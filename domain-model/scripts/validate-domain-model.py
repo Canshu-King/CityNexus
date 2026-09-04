@@ -9,11 +9,11 @@ from collections import defaultdict, deque
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL_FILE = ROOT / "citynexus-core-domain-model-v0.4.1.yaml"
+MODEL_FILE = ROOT / "citynexus-core-domain-model-v0.4.2.yaml"
 SCHEMA_FILE = ROOT / "citynexus-domain-model.schema.json"
 README_FILE = ROOT / "README.md"
 CHANGELOG_FILE = ROOT / "CHANGELOG.md"
-REPORT_FILE = ROOT / "qa" / "domain-model-v0.4.1-report.json"
+REPORT_FILE = ROOT / "qa" / "domain-model-v0.4.2-report.json"
 
 # Prefer normal dependencies; support the project's optional local QA dependency folder.
 try:
@@ -358,11 +358,11 @@ def main():
 
     readme = README_FILE.read_text(encoding="utf-8")
     changelog = CHANGELOG_FILE.read_text(encoding="utf-8")
-    readme_ok = "v0.4.1" in readme and "citynexus-core-domain-model-v0.4.1.yaml" in readme
+    readme_ok = "v0.4.2" in readme and "citynexus-core-domain-model-v0.4.2.yaml" in readme
     changelog_ok = re.search(r"^## 0\.4\.1\b", changelog, flags=re.MULTILINE) is not None
     checks += [
         result("README current baseline version consistency", readme_ok),
-        result("CHANGELOG contains v0.4.1 entry", changelog_ok),
+        result("CHANGELOG contains v0.4.2 entry", changelog_ok),
     ]
 
     report = {

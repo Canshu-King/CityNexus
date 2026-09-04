@@ -46,3 +46,7 @@
 - Renamed domain rule IDs from `BR-*` to `DR-*` and expanded use-case traceability.
 - Corrected replanning policy for feasible versus infeasible active plans and Exception Mode.
 - Normalised relationship cardinalities into `multiplicity.source` and `multiplicity.target` objects.
+## 0.4.2 RC3 — domain promotion
+
+- Promoted the reviewed v0.4.2 RC3 domain model while preserving v0.4.1 RC2 as an immutable historical baseline.
+- Added the `planning_mode` enum and PlanVersion planning/scoring references required by the v0.3.0 requirements baseline.

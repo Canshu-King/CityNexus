@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://citynexus.local/schema/domain-model-v0.4.1.json",
-  "title": "CityNexus Core Domain Model v0.4.1 RC2",
+  "$id": "https://citynexus.local/schema/domain-model-v0.4.2.json",
+  "title": "CityNexus Core Domain Model v0.4.2 RC3",
   "type": "object",
   "required": [
     "model",
@@ -30,13 +30,13 @@
       "additionalProperties": false,
       "properties": {
         "id": {
-          "const": "CN-DM-0041"
+          "const": "CN-DM-0042"
         },
         "name": {
           "const": "CityNexus Core Domain Model"
         },
         "version": {
-          "const": "0.4.1"
+          "const": "0.4.2"
         },
         "status": {
           "const": "release-candidate"

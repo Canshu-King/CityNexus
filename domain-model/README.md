@@ -1,7 +1,7 @@
 # CityNexus Core Domain Model
 
-Current baseline: **v0.4.1 Release Candidate 2**  
-Source of truth: `citynexus-core-domain-model-v0.4.1.yaml`
+Current baseline: **v0.4.2 Release Candidate 3**
+Source of truth: `citynexus-core-domain-model-v0.4.2.yaml`
 
 This folder contains the working core-domain baseline for the official coursework project **Smart City Traveler System**, product name **CityNexus**.
 

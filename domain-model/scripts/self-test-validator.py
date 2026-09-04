@@ -19,7 +19,7 @@ except ImportError:
     import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-MODEL = ROOT / "citynexus-core-domain-model-v0.4.1.yaml"
+MODEL = ROOT / "citynexus-core-domain-model-v0.4.2.yaml"
 SCHEMA = ROOT / "citynexus-domain-model.schema.json"
 README = ROOT / "README.md"
 CHANGELOG = ROOT / "CHANGELOG.md"
