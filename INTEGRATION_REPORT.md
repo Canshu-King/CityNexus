@@ -244,3 +244,75 @@ Apple 线只做 #1 重复语言入口、#2 Today CTA 层级（有 active journey
 #4 地图诚实空态高度；主线做 #5 Copilot 遮挡（统一 bottom clearance）、#6 avatar 溢出、#7 文案粘连与
 `transit` 未本地化；测试债做 8 条 legacy 的 capability mapping 与 4 条当前 V8 规格重写。
 Trips / Copilot 主页面 / Onboarding 继续不碰。
+
+---
+
+# pass-9 收口（按裁决范围，不扩面）
+
+## 12. Apple P0 四项
+
+| # | 裁决 | 落地 |
+|---|---|---|
+| 1 | Today 重复语言入口 | 删掉 hero 区的 `home-language`（topbar 已拥有该控件，全仓无其它引用）。 |
+| 2 | Today 唯一 primary | `AI 帮我规划 / 试用其他城市 / 打开行程工作台` 从四个堆叠全宽按钮变成一行 quiet 文本动作（`.v8-hub-actions` 此前**在仓库里根本没有 CSS 规则**，这就是它们渲染成"按钮联合国大会"的直接原因）。门同步升级：旧断言只数 hero **内部**的 primary，所以紧贴其上的全宽 `.v8-primary` 门是看不见的；现在要求整屏可见 primary ≤1 且必须是 `today-hero-cta`。**非空过已证明**：把 `hub-plan-with-ai` 改回 `.v8-primary` 立刻 FAIL 并点名两个按钮。 |
+| 3 | Live 次级动作层级 | `更新位置 / 报告降雨` 移出 Live intro，落到 Disruption/Replan 之后的 compact 行，顺序成为 Current → Map → Disruption/Replan → utilities → mode/evidence。 |
+| 4 | 地图诚实空态高度 | 第一次修完全无效：Apple 的 240/208 规则带 `!important`，而 CSS 里 **min-height 优先于 max-height**，盒子仍是 240px。在同一 register 里豁免后 97px，Live 地图带从 2065px 页高压到 228px。 |
+
+门侧诚实化：`qoder-live-structure` 现在打印它量的是哪个分支
+（`[live-map] branch=honest-empty-state height=97px`）。曾尝试给 mock 加坐标去真正验证 240/208
+分支，结果 maplibre 开始拉 style/tiles，离线 harness 直接挂起、dark 审计还把地图 canvas 算成违规 ——
+已回退并写明"该分支需要联网环境"，而不是留一条时隐时现的绿灯。
+
+## 13. 主线三项（单独提交，归属清楚）
+
+- **#5 Copilot 遮挡**：`.v8-content` 统一预留 `124px + safe-area` 底部带；决策态 dock 收成右对齐 pill
+  （原来 yield 后仍是 230px 宽横条，正好盖住全宽 Accept）。注意第一版把留白加在 `.v8-page` 上，
+  而 Today/Live 会连续渲染多个 `.v8-page`，每个都加 124px，把决策块推下去 124px —— 首屏门以 8px
+  之差抓到。门侧同时把"是否遮挡"改为在**决策被滚到视口中央**时测量：`scrollIntoViewIfNeeded`
+  会把按钮留在视口底边，而那正是 pill 所在的位置，旧断言其实是在赌滚动位置而不是在设计保证。
+- **#6 avatar 溢出**：加 `overflow/nowrap/flex:none`，两字符不再压在圆外。
+- **#7 文案与本地化**：advisory 的 text 与 hint 由 inline 相邻改为块级（消除
+  `每人每天约 ¥500这是按你的预算…`）；Live 的 leg 行原本把 provider 枚举原样插进中文句子
+  （`transit`），现在走 `modeLabel()`，与全站其它 mode 呈现一致。
+
+## 14. 种子升级：从"能跑"到"跑的是真东西"
+
+`demo/reset` 给的是一天 CNX-DEMO 行程，stay-aware optimizer 返回 **0 个 option**。这个事实悄悄污染了
+之前所有在它上面得出的判断：Stay Explorer 只能显示空态、恢复链没有可保护的住宿、Today 只有一天
+时间线、地图永远没有 marker。种子改为通过产品 API 建两晚 CN-TIANJIN 行程并真实 generate + select：
+`options=4 chosen=… (Haihe Riverside Hotel)`、`trialWizard=false`、`live-journey-current=true`，
+地图第一次渲染出真 marker。
+
+它立刻抓到三个此前不可见的缺陷：
+
+1. Today 在真实 disruption 下出现**第二个 primary**（attention band 的 `Review in Live`，与 hero 同目标）
+   —— 裁决 #2 的第二个实例，已降级。
+2. `current` 地图 marker 白字 10px on `#d65e56` = **3.75:1**。改用 `--cn-accent-solid`（两主题都是
+   `#0a66ff`，白字 4.82:1）；第一版用 `--cn-accent-text`，在 dark 下 `#0a84ff` 只有 3.49:1，
+   双主题门当场拦下。
+3. 多日时间线的 `DAY n` 与副文本灰（`#9aa4b3` 2.52、`#6c7889` 4.48/3.8）此前从未被审计到，
+   因为根本没有多日卡片。统一到 `--cn-ink-secondary`。
+
+## 15. 门禁与套件现状
+
+- `qoder-*` 29 条全绿；contrast 在 Today/Live × light/dark × 390/1280 **全部 0**，
+  focus ring 也改成两主题都量（改名 `qoder-contrast-audit` 后立刻发现 light 下 4 条
+  `button:focus-visible` 的 `#9aa8ff` outline 只有 2.05–2.23:1）。
+- 全量 Playwright：31 passed / 15 failed。其中 8 条是已定性的 `/` legacy（见
+  `docs/LEGACY_E2E_MIGRATION.md`），4 条当前产品 spec 已按现状重写（locale 固定、
+  `hub.title`→`today-heading`、`AI`→`Copilot`、`read-only ready`→`available offline`、
+  硬编码 4 张 offer 卡改为记录分支、AgentComposer testid→Copilot dock）。
+- **新发现的测试基建缺陷**：`v10-inbox / v10-quality-budget / v10-accessibility` 固定 locale 后
+  单跑 9 秒 4 passed，放进串行全量又红 —— 因为整套共用一个后端与一个 SQLite journey，
+  前面的 spec 会 reset / 重新 select。没有靠调整顺序掩盖，作为独立缺陷记录。
+
+## 16. 截图里仍然看得见、但我没有动手的
+
+1. 真地图渲染后，地图左半约 40% 是未加载瓦片的浅灰底（右侧天津城区正常）—— 视觉上不平衡，
+   但属于瓦片可用性/地图视野问题，不是配色。
+2. 5 号 marker 被"路线上下文 · 8 段路程"信息条压掉一半。
+3. dock 在 Today 首屏仍会压住 hero 之后的内容（已预留底部带，滚动后可完全避开；
+   是否要在首屏就完全让位属于产品取舍）。
+
+请复验这三条的归属，以及 pass-9 的四项 P0 是否达到
+`FRONTEND_APPLE_PASS1_VISUALLY_ACCEPTED_FOR_MERGE`。
