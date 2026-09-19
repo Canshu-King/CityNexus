@@ -2081,6 +2081,14 @@ ORD-0031 的结论是 **`package-lock.json` 是权威**，而两棵 `node_module
 | M2 历史缺陷原样（幽灵键 `current_activity_id` ⇒ 游标恒 null ⇒ 回退首项） | `LiveRecovery.tsx:213-217` | **2 / 5** | `spec:96`（`data-now-activity-id` 期望 `61e3096d…`=activities[2]，实到 `3a58c470…`=activities[0]）、`spec:267`（期望 "Execution position unresolved"，实到 "Next: Old Town Gate"） |
 | M3 共享解析器允许陈旧游标按列表顺序造 Now | `src/lib/executionWindow.ts` STALE 分支 | **2 / 5** | `spec:267` 与 `qoder-stale-cursor.spec.ts:36`，都红在标题 `live-journey-current`："Old Town Gate" 而不是 "Execution position unresolved" |
 | M4 撤掉后端 trustworthy-Now 守卫（退回 `legs[current_index]`） | `backend/app/operations/v9.py:169-173` | **6 / 26** | 结构不变式 `[more legs than activities]`、`[one leg per hop]`、`test_no_trustworthy_now_projects_no_next_leg` 两例、权威层整元组与"完成旅程多出出发腿"两例 |
+| M5 把"空计划"当成"还没拿到计划" | `src/lib/executionWindow.ts` 的 `if (!plan)` → `if (!plan \|\| plan.activities.length === 0)` | **1 / 5** | `spec:138`（标题 `data-cursor-status` 期望 `ABSENT_FALLBACK`，实到 `UNKNOWN`） |
+
+**仲裁点名的三例，现在各自都有能杀它的突变体**：VALID 例 ← M2（`spec:96`）、STALE 例 ← M1/M2/M3
+（`spec:267`）、空列表例 ← M5（`spec:138`）。同时要说清 M5 为什么必须另找：**索引回退那具突变体杀不到
+空列表例**——空数组的 `activities[0]` 本来就是 `undefined`，回退也是空。所以"给空计划配一条鉴别力"
+不能靠重复 M1，只能针对这个形状自己的失效方式，也就是把"计划存在但零步"与"还没有计划"混成一态；
+这正是 `UNKNOWN`（取数态）与 `ABSENT_FALLBACK`（执行态）两个值存在的理由，M5 一混就红。
+M5 同样 `tsc --noEmit` exit 0、字节还原后 `executionWindow.ts` 与 HEAD 相同（`4280bbe8…`）。
 
 三点要记的口径：
 
