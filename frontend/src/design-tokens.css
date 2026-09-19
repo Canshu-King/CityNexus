@@ -695,3 +695,19 @@ button[data-testid^="mode-"],
 .cn-attention-band[data-attention="clear"] .cn-attention-head strong {
   color: var(--cn-success-text);
 }
+
+
+/* ---------------------------------------------------------------------------
+   Focus ring (light theme). The shell's own rule paints a 3px #9aa8ff outline,
+   which measures 2.05-2.23:1 against the #f5f5f7 canvas. Dark was fine; light
+   had never been measured because this gate used to emulate dark only.
+   --cn-accent-text is 5.49:1 on the canvas, and its dark twin #0a84ff is
+   5.76:1 on the dark canvas, so one token now serves both schemes.
+   --------------------------------------------------------------------------- */
+:focus-visible,
+.v8-product-shell :focus-visible,
+.v8-product-shell button:focus-visible,
+.v8-product-shell [role="button"]:focus-visible,
+.v8-product-shell textarea:focus-visible {
+  outline-color: var(--cn-accent-text);
+}

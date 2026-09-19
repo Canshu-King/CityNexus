@@ -210,3 +210,37 @@ disruption），所以给该 spec 加了一个默认关闭的 `QODER_CAPTURE_STA
 
 （同一探针还顺带说明：真种子 harness 与 legacy 界面是兼容的，`data-journey-id` 正是种子建出来的
 `22222222-…` journey。）
+
+## 10. pass-8 裁决后的收口（证据卫生三项）
+
+裁决接受 `FRONTEND_APPLE_PASS1_AB_RECONCILED_ON_TRUTH_V6_BASELINE` 与
+`INTEGRATION_TRUTH_GATES_PASS`，并把视觉阶段记为
+`FRONTEND_APPLE_PASS1_VISUAL_INTEGRATION_BLOCKED`。他点的三个证据卫生问题都补了：
+
+1. **门改名**：`qoder-dark-audit.spec.ts` → `qoder-contrast-audit.spec.ts`，describe/test 标题、
+   报告目录 `reports/contrast-audit/`、文件名 `contrast-audit-*.json` 全部跟上；
+   `summarise()` 里那个把 light 行打成 `(dark)` 的标签删了。
+   顺手把 focus-ring 那半条门也真的从"只量 dark"改成 dark+light 都走——
+   名字改成两主题而实现仍只测 dark，就是他批评的那种"标签撒小谎"。
+   **这一改立刻抓到 4 条 light 违规**：`.v8-product-shell button:focus-visible` 的
+   `outline: 3px solid #9aa8ff` 在 #f5f5f7 上只有 2.05–2.23:1（要求 3:1）。
+   修法是让 outline-color 走 `--cn-accent-text`（画布 5.49:1 / dark 5.76:1）；
+   第一次覆盖没生效，因为赢下 specificity 的是 `button:focus-visible` 而不是
+   `:focus-visible`——补上该选择器后 8 组对比度 + 双主题 focus 全 0。
+2. **truth_baseline.log**：v1 包 README 声称有、实际没打进 zip，所以基线对照无法独立复算。
+   v2 包已包含 `truth_baseline.log`（762/0）与 `truth_patched.log`（827/0），
+   README 清单与 zip 内容逐条核对一致。
+3. **MapPanel 的行为 delta**：`failIfMajorPerformanceCaveat: false` 连同解释它的注释
+   （"瓦片服务不可达时别让用户对着空盒子看，受限网络很常见"）被 Apple 分支的 GeoJSON
+   typing 修复一起删掉了。maplibre 自身默认确实是 false，行为可能等效，但这条注释承载的是
+   产品意图，不该藏进"前置类型修复"四个字里 —— 已把该行与注释恢复回源码，
+   并在此处明列为 reconciliation delta。
+
+## 11. 下一轮范围（照裁决，不扩面）
+
+Apple 线只做 #1 重复语言入口、#2 Today CTA 层级（有 active journey 时唯一 primary 是
+"查看实时行程"，"AI 帮我规划"降级、"试用其他城市"归创建路径、"打开行程工作台"降 tertiary）、
+#3 Live 次级动作层级（Current → Map → Disruption/Replan → 更新位置·报告降雨 → mode/evidence）、
+#4 地图诚实空态高度；主线做 #5 Copilot 遮挡（统一 bottom clearance）、#6 avatar 溢出、#7 文案粘连与
+`transit` 未本地化；测试债做 8 条 legacy 的 capability mapping 与 4 条当前 V8 规格重写。
+Trips / Copilot 主页面 / Onboarding 继续不碰。
