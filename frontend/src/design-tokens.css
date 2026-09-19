@@ -107,14 +107,25 @@
     --cn-warning: #ff9f0a;
     --cn-danger: #ff453a;
     --cn-hairline: rgba(255, 255, 255, 0.1);
+    --cn-nav-bg: rgba(28, 28, 30, 0.95);
     --cn-control-border: #7c7c82;
     --cn-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.5);
     --cn-shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.5), 0 18px 40px rgba(0, 0, 0, 0.6);
   }
 }
 
-/* Bind the V8 shell to the Apple palette + system font without touching markup:
-   existing components consume --v8-* vars, so remapping them re-skins the app. */
+/* Bind the V8 palette to the Apple tokens at :root as well as on the shell.
+   Existing components consume --v8-*, so rebinding them re-skins the app; doing it
+   on :root additionally reaches the one screen that is returned *before*
+   .v8-product-shell exists — JourneyTrialSetup (V8Experience.tsx:818) — which until
+   now got neither the Apple palette nor the dark theme.
+   The shell selector is not redundant: styles.css carries an AA override block on
+   `.v8-product-shell` (--v8-muted / -amber / -coral) that this file has always beaten
+   by load order at equal specificity.  Binding :root alone would let that override
+   win again inside the shell, silently resurrecting declarations that were dead
+   code.  Keeping both selectors preserves the shell's effective values exactly while
+   extending them to the screen that has no shell. */
+:root,
 .v8-product-shell {
   --v8-canvas: var(--cn-canvas);
   --v8-panel: var(--cn-surface);
@@ -125,6 +136,36 @@
   --v8-green: var(--cn-success);
   --v8-amber: var(--cn-warning);
   --v8-coral: var(--cn-danger);
+  /* Two tokens 18 declarations referenced but nobody ever defined, so every one of
+     them silently took its fallback: --v8-accent resolved to teal #0f766e in 14
+     places (making the create-trip primary button a different colour from every
+     other primary button in the app) and --v8-surface resolved to #0b1f24 in one
+     place and #fff in two others — one token, three intents.  Accent and card
+     surface get real values here; the near-black site was never a surface at all,
+     it wanted the page canvas behind a fading sticky bar, so that declaration now
+     reads --v8-canvas directly in styles.css.
+     --v8-accent binds to the SOLID accent, not the text accent: it paints button
+     fills that carry white labels (.v8-primary-button is shared by the create-trip
+     CTA and Live's live-accept).  --cn-accent is tuned for text on the canvas and is
+     #0a84ff under dark, which put white-on-blue at 3.4:1 and turned
+     qoder-live-structure's L2 dark assertion red. */
+  --v8-accent: var(--cn-accent-solid);
+  --v8-surface: var(--cn-surface);
+  /* Mobile chrome geometry in one place.  The shell used to reserve a hardcoded
+     63px below the page, which was just a snapshot of "however tall the nav
+     happened to be"; the nav itself carried no safe-area at all.  48 + 8 + 7 = 63
+     is the arithmetic the old literal stood for, now written out. */
+  --cn-touch-min: 44px;
+  --cn-nav-bg: rgba(255, 255, 255, 0.95);
+  --cn-nav-item-h: max(48px, var(--cn-touch-min));
+  --cn-nav-pad-top: 8px;
+  --cn-nav-pad-bottom: 7px;
+  --cn-nav-h: calc(var(--cn-nav-item-h) + var(--cn-nav-pad-top) + var(--cn-nav-pad-bottom));
+  --cn-nav-clearance: calc(var(--cn-nav-h) + env(safe-area-inset-bottom, 0px));
+  --cn-safe-top: env(safe-area-inset-top, 0px);
+}
+
+.v8-product-shell {
   font-family: var(--cn-font);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -737,8 +778,11 @@ button[data-testid^="mode-"],
   gap: 2px 16px;
   margin-top: 10px;
 }
+/* Pass-16 pinned this row to 30px.  These are deliberate taps on a phone, and a
+   0,2,0 selector outranks the global 44px floor in styles.css, so the floor has
+   to be honoured here too. */
 .v8-hub-actions .v8-quiet-button {
-  min-height: 30px;
+  min-height: var(--cn-touch-min);
   padding: 2px 0;
   font-size: var(--cn-fs-caption);
   font-weight: 600;
@@ -764,7 +808,7 @@ button[data-testid^="mode-"],
   margin-bottom: 12px;
 }
 .cn-live-toolbar .v8-quiet-button {
-  min-height: 30px;
+  min-height: var(--cn-touch-min);
   padding: 2px 0;
   font-size: var(--cn-fs-caption);
   font-weight: 600;
@@ -925,3 +969,70 @@ button[data-testid^="mode-"],
   flex: none;
   white-space: nowrap;
 }
+
+
+/* ===========================================================================
+   Pass-17 UI overnight lane — the screen that renders outside the shell.
+
+   JourneyTrialSetup is returned at V8Experience.tsx:818, before
+   .v8-product-shell exists.  Everything the shell supplied was therefore
+   missing on the very first screen a traveller sees:
+     * the --v8-* tokens            (fixed by hoisting the bindings to :root)
+     * a text colour                (body never set one; only the shell did)
+     * the horizontal gutter        (.v8-content owns it, and there is no .v8-content)
+     * the status-bar inset         (viewport-fit=cover makes env() real)
+   These rules hand the standalone page the same chrome without touching markup.
+   =========================================================================== */
+body {
+  color: var(--v8-ink);
+  background: var(--v8-canvas);
+  font-family: var(--cn-font);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.v8-page {
+  padding: var(--cn-safe-top) var(--cn-gutter) var(--cn-s-32);
+}
+/* Inside the shell the gutter belongs to .v8-content, not to the page. */
+.v8-content .v8-page { padding: 0; }
+
+/* Three step labels cannot share 360px, and the ellipsis was eating
+   "Travellers & preferences" at all three acceptance widths.  Progressive
+   disclosure instead: the step you are on names itself, the others collapse to
+   their number.  Visually-hidden rather than display:none — ORD-0014 A requires
+   the fix not cost semantics, and display:none would drop the step name out of the
+   accessibility tree, leaving a screen reader with a bare digit. */
+@media (max-width: 680px) {
+  .trial-steps { gap: var(--cn-s-8); }
+  .trial-steps li { flex: 0 0 auto; position: relative; }
+  .trial-steps li:not(.active) span:last-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* Form fields were UA-white: a white slab floating on a dark card, and a
+   black-on-black label wherever the page carried no inherited colour. */
+.trial-field input,
+.trial-field textarea,
+.trial-field select {
+  min-height: var(--cn-touch-min);
+  padding: 0 var(--cn-s-12);
+  border: 1px solid var(--cn-control-border);
+  border-radius: var(--cn-r-control);
+  background: var(--v8-panel);
+  color: var(--v8-ink);
+  font: inherit;
+}
+.trial-field textarea { padding: var(--cn-s-12); }
+.trial-field input::placeholder,
+.trial-field textarea::placeholder { color: var(--cn-ink-tertiary); }
+/* Native date pickers paint their own chrome; without this they stay light. */
+.trial-field input[type="datetime-local"] { color-scheme: light dark; }
