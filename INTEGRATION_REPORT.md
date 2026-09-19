@@ -1642,15 +1642,19 @@ AI 关闭，且 `/health` 的回显是经前端 origin 拿回来并核对过 run
 十处被突变的源文件逐一按字节还原：矩阵自身只在 `finally` 里写回原字节，
 本层跑完后另用 `git status` 复核，不依赖工具自报。
 
-### 80.2 两项待裁决，不影响本表数字
+### 80.2 一项已裁（口径如下），一项仍等令
 
-1. `F` 记为 `EQUIVALENT_OR_NON_ACTIONABLE`（带不可达理由），与 Mission 002 C 字面的
-   “0 SURVIVED / 16 KILLED”仍然冲突。可选收口：删这一行让分母诚实变成 16/16，
-   或承认“16 actionable + 1 equivalent”这个口径。我没有为了让表好看去动分母。
+1. **已裁** —— 真总线 `Canshu-King/CityNexus-Workspace` Issue #1（评论 5745031386 / 5745135961）：
+   口径是 **16 actionable + 1 equivalent，且 equivalent 那一行在分母之外**。
+   所以本表保持 17 行、`F` 仍记 `EQUIVALENT_OR_NON_ACTIONABLE` 并带不可达理由：
+   **没有删行，也没有把它伪造成 KILLED**。"0 SURVIVED / 16 KILLED"与这张表不再冲突——
+   那句约束的是 16 个 actionable，等流行本来就不在它里面。
 2. §79.1 的 `/twin`：它按 ACTIVE 计划解析游标（正确），但 `JourneyTwinSchema` 里没有任何字段
-   能表达“游标存在但不可解析”，消费者只能看见 `derived_now = journey.start_at` 这个被填出来的时间。
+   能表达"游标存在但不可解析"，消费者只能看见 `derived_now = journey.start_at` 这个被填出来的时间。
    这是 ORD-0007 同族但形态不同（那里是互相矛盾，这里是沉默）。改它要动 schema，属契约变更，
    等令再动；连带一条 `/twin` 与 `_execution_truth` 的差分回归。
+   （这与 ORD-0011(3) 冻结的是同一件事：Mission 002 期间 `/twin` 顶层 `projection_status`
+   保持 `READY|DEGRADED`，执行新鲜度只走嵌套 `cursor_status`。未动。）
 
 
 ---
@@ -2094,19 +2098,24 @@ ORD-0031 的结论是 **`package-lock.json` 是权威**，而两棵 `node_module
   "Execution position unresolved" 且不得为 "in progress"，只是同一例子里标题（328 行）先失败所以没跑到。
   写在这里是为了下一辆车道不必再查一遍：**同一测试内多条断言时，报表上的击杀只反映最先红的那条**。
 
-### 86.3 顺带读到的一条同类问题（今天没测到、也没改）
+### 86.3 一处同类问题：不是新发现，是复核它还在
 
-`V8Experience.tsx:1479-1480`（Today/hub）：
+账本里它本来就有名字——`KNOWN_FAILURES` 第 2 条 / `INTEGRATION_QUEUE` 第 3 条：
+"前端仍有一处墙上时间推断：`V8Experience.tsx` 约 1501 行
+`activities.find(end_at >= nowMs) ?? activities[0]`，与后端 docstring 相冲，是否纳入本轮需裁决"。
+我在合并树上重定位了一遍，三处新信息：
 
 ```
 const nextStop = activities.find((item) => Date.parse(item.end_at) >= nowMs) ?? activities[0] ?? null;
 ```
 
-`nextStop` 喂给 1501-1504 的 `nextUp`，1590/1593 行把它渲染成 **"Next / 接下来 + 时钟 + 标题"**。
-它读的是墙钟不是游标，所以不是 ORD-0010/0011 那条链上的东西；但当**所有活动都早于 now**
-（旅程已完成，或日期落在过去的旅程）时，`find` 为空、回退取 `activities[0]`，
-Today 就会把早已结束的第一站显示成"接下来"。而 1495-1496 行的注释写的是
-"No empty current slot is ever fabricated" —— 那句话说的是 `currentStop`（它确实没有回退），
-**`nextUp` 这一侧不成立**。按本次的规矩，这是静态读到的、**未做端到端实测**的观察，
-且 `qoder-today-hero.spec.ts` 现有 2 条例子（单一 CTA / 高度 / 无空 Now / 无溢出）不覆盖该态；
-要修该由 Commander 派单，并配一条"全部活动已结束时 Today 不得说 Next"的门。
+- **行号已漂**：表达式现在在 `1479-1480`（账本写的"约 1501"是 `nextUp` 那一行，1501-1503）。
+- **它确实进旅客眼睛**：`nextStop` → `nextUp`（1501-1503）→ 1590 行的标签 `"Next" / "接下来"`
+  与 1593 行的 `${heroClock} ${nextUp.title}`。所以当**所有活动都早于 now**
+  （旅程已完成，或旅程日期落在过去）时，Today 会把早已结束的第一站显示成"接下来"并配上它的起始钟点。
+- **注释与代码相反**：1495-1496 行写 "No empty current slot is ever fabricated" ——
+  那句对 `currentStop`（1497-1500，确实无回退）成立，对 `nextUp` 这一侧不成立。
+
+按本次的规矩标注：**静态读到，未做端到端实测**。`qoder-today-hero.spec.ts` 现有 2 例覆盖的是
+单一 CTA / 高度 / 无空 Now / 无溢出，不含"全部已结束"这个态。要修该由 Commander 派单，
+并配一条"全部活动已结束时 Today 不得说 Next"的门；我没有在重放复核这一轮里顺手改它。
