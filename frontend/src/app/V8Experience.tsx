@@ -1677,9 +1677,13 @@ function Hub({
           </p>
         ) : null}
         {disruptions.length > 0 && (
+          /* Pass-8 ruling #2, second instance: this pointed at exactly the same
+             destination as the hero's "Open Live", so a screen with a real
+             disruption showed two primary buttons side by side. The hero owns
+             the primary; the attention band keeps its own quiet link. */
           <button
             type="button"
-            className="v8-primary cn-attention-cta"
+            className="v8-quiet-button cn-attention-cta"
             onClick={() => onNavigate("live")}
           >
             {zh ? "查看实时行程" : "Review in Live"}

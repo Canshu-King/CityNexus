@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-test("real-world trip operations: inbox to luggage-aware autonomous recovery", async ({ page, request }) => {
+test("real-world trip operations: inbox to luggage-aware autonomous recovery", async ({ page, request }, testInfo) => {
+  await page.addInitScript(() => localStorage.setItem("citynexus.locale", "en"));
   const reset = await request.post("/api/v1/demo/reset");
   const ids = await reset.json();
   const created = await request.post("/api/v1/journeys", {
@@ -24,7 +25,7 @@ test("real-world trip operations: inbox to luggage-aware autonomous recovery", a
   await request.put(`/api/v1/journeys/${journey.id}/operations/luggage`, {
     data: { baggage_present: true, baggage_size_class: "MEDIUM", luggage_drop_required: true },
   });
-  await page.context().grantPermissions(["geolocation"], { origin: "http://127.0.0.1:4173" });
+  await page.context().grantPermissions(["geolocation"], { origin: testInfo.project.use.baseURL ?? "http://127.0.0.1:4173" });
   await page.context().setGeolocation({ latitude: 39.1366, longitude: 117.1696, accuracy: 12 });
 
   await page.addInitScript((journeyId) => localStorage.setItem("citynexus.v8.journey_id", journeyId), journey.id);

@@ -87,62 +87,80 @@ function reservation(role: AnchorRole): Record<string, unknown> {
   };
 }
 
+const API =
+  process.env.CITYNEXUS_API_BASE_URL ??
+  `http://127.0.0.1:${Number(process.env.CITYNEXUS_BACKEND_PORT ?? 8000)}`;
+
+async function call(url: string, init: RequestInit = {}): Promise<any> {
+  const res = await fetch(new URL(url, API), {
+    ...init,
+    // fetch defaults a string body to text/plain, which FastAPI rejects with a
+    // 422 before it ever looks at the payload.
+    headers: { "Content-Type": "application/json", ...(init.headers ?? {}) },
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(`${url} -> HTTP ${res.status}: ${text.slice(0, 200)}`);
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+}
+
 setup("seed a real journey through the product API", async ({ browser }) => {
+  /* The seeded journey matters as much as the seed mechanism. demo/reset hands
+     back a one-day CNX-DEMO trip, which yields zero stay options — so Stay
+     Explorer showed its honest empty state, the recovery chain had no booked
+     stay to protect, and several current-product specs could not get past their
+     first step for reasons that had nothing to do with the product. A
+     two-night CN-TIANJIN journey runs the real stay-aware optimiser and comes
+     back with four ranked options and located activities. */
+  const traveler = await call("/api/v1/travelers", {
+    method: "POST",
+    body: JSON.stringify({
+      display_name: "Qoder seeded traveller",
+      locale: "en-GB",
+      timezone: "Asia/Shanghai",
+    }),
+  });
+  const journey = await call("/api/v1/journeys", {
+    method: "POST",
+    body: JSON.stringify({
+      traveler_id: traveler.id,
+      title: "Tianjin · stay-aware weekend",
+      city_code: "CN-TIANJIN",
+      timezone: "Asia/Shanghai",
+      start_at: "2026-10-09T18:00:00+08:00",
+      end_at: "2026-10-11T15:00:00+08:00",
+      budget: { amount_minor: 120000, currency: "CNY" },
+    }),
+  });
+  const journeyId: string = journey.id;
+
+  await call(`/api/v1/journeys/${journeyId}/stay-options/generate`, { method: "POST" });
+  const listed = await call(`/api/v1/journeys/${journeyId}/stay-options`);
+  const options: any[] = listed.options ?? [];
+  if (!options.length) throw new Error("real-seed setup: stay-aware optimiser returned no options");
+  const chosen = options.find((o) => o.status === "RECOMMENDED") ?? options[0];
+  await call(`/api/v1/journeys/${journeyId}/stay-options/${chosen.id}/select`, { method: "POST" });
+  console.log(
+    `[qoder-real-seed] journey=${journeyId} options=${options.length} chosen=${chosen.id} (${chosen.stay?.property_name})`,
+  );
+
   const context = await browser.newContext({ viewport: { width: 412, height: 915 } });
   const page = await context.newPage();
+  await page.addInitScript((id) => {
+    localStorage.setItem("citynexus.v8.journey_id", id);
+    localStorage.setItem("citynexus.demo.journey_id", id);
+  }, journeyId);
 
-    const reset = await page.request.post(`${BASE}/api/v1/demo/reset`);
-    if (!reset.ok()) throw new Error(`real-seed setup: demo/reset -> HTTP ${reset.status()}`);
-    const journeyId: string = (await reset.json()).journey_id;
-    if (!journeyId) throw new Error("real-seed setup: demo/reset returned no journey_id");
+  await page.goto(`${BASE}/v8/live`, { waitUntil: "load" });
+  await page.waitForTimeout(4000);
+  const stillWizard = await page.getByTestId("trial-setup").isVisible().catch(() => false);
+  const current = await page.getByTestId("live-journey-current").count();
+  console.log(`[qoder-real-seed] trialWizard=${stillWizard} live-journey-current=${current > 0}`);
 
-    for (const role of ["ARRIVAL", "MID_TRIP", "DEPARTURE"] as AnchorRole[]) {
-      const imported = await page.request.post(`${BASE}/api/v1/journeys/${journeyId}/inbox/import`, {
-        data: { artifact_type: "STRUCTURED_JSON", payload: { reservation: reservation(role) } },
-      });
-      if (!imported.ok()) {
-        throw new Error(`real-seed setup: inbox/import ${role} -> HTTP ${imported.status()}`);
-      }
-      const draftId = (await imported.json()).id;
-      const confirmed = await page.request.post(
-        `${BASE}/api/v1/journeys/${journeyId}/inbox/${draftId}/confirm`,
-      );
-      if (!confirmed.ok()) {
-        throw new Error(`real-seed setup: confirm ${role} -> HTTP ${confirmed.status()}`);
-      }
-    }
-
-    await page.addInitScript((id) => {
-      localStorage.setItem("citynexus.v8.journey_id", id);
-      localStorage.setItem("citynexus.demo.journey_id", id);
-    }, journeyId);
-
-    // Materialise the active plan the way the product does: real-city discovery
-    // on the sealed replay, then the plan the panel selects.
-    await page.goto(`${BASE}/v8/discover`, { waitUntil: "load" });
-    await page.waitForTimeout(2500);
-    const submit = page.getByTestId("v13-discover-submit");
-    if (await submit.isVisible().catch(() => false)) {
-      await submit.click();
-      await page
-        .waitForSelector('[data-testid="v13-discovery-selected-plan"]', { timeout: 90_000 })
-        .catch(() => undefined);
-    }
-    const selected = await page
-      .getByTestId("v13-discovery-selected-plan")
-      .textContent()
-      .catch(() => null);
-    console.log(
-      `[qoder-real-seed] journey=${journeyId} selectedPlan=${selected ? selected.trim().slice(0, 60) : "NONE"}`,
-    );
-
-    await page.goto(`${BASE}/v8/live`, { waitUntil: "load" });
-    await page.waitForTimeout(3000);
-    const stillWizard = await page.getByTestId("trial-setup").isVisible().catch(() => false);
-    if (stillWizard) console.log("[qoder-real-seed] WARN /v8/live still shows the trial wizard");
-
-    if (!existsSync(HERE)) mkdirSync(HERE, { recursive: true });
-    await context.storageState({ path: STATE });
-    expect(existsSync(STATE)).toBe(true);
-  },
-);
+  if (!existsSync(HERE)) mkdirSync(HERE, { recursive: true });
+  await context.storageState({ path: STATE });
+  expect(stillWizard, "seeded journey was not accepted by the V8 shell").toBe(false);
+});

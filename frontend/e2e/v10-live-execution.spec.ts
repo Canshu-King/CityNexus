@@ -4,6 +4,7 @@ test("V10 live execution panel exposes the server clock and evidence trail", asy
   page,
   request,
 }) => {
+  await page.addInitScript(() => localStorage.setItem("citynexus.locale", "en"));
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/v8/live");
   await expect(page.getByRole("heading", { name: "Choose your next leg." })).toBeVisible();
@@ -11,7 +12,10 @@ test("V10 live execution panel exposes the server clock and evidence trail", asy
   const panel = page.getByTestId("v10-live-execution-panel");
   await expect(panel).toBeVisible();
   await expect(panel.getByText("CLOCK", { exact: true })).toBeVisible();
-  await expect(panel.getByText("read-only ready", { exact: true })).toBeVisible();
+  /* The panel's status line is i18n'd under exec.readOnlyReady, whose English
+     value is "available offline" — the spec was still asserting the wording that
+     key replaced. */
+    await expect(panel.getByText("available offline", { exact: true })).toBeVisible();
 
   const journeyId = await page.evaluate(() => localStorage.getItem("citynexus.v8.journey_id"));
   expect(journeyId).toBeTruthy();
