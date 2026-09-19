@@ -443,3 +443,96 @@ pass-9 里我提交过一个"让 Live 的『现在』标签不再折行"的 comm
 2. `v10-live-execution` 我判断是"fixture 归属未完成"，是否直接按 pass-10 的方式接入 `_qoderFreshJourney` 即可。
 3. `product-v8` 的 Copilot 提交步骤与 `v9` 的预订导入入口，需要按**当前**产品形状重写断言：
    这两处涉及"当前认可的行为是什么"，我不替你定，请你或负责人给出目标断言，或者授权我按现状调查后提出草案。
+
+---
+
+# pass-12（2026-09-19 19:0x，HEAD `2875aba`）
+
+按裁决只做三条当前产品规格的迁移 + 文档纠正 + 门禁复跑，没有碰那 8 条 legacy。
+
+## 26. 三条迁移的结果，以及每条"没有削弱断言"的证据
+
+| spec | 迁移内容 | 保留/替换掉的断言 | 非空转证明 |
+|---|---|---|---|
+| `v10-live-execution` | 接入 `_qoderFreshJourney`（`createFreshJourney` + `useJourney`），文案对齐现行 `exec.readOnlyReady` | 时钟、证据链断言一字未改 | 单跑 2 passed；去掉 journey ownership 会退回 `Choose your next leg.` 失败 |
+| `product-v8` mobile composition | 导航改用现行 `data-testid`（`nav-agent`/`nav-trips`/`nav-me`/`nav-hub`）；Copilot 步骤改成真实交互；Bookings 走 Trips 标签页 | 旧的 `v8-agent-submit` + `Mission captured` 换成 `v15-copilot-input` → `v15-copilot-submit` → `v15-intent` + `v15-mode`；Me 屏换成 `v8-me` + 现行标题 | 你上一轮判定"断言 dock 可见"是穿了新衣服的空转，成立，已按你的意见改成**发送一句话并观察服务端回执**；`v15-intent`/`v15-mode` 只有在拿到 response 后才渲染 |
+| `real-world-trip-operations-v9` | 预订录入改走消费者手工表单（`inbox-tab-manual` → 字段 → `manual-submit` → `v13-2-confirm`），钱包列表通过 Advanced 展开后核对；后半段链路切到桌面宽度 | 行李感知恢复链（`active_plan.legs == activities-1`、`LUGGAGE_DROP`/`CHECK_IN` 角色、amap `wgs84` 链接、`Location updated · accuracy 12 m`、`Autopilot recovered the exposed leg`）全部保留 | 单跑 2 passed，且 `reports/product-v9/ui/live-journey-mobile.png` 现在能看见"NEXT · LEAVE BY / Luggage drop · Haihe Riverside Hotel / NAVIGATE →"，离线截图能看见种子酒店进了 24 小时快照 |
+
+一处**主动披露的替换**：v9 原来还断言 bookings 页标题 `Your real reservations, protected.`。
+该标题属于被折叠的开发者工作台，我没有把它塞回消费者路径，而是以 `inbox-tab-manual` 与
+`v10-inbox-draft` 的存在作为"到达 Bookings 面"的证据——覆盖面略窄了一点，但不再依赖被折叠的入口。
+
+## 27. 计划外的第 9 条红灯：不是漂移，是前端套件一直在借用别人的后端
+
+第一次全量跑出 **37 expected / 9 unexpected**，多出来的是 `v13-5-fully-grounded`。逐层定位：
+
+1. 它**单跑也失败**，页面停在 `Composing city evidence…`，即 `expect` 的 10s 预算内服务端没返回 → 排除我这三条迁移造成的跨 spec 污染。
+2. 用同样的三步直接打 API（`demo/reset` → 三次 `inbox/import`+`confirm` → `real-city/intelligence`）：
+   请求 **201 成功但耗时 15.5s**，因为应答的 `:8000` 后端 `ai: enabled`，语义组合走 DeepSeek，而校园网出口当前很慢。
+3. 根因是环境归属：`_qoder_integration_20260919` **没有自己的 venv**，`playwright.config.ts` 的
+   `backendPython` 因此退化成系统 `python`（3.10，`ImportError: StrEnum` 起不来），而 `reuseExistingServer: true`
+   让套件静默复用了 `:8000` 上那个由别的 lane 起的进程（命令行是 uv 的 cpython-3.12，不是本仓代码）。
+   也就是说：**过去几轮"前端 e2e 通过"的证据，后端可能根本不是被集成的那份代码**，AI 开关和数据库也不由这次 HEAD 决定。
+   这同时解释了"同一 HEAD、不同数字"（34/12 → 35/11 → 37/9）。
+
+受控复现（本轮权威数字的来源，未改任何 harness 代码，只是显式给环境）：
+
+```
+DEEPSEEK_API_KEY= CITYNEXUS_AI_API_KEY= CITYNEXUS_AI_ENABLED=false \
+CITYNEXUS_PYTHON='D:\moodle\CityNexus\.venv\Scripts\python.exe' \
+CITYNEXUS_BACKEND_PORT=8021 CITYNEXUS_E2E_PORT=4194 \
+CITYNEXUS_DATABASE_URL='sqlite:///./_p12_full.db' \
+  npx playwright test --reporter=json
+```
+
+结果：**38 expected / 8 unexpected / 0 flaky**，与你预测的分毫不差，且 8 条正是已分类的 legacy 8 条。
+`v13-5` 在该环境下 13.0s 通过。两次运行的 JSON 都进包（`fe_full_pass12_shared8000.json` 与
+`fe_full_pass12_isolated.json`），因为前者本身就是这个环境归属缺陷的证据。
+
+## 28. 门禁数字（全部来自同一次受控运行，HEAD `2875aba`）
+
+| 门禁 | 结果 |
+|---|---|
+| 全量 Playwright | 38 expected / 8 unexpected / 0 flaky（188.8s，`workers: 1`） |
+| 其中 `qoder-*` | 28 passed / 0 failed（同一 JSON 按文件聚合，见下表） |
+| 其中两条对比度门 | `qoder-contrast-audit` 4 passed、`qoder-live-structure` 9 passed。审计 JSON：8 屏（Today/Live × light/dark × 390/1280）共扫描 1740 个节点，**violations 0**；borderWarnings 每屏 2（dark）/4（light），与 pass-11 提交的 JSON 逐字节相同（本轮无视觉回归，文件未变更） |
+| `typecheck` / `typecheck:all` | 0 error |
+| `vite build` | 成功（PWA generateSW，precache 9 entries / 2295.48 KiB） |
+| 后端同环境 | 827 passed / 15 skipped / 0 failed（58.21s，AI key 置空，主仓 venv 的 python 3.12） |
+
+三条迁移过的 spec 在切换 HEAD 前后**单独**跑过一遍（8.6s / 15.9s / 12.4s 全绿），全量再复跑一次，
+不存在"只有单跑绿"的情况。
+
+按文件聚合（同一 `fe_full_pass12_isolated.json`，pass/fail）：
+
+| 文件 | pass | fail | | 文件 | pass | fail |
+|---|---|---|---|---|---|---|
+| `_qoderRealSeed.setup.ts` | 1 | 0 | | `qoder-mobile-overflow.spec.ts` | 1 | 0 |
+| `product-v8.spec.ts` | 2 | 0 | | `qoder-today-hero.spec.ts` | 2 | 0 |
+| `real-world-trip-operations-v9.spec.ts` | 1 | 0 | | `v10-accessibility.spec.ts` | 1 | 0 |
+| `v10-live-execution.spec.ts` | 1 | 0 | | `v10-inbox.spec.ts` | 1 | 0 |
+| `v10-quality-budget.spec.ts` | 1 | 0 | | `v13-5-fully-grounded.spec.ts` | 1 | 0 |
+| `v13-authoritative-integrity.spec.ts` | 1 | 0 | | `qoder-ack-rendered.spec.ts` | 6 | 0 |
+| `qoder-ack-resolution.spec.ts` | 1 | 0 | | `qoder-budget-evidence.spec.ts` | 2 | 0 |
+| `qoder-budget-rendered.spec.ts` | 3 | 0 | | `qoder-contrast-audit.spec.ts` | 4 | 0 |
+| `qoder-live-structure.spec.ts` | 9 | 0 | | **8 条 legacy** | 0 | **8** |
+
+`golden`(1) + `live-autopilot-v5`(1) + `predictive-real-city-v6`(1) + `product-hardening`(5) = 8，
+与 `docs/LEGACY_E2E_MIGRATION.md` 的清单逐条一致，没有第 9 条。
+
+## 29. 截图复核里新看见、我没有动手的一处
+
+`reports/product-v9/ui/live-journey-mobile.png`：Live 页的 Copilot 悬浮胶囊压在 EVIDENCE 卡片首行
+（`Provider route, fres…` 被遮住）。这与 pass-10 的 Today 遮挡是同一家族，但发生在 Live 的
+非 idle 态，`idle-compact` 那条规则管不到它。按"pass-12 只收口测试债"的边界，我只登记不动手。
+
+## 30. 请判
+
+1. 环境归属：是否授权我把"前端 e2e 必须跑在本仓代码自起的后端上"变成**可检查的约束**
+   （最小做法：`playwright.config.ts` 在复用已有 server 前先核对 `/health` 里的构建标识，不匹配就 fail fast）。
+   这属于你此前划的"Playwright 启动/数据库改造 NOT_AUTHORIZED"边界，所以我先问不动手。
+2. `v13-5` 的 10s 预算：AI 打开时该端点确实要 15s+。这是产品性能问题（应给 discovery 一个
+   可等待的进度态或后端超时降级），还是测试预算问题（`expect` 单独放宽到 30s）？我倾向前者，
+   因为消费者真的会盯着"Composing city evidence…"不动。
+3. pass-12 三条迁移是否解除 `BLOCKED_ON_E2E_EVIDENCE_CLOSEOUT`；若解除，下一轮按
+   `docs/LEGACY_E2E_MIGRATION.md` 的 archive/port 判定执行，还是先做 §29 的 Live 遮挡与 Hero→replan 路线图。
