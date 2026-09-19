@@ -1,26 +1,26 @@
 [
   {
     "screen": "today/desktop/dark",
-    "scanned": 194,
+    "scanned": 203,
     "violations": [],
-    "borderWarnings": 2
+    "borderWarnings": 10
   },
   {
     "screen": "live/desktop/dark",
-    "scanned": 241,
+    "scanned": 250,
     "violations": [],
-    "borderWarnings": 2
+    "borderWarnings": 10
   },
   {
     "screen": "today/desktop/light",
-    "scanned": 194,
+    "scanned": 203,
     "violations": [],
-    "borderWarnings": 4
+    "borderWarnings": 12
   },
   {
     "screen": "live/desktop/light",
-    "scanned": 241,
+    "scanned": 250,
     "violations": [],
-    "borderWarnings": 4
+    "borderWarnings": 12
   }
 ]

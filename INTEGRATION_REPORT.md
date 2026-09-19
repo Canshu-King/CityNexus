@@ -316,3 +316,30 @@ Trips / Copilot 主页面 / Onboarding 继续不碰。
 
 请复验这三条的归属，以及 pass-9 的四项 P0 是否达到
 `FRONTEND_APPLE_PASS1_VISUALLY_ACCEPTED_FOR_MERGE`。
+
+## 17. 我自己在收尾期间造成并已修复的事故（如实记录）
+
+清理两个临时对照 worktree 时用了 `git worktree remove --force`，而它们的
+`node_modules` 是我先前用 **Windows junction** 指向集成树
+`_qoder_integration_20260919/frontend/node_modules` 的。删除过程把集成树的
+`node_modules/.bin` 一起抽走（375M / 389 项，`tsc` 与 `vite` 消失，`npx tsc`
+开始去下载一个叫 `tsc@2.0.3` 的无关假包）。
+
+处置：从 `D:\moodle\_qoder_th_20260918\frontend\node_modules` 用
+`robocopy /E /XO` 补齐回 409M，并在同一 HEAD（`7870270`，工作树 0 行改动）上重跑：
+
+| 检查 | 结果 |
+|---|---|
+| `tsc -p tsconfig.typecheck.json --noEmit` | 0 错误 |
+| `vite build` | 通过（7.16s） |
+| `npx playwright test e2e/qoder-*` | 29 passed |
+| 后端全量（同环境、独立 DB） | 827 passed / 15 skipped / 0 failed（68.5s） |
+
+教训与遗留：
+
+- **junction 不能当 worktree 的 `node_modules` 来源**；要隔离就得真复制。
+- 两个残留空壳目录（`_qoder_a_only`、`_qoder_truth_baseline`）我**没有强删**：
+  里面仍有指向真实 `node_modules` 的链接，`rm -rf` 会再咬一口。它们不参与任何
+  gate，需要人工确认后再清理。
+- 其它 lane（Astra / Sol）被裁决为把我的树当只读输入，所以这条恢复记录也写给它们：
+  当前 HEAD 的工具链与门禁状态是完好的，上面四项可复现。
