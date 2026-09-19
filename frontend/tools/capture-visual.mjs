@@ -33,12 +33,17 @@ const VIEWPORTS = [
 const SCHEMES = ["light", "dark"];
 
 
-/* Pass-9 MAP_VISUAL_EVIDENCE_PENDING: a half-grey map was either a tile that
-   had not arrived when the shutter fired, or a map that genuinely cannot load
-   here. Those two need different owners, so the harness has to stop guessing.
-   Before every shot we count tile requests, wait until tile traffic goes quiet
-   (or a ceiling is hit), and record failures — the screenshot is then taken
-   with that evidence attached. */
+/* Pass-9 MAP_VISUAL_EVIDENCE_PENDING: a half-grey map was either a tile that had
+   not arrived when the shutter fired, or a map that genuinely cannot load here.
+   Those two need different owners, so the harness has to stop guessing.
+
+   What this actually implements, stated precisely because pass-10 was right to
+   call the earlier wording overclaiming: it counts network requests whose URL
+   looks tile-like and waits until no new one appears for 1.5s (20s ceiling),
+   recording failures along the way. It is NOT a MapLibre `idle` gate and does not
+   track outstanding-request quiescence — it cannot reach the map instance, which
+   lives inside the component. Good enough to show a re-shot frame is fully drawn;
+   not a strict map-ready assertion, and not to be described as one. */
 const TILE_HINT = /(tile|maplibre|vector|raster|\.pbf|demotion|arcgis|osm)/i;
 
 function watchTiles(page, out) {
