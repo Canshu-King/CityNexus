@@ -172,6 +172,7 @@ const en: Dict = {
   // different fact from "no plan yet"; the UI must not claim the latter.
   "live.unresolvedStep": "Execution position unresolved",
   "live.unresolvedStepHint": "The saved position points at a step this plan no longer contains, so no current or next step can be shown honestly.",
+  "live.nothingDue": "Nothing is due right now",
   "live.nextLeg": "NEXT · {title} · {mode} · {duration}{unit}",
   "live.nextSelect": "NEXT · Select a plan to calculate the next leg",
   "live.awaitingPlanUpper": "AWAITING PLAN",
@@ -812,6 +813,7 @@ const zhCN: Dict = {
   "live.awaitingPlan": "等待方案",
   "live.unresolvedStep": "执行位置无法确认",
   "live.unresolvedStepHint": "已保存的位置指向当前方案中不再存在的步骤，无法如实显示当前或下一步。",
+  "live.nothingDue": "现在没有待进行的步骤",
   "live.nextLeg": "下一步 · {title} · {mode} · {duration}{unit}",
   "live.nextSelect": "下一步 · 选择方案以计算下一段路程",
   "live.awaitingPlanUpper": "等待方案",

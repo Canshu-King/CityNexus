@@ -10,7 +10,7 @@
  */
 
 import { useCallback, useEffect, useState } from "react";
-import { useLocale } from "../../i18n/LocaleContext";
+import { useLocale, useT } from "../../i18n/LocaleContext";
 import {
   isDisruptionAcknowledgedOnly,
   isDisruptionOpen,
@@ -99,6 +99,7 @@ export function LiveRecovery({
   onAccepted?: () => void;
 }) {
   const { locale } = useLocale();
+  const t = useT();
   const zh = locale.startsWith("zh");
   const twin = useAuthoritativeTwin(journeyId);
   const plans = useAuthoritativePlans(journeyId);
@@ -123,8 +124,21 @@ export function LiveRecovery({
   const plan =
     plans.data?.find((p) => p.status === "ACTIVE" || p.status === "SELECTED") ?? null;
   const activities = (plan?.activities ?? []) as unknown as Array<Record<string, unknown>>;
+  // The projection this card reads is the shared execution truth, whose keys are
+  // now_activity_id / next_activity_id / cursor_status / persisted_cursor.  It used to
+  // reach for `current_activity_id`, a key that dict does not contain (the *twin* has
+  // one at its top level; `execution` does not), so `currentId` was permanently null and
+  // the `?? activities[0]` below made the first stop the traveller's Now no matter how
+  // far the journey had advanced — CX-SOL-001's failure class in a second consumer.
   const context = twin.data?.context as
-    | { disruptions?: Disruption[]; execution?: { current_activity_id?: string | null } }
+    | {
+        disruptions?: Disruption[];
+        execution?: {
+          now_activity_id?: string | null;
+          cursor_status?: string | null;
+          persisted_cursor?: string | null;
+        };
+      }
     | undefined;
   // Also read the plan-scoped disruption list from /experience: the twin
   // context can be empty immediately after a replan while the Journey still
@@ -195,9 +209,12 @@ export function LiveRecovery({
     return true;
   });
   const duplicateCount = pendingAll.length - pending.length;
-  const currentId = context?.execution?.current_activity_id ?? null;
-  const liveNow =
-    activities.find((a) => a.id === currentId) ?? activities[0] ?? null;
+  const cursorStatus = context?.execution?.cursor_status ?? null;
+  const nowId = context?.execution?.now_activity_id ?? null;
+  // No list position is ever a substitute for a resolved Now: an id that the plan
+  // cannot honour yields null, and the render below says so instead of pointing at
+  // whatever happens to be first.
+  const liveNow = nowId ? (activities.find((a) => a.id === nowId) ?? null) : null;
   // Recent events that were already handled still deserve an explanation.
   const handled = proposals.filter((p) => p.status === "ACCEPTED").slice(0, 1);
 
@@ -239,14 +256,21 @@ export function LiveRecovery({
         <div>
           <p className="v8-kicker">{zh ? "正在进行" : "In progress"}</p>
           <h1>{zh ? "现在的行程" : "Your trip right now"}</h1>
-          <p className="v8-lede" data-testid="live-next">
+          <p
+            className="v8-lede"
+            data-testid="live-next"
+            data-cursor-status={cursorStatus ?? "UNKNOWN"}
+            data-now-activity-id={String(liveNow?.id ?? "")}
+          >
             {liveNow
               ? zh
                 ? `下一站：${String(liveNow.title ?? "")}`
                 : `Next: ${String(liveNow.title ?? "")}`
-              : zh
-                ? "还没有选定的行程安排。"
-                : "No plan is active yet."}
+              : !plan
+                ? t("live.awaitingPlan")
+                : cursorStatus === "STALE"
+                  ? t("live.unresolvedStep")
+                  : t("live.nothingDue")}
           </p>
         </div>
       </div>

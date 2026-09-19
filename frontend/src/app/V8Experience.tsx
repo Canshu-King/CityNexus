@@ -2093,7 +2093,9 @@ function Live({
                 ? t("live.unresolvedStep")
                 : now
                   ? now.title
-                  : `${t("live.awaitingPlan")}${selected?.stay.property_name ? ` · ${selected.stay.property_name}` : ""}`}
+                  : data.active_plan
+                    ? t("live.nothingDue")
+                    : t("live.awaitingPlan")}
             </h2>
             <p>
               {cursorUnresolved ? (
@@ -2105,6 +2107,10 @@ function Live({
                   duration: nextLeg?.duration_min ?? t("live.durationPending"),
                   unit: nextLeg ? " min" : "",
                 })
+              ) : data.active_plan ? (
+                // A plan that is spent is not a plan that is missing, and the
+                // sub-line used to claim the latter.
+                t("live.nothingDue")
               ) : (
                 t("live.nextSelect")
               )}
