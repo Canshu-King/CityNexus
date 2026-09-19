@@ -1744,3 +1744,102 @@ rows_with_zero_collected=0`，`CAMPAIGN PASSED`。逐行 collected：
    这条恰恰证明那道守卫是对的：它宁可不开，也不让两次测量共用一份库。
 3. 汇总行的取法：Playwright 的 line reporter 把 `N failed` 单独成行、后面才是
    `M passed (Xs)`，只取最后一条匹配行会把"有失败"读成"全通过"。现在两种计数都进表。
+
+
+---
+
+## 82. ORD-0011 / ORD-0017 / ORD-0024：结构不变式、四例门、两句文案与一个"别再来修"的注释
+
+### 82.1 ORD-0011 (1)：只补真正没人守的那件事
+
+Commander 的 05:36 更正我接受，而且它说得很具体：精确缺席元组**已经有权威看守**——
+`backend/tests/test_sol_execution_cursor.py:499-515` 用整字典相等钉住九项，512-515 行连 Edge 视图
+一起钉。所以把四项断言抄进 `test_rx3_stale_cursor_fails_closed.py` 是零新增覆盖，我没抄。
+
+补的是那条结构不变式，而且必须跨形状成立：
+
+```
+next_leg_id is None  <=>  (next_mode, next_eta_min) == ("NONE", 0)
+```
+
+`tests/test_qoder_next_leg_binding.py` 新增 4 collected（3 个参数化形状 + 1 条正向陈述），
+形状是 `0 腿计划 / 每跳一腿 / activities=9·legs=10`（后者正是 `journey_legs`
+ON DELETE SET NULL 的合法持久态），每个形状里再扫三种完成模式 × 去重后的游标状态，
+`checked >= 8` 保证参数化不是摆设。正向那条要求：只要给出了 mode/eta，就必须给出腿的身份，
+而且那个身份必须真在本计划的腿列表里——一个没有 id 的时长没法刷新、复核或向旅客解释。
+
+鉴别力实测（一次性突变，字节还原 + sha256 校验，两文件共 21 collected）：
+
+| 突变 | 结果 | 杀掉它的节点 |
+| --- | --- | --- |
+| `next_eta_min` 在腿为 null 时仍给 17（混合缺席编码） | 11 failed / 10 passed | 三条结构参数化节点、Edge 结构节点，以及原有 STALE/完成态/差分 oracle 各条 |
+| Edge 的 `mode` 不再读共享投影（写死 "WALK"） | 5 failed / 16 passed | `test_the_edge_copy_honours_the_same_leg_rule_as_the_projection` 与 ORD-0007 两条跨消费者门 |
+
+### 82.2 ORD-0011 (4)：Edge 那份副本也要守同一条规则
+
+`v9.py` 的 Edge 快照现在与离线快照共用一次投影判断（这是 ORD-0007 的修法）。
+光"两处相等"还不够：一份一致地错着的响应照样能让手表显示一段没人承诺的路。
+所以新增 `test_the_edge_copy_honours_the_same_leg_rule_as_the_projection`，
+对 5 个游标状态各断两件事——两侧各自满足 `null <=> ("NONE", 0)`，以及两侧彼此相等。
+
+### 82.3 ORD-0011 (2)：LiveRecovery 的四例门，以及哪一例负责击杀
+
+`frontend/e2e/qoder-live-recovery-cursor.spec.ts` 现在 4 collected，覆盖仲裁点名的三例
+（VALID 解析出精确 id / STALE 不回退首项 / 空活动列表不凭空造 current），加上一例
+"游标落在已完成步骤"（82.4）。一次性把 `?? activities[0]` 加回去之后：
+
+```
+Running 5 tests … 3 failed / 2 passed
+  case 1  期望 data-now-activity-id 61e3096d（activities[2]），实到 3a58c470（activities[0]）
+  case 3  期望 "Execution position unresolved"，实到 "Next: Old Town Gate"
+  case 4  失败在拦截计数上，不是失败在契约断言上
+```
+
+**所以击杀由 case 1 与 case 3 承担，case 4 不是鉴别器**：在突变下它的契约断言没有变红，
+只有记账断言变红。我先把结论按测量写下来，再把那条会误报的记账断言删掉——它依赖
+`/plans` 这条 route 真的被命中，而这个 PWA 的 service worker 可以从缓存回答计划列表，
+于是"门没跑"和"产品出错"在报表里长成同一个样子。删掉它不减少覆盖，因为被保证的东西
+在前面那行断言里。这也把我一开始写进注释的预测推翻了一次：我原以为空列表那一例
+无论如何都不会变红，实测它变红了、但红在错误的地方——那正是更值得修的东西。
+
+`seen.experience` / `seen.twin` 的计数保留：那两条 route 是断言成立的前提，不是装饰。
+
+### 82.4 顺带发现：一个前端守卫没有人守
+
+`liveActivityWindow` 里"Now 必须非终结态"的判断，删掉之后整套验收门全绿。
+补了 case（游标停在一个已完成、后面还有未完成活动的步骤），要求可见的 Live 标题说
+"现在没有待进行的步骤"，而不是复述那个已经做完的步骤标题。
+
+### 82.5 ORD-0017 (1) 与 ORD-0024：两句措辞
+
+1. Wallet 的 `Bookings()` 面板里，标题写"导入预订"，正文却让旅客"去 行程 · 预订 粘贴确认单"，
+   并声明"这个页面只用于结构化数据"——**旅客此刻就在 Bookings 里**，而这句话把人支使自己站着的地方。
+   改为：`结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。`
+   不再撒谎的那句是第二句的否定形式：它不再声称"这里只能结构化 / 别处才能粘贴"，而是说出这个面板实际有的
+   入口（Advanced → JSON），并把确认单文本、截图两类输入指给行程收件箱——那边确实有 paste 与
+   screenshot（`accept="image/*"`）两个 tab，这句我是读了 `JourneyInboxWorkbench.tsx:466/587/595`
+   才写的。逻辑与结构未动，纯文本替换（en/zh 同步）。
+2. Journey 创建那处的提前 return 保持原样，只补了注释：Amendment F 裁定它是刻意的
+   focused pre-Journey onboarding，首进门不给全局底部主导航；下一辆车道（含 UI 车道的 onboarding
+   wrapper）不要再把它"顺手修好"——为一块屏幕去迁移壳层，比它换来的措辞代价大得多。
+   注释归我，wrapper 归它，没有互相伸手。
+
+### 82.6 这一轮收口时的门禁数字
+
+| 门禁 | 结果 |
+| --- | --- |
+| 后端全量（默认 12×12 stateful） | **912 passed / 15 skipped / 0 failed**（67.23s） |
+| `npm run typecheck` / `typecheck:all` / `build` | 退出码 0 / 0 / 0 |
+| 权威 E2E（全 current-product 套件） | **51 expected / 0 unexpected / 0 flaky / 0 skipped**（provenance：web :3419 → backend :8419，一次性库 `_ord11-e2e2.db`，ai=disabled，reuseExistingServer=false） |
+| 本门 4 collected 的干净复跑 | 5 passed / 0 failed（含 real-seed setup 1 条） |
+
+算术：§80 的 907 + 结构不变式 4 + Edge 结构门 1 = 912；
+E2E 从 §80 的 47 加到 51（本 spec 从 2 例增到 4 例）。
+
+那一次 51 之前还有一次全量：`50 expected / 1 unexpected`，红的是
+`product-v8.spec.ts :: completes the multi-day stay and autonomous recovery journey`，
+状态 `timedOut`（60s 上限），同一时刻后端全量与别的车道正在同一台机器上抢 SQLite
+（webserver 日志里能看到 `JourneyTwin cache write skipped … database is locked`）。
+把它单独重跑是 **3 passed / 16.0s**。结论：不是产品缺陷，也不假装它没发生——这条门在满负载下
+会自己超时，属于验收稳定性欠账，和 §80 那次 7 failed/1 error 的噪声同源；我没有为它放宽
+任何断言，也没有把负载下的红擦掉，只是补了一次可复现的隔离复跑作为证据。
