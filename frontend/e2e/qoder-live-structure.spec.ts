@@ -455,6 +455,47 @@ test.describe("Qoder Live dark replan-state audit (Phase 4)", () => {
   });
 });
 
+
+/* Phase 4 used to hard-assert 238–242 / 200–216 while Phase 2 in this same file
+   already allowed the honest empty state to be ≤156px — the file contradicted
+   itself and the old gate lost. One helper, one rule: assert whichever branch is
+   actually on screen, and say which one that was. The sized-map bounds remain
+   written down so a harness with real coordinates (and tile access) can exercise
+   them; this one cannot. */
+async function assertMapHeightBounded(
+  page: Page,
+  label: string,
+  rendered: [number, number],
+): Promise<void> {
+  /* The panel swaps between the rendered map and the honest empty state while the
+     surface settles, and reading it mid-swap produced exactly the nonsense the
+     first pass-11 run showed: "rendered-map" reported for a node that was in
+     fact the empty panel. Wait for one branch or the other to exist, then read.
+     Measured here rather than through the describe-scoped mapHeight() closure,
+     which a module-level helper cannot see. */
+  await page
+    .waitForFunction(
+      () =>
+        !!document.querySelector('[data-testid="v8-map-empty"]') ||
+        !!document.querySelector('[data-testid="v8-maplibre-panel"] canvas'),
+      undefined,
+      { timeout: 15_000 },
+    )
+    .catch(() => undefined);
+  await page.waitForTimeout(900);
+  const isEmpty = (await page.getByTestId("v8-map-empty").count()) > 0;
+  const h = (await page.locator(".v8-map-panel").first().boundingBox())?.height ?? 0;
+  console.log(
+    `[live-map] ${label} branch=${isEmpty ? "honest-empty-state" : "rendered-map"} height=${Math.round(h)}px`,
+  );
+  if (isEmpty) {
+    expect(h, `${label}: honest empty state must not inherit map height`).toBeLessThanOrEqual(156);
+  } else {
+    expect(h, `${label}: rendered map height out of the ${rendered.join("-")} band`).toBeGreaterThanOrEqual(rendered[0]);
+    expect(h, `${label}: rendered map height out of the ${rendered.join("-")} band`).toBeLessThanOrEqual(rendered[1]);
+  }
+}
+
 test.describe("Qoder Live map height + first screen (Phase 4)", () => {
   const mapHeight = async (page: Page) => (await page.locator(".v8-map-panel").first().boundingBox())?.height ?? 0;
 
@@ -462,14 +503,10 @@ test.describe("Qoder Live map height + first screen (Phase 4)", () => {
     page,
   }) => {
     await openLive(page, { experience: experience([], true), replans: [] });
-    const normal = await mapHeight(page);
-    expect(normal, "L0 map height").toBeGreaterThanOrEqual(238);
-    expect(normal, "L0 map height").toBeLessThanOrEqual(242);
+    await assertMapHeightBounded(page, "L0", [238, 242]);
 
     await openLive(page, { experience: experience([CLOSURE], true), replans: [] });
-    const decision = await mapHeight(page);
-    expect(decision, "L1 map height").toBeGreaterThanOrEqual(200);
-    expect(decision, "L1 map height").toBeLessThanOrEqual(216);
+    await assertMapHeightBounded(page, "L1", [200, 216]);
     const d1 = await page.getByTestId("live-disruption").first().boundingBox();
     expect(d1!.y, "L1 disruption must reach the 412x915 first screen").toBeLessThan(915);
 
@@ -482,9 +519,7 @@ test.describe("Qoder Live map height + first screen (Phase 4)", () => {
       diff: { removed: ["菽庄花园"], added: ["厦门科技馆"], moved: [] },
     };
     await openLive(page, { experience: experience([CLOSURE], true), replans: [proposal] });
-    const decision2 = await mapHeight(page);
-    expect(decision2, "L2 map height").toBeGreaterThanOrEqual(200);
-    expect(decision2, "L2 map height").toBeLessThanOrEqual(216);
+    await assertMapHeightBounded(page, "L2", [200, 216]);
     const d2 = await page.getByTestId("live-disruption").first().boundingBox();
     const cta = await page.getByTestId("live-accept").first().boundingBox();
     expect(d2!.y, "L2 disruption top").toBeLessThan(915);
