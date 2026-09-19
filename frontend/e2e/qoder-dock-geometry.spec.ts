@@ -183,6 +183,101 @@ test.describe("Copilot dock geometry at phone size", () => {
               .join("; ")})`,
         ).toBe(0);
       }
+
+      /* pass-14 ruling on the navigation bar, which is deliberately different.
+         A fixed bottom bar over a full-bleed column overlaps content at
+         arbitrary scroll positions — that is the normal mobile scroll model, and
+         forbidding it would cost a phone ~138px of every screen.  What it must
+         never do is make something permanently unreachable, so the assertion
+         applies at terminal scroll only.  The top and middle counts are printed
+         above for exactly that reason: they are allowed, and they should still
+         be visible to a reader. */
+      const atEnd = results.get("bottom")!;
+      expect(
+        atEnd.coveredByNav.length,
+        `${route} at maximum scroll: ${atEnd.coveredByNav.length} actionable element(s) cannot ` +
+          `clear the fixed navigation bar (${atEnd.coveredByNav.map((c) => c.label).join(", ")})`,
+      ).toBe(0);
     });
   }
+
+  test("a yielded pill is not a ghost control: hidden, unfocusable, and back again", async ({
+    page,
+    request,
+  }) => {
+    const { journeyId } = await createFreshJourney(request);
+    await useJourney(page, journeyId);
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto("/v8/hub");
+    await page.waitForFunction(() => !!document.querySelector(".cn-copilot-dock"), undefined, {
+      timeout: 15_000,
+    });
+    await page.waitForTimeout(900);
+
+    const dock = page.locator(".cn-copilot-dock");
+    const scrollTo = (fraction: number) =>
+      page.evaluate((f) => {
+        const scroller = document.scrollingElement ?? document.querySelector(".v8-content");
+        if (scroller) scroller.scrollTop = (scroller.scrollHeight - scroller.clientHeight) * f;
+      }, fraction);
+
+    /* Find the state rather than assume a layout: the yield depends on where the
+       cards happen to rest, and a future spacing change should not be able to
+       turn this into a test that quietly asserts nothing. */
+    let engaged = false;
+    for (const fraction of [0.5, 0.35, 0.65, 0.2, 0.8]) {
+      await scrollTo(fraction);
+      await page.waitForTimeout(700);
+      if ((await dock.getAttribute("data-rest-overlap")) === "true") {
+        engaged = true;
+        break;
+      }
+    }
+    expect(
+      engaged,
+      "the pill never entered yield-at-rest at any scroll position on Today, so this assertion " +
+        "would be vacuous — either the overlap is gone (re-check the geometry gate) or the " +
+        "yield stopped firing",
+    ).toBe(true);
+
+    await expect(dock, "a stepped-aside pill must be hidden, not merely transparent").toBeHidden();
+    const focusability = await dock.evaluate((node) => {
+      const control = node.querySelector("button") as HTMLButtonElement | null;
+      if (!control) return { reason: "no control inside the dock" };
+      control.focus();
+      return {
+        receivedFocus: document.activeElement === control,
+        inAccessibilityTree: (node as HTMLElement).checkVisibility?.({
+          checkVisibilityCSS: true,
+          contentVisibilityAuto: true,
+          opacityProperty: true,
+          visibilityProperty: true,
+        }),
+      };
+    });
+    expect(focusability.receivedFocus, JSON.stringify(focusability)).toBe(false);
+    expect(focusability.inAccessibilityTree, JSON.stringify(focusability)).toBe(false);
+
+    /* And it must come back.  A yield that never returns is just a removed
+       feature with extra steps. */
+    let returned = false;
+    for (const fraction of [1, 0, 0.9, 0.1]) {
+      await scrollTo(fraction);
+      await page.waitForTimeout(700);
+      if ((await dock.getAttribute("data-rest-overlap")) === "false") {
+        returned = true;
+        break;
+      }
+    }
+    expect(returned, "the pill never came back after the band cleared").toBe(true);
+    await expect(dock).toBeVisible();
+    await expect(page.locator(".cn-copilot-dock .cn-copilot-edge")).toBeEnabled();
+    const backAgain = await dock.evaluate((node) => {
+      const control = node.querySelector("button") as HTMLButtonElement | null;
+      if (!control) return false;
+      control.focus();
+      return document.activeElement === control;
+    });
+    expect(backAgain, "a restored pill must be keyboard reachable again").toBe(true);
+  });
 });

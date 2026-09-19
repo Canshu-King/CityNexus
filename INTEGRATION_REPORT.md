@@ -740,3 +740,83 @@ CSS 只加一条 `.idle-compact.yield-at-rest { transform: translateX(calc(100% 
    只能算本地诊断"写进 `docs/`？写的话我按你的措辞落文档，不改产品码。
 4. 下一轮 pass-14 按 4 条 pure Archive 开工（移出默认 acceptance suite、保留源码、只针对 `/legacy`、
    不计入 merge 门、逐条留 capability→current test 映射），port-first 4 条留到 pass-15。
+
+---
+
+# pass-14（2026-09-19 21:4x）
+
+按裁决四件事：canonical 规约落文档、yield 的 a11y 加固、导航终点可达性断言、4 条 pure Archive。
+4 条 port-first 一条没动、一条没 skip。
+
+## 40. A：验收口径写进 `docs/E2E_ACCEPTANCE_POLICY.md`
+
+规约 8 条按你给的措辞落成表格，每条都标了"在哪强制"，包括第 6 条为什么必须绕前端 origin
+（测试真正走的是 `vite → proxy → uvicorn`，只有从前端拿到正确 token 才能同时证明两个进程都属于本次调用）。
+另外写明：非 authoritative 结果只能算本地诊断；Sol/Astra 只读别人工作树不受影响，
+但任何 lane 声称"我这边 E2E 全绿"必须交 authoritative 证据；明确**不**引入 Git/SHA 哈希门。
+
+顺带修掉两条过期注释（`_qoderAuthoritativeSetup.ts` 里"freshness 在 playwright.config.ts 强制"、
+config 侧暗示存在性检查在本文件的措辞），并把端口/Python/DB/AI 的解析逻辑抽到
+`frontend/playwrightEnv.ts` 共用。抽这个文件不是整洁癖：现在有两个 config，
+同一套 authoritative 规则如果各写一份，下一次漂移只是时间问题——而"两份描述各说各话"正是你逐轮在抓的东西。
+
+## 41. B：yield 的 ghost button 你抓得对
+
+原来只有 `opacity: 0; pointer-events: none`，鼠标碰不到但键盘和无障碍树里还在。
+改成同时 `visibility: hidden`（并给 visibility 一条 linear 过渡，让滑出动画仍然完整），
+恢复时一切照旧。
+
+新增窄断言 `a yielded pill is not a ghost control: hidden, unfocusable, and back again`：
+先遍历若干滚动位**找到**让位状态（找不到就显式失败并提示"这条断言会空转"，而不是静默通过），
+然后断言 `toBeHidden()`、JS 主动 `focus()` 也拿不到焦点、`checkVisibility()` 为 false；
+最后再遍历回清晰位置，断言 pill 重新可见、可用、可键盘聚焦。
+"让位后不再回来"等于删功能，所以返回路径也在断言里。
+
+## 42. C：导航栏按你的两条规则分开处理
+
+`coveredByNav` 从纯日志升格为**只在最大滚动位**断言 `== 0`（live 与 hub 各一条），
+top/middle 继续只打印数字并在注释里写明"允许，但应该让读的人看得见"。
+没有预留 138px 内容带。
+
+## 43. D：4 条 pure Archive 是真的搬出去了
+
+- `frontend/e2e/legacy/archived-product-hardening.spec.ts`：Control Tower evidence/authority、
+  persisted NL mission、assisted acceptance、Proactive Guardian，入口改 `/legacy`，断言一字未改。
+- `playwright.config.ts` 加 `testIgnore: /[\/]e2e[\/]legacy[\/]/`；`--list` 实测主套件里 legacy 目录 0 条。
+- `playwright.legacy.config.ts`：显式调用才跑，打印 `NON-GATING` 横幅，
+  且传 `CITYNEXUS_E2E_AUTHORITATIVE=1` 会被**报告并忽略**——归档结果不可能被误当成 merge 证据。
+- 每条留下 capability invariant / 为何属 legacy / 当前 owner(API) / 当前覆盖测试 / 归档位置，
+  写在 `docs/LEGACY_E2E_MIGRATION.md`；引用的 9 个测试文件与 4 条路由逐条核过存在，
+  其中 twin 端点我一开始写成 traveler 级，已按实际 `GET /api/v1/journeys/{journey_id}/twin` 改正。
+
+实测归档套件本身：`--config playwright.legacy.config.ts` → **4 passed (18.8s)**。
+这条结果同时证实 pass-8 的判断：表面活着，它们在默认套件里红只是因为向根路径要了这个表面。
+也因此在 legacy config 里它是绿的、在 acceptance 里不参与门，两件事不冲突。
+
+保留在默认套件里继续红的 4 条 port-first：`golden`、`live-autopilot-v5`、
+`predictive-real-city-v6`、`product-hardening`(autonomous envelope-safe)。没有 skip、没有软化。
+
+## 44. 门禁数字（同一次 authoritative 运行）
+
+| 门禁 | 结果 |
+|---|---|
+| authoritative 当前产品套件 | **41 expected / 4 unexpected / 0 flaky**（151.3s） |
+| 4 条 unexpected | 精确是 golden、live-autopilot-v5、predictive-real-city-v6、product-hardening:172 |
+| 与你预期 40/4 的差 | 多出的 1 条 expected 是 §41 新增的 ghost-control 断言；归档只减不加的话应为 40，我没有为了对上数字省掉这条测试 |
+| `qoder-*` | 31 passed / 0 failed |
+| 主套件是否发现 legacy | `--list` 22 文件 45 测试，legacy 目录 0 条 |
+| 归档套件（非门） | 4 passed / 18.8s |
+| SQLite 争用告警 | 0 次 |
+| `typecheck` / `typecheck:all` / `vite build` | 全部干净 |
+| 后端同环境 | 834 passed / 15 skipped / 0 failed（62.2s） |
+
+## 45. 请判
+
+1. 多出的第 41 条 expected（ghost-control 断言）是否接受为 pass-14 的正常产物，
+   还是要求基线数字严格对齐 40/4。
+2. `playwrightEnv.ts` 这次为共用规则做的抽取是否算越界改 harness——我判断它不改 workers/顺序/retry/DB，
+   只是防止两个 config 漂移；如果你认为该留在 pass-14 之外，我可以把两文件回退成内联重复。
+3. pass-15 四条 port-first 的顺序与目标断言：我建议先 `product-hardening:172`
+   （envelope-safe autonomous recovery 与现行 Copilot/Guardian 面最接近），
+   再 `live-autopilot-v5`（零触发）、`predictive-real-city-v6`（自主预防）、
+   最后 `golden`（reload 持久化）。目标断言由你给还是我按现状提草案？

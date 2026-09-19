@@ -895,10 +895,15 @@ button[data-testid^="mode-"],
    assistant is never further away than one tab.  The decision is made against
    the pill's layout box, so this transform cannot make it oscillate. */
 .cn-copilot-dock.idle-compact.yield-at-rest {
+  /* visibility, not just opacity: an invisible-but-focusable pill is a ghost
+     button — a keyboard traveller can land on a control nobody can see, and the
+     accessibility tree keeps advertising it as an available action.  Hidden
+     visibility takes it out of both, and returns it when the band clears. */
   transform: translateX(calc(100% + 16px));
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
-  transition: transform 140ms ease, opacity 140ms ease;
+  transition: transform 140ms ease, opacity 140ms ease, visibility 140ms linear;
 }
 @media (prefers-reduced-motion: reduce) {
   .cn-copilot-dock.idle-compact.yield-at-rest { transition: none; }
