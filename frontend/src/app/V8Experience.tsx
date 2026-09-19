@@ -1031,6 +1031,8 @@ export function V8Experience() {
                 isHandledDisruption={isHandledDisruption}
                 onMode={changeMode}
                 onSheet={() => setSheetOpen(true)}
+                onRain={triggerRain}
+                onLocation={shareForegroundLocation}
               />
               <V10LiveExecutionPanel journeyId={data.journey.id} />
             </div>
@@ -2035,21 +2037,6 @@ function Live({
             {t("live.lede")}
           </p>
         </div>
-        <div className="v9-live-actions">
-          <button
-            className="v8-outline-button"
-            onClick={() => void onLocation()}
-          >
-            {t("live.updateLocation")}
-          </button>
-          <button
-            className="v8-rain-button"
-            aria-label="Rain detected"
-            onClick={() => void onRain()}
-          >
-            {t("live.reportRain")}
-          </button>
-        </div>
       </div>
       <div className="v8-live-main">
         <div className="v8-live-now">
@@ -2087,6 +2074,8 @@ function LiveSecondary({
   isHandledDisruption,
   onMode,
   onSheet,
+  onRain,
+  onLocation,
 }: {
   data: V8Data;
   selected: V8Data["options"][number] | null;
@@ -2095,6 +2084,8 @@ function LiveSecondary({
   isHandledDisruption: (item: NonNullable<V8Data["active_plan"]>["disruptions"][number]) => boolean;
   onMode: (mode: V8Mode) => Promise<void>;
   onSheet: () => void;
+  onRain: () => Promise<void>;
+  onLocation: () => Promise<void>;
 }) {
   const t = useT();
   const { locale } = useLocale();
@@ -2111,6 +2102,29 @@ function LiveSecondary({
       : null;
   return (
     <section className="v8-page" data-testid="v8-live-secondary">
+      {/* Pass-8 ruling #3: Live reads Current -> Map -> Disruption/Replan ->
+          these utilities -> mode/evidence. They are location and weather
+          reporting, not decisions, so they no longer sit above "Current" as two
+          full-width buttons of equal visual weight. */}
+      <div className="cn-live-toolbar" data-testid="live-toolbar-actions">
+        <button
+          type="button"
+          className="v8-quiet-button"
+          data-testid="live-update-location"
+          onClick={() => void onLocation()}
+        >
+          {t("live.updateLocation")}
+        </button>
+        <button
+          type="button"
+          className="v8-quiet-button"
+          data-testid="live-report-rain"
+          aria-label="Rain detected"
+          onClick={() => void onRain()}
+        >
+          {t("live.reportRain")}
+        </button>
+      </div>
       <div className="cn-live-secondary">
         <div className="v8-mode-chooser">
           <div>

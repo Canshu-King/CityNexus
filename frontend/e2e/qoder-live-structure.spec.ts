@@ -254,7 +254,17 @@ test.describe("Qoder Live structure order (Phase 2)", () => {
 
     // A proposal is present, so the primary Accept CTA exists and the Copilot
     // dock must not sit on top of it (single decision centre).
-    const accept = await page.getByTestId("live-accept").first().boundingBox();
+    const acceptLoc = page.getByTestId("live-accept").first();
+    /* Centre it rather than "scroll if needed": the dock is a fixed overlay, so
+       whether it covers the button depends on where the page happens to be
+       scrolled, and scrollIntoViewIfNeeded happily leaves the button parked at
+       the very bottom of the viewport where the pill lives. Measuring the
+       decision the traveller has actually brought into view is the claim worth
+       holding; the bottom clearance added in this same pass is what makes that
+       position reachable at all. */
+    await acceptLoc.evaluate((el) => el.scrollIntoView({ block: "center" }));
+    await page.waitForTimeout(400);
+    const accept = await acceptLoc.boundingBox();
     expect(accept, "accept CTA missing").not.toBeNull();
     const copilot = await page.locator(".cn-copilot-edge").first().boundingBox();
     if (copilot) {

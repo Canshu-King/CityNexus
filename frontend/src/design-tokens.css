@@ -737,3 +737,73 @@ button[data-testid^="mode-"],
   border-left: 1px solid var(--cn-control-border);
   padding-left: 16px;
 }
+
+
+/* ---------------------------------------------------------------------------
+   Live toolbar + honest empty-map height (pass-8 ruling #3/#4).
+   --------------------------------------------------------------------------- */
+.cn-live-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 16px;
+  margin-bottom: 12px;
+}
+.cn-live-toolbar .v8-quiet-button {
+  min-height: 30px;
+  padding: 2px 0;
+  font-size: var(--cn-fs-caption);
+  font-weight: 600;
+}
+.cn-live-toolbar .v8-quiet-button + .v8-quiet-button {
+  border-left: 1px solid var(--cn-control-border);
+  padding-left: 16px;
+}
+
+/* The 240/208 map-height rule governs a *rendered* map. With no trustworthy
+   coordinates the panel still reserved a map-sized box, so a two-line caption
+   sat inside roughly 400px of empty card and pushed the actual journey state
+   below the fold. An honest empty state should cost an honest empty-state
+   height. */
+.v8-page .v8-map-panel.v8-map-empty {
+  min-height: 0;
+  max-height: 156px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+}
+.v8-page .v8-map-empty .v8-map-empty-body p {
+  margin: 4px 0 0;
+  font-size: var(--cn-fs-caption);
+  line-height: 1.45;
+}
+
+
+/* ---------------------------------------------------------------------------
+   Pass-8 ruling #5 — one bottom clearance, and a dock that yields in full.
+   The dock is a fixed overlay, so "does it cover the primary action" used to
+   depend on where the page happened to be scrolled. Two changes:
+   * every page reserves a bottom band for the dock + mobile nav, so content is
+     never the thing that has to dodge it;
+   * when a surface is already on screen (yield-to-surface), the dock collapses
+     to a right-aligned pill instead of a 230px slab that still spans the width
+     of a full-bleed Accept button.
+   --------------------------------------------------------------------------- */
+/* Reserve the band once, on the scrolling content container. Putting it on
+   .v8-page was wrong: Today/Live render several .v8-page sections in a row, so
+   each one added the clearance and pushed the decision 124px further down per
+   section — the gate caught it as an 8px first-screen miss. */
+.v8-content {
+  padding-bottom: calc(124px + env(safe-area-inset-bottom, 0px));
+}
+.cn-copilot-dock.yield-to-surface {
+  right: 10px;
+  left: auto;
+  width: auto;
+}
+.cn-copilot-dock.yield-to-surface .cn-copilot-edge {
+  width: auto;
+  min-height: 42px;
+  padding: 0 12px;
+  font-size: 11px;
+}
