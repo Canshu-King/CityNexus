@@ -50,8 +50,17 @@ is a truth-value question, not a dead surface.
   `exec.readOnlyReady` value `available offline`, the hard-coded four offer cards
   turned into a logged branch, and the AgentComposer testid replaced by the
   Copilot dock.
-- Open defect found while doing this: those three v10 specs pass in 9 seconds in
-  isolation and fail inside the serial full run, because the suite shares one
-  backend and one SQLite journey and earlier specs reset or re-select it. That is
-  a test-infrastructure defect and is deliberately not papered over by
-  reordering.
+- Correction (pass-11 disproved the original note in this file, which claimed
+  those v10 specs "pass alone but fail in the serial full run because the suite
+  shares one SQLite file"). That hypothesis is **false** and the database has
+  been cleared of it: re-running the failing specs individually on the same HEAD
+  and the same seed reproduced the identical failures. The real causes are
+  contract drift and unfinished fixture ownership —
+  `v10-live-execution` was simply the last spec of the family not yet owning its
+  journey (fixed in pass-12 A), `product-v8` drives a Copilot submit control that
+  has since changed shape, and `real-world-trip-operations-v9` drives the raw
+  JSON workbench that is now deliberately hidden behind an Advanced/developer
+  disclosure while `JourneyInboxWorkbench` is the consumer path. No reordering,
+  no retries, and no database-harness change is warranted; the arbiter closed
+  `TEST_INFRA_SHARED_DB_BLOCKER` and marked `PER_WORKER_TEMP_DB` as
+  NOT_AUTHORIZED.
