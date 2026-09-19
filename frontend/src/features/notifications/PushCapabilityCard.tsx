@@ -4,7 +4,7 @@ import { useT } from "../../i18n/LocaleContext";
 type Props = { travelerId: string };
 type PushConfig = { capability: string; public_key: string | null; record_fallback: boolean };
 
-function decodeKey(value: string): Uint8Array {
+function decodeKey(value: string): Uint8Array<ArrayBuffer> {
   const padded = `${value}${"=".repeat((4 - (value.length % 4)) % 4)}`;
   const binary = window.atob(padded.replace(/-/g, "+").replace(/_/g, "/"));
   return Uint8Array.from(binary, (character) => character.charCodeAt(0));

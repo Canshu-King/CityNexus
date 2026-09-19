@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { V8Data } from "../../app/v8Types";
 import { cityNexusApi, type CopilotResponse } from "../../api/citynexus";
-import { useLocale, useT } from "../../i18n/LocaleContext";
+import { useLocale, useT, type TripLocale } from "../../i18n/LocaleContext";
 import { formatMinorMoney } from "../../lib/money";
 import { NativeMissionTimeline } from "./CopilotDock";
 
@@ -221,7 +221,7 @@ export function AgentComposer({
                       </div>
                       <div>
                         <span>{t("agent.feasibility")}</span>
-                        <b>{feasibilityLabel(item.response.what_if.feasibility, zh)}</b>
+                        <b>{feasibilityLabel(item.response.what_if.feasibility, locale === "zh-CN")}</b>
                       </div>
                     </div>
                     <small>
@@ -305,7 +305,7 @@ function readStoredMessages(journeyId: string): CopilotMessage[] {
 function formatMetric(
   record: Record<string, unknown>,
   cost: unknown,
-  locale: "zh-CN" | "en-GB",
+  locale: TripLocale,
 ) {
   const currency = typeof record.currency === "string" ? record.currency : "CNY";
   const value = typeof cost === "number" ? formatMinorMoney(cost, currency, locale) : "—";

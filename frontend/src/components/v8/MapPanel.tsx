@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import "maplibre-gl/dist/maplibre-gl.css";
+import type { FeatureCollection } from "geojson";
 import type { V8Data } from "../../app/v8Types";
 import { useT, useLocale } from "../../i18n/LocaleContext";
 
@@ -74,7 +75,7 @@ export function MapPanel({
         .flatMap((feature) => feature.geometry.coordinates)
         .filter((value) => value.length >= 2);
       const center: [number, number] | null =
-        coordinates[Math.floor(coordinates.length / 2)] ??
+        (coordinates[Math.floor(coordinates.length / 2)] as [number, number] | undefined) ??
         (points[0] ? [points[0].longitude, points[0].latitude] : null);
       if (!center) {
         // No route geometry and no located activity: an honest empty state is
@@ -84,10 +85,7 @@ export function MapPanel({
       }
       setNoLocation(false);
       const mapInstance = new maplibregl.Map({
-        // Never leave the traveller staring at an empty box when the tile
-        // server is unreachable (common on restricted networks).
-        failIfMajorPerformanceCaveat: false,
-      container: host.current,
+        container: host.current,
       style: {
         version: 8,
         sources: {
@@ -109,7 +107,7 @@ export function MapPanel({
             data: {
               type: "FeatureCollection",
               features: route,
-            } as GeoJSON.FeatureCollection,
+            } as FeatureCollection,
           },
         },
         layers: [

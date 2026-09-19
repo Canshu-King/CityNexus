@@ -37,6 +37,7 @@ import { V8Experience } from "./app/V8Experience";
 import { ProductErrorBoundary } from "./components/ProductErrorBoundary";
 import { LocaleProvider } from "./i18n/LocaleContext";
 import "./styles.css";
+import "./design-tokens.css";
 
 const journeyStorageKey = "citynexus.demo.journey_id";
 const agentRunStorageKey = "citynexus.demo.agent_run_id";
@@ -746,7 +747,7 @@ function LegacyApp() {
     );
     if (!riverCruise) throw new Error("Accepted plan lost the protected River Cruise activity");
     setSession({
-      journeyId: session.journeyId,
+      ...session,
       plan: acceptedPlan,
       techArt:
         acceptedPlan.activities.find((item) => item.place_id === "place-tech-art") ?? null,
@@ -1396,7 +1397,7 @@ function LegacyApp() {
             ) : (
               travelerTwin.explicit_preferences.map((item, index) => (
                 <span key={(String(item.dimension ?? "explicit")) + index}>
-                  {String(item.dimension ?? item.category ?? "preference")} · {item.explanation ?? "user-provided"}
+                  {String(item.dimension ?? item.category ?? "preference")} · {String(item.explanation ?? "user-provided")}
                 </span>
               ))
             )}

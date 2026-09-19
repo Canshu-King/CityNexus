@@ -52,6 +52,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const StateMatrix: Story = {
+  args: { plan: fixture(states[0]) },
   render: () => (
     <div className="v12-story-grid">
       {states.map((state) => {
