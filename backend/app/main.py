@@ -483,7 +483,13 @@ def health() -> dict[str, str]:
         # Empty unless this process was started with CITYNEXUS_E2E_RUN_ID, which
         # only a suite that owns the server does.
         "e2e_run_id": settings.e2e_run_id or "",
-        "database_url": settings.database_url,
+        # Deliberately not the connection URI: today it is a local SQLite path,
+        # but a /health that echoes whatever DATABASE_URL may one day contain
+        # (host, user, password) turns a test-provenance field into a leak.  The
+        # gate only needs to know *which* throwaway file this process opened.
+        "e2e_database_id": (
+            settings.database_url.rsplit("/", 1)[-1] if settings.e2e_run_id else ""
+        ),
     }
 
 

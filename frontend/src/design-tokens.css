@@ -886,6 +886,23 @@ button[data-testid^="mode-"],
   left: auto;
   width: auto;
 }
+/* Pass-13.1: a position:fixed accessory sits wherever the page happens to come
+   to rest, and pass-13 measured this one resting on top of the DAY 1 card
+   (158x54 of tappable surface).  Reserving that band properly would cost a phone
+   ~138px of every screen, so the pill yields instead: when something actionable
+   is under it at rest, it steps off the content column and comes back when the
+   band clears.  The bottom navigation keeps its own Copilot entry, so the
+   assistant is never further away than one tab.  The decision is made against
+   the pill's layout box, so this transform cannot make it oscillate. */
+.cn-copilot-dock.idle-compact.yield-at-rest {
+  transform: translateX(calc(100% + 16px));
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 140ms ease, opacity 140ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cn-copilot-dock.idle-compact.yield-at-rest { transition: none; }
+}
 .cn-copilot-dock.idle-compact .cn-copilot-edge {
   width: auto;
   min-height: 42px;

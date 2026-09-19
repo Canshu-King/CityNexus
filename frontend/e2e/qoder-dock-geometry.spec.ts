@@ -15,12 +15,19 @@ import { createFreshJourney, useJourney } from "./_qoderFreshJourney";
 type Rect = { x: number; y: number; w: number; h: number };
 
 type Probe = {
-  dock: Rect & { idleCompact: string; state: string };
+  dock: Rect & { idleCompact: string; state: string; yieldsAtRest: boolean };
   viewport: { w: number; h: number };
   scrollY: number;
   maxScroll: number;
   covered: { tag: string; label: string; rect: Rect; overlap: Rect }[];
   actionableInView: number;
+  /* Reference case, reported but not asserted: the bottom navigation bar is also
+     a fixed surface that the page scrolls beneath.  If it overlaps actionable
+     elements at rest too, then "no resting overlap" is a shell-wide layout
+     policy question rather than a dock bug, and that belongs in the report with
+     numbers instead of being quietly asserted away. */
+  nav: Rect & { present: boolean };
+  coveredByNav: { tag: string; label: string; overlap: Rect }[];
 };
 
 async function probe(page: import("@playwright/test").Page): Promise<Probe> {
@@ -33,36 +40,44 @@ async function probe(page: import("@playwright/test").Page): Promise<Probe> {
       return { x: r.left, y: r.top, w: r.width, h: r.height };
     };
     const selectors = "button, a[href], input, select, textarea, [role=button]";
+    const nav = document.querySelector(".v8-mobile-nav") as HTMLElement | null;
+    const n = nav ? nav.getBoundingClientRect() : null;
     const scroller =
       document.scrollingElement ?? (document.querySelector(".v8-content") as Element | null);
     const candidates = Array.from(document.querySelectorAll(selectors)).filter((el) => {
       const r = el.getBoundingClientRect();
       if (r.width === 0 || r.height === 0) return false;
       if (r.bottom < 0 || r.top > window.innerHeight) return false;
-      return !dock.contains(el) && !el.contains(dock);
+      return !dock.contains(el) && !el.contains(dock) && (!nav || (!nav.contains(el) && !el.contains(nav)));
     });
-    const covered = candidates
-      .map((el) => {
-        const r = el.getBoundingClientRect();
-        const x = Math.max(r.left, d.left);
-        const y = Math.max(r.top, d.top);
-        const right = Math.min(r.right, d.right);
-        const bottom = Math.min(r.bottom, d.bottom);
-        const w = right - x;
-        const h = bottom - y;
-        if (w <= 1 || h <= 1) return null;
-        const label =
-          (el.getAttribute("aria-label") ||
-            el.getAttribute("data-testid") ||
-            (el.textContent || "").trim().slice(0, 32) ||
-            el.tagName.toLowerCase());
-        return { tag: el.tagName.toLowerCase(), label, rect: rect(el), overlap: { x, y, w, h } };
-      })
-      .filter(Boolean) as Probe["covered"];
+    const against = (band: DOMRect | null) =>
+      band === null
+        ? []
+        : (candidates
+            .map((el) => {
+              const r = el.getBoundingClientRect();
+              const x = Math.max(r.left, band.left);
+              const y = Math.max(r.top, band.top);
+              const right = Math.min(r.right, band.right);
+              const bottom = Math.min(r.bottom, band.bottom);
+              const w = right - x;
+              const h = bottom - y;
+              if (w <= 1 || h <= 1) return null;
+              const label =
+                (el.getAttribute("aria-label") ||
+                  el.getAttribute("data-testid") ||
+                  (el.textContent || "").trim().slice(0, 32) ||
+                  el.tagName.toLowerCase());
+              return { tag: el.tagName.toLowerCase(), label, rect: rect(el), overlap: { x, y, w, h } };
+            })
+            .filter(Boolean) as Probe["covered"]);
+    const covered = against(d);
+    const coveredByNav = against(n).map(({ tag, label, overlap }) => ({ tag, label, overlap }));
     return {
       dock: {
         ...rect(dock),
         idleCompact: dock.getAttribute("data-idle-compact") ?? "?",
+        yieldsAtRest: dock.getAttribute("data-rest-overlap") === "true",
         state: dock.className.replace("cn-copilot-dock", "").trim() || "default",
       },
       viewport: { w: window.innerWidth, h: window.innerHeight },
@@ -70,6 +85,10 @@ async function probe(page: import("@playwright/test").Page): Promise<Probe> {
       maxScroll: Math.round(scroller ? scroller.scrollHeight - scroller.clientHeight : 0),
       covered,
       actionableInView: candidates.length,
+      nav: n
+        ? { present: true, x: n.left, y: n.top, w: n.width, h: n.height }
+        : { present: false, x: 0, y: 0, w: 0, h: 0 },
+      coveredByNav,
     };
   });
 }
@@ -86,10 +105,17 @@ function report(route: string, at: string, probe: Probe) {
       `dock=${Math.round(probe.dock.x)},${Math.round(probe.dock.y)} ${Math.round(
         probe.dock.w,
       )}x${Math.round(probe.dock.h)} state=${probe.dock.state} idleCompact=${probe.dock.idleCompact} ` +
+      `yieldsAtRest=${probe.dock.yieldsAtRest} ` +
       `scrollY=${probe.scrollY}/${probe.maxScroll} actionableInView=${probe.actionableInView} ` +
-      `covered=${probe.covered.length}`,
+      `coveredByDock=${probe.covered.length} coveredByNav=${probe.coveredByNav.length} ` +
+      `nav=${probe.nav.present ? `${Math.round(probe.nav.y)}..${Math.round(probe.nav.y + probe.nav.h)}` : "absent"}`,
   );
   for (const line of lines) console.log(line);
+  for (const c of probe.coveredByNav) {
+    console.log(
+      `      (nav reference) ${c.tag} "${c.label}" overlap=${Math.round(c.overlap.w)}x${Math.round(c.overlap.h)}px`,
+    );
+  }
 }
 
 test.describe("Copilot dock geometry at phone size", () => {
@@ -98,7 +124,7 @@ test.describe("Copilot dock geometry at phone size", () => {
   });
 
   for (const route of ["/v8/live", "/v8/hub"]) {
-    test(`${route}: the dock must not sit on an actionable element at the end of the scroll`, async ({
+    test(`${route}: no actionable element may rest under the dock at any settled scroll position`, async ({
       page,
       request,
     }) => {
@@ -126,7 +152,7 @@ test.describe("Copilot dock geometry at phone size", () => {
           const max = scroller.scrollHeight - scroller.clientHeight;
           scroller.scrollTop = where === "top" ? 0 : where === "middle" ? max / 2 : max;
         }, at);
-        await page.waitForTimeout(450);
+        await page.waitForTimeout(700);
         const measured = await probe(page);
         results.set(at, measured);
         report(route, at, measured);
@@ -142,12 +168,21 @@ test.describe("Copilot dock geometry at phone size", () => {
         });
       }
 
-      const bottom = results.get("bottom")!;
-      expect(
-        bottom.covered.length,
-        `${route} at rest: ${bottom.covered.length} actionable element(s) sit under the dock ` +
-          `(${bottom.covered.map((c) => c.label).join(", ")})`,
-      ).toBe(0);
+      /* pass-13 ruling: a stable scroll position is a stable position.  The
+         middle sample below is taken after the scroll has come to rest, so an
+         overlap there is not "the pill passing over content while you drag" — it
+         is content sitting under the pill wherever the reader stopped.  All
+         three resting positions must be clear. */
+      for (const at of positions) {
+        const measured = results.get(at)!;
+        expect(
+          measured.covered.length,
+          `${route} @${at} at rest: ${measured.covered.length} actionable element(s) sit under ` +
+            `the dock (${measured.covered
+              .map((c) => `${c.tag} "${c.label}" overlap=${Math.round(c.overlap.w)}x${Math.round(c.overlap.h)}px`)
+              .join("; ")})`,
+        ).toBe(0);
+      }
     });
   }
 });
