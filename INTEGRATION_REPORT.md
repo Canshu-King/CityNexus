@@ -726,6 +726,10 @@ CSS 只加一条 `.idle-compact.yield-at-rest { transform: translateX(calc(100% 
 | 后端同环境 | **834 passed / 15 skipped / 0 failed**（58.2s；= 827 基线 + 7 条 provenance/新鲜度测试） |
 | 默认（非 authoritative）模式 | 回归通过：`authoritative=false ... reuseExistingServer=true` 照常工作，并把借用状态打印出来 |
 
+一处随行为改变而变化的证据：`reports/contrast-audit/contrast-audit-mobile.json` 里
+`live/mobile/light` 的 `borderWarnings` 从 4 变成 3（violations 仍为 0）。原因就是 §37 的让位——
+静止时那个 pill 不再停在原处，被边界规则量到的元素少了一个。这是行为变化的正常后果，不是审计脚本被改。
+
 ## 39. 请判
 
 1. 底部导航栏的静止遮挡（`mode-walk` 318×44、`DAY 2` 356×36）：与 pill 同规则处理（那就必须决定
