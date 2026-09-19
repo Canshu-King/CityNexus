@@ -98,6 +98,23 @@ export interface CtaCandidateProbe {
   height: number;
 }
 
+export interface OnboardingFacts {
+  /* Amendment F-1 acceptance, made measurable:
+     - an onboarding flow must not also render the app's bottom tab bar;
+     - its sticky action must sit inside the viewport;
+     - and it must actually reserve the safe area.  On a device without a notch
+       env(safe-area-inset-bottom) computes to 0, so the *measured* padding cannot
+       distinguish "declared" from "missing" — the declared value is what we assert. */
+  bottomNavItemCount: number;
+  stickyCtaVisible: boolean;
+  stickyCtaBottom: number;
+  innerHeight: number;
+  stickyCtaDeclaresSafeArea: boolean;
+  stickyCtaRuleCount: number;
+  stickyCtaPaddingBottomDeclared: string;
+  stickyCtaRuleTexts: string[];
+}
+
 export interface MobileGeometry {
   innerWidth: number;
   innerHeight: number;
@@ -110,6 +127,7 @@ export interface MobileGeometry {
   /* A negative result has to be traceable: "no visible primary CTA" is only
      evidence if the report says what each candidate actually looked like. */
   ctaCandidates: CtaCandidateProbe[];
+  onboarding: OnboardingFacts;
 }
 
 /** Controls that a thumb has to hit deliberately, on these four screens. */
@@ -403,6 +421,64 @@ export async function probeMobileGeometry(
         };
       }
 
+      /* ---- 6. Amendment F-1 onboarding facts ---- */
+      const navButtons = Array.from(
+        document.querySelectorAll<HTMLElement>(".v8-mobile-nav button"),
+      ).filter((el) => painted(el));
+      const stickyBar = document.querySelector<HTMLElement>(".trial-sticky-cta");
+      const stickyButton = stickyBar
+        ? Array.from(stickyBar.querySelectorAll<HTMLElement>("button")).find((el) => painted(el)) ?? null
+        : null;
+      const stickyRect = stickyButton ? stickyButton.getBoundingClientRect() : null;
+      /* getComputedStyle resolves env() to a used value (0 on a device without a
+         notch), so it cannot tell "declared" from "missing".  Read the authored
+         declaration out of the stylesheet instead. */
+      let declaresSafeArea = false;
+      const stickyCtaRules: { paddingBottom: string; cssText: string }[] = [];
+      for (const sheet of Array.from(document.styleSheets)) {
+        let rules: CSSRuleList | null = null;
+        try {
+          rules = sheet.cssRules;
+        } catch {
+          continue;
+        }
+        const walk = (list: CSSRuleList | CSSRuleList | null): void => {
+          if (!list) return;
+          for (const rule of Array.from(list)) {
+            if ((rule as CSSStyleRule).selectorText?.includes(".trial-sticky-cta")) {
+              const declared =
+                        (rule as CSSStyleRule).style?.getPropertyValue("padding-bottom") || "";
+              stickyCtaRules.push({
+                paddingBottom: declared,
+                cssText: (rule as CSSStyleRule).cssText ?? "",
+              });
+              if (/safe-area-inset-bottom/.test(declared)) declaresSafeArea = true;
+            }
+            const nested = (rule as CSSMediaRule).cssRules;
+            if (nested) walk(nested);
+          }
+        };
+        walk(rules);
+      }
+      /* A shorthand the engine refuses to expose longhand still counts, provided the
+         authored text is present — otherwise this check reports a missing declaration
+         that is actually a lookup failure. */
+      if (!declaresSafeArea) {
+        declaresSafeArea = stickyCtaRules.some((r) =>
+          /safe-area-inset-bottom/.test(r.cssText),
+        );
+      }
+      const onboarding: OnboardingFacts = {
+        bottomNavItemCount: navButtons.length,
+        stickyCtaVisible: !!stickyRect && stickyRect.height > 1,
+        stickyCtaBottom: stickyRect ? Math.round(stickyRect.bottom) : -1,
+        innerHeight,
+        stickyCtaDeclaresSafeArea: declaresSafeArea,
+        stickyCtaRuleCount: stickyCtaRules.length,
+        stickyCtaPaddingBottomDeclared: stickyCtaRules.map((r) => r.paddingBottom).join(" | "),
+        stickyCtaRuleTexts: stickyCtaRules.map((r) => r.cssText.slice(0, 220)),
+      };
+
       return {
         innerWidth,
         innerHeight,
@@ -413,6 +489,7 @@ export async function probeMobileGeometry(
         chromeOverlaps,
         cta,
         ctaCandidates,
+        onboarding,
       };
     },
     {

@@ -225,6 +225,7 @@ test.describe("Qoder mobile-overnight gate (Journey creation, first entry)", () 
     });
 
     const rows: Row[] = [];
+    const onboarding: Array<{ viewport: string; facts: MobileGeometry["onboarding"] }> = [];
     for (const vp of VIEWPORTS) {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await openScreen(page, SETUP_SCREEN.url, SETUP_SCREEN.ready);
@@ -232,21 +233,117 @@ test.describe("Qoder mobile-overnight gate (Journey creation, first entry)", () 
         ctaCandidates: SETUP_SCREEN.ctaCandidates,
       });
       const label = `${SETUP_SCREEN.key}@${vp.name}`;
+      onboarding.push({ viewport: vp.name, facts: geometry.onboarding });
+      const f = geometry.onboarding;
+      const extra: string[] = [];
+      /* Amendment F-1: onboarding carries exactly one navigation. A visible bottom
+         tab bar here would also be an exit into half-initialised destinations. */
+      if (f.bottomNavItemCount > 0) {
+        extra.push(
+          `${label}: onboarding renders ${f.bottomNavItemCount} bottom-nav item(s); F-1 requires 0`,
+        );
+      }
+      if (!f.stickyCtaVisible) extra.push(`${label}: sticky CTA is not visible`);
+      else if (f.stickyCtaBottom > f.innerHeight + 1) {
+        extra.push(`${label}: sticky CTA bottom ${f.stickyCtaBottom} escapes viewport ${f.innerHeight}`);
+      }
+      /* env() computes to 0 without a notch, so the measured padding cannot tell
+         "declared" from "missing" — assert the authored declaration instead. */
+      if (!f.stickyCtaDeclaresSafeArea) {
+        extra.push(
+          `${label}: .trial-sticky-cta does not declare env(safe-area-inset-bottom) ` +
+            `[matched ${f.stickyCtaRuleCount} rule(s); padding-bottom="${f.stickyCtaPaddingBottomDeclared}"; ` +
+            `authored=${JSON.stringify(f.stickyCtaRuleTexts)}]`,
+        );
+      }
       rows.push({
         screen: SETUP_SCREEN.key,
         viewport: vp.name,
         geometry,
-        failures: judge(label, SETUP_SCREEN.key, geometry),
+        failures: [...judge(label, SETUP_SCREEN.key, geometry), ...extra],
       });
     }
 
     writeFileSync(
       evidencePath("ui-overnight/geometry-setup.json"),
-      JSON.stringify({ generatedBy: "e345b9d6", head: "00dfd62", rows }, null, 2) + "\n",
+      JSON.stringify({ generatedBy: "e345b9d6", head: "00dfd62", onboarding, rows }, null, 2) + "\n",
       "utf-8",
     );
 
     const failures = rows.flatMap((r) => r.failures);
     expect(failures, `journey-creation failures:\n${failures.join("\n")}`).toEqual([]);
+  });
+});
+
+/**
+ * Amendment F-2, the other direction.
+ *
+ * The contract is layered: >=44px on touch/mobile, 30px allowed as compact fine-pointer
+ * density on desktop.  The mobile half is already asserted by the touch-target check in
+ * every row above.  This test exists because without it, "we raised it to 44px" and
+ * "we inflated every control in the app" produce identical mobile numbers — only the
+ * desktop measurement distinguishes them.
+ */
+test.describe("Qoder touch-target contract is layered (F-2)", () => {
+  /* Each control lives on its own screen; measuring both on one route would report
+     "nothing rendered to measure" for whichever is not there. */
+  const PAIRS = [
+    { url: "/v8/hub", ready: ["today-heading", "today-attention"], selector: ".v8-hub-actions .v8-quiet-button" },
+    { url: "/v8/live", ready: ["v8-live-journey", "live-journey-current"], selector: ".cn-live-toolbar .v8-quiet-button" },
+  ];
+  const VIEWS = [
+    { name: "desktop-1280x800", width: 1280, height: 800 },
+    { name: "mobile-390x844", width: 390, height: 844 },
+  ];
+
+  const heights = (page: Page, selector: string) =>
+    page.evaluate((sel: string) => {
+      return Array.from(document.querySelectorAll<HTMLElement>(sel))
+        .filter((el) => {
+          const s = getComputedStyle(el);
+          if (s.display === "none" || s.visibility === "hidden") return false;
+          const r = el.getBoundingClientRect();
+          return r.width >= 2 && r.height >= 2;
+        })
+        .map((el) => Math.round(el.getBoundingClientRect().height));
+    }, selector);
+
+  test("fine-pointer desktop keeps the compact density, mobile takes >=44px", async ({ page }) => {
+    test.setTimeout(240_000);
+    await page.emulateMedia({ colorScheme: "light", media: "screen" });
+    await ensureDemoJourney(page);
+
+    const measured: Record<string, Record<string, number[]>> = {};
+    for (const view of VIEWS) {
+      await page.setViewportSize({ width: view.width, height: view.height });
+      measured[view.name] = {};
+      for (const pair of PAIRS) {
+        await openScreen(page, pair.url, pair.ready);
+        measured[view.name][pair.selector] = await heights(page, pair.selector);
+      }
+    }
+
+    writeFileSync(
+      evidencePath("ui-overnight/touch-contract-layering.json"),
+      JSON.stringify({ generatedBy: "e345b9d6", head: "00dfd62", measured }, null, 2) + "\n",
+      "utf-8",
+    );
+
+    const failures: string[] = [];
+    for (const pair of PAIRS) {
+      const d = measured["desktop-1280x800"][pair.selector] ?? [];
+      const m = measured["mobile-390x844"][pair.selector] ?? [];
+      if (!d.length) failures.push(`desktop ${pair.selector}: nothing rendered to measure`);
+      if (!m.length) failures.push(`mobile ${pair.selector}: nothing rendered to measure`);
+      for (const h of d) {
+        if (h > 34) {
+          failures.push(`desktop ${pair.selector} is ${h}px; F-2 keeps compact density here, not 44`);
+        }
+      }
+      for (const h of m) {
+        if (h < 44) failures.push(`mobile ${pair.selector} is ${h}px; below the >=44px touch contract`);
+      }
+    }
+    expect(failures, `touch contract:\n${failures.join("\n")}`).toEqual([]);
   });
 });

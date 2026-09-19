@@ -778,14 +778,18 @@ button[data-testid^="mode-"],
   gap: 2px 16px;
   margin-top: 10px;
 }
-/* Pass-16 pinned this row to 30px.  These are deliberate taps on a phone, and a
-   0,2,0 selector outranks the global 44px floor in styles.css, so the floor has
-   to be honoured here too. */
+/* 30px = compact fine-pointer visual density; mobile/touch hit target is superseded
+   by the >=44px accessibility contract.  (Amendment F-2.)  The override below uses the
+   same 0,2,0 selector on purpose: styles.css's 0,1,0 floor cannot outrank this rule,
+   so the mobile contract has to be asserted at this specificity. */
 .v8-hub-actions .v8-quiet-button {
-  min-height: var(--cn-touch-min);
+  min-height: 30px;
   padding: 2px 0;
   font-size: var(--cn-fs-caption);
   font-weight: 600;
+}
+@media (max-width: 680px) {
+  .v8-hub-actions .v8-quiet-button { min-height: var(--cn-touch-min); }
 }
 /* A border-left separator looked wrong here: these buttons inherit a
    border-radius, so the 1px edge drew an arc. A typographic middot keeps the
@@ -807,11 +811,16 @@ button[data-testid^="mode-"],
   gap: 2px 16px;
   margin-bottom: 12px;
 }
+/* 30px = compact fine-pointer visual density; mobile/touch hit target is superseded
+   by the >=44px accessibility contract.  (Amendment F-2.) */
 .cn-live-toolbar .v8-quiet-button {
-  min-height: var(--cn-touch-min);
+  min-height: 30px;
   padding: 2px 0;
   font-size: var(--cn-fs-caption);
   font-weight: 600;
+}
+@media (max-width: 680px) {
+  .cn-live-toolbar .v8-quiet-button { min-height: var(--cn-touch-min); }
 }
 .cn-live-toolbar .v8-quiet-button + .v8-quiet-button::before {
   content: "·";
@@ -981,7 +990,16 @@ button[data-testid^="mode-"],
      * a text colour                (body never set one; only the shell did)
      * the horizontal gutter        (.v8-content owns it, and there is no .v8-content)
      * the status-bar inset         (viewport-fit=cover makes env() real)
-   These rules hand the standalone page the same chrome without touching markup.
+
+   Amendment F-1 ruled that this screen is *deliberately* outside the app chrome — an
+   onboarding flow should carry one navigation (Back / Next / Create), not that plus a
+   bottom tab bar leading to destinations that are empty or misleading before a journey
+   exists.  So the fix is not a structural shell migration: it is separating the visual
+   foundation from the navigation chrome.  body keeps a real declaration because a
+   document root should state its own colours, and .cn-onboarding then states the rest
+   explicitly.  The earlier generic `.v8-page { padding: … }` plus
+   `.v8-content .v8-page { padding: 0 }` pair is removed: that was the "it inherits
+   because it happens to sit in the shell's class" pattern F-1 rejects.
    =========================================================================== */
 body {
   color: var(--v8-ink);
@@ -990,11 +1008,25 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
-.v8-page {
-  padding: var(--cn-safe-top) var(--cn-gutter) var(--cn-s-32);
+/* The onboarding surface's own foundation — declared, not inherited by accident.
+   It intentionally renders no .v8-mobile-nav. */
+.cn-onboarding {
+  box-sizing: border-box;
+  min-height: 100vh;
+  max-width: 1370px;
+  margin: 0 auto;
+  padding: calc(var(--cn-s-32) + var(--cn-safe-top)) var(--cn-gutter)
+    calc(var(--cn-s-32) + env(safe-area-inset-bottom, 0px));
+  background: var(--v8-canvas);
+  color: var(--v8-ink);
+  font-family: var(--cn-font);
 }
-/* Inside the shell the gutter belongs to .v8-content, not to the page. */
-.v8-content .v8-page { padding: 0; }
+@media (min-width: 961px) {
+  .cn-onboarding { padding-left: 46px; padding-right: 46px; }
+}
+@media (max-width: 960px) and (min-width: 681px) {
+  .cn-onboarding { padding-left: 26px; padding-right: 26px; }
+}
 
 /* Three step labels cannot share 360px, and the ellipsis was eating
    "Travellers & preferences" at all three acceptance widths.  Progressive
@@ -1023,13 +1055,17 @@ body {
 .trial-field input,
 .trial-field textarea,
 .trial-field select {
-  min-height: var(--cn-touch-min);
+  min-height: 34px; /* fine-pointer compact density; mobile/touch takes the >=44px contract below */
   padding: 0 var(--cn-s-12);
   border: 1px solid var(--cn-control-border);
   border-radius: var(--cn-r-control);
   background: var(--v8-panel);
   color: var(--v8-ink);
   font: inherit;
+}
+@media (max-width: 680px) {
+  .trial-field input,
+  .trial-field select { min-height: var(--cn-touch-min); }
 }
 .trial-field textarea { padding: var(--cn-s-12); }
 .trial-field input::placeholder,
