@@ -486,7 +486,12 @@ CITYNEXUS_DATABASE_URL='sqlite:///./_p12_full.db' \
 ```
 
 结果：**38 expected / 8 unexpected / 0 flaky**，与你预测的分毫不差，且 8 条正是已分类的 legacy 8 条。
-`v13-5` 在该环境下 13.0s 通过。两次运行的 JSON 都进包（`fe_full_pass12_shared8000.json` 与
+`v13-5` 在该环境下通过。
+*（pass-13 更正）* 我原来写"13.0s 通过"是记账口径错误：13.0s 是那次 `npx playwright test` 的整条命令墙钟
+（含两个 webServer 启动与 `real-seed` setup 项目），`fe_full_pass12_isolated.json` 里 `v13-5` 自身的
+result duration 是 **1221 ms**。真正慢的是借用 `:8000` 那次的外部 AI 路径（另行直调端点约 15.5s，
+测试自身 10990 ms 后在 10000 ms 预算上超时）。两个数字分属不同层，不该混着引用。
+两次运行的 JSON 都进包（`fe_full_pass12_shared8000.json` 与
 `fe_full_pass12_isolated.json`），因为前者本身就是这个环境归属缺陷的证据。
 
 ## 28. 门禁数字（全部来自同一次受控运行，HEAD `2875aba`）
@@ -522,9 +527,16 @@ CITYNEXUS_DATABASE_URL='sqlite:///./_p12_full.db' \
 
 ## 29. 截图复核里新看见、我没有动手的一处
 
-`reports/product-v9/ui/live-journey-mobile.png`：Live 页的 Copilot 悬浮胶囊压在 EVIDENCE 卡片首行
-（`Provider route, fres…` 被遮住）。这与 pass-10 的 Today 遮挡是同一家族，但发生在 Live 的
-非 idle 态，`idle-compact` 那条规则管不到它。按"pass-12 只收口测试债"的边界，我只登记不动手。
+*（pass-13 更正：这条的具体结论不成立，我先自己撤回。）*
+
+原结论写的是"Copilot 悬浮胶囊压在 EVIDENCE 卡片首行，`Provider route, fres…` 被遮住"。
+把 `reports/product-v9/ui/live-journey-mobile.png` 当证据看是错的：那是一张 390×2250 的
+`fullPage: true` 拼接图，EVIDENCE 那一行在图里更靠下、文字是完整可读的，并没有被盖住。
+`position: fixed` 的悬浮元素在整页拼接里会落在它当时所在的滚动位置附近，所以它能证明的只有：
+**Live 页的固定 pill 与"Compare all modes"一带的内容空间发生了冲突**——这仍然值得查，
+但不能拿它当作"EVIDENCE 首行被遮"的证据。方法错误本身记一条：不要根据长截图的拼接结果推断
+遮挡关系，也不要去改 CSS。pass-13 改用在 390×844 真实视口下取 `getBoundingClientRect()` 相交判定，
+结果见 §32。
 
 ## 30. 请判
 
@@ -537,3 +549,86 @@ CITYNEXUS_DATABASE_URL='sqlite:///./_p12_full.db' \
 3. pass-12 三条迁移是否解除 `CURRENT_E2E_CONTRACT_MIGRATION`（`BLOCKED_ON_E2E_EVIDENCE_CLOSEOUT`
    已由 pass-11 解除）；若解除，下一轮按 `docs/LEGACY_E2E_MIGRATION.md` 的 archive/port 判定执行，
    还是先做 §29 的 Live 遮挡与 Hero→replan 路线图。
+
+---
+
+# pass-13（2026-09-19 20:0x，门禁树 `5e84e29`）
+
+按裁决只做 A（authoritative provenance 门）与 C（Live dock 先验证后修）两件事，
+没碰 8 条 legacy，没开 OSM/Hero 路线图，没改 v13-5 的 10s 预算。
+
+## 31. A：把"测的是不是自己"变成机器事实
+
+`CITYNEXUS_E2E_AUTHORITATIVE=1` 下按顺序强制：
+
+| 约束 | 落点 | 观察到的行为 |
+|---|---|---|
+| `CITYNEXUS_PYTHON` 必须显式给出且文件存在，禁止退系统 Python | `playwright.config.ts` | 缺失/路径不存在 → `authoritative mode refuses to start: CITYNEXUS_PYTHON="./nope.exe" does not exist` |
+| 前端与后端端口必须显式且不相等 | 同上 | 缺 `CITYNEXUS_E2E_PORT` → 直接拒绝 |
+| 独立 DB，且文件名必须含本次 `CITYNEXUS_E2E_RUN_ID`，必须是 `_*.db` | 同上 | `sqlite:///./citynexus.db` 被拒；命名含 run id 使"每次全新库"成为结构性质，而不是"跑之前偷偷删一下"（globalSetup 在 webServer 之后运行，那时文件已被本 run 的后端打开并锁住，Windows 上 `rmSync` 直接 EPERM——这条我踩过并改成了结构性方案） |
+| 外部 AI 必须关闭 | 同上 | 环境里留着 `DEEPSEEK_API_KEY` 就拒绝启动，而不是静默走真模型 |
+| 两个 webServer 全部 `reuseExistingServer: false` | 同上 | 端口被占时 Playwright 自己就拒绝：`http://127.0.0.1:8026/api/v1/health is already used, make sure that nothing is running on the port/url or set reuseExistingServer:true` |
+| 通过**前端 origin** 读 `/health`，要求回显本次 run token、DB 路径、`ai=disabled` | `e2e/_qoderAuthoritativeSetup.ts` | `provenance ok: run=p13final1 frontend=:4202 -> backend=:8029 ai=disabled db=sqlite:///./_p13final1.db`；token 不匹配时报文直接指出"应答 :PORT 的后端不属于本次调用"并给出 netstat 查法 |
+
+为什么要绕前端而不是直连后端：测试真正依赖的是 `vite → proxy → backend` 这条链，
+只有从前端 origin 拿到正确 token，才能同时证明 dev server 也是本次起的。
+
+`/health` 为此新增 `e2e_run_id` 与 `database_url` 两个字段（`backend/app/core/config.py`、
+`app/main.py`），并由 `backend/tests/test_e2e_provenance.py` 钉住三条事实：
+没被盖戳的服务器回显空串（所以借来的后端永远过不了断言）、被盖戳的回显自己的值、
+以及它报的是自己打开的 DB。按裁决**没有**引入 Git SHA/哈希门。
+
+provenance 打到 stderr（stdout 留给 `--reporter=json`，否则 JSON 会被首行污染——这个我第一版就踩了），
+并落盘 `reports/e2e-provenance/authoritative.json` 随包交付。
+workers / spec 顺序 / retry / DB schema / 产品语义一律未动。
+
+## 32. C：Live dock 用真实视口重测，结论是我上一轮看错了
+
+`e2e/qoder-dock-geometry.spec.ts` 在 390×844 下取 `.cn-copilot-dock` 与视口内所有可交互元素
+（`button, a[href], input, select, textarea, [role=button]`）的 `getBoundingClientRect()`，
+在 top/middle/bottom 三个滚动位各测一次并打印数字，截图为非 fullPage：
+
+```
+[dock-geometry] /v8/live   @top    dock=215,706 165x54 state=collapsed idle-compact idleCompact=true scrollY=0/1318    actionableInView=21 covered=0
+[dock-geometry] /v8/live   @middle dock=215,706 165x54 ...                                            scrollY=659/1318  actionableInView=14 covered=0
+[dock-geometry] /v8/live   @bottom dock=215,706 165x54 ...                                            scrollY=1318/1318 actionableInView=7  covered=0
+[dock-geometry] /v8/hub    @top    ...                                                                actionableInView=21 covered=0
+[dock-geometry] /v8/hub    @middle ...                                                                actionableInView=18 covered=1
+      button "DAY 1FridayArrival · Check in · " rect=626..782 overlap=158x54px
+[dock-geometry] /v8/hub    @bottom ...                                                                actionableInView=9  covered=0
+```
+
+结论：
+1. **Live 页不成立**。真实视口里 dock 已经是 idle-compact 小胶囊（165×54，位于 215,706），
+   三个滚动位都没有压住任何可交互元素；`reports/dock-geometry/live-390x844-bottom.png` 里
+   `EVIDENCE / Provider route, freshness, cost and feasibility` 整行完整可读。
+   pass-12 §29 那句"EVIDENCE 首行被遮"是 390×2250 fullPage 拼接图的产物，已按你的判定在 §29 就地撤回。
+2. **没有做产品 CSS 改动**，因为不成立；这条归 `fullPage capture artifact`。
+3. 顺带量到一件需要你定性的小事：Today 在**滚动到中间**时，DAY 1 卡片按钮与胶囊有
+   158×54 的瞬时重叠（滚动停止后 covered=0）。这是 fixed 悬浮件经过滚动内容的固有现象，
+   不是静止遮挡，所以我只把"静止时不得压住任何可交互元素"写成断言（已通过），
+   瞬时相交只报数字不判对错。若你认为 pill 在滚动中也必须让位，那是产品规则，等你下令我再动。
+
+## 33. 门禁数字（全部来自 HEAD `5e84e29` 上同一次 authoritative 运行）
+
+| 门禁 | 结果 |
+|---|---|
+| 全量 Playwright（authoritative） | **40 expected / 8 unexpected / 0 flaky**（194.8s） |
+| 8 条 unexpected | 恰为已分类 legacy：golden 1、live-autopilot-v5 1、predictive-real-city-v6 1、product-hardening 5 |
+| 其中 `qoder-*` | 30 passed / 0 failed（含新增 dock-geometry 2 条；此前 28） |
+| `v13-5-fully-grounded` | expected，测试自身 result duration **1298 ms**（10s 预算未动，也未改 30s） |
+| 对比度 | `qoder-contrast-audit` 4 passed；8 屏 1740 节点 0 violations |
+| `typecheck` / `typecheck:all` | 0 error |
+| `vite build` | 成功（PWA precache 9 entries / 2295.48 KiB） |
+| 后端同环境 | **830 passed / 15 skipped / 0 failed**（58.6s；= 827 + 新增 3 条 provenance 测试） |
+| SQLite 争用告警 | 本次 authoritative 全量 0 次（此前单规格探测时出现过 1 次 `JourneyTwin cache write skipped ... database is locked`，未导致失败，仍记录在案） |
+
+## 34. 请判
+
+1. Today 滚动中途的瞬时相交（§32 第 3 点）：判"fixed 悬浮件经过内容属正常"结案，
+   还是要求 pill 在滚动中也让位（那就是一次真实的 yield 规则改动）？
+2. authoritative 模式目前只在我这条线强制。是否把它写进 `docs/` 的验收规约并作为
+   所有 lane 出 E2E 证据的唯一口径（Sol/Astra 的只读输入约定我不清楚，需要你或负责人确认）？
+3. 下一轮按你的排期是 pass-14：8 条 legacy 的 archive / port-first。
+   要我现在就把 4 条 "Archive" 的入口改成 `/legacy` 并逐条记录能力不变量已被现行套件覆盖的证据，
+   还是先只写归档 PR、把 port-first 的 4 条留到之后？
