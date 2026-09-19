@@ -161,7 +161,16 @@ def _execution_truth(
         (item for item in activities[current_index + 1 :] if item.status not in terminal),
         None,
     )
-    next_leg = legs[current_index] if 0 <= current_index < len(legs) else None
+    # The leg is the transfer *out of* Now, so it needs a Now: binding it to the
+    # index alone leaks a leg whenever current_index sits past the last activity
+    # (a stale cursor, or every activity terminal) and the plan carries more legs
+    # than activities — arrival and departure transfers do exactly that.  The
+    # traveller would then see "walk 23 min" with no step to walk to.
+    next_leg = (
+        legs[current_index]
+        if now_item is not None and 0 <= current_index < len(legs)
+        else None
+    )
 
     def compact(item: Activity | None) -> dict[str, Any] | None:
         if item is None:
