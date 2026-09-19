@@ -1020,10 +1020,17 @@ legacy 套件带 host `DEEPSEEK_API_KEY` 跑：3 passed / 1 failed，
 内容比历史上任何一版都完整（候选列表含 `天津文化中心 · Eligible · openstreetmap-replay`、
 证据面板、`FULLY GROUNDED`、`SELECTED`）。
 
-其余 8 张 PNG 我做了像素级 diff 而不是只看字节：
-`mobility-sheet-desktop` 37.6% 变化但内容同构（同一模态、同一横幅、同一五种模式数据），
-差异是 fullPage 画布上模态的垂直锚点 + 时间戳 + 地图节点位置；
-其余在 0.02%–3.8%，为地图瓦片与动态时间文本。没有一张变成空白。
+其余 8 张 PNG 我做了像素级 diff 而不是只看字节：`mobility-sheet-desktop` 37.6% 变化
+但内容同构（同一模态、同一横幅、同一五种模式数据），差异是 fullPage 画布上模态的
+垂直锚点 + 时间戳 + 地图节点位置；其余在 0.02%–3.8%。没有一张变成空白。
+
+最终一次运行（`p16full3`）又重截了一遍，所以引用那次的包里的图按同一方法再对比
+（相对 `5de880b`）：bottom 0.02%、fully-grounded 0.03%、journey-hub 3.65%、
+mobility-desktop 0.56%、mobility-mobile 37.14%、stay-explorer 1.72%、
+trip-studio 2.60%、v9 live 0.01%、v9 offline 0.01%。
+`journey-hub-desktop` 字节从 96643 掉到 67129 看着吓人，但像素只差 3.65%、
+平均亮度 244.4 → 246.3，是 PNG 对文本栅格化的敏感性而不是内容消失；
+空白页会是接近 100% 的差异，不是这个量级。
 
 ## 59. 门禁数字（同一次 authoritative 运行 `p16full3`，tree `967e2b2`）
 
