@@ -1941,3 +1941,84 @@ service worker 可以从缓存回答请求，而那些例子里每一条实质�
 （run `ord29-c` / `ord29-d`，各自端口与一次性库）。收口复跑在 `94295e5`：
 后端 **913 passed / 15 skipped / 0 failed**（64.94s）、build 0、权威 E2E
 **51 expected / 0 unexpected / 0 flaky / 0 skipped**（run `ord29-full`，web :3437 → backend :8437）。
+
+## 85. ORD-0030：UI 过夜车道合进权威树，以及一次"我自己把门跑红"的记录
+
+合并本身没有戏剧性：Commander 已用一次性 worktree 试过合（"Automatic merge went well"、
+零 unmerged 文件），我在真树上做同一件事——`git merge --no-ff --no-commit agent/ui-overnight-20260920`
+→ 零冲突 → 提交为 **`5a33eaf`**。`git show --stat`：**11 个文件、+1628 / −25**，
+其中 **零个 `backend/` 路径**：
+
+```
+UI_OVERNIGHT_PLAN.md · frontend/index.html · frontend/src/design-tokens.css
+frontend/src/styles.css · frontend/src/v10.css · frontend/src/features/setup/JourneyTrialSetup.tsx
+frontend/e2e/_qoderMobileScan.ts · frontend/e2e/qoder-mobile-ui-overnight.spec.ts
+frontend/e2e/qoder-ui-overnight-shots.spec.ts · review/UI_OVERNIGHT_{BASELINE,EVIDENCE}.md
+```
+
+也就是说这一笔确实"只动前端"，Commander 预登记的那个判断条件（Amendment E 1b：只有 `source=`
+目标文件或 owner 节点被碰到才重跑矩阵）不成立，矩阵不必因为我重跑。
+
+### 85.1 合并前后：同一命令、同一口径
+
+| 门 | 合并前 `a98babb` | 合并后 `5a33eaf` |
+| --- | --- | --- |
+| 全量后端 `pytest -q -p no:cacheprovider --no-header`（AI 关） | 913 passed / 15 skipped / 0 failed（64.94s） | **913 passed / 15 skipped / 0 failed（66.40s）** |
+| 权威 E2E `--reporter=json`（自有端口、一次性库、ai=disabled、reuseExistingServer=false） | 51 expected / 0 unexpected / 0 flaky / 0 skipped | **54 expected / 0 unexpected / 0 flaky / 5 skipped**（152.5s） |
+| `npm run build` | 退出码 0 | **退出码 0** |
+| `npm run typecheck` / `typecheck:all`（不接管道，`> file 2>&1` 后读 `$?`） | 0 / 0，`error TS` 0 条 | **0 / 0，`error TS` 0 条** |
+| UI 车道三道门（同一套件内的逐条） | 不在本树 | **contrast-audit 4/4、mobile-overflow 1/1、today-hero 2/2** |
+| 新 12 点门（3 视口 × 4 界面 = 12 个测量点） | 不在本树 | **3 passed；溢出 0 / <44px 0 / 截断 0 / chrome 重叠 0 / CTA 被遮 0 / 找不到 CTA 0** |
+
+后端总数一字未动，符合"只动前端则不应变"的预期，所以这一轮没有需要压的意外。
+E2E 的 +3 expected 正是 12 点门；**5 skipped 全部来自 `qoder-ui-overnight-shots.spec.ts`**——
+它按设计在没有显式 `CITYNEXUS_SHOT_LABEL` 时跳过，理由是防"整套跑悄悄把 before 基线刷成改后像素"，
+所以 skip 是这道门的正确行为，不是漏跑。我另外单独按标签跑了一次以证明这份文件在合并树上可用：
+`CITYNEXUS_SHOT_LABEL=after` → **6 passed（30.3s）**、20 张 412x915 明/暗截图（5 场景 × 明暗 × 整页/首屏），
+落在仓库外的证据目录，`git status` 未新增任何跟踪文件。
+
+12 点门的逐条数字是从门自己写的原始测量里数出来的（`ui-overnight/geometry-*.json`：seeded 9 行
++ setup 3 行 = 12 个测量点），不是复述车道自报；触控分层对照也在同一份产物里：
+桌面 30px 紧凑、移动 44px 达标。
+
+### 85.2 我第一次的全量后端跑是红的，红在我的调用方式
+
+第一次 `pytest -q`（同一棵合并树）：**9 failed / 902 passed / 16 skipped / 1 error（307.32s）**。
+我没有把它当成"合并引入的回归"报上去，先查了机制：
+
+- 那一次我**没有清 `DEEPSEEK_API_KEY`**（这条会话的 shell 里它是设着的），
+  而门要求的正是"AI 必须关"。权威 E2E 的 `playwrightEnv.ts` 会因这个键直接拒绝启动；
+  pytest 侧**没有对应的守卫**，于是它带着真键跑了 AI 路径。
+- 9 条失败的族谱支持这个归因：`test_guardian_v4`(3)、`test_v13_integrity`(gateway)、
+  `test_v15_copilot`（用例名本身就是"without deepseek configuration"）、`test_v5_autopilot`、
+  `test_v6_predictive_real_city`、`test_v7_traveler_twin`、`test_v8_stay_mobility`（自然语言 mission）。
+  全是依赖"没有配置外部 agent"的测试。
+- 那条 ERROR 更具体，而且**是一条真缺陷**：`tests/test_v16_integration.py:111` 写的是
+  `@pytest.mark.skipif(settings.ai_api_key, reason="…")`。pytest 对**字符串形式**的 skipif 参数
+  会当作表达式去 `eval`，所以一旦键存在（值形如 `sk-…`）这个"该跳过"的守卫就不是跳过而是
+  `SyntaxError: invalid decimal literal (<skipif condition>, line 1)` → 收集期 ERROR。
+  换句话说这条守卫**在它想防的那个场景里永远失效**——和今晚反复在修的"守卫从不触发"同一族。
+  最小修法是 `bool(settings.ai_api_key)`；该文件不在 campaign 的 `SUITES` 里，改了不动矩阵分母。
+  我**没有动它**：不在本单写域，且这类一行修该由 Commander 派单落名。
+
+清键重跑（`DEEPSEEK_API_KEY= CITYNEXUS_AI_API_KEY= CITYNEXUS_AI_ENABLED=false`）→
+**913 passed / 15 skipped / 0 failed（66.40s）**，与合并前逐项相同。
+教训值得留在账上：这台机器上"全量后端绿"必须显式带三个 AI 环境变量，否则数字根本不可比；
+两次跑相差 4.6 倍时长（307s vs 66s）也说明当时还有别的车道在抢 CPU。
+
+### 85.3 合并产物里我发现、但没顺手改的一件事
+
+`frontend/e2e/qoder-mobile-ui-overnight.spec.ts` 的三处写盘（200 / 269 / 328 行）把
+`generatedBy: "e345b9d6"` 和 `head: "00dfd62"` **写成了字面量**。在车道自己的树上它恰好为真；
+合到 `5a33eaf` 之后，它产出的 JSON 会声称自己是 `00dfd62` 生成的——而我这一轮拿到的三份
+几何产物（时间戳确实是本次的 07:01）里 `head` 全是 `00dfd62`。这正是我们刚在 ORD-0029 里
+消灭的那类东西：一个字段说"我是谁"，但它不来自这次运行。建议改成从 `git rev-parse HEAD`
+或 `CITYNEXUS_E2E_RUN_ID` 取值，等 Commander 派单，我不在合并的同一轮里改刚合进来的别人家文件。
+
+### 85.4 一个仍然悬着的口径问题（不因为我跑绿就消失）
+
+ORD-0031 的结论是 **`package-lock.json` 是权威**，而两棵 `node_modules` 都有同一处偏移
+（`@types/react` 19.3.0、`@types/react-dom` 19.3.0、`csstype` 3.2.3，lock 里都没有条目）。
+所以上面那两个 `typecheck = 0 errors` **只与同一依赖集上的历史数字可比**，不能拿去覆盖任何人的基线，
+也不能当作"合并把类型问题清理干净了"的证据——它只是"在这台机器当前的 node_modules 下不报错"。
+在依赖问题结清之前，我报的每个 tsc 数字都自带这条脚注。
