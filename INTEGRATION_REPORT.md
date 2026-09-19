@@ -344,3 +344,42 @@ Trips / Copilot 主页面 / Onboarding 继续不碰。
   直接 `rm -rf` 会顺着 junction 再咬一口，这一步不能省序。
 - 其它 lane（Astra / Sol）被裁决为把我的树当只读输入，所以这条恢复记录也写给它们：
   当前 HEAD 的工具链与门禁状态是完好的，上面四项可复现。
+
+---
+
+# pass-10 极窄 closeout（按 pass-9 裁决的五条，不扩面）
+
+## 18. 四条 blocker 的结果
+
+| blocker | 裁决要求 | 落地 | 证据 |
+|---|---|---|---|
+| 1 marker 被 route-context 压住 | 不许 z-index 互相霸凌；要让地图知道 overlay 占了空间 | fitBounds 的 padding 从统一 42 改为实测 caption 高度 + 16px 安全间隙（只加大 bottom） | live-412x915-light.png：5 号 marker 完整可见，未被信息条截断 |
+| 2 Today 大 dock 压内容 | idle -> compact pill；active conversation / meaningful task -> expanded dock | CopilotDock 新增 idleCompact = !open && !sending && !yieldToSurface，复用决策态已验证够用的 pill 形态（暴露 data-idle-compact 供断言） | 同批截图里 dock 已是右下角小胶囊；底部导航仍保留 Copilot 入口，不再双重邀请 |
+| 3 半灰地图定性 | 等 style loaded + idle + 记录 tile 错误后再拍，据此分类 | capture-visual.mjs 加 tile 请求监听与静默等待（quiet 1.5s / 上限 20s），每屏输出 tiles/failed/settled/waited | 16/16 屏全部 settled 且地图完整 -> 之前那帧半灰是 harness 抢拍，属 evidence timing，结案。**但每屏仍有 6-12 个 tile.openstreetmap.org 请求失败**（本网络不可达），说明"瓦片源不可达时 canvas 留灰区"是真实产品韧性缺口，不是截图问题 |
+| 4 E2E journey 隔离 | 每 spec 自建 journey / 自持 journey_id / 自设 localStorage；不许调顺序或 retry 掩盖 | 新增 e2e/_qoderFreshJourney.ts（只走公开 API，两晚 CN-TIANJIN），接入 v10-inbox、v10-accessibility、v10-quality-budget、product-v8 | 全量 31 passed / 15 failed -> 35 passed / 11 failed；恢复的正是"单跑绿、全量红"那四条 |
+
+## 19. 还没消掉的跨 spec 污染（如实上报）
+
+qoder-live-structure 的 map-height 门：单跑 7 秒 2 passed，放进全量就红。
+所以 blocker 4 是显著缓解而非结案——整套仍共用一个 SQLite 文件，任何写状态的 spec
+都是共享资源。裁决里提到的下一步（per-worker / per-suite 临时 DB）我没有做，因为它要改
+harness 的启动方式，会波及 Codex Sol 与 Astra 两条 lane 的只读输入约定，应该由你决定
+是否在这个时点动它。
+
+## 20. 一条自我纠错
+
+pass-9 里我提交过一个"让 Live 的『现在』标签不再折行"的 commit，它其实什么都没改：
+存在性守卫写的是子串 `.v8-live-label {`，而这个子串已经出现在深色主题的
+`.v8-product-shell .v8-live-label {` 里，于是脚本判定"规则已存在"直接跳过写入。
+重拍截图时才发现标签仍然两行。现在换成不会误匹配的守卫，并确认单行。
+这正是你反复警告的"安慰剂修复"那一类，区别是这次是门和截图抓住的，不是我抓住的。
+
+## 21. 请判
+
+1. Blocker 1/2/3 是否足以签发 FRONTEND_APPLE_PASS1_VISUALLY_ACCEPTED_FOR_MERGE。
+2. 瓦片源不可达时的灰区：算产品韧性 blocker，还是算环境限制（本网络无法访问 OSM）。
+3. Blocker 4 的部分完成（35/11，仍有一条跨 spec 污染）是否继续挡住
+   INTEGRATION_CANDIDATE_READY_FOR_MAIN，以及是否授权我做 per-worker 临时 DB
+   （它会改变 harness 启动方式，影响其它 lane 的只读输入约定）。
+4. 你提的"最终 release candidate 前用干净 checkout + 自己的 lockfile npm ci 重建一次"
+   我留到 integration freeze 执行，不在这轮占用视觉线收口。
