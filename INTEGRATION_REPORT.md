@@ -338,8 +338,9 @@ Trips / Copilot 主页面 / Onboarding 继续不碰。
 教训与遗留：
 
 - **junction 不能当 worktree 的 `node_modules` 来源**；要隔离就得真复制。
-- 两个残留空壳目录（`_qoder_a_only`、`_qoder_truth_baseline`）我**没有强删**：
-  里面仍有指向真实 `node_modules` 的链接，`rm -rf` 会再咬一口。它们不参与任何
-  gate，需要人工确认后再清理。
+- 两个残留空壳目录（`_qoder_a_only`、`_qoder_truth_baseline`）已安全清掉：先用
+  `os.rmdir` 删除 reparse point 本身（它不跟随链接），确认两个真实
+  `node_modules` 仍是 409M / 399 项之后，才 `shutil.rmtree` 删壳目录。
+  直接 `rm -rf` 会顺着 junction 再咬一口，这一步不能省序。
 - 其它 lane（Astra / Sol）被裁决为把我的树当只读输入，所以这条恢复记录也写给它们：
   当前 HEAD 的工具链与门禁状态是完好的，上面四项可复现。
