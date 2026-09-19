@@ -240,14 +240,45 @@ function initialsFrom(name: string) {
   return (initials || "CN").toUpperCase();
 }
 
+const TERMINAL_ACTIVITY_STATES = new Set(["COMPLETED", "SKIPPED", "CANCELLED"]);
+
+/**
+ * Resolve the live execution window from the authoritative cursor.
+ *
+ * Three states, deliberately kept distinct:
+ *   - cursor null            -> pre-execution; the first non-terminal step is honest;
+ *   - cursor names a step    -> that step is Now, the next non-terminal one is Next;
+ *   - cursor names nothing   -> stale.  Nothing may be invented from list order,
+ *     so the window is empty and `unresolved` tells the surface why.
+ */
+function liveActivityWindow(plan: V8Data["active_plan"]) {
+  if (!plan) return { now: null, next: null, nextLeg: null, unresolved: false };
+  const activities = plan.activities;
+  const cursor = plan.current_activity_id ?? null;
+  const index = activities.findIndex((item) => item.id === cursor);
+  if (cursor !== null && index === -1) {
+    return { now: null, next: null, nextLeg: null, unresolved: true };
+  }
+  const anchor =
+    index === -1
+      ? activities.findIndex((item) => !TERMINAL_ACTIVITY_STATES.has(item.status))
+      : index;
+  if (anchor === -1) return { now: null, next: null, nextLeg: null, unresolved: false };
+  const candidate = activities[anchor];
+  const now =
+    candidate && !TERMINAL_ACTIVITY_STATES.has(candidate.status) ? candidate : null;
+  const next =
+    activities
+      .slice(anchor + 1)
+      .find((item) => !TERMINAL_ACTIVITY_STATES.has(item.status)) ?? null;
+  const nextLeg = now && next ? plan.legs[anchor] ?? null : null;
+  return { now, next, nextLeg, unresolved: false };
+}
+
 // The authoritative current step is current_activity_id; falling back to a
 // fixed index would show a stale "next" once the journey has advanced.
 function nextActivityOf(plan: V8Data["active_plan"]) {
-  if (!plan) return null;
-  const index = plan.activities.findIndex(
-    (item) => item.id === plan.current_activity_id,
-  );
-  return plan.activities[index >= 0 ? index + 1 : 1] ?? null;
+  return liveActivityWindow(plan).next;
 }
 
 export function V8Experience() {
@@ -2027,9 +2058,12 @@ function Live({
 }) {
   const t = useT();
   const { locale } = useLocale();
-  const now = data.active_plan?.activities[0];
-  const next = data.active_plan?.activities[1];
-  const nextLeg = data.active_plan?.legs[0];
+  const {
+    now,
+    next,
+    nextLeg,
+    unresolved: cursorUnresolved,
+  } = liveActivityWindow(data.active_plan ?? null);
   return (
     <section className="v8-page" data-testid="v8-live-journey">
       <div className="v8-page-intro compact">
@@ -2051,24 +2085,37 @@ function Live({
             {t("live.now")}
           </span>
           <div>
-            <h2 data-testid="live-journey-current">
-              {now
-                ? now.title
-                : `${t("live.awaitingPlan")}${selected?.stay.property_name ? ` · ${selected.stay.property_name}` : ""}`}
+            <h2
+              data-testid="live-journey-current"
+              data-cursor-status={cursorUnresolved ? "STALE" : now ? "VALID" : "ABSENT"}
+            >
+              {cursorUnresolved
+                ? t("live.unresolvedStep")
+                : now
+                  ? now.title
+                  : `${t("live.awaitingPlan")}${selected?.stay.property_name ? ` · ${selected.stay.property_name}` : ""}`}
             </h2>
             <p>
-              {next
-                ? t("live.nextLeg", {
-                    title: next.title,
-                    mode: modeLabel(nextLeg?.mode ?? mode, locale.startsWith("zh")),
-                    duration: nextLeg?.duration_min ?? t("live.durationPending"),
-                    unit: nextLeg ? " min" : "",
-                  })
-                : t("live.nextSelect")}
+              {cursorUnresolved ? (
+                t("live.unresolvedStepHint")
+              ) : next ? (
+                t("live.nextLeg", {
+                  title: next.title,
+                  mode: modeLabel(nextLeg?.mode ?? mode, locale.startsWith("zh")),
+                  duration: nextLeg?.duration_min ?? t("live.durationPending"),
+                  unit: nextLeg ? " min" : "",
+                })
+              ) : (
+                t("live.nextSelect")
+              )}
             </p>
           </div>
           <strong>
-            {now ? clockInZone(now.start_at, data.journey.timezone || "UTC") : t("live.awaitingPlanUpper")}
+            {now && !cursorUnresolved
+              ? clockInZone(now.start_at, data.journey.timezone || "UTC")
+              : cursorUnresolved
+                ? "—"
+                : t("live.awaitingPlanUpper")}
           </strong>
         </div>
         <MapPanel data={data} option={selected} />
@@ -2101,8 +2148,7 @@ function LiveSecondary({
   const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
-  const next = data.active_plan?.activities[1];
-  const nextLeg = data.active_plan?.legs[0];
+  const { next, nextLeg } = liveActivityWindow(data.active_plan ?? null);
   const planDisruptions = data.active_plan?.disruptions ?? [];
   const disruptions = planDisruptions.filter((item) => !isHandledDisruption(item));
   const destination =
