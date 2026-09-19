@@ -99,3 +99,15 @@ def test_aware_utc_event_is_normalized_to_journey_local_schedule_before_f3():
     local_event = datetime.fromisoformat(evidence["window_opens_at"])
     assert local_event.isoformat() == "2026-10-10T13:25:00+08:00"
     assert evidence["origin_key"] == "place-tech-art"
+
+
+# V2-B1: replan now refuses the mock fixture's blanket default 20 as a hard fact.
+# Seed the demo graph with *explicit* mobility so these replan-dependent tests
+# exercise trustworthy legs (see tests/_qoder_explicit_demo_mobility.py).
+import pytest as _pytest  # noqa: E402
+from _qoder_explicit_demo_mobility import VERTICAL_SLICE_MOBILITY as _MODULE_MOBILITY, seed_module_mobility as _seed  # noqa: E402
+
+
+@_pytest.fixture(autouse=True)
+def _qoder_explicit_demo_mobility(monkeypatch):
+    _seed(monkeypatch, _MODULE_MOBILITY)

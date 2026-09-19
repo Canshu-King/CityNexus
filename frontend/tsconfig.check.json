@@ -13,5 +13,11 @@
     "esModuleInterop": true,
     "types": []
   },
-  "include": ["src/app/V8Experience.tsx", "src/features/execution/LiveRecovery.tsx"]
+  "include": [
+    "src/app/V8Experience.tsx",
+    "src/features/execution/LiveRecovery.tsx",
+    "src/i18n/LocaleContext.tsx",
+    "src/lib/budgetEvidence.ts",
+    "src/lib/disruptionState.ts"
+  ]
 }

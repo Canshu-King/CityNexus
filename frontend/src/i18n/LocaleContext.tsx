@@ -143,10 +143,11 @@ const en: Dict = {
   "studio.walkingExposure": "Walking exposure",
   "studio.planHealth": "Plan health",
   "studio.protected": "Protected · {n} min slack",
-  "studio.feasibilityPassed": "All safety checks passed",
-  "studio.feasibilityPassedPartial": "Safety checks passed, budget not verified",
-  "studio.feasibilitySub": "Arrival, departure, budget, and protected commitments verified.",
+  "studio.feasibilityPassed": "Trip constraint checks passed",
+  "studio.feasibilityPassedPartial": "Constraint checks passed, cost evidence incomplete",
+  "studio.feasibilitySub": "Arrival, departure, and protected commitments verified. Activity costs are complete for every stop; the total trip budget (including stay and transport) is not verified here.",
   "studio.feasibilityNoPrice": "Arrival, departure, and protected commitments verified. Budget not verified: no stop has a provider price yet.",
+  "studio.feasibilityPartialSub": "Arrival, departure, and protected commitments verified. Budget not verified: {n} item(s) lack a verified provider price, so no total is claimed.",
 
   // ── Authoritative Execution ──
   "auth.kicker": "V12 · plan, mobile, Edge, and twin",
@@ -780,10 +781,11 @@ const zhCN: Dict = {
   "studio.walkingExposure": "步行暴露",
   "studio.planHealth": "方案健康度",
   "studio.protected": "受保护 · {n} 分钟余量",
-  "studio.feasibilityPassed": "已通过全部安全检查",
-  "studio.feasibilityPassedPartial": "安全检查已通过，预算未验证",
-  "studio.feasibilitySub": "到达、出发、预算和受保护承诺已验证。",
+  "studio.feasibilityPassed": "行程约束检查已通过",
+  "studio.feasibilityPassedPartial": "行程约束检查通过，费用证据不完整",
+  "studio.feasibilitySub": "到达、出发和受保护承诺已验证。所有站点的活动费用已完整；整趟行程预算（含住宿与交通）未在此处验证。",
   "studio.feasibilityNoPrice": "到达、出发和受保护承诺已验证。预算未验证：目前没有任何一站拿到供应商价格。",
+  "studio.feasibilityPartialSub": "到达、出发和受保护承诺已验证。预算未验证：还有 {n} 项缺少已验证的供应商价格，因此不给出总价结论。",
 
   // ── Authoritative Execution ──
   "auth.kicker": "V12 · 方案、移动端、Edge 与画像",

@@ -204,9 +204,16 @@ def test_v12_studio_protects_locked_order() -> None:
     assert "PROTECTED_ACTIVITY_REORDER" in preview.json()["deterministic_gate"]["failures"]
 
 
-def test_v12_autonomous_recovery_uses_preauthorized_envelope() -> None:
+def test_v12_autonomous_recovery_uses_preauthorized_envelope(monkeypatch) -> None:
     client = TestClient(app)
     journey_id, place_ids, commitment_id = _journey_with_inputs()
+    # V4 #1 (T2 hard truth gate): the grounded-recovery path re-uses the frozen
+    # baseline snapshot and hard-gates the selected route legs it evaluates.
+    # This scenario declares those legs as EXPLICIT DETERMINISTIC FIXTURE facts
+    # (test fixture values, NOT live/Xiamen mobility).  A pair outside the table
+    # stays unseeded/synthetic, so the mock blanket default is never laundered
+    # into a hard fact (B1 intact).  Shared with V13's authoritative journey.
+    seed_authoritative_recovery_mobility(monkeypatch, journey_id)
     composed = client.post(
         f"/api/v1/journeys/{journey_id}/plans/authoritative-compose",
         json={"place_ids": place_ids, "candidate_count": 1, "reservation_id": commitment_id},
@@ -295,3 +302,13 @@ def test_v12_autonomous_recovery_uses_preauthorized_envelope() -> None:
     assert accepted.json()["decision"] == "ALLOW_AUTO"
     assert accepted.json()["executed"] is True
     assert accepted.json()["result"]["journey"]["active_plan_version_id"] != base_plan["id"]
+
+
+# V4 #5: V12 uses v12-scoped node keys (v12:{journey_id}:* and v12-test-place-*),
+# so the shared place-* demo table was irrelevant to it.  The autonomous-recovery
+# scenario now declares its OWN explicit deterministic fixture legs in-test
+# (seed_explicit_mobility); no module-wide autouse inheritance.
+import pytest as _pytest  # noqa: E402,F401
+from _qoder_explicit_demo_mobility import (  # noqa: E402
+    seed_authoritative_recovery_mobility,
+)

@@ -57,3 +57,15 @@ def test_replan_v2_materializes_multi_slot_candidates_through_the_existing_gate(
         headers={"Idempotency-Key": f"v2-accept-{uuid4()}"},
     )
     assert accepted.status_code == 200, accepted.text
+
+
+# V2-B1: replan now refuses the mock fixture's blanket default 20 as a hard fact.
+# Seed the demo graph with *explicit* mobility so these replan-dependent tests
+# exercise trustworthy legs (see tests/_qoder_explicit_demo_mobility.py).
+import pytest as _pytest  # noqa: E402
+from _qoder_explicit_demo_mobility import SOLVER_V2_MOBILITY as _MODULE_MOBILITY, seed_module_mobility as _seed  # noqa: E402
+
+
+@_pytest.fixture(autouse=True)
+def _qoder_explicit_demo_mobility(monkeypatch):
+    _seed(monkeypatch, _MODULE_MOBILITY)

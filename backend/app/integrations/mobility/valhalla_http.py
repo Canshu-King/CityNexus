@@ -6,6 +6,8 @@ from typing import Any, Callable, Mapping
 
 import httpx
 
+from app.replanning.provider_snapshots import LIVE_PROVIDER_CAPTURE
+
 
 @dataclass(frozen=True)
 class ValhallaRouteEstimate:
@@ -116,6 +118,16 @@ class ValhallaHTTPMobilityProvider:
 
     def estimate_minutes(self, origin_place_id: str, destination_place_id: str) -> int:
         return self.estimate(origin_place_id, destination_place_id).duration_min
+
+    def fact_quality(self, origin_place_id: str, destination_place_id: str) -> str:
+        """Valhalla returns a measured route, so it attests LIVE explicitly.
+
+        Hard feasibility trusts this declaration, not the provider's name
+        (V4 #2).  If a request fails, the capture records a failure and the leg
+        is unavailable — it never falls back to a synthetic default here.
+        """
+
+        return LIVE_PROVIDER_CAPTURE
 
     def status_capabilities(self) -> dict[str, Any]:
         """Read deployment capabilities before labelling traffic as live."""

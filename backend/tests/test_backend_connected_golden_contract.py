@@ -131,3 +131,16 @@ def test_backend_connected_golden_scenario_contract():
     )
     with SessionLocal() as session:
         assert session.get(Activity, reloaded_c4["activity_id"]).plan_version_id == new_plan_id
+
+
+# V2-B1: the F3 opportunity-window family routes through legs the demo fixture
+# only supplied via the blanket default.  Give the demo graph *explicit* mobility
+# so this replan contract test exercises trustworthy facts (B1), not a 20 that
+# replan now refuses.
+import pytest as _pytest  # noqa: E402
+from _qoder_explicit_demo_mobility import GOLDEN_CONTRACT_MOBILITY as _MODULE_MOBILITY, seed_module_mobility as _seed  # noqa: E402
+
+
+@_pytest.fixture(autouse=True)
+def _qoder_explicit_demo_mobility(monkeypatch):
+    _seed(monkeypatch, _MODULE_MOBILITY)

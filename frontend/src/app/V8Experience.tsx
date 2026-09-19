@@ -44,6 +44,11 @@ import {
 import { useT, useLocale } from "../i18n/LocaleContext";
 import { formatMinorMoney, majorToMinor } from "../lib/money";
 import { withViewTransition } from "../lib/viewTransition";
+import { isDisruptionOpen } from "../lib/disruptionState";
+import {
+  budgetEvidenceCoverage,
+  budgetVerdictAllowed as budgetVerdictAllowedFor,
+} from "../lib/budgetEvidence";
 import { v8Modes, type RecoveryState, type V8Data, type V8Mode } from "./v8Types";
 
 type Policy = {
@@ -275,11 +280,12 @@ export function V8Experience() {
   const { locale, switchLocale } = useLocale();
   const t = useT();
   // "Needs attention" means an event the traveller has NOT already handled.
-  // An accepted replan leaves its trigger Event in ACKNOWLEDGED, which this
-  // product deliberately treats as "seen", not "resolved" — so the plan still
-  // lists it.  Counting that as an open problem made Today and the notification
-  // badge keep saying "1 项变化" forever while Live showed nothing to decide.
-  // Anything explicitly RESOLVED/IGNORED is likewise no longer attention.
+  // Acknowledgement is deliberately NOT resolution in this product: an
+  // ACKNOWLEDGED trigger means the traveller has *seen* the change, not that a
+  // recovery was chosen.  Only RESOLVED, IGNORED, or an accepted replan linked
+  // to this event closes it (T3 / docs/ACK_RESOLUTION_CONTRACT.md).  Counting a
+  // merely-acknowledged event as handled let Today and the notification badge
+  // go quiet while the disruption was still unresolved.
   const allDisruptions = useMemo(
     () => data?.active_plan?.disruptions ?? [],
     [data],
@@ -288,10 +294,8 @@ export function V8Experience() {
     (item: V8Data["active_plan"] extends null
       ? never
       : NonNullable<V8Data["active_plan"]>["disruptions"][number]) => {
-      const status = String(item.status ?? "").toUpperCase();
-      if (status === "ACKNOWLEDGED" || status === "RESOLVED" || status === "IGNORED") return true;
-      if (item.resolved_at) return true;
-      return handledEventIds.includes(item.id);
+      const acceptedTriggerIds: Set<string> = new Set(handledEventIds);
+      return !isDisruptionOpen(item, acceptedTriggerIds);
     },
     [handledEventIds],
   );
@@ -1734,20 +1738,15 @@ function Studio({
   const t = useT();
   const { locale } = useLocale();
   const [draftImpact, setDraftImpact] = useState<{ day: number; count: number } | null>(null);
-  // How many stops carry real cost evidence?  Only then can the budget part of
-  // the safety check be described as verified.  The evidence lives on the
-  // authoritative plan's activities (`cost_status`), not on the /experience
-  // projection, so it is read from `plan`.
+  // How much of the budget is actually evidenced?  A single priced stop does
+  // not verify a total, and a stop with no provider price is not a free stop.
+  // The evidence lives on the authoritative plan's activities (`cost_status`),
+  // not on the /experience projection, so it is read from `plan`
+  // (T4 / docs/BUDGET_EVIDENCE_CONTRACT.md).
   const planActivities = plan?.activities ?? [];
-  const pricedStops = planActivities.filter((item) => {
-    const status = String(
-      (item as { cost_status?: string | null }).cost_status ?? "",
-    ).toUpperCase();
-    if (status === "KNOWN" || status === "KNOWN_FREE" || status === "KNOWN_PAID") return true;
-    if (status === "UNKNOWN") return false;
-    return (item.estimated_cost?.amount_minor ?? 0) > 0;
-  }).length;
-  const hasPricedEvidence = planActivities.length > 0 && pricedStops > 0;
+  const costEvidence = budgetEvidenceCoverage(planActivities);
+  const pricedStops = costEvidence.knownCount;
+  const budgetVerdictAllowed = budgetVerdictAllowedFor(costEvidence);
   return (
     <section className="v8-page" data-testid="v8-trip-studio">
       <div className="v8-page-intro compact">
@@ -1859,20 +1858,26 @@ function Studio({
           {/* The plan gate has nothing to validate before a plan exists, and
               it cannot verify a budget it has no prices for: a stop with no
               provider price is not a free stop.  Claiming "budget verified"
-              over an all-unknown itinerary is a fabricated fact. */}
+              over an all-unknown itinerary is a fabricated fact, and one known
+              price beside many unknown ones is only partial evidence — never a
+              total (T4 / docs/BUDGET_EVIDENCE_CONTRACT.md). */}
           {data.active_plan ? (
             <div className="v8-feasibility" data-testid="studio-feasibility">
               <span className="status-dot" />
               <div>
                 <b>
-                  {hasPricedEvidence
+                  {budgetVerdictAllowed
                     ? t("studio.feasibilityPassed")
                     : t("studio.feasibilityPassedPartial")}
                 </b>
                 <small>
-                  {hasPricedEvidence
+                  {budgetVerdictAllowed
                     ? t("studio.feasibilitySub")
-                    : t("studio.feasibilityNoPrice")}
+                    : costEvidence.state === "PARTIAL"
+                      ? t("studio.feasibilityPartialSub", {
+                          n: costEvidence.unverifiedCount,
+                        })
+                      : t("studio.feasibilityNoPrice")}
                 </small>
               </div>
             </div>

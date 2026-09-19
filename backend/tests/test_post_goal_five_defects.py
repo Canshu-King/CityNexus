@@ -215,3 +215,15 @@ def test_traffic_delay_honors_explicit_extra_minutes_semantics():
         assert changed is not None
         delta = datetime.fromisoformat(changed.start_at) - datetime.fromisoformat(tech["start_at"])
         assert int(delta.total_seconds() // 60) == 25
+
+
+# V2-B1: replan now refuses the mock fixture's blanket default 20 as a hard fact.
+# Seed the demo graph with *explicit* mobility so these replan-dependent tests
+# exercise trustworthy legs (see tests/_qoder_explicit_demo_mobility.py).
+import pytest as _pytest  # noqa: E402
+from _qoder_explicit_demo_mobility import POST_GOAL_MOBILITY as _MODULE_MOBILITY, seed_module_mobility as _seed  # noqa: E402
+
+
+@_pytest.fixture(autouse=True)
+def _qoder_explicit_demo_mobility(monkeypatch):
+    _seed(monkeypatch, _MODULE_MOBILITY)

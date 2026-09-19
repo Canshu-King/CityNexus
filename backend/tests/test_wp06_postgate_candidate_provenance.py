@@ -105,3 +105,15 @@ def test_public_event_provenance_is_server_assigned_and_demo_time_is_determinist
     with SessionLocal() as session:
         stored = session.get(Event, fallback.json()["id"])
         assert stored.provenance == "USER_REPORTED"
+
+
+# V2-B1: replan now refuses the mock fixture's blanket default 20 as a hard fact.
+# Seed the demo graph with *explicit* mobility so these replan-dependent tests
+# exercise trustworthy legs (see tests/_qoder_explicit_demo_mobility.py).
+import pytest as _pytest  # noqa: E402
+from _qoder_explicit_demo_mobility import WP06_POSTGATE_MOBILITY as _MODULE_MOBILITY, seed_module_mobility as _seed  # noqa: E402
+
+
+@_pytest.fixture(autouse=True)
+def _qoder_explicit_demo_mobility(monkeypatch):
+    _seed(monkeypatch, _MODULE_MOBILITY)

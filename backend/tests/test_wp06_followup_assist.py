@@ -222,3 +222,15 @@ def test_f3_family_is_backed_by_next_c4_window_evidence():
     assert verified["commitment_preservation"]["protected_count"] >= 1
     assert verified["mobility"]["provider"] == "mock-mobility"
     assert verified["opportunity"]["evidence"] == evidence
+
+
+# V2-B1: replan now refuses the mock fixture's blanket default 20 as a hard fact.
+# Seed the demo graph with *explicit* mobility so these replan-dependent tests
+# exercise trustworthy legs (see tests/_qoder_explicit_demo_mobility.py).
+import pytest as _pytest  # noqa: E402
+from _qoder_explicit_demo_mobility import WP06_FOLLOWUP_MOBILITY as _MODULE_MOBILITY, seed_module_mobility as _seed  # noqa: E402
+
+
+@_pytest.fixture(autouse=True)
+def _qoder_explicit_demo_mobility(monkeypatch):
+    _seed(monkeypatch, _MODULE_MOBILITY)

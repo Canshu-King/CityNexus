@@ -8,7 +8,11 @@ from fastapi.testclient import TestClient
 import app.main as main_module
 from app.integrations.mobility.snapshot_capture import capture_mobility_snapshot
 from app.integrations.mock.providers import MockMobilityProvider
-from app.replanning.provider_snapshots import MobilitySnapshot, TravelEstimateFact
+from app.replanning.provider_snapshots import (
+    LIVE_PROVIDER_CAPTURE,
+    MobilitySnapshot,
+    TravelEstimateFact,
+)
 
 client = TestClient(main_module.app)
 
@@ -24,6 +28,17 @@ class _Provider:
         if pair in self.fail:
             raise RuntimeError("provider unavailable")
         return self.mock.estimate_minutes(origin_key, destination_key)
+
+    def fact_quality(self, origin_key: str, destination_key: str) -> str:
+        # Provider-contract double: it stands for a healthy capturing routing
+        # provider (valhalla primary, or its degraded fallback), which attests
+        # LIVE for a measurement, mirroring app.integrations.mobility.
+        # valhalla_http.fact_quality.  A failed pair raises so the capture falls
+        # back rather than fabricating (V4 #2: doubles declare their own honest
+        # quality instead of relying on provider-name laundering).
+        if (origin_key, destination_key) in self.fail:
+            raise RuntimeError("provider unavailable")
+        return LIVE_PROVIDER_CAPTURE
 
 
 def _prepare_disruption() -> tuple[str, dict]:
@@ -168,6 +183,11 @@ class _ConstantProvider:
 
     def estimate_minutes(self, origin_key: str, destination_key: str) -> int:
         return 0 if origin_key == destination_key else self.minutes
+
+    def fact_quality(self, origin_key: str, destination_key: str) -> str:
+        # Healthy capturing routing provider (valhalla): attests LIVE for each
+        # measurement, mirroring app.integrations.mobility.valhalla_http.
+        return LIVE_PROVIDER_CAPTURE
 
 
 def _snapshot_route_total(plan: dict, snapshot_payload: dict) -> int:

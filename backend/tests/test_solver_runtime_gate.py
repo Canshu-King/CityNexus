@@ -25,6 +25,21 @@ from app.planning.solver_runtime import SolverAttempt
 client = TestClient(main_module.app)
 
 
+# V2-B1: replan now refuses the mock fixture's blanket default 20 as a hard fact.
+# These gate tests exercise solver/window/budget behaviour on top of a real
+# replan, so give the demo graph *explicit* mobility rather than a fabricated
+# constant (see tests/_qoder_explicit_demo_mobility.py).
+from _qoder_explicit_demo_mobility import (  # noqa: E402
+    SOLVER_RUNTIME_MOBILITY as _MODULE_MOBILITY,
+    seed_module_mobility as _seed,
+)
+
+
+@pytest.fixture(autouse=True)
+def _explicit_demo_mobility(monkeypatch):
+    _seed(monkeypatch, _MODULE_MOBILITY)
+
+
 def _prepare_disruption() -> tuple[str, dict[str, object], dict[str, object]]:
     ids = client.post("/api/v1/demo/reset").json()
     journey_id = ids["journey_id"]
