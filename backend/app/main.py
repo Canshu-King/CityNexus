@@ -4019,6 +4019,16 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
         return journey_schema(journey)
     if plan.status not in {"CANDIDATE", "SELECTED"}:
         raise HTTPException(422, "Only a candidate plan can be selected")
+    # Selecting a different plan leaves the one the traveller may have been executing.
+    # Retire it here, in the same transaction, with a predicate the database evaluates
+    # against the current row.  Without this the abandoned plan stays ACTIVE with
+    # nothing pointing at it: still one ACTIVE row, so the unique index cannot see the
+    # corruption, and no projection can explain which plan the Journey is running.
+    abandoned_id = (
+        journey.active_plan_version_id
+        if journey.active_plan_version_id != plan.id
+        else None
+    )
     constraints = _journey_constraints_with_capabilities(session, journey, active_only=True)
     places = {
         place.id: place
@@ -4108,6 +4118,32 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
         )
         if match is not None:
             commitment.activity_id = match.id
+    if abandoned_id is not None:
+        retired = session.execute(
+            update(PlanVersion)
+            .where(PlanVersion.id == abandoned_id, PlanVersion.status == "ACTIVE")
+            .values(status="SUPERSEDED")
+        )
+        if retired.rowcount != 1:
+            session.rollback()
+            raise HTTPException(
+                409, "the plan being replaced is no longer the ACTIVE plan"
+            )
+        # The cursor named a step on the plan being abandoned.  Leaving it there would
+        # be exactly the stale-cursor state the projection contract refuses to render,
+        # so it moves to the first pending step of the plan now selected.
+        journey.current_activity_id = next(
+            (
+                item.id
+                for item in session.scalars(
+                    select(Activity)
+                    .where(Activity.plan_version_id == plan.id)
+                    .order_by(Activity.sequence_no)
+                ).all()
+                if item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+            ),
+            None,
+        )
     journey.status = "PLANNED"
     journey.active_plan_version_id = plan.id
     journey.updated_at = datetime.now(timezone.utc).isoformat()
@@ -8746,7 +8782,94 @@ def _accept_replan_impl(
         return _accept_replan_serialized_impl(proposal_id, idempotency_key, session, **kwargs)
 
 
+def _replay_committed_accept(
+    session: Session, scoped_key: str, signature: str, *, wait: bool = False
+) -> dict[str, Any] | None:
+    """Return the canonical response for an already-claimed idempotency key.
+
+    The receipt row is inserted inside the same transaction as the plan transition,
+    so finding it populated is proof the transition committed - not a guess that a
+    sibling request probably succeeded.
+    """
+
+    attempts = 40 if wait else 1
+    for attempt in range(attempts):
+        session.expire_all()
+        row = session.get(IdempotencyKey, scoped_key)
+        if row is not None:
+            if row.request_hash != signature:
+                raise HTTPException(409, "same idempotency key used for a different request")
+            stored = json.loads(row.response_json or "{}")
+            if stored:
+                return stored
+        if not wait or attempt == attempts - 1:
+            break
+        # Waiting on durable state, not on a schedule: exactly-one-transition is
+        # already guaranteed by the conditional writes and the unique index.  If the
+        # receipt never lands, the caller gets a deterministic 409 and the database
+        # is still correct.
+        time.sleep(0.02)
+    return None
+
+
 def _accept_replan_serialized_impl(
+    proposal_id: UUID,
+    idempotency_key: str | None,
+    session: Session,
+    *,
+    actor_type: str = "system",
+    actor_id: str | None = None,
+    policy_version: int | None = None,
+    authorization_decision: str | None = None,
+    reason_codes: tuple[str, ...] = (),
+):
+    """Accept a replan, replaying any response this key already produced.
+
+    The Journey lock above this call is an optimisation, not the contract.  Without
+    it, two processes sharing one database must still agree: one performs the
+    transition, the other discovers the committed receipt and returns the same body.
+    """
+
+    if idempotency_key is None:
+        raise HTTPException(422, "Idempotency-Key header is required")
+    try:
+        header_key = validate_idempotency_key(idempotency_key)
+    except CommerceValidationError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    scoped_key = f"replan.accept:{header_key}"
+    signature = canonical_request_signature({"proposal_id": str(proposal_id)})
+
+    replayed = _replay_committed_accept(session, scoped_key, signature)
+    if replayed is not None:
+        return replayed
+
+    kwargs = {
+        "actor_type": actor_type,
+        "actor_id": actor_id,
+        "policy_version": policy_version,
+        "authorization_decision": authorization_decision,
+        "reason_codes": reason_codes,
+    }
+    try:
+        return _accept_replan_executing(proposal_id, idempotency_key, session, **kwargs)
+    except HTTPException as exc:
+        if exc.status_code != 409:
+            raise
+        replayed = _replay_committed_accept(session, scoped_key, signature, wait=True)
+        if replayed is not None:
+            return replayed
+        raise
+    except IntegrityError as exc:
+        session.rollback()
+        replayed = _replay_committed_accept(session, scoped_key, signature, wait=True)
+        if replayed is not None:
+            return replayed
+        raise HTTPException(
+            409, "replan conflicts with an authoritative plan transition in progress"
+        ) from exc
+
+
+def _accept_replan_executing(
     proposal_id: UUID,
     idempotency_key: str | None,
     session: Session,

@@ -110,36 +110,52 @@ def _quarantine_existing_duplicates(connection) -> None:
 
 
 def _collapse_duplicate_active_plans(connection) -> None:
-    """Leave at most one ACTIVE PlanVersion per Journey before the index is built.
+    """Resolve historical duplicate ACTIVE plans using the Journey's own pointer.
 
-    The invariant itself is enforced by `ux_plan_versions_single_active`; this
-    only clears the historical violations that would stop that index from being
-    created on an existing database.  The survivor is the newest row, and the
-    losers take the status the product already uses for a plan a later plan
-    replaced.
+    The invariant itself is enforced by `ux_plan_versions_single_active`; this only
+    clears violations an existing database may already contain, so the index can be
+    created at all.
+
+    The survivor is *not* chosen by timestamp.  `journeys.active_plan_version_id` is
+    the product's authoritative statement of which plan a Journey is executing, and
+    picking "the newest row" can retire exactly that plan - trading two answers for
+    one answer nothing points at.  Where the pointer cannot settle the question, this
+    refuses to migrate rather than guess.
     """
 
     if not _table_exists(connection, "plan_versions"):
         return
-    connection.exec_driver_sql(
+    if not _table_exists(connection, "journeys"):
+        return
+    duplicates = connection.exec_driver_sql(
         """
-        UPDATE plan_versions
-        SET status = 'SUPERSEDED'
+        SELECT journey_id, group_concat(id) AS ids, COUNT(*) AS total
+        FROM plan_versions
         WHERE status = 'ACTIVE'
-          AND id NOT IN (
-              SELECT id FROM (
-                  SELECT id,
-                         ROW_NUMBER() OVER (
-                             PARTITION BY journey_id
-                             ORDER BY created_at DESC, version_no DESC, id DESC
-                         ) AS rank
-                  FROM plan_versions
-                  WHERE status = 'ACTIVE'
-              )
-              WHERE rank = 1
-          )
+        GROUP BY journey_id
+        HAVING COUNT(*) > 1
         """
-    )
+    ).fetchall()
+    for journey_id, ids, total in duplicates:
+        active_ids = [item for item in str(ids or "").split(",") if item]
+        pointer_row = connection.exec_driver_sql(
+            "SELECT active_plan_version_id FROM journeys WHERE id = ?", (journey_id,)
+        ).fetchone()
+        pointer_id = pointer_row[0] if pointer_row is not None else None
+        if pointer_id not in active_ids:
+            raise RuntimeError(
+                "refusing to migrate duplicate ACTIVE PlanVersions: Journey "
+                f"{journey_id!r} has {total} ACTIVE plans {active_ids} but its "
+                f"active_plan_version_id is {pointer_id!r}, which names none of them. "
+                "Choosing a winner by created_at/version_no would silently decide "
+                "which plan the traveller is executing; this is a data-integrity "
+                "conflict and must be repaired explicitly."
+            )
+        connection.exec_driver_sql(
+            "UPDATE plan_versions SET status = 'SUPERSEDED' "
+            "WHERE journey_id = ? AND status = 'ACTIVE' AND id <> ?",
+            (journey_id, pointer_id),
+        )
 
 
 def _migrate_reservation_identity(connection) -> None:

@@ -31,7 +31,14 @@ from sqlalchemy.exc import IntegrityError
 
 import app.main as main_module
 from app import concurrency_guards
-from app.db.models import Activity, Commitment, Journey, PlanVersion, ReplanProposal
+from app.db.models import (
+    Activity,
+    Commitment,
+    IdempotencyKey,
+    Journey,
+    PlanVersion,
+    ReplanProposal,
+)
 from app.db.session import SessionLocal
 from app.replanning.commitment_remap import (
     RemapConflict,
@@ -922,6 +929,67 @@ def test_the_database_itself_refuses_a_second_active_plan() -> None:
             )
             == 1
         ), "the rejected write left a second ACTIVE plan behind anyway"
+
+
+def test_one_idempotency_key_across_two_sessions_replays_without_the_lock() -> None:
+    """Same proposal, same key, no shared guard: one transition, two successes.
+
+    This is the last place where the in-process lock was load-bearing.  With the
+    lock removed, the loser used to collide with the winner's conditional update and
+    answer 409 - correct-looking only because one Python process happened to
+    serialize them.  The durable receipt, not the lock, has to decide.
+    """
+    from uuid import UUID as _UUID
+
+    from app.main import _accept_replan_serialized_impl
+
+    journey_id, _ = _started_for_race()
+    proposal = _proposal_for(
+        journey_id, _closed_activity_id(_plan_activities(journey_id)), "shared-key"
+    )
+    key = "one-key-two-processes"
+    barrier = threading.Barrier(2)
+    outcomes: list[tuple[str, Any]] = []
+
+    def worker() -> None:
+        barrier.wait()
+        with SessionLocal() as session:
+            try:
+                result = _accept_replan_serialized_impl(_UUID(proposal["id"]), key, session)
+                outcomes.append(("ok", result["journey"]["active_plan_version_id"]))
+            except Exception as exc:  # HTTPException from a genuine conflict
+                outcomes.append(
+                    ("err", getattr(exc, "status_code", type(exc).__name__))
+                )
+            finally:
+                session.rollback()
+                session.close()
+
+    threads = [threading.Thread(target=worker) for _ in range(2)]
+    for item in threads:
+        item.start()
+    for item in threads:
+        item.join()
+
+    assert [kind for kind, _ in outcomes] == ["ok", "ok"], (
+        f"both callers must receive the canonical idempotent success without the lock, "
+        f"got {outcomes}"
+    )
+    assert outcomes[0][1] == outcomes[1][1], (
+        "the two callers were shown different active plans, so one of them replayed "
+        "something that was never committed"
+    )
+    truth = _final_truth(journey_id)
+    _assert_one_winner(truth)
+    assert truth["journey_plan_id"] == outcomes[0][1]
+    with SessionLocal() as session:
+        receipts = session.scalars(
+            select(IdempotencyKey).where(IdempotencyKey.key == f"replan.accept:{key}")
+        ).all()
+        assert len(receipts) == 1, (
+            f"one idempotency key produced {len(receipts)} receipts; the replay is not "
+            "resting on a single durable fact"
+        )
 
 
 # --------------------------------------------------------------------------
