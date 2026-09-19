@@ -1489,6 +1489,16 @@ def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] |
                 "sequence_no": item.sequence_no,
                 "type": item.activity_type,
                 "title": item.title,
+                # Stable identity.  The canonical plan projection
+                # (GET /api/v1/plans/{id}) has always carried these, and a
+                # consumer of /experience has the same right to know *which
+                # place* an activity is.  Without them the only handle left is
+                # the title, which is localisable, renameable, and not a key —
+                # so "is the protected commitment still here?" silently becomes
+                # a string match.  Fix at this layer: the child PlanVersion
+                # created by an accepted replan keeps place_id intact.
+                "place_id": item.place_id,
+                "city_service_id": item.city_service_id,
                 "start_at": item.start_at,
                 "end_at": item.end_at,
                 "locked": bool(item.locked),
