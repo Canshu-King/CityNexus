@@ -80,6 +80,11 @@ class Settings:
     )
     solver_random_seed: int = int(os.getenv("CITYNEXUS_SOLVER_RANDOM_SEED", "1"))
     solver_max_time_seconds: float = float(os.getenv("CITYNEXUS_SOLVER_MAX_TIME_SECONDS", "1.0"))
+    # Process-ownership token for the authoritative frontend E2E gate.  The suite
+    # starts its own backend with a per-run value and refuses to trust a /health
+    # that does not echo it, so a server belonging to another checkout or another
+    # agent lane can never answer for this tree's tests again.
+    e2e_run_id: str | None = os.getenv("CITYNEXUS_E2E_RUN_ID") or None
 
 
 settings = Settings()

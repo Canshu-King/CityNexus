@@ -479,6 +479,11 @@ def health() -> dict[str, str]:
         "status": "ok",
         "database": "ok",
         "ai": "enabled" if settings.ai_enabled and settings.ai_api_key else "disabled",
+        # Echoed for the authoritative E2E gate (frontend/playwright.config.ts).
+        # Empty unless this process was started with CITYNEXUS_E2E_RUN_ID, which
+        # only a suite that owns the server does.
+        "e2e_run_id": settings.e2e_run_id or "",
+        "database_url": settings.database_url,
     }
 
 
