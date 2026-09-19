@@ -849,3 +849,30 @@ button[data-testid^="mode-"],
   font-size: 9px;
   letter-spacing: 0.02em;
 }
+
+
+/* The real seeded journey renders actual map markers for the first time (the
+   demo/reset trip has no located activities), and the audit immediately caught
+   the current-location badge: white 10px bold text on #d65e56 is 3.75:1 against
+   a 4.5:1 requirement. "Current" is a location, not a risk, so it takes the
+   accent fill rather than a deepened red, which also stops it reading the same
+   as .disrupted. --cn-accent-solid (#0a66ff in both schemes) is the one the
+   token set already defines for white label text at 4.82:1; the brighter link
+   accent fails in dark at 3.49:1. */
+.v9-map-marker.current {
+  background: var(--cn-accent-solid);
+}
+
+
+/* Today's day cards only became auditable once the seed produced a real
+   multi-day plan (the demo/reset trip has one day and no located activities).
+   Two hardcoded greys fail AA as body text: .v8-day-card p at #6c7889 is
+   4.48:1 on white and 3.8:1 on the dark surface, and the DAY n / meta row at
+   #9aa4b3 is 2.52:1. Both take the ink-secondary token, which clears 4.5:1 in
+   either scheme while staying visually subordinate to the stop name. */
+.v8-day-card p,
+.v8-day-card span,
+.v8-day-card small,
+.v8-day-detail-title small {
+  color: var(--cn-ink-secondary);
+}
