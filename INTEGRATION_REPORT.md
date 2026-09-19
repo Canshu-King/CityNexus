@@ -994,19 +994,43 @@ legacy 套件带 host `DEEPSEEK_API_KEY` 跑：3 passed / 1 failed，
 `docs/LEGACY_E2E_MIGRATION.md` 结尾还说它们"still red, deliberately"。两处按现状改写，
 并保留原则（红测试命名缺口 > 绿测试掩盖缺口）与将来留红时的写法要求。
 
-## 58. 门禁数字（同一次 authoritative 运行 `p16full1`，tree `6311382`）
+## 58. 证据卫生：一张"通过却空白"的截图（本轮自查发现）
+
+第一次 authoritative 全量跑（`p16full1`，tree `6311382`）是 45/0，但我按惯例去比对
+门禁重截的 PNG 时，`reports/product-v13.5/fully-grounded-discovery.png` 从 133910 字节
+掉到 91550 字节。看图：页面只剩发现表单，结果卡片整块不见。
+而这条 spec 是 **passed** 的——`v13-discovery-result`、`FULLY GROUNDED`、`valhalla`、
+`SELECTED` 全部断言过。
+
+原因不是功能退化，是**截图时机**：结果卡片淡入，而 `toBeVisible()` 在 opacity 0 就已经为真。
+上一轮恰好截在半透明（图上能看见卡片但发灰），这一轮截在淡入之前（完全空白）。
+一张在过渡中拍的图不是"已稳定表面"的证据——这正是 §29 那次 fullPage 假证据的同类错误，
+只是这次藏在通过状态里。
+
+修法（`1d922ef`）：截图前等该子树的动画进入终态，作用域限定在结果卡片，
+因为应用别处有无限循环的 pulse 点，文档级等待永远不收敛。修完这张图 178816 字节，
+内容比历史上任何一版都完整（候选列表含 `天津文化中心 · Eligible · openstreetmap-replay`、
+证据面板、`FULLY GROUNDED`、`SELECTED`）。
+
+其余 8 张 PNG 我做了像素级 diff 而不是只看字节：
+`mobility-sheet-desktop` 37.6% 变化但内容同构（同一模态、同一横幅、同一五种模式数据），
+差异是 fullPage 画布上模态的垂直锚点 + 时间戳 + 地图节点位置；
+其余在 0.02%–3.8%，为地图瓦片与动态时间文本。没有一张变成空白。
+
+## 59. 门禁数字（同一次 authoritative 运行 `p16full2`，tree `1d922ef`）
 
 | 门禁 | 结果 |
 |---|---|
-| authoritative 当前产品套件 | **45 expected / 0 unexpected / 0 flaky / 0 skipped**（114.9s） |
+| authoritative 当前产品套件 | **45 expected / 0 unexpected / 0 flaky / 0 skipped**（123.8s） |
+| 为什么不是 §58 那次 | `p16full1` 也是 45/0，但它产出的截图证据不合格；修 v13-5 的截图时机改变了树，所以整套重跑并只引用这一次 |
 | 与 §50 的 44/1 之差 | D 从红转绿：不是删断言，是补了表面主人；总数 45 不变 |
 | `qoder-*`（视觉/对比/几何/无障碍预算） | 31 results / 0 failed（对比 4、dock 几何 3、live 结构 9、移动溢出 1、today hero 2、ack 7、budget 5） |
 | SQLite 争用告警 | 0 次 |
 | `typecheck` / `typecheck:all` / `vite build` | 全部干净（build 4.70s） |
 | 后端套件（同环境，单跑） | 836 passed / 15 skipped / 0 failed（56.7s；比 §50 多 2 条 = 身份契约回归） |
-| legacy 非门禁套件（AI 关闭） | 4 passed（21.2s） |
+| legacy 非门禁套件 | AI 关闭 4 passed（21.2s）；继承 host `DEEPSEEK_API_KEY` 时 3 passed / 1 failed（§56） |
 
-## 59. 请判
+## 60. 请判
 
 1. §54 那条撤回是否接受：预防在真实 mobility 下买到时间余量而非换点，
    "真地点进入计划"的所有者仍是 v13-5。若你认为预防本身就必须引入 real-place，
@@ -1018,3 +1042,7 @@ legacy 套件带 host `DEEPSEEK_API_KEY` 跑：3 passed / 1 failed，
 4. 四条 port-first 全绿、0 unexpected、0 flaky。§51.4 提的签发条件
    （authoritative 0 unexpected + D 有 owner）现已同时满足，是否签发
    `INTEGRATION_CANDIDATE_READY_FOR_MAIN`，还是仍有 RC 项（OSM fallback、live-AI 韧性）挡在前面？
+5. §58 那个截图时机缺陷我只修了暴露出来的这一张（v13-5）。另 8 张我做了像素 diff 确认
+   内容未退化，但它们的 spec 里没有同样的"等动画终态"步骤。是否要求我把 settled 等待
+   推广成截图门的通用前置，还是留在"发现即修"的粒度（我倾向通用前置，但那属于宽泛
+   视觉工作线，pass-14 之后你两次让我不要重开）。
