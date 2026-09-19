@@ -304,7 +304,7 @@ export function LiveRecovery({
             : `Option ${String.fromCharCode(65 + index)}`;
           const summary = proposal.explanation?.summary?.trim();
           return (
-            <article className="live-proposal" key={proposal.id} data-testid="live-proposal">
+            <article className="live-proposal" key={proposal.id} data-testid="live-proposal" data-state={busy === proposal.id ? "accepting" : "idle"}>
               <b>
                 {optionLabel} · {zh ? "推荐怎么改" : "Suggested change"}
               </b>

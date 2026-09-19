@@ -831,6 +831,7 @@ export function V8Experience() {
               )}
               <button
                 className={route === item.key ? "active" : ""}
+                data-contrast-role={route === item.key ? "state" : undefined}
                 onClick={() => navigate(item.key)}
               >
                 <Icon name={item.icon} />
@@ -883,6 +884,7 @@ export function V8Experience() {
             <button
               className="v9-language"
               data-testid="topbar-language"
+              data-contrast-role="control"
               aria-label="Switch language"
               onClick={switchLocale}
             >
@@ -1004,28 +1006,34 @@ export function V8Experience() {
             />
           )}
           {route === "live" && (
-            <LiveRecovery
-              journeyId={data.journey.id}
-              handledEventIds={handledEventIds}
-              onAccepted={() => void load(data.journey.id)}
-            />
-          )}
-          {route === "live" && (
-            <>
+            <div
+              className="live-shell"
+              data-decision-active={disruptions.length > 0 ? "true" : "false"}
+            >
               <Live
+                data={data}
+                selected={selected}
+                mode={mode}
+                onRain={triggerRain}
+                onLocation={shareForegroundLocation}
+                offline={offline}
+              />
+              <LiveRecovery
+                journeyId={data.journey.id}
+                handledEventIds={handledEventIds}
+                onAccepted={() => void load(data.journey.id)}
+              />
+              <LiveSecondary
                 data={data}
                 selected={selected}
                 mode={mode}
                 comparison={comparison}
                 isHandledDisruption={isHandledDisruption}
                 onMode={changeMode}
-                onRain={triggerRain}
                 onSheet={() => setSheetOpen(true)}
-                onLocation={shareForegroundLocation}
-                offline={offline}
               />
               <V10LiveExecutionPanel journeyId={data.journey.id} />
-            </>
+            </div>
           )}
           {route === "map" && (
             <MapPage
@@ -1129,6 +1137,11 @@ export function V8Experience() {
           <button
             key={item.key}
             data-testid={`nav-${item.key}`}
+            data-contrast-role={
+              route === item.key || (item.key === "map" && route === "live")
+                ? "state"
+                : undefined
+            }
             className={
               route === item.key || (item.key === "map" && route === "live")
                 ? "active"
@@ -1162,7 +1175,7 @@ export function V8Experience() {
             </div>
             {drawerRoutes.map((item, index) => (
               <div key={item.key}>
-                {("group" in item && (index === 0 || !("group" in drawerRoutes[index - 1]) || drawerRoutes[index - 1].group !== item.group)) && (
+                {("group" in item && (index === 0 || !("group" in drawerRoutes[index - 1]) || (drawerRoutes[index - 1] as { group?: string }).group !== item.group)) && (
                   <span className="v8-nav-group">{"group" in item ? item.group : "MORE"}</span>
                 )}
                 <button
@@ -1279,7 +1292,7 @@ function TripsWorkspace({
               kept for developers behind an Advanced disclosure. */}
           <JourneyInboxWorkbench
             journeyId={data.journey.id}
-            onConfirmed={onRefresh}
+            onConfirmed={async () => { onRefresh(); }}
           />
           <details className="trips-advanced">
             <summary>{zh ? "高级 / 开发者" : "Advanced / developer"}</summary>
@@ -1466,7 +1479,16 @@ function Hub({
   // not keep Today in a permanent "needs attention" state.
   const disruptions = planDisruptions.filter((item) => !isHandledDisruption(item));
   const handledDisruptions = planDisruptions.filter((item) => isHandledDisruption(item));
-  const nextClock = nextStop ? clockInZone(nextStop.start_at, journeyTz) : null;
+  // Single-focus hero: "Now" only when something is genuinely in progress, and
+  // "Next" as the one upcoming action. No empty current slot is ever fabricated.
+  const currentStop =
+    activities.find(
+      (item) => Date.parse(item.start_at) <= nowMs && Date.parse(item.end_at) >= nowMs,
+    ) ?? null;
+  const nextUp = currentStop
+    ? activities.find((item) => Date.parse(item.start_at) > Date.parse(currentStop.end_at)) ?? null
+    : nextStop;
+  const heroClock = nextUp ? clockInZone(nextUp.start_at, journeyTz) : null;
 
   return (
     <section className="v8-page">
@@ -1521,7 +1543,7 @@ function Hub({
           </p>
         </div>
         <div className="v8-hub-actions">
-          <button className="v9-language v8-home-language" data-testid="home-language" aria-label="Switch language" onClick={switchLocale}>
+          <button className="v9-language v8-home-language" data-testid="home-language" data-contrast-role="control" aria-label="Switch language" onClick={switchLocale}>
             {t("nav.language")}
           </button>
           <button className="v8-outline-button" onClick={onNewJourney}>
@@ -1541,115 +1563,129 @@ function Hub({
         </div>
       </div>
       <div className="v8-hero-grid">
-        <article className="v8-trip-hero">
-          <div className="v8-trip-hero-head">
-            <div>
-              <span className="v8-status-pill">
-                <span className="status-dot" />
-                {t("hub.planningReady")}
-              </span>
-              <h2>{data.journey.title}</h2>
-              <p>
-                <Icon name="calendar" />
-                {dateInZone(data.journey.start_at, locale, journeyTz)} — {dateInZone(data.journey.end_at, locale, journeyTz)}{" "}
-                <span>·</span> {t("shell.travelers", { n: data.trip.party_size })}
-              </p>
+        <article
+          className="v8-trip-hero cn-now-next-hero"
+          data-testid="today-hero"
+          data-now={currentStop ? "true" : "false"}
+        >
+          {currentStop ? (
+            <div className="cn-hero-now" data-testid="today-now">
+              <span className="cn-hero-label">{zh ? "现在" : "Now"}</span>
+              <strong className="cn-hero-now-place">{currentStop.title}</strong>
             </div>
-            <button
-              className="v8-quiet-button"
-              onClick={() => onNavigate("studio")}
-            >
-              {t("hub.viewPlan")}
-            </button>
-          </div>
-          <div className="today-actions" data-testid="today-next">
-            <div>
-              <span>{zh ? "下一步" : "Next"}</span>
-              <strong>
-                {nextStop
-                  ? `${nextClock ?? ""} ${nextStop.title}`.trim()
-                  : zh
-                    ? "还没有安排"
-                    : "Nothing scheduled"}
-              </strong>
-              <small>
+          ) : null}
+          <div className="cn-hero-next" data-testid="today-next">
+            <span className="cn-hero-label">
+              {nextUp ? (zh ? "接下来" : "Next") : zh ? "今天" : "Today"}
+            </span>
+            <strong className="cn-hero-next-row">
+              {nextUp
+                ? `${heroClock ?? ""} ${nextUp.title}`.trim()
+                : zh
+                  ? "还没有安排"
+                  : "Nothing scheduled"}
+            </strong>
+            {nextUp ? (
+              <small className="cn-hero-meta">
                 {todayStops.length
                   ? zh
-                    ? `今天有 ${todayStops.length} 项安排`
+                    ? `今天还有 ${todayStops.length} 项安排`
                     : `${todayStops.length} stops today`
                   : zh
-                    ? "今天没有安排"
-                    : "Nothing today"}
+                    ? "下一站之后暂无安排"
+                    : "Nothing scheduled after this"}
               </small>
-            </div>
-            <div>
-              <span>{zh ? "住宿" : "Stay"}</span>
-              <strong data-testid="today-stay">
-                {chosenStay
-                  ? chosenStay.stay.property_name
-                  : zh
-                    ? "还没有选定"
-                    : "Not chosen yet"}
-              </strong>
-              <small>
-                {chosenStay
-                  ? zh
-                    ? "已确认的住宿"
-                    : "Confirmed stay"
-                  : zh
-                    ? "去「行程 · 住宿」挑选"
-                    : "Choose in Trips · Stay"}
-              </small>
-            </div>
-            <div>
-              <span>{zh ? "需要关注" : "Attention"}</span>
-              <strong
-                className={disruptions.length ? "warn" : "green"}
-                data-testid="today-attention"
-              >
-                {disruptions.length
-                  ? zh
-                    ? `${disruptions.length} 项变化`
-                    : `${disruptions.length} change(s)`
-                  : handledDisruptions.length
-                    ? zh
-                      ? "已处理"
-                      : "Handled"
-                    : zh
-                      ? "一切正常"
-                      : "All clear"}
-              </strong>
-              <small>
-                {disruptions.length
-                  ? zh
-                    ? "打开「实时行程」查看"
-                    : "Open Live to review"
-                  : handledDisruptions.length
-                    ? zh
-                      ? "刚才的变化已经处理好"
-                      : "The earlier change has been handled"
-                    : zh
-                      ? "没有影响行程的变化"
-                      : "Nothing affecting your trip"}
-              </small>
-            </div>
+            ) : null}
           </div>
-          <div className="v8-anchor-row">
-            <div>
-              <span>{t("hub.arrival")}</span>
-              <b>{dateInZone(data.trip.arrival_anchor.at, locale, journeyTz)}</b>
-              <small>{data.trip.arrival_anchor.location}</small>
-            </div>
-            <div className="anchor-line" />
-            <div>
-              <span>{t("hub.departure")}</span>
-              <b>{dateInZone(data.trip.departure_anchor.at, locale, journeyTz)}</b>
-              <small>{data.trip.departure_anchor.location}</small>
-            </div>
-          </div>
+          {nextUp ? (
+            <button
+              type="button"
+              className="v8-primary cn-hero-cta"
+              data-testid="today-hero-cta"
+              data-contrast-role="control"
+              onClick={() => onNavigate("live")}
+            >
+              {zh ? "查看实时行程" : "Open Live"}
+            </button>
+          ) : null}
         </article>
         <MapPanel data={data} option={selected} />
       </div>
+      {/* Stay / booking steps OUT of the hero into a compact strip: the hero owns
+          one action, lodging is secondary context (GPT Hero rules). */}
+      <div className="cn-hero-strip" data-testid="today-strip">
+        <div className="cn-strip-item">
+          <span>{zh ? "住宿" : "Stay"}</span>
+          <strong data-testid="today-stay">
+            {chosenStay
+              ? chosenStay.stay.property_name
+              : zh
+                ? "还没有选定"
+                : "Not chosen yet"}
+          </strong>
+        </div>
+        <div className="cn-strip-item">
+          <span>{t("hub.arrival")}</span>
+          <b>{dateInZone(data.trip.arrival_anchor.at, locale, journeyTz)}</b>
+        </div>
+        <div className="cn-strip-item">
+          <span>{t("hub.departure")}</span>
+          <b>{dateInZone(data.trip.departure_anchor.at, locale, journeyTz)}</b>
+        </div>
+      </div>
+      {/* Attention is its own band, not a tile squeezed beside "Next"/"Stay":
+          Apple hierarchy says a change that needs the traveller is the loudest
+          thing after Now/Next, and an all-clear is a quiet line, not a card.
+          The `today-attention` element is always rendered (same logic and
+          strings as before); only its presentation escalates via data-attention. */}
+      <section
+        className="cn-attention-band"
+        data-testid="today-attention-band"
+        data-attention={
+          disruptions.length ? "open" : handledDisruptions.length ? "handled" : "clear"
+        }
+        aria-label={zh ? "需要关注" : "Needs attention"}
+      >
+        <div className="cn-attention-head">
+          <span className="v8-kicker">{zh ? "需要关注" : "Attention"}</span>
+          <strong
+            className={disruptions.length ? "warn" : "green"}
+            data-testid="today-attention"
+          >
+            {disruptions.length
+              ? zh
+                ? `${disruptions.length} 项变化`
+                : `${disruptions.length} change(s)`
+              : handledDisruptions.length
+                ? zh
+                  ? "已处理"
+                  : "Handled"
+                : zh
+                  ? "一切正常"
+                  : "All clear"}
+          </strong>
+        </div>
+        {disruptions.length > 0 || handledDisruptions.length > 0 ? (
+          <p className="cn-attention-hint">
+            {disruptions.length
+              ? zh
+                ? "打开「实时行程」查看并处理这些变化。"
+                : "Open Live to review these changes."
+              : zh
+                ? "刚才的变化已经处理好。"
+                : "The earlier change has been handled."}
+          </p>
+        ) : null}
+        {disruptions.length > 0 && (
+          <button
+            type="button"
+            className="v8-primary cn-attention-cta"
+            onClick={() => onNavigate("live")}
+          >
+            {zh ? "查看实时行程" : "Review in Live"}
+          </button>
+        )}
+      </section>
       <div className="v8-section-heading">
         <div>
           <p className="v8-kicker">{t("hub.planGlance")}</p>
@@ -1972,44 +2008,22 @@ function Live({
   data,
   selected,
   mode,
-  comparison,
-  isHandledDisruption,
-  onMode,
   onRain,
-  onSheet,
   onLocation,
   offline,
 }: {
   data: V8Data;
   selected: V8Data["options"][number] | null;
   mode: V8Mode;
-  comparison: V8Data["mobility_facts"];
-  /** Whether a disruption has already been dealt with (accepted replan). */
-  isHandledDisruption: (item: NonNullable<V8Data["active_plan"]>["disruptions"][number]) => boolean;
-  onMode: (mode: V8Mode) => Promise<void>;
   onRain: () => Promise<void>;
-  onSheet: () => void;
   onLocation: () => Promise<void>;
   offline: OfflineJourney | null;
 }) {
   const t = useT();
   const { locale } = useLocale();
-  const zh = locale.startsWith("zh");
   const now = data.active_plan?.activities[0];
   const next = data.active_plan?.activities[1];
   const nextLeg = data.active_plan?.legs[0];
-  // The Live risk line reports only what still needs the traveller.  A trigger
-  // Event stays in the plan payload after an accepted replan (ACKNOWLEDGED is
-  // deliberately not resolution in this product), so counting it as an open
-  // disruption made Live keep warning about a problem that was already solved.
-  const planDisruptions = data.active_plan?.disruptions ?? [];
-  const disruptions = planDisruptions.filter((item) => !isHandledDisruption(item));
-  const destination =
-    next?.metadata.longitude != null && next?.metadata.latitude != null
-      ? data.journey.city_code.startsWith("CN-")
-        ? `https://uri.amap.com/navigation?to=${next.metadata.longitude},${next.metadata.latitude},${encodeURIComponent(next.title)}&mode=walk&coordinate=wgs84&callnative=1`
-        : `https://www.google.com/maps/dir/?api=1&destination=${next.metadata.latitude},${next.metadata.longitude}`
-      : null;
   return (
     <section className="v8-page" data-testid="v8-live-journey">
       <div className="v8-page-intro compact">
@@ -2039,53 +2053,90 @@ function Live({
           </button>
         </div>
       </div>
-      <div className="v8-live-grid">
-        <div className="v8-live-main">
-          <MapPanel data={data} option={selected} />
-          <div className="v8-live-now">
-            <span className="v8-live-label">
-              <span className="status-dot pulse" />
-              {t("live.now")}
-            </span>
-            <div>
-              <h2 data-testid="live-journey-current">
-                {now
-                  ? now.title
-                  : `${t("live.awaitingPlan")}${selected?.stay.property_name ? ` · ${selected.stay.property_name}` : ""}`}
-              </h2>
-              <p>
-                {next
-                  ? t("live.nextLeg", { title: next.title, mode: nextLeg?.mode?.toLowerCase() ?? mode.toLowerCase(), duration: nextLeg?.duration_min ?? t("live.durationPending"), unit: nextLeg ? " min" : "" })
-                  : t("live.nextSelect")}
-              </p>
-            </div>
-            <strong>
-              {now ? clockInZone(now.start_at, data.journey.timezone || "UTC") : t("live.awaitingPlanUpper")}
-            </strong>
+      <div className="v8-live-main">
+        <div className="v8-live-now">
+          <span className="v8-live-label">
+            <span className="status-dot pulse" />
+            {t("live.now")}
+          </span>
+          <div>
+            <h2 data-testid="live-journey-current">
+              {now
+                ? now.title
+                : `${t("live.awaitingPlan")}${selected?.stay.property_name ? ` · ${selected.stay.property_name}` : ""}`}
+            </h2>
+            <p>
+              {next
+                ? t("live.nextLeg", { title: next.title, mode: nextLeg?.mode?.toLowerCase() ?? mode.toLowerCase(), duration: nextLeg?.duration_min ?? t("live.durationPending"), unit: nextLeg ? " min" : "" })
+                : t("live.nextSelect")}
+            </p>
           </div>
-          <div className="v8-mode-chooser">
-            <div>
-              <span>{t("live.modeForLeg")}</span>
-              <b>{t("live.chooseRoute")}</b>
-            </div>
-            <div className="v8-mode-chips">
-              {v8Modes.map((item) => (
-                <button
-                  data-testid={`mode-${item.toLowerCase()}`}
-                  key={item}
-                  className={mode === item ? "active" : ""}
-                  onClick={() => void onMode(item)}
-                >
-                  {modeLabel(item, zh)}
-                </button>
-              ))}
-            </div>
-            <button className="v8-compare-button" onClick={onSheet}>
-              {t("live.compareAll")}
-            </button>
-          </div>
+          <strong>
+            {now ? clockInZone(now.start_at, data.journey.timezone || "UTC") : t("live.awaitingPlanUpper")}
+          </strong>
         </div>
-        <aside className="v8-live-side">
+        <MapPanel data={data} option={selected} />
+      </div>
+    </section>
+  );
+}
+
+function LiveSecondary({
+  data,
+  selected,
+  mode,
+  comparison,
+  isHandledDisruption,
+  onMode,
+  onSheet,
+}: {
+  data: V8Data;
+  selected: V8Data["options"][number] | null;
+  mode: V8Mode;
+  comparison: V8Data["mobility_facts"];
+  isHandledDisruption: (item: NonNullable<V8Data["active_plan"]>["disruptions"][number]) => boolean;
+  onMode: (mode: V8Mode) => Promise<void>;
+  onSheet: () => void;
+}) {
+  const t = useT();
+  const { locale } = useLocale();
+  const zh = locale.startsWith("zh");
+  const next = data.active_plan?.activities[1];
+  const nextLeg = data.active_plan?.legs[0];
+  const planDisruptions = data.active_plan?.disruptions ?? [];
+  const disruptions = planDisruptions.filter((item) => !isHandledDisruption(item));
+  const destination =
+    next?.metadata.longitude != null && next?.metadata.latitude != null
+      ? data.journey.city_code.startsWith("CN-")
+        ? `https://uri.amap.com/navigation?to=${next.metadata.longitude},${next.metadata.latitude},${encodeURIComponent(next.title)}&mode=walk&coordinate=wgs84&callnative=1`
+        : `https://www.google.com/maps/dir/?api=1&destination=${next.metadata.latitude},${next.metadata.longitude}`
+      : null;
+  return (
+    <section className="v8-page" data-testid="v8-live-secondary">
+      <div className="cn-live-secondary">
+        <div className="v8-mode-chooser">
+          <div>
+            <span>{t("live.modeForLeg")}</span>
+            <b>{t("live.chooseRoute")}</b>
+          </div>
+          <div className="v8-mode-chips">
+            {v8Modes.map((item) => (
+              <button
+                data-testid={`mode-${item.toLowerCase()}`}
+                key={item}
+                className={mode === item ? "active" : ""}
+                data-contrast-role={mode === item ? "state" : "control"}
+                onClick={() => void onMode(item)}
+              >
+                {modeLabel(item, zh)}
+              </button>
+            ))}
+          </div>
+          <button className="v8-compare-button" onClick={onSheet}>
+            {t("live.compareAll")}
+          </button>
+        </div>
+        <div className="v8-live-side">
           <div className="v8-next-card">
             <span>{t("live.leaveBy")}</span>
             <h3>{next?.title ?? t("live.awaitingPlan")}</h3>
@@ -2147,7 +2198,7 @@ function Live({
             ))}
             <small>{t("live.providerFacts")}</small>
           </details>
-        </aside>
+        </div>
       </div>
     </section>
   );
@@ -2458,7 +2509,7 @@ function Me({
   data: V8Data;
   policy: Policy | null;
   onActivate: () => Promise<void>;
-  wallet?: WalletSnapshot | null;
+  wallet?: Wallet | null;
 }) {
   const t = useT();
   const { locale } = useLocale();
