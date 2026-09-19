@@ -209,7 +209,7 @@ export function JourneyTrialSetup({
   };
 
   return (
-    <section className="v8-page" data-testid="trial-setup">
+    <section className="v8-page cn-onboarding" data-testid="trial-setup">
       <div className="v8-page-intro compact">
         <div>
           <p className="v8-kicker">{t("trial.kicker")}</p>
