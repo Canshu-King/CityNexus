@@ -979,6 +979,14 @@ TIMING 行是 `evidence.observation.forecast_before_hard_failure`，FORECAST 行
    只 poll"行出现"就会读到半成品并按 PLANNING 失败——补了一条按同一 run id 等终态的
    poll，两条失败信息各自准确（从未出现 vs 出现但没完成）。
 3. 面板发现 run 后停止轮询：run 是持久证据，继续 3 秒一次只是和 autopilot 的写抢 SQLite。
+4. 裁决明确"不能只凭 `trigger_kind=PREDICTIVE` 认定 grounded real-city 预测"，所以案例直接读
+   run 自己的证据：`evidence.prediction.evidence_provenance` 必须非空、**每一条**都是
+   `provenance == "REPLAY"`（不是被洗成硬事实的 mock 默认值）、且至少一条来自 replay provider。
+   实测这张 journey 上是 `open-meteo-replay`(CITY_SIGNAL) 与 `city-signal-fixture`(MOBILITY)，
+   两条都 REPLAY，mesh 里 3 个真城市候选；这些数字随运行日志一起打印，主张和数据同处一地。
+   另需说明一个未消除的现象：单独反复跑这条案例时出现过 2 次
+   `JourneyTwin cache write skipped … database is locked`（后端显式捕获的容错路径，不影响断言），
+   而三次全量 authoritative 运行都是 0 次。我没有把它"修成 0"，只是如实报两种观察。
 
 ## 56. 归档套件的一个真实不确定性（新发现，非门禁）
 
@@ -1017,12 +1025,12 @@ legacy 套件带 host `DEEPSEEK_API_KEY` 跑：3 passed / 1 failed，
 差异是 fullPage 画布上模态的垂直锚点 + 时间戳 + 地图节点位置；
 其余在 0.02%–3.8%，为地图瓦片与动态时间文本。没有一张变成空白。
 
-## 59. 门禁数字（同一次 authoritative 运行 `p16full2`，tree `1d922ef`）
+## 59. 门禁数字（同一次 authoritative 运行 `p16full3`，tree `967e2b2`）
 
 | 门禁 | 结果 |
 |---|---|
-| authoritative 当前产品套件 | **45 expected / 0 unexpected / 0 flaky / 0 skipped**（123.8s） |
-| 为什么不是 §58 那次 | `p16full1` 也是 45/0，但它产出的截图证据不合格；修 v13-5 的截图时机改变了树，所以整套重跑并只引用这一次 |
+| authoritative 当前产品套件 | **45 expected / 0 unexpected / 0 flaky / 0 skipped**（115.6s） |
+| 为什么不是更早那两次 | `p16full1`（tree 6311382）也是 45/0，但它产出的截图证据不合格（§58）；`p16full2`（tree 1d922ef）之后又加了 §55.4 的 provenance 断言，树变了。本轮只引用最后一次运行 `p16full3` |
 | 与 §50 的 44/1 之差 | D 从红转绿：不是删断言，是补了表面主人；总数 45 不变 |
 | `qoder-*`（视觉/对比/几何/无障碍预算） | 31 results / 0 failed（对比 4、dock 几何 3、live 结构 9、移动溢出 1、today hero 2、ack 7、budget 5） |
 | SQLite 争用告警 | 0 次 |
@@ -1032,17 +1040,32 @@ legacy 套件带 host `DEEPSEEK_API_KEY` 跑：3 passed / 1 failed，
 
 ## 60. 请判
 
-1. §54 那条撤回是否接受：预防在真实 mobility 下买到时间余量而非换点，
-   "真地点进入计划"的所有者仍是 v13-5。若你认为预防本身就必须引入 real-place，
-   那是产品语义要求，需要另开的实现线而不是测试里断言。
-2. §55 的 `V14PreventivePanel` 是我按 §51.1 批准边界做的最小承接（读 run、不改语义、
-   不复活旧控件）。是否接受为 D 的关闭，还是要它同时出现在 `/v8/live`？
-3. §53 之后 `locked_commitments_preserved` 这个 proposal 级 flag 仍被 envelope/zero-touch
-   两条读着（我已在其后加身份断言）。要不要把它降级为信息字段、以 plan 身份为准？
-4. 四条 port-first 全绿、0 unexpected、0 flaky。§51.4 提的签发条件
-   （authoritative 0 unexpected + D 有 owner）现已同时满足，是否签发
-   `INTEGRATION_CANDIDATE_READY_FOR_MAIN`，还是仍有 RC 项（OSM fallback、live-AI 韧性）挡在前面？
-5. §58 那个截图时机缺陷我只修了暴露出来的这一张（v13-5）。另 8 张我做了像素 diff 确认
-   内容未退化，但它们的 spec 里没有同样的"等动画终态"步骤。是否要求我把 settled 等待
-   推广成截图门的通用前置，还是留在"发现即修"的粒度（我倾向通用前置，但那属于宽泛
-   视觉工作线，pass-14 之后你两次让我不要重开）。
+pass-15 的裁决已经把 final integration gate 定义成三组条件，并把 pass-17 排成
+Integration Freeze / Clean-checkout Reproducibility。所以本轮**不请求**签发
+`INTEGRATION_CANDIDATE_READY_FOR_MAIN`——那条按你的定义要等 pass-17 从干净 checkout
+复现之后。这里要的是 pass-16 的关闭判定与 pass-17 的验收形式。
+
+1. D 的关闭五条件按裁决逐条自陈：real-city deterministic/replay 证据恢复（discover 在
+   RISK_FORECAST 之前，`provenance == REPLAY`，mesh 有 `openstreetmap-replay` 候选，
+   run 的每条 prediction 证据都是 REPLAY）；genuine C4 fixture（booking + CAPTURE，
+   建完回读断言 `protected` 落地）；V8 有 preventive owner；结构化断言（七个
+   `v14-preventive-*` testid + `data-run-id` / `data-plan-before-id` /
+   `data-plan-after-id`，并断言页面显示的 run id 就是刚执行的那一个）；
+   authoritative 0 unexpected / 0 flaky。identity contract 一侧：`/experience` 不再丢
+   `place_id`，Golden 不再用 title 认亲。是否判 D = CLOSED？
+2. §54 那条撤回是否接受：真实 mobility 下预防买到的是时间余量而不是换点，
+   "真地点进入计划"的所有者仍是 v13-5。若你要求预防本身必须引入 real-place，
+   那是产品语义线，需要另开实现而不是测试里断言——请明确是否开。
+3. `V14PreventivePanel` 只挂在 `/v8/authoritative`（你批准的最小 owner 位置）。
+   是否还需要在 `/v8/live` 出现，还是 live 只需要渲染被预防后的权威计划本身（案例里
+   已用 `live-journey-current` 与 `/experience` 的活动身份对齐）？
+4. `locked_commitments_preserved` 这个 proposal 级 flag 现在被四条案例的身份断言架空，
+   后端仍产出它。是否降级为信息字段（以 plan 身份为准），还是保留为权威字段并要求
+   后端也加契约测试？
+5. pass-17 的验收形式请定：我理解为在临时目录 `git clone` 本分支 → `npm ci`（lockfile 驱动）
+   → `vite build` → 一次 authoritative E2E（不借任何现有 server、独立端口与一次性 DB）→
+   后端套件 → `git status` 干净，并把每步命令与输出打进包。若如此，pass-17 期间发现需要
+   改源码才能复现的问题，按你的规则应当回炉为 pass-16.1 而不是在 freeze 里修，确认这一点。
+6. §58 的 settled-before-capture 我只修了暴露出来的那张。其余 8 张做了像素 diff 确认未退化，
+   但它们的 spec 没有同样的等待。是否推广为截图门通用前置（我倾向推广，但那属于宽泛视觉线，
+   你两次让我不要重开，所以先问）。
