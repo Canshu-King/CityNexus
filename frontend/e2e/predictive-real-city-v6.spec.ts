@@ -1,28 +1,31 @@
 import { expect, test } from "@playwright/test";
+import { protectCommitment } from "./_qoderFreshJourney";
 
-/* PORT-FIRST (pass-15 D) — prevention, not detection, and not recovery-after-the-fact.
+/* PORT-FIRST (pass-15 D, real evidence chain in pass-16 A/B/D) — prevention, not
+ * detection, and not recovery-after-the-fact.
  *
  * `v13-5-fully-grounded` already proves grounded discovery and that a weakness can
  * be *seen*.  What this case must still prove is the half nothing else covers:
  * CityNexus acts before the failure happens, and the traveller can see why.
  *
  * So the assertions are deliberately shaped as:
+ *   - the alternative it would move to is a real, replay-provenanced city POI, so
+ *     prevention is grounded in the city twin rather than in demo placeholders;
+ *   - a genuine protected commitment exists *before* the forecast — created with
+ *     the public booking + CAPTURE path, because `locked` alone is not a promise;
  *   - no hard failure exists at the moment of action (checked, not assumed);
- *   - a forecast pulse alone produces a preventive run, with predictive evidence;
- *   - the plan really changes, and locked commitments stay intact;
+ *   - a forecast pulse with a real payload alone produces a preventive run, whose
+ *     evidence carries the predictive status, the solver that recomposed the plan
+ *     and `forecast_before_hard_failure`;
+ *   - the plan really changes, and the commitment is still on it by place id;
  *   - nobody clicked anything (a scan request would make this reactive, not predictive);
- *   - the current product surface explains it.
+ *   - a current V8 surface owns the result, asserted field by field.
  *
- * The last bullet is where this test is expected to fail today, and it is left
- * failing on purpose.  The backend implements preventive recovery end to end
- * (`decision=PREEMPTIVE_RECOVERY`, `trigger_kind=PREDICTIVE`, evidence carries
- * `forecast_before_hard_failure`), but every guardian testid that renders it —
- * `guardian-decision`, `guardian-predictive-resilience`, `guardian-provenance`,
- * `guardian-trace` — exists only in `src/main.tsx`, i.e. the legacy surface under
- * `/legacy`.  Nothing in V8 owns the result.  Per the ruling, that is reported as
- * a product integration gap by a red test rather than converted into a
- * backend-only green one, and it must not be "fixed" by relabelling a reactive
- * recovery as prevention.
+ * The last bullet is what was missing in pass-15: the run existed and the plan
+ * changed, but only `src/main.tsx` (i.e. `/legacy`) rendered it.  Pass-16 added
+ * `V14PreventivePanel` to `/v8/authoritative`, so the assertions below bind to
+ * structured testids and to the guardian run id rather than to the body-text
+ * sentinel this file used while the gap was open.
  */
 
 const API =
@@ -50,7 +53,17 @@ async function api<T>(
   return (await response.json()) as T;
 }
 
+type Activity = {
+  id: string;
+  place_id: string | null;
+  title?: string | null;
+  start_at?: string | null;
+  locked?: boolean;
+  protected?: boolean;
+};
+
 type GuardianRun = {
+  id: string;
   decision: string;
   status: string;
   action_status: string;
@@ -60,8 +73,9 @@ type GuardianRun = {
   active_plan_after_id: string | null;
   evidence?: {
     observation?: { trigger_kind?: string; forecast_before_hard_failure?: boolean };
-    prediction?: { weakness?: string | null; score?: number | null } & Record<string, unknown>;
+    prediction?: { status?: string | null; risk_score?: number | null } & Record<string, unknown>;
     inference?: { decision?: string; reason?: string };
+    solver?: { kind?: string } | null;
   };
 };
 
@@ -93,13 +107,22 @@ test("a forecast is prevented before the failure happens, and the traveller can 
     allow_auto_on_critical_event: false,
   });
 
-  const plans = await api<{ id: string; activities: { id: string; place_id: string | null; title: string }[] }[]>(
+  const plans = await api<{ id: string; activities: Activity[] }[]>(
     request,
     `/api/v1/journeys/${journeyId}/plans/generate`,
     "POST",
     { candidate_count: 1 },
   );
   await api(request, `/api/v1/journeys/${journeyId}/plans/${plans[0].id}/select`, "POST");
+
+  /* A commitment has to exist before prevention can be credited with keeping it.
+     Measured in pass-16: the demo cruise is `locked: true` but `protected: false`
+     until a booking is created and its payment captured, so asserting on
+     `protected` without this step asserts on a fixture with nothing to protect.
+     `/bookings` refuses an activity whose journey is already travelling, so this
+     is deliberately before `/start`. */
+  const commitment = await protectCommitment(request, journeyId, "place-river-cruise");
+
   await api(request, `/api/v1/journeys/${journeyId}/start`, "POST");
   const mission = await api<{ status: string }>(
     request,
@@ -119,11 +142,27 @@ test("a forecast is prevented before the failure happens, and the traveller can 
     { interval_seconds: 0.5 },
   );
 
-  const before = await api<{ active_plan: { id: string } }>(
-    request,
-    `/api/v1/journeys/${journeyId}/experience`,
-    "GET",
-  );
+  /* Ground the prevention in the real city twin first: the alternative the
+     guardian will move to must exist as a replay-provenanced POI, otherwise a
+     green preventive run would only prove the mock could edit the mock. */
+  const discovered = await api<{
+    provenance: string;
+    mode: string;
+    candidates: { name: string; provider_key?: string }[];
+  }>(request, `/api/v1/journeys/${journeyId}/real-city/discover`, "POST", {
+    query: "indoor",
+    mode: "replay",
+    limit: 3,
+  });
+  expect(discovered.provenance, "real-city discovery was not replay-provenanced").toBe("REPLAY");
+  expect(
+    discovered.candidates.some((item) => /Tianjin|Haihe/i.test(item.name)),
+    `no real-city POI in ${JSON.stringify(discovered.candidates.map((c) => c.name))}`,
+  ).toBe(true);
+
+  const before = await api<{
+    active_plan: { id: string; activities?: Activity[] };
+  }>(request, `/api/v1/journeys/${journeyId}/experience`, "GET");
 
   /* "Before the failure" has to be a measured fact.  A hard failure here means a
      CLOSURE or CRITICAL event on the journey; none is injected in this test, and
@@ -149,11 +188,20 @@ test("a forecast is prevented before the failure happens, and the traveller can 
     if (entry.url().endsWith("/guardian/scan")) scanRequests += 1;
   });
 
+  /* A real forecast, not an empty pulse: these numbers are what the resilience
+     snapshot has to reproduce, so the run cannot pass on a default. */
   const fixture = await api<{ state: string }>(
     request,
     `/api/v1/journeys/${journeyId}/guardian/provider-fixture`,
     "POST",
-    { state: "RISK_FORECAST", payload: {} },
+    {
+      state: "RISK_FORECAST",
+      payload: {
+        risk_score: 88,
+        forecast_horizon_min: 45,
+        expected_route_delay_min: 18,
+      },
+    },
   );
   expect(fixture.state).toBe("RISK_FORECAST");
 
@@ -182,38 +230,125 @@ test("a forecast is prevented before the failure happens, and the traveller can 
     )
     .toBe(true);
 
+  const appeared = preventive as unknown as GuardianRun;
+  /* The row is written before the work finishes: measured, it appears with
+     status=RUNNING / action_status=PLANNING and only later carries EXECUTED and
+     the solver evidence.  Waiting for the same run id to reach a terminal state
+     is not a retry — reading it mid-flight would just assert on a half-truth. */
+  await expect
+    .poll(
+      async () => {
+        const status = await api<{ runs: GuardianRun[] }>(
+          request,
+          `/api/v1/journeys/${journeyId}/guardian/status`,
+          "GET",
+        );
+        const fresh = status.runs.find((run) => run.id === appeared.id) ?? null;
+        if (fresh) preventive = fresh;
+        return fresh?.status ?? "MISSING";
+      },
+      {
+        message:
+          "the preventive run never left PLANNING — prevention started and did not reach a terminal " +
+          "state, so nothing was actually done about the forecast",
+        timeout: 60_000,
+        intervals: [1000],
+      },
+    )
+    .toBe("COMPLETED");
+
   const run = preventive as unknown as GuardianRun;
   expect(run.action_status, "the preventive run never executed").toBe("EXECUTED");
   expect(run.evidence?.observation?.forecast_before_hard_failure, "the run does not claim to be pre-failure")
     .toBe(true);
+  expect(
+    run.evidence?.prediction?.status,
+    "the forecast pulse did not produce a predictive weakness",
+  ).toBe("PREDICTIVE_WEAKNESS");
+  expect(
+    run.evidence?.solver?.kind,
+    "the preventive plan did not come from the CP-SAT solver the twin validates",
+  ).toBe("ORTOOLS_CP_SAT_V2");
   expect(run.active_plan_after_id, "the preventive action left no plan identity behind").toBeTruthy();
   expect(
     run.active_plan_before_id,
     "the preventive run did not record which plan it moved away from",
   ).toBe(before.active_plan.id);
 
-  const after = await api<{ active_plan: { id: string; activities?: { title?: string }[] } }>(
-    request,
-    `/api/v1/journeys/${journeyId}/experience`,
-    "GET",
-  );
+  const after = await api<{
+    active_plan: { id: string; current_activity_id?: string | null; activities?: Activity[] };
+  }>(request, `/api/v1/journeys/${journeyId}/experience`, "GET");
   expect(after.active_plan.id, "the authoritative plan did not change after prevention")
     .not.toBe(before.active_plan.id);
+
+  /* Identity, not wording: `place_id` is the stable key and an accepted replan
+     mints new activity ids, so this is the only comparison that can fail. */
+  const activities = after.active_plan.activities ?? [];
+  const cruise = activities.find((item) => item.place_id === "place-river-cruise");
   expect(
-    (after.active_plan.activities ?? []).some((a) => /river cruise/i.test(String(a.title ?? ""))),
-    "the protected River Cruise commitment was spent by a preventive action",
+    cruise,
+    `the committed River Cruise is not on the prevented plan; it holds ${JSON.stringify(
+      activities.map((item) => item.place_id),
+    )}`,
+  ).toBeTruthy();
+  expect(cruise?.protected, "the commitment survived prevention but is no longer protected").toBe(true);
+  expect(
+    activities.some((item) => item.place_id),
+    "the prevented plan exposes no activity identity at all",
   ).toBe(true);
+
+  /* What the recomposition actually did, printed rather than assumed.  This is
+     the honest record of a claim pass-16 tried to make and could not: the
+     preventive plan does NOT gain a `real-place-*` activity in this environment.
+     The v6 pytest case only gets one because it seeds specific legs as explicit
+     replay facts, which changes which alternatives the solver finds affordable;
+     with live mobility the recomposition keeps the demo places and buys slack
+     instead.  Asserting otherwise here would test the fixture, not the product. */
+  const signature = (items: Activity[]) =>
+    JSON.stringify(items.map((item) => [item.place_id, item.start_at ?? "?"]));
+  console.log(
+    `[prevention] recomposition changed: ${
+      signature(before.active_plan.activities ?? []) !== signature(activities)
+    }\n` +
+      `  before ${signature(before.active_plan.activities ?? [])}\n` +
+      `  after  ${signature(activities)}`,
+  );
+
+  /* The real-city half that IS provable here: the providers the guardian reasons
+     over are replay-provenanced OpenStreetMap candidates for this journey, not a
+     demo-only namespace. */
+  const mesh = await api<{
+    real_place_candidates: { provider_key: string; name: string; status: string }[];
+  }>(request, `/api/v1/journeys/${journeyId}/provider-mesh`, "GET");
+  expect(
+    mesh.real_place_candidates.some((item) => item.provider_key === "openstreetmap-replay"),
+    `no replay-provenanced real-city candidate in the mesh: ${JSON.stringify(
+      mesh.real_place_candidates.map((item) => [item.provider_key, item.name]),
+    )}`,
+  ).toBe(true);
+
+  /* The forecast the run acted on has to be the forecast that was filed. */
+  const resilience = await api<{ status: string; components: Record<string, number> }>(
+    request,
+    `/api/v1/journeys/${journeyId}/resilience`,
+    "GET",
+  );
+  expect(resilience.status).toBe("PREDICTIVE_WEAKNESS");
+  expect(resilience.components.forecast_risk, "the snapshot ignored the supplied forecast payload")
+    .toBe(88);
 
   expect(scanRequests, "the test itself asked for the decision, so this is not zero-touch").toBe(0);
   console.log(
-    `[prevention] decision=${run.decision} trigger=${run.trigger_kind} action=${run.action_status} ` +
+    `[prevention] run=${run.id} decision=${run.decision} trigger=${run.trigger_kind} ` +
+      `action=${run.action_status} solver=${run.evidence?.solver?.kind} ` +
+      `booking=${commitment.bookingId} commitment=${commitment.commitmentId ?? "n/a"} ` +
       `plan ${before.active_plan.id} -> ${after.active_plan.id} with no hard failure on the journey ` +
       `and ${scanRequests} scan requests`,
   );
 
-  /* The traveller has to be able to see it.  This is the missing link: the run
-     exists, the plan changed, and no V8 surface renders a preventive recovery —
-   */
+  /* A current surface has to own it.  Pass-15 left this red with a body-text
+     sentinel; pass-16 added V14PreventivePanel on /v8/authoritative, so the
+     assertions below are structured and bound to the guardian run id. */
   await page.addInitScript((id) => {
     localStorage.setItem("citynexus.v8.journey_id", id);
     localStorage.setItem("citynexus.demo.journey_id", id);
@@ -221,14 +356,40 @@ test("a forecast is prevented before the failure happens, and the traveller can 
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto("/v8/authoritative");
   await expect(page.getByTestId("v14-recovery-truth")).toBeVisible();
-  await expect(
-    page.locator("body"),
-    "PRODUCT INTEGRATION GAP: the backend prevented a failure (PREEMPTIVE_RECOVERY / " +
-      "trigger_kind=PREDICTIVE / forecast_before_hard_failure=true) and changed the authoritative " +
-      "plan, but no current V8 surface says so. The only components that render a preventive " +
-      "recovery are guardian-decision / guardian-predictive-resilience / guardian-provenance / " +
-      "guardian-trace, and all of them exist solely in src/main.tsx behind /legacy. " +
-      "Fix by giving V8 an owner for the preventive result — do not turn this test into a " +
-      "backend-only assertion, and do not relabel a reactive recovery as prevention.",
-  ).toContainText(/PREEMPTIVE|predictive|before it happened|forecast/i);
+  await expect(page.getByTestId("v14-preventive")).toBeVisible();
+  await expect(page.getByTestId("v14-preventive-decision")).toHaveText("PREEMPTIVE_RECOVERY");
+  await expect(page.getByTestId("v14-preventive-trigger")).toHaveAttribute("data-run-id", run.id);
+  await expect(page.getByTestId("v14-preventive-action")).toHaveText("EXECUTED");
+  await expect(page.getByTestId("v14-preventive-timing")).toHaveAttribute("data-pre-failure", "true");
+  await expect(page.getByTestId("v14-preventive-resilience")).toContainText("PREDICTIVE_WEAKNESS");
+  /* The component, not the aggregate: measured in this run, a filed forecast of 88
+     produces an aggregate score of 100 once the other components stack, so only
+     forecast_risk can show the panel is rendering this journey's forecast. */
+  await expect(page.getByTestId("v14-preventive-resilience")).toContainText("forecast 88");
+  await expect(page.getByTestId("v14-preventive-evidence")).toContainText("ORTOOLS_CP_SAT_V2");
+  await expect(page.getByTestId("v14-preventive-reason")).not.toHaveText("—");
+  await expect(page.getByTestId("v14-preventive-plan-change")).toHaveAttribute(
+    "data-plan-before-id",
+    before.active_plan.id,
+  );
+  await expect(page.getByTestId("v14-preventive-plan-change")).toHaveAttribute(
+    "data-plan-after-id",
+    after.active_plan.id,
+  );
+  await expect(page.getByTestId("v14-preventive-protected")).toContainText("place-river-cruise");
+
+  /* The traveller's own view of the same fact.  Live has no plan id on screen, so
+     the strongest thing it can prove is that it is rendering the prevented plan:
+     its current-activity heading comes from the same /experience payload, matched
+     by activity id rather than by wording invented in this test. */
+  const current = activities.find((item) => item.id === after.active_plan.current_activity_id);
+  await page.goto("/v8/live");
+  if (current?.title) {
+    await expect(page.getByTestId("live-journey-current")).toHaveText(current.title);
+  } else {
+    await expect(page.getByTestId("live-journey-current")).toBeVisible();
+  }
+  /* Prevention is owned by the authoritative surface; Live must not grow a second,
+     drifting copy of the same claim. */
+  await expect(page.getByTestId("v14-preventive")).toHaveCount(0);
 });
