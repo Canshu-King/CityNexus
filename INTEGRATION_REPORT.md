@@ -2127,3 +2127,95 @@ const nextStop = activities.find((item) => Date.parse(item.end_at) >= nowMs) ?? 
 按本次的规矩标注：**静态读到，未做端到端实测**。`qoder-today-hero.spec.ts` 现有 2 例覆盖的是
 单一 CTA / 高度 / 无空 Now / 无溢出，不含"全部已结束"这个态。要修该由 Commander 派单，
 并配一条"全部活动已结束时 Today 不得说 Next"的门；我没有在重放复核这一轮里顺手改它。
+
+## 87. ORD-0025 又作为 urgent 回来了：先测，再决定做不做
+
+账本里 ORD-0025 是 `VOID@20260920-061500 by commander —— 我的测量伪果`，并附完整 `void_reason`；
+这次转达把它当新单发来（urgent，`if_head 9e66d1e`）。这种"作者已自否证、又以原样重发"的情况，
+我按当前树重测一遍再回答，不引用任何一方的文本。
+
+### 87.1 三条命令的实测（`ee6a93e`，Node v24 / Playwright 1.63，`node node_modules/@playwright/test/cli.js`）
+
+| 命令 | 启动方式 | 退出码 | stdout | stderr |
+| --- | --- | --- | --- | --- |
+| A) 不加 `CITYNEXUS_E2E_AUTHORITATIVE`，`--list` | bash 原生 | 0 | 641 B（列出节点） | 183 B（announce 行） |
+| B) **只加这一个变量** | **bash 原生赋值** | **1** | 0 B | **1505 B** |
+| C) 与 B 完全同一条命令 | **`env VAR=1 node …`** | **0** | 0 B | 0 B |
+
+B 的 stderr 第一行就是要求 (1) 要的东⻄：
+
+```
+Error: [citynexus e2e] authoritative mode refuses to start:
+       CITYNEXUS_E2E_PORT must be set explicitly (the frontend must not be borrowed)
+[citynexus e2e] fix the invocation, not the assertion.  See docs/E2E_ACCEPTANCE_POLICY.md.
+    at refuse (…/playwrightEnv.ts:30:9)
+    at requiredEnv (…/playwrightEnv.ts:38:15)
+```
+
+⇒ **求值期的拒绝本来就响亮且非零，`playwrightEnv.ts` / `playwright.config.ts` 一行未改**（要求 (1) 无需施工）。
+
+### 87.2 要求 (3)："命令看起来很完整，还缺什么" —— 什么也不缺，那具启动器什么都不做
+
+这条我能答了，而且答案比"只是吞输出"更糟：**`env` 前缀下的 Playwright 根本没运行**。
+把变量给齐（RUN_ID、`_ord25-envtest.db`、:3465/:8465、存在的 venv、AI 关）再走 `env(1)`：
+
+```
+exit=0   stdout=0 B   stderr=0 B   backend/_ord25-envtest.db 不存在
+```
+
+服务器没起、库没建、一条测试没跑 —— 却回报"成功"。这一次观测同时解释了留档里那四组对照
+（`auth.out` 0/0、`run2.out` 0/0、`refuse_*` 0/0、"`_cmd01.db` 至今不存在"），
+不需要假设 config 有任何缺陷。UI 那棵树也不是反例：同一棵树的同一模式在两处行为一致，
+差异只在**哪条命令带了 `env` 前缀**——"指一个不存在的 config 会大声报错"那组对照，
+唯一的自变量也是启动器。要求 (3) 因此有解，但解不在产品侧：
+
+> 本机规矩（对所有车道）：跑门只用 `VAR=value prog`，永远不要用 `env VAR=value prog`；
+> 看到"0 输出 + exit 0"时先换启动器复现，再谈缺陷。
+
+### 87.3 要求 (2) 仍然做了：这条回归此前确实不存在
+
+`FILE_OWNERSHIP` 对我这两个文件写着"**改它必须带回归：缺必需变量时必须非零退出并打印缺哪个**"，
+而今天没有这样一条测试 —— 一个已经响亮的守卫，如果哪天被改成不响亮，没人会知道。
+新增 `frontend/e2e/qoder-e2e-config-guard.spec.ts`（4 条）：用 `process.execPath` 起真 CLI、
+只跑 `--list`（强制求值 config 而不启动 webServer，所以它不会 Adopt 任何人的 :8000），
+断言子进程的退出码与 stderr：
+
+- 逐个缺一个必需变量（`CITYNEXUS_E2E_PORT` / `_BACKEND_PORT` / `_PYTHON` / `_DATABASE_URL`）时，
+  **既**非零退出**又**在输出里点名那个变量，还带 "fix the invocation, not the assertion"；
+  两个条件都断，正是为了不被"非零但静默"糊过去；
+- 不给解释器时拒绝，并说明理由"falling back to system Python"（Pass-12 那一幕）；
+- 带着活的 `DEEPSEEK_API_KEY` 时拒绝（既为确定性也为额度）；
+- 变量给齐时**接受**，且 announce 行含 `suite=` / `authoritative=true` / 端口 / `ai=disabled` /
+  `reuseExistingServer=false`，并断言 `--list` 的 stdout 里真有节点 —— 防"门自己没测到东西"。
+
+**鉴别力实测（M-G2）**：把 `refuse()` 换成 `return process.exit(2) as never;`（=静默但非零，
+正是要求 (2) 点名的形状）→ **3 failed / 2 passed**；其中"完整环境被接受"那条**仍然绿**，
+所以红的是"沉默"本身而不是文件加载失败。一次性、唯一 anchor、字节还原 `577561705393609c…` 与 HEAD 相同。
+
+顺带记一条我自己写门时踩的：第一版用 `__dirname`，收集期就
+`ReferenceError: __dirname is not defined in ES module scope`（这套 spec 是 ESM 加载），
+整跑 exit 1；改成 `fileURLToPath(import.meta.url)`。这类错的形状是"门没测任何东西却像被测过"，
+所以文件里留了一句 CLI 不存在就抛 —— 门起不来要说自己起不来。
+
+### 87.4 数字与一条可直接照抄的权威命令
+
+新增门后同口径复跑：`typecheck` 0（`error TS` 0 条）、`typecheck:all` 0（0 条）、`npm run build` 0；
+`guard + qoder-live-recovery-cursor + qoder-stale-cursor` = **10 passed / 15.7s**（run `ord25-guard2`）；
+**全套 58 expected / 0 unexpected / 0 flaky / 5 skipped（157.5s）**（run `ord25-full`，:3467→:8467）
+—— 54 + 4，正是这份新门，别的车道一条没动。
+
+给 Commander 复跑 LiveRecovery 那扇门（也是 ORD-0011(2) 要的那件）的完整命令：
+
+```
+cd /d/moodle/_qoder_integration_20260919/frontend
+CITYNEXUS_E2E_AUTHORITATIVE=1 CITYNEXUS_E2E_PORT=3459 CITYNEXUS_BACKEND_PORT=8459 \
+CITYNEXUS_PYTHON='D:\moodle\CityNexus\.venv\Scripts\python.exe' \
+CITYNEXUS_DATABASE_URL='sqlite:///D:/moodle/_qoder_integration_20260919/backend/_ord25-guard2.db' \
+CITYNEXUS_E2E_RUN_ID=ord25-guard2 CITYNEXUS_AI_ENABLED=false DEEPSEEK_API_KEY= CITYNEXUS_AI_API_KEY= \
+CITYNEXUS_EVIDENCE_DIR='D:\moodle\_qoder_ord30_evidence_20260920\guard2' \
+./node_modules/.bin/playwright.cmd test e2e/qoder-e2e-config-guard.spec.ts \
+  e2e/qoder-live-recovery-cursor.spec.ts e2e/qoder-stale-cursor.spec.ts --reporter=list
+```
+
+一次跑只换一个 `RUN_ID` 与同名 `_*.db`（fresh-or-no-run 会拒第二个调用复用同一个库），
+且**不要**在这条命令前加 `env`。
