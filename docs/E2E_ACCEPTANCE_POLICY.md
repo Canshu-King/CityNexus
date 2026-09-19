@@ -83,14 +83,19 @@ authoritative: passing the flag there is reported and ignored.  Archiving means 
 default suite stops counting a test — moving it to another project that the default
 run still executes would be a reorganisation, not a retirement.
 
-## Known-red by design
+## Known-red by design (currently none)
 
-Four port-first legacy cases stay in the current suite and stay failing until
-pass-15 replaces them with current-surface equivalents: `golden.spec.ts`,
-`live-autopilot-v5.spec.ts`, `predictive-real-city-v6.spec.ts`, and
-`product-hardening.spec.ts` (autonomous envelope-safe recovery).  They are not
-skipped, and their capability mapping is in `docs/LEGACY_E2E_MIGRATION.md`.
-A red test that names unfinished work is worth more than a green test that hides it.
+Pass-14 shipped with four deliberate reds: `golden.spec.ts`,
+`live-autopilot-v5.spec.ts`, `product-hardening.spec.ts` (autonomous envelope-safe
+recovery) and `predictive-real-city-v6.spec.ts`.  They were ported, not skipped and not
+deleted — pass-15 re-expressed three of them on the current V8 surface and pass-16 gave
+prevention a current owner — so the acceptance suite is now 45 expected / 0 unexpected.
+
+The principle stands and is the reason this section exists rather than being deleted
+with the reds: a red test that names unfinished work is worth more than a green test that
+hides it.  If a future pass leaves a case red, its failure message has to name the
+product gap it is standing for and the shortcut that would falsely green it (relabelling,
+narrowing the assertion, or moving the proof to a layer the user never sees).
 
 ## Explicitly not required
 
