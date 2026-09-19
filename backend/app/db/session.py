@@ -16,8 +16,36 @@ ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_PATH = ROOT / "db" / "schema.sql"
 
 
+def _refuse_to_reopen_an_existing_e2e_database(url: str) -> None:
+    """Fresh database or no run.
+
+    Only an authoritative E2E invocation stamps a process with
+    CITYNEXUS_E2E_RUN_ID, so this check cannot disturb normal or test use.  It
+    lives here, in the process that is about to open the file, because that is
+    the only place where "did this run create it?" is answerable exactly once:
+    the frontend's config is re-read by the worker process after the server has
+    already created the database, and its globalSetup runs even later.
+    """
+
+    if not settings.e2e_run_id or not url.startswith("sqlite:///"):
+        return
+    path = url[len("sqlite:///") :]
+    if not path or path.startswith(":memory:"):
+        return
+    target = Path(path)
+    if not target.is_absolute():
+        target = Path.cwd() / target
+    if target.exists():
+        raise RuntimeError(
+            f"E2E run {settings.e2e_run_id!r} refuses to reopen an existing database at "
+            f"{target}. An authoritative run must start from an empty file; issue a new "
+            "CITYNEXUS_E2E_RUN_ID instead of deleting it here."
+        )
+
+
 def make_engine(database_url: str | None = None) -> Engine:
     url = database_url or settings.database_url
+    _refuse_to_reopen_an_existing_e2e_database(url)
     kwargs: dict[str, object] = {"future": True}
     if url.startswith("sqlite"):
         # The local product path intentionally exercises browser requests and

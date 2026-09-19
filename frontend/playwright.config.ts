@@ -74,8 +74,13 @@ if (AUTHORITATIVE) {
     refuse(`CITYNEXUS_DATABASE_URL must point at a throwaway "_*.db" file, got "${dbFile}"`);
   }
   runId = requiredEnv("CITYNEXUS_E2E_RUN_ID", "the backend echoes it back to prove who started it");
-  /* Naming the database after the run makes "fresh isolated DB" structural: no
-     later invocation can reopen this file, because it will carry a new id. */
+  /* Fresh-or-no-run.  It is *not* checked here: this file is evaluated again in
+     the worker process after the backend has already created the file, so an
+     existence check at config time fails on the second read of the same run
+     (observed).  The refusal therefore lives in the process that opens the
+     database — backend/app/db/session.py raises before create_engine when a
+     run-stamped process finds the file already there.  The naming rule below is
+     what makes that refusal reachable at all: each run gets its own filename. */
   if (!dbBase.includes(runId)) {
     refuse(`CITYNEXUS_DATABASE_URL ("${dbFile}") must contain CITYNEXUS_E2E_RUN_ID "${runId}"`);
   }
@@ -137,8 +142,13 @@ const backendCommand = `${
 
 export default defineConfig({
   testDir: "./e2e",
-  /* Authoritative mode checks that this run can actually own both ports before
-     webServer starts them — globalSetup is the only hook that runs earlier. */
+  /* Authoritative mode asserts, through globalSetup, that the servers answering
+     are the ones this invocation started.  Measured on Playwright 1.63:
+     globalSetup runs *after* the webServer entries are up — the first version of
+     this gate assumed the opposite and tried to check that the ports were free,
+     only to find this run's own uvicorn already listening.  Anything that must
+     happen before the servers start therefore belongs in this file, which is why
+     the fresh-database check is here and the ownership check is there. */
   ...(AUTHORITATIVE ? { globalSetup: "./e2e/_qoderAuthoritativeSetup.ts" } : {}),
   // Guardian recovery is an asynchronous provider -> solver -> policy ->
   // mutation path.  Windows CI occasionally needs longer than Playwright's
@@ -149,9 +159,11 @@ export default defineConfig({
   // The local demo intentionally uses one shared SQLite process/database;
   // serial workers keep reset-and-replay scenarios isolated.
   workers: 1,
-  /* globalSetup would run before this config's webServer entries have a live
-     port, so the seed is a Playwright setup *project*: it runs against the very
-     servers Playwright starts, then every test replays its storageState. */
+  /* The seed is a Playwright setup *project* rather than a globalSetup file: it
+     needs the servers this run started, an APIRequest context, and somewhere to
+     write the storageState that the chromium project then replays.  (globalSetup
+     does run after webServer here, but it has no fixtures and no per-project
+     output, so it is only used for the provenance assertion.) */
   projects: [
     { name: "real-seed", testMatch: /_qoderRealSeed\.setup\.ts/ },
     {

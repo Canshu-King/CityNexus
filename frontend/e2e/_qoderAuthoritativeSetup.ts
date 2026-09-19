@@ -24,10 +24,11 @@ export default async function authoritativeProvenanceCheck() {
   const databaseUrl = process.env.CITYNEXUS_DATABASE_URL ?? "";
   if (!runId) refuse("CITYNEXUS_E2E_RUN_ID is required in authoritative mode");
 
-  /* Freshness is structural, not something deleted behind a running server: the
-     config requires the throwaway filename to contain this run's unique
-     CITYNEXUS_E2E_RUN_ID, so no two invocations can open the same file, and the
-     /health assertion below confirms the server really opened that path. */
+  /* Freshness itself is enforced earlier, in playwright.config.ts, which refuses
+     to start when the run's database file already exists.  What is checked here
+     is which file the process that answered actually opened — identified by its
+     basename, because /health deliberately does not expose a connection URI. */
+  const expectedDatabaseId = databaseUrl.replace(/^sqlite:\/\/\//, "").split(/[\\/]/).pop();
 
   const api = await request.newContext({ baseURL: `http://127.0.0.1:${frontendPort}` });
   let health: Record<string, string>;
@@ -54,15 +55,15 @@ export default async function authoritativeProvenanceCheck() {
   if (health.ai !== "disabled") {
     refuse(`external AI must be disabled for the authoritative suite, /health says "${health.ai}"`);
   }
-  if (health.database_url !== databaseUrl) {
+  if (health.e2e_database_id !== expectedDatabaseId) {
     refuse(
-      `this run asked for ${databaseUrl} but the backend opened "${health.database_url}" — ` +
-        `the database is not the one this invocation created.`,
+      `this run asked for database "${expectedDatabaseId}" but the backend opened ` +
+        `"${health.e2e_database_id ?? ""}" — the database is not the one this invocation created.`,
     );
   }
 
   console.error(
     `[citynexus e2e] provenance ok: run=${runId} frontend=:${frontendPort} -> ` +
-      `backend=:${backendPort} ai=disabled db=${health.database_url}`,
+      `backend=:${backendPort} ai=disabled db=${health.e2e_database_id}`,
   );
 }

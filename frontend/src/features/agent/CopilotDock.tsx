@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import type { V8Data } from "../../app/v8Types";
 import {
@@ -638,12 +638,78 @@ export function CopilotDock({
      bar returns for an active conversation or a task worth interrupting for. */
   const idleCompact = !open && !sending && !yieldToSurface;
 
+  /* Pass-13.1: the pill is `position: fixed`, so wherever the page happens to
+     come to rest, that is where the pill sits on top of it.  The bottom
+     navigation gets away with this because the shell reserves a band for it;
+     the pill floats in the middle of the content column, and pass-13 measured it
+     resting over the DAY 1 card (158x54 of a tappable surface) at a settled
+     scroll position.  Reserving that band properly would cost a phone user
+     ~138px of every screen, so instead the pill yields: once scrolling settles,
+     if an actionable element is under it, it steps off the content column and
+     comes back when the band is clear.  Nothing is lost — the bottom navigation
+     still carries a Copilot entry — and the traveller's content is never
+     covered by an invitation they did not ask for. */
+  const dockRef = useRef<HTMLElement | null>(null);
+  const [restOverlap, setRestOverlap] = useState(false);
+
+  useEffect(() => {
+    if (!idleCompact) {
+      setRestOverlap(false);
+      return;
+    }
+    const measure = () => {
+      const node = dockRef.current;
+      if (!node) return;
+      /* The resting band, not the current painted rectangle: once the pill has
+         stepped aside, getBoundingClientRect() would report it as clear, the
+         state would flip back, and the pill would slide in and out forever.  For
+         a position:fixed element the layout box is where it rests. */
+      const d = {
+        left: node.offsetLeft,
+        top: node.offsetTop,
+        right: node.offsetLeft + node.offsetWidth,
+        bottom: node.offsetTop + node.offsetHeight,
+      };
+      const actionable =
+        'button, a[href], input, select, textarea, [role="button"]';
+      const hit = Array.from(document.querySelectorAll(actionable)).some((el) => {
+        if (node.contains(el) || el.contains(node)) return false;
+        const r = el.getBoundingClientRect();
+        if (r.width === 0 || r.height === 0) return false;
+        if (r.bottom < 0 || r.top > window.innerHeight) return false;
+        const overlapW = Math.min(r.right, d.right) - Math.max(r.left, d.left);
+        const overlapH = Math.min(r.bottom, d.bottom) - Math.max(r.top, d.top);
+        return overlapW > 1 && overlapH > 1;
+      });
+      setRestOverlap(hit);
+    };
+    /* Measure once the scroll has settled, not during it: while the page is
+       moving, content passing under a floating accessory is not the defect. */
+    let timer = 0;
+    const schedule = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(measure, 220);
+    };
+    measure();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+    };
+  }, [idleCompact]);
+
+  const yieldsAtRest = idleCompact && restOverlap;
+
   return (
     <aside
-      className={`cn-copilot-dock ${expanded ? "open" : "collapsed"}${yieldToSurface ? " yield-to-surface" : ""}${idleCompact ? " idle-compact" : ""}`}
+      ref={dockRef}
+      className={`cn-copilot-dock ${expanded ? "open" : "collapsed"}${yieldToSurface ? " yield-to-surface" : ""}${idleCompact ? " idle-compact" : ""}${yieldsAtRest ? " yield-at-rest" : ""}`}
       data-testid="v18-copilot-dock"
       data-yield-to-surface={yieldToSurface ? "true" : "false"}
       data-idle-compact={idleCompact ? "true" : "false"}
+      data-rest-overlap={yieldsAtRest ? "true" : "false"}
     >
       {!expanded ? (
         <button
