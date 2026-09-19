@@ -4,14 +4,17 @@ import { ensureDemoJourney, openScreen } from "./_qoderShellSeed";
 import { scanContrast, type Violation } from "./_qoderContrastScan";
 
 /**
- * Qoder frontend track — dark-mode gate on the real Today (/v8/hub) and Live
- * (/v8/live) surfaces (GPT calls #1 + #5). The four-tier contrast judgement
+ * Qoder frontend track — contrast gate on the real Today (/v8/hub) and Live
+ * (/v8/live) surfaces, audited under BOTH colour schemes (GPT calls #1 + #5;
+ * pass-8 renamed this from qoder-dark-audit because it stopped being
+ * dark-only, and a gate whose name lies about its coverage is how light
+ * themes end up unguarded). The four-tier contrast judgement
  * lives in _qoderContrastScan.ts and is shared with the mocked Live state gate,
  * so "0 violations" means the same thing everywhere. Legacy / Advanced /
  * Wallet-JSON / off-path panels stay declared debt.
  */
 
-const OUT_DIR = "../reports/dark-audit";
+const OUT_DIR = "../reports/contrast-audit";
 
 interface AuditReport {
   screen: string;
@@ -167,7 +170,7 @@ async function auditFocusRing(
 function summarise(reports: AuditReport[]): string {
   const lines: string[] = [];
   for (const r of reports) {
-    lines.push(`\n=== ${r.screen} (dark) — scanned ${r.scanned} nodes, ${r.violations.length} violation(s), ${r.borderWarnings} decorative-border warning(s) ===`);
+    lines.push(`\n=== ${r.screen} — scanned ${r.scanned} nodes, ${r.violations.length} violation(s), ${r.borderWarnings} decorative-border warning(s) ===`);
     const byKind = new Map<string, Violation[]>();
     for (const v of r.violations) {
       if (!byKind.has(v.kind)) byKind.set(v.kind, []);
@@ -182,12 +185,12 @@ function summarise(reports: AuditReport[]): string {
   return lines.join("\n");
 }
 
-test.describe("Qoder dark-mode audit (Today + Live)", () => {
+test.describe("Qoder contrast audit (Today + Live, light + dark)", () => {
   for (const vp of [
     { width: 390, height: 844, name: "mobile" },
     { width: 1280, height: 900, name: "desktop" },
   ]) {
-    test(`no dark contrast violations on Today/Live (${vp.name})`, async ({ page }) => {
+    test(`no contrast violations on Today/Live, light + dark (${vp.name})`, async ({ page }) => {
       test.setTimeout(180_000);
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await ensureDemoJourney(page);
@@ -201,23 +204,31 @@ test.describe("Qoder dark-mode audit (Today + Live)", () => {
         );
       }
       mkdirSync(OUT_DIR, { recursive: true });
-      writeFileSync(`${OUT_DIR}/dark-audit-${vp.name}.json`, JSON.stringify(reports, null, 2), "utf8");
+      writeFileSync(`${OUT_DIR}/contrast-audit-${vp.name}.json`, JSON.stringify(reports, null, 2), "utf8");
       console.log(summarise(reports));
       const all = reports.flatMap((r) => r.violations.map((v) => `${r.screen}: ${v.kind} ${v.selector} "${v.text}"`));
       expect(all, `contrast violations (${vp.name}):\n${all.slice(0, 40).join("\n")}`).toEqual([]);
     });
 
-    test(`focus indicators clear 3:1 on Today/Live (${vp.name})`, async ({ page }) => {
-      test.setTimeout(120_000);
+    test(`focus indicators clear 3:1 on Today/Live, light + dark (${vp.name})`, async ({ page }) => {
+      test.setTimeout(180_000);
       await page.setViewportSize({ width: vp.width, height: vp.height });
-      await page.emulateMedia({ colorScheme: "dark", media: "screen" });
       await ensureDemoJourney(page);
-      await openScreen(page, "/v8/hub", ["today-heading"]);
-      const todayFocus = await auditFocusRing(page);
-      await openScreen(page, "/v8/live", ["v8-live-journey"]);
-      const liveFocus = await auditFocusRing(page);
-      const lines = [...todayFocus, ...liveFocus].map((v) => `${v.selector} "${v.text}" ${v.contrast}/${v.required}`);
-      expect(lines, `dark focus violations (${vp.name}):\n${lines.join("\n")}`).toEqual([]);
+      /* The ring was previously only ever measured in dark. A focus outline
+         that clears 3:1 against #000 can be invisible against the #f5f5f7
+         canvas, so both schemes get walked — the name of this test is a
+         promise, not a label. */
+      const found: string[] = [];
+      for (const scheme of ["dark", "light"] as const) {
+        await page.emulateMedia({ colorScheme: scheme, media: "screen" });
+        await openScreen(page, "/v8/hub", ["today-heading"]);
+        for (const v of await auditFocusRing(page))
+          found.push(`${scheme} today ${v.selector} "${v.text}" ${v.contrast}/${v.required}`);
+        await openScreen(page, "/v8/live", ["v8-live-journey"]);
+        for (const v of await auditFocusRing(page))
+          found.push(`${scheme} live ${v.selector} "${v.text}" ${v.contrast}/${v.required}`);
+      }
+      expect(found, `focus-ring violations (${vp.name}):\n${found.join("\n")}`).toEqual([]);
     });
   }
 });

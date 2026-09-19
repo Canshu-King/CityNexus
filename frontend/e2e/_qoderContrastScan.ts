@@ -4,7 +4,7 @@ import type { Page } from "@playwright/test";
  * Shared dark-mode contrast scan for the Qoder frontend gates.
  *
  * Implements GPT's final dark gate table as a single source of truth used by
- * both e2e/qoder-dark-audit.spec.ts (real Today/Live surfaces) and
+ * both e2e/qoder-contrast-audit.spec.ts (real Today/Live surfaces) and
  * e2e/qoder-live-structure.spec.ts (the mocked L1/L2/L3 replan states), so the
  * four tiers are judged identically everywhere:
  *   FAIL — text AA (body <4.5, large <3), a required control boundary <3:1, a

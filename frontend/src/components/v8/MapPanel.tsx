@@ -85,6 +85,13 @@ export function MapPanel({
       }
       setNoLocation(false);
       const mapInstance = new maplibregl.Map({
+        /* Never leave the traveller staring at an empty box when the tile
+           server is unreachable (common on restricted networks). The Apple
+           branch's GeoJSON typing fix dropped this line along with the comment
+           that explained it; maplibre's own default happens to be false, but an
+           accessibility-relevant intent belongs in the source, not in an
+           implicit library default. */
+        failIfMajorPerformanceCaveat: false,
         container: host.current,
       style: {
         version: 8,
