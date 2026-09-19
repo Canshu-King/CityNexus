@@ -20,6 +20,7 @@ import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { SortableActivityList } from "../features/studio/SortableActivityList";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
 import { V14RecoveryTruthPanel } from "../features/recovery/V14RecoveryTruthPanel";
+import { V14PreventivePanel } from "../features/recovery/V14PreventivePanel";
 import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPanel";
 import { V12TripStudioPanel } from "../features/studio/V12TripStudioPanel";
 import { RealCityDiscoveryPanel } from "../features/discovery/RealCityDiscoveryPanel";
@@ -2001,6 +2002,7 @@ function AuthoritativeExecution({
             onTransition={onRefresh}
           />
           <V12TripStudioPanel journeyId={journeyId} plan={plan} onAccepted={onRefresh} />
+          <V14PreventivePanel journeyId={journeyId} refreshKey={plan?.id} />
           <V14RecoveryTruthPanel journeyId={journeyId} policy={policy} currency={currency} onAccepted={onRefresh} />
         </>
       )}
