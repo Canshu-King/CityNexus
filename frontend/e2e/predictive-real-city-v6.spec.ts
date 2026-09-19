@@ -73,7 +73,11 @@ type GuardianRun = {
   active_plan_after_id: string | null;
   evidence?: {
     observation?: { trigger_kind?: string; forecast_before_hard_failure?: boolean };
-    prediction?: { status?: string | null; risk_score?: number | null } & Record<string, unknown>;
+    prediction?: {
+      status?: string | null;
+      risk_score?: number | null;
+      evidence_provenance?: { provider_key: string; provenance: string }[];
+    } & Record<string, unknown>;
     inference?: { decision?: string; reason?: string };
     solver?: { kind?: string } | null;
   };
@@ -327,6 +331,27 @@ test("a forecast is prevented before the failure happens, and the traveller can 
     )}`,
   ).toBe(true);
 
+  /* `trigger_kind=PREDICTIVE` is not proof of a grounded prediction, so the run's
+     own evidence is checked: it must name recorded provider observations, and every
+     one of them must be REPLAY rather than a mock default that got laundered into a
+     hard fact.  Measured on this journey: open-meteo-replay (CITY_SIGNAL) and
+     city-signal-fixture (MOBILITY), both provenance REPLAY. */
+  const evidenceProvenance = run.evidence?.prediction?.evidence_provenance ?? [];
+  expect(
+    evidenceProvenance.length,
+    "the preventive run acted on no recorded provider evidence at all",
+  ).toBeGreaterThan(0);
+  expect(
+    evidenceProvenance.every((item) => item.provenance === "REPLAY"),
+    `the prediction leaned on non-replay evidence: ${JSON.stringify(
+      evidenceProvenance.map((item) => [item.provider_key, item.provenance]),
+    )}`,
+  ).toBe(true);
+  expect(
+    evidenceProvenance.some((item) => /replay$/.test(item.provider_key)),
+    "no replay provider backs the prediction the prevention acted on",
+  ).toBe(true);
+
   /* The forecast the run acted on has to be the forecast that was filed. */
   const resilience = await api<{ status: string; components: Record<string, number> }>(
     request,
@@ -338,6 +363,14 @@ test("a forecast is prevented before the failure happens, and the traveller can 
     .toBe(88);
 
   expect(scanRequests, "the test itself asked for the decision, so this is not zero-touch").toBe(0);
+  /* The ruling refuses `trigger_kind=PREDICTIVE` alone as proof of a grounded
+     real-city prediction, so the run record carries what the evidence actually
+     names rather than what the case's title claims. */
+  console.log(
+    `[prevention] prediction provenance ${JSON.stringify(
+      ((run.evidence?.prediction ?? {}) as { evidence_provenance?: unknown }).evidence_provenance ?? [],
+    )} · mesh candidates ${mesh.real_place_candidates.length}`,
+  );
   console.log(
     `[prevention] run=${run.id} decision=${run.decision} trigger=${run.trigger_kind} ` +
       `action=${run.action_status} solver=${run.evidence?.solver?.kind} ` +
