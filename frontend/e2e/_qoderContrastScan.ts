@@ -32,8 +32,16 @@ export interface ScanResult {
   warnings: number;
 }
 
-export async function scanContrast(page: Page): Promise<ScanResult> {
-  return page.evaluate(() => {
+export async function scanContrast(
+  page: Page,
+  opts: { scheme?: "dark" | "light" } = {},
+): Promise<ScanResult> {
+  // The "light-surface" tier means "an un-tokenised near-white block now
+  // floating on the dark theme". Under the light theme a white surface is
+  // correct, so that tier must not fire there — otherwise the light audit is
+  // mostly noise and the real text failures hide inside it.
+  const { scheme = "dark" } = opts;
+  return page.evaluate(({ scheme }) => {
     type Row = Violation;
     const parse = (value: string): [number, number, number, number] => {
       const m = value.match(/rgba?\(([^)]+)\)/);
@@ -109,7 +117,7 @@ export async function scanContrast(page: Page): Promise<ScanResult> {
       const bg = backgroundUnder(el);
       const selfBg = parse(style.backgroundColor);
 
-      if (selfBg[3] > 0.6 && lum(bg) > 0.82) {
+      if (scheme === "dark" && selfBg[3] > 0.6 && lum(bg) > 0.82) {
         rows.push({
           kind: "light-surface",
           selector: describe(el),
@@ -211,5 +219,5 @@ export async function scanContrast(page: Page): Promise<ScanResult> {
     }
 
     return { count: all.length, rows, warnings };
-  });
+  }, { scheme });
 }

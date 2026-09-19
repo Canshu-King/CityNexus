@@ -43,3 +43,6 @@ frontend/storybook-static/
 frontend/dev-dist/
 backend/citynexus_backend.egg-info/
 frontend/reports/
+
+# real-seed global setup artefact (generated per run)
+frontend/e2e/.qoder-seed-state.json
