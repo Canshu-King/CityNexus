@@ -2038,3 +2038,75 @@ ORD-0031 的结论是 **`package-lock.json` 是权威**，而两棵 `node_module
 
 现在权威树的 `git status --porcelain` 只剩两份别人家的修改（`tools/verification/mutation_campaign.py`
 由 Commander 持有、`qoder-handoff/qoder_xiaomi_truth_hardening_v6.patch` 属另一车道），未跟踪文件为 0。
+
+## 86. ORD-0011 被重放了一次：没有重做，改成在合并树上重新证明它有鉴别力
+
+07:2x 收到的转达写的是"账本新增 **ORD-0011（urgent，if_head 21cbf22）**"。账本里 ORD-0011 是
+第 288 行那一条，状态 `DONE@20260920-061922`，而且带 Commander 06:40 的 `commander_check`；
+最后一笔订单是 ORD-0031，没有 ORD-0032/0033。所以这是一次**重放**，不是新工作。
+另外转达要点 (1) 要求"把四项断言补进 `test_rx3_stale_cursor_fails_closed.py`"，
+而账本原文里同一件事有 **05:36 的更正**：精确缺席元组已由 `test_sol_execution_cursor.py:499-510`
+用整字典相等钉住九项，抄进 rx3 是**零新增覆盖**，本条收缩为"只剩多形状结构不变式"。
+按长期协议（聊天只作提醒、正式指令以 ORDERS 为准），我按账本收缩版复核，不按转达原文动手。
+
+要重验的理由是实的：ORD-0026 把游标解析收进共享 `src/lib/executionWindow.ts`，ORD-0029 又换掉了
+`"ABSENT"` 词表 —— 这两笔都动在 ORD-0011 鉴别力断言的正下方。所以在合并树 `bf0869b` 上重测。
+
+### 86.1 静态与 collected 复核
+
+`tests/test_sol_execution_cursor.py:499-510` 的整字典钉仍在（九项 + 511 行"游标确实不在活动里"），
+`now_state == "STALE_CURSOR"`、哨兵对 `("NONE", 0)` 都在其中；行号与订单引用一致，未漂移。
+`grep -rn "activities\[0\]" frontend/src` 在 `LiveRecovery.tsx` 只剩注释一处（第 131 行解释为什么不要它）。
+
+| 套件 | collected | 合并树结果 |
+| --- | --- | --- |
+| `tests/test_qoder_next_leg_binding.py` | 8 | 全绿 |
+| `tests/test_rx3_stale_cursor_fails_closed.py` | 5 | 全绿 |
+| `tests/test_sol_execution_cursor.py` | 13 | 全绿 |
+| 三文件连跑（AI 关） | **26** | **26 passed / 0 failed（2.58s）** |
+| `e2e/qoder-live-recovery-cursor.spec.ts` + `qoder-stale-cursor.spec.ts` | 4 + 1 | 全绿（含在 `ord30-full` 的 54 expected 内） |
+
+### 86.2 突变归属表：一次"变红"不等于一份鉴别力
+
+订单要的是"把 `?? activities[0]` 加回去必须变红"。今天这句话有两种读法，我分别测了，
+因为它们的击杀集合**不一样**（一次性、唯一 anchor、读回校验、字节还原 + SHA-256，`tsc --noEmit` 均 exit 0 证明突变体本身可编译）：
+
+| 突变 | 位置 | 红了几条 | 红在什么断言上 |
+| --- | --- | --- | --- |
+| M1 纯列表回退（游标仍读对） | `LiveRecovery.tsx:217` | **1 / 5** | `spec:267`（`toHaveText`） |
+| M2 历史缺陷原样（幽灵键 `current_activity_id` ⇒ 游标恒 null ⇒ 回退首项） | `LiveRecovery.tsx:213-217` | **2 / 5** | `spec:96`（`data-now-activity-id` 期望 `61e3096d…`=activities[2]，实到 `3a58c470…`=activities[0]）、`spec:267`（期望 "Execution position unresolved"，实到 "Next: Old Town Gate"） |
+| M3 共享解析器允许陈旧游标按列表顺序造 Now | `src/lib/executionWindow.ts` STALE 分支 | **2 / 5** | `spec:267` 与 `qoder-stale-cursor.spec.ts:36`，都红在标题 `live-journey-current`："Old Town Gate" 而不是 "Execution position unresolved" |
+| M4 撤掉后端 trustworthy-Now 守卫（退回 `legs[current_index]`） | `backend/app/operations/v9.py:169-173` | **6 / 26** | 结构不变式 `[more legs than activities]`、`[one leg per hop]`、`test_no_trustworthy_now_projects_no_next_leg` 两例、权威层整元组与"完成旅程多出出发腿"两例 |
+
+三点要记的口径：
+
+- **M1 只杀 1 条不是门变钝**：游标解析成功时列表回退分支根本不可达，`spec:96` 不可能为它变红；
+  `spec:138`（空计划）也不可能——空数组的 `activities[0]` 本来就是 undefined。
+  这解释了"为什么 ORD-0011 当年报的是 3 failed 而如今同样一句话只有 2/1 failed"：
+  当年那第三条红是 `spec:134` 的**拦截计数**断言（我在结案时已写明"契约断言没红，击杀由前两例承担"，
+  并在 ORD-0029 把那条计数删掉）。计数没了，红也就没了 —— 少的那条本来就不该算。
+- **一条畸形突变体会伪造鉴别力**：我第一版 M2 写成 `(context?.execution as X).current_activity_id`
+  （漏了可选链），组件渲染当场抛错，`live-next` 整个消失，**4/5 齐红且全部红在 `openLive()` 的
+  `toBeAttached()` 上**。如果只看"红了几条"，这具突变体看起来比正确的更强。加上 `?.` 之后真实答案是 2 条。
+  这与 Commander 在量具里加的 `KILLED_UNVERIFIED` 是同一件事：**击杀必须点名拥有它的那条契约断言**。
+- **一个我怀疑错、查过就撤销的"缺口"**：我原以为 M3 之下 V10 面板（`v10-current-step`）说"进行中"
+  没人管。实际 `qoder-live-recovery-cursor.spec.ts:331-334` 就断言了 STALE 时它是
+  "Execution position unresolved" 且不得为 "in progress"，只是同一例子里标题（328 行）先失败所以没跑到。
+  写在这里是为了下一辆车道不必再查一遍：**同一测试内多条断言时，报表上的击杀只反映最先红的那条**。
+
+### 86.3 顺带读到的一条同类问题（今天没测到、也没改）
+
+`V8Experience.tsx:1479-1480`（Today/hub）：
+
+```
+const nextStop = activities.find((item) => Date.parse(item.end_at) >= nowMs) ?? activities[0] ?? null;
+```
+
+`nextStop` 喂给 1501-1504 的 `nextUp`，1590/1593 行把它渲染成 **"Next / 接下来 + 时钟 + 标题"**。
+它读的是墙钟不是游标，所以不是 ORD-0010/0011 那条链上的东西；但当**所有活动都早于 now**
+（旅程已完成，或日期落在过去的旅程）时，`find` 为空、回退取 `activities[0]`，
+Today 就会把早已结束的第一站显示成"接下来"。而 1495-1496 行的注释写的是
+"No empty current slot is ever fabricated" —— 那句话说的是 `currentStop`（它确实没有回退），
+**`nextUp` 这一侧不成立**。按本次的规矩，这是静态读到的、**未做端到端实测**的观察，
+且 `qoder-today-hero.spec.ts` 现有 2 条例子（单一 CTA / 高度 / 无空 Now / 无溢出）不覆盖该态；
+要修该由 Commander 派单，并配一条"全部活动已结束时 Today 不得说 Next"的门。
