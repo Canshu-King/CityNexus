@@ -1470,3 +1470,135 @@ domain/requirements baseline 一行未改。UI 未重构，无清理性改动。
 过来的 9 个节点里不含它（若把它算作 +1，RX-2 就变成 +3、净增变成 +9）。我没有为了凑数改名。
 它看守的前提也不是没有落点：模块级 `next(...)` 在 mock 矩阵里找不到显式边时直接
 `StopIteration`，整个文件在收集阶段就报错，不会悄悄退化成一个恒真断言。
+
+
+---
+
+## 78. ORD-0008：RX-4 门吸收进权威测试树，并在权威树上正式跑一轮矩阵
+
+### 78.1 吸收与节点对应表
+
+两份门按字节从 `_qoder_rx4_20260920/delivery/` 拷进 `backend/tests/`（SHA-1 一致：
+`37b45e3b10`、`f7fb3a93c4`），单独跑 **10 passed / 0 failed**（2.18s）。
+
+计数是 +8，不是 +10，对应表如下：
+
+| 节点 | 变化 |
+| --- | --- |
+| `tests/test_rx4_c4_generate_gate.py`（7 条） | +7 |
+| `tests/test_rx4_c4_protection_surface_gate.py`（3 条） | +3 |
+| `tests/test_qoder_generate_anchor_gate.py`（本线一小时前写的临时门，2 条） | −2 |
+
+删我自己那条门的原因不是风格：`test_unresolvable_paid_anchor_refuses_generation_instead_of_omitting_it`
+断言的是同一个 422、同一个 `C4_ANCHOR_UNRESOLVED:<key>`，而且还带两个我没有的场景（只有约束能materialise
+的确认 ARRIVAL + 它的未确认对照，以及"demo 巡航根本不具备区分力"这条哨兵）。Mission 002 B 不许吸收进
+重复语义，反方向也一样。有一条断言没跟着活下来，写在 §78.4。
+
+全量：**907 passed / 15 skipped / 0 failed**（86.97s，解释器 `D:\moodle\CityNexus\.venv`，
+`DEEPSEEK_API_KEY` / `CITYNEXUS_AI_API_KEY` 置空）。算术：899 − 2 + 10 = 907。
+
+### 78.2 为什么这一步是阻塞项
+
+Commander 上一轮给 `SUITES` 加了 `tests/test_rx4_c4_generate_gate.py`，而权威树里还没有这个文件。
+在这个量具的判定规则下（收集不到 = HARNESS_INVALID，不是跳过），文件缺失会让整轮矩阵作废，
+而不是少测一条门。吸收之后权威树 baseline `ran=137`。
+
+### 78.3 权威树上的 17 行矩阵（Commander 的量具，一次未改）
+
+`python tools/verification/mutation_campaign.py --python D:\moodle\CityNexus\.venv\Scripts\python.exe`
+工作目录 `D:\moodle\_qoder_integration_20260919`；evidence 落在仓库外
+（`CITYNEXUS_EVIDENCE_DIR=%TEMP%\cnx-authoritative-ev`）。每行 ran=137，无一例外；
+判定来自 `FAILED` 行而非退出码。
+
+| # | id | 语义破坏 | ran / passed / failed | 杀掉它的测试（首条） | 判定 |
+| --- | --- | --- | --- | --- | --- |
+| 1 | A | 陈旧游标像缺省游标一样回退 | 137 / 130 / 7 | `test_completed_prefix_does_not_hide_a_stale_cursor` | KILLED |
+| 2 | B | Journey 写锁变空操作 | 137 / 135 / 2 | `test_the_guard_actually_serialises_two_threads_for_one_journey` | KILLED |
+| 3 | E | 捕获不再重锚承诺 | 137 / 135 / 2 | `test_capture_reanchors_a_commitment_that_arrived_stale` | KILLED |
+| 4 | A1 | 同键冲突不再回放 durable receipt | 137 / 136 / 1 | `test_one_idempotency_key_across_two_sessions_replays_without_the_lock` | KILLED |
+| 5 | G1 | 重复 ACTIVE 迁移又按"最新"猜 | 137 / 136 / 1 | `test_migration_refuses_to_guess_when_the_pointer_matches_neither` | KILLED |
+| 6 | G2 | 选新计划不退休被抛弃的计划 | 137 / 112 / 25 | `test_journey_truth_invariants_survive_random_operation_orders[…]`（stateful 60×30） | KILLED |
+| 7 | F1 | 多候选时取第一条而不是 AMBIGUOUS | 137 / 136 / 1 | `test_two_candidates_for_one_commitment_are_ambiguous_and_fail_closed` | KILLED |
+| 8 | F2 | 零候选时返回 None 而不是失败 | 137 / 134 / 3 | `test_a_different_instant_is_not_the_same_commitment` | KILLED |
+| 9 | F3 | 身份退化到后缀相似 | 137 / 136 / 1 | `test_a_suffix_of_a_semantic_key_is_not_an_identity_match` | KILLED |
+| 10 | F4 | 计划时刻不再是锚的一部分 | 137 / 135 / 2 | `test_a_different_instant_is_not_the_same_commitment` | KILLED |
+| 11 | RX1 | 触发事件不再检查 Journey 归属 | 137 / 136 / 1 | `test_foreign_trigger_is_refused_by_the_journey_scope_guard` | KILLED |
+| 12 | RX2 | 硬捕获允许退回 mock | 137 / 136 / 1 | `test_hard_capture_has_no_mock_fallback_for_an_explicit_fixture_leg` | KILLED |
+| 13 | PROV | 任意 provenance 标签都能洗成实时捕获 | 137 / 130 / 7 | `test_sealed_legacy_synthetic_fixture_without_quality_fails_closed` | KILLED |
+| 14 | C4G | 生成候选时付费 C4 不再是硬约束 | 137 / 136 / 1 | `test_unresolvable_paid_anchor_refuses_generation_instead_of_omitting_it` | KILLED |
+| 15 | C4A | anchor schedule 不再钉住 ACTIVE C4 | 137 / 135 / 2 | `test_confirmed_external_arrival_is_built_into_every_candidate` | KILLED |
+| 16 | RX3NEXT | 陈旧游标从第一个活动继续投影 | 137 / 131 / 6 | `test_stale_cursor_fails_closed_instead_of_resuming_from_the_first_activity` | KILLED |
+| 17 | F | 不可解析 C4 被跳过而不是让接受失败 | 137 / 137 / 0 | —（公开端点走不到该分支，理由随 EXPECTED_SURVIVORS 打印） | EQUIVALENT_OR_NON_ACTIONABLE |
+
+汇总（工具自己算的）：`actionable=16 killed=16 survived=0 harness_invalid=0 equivalent=1`，
+`campaign: 16 killed / 0 survived / 17 attempted`，`CAMPAIGN PASSED`。跑完 `git status --porcelain`
+里 `backend/app` 一条没有 —— 十处被突变过的源文件全部按字节还原（本树这些文件都是 LF，
+Commander 那版 `finally` 写回 LF 文本的缺陷在这里没有暴露，但对 CRLF 树是真实的，已随 diff 说明）。
+
+第 17 行的口径冲突仍然待仲裁：Mission 002 C 的字面要求是 `0 SURVIVED / 16 KILLED`，
+本表把 F 记为"声明不可达"而非 KILLED。要么按字面砍掉这一行（分母变 16 attempted），
+要么接受"16 actionable + 1 equivalent"这个口径 —— 我没有为了让表好看而改它的分母。
+
+### 78.4 一条没跟着活下来的断言，和一次独立交叉验证
+
+本线那条临时门里还有一句：不可解析锚所在 ACTIVE 计划里没有任何 Activity 带着那个 place id，
+也就是"确实只有约束在守"。吸收进来的门断言的是承诺 `activity_id is None`，接近但不等价。
+它应该补进 RX-4 自己的文件（那是他们的所有权），我没有改一个字节。
+
+交叉验证在一份 disposable worktree（同 `00dfd62`）用我自己的量具跑过：mandate 轨后端可行
+13 行全 KILLED（三条前端行因 worktree 无 `node_modules` 未测），扩展轨 12 KILLED + 1 声明不可达；
+其中 `anchor_schedule.py:90` 那个站点用整条 `tests` 作门时 `collected=962` 且 KILLED，
+"已被现有门覆盖"这句话在我这边也是量出来的，不是转述。
+
+---
+
+## 79. 这一轮的量具边界与一条新发现（不是任务，记下来免得下次重新发现）
+
+### 79.1 `/twin` 不参与"游标是否可信"这件事
+
+`cursor_status` 目前只有两个消费者会算：`operations/v9.py::_execution_truth`（`STALE` /
+`VALID` / `ABSENT_FALLBACK`）和 `stay_mobility.py::_active_plan_payload`（`/experience` 用的那份，
+三态判据与前者一致，逐条对过）。`GET /api/v1/journeys/{id}/twin` 走
+`_twin_snapshot`，它把游标按 ACTIVE 计划解析：
+
+```python
+current = next((item for item in activities if item.id == current_id), None)
+```
+
+这一步本身是对的（游标落在被替换掉的计划上时不会认错活动），但它把"游标不可解析"和"还没有游标"
+压成同一个 `None`，而且 `JourneyTwinSchema` 里没有任何字段能表达这个区别。
+结果是一个只读 twin 的消费者看见 `derived_now = journey.start_at`：那既不是旅行者的位置，
+也不是计划的真相，而是一个填补出来的默认值。这属于 ORD-0007 同一族的问题（两个消费者对
+"现在在哪"必须给同一个答案），但形态不同——那里是互相矛盾，这里是**沉默**。
+
+我没有擅自改它：给 schema 加字段是契约变更，超出 ORD-0006/0007 的字面范围。
+最小改法是 `_twin_snapshot` 复用同一条三态判据（活动列表已经在手上了）并在 schema 上暴露
+`cursor_status`；要动的话我一次做完，连带一条 `/twin` 与 `_execution_truth` 的差分回归。
+
+### 79.2 `len(legs) > len(activities)` 不是这棵树能自然长出来的形状
+
+ORD-0006 要的权威回归必须先有这个形状才可能失败。三处写腿的产品代码
+（`operations/v9.py:664`、`main.py:4620`、`planning/authoritative_v12.py:1383`）都按"相邻活动成对"
+写，恒等于 `len(activities) - 1`；demo 生成的计划一条腿都不写。所以权威回归里那条腿是我按 schema
+直接持久化的（腿的 `from_activity_id` / `to_activity_id` 可空是设计如此，一条只连两个 place key
+的 provider 事实本身是完整事实）。
+
+这意味着 ORD-0001/0006 的修法性质上是**契约加固**，不是"复现了一个正在发生的错误"。
+但 Commander 的指纹（`next_mode="AUTO"`、`next_eta_min=29`）来自一份真的多出一条腿的计划——
+如果那不是手摆的，那么"谁写了第 N+1 条腿"本身是另一条缺陷，值得单独开一单，我不想把它顺手吸进
+这条已经收口的修复里。
+
+### 79.3 矩阵现在有两份实现，只应该有一份数字
+
+Commander 按仲裁 Amendment B 直接修了 `tools/verification/mutation_campaign.py`（ORD-0002），
+我不再碰那个文件；我把带 canonical `J-*` 行、逐行 declared gate + `--collect-only` 前置、
+模糊 anchor 拒绝、按原行尾字节还原 + SHA-256 校验、journal/`--recover`、evidence JSON 出仓、
+以及三条前端行的版本作为 diff 交付在 `_qoder_recovery_20260919/patches/CNX-002C-mandate16-*`。
+两份的分母不同：Commander 那版是 16 actionable + 1 equivalent（键名 `A/B/E/A1/G1/G2/F1-F4/RX1/RX2/PROV/C4G/C4A/RX3NEXT/F`），
+我这版是 16 条 mandated（`J-*` + `RX4-C4-GENERATE-ANCHOR`）外加 13 条本线自有缺陷单列。
+外部仲裁拿到的表需要能对上 `mutation_manifest.json` 的 15 个 id，这一点只有后一种键名能直接对上。
+
+我在一份 disposable worktree（同 `00dfd62`）里跑过自己那版的后端可行部分，数字独立可查：
+mandate 13/13 KILLED（三条前端行因 worktree 无 `node_modules` 未测），扩展轨 12 KILLED + 1 声明不可达，
+`Q-ANCHOR-SCHEDULE-C4` 用整条 `tests` 作门时 `collected=962` 且 KILLED —— 这就是"anchor_schedule.py:90
+已被现有门覆盖"这句话在我这边的测法，不是转述。
