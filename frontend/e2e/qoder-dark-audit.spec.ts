@@ -25,14 +25,15 @@ async function auditScreen(
   url: string,
   readyTestIds: string[],
   screen: string,
+  scheme: "dark" | "light" = "dark",
 ): Promise<AuditReport> {
-  await page.emulateMedia({ colorScheme: "dark", media: "screen" });
+  await page.emulateMedia({ colorScheme: scheme, media: "screen" });
   await page.goto(url, { waitUntil: "load" });
   for (const id of readyTestIds) {
     await expect(page.getByTestId(id).first()).toBeVisible({ timeout: 25_000 });
   }
   await page.waitForTimeout(1500);
-  const scanned = await scanContrast(page);
+  const scanned = await scanContrast(page, { scheme });
   return {
     screen,
     scanned: scanned.count,
@@ -187,17 +188,23 @@ test.describe("Qoder dark-mode audit (Today + Live)", () => {
     { width: 1280, height: 900, name: "desktop" },
   ]) {
     test(`no dark contrast violations on Today/Live (${vp.name})`, async ({ page }) => {
-      test.setTimeout(120_000);
+      test.setTimeout(180_000);
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await ensureDemoJourney(page);
-      const today = await auditScreen(page, "/v8/hub", ["today-heading"], `today/${vp.name}`);
-      const live = await auditScreen(page, "/v8/live", ["v8-live-journey"], `live/${vp.name}`);
-      const reports = [today, live];
+      // Both themes are gated. Light was previously un-gated and axe found a
+      // real 4.42:1 eyebrow text there, so "dark is clean" was never enough.
+      const reports: AuditReport[] = [];
+      for (const scheme of ["dark", "light"] as const) {
+        reports.push(
+          await auditScreen(page, "/v8/hub", ["today-heading"], `today/${vp.name}/${scheme}`, scheme),
+          await auditScreen(page, "/v8/live", ["v8-live-journey"], `live/${vp.name}/${scheme}`, scheme),
+        );
+      }
       mkdirSync(OUT_DIR, { recursive: true });
       writeFileSync(`${OUT_DIR}/dark-audit-${vp.name}.json`, JSON.stringify(reports, null, 2), "utf8");
       console.log(summarise(reports));
       const all = reports.flatMap((r) => r.violations.map((v) => `${r.screen}: ${v.kind} ${v.selector} "${v.text}"`));
-      expect(all, `dark contrast violations (${vp.name}):\n${all.slice(0, 40).join("\n")}`).toEqual([]);
+      expect(all, `contrast violations (${vp.name}):\n${all.slice(0, 40).join("\n")}`).toEqual([]);
     });
 
     test(`focus indicators clear 3:1 on Today/Live (${vp.name})`, async ({ page }) => {

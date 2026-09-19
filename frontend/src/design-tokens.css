@@ -18,14 +18,26 @@
      dark so a button label clears AA (white on #0a66ff ≈ 4.8:1), unlike the
      brighter #0a84ff link accent which only reaches ~3.6:1 against white. */
   --cn-accent-solid: #0a66ff;
+  /* Accent used as *text* (eyebrow / kicker) on a light page. #0a66ff is the
+     Apple link blue, but against the #f5f5f7 canvas it only reaches 4.42:1 and
+     fails WCAG AA for 10px bold uppercase — a real axe failure, not a taste
+     call. This deeper blue clears 4.5:1 on both canvas (#f5f5f7 → 5.49:1) and
+     surface (#ffffff → 5.97:1) without changing hue. */
+  --cn-accent-text: #0a5cd6;
+  /* Success as *text*: #248a3d is a good fill/badge colour but only reaches
+     4.04:1 as 13px text on the light attention panel. */
+  --cn-success-text: #17672f;
   --cn-success: #248a3d;
   --cn-warning: #b06000;
   --cn-danger: #d70015;
   --cn-hairline: rgba(0, 0, 0, 0.08);
   /* Boundary for controls whose only affordance is their outline (language
      toggle, outline buttons) — must clear 3:1 vs the page. Decorative
-     separators stay on the softer --cn-hairline. */
-  --cn-control-border: #b9bfca;
+     separators stay on the softer --cn-hairline. #7d8797 is the light twin of
+     dark's #7c7c82: 3.63:1 on #ffffff and 3.33:1 on the #f5f5f7 canvas, where
+     the previous #b9bfca reached only 1.85:1 and an outline button with no
+     fill was effectively invisible to a low-vision user. */
+  --cn-control-border: #7d8797;
   font-family: var(--cn-font);
 
   /* Type scale (mobile-first) */
@@ -87,6 +99,10 @@
     --cn-ink-tertiary: #8e8e93;
     --cn-accent: #0a84ff;
     --cn-accent-solid: #0a66ff;
+    /* #0a84ff on the #000000 dark canvas is 5.76:1 — already AA, so the dark
+       theme keeps the brighter accent for text. */
+    --cn-accent-text: #0a84ff;
+    --cn-success-text: #30d158;
     --cn-success: #30d158;
     --cn-warning: #ff9f0a;
     --cn-danger: #ff453a;
@@ -597,3 +613,85 @@
   }
 }
 
+/* ---------------------------------------------------------------------------
+   AA-safe eyebrow text (regression fix found by axe in the real-seed
+   integration run, 2026-09-19). `.v8-kicker` inherits --v8-indigo, which the
+   Apple palette binds to --cn-accent — fine as a link, 4.42:1 as 10px text on
+   the light canvas. Page intros get the dedicated --cn-accent-text instead.
+   --------------------------------------------------------------------------- */
+.v8-page-intro .v8-kicker { color: var(--cn-accent-text); }
+
+/* An outline button has no fill, so its border is the only affordance — under
+   the light theme it was still the legacy hardcoded #d9ddea (1.2:1 on white),
+   the same failure the dark pass fixed with --cn-control-border. Fixed on both
+   sides of the theme now, decorative separators untouched. */
+.v8-page .v8-outline-button { border-color: var(--cn-control-border); }
+
+/* Hero eyebrow labels: --cn-ink-tertiary is 3.33:1 on the canvas, which fails
+   AA for 10-11px caption text. Secondary ink clears it (4.66:1) and stays
+   visually subordinate to the stop name beneath it. */
+.cn-now-next-hero .cn-hero-label { color: var(--cn-ink-secondary); }
+
+/* ---------------------------------------------------------------------------
+   Shell chrome tokenised for the light theme (found the moment the two-theme
+   contrast gate was switched on). These greys were hardcoded in styles.css at
+   1.5–3.9:1 on white: breadcrumb text and its "/" separator, the workspace
+   label, the sidebar nav group captions, the nav buttons and the language
+   toggle's outline. Under dark they were pulled in by the theme binding; under
+   light they were simply too faint, and axe/computed-style agree.
+   --------------------------------------------------------------------------- */
+.v8-breadcrumb,
+.v8-breadcrumb b,
+.v8-workspace-label,
+.v8-nav-group,
+.v8-nav button,
+.v8-runtime {
+  color: var(--cn-ink-secondary);
+}
+.v8-nav button.active,
+.v8-nav button:hover,
+.v8-page .v9-language {
+  color: var(--cn-ink);
+}
+.v9-language,
+.v8-home-language {
+  border-color: var(--cn-control-border);
+}
+
+/* ---------------------------------------------------------------------------
+   Accent-as-text and remaining sidebar chrome (light theme).
+   Rebinding --v8-indigo to Apple blue made every text consumer of it — the
+   kicker outside page intros, quiet/text buttons — drop to 4.43:1 on the
+   #f5f5f7 canvas. They now take --cn-accent-text, which is the same hue at an
+   AA-safe depth. The sidebar tagline, the sync panel, the icon button and the
+   mode chips were legacy hardcoded greys/blues that the light theme had never
+   been checked against.
+   --------------------------------------------------------------------------- */
+.v8-kicker,
+.v8-text-button,
+.v8-quiet-button,
+.v8-compare-button {
+  color: var(--cn-accent-text);
+}
+.v8-brand span,
+.v8-sync div,
+.v8-icon-button {
+  color: var(--cn-ink-secondary);
+}
+/* 4.40:1 as #248a3d on the tinted sync panel; the deeper green reads identical
+   but clears AA for 11px bold text. */
+.v8-sync {
+  color: #17672f;
+}
+/* A mode chip's border is its selection affordance, so it must clear 3:1. */
+button[data-testid^="mode-"],
+.v8-mode-option {
+  border-color: var(--cn-control-border);
+}
+
+/* The "all clear" caption is the only text in the collapsed attention band; it
+   inherits the semantic green, which as small text needed the AA-safe variant.
+   "无事就闭嘴" must not mean "say it too faintly to read". */
+.cn-attention-band[data-attention="clear"] .cn-attention-head strong {
+  color: var(--cn-success-text);
+}
