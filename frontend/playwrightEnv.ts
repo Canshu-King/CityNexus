@@ -49,7 +49,8 @@ function port(value: string, name: string): number {
 /**
  * @param label      what to print in the provenance line, e.g. "current-product"
  * @param allowAuthoritative  false for the legacy config: an archived run may not
- *                   claim gate evidence, so the flag is rejected rather than ignored.
+ *                   claim gate evidence, so the flag is reported and ignored rather
+ *                   than honoured.
  */
 export function resolveE2eEnvironment(
   label: string,
@@ -83,8 +84,10 @@ export function resolveE2eEnvironment(
     if (!databaseUrl.startsWith("sqlite:///")) {
       refuse(`CITYNEXUS_DATABASE_URL must be a sqlite:/// path in this mode, got "${databaseUrl}"`);
     }
-    /* The file is deleted before the run, so refuse to touch anything that does
-       not look disposable.  A leading underscore is also git-ignored. */
+    /* Nothing is ever deleted for a run.  The "_*.db" shape is required because
+       the run-stamped backend refuses to reopen a file that already exists
+       (fresh-or-no-run), so this path must never be able to name something a
+       person made.  A leading underscore is also git-ignored. */
     const dbFile = databaseUrl.replace(/^sqlite:\/\/\//, "");
     const dbBase = dbFile.split(/[\\/]/).pop() ?? "";
     if (!dbBase.startsWith("_") || !dbBase.endsWith(".db")) {
