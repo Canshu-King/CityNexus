@@ -169,3 +169,25 @@ disruption），所以给该 spec 加了一个默认关闭的 `QODER_CAPTURE_STA
 - 6.2 的 7 项视觉缺陷：哪些进入 Apple 线下一轮，哪些归主线（语言键重复、Copilot 遮挡、头像溢出
   看起来是主线既有 DOM）；
 - 那 8 条 `/` 旧界面 legacy：迁移到 V8 shell 断言，还是标记为过期归档。
+
+## 8. "A 能不能单独并"——实测答案：不能
+
+裁决建议 A 优先保留、B 逐项 reconcile，隐含"A 至少可以先走"。用三个 worktree 在**同一份
+`tsconfig.check.json`** 下实测：
+
+| 树 | 类型错误数 |
+|---|---|
+| `b12f24f` truth-only 基线 | **17** |
+| 基线 + 只并 A（`e330ac2` 的内容） | **14** |
+| 基线 + A + B（`a2124c0`） | **0** |
+
+读法：
+
+- A 自己**不新增**任何类型错误，还顺带清掉 3 个（`V8Experience.tsx` / `LiveRecovery.tsx` 的改动本身是类型安全的）；
+- 但 A 单独并进来仍然编不过，**B 是 A 的前置**，不是可选项；
+- 更关键：B 里 `v8Types.ts` 新增的 `acknowledged` / `no_alternative` 两个字段，报错方是
+  **truth 线自己的组件** `src/features/recovery/RecoveryRequiredPanel.tsx:45-46`。
+  也就是说这两个字段属于主线编译前置，而不是 Apple 线的私货——逐项 reconcile B 时它们必须进，
+  否则 authoritative 分支自己就红。
+
+`vite build` 在 A-only 下能过（vite 不做类型检查），所以"能 build"不能作为 A 可独立合并的证据。
