@@ -24,10 +24,12 @@ export default async function authoritativeProvenanceCheck() {
   const databaseUrl = process.env.CITYNEXUS_DATABASE_URL ?? "";
   if (!runId) refuse("CITYNEXUS_E2E_RUN_ID is required in authoritative mode");
 
-  /* Freshness itself is enforced earlier, in playwright.config.ts, which refuses
-     to start when the run's database file already exists.  What is checked here
-     is which file the process that answered actually opened — identified by its
-     basename, because /health deliberately does not expose a connection URI. */
+  /* Freshness is enforced in the process that opens the database —
+     backend/app/db/session.py refuses to reopen an existing file for a
+     run-stamped process.  It cannot be checked here or in the config: by the time
+     this hook runs, the backend this invocation started has already created the
+     file.  What is verified below is which file that process opened, by basename,
+     because /health deliberately does not expose a connection URI. */
   const expectedDatabaseId = databaseUrl.replace(/^sqlite:\/\/\//, "").split(/[\\/]/).pop();
 
   const api = await request.newContext({ baseURL: `http://127.0.0.1:${frontendPort}` });

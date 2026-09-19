@@ -64,3 +64,39 @@ is a truth-value question, not a dead surface.
   no retries, and no database-harness change is warranted; the arbiter closed
   `TEST_INFRA_SHARED_DB_BLOCKER` and marked `PER_WORKER_TEMP_DB` as
   NOT_AUTHORIZED.
+
+## pass-14: the four pure archives are actually archived
+
+The arbiter's condition on archiving (pass-14 dispatch, §D): moving a file and
+leaving it inside the default suite is a reorganisation, not a retirement.  So:
+
+- `frontend/e2e/legacy/archived-product-hardening.spec.ts` holds the four cases, and
+  drives `/legacy` — the only place that surface renders now (`src/main.tsx` falls back
+  to `LegacyApp` only for paths starting with `/legacy`).
+- `frontend/playwright.config.ts` sets `testIgnore: /[\/]e2e[\/]legacy[\/]/`, so an
+  acceptance run cannot discover them.
+- `frontend/playwright.legacy.config.ts` runs them on explicit request and refuses to
+  become authoritative; its results are non-gating by construction.
+- No assertion was weakened or skipped during the move.  Run for real on 2026-09-19
+  with `npx playwright test --config playwright.legacy.config.ts` against a
+  self-started backend: **4 passed (18.8s)**.  That is the evidence for what this
+  document has claimed since pass-8 — the surface is alive under `/legacy`, and the
+  only reason these four were red inside the current suite is that they asked the
+  root path for it.  Being green here changes nothing about gating: this config
+  cannot be made authoritative, and these results do not count toward a merge gate.
+
+Per-case record required by the ruling:
+
+| archived case | capability invariant | why the old UI expectation is legacy-only | current owner (API / surface) | current coverage | archive location |
+|---|---|---|---|---|---|
+| TravelerTwin Control Tower evidence + authority boundary | persisted twin evidence is inspectable, and learned preferences are a *soft input* that cannot authorise actions | the TravelerTwin panel with `data-testid=traveler-twin-*` exists only in the legacy tree; V8 has no Control Tower surface | `GET /api/v1/journeys/{journey_id}/twin`, agent authority checks in `app/integrations/agent_gateway` | `backend/tests/test_gpt_agent_authority_v3.py`, `test_gpt_v5_mission_authority.py` (authority boundary, not the panel) | `e2e/legacy/archived-product-hardening.spec.ts` |
+| Control Tower compiles and reloads a persisted NL mission | a natural-language mission compiles to codes + protected activity ids and survives reload | the mission composer (`agent-command`, `run-agent-command`) is legacy-only; V8's Copilot is a different surface with a different contract | `POST /api/v1/journeys/{id}/agent/commands`, persisted mission + run trace | `backend/tests/test_agent_mission_runtime.py`, `test_gpt_v5_mission_authority.py` | same |
+| Assisted acceptance is policy-driven; route/feed evidence survive reload | a replan under ASSISTED requires confirmation, the approval receipt is consumed exactly once, and route evidence is provider-backed | the legacy event simulator / accept button and `.maplibre-container` route layers are not part of V8's acknowledgement flow | `POST /agent/tools/request_replan`, `/accept_replan`, `POST /agent/approvals/{id}`, `GET /route-evidence` | covered **in the current surface**: `frontend/e2e/qoder-ack-rendered.spec.ts`, `qoder-ack-resolution.spec.ts`, `backend/tests/test_qoder_live_replans_endpoint.py` | same |
+| Proactive Guardian launches the flagship recovery without a new chat prompt | a standing mission plus a scan can recover the flagship leg with CP-SAT V2 evidence, without the traveller asking | the Guardian console (`guardian-flagship-scan`, `guardian-decision`, `guardian-trace`) lives in the legacy tree | `PUT /guardian/mission`, `POST /guardian/scan`, solver `ORTOOLS_CP_SAT_V2` | `backend/tests/test_guardian_v4.py`, `test_guardian_model_evidence.py`, `test_v10_flagship_e2e.py` | same |
+
+Still in the acceptance suite, still red, deliberately (pass-15's work list):
+`golden.spec.ts` (reload persistence not yet handed over), `live-autopilot-v5.spec.ts`
+(zero-touch UI trigger), `predictive-real-city-v6.spec.ts` (autonomous prevention), and
+`product-hardening.spec.ts` → autonomous envelope-safe recovery through the Agent
+Gateway.  These four guard capabilities CityNexus is still building, so the behaviour
+check has to be re-expressed on the current surface before the legacy one is dropped.
