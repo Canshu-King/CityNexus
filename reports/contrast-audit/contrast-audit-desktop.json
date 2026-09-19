@@ -1,7 +1,7 @@
 [
   {
     "screen": "today/desktop/dark",
-    "scanned": 173,
+    "scanned": 170,
     "violations": [],
     "borderWarnings": 0
   },
@@ -13,7 +13,7 @@
   },
   {
     "screen": "today/desktop/light",
-    "scanned": 173,
+    "scanned": 170,
     "violations": [],
     "borderWarnings": 3
   },

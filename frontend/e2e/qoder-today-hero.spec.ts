@@ -39,6 +39,34 @@ test.describe("Qoder Today single-focus hero", () => {
         );
       expect(primaryCount, `hero@${width}: expected ≤1 primary CTA, got ${primaryCount}`).toBeLessThanOrEqual(1);
 
+      /* 1b. Whole-screen check (pass-8 ruling #2). The old assertion only
+         counted primaries *inside* the hero, so a full-width .v8-primary
+         "AI 帮我规划" sitting in .v8-hub-actions right above it was invisible
+         to the gate while being unmistakably visible on the real screenshot —
+         a green light for a screen with four competing buttons. On a seeded
+         journey with a genuine next stop this now runs against the positive
+         branch, which is the branch the gate had never actually exercised. */
+      const pagePrimary = await page
+        .locator(".v8-primary, .v8-primary-button")
+        .evaluateAll((els) =>
+          els
+            .filter((el) => (el as HTMLElement).getClientRects().length > 0)
+            .map((el) => ({
+              testId: el.getAttribute("data-testid"),
+              text: (el.textContent || "").trim().slice(0, 40),
+            })),
+        );
+      expect(
+        pagePrimary.length,
+        `Today@${width}: the hero must not be competed with — visible primaries: ${JSON.stringify(pagePrimary)}`,
+      ).toBeLessThanOrEqual(1);
+      if (pagePrimary.length === 1) {
+        expect(
+          pagePrimary[0].testId,
+          `Today@${width}: the single visible primary must be the hero CTA, got ${JSON.stringify(pagePrimary[0])}`,
+        ).toBe("today-hero-cta");
+      }
+
       // 2. No horizontal overflow within the hero itself.
       const overflow = await hero.evaluate((el) => ({
         scrollW: el.scrollWidth,

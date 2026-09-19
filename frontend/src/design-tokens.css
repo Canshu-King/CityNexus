@@ -711,3 +711,29 @@ button[data-testid^="mode-"],
 .v8-product-shell textarea:focus-visible {
   outline-color: var(--cn-accent-text);
 }
+
+
+/* ---------------------------------------------------------------------------
+   Today secondary action row (pass-8 ruling #1/#2).
+   These three utilities used to render as four stacked full-width buttons with
+   no shared layout rule at all (.v8-hub-actions had no CSS in the repo), which
+   is how the hero's single primary action got out-shouted on a real journey.
+   They are now one quiet, wrapping text row under the trip summary.
+   --------------------------------------------------------------------------- */
+.v8-hub-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 16px;
+  margin-top: 10px;
+}
+.v8-hub-actions .v8-quiet-button {
+  min-height: 30px;
+  padding: 2px 0;
+  font-size: var(--cn-fs-caption);
+  font-weight: 600;
+}
+.v8-hub-actions .v8-quiet-button + .v8-quiet-button {
+  border-left: 1px solid var(--cn-control-border);
+  padding-left: 16px;
+}

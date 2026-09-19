@@ -90,7 +90,9 @@ export function MapPanel({
            branch's GeoJSON typing fix dropped this line along with the comment
            that explained it; maplibre's own default happens to be false, but an
            accessibility-relevant intent belongs in the source, not in an
-           implicit library default. */
+           implicit library default. maplibre's shipped MapOptions type omits
+           this documented constructor flag, hence the narrow cast at the end of
+           the options object. */
         failIfMajorPerformanceCaveat: false,
         container: host.current,
       style: {
@@ -145,7 +147,7 @@ export function MapPanel({
       zoom: 11,
       attributionControl: false,
       interactive: false,
-      });
+      } as maplibregl.MapOptions & { failIfMajorPerformanceCaveat?: boolean });
       map = mapInstance;
       resizeObserver = new ResizeObserver(() => map?.resize());
       resizeObserver.observe(host.current);
