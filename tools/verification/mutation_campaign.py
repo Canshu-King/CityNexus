@@ -36,6 +36,9 @@ SUITES = [
     "tests/test_sol_migration_truth.py",
     "tests/test_sol_plan_handover.py",
     "tests/test_sol_guardian_projection.py",
+    "tests/test_rx1_cross_journey_trigger_gate.py",
+    "tests/test_rx2_mock_hard_laundering_gate.py",
+    "tests/test_rx3_stale_cursor_fails_closed.py",
     "tests/stateful",
 ]
 
@@ -182,6 +185,22 @@ SABOTAGES = [
             continue""",
         replacement="""        if False:
             continue""",
+    ),
+    Sabotage(
+        key="RX1",
+        label="the replan trigger stops checking which Journey owns the event",
+        source="backend/app/main.py",
+        original="""    if trigger_event is None or trigger_event.journey_id != journey.id:
+        raise HTTPException(422, "trigger event is not on this journey")""",
+        replacement="""    if trigger_event is None:
+        raise HTTPException(422, "trigger event is not on this journey")""",
+    ),
+    Sabotage(
+        key="RX2",
+        label="a hard mobility capture is allowed to fall back to the mock",
+        source="backend/app/integrations/mobility/runtime.py",
+        original="            fallback=None if hard_capture else mock,",
+        replacement="            fallback=mock,",
     ),
     Sabotage(
         key="F",

@@ -74,26 +74,12 @@ def test_replan_requires_active_journey():
     assert response.status_code == 409
 
 
-def test_replan_trigger_event_must_belong_to_same_journey():
-    ids, _ = _selected(start=True)
-    j1 = ids["journey_id"]
-    traveler = ids["traveler_id"]
-    j2 = client.post(
-        "/api/v1/journeys",
-        json={
-            "traveler_id": traveler,
-            "title": "Second Journey",
-            "city_code": "CNX-DEMO",
-            "timezone": "Asia/Shanghai",
-            "start_at": "2026-10-10T09:00:00+08:00",
-            "end_at": "2026-10-10T19:00:00+08:00",
-            "budget": {"amount_minor": 50000, "currency": "CNY"},
-            "planning_mode": "balanced",
-        },
-    ).json()["id"]
-    event = client.post(f"/api/v1/journeys/{j2}/events", json={"event_type": "WEATHER"}).json()
-    response = client.post(f"/api/v1/journeys/{j1}/replans", json={"trigger_event_id": event["id"]})
-    assert response.status_code == 422
+# RETIRED (RX-1 absorption): test_replan_trigger_event_must_belong_to_same_journey
+# asserted only `status_code == 422`, and its WEATHER event carries no affected
+# activity, so target resolution answered 422 regardless of the journey scope guard.
+# Replaced by tests/test_rx1_cross_journey_trigger_gate.py, which reaches the guard
+# with a real CLOSURE event, asserts the guard's own message, proves the same event
+# is actionable on its own journey, and documents why the old assertion was vacuous.
 
 
 def test_replan_accept_remaps_current_activity_to_new_active_plan():
