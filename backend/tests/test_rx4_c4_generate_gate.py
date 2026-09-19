@@ -35,7 +35,7 @@ os.environ.setdefault("CITYNEXUS_AI_ENABLED", "false")
 import pytest
 from fastapi.testclient import TestClient
 
-from app.db.models import Commitment
+from app.db.models import Activity, Commitment, Journey
 from app.db.session import SessionLocal
 from app.main import app
 from app.planning.anchors import structural_place_id
@@ -437,3 +437,115 @@ def test_cruise_protection_is_not_discriminating() -> None:
             "the cruise assertions may now discriminate, so revisit this gate "
             "and the arrival scenario it justifies"
         )
+
+
+# --------------------------------------------------------------------------
+# ORD-0021 (scope-corrected): three premises that were assertions in the retired
+# gate are now only prose.  They are re-pinned here, and nothing else:
+# the refusal itself stays owned by
+# `test_unresolvable_paid_anchor_refuses_generation_instead_of_omitting_it`.
+# --------------------------------------------------------------------------
+def _import_unresolvable_reservation(
+    client: TestClient, journey_id: str, *, ref: str, confirm: bool
+) -> str | None:
+    """Bring the same artefact onto the journey, confirmed or not.
+
+    Confirmation is the only thing that varies between the control generation and
+    the refusal, so this stays the single lever in the node below.
+    """
+    imported = client.post(
+        f"/api/v1/journeys/{journey_id}/inbox/import",
+        json={
+            "artifact_type": "STRUCTURED_JSON",
+            "payload": {
+                "reservation": {
+                    "reservation_type": "FERRY",
+                    "provider_key": "rx4-gate",
+                    "confirmation_ref": ref,
+                    "origin": {"name": "Tianjin Port", "latitude": 39.0, "longitude": 117.7},
+                    "destination": {
+                        "name": "Nowhere Terminal",
+                        "latitude": 38.0,
+                        "longitude": 118.0,
+                    },
+                    "scheduled_departure_at": "2026-10-10T13:00:00+08:00",
+                    "scheduled_arrival_at": "2026-10-10T13:40:00+08:00",
+                    "price_amount_minor": 3200,
+                    "currency": "CNY",
+                    "price_status": "KNOWN",
+                    "anchor_role": "MID_TRIP",
+                    "semantic_node_key": UNRESOLVABLE_PLACE,
+                }
+            },
+        },
+    )
+    assert imported.status_code == 201, imported.text
+    draft_id = imported.json()["id"]
+    if not confirm:
+        return None
+    confirmed = client.post(f"/api/v1/journeys/{journey_id}/inbox/{draft_id}/confirm")
+    assert confirmed.status_code == 200, confirmed.text
+    return confirmed.json()["commitment"]["id"]
+
+
+def test_nothing_outside_the_commitment_pins_the_unreachable_anchor() -> None:
+    """Why the refusal can only be the C4 constraint assembly talking.
+
+    Three premises, asserted rather than described:
+
+      1. an identical journey carrying the same reservation *unconfirmed* - so no
+         ACTIVE C4 - still generates, and generates plural;
+      2. no Activity anywhere in the database carries the unreachable node, so the
+         fixture does not hand the answer to the generator;
+      3. the plan this journey is actually executing pins no such node either, so
+         no second guard is quietly responsible.
+
+    The control generation is deliberately the **first** call to
+    ``plans/generate`` in this node: if generation ever refuses everything, item 1
+    is what goes red, which is the only proof that these three are assertions and
+    not decoration.  The refusal itself is asserted by
+    ``test_unresolvable_paid_anchor_refuses_generation_instead_of_omitting_it``
+    and is not repeated here.
+    """
+    client = TestClient(app)
+    journey_id = client.post("/api/v1/demo/reset").json()["journey_id"]
+
+    _import_unresolvable_reservation(
+        client, journey_id, ref="RX4-PREMISE-UNCONFIRMED", confirm=False
+    )
+    assert [
+        item for item in _active_c4_commitments(journey_id) if item["level"] == "C4_Anchored"
+    ] == [], "an unconfirmed draft must not create an ACTIVE C4 commitment"
+
+    # (1) same shape, no ACTIVE C4: generation succeeds and offers candidates.
+    control = client.post(
+        f"/api/v1/journeys/{journey_id}/plans/generate", json={"candidate_count": 3}
+    )
+    assert control.status_code == 201, (
+        "the control journey holds no ACTIVE C4 and was still refused: "
+        f"{control.text[:200]} - generation is refusing indiscriminately, so the "
+        "named anchor refusal elsewhere in this file proves nothing about the "
+        "commitment"
+    )
+    assert len(control.json()) == 3, f"expected 3 candidates, got {len(control.json())}"
+    assert client.post(
+        f"/api/v1/journeys/{journey_id}/plans/{control.json()[0]['id']}/select"
+    ).status_code == 200
+
+    with SessionLocal() as session:
+        # (2) the node exists nowhere in the seeded data.
+        strays = session.query(Activity).filter(Activity.place_id == UNRESOLVABLE_PLACE).count()
+        assert strays == 0, (
+            f"the seeded fixture already holds {strays} Activity rows for "
+            f"{UNRESOLVABLE_PLACE}; the refusal would then be about data, not the commitment"
+        )
+
+        # (3) and the live plan pins none of it either.
+        active_plan_id = session.get(Journey, journey_id).active_plan_version_id
+        assert active_plan_id, "the control journey must be executing a plan"
+        pinned = (
+            session.query(Activity)
+            .filter_by(place_id=UNRESOLVABLE_PLACE, plan_version_id=active_plan_id)
+            .count()
+        )
+        assert pinned == 0, "the ACTIVE plan already pins the node; another guard is in play"
