@@ -131,6 +131,51 @@ test("the recovery card follows the cursor the product itself advanced", async (
   await expect(heading).toHaveText(activities[2].title);
 });
 
+test("a cursor that resolves to a finished step yields no Now on the Live heading", async ({
+  page,
+  request,
+}) => {
+  // The saved position names a real activity, and that activity is COMPLETED: server-side
+  // that is exactly the shape ORD-0007 measured (cursor VALID, Now empty, Next present),
+  // and the frontend keeps its own guard for it inside liveActivityWindow.  Presenting a
+  // finished step as "now" tells the traveller to do something they already did, and until
+  // this case existed no observable behaviour depended on that guard at all.
+  const { journeyId, activities } = await startedJourney(request);
+  const finished = activities[1];
+  await call(
+    request,
+    `/api/v1/journeys/${journeyId}/activities/${activities[0].id}/complete`,
+    "POST",
+  );
+
+  let served = 0;
+  await page.route(`**/api/v1/journeys/${journeyId}/experience`, async (route) => {
+    let body: { active_plan?: { current_activity_id?: string; activities: Activity[] } };
+    try {
+      body = await route.fetch().then((response) => response.json());
+    } catch {
+      return;
+    }
+    if (body.active_plan) {
+      body.active_plan.current_activity_id = finished.id;
+      body.active_plan.activities = body.active_plan.activities.map((item) =>
+        item.id === finished.id ? { ...item, status: "COMPLETED" } : item,
+      );
+    }
+    served += 1;
+    await route.fulfill({ json: body });
+  });
+
+  const { heading } = await openLive(page, journeyId);
+  await expect(heading).toHaveAttribute("data-cursor-status", "ABSENT");
+  await expect(heading).not.toHaveText(finished.title);
+  await expect(heading).toHaveText("Nothing is due right now");
+  expect(
+    served,
+    `the projection was intercepted ${served} time(s)`,
+  ).toBeGreaterThanOrEqual(1);
+});
+
 test("an unresolvable cursor makes the recovery card name nothing", async ({
   page,
   request,
