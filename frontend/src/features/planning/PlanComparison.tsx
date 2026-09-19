@@ -13,6 +13,15 @@ import { useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import type { PlanVersion } from "../../api/v12Authoritative";
 
+// The generated OpenAPI PlanVersion schema lags the backend, which also emits
+// plan.stale, plan.selectable and per-activity cost_status / metadata. View
+// types layer those additive runtime fields without editing the generated schema.
+type PlanVersionView = PlanVersion & { stale?: boolean; selectable?: boolean };
+type PlanActivityView = NonNullable<PlanVersion["activities"]>[number] & {
+  cost_status?: string;
+  metadata?: Record<string, unknown>;
+};
+
 const MINOR = 100;
 
 function money(amountMinor: number, currency: string, zh: boolean): string {
@@ -67,7 +76,7 @@ export function PlanComparison({
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const candidates = plans.filter(
+  const candidates = (plans as PlanVersionView[]).filter(
     (plan) => plan.status === "CANDIDATE" && !plan.stale && plan.selectable !== false,
   );
   if (candidates.length === 0) return null;
@@ -116,7 +125,7 @@ export function PlanComparison({
           // relationship from missing data is a fabricated fact.
           // Partial coverage is not coverage: if ANY stop's price is unknown the
           // total is unknown, so no within/over verdict may be claimed from it.
-          const stops = plan.activities ?? [];
+          const stops = (plan.activities ?? []) as PlanActivityView[];
           const knownFlags = stops.map((activity) => {
             const status = String(activity.cost_status ?? "").toUpperCase();
             if (status === "KNOWN_FREE" || status === "KNOWN_PAID") return true;

@@ -30,6 +30,8 @@ export type RecoveryState = {
   kind: string;
   event_id: string;
   event_status: "DETECTED" | "ACKNOWLEDGED" | "RESOLVED";
+  acknowledged: boolean;
+  no_alternative: boolean;
   capability_code: string | null;
   active_plan_version_id: string | null;
   failures: string[];

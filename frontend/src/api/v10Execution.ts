@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 // in CI whenever contracts/openapi.yaml changes.
 export type GeneratedOpenApiPaths = paths;
 
-export type ExecutionClockResponse = paths["/api/v1/journeys/{journey_id}/execution-clock"]["get"]["responses"][200]["content"]["application/json"];
+export type ExecutionClockResponse = paths["/journeys/{journey_id}/execution-clock"]["get"]["responses"][200]["content"]["application/json"];
 
 export type WebObservationPayload = {
   id: string;
