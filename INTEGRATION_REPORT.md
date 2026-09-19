@@ -632,3 +632,107 @@ workers / spec 顺序 / retry / DB schema / 产品语义一律未动。
 3. 下一轮按你的排期是 pass-14：8 条 legacy 的 archive / port-first。
    要我现在就把 4 条 "Archive" 的入口改成 `/legacy` 并逐条记录能力不变量已被现行套件覆盖的证据，
    还是先只写归档 PR、把 port-first 的 4 条留到之后？
+
+---
+
+# pass-13.1（2026-09-19 20:5x，门禁树见 COMMITS.txt）
+
+按裁决只做三件：provenance 两处加固、Today dock 静止遮挡。8 条 legacy 一条没碰。
+
+## 35. ① fresh-or-no-run：先说清楚为什么不能放在 config 里
+
+裁决要求"webServer 启动前若目标库已存在就 fail fast，绝不自动删"。我先按字面实现在
+`playwright.config.ts` 里，然后被自己的门拦下了：
+
+```
+authoritative mode refuses to start: the database for run "p131dock1" already exists at
+D:\moodle\_qoder_integration_20260919\backend\_p131dock1.db
+```
+
+原因是 Playwright 会在主进程和 worker 进程里**各求值一次 config**，第一次求值后
+后端已经建好文件，第二次求值自然"已存在"。也就是说 config 不是"启动前只问一次"的地方。
+
+所以这条规则改放到**真正打开这个文件的那个进程**里：`backend/app/db/session.py` 的
+`make_engine()` 在 `create_engine` 之前检查——只有被 `CITYNEXUS_E2E_RUN_ID` 盖过戳的进程
+才受约束（普通 demo 服务与 pytest 完全不受影响），文件存在就抛错、绝不删除：
+
+```
+E2E run 'p131dock1' refuses to reopen an existing database at ...
+An authoritative run must start from an empty file; issue a new CITYNEXUS_E2E_RUN_ID instead of deleting it here.
+```
+
+`_*.db` + 文件名必须含 run id 的命名规则保留，它正是让这条拒绝"可达"的前提。
+三条行为由 `backend/tests/test_e2e_provenance.py` 钉住：盖戳进程拒绝重开、盖戳进程可以新建、
+未盖戳进程不受影响。
+
+## 36. ② /health 不再回显连接串
+
+`database_url` 从 `/health` 移除，改为 `e2e_database_id`：只回显文件名（`_p131full1.db`），
+且**只有被盖戳的 E2E 进程才回显**，其他进程一律空串。门与后端测试同步改了。
+新增一条回归测试直接用最坏情况断言：把 `database_url` 换成
+`postgresql://citynexus:s3cr3t@db.internal:5432/citynexus`，`/health` 里不得出现 `s3cr3t` 或 `db.internal`。
+
+两条互相打架的注释也统一了：实测 Playwright 1.63 的 `globalSetup` 在 webServer **之后**运行
+（第一版门在检查"端口是否空闲"时撞见自己刚起的 uvicorn，就是证据），
+所以"必须在服务启动前完成"的检查留在 config 文件体内，"谁应答了这次运行"的检查留在 globalSetup。
+
+## 37. ③ Today dock：你说得对，那是静止遮挡；另外这条规则还牵出导航栏
+
+先认账：§32 里"静止时归零"是我的错误解释。middle 采样点确实是滚动停止、等了 450ms 之后测的，
+重叠仍然存在；bottom 为 0 只是另一个位置的结果，我把它当成了"静止"的证据。
+
+把门改成三个静止位都要 `coveredByDock == 0` 之后，我先加了一个**参照测量**（只报数不断言）：
+同一规则套在底部导航栏上会怎样。
+
+```
+[v8/live @top   ] dock=215,706 165x54  coveredByDock=0  coveredByNav=2   nav=768..844
+      (nav reference) button "mode-walk"    overlap=318x44px
+      (nav reference) button "mode-bicycle" overlap=318x13px
+[v8/hub  @middle] dock=215,706 165x54  coveredByDock=1  coveredByNav=2
+      button "DAY 1FridayArrival · Check in ·" overlap=158x54px
+      (nav reference) button "DAY 1..." overlap=356x14px  button "DAY 2..." overlap=356x36px
+```
+
+也就是说：`position: fixed` 的底部条带在任何静止位都会压住可交互内容，导航栏压得比 pill 更狠
+（`mode-walk` 被盖 318×44，几乎整只按钮）。要按字面把这条规则贯彻到两者，唯一结构性做法是
+把滚动视口截短到 pill 之上（导航 76px + pill 54px + 间隙 ≈ 138px），等于每台手机永久让出约 16% 高度，
+而且会直接挤压首屏门。这个代价我判断不该由一次遮挡收口来付，所以按你允许的 yield 思路做：
+
+**pill 在静止时若压住任何可交互元素，就自己让出内容列（向右滑出），带内一空就回来。**
+`CopilotDock` 里 debounce 220ms 后按**布局盒**（不是 transform 后的矩形，否则会自激振荡）判定，
+CSS 只加一条 `.idle-compact.yield-at-rest { transform: translateX(calc(100% + 16px)); opacity: 0; pointer-events: none }`，
+带 `prefers-reduced-motion` 降级。没有保留 `idleCompact` 之外的行为改动，没有动导航，没有重开 Apple 视觉线。
+入口不丢：底部导航本来就有 Copilot 项。
+
+修后门里的数字（同一次 authoritative 运行）：
+
+```
+[v8/hub @middle] dock=396,706 165x54 state=collapsed idle-compact yield-at-rest yieldsAtRest=true coveredByDock=0
+```
+
+其余静止位 `yieldsAtRest=false`（本来就没压东西），`coveredByDock` 全为 0。
+`yieldsAtRest` 与 `coveredByNav` 都打进日志，是为了让"绿"能区分"让位生效"与"根本没重叠"。
+导航栏那两处重叠我没有修也没有断言——那是 shell 级布局策略，要不要为它让出 138px 由你定。
+
+## 38. 门禁数字（同一次 authoritative 运行）
+
+| 门禁 | 结果 |
+|---|---|
+| 全量 Playwright（authoritative） | **40 expected / 8 unexpected / 0 flaky**（195.7s） |
+| 8 条 unexpected | 与 pass-13 完全相同的 8 条 legacy，一条没多一条没少 |
+| `qoder-*` | 30 passed / 0 failed（含收紧后的 dock 门 2 条） |
+| SQLite 争用告警 | 0 次 |
+| `typecheck` / `typecheck:all` / `vite build` | 全部干净 |
+| 后端同环境 | **834 passed / 15 skipped / 0 failed**（58.2s；= 827 基线 + 7 条 provenance/新鲜度测试） |
+| 默认（非 authoritative）模式 | 回归通过：`authoritative=false ... reuseExistingServer=true` 照常工作，并把借用状态打印出来 |
+
+## 39. 请判
+
+1. 底部导航栏的静止遮挡（`mode-walk` 318×44、`DAY 2` 356×36）：与 pill 同规则处理（那就必须决定
+   是否让出 138px 视口），还是明确豁免固定导航条、只把规则用于浮层？我给数据不给结论。
+2. pill 让位用"滑出内容列"实现：可接受，还是你更希望它改为"上移到带内空隙"或直接不在移动端浮起？
+3. authoritative 模式现已满足你要求的两点加固（fresh-or-no-run、连接串不外泄），
+   是否正式定为 `AUTHORITATIVE_E2E_CANONICAL_GATE = REQUIRED`，并把它连同"非 authoritative 的 E2E 结果
+   只能算本地诊断"写进 `docs/`？写的话我按你的措辞落文档，不改产品码。
+4. 下一轮 pass-14 按 4 条 pure Archive 开工（移出默认 acceptance suite、保留源码、只针对 `/legacy`、
+   不计入 merge 门、逐条留 capability→current test 映射），port-first 4 条留到 pass-15。
