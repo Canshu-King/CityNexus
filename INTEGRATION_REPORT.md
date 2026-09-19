@@ -534,5 +534,6 @@ CITYNEXUS_DATABASE_URL='sqlite:///./_p12_full.db' \
 2. `v13-5` 的 10s 预算：AI 打开时该端点确实要 15s+。这是产品性能问题（应给 discovery 一个
    可等待的进度态或后端超时降级），还是测试预算问题（`expect` 单独放宽到 30s）？我倾向前者，
    因为消费者真的会盯着"Composing city evidence…"不动。
-3. pass-12 三条迁移是否解除 `BLOCKED_ON_E2E_EVIDENCE_CLOSEOUT`；若解除，下一轮按
-   `docs/LEGACY_E2E_MIGRATION.md` 的 archive/port 判定执行，还是先做 §29 的 Live 遮挡与 Hero→replan 路线图。
+3. pass-12 三条迁移是否解除 `CURRENT_E2E_CONTRACT_MIGRATION`（`BLOCKED_ON_E2E_EVIDENCE_CLOSEOUT`
+   已由 pass-11 解除）；若解除，下一轮按 `docs/LEGACY_E2E_MIGRATION.md` 的 archive/port 判定执行，
+   还是先做 §29 的 Live 遮挡与 Hero→replan 路线图。
