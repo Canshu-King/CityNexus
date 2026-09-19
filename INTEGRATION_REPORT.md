@@ -820,3 +820,94 @@ top/middle 继续只打印数字并在注释里写明"允许，但应该让读�
    （envelope-safe autonomous recovery 与现行 Copilot/Guardian 面最接近），
    再 `live-autopilot-v5`（零触发）、`predictive-real-city-v6`（自主预防）、
    最后 `golden`（reload 持久化）。目标断言由你给还是我按现状提草案？
+
+---
+
+# pass-15（2026-09-19 22:1x）
+
+按你定的顺序 golden → :172 → v5 → v6 做 port-first，四条都没有改指 `/legacy`、没有 skip、没有降成 API-only。
+
+## 46. A golden：迁到当前 V8 Live，持久化用身份而不是文字
+
+链条：closure 事件 → 当前 Live 呈现 proposal → 旅客按产品自己的 `live-accept` →
+接受的 plan 身份是服务端事实（journey 与 twin 一致）→ reload 后仍渲染已解决状态 →
+受保护承诺还在。断言落在 plan 身份与"不再重复询问"上，不是标题文字。
+
+两处测量结果我没有藏：
+1. **`/experience` 的 active_plan 里 6 个 activity 的 `place_id` 全是 null**，而
+   `/plans/generate` 是填了 `place_id` 的。所以"同一个地点仍被保护"在当前消费者载荷里无法证明，
+   我改成按旅客看得见的 title 匹配（`Nexus River Cruise Pier`），并由测试把这行差异打印出来。
+   这是契约不一致，不是测试偏好。
+2. 原本照 legacy 写"localStorage 键必须恰好等于三个"会因合法原因失败——Copilot dock 本来就把
+   每个 journey 的对话历史存 localStorage。改成断言真正要紧的：没有任何 plan 形状的键，
+   且任何存储值都不含被接受的 plan id，否则"reload 后还在"证明的是浏览器不是服务端。
+
+setup 走产品自己的转换（demo/reset → plans/generate → select → `/start`），因为
+`request_replan` 在未 ACTIVE 的 journey 上直接 409 `journey must be ACTIVE with an active plan`；
+去改状态列等于测一个旅客到不了的状态。
+
+## 47. B envelope-safe 自主恢复：数字与表面都断
+
+legacy 用 Control Tower 的模式/成本/漂移输入。能力没消失，所以检查搬到当前表面：
+gateway 在旅客自己的 policy 下 `ALLOW_AUTO`、真的 `executed`、执行出的子 plan 版本成为权威、
+cost delta 与 drift 落在配置的 envelope 内、locked commitment 保住、
+`/v8/authoritative` 渲染出 accepted 的子版本 id + `C4 commitments preserved` + provider 证据。
+PUT 之后把 policy 读回来再断——"在 envelope 内"如果 envelope 根本没存进去就毫无意义。
+
+实测一次：`cost delta -3000 of 5000, drift -5 of 120, plan 55523d40… -> a8f9bdc5…`。
+
+## 48. C zero-touch：与 B 保持结构差异
+
+触发（一个 provider 形状的 CLOSURE 事件）之后测试不做任何点击/输入/accept。
+plan 身份自己改变；与该事件关联的 proposal 是 `ACCEPTED` 且 `locked_commitments_preserved`；
+审计日志把它记为 `replan_auto_accepted / AI_AGENT`；`/v8/authoritative` 显示 accepted 子版本，
+`/v8/live` 不再就一次已经发生的恢复询问旅客；reload 后 plan id 不变。
+
+第一版我把 feed 请求包在 `.catch()` 里并且猜错了路径（`/agent/feed`），结果 404 被吞成空列表，
+"证明它是自动的"这条断言就静默变成了空转——正是这条工作线一直在抓的沉默削弱。
+正确端点是 `/journeys/{id}/agent-feed`，返回 `{source, events}`，swallow 已去掉。
+
+## 49. D 预测式自主预防：能力在，表面没有主人——留红
+
+后端确实端到端做了预防：只喂一个 `RISK_FORECAST` fixture（journey 上没有任何 CLOSURE/CRITICAL 事件，
+这条是被断言的而不是假设的），autopilot 自己产出
+`decision=PREEMPTIVE_RECOVERY / trigger_kind=PREDICTIVE / action_status=EXECUTED`，
+`evidence.observation.forecast_before_hard_failure=true`，plan 从 `55523d40…` 变成 `e8037cd1…`，
+River Cruise 仍在，且 `scanRequests == 0`（测试自己没去要决策，否则就成 reactive）。
+
+但渲染它的组件——`guardian-decision`、`guardian-predictive-resilience`、`guardian-provenance`、
+`guardian-trace`、`guardian-standing-mission`、`guardian-provider-risk-forecast`——
+**只存在于 `src/main.tsx`，即 `/legacy` 后面的旧表面**。V8 里没有任何面承接预防结果
+（`api/citynexus.ts` 有 `PREEMPTIVE_RECOVERY` 与 `trigger_kind` 类型，组件层零引用）。
+
+因此这条按裁决**留红**，失败信息直接写 `PRODUCT INTEGRATION GAP: …` 并给出修法方向
+（给 V8 一个预防结果的 owner），同时写明两条禁止的捷径：不得改成 backend-only 断言变绿，
+不得把 reactive recovery 改名冒充 prevention。
+
+一个诚实的弱点：这条断言目前是"页面文本里出现 PREEMPTIVE/predictive/forecast 之一"。
+它现在为假所以缺口成立；但如果将来有人在无关文案里写了 "forecast"，它会虚假变绿。
+给 V8 补真 owner 时应把这条换成结构化断言（具体 testid + run 身份），我在 §51 请判里提出。
+
+## 50. 门禁数字（同一次 authoritative 运行）
+
+| 门禁 | 结果 |
+|---|---|
+| authoritative 当前产品套件 | **44 expected / 1 unexpected / 0 flaky**（122.2s） |
+| 唯一 unexpected | `predictive-real-city-v6` —— §49 的产品缺口，故意留红 |
+| 与你预期 45/0 的差 | 一换一成立（45 条总数不变），差的那 1 条正是 D：能力存在、表面没有主人 |
+| 默认套件是否发现 legacy | 否（`--list` 与本次运行都不含 `e2e/legacy`） |
+| `qoder-*` | 31 passed / 0 failed |
+| SQLite 争用告警 | 0 次 |
+| `typecheck` / `typecheck:all` / `vite build` | 全部干净 |
+| 后端同环境 | 834 passed / 15 skipped / 0 failed（93.9s） |
+
+## 51. 请判
+
+1. D 的处置：批准"留红 + 报产品缺口"，并把它排成一次独立的产品补线（V8 需要一个预防结果 owner）？
+   若批准，我按你的边界提最小方案：在 `/v8/authoritative` 的恢复面板上承接 guardian 预防run
+   （decision + trigger_kind + 预测证据 + 为什么提前改），不改产品语义、不复活旧控件。
+2. 那条文本级断言是否接受为过渡（现在为假，能证明缺口），还是要求我在补线时一并换成结构化断言？
+3. `place_id` 在 `/experience` 里为 null 而 `/plans/generate` 有值——判为契约缺陷要我修，
+   还是记为已知限制？它影响任何"同一地点仍被保护"的当前表面证明。
+4. 四条 port-first 已清三条，剩 D。`INTEGRATION_CANDIDATE_READY_FOR_MAIN` 的签发条件现在是否可以
+   定义为"authoritative current-product 0 unexpected + D 有 owner"，还是另有条件？
