@@ -2052,7 +2052,12 @@ function Live({
             </h2>
             <p>
               {next
-                ? t("live.nextLeg", { title: next.title, mode: nextLeg?.mode?.toLowerCase() ?? mode.toLowerCase(), duration: nextLeg?.duration_min ?? t("live.durationPending"), unit: nextLeg ? " min" : "" })
+                ? t("live.nextLeg", {
+                    title: next.title,
+                    mode: modeLabel(nextLeg?.mode ?? mode, locale.startsWith("zh")),
+                    duration: nextLeg?.duration_min ?? t("live.durationPending"),
+                    unit: nextLeg ? " min" : "",
+                  })
                 : t("live.nextSelect")}
             </p>
           </div>

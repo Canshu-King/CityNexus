@@ -807,3 +807,30 @@ button[data-testid^="mode-"],
   padding: 0 12px;
   font-size: 11px;
 }
+
+
+/* ---------------------------------------------------------------------------
+   Pass-8 ruling #6/#7 (mainline chrome, done here because the visual gate is
+   what found them).
+   #7a - the budget line and its explanatory hint are two inline spans with no
+         separator, which rendered as "每人每天约 ¥500这是按你的预算…".
+   #7b - the Live leg line interpolated the raw provider enum, so a Chinese
+         sentence contained "transit"; every other mode surface uses modeLabel.
+   #6  - the avatar is a 28px circle holding up to two initials; without a
+         nowrap/overflow guard the glyphs sat on top of the circle's edge.
+   --------------------------------------------------------------------------- */
+.today-advisory strong {
+  display: block;
+}
+.today-advisory span {
+  display: block;
+  margin-top: 3px;
+  line-height: 1.45;
+}
+.v8-avatar {
+  overflow: hidden;
+  white-space: nowrap;
+  flex: none;
+  font-size: 9px;
+  letter-spacing: 0.02em;
+}
