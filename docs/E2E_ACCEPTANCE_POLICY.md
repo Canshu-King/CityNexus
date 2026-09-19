@@ -97,6 +97,32 @@ hides it.  If a future pass leaves a case red, its failure message has to name t
 product gap it is standing for and the shortcut that would falsely green it (relabelling,
 narrowing the assertion, or moving the proof to a layer the user never sees).
 
+## A screenshot is evidence, so it must be settled
+
+`toBeVisible()` is already true at `opacity: 0`.  A capture taken during a fade, a
+map idle transition or a route change is not a picture of the surface the test just
+asserted on - it is a picture of a transition, and it can show an empty page while
+every assertion in the case passes.  This was caught in pass-16: an authoritative run
+came back 45/0 and the shipped `fully-grounded-discovery.png` had lost its result
+card.
+
+Policy, as ruled on 2026-09-20:
+
+- a spec that writes a screenshot as its artefact must wait for the surface it
+  captured to settle before calling `page.screenshot()`;
+- scope the wait to the element being evidenced (`element.getAnimations({ subtree: true })`
+  all finished).  A document-wide wait is not usable: the app runs infinite pulse
+  indicators, so it can never converge;
+- the wait is an assertion, so it needs its own failure message.  "The surface never
+  stopped animating" is a finding, not a timeout to swallow;
+- regenerating images is allowed; **eyeballing** them is not.  When a run re-cuts
+  evidence images, diff them (pixel difference plus a brightness sanity check) and
+  report the numbers, because a blank page is a near-100% diff and a text-rendering
+  wobble is not;
+- the eight existing screenshot specs are not required to be rewritten in the same
+  pass as this rule.  Any *new* screenshot assertion must follow it, and a stale one
+  that produces a suspect image gets fixed when it is noticed.
+
 ## Explicitly not required
 
 A Git-SHA / build-hash verification gate.  Process ownership (points 2, 3 and 6) is
