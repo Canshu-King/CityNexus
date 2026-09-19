@@ -109,6 +109,39 @@ def _quarantine_existing_duplicates(connection) -> None:
     _quarantine_duplicates(connection)
 
 
+def _collapse_duplicate_active_plans(connection) -> None:
+    """Leave at most one ACTIVE PlanVersion per Journey before the index is built.
+
+    The invariant itself is enforced by `ux_plan_versions_single_active`; this
+    only clears the historical violations that would stop that index from being
+    created on an existing database.  The survivor is the newest row, and the
+    losers take the status the product already uses for a plan a later plan
+    replaced.
+    """
+
+    if not _table_exists(connection, "plan_versions"):
+        return
+    connection.exec_driver_sql(
+        """
+        UPDATE plan_versions
+        SET status = 'SUPERSEDED'
+        WHERE status = 'ACTIVE'
+          AND id NOT IN (
+              SELECT id FROM (
+                  SELECT id,
+                         ROW_NUMBER() OVER (
+                             PARTITION BY journey_id
+                             ORDER BY created_at DESC, version_no DESC, id DESC
+                         ) AS rank
+                  FROM plan_versions
+                  WHERE status = 'ACTIVE'
+              )
+              WHERE rank = 1
+          )
+        """
+    )
+
+
 def _migrate_reservation_identity(connection) -> None:
     """Make the reservation uniqueness rule actually enforceable.
 
@@ -224,6 +257,7 @@ def ensure_schema(target_engine: Engine = engine) -> None:
         # so this is a no-op there.
         if target_engine.dialect.name == "sqlite":
             _quarantine_existing_duplicates(connection)
+            _collapse_duplicate_active_plans(connection)
         if hasattr(raw, "executescript"):
             raw.executescript(sql)
         else:  # pragma: no cover - retained for non-SQLite development engines

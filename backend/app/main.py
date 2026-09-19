@@ -4518,7 +4518,11 @@ def _trip_studio_accept_impl(
         journey_id=journey.id,
         version_no=latest_version + 1,
         planning_mode=base.planning_mode,
-        status="ACTIVE" if journey.status == "ACTIVE" else "SELECTED",
+        # Created as CANDIDATE and promoted only after the base plan has been
+        # superseded: `ux_plan_versions_single_active` is checked per statement, so
+        # inserting the successor as ACTIVE would mean the invariant briefly held
+        # two answers inside one transaction.
+        status="CANDIDATE",
         source="MANUAL",
         parent_plan_version_id=base.id,
         total_cost_minor=authoritative_gate["total_cost_minor"],
@@ -4616,6 +4620,10 @@ def _trip_studio_accept_impl(
     ).all():
         commitment.activity_id = new_by_old.get(commitment.activity_id)
     base.status = "SUPERSEDED"
+    # Flush the retirement before anything can promote the successor, so the
+    # single-ACTIVE invariant is never satisfied only by statement ordering
+    # inside a later flush.
+    session.flush()
     next_current_activity_id = (
         new_by_old.get(journey.current_activity_id) if journey.status == "ACTIVE" else None
     )
@@ -4644,6 +4652,9 @@ def _trip_studio_accept_impl(
     journey.active_plan_version_id = new_plan.id
     journey.current_activity_id = next_current_activity_id
     journey.updated_at = now
+    # The base is provably out of the way at this point, so the successor may now
+    # take its place.
+    new_plan.status = "ACTIVE" if journey.status == "ACTIVE" else "SELECTED"
     record_audit(
         session,
         action="trip_studio.accepted",
@@ -8589,6 +8600,109 @@ def accept_replan(
     return _accept_replan_impl(proposal_id, idempotency_key, session)
 
 
+def _switch_active_plan_atomically(
+    session: Session, *, base: PlanVersion, proposed: PlanVersion, decided_at: str
+) -> None:
+    """Move the ACTIVE marker with predicates the database evaluates itself.
+
+    Both flips are conditional.  The partial unique index
+    `ux_plan_versions_single_active` then makes "two ACTIVE plans for one Journey"
+    unrepresentable even if a future caller forgets this helper, and the commit
+    path turns the resulting IntegrityError into the same 409 as everything else
+    here.  A process-local lock cannot promise any of that across processes.
+    """
+
+    superseded = session.execute(
+        update(PlanVersion)
+        .where(PlanVersion.id == base.id, PlanVersion.status == "ACTIVE")
+        .values(status="SUPERSEDED")
+    )
+    if superseded.rowcount != 1:
+        session.rollback()
+        raise HTTPException(409, "replan base plan is no longer the active plan")
+    activated = session.execute(
+        update(PlanVersion)
+        .where(PlanVersion.id == proposed.id, PlanVersion.status == "CANDIDATE")
+        .values(status="ACTIVE")
+    )
+    if activated.rowcount != 1:
+        session.rollback()
+        raise HTTPException(409, "replan candidate plan is no longer acceptable")
+    # The bulk updates bypass the identity map, so every later read of these rows
+    # in this transaction must come back from the database.
+    session.expire_all()
+
+
+def _revalidate_locked_commitments(
+    session: Session, journey: Journey, proposal, proposed: PlanVersion
+) -> None:
+    """Recompute `locked_commitments_preserved` against current commitment truth.
+
+    The field is a derived guard assertion, not a source of truth: the facts are
+    the Commitment rows, the booking/payment state, and the activity identities on
+    the canonical plans.  Recomputing it here closes the window where a payment was
+    captured after the proposal was generated, because a boolean minted a minute
+    ago cannot license destroying a promise made since.
+    """
+
+    locked_activity_ids = {
+        item.id
+        for item in session.scalars(
+            select(Activity).where(
+                Activity.plan_version_id == journey.active_plan_version_id,
+                Activity.locked.is_(True),
+            )
+        ).all()
+    }
+    protected_activity_ids = {
+        item.activity_id
+        for item in session.scalars(
+            select(CommitmentModel).where(
+                CommitmentModel.journey_id == journey.id,
+                CommitmentModel.status == "ACTIVE",
+                CommitmentModel.level == "C4_Anchored",
+                CommitmentModel.activity_id.is_not(None),
+            )
+        ).all()
+    }
+    must_survive = locked_activity_ids | protected_activity_ids
+    if not must_survive:
+        proposal.locked_commitments_preserved = True
+        return
+    child = {
+        item.id: item
+        for item in session.scalars(
+            select(Activity).where(Activity.plan_version_id == proposed.id)
+        ).all()
+    }
+    preserved = True
+    for activity_id in must_survive:
+        source = session.get(Activity, activity_id)
+        if source is None:
+            preserved = False
+            break
+        try:
+            resolve_commitment_target(
+                policy={
+                    "semantic_key": str(source.place_id or source.city_service_id or ""),
+                    "scheduled_start_at": source.start_at,
+                },
+                anchored_activity=source,
+                candidates=list(child.values()),
+                subject="locked commitment",
+            )
+        except CommitmentRemapConflict:
+            preserved = False
+            break
+    proposal.locked_commitments_preserved = preserved
+    if not preserved:
+        raise HTTPException(
+            409,
+            "replan no longer preserves the locked and protected commitments captured "
+            "since this proposal was generated",
+        )
+
+
 def _accept_replan_impl(
     proposal_id: UUID,
     idempotency_key: str | None,
@@ -8723,8 +8837,19 @@ def _accept_replan_serialized_impl(
             raise HTTPException(409, "replan does not preserve the current execution position")
 
     decided_at = datetime.now(timezone.utc).isoformat()
-    base.status = "SUPERSEDED"
-    proposed.status = "ACTIVE"
+
+    # Re-derive the commitment guard from the rows that exist *now*.  The stored
+    # verdict was computed when the proposal was generated, and a booking can have
+    # been captured in between - which is precisely how a stale `true` could author
+    # a plan transition that destroys a promise made after the proposal was built.
+    _revalidate_locked_commitments(session, journey, proposal, proposed)
+
+    # Conditional writes, not object assignment.  A read-then-write of the ORM
+    # rows is exactly the window two concurrent accepters can both pass; the
+    # predicate below is evaluated by the database against the current row, so a
+    # writer whose base plan has already been superseded, or whose candidate has
+    # already been consumed, loses on rowcount rather than on a race it cannot see.
+    _switch_active_plan_atomically(session, base=base, proposed=proposed, decided_at=decided_at)
     journey.active_plan_version_id = proposed.id
     journey.current_activity_id = replacement_current.id if replacement_current else None
     proposal.status = "ACCEPTED"
@@ -8837,7 +8962,17 @@ def _accept_replan_serialized_impl(
             expires_at=(datetime.now(timezone.utc) + timedelta(days=7)).isoformat(),
         )
     )
-    session.commit()
+    try:
+        session.commit()
+    except IntegrityError as exc:
+        # `ux_plan_versions_single_active` refused a second ACTIVE plan for this
+        # Journey.  That is a concurrent acceptance from another session or
+        # another process, i.e. a conflict with the same meaning as the optimistic
+        # checks above - not a crash, and nothing may survive the rollback.
+        session.rollback()
+        raise HTTPException(
+            409, "replan conflicts with an authoritative plan transition in progress"
+        ) from exc
     return response
 
 

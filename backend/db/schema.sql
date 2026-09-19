@@ -418,6 +418,14 @@ CREATE TABLE IF NOT EXISTS action_approvals (
 
 CREATE INDEX IF NOT EXISTS idx_journeys_traveler ON journeys(traveler_id);
 CREATE INDEX IF NOT EXISTS idx_plan_versions_journey ON plan_versions(journey_id, version_no);
+-- One ACTIVE PlanVersion per Journey is a domain invariant, not a convention.
+-- No Python-side lock can guarantee it across processes, and SQLite has no
+-- SELECT ... FOR UPDATE to serialise the read/validate/write window that
+-- produces it, so the guarantee is stated where it can actually be enforced.
+-- A rejected writer sees IntegrityError and must treat it as a conflict, not
+-- as a crash.
+CREATE UNIQUE INDEX IF NOT EXISTS ux_plan_versions_single_active
+    ON plan_versions(journey_id) WHERE status = 'ACTIVE';
 CREATE INDEX IF NOT EXISTS idx_activities_plan ON activities(plan_version_id, sequence_no);
 CREATE INDEX IF NOT EXISTS idx_commitments_journey ON commitments(journey_id, status, level);
 CREATE INDEX IF NOT EXISTS idx_events_journey ON events(journey_id, detected_at);

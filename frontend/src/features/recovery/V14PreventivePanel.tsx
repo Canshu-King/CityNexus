@@ -96,16 +96,31 @@ export function V14PreventivePanel({ journeyId, refreshKey }: Props) {
       const status = await readJson<{ runs?: GuardianRun[] }>(
         `/api/v1/journeys/${journeyId}/guardian/status`,
       );
-      const preventive = (status?.runs ?? []).filter(PREVENTIVE)[0] ?? null;
+      /* Newest by created_at, not runs[0]: the endpoint has never promised an
+         ordering, and "the run the panel is describing" must not depend on
+         guessing which end of the list is current. */
+      const preventive = (status?.runs ?? [])
+        .filter(PREVENTIVE)
+        .reduce<GuardianRun | null>(
+          (newest, item) =>
+            !newest || String(item.created_at ?? "") > String(newest.created_at ?? "")
+              ? item
+              : newest,
+          null,
+        );
       if (cancelled) return;
       setAvailable(preventive !== null);
       setRun(preventive);
-      if (preventive) {
-        setExperience(await readJson<Experience>(`/api/v1/journeys/${journeyId}/experience`));
-        /* A run is durable evidence: once it exists there is nothing left to poll
-           for, and a 3-second poll beside the autopilot's own writes buys nothing
-           but SQLite contention. */
-        if (timer !== undefined) window.clearInterval(timer);
+      if (!preventive) return;
+      setExperience(await readJson<Experience>(`/api/v1/journeys/${journeyId}/experience`));
+      /* A run is written as RUNNING / PLANNING before the recomposition lands and
+         only later carries COMPLETED / EXECUTED, so "a run exists" is not "the
+         story is finished".  Stopping here on mere existence would freeze a
+         traveller who opened the page mid-action on a half-finished claim until
+         they reloaded by hand.  FAILED_RETRYABLE keeps polling too: a retry can
+         still change what this panel is asserting. */
+      if (preventive.status === "COMPLETED" && timer !== undefined) {
+        window.clearInterval(timer);
         timer = undefined;
       }
     };
