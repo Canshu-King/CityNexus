@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { scanContrast } from "./_qoderContrastScan";
+import { evidencePath } from "./_qoderEvidence";
 
 /**
  * Qoder frontend track — Live state-coverage matrix (GPT pass-5, Phase 1).
@@ -193,7 +194,7 @@ async function captureState(page: Page): Promise<void> {
     await page.emulateMedia({ colorScheme: scheme, media: "screen" });
     await page.waitForTimeout(400);
     await page.screenshot({
-      path: `../reports/visual-integration/states/${label}-${scheme}.png`,
+      path: evidencePath(`visual-integration/states/${label}-${scheme}.png`),
     });
   }
   await page.emulateMedia({ colorScheme: before, media: "screen" });

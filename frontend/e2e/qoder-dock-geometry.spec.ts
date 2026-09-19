@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { createFreshJourney, useJourney } from "./_qoderFreshJourney";
+import { evidencePath } from "./_qoderEvidence";
 
 /* pass-13 C — measure before claiming.
  *
@@ -160,11 +161,11 @@ test.describe("Copilot dock geometry at phone size", () => {
 
       if (route === "/v8/live") {
         await page.screenshot({
-          path: "../reports/dock-geometry/live-390x844-bottom.png",
+          path: evidencePath("dock-geometry/live-390x844-bottom.png"),
         });
       } else {
         await page.screenshot({
-          path: "../reports/dock-geometry/today-390x844-bottom.png",
+          path: evidencePath("dock-geometry/today-390x844-bottom.png"),
         });
       }
 

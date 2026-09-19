@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { evidencePath } from "./_qoderEvidence";
 
 function reservation(role: "ARRIVAL" | "MID_TRIP" | "DEPARTURE") {
   if (role === "ARRIVAL") {
@@ -89,5 +90,5 @@ test("City Discovery renders the fully grounded Journey proof", async ({ page, r
       },
     )
     .toBe(true);
-  await page.screenshot({ path: "../reports/product-v13.5/fully-grounded-discovery.png", fullPage: true });
+  await page.screenshot({ path: evidencePath("product-v13.5/fully-grounded-discovery.png"), fullPage: true });
 });

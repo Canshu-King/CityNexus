@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { ensureDemoJourney, openScreen } from "./_qoderShellSeed";
 import { scanContrast, type Violation } from "./_qoderContrastScan";
+import { evidencePath } from "./_qoderEvidence";
 
 /**
  * Qoder frontend track — contrast gate on the real Today (/v8/hub) and Live
@@ -14,7 +15,7 @@ import { scanContrast, type Violation } from "./_qoderContrastScan";
  * Wallet-JSON / off-path panels stay declared debt.
  */
 
-const OUT_DIR = "../reports/contrast-audit";
+const OUT_DIR = evidencePath("contrast-audit");
 
 interface AuditReport {
   screen: string;

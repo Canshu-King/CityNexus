@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { evidencePath } from "./_qoderEvidence";
 
 test("real-world trip operations: inbox to luggage-aware autonomous recovery", async ({ page, request }, testInfo) => {
   await page.addInitScript(() => localStorage.setItem("citynexus.locale", "en"));
@@ -119,7 +120,7 @@ test("real-world trip operations: inbox to luggage-aware autonomous recovery", a
     return (Math.max(foreground, background) + 0.05) / (Math.min(foreground, background) + 0.05);
   });
   expect(contrast).toBeGreaterThanOrEqual(4.5);
-  await page.screenshot({ path: "../reports/product-v9/ui/live-journey-mobile.png", fullPage: true });
+  await page.screenshot({ path: evidencePath("product-v9/ui/live-journey-mobile.png"), fullPage: true });
   await page.getByRole("button", { name: "Switch language" }).click();
   /* The old expectation looked for 旅行票夹 in the mobile bar. That string is
      still real — it is zh nav.bookings, the desktop "Travel Wallet" entry — but
@@ -143,6 +144,6 @@ test("real-world trip operations: inbox to luggage-aware autonomous recovery", a
   await page.reload();
   await expect(page.getByRole("heading", { name: "Your next 24 hours are saved." })).toBeVisible();
   await expect(page.getByText(/Financial actions are disabled offline/)).toBeVisible();
-  await page.screenshot({ path: "../reports/product-v9/ui/offline-journey-mobile.png", fullPage: true });
+  await page.screenshot({ path: evidencePath("product-v9/ui/offline-journey-mobile.png"), fullPage: true });
   await page.context().setOffline(false);
 });

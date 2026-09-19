@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
+import { evidencePath } from "./e2e/_qoderEvidence";
 
 /* Shared startup environment for the Playwright configs.
  *
@@ -149,7 +150,7 @@ export function announce(env: E2eEnvironment, label: string): void {
     `reuseExistingServer=${env.reuseExistingServer}`;
   console.error(line);
   if (env.authoritative) {
-    const target = resolve("../reports/e2e-provenance/authoritative.json");
+    const target = evidencePath("e2e-provenance/authoritative.json");
     mkdirSync(dirname(target), { recursive: true });
     writeFileSync(
       target,

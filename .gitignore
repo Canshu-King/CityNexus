@@ -18,6 +18,10 @@ __pycache__/
 *.db-shm
 ruff_cache/
 node_modules/
+# Verification output: a canonical run must not rewrite tracked files.
+.evidence/
+evidence/
+
 dist/
 coverage/
 playwright-report/

@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { createFreshJourney, useJourney } from "./_qoderFreshJourney";
+import { evidencePath } from "./_qoderEvidence";
 
 test.describe("V8 product experience", () => {
   test.beforeEach(async ({ page, request }) => {
@@ -17,7 +18,7 @@ test.describe("V8 product experience", () => {
        tested a copy entry nobody renders. */
     await expect(page.getByTestId("today-heading")).toBeVisible();
     await expect(page.getByTestId("v8-maplibre-panel")).toBeVisible();
-    await page.screenshot({ path: "../reports/product-v8/ui/after/journey-hub-desktop.png", fullPage: true });
+    await page.screenshot({ path: evidencePath("product-v8/ui/after/journey-hub-desktop.png"), fullPage: true });
 
     await page.getByRole("button", { name: "Stay Explorer" }).click();
     await expect(page.getByTestId("v8-stay-explorer")).toBeVisible();
@@ -29,17 +30,17 @@ test.describe("V8 product experience", () => {
     const noOptions = await page.getByTestId("stay-no-options").count();
     console.log(`[stay-explorer] offerCards=${offerCount} noOptionsState=${noOptions}`);
     expect(offerCount + noOptions, "Stay Explorer shows neither offers nor its honest empty state").toBeGreaterThan(0);
-    await page.screenshot({ path: "../reports/product-v8/ui/after/stay-explorer-desktop.png", fullPage: true });
+    await page.screenshot({ path: evidencePath("product-v8/ui/after/stay-explorer-desktop.png"), fullPage: true });
     if (offerCount > 1) await page.getByTestId("stay-offer-card").nth(1).click();
 
     await page.getByRole("button", { name: "Trip Studio" }).click();
     await expect(page.getByTestId("v8-trip-studio")).toBeVisible();
-    await page.screenshot({ path: "../reports/product-v8/ui/after/trip-studio-desktop.png", fullPage: true });
+    await page.screenshot({ path: evidencePath("product-v8/ui/after/trip-studio-desktop.png"), fullPage: true });
 
     await page.getByRole("button", { name: "Intelligence" }).click();
     await page.getByRole("button", { name: "Enable reversible recovery" }).click();
     await expect(page.getByText("Autonomous recovery is enabled")).toBeVisible();
-    await page.screenshot({ path: "../reports/product-v8/ui/after/intelligence-desktop.png", fullPage: true });
+    await page.screenshot({ path: evidencePath("product-v8/ui/after/intelligence-desktop.png"), fullPage: true });
 
     await page.getByRole("button", { name: "Live Journey" }).click();
     await expect(page.getByTestId("live-journey-current")).toBeVisible();
@@ -47,7 +48,7 @@ test.describe("V8 product experience", () => {
     await expect(page.getByText(/Autopilot recovered the exposed leg/)).toBeVisible();
     await page.getByRole("button", { name: "Compare all modes" }).click();
     await expect(page.getByRole("dialog", { name: "Choose a calm route" })).toBeVisible();
-    await page.screenshot({ path: "../reports/product-v8/ui/after/mobility-sheet-desktop.png", fullPage: true });
+    await page.screenshot({ path: evidencePath("product-v8/ui/after/mobility-sheet-desktop.png"), fullPage: true });
     await page.getByRole("button", { name: "Close mobility comparison" }).click();
 
     await page.reload();
@@ -62,7 +63,7 @@ test.describe("V8 product experience", () => {
     await expect(page.getByTestId("nav-map")).toBeVisible();
     await page.getByRole("button", { name: "Compare all modes" }).click();
     await expect(page.getByRole("dialog")).toBeVisible();
-    await page.screenshot({ path: "../reports/product-v8/ui/after/mobility-sheet-mobile.png", fullPage: true });
+    await page.screenshot({ path: evidencePath("product-v8/ui/after/mobility-sheet-mobile.png"), fullPage: true });
     await page.getByRole("button", { name: "Close mobility comparison" }).click();
     /* nav.agent reads "Copilot" in both dictionaries — the "AI" label was
        renamed when the assistant became a persistent dock. */
@@ -89,7 +90,7 @@ test.describe("V8 product experience", () => {
     await page.getByTestId("v15-copilot-submit").click();
     await expect(page.getByTestId("v15-intent")).toBeVisible();
     await expect(page.getByTestId("v15-mode")).toBeVisible();
-    await page.screenshot({ path: "../reports/product-v8/ui/after/agent-composer-mobile.png", fullPage: true });
+    await page.screenshot({ path: evidencePath("product-v8/ui/after/agent-composer-mobile.png"), fullPage: true });
     /* pass-12 B (cont.). There is no bookings entry in the mobile bar any more:
        src/routes/v8Routes.ts says it out loud — "Wallet/bookings deliberately
        left the golden path; they now live under Trips (预订与凭证) and Me (钱包)".
