@@ -2042,6 +2042,7 @@ function Live({
     next,
     nextLeg,
     unresolved: cursorUnresolved,
+    cursorStatus,
   } = liveActivityWindow(data.active_plan ?? null);
   return (
     <section className="v8-page" data-testid="v8-live-journey">
@@ -2066,7 +2067,12 @@ function Live({
           <div>
             <h2
               data-testid="live-journey-current"
-              data-cursor-status={cursorUnresolved ? "STALE" : now ? "VALID" : "ABSENT"}
+              // Same value domain as the backend's cursor_status, on purpose: this
+              // attribute used to publish a fourth-looking "ABSENT" that the projection
+              // never emits, so a reader could not tell a vocabulary difference from a
+              // contract. UNKNOWN is a fetch state (no plan served yet), not an
+              // execution state.
+              data-cursor-status={cursorStatus ?? "UNKNOWN"}
             >
               {cursorUnresolved
                 ? t("live.unresolvedStep")
