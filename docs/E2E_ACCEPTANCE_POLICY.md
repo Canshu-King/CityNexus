@@ -83,6 +83,33 @@ authoritative: passing the flag there is reported and ignored.  Archiving means 
 default suite stops counting a test — moving it to another project that the default
 run still executes would be a reorganisation, not a retirement.
 
+## Verification runs must not rewrite the checkout
+
+A canonical run writes artefacts; it does not edit the repository.  Screenshots,
+contrast audits and the provenance record are produced through
+`frontend/e2e/_qoderEvidence.ts`, which resolves them under `CITYNEXUS_EVIDENCE_DIR`
+when that variable is set and under the tracked `reports/` directory when it is not.
+
+This exists because the freeze gate is `git status --short` empty after verification.
+Restoring files after a run is not allowed as a way to satisfy it: a gate whose
+side effect is a repository edit cannot certify the repository it just edited.
+A developer run with the variable unset still writes where it always did.
+
+## Two gates, not one cost
+
+| gate | what runs | when |
+|---|---|---|
+| NORMAL | pytest, truth contracts, deterministic concurrency schedules, projection oracle, authoritative current-product E2E, typecheck, typecheck:all, production build | every integration pass |
+| EXTENDED | `backend/tests/stateful` at full scale (`CITYNEXUS_STATEFUL_CASES=60 CITYNEXUS_STATEFUL_STEPS=30`) and `tools/verification/mutation_campaign.py` | before an integration freeze and before a release candidate |
+
+The split is deliberate: a stylesheet change should not pay for eleven source
+sabotages, and a freeze must not be signed without them.
+
+The mutation campaign fails on an **undeclared survivor** — a catastrophe the suite
+cannot notice — and also fails on a **declared survivor that has started dying**, so
+its `EXPECTED_SURVIVORS` reasons cannot quietly go stale.  A mutant listed there must
+carry the interception reason that makes it unreachable, not merely a preference.
+
 ## Known-red by design (currently none)
 
 Pass-14 shipped with four deliberate reds: `golden.spec.ts`,
