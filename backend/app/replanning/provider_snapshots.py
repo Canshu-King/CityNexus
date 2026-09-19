@@ -7,6 +7,17 @@ from typing import Any, Mapping
 from uuid import uuid4
 
 
+# Mobility fact quality.  A fact's provenance is recorded at capture so hard
+# feasibility can trust real measurements while rejecting the mock fixture's
+# blanket default (T2 / B1).
+EXPLICIT_FROZEN_FIXTURE = "EXPLICIT_FROZEN_FIXTURE"
+LIVE_PROVIDER_CAPTURE = "LIVE_PROVIDER_CAPTURE"
+SYNTHETIC_DEFAULT = "SYNTHETIC_DEFAULT"
+
+#: Fact qualities allowed to drive a deterministic hard-feasibility decision.
+HARD_FEASIBLE_QUALITIES = frozenset({EXPLICIT_FROZEN_FIXTURE, LIVE_PROVIDER_CAPTURE})
+
+
 @dataclass(frozen=True)
 class TravelEstimateFact:
     origin_key: str
@@ -27,10 +38,48 @@ class TravelEstimateFact:
     # The travel mode is what makes ``distance_m`` interpretable.  Without it a
     # total route distance could be silently read as walking distance.
     mode: str | None = None
+    # Fact quality separates a *real* mobility measurement from the mock
+    # fixture's blanket ``default_minutes``.  Only EXPLICIT_FROZEN_FIXTURE /
+    # LIVE_PROVIDER_CAPTURE are hard-eligible.  ``None`` means the quality is
+    # UNKNOWN, and ``MobilitySnapshot.hard_minutes`` FAILS CLOSED on it (V4 #1 /
+    # V6) — unknown/legacy-unclassified provenance is never trusted for hard truth.
+    fact_quality: str | None = None
 
     def __post_init__(self) -> None:
         if self.minutes < 0:
             raise ValueError("travel minutes must be non-negative")
+
+
+def _derive_fact_quality_from_provenance(item: Mapping[str, Any]) -> str | None:
+    """Honest quality for a sealed fact — EXACT and fail-closed (V6).
+
+    1. An explicit persisted ``fact_quality`` always wins (capture/seal now write
+       it for every current fact — see authoritative_v12 and snapshot_capture).
+    2. The ONLY legacy provenance promoted to LIVE is the exact label
+       ``LIVE_CAPTURE``, which historically was emitted solely by the real
+       valhalla capture path.
+    3. Everything else — ``CAPTURED_REPLAY``, any ``SEALED*`` (including labels
+       that literally name ``SYNTHETIC_FALLBACK`` / ``SYNTHETIC_FIXTURE``),
+       ``RUNTIME_CAPTURE``, and any unrecognised string — is UNKNOWN and refused.
+
+    Rationale (V6 review): the previous substring/prefix rules ("LIVE" in prov,
+    prov.startswith("SEALED"), promote CAPTURED_REPLAY) were wider than any
+    actual proof.  Old authoritative_v12 code could normalise unrecognised
+    provenance to ``CAPTURED_REPLAY``, and historical seal labels such as
+    ``SEALED_REAL_REPLAY_WITH_EXPLICIT_SYNTHETIC_FALLBACK`` satisfied
+    ``startswith("SEALED")`` — so "looks sealed/live" was being granted a hard-
+    truth passport.  A genuinely-trusted fact carries an explicit quality; an
+    ambiguous historical row must be re-captured to earn trust, not inferred.
+    """
+
+    explicit = item.get("fact_quality")
+    if explicit is not None:
+        return str(explicit)
+    prov = str(item.get("route_provenance") or item.get("provenance") or "").upper()
+    if prov == "LIVE_CAPTURE":
+        # Exact, historically-proven real-capture label only.
+        return LIVE_PROVIDER_CAPTURE
+    return None
 
 
 @dataclass(frozen=True)
@@ -75,6 +124,10 @@ class MobilitySnapshot:
         operation_key: str | None = None,
         route_geometries: Mapping[tuple[str, str], Any] | None = None,
         provider_capabilities: Mapping[str, Any] | None = None,
+        # V4 #3: unknown provenance by default.  A caller building a genuinely
+        # explicit frozen matrix must opt in with EXPLICIT_FROZEN_FIXTURE; the
+        # builder cannot assume where a number came from.
+        fact_quality: str | None = None,
     ) -> MobilitySnapshot:
         stamp = captured_at or datetime.now(timezone.utc).isoformat()
         return cls(
@@ -90,6 +143,7 @@ class MobilitySnapshot:
                     geometry_provider=(
                         source_provider_key if (route_geometries or {}).get(pair) else None
                     ),
+                    fact_quality=fact_quality,
                 )
                 for pair, value in minutes.items()
             },
@@ -105,6 +159,36 @@ class MobilitySnapshot:
         fact = self.facts.get((origin_key, destination_key))
         if fact is None:
             raise KeyError(f"missing frozen travel estimate: {origin_key}|{destination_key}")
+        return fact.minutes
+
+    def hard_minutes(self, origin_key: str, destination_key: str) -> int:
+        """Travel minutes allowed into a deterministic hard-feasibility decision.
+
+        Unlike :meth:`estimate_minutes` — the raw accessor the offline demo and
+        geometry use — this is the *truth gate* for replan feasibility and is a
+        strict ALLOWLIST (V3-1 / V4 #1 / V6): only a fact whose quality is
+        ``EXPLICIT_FROZEN_FIXTURE`` or ``LIVE_PROVIDER_CAPTURE`` may pass.  A leg
+        positively tagged ``SYNTHETIC_DEFAULT`` (the mock blanket constant), or
+        one with NO recorded quality / unknown / legacy-unclassified provenance,
+        all raise ``KeyError`` and fail closed — so the caller reports
+        ``MOBILITY_DATA_UNAVAILABLE`` instead of trusting a number we cannot
+        source.  Genuine sealed replays keep working because they carry an
+        explicit, persisted ``fact_quality`` (V4 #1), not because untagged rows
+        are trusted.
+        """
+
+        fact = self.facts.get((origin_key, destination_key))
+        if fact is None:
+            raise KeyError(f"missing frozen travel estimate: {origin_key}|{destination_key}")
+        # True allowlist (V3-1): only an explicitly trusted quality may drive
+        # hard feasibility.  A pre-v2 snapshot can hold an *untagged* blanket
+        # default 20, so None / unknown / LEGACY must fail closed — we would
+        # rather say "mobility unavailable" than trust a number we cannot source.
+        if fact.fact_quality not in HARD_FEASIBLE_QUALITIES:
+            raise KeyError(
+                f"fact quality {fact.fact_quality!r} is not eligible for hard "
+                f"feasibility: {origin_key}|{destination_key}"
+            )
         return fact.minutes
 
     def to_evidence(self) -> dict[str, Any]:
@@ -133,6 +217,7 @@ class MobilitySnapshot:
                     "walking_distance_m": fact.walking_distance_m,
                     "walking_min": fact.walking_min,
                     "mode": fact.mode,
+                    "fact_quality": fact.fact_quality,
                 }
                 for _, fact in sorted(self.facts.items())
             ],
@@ -205,6 +290,7 @@ class MobilitySnapshot:
                     if item.get("mode") is not None
                     else None
                 ),
+                fact_quality=_derive_fact_quality_from_provenance(item),
             )
         return cls(
             facts=facts,

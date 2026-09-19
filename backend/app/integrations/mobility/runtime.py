@@ -81,17 +81,32 @@ def capture_runtime_mobility_snapshot(
     *,
     operation_key: str,
     captured_at: str | None = None,
+    require_explicit_facts: bool = False,
 ) -> MobilitySnapshotCaptureResult:
     """Capture one immutable mobility reality for a product operation.
 
     The default/offline profile uses the deterministic mock provider. When an
-    opt-in Valhalla URL is configured, Valhalla becomes the primary provider
-    and the deterministic mock remains an explicit pair-level fallback. The
-    returned snapshot is the only object allowed into the feasibility gate.
+    opt-in Valhalla URL is configured, Valhalla becomes the primary provider.
+    For *soft* (non-hard) captures the deterministic mock stays an explicit
+    pair-level fallback so a transient live outage degrades rather than
+    aborts.  For *hard* replan captures (``require_explicit_facts=True``) there
+    is deliberately NO mock fallback: a leg the live provider could not measure
+    must stay unavailable instead of inheriting a fixture number and being
+    laundered into a hard feasibility decision (V4 #4).  The returned snapshot
+    is the only object allowed into the feasibility gate.
+
+    ``require_explicit_facts`` is for the replan path: a pair with no explicit
+    frozen or measured fact must fail closed rather than inherit the mock
+    fixture's blanket ``default_minutes`` constant.  The constant is not a
+    measurement, so it must never become hard replan evidence
+    (T2 / docs/MOBILITY_TRUTH_CONTRACT.md).
     """
 
     normalized_pairs = tuple(sorted({(str(a), str(b)) for a, b in pairs if a and b and a != b}))
-    mock = MockMobilityProvider(place_lookup=lambda key: _place_lookup(session, key))
+    mock = MockMobilityProvider(
+        place_lookup=lambda key: _place_lookup(session, key),
+        strict=require_explicit_facts,
+    )
     if not settings.live_valhalla_url:
         return capture_mobility_snapshot(
             normalized_pairs,
@@ -114,17 +129,38 @@ def capture_runtime_mobility_snapshot(
                 "has_live_traffic": False,
                 "error_type": type(exc).__name__,
             }
+        # V4 #4: a live-configured HARD capture must not fall back to the mock
+        # fixture.  Soft/offline captures keep the pair-level mock fallback.
+        hard_capture = require_explicit_facts
         captured = capture_mobility_snapshot(
             normalized_pairs,
             primary=primary,
-            fallback=mock,
+            fallback=None if hard_capture else mock,
             captured_at=captured_at,
             operation_key=operation_key,
         )
+        # V5 blocker-1: with a live routing provider configured, a leg the live
+        # provider FAILED must not enter hard feasibility just because the mock
+        # happened to carry an explicit matrix value for it.  The bulk replan
+        # capture runs soft (fallback=mock), so we DOWNGRADE every mock-fallback
+        # fact to UNKNOWN quality (kept for soft/display reads, but rejected by
+        # hard_minutes) -> the per-candidate hard gate refuses it, the on-demand
+        # strict recapture (live, fallback=None) reports that leg unavailable, and
+        # the candidate is excluded while a fully-live candidate still proceeds.
+        # Offline demos have no fallback pairs, so they keep using their
+        # legitimate explicit mock facts as hard truth.
+        snapshot = captured.snapshot
+        if captured.fallback_pairs:
+            facts = dict(snapshot.facts)
+            for pair in captured.fallback_pairs:
+                fact = facts.get(pair)
+                if fact is not None and fact.fact_quality is not None:
+                    facts[pair] = replace(fact, fact_quality=None)
+            snapshot = replace(snapshot, facts=facts)
         return replace(
             captured,
             snapshot=replace(
-                captured.snapshot,
+                snapshot,
                 provider_capabilities={"valhalla": capabilities},
             ),
         )
@@ -210,6 +246,7 @@ def capture_journey_mobility_matrix(
                                 "captured_at": captured,
                                 "route_provider": "valhalla",
                                 "route_provenance": "LIVE_CAPTURE",
+                                "fact_quality": "LIVE_PROVIDER_CAPTURE",
                                 "cost_provenance": "CITYNEXUS_COST_ESTIMATE",
                                 "time_basis": "VALHALLA_SOURCES_TO_TARGETS",
                                 "matrix_cell": cell.raw,

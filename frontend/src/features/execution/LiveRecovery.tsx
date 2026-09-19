@@ -12,6 +12,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 import {
+  isDisruptionAcknowledgedOnly,
+  isDisruptionOpen,
+} from "../../lib/disruptionState";
+import {
   useAuthoritativePlans,
   useAuthoritativeTwin,
 } from "../../api/v12Authoritative";
@@ -46,6 +50,43 @@ const EVENT_COPY: Record<string, { zh: string; en: string }> = {
   USER_CHANGE: { zh: "你更新了行程需求", en: "You changed a trip requirement" },
   OTHER: { zh: "行程有新情况", en: "Something changed" },
 };
+
+/**
+ * Translate an internal replan refusal into traveller language.
+ *
+ * `MOBILITY_DATA_UNAVAILABLE` means the engine could not establish how long a
+ * new leg takes.  That is not the same finding as "no replacement place
+ * exists", so it must not be shown as such (T2 /
+ * docs/MOBILITY_TRUTH_CONTRACT.md).  Raw internal codes never reach the
+ * traveller; only the Advanced details may retain them.
+ */
+export function humanReplanReason(raw: string, zh: boolean): string {
+  const code = String(raw ?? "");
+  if (code.includes("MOBILITY_DATA_UNAVAILABLE")) {
+    return zh
+      ? "暂时无法获取这段路线的可靠通行时间，因此没有自动修改你的行程。你可以稍后重试，或手动选择替代地点。"
+      : "We could not get a reliable travel time for this leg, so your trip was not changed automatically. You can retry later or pick a replacement place yourself.";
+  }
+  if (code.includes("REPLAN_NO_ALTERNATIVE")) {
+    return zh
+      ? "附近没有可以替换这处行程的合适地点。"
+      : "No suitable replacement place was found for this stop.";
+  }
+  if (code.includes("REPLAN_TARGET_UNRESOLVED")) {
+    return zh
+      ? "没能确定这次变化影响的是哪一段行程。"
+      : "We could not tell which stop this change affects.";
+  }
+  if (code.includes("REPLAN_PROTECTED_CONFLICT")) {
+    return zh
+      ? "这一段属于你已确认不能动的安排，需要你手动处理。"
+      : "This stop is part of a protected commitment, so it needs your decision.";
+  }
+  // Unknown / unmapped reason: never surface the raw internal string.
+  return zh
+    ? "暂时无法自动调整这段行程，请稍后重试或手动处理。"
+    : "We couldn't adjust this part of your trip automatically. Please retry later or handle it manually.";
+}
 
 export function LiveRecovery({
   journeyId,
@@ -111,26 +152,24 @@ export function LiveRecovery({
   }, [journeyId, context]);
   // An event the traveller already acted on must not keep shouting "what
   // happened" as an open problem.  Acknowledgement is deliberately NOT
-  // resolution in this product, so the event stays in the payload; the surface
-  // has to separate "still needs you" from "already handled".
-  const isOpen = (d: Disruption) => {
-    const status = String(d.status ?? "DETECTED").toUpperCase();
-    if (status === "ACKNOWLEDGED" || status === "RESOLVED" || status === "IGNORED") return false;
-    if (d.resolved_at) return false;
-    return !handledEventIds.includes(d.id);
-  };
-  // Trigger events behind an accepted proposal are resolved by that acceptance,
-  // even while the Event itself is only ACKNOWLEDGED in the plan payload.
-  const acceptedTriggerIds = new Set(
+  // resolution in this product: `ACKNOWLEDGED` means the traveller has seen
+  // the disruption, not that a recovery was chosen.  Only RESOLVED, IGNORED,
+  // or an ACCEPTED replan explicitly linked to this event closes it
+  // (T3 / docs/ACK_RESOLUTION_CONTRACT.md).  The rule lives in one shared
+  // module so Today and Live cannot disagree about the same event.
+  const acceptedTriggerIds: Set<string> = new Set(
     proposals
       .filter((p) => p.status === "ACCEPTED")
       .map((p) => String((p as { trigger_event_id?: string | null }).trigger_event_id ?? ""))
       .filter(Boolean),
   );
-  const openDisruptions = disruptions.filter(
-    (d) => isOpen(d) && !acceptedTriggerIds.has(d.id),
+  const openDisruptions = disruptions.filter((d) => isDisruptionOpen(d, acceptedTriggerIds));
+  const handledDisruptions = disruptions.filter((d) => !isDisruptionOpen(d, acceptedTriggerIds));
+  // Acknowledged-but-unresolved events get their own copy: the traveller has
+  // seen them, but they still need a decision.
+  const acknowledgedOnly = disruptions.filter((d) =>
+    isDisruptionAcknowledgedOnly(d, acceptedTriggerIds),
   );
-  const handledDisruptions = disruptions.filter((d) => !isOpen(d));
 
   // Canonicalise each proposal's semantic diff so two proposals that describe
   // the SAME change cannot appear as two identical "接受新方案" buttons.  The key
@@ -172,11 +211,11 @@ export function LiveRecovery({
       });
       if (!r.ok) {
         const body = await r.json().catch(() => null);
-        setMessage(
+        const raw =
           body?.error?.message ??
-            body?.detail ??
-            (zh ? "暂时无法接受这个调整。" : "Could not accept this change."),
-        );
+          body?.detail ??
+          (zh ? "暂时无法接受这个调整。" : "Could not accept this change.");
+        setMessage(humanReplanReason(raw, zh));
         return;
       }
       setMessage(zh ? "已按新安排更新你的行程。" : "Your trip has been updated.");
@@ -233,6 +272,18 @@ export function LiveRecovery({
             })}
           </ul>
         </div>
+      )}
+
+      {/* acknowledged-only events are a subset of openDisruptions (an
+          acknowledged event is still open), so this must key off their own
+          count — the earlier `openDisruptions.length === 0` guard made this
+          branch unreachable (V2-T3). */}
+      {acknowledgedOnly.length > 0 && (
+        <p className="v8-muted" data-testid="live-acknowledged">
+          {zh
+            ? "已知晓，仍待处理：你已经看过这些变化，但还没有选定新的安排。"
+            : "Seen, still open: you have seen these changes but have not chosen a new arrangement yet."}
+        </p>
       )}
 
       {duplicateCount > 0 && (

@@ -5,6 +5,7 @@ from uuid import uuid4
 from fastapi.testclient import TestClient
 
 import app.main as main_module
+from _qoder_explicit_demo_mobility import seed_explicit_mobility
 from app.agent.autorun import ensure_enrollment, run_once, stop_autorun
 from app.db.models import Journey, PlanVersion
 from app.db.session import SessionLocal
@@ -31,8 +32,27 @@ def _autonomous_policy(traveler_id: str) -> None:
     assert response.status_code == 200, response.text
 
 
-def test_v6_predictive_real_city_twin_prevents_failure_before_hard_break() -> None:
+def test_v6_predictive_real_city_twin_prevents_failure_before_hard_break(monkeypatch) -> None:
     stop_autorun()
+    # V5 (T2 same-env): the predictive recovery hard-gates the real-city replay
+    # legs plus the demo legs this offline journey traverses.  Declare them as
+    # explicit deterministic FIXTURE facts (scenario/replay values, NOT live
+    # mobility).  A leg outside this set stays unseeded/synthetic -> unavailable,
+    # so the mock blanket default is never laundered into a hard fact (B1 intact).
+    seed_explicit_mobility(
+        monkeypatch,
+        {
+            ("place-food-hall", "place-river-cruise"): 16,
+            ("place-food-hall", "real-place-2a59f43244feca0eeced4bfa"): 12,
+            ("place-old-town", "place-city-park"): 22,
+            ("place-old-town", "place-design-library"): 10,
+            ("place-old-town", "real-place-7836d8cd2e948d6d1a0773e7"): 14,
+            ("place-old-town", "real-place-b0557d41934f83a861634fe2"): 18,
+            ("real-place-2a59f43244feca0eeced4bfa", "place-river-cruise"): 16,
+            ("real-place-7836d8cd2e948d6d1a0773e7", "place-river-cruise"): 14,
+            ("real-place-b0557d41934f83a861634fe2", "place-river-cruise"): 18,
+        },
+    )
     ids = client.post("/api/v1/demo/reset").json()
     journey_id = ids["journey_id"]
     generated = client.post(

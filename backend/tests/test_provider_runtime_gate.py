@@ -14,6 +14,7 @@ from app.integrations.mobility.snapshot_capture import (
 )
 from app.integrations.mobility.valhalla_http import ValhallaHTTPMobilityProvider
 from app.integrations.mock.providers import MockMobilityProvider
+from app.replanning.provider_snapshots import LIVE_PROVIDER_CAPTURE
 from app.replanning.feasibility import FeasibilityActivity, build_context, evaluate_feasibility
 
 client = TestClient(main_module.app)
@@ -32,6 +33,17 @@ class _Provider:
         if pair in self.fail:
             raise RuntimeError("provider unavailable")
         return self.mock.estimate_minutes(origin_key, destination_key)
+
+    def fact_quality(self, origin_key: str, destination_key: str) -> str:
+        # This double models a capturing routing provider (e.g. Valhalla): a
+        # duration it returns is a real measurement, so it honestly attests
+        # LIVE, mirroring app.integrations.mobility.valhalla_http.  A failed
+        # pair raises before attesting, so the capture falls back rather than
+        # fabricating a fact (V4 #2 fail-closed classifier requires the double
+        # to declare its own quality — no provider-name laundering).
+        if (origin_key, destination_key) in self.fail:
+            raise RuntimeError("provider unavailable")
+        return LIVE_PROVIDER_CAPTURE
 
 
 def _prepare_disruption() -> tuple[str, dict, dict]:

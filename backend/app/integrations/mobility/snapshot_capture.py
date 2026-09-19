@@ -5,7 +5,13 @@ from datetime import datetime, timezone
 from typing import Any, Iterable, Protocol
 from uuid import uuid4
 
-from app.replanning.provider_snapshots import MobilitySnapshot, TravelEstimateFact
+from app.replanning.provider_snapshots import (
+    EXPLICIT_FROZEN_FIXTURE,
+    LIVE_PROVIDER_CAPTURE,
+    SYNTHETIC_DEFAULT,
+    MobilitySnapshot,
+    TravelEstimateFact,
+)
 
 
 class MinuteEstimator(Protocol):
@@ -46,6 +52,29 @@ def _normalize_geometry(value: Any) -> tuple[tuple[float, float], ...]:
             if -180 <= lon <= 180 and -90 <= lat <= 90:
                 points.append((lon, lat))
     return tuple(points) if len(points) >= 2 else ()
+
+
+def _resolve_fact_quality(
+    provider: MinuteEstimator, origin: str, destination: str, provider_key: str
+) -> str | None:
+    """Classify a captured fact so hard feasibility can trust or reject it.
+
+    V4 #2 (fully fail-closed): a provider that distinguishes an explicit fixture
+    entry from its blanket default exposes ``fact_quality``; that attestation is
+    the only source of truth here.  A provider that cannot attest a leg, or
+    whose classifier raises, yields ``None`` (UNKNOWN), which hard feasibility
+    rejects.  We never infer trustworthiness from the provider's *name* — a mock
+    or fixture label is not a measurement (T2 / B1), and doing so would launder
+    an unmeasured leg into a hard fact.
+    """
+
+    provider_quality = getattr(provider, "fact_quality", None)
+    if callable(provider_quality):
+        try:
+            return str(provider_quality(origin, destination))
+        except Exception:
+            return None
+    return None
 
 
 class MobilitySnapshotCaptureError(RuntimeError):
@@ -95,6 +124,7 @@ def capture_mobility_snapshot(
             if minutes < 0:
                 raise ValueError("negative travel minutes")
             provider_key = str(primary.provider_key)
+            active_provider: MinuteEstimator = primary
             degraded = False
             if geometry:
                 geometries[(origin, destination)] = geometry
@@ -131,6 +161,7 @@ def capture_mobility_snapshot(
                     f"primary and fallback mobility facts unavailable for {origin}|{destination}"
                 ) from fallback_exc
             provider_key = str(fallback.provider_key)
+            active_provider = fallback
             degraded = True
             fallback_pairs.append((origin, destination))
             fallback_reasons[(origin, destination)] = type(primary_exc).__name__
@@ -173,6 +204,9 @@ def capture_mobility_snapshot(
                 or ""
             ).upper()
             or None,
+            fact_quality=_resolve_fact_quality(
+                active_provider, origin, destination, provider_key
+            ),
         )
 
     snapshot = MobilitySnapshot(

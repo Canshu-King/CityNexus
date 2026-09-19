@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import math
+import re
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any, Iterable
@@ -121,6 +123,81 @@ def _capability_candidate_fit(
 #: metre, which is finer than any two distinct venues are ever recorded.
 _COORD_QUANTUM = 5
 
+#: Conservative ground distance (metres) within which two different-provider rows
+#: that share a venue name are treated as possibly the same physical venue and
+#: downgraded DIFFERENT -> AMBIGUOUS (V3-4).  Proximity alone is never SAME.
+_NEAR_VENUE_METERS = 60.0
+
+
+#: ``<namespace>:<object-type>/<object-id>`` — a provider-scoped reference such
+#: as ``overpass:node/1588295483``.  The numeric suffix alone is never an
+#: identity: OSM ``node/123`` and ``way/123`` are different objects, and two
+#: unrelated providers may both use the number ``123``.
+_PROVIDER_REFERENCE = re.compile(
+    r"^(?P<namespace>[a-z0-9_]+):(?P<object_type>[a-z]+)/(?P<object_id>.+)$",
+    re.IGNORECASE,
+)
+
+#: ``CN-<CITY-CODE>:<row-id>`` — a CityNexus domain wrapper that explicitly
+#: names the provider Place row it wraps, for example
+#: ``CN-XIAMEN:real-place-07e7689756fa27109a8bff96``.  Only this documented
+#: CityNexus prefix is treated as a wrapper cross-reference: an arbitrary
+#: ``SOMEPREFIX:value`` external id from any other source must not be mistaken
+#: for one (T1 hardening rule C — a broad uppercase-prefix regex wrongly turned
+#: every ``FOO:bar`` id into a CityNexus wrapper).
+_WRAPPER_REFERENCE = re.compile(r"^CN-[A-Z0-9]+:(?P<target>.+)$")
+
+#: Verdicts returned by :func:`compare_physical_venue`.
+SAME = "SAME"
+DIFFERENT = "DIFFERENT"
+AMBIGUOUS = "AMBIGUOUS"
+
+
+@dataclass(frozen=True)
+class PhysicalVenueIdentity:
+    """The structured identity evidence one Place row actually carries.
+
+    ``row_id``, ``wrapper_reference`` and the provider-scoped tuple are strong
+    evidence.  ``normalized_name``, ``category`` and ``coordinates`` are
+    supporting evidence only: one building routinely holds several venues at a
+    single centroid, so coordinates can never prove identity by themselves.
+    """
+
+    row_id: str | None
+    wrapper_reference: str | None
+    provider_namespace: str | None
+    provider_object_type: str | None
+    provider_object_id: str | None
+    normalized_name: str | None
+    category: str | None
+    coordinates: tuple[float, float] | None
+
+    @property
+    def provider_scoped(self) -> tuple[str, str, str] | None:
+        """``(namespace, object-type, object-id)`` when all three are known."""
+
+        if (
+            self.provider_namespace
+            and self.provider_object_type
+            and self.provider_object_id
+        ):
+            return (
+                self.provider_namespace,
+                self.provider_object_type,
+                self.provider_object_id,
+            )
+        return None
+
+
+def _non_empty(value: Any) -> str | None:
+    text = str(value or "").strip()
+    return text or None
+
+
+def _normalized_label(value: Any) -> str | None:
+    text = _non_empty(value)
+    return None if text is None else re.sub(r"\s+", " ", text.casefold())
+
 
 def _coordinates(place: Any) -> tuple[float, float] | None:
     try:
@@ -132,51 +209,186 @@ def _coordinates(place: Any) -> tuple[float, float] | None:
         return None
 
 
-def _identity_tokens(place: Any) -> set[str]:
-    """Opaque identifiers that name the physical venue behind a Place row.
+def physical_venue_identity(place: Any) -> PhysicalVenueIdentity | None:
+    """Extract the identity evidence carried by one Place row."""
 
-    A domain wrapper and the provider row it wraps are *different* Place rows
-    with different ``id`` values, so comparing ids alone cannot tell that they
-    are one venue.  The wrapper stores the provider identity inside its
-    ``external_id`` (``CN-XIAMEN:real-place-<hex>``), so tokenising both rows'
-    identifiers recovers the shared identity.  Short human labels such as a
-    city code are deliberately ignored: only tokens that carry a digit and are
-    long enough to be machine identifiers can name a venue.
+    if place is None:
+        return None
+    row_id = _non_empty(getattr(place, "id", None))
+    external_id = _non_empty(getattr(place, "external_id", None))
+    wrapper_reference: str | None = None
+    namespace: str | None = None
+    object_type: str | None = None
+    object_id: str | None = None
+    if external_id:
+        provider_match = _PROVIDER_REFERENCE.match(external_id)
+        if provider_match:
+            namespace = provider_match.group("namespace").casefold()
+            object_type = provider_match.group("object_type").casefold()
+            object_id = _non_empty(provider_match.group("object_id"))
+        else:
+            wrapper_match = _WRAPPER_REFERENCE.match(external_id)
+            if wrapper_match:
+                target = _non_empty(wrapper_match.group("target"))
+                if target and target != row_id:
+                    wrapper_reference = target
+    return PhysicalVenueIdentity(
+        row_id=row_id,
+        wrapper_reference=wrapper_reference,
+        provider_namespace=namespace,
+        provider_object_type=object_type,
+        provider_object_id=object_id,
+        normalized_name=_normalized_label(getattr(place, "name", None)),
+        category=_normalized_label(getattr(place, "category", None)),
+        coordinates=_coordinates(place),
+    )
+
+
+def _near_coordinates(
+    a: "tuple[float, float] | None", b: "tuple[float, float] | None"
+) -> bool:
+    """Approximate ground distance within a conservative venue threshold.
+
+    Two providers routinely geocode the same restaurant a few to a few tens of
+    metres apart (door vs building centroid), so exact rounded equality would
+    wrongly split one venue into two.  This only feeds the DIFFERENT -> AMBIGUOUS
+    downgrade; proximity alone is never treated as SAME (V3-4).
     """
 
-    tokens: set[str] = set()
-    raw_id = str(getattr(place, "id", "") or "")
-    if raw_id:
-        tokens.add(raw_id)
-    raw = str(getattr(place, "external_id", "") or "")
-    for separator in (":", "/", "|", ",", "#"):
-        raw = raw.replace(separator, " ")
-    for token in raw.split():
-        if len(token) >= 8 and any(character.isdigit() for character in token):
-            tokens.add(token)
-    return tokens
+    if a is None or b is None:
+        return False
+    lat_m = abs(a[0] - b[0]) * 111320.0
+    lon_m = abs(a[1] - b[1]) * 111320.0 * math.cos(math.radians((a[0] + b[0]) / 2.0))
+    return (lat_m * lat_m + lon_m * lon_m) ** 0.5 <= _NEAR_VENUE_METERS
+
+
+def _corroborated_same_venue(
+    left: "PhysicalVenueIdentity", right: "PhysicalVenueIdentity"
+) -> bool:
+    """Whether two rows carry a same-venue signature despite differing ids.
+
+    Used only to downgrade ``DIFFERENT`` to ``AMBIGUOUS`` across distinct
+    provider identities.  It requires every corroborating signal to line up:
+    a near coordinate (within the conservative threshold), an equal, present
+    normalized name, and no category conflict.  It is deliberately conservative —
+    a match here means "we cannot safely call these different", not "they are
+    proven the same".
+    """
+
+    if not _near_coordinates(left.coordinates, right.coordinates):
+        return False
+    left_name = left.normalized_name
+    right_name = right.normalized_name
+    if not left_name or not right_name or left_name != right_name:
+        return False
+    if (
+        left.category
+        and right.category
+        and left.category != right.category
+    ):
+        return False
+    return True
+
+
+def compare_physical_venue(left: Any, right: Any) -> str:
+    """Ordered strong-evidence comparison of two Place rows.
+
+    Returns ``SAME``, ``DIFFERENT`` or ``AMBIGUOUS``.  Identity is proven by
+    structure — a non-empty row id, an explicit wrapper cross-reference, or a
+    provider-scoped ``(namespace, object-type, object-id)`` tuple.  Coordinates
+    only ever support identity together with a matching name and category.
+    """
+
+    left_identity = physical_venue_identity(left)
+    right_identity = physical_venue_identity(right)
+    if left_identity is None or right_identity is None:
+        return DIFFERENT
+
+    # Rule 1 — null safety: missing ids never match by equality.
+    if (
+        left_identity.row_id
+        and right_identity.row_id
+        and left_identity.row_id == right_identity.row_id
+    ):
+        return SAME
+
+    # Rule 2 — an explicit wrapper cross-reference is structural identity.
+    if left_identity.wrapper_reference and (
+        left_identity.wrapper_reference == right_identity.row_id
+        or left_identity.wrapper_reference == right_identity.wrapper_reference
+    ):
+        return SAME
+    if (
+        right_identity.wrapper_reference
+        and right_identity.wrapper_reference == left_identity.row_id
+    ):
+        return SAME
+
+    # Rule 3 — provider identity is a tuple, never a bare numeric suffix.
+    left_scoped = left_identity.provider_scoped
+    right_scoped = right_identity.provider_scoped
+    if left_scoped is not None and right_scoped is not None:
+        if left_scoped == right_scoped:
+            return SAME
+        # Different provider tuples are NOT proof of different physical venues:
+        # two providers routinely describe the same restaurant with different ids.
+        # Only a corroborating venue signature (same coordinate + same name, no
+        # category conflict) can downgrade this from DIFFERENT to AMBIGUOUS so the
+        # caller fails safe (T1 hardening rule B / B2).
+        if _corroborated_same_venue(left_identity, right_identity):
+            return AMBIGUOUS
+        return DIFFERENT
+
+    # Rules 4/5 — coordinates are supporting evidence, and a name alone is not
+    # proof.  A shared coordinate plus a corroborating name and compatible
+    # category is the strongest statement this evidence can support.
+    if (
+        left_identity.coordinates is not None
+        and left_identity.coordinates == right_identity.coordinates
+    ):
+        left_name = left_identity.normalized_name
+        right_name = right_identity.normalized_name
+        if left_name and right_name:
+            if left_name != right_name:
+                return DIFFERENT
+            if (
+                left_identity.category
+                and right_identity.category
+                and left_identity.category != right_identity.category
+            ):
+                return AMBIGUOUS
+            return SAME
+        # A shared coordinate with nothing to corroborate it is not identity:
+        # several venues routinely share one building centroid.
+        return DIFFERENT
+
+    return DIFFERENT
 
 
 def is_same_physical_venue(left: Any, right: Any) -> bool:
-    """Whether two Place rows describe one and the same real-world venue.
+    """Whether two Place rows are *proven* to describe one physical venue.
 
-    Used to keep a closed venue out of its own replacement family.  A domain
-    wrapper row and the provider row it wraps have different ids but identical
-    coordinates and cross-referencing identifiers; treating them as different
-    places let a replan "replace" a closed restaurant with that same
-    restaurant under a new id, so the plan looked recovered while the traveller
-    was still sent to a closed venue.
+    Honest identity truth only: ``True`` strictly for a ``SAME`` verdict.  It
+    must never report ``AMBIGUOUS`` as same — callers that need the fail-safe
+    "do not treat these as different" behaviour use
+    :func:`should_exclude_replacement_candidate` instead
+    (T1 hardening rule A / B2).
     """
 
-    if left is None or right is None:
-        return False
-    if str(getattr(left, "id", "")) == str(getattr(right, "id", "")):
-        return True
-    left_coordinates = _coordinates(left)
-    right_coordinates = _coordinates(right)
-    if left_coordinates is not None and left_coordinates == right_coordinates:
-        return True
-    return bool(_identity_tokens(left) & _identity_tokens(right))
+    return compare_physical_venue(left, right) == SAME
+
+
+def should_exclude_replacement_candidate(candidate: Any, reference: Any) -> bool:
+    """Whether ``candidate`` must be kept out of ``reference``'s replacement family.
+
+    Exclusion is a fail-safe policy, not an identity claim: a candidate that is
+    proven the SAME venue, or merely AMBIGUOUS (we cannot safely tell it apart
+    from the venue the traveller just lost), is excluded — so a closed venue can
+    never reappear as its own replacement under a wrapper or cross-provider id.
+    Only a clean ``DIFFERENT`` verdict lets a candidate through.
+    """
+
+    return compare_physical_venue(candidate, reference) != DIFFERENT
 
 
 def choose_closure_replacement(
@@ -222,9 +434,13 @@ def rank_closure_replacements(
         # venue already used elsewhere in the plan must not be reused.  Both
         # checks are physical, because one venue can be stored under several
         # id namespaces (domain wrapper vs provider row).
-        if place_id in occupied_place_ids or is_same_physical_venue(place, affected_place):
+        if place_id in occupied_place_ids or should_exclude_replacement_candidate(
+            place, affected_place
+        ):
             continue
-        if any(is_same_physical_venue(place, other) for other in occupied_places):
+        if any(
+            should_exclude_replacement_candidate(place, other) for other in occupied_places
+        ):
             continue
         meta = _json(getattr(place, "metadata_json", "{}"), {})
         tags = set(_json(getattr(place, "tags_json", "[]"), []))

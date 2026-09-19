@@ -34,6 +34,7 @@ from app.db.models import (
 from app.db.session import SessionLocal
 from app.main import app
 from test_v12_authoritative_trip_execution import _journey_with_inputs
+from _qoder_explicit_demo_mobility import seed_authoritative_recovery_mobility
 
 
 def _started_journey() -> tuple[TestClient, str, dict, list[str]]:
@@ -603,12 +604,17 @@ def test_v13_trip_studio_rejects_a_missing_frozen_matrix_pair() -> None:
     assert "TRIP_STUDIO_DETERMINISTIC_GATE_FAILED" in rejected.text
 
 
-def test_v13_authoritative_predictive_recovery_executes_through_gateway_and_offline_truth() -> None:
+def test_v13_authoritative_predictive_recovery_executes_through_gateway_and_offline_truth(monkeypatch) -> None:
     """Provider replay -> Event -> Guardian -> gate -> accepted Plan -> projections."""
 
     stop_autorun()
     client = TestClient(app)
     journey_id, place_ids, commitment_id = _journey_with_inputs()
+    # V5 (T2 same-env): the predictive recovery hard-gates the same v12-style
+    # authoritative journey, so this scenario declares its route legs explicitly
+    # as deterministic fixture facts (not laundered synthetic default).  A pair
+    # outside the table stays synthetic/unavailable, so B1 is not neutralised.
+    seed_authoritative_recovery_mobility(monkeypatch, journey_id)
     composed = client.post(
         f"/api/v1/journeys/{journey_id}/plans/authoritative-compose",
         json={"place_ids": place_ids, "candidate_count": 1, "reservation_id": commitment_id},

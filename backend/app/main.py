@@ -4928,6 +4928,10 @@ def _grounded_recovery_reserve_snapshot(
             walking_min=(
                 int(chosen["walking_min"]) if chosen.get("walking_min") is not None else None
             ),
+            # V6: propagate the captured provider fact's honest quality (no
+            # provenance guessing); if the source did not attest a quality this
+            # stays None and hard feasibility fails closed, as intended.
+            fact_quality=(str(chosen["fact_quality"]) if chosen.get("fact_quality") is not None else None),
         )
 
     for pair, fact in base.facts.items():
@@ -6357,6 +6361,21 @@ class _ReplanCandidateSpec:
     v2_choices: dict[tuple[str, str], Any] | None = None
 
 
+class MobilityDataUnavailable(RuntimeError):
+    """No explicit frozen or measured travel fact exists for a replan leg.
+
+    Distinct from "no feasible alternative": the engine never learned how long
+    the leg takes, so it must not declare a candidate infeasible (or feasible)
+    on the strength of a fabricated constant.  See
+    docs/MOBILITY_TRUTH_CONTRACT.md (T2).
+    """
+
+    def __init__(self, origin: str | None, destination: str | None) -> None:
+        self.origin = origin
+        self.destination = destination
+        super().__init__(f"MOBILITY_DATA_UNAVAILABLE:{origin}|{destination}")
+
+
 def _replan_estimate(
     session: Session,
     journey: Journey,
@@ -6370,21 +6389,45 @@ def _replan_estimate(
 
     Frozen evidence was captured for the stop order that existed when the plan
     was selected.  A replan creates new adjacencies, so a pair can be absent;
-    that is a gap to fill from the provider, not a reason to fail the request.
+    that is a gap to fill from a *real* provider, not a reason to fail the
+    request — and not a licence to invent a constant.
+
+    The capture is therefore strict: a pair with no explicit frozen or measured
+    fact raises :class:`MobilityDataUnavailable` instead of inheriting the mock
+    fixture's blanket ``default_minutes`` (T2).
     """
 
     if not origin or not destination or origin == destination:
         return 0
     try:
+        # ``hard_minutes`` (not the raw ``estimate_minutes``) so a leg whose
+        # quality is SYNTHETIC_DEFAULT — the blanket mock 20 the bulk replan
+        # capture may have pre-frozen — is rejected at this front door rather
+        # than flowing into feasibility as if it were measured (V2-T2 / B1).
+        # The real MobilitySnapshot always exposes it; duck-typed providers that
+        # predate quality tagging fall back to the raw accessor.
+        hard_minutes = getattr(mobility, "hard_minutes", None)
+        if callable(hard_minutes):
+            return int(hard_minutes(origin, destination))
         return int(mobility.estimate_minutes(origin, destination))
     except KeyError:
-        captured = capture_runtime_mobility_snapshot(
-            session,
-            journey,
-            [(origin, destination)],
-            operation_key=operation_key,
-        ).snapshot
-        return int(captured.estimate_minutes(origin, destination))
+        try:
+            captured = capture_runtime_mobility_snapshot(
+                session,
+                journey,
+                [(origin, destination)],
+                operation_key=operation_key,
+                require_explicit_facts=True,
+            ).snapshot
+        except (MobilitySnapshotCaptureError, KeyError) as exc:
+            raise MobilityDataUnavailable(origin, destination) from exc
+        captured_hard = getattr(captured, "hard_minutes", None)
+        try:
+            if callable(captured_hard):
+                return int(captured_hard(origin, destination))
+            return int(captured.estimate_minutes(origin, destination))
+        except KeyError as exc:
+            raise MobilityDataUnavailable(origin, destination) from exc
 
 
 @app.post(
@@ -7235,6 +7278,13 @@ def generate_replan(
             effective_event_time.tzinfo,
         )
 
+    # V2-T2 (B1, gate point 4): created / failed_reasons / mobility_unavailable_pairs
+    # are referenced by the first candidate loop below (its inbound/outbound legs
+    # can raise MobilityDataUnavailable), so they must exist before any
+    # _replan_estimate() runs — otherwise that path crashes with UnboundLocalError.
+    created: list[ReplanProposalModel] = []
+    failed_reasons: set[str] = set()
+    mobility_unavailable_pairs: set[str] = set()
     heuristic_specs: list[_ReplanCandidateSpec] = []
     # Set when a physical disruption has no material repair available.
     heuristic_specs_unresolved_reason: str | None = None
@@ -7265,22 +7315,32 @@ def generate_replan(
                         if origin_activity is not None
                         else None
                     )
-                    inbound = _replan_estimate(
-                        session,
-                        journey,
-                        mobility,
-                        origin,
-                        choice.place_id,
-                        operation_key=f"replan-inbound:{affected.id}",
-                    )
-                    outbound = _replan_estimate(
-                        session,
-                        journey,
-                        mobility,
-                        choice.place_id,
-                        next_anchor[1],
-                        operation_key=f"replan-outbound:{affected.id}",
-                    )
+                    try:
+                        inbound = _replan_estimate(
+                            session,
+                            journey,
+                            mobility,
+                            origin,
+                            choice.place_id,
+                            operation_key=f"replan-inbound:{affected.id}",
+                        )
+                        outbound = _replan_estimate(
+                            session,
+                            journey,
+                            mobility,
+                            choice.place_id,
+                            next_anchor[1],
+                            operation_key=f"replan-outbound:{affected.id}",
+                        )
+                    except MobilityDataUnavailable as exc:
+                        # T2: the engine has no measured travel fact for this
+                        # leg.  It must not price the candidate at a fabricated
+                        # constant, and it must not report the candidate as
+                        # infeasible either -- the candidate's feasibility is
+                        # simply unknown.
+                        mobility_unavailable_pairs.add(str(exc))
+                        failed_reasons.add("MOBILITY_DATA_UNAVAILABLE")
+                        continue
                     budget_remaining = journey.budget_amount_minor - (
                         sum(item.estimated_cost_minor for item in source)
                         - affected.estimated_cost_minor
@@ -7849,8 +7909,8 @@ def generate_replan(
         return total
 
     base_route_total = _frozen_route_total(source)
-    created: list[ReplanProposalModel] = []
-    failed_reasons: set[str] = set()
+    # created / failed_reasons / mobility_unavailable_pairs are initialised
+    # earlier, before the first candidate loop (V2-T2 gate point 4).
     accepted_assignment_keys: set[str] = set()
     rejected_solver_assignment_keys: set[str] = set()
 
@@ -8072,6 +8132,7 @@ def generate_replan(
             return semantic or row.get("place_id") or row.get("city_service_id")
 
         # 1. Resolve the travel time of every leg in the *new* order.
+        abandoned = False
         for index, row in enumerate(copied_rows):
             if index == 0:
                 row["travel_from_prev_min"] = 0
@@ -8082,14 +8143,31 @@ def generate_replan(
             if not origin or not destination:
                 row["travel_from_prev_min"] = 0
                 continue
-            row["travel_from_prev_min"] = _replan_estimate(
-                session,
-                journey,
-                mobility,
-                origin,
-                destination,
-                operation_key=f"replan-leg:{proposed.id}",
-            )
+            try:
+                row["travel_from_prev_min"] = _replan_estimate(
+                    session,
+                    journey,
+                    mobility,
+                    origin,
+                    destination,
+                    operation_key=f"replan-leg:{proposed.id}",
+                )
+            except MobilityDataUnavailable as exc:
+                # T2: without a measured fact this leg cannot be re-timed.
+                # Abandon this candidate rather than shifting the schedule by a
+                # fabricated constant and letting the gate reject it for the
+                # wrong reason.
+                mobility_unavailable_pairs.add(str(exc))
+                failed_reasons.add("MOBILITY_DATA_UNAVAILABLE")
+                abandoned = True
+                break
+
+        if abandoned:
+            # T2: drop the half-built proposal.  Its travel times are unknown,
+            # so it must not be presented as a feasible or infeasible repair.
+            session.delete(proposed)
+            session.flush()
+            continue
 
         # 1b. Normalise every timestamp into one offset.
         #     ``activities.end_at > start_at`` is a TEXT comparison, so a plan
@@ -8399,6 +8477,12 @@ def generate_replan(
         # REPLAN_NO_ALTERNATIVE unreachable dead code.
         if heuristic_specs_unresolved_reason:
             raise HTTPException(422, heuristic_specs_unresolved_reason)
+        # T2: "we could not measure the legs" is not the same finding as "no
+        # replacement place exists".  Reporting the first as the second would
+        # tell the traveller that nothing can be done when the truth is that
+        # the engine lacked travel evidence.
+        if mobility_unavailable_pairs:
+            raise HTTPException(422, "MOBILITY_DATA_UNAVAILABLE")
         details = ", ".join(sorted(failed_reasons)) or "NO_DISTINCT_CANDIDATE"
         raise HTTPException(422, f"no feasible replan proposal: {details}")
 
