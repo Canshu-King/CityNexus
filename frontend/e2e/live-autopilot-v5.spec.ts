@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { protectCommitment } from "./_qoderFreshJourney";
 
 /* PORT-FIRST (pass-15 C) — zero-touch means nobody presses anything.
  *
@@ -82,6 +83,12 @@ test("the guardian autopilot recovers a live journey from a provider event with 
     { candidate_count: 1 },
   );
   await api(request, `/api/v1/journeys/${journeyId}/plans/${plans[0].id}/select`, "POST");
+  /* The autopilot is being trusted with a commitment, so there has to be one.
+     The demo cruise is `locked` but not `protected` until a booking is filed and
+     its payment captured, so without this step `locked_commitments_preserved`
+     would be true for the wrong reason.  Before /start, because booking a
+     travelling activity is refused with 422. */
+  const commitment = await protectCommitment(request, journeyId, "place-river-cruise");
   await api(request, `/api/v1/journeys/${journeyId}/start`, "POST");
 
   const mission = await api<{ id: string; status: string }>(
@@ -173,6 +180,25 @@ test("the guardian autopilot recovers a live journey from a provider event with 
   expect(
     accepted!.locked_commitments_preserved,
     "the automatic recovery spent a locked commitment",
+  ).toBe(true);
+
+  /* And the flag has to mean something on the plan the autopilot installed:
+     this journey owns a real captured booking now, so the cruise must still be
+     on the recovered plan by place id, still flagged protected. */
+  const recovered = await api<{
+    active_plan: { id: string; activities?: { place_id?: string | null; protected?: boolean }[] };
+  }>(request, `/api/v1/journeys/${journeyId}/experience`, "GET");
+  const preservedCruise = (recovered.active_plan.activities ?? []).find(
+    (a) => a.place_id === "place-river-cruise",
+  );
+  expect(
+    preservedCruise,
+    `the autopilot's recovered plan has no committed cruise (booking ${commitment.bookingId}); ` +
+      `it holds ${JSON.stringify((recovered.active_plan.activities ?? []).map((a) => a.place_id))}`,
+  ).toBeTruthy();
+  expect(
+    preservedCruise?.protected,
+    "the recovered plan carries the cruise activity but no longer treats it as protected",
   ).toBe(true);
 
   /* The record has to say it was the system, not the traveller.  No .catch here:
