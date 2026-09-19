@@ -630,12 +630,20 @@ export function CopilotDock({
   // its edge button instead of covering the primary action.  The traveller's
   // own open/closed choice is remembered and restored when the surface closes.
   const expanded = open && !yieldToSurface;
+  /* Pass-9 blocker #2: the traveller already gets a Copilot entry in the bottom
+     navigation, so a full-width persistent bar floating over Today's content
+     meant two competing invitations and a screen where the dock outranked the
+     journey. The L2 decision state proved a compact pill is enough, so idle
+     (nothing open, nothing running) reuses exactly that presentation, and the
+     bar returns for an active conversation or a task worth interrupting for. */
+  const idleCompact = !open && !sending && !yieldToSurface;
 
   return (
     <aside
-      className={`cn-copilot-dock ${expanded ? "open" : "collapsed"}${yieldToSurface ? " yield-to-surface" : ""}`}
+      className={`cn-copilot-dock ${expanded ? "open" : "collapsed"}${yieldToSurface ? " yield-to-surface" : ""}${idleCompact ? " idle-compact" : ""}`}
       data-testid="v18-copilot-dock"
       data-yield-to-surface={yieldToSurface ? "true" : "false"}
+      data-idle-compact={idleCompact ? "true" : "false"}
     >
       {!expanded ? (
         <button

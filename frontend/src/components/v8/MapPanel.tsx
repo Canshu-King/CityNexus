@@ -186,8 +186,24 @@ export function MapPanel({
           ),
         );
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        mapInstance.fitBounds(bounds, {
-        padding: 42,
+      /* The route-context caption floats over the bottom of the canvas, so a
+         uniform 42px padding let the last marker sit underneath it (pass-9
+         blocker #1). The fix tells the camera how much of its own viewport the
+         overlay occupies, rather than raising the marker's z-index so the two
+         elements take turns bullying each other. */
+      const caption = host.current?.parentElement?.querySelector(
+        ".v8-map-caption",
+      ) as HTMLElement | null;
+      const captionHeight = caption?.getBoundingClientRect().height ?? 0;
+      const side = 42;
+      const safetyGap = 16;
+      mapInstance.fitBounds(bounds, {
+        padding: {
+          top: side,
+          right: side,
+          bottom: side + captionHeight + safetyGap,
+          left: side,
+        },
         maxZoom: 13,
         duration: reducedMotion ? 0 : 650,
       });
