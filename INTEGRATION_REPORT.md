@@ -1651,3 +1651,96 @@ AI 关闭，且 `/health` 的回显是经前端 origin 拿回来并核对过 run
    能表达“游标存在但不可解析”，消费者只能看见 `derived_now = journey.start_at` 这个被填出来的时间。
    这是 ORD-0007 同族但形态不同（那里是互相矛盾，这里是沉默）。改它要动 schema，属契约变更，
    等令再动；连带一条 `/twin` 与 `_execution_truth` 的差分回归。
+
+
+---
+
+## 81. ORD-0010：recovery 卡的幽灵键，以及用另一把量具把 mandated 16 行重测一遍
+
+### 81.1 修的是什么，以及它今天有没有伤到旅客
+
+`LiveRecovery` 读的是 `context.execution.current_activity_id`。这个键不存在——那份 dict 是
+`_execution_truth()` 的返回，键是 `now_activity_id / next_activity_id / cursor_status /
+persisted_cursor`；twin 在**上一层**确实有一个叫 `current_activity_id` 的字段，两边混了。
+于是读出来永远是 null，紧跟的 `?? activities[0]` 就把首站永久钉成"现在"。
+
+但必须说清楚严重性的真实边界：`design-tokens.css:389` 把 `.live-shell` 下这张卡的 intro
+整块 `display: none`（注释原话是 Live 已经显示唯一当前状态、把重复标题留在 DOM 里）。
+所以今天旅客在 `/v8/live` 上并没有读到那个错步骤——谎言被算出来、被渲染进 DOM，屏幕阅读器跳过它，
+但任何别的 markup 消费者不会。这也决定了门的形状：两头都断言（卡解析出的身份 + 可见 Live 标题同意），
+这样 Amendment C 那一路重新排这一屏时，卡不会把一个假 Now 抬到可见区。
+
+门：`frontend/e2e/qoder-live-recovery-cursor.spec.ts`，3 collected。
+
+* 用例 1 完全不加拦截：走产品自己的 `/complete` 两次，要求卡与可见标题都指向第三个活动；
+* 用例 2 把"游标存在但不可解析"同时喂给 `/twin` 与 `/experience`（只改一个等于测试自己造出两个
+  消费者的分歧，什么也测不到）；
+* 用例 3 是这一轮新发现的无主守卫（见 81.2）。
+
+突变验证：把修法退回 phantom key + 索引零兜底 → 3 个节点里 2 个失败，实测
+`data-now-activity-id` 打出 `3a58c470`（activities[0]）而 twin 给的是 `61e3096d`（activities[2]），
+不可解析态打出 `"Next: Old Town Gate"`（首活动标题）；源文件跑完字节还原 sha256 一致。
+干净态 4 passed / 0 failed（run `ord10-c` / `ord10-d`，backend :8163 / :8398，一次性库，`ai=disabled`）。
+
+顺带把 Live 自己的第三态补齐：有 ACTIVE 计划但没有待执行步骤时，标题与副行原本说
+`Awaiting plan` / `Select a plan to calculate your route`——都是对"已经有计划"的不实陈述。
+新增一个 locale 键 `live.nothingDue`（en + zh），卡与 Live 共用，避免同一状态两种说法。
+
+按令未动：`main.py:5220` 的 twin `projection_status` 仍只在 READY/DEGRADED 之间取值（等仲裁裁 schema）。
+同一族还剩第三处：`V10LiveExecutionPanel.tsx:53` 只要游标存在就说 `In progress`（含陈旧游标），
+诚实的修法是把解析后的窗口传进去，而不是继续读原始 `current_activity_id`——这条我没有擅自扩。
+
+### 81.2 一条"有守卫、没主人"的前端缺陷
+
+`liveActivityWindow` 里"Now 必须非终结态"的守卫，删掉之后整套验收门全绿。
+这是突变矩阵要抓的那一类缺陷（守卫无人认领），只是层次在浏览器里。
+补了用例 3：通过产品自己的完成动作把游标留在一个 COMPLETED 活动上，要求可见标题
+说"现在没有待进行的步骤"而不是复述那个已完成的步骤标题。
+
+这条直接改变了矩阵的结论：`J-LIVE-FIXED-INDEX` 原本报 `SURVIVED`（collected=2，门选错了文件——
+`live-autopilot-v5.spec.ts` 从不构造这个状态），把门加宽到真正持有断言的 spec 之后变成
+`KILLED`（collected=6）。也就是说：一次"存活"其实是量具指错了地方，不是产品没有守卫。
+
+### 81.3 用另一把量具把 mandated 16 行重测一遍（同一棵树，内容即 `a75ba7a`）
+
+命令（权威树，仓库外 evidence）：
+
+```
+python <candidate matrix> --repo D:/moodle/_qoder_integration_20260919 \
+  --lane M --full --e2e-backend-port 8405 --e2e-web-port 3405
+```
+
+结果：`mandate: attempted=16 killed=16 survived=0 harness_invalid=0 declared_unreachable=0
+rows_with_zero_collected=0`，`CAMPAIGN PASSED`。逐行 collected：
+
+| 行 | collected | 行 | collected |
+| --- | --- | --- | --- |
+| J-ACK-RESOLVED | 2 | J-AMBIGUOUS-ADMITTED | 23 |
+| J-CROSS-JOURNEY-TRIGGER | 1 | J-PROTECTED-C4-DROPPED | 7 |
+| J-ACK-CLOSES-UNRELATED | 3 | J-PARTIAL-BUDGET-FULL | 3 |
+| J-PROVENANCE-LAUNDER | 24 | J-LIVE-FIXED-INDEX | 6 |
+| J-NONE-QUALITY-HARD | 24 | J-STALE-CURSOR-FALLBACK | 5 |
+| J-MOCK-HARD-FALLBACK | 1 | J-MATERIALITY-DIFF | 1 |
+| J-NONE-NONE-PHYSICAL | 23 | RX4-C4-GENERATE-ANCHOR | 1 |
+| J-COORDINATE-ONLY-SAME | 23 | J-CROSS-PROVIDER-NUMERIC | 23 |
+
+同一次调用尾部的集成门（Mission 002 E）：`ran=970 / 955 passed / 15 skipped / 0 failed`。
+**970 与 §80 的 922 不矛盾**：这把量具的 ENV 固定 `CITYNEXUS_STATEFUL_CASES=60`（§80 那次是默认 12），
+60×30 的有状态机比 12×12 多 48 个参数化节点，907 + 48 = 955 passed，922 + 48 = 970。
+
+这也顺手解掉 §80.2 第 1 条那个分母冲突：mandated 16 行全部 KILLED，而那条"公开端点走不到"的
+`Q-ACCEPT-PROTECTED-SKIP` 放在另一轨并带理由打印，于是 "16 attempted / 16 KILLED / 0 SURVIVED /
+0 HARNESS_INVALID" 字面成立，不需要把任何一个行改名或删掉。Commander 那版量具仍是权威，
+这一版是候选与交叉验证（`patches/CNX-002C-mandate16-*`）。
+
+### 81.4 前端门必须自带来源指纹
+
+这轮我自己踩了三次，都值得写下来给下一个量具作者：
+
+1. Playwright 门不带 authoritative 环境跑，就会连到别的 lane 已经开着的 :8000——一行"绿"
+   测的是别人的树；候选现在拒绝在没有 run id / 端口 / 一次性库时运行前端门。
+2. 一整行共用一个 run id：干净态那次创建 `_mut<stamp>.db`，突变那次想重开同一个文件，
+   fresh-or-no-run 守卫直接拒启——现象是"突变下 0 条执行"。现在每次调用一个 token。
+   这条恰恰证明那道守卫是对的：它宁可不开，也不让两次测量共用一份库。
+3. 汇总行的取法：Playwright 的 line reporter 把 `N failed` 单独成行、后面才是
+   `M passed (Xs)`，只取最后一条匹配行会把"有失败"读成"全通过"。现在两种计数都进表。
