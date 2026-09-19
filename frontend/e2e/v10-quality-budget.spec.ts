@@ -4,6 +4,7 @@ test.describe("V10 product-quality budget", () => {
   test("Live Journey becomes usable without layout or server-error regressions", async ({
     page,
   }) => {
+  await page.addInitScript(() => localStorage.setItem("citynexus.locale", "en"));
     await page.setViewportSize({ width: 390, height: 844 });
     const consoleErrors: string[] = [];
     const serverErrors: string[] = [];

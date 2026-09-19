@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("V10 Journey Inbox exposes text, image, and deterministic code paths", async ({ page }) => {
+  await page.addInitScript(() => localStorage.setItem("citynexus.locale", "en"));
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/v8/bookings");
   await expect(page.getByRole("heading", { name: "Your real reservations, protected." })).toBeVisible();
