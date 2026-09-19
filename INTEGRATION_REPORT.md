@@ -1602,3 +1602,52 @@ Commander 按仲裁 Amendment B 直接修了 `tools/verification/mutation_campai
 mandate 13/13 KILLED（三条前端行因 worktree 无 `node_modules` 未测），扩展轨 12 KILLED + 1 声明不可达，
 `Q-ANCHOR-SCHEDULE-C4` 用整条 `tests` 作门时 `collected=962` 且 KILLED —— 这就是"anchor_schedule.py:90
 已被现有门覆盖"这句话在我这边的测法，不是转述。
+
+
+---
+
+## 80. Mission 002 E：本轮全门禁数字（权威树、HEAD `21cbf22`，全部为实测）
+
+解释器统一是 `D:\moodle\CityNexus\.venv\Scripts\python.exe`（含 ortools），
+后端命令都清空 `DEEPSEEK_API_KEY` / `CITYNEXUS_AI_API_KEY` 并置 `CITYNEXUS_AI_ENABLED=false`。
+
+| 门禁 | 命令要点 | 结果 |
+| --- | --- | --- |
+| 后端全量（集成门） | `pytest -q` in `backend/` | **907 passed / 15 skipped / 0 failed**（86.97s） |
+| 权威突变矩阵 | Commander 那版 `tools/verification/mutation_campaign.py`，未改一字 | baseline `ran=137`；**17 attempted / 16 KILLED / 0 SURVIVED / 0 HARNESS_INVALID / 1 EQUIVALENT**；`CAMPAIGN PASSED` |
+| 扩展 stateful 门 | `CITYNEXUS_STATEFUL_CASES=60 CITYNEXUS_STATEFUL_STEPS=30`，`tests/stateful tests/test_qoder_next_leg_binding.py tests/test_sol_execution_cursor.py tests/test_rx4_c4_generate_gate.py tests/test_rx4_c4_protection_surface_gate.py` | **86 passed / 0 failed**（31.62s；60 + 4 + 12 + 7 + 3 = 86） |
+| 前端类型门 | `npm run typecheck` / `npm run typecheck:all` | 各自退出码 **0**，无新增 TypeScript 错误 |
+| 前端构建 | `npm run build` | 退出码 **0**（generateSW，9 entries / 2301.56 KiB） |
+| 权威 E2E | `CITYNEXUS_E2E_AUTHORITATIVE=1`，run `ord08-20260920a`，前端 :3153 / 后端 :8153，`CITYNEXUS_DATABASE_URL=sqlite:///./_ord08-20260920a.db`，`reuseExistingServer=false`，`--reporter=json` | **47 expected / 0 unexpected / 0 flaky / 0 skipped** |
+
+权威 E2E 的来源指纹（stderr，逐条核对过）：
+
+```
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe
+                frontend=:3153 backend=:8153 db=sqlite:///./_ord08-20260920a.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=ord08-20260920a frontend=:3153 -> backend=:8153 ai=disabled db=_ord08-20260920a.db
+```
+
+也就是说这两次跑的数字属于这一棵树、这一次调用：自己的解释器、自己的端口、自己的一次性库，
+AI 关闭，且 `/health` 的回显是经前端 origin 拿回来并核对过 run token 的。
+
+### 80.1 “验证不改写 checkout”这一条是怎么核的
+
+矩阵与 E2E 都跑完之后 `git status --porcelain` 只剩两条：
+`tools/verification/mutation_campaign.py`（Commander 的量具，我不写）与
+`qoder-handoff/qoder_xiaomi_truth_hardening_v6.patch`（另一条线的交接补丁）。**两者都不是本层的改动**，
+并且本轮开始前就已经在那里。除此以外没有一条 backend/、frontend/、reports/ 的改动，
+截图与 provenance 全部落在 `CITYNEXUS_EVIDENCE_DIR`（仓库外）。
+
+十处被突变的源文件逐一按字节还原：矩阵自身只在 `finally` 里写回原字节，
+本层跑完后另用 `git status` 复核，不依赖工具自报。
+
+### 80.2 两项待裁决，不影响本表数字
+
+1. `F` 记为 `EQUIVALENT_OR_NON_ACTIONABLE`（带不可达理由），与 Mission 002 C 字面的
+   “0 SURVIVED / 16 KILLED”仍然冲突。可选收口：删这一行让分母诚实变成 16/16，
+   或承认“16 actionable + 1 equivalent”这个口径。我没有为了让表好看去动分母。
+2. §79.1 的 `/twin`：它按 ACTIVE 计划解析游标（正确），但 `JourneyTwinSchema` 里没有任何字段
+   能表达“游标存在但不可解析”，消费者只能看见 `derived_now = journey.start_at` 这个被填出来的时间。
+   这是 ORD-0007 同族但形态不同（那里是互相矛盾，这里是沉默）。改它要动 schema，属契约变更，
+   等令再动；连带一条 `/twin` 与 `_execution_truth` 的差分回归。
