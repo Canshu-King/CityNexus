@@ -129,6 +129,10 @@ test("the recovery card follows the cursor the product itself advanced", async (
   // The visible Live heading must not disagree about which step is now.
   await expect(heading).toHaveAttribute("data-cursor-status", "VALID");
   await expect(heading).toHaveText(activities[2].title);
+  // Neither may the V10 panel, which used to decide this from the raw cursor.
+  const step = page.getByTestId("v10-current-step");
+  await expect(step).toHaveAttribute("data-cursor-status", "VALID");
+  await expect(step).toHaveText("in progress");
 });
 
 test("a plan that holds no activities invents no current step", async ({
@@ -251,6 +255,12 @@ test("a cursor that resolves to a finished step yields no Now on the Live headin
   await expect(heading).toHaveAttribute("data-cursor-status", "ABSENT");
   await expect(heading).not.toHaveText(finished.title);
   await expect(heading).toHaveText("Nothing is due right now");
+  // The discriminator for ORD-0026: the cursor exists and names a real activity,
+  // so an existence test answers "in progress" where the resolution answers
+  // "nothing is due".
+  const step = page.getByTestId("v10-current-step");
+  await expect(step).toHaveText("Nothing is due right now");
+  await expect(step).not.toHaveText("in progress");
   expect(
     served,
     `the projection was intercepted ${served} time(s)`,
@@ -319,6 +329,12 @@ test("an unresolvable cursor makes the recovery card name nothing", async ({
   }
   await expect(heading).toHaveAttribute("data-cursor-status", "STALE");
   await expect(heading).toHaveText("Execution position unresolved");
+  // A stale pointer used to read as "in progress": the field exists, so the panel
+  // assumed the traveller was mid-step.
+  const step = page.getByTestId("v10-current-step");
+  await expect(step).toHaveAttribute("data-cursor-status", "STALE");
+  await expect(step).toHaveText("Execution position unresolved");
+  await expect(step).not.toHaveText("in progress");
   expect(served.twin, `the twin was intercepted ${served.twin} time(s)`).toBeGreaterThanOrEqual(
     1,
   );

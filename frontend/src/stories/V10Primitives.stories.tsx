@@ -25,7 +25,10 @@ export default panelMeta;
 type PanelStory = StoryObj<typeof panelMeta>;
 
 export const Ready: PanelStory = {
-  args: { journeyId: "demo-journey" },
+  // The panel resolves "where am I" from the ACTIVE plan it is handed, so a story has
+  // to name one: null is the honest "no plan loaded here", where previously the
+  // component would have answered from a persisted cursor it never had.
+  args: { journeyId: "demo-journey", plan: null },
 };
 
 export const InboxScanner: StoryObj<typeof BookingArtifactScanner> = {

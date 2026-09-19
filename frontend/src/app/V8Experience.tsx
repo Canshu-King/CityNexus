@@ -9,6 +9,7 @@ import { ActivityDetail } from "../features/trip/ActivityDetail";
 import { HotelsPanel } from "../features/stay/HotelsPanel";
 import { PlanComparison } from "../features/planning/PlanComparison";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
+import { liveActivityWindow } from "../lib/executionWindow";
 import { MobilitySheet } from "../features/mobility/MobilitySheet";
 import { StayExplorer } from "../features/stay/StayExplorer";
 import { ControlTowerPanel } from "../features/intelligence/ControlTowerPanel";
@@ -240,40 +241,9 @@ function initialsFrom(name: string) {
   return (initials || "CN").toUpperCase();
 }
 
-const TERMINAL_ACTIVITY_STATES = new Set(["COMPLETED", "SKIPPED", "CANCELLED"]);
-
-/**
- * Resolve the live execution window from the authoritative cursor.
- *
- * Three states, deliberately kept distinct:
- *   - cursor null            -> pre-execution; the first non-terminal step is honest;
- *   - cursor names a step    -> that step is Now, the next non-terminal one is Next;
- *   - cursor names nothing   -> stale.  Nothing may be invented from list order,
- *     so the window is empty and `unresolved` tells the surface why.
- */
-function liveActivityWindow(plan: V8Data["active_plan"]) {
-  if (!plan) return { now: null, next: null, nextLeg: null, unresolved: false };
-  const activities = plan.activities;
-  const cursor = plan.current_activity_id ?? null;
-  const index = activities.findIndex((item) => item.id === cursor);
-  if (cursor !== null && index === -1) {
-    return { now: null, next: null, nextLeg: null, unresolved: true };
-  }
-  const anchor =
-    index === -1
-      ? activities.findIndex((item) => !TERMINAL_ACTIVITY_STATES.has(item.status))
-      : index;
-  if (anchor === -1) return { now: null, next: null, nextLeg: null, unresolved: false };
-  const candidate = activities[anchor];
-  const now =
-    candidate && !TERMINAL_ACTIVITY_STATES.has(candidate.status) ? candidate : null;
-  const next =
-    activities
-      .slice(anchor + 1)
-      .find((item) => !TERMINAL_ACTIVITY_STATES.has(item.status)) ?? null;
-  const nextLeg = now && next ? plan.legs[anchor] ?? null : null;
-  return { now, next, nextLeg, unresolved: false };
-}
+// The resolver lives in src/lib/executionWindow.ts so every surface that states "where am
+// I now" reads one implementation.  Two copies of a three-state rule is how Live and the
+// V10 panel ended up disagreeing about the same journey.
 
 // The authoritative current step is current_activity_id; falling back to a
 // fixed index would show a stale "next" once the journey has advanced.
@@ -1072,7 +1042,10 @@ export function V8Experience() {
                 onRain={triggerRain}
                 onLocation={shareForegroundLocation}
               />
-              <V10LiveExecutionPanel journeyId={data.journey.id} />
+              <V10LiveExecutionPanel
+                journeyId={data.journey.id}
+                plan={data.active_plan ?? null}
+              />
             </div>
           )}
           {route === "map" && (

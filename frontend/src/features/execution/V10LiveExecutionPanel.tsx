@@ -10,14 +10,35 @@ import {
   useWebObservations,
 } from "../../api/v10Execution";
 import { useT } from "../../i18n/LocaleContext";
+import { liveActivityWindow } from "../../lib/executionWindow";
+import type { V8Data } from "../../app/v8Types";
 
-type Props = { journeyId: string };
+type Props = {
+  journeyId: string;
+  /**
+   * The ACTIVE plan as the projection served it.  "In progress" is a statement about the
+   * resolved execution window, so the panel takes the plan and resolves it here rather than
+   * reading the persisted cursor, which only records where the pointer was left.
+   */
+  plan: V8Data["active_plan"];
+};
 
-export function V10LiveExecutionPanel({ journeyId }: Props) {
+export function V10LiveExecutionPanel({ journeyId, plan }: Props) {
   const t = useT();
   const clock = useExecutionClock(journeyId);
   const web = useWebObservations(journeyId);
   const now = clock.data ? new Date(clock.data.now) : null;
+  const window = liveActivityWindow(plan);
+  // Four facts, four answers.  The old pair of branches keyed off "does a cursor exist",
+  // which made a stale cursor read as "in progress" and a finished journey read as
+  // "awaiting plan" - both wrong, and both in the same metric.
+  const stepLabel = window.unresolved
+    ? t("live.unresolvedStep")
+    : window.now
+      ? t("exec.inProgress")
+      : plan
+        ? t("live.nothingDue")
+        : t("live.awaitingPlan");
   return (
     <section
       className="v10-execution-panel"
@@ -49,8 +70,8 @@ export function V10LiveExecutionPanel({ journeyId }: Props) {
         <div className="v10-metric">
           <Activity size={17} aria-hidden="true" />
           <span>{t("exec.currentStep")}</span>
-          <strong>
-            {clock.data?.current_activity_id ? t("exec.inProgress") : t("live.awaitingPlan")}
+          <strong data-testid="v10-current-step" data-cursor-status={window.cursorStatus ?? "UNKNOWN"}>
+            {stepLabel}
           </strong>
           <small>{clock.data ? t("exec.journeyStatus") : t("exec.loading")}</small>
         </div>
