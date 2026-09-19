@@ -411,6 +411,16 @@
     min-height: 208px !important;
     height: 208px !important;
   }
+  /* Ruling #4, take two. The 240/208 sizing above is stated with !important so
+     it beats the shell's own media rules — which also meant it silently beat my
+     first empty-state fix (computed min-height stayed 240px against a
+     max-height of 156px, because min-height wins over max-height in CSS). An
+     honest empty state has to be exempted in the same register it was sized. */
+  .live-shell > .v8-page .v8-live-main > .v8-map-panel.v8-map-empty {
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: 156px;
+  }
 }
 
 /*
@@ -733,9 +743,13 @@ button[data-testid^="mode-"],
   font-size: var(--cn-fs-caption);
   font-weight: 600;
 }
-.v8-hub-actions .v8-quiet-button + .v8-quiet-button {
-  border-left: 1px solid var(--cn-control-border);
-  padding-left: 16px;
+/* A border-left separator looked wrong here: these buttons inherit a
+   border-radius, so the 1px edge drew an arc. A typographic middot keeps the
+   row quiet without painting a box. */
+.v8-hub-actions .v8-quiet-button + .v8-quiet-button::before {
+  content: "·";
+  margin-right: 16px;
+  color: var(--cn-ink-tertiary);
 }
 
 
@@ -755,9 +769,10 @@ button[data-testid^="mode-"],
   font-size: var(--cn-fs-caption);
   font-weight: 600;
 }
-.cn-live-toolbar .v8-quiet-button + .v8-quiet-button {
-  border-left: 1px solid var(--cn-control-border);
-  padding-left: 16px;
+.cn-live-toolbar .v8-quiet-button + .v8-quiet-button::before {
+  content: "·";
+  margin-right: 16px;
+  color: var(--cn-ink-tertiary);
 }
 
 /* The 240/208 map-height rule governs a *rendered* map. With no trustworthy

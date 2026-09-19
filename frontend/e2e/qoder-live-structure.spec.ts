@@ -59,6 +59,11 @@ function activity(id: string, title: string, start: string, end: string) {
     end_at: end,
     locked: false,
     protected: false,
+    /* Left deliberately empty. With coordinates the panel starts a real
+       maplibre map, which needs to fetch a raster style and tiles — on this
+       offline harness that makes the gate hang, so what is measurable here is
+       the honest empty state, not the rendered map. The branch is asserted and
+       logged below rather than silently conflated. */
     metadata: {},
     cost_status: "UNKNOWN",
   };
@@ -247,9 +252,25 @@ test.describe("Qoder Live structure order (Phase 2)", () => {
     expect(replan).not.toBeNull();
     expect(disruption!).toBeLessThan(replan!);
 
-    // Bounded mobile map: 200–270 tall, not wider than the viewport.
-    expect(mapBox!.height).toBeGreaterThanOrEqual(200);
-    expect(mapBox!.height).toBeLessThanOrEqual(270);
+    /* Ruling #4 + an honesty note the previous version of this gate owed.
+       The box measured here is whichever branch is on screen: with no
+       coordinates the panel renders its empty state (which must now stay
+       compact), and only a networked harness can exercise the 240/208 sized
+       map. Logging the branch keeps the evidence from claiming more than it
+       checked. */
+    const isEmpty = (await page.getByTestId("v8-map-empty").count()) > 0;
+    console.log(
+      `[live-map] branch=${isEmpty ? "honest-empty-state" : "rendered-map"} height=${Math.round(mapBox!.height)}px`,
+    );
+    if (isEmpty) {
+      expect(
+        mapBox!.height,
+        `empty map state must not inherit map height (got ${Math.round(mapBox!.height)}px)`,
+      ).toBeLessThanOrEqual(156);
+    } else {
+      expect(mapBox!.height).toBeGreaterThanOrEqual(200);
+      expect(mapBox!.height).toBeLessThanOrEqual(270);
+    }
     expect(mapBox!.width).toBeLessThanOrEqual(412);
 
     // A proposal is present, so the primary Accept CTA exists and the Copilot
