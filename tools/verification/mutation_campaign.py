@@ -248,11 +248,9 @@ def main() -> int:
     campaign = Campaign()
     for sabotage in selected:
         path = REPO / sabotage.source
-        # Bytes, not text: `Path.write_text` translates "
-" to the platform
-        # newline, so a campaign that restores a file by rewriting it would leave
-        # every line of the checkout changed.  Verification must not touch what it
-        # is verifying.
+        # Bytes, not text: write_text translates LF to the platform newline, so a
+        # campaign that restores a file by rewriting it would leave every line of the
+        # checkout changed.  Verification must not touch what it is verifying.
         original_text = path.read_bytes().decode("utf-8")
         if sabotage.original not in original_text:
             print(f"!! {sabotage.key}: anchor not found in {sabotage.source}; skipping")
