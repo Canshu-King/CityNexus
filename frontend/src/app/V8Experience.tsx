@@ -1542,22 +1542,20 @@ function Hub({
             {zh ? `${tripDayCount} 天` : `${tripDayCount} days`}
           </p>
         </div>
-        <div className="v8-hub-actions">
-          <button className="v9-language v8-home-language" data-testid="home-language" data-contrast-role="control" aria-label="Switch language" onClick={switchLocale}>
-            {t("nav.language")}
-          </button>
-          <button className="v8-outline-button" onClick={onNewJourney}>
-            {t("trial.newJourney")}
-          </button>
-          <button
-            className="v8-primary"
-            data-testid="hub-plan-with-ai"
-            onClick={onPlanWithAi}
-          >
-            <Icon name="spark" />
+        {/* Pass-8 ruling #1/#2: with an active journey the hero's
+            "查看实时行程" is the ONLY primary action on this screen. These are
+            path-switching and authoring utilities, so they read as one line of
+            quiet text links below the summary instead of four stacked
+            full-width buttons competing with the hero. The duplicated language
+            toggle is gone — the topbar already owns that control. */}
+        <div className="v8-hub-actions" data-testid="hub-secondary-actions">
+          <button type="button" className="v8-quiet-button" data-testid="hub-plan-with-ai" onClick={onPlanWithAi}>
             {locale.startsWith("zh") ? "AI 帮我规划" : "Plan my trip with AI"}
           </button>
-          <button className="v8-outline-button" onClick={() => onNavigate("studio")}>
+          <button type="button" className="v8-quiet-button" onClick={onNewJourney}>
+            {t("trial.newJourney")}
+          </button>
+          <button type="button" className="v8-quiet-button" onClick={() => onNavigate("studio")}>
             {t("hub.openStudio")}
           </button>
         </div>
