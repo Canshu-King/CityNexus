@@ -151,7 +151,12 @@ def _reference_projection(journey_id: str) -> dict[str, Any]:
     nxt = next(
         (item for item in activities[index + 1 :] if item.status not in TERMINAL), None
     )
-    leg = legs[index] if 0 <= index < len(legs) else None
+    # Independent re-derivation of the same rule the product now applies: a leg is the
+    # transfer *out of* Now, so an index with no resolved Now gets no leg even when the
+    # leg list is longer than the activity list.  If the oracle kept `legs[index]` alone
+    # it would leak on exactly the shape ORD-0006 constructs, and the comparison would
+    # then report the oracle's own mistake as a product divergence.
+    leg = legs[index] if now is not None and 0 <= index < len(legs) else None
     return {
         "cursor_status": status,
         "persisted_cursor": cursor,
@@ -380,3 +385,214 @@ def test_projection_matches_the_reference_after_an_accepted_replan() -> None:
         headers={"Idempotency-Key": f"oracle-accept-{proposal['id']}"},
     ).status_code == 200
     _oracle_case(journey_id)
+
+
+
+# --------------------------------------------------------------------------
+# ORD-0006 / ORD-0007: the leg tuple, and the two consumers of "is there a Next"
+# --------------------------------------------------------------------------
+def _legs_beyond_the_last_activity(journey_id: str) -> int:
+    """Bring the ACTIVE plan to ``len(legs) == len(activities) + 1``.
+
+    Written from scratch because no shipped path builds this shape: the demo plan
+    stores no legs at all, and every product writer pairs consecutive activities, so it
+    produces ``len(activities) - 1`` of them.  The schema permits more - a leg's
+    Activity endpoints are nullable, and a provider-backed connection between two place
+    keys is a complete fact on its own - which is exactly why the projection must not
+    infer a Next from the leg list being longer than the activity list.
+
+    So this case is contract hardening, not a reproduction: it pins the rule "STALE (or
+    finished) means the whole tuple is empty" against the only state in which the old
+    index-bound version could be caught lying.  Each leg carries its own duration and
+    the AUTO mode, so a leaked one is recognisable in a projection instead of being
+    mistaken for the legitimate answer of a different index.
+    """
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None and journey.active_plan_version_id
+        activities = list(
+            session.scalars(
+                select(Activity)
+                .where(Activity.plan_version_id == journey.active_plan_version_id)
+                .order_by(Activity.sequence_no)
+            ).all()
+        )
+        assert activities, "the demo plan has no activities to hang legs on"
+        existing = list(
+            session.scalars(
+                select(JourneyLeg)
+                .where(JourneyLeg.plan_version_id == journey.active_plan_version_id)
+                .order_by(JourneyLeg.sequence_no)
+            ).all()
+        )
+        target = len(activities) + 1
+        sequence = max([leg.sequence_no for leg in existing], default=0)
+        for offset in range(target - len(existing)):
+            sequence += 1
+            session.add(
+                JourneyLeg(
+                    id=f"leg-qoder-overflow-{journey_id[-6:]}-{sequence}",
+                    journey_id=journey.id,
+                    plan_version_id=journey.active_plan_version_id,
+                    sequence_no=sequence,
+                    from_key=f"place-qoder-overflow-{sequence}",
+                    to_key=f"place-qoder-overflow-{sequence + 1}",
+                    mode="AUTO",
+                    depart_at=activities[-1].end_at,
+                    arrive_at=activities[-1].end_at,
+                    duration_min=29 + offset,
+                    distance_m=1200,
+                    cost_status="UNKNOWN",
+                    walking_min=0,
+                    transfers=0,
+                    reliability_score=0.0,
+                    weather_exposure="UNKNOWN",
+                    provider_key="qoder-overflow-gate",
+                    # Both columns are NOT NULL, and the honest value is a synthetic
+                    # fixture: these legs exist to make the leg list longer than the
+                    # activity list, not to pretend a provider measured them.
+                    provenance="SYNTHETIC_FIXTURE",
+                    captured_at=activities[-1].end_at,
+                )
+            )
+        session.commit()
+        return sequence
+
+
+def _edge_view(journey_id: str) -> dict[str, Any]:
+    """What the companion device is told, which used to be a second opinion."""
+    created = client.post(
+        f"/api/v1/journeys/{journey_id}/edge/devices",
+        json={"display_name": "differential device"},
+    )
+    assert created.status_code in (200, 201), created.text
+    device = created.json()
+    snapshot = client.get(
+        f"/api/v1/edge/devices/{device['device_id']}/journey-snapshot",
+        headers={"X-Edge-Token": device["device_token"]},
+    )
+    assert snapshot.status_code == 200, snapshot.text
+    return snapshot.json()
+
+
+def test_a_stale_cursor_with_more_legs_than_activities_nulls_the_whole_tuple() -> None:
+    """ORD-0006: STALE means Now, Next *and* the NextLeg are all empty.
+
+    Asserted as one tuple on purpose.  Checking ``now_activity_id`` alone is what let
+    a leg through with nothing in front of it, and the leak only appears in this
+    shape, so a plan with more legs than activities is part of the fixture, not an
+    incidental detail.  It must hold in the stored snapshot, in what the Today/Live
+    surface is served, and in what the device is told.
+    """
+    journey_id, activities = _started_journey()
+    _legs_beyond_the_last_activity(journey_id)
+    activities_now, legs_now, _cursor = _plan_rows(journey_id)
+    stored_legs, stored_activities = len(legs_now), len(activities_now)
+    assert stored_legs > stored_activities, (
+        "the fixture no longer has more legs than activities, so this case "
+        "measures nothing"
+    )
+
+    _set_cursor(journey_id, _off_plan_activity_id(journey_id))
+    projection = _served_projection(journey_id)
+    assert projection["cursor_status"] == "STALE"
+    assert projection == {
+        **projection,
+        "now": None,
+        "now_activity_id": None,
+        "now_state": "STALE_CURSOR",
+        "next": None,
+        "next_activity_id": None,
+        "next_state": None,
+        "next_leg_id": None,
+        "next_mode": "NONE",
+        "next_eta_min": 0,
+    }, f"a stale cursor still projected part of the window: {projection}"
+    assert projection["persisted_cursor"] not in {item["id"] for item in activities}
+
+    edge = _edge_view(journey_id)
+    assert edge["execution"]["next_leg_id"] is None
+    assert (edge["mode"], edge["eta_min"], edge["next_leg_id"]) == ("NONE", 0, None), edge
+
+
+def test_a_finished_journey_with_extra_legs_projects_no_departure_step() -> None:
+    """The second leak path, reached without a corrupt cursor at all.
+
+    A null cursor with every activity terminal is a legal end state: the absent-cursor
+    fallback searches for the first pending step, finds none, and lands on the same
+    out-of-range index a stale cursor does.  A device told "Journey complete" and two
+    minutes later "walk 23 minutes" is the same fabrication in cleaner clothes.
+    """
+    journey_id, activities = _started_journey()
+    _legs_beyond_the_last_activity(journey_id)
+    _set_cursor(journey_id, None, {item["id"]: "COMPLETED" for item in activities})
+
+    projection = _served_projection(journey_id)
+    assert projection["cursor_status"] == "ABSENT_FALLBACK"
+    assert projection["now_activity_id"] is None
+    assert projection["now_state"] == "COMPLETE"
+    assert projection["next_activity_id"] is None
+    assert (projection["next_leg_id"], projection["next_mode"], projection["next_eta_min"]) == (
+        None,
+        "NONE",
+        0,
+    ), f"a finished journey still projected a leg: {projection}"
+
+    edge = _edge_view(journey_id)
+    assert (edge["mode"], edge["eta_min"], edge["next_leg_id"]) == ("NONE", 0, None), edge
+    assert edge["next_title"] == "Journey complete"
+
+
+def test_edge_and_v9_agree_on_whether_a_next_step_exists() -> None:
+    """ORD-0007: one question, one answer.
+
+    ``edge_snapshot`` used to call the shared projection with an empty leg list and
+    then recompute the window from scratch, so a single response carried both answers
+    in different fields: ``execution`` naming a next activity while the device fields
+    said there was none.  The reproduced shape is a cursor left on a step the traveller
+    finished while later steps are still pending - Now is genuinely empty, Next is not.
+    """
+    journey_id, activities = _started_journey()
+    _set_cursor(journey_id, activities[1]["id"], {activities[1]["id"]: "COMPLETED"})
+
+    projection = _served_projection(journey_id)
+    assert projection["cursor_status"] == "VALID", projection
+    assert projection["now_activity_id"] is None, projection
+    assert projection["next_activity_id"], (
+        "this case is only worth running while the shared projection does see a next step"
+    )
+
+    edge = _edge_view(journey_id)
+    assert edge["next_state"] == projection["next_state"], (edge["next_state"], projection)
+    assert edge["next_state"], edge
+    assert edge["execution"]["next_activity_id"] == projection["next_activity_id"]
+    assert (edge["mode"], edge["eta_min"]) == (
+        projection["next_mode"],
+        projection["next_eta_min"],
+    ), "the device got a different leg answer than the snapshot it also carries"
+
+
+def test_edge_and_v9_agree_when_there_really_is_no_next_step() -> None:
+    """The other half of the same invariant, so agreement is not one-sided.
+
+    With the cursor on the final pending step there is genuinely nothing after it:
+    both consumers must answer null, and the surface must not fall back to "the first
+    activity" or to a leftover leg to fill the gap.
+    """
+    journey_id, activities = _started_journey()
+    last = activities[-1]["id"]
+    _set_cursor(journey_id, last)
+
+    projection = _served_projection(journey_id)
+    assert projection["cursor_status"] == "VALID"
+    assert projection["now_activity_id"] == last
+    assert projection["next_activity_id"] is None
+
+    edge = _edge_view(journey_id)
+    assert edge["next_state"] is None, edge
+    assert edge["next_title"] == "Journey complete"
+    assert edge["execution"]["next_activity_id"] is None
+    assert (edge["mode"], edge["eta_min"]) == (
+        projection["next_mode"],
+        projection["next_eta_min"],
+    )

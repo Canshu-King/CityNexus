@@ -1478,25 +1478,28 @@ def edge_snapshot(session: Session, device: EdgeDevice) -> dict[str, Any]:
         if journey.active_plan_version_id
         else []
     )
-    execution = _execution_truth(activities, [], journey.current_activity_id)
-    current_index = next(
-        (index for index, item in enumerate(activities) if item.id == execution["now_activity_id"]),
-        len(activities),
-    )
-    now_item = activities[current_index] if current_index < len(activities) else None
-    next_item = next(
-        (item for item in activities[current_index + 1 :] if item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}),
-        None,
-    )
-    next_leg = (
-        session.scalar(
-            select(JourneyLeg).where(
-                JourneyLeg.plan_version_id == journey.active_plan_version_id,
-                JourneyLeg.sequence_no == current_index + 1,
-            )
-        )
+    legs = (
+        session.scalars(
+            select(JourneyLeg)
+            .where(JourneyLeg.plan_version_id == journey.active_plan_version_id)
+            .order_by(JourneyLeg.sequence_no)
+        ).all()
         if journey.active_plan_version_id
-        else None
+        else []
+    )
+    # One source, one answer.  This used to call the shared projection with an empty
+    # leg list and then recompute current_index / Now / Next / leg by hand from its
+    # result, so a single Edge response could carry two different stories: the
+    # projection naming a next activity while the device-facing fields said there was
+    # none, and (before the leg was bound to a trustworthy Now) the other way round.
+    # A device cannot be told "is there a next step?" twice with two answers.
+    execution = _execution_truth(activities, legs, journey.current_activity_id)
+    by_id = {item.id: item for item in activities}
+    now_item = (
+        by_id.get(str(execution["now_activity_id"])) if execution["now_activity_id"] else None
+    )
+    next_item = (
+        by_id.get(str(execution["next_activity_id"])) if execution["next_activity_id"] else None
     )
     c4 = session.scalar(
         select(Commitment)
@@ -1559,8 +1562,9 @@ def edge_snapshot(session: Session, device: EdgeDevice) -> dict[str, Any]:
         ),
         "next_state": next_item.status if next_item else None,
         "next_at": next_item.start_at if next_item else None,
-        "mode": next_leg.mode if next_leg else "NONE",
-        "eta_min": next_leg.duration_min if next_leg else 0,
+        "mode": execution["next_mode"],
+        "eta_min": execution["next_eta_min"],
+        "next_leg_id": execution["next_leg_id"],
         "c4_countdown_min": c4_countdown,
         "risk": risk,
         "autopilot_state": autopilot_state,
