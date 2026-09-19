@@ -383,3 +383,63 @@ pass-9 里我提交过一个"让 Live 的『现在』标签不再折行"的 comm
    （它会改变 harness 启动方式，影响其它 lane 的只读输入约定）。
 4. 你提的"最终 release candidate 前用干净 checkout + 自己的 lockfile npm ci 重建一次"
    我留到 integration freeze 执行，不在这轮占用视觉线收口。
+
+---
+
+# pass-11 integration evidence closeout
+
+按裁决只做三件事，没有扩面。
+
+## 22. ① map-height 的真相：不是数据库污染
+
+你的判断方向对，而且实际比"旧断言没迁移"还多一层。同一个文件里两处矛盾 + 一处竞态：
+
+- Phase 4 仍硬断言 238–242 / 200–216，而 Phase 2 已承认无可信坐标时走 honest empty state（≤156px）。
+  同一 fixture，两条互相矛盾的规则，旧的输了。
+- 门还在面板**切换中**读取。诊断输出直接自相矛盾：`branch=rendered-map height=208px`，
+  而同一时刻页面上那个节点其实是 97px 的 empty 面板。
+
+现在统一成一个 helper：先等 `[data-testid=v8-map-empty]` 或真地图 canvas 出现，再读，再按分支断言。
+三个 Live 状态一致报告 `branch=honest-empty-state height=97px`，因为 mock fixture 本来就没有可信坐标。
+240/208 的区间**保留写在代码里但没有可达路径**（需要真坐标 + 瓦片访问），没有偷偷删掉。
+
+顺带按你的 evidence hygiene 纠正了 `capture-visual.mjs` 的注释：它等的不是 MapLibre style/idle，
+而是"看起来像 tile 的请求 1.5 秒内不再新增"（20 秒上限），而且它根本拿不到 map 实例。
+证据不变，描述不再越界。
+
+## 23. ② HEAD 与数字对齐
+
+`COMMITS.txt` 之前只到 `f34d50e`，而报告声明 `f5117f4`——包确实不能自证。
+本轮重跑并把清单、报告、README、`fe_full_pass11.json` 全部对齐到**同一次运行**：
+
+| 项 | 值 |
+|---|---|
+| HEAD | `dafe091`（pass-11 ① 之后） |
+| 全量 Playwright | **35 expected / 11 unexpected / 0 flaky**（stats 块原样引用，306.3s） |
+| `qoder-*` | 29 passed（含 branch-aware map 门 10 passed） |
+| contrast | Today/Live × light/dark × 390/1280 全 0 |
+| 后端同环境 | 827 passed / 15 skipped / 0 failed（基线 762 / 0） |
+
+之前 34/12 与 35/11 的差别来自我引用了不同次运行，这是记账错误，不是产品差异，已按单次运行固定。
+
+## 24. ③ 三条当前 spec 的定性：全是规格漂移，没有一条是共享状态
+
+关键实验：把这三条**单独**跑（同一 HEAD，setup 种子相同），结果与全量一致地失败。
+
+| spec | 首个失败点 | 单跑 | 全量 | 定性 |
+|---|---|---|---|---|
+| `product-v8` mobile composition | `getByTestId('v8-agent-submit')` 永不出现（60s timeout） | 失败 | 失败 | **规格漂移**：AgentComposer 那套控件已被 Copilot dock 取代，`v8-agent-submit` 在 src 里不存在。我上一轮只改了 `v8-agent-composer`→`v18-copilot-dock`，漏了 submit 这一步 |
+| `real-world-trip-operations-v9` | `getByLabel('Reservation JSON')` 永不出现（60s timeout） | 失败 | 失败 | **规格漂移**：`bookings.reservationJson` 这个 i18n key 还在字典里，但已没有任何组件使用它，即 bookings 页的 JSON 粘贴入口在当前产品里不是这个形状 |
+| `v10-live-execution` | heading `Choose your next leg.` not found | 失败 | 失败 | **规格漂移（待定位）**：`live.title` 的 en 值确实就是这句，所以问题不在文案，而在该 spec 没接入 per-spec journey（我没把它列进 pass-10 的四条），页面停在 setup 向导。属于 fixture 归属未完成，不是产品坏了 |
+
+**因此按你设的门槛，测试基础设施改造不该授权**：没有任何一条呈现
+"同一 HEAD、单跑稳定 PASS、全量稳定 FAIL" 的形态。`workers: 1` 下 per-worker DB
+本来也无效，这一点你已指出。剩下的红灯是三条规格需要按当前产品重写，
+其中 `v10-live-execution` 只需补上它自己的 journey 归属。
+
+## 25. 请判
+
+1. ①②③ 是否构成 `BLOCKED_ON_E2E_EVIDENCE_CLOSEOUT` 的解除条件，还是仍要求我先把这三条重写到绿。
+2. `v10-live-execution` 我判断是"fixture 归属未完成"，是否直接按 pass-10 的方式接入 `_qoderFreshJourney` 即可。
+3. `product-v8` 的 Copilot 提交步骤与 `v9` 的预订导入入口，需要按**当前**产品形状重写断言：
+   这两处涉及"当前认可的行为是什么"，我不替你定，请你或负责人给出目标断言，或者授权我按现状调查后提出草案。
