@@ -42,6 +42,11 @@ from app.agent.delegation_policy import (
     update_policy,
 )
 from app.agent.gateway import AgentToolGateway
+from app.concurrency_guards import journey_write_lock
+from app.replanning.commitment_remap import (
+    RemapConflict as CommitmentRemapConflict,
+    resolve_commitment_target,
+)
 from app.agent.guardian import guardian_status, scan_guardian
 from app.agent.mission import create_mission, mission_payload
 from app.agent.mission_plan import mission_plan_for_model
@@ -8595,6 +8600,49 @@ def _accept_replan_impl(
     authorization_decision: str | None = None,
     reason_codes: tuple[str, ...] = (),
 ):
+    """Serialize acceptance for one Journey across its whole transaction.
+
+    Acceptance reads the base plan, the proposal status, the active C4
+    commitments and plan feasibility, and only then writes.  Two callers that
+    both pass those checks against the same pre-transition state would each
+    produce a plan transition, which is how a Journey ends up with two ACTIVE
+    PlanVersions.  The lock therefore starts before the first read and is
+    released after the commit — locking the write alone would not help, because
+    the second caller's validation has already happened by then.
+
+    The lookup that finds the Journey id happens outside the lock and is only
+    used to choose a lock key, so the identity map is expired before delegating:
+    everything below must re-read under the lock rather than trust it.
+    """
+
+    kwargs = {
+        "actor_type": actor_type,
+        "actor_id": actor_id,
+        "policy_version": policy_version,
+        "authorization_decision": authorization_decision,
+        "reason_codes": reason_codes,
+    }
+    located = session.get(ReplanProposalModel, str(proposal_id))
+    journey_id = located.journey_id if located is not None else None
+    if journey_id is None:
+        # Unknown proposal: let the body below produce the canonical 404.
+        return _accept_replan_serialized_impl(proposal_id, idempotency_key, session, **kwargs)
+    with journey_write_lock(journey_id):
+        session.expire_all()
+        return _accept_replan_serialized_impl(proposal_id, idempotency_key, session, **kwargs)
+
+
+def _accept_replan_serialized_impl(
+    proposal_id: UUID,
+    idempotency_key: str | None,
+    session: Session,
+    *,
+    actor_type: str = "system",
+    actor_id: str | None = None,
+    policy_version: int | None = None,
+    authorization_decision: str | None = None,
+    reason_codes: tuple[str, ...] = (),
+):
     if idempotency_key is None:
         raise HTTPException(422, "Idempotency-Key header is required")
     try:
@@ -8694,68 +8742,35 @@ def _accept_replan_impl(
         .where(Activity.plan_version_id == proposed.id)
         .order_by(Activity.sequence_no)
     ).all()
-    active_c4_commitments = session.scalars(
+    active_commitments = session.scalars(
         select(CommitmentModel).where(
             CommitmentModel.journey_id == journey.id,
             CommitmentModel.status == "ACTIVE",
-            CommitmentModel.level == "C4_Anchored",
         )
     ).all()
-    for commitment in active_c4_commitments:
+    for commitment in active_commitments:
         policy = json.loads(commitment.policy_json or "{}")
-        semantic_key = str(policy.get("semantic_key") or "")
-        scheduled_start = str(policy.get("scheduled_start_at") or "")
-        time_boundary = (
-            "END"
-            if str(policy.get("anchor_role") or "").upper() == "DEPARTURE"
-            else "START"
+        anchored = (
+            session.get(Activity, commitment.activity_id) if commitment.activity_id else None
         )
-        # A commitment stores the *canonical* semantic key (for example
-        # ``v12:<journey>:departure-anchor``), while an Activity carries that key
-        # in metadata and its own Place id in ``place_id``.  Comparing place_id
-        # against the semantic key could never match, so accepting a replan
-        # always failed with "cannot remap an active C4 commitment".
-        legacy_key = str(policy.get("semantic_node_key") or "")
-        # The same commitment can be spelled as a canonical semantic key
-        # (v12:<journey>:arrival-anchor), a bare structural node
-        # (arrival-anchor), or an activity/Place id.  Accept every equivalent
-        # spelling so a legacy C4 anchor still remaps.
-        wanted = {semantic_key, legacy_key}
-        wanted |= {item for item in (semantic_key, legacy_key) if item}
-        wanted |= {f":{item}" for item in (semantic_key, legacy_key) if item}
-
-        def _matches_commitment(activity: Any) -> bool:
-            metadata = _json_object(activity.metadata_json, {})
-            candidates = {
-                str(activity.place_id or ""),
-                str(activity.city_service_id or ""),
-                str(metadata.get("semantic_key") or ""),
-                str(metadata.get("semantic_node_key") or ""),
-            }
-            if not any(
-                candidate and any(candidate.endswith(term) for term in wanted if term)
-                for candidate in candidates
-            ):
-                return False
-            moment = activity.end_at if time_boundary == "END" else activity.start_at
-            try:
-                # Compare the *instant*.  The proposed plan is normalised to the
-                # journey's offset while the commitment may hold the same
-                # instant in UTC, so string equality would be wrong.
-                return datetime.fromisoformat(moment) == datetime.fromisoformat(
-                    scheduled_start
-                )
-            except (TypeError, ValueError):
-                return False
-
-        replacement = next(
-            (activity for activity in proposed_activities if _matches_commitment(activity)),
-            None,
-        )
-        if replacement is None:
-            # A preserved commitment must remain addressable on the accepted
-            # active plan; fail safe rather than persisting a stale pointer.
-            raise HTTPException(409, "accepted replan cannot remap an active C4 commitment")
+        protected = commitment.level == "C4_Anchored"
+        try:
+            replacement = resolve_commitment_target(
+                policy=policy,
+                anchored_activity=anchored,
+                candidates=list(proposed_activities),
+                subject="accepted replan",
+            )
+        except CommitmentRemapConflict as exc:
+            if protected:
+                # Zero matches means the accepted plan silently dropped something the
+                # traveller was promised; more than one means two activities claim the
+                # same anchor and picking one would invent an identity the record does
+                # not carry.  Both fail closed rather than persist a guessed pointer.
+                raise HTTPException(
+                    409, f"accepted replan cannot remap an active C4 commitment: {exc}"
+                ) from exc
+            continue
         commitment.activity_id = replacement.id
         commitment.updated_at = decided_at
 
@@ -9812,32 +9827,38 @@ def create_journey_transaction(
 ):
     if idempotency_key is None:
         raise HTTPException(422, "Idempotency-Key header is required")
-    try:
-        provider, provider_failure = _mock_payment_provider(payload.provider_key)
-        item = commerce_create_transaction(
-            session,
-            journey_id=str(journey_id),
-            booking_id=str(payload.booking_id) if payload.booking_id else None,
-            order_id=str(payload.order_id) if payload.order_id else None,
-            transaction_type=payload.transaction_type,
-            requested_amount_minor=payload.amount.amount_minor,
-            requested_currency=payload.amount.currency,
-            provider=provider,
-            idempotency_key=idempotency_key,
-            source_strength_codes=SOURCE_COMMITMENT_STRENGTHS,
-            force_failure=provider_failure
-            or payload.force_failure
-            or payload.failure_token is not None
-            or x_mock_failure == "FORCE_PAYMENT_FAIL",
-        )
-        session.commit()
-        return _transaction_payload(item)
-    except (IdempotencyConflict, CommerceConflict) as exc:
-        session.rollback()
-        raise HTTPException(409, str(exc)) from exc
-    except (CommerceValidationError, ValueError) as exc:
-        session.rollback()
-        raise HTTPException(422, str(exc)) from exc
+    # Held across the commit and the rollback: a capture validates a booking, then
+    # promotes the commitment behind it, so releasing between validation and commit
+    # would let a concurrent replan switch the authoritative plan and leave that
+    # promotion pointing at an activity no active plan contains.
+    with journey_write_lock(str(journey_id)):
+        session.expire_all()
+        try:
+            provider, provider_failure = _mock_payment_provider(payload.provider_key)
+            item = commerce_create_transaction(
+                session,
+                journey_id=str(journey_id),
+                booking_id=str(payload.booking_id) if payload.booking_id else None,
+                order_id=str(payload.order_id) if payload.order_id else None,
+                transaction_type=payload.transaction_type,
+                requested_amount_minor=payload.amount.amount_minor,
+                requested_currency=payload.amount.currency,
+                provider=provider,
+                idempotency_key=idempotency_key,
+                source_strength_codes=SOURCE_COMMITMENT_STRENGTHS,
+                force_failure=provider_failure
+                or payload.force_failure
+                or payload.failure_token is not None
+                or x_mock_failure == "FORCE_PAYMENT_FAIL",
+            )
+            session.commit()
+            return _transaction_payload(item)
+        except (IdempotencyConflict, CommerceConflict) as exc:
+            session.rollback()
+            raise HTTPException(409, str(exc)) from exc
+        except (CommerceValidationError, ValueError) as exc:
+            session.rollback()
+            raise HTTPException(422, str(exc)) from exc
 
 
 @app.get("/api/v1/transactions/{transaction_id}", response_model=TransactionSchema)

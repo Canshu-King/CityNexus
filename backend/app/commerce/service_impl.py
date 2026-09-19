@@ -32,6 +32,10 @@ from app.commerce.validators import (
     validate_transaction_target_ids,
 )
 from app.core.audit import record_audit
+from app.replanning.commitment_remap import (
+    RemapConflict as CommitmentRemapConflict,
+    resolve_commitment_target,
+)
 from app.db.models import (
     Activity,
     Booking,
@@ -182,6 +186,38 @@ def _booking_policy(
         "source_refs": {"booking_external_ref": external_ref},
     }
     return policy, decision.rank
+
+
+def _remap_commitment_to_active_plan(session: Session, commitment: Commitment) -> None:
+    """Keep a commitment addressable before its payment is allowed to promote it.
+
+    ``Commitment.activity_id`` is PlanVersion-local.  A capture that arrives after
+    a concurrent replan would otherwise promote a pointer into a superseded plan
+    to C4 truth, which is exactly the "protected commitment" the traveller believes
+    they hold.  Either the now-active plan contains the same commitment target — by
+    structural identity, not by name — or the capture fails closed.
+    """
+
+    journey = session.get(Journey, commitment.journey_id)
+    if journey is None or not journey.active_plan_version_id or not commitment.activity_id:
+        return
+    anchored = session.get(Activity, commitment.activity_id)
+    if anchored is not None and anchored.plan_version_id == journey.active_plan_version_id:
+        return
+    policy = json.loads(commitment.policy_json or "{}")
+    candidates = session.scalars(
+        select(Activity).where(Activity.plan_version_id == journey.active_plan_version_id)
+    ).all()
+    try:
+        target = resolve_commitment_target(
+            policy=policy,
+            anchored_activity=anchored,
+            candidates=list(candidates),
+            subject="captured booking",
+        )
+    except CommitmentRemapConflict as exc:
+        raise CommerceConflict(str(exc)) from exc
+    commitment.activity_id = target.id
 
 
 def create_booking(
@@ -571,6 +607,10 @@ def create_transaction(
         commitment = session.get(Commitment, commitment_id)
         if commitment is None:
             raise CommerceConflict("target commitment is missing")
+        # Resolve the pointer first: everything below promotes what this commitment
+        # is attached to, so an attachment into a superseded plan must never reach
+        # the strength update.
+        _remap_commitment_to_active_plan(session, commitment)
         policy = json.loads(commitment.policy_json or "{}")
         decision = derive_strength_rank(
             CommitmentFacts(

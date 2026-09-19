@@ -1464,6 +1464,18 @@ def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] |
         .where(LocationObservation.journey_id == journey.id)
         .order_by(LocationObservation.captured_at.desc(), LocationObservation.id.desc())
     )
+    # The cursor and the activity list below come from the same read, so the
+    # projection can say whether the persisted position is actually one of this
+    # plan's activities.  Without it a consumer gets a cursor value and a list it
+    # does not intersect, and has no way to notice.
+    cursor_status = (
+        "VALID"
+        if journey.current_activity_id
+        and any(item.id == journey.current_activity_id for item in activities)
+        else "STALE"
+        if journey.current_activity_id
+        else "ABSENT_FALLBACK"
+    )
     disruptions = session.scalars(
         select(Event)
         .where(Event.journey_id == journey.id, Event.status.in_(("DETECTED", "ACKNOWLEDGED")))
@@ -1483,11 +1495,13 @@ def _active_plan_payload(session: Session, journey: Journey) -> dict[str, Any] |
             "replayable": bool(plan.mobility_evidence_json),
         },
         "current_activity_id": journey.current_activity_id,
+        "cursor_status": cursor_status,
         "activities": [
             {
                 "id": item.id,
                 "sequence_no": item.sequence_no,
                 "type": item.activity_type,
+                "status": item.status,
                 "title": item.title,
                 # Stable identity.  The canonical plan projection
                 # (GET /api/v1/plans/{id}) has always carried these, and a

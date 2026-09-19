@@ -12,6 +12,10 @@ from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from app.core.audit import record_audit
+from app.replanning.commitment_remap import (
+    RemapConflict as CommitmentRemapConflict,
+    resolve_commitment_target,
+)
 from app.operations.reservation_identity import (
     quarantine_duplicate_confirmation_identities,
 )
@@ -131,11 +135,23 @@ def _execution_truth(
         (index for index, item in enumerate(activities) if item.id == current_activity_id),
         None,
     )
-    if current_index is None:
+    # The cursor is an assertion about identity, so "absent" and "unresolvable"
+    # are different facts and must not share a branch.  A null cursor is a legal
+    # pre-execution state: the journey has started and nothing has been completed
+    # yet, so projecting the first pending activity is the truth.  A cursor that
+    # names a specific activity which is not on this plan — because it was
+    # deleted, or because a replan replaced the plan underneath it — is stale or
+    # corrupt state.  Falling back there would render a plausible Now/Next/NextLeg
+    # that the authoritative record does not support, which is worse than
+    # rendering nothing: a traveller would act on it.
+    stale_cursor = current_activity_id is not None and current_index is None
+    if current_activity_id is None:
         current_index = next(
             (index for index, item in enumerate(activities) if item.status not in terminal),
             len(activities),
         )
+    elif stale_cursor:
+        current_index = len(activities)
     now_item = (
         activities[current_index]
         if 0 <= current_index < len(activities) and activities[current_index].status not in terminal
@@ -164,10 +180,23 @@ def _execution_truth(
         "next": compact(next_item),
         "now_activity_id": now_item.id if now_item else None,
         "next_activity_id": next_item.id if next_item else None,
-        "now_state": now_item.status if now_item else "COMPLETE",
+        "now_state": now_item.status if now_item else ("STALE_CURSOR" if stale_cursor else "COMPLETE"),
         "next_state": next_item.status if next_item else None,
         "next_mode": next_leg.mode if next_leg else "NONE",
         "next_eta_min": next_leg.duration_min if next_leg else 0,
+        # The oracle compares the leg itself, not only what was derived from it:
+        # two legs can share a mode and a duration and still be different promises.
+        "next_leg_id": next_leg.id if next_leg else None,
+        # Fail-closed has to be observable, otherwise a consumer cannot tell
+        # "nothing is due" from "the record contradicts itself".
+        "cursor_status": (
+            "STALE"
+            if stale_cursor
+            else "ABSENT_FALLBACK"
+            if current_activity_id is None
+            else "VALID"
+        ),
+        "persisted_cursor": current_activity_id,
     }
 
 
@@ -739,27 +768,39 @@ def materialize_stay_option(
             Commitment.status == "ACTIVE",
         )
     ).all()
-    by_semantic = {
-        str(_load(item.metadata_json, {}).get("semantic_key") or ""): item
-        for item in activities
-    }
-    by_place = {item.place_id: item for item in activities}
     for commitment in active_commitments:
         policy = _load(commitment.policy_json, {})
         role = str(policy.get("anchor_role") or "").upper()
+        anchored = (
+            session.get(Activity, commitment.activity_id) if commitment.activity_id else None
+        )
         # Reservation anchors resolve to their canonical structural node; a
         # booking/order anchor keeps its own activity-anchored identity.
         if role in {"ARRIVAL", "DEPARTURE"}:
-            candidate_key = f"v12:{journey.id}:{role.lower()}-anchor"
+            wanted_key = f"v12:{journey.id}:{role.lower()}-anchor"
         else:
-            candidate_key = str(policy.get("semantic_key") or policy.get("semantic_node_key") or "")
-        activity = by_semantic.get(candidate_key) or by_place.get(candidate_key)
-        if activity is not None:
-            commitment.activity_id = activity.id
-            if role in {"ARRIVAL", "DEPARTURE"}:
-                policy["semantic_key"] = candidate_key
-            commitment.policy_json = _json(policy)
-            commitment.updated_at = _now()
+            wanted_key = str(policy.get("semantic_key") or policy.get("semantic_node_key") or "")
+        if anchored is not None and anchored.plan_version_id == plan.id and wanted_key in {
+            str(policy.get("semantic_key") or ""),
+            str(policy.get("semantic_node_key") or ""),
+        }:
+            continue
+        try:
+            activity = resolve_commitment_target(
+                policy={**policy, "semantic_node_key": wanted_key},
+                anchored_activity=anchored,
+                candidates=list(activities),
+                subject="authoritative plan activation",
+            )
+        except CommitmentRemapConflict as exc:
+            # Previously this branch just skipped the commitment, leaving a live
+            # C4 anchored to an activity on the plan this one replaced.
+            raise ValueError(f"cannot bind an active commitment: {exc}") from exc
+        commitment.activity_id = activity.id
+        if role in {"ARRIVAL", "DEPARTURE"}:
+            policy["semantic_key"] = wanted_key
+        commitment.policy_json = _json(policy)
+        commitment.updated_at = _now()
 
     twin = session.get(JourneyTwin, journey.id)
     if twin is None:
@@ -1488,13 +1529,25 @@ def edge_snapshot(session: Session, device: EdgeDevice) -> dict[str, Any]:
         autopilot_state = "DISABLED"
     device.last_sequence += 1
     device.updated_at = _now()
+    stale_projection = execution["cursor_status"] == "STALE"
     return {
         "sequence": device.last_sequence,
         "time": execution_now.isoformat(),
         "journey_state": journey.status,
-        "now_title": now_item.title if now_item else "No active step",
-        "now_state": now_item.status if now_item else "COMPLETE",
-        "next_title": next_item.title if next_item else "Journey complete",
+        # "Nothing is due" and "the record contradicts itself" are different
+        # facts; the device must not be told the journey is complete because the
+        # cursor points at an activity this plan does not contain.
+        "now_title": (
+            "Execution position unresolved"
+            if stale_projection
+            else now_item.title if now_item else "No active step"
+        ),
+        "now_state": now_item.status if now_item else ("STALE_CURSOR" if stale_projection else "COMPLETE"),
+        "next_title": (
+            "Next step unavailable"
+            if stale_projection
+            else next_item.title if next_item else "Journey complete"
+        ),
         "next_state": next_item.status if next_item else None,
         "next_at": next_item.start_at if next_item else None,
         "mode": next_leg.mode if next_leg else "NONE",
@@ -1503,6 +1556,7 @@ def edge_snapshot(session: Session, device: EdgeDevice) -> dict[str, Any]:
         "risk": risk,
         "autopilot_state": autopilot_state,
         "active_plan_version_id": journey.active_plan_version_id,
+        "cursor_status": execution["cursor_status"],
         "execution": execution,
         "execution_truth_id": f"edge:{journey.id}:{journey.active_plan_version_id}:{journey.current_activity_id}",
     }
