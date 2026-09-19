@@ -32,6 +32,49 @@ const VIEWPORTS = [
 ];
 const SCHEMES = ["light", "dark"];
 
+
+/* Pass-9 MAP_VISUAL_EVIDENCE_PENDING: a half-grey map was either a tile that
+   had not arrived when the shutter fired, or a map that genuinely cannot load
+   here. Those two need different owners, so the harness has to stop guessing.
+   Before every shot we count tile requests, wait until tile traffic goes quiet
+   (or a ceiling is hit), and record failures — the screenshot is then taken
+   with that evidence attached. */
+const TILE_HINT = /(tile|maplibre|vector|raster|\.pbf|demotion|arcgis|osm)/i;
+
+function watchTiles(page, out) {
+  page.on("request", (req) => {
+    if (TILE_HINT.test(req.url())) out.requested += 1;
+  });
+  page.on("requestfailed", (req) => {
+    if (TILE_HINT.test(req.url())) {
+      out.failed += 1;
+      if (out.samples.length < 4) out.samples.push(`FAIL ${req.url().slice(0, 90)}`);
+    }
+  });
+  page.on("response", (res) => {
+    if (TILE_HINT.test(res.url()) && res.status() >= 400) {
+      out.failed += 1;
+      if (out.samples.length < 4) out.samples.push(`HTTP ${res.status()} ${res.url().slice(0, 80)}`);
+    }
+  });
+}
+
+async function waitForTileQuiescence(page, out, { quietMs = 1500, ceilingMs = 20000 } = {}) {
+  const started = Date.now();
+  let lastCount = -1;
+  let lastChange = Date.now();
+  while (Date.now() - started < ceilingMs) {
+    await page.waitForTimeout(250);
+    if (out.requested !== lastCount) {
+      lastCount = out.requested;
+      lastChange = Date.now();
+    } else if (out.requested > 0 && Date.now() - lastChange >= quietMs) {
+      return { settled: true, waitedMs: Date.now() - started };
+    }
+  }
+  return { settled: false, waitedMs: Date.now() - started };
+}
+
 mkdirSync(OUT, { recursive: true });
 
 const browser = await chromium.launch();
@@ -46,9 +89,12 @@ for (const screen of SCREENS) {
         deviceScaleFactor: 2,
       });
       const page = await context.newPage();
+      const tile = { requested: 0, failed: 0, samples: [] };
+      watchTiles(page, tile);
       await page.goto(`${BASE}${screen.url}`, { waitUntil: "load" });
       await page.getByTestId(screen.ready).first().waitFor({ timeout: 30_000 });
-      await page.waitForTimeout(1800);
+      const settle = await waitForTileQuiescence(page, tile);
+      await page.waitForTimeout(1200);
 
       const facts = await page.evaluate(() => {
         const bodyText = document.body.innerText;
@@ -66,9 +112,11 @@ for (const screen of SCREENS) {
       });
 
       const file = `${screen.name}-${vp.name}-${scheme}.png`;
+      tile.settled = settle.settled;
+      tile.waitedMs = settle.waitedMs;
       await page.screenshot({ path: `${OUT}/${file}`, fullPage: false });
       await page.screenshot({ path: `${OUT}/${file.replace(".png", "-full.png")}`, fullPage: true });
-      rows.push({ screen: screen.name, vp: vp.name, scheme, file, ...facts });
+      rows.push({ screen: screen.name, vp: vp.name, scheme, file, ...facts, tiles: tile });
       await context.close();
     }
   }
@@ -77,7 +125,13 @@ await browser.close();
 
 for (const r of rows) {
   console.log(
-    `${r.screen.padEnd(5)} ${r.vp.padEnd(13)} ${r.scheme.padEnd(5)} ${r.file.padEnd(34)} h=${String(r.pageHeightPx).padStart(5)}px overflow=${r.horizontalOverflowPx}px bg=${r.background} fg=${r.foreground} kicker="${r.kickerText ?? "-"}"`,
+    `${r.screen.padEnd(5)} ${r.vp.padEnd(13)} ${r.scheme.padEnd(5)} ${r.file.padEnd(34)} h=${String(r.pageHeightPx).padStart(5)}px overflow=${r.horizontalOverflowPx}px tiles=${String(r.tiles.requested).padStart(3)} failed=${String(r.tiles.failed).padStart(2)} settled=${String(r.tiles.settled).padStart(5)} waited=${r.tiles.waitedMs}ms`,
   );
 }
+const tileFailures = rows.filter((r) => r.tiles.failed > 0 || !r.tiles.settled);
+console.log(
+  tileFailures.length
+    ? `\nMAP EVIDENCE: ${tileFailures.length}/${rows.length} shots had tile failures or never settled — e.g. ${tileFailures[0].tiles.samples.join(" ; ") || "no failures recorded"}`
+    : "\nMAP EVIDENCE: every shot settled with zero tile failures — a grey region in a picture is therefore not a load-timing artefact.",
+);
 console.log(`\n${rows.length} screens captured, ${rows.length * 2} files in ${OUT}`);

@@ -876,3 +876,30 @@ button[data-testid^="mode-"],
 .v8-day-detail-title small {
   color: var(--cn-ink-secondary);
 }
+
+
+/* Pass-9 blocker #2 — the idle dock presents as the same right-aligned pill the
+   decision state already proved sufficient, so it stops covering Today's
+   content while remaining one tap from the assistant. */
+.cn-copilot-dock.idle-compact {
+  right: 10px;
+  left: auto;
+  width: auto;
+}
+.cn-copilot-dock.idle-compact .cn-copilot-edge {
+  width: auto;
+  min-height: 42px;
+  padding: 0 12px;
+  font-size: 11px;
+}
+
+
+/* The Live "现在 / Now" badge sits in a flex row and was being squeezed into two
+   lines at 412px. It is a two-character tag: it must never wrap, and it must not
+   be allowed to shrink. (Note for whoever reads the history: the first attempt at
+   this rule silently no-oped because its existence check matched the dark-theme
+   colour rule instead of itself.) */
+.v8-live-label {
+  flex: none;
+  white-space: nowrap;
+}
