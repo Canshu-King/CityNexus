@@ -1908,3 +1908,36 @@ Live 与卡已经在读的同两个 locale 键，所以可见文案改动只涉�
 | typecheck / typecheck:all / build | 0 / 0 / 0 |
 | 权威 E2E（current-product 全套） | **51 expected / 0 unexpected / 0 flaky / 0 skipped**（run `ord26-e2e`，web :3427 → backend :8427，一次性库 `_ord26-e2e.db`，ai=disabled，reuseExistingServer=false） |
 | 本线 HEAD | ``d322547`` |
+
+
+---
+
+## 84. ORD-0029：一个键名只该有一套词表，以及"门自己把自己跑红"的那类断言
+
+`data-cursor-status` 之前同时存在两种取值域：后端契约是
+`VALID | STALE | ABSENT_FALLBACK`，而 `V8Experience.tsx` 的前端派生值是
+`VALID | STALE | ABSENT`。两边各自都说得通，但同名不同域，下一个读测试的人会拿
+`"ABSENT"` 去推后端枚举——今晚反复在防的正是这种误读。
+
+订单给了两条路：(a) 改名成前端展示态的名字，或 (b) 保留名字加注释说明对应关系。
+两条都没选，因为都留下两套词表。共享解析器（`src/lib/executionWindow.ts`，ORD-0026 建）本来
+就产出与后端**同一域**的 `cursorStatus`，标题直接发布它即可：
+
+```
+before:  STALE | VALID | ABSENT                 ← ABSENT 在后端从不出现
+after:   STALE | VALID | ABSENT_FALLBACK | UNKNOWN   ← UNKNOWN 是"还没拿到计划"，取数态不是执行态
+```
+
+原来断言 `ABSENT` 的两处，现在各自说出它真正构造了哪个事实：没有游标 = `ABSENT_FALLBACK`；
+游标指向一个已完成活动 = `VALID` 且无 Now。后者正是 `ABSENT` 抹掉的区别，方向和 ORD-0007、
+ORD-0026 一致。
+
+同一次改动里删掉了所有"拦截计数"断言，理由是测量而不是洁癖：配对跑出现过一次
+`Expected: >= 1 / Received: 0`，同一条命令再跑就过——最脆的那行是"route handler 命中了几次"。
+service worker 可以从缓存回答请求，而那些例子里每一条实质断言都只有注入状态真的到达页面才可能成立，
+所以"拦截没生效"本来就会让真断言变红；计数只多提供了一种**为错误的理由变红**的方式。
+
+实测：`typecheck:all` 退出码 0；受影响两份 spec 连跑两次各 6 passed / 0 failed
+（run `ord29-c` / `ord29-d`，各自端口与一次性库）。收口复跑在 `94295e5`：
+后端 **913 passed / 15 skipped / 0 failed**（64.94s）、build 0、权威 E2E
+**51 expected / 0 unexpected / 0 flaky / 0 skipped**（run `ord29-full`，web :3437 → backend :8437）。
