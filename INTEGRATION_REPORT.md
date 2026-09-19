@@ -1843,3 +1843,68 @@ E2E 从 §80 的 47 加到 51（本 spec 从 2 例增到 4 例）。
 把它单独重跑是 **3 passed / 16.0s**。结论：不是产品缺陷，也不假装它没发生——这条门在满负载下
 会自己超时，属于验收稳定性欠账，和 §80 那次 7 failed/1 error 的噪声同源；我没有为它放宽
 任何断言，也没有把负载下的红擦掉，只是补了一次可复现的隔离复跑作为证据。
+
+
+---
+
+## 83. ORD-0028 与 ORD-0026：一支更宽的门进树，游标家族的第三处结案
+
+### 83.1 ORD-0028：RX-4 更正版 generate 门吸收（8 节点）
+
+`backend/tests/test_rx4_c4_generate_gate.py` 换成 delivery 版，逐字节一致（24,513 B，LF，SHA-256 相符）。
+拷贝前逐行核过 diff 只有两处：`from app.db.models import` 一行扩成 `Activity, Commitment, Journey`，
+以及追加的 `_import_unresolvable_reservation` + 新节点
+`test_nothing_outside_the_commitment_pins_the_unreachable_anchor`。没有夹带别的。
+
+跑（命令原文）：
+
+```
+cd D:\moodle\_qoder_integration_20260919\backend
+DEEPSEEK_API_KEY= CITYNEXUS_AI_API_KEY= CITYNEXUS_AI_ENABLED=false \
+  D:\moodle\CityNexus\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider --no-header tests/test_rx4_c4_generate_gate.py
+-> 8 collected, 8 passed, 2 warnings in 1.53s
+```
+
+全量后端 **913 passed / 15 skipped / 0 failed**（912 + 1）。
+
+顺带把 §78.4 我认下来的那条缺口销掉：那个"ACTIVE 计划里不得有任何 Activity 钉住不可解析锚点"的前提，
+现在由 RX-4 自己的新节点守（还多了未确认对照 201+3 候选、以及全库 `strays == 0`）。
+它自我修正的那一步（上一版报 "C4G owners 2/2"、更正后实测 1 failed / 7 passed、owner 一个）
+也该记一笔：**收窄的断言才是能被突变检验的断言**。
+
+给 Commander 的连带后果要更正一个数：SUITES 的 collect 现在默认 12×12 下是 **91**，
+按 60×30 换算即 **139**，不是 138。原因是那 11 个路径里有两处进了新节点——
+RX-4 这支 +1，以及 `test_sol_execution_cursor.py::test_the_edge_copy_honours_the_same_leg_rule_as_the_projection`
+（`7f9bb69`，ORD-0011 (4)）+1。除这两处外我没再动 SUITES 里的文件，可以一次跑完整场矩阵再引用 C 节。
+
+### 83.2 ORD-0026：游标家族的第三处，结案
+
+`V10LiveExecutionPanel` 用 `clock.data.current_activity_id` 判断"是否在进行中"——那是**持久指针的存在性**，
+不是执行位置。一个字段给出两个错答：陈旧游标 → "in progress"（人根本不在那一步）；
+旅程已完成 → "awaiting plan"（有计划，只是走完了）。现在它解析窗口后四态回答：
+解析出步骤 → in progress；游标不可解析 → Execution position unresolved；
+有计划但无待执行 → Nothing is due right now；无计划 → Awaiting plan。
+
+解析器被**移**到 `src/lib/executionWindow.ts`（不是再抄一份）并带上 `cursorStatus`：
+这一夜三次分歧（Live、recovery 卡、这个面板）根因都是"同一个三态规则有多个实现"，
+第四份拷贝只会看起来一致到有人突变它为止。文案没有新造：unresolved / nothing-due 复用
+Live 与卡已经在读的同两个 locale 键，所以可见文案改动只涉及既有标签——这就是订单里说的
+"不需要 UI 车道配合的那一半"。Story 被迫显式写 `plan: null`：窗口由 props 解析之后，
+"这块故事里没有计划"必须是故事自己下的判断，而不是组件替它猜。
+
+实测（指标加了 `data-testid="v10-current-step"` 让断言点名字段而不是猜文本）：
+
+| 状态 | 结果 |
+| --- | --- |
+| 干净态本 spec 4 collected | 5 passed / 0 failed（12.7s，run `ord26-b`，backend :8423，一次性库，ai=disabled） |
+| 把旧的"存在性判断"塞回去 | 2 failed / 3 passed：已完成步骤那例期望 "Nothing is due right now" 实到 "in progress"；STALE 那例期望 "Execution position unresolved" 实到 "in progress"；源文件字节还原 sha256 相符 |
+| 门 | typecheck / typecheck:all 退出码 0 |
+
+### 83.3 本轮收口数字
+
+| 门禁 | 结果 |
+| --- | --- |
+| 后端全量 | **913 passed / 15 skipped / 0 failed**（62.28s，在 `d322547` 上重跑） |
+| typecheck / typecheck:all / build | 0 / 0 / 0 |
+| 权威 E2E（current-product 全套） | **51 expected / 0 unexpected / 0 flaky / 0 skipped**（run `ord26-e2e`，web :3427 → backend :8427，一次性库 `_ord26-e2e.db`，ai=disabled，reuseExistingServer=false） |
+| 本线 HEAD | ``d322547`` |
