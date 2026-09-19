@@ -1221,18 +1221,19 @@ Activity / JourneyLeg 行重算，比较 `cursor_status`、`now_activity_id`、
 handler 里那个 `catch` 只用于页面放弃的请求，所以我加了 `served >= 2` 断言，
 防止"handler 一直失败"变成静默通过。
 
-## 68. 门禁数字（authoritative 一次运行 `scfull2`，tree `79d2098`）
+## 68. 门禁数字（authoritative 一次运行 `scfull3`，tree `faaa4a8`）
 
 | 门禁 | 结果 |
 |---|---|
-| authoritative 当前产品套件 | **46 expected / 0 unexpected / 0 flaky / 0 skipped**（121.1s） |
-| 与 pass-16 的 45 之差 | +1 = 新增 stale-cursor 用例；没有用例被删（pass-15 的四条 port 与 D 全部保留且仍绿） |
-| 后端全量 | 861 passed / 15 skipped / 0 failed（68.1s；pass-16 是 836，+25 = 本 pass 收敛用例） |
-| Qoder/Sol truth contracts 子集 | 171 passed / 0 failed（12.9s） |
+| authoritative 当前产品套件 | **47 expected / 0 unexpected / 0 flaky / 0 skipped**（127.7s） |
+| 与 pass-16 的 45 之差 | +2 = `qoder-stale-cursor`（A/H）与 `qoder-preventive-lifecycle`（C0）；没有用例被删，pass-15 的四条 port 与 D 全部保留且仍绿 |
+| 后端全量 | 865 passed / 15 skipped / 0 failed（62.0s；pass-16 是 836，+29 = 本 pass 收敛用例） |
+| Qoder/Sol truth contracts 子集 | 175 passed / 0 failed（14.8s） |
 | SQLite 争用告警 | 0 次 |
-| `typecheck` / `typecheck:all` / `vite build` | 干净 |
+| `typecheck` / `typecheck:all` / `vite build` | 干净（build 5.86s） |
 | legacy 非门禁套件（AI 关闭） | 4 passed（20.1s） |
 | mutation 检查 | 8 破坏 / 7 killed / 1 survived（原因见 §67，非"全绿"） |
+| 数据库不变量探针 | 带索引 REFUSED（1 个 ACTIVE 留下）/ 去掉该索引 ACCEPTED（2 个 ACTIVE）|
 
 ## 69. 没有做的，以及请裁
 
@@ -1250,3 +1251,86 @@ handler 里那个 `catch` 只用于页面放弃的请求，所以我加了 `serv
 3. 基线问题（§61）请确认：convergence 叠加在 pass-16 之后是否可接受；
    若要求必须从 0af1905 起算，请给出处置已交付 pass-16 的方式，我不会自行回退。
 4. 与 GPT 仲裁那条线（pass-16 §60 的 5 个问题）仍未回复，两条线的裁决顺序请定。
+
+## 70. C0：仲裁抓到的面板 lifecycle 缺陷（我自己没发现）
+
+pass-16 的裁决确认 D 的后端能力与证据都关闭，但指出 `V14PreventivePanel` 有一个窄
+blocker，而且正好和同一轮报告 §55 里我自己写下的事实互相打脸：
+
+> GuardianRun 先以 `status=RUNNING / action_status=PLANNING` 落库，之后才变 EXECUTED
+
+我在 API 层为此加了"等同一 run id 到 COMPLETED"的 poll，却在面板里写着"看到任何
+preventive run 就停止轮询"。所以旅客如果在动作进行中间打开 `/v8/authoritative`，
+面板会永久停在 PLANNING，直到手动刷新。测试没抓到，是因为它自己在 API 层先把 run
+poll 到 COMPLETED 才打开页面。
+
+修法按裁决收窄到两点：只有 `status === "COMPLETED"` 才停轮询（RUNNING 与
+FAILED_RETRYABLE 继续，因为重试会改变面板正在断言的内容）；不再靠 `runs[0]` 猜
+"这是最新一条"，改按 `created_at` 选最新。顺带把裁决要求的排序契约钉成后端测试：
+`/guardian/status` 确实按 `created_at desc, id desc` 返回，所以那是一条契约而不是一
+个巧合，面板同时也自己排序，将来排序变了不会让它去描述一条旧 run。
+
+新增 `qoder-preventive-lifecycle.spec.ts`：先让 autopilot 真跑出 COMPLETED/EXECUTED
+的预防 run（`/guardian/scan` 是反应式控制器，永远不产出预防，这点是测出来的），停掉
+autopilot，再把 `/guardian/status` 的第一次响应改成同一 run 的 PLANNING 形态。页面
+先渲染 PLANNING，随后**不 reload、不点击**自动变 EXECUTED。
+`_sc_c0_sensitivity.py` 把面板改回"见到 run 就停"，这条用例即失败——它不是摆设。
+
+## 71. 把"一个 Journey 只有一个 ACTIVE 计划"交给数据库
+
+裁决给的硬边界是：进程内锁可以是第二道保护，不能成为 CX-EXT-002/003/004 的唯一
+closure 依据，否则判 MITIGATED_SINGLE_PROCESS 而不是 CLOSED。我上一轮的提交正好踩在
+这条线上，所以改成持久层决定：
+
+1. `ux_plan_versions_single_active` —— `plan_versions(journey_id) WHERE status='ACTIVE'`
+   的 partial unique index。两个 ACTIVE 计划在数据库里不可表示，任何进程都一样。
+   `_collapse_duplicate_active_plans` 在建索引前清理历史违规（保留最新一条，其余转
+   `SUPERSEDED`），否则老库根本建不起来。
+2. 接受路径的两次状态翻转改成**条件 UPDATE**：base 必须仍是 ACTIVE、candidate 必须
+   仍是 CANDIDATE，谓词由数据库对当前行求值，rowcount 不为 1 就回滚 + 409；commit 时
+   的 IntegrityError 翻译成同一个 409，而不是 500。
+3. Trip Studio 被新索引当场拦下，而且它报的是真问题：它把子计划以 `status='ACTIVE'`
+   插入、之后才把 base 转 SUPERSEDED，于是同一事务里存在过一瞬的两个答案。现在顺序
+   由产品决定而不是由 flush 调度决定：建为 CANDIDATE → 退休 base 并 flush → 再晋升。
+4. `locked_commitments_preserved` 按裁决定位成 **DERIVED_GUARD_ASSERTION,
+   NOT SOURCE_OF_TRUTH**：字段保留（UI/日志/审计有价值），但接受前用**当下**的
+   Commitment 行、booking/payment 状态与两个计划的规范活动身份重新推导；若期间新
+   CAPTURE 出的受保护承诺会被候选计划破坏，接受被拒。这正是裁决要求并入 CX-EXT-004
+   的那件事。
+
+证据不是自述，是两条独立可跑的探针：
+
+- `test_two_sessions_without_the_lock_still_cannot_produce_two_active_plans`：绕开
+  `journey_write_lock`，两个独立 Session 直接调 serialized 实现（等价于两个后端进程），
+  结果仍是恰好一个 ACTIVE、一个 accepted、一个 409，且零悬挂承诺。
+- `_sc_db_invariant_probe.py`：同一份 schema 建两个临时库，用裸 SQL 写两个 ACTIVE，
+  带索引那个 `REFUSED (UNIQUE constraint failed: plan_versions.journey_id)` 且只留
+  1 个；把那一行索引去掉，同一写入 `ACCEPTED 2 ACTIVE plans`。所以保证在索引里。
+
+副作用值得记一笔：把锁改成空操作后，收敛套件从"5 条失败"变成"3 条失败"——不是因为
+变弱了，而是那两条竞态用例现在由数据库兜住，不再依赖锁。这正是裁决要的分工。
+
+## 72. 接受的仲裁更正
+
+- **记账错误**：交付消息里把 pass-16 包写成"21 payload + MANIFEST"，实际是
+  22 payload + MANIFEST = 23 entries（MANIFEST 自身也列 22 条）。数字来自包体，
+  我写消息时手数错了条目。包不改（改了就换 SHA），在此更正。
+- **D 的 owner 位置**：完整 preventive owner 只放 `/v8/authoritative`，不复制进
+  `/v8/live`；Live 的责任是渲染预防后的当前权威旅程、且不重复询问已完成的动作——
+  这一点已由 `predictive-real-city-v6` 用活动身份对齐证明。
+- **real-place 撤回**：接受。预防的语义是"real-city 证据影响了风险与可行性判断并促成
+  提前重规划"，不要求最终方案必须塞进一个 `real-place-*` POI；`place-tech-art →
+  place-city-park` 用时间余量吸收风险是合法的 preventive response。两个测试不互相
+  吞职责，"真实地点进入计划"仍由 v13-5 负责。
+- **locked_commitments_preserved**：不降级为装饰字段，也不当最高权威，定位成
+  derived guard assertion；已在 §71.4 落成"生成时算一次、接受前按当下承诺真值再验证"
+  的后端契约。
+- **基线**：确认 convergence 叠加在 `fec2204` 之上、不回退 `0af1905`；Sol 两个
+  commit 只作行为/测试参考，不整体 cherry-pick。§61 的处置与之一致。
+- **PROCESS_LOCAL_ONLY**：披露措辞采纳，硬边界（不能单独关闭 002/003/004）按 §71
+  落到数据库层，不再依赖锁。
+- **pass-17**：暂缓。顺序为 fec2204 → C0（已完成）→ Sol convergence A–H（已完成）→
+  外部复核 → PASS-17 clean-checkout freeze。pass-17 的两条新增要求已记下：后端也必须
+  由 clone 自己声明的环境建立（不得借 `D:\moodle\CityNexus\.venv`），以及运行后
+  `git status --short` 必须为空、任何源码/config/test 变化都算 freeze failure，且
+  freeze 期间需要改源码即当场 FAIL。
