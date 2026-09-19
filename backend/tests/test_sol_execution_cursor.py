@@ -596,3 +596,58 @@ def test_edge_and_v9_agree_when_there_really_is_no_next_step() -> None:
         projection["next_mode"],
         projection["next_eta_min"],
     )
+
+def _edge_sweep(journey_id: str) -> list[tuple[str, dict, dict]]:
+    """Every cursor state the device can be handed, with both copies of the answer."""
+    activities, _legs, _cursor = _plan_rows(journey_id)
+    cases: list[tuple[str, dict, dict]] = []
+
+    _set_cursor(journey_id, activities[1].id)
+    cases.append(("mid-journey cursor", _edge_view(journey_id), _served_projection(journey_id)))
+
+    _set_cursor(journey_id, activities[-1].id)
+    cases.append(("final cursor", _edge_view(journey_id), _served_projection(journey_id)))
+
+    _set_cursor(journey_id, activities[1].id, {activities[1].id: "COMPLETED"})
+    cases.append(
+        ("cursor on a finished step, later steps pending", _edge_view(journey_id), _served_projection(journey_id))
+    )
+
+    _legs_beyond_the_last_activity(journey_id)
+    _set_cursor(journey_id, _off_plan_activity_id(journey_id))
+    cases.append(("stale cursor with extra legs", _edge_view(journey_id), _served_projection(journey_id)))
+
+    _set_cursor(journey_id, None, {item.id: "COMPLETED" for item in activities})
+    cases.append(("finished journey", _edge_view(journey_id), _served_projection(journey_id)))
+
+    return cases
+
+
+def test_the_edge_copy_honours_the_same_leg_rule_as_the_projection() -> None:
+    """Two consumers of one tuple, and the tuple's own structural rule on both.
+
+    The device fields must not only equal the projection - they must each satisfy
+    ``leg id is None <=> (mode, eta) == ("NONE", 0)`` on their own, because a response
+    that is consistently wrong still leaves a watch face rendering a trip nobody promised.
+    """
+    journey_id, _activities = _started_journey()
+    seen = 0
+    for label, edge, projection in _edge_sweep(journey_id):
+        seen += 1
+        for side, values in (
+            ("edge", (edge["next_leg_id"], edge["mode"], edge["eta_min"])),
+            ("projection", (projection["next_leg_id"], projection["next_mode"], projection["next_eta_min"])),
+        ):
+            leg_id, mode, eta = values
+            missing = leg_id is None
+            sentinel = (mode, eta) == ("NONE", 0)
+            assert missing == sentinel, (
+                f"{label}: {side} encodes absence inconsistently "
+                f"(leg_id={leg_id!r} mode={mode!r} eta={eta!r})"
+            )
+        assert (edge["next_leg_id"], edge["mode"], edge["eta_min"]) == (
+            projection["next_leg_id"],
+            projection["next_mode"],
+            projection["next_eta_min"],
+        ), f"{label}: the device was told a different leg story than the snapshot it also carries"
+    assert seen == 5, f"only {seen} of the 5 cursor states were exercised"

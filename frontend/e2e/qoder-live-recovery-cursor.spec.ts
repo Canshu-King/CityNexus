@@ -131,6 +131,87 @@ test("the recovery card follows the cursor the product itself advanced", async (
   await expect(heading).toHaveText(activities[2].title);
 });
 
+test("a plan that holds no activities invents no current step", async ({
+  page,
+  request,
+}) => {
+  // The third named state in ORD-0011 (2): nothing to resolve from at all.  All three
+  // surfaces that could fill the gap - the twin's execution truth, the projection's plan
+  // window, and the card's own activity list - are handed the same empty plan, and none of
+  // them may produce a step out of nothing.
+  const { journeyId } = await startedJourney(request);
+  const seen = { twin: 0, experience: 0 };
+
+  // The card's list comes from /plans, not from the projection, so emptiness has to be
+  // applied there as well - otherwise this case measures a page whose list is full and
+  // proves nothing about an empty plan.
+  await page.route(`**/api/v1/journeys/${journeyId}/plans`, async (route) => {
+    let body: { activities?: Activity[] }[];
+    try {
+      body = await route.fetch().then((response) => response.json());
+    } catch {
+      return;
+    }
+    if (Array.isArray(body)) {
+      for (const plan of body) {
+        if (Array.isArray(plan?.activities)) plan.activities = [];
+      }
+    }
+    await route.fulfill({ json: body });
+  });
+
+  await page.route(`**/api/v1/journeys/${journeyId}/experience`, async (route) => {
+    let body: { active_plan?: { current_activity_id?: string; activities: Activity[] } };
+    try {
+      body = await route.fetch().then((response) => response.json());
+    } catch {
+      return;
+    }
+    if (body.active_plan) {
+      body.active_plan.current_activity_id = null;
+      body.active_plan.activities = [];
+    }
+    seen.experience += 1;
+    await route.fulfill({ json: body });
+  });
+
+  await page.route(`**/api/v1/journeys/${journeyId}/twin`, async (route) => {
+    let body: { context?: { execution?: Record<string, unknown> } };
+    try {
+      body = await route.fetch().then((response) => response.json());
+    } catch {
+      return;
+    }
+    if (body.context?.execution) {
+      body.context.execution = {
+        ...body.context.execution,
+        persisted_cursor: null,
+        now_activity_id: null,
+        now: null,
+        next_activity_id: null,
+        next: null,
+        next_leg_id: null,
+        next_mode: "NONE",
+        next_eta_min: 0,
+        cursor_status: "ABSENT_FALLBACK",
+      };
+    }
+    seen.twin += 1;
+    await route.fulfill({ json: body });
+  });
+
+  const { card, heading } = await openLive(page, journeyId);
+  await expect(card).toHaveAttribute("data-now-activity-id", "");
+  await expect(card).not.toContainText("Next:");
+  await expect(heading).toHaveAttribute("data-cursor-status", "ABSENT");
+  expect(seen.experience, "the projection was never intercepted").toBeGreaterThanOrEqual(1);
+  expect(seen.twin, "the twin was never intercepted").toBeGreaterThanOrEqual(1);
+  // Deliberately no assertion on seen.plans: the service worker can answer the plan list
+  // from cache, so the handler may legitimately never fire.  What is being guaranteed is
+  // the assertion above - no identifier may appear as Now - and that one does not depend
+  // on this counter.
+});
+
 test("a cursor that resolves to a finished step yields no Now on the Live heading", async ({
   page,
   request,

@@ -149,3 +149,95 @@ def test_the_final_activity_keeps_the_transfer_out_of_it_and_no_next_activity() 
     assert projection["next_leg_id"] == "leg-2"
     assert projection["next_mode"] == "walk"
     assert projection["next_eta_min"] == 22
+
+# --------------------------------------------------------------------------
+# ORD-0011 (1): the structural relationship between the three leg fields
+# --------------------------------------------------------------------------
+# The precise STALE tuple is already pinned by whole-dict equality above, so repeating
+# those four assertions here would add no coverage.  What was unowned is the *shape*
+# relationship, which has to hold in every state and in every plan shape:
+#
+#     next_leg_id is None   <=>   (next_mode, next_eta_min) == ("NONE", 0)
+#
+# A projection may say "no leg" in three legal shapes today - a plan with no legs at all,
+# one leg per hop, and a plan with more legs than activities (the `ON DELETE SET NULL`
+# state ORD-0006 had to construct) - and it has to say it under five cursor states and
+# three completion patterns.  The defect owned here is the mixed encoding: a null leg id
+# beside a mode or an ETA that still describes travel. `("NONE", 17)` or `(null, "AUTO", 0)`
+# is what a client renders as a spinner for a trip nobody promised.
+_SHAPE_PLANS = {
+    "zero-leg plan": (3, 0),
+    "one leg per hop": (3, 2),
+    "more legs than activities": (9, 10),
+}
+
+
+def _sweep(shape: str):
+    """Every (completion pattern x cursor state) combination for one plan shape."""
+    activity_count, leg_count = _SHAPE_PLANS[shape]
+    legs = [_leg(index) for index in range(leg_count)]
+    patterns = {
+        "all pending": lambda index: "PENDING",
+        "all completed": lambda index: "COMPLETED",
+        "prefix completed": lambda index: (
+            "COMPLETED" if index < activity_count // 2 else "PENDING"
+        ),
+    }
+    for pattern, status_of in patterns.items():
+        activities = [
+            _activity(index, status=status_of(index)) for index in range(activity_count)
+        ]
+        cursors: list[str | None] = [
+            None,
+            "act-from-superseded-plan",
+            activities[0].id if activities else None,
+            activities[-1].id if activities else None,
+        ]
+        for cursor in dict.fromkeys(cursors):
+            yield pattern, cursor, _execution_truth(activities, legs, cursor)
+
+
+@pytest.mark.parametrize("shape", sorted(_SHAPE_PLANS))
+def test_the_three_leg_fields_are_absent_or_present_together(shape: str) -> None:
+    combinations = list(_sweep(shape))
+    assert len(combinations) >= 8, f"{shape}: only {len(combinations)} combinations swept"
+
+    for pattern, cursor, projection in combinations:
+        missing = projection["next_leg_id"] is None
+        sentinel = (projection["next_mode"], projection["next_eta_min"]) == ("NONE", 0)
+        assert missing == sentinel, (
+            f"mixed absence encoding in shape {shape!r} / {pattern} / cursor={cursor!r}: "
+            f"next_leg_id={projection['next_leg_id']!r} but "
+            f"mode={projection['next_mode']!r} eta={projection['next_eta_min']!r}"
+        )
+        assert projection["cursor_status"] in {"VALID", "STALE", "ABSENT_FALLBACK"}
+        if projection["now_activity_id"] is None:
+            assert projection["next_leg_id"] is None, (
+                f"a leg was projected from a position nobody is standing at "
+                f"({shape} / {pattern} / cursor={cursor!r})"
+            )
+
+
+def test_a_projected_leg_is_always_one_of_this_plan_s_legs() -> None:
+    """The same invariant read positively.
+
+    A shown mode and ETA must name the leg they came from: a duration with no identity
+    cannot be refreshed, re-checked or explained, and a client displaying it has no way to
+    learn it was invented.
+    """
+    activities, legs = (
+        [_activity(index) for index in range(9)],
+        [_leg(index) for index in range(10)],
+    )
+    named = [item.id for item in legs]
+    for cursor in [None, activities[0].id, activities[4].id, activities[-1].id]:
+        projection = _execution_truth(activities, legs, cursor)
+        if projection["next_mode"] != "NONE" or projection["next_eta_min"] != 0:
+            assert projection["next_leg_id"], (
+                "a leg was described without naming it: "
+                f"{projection['next_mode']} / {projection['next_eta_min']} at cursor {cursor}"
+            )
+            assert projection["next_leg_id"] in named, (
+                f"the projection named {projection['next_leg_id']}, which is not one of this "
+                f"plan's {len(legs)} legs"
+            )
