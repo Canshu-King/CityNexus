@@ -911,3 +911,110 @@ River Cruise 仍在，且 `scanRequests == 0`（测试自己没去要决策，�
    还是记为已知限制？它影响任何"同一地点仍被保护"的当前表面证明。
 4. 四条 port-first 已清三条，剩 D。`INTEGRATION_CANDIDATE_READY_FOR_MAIN` 的签发条件现在是否可以
    定义为"authoritative current-product 0 unexpected + D 有 owner"，还是另有条件？
+
+---
+
+# pass-16（回应 §51 请判 1/2/3）：身份契约、真承诺、预防的表面主人
+
+## 52. C `place_id`：先诊断到层，再修那一层
+
+§51.3 那个"`/experience` 里 place_id 为 null"的问题判为契约缺陷并修掉。诊断是一次测量，
+不是猜测：同一次运行里，canonical 子计划 `GET /api/v1/plans/{id}` 报 6/6 活动带 place_id，
+同一个计划经 `GET /journeys/{id}/experience` 报 0/6。
+所以身份没有丢在 solver 或 accept 里，是丢在**投影层**。
+
+修在 `backend/app/stay_mobility.py::_active_plan_payload`：把 `place_id` 和 `city_service_id`
+放进活动投影。回归不是"字段存在"这种断言，而是整条链
+（generate → select → start → closure → request_replan → accept）跑完后比较两个投影的
+place_id 集合，`backend/tests/test_qoder_activity_identity_contract.py`，2 passed。
+第二条测试防的是反向偷懒：替代活动也必须带真 place_id，不能靠 null 蒙过比较。
+
+前端四条 spec 里所有 `/river cruise/i` 之类的标题匹配全部换成 place_id + protected。
+标题可翻译、可改名，不是键。
+
+## 53. A/B 承诺：fixture 里原本没有可保护的东西
+
+写 §48 时我用了 `locked_commitments_preserved`。测量结果说明那三个案例都是空转：
+demo 计划上的游船活动是 `locked: true` 而 `protected: false`——`protected` 由 ACTIVE
+Commitment 行推导，必须有 booking 且付款已 CAPTURE。也就是说"受保护承诺被保住了"
+在一个根本没有受保护承诺的 fixture 上恒真。
+
+现在三条（golden / envelope / zero-touch）加上预防案例，都通过公开端点先建真承诺：
+`POST /bookings` → `POST /transactions` CAPTURE（带 `Idempotency-Key`），
+而且必须在 `/start` 之前——行程中预订活动会被 422 拒绝（这也是测出来的）。
+共享 helper `protectCommitment()` 放在 `frontend/e2e/_qoderFreshJourney.ts`，
+它建完会回读 `/experience`，若 `protected` 没落地就抛错——四个各写一份、
+各自漂移成"大概受保护"正是仲裁要我避免的事。
+
+## 54. 一条我没能证明的主张，如实撤回
+
+预防案例里我加了"预防后的计划必须含 `real-place-*` 活动"，想证明预防 grounded 在真实城市。
+**跑出来是假的**：`place-tech-art → place-city-park`，六个活动仍是 demo 命名空间。
+原因也是查出来的：pytest 版 `test_v6_predictive_real_city.py` 之所以有 real-place，
+是因为它用 `seed_explicit_mobility` 把特定 leg 声明成显式 replay 事实，改变了 solver
+认为可负担的替代集；不带那层种子的真实 mobility 下，预防买到的是时间余量而不是换点。
+在这里硬断言就是在测 fixture，不是测产品。所以删掉该断言，改成两条可证的：
+`/provider-mesh` 必须含 `openstreetmap-replay` 的真城市候选，
+以及把 recomposition 前后 (place_id, start_at) 指纹打进运行日志。
+`v13-5-fully-grounded` 才是"真地点被选进计划"的所有者，这条不抢它的活。
+
+## 55. D/E 预防的表面主人（§51.1、§51.2 的处置）
+
+新增 `frontend/src/features/recovery/V14PreventivePanel.tsx`，挂在 `/v8/authoritative`
+的反应式恢复面板之上。它读的是 `GuardianRun` 本身而不是计划 diff，这样就不可能把
+reactive recovery 换个标签冒充 prevention：TRIGGER 行是 run 的 `trigger_kind`，
+TIMING 行是 `evidence.observation.forecast_before_hard_failure`，FORECAST 行是 run
+据以行动的那张快照，PLAN 行带 before/after 两个计划 id 的 data 属性，
+并显式写明"反应式结果由下面的面板负责"。
+
+§49 承认的那个可被无关文案骗过的文本哨兵已删除，换成按 testid + `data-run-id === run.id`
+的结构化断言。案例同时要求：跑动前无 CLOSURE/CRITICAL、真实 forecast payload 的
+`components.forecast_risk === 88`、`solver.kind === ORTOOLS_CP_SAT_V2`、承诺按身份仍在且
+仍 protected、`scanRequests === 0`。
+
+两个只有真跑才暴露的事实：
+1. 韧性**总分饱和**——提交 forecast 88 渲染成 `risk 100`，所以面板和测试都看
+   `forecast_risk` 分量，不看总分；
+2. `GuardianRun` 行先以 `status=RUNNING / action_status=PLANNING` 落库，重排完才变 EXECUTED。
+   只 poll"行出现"就会读到半成品并按 PLANNING 失败——补了一条按同一 run id 等终态的
+   poll，两条失败信息各自准确（从未出现 vs 出现但没完成）。
+3. 面板发现 run 后停止轮询：run 是持久证据，继续 3 秒一次只是和 autopilot 的写抢 SQLite。
+
+## 56. 归档套件的一个真实不确定性（新发现，非门禁）
+
+legacy 套件带 host `DEEPSEEK_API_KEY` 跑：3 passed / 1 failed，
+`Proactive Guardian …` 得到 `action_status=MODEL_NO_MUTATION`。
+同一棵树关掉 AI 开关跑：4 passed / 21.2s。
+所以那一条依赖外部模型回合，不是本轮改动引入。归档套件不签门禁，
+但它的数字以后必须连着 AI 开关状态一起报——已写进 `docs/LEGACY_E2E_MIGRATION.md`。
+
+## 57. 文档与事实对齐
+
+`docs/E2E_ACCEPTANCE_POLICY.md` 的 "Known-red by design" 列着四条现在已绿的案例，
+`docs/LEGACY_E2E_MIGRATION.md` 结尾还说它们"still red, deliberately"。两处按现状改写，
+并保留原则（红测试命名缺口 > 绿测试掩盖缺口）与将来留红时的写法要求。
+
+## 58. 门禁数字（同一次 authoritative 运行 `p16full1`，tree `6311382`）
+
+| 门禁 | 结果 |
+|---|---|
+| authoritative 当前产品套件 | **45 expected / 0 unexpected / 0 flaky / 0 skipped**（114.9s） |
+| 与 §50 的 44/1 之差 | D 从红转绿：不是删断言，是补了表面主人；总数 45 不变 |
+| `qoder-*`（视觉/对比/几何/无障碍预算） | 31 results / 0 failed（对比 4、dock 几何 3、live 结构 9、移动溢出 1、today hero 2、ack 7、budget 5） |
+| SQLite 争用告警 | 0 次 |
+| `typecheck` / `typecheck:all` / `vite build` | 全部干净（build 4.70s） |
+| 后端套件（同环境，单跑） | 836 passed / 15 skipped / 0 failed（56.7s；比 §50 多 2 条 = 身份契约回归） |
+| legacy 非门禁套件（AI 关闭） | 4 passed（21.2s） |
+
+## 59. 请判
+
+1. §54 那条撤回是否接受：预防在真实 mobility 下买到时间余量而非换点，
+   "真地点进入计划"的所有者仍是 v13-5。若你认为预防本身就必须引入 real-place，
+   那是产品语义要求，需要另开的实现线而不是测试里断言。
+2. §55 的 `V14PreventivePanel` 是我按 §51.1 批准边界做的最小承接（读 run、不改语义、
+   不复活旧控件）。是否接受为 D 的关闭，还是要它同时出现在 `/v8/live`？
+3. §53 之后 `locked_commitments_preserved` 这个 proposal 级 flag 仍被 envelope/zero-touch
+   两条读着（我已在其后加身份断言）。要不要把它降级为信息字段、以 plan 身份为准？
+4. 四条 port-first 全绿、0 unexpected、0 flaky。§51.4 提的签发条件
+   （authoritative 0 unexpected + D 有 owner）现已同时满足，是否签发
+   `INTEGRATION_CANDIDATE_READY_FOR_MAIN`，还是仍有 RC 项（OSM fallback、live-AI 韧性）挡在前面？

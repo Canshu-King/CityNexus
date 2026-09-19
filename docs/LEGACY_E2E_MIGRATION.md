@@ -94,9 +94,26 @@ Per-case record required by the ruling:
 | Assisted acceptance is policy-driven; route/feed evidence survive reload | a replan under ASSISTED requires confirmation, the approval receipt is consumed exactly once, and route evidence is provider-backed | the legacy event simulator / accept button and `.maplibre-container` route layers are not part of V8's acknowledgement flow | `POST /agent/tools/request_replan`, `/accept_replan`, `POST /agent/approvals/{id}`, `GET /route-evidence` | covered **in the current surface**: `frontend/e2e/qoder-ack-rendered.spec.ts`, `qoder-ack-resolution.spec.ts`, `backend/tests/test_qoder_live_replans_endpoint.py` | same |
 | Proactive Guardian launches the flagship recovery without a new chat prompt | a standing mission plus a scan can recover the flagship leg with CP-SAT V2 evidence, without the traveller asking | the Guardian console (`guardian-flagship-scan`, `guardian-decision`, `guardian-trace`) lives in the legacy tree | `PUT /guardian/mission`, `POST /guardian/scan`, solver `ORTOOLS_CP_SAT_V2` | `backend/tests/test_guardian_v4.py`, `test_guardian_model_evidence.py`, `test_v10_flagship_e2e.py` | same |
 
-Still in the acceptance suite, still red, deliberately (pass-15's work list):
-`golden.spec.ts` (reload persistence not yet handed over), `live-autopilot-v5.spec.ts`
-(zero-touch UI trigger), `predictive-real-city-v6.spec.ts` (autonomous prevention), and
-`product-hardening.spec.ts` → autonomous envelope-safe recovery through the Agent
-Gateway.  These four guard capabilities CityNexus is still building, so the behaviour
-check has to be re-expressed on the current surface before the legacy one is dropped.
+Those four Port-first verdicts were executed, not re-litigated: pass-15 re-expressed
+`golden.spec.ts`, `live-autopilot-v5.spec.ts` and the Agent-Gateway envelope case in
+`product-hardening.spec.ts` on the current V8 surface, and pass-16 gave
+`predictive-real-city-v6.spec.ts` a current owner (`V14PreventivePanel` on
+`/v8/authoritative`).  All four pass in the authoritative acceptance suite, which
+therefore has **no known-red case**; the table above is the historical judgement each
+was archived or ported under, kept as the record of why.
+
+What each one now asserts on the current surface, briefly: golden — accepted closure
+recovery is backend truth, survives reload, and the browser never held the plan;
+live-autopilot-v5 — the plan changes with no click or fill at all, and the audit feed
+names the actor as `AI_AGENT`; product-hardening — an AUTONOMOUS envelope executes the
+recovery and the panel shows the child version; predictive-real-city-v6 — a forecast
+alone produces `PREEMPTIVE_RECOVERY` before any hard failure, with the run's evidence
+rendered field by field.
+
+One measured caveat about the *archived* set: with a real `DEEPSEEK_API_KEY` present,
+the Proactive Guardian case is non-deterministic, because its flagship scan goes
+through the model and the model may return no mutation
+(`action_status = MODEL_NO_MUTATION`, where the assertion wants `EXECUTED`).  Measured
+on the same tree: 4 passed with the AI switch disabled, 3 passed / 1 failed with the
+host key inherited.  That suite is non-gating in any case, but its numbers must always
+be quoted together with the AI switch state.

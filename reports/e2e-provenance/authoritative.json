@@ -1,16 +1,16 @@
 {
   "authoritative": true,
   "suite": "current-product",
-  "runId": "p15full1",
+  "runId": "p16full1",
   "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
   "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
-  "frontendPort": 4219,
-  "backendPort": 8047,
-  "databaseUrl": "sqlite:///./_p15full1.db",
+  "frontendPort": 4221,
+  "backendPort": 8049,
+  "databaseUrl": "sqlite:///./_p16full1.db",
   "ai": "disabled",
   "reuseExistingServer": false,
   "workers": 1,
   "retries": 0,
-  "recordedAt": "2026-09-19T14:11:07.331Z",
-  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4219 backend=:8047 db=sqlite:///./_p15full1.db ai=disabled reuseExistingServer=false"
+  "recordedAt": "2026-09-19T15:10:36.433Z",
+  "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4221 backend=:8049 db=sqlite:///./_p16full1.db ai=disabled reuseExistingServer=false"
 }
