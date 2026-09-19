@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { protectCommitment } from "./_qoderFreshJourney";
 
 /* golden — backend truth for a closure recovery, and the persistence half of it.
  *
@@ -71,6 +72,20 @@ test("an accepted closure recovery is backend truth on V8 Live and survives relo
   );
   expect(plans.length, "the demo plan generator produced nothing").toBeGreaterThan(0);
   await api(`/api/v1/journeys/${journeyId}/plans/${plans[0].id}/select`, "POST");
+
+  const techArt = plans[0].activities.find((a) => a.place_id === "place-tech-art");
+  const cruise = plans[0].activities.find((a) => a.place_id === "place-river-cruise");
+  expect(techArt, "the plan has no Tech Art activity to close").toBeTruthy();
+  expect(cruise, "the plan has no River Cruise commitment to protect").toBeTruthy();
+
+  /* The commitment this recovery is not allowed to spend has to exist.  On the
+     demo plan the cruise is `locked: true` but `protected: false` until a booking
+     is created and its payment captured — `protected` is derived from ACTIVE
+     Commitment rows — so without this step the case would be asserting that
+     nothing was disturbed.  Booking is refused once the journey is travelling, so
+     it goes here, before /start, through the public endpoints. */
+  const commitment = await protectCommitment(request, journeyId, "place-river-cruise");
+
   /* Selecting a plan only makes it the current draft; the recovery machinery
      refuses a journey that is not travelling.  /start is the product's own
      transition (the client calls it startJourney), so the fixture goes the way a
@@ -80,11 +95,6 @@ test("an accepted closure recovery is backend truth on V8 Live and survives relo
     "POST",
   );
   expect(twinAfterStart.active_plan_version_id, "starting the journey produced no active plan").toBeTruthy();
-
-  const techArt = plans[0].activities.find((a) => a.place_id === "place-tech-art");
-  const cruise = plans[0].activities.find((a) => a.place_id === "place-river-cruise");
-  expect(techArt, "the plan has no Tech Art activity to close").toBeTruthy();
-  expect(cruise, "the plan has no River Cruise commitment to protect").toBeTruthy();
 
   const before = await api<{ active_plan: { id: string } }>(
     `/api/v1/journeys/${journeyId}/experience`,
@@ -183,32 +193,43 @@ test("an accepted closure recovery is backend truth on V8 Live and survives relo
   await expect(page.getByTestId("live-handled")).toBeVisible();
 
   const reloaded = await api<{
-    active_plan: { id: string; activities?: { title?: string; place_id?: string | null }[] };
+    active_plan: {
+      id: string;
+      activities?: {
+        title?: string;
+        place_id?: string | null;
+        locked?: boolean;
+        protected?: boolean;
+      }[];
+    };
   }>(`/api/v1/journeys/${journeyId}/experience`);
   expect(reloaded.active_plan.id, "the accepted plan did not survive a reload")
     .toBe(after.active_plan.id);
 
-  /* 6. The commitment the recovery was not allowed to spend.
-     Matched by title, not place id, because of what this run measured:
-     /journeys/{id}/plans/generate populates activity.place_id, but the accepted
-     plan served by /experience reports place_id as null for every activity.  The
-     traveller-facing surface therefore cannot prove "the same place is still
-     protected" from the experience payload — printed here so the gap is recorded
-     rather than papered over by a looser assertion. */
+  /* 6. The commitment the recovery was not allowed to spend — compared by
+     identity, not wording.  `place_id` is the stable key and an accepted replan
+     mints new activity ids, so a title match could pass while the place changed
+     and fail while nothing did.  Pass-16 fixed the projection that made this
+     impossible: /experience used to report place_id as null on the accepted plan,
+     which pushed consumers onto titles; GET /plans/{id} and /experience now agree.
+     `protected` is only true because step 1 filed a real booking and captured it. */
   const activities = reloaded.active_plan.activities ?? [];
-  const rendered = activities.map(
-    (item: { title?: string; place_id?: string | null }) =>
-      `${String(item.title ?? "?")}@${String(item.place_id ?? "no-place")}`,
-  );
-  const missingPlaceIds = activities.filter(
-    (item: { place_id?: string | null }) => !item.place_id,
-  ).length;
+  const missingPlaceIds = activities.filter((item) => !item.place_id).length;
+  const preserved = activities.find((item) => item.place_id === "place-river-cruise");
   console.log(
-    `[golden] accepted plan reports ${activities.length} activities, ` +
-      `${missingPlaceIds} of them with no place_id: ${JSON.stringify(rendered)}`,
+    `[golden] accepted plan ${reloaded.active_plan.id} reports ${activities.length} activities, ` +
+      `${missingPlaceIds} without a place_id; commitment booking=${commitment.bookingId} ` +
+      `commitment=${commitment.commitmentId ?? "n/a"} ` +
+      `cruise(locked=${preserved?.locked},protected=${preserved?.protected})`,
   );
+  expect(missingPlaceIds, "the accepted plan is still hiding activity identity")
+    .toBe(0);
   expect(
-    activities.some((item: { title?: string }) => /river cruise/i.test(String(item.title ?? ""))),
-    `the protected River Cruise commitment is not on the accepted plan; it holds ${JSON.stringify(rendered)}`,
-  ).toBe(true);
+    preserved,
+    `the committed River Cruise is not on the accepted plan; it holds ${JSON.stringify(
+      activities.map((item) => item.place_id),
+    )}`,
+  ).toBeTruthy();
+  expect(preserved?.protected, "the surviving cruise activity is no longer a protected commitment")
+    .toBe(true);
 });

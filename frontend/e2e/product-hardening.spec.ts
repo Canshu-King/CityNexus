@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { protectCommitment } from "./_qoderFreshJourney";
 
 /* PORT-FIRST (pass-15 B) — autonomous recovery that stays inside its envelope.
  *
@@ -122,6 +123,11 @@ test("an autonomous recovery executes inside its envelope and is observable on t
     { candidate_count: 1 },
   );
   await api(request, `/api/v1/journeys/${journeyId}/plans/${plans[0].id}/select`, "POST");
+  /* The envelope promises it will not spend a protected commitment, so this case
+     has to own one: the demo cruise is only `locked` until a booking exists and
+     its payment is captured, and `protected` is derived from ACTIVE Commitment
+     rows.  Before /start, because booking a travelling activity is refused. */
+  const commitment = await protectCommitment(request, journeyId, "place-river-cruise");
   await api(request, `/api/v1/journeys/${journeyId}/start`, "POST");
   const before = await api<{ active_plan: { id: string } }>(
     request,
@@ -201,13 +207,26 @@ test("an autonomous recovery executes inside its envelope and is observable on t
 
   /* And the plan that is now authoritative really is the child it executed. */
   const after = await api<{
-    active_plan: { id: string; activities?: { title?: string }[] };
+    active_plan: {
+      id: string;
+      activities?: { title?: string; place_id?: string | null; protected?: boolean }[];
+    };
   }>(request, `/api/v1/journeys/${journeyId}/experience`, "GET");
   expect(after.active_plan.id).not.toBe(before.active_plan.id);
   expect(after.active_plan.id).toBe(proposal.proposed_plan_version_id);
+  /* Identity, not wording: an executed replan mints new activity ids, so only
+     place_id can show the committed place is the same one. */
+  const preservedCruise = (after.active_plan.activities ?? []).find(
+    (a) => a.place_id === "place-river-cruise",
+  );
   expect(
-    (after.active_plan.activities ?? []).some((a) => /river cruise/i.test(String(a.title ?? ""))),
-    "the protected River Cruise commitment disappeared from the executed plan",
+    preservedCruise,
+    `the committed River Cruise disappeared from the executed plan (booking ${commitment.bookingId}); ` +
+      `it holds ${JSON.stringify((after.active_plan.activities ?? []).map((a) => a.place_id))}`,
+  ).toBeTruthy();
+  expect(
+    preservedCruise?.protected,
+    "the commitment survived the envelope but is no longer protected",
   ).toBe(true);
 
   /* Observation on the surface a traveller can actually reach. */

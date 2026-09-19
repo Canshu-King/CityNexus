@@ -20,15 +20,20 @@ const API =
   process.env.CITYNEXUS_API_BASE_URL ??
   `http://127.0.0.1:${Number(process.env.CITYNEXUS_BACKEND_PORT ?? 8000)}`;
 
-async function post(request: APIRequestContext, url: string, data?: unknown) {
-  const res = await request.post(`${API}${url}`, { data });
+async function post<T = any>(
+  request: APIRequestContext,
+  url: string,
+  data?: unknown,
+  headers?: Record<string, string>,
+): Promise<T> {
+  const res = await request.post(`${API}${url}`, { data, headers });
   if (!res.ok()) {
     throw new Error(`${url} -> HTTP ${res.status()}: ${(await res.text()).slice(0, 180)}`);
   }
   return res.json();
 }
 
-async function get(request: APIRequestContext, url: string) {
+async function get<T = any>(request: APIRequestContext, url: string): Promise<T> {
   const res = await request.get(`${API}${url}`);
   if (!res.ok()) throw new Error(`${url} -> HTTP ${res.status()}`);
   return res.json();
@@ -81,4 +86,77 @@ export async function useJourney(page: import("@playwright/test").Page, journeyI
     localStorage.setItem("citynexus.v8.journey_id", id);
     localStorage.setItem("citynexus.demo.journey_id", id);
   }, journeyId);
+}
+
+export type ProtectedCommitment = {
+  activityId: string;
+  placeId: string;
+  bookingId: string;
+  commitmentId: string | null;
+  amount: unknown;
+};
+
+/**
+ * Create a real protected commitment through the path a traveller would use.
+ *
+ * Measured, not assumed: on the demo plan the cruise activity is `locked: true`
+ * but `protected: false` until a booking exists and its payment is captured —
+ * `protected` is derived from ACTIVE Commitment rows.  So a spec that asserts
+ * "the protected commitment survived the recovery" without creating one is
+ * asserting on a fixture that has nothing to protect, and the flag it reads is
+ * true for the wrong reason.
+ *
+ * Must run before `/start`: booking an activity on a journey that is already
+ * travelling is refused with 422.
+ */
+export async function protectCommitment(
+  request: APIRequestContext,
+  journeyId: string,
+  placeId = "place-river-cruise",
+): Promise<ProtectedCommitment> {
+  const experience = await get<{ active_plan?: { activities?: any[] } }>(
+    request,
+    `/api/v1/journeys/${journeyId}/experience`,
+  );
+  const activity = (experience.active_plan?.activities ?? []).find(
+    (item) => item.place_id === placeId,
+  );
+  if (!activity) {
+    throw new Error(`no activity for ${placeId} on journey ${journeyId} to protect`);
+  }
+
+  const booking = await post<{
+    id: string;
+    commitment_id?: string | null;
+    amount?: unknown;
+  }>(request, `/api/v1/journeys/${journeyId}/bookings`, { activity_id: activity.id });
+  await post(
+    request,
+    `/api/v1/journeys/${journeyId}/transactions`,
+    { booking_id: booking.id, transaction_type: "CAPTURE", amount: booking.amount },
+    { "Idempotency-Key": `protect-${booking.id}` },
+  );
+
+  /* Prove it landed before anything else leans on it. */
+  const after = await get<{ active_plan?: { activities?: any[] } }>(
+    request,
+    `/api/v1/journeys/${journeyId}/experience`,
+  );
+  const projected = (after.active_plan?.activities ?? []).find(
+    (item) => item.place_id === placeId,
+  );
+  if (!projected?.protected) {
+    throw new Error(
+      `booking ${booking.id} + CAPTURE did not make ${placeId} a protected commitment ` +
+        `(locked=${projected?.locked}, protected=${projected?.protected})`,
+    );
+  }
+
+  return {
+    activityId: activity.id,
+    placeId,
+    bookingId: booking.id,
+    commitmentId: booking.commitment_id ?? null,
+    amount: booking.amount,
+  };
 }
