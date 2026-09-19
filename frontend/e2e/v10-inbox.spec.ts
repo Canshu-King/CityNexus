@@ -1,7 +1,11 @@
 import { expect, test } from "@playwright/test";
+import { createFreshJourney, useJourney } from "./_qoderFreshJourney";
 
-test("V10 Journey Inbox exposes text, image, and deterministic code paths", async ({ page }) => {
+test("V10 Journey Inbox exposes text, image, and deterministic code paths", async ({ page, request }) => {
   await page.addInitScript(() => localStorage.setItem("citynexus.locale", "en"));
+  const { journeyId } = await createFreshJourney(request);
+  await useJourney(page, journeyId);
+
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/v8/bookings");
   await expect(page.getByRole("heading", { name: "Your real reservations, protected." })).toBeVisible();

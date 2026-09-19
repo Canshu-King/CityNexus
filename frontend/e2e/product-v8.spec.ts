@@ -1,8 +1,12 @@
 import { expect, test } from "@playwright/test";
+import { createFreshJourney, useJourney } from "./_qoderFreshJourney";
 
 test.describe("V8 product experience", () => {
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, request }) => {
     await page.addInitScript(() => localStorage.setItem("citynexus.locale", "en"));
+  const { journeyId } = await createFreshJourney(request);
+  await useJourney(page, journeyId);
+
   });
 
   test("completes the multi-day stay and autonomous recovery journey", async ({ page }) => {
