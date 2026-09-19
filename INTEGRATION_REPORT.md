@@ -138,6 +138,19 @@ expected 4.5:1   <p class="v8-kicker">Live Journey · saved 19 Sept, 13:43</p>
 这些属于产品 IA / DOM 决策（哪个语言键该留、哪个 CTA 是 primary），不在"reconcile 不降级"的授权内，
 因此只记录不动手。
 
+### 6.3 Live 关键状态截图（`reports/visual-integration/states/`）
+
+L0–L4 只有 `qoder-live-structure.spec.ts` 的 route fixture 能构造（真种子 journey 没有开着的
+disruption），所以给该 spec 加了一个默认关闭的 `QODER_CAPTURE_STATES=1` 截图出口
+（断言未改，捕获后把配色恢复成进入前的主题）。产出 L1/L2/L3 × light/dark。
+
+`L2-proposal-ready-light.png` 是这批里最要紧的一张：**"方案 A · 推荐怎么改" 提案卡被 Copilot dock
+压在下面，只露出标题，Accept CTA 不在首屏**。也就是说第 (e) 项不是"边缘文字被裁"的装饰问题，
+而是**决策态下主操作被遮挡**；配合第 (d) 项（地图空态约 400px），真正需要用户点的那一下
+被推到了折叠线以下。这条门的断言（Accept 唯一、disruption 进入首屏）仍然通过，
+因为它量的是 bounding rect 与"Copilot 不与 Accept 相交"，而截图显示的是**视觉层叠与首屏优先级**——
+两者不是一回事，这正是肉眼阶段存在的理由。
+
 ## 7. 请给的裁决
 
 - A/B 整合是否接受（`FRONTEND_APPLE_PASS1_INTEGRATED_ON_TRUTH_BASELINE`？）；

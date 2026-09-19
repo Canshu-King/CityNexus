@@ -162,6 +162,36 @@ async function openLive(page: Page, fx: { experience: unknown; replans: unknown 
   await mockApi(page, fx);
   await page.goto("/v8/live", { waitUntil: "domcontentloaded" });
   await expect(page.getByTestId("live-recovery")).toBeVisible({ timeout: 20_000 });
+  await captureState(page);
+}
+
+/**
+ * Visual-review aid (off unless QODER_CAPTURE_STATES=1). The arbiter's visual
+ * gate asks for readable shots of the key Live states, and these states only
+ * exist through the route fixtures below — the seeded demo journey has no open
+ * disruption to photograph. Assertions are untouched.
+ */
+async function captureState(page: Page): Promise<void> {
+  if (!process.env.QODER_CAPTURE_STATES) return;
+  const before = await page.evaluate(
+    () => window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light",
+  );
+  await page.waitForTimeout(700);
+  const label = await page.evaluate(() => {
+    const has = (id: string) => !!document.querySelector(`[data-testid="${id}"]`);
+    if (has("live-handled")) return "L3-accepted";
+    if (has("live-proposal")) return "L2-proposal-ready";
+    if (has("live-no-proposal") || has("live-disruption")) return "L1-unresolved";
+    return "L0-normal";
+  });
+  for (const scheme of ["light", "dark"] as const) {
+    await page.emulateMedia({ colorScheme: scheme, media: "screen" });
+    await page.waitForTimeout(400);
+    await page.screenshot({
+      path: `../reports/visual-integration/states/${label}-${scheme}.png`,
+    });
+  }
+  await page.emulateMedia({ colorScheme: before, media: "screen" });
 }
 
 const acceptCtaCount = (page: Page) =>
