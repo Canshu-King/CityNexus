@@ -815,6 +815,12 @@ export function V8Experience() {
       </section>
     );
 
+  // Intentional, and ruled so (Amendment F #1): this return sits outside
+  // `.v8-product-shell`, so the pre-Journey onboarding screen deliberately has no bottom
+  // primary navigation - there is no journey to navigate yet, and a focused first gate is
+  // the product decision, not a scoping miss.  Do not "fix" it by moving the return inside
+  // the shell: the visual ground for these screens is the onboarding wrapper's job, and a
+  // shell migration for one screen is a much larger change than the wording it would buy.
   if (setupOpen)
     return (
       <JourneyTrialSetup
@@ -2489,8 +2495,8 @@ function Bookings({
           <span className="v8-kicker">{zh ? "导入预订" : "Import a booking"}</span>
           <p className="v8-lede">
             {zh
-              ? "在「行程 · 预订」里粘贴确认单、手动录入或上传截图。这个页面只用于结构化数据。"
-              : "Use Trips · Bookings to paste a confirmation, type one in, or upload a screenshot. This panel is for structured data only."}
+              ? "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。"
+              : "Structured import lives here - expand Advanced below to paste a JSON confirmation. Confirmation text and screenshots go through the journey inbox."}
           </p>
           <details className="v8-advanced" data-testid="bookings-advanced">
             <summary>{zh ? "高级：结构化数据" : "Advanced: structured data"}</summary>
