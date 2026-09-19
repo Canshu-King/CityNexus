@@ -1,0 +1,767 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- 由 Microsoft Visio, SVG Export 生成 C4E_ExtendFallback.raw.svg C4E_Extend -->
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events"
+		xmlns:v="http://schemas.microsoft.com/visio/2003/SVGExtensions/" width="13.3346in" height="7.5in" viewBox="0 0 960.094 540"
+		xml:space="preserve" color-interpolation-filters="sRGB" class="st14">
+	<v:documentProperties v:langID="2052" v:metric="true" v:viewMarkup="false"/>
+
+	<style type="text/css">
+	<![CDATA[
+		.st1 {fill:#ffffff;stroke:#2563eb;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1}
+		.st2 {fill:#0f172a;font-family:Segoe UI;font-size:1.00001em}
+		.st3 {font-size:1em}
+		.st4 {fill:#ecfdf5;stroke:#059669;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.3}
+		.st5 {fill:#f5f3ff;stroke:#7c3aed;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.6}
+		.st6 {marker-end:url(#mrkr1-26);stroke:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st7 {fill:#000000;fill-opacity:1;stroke:#000000;stroke-opacity:1;stroke-width:0.22935779816514}
+		.st8 {stroke:#94a3b8;stroke-dasharray:5.95,4.25;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.85}
+		.st9 {marker-end:url(#mrkr1-41);stroke:#94a3b8;stroke-dasharray:5.95,4.25;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.85}
+		.st10 {fill:#94a3b8;fill-opacity:1;stroke:#94a3b8;stroke-opacity:1;stroke-width:0.25222551928783}
+		.st11 {fill:none;stroke:none;stroke-linecap:round;stroke-linejoin:round;stroke-width:0.75}
+		.st12 {fill:#64748b;font-family:Segoe UI;font-size:0.625008em}
+		.st13 {fill:#64748b;font-family:Segoe UI;font-size:0.583328em}
+		.st14 {fill:none;fill-rule:evenodd;font-size:12px;overflow:visible;stroke-linecap:square;stroke-miterlimit:3}
+	]]>
+	</style>
+
+	<defs id="Markers">
+		<g id="lend1">
+			<path d="M 1 -1 L 0 0 L 1 1 " style="stroke-linecap:round;stroke-linejoin:round;fill:none"/>
+		</g>
+		<marker id="mrkr1-26" class="st7" v:arrowType="1" v:arrowSize="2" orient="auto" markerUnits="strokeWidth"
+				overflow="visible">
+			<use xlink:href="#lend1" transform="scale(-4.36,-4.36) "/>
+		</marker>
+		<marker id="mrkr1-41" class="st10" v:arrowType="1" v:arrowSize="2" orient="auto" markerUnits="strokeWidth"
+				overflow="visible">
+			<use xlink:href="#lend1" transform="scale(-3.9647058823529,-3.9647058823529) "/>
+		</marker>
+	</defs>
+	<g v:mID="0" v:index="1" v:groupContext="foregroundPage">
+		<title>C4E_Extend</title>
+		<v:pageProperties v:drawingScale="0.0393701" v:pageScale="0.0393701" v:drawingUnits="24" v:shadowOffsetX="8.50394"
+				v:shadowOffsetY="-8.50394"/>
+		<v:layer v:name="连接线" v:index="0"/>
+		<g id="shape1-1" v:mID="1" v:groupContext="shape" transform="translate(246.614,-288.425)">
+			<title>用例</title>
+			<desc>UC-06 Book &#38; Order Services</desc>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(UC-06)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(semantic)"/>
+				<v:cp v:nameU="NodeKind" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(usecase)"/>
+			</v:custProps>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="68.0315" cy="520.866" width="136.07" height="38.2677"/>
+			<ellipse cx="68.0315" cy="520.866" rx="68.0315" ry="19.1339" class="st1"/>
+			<text x="51.33" y="517.27" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>UC-06<v:newlineChar/><tspan
+						x="8.29" dy="1.2em" class="st3">Book &#38; Order Services</tspan></text>		</g>
+		<g id="shape2-5" v:mID="2" v:groupContext="shape" transform="translate(419.528,-288.425)">
+			<title>用例.2</title>
+			<desc>UC-07 Make Secure Payment</desc>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(UC-07)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(semantic)"/>
+				<v:cp v:nameU="NodeKind" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(usecase)"/>
+			</v:custProps>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="68.0315" cy="520.866" width="136.07" height="38.2677"/>
+			<ellipse cx="68.0315" cy="520.866" rx="68.0315" ry="19.1339" class="st4"/>
+			<text x="51.33" y="517.27" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>UC-07<v:newlineChar/><tspan
+						x="9.42" dy="1.2em" class="st3">Make Secure Payment</tspan></text>		</g>
+		<g id="shape3-9" v:mID="3" v:groupContext="shape" transform="translate(246.614,-183.543)">
+			<title>用例.3</title>
+			<desc>UC-08 Execute Journey</desc>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(UC-08)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(semantic)"/>
+				<v:cp v:nameU="NodeKind" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(usecase)"/>
+			</v:custProps>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="68.0315" cy="520.866" width="136.07" height="38.2677"/>
+			<ellipse cx="68.0315" cy="520.866" rx="68.0315" ry="19.1339" class="st1"/>
+			<text x="51.33" y="517.27" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>UC-08<v:newlineChar/><tspan
+						x="25.55" dy="1.2em" class="st3">Execute Journey</tspan></text>		</g>
+		<g id="shape4-13" v:mID="4" v:groupContext="shape" transform="translate(419.528,-183.543)">
+			<title>用例.4</title>
+			<desc>UC-09 Detect Journey Events</desc>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(UC-09)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(semantic)"/>
+				<v:cp v:nameU="NodeKind" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(usecase)"/>
+			</v:custProps>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="68.0315" cy="520.866" width="136.07" height="38.2677"/>
+			<ellipse cx="68.0315" cy="520.866" rx="68.0315" ry="19.1339" class="st1"/>
+			<text x="51.33" y="517.27" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>UC-09<v:newlineChar/><tspan
+						x="9.83" dy="1.2em" class="st3">Detect Journey Events</tspan></text>		</g>
+		<g id="shape5-17" v:mID="5" v:groupContext="shape" transform="translate(592.441,-183.543)">
+			<title>用例.5</title>
+			<desc>UC-10 Replan Journey</desc>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(UC-10)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(semantic)"/>
+				<v:cp v:nameU="NodeKind" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(usecase)"/>
+			</v:custProps>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+			</v:userDefs>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="68.0315" cy="520.866" width="136.07" height="38.2677"/>
+			<ellipse cx="68.0315" cy="520.866" rx="68.0315" ry="19.1339" class="st5"/>
+			<text x="51.33" y="517.27" class="st2" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>UC-10<v:newlineChar/><tspan
+						x="27.66" dy="1.2em" class="st3">Replan Journey</tspan></text>		</g>
+		<g id="group6-21" transform="translate(487.559,-326.693)" v:mID="6" v:groupContext="group" v:layerMember="0">
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(semantic)"/>
+				<v:cp v:nameU="ConnectorType" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(extend)"/>
+				<v:cp v:nameU="SourceSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(UC-07)"/>
+				<v:cp v:nameU="TargetSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(UC-06)"/>
+				<v:cp v:nameU="SourceSide" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(TOP)"/>
+				<v:cp v:nameU="TargetSide" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(BOTTOM)"/>
+				<v:cp v:nameU="SourcePortFraction" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(0.5)"/>
+				<v:cp v:nameU="TargetPortFraction" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(0.5)"/>
+				<v:cp v:nameU="NativeArrowCode" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(1)"/>
+				<v:cp v:nameU="NativeArrowSourceCell" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(EndArrow)"/>
+				<v:cp v:nameU="RoutingMechanic" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(native-extend-hidden-plus-presentation-segments)"/>
+			</v:custProps>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+				<v:ud v:nameU="RelationshipName" v:prompt="" v:val="VT4(&#60;&#60;扩展&#62;&#62;)"/>
+				<v:ud v:nameU="ShowMulti" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="Identifying" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="DXBegin" v:prompt="" v:val="VT0(0.02362204795363):1"/>
+				<v:ud v:nameU="DYBegin" v:prompt="" v:val="VT0(-1.6653345369377E-16):1"/>
+				<v:ud v:nameU="DXEnd" v:prompt="" v:val="VT0(0.023622047953632):1"/>
+				<v:ud v:nameU="DYEnd" v:prompt="" v:val="VT0(-6.6613381477509E-16):1"/>
+				<v:ud v:nameU="BeginAngle" v:prompt="" v:val="VT0(2.8199663978446E-14):32"/>
+				<v:ud v:nameU="EndAngle" v:prompt="" v:val="VT0(-2.8199663978443E-14):32"/>
+				<v:ud v:nameU="Name" v:prompt="" v:val="VT0(0):26"/>
+				<v:ud v:nameU="ID" v:prompt="" v:val="VT0(3):26"/>
+				<v:ud v:nameU="RelationshipName" v:prompt="" v:val="VT4()"/>
+				<v:ud v:nameU="DXBegin" v:prompt="" v:val="VT0(-0.036023622047245):0"/>
+				<v:ud v:nameU="DYBegin" v:prompt="" v:val="VT0(-0.007972440944882):0"/>
+				<v:ud v:nameU="DXEnd" v:prompt="" v:val="VT0(-0.036023622047248):0"/>
+				<v:ud v:nameU="DYEnd" v:prompt="" v:val="VT0(-0.0079724409448829):0"/>
+				<v:ud v:nameU="BeginAngle" v:prompt="" v:val="VT0(-2.9237917630534):32"/>
+				<v:ud v:nameU="EndAngle" v:prompt="" v:val="VT0(-2.9237917630534):32"/>
+			</v:userDefs>
+			<title>扩展</title>
+			<g id="shape6-22" v:mID="6" v:groupContext="groupContent" v:layerMember="0">
+				<path d="M0 540 L-172.91 578.27" class="st6"/>
+			</g>
+		</g>
+		<g id="shape11-27" v:mID="11" v:groupContext="shape" transform="translate(-52.4409,213.307) rotate(-90)">
+			<title>工作表.11</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06::SEG::01)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(1)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(4)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(false)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([17.2,7.5249999999999995])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([17.2,6.6])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L26.22 540" class="st8"/>
+		</g>
+		<g id="shape12-30" v:mID="12" v:groupContext="shape" transform="translate(487.559,727.087) rotate(180)">
+			<title>工作表.12</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06::SEG::02)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(2)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(4)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(false)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([17.2,6.6])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([8.3,6.6])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L252.28 540" class="st8"/>
+		</g>
+		<g id="shape13-33" v:mID="13" v:groupContext="shape" transform="translate(775.276,187.087) rotate(90)">
+			<title>工作表.13</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06::SEG::03)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(3)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(4)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(false)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([8.3,6.6])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([8.3,8.875])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L64.49 540" class="st8"/>
+		</g>
+		<g id="shape14-36" v:mID="14" v:groupContext="shape" transform="translate(235.276,-288.425)">
+			<title>工作表.14</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06::SEG::04)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(4)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(4)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(true)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([8.3,8.875])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([11.1,8.875])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L79.37 540" class="st9"/>
+		</g>
+		<g id="shape15-42" v:mID="15" v:groupContext="shape" transform="translate(321.732,-364.961)">
+			<title>工作表.15</title>
+			<desc>&#60;&#60;extend&#62;&#62;</desc>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06::LABEL)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-label)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06)"/>
+			</v:custProps>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="38.2677" cy="533.622" width="76.54" height="12.7559"/>
+			<rect x="0" y="527.244" width="76.5354" height="12.7559" class="st11"/>
+			<text x="16.76" y="535.87" class="st12" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>&#60;&#60;extend&#62;&#62;</text>		</g>
+		<g id="shape16-45" v:mID="16" v:groupContext="shape" transform="translate(308.976,-336.614)">
+			<title>工作表.16</title>
+			<desc>[payment required]</desc>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06::CONDITION)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-condition)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-07-06)"/>
+			</v:custProps>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="51.0236" cy="533.622" width="102.05" height="12.7559"/>
+			<rect x="0" y="527.244" width="102.047" height="12.7559" class="st11"/>
+			<text x="21.36" y="535.72" class="st13" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>[payment required]</text>		</g>
+		<g id="group17-48" transform="translate(487.559,-221.811)" v:mID="17" v:groupContext="group" v:layerMember="0">
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(semantic)"/>
+				<v:cp v:nameU="ConnectorType" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(extend)"/>
+				<v:cp v:nameU="SourceSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(UC-09)"/>
+				<v:cp v:nameU="TargetSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(UC-08)"/>
+				<v:cp v:nameU="SourceSide" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(TOP)"/>
+				<v:cp v:nameU="TargetSide" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(BOTTOM)"/>
+				<v:cp v:nameU="SourcePortFraction" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(0.5)"/>
+				<v:cp v:nameU="TargetPortFraction" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(0.5)"/>
+				<v:cp v:nameU="NativeArrowCode" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(1)"/>
+				<v:cp v:nameU="NativeArrowSourceCell" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(EndArrow)"/>
+				<v:cp v:nameU="RoutingMechanic" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(native-extend-hidden-plus-presentation-segments)"/>
+			</v:custProps>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+				<v:ud v:nameU="RelationshipName" v:prompt="" v:val="VT4(&#60;&#60;扩展&#62;&#62;)"/>
+				<v:ud v:nameU="ShowMulti" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="Identifying" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="DXBegin" v:prompt="" v:val="VT0(0.02362204795363):1"/>
+				<v:ud v:nameU="DYBegin" v:prompt="" v:val="VT0(-1.6653345369377E-16):1"/>
+				<v:ud v:nameU="DXEnd" v:prompt="" v:val="VT0(0.023622047953632):1"/>
+				<v:ud v:nameU="DYEnd" v:prompt="" v:val="VT0(-6.6613381477509E-16):1"/>
+				<v:ud v:nameU="BeginAngle" v:prompt="" v:val="VT0(2.8199663978446E-14):32"/>
+				<v:ud v:nameU="EndAngle" v:prompt="" v:val="VT0(-2.8199663978443E-14):32"/>
+				<v:ud v:nameU="Name" v:prompt="" v:val="VT0(0):26"/>
+				<v:ud v:nameU="ID" v:prompt="" v:val="VT0(3):26"/>
+				<v:ud v:nameU="RelationshipName" v:prompt="" v:val="VT4()"/>
+				<v:ud v:nameU="DXBegin" v:prompt="" v:val="VT0(-0.036023622047244):0"/>
+				<v:ud v:nameU="DYBegin" v:prompt="" v:val="VT0(-0.007972440944882):0"/>
+				<v:ud v:nameU="DXEnd" v:prompt="" v:val="VT0(-0.036023622047247):0"/>
+				<v:ud v:nameU="DYEnd" v:prompt="" v:val="VT0(-0.0079724409448825):0"/>
+				<v:ud v:nameU="BeginAngle" v:prompt="" v:val="VT0(-2.9237917630534):32"/>
+				<v:ud v:nameU="EndAngle" v:prompt="" v:val="VT0(-2.9237917630534):32"/>
+			</v:userDefs>
+			<title>扩展.17</title>
+			<g id="shape17-49" v:mID="17" v:groupContext="groupContent" v:layerMember="0">
+				<path d="M0 540 L-172.91 578.27" class="st6"/>
+			</g>
+		</g>
+		<g id="shape22-53" v:mID="22" v:groupContext="shape" transform="translate(-52.4409,318.189) rotate(-90)">
+			<title>工作表.22</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08::SEG::01)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(1)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(false)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([17.2,11.225])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([17.2,10.2])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L29.06 540" class="st8"/>
+		</g>
+		<g id="shape23-56" v:mID="23" v:groupContext="shape" transform="translate(487.559,829.134) rotate(180)">
+			<title>工作表.23</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08::SEG::02)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(2)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(false)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([17.2,10.2])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([7.5,10.2])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L274.96 540" class="st8"/>
+		</g>
+		<g id="shape24-59" v:mID="24" v:groupContext="shape" transform="translate(752.598,289.134) rotate(90)">
+			<title>工作表.24</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08::SEG::03)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(3)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(false)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([7.5,10.2])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([7.5,13.4])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L90.71 540" class="st8"/>
+		</g>
+		<g id="shape25-62" v:mID="25" v:groupContext="shape" transform="translate(212.598,-160.157)">
+			<title>工作表.25</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08::SEG::04)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(4)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(false)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([7.5,13.4])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([11.1,13.4])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L102.05 540" class="st8"/>
+		</g>
+		<g id="shape26-65" v:mID="26" v:groupContext="shape" transform="translate(-225.354,379.843) rotate(-90)">
+			<title>工作表.26</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08::SEG::05)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(true)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([11.1,13.4])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([11.1,12.575000000000001])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L23.39 540" class="st9"/>
+		</g>
+		<g id="shape27-70" v:mID="27" v:groupContext="shape" transform="translate(318.898,-262.913)">
+			<title>工作表.27</title>
+			<desc>&#60;&#60;extend&#62;&#62;</desc>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08::LABEL)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-label)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08)"/>
+			</v:custProps>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="38.2677" cy="533.622" width="76.54" height="12.7559"/>
+			<rect x="0" y="527.244" width="76.5354" height="12.7559" class="st11"/>
+			<text x="16.76" y="535.87" class="st12" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>&#60;&#60;extend&#62;&#62;</text>		</g>
+		<g id="shape28-73" v:mID="28" v:groupContext="shape" transform="translate(308.976,-226.063)">
+			<title>工作表.28</title>
+			<desc>[event detected]</desc>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08::CONDITION)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-condition)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-09-08)"/>
+			</v:custProps>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="48.189" cy="533.622" width="96.38" height="12.7559"/>
+			<rect x="0" y="527.244" width="96.378" height="12.7559" class="st11"/>
+			<text x="23.01" y="535.72" class="st13" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>[event detected]</text>		</g>
+		<g id="group29-76" transform="translate(660.472,-221.811)" v:mID="29" v:groupContext="group" v:layerMember="0">
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(semantic)"/>
+				<v:cp v:nameU="ConnectorType" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(extend)"/>
+				<v:cp v:nameU="SourceSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(UC-10)"/>
+				<v:cp v:nameU="TargetSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(UC-09)"/>
+				<v:cp v:nameU="SourceSide" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(TOP)"/>
+				<v:cp v:nameU="TargetSide" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(BOTTOM)"/>
+				<v:cp v:nameU="SourcePortFraction" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(0.5)"/>
+				<v:cp v:nameU="TargetPortFraction" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(0.5)"/>
+				<v:cp v:nameU="NativeArrowCode" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(1)"/>
+				<v:cp v:nameU="NativeArrowSourceCell" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(EndArrow)"/>
+				<v:cp v:nameU="RoutingMechanic" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(native-extend-hidden-plus-presentation-segments)"/>
+			</v:custProps>
+			<v:userDefs>
+				<v:ud v:nameU="visVersion" v:prompt="" v:val="VT0(15):26"/>
+				<v:ud v:nameU="RelationshipName" v:prompt="" v:val="VT4(&#60;&#60;扩展&#62;&#62;)"/>
+				<v:ud v:nameU="ShowMulti" v:prompt="" v:val="VT0(0):5"/>
+				<v:ud v:nameU="Identifying" v:prompt="" v:val="VT0(1):26"/>
+				<v:ud v:nameU="DXBegin" v:prompt="" v:val="VT0(0.02362204795363):1"/>
+				<v:ud v:nameU="DYBegin" v:prompt="" v:val="VT0(-1.6653345369377E-16):1"/>
+				<v:ud v:nameU="DXEnd" v:prompt="" v:val="VT0(0.023622047953632):1"/>
+				<v:ud v:nameU="DYEnd" v:prompt="" v:val="VT0(-6.6613381477509E-16):1"/>
+				<v:ud v:nameU="BeginAngle" v:prompt="" v:val="VT0(2.8199663978446E-14):32"/>
+				<v:ud v:nameU="EndAngle" v:prompt="" v:val="VT0(-2.8199663978443E-14):32"/>
+				<v:ud v:nameU="Name" v:prompt="" v:val="VT0(0):26"/>
+				<v:ud v:nameU="ID" v:prompt="" v:val="VT0(3):26"/>
+				<v:ud v:nameU="RelationshipName" v:prompt="" v:val="VT4()"/>
+				<v:ud v:nameU="DXBegin" v:prompt="" v:val="VT0(-0.036023622047244):0"/>
+				<v:ud v:nameU="DYBegin" v:prompt="" v:val="VT0(-0.007972440944882):0"/>
+				<v:ud v:nameU="DXEnd" v:prompt="" v:val="VT0(-0.036023622047247):0"/>
+				<v:ud v:nameU="DYEnd" v:prompt="" v:val="VT0(-0.0079724409448825):0"/>
+				<v:ud v:nameU="BeginAngle" v:prompt="" v:val="VT0(-2.9237917630534):32"/>
+				<v:ud v:nameU="EndAngle" v:prompt="" v:val="VT0(-2.9237917630534):32"/>
+			</v:userDefs>
+			<title>扩展.29</title>
+			<g id="shape29-77" v:mID="29" v:groupContext="groupContent" v:layerMember="0">
+				<path d="M0 540 L-172.91 578.27" class="st6"/>
+			</g>
+		</g>
+		<g id="shape34-81" v:mID="34" v:groupContext="shape" transform="translate(120.472,318.189) rotate(-90)">
+			<title>工作表.34</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09::SEG::01)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(1)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(false)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([23.3,11.225])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([23.3,9.4])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L51.73 540" class="st8"/>
+		</g>
+		<g id="shape35-84" v:mID="35" v:groupContext="shape" transform="translate(660.472,-273.543)">
+			<title>工作表.35</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09::SEG::02)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(2)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(false)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([23.3,9.4])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([27.0,9.4])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L104.88 540" class="st8"/>
+		</g>
+		<g id="shape36-87" v:mID="36" v:groupContext="shape" transform="translate(1305.35,266.457) rotate(90)">
+			<title>工作表.36</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09::SEG::03)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(3)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(false)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([27.0,9.4])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([27.0,14.2])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L136.06 540" class="st8"/>
+		</g>
+		<g id="shape37-90" v:mID="37" v:groupContext="shape" transform="translate(765.354,942.52) rotate(180)">
+			<title>工作表.37</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09::SEG::04)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(4)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(false)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([27.0,14.2])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([17.2,14.2])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L277.8 540" class="st8"/>
+		</g>
+		<g id="shape38-93" v:mID="38" v:groupContext="shape" transform="translate(-52.4409,402.52) rotate(-90)">
+			<title>工作表.38</title>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09::SEG::05)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-route-segment)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09)"/>
+				<v:cp v:nameU="SegmentIndex" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="SegmentCount" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(5)"/>
+				<v:cp v:nameU="TerminalSegment" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false"
+						v:ask="false" v:langID="2052" v:cal="0" v:val="VT4(true)"/>
+				<v:cp v:nameU="StartCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([17.2,14.2])"/>
+				<v:cp v:nameU="EndCm" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4([17.2,12.575000000000001])"/>
+				<v:cp v:nameU="RouteStyle" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(includeExtend)"/>
+			</v:custProps>
+			<path d="M0 540 L46.06 540" class="st9"/>
+		</g>
+		<g id="shape39-98" v:mID="39" v:groupContext="shape" transform="translate(676.063,-285.591)">
+			<title>工作表.39</title>
+			<desc>&#60;&#60;extend&#62;&#62;</desc>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09::LABEL)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-label)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09)"/>
+			</v:custProps>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="38.2677" cy="533.622" width="76.54" height="12.7559"/>
+			<rect x="0" y="527.244" width="76.5354" height="12.7559" class="st11"/>
+			<text x="16.76" y="535.87" class="st12" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>&#60;&#60;extend&#62;&#62;</text>		</g>
+		<g id="shape40-101" v:mID="40" v:groupContext="shape" transform="translate(666.142,-248.74)">
+			<title>工作表.40</title>
+			<desc>[replan required]</desc>
+			<v:custProps>
+				<v:cp v:nameU="SpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09::CONDITION)"/>
+				<v:cp v:nameU="Role" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(presentation)"/>
+				<v:cp v:nameU="ContentRole" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(extend-condition)"/>
+				<v:cp v:nameU="OwnerSpecId" v:lbl="" v:prompt="" v:type="0" v:format="" v:sortKey="" v:invis="false" v:ask="false"
+						v:langID="2052" v:cal="0" v:val="VT4(EXT-10-09)"/>
+			</v:custProps>
+			<v:textBlock v:margins="rect(4,4,4,4)" v:tabSpace="42.5197"/>
+			<v:textRect cx="48.189" cy="533.622" width="96.38" height="12.7559"/>
+			<rect x="0" y="527.244" width="96.378" height="12.7559" class="st11"/>
+			<text x="22.36" y="535.72" class="st13" v:langID="2052"><v:paragraph v:horizAlign="1"/><v:tabList/>[replan required]</text>		</g>
+	</g>
+</svg>
