@@ -1076,3 +1076,177 @@ Integration Freeze / Clean-checkout Reproducibility。所以本轮**不请求**�
 6. §58 的 settled-before-capture 我只修了暴露出来的那张。其余 8 张做了像素 diff 确认未退化，
    但它们的 spec 没有同样的等待。是否推广为截图门通用前置（我倾向推广，但那属于宽泛视觉线，
    你两次让我不要重开，所以先问）。
+
+---
+
+# Sol Truth Convergence Integration（外部 handoff：Codex GPT-5.6 Sol V2）
+
+## 61. 基线冲突怎么处理的（先说清楚，免得审计重新推导）
+
+handoff 写的基线是 `HEAD = 0af1905`，并且"Do not work on the pass-15 /experience
+place_id contract defect / predictive V8 ownership"。但同一份 handoff 又要求
+"Preserve all current pass-15 behavior"，而 pass-15 的 GPT 裁决把那两项判为 main
+前必修并已派给我——我在收到 handoff 之前已经做完、打包、送仲裁。
+
+所以我的处置是：**不回退、不 cherry-pick、叠加在 `fec2204` 之上**。
+理由是可核实的：Sol 那四项缺陷（cursor 语义、同 proposal 竞态、竞争 proposal、
+CAPTURE vs ACCEPT）我逐条读过代码定位，我的五个 pass-16 提交完全没碰
+cursor 解析 / accept / CAPTURE / serialization 路径，四项缺陷在 `fec2204` 上依然
+全部成立。回退到 0af1905 只会把已交付的仲裁项丢掉，不会让 convergence 更好做。
+
+Sol 的两个 verification commit（`c19daa54`、`776be4e9`）在本仓与主仓都不可读，
+只在 `D:/moodle/_codex_sol_extreme_v2_20260919/snapshot/citynexus/.git` 里可读。
+我只把它们当行为参考读，**没有 fetch、没有 cherry-pick**；本 pass 的实现是自己写的
+（`concurrency_guards.py`、`commitment_remap.py`、`_execution_truth` 的三分支、
+前端 `liveActivityWindow`），命名、注释、边界都按本线的情况写。
+
+## 62. A / CX-SOL-001：cursor 从"提示"变成"断言"
+
+改前 `_execution_truth`（`backend/app/operations/v9.py:129-138`）只有一条分支：
+`current_index is None` 就回退到首个非终态活动。也就是说"cursor 为空"和"cursor
+指向一个不在本计划里的活动"走同一条路，后者会凭空造出 Now / Next / NextLeg。
+
+现在是三态：`VALID`（精确指向该活动）/ `ABSENT_FALLBACK`（合法前置执行态，允许回退）
+/ `STALE`（present-but-unresolvable，Now/Next/leg 全为空，`now_state=STALE_CURSOR`）。
+`cursor_status` 随每条投影输出：offline snapshot、Edge journey-snapshot、`/experience`。
+
+写测试时测到的事实（不是我推测的）：`journeys.current_activity_id` 和
+`activities.place_id` 都是外键，所以随机 uuid 和编造地点在 SQLite 层就被拒——
+"unknown cursor" 的真实形态是**指向另一个计划上确实存在的活动**，它满足外键却对
+当前计划不可解析，测试因此改成那个形状。
+
+Edge 侧原来在 cursor 不可解析时说 `"Journey complete"`；这是假话（旅程在进行，是记录
+自相矛盾），现在说 `Execution position unresolved` / `Next step unavailable`。
+前端 Live 与 LiveSecondary 原来直接读 `activities[0]/[1]/legs[0]`，完全不看 cursor；
+现在统一走 `liveActivityWindow`，STALE 时不再显示"Awaiting plan"（那会把旅客推去
+选计划，而问题不在旅客那边），并加 `data-cursor-status` 让断言不依赖文案。
+`/experience` 的活动投影补 `status`，否则客户端只能靠顺序判断"做完没有"。
+
+## 63. B：Journey 级串行化，以及它不是什么
+
+`backend/app/concurrency_guards.py` 新增 `journey_write_lock(journey_id)`
+（RLock 注册表 + WeakValueDictionary）。边界覆盖**完整** read/validate/mutate/commit：
+锁在第一次读之前拿、在 commit 之后放，并且拿锁后 `session.expire_all()`，
+因为定位 journey_id 的那次读发生在锁外、不能信。接的三个写入点：
+replan accept（`_accept_replan_impl` 变成 wrapper，真身在
+`_accept_replan_serialized_impl`，agent gateway 走同一条实现所以自动受益）、
+payment transaction 端点（commit 与 rollback 都在锁内）、以及 accept 内部的
+commitment 升级。
+
+披露按 handoff 要求做在三个地方：常量 `PROCESS_LOCAL_ONLY = True`、模块 docstring
+明写"不是多 worker 安全、不是分布式安全"、以及"参考部署是单进程 SQLite 且
+SQLite 不支持 SELECT … FOR UPDATE，所以没有数据库层兜底"。
+以后换成分布式锁只需替换这一个函数，业务不变量不动。
+
+## 64. C / D：接受竞态断言的是最终全局真值
+
+`_final_truth()` 直接从行里读，不看端点：ACTIVE PlanVersion 集合、Journey 指向、
+ACCEPTED proposal 集合、其 proposed_plan_version_id、锚在active plan 之外的 active
+commitment、cursor 是否还能解析。每条 schedule 都过 `_assert_one_winner`。
+
+四种 schedule（barrier 同步释放，没有 sleep 当正确性机制）：
+同 proposal / 同 proposal（不同幂等键）→ 恰好一个 200 一个 409；
+同 proposal 同幂等键并发 → 两个都 200 且只发生一次转换；
+竞争 proposal A / B（同一 base plan）→ 恰好一个 ACTIVE，输家落在既有领域状态
+`INVALIDATED`（没有为测试新增状态），其 plan 不为 ACTIVE；
+replan accept / booking CAPTURE → 见 §65。
+
+## 65. E / CX-EXT-004：CAPTURE 不再盲目升级指针
+
+改前 `service_impl.create_transaction` 的 CAPTURE 分支全程不读 Journey、不读
+`active_plan_version_id`、不重跑 gate，直接把 `commitment.activity_id` 指向的行升到
+C4。并发放行后，承诺就留在被替换的计划上——旅客被告知他持有一个受保护承诺，
+而没有任何权威计划包含它。
+
+现在 CAPTURE 先解析锚点：指向的行仍在 active plan 上就直接通过；否则按结构身份
+重绑，0 个匹配或 >1 个匹配一律 `CommerceConflict` → 409。
+另外 accept 的重绑范围从"只有 C4"扩到"所有 active commitment"：C4 解析不了就
+fail closed（拒绝整次接受），非 C4 解析不了就跳过（它不是承诺，不该因为它把旅客
+需要的恢复也挡掉）。
+
+## 66. F：三个重绑点共用一条计数规则
+
+`backend/app/replanning/commitment_remap.py` 是唯一实现：0 → fail closed，
+1 → 重绑，>1 → AMBIGUOUS fail closed。身份只比精确相等的集合
+（policy 的 semantic key + 锚点活动的 metadata semantic key 为强身份；
+`place_id` / `city_service_id` 为弱身份，且只在候选方没有更强语义身份时才用），
+再加拉锚时刻（比较瞬时而不是字符串，因为计划按城市偏移归一化而承诺可能是 UTC）。
+
+被替换掉的两处：accept 里的 `candidate.endswith(term)`（字符串相似度冒充身份，
+短的键能声称任何共享后缀的长键）；`operations/v9.py` 激活路径的
+`by_semantic.get(...) or by_place.get(...)`——匹配不到就**静默跳过**，把承诺留在
+被替换的计划上，而且字典推导让 sequence 更大的活动覆盖更小的，重复身份会解析成
+"最后写入的那个"。现在两处都走同一 resolver，激活路径解析不了直接 raise。
+
+Sol 的物理身份实现**没有**移植：`compare_physical_venue()`、
+`HARD_FEASIBLE_QUALITIES`、mobility provenance 与 fact-quality 规则全部保持本线现状，
+`grep` 可验证它们未被本次改动触碰。
+
+## 67. G/H：测试强度是用 mutation 检查挑出来的，不是自评
+
+`_sc_mutation_check.py` 逐个施加破坏、跑收敛套件、还原文件。结果 **8 个破坏，7 个被杀，
+1 个存活**：
+
+| 破坏 | 结果 | 被哪些用例抓到 |
+|---|---|---|
+| B 锁变空操作 | KILLED | 5 条（含锁本身的对照用例） |
+| E CAPTURE 不再重锚 | KILLED | 2 条 |
+| A 陈旧 cursor 回退成"首个活动" | KILLED | 4 条（含投影 oracle） |
+| F accept 的 C4 冲突分支被跳过 | **SURVIVED** | 见下 |
+| F1 多个匹配取第一个 | KILLED | resolver 计数用例 |
+| F2 零匹配返回 None | KILLED | 3 条 |
+| F3 身份退回后缀相似度 | KILLED | 后缀用例 |
+| F4 锚定时刻不参与匹配 | KILLED | 2 条 |
+
+存活那一个不是我没测出来，是**它通过公开端点不可达**：把受保护地点从子计划里删掉
+会被 feasibility gate 以 `LOCKED_COMMITMENT_LOST` 拒掉，复制一份会被
+`ACTIVITY_OVERLAP` 拒掉，两者都发生在 remap 之前。所以该分支是纵深防御，
+它的计数行为由 resolver 的直接用例覆盖。我没有为了"杀光"去伪造一个产品到不了的状态，
+而是把这条写进用例 docstring 和这份报告。
+
+mutation 检查还抓出我自己写的一条空转用例：第一版 CAPTURE-vs-ACCEPT 竞态用了
+**已经 capture 过的 booking**，第二次 capture 必然 409，永远不可能留下悬挂承诺，
+把锁拆掉它照样绿。改成未 capture 的 booking（accept 只重绑 C4，看不见它）之后，
+它才真的能 stranded。这条也写进了提交信息。
+
+投影差分 oracle（H）在 `test_sol_execution_cursor.py`：参考投影直接从
+Activity / JourneyLeg 行重算，比较 `cursor_status`、`now_activity_id`、
+`next_activity_id`、`next_leg_id`、`next_mode`、`next_eta_min`，覆盖五种 cursor
+状态 + accepted replan 之后一轮；有权威事实的字段不允许任何分歧，没有权威事实时
+必须 fail closed 而不是产出外观等价值。为此 `_execution_truth` 补了 `next_leg_id`
+（两条 leg 可以有相同 mode 和相同 eta 却是不同承诺）。
+
+浏览器侧新增 `qoder-stale-cursor.spec.ts`：拦截 `/experience` 注入不可解析 cursor，
+断言 Live 说"未解决"而不是任何计划里的步骤，并跑同一路径的真实 cursor 作对照。
+handler 里那个 `catch` 只用于页面放弃的请求，所以我加了 `served >= 2` 断言，
+防止"handler 一直失败"变成静默通过。
+
+## 68. 门禁数字（authoritative 一次运行 `scfull2`，tree `79d2098`）
+
+| 门禁 | 结果 |
+|---|---|
+| authoritative 当前产品套件 | **46 expected / 0 unexpected / 0 flaky / 0 skipped**（121.1s） |
+| 与 pass-16 的 45 之差 | +1 = 新增 stale-cursor 用例；没有用例被删（pass-15 的四条 port 与 D 全部保留且仍绿） |
+| 后端全量 | 861 passed / 15 skipped / 0 failed（68.1s；pass-16 是 836，+25 = 本 pass 收敛用例） |
+| Qoder/Sol truth contracts 子集 | 171 passed / 0 failed（12.9s） |
+| SQLite 争用告警 | 0 次 |
+| `typecheck` / `typecheck:all` / `vite build` | 干净 |
+| legacy 非门禁套件（AI 关闭） | 4 passed（20.1s） |
+| mutation 检查 | 8 破坏 / 7 killed / 1 survived（原因见 §67，非"全绿"） |
+
+## 69. 没有做的，以及请裁
+
+1. **Sol 的 stateful fuzz（60×30）与 catastrophic mutation campaign（17/17）没有复现**。
+   本仓不存在任何 property-based / stateful / fuzz 测试（`grep hypothesis|RuleBasedStateMachine`
+   零命中），Sol 的 `real_api_state_machine.py`、`mutation_runner.py`、
+   `concurrency_harness.py`、`projection_oracle.py` 都在仓库之外的快照目录里。
+   按 handoff"不强行凑数、行为与不变量优先"，我交了确定性并发 schedule + 差分 oracle +
+   上面那 8 个破坏的 mutation 结果。是否要求把 fuzz/mutation harness 正式移植进本仓
+   成为常驻门禁，请裁定——那是新增基础设施，不是本 pass 的范围。
+2. CX-SOL-001 / CX-EXT-002 / CX-EXT-003 / CX-EXT-004 我的自评为
+   **CLOSED / CLOSED / CLOSED / CLOSED**，证据分别是 §62+用例、§64 三条 schedule、
+   §64 竞争 schedule、§65+§67；F 的物理身份按 §66 保持本线更强模型。
+   请独立复核而不是接受我的自评。
+3. 基线问题（§61）请确认：convergence 叠加在 pass-16 之后是否可接受；
+   若要求必须从 0af1905 起算，请给出处置已交付 pass-16 的方式，我不会自行回退。
+4. 与 GPT 仲裁那条线（pass-16 §60 的 5 个问题）仍未回复，两条线的裁决顺序请定。
