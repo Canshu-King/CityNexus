@@ -191,3 +191,22 @@ disruption），所以给该 spec 加了一个默认关闭的 `QODER_CAPTURE_STA
   否则 authoritative 分支自己就红。
 
 `vite build` 在 A-only 下能过（vite 不做类型检查），所以"能 build"不能作为 A 可独立合并的证据。
+
+## 9. 那 8 条 `/` legacy：不是过期不可修，实测只差一行入口
+
+旧界面没有被删除，它被**显式挪到 `/legacy`**（`src/main.tsx` 的 `App()`：默认入口渲染
+`V8Experience`，`path.startsWith("/legacy")` 才渲染 `LegacyApp`，注释写明"legacy 仅供内部/向后兼容访问"）。
+
+探针实验（临时把 `golden.spec.ts` 的 `page.goto("/")` 改成 `/legacy`，跑完已还原，未提交）：
+
+| 断言 | 改前 | 改后 |
+|---|---|---|
+| `journey-status` 存在 | element(s) not found | 元素存在，`data-source="backend"` 已满足 |
+| 状态文本 | — | 实际 `PLANNED · backend truth`，spec 期望 `ACTIVE` |
+
+所以这 8 条的成本是：每条 1 行入口路径 + 把状态期望对齐当前后端真值（journey 在被选中 plan 之后是
+`PLANNED`，不再是 `ACTIVE`）。**期望值不该为了变绿而改**，因此这里只交结论，不交改动——
+需要 owner/裁决确认"PLANNED 是否就是今天该断言的真值"。
+
+（同一探针还顺带说明：真种子 harness 与 legacy 界面是兼容的，`data-journey-id` 正是种子建出来的
+`22222222-…` journey。）
