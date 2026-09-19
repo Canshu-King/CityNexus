@@ -2022,3 +2022,19 @@ ORD-0031 的结论是 **`package-lock.json` 是权威**，而两棵 `node_module
 所以上面那两个 `typecheck = 0 errors` **只与同一依赖集上的历史数字可比**，不能拿去覆盖任何人的基线，
 也不能当作"合并把类型问题清理干净了"的证据——它只是"在这台机器当前的 node_modules 下不报错"。
 在依赖问题结清之前，我报的每个 tsc 数字都自带这条脚注。
+
+### 85.5 一次性：把散落的一次性脚本移出权威树（以及我自己踩的一次空）
+
+门跑完后树里还剩 **38 个未跟踪的 `_*.py`**——本轮之前几轮的补丁/探针脚本（`_sc_*`、`_p161_*`、
+`_build_pkg_*` 等）。它们不影响任何门的数字，但 PASS-17 要的是"`git status --short` 为空"，
+靠事后清理不算达成，所以挪去了 `D:\moodle\_qoder_scratch_20260920\scripts\`。
+
+用 `mv _*.py` 一把梭的时候踩了一次空：仓库根里另有**两个是被跟踪的**产品文件
+（`_autopilot_flow.py`、`_demo_flow.py`，自基线 `380e6ff` 就在树里），glob 不认识"未跟踪"这件事。
+已经 `git checkout --` 还原，并按 SHA-256 逐文件比对确认与 HEAD **逐字节相同**
+（`af3c8a05…` / `2812a6fc…`），`git diff --name-only HEAD` 对这两个路径为 0 行。
+记在这里是因为这类错的形状很典型：**"我以为这堆文件都是我刚生成的"**，而判别依据（未跟踪列表）
+我手上本来就有——先按 `git status --porcelain` 的 `??` 过滤再动，就不会有这一步。
+
+现在权威树的 `git status --porcelain` 只剩两份别人家的修改（`tools/verification/mutation_campaign.py`
+由 Commander 持有、`qoder-handoff/qoder_xiaomi_truth_hardening_v6.patch` 属另一车道），未跟踪文件为 0。
