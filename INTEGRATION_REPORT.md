@@ -1334,3 +1334,139 @@ closure 依据，否则判 MITIGATED_SINGLE_PROCESS 而不是 CLOSED。我上一
   由 clone 自己声明的环境建立（不得借 `D:\moodle\CityNexus\.venv`），以及运行后
   `git status --short` 必须为空、任何源码/config/test 变化都算 freeze failure，且
   freeze 期间需要改源码即当场 FAIL。
+
+---
+
+# PASS-16.1 — 分布式幂等、迁移真值、freeze 前置
+
+仲裁对 Sol convergence 包的裁决不接受我"四个 CLOSED"的自评，签的是
+CX-SOL-001 = CLOSED、CX-EXT-002 = PARTIAL_CROSS_PROCESS_IDEMPOTENCY_OPEN、
+CX-EXT-003 = RUNTIME_CLOSED_MIGRATION_TRUTH_OPEN、
+CX-EXT-004 = CLOSED_CURRENT_SINGLE_DB_TOPOLOGY，并派下四项 freeze 前收尾。
+下面是逐项处置。
+
+## 73. A 同 Idempotency-Key 的跨进程重放语义
+
+我上一轮把 CX-EXT-002 整体判 CLOSED 是过头的：我自己的 mutation log 已经招供——把
+`journey_write_lock` 改成空操作后，
+`test_replaying_the_same_idempotency_key_never_transitions_twice` 仍然失败。
+也就是"同键重放得到同一个成功"这件事，靠的是恰好两个请求落在同一个 Python 进程里。
+
+修法不是再加一层锁。`IdempotencyKey` 行本来就与计划转换在同一个事务里写入，
+所以**它的存在就是转换已提交的证明**——这是可复用的既有 durable 记录，不需要新表。
+缺的是另一半：冲突时没有人去读它。现在 `_accept_replan_serialized_impl`
+执行前先读 durable receipt，执行若以 409 或 IntegrityError 结束，再读一次并回放胜者
+留下的规范响应。两个进程、同 proposal、同 key 的结果是：一次转换、一个 ACTIVE、
+Journey 指向它、一个 ACCEPTED、零悬挂 C4，两个调用者拿到同一份响应。
+
+有界等待不是时序假设，写进注释里了：恰好一次转换由条件 UPDATE 与唯一索引保证，
+与等待无关；如果胜者的 receipt 始终没落，调用者拿到确定的 409，数据库状态仍然正确。
+新增 `test_one_idempotency_key_across_two_sessions_replays_without_the_lock`
+完全绕开锁调用 serialized 层；mutation A1（把冲突回放拆掉）被杀。
+
+## 74. B duplicate-ACTIVE 的迁移真值
+
+`_collapse_duplicate_active_plans` 原来按 created_at/version_no 选"最新"，
+却不看 `journeys.active_plan_version_id`。仲裁指出这会把"两个答案"迁移成
+"唯一 ACTIVE 但 Journey 指向被 SUPERSEDED 的那条"——数据库工程非常有创造力。
+
+现在指针优先：Journey 指向的那条 ACTIVE 是幸存者，其余转 SUPERSEDED；
+指针不指向其中任何一条时 **fail closed**，抛明确的迁移完整性错误，绝不按时间猜。
+两条回归用真实的历史库形状（把当前 schema 里那一行索引去掉建库、植入两个 ACTIVE、
+再跑真的 `ensure_schema`）：
+指针指向较旧的一条 → 迁移后 ACTIVE 只有它、指针==它、且此后裸写第三条 ACTIVE 被索引拒绝；
+指针两条都不指向 → 迁移拒绝，且不许它"顺手"先选一个赢家。mutation G1 被杀。
+
+## 75. C 验证不再改写 tracked 文件
+
+PASS-17 要求跑完 `git status --short` 为空，而这不能靠"跑完 git restore"。
+新增 `frontend/e2e/_qoderEvidence.ts`：15 处截图与 provenance 记录都经
+`evidencePath(...)` 解析。`CITYNEXUS_EVIDENCE_DIR` 未设时基座仍是 tracked
+`reports/`（开发者行为不变），设了就整体落到该目录，且两侧都过 `resolve()`
+再比较前缀，防止 `..` 或正斜杠环境变量把文件写出根外。
+
+两种模式都实测过，不是推断：默认模式跑 `qoder-dock-geometry` 确实改动
+`reports/dock-geometry/...`；外部模式跑完 `git status --porcelain` 里 reports 一条没有，
+而 17 个产物（截图、对比审计 JSON、provenance）都落在仓库外目录里。
+
+## 76. D 仓库自有的扩展真值验证
+
+不搬 Sol 的一次性快照。本仓现在有两件自己的东西：
+
+- `backend/tests/stateful/test_journey_truth_state_machine.py`：确定性 PRNG + 打印 seed
+  的有状态机器（venv 里没有 hypothesis，也不为此新增依赖），每步之后都断言七条灾难
+  不变量。默认 12×12 随普通套件跑；`CITYNEXUS_STATEFUL_CASES/STEPS` 可调到 60×30。
+- `tools/verification/mutation_campaign.py`：11 个破坏，跑收敛套件 + stateful，
+  逐条还原。未申报的存活 = 失败；申报为不可达却已被杀 = 也失败（allowlist 不能变成
+  让真缺口安度晚年的地方）。
+
+这台机器第一次跑 60×30 就抓到两件事，都值得记：
+
+1. **一个真缺陷**：`select_plan` 只退休其他 SELECTED 计划。在旅程 ACTIVE 时选择另一个
+   计划（这是 hard recovery 的既定解决路径，v19.2.3/v19.2.4 两条 gate 就在用），会把
+   正在执行的计划丢在 ACTIVE 状态、无人指向——唯一索引看不见它，因为始终只有一行
+   ACTIVE。我先试的是禁止这种切换，结果打断了两条合法的恢复流程，说明我判错了对象：
+   问题不是切换，是切换时不退休。现在按 `abandoned_id` 条件退休并同步把 cursor 移到新
+   计划的首个未完成步骤（否则就留下一个 STALE cursor 去考验投影契约）。
+   mutation G2 覆盖它。
+2. **我自己写错的两条不变量**：一是"Journey 指针必须落在 ACTIVE 集合里"——PLANNED
+   阶段指针指向 SELECTED 计划是合法的，`/start` 才晋升；二是"ACCEPTED 胜者的计划必须
+   仍是 ACTIVE"——接受是某一刻的事实，旅客之后换计划会把它 SUPERSEDE，这不代表接受
+   没生效。收紧成真正不许的形状：接受过的计划只能是 ACTIVE 或 SUPERSEDED，
+   不能还是 CANDIDATE/REJECTED。写错的断言比没有断言更坏，因为它会在对的时候沉默、
+   错的时候报警。
+
+---
+
+# RX 吸收与最终数字
+
+## 77. Mission 002 B 节：RX-1/2/3 进权威测试树
+
+基线先量再动手：HEAD `4d2f0c8`，全量 **881 passed / 15 skipped / 0 failed**（88.50s）。
+
+吸收方式是按字节拷贝，不是"照着重写一遍"：三个文件在 `backend/tests/` 下的 SHA-1 前缀与
+`_qoder_recovery_20260919/tests/` 里一致（`dd3d0cb92f` / `0a0d679001` / `470516cd59`）。
+这样仲裁在 recovery 线上量到的 9 个节点，在这里是同一批 9 个，而不是一批长得像它们的用例。
+
+计数：RX 专集 **9 passed / 0 failed**（1.68s）；全量 **889 passed / 15 skipped / 0 failed**
+（88.10s）。889 = 881 + 9 − 1。
+
+精确 test-node 对应表。这里要同时纠正 `4b1e829` 提交信息里的一处误计：RX-2 是 **+2**，
+我在那里写成 +3，于是那张表自己加起来是 +9，而实际净增是 +8。表格以下面这份为准。
+
+| 节点 | 变化 | 归属 |
+| --- | --- | --- |
+| `tests/test_rx1_cross_journey_trigger_gate.py::test_foreign_trigger_is_refused_by_the_journey_scope_guard` | +1 | RX-1 |
+| `tests/test_rx1_cross_journey_trigger_gate.py::test_existing_status_code_assertion_would_pass_for_the_wrong_reason` | +1 | RX-1 |
+| `tests/test_rx2_mock_hard_laundering_gate.py::test_hard_capture_has_no_mock_fallback_for_an_explicit_fixture_leg` | +1 | RX-2 |
+| `tests/test_rx2_mock_hard_laundering_gate.py::test_soft_capture_may_still_degrade_to_the_explicit_fixture_leg` | +1 | RX-2 |
+| `tests/test_rx3_stale_cursor_fails_closed.py::test_absent_cursor_may_project_the_first_pending_activity` | +1 | RX-3 |
+| `tests/test_rx3_stale_cursor_fails_closed.py::test_matching_cursor_projects_that_activity_and_its_successor` | +1 | RX-3 |
+| `tests/test_rx3_stale_cursor_fails_closed.py::test_final_activity_has_no_fabricated_next` | +1 | RX-3 |
+| `tests/test_rx3_stale_cursor_fails_closed.py::test_stale_cursor_fails_closed_instead_of_resuming_from_the_first_activity` | +1 | RX-3 |
+| `tests/test_rx3_stale_cursor_fails_closed.py::test_completed_prefix_does_not_hide_a_stale_cursor` | +1 | RX-3 |
+| `tests/test_wp05_integrity_next.py::test_replan_trigger_event_must_belong_to_same_journey` | −1 | 空转节点退役 |
+
+被删的那条不是"弱"而是"空转"：它给一个不带 affected activity 的 WEATHER 事件断言
+`status_code == 422`，而这条请求在守卫存在与否两种情况下都会因为
+`REPLAN_TARGET_UNRESOLVED` 得到 422——删掉归属校验它照样绿。RX-1 用真正的 CLOSURE 事件
+走到守卫、断言守卫自己的 message、检查没有 proposal 泄漏，再加一条"同一事件在自己的旅程上
+可用"的对照；保留旧节点等于复制 RX-1 的第一个用例且证明得更少。退役理由写在了它原来所在的
+文件里（`test_wp05_integrity_next.py` 第 77 行起）。
+
+RX-3 与既有 cursor gate 的差别是层次而不是重复：它钉的是 `_execution_truth` 本身——
+Today、Live、Edge 共用的那一个真值来源——既有 gate 证明的是服务端投影出来的契约。
+`completed-prefix` 那条在两个层次上都是新的。
+
+吸收没有为老 fixture 动冻结区：提交只含 5 个文件（3 个新测试、1 个退役节点、
+`tools/verification/mutation_campaign.py` 增加 RX1/RX2 两个破坏），
+`HARD_FEASIBLE_QUALITIES`、mobility provenance 与 `fact_quality` 传播、
+`MOBILITY_DATA_UNAVAILABLE`、`compare_physical_venue()`、provider-scoped 物理身份、
+权威 E2E 策略、单一 ACTIVE 不变式、幂等语义、Live 陈旧游标 fail-closed、
+domain/requirements baseline 一行未改。UI 未重构，无清理性改动。
+
+一处诚实的边角：RX-2 文件自带的"前提守卫"函数
+`_fixture_pair_is_what_this_gate_assumes` 因为下划线前缀不会被 pytest 收集，所以我吸收
+过来的 9 个节点里不含它（若把它算作 +1，RX-2 就变成 +3、净增变成 +9）。我没有为了凑数改名。
+它看守的前提也不是没有落点：模块级 `next(...)` 在 mock 矩阵里找不到显式边时直接
+`StopIteration`，整个文件在收集阶段就报错，不会悄悄退化成一个恒真断言。
