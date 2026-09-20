@@ -149,6 +149,78 @@ def test_the_scene_read_reports_the_scenario_clock_and_not_this_machine(_stage_o
     assert scene["evidence_state"] in {"REFERENCED", "NO_FROZEN_EVIDENCE"}, scene
 
 
+def test_reset_leaves_a_bookable_stage_and_start_scenario_makes_it_executable(_stage_on) -> None:
+    """The two halves of ORD-0078, measured through the routes a client would call.
+
+    Before this split, reset ran all the way to ACTIVE, which made `POST /bookings` answer
+    422 "booking requires a PLANNED Journey" forever on the demo stage - the failure was
+    measured by the commander, not inferred.  Starting is now an action, and the cursor the
+    panel needs only appears after it.
+    """
+
+    assert client.post("/api/v1/demo/reset").status_code == 200
+    scene = _scene()
+    journey_id = scene["journey_id"]
+    # ORD-0078 is about the *PLANNED* gate, so the assertion has to distinguish that refusal
+    # from a legitimate one: a stop with no supported commerce service is not bookable for
+    # reasons this order does not touch, and pretending otherwise would test nothing.
+    with SessionLocal() as session:
+        activity_ids = [
+            row.id
+            for row in session.scalars(
+                select(Activity)
+                .where(Activity.plan_version_id == scene["plan_version_id"])
+                .order_by(Activity.sequence_no)
+            ).all()
+        ]
+    assert activity_ids, scene
+    codes: list[tuple[str, int]] = []
+    booked_status = 0
+    for candidate in activity_ids:
+        response = client.post(
+            f"/api/v1/journeys/{journey_id}/bookings", json={"activity_id": candidate}
+        )
+        codes.append((candidate, response.status_code))
+        assert "PLANNED" not in response.text, (
+            "reset put the journey out of bookable state again: " + response.text[:200]
+        )
+        if response.status_code < 400:
+            booked_status = response.status_code
+            break
+    assert booked_status == 201, codes
+
+    started = client.post("/api/v1/demo/start-scenario")
+    assert started.status_code == 200, started.text[:300]
+    body = started.json()
+    assert body["status"] == "started", body
+    assert body["journey_status"] == "ACTIVE", body
+    assert body["current_activity_id"], body
+
+    after_start = _scene()
+    assert after_start["journey_status"] == "ACTIVE", after_start
+    assert after_start["basis"] == "CURSOR", after_start
+    cursor = after_start["effective_now"]
+
+    completed = client.post(
+        f"/api/v1/journeys/{journey_id}/activities/{body['current_activity_id']}/complete", json={}
+    )
+    assert completed.status_code < 400, (completed.status_code, completed.text[:300])
+    moved = _scene()
+    assert moved["current_activity_id"] != body["current_activity_id"], moved
+    assert moved["effective_now"] != cursor, (moved["effective_now"], cursor)
+
+
+def test_start_scenario_is_behind_the_same_switch_as_reset(monkeypatch) -> None:
+    """A state-changing demo action gets the same refusal, with its own key."""
+
+    monkeypatch.setattr("app.main.demo_mode_enabled", lambda: False)
+    response = client.post("/api/v1/demo/start-scenario")
+    assert response.status_code == 403, response.text[:200]
+    body = response.json()["error"]
+    assert body["code"] == "DEMO_MODE_REQUIRED", body
+    assert body["message_key"] == "demo.start_disabled", body
+
+
 def test_the_scene_clock_moves_with_the_scenario_and_never_with_the_device(_stage_on) -> None:
     """Change the journey's window and the reported moment moves; wall time cannot make it move.
 
@@ -198,23 +270,24 @@ def test_the_seeded_stage_is_executable_and_both_branches_share_one_key_set(_sta
     assert payload["simulation_advance"], payload
     advance = json.loads(payload["simulation_advance"])
     steps = {item["step"]: item for item in advance["steps"]}
-    assert "plans/generate" in steps and "select" in steps and "start" in steps, advance
+    assert "plans/generate" in steps and "select" in steps, advance
+    assert "start" not in steps, f"reset must not auto-start any more: {advance}"
     assert all(item.get("ok") for item in advance["steps"]), advance
-    assert advance["journey_status"] == "ACTIVE", advance
+    # ORD-0078: PLANNED + SELECTED is the state `commerce/validators.py:33-41` books against,
+    # so stopping here is what keeps the first half of M4 demonstrable.
+    assert advance["journey_status"] == "PLANNED", advance
     assert isinstance(advance["total_ms"], float), advance
 
     scene = _scene()
-    assert scene["journey_status"] == "ACTIVE", scene
-    assert scene["plan_version_id"], scene
-    assert scene["basis"] == "CURSOR", scene
+    assert scene["journey_status"] == "PLANNED", scene
+    assert scene["plan_version_id"], "a selected plan must be visible before the stage starts"
+    assert scene["basis"] == "JOURNEY_START", scene
     assert scene["effective_now"], scene
     with SessionLocal() as session:
         plan = session.get(PlanVersion, scene["plan_version_id"])
-        assert plan is not None and plan.status == "ACTIVE", scene["plan_version_id"]
+        assert plan is not None and plan.status == "SELECTED", (plan.status if plan else None)
         journey = session.get(Journey, scene["journey_id"])
-        assert journey.current_activity_id, "ACTIVE without a cursor: nothing to advance"
-        cursor = session.get(Activity, journey.current_activity_id)
-        assert cursor is not None and cursor.plan_version_id == scene["plan_version_id"], journey.current_activity_id
+        assert journey.active_plan_version_id == scene["plan_version_id"], journey.active_plan_version_id
     populated = set(scene)
 
     # Empty stage: remove the journeys the seed created, then restore them by resetting again so

@@ -1421,6 +1421,13 @@ paths:
   # (test_openapi_runtime_method_parity_includes_v7_surface) asserts contract and runtime are
   # the same set - an implemented-but-unpublished surface is exactly the drift it catches.
   # ORD-0058: the scene read a Simulation client needs so it never invents its own clock.
+  # ORD-0078: the second stage of the demo, behind the same switch as reset.
+  /demo/start-scenario:
+    post:
+      operationId: startDemoScenario
+      responses:
+        '200': {description: 'Scenario started through /start, with the journey status and cursor it produced', content: {application/json: {schema: {type: object}}}}
+        '403': {description: 'CITYNEXUS_DEMO_MODE is not set; nothing was started', content: {application/json: {schema: {type: object}}}}
   /demo/scene:
     get:
       operationId: readDemoScene

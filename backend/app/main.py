@@ -1833,9 +1833,12 @@ def _advance_steps(session: Session, journey_id: str, timed) -> None:
     if plans:
         first = plans[0]
         plan_id = getattr(first, "id", None) or (first.get("id") if isinstance(first, dict) else None)
+    # Deliberately stops at SELECTED: `start_journey` flips the journey to ACTIVE, and
+    # `commerce/validators.py:33-41` refuses a booking unless the journey is PLANNED with a
+    # SELECTED plan.  Auto-starting therefore used to make M4's first half impossible to
+    # demonstrate; starting is now an explicit action on the stage.
     if plan_id is not None:
         timed("select", lambda: select_plan(UUID(journey_id), UUID(str(plan_id)), session))
-        timed("start", lambda: start_journey(UUID(journey_id), session))
     session.commit()
 
 
@@ -1845,7 +1848,11 @@ def _advance_report(session: Session, journey_id: str, steps: list[dict]) -> dic
         "steps": steps,
         "total_ms": round(sum(float(item["ms"]) for item in steps), 1),
         # Read back from the row rather than from a local: after a refusal the local can say "I picked X" while the journey still points nowhere.
-        "selected_plan_version_id": row.active_plan_version_id if row is not None else None,
+        "selected_plan_version_id": (
+            str(row.active_plan_version_id)
+            if row is not None and row.active_plan_version_id
+            else None
+        ),
         "journey_status": row.status if row is not None else None,
     }
 
@@ -1895,8 +1902,72 @@ def demo_reset(session: Session = Depends(get_session)) -> dict[str, str]:
     return {
         "status": "reset",
         **summary,
-        "simulation_advance": json.dumps(advance, ensure_ascii=False) if advance else None,
+        # default=str because an id arriving from an in-process handler can be a UUID rather
+        # than the string HTTP would have produced; one unserializable object must not take the
+        # whole reset response - the fixture door of ~30 modules - down with it.
+        "simulation_advance": (
+            json.dumps(advance, ensure_ascii=False, default=str) if advance else None
+        ),
     }
+
+@app.post("/api/v1/demo/start-scenario")
+def demo_start_scenario(session: Session = Depends(get_session)):
+    """Start the seeded journey, through `/start` and with all of its gates intact.
+
+    The second stage of the demo: reset leaves the journey PLANNED with a selected plan so
+    booking and transaction can still be demonstrated, and this is the step that turns it into
+    an executing journey with a cursor.  Same `CITYNEXUS_DEMO_MODE` guard as reset (it is a
+    state-changing demo action), same reporting: the route refuses by name rather than half-
+    doing it, and it reports whatever `/start` decided - including a stale-evidence refusal,
+    which is a true answer about the scenario and must not be smoothed over.
+    """
+
+    if not demo_mode_enabled():
+        return error(
+            "DEMO_MODE_REQUIRED",
+            "Starting the demo scenario needs CITYNEXUS_DEMO_MODE=true.",
+            status=403,
+            details={"flag": "CITYNEXUS_DEMO_MODE"},
+            message_key="demo.start_disabled",
+        )
+    with SessionLocal() as scene_session:
+        journey = scene_session.scalar(
+            select(Journey).where(Journey.active_plan_version_id.is_not(None))
+        ) or scene_session.scalar(select(Journey).order_by(Journey.created_at.desc()))
+        if journey is None:
+            return error(
+                "DEMO_SCENARIO_MISSING",
+                "There is no seeded scenario to start; call demo/reset first.",
+                status=409,
+                details={"journey_id": None},
+                message_key="demo.scenario_missing",
+            )
+        journey_id = journey.id
+        try:
+            twin = start_journey(UUID(journey_id), scene_session)
+            scene_session.commit()
+        except HTTPException as exc:
+            scene_session.rollback()
+            return error(
+                "DEMO_START_REFUSED",
+                str(exc.detail),
+                status=exc.status_code,
+                details={"journey_id": str(journey_id)},
+                message_key="demo.start_refused",
+            )
+    with SessionLocal() as check:
+        row = check.get(Journey, journey_id)
+    return {
+        "status": "started",
+        "journey_id": str(journey_id),
+        "journey_status": row.status if row is not None else None,
+        "current_activity_id": (
+            str(row.current_activity_id) if row is not None and row.current_activity_id else None
+        ),
+        "twin_present": twin is not None,
+    }
+
+
 
 
 @app.post("/api/v1/travelers", status_code=201)
@@ -6007,6 +6078,7 @@ def demo_scene(session: Session = Depends(get_session)):
             "demo_mode": demo_mode_enabled(),
             "journey_id": None,
             "journey_status": None,
+            "current_activity_id": None,
             "scene_start_at": None,
             "scene_end_at": None,
             "effective_now": None,
@@ -6025,8 +6097,13 @@ def demo_scene(session: Session = Depends(get_session)):
             datetime.fromisoformat(journey.end_at),
         )
     )
-    plan = session.scalar(
-        select(PlanVersion).where(PlanVersion.journey_id == journey.id, PlanVersion.status == "ACTIVE")
+    # The journey's pointer is the product's own statement of which plan it is executing -
+    # including one that is SELECTED but not yet started, which a status=="ACTIVE" filter
+    # dropped, making the scene report plan_version_id: null for a plan that existed.
+    plan = (
+        session.get(PlanVersion, journey.active_plan_version_id)
+        if journey.active_plan_version_id
+        else None
     )
     cursor_at: str | None = None
     if plan is not None:
@@ -6046,6 +6123,9 @@ def demo_scene(session: Session = Depends(get_session)):
         # Stated rather than implied: a DRAFT journey has a window but no cursor, and a client
         # must be able to see that difference instead of inferring it from a missing field.
         "journey_status": journey.status,
+        # Where the stage actually is: the panel labels Now/Next from this, and a client
+        # deriving it from activity order would be a second cursor truth.
+        "current_activity_id": str(journey.current_activity_id) if journey.current_activity_id else None,
         "scene_start_at": start_raw.isoformat(),
         "scene_end_at": end_raw.isoformat(),
         # Per journey: the cursor says where the traveller is; without one, the window's own
@@ -6056,7 +6136,7 @@ def demo_scene(session: Session = Depends(get_session)):
         # Reported, not judged: whether the evidence is still valid is the stale gate's job
         # (`STALE_RECOMPOSE_REQUIRED`), and a scene read must not grow a second opinion.
         "evidence_state": "REFERENCED" if evidence.get("expires_at") else "NO_FROZEN_EVIDENCE",
-        "plan_version_id": plan.id if plan else None,
+        "plan_version_id": str(plan.id) if plan is not None else None,
     }
 
 
