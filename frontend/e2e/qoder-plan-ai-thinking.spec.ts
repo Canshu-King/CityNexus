@@ -356,6 +356,83 @@ test.describe("ORD-0038 the AI sheet reports what it actually knows", () => {
     ).toBe(true);
   });
 
+  test("plan-ai-no-synthetic-success — rows the fallback assembled are not an AI result", async ({
+    page,
+  }) => {
+    test.setTimeout(150_000);
+    await page.emulateMedia({ colorScheme: "light", media: "screen" });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await readyStatus(page);
+    /* Measured on the shipped bundle with no model configured: the mission came back not
+       completed with `DeepSeek API key is not configured`, this component's own fallback
+       re-plan produced 2 rows, and the sheet said "已生成 2 个可选方案". */
+    await page.route(COMMANDS, (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          mission: { status: "FAILED", failure_reason: "DeepSeek API key is not configured" },
+        }),
+      }),
+    );
+    let generateCalls = 0;
+    /* State, not call order: the hub fetches /plans while the sheet is opening, so a
+       counter would let that request consume the "baseline" answer. */
+    let plansBody = "[]";
+    await page.route("**/api/v1/journeys/*/plans", (route) =>
+      route.fulfill({ status: 200, contentType: "application/json", body: plansBody }),
+    );
+    await page.route("**/api/v1/places?*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify([{ id: "place-a" }, { id: "place-b" }]),
+      }),
+    );
+    await page.route(GENERATE, (route) => {
+      generateCalls += 1;
+      // From here on the two rows exist, because this call is what created them.
+      plansBody = JSON.stringify([{ id: "plan-a" }, { id: "plan-b" }]);
+      void route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: plansBody,
+      });
+    });
+    await openSheet(page);
+    await page.getByTestId("plan-ai-submit").click();
+
+    const result = page.getByTestId("plan-ai-result");
+    await expect(result, node("plan-ai-no-synthetic-success",
+      "the run produced no outcome block at all")).toBeVisible({ timeout: 20_000 });
+    const status = await result.getAttribute("data-result-status");
+    const tone = await result.getAttribute("data-result-tone");
+    const rendered = (await result.innerText()).replace(/\s+/g, " ").trim();
+
+    expect(
+      generateCalls,
+      node("plan-ai-no-synthetic-success",
+        `the fallback re-plan never ran (calls: ${generateCalls}), so this case is no longer `
+        + "reproducing the sequence that produced the false success"),
+    ).toBeGreaterThan(0);
+    expect(
+      status,
+      node("plan-ai-no-synthetic-success",
+        `a mission that reported it did not run must never be presented as AI success; got `
+        + `${JSON.stringify(status)}: ${JSON.stringify(rendered)}`),
+    ).toBe("PLANS_WITHOUT_AI");
+    expect(
+      tone,
+      node("plan-ai-no-synthetic-success",
+        `the tone said ${JSON.stringify(tone)} while the AI was absent`),
+    ).not.toBe("ok");
+    expect(
+      /没有参与|did not take part/.test(rendered),
+      node("plan-ai-no-synthetic-success",
+        `the copy never told the traveller the AI was absent: ${JSON.stringify(rendered)}`),
+    ).toBe(true);
+  });
+
   test("plan-ai-preflight-honest — an unreadable AI status is reported as unknown, never as ready", async ({
     page,
   }) => {

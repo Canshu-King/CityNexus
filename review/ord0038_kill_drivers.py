@@ -108,6 +108,19 @@ CASES = [
         [('        if (!stale) setAiState("unknown");', '        if (!stale) setAiState("ready");')],
         "plan-ai-preflight-honest",
     ),
+    (
+        # The shape the production walk exposed: a mission that said it never ran, rows the
+        # component assembled itself, and the sheet calling that success.
+        "kill38-g-any-rows-count-as-ai-success",
+        "4350",
+        [
+            (
+                "      } else if (planCount > 0 && missionCompleted) {\n",
+                "      } else if (planCount > 0) {\n",
+            )
+        ],
+        "plan-ai-no-synthetic-success",
+    ),
 ]
 
 only = sys.argv[1:] or [c[0] for c in CASES]
