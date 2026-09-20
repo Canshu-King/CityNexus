@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "../components/v8/Icon";
 import { MapPanel } from "../components/v8/MapPanel";
 import { AgentComposer } from "../features/agent/AgentComposer";
@@ -10,6 +10,7 @@ import { HotelsPanel } from "../features/stay/HotelsPanel";
 import { PlanComparison } from "../features/planning/PlanComparison";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { liveActivityWindow } from "../lib/executionWindow";
+import { useElapsedSeconds } from "../lib/waitClock";
 import { MobilitySheet } from "../features/mobility/MobilitySheet";
 import { StayExplorer } from "../features/stay/StayExplorer";
 import { ControlTowerPanel } from "../features/intelligence/ControlTowerPanel";
@@ -29,6 +30,7 @@ import {
   JourneyTrialSetup,
   localDateTimeInZoneToIso,
   type JourneyTrialDraft,
+  type TrialPhase,
 } from "../features/setup/JourneyTrialSetup";
 import type { AgentRuntimeStatus } from "../api/citynexus";
 import {
@@ -125,6 +127,14 @@ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 const money = formatMinorMoney;
+
+/** Waiting, found, empty and refused are four different faces and must not share one. */
+type StaySearchState = "idle" | "searching" | "found" | "empty" | "failed";
+
+/** A fetch the traveller stopped is an AbortError; a network failure is a TypeError. */
+function isAbort(cause: unknown): boolean {
+  return cause instanceof Error && cause.name === "AbortError";
+}
 
 /**
  * Wall-clock helpers that read an ISO instant in the *journey's* time zone.
@@ -303,6 +313,19 @@ export function V8Experience() {
   // vanished (master mission Phase 10).
   const [unreachable, setUnreachable] = useState(false);
   const [setupBusy, setSetupBusy] = useState(false);
+  /* ORD-0047 — a cold city's first stay search measured 114.98s through the production
+     preview, during which this screen showed nothing at all.  The shell is the only party
+     that knows which request it is awaiting, so it owns the phase, the clock and the
+     controller the traveller's "stop waiting" aborts.  `journeyCreated` keeps the failure
+     notice from denying a trip whose row is already committed. */
+  const [createPhase, setCreatePhase] = useState<TrialPhase | null>(null);
+  const [createStartedAt, setCreateStartedAt] = useState<number | null>(null);
+  const [journeyCreated, setJourneyCreated] = useState(false);
+  const [stoppedWaiting, setStoppedWaiting] = useState(false);
+  const createAbortRef = useRef<AbortController | null>(null);
+  // "empty" is a completed search with nothing in it: neither a spinner nor an error.
+  const [staySearch, setStaySearch] = useState<StaySearchState>("idle");
+  const [stayAttempts, setStayAttempts] = useState(0);
   const { locale, switchLocale } = useLocale();
   const t = useT();
   // "Needs attention" means an event the traveller has NOT already handled.
@@ -546,7 +569,7 @@ export function V8Experience() {
         }),
       });
       localStorage.setItem("citynexus.v8.journey_id", journey.id);
-      await v8Request(`/api/v1/journeys/${journey.id}/stay-options/generate`, { method: "POST" });
+      await searchStayOptions(journey.id, "Tianjin stay-aware journey", new AbortController().signal);
       await load(journey.id);
       setSetupOpen(false);
       navigate("discover");
@@ -556,9 +579,73 @@ export function V8Experience() {
       setSetupBusy(false);
     }
   };
+  /**
+   * One stay search, one honest outcome.  Cold cities measured 114.98s here and came back
+   * with `top_k: []`, so the count -- not the 200 -- is what decides the next screen, and a
+   * zero result gets its own state instead of Today's ordinary face.
+   */
+  const searchStayOptions = async (journeyId: string, query: string, signal: AbortSignal) => {
+    setCreatePhase("stay-options");
+    setStaySearch("searching");
+    setStayAttempts((current) => current + 1);
+    try {
+      const generated = await v8Request<{ top_k?: unknown }>(
+        `/api/v1/journeys/${journeyId}/stay-options/generate`,
+        { method: "POST", body: JSON.stringify({ query }), signal },
+      );
+      const count = Array.isArray(generated?.top_k) ? generated.top_k.length : 0;
+      setStaySearch(count === 0 ? "empty" : "found");
+      return count;
+    } catch (cause) {
+      if (!isAbort(cause)) setStaySearch("failed");
+      throw cause;
+    }
+  };
+
+  /** Abandon the wait, not the trip: the server keeps whatever it is doing. */
+  const stopWaiting = () => {
+    setStoppedWaiting(true);
+    createAbortRef.current?.abort();
+  };
+
+  /** Today's "look again": the trip is already written, only the search is repeated. */
+  const retryStaySearch = async () => {
+    if (!data) return;
+    const controller = new AbortController();
+    createAbortRef.current = controller;
+    setStoppedWaiting(false);
+    setCreateStartedAt(Date.now());
+    try {
+      await searchStayOptions(
+        data.journey.id,
+        `${data.journey.city_code} stay-aware journey`,
+        controller.signal,
+      );
+      await load(data.journey.id);
+    } catch (cause) {
+      if (!isAbort(cause)) {
+        setMessage(cause instanceof Error ? cause.message : t("shell.loadError"));
+      }
+    } finally {
+      createAbortRef.current = null;
+      setCreatePhase(null);
+      setCreateStartedAt(null);
+    }
+  };
+
   const createJourney = async (draft: JourneyTrialDraft) => {
     setSetupBusy(true);
     setMessage(null);
+    setStoppedWaiting(false);
+    setJourneyCreated(false);
+    setStaySearch("idle");
+    setStayAttempts(0);
+    setCreateStartedAt(Date.now());
+    const controller = new AbortController();
+    createAbortRef.current = controller;
+    // Read from here, not from `journeyCreated`: this closure holds the value from the
+    // render it was created in, which is always false during the attempt.
+    let tripWritten = false;
     try {
       const cityName = draft.cityName.trim();
       // The real-city discovery provider materialises places under a latin
@@ -567,16 +654,20 @@ export function V8Experience() {
       const cityCode = `${draft.countryCode.trim() || "CN"}-${cityCodeSlug(cityName)}`;
       const startAt = localDateTimeInZoneToIso(draft.startAt, draft.timezone.trim());
       const endAt = localDateTimeInZoneToIso(draft.endAt, draft.timezone.trim());
+      setCreatePhase("traveler");
       const traveler = await v8Request<{ id: string }>("/api/v1/travelers", {
         method: "POST",
+        signal: controller.signal,
         body: JSON.stringify({
           display_name: "City traveler",
           locale: locale === "zh-CN" ? "zh-CN" : "en-GB",
           timezone: draft.timezone.trim(),
         }),
       });
+      setCreatePhase("journey");
       const journey = await v8Request<{ id: string }>("/api/v1/journeys", {
         method: "POST",
+        signal: controller.signal,
         body: JSON.stringify({
           traveler_id: traveler.id,
           title: `${cityName} · journey`,
@@ -592,26 +683,51 @@ export function V8Experience() {
           departure_anchor: { at: endAt, location: draft.departureLocation.trim() },
         }),
       });
+      tripWritten = true;
+      setJourneyCreated(true);
       localStorage.setItem("citynexus.v8.journey_id", journey.id);
-      await v8Request(`/api/v1/journeys/${journey.id}/stay-options/generate`, {
-        method: "POST",
-        body: JSON.stringify({ query: `${cityName} stay-aware journey` }),
-      });
+      const stayCount = await searchStayOptions(
+        journey.id,
+        `${cityName} stay-aware journey`,
+        controller.signal,
+      );
+      setCreatePhase("experience");
       await load(journey.id);
       setSetupOpen(false);
       // Land on Today and open the planning entry: the next thing a traveller
       // wants after creating a trip is a plan, not a discovery console.
       navigate("hub");
-      setPlanAiOpen(true);
-      setMessage(
-        locale.startsWith("zh")
-          ? "行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。"
-          : "Trip created. Tell the AI how you like to travel and it will build candidate plans.",
-      );
+      if (stayCount === 0) {
+        /* An empty search is not a success to announce: Today carries the empty block with
+           its own retry, and opening the planner on top of nothing is the same lie. */
+        setMessage(null);
+      } else {
+        setPlanAiOpen(true);
+        setMessage(
+          locale.startsWith("zh")
+            ? "行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。"
+            : "Trip created. Tell the AI how you like to travel and it will build candidate plans.",
+        );
+      }
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("shell.loadError"));
+      if (isAbort(error)) {
+        // No endpoint cancels this search, so say what the traveller gave up on instead.
+        setMessage(
+          locale.startsWith("zh")
+            ? tripWritten
+              ? "已停止等待。行程已经创建，住宿搜索可能仍在服务器上运行，稍后回到 Today 查看结果。"
+              : "已停止等待，行程还没有创建。"
+            : tripWritten
+              ? "Stopped waiting. The trip is created and the stay search may still be running server-side — come back to Today for the result."
+              : "Stopped waiting — no journey was created.",
+        );
+      } else {
+        setMessage(error instanceof Error ? error.message : t("shell.loadError"));
+      }
     } finally {
       setSetupBusy(false);
+      setCreatePhase(null);
+      createAbortRef.current = null;
     }
   };
   const selectOption = async (id: string) => {
@@ -823,6 +939,11 @@ export function V8Experience() {
         onCancel={data ? () => setSetupOpen(false) : undefined}
         busy={setupBusy}
         message={message}
+        phase={createPhase}
+        startedAt={createStartedAt}
+        journeyCreated={journeyCreated}
+        stoppedWaiting={stoppedWaiting}
+        onStopWaiting={stopWaiting}
       />
     );
   if (busy && !data)
@@ -1010,6 +1131,10 @@ export function V8Experience() {
                 onNavigate={navigate}
                 onNewJourney={() => setSetupOpen(true)}
                 onPlanWithAi={() => setPlanAiOpen(true)}
+                staySearch={staySearch}
+                stayAttempts={stayAttempts}
+                waitStartedAt={createStartedAt}
+                onRetryStays={() => void retryStaySearch()}
               />
             </>
           )}
@@ -1444,6 +1569,10 @@ function Hub({
   onNavigate,
   onNewJourney,
   onPlanWithAi,
+  staySearch,
+  stayAttempts,
+  waitStartedAt,
+  onRetryStays,
 }: {
   data: V8Data;
   selected: V8Data["options"][number] | null;
@@ -1454,10 +1583,17 @@ function Hub({
   onNavigate: (route: string) => void;
   onNewJourney: () => void;
   onPlanWithAi: () => void;
+  /* ORD-0047: a stay search that answered "200, nothing" must not wear Today's ordinary
+     face, and one that is running must be countable. */
+  staySearch: StaySearchState;
+  stayAttempts: number;
+  waitStartedAt: number | null;
+  onRetryStays: () => void;
 }) {
   const t = useT();
   const { locale, switchLocale } = useLocale();
   const zh = locale.startsWith("zh");
+  const stayWaited = useElapsedSeconds(staySearch === "searching" ? waitStartedAt : null);
   // The traveller may intentionally proceed after seeing a tight-budget warning.
   const [advisoryDismissed, setAdvisoryDismissed] = useState(false);
 
@@ -1542,6 +1678,57 @@ function Hub({
                 : `Trip to ${cityLabel}`
               : data.journey.title}
           </h1>
+          {staySearch === "searching" && (
+            <div className="hub-stay-searching" data-testid="hub-stay-search" data-stay-search="searching">
+              <strong>
+                {zh ? "正在搜索住宿" : "Looking for stays"} ·{" "}
+                <span data-testid="hub-stay-elapsed">
+                  {zh ? `已等待 ${stayWaited} 秒` : `waiting ${stayWaited}s`}
+                </span>
+              </strong>
+              <span>
+                {zh
+                  ? "服务器不会中途汇报进度，这里只有真实等待时间。第一次搜索一个城市可能要一两分钟。"
+                  : "The server reports nothing until it finishes, so this is measured waiting time. A city's first search can take a minute or two."}
+              </span>
+            </div>
+          )}
+          {staySearch === "failed" && (
+            <div className="hub-stay-refused" data-testid="hub-stay-search" data-stay-search="failed" role="alert">
+              <strong>
+                {zh ? "住宿搜索失败了，行程本身还在。" : "The stay search failed — your trip is untouched."}
+              </strong>
+              <button type="button" className="v8-outline-button" data-testid="hub-stay-retry" onClick={onRetryStays}>
+                {zh ? "再查一次" : "Search again"}
+              </button>
+            </div>
+          )}
+          {staySearch === "empty" && data.options.length === 0 && (
+            /* A 200 whose top_k is empty is a completed search with no answer in it. Rendering
+               Today as if it had found stays is the same defect as showing a spinner forever:
+               the traveller cannot tell an empty result from a working one. */
+            <section className="hub-stay-empty" data-testid="hub-no-stays" data-stay-search="empty" role="status">
+              <strong>{zh ? "这次没找到可推荐的住宿" : "No stay options came back this time"}</strong>
+              <p>
+                {zh
+                  ? "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿。我们不会编造酒店。"
+                  : "Your trip is created and its dates are intact — this search simply returned nothing to compare. We will not invent hotels."}
+              </p>
+              <div className="hub-stay-empty-actions">
+                <button type="button" className="v8-primary-button" data-testid="hub-stay-retry" onClick={onRetryStays}>
+                  {zh ? "再查一次" : "Search again"}
+                </button>
+                <button type="button" className="v8-quiet-button" onClick={() => onNavigate("stay")}>
+                  {zh ? "去住宿页看看" : "Open the stay page"}
+                </button>
+              </div>
+              {stayAttempts > 1 && (
+                <small data-testid="hub-stay-attempts">
+                  {zh ? `第 ${stayAttempts} 次查询` : `attempt ${stayAttempts}`}
+                </small>
+              )}
+            </section>
+          )}
           {advisory && !advisoryDismissed && (
             <div
               className={`today-advisory${advisory.tight ? " tight" : ""}`}
