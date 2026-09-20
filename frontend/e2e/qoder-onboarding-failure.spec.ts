@@ -115,10 +115,27 @@ test.describe("ORD-0034 onboarding surfaces a failed create", () => {
 
     await page.route("**/api/v1/journeys", async (route) => {
       if (route.request().method() !== "POST") return route.fallback();
+      /* A4-1 froze the envelope: `VALIDATION_ERROR` with details.errors[].loc/msg.  This is
+         the body a real create returns when an anchor location is left blank. */
       await route.fulfill({
-        status: 500,
+        status: 422,
         contentType: "application/json",
-        body: JSON.stringify({ detail: NAMED_ERROR }),
+        body: JSON.stringify({
+          error: {
+            code: "VALIDATION_ERROR",
+            message: "Request validation failed",
+            trace_id: "probe-trace",
+            details: {
+              errors: [
+                {
+                  loc: ["body", "arrival_anchor", "location"],
+                  msg: "String should have at least 1 character",
+                  type: "string_too_short",
+                },
+              ],
+            },
+          },
+        }),
       });
     });
 
@@ -128,10 +145,20 @@ test.describe("ORD-0034 onboarding surfaces a failed create", () => {
 
     const error = page.getByTestId("trial-create-error");
     await expect(error).toBeVisible({ timeout: 15_000 });
+    const shown = (await error.innerText()).replace(/\s+/g, " ");
     await expect(
       error,
       "e2e/qoder-onboarding-failure.spec.ts :: named reason inside trial-create-error",
-    ).toContainText(NAMED_ERROR);
+    ).toContainText("arrival_anchor.location");
+    await expect(
+      error,
+      "e2e/qoder-onboarding-failure.spec.ts :: named reason inside trial-create-error",
+    ).toContainText("String should have at least 1 character");
+    expect(
+      /^Request validation failed\s*$/.test(shown.trim()),
+      "e2e/qoder-onboarding-failure.spec.ts :: named reason inside trial-create-error — the panel " +
+        `shows only the constant headline: ${JSON.stringify(shown.trim())}`,
+    ).toBe(false);
   });
 
   /* ORD-0044 -- the acceptance item.  Nothing is mocked here: a 4-day window is legal by a
