@@ -379,6 +379,7 @@ from app.stay_generation_operations import (
     FAILED,
     abandon_operation,
     operation_payload,
+    operations_for_journey,
     read_operation,
     reconcile_interrupted_operations,
     submit_operation,
@@ -2572,6 +2573,18 @@ def submit_stay_generation(
         "abandon_url": body["abandon_url"],
         "fingerprint": row.fingerprint,
     }
+
+
+@app.get("/api/v1/journeys/{journey_id}/stay-generations")
+def list_stay_generations(journey_id: UUID, session: Session = Depends(get_session)):
+    """Name the job this journey already has open, so a reload can restore it.
+
+    Without this, "reload restores the same operation" only works for a client that kept the
+    id - and a phone that restarted the browser is exactly the client that did not.
+    """
+
+    require(session, Journey, str(journey_id), "Journey")
+    return operations_for_journey(session, str(journey_id))
 
 
 @app.get("/api/v1/journeys/{journey_id}/stay-generations/{operation_id}")

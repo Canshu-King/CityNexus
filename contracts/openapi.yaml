@@ -1416,6 +1416,29 @@ paths:
       operationId: generateStayJourneyOptions
       responses:
         '200': {description: Bounded Top-K stay and Journey options, content: {application/json: {schema: {type: object}}}}
+  # ORD-0057 (arbitration `5749459724` section 1): an accepted generation is an operation,
+  # not a held-open request.  These four are published here because the parity gate
+  # (test_openapi_runtime_method_parity_includes_v7_surface) asserts contract and runtime are
+  # the same set - an implemented-but-unpublished surface is exactly the drift it catches.
+  /journeys/{journey_id}/stay-generations:
+    post:
+      operationId: submitStayGeneration
+      responses:
+        '202': {description: 'Operation accepted: operation_id, status, status_url, abandon_url, retry_after_ms, reused', content: {application/json: {schema: {type: object}}}}
+    get:
+      operationId: listStayGenerations
+      responses:
+        '200': {description: 'The job this journey already has open, plus its latest operation, so a reload restores it without an id', content: {application/json: {schema: {type: object}}}}
+  /journeys/{journey_id}/stay-generations/{operation_id}:
+    get:
+      operationId: readStayGeneration
+      responses:
+        '200': {description: 'Status, phase, outcome, elapsed_ms, retry_after_ms, stored result or error', content: {application/json: {schema: {type: object}}}}
+  /journeys/{journey_id}/stay-generations/{operation_id}/abandon:
+    post:
+      operationId: abandonStayGeneration
+      responses:
+        '200': {description: 'Idempotent stop request: ABANDON_REQUESTED while in flight, the real terminal state otherwise', content: {application/json: {schema: {type: object}}}}
   /journeys/{journey_id}/stay-options:
     get:
       operationId: listStayJourneyOptions

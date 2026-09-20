@@ -376,6 +376,29 @@ def read_operation(session: Session, operation_id: str) -> StayGenerationOperati
     return session.get(StayGenerationOperation, operation_id)
 
 
+def operations_for_journey(session: Session, journey_id: str) -> dict[str, Any]:
+    """What a returning client can ask instead of POSTing again and hoping to dedupe.
+
+    Restoring the *same* job after a reload is only honest if the job can be found without
+    knowing its id: the fingerprint match happens to cover the common case (same question),
+    but a client that came back later - or that asks a differently-worded question - needs
+    the open job named, not silently re-created.
+    """
+
+    rows = session.scalars(
+        select(StayGenerationOperation)
+        .where(StayGenerationOperation.journey_id == journey_id)
+        .order_by(StayGenerationOperation.queued_at.desc())
+    ).all()
+    open_rows = [row for row in rows if row.status in OPEN_STATUSES]
+    return {
+        "journey_id": journey_id,
+        "open": [operation_payload(row) for row in open_rows],
+        "latest": operation_payload(rows[0]) if rows else None,
+        "count": len(rows),
+    }
+
+
 def abandon_operation(session: Session, operation_id: str) -> StayGenerationOperation:
     """Ask a job to stop.  Idempotent, and honest about what just happened.
 

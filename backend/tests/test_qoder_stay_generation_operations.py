@@ -651,6 +651,41 @@ def test_a_reload_reads_the_stored_operation_and_a_repeat_post_reuses_it(monkeyp
     assert finished["status"] == COMPLETED, finished
 
 
+def test_a_returning_client_can_name_its_open_job_without_the_id(monkeypatch) -> None:
+    """The read side of "reload restores the same operation".
+
+    A phone that lost its stored id still deserves to find the job that is already running -
+    otherwise the only way back is another POST, which is how one 115s chain becomes two.
+    """
+
+    http = _SlowHttp(delay_s=0.2)
+    _use(monkeypatch, http)
+    journey_id = _journey()
+    operation_id = _submit(journey_id)["operation_id"]
+
+    listing = client.get(f"/api/v1/journeys/{journey_id}/stay-generations")
+    assert listing.status_code == 200, listing.text
+    body = listing.json()
+    assert body["journey_id"] == journey_id, body
+    assert [item["operation_id"] for item in body["open"]] == [operation_id], body["open"]
+    assert body["latest"]["operation_id"] == operation_id, body["latest"]
+    assert body["count"] == 1, body
+
+    finished = _wait(journey_id, operation_id)
+    settled = client.get(f"/api/v1/journeys/{journey_id}/stay-generations").json()
+    assert settled["open"] == [], settled["open"]
+    assert settled["latest"]["status"] == finished["status"], settled["latest"]
+    assert settled["latest"]["outcome"] in OUTCOMES, settled["latest"]
+
+
+def test_a_journey_that_never_asked_reports_nothing_rather_than_a_stale_job() -> None:
+    """`latest: null` is the honest answer; an inherited job from another trip is not."""
+
+    journey_id = _journey()
+    body = client.get(f"/api/v1/journeys/{journey_id}/stay-generations").json()
+    assert body["open"] == [] and body["latest"] is None and body["count"] == 0, body
+
+
 def test_the_status_route_is_scoped_to_its_journey(monkeypatch) -> None:
     http = _SlowHttp(delay_s=0.0)
     _use(monkeypatch, http)

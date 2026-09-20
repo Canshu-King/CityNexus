@@ -2717,8 +2717,8 @@ ORD-0033 那条"深路径必须回 422 而不是裸 500"的门在新架构下依
 | 新契约自己的门 `tests/test_qoder_stay_generation_operations.py` | **21 passed**（受理<1s、三击一链、不同问题不同 operation、四态可区分×4、abandon 语义/幂等/不可翻案、部分唯一索引、轮询阶梯、刷新恢复、同步门口不漂移、WORKER_LOST 回收、timeout 配置生效） |
 | 连带复跑（单独配对） | `phases`+`window`+`v8_stay_mobility` = **19 passed**；`v8_stay_mobility`+`本新文件` = **25 passed**；`v16`+`本新文件` = 全绿 |
 | **全量后端（T3 口径，真实读数）** | **970 passed / 2 failed / 15 skipped，collected 987（166.72s）** ⇒ **不是全绿**：红的 2 条 + 1 个 error 全在 `test_qoder_stay_generation_operations.py` 自己里面（`test_the_terminal_answer_keeps_the_four_cases_apart`、`test_a_different_question_is_a_different_operation`、`test_acceptance_answers_while_the_provider_is_still_being_asked`），**单独跑与多数配对下都绿**，只有整套顺序下才出现 ⇒ 见 §94.6，ORD-0057 记 PARTIAL |
-| 变异（`ord57_mutants.json` + `ord57_A9.json`） | **10/10 由点名节点杀掉**，每一次还原后 SHA-256 逐字节相同。A1 指纹不吞问题、A2 接受 abandon 后仍交付、A3 状态机不 enforce、A4 没命中行的 UPDATE 谎报成功、A5 收下来路不明的阶段名、A6 worker 异常丢掉 reason 原文、A7 孤儿作业不回收、A8/A10 同步门口与 operation 存的东西漂移、**A9 把 `wait_for_operation` 塞回 202 门口（= 换名字的旧请求）** |
-| 受理延迟 | `review/probe-ord57-acceptance-latency.py` → `.../ord57/acceptance-latency.json` |
+| 变异（`ord57_mutants.json` + `ord57_A9.json`） | **9/10 在主批 + A9 单独复跑杀掉**（主批那次 A9 是`rc=2`、`3 errors in 2.11s` = 收集错，不是突变存活）；A9 重跑后 5 个节点红、含点名那条，**实质 10/10**（主批 9/9 主人断言成立，还原字节相同 10/10）。只读 JSON 的人会算出 9/10，因为 `ord57_mutants.json` 里 A9 自己写着 `killed_as_expected: false`。A1 指纹不吞问题、A2 接受 abandon 后仍交付、A3 状态机不 enforce、A4 没命中行的 UPDATE 谎报成功、A5 收下来路不明的阶段名、A6 worker 异常丢掉 reason 原文、A7 孤儿作业不回收、A8/A10 同步门口与 operation 存的东西漂移、**A9 把 `wait_for_operation` 塞回 202 门口（= 换名字的旧请求）** |
+| 受理延迟 | **未产出**：探针首笔 POST 返回 500，且那次运行发生在`acceptance-latency.json` / `uvicorn.log` 两个路径被写进报告之前 ⇒ 目录是空的。探针已改成把服务端 stderr 落盘，重跑后才有数；在那之前这里没有 p50/p95/max，也不该有。
 
 A9 第一次跑报的是 3 个 collection error 而不是杀点名节点——原因是我这轮正在编辑同一个 `main.py`，
 批量脚本的"改写→跑→还原"和我的编辑撞了同一次，**那次读数不可归因**；我把 A9 单独在无并发的树上重跑，
@@ -2741,6 +2741,14 @@ A9 第一次跑报的是 3 个 collection error 而不是杀点名节点——�
 `db/schema.sql` 只 `+32/-0`。`tools/verification/mutation_campaign.py` 与
 `qoder-handoff/qoder_xiaomi_truth_hardening_v6.patch` 继续**不暂存**（前者是 Commander 的量具，后者归 `6af4cf53`）。
 
+### 94.5b 契约登记（Commander 复核发现的第 1 条真缺陷）
+
+`contracts/openapi.yaml` 里 `stay-generations` 命中 **0**，而运行时已有 4 个新表面 ⇒
+`tests/test_contract.py::test_openapi_runtime_method_parity_includes_v7_surface`（断言
+`runtime == contract` 精确相等）在**隔离跑**下就是红的。这条只有单独跑才看得见，我没报上来说是漏了。
+处理：把 4 个表面按现有条目风格写进契约文件（`submitStayGeneration` / `listStayGenerations` /
+`readStayGeneration` / `abandonStayGeneration`），**不放宽那条断言**——它正是"契约与运行时不许漂移"的门。
+
 ### 94.6 全量套内出现的红：现状与下一步（不粉饰）
 
 `tests/test_qoder_stay_generation_operations.py` 单独跑 **21/21 绿**，与 `v8_stay_mobility`、`v16` 配对也绿；
@@ -2755,4 +2763,4 @@ A9 第一次跑报的是 3 个 collection error 而不是杀点名节点——�
 当前在执行器里排队的 id 列表"，让下一次红能一次定位；② 要么给测试自己的执行器（`_MAX_WORKERS` 可注入），
 要么把这几条断言改成"等 terminal，不设 30s 墙"；③ 复跑全量两次连跑取同口径数，绿了才把 ORD-0057 转 DONE。
 ORD-0057 的**受理延迟分布**也还没拿到数：探针在真 uvicorn 上第一次 POST 返回 500（TestClient 不复现），
-已把服务端 stderr 收进 `.../ord57/uvicorn.log` 以便下一轮直接看栈——**没有实测数我就不写 p50/p95**。
+`.../ord57/uvicorn.log` **现在还不存在**——首次 500 那轮跑在加日志之前，我上一条 status 行写的"stderr 已收 log"当时没有对应文件，在此更正；探针代码现在会把服务端 stderr 落进那个路径，重跑才有栈可读——**没有实测数我就不写 p50/p95**。
