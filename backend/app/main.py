@@ -1766,6 +1766,90 @@ def approve_agent_action(
     )
 
 
+def advance_seed_to_executable(session: Session, journey_id: str) -> dict:
+    """Push the freshly seeded journey to ACTIVE through the routes a real client would call.
+
+    Deliberately calls the handlers rather than the service layer: `select` and `/start` are where
+    the frozen-evidence, feasibility, single-ACTIVE-plan and C4 rules live, and a demo that skipped
+    them would be demonstrating a state the product cannot actually reach.
+    """
+
+    steps: list[dict[str, object]] = []
+
+    def timed(name: str, call):
+        began = time.perf_counter()
+        try:
+            outcome = call()
+        except Exception as exc:  # noqa: BLE001 - a refused or broken step must not 500 reset
+            # reset is the fixture door for ~30 test modules and for the panel; if the advance
+            # cannot reach ACTIVE, the honest answer is a recorded refusal in the response, not
+            # a 500 that takes the whole seeded library down with it.
+            if isinstance(exc, HTTPException) and exc.status_code in {404, 409, 422}:
+                pass  # a real policy refusal: reported below with its detail
+            steps.append(
+                {
+                    "step": name,
+                    "ms": round((time.perf_counter() - began) * 1000.0, 1),
+                    "refused": getattr(exc, "status_code", type(exc).__name__),
+                    "detail": str(getattr(exc, "detail", None) or exc)[:300],
+                }
+            )
+            try:
+                session.rollback()
+            except Exception:  # pragma: no cover
+                pass
+            return None
+        steps.append(
+            {"step": name, "ms": round((time.perf_counter() - began) * 1000.0, 1), "ok": True}
+        )
+        return outcome
+
+    try:
+        _advance_steps(session, journey_id, timed)
+    except Exception as exc:  # noqa: BLE001 - an ORM flush error must not outlive the reset
+        # An ORM failure here surfaces at commit time, i.e. outside any single step, so the
+        # whole advance needs the same non-fatal treatment: record what happened, roll back to
+        # the seeded state, and let reset still answer 200 with an honest refusal attached.
+        steps.append(
+            {
+                "step": "advance",
+                "ms": 0.0,
+                "refused": type(exc).__name__,
+                "detail": str(exc)[:300],
+            }
+        )
+        try:
+            session.rollback()
+        except Exception:  # pragma: no cover
+            pass
+    return _advance_report(session, journey_id, steps)
+
+
+def _advance_steps(session: Session, journey_id: str, timed) -> None:
+    plans = timed("plans/generate", lambda: generate_journey_plans(UUID(journey_id), None, session))
+    # Called in-process, the handler hands back ORM rows rather than the JSON a client would
+    # see - the id is the same either way, and guessing the shape is how this line died once.
+    plan_id = None
+    if plans:
+        first = plans[0]
+        plan_id = getattr(first, "id", None) or (first.get("id") if isinstance(first, dict) else None)
+    if plan_id is not None:
+        timed("select", lambda: select_plan(UUID(journey_id), UUID(str(plan_id)), session))
+        timed("start", lambda: start_journey(UUID(journey_id), session))
+    session.commit()
+
+
+def _advance_report(session: Session, journey_id: str, steps: list[dict]) -> dict:
+    row = session.get(Journey, journey_id)
+    return {
+        "steps": steps,
+        "total_ms": round(sum(float(item["ms"]) for item in steps), 1),
+        # Read back from the row rather than from a local: after a refusal the local can say "I picked X" while the journey still points nowhere.
+        "selected_plan_version_id": row.active_plan_version_id if row is not None else None,
+        "journey_status": row.status if row is not None else None,
+    }
+
+
 def demo_mode_enabled() -> bool:
     """The one seam that says whether this process is allowed to be a stage.
 
@@ -1799,7 +1883,20 @@ def demo_reset(session: Session = Depends(get_session)) -> dict[str, str]:
     # appear to have an active autopilot with no subscription of its own.
     stop_autorun()
     summary = seed_demo(session)
-    return {"status": "reset", **summary}
+    # ORD-0074: a seeded demo journey is DRAFT with no PlanVersion, which makes every panel
+    # action that requires ACTIVE + a selected plan unreachable straight after the teacher
+    # presses reset.  The fix is the real pipeline, run in the open, not a status column.
+    with SessionLocal() as scene_session:
+        seeded = scene_session.scalar(select(Journey).order_by(Journey.created_at.desc()))
+        advance = (
+            advance_seed_to_executable(scene_session, seeded.id) if seeded is not None else None
+        )
+        scene_session.commit()
+    return {
+        "status": "reset",
+        **summary,
+        "simulation_advance": json.dumps(advance, ensure_ascii=False) if advance else None,
+    }
 
 
 @app.post("/api/v1/travelers", status_code=201)
@@ -5916,6 +6013,10 @@ def demo_scene(session: Session = Depends(get_session)):
             "basis": None,
             "evidence_expires_at": None,
             "evidence_state": "NO_SCENARIO",
+            # Constant key set: a strict client-side shape check (missing key -> the envelope is
+            # dropped) would otherwise turn an honest empty stage into "cannot read the scene",
+            # which is the ORD-0070 family of defects seen from the other side.
+            "plan_version_id": None,
         }
     context = session.get(JourneyTripContext, journey.id)
     start_raw, end_raw = (

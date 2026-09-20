@@ -19,6 +19,7 @@ fail-closed gate on the frozen list.
 
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
 from uuid import UUID
 
@@ -166,11 +167,76 @@ def test_the_scene_clock_moves_with_the_scenario_and_never_with_the_device(_stag
         row.end_at = "2027-03-06T18:00:00+08:00"
         session.commit()
     after = _scene()
-    if after["basis"] == "JOURNEY_START":
+    # Which moment wins is stated, not guessed: an ACTIVE journey is read from its cursor, so
+    # moving the window must not move it, while a journey with no cursor is anchored on the
+    # window itself.  Either way the answer is the scenario's instant and never wall time.
+    if after["basis"] == "CURSOR":
+        assert after["effective_now"] == before["effective_now"], (before, after)
+    else:
+        assert after["scene_start_at"] == shifted, after
         assert after["effective_now"] == shifted, after
-    assert after["scene_start_at"] == shifted, after
-    assert after["effective_now"] != before["effective_now"], (before, after)
     assert after["effective_now"] != datetime.now(timezone.utc).isoformat(), after
+
+
+def test_the_seeded_stage_is_executable_and_both_branches_share_one_key_set(_stage_on) -> None:
+    """After the button a teacher presses, the panel must have a real step to take.
+
+    Two halves, both asserted:
+
+    (a) `demo/reset` leaves the journey `ACTIVE` with a selected plan and a cursor, reached by
+        the existing `plans/generate` -> `select` -> `/start` pipeline - so the state is one the
+        product's own validators allow, not a column someone set.  The cost of doing that in the
+        open is reported, not hidden, because the commander's rule is ">10s => stop and tell me".
+    (b) the populated stage and an empty stage answer with **equal key sets**.  A strict client
+        shape check treats a missing key as "cannot read the envelope", which would render an
+        honest empty stage as an outage - the ORD-0070 family, from the server side.
+    """
+
+    response = client.post("/api/v1/demo/reset")
+    assert response.status_code == 200, response.text
+    payload = response.json()
+    assert payload["simulation_advance"], payload
+    advance = json.loads(payload["simulation_advance"])
+    steps = {item["step"]: item for item in advance["steps"]}
+    assert "plans/generate" in steps and "select" in steps and "start" in steps, advance
+    assert all(item.get("ok") for item in advance["steps"]), advance
+    assert advance["journey_status"] == "ACTIVE", advance
+    assert isinstance(advance["total_ms"], float), advance
+
+    scene = _scene()
+    assert scene["journey_status"] == "ACTIVE", scene
+    assert scene["plan_version_id"], scene
+    assert scene["basis"] == "CURSOR", scene
+    assert scene["effective_now"], scene
+    with SessionLocal() as session:
+        plan = session.get(PlanVersion, scene["plan_version_id"])
+        assert plan is not None and plan.status == "ACTIVE", scene["plan_version_id"]
+        journey = session.get(Journey, scene["journey_id"])
+        assert journey.current_activity_id, "ACTIVE without a cursor: nothing to advance"
+        cursor = session.get(Activity, journey.current_activity_id)
+        assert cursor is not None and cursor.plan_version_id == scene["plan_version_id"], journey.current_activity_id
+    populated = set(scene)
+
+    # Empty stage: remove the journeys the seed created, then restore them by resetting again so
+    # no other module inherits a wiped library.
+    try:
+        with SessionLocal() as session:
+            for row in session.scalars(select(Journey)).all():
+                session.delete(row)
+            session.commit()
+        empty = _scene()
+        assert empty["evidence_state"] == "NO_SCENARIO", empty
+        assert set(empty) == populated, (sorted(populated - set(empty)), sorted(set(empty) - populated))
+        assert empty["plan_version_id"] is None, empty
+    finally:
+        assert client.post("/api/v1/demo/reset").status_code == 200
+
+
+def _cursor_id(scene: dict) -> str | None:
+    with SessionLocal() as session:
+        row = session.get(Journey, scene["journey_id"])
+    return row.current_activity_id if row is not None else None
+
 
 
 def test_a_naive_projection_instant_is_refused_by_name_instead_of_500(_stage_on) -> None:
