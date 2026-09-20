@@ -120,11 +120,12 @@ test.describe("ORD-0063/0064a Today states the projected shape and currency", ()
 
     const seen: Record<string, string> = {};
     for (const arm of [
-      // 300 yen per person per day is below the 150-yuan floor as a raw number.  Comparing
-      // them anyway is the defect, so an incomparable floor must suppress the verdict.
-      { currency: "JPY", comparable: false, dayCount: 1, perPerson: 30000, wantTight: "false" },
-      // 66.66 yuan is genuinely under the floor, and here the backend said the money is
-      // comparable, so suppressing it would be its own untruth.
+      // 66.66 units per person per day is under the floor as a raw number.  The floor is
+      // quoted in CNY and this journey is priced in yen, so `floor_comparable` is false and
+      // comparing them at all would hand the traveller a verdict reached in the wrong money.
+      { currency: "JPY", comparable: false, dayCount: 1, perPerson: 6666, wantTight: "false" },
+      // Same amount, same floor, and this time the backend says the money is comparable, so
+      // suppressing the warning would be its own untruth.  Only `floor_comparable` differs.
       { currency: "CNY", comparable: true, dayCount: 3, perPerson: 6666, wantTight: "true" },
     ] as const) {
       await page.unroute("**/api/v1/journeys/*/experience");
