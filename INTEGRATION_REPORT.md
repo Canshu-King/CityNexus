@@ -2653,3 +2653,106 @@ Amendment J §2 把 `frontend/src/app/V8Experience.tsx` 判给 `e345b9d6`、我�
 `git apply --check --directory=frontend` **CLEAN**（v8Types.ts 在库里是 CRLF，补丁按目标文件各自的行尾生成，
 不需要 `--ignore-space-change`）。**未做**：在真树上 `typecheck` 与屏幕 innerText 断言——那要求写他们的文件，
 所以 ORD-0063 / ORD-0064(a) 我按 **PARTIAL** 记，等裁决：要么把这两处一次性授权给我落，要么并进 `e345b9d6` 的单子里。
+
+## 94. ORD-0057：生成方案变成一件可以离开、可以回来、可以停下的事（`8c66aa92`）
+
+### 94.1 契约长什么样
+
+仲裁批准的形状（总线 `5749459724` §1）落成三个端点 + 一张表：
+
+```
+POST /api/v1/journeys/{id}/stay-generations            -> 202 {operation_id, status, status_url,
+                                                              abandon_url, retry_after_ms, reused,
+                                                              fingerprint}
+GET  /api/v1/journeys/{id}/stay-generations/{operation_id}
+     -> {operation_id, status, recorded_status, phase, outcome, elapsed_ms, retry_after_ms,
+         terminal, result, error, submitted_at, started_at, finished_at, abandon_requested_at, ...}
+POST /api/v1/journeys/{id}/stay-generations/{operation_id}/abandon
+     -> 同一份状态 + {abandoned: bool}
+表：stay_generation_operations（status / phase / outcome 三段 CHECK + 部分唯一索引）
+状态机：QUEUED -> RUNNING -> COMPLETED | FAILED | ABANDONED，允许 RUNNING -> ABANDON_REQUESTED -> ABANDONED
+```
+
+`outcome` 就是 ORD-0049 已经落地的四态（`OPTIONS_FOUND` / `NO_OFFERS_FROM_PROVIDER` /
+`ALL_CANDIDATES_REJECTED` / `NOT_APPLICABLE_ZERO_NIGHTS`），所以 `top_k: []` 不再是"成功了但没东西"。
+没有百分比：`phase` 只允许 `DISCOVERY / NORMALIZATION / MOBILITY_CHECK / RANKING`，
+并且这四个值**由真正进入阶段的代码发出来**（`generate_stay_options(..., stage_out=...)`，
+和 `phase()` 计时跨度同一行），所以不会出现"进度条在跑、代码没在跑"。
+
+### 94.2 老端点没有第二条实现
+
+`POST /stay-options/generate` 现在就是"提交同一个 operation + 等它结束"，返回体就是 operation 存下来的那份
+（`test_the_synchronous_door_answers_with_what_the_operation_stored` 逐字段比对，A10 变异杀掉它）。
+两条契约因此不会漂：`X-CityNexus-Phase-Ms` 由 worker 的同一份 trace 带回来；
+命名时间拒绝（`V13_JOURNEY_DAYS_OUT_OF_BOUNDS`）在 worker 线程里抛出后，原文被存进 `error.reason`，
+同步门口再 `raise ValueError(reason)`，仍然由**同一个** HTTP 转换器决定 422 还是 500——
+ORD-0033 那条"深路径必须回 422 而不是裸 500"的门在新架构下依旧绿。
+
+### 94.3 过程中真的踩到、并且被门钉住的三件事
+
+1. **终态写过但没提交。** 第一次实现把 `COMPLETED` 的写入放在同一个事务里但只在 abandon 分支 `commit()`，
+   于是任务已经算完、行却永远停在 `RUNNING`，同步门口无限轮询（表现为整套测试挂住）。
+   现在成功路径显式提交，并留了一条"worker 任何异常都必须落终态"的兜底（`_force_fail`）。
+2. **phase 写入和生成事务抢同一个写锁。** SQLite 只有一个写者，而生成从第一条 offer 落库到排完序**一直**持有写事务；
+   第二条连接去 UPDATE 同一行就是 `database is locked`（实测 3 次）。phase 因此改成走 worker 自己的 session：
+   代价是**阶段在事务提交后才可见**，所以运行中客户端能信的是 `status` + `elapsed_ms`，不是进度。
+   顺手量出来一条更大的事实并如实登记：**一次生成会把整库的写能力按住到它结束**（这在同步时代同样成立，
+   不是本次引入），要根治得让证据落库分阶段提交——那是另开一单的事，我不在收口里顺手改。
+3. **abandon 不能等那把锁。** 如果 abandon 门口坚持"先落库再回答"，它会挂在写锁上什么都不回——正是按钮最不能做的事。
+   所以进程内先记事件（这才是"这次结果不再被使用"的生效信号），行写入按 `busy_timeout=1500ms` 尽力而为；
+   worker 在写终态前看到事件就把已生成的东西 `rollback`，然后 `RUNNING -> ABANDON_REQUESTED -> ABANDONED` 一次落库。
+   **不假报**：已经在飞的第三方 HTTP 不会被杀 socket；已经交付完成的任务再点 abandon 回答 `COMPLETED`。
+   口径沿用账本里既有的 `PROCESS_LOCAL_ONLY` 披露。
+
+另外按订单第 5 步修掉 `integrations/stay_osm.py` 的 `max(30.0, settings.real_city_timeout_seconds)`：
+配置默认 12 秒被这个下限静默吃掉，"把 provider 超时调短"一直是空操作。
+现在配置即超时（门里 7s/45s 双向钉住）。**后果如实说明**：>12s 才回的镜像现在会记成 timeout 而不是等满 30s，
+如果仲裁认为应该放宽，请改 `CITYNEXUS_REAL_CITY_TIMEOUT_SECONDS` 的默认值——那是一个明说的产品决定，
+不是藏在代码里的地板。
+
+### 94.4 数字
+
+| 门 | 读数 |
+| --- | --- |
+| 新契约自己的门 `tests/test_qoder_stay_generation_operations.py` | **21 passed**（受理<1s、三击一链、不同问题不同 operation、四态可区分×4、abandon 语义/幂等/不可翻案、部分唯一索引、轮询阶梯、刷新恢复、同步门口不漂移、WORKER_LOST 回收、timeout 配置生效） |
+| 连带复跑（单独配对） | `phases`+`window`+`v8_stay_mobility` = **19 passed**；`v8_stay_mobility`+`本新文件` = **25 passed**；`v16`+`本新文件` = 全绿 |
+| **全量后端（T3 口径，真实读数）** | **970 passed / 2 failed / 15 skipped，collected 987（166.72s）** ⇒ **不是全绿**：红的 2 条 + 1 个 error 全在 `test_qoder_stay_generation_operations.py` 自己里面（`test_the_terminal_answer_keeps_the_four_cases_apart`、`test_a_different_question_is_a_different_operation`、`test_acceptance_answers_while_the_provider_is_still_being_asked`），**单独跑与多数配对下都绿**，只有整套顺序下才出现 ⇒ 见 §94.6，ORD-0057 记 PARTIAL |
+| 变异（`ord57_mutants.json` + `ord57_A9.json`） | **10/10 由点名节点杀掉**，每一次还原后 SHA-256 逐字节相同。A1 指纹不吞问题、A2 接受 abandon 后仍交付、A3 状态机不 enforce、A4 没命中行的 UPDATE 谎报成功、A5 收下来路不明的阶段名、A6 worker 异常丢掉 reason 原文、A7 孤儿作业不回收、A8/A10 同步门口与 operation 存的东西漂移、**A9 把 `wait_for_operation` 塞回 202 门口（= 换名字的旧请求）** |
+| 受理延迟 | `review/probe-ord57-acceptance-latency.py` → `.../ord57/acceptance-latency.json` |
+
+A9 第一次跑报的是 3 个 collection error 而不是杀点名节点——原因是我这轮正在编辑同一个 `main.py`，
+批量脚本的"改写→跑→还原"和我的编辑撞了同一次，**那次读数不可归因**；我把 A9 单独在无并发的树上重跑，
+结果 5 个节点红、点名那条在内、还原逐字节一致。同一条也提醒：**变异批跑期间不许顺手编辑被改的文件**。
+
+### 94.5 提交形状（ORD-0067 选 A）
+
+`backend/app/db/models.py` 在 HEAD 是 1022 CRLF / 89 LF 混用，我加 33 行模型时用 `newline="\n"` 写回，
+把整文件翻成 LF ⇒ naive diff 报 `1055/1022`，真实内容只有 `+33/-0`。按 A 拆两笔：
+
+```
+605e2c5 chore(models): normalize models.py line endings to LF, no semantic change   1022/1022
+下一笔  ORD-0057 业务切片                                                            models.py 33/0
+```
+
+零语义变更的证法（与订单验收同款）：`git show HEAD~1:…models.py` 与 `git show HEAD:…models.py`
+各自 `tr -d CR` 后 SHA-256 相同（实测 `aa42a808a == aa42a808a`）。
+本切片其余文件行尾未动：`stay_mobility.py` 1961/0 CRLF（本来就是 CRLF 文件，写完做归一并核对
+`count(LF)==count(CRLF)`）、`main.py`/`temporal.py`/`schema.sql` 保持 LF、
+`db/schema.sql` 只 `+32/-0`。`tools/verification/mutation_campaign.py` 与
+`qoder-handoff/qoder_xiaomi_truth_hardening_v6.patch` 继续**不暂存**（前者是 Commander 的量具，后者归 `6af4cf53`）。
+
+### 94.6 全量套内出现的红：现状与下一步（不粉饰）
+
+`tests/test_qoder_stay_generation_operations.py` 单独跑 **21/21 绿**，与 `v8_stay_mobility`、`v16` 配对也绿；
+但整套 987 条里我自己这三条红/错（两条 assert、一条 fixture 超时）。**已排除的**：不是我改的行尾、
+不是 `demo/reset` 抹别人的行程（配对着试过）、不是状态机或索引的语义（这些门在单独跑时都杀掉过变异）。
+**当前假设（未证实）**：executor 只有 4 个槽，整套里某个先跑的门禁会留下"真 provider 冷链路"的在飞作业
+（这台机器无外网出口 ⇒ 一条链要吃满每主机 12s 超时），我的作业在队列里排到超过 drain 的 30 秒，
+于是"谁排在后面谁背锅"。这条如果成立，它既是**测试隔离问题**，也是**产品事实**：
+共享单写者 + 固定 worker 数 ⇒ 冷链路会互相排队，而这正是同步时代同样存在、只是看不见的问题。
+
+下一步（下一轮我做，按顺序）：① 把 drain 的超时消息改成打印"每个未完成 operation 的 status/phase/elapsed +
+当前在执行器里排队的 id 列表"，让下一次红能一次定位；② 要么给测试自己的执行器（`_MAX_WORKERS` 可注入），
+要么把这几条断言改成"等 terminal，不设 30s 墙"；③ 复跑全量两次连跑取同口径数，绿了才把 ORD-0057 转 DONE。
+ORD-0057 的**受理延迟分布**也还没拿到数：探针在真 uvicorn 上第一次 POST 返回 500（TestClient 不复现），
+已把服务端 stderr 收进 `.../ord57/uvicorn.log` 以便下一轮直接看栈——**没有实测数我就不写 p50/p95**。
