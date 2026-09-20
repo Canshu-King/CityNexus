@@ -1,4 +1,4 @@
-import { test, type Page } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { ensureDemoJourney, openScreen } from "./_qoderShellSeed";
 import { evidencePath } from "./_qoderEvidence";
 
@@ -27,12 +27,21 @@ const SHOTS: {
   ready: string[];
   fresh?: boolean;
   step?: 1 | 2 | 3;
+  openSheet?: { trigger: string; appear: string };
 }[] = [
   { name: "today", url: "/v8/hub", ready: ["today-heading", "today-attention"] },
   { name: "live", url: "/v8/live", ready: ["v8-live-journey", "live-journey-current"] },
   { name: "wallet", url: "/v8/bookings", ready: ["v8-bookings"] },
   { name: "setup-step1", url: "/v8", ready: ["trial-setup"], fresh: true },
   { name: "setup-step3", url: "/v8", ready: ["trial-setup"], fresh: true, step: 3 },
+  /* ORD-0035: the surface the user actually photographed. Not a route — a sheet
+     opened from Today, so it needs its own trigger. */
+  {
+    name: "plan-ai-sheet",
+    url: "/v8/hub",
+    ready: ["today-heading", "today-attention"],
+    openSheet: { trigger: "hub-plan-with-ai", appear: "plan-ai-sheet" },
+  },
 ];
 
 async function shoot(page: Page, shot: (typeof SHOTS)[number], scheme: "light" | "dark") {
@@ -48,6 +57,10 @@ async function shoot(page: Page, shot: (typeof SHOTS)[number], scheme: "light" |
     });
   }
   await openScreen(page, shot.url, shot.ready);
+  if (shot.openSheet) {
+    await page.getByTestId(shot.openSheet.trigger).click();
+    await expect(page.getByTestId(shot.openSheet.appear)).toBeVisible({ timeout: 15_000 });
+  }
   if (shot.step === 3) {
     // Walk the three-step form to its review page with the demo defaults.
     await page.getByTestId("trial-city").fill("Tianjin");

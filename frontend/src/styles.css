@@ -669,6 +669,14 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 
 /* ------------------------------------------------------------------ *
  * "AI 帮我规划" planning sheet.
+ *
+ * This block used to be light-only by construction: the sheet hardcoded #f9fbfd,
+ * never declared a foreground, and its textarea / example chips / close button all
+ * said `color: inherit`.  Under a dark system theme body hands back --cn-ink (#f5f5f7),
+ * so near-white text landed on a near-white panel — the "一片白，字看不清" report.
+ * The fix is not a fourth !important patch section: every declaration below now names a
+ * token that already flips, so the sheet is theme-correct by construction and cannot
+ * drift again when a new surface is added to it.
  * ------------------------------------------------------------------ */
 .plan-ai-sheet {
   width: min(520px, 100%);
@@ -676,61 +684,69 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   display: grid;
-  gap: 12px;
-  padding: 18px 16px calc(18px + env(safe-area-inset-bottom, 0px));
-  border-radius: 18px 18px 0 0;
-  background: #f9fbfd;
-  box-shadow: 0 -12px 40px #14233b33;
+  gap: var(--cn-s-12);
+  padding: var(--cn-s-16) var(--cn-s-16) calc(var(--cn-s-16) + env(safe-area-inset-bottom, 0px));
+  border-radius: var(--cn-r-sheet) var(--cn-r-sheet) 0 0;
+  border-top: 1px solid var(--cn-hairline);
+  background: var(--cn-surface);
+  color: var(--v8-ink);
+  box-shadow: var(--cn-shadow-raised);
 }
 .plan-ai-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--cn-s-12);
 }
 .plan-ai-head b {
-  font-size: 15px;
+  font-size: var(--cn-fs-secondary);
 }
+/* opacity used to do the de-emphasis here (0.72), which lowers the *measured* contrast
+   ratio along with the visual weight. --v8-muted is the AA-checked subordinate ink. */
 .plan-ai-head small {
   display: block;
   margin-top: 4px;
-  font-size: 11px;
-  opacity: 0.72;
+  font-size: var(--cn-fs-body);
+  color: var(--v8-muted);
   line-height: 1.45;
 }
 .plan-ai-close {
+  min-height: 30px;
   border: 0;
   background: transparent;
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
-  color: inherit;
+  color: var(--v8-muted);
   padding: 0 4px;
 }
 .plan-ai-field textarea {
   width: 100%;
   box-sizing: border-box;
+  min-height: 34px;
   font: inherit;
-  font-size: 13px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(127, 127, 127, 0.35);
-  background: #fff;
-  color: inherit;
+  font-size: var(--cn-fs-body);
+  padding: var(--cn-s-12);
+  border-radius: var(--cn-r-control);
+  border: 1px solid var(--cn-control-border);
+  background: var(--cn-surface);
+  color: var(--v8-ink);
   resize: vertical;
 }
+.plan-ai-field textarea::placeholder { color: var(--cn-ink-tertiary); }
 .plan-ai-examples {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
 }
 .plan-ai-examples button {
-  border-radius: 999px;
+  min-height: 30px;
+  border-radius: var(--cn-r-pill);
   padding: 5px 10px;
-  font-size: 11px;
-  border: 1px solid rgba(127, 127, 127, 0.4);
-  background: transparent;
-  color: inherit;
+  font-size: var(--cn-fs-body);
+  border: 1px solid var(--cn-hairline);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
   cursor: pointer;
 }
 .plan-ai-steps {
@@ -739,58 +755,62 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   padding: 0;
   display: grid;
   gap: 6px;
-  font-size: 12px;
+  font-size: var(--cn-fs-body);
+  color: var(--v8-muted);
 }
 .plan-ai-steps li {
   display: flex;
   align-items: center;
-  gap: 8px;
-  opacity: 0.5;
+  gap: var(--cn-s-8);
 }
 .plan-ai-steps li.active,
 .plan-ai-steps li.done {
-  opacity: 1;
+  color: var(--v8-ink);
 }
 .plan-ai-dot {
   width: 16px;
   text-align: center;
 }
 .plan-ai-result {
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 12px;
+  border-radius: var(--cn-r-control);
+  padding: var(--cn-s-12);
+  font-size: var(--cn-fs-body);
   line-height: 1.5;
+  /* The three tones used to be literal pale fills (#e8f6ee / #fff6e6 / #eef2fb), i.e. three
+     white slabs on a dark sheet.  Same-token surface plus a semantic rule keeps the
+     distinction without making the colour the only carrier of meaning. */
+  border: 1px solid var(--cn-hairline);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
 }
-.plan-ai-result.ok {
-  background: #e8f6ee;
-  border: 1px solid #b6e0c8;
-}
-.plan-ai-result.warn {
-  background: #fff6e6;
-  border: 1px solid #f0d1a5;
-}
-.plan-ai-result.busy {
-  background: #eef2fb;
-  border: 1px solid #cdd8f0;
-}
+.plan-ai-result.ok { border-left: 3px solid var(--cn-success); }
+.plan-ai-result.warn { border-left: 3px solid var(--cn-warning); }
+.plan-ai-result.busy { border-left: 3px solid var(--cn-accent); }
 .plan-ai-result p {
   margin: 4px 0 0;
 }
 .plan-ai-detail summary {
   cursor: pointer;
-  font-size: 11px;
-  opacity: 0.7;
+  font-size: var(--cn-fs-body);
+  color: var(--v8-muted);
 }
 .plan-ai-detail code {
   display: block;
   margin-top: 4px;
-  font-size: 11px;
+  font-size: var(--cn-fs-body);
   word-break: break-word;
 }
 .plan-ai-actions {
   display: flex;
   gap: 10px;
   justify-content: flex-end;
+}
+/* Amendment F-2: the >=44px contract belongs to the touch layer; desktop keeps 30px. */
+@media (max-width: 680px) {
+  .plan-ai-close,
+  .plan-ai-examples button,
+  .plan-ai-field textarea,
+  .plan-ai-actions button { min-height: var(--cn-touch-min); }
 }
 
 /* ------------------------------------------------------------------ *
