@@ -22,8 +22,18 @@ import { evidencePath } from "./_qoderEvidence";
 const FILE = "e2e/qoder-service-worker.spec.ts";
 const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
 
-const OWN_CACHE = "citynexus-trip-operations-v1";
-const FOREIGN_CACHES = ["citynexus-pages", "citynexus-static", "workbox-precache-v2"];
+const SW_CACHE_VERSION = "m3-a4-v1";
+const OWN_CACHE = `citynexus-recovery-citynexus-recovery-${SW_CACHE_VERSION}`;
+/* Owned by the generated production worker, not by this one: deleting these from a dev
+   session is the "rebuilt but the refresh shows the old shell" bug all over again. */
+const FOREIGN_CACHES = [
+  `citynexus-pages-${SW_CACHE_VERSION}`,
+  `citynexus-static-${SW_CACHE_VERSION}`,
+  "workbox-precache-v2",
+];
+/* A4-1 names these as retired: the cleanup is expected to remove them, and a cleanup that
+   deletes nothing policing nothing is the pass this node refused to be once already. */
+const LEGACY_CACHES = ["citynexus-pages", "citynexus-static", "citynexus-trip-operations-v1"];
 
 test.describe("ORD-0036 the dev service worker degrades honestly", () => {
   test("sw-never-answers-script-with-html — a failed module request stays a failure", async ({
@@ -127,43 +137,28 @@ test.describe("ORD-0036 the dev service worker degrades honestly", () => {
         + `through as ${JSON.stringify(online.type)}`),
     ).toBe(false);
 
-    /* Positive control, and it has to be the right one.  An earlier revision reloaded the
-       page offline and asserted it rendered; that failed for a reason unrelated to this
-       guard -- in dev the module graph is fetched before the worker ever takes control, so
-       an offline reload can render nothing however the fallback is written.  It measured
-       cache completeness, not the contract.  The contract is an asymmetry: a document may
-       still get the cached shell, which is what makes denying HTML to code meaningful. */
+    /* Positive control, and it has to be the right one.  The guarantee is asymmetry: a code
+       request must never be answered with a document, while a *navigation* may be.  Asserting
+       it with `fetch("/v8/live")` tested neither -- a window fetch is not a navigation, and the
+       recovery worker answers only navigations with the shell.  And asserting it with "the page
+       rendered" measures the module graph, not the contract: in dev the modules were fetched
+       before the worker took control, so an offline reload can paint nothing however correct
+       the fallback is.  `sw-offline-boot-serves-cached-code` owns that case. */
     await context.setOffline(true);
-    const documentAnswer = await page.evaluate(async () => {
-      try {
-        const response = await fetch("/v8/live");
-        const type = response.headers.get("content-type") ?? "";
-        const body = await response.text();
-        return {
-          ok: response.ok,
-          type,
-          hasShell: /id=["']?root["' ]/.test(body),
-          rejected: false,
-          excerpt: body.slice(0, 120),
-        };
-      } catch (cause) {
-        return {
-          ok: false,
-          type: "",
-          hasShell: false,
-          rejected: true,
-          error: cause instanceof Error ? cause.name : String(cause),
-        };
-      }
-    });
+    const navigation = await page.goto("/v8/live", { waitUntil: "commit" }).catch(() => null);
+    const shell = navigation
+      ? await page
+          .evaluate(() => ({ hasRoot: !!document.getElementById("root"), title: document.title }))
+          .catch(() => ({ hasRoot: false, title: "" }))
+      : { hasRoot: false, title: "the navigation produced no response" };
     await context.setOffline(false);
 
     expect(
-      documentAnswer.rejected || !documentAnswer.hasShell,
+      shell.hasRoot,
       node("sw-never-answers-script-with-html",
-        "the offline document fallback stopped working, so the guard written for code requests "
-        + `also took navigation's shell away: ${JSON.stringify(documentAnswer)}`),
-    ).toBe(false);
+        "an offline navigation did not reach the cached shell, so the guard written for code "
+        + `requests also took navigation's document away: ${JSON.stringify(shell)}`),
+    ).toBe(true);
   });
 
   test("sw-activate-keeps-foreign-caches — its cleanup must not wipe another strategy's caches", async ({
@@ -174,14 +169,14 @@ test.describe("ORD-0036 the dev service worker degrades honestly", () => {
     await page.waitForLoadState("networkidle");
 
     const result = await page.evaluate(
-      async ({ own, foreign }) => {
+      async ({ own, foreign, legacy }) => {
         const opened = await caches.open(own);
         // A body of our own so the cache exists and is recognisably ours.
         await opened.put(
           "/__qoder_probe__.txt",
           new Response("own", { headers: { "content-type": "text/plain" } }),
         );
-        for (const name of foreign) {
+        for (const name of [...foreign, ...legacy]) {
           const cache = await caches.open(name);
           await cache.put(
             "/__qoder_probe__.txt",
@@ -214,9 +209,10 @@ test.describe("ORD-0036 the dev service worker degrades honestly", () => {
           after,
           report,
           survivors: foreign.filter((name) => after.includes(name)),
+          legacySurvivors: legacy.filter((name) => after.includes(name)),
         };
       },
-      { own: OWN_CACHE, foreign: FOREIGN_CACHES },
+      { own: OWN_CACHE, foreign: FOREIGN_CACHES, legacy: LEGACY_CACHES },
     );
 
     const evidence = { generatedBy: "e345b9d6", order: "ORD-0036", node: "sw-activate-keeps-foreign-caches", ...result };
@@ -246,6 +242,13 @@ test.describe("ORD-0036 the dev service worker degrades honestly", () => {
         `foreign caches did not survive activation (survivors ${JSON.stringify(result.survivors)} `
         + `of ${JSON.stringify(FOREIGN_CACHES)}; keys after: ${JSON.stringify(result.after)})`),
     ).toEqual(expect.arrayContaining(FOREIGN_CACHES));
+    expect(
+      result.legacySurvivors,
+      node("sw-activate-keeps-foreign-caches",
+        "the retired cache names A4-1 lists survived activation, so an old strategy's entries "
+        + `are still able to answer (survivors ${JSON.stringify(result.legacySurvivors)} of `
+        + `${JSON.stringify(LEGACY_CACHES)}; deleted was ${JSON.stringify(result.report.deleted)})`),
+    ).toEqual([]);
   });
 
   test("sw-offline-boot-serves-cached-code — refusing HTML for code must not refuse the cache", async ({

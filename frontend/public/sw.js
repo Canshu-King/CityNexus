@@ -1,67 +1,151 @@
-/* Vite's development service worker, registered from src/main.tsx.
- *
- * Two defects lived here, both of which turned one network blip into a page that looked
- * broken rather than a page that failed to load:
- *
- *  1. the catch-all fallback answered *any* failed GET with the HTML shell, including a
- *     `.js` module or a stylesheet.  The browser then parsed HTML as a script, the app
- *     half-booted, and that half-booted document got written back into the cache -- which
- *     is how "white screen that survives a reload" happened.
- *  2. activate deleted every cache whose name was not this worker's own, so a dev session
- *     wiped the same origin's Workbox production caches (`workbox-precache-*`,
- *     `citynexus-pages`, `citynexus-static`).  That is the other half of "I rebuilt and a
- *     refresh still gave me the old shell".
- *
- * Production uses the versioned Workbox worker instead; this file stays registered so the
- * gates that require a controlling service worker keep working under `vite dev`.
- */
+const SW_VERSION = "citynexus-recovery-m3-a4-v1";
+const CACHE_PREFIX = "citynexus-recovery-";
+const CACHE = `${CACHE_PREFIX}${SW_VERSION}`;
+const NAVIGATION_FALLBACK = "/v8/live";
+const LEGACY_CACHE_NAMES = new Set([
+  "citynexus-trip-operations-v1",
+  "citynexus-pages",
+  "citynexus-static",
+]);
 
-const CACHE = "citynexus-trip-operations-v1";
-const CACHE_PREFIX = "citynexus-trip-operations-";
-const APP_SHELL = ["/v8/live", "/manifest.webmanifest", "/favicon.svg"];
+function isHtmlResponse(response) {
+  const contentType = response?.headers?.get("content-type") ?? "";
+  return response?.status === 200 && contentType.includes("text/html");
+}
+
+function isSafeAssetResponse(response) {
+  return Boolean(response && response.status === 200 && response.type !== "opaque");
+}
+
+async function putIfSafe(cache, request, response, destination) {
+  const safe =
+    destination === "document" ? isHtmlResponse(response) : isSafeAssetResponse(response);
+  if (!safe) return;
+  await cache.put(request, response.clone());
+}
+
+async function precacheRecoveryShell() {
+  const cache = await caches.open(CACHE);
+  const requests = [
+    new Request(NAVIGATION_FALLBACK, { cache: "reload" }),
+    new Request("/manifest.webmanifest", { cache: "reload" }),
+    new Request("/favicon.svg", { cache: "reload" }),
+  ];
+  await Promise.all(
+    requests.map(async (request) => {
+      try {
+        const response = await fetch(request);
+        const destination =
+          request.url.endsWith(NAVIGATION_FALLBACK) ? "document" : "image";
+        await putIfSafe(cache, request, response, destination);
+      } catch {
+        // Recovery precache is best-effort. A failed install fetch must not
+        // prevent a newer worker from activating and replacing a poisoned one.
+      }
+    }),
+  );
+}
+
+async function networkFirstDocument(request) {
+  const cache = await caches.open(CACHE);
+  try {
+    const response = await fetch(request);
+    await putIfSafe(cache, request, response, "document");
+    return response;
+  } catch (error) {
+    const exact = await cache.match(request);
+    if (exact && isHtmlResponse(exact)) return exact;
+
+    const fallback = await cache.match(NAVIGATION_FALLBACK);
+    if (fallback && isHtmlResponse(fallback)) return fallback;
+
+    throw error;
+  }
+}
+
+async function staleWhileRevalidateAsset(event) {
+  const request = event.request;
+  const cache = await caches.open(CACHE);
+  const cached = await cache.match(request);
+  const network = fetch(request).then(async (response) => {
+    await putIfSafe(cache, request, response, request.destination);
+    return response;
+  });
+
+  if (cached && isSafeAssetResponse(cached)) {
+    event.waitUntil(network.catch(() => undefined));
+    return cached;
+  }
+
+  return network;
+}
 
 self.addEventListener("install", (event) => {
-  // allSettled, not all: if one shell URL is unreachable the worker must still install.
-  // A rejected install leaves the *previous* worker in control, which is exactly the
-  // stale-shell state this file is meant to clear.
-  event.waitUntil(
-    caches
-      .open(CACHE)
-      .then((cache) => Promise.allSettled(APP_SHELL.map((url) => cache.add(url)))),
-  );
+  event.waitUntil(precacheRecoveryShell());
   self.skipWaiting();
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches
-      .keys()
-      .then(async (keys) => {
-        // Only caches this worker owns.  Anything else on the origin belongs to
-        // another strategy and is not ours to destroy.
-        const doomed = keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE);
-        await Promise.all(doomed.map((key) => caches.delete(key)));
-        /* Record what this activation deleted.  Without it, "the cleanup is scoped" is not
-           observable from outside the worker: a test that only lists caches afterwards
-           cannot tell a scoped cleanup from one that never ran. */
-        const own = await caches.open(CACHE);
-        await own.put(
+    (async () => {
+      const keys = await caches.keys();
+      const doomed = keys.filter(
+        (key) =>
+          (key.startsWith(CACHE_PREFIX) && key !== CACHE) ||
+          LEGACY_CACHE_NAMES.has(key) ||
+          key.startsWith("citynexus-trip-operations-v"),
+      );
+      await Promise.all(doomed.map((key) => caches.delete(key)));
+
+      /* A seam for the gates, in the same spirit as the map's camera hook: cleanup that
+         cannot be observed cannot be judged.  Written into this worker's own cache, because
+         nothing outside it is allowed to be an answer to an unknown URL. */
+      try {
+        const cache = await caches.open(CACHE);
+        await cache.put(
           "/__sw_activate_report__",
           new Response(
             JSON.stringify({
-              /* Which script this activation belongs to.  Without it a reader cannot tell
-                 this activation from the previous worker's, and a poll for "a report"
-                 always finds the stale one. */
               script: self.location.href,
+              version: SW_VERSION,
               deleted: doomed,
-              kept: keys.filter((key) => !doomed.includes(key)),
+              kept: keys.filter((key) => !doomed.includes(key) && key !== CACHE),
             }),
             { headers: { "content-type": "application/json" } },
           ),
         );
-      })
-      .then(() => self.clients.claim()),
+      } catch {
+        // A report is not worth failing activation over.
+      }
+
+      await self.clients.claim();
+
+      const clients = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+      for (const client of clients) {
+        client.postMessage({
+          type: "CITYNEXUS_SW_ACTIVATED",
+          version: SW_VERSION,
+        });
+      }
+    })(),
   );
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data?.type === "CITYNEXUS_SW_GET_VERSION") {
+    const payload = {
+      type: "CITYNEXUS_SW_VERSION",
+      version: SW_VERSION,
+    };
+    if (event.ports?.[0]) {
+      event.ports[0].postMessage(payload);
+    } else if (event.source?.postMessage) {
+      event.source.postMessage(payload);
+    }
+  }
+  if (event.data?.type === "SKIP_WAITING") {
+    void self.skipWaiting();
+  }
 });
 
 self.addEventListener("fetch", (event) => {
@@ -69,46 +153,41 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
 
   const url = new URL(request.url);
-  // Vite's dev client and source modules are live compiler resources: a dev worker must
-  // keep them network-first so a normal reload observes the current module graph.
+  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/")) return;
+
+  const destination = request.destination;
+
+  /* `destination` alone is not enough: a `fetch("/something.js")` from the page arrives with
+     an empty destination, and the dev server answers that path with the SPA document.  The
+     path test is what keeps that case from being served as code. */
+  const askedForCode = /\.(?:js|mjs|cjs|css)$/i.test(url.pathname);
+
+  // Executable resources are always network truth. If the network request
+  // fails, let that failure propagate. Returning an HTML shell for a module or
+  // worker request creates the MIME mismatch that previously blanked #root.
   if (
-    url.origin !== self.location.origin ||
-    url.pathname.startsWith("/api/") ||
-    url.pathname.includes("hot-update")
-  )
-    return;
-
-  /* Code and styles may be served from the cache -- that is what makes an offline boot
-     possible -- but never with an HTML body, from network or from cache.  An earlier
-     revision of this branch was network-only, and `real-world-trip-operations-v9` caught
-     it: the offline reload could not fetch its cached modules and the app never booted.
-
-     Checking `request.destination` alone was not enough either: a measured gate run showed
-     the dev server answering an unknown `.js` path with a 200 `text/html` document, and a
-     module pulled in through fetch() carries destination "empty". */
-  const CODE_PATH = /\.(js|mjs|cjs|css)$/i;
-  const isCode =
-    ["script", "style", "worker"].includes(request.destination) || CODE_PATH.test(url.pathname);
-  const isHtml = (response) => /text\/html/i.test(response.headers.get("content-type") ?? "");
-
-  if (isCode) {
+    askedForCode ||
+    destination === "script" ||
+    destination === "style" ||
+    destination === "worker" ||
+    destination === "serviceworker"
+  ) {
+    /* Two failures, both measured, define this branch.  Answering a module request with the
+       app shell makes the browser parse HTML as JavaScript, the app half-boots, and that
+       half-booted document gets written back into the cache -- a white screen that survives a
+       reload.  Refusing to serve any cached code instead leaves a device with no network
+       unable to start at all.  So: network first, cache only when the cached bytes really
+       are code, and otherwise fail as itself. */
     const fromCacheOrFailure = async () => {
       const cached = await caches.match(request);
-      return cached && !isHtml(cached) ? cached : Response.error();
+      return cached && !isHtmlResponse(cached) ? cached : Response.error();
     };
     event.respondWith(
       fetch(request)
         .then(async (response) => {
-          if (isHtml(response)) {
-            /* The network handed back a document where code belongs.  Fall back to a real
-               cached response if we have one; otherwise fail honestly.  Passing the HTML
-               through is how one hiccup became a cached white screen. */
-            return fromCacheOrFailure();
-          }
-          const copy = response.clone();
-          event.waitUntil(
-            caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => undefined),
-          );
+          if (isHtmlResponse(response)) return fromCacheOrFailure();
+          const cache = await caches.open(CACHE);
+          await putIfSafe(cache, request, response, destination);
           return response;
         })
         .catch(fromCacheOrFailure),
@@ -116,25 +195,17 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  event.respondWith(
-    fetch(request)
-      .then((response) => {
-        const copy = response.clone();
-        event.waitUntil(
-          caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => undefined),
-        );
-        return response;
-      })
-      .catch(() =>
-        caches.match(request).then((cached) => {
-          if (cached) return cached;
-          // Offline may still show the shell, but only for a real navigation.  Anything
-          // else keeps its original failure instead of receiving HTML.
-          if (request.mode === "navigate") {
-            return caches.match("/v8/live").then((shell) => shell ?? Response.error());
-          }
-          return Response.error();
-        }),
-      ),
-  );
+  // HTML fallback is legal only for document navigation.
+  if (request.mode === "navigate" || destination === "document") {
+    event.respondWith(networkFirstDocument(request));
+    return;
+  }
+
+  if (destination === "image" || destination === "font") {
+    event.respondWith(staleWhileRevalidateAsset(event));
+    return;
+  }
+
+  // All other requests remain network-first and never borrow the app shell.
+  event.respondWith(fetch(request));
 });
