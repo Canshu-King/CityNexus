@@ -53,15 +53,21 @@ async function slowGenerate(page: Page, delay: number, topK: unknown[] | null) {
   await page.route(GENERATE, async (route) => {
     if (route.request().method() !== "POST") return route.fallback();
     await new Promise<void>((resolve) => setTimeout(resolve, delay));
-    if (topK === null) {
-      await route.fulfill({ status: 500, contentType: "text/plain; charset=utf-8", body: "Internal Server Error" });
-      return;
+    // Once the traveller stopped waiting, or this node swapped its mock, the route is gone
+    // and answering it throws -- which would strand the next state on a pending request.
+    try {
+      if (topK === null) {
+        await route.fulfill({ status: 500, contentType: "text/plain; charset=utf-8", body: "Internal Server Error" });
+        return;
+      }
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ optimizer: "BOUNDED_DETERMINISTIC", top_k: topK, hard_constraints: {} }),
+      });
+    } catch {
+      /* abandoned; the product already moved on */
     }
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({ optimizer: "BOUNDED_DETERMINISTIC", top_k: topK, hard_constraints: {} }),
-    });
   });
 }
 
@@ -304,13 +310,65 @@ test.describe("ORD-0047 the stay search says what it is waiting for", () => {
     await slowGenerate(page, 300, []);
     await page.getByTestId("trial-create").click();
     await expect(page.getByTestId("hub-no-stays")).toBeVisible({ timeout: 25_000 });
-    seen.empty = {
+    seen["hub empty"] = {
       text: (await page.getByTestId("hub-no-stays").innerText()).replace(/\s+/g, " ").trim(),
       state: await page.getByTestId("hub-no-stays").getAttribute("data-stay-search"),
     };
 
+    /* The three faces the ruling named -- still loading, empty, refused -- are swept on the
+       same surface, because that is where a traveller meets them. */
+    await page.unroute(GENERATE);
+    await slowGenerate(page, 6_000, []);
+    await page.getByTestId("hub-stay-retry").click();
+    const searching = page.getByTestId("hub-stay-searching");
+    await expect(
+      searching,
+      node("gen-three-states-distinguishable", "a retry from Today showed no waiting face at all"),
+    ).toBeVisible({ timeout: 8_000 });
+    await expect(
+      searching,
+      node("gen-three-states-distinguishable", "Today's in-flight state is not labelled as searching"),
+    ).toHaveAttribute("data-stay-search", "searching", { timeout: 8_000 });
+    seen["hub searching"] = {
+      text: (await searching.innerText()).replace(/\s+/g, " ").trim(),
+      state: "searching",
+    };
+    await expect(
+      page.getByTestId("hub-stay-elapsed"),
+      node("gen-three-states-distinguishable", "Today's waiting face has no counted seconds"),
+    ).toContainText(/\d+/);
+    // Let this retry finish before starting the next one; two overlapping searches would
+    // make the face the assertion reads a race rather than a product state.
+    await expect(
+      page.getByTestId("hub-no-stays"),
+      node("gen-three-states-distinguishable", "the delayed retry never came back to an empty result"),
+    ).toBeVisible({ timeout: 25_000 });
+
+    await page.unroute(GENERATE);
+    await slowGenerate(page, 300, null);
+    await page.getByTestId("hub-stay-retry").click();
+    const refused = page.getByTestId("hub-stay-refused");
+    await expect(
+      refused,
+      node("gen-three-states-distinguishable", "a refused retry from Today rendered no state at all"),
+    ).toBeVisible({ timeout: 20_000 });
+    await expect(
+      refused,
+      node("gen-three-states-distinguishable", "Today's refused retry is not labelled as failed"),
+    ).toHaveAttribute("data-stay-search", "failed", { timeout: 8_000 });
+    seen["hub refused"] = {
+      text: (await refused.innerText()).replace(/\s+/g, " ").trim(),
+      state: "failed",
+    };
+
+    const hubFaces = ["hub searching", "hub empty", "hub refused"].map((key) => seen[key].text);
     expect(
-      new Set([seen.waiting.text, seen.empty.text, seen.failed.text]).size,
+      new Set(hubFaces).size,
+      node("gen-three-states-distinguishable",
+        `Today cannot tell loading from empty from refused: ${JSON.stringify(hubFaces)}`),
+    ).toBe(3);
+    expect(
+      new Set([seen.waiting.text, seen["hub empty"].text, seen.failed.text]).size,
       node("gen-three-states-distinguishable", `two of the three states rendered the same words: ${JSON.stringify(seen)}`),
     ).toBe(3);
     writeFileSync(

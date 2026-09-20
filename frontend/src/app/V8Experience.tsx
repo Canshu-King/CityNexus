@@ -1679,7 +1679,7 @@ function Hub({
               : data.journey.title}
           </h1>
           {staySearch === "searching" && (
-            <div className="hub-stay-searching" data-testid="hub-stay-search" data-stay-search="searching">
+            <div className="hub-stay-searching" data-testid="hub-stay-searching" data-stay-search="searching">
               <strong>
                 {zh ? "正在搜索住宿" : "Looking for stays"} ·{" "}
                 <span data-testid="hub-stay-elapsed">
@@ -1694,7 +1694,7 @@ function Hub({
             </div>
           )}
           {staySearch === "failed" && (
-            <div className="hub-stay-refused" data-testid="hub-stay-search" data-stay-search="failed" role="alert">
+            <div className="hub-stay-refused" data-testid="hub-stay-refused" data-stay-search="failed" role="alert">
               <strong>
                 {zh ? "住宿搜索失败了，行程本身还在。" : "The stay search failed — your trip is untouched."}
               </strong>
