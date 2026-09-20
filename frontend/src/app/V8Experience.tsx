@@ -11,6 +11,7 @@ import { PlanComparison } from "../features/planning/PlanComparison";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { liveActivityWindow } from "../lib/executionWindow";
 import { useElapsedSeconds } from "../lib/waitClock";
+import { readChoice, setThemeChoice, type ThemeChoice } from "../theme";
 import { MobilitySheet } from "../features/mobility/MobilitySheet";
 import { StayExplorer } from "../features/stay/StayExplorer";
 import { ControlTowerPanel } from "../features/intelligence/ControlTowerPanel";
@@ -162,6 +163,19 @@ function stayOutcomeLine(outcome: string | null, zh: boolean): string {
 function isAbort(cause: unknown): boolean {
   return cause instanceof Error && cause.name === "AbortError";
 }
+
+/** Ruling ④: three choices, and the word on the button is the choice you have now. */
+const THEME_WORD: Record<ThemeChoice, [string, string]> = {
+  system: ["跟随系统", "System"],
+  light: ["亮色", "Light"],
+  dark: ["暗色", "Dark"],
+};
+
+const THEME_NEXT: Record<ThemeChoice, ThemeChoice> = {
+  system: "light",
+  light: "dark",
+  dark: "system",
+};
 
 /**
  * Wall-clock helpers that read an ISO instant in the *journey's* time zone.
@@ -355,7 +369,11 @@ export function V8Experience() {
   // Whatever `generation.outcome` the server actually reported; null means it said nothing.
   const [stayOutcome, setStayOutcome] = useState<string | null>(null);
   const [stayAttempts, setStayAttempts] = useState(0);
+  // Ruling ④ asked for a choice, not just a contract: the root attribute and persistence
+  // were already in place, but nothing on screen let anyone pick.
+  const [themeChoice, setThemeChoiceState] = useState<ThemeChoice>(() => readChoice());
   const { locale, switchLocale } = useLocale();
+  const zh = locale.startsWith("zh");
   const t = useT();
   // "Needs attention" means an event the traveller has NOT already handled.
   // Acknowledgement is deliberately NOT resolution in this product: an
@@ -556,6 +574,11 @@ export function V8Experience() {
     data?.options.find((item) => item.id === data.selected_option_id) ??
     data?.options.find((item) => item.status === "SELECTED") ??
     null;
+  const cycleTheme = () => {
+    const next = THEME_NEXT[themeChoice];
+    setThemeChoice(next);
+    setThemeChoiceState(next);
+  };
   const navigate = (next: string) => {
     const value = next || "hub";
     withViewTransition(() => {
@@ -1067,6 +1090,22 @@ export function V8Experience() {
                 ? t("shell.autonomyActive")
                 : t("shell.factsReady")}
             </span>
+            <button
+              className="v9-language"
+              data-testid="topbar-theme"
+              data-theme-choice={themeChoice}
+              data-contrast-role="control"
+              aria-label={
+                themeChoice === "system"
+                  ? "Theme: following the system. Choose light, dark, or back to system."
+                  : themeChoice === "light"
+                    ? "Theme: pinned to light. Switch to dark or back to system."
+                    : "Theme: pinned to dark. Switch back to system or to light."
+              }
+              onClick={cycleTheme}
+            >
+              {zh ? THEME_WORD[themeChoice][0] : THEME_WORD[themeChoice][1]}
+            </button>
             <button
               className="v9-language"
               data-testid="topbar-language"
