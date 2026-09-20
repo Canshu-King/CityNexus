@@ -1,6 +1,66 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 
+/**
+ * ORD-0036 (d) -- where the wizard's state lives.
+ *
+ * The decision is **localStorage, not the URL**: a half-filled trip is not a link worth
+ * sharing, and `startAt` / `endAt` are local wall-clock strings whose meaning depends on
+ * the browser's zone.  The URL keeps its existing job (which screen you are on); this key
+ * keeps what you had typed.
+ *
+ * The overlay open/close state is deliberately *not* persisted -- see the lane's report --
+ * because a reload now genuinely aborts an in-flight request, and restoring an open sheet
+ * would imply a run that no longer exists.
+ */
+const TRIAL_DRAFT_KEY = "citynexus.v8.trial_draft";
+
+type StoredTrial = { step: number; draft: Record<string, unknown> };
+
+function readStoredTrial(defaults: { step: 1 | 2 | 3; draft: Record<string, unknown> }): {
+  step: 1 | 2 | 3;
+  draft: Record<string, unknown>;
+} {
+  try {
+    const raw = localStorage.getItem(TRIAL_DRAFT_KEY);
+    if (!raw) return defaults;
+    const parsed = JSON.parse(raw) as Partial<StoredTrial> | null;
+    if (!parsed || typeof parsed !== "object") return defaults;
+    const step = parsed.step === 2 || parsed.step === 3 ? parsed.step : 1;
+    /* Accept a stored value only when it has the same shape as the default it replaces.
+       The entry is user-editable and may predate a field rename, and a string where the
+       form expects a number breaks the first screen rather than just that field. */
+    const draft: Record<string, unknown> = { ...defaults.draft };
+    if (parsed.draft && typeof parsed.draft === "object") {
+      for (const [key, value] of Object.entries(parsed.draft)) {
+        if (key in defaults.draft && typeof value === typeof defaults.draft[key]) {
+          draft[key] = value;
+        }
+      }
+    }
+    return { step, draft };
+  } catch {
+    // Blocked storage or a half-written entry: start clean rather than trust it.
+    return defaults;
+  }
+}
+
+function writeStoredTrial(step: number, draft: unknown): void {
+  try {
+    localStorage.setItem(TRIAL_DRAFT_KEY, JSON.stringify({ step, draft }));
+  } catch {
+    /* Nothing to do: the wizard still works, it just will not survive a reload. */
+  }
+}
+
+function clearStoredTrial(): void {
+  try {
+    localStorage.removeItem(TRIAL_DRAFT_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
 export type JourneyTrialDraft = {
   cityName: string;
   countryCode: string;
@@ -165,7 +225,30 @@ export function JourneyTrialSetup({
     () => Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Shanghai",
     [],
   );
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const defaultDraft = useMemo<JourneyTrialDraft>(
+    () => ({
+      cityName: "",
+      countryCode: "CN",
+      timezone: browserTimezone,
+      startAt: futureLocalAt(1, 10),
+      endAt: futureLocalAt(3, 20),
+      arrivalLocation: "",
+      departureLocation: "",
+      budgetMajor: 3000,
+      stayBudgetMajor: 1000,
+      currency: "CNY",
+      partySize: 2,
+      rooms: 1,
+      pace: "relaxed",
+      interests: [],
+      specialRequirements: "",
+    }),
+    [browserTimezone],
+  );
+  /* Read once, before either state exists: a reload must land on the step the traveller
+     was on with what they had typed, which is the half of "没有保存记录" that was real. */
+  const restored = useRef(readStoredTrial({ step: 1, draft: defaultDraft })).current;
+  const [step, setStep] = useState<1 | 2 | 3>(restored.step);
   const [advanced, setAdvanced] = useState(false);
   /* createJourney catches its own failure and does not rethrow, so a resolved
      `await onCreate()` here does not mean a journey exists.  Its success path closes this
@@ -179,24 +262,12 @@ export function JourneyTrialSetup({
       mounted.current = false;
     };
   }, []);
-  const [draft, setDraft] = useState<JourneyTrialDraft>({
-    cityName: "",
-    countryCode: "CN",
-    timezone: browserTimezone,
-    startAt: futureLocalAt(1, 10),
-    endAt: futureLocalAt(3, 20),
-    arrivalLocation: "",
-    departureLocation: "",
-    budgetMajor: 3000,
-    stayBudgetMajor: 1000,
-    currency: "CNY",
-    partySize: 2,
-    rooms: 1,
-    pace: "relaxed",
-    interests: [],
-    specialRequirements: "",
-  });
+  const [draft, setDraft] = useState<JourneyTrialDraft>(restored.draft as JourneyTrialDraft);
   const [roomsTouched, setRoomsTouched] = useState(false);
+
+  useEffect(() => {
+    writeStoredTrial(step, draft);
+  }, [step, draft]);
 
   const update = <K extends keyof JourneyTrialDraft>(key: K, value: JourneyTrialDraft[K]) => {
     setCreateAttemptFailed(false);
@@ -227,9 +298,10 @@ export function JourneyTrialSetup({
   const submit = async () => {
     setCreateAttemptFailed(false);
     await onCreate(draft);
-    /* Still mounted means the shell never closed the wizard, i.e. never reached its
-       success path.  On success the unmount makes this setState a no-op. */
+    /* Still mounted means the step did not complete.  Unmounted means the shell took its
+       success path, so the draft has been consumed and must not be offered again. */
     if (mounted.current) setCreateAttemptFailed(true);
+    else clearStoredTrial();
   };
 
   return (
