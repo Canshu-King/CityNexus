@@ -798,6 +798,7 @@ export function V8Experience() {
         onUseTianjinDemo={createTianjinDemo}
         onCancel={data ? () => setSetupOpen(false) : undefined}
         busy={setupBusy}
+        message={message}
       />
     );
   if (busy && !data)

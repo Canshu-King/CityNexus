@@ -36,6 +36,8 @@ async function openFreshWizard(page: import("@playwright/test").Page) {
 
 async function walkToStep3(page: import("@playwright/test").Page) {
   await page.getByTestId("trial-city").fill("Tianjin");
+  await page.getByTestId("trial-arrival").fill("Tianjin West Station");
+  await page.getByTestId("trial-departure").fill("Tianjin Binhai Airport");
   await page.getByTestId("trial-next").click();
   await page.waitForTimeout(300);
   await page.getByTestId("trial-next").click();
@@ -130,5 +132,71 @@ test.describe("ORD-0034 onboarding surfaces a failed create", () => {
       error,
       "e2e/qoder-onboarding-failure.spec.ts :: named reason inside trial-create-error",
     ).toContainText(NAMED_ERROR);
+  });
+
+  /* ORD-0044 -- the acceptance item.  Nothing is mocked here: a 4-day window is legal by a
+     wide margin, so if the success path advances, `.v8-product-shell` must appear inside
+     five seconds.  Remove the stay-options/generate call from createJourney and this node
+     goes red while the journeys row still exists -- a half-created trip, which is precisely
+     what the user was clicking "retry" against. */
+  test("legal-window-create-advances — a legal trip reaches the app within 5s", async ({ page }) => {
+    test.setTimeout(180_000);
+    const started = Date.now();
+    await page.emulateMedia({ colorScheme: "light", media: "screen" });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openFreshWizard(page);
+    await page.getByTestId("trial-city").fill("Tianjin");
+    await page.getByTestId("trial-arrival").fill("Tianjin West Station");
+    await page.getByTestId("trial-departure").fill("Tianjin Binhai Airport");
+    await page.getByTestId("trial-start").fill("2026-10-09T18:00");
+    await page.getByTestId("trial-end").fill("2026-10-13T15:00");
+    await page.getByTestId("trial-next").click();
+    await page.getByTestId("trial-next").click();
+    await expect(page.getByTestId("trial-create")).toBeVisible({ timeout: 10_000 });
+    await page.getByTestId("trial-create").click();
+
+    await expect(
+      page.locator(".v8-product-shell"),
+      "e2e/qoder-onboarding-failure.spec.ts :: legal-window-create-advances — a legal 4-day trip " +
+        "never reached the app: the create stopped after the journey row was written, which is " +
+        "the 'nothing happens, retry it' report on non-erroring input",
+    ).toBeVisible({ timeout: 5_000 });
+    const elapsed = Date.now() - started;
+    expect(
+      await page.evaluate(() => localStorage.getItem("citynexus.v8.journey_id")),
+      "e2e/qoder-onboarding-failure.spec.ts :: legal-window-create-advances — the shell appeared " +
+        "but no journey id was stored, so the create did not really complete",
+    ).toMatch(/^[0-9a-f-]{36}$/);
+    console.log(`legal-window-create-advances reached the shell in ${elapsed}ms`);
+  });
+
+  /* ORD-0044's root cause: the API requires a non-empty anchor location at both ends, but
+     the field looked optional and the review page showed a dash, so a legal-looking trip
+     died on a 422.  Blocked before submit is right; blocked *silently* is not. */
+  test("missing-anchor-is-named-before-submit", async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.emulateMedia({ colorScheme: "light", media: "screen" });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openFreshWizard(page);
+    await page.getByTestId("trial-city").fill("Tianjin");
+
+    await expect(
+      page.getByTestId("trial-required-hint"),
+      "e2e/qoder-onboarding-failure.spec.ts :: missing-anchor-is-named-before-submit — the anchor " +
+        "fields are required by the API but the wizard gives no reason for the blocked Next",
+    ).toContainText(/抵达|离开|arrive|leave/i, { timeout: 5_000 });
+    await expect(
+      page.getByTestId("trial-next"),
+      "e2e/qoder-onboarding-failure.spec.ts :: missing-anchor-is-named-before-submit — Next was " +
+        "enabled with an empty anchor, so the traveller would have met the 422 instead",
+    ).toBeDisabled();
+
+    await page.getByTestId("trial-arrival").fill("Tianjin West Station");
+    await page.getByTestId("trial-departure").fill("Tianjin Binhai Airport");
+    await expect(
+      page.getByTestId("trial-next"),
+      "e2e/qoder-onboarding-failure.spec.ts :: missing-anchor-is-named-before-submit — Next stayed " +
+        "blocked after every required field was filled",
+    ).toBeEnabled();
   });
 });

@@ -64,6 +64,8 @@ async function shoot(page: Page, shot: (typeof SHOTS)[number], scheme: "light" |
   if (shot.step === 3) {
     // Walk the three-step form to its review page with the demo defaults.
     await page.getByTestId("trial-city").fill("Tianjin");
+    await page.getByTestId("trial-arrival").fill("Tianjin West Station");
+    await page.getByTestId("trial-departure").fill("Tianjin Binhai Airport");
     await page.getByTestId("trial-next").click();
     await page.waitForTimeout(400);
     await page.getByTestId("trial-next").click();

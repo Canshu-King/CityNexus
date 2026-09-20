@@ -288,7 +288,17 @@ export function JourneyTrialSetup({
   };
 
   const facts = inferCityFacts(draft.cityName);
-  const step1Ready = draft.cityName.trim().length > 0;
+  /* The API requires a non-empty anchor location at both ends
+     (`arrival_anchor.location` has minLength 1).  Until now the field looked optional -- a
+     placeholder, and a bare "—" on the review page -- so a legal-looking 4-day trip died on
+     a 422 the traveller could not see.  Pre-validating here is what ruling ① allows; the
+     backend stays the authority. */
+  const missingStep1 = [
+    draft.cityName.trim() ? null : zh ? "目的地" : "the destination",
+    draft.arrivalLocation.trim() ? null : zh ? "抵达地点" : "where you arrive",
+    draft.departureLocation.trim() ? null : zh ? "离开地点" : "where you leave",
+  ].filter(Boolean) as string[];
+  const step1Ready = missingStep1.length === 0;
   const step2Ready = draft.partySize >= 1 && draft.budgetMajor > 0;
 
   const stepTitle = zh
@@ -632,6 +642,15 @@ export function JourneyTrialSetup({
           </strong>
           {message ? <span>{message}</span> : null}
         </div>
+      )}
+      {step === 1 && !step1Ready && (
+        /* A greyed-out "Next" with no reason is the same silence as a create that dies
+           quietly, so name what is missing. */
+        <p className="trial-required-hint" data-testid="trial-required-hint" role="status">
+          {zh
+            ? `还需要填写：${missingStep1.join("、")}`
+            : `Still needed: ${missingStep1.join(", ")}`}
+        </p>
       )}
       {/* Sticky CTA: always reachable, never below a wall of scrolling. */}
       <div className="trial-sticky-cta" data-testid="trial-sticky-cta">

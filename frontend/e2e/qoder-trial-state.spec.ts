@@ -55,6 +55,8 @@ test.describe("ORD-0036 (d) the trial wizard survives a reload", () => {
     await openFreshWizard(page);
 
     await page.getByTestId("trial-city").fill(CITY);
+    await page.getByTestId("trial-arrival").fill("厦门高崎国际机场");
+    await page.getByTestId("trial-departure").fill("厦门站");
     await page.getByTestId("trial-next").click();
     await page.getByTestId("trial-next").click();
     await expect(page.getByTestId("trial-create")).toBeVisible({ timeout: 15_000 });
