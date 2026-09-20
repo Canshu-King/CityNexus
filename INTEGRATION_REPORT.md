@@ -2488,3 +2488,49 @@ attempt 3 的真相是"三个镜像全灭 + 兜底源连不上"，但响应里�
 * **口径分开**：以上全是 **API 操作延迟**。document 导航延迟本轮**没有**重测，也不拿这 121s 当
   HTML 超时的依据（UI 线另有一份 `review/measure-document-path.json`）；仲裁"两者分开测"这一条，
   我按"只报 API、不混用"处理，需要的话我另跑一遍纯导航。
+
+
+## 91. ORD-0034 的"最后一行 prop"从我这一侧落地，以及一次五红先证明是负载
+
+### 91.1 一行改动，闭合那扇自陈待办的门
+
+合并进来的 `qoder-onboarding-failure.spec.ts` 里有一条**故意红**的断言，注释写明缺口是
+`V8Experience.tsx` 的一个 prop、"本车道不拥有该文件"。那正是我的写域，所以补的是壳层调用点：
+
+```
+<JourneyTrialSetup … busy={setupBusy} message={message} />   // 之前没传 message
+```
+
+向导侧 `JourneyTrialSetup.tsx:551-562` 早就备好了 `{message ? <span>{message}</span> : null}`，
+并且它把整块 gate 在自己的 `createAttemptFailed` 上（不是 gate 在 `message` 上），所以传进来不会让
+"上一步残留的提示"漂到创建失败的位置。**没有改他们那条断言、没有放宽任何期望**：
+
+| | 改之前 | 改之后 |
+| --- | --- | --- |
+| `a 500 on journey creation shows a visible, named failure` | 绿 | 绿 |
+| `the named backend reason reaches the onboarding screen` | **红**（实到通用文案） | **绿**（能读到 `V13_JOURNEY_DAYS_OUT_OF_BOUNDS:9`） |
+| 该文件所在的一次权威连跑（`ord34-prop`，:3477→:8477，10 例含 12 点门 3 + 主题契约 4） | — | **10 passed（1.5m）** |
+| `typecheck` / `typecheck:all` / `build` | 0 / 0 / 0 | **0 / 0 / 0** |
+
+顺带说明我为什么不动 ORD-0034 的 status：那单归 `e345b9d6`，我只在自己的 DELIVERIES 块里把
+"这一行已从 `V8Experience.tsx` 落地 + 两条门的实测"写清楚，由他们或你据此收尾。
+
+### 91.2 五红不是回归，是负载：我按"先证明、再归因"办
+
+改完之后跑全套（run `ord34-full`，:3479→:8479）得到 **76 expected / 6 skipped / 5 unexpected（339.6s）**，
+五条红是 `qoder-contrast-audit`(×3)、`predictive-real-city-v6`(×1)、`qoder-plan-ai-thinking` 的
+`plan-ai-cancel-aborts-request`(×1)。我没有把它写成"我一行 prop 不可能影响对比度"这种推理式免责，
+而是去测：
+
+1. **同一棵树、同一批 spec 单独连跑**（run `ord34-isol`，:3481→:8481，只那三个文件）：
+   **14 passed（2.2m）**，其中包含全套里红的全部 5 条。
+2. **再跑一次全套**（run `ord34-full2`，:3483→:8483）：
+   **81 expected / 6 skipped / 0 unexpected / 0 flaky（295.8s）** —— 81 = 之前 80 + 新绿的那条。
+
+⇒ 归因为**并发负载下的超时**（那一次 339.6s 也是本日最长的一次；同机当时有多个车道在跑），
+不是代码回归；两次的逐条差异、provenance 行与日志都在
+`D:\moodle\_qoder_ord30_evidence_20260920\ord34-*.{json,log}`。
+**这笔账要留着**：权威 E2E 在满负载下会假红，说明"整套一次跑绿"目前依赖机器空闲。
+可做的下一步（谁接由你派，不属本单）：给这 5 条各自的等待改成事件驱动（等真实 settle 而不是定时），
+或者把"整套必须在 N 分钟内过"换成"每文件单独过 + 全套允许一次重跑并逐条点名红因"。
+我不在这轮动它们——那 5 条的门各有 owner。

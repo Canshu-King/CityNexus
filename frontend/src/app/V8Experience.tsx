@@ -798,6 +798,12 @@ export function V8Experience() {
         onUseTianjinDemo={createTianjinDemo}
         onCancel={data ? () => setSetupOpen(false) : undefined}
         busy={setupBusy}
+        /* ORD-0034's whole remainder was this line. The wizard returns before the shell
+           renders `message`, so a named backend rejection ("your dates are 9 days, the
+           window is 7") died in shell state and the traveller saw only a generic notice.
+           The wizard still gates the block on its own createAttemptFailed, so a stale
+           message from an earlier step cannot show up here. */
+        message={message}
       />
     );
   if (busy && !data)
