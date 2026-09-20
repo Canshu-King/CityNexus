@@ -89,8 +89,8 @@
   --cn-t-accept: 440ms;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+
+  :root[data-theme="dark"] {
     --cn-canvas: #000000;
     --cn-surface: #1c1c1e;
     --cn-secondary: #2c2c2e;
@@ -112,7 +112,7 @@
     --cn-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.5);
     --cn-shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.5), 0 18px 40px rgba(0, 0, 0, 0.6);
   }
-}
+
 
 /* Bind the V8 palette to the Apple tokens at :root as well as on the shell.
    Existing components consume --v8-*, so rebinding them re-skins the app; doing it
@@ -475,25 +475,23 @@
  * --cn-accent-solid so white labels clear AA. Legacy / Advanced / Wallet-JSON /
  * off-path panels are intentionally left as declared debt this pass.
  */
-@media (prefers-color-scheme: dark) {
+
   /* 1. Shell surfaces that painted a hardcoded white in dark. */
-  .v8-product-shell .v8-topbar {
+  :root[data-theme="dark"] .v8-product-shell .v8-topbar {
     background: var(--cn-surface) !important;
   }
-  .v8-product-shell .v8-breadcrumb,
-  .v8-product-shell .v8-runtime,
-  .v8-product-shell .v8-icon-button {
+  :root[data-theme="dark"] .v8-product-shell .v8-breadcrumb, :root[data-theme="dark"] .v8-product-shell .v8-runtime, :root[data-theme="dark"] .v8-product-shell .v8-icon-button {
     color: var(--cn-ink-secondary) !important;
   }
-  .v8-product-shell .v8-breadcrumb b { color: var(--cn-ink-tertiary) !important; }
-  .v8-product-shell .v8-breadcrumb strong { color: var(--cn-ink) !important; }
-  .v8-product-shell .v8-mobile-nav {
+  :root[data-theme="dark"] .v8-product-shell .v8-breadcrumb b { color: var(--cn-ink-tertiary) !important; }
+  :root[data-theme="dark"] .v8-product-shell .v8-breadcrumb strong { color: var(--cn-ink) !important; }
+  :root[data-theme="dark"] .v8-product-shell .v8-mobile-nav {
     background: rgba(28, 28, 30, 0.92) !important;
     border-top-color: var(--cn-hairline) !important;
   }
-  .v8-product-shell .v8-mobile-nav button { color: var(--cn-ink-secondary) !important; }
-  .v8-product-shell .v8-mobile-nav button.active { color: var(--cn-accent) !important; }
-  .v8-product-shell .cn-copilot-edge {
+  :root[data-theme="dark"] .v8-product-shell .v8-mobile-nav button { color: var(--cn-ink-secondary) !important; }
+  :root[data-theme="dark"] .v8-product-shell .v8-mobile-nav button.active { color: var(--cn-accent) !important; }
+  :root[data-theme="dark"] .v8-product-shell .cn-copilot-edge {
     background: var(--cn-surface) !important;
     color: var(--cn-ink) !important;
     border-color: var(--cn-hairline) !important;
@@ -501,82 +499,61 @@
   }
 
   /* 2. Language button: was white fill + bright accent text. */
-  .v8-product-shell .v9-language,
-  .v8-page .v9-language {
+  :root[data-theme="dark"] .v8-product-shell .v9-language, :root[data-theme="dark"] .v8-page .v9-language {
     background: var(--cn-secondary) !important;
     color: var(--cn-ink) !important;
     border-color: var(--cn-control-border) !important;
   }
 
   /* 3. Filled controls: deep accent so the white label clears AA in dark. */
-  .v8-product-shell .v8-avatar,
-  .v8-product-shell .v8-primary,
-  .v8-product-shell .cn-copilot-edge-mark,
-  .v8-product-shell .v9-navigate,
-  .v8-product-shell a.v9-navigate {
+  :root[data-theme="dark"] .v8-product-shell .v8-avatar, :root[data-theme="dark"] .v8-product-shell .v8-primary, :root[data-theme="dark"] .v8-product-shell .cn-copilot-edge-mark, :root[data-theme="dark"] .v8-product-shell .v9-navigate, :root[data-theme="dark"] .v8-product-shell a.v9-navigate {
     background: var(--cn-accent-solid) !important;
     color: #fff !important;
   }
 
   /* 4. Content cards / rows that kept a light fill inside .v8-page. */
-  .v8-page .v8-day-card,
-  .v8-page .v8-day-detail,
-  .v8-page .v8-live-now,
-  .v8-page .v8-mode-chooser,
-  .v8-page .v8-next-card,
-  .v8-page .v8-comparison,
-  .v8-page .v8-outline-button,
-  .v8-page .v8-compare-button,
-  .v8-page .v8-rain-button,
-  .v8-page .v8-map-panel {
+  :root[data-theme="dark"] .v8-page .v8-day-card, :root[data-theme="dark"] .v8-page .v8-day-detail, :root[data-theme="dark"] .v8-page .v8-live-now, :root[data-theme="dark"] .v8-page .v8-mode-chooser, :root[data-theme="dark"] .v8-page .v8-next-card, :root[data-theme="dark"] .v8-page .v8-comparison, :root[data-theme="dark"] .v8-page .v8-outline-button, :root[data-theme="dark"] .v8-page .v8-compare-button, :root[data-theme="dark"] .v8-page .v8-rain-button, :root[data-theme="dark"] .v8-page .v8-map-panel {
     background: var(--cn-surface) !important;
     color: var(--cn-ink) !important;
     border-color: var(--cn-hairline) !important;
   }
   /* Outline buttons carry no fill — their border is the only affordance, so it
      must clear 3:1 vs the page (unlike the decorative cards above). */
-  .v8-page .v8-outline-button {
+  :root[data-theme="dark"] .v8-page .v8-outline-button {
     border-color: var(--cn-control-border) !important;
   }
-  .v8-page .active,
-  .v8-page .v8-mode-chooser .active {
+  :root[data-theme="dark"] .v8-page .active, :root[data-theme="dark"] .v8-page .v8-mode-chooser .active {
     background: var(--cn-secondary) !important;
     color: var(--cn-ink) !important;
   }
-  .v8-page .v8-map-caption {
+  :root[data-theme="dark"] .v8-page .v8-map-caption {
     background: rgba(28, 28, 30, 0.86) !important;
     color: var(--cn-ink) !important;
   }
-  .v8-page .v8-status-pill {
+  :root[data-theme="dark"] .v8-page .v8-status-pill {
     background: rgba(48, 209, 88, 0.16) !important;
     color: #7bd88f !important;
   }
-  .v8-page .mode-mark {
-    background: var(--cn-secondary) !important;
-    color: var(--cn-accent) !important;
+  :root[data-theme="dark"] .v8-page .mode-mark {
+    /* Was accent text on a grey fill: 3.82:1 at 8px/800, below AA.  A filled accent chip
+       with the canvas colour as its label keeps the mode readable and the identity. */
+    background: var(--cn-accent) !important;
+    color: var(--cn-canvas) !important;
   }
 
   /* 5. Hardcoded grey-blue body text that fell below AA on the dark canvas. */
-  .v8-product-shell .v8-lede,
-  .v8-product-shell .v8-muted,
-  .v8-product-shell .v8-live-now p,
-  .v8-product-shell .v8-live-now > strong,
-  .v8-product-shell .v8-mode-chooser span,
-  .v8-product-shell .v8-mode-chips button,
-  .v8-product-shell .v8-next-card p,
-  .v8-product-shell .v8-eta span,
-  .v8-product-shell .v9-evidence-summary > small {
+  :root[data-theme="dark"] .v8-product-shell .v8-lede, :root[data-theme="dark"] .v8-product-shell .v8-muted, :root[data-theme="dark"] .v8-product-shell .v8-live-now p, :root[data-theme="dark"] .v8-product-shell .v8-live-now > strong, :root[data-theme="dark"] .v8-product-shell .v8-mode-chooser span, :root[data-theme="dark"] .v8-product-shell .v8-mode-chips button, :root[data-theme="dark"] .v8-product-shell .v8-next-card p, :root[data-theme="dark"] .v8-product-shell .v8-eta span, :root[data-theme="dark"] .v8-product-shell .v9-evidence-summary > small {
     color: var(--cn-ink-secondary) !important;
   }
-  .v8-product-shell .v8-live-label { color: var(--cn-danger) !important; }
-  .v8-product-shell .v8-live-label .status-dot { background: var(--cn-danger) !important; }
+  :root[data-theme="dark"] .v8-product-shell .v8-live-label { color: var(--cn-danger) !important; }
+  :root[data-theme="dark"] .v8-product-shell .v8-live-label .status-dot { background: var(--cn-danger) !important; }
 
-  .v8-page button:not([class]) {
+  :root[data-theme="dark"] .v8-page button:not([class]) {
     background: var(--cn-surface);
     color: var(--cn-ink);
     border: 1px solid var(--cn-hairline);
   }
-}
+
 
 /*
  * Desktop-only sidebar (renders above 680px, so only the desktop audit reaches
@@ -584,85 +561,76 @@
  * surfaces the dark audit flagged. Same controlled approach: token-bind just
  * these rendered classes.
  */
-@media (prefers-color-scheme: dark) {
-  .v8-product-shell .v8-sidebar {
+
+  :root[data-theme="dark"] .v8-product-shell .v8-sidebar {
     background: var(--cn-surface) !important;
     border-right-color: var(--cn-hairline) !important;
   }
-  .v8-product-shell .v8-brand strong { color: var(--cn-ink); }
-  .v8-product-shell .v8-brand span,
-  .v8-product-shell .v8-workspace-label,
-  .v8-product-shell .v8-nav-group,
-  .v8-product-shell .v8-nav button {
+  :root[data-theme="dark"] .v8-product-shell .v8-brand strong { color: var(--cn-ink); }
+  :root[data-theme="dark"] .v8-product-shell .v8-brand span, :root[data-theme="dark"] .v8-product-shell .v8-workspace-label, :root[data-theme="dark"] .v8-product-shell .v8-nav-group, :root[data-theme="dark"] .v8-product-shell .v8-nav button {
     color: var(--cn-ink-secondary) !important;
   }
-  .v8-product-shell .v8-workspace-label span { color: var(--cn-ink) !important; }
-  .v8-product-shell .v8-brand-mark {
+  :root[data-theme="dark"] .v8-product-shell .v8-workspace-label span { color: var(--cn-ink) !important; }
+  :root[data-theme="dark"] .v8-product-shell .v8-brand-mark {
     background: var(--cn-accent-solid) !important;
     color: #fff !important;
   }
-  .v8-product-shell .v8-nav button:hover,
-  .v8-product-shell .v8-nav button.active {
+  :root[data-theme="dark"] .v8-product-shell .v8-nav button:hover, :root[data-theme="dark"] .v8-product-shell .v8-nav button.active {
     background: var(--cn-secondary) !important;
     color: var(--cn-ink) !important;
   }
-  .v8-product-shell .v8-nav button.active:before { background: var(--cn-accent); }
-  .v8-product-shell .v8-sync {
+  :root[data-theme="dark"] .v8-product-shell .v8-nav button.active:before { background: var(--cn-accent); }
+  :root[data-theme="dark"] .v8-product-shell .v8-sync {
     color: #7bd88f !important;
     border-color: var(--cn-hairline) !important;
   }
-  .v8-product-shell .v8-sync div { color: var(--cn-ink-secondary) !important; }
-  .v8-product-shell .v8-user { color: var(--cn-ink) !important; }
-  .v8-product-shell .v8-user small { color: var(--cn-ink-secondary) !important; }
+  :root[data-theme="dark"] .v8-product-shell .v8-sync div { color: var(--cn-ink-secondary) !important; }
+  :root[data-theme="dark"] .v8-product-shell .v8-user { color: var(--cn-ink) !important; }
+  :root[data-theme="dark"] .v8-product-shell .v8-user small { color: var(--cn-ink-secondary) !important; }
 
   /* Today hero attention status: was a hard-coded green/amber. */
-  .v8-page .today-actions strong.green { color: #7bd88f !important; }
-  .v8-page .today-actions strong.warn { color: var(--cn-warning) !important; }
+  :root[data-theme="dark"] .v8-page .today-actions strong.green { color: #7bd88f !important; }
+  :root[data-theme="dark"] .v8-page .today-actions strong.warn { color: var(--cn-warning) !important; }
 
   /* Live next-card green accents: hard-coded dark-on-light greens now sit on a
      dark card surface, so they fall below AA. */
-  .v8-page .v8-next-card > span,
-  .v8-page .v8-next-card .v9-risk,
-  .v8-page .v8-next-card .v9-risk span { color: #7bd88f !important; }
-  .v8-page .v8-next-card .v9-risk b { color: var(--cn-warning) !important; }
+  :root[data-theme="dark"] .v8-page .v8-next-card > span, :root[data-theme="dark"] .v8-page .v8-next-card .v9-risk, :root[data-theme="dark"] .v8-page .v8-next-card .v9-risk span { color: #7bd88f !important; }
+  :root[data-theme="dark"] .v8-page .v8-next-card .v9-risk b { color: var(--cn-warning) !important; }
 
   /* Live replan surfaces (render only with a disruption, so the demo-driven
      audit cannot reach them — migrated for coherence, declared unverified this
      pass). They were hard-coded light tints with ink inherited from the body. */
-  .v8-page .live-disruption {
+  :root[data-theme="dark"] .v8-page .live-disruption {
     background: rgba(255, 159, 10, 0.12) !important;
     border-color: rgba(255, 159, 10, 0.34) !important;
     color: var(--cn-ink) !important;
   }
-  .v8-page .live-proposal {
+  :root[data-theme="dark"] .v8-page .live-proposal {
     background: var(--cn-surface) !important;
     border-color: var(--cn-hairline) !important;
     color: var(--cn-ink) !important;
   }
-  .v8-page .live-disruption b,
-  .v8-page .live-proposal b { color: var(--cn-ink) !important; }
-  .v8-page .live-summary,
-  .v8-page .live-unchanged,
-  .v8-page .live-diff { color: var(--cn-ink-secondary) !important; }
-  .v8-page .role-alert { color: #ff6961 !important; }
-  .v8-page .live-handled { color: #7bd88f !important; }
+  :root[data-theme="dark"] .v8-page .live-disruption b, :root[data-theme="dark"] .v8-page .live-proposal b { color: var(--cn-ink) !important; }
+  :root[data-theme="dark"] .v8-page .live-summary, :root[data-theme="dark"] .v8-page .live-unchanged, :root[data-theme="dark"] .v8-page .live-diff { color: var(--cn-ink-secondary) !important; }
+  :root[data-theme="dark"] .v8-page .role-alert { color: #ff6961 !important; }
+  :root[data-theme="dark"] .v8-page .live-handled { color: #7bd88f !important; }
 
   /* Mode chips: the reorder lifted them into the desktop viewport, exposing a
      hard-coded #fff fill (a light surface in dark) and a selected state that was
      indistinguishable from unselected. Unselected = surface + control-border
      (unfilled control); selected = accent-solid fill + white label (a real
      fill-difference cue, not colour alone). */
-  .v8-page .v8-mode-chips button {
+  :root[data-theme="dark"] .v8-page .v8-mode-chips button {
     background: var(--cn-surface) !important;
     color: var(--cn-ink-secondary) !important;
     border-color: var(--cn-control-border) !important;
   }
-  .v8-page .v8-mode-chips button.active {
+  :root[data-theme="dark"] .v8-page .v8-mode-chips button.active {
     background: var(--cn-accent-solid) !important;
     color: #fff !important;
     border-color: transparent !important;
   }
-}
+
 
 /* ---------------------------------------------------------------------------
    AA-safe eyebrow text (regression fix found by axe in the real-seed
