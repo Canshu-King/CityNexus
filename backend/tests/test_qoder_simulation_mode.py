@@ -75,6 +75,28 @@ def test_the_reset_route_is_closed_without_the_switch_and_deletes_nothing(monkey
     """
 
     monkeypatch.setattr("app.main.demo_mode_enabled", lambda: False)
+    # A row the frozen seed cannot produce: without this, "counts unchanged" passes even when
+    # the route destroys everything and re-seeds identical rows, which is exactly what the first
+    # kill-evidence batch proved (mutant T2 survived on that blind spot).
+    with SessionLocal() as session:
+        traveler = session.scalar(select(Traveler.id))
+    assert traveler is not None, "needs a seeded traveler to own the marker journey"
+    created = client.post(
+        "/api/v1/journeys",
+        json={
+            "traveler_id": traveler,
+            "title": "marker row",
+            "city_code": "CNX-DEMO",
+            "timezone": "Asia/Shanghai",
+            "start_at": "2026-12-01T09:00:00+08:00",
+            "end_at": "2026-12-02T18:00:00+08:00",
+            "budget": {"amount_minor": 20000, "currency": "CNY"},
+            "planning_mode": "balanced",
+        },
+    )
+    assert created.status_code == 201, created.text
+    marker_id = created.json()["id"]
+
     before = _counts()
     assert before["journeys"] > 0, "needs a populated library so deletion would be observable"
     response = client.post("/api/v1/demo/reset")
@@ -85,6 +107,12 @@ def test_the_reset_route_is_closed_without_the_switch_and_deletes_nothing(monkey
     assert body["details"]["flag"] == "CITYNEXUS_DEMO_MODE", body["details"]
     assert body["details"]["tables_protected"] is True, body["details"]
     assert _counts() == before, "a refused reset must not have touched a single row"
+    with SessionLocal() as session:
+        assert session.get(Journey, marker_id) is not None, (
+            "the refused reset destroyed a journey the seed cannot reproduce - the guard fires"
+            " after the deletion, not before it"
+        )
+        assert session.scalar(select(func.count(Traveler.id))) > 0
 
 
 def test_the_same_call_is_allowed_once_the_process_claims_the_stage(_stage_on) -> None:
