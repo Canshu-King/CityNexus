@@ -1,0 +1,46 @@
+baselines: V8Experience.tsx=ad4e898b1d469fd1c12988d7a479b4ae8a8088cb, JourneyTrialSetup.tsx=0b16a7b2f2026ba4ccf420c399e498ebe47de9d3
+kill44-a-stalls-after-the-journey-row: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-onboarding-failure.spec.ts :: legal-window-create-advances — a legal 4-day trip never reached the app: the create stopped after the journey row was written, which is the 'no
+  node legal-window-create-advances: NAMED IN A RED
+  restored V8Experience.tsx ad4e898b1d469fd1c12988d7a479b4ae8a8088cb OK
+kill44-b-never-opens-the-shell: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-onboarding-failure.spec.ts :: legal-window-create-advances — a legal 4-day trip never reached the app: the create stopped after the journey row was written, which is the 'no
+  node legal-window-create-advances: NAMED IN A RED
+  restored V8Experience.tsx ad4e898b1d469fd1c12988d7a479b4ae8a8088cb OK
+kill44-c-anchor-not-required: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-onboarding-failure.spec.ts :: missing-anchor-is-named-before-submit — the anchor fields are required by the API but the wizard gives no reason for the blocked Next
+  node missing-anchor-is-named-before-submit: NAMED IN A RED
+  restored JourneyTrialSetup.tsx 0b16a7b2f2026ba4ccf420c399e498ebe47de9d3 OK
+kill44-d-drops-the-named-reason: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-onboarding-failure.spec.ts :: a 500 stays silent — the notice hides the only fact the server actually sent: "This step did not complete — no journey was created."
+  node named reason inside trial-create-error: NAMED IN A RED
+  restored V8Experience.tsx ad4e898b1d469fd1c12988d7a479b4ae8a8088cb OK
+kill44-e-says-the-field-is-not-required: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-onboarding-failure.spec.ts :: missing-anchor-is-named-before-submit — trial-arrival is required by the API but does not say so
+  node missing-anchor-is-named-before-submit: NAMED IN A RED
+  restored JourneyTrialSetup.tsx 0b16a7b2f2026ba4ccf420c399e498ebe47de9d3 OK
+kill44-f-leaves-the-reason-unassociated: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-onboarding-failure.spec.ts :: missing-anchor-is-named-before-submit — trial-arrival is blocked as required but is not tied to the visible reason
+  node missing-anchor-is-named-before-submit: NAMED IN A RED
+  restored JourneyTrialSetup.tsx 0b16a7b2f2026ba4ccf420c399e498ebe47de9d3 OK
+kill44-g-reviews-a-blank-anchor-as-a-dash: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-onboarding-failure.spec.ts :: review-page-says-missing-anchor-is-required — review-arrival renders "— · 2026-09-21 10:00" in en; a bare "—" reads as an acceptable blank and 
+  node review-page-says-missing-anchor-is-required: NAMED IN A RED
+  restored JourneyTrialSetup.tsx 0b16a7b2f2026ba4ccf420c399e498ebe47de9d3 OK
+kill44-h-ignores-which-field-the-backend-named: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-onboarding-failure.spec.ts :: backend-reason-lands-on-its-own-field — a complaint about the arrival anchor was smeared onto the departure field too
+  node backend-reason-lands-on-its-own-field: NAMED IN A RED
+  restored JourneyTrialSetup.tsx 0b16a7b2f2026ba4ccf420c399e498ebe47de9d3 OK
+kill44-i-hides-the-status-the-server-sent: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-onboarding-failure.spec.ts :: a 500 stays silent — the notice hides the only fact the server actually sent: "This step did not complete — no journey was created.The request 
+  node a 500 stays silent: NAMED IN A RED
+  restored V8Experience.tsx ad4e898b1d469fd1c12988d7a479b4ae8a8088cb OK

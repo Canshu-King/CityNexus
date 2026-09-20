@@ -1,0 +1,41 @@
+{
+  "sha": "dddfd8b936e1615897736cdc32b03dc7670b30ab",
+  "files": {
+    "frontend/src/main.tsx": {
+      "resolved": "_tools/qoder-integration-20260919/frontend/src/main.tsx",
+      "bytes": 70166,
+      "sha": "34a78a9760a8eb574ba430ea18db704990d20d75",
+      "size_matches": true
+    },
+    "frontend/vite.config.ts": {
+      "resolved": "_tools/qoder-integration-20260919/frontend/vite.config.ts",
+      "bytes": 3650,
+      "sha": "bc7e1b8508a6696cc3e2099fbaf2455641aacffc",
+      "size_matches": true
+    },
+    "frontend/public/sw.js": {
+      "resolved": "_tools/qoder-integration-20260919/frontend/public/sw.js",
+      "bytes": 5057,
+      "sha": "324dbc7ec1b093e42858e62f3862e344ac9df4d7",
+      "size_matches": true
+    },
+    "frontend/playwright.sw.config.ts": {
+      "resolved": "_tools/qoder-integration-20260919/frontend/playwright.sw.config.ts",
+      "bytes": 1273,
+      "sha": "d2f664e187f733302a1b9ecf84ce26a53446c9b7",
+      "size_matches": true
+    },
+    "frontend/e2e/qoder-sw-lifecycle.spec.ts": {
+      "resolved": "_tools/qoder-integration-20260919/frontend/e2e/qoder-sw-lifecycle.spec.ts",
+      "bytes": 6817,
+      "sha": "036fa8832d82247ba215228763e166b91f1ffada",
+      "size_matches": true
+    },
+    "frontend/docs/SW_LIFECYCLE_ACCEPTANCE.md": {
+      "resolved": "_tools/qoder-integration-20260919/frontend/docs/SW_LIFECYCLE_ACCEPTANCE.md",
+      "bytes": 6252,
+      "sha": "c6ac49f38ab5fc1a7a00ed4a089f2d99bbdb41e7",
+      "size_matches": true
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "../components/v8/Icon";
 import { MapPanel } from "../components/v8/MapPanel";
 import { AgentComposer } from "../features/agent/AgentComposer";
@@ -10,6 +10,8 @@ import { HotelsPanel } from "../features/stay/HotelsPanel";
 import { PlanComparison } from "../features/planning/PlanComparison";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { liveActivityWindow } from "../lib/executionWindow";
+import { useElapsedSeconds } from "../lib/waitClock";
+import { readChoice, setThemeChoice, type ThemeChoice } from "../theme";
 import { MobilitySheet } from "../features/mobility/MobilitySheet";
 import { StayExplorer } from "../features/stay/StayExplorer";
 import { ControlTowerPanel } from "../features/intelligence/ControlTowerPanel";
@@ -29,6 +31,7 @@ import {
   JourneyTrialSetup,
   localDateTimeInZoneToIso,
   type JourneyTrialDraft,
+  type TrialPhase,
 } from "../features/setup/JourneyTrialSetup";
 import type { AgentRuntimeStatus } from "../api/citynexus";
 import {
@@ -44,7 +47,7 @@ import {
   type OfflineJourney,
 } from "../lib/offlineJourney";
 import { useT, useLocale } from "../i18n/LocaleContext";
-import { formatMinorMoney, majorToMinor } from "../lib/money";
+import { currencyExponent, currencyMinorFactor, formatMinorMoney, majorToMinor } from "../lib/money";
 import { withViewTransition } from "../lib/viewTransition";
 import { isDisruptionOpen } from "../lib/disruptionState";
 import {
@@ -125,6 +128,54 @@ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 const money = formatMinorMoney;
+
+/** Waiting, found, empty and refused are four different faces and must not share one. */
+type StaySearchState = "idle" | "searching" | "found" | "empty" | "failed";
+
+/**
+ * Today's explanation for an empty search, taken from the `generation.outcome` the server
+ * reported.  Anything unrecognised -- including no outcome at all -- keeps the generic
+ * sentence: naming a cause the server did not give would be the fabrication the frozen list
+ * forbids, in the same shape as a made-up progress step.
+ */
+function stayOutcomeLine(outcome: string | null, zh: boolean): string {
+  switch (outcome) {
+    case "NO_OFFERS_FROM_PROVIDER":
+      return zh
+        ? "提供方这一轮没有返回任何可比较的住宿。这种失败多在提供方一侧，再查一次通常能拿到结果。"
+        : "The providers returned nothing comparable this round. That failure is on their side; searching again usually brings results.";
+    case "ALL_CANDIDATES_REJECTED":
+      return zh
+        ? "有候选住宿，但没有一个满足这趟行程的硬性条件（预算、时间或可达性）。"
+        : "There were candidates, but none of them met this trip's hard constraints (budget, timing or reachability).";
+    case "NOT_APPLICABLE_ZERO_NIGHTS":
+      return zh
+        ? "这趟行程不过夜，所以没有住宿可搜。"
+        : "This trip has no overnight stay, so there is nothing to search for.";
+    default:
+      return zh
+        ? "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿，服务器也没有说明原因。我们不会编造酒店。"
+        : "Your trip is created and its dates are intact — this search returned nothing to compare, and the server gave no reason. We will not invent hotels.";
+  }
+}
+
+/** A fetch the traveller stopped is an AbortError; a network failure is a TypeError. */
+function isAbort(cause: unknown): boolean {
+  return cause instanceof Error && cause.name === "AbortError";
+}
+
+/** Ruling ④: three choices, and the word on the button is the choice you have now. */
+const THEME_WORD: Record<ThemeChoice, [string, string]> = {
+  system: ["跟随系统", "System"],
+  light: ["亮色", "Light"],
+  dark: ["暗色", "Dark"],
+};
+
+const THEME_NEXT: Record<ThemeChoice, ThemeChoice> = {
+  system: "light",
+  light: "dark",
+  dark: "system",
+};
 
 /**
  * Wall-clock helpers that read an ISO instant in the *journey's* time zone.
@@ -303,7 +354,26 @@ export function V8Experience() {
   // vanished (master mission Phase 10).
   const [unreachable, setUnreachable] = useState(false);
   const [setupBusy, setSetupBusy] = useState(false);
+  /* ORD-0047 — a cold city's first stay search measured 114.98s through the production
+     preview, during which this screen showed nothing at all.  The shell is the only party
+     that knows which request it is awaiting, so it owns the phase, the clock and the
+     controller the traveller's "stop waiting" aborts.  `journeyCreated` keeps the failure
+     notice from denying a trip whose row is already committed. */
+  const [createPhase, setCreatePhase] = useState<TrialPhase | null>(null);
+  const [createStartedAt, setCreateStartedAt] = useState<number | null>(null);
+  const [journeyCreated, setJourneyCreated] = useState(false);
+  const [stoppedWaiting, setStoppedWaiting] = useState(false);
+  const createAbortRef = useRef<AbortController | null>(null);
+  // "empty" is a completed search with nothing in it: neither a spinner nor an error.
+  const [staySearch, setStaySearch] = useState<StaySearchState>("idle");
+  // Whatever `generation.outcome` the server actually reported; null means it said nothing.
+  const [stayOutcome, setStayOutcome] = useState<string | null>(null);
+  const [stayAttempts, setStayAttempts] = useState(0);
+  // Ruling ④ asked for a choice, not just a contract: the root attribute and persistence
+  // were already in place, but nothing on screen let anyone pick.
+  const [themeChoice, setThemeChoiceState] = useState<ThemeChoice>(() => readChoice());
   const { locale, switchLocale } = useLocale();
+  const zh = locale.startsWith("zh");
   const t = useT();
   // "Needs attention" means an event the traveller has NOT already handled.
   // Acknowledgement is deliberately NOT resolution in this product: an
@@ -504,6 +574,11 @@ export function V8Experience() {
     data?.options.find((item) => item.id === data.selected_option_id) ??
     data?.options.find((item) => item.status === "SELECTED") ??
     null;
+  const cycleTheme = () => {
+    const next = THEME_NEXT[themeChoice];
+    setThemeChoice(next);
+    setThemeChoiceState(next);
+  };
   const navigate = (next: string) => {
     const value = next || "hub";
     withViewTransition(() => {
@@ -546,7 +621,7 @@ export function V8Experience() {
         }),
       });
       localStorage.setItem("citynexus.v8.journey_id", journey.id);
-      await v8Request(`/api/v1/journeys/${journey.id}/stay-options/generate`, { method: "POST" });
+      await searchStayOptions(journey.id, "Tianjin stay-aware journey", new AbortController().signal);
       await load(journey.id);
       setSetupOpen(false);
       navigate("discover");
@@ -556,9 +631,76 @@ export function V8Experience() {
       setSetupBusy(false);
     }
   };
+  /**
+   * One stay search, one honest outcome.  Cold cities measured 114.98s here and came back
+   * with `top_k: []`, so the count -- not the 200 -- is what decides the next screen, and a
+   * zero result gets its own state instead of Today's ordinary face.
+   */
+  const searchStayOptions = async (journeyId: string, query: string, signal: AbortSignal) => {
+    setCreatePhase("stay-options");
+    setStaySearch("searching");
+    setStayAttempts((current) => current + 1);
+    try {
+      const generated = await v8Request<{ top_k?: unknown; generation?: { outcome?: string } }>(
+        `/api/v1/journeys/${journeyId}/stay-options/generate`,
+        { method: "POST", body: JSON.stringify({ query }), signal },
+      );
+      const count = Array.isArray(generated?.top_k) ? generated.top_k.length : 0;
+      // An absent outcome stays unknown: the reason on screen must be one the server gave.
+      setStayOutcome(typeof generated?.generation?.outcome === "string" ? generated.generation.outcome : null);
+      setStaySearch(count === 0 ? "empty" : "found");
+      return count;
+    } catch (cause) {
+      if (!isAbort(cause)) setStaySearch("failed");
+      throw cause;
+    }
+  };
+
+  /** Abandon the wait, not the trip: the server keeps whatever it is doing. */
+  const stopWaiting = () => {
+    setStoppedWaiting(true);
+    createAbortRef.current?.abort();
+  };
+
+  /** Today's "look again": the trip is already written, only the search is repeated. */
+  const retryStaySearch = async () => {
+    if (!data) return;
+    const controller = new AbortController();
+    createAbortRef.current = controller;
+    setStoppedWaiting(false);
+    setCreateStartedAt(Date.now());
+    try {
+      await searchStayOptions(
+        data.journey.id,
+        `${data.journey.city_code} stay-aware journey`,
+        controller.signal,
+      );
+      await load(data.journey.id);
+    } catch (cause) {
+      if (!isAbort(cause)) {
+        setMessage(cause instanceof Error ? cause.message : t("shell.loadError"));
+      }
+    } finally {
+      createAbortRef.current = null;
+      setCreatePhase(null);
+      setCreateStartedAt(null);
+    }
+  };
+
   const createJourney = async (draft: JourneyTrialDraft) => {
     setSetupBusy(true);
     setMessage(null);
+    setStoppedWaiting(false);
+    setJourneyCreated(false);
+    setStaySearch("idle");
+    setStayOutcome(null);
+    setStayAttempts(0);
+    setCreateStartedAt(Date.now());
+    const controller = new AbortController();
+    createAbortRef.current = controller;
+    // Read from here, not from `journeyCreated`: this closure holds the value from the
+    // render it was created in, which is always false during the attempt.
+    let tripWritten = false;
     try {
       const cityName = draft.cityName.trim();
       // The real-city discovery provider materialises places under a latin
@@ -567,16 +709,20 @@ export function V8Experience() {
       const cityCode = `${draft.countryCode.trim() || "CN"}-${cityCodeSlug(cityName)}`;
       const startAt = localDateTimeInZoneToIso(draft.startAt, draft.timezone.trim());
       const endAt = localDateTimeInZoneToIso(draft.endAt, draft.timezone.trim());
+      setCreatePhase("traveler");
       const traveler = await v8Request<{ id: string }>("/api/v1/travelers", {
         method: "POST",
+        signal: controller.signal,
         body: JSON.stringify({
           display_name: "City traveler",
           locale: locale === "zh-CN" ? "zh-CN" : "en-GB",
           timezone: draft.timezone.trim(),
         }),
       });
+      setCreatePhase("journey");
       const journey = await v8Request<{ id: string }>("/api/v1/journeys", {
         method: "POST",
+        signal: controller.signal,
         body: JSON.stringify({
           traveler_id: traveler.id,
           title: `${cityName} · journey`,
@@ -592,26 +738,51 @@ export function V8Experience() {
           departure_anchor: { at: endAt, location: draft.departureLocation.trim() },
         }),
       });
+      tripWritten = true;
+      setJourneyCreated(true);
       localStorage.setItem("citynexus.v8.journey_id", journey.id);
-      await v8Request(`/api/v1/journeys/${journey.id}/stay-options/generate`, {
-        method: "POST",
-        body: JSON.stringify({ query: `${cityName} stay-aware journey` }),
-      });
+      const stayCount = await searchStayOptions(
+        journey.id,
+        `${cityName} stay-aware journey`,
+        controller.signal,
+      );
+      setCreatePhase("experience");
       await load(journey.id);
       setSetupOpen(false);
       // Land on Today and open the planning entry: the next thing a traveller
       // wants after creating a trip is a plan, not a discovery console.
       navigate("hub");
-      setPlanAiOpen(true);
-      setMessage(
-        locale.startsWith("zh")
-          ? "行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。"
-          : "Trip created. Tell the AI how you like to travel and it will build candidate plans.",
-      );
+      if (stayCount === 0) {
+        /* An empty search is not a success to announce: Today carries the empty block with
+           its own retry, and opening the planner on top of nothing is the same lie. */
+        setMessage(null);
+      } else {
+        setPlanAiOpen(true);
+        setMessage(
+          locale.startsWith("zh")
+            ? "行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。"
+            : "Trip created. Tell the AI how you like to travel and it will build candidate plans.",
+        );
+      }
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("shell.loadError"));
+      if (isAbort(error)) {
+        // No endpoint cancels this search, so say what the traveller gave up on instead.
+        setMessage(
+          locale.startsWith("zh")
+            ? tripWritten
+              ? "已停止等待。行程已经创建，住宿搜索可能仍在服务器上运行，稍后回到 Today 查看结果。"
+              : "已停止等待，行程还没有创建。"
+            : tripWritten
+              ? "Stopped waiting. The trip is created and the stay search may still be running server-side — come back to Today for the result."
+              : "Stopped waiting — no journey was created.",
+        );
+      } else {
+        setMessage(error instanceof Error ? error.message : t("shell.loadError"));
+      }
     } finally {
       setSetupBusy(false);
+      setCreatePhase(null);
+      createAbortRef.current = null;
     }
   };
   const selectOption = async (id: string) => {
@@ -829,6 +1000,11 @@ export function V8Experience() {
            button is gated on the wizard's own createAttemptFailed - without this prop the
            reason never arrives, and a stale message from an earlier step still cannot. */
         message={message}
+        phase={createPhase}
+        startedAt={createStartedAt}
+        journeyCreated={journeyCreated}
+        stoppedWaiting={stoppedWaiting}
+        onStopWaiting={stopWaiting}
       />
     );
   if (busy && !data)
@@ -920,6 +1096,22 @@ export function V8Experience() {
                 ? t("shell.autonomyActive")
                 : t("shell.factsReady")}
             </span>
+            <button
+              className="v9-language"
+              data-testid="topbar-theme"
+              data-theme-choice={themeChoice}
+              data-contrast-role="control"
+              aria-label={
+                themeChoice === "system"
+                  ? "Theme: following the system. Choose light, dark, or back to system."
+                  : themeChoice === "light"
+                    ? "Theme: pinned to light. Switch to dark or back to system."
+                    : "Theme: pinned to dark. Switch back to system or to light."
+              }
+              onClick={cycleTheme}
+            >
+              {zh ? THEME_WORD[themeChoice][0] : THEME_WORD[themeChoice][1]}
+            </button>
             <button
               className="v9-language"
               data-testid="topbar-language"
@@ -1016,6 +1208,11 @@ export function V8Experience() {
                 onNavigate={navigate}
                 onNewJourney={() => setSetupOpen(true)}
                 onPlanWithAi={() => setPlanAiOpen(true)}
+                staySearch={staySearch}
+                stayOutcome={stayOutcome}
+                stayAttempts={stayAttempts}
+                waitStartedAt={createStartedAt}
+                onRetryStays={() => void retryStaySearch()}
               />
             </>
           )}
@@ -1405,40 +1602,74 @@ function TripsWorkspace({
 /**
  * A truthful, deliberately approximate budget sanity signal.
  *
- * It never claims an exact trip cost.  It only divides the traveller's own
- * declared budget by the trip length and party size and says whether that
- * leaves a workable daily allowance once lodging, transport and food are
- * considered.
+ * It never claims an exact trip cost, and it no longer computes anything: the backend
+ * divides the traveller's declared budget by the authoritative trip shape
+ * (`backend/app/core/temporal.py`).  This function used to round the hours between the
+ * anchors into days and add one, which turned a twelve-hour same-day trip into "2 天" — and
+ * then divided the budget by that invented second day (ORD-0063).
+ *
+ * The money is shown in the journey's own currency (ORD-0064).  `¥` was hard-coded here,
+ * and `¥` is also JPY's sign, so a symbol could not be trusted at all; the ISO code can be.
  */
-const BUDGET_DAILY_FLOOR_MINOR = 15_000; // CNY 150 per person per day
+const CURRENCY_CODE = /^[A-Z]{3}$/;
+
+/** `budgetMoney` rather than `money`: this module already aliases `money` to formatMinorMoney. */
+function budgetMoney(minorUnits: number, currency: string, locale: string): string {
+  if (!CURRENCY_CODE.test(currency)) return "";
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency,
+      currencyDisplay: "code",
+      maximumFractionDigits: currencyExponent(currency),
+    }).format(minorUnits / currencyMinorFactor(currency));
+  } catch {
+    // An unsupported code must not fall back to a plausible symbol.
+    return "";
+  }
+}
 
 function budgetAdvisory(
-  budgetMinor: number,
-  days: number,
-  people: number,
+  reference: V8Data["trip"]["budget_reference"],
   zh: boolean,
-): { tight: boolean; perDay: number; perPersonPerDay: number; text: string; hint: string } | null {
-  if (!Number.isFinite(budgetMinor) || budgetMinor <= 0) return null;
-  const safeDays = Math.max(1, days);
-  const safePeople = Math.max(1, people);
-  const perDay = Math.round(budgetMinor / safeDays);
-  const perPersonPerDay = Math.round(perDay / safePeople);
-  const tight = perPersonPerDay < BUDGET_DAILY_FLOOR_MINOR;
-  const fmt = (minor: number) => `${Math.round(minor / 100).toLocaleString("zh-CN")}`;
+  locale: string,
+): { tight: boolean; text: string; hint: string } | null {
+  if (!reference || !reference.available) return null;
+  const days = reference.day_count;
+  const people = reference.party_size;
+  const perDay = reference.per_day_minor;
+  const perPersonPerDay = reference.per_person_per_day_minor;
+  const currency = reference.currency;
+  if (
+    days === null ||
+    people === null ||
+    perDay === null ||
+    perPersonPerDay === null ||
+    !currency ||
+    !budgetMoney(perPersonPerDay, currency, locale)
+  )
+    return null;
+  // `floor_comparable` is the backend saying "this CNY price level applies to your money".
+  // For a JPY or SGD budget it is false, and calling the trip tight would be a verdict
+  // reached by comparing yen against yuan.
+  const tight = Boolean(reference.floor_comparable) && perPersonPerDay < (reference.floor_minor ?? 0);
+  const amount = budgetMoney(perPersonPerDay, currency, locale);
   return {
     tight,
-    perDay,
-    perPersonPerDay,
     text: zh
-      ? `${safeDays} 天 · ${safePeople} 人 · 每人每天约 ¥${fmt(perPersonPerDay)}`
-      : `${safeDays} days · ${safePeople} people · about ¥${fmt(perPersonPerDay)} per person per day`,
+      ? `${days} 天 · ${people} 人 · 每人每天约 ${amount}`
+      : `${days} days · ${people} people · about ${amount} per person per day`,
     hint: tight
       ? zh
         ? "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。"
         : "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally."
-      : zh
-        ? "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。"
-        : "This is your own budget averaged out, not a final cost. Real prices come from providers.",
+      : reference.floor_comparable
+        ? zh
+          ? "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。"
+          : "This is your own budget averaged out, not a final cost. Real prices come from providers."
+        : zh
+          ? `这是按你的预算平均下来的参考值（以 ${currency} 计），不是最终花费；真实价格以供应商为准。`
+          : `This is your own budget averaged out, in ${currency}, not a final cost. Real prices come from providers.`,
   };
 }
 
@@ -1450,6 +1681,11 @@ function Hub({
   onNavigate,
   onNewJourney,
   onPlanWithAi,
+  staySearch,
+  stayOutcome,
+  stayAttempts,
+  waitStartedAt,
+  onRetryStays,
 }: {
   data: V8Data;
   selected: V8Data["options"][number] | null;
@@ -1460,10 +1696,18 @@ function Hub({
   onNavigate: (route: string) => void;
   onNewJourney: () => void;
   onPlanWithAi: () => void;
+  /* ORD-0047: a stay search that answered "200, nothing" must not wear Today's ordinary
+     face, and one that is running must be countable. */
+  staySearch: StaySearchState;
+  stayOutcome: string | null;
+  stayAttempts: number;
+  waitStartedAt: number | null;
+  onRetryStays: () => void;
 }) {
   const t = useT();
   const { locale, switchLocale } = useLocale();
   const zh = locale.startsWith("zh");
+  const stayWaited = useElapsedSeconds(staySearch === "searching" ? waitStartedAt : null);
   // The traveller may intentionally proceed after seeing a tight-budget warning.
   const [advisoryDismissed, setAdvisoryDismissed] = useState(false);
 
@@ -1487,12 +1731,12 @@ function Hub({
       .join(" ");
   })();
 
-  const startMs = Date.parse(data.journey.start_at);
-  const endMs = Date.parse(data.journey.end_at);
-  const tripDayCount =
-    Number.isFinite(startMs) && Number.isFinite(endMs)
-      ? Math.max(1, Math.round((endMs - startMs) / 86_400_000) + 1)
-      : 1;
+  // ORD-0063: the day count is projected by the backend, not derived here.  The removed line
+  // rounded the span between the anchors into whole days and added one, which called a
+  // 08:00→20:00 trip "2 天" and then divided the budget by that invented second day.  A null
+  // means the stored window cannot be ordered at all, which shows as unknown, never as 1.
+  const tripDayCount = data.journey.temporal_shape?.day_count ?? null;
+  const advisory = budgetAdvisory(data.trip.budget_reference, zh, locale);
   const activities = (data.active_plan?.activities ?? []) as unknown as Array<{
     id: string;
     title: string;
@@ -1500,12 +1744,6 @@ function Hub({
     end_at: string;
     type?: string | null;
   }>;
-  const advisory = budgetAdvisory(
-    Number(data.journey.budget?.amount_minor ?? 0),
-    tripDayCount,
-    Math.max(1, Number(data.trip.party_size ?? 1)),
-    zh,
-  );
   const nowMs = Date.now();
   const nextStop =
     activities.find((item) => Date.parse(item.end_at) >= nowMs) ?? activities[0] ?? null;
@@ -1548,6 +1786,53 @@ function Hub({
                 : `Trip to ${cityLabel}`
               : data.journey.title}
           </h1>
+          {staySearch === "searching" && (
+            <div className="hub-stay-searching" data-testid="hub-stay-searching" data-stay-search="searching">
+              <strong>
+                {zh ? "正在搜索住宿" : "Looking for stays"} ·{" "}
+                <span data-testid="hub-stay-elapsed">
+                  {zh ? `已等待 ${stayWaited} 秒` : `waiting ${stayWaited}s`}
+                </span>
+              </strong>
+              <span>
+                {zh
+                  ? "服务器不会中途汇报进度，这里只有真实等待时间。第一次搜索一个城市可能要一两分钟。"
+                  : "The server reports nothing until it finishes, so this is measured waiting time. A city's first search can take a minute or two."}
+              </span>
+            </div>
+          )}
+          {staySearch === "failed" && (
+            <div className="hub-stay-refused" data-testid="hub-stay-refused" data-stay-search="failed" role="alert">
+              <strong>
+                {zh ? "住宿搜索失败了，行程本身还在。" : "The stay search failed — your trip is untouched."}
+              </strong>
+              <button type="button" className="v8-outline-button" data-testid="hub-stay-retry" onClick={onRetryStays}>
+                {zh ? "再查一次" : "Search again"}
+              </button>
+            </div>
+          )}
+          {staySearch === "empty" && data.options.length === 0 && (
+            /* A 200 whose top_k is empty is a completed search with no answer in it. Rendering
+               Today as if it had found stays is the same defect as showing a spinner forever:
+               the traveller cannot tell an empty result from a working one. */
+            <section className="hub-stay-empty" data-testid="hub-no-stays" data-stay-search="empty" data-stay-outcome={stayOutcome ?? "unknown"} role="status">
+              <strong>{zh ? "这次没找到可推荐的住宿" : "No stay options came back this time"}</strong>
+              <p>{stayOutcomeLine(stayOutcome, zh)}</p>
+              <div className="hub-stay-empty-actions">
+                <button type="button" className="v8-primary-button" data-testid="hub-stay-retry" onClick={onRetryStays}>
+                  {zh ? "再查一次" : "Search again"}
+                </button>
+                <button type="button" className="v8-quiet-button" onClick={() => onNavigate("stay")}>
+                  {zh ? "去住宿页看看" : "Open the stay page"}
+                </button>
+              </div>
+              {stayAttempts > 1 && (
+                <small data-testid="hub-stay-attempts">
+                  {zh ? `第 ${stayAttempts} 次查询` : `attempt ${stayAttempts}`}
+                </small>
+              )}
+            </section>
+          )}
           {advisory && !advisoryDismissed && (
             <div
               className={`today-advisory${advisory.tight ? " tight" : ""}`}
@@ -1583,7 +1868,13 @@ function Hub({
             {" · "}
             {t("shell.travelers", { n: data.trip.party_size })}
             {" · "}
-            {zh ? `${tripDayCount} 天` : `${tripDayCount} days`}
+            {tripDayCount === null
+              ? zh
+                ? "天数未知"
+                : "length unknown"
+              : zh
+                ? `${tripDayCount} 天`
+                : `${tripDayCount} days`}
           </p>
         </div>
         {/* Pass-8 ruling #1/#2: with an active journey the hero's

@@ -1,0 +1,16 @@
+baseline JourneyTrialSetup.tsx=269384f54e71a30a90672252a15ab91d3b672656
+kill60-a-label-stops-following-the-city: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-wizard-city-copy.spec.ts :: city-label-follows-the-recognised-city — the arrival field for a Tokyo trip is labelled "抵达地点"
+  node city-label-follows-the-recognised-city: NAMED IN A RED
+  restored 269384f54e71a30a90672252a15ab91d3b672656 OK
+kill60-b-assumption-goes-quiet-again: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-wizard-city-copy.spec.ts :: unrecognised-city-assumption-is-said-out-loud — an unknown city is accepted with no word about what will be assumed
+  node unrecognised-city-assumption-is-said-out-loud: NAMED IN A RED
+  restored 269384f54e71a30a90672252a15ab91d3b672656 OK
+kill60-c-supported-list-shows-one-name: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-wizard-city-copy.spec.ts :: supported-destinations-are-reachable-without-an-invented-count — 天津 is recognised by the wizard but never listed for the traveller
+  node supported-destinations-are-reachable-without-an-invented-count: NAMED IN A RED
+  restored 269384f54e71a30a90672252a15ab91d3b672656 OK

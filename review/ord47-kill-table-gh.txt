@@ -1,0 +1,11 @@
+baselines: V8Experience.tsx=9c5787d5440ee7ce66a0cab6bd526919b79f4b6f, JourneyTrialSetup.tsx=4ca4d1200a537098941f9c29af272ec815588491, waitClock.ts=16add639ab3477efc01b6a180d5075010e78b3e3
+kill47-g-drops-the-reported-cause: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-generation-wait.spec.ts :: gen-empty-reason-comes-from-the-server — the server named the providers and the screen said something else: "No stay options came back this time Your trip i
+  node gen-empty-reason-comes-from-the-server: NAMED IN A RED
+  restored V8Experience.tsx 9c5787d5440ee7ce66a0cab6bd526919b79f4b6f OK
+kill47-h-invents-a-cause-for-a-silence: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-generation-wait.spec.ts :: gen-empty-reason-comes-from-the-server — the screen blamed the providers without being told to: "No stay options came back this time The providers returned 
+  node gen-empty-reason-comes-from-the-server: NAMED IN A RED
+  restored V8Experience.tsx 9c5787d5440ee7ce66a0cab6bd526919b79f4b6f OK

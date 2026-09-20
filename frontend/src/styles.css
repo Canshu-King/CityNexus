@@ -838,6 +838,128 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
     animation: plan-ai-pulse 1.6s ease-in-out infinite;
   }
 }
+
+/* ORD-0047 — the create flow's wait.  Same rule as the sheet above: name the stage, count
+   the seconds, and never animate for someone who asked not to. */
+.trial-wait {
+  display: grid;
+  gap: var(--cn-s-8);
+  margin: 0 0 var(--cn-s-12);
+  padding: var(--cn-s-12);
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+}
+.trial-wait-line {
+  display: flex;
+  align-items: center;
+  gap: var(--cn-s-8);
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  font-weight: 600;
+}
+.trial-wait-line b {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+.trial-wait-note,
+.trial-wait-hint {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.trial-wait-hint {
+  font-size: var(--cn-fs-caption);
+}
+.trial-wait-pulse {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cn-accent);
+}
+@keyframes trial-wait-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .trial-wait-pulse {
+    animation: trial-wait-pulse 1.6s ease-in-out infinite;
+  }
+}
+.trial-wait-outcome {
+  display: grid;
+  gap: var(--cn-s-8);
+  margin: 0 0 var(--cn-s-12);
+  padding: var(--cn-s-12) var(--cn-s-16);
+  border-left: 3px solid var(--cn-accent);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+.trial-wait-outcome strong {
+  font-weight: 750;
+}
+.trial-wait-outcome span {
+  color: var(--v8-ink);
+  overflow-wrap: anywhere;
+}
+
+/* Today's stay-search outcome: waiting, refused and empty are three different faces, and
+   none of them is the ordinary Today. */
+.hub-stay-searching,
+.hub-stay-refused,
+.hub-stay-empty {
+  display: grid;
+  gap: var(--cn-s-8);
+  margin-top: var(--cn-s-12);
+  padding: var(--cn-s-12) var(--cn-s-16);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+.hub-stay-searching {
+  border: 1px solid var(--cn-hairline);
+}
+.hub-stay-refused {
+  border-left: 3px solid var(--cn-danger);
+}
+.hub-stay-empty {
+  border-left: 3px solid var(--cn-accent);
+}
+.hub-stay-searching strong,
+.hub-stay-refused strong,
+.hub-stay-empty strong {
+  font-weight: 750;
+}
+.hub-stay-searching span,
+.hub-stay-refused span,
+.hub-stay-empty p,
+.hub-stay-empty small {
+  margin: 0;
+  color: var(--v8-ink);
+  overflow-wrap: anywhere;
+}
+.hub-stay-empty small {
+  font-size: var(--cn-fs-caption);
+}
+.hub-stay-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cn-s-8);
+}
 .plan-ai-result {
   border-radius: var(--cn-r-control);
   padding: var(--cn-s-12);

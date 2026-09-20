@@ -157,6 +157,105 @@ test.describe("Ruling ④ the theme root contract", () => {
     ).toBe("light");
   });
 
+  /* Ruling ④ asked for a choice in the app, not only a contract in the stylesheet. Until
+     this node existed, nothing on screen let anyone pick: the stored key could only be
+     written by a test. */
+  test("theme-control-cycles-all-three-choices", async ({ page }) => {
+    test.setTimeout(120_000);
+    await page.emulateMedia({ colorScheme: "light", media: "screen" });
+    await page.setViewportSize({ width: 390, height: 844 });
+    await ensureDemoJourney(page);
+    await openScreen(page, "/v8/hub", ["today-heading", "today-attention"]);
+
+    const control = page.getByTestId("topbar-theme");
+    await expect(
+      control,
+      node("theme-control-cycles-all-three-choices",
+        "there is no theme control on screen, so the three choices are unreachable for a user"),
+    ).toBeVisible();
+    const box = await control.boundingBox();
+    expect(
+      box?.height ?? 0,
+      node("theme-control-cycles-all-three-choices",
+        `the theme control is ${(box?.height ?? 0).toFixed(1)}px tall at 390px, under 44`),
+    ).toBeGreaterThanOrEqual(44);
+
+    /* `body` declares no background (styles.css:2 resets only the margin), so comparing it
+       would compare two transparent values. The heading's ink is where the token tables
+       actually flip, and it is what a traveller sees. */
+    const painted = () =>
+      page.getByTestId("today-heading").evaluate((el) => getComputedStyle(el).color);
+
+    expect(
+      await rootTheme(page),
+      node("theme-control-cycles-all-three-choices", "a traveller who never chose is not following the OS"),
+    ).toBe("light");
+    expect(
+      await control.getAttribute("data-theme-choice"),
+      node("theme-control-cycles-all-three-choices", "the control does not say which choice is active"),
+    ).toBe("system");
+
+    const steps: Array<{ choice: string; root: string | null; background: string; word: string }> = [];
+    for (const want of [
+      { choice: "light", root: "light" },
+      { choice: "dark", root: "dark" },
+      { choice: "system", root: "light" },
+      { choice: "light", root: "light" },
+      { choice: "dark", root: "dark" },
+    ] as const) {
+      await control.click();
+      steps.push({
+        choice: want.choice,
+        root: await rootTheme(page),
+        background: await painted(),
+        word: (await control.innerText()).trim(),
+      });
+      expect(
+        steps[steps.length - 1].root,
+        node("theme-control-cycles-all-three-choices",
+          `after choosing ${want.choice} the root said ${JSON.stringify(steps[steps.length - 1].root)} (${JSON.stringify(steps.map((s) => s.root))})`),
+      ).toBe(want.root);
+      expect(
+        await control.getAttribute("data-theme-choice"),
+        node("theme-control-cycles-all-three-choices",
+          `the control's own label disagrees with what it applied (wanted ${want.choice})`),
+      ).toBe(want.choice);
+    }
+    // The cycle must be a circle over three states, not a two-state toggle with a third word.
+    expect(
+      [...new Set(steps.map((step) => step.choice))].sort(),
+      node("theme-control-cycles-all-three-choices",
+        `the control never offered all three choices: ${JSON.stringify(steps.map((s) => s.choice))}`),
+    ).toEqual(["dark", "light", "system"]);
+    const lightPaint = steps.find((step) => step.choice === "light")?.background;
+    const darkPaint = steps.find((step) => step.choice === "dark")?.background;
+    expect(
+      darkPaint && lightPaint && darkPaint !== lightPaint,
+      node("theme-control-cycles-all-three-choices",
+        `the switch changes an attribute but not what is painted (light ${lightPaint} / dark ${darkPaint}) — that is the cover-up the ruling forbids`),
+    ).toBe(true);
+    expect(
+      steps[steps.length - 1].word,
+      node("theme-control-cycles-all-three-choices", "the button does not name the active choice"),
+    ).toBeTruthy();
+
+    await page.reload({ waitUntil: "networkidle" });
+    await openScreen(page, "/v8/hub", ["today-heading", "today-attention"]);
+    expect(
+      await rootTheme(page),
+      node("theme-control-cycles-all-three-choices", "the pinned choice did not survive a reload"),
+    ).toBe("dark");
+    expect(
+      await page.evaluate(() => localStorage.getItem("citynexus.theme")),
+      node("theme-control-cycles-all-three-choices", "the choice a user clicked is not what persists"),
+    ).toBe("dark");
+    writeFileSync(
+      evidencePath("ui-overnight/theme-control.json"),
+      JSON.stringify({ generatedBy: "e345b9d6", order: "RULING-4", node: "theme-control-cycles-all-three-choices", steps }, null, 2) + "\n",
+      "utf-8",
+    );
+  });
+
   test("theme-pinned-dark-legible-on-light-os", async ({ page }) => {
     test.setTimeout(150_000);
     /* The combination that did not exist before the contract: the traveller's device is in

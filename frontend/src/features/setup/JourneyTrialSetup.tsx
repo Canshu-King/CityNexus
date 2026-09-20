@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
+import { useElapsedSeconds } from "../../lib/waitClock";
 
 /**
  * ORD-0036 (d) -- where the wizard's state lives.
@@ -132,6 +133,22 @@ export function inferCityFacts(cityName: string) {
   return CITY_FACTS[key] ?? CITY_FACTS[cityName.trim()] ?? null;
 }
 
+/**
+ * The cities this table recognises. Names only, deliberately no total: the authoritative
+ * count of supported destinations is not this table's to publish, and a headcount computed
+ * here would be a claim (ORD-0060 #3).
+ *
+ * Grouping these by their facts looked natural and was wrong: nine Chinese cities share
+ * CN / Asia/Shanghai / CNY, so one entry swallowed eight of them. The table already holds
+ * one key per spelling, which is the pairing that actually exists.
+ */
+const SUPPORTED_CITIES = {
+  zh: Object.keys(CITY_FACTS).filter((name) => /[^\x00-\x7F]/.test(name)),
+  en: Object.keys(CITY_FACTS)
+    .filter((name) => /^[\x00-\x7F]+$/.test(name))
+    .map((name) => name.charAt(0).toUpperCase() + name.slice(1)),
+};
+
 export function currencyLabel(currency: string, locale: string) {
   const zh = locale.startsWith("zh");
   const table: Record<string, [string, string]> = {
@@ -221,12 +238,32 @@ const INTEREST_OPTIONS = [
   { key: "family", zh: "亲子", en: "Family" },
 ] as const;
 
+/**
+ * The stages `createJourney` actually awaits (ORD-0047).  A waiting line may name nothing
+ * outside this list: a fabricated step is worse than no step, because it teaches the
+ * traveller to believe a progress bar that means nothing.
+ */
+export type TrialPhase = "traveler" | "journey" | "stay-options" | "experience";
+
+/** [中文, English] for each awaited stage. */
+const PHASE_LABEL: Record<TrialPhase, [string, string]> = {
+  traveler: ["正在登记出行人", "Registering the traveller"],
+  journey: ["正在创建行程", "Writing the trip"],
+  "stay-options": ["正在搜索住宿", "Looking for stays"],
+  experience: ["正在载入行程数据", "Loading your trip"],
+};
+
 export function JourneyTrialSetup({
   onCreate,
   onUseTianjinDemo,
   onCancel,
   busy,
   message,
+  phase = null,
+  startedAt = null,
+  journeyCreated = false,
+  stoppedWaiting = false,
+  onStopWaiting,
 }: {
   onCreate: (draft: JourneyTrialDraft) => Promise<void>;
   onUseTianjinDemo: () => Promise<void>;
@@ -238,6 +275,15 @@ export function JourneyTrialSetup({
      Optional on purpose: the wizard's own "this step did not complete" visibility must not
      depend on the reason being available. */
   message?: string | null;
+  /** Which request the shell is awaiting right now, or null when it is not waiting. */
+  phase?: TrialPhase | null;
+  /** Epoch millis of the first request in this attempt; the clock must read the wall. */
+  startedAt?: number | null;
+  /** True once the journey row exists, so the failure copy cannot deny the trip. */
+  journeyCreated?: boolean;
+  /** The traveller gave up waiting: an outcome line, not a red failure block. */
+  stoppedWaiting?: boolean;
+  onStopWaiting?: () => void;
 }) {
   const t = useT();
   const { locale, switchLocale } = useLocale();
@@ -309,6 +355,11 @@ export function JourneyTrialSetup({
   };
 
   const facts = inferCityFacts(draft.cityName);
+  /* ORD-0060 #1: the anchor labels said 厦门 whatever the traveller typed, so a person going
+     to Tokyo was asked to "抵达厦门". The name only belongs in a label once the table has
+     recognised it; until then the label says what it knows. */
+  const identifiedCity = facts ? draft.cityName.trim() : "";
+  const unrecognizedCity = draft.cityName.trim().length > 0 && !facts;
   /* The API requires a non-empty anchor location at both ends
      (`arrival_anchor.location` has minLength 1).  Until now the field looked optional -- a
      placeholder, and a bare "—" on the review page -- so a legal-looking 4-day trip died on
@@ -324,6 +375,10 @@ export function JourneyTrialSetup({
   /* The backend's own words, routed to the field it named. */
   const arrivalProblem = fieldProblem(message, /arrival_anchor/);
   const departureProblem = fieldProblem(message, /departure_anchor/);
+  /* ORD-0047: the wait has to be countable while it runs.  Only a stage the shell really
+     awaited may be named, and only the wall clock may say how long. */
+  const waited = useElapsedSeconds(busy ? startedAt : null);
+  const phaseLabel = phase ? PHASE_LABEL[phase] : null;
 
   const stepTitle = zh
     ? ["目的地与时间", "人数与偏好", "确认创建"]
@@ -384,27 +439,62 @@ export function JourneyTrialSetup({
               data-testid="trial-city"
               value={draft.cityName}
               onChange={(event) => applyCity(event.target.value)}
-              placeholder={zh ? "例如：厦门" : "e.g. Xiamen"}
+              placeholder={zh ? "例如：天津、东京、新加坡" : "e.g. Tianjin, Tokyo, Singapore"}
+              aria-describedby={unrecognizedCity ? "trial-city-warning" : undefined}
               autoFocus
             />
           </label>
 
-          {facts && (
+          {facts ? (
             <p className="trial-inferred" data-testid="trial-inferred">
               {zh ? "已自动设置：" : "Auto-set: "}
               {zh ? facts.labelZh : facts.labelEn} ·{" "}
               {currencyLabel(draft.currency, locale)} ·{" "}
               {timezoneLabel(draft.timezone, locale)}
             </p>
+          ) : null}
+          {unrecognizedCity && (
+            /* ORD-0060 #2: `inferCityFacts` returns nothing here, and `applyCity` then leaves
+               the hidden country / currency / timezone fields holding whatever the *previous*
+               city set. A disabled "Next" with no reason would only move the silence, so the
+               assumption is stated, named, and left correctable. */
+            <p
+              className="trial-city-warning"
+              data-testid="trial-city-warning"
+              id="trial-city-warning"
+              role="status"
+            >
+              {zh
+                ? `没认出「${draft.cityName.trim()}」：仍按 ${draft.countryCode} / ${currencyLabel(draft.currency, locale)}（${draft.currency}）/ ${draft.timezone} 规划。换个写法，或在"看支持的目的地"里挑一个。`
+                : `"${draft.cityName.trim()}" is not recognised: the trip will still be planned with ${draft.countryCode} / ${currencyLabel(draft.currency, locale)} (${draft.currency}) / ${draft.timezone}. Try another spelling, or pick one from "See supported destinations".`}
+            </p>
           )}
+          <details className="trial-supported" data-testid="trial-supported-cities">
+            {/* No count is printed: the authoritative number of supported cities is not this
+                lane's to derive, and a headcount read off the local table would be its own
+                claim. The names the table does know are shown, which is what a traveller
+                can act on. */}
+            <summary data-testid="trial-supported-toggle">
+              {zh ? "看支持的目的地" : "See supported destinations"}
+            </summary>
+            <ul className="trial-supported-list">
+              {(zh ? SUPPORTED_CITIES.zh : SUPPORTED_CITIES.en).map((name) => (
+                <li key={name}>{name}</li>
+              ))}
+            </ul>
+          </details>
 
           <label className="trial-field">
-            <span>{zh ? "抵达厦门" : "Arrive at"}</span>
+            <span>{zh ? (identifiedCity ? `抵达${identifiedCity}` : "抵达地点") : "Arrive at"}</span>
             <input
               data-testid="trial-arrival"
               value={draft.arrivalLocation}
               onChange={(event) => update("arrivalLocation", event.target.value)}
-              placeholder={zh ? "例如：厦门高崎国际机场" : "e.g. Xiamen Gaoqi Intl Airport"}
+              placeholder={
+                zh
+                  ? `例如：${identifiedCity || "某地"}站 / 机场`
+                  : "e.g. station or airport"
+              }
               aria-required="true"
               aria-invalid={
                 draft.arrivalLocation.trim() && !arrivalProblem ? undefined : true
@@ -424,12 +514,16 @@ export function JourneyTrialSetup({
             )}
           </label>
           <label className="trial-field">
-            <span>{zh ? "离开厦门" : "Depart from"}</span>
+            <span>{zh ? (identifiedCity ? `离开${identifiedCity}` : "离开地点") : "Depart from"}</span>
             <input
               data-testid="trial-departure"
               value={draft.departureLocation}
               onChange={(event) => update("departureLocation", event.target.value)}
-              placeholder={zh ? "例如：厦门北站" : "e.g. Xiamen North Station"}
+              placeholder={
+                zh
+                  ? `例如：${identifiedCity || "某地"}站 / 机场`
+                  : "e.g. station or airport"
+              }
               aria-required="true"
               aria-invalid={
                 draft.departureLocation.trim() && !departureProblem ? undefined : true
@@ -632,6 +726,15 @@ export function JourneyTrialSetup({
             <div>
               <dt>{zh ? "目的地" : "Destination"}</dt>
               <dd data-testid="review-city">{draft.cityName || "—"}</dd>
+              {/* The step-1 caution has to be here too: this is the screen the traveller
+                  confirms from, and an assumption shown only two steps back is gone. */}
+              {unrecognizedCity && (
+                <dd className="trial-city-warning" data-testid="review-city-warning">
+                  {zh
+                    ? `未识别 · 按 ${draft.countryCode} / ${currencyLabel(draft.currency, locale)} / ${draft.timezone} 规划`
+                    : `not recognised · planned with ${draft.countryCode} / ${currencyLabel(draft.currency, locale)} / ${draft.timezone}`}
+                </dd>
+              )}
             </div>
             <div>
               <dt>{zh ? "抵达" : "Arrival"}</dt>
@@ -697,17 +800,29 @@ export function JourneyTrialSetup({
         </div>
       )}
 
-      {createAttemptFailed && (
+      {createAttemptFailed && !stoppedWaiting && (
         /* Directly above the confirm button, so the reason is where the tap was.
            Gated on createAttemptFailed rather than on `message` alone: the shell's message
            is shared state and could carry text from an unrelated earlier step. */
         <div className="trial-create-error" data-testid="trial-create-error" role="alert">
           <strong>
-            {zh
-              ? "这一步没有成功，行程还没有创建。"
-              : "This step did not complete — no journey was created."}
+            {journeyCreated
+              ? zh
+                ? "这一步没有成功——行程已创建，但住宿搜索没有完成。"
+                : "This step did not complete — the trip was created, but the stay search did not."
+              : zh
+                ? "这一步没有成功，行程还没有创建。"
+                : "This step did not complete — no journey was created."}
           </strong>
           {message ? <span>{message}</span> : null}
+        </div>
+      )}
+      {stoppedWaiting && !busy && message && (
+        /* Giving up on the wait is not a failure and not a cancel: the request this screen
+           stopped is described by what actually happened to it. */
+        <div className="trial-wait-outcome" data-testid="trial-wait-outcome" role="status">
+          <strong>{zh ? "已停止等待" : "Stopped waiting"}</strong>
+          <span>{message}</span>
         </div>
       )}
       {step === 1 && !step1Ready && (
@@ -718,6 +833,46 @@ export function JourneyTrialSetup({
             ? `还需要填写：${missingStep1.join("、")}`
             : `Still needed: ${missingStep1.join(", ")}`}
         </p>
+      )}
+      {busy && phaseLabel && (
+        /* ORD-0047: this wait measured 114.98s on a cold city through the production
+           preview with nothing on screen, so a traveller tapping 确认创建 once could not tell
+           "working" from "broken" and tapped again. */
+        <div
+          className="trial-wait"
+          data-testid="trial-wait"
+          data-phase={phase ?? ""}
+          data-elapsed-seconds={waited}
+          role="status"
+        >
+          <p className="trial-wait-line">
+            <span className="trial-wait-pulse" aria-hidden="true" />
+            <span>{zh ? phaseLabel[0] : phaseLabel[1]}</span>
+            <b data-testid="trial-wait-elapsed">
+              {zh ? `已等待 ${waited} 秒` : `waiting ${waited}s`}
+            </b>
+          </p>
+          <p className="trial-wait-note">
+            {zh
+              ? "第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。"
+              : "A cold city's first search measured about two minutes. The server reports nothing until it finishes, so this is measured seconds — not an invented number."}
+          </p>
+          {onStopWaiting && (
+            <button
+              type="button"
+              className="v8-outline-button trial-wait-stop"
+              data-testid="trial-stop-waiting"
+              onClick={onStopWaiting}
+            >
+              {zh ? "停止等待" : "Stop waiting"}
+            </button>
+          )}
+          <p className="trial-wait-hint">
+            {zh
+              ? "停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。"
+              : "Stopping the wait only closes this view: the server keeps going, and nothing you typed is lost."}
+          </p>
+        </div>
       )}
       {/* Sticky CTA: always reachable, never below a wall of scrolling. */}
       <div className="trial-sticky-cta" data-testid="trial-sticky-cta">
