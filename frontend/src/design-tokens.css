@@ -1074,6 +1074,15 @@ body {
   font-size: var(--cn-fs-body);
   line-height: 1.45;
 }
+/* The backend's own sentence, shown under the field it is about. Full ink in both themes:
+   a rejection explanation cannot be the weakest text on the screen. */
+.trial-field-problem {
+  margin-top: var(--cn-s-4);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
 
 /* ORD-0037 — the map must say what it is doing.
    The tile notice is the honest counterpart to the flat canvas fallback; the gesture

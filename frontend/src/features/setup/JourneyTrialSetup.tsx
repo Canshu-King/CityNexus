@@ -53,6 +53,26 @@ function writeStoredTrial(step: number, draft: unknown): void {
   }
 }
 
+/**
+ * Pull one field's own complaint out of the composed rejection message.
+ *
+ * `v8Request` renders the frozen `VALIDATION_ERROR` envelope as
+ * "headline — body.arrival_anchor.location: msg / …".  The backend stays the authority; this
+ * only routes each sentence back to the field it was about, so a rejection reads as
+ * "this box" rather than as one long string the traveller has to parse.
+ */
+function fieldProblem(
+  message: string | null | undefined,
+  locNeedle: RegExp,
+): string | null {
+  if (!message) return null;
+  const tail = message.split(" — ")[1] ?? "";
+  const part = tail.split(" / ").find((chunk) => locNeedle.test(chunk));
+  if (!part) return null;
+  const colon = part.indexOf(": ");
+  return (colon >= 0 ? part.slice(colon + 2) : part).trim() || null;
+}
+
 function clearStoredTrial(): void {
   try {
     localStorage.removeItem(TRIAL_DRAFT_KEY);
@@ -212,10 +232,11 @@ export function JourneyTrialSetup({
   onUseTianjinDemo: () => Promise<void>;
   onCancel?: () => void;
   busy: boolean;
-  /* The shell's createJourney catch writes the named backend error into its own state,
-     but this screen returns before the shell renders it, so the reason never reached the
-     user.  Optional on purpose: the call-site change belongs to another owner, and the
-     wizard's own failure visibility below must not depend on it landing first. */
+  /* The shell's createJourney catch writes the named backend error into its own state, and
+     since ORD-0044 the onboarding call site passes it here -- this screen returns before the
+     shell renders state, so without that prop the reason never reaches the user.
+     Optional on purpose: the wizard's own "this step did not complete" visibility must not
+     depend on the reason being available. */
   message?: string | null;
 }) {
   const t = useT();
@@ -300,6 +321,9 @@ export function JourneyTrialSetup({
   ].filter(Boolean) as string[];
   const step1Ready = missingStep1.length === 0;
   const step2Ready = draft.partySize >= 1 && draft.budgetMajor > 0;
+  /* The backend's own words, routed to the field it named. */
+  const arrivalProblem = fieldProblem(message, /arrival_anchor/);
+  const departureProblem = fieldProblem(message, /departure_anchor/);
 
   const stepTitle = zh
     ? ["目的地与时间", "人数与偏好", "确认创建"]
@@ -381,7 +405,23 @@ export function JourneyTrialSetup({
               value={draft.arrivalLocation}
               onChange={(event) => update("arrivalLocation", event.target.value)}
               placeholder={zh ? "例如：厦门高崎国际机场" : "e.g. Xiamen Gaoqi Intl Airport"}
+              aria-required="true"
+              aria-invalid={
+                draft.arrivalLocation.trim() && !arrivalProblem ? undefined : true
+              }
+              aria-describedby={
+                arrivalProblem
+                  ? "trial-required-hint trial-arrival-problem"
+                  : draft.arrivalLocation.trim()
+                    ? undefined
+                    : "trial-required-hint"
+              }
             />
+            {arrivalProblem && (
+              <span className="trial-field-problem" data-testid="trial-arrival-problem" role="alert">
+                {arrivalProblem}
+              </span>
+            )}
           </label>
           <label className="trial-field">
             <span>{zh ? "离开厦门" : "Depart from"}</span>
@@ -390,7 +430,23 @@ export function JourneyTrialSetup({
               value={draft.departureLocation}
               onChange={(event) => update("departureLocation", event.target.value)}
               placeholder={zh ? "例如：厦门北站" : "e.g. Xiamen North Station"}
+              aria-required="true"
+              aria-invalid={
+                draft.departureLocation.trim() && !departureProblem ? undefined : true
+              }
+              aria-describedby={
+                departureProblem
+                  ? "trial-required-hint trial-departure-problem"
+                  : draft.departureLocation.trim()
+                    ? undefined
+                    : "trial-required-hint"
+              }
             />
+            {departureProblem && (
+              <span className="trial-field-problem" data-testid="trial-departure-problem" role="alert">
+                {departureProblem}
+              </span>
+            )}
           </label>
           <div className="trial-row">
             <label className="trial-field">
@@ -579,14 +635,25 @@ export function JourneyTrialSetup({
             </div>
             <div>
               <dt>{zh ? "抵达" : "Arrival"}</dt>
-              <dd data-testid="review-arrival">
-                {draft.arrivalLocation || "—"} · {draft.startAt.replace("T", " ")}
+              {/* A bare "—" read as an acceptable blank, and the API rejects it. Say so here. */}
+              <dd
+                data-testid="review-arrival"
+                data-missing={draft.arrivalLocation.trim() ? undefined : "true"}
+              >
+                {draft.arrivalLocation.trim() || (zh ? "未填写 · 必填" : "not filled in · required")}
+                {" · "}
+                {draft.startAt.replace("T", " ")}
               </dd>
             </div>
             <div>
               <dt>{zh ? "离开" : "Departure"}</dt>
-              <dd data-testid="review-departure">
-                {draft.departureLocation || "—"} · {draft.endAt.replace("T", " ")}
+              <dd
+                data-testid="review-departure"
+                data-missing={draft.departureLocation.trim() ? undefined : "true"}
+              >
+                {draft.departureLocation.trim() || (zh ? "未填写 · 必填" : "not filled in · required")}
+                {" · "}
+                {draft.endAt.replace("T", " ")}
               </dd>
             </div>
             <div>
@@ -646,7 +713,7 @@ export function JourneyTrialSetup({
       {step === 1 && !step1Ready && (
         /* A greyed-out "Next" with no reason is the same silence as a create that dies
            quietly, so name what is missing. */
-        <p className="trial-required-hint" data-testid="trial-required-hint" role="status">
+        <p className="trial-required-hint" id="trial-required-hint" data-testid="trial-required-hint" role="status">
           {zh
             ? `还需要填写：${missingStep1.join("、")}`
             : `Still needed: ${missingStep1.join(", ")}`}
