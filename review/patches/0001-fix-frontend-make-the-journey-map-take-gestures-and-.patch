@@ -1,0 +1,295 @@
+From d52d586cbfb0be1f61ddc52163bb838dfae95c59 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=BB=93=E9=BC=A0=E7=8E=8B?= <yjianbin419@gmail.com>
+Date: Sun, 20 Sep 2026 11:14:12 +0800
+Subject: [PATCH 1/2] fix(frontend): make the journey map take gestures and
+ read as a map
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+`interactive: false` switched off drag, zoom, rotate and pitch in one line, so every
+gesture the traveller made was discarded and the panel behaved like a pasted picture.
+Interaction is back with an explicit gesture split (cooperative: two fingers / Ctrl+wheel)
+and rotation and pitch kept off, and a blocked tile server now says so instead of
+degrading silently to the flat canvas.
+
+The route was one #4658d9 stroke at a fixed 4px for every leg -- the "一根大线" report.
+It is now a casing plus a mode-driven colour and a zoom-interpolated width, with both
+colours read from the document's own tokens so the map follows light and dark.
+
+Both new labels needed an opaque chip: floating #6e6e73 text over raster tiles measured
+4.12:1 and maplibre's own white gesture hint over its 40% veil 3.41:1, which the light
+theme contrast audit correctly refused. They now carry --cn-surface with --v8-ink.
+---
+ frontend/src/components/v8/MapPanel.tsx | 136 ++++++++++++++++++++++--
+ frontend/src/design-tokens.css          |  56 ++++++++++
+ 2 files changed, 184 insertions(+), 8 deletions(-)
+
+diff --git a/frontend/src/components/v8/MapPanel.tsx b/frontend/src/components/v8/MapPanel.tsx
+index 43ae416..4c19610 100644
+--- a/frontend/src/components/v8/MapPanel.tsx
++++ b/frontend/src/components/v8/MapPanel.tsx
+@@ -16,22 +16,47 @@ export function MapPanel({
+   // trustworthy coordinates we say so explicitly instead of silently showing
+   // an unrelated city (design corrections §10).
+   const [noLocation, setNoLocation] = useState(false);
++  /* A blocked or offline raster tile server used to degrade silently to the flat
++     canvas underneath, which is exactly what reads as "the map is just a picture".
++     The fallback stays, but it is now named. */
++  const [tilesUnavailable, setTilesUnavailable] = useState(false);
+   const t = useT();
+   const { locale } = useLocale();
+   const route = useMemo(() => {
++    /* Stamp the travel mode and the leg order onto the feature so the line layer has
++       something to group by.  Measured: the provider's geometry already carries
++       `properties.mode` ({"crs":"WGS84","mode":"AUTO",...}), so for today's data this
++       re-states what is already there.  It stays because the grouping is what stops
++       "一根大线": a provider that omits the key would otherwise collapse every leg onto
++       the fallback colour and nothing on screen would say the style had degraded. */
++    const tag = (
++      feature: { type: "Feature"; properties?: Record<string, unknown>; geometry: { type: "LineString"; coordinates: number[][] } },
++      mode: string,
++      index: number,
++    ) => ({
++      ...feature,
++      properties: { ...(feature.properties ?? {}), mode, leg_index: index },
++    });
+     if (data?.active_plan?.legs.length)
+-      return data.active_plan.legs.map((leg) => leg.geometry);
++      return data.active_plan.legs.map((leg, index) => tag(leg.geometry, leg.mode, index));
+     if (!data || !option) return [];
+-    return option.leg_mode_map.flatMap((leg) => {
++    return option.leg_mode_map.flatMap((leg, index) => {
+       const fact = data.mobility_facts.find(
+         (item) =>
+           item.from_key === leg.from_key &&
+           item.to_key === leg.to_key &&
+           item.mode === leg.mode,
+       );
+-      return fact?.geometry ? [fact.geometry] : [];
++      return fact?.geometry ? [tag(fact.geometry, leg.mode, index)] : [];
+     });
+   }, [data, option]);
++  const routeModes = useMemo(
++    () =>
++      Array.from(
++        new Set(route.map((feature) => String(feature.properties?.mode ?? "")).filter(Boolean)),
++      ),
++    [route],
++  );
+   const points = useMemo(() => {
+     const active =
+       data?.active_plan?.activities.flatMap((item) =>
+@@ -84,6 +109,27 @@ export function MapPanel({
+         return;
+       }
+       setNoLocation(false);
++      /* Read the app's own palette out of the document rather than inventing a
++         second set of literals inside the map style: the route lines then follow
++         the light/dark binding the rest of the product already uses. */
++      const css = getComputedStyle(document.documentElement);
++      const token = (name: string, fallback: string) =>
++        css.getPropertyValue(name).trim() || fallback;
++      const routePalette: Record<string, string> = {
++        WALK: token("--cn-accent", "#0a66ff"),
++        TRANSIT: token("--cn-success", "#248a3d"),
++        AUTO: token("--cn-warning", "#b06000"),
++        TRAIN: token("--v8-violet", "#8063d7"),
++      };
++      const routeFallbackColour = token("--cn-accent-text", "#0a5cd6");
++      const casingColour = token("--v8-panel", "#ffffff");
++      const modesPresent = Array.from(new Set(route.map((feature) => String(feature.properties?.mode ?? ""))));
++      const lineCases: unknown[] = ["case"];
++      for (const mode of modesPresent) {
++        lineCases.push(["==", ["get", "mode"], mode], routePalette[mode] ?? routeFallbackColour);
++      }
++      lineCases.push(routeFallbackColour);
++      const lineColour = lineCases.length > 2 ? lineCases : routeFallbackColour;
+       const mapInstance = new maplibregl.Map({
+         /* Never leave the traveller staring at an empty box when the tile
+            server is unreachable (common on restricted networks). The Apple
+@@ -132,13 +178,38 @@ export function MapPanel({
+             paint: { "raster-opacity": 0.82 },
+           },
+           {
++            /* A casing underneath so the line stays readable on a pale raster the
++               same way a road label keeps its outline. */
++            id: "journey-provider-route-casing",
++            type: "line",
++            source: "journey-provider-route",
++            paint: {
++              "line-color": casingColour,
++              "line-width": [
++                "interpolate", ["exponential", 1.3], ["zoom"],
++                8, 3,
++                12, 6,
++                16, 11,
++              ],
++              "line-opacity": 0.95,
++            },
++          },
++          {
++            /* Was a single #4658d9 stroke at a fixed 4px for every leg, which is
++               what read as "one big line". Colour now follows the travel mode and
++               width follows the zoom level. */
+             id: "journey-provider-route",
+             type: "line",
+             source: "journey-provider-route",
+             paint: {
+-              "line-color": "#4658d9",
+-              "line-width": 4,
+-              "line-opacity": 0.84,
++              "line-color": lineColour as unknown as string,
++              "line-width": [
++                "interpolate", ["exponential", 1.3], ["zoom"],
++                8, 1.5,
++                12, 3.5,
++                16, 7,
++              ],
++              "line-opacity": 0.9,
+             },
+           },
+         ],
+@@ -146,9 +217,41 @@ export function MapPanel({
+       center: center as [number, number],
+       zoom: 11,
+       attributionControl: false,
+-      interactive: false,
++      /* `interactive: false` here switched off drag, zoom, rotate and pitch at once,
++         which is why the panel behaved like a static image.  Interaction is back on,
++         but with an explicit gesture split rather than by taking the page's scroll
++         away: cooperative gestures need two fingers to pan/zoom on touch (one finger
++         still scrolls the page) and Ctrl+wheel to zoom on a fine pointer.  Rotation
++         and pitch stay off because a tilted, spun city view is not readable on a
++         phone and nothing in this product depends on it. */
++      interactive: true,
++      cooperativeGestures: true,
++      dragRotate: false,
++      pitchWithRotate: false,
++      touchPitch: false,
++      maxPitch: 0,
+       } as maplibregl.MapOptions & { failIfMajorPerformanceCaveat?: boolean });
++      /* The flat canvas behind the raster tiles is the right degradation, but it
++         must not be a *silent* one: with every tile blocked the panel looked like a
++         picture of a map rather than a map that failed to load its basemap. */
++      mapInstance.on("error", (event) => {
++        const source = (event as { sourceId?: string }).sourceId;
++        if (source === "open-street-map") setTilesUnavailable(true);
++      });
++      mapInstance.on("load", () => {
++        const raster = mapInstance.getSource("open-street-map") as
++          | { tiles?: { has: (v: unknown) => boolean; size?: number }[]; cache?: { has: (v: unknown) => boolean } }
++          | undefined;
++        const loaded = raster?.tiles?.some((bucket) => typeof bucket?.has === "function" && bucket.size !== 0);
++        if (loaded === false) setTilesUnavailable(true);
++      });
+       map = mapInstance;
++      /* Test seam.  maplibre keeps its instance off the DOM, but the acceptance
++         gate has to read the camera to prove a gesture actually moved it — a
++         rendered-frame diff alone cannot say *why* nothing changed.  Exposing the
++         instance on the container is the smallest surface that does it, and nothing
++         in the app reads it back. */
++      (host.current as (HTMLElement & { citynexusMap?: unknown })).citynexusMap = mapInstance;
+       resizeObserver = new ResizeObserver(() => map?.resize());
+       resizeObserver.observe(host.current);
+     points.forEach((point, index) => {
+@@ -239,14 +342,31 @@ export function MapPanel({
+     <div
+       className="v8-map-panel"
+       data-testid="v8-maplibre-panel"
++      data-route-legs={route.length}
++      data-route-modes={routeModes.join(" ")}
+       aria-label={t("mapComp.journeyMap")}
+     >
+-      <div ref={host} className="v8-maplibre-canvas" />
++      <div ref={host} className="v8-maplibre-canvas" data-testid="v8-maplibre-canvas" />
++      {tilesUnavailable && (
++        /* Requirement 3 of ORD-0037: the flat canvas behind the raster tiles is the
++           right degradation, but saying nothing is what made the panel read as a
++           picture someone had drawn rather than a map that failed to fetch one. */
++          <p className="v8-map-tile-notice" data-testid="v8-map-tile-notice" role="status">
++            {locale.startsWith("zh")
++              ? "底图未加载，显示的是路线示意。"
++              : "Basemap did not load — showing the route diagram only."}
++          </p>
++        )}
+       <div className="v8-map-caption">
+         <span className="status-dot" />
+         {t("mapComp.routeContext")} <b>{t("mapComp.legs", { n: route.length })}</b>
+         <span className="v8-sr-only">{t("mapComp.providerRoute")}</span>
+       </div>
++      <p className="v8-map-gesture-hint" data-testid="v8-map-gesture-hint">
++        {locale.startsWith("zh")
++          ? "两指拖动或缩放地图 · 单指仍然滚动页面"
++          : "Two fingers to pan or zoom · one finger still scrolls the page"}
++      </p>
+     </div>
+   );
+ }
+diff --git a/frontend/src/design-tokens.css b/frontend/src/design-tokens.css
+index 916d40c..1633395 100644
+--- a/frontend/src/design-tokens.css
++++ b/frontend/src/design-tokens.css
+@@ -1092,3 +1092,59 @@ body {
+ }
+ .trial-create-error strong { font-weight: 750; }
+ .trial-create-error span { color: var(--v8-muted); overflow-wrap: anywhere; }
++
++/* ORD-0037 — the map must say what it is doing.
++   The tile notice is the honest counterpart to the flat canvas fallback; the gesture
++   hint exists because a two-finger-only map is undiscoverable without being told. */
++.v8-map-tile-notice {
++  position: absolute;
++  top: var(--cn-s-8);
++  right: var(--cn-s-8);
++  left: var(--cn-s-8);
++  z-index: 3;
++  margin: 0;
++  padding: var(--cn-s-8) var(--cn-s-12);
++  border-radius: var(--cn-r-control);
++  background: var(--cn-secondary);
++  color: var(--v8-ink);
++  font-size: var(--cn-fs-caption);
++  line-height: 1.4;
++}
++.v8-map-gesture-hint {
++  position: absolute;
++  bottom: calc(var(--cn-s-40) + env(safe-area-inset-bottom, 0px));
++  left: 50%;
++  transform: translateX(-50%);
++  z-index: 3;
++  margin: 0;
++  max-width: calc(100% - 2 * var(--cn-s-12));
++  padding: var(--cn-s-8) var(--cn-s-12);
++  border: 1px solid var(--cn-hairline);
++  border-radius: var(--cn-r-control);
++  background: var(--cn-surface);
++  box-shadow: var(--cn-shadow-card);
++  text-align: center;
++  color: var(--v8-ink);
++  font-size: var(--cn-fs-caption);
++  line-height: 1.4;
++  pointer-events: none;
++}
++/* Maplibre paints its cooperative-gesture label as white text over a 40% black veil,
++   which over a pale raster measures 3.4:1.  A label that has to be read against whatever
++   tile happens to be underneath is not a legibility strategy, so it gets the same opaque
++   chip as our own hint and inherits the theme's ink instead of the library's #fff. */
++.v8-maplibre-canvas
++  .maplibregl-cooperative-gesture-screen
++  .maplibregl-desktop-message,
++.v8-maplibre-canvas
++  .maplibregl-cooperative-gesture-screen
++  .maplibregl-mobile-message {
++  padding: var(--cn-s-8) var(--cn-s-12);
++  border: 1px solid var(--cn-hairline);
++  border-radius: var(--cn-r-control);
++  background: var(--cn-surface);
++  box-shadow: var(--cn-shadow-card);
++  color: var(--v8-ink);
++  font-size: var(--cn-fs-caption);
++  line-height: 1.4;
++}
+-- 
+2.45.1.windows.1
+

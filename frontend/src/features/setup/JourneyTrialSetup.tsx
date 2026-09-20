@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 
 export type JourneyTrialDraft = {
@@ -146,11 +146,17 @@ export function JourneyTrialSetup({
   onUseTianjinDemo,
   onCancel,
   busy,
+  message,
 }: {
   onCreate: (draft: JourneyTrialDraft) => Promise<void>;
   onUseTianjinDemo: () => Promise<void>;
   onCancel?: () => void;
   busy: boolean;
+  /* The shell's createJourney catch writes the named backend error into its own state,
+     but this screen returns before the shell renders it, so the reason never reached the
+     user.  Optional on purpose: the call-site change belongs to another owner, and the
+     wizard's own failure visibility below must not depend on it landing first. */
+  message?: string | null;
 }) {
   const t = useT();
   const { locale, switchLocale } = useLocale();
@@ -161,6 +167,18 @@ export function JourneyTrialSetup({
   );
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [advanced, setAdvanced] = useState(false);
+  /* createJourney catches its own failure and does not rethrow, so a resolved
+     `await onCreate()` here does not mean a journey exists.  Its success path closes this
+     wizard (V8Experience.tsx:577 setSetupOpen(false)), so still being mounted once the
+     await settles is the deterministic signal that the step did not complete. */
+  const [createAttemptFailed, setCreateAttemptFailed] = useState(false);
+  const mounted = useRef(true);
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
   const [draft, setDraft] = useState<JourneyTrialDraft>({
     cityName: "",
     countryCode: "CN",
@@ -180,8 +198,10 @@ export function JourneyTrialSetup({
   });
   const [roomsTouched, setRoomsTouched] = useState(false);
 
-  const update = <K extends keyof JourneyTrialDraft>(key: K, value: JourneyTrialDraft[K]) =>
+  const update = <K extends keyof JourneyTrialDraft>(key: K, value: JourneyTrialDraft[K]) => {
+    setCreateAttemptFailed(false);
     setDraft((current) => ({ ...current, [key]: value }));
+  };
 
   // Corrections §5: infer country / timezone / currency from the city and keep
   // the technical fields behind "Advanced settings".
@@ -205,7 +225,11 @@ export function JourneyTrialSetup({
     : ["Destination & dates", "Travellers & preferences", "Review & create"];
 
   const submit = async () => {
+    setCreateAttemptFailed(false);
     await onCreate(draft);
+    /* Still mounted means the shell never closed the wizard, i.e. never reached its
+       success path.  On success the unmount makes this setState a no-op. */
+    if (mounted.current) setCreateAttemptFailed(true);
   };
 
   return (
@@ -524,6 +548,19 @@ export function JourneyTrialSetup({
         </div>
       )}
 
+      {createAttemptFailed && (
+        /* Directly above the confirm button, so the reason is where the tap was.
+           Gated on createAttemptFailed rather than on `message` alone: the shell's message
+           is shared state and could carry text from an unrelated earlier step. */
+        <div className="trial-create-error" data-testid="trial-create-error" role="alert">
+          <strong>
+            {zh
+              ? "这一步没有成功，行程还没有创建。"
+              : "This step did not complete — no journey was created."}
+          </strong>
+          {message ? <span>{message}</span> : null}
+        </div>
+      )}
       {/* Sticky CTA: always reachable, never below a wall of scrolling. */}
       <div className="trial-sticky-cta" data-testid="trial-sticky-cta">
         {step > 1 && (

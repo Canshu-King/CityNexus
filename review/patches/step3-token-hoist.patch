@@ -1,0 +1,70 @@
+diff --git a/frontend/src/design-tokens.css b/frontend/src/design-tokens.css
+index ccb7bfa..157ba43 100644
+--- a/frontend/src/design-tokens.css
++++ b/frontend/src/design-tokens.css
+@@ -113,9 +113,13 @@
+   }
+ }
+ 
+-/* Bind the V8 shell to the Apple palette + system font without touching markup:
+-   existing components consume --v8-* vars, so remapping them re-skins the app. */
+-.v8-product-shell {
++/* Bind the V8 palette to the Apple tokens at :root rather than on the shell.
++   Existing components consume --v8-*, so rebinding them re-skins the app; doing it
++   on :root additionally reaches the one screen that is returned *before*
++   .v8-product-shell exists — JourneyTrialSetup (V8Experience.tsx:818) — which until
++   now got neither the Apple palette nor the dark theme.  styles.css declares the
++   literal defaults on :root too, so this block still wins by load order. */
++:root {
+   --v8-canvas: var(--cn-canvas);
+   --v8-panel: var(--cn-surface);
+   --v8-ink: var(--cn-ink);
+@@ -125,6 +129,19 @@
+   --v8-green: var(--cn-success);
+   --v8-amber: var(--cn-warning);
+   --v8-coral: var(--cn-danger);
++  /* Two tokens 18 declarations referenced but nobody ever defined, so every one of
++     them silently took its fallback: --v8-accent resolved to teal #0f766e in 14
++     places (making the create-trip primary button a different colour from every
++     other primary button in the app) and --v8-surface resolved to #0b1f24 in one
++     place and #fff in two others — one token, three intents.  Accent and card
++     surface get real values here; the near-black site was never a surface at all,
++     it wanted the page canvas behind a fading sticky bar, so that declaration now
++     reads --v8-canvas directly in styles.css. */
++  --v8-accent: var(--cn-accent);
++  --v8-surface: var(--cn-surface);
++}
++
++.v8-product-shell {
+   font-family: var(--cn-font);
+   -webkit-font-smoothing: antialiased;
+   text-rendering: optimizeLegibility;
+diff --git a/frontend/src/styles.css b/frontend/src/styles.css
+index a7c53c5..3dd709e 100644
+--- a/frontend/src/styles.css
++++ b/frontend/src/styles.css
+@@ -121,8 +121,13 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
+ @media (max-width: 560px) { .command-toolbar { grid-template-columns: 1fr; } .run-steps li { grid-template-columns: 24px 1fr; } .step-result { grid-column: 2; } }
+ @media (max-width: 760px) { .provenance-lanes { grid-template-columns: 1fr 1fr; } .guardian-actions { grid-template-columns: 1fr; } }
+ 
+-/* V8 product shell — map-first, calm canvas, semantic states, keyboard-visible controls. */
+-.v8-product-shell { --v8-ink: #14233b; --v8-muted: #68758a; --v8-canvas: #f6f7fb; --v8-panel: #fff; --v8-line: #e5e8ef; --v8-indigo: #4658d9; --v8-green: #16835b; --v8-amber: #b86d2e; --v8-coral: #d65e56; --v8-violet: #8063d7; min-height: 100vh; display: flex; color: var(--v8-ink); background: var(--v8-canvas); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
++/* V8 product shell — map-first, calm canvas, semantic states, keyboard-visible controls.
++   The --v8-* defaults live on :root, not on the shell, because JourneyTrialSetup is
++   returned before .v8-product-shell exists (V8Experience.tsx:818) and would otherwise
++   inherit nothing.  design-tokens.css rebinds these to the Apple palette at :root too,
++   and wins by load order — the two must move together or the shell reverts. */
++:root { --v8-ink: #14233b; --v8-muted: #68758a; --v8-canvas: #f6f7fb; --v8-panel: #fff; --v8-line: #e5e8ef; --v8-indigo: #4658d9; --v8-green: #16835b; --v8-amber: #b86d2e; --v8-coral: #d65e56; --v8-violet: #8063d7; }
++.v8-product-shell { min-height: 100vh; display: flex; color: var(--v8-ink); background: var(--v8-canvas); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+ .v8-product-shell button { font: inherit; }
+ .v8-sidebar { width: 252px; min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; padding: 24px 16px 18px; background: #fff; border-right: 1px solid var(--v8-line); }
+ .v8-brand { display: flex; align-items: center; gap: 11px; padding: 0 10px 30px; }
+@@ -589,7 +594,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
+   gap: 10px;
+   justify-content: flex-end;
+   padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+-  background: linear-gradient(to top, var(--v8-surface, #0b1f24) 70%, transparent);
++  background: linear-gradient(to top, var(--v8-canvas) 70%, transparent);
+ }
+ .trial-sticky-cta .v8-primary-button {
+   min-width: 140px;

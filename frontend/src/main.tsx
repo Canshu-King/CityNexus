@@ -36,8 +36,16 @@ import { journeyModeMachine } from "./state/journeyModeMachine";
 import { V8Experience } from "./app/V8Experience";
 import { ProductErrorBoundary } from "./components/ProductErrorBoundary";
 import { LocaleProvider } from "./i18n/LocaleContext";
+import { applyTheme, followSystemTheme } from "./theme";
 import "./styles.css";
 import "./design-tokens.css";
+
+/* Resolve the theme root contract before the first paint.  The stylesheets key their dark
+   tables off `:root[data-theme]`, so the attribute must exist by the time anything is
+   painted; doing it here rather than in a component keeps the first render correct and
+   avoids a second copy of the OS check. */
+applyTheme();
+followSystemTheme();
 
 const journeyStorageKey = "citynexus.demo.journey_id";
 const agentRunStorageKey = "citynexus.demo.agent_run_id";

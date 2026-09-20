@@ -1,0 +1,1276 @@
+From bbbb9e699a070ae5b30efcc7ad2ba3058058f9c8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=BB=93=E9=BC=A0=E7=8E=8B?= <yjianbin419@gmail.com>
+Date: Sun, 20 Sep 2026 11:16:08 +0800
+Subject: [PATCH 2/2] test(e2e): gate the map's gestures and route readability,
+ with per-node kills
+
+Three nodes: the camera must actually move under a real pointer drag and Ctrl+wheel,
+the route must carry more than one feature and be styled by mode and zoom, and the
+gesture split must be stated on the panel rather than left to be discovered.
+
+Six of the seven mutants are killed, each by a mutant of its own node's shape;
+kill-b survived for a measured reason -- the provider's geometry already carries
+properties.mode -- and review/ORD-0037-kill-evidence.md records that as a known gap
+instead of a pass.
+---
+ frontend/e2e/qoder-map-interaction.spec.ts    | 204 ++++++++++++++
+ review/ORD-0037-kill-evidence.md              |  66 +++++
+ review/list-ord37.txt                         |  75 +++++
+ review/ord0037_check_anchors.py               |  14 +
+ review/ord0037_kill_drivers.py                | 192 +++++++++++++
+ .../patches/ORD-0034-relay-message-prop.patch |  10 +
+ review/patches/batch1-delivered.patch         | 265 ++++++++++++++++++
+ review/patches/batch2-theme-color.patch       |  15 +
+ review/patches/step3-token-hoist.patch        |  70 +++++
+ review/patches/ui-overnight-final.patch       | 265 ++++++++++++++++++
+ 10 files changed, 1176 insertions(+)
+ create mode 100644 frontend/e2e/qoder-map-interaction.spec.ts
+ create mode 100644 review/ORD-0037-kill-evidence.md
+ create mode 100644 review/list-ord37.txt
+ create mode 100644 review/ord0037_check_anchors.py
+ create mode 100644 review/ord0037_kill_drivers.py
+ create mode 100644 review/patches/ORD-0034-relay-message-prop.patch
+ create mode 100644 review/patches/batch1-delivered.patch
+ create mode 100644 review/patches/batch2-theme-color.patch
+ create mode 100644 review/patches/step3-token-hoist.patch
+ create mode 100644 review/patches/ui-overnight-final.patch
+
+diff --git a/frontend/e2e/qoder-map-interaction.spec.ts b/frontend/e2e/qoder-map-interaction.spec.ts
+new file mode 100644
+index 0000000..336fc74
+--- /dev/null
++++ b/frontend/e2e/qoder-map-interaction.spec.ts
+@@ -0,0 +1,204 @@
++import { expect, test, type Page } from "@playwright/test";
++import { writeFileSync } from "node:fs";
++import { ensureDemoJourney, openScreen } from "./_qoderShellSeed";
++import { evidencePath } from "./_qoderEvidence";
++
++/**
++ * ORD-0037 — the map behaved like a pasted picture.
++ *
++ * `interactive: false` in MapPanel.tsx switched off drag, zoom, rotate and pitch in one
++ * line, so every gesture the traveller made was discarded.  This gate does not assert on
++ * that flag; it performs the gestures and reads the camera, which is the thing the user
++ * actually experiences.  Restoring the flag therefore still turns `drag-moves-camera`
++ * and `ctrl-wheel-zooms` red, and that is the kill evidence the order asked for.
++ *
++ * The route half exists for the second complaint ("一根大线"): more than one feature in
++ * the source, a style that varies by mode, and a width that follows zoom.
++ *
++ * An earlier revision counted through `GeoJSONSource.getData()` and
++ * `map.queryRenderedFeatures({layers})`.  Measured on this same screen both returned 0
++ * while the caption — which prints `route.length` straight out of React — said 8, so
++ * neither is a usable denominator here (getData hands back maplibre's internal tile
++ * structure, not the FeatureCollection that was passed in; rendered-feature queries are
++ * worker-tile and viewport dependent).  What is read instead is the contract the
++ * component itself publishes (`data-route-legs` / `data-route-modes`) together with the
++ * layer's declared paint properties, which are synchronous and not tile-scheduled.
++ */
++
++interface Camera {
++  lng: number;
++  lat: number;
++  zoom: number;
++}
++
++async function readCamera(page: Page): Promise<Camera | null> {
++  return page.evaluate(() => {
++    const host = document.querySelector<HTMLElement>(".v8-maplibre-canvas");
++    const map = (host as (HTMLElement & { citynexusMap?: any }) | null)?.citynexusMap;
++    if (!map) return null;
++    const c = map.getCenter();
++    return { lng: c.lng, lat: c.lat, zoom: map.getZoom() };
++  });
++}
++
++interface RouteShape {
++  legs: number;
++  modes: string[];
++  hasModeColourExpression: boolean;
++  hasZoomExpression: boolean;
++  casingLayer: boolean;
++  captionText: string | null;
++}
++
++async function readRouteShape(page: Page): Promise<RouteShape | null> {
++  return page.evaluate(() => {
++    const panel = document.querySelector<HTMLElement>("[data-route-legs]");
++    if (!panel) return null;
++    const host = panel.querySelector<HTMLElement>(".v8-maplibre-canvas");
++    const map = (host as (HTMLElement & { citynexusMap?: any }) | null)?.citynexusMap;
++    const width = map?.getPaintProperty?.("journey-provider-route", "line-width");
++    const colour = map?.getPaintProperty?.("journey-provider-route", "line-color");
++    return {
++      legs: Number(panel.dataset.routeLegs ?? "0"),
++      modes: (panel.dataset.routeModes ?? "").split(" ").filter(Boolean),
++      hasModeColourExpression: Array.isArray(colour) && JSON.stringify(colour).includes('"get"'),
++      hasZoomExpression: Array.isArray(width) && width[0] === "interpolate",
++      casingLayer: !!map?.getLayer?.("journey-provider-route-casing"),
++      captionText: panel.querySelector(".v8-map-caption")?.textContent?.trim() ?? null,
++    };
++  });
++}
++
++test.describe("ORD-0037 the journey map takes gestures and reads as a map", () => {
++  test.beforeEach(async ({ page }) => {
++    await page.emulateMedia({ colorScheme: "light", media: "screen" });
++    await page.setViewportSize({ width: 412, height: 915 });
++    await ensureDemoJourney(page);
++    /* /v8/hub, not /v8/live: the shipped demo plan carries no legs, so Live's map
++       legitimately has no route geometry and would give the leg-count assertion a zero
++       denominator.  Hub renders the same MapPanel against the selected option. */
++    await openScreen(page, "/v8/hub", ["today-heading", "today-attention"]);
++    const canvas = page.locator(".maplibregl-canvas").first();
++    await expect(canvas).toBeVisible({ timeout: 25_000 });
++    await expect
++      .poll(() => readCamera(page), { timeout: 25_000, message: "map instance never appeared" })
++      .not.toBeNull();
++    // Let fitBounds' 650ms animation settle before anything reads a baseline.
++    await page.waitForTimeout(1200);
++  });
++
++  test("drag-moves-camera + ctrl-wheel-zooms — gestures reach the camera", async ({
++    page,
++  }) => {
++    test.setTimeout(180_000);
++
++    const before = (await readCamera(page))!;
++    const box = (await page.locator(".maplibregl-canvas").first().boundingBox())!;
++    const cx = box.x + box.width / 2;
++    const cy = box.y + box.height / 2;
++
++    await page.mouse.move(cx, cy);
++    await page.mouse.down();
++    for (let i = 1; i <= 6; i += 1) {
++      await page.mouse.move(cx - i * 18, cy - i * 12);
++    }
++    await page.mouse.up();
++    await page.waitForTimeout(700);
++    const afterDrag = (await readCamera(page))!;
++
++    // Cooperative gestures make a plain wheel scroll the page, so zoom is Ctrl+wheel.
++    await page.keyboard.down("Control");
++    await page.mouse.move(cx, cy);
++    await page.mouse.wheel(0, -400);
++    await page.keyboard.up("Control");
++    await page.waitForTimeout(700);
++    const afterZoom = (await readCamera(page))!;
++
++    const evidence = {
++      generatedBy: "e345b9d6",
++      order: "ORD-0037",
++      nodeIds: ["drag-moves-camera", "ctrl-wheel-zooms"],
++      before,
++      afterDrag,
++      afterZoom,
++      centreMoved: afterDrag.lng !== before.lng || afterDrag.lat !== before.lat,
++      zoomChanged: afterZoom.zoom !== afterDrag.zoom,
++    };
++    writeFileSync(
++      evidencePath("ui-overnight/map-camera.json"),
++      JSON.stringify(evidence, null, 2) + "\n",
++      "utf-8",
++    );
++
++    expect(
++      evidence.centreMoved,
++      "e2e/qoder-map-interaction.spec.ts :: drag-moves-camera — " +
++        `centre unchanged after a real pointer drag (${before.lng},${before.lat} -> ` +
++        `${afterDrag.lng},${afterDrag.lat}); gestures are switched off`,
++    ).toBe(true);
++    expect(
++      evidence.zoomChanged,
++      "e2e/qoder-map-interaction.spec.ts :: ctrl-wheel-zooms — " +
++        `zoom unchanged after Ctrl+wheel (${afterDrag.zoom} -> ${afterZoom.zoom})`,
++    ).toBe(true);
++  });
++
++  test("route-feature-count + route-width-follows-zoom + route-casing-layer — not one big line", async ({
++    page,
++  }) => {
++    test.setTimeout(120_000);
++
++    const route = await readRouteShape(page);
++    const evidence = {
++      generatedBy: "e345b9d6",
++      order: "ORD-0037",
++      nodeIds: [
++        "route-feature-count",
++        "route-mode-colour-expression",
++        "route-width-follows-zoom",
++        "route-casing-layer",
++      ],
++      route,
++    };
++    writeFileSync(
++      evidencePath("ui-overnight/map-route.json"),
++      JSON.stringify(evidence, null, 2) + "\n",
++      "utf-8",
++    );
++
++    expect(route, "no route panel to measure").not.toBeNull();
++    expect(
++      route!.legs,
++      `e2e/qoder-map-interaction.spec.ts :: route-feature-count — the route source carries ` +
++        `${route!.legs} feature(s) (caption: ${JSON.stringify(route!.captionText)}); one line ` +
++        `for the whole journey is the "一根大线" report`,
++    ).toBeGreaterThan(1);
++    expect(
++      route!.modes.length,
++      `e2e/qoder-map-interaction.spec.ts :: route-mode-colour-expression — the features carry ` +
++        `no mode grouping keys (modes: ${route!.modes.join(",") || "none"}), so the layer ` +
++        `cannot colour one leg differently from another`,
++    ).toBeGreaterThan(1);
++    expect(
++      route!.hasModeColourExpression,
++      "e2e/qoder-map-interaction.spec.ts :: route-mode-colour-expression — line-color is a " +
++        "constant, so every leg paints the same colour",
++    ).toBe(true);
++    expect(
++      route!.hasZoomExpression,
++      "e2e/qoder-map-interaction.spec.ts :: route-width-follows-zoom — line-width is a " +
++        "constant, so the line cannot stay legible across zoom levels",
++    ).toBe(true);
++    expect(
++      route!.casingLayer,
++      "e2e/qoder-map-interaction.spec.ts :: route-casing-layer — no casing under the route",
++    ).toBe(true);
++  });
++
++  test("the gesture split is stated on the panel, not left to be discovered", async ({
++    page,
++  }) => {
++    test.setTimeout(120_000);
++    await expect(page.getByTestId("v8-map-gesture-hint")).toBeVisible({ timeout: 25_000 });
++  });
++});
+diff --git a/review/ORD-0037-kill-evidence.md b/review/ORD-0037-kill-evidence.md
+new file mode 100644
+index 0000000..e2cdd2b
+--- /dev/null
++++ b/review/ORD-0037-kill-evidence.md
+@@ -0,0 +1,66 @@
++# ORD-0037 杀证据记录（map 交互 + 路线可读性）
++
++会话 `e345b9d6` · 门 `frontend/e2e/qoder-map-interaction.spec.ts` · 驱动 `review/ord0037_kill_drivers.py`
++
++`*.log` 被仓库 `.gitignore:39` 排除，所以逐条读数记在这里；原始日志在同名 `review/kill-*.log`（本地）。
++每个变异体跑完都从 pristine 还原并校验 sha1，六次全部 `OK`，驱动在指纹不符时会直接 `exit 2`。
++
++## 前置：这张表测的是什么
++
++门不测 `interactive` 这个标志位，它派发布尔手势再读 `map.getCenter()/getZoom()`；
++路线一半读组件自己公布的契约（`data-route-legs` / `data-route-modes`）加图层声明的 paint 表达式。
++
++不用 `GeoJSONSource.getData()`，也不用 `queryRenderedFeatures({layers})` 做分母：在同一屏上实测两者都返回 0，
++而 caption（直接把 `route.length` 从 React 打出来）读 8。`getData()` 交回的是 maplibre 内部结构，
++既无 `type` 也无 `features`；rendered-features 查询受 worker 切图和视口支配。分子分母对不上，就不能当门。
++
++pristine 基线 sha1：`c30b937a9617955300684d3bfc5a0b46c61a34d0`（`MapPanel.tsx`，含交付态注释）。
++
++## 逐节点结果
++
++| 变异体 | 改动形状 | 点名节点 | 结果 | 红消息（原文摘录） |
++| --- | --- | --- | --- | --- |
++| kill-a-interactive-false | `interactive: true` → `false` | `drag-moves-camera` | 杀死 1 failed / 3 passed | centre unchanged after a real pointer drag (117.23850000000004,39.114212600733225 -> 同一坐标); gestures are switched off |
++| kill-a2-scrollzoom-false | 加 `scrollZoom: false` | `ctrl-wheel-zooms` | 杀死 1 failed / 3 passed | zoom unchanged after Ctrl+wheel (9.06783337135099 -> 9.06783337135099) |
++| kill-e-merged-single-line | 8 段几何合并成 1 条 LineString | `route-feature-count` | 杀死 1 failed / 3 passed | the route source carries 1 feature(s) (caption: "Route context 1 legs…") |
++| kill-f-constant-colour | `line-color` 回到常量 `#4658d9` | `route-mode-colour-expression` | 杀死 1 failed / 3 passed | line-color is a constant, so every leg paints the same colour |
++| kill-c-constant-width | 主层 `line-width` 回到常量 4 | `route-width-follows-zoom` | 杀死 1 failed / 3 passed | line-width is a constant, so the line cannot stay legible across zoom levels |
++| kill-d-no-casing-layer | casing 图层 id 改掉 | `route-casing-layer` | 杀死 1 failed / 3 passed | no casing under the route |
++| kill-b-no-mode-property | 去掉组件自己盖的 `mode` / `leg_index` | `route-mode-colour-expression` | **存活 4 passed / exit 0** | — |
++
++kill-a 之外还补了 kill-a2：`interactive: false` 会先打死 `drag-moves-camera` 并在同一测试里短路，
++`ctrl-wheel-zooms` 拿不到自己的红，所以给它一个只关缩放、留拖拽的变异体。
++六个节点各配一个形状的变异体，不是"一个变异体打死六个"。
++
++## kill-b 存活说明了什么（不是门坏了）
++
++临时探针（`review/evidence/ui-overnight/map-mode-probe.json`）读 `/experience` 的原始载荷：
++每一条几何本身就是带 properties 的 Feature —
++
++```json
++{"crs": "WGS84", "mode": "AUTO", "provider": "citynexus-synthetic-fixture"}
++```
++
++`mobility_facts` 同样带。也就是说 `data-route-modes` 量到的是**供给方的数据**，不是我盖的那个字。
++所以"删掉我的 tag 仍然绿"是正确的：门不能证明一条当前无人依赖的保险丝。
++
++保留 `tag()` 的理由已写进源码注释：它把视觉契约与供给方的自觉解耦。真出现不带 `mode` 的供给方时，
++`["case", ["==", ["get","mode"], …]]` 会全部落到 fallback 色，"一根大线"以另一种方式回潮，
++而屏幕上不会说样式降级过。要把这条臂变成可杀的，需要一份不带 properties 的 mobility fixture —
++那是后端几何/夹具的改动，订单明确禁止我碰（"不改后端几何生成逻辑"）。**记为已知缺口，不当成绩。**
++
++顺带一条观察，不下结论：探针里 `active_plan.legs` 的 mode 是 AUTO/WALK，而 `options[0].leg_mode_map`
++同期写的是 TRANSIT。这两者是否指同一选项的同一批腿我没有验证（4 个 option 只打了第 0 个），
++所以只登记为"谁消费哪个源"的疑问，不改任何东西。
++
++## 我自己引入又被门抓住的回归
++
++`gates-ord37-full.log`（run `uiord3702`）：`qoder-contrast-audit` 亮色档新增 2 条 violation —
++
++- `div.maplibregl-desktop-message` "Use Ctrl + scroll to zoom the map" fg=#fff bg=rgba(0,0,0,0) **3.41**/4.5
++- `[data-testid="v8-map-gesture-hint"]` fg=#6e6e73 bg=rgba(0,0,0,0) **4.12**/4.5
++
++原因就是我这次把 `cooperativeGestures` 打开、又新写了一行飘在瓦片上的提示。
++修法只动 CSS（`design-tokens.css`，我这一侧的文件；`MapPanel.tsx` 已按 ORD-REASSIGN-003 归 `8c66aa92`，
++我没有为回归再改它）：两个标签都换成不透明贴片 `--cn-surface` + `--v8-ink` + `--cn-hairline`，
++不新增字面色值。修后 `gates-ord37-contrast-fix.log`：today/live × 亮/暗 × 移动/桌面 全部 0 violation。
+diff --git a/review/list-ord37.txt b/review/list-ord37.txt
+new file mode 100644
+index 0000000..91c0130
+--- /dev/null
++++ b/review/list-ord37.txt
+@@ -0,0 +1,75 @@
++[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4173 backend=:8000 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
++Listing tests:
++  [real-seed] › _qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
++  [chromium] › golden.spec.ts:55:1 › an accepted closure recovery is backend truth on V8 Live and survives reload
++  [chromium] › live-autopilot-v5.spec.ts:50:1 › the guardian autopilot recovers a live journey from a provider event with no traveller action
++  [chromium] › predictive-real-city-v6.spec.ts:86:1 › a forecast is prevented before the failure happens, and the traveller can see why
++  [chromium] › product-hardening.spec.ts:83:1 › an autonomous recovery executes inside its envelope and is observable on the current recovery surface
++  [chromium] › product-v8.spec.ts:13:3 › V8 product experience › completes the multi-day stay and autonomous recovery journey
++  [chromium] › product-v8.spec.ts:59:3 › V8 product experience › keeps the mobile Journey, Map, AI, Bookings, Me composition usable
++  [chromium] › qoder-ack-rendered.spec.ts:198:3 › T3 acknowledgement vs resolution (rendered integration) › an ACKNOWLEDGED disruption with no linked acceptance stays open: both '发生了什么' and '已知晓，仍待处理' render
++  [chromium] › qoder-ack-rendered.spec.ts:223:3 › T3 acknowledgement vs resolution (rendered integration) › an ACCEPTED proposal linked to the event by trigger_event_id closes it: no open/acknowledged notice, shown as handled
++  [chromium] › qoder-ack-rendered.spec.ts:246:3 › T3 acknowledgement vs resolution (rendered integration) › an ACCEPTED proposal with an UNRELATED trigger_event_id leaves the event open
++  [chromium] › qoder-ack-rendered.spec.ts:280:3 › T3 ack vs resolution — Today surface (rendered integration) › an ACKNOWLEDGED event with no acceptance stays an unresolved change on Today
++  [chromium] › qoder-ack-rendered.spec.ts:292:3 › T3 ack vs resolution — Today surface (rendered integration) › a matching ACCEPTED replan clears the change count on Today
++  [chromium] › qoder-ack-rendered.spec.ts:311:3 › T3 ack vs resolution — Today surface (rendered integration) › an UNRELATED accepted proposal still leaves the change unresolved on Today
++  [chromium] › qoder-ack-resolution.spec.ts:17:3 › T3 acknowledgement vs resolution (unit) › acknowledged-only stays open; only linked acceptance resolves
++  [chromium] › qoder-budget-evidence.spec.ts:19:3 › T4 budget evidence coverage (unit) › NONE / PARTIAL / FULL are distinct, and only FULL allows a verdict
++  [chromium] › qoder-budget-evidence.spec.ts:67:3 › T4 budget evidence coverage (unit) › B4: all activities priced but an unknown hotel/booking stays PARTIAL (no trip verdict)
++  [chromium] › qoder-budget-rendered.spec.ts:171:3 › T4 budget evidence coverage (rendered integration) › B4: all stops priced but an unknown stay/transport -> the block refuses a verified-budget verdict and shows PARTIAL wording
++  [chromium] › qoder-budget-rendered.spec.ts:195:3 › T4 budget evidence coverage (rendered integration) › only when every budget-relevant item is known does the FULL verdict wording render
++  [chromium] › qoder-budget-rendered.spec.ts:215:3 › T4 budget evidence coverage (rendered integration) › a KNOWN_FREE (0 amount) stop counts as known and keeps the block at FULL
++  [chromium] › qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (mobile)
++  [chromium] › qoder-contrast-audit.spec.ts:214:5 › Qoder contrast audit (Today + Live, light + dark) › focus indicators clear 3:1 on Today/Live, light + dark (mobile)
++  [chromium] › qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (desktop)
++  [chromium] › qoder-contrast-audit.spec.ts:214:5 › Qoder contrast audit (Today + Live, light + dark) › focus indicators clear 3:1 on Today/Live, light + dark (desktop)
++  [chromium] › qoder-dock-geometry.spec.ts:128:5 › Copilot dock geometry at phone size › /v8/live: no actionable element may rest under the dock at any settled scroll position
++  [chromium] › qoder-dock-geometry.spec.ts:128:5 › Copilot dock geometry at phone size › /v8/hub: no actionable element may rest under the dock at any settled scroll position
++  [chromium] › qoder-dock-geometry.spec.ts:205:3 › Copilot dock geometry at phone size › a yielded pill is not a ghost control: hidden, unfocusable, and back again
++  [chromium] › qoder-e2e-config-guard.spec.ts:85:1 › an authoritative run missing a required variable exits non-zero and names that variable
++  [chromium] › qoder-e2e-config-guard.spec.ts:121:1 › an authoritative run that omits the interpreter cannot fall back to a system Python
++  [chromium] › qoder-e2e-config-guard.spec.ts:132:1 › a live external AI key refuses the deterministic suite instead of silently spending it
++  [chromium] › qoder-e2e-config-guard.spec.ts:149:1 › a complete authoritative environment is accepted and announces who it started
++  [chromium] › qoder-live-recovery-cursor.spec.ts:96:1 › the recovery card follows the cursor the product itself advanced
++  [chromium] › qoder-live-recovery-cursor.spec.ts:138:1 › a plan that holds no activities invents no current step
++  [chromium] › qoder-live-recovery-cursor.spec.ts:215:1 › a cursor that resolves to a finished step yields no Now on the Live heading
++  [chromium] › qoder-live-recovery-cursor.spec.ts:267:1 › an unresolvable cursor makes the recovery card name nothing
++  [chromium] › qoder-live-structure.spec.ts:224:3 › Qoder Live structure order (Phase 2) › sections stack Current -> Map -> Disruption -> Replan (bounding rect)
++  [chromium] › qoder-live-structure.spec.ts:302:3 › Qoder Live accepted transition (Phase 3) › accepting a proposal surfaces the confirmation before the open warning collapses
++  [chromium] › qoder-live-structure.spec.ts:367:3 › Qoder Live state-coverage matrix (Phase 1) › L0 NORMAL: current/next real, no disruption, no Accept CTA
++  [chromium] › qoder-live-structure.spec.ts:374:3 › Qoder Live state-coverage matrix (Phase 1) › L1 UNRESOLVED: disruption shown, no proposal, no Accept CTA, safe notice
++  [chromium] › qoder-live-structure.spec.ts:382:3 › Qoder Live state-coverage matrix (Phase 1) › L2 PROPOSAL_READY: one real differing proposal, exactly one Accept CTA
++  [chromium] › qoder-live-structure.spec.ts:396:3 › Qoder Live state-coverage matrix (Phase 1) › L3 ACCEPTED: Accept CTA gone, handled confirmation shown
++  [chromium] › qoder-live-structure.spec.ts:412:3 › Qoder Live state-coverage matrix (Phase 1) › L4 MOBILITY_UNAVAILABLE-safe: rejected proposal offers no fake Accept CTA
++  [chromium] › qoder-live-structure.spec.ts:435:3 › Qoder Live dark replan-state audit (Phase 4) › L1 UNRESOLVED and L2 PROPOSAL_READY have no dark contrast violations
++  [chromium] › qoder-live-structure.spec.ts:503:3 › Qoder Live map height + first screen (Phase 4) › map is 240 normal and 200-216 when a decision is active; disruption reaches the fold
++  [chromium] › qoder-map-interaction.spec.ts:90:3 › ORD-0037 the journey map takes gestures and reads as a map › drag-moves-camera + ctrl-wheel-zooms — gestures reach the camera
++  [chromium] › qoder-map-interaction.spec.ts:146:3 › ORD-0037 the journey map takes gestures and reads as a map › route-feature-count + route-width-follows-zoom + route-casing-layer — not one big line
++  [chromium] › qoder-map-interaction.spec.ts:198:3 › ORD-0037 the journey map takes gestures and reads as a map › the gesture split is stated on the panel, not left to be discovered
++  [chromium] › qoder-mobile-overflow.spec.ts:82:3 › Qoder mobile-overflow (Today + Live) › no horizontal overflow at 360/412/430 on Today and Live
++  [chromium] › qoder-mobile-ui-overnight.spec.ts:186:3 › Qoder mobile-overnight gate (Today/Live/Wallet x 360/390/412) › no overflow, 44px targets, unblocked CTA, no truncation
++  [chromium] › qoder-mobile-ui-overnight.spec.ts:213:3 › Qoder mobile-overnight gate (Journey creation, first entry) › no overflow, 44px targets, unblocked CTA, no truncation
++  [chromium] › qoder-mobile-ui-overnight.spec.ts:311:3 › Qoder touch-target contract is layered (F-2) › fine-pointer desktop keeps the compact density, mobile takes >=44px
++  [chromium] › qoder-onboarding-failure.spec.ts:47:3 › ORD-0034 onboarding surfaces a failed create › a 500 on journey creation shows a visible, named failure instead of silence
++  [chromium] › qoder-onboarding-failure.spec.ts:109:3 › ORD-0034 onboarding surfaces a failed create › the named backend reason reaches the onboarding screen
++  [chromium] › qoder-plan-ai-contrast.spec.ts:111:5 › ORD-0035 plan-ai sheet ink is legible in both themes › light: sheet and textarea clear AA
++  [chromium] › qoder-plan-ai-contrast.spec.ts:111:5 › ORD-0035 plan-ai sheet ink is legible in both themes › dark: sheet and textarea clear AA
++  [chromium] › qoder-plan-ai-contrast.spec.ts:141:1 › no .plan-ai-* rule pairs a literal light fill with an inherited foreground
++  [chromium] › qoder-preventive-lifecycle.spec.ts:42:1 › a preventive run that was still planning updates to executed without a reload
++  [chromium] › qoder-stale-cursor.spec.ts:36:1 › a cursor the plan cannot resolve is reported as unresolved, not as a plausible step
++  [chromium] › qoder-today-hero.spec.ts:16:3 › Qoder Today single-focus hero › hero has one primary CTA, bounded height, no empty Now slot, no overflow
++  [chromium] › qoder-today-hero.spec.ts:108:3 › Qoder Today single-focus hero › reduced-motion disables the hero reveal transform
++  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › today light + dark
++  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › live light + dark
++  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › wallet light + dark
++  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › setup-step1 light + dark
++  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › setup-step3 light + dark
++  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › plan-ai-sheet light + dark
++  [chromium] › real-world-trip-operations-v9.spec.ts:4:1 › real-world trip operations: inbox to luggage-aware autonomous recovery
++  [chromium] › v10-accessibility.spec.ts:5:1 › V10 live execution surface has no automated accessibility violations
++  [chromium] › v10-inbox.spec.ts:4:1 › V10 Journey Inbox exposes text, image, and deterministic code paths
++  [chromium] › v10-live-execution.spec.ts:4:1 › V10 live execution panel exposes the server clock and evidence trail
++  [chromium] › v10-quality-budget.spec.ts:5:3 › V10 product-quality budget › Live Journey becomes usable without layout or server-error regressions
++  [chromium] › v13-5-fully-grounded.spec.ts:51:1 › City Discovery renders the fully grounded Journey proof
++  [chromium] › v13-authoritative-integrity.spec.ts:20:1 › accepted authoritative execution truth converges to Dexie offline truth
++Total: 72 tests in 31 files
+diff --git a/review/ord0037_check_anchors.py b/review/ord0037_check_anchors.py
+new file mode 100644
+index 0000000..d54eca9
+--- /dev/null
++++ b/review/ord0037_check_anchors.py
+@@ -0,0 +1,14 @@
++import importlib.util, sys
++
++spec = importlib.util.spec_from_file_location(
++    "d", "D:/moodle/_qoder_ui_overnight_20260920/review/ord0037_kill_drivers.py"
++)
++mod = importlib.util.module_from_spec(spec)
++sys.argv = ["x", "__none__"]
++spec.loader.exec_module(mod)
++
++text = open(mod.PRISTINE, "r", encoding="utf-8", newline="").read()
++for name, _port, subs, node in mod.CASES:
++    counts = [text.count(old) for old, _new in subs]
++    produces_change = [text.replace(old, new, 1) != text for old, new in subs]
++    print(f"{name:32s} node={node:32s} counts={counts} changes={produces_change}")
+diff --git a/review/ord0037_kill_drivers.py b/review/ord0037_kill_drivers.py
+new file mode 100644
+index 0000000..28edcd2
+--- /dev/null
++++ b/review/ord0037_kill_drivers.py
+@@ -0,0 +1,192 @@
++"""ORD-0037 kill evidence driver.
++
++Each named assertion node in e2e/qoder-map-interaction.spec.ts is given a mutant of its
++own shape.  After every run MapPanel.tsx is restored from the pristine copy and its
++sha1 is checked, so the tree cannot drift out of a mutation experiment.
++"""
++
++import hashlib
++import os
++import subprocess
++import sys
++
++ROOT = "D:/moodle/_qoder_ui_overnight_20260920"
++SRC = f"{ROOT}/frontend/src/components/v8/MapPanel.tsx"
++PRISTINE = f"{ROOT}/review/MapPanel.tsx.pristine"
++LOGDIR = f"{ROOT}/review"
++SPEC = "e2e/qoder-map-interaction.spec.ts"
++
++sha1 = lambda p: hashlib.sha1(open(p, "rb").read()).hexdigest()
++
++
++def seed_pristine_from_git() -> None:
++    """The restore baseline is the committed file, never a hand-made copy that can go stale."""
++    proc = subprocess.run(
++        "git show HEAD:frontend/src/components/v8/MapPanel.tsx",
++        cwd=f"{ROOT}/frontend",
++        capture_output=True,
++        shell=True,
++    )
++    if proc.returncode != 0:
++        raise SystemExit(f"cannot read MapPanel.tsx from HEAD: {proc.stderr[:200]!r}")
++    with open(PRISTINE, "wb") as fh:
++        fh.write(proc.stdout)
++
++
++seed_pristine_from_git()
++
++CASES = [
++    (
++        "kill-a-interactive-false",
++        "8191",
++        [("      interactive: true,\n", "      interactive: false,\n")],
++        "drag-moves-camera",
++    ),
++    (
++        "kill-a2-scrollzoom-false",
++        "8192",
++        [("      maxPitch: 0,\n", "      maxPitch: 0,\n      scrollZoom: false,\n")],
++        "ctrl-wheel-zooms",
++    ),
++    (
++        "kill-e-merged-single-line",
++        "8193",
++        [
++            (
++                "      return data.active_plan.legs.map((leg, index) => tag(leg.geometry, leg.mode, index));\n",
++                "      return [\n"
++                "        tag(\n"
++                "          { type: \"Feature\", geometry: { type: \"LineString\", coordinates: data.active_plan.legs.flatMap((leg) => leg.geometry.geometry.coordinates) } },\n"
++                "          \"MERGED\",\n"
++                "          0,\n"
++                "        ),\n"
++                "      ];\n",
++            )
++        ],
++        "route-feature-count",
++    ),
++    (
++        "kill-b-no-mode-property",
++        "8244",
++        [
++            (
++                "      properties: { ...(feature.properties ?? {}), mode, leg_index: index },\n",
++                "      properties: { ...(feature.properties ?? {}) },\n",
++            )
++        ],
++        "route-mode-colour-expression",
++    ),
++    (
++        "kill-c-constant-width",
++        "8195",
++        [
++            (
++                '              "line-width": [\n'
++                '                "interpolate", ["exponential", 1.3], ["zoom"],\n'
++                "                8, 1.5,\n"
++                "                12, 3.5,\n"
++                "                16, 7,\n"
++                "              ],\n",
++                '              "line-width": 4,\n',
++            )
++        ],
++        "route-width-follows-zoom",
++    ),
++    (
++        "kill-d-no-casing-layer",
++        "8196",
++        [
++            (
++                '            id: "journey-provider-route-casing",\n',
++                '            id: "journey-provider-route-casing-removed",\n',
++            )
++        ],
++        "route-casing-layer",
++    ),
++    # kill-b (dropping the stamped mode) survived, and that is a measured fact: the
++    # provider's geometry already carries properties.mode.  The mutant that does
++    # correspond to this node is the pre-fix painting itself — one constant colour.
++    (
++        "kill-f-constant-colour",
++        "8197",
++        [
++            (
++                '              "line-color": lineColour as unknown as string,\n',
++                '              "line-color": "#4658d9",\n',
++            )
++        ],
++        "route-mode-colour-expression",
++    ),
++]
++
++only = sys.argv[1:] or [c[0] for c in CASES]
++baseline = sha1(PRISTINE)
++print(f"pristine sha1 {baseline}")
++
++for name, port, subs, expected_node in CASES:
++    if name not in only:
++        continue
++    text = open(PRISTINE, "r", encoding="utf-8", newline="").read()
++    mutated = text
++    hits = []
++    for old, new in subs:
++        n = mutated.count(old)
++        hits.append(n)
++        mutated = mutated.replace(old, new, 1)
++    if any(h == 0 for h in hits):
++        print(f"{name}: ANCHOR NOT FOUND (counts={hits}) — mutant not applied, result invalid")
++        continue
++    if mutated == text:
++        print(f"{name}: substitution was a no-op — result invalid")
++        continue
++    open(SRC, "w", encoding="utf-8", newline="").write(mutated)
++    print(f"{name}: mutant applied ({len(text)} -> {len(mutated)} bytes)")
++
++    env = dict(os.environ)
++    env.update(
++        {
++            "CITYNEXUS_E2E_AUTHORITATIVE": "1",
++            "CITYNEXUS_E2E_RUN_ID": name.replace("-", "")[:24],
++            "CITYNEXUS_E2E_PORT": str(int(port) + 100),
++            "CITYNEXUS_BACKEND_PORT": port,
++            "CITYNEXUS_PYTHON": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
++            "CITYNEXUS_DATABASE_URL": f"sqlite:///{ROOT}/review/evidence/_{name.replace('-', '')[:24]}.db",
++            "CITYNEXUS_AI_ENABLED": "false",
++            "CITYNEXUS_EVIDENCE_DIR": f"{ROOT}/review/evidence",
++        }
++    )
++    env.pop("DEEPSEEK_API_KEY", None)
++    env.pop("CITYNEXUS_AI_API_KEY", None)
++    proc = subprocess.run(
++        f"npx playwright test {SPEC} --reporter=list",
++        cwd=f"{ROOT}/frontend",
++        env=env,
++        capture_output=True,
++        text=True,
++        encoding="utf-8",
++        errors="replace",
++        shell=True,
++    )
++    out = proc.stdout + proc.stderr
++    lines = [ln for ln in out.splitlines() if "WebServer" not in ln]
++    log = f"{LOGDIR}/{name}.log"
++    with open(log, "w", encoding="utf-8", newline="") as fh:
++        fh.write("\n".join(lines) + "\n")
++    kills = [ln.strip() for ln in lines if " :: " in ln]
++    print(f"  exit={proc.returncode}  log={log}")
++    for k in kills[:4]:
++        print(f"  red message: {k[:220]}")
++    server_died = any("was not able to start" in ln for ln in lines)
++    if server_died:
++        print(f"  INVALID RUN: the webServer never started, so this says nothing about {expected_node}")
++    else:
++        named = f":: {expected_node} " in out or f":: {expected_node} —" in out
++        print(f"  expected node {expected_node}: {'NAMED IN A RED' if named else 'SURVIVED'}")
++
++    import shutil
++
++    shutil.copyfile(PRISTINE, SRC)
++    now = sha1(SRC)
++    print(f"  restored sha1 {now} {'OK' if now == baseline else 'MISMATCH — STOP'}")
++    if now != baseline:
++        sys.exit(2)
+diff --git a/review/patches/ORD-0034-relay-message-prop.patch b/review/patches/ORD-0034-relay-message-prop.patch
+new file mode 100644
+index 0000000..4fd2ad1
+--- /dev/null
++++ b/review/patches/ORD-0034-relay-message-prop.patch
+@@ -0,0 +1,10 @@
++--- a/frontend/src/app/V8Experience.tsx
+++++ b/frontend/src/app/V8Experience.tsx
++@@ -797,6 +797,7 @@
++         onCreate={createJourney}
++         onUseTianjinDemo={createTianjinDemo}
++         onCancel={data ? () => setSetupOpen(false) : undefined}
++         busy={setupBusy}
+++        message={message}
++       />
++     );
+diff --git a/review/patches/batch1-delivered.patch b/review/patches/batch1-delivered.patch
+new file mode 100644
+index 0000000..6d554ee
+--- /dev/null
++++ b/review/patches/batch1-delivered.patch
+@@ -0,0 +1,265 @@
++diff --git a/frontend/index.html b/frontend/index.html
++index c48d657..a7df011 100644
++--- a/frontend/index.html
+++++ b/frontend/index.html
++@@ -2,7 +2,10 @@
++ <html lang="en">
++   <head>
++     <meta charset="UTF-8" />
++-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+++    <!-- viewport-fit=cover is only safe because .v8-mobile-nav / .v8-topbar /
+++         .v8-product-shell now carry real env(safe-area-inset-*) padding; adding
+++         this meta without that chrome would put content under the home indicator. -->
+++    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
++     <link rel="icon" href="/favicon.svg" />
++     <link rel="manifest" href="/manifest.webmanifest" />
++     <meta name="theme-color" content="#172945" />
++diff --git a/frontend/src/design-tokens.css b/frontend/src/design-tokens.css
++index ccb7bfa..877cb7e 100644
++--- a/frontend/src/design-tokens.css
+++++ b/frontend/src/design-tokens.css
++@@ -107,14 +107,25 @@
++     --cn-warning: #ff9f0a;
++     --cn-danger: #ff453a;
++     --cn-hairline: rgba(255, 255, 255, 0.1);
+++    --cn-nav-bg: rgba(28, 28, 30, 0.95);
++     --cn-control-border: #7c7c82;
++     --cn-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.5);
++     --cn-shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.5), 0 18px 40px rgba(0, 0, 0, 0.6);
++   }
++ }
++ 
++-/* Bind the V8 shell to the Apple palette + system font without touching markup:
++-   existing components consume --v8-* vars, so remapping them re-skins the app. */
+++/* Bind the V8 palette to the Apple tokens at :root as well as on the shell.
+++   Existing components consume --v8-*, so rebinding them re-skins the app; doing it
+++   on :root additionally reaches the one screen that is returned *before*
+++   .v8-product-shell exists — JourneyTrialSetup (V8Experience.tsx:818) — which until
+++   now got neither the Apple palette nor the dark theme.
+++   The shell selector is not redundant: styles.css carries an AA override block on
+++   `.v8-product-shell` (--v8-muted / -amber / -coral) that this file has always beaten
+++   by load order at equal specificity.  Binding :root alone would let that override
+++   win again inside the shell, silently resurrecting declarations that were dead
+++   code.  Keeping both selectors preserves the shell's effective values exactly while
+++   extending them to the screen that has no shell. */
+++:root,
++ .v8-product-shell {
++   --v8-canvas: var(--cn-canvas);
++   --v8-panel: var(--cn-surface);
++@@ -125,6 +136,36 @@
++   --v8-green: var(--cn-success);
++   --v8-amber: var(--cn-warning);
++   --v8-coral: var(--cn-danger);
+++  /* Two tokens 18 declarations referenced but nobody ever defined, so every one of
+++     them silently took its fallback: --v8-accent resolved to teal #0f766e in 14
+++     places (making the create-trip primary button a different colour from every
+++     other primary button in the app) and --v8-surface resolved to #0b1f24 in one
+++     place and #fff in two others — one token, three intents.  Accent and card
+++     surface get real values here; the near-black site was never a surface at all,
+++     it wanted the page canvas behind a fading sticky bar, so that declaration now
+++     reads --v8-canvas directly in styles.css.
+++     --v8-accent binds to the SOLID accent, not the text accent: it paints button
+++     fills that carry white labels (.v8-primary-button is shared by the create-trip
+++     CTA and Live's live-accept).  --cn-accent is tuned for text on the canvas and is
+++     #0a84ff under dark, which put white-on-blue at 3.4:1 and turned
+++     qoder-live-structure's L2 dark assertion red. */
+++  --v8-accent: var(--cn-accent-solid);
+++  --v8-surface: var(--cn-surface);
+++  /* Mobile chrome geometry in one place.  The shell used to reserve a hardcoded
+++     63px below the page, which was just a snapshot of "however tall the nav
+++     happened to be"; the nav itself carried no safe-area at all.  48 + 8 + 7 = 63
+++     is the arithmetic the old literal stood for, now written out. */
+++  --cn-touch-min: 44px;
+++  --cn-nav-bg: rgba(255, 255, 255, 0.95);
+++  --cn-nav-item-h: max(48px, var(--cn-touch-min));
+++  --cn-nav-pad-top: 8px;
+++  --cn-nav-pad-bottom: 7px;
+++  --cn-nav-h: calc(var(--cn-nav-item-h) + var(--cn-nav-pad-top) + var(--cn-nav-pad-bottom));
+++  --cn-nav-clearance: calc(var(--cn-nav-h) + env(safe-area-inset-bottom, 0px));
+++  --cn-safe-top: env(safe-area-inset-top, 0px);
+++}
+++
+++.v8-product-shell {
++   font-family: var(--cn-font);
++   -webkit-font-smoothing: antialiased;
++   text-rendering: optimizeLegibility;
++@@ -737,8 +778,11 @@ button[data-testid^="mode-"],
++   gap: 2px 16px;
++   margin-top: 10px;
++ }
+++/* Pass-16 pinned this row to 30px.  These are deliberate taps on a phone, and a
+++   0,2,0 selector outranks the global 44px floor in styles.css, so the floor has
+++   to be honoured here too. */
++ .v8-hub-actions .v8-quiet-button {
++-  min-height: 30px;
+++  min-height: var(--cn-touch-min);
++   padding: 2px 0;
++   font-size: var(--cn-fs-caption);
++   font-weight: 600;
++@@ -764,7 +808,7 @@ button[data-testid^="mode-"],
++   margin-bottom: 12px;
++ }
++ .cn-live-toolbar .v8-quiet-button {
++-  min-height: 30px;
+++  min-height: var(--cn-touch-min);
++   padding: 2px 0;
++   font-size: var(--cn-fs-caption);
++   font-weight: 600;
++@@ -925,3 +969,70 @@ button[data-testid^="mode-"],
++   flex: none;
++   white-space: nowrap;
++ }
+++
+++
+++/* ===========================================================================
+++   Pass-17 UI overnight lane — the screen that renders outside the shell.
+++
+++   JourneyTrialSetup is returned at V8Experience.tsx:818, before
+++   .v8-product-shell exists.  Everything the shell supplied was therefore
+++   missing on the very first screen a traveller sees:
+++     * the --v8-* tokens            (fixed by hoisting the bindings to :root)
+++     * a text colour                (body never set one; only the shell did)
+++     * the horizontal gutter        (.v8-content owns it, and there is no .v8-content)
+++     * the status-bar inset         (viewport-fit=cover makes env() real)
+++   These rules hand the standalone page the same chrome without touching markup.
+++   =========================================================================== */
+++body {
+++  color: var(--v8-ink);
+++  background: var(--v8-canvas);
+++  font-family: var(--cn-font);
+++  -webkit-font-smoothing: antialiased;
+++  text-rendering: optimizeLegibility;
+++}
+++.v8-page {
+++  padding: var(--cn-safe-top) var(--cn-gutter) var(--cn-s-32);
+++}
+++/* Inside the shell the gutter belongs to .v8-content, not to the page. */
+++.v8-content .v8-page { padding: 0; }
+++
+++/* Three step labels cannot share 360px, and the ellipsis was eating
+++   "Travellers & preferences" at all three acceptance widths.  Progressive
+++   disclosure instead: the step you are on names itself, the others collapse to
+++   their number.  Visually-hidden rather than display:none — ORD-0014 A requires
+++   the fix not cost semantics, and display:none would drop the step name out of the
+++   accessibility tree, leaving a screen reader with a bare digit. */
+++@media (max-width: 680px) {
+++  .trial-steps { gap: var(--cn-s-8); }
+++  .trial-steps li { flex: 0 0 auto; position: relative; }
+++  .trial-steps li:not(.active) span:last-child {
+++    position: absolute;
+++    width: 1px;
+++    height: 1px;
+++    margin: -1px;
+++    padding: 0;
+++    overflow: hidden;
+++    clip-path: inset(50%);
+++    white-space: nowrap;
+++    border: 0;
+++  }
+++}
+++
+++/* Form fields were UA-white: a white slab floating on a dark card, and a
+++   black-on-black label wherever the page carried no inherited colour. */
+++.trial-field input,
+++.trial-field textarea,
+++.trial-field select {
+++  min-height: var(--cn-touch-min);
+++  padding: 0 var(--cn-s-12);
+++  border: 1px solid var(--cn-control-border);
+++  border-radius: var(--cn-r-control);
+++  background: var(--v8-panel);
+++  color: var(--v8-ink);
+++  font: inherit;
+++}
+++.trial-field textarea { padding: var(--cn-s-12); }
+++.trial-field input::placeholder,
+++.trial-field textarea::placeholder { color: var(--cn-ink-tertiary); }
+++/* Native date pickers paint their own chrome; without this they stay light. */
+++.trial-field input[type="datetime-local"] { color-scheme: light dark; }
++diff --git a/frontend/src/styles.css b/frontend/src/styles.css
++index a7c53c5..fe8a6c8 100644
++--- a/frontend/src/styles.css
+++++ b/frontend/src/styles.css
++@@ -121,8 +121,13 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
++ @media (max-width: 560px) { .command-toolbar { grid-template-columns: 1fr; } .run-steps li { grid-template-columns: 24px 1fr; } .step-result { grid-column: 2; } }
++ @media (max-width: 760px) { .provenance-lanes { grid-template-columns: 1fr 1fr; } .guardian-actions { grid-template-columns: 1fr; } }
++ 
++-/* V8 product shell — map-first, calm canvas, semantic states, keyboard-visible controls. */
++-.v8-product-shell { --v8-ink: #14233b; --v8-muted: #68758a; --v8-canvas: #f6f7fb; --v8-panel: #fff; --v8-line: #e5e8ef; --v8-indigo: #4658d9; --v8-green: #16835b; --v8-amber: #b86d2e; --v8-coral: #d65e56; --v8-violet: #8063d7; min-height: 100vh; display: flex; color: var(--v8-ink); background: var(--v8-canvas); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+++/* V8 product shell — map-first, calm canvas, semantic states, keyboard-visible controls.
+++   The --v8-* defaults live on :root, not on the shell, because JourneyTrialSetup is
+++   returned before .v8-product-shell exists (V8Experience.tsx:818) and would otherwise
+++   inherit nothing.  design-tokens.css rebinds these to the Apple palette at :root too,
+++   and wins by load order — the two must move together or the shell reverts. */
+++:root { --v8-ink: #14233b; --v8-muted: #68758a; --v8-canvas: #f6f7fb; --v8-panel: #fff; --v8-line: #e5e8ef; --v8-indigo: #4658d9; --v8-green: #16835b; --v8-amber: #b86d2e; --v8-coral: #d65e56; --v8-violet: #8063d7; }
+++.v8-product-shell { min-height: 100vh; display: flex; color: var(--v8-ink); background: var(--v8-canvas); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
++ .v8-product-shell button { font: inherit; }
++ .v8-sidebar { width: 252px; min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; padding: 24px 16px 18px; background: #fff; border-right: 1px solid var(--v8-line); }
++ .v8-brand { display: flex; align-items: center; gap: 11px; padding: 0 10px 30px; }
++@@ -170,7 +175,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
++ .v8-chain .v8-chain-arrow { margin-left: 11px; color: #8fa7d3; }
++ .v8-message { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 18px 46px -7px; padding: 11px 14px; border: 1px solid #f0d1b5; border-radius: 8px; color: #8e5f32; background: #fffaf4; font-size: 11px; }.v8-message button { width: auto; margin: 0; padding: 0; border: 0; color: inherit; background: transparent; cursor: pointer; font-size: 10px; font-weight: 800; }.v8-loading { display: grid; place-items: center; align-content: center; gap: 8px; min-height: 100vh; color: var(--v8-ink); background: var(--v8-canvas); }.v8-loading p { margin: 10px 0 0; font-weight: 700; }.v8-loading span { color: var(--v8-muted); font-size: 12px; }.v8-mobile-nav, .v8-mobile-menu { display: none; }
++ @media (max-width: 960px) { .v8-sidebar { width: 205px; }.v8-content { padding: 32px 26px 70px; }.v8-topbar { padding: 0 26px; }.v8-message { margin-left: 26px; margin-right: 26px; }.v8-hero-grid, .v8-studio-layout, .v8-stay-layout, .v8-live-grid, .v8-intelligence-grid { grid-template-columns: 1fr; }.v8-map-panel { min-height: 260px; }.v8-stay-detail { grid-row: 1; }.v8-stay-list { grid-row: 2; }.v8-intel-facts { grid-template-columns: repeat(3, 1fr); }.v8-twin-grid { grid-template-columns: repeat(2, 1fr); }.v8-boundary-card { grid-column: 1 / -1; } }
++-@media (max-width: 680px) { .v8-product-shell { display: block; padding-bottom: 63px; }.v8-sidebar { display: none; }.v8-topbar { height: 58px; padding: 0 17px; }.v8-mobile-menu { display: block; width: auto; margin: 0; padding: 0; color: var(--v8-ink); font-size: 0; }.v8-mobile-menu:after { content: "≡"; font-size: 20px; }.v8-breadcrumb span, .v8-runtime, .v8-icon-button { display: none; }.v8-top-actions { gap: 8px; }.v8-content { padding: 27px 17px 34px; }.v8-message { margin: 13px 17px -5px; }.v8-page-intro { display: block; margin-bottom: 24px; }.v8-page-intro .v8-primary, .v8-page-intro .v8-outline-button, .v8-page-intro .v8-rain-button { margin-top: 18px; }.v8-page h1 { font-size: 30px; }.v8-lede { font-size: 13px; }.v8-trip-hero { padding: 22px 19px; }.v8-trip-hero-head { display: block; }.v8-trip-hero-head .v8-quiet-button { margin-top: 15px; }.v8-trip-hero h2 { font-size: 21px; }.v8-trip-metrics { gap: 8px; }.v8-trip-metrics strong { font-size: 15px; }.v8-trip-metrics small { line-height: 1.35; }.v8-anchor-row { gap: 9px; }.v8-anchor-row small { max-width: 110px; }.v8-day-row, .v8-twin-grid, .v8-intel-facts { grid-template-columns: 1fr; }.v8-day-card { min-height: 120px; }.v8-section-heading { margin-top: 30px; }.v8-section-heading h2 { font-size: 19px; }.v8-map-panel { min-height: 245px; }.v8-studio-layout { gap: 13px; }.v8-day-detail { padding: 16px; }.v8-activity-list { margin-left: 0; }.v8-stay-card { gap: 10px; }.v8-hotel-thumb.large { width: 90px; height: 110px; }.v8-stay-card h3 { font-size: 13px; }.v8-stay-impact { flex-wrap: wrap; }.v8-live-main > .v8-map-panel { min-height: 285px; }.v8-live-now { align-items: start; }.v8-live-now > strong { font-size: 14px; }.v8-mode-chooser { display: block; }.v8-mode-chips { justify-content: start; margin-top: 14px; }.v8-intel-hero h2 { font-size: 24px; }.v8-chain { gap: 5px; }.v8-chain span { padding: 6px 7px; font-size: 9px; }.v8-mobile-nav { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; display: grid; grid-template-columns: repeat(5, 1fr); padding: 8px 5px 7px; border-top: 1px solid var(--v8-line); background: #fffffff2; backdrop-filter: blur(12px); }.v8-mobile-nav button { display: grid; justify-items: center; gap: 4px; padding: 3px 0; border: 0; color: #8b95a4; background: transparent; cursor: pointer; font-size: 9px; }.v8-mobile-nav svg { width: 17px; height: 17px; }.v8-mobile-nav button.active { color: var(--v8-indigo); font-weight: 750; } }
+++@media (max-width: 680px) { .v8-product-shell { display: block; padding-bottom: var(--cn-nav-clearance); }.v8-sidebar { display: none; }.v8-topbar { min-height: 58px; padding: var(--cn-safe-top) 17px 0; }.v8-mobile-menu { display: block; width: auto; margin: 0; padding: 0; color: var(--v8-ink); font-size: 0; }.v8-mobile-menu:after { content: "≡"; font-size: 20px; }.v8-breadcrumb span, .v8-runtime, .v8-icon-button { display: none; }.v8-top-actions { gap: 8px; }.v8-content { padding: 27px 17px 34px; }.v8-message { margin: 13px 17px -5px; }.v8-page-intro { display: block; margin-bottom: 24px; }.v8-page-intro .v8-primary, .v8-page-intro .v8-outline-button, .v8-page-intro .v8-rain-button { margin-top: 18px; }.v8-page h1 { font-size: 30px; }.v8-lede { font-size: 13px; }.v8-trip-hero { padding: 22px 19px; }.v8-trip-hero-head { display: block; }.v8-trip-hero-head .v8-quiet-button { margin-top: 15px; }.v8-trip-hero h2 { font-size: 21px; }.v8-trip-metrics { gap: 8px; }.v8-trip-metrics strong { font-size: 15px; }.v8-trip-metrics small { line-height: 1.35; }.v8-anchor-row { gap: 9px; }.v8-anchor-row small { max-width: 110px; }.v8-day-row, .v8-twin-grid, .v8-intel-facts { grid-template-columns: 1fr; }.v8-day-card { min-height: 120px; }.v8-section-heading { margin-top: 30px; }.v8-section-heading h2 { font-size: 19px; }.v8-map-panel { min-height: 245px; }.v8-studio-layout { gap: 13px; }.v8-day-detail { padding: 16px; }.v8-activity-list { margin-left: 0; }.v8-stay-card { gap: 10px; }.v8-hotel-thumb.large { width: 90px; height: 110px; }.v8-stay-card h3 { font-size: 13px; }.v8-stay-impact { flex-wrap: wrap; }.v8-live-main > .v8-map-panel { min-height: 285px; }.v8-live-now { align-items: start; }.v8-live-now > strong { font-size: 14px; }.v8-mode-chooser { display: block; }.v8-mode-chips { justify-content: start; margin-top: 14px; }.v8-intel-hero h2 { font-size: 24px; }.v8-chain { gap: 5px; }.v8-chain span { padding: 6px 7px; font-size: 9px; }.v8-mobile-nav { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; display: grid; grid-template-columns: repeat(5, 1fr); padding: var(--cn-nav-pad-top) 5px calc(var(--cn-nav-pad-bottom) + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--v8-line); background: var(--cn-nav-bg); backdrop-filter: blur(12px); }.v8-mobile-nav button { min-height: var(--cn-nav-item-h); display: grid; justify-items: center; align-content: center; gap: 4px; padding: 3px 0; border: 0; color: var(--cn-ink-secondary); background: transparent; cursor: pointer; font-size: var(--cn-fs-caption); }.v8-mobile-nav svg { width: 19px; height: 19px; }.v8-mobile-nav button.active { color: var(--cn-accent-text); font-weight: 750; } }
++ 
++ /* Keep the quiet travel UI legible at WCAG AA contrast on the live surface. */
++ .v8-product-shell { --v8-muted: #5f6c80; --v8-amber: #8a4f1d; --v8-coral: #a83d36; }
++@@ -257,7 +262,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
++ .v12-offline-now-next article span { color: #51756b; font-size: 10px; font-weight: 750; letter-spacing: .06em; }
++ @media (max-width: 680px) { .v12-offline-now-next { grid-template-columns: 1fr; } }
++ @media (max-width: 680px) { .v9-live-actions { align-items: stretch; flex-direction: column; }.v9-live-actions button { margin-top: 8px !important; }.v9-wallet-layout { grid-template-columns: 1fr; }.v9-offline { margin-top: 20px; padding: 22px; } }
++-@media (max-width: 680px) { .v8-mobile-nav button { min-height: 48px; }.v8-mobile-nav button span { font-size: 10px; }.v8-mode-chips button, .v8-compare-button { min-height: 44px; }.v8-page-intro button { min-height: 44px; } }
+++@media (max-width: 680px) { .v8-mobile-nav button { min-height: var(--cn-nav-item-h); }.v8-mobile-nav button span { font-size: var(--cn-fs-caption); }.v8-mode-chips button, .v8-compare-button { min-height: var(--cn-touch-min); }/* The 44px floor had holes: every one of these is a deliberate tap, and .v8-quiet-button carried no min-height at all, so Today's three secondary actions measured 30px. */.v8-quiet-button, .v8-primary, .v8-outline-button, .v8-rain-button, .v8-page-intro button, .trial-chips button, .trial-sticky-cta button { min-height: var(--cn-touch-min); } }
++ 
++ /* Progressive disclosure, mobile comparison, and accessible focus states. */
++ .v8-product-shell button:focus-visible, .v8-product-shell [role="button"]:focus-visible, .v8-product-shell textarea:focus-visible { outline: 3px solid #9aa8ff; outline-offset: 3px; }
++@@ -589,7 +594,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
++   gap: 10px;
++   justify-content: flex-end;
++   padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
++-  background: linear-gradient(to top, var(--v8-surface, #0b1f24) 70%, transparent);
+++  background: linear-gradient(to top, var(--v8-canvas) 70%, transparent);
++ }
++ .trial-sticky-cta .v8-primary-button {
++   min-width: 140px;
++diff --git a/frontend/src/v10.css b/frontend/src/v10.css
++index 50731b2..31f7aac 100644
++--- a/frontend/src/v10.css
+++++ b/frontend/src/v10.css
++@@ -1,19 +1,20 @@
++-/* V10 execution rail: quiet hierarchy, one primary metric, progressive evidence. */
++-.v10-execution-panel { width: min(1180px, calc(100% - 34px)); margin: 0 auto 18px; padding: 20px; border: 1px solid #d9e2df; border-radius: 14px; background: #fbfdfb; box-shadow: 0 10px 30px #173f3a0b; }
++-.v10-execution-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }.v10-execution-heading h3 { margin: 5px 0 0; color: #12383b; font-size: 20px; letter-spacing: -.03em; }.v10-truth-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; border-radius: 99px; color: #17624b; background: #e8f7ef; font-size: 10px; font-weight: 800; }
++-.v10-execution-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }.v10-metric { display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; padding: 13px; border: 1px solid #e4ece8; border-radius: 10px; color: #758584; background: #fff; }.v10-metric svg { grid-row: span 3; margin-top: 2px; color: #26806d; }.v10-metric span { font-size: 9px; font-weight: 800; letter-spacing: .09em; }.v10-metric strong { color: #173f42; font-size: 16px; }.v10-metric small { font-size: 10px; }
++-.v10-evidence-drawer { margin-top: 12px; border-top: 1px solid #e4ece8; }.v10-evidence-drawer summary { display: flex; justify-content: space-between; padding: 13px 2px 1px; color: #34605b; font-size: 11px; font-weight: 750; cursor: pointer; list-style: none; }.v10-evidence-drawer summary::-webkit-details-marker { display: none; }.v10-evidence-drawer summary span { color: #8a9b98; font-weight: 500; }.v10-evidence-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 2px; border-top: 1px solid #edf2ef; color: #214b4d; text-decoration: none; }.v10-evidence-row span { display: grid; gap: 3px; }.v10-evidence-row small, .v10-muted { color: #879693; font-size: 10px; }.v10-muted { padding-bottom: 2px; line-height: 1.45; }
+++/* V10 execution rail: quiet hierarchy, one primary metric, progressive evidence.
+++   This surface carried its own hardcoded green palette (#17624b / #fbfdfb / #12383b)
+++   that existed only in the light theme, so on the dark canvas it painted a mint
+++   island and a white slab.  It now reads the shared tokens; green survives only
+++   where it means something (a truth/protected marker), not as decoration. */
+++.v10-execution-panel { width: min(1180px, calc(100% - 34px)); margin: 0 auto 18px; padding: var(--cn-s-20); border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-card); background: var(--v8-panel); box-shadow: var(--cn-shadow-card); }
+++.v10-execution-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }.v10-execution-heading h3 { margin: 5px 0 0; color: var(--v8-ink); font-size: var(--cn-fs-title); letter-spacing: -.03em; }.v10-truth-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; border-radius: var(--cn-r-pill); color: var(--cn-success-text); background: var(--cn-secondary); font-size: var(--cn-fs-caption); font-weight: 800; }
+++.v10-execution-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: var(--cn-s-20); }.v10-metric { display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; padding: 13px; border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-control); color: var(--v8-muted); background: var(--v8-panel); }.v10-metric svg { grid-row: span 3; margin-top: 2px; color: var(--v8-green); }.v10-metric span { font-size: var(--cn-fs-caption); font-weight: 800; letter-spacing: .09em; }.v10-metric strong { color: var(--v8-ink); font-size: var(--cn-fs-card); }.v10-metric small { font-size: var(--cn-fs-caption); }
+++.v10-evidence-drawer { margin-top: 12px; border-top: 1px solid var(--cn-hairline); }.v10-evidence-drawer summary { display: flex; justify-content: space-between; padding: 13px 2px 1px; color: var(--v8-ink); font-size: var(--cn-fs-body); font-weight: 750; cursor: pointer; list-style: none; }.v10-evidence-drawer summary::-webkit-details-marker { display: none; }.v10-evidence-drawer summary span { color: var(--v8-muted); font-weight: 500; }.v10-evidence-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 2px; border-top: 1px solid var(--cn-hairline); color: var(--v8-ink); text-decoration: none; }.v10-evidence-row span { display: grid; gap: 3px; }.v10-evidence-row small, .v10-muted { color: var(--v8-muted); font-size: var(--cn-fs-caption); }.v10-muted { padding-bottom: 2px; line-height: 1.45; }
++ @media (max-width: 680px) { .v10-execution-panel { width: auto; margin: 0 17px 18px; padding: 16px; }.v10-execution-heading { display: grid; gap: 10px; }.v10-execution-grid { grid-template-columns: 1fr; }.v10-metric { min-height: 52px; } }
++-.v10-inbox-scanner { display: grid; gap: 8px; padding: 14px; border: 1px solid #e2ebe7; border-radius: 10px; background: #fbfdfb; }.v10-inbox-scanner > div { display: grid; gap: 3px; }.v10-inbox-scanner small { color: #82918d; font-size: 10px; }.v10-inbox-scanner button { width: fit-content; padding: 8px 11px; border: 1px solid #cfe0d9; border-radius: 7px; color: #17624b; background: #fff; cursor: pointer; font-size: 11px; font-weight: 750; }.v10-scanner-video { width: 100%; max-height: 220px; border-radius: 8px; background: #0d282b; }.v10-inbox-scanner code { overflow-wrap: anywhere; padding: 8px; border-radius: 6px; color: #35615b; background: #eef8f3; font-size: 10px; }
++-.v10-metric { color: #5b756b; }
++-.v10-metric span, .v10-metric small { color: #5b756b; }
++-.v10-evidence-drawer summary span { color: #567064; }
++-.v10-inbox-workbench { display: grid; gap: 16px; padding: 20px; border: 1px solid #d9e2df; border-radius: 14px; background: #fbfdfb; box-shadow: 0 10px 30px #173f3a0b; }
++-.v10-inbox-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }.v10-inbox-heading h2 { margin: 5px 0 0; color: #12383b; font-size: 20px; letter-spacing: -.03em; }
++-.v10-inbox-inputs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }.v10-inbox-inputs label { display: grid; gap: 7px; color: #365f5a; font-size: 11px; font-weight: 750; }.v10-inbox-inputs textarea { min-height: 96px; resize: vertical; }.v10-inbox-inputs textarea, .v10-inbox-inputs input { padding: 10px; border: 1px solid #d7e4df; border-radius: 8px; color: #173f42; background: #fff; font: inherit; }.v10-inbox-inputs input { padding: 9px; }.v10-inbox-inputs small { color: #567064; font-size: 10px; overflow-wrap: anywhere; }.v10-inbox-inputs button, .v10-inbox-draft button { width: fit-content; padding: 9px 12px; border: 0; border-radius: 8px; color: #fff; background: #17624b; cursor: pointer; font-size: 11px; font-weight: 800; }.v10-inbox-inputs button:disabled, .v10-inbox-draft button:disabled { opacity: .45; cursor: not-allowed; }
++-.v10-inbox-message { margin: 0; padding: 10px 12px; border-radius: 8px; color: #365f5a; background: #eef8f3; font-size: 11px; }.v10-inbox-draft { display: grid; gap: 12px; padding-top: 14px; border-top: 1px solid #e4ece8; }.v10-inbox-draft > div:first-child { display: grid; gap: 3px; }.v10-inbox-draft small { color: #567064; font-size: 10px; }.v10-inbox-draft dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0; }.v10-inbox-draft dl div { padding: 9px; border: 1px solid #e4ece8; border-radius: 8px; background: #fff; }.v10-inbox-draft dt { color: #567064; font-size: 9px; text-transform: uppercase; }.v10-inbox-draft dd { margin: 4px 0 0; color: #173f42; font-size: 11px; overflow-wrap: anywhere; }.v10-inbox-warning, .v10-inbox-clear { margin: 0; color: #8a5d22; font-size: 11px; }.v10-inbox-clear { color: #17624b; }
++-@media (max-width: 680px) { .v10-inbox-workbench { padding: 16px; }.v10-inbox-heading { display: grid; gap: 10px; }.v10-inbox-inputs, .v10-inbox-draft dl { grid-template-columns: 1fr; } }
++-.v8-secondary { width: fit-content; padding: 9px 12px; border: 1px solid #b9d7cb; border-radius: 8px; color: #17624b; background: #fff; cursor: pointer; font-size: 11px; font-weight: 800; }
+++.v10-inbox-scanner { display: grid; gap: var(--cn-s-8); padding: var(--cn-s-16); border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-control); background: var(--v8-panel); }.v10-inbox-scanner > div { display: grid; gap: 3px; }.v10-inbox-scanner small { color: var(--v8-muted); font-size: var(--cn-fs-caption); }.v10-inbox-scanner button { width: fit-content; min-height: var(--cn-touch-min); padding: 8px 11px; border: 1px solid var(--cn-control-border); border-radius: var(--cn-r-button); color: var(--v8-accent); background: var(--v8-panel); cursor: pointer; font-size: var(--cn-fs-body); font-weight: 750; }.v10-scanner-video { width: 100%; max-height: 220px; border-radius: var(--cn-r-control); background: #0d282b; }.v10-inbox-scanner code { overflow-wrap: anywhere; padding: 8px; border-radius: var(--cn-r-control); color: var(--v8-ink); background: var(--cn-secondary); font-size: var(--cn-fs-caption); }
+++.v10-inbox-workbench { display: grid; gap: var(--cn-s-16); padding: var(--cn-s-20); border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-card); background: var(--v8-panel); box-shadow: var(--cn-shadow-card); }
+++.v10-inbox-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }.v10-inbox-heading h2 { margin: 5px 0 0; color: var(--v8-ink); font-size: var(--cn-fs-title); letter-spacing: -.03em; }
+++.v10-inbox-inputs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }.v10-inbox-inputs label { display: grid; gap: 7px; min-width: 0; color: var(--v8-ink); font-size: var(--cn-fs-body); font-weight: 750; }.v10-inbox-inputs textarea { min-height: 96px; resize: vertical; }.v10-inbox-inputs textarea, .v10-inbox-inputs input { min-width: 0; padding: var(--cn-s-12); border: 1px solid var(--cn-control-border); border-radius: var(--cn-r-control); color: var(--v8-ink); background: var(--v8-panel); font: inherit; }.v10-inbox-inputs input { min-height: var(--cn-touch-min); padding: 9px; }.v10-inbox-inputs small { color: var(--v8-muted); font-size: var(--cn-fs-caption); overflow-wrap: anywhere; }.v10-inbox-inputs button, .v10-inbox-draft button { width: fit-content; min-height: var(--cn-touch-min); padding: 9px var(--cn-s-16); border: 0; border-radius: var(--cn-r-button); color: #fff; background: var(--v8-accent); cursor: pointer; font-size: var(--cn-fs-body); font-weight: 800; }.v10-inbox-inputs button:disabled, .v10-inbox-draft button:disabled { opacity: .45; cursor: not-allowed; }
+++.v10-inbox-message { margin: 0; padding: var(--cn-s-12); border-radius: var(--cn-r-control); color: var(--v8-ink); background: var(--cn-secondary); font-size: var(--cn-fs-body); }.v10-inbox-draft { display: grid; gap: 12px; padding-top: 14px; border-top: 1px solid var(--cn-hairline); }.v10-inbox-draft > div:first-child { display: grid; gap: 3px; }.v10-inbox-draft small { color: var(--v8-muted); font-size: var(--cn-fs-caption); }.v10-inbox-draft dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--cn-s-8); margin: 0; }.v10-inbox-draft dl div { padding: 9px; border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-control); background: var(--v8-panel); }.v10-inbox-draft dt { color: var(--v8-muted); font-size: var(--cn-fs-caption); text-transform: uppercase; }.v10-inbox-draft dd { margin: 4px 0 0; color: var(--v8-ink); font-size: var(--cn-fs-body); overflow-wrap: anywhere; }.v10-inbox-warning { margin: 0; color: var(--cn-warning); font-size: var(--cn-fs-body); }.v10-inbox-clear { margin: 0; color: var(--cn-success-text); font-size: var(--cn-fs-body); }
+++@media (max-width: 680px) { .v10-inbox-workbench { padding: var(--cn-s-16); }.v10-inbox-heading { display: grid; gap: 10px; }.v10-inbox-inputs, .v10-inbox-draft dl { grid-template-columns: 1fr; } }
+++.v8-secondary { width: fit-content; min-height: var(--cn-touch-min); padding: 9px var(--cn-s-16); border: 1px solid var(--cn-control-border); border-radius: var(--cn-r-button); color: var(--v8-accent); background: var(--v8-panel); cursor: pointer; font-size: var(--cn-fs-body); font-weight: 800; }
++ 
++ /* V14 trial-readiness: first-run city setup and prominent locale control. */
++ .v8-trial-setup { min-height: 100vh; padding: 24px; background: var(--v8-bg, #f4f6f2); }
+diff --git a/review/patches/batch2-theme-color.patch b/review/patches/batch2-theme-color.patch
+new file mode 100644
+index 0000000..410d74c
+--- /dev/null
++++ b/review/patches/batch2-theme-color.patch
+@@ -0,0 +1,15 @@
++--- a/frontend/index.html
+++++ b/frontend/index.html
++@@ -8,7 +8,11 @@
++     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
++     <link rel="icon" href="/favicon.svg" />
++     <link rel="manifest" href="/manifest.webmanifest" />
++-    <meta name="theme-color" content="#172945" />
+++    <!-- theme-color follows the design tokens; the old #172945 matched no surface in the
+++         app. The last *matching* declaration wins, so the always-matching light value is
+++         declared first and the dark one after it. -->
+++    <meta name="theme-color" content="#f5f5f7" />
+++    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
++     <title>CityNexus Trip Operations</title>
++   </head>
++   <body>
+diff --git a/review/patches/step3-token-hoist.patch b/review/patches/step3-token-hoist.patch
+new file mode 100644
+index 0000000..58859ad
+--- /dev/null
++++ b/review/patches/step3-token-hoist.patch
+@@ -0,0 +1,70 @@
++diff --git a/frontend/src/design-tokens.css b/frontend/src/design-tokens.css
++index ccb7bfa..157ba43 100644
++--- a/frontend/src/design-tokens.css
+++++ b/frontend/src/design-tokens.css
++@@ -113,9 +113,13 @@
++   }
++ }
++ 
++-/* Bind the V8 shell to the Apple palette + system font without touching markup:
++-   existing components consume --v8-* vars, so remapping them re-skins the app. */
++-.v8-product-shell {
+++/* Bind the V8 palette to the Apple tokens at :root rather than on the shell.
+++   Existing components consume --v8-*, so rebinding them re-skins the app; doing it
+++   on :root additionally reaches the one screen that is returned *before*
+++   .v8-product-shell exists — JourneyTrialSetup (V8Experience.tsx:818) — which until
+++   now got neither the Apple palette nor the dark theme.  styles.css declares the
+++   literal defaults on :root too, so this block still wins by load order. */
+++:root {
++   --v8-canvas: var(--cn-canvas);
++   --v8-panel: var(--cn-surface);
++   --v8-ink: var(--cn-ink);
++@@ -125,6 +129,19 @@
++   --v8-green: var(--cn-success);
++   --v8-amber: var(--cn-warning);
++   --v8-coral: var(--cn-danger);
+++  /* Two tokens 18 declarations referenced but nobody ever defined, so every one of
+++     them silently took its fallback: --v8-accent resolved to teal #0f766e in 14
+++     places (making the create-trip primary button a different colour from every
+++     other primary button in the app) and --v8-surface resolved to #0b1f24 in one
+++     place and #fff in two others — one token, three intents.  Accent and card
+++     surface get real values here; the near-black site was never a surface at all,
+++     it wanted the page canvas behind a fading sticky bar, so that declaration now
+++     reads --v8-canvas directly in styles.css. */
+++  --v8-accent: var(--cn-accent);
+++  --v8-surface: var(--cn-surface);
+++}
+++
+++.v8-product-shell {
++   font-family: var(--cn-font);
++   -webkit-font-smoothing: antialiased;
++   text-rendering: optimizeLegibility;
++diff --git a/frontend/src/styles.css b/frontend/src/styles.css
++index a7c53c5..3dd709e 100644
++--- a/frontend/src/styles.css
+++++ b/frontend/src/styles.css
++@@ -121,8 +121,13 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
++ @media (max-width: 560px) { .command-toolbar { grid-template-columns: 1fr; } .run-steps li { grid-template-columns: 24px 1fr; } .step-result { grid-column: 2; } }
++ @media (max-width: 760px) { .provenance-lanes { grid-template-columns: 1fr 1fr; } .guardian-actions { grid-template-columns: 1fr; } }
++ 
++-/* V8 product shell — map-first, calm canvas, semantic states, keyboard-visible controls. */
++-.v8-product-shell { --v8-ink: #14233b; --v8-muted: #68758a; --v8-canvas: #f6f7fb; --v8-panel: #fff; --v8-line: #e5e8ef; --v8-indigo: #4658d9; --v8-green: #16835b; --v8-amber: #b86d2e; --v8-coral: #d65e56; --v8-violet: #8063d7; min-height: 100vh; display: flex; color: var(--v8-ink); background: var(--v8-canvas); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+++/* V8 product shell — map-first, calm canvas, semantic states, keyboard-visible controls.
+++   The --v8-* defaults live on :root, not on the shell, because JourneyTrialSetup is
+++   returned before .v8-product-shell exists (V8Experience.tsx:818) and would otherwise
+++   inherit nothing.  design-tokens.css rebinds these to the Apple palette at :root too,
+++   and wins by load order — the two must move together or the shell reverts. */
+++:root { --v8-ink: #14233b; --v8-muted: #68758a; --v8-canvas: #f6f7fb; --v8-panel: #fff; --v8-line: #e5e8ef; --v8-indigo: #4658d9; --v8-green: #16835b; --v8-amber: #b86d2e; --v8-coral: #d65e56; --v8-violet: #8063d7; }
+++.v8-product-shell { min-height: 100vh; display: flex; color: var(--v8-ink); background: var(--v8-canvas); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
++ .v8-product-shell button { font: inherit; }
++ .v8-sidebar { width: 252px; min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; padding: 24px 16px 18px; background: #fff; border-right: 1px solid var(--v8-line); }
++ .v8-brand { display: flex; align-items: center; gap: 11px; padding: 0 10px 30px; }
++@@ -589,7 +594,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
++   gap: 10px;
++   justify-content: flex-end;
++   padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
++-  background: linear-gradient(to top, var(--v8-surface, #0b1f24) 70%, transparent);
+++  background: linear-gradient(to top, var(--v8-canvas) 70%, transparent);
++ }
++ .trial-sticky-cta .v8-primary-button {
++   min-width: 140px;
+diff --git a/review/patches/ui-overnight-final.patch b/review/patches/ui-overnight-final.patch
+new file mode 100644
+index 0000000..6d554ee
+--- /dev/null
++++ b/review/patches/ui-overnight-final.patch
+@@ -0,0 +1,265 @@
++diff --git a/frontend/index.html b/frontend/index.html
++index c48d657..a7df011 100644
++--- a/frontend/index.html
+++++ b/frontend/index.html
++@@ -2,7 +2,10 @@
++ <html lang="en">
++   <head>
++     <meta charset="UTF-8" />
++-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+++    <!-- viewport-fit=cover is only safe because .v8-mobile-nav / .v8-topbar /
+++         .v8-product-shell now carry real env(safe-area-inset-*) padding; adding
+++         this meta without that chrome would put content under the home indicator. -->
+++    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
++     <link rel="icon" href="/favicon.svg" />
++     <link rel="manifest" href="/manifest.webmanifest" />
++     <meta name="theme-color" content="#172945" />
++diff --git a/frontend/src/design-tokens.css b/frontend/src/design-tokens.css
++index ccb7bfa..877cb7e 100644
++--- a/frontend/src/design-tokens.css
+++++ b/frontend/src/design-tokens.css
++@@ -107,14 +107,25 @@
++     --cn-warning: #ff9f0a;
++     --cn-danger: #ff453a;
++     --cn-hairline: rgba(255, 255, 255, 0.1);
+++    --cn-nav-bg: rgba(28, 28, 30, 0.95);
++     --cn-control-border: #7c7c82;
++     --cn-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 28px rgba(0, 0, 0, 0.5);
++     --cn-shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.5), 0 18px 40px rgba(0, 0, 0, 0.6);
++   }
++ }
++ 
++-/* Bind the V8 shell to the Apple palette + system font without touching markup:
++-   existing components consume --v8-* vars, so remapping them re-skins the app. */
+++/* Bind the V8 palette to the Apple tokens at :root as well as on the shell.
+++   Existing components consume --v8-*, so rebinding them re-skins the app; doing it
+++   on :root additionally reaches the one screen that is returned *before*
+++   .v8-product-shell exists — JourneyTrialSetup (V8Experience.tsx:818) — which until
+++   now got neither the Apple palette nor the dark theme.
+++   The shell selector is not redundant: styles.css carries an AA override block on
+++   `.v8-product-shell` (--v8-muted / -amber / -coral) that this file has always beaten
+++   by load order at equal specificity.  Binding :root alone would let that override
+++   win again inside the shell, silently resurrecting declarations that were dead
+++   code.  Keeping both selectors preserves the shell's effective values exactly while
+++   extending them to the screen that has no shell. */
+++:root,
++ .v8-product-shell {
++   --v8-canvas: var(--cn-canvas);
++   --v8-panel: var(--cn-surface);
++@@ -125,6 +136,36 @@
++   --v8-green: var(--cn-success);
++   --v8-amber: var(--cn-warning);
++   --v8-coral: var(--cn-danger);
+++  /* Two tokens 18 declarations referenced but nobody ever defined, so every one of
+++     them silently took its fallback: --v8-accent resolved to teal #0f766e in 14
+++     places (making the create-trip primary button a different colour from every
+++     other primary button in the app) and --v8-surface resolved to #0b1f24 in one
+++     place and #fff in two others — one token, three intents.  Accent and card
+++     surface get real values here; the near-black site was never a surface at all,
+++     it wanted the page canvas behind a fading sticky bar, so that declaration now
+++     reads --v8-canvas directly in styles.css.
+++     --v8-accent binds to the SOLID accent, not the text accent: it paints button
+++     fills that carry white labels (.v8-primary-button is shared by the create-trip
+++     CTA and Live's live-accept).  --cn-accent is tuned for text on the canvas and is
+++     #0a84ff under dark, which put white-on-blue at 3.4:1 and turned
+++     qoder-live-structure's L2 dark assertion red. */
+++  --v8-accent: var(--cn-accent-solid);
+++  --v8-surface: var(--cn-surface);
+++  /* Mobile chrome geometry in one place.  The shell used to reserve a hardcoded
+++     63px below the page, which was just a snapshot of "however tall the nav
+++     happened to be"; the nav itself carried no safe-area at all.  48 + 8 + 7 = 63
+++     is the arithmetic the old literal stood for, now written out. */
+++  --cn-touch-min: 44px;
+++  --cn-nav-bg: rgba(255, 255, 255, 0.95);
+++  --cn-nav-item-h: max(48px, var(--cn-touch-min));
+++  --cn-nav-pad-top: 8px;
+++  --cn-nav-pad-bottom: 7px;
+++  --cn-nav-h: calc(var(--cn-nav-item-h) + var(--cn-nav-pad-top) + var(--cn-nav-pad-bottom));
+++  --cn-nav-clearance: calc(var(--cn-nav-h) + env(safe-area-inset-bottom, 0px));
+++  --cn-safe-top: env(safe-area-inset-top, 0px);
+++}
+++
+++.v8-product-shell {
++   font-family: var(--cn-font);
++   -webkit-font-smoothing: antialiased;
++   text-rendering: optimizeLegibility;
++@@ -737,8 +778,11 @@ button[data-testid^="mode-"],
++   gap: 2px 16px;
++   margin-top: 10px;
++ }
+++/* Pass-16 pinned this row to 30px.  These are deliberate taps on a phone, and a
+++   0,2,0 selector outranks the global 44px floor in styles.css, so the floor has
+++   to be honoured here too. */
++ .v8-hub-actions .v8-quiet-button {
++-  min-height: 30px;
+++  min-height: var(--cn-touch-min);
++   padding: 2px 0;
++   font-size: var(--cn-fs-caption);
++   font-weight: 600;
++@@ -764,7 +808,7 @@ button[data-testid^="mode-"],
++   margin-bottom: 12px;
++ }
++ .cn-live-toolbar .v8-quiet-button {
++-  min-height: 30px;
+++  min-height: var(--cn-touch-min);
++   padding: 2px 0;
++   font-size: var(--cn-fs-caption);
++   font-weight: 600;
++@@ -925,3 +969,70 @@ button[data-testid^="mode-"],
++   flex: none;
++   white-space: nowrap;
++ }
+++
+++
+++/* ===========================================================================
+++   Pass-17 UI overnight lane — the screen that renders outside the shell.
+++
+++   JourneyTrialSetup is returned at V8Experience.tsx:818, before
+++   .v8-product-shell exists.  Everything the shell supplied was therefore
+++   missing on the very first screen a traveller sees:
+++     * the --v8-* tokens            (fixed by hoisting the bindings to :root)
+++     * a text colour                (body never set one; only the shell did)
+++     * the horizontal gutter        (.v8-content owns it, and there is no .v8-content)
+++     * the status-bar inset         (viewport-fit=cover makes env() real)
+++   These rules hand the standalone page the same chrome without touching markup.
+++   =========================================================================== */
+++body {
+++  color: var(--v8-ink);
+++  background: var(--v8-canvas);
+++  font-family: var(--cn-font);
+++  -webkit-font-smoothing: antialiased;
+++  text-rendering: optimizeLegibility;
+++}
+++.v8-page {
+++  padding: var(--cn-safe-top) var(--cn-gutter) var(--cn-s-32);
+++}
+++/* Inside the shell the gutter belongs to .v8-content, not to the page. */
+++.v8-content .v8-page { padding: 0; }
+++
+++/* Three step labels cannot share 360px, and the ellipsis was eating
+++   "Travellers & preferences" at all three acceptance widths.  Progressive
+++   disclosure instead: the step you are on names itself, the others collapse to
+++   their number.  Visually-hidden rather than display:none — ORD-0014 A requires
+++   the fix not cost semantics, and display:none would drop the step name out of the
+++   accessibility tree, leaving a screen reader with a bare digit. */
+++@media (max-width: 680px) {
+++  .trial-steps { gap: var(--cn-s-8); }
+++  .trial-steps li { flex: 0 0 auto; position: relative; }
+++  .trial-steps li:not(.active) span:last-child {
+++    position: absolute;
+++    width: 1px;
+++    height: 1px;
+++    margin: -1px;
+++    padding: 0;
+++    overflow: hidden;
+++    clip-path: inset(50%);
+++    white-space: nowrap;
+++    border: 0;
+++  }
+++}
+++
+++/* Form fields were UA-white: a white slab floating on a dark card, and a
+++   black-on-black label wherever the page carried no inherited colour. */
+++.trial-field input,
+++.trial-field textarea,
+++.trial-field select {
+++  min-height: var(--cn-touch-min);
+++  padding: 0 var(--cn-s-12);
+++  border: 1px solid var(--cn-control-border);
+++  border-radius: var(--cn-r-control);
+++  background: var(--v8-panel);
+++  color: var(--v8-ink);
+++  font: inherit;
+++}
+++.trial-field textarea { padding: var(--cn-s-12); }
+++.trial-field input::placeholder,
+++.trial-field textarea::placeholder { color: var(--cn-ink-tertiary); }
+++/* Native date pickers paint their own chrome; without this they stay light. */
+++.trial-field input[type="datetime-local"] { color-scheme: light dark; }
++diff --git a/frontend/src/styles.css b/frontend/src/styles.css
++index a7c53c5..fe8a6c8 100644
++--- a/frontend/src/styles.css
+++++ b/frontend/src/styles.css
++@@ -121,8 +121,13 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
++ @media (max-width: 560px) { .command-toolbar { grid-template-columns: 1fr; } .run-steps li { grid-template-columns: 24px 1fr; } .step-result { grid-column: 2; } }
++ @media (max-width: 760px) { .provenance-lanes { grid-template-columns: 1fr 1fr; } .guardian-actions { grid-template-columns: 1fr; } }
++ 
++-/* V8 product shell — map-first, calm canvas, semantic states, keyboard-visible controls. */
++-.v8-product-shell { --v8-ink: #14233b; --v8-muted: #68758a; --v8-canvas: #f6f7fb; --v8-panel: #fff; --v8-line: #e5e8ef; --v8-indigo: #4658d9; --v8-green: #16835b; --v8-amber: #b86d2e; --v8-coral: #d65e56; --v8-violet: #8063d7; min-height: 100vh; display: flex; color: var(--v8-ink); background: var(--v8-canvas); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+++/* V8 product shell — map-first, calm canvas, semantic states, keyboard-visible controls.
+++   The --v8-* defaults live on :root, not on the shell, because JourneyTrialSetup is
+++   returned before .v8-product-shell exists (V8Experience.tsx:818) and would otherwise
+++   inherit nothing.  design-tokens.css rebinds these to the Apple palette at :root too,
+++   and wins by load order — the two must move together or the shell reverts. */
+++:root { --v8-ink: #14233b; --v8-muted: #68758a; --v8-canvas: #f6f7fb; --v8-panel: #fff; --v8-line: #e5e8ef; --v8-indigo: #4658d9; --v8-green: #16835b; --v8-amber: #b86d2e; --v8-coral: #d65e56; --v8-violet: #8063d7; }
+++.v8-product-shell { min-height: 100vh; display: flex; color: var(--v8-ink); background: var(--v8-canvas); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
++ .v8-product-shell button { font: inherit; }
++ .v8-sidebar { width: 252px; min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; padding: 24px 16px 18px; background: #fff; border-right: 1px solid var(--v8-line); }
++ .v8-brand { display: flex; align-items: center; gap: 11px; padding: 0 10px 30px; }
++@@ -170,7 +175,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
++ .v8-chain .v8-chain-arrow { margin-left: 11px; color: #8fa7d3; }
++ .v8-message { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 18px 46px -7px; padding: 11px 14px; border: 1px solid #f0d1b5; border-radius: 8px; color: #8e5f32; background: #fffaf4; font-size: 11px; }.v8-message button { width: auto; margin: 0; padding: 0; border: 0; color: inherit; background: transparent; cursor: pointer; font-size: 10px; font-weight: 800; }.v8-loading { display: grid; place-items: center; align-content: center; gap: 8px; min-height: 100vh; color: var(--v8-ink); background: var(--v8-canvas); }.v8-loading p { margin: 10px 0 0; font-weight: 700; }.v8-loading span { color: var(--v8-muted); font-size: 12px; }.v8-mobile-nav, .v8-mobile-menu { display: none; }
++ @media (max-width: 960px) { .v8-sidebar { width: 205px; }.v8-content { padding: 32px 26px 70px; }.v8-topbar { padding: 0 26px; }.v8-message { margin-left: 26px; margin-right: 26px; }.v8-hero-grid, .v8-studio-layout, .v8-stay-layout, .v8-live-grid, .v8-intelligence-grid { grid-template-columns: 1fr; }.v8-map-panel { min-height: 260px; }.v8-stay-detail { grid-row: 1; }.v8-stay-list { grid-row: 2; }.v8-intel-facts { grid-template-columns: repeat(3, 1fr); }.v8-twin-grid { grid-template-columns: repeat(2, 1fr); }.v8-boundary-card { grid-column: 1 / -1; } }
++-@media (max-width: 680px) { .v8-product-shell { display: block; padding-bottom: 63px; }.v8-sidebar { display: none; }.v8-topbar { height: 58px; padding: 0 17px; }.v8-mobile-menu { display: block; width: auto; margin: 0; padding: 0; color: var(--v8-ink); font-size: 0; }.v8-mobile-menu:after { content: "≡"; font-size: 20px; }.v8-breadcrumb span, .v8-runtime, .v8-icon-button { display: none; }.v8-top-actions { gap: 8px; }.v8-content { padding: 27px 17px 34px; }.v8-message { margin: 13px 17px -5px; }.v8-page-intro { display: block; margin-bottom: 24px; }.v8-page-intro .v8-primary, .v8-page-intro .v8-outline-button, .v8-page-intro .v8-rain-button { margin-top: 18px; }.v8-page h1 { font-size: 30px; }.v8-lede { font-size: 13px; }.v8-trip-hero { padding: 22px 19px; }.v8-trip-hero-head { display: block; }.v8-trip-hero-head .v8-quiet-button { margin-top: 15px; }.v8-trip-hero h2 { font-size: 21px; }.v8-trip-metrics { gap: 8px; }.v8-trip-metrics strong { font-size: 15px; }.v8-trip-metrics small { line-height: 1.35; }.v8-anchor-row { gap: 9px; }.v8-anchor-row small { max-width: 110px; }.v8-day-row, .v8-twin-grid, .v8-intel-facts { grid-template-columns: 1fr; }.v8-day-card { min-height: 120px; }.v8-section-heading { margin-top: 30px; }.v8-section-heading h2 { font-size: 19px; }.v8-map-panel { min-height: 245px; }.v8-studio-layout { gap: 13px; }.v8-day-detail { padding: 16px; }.v8-activity-list { margin-left: 0; }.v8-stay-card { gap: 10px; }.v8-hotel-thumb.large { width: 90px; height: 110px; }.v8-stay-card h3 { font-size: 13px; }.v8-stay-impact { flex-wrap: wrap; }.v8-live-main > .v8-map-panel { min-height: 285px; }.v8-live-now { align-items: start; }.v8-live-now > strong { font-size: 14px; }.v8-mode-chooser { display: block; }.v8-mode-chips { justify-content: start; margin-top: 14px; }.v8-intel-hero h2 { font-size: 24px; }.v8-chain { gap: 5px; }.v8-chain span { padding: 6px 7px; font-size: 9px; }.v8-mobile-nav { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; display: grid; grid-template-columns: repeat(5, 1fr); padding: 8px 5px 7px; border-top: 1px solid var(--v8-line); background: #fffffff2; backdrop-filter: blur(12px); }.v8-mobile-nav button { display: grid; justify-items: center; gap: 4px; padding: 3px 0; border: 0; color: #8b95a4; background: transparent; cursor: pointer; font-size: 9px; }.v8-mobile-nav svg { width: 17px; height: 17px; }.v8-mobile-nav button.active { color: var(--v8-indigo); font-weight: 750; } }
+++@media (max-width: 680px) { .v8-product-shell { display: block; padding-bottom: var(--cn-nav-clearance); }.v8-sidebar { display: none; }.v8-topbar { min-height: 58px; padding: var(--cn-safe-top) 17px 0; }.v8-mobile-menu { display: block; width: auto; margin: 0; padding: 0; color: var(--v8-ink); font-size: 0; }.v8-mobile-menu:after { content: "≡"; font-size: 20px; }.v8-breadcrumb span, .v8-runtime, .v8-icon-button { display: none; }.v8-top-actions { gap: 8px; }.v8-content { padding: 27px 17px 34px; }.v8-message { margin: 13px 17px -5px; }.v8-page-intro { display: block; margin-bottom: 24px; }.v8-page-intro .v8-primary, .v8-page-intro .v8-outline-button, .v8-page-intro .v8-rain-button { margin-top: 18px; }.v8-page h1 { font-size: 30px; }.v8-lede { font-size: 13px; }.v8-trip-hero { padding: 22px 19px; }.v8-trip-hero-head { display: block; }.v8-trip-hero-head .v8-quiet-button { margin-top: 15px; }.v8-trip-hero h2 { font-size: 21px; }.v8-trip-metrics { gap: 8px; }.v8-trip-metrics strong { font-size: 15px; }.v8-trip-metrics small { line-height: 1.35; }.v8-anchor-row { gap: 9px; }.v8-anchor-row small { max-width: 110px; }.v8-day-row, .v8-twin-grid, .v8-intel-facts { grid-template-columns: 1fr; }.v8-day-card { min-height: 120px; }.v8-section-heading { margin-top: 30px; }.v8-section-heading h2 { font-size: 19px; }.v8-map-panel { min-height: 245px; }.v8-studio-layout { gap: 13px; }.v8-day-detail { padding: 16px; }.v8-activity-list { margin-left: 0; }.v8-stay-card { gap: 10px; }.v8-hotel-thumb.large { width: 90px; height: 110px; }.v8-stay-card h3 { font-size: 13px; }.v8-stay-impact { flex-wrap: wrap; }.v8-live-main > .v8-map-panel { min-height: 285px; }.v8-live-now { align-items: start; }.v8-live-now > strong { font-size: 14px; }.v8-mode-chooser { display: block; }.v8-mode-chips { justify-content: start; margin-top: 14px; }.v8-intel-hero h2 { font-size: 24px; }.v8-chain { gap: 5px; }.v8-chain span { padding: 6px 7px; font-size: 9px; }.v8-mobile-nav { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; display: grid; grid-template-columns: repeat(5, 1fr); padding: var(--cn-nav-pad-top) 5px calc(var(--cn-nav-pad-bottom) + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--v8-line); background: var(--cn-nav-bg); backdrop-filter: blur(12px); }.v8-mobile-nav button { min-height: var(--cn-nav-item-h); display: grid; justify-items: center; align-content: center; gap: 4px; padding: 3px 0; border: 0; color: var(--cn-ink-secondary); background: transparent; cursor: pointer; font-size: var(--cn-fs-caption); }.v8-mobile-nav svg { width: 19px; height: 19px; }.v8-mobile-nav button.active { color: var(--cn-accent-text); font-weight: 750; } }
++ 
++ /* Keep the quiet travel UI legible at WCAG AA contrast on the live surface. */
++ .v8-product-shell { --v8-muted: #5f6c80; --v8-amber: #8a4f1d; --v8-coral: #a83d36; }
++@@ -257,7 +262,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
++ .v12-offline-now-next article span { color: #51756b; font-size: 10px; font-weight: 750; letter-spacing: .06em; }
++ @media (max-width: 680px) { .v12-offline-now-next { grid-template-columns: 1fr; } }
++ @media (max-width: 680px) { .v9-live-actions { align-items: stretch; flex-direction: column; }.v9-live-actions button { margin-top: 8px !important; }.v9-wallet-layout { grid-template-columns: 1fr; }.v9-offline { margin-top: 20px; padding: 22px; } }
++-@media (max-width: 680px) { .v8-mobile-nav button { min-height: 48px; }.v8-mobile-nav button span { font-size: 10px; }.v8-mode-chips button, .v8-compare-button { min-height: 44px; }.v8-page-intro button { min-height: 44px; } }
+++@media (max-width: 680px) { .v8-mobile-nav button { min-height: var(--cn-nav-item-h); }.v8-mobile-nav button span { font-size: var(--cn-fs-caption); }.v8-mode-chips button, .v8-compare-button { min-height: var(--cn-touch-min); }/* The 44px floor had holes: every one of these is a deliberate tap, and .v8-quiet-button carried no min-height at all, so Today's three secondary actions measured 30px. */.v8-quiet-button, .v8-primary, .v8-outline-button, .v8-rain-button, .v8-page-intro button, .trial-chips button, .trial-sticky-cta button { min-height: var(--cn-touch-min); } }
++ 
++ /* Progressive disclosure, mobile comparison, and accessible focus states. */
++ .v8-product-shell button:focus-visible, .v8-product-shell [role="button"]:focus-visible, .v8-product-shell textarea:focus-visible { outline: 3px solid #9aa8ff; outline-offset: 3px; }
++@@ -589,7 +594,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
++   gap: 10px;
++   justify-content: flex-end;
++   padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
++-  background: linear-gradient(to top, var(--v8-surface, #0b1f24) 70%, transparent);
+++  background: linear-gradient(to top, var(--v8-canvas) 70%, transparent);
++ }
++ .trial-sticky-cta .v8-primary-button {
++   min-width: 140px;
++diff --git a/frontend/src/v10.css b/frontend/src/v10.css
++index 50731b2..31f7aac 100644
++--- a/frontend/src/v10.css
+++++ b/frontend/src/v10.css
++@@ -1,19 +1,20 @@
++-/* V10 execution rail: quiet hierarchy, one primary metric, progressive evidence. */
++-.v10-execution-panel { width: min(1180px, calc(100% - 34px)); margin: 0 auto 18px; padding: 20px; border: 1px solid #d9e2df; border-radius: 14px; background: #fbfdfb; box-shadow: 0 10px 30px #173f3a0b; }
++-.v10-execution-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }.v10-execution-heading h3 { margin: 5px 0 0; color: #12383b; font-size: 20px; letter-spacing: -.03em; }.v10-truth-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; border-radius: 99px; color: #17624b; background: #e8f7ef; font-size: 10px; font-weight: 800; }
++-.v10-execution-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }.v10-metric { display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; padding: 13px; border: 1px solid #e4ece8; border-radius: 10px; color: #758584; background: #fff; }.v10-metric svg { grid-row: span 3; margin-top: 2px; color: #26806d; }.v10-metric span { font-size: 9px; font-weight: 800; letter-spacing: .09em; }.v10-metric strong { color: #173f42; font-size: 16px; }.v10-metric small { font-size: 10px; }
++-.v10-evidence-drawer { margin-top: 12px; border-top: 1px solid #e4ece8; }.v10-evidence-drawer summary { display: flex; justify-content: space-between; padding: 13px 2px 1px; color: #34605b; font-size: 11px; font-weight: 750; cursor: pointer; list-style: none; }.v10-evidence-drawer summary::-webkit-details-marker { display: none; }.v10-evidence-drawer summary span { color: #8a9b98; font-weight: 500; }.v10-evidence-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 2px; border-top: 1px solid #edf2ef; color: #214b4d; text-decoration: none; }.v10-evidence-row span { display: grid; gap: 3px; }.v10-evidence-row small, .v10-muted { color: #879693; font-size: 10px; }.v10-muted { padding-bottom: 2px; line-height: 1.45; }
+++/* V10 execution rail: quiet hierarchy, one primary metric, progressive evidence.
+++   This surface carried its own hardcoded green palette (#17624b / #fbfdfb / #12383b)
+++   that existed only in the light theme, so on the dark canvas it painted a mint
+++   island and a white slab.  It now reads the shared tokens; green survives only
+++   where it means something (a truth/protected marker), not as decoration. */
+++.v10-execution-panel { width: min(1180px, calc(100% - 34px)); margin: 0 auto 18px; padding: var(--cn-s-20); border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-card); background: var(--v8-panel); box-shadow: var(--cn-shadow-card); }
+++.v10-execution-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }.v10-execution-heading h3 { margin: 5px 0 0; color: var(--v8-ink); font-size: var(--cn-fs-title); letter-spacing: -.03em; }.v10-truth-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 9px; border-radius: var(--cn-r-pill); color: var(--cn-success-text); background: var(--cn-secondary); font-size: var(--cn-fs-caption); font-weight: 800; }
+++.v10-execution-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: var(--cn-s-20); }.v10-metric { display: grid; grid-template-columns: auto 1fr; gap: 3px 8px; padding: 13px; border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-control); color: var(--v8-muted); background: var(--v8-panel); }.v10-metric svg { grid-row: span 3; margin-top: 2px; color: var(--v8-green); }.v10-metric span { font-size: var(--cn-fs-caption); font-weight: 800; letter-spacing: .09em; }.v10-metric strong { color: var(--v8-ink); font-size: var(--cn-fs-card); }.v10-metric small { font-size: var(--cn-fs-caption); }
+++.v10-evidence-drawer { margin-top: 12px; border-top: 1px solid var(--cn-hairline); }.v10-evidence-drawer summary { display: flex; justify-content: space-between; padding: 13px 2px 1px; color: var(--v8-ink); font-size: var(--cn-fs-body); font-weight: 750; cursor: pointer; list-style: none; }.v10-evidence-drawer summary::-webkit-details-marker { display: none; }.v10-evidence-drawer summary span { color: var(--v8-muted); font-weight: 500; }.v10-evidence-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 2px; border-top: 1px solid var(--cn-hairline); color: var(--v8-ink); text-decoration: none; }.v10-evidence-row span { display: grid; gap: 3px; }.v10-evidence-row small, .v10-muted { color: var(--v8-muted); font-size: var(--cn-fs-caption); }.v10-muted { padding-bottom: 2px; line-height: 1.45; }
++ @media (max-width: 680px) { .v10-execution-panel { width: auto; margin: 0 17px 18px; padding: 16px; }.v10-execution-heading { display: grid; gap: 10px; }.v10-execution-grid { grid-template-columns: 1fr; }.v10-metric { min-height: 52px; } }
++-.v10-inbox-scanner { display: grid; gap: 8px; padding: 14px; border: 1px solid #e2ebe7; border-radius: 10px; background: #fbfdfb; }.v10-inbox-scanner > div { display: grid; gap: 3px; }.v10-inbox-scanner small { color: #82918d; font-size: 10px; }.v10-inbox-scanner button { width: fit-content; padding: 8px 11px; border: 1px solid #cfe0d9; border-radius: 7px; color: #17624b; background: #fff; cursor: pointer; font-size: 11px; font-weight: 750; }.v10-scanner-video { width: 100%; max-height: 220px; border-radius: 8px; background: #0d282b; }.v10-inbox-scanner code { overflow-wrap: anywhere; padding: 8px; border-radius: 6px; color: #35615b; background: #eef8f3; font-size: 10px; }
++-.v10-metric { color: #5b756b; }
++-.v10-metric span, .v10-metric small { color: #5b756b; }
++-.v10-evidence-drawer summary span { color: #567064; }
++-.v10-inbox-workbench { display: grid; gap: 16px; padding: 20px; border: 1px solid #d9e2df; border-radius: 14px; background: #fbfdfb; box-shadow: 0 10px 30px #173f3a0b; }
++-.v10-inbox-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }.v10-inbox-heading h2 { margin: 5px 0 0; color: #12383b; font-size: 20px; letter-spacing: -.03em; }
++-.v10-inbox-inputs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }.v10-inbox-inputs label { display: grid; gap: 7px; color: #365f5a; font-size: 11px; font-weight: 750; }.v10-inbox-inputs textarea { min-height: 96px; resize: vertical; }.v10-inbox-inputs textarea, .v10-inbox-inputs input { padding: 10px; border: 1px solid #d7e4df; border-radius: 8px; color: #173f42; background: #fff; font: inherit; }.v10-inbox-inputs input { padding: 9px; }.v10-inbox-inputs small { color: #567064; font-size: 10px; overflow-wrap: anywhere; }.v10-inbox-inputs button, .v10-inbox-draft button { width: fit-content; padding: 9px 12px; border: 0; border-radius: 8px; color: #fff; background: #17624b; cursor: pointer; font-size: 11px; font-weight: 800; }.v10-inbox-inputs button:disabled, .v10-inbox-draft button:disabled { opacity: .45; cursor: not-allowed; }
++-.v10-inbox-message { margin: 0; padding: 10px 12px; border-radius: 8px; color: #365f5a; background: #eef8f3; font-size: 11px; }.v10-inbox-draft { display: grid; gap: 12px; padding-top: 14px; border-top: 1px solid #e4ece8; }.v10-inbox-draft > div:first-child { display: grid; gap: 3px; }.v10-inbox-draft small { color: #567064; font-size: 10px; }.v10-inbox-draft dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin: 0; }.v10-inbox-draft dl div { padding: 9px; border: 1px solid #e4ece8; border-radius: 8px; background: #fff; }.v10-inbox-draft dt { color: #567064; font-size: 9px; text-transform: uppercase; }.v10-inbox-draft dd { margin: 4px 0 0; color: #173f42; font-size: 11px; overflow-wrap: anywhere; }.v10-inbox-warning, .v10-inbox-clear { margin: 0; color: #8a5d22; font-size: 11px; }.v10-inbox-clear { color: #17624b; }
++-@media (max-width: 680px) { .v10-inbox-workbench { padding: 16px; }.v10-inbox-heading { display: grid; gap: 10px; }.v10-inbox-inputs, .v10-inbox-draft dl { grid-template-columns: 1fr; } }
++-.v8-secondary { width: fit-content; padding: 9px 12px; border: 1px solid #b9d7cb; border-radius: 8px; color: #17624b; background: #fff; cursor: pointer; font-size: 11px; font-weight: 800; }
+++.v10-inbox-scanner { display: grid; gap: var(--cn-s-8); padding: var(--cn-s-16); border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-control); background: var(--v8-panel); }.v10-inbox-scanner > div { display: grid; gap: 3px; }.v10-inbox-scanner small { color: var(--v8-muted); font-size: var(--cn-fs-caption); }.v10-inbox-scanner button { width: fit-content; min-height: var(--cn-touch-min); padding: 8px 11px; border: 1px solid var(--cn-control-border); border-radius: var(--cn-r-button); color: var(--v8-accent); background: var(--v8-panel); cursor: pointer; font-size: var(--cn-fs-body); font-weight: 750; }.v10-scanner-video { width: 100%; max-height: 220px; border-radius: var(--cn-r-control); background: #0d282b; }.v10-inbox-scanner code { overflow-wrap: anywhere; padding: 8px; border-radius: var(--cn-r-control); color: var(--v8-ink); background: var(--cn-secondary); font-size: var(--cn-fs-caption); }
+++.v10-inbox-workbench { display: grid; gap: var(--cn-s-16); padding: var(--cn-s-20); border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-card); background: var(--v8-panel); box-shadow: var(--cn-shadow-card); }
+++.v10-inbox-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; }.v10-inbox-heading h2 { margin: 5px 0 0; color: var(--v8-ink); font-size: var(--cn-fs-title); letter-spacing: -.03em; }
+++.v10-inbox-inputs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }.v10-inbox-inputs label { display: grid; gap: 7px; min-width: 0; color: var(--v8-ink); font-size: var(--cn-fs-body); font-weight: 750; }.v10-inbox-inputs textarea { min-height: 96px; resize: vertical; }.v10-inbox-inputs textarea, .v10-inbox-inputs input { min-width: 0; padding: var(--cn-s-12); border: 1px solid var(--cn-control-border); border-radius: var(--cn-r-control); color: var(--v8-ink); background: var(--v8-panel); font: inherit; }.v10-inbox-inputs input { min-height: var(--cn-touch-min); padding: 9px; }.v10-inbox-inputs small { color: var(--v8-muted); font-size: var(--cn-fs-caption); overflow-wrap: anywhere; }.v10-inbox-inputs button, .v10-inbox-draft button { width: fit-content; min-height: var(--cn-touch-min); padding: 9px var(--cn-s-16); border: 0; border-radius: var(--cn-r-button); color: #fff; background: var(--v8-accent); cursor: pointer; font-size: var(--cn-fs-body); font-weight: 800; }.v10-inbox-inputs button:disabled, .v10-inbox-draft button:disabled { opacity: .45; cursor: not-allowed; }
+++.v10-inbox-message { margin: 0; padding: var(--cn-s-12); border-radius: var(--cn-r-control); color: var(--v8-ink); background: var(--cn-secondary); font-size: var(--cn-fs-body); }.v10-inbox-draft { display: grid; gap: 12px; padding-top: 14px; border-top: 1px solid var(--cn-hairline); }.v10-inbox-draft > div:first-child { display: grid; gap: 3px; }.v10-inbox-draft small { color: var(--v8-muted); font-size: var(--cn-fs-caption); }.v10-inbox-draft dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--cn-s-8); margin: 0; }.v10-inbox-draft dl div { padding: 9px; border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-control); background: var(--v8-panel); }.v10-inbox-draft dt { color: var(--v8-muted); font-size: var(--cn-fs-caption); text-transform: uppercase; }.v10-inbox-draft dd { margin: 4px 0 0; color: var(--v8-ink); font-size: var(--cn-fs-body); overflow-wrap: anywhere; }.v10-inbox-warning { margin: 0; color: var(--cn-warning); font-size: var(--cn-fs-body); }.v10-inbox-clear { margin: 0; color: var(--cn-success-text); font-size: var(--cn-fs-body); }
+++@media (max-width: 680px) { .v10-inbox-workbench { padding: var(--cn-s-16); }.v10-inbox-heading { display: grid; gap: 10px; }.v10-inbox-inputs, .v10-inbox-draft dl { grid-template-columns: 1fr; } }
+++.v8-secondary { width: fit-content; min-height: var(--cn-touch-min); padding: 9px var(--cn-s-16); border: 1px solid var(--cn-control-border); border-radius: var(--cn-r-button); color: var(--v8-accent); background: var(--v8-panel); cursor: pointer; font-size: var(--cn-fs-body); font-weight: 800; }
++ 
++ /* V14 trial-readiness: first-run city setup and prominent locale control. */
++ .v8-trial-setup { min-height: 100vh; padding: 24px; background: var(--v8-bg, #f4f6f2); }
+-- 
+2.45.1.windows.1
+
