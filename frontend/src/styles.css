@@ -756,12 +756,18 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   display: grid;
   gap: 6px;
   font-size: var(--cn-fs-body);
-  color: var(--v8-muted);
+  /* Was --v8-muted, which styles.css overrides theme-blind: pending rows were small
+     grey text nobody could read.  The ○/●/✓ marker and the weight carry the state now,
+     so the words do not have to. */
+  color: var(--v8-ink);
 }
 .plan-ai-steps li {
   display: flex;
   align-items: center;
   gap: var(--cn-s-8);
+}
+.plan-ai-steps li.active {
+  font-weight: 600;
 }
 .plan-ai-steps li.active,
 .plan-ai-steps li.done {
@@ -770,6 +776,67 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .plan-ai-dot {
   width: 16px;
   text-align: center;
+}
+/* ORD-0038 — the sheet says only what it can prove: the phase it is genuinely in,
+   the seconds that really elapsed, and the fact that the backend sends nothing between
+   "sent" and "answered". */
+.plan-ai-preflight {
+  margin: 0;
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border: 1px solid var(--cn-hairline);
+  border-left: 3px solid var(--cn-ink-tertiary);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+.plan-ai-preflight.ready { border-left-color: var(--cn-success); }
+.plan-ai-preflight.unconfigured { border-left-color: var(--cn-warning); }
+.plan-ai-live {
+  display: grid;
+  gap: var(--cn-s-8);
+  padding: var(--cn-s-12);
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+}
+.plan-ai-live-line {
+  display: flex;
+  align-items: center;
+  gap: var(--cn-s-8);
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  font-weight: 600;
+}
+.plan-ai-live-note {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+.plan-ai-pulse {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cn-accent);
+}
+@keyframes plan-ai-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+/* A waiting indicator may move, but never to a traveller who asked us not to. */
+@media (prefers-reduced-motion: no-preference) {
+  .plan-ai-pulse {
+    animation: plan-ai-pulse 1.6s ease-in-out infinite;
+  }
 }
 .plan-ai-result {
   border-radius: var(--cn-r-control);
@@ -786,6 +853,8 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .plan-ai-result.ok { border-left: 3px solid var(--cn-success); }
 .plan-ai-result.warn { border-left: 3px solid var(--cn-warning); }
 .plan-ai-result.busy { border-left: 3px solid var(--cn-accent); }
+/* A cancellation is neither success nor failure, so it must not borrow either tone. */
+.plan-ai-result.neutral { border-left: 3px solid var(--cn-ink-tertiary); }
 .plan-ai-result p {
   margin: 4px 0 0;
 }
@@ -808,6 +877,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 /* Amendment F-2: the >=44px contract belongs to the touch layer; desktop keeps 30px. */
 @media (max-width: 680px) {
   .plan-ai-close,
+  .plan-ai-cancel,
   .plan-ai-examples button,
   .plan-ai-field textarea,
   .plan-ai-actions button { min-height: var(--cn-touch-min); }
