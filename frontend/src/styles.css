@@ -613,6 +613,14 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   opacity: 0.45;
   cursor: not-allowed;
 }
+/* ORD-0066 (甲): the wizard's blocked "Next" is aria-disabled so a keyboard and screen-reader
+   traveller can reach it and hear why it will not advance.  It must still *look* like a control
+   that cannot advance -- same wash as :disabled, plus the focus ring the browser now gives it. */
+.v8-primary-button[aria-disabled="true"],
+.v8-outline-button[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
 .v8-outline-button:disabled {
   opacity: 0.45;
   cursor: not-allowed;

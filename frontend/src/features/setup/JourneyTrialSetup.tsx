@@ -134,6 +134,24 @@ export function inferCityFacts(cityName: string) {
 }
 
 /**
+ * ORD-0072: an unrecognised destination has no country / currency / timezone of its own, so
+ * it must not keep the ones belonging to whichever city the traveller typed before it.
+ * Applied both when a draft is restored and on every city keystroke.
+ */
+export function withNeutralBasis(
+  draft: JourneyTrialDraft,
+  basis: { countryCode: string; currency: string; timezone: string },
+): JourneyTrialDraft {
+  if (!draft.cityName?.trim() || inferCityFacts(draft.cityName)) return draft;
+  return {
+    ...draft,
+    countryCode: basis.countryCode,
+    currency: basis.currency,
+    timezone: basis.timezone,
+  };
+}
+
+/**
  * The cities this table recognises. Names only, deliberately no total: the authoritative
  * count of supported destinations is not this table's to publish, and a headcount computed
  * here would be a claim (ORD-0060 #3).
@@ -292,18 +310,26 @@ export function JourneyTrialSetup({
     () => Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Shanghai",
     [],
   );
+  /* ORD-0072: the neutral basis a trip starts on when this screen has not recognised a
+     destination.  Named once because three places have to agree on it -- the fresh draft,
+     the reset below when a city stops being recognised, and the sentence the traveller
+     reads.  "按中立口径规划" is only honest while the default is a single stated value. */
+  const defaultBasis = useMemo(
+    () => ({ countryCode: "CN", currency: "CNY", timezone: browserTimezone }),
+    [browserTimezone],
+  );
   const defaultDraft = useMemo<JourneyTrialDraft>(
     () => ({
       cityName: "",
-      countryCode: "CN",
-      timezone: browserTimezone,
+      countryCode: defaultBasis.countryCode,
+      timezone: defaultBasis.timezone,
       startAt: futureLocalAt(1, 10),
       endAt: futureLocalAt(3, 20),
       arrivalLocation: "",
       departureLocation: "",
       budgetMajor: 3000,
       stayBudgetMajor: 1000,
-      currency: "CNY",
+      currency: defaultBasis.currency,
       partySize: 2,
       rooms: 1,
       pace: "relaxed",
@@ -322,6 +348,23 @@ export function JourneyTrialSetup({
      wizard (V8Experience.tsx:577 setSetupOpen(false)), so still being mounted once the
      await settles is the deterministic signal that the step did not complete. */
   const [createAttemptFailed, setCreateAttemptFailed] = useState(false);
+  /* ORD-0066 (甲): a tap on a button that cannot advance has to answer out loud.  A live
+     region only announces a *change*, so the region is cleared before the same sentence is
+     written back -- otherwise the second blocked tap, the one where the traveller is sure they
+     pressed it, would be silent. */
+  const [spokenReason, setSpokenReason] = useState("");
+  const speakTimer = useRef<number | null>(null);
+  useEffect(
+    () => () => {
+      if (speakTimer.current !== null) window.clearTimeout(speakTimer.current);
+    },
+    [],
+  );
+  const speak = (text: string) => {
+    if (speakTimer.current !== null) window.clearTimeout(speakTimer.current);
+    setSpokenReason("");
+    speakTimer.current = window.setTimeout(() => setSpokenReason(text), 60);
+  };
   const mounted = useRef(true);
   useEffect(() => {
     mounted.current = true;
@@ -329,7 +372,12 @@ export function JourneyTrialSetup({
       mounted.current = false;
     };
   }, []);
-  const [draft, setDraft] = useState<JourneyTrialDraft>(restored.draft as JourneyTrialDraft);
+  const [draft, setDraft] = useState<JourneyTrialDraft>(() =>
+    /* A draft stored by the previous build can name a city the table does not know while
+       still carrying the triple of the last city it did know.  Coerce on the way in, so the
+       step-1 sentence is true on the first render rather than only after the next keystroke. */
+    withNeutralBasis(restored.draft as JourneyTrialDraft, defaultBasis),
+  );
   const [roomsTouched, setRoomsTouched] = useState(false);
 
   useEffect(() => {
@@ -345,13 +393,22 @@ export function JourneyTrialSetup({
   // the technical fields behind "Advanced settings".
   const applyCity = (cityName: string) => {
     const facts = inferCityFacts(cityName);
-    setDraft((current) => ({
-      ...current,
-      cityName,
-      ...(facts
-        ? { countryCode: facts.country, timezone: facts.timezone, currency: facts.currency }
-        : {}),
-    }));
+    setDraft((current) =>
+      /* The failure branch used to be `{}` -- "leave the hidden fields alone" -- so after a
+         Tokyo attempt the trip still planned in JPY and Asia/Tokyo while the screen called
+         that the fallback.  An unrecognised city falls back to the neutral basis, never to
+         the previous city's. */
+      withNeutralBasis(
+        {
+          ...current,
+          cityName,
+          ...(facts
+            ? { countryCode: facts.country, timezone: facts.timezone, currency: facts.currency }
+            : {}),
+        },
+        defaultBasis,
+      ),
+    );
   };
 
   const facts = inferCityFacts(draft.cityName);
@@ -360,6 +417,16 @@ export function JourneyTrialSetup({
      recognised it; until then the label says what it knows. */
   const identifiedCity = facts ? draft.cityName.trim() : "";
   const unrecognizedCity = draft.cityName.trim().length > 0 && !facts;
+  /* ORD-0072 #2: one pass, one basis.  Every screen that names the planning basis reads this
+     object -- the step-1 caution, the step-3 confirmation, the auto-set line -- and it is the
+     same triple `submit()` hands the shell, so three places cannot tell three stories. */
+  const basisWords = {
+    country: draft.countryCode,
+    currencyCode: draft.currency,
+    currency: currencyLabel(draft.currency, locale),
+    timezone: draft.timezone,
+    zone: timezoneLabel(draft.timezone, locale),
+  };
   /* The API requires a non-empty anchor location at both ends
      (`arrival_anchor.location` has minLength 1).  Until now the field looked optional -- a
      placeholder, and a bare "—" on the review page -- so a legal-looking 4-day trip died on
@@ -370,8 +437,21 @@ export function JourneyTrialSetup({
     draft.arrivalLocation.trim() ? null : zh ? "抵达地点" : "where you arrive",
     draft.departureLocation.trim() ? null : zh ? "离开地点" : "where you leave",
   ].filter(Boolean) as string[];
-  const step1Ready = missingStep1.length === 0;
-  const step2Ready = draft.partySize >= 1 && draft.budgetMajor > 0;
+  /* ORD-0066: step 2 can block too, and a blocked primary button that names the anchors on
+     step 1 then falls silent one step later is the same defect moved down the wizard. */
+  const missingStep2 = [
+    draft.partySize >= 1 ? null : zh ? "旅行人数" : "the number of travellers",
+    draft.budgetMajor > 0 ? null : zh ? "总预算" : "the total budget",
+  ].filter(Boolean) as string[];
+  const missingNow = step === 1 ? missingStep1 : step === 2 ? missingStep2 : [];
+  const blockedNow = missingNow.length > 0;
+  /* One sentence, read by the visible hint and by the announcement a blocked tap makes, so
+     what a sighted traveller sees and what a screen reader says cannot diverge. */
+  const missingLine = missingNow.length
+    ? zh
+      ? `还需要填写：${missingNow.join("、")}`
+      : `Still needed: ${missingNow.join(", ")}`
+    : "";
   /* The backend's own words, routed to the field it named. */
   const arrivalProblem = fieldProblem(message, /arrival_anchor/);
   const departureProblem = fieldProblem(message, /departure_anchor/);
@@ -448,16 +528,14 @@ export function JourneyTrialSetup({
           {facts ? (
             <p className="trial-inferred" data-testid="trial-inferred">
               {zh ? "已自动设置：" : "Auto-set: "}
-              {zh ? facts.labelZh : facts.labelEn} ·{" "}
-              {currencyLabel(draft.currency, locale)} ·{" "}
-              {timezoneLabel(draft.timezone, locale)}
+              {zh ? facts.labelZh : facts.labelEn} · {basisWords.currency} · {basisWords.zone}
             </p>
           ) : null}
           {unrecognizedCity && (
-            /* ORD-0060 #2: `inferCityFacts` returns nothing here, and `applyCity` then leaves
-               the hidden country / currency / timezone fields holding whatever the *previous*
-               city set. A disabled "Next" with no reason would only move the silence, so the
-               assumption is stated, named, and left correctable. */
+            /* ORD-0060 #2 + ORD-0072: `inferCityFacts` returns nothing here, and the old
+               `applyCity` left the hidden triple holding the *previous* city's values -- so this
+               sentence read "still planning with JP / JPY / Asia/Tokyo" about a city it had just
+               admitted it did not know.  The basis quoted below is the one `submit()` carries. */
             <p
               className="trial-city-warning"
               data-testid="trial-city-warning"
@@ -465,8 +543,8 @@ export function JourneyTrialSetup({
               role="status"
             >
               {zh
-                ? `没认出「${draft.cityName.trim()}」：仍按 ${draft.countryCode} / ${currencyLabel(draft.currency, locale)}（${draft.currency}）/ ${draft.timezone} 规划。换个写法，或在"看支持的目的地"里挑一个。`
-                : `"${draft.cityName.trim()}" is not recognised: the trip will still be planned with ${draft.countryCode} / ${currencyLabel(draft.currency, locale)} (${draft.currency}) / ${draft.timezone}. Try another spelling, or pick one from "See supported destinations".`}
+                ? `没认出「${draft.cityName.trim()}」：已退回中立口径 ${basisWords.country} / ${basisWords.currency}（${basisWords.currencyCode}）/ ${basisWords.timezone} 规划，不沿用上一次识别到的城市。换个写法，或在"看支持的目的地"里挑一个。`
+                : `"${draft.cityName.trim()}" is not recognised: planning falls back to the neutral basis ${basisWords.country} / ${basisWords.currency} (${basisWords.currencyCode}) / ${basisWords.timezone}, and does not keep the city you last recognised. Try another spelling, or pick one from "See supported destinations".`}
             </p>
           )}
           <details className="trial-supported" data-testid="trial-supported-cities">
@@ -731,8 +809,8 @@ export function JourneyTrialSetup({
               {unrecognizedCity && (
                 <dd className="trial-city-warning" data-testid="review-city-warning">
                   {zh
-                    ? `未识别 · 按 ${draft.countryCode} / ${currencyLabel(draft.currency, locale)} / ${draft.timezone} 规划`
-                    : `not recognised · planned with ${draft.countryCode} / ${currencyLabel(draft.currency, locale)} / ${draft.timezone}`}
+                    ? `未识别 · 按中立口径 ${basisWords.country} / ${basisWords.currency}（${basisWords.currencyCode}）/ ${basisWords.timezone} 规划，不沿用上一次识别到的城市`
+                    : `not recognised · planned on the neutral basis ${basisWords.country} / ${basisWords.currency} (${basisWords.currencyCode}) / ${basisWords.timezone}, not the last recognised city`}
                 </dd>
               )}
             </div>
@@ -825,15 +903,25 @@ export function JourneyTrialSetup({
           <span>{message}</span>
         </div>
       )}
-      {step === 1 && !step1Ready && (
+      {blockedNow && (
         /* A greyed-out "Next" with no reason is the same silence as a create that dies
-           quietly, so name what is missing. */
+           quietly, so name what is missing.  Stable id: the blocked button describes itself
+           with this element, so the relation cannot dangle between keystrokes. */
         <p className="trial-required-hint" id="trial-required-hint" data-testid="trial-required-hint" role="status">
-          {zh
-            ? `还需要填写：${missingStep1.join("、")}`
-            : `Still needed: ${missingStep1.join(", ")}`}
+          {missingLine}
         </p>
       )}
+      {/* Polite, and empty until a tap is refused: the visible hint above already carries the
+          words for sighted travellers, so this region exists for the announcement alone. */}
+      <p
+        className="v8-sr-only"
+        id="trial-next-reason"
+        data-testid="trial-next-reason"
+        role="status"
+        aria-live="polite"
+      >
+        {spokenReason}
+      </p>
       {busy && phaseLabel && (
         /* ORD-0047: this wait measured 114.98s on a cold city through the production
            preview with nothing on screen, so a traveller tapping 确认创建 once could not tell
@@ -892,8 +980,20 @@ export function JourneyTrialSetup({
             type="button"
             className="v8-primary-button"
             data-testid="trial-next"
-            disabled={(step === 1 && !step1Ready) || (step === 2 && !step2Ready)}
-            onClick={() => setStep((current) => (current === 1 ? 2 : 3))}
+            /* ORD-0066 (甲): `disabled` kept this control out of the tab sequence, so a screen
+               reader user never reached the button -- and never heard the reason parked beside
+               it.  Measured on the rebuilt production bundle: focus could not land even with
+               `aria-describedby` injected.  aria-disabled carries the same "not yet" semantics
+               while staying focusable; the click below still refuses to advance and says why. */
+            aria-disabled={blockedNow ? "true" : undefined}
+            aria-describedby={blockedNow ? "trial-required-hint" : undefined}
+            onClick={() => {
+              if (blockedNow) {
+                speak(missingLine);
+                return;
+              }
+              setStep((current) => (current === 1 ? 2 : 3));
+            }}
           >
             {zh ? "下一步" : "Next"}
           </button>
