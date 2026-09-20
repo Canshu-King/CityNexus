@@ -22,15 +22,20 @@ sha1 = lambda p: hashlib.sha1(open(p, "rb").read()).hexdigest()
 
 
 def git_show(rev: str) -> bytes:
+    # The revspec is quoted: this runs through cmd.exe, where a bare `^` is the escape
+    # character, so `7022630^:path` silently degrades to `7022630:path`.
     proc = subprocess.run(
-        f"git show {rev}:{REL}", cwd=ROOT, capture_output=True, shell=True,
+        f'git show "{rev}:{REL}"', cwd=ROOT, capture_output=True, shell=True,
     )
     if proc.returncode != 0:
         raise SystemExit(f"cannot read {REL}@{rev}: {proc.stderr[:200]!r}")
     return proc.stdout
 
 
-ORIGINAL = git_show("HEAD")
+# The pre-fix worker is not at HEAD any more -- HEAD carries the fix -- so read it from the
+# commit before it.  Comparing against HEAD would produce an identical payload and a
+# silently skipped case.
+ORIGINAL = git_show("7022630^")
 PRISTINE_BYTES = open(SRC, "rb").read()
 with open(PRISTINE, "wb") as fh:
     fh.write(PRISTINE_BYTES)
