@@ -2192,6 +2192,23 @@ exit=0   stdout=0 B   stderr=0 B   backend/_ord25-envtest.db 不存在
 正是要求 (2) 点名的形状）→ **3 failed / 2 passed**；其中"完整环境被接受"那条**仍然绿**，
 所以红的是"沉默"本身而不是文件加载失败。一次性、唯一 anchor、字节还原 `577561705393609c…` 与 HEAD 相同。
 
+**这条门的分母要写清**（"collected 4" 与 "3+2=5" 看着像矛盾，Commander 08:3x 就抓了这一点）：
+本文件自己声明 **4** 条，但 `playwright.config.ts` 的 `chromium` 项目写着 `dependencies: ["real-seed"]`，
+所以**只选这一个文件也会带上 `_qoderRealSeed.setup.ts:110` 那 1 条**，任何一次跑的 summary 都是 5。
+"collected 4" 说的是声明数，"3 failed / 2 passed" 说的是运行数，两者不冲突——但我不该让读者自己做这个加法。
+三个可复现读数（日志都在 `D:\moodle\_qoder_ord30_evidence_20260920\`）：
+
+```
+node node_modules/@playwright/test/cli.js test e2e/qoder-e2e-config-guard.spec.ts --list
+  → Total: 5 tests in 2 files          （chromium 4 + real-seed 1；exit 0；ord25-guard-list.txt）
+干净态  run ord25-guard3  :3469→:8469  _ord25-guard3.db
+  → Running 5 tests … 5 passed (12.4s)                                          exit 0
+M-G2    run ord25-mg2     :3461→:8461  _ord25-mg2.db
+  → Running 5 tests … 3 failed / 2 passed (12.4s)                               exit 1
+     ok 1 [real-seed] seed a real journey | x 2 :85 缺变量点名 | x 3 :121 系统 Python
+     x 4 :132 活键必须拒 | ok 5 :149 完整环境被接受（这条在突变下仍绿 = 红的是沉默）
+```
+
 顺带记一条我自己写门时踩的：第一版用 `__dirname`，收集期就
 `ReferenceError: __dirname is not defined in ES module scope`（这套 spec 是 ESM 加载），
 整跑 exit 1；改成 `fileURLToPath(import.meta.url)`。这类错的形状是"门没测任何东西却像被测过"，
