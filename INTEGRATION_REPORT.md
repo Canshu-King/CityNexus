@@ -2534,3 +2534,55 @@ attempt 3 的真相是"三个镜像全灭 + 兜底源连不上"，但响应里�
 可做的下一步（谁接由你派，不属本单）：给这 5 条各自的等待改成事件驱动（等真实 settle 而不是定时），
 或者把"整套必须在 N 分钟内过"换成"每文件单独过 + 全套允许一次重跑并逐条点名红因"。
 我不在这轮动它们——那 5 条的门各有 owner。
+
+
+## 92. ORD-0056：向导修复合进权威树，并用**生产构建读屏**收口（不是读代码）
+
+合入 `agent/ui-overnight-20260920` 到 `ca65483`（合的是订单点名的四笔及其祖先 `baf8c69`；
+再往后的 `74a38bf…012ff56` 属 ORD-0047/A4，不在这次范围内，故**没有**顺手多合）。
+`git merge --no-ff --no-commit ca65483` → **1 个冲突文件**（`V8Experience.tsx`），
+8 文件 / +910 / −55，`backend/` 零路径。合并提交 **`38278de`**。
+
+冲突本身是个值得记的巧合：**两条车道各自独立加了同一行** `message={message}`
+（我这边是 ORD-0034 的收尾，他们那边是 ORD-0044 的字段级 422）。解法是留一行 prop +
+把"两条线各写过一次"这件事写进注释，免得下次有人以为是复制。
+
+### 92.1 收口证据 = 在 `vite preview` 上读屏幕文字
+
+`npm run build` 产出的 `dist/` 用 `vite preview`（proxy 早已配好）+ 自己的后端与一次性库
+（run id `ord56-prod2`、:4193→:8493、`_ord56-prod2.db`、ai=disabled），脚本
+`review/probe-ord0056-prod-read.mjs`，输出 `…_qoder_ord30_evidence_20260920/ord56/prod-read.json`。
+下面每条都是**屏幕 innerText**：
+
+1. **留空时"下一步"不可点，且说得出缺什么**（合并前 `nextStillEnabled = true`）：
+   ```
+   step1 · 抵达/离开留空      → trial-next: button disabled=true
+   屏幕：「还需要填写：目的地、抵达地点、离开地点」
+   只填城市之后               → 仍然 disabled=true
+   屏幕：「还需要填写：抵达地点、离开地点」
+   五项填齐                   → trial-next: button disabled=false
+   ```
+2. **审核页不再拿裸破折号冒充时间**（合并前是「— · 2026-10-09 18:00」）：
+   ```
+   抵达  厦门站 · 2026-10-09 08:00
+   离开  高崎机场 · 2026-10-11 18:00
+   人数 / 房间  2 · 1      总预算 / 住宿  CNY 3000 / 1000      自动设置  CN · CNY · Asia/Shanghai
+   ```
+   同一屏仍有两个「—」，但那是**兴趣 / 特殊要求**——用户确实没填，属于诚实的"未提供"，不是把已知值印成破折号。
+3. **字段级 422 落到屏幕上**（合并前只有整句 `Request validation failed`）：
+   注入 `details.errors[0] = {loc:["body","end_at"], msg:"Input should be a valid date"}` 后读到
+   ```
+   「这一步没有成功，行程还没有创建。 Request validation failed — body.end_at: Input should be a valid date」
+   ```
+
+### 92.2 同口径门禁（合并树 `38278de`）
+
+| 门 | 读数 |
+| --- | --- |
+| 全量后端（`.venv`，AI 三变量清空） | **928 passed / 15 skipped / 0 failed（70.80s）**，collected **943** ⇒ 与合并前逐数相同（合并面零 `backend/` 路径） |
+| 前端 `--list` | **`Total: 92 tests in 35 files`**（chromium 91 + setup 工程 real-seed 1）；87→92 = `qoder-onboarding-failure` +4、`qoder-trial-state` +3、`qoder-ui-overnight-shots` +1，其余不变 |
+| 全套权威 E2E **两次连跑** | run `ord56-e2ea`（:3485→:8485）**86 expected / 6 skipped / 0 unexpected / 0 flaky（268.5s）**；run `ord56-e2eb`（:3487→:8487）**86 / 6 / 0 / 0（281.1s）**；两次起点时机器上分别有 **65 / 68** 个 chrome·node·python 进程 ⇒ 这两次是并发负载下拿到的，不是空机器上的漂亮数 |
+| `npm run build` / `typecheck` / `typecheck:all` | 全部 **exit 0**，`error TS` 0 条 |
+
+顺带一提：上面第 3 条读到的那句里，英文 `Request validation failed — body.end_at: …` 出现在**中文界面**上，
+正是 **ORD-0055** 要的靶子——那次读屏同时是它的"改之前"证据。
