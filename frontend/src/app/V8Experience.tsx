@@ -131,6 +131,33 @@ const money = formatMinorMoney;
 /** Waiting, found, empty and refused are four different faces and must not share one. */
 type StaySearchState = "idle" | "searching" | "found" | "empty" | "failed";
 
+/**
+ * Today's explanation for an empty search, taken from the `generation.outcome` the server
+ * reported.  Anything unrecognised -- including no outcome at all -- keeps the generic
+ * sentence: naming a cause the server did not give would be the fabrication the frozen list
+ * forbids, in the same shape as a made-up progress step.
+ */
+function stayOutcomeLine(outcome: string | null, zh: boolean): string {
+  switch (outcome) {
+    case "NO_OFFERS_FROM_PROVIDER":
+      return zh
+        ? "提供方这一轮没有返回任何可比较的住宿。这种失败多在提供方一侧，再查一次通常能拿到结果。"
+        : "The providers returned nothing comparable this round. That failure is on their side; searching again usually brings results.";
+    case "ALL_CANDIDATES_REJECTED":
+      return zh
+        ? "有候选住宿，但没有一个满足这趟行程的硬性条件（预算、时间或可达性）。"
+        : "There were candidates, but none of them met this trip's hard constraints (budget, timing or reachability).";
+    case "NOT_APPLICABLE_ZERO_NIGHTS":
+      return zh
+        ? "这趟行程不过夜，所以没有住宿可搜。"
+        : "This trip has no overnight stay, so there is nothing to search for.";
+    default:
+      return zh
+        ? "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿，服务器也没有说明原因。我们不会编造酒店。"
+        : "Your trip is created and its dates are intact — this search returned nothing to compare, and the server gave no reason. We will not invent hotels.";
+  }
+}
+
 /** A fetch the traveller stopped is an AbortError; a network failure is a TypeError. */
 function isAbort(cause: unknown): boolean {
   return cause instanceof Error && cause.name === "AbortError";
@@ -325,6 +352,8 @@ export function V8Experience() {
   const createAbortRef = useRef<AbortController | null>(null);
   // "empty" is a completed search with nothing in it: neither a spinner nor an error.
   const [staySearch, setStaySearch] = useState<StaySearchState>("idle");
+  // Whatever `generation.outcome` the server actually reported; null means it said nothing.
+  const [stayOutcome, setStayOutcome] = useState<string | null>(null);
   const [stayAttempts, setStayAttempts] = useState(0);
   const { locale, switchLocale } = useLocale();
   const t = useT();
@@ -589,11 +618,13 @@ export function V8Experience() {
     setStaySearch("searching");
     setStayAttempts((current) => current + 1);
     try {
-      const generated = await v8Request<{ top_k?: unknown }>(
+      const generated = await v8Request<{ top_k?: unknown; generation?: { outcome?: string } }>(
         `/api/v1/journeys/${journeyId}/stay-options/generate`,
         { method: "POST", body: JSON.stringify({ query }), signal },
       );
       const count = Array.isArray(generated?.top_k) ? generated.top_k.length : 0;
+      // An absent outcome stays unknown: the reason on screen must be one the server gave.
+      setStayOutcome(typeof generated?.generation?.outcome === "string" ? generated.generation.outcome : null);
       setStaySearch(count === 0 ? "empty" : "found");
       return count;
     } catch (cause) {
@@ -639,6 +670,7 @@ export function V8Experience() {
     setStoppedWaiting(false);
     setJourneyCreated(false);
     setStaySearch("idle");
+    setStayOutcome(null);
     setStayAttempts(0);
     setCreateStartedAt(Date.now());
     const controller = new AbortController();
@@ -1132,6 +1164,7 @@ export function V8Experience() {
                 onNewJourney={() => setSetupOpen(true)}
                 onPlanWithAi={() => setPlanAiOpen(true)}
                 staySearch={staySearch}
+                stayOutcome={stayOutcome}
                 stayAttempts={stayAttempts}
                 waitStartedAt={createStartedAt}
                 onRetryStays={() => void retryStaySearch()}
@@ -1570,6 +1603,7 @@ function Hub({
   onNewJourney,
   onPlanWithAi,
   staySearch,
+  stayOutcome,
   stayAttempts,
   waitStartedAt,
   onRetryStays,
@@ -1586,6 +1620,7 @@ function Hub({
   /* ORD-0047: a stay search that answered "200, nothing" must not wear Today's ordinary
      face, and one that is running must be countable. */
   staySearch: StaySearchState;
+  stayOutcome: string | null;
   stayAttempts: number;
   waitStartedAt: number | null;
   onRetryStays: () => void;
@@ -1707,13 +1742,9 @@ function Hub({
             /* A 200 whose top_k is empty is a completed search with no answer in it. Rendering
                Today as if it had found stays is the same defect as showing a spinner forever:
                the traveller cannot tell an empty result from a working one. */
-            <section className="hub-stay-empty" data-testid="hub-no-stays" data-stay-search="empty" role="status">
+            <section className="hub-stay-empty" data-testid="hub-no-stays" data-stay-search="empty" data-stay-outcome={stayOutcome ?? "unknown"} role="status">
               <strong>{zh ? "这次没找到可推荐的住宿" : "No stay options came back this time"}</strong>
-              <p>
-                {zh
-                  ? "行程已经创建，日期和地点都还在，只是这一次搜索没有返回任何可比较的住宿。我们不会编造酒店。"
-                  : "Your trip is created and its dates are intact — this search simply returned nothing to compare. We will not invent hotels."}
-              </p>
+              <p>{stayOutcomeLine(stayOutcome, zh)}</p>
               <div className="hub-stay-empty-actions">
                 <button type="button" className="v8-primary-button" data-testid="hub-stay-retry" onClick={onRetryStays}>
                   {zh ? "再查一次" : "Search again"}

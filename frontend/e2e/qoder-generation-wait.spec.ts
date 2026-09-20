@@ -49,7 +49,12 @@ async function openFreshWizard(page: Page, locale: string) {
 }
 
 /** Answer `generate` after `delay`, then report how many results it handed back. */
-async function slowGenerate(page: Page, delay: number, topK: unknown[] | null) {
+async function slowGenerate(
+  page: Page,
+  delay: number,
+  topK: unknown[] | null,
+  generation?: { outcome: string } | null,
+) {
   await page.route(GENERATE, async (route) => {
     if (route.request().method() !== "POST") return route.fallback();
     await new Promise<void>((resolve) => setTimeout(resolve, delay));
@@ -63,7 +68,12 @@ async function slowGenerate(page: Page, delay: number, topK: unknown[] | null) {
       await route.fulfill({
         status: 200,
         contentType: "application/json",
-        body: JSON.stringify({ optimizer: "BOUNDED_DETERMINISTIC", top_k: topK, hard_constraints: {} }),
+        body: JSON.stringify({
+          optimizer: "BOUNDED_DETERMINISTIC",
+          top_k: topK,
+          hard_constraints: {},
+          ...(generation ? { generation } : {}),
+        }),
       });
     } catch {
       /* abandoned; the product already moved on */
@@ -374,6 +384,76 @@ test.describe("ORD-0047 the stay search says what it is waiting for", () => {
     writeFileSync(
       evidencePath("ui-overnight/generation-states.json"),
       JSON.stringify({ generatedBy: "e345b9d6", order: "ORD-0047", node: "gen-three-states-distinguishable", seen }, null, 2) + "\n",
+      "utf-8",
+    );
+  });
+
+  /* The empty block may only say what `generation.outcome` said. This lane's own rule from
+     ORD-0038 applies to causes as well as to stages: an invented reason is worse than "the
+     server did not say". */
+  test("gen-empty-reason-comes-from-the-server — a reported cause is named, an unreported one stays unknown", async ({
+    page,
+  }) => {
+    test.setTimeout(240_000);
+    await page.emulateMedia({ colorScheme: "light", media: "screen" });
+    await page.setViewportSize({ width: 390, height: 844 });
+
+    await slowGenerate(page, 300, [], { outcome: "NO_OFFERS_FROM_PROVIDER" });
+    await openFreshWizard(page, "en");
+    await page.getByTestId("trial-create").click();
+    const reported = page.getByTestId("hub-no-stays");
+    await expect(
+      reported,
+      node("gen-empty-reason-comes-from-the-server", "a reported outcome never reached the screen"),
+    ).toBeVisible({ timeout: 25_000 });
+    await expect(
+      reported,
+      node("gen-empty-reason-comes-from-the-server", "the reported outcome is not carried on the block"),
+    ).toHaveAttribute("data-stay-outcome", "NO_OFFERS_FROM_PROVIDER");
+    const reportedText = (await reported.innerText()).replace(/\s+/g, " ");
+    expect(
+      /provider|提供方/i.test(reportedText),
+      node("gen-empty-reason-comes-from-the-server",
+        `the server named the providers and the screen said something else: ${JSON.stringify(reportedText)}`),
+    ).toBe(true);
+
+    await page.unroute(GENERATE);
+    await slowGenerate(page, 300, []);
+    await openFreshWizard(page, "en");
+    await page.getByTestId("trial-create").click();
+    const unknown = page.getByTestId("hub-no-stays");
+    await expect(
+      unknown,
+      node("gen-empty-reason-comes-from-the-server", "an empty result without an outcome was not drawn as empty"),
+    ).toBeVisible({ timeout: 25_000 });
+    await expect(
+      unknown,
+      node("gen-empty-reason-comes-from-the-server", "a search that reported no cause must say so, not guess one"),
+    ).toHaveAttribute("data-stay-outcome", "unknown");
+    const unknownText = (await unknown.innerText()).replace(/\s+/g, " ");
+    expect(
+      /provider|提供方/i.test(unknownText),
+      node("gen-empty-reason-comes-from-the-server",
+        `the screen blamed the providers without being told to: ${JSON.stringify(unknownText)}`),
+    ).toBe(false);
+    expect(
+      /no stay options|没找到/i.test(unknownText),
+      node("gen-empty-reason-comes-from-the-server",
+        `the unknown arm stopped saying the plain fact that nothing came back: ${JSON.stringify(unknownText)}`),
+    ).toBe(true);
+    writeFileSync(
+      evidencePath("ui-overnight/generation-outcome.json"),
+      JSON.stringify(
+        {
+          generatedBy: "e345b9d6",
+          order: "ORD-0047",
+          node: "gen-empty-reason-comes-from-the-server",
+          reported: reportedText.trim(),
+          unknown: unknownText.trim(),
+        },
+        null,
+        2,
+      ) + "\n",
       "utf-8",
     );
   });
