@@ -106,6 +106,17 @@ function statusCopy(
       tone: "warn",
     };
   }
+  if (s === "PLANS_WITHOUT_AI") {
+    return {
+      title: zh
+        ? `AI 没有参与这次规划（生成了 ${planCount} 个备选）`
+        : `AI did not take part — ${planCount} options were still assembled`,
+      body: zh
+        ? "这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里。"
+        : "These were assembled from places already found for this city; they do not show that your request was understood. Retry to plan from what you typed — the reason is under “Technical detail”.",
+      tone: "warn",
+    };
+  }
   if (s === "BASELINE_UNAVAILABLE") {
     return {
       title: zh ? "无法确认这次的结果" : "We could not confirm this run",
@@ -378,6 +389,12 @@ export function PlanWithAiSheet({
       }
 
       const missionStatus = String(mission?.status ?? "").toUpperCase();
+      /* A mission that did not complete is not a success, however many rows exist
+         afterwards.  Measured on the production build with no model configured: the
+         mission came back with `DeepSeek API key is not configured`, the fallback re-plan
+         produced 2 plans, and the sheet reported "已生成 2 个可选方案" as plain success.
+         Those rows are real, but nothing about them answers what the traveller typed. */
+      const missionCompleted = missionStatus === "COMPLETED" || missionStatus === "SUCCEEDED";
       let status: string;
       if (baseline === null) {
         // Indeterminate baseline: whatever we see afterwards cannot be
@@ -386,8 +403,10 @@ export function PlanWithAiSheet({
         status = "BASELINE_UNAVAILABLE";
         planCount = -1;
         newPlanIds = [];
-      } else if (planCount > 0) {
+      } else if (planCount > 0 && missionCompleted) {
         status = "COMPLETED";
+      } else if (planCount > 0) {
+        status = "PLANS_WITHOUT_AI";
       } else if (missionStatus.includes("EXTERNAL") || missionStatus.includes("SKIPPED")) {
         status = "SKIPPED_EXTERNAL_DEPENDENCY";
       } else {
