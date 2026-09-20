@@ -14,12 +14,21 @@ class JourneyTemporalShape:
     night_count: int
 
 
+# Named rather than inlined in the signature so an entry point can state the same window it
+# enforces (ORD-0033: the create endpoint now rejects before it persists, and the rejection
+# has to carry the limit the traveller can act on).  These are product rules, not tuning
+# knobs - `V13_JOURNEY_DAYS_OUT_OF_BOUNDS` is raised against them, and a gate pins the
+# values so shrinking them to make a test pass cannot be silent.
+MIN_JOURNEY_DAYS = 1
+MAX_JOURNEY_DAYS = 7
+
+
 def derive_journey_temporal_shape(
     arrival_at: datetime,
     departure_at: datetime,
     *,
-    min_day_count: int = 1,
-    max_day_count: int = 7,
+    min_day_count: int = MIN_JOURNEY_DAYS,
+    max_day_count: int = MAX_JOURNEY_DAYS,
 ) -> JourneyTemporalShape:
     """Derive one calendar-date shape for every Journey consumer.
 

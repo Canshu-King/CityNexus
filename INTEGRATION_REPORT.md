@@ -2307,3 +2307,72 @@ ORD-0034）"，而 ORD-0034 归 `e345b9d6`、账本状态 PARTIAL。要么把 OR
 被下一次"顺手改绿"**。另外它和我正在做的 ORD-0033 是同一件事的两半：入口改成 422 + 具名码之后，
 这条门要显示的 `V13_JOURNEY_DAYS_OUT_OF_BOUNDS:9` 会换成型如 `JOURNEY_DAYS_OUT_OF_BOUNDS` 带
 `actual_days`/`max_days` 的结构体，届时该按新契约更新那条断言，而不是把旧串硬留在测试里。
+
+## 89. ORD-0033（M3-A）：九天行程现在在门口就被具名拒绝，而且一行都不写
+
+裁定 ① 选 A 落地。三处改动、一份新门，全部实测：
+
+**1. 上限从"函数签名里的 7"变成有名字的常量**（`app/core/temporal.py`）：
+`MIN_JOURNEY_DAYS = 1` / `MAX_JOURNEY_DAYS = 7`，`derive_journey_temporal_shape` 的默认值改为引用它们。
+**数值没动**（订单禁止），动的是"谁能说出这个数"——入口要告诉旅客上限是多少，就不能自己抄一份 7。
+
+**2. 域规则不再以 500 出门**（`app/main.py` 新增 `temporal_rejection`）：`ValueError` 只有在
+前缀是 `V13_JOURNEY_DAYS_OUT_OF_BOUNDS` / `V13_INVALID_ANCHOR_WINDOW` 时才转 422，
+**其余一律 `raise exc` 保留 500**——这个转换不能变成把真 bug 洗成"客户端错误"的通道，
+`test_an_unexpected_value_error_stays_a_server_error` 就是钉这条的（含一个 `"V13_…_OUT_OF_BOUNDSX:9"`
+近似前缀，防"startswith 式"实现蒙混过关）。响应体走仓库已有的信封：
+
+```json
+{"error": {"code": "V13_JOURNEY_DAYS_OUT_OF_BOUNDS",
+           "message": "The trip is longer than the supported journey window of 7 days. Shorten the dates and try again.",
+           "trace_id": "…",
+           "details": {"reason": "V13_JOURNEY_DAYS_OUT_OF_BOUNDS", "actual_days": 9, "min_days": 1, "max_days": 7}}}
+```
+
+关于"人话文案"我选英文、把中文留给前端：本仓所有 HTTP 消息都是英文，中文在
+`LocaleContext` / `humanReplanReason(raw, zh)` 里映射；后端再存一份中文就会出现同一句话两个真相。
+`code` + `actual_days`/`max_days` 是稳定的机器面，UI 要说什么话由它决定。**这一条是我替你做的选择，
+若裁定①其实要求后端直出中文，说一声我改，改的只是 `message` 字面量。**
+
+**3. 门口就查，且在写之前**（`create_journey`）：把 `Journey` 与 `JourneyTripContext` 两个对象
+**先构造、再校验、后 `session.add`**——原代码是 `session.add(journey)` 之后才构造 context，
+所以顺序本身就是那条"建得出来"的路径。校验通过 `stay_mobility.journey_temporal_shape`，
+即住宿定价用的同一个"锚点时刻优先于行程窗口"的解析，为此把那条规则抽成公开的
+`journey_boundaries(context, arrival_fallback, departure_fallback)`，`_nights` 改为走它。
+**为什么非要共用**：只读 `start_at/end_at` 的入口会错两次——锚点够短却被拒、锚点超长却被放行，
+而后者正是"门放行、深处 500"的来源。`test_the_door_measures_the_window_the_pricer_measures…`
+把 `journey_boundaries` 与 `_anchor` 在真行上逐值对齐，就是为了这条镜像不漂。
+
+**顺带把另一扇门也关了**（`PATCH /api/v1/journeys/{id}`）：把已存行程拉到 9 天会重建同一个不可用状态。
+这超出订单字面（它只点名创建入口），但没有它裁定 A 只是半条规则；改在 mutation 之前，所以被拒的 patch
+同样不落库（`test_patching_a_saved_trip_past_the_window_is_refused_without_writing` 读回 `end_at` 证明）。
+**如果你认为 PATCH 不该动，这一处可以单独回退**，它是独立一段。
+
+### 89.1 验收数字（解释器 `D:\moodle\CityNexus\.venv`，三个 AI 变量清空）
+
+新门 `backend/tests/test_qoder_journey_window_boundary.py`：**collected 8 / 8 passed（1.25s）**。
+全量后端：**921 passed / 15 skipped / 0 failed（100.42s）**，collected **936**。
+与权威读数对表：`913/15/0 / 928` → 差值 **+8 / 0 / 0 / +8**，全部来自这一个新文件，
+被改动波及的既有测试**一个都没有**（若已有测试依赖"9 天能建"，它会在这里红；没有，
+说明这条路径此前从未被任何测试覆盖）。
+
+**杀得掉的证据**（一次性、唯一 anchor、`py_compile` 自检、字节还原 + SHA-256 相同 `a5d3277565413cf5`）：
+
+| 突变 | 形状 | 红了的节点 |
+| --- | --- | --- |
+| MUT-A | 删掉 `create_journey` 里的窗口校验那一行 | **4 failed / 4 passed**：`…_by_name_and_with_numbers`、`test_a_refused_creation_leaves_no_journey_row`、`test_the_supported_ceiling_is_named_and_seven_days`、`test_the_door_measures_the_window_the_pricer_measures…` |
+| MUT-B | 把 422 转换改回一律 `raise ValueError`（=订单点名的"退回 500"） | **6 failed / 2 passed**：上面 4 条，外加 `test_generating_stays_over_the_window_answers_a_named_422_instead_of_a_bare_500` 与 `test_patching_a_saved_trip_past_the_window_is_refused_without_writing` |
+
+两具的分工要说清：MUT-A 只杀门口那四条，因为深处那条走的是另一个守卫；MUT-B 同时杀深度路径与 PATCH，
+因为它是唯一的转换点。**只报"MUT-B 6 条"会高估门口那扇门的独立性**，所以两具都留档。
+
+其余同口径复跑：`typecheck` / `typecheck:all` / `build` 均 exit 0（本次没动前端一行）；
+全套权威 E2E（run `ord33-e2e`，:3473→:8473）= **80 expected / 6 skipped / 1 unexpected / 0 flaky（282.2s）**，
+与 §88 合并后那次**逐数相同**，唯一那条 unexpected 仍是 UI 车道自陈的待办门
+（`qoder-onboarding-failure.spec.ts :: the named backend reason reaches the onboarding screen`）。
+提醒它现在与真契约错位了：那条断言等的是**伪造的 500 + `V13_…:9` 字符串**，
+真实后端已经改成 **422 + `error.code` + `details.actual_days`**，等 ORD-0034 补 prop 时要一起对齐，
+别把旧串留在测试里。
+
+库里那 5 条 9 天孤儿行程：按令**不写破坏性迁移**，也不动生产数据；它们是预览一次性库里的事，
+Commander 自己清。这里只保证**新的进不来**。

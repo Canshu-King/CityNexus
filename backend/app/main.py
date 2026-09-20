@@ -99,6 +99,11 @@ from app.commerce.strengths_generated import SOURCE_COMMITMENT_STRENGTHS
 from app.commerce.validators import CommerceValidationError, validate_idempotency_key
 from app.core.audit import record_audit
 from app.core.config import settings
+from app.core.temporal import (
+    MAX_JOURNEY_DAYS,
+    MIN_JOURNEY_DAYS,
+    derive_journey_temporal_shape,
+)
 from app.db.models import (
     AccommodationOfferSnapshot,
     ActionApproval,
@@ -364,6 +369,8 @@ from app.stay_mobility import (
     experience_payload,
     fact_payload,
     generate_stay_options,
+    journey_boundaries,
+    journey_temporal_shape,
     option_payload,
 )
 from app.planning.authoritative_v12 import compose_authoritative_multiday
@@ -410,6 +417,42 @@ async def http_error(_: Request, exc: HTTPException) -> JSONResponse:
         exc.status_code, "REQUEST_ERROR"
     )
     return error(code, detail, status=exc.status_code)
+
+
+# The journey window is one authority (`app/core/temporal.py`) and every public entry that
+# needs it gets here, so the conversion from "domain rule" to "HTTP answer" happens once
+# rather than at each door - and each door keeps the same code and the same numbers.
+# Before this, a nine-day trip reached the deepest call and came back as
+# `500` + `ValueError: V13_JOURNEY_DAYS_OUT_OF_BOUNDS:9`; on a phone that reads as a
+# frozen button, and it left an unusable Journey behind (ORD-0033).  A ValueError that is
+# not one of these named rejections is still a bug, so it is re-raised and keeps its 500:
+# this handler must never launder an unexpected failure into a 4xx.
+TEMPORAL_REJECTIONS = {
+    "V13_JOURNEY_DAYS_OUT_OF_BOUNDS": (
+        f"The trip is longer than the supported journey window of {MAX_JOURNEY_DAYS} days. "
+        f"Shorten the dates and try again."
+    ),
+    "V13_INVALID_ANCHOR_WINDOW": "The departure must be after the arrival.",
+}
+
+
+@app.exception_handler(ValueError)
+async def temporal_rejection(_: Request, exc: ValueError) -> JSONResponse:
+    code, _, argument = str(exc).partition(":")
+    if code not in TEMPORAL_REJECTIONS:
+        raise exc
+    details: dict[str, object] = {"reason": code}
+    if code == "V13_JOURNEY_DAYS_OUT_OF_BOUNDS":
+        if argument.strip().isdigit():
+            details["actual_days"] = int(argument.strip())
+        details["min_days"] = MIN_JOURNEY_DAYS
+        details["max_days"] = MAX_JOURNEY_DAYS
+    return error(
+        code,
+        TEMPORAL_REJECTIONS[code],
+        status=422,
+        details=details,
+    )
 
 
 def require(session: Session, model: type, identifier: str, label: str):
@@ -2272,29 +2315,36 @@ def create_journey(payload: JourneyCreate, session: Session = Depends(get_sessio
         created_at=now,
         updated_at=now,
     )
-    session.add(journey)
     now = datetime.now(timezone.utc).isoformat()
-    session.add(
-        JourneyTripContext(
-            journey_id=journey.id,
-            arrival_anchor_json=json.dumps(
-                payload.arrival_anchor.model_dump(mode="json") if payload.arrival_anchor else {},
-                ensure_ascii=False,
-            ),
-            departure_anchor_json=json.dumps(
-                payload.departure_anchor.model_dump(mode="json")
-                if payload.departure_anchor
-                else {},
-                ensure_ascii=False,
-            ),
-            party_size=payload.party_size,
-            occupancy_json=json.dumps(occupancy, ensure_ascii=False),
-            stay_budget_amount_minor=payload.stay_budget.amount_minor if payload.stay_budget else 0,
-            stay_budget_currency=payload.stay_budget.currency if payload.stay_budget else payload.budget.currency,
-            created_at=now,
-            updated_at=now,
-        )
+    trip_context = JourneyTripContext(
+        journey_id=journey.id,
+        arrival_anchor_json=json.dumps(
+            payload.arrival_anchor.model_dump(mode="json") if payload.arrival_anchor else {},
+            ensure_ascii=False,
+        ),
+        departure_anchor_json=json.dumps(
+            payload.departure_anchor.model_dump(mode="json")
+            if payload.departure_anchor
+            else {},
+            ensure_ascii=False,
+        ),
+        party_size=payload.party_size,
+        occupancy_json=json.dumps(occupancy, ensure_ascii=False),
+        stay_budget_amount_minor=payload.stay_budget.amount_minor if payload.stay_budget else 0,
+        stay_budget_currency=payload.stay_budget.currency if payload.stay_budget else payload.budget.currency,
+        created_at=now,
+        updated_at=now,
     )
+    # ORD-0033 (ruling A): the supported window is a creation rule, checked here on the pair
+    # of rows this request is about to write, through the same helper stay pricing uses
+    # (`journey_temporal_shape` - an anchor's own moment wins over the journey window).  Two
+    # consequences are deliberate: a refused request never reaches `session.add`, so repeated
+    # taps cannot pile up unusable journeys (the preview library had five), and the door
+    # cannot accept a window that `/stay-options/generate` would later reject.  The raised
+    # `V13_…` becomes a named 422 in `temporal_rejection` above.
+    journey_temporal_shape(trip_context, journey)
+    session.add(journey)
+    session.add(trip_context)
     session.commit()
     record_audit(
         session,
@@ -3729,6 +3779,18 @@ def update_journey(
     end = payload.end_at or datetime.fromisoformat(journey.end_at)
     if end <= start:
         raise HTTPException(422, "end_at must be after start_at")
+    # ORD-0033's ruling covers this door as well: stretching a saved trip past the supported
+    # window would otherwise rebuild the exact state create now refuses - a journey that
+    # cannot generate stays.  Measured on the stored anchors through `journey_boundaries`,
+    # so an anchor still wins over the window, and before anything is mutated.
+    trip_context = session.get(JourneyTripContext, journey.id)
+    if trip_context is None:
+        derive_journey_temporal_shape(start, end)
+    else:
+        arrival_at, departure_at = journey_boundaries(
+            trip_context, start.isoformat(), end.isoformat()
+        )
+        derive_journey_temporal_shape(arrival_at, departure_at)
     overrides = {}
     if payload.start_at is not None:
         overrides["start_at"] = payload.start_at.isoformat()

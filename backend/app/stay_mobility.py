@@ -15,7 +15,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.money import major_to_minor
-from app.core.temporal import derive_journey_temporal_shape
+from app.core.temporal import JourneyTemporalShape, derive_journey_temporal_shape
 from app.db.models import (
     AccommodationOfferSnapshot,
     Activity,
@@ -195,10 +195,40 @@ def _anchor(context: JourneyTripContext, journey: Journey, kind: str) -> dict[st
     }
 
 
+def journey_boundaries(
+    context: JourneyTripContext, arrival_fallback: str, departure_fallback: str
+) -> tuple[datetime, datetime]:
+    """The two instants that bound a journey: an anchor's own moment wins over the window.
+
+    This is the same rule `_anchor` applies, restated so a caller that has not written the
+    row yet (or is about to change it) can measure the identical window without mutating
+    anything first.  `test_qoder_journey_window_boundary` pins the two against each other
+    across anchor-present and anchor-absent journeys, because a silent disagreement here is
+    exactly the shape that let a nine-day trip through one door and 500 at the other.
+    """
+
+    arrival = _load(context.arrival_anchor_json, {}).get("at") or arrival_fallback
+    departure = _load(context.departure_anchor_json, {}).get("at") or departure_fallback
+    return datetime.fromisoformat(str(arrival)), datetime.fromisoformat(str(departure))
+
+
+def journey_temporal_shape(
+    context: JourneyTripContext, journey: Journey
+) -> JourneyTemporalShape:
+    """The one way this product decides which two instants bound a journey.
+
+    An anchor's own moment wins over the journey window (`_anchor`), and both the day/night
+    count used for pricing and the ceiling checked at the doors come from here - otherwise a
+    create endpoint could validate one window while stay generation priced another, which is
+    the disagreement ORD-0033 turned into a user-visible 500.
+    """
+
+    start, end = journey_boundaries(context, journey.start_at, journey.end_at)
+    return derive_journey_temporal_shape(start, end)
+
+
 def _nights(context: JourneyTripContext, journey: Journey) -> int:
-    start = datetime.fromisoformat(_anchor(context, journey, "arrival")["at"])
-    end = datetime.fromisoformat(_anchor(context, journey, "departure")["at"])
-    return derive_journey_temporal_shape(start, end).night_count
+    return journey_temporal_shape(context, journey).night_count
 
 
 def _at_on_day(
