@@ -1,0 +1,184 @@
+.cn-sim-entry {
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--cn-hairline, rgba(0, 0, 0, 0.16));
+  border-radius: var(--cn-r-card, 14px);
+  background: var(--cn-surface);
+  min-width: 0;
+}
+.cn-sim-summary {
+  padding: var(--cn-s-12);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  font-weight: 700;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.cn-sim-entry[open] .cn-sim {
+  border-top: 1px solid var(--cn-hairline, rgba(0, 0, 0, 0.16));
+}
+@media (max-width: 680px) {
+  .cn-sim-summary {
+    min-height: var(--cn-touch-min);
+    display: flex;
+    align-items: center;
+  }
+}
+
+/*
+ * ORD-0059 (b) -- the Simulation entry's own sheet.
+ *
+ * Tokens only, and full ink for every sentence that carries meaning: this surface explains
+ * refusals, and a refusal written in a grey that fails contrast in one theme is a refusal the
+ * traveller did not receive.  The dark audit measures it at 390px in both themes, so nothing
+ * here may depend on a colour that only works on one of them.
+ */
+.cn-sim {
+  display: grid;
+  gap: var(--cn-s-12);
+  margin: 0;
+  padding: var(--cn-s-12);
+  border: 1px solid var(--cn-hairline, rgba(0, 0, 0, 0.16));
+  border-radius: var(--cn-r-card, 14px);
+  background: var(--cn-surface);
+  color: var(--v8-ink);
+  min-width: 0;
+}
+.cn-sim *,
+.cn-sim *::before,
+.cn-sim *::after {
+  box-sizing: border-box;
+}
+
+.cn-sim-banner {
+  margin: 0;
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border-left: 3px solid var(--cn-accent-text);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  font-weight: 650;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.cn-sim-retry {
+  justify-self: start;
+}
+/* Diagnostic, not decoration: smaller than the banner, but full ink -- a flag that only reads in
+   one theme is a flag nobody can check on a phone. */
+.cn-sim-diag {
+  margin: calc(-1 * var(--cn-s-4, 4px)) 0 0;
+  color: var(--v8-ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: var(--cn-fs-caption);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.cn-sim-facts {
+  display: grid;
+  gap: var(--cn-s-4, 4px);
+  margin: 0;
+}
+.cn-sim-facts > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cn-s-8);
+  justify-content: space-between;
+  min-width: 0;
+}
+.cn-sim-facts dt {
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  font-weight: 700;
+}
+.cn-sim-facts dd {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.cn-sim-mismatch {
+  margin: 0;
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border-left: 3px solid var(--cn-warning);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.cn-sim-actions {
+  display: grid;
+  gap: var(--cn-s-8);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cn-sim-row {
+  display: grid;
+  gap: var(--cn-s-4, 4px);
+  min-width: 0;
+}
+.cn-sim-button {
+  justify-self: stretch;
+  text-align: left;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* Same wash as a real disabled control, so "cannot run" is visible and not only spoken. */
+.cn-sim-button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.cn-sim-reason {
+  margin: 0;
+  padding-left: var(--cn-s-12);
+  border-left: 2px solid var(--cn-accent-text);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.cn-sim-outcome,
+.cn-sim-refusal {
+  margin: 0;
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.cn-sim-refusal {
+  border-left: 3px solid var(--cn-danger);
+}
+.cn-sim-outcome-note {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+/* The 44px floor is a mobile rule only; desktop keeps the compact density it was audited with. */
+@media (max-width: 680px) {
+  .cn-sim-actions button {
+    min-height: var(--cn-touch-min);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cn-sim * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

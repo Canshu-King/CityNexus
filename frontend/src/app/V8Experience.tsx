@@ -22,6 +22,7 @@ import { PushCapabilityCard } from "../features/notifications/PushCapabilityCard
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { SortableActivityList } from "../features/studio/SortableActivityList";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
+import { SimulationEntry } from "../features/simulation/SimulationPanel";
 import { V14RecoveryTruthPanel } from "../features/recovery/V14RecoveryTruthPanel";
 import { V14PreventivePanel } from "../features/recovery/V14PreventivePanel";
 import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPanel";
@@ -1895,6 +1896,10 @@ function Hub({
           </button>
         </div>
       </div>
+      {/* ORD-0059: the Simulation entry belongs on Today, because Today is the screen whose
+          "now" is being staged.  Whether this deployment is a stage is the server's answer
+          (`GET /demo/scene` -> demo_mode), never a path this file guesses at. */}
+      <SimulationEntry viewingJourneyId={data.journey.id} />
       <div className="v8-hero-grid">
         <article
           className="v8-trip-hero cn-now-next-hero"
