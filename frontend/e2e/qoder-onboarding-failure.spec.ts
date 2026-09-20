@@ -21,7 +21,11 @@ import { evidencePath } from "./_qoderEvidence";
  *   - remove the `message` prop plumbing  -> see the reason assertion below
  */
 
-const NAMED_ERROR = "V13_JOURNEY_DAYS_OUT_OF_BOUNDS:9";
+const MEASURED_500 = {
+  status: 500,
+  contentType: "text/plain; charset=utf-8",
+  body: "Internal Server Error",
+};
 
 async function openFreshWizard(page: import("@playwright/test").Page) {
   await page.addInitScript(() => {
@@ -57,11 +61,7 @@ test.describe("ORD-0034 onboarding surfaces a failed create", () => {
     await page.route("**/api/v1/journeys", async (route) => {
       if (route.request().method() !== "POST") return route.fallback();
       sawCreateRequest = true;
-      await route.fulfill({
-        status: 500,
-        contentType: "application/json",
-        body: JSON.stringify({ detail: NAMED_ERROR }),
-      });
+      await route.fulfill(MEASURED_500);
     });
 
     await openFreshWizard(page);
@@ -82,14 +82,20 @@ test.describe("ORD-0034 onboarding surfaces a failed create", () => {
        step did not complete even when the reason itself cannot reach this screen. */
     const saysItFailed =
       /没有成功|did not complete|no journey was created/i.test(text);
+    /* An unhandled server error crosses the wire as plain text, so the only thing the
+       client may state is the status.  Naming a code the endpoint never sent would be the
+       same lie in the other direction. */
+    const namesTheStatus = text.includes(String(MEASURED_500.status));
+    const inventsAReason = /V13_|VALIDATION_ERROR|arrival_anchor/i.test(text);
 
     const evidence = {
       generatedBy: "e345b9d6",
       sawCreateRequest,
-      namedErrorFromBackend: NAMED_ERROR,
+      serverEnvelope: MEASURED_500,
       renderedText: text.trim(),
       saysItFailed,
-      carriesNamedReason: text.includes(NAMED_ERROR),
+      namesTheStatus,
+      inventsAReason,
     };
     writeFileSync(
       evidencePath("ui-overnight/onboarding-create-failure.json"),
@@ -100,14 +106,26 @@ test.describe("ORD-0034 onboarding surfaces a failed create", () => {
     expect(sawCreateRequest, "the wizard never issued a POST /api/v1/journeys").toBe(true);
     expect(
       saysItFailed,
-      `the failure notice does not state the step failed; it rendered: "${text.trim()}"`,
+      "e2e/qoder-onboarding-failure.spec.ts :: a 500 stays silent — the failure notice does not " +
+        `state that the step failed; it rendered: "${text.trim()}"`,
     ).toBe(true);
+    expect(
+      namesTheStatus,
+      "e2e/qoder-onboarding-failure.spec.ts :: a 500 stays silent — the notice hides the only fact " +
+        `the server actually sent: ${JSON.stringify(text.trim())}`,
+    ).toBe(true);
+    expect(
+      inventsAReason,
+      "e2e/qoder-onboarding-failure.spec.ts :: a 500 stays silent — the notice names a reason the " +
+        `server never sent: ${JSON.stringify(text.trim())}`,
+    ).toBe(false);
   });
 
   /* Split out on purpose.  Kept inside the test above, this would share one red/green
      verdict with the fix that has landed, and a suite reading could not tell "the wizard
      is no longer silent" apart from "the named reason still cannot reach this screen".
-     The remaining gap is one prop at V8Experience.tsx:800, a file this lane does not own. */
+     The expected string is the envelope measured off the wire (review/probe-envelope.py):
+     the generic `VALIDATION_ERROR` with `details.errors[].loc/msg`, not a code we wrote. */
   test("the named backend reason reaches the onboarding screen", async ({ page }) => {
     test.setTimeout(180_000);
     await page.emulateMedia({ colorScheme: "light", media: "screen" });
