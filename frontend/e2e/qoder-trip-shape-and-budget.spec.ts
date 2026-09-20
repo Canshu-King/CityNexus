@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { existsSync, readFileSync } from "node:fs";
 import { writeFileSync } from "node:fs";
-import { openScreen } from "./_qoderShellSeed";
+import { ensureDemoJourney, openScreen } from "./_qoderShellSeed";
 import { evidencePath } from "./_qoderEvidence";
 
 /**
@@ -50,11 +50,22 @@ async function patchExperience(page: Page, patch: (body: any) => void) {
   await page.route("**/api/v1/journeys/*/experience", async (route) => {
     if (route.request().method() !== "GET") return route.fallback();
     let body: any;
+    let status = 0;
     try {
       const upstream = await route.fetch();
+      status = upstream.status();
       body = await upstream.json();
     } catch {
       return route.fallback();
+    }
+    if (status !== 200 || !body?.journey) {
+      // A stale seeded journey answers 404 with an error envelope. Falling through would
+      // let the gate pass against a body that never had the fields it claims to read.
+      throw new Error(
+        node("gate precondition",
+          `/experience answered ${status} without a journey payload, so the projection could `
+          + "not be patched. The gate is not measuring the product: " + JSON.stringify(body).slice(0, 200)),
+      );
     }
     patch(body);
     try {
@@ -63,6 +74,26 @@ async function patchExperience(page: Page, patch: (body: any) => void) {
       /* the page moved on; nothing left to answer */
     }
   });
+}
+
+/**
+ * A journey this run really created.
+ *
+ * The chromium project replays a storageState holding `citynexus.v8.journey_id`
+ * (playwright.config.ts:66); in a long run that row may belong to a database this run never
+ * had, and every surface below would then be judged against a 404.
+ */
+async function openHubWithJourney(page: Page, readyTestIds: string[]) {
+  /* Wipe once per context. An unguarded init script runs again on the navigation into the
+     hub and deletes the journey the demo button had just written, which is how the first
+     version of this helper ended up staring at the wizard. */
+  await page.addInitScript(() => {
+    if (sessionStorage.getItem("cnx.qoder.shape-seeded")) return;
+    sessionStorage.setItem("cnx.qoder.shape-seeded", "1");
+    localStorage.removeItem("citynexus.v8.journey_id");
+  });
+  await ensureDemoJourney(page);
+  await openScreen(page, "/v8/hub", readyTestIds);
 }
 
 test.describe("ORD-0063/0064a Today states the projected shape and currency", () => {
@@ -76,7 +107,7 @@ test.describe("ORD-0063/0064a Today states the projected shape and currency", ()
       body.journey.temporal_shape = SHAPE(1);
       body.trip.budget_reference = REFERENCE();
     });
-    await openScreen(page, "/v8/hub", ["today-heading", "today-when"]);
+    await openHubWithJourney(page, ["today-heading", "today-when"]);
     const when = page.getByTestId("today-when");
     const oneDay = (await when.innerText()).replace(/\s+/g, " ").trim();
     expect(
@@ -94,8 +125,7 @@ test.describe("ORD-0063/0064a Today states the projected shape and currency", ()
       body.journey.temporal_shape = SHAPE(null);
       body.trip.budget_reference = { ...REFERENCE(), available: false, reason: "WINDOW_UNORDERABLE" };
     });
-    await page.reload({ waitUntil: "networkidle" });
-    await openScreen(page, "/v8/hub", ["today-heading", "today-when"]);
+    await openHubWithJourney(page, ["today-heading", "today-when"]);
     const unknown = (await page.getByTestId("today-when").innerText()).replace(/\s+/g, " ").trim();
     expect(
       unknown,
@@ -139,8 +169,7 @@ test.describe("ORD-0063/0064a Today states the projected shape and currency", ()
           floor_comparable: arm.comparable,
         });
       });
-      await page.goto("/v8", { waitUntil: "load" });
-      await openScreen(page, "/v8/hub", ["today-heading", "budget-advisory"]);
+      await openHubWithJourney(page, ["today-heading", "budget-advisory"]);
       const advisory = page.getByTestId("budget-advisory");
       const text = (await advisory.innerText()).replace(/\s+/g, " ").trim();
       seen[arm.currency] = text;
