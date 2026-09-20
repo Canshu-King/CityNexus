@@ -133,6 +133,22 @@ export function inferCityFacts(cityName: string) {
   return CITY_FACTS[key] ?? CITY_FACTS[cityName.trim()] ?? null;
 }
 
+/**
+ * The cities this table recognises. Names only, deliberately no total: the authoritative
+ * count of supported destinations is not this table's to publish, and a headcount computed
+ * here would be a claim (ORD-0060 #3).
+ *
+ * Grouping these by their facts looked natural and was wrong: nine Chinese cities share
+ * CN / Asia/Shanghai / CNY, so one entry swallowed eight of them. The table already holds
+ * one key per spelling, which is the pairing that actually exists.
+ */
+const SUPPORTED_CITIES = {
+  zh: Object.keys(CITY_FACTS).filter((name) => /[^\x00-\x7F]/.test(name)),
+  en: Object.keys(CITY_FACTS)
+    .filter((name) => /^[\x00-\x7F]+$/.test(name))
+    .map((name) => name.charAt(0).toUpperCase() + name.slice(1)),
+};
+
 export function currencyLabel(currency: string, locale: string) {
   const zh = locale.startsWith("zh");
   const table: Record<string, [string, string]> = {
@@ -339,6 +355,11 @@ export function JourneyTrialSetup({
   };
 
   const facts = inferCityFacts(draft.cityName);
+  /* ORD-0060 #1: the anchor labels said 厦门 whatever the traveller typed, so a person going
+     to Tokyo was asked to "抵达厦门". The name only belongs in a label once the table has
+     recognised it; until then the label says what it knows. */
+  const identifiedCity = facts ? draft.cityName.trim() : "";
+  const unrecognizedCity = draft.cityName.trim().length > 0 && !facts;
   /* The API requires a non-empty anchor location at both ends
      (`arrival_anchor.location` has minLength 1).  Until now the field looked optional -- a
      placeholder, and a bare "—" on the review page -- so a legal-looking 4-day trip died on
@@ -418,27 +439,62 @@ export function JourneyTrialSetup({
               data-testid="trial-city"
               value={draft.cityName}
               onChange={(event) => applyCity(event.target.value)}
-              placeholder={zh ? "例如：厦门" : "e.g. Xiamen"}
+              placeholder={zh ? "例如：天津、东京、新加坡" : "e.g. Tianjin, Tokyo, Singapore"}
+              aria-describedby={unrecognizedCity ? "trial-city-warning" : undefined}
               autoFocus
             />
           </label>
 
-          {facts && (
+          {facts ? (
             <p className="trial-inferred" data-testid="trial-inferred">
               {zh ? "已自动设置：" : "Auto-set: "}
               {zh ? facts.labelZh : facts.labelEn} ·{" "}
               {currencyLabel(draft.currency, locale)} ·{" "}
               {timezoneLabel(draft.timezone, locale)}
             </p>
+          ) : null}
+          {unrecognizedCity && (
+            /* ORD-0060 #2: `inferCityFacts` returns nothing here, and `applyCity` then leaves
+               the hidden country / currency / timezone fields holding whatever the *previous*
+               city set. A disabled "Next" with no reason would only move the silence, so the
+               assumption is stated, named, and left correctable. */
+            <p
+              className="trial-city-warning"
+              data-testid="trial-city-warning"
+              id="trial-city-warning"
+              role="status"
+            >
+              {zh
+                ? `没认出「${draft.cityName.trim()}」：仍按 ${draft.countryCode} / ${currencyLabel(draft.currency, locale)}（${draft.currency}）/ ${draft.timezone} 规划。换个写法，或在"看支持的目的地"里挑一个。`
+                : `"${draft.cityName.trim()}" is not recognised: the trip will still be planned with ${draft.countryCode} / ${currencyLabel(draft.currency, locale)} (${draft.currency}) / ${draft.timezone}. Try another spelling, or pick one from "See supported destinations".`}
+            </p>
           )}
+          <details className="trial-supported" data-testid="trial-supported-cities">
+            {/* No count is printed: the authoritative number of supported cities is not this
+                lane's to derive, and a headcount read off the local table would be its own
+                claim. The names the table does know are shown, which is what a traveller
+                can act on. */}
+            <summary data-testid="trial-supported-toggle">
+              {zh ? "看支持的目的地" : "See supported destinations"}
+            </summary>
+            <ul className="trial-supported-list">
+              {(zh ? SUPPORTED_CITIES.zh : SUPPORTED_CITIES.en).map((name) => (
+                <li key={name}>{name}</li>
+              ))}
+            </ul>
+          </details>
 
           <label className="trial-field">
-            <span>{zh ? "抵达厦门" : "Arrive at"}</span>
+            <span>{zh ? (identifiedCity ? `抵达${identifiedCity}` : "抵达地点") : "Arrive at"}</span>
             <input
               data-testid="trial-arrival"
               value={draft.arrivalLocation}
               onChange={(event) => update("arrivalLocation", event.target.value)}
-              placeholder={zh ? "例如：厦门高崎国际机场" : "e.g. Xiamen Gaoqi Intl Airport"}
+              placeholder={
+                zh
+                  ? `例如：${identifiedCity || "某地"}站 / 机场`
+                  : "e.g. station or airport"
+              }
               aria-required="true"
               aria-invalid={
                 draft.arrivalLocation.trim() && !arrivalProblem ? undefined : true
@@ -458,12 +514,16 @@ export function JourneyTrialSetup({
             )}
           </label>
           <label className="trial-field">
-            <span>{zh ? "离开厦门" : "Depart from"}</span>
+            <span>{zh ? (identifiedCity ? `离开${identifiedCity}` : "离开地点") : "Depart from"}</span>
             <input
               data-testid="trial-departure"
               value={draft.departureLocation}
               onChange={(event) => update("departureLocation", event.target.value)}
-              placeholder={zh ? "例如：厦门北站" : "e.g. Xiamen North Station"}
+              placeholder={
+                zh
+                  ? `例如：${identifiedCity || "某地"}站 / 机场`
+                  : "e.g. station or airport"
+              }
               aria-required="true"
               aria-invalid={
                 draft.departureLocation.trim() && !departureProblem ? undefined : true
@@ -666,6 +726,15 @@ export function JourneyTrialSetup({
             <div>
               <dt>{zh ? "目的地" : "Destination"}</dt>
               <dd data-testid="review-city">{draft.cityName || "—"}</dd>
+              {/* The step-1 caution has to be here too: this is the screen the traveller
+                  confirms from, and an assumption shown only two steps back is gone. */}
+              {unrecognizedCity && (
+                <dd className="trial-city-warning" data-testid="review-city-warning">
+                  {zh
+                    ? `未识别 · 按 ${draft.countryCode} / ${currencyLabel(draft.currency, locale)} / ${draft.timezone} 规划`
+                    : `not recognised · planned with ${draft.countryCode} / ${currencyLabel(draft.currency, locale)} / ${draft.timezone}`}
+                </dd>
+              )}
             </div>
             <div>
               <dt>{zh ? "抵达" : "Arrival"}</dt>

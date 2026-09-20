@@ -1084,6 +1084,48 @@ body {
   overflow-wrap: anywhere;
 }
 
+/* ORD-0060 — an assumption the product is about to make has to be readable, not hinted at
+   by a colour. The sentence says "没认出 / not recognised", so the rule is decoration. */
+.trial-city-warning {
+  margin: var(--cn-s-8) 0;
+  padding: var(--cn-s-12) var(--cn-s-16);
+  border-left: 3px solid var(--cn-danger);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+dd.trial-city-warning {
+  margin: var(--cn-s-4) 0 0;
+  padding: var(--cn-s-8) var(--cn-s-12);
+  font-size: var(--cn-fs-caption);
+}
+.trial-supported {
+  margin: 0 0 var(--cn-s-12);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+}
+.trial-supported summary {
+  /* Reachable with a thumb on the smallest layout without stealing weight from the CTA. */
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  color: var(--v8-accent);
+  font-weight: 700;
+  cursor: pointer;
+}
+.trial-supported-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cn-s-4) var(--cn-s-12);
+  margin: var(--cn-s-8) 0 0;
+  padding-left: var(--cn-s-20);
+  columns: 2;
+  list-style: disc;
+}
+
 /* ORD-0037 — the map must say what it is doing.
    The tile notice is the honest counterpart to the flat canvas fallback; the gesture
    hint exists because a two-finger-only map is undiscoverable without being told. */
