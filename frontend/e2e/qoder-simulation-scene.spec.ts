@@ -163,11 +163,17 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
     const wall = await page.request.get(`/api/v1/journeys/${String(scene.journey_id)}/execution-clock`);
     const wallBody = (await wall.json()) as { now?: string };
     const wallMinute = minute(wallBody.now);
-    if (wallMinute && wallMinute.slice(0, 10) !== sceneMinute.slice(0, 10)) {
+    const bannerText = (await page.getByTestId("sim-banner").innerText()).replace(/\s+/g, " ").trim();
+    expect(
+      bannerText.includes(sceneMinute),
+      node("sim-scene-time-is-the-servers-not-the-devices",
+        `the banner does not render the server's scene instant ${sceneMinute}: ${JSON.stringify(bannerText)}`),
+    ).toBe(true);
+    if (wallMinute && wallMinute !== sceneMinute) {
       expect(
-        shown.includes(wallMinute),
+        bannerText.includes(wallMinute),
         node("sim-scene-time-is-the-servers-not-the-devices",
-          `the panel printed the device/server wall clock ${wallMinute} rather than only the scene instant`),
+          `the banner rendered the wall clock ${wallMinute} instead of the scene's ${sceneMinute}`),
       ).toBe(false);
     }
 
@@ -197,7 +203,7 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
     );
   });
 
-  test("sim-advance-changes-the-now-next-line — 推进之后屏幕上的字真的变了", async ({ page }) => {
+  test("sim-scene-advances-on-server — 服务器场景真的推进了（hero 是否跟随记进证据，归 ORD-0075）", async ({ page }) => {
     test.setTimeout(240_000);
     await page.setViewportSize({ width: 390, height: 844 });
     const scene = await openStage(page);
@@ -211,7 +217,7 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
       const reason = (await page.locator(`#${described}`).innerText()).replace(/\s+/g, " ").trim();
       expect(
         reason.length > 0,
-        node("sim-advance-changes-the-now-next-line",
+        node("sim-scene-advances-on-server",
           "the advance row is disabled and points at an id with no explanation behind it"),
       ).toBe(true);
       test.skip(true, `the stage has no activity to advance (server reason: ${reason})`);
@@ -219,7 +225,12 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
 
     const clean = (value: string) => value.replace(/\s+/g, " ").trim();
     const before = clean(await page.getByTestId("today-next").innerText());
-    const beforeScene = minute((await sceneOf(page)).effective_now);
+    /* Read "before" through the component, not through a second fetch of my own: the panel has
+       already loaded by now, so an independent fetch can return a *later* scene than the one that
+       was on screen, and the final comparison would then be true without anything having visibly
+       moved.  The banner is the component's own rendering of the server's instant, so both sides
+       of the comparison are read the same way. */
+    const beforeScene = clean(await page.getByTestId("sim-banner").innerText());
     /* One tap is one legal transition, and the server decides which one that is; on a frozen V12
        plan an activity walks NOT_STARTED -> EN_ROUTE -> ARRIVED -> IN_PROGRESS -> COMPLETED before
        the cursor moves on.  So tap until the screen's Next actually changes. */
@@ -231,7 +242,7 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
       taps += 1;
       await expect(
         page.getByTestId("sim-outcome"),
-        node("sim-advance-changes-the-now-next-line",
+        node("sim-scene-advances-on-server",
           "advancing an activity produced no answer from the panel at all"),
       ).toContainText(/服务器/, { timeout: 30_000 });
       outcome = clean(await page.getByTestId("sim-outcome").innerText());
@@ -240,31 +251,51 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
 
     expect(
       taps > 0,
-      node("sim-advance-changes-the-now-next-line", "the advance row never fired a server step"),
+      node("sim-scene-advances-on-server", "the advance row never fired a server step"),
     ).toBe(true);
     expect(
       /出发|到达|开始这项活动|完成这项活动|depart|arrive|begin|complete/.test(outcome),
-      node("sim-advance-changes-the-now-next-line",
+      node("sim-scene-advances-on-server",
         `the panel did not say which transition the server took: ${JSON.stringify(outcome)}`),
     ).toBe(true);
     expect(
       /游标|cursor/.test(outcome),
-      node("sim-advance-changes-the-now-next-line",
+      node("sim-scene-advances-on-server",
         `the outcome line does not report the server's own cursor: ${JSON.stringify(outcome)}`),
     ).toBe(true);
 
     const after = clean(await page.getByTestId("today-next").innerText());
-    const afterScene = minute((await sceneOf(page)).effective_now);
+    const afterScene = clean(await page.getByTestId("sim-banner").innerText());
+    const heroChanged = after !== before;
+    /* What this node owns is the server's scene moving, read through the component's own banner
+       (same string on both sides, so a format mismatch cannot make it "change" by itself).
+       Whether Today's hero line followed is a different claim: the hero still picks Now/Next with
+       `Date.now()` (V8Experience.tsx:1747), so on a staged scenario it does not move -- that is
+       ORD-0075's finding and this gate records it instead of masking it. */
     expect(
-      after !== before || afterScene !== beforeScene,
-      node("sim-advance-changes-the-now-next-line",
-        `after ${taps} server step(s) nothing moved: scene ${beforeScene} -> ${afterScene}, screen "${before}" -> "${after}"`),
+      afterScene !== beforeScene,
+      node("sim-scene-advances-on-server",
+        `after ${taps} server step(s) the stage never moved: banner was ${JSON.stringify(beforeScene.slice(0, 120))}, still ${JSON.stringify(afterScene.slice(0, 120))}`),
     ).toBe(true);
 
     writeFileSync(
       evidencePath("ui-overnight/simulation-advance.json"),
       JSON.stringify(
-        { generatedBy: "e345b9d6", order: "ORD-0059", node: "sim-advance-changes-the-now-next-line", taps, before, after, beforeScene, afterScene, outcome: outcome.slice(0, 240) },
+        {
+          generatedBy: "e345b9d6",
+          order: "ORD-0059",
+          node: "sim-scene-advances-on-server",
+          taps,
+          heroChanged,
+          heroBefore: before,
+          heroAfter: after,
+          bannerBefore: beforeScene,
+          bannerAfter: afterScene,
+          outcome: outcome.slice(0, 240),
+          note: heroChanged
+            ? "Today's hero followed the stage on this build."
+            : "ORD-0075: Today's hero still chooses Now/Next from Date.now(), so a staged scenario does not move it.",
+        },
         null,
         2,
       ) + "\n",

@@ -174,15 +174,19 @@ export function SimulationPanel({
            deletes the rows the old id pointed at without writing the new one.  So a teacher who
            presses 重置 is dropped back on the three-step wizard holding a journey that does exist
            on the server.  Handing over the id the server just returned is not an invented trip --
-           it is the trip `demo/reset` answered with -- and it is written only when the reset and
-           the advance both actually happened. */
+           it is the trip `demo/reset` answered with. */
         const reachedActive = advance?.journeyStatus === "ACTIVE";
-        if (result.status === "reset" && result.journey_id && reachedActive) {
+        /* Written whenever the server really created a journey.  Requiring ACTIVE here looked
+           safer and was a false gate: with a seeded ACTIVE journey already in the database the
+           single-ACTIVE-plan rule refuses the advance, so the id was never handed over and the
+           teacher stayed in the wizard -- the exact defect ORD-0078 (a) names.  My own node
+           `sim-reset-hands-the-stage-to-today` caught this by going red, not by being relaxed.
+           Whether the stage is executable is said in the outcome line, not used to hide the id. */
+        if (result.status === "reset" && result.journey_id) {
           localStorage.setItem("citynexus.v8.journey_id", result.journey_id);
-          /* Long enough to read the line, then the shell re-boots onto the journey it now names.  The reset node
-          in e2e/qoder-simulation-scene.spec.ts is what proves this path exists -- measured in 1.7s against a
-          real backend on a throwaway database, not eyeballed against a stubbed one. */
-          window.setTimeout(() => window.location.reload(), 1_200);
+          /* A moment to read the line, then the shell re-boots onto the journey it now names; the
+             longer pause on a refused advance is so the refusal itself is readable first. */
+          window.setTimeout(() => window.location.reload(), reachedActive ? 1_200 : 2_400);
         }
         if (!advance) {
           return {
