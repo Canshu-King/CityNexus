@@ -20,10 +20,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install backend test dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -e '.[dev,solver,push]'
+      - name: Install uv
+        run: python -m pip install uv
+      - name: Sync backend test dependencies
+        run: uv sync --all-extras --frozen
       - name: Run full backend suite (clean terminal)
         if: matrix.mode == 'clean'
         env:
@@ -39,7 +39,7 @@ jobs:
           CITYNEXUS_HERMES_MODEL: ''
           CITYNEXUS_HERMES_NATIVE_PROVIDER: ''
           CITYNEXUS_HERMES_NATIVE_MODEL: ''
-        run: python -m pytest -q
+        run: uv run python -m pytest -q
       - name: Run full backend suite (credential-polluted terminal)
         if: matrix.mode == 'inherited-provider-env'
         env:
@@ -55,4 +55,4 @@ jobs:
           CITYNEXUS_HERMES_MODEL: 'dummy-hermes-model'
           CITYNEXUS_HERMES_NATIVE_PROVIDER: 'dummy-provider'
           CITYNEXUS_HERMES_NATIVE_MODEL: 'dummy-native-model'
-        run: python -m pytest -q
+        run: uv run python -m pytest -q
