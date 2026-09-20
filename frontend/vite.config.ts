@@ -42,18 +42,22 @@ export default defineConfig({
             handler: "NetworkFirst",
             options: {
               cacheName: "citynexus-pages",
-              /* Measured from this machine against the live public tunnel path
-                 (`review/tunnel-latency.txt`, 10 samples, unauthenticated so the response
-                 is a 401 but the whole DNS + TLS + request path is traversed):
-                   warm request  0.86s – 1.06s
-                   cold request  2.96s  (DNS 0.03s + TLS 2.18s + request)
-                   re-handshake  1.81s
-                 Loopback floor for the same document is p50 0.9ms / p95 21ms, so the
-                 server is never the constraint.  A 3s budget is therefore smaller than a
-                 single cold connection on a *healthy* link: the timeout fires, the worker
-                 answers with the cached shell, and the traveller reads "I can't get back to
-                 the screen I was on".  10s is ~3.4x the cold sample and still bounds a
-                 genuinely dead network.  Not measured here: the cellular leg itself. */
+              /* Document-navigation latency, measured against the live public entry the user
+                 is actually on (`review/tunnel-latency-n20.txt`, 20 unauthenticated GETs of
+                 /v8/live, so the whole DNS + TLS + tunnel + auth-proxy path is traversed and
+                 only the tiny 401 body comes back):
+                   min 0.84s  p50 1.59s  p90 3.88s  p95 10.47s  max 20.93s
+                   4 of 20 above 3s, 2 of 20 above 8s
+                 Loopback floor for the same document is p50 0.9ms / p95 21ms, so the server
+                 is never the constraint -- the tail is the tunnel leg.  A 3s budget is below
+                 a fifth of real navigations, and even a body as small as this one understates
+                 a real shell, so the percentiles here are a lower bound.
+                 Kept out of this number on purpose: API/provider operation latency.  The
+                 backend lane measured a stay search at 120.86s on the provider chain, and a
+                 slow API call is no reason to let an HTML navigation hang.
+                 What 10s does not fix: roughly one navigation in ten still falls back to the
+                 cached shell. That fallback is the designed answer (a stale page beats a
+                 spinner), and the remaining tail belongs to the shared tunnel, not here. */
               networkTimeoutSeconds: 10,
               /* `0` used to be listed here.  An opaque/empty response is not a page worth
                  serving, and once cached under a NetworkFirst rule it becomes the answer
