@@ -76,3 +76,46 @@ now backed by a measured value, and the value is indeed measured — but its pro
 on a real navigation is **unproven** by this harness. I am not treating "the number is in the
 generated worker" as "the behaviour works", and the follow-up belongs to this lane:
 make case B reproducible (or prove it cannot happen) before anyone cites 10s as a guard.
+
+## 4. Option (A) landed -- ruling `5749925104`
+
+Commit `047e748`. The six mechanisms the ruling named, each where the ruling put it:
+
+| mechanism | file | evidence it is real |
+|---|---|---|
+| `SW_VERSION` | `public/sw.js` | `citynexus-recovery-m3-a4-v1`, answered over a MessageChannel |
+| recovery worker | `public/sw.js` | A4's file, with `precacheRecoveryShell()` and the activate-side legacy purge |
+| `updateViaCache: "none"` | `src/main.tsx` | production registration, plus `registration.update()` and the one-time `controllerchange` reload |
+| narrowed `navigateFallbackDenylist` | `vite.config.ts` | A4's three-entry list; per-route check in section 1 |
+| versioned cache names | `vite.config.ts` | `runtimeCacheVersion = "m3-a4-v1"` on both runtime caches |
+| `clientsClaim` / `skipWaiting`, worker out of SWR | `vite.config.ts` | both flags set; `["script","style","image","font"]`, no `worker` |
+
+Kept, as the ruling asked: `preview.proxy`, and the document budget set from the measured
+tunnel percentiles rather than the branch's candidate value.
+
+**A4's own gate: `2 collected / 2 passed / 0 failed` under `--config playwright.sw.config.ts`**
+(0 passed / 2 failed before this commit). Under the default project the same two tests report
+**skipped**, on purpose: they assert a lifecycle the dev server never registers, and
+`playwright.config.ts` belongs to `8c66aa92`, so the spec declares its own project with a
+reason string rather than this lane editing someone else's config.
+
+Answer to the question the verdict asked -- is "the old worker upgrades automatically" truly
+green or skipped? -- **truly green in the project that can prove it, skipped by name in the one
+that cannot.** It is not counted as a pass under dev.
+
+## 5. Kills for the landing -- `review/ord43-kill-table.txt`
+
+| mutant | node | result |
+|---|---|---|
+| drop the path test from the HTML guard | `sw-never-answers-script-with-html` | KILLED: "an online .js request ... was passed through as text/html" |
+| activate deletes every cache but its own | `sw-activate-keeps-foreign-caches` | KILLED: "deleted caches it does not own: [citynexus-pages-m3-a4-v1, ...]" |
+| activate deletes nothing | `sw-activate-keeps-foreign-caches` | KILLED: "the retired cache names A4-1 lists survived activation" |
+| code requests network-only, exactly as A4 writes it | `sw-offline-boot-serves-cached-code` | **KILLED: "offline code requests were refused instead of served from cache"** |
+
+The last row is the one to read carefully, because it is the only place this landing is **not**
+byte-for-byte A4: `public/sw.js` may serve a cached module when the cached bytes really are
+code (never when they are a document). This lane already shipped that network-only shape once
+and watched an offline reload fail to start -- `real-world-trip-operations-v9` went red, and
+the gate above is what grew out of fixing it. The deviation is therefore recorded, gated, and
+reversible in one line: if the arbiter wants byte-fidelity ahead of that gate, say so and it
+goes, together with the offline boot it protects.

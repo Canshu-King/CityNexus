@@ -1,0 +1,21 @@
+baseline sw.js=413659cee9cb25b50c54be4882e9848279790aa8
+kill43-a-html-guard-loses-the-path-test: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-service-worker.spec.ts :: sw-never-answers-script-with-html — an online .js request for a path the dev server answers with a document was passed through as "text/html"
+  node sw-never-answers-script-with-html: NAMED IN A RED
+  restored 413659cee9cb25b50c54be4882e9848279790aa8 OK
+kill43-b-activate-wipes-foreign-caches: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-service-worker.spec.ts :: sw-activate-keeps-foreign-caches — the worker's activate cleanup deleted caches it does not own: ["citynexus-pages-m3-a4-v1","citynexus-static-m3-a4-v1","workbox-preca
+  node sw-activate-keeps-foreign-caches: NAMED IN A RED
+  restored 413659cee9cb25b50c54be4882e9848279790aa8 OK
+kill43-c-activate-retires-nothing: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-service-worker.spec.ts :: sw-activate-keeps-foreign-caches — the retired cache names A4-1 lists survived activation, so an old strategy's entries are still able to answer (survivors ["citynexus
+  node sw-activate-keeps-foreign-caches: NAMED IN A RED
+  restored 413659cee9cb25b50c54be4882e9848279790aa8 OK
+kill43-d-code-requests-network-only: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-service-worker.spec.ts :: sw-offline-boot-serves-cached-code — offline code requests were refused instead of served from cache: ["http://127.0.0.1:4450/@vite/client :: net::ERR_FAILED","http://
+  node sw-offline-boot-serves-cached-code: NAMED IN A RED
+  restored 413659cee9cb25b50c54be4882e9848279790aa8 OK
