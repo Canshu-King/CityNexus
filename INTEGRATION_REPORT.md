@@ -2236,3 +2236,74 @@ CITYNEXUS_EVIDENCE_DIR='D:\moodle\_qoder_ord30_evidence_20260920\guard2' \
 
 一次跑只换一个 `RUN_ID` 与同名 `_*.db`（fresh-or-no-run 会拒第二个调用复用同一个库），
 且**不要**在这条命令前加 `env`。
+
+## 88. ORD-0041：M3 那一族合进权威树，三组数字，以及合并后仍然红的那一条
+
+合并前先做了一件该做的事：**证明对方没有把我的东西盖回去**。上次发布包出事的形状是
+"包缺一个已被 import 的新文件"，反向危险是"合并没有我最近的提交"。`c0367c1` 是 `a512244`
+的祖先（他们的分支已含我的 tip），并且逐文件比过 sha256 全部相同：
+
+```
+qoder-e2e-config-guard.spec.ts 70b44863 = 70b44863   executionWindow.ts   4280bbe8 = 4280bbe8
+LiveRecovery.tsx               f527d929 = f527d929   next_leg_binding     ae2fc8eb = ae2fc8eb
+v9.py                          56da6ea4 = 56da6ea4   playwrightEnv.ts     57756170 = 57756170
+INTEGRATION_REPORT.md          719e0b36 = 719e0b36
+```
+
+`git merge --no-ff --no-commit a512244` → "Automatic merge went well"、`--diff-filter=U` **0 文件**，
+合并提交 **`a453121`**：**20 笔提交 / 37 文件 / +6980 / −203**，其中 `backend/app/**` 零改动。
+内容：主题根契约（`data-theme` 能压过系统）、地图真手势 + 路线分层 + 瓦片失败显式降级、
+AI 规划面板不再把兜底行谎报成 AI 结果、深色下那张面板可读、创建失败不再看起来像"没反应"、
+以及服务工作者/缓存三处（不再缓存 status 0、不再用 HTML 回答 `.js` 请求、document 超时放宽）。
+
+### 88.1 要交的三组数字（同一棵树 `a453121`，全部亲测）
+
+| # | 门 | 读数 |
+| --- | --- | --- |
+| 1 | 全量后端 `pytest -q -p no:cacheprovider --no-header`（解释器 `D:\moodle\CityNexus\.venv`，AI 三个变量清空） | **913 passed / 15 skipped / 0 failed**（77.30s）；`--collect-only` **928 collected** |
+| 2 | `node node_modules/@playwright/test/cli.js test --list` | **`Total: 87 tests in 34 files`** = `chromium` **86** + setup 工程 `real-seed` **1**（`_qoderRealSeed.setup.ts:110`） |
+| 3 | `npm run build` | **exit 0**（`dist/v10-sw.js` 等照常产出）；另 `typecheck` exit 0 / `error TS` 0 条、`typecheck:all` exit 0 / 0 条 |
+
+与权威读数 **913/15/0 与 928** 对表：**完全相等，零差值**——这次合并 37 个文件里没有一个是
+`backend/` 路径，所以后端分母不该动、也确实没动（口径同 §85）。
+
+前端 63 → **87**（+24）逐文件点名：
+
+```
+qoder-map-interaction.spec.ts      0 -> 3     qoder-onboarding-failure.spec.ts  0 -> 2
+qoder-plan-ai-contrast.spec.ts     0 -> 3     qoder-plan-ai-thinking.spec.ts    0 -> 8
+qoder-service-worker.spec.ts       0 -> 3     qoder-theme-contract.spec.ts      0 -> 4
+qoder-ui-overnight-shots.spec.ts   5 -> 6     （+1，多一个采集场景）
+```
+
+旧的 54/5 已经不是现状，别再引用；新现状是 **87 collected**（其中 6 条是 shot 采集器
+无 `CITYNEXUS_SHOT_LABEL` 时的设计性 skip）。
+
+### 88.2 合并树上红的那一条，是对方留的"未完成的证据"，不是我合坏了
+
+全套权威 E2E 跑一遍（run `ord41-full`，web :3471 → backend :8471、`_ord41-full.db`、ai=disabled、
+`reuseExistingServer=false`、provenance 行核过）：
+
+```
+80 expected / 6 skipped / 1 unexpected / 0 flaky   （266.1s）
+unexpected: qoder-onboarding-failure.spec.ts :: the named backend reason reaches the onboarding screen
+  Locator:  getByTestId('trial-create-error')
+  Expected substring: "V13_JOURNEY_DAYS_OUT_OF_BOUNDS:9"
+  Received string:    "This step did not complete — no journey was created."
+```
+
+这不是合并事故，是**故意红的待办门**。该文件自己的注释写着：这条被单独拆出来，是因为
+"如果跟已落地的修复共用一个 verdict，读报表的人就分不开'向导不再沉默'和'具名原因仍然到不了这个界面'"，
+并且点名缺口位置：**"The remaining gap is one prop at `V8Experience.tsx:800`, a file this lane does not own."**
+`V8Experience.tsx` 是我的写域，`JourneyTrialSetup.tsx:555-561` 的渲染早就准备好了
+（`{message ? <span>{message}</span> : null}`），缺的只是壳层把 `message` 传进去。
+我也顺手排除了另一个假设：他们工作区里那份**未提交**的 `JourneyTrialSetup.tsx`（+92/−20，ORD-0036 在做的
+刷新恢复）与这条无关——`git diff` 里没有任何 `message` / `createAttemptFailed` 行的改动，
+所以"绿只在脏工作区里成立"这个说法不成立。
+
+处置：**我没有在这一轮里补那一行 prop**。理由是 ORD-0033 的边界明写"不要碰前端（错误可见性另单
+ORD-0034）"，而 ORD-0034 归 `e345b9d6`、账本状态 PARTIAL。要么把 ORD-0034 补完的归属定下来
+（一行 prop + 复跑那 2 条，我可以在 15 分钟内交），要么由 UI 车道自己接——**别让这条红在无人认领的情况下
+被下一次"顺手改绿"**。另外它和我正在做的 ORD-0033 是同一件事的两半：入口改成 422 + 具名码之后，
+这条门要显示的 `V13_JOURNEY_DAYS_OUT_OF_BOUNDS:9` 会换成型如 `JOURNEY_DAYS_OUT_OF_BOUNDS` 带
+`actual_days`/`max_days` 的结构体，届时该按新契约更新那条断言，而不是把旧串硬留在测试里。
