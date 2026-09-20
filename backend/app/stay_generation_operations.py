@@ -237,6 +237,38 @@ def find_open_operation(
     )
 
 
+class GenerationStoreBusy(RuntimeError):
+    """The database could not take the new job within the acceptance budget.
+
+    Distinct from a bug on purpose: it is a real, tellable condition ("another generation owns
+    the writer right now"), and the door answers 503 + `retry_after_ms` rather than the raw 500
+    an unhandled `OperationalError` would produce.
+    """
+
+
+def _commit_with_bounded_retries(session: Session, *, attempts: int = 4) -> None:
+    """Try to commit, giving up inside the acceptance budget instead of at the 30s engine timeout.
+
+    The wait is per attempt and deliberately short: four tries cost well under a second, which
+    keeps the "accept fast" promise even while another job holds the writer, and a caller that
+    still gets refused learns it immediately rather than after a stalled request.
+    """
+
+    from sqlalchemy.exc import OperationalError
+
+    for attempt in range(attempts):
+        try:
+            session.commit()
+            return
+        except OperationalError:
+            session.rollback()
+            if attempt == attempts - 1:
+                raise GenerationStoreBusy(
+                    f"the stay-generation store stayed busy over {attempts} attempts"
+                )
+            time.sleep(0.05)
+
+
 def submit_operation(
     session: Session,
     journey: Journey,
@@ -256,6 +288,10 @@ def submit_operation(
     if existing is not None:
         return existing, True
     stamp = now_iso()
+    # A generation in flight owns the database's only writer, so this INSERT can be refused.
+    # It must never turn into a 500 at the door that is supposed to be fast: wait briefly,
+    # retry a bounded number of times, and let the caller decide what to say.
+    session.execute(text("PRAGMA busy_timeout = 200"))
     row = StayGenerationOperation(
         id=str(uuid.uuid4()),
         journey_id=journey.id,
@@ -271,7 +307,7 @@ def submit_operation(
     )
     session.add(row)
     try:
-        session.commit()
+        _commit_with_bounded_retries(session, attempts=4)
     except IntegrityError:
         # Someone else's identical job won the index between the read and the insert.
         session.rollback()

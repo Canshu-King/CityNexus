@@ -377,6 +377,7 @@ from app.planning.authoritative_v12 import compose_authoritative_multiday
 from app.stay_generation_operations import (
     ABANDONED,
     FAILED,
+    GenerationStoreBusy,
     abandon_operation,
     operation_payload,
     operations_for_journey,
@@ -2559,7 +2560,19 @@ def submit_stay_generation(
     """
 
     journey = require(session, Journey, str(journey_id), "Journey")
-    row, reused = submit_operation(session, journey, _generation_request(payload))
+    try:
+        row, reused = submit_operation(session, journey, _generation_request(payload))
+    except GenerationStoreBusy:
+        # Named, retryable and localised by key: the traveller's tap is not lost, it just
+        # could not be written down this instant, and "Internal Server Error" would be a lie
+        # about which end broke.
+        return error(
+            "GENERATION_STORE_BUSY",
+            "Another generation is writing right now; this one was not recorded. Try again.",
+            status=503,
+            details={"retry_after_ms": 500},
+            message_key="generation.store_busy",
+        )
     body = operation_payload(row)
     return {
         "operation_id": row.id,
@@ -2647,7 +2660,18 @@ def generate_stay_journey_options(
     """
 
     journey = require(session, Journey, str(journey_id), "Journey")
-    row, _reused = submit_operation(session, journey, _generation_request(payload))
+    try:
+        row, _reused = submit_operation(session, journey, _generation_request(payload))
+    except GenerationStoreBusy:
+        # Same named answer as the asynchronous door: one condition, one wording, no
+        # endpoint-specific invention.
+        return error(
+            "GENERATION_STORE_BUSY",
+            "Another generation is writing right now; this one was not recorded. Try again.",
+            status=503,
+            details={"retry_after_ms": 500},
+            message_key="generation.store_busy",
+        )
     finished = wait_for_operation(row.id)
     if finished is None:
         raise HTTPException(500, f"Generation operation {row.id} disappeared")

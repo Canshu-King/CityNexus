@@ -651,6 +651,64 @@ def test_a_reload_reads_the_stored_operation_and_a_repeat_post_reuses_it(monkeyp
     assert finished["status"] == COMPLETED, finished
 
 
+def test_a_busy_store_answers_a_named_retry_on_both_doors(monkeypatch) -> None:
+    """The database can be held by a generation in flight; that is not an internal error.
+
+    A raw 500 would tell the traveller nothing and would look like the app broke.  A named 503
+    with a retry hint says what happened, on the door that accepts and the door that waits.
+    """
+
+    from app import main as main_module
+
+    def _busy(*_args, **_kwargs):
+        raise main_module.GenerationStoreBusy("the store is busy")
+
+    monkeypatch.setattr(main_module, "submit_operation", _busy)
+    journey_id = _journey()
+    for url in (
+        f"/api/v1/journeys/{journey_id}/stay-generations",
+        f"/api/v1/journeys/{journey_id}/stay-options/generate",
+    ):
+        response = client.post(url, json={})
+        assert response.status_code == 503, (url, response.status_code, response.text[:200])
+        body = response.json()["error"]
+        assert body["code"] == "GENERATION_STORE_BUSY", body
+        assert body["message_key"] == "generation.store_busy", body
+        assert body["details"]["retry_after_ms"] == 500, body
+
+
+def test_the_acceptance_retry_is_bounded_and_then_names_the_condition() -> None:
+    """Four short waits, then a refusal - never the engine's 30-second stall.
+
+    Without the bound, "accept fast" quietly becomes "the request hangs and then 500s", which is
+    the failure mode this whole contract was written to remove.
+    """
+
+    from sqlalchemy.exc import OperationalError
+
+    from app import stay_generation_operations as ops
+
+    attempts = []
+
+    class _StubbornSession:
+        def commit(self) -> None:
+            attempts.append(1)
+            raise OperationalError("INSERT INTO stay_generation_operations", {}, Exception("locked"))
+
+        def rollback(self) -> None:
+            return None
+
+    started = time.monotonic()
+    try:
+        ops._commit_with_bounded_retries(_StubbornSession(), attempts=4)
+    except ops.GenerationStoreBusy as exc:
+        assert "4 attempts" in str(exc), exc
+    else:
+        raise AssertionError("a permanently busy store was reported as success")
+    assert len(attempts) == 4, attempts
+    assert time.monotonic() - started < 1.0, time.monotonic() - started
+
+
 def test_a_returning_client_can_name_its_open_job_without_the_id(monkeypatch) -> None:
     """The read side of "reload restores the same operation".
 
