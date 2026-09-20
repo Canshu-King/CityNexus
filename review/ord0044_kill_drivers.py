@@ -83,6 +83,61 @@ CASES = [
         "        busy={setupBusy}\n",
         ["named reason inside trial-create-error"],
     ),
+    (
+        # Ruling (1a): a disabled button the assistive tech cannot tie to a reason is still a
+        # silent blocker.  Two mutants, because the gate checks two distinct attributes.
+        "kill44-e-says-the-field-is-not-required",
+        WIZARD_REL,
+        '              placeholder={zh ? "例如：厦门高崎国际机场" : "e.g. Xiamen Gaoqi Intl Airport"}\n'
+        '              aria-required="true"\n',
+        '              placeholder={zh ? "例如：厦门高崎国际机场" : "e.g. Xiamen Gaoqi Intl Airport"}\n',
+        ["missing-anchor-is-named-before-submit"],
+    ),
+    (
+        "kill44-f-leaves-the-reason-unassociated",
+        WIZARD_REL,
+        """              aria-describedby={
+                arrivalProblem
+                  ? "trial-required-hint trial-arrival-problem"
+                  : draft.arrivalLocation.trim()
+                    ? undefined
+                    : "trial-required-hint"
+              }
+""",
+        "              aria-describedby={undefined}\n",
+        ["missing-anchor-is-named-before-submit"],
+    ),
+    (
+        # Ruling (1b): a bare em-dash reads as an acceptable blank.
+        "kill44-g-reviews-a-blank-anchor-as-a-dash",
+        WIZARD_REL,
+        '                {draft.arrivalLocation.trim() || (zh ? "未填写 · 必填" : "not filled in · required")}\n',
+        '                {draft.arrivalLocation.trim() || "—"}\n',
+        ["review-page-says-missing-anchor-is-required"],
+    ),
+    (
+        # Ruling (1c): the backend stays the authority, so its complaint must land on the
+        # field it named.  Dropping the loc routing keeps the headline honest and smears the
+        # arrival sentence onto the departure box, which is what the node's last assertion is
+        # for -- the first assertion still passes under this mutant.
+        "kill44-h-ignores-which-field-the-backend-named",
+        WIZARD_REL,
+        "  const arrivalProblem = fieldProblem(message, /arrival_anchor/);\n"
+        "  const departureProblem = fieldProblem(message, /departure_anchor/);\n",
+        "  const arrivalProblem = fieldProblem(message, /.*/);\n"
+        "  const departureProblem = fieldProblem(message, /.*/);\n",
+        ["backend-reason-lands-on-its-own-field"],
+    ),
+    (
+        # The 500 node: an unhandled server error crosses the wire as plain text, so the
+        # status is the only fact the client may state.  Hiding it leaves "it failed" with no
+        # way to tell a refused request from a dropped one.
+        "kill44-i-hides-the-status-the-server-sent",
+        SHELL_REL,
+        "    `Request failed (${status})`;\n",
+        '    "The request failed";\n',
+        ["a 500 stays silent"],
+    ),
 ]
 
 only = sys.argv[1:] or [c[0] for c in CASES]

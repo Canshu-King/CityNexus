@@ -1,0 +1,31 @@
+baselines: V8Experience.tsx=655b2833c99278d7580425bd625c8dd73f306d44, JourneyTrialSetup.tsx=4ca4d1200a537098941f9c29af272ec815588491, waitClock.ts=16add639ab3477efc01b6a180d5075010e78b3e3
+kill47-a-waiting-block-removed: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-generation-wait.spec.ts :: gen-wait-phase-stays-visible — no waiting block appeared for en
+  node gen-wait-phase-stays-visible: NAMED IN A RED
+  restored JourneyTrialSetup.tsx 4ca4d1200a537098941f9c29af272ec815588491 OK
+kill47-b-clock-frozen-at-zero: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-generation-wait.spec.ts :: gen-wait-phase-stays-visible — en: the waiting number never advanced ([0,0,0,0,0,0,0,0,0,0,0,0])
+  node gen-wait-phase-stays-visible: NAMED IN A RED
+  restored waitClock.ts 16add639ab3477efc01b6a180d5075010e78b3e3 OK
+kill47-c-stop-does-not-abort: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-generation-wait.spec.ts :: gen-wait-stop-waiting-aborts — after stopping, the screen said nothing about what just happened
+  node gen-wait-stop-waiting-aborts: NAMED IN A RED
+  restored V8Experience.tsx 655b2833c99278d7580425bd625c8dd73f306d44 OK
+kill47-d-zero-options-called-success: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-generation-wait.spec.ts :: gen-empty-options-is-not-success — en: zero stay options were presented as an ordinary Today
+  node gen-empty-options-is-not-success: NAMED IN A RED
+  restored V8Experience.tsx 655b2833c99278d7580425bd625c8dd73f306d44 OK
+kill47-e-refused-wears-the-empty-face: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-generation-wait.spec.ts :: gen-three-states-distinguishable — a refused retry from Today rendered no state at all
+  node gen-three-states-distinguishable: NAMED IN A RED
+  restored V8Experience.tsx 655b2833c99278d7580425bd625c8dd73f306d44 OK
+kill47-f-notice-denies-a-trip-that-exists: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-generation-wait.spec.ts :: gen-three-states-distinguishable — the notice denies a journey that exists: "This step did not complete — no journey was created. Request failed (500)"
+  node gen-three-states-distinguishable: NAMED IN A RED
+  restored JourneyTrialSetup.tsx 4ca4d1200a537098941f9c29af272ec815588491 OK
