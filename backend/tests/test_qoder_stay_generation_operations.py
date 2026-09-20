@@ -881,3 +881,64 @@ def test_the_provider_timeout_is_the_configured_value_not_a_hidden_floor(monkeyp
         assert widened._client.timeout.read == 45.0, widened._client.timeout
     finally:
         widened.close()
+
+
+def test_a_refused_commit_is_re_staged_and_only_then_called_a_202(monkeypatch) -> None:
+    """Tonight's defect, measured at the seam where it happened.
+
+    The ORD-0057 acceptance probe (eight submits behind a job owning SQLite's single writer)
+    came back with eight 202s and **one** row in the table: the refused attempt rolled back, the
+    retry's `session.commit()` then succeeded while writing nothing - a rollback de-registers
+    the already-flushed new object, so the retried transaction had no row left to insert - and
+    the caller's first poll was a 404 for a job the door had just accepted.
+
+    The busy writer is simulated here rather than held for real.  Measured, not theorised: an
+    earlier version of this gate took the write lock from a second connection, and because the
+    suite shares one database file it left the *next* run's tests timing out in a cascade -
+    a gate that destabilises the thing it is meant to protect is not evidence.  Failing the
+    first commit at the seam is the same state, without borrowing the lock.
+    """
+
+    from sqlalchemy.exc import OperationalError
+
+    import app.stay_generation_operations as ops
+
+    journey_id = _journey()
+    request = {"candidate_count": 4, "query": "the first commit is refused"}
+    with SessionLocal() as session:
+        journey = session.get(Journey, journey_id)
+        assert journey is not None
+        real_commit = session.commit
+        attempts: list[str] = []
+
+        def refusing_first_commit() -> None:
+            attempts.append("commit")
+            if len(attempts) == 1:
+                session.rollback()  # what the store does to a refused write
+                raise OperationalError(
+                    "INSERT INTO stay_generation_operations (id) VALUES (?)",
+                    {"id": "first attempt"},
+                    Exception("database is locked"),
+                )
+            real_commit()
+
+        # The retry path waits between attempts; the wait itself is not what is under test.
+        monkeypatch.setattr(ops.time, "sleep", lambda _seconds: None)
+        session.commit = refusing_first_commit
+        row, reused = ops.submit_operation(session, journey, request, start_worker=False)
+        assert reused is False, row
+        stored_id = row.id
+
+    # Two commits happened: the refused one and the one that had to carry the row.
+    assert len(attempts) == 2, attempts
+    # And the second one actually wrote something, which is the whole claim.
+    with SessionLocal() as verify:
+        found = verify.scalar(
+            select(StayGenerationOperation.id).where(
+                StayGenerationOperation.id == stored_id
+            )
+        )
+    assert found == stored_id, (
+        "the door handed out an operation id the store never received - the retried commit "
+        "wrote an empty transaction, which is the pre-fix behaviour"
+    )

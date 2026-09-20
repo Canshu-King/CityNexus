@@ -38,7 +38,7 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from typing import Any, Callable
 
-from sqlalchemy import select, text, update
+from sqlalchemy import func, select, text, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -246,12 +246,26 @@ class GenerationStoreBusy(RuntimeError):
     """
 
 
-def _commit_with_bounded_retries(session: Session, *, attempts: int = 4) -> None:
+def _commit_with_bounded_retries(
+    session: Session,
+    *,
+    attempts: int = 4,
+    restage: Callable[[], None] | None = None,
+) -> None:
     """Try to commit, giving up inside the acceptance budget instead of at the 30s engine timeout.
 
     The wait is per attempt and deliberately short: four tries cost well under a second, which
     keeps the "accept fast" promise even while another job holds the writer, and a caller that
     still gets refused learns it immediately rather than after a stalled request.
+
+    ``restage`` exists because of a measurement, not a theory.  Reproduced with the acceptance
+    probe (eight submits, first job's worker holding the writer): the attempts that were refused
+    printed `INSERT … ROLLBACK`, and the attempt after them printed a **clean COMMIT that wrote
+    nothing** - because the rollback de-registered the already-flushed new ORM object, so the
+    retried transaction had no pending row.  The door answered 202 with an id that was never in
+    the store, and the caller's first poll came back 404.  A retry that cannot re-queue its work
+    is not a retry, so the caller passes the staging step in and every attempt submits the row
+    again.
     """
 
     from sqlalchemy.exc import OperationalError
@@ -262,6 +276,8 @@ def _commit_with_bounded_retries(session: Session, *, attempts: int = 4) -> None
             return
         except OperationalError:
             session.rollback()
+            if restage is not None:
+                restage()
             if attempt == attempts - 1:
                 raise GenerationStoreBusy(
                     f"the stay-generation store stayed busy over {attempts} attempts"
@@ -292,22 +308,41 @@ def submit_operation(
     # It must never turn into a 500 at the door that is supposed to be fast: wait briefly,
     # retry a bounded number of times, and let the caller decide what to say.
     session.execute(text("PRAGMA busy_timeout = 200"))
-    row = StayGenerationOperation(
-        id=str(uuid.uuid4()),
-        journey_id=journey.id,
-        fingerprint=fingerprint,
-        status=QUEUED,
-        phase=None,
-        request_json=json.dumps(request_payload, ensure_ascii=False, sort_keys=True),
-        result_json="{}",
-        error_json="{}",
-        outcome=None,
-        queued_at=stamp,
-        updated_at=stamp,
-    )
-    session.add(row)
+    operation_id = str(uuid.uuid4())
+    request_json = json.dumps(request_payload, ensure_ascii=False, sort_keys=True)
+
+    staged: list[StayGenerationOperation] = []
+
+    def stage() -> StayGenerationOperation:
+        """Put the row into the session, ready for this attempt's transaction.
+
+        Re-runnable by design: after a refused commit the rollback de-registers the flushed
+        object, so the next attempt needs its own instance.  The id is minted once, outside,
+        because the caller was already handed a status url that names it - and the live
+        instance is remembered, so what this function returns is the row the session actually
+        owns, not the detached first attempt.
+        """
+
+        row = StayGenerationOperation(
+            id=operation_id,
+            journey_id=journey.id,
+            fingerprint=fingerprint,
+            status=QUEUED,
+            phase=None,
+            request_json=request_json,
+            result_json="{}",
+            error_json="{}",
+            outcome=None,
+            queued_at=stamp,
+            updated_at=stamp,
+        )
+        session.add(row)
+        staged.append(row)
+        return row
+
+    stage()
     try:
-        _commit_with_bounded_retries(session, attempts=4)
+        _commit_with_bounded_retries(session, attempts=4, restage=stage)
     except IntegrityError:
         # Someone else's identical job won the index between the read and the insert.
         session.rollback()
@@ -315,9 +350,21 @@ def submit_operation(
         if winner is None:
             raise
         return winner, True
+    # The promise of a 202 is "this job exists and you can ask it about later", so check it
+    # against the store rather than against the object in memory: with `expire_on_commit=False`
+    # the session would happily hand back a row that a rolled-back retry never wrote.
+    durable = session.scalar(
+        select(func.count())
+        .select_from(StayGenerationOperation)
+        .where(StayGenerationOperation.id == operation_id)
+    )
+    if not durable:
+        raise GenerationStoreBusy(
+            f"operation {operation_id} reported a commit the store does not hold"
+        )
     if start_worker:
-        dispatch(row.id)
-    return row, False
+        dispatch(operation_id)
+    return staged[-1], False
 
 
 class TransitionRefused(RuntimeError):

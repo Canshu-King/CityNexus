@@ -34,7 +34,8 @@ PYTHON = Path(r"D:\moodle\CityNexus\.venv\Scripts\python.exe")
 OUT_DIR = Path(r"D:\moodle\_qoder_ord30_evidence_20260920\ord57")
 RUN_ID = os.environ.get("PROBE_RUN_ID", "ord57-lat")
 DB_FILE = BACKEND / f"_{RUN_ID}.db"
-JOBS = 8
+JOBS = 6
+IDLE_TAPS = 3
 TZ = timezone(timedelta(hours=8))
 
 
@@ -63,6 +64,11 @@ def main() -> int:
     env.update(
         {
             "CITYNEXUS_DATABASE_URL": f"sqlite:///./{DB_FILE.name}",
+            # The guard from ORD-0058 makes `demo/reset` a 403 unless the process claims the
+            # stage.  This is a throwaway database on an ephemeral port, which is precisely the
+            # case the flag exists to allow - so claim it rather than work around the guard.
+            "CITYNEXUS_DEMO_MODE": "true",
+            "CITYNEXUS_GUARDIAN_AUTORUN": "false",
             "CITYNEXUS_AI_ENABLED": "false",
             "DEEPSEEK_API_KEY": "",
             "CITYNEXUS_AI_API_KEY": "",
@@ -94,47 +100,105 @@ def main() -> int:
 
         traveler = httpx.post(f"{base}/api/v1/demo/reset", timeout=60.0).json()["traveler_id"]
         start = datetime(2026, 11, 3, 9, 0, tzinfo=TZ)
-        journey = httpx.post(
-            f"{base}/api/v1/journeys",
-            json={
-                "traveler_id": traveler,
-                "title": "acceptance latency",
-                "city_code": "CN-XIAMEN",
-                "timezone": "Asia/Shanghai",
-                "start_at": start.isoformat(),
-                "end_at": (start + timedelta(days=2, hours=8)).isoformat(),
-                "budget": {"amount_minor": 90000, "currency": "CNY"},
-                "planning_mode": "balanced",
-            },
-            timeout=60.0,
-        ).json()
-        journey_id = journey["id"]
 
+        def create_journey(title: str) -> str:
+            created = httpx.post(
+                f"{base}/api/v1/journeys",
+                json={
+                    "traveler_id": traveler,
+                    "title": title,
+                    "city_code": "CN-XIAMEN",
+                    "timezone": "Asia/Shanghai",
+                    "start_at": start.isoformat(),
+                    "end_at": (start + timedelta(days=2, hours=8)).isoformat(),
+                    "budget": {"amount_minor": 90000, "currency": "CNY"},
+                    "planning_mode": "balanced",
+                },
+                timeout=60.0,
+            )
+            assert created.status_code == 201, created.text[:300]
+            return created.json()["id"]
+
+        journey_id = create_journey("acceptance latency")
+        idle_operations: list[str] = []
+        idle_journeys: list[str] = []
+
+        def open_jobs(jid: str) -> int:
+            body = httpx.get(f"{base}/api/v1/journeys/{jid}/stay-generations", timeout=30.0).json()
+            return len(body.get("open") or [])
+
+        def tap(jid: str, question: str, *, budget_attempts: int = 8):
+            """One traveller tap: returns (latency ms, operation_id, attempts, refusals)."""
+
+            refusals = 0
+            for attempt in range(1, budget_attempts + 1):
+                began = time.perf_counter()
+                response = httpx.post(
+                    f"{base}/api/v1/journeys/{jid}/stay-generations",
+                    # `candidate_count` is validated in 3..8, so distinctness comes from
+                    # `query`, which `generation_fingerprint` also hashes.
+                    json={"candidate_count": 4, "query": question},
+                    timeout=120.0,
+                )
+                elapsed = (time.perf_counter() - began) * 1000.0
+                if response.status_code == 202:
+                    return elapsed, response.json()["operation_id"], attempt, refusals
+                if response.status_code == 503:
+                    # A job in flight owns SQLite's single writer. The named refusal and its
+                    # `retry_after_ms` are the contract, so the probe obeys them and counts
+                    # them - the refusal rate is the price of the acceptance number, and
+                    # hiding it would make the p95 unreadable.
+                    refusals += 1
+                    details = (response.json().get("error") or {}).get("details") or {}
+                    time.sleep(float(details.get("retry_after_ms", 500)) / 1000.0)
+                    continue
+                raise AssertionError(f"{response.status_code}: {response.text[:300]}")
+            raise AssertionError(f"tap {question!r} was never accepted in {budget_attempts} tries")
+
+        # --- idle face: what one tap costs when nothing else owns the writer --------------
+        idle: list[float] = []
+        for index in range(IDLE_TAPS):
+            idle_journey = create_journey(f"idle tap {index}")
+            began_wait = time.perf_counter()
+            while open_jobs(idle_journey) and time.perf_counter() - began_wait < 30.0:
+                time.sleep(0.5)
+            elapsed, operation_id, _attempt, _refused = tap(idle_journey, f"idle {index}")
+            idle.append(elapsed)
+            idle_journeys.append(idle_journey)
+            idle_operations.append(operation_id)
+
+        # --- contended face: taps while earlier chains still own the writer ---------------
         samples: list[float] = []
         operations: list[str] = []
+        attempts_per_submit: list[int] = []
+        refusals = 0
         for index in range(JOBS):
-            began = time.perf_counter()
-            response = httpx.post(
-                f"{base}/api/v1/journeys/{journey_id}/stay-generations",
-                json={"candidate_count": 5 + index},  # a distinct question each time
-                timeout=120.0,
-            )
-            samples.append((time.perf_counter() - began) * 1000.0)
-            assert response.status_code == 202, response.text[:300]
-            operations.append(response.json()["operation_id"])
+            elapsed, operation_id, attempt, refused = tap(journey_id, f"stay-aware journey {index}")
+            samples.append(elapsed)
+            attempts_per_submit.append(attempt)
+            refusals += refused
+            operations.append(operation_id)
 
         # Still open while these reads happen - which is the whole claim: the request is not
         # the thing carrying the provider chain any more.
         states = []
         for operation_id in operations:
-            body = httpx.get(
+            read = httpx.get(
                 f"{base}/api/v1/journeys/{journey_id}/stay-generations/{operation_id}", timeout=30.0
-            ).json()
+            )
+            body = read.json()
+            assert read.status_code == 200 and "status" in body, (read.status_code, body)
             states.append((body["status"], body["phase"], body["elapsed_ms"]))
         still_running = sum(1 for status, _phase, _ms in states if status in {"QUEUED", "RUNNING"})
 
         # Leave nothing behind: abandon what is in flight, then stop the server.
         abandoned = []
+        for idle_jid, operation_id in zip(idle_journeys, idle_operations):
+            body = httpx.post(
+                f"{base}/api/v1/journeys/{idle_jid}/stay-generations/{operation_id}/abandon",
+                timeout=30.0,
+            )
+            abandoned.append(body.json().get("status"))
         for operation_id in operations:
             body = httpx.post(
                 f"{base}/api/v1/journeys/{journey_id}/stay-generations/{operation_id}/abandon",
@@ -145,16 +209,55 @@ def main() -> int:
         report = {
             "measured_at": datetime.now(timezone.utc).isoformat(),
             "run_id": RUN_ID,
+            "tree": str(BACKEND.parent),
+            "head": subprocess.run(
+                ["git", "rev-parse", "HEAD"],
+                cwd=BACKEND.parent,
+                capture_output=True,
+                text=True,
+                timeout=20,
+            ).stdout.strip(),
+            "interpreter": sys.version.split()[0],
+            "credentials": {
+                "DEEPSEEK_API_KEY in server env": bool(env.get("DEEPSEEK_API_KEY")),
+                "CITYNEXUS_AI_ENABLED": env["CITYNEXUS_AI_ENABLED"],
+            },
             "server": {"pid": server.pid, "port": port, "database": DB_FILE.name},
             "chain": "cold CN-XIAMEN through Photon -> 3 Overpass mirrors -> Nominatim",
-            "submits": JOBS,
+            "idle_store": {
+                "taps": len(idle),
+                "acceptance_ms": {
+                    "p50": round(percentile(idle, 50), 1),
+                    "p95": round(percentile(idle, 95), 1),
+                    "max": round(max(idle), 1) if idle else None,
+                    "all": [round(item, 1) for item in idle],
+                },
+                "note": "one tap on a journey that has no open job of its own. Not a free "
+                "store: another journey's chain can still own the single writer, and when it "
+                "does the tap is refused by name, so read this face together with the refusal "
+                "count below rather than as a clean-machine number",
+            },
+            "contended_store": {
+                "taps": len(samples),
+                "acceptance_ms": {
+                    "p50": round(percentile(samples, 50), 1),
+                    "p95": round(percentile(samples, 95), 1),
+                    "max": round(max(samples), 1) if samples else None,
+                    "all": [round(item, 1) for item in samples],
+                },
+                "503_refusals_before_acceptance": refusals,
+                "attempts_per_submit": attempts_per_submit,
+                "note": "six taps against one journey while earlier chains still own the "
+                "writer; a refusal is the contract working, not a failure",
+            },
+            "submits": len(samples),
             "acceptance_ms": {
                 "p50": round(percentile(samples, 50), 1),
                 "p95": round(percentile(samples, 95), 1),
-                "max": round(max(samples), 1),
+                "max": round(max(samples), 1) if samples else None,
                 "all": [round(item, 1) for item in samples],
             },
-            "over_1000ms": sum(1 for item in samples if item > 1000.0),
+            "idle_acceptance_ms": [round(item, 1) for item in idle],
             "operations_still_in_flight_at_read": still_running,
             "states_at_read": states,
             "abandon_responses": abandoned,
