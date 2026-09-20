@@ -159,6 +159,7 @@ def test_reset_leaves_a_bookable_stage_and_start_scenario_makes_it_executable(_s
     """
 
     assert client.post("/api/v1/demo/reset").status_code == 200
+    assert client.post("/api/v1/demo/prepare-scenario").status_code == 200
     scene = _scene()
     journey_id = scene["journey_id"]
     # ORD-0078 is about the *PLANNED* gate, so the assertion has to distinguish that refusal
@@ -255,33 +256,49 @@ def test_the_seeded_stage_is_executable_and_both_branches_share_one_key_set(_sta
 
     Two halves, both asserted:
 
-    (a) `demo/reset` leaves the journey `ACTIVE` with a selected plan and a cursor, reached by
-        the existing `plans/generate` -> `select` -> `/start` pipeline - so the state is one the
-        product's own validators allow, not a column someone set.  The cost of doing that in the
-        open is reported, not hidden, because the commander's rule is ">10s => stop and tell me".
-    (b) the populated stage and an empty stage answer with **equal key sets**.  A strict client
+    (a) `demo/reset` seeds only: the journey stays DRAFT and the library holds **no**
+        PlanVersion.  Seeding a plan from here is what leaked a SELECTED plan into `GET /plans`
+        (which does not filter by status) and turned 35 gates red, one of them in isolation -
+        a fixture door may reset state and nothing else;
+    (b) `demo/prepare-scenario` reaches PLANNED + SELECTED through the real pipeline and answers
+        with the advance as an object (ids stringified), which is the state the booking validator
+        requires;
+    (c) the populated stage and an empty stage answer with **equal key sets** - a strict client
         shape check treats a missing key as "cannot read the envelope", which would render an
-        honest empty stage as an outage - the ORD-0070 family, from the server side.
+        honest empty stage as an outage (the ORD-0070 family, from the server side).
     """
 
     response = client.post("/api/v1/demo/reset")
     assert response.status_code == 200, response.text
     payload = response.json()
-    assert payload["simulation_advance"], payload
-    advance = json.loads(payload["simulation_advance"])
+    assert "simulation_advance" not in payload, "reset must not run the pipeline any more"
+    with SessionLocal() as session:
+        seeded_plans = session.scalars(select(PlanVersion)).all()
+        journey = session.get(Journey, payload["journey_id"]) if "journey_id" in payload else session.scalar(
+            select(Journey).order_by(Journey.created_at.desc())
+        )
+    assert seeded_plans == [], [plan.status for plan in seeded_plans]
+    assert journey.status == "DRAFT", journey.status
+
+    prepared = client.post("/api/v1/demo/prepare-scenario")
+    assert prepared.status_code == 200, prepared.text[:400]
+    body = prepared.json()
+    assert body["status"] == "prepared", body
+    assert body["journey_status"] == "PLANNED", body
+    assert body["plan_version_id"], body
+    advance = body["advance"]
+    assert isinstance(advance, dict), f"advance came back as {type(advance).__name__}"
     steps = {item["step"]: item for item in advance["steps"]}
     assert "plans/generate" in steps and "select" in steps, advance
-    assert "start" not in steps, f"reset must not auto-start any more: {advance}"
+    assert "start" not in steps, f"prepare must not start: {advance}"
     assert all(item.get("ok") for item in advance["steps"]), advance
-    # ORD-0078: PLANNED + SELECTED is the state `commerce/validators.py:33-41` books against,
-    # so stopping here is what keeps the first half of M4 demonstrable.
-    assert advance["journey_status"] == "PLANNED", advance
     assert isinstance(advance["total_ms"], float), advance
 
     scene = _scene()
     assert scene["journey_status"] == "PLANNED", scene
-    assert scene["plan_version_id"], "a selected plan must be visible before the stage starts"
+    assert scene["plan_version_id"] == body["plan_version_id"], (scene, body)
     assert scene["basis"] == "JOURNEY_START", scene
+    assert scene["current_activity_id"] is None, scene
     assert scene["effective_now"], scene
     with SessionLocal() as session:
         plan = session.get(PlanVersion, scene["plan_version_id"])

@@ -1845,7 +1845,7 @@ def _advance_steps(session: Session, journey_id: str, timed) -> None:
 def _advance_report(session: Session, journey_id: str, steps: list[dict]) -> dict:
     row = session.get(Journey, journey_id)
     return {
-        "steps": steps,
+        "steps": [{key: str(value) if isinstance(value, UUID) else value for key, value in item.items()} for item in steps],
         "total_ms": round(sum(float(item["ms"]) for item in steps), 1),
         # Read back from the row rather than from a local: after a refusal the local can say "I picked X" while the journey still points nowhere.
         "selected_plan_version_id": (
@@ -1890,24 +1890,59 @@ def demo_reset(session: Session = Depends(get_session)) -> dict[str, str]:
     # appear to have an active autopilot with no subscription of its own.
     stop_autorun()
     summary = seed_demo(session)
-    # ORD-0074: a seeded demo journey is DRAFT with no PlanVersion, which makes every panel
-    # action that requires ACTIVE + a selected plan unreachable straight after the teacher
-    # presses reset.  The fix is the real pipeline, run in the open, not a status column.
-    with SessionLocal() as scene_session:
-        seeded = scene_session.scalar(select(Journey).order_by(Journey.created_at.desc()))
-        advance = (
-            advance_seed_to_executable(scene_session, seeded.id) if seeded is not None else None
+    return {"status": "reset", **summary}
+
+
+@app.post("/api/v1/demo/prepare-scenario")
+def demo_prepare_scenario(session: Session = Depends(get_session)):
+    """Put a plan on the stage: `plans/generate` then `select`, and nothing beyond that.
+
+    Why this is its own action instead of part of reset (measured, not theorised): reset is the
+    fixture door for ~140 modules, and seeding a PlanVersion from it leaked a SELECTED plan into
+    `GET /plans` - which does not filter by status - and turned 35 gates red, one of them in
+    isolation.  A door that resets state must reset state and nothing else.
+
+    It also stops short of `/start`, because `commerce/validators.py:33-41` books only against a
+    PLANNED journey with a SELECTED plan: the hard-commitment step of the demo lives in this
+    window, and auto-starting would erase it.
+    """
+
+    if not demo_mode_enabled():
+        return error(
+            "DEMO_MODE_REQUIRED",
+            "Preparing the demo scenario needs CITYNEXUS_DEMO_MODE=true.",
+            status=403,
+            details={"flag": "CITYNEXUS_DEMO_MODE"},
+            message_key="demo.prepare_disabled",
         )
+    with SessionLocal() as scene_session:
+        journey = scene_session.scalar(
+            select(Journey).where(Journey.status == "DRAFT").order_by(Journey.created_at.desc())
+        ) or scene_session.scalar(select(Journey).order_by(Journey.created_at.desc()))
+        if journey is None:
+            return error(
+                "DEMO_SCENARIO_MISSING",
+                "There is no seeded scenario to prepare; call demo/reset first.",
+                status=409,
+                details={"journey_id": None},
+                message_key="demo.scenario_missing",
+            )
+        journey_id = journey.id
+        advance = advance_seed_to_executable(scene_session, journey_id)
         scene_session.commit()
+        row = scene_session.get(Journey, journey_id)
     return {
-        "status": "reset",
-        **summary,
-        # default=str because an id arriving from an in-process handler can be a UUID rather
-        # than the string HTTP would have produced; one unserializable object must not take the
-        # whole reset response - the fixture door of ~30 modules - down with it.
-        "simulation_advance": (
-            json.dumps(advance, ensure_ascii=False, default=str) if advance else None
+        "status": "prepared",
+        "journey_id": str(journey_id),
+        "journey_status": row.status if row is not None else None,
+        "plan_version_id": (
+            str(row.active_plan_version_id)
+            if row is not None and row.active_plan_version_id
+            else None
         ),
+        # An object, not a JSON string: a client should not have to parse a payload it was
+        # handed in a body it already parsed.
+        "advance": advance,
     }
 
 @app.post("/api/v1/demo/start-scenario")

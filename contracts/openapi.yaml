@@ -1421,6 +1421,14 @@ paths:
   # (test_openapi_runtime_method_parity_includes_v7_surface) asserts contract and runtime are
   # the same set - an implemented-but-unpublished surface is exactly the drift it catches.
   # ORD-0058: the scene read a Simulation client needs so it never invents its own clock.
+  # ORD-0078 revision: reset seeds only; preparing and starting are their own actions, so the
+  # fixture door cannot leak a SELECTED plan into GET /plans for everyone else.
+  /demo/prepare-scenario:
+    post:
+      operationId: prepareDemoScenario
+      responses:
+        '200': {description: 'Journey pushed to PLANNED with a SELECTED plan via the real pipeline; no /start', content: {application/json: {schema: {type: object}}}}
+        '403': {description: 'CITYNEXUS_DEMO_MODE is not set; nothing was generated or selected', content: {application/json: {schema: {type: object}}}}
   # ORD-0078: the second stage of the demo, behind the same switch as reset.
   /demo/start-scenario:
     post:
