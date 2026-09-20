@@ -1,0 +1,5 @@
+# Pure line-ending normalization: zero semantic change.
+# Evidence: ledger ORD-0067 evidence and INTEGRATION_REPORT.md 94.5 - the file's sha256
+# after stripping carriage returns is identical on both sides of this commit.
+# Deliberately no `git config blame.ignoreRevsFile`: that switch is the user's call.
+605e2c5f4e531b36e955d4990a21c823a852c71f
