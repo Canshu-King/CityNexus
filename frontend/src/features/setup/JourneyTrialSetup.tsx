@@ -1,6 +1,86 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 
+/**
+ * ORD-0036 (d) -- where the wizard's state lives.
+ *
+ * The decision is **localStorage, not the URL**: a half-filled trip is not a link worth
+ * sharing, and `startAt` / `endAt` are local wall-clock strings whose meaning depends on
+ * the browser's zone.  The URL keeps its existing job (which screen you are on); this key
+ * keeps what you had typed.
+ *
+ * The overlay open/close state is deliberately *not* persisted -- see the lane's report --
+ * because a reload now genuinely aborts an in-flight request, and restoring an open sheet
+ * would imply a run that no longer exists.
+ */
+const TRIAL_DRAFT_KEY = "citynexus.v8.trial_draft";
+
+type StoredTrial = { step: number; draft: Record<string, unknown> };
+
+function readStoredTrial(defaults: { step: 1 | 2 | 3; draft: Record<string, unknown> }): {
+  step: 1 | 2 | 3;
+  draft: Record<string, unknown>;
+} {
+  try {
+    const raw = localStorage.getItem(TRIAL_DRAFT_KEY);
+    if (!raw) return defaults;
+    const parsed = JSON.parse(raw) as Partial<StoredTrial> | null;
+    if (!parsed || typeof parsed !== "object") return defaults;
+    const step = parsed.step === 2 || parsed.step === 3 ? parsed.step : 1;
+    /* Accept a stored value only when it has the same shape as the default it replaces.
+       The entry is user-editable and may predate a field rename, and a string where the
+       form expects a number breaks the first screen rather than just that field. */
+    const draft: Record<string, unknown> = { ...defaults.draft };
+    if (parsed.draft && typeof parsed.draft === "object") {
+      for (const [key, value] of Object.entries(parsed.draft)) {
+        if (key in defaults.draft && typeof value === typeof defaults.draft[key]) {
+          draft[key] = value;
+        }
+      }
+    }
+    return { step, draft };
+  } catch {
+    // Blocked storage or a half-written entry: start clean rather than trust it.
+    return defaults;
+  }
+}
+
+function writeStoredTrial(step: number, draft: unknown): void {
+  try {
+    localStorage.setItem(TRIAL_DRAFT_KEY, JSON.stringify({ step, draft }));
+  } catch {
+    /* Nothing to do: the wizard still works, it just will not survive a reload. */
+  }
+}
+
+/**
+ * Pull one field's own complaint out of the composed rejection message.
+ *
+ * `v8Request` renders the frozen `VALIDATION_ERROR` envelope as
+ * "headline — body.arrival_anchor.location: msg / …".  The backend stays the authority; this
+ * only routes each sentence back to the field it was about, so a rejection reads as
+ * "this box" rather than as one long string the traveller has to parse.
+ */
+function fieldProblem(
+  message: string | null | undefined,
+  locNeedle: RegExp,
+): string | null {
+  if (!message) return null;
+  const tail = message.split(" — ")[1] ?? "";
+  const part = tail.split(" / ").find((chunk) => locNeedle.test(chunk));
+  if (!part) return null;
+  const colon = part.indexOf(": ");
+  return (colon >= 0 ? part.slice(colon + 2) : part).trim() || null;
+}
+
+function clearStoredTrial(): void {
+  try {
+    localStorage.removeItem(TRIAL_DRAFT_KEY);
+  } catch {
+    /* ignore */
+  }
+}
+
 export type JourneyTrialDraft = {
   cityName: string;
   countryCode: string;
@@ -152,10 +232,11 @@ export function JourneyTrialSetup({
   onUseTianjinDemo: () => Promise<void>;
   onCancel?: () => void;
   busy: boolean;
-  /* The shell's createJourney catch writes the named backend error into its own state,
-     but this screen returns before the shell renders it, so the reason never reached the
-     user.  Optional on purpose: the call-site change belongs to another owner, and the
-     wizard's own failure visibility below must not depend on it landing first. */
+  /* The shell's createJourney catch writes the named backend error into its own state, and
+     since ORD-0044 the onboarding call site passes it here -- this screen returns before the
+     shell renders state, so without that prop the reason never reaches the user.
+     Optional on purpose: the wizard's own "this step did not complete" visibility must not
+     depend on the reason being available. */
   message?: string | null;
 }) {
   const t = useT();
@@ -165,7 +246,30 @@ export function JourneyTrialSetup({
     () => Intl.DateTimeFormat().resolvedOptions().timeZone || "Asia/Shanghai",
     [],
   );
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const defaultDraft = useMemo<JourneyTrialDraft>(
+    () => ({
+      cityName: "",
+      countryCode: "CN",
+      timezone: browserTimezone,
+      startAt: futureLocalAt(1, 10),
+      endAt: futureLocalAt(3, 20),
+      arrivalLocation: "",
+      departureLocation: "",
+      budgetMajor: 3000,
+      stayBudgetMajor: 1000,
+      currency: "CNY",
+      partySize: 2,
+      rooms: 1,
+      pace: "relaxed",
+      interests: [],
+      specialRequirements: "",
+    }),
+    [browserTimezone],
+  );
+  /* Read once, before either state exists: a reload must land on the step the traveller
+     was on with what they had typed, which is the half of "没有保存记录" that was real. */
+  const restored = useRef(readStoredTrial({ step: 1, draft: defaultDraft })).current;
+  const [step, setStep] = useState<1 | 2 | 3>(restored.step);
   const [advanced, setAdvanced] = useState(false);
   /* createJourney catches its own failure and does not rethrow, so a resolved
      `await onCreate()` here does not mean a journey exists.  Its success path closes this
@@ -179,24 +283,12 @@ export function JourneyTrialSetup({
       mounted.current = false;
     };
   }, []);
-  const [draft, setDraft] = useState<JourneyTrialDraft>({
-    cityName: "",
-    countryCode: "CN",
-    timezone: browserTimezone,
-    startAt: futureLocalAt(1, 10),
-    endAt: futureLocalAt(3, 20),
-    arrivalLocation: "",
-    departureLocation: "",
-    budgetMajor: 3000,
-    stayBudgetMajor: 1000,
-    currency: "CNY",
-    partySize: 2,
-    rooms: 1,
-    pace: "relaxed",
-    interests: [],
-    specialRequirements: "",
-  });
+  const [draft, setDraft] = useState<JourneyTrialDraft>(restored.draft as JourneyTrialDraft);
   const [roomsTouched, setRoomsTouched] = useState(false);
+
+  useEffect(() => {
+    writeStoredTrial(step, draft);
+  }, [step, draft]);
 
   const update = <K extends keyof JourneyTrialDraft>(key: K, value: JourneyTrialDraft[K]) => {
     setCreateAttemptFailed(false);
@@ -217,8 +309,21 @@ export function JourneyTrialSetup({
   };
 
   const facts = inferCityFacts(draft.cityName);
-  const step1Ready = draft.cityName.trim().length > 0;
+  /* The API requires a non-empty anchor location at both ends
+     (`arrival_anchor.location` has minLength 1).  Until now the field looked optional -- a
+     placeholder, and a bare "—" on the review page -- so a legal-looking 4-day trip died on
+     a 422 the traveller could not see.  Pre-validating here is what ruling ① allows; the
+     backend stays the authority. */
+  const missingStep1 = [
+    draft.cityName.trim() ? null : zh ? "目的地" : "the destination",
+    draft.arrivalLocation.trim() ? null : zh ? "抵达地点" : "where you arrive",
+    draft.departureLocation.trim() ? null : zh ? "离开地点" : "where you leave",
+  ].filter(Boolean) as string[];
+  const step1Ready = missingStep1.length === 0;
   const step2Ready = draft.partySize >= 1 && draft.budgetMajor > 0;
+  /* The backend's own words, routed to the field it named. */
+  const arrivalProblem = fieldProblem(message, /arrival_anchor/);
+  const departureProblem = fieldProblem(message, /departure_anchor/);
 
   const stepTitle = zh
     ? ["目的地与时间", "人数与偏好", "确认创建"]
@@ -227,9 +332,10 @@ export function JourneyTrialSetup({
   const submit = async () => {
     setCreateAttemptFailed(false);
     await onCreate(draft);
-    /* Still mounted means the shell never closed the wizard, i.e. never reached its
-       success path.  On success the unmount makes this setState a no-op. */
+    /* Still mounted means the step did not complete.  Unmounted means the shell took its
+       success path, so the draft has been consumed and must not be offered again. */
     if (mounted.current) setCreateAttemptFailed(true);
+    else clearStoredTrial();
   };
 
   return (
@@ -299,7 +405,23 @@ export function JourneyTrialSetup({
               value={draft.arrivalLocation}
               onChange={(event) => update("arrivalLocation", event.target.value)}
               placeholder={zh ? "例如：厦门高崎国际机场" : "e.g. Xiamen Gaoqi Intl Airport"}
+              aria-required="true"
+              aria-invalid={
+                draft.arrivalLocation.trim() && !arrivalProblem ? undefined : true
+              }
+              aria-describedby={
+                arrivalProblem
+                  ? "trial-required-hint trial-arrival-problem"
+                  : draft.arrivalLocation.trim()
+                    ? undefined
+                    : "trial-required-hint"
+              }
             />
+            {arrivalProblem && (
+              <span className="trial-field-problem" data-testid="trial-arrival-problem" role="alert">
+                {arrivalProblem}
+              </span>
+            )}
           </label>
           <label className="trial-field">
             <span>{zh ? "离开厦门" : "Depart from"}</span>
@@ -308,7 +430,23 @@ export function JourneyTrialSetup({
               value={draft.departureLocation}
               onChange={(event) => update("departureLocation", event.target.value)}
               placeholder={zh ? "例如：厦门北站" : "e.g. Xiamen North Station"}
+              aria-required="true"
+              aria-invalid={
+                draft.departureLocation.trim() && !departureProblem ? undefined : true
+              }
+              aria-describedby={
+                departureProblem
+                  ? "trial-required-hint trial-departure-problem"
+                  : draft.departureLocation.trim()
+                    ? undefined
+                    : "trial-required-hint"
+              }
             />
+            {departureProblem && (
+              <span className="trial-field-problem" data-testid="trial-departure-problem" role="alert">
+                {departureProblem}
+              </span>
+            )}
           </label>
           <div className="trial-row">
             <label className="trial-field">
@@ -497,14 +635,25 @@ export function JourneyTrialSetup({
             </div>
             <div>
               <dt>{zh ? "抵达" : "Arrival"}</dt>
-              <dd data-testid="review-arrival">
-                {draft.arrivalLocation || "—"} · {draft.startAt.replace("T", " ")}
+              {/* A bare "—" read as an acceptable blank, and the API rejects it. Say so here. */}
+              <dd
+                data-testid="review-arrival"
+                data-missing={draft.arrivalLocation.trim() ? undefined : "true"}
+              >
+                {draft.arrivalLocation.trim() || (zh ? "未填写 · 必填" : "not filled in · required")}
+                {" · "}
+                {draft.startAt.replace("T", " ")}
               </dd>
             </div>
             <div>
               <dt>{zh ? "离开" : "Departure"}</dt>
-              <dd data-testid="review-departure">
-                {draft.departureLocation || "—"} · {draft.endAt.replace("T", " ")}
+              <dd
+                data-testid="review-departure"
+                data-missing={draft.departureLocation.trim() ? undefined : "true"}
+              >
+                {draft.departureLocation.trim() || (zh ? "未填写 · 必填" : "not filled in · required")}
+                {" · "}
+                {draft.endAt.replace("T", " ")}
               </dd>
             </div>
             <div>
@@ -560,6 +709,15 @@ export function JourneyTrialSetup({
           </strong>
           {message ? <span>{message}</span> : null}
         </div>
+      )}
+      {step === 1 && !step1Ready && (
+        /* A greyed-out "Next" with no reason is the same silence as a create that dies
+           quietly, so name what is missing. */
+        <p className="trial-required-hint" id="trial-required-hint" data-testid="trial-required-hint" role="status">
+          {zh
+            ? `还需要填写：${missingStep1.join("、")}`
+            : `Still needed: ${missingStep1.join(", ")}`}
+        </p>
       )}
       {/* Sticky CTA: always reachable, never below a wall of scrolling. */}
       <div className="trial-sticky-cta" data-testid="trial-sticky-cta">

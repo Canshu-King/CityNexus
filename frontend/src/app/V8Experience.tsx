@@ -85,18 +85,42 @@ type Wallet = {
   offline_ready: boolean;
 };
 
+/**
+ * The traveller-facing reason behind a rejected request.
+ *
+ * A4-1 froze the envelope as `error.code = VALIDATION_ERROR` with
+ * `error.details.errors[].loc / msg`.  Reading only `error.message` yields the constant
+ * "Request validation failed", which names nothing the traveller can go and fix, so the
+ * per-field `loc: msg` pairs are appended verbatim -- backend words, no invented translation.
+ */
+function rejectionReason(body: any, status: number): string {
+  const errors: unknown[] = Array.isArray(body?.error?.details?.errors)
+    ? body.error.details.errors
+    : [];
+  const fields = errors
+    .map((entry) => {
+      const item = entry as { loc?: unknown[]; msg?: unknown };
+      const loc = Array.isArray(item?.loc) ? item.loc.filter(Boolean).join(".") : "";
+      const msg = typeof item?.msg === "string" ? item.msg : "";
+      return loc || msg ? `${loc ? `${loc}: ` : ""}${msg}` : "";
+    })
+    .filter(Boolean)
+    .slice(0, 4)
+    .join(" / ");
+  const headline =
+    (typeof body?.detail === "string" ? body.detail : null) ??
+    (typeof body?.error?.message === "string" ? body.error.message : null) ??
+    `Request failed (${status})`;
+  return fields ? `${headline} — ${fields}` : headline;
+}
+
 async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, {
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
   });
-  const body = await response.json();
-  if (!response.ok)
-    throw new Error(
-      body?.detail ??
-        body?.error?.message ??
-        `Request failed (${response.status})`,
-    );
+  const body = await response.json().catch(() => null);
+  if (!response.ok) throw new Error(rejectionReason(body, response.status));
   return body as T;
 }
 
@@ -798,11 +822,12 @@ export function V8Experience() {
         onUseTianjinDemo={createTianjinDemo}
         onCancel={data ? () => setSetupOpen(false) : undefined}
         busy={setupBusy}
-        /* ORD-0034's whole remainder was this line. The wizard returns before the shell
-           renders `message`, so a named backend rejection ("your dates are 9 days, the
-           window is 7") died in shell state and the traveller saw only a generic notice.
-           The wizard still gates the block on its own createAttemptFailed, so a stale
-           message from an earlier step cannot show up here. */
+        /* Both lanes landed this same line independently: this comment came from ORD-0034's
+           remainder (the wizard returns before the shell renders `message`, so a named
+           backend rejection died in shell state), and ca65483 passed it again as part of
+           ORD-0044's field-level 422 work. Keeping it because the block below the confirm
+           button is gated on the wizard's own createAttemptFailed - without this prop the
+           reason never arrives, and a stale message from an earlier step still cannot. */
         message={message}
       />
     );

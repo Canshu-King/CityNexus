@@ -1059,7 +1059,30 @@ body {
   line-height: 1.45;
 }
 .trial-create-error strong { font-weight: 750; }
-.trial-create-error span { color: var(--v8-muted); overflow-wrap: anywhere; }
+/* The named reason is the whole point of this panel, and it inherited --v8-muted, which
+   styles.css overrides theme-blind -- the same hole ORD-0035 recorded. Full ink; size and
+   the leading rule carry the hierarchy instead of a grey that may not be readable. */
+.trial-create-error span { color: var(--v8-ink); overflow-wrap: anywhere; }
+
+.trial-required-hint {
+  margin: 0 0 var(--cn-s-8);
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border-left: 3px solid var(--cn-accent-text);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+/* The backend's own sentence, shown under the field it is about. Full ink in both themes:
+   a rejection explanation cannot be the weakest text on the screen. */
+.trial-field-problem {
+  margin-top: var(--cn-s-4);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
 
 /* ORD-0037 — the map must say what it is doing.
    The tile notice is the honest counterpart to the flat canvas fallback; the gesture
