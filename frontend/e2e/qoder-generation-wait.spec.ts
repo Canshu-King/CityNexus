@@ -184,6 +184,12 @@ test.describe("ORD-0047 the stay search says what it is waiting for", () => {
     await expect(stop, node("gen-wait-stop-waiting-aborts", "no way to stop waiting was offered")).toBeVisible({
       timeout: 8_000,
     });
+    const stopBox = await stop.boundingBox();
+    expect(
+      stopBox?.height ?? 0,
+      node("gen-wait-stop-waiting-aborts",
+        `the control a traveller presses in frustration is ${(stopBox?.height ?? 0).toFixed(1)}px tall at 390px, under 44`),
+    ).toBeGreaterThanOrEqual(44);
     await stop.click();
 
     const outcome = page.getByTestId("trial-wait-outcome");
@@ -259,10 +265,17 @@ test.describe("ORD-0047 the stay search says what it is waiting for", () => {
         rendered,
         node("gen-empty-options-is-not-success", `${arm.locale}: the empty result is not named`),
       ).toMatch(arm.empty);
+      const retry = page.getByTestId("hub-stay-retry");
       await expect(
-        page.getByTestId("hub-stay-retry"),
+        retry,
         node("gen-empty-options-is-not-success", `${arm.locale}: an empty result with no next action is a dead end`),
       ).toBeVisible();
+      const retryBox = await retry.boundingBox();
+      expect(
+        retryBox?.height ?? 0,
+        node("gen-empty-options-is-not-success",
+          `${arm.locale}: the only way out of the empty screen is ${(retryBox?.height ?? 0).toFixed(1)}px tall at 390px, under 44`),
+      ).toBeGreaterThanOrEqual(44);
       // A planning sheet opened on top of nothing to plan is the "success" face of the bug.
       await expect(
         page.getByTestId("plan-ai-sheet"),
