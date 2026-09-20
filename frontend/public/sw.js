@@ -78,31 +78,40 @@ self.addEventListener("fetch", (event) => {
   )
     return;
 
-  /* Code and styles are network-only, and an HTML body is never a valid answer for them.
+  /* Code and styles may be served from the cache -- that is what makes an offline boot
+     possible -- but never with an HTML body, from network or from cache.  An earlier
+     revision of this branch was network-only, and `real-world-trip-operations-v9` caught
+     it: the offline reload could not fetch its cached modules and the app never booted.
 
-     Checking `request.destination` alone was not enough: a measured gate run showed the
-     dev server answering an unknown `.js` path with a 200 `text/html` document, and a
-     module pulled in through fetch() carries destination "empty", so the HTML still
-     reached a code request.  The extension check closes that hole, and the content-type
-     check closes the one where the network itself is the thing handing back HTML --
-     whoever produced it, HTML parsed as a script is how a hiccup became a white screen. */
+     Checking `request.destination` alone was not enough either: a measured gate run showed
+     the dev server answering an unknown `.js` path with a 200 `text/html` document, and a
+     module pulled in through fetch() carries destination "empty". */
   const CODE_PATH = /\.(js|mjs|cjs|css)$/i;
   const isCode =
     ["script", "style", "worker"].includes(request.destination) || CODE_PATH.test(url.pathname);
+  const isHtml = (response) => /text\/html/i.test(response.headers.get("content-type") ?? "");
 
   if (isCode) {
+    const fromCacheOrFailure = async () => {
+      const cached = await caches.match(request);
+      return cached && !isHtml(cached) ? cached : Response.error();
+    };
     event.respondWith(
-      fetch(request).then((response) => {
-        if (/text\/html/i.test(response.headers.get("content-type") ?? "")) {
-          // Fail the request honestly instead of serving a document where code belongs.
-          return Response.error();
-        }
-        const copy = response.clone();
-        event.waitUntil(
-          caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => undefined),
-        );
-        return response;
-      }),
+      fetch(request)
+        .then(async (response) => {
+          if (isHtml(response)) {
+            /* The network handed back a document where code belongs.  Fall back to a real
+               cached response if we have one; otherwise fail honestly.  Passing the HTML
+               through is how one hiccup became a cached white screen. */
+            return fromCacheOrFailure();
+          }
+          const copy = response.clone();
+          event.waitUntil(
+            caches.open(CACHE).then((cache) => cache.put(request, copy)).catch(() => undefined),
+          );
+          return response;
+        })
+        .catch(fromCacheOrFailure),
     );
     return;
   }

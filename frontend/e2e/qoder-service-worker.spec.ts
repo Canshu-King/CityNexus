@@ -247,4 +247,66 @@ test.describe("ORD-0036 the dev service worker degrades honestly", () => {
         + `of ${JSON.stringify(FOREIGN_CACHES)}; keys after: ${JSON.stringify(result.after)})`),
     ).toEqual(expect.arrayContaining(FOREIGN_CACHES));
   });
+
+  test("sw-offline-boot-serves-cached-code — refusing HTML for code must not refuse the cache", async ({
+    page,
+    context,
+  }) => {
+    test.setTimeout(120_000);
+    /* This node exists because the first version of the HTML guard was written as
+       "code requests are network-only", which broke an offline reload: the app could not
+       fetch its already-cached modules and never booted.  Only another lane's gate caught
+       it, so the contract is policed here as well. */
+    await page.goto("/v8/live");
+    await page.waitForFunction(() => Boolean(navigator.serviceWorker.controller), null, {
+      timeout: 20_000,
+    });
+    await page.reload({ waitUntil: "networkidle" });
+
+    const failedScripts: string[] = [];
+    page.on("requestfailed", (request) => {
+      if (["script", "style"].includes(request.resourceType())) {
+        failedScripts.push(`${request.url().slice(-46)} :: ${request.failure()?.errorText}`);
+      }
+    });
+
+    await context.setOffline(true);
+    await page.reload({ waitUntil: "load" }).catch(() => undefined);
+    await page.waitForTimeout(2000);
+    const booted = await page.evaluate(() => document.querySelectorAll("#root > *").length);
+    const cached = await page.evaluate(async () => {
+      const names = await caches.keys();
+      let entries = 0;
+      for (const name of names) entries += (await (await caches.open(name)).keys()).length;
+      return { names, entries };
+    });
+    await context.setOffline(false);
+
+    writeFileSync(
+      evidencePath("ui-overnight/sw-offline-boot.json"),
+      JSON.stringify(
+        { generatedBy: "e345b9d6", order: "ORD-0036", node: "sw-offline-boot-serves-cached-code", booted, cached, failedScripts },
+        null,
+        2,
+      ) + "\n",
+      "utf-8",
+    );
+
+    expect(
+      cached.entries,
+      node("sw-offline-boot-serves-cached-code",
+        "nothing was cached while online, so an offline boot could not be expected either way"),
+    ).toBeGreaterThan(10);
+    expect(
+      failedScripts,
+      node("sw-offline-boot-serves-cached-code",
+        `offline code requests were refused instead of served from cache: ${JSON.stringify(failedScripts)}`),
+    ).toEqual([]);
+    expect(
+      booted,
+      node("sw-offline-boot-serves-cached-code",
+        "the app did not boot offline even though the cache is populated -- the HTML guard "
+        + "must fall back to a cached response, not to a failure"),
+    ).toBeGreaterThan(0);
+  });
 });

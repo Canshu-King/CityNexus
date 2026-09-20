@@ -70,13 +70,22 @@ CASES = [
         "8373",
         "substitute",
         (
-            b"""        if (/text\\/html/i.test(response.headers.get("content-type") ?? "")) {
-          // Fail the request honestly instead of serving a document where code belongs.
-          return Response.error();
-        }""",
-            b"        // mutant: pass whatever the network handed back",
+            b"          if (isHtml(response)) {",
+            b"          if (false) {",
         ),
         ["sw-never-answers-script-with-html"],
+    ),
+    (
+        # The regression `sw-offline-boot-serves-cached-code` exists to catch: code that
+        # cannot reach the network fails instead of falling back to its cached copy.
+        "kill36-d-code-never-uses-cache",
+        "8374",
+        "substitute",
+        (
+            b"        .catch(fromCacheOrFailure),",
+            b"        .catch(() => Response.error()),",
+        ),
+        ["sw-offline-boot-serves-cached-code"],
     ),
 ]
 
