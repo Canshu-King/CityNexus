@@ -1,0 +1,191 @@
+import { expect, test, type Page } from "@playwright/test";
+import { existsSync, readFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
+import { openScreen } from "./_qoderShellSeed";
+import { evidencePath } from "./_qoderEvidence";
+
+/**
+ * ORD-0063 and ORD-0064(a), frontend half.
+ *
+ * Two sentences the traveller used to read that the product had invented:
+ *   - "3 天" came from `Math.round((end - start) / 86_400_000) + 1`, so a 08:00→20:00 same-day
+ *     trip was two days, and the budget was then divided by the second day that never existed;
+ *   - "每人每天约 ¥200" printed `¥` regardless of the journey's currency, and `¥` is also yen.
+ *
+ * Both are now the backend's to say (`journey.temporal_shape`, `trip.budget_reference`), and
+ * what the backend does not say must read as unknown rather than as a plausible number.  The
+ * payloads below are the real `/experience` response with only those two fields replaced, so
+ * nothing here depends on a fixture the product never serves.
+ */
+
+const FILE = "e2e/qoder-trip-shape-and-budget.spec.ts";
+const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
+
+const SHAPE = (dayCount: number | null) => ({
+  day_count: dayCount,
+  night_count: dayCount === null ? null : Math.max(0, dayCount - 1),
+  semantics: "CALENDAR_DAYS_INCLUSIVE",
+  window_status: dayCount === null ? "UNORDERABLE" : "OK",
+  min_days: 1,
+  max_days: 7,
+});
+
+const REFERENCE = (over: Record<string, unknown> = {}) => ({
+  available: true,
+  amount_minor: 60000,
+  currency: "JPY",
+  party_size: 2,
+  day_count: 1,
+  per_day_minor: 60000,
+  per_person_per_day_minor: 30000,
+  floor_minor: 15000,
+  floor_currency: "CNY",
+  floor_comparable: false,
+  reason: null,
+  ...over,
+});
+
+/** Answer the journey's real /experience with only the projected fields rewritten. */
+async function patchExperience(page: Page, patch: (body: any) => void) {
+  await page.route("**/api/v1/journeys/*/experience", async (route) => {
+    if (route.request().method() !== "GET") return route.fallback();
+    let body: any;
+    try {
+      const upstream = await route.fetch();
+      body = await upstream.json();
+    } catch {
+      return route.fallback();
+    }
+    patch(body);
+    try {
+      await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
+    } catch {
+      /* the page moved on; nothing left to answer */
+    }
+  });
+}
+
+test.describe("ORD-0063/0064a Today states the projected shape and currency", () => {
+  test("trip-length-comes-from-the-backend", async ({ page }) => {
+    test.setTimeout(150_000);
+    await page.emulateMedia({ colorScheme: "light", media: "screen" });
+    await page.setViewportSize({ width: 390, height: 844 });
+
+    // A twelve-hour same-day trip: the removed arithmetic called this "2 天".
+    await patchExperience(page, (body) => {
+      body.journey.temporal_shape = SHAPE(1);
+      body.trip.budget_reference = REFERENCE();
+    });
+    await openScreen(page, "/v8/hub", ["today-heading", "today-when"]);
+    const when = page.getByTestId("today-when");
+    const oneDay = (await when.innerText()).replace(/\s+/g, " ").trim();
+    expect(
+      oneDay,
+      node("trip-length-comes-from-the-backend", `the projected single day was not what Today said: ${JSON.stringify(oneDay)}`),
+    ).toMatch(/1 天|1 days/);
+    expect(
+      /2 天|2 days/.test(oneDay),
+      node("trip-length-comes-from-the-backend", `Today still invented a second day: ${JSON.stringify(oneDay)}`),
+    ).toBe(false);
+
+    // And when the window cannot be ordered, Today must say unknown, not fall back to 1.
+    await page.unroute("**/api/v1/journeys/*/experience");
+    await patchExperience(page, (body) => {
+      body.journey.temporal_shape = SHAPE(null);
+      body.trip.budget_reference = { ...REFERENCE(), available: false, reason: "WINDOW_UNORDERABLE" };
+    });
+    await page.reload({ waitUntil: "networkidle" });
+    await openScreen(page, "/v8/hub", ["today-heading", "today-when"]);
+    const unknown = (await page.getByTestId("today-when").innerText()).replace(/\s+/g, " ").trim();
+    expect(
+      unknown,
+      node("trip-length-comes-from-the-backend",
+        `an unprojectable window was presented as a fact instead of as unknown: ${JSON.stringify(unknown)}`),
+    ).toMatch(/天数未知|length unknown/);
+    expect(
+      /1 天|1 days/.test(unknown),
+      node("trip-length-comes-from-the-backend", `unknown still rendered as one day: ${JSON.stringify(unknown)}`),
+    ).toBe(false);
+    writeFileSync(
+      evidencePath("ui-overnight/trip-shape.json"),
+      JSON.stringify({ generatedBy: "e345b9d6", order: "ORD-0063", node: "trip-length-comes-from-the-backend", oneDay, unknown }, null, 2) + "\n",
+      "utf-8",
+    );
+  });
+
+  test("budget-line-never-borrows-a-symbol", async ({ page }) => {
+    test.setTimeout(150_000);
+    await page.emulateMedia({ colorScheme: "light", media: "screen" });
+    await page.setViewportSize({ width: 390, height: 844 });
+
+    const seen: Record<string, string> = {};
+    for (const arm of [
+      // 300 yen per person per day is below the 150-yuan floor as a raw number.  Comparing
+      // them anyway is the defect, so an incomparable floor must suppress the verdict.
+      { currency: "JPY", comparable: false, dayCount: 1, perPerson: 30000, wantTight: "false" },
+      // 66.66 yuan is genuinely under the floor, and here the backend said the money is
+      // comparable, so suppressing it would be its own untruth.
+      { currency: "CNY", comparable: true, dayCount: 3, perPerson: 6666, wantTight: "true" },
+    ] as const) {
+      await page.unroute("**/api/v1/journeys/*/experience");
+      await patchExperience(page, (body) => {
+        body.journey.temporal_shape = SHAPE(arm.dayCount);
+        body.trip.budget_reference = REFERENCE({
+          currency: arm.currency,
+          day_count: arm.dayCount,
+          per_day_minor: arm.perPerson * 2,
+          per_person_per_day_minor: arm.perPerson,
+          floor_comparable: arm.comparable,
+        });
+      });
+      await page.goto("/v8", { waitUntil: "load" });
+      await openScreen(page, "/v8/hub", ["today-heading", "budget-advisory"]);
+      const advisory = page.getByTestId("budget-advisory");
+      const text = (await advisory.innerText()).replace(/\s+/g, " ").trim();
+      seen[arm.currency] = text;
+      expect(
+        text.includes("¥"),
+        node("budget-line-never-borrows-a-symbol",
+          `${arm.currency}: the advisory prints a symbol again, and ¥ is ambiguous between CNY and JPY: ${JSON.stringify(text)}`),
+      ).toBe(false);
+      expect(
+        text,
+        node("budget-line-never-borrows-a-symbol", `${arm.currency}: the ISO code the money is in never reaches the line`),
+      ).toContain(arm.currency);
+      // An incomparable floor must not produce a tightness verdict: that would be comparing
+      // yen against yuan and reporting the result as advice.
+      expect(
+        await advisory.getAttribute("data-tight"),
+        node("budget-line-never-borrows-a-symbol",
+          `${arm.currency}: floor_comparable=${arm.comparable} but the screen chose ${JSON.stringify(
+            await advisory.getAttribute("data-tight"),
+          )}, expected ${arm.wantTight}`),
+      ).toBe(arm.wantTight);
+    }
+    writeFileSync(
+      evidencePath("ui-overnight/budget-reference.json"),
+      JSON.stringify({ generatedBy: "e345b9d6", order: "ORD-0064", node: "budget-line-never-borrows-a-symbol", seen }, null, 2) + "\n",
+      "utf-8",
+    );
+  });
+
+  test("no-client-side-day-or-currency-invention", async () => {
+    // The arithmetic leaving the file is the fix; a gate that only checks today's rendered
+    // sentence would still pass after someone re-added the same division for another string.
+    const path = new URL("../src/app/V8Experience.tsx", import.meta.url);
+    expect(existsSync(path), node("no-client-side-day-or-currency-invention", "the source under guard is not where it was expected")).toBe(true);
+    const source = readFileSync(path, "utf8");
+    const offenders = [
+      /86_?400_?000/,
+      /Math\.round\([^)]*\/\s*24\)/,
+      /BUDGET_DAILY_FLOOR_MINOR/,
+      /每人每天约\s*¥/,
+      /about\s+¥\$\{/,
+    ].filter((pattern) => pattern.test(source));
+    expect(
+      offenders.map(String),
+      node("no-client-side-day-or-currency-invention",
+        `Today computes days or picks a currency symbol again: ${JSON.stringify(offenders.map(String))}`),
+    ).toEqual([]);
+  });
+});

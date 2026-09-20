@@ -47,7 +47,7 @@ import {
   type OfflineJourney,
 } from "../lib/offlineJourney";
 import { useT, useLocale } from "../i18n/LocaleContext";
-import { formatMinorMoney, majorToMinor } from "../lib/money";
+import { currencyExponent, currencyMinorFactor, formatMinorMoney, majorToMinor } from "../lib/money";
 import { withViewTransition } from "../lib/viewTransition";
 import { isDisruptionOpen } from "../lib/disruptionState";
 import {
@@ -1596,40 +1596,74 @@ function TripsWorkspace({
 /**
  * A truthful, deliberately approximate budget sanity signal.
  *
- * It never claims an exact trip cost.  It only divides the traveller's own
- * declared budget by the trip length and party size and says whether that
- * leaves a workable daily allowance once lodging, transport and food are
- * considered.
+ * It never claims an exact trip cost, and it no longer computes anything: the backend
+ * divides the traveller's declared budget by the authoritative trip shape
+ * (`backend/app/core/temporal.py`).  This function used to round the hours between the
+ * anchors into days and add one, which turned a twelve-hour same-day trip into "2 天" — and
+ * then divided the budget by that invented second day (ORD-0063).
+ *
+ * The money is shown in the journey's own currency (ORD-0064).  `¥` was hard-coded here,
+ * and `¥` is also JPY's sign, so a symbol could not be trusted at all; the ISO code can be.
  */
-const BUDGET_DAILY_FLOOR_MINOR = 15_000; // CNY 150 per person per day
+const CURRENCY_CODE = /^[A-Z]{3}$/;
+
+/** `budgetMoney` rather than `money`: this module already aliases `money` to formatMinorMoney. */
+function budgetMoney(minorUnits: number, currency: string, locale: string): string {
+  if (!CURRENCY_CODE.test(currency)) return "";
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency,
+      currencyDisplay: "code",
+      maximumFractionDigits: currencyExponent(currency),
+    }).format(minorUnits / currencyMinorFactor(currency));
+  } catch {
+    // An unsupported code must not fall back to a plausible symbol.
+    return "";
+  }
+}
 
 function budgetAdvisory(
-  budgetMinor: number,
-  days: number,
-  people: number,
+  reference: V8Data["trip"]["budget_reference"],
   zh: boolean,
-): { tight: boolean; perDay: number; perPersonPerDay: number; text: string; hint: string } | null {
-  if (!Number.isFinite(budgetMinor) || budgetMinor <= 0) return null;
-  const safeDays = Math.max(1, days);
-  const safePeople = Math.max(1, people);
-  const perDay = Math.round(budgetMinor / safeDays);
-  const perPersonPerDay = Math.round(perDay / safePeople);
-  const tight = perPersonPerDay < BUDGET_DAILY_FLOOR_MINOR;
-  const fmt = (minor: number) => `${Math.round(minor / 100).toLocaleString("zh-CN")}`;
+  locale: string,
+): { tight: boolean; text: string; hint: string } | null {
+  if (!reference || !reference.available) return null;
+  const days = reference.day_count;
+  const people = reference.party_size;
+  const perDay = reference.per_day_minor;
+  const perPersonPerDay = reference.per_person_per_day_minor;
+  const currency = reference.currency;
+  if (
+    days === null ||
+    people === null ||
+    perDay === null ||
+    perPersonPerDay === null ||
+    !currency ||
+    !budgetMoney(perPersonPerDay, currency, locale)
+  )
+    return null;
+  // `floor_comparable` is the backend saying "this CNY price level applies to your money".
+  // For a JPY or SGD budget it is false, and calling the trip tight would be a verdict
+  // reached by comparing yen against yuan.
+  const tight = Boolean(reference.floor_comparable) && perPersonPerDay < (reference.floor_minor ?? 0);
+  const amount = budgetMoney(perPersonPerDay, currency, locale);
   return {
     tight,
-    perDay,
-    perPersonPerDay,
     text: zh
-      ? `${safeDays} 天 · ${safePeople} 人 · 每人每天约 ¥${fmt(perPersonPerDay)}`
-      : `${safeDays} days · ${safePeople} people · about ¥${fmt(perPersonPerDay)} per person per day`,
+      ? `${days} 天 · ${people} 人 · 每人每天约 ${amount}`
+      : `${days} days · ${people} people · about ${amount} per person per day`,
     hint: tight
       ? zh
         ? "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。"
         : "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally."
-      : zh
-        ? "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。"
-        : "This is your own budget averaged out, not a final cost. Real prices come from providers.",
+      : reference.floor_comparable
+        ? zh
+          ? "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。"
+          : "This is your own budget averaged out, not a final cost. Real prices come from providers."
+        : zh
+          ? `这是按你的预算平均下来的参考值（以 ${currency} 计），不是最终花费；真实价格以供应商为准。`
+          : `This is your own budget averaged out, in ${currency}, not a final cost. Real prices come from providers.`,
   };
 }
 
@@ -1691,12 +1725,12 @@ function Hub({
       .join(" ");
   })();
 
-  const startMs = Date.parse(data.journey.start_at);
-  const endMs = Date.parse(data.journey.end_at);
-  const tripDayCount =
-    Number.isFinite(startMs) && Number.isFinite(endMs)
-      ? Math.max(1, Math.round((endMs - startMs) / 86_400_000) + 1)
-      : 1;
+  // ORD-0063: the day count is projected by the backend, not derived here.  The removed line
+  // rounded the span between the anchors into whole days and added one, which called a
+  // 08:00→20:00 trip "2 天" and then divided the budget by that invented second day.  A null
+  // means the stored window cannot be ordered at all, which shows as unknown, never as 1.
+  const tripDayCount = data.journey.temporal_shape?.day_count ?? null;
+  const advisory = budgetAdvisory(data.trip.budget_reference, zh, locale);
   const activities = (data.active_plan?.activities ?? []) as unknown as Array<{
     id: string;
     title: string;
@@ -1704,12 +1738,6 @@ function Hub({
     end_at: string;
     type?: string | null;
   }>;
-  const advisory = budgetAdvisory(
-    Number(data.journey.budget?.amount_minor ?? 0),
-    tripDayCount,
-    Math.max(1, Number(data.trip.party_size ?? 1)),
-    zh,
-  );
   const nowMs = Date.now();
   const nextStop =
     activities.find((item) => Date.parse(item.end_at) >= nowMs) ?? activities[0] ?? null;
@@ -1834,7 +1862,13 @@ function Hub({
             {" · "}
             {t("shell.travelers", { n: data.trip.party_size })}
             {" · "}
-            {zh ? `${tripDayCount} 天` : `${tripDayCount} days`}
+            {tripDayCount === null
+              ? zh
+                ? "天数未知"
+                : "length unknown"
+              : zh
+                ? `${tripDayCount} 天`
+                : `${tripDayCount} days`}
           </p>
         </div>
         {/* Pass-8 ruling #1/#2: with an active journey the hero's

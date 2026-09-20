@@ -1,8 +1,33 @@
 import type { TravelerCapability } from "../api/citynexus";
 
+/** The trip length as the backend counts it. ORD-0063: the client no longer derives days. */
+export type TripShape = {
+  day_count: number | null;
+  night_count: number | null;
+  semantics: string;
+  window_status: string;
+  min_days: number;
+  max_days: number;
+};
+
+/** The traveller's own budget divided by that authoritative shape (ORD-0064). */
+export type BudgetReference = {
+  available: boolean;
+  amount_minor: number | null;
+  currency: string | null;
+  party_size: number | null;
+  day_count: number | null;
+  per_day_minor: number | null;
+  per_person_per_day_minor: number | null;
+  floor_minor: number | null;
+  floor_currency: string;
+  floor_comparable: boolean;
+  reason: string | null;
+};
+
 export type V8Data = {
-  journey: { id: string; traveler_id: string; title: string; city_code: string; timezone: string; start_at: string; end_at: string; budget: { amount_minor: number; currency: string } };
-  trip: { arrival_anchor: { at?: string; location?: string }; departure_anchor: { at?: string; location?: string }; party_size: number; occupancy: Record<string, unknown>; stay_budget: { amount_minor: number; currency: string } };
+  journey: { id: string; traveler_id: string; title: string; city_code: string; timezone: string; start_at: string; end_at: string; budget: { amount_minor: number; currency: string }; temporal_shape?: TripShape | null };
+  trip: { arrival_anchor: { at?: string; location?: string }; departure_anchor: { at?: string; location?: string }; party_size: number; occupancy: Record<string, unknown>; budget_reference?: BudgetReference | null; stay_budget: { amount_minor: number; currency: string } };
   offers: Array<{ id: string; external_offer_id: string; property_name: string; room_type: string; total_amount_minor: number; nightly_amount_minor: number; currency: string; refundable: boolean; check_in_at: string; check_out_at: string; cancellation_policy: { summary?: string }; evidence: { source?: string; confidence?: number }; location: { latitude: number; longitude: number; crs?: string } }>;
   options: Array<{ id: string; rank: number; status: string; score: number; stay: V8Data["offers"][number]; stay_total_minor: number; daily_travel_minor: number; mobility_total_minor: number; walking_min: number; protected_margin_min: number; arrival_fit: number; departure_fit: number; cancellation_score: number; days: Array<{ day: number; label: string; anchor: string; activities: string[]; mode: string }>; leg_modes: string[]; leg_mode_map: Array<{ from_key: string; to_key: string; mode: string; mobility_fact_id?: string }>; journey_impact: Record<string, any>; hard_constraints_passed: boolean; optimizer_kind: string; weather_state: string; materialized_plan_version_id?: string | null }>;
   selected_option_id: string | null;
