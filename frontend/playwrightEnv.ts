@@ -187,6 +187,12 @@ export function backendCommand(env: E2eEnvironment): string {
 export function backendEnv(env: E2eEnvironment): Record<string, string> {
   return {
     ...(process.env as Record<string, string>),
+    // ORD-0058: the authoritative backend now refuses `POST /api/v1/demo/reset` unless the
+    // process declares itself a simulation stage, and the E2E specs use that route as their
+    // fixture door.  The switch is set here (not required from the caller) because an
+    // authoritative run is by definition running against seeded demo data - and the guard's
+    // own refusal is gated in the backend suite, so this cannot mask a missing guard.
+    CITYNEXUS_DEMO_MODE: "true",
     ...(env.databaseUrl ? { CITYNEXUS_DATABASE_URL: env.databaseUrl } : {}),
     ...(env.runId ? { CITYNEXUS_E2E_RUN_ID: env.runId } : {}),
   };

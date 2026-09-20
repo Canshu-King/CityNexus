@@ -1420,6 +1420,12 @@ paths:
   # not a held-open request.  These four are published here because the parity gate
   # (test_openapi_runtime_method_parity_includes_v7_surface) asserts contract and runtime are
   # the same set - an implemented-but-unpublished surface is exactly the drift it catches.
+  # ORD-0058: the scene read a Simulation client needs so it never invents its own clock.
+  /demo/scene:
+    get:
+      operationId: readDemoScene
+      responses:
+        '200': {description: 'demo_mode, the seeded journey window, its cursor-derived effective_now, and the referenced evidence expiry', content: {application/json: {schema: {type: object}}}}
   /journeys/{journey_id}/stay-generations:
     post:
       operationId: submitStayGeneration

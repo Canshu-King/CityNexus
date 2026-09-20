@@ -1766,8 +1766,33 @@ def approve_agent_action(
     )
 
 
+def demo_mode_enabled() -> bool:
+    """The one seam that says whether this process is allowed to be a stage.
+
+    A function rather than `settings.demo_mode` at each call site because the guard has to be
+    testable in both states inside one process, and `Settings` is frozen.
+    """
+
+    return bool(settings.demo_mode)
+
+
 @app.post("/api/v1/demo/reset")
 def demo_reset(session: Session = Depends(get_session)) -> dict[str, str]:
+    # ORD-0058 item 2: this endpoint deletes 52 tables (`services.reset_all`) - every
+    # traveler, every audit row, every commitment - with no env, flag or auth in front of it.
+    # On a reachable deployment that is not a demo convenience, it is a data-destruction
+    # route, so it now belongs to the simulation switch.  Flag off answers a named 403 and
+    # touches nothing; the guard is placed before `stop_autorun()` on purpose, because
+    # killing the process-global guardian worker would already be a side effect of a
+    # request that was refused.
+    if not demo_mode_enabled():
+        return error(
+            "DEMO_MODE_REQUIRED",
+            "Resetting the demo scenario needs CITYNEXUS_DEMO_MODE=true; nothing was deleted.",
+            status=403,
+            details={"flag": "CITYNEXUS_DEMO_MODE", "tables_protected": True},
+            message_key="demo.reset_disabled",
+        )
     # The demo endpoint is also the E2E/runtime reset boundary.  The Guardian
     # worker is process-global while enrollments are Journey-scoped; leaving
     # the worker alive after replacing the demo rows makes the next Journey
@@ -5854,6 +5879,86 @@ def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depend
     return twin
 
 
+@app.get("/api/v1/demo/scene")
+def demo_scene(session: Session = Depends(get_session)):
+    """Which day the stage is set on, from the server - the one read gap Simulation needs.
+
+    Everything else about walking a scenario already exists (complete/skip/events/replan/
+    accept/book).  What nothing answered is "what is now, for this journey", so any client
+    that wanted a banner or a Today header had to call `new Date()` and invent a second
+    clock.  This reports the seeded journey's own bound window, the cursor it is executing,
+    and the expiry of the evidence that window is priced with - all per journey, never a
+    frozen global clock, because a global freeze would also move the guardian thread and real
+    users' `created_at`.
+
+    With no scenario present it says so with nulls.  It does not fall back to wall time: an
+    unknown scene reported as "today" is the unknown-as-known failure this project keeps
+    being charged for.
+    """
+
+    # The scenario on stage is the journey an ACTIVE plan points at, and failing that the most
+    # recently seeded journey - deliberately not an `ACTIVE|PLANNED` status filter, because the
+    # frozen seed produces one DRAFT journey with no PlanVersion row at all, so a status filter
+    # would report "no scenario" for the only scenario that exists.
+    journey = session.scalar(
+        select(Journey)
+        .where(Journey.active_plan_version_id.is_not(None))
+        .order_by(Journey.created_at.desc())
+    ) or session.scalar(select(Journey).order_by(Journey.created_at.desc()))
+    if journey is None:
+        return {
+            "demo_mode": demo_mode_enabled(),
+            "journey_id": None,
+            "journey_status": None,
+            "scene_start_at": None,
+            "scene_end_at": None,
+            "effective_now": None,
+            "basis": None,
+            "evidence_expires_at": None,
+            "evidence_state": "NO_SCENARIO",
+        }
+    context = session.get(JourneyTripContext, journey.id)
+    start_raw, end_raw = (
+        journey_boundaries(context, journey.start_at, journey.end_at) if context else (
+            datetime.fromisoformat(journey.start_at),
+            datetime.fromisoformat(journey.end_at),
+        )
+    )
+    plan = session.scalar(
+        select(PlanVersion).where(PlanVersion.journey_id == journey.id, PlanVersion.status == "ACTIVE")
+    )
+    cursor_at: str | None = None
+    if plan is not None:
+        current_id = journey.current_activity_id
+        activity = (
+            session.scalar(
+                select(Activity).where(Activity.plan_version_id == plan.id, Activity.id == current_id)
+            )
+            if current_id
+            else None
+        )
+        cursor_at = activity.start_at if activity is not None else None
+    evidence = json.loads((plan.mobility_evidence_json if plan else None) or "{}")
+    return {
+        "demo_mode": demo_mode_enabled(),
+        "journey_id": journey.id,
+        # Stated rather than implied: a DRAFT journey has a window but no cursor, and a client
+        # must be able to see that difference instead of inferring it from a missing field.
+        "journey_status": journey.status,
+        "scene_start_at": start_raw.isoformat(),
+        "scene_end_at": end_raw.isoformat(),
+        # Per journey: the cursor says where the traveller is; without one, the window's own
+        # start is the honest anchor.  `Date.now()` appears nowhere on this path.
+        "effective_now": cursor_at or start_raw.isoformat(),
+        "basis": "CURSOR" if cursor_at else "JOURNEY_START",
+        "evidence_expires_at": evidence.get("expires_at"),
+        # Reported, not judged: whether the evidence is still valid is the stale gate's job
+        # (`STALE_RECOMPOSE_REQUIRED`), and a scene read must not grow a second opinion.
+        "evidence_state": "REFERENCED" if evidence.get("expires_at") else "NO_FROZEN_EVIDENCE",
+        "plan_version_id": plan.id if plan else None,
+    }
+
+
 @app.get("/api/v1/journeys/{journey_id}/twin", response_model=JourneyTwinSchema)
 def get_journey_twin(
     journey_id: UUID,
@@ -5861,6 +5966,18 @@ def get_journey_twin(
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
+    # ORD-0058's flagged static inference, settled by measurement instead of assumption: a
+    # `?now=` without an offset arrives naive while the projection compares it against
+    # offset-aware instants, which raises TypeError - i.e. a 500 for a query-string detail.
+    # Refusing by name is fail-closed and costs a caller nothing they already had.
+    if now is not None and now.tzinfo is None:
+        return error(
+            "TWIN_NOW_OFFSET_REQUIRED",
+            "The projection instant must carry a UTC offset, e.g. 2026-10-01T09:00:00+08:00.",
+            status=422,
+            details={"received": now.isoformat(), "offset_required": True},
+            message_key="twin.now_offset_required",
+        )
     result = _twin_snapshot(session, journey, projection_now=now)
     session.commit()
     return result

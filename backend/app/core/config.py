@@ -8,6 +8,11 @@ from dataclasses import dataclass
 class Settings:
     environment: str = os.getenv("CITYNEXUS_ENV", "development")
     database_url: str = os.getenv("CITYNEXUS_DATABASE_URL", "sqlite:///./citynexus.db")
+    # ORD-0058: the only switch that turns the seeded scenario into something a person can
+    # walk through.  Default OFF, and off means a normal production journey never silently
+    # inherits simulation semantics.  Guarded doors read this through
+    # `app.main.demo_mode_enabled()` so a test can exercise both states.
+    demo_mode: bool = os.getenv("CITYNEXUS_DEMO_MODE", "false").lower() == "true"
     ai_enabled: bool = os.getenv("CITYNEXUS_AI_ENABLED", "false").lower() == "true"
     ai_provider: str = os.getenv("CITYNEXUS_AI_PROVIDER", "deepseek")
     ai_model: str = os.getenv("CITYNEXUS_AI_MODEL", "deepseek-v4-flash")
