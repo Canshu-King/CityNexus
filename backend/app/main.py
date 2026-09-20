@@ -391,23 +391,100 @@ def trace_id() -> str:
     return str(uuid4())
 
 
-def error(code: str, message: str, *, status: int, details: dict | None = None) -> JSONResponse:
+def error(
+    code: str,
+    message: str,
+    *,
+    status: int,
+    details: dict | None = None,
+    message_key: str | None = None,
+) -> JSONResponse:
+    """One envelope for every rejection, and one stable key inside it.
+
+    ORD-0055: a screen must not translate an English sentence.  `message_key` is what it
+    looks up, `details` is what it interpolates, and `message` stays what a log line and an
+    untranslated fallback are allowed to read.  The default is derived from `code` - never
+    from `message` - so a reworded sentence cannot silently change a key.
+    """
+
     return JSONResponse(
         status_code=status,
         content={
-            "error": {"code": code, "message": message, "trace_id": trace_id(), "details": details}
+            "error": {
+                "code": code,
+                "message": message,
+                "message_key": message_key or f"error.{code.lower()}",
+                "trace_id": trace_id(),
+                "details": details,
+            }
         },
     )
 
 
+# Pydantic's `type` is the stable half of a validation error; `msg` is prose that pydantic
+# itself rewrites between versions.  Anything unlisted still gets a key built from `type`
+# (below), so a new rule cannot reach a screen without one.
+VALIDATION_MESSAGE_KEYS = {
+    "missing": "validation.field_missing",
+    "value_error.missing": "validation.field_missing",
+    "string_type": "validation.not_text",
+    "int_parsing": "validation.not_whole_number",
+    "int_gt": "validation.too_small",
+    "greater_than": "validation.too_small",
+    "greater_than_equal": "validation.too_small",
+    "less_than": "validation.too_large",
+    "too_short": "validation.too_short",
+    "too_long": "validation.too_long",
+    "json_invalid": "validation.not_json",
+    "uuid_parsing": "validation.not_an_id",
+    "date_from_datetime_parsing": "validation.not_a_date",
+    "datetime_from_date_parsing": "validation.not_a_date",
+    "value_error.datetime": "validation.not_a_date",
+    "value_error.uuid.byte_length": "validation.not_an_id",
+    "literal_error": "validation.not_an_option",
+    "extra_forbidden": "validation.unknown_field",
+}
+
+HTTP_MESSAGE_KEYS = {
+    404: "resource.not_found",
+    409: "request.conflict",
+    422: "request.invalid",
+    403: "request.forbidden",
+    423: "request.locked",
+}
+
+
+def validation_message_key(item: dict) -> str:
+    """Name a validation failure by its rule type, never by its English message."""
+
+    kind = str(item.get("type") or "")
+    known = VALIDATION_MESSAGE_KEYS.get(kind)
+    if known:
+        return known
+    cleaned = kind.replace("_", ".").strip(".") or "unknown"
+    return f"validation.{cleaned}"
+
+
 @app.exception_handler(RequestValidationError)
 async def validation_error(_: Request, exc: RequestValidationError) -> JSONResponse:
-    safe_errors = [
-        {"loc": list(item.get("loc", ())), "msg": item.get("msg"), "type": item.get("type")}
-        for item in exc.errors()
-    ]
+    safe_errors = []
+    for item in exc.errors():
+        payload = {
+            "loc": list(item.get("loc", ())),
+            "msg": item.get("msg"),
+            "type": item.get("type"),
+        }
+        # `loc` decides *which field* to mark and `message_key`/`type` decide *what to say*;
+        # the two are separate on purpose, because matching on `msg` was how a reworded
+        # pydantic string used to turn a form back into an untranslatable block.
+        payload["message_key"] = validation_message_key(payload)
+        safe_errors.append(payload)
     return error(
-        "VALIDATION_ERROR", "Request validation failed", status=422, details={"errors": safe_errors}
+        "VALIDATION_ERROR",
+        "Request validation failed",
+        status=422,
+        details={"errors": safe_errors},
+        message_key="request.invalid",
     )
 
 
@@ -417,7 +494,12 @@ async def http_error(_: Request, exc: HTTPException) -> JSONResponse:
     code = {404: "NOT_FOUND", 409: "CONFLICT", 422: "VALIDATION_ERROR"}.get(
         exc.status_code, "REQUEST_ERROR"
     )
-    return error(code, detail, status=exc.status_code)
+    return error(
+        code,
+        detail,
+        status=exc.status_code,
+        message_key=HTTP_MESSAGE_KEYS.get(exc.status_code, f"error.{code.lower()}"),
+    )
 
 
 # The journey window is one authority (`app/core/temporal.py`) and every public entry that
@@ -434,6 +516,14 @@ TEMPORAL_REJECTIONS = {
         f"Shorten the dates and try again."
     ),
     "V13_INVALID_ANCHOR_WINDOW": "The departure must be after the arrival.",
+}
+
+# A screen looks up this key; the English string above stays what a log reads and what an
+# unknown key falls back to.  A test pins that these two maps share exactly one domain, so a
+# new named rejection cannot reach a client without a key of its own.
+TEMPORAL_MESSAGE_KEYS = {
+    "V13_JOURNEY_DAYS_OUT_OF_BOUNDS": "journey.days_out_of_bounds",
+    "V13_INVALID_ANCHOR_WINDOW": "journey.anchor_order",
 }
 
 
@@ -453,6 +543,7 @@ async def temporal_rejection(_: Request, exc: ValueError) -> JSONResponse:
         TEMPORAL_REJECTIONS[code],
         status=422,
         details=details,
+        message_key=TEMPORAL_MESSAGE_KEYS[code],
     )
 
 

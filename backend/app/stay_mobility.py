@@ -16,7 +16,18 @@ from sqlalchemy.orm import Session
 
 from app.core.money import major_to_minor
 from app.core.phase_timing import phase
-from app.core.temporal import JourneyTemporalShape, derive_journey_temporal_shape
+from app.core.temporal import (
+    MAX_JOURNEY_DAYS,
+    MIN_JOURNEY_DAYS,
+    WINDOW_IN,
+    WINDOW_INVALID,
+    WINDOW_OUT,
+    WINDOW_UNCOMPARABLE,
+    JourneyTemporalShape,
+    calendar_day_night_shape,
+    derive_budget_reference,
+    derive_journey_temporal_shape,
+)
 from app.db.models import (
     AccommodationOfferSnapshot,
     Activity,
@@ -230,6 +241,33 @@ def journey_temporal_shape(
 
 def _nights(context: JourneyTripContext, journey: Journey) -> int:
     return journey_temporal_shape(context, journey).night_count
+
+
+def journey_projection_window(
+    context: JourneyTripContext, journey: Journey
+) -> tuple[JourneyTemporalShape | None, str]:
+    """The trip shape as a *read* projection has to report it: same arithmetic, judged not enforced.
+
+    `journey_temporal_shape` is the write path's gate and it raises.  A `GET` cannot answer
+    500 because a row stored before ORD-0033 is nine days long - the traveller would get no
+    screen at all - so this reuses the identical boundaries and the identical formula, and
+    reports the window judgement as a field instead of as an exception.  A count is only ever
+    dropped to `None` when the window itself cannot be ordered, because a fabricated "1 天"
+    is the exact class of defect this file exists to stop.
+    """
+
+    start, end = journey_boundaries(context, journey.start_at, journey.end_at)
+    try:
+        return derive_journey_temporal_shape(start, end), WINDOW_IN
+    except ValueError as exc:
+        code, _, _ = str(exc).partition(":")
+        if code == "V13_JOURNEY_DAYS_OUT_OF_BOUNDS":
+            return calendar_day_night_shape(start, end), WINDOW_OUT
+        return None, WINDOW_INVALID
+    except TypeError:
+        # Naive against offset-aware: no day count is knowable, and that is not the same
+        # statement as "departure before arrival".
+        return None, WINDOW_UNCOMPARABLE
 
 
 def _at_on_day(
@@ -1671,6 +1709,17 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
         .order_by(MobilityFact.from_key, MobilityFact.to_key, MobilityFact.mode)
     ).all()
     selected = next((item for item in options if item.status == "SELECTED"), None)
+    # One trip shape, computed here and consumed everywhere: the day count that prices a
+    # stay, the day count in the headline, and the reference allowance are the same number
+    # or they are nothing (ORD-0063 found a screen doing its own `round(hours/24)+1`, which
+    # called a 12-hour same-day trip "2 天" and then divided the budget by that).
+    shape, window_status = journey_projection_window(context, journey)
+    budget_reference = derive_budget_reference(
+        day_count=shape.day_count if shape is not None else None,
+        budget_amount_minor=journey.budget_amount_minor,
+        budget_currency=journey.budget_currency,
+        party_size=context.party_size,
+    )
     return {
         "journey": {
             "id": journey.id,
@@ -1686,12 +1735,24 @@ def experience_payload(session: Session, journey: Journey) -> dict[str, Any]:
                 "amount_minor": journey.budget_amount_minor,
                 "currency": journey.budget_currency,
             },
+            "temporal_shape": {
+                "day_count": shape.day_count if shape is not None else None,
+                "night_count": shape.night_count if shape is not None else None,
+                # What the counts mean, in the client's own words: calendar days with the
+                # first and last day included, so Oct 1 -> Oct 4 is 4 days / 3 nights and
+                # 08:00 -> 20:00 on one date is 1 day / 0 nights.
+                "semantics": "CALENDAR_DAYS_INCLUSIVE",
+                "window_status": window_status,
+                "min_days": MIN_JOURNEY_DAYS,
+                "max_days": MAX_JOURNEY_DAYS,
+            },
         },
         "trip": {
             "arrival_anchor": _anchor(context, journey, "arrival"),
             "departure_anchor": _anchor(context, journey, "departure"),
             "party_size": context.party_size,
             "occupancy": _load(context.occupancy_json, {}),
+            "budget_reference": budget_reference.as_payload(),
             "stay_budget": {
                 "amount_minor": context.stay_budget_amount_minor,
                 "currency": context.stay_budget_currency,

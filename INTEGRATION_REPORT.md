@@ -2586,3 +2586,70 @@ attempt 3 的真相是"三个镜像全灭 + 兜底源连不上"，但响应里�
 
 顺带一提：上面第 3 条读到的那句里，英文 `Request validation failed — body.end_at: …` 出现在**中文界面**上，
 正是 **ORD-0055** 要的靶子——那次读屏同时是它的"改之前"证据。
+
+## 93. ORD-0063 / ORD-0064(a) / ORD-0055：天数与币种的真值收回后端，拒绝文案有了可查的键（`8c66aa92` @2026-09-20 21:47+08 起）
+
+### 93.1 一个"天"只允许有一个算法
+
+`backend/app/core/temporal.py` 现在是**唯一**的天/夜算式：`calendar_day_night_shape()` 只做日历计数
+（同日 = 1 天 / 0 夜；Oct 1 → Oct 4 = 4 天 / 3 夜），`derive_journey_temporal_shape()` 在它上面加"窗口判定"
+（写路径的门，行为逐字未变，ORD-0033 的门照旧绿）。新增 `derive_budget_reference()`：把"总预算 ÷ 权威天数 ÷ 人数"
+这一步也从屏幕上收回来，并且**除不尽时按四舍五入（half-up）用整数算**——Python 自带的 `round()` 是 half-to-even，
+`round(2.5) == 2`，一个刚好落在半格的日均会因为"写法"而不是"数值"变样。
+
+`GET /experience` 因此多出两块（纯增量，`start_at/end_at/budget` 一个都没动）：
+
+```
+journey.temporal_shape = { day_count, night_count, semantics: "CALENDAR_DAYS_INCLUSIVE",
+                           window_status, min_days: 1, max_days: 7 }
+trip.budget_reference  = { available, amount_minor, currency, party_size, day_count,
+                           per_day_minor, per_person_per_day_minor,
+                           floor_minor: 15000, floor_currency: "CNY", floor_comparable, reason }
+```
+
+`window_status` 是给**读路径**留的活路：写路径该拒的（>7 天）照旧拒，但一条 ORD-0033 之前落库的 9 天旧行程
+不能让 `GET` 变成 500——那等于把用户的整块屏幕拿掉。于是投影 `journey_projection_window()` 复用同一算式，
+把判定改成字段：`IN_WINDOW / OUT_OF_SUPPORTED_WINDOW / INVALID_ANCHOR_ORDER / ANCHORS_NOT_DIRECTLY_COMPARABLE`。
+后两个给出 `day_count: null`，屏幕上只能出现"天数未知"，**不允许**回填成"1 天"。
+
+顺带查出两条同族的真值缺陷：
+
+1. `journeys` 表本身有 `CHECK (end_at > start_at)`，`journey_trip_contexts` 有 `CHECK (party_size >= 1)`
+   ⇒ "倒挂窗口"和"0 人"在库里**不可能存在**；真正能倒挂的是 anchor JSON（价格用的是 anchor 的时刻，没有约束覆盖）。
+   门因此按真实可达路径写：倒挂用 anchor 注入，同时把两条 SQL CHECK 也钉住——否则下一个读代码的人会去修一个不存在的状态。
+2. 屏幕那句 `tight = 每人每天 < 15000` 拿的是 **CNY 的价位**去判 **JPY/SGD** 预算：东京行程 1500 JPY 被除以 100
+   当成 ¥15，永远"预算紧张"。这跟硬编码 `¥` 是同一类错，所以 `floor_comparable` 由后端给出，非 CNY 时前端不得下这个判断。
+
+### 93.2 ORD-0064(a)：符号不能是常量
+
+`¥` 同时是 CNY 和 JPY 的符号——所以"把符号改对"的正解不是换符号，而是**跟着行程币种走、显示 ISO 码**
+（住宿卡片和"我的"页本来就印 `SGD 400`）。后端把 `currency` 和算好的金额交出去，前端渲染规则在交接 diff 里：
+`Intl.NumberFormat(locale, { style: "currency", currency, currencyDisplay: "code", min/maxFractionDigits: 0/2 })`，
+不可识别的币种码一律回落到"不显示金额"，**不回落成一个看着合理的符号**。
+
+### 93.3 ORD-0055：每条拒绝都有 `message_key`
+
+`error()` 现在恒带 `message_key`：显式给的优先，没给的从 **code** 派生（`error.<code 小写>`），
+**永不**从 message 文本派生。字段级 422 的每条 `details.errors[]` 多一个 `message_key`，
+按仲裁的规矩由 pydantic 的 **`type`** 决定（`missing → validation.field_missing`，
+`datetime_from_date_parsing → validation.not_a_date` …），未登记的 type 也要生成一个键而不是退回英文；
+`loc` 仍然只负责"哪个字段"。两句英文原文继续留在 `message` 里当日志与未知键 fallback——它不是第二套文案真值。
+
+### 93.4 门禁与变异证据
+
+| 门 | 读数 |
+| --- | --- |
+| 新增后端文件 | `tests/test_qoder_trip_shape_and_budget_reference.py` **13 passed**、`tests/test_qoder_rejection_message_keys.py` **10 passed** |
+| 全量后端（`.venv`，AI 变量清空） | **951 passed / 15 skipped / 0 failed（102.09s）**；改动前同树读数 928/15/0 ⇒ **+23 条，0 红** |
+| ORD-0063/0064a 变异 | **7/7 由点名节点杀掉**，每次还原后 SHA-256 逐字节相同：`M1` 去掉首尾日 +1、`M7` 把屏幕上那套 `round(hours/24)+1` 搬进权威算式（这就是订单点名的缺陷形状）、`M2` 读路径改成抛错、`M3` 能算出的天数伪装成未知、`M4` 把 CNY 地板说成可比、`M5` 换回 half-to-even、`M6` naive/aware 倒挂回退成"1 天" |
+| ORD-0055 变异 | **6/6 由点名节点杀掉**：`K1` 删 envelope 默认键、`K2` 改成读 `msg`（仲裁禁止的脆弱匹配）、`K3` 去掉天数拒绝的键、`K4` 去掉 HTTP 状态键、`K5` 用前缀匹配把任意 `V13_*` 洗成 422、`K6` 未登记 type 统一塌成 `validation.invalid` |
+| 证据文件 | `D:\moodle\_qoder_scratch_20260920\ord63_mutants.json`、`ord55_mutants.json`；跑法 `scripts/ord63_mutate.py`、`scripts/ord55_mutate.py` |
+
+### 93.5 交接：ORD-0063 第 2 条与 ORD-0064(a) 的显示层不在我的写集里
+
+Amendment J §2 把 `frontend/src/app/V8Experience.tsx` 判给 `e345b9d6`、我转只读，所以这两条的**前端半**
+以补丁交付：`review/ORD-0063-0064a-frontend.diff`（`V8Experience.tsx` +70/−36、`v8Types.ts` +25/−2，
+删掉 `Math.round((endMs-startMs)/86_400_000)+1` 与硬编码 `¥`，改消费上面两块契约）。
+`git apply --check --directory=frontend` **CLEAN**（v8Types.ts 在库里是 CRLF，补丁按目标文件各自的行尾生成，
+不需要 `--ignore-space-change`）。**未做**：在真树上 `typecheck` 与屏幕 innerText 断言——那要求写他们的文件，
+所以 ORD-0063 / ORD-0064(a) 我按 **PARTIAL** 记，等裁决：要么把这两处一次性授权给我落，要么并进 `e345b9d6` 的单子里。
