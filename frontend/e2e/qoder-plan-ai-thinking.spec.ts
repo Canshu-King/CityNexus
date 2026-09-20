@@ -65,44 +65,51 @@ async function renderedSeconds(page: Page): Promise<number> {
 }
 
 test.describe("ORD-0038 the AI sheet reports what it actually knows", () => {
-  test("plan-ai-elapsed-ticks — the waiting number is measured time, not a timer position", async ({
-    page,
-  }) => {
-    test.setTimeout(150_000);
-    await page.emulateMedia({ colorScheme: "light", media: "screen" });
-    await page.setViewportSize({ width: 390, height: 844 });
-    await readyStatus(page);
-    await page.route(COMMANDS, async (route) => {
-      await new Promise<void>((resolve) => setTimeout(resolve, 20_000));
-      void route.abort();
+  // Both render arms, because the sheet builds the waiting line twice — once per language
+  // — and a mutant in whichever arm the suite does not run survives unnoticed.
+  for (const language of ["en", "zh-CN"] as const) {
+    test(`plan-ai-elapsed-ticks — the waiting number advances (${language === "en" ? "English" : "Chinese"} copy)`, async ({
+      page,
+    }) => {
+      test.setTimeout(150_000);
+      await page.addInitScript(
+        (value) => localStorage.setItem("citynexus.locale", value),
+        language,
+      );
+      await page.emulateMedia({ colorScheme: "light", media: "screen" });
+      await page.setViewportSize({ width: 390, height: 844 });
+      await readyStatus(page);
+      await page.route(COMMANDS, async (route) => {
+        await new Promise<void>((resolve) => setTimeout(resolve, 20_000));
+        void route.abort();
+      });
+      await openSheet(page);
+      await page.getByTestId("plan-ai-submit").click();
+
+      await expect(
+        page.getByTestId("plan-ai-live"),
+        node("plan-ai-elapsed-ticks",
+          `the sheet never showed a waiting state at all (${language} copy)`),
+      ).toBeVisible({ timeout: 15_000 });
+      const first = await renderedSeconds(page);
+      const rendered = (await page.getByTestId("plan-ai-elapsed").innerText()).trim();
+      expect(
+        first >= 0,
+        node("plan-ai-elapsed-ticks",
+          `the waiting line carries no number the traveller can read (${language}): `
+          + `${JSON.stringify(rendered)}`),
+      ).toBe(true);
+      await expect
+        .poll(() => renderedSeconds(page), {
+          timeout: 12_000,
+          message: node("plan-ai-elapsed-ticks",
+            `the seconds the traveller reads on screen never advanced (${language} copy); a waiting `
+            + "line stuck at one number is indistinguishable from a hang, which is the report this "
+            + "order answers"),
+        })
+        .toBeGreaterThan(first);
     });
-    await openSheet(page);
-    await page.getByTestId("plan-ai-submit").click();
-
-    await expect(page.getByTestId("plan-ai-live"), node("plan-ai-elapsed-ticks",
-      "the sheet never showed a waiting state at all")).toBeVisible({ timeout: 15_000 });
-    const first = await renderedSeconds(page);
-    await expect
-      .poll(() => renderedSeconds(page), {
-        timeout: 12_000,
-        message: node("plan-ai-elapsed-ticks",
-          "the seconds the traveller reads on screen never advanced; a waiting line stuck at one "
-          + "number is indistinguishable from a hang, which is the report this order answers"),
-      })
-      .toBeGreaterThan(first);
-    const later = await renderedSeconds(page);
-    const rendered = (await page.getByTestId("plan-ai-elapsed").innerText()).trim();
-
-    expect(
-      first >= 0,
-      node("plan-ai-elapsed-ticks",
-        `the waiting line carries no number the traveller can read: ${JSON.stringify(rendered)}`),
-    ).toBe(true);
-    expect(
-      later > first,
-      node("plan-ai-elapsed-ticks", `rendered seconds did not advance (${first} -> ${later})`),
-    ).toBe(true);
-  });
+  }
 
   test("plan-ai-no-fabricated-stage — no step may claim done before it was awaited", async ({
     page,

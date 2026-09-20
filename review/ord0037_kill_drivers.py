@@ -9,6 +9,7 @@ import hashlib
 import os
 import subprocess
 import sys
+import time
 
 ROOT = "D:/moodle/_qoder_ui_overnight_20260920"
 SRC = f"{ROOT}/frontend/src/components/v8/MapPanel.tsx"
@@ -142,15 +143,18 @@ for name, port, subs, expected_node in CASES:
     open(SRC, "w", encoding="utf-8", newline="").write(mutated)
     print(f"{name}: mutant applied ({len(text)} -> {len(mutated)} bytes)")
 
+    # A fresh run id per attempt: the backend refuses to reopen an existing e2e
+    # database, which is what made the first re-run of every mutant "invalid".
+    run_id = f"{name.replace(chr(45), chr(0x5f))[:12]}{int(time.time()) % 100000:05d}"
     env = dict(os.environ)
     env.update(
         {
             "CITYNEXUS_E2E_AUTHORITATIVE": "1",
-            "CITYNEXUS_E2E_RUN_ID": name.replace("-", "")[:24],
+            "CITYNEXUS_E2E_RUN_ID": run_id,
             "CITYNEXUS_E2E_PORT": str(int(port) + 100),
             "CITYNEXUS_BACKEND_PORT": port,
             "CITYNEXUS_PYTHON": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
-            "CITYNEXUS_DATABASE_URL": f"sqlite:///{ROOT}/review/evidence/_{name.replace('-', '')[:24]}.db",
+            "CITYNEXUS_DATABASE_URL": f"sqlite:///{ROOT}/review/evidence/_{run_id}.db",
             "CITYNEXUS_AI_ENABLED": "false",
             "CITYNEXUS_EVIDENCE_DIR": f"{ROOT}/review/evidence",
         }

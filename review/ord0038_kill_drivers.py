@@ -10,6 +10,7 @@ import os
 import shutil
 import subprocess
 import sys
+import time
 
 ROOT = "D:/moodle/_qoder_ui_overnight_20260920"
 REL = "frontend/src/features/planning/PlanWithAiSheet.tsx"
@@ -40,13 +41,21 @@ seed_pristine_from_git()
 CASES = [
     (
         "kill38-a-frozen-seconds",
-        "8231",
+        "4341",
         [("`已等待 ${elapsed} 秒`", "`已等待 0 秒`")],
         "plan-ai-elapsed-ticks",
     ),
     (
+        # Same node, the other render arm: the first round's Chinese mutant survived only
+        # because the suite ran in English and never executed that line.
+        "kill38-a2-frozen-seconds-en",
+        "4348",
+        [("`waiting ${elapsed}s`", "`waiting 0s`")],
+        "plan-ai-elapsed-ticks",
+    ),
+    (
         "kill38-b-everything-claims-done",
-        "8232",
+        "4342",
         [
             (
                 '                const state = index < here ? "done" : index === here ? "active" : "";\n',
@@ -57,7 +66,7 @@ CASES = [
     ),
     (
         "kill38-c-cancel-cannot-stop-the-post",
-        "8233",
+        "4343",
         [
             (
                 '        body: JSON.stringify({ command }),\n        signal,\n',
@@ -68,7 +77,7 @@ CASES = [
     ),
     (
         "kill38-d-cancel-cannot-stop-the-baseline",
-        "8234",
+        "4344",
         [
             (
                 '      const response = await fetch(`/api/v1/journeys/${journeyId}/plans`, {\n'
@@ -84,7 +93,7 @@ CASES = [
     ),
     (
         "kill38-e-refused-request-falls-through",
-        "8235",
+        "4345",
         [
             (
                 "      if (!response.ok) {\n        /* A refused or failed request is reported as what it is.",
@@ -95,7 +104,7 @@ CASES = [
     ),
     (
         "kill38-f-unreadable-status-reads-as-ready",
-        "8236",
+        "4346",
         [('        if (!stale) setAiState("unknown");', '        if (!stale) setAiState("ready");')],
         "plan-ai-preflight-honest",
     ),
@@ -123,16 +132,19 @@ for name, port, subs, expected_node in CASES:
     open(SRC, "w", encoding="utf-8", newline="").write(mutated)
     print(f"{name}: mutant applied ({len(text)} -> {len(mutated)} bytes)")
 
+    # A fresh run id per attempt: the backend refuses to reopen an existing e2e
+    # database, which is what made the first re-run of every mutant "invalid".
+    run_id = f"{name.replace(chr(45), chr(0x5f))[:12]}{int(time.time()) % 100000:05d}"
     env = dict(os.environ)
     env.update(
         {
             "CITYNEXUS_E2E_AUTHORITATIVE": "1",
-            "CITYNEXUS_E2E_RUN_ID": name.replace("-", "")[:24],
-            "CITYNEXUS_E2E_PORT": str(int(port) + 100),
-            "CITYNEXUS_BACKEND_PORT": port,
+            "CITYNEXUS_E2E_RUN_ID": run_id,
+            "CITYNEXUS_E2E_PORT": port,
+            "CITYNEXUS_BACKEND_PORT": str(8300 + int(port[-2:])),
             "CITYNEXUS_PYTHON": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
             "CITYNEXUS_DATABASE_URL": (
-                f"sqlite:///{ROOT}/review/evidence/_{name.replace('-', '')[:24]}.db"
+                f"sqlite:///{ROOT}/review/evidence/_{run_id}.db"
             ),
             "CITYNEXUS_AI_ENABLED": "false",
             "CITYNEXUS_EVIDENCE_DIR": f"{ROOT}/review/evidence",
@@ -148,9 +160,10 @@ for name, port, subs, expected_node in CASES:
         text=True,
         encoding="utf-8",
         errors="replace",
+        shell=True,
     )
     out = proc.stdout + proc.stderr
-    lines = [ln for ln in out.splitlines() if "WebServer" not in ln]
+    lines = out.splitlines()
     log = f"{LOGDIR}/{name}.log"
     with open(log, "w", encoding="utf-8", newline="") as fh:
         fh.write("\n".join(lines) + "\n")
