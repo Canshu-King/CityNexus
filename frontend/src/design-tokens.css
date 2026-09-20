@@ -1092,3 +1092,59 @@ body {
 }
 .trial-create-error strong { font-weight: 750; }
 .trial-create-error span { color: var(--v8-muted); overflow-wrap: anywhere; }
+
+/* ORD-0037 — the map must say what it is doing.
+   The tile notice is the honest counterpart to the flat canvas fallback; the gesture
+   hint exists because a two-finger-only map is undiscoverable without being told. */
+.v8-map-tile-notice {
+  position: absolute;
+  top: var(--cn-s-8);
+  right: var(--cn-s-8);
+  left: var(--cn-s-8);
+  z-index: 3;
+  margin: 0;
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.4;
+}
+.v8-map-gesture-hint {
+  position: absolute;
+  bottom: calc(var(--cn-s-40) + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  margin: 0;
+  max-width: calc(100% - 2 * var(--cn-s-12));
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-surface);
+  box-shadow: var(--cn-shadow-card);
+  text-align: center;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.4;
+  pointer-events: none;
+}
+/* Maplibre paints its cooperative-gesture label as white text over a 40% black veil,
+   which over a pale raster measures 3.4:1.  A label that has to be read against whatever
+   tile happens to be underneath is not a legibility strategy, so it gets the same opaque
+   chip as our own hint and inherits the theme's ink instead of the library's #fff. */
+.v8-maplibre-canvas
+  .maplibregl-cooperative-gesture-screen
+  .maplibregl-desktop-message,
+.v8-maplibre-canvas
+  .maplibregl-cooperative-gesture-screen
+  .maplibregl-mobile-message {
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-surface);
+  box-shadow: var(--cn-shadow-card);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  line-height: 1.4;
+}
