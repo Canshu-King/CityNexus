@@ -1,0 +1,16 @@
+baseline V8Experience.tsx=383f9d13b5f90b5b7918abc3bc5b1350b3f1f2c6
+killT-a-control-dead: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-theme-contract.spec.ts :: theme-control-cycles-all-three-choices — the control's own label disagrees with what it applied (wanted light)
+  node theme-control-cycles-all-three-choices: NAMED IN A RED
+  restored 383f9d13b5f90b5b7918abc3bc5b1350b3f1f2c6 OK
+killT-b-two-state-toggle: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-theme-contract.spec.ts :: theme-control-cycles-all-three-choices — the control's own label disagrees with what it applied (wanted system)
+  node theme-control-cycles-all-three-choices: NAMED IN A RED
+  restored 383f9d13b5f90b5b7918abc3bc5b1350b3f1f2c6 OK
+killT-c-choice-never-applied: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-theme-contract.spec.ts :: theme-control-cycles-all-three-choices — after choosing dark the root said "light" (["light","light"])
+  node theme-control-cycles-all-three-choices: NAMED IN A RED
+  restored 383f9d13b5f90b5b7918abc3bc5b1350b3f1f2c6 OK

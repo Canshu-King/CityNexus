@@ -1,5 +1,23 @@
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 
+/* This file proves a production service-worker lifecycle, so it belongs to the
+   `playwright.sw.config.ts` project, which builds and previews the shipped bundle. The
+   default project runs `npm run dev`, where main.tsx registers the checked-in dev worker
+   and never the generated one, so neither test could ever pass there -- a red under dev is
+   not a product finding, it is a gate running in the wrong clothes. It skips itself and
+   says so, rather than being deleted or loosened. */
+test.beforeEach(async ({ request }) => {
+  const html = await request
+    .get("/v8/live")
+    .then((response) => response.text())
+    .catch(() => "");
+  test.skip(
+    html.includes("@vite/client"),
+    "production-only lifecycle: the default project serves Vite dev, which never registers " +
+      "/v10-sw.js. Run it with --config playwright.sw.config.ts.",
+  );
+});
+
 async function resetServiceWorkerState(page: Page) {
   await page.evaluate(async () => {
     const registrations = await navigator.serviceWorker.getRegistrations();
