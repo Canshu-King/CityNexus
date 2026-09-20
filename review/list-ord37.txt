@@ -1,0 +1,75 @@
+[citynexus e2e] suite=current-product authoritative=false python=python frontend=:4173 backend=:8000 db=(inherited default) ai=inherited from the environment reuseExistingServer=true
+Listing tests:
+  [real-seed] › _qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+  [chromium] › golden.spec.ts:55:1 › an accepted closure recovery is backend truth on V8 Live and survives reload
+  [chromium] › live-autopilot-v5.spec.ts:50:1 › the guardian autopilot recovers a live journey from a provider event with no traveller action
+  [chromium] › predictive-real-city-v6.spec.ts:86:1 › a forecast is prevented before the failure happens, and the traveller can see why
+  [chromium] › product-hardening.spec.ts:83:1 › an autonomous recovery executes inside its envelope and is observable on the current recovery surface
+  [chromium] › product-v8.spec.ts:13:3 › V8 product experience › completes the multi-day stay and autonomous recovery journey
+  [chromium] › product-v8.spec.ts:59:3 › V8 product experience › keeps the mobile Journey, Map, AI, Bookings, Me composition usable
+  [chromium] › qoder-ack-rendered.spec.ts:198:3 › T3 acknowledgement vs resolution (rendered integration) › an ACKNOWLEDGED disruption with no linked acceptance stays open: both '发生了什么' and '已知晓，仍待处理' render
+  [chromium] › qoder-ack-rendered.spec.ts:223:3 › T3 acknowledgement vs resolution (rendered integration) › an ACCEPTED proposal linked to the event by trigger_event_id closes it: no open/acknowledged notice, shown as handled
+  [chromium] › qoder-ack-rendered.spec.ts:246:3 › T3 acknowledgement vs resolution (rendered integration) › an ACCEPTED proposal with an UNRELATED trigger_event_id leaves the event open
+  [chromium] › qoder-ack-rendered.spec.ts:280:3 › T3 ack vs resolution — Today surface (rendered integration) › an ACKNOWLEDGED event with no acceptance stays an unresolved change on Today
+  [chromium] › qoder-ack-rendered.spec.ts:292:3 › T3 ack vs resolution — Today surface (rendered integration) › a matching ACCEPTED replan clears the change count on Today
+  [chromium] › qoder-ack-rendered.spec.ts:311:3 › T3 ack vs resolution — Today surface (rendered integration) › an UNRELATED accepted proposal still leaves the change unresolved on Today
+  [chromium] › qoder-ack-resolution.spec.ts:17:3 › T3 acknowledgement vs resolution (unit) › acknowledged-only stays open; only linked acceptance resolves
+  [chromium] › qoder-budget-evidence.spec.ts:19:3 › T4 budget evidence coverage (unit) › NONE / PARTIAL / FULL are distinct, and only FULL allows a verdict
+  [chromium] › qoder-budget-evidence.spec.ts:67:3 › T4 budget evidence coverage (unit) › B4: all activities priced but an unknown hotel/booking stays PARTIAL (no trip verdict)
+  [chromium] › qoder-budget-rendered.spec.ts:171:3 › T4 budget evidence coverage (rendered integration) › B4: all stops priced but an unknown stay/transport -> the block refuses a verified-budget verdict and shows PARTIAL wording
+  [chromium] › qoder-budget-rendered.spec.ts:195:3 › T4 budget evidence coverage (rendered integration) › only when every budget-relevant item is known does the FULL verdict wording render
+  [chromium] › qoder-budget-rendered.spec.ts:215:3 › T4 budget evidence coverage (rendered integration) › a KNOWN_FREE (0 amount) stop counts as known and keeps the block at FULL
+  [chromium] › qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (mobile)
+  [chromium] › qoder-contrast-audit.spec.ts:214:5 › Qoder contrast audit (Today + Live, light + dark) › focus indicators clear 3:1 on Today/Live, light + dark (mobile)
+  [chromium] › qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (desktop)
+  [chromium] › qoder-contrast-audit.spec.ts:214:5 › Qoder contrast audit (Today + Live, light + dark) › focus indicators clear 3:1 on Today/Live, light + dark (desktop)
+  [chromium] › qoder-dock-geometry.spec.ts:128:5 › Copilot dock geometry at phone size › /v8/live: no actionable element may rest under the dock at any settled scroll position
+  [chromium] › qoder-dock-geometry.spec.ts:128:5 › Copilot dock geometry at phone size › /v8/hub: no actionable element may rest under the dock at any settled scroll position
+  [chromium] › qoder-dock-geometry.spec.ts:205:3 › Copilot dock geometry at phone size › a yielded pill is not a ghost control: hidden, unfocusable, and back again
+  [chromium] › qoder-e2e-config-guard.spec.ts:85:1 › an authoritative run missing a required variable exits non-zero and names that variable
+  [chromium] › qoder-e2e-config-guard.spec.ts:121:1 › an authoritative run that omits the interpreter cannot fall back to a system Python
+  [chromium] › qoder-e2e-config-guard.spec.ts:132:1 › a live external AI key refuses the deterministic suite instead of silently spending it
+  [chromium] › qoder-e2e-config-guard.spec.ts:149:1 › a complete authoritative environment is accepted and announces who it started
+  [chromium] › qoder-live-recovery-cursor.spec.ts:96:1 › the recovery card follows the cursor the product itself advanced
+  [chromium] › qoder-live-recovery-cursor.spec.ts:138:1 › a plan that holds no activities invents no current step
+  [chromium] › qoder-live-recovery-cursor.spec.ts:215:1 › a cursor that resolves to a finished step yields no Now on the Live heading
+  [chromium] › qoder-live-recovery-cursor.spec.ts:267:1 › an unresolvable cursor makes the recovery card name nothing
+  [chromium] › qoder-live-structure.spec.ts:224:3 › Qoder Live structure order (Phase 2) › sections stack Current -> Map -> Disruption -> Replan (bounding rect)
+  [chromium] › qoder-live-structure.spec.ts:302:3 › Qoder Live accepted transition (Phase 3) › accepting a proposal surfaces the confirmation before the open warning collapses
+  [chromium] › qoder-live-structure.spec.ts:367:3 › Qoder Live state-coverage matrix (Phase 1) › L0 NORMAL: current/next real, no disruption, no Accept CTA
+  [chromium] › qoder-live-structure.spec.ts:374:3 › Qoder Live state-coverage matrix (Phase 1) › L1 UNRESOLVED: disruption shown, no proposal, no Accept CTA, safe notice
+  [chromium] › qoder-live-structure.spec.ts:382:3 › Qoder Live state-coverage matrix (Phase 1) › L2 PROPOSAL_READY: one real differing proposal, exactly one Accept CTA
+  [chromium] › qoder-live-structure.spec.ts:396:3 › Qoder Live state-coverage matrix (Phase 1) › L3 ACCEPTED: Accept CTA gone, handled confirmation shown
+  [chromium] › qoder-live-structure.spec.ts:412:3 › Qoder Live state-coverage matrix (Phase 1) › L4 MOBILITY_UNAVAILABLE-safe: rejected proposal offers no fake Accept CTA
+  [chromium] › qoder-live-structure.spec.ts:435:3 › Qoder Live dark replan-state audit (Phase 4) › L1 UNRESOLVED and L2 PROPOSAL_READY have no dark contrast violations
+  [chromium] › qoder-live-structure.spec.ts:503:3 › Qoder Live map height + first screen (Phase 4) › map is 240 normal and 200-216 when a decision is active; disruption reaches the fold
+  [chromium] › qoder-map-interaction.spec.ts:90:3 › ORD-0037 the journey map takes gestures and reads as a map › drag-moves-camera + ctrl-wheel-zooms — gestures reach the camera
+  [chromium] › qoder-map-interaction.spec.ts:146:3 › ORD-0037 the journey map takes gestures and reads as a map › route-feature-count + route-width-follows-zoom + route-casing-layer — not one big line
+  [chromium] › qoder-map-interaction.spec.ts:198:3 › ORD-0037 the journey map takes gestures and reads as a map › the gesture split is stated on the panel, not left to be discovered
+  [chromium] › qoder-mobile-overflow.spec.ts:82:3 › Qoder mobile-overflow (Today + Live) › no horizontal overflow at 360/412/430 on Today and Live
+  [chromium] › qoder-mobile-ui-overnight.spec.ts:186:3 › Qoder mobile-overnight gate (Today/Live/Wallet x 360/390/412) › no overflow, 44px targets, unblocked CTA, no truncation
+  [chromium] › qoder-mobile-ui-overnight.spec.ts:213:3 › Qoder mobile-overnight gate (Journey creation, first entry) › no overflow, 44px targets, unblocked CTA, no truncation
+  [chromium] › qoder-mobile-ui-overnight.spec.ts:311:3 › Qoder touch-target contract is layered (F-2) › fine-pointer desktop keeps the compact density, mobile takes >=44px
+  [chromium] › qoder-onboarding-failure.spec.ts:47:3 › ORD-0034 onboarding surfaces a failed create › a 500 on journey creation shows a visible, named failure instead of silence
+  [chromium] › qoder-onboarding-failure.spec.ts:109:3 › ORD-0034 onboarding surfaces a failed create › the named backend reason reaches the onboarding screen
+  [chromium] › qoder-plan-ai-contrast.spec.ts:111:5 › ORD-0035 plan-ai sheet ink is legible in both themes › light: sheet and textarea clear AA
+  [chromium] › qoder-plan-ai-contrast.spec.ts:111:5 › ORD-0035 plan-ai sheet ink is legible in both themes › dark: sheet and textarea clear AA
+  [chromium] › qoder-plan-ai-contrast.spec.ts:141:1 › no .plan-ai-* rule pairs a literal light fill with an inherited foreground
+  [chromium] › qoder-preventive-lifecycle.spec.ts:42:1 › a preventive run that was still planning updates to executed without a reload
+  [chromium] › qoder-stale-cursor.spec.ts:36:1 › a cursor the plan cannot resolve is reported as unresolved, not as a plausible step
+  [chromium] › qoder-today-hero.spec.ts:16:3 › Qoder Today single-focus hero › hero has one primary CTA, bounded height, no empty Now slot, no overflow
+  [chromium] › qoder-today-hero.spec.ts:108:3 › Qoder Today single-focus hero › reduced-motion disables the hero reveal transform
+  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › today light + dark
+  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › live light + dark
+  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › wallet light + dark
+  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › setup-step1 light + dark
+  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › setup-step3 light + dark
+  [chromium] › qoder-ui-overnight-shots.spec.ts:84:5 › Qoder ui-overnight before/after capture › plan-ai-sheet light + dark
+  [chromium] › real-world-trip-operations-v9.spec.ts:4:1 › real-world trip operations: inbox to luggage-aware autonomous recovery
+  [chromium] › v10-accessibility.spec.ts:5:1 › V10 live execution surface has no automated accessibility violations
+  [chromium] › v10-inbox.spec.ts:4:1 › V10 Journey Inbox exposes text, image, and deterministic code paths
+  [chromium] › v10-live-execution.spec.ts:4:1 › V10 live execution panel exposes the server clock and evidence trail
+  [chromium] › v10-quality-budget.spec.ts:5:3 › V10 product-quality budget › Live Journey becomes usable without layout or server-error regressions
+  [chromium] › v13-5-fully-grounded.spec.ts:51:1 › City Discovery renders the fully grounded Journey proof
+  [chromium] › v13-authoritative-integrity.spec.ts:20:1 › accepted authoritative execution truth converges to Dexie offline truth
+Total: 72 tests in 31 files

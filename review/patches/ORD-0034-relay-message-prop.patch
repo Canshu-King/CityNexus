@@ -1,0 +1,10 @@
+--- a/frontend/src/app/V8Experience.tsx
++++ b/frontend/src/app/V8Experience.tsx
+@@ -797,6 +797,7 @@
+         onCreate={createJourney}
+         onUseTianjinDemo={createTianjinDemo}
+         onCancel={data ? () => setSetupOpen(false) : undefined}
+         busy={setupBusy}
++        message={message}
+       />
+     );
