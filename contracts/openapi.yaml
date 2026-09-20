@@ -1440,7 +1440,7 @@ paths:
     get:
       operationId: readDemoScene
       responses:
-        '200': {description: 'demo_mode, the seeded journey window, its cursor-derived effective_now, and the referenced evidence expiry', content: {application/json: {schema: {type: object}}}}
+        '200': {description: 'demo_mode, the seeded journey window, its cursor-derived effective_now, and the evidence that window is priced with: evidence_state (REFERENCED | FROZEN_WITHOUT_TTL | EVIDENCE_REFERENCE_INCONSISTENT | NO_FROZEN_EVIDENCE | NO_SCENARIO), evidence_snapshot_id, evidence_reference_consistent, and mobility_legs_total versus mobility_legs_hard_eligible. The leg counts report how much of the plan the sealed facts already cover and license nothing - /replans decides for itself', content: {application/json: {schema: {type: object}}}}
   /journeys/{journey_id}/stay-generations:
     post:
       operationId: submitStayGeneration

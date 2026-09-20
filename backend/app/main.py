@@ -6082,6 +6082,78 @@ def skip_activity(journey_id: UUID, activity_id: UUID, session: Session = Depend
     return twin
 
 
+def _activity_routing_key(item: Activity | None) -> str | None:
+    """The routing identity of one activity - the key the mobility evidence is filed under.
+
+    Must match ``feasibility._location_key``, and it is the *same* rule
+    ``generate_replan`` uses to ask for its legs: the frozen evidence is keyed by
+    ``metadata.semantic_key``, so requesting a pair by ``place_id`` would ask for keys the
+    gate never looks up and every leg would report MOBILITY_DATA_UNAVAILABLE (identity
+    drift, truth blocker B5).  A read that counts coverage has to ask with this key too,
+    which is why the rule lives here once rather than in two places.
+    """
+
+    if item is None:
+        return None
+    metadata = _json_object(item.metadata_json, {})
+    semantic = str(metadata.get("semantic_key") or "").strip()
+    return semantic or item.place_id or item.city_service_id
+
+
+def _mobility_evidence_coverage(session: Session, plan: PlanVersion | None) -> dict[str, Any]:
+    """How much of the plan's own walking order the sealed evidence can actually carry.
+
+    Reported, not judged.  This never licenses or blocks a recovery - `generate_replan`
+    runs its own gate and will still refuse for its own reasons - it answers the question
+    the Simulation panel has to put into traveller words (ORD-0079 must 3b): does this
+    journey have usable inter-stop travel facts at all, and for how many of its legs?
+
+    The hardness test is the product's own ``MobilitySnapshot.hard_minutes``, so the
+    count cannot drift from the rule that decides it: a leg sealed as
+    ``SYNTHETIC_DEFAULT`` (the fixture's blanket constant) or left untagged raises
+    ``KeyError`` there and is counted as not covered (V4 #1 - unknown is never trusted
+    as hard truth).  Nothing here invents, edits, or extends evidence.
+    """
+
+    empty = {
+        "snapshot_id": None,
+        "reference_consistent": False,
+        "legs_total": 0,
+        "legs_hard_eligible": 0,
+    }
+    if plan is None:
+        return empty
+    evidence = _json_object(plan.mobility_evidence_json, {})
+    snapshot_id = str(evidence.get("snapshot_id") or "") or None
+    activities = session.scalars(
+        select(Activity)
+        .where(Activity.plan_version_id == plan.id)
+        .order_by(Activity.sequence_no)
+    ).all()
+    keys = [str(key) for key in (_activity_routing_key(item) for item in activities) if key]
+    legs = [(left, right) for left, right in zip(keys, keys[1:]) if left != right]
+    snapshot: MobilitySnapshot | None = None
+    if snapshot_id is not None:
+        try:
+            snapshot = MobilitySnapshot.from_evidence(evidence)
+        except (KeyError, TypeError, ValueError):
+            snapshot = None
+    hard_eligible = 0
+    if snapshot is not None:
+        for pair in legs:
+            try:
+                snapshot.hard_minutes(*pair)
+            except KeyError:
+                continue
+            hard_eligible += 1
+    return {
+        "snapshot_id": snapshot_id,
+        "reference_consistent": bool(snapshot_id) and snapshot_id == plan.mobility_snapshot_id,
+        "legs_total": len(legs),
+        "legs_hard_eligible": hard_eligible,
+    }
+
+
 @app.get("/api/v1/demo/scene")
 def demo_scene(session: Session = Depends(get_session)):
     """Which day the stage is set on, from the server - the one read gap Simulation needs.
@@ -6120,6 +6192,10 @@ def demo_scene(session: Session = Depends(get_session)):
             "basis": None,
             "evidence_expires_at": None,
             "evidence_state": "NO_SCENARIO",
+            "evidence_snapshot_id": None,
+            "evidence_reference_consistent": None,
+            "mobility_legs_total": None,
+            "mobility_legs_hard_eligible": None,
             # Constant key set: a strict client-side shape check (missing key -> the envelope is
             # dropped) would otherwise turn an honest empty stage into "cannot read the scene",
             # which is the ORD-0070 family of defects seen from the other side.
@@ -6152,6 +6228,21 @@ def demo_scene(session: Session = Depends(get_session)):
         )
         cursor_at = activity.start_at if activity is not None else None
     evidence = json.loads((plan.mobility_evidence_json if plan else None) or "{}")
+    coverage = _mobility_evidence_coverage(session, plan)
+    # Four answers, not two.  `expires_at` used to stand in for "is there frozen evidence at
+    # all", so a plan carrying 56 sealed pairs - measured, and consumed by a successful replan -
+    # was reported as NO_FROZEN_EVIDENCE, and a panel that faithfully repeats the server then
+    # tells a traveller this trip has no travel data (ORD-0079 must 3b, inverted).  A missing
+    # TTL is stated as missing; writing one to make the field look better is the fabricated
+    # `expires_at` this project is not allowed to produce.
+    if coverage["snapshot_id"] is None:
+        evidence_state = "NO_FROZEN_EVIDENCE"
+    elif not coverage["reference_consistent"]:
+        evidence_state = "EVIDENCE_REFERENCE_INCONSISTENT"
+    elif evidence.get("expires_at"):
+        evidence_state = "REFERENCED"
+    else:
+        evidence_state = "FROZEN_WITHOUT_TTL"
     return {
         "demo_mode": demo_mode_enabled(),
         "journey_id": journey.id,
@@ -6170,7 +6261,14 @@ def demo_scene(session: Session = Depends(get_session)):
         "evidence_expires_at": evidence.get("expires_at"),
         # Reported, not judged: whether the evidence is still valid is the stale gate's job
         # (`STALE_RECOMPOSE_REQUIRED`), and a scene read must not grow a second opinion.
-        "evidence_state": "REFERENCED" if evidence.get("expires_at") else "NO_FROZEN_EVIDENCE",
+        "evidence_state": evidence_state,
+        "evidence_snapshot_id": coverage["snapshot_id"],
+        "evidence_reference_consistent": coverage["reference_consistent"],
+        # How many legs this plan actually walks, and how many of those the sealed evidence can
+        # carry into a hard decision.  A count of existing facts, not a licence: `/replans`
+        # still decides for itself.
+        "mobility_legs_total": coverage["legs_total"],
+        "mobility_legs_hard_eligible": coverage["legs_hard_eligible"],
         "plan_version_id": str(plan.id) if plan is not None else None,
     }
 
@@ -7541,19 +7639,15 @@ def generate_replan(
         effective_event_time = effective_event_time.astimezone(journey_tz)
 
     def _activity_location(item: Activity | None) -> str | None:
-        """Routing identity of one activity.
+        """Routing identity of one activity - see module-level `_activity_routing_key`.
 
-        Must match ``feasibility._location_key``: the frozen mobility evidence is
-        keyed by ``metadata.semantic_key``, so requesting pairs by ``place_id``
-        would ask for keys the gate never looks up and every leg would report
-        MOBILITY_DATA_UNAVAILABLE (identity drift).
+        Delegated rather than duplicated: the evidence is keyed by
+        ``metadata.semantic_key``, and the read that counts coverage
+        (`_mobility_evidence_coverage`) has to ask with the very same key, or the two
+        drift and one of them reports legs the other never requested.
         """
 
-        if item is None:
-            return None
-        metadata = _json_object(item.metadata_json, {})
-        semantic = str(metadata.get("semantic_key") or "").strip()
-        return semantic or item.place_id or item.city_service_id
+        return _activity_routing_key(item)
 
     mobility_pairs: set[tuple[str, str]] = set()
 

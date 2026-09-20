@@ -146,7 +146,12 @@ def test_the_scene_read_reports_the_scenario_clock_and_not_this_machine(_stage_o
     drift = abs((datetime.now(timezone.utc) - moment).total_seconds())
     assert drift > 86_400, f"the scene clock is within a day of wall time: {drift}s"
     assert scene["scene_start_at"] <= scene["scene_end_at"], scene
-    assert scene["evidence_state"] in {"REFERENCED", "NO_FROZEN_EVIDENCE"}, scene
+    assert scene["evidence_state"] in {
+        "REFERENCED",
+        "FROZEN_WITHOUT_TTL",
+        "EVIDENCE_REFERENCE_INCONSISTENT",
+        "NO_FROZEN_EVIDENCE",
+    }, scene
 
 
 def test_reset_leaves_a_bookable_stage_and_start_scenario_makes_it_executable(_stage_on) -> None:
