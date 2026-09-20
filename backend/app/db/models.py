@@ -1109,3 +1109,36 @@ class WebObservation(Base):
         String, default="NON_AUTHORITATIVE", server_default="NON_AUTHORITATIVE"
     )
     created_at: Mapped[str] = mapped_column(String)
+
+
+class StayGenerationOperation(Base):
+    """One asynchronous stay-generation job, with the state machine it is allowed to run.
+
+    ORD-0057 (arbitration `5749459724` §1): a cold chain of Photon -> three Overpass
+    mirrors -> Nominatim was measured at ~115s inside a POST, so the request had to stop
+    being the thing that carries the work.  This row is what survives a reload: the client
+    keeps an `operation_id` and reads *this* record, which is also why the state, the phase
+    and the result live in the database rather than in a process-local future.
+    """
+
+    __tablename__ = "stay_generation_operations"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    journey_id: Mapped[str] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE"), index=True
+    )
+    # Derived from the inputs that can change the answer.  Two taps of the same button
+    # produce the same fingerprint, and the partial unique index below is what stops the
+    # second one from starting a second provider chain.
+    fingerprint: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="QUEUED", server_default="QUEUED")
+    phase: Mapped[str | None] = mapped_column(String, nullable=True)
+    request_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    # `outcome` is the four-way answer that `top_k: []` could never express.
+    outcome: Mapped[str | None] = mapped_column(String, nullable=True)
+    queued_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    finished_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    abandon_requested_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String)

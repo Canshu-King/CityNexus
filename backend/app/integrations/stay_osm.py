@@ -54,8 +54,14 @@ class OsmAccommodationProvider:
     provenance = "LIVE_PROVIDER"
 
     def __init__(self, *, client: httpx.Client | None = None) -> None:
+        # ORD-0057 item 5: this read `max(30.0, settings.real_city_timeout_seconds)`, which
+        # silently discarded the configured value for every setting at or below 30s - the
+        # default is 12, so "make the provider timeout shorter" did nothing at all and the
+        # only way to change it was to know about the hidden floor.  The setting is now the
+        # timeout; a slower mirror is reported as a timeout, which is a true answer, rather
+        # than being hidden behind a constant nobody configured.
         self._client = client or httpx.Client(
-            timeout=max(30.0, settings.real_city_timeout_seconds),
+            timeout=settings.real_city_timeout_seconds,
             trust_env=trust_environment_for_public_providers(),
         )
         self._owned = client is None

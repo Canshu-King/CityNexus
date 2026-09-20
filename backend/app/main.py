@@ -99,7 +99,6 @@ from app.commerce.strengths_generated import SOURCE_COMMITMENT_STRENGTHS
 from app.commerce.validators import CommerceValidationError, validate_idempotency_key
 from app.core.audit import record_audit
 from app.core.config import settings
-from app.core.phase_timing import begin_trace, end_trace, phase
 from app.core.temporal import (
     MAX_JOURNEY_DAYS,
     MIN_JOURNEY_DAYS,
@@ -375,8 +374,22 @@ from app.stay_mobility import (
     option_payload,
 )
 from app.planning.authoritative_v12 import compose_authoritative_multiday
+from app.stay_generation_operations import (
+    ABANDONED,
+    FAILED,
+    abandon_operation,
+    operation_payload,
+    read_operation,
+    reconcile_interrupted_operations,
+    submit_operation,
+    wait_for_operation,
+)
 
 ensure_schema()
+# Rows still open at this point were left by a process that no longer exists, so no thread
+# here can ever finish them; they are closed as WORKER_LOST rather than left to be polled
+# (see app/stay_generation_operations.py).
+reconcile_interrupted_operations()
 app = FastAPI(title="CityNexus MVP API", version="0.1.0")
 logger = logging.getLogger(__name__)
 _trip_studio_accept_lock = RLock()
@@ -2525,6 +2538,84 @@ def capture_stay_offers(journey_id: UUID, session: Session = Depends(get_session
     }
 
 
+def _generation_request(payload: StayPlanGenerateRequest | None) -> dict:
+    request = payload or StayPlanGenerateRequest()
+    return request.model_dump(mode="json")
+
+
+@app.post("/api/v1/journeys/{journey_id}/stay-generations", status_code=202)
+def submit_stay_generation(
+    journey_id: UUID,
+    payload: StayPlanGenerateRequest | None = None,
+    session: Session = Depends(get_session),
+):
+    """Accept the work without carrying it (ORD-0057, arbitration `5749459724` §1).
+
+    The response is written before any provider is contacted: the request's job is to record
+    an operation and hand it over, so the traveller can put the phone away.  A second tap
+    with the same journey and the same question is *the same operation* - that is what stops
+    four taps from becoming four 115-second chains.
+    """
+
+    journey = require(session, Journey, str(journey_id), "Journey")
+    row, reused = submit_operation(session, journey, _generation_request(payload))
+    body = operation_payload(row)
+    return {
+        "operation_id": row.id,
+        "journey_id": row.journey_id,
+        "status": row.status,
+        "phase": body["phase"],
+        "reused": reused,
+        "elapsed_ms": body["elapsed_ms"],
+        "retry_after_ms": body["retry_after_ms"],
+        "status_url": body["status_url"],
+        "abandon_url": body["abandon_url"],
+        "fingerprint": row.fingerprint,
+    }
+
+
+@app.get("/api/v1/journeys/{journey_id}/stay-generations/{operation_id}")
+def read_stay_generation(
+    journey_id: UUID,
+    operation_id: str,
+    session: Session = Depends(get_session),
+):
+    """Everything a client needs to decide whether to keep waiting, from the row alone."""
+
+    require(session, Journey, str(journey_id), "Journey")
+    row = read_operation(session, operation_id)
+    if row is None or row.journey_id != str(journey_id):
+        raise HTTPException(404, f"Generation operation {operation_id} was not found")
+    return operation_payload(row)
+
+
+@app.post("/api/v1/journeys/{journey_id}/stay-generations/{operation_id}/abandon")
+def abandon_stay_generation(
+    journey_id: UUID,
+    operation_id: str,
+    session: Session = Depends(get_session),
+):
+    """Stop using this job's result.  Idempotent, and never a claim it cannot keep.
+
+    A job still in flight answers `ABANDON_REQUESTED`, not `ABANDONED`: an Overpass call
+    already on the wire is not dead yet, and the worker moves it to `ABANDONED` when it
+    returns without writing anything the traveller can see.  A job that already finished
+    cannot be un-finished, and this says so instead of reporting a cancellation that did not
+    happen.
+    """
+
+    require(session, Journey, str(journey_id), "Journey")
+    try:
+        row = abandon_operation(session, operation_id)
+    except LookupError as exc:
+        raise HTTPException(404, f"Generation operation {operation_id} was not found") from exc
+    if row.journey_id != str(journey_id):
+        raise HTTPException(404, f"Generation operation {operation_id} was not found")
+    body = operation_payload(row)
+    body["abandoned"] = row.status == ABANDONED
+    return body
+
+
 @app.post("/api/v1/journeys/{journey_id}/stay-options/generate")
 def generate_stay_journey_options(
     journey_id: UUID,
@@ -2532,52 +2623,47 @@ def generate_stay_journey_options(
     payload: StayPlanGenerateRequest | None = None,
     session: Session = Depends(get_session),
 ):
+    """The synchronous door, now standing in the queue behind the same operation.
+
+    Deliberately not a second implementation: it submits what `POST /stay-generations`
+    submits and waits for that row, so a client that has not moved to the asynchronous
+    contract yet is served by the same worker, the same state machine and the same stored
+    result.  `X-CityNexus-Phase-Ms` and the named temporal rejections are re-emitted from
+    what the worker recorded, which is what keeps ORD-0049's timing contract and ORD-0033's
+    422 contract true across the move (see §94 of INTEGRATION_REPORT.md).
+    """
+
     journey = require(session, Journey, str(journey_id), "Journey")
-    request = payload or StayPlanGenerateRequest()
-    # `generation` is not diagnostics: it is the difference between "this city has no
-    # mapped hotels", "the provider did not answer", "a one-day trip needs no stay" and
-    # "every hotel conflicted with your itinerary".  All four used to look the same -
-    # HTTP 200 with `top_k: []` - and a screen given nothing can only draw a blank.
-    generation: dict[str, Any] = {}
-    begin_trace()
-    try:
-        with phase("stay.generate", detail=f"journey={journey_id} city={journey.city_code}"):
-            options = generate_stay_options(
-                session, journey, weather=request.weather_state, generation_out=generation
-            )
-    finally:
-        finished = end_trace()
-    if finished is not None:
-        # The evidence the arbiter asked for before anyone names a layer: one log line per
-        # call with each phase's share, and the same table on a header so a browser-side
-        # measurement can be lined up against it without reading server logs.
-        logger.info(finished.render())
-        http_response.headers["X-CityNexus-Phase-Ms"] = finished.render_header()
-    if request.sort == "CHEAPEST":
-        options = sorted(options, key=lambda item: (item.stay_total_minor, item.rank))
-    elif request.sort == "LEAST_TRAVEL":
-        options = sorted(
-            options, key=lambda item: (item.daily_travel_minor, item.walking_min, item.rank)
+    row, _reused = submit_operation(session, journey, _generation_request(payload))
+    finished = wait_for_operation(row.id)
+    if finished is None:
+        raise HTTPException(500, f"Generation operation {row.id} disappeared")
+    header = json.loads(finished.result_json or "{}").get("phase_ms_header")
+    if isinstance(header, str) and header:
+        http_response.headers["X-CityNexus-Phase-Ms"] = header
+    if finished.status == FAILED:
+        stored = json.loads(finished.error_json or "{}")
+        reason = str(stored.get("reason") or "")
+        if str(stored.get("exception") or "") == "ValueError" and reason:
+            # Re-raising keeps one conversion point: `temporal_rejection` below decides
+            # named-422-versus-bug-500 here exactly as it did when the work ran inline.
+            raise ValueError(reason)
+        return error(
+            str(stored.get("code") or "GENERATION_FAILED"),
+            str(stored.get("message") or "Generation failed."),
+            status=500,
+            message_key=str(stored.get("message_key") or "error.generation_failed"),
         )
-    elif request.sort == "MOST_FLEXIBLE":
-        options = sorted(options, key=lambda item: (-item.cancellation_score, item.rank))
-    session.commit()
-    offers = session.scalars(
-        select(AccommodationOfferSnapshot)
-        .where(AccommodationOfferSnapshot.journey_id == journey.id)
-        .order_by(AccommodationOfferSnapshot.total_amount_minor)
-    ).all()
-    return {
-        "optimizer": options[0].optimizer_kind if options else "BOUNDED_DETERMINISTIC",
-        "query": request.query,
-        "sort": request.sort,
-        "top_k": [option_payload(item, offers) for item in options[: request.candidate_count]],
-        "generation": generation,
-        "hard_constraints": {
-            "protected_commitments": "PRESERVED",
-            "deterministic_feasibility": "PASSED",
-        },
-    }
+    if finished.status == ABANDONED:
+        return error(
+            "GENERATION_ABANDONED",
+            "This generation was abandoned before it produced a result.",
+            status=409,
+            message_key="generation.abandoned",
+        )
+    result = json.loads(finished.result_json or "{}")
+    result.pop("phase_ms_header", None)
+    return result
 
 
 @app.post("/api/v1/journeys/{journey_id}/stays/search")

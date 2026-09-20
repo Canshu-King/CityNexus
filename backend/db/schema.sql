@@ -921,3 +921,35 @@ CREATE INDEX IF NOT EXISTS idx_location_observations_journey ON location_observa
 CREATE INDEX IF NOT EXISTS idx_stay_offers_journey ON accommodation_offer_snapshots(journey_id, captured_at);
 CREATE INDEX IF NOT EXISTS idx_stay_options_journey ON stay_journey_options(journey_id, rank);
 CREATE INDEX IF NOT EXISTS idx_mobility_facts_journey ON mobility_facts(journey_id, from_key, to_key);
+
+-- ORD-0057: an asynchronous generation job and its state machine.
+CREATE TABLE IF NOT EXISTS stay_generation_operations (
+    id TEXT PRIMARY KEY,
+    journey_id TEXT NOT NULL REFERENCES journeys(id) ON DELETE CASCADE,
+    fingerprint TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'QUEUED' CHECK (status IN
+        ('QUEUED','RUNNING','ABANDON_REQUESTED','COMPLETED','FAILED','ABANDONED')),
+    phase TEXT CHECK (phase IS NULL OR phase IN
+        ('DISCOVERY','NORMALIZATION','MOBILITY_CHECK','RANKING')),
+    request_json TEXT NOT NULL DEFAULT '{}',
+    result_json TEXT NOT NULL DEFAULT '{}',
+    error_json TEXT NOT NULL DEFAULT '{}',
+    outcome TEXT CHECK (outcome IS NULL OR outcome IN
+        ('OPTIONS_FOUND','NO_OFFERS_FROM_PROVIDER','ALL_CANDIDATES_REJECTED','NOT_APPLICABLE_ZERO_NIGHTS')),
+    queued_at TEXT NOT NULL,
+    started_at TEXT,
+    finished_at TEXT,
+    abandon_requested_at TEXT,
+    updated_at TEXT NOT NULL
+);
+
+-- At most one *unfinished* job per journey and per identical request.  This is a database
+-- rule, not a polite convention: two taps racing through the same code path cannot both
+-- start a second ~115s provider chain, and a rejected insert is read back as the winner's
+-- id.  Terminal rows are deliberately excluded so a traveller can regenerate later.
+CREATE UNIQUE INDEX IF NOT EXISTS ux_stay_generation_one_open_job
+    ON stay_generation_operations(journey_id, fingerprint)
+    WHERE status IN ('QUEUED','RUNNING','ABANDON_REQUESTED');
+
+CREATE INDEX IF NOT EXISTS idx_stay_generation_journey_recent
+    ON stay_generation_operations(journey_id, queued_at);

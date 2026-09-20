@@ -8,7 +8,7 @@ import os
 from dataclasses import dataclass
 from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Callable, Protocol
 from uuid import uuid4
 
 from sqlalchemy import select
@@ -1372,8 +1372,26 @@ def generate_stay_options(
     *,
     weather: str = "NORMAL",
     generation_out: dict[str, Any] | None = None,
+    stage_out: Callable[[str], None] | None = None,
 ) -> list[StayJourneyOption]:
+    """Generate ranked stay-aware options for one journey.
+
+    `stage_out` names the stage the work has genuinely entered (`DISCOVERY` /
+    `NORMALIZATION` / `MOBILITY_CHECK` / `RANKING`) and exists for ORD-0057's operation
+    record, where a traveller waiting on a 115s chain is allowed exactly one honest
+    question: how far did it actually get.  It is emitted beside the matching `phase()`
+    span on purpose - the timing instrument and the reported stage cannot then disagree,
+    and no percentage is invented anywhere.  Optional and inert when unset, and unlike
+    `CITYNEXUS_PROVIDER_TIMING` it is not gated off: an operation's phase is product
+    state, not diagnostics.
+    """
+
+    def stage(name: str) -> None:
+        if stage_out is not None:
+            stage_out(name)
+
     provider_attempts: list[dict[str, Any]] = []
+    stage("DISCOVERY")
     with phase("stay.offers", detail=f"city={journey.city_code}") as span:
         offers = capture_accommodation_offers(session, journey, attempts_out=provider_attempts)
     if span is not None:
@@ -1394,6 +1412,7 @@ def generate_stay_options(
         # One property whose pinned windows cannot coexist with the traveller's
         # itinerary is a fact about that property, not a reason to withhold
         # every other hotel.  Record it as unselectable and keep going.
+        stage("NORMALIZATION")
         with phase(f"stay.nodes[{provisional_rank}]", detail=str(offer.property_name)[:40]) as nodes_span:
             try:
                 nodes = build_candidate_nodes(session, journey, offer)
@@ -1405,11 +1424,13 @@ def generate_stay_options(
         if len(nodes) < 2:
             rejected.append((offer, "INCOMPLETE_STAY_GRAPH"))
             continue
+        stage("MOBILITY_CHECK")
         with phase(
             f"stay.legs[{provisional_rank}]",
             detail=f"pairs={max(0, len(nodes) - 1)} modes={len(MODES)}",
         ):
             facts = capture_mobility_facts(session, journey, offer)
+        stage("RANKING")
         with phase(f"stay.solve[{provisional_rank}]") as solve_span:
             try:
                 solver_result = solve_mode_choices(
