@@ -82,11 +82,11 @@ test.describe("ORD-0060 the wizard describes the destination it will actually pl
     await page.getByTestId("trial-city").fill("拉萨");
 
     const warning = page.getByTestId("trial-city-warning");
-    const text = (await warning.innerText()).replace(/\s+/g, " ").trim();
     await expect(
       warning,
       node("unrecognised-city-assumption-is-said-out-loud", "an unknown city is accepted with no word about what will be assumed"),
     ).toBeVisible();
+    const text = (await warning.innerText()).replace(/\s+/g, " ").trim();
     expect(
       text,
       node("unrecognised-city-assumption-is-said-out-loud", `the caution does not name the assumption: ${JSON.stringify(text)}`),
