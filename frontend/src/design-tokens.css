@@ -1072,3 +1072,23 @@ body {
 .trial-field textarea::placeholder { color: var(--cn-ink-tertiary); }
 /* Native date pickers paint their own chrome; without this they stay light. */
 .trial-field input[type="datetime-local"] { color-scheme: light dark; }
+
+/* ORD-0034 — the onboarding failure notice.
+   Text is --v8-ink on --cn-secondary in both themes (#1d1d1f on #f2f2f7 light,
+   #f5f5f7 on #2c2c2e dark), because a semantic colour used as small text is exactly
+   what fails AA; the danger hue is carried by the rule on the left, which is
+   decorative and not the only carrier of meaning. */
+.trial-create-error {
+  display: grid;
+  gap: var(--cn-s-8);
+  margin: 0 0 var(--cn-s-8);
+  padding: var(--cn-s-12) var(--cn-s-16);
+  border-left: 3px solid var(--cn-danger);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+.trial-create-error strong { font-weight: 750; }
+.trial-create-error span { color: var(--v8-muted); overflow-wrap: anywhere; }
