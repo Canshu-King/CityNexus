@@ -13,6 +13,14 @@ Strategy (all real providers, no invention):
 Only provider-backed facts are surfaced: name, coordinates, OSM identity.
 **Price is not knowable from OSM** and is therefore reported as unknown rather
 than invented.
+
+Every attempt is also *recorded* (`attempts`), because this provider's failure mode is
+silent: mirrors that time out are skipped by design, so `discover()` can return an empty
+tuple after two minutes and the caller cannot tell "Xiamen has no hotels in OSM" from
+"three mirrors were unreachable". The timings (`app.core.phase_timing`) and the attempt
+list are how that distinction survives to the response instead of dying in a bare
+`except Exception: continue`. Neither changes what a call does - no timeout here is
+lengthened or shortened by this instrumentation.
 """
 
 from __future__ import annotations
@@ -22,6 +30,7 @@ from typing import Any
 import httpx
 
 from app.core.config import settings
+from app.core.phase_timing import phase
 from app.integrations.provider_config import (
     ExternalProviderSettings,
     trust_environment_for_public_providers,
@@ -50,6 +59,12 @@ class OsmAccommodationProvider:
             trust_env=trust_environment_for_public_providers(),
         )
         self._owned = client is None
+        # One entry per network attempt, in the order they were made. Public so the stay
+        # path can carry it into the response when it has nothing else to say.
+        self.attempts: list[dict[str, Any]] = []
+
+    def _note(self, step: str, target: str, outcome: str, detail: str = "") -> None:
+        self.attempts.append({"step": step, "target": target, "outcome": outcome, "detail": detail})
 
     def close(self) -> None:
         if self._owned:
@@ -62,20 +77,28 @@ class OsmAccommodationProvider:
     def _geocode(self, city_code: str) -> tuple[float, float] | None:
         label = self._city_label(city_code)
         if not label or label.upper() in {"CNX", "DEMO"}:
+            self._note("geocode", "skipped", "no_city_label", f"label={label!r}")
             return None
-        try:
-            r = self._client.get(
-                f"{_provider_settings.photon_base_url.rstrip('/')}/api/",
-                params={"q": label, "limit": 1},
-                headers=_UA,
-            )
-            r.raise_for_status()
-            feats = (r.json() or {}).get("features") or []
-            if feats:
-                lon, lat = feats[0]["geometry"]["coordinates"][:2]
-                return float(lat), float(lon)
-        except Exception:
-            pass
+        with phase("provider.photon", detail=f"label={label}") as span:
+            try:
+                r = self._client.get(
+                    f"{_provider_settings.photon_base_url.rstrip('/')}/api/",
+                    params={"q": label, "limit": 1},
+                    headers=_UA,
+                )
+                r.raise_for_status()
+                feats = (r.json() or {}).get("features") or []
+                if feats:
+                    lon, lat = feats[0]["geometry"]["coordinates"][:2]
+                    self._note("geocode", "photon", "ok", f"label={label}")
+                    return float(lat), float(lon)
+                if span is not None:
+                    span.outcome = "empty"
+                self._note("geocode", "photon", "empty", f"label={label}")
+            except Exception as exc:  # noqa: BLE001 - the anchor is optional; recorded now
+                if span is not None:
+                    span.outcome = type(exc).__name__
+                self._note("geocode", "photon", type(exc).__name__, f"label={label}")
         return None
 
     # -- providers ---------------------------------------------------------
@@ -86,15 +109,30 @@ class OsmAccommodationProvider:
             f'way(around:6000,{lat},{lon})["tourism"~"hotel|guest_house|hostel"];'
             f");out center 15;"
         )
-        for url in _OVERPASS_MIRRORS:
-            try:
-                r = self._client.post(url, data={"data": query}, headers=_UA)
-                r.raise_for_status()
-                els = (r.json() or {}).get("elements") or []
-                if els:
+        with phase("provider.overpass", detail=f"around=6000m mirrors={len(_OVERPASS_MIRRORS)}") as outer:
+            for index, url in enumerate(_OVERPASS_MIRRORS, start=1):
+                host = url.split("//", 1)[-1].split("/", 1)[0]
+                with phase(f"provider.overpass.mirror[{index}]", detail=host) as span:
+                    try:
+                        r = self._client.post(url, data={"data": query}, headers=_UA)
+                        r.raise_for_status()
+                        els = (r.json() or {}).get("elements") or []
+                    except Exception as exc:  # noqa: BLE001 - rotation to the next mirror
+                        if span is not None:
+                            span.outcome = type(exc).__name__
+                        self._note("overpass", host, type(exc).__name__)
+                        continue
+                    if not els:
+                        if span is not None:
+                            span.outcome = "empty"
+                        self._note("overpass", host, "empty")
+                        continue
+                    if outer is not None:
+                        outer.outcome = f"ok@{host}"
+                    self._note("overpass", host, "ok", f"elements={len(els)}")
                     return els
-            except Exception:
-                continue
+            if outer is not None and outer.outcome == "ok":
+                outer.outcome = "empty"
         return []
 
     def _nominatim(self, city_code: str) -> list[dict[str, Any]]:
@@ -104,51 +142,60 @@ class OsmAccommodationProvider:
         if not label:
             return []
         out: list[dict[str, Any]] = []
-        for q in (f"酒店 {label}", f"hotel {label}"):
-            try:
-                r = self._client.get(
-                    "https://nominatim.openstreetmap.org/search",
-                    params={"q": q, "format": "json", "limit": 15, "extratags": 1},
-                    headers=_UA,
-                )
-                r.raise_for_status()
-                rows = r.json() or []
-            except Exception:
-                continue
-            for row in rows:
-                kind = str(row.get("type") or "")
-                klass = str(row.get("class") or "")
-                if not (
-                    kind in {"hotel", "guest_house", "hostel", "motel"}
-                    or klass == "tourism"
-                    or (row.get("extratags") or {}).get("tourism")
-                ):
-                    continue
-                display = str(row.get("display_name") or "").split(",")
-                # Many OSM hotels in China have no ``name`` tag; taking the
-                # street-level part of the address is honest and keeps the
-                # entries distinguishable instead of collapsing them all to
-                # a single "酒店".
-                # e.g. "酒店, 岐山北二路, 禾山街道" -> "酒店 · 岐山北二路"
-                fallback_name = " · ".join(part.strip() for part in display[:2] if part.strip())
-                if fallback_name and display and display[0].strip() == fallback_name:
-                    fallback_name = ""
-                try:
-                    out.append(
-                        {
-                            "name": str(row.get("name") or "").strip()
-                            or fallback_name
-                            or f"OSM hotel {row.get('osm_id')}",
-                            "lat": float(row["lat"]),
-                            "lon": float(row["lon"]),
-                            "osm_id": f"nominatim/{row.get('osm_id')}",
-                            "tourism": (row.get("extratags") or {}).get("tourism") or kind,
-                        }
-                    )
-                except (KeyError, TypeError, ValueError):
-                    continue
-            if out:
-                break
+        with phase("provider.nominatim", detail=f"label={label}") as outer:
+            for index, q in enumerate((f"酒店 {label}", f"hotel {label}"), start=1):
+                with phase(f"provider.nominatim.query[{index}]", detail=q) as span:
+                    try:
+                        r = self._client.get(
+                            "https://nominatim.openstreetmap.org/search",
+                            params={"q": q, "format": "json", "limit": 15, "extratags": 1},
+                            headers=_UA,
+                        )
+                        r.raise_for_status()
+                        rows = r.json() or []
+                    except Exception as exc:  # noqa: BLE001 - the second query is the fallback
+                        if span is not None:
+                            span.outcome = type(exc).__name__
+                        self._note("nominatim", q, type(exc).__name__)
+                        continue
+                    if not rows:
+                        if span is not None:
+                            span.outcome = "empty"
+                        self._note("nominatim", q, "empty")
+                for row in rows:
+                    kind = str(row.get("type") or "")
+                    klass = str(row.get("class") or "")
+                    if not (
+                        kind in {"hotel", "guest_house", "hostel", "motel"}
+                        or klass == "tourism"
+                        or (row.get("extratags") or {}).get("tourism")
+                    ):
+                        continue
+                    display = str(row.get("display_name") or "").split(",")
+                    # Many OSM hotels in China have no ``name`` tag; taking the
+                    # street-level part of the address is honest and keeps the
+                    # entries distinguishable instead of collapsing them all to
+                    # a single "酒店".
+                    # e.g. "酒店, 岐山北二路, 禾山街道" -> "酒店 · 岐山北二路"
+                    fallback_name = " · ".join(part.strip() for part in display[:2] if part.strip())
+                    if fallback_name and display and display[0].strip() == fallback_name:
+                        fallback_name = ""
+                    try:
+                        out.append(
+                            {
+                                "name": str(row.get("name") or "").strip()
+                                or fallback_name
+                                or f"OSM hotel {row.get('osm_id')}",
+                                "lat": float(row["lat"]),
+                                "lon": float(row["lon"]),
+                                "osm_id": f"nominatim/{row.get('osm_id')}",
+                                "tourism": (row.get("extratags") or {}).get("tourism") or kind,
+                            }
+                        )
+                    except (KeyError, TypeError, ValueError):
+                        continue
+                if out:
+                    break
         return out
 
     # -- public ------------------------------------------------------------

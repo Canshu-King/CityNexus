@@ -2376,3 +2376,115 @@ ORD-0034）"，而 ORD-0034 归 `e345b9d6`、账本状态 PARTIAL。要么把 OR
 
 库里那 5 条 9 天孤儿行程：按令**不写破坏性迁移**，也不动生产数据；它们是预览一次性库里的事，
 Commander 自己清。这里只保证**新的进不来**。
+
+
+## 90. ORD-0049：冷路径的 120 秒属于谁 —— 时序证据、串行超时点、以及 `top_k=[]` 的真面目
+
+先给结论（仲裁要求"时序证据先于猜测"）：**115~121 秒里近乎 100% 是住宿 provider 链；
+应用自己的建模 / 路由事实 / CP-SAT 求解 / DB 全部加起来不到 60 毫秒。**
+
+### 90.1 实测分段（真 provider、真网络、一次性库 `_ord49.db`，`CITYNEXUS_PROVIDER_TIMING=1`）
+
+同一城市 `CN-XIAMEN`、同一 3 天窗口，连打三次 `POST /stay-options/generate`：
+
+```
+attempt 1  HTTP 200  wall  3.85s  top_k=4  outcome=OPTIONS_FOUND
+   provider.photon          755ms  ok
+   provider.overpass       2413ms  ok@overpass-api.de
+      mirror[1]            2413ms  ok                    ← 第一个镜像就答上了
+   stay.offers             3220ms  ok  （占 stay.generate 3842ms 的 84%）
+attempt 2  HTTP 200  wall  3.45s  top_k=4  outcome=OPTIONS_FOUND
+   stay.nodes[1..10] 合计 ~8ms | stay.legs[1..10] 合计 ~40ms | stay.solve[1..10] 合计 ~12ms
+attempt 3  HTTP 200  wall 120.86s  top_k=0  outcome=NO_OFFERS_FROM_PROVIDER
+   provider.photon          763ms  ok
+   provider.overpass      77930ms  empty
+      mirror[1]           15935ms  HTTPStatusError       ← 429/504 一类
+      mirror[2]           31537ms  ReadTimeout           ← 撞满 30s 客户端超时
+      mirror[3]           30459ms  ReadTimeout
+   provider.nominatim     42153ms  （空）
+      query[1]            21077ms  ConnectTimeout
+      query[2]            21076ms  ConnectTimeout
+   stay.offers           120856ms  ← 整个请求的 99.999%
+   stay.generate         120858ms
+```
+
+逐段原文与 provider 尝试清单在
+`D:\moodle\_qoder_ord30_evidence_20260920\ord49-measure.json`（脚本
+`_qoder_scratch_20260920\ord49_measure_phases.py`；跑自己的库，没碰预览实例）。
+
+attempt 2 那一行同时**排除了三个候选解释**：CP-SAT 慢、routing 慢、建模慢——10 个候选的
+`nodes/legs/solve` 三族全量可见，合计约 60ms。原因是 `capture_mobility_facts → _mode_fact`
+根本不出网（按 haversine 距离做算术），所以多候选多模式只要几十毫秒。
+
+### 90.2 串行超时与重试的确切位置（`app/integrations/stay_osm.py`）
+
+| 位置 | 事实 | 后果 |
+| --- | --- | --- |
+| `:47-51` 客户端 `timeout=max(30.0, settings.real_city_timeout_seconds)` | 配置默认 **12**（`app/core/config.py:70`），被 `max(30.0, …)` **吃掉** | 这个旋钮在住宿路径上**根本不生效**；同一设置在 `discovery/real_city.py:531/605` 却老实按 12s 用 ⇒ 两条 provider 路径不一致 |
+| `:89` 三个镜像 `for url in _OVERPASS_MIRRORS:` **串行** | 每格最长 30s | 仅这一段最坏 **90s** |
+| `:84` query 自带 `[timeout:45]` | 服务端 45s > 客户端 30s | 客户端必然先断：白等 30s 且拿不到任何结果 |
+| `:107` `_nominatim` 两个查询**串行**，条件 `len(drafts) < 4` | 每次最长 30s | Overpass 全空时再加 **60s** |
+| `discover` 每次 generate 都重跑 | 快照虽落库，provider 调用不省 | 第 2 次快是 provider 那天心情好，**不是应用有缓存** |
+| `:77` `:96` `:116` `except Exception: continue/pass` | 失败被吞 | 空结果与"城市真无数据"在响应里不可区分（90.4 已修） |
+
+### 90.3 哪些 provider 状态可以安全预热/缓存
+
+| 状态 | 确定性 | 做法 | 为什么安全 |
+| --- | --- | --- | --- |
+| Photon 城市锚点（city_code → lat/lon） | 高 | 进程内 LRU + 24h TTL | 纯地理事实，不碰 `fact_quality`/provenance |
+| 城市级 OSM 住宿清单 | 中（小时级稳定） | 跨 journey 共享缓存，TTL 对齐既有 `expires=24h`，**连同 `captured_at`/provider_key 一起存** | 缓存的是"某时刻真实 provider 的快照"，不谎称实时 |
+| 每请求新建 `httpx.Client` | — | 复用带连接池的 client | 省 TLS 握手，语义不变 |
+| 镜像顺序 | — | 保持串行 + 加**总预算**（如 8s），到点走"未取到"分支 | 并行轰公共镜像不礼貌；预算是缩短等待，不是调大超时 |
+| 建模 / 求解 / DB | 已是毫秒级 | **不动** | 不是瓶颈，动了只引入风险 |
+
+### 90.4 `top_k=[]` + HTTP 200：是静默失败，现在能解释自己
+
+attempt 3 的真相是"三个镜像全灭 + 兜底源连不上"，但响应里此前一个字都没说。现在响应带
+`generation`（节选）：
+
+```
+"generation": {
+  "outcome": "NO_OFFERS_FROM_PROVIDER",
+  "offers_from_provider": 0, "options_ranked": 0, "rejections_by_reason": {},
+  "provider_attempts": [
+    {"step":"geocode","target":"photon","outcome":"ok"},
+    {"step":"overpass","target":"overpass-api.de","outcome":"HTTPStatusError"},
+    {"step":"overpass","target":"overpass.kumi.systems","outcome":"ReadTimeout"},
+    {"step":"overpass","target":"overpass.private.coffee","outcome":"ReadTimeout"},
+    {"step":"nominatim","target":"酒店 XIAMEN","outcome":"ConnectTimeout"},
+    {"step":"nominatim","target":"hotel XIAMEN","outcome":"ConnectTimeout"}]}
+```
+
+四类状态各一个码，**没有一类是把未知写成已知**：`OPTIONS_FOUND` /
+`NOT_APPLICABLE_ZERO_NIGHTS`（合法无解：当天往返不需要住宿）/ `NO_OFFERS_FROM_PROVIDER`
+（provider 没答上 ≠ 这个城市没有酒店）/ `ALL_CANDIDATES_REJECTED`（有酒店但都与行程冲突，
+带逐原因计数）。新门 `backend/tests/test_qoder_stay_generation_phases.py`
+**collected 7 / 7 passed**，其中：一条"镜像全超时 ⇒ 码为 NO_OFFERS 且 attempts 逐台点名"；
+一条"父段耗时 ≥ 子段之和、且每段镜像都真有等待"（用 3×50ms 假镜像证明**归因**，不是证明字段存在）；
+一条"开关关掉时响应里既没有 header 也没有额外行为"（防量具变成契约）；
+一条"span 内抛异常要记成 `error:Type` 且继续往上抛"（测了不能变成吞了）。
+
+### 90.5 契约判断：冷城市做不到稳定 ≤10s，建议改异步作业——但这条要你裁
+
+应用内能省的只有那 ~60ms，其余全在 provider 手里。即便把超时按配置收紧到 12s，attempt 3
+那种形态的下界仍是 `12×3(镜像) + 12×2(兜底) ≈ 60s` 量级，**同步 POST 装不下这件事**。
+建议契约（与 ORD-0047 一起裁，因为它决定前端能说什么）：
+
+1. `POST /stay-options/generate`：该 journey 有未过期快照 ⇒ **200 直接给**（缓存后应 <100ms，
+   今天 3.5s 的大头其实是重复问 provider）；否则 ⇒ **202 + `operation_id`**，后台跑 provider，
+   前端 `GET /stay-options/operations/{id}` 轮询，状态里带当前 `phase` 与 `generation.outcome`。
+2. **真取消**：operation 持有 provider 请求的 cancel/deadline，`DELETE` 之后不再写快照。
+   我不做半成品——**取消若不能真的停止等待，前端就不该出现"取消生成"这个按钮**（此话随契约一并交给 ORD-0047）。
+3. 幂等与并发：同一 journey 同时只允许一个运行中的 operation（沿用既有幂等口径；不动单 ACTIVE 计划不变式）。
+4. 权威 E2E 政策不变：异步门照样用自有端口 / 一次性 `_*.db` / `ai=disabled`。
+
+### 90.6 本轮数字（同口径）
+
+* 新门 **collected 7 / 7 passed（1.89s）**；全量后端 **928 passed / 15 skipped / 0 failed（68.21s）**、
+  collected **943** ⇒ 与上一轮 `921/15/0 / 936` 对表：**+7 / 0 / 0 / +7**，全部来自这一个文件，
+  既有测试零波及（解释器 `D:\moodle\CityNexus\.venv`，三个 AI 变量清空）。
+* 全套权威 E2E（run `ord49-e2e`，:3475→:8475）**80 expected / 6 skipped / 1 unexpected（288.7s）**，
+  与 ORD-0041、ORD-0033 两次逐数相同；唯一红仍是 ORD-0034 那扇自陈待办门。
+* **口径分开**：以上全是 **API 操作延迟**。document 导航延迟本轮**没有**重测，也不拿这 121s 当
+  HTML 超时的依据（UI 线另有一份 `review/measure-document-path.json`）；仲裁"两者分开测"这一条，
+  我按"只报 API、不混用"处理，需要的话我另跑一遍纯导航。

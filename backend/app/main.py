@@ -14,7 +14,7 @@ from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 import httpx
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, StreamingResponse
 from sqlalchemy import delete, func, select, update
@@ -99,6 +99,7 @@ from app.commerce.strengths_generated import SOURCE_COMMITMENT_STRENGTHS
 from app.commerce.validators import CommerceValidationError, validate_idempotency_key
 from app.core.audit import record_audit
 from app.core.config import settings
+from app.core.phase_timing import begin_trace, end_trace, phase
 from app.core.temporal import (
     MAX_JOURNEY_DAYS,
     MIN_JOURNEY_DAYS,
@@ -2436,12 +2437,31 @@ def capture_stay_offers(journey_id: UUID, session: Session = Depends(get_session
 @app.post("/api/v1/journeys/{journey_id}/stay-options/generate")
 def generate_stay_journey_options(
     journey_id: UUID,
+    http_response: Response,
     payload: StayPlanGenerateRequest | None = None,
     session: Session = Depends(get_session),
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     request = payload or StayPlanGenerateRequest()
-    options = generate_stay_options(session, journey, weather=request.weather_state)
+    # `generation` is not diagnostics: it is the difference between "this city has no
+    # mapped hotels", "the provider did not answer", "a one-day trip needs no stay" and
+    # "every hotel conflicted with your itinerary".  All four used to look the same -
+    # HTTP 200 with `top_k: []` - and a screen given nothing can only draw a blank.
+    generation: dict[str, Any] = {}
+    begin_trace()
+    try:
+        with phase("stay.generate", detail=f"journey={journey_id} city={journey.city_code}"):
+            options = generate_stay_options(
+                session, journey, weather=request.weather_state, generation_out=generation
+            )
+    finally:
+        finished = end_trace()
+    if finished is not None:
+        # The evidence the arbiter asked for before anyone names a layer: one log line per
+        # call with each phase's share, and the same table on a header so a browser-side
+        # measurement can be lined up against it without reading server logs.
+        logger.info(finished.render())
+        http_response.headers["X-CityNexus-Phase-Ms"] = finished.render_header()
     if request.sort == "CHEAPEST":
         options = sorted(options, key=lambda item: (item.stay_total_minor, item.rank))
     elif request.sort == "LEAST_TRAVEL":
@@ -2461,6 +2481,7 @@ def generate_stay_journey_options(
         "query": request.query,
         "sort": request.sort,
         "top_k": [option_payload(item, offers) for item in options[: request.candidate_count]],
+        "generation": generation,
         "hard_constraints": {
             "protected_commitments": "PRESERVED",
             "deterministic_feasibility": "PASSED",

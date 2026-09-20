@@ -15,6 +15,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.core.money import major_to_minor
+from app.core.phase_timing import phase
 from app.core.temporal import JourneyTemporalShape, derive_journey_temporal_shape
 from app.db.models import (
     AccommodationOfferSnapshot,
@@ -262,13 +263,28 @@ def _at_on_day(
 
 
 def capture_accommodation_offers(
-    session: Session, journey: Journey
+    session: Session,
+    journey: Journey,
+    *,
+    attempts_out: list[dict[str, Any]] | None = None,
 ) -> list[AccommodationOfferSnapshot]:
+    """Snapshot the properties available to this journey.
+
+    `attempts_out` exists because an empty return value is ambiguous by construction: zero
+    nights, an unreachable mirror, and a city with no mapped hotels all look identical to
+    the caller and to the traveller. Anything this function learns about *why* it found what
+    it found is appended there, so the response can say so. It is a parameter rather than a
+    function attribute because the API serves requests in worker threads, and a shared
+    attribute would let one traveller read another's outcome.
+    """
+
+    notes = attempts_out if attempts_out is not None else []
     context = _context(session, journey)
     arrival = datetime.fromisoformat(_anchor(context, journey, "arrival")["at"])
     departure = datetime.fromisoformat(_anchor(context, journey, "departure")["at"])
     nights = _nights(context, journey)
     if nights == 0:
+        notes.append({"step": "nights", "target": "journey", "outcome": "zero_nights"})
         return []
     captured = _now()
     expires = (datetime.now(timezone.utc) + timedelta(hours=24)).isoformat()
@@ -288,6 +304,17 @@ def capture_accommodation_offers(
         close = getattr(provider, "close", None)
         if callable(close):
             close()
+    notes.append(
+        {
+            "step": "provider",
+            "target": provider.provider_key,
+            "outcome": "ok" if drafts else "empty",
+            "detail": f"fixture={'yes' if fixture.get('stays') else 'no'} drafts={len(drafts)}",
+        }
+    )
+    # The provider knows which mirrors it tried and how each ended; this is the only place
+    # that knowledge can still reach a response.
+    notes.extend(dict(item) for item in getattr(provider, "attempts", []) or [])
     for draft in drafts:
         existing = session.scalar(
             select(AccommodationOfferSnapshot).where(
@@ -1302,9 +1329,21 @@ def _day_payload(nodes: list[GraphNode], selected: dict[str, MobilityFact]) -> l
 
 
 def generate_stay_options(
-    session: Session, journey: Journey, *, weather: str = "NORMAL"
+    session: Session,
+    journey: Journey,
+    *,
+    weather: str = "NORMAL",
+    generation_out: dict[str, Any] | None = None,
 ) -> list[StayJourneyOption]:
-    offers = capture_accommodation_offers(session, journey)
+    provider_attempts: list[dict[str, Any]] = []
+    with phase("stay.offers", detail=f"city={journey.city_code}") as span:
+        offers = capture_accommodation_offers(session, journey, attempts_out=provider_attempts)
+    if span is not None:
+        # "empty" here is the incident: an empty offer list is what makes the whole
+        # generation return `top_k: []` with HTTP 200, and it looks identical in a log to
+        # "this city genuinely has nothing".  The provider's own attempt list says which.
+        span.outcome = "ok" if offers else "empty"
+        span.detail = f"city={journey.city_code} offers={len(offers)}"
     preference_items = planning_preference_items(session, journey.traveler_id, journey.id)
     learned_dimensions = {
         str(getattr(item, "preference_key", ""))
@@ -1317,27 +1356,35 @@ def generate_stay_options(
         # One property whose pinned windows cannot coexist with the traveller's
         # itinerary is a fact about that property, not a reason to withhold
         # every other hotel.  Record it as unselectable and keep going.
-        try:
-            nodes = build_candidate_nodes(session, journey, offer)
-        except StayItineraryConflict:
-            rejected.append((offer, "STAY_ITINERARY_CONFLICT"))
-            continue
+        with phase(f"stay.nodes[{provisional_rank}]", detail=str(offer.property_name)[:40]) as nodes_span:
+            try:
+                nodes = build_candidate_nodes(session, journey, offer)
+            except StayItineraryConflict:
+                if nodes_span is not None:
+                    nodes_span.outcome = "rejected:STAY_ITINERARY_CONFLICT"
+                rejected.append((offer, "STAY_ITINERARY_CONFLICT"))
+                continue
         if len(nodes) < 2:
             rejected.append((offer, "INCOMPLETE_STAY_GRAPH"))
             continue
-        facts = capture_mobility_facts(session, journey, offer)
-        try:
-            solver_result = solve_mode_choices(
-                facts,
-                budget_minor=max(
-                    0, int(journey.budget_amount_minor) - int(offer.total_amount_minor)
-                ),
-                weather_state=weather,
-                learned_dimensions=learned_dimensions,
-            )
-        except ValueError:
-            rejected.append((offer, "NO_FEASIBLE_MODE_CHOICE"))
-            continue
+        with phase(
+            f"stay.legs[{provisional_rank}]",
+            detail=f"pairs={max(0, len(nodes) - 1)} modes={len(MODES)}",
+        ):
+            facts = capture_mobility_facts(session, journey, offer)
+        with phase(f"stay.solve[{provisional_rank}]") as solve_span:
+            try:
+                solver_result = solve_mode_choices(
+                    facts,
+                    budget_minor=max(
+                        0, int(journey.budget_amount_minor) - int(offer.total_amount_minor)
+                    ),
+                    weather_state=weather,
+                    learned_dimensions=learned_dimensions,
+                )
+            except ValueError:
+                rejected.append((offer, "NO_FEASIBLE_MODE_CHOICE"))
+                continue
         selected_facts = list(solver_result.selected)
         selected_map = {f"{item.from_key}->{item.to_key}": item for item in selected_facts}
         mobility_total = sum(int(item.cost_amount_minor or 0) for item in selected_facts)
@@ -1463,6 +1510,31 @@ def generate_stay_options(
     session.flush()
     last_rejected = rejected
     generate_stay_options.last_rejected = last_rejected  # type: ignore[attr-defined]
+    if generation_out is not None:
+        # An empty `top_k` must never be readable as "success, nothing to show".  These are
+        # different facts and the traveller sees a different thing in each: a city with no
+        # mapped hotels, a provider that answered nothing, a one-day trip that needs no
+        # stay, or hotels that all conflicted with the itinerary.
+        reasons = [str(reason) for _offer, reason in rejected]
+        if ranked:
+            outcome = "OPTIONS_FOUND"
+        elif any(item.get("outcome") == "zero_nights" for item in provider_attempts):
+            outcome = "NOT_APPLICABLE_ZERO_NIGHTS"
+        elif not offers:
+            outcome = "NO_OFFERS_FROM_PROVIDER"
+        else:
+            outcome = "ALL_CANDIDATES_REJECTED"
+        generation_out.update(
+            {
+                "outcome": outcome,
+                "offers_from_provider": len(offers),
+                "options_ranked": len(ranked),
+                "rejections_by_reason": {
+                    reason: reasons.count(reason) for reason in sorted(set(reasons))
+                },
+                "provider_attempts": provider_attempts,
+            }
+        )
     return ranked
 
 
