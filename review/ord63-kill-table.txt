@@ -1,0 +1,22 @@
+baseline V8Experience.tsx=a988599fecc78cb7ec34fceb0c57b3c37f834a8c
+kill63-a-client-derives-the-length: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-trip-shape-and-budget.spec.ts :: trip-length-comes-from-the-backend — the projected single day was not what Today said: "9 Oct, 18:00 — 11 Oct, 15:00 · 1 travelers · 3 days"
+  node trip-length-comes-from-the-backend: NAMED IN A RED
+  node no-client-side-day-or-currency-invention: NAMED IN A RED
+  restored a988599fecc78cb7ec34fceb0c57b3c37f834a8c OK
+kill63-b-unknown-becomes-one-day: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-trip-shape-and-budget.spec.ts :: trip-length-comes-from-the-backend — an unprojectable window was presented as a fact instead of as unknown: "9 Oct, 18:00 — 11 Oct, 15:00 · 1 travelers · 1 days
+  node trip-length-comes-from-the-backend: NAMED IN A RED
+  restored a988599fecc78cb7ec34fceb0c57b3c37f834a8c OK
+kill64-a-symbol-instead-of-code: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-trip-shape-and-budget.spec.ts :: budget-line-never-borrows-a-symbol — JPY: the advisory prints a symbol again, and ¥ is ambiguous between CNY and JPY: "1 days · 2 people · about ¥6,666 per pers
+  node budget-line-never-borrows-a-symbol: NAMED IN A RED
+  restored a988599fecc78cb7ec34fceb0c57b3c37f834a8c OK
+kill64-b-floor-compared-anyway: anchor hits=1 applied=True
+  exit=1
+  red message: Error: e2e/qoder-trip-shape-and-budget.spec.ts :: budget-line-never-borrows-a-symbol — JPY: floor_comparable=false but the screen chose "true", expected false
+  node budget-line-never-borrows-a-symbol: NAMED IN A RED
+  restored a988599fecc78cb7ec34fceb0c57b3c37f834a8c OK
