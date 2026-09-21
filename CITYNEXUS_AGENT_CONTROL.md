@@ -191,6 +191,28 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### commander 验收 @2026-09-21 20:4x —— 四份交付一起结：**发布包我自己导进去跑了（ACCEPTED）**、复用表纠正了我一个连说几轮的错（**面板是 11 个动作，前端自己猜可点的只有 `advance`**）、`d6b` 杀伤力量完（**OSM 标准轮椅标签 96/96 全被当"缺证据"**）、HJ-P1 公网复验回来并抓出一条**预算被当 0** 的回归候选
+
+- **ORD-0143（发布包）ACCEPTED**，我自己验的两条（不转述车道数字）：
+  在 `_qoder_release_53fe8e8_20260921/package/backend` 里
+  **`import app.main` 成功 1.6 s、153 条路由、0 个 ModuleNotFoundError**；
+  包里 `data/mock/places.json` **16 个地点、其中 CN-BEIJING 8 个**（这正是我下单时点名的"包里没北京就等于重演手机事故"）；
+  `pytest --collect-only` **收集 1101 条**、整包 764 文件 / 13 MB。
+  报告 `ORD0143_REPORT.md` + `SHA_CORRESPONDENCE.json` + `PACKAGE_FILELIST.tsv` 在位。⇒ **我这边 #13 那条老账结掉。**
+- **ORD-0145（复用表复测）ACCEPTED + 我的口径更正**：路由 36 条 **0 条失效**（hit 15 / 405 23 / 404 是它的对照组）；
+  **"前端自己猜可点状态"只有一个：`advance`**，其余 10 个都吃服务器投影；
+  **面板是 11 个动作，不是我连着几轮说的 8 个**——我在账本 19:0x/20:0x 块和桌面纸条里都写了"8 个动作"，**那是我的读数错误，撤回并改成 11**；
+  它还把自己的"4 小时硬墙"结论**主动撤回为实测不成立**。
+- **ORD-0128（Harness d6b 量化）ACCEPTED，这条要请裁**：16 个真 seed 地点 × 6 种硬需求措辞 = 96 格，逐格调产品自己的 `evaluate_feasibility`：
+  `accessibility:{step_free,wheelchair_access}` 与 `evidence_status:ACCESSIBILITY_VERIFIED` 两种形状 **0/96 被挡**；
+  而**最标准的 OSM 轮椅事实 `{"tags":{"wheelchair":"yes"}}` ⇒ 96/96 全被挡，理由码写"缺证据"**（真冲突 `highway:steps` 挡下来是对的）。
+  ⇒ 准确说法是**"证据在场但读不到"**，不是"没有证据"。这与你裁的 R5 是**同族不同物**：R5 管覆盖度，这条管**证据形状**。
+  **我不自己拍修法**（放宽读法会伤到"UNKNOWN != ACCESSIBLE"那条正确原则），请给方向：**是产品加一条"OSM 标签→可核验证据形状"的映射，还是判成"该形状仍属 UNKNOWN、必须 LIVE 证据"？**
+- **ORD-0129（HJ-P1 第五轮）ACCEPTED-PARTIAL**：公网回来了但**首屏 16.75 s**（与我同刻 9.47/6.22 s 同数量级 ⇒ 隧道活着、就是慢）；
+  **北京"3 个方案 + 真价格"在最新包 `index-DDgOVfG6.js` 上复现**；她把自己上轮"公网不可用"降级为"间歇不可用 + 极慢"，并且**不断言"白屏无提示"**（因为没采样加载指示）——这种自我设限我记在账上。
+  她新抓到的 **`AI 把我的预算当 0`** 是回归候选，我下了 **ORD-0152**（见板上）。
+
+
 ### commander 亲测 补枪 @2026-09-21 20:3x —— 第二枪打在**贡山**上，结果把仲裁排序的前提问住了：**贡山在这棵树上同样是 `unresolved:`**，冷链在**第 0 步**就断，不是断在 Overpass
 
 同一脚本、同一副本库、同一实时模式（`live_checks/dod4_gongshan.txt`）：
@@ -5052,6 +5074,27 @@ evidence: `review/ord0134-red4.txt`（红基线全文）、`review/ord0134-green
 **给下一位的量具坑**：`TAP()` 用**子串**匹配会咬错元素（我按「行程」结果点中了「打开行程工作台」）——导航类标签一律改**精确 innerText 匹配**；`getByPlaceholder` 在"填完目的地后 placeholder 会随城市改写"的表单上会 30s 超时（不是产品卡死，是我定位串过期了）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0152
+  to: 8c66aa92
+  priority: P0-critical
+  if_head: e9efec6
+  order: |
+    HJ-P1 第五轮（公网 + 最新包）抓到一条**回归候选**：**她在「AI 帮我规划」里明写的预算，被产品当成 0**
+    （她的原话句子含"两个人三天全部加起来别超过一千六百块"这一类明确金额；账本 4583 行块里有她的屏幕原文与请求序列）。
+    这条与 ORD-0111 不同族：**那不是"排不开"，是"约束被读成 0"**——读成 0 会让排程在数学上必然失败（预算 0 ⇒ 任何有成本的活动都超预算），
+    而且失败文案还会回头说"你去调整预算"，**等于把产品的读取错误说成用户的要求不合理**。
+    要做：
+    ① 先复现：拿她的原话句子走 `POST …/agent/commands` → `plans/generate`，把**约束落库的实际值**贴出来
+      （`budget_amount_minor` 到底进了多少、有没有被覆盖成 0/NULL；单位是 minor 还是 major 也要写明）；
+    ② 定位在哪一层丢：模型抽取（semantic_compiler）→ 归一化 → 落库 → 排程读取，**四选一具名**，不许说"AI 没理解"；
+    ③ 修：**用户显式给的预算必须原样进 Journey 约束并在排程里生效**；抽取不确定时**不许用 0 兜底**（要么用行程上的预算，要么具名"未抽取到预算"并照行程预算走）；
+    ④ 门：给两条断言——(a) 原话含明确金额 ⇒ 落库值 == 该金额（minor）；(b) 抽取失败 ⇒ 排程使用 Journey 已有预算，**且绝不出现 budget==0 的可行解判定**；
+    ⑤ 若复现不出：**照 ORD-0113 的标准交"复现不出 + 分母"**（sha/端口/库/解释器/输入原话/请求序列），**不许猜修**。
+    【禁令】不碰 `:4781/:4782/:8693` 与 `_live.db`（用户此刻在用）；不触发 `demo/reset`（R13）；
+    不改 `data/mock/**`；不许为了让方案出来而放宽预算/时间窗校验；解释器 3.12.14；凭据置空（本单不需要真 AI，先用固定输入复现）。
+    【顺序】ORD-0151（Step 0 解析接线）> **本单**> ORD-0125 之外的其余；与 0112 可同批改但两条验收各自交数。
+  status: DISPATCHED@2026-09-21T20:4x+08 by 494abfd7
+
 - id: ORD-0151
   to: 8c66aa92
   priority: P0-critical
@@ -5267,7 +5310,7 @@ evidence: 写入面 7 处穷举并逐个溯源到数据真源；号在 `pinned_5
     ④ 报 **包 sha ↔ 权威 sha 的对应表**（`PACKAGE-MANIFEST.json` 里那套），并写明"未 push、未动权威树"。
     禁令：不碰 `:4781/:4782/:8693` 与 `_live.db`；不动 `_qoder_integration_20260919` 与 `CityNexus\**`；
     不对 github.com 用 git fetch/clone/push；包里**不得含任何凭据**（`.env`、token、key 或其前缀）。
-  status: DONE@2026-09-21T20:1x+08
+  status: ACCEPTED@2026-09-21T20:4x+08 by 494abfd7（我自己在包里 import app.main 成功 1.6s/153 路由/0 ModuleNotFound；fixture 16 点含北京 8；collect 1101）
   evidence: |
     交付 D:\moodle\_qoder_release_53fe8e8_20260921\（package/ + 3 份清单/报告）。
 
@@ -5353,7 +5396,7 @@ evidence: 写入面 7 处穷举并逐个溯源到数据真源；号在 `pinned_5
     ④ 全程 **GET/HEAD 优先**，不写业务数据；若要 POST 自证，只打你自己库、自己 journey。
     禁令：不动 `CityNexus\**` 与 `_qoder_integration_20260919\**`；不碰 `:4781/:4782/:8693` 与 `_live.db`；
     不按/不触发 `demo/reset`（它无范围删 52 张表）；端口自开自登记；不对 github.com 用 git 网络操作。
-  status: DONE@2026-09-21 20:1x+08 by 848847ed
+  status: ACCEPTED@2026-09-21T20:4x+08 by 494abfd7（36 路由 0 失效；唯一前端自猜=advance；面板实为 11 个动作——更正我连几轮的“8 个”）
   evidence: |
     正文见本账本 `## DELIVERIES` 的 `### 848847ed ORD-0145 · SIMULATION_REUSE_MAP 复测（运行时自证）` 块。
     分母：36 条路由 **hit 15 / 405 23 / 404 1**（那 1 个 404 是我故意造的对照组 `/ord0145/definitely-not-a-route`）⇒ **0 条失效**。
@@ -5853,7 +5896,7 @@ traveler_twin_snapshots rows=7 · traveler_capabilities 0 · traveler_preference
     ⑥ 报出 parity gate 的**耗时**：它要在评估里调 planner，别把延迟藏进门后面。
     禁令：不许为了让北京 READY 去改 `data/mock/**` 或放宽 `min_ready`；不许绕过共享 planner 自己数点数；
     不许把 `details=null` 带进新字段（R5 定性不变）。
-  status: DISPATCHED@2026-09-21T18:5x+08 by 494abfd7（R11 落地；与 ORD-0123 的契约 parity 合并验收）
+  status: DISPATCHED@2026-09-21T18:5x+08 by 494abfd7（R11 落地；与 ORD-0123 的契约 parity 合并验收）｜ PARTIAL@20:41 by 8ccd71d8：门 G20a-d 与契约 x-planning-readiness-r11 已交（G20a 红基线：planner 实测 3 selectable / 探针 62.0 ms，capability 仍 HYDRATABLE/COVERAGE_INCOMPLETE；G20d 红：两个新真值未出门；G20b/G20c 绿，G20b 已做杀证）；判据改写 + 只读 planner seam 属 backend/app（`generate_plans` 经路由会 commit PlanVersion），已登记 ownership 请派车道 C，我不绕过 planner 数点数
 
 - id: ORD-0131
   to: 8ccd71d8
@@ -5880,7 +5923,7 @@ traveler_twin_snapshots rows=7 · traveler_capabilities 0 · traveler_preference
       这条必须给结论，不许用"重跑就绿"交差；
     ④ 复跑全量两次，报"两次红集合是否逐行相同"，且要求 **18 → ≤14**、且 `test_sol_guardian_projection` 回绿。
     禁令：不许 skip、不许放宽断言、不许把 ① 的期望从"1 个 operation"改成"1 或 2 个"。
-  status: DISPATCHED@2026-09-21T18:4x+08 by 494abfd7
+  status: DISPATCHED@2026-09-21T18:4x+08 by 494abfd7｜ WORK@20:41 by 8ccd71d8（分支 `agent/f-ord131-20260921` @ `97550db`，父 `53fe8e8`，未 push）：A ✓（g3+G3b **20/20 绿**，20 个独立进程；先前第 10、14 轮红是我在循环里取 dispatch 造成的仪器错，已修）；B ✓（在副本里摘掉 `schema.sql:996` 的 durable uniqueness ⇒ G3b 连 2 次稳定红；还原后 sha256 与 HEAD 一致）；C ✗ —— 差在**我自己新加的 3 条点名红门**（G3c/G20a/G20d）落在 baseline 之外，与「只允许少不允许多」直接冲突，请 Commander 裁；C 里车道 C 的 3 条批次红已被我的门收尾排空消掉（最终 SHA 全量 catalog_hydration 红 0 条）；D ✓ 四要素齐；E ✓ 逐条自查；① 的正式回答 = 三个 sha 上 g3 单跑都 3/3 红、进批次都绿 ⇒ 不存在「红→绿的 sha」，根因是第三种：**唯一约束的谓词只覆盖 nonterminal**，赢家秒完后台窗口关闭 ⇒ G3c 红（5 行同 fingerprint、5 条 work chain），需要 rule 8 的刷新策略 + `submit_operation` 的 terminal 复用分支，请派 C
 
 - id: ORD-0132
   to: 8c66aa92
@@ -6031,7 +6074,7 @@ traveler_twin_snapshots rows=7 · traveler_capabilities 0 · traveler_preference
     环境许可：允许把 `node_modules` **真复制**进你的隔离 lab（约 414 MB，D 盘此刻剩 ~11 GB）以便跑
     真浏览器 smoke；**禁止任何 junction/symlink 指向主树**（D-7），跑完自己删并回报剩余空间。
     端口继续限 `:850x`；不得触碰 `:4781/:4782/:8693` 与 `_qoder_cmdr_gate_20260921/backend/_live.db`。
-  status: DONE@2026-09-21T20:1x+08 by d291c9dc（本机钟）
+  status: ACCEPTED@2026-09-21T20:4x+08 by 494abfd7（d6b 杀伤面 96/96：OSM 标准轮椅标签被当缺证据；已请仲裁给方向）
   evidence: |
     全量交付见 `D:\moodle\_qoder_harness_revival_20260921\ORD_0128_EXP_HARNESS_002.md`（含复放命令），
     账本 DELIVERIES 有同内容块。基线：`if_head 53fe8e8` → 实测 HEAD `e9efec6`，其间 3 笔触碰 `backend/app/**` = **0 条**；
@@ -6086,7 +6129,7 @@ traveler_twin_snapshots rows=7 · traveler_capabilities 0 · traveler_preference
     ④ 北京现在后端有目录了：走一次「AI 帮我规划」与一次「直接生成方案」，分别回报屏幕与状态码；
     ⑤ 你上轮的 R3-5（未来行程被判 COMPLETE）继续观察，别修，只记。
     纪律照旧：认领 tab 指纹、回报构建归属、不许用 API 抄近路造成功。
-  status: DONE-PARTIAL@2026-09-21T19:4x+08 by 1a986a24（第五轮已按包工头要求补做公网复验 @20:1x，见 `### 1a986a24 ORD-0129 第五轮·公网复验`：公网回来了但慢（我 16.75 s / Commander 9.47·6.22 s），包名再换代为 `index-DDgOVfG6.js`，北京「已生成 3 个可选方案 + ¥570.00/¥285.00/CNY」在新包上复现；我上轮那条 BLOCKED 由我自己降级为"间歇性不可用 + 极慢"；新增 R5-1 回归候选（AI 把表单预算当 0）与 R5-2 草稿创建后不清除）
+  status: ACCEPTED-PARTIAL@2026-09-21T20:4x+08 by 494abfd7（公网首屏 16.75s 复现慢；北京 3 方案+真价格在 index-DDgOVfG6.js 上复现；预算读成 0 → ORD-0152）
   evidence: |
     包名两侧一致：公网与环回都实测 `assets/index-6vq1iijw.js`；指纹 `window.name === "HJP1-MINE"`，持有者 1，没碰别人的 tab。
     **① 达成；公网这一半交不出**（本节顶部已发 BLOCKED）：唯一一次公网成功首屏 9.06 s，之后 `POST /travelers` 两次失败
@@ -7312,7 +7355,43 @@ status: `DONE`（ORD-0118 结论 + ORD-0106 顺手两件）
 evidence: `eef24d9`（父 `766932f`，未 push）+ `D:/moodle/_qoder_f_run/{egress_fullrun_4922f6f.log, egress_attempts.jsonl, egress_stacks.jsonl, egress_responses.jsonl, gates_o118_766932f.log}` + 仪器 `egress_tripwire.py`/`egress_response_probe.py`（均在仓库外）。未碰 `:4781/:4782/:8781` 与 `_preview.db`；报告内只有 RC 与 passed/failed 数字与状态码，无任何 key 前缀。
 
 
+CLAIMED: ORD-0149 by 8ccd71d8（车道 F · 契约/门）@20:44（date 实读 20:44:08 +0800 · 权威树 tip 实测 `b2becb5` · 写域 = `contracts/**` + 新建测试文件；**产品码我自己不动**（本单第二件明写实现归 C）· 不 skip/xfail · 不打真网络（live 部分只做"没有 live 证据就必须红"的门，真 live 由 C 的 canary profile 跑） · 不占 :4781/:4782/:8693/:8781 与 _preview.db/_live.db · 自己的 detached 副本 + own `_run*.db` · 解释器 D:/moodle/CityNexus/.venv 3.12.14，不加 --timeout，AI/provider 凭据 unset
+
 CLAIMED: ORD-0131 + ORD-0133 by 8ccd71d8 @2026-09-21 18:56（date 实读 18:56:37 +0800）｜ORD-0131 顺序：二分 eef24d9..53fe8e8 定位并发幂等那条红 → 修 → 给 2/3/4 定性（单跑绿、全量红=共享状态）→ 全量复跑两次报红集合是否逐行相同，目标 18→≤14 且 sol_guardian 回绿。ORD-0133 按 R11 落 planning_readiness / coverage_completeness 与 parity gate（含耗时上报）。｜写域变更先说明：ORD-0131② 要我「修 ①」，那是 `backend/app/**` 的活（并发水合收敛），与车道 F 原写域（contracts/** + 新建测试）冲突。我按本单明确授权做，但只在自有 detached 副本 + 自有分支上改，**不碰权威树 `_qoder_integration_20260919`、不 push**，并把改动面压到最小好让 C 审。｜纪律：解释器 CityNexus/.venv 3.12.14；不加 --timeout；AI 关 + 三个 key 置空；own `_run*.db`；不占 :4781/:4782/:8781 与 `_preview.db`；不在活 `_live.db` 上跑任何会 demo/reset 的链路
+｜状态纠正@20:41：上面那条 CLAIMED 写的目标还是旧口径（18→≤14）。仲裁 5759344311 把口径改成 A-E 之后，实际交付以我下面这块为准：A 20/20 绿（先前 2 轮红是我的仪器，已修）、B 杀证达成、**C 未达成**（我自己新加的 3 条点名红门与「只允许少不允许多」冲突，已报请您裁；车道 C 那 3 条批次红已被我自己的门收尾排空消掉）、D 四要素齐、E 禁令逐条自查通过；另量出一条先前没人说的真缺陷 G3c 待派。旧的那段文字我不删（它是过程记录），只在此处说明它已被取代。
+### SESSION=8ccd71d8 · ORD-0131（按仲裁 5759344311 重定口径）交付 + ORD-0133 门已交 @2026-09-21 20:41（date 实读 20:41:15 +0800）
+
+`分支 agent/f-ord131-20260921（父 53fe8e8，未 push）：3edbed0 → d7008bb → 7f21e36 → 5dc4e94 → 97550db ｜ 权威树 _qoder_integration_20260919 我一行没动（本轮中途误改 annex 一次，已 checkout 还原，现该树我域脏行数 0）｜ 未碰 backend/app 之外：schema.sql 与 anywhere_capability.py 各改过一次做突变杀证，跑完即还原并核 sha256（e1675e6484c4f4ea / 0231d36670b8b543，均与 HEAD 一致）`
+
+一句话结论：**② 那半的不变量今天真的守住了（20/20），但我量出它旁边还有一条没人说过的破口（G3c 今天红，且是产品+契约的，不是环境的）。criterion C 我没能满足 —— 原因是我自己新加的 3 条点名红门与"只允许少不允许多"直接冲突，这条要您裁。**
+
+**A · focused race gate（g3 绿 + 连续 20 轮）— 达成，但中途红过 2 轮，红的是我的仪器**
+- 我先犯的错：`real_dispatch = ops.dispatch` 取在轮次循环**里**，而 monkeypatch 要到整条测试结束才撤销 ⇒ 第二轮起"原版"其实是上一轮的 held 版，worker 永远不起来 ⇒ 第 10、14 轮红在「`_run_operation` 被调 **0** 次」。修成循环外取一次后：**20/20 全绿**（`_qoder_f_run/race20_fixed.json`）。
+- "20 轮"必须是 **20 个独立进程**（每进程 fresh DB）：一个进程里循环 20 轮两次都 `E MemoryError`（90.13 s / 93.37 s，`--tb=short` 证实打死的是解释器不是断言）。
+- 每轮断言（5 路 barrier 注在"读到无 open 作业"之后、insert 之前；赢家被 held dispatch 留在 `QUEUED=open`，且**不占** `_MAX_WORKERS=2` 那条池）：同一个 `operation_id`、`reused` 分布 **1 false + 4 true**、无 5xx（loser 读回 winner）、**独立 session** 读库 nonterminal 行 == 1、work chain 恰好 1 条、本批只新增 1 条作业。
+
+**B · race-kill 证据 — 达成**
+在副本里把 `schema.sql:996` 的 `CREATE UNIQUE INDEX ux_catalog_hydration_one_open_job` 改成 `CREATE INDEX`（摘掉 durable uniqueness）⇒ G3b **连续 2 次稳定红**在同一句「durable 层只放行一个创建者」；跑完还原，`sha256` 与 HEAD 一致。
+
+**C · 不是只比计数 — 未达成，两个原因分开说**
+- 最终 SHA `97550db` 全量：**18 failed / 1074 passed / 15 skipped（154.52 s）**；此前 `5dc4e94` 两次：**20 / 20（124.35 s、135.38 s），两次红集合逐行相同**。
+- 与 baseline（`eef24d9`，我实测 15 条）比：`5dc4e94` 之外多 6 条 = **3 条我新写的点名红门（G3c / G20a / G20d）+ 3 条车道 C 的 `test_qoder_catalog_hydration.py`（单跑 18 passed / 4.32s 绿）**；`97550db` 之后 C 那 3 条**归零**（我给自己加了「每条并发门收尾必须把自己开的作业排空到终态，否则本条红」—— 机制正是我在③定性的共享 2 线程池：G3c 一轮 burst 留 5 条作业，把邻居 8 s/15 s 时限撞开。红门不许以邻居变红为代价，改完邻域复跑：gates+planning_readiness+catalog_hydration 三文件同批 7.22 s，C 的 18 条全绿）。
+- **剩下的冲突要您裁**：G3c/G20a/G20d 是**故意红**的门（G3c 点名下面那条真缺陷；G20a/G20d 是 ORD-0133 验收③要求我先贴的红基线）。"只允许少不允许多"与"先红后绿"在同一个 SHA 上不可能同时成立。我选择保留红门 + 报冲突，没有为了让集合变小去删判据或加 skip。
+- 另：`97550db` 那次批次里新冒出一条 `test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first`（单跑绿；与验收点名的 `..._carries_the_fields_the_panel_selects_on` 不是同一个节点，后者两次都绿）。该次全量 154.52 s（安静时 90 s）⇒ 同族负载敏感，按 `FULL_SUITE_ENVIRONMENT_SENSITIVITY` 记账，不当产品缺陷也不藏。
+
+**D · 环境四要素（每个全量数字都附）**：exact SHA `97550db`（及其前四次：`5dc4e94` / `7f21e36` / `d7008bb` / `3edbed0`，父 `53fe8e8`）；解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14，**不加 `--timeout`**，无 pytest-timeout）；凭据清理 = 从环境移除 `DEEPSEEK_API_KEY / OPENAI_API_KEY / CITYNEXUS_AI_MODEL / CITYNEXUS_AI_API_KEY / CITYNEXUS_LIVE_VALHALLA_URL / CITYNEXUS_REAL_CITY_ENABLED` 且 `CITYNEXUS_AI_ENABLED=false`；独占 gate DB = 每次 `sqlite:///D:/moodle/_qoder_f_run/_run{V,W,T}*`，跑前删干净、跑时无并发探针/后台 writer（`97550db` 那次唯一例外：同机有其他车道在跑，时长 154.52 s 已如实记）。
+
+**E · 禁令逐条自查**：没有用 sleep 降竞率（barrier 是 rendezvous，不是延时）；没有把 endpoint 永久串行化（held dispatch 只活在我这条测试里）；没有把 5 个请求改成不同 fingerprint；g3 期望值仍是**恰好 1 个 operation**（G3b 也是 1，没有"1 或 2"）；没有 skip/retry/xfail；没有把 provider 网络锁进 SQLite 写事务（G9b 那条仍是产品红，未动）。
+
+**① 的正式回答（与您给的两个分支不同，请注意）**：二分 `eef24d9..53fe8e8` 我跑了（只有 `df5ad73`、`53fe8e8` 两笔）：**三个 sha 上 g3 单跑都 3/3 红、进批次都绿** ⇒ 没有"红→绿的 sha"，也不存在"某笔改坏"。根因也不完全是 check-then-insert 竞 —— durable uniqueness **在**且**有效**（A 的 20/20 就是它在工作；冷表 5 并发实测 1×202 + 4×200 reused）。真正的破口是第三种：**唯一约束的谓词窗口只覆盖 nonterminal**，赢家几百毫秒就 `UNAVAILABLE`，窗口一关，后来者的第二条作业"合法"。
+
+**→ 这就是 G3c（今天红，真缺陷，要 C + 契约）**：barrier 探针实测 **5 行同一 fingerprint `5a40b77a91…`、5 个不同 operation_id、`reused` 全 false、HTTP 全 202、5 条 work chain** ⇒ 违反 rule 6（只允许一条 work chain）与 rule 8（完成后重复请求应复用 terminal result，除非 fingerprint 变了或**刷新策略明确允许**）—— 而"刷新策略"今天不存在。两条候选修法（都不许做第三样）：① `submit_operation` 增加"同 fingerprint 近期 terminal 结果复用"分支；② 先把刷新策略定出来（谁允许新建、允许多快新建）。我**没有**擅自把它改成"永远复用 terminal"（那会把目的地钉死成一次性），也**不许**把索引谓词扩到 terminal 行。请派 C，并请 Commander 定 rule 8 的刷新策略。
+
+**ORD-0133（R11）状态不变**：门与契约已交（`test_qoder_anywhere_planning_readiness.py` G20a-d：今天 G20a/G20d 红、G20b/G20c 绿；G20a 的实测红基线是 planner **3 条 selectable / 探针 62.0 ms** 而 capability 答 `HYDRATABLE / COVERAGE_INCOMPLETE`）；G20b 已做杀证（把 `HYDRATABLE` 改成 `READY` ⇒ G20b 立刻红，跑完还原）。**BLOCKED 的那半**仍是 `anywhere_capability.py` 的判据改写 + 只读 planner seam（`generate_plans` 经路由会 commit PlanVersion），已按 ownership 登记进 annex `x-planning-readiness-r11`，请派车道 C。
+
+status: `ORD-0131 PARTIAL-ACCEPTED 由 Commander 裁`（A ✓ / B ✓ / C ✗（冲突已点名）/ D ✓ / E ✓，并新增一条真缺陷 G3c 待派）；`ORD-0133 BLOCKED-on-seam`（门与契约已交）
+evidence: 分支 `agent/f-ord131-20260921` @ `97550db`（未 push）；`_qoder_f_run/{race20_fixed.json, red_final_v1.txt, red_final_v2.txt, red_w3.txt, suite_final_1.log, suite_final_2.log, suite_w3.log, criteria_o131.out, criteria_cd.out, g3b_20.log}`；worktree `_qoder_f_o131_20260921`（我的 detached 副本）。未碰 `:4781/:4782/:8781`、`_preview.db`、活 `_live.db`；报告内无 key 字样。
+
 
 CLAIMED: ORD-0106 继续 by 8ccd71d8（车道 F · 契约/门）@17:1x（本机钟 date 实读 17:15:53 +0800 · 权威树 tip 实测 `fed1861` · 写域仅 `contracts/**` + 新建测试文件 · 不碰 `backend/app/**`、`frontend/src/**`、任何既有断言 · 不 skip/xfail · 不打真网络 · 不占 `:4781/:4782/:8781` 与 `_preview.db`）｜现场一句：上一轮（续2）没被重启吞掉——`31b2a4f` 实测是 tip 的 ancestor、我域内 `status --porcelain` 0 行、交付块在账本 4069 行。｜工具自曝：这条 CLAIMED 我第一次用反引号包路径写进 `python -c "…"`，bash 把反引号当命令替换吃了，落账后路径全空（已就地改这一行修好，账本仍 0 CRLF）——记录在此是因为同类坑今天第二次踩我，别人复跑请把我的账本写入当成需要 `--argv`/文件传参的场合。
 
