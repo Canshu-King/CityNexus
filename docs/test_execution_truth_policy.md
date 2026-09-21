@@ -138,6 +138,29 @@ Required sequence:
 
 A mutation that fails only because the suite no longer imports does not prove the business gate works.
 
+### Red-baseline mutation rule
+
+A mutation is only measurable against a gate that is GREEN on the unmutated baseline.
+
+If the target gate is already RED before mutation, the mutation result MUST be recorded as:
+
+    NOT_MEASURABLE_RED_BASE
+
+and MUST NOT be reported as "killed", "survived", or "mutation passed".
+
+Required sequence for a measurable mutation:
+
+    baseline target gate = GREEN
+    -> apply one isolated semantic mutation
+    -> target gate becomes RED
+    -> mutation = KILLED
+
+If the baseline target gate is RED, first repair or choose a different independent GREEN gate.
+Do not use an already-failing assertion as evidence that the mutation framework has teeth.
+
+A mutation campaign may still include RED-baseline probes for diagnosis, but those probes are
+diagnostic only and do not count toward mutation-kill acceptance totals.
+
 ## 9. Freeze sentence
 
 **No collection, no denominator; no denominator, no red/green count.**
