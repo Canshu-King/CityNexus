@@ -1211,6 +1211,7 @@ def capture_real_city_candidates(
         live_error: str | None = None
         failure_stage: str | None = None
         candidates = []
+        overpass_attempts: list[dict[str, Any]] = []
         anchor = journey_anchor
         if not settings.real_city_enabled:
             live_error = "REAL_CITY_DISABLED"
@@ -1324,6 +1325,9 @@ def capture_real_city_candidates(
                     "fallback_reason": live_error or PROVIDER_NO_RESULTS,
                     "failure_stage": failure_stage,
                     "wrong_city_replay_blocked": True,
+                    # Observations from before the failure: which endpoints were asked and
+                    # what each said.  Empty only when nothing was even attempted.
+                    "attempts": overpass_attempts,
                 }
     else:
         candidates = (
