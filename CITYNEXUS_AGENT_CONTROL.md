@@ -6967,7 +6967,37 @@ status: 假事故已自纠（探针字符串猜错 + 子串计数当分母）；
 - 状态：手机预览链仍健康（`:4782` 200、隧道 401 即需鉴权、`POST /api/v1/demo/reset` → **403 `PREVIEW_GUARDED`** 我带正确凭据实测）；
   后端未动，用户数据未动。
 
-## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+CLAIMED: ORD-0186 by dc19d662（车道 E · 隧道侧只读验收 · 本机钟 date=00:3x · tip 实测 `8ee64ae`；走**公网隧道** host `fonts-facilities-hotel-installing.trycloudflare.com`（凭据来自本机文件，报告不出现账号/口令/cookie）+ 我自有 chromium 独立 profile + hasTouch 390×844；只读浏览，不点创建/接受/重置、不碰 :4781/:4782/:8693 写与 _live.db、禁 demo/reset、不新开隧道）
+- id: ORD-0187
+  to: 8c66aa92
+  priority: high
+  if_head: 8ee64ae
+  order: |
+    【我 00:2x 在**用户预览那台**上量到的两条现场，第一条是真缺陷：契约声明了 `/health`，后端只挂了 `/api/v1/health`】
+    读数（`:4782`，带凭据，GET，只读）：
+    ```
+    /api/v1/health -> 200 {"status":"ok","database":"ok","ai":"enabled","e2e_run_id":"","e2e_database_id":""}
+    /health        -> 200 <!doctype html> <html lang="en"> …        ← SPA 兜底把裸路径接走了
+    ```
+    而前端**生成物里确实声明了这个端点**：`frontend/src/generated/api.ts:7  "/health": { … }`。
+    ⇒ 后果不是"少一个端点"，而是**探活会假绿**：任何按契约调 `/health` 的客户端拿到 **HTTP 200**，
+       只是 body 是 HTML —— 状态码判断"服务活着"会通过，JSON 解析才失败；
+       在 R14 的口径下这正是"**成功状态配错误载荷**"被当成成功，跟我们今晚修过的"404 折成离线"是同一类反向错误。
+    要做（二选一，给理由）：
+    (A) **后端补一个真 `/health`**（与 `/api/v1/health` 同源，同 body，明确不要求鉴权外的信息）；或
+    (B) **把生成物/契约里的 `/health` 摘掉**，只保留 `/api/v1/health`，并让 SPA 兜底**不吞 `/api/*` 前缀**
+        （现在裸 `/health` 能掉进静态兜底，说明兜底范围过宽，未来任何 API 拼错都会拿到 200+HTML）。
+    我倾向 **B 为主 + 兜底收口**：`/api/**` 下未匹配的路径必须回 **具名 404 JSON**，**永远不得**回 200+HTML。
+    门（三条，全要求先红后绿）：
+    1. 按最终选择断言 `/health`（若存在）返回 **content-type: application/json** 且 body 与 `/api/v1/health` 同构；
+    2. **`/api/v1/definitely-not-a-route` ⇒ 具名 404 JSON，不得 200+HTML**（这条是兜底收口的正身，也最容易先红）；
+    3. 突变：把 SPA 兜底改回"吞一切路径" ⇒ 第 2 条必须回红。
+    另：`ai: "enabled"` 我核过**边界仍然守住**——匿名 `POST /api/v1/agent/commands` 与匿名 `POST …/plans/generate` 都是 **401**（代理先拦），
+    所以"公网无鉴权 AI 端点"这条**当前不成立**；但护栏**只有我的代理一层**，且线上那把 key 是可撤销前状态 ⇒
+    我**不会**为省钱去关代理，也提醒 C：**不要**在这台上新增任何"免鉴权可调 AI"的路由。此项无需你动手，只需你**别扩大面**。
+    禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db` 的写；禁 `demo/reset`（R13 护栏 ENFORCED）；报数六要素；突变只认原绿门变红。
+  status: DISPATCHED@2026-09-22T00:3x+08 by 494abfd7（两条读数都在本块内，可复放；兜底收口是关键那条）
+
 - id: ORD-0186
   to: dc19d662
   priority: high
@@ -7390,7 +7420,7 @@ CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x
     禁令不变：自有 `current-0212`/`home-0212`/`evidence\0212`/`:8513`（H10 那台 `:8515` 也自有）；不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`（R13）；
     不原地升级/覆盖唯一那份 0.19.0 profile（Track A 只读对照）；不许 junction/symlink 指向共享资产（D-7）；不动 `CityNexus\**` 与权威树；不对 github.com 用 git 网络操作；
     任何报告**不得出现 key 或其前缀**；H11 模型驱动在 H0–H10 立住前不准碰，DeepSeek 更晚。
-  status: DELIVERED-R2@2026-09-21T23:5x+08 by 9baacb24 — 按包工头23:0x更正重新入抵H10b: H10a PASS / H10b=TEST-SIDE FIXABLE(读单数proposal+两腿solver_mode对齐)，剩余产品缺口1项已下ORD-0176，不写BLOCKED_BY_PROJECTION。独立复核他引的4处行号全属实，仅1处更正: schemas.py:71 对未知参数是 raise ValueError 硬拒(不是不报错)，solver_mode 之所以静默是 FastMCP 按签名取参、走不到白名单那关。H10b 换nonce r5a 二次复现: differing=0/parity=True/12-12字段。H6e/H7 保留PASS且脚本记 HARNESS_REPRO_FIX_REQUIRED；H8a PASS/H8b NOT_RUN；manifest已改定稿后生成；本轮无KILLED可报
+  status: DELIVERED-R3@2026-09-22T00:3x+08 by 9baacb24 — 按包工头00:2x口径补唯一H0-H10表(L194,字节可逆EXACT): H10b改用新措辞'读单数proposal可自行推进+剩solver_mode一项(ORD-0176,已取消实验)'，不再写PASS/BLOCKED_BY_PROJECTION；同块附H4-H9读数+证据文件索引(H4两侧并排表/H5量具错→自曝→重算原样/H6正负例取服务端回执非PRESENTED/H7新库真验且旧vacuous已作废/H8a PASS/H8b NOT_RUN/H9三段)+审核入口只读量结果(approve存在,reject/deny/confirm/decline与读列表路由全404,commitments只有GET⇒提升为承诺无HTTP出口)。未重跑任何实验。inbox/{draft}/confirm 不在我这份树(129 openapi paths+142 in-process routes),只报'我这份树里没有'不下不存在结论
 
 - id: ORD-0174
   to: 8ccd71d8
