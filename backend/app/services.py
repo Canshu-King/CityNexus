@@ -473,6 +473,33 @@ def _plan_staleness(item: PlanVersion) -> tuple[bool, str | None]:
 
 _CURRENT_UNRESOLVED = object()
 
+#: Why composition refused, named (ORD-0101). `No feasible plan candidates` is one sentence
+#: covering two different realities: a city with nothing to plan with at all, and a city whose
+#: places exist but none of whose combinations survive the deterministic gate. A traveller can
+#: act on the second ("loosen the budget, pick places") and cannot on the first ("this
+#: destination has no data yet") - which is why they must not share a name.
+CATALOG_EMPTY = "CATALOG_EMPTY"
+CATALOG_INSUFFICIENT = "CATALOG_INSUFFICIENT"
+
+
+class CatalogShortfall(ValueError):
+    """A plan could not be composed, carrying the reason and the counts that show it.
+
+    A `ValueError` on purpose: the doors that translate it to 422, and the demo advance chain
+    that catches it, keep working unchanged - this only adds what they may choose to publish.
+    """
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        reason_code: str,
+        details: dict[str, Any] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.reason_code = reason_code
+        self.details = dict(details or {})
+
 
 def plan_schema(
     session: Session,
@@ -1563,8 +1590,21 @@ def generate_plans(
                 "C4_ANCHOR_UNRESOLVED:" + ",".join(sorted(set(unresolved_anchors)))
             )
         detail = _anchor_block_reason(session, journey)
-        raise ValueError(
-            "No feasible plan candidates satisfy the journey constraints" + detail
+        # "No feasible plan candidates" is true for both "this city has nothing to plan with"
+        # and "there were places, and none of the combinations survived the gate" - and a
+        # traveller can only act on the second one. Named here, where the counts are actually
+        # in hand; the message stays byte-identical because a screen and an existing gate both
+        # read it (ORD-0101: add a name, do not rewrite a sentence).
+        raise CatalogShortfall(
+            "No feasible plan candidates satisfy the journey constraints" + detail,
+            reason_code=CATALOG_EMPTY if not places else CATALOG_INSUFFICIENT,
+            details={
+                "city_code": journey.city_code,
+                "places_in_catalog": len(places),
+                "city_services_in_catalog": len(services),
+                "day_sequences_available": len(raw_templates),
+                "requested_candidates": candidate_count,
+            },
         )
     record_audit(
         session,

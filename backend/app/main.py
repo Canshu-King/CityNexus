@@ -414,6 +414,7 @@ def error(
     status: int,
     details: dict | None = None,
     message_key: str | None = None,
+    reason_code: str | None = None,
 ) -> JSONResponse:
     """One envelope for every rejection, and one stable key inside it.
 
@@ -421,20 +422,24 @@ def error(
     looks up, `details` is what it interpolates, and `message` stays what a log line and an
     untranslated fallback are allowed to read.  The default is derived from `code` - never
     from `message` - so a reworded sentence cannot silently change a key.
+
+    `reason_code` (ORD-0101) names *which* condition refused when one code covers several -
+    `VALIDATION_ERROR` is correct for both "this city has no catalog" and "the catalog could
+    not satisfy the constraints", and those two sentences mean different things to a
+    traveller.  It is emitted only when a raise site supplies it, so every existing body is
+    unchanged, and `message` is never rewritten to carry it.
     """
 
-    return JSONResponse(
-        status_code=status,
-        content={
-            "error": {
-                "code": code,
-                "message": message,
-                "message_key": message_key or f"error.{code.lower()}",
-                "trace_id": trace_id(),
-                "details": details,
-            }
-        },
-    )
+    body: dict[str, object] = {
+        "code": code,
+        "message": message,
+        "message_key": message_key or f"error.{code.lower()}",
+        "trace_id": trace_id(),
+        "details": details,
+    }
+    if reason_code:
+        body["reason_code"] = reason_code
+    return JSONResponse(status_code=status, content={"error": body})
 
 
 # Pydantic's `type` is the stable half of a validation error; `msg` is prose that pydantic
@@ -514,6 +519,11 @@ async def http_error(_: Request, exc: HTTPException) -> JSONResponse:
         code,
         detail,
         status=exc.status_code,
+        # ORD-0101: a raise site that knows *which* condition refused may attach the name and
+        # the counts without rewriting `message`. Both are read as optional attributes, so
+        # every existing `raise HTTPException(...)` renders exactly as it did before.
+        reason_code=getattr(exc, "reason_code", None),
+        details=getattr(exc, "error_details", None),
         message_key=HTTP_MESSAGE_KEYS.get(exc.status_code, f"error.{code.lower()}"),
     )
 
@@ -4463,7 +4473,14 @@ def generate_journey_plans(
             failures=[str(exc)],
         )
         session.commit()
-        raise HTTPException(422, str(exc)) from exc
+        refusal = HTTPException(422, str(exc))
+        # The message and the status stay exactly as they were; the *name* rides along as an
+        # attribute the envelope renderer publishes when one is present (ORD-0101).
+        reason = getattr(exc, "reason_code", None)
+        if reason:
+            refusal.reason_code = reason
+            refusal.error_details = getattr(exc, "details", None)
+        raise refusal from exc
     # Candidates that survived the deterministic gate are the only ones exposed.
     feasible_ids = [plan.id for plan in plans]
     record_replan_outcome(
