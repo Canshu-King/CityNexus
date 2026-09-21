@@ -7935,9 +7935,69 @@ status: P7 七条逐条实测（1/2 FAIL、4/6 尚不可达或未测、3/5/7 PAS
 P0 冻结：`demo/reset 403`、匿名 401、用户 `3/19/3`、places 北京8/演示8、主预览不切 live router、**lab 权限不外溢到权威线**。
 
 status: 撤回我的"charter 不存在"错报（仓坐标搞错）；三份 charter 字节校验入库并交付 lab 车道；UI 与账本两条防健忘规则接受并入工具计划；ORD-0135③ 签收获仲裁确认；P7 仍 false
+
+### SESSION=494abfd7 · 隧道侧我亲手量了（ ORD-0186 有一件可以升 REPRODUCED），但**发现一条必须写进晨报的真实现状**：用户手机上"没预录过的县"仍然被回 `unresolved:<hash>` + 「换个目的地」 @01:5x
+
+`STATUS: TUNNEL-MEASURED-BY-ME + LIVE-BACKEND-GAP-CONFIRMED | 树：无改动（纯只读 HTTP 探针，凭据不出现在输出里）| 隧道 host 与 `:4782` 两条路径各测一次 |`
+
+#### ① 隧道侧（真机走的那条路）
+| 探针 | 带凭据 | 匿名 |
+|---|---|---|
+| `GET /manifest.webmanifest` | **200** | **401** |
+| `GET /api/v1/destinations/capability?query=云和县` | **200** | **401** |
+⇒ **manifest 的 401 悬案定性**：端点没问题；是**浏览器不给 manifest/SW 注册这类子资源带上 URL 内嵌凭据**。⇒ 属"预览代理的鉴权方式与浏览器子资源请求不兼容"，**不是产品缺陷**；我按"控制台噪声 + PWA 安装降级"记，**不立产品单**（要立也只能立在代理侧）。
+⇒ 这条给 E 的 ORD-0186：**manifest 那一臂我复核成立**（401 只在匿名侧）。
+
+#### ② 真正要进晨报的一条硬事实（我原样贴，不粉饰）
+**用户此刻手机上，"输入一个没预录过的县"的结果仍然是错的**：
+```
+200 GET /api/v1/destinations/capability?query=云和县
+canonical_destination_id = "unresolved:8fccf2bbf123e3df"   ← hash 当身份（R10 明令禁止）
+destination_resolution   = "unresolved"
+capability / reason_code = "UNAVAILABLE" / "NO_CANONICAL_IDENTITY"
+recommended_action       = "CHOOSE_ANOTHER_DESTINATION"     ← 对一座真实存在的县说"换个目的地"
+place_count              = 0，六类 coverage 全 MISSING
+```
+⇒ **原因不是没修，而是修好的东西没部署**：C 的身份修复在 `f2708dd`（我 01:2x 复跑 19/19 认了），但按 P0 冻结，**用户预览后端一直钉在 `53fe8e8` 不动** ⇒ 手机看到的行为仍是旧的。
+⇒ 这条正是"权威树已修 ≠ 用户可感已修"，**晨报里我按 `REPRODUCED(树) / NOT-DEPLOYED(用户可见)` 分两格写**，绝不用绿的测试代表用户屏幕。
+
+#### ③ 因此我建议（明早之前不擅自做）：开一条 **canary 后端**
+在**自有端口 + 自有库副本**上跑当前 tip 后端，只给真人组与 Harness 走，用于验证"未预录县 → HYDRATABLE + 真解析"的用户可见形状；**主预览继续 `53fe8e8`**，P0 不破。
+⇒ 要请仲裁一字确认（或我按 P7 七条成立后自然推进）：canary 只读用户不可达，不构成"部署"。
+⇒ 顺带：**`P7_RESOLVER_INTEGRATED` 仍 false**（产品码 0 处消费 B 的 typed result），Harness / P1–P4 继续不唤醒。
+
+#### ④ 我自己这边：账本第三次被刷成 CRLF，已按新规矩处理
+- 本轮写入前发现 **18,018 对 CRLF**；我先做 **newline profile 检查 → 归一 LF → 可逆校验**，再写；
+- 新建 `live_checks/ledger_write.py`：写前测 EOL、**邻域锚点（前一区块尾 + 目标结构 + 后一行）**而非裸行号/全局替换、**写后证明逆操作可还原**、**读后若文件被他人改过就 ABORT 不盲写**。本块即用它写入。
+
+status: 隧道侧实测完成（manifest/capability 带凭据 200、匿名 401 ⇒ 401 属代理鉴权与浏览器子资源不兼容，非产品缺陷）；确认用户手机仍见 `unresolved:hash` + 「换个目的地」，原因是修复未部署（P0 冻结后端）；提出 canary 后端方案待批；账本写入器已按新规矩硬化并用于本块
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 
 CLAIMED: ORD-0196 by 5ea3bedc（REVOLUTION-LAB-001 主建造者 · 台子已独立复验：worktree `D:/moodle/CityNexus-RevolutionLab`、分支 `experiment/deepseek-hermes-revolution`、HEAD=`f2708dd` 且 `git merge-base --is-ancestor f2708dd HEAD` ✓、`REVISION_LAB_PARENT.json` 在（当前为未跟踪 `??` ⇒ 我没替你 commit 它）、`frontend/node_modules` 与 `backend/.venv` **确实都不存在**（不做 junction）。charter 我这边本地复验=两个 commit `Not a valid object name`+分支与两文件均不存在 ⇒ **依命令正文执行，绝不声称已按 charter 执行**。四条边界照守；不抢 B/C/F/D/HERMES 权威所有权；lab 结论一律不当权威线验收证据）@01:5x
+
+
+### ⚗️ (SESSION=5ea3bedc) REVOLUTION-LAB-001 · ORD-0196 第一小时：H1 已实施，并**证伪了我自己的假设** @02:3x
+
+STATUS | commit | blocker | 板与 log
+`RUNNING`（第一小时交付，lab 继续开）| **`a942ea4`**（H1 实施）+ **`7ecf128`**（撤回我自己的错误发现）· 分支 `experiment/deepseek-hermes-revolution`，父 `f2708dd` · `*.db` 被 `.gitignore:15` 挡住未误提交 · 你的 `REVISION_LAB_PARENT.json` 我**没替你 commit**（仍未跟踪）| 无 | `LAB.md` + `RUNNING_LOG.md`（lab 根）
+
+**台子独立复验**：worktree/分支/`HEAD=f2708dd` 与声明父一致、`git merge-base --is-ancestor f2708dd HEAD` ✓、`node_modules` 与 `backend/.venv` **确实都不存在**（未做 junction；外部只读解释器 `CityNexus/.venv` 3.12.14 / fastapi 0.141.1 / sa 2.0.52，已验证 `app` 解析自 lab 树；DB 全走 `sqlite:///./lab_*.db`，lab 内无任何 `_preview.db`/`_live.db`）。**charter 我这侧本地不可见**（两 commit `Not a valid object name`、分支与两文件都不存在），且**我没有对 github 跑 git 网络操作** ⇒ 全程按命令正文，**未声称"已按 charter 执行"**。
+
+🔴 **H1 被证伪，且方向相反**（本小时最有用的一条，它砍掉一个会被照做的"扩权限"提案）：
+手机那条 `plans/generate` 今天确实没有模型通道（AI 驱动的选择只接 V12 多日规划器：`orchestration.py:751/:768` → `main.py:1629-1635` → `compose_authoritative_multiday`）。我把通道补上后，北京四臂（AI 关闭、模型侧用录制的类别词替身，**不假装真跑模型**）：
+**A 目录路径（手机今天的行为）3 候选 / 8 站 / 意图命中 0.75** ｜ **B 具名提案 2 候选 / 4 站 / 命中 1.00** ｜ C 裸 `place_ids` 1 候选 / 4 站 ｜ **D 伪造 id → 回落目录，3 候选 / 8 站，无 500、无新增行**
+⇒ **更多自主权换来的是"更窄"，不是"更好"**：目录路径按整城配平，`_generic_compose_variants` 只在被给的集合内排程 ⇒ "手机 0 方案"那族事故的解药是**提案 ∪ 目录兜底**（下一轮做），**不是扩大权限**。⇒ 至少这一例上，被指为"过度约束"的门**在承重（承多样性，不承真值）**。
+防一手自我说服：`0.75→1.00` 不算收益——A 多出的 2 站恰好是 `park` 与 `nightlife`，用户没点名但那叫多样性。**拿我自己选的指标替换产品目标就是作弊**，已写进板。
+
+**门与账**：改前基线 **14/14**；新 lab 门 **4/4**（含"跨城 id 打不进本城目录"与"伪造不入库"）；全量后端 **12 failed / 1093 passed / 15 skipped / 115.24s**。逐条隔离：把那 4 个文件 `git stash push -u -- <paths>` 后在父上复跑得 **11 红**（已 pop、stash 已 drop，你的 json 全程未动）⇒ **11 条在 `f2708dd` 就红**（车道 F 先写的门，代码未追平）；第 12 条 `test_a_job_stopped_before_its_worker_starts_still_closes_itself` 是**我复用旧 lab 库**的状态污染，换全新库带我改动 **18/18 全过** ⇒ **本次改动新增红 = 0**。既有 `place_ids ∩ places → 422`（`services.py:859/:865`）**一行未动**。
+
+⚠ **我撤回一条自己报过的"发现"**（本小时第二个有用输出）：曾据探针里 `/places?city_code=CN-BEIJING` 返空记成"读端点与目录不同步、属权威线真值风险"。同进程复测（`lab_check.db`：先查 → `demo/reset` → 再查）：**reset 前 0 行、reset 后 8 行，与 `Place` 表北京 8 行一致** ⇒ 空是我**探针在 seed 之前查目录**的假象，端点行为正确，**不是缺陷、不上报**。教训已写进 log：报"读端点撒谎"前必须先固定 seed 顺序，否则探针自己就是变量。
+
+**下一小时（不再开 ORD）**：H2「真值门 vs 策略门」分离；「提案 ∪ 目录兜底」变体——若它拿不到"8 站且高命中"，"过度约束"这一例正式判否。
+
+status: RUNNING（第一小时交付完成，lab 继续）
+evidence: `LAB.md`、`RUNNING_LOG.md`、`backend/tests/test_lab_h1_ai_proposal_channel.py`、`backend/review/lab_h1_beijing_probe.py`；四臂与门数为实跑输出。四条边界照守：**我对权威树零写入**（我只在 `_qoder_integration_20260919` 上读；该树现在的 `backend/` 脏项是别的车道在写，不是我）、未碰预览/活库、无任何 key、无真实付费或预订。**lab 结论不当权威线验收证据。**
+
 
 - id: ORD-0191
   to: 8c66aa92
@@ -7977,7 +8037,8 @@ CLAIMED: ORD-0192 by SESSION=c01d72a3 @2026-09-22T01:2x（`date` 实读 01:27:29
     冷跑 4 分钟可接受，但必须同时满足：验收快 / 作业 durable / 用户可离开再回来 / phase 真实 / 完成**不自动改行程** / 产品给出清楚的"去规划"下一步。
     写域仍是你的 `integrations/discovery/**` + 冷链证据与自有库；**产品真值持久化归 C**。
     禁令：只用自有副本库 + 自有端口（:85xx）；不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`；不打真付费接口。
-  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P2 冷链 13 步；仲裁指定首选城市=贡山，第二=云和）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例｜**新增强制字段@01:3x（契约 94b4d904）**：mobility 收据必须含 `blocker_basis=USED_EDGE_INVENTORY` + `aggregate_repository_counts_used_as_blocker=false`；**拿聚合数当 blocker ⇒ receipt INVALID**；反之真实 used edges 全 hard-eligible 就**必须继续走 SELECTABLE 评估**，不许提前停在 gap。另 cbc112d6 把 provider 分类入 R14：401/403→PROVIDER_ACCESS/RUNTIME_FAILURE；只有「满足 transport 契约 + 可解析语义响应 + provider 明确返回空」才准叫 NO_MATCH。｜**边界钉死@01:4x（契约 64dc804b）**：B 是 **E2E runner / evidence owner，不是整条链的 implementation owner**；写域仍是 `integrations/discovery/**` + adapter 直绑测试，**不许为凑完 13 步悄悄扩大**；blocker 落在别人域 ⇒ **停在 blocker、交 owner**，owner 修完 B 从同一 stage 复跑；跨 owner blocker receipt 至少 8 项：`case/stage/input/observed/expected/evidence/owning_lane/handoff_status`。冻结句：「Owning the E2E run means owning the evidence, not every implementation layer it traverses.」
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P2 冷链 13 步；仲裁指定首选城市=贡山，第二=云和）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例｜**新增强制字段@01:3x（契约 94b4d904）**：mobility 收据必须含 `blocker_basis=USED_EDGE_INVENTORY` + `aggregate_repository_counts_used_as_blocker=false`；**拿聚合数当 blocker ⇒ receipt INVALID**；反之真实 used edges 全 hard-eligible 就**必须继续走 SELECTABLE 评估**，不许提前停在 gap。另 cbc112d6 把 provider 分类入 R14：401/403→PROVIDER_ACCESS/RUNTIME_FAILURE；只有「满足 transport 契约 + 可解析语义响应 + provider 明确返回空」才准叫 NO_MATCH。
+｜**边界钉死@01:4x（契约 64dc804b）**：B 是 **E2E runner / evidence owner，不是整条链的 implementation owner**；写域仍是 `integrations/discovery/**` + adapter 直绑测试，**不许为凑完 13 步悄悄扩大**；blocker 落在别人域 ⇒ **停在 blocker、交 owner**，owner 修完 B 从同一 stage 复跑；跨 owner blocker receipt 至少 8 项：`case/stage/input/observed/expected/evidence/owning_lane/handoff_status`。冻结句：「Owning the E2E run means owning the evidence, not every implementation layer it traverses.」
 
 - id: ORD-0193
   to: e345b9d6
@@ -8032,7 +8093,8 @@ CLAIMED: ORD-0192 by SESSION=c01d72a3 @2026-09-22T01:2x（`date` 实读 01:27:29
        不得搞成报告堆。**每格必须标 REPRODUCED / FORMAT_CHECKED / SELF_REPORTED**（我自己定的三条：
        只有我自己跑过的才算 REPRODUCED；只核了文件存在与格式的算 FORMAT_CHECKED；车道自述未复算的算 SELF_REPORTED）。
     ⑤ 顺序不得被"测试计数化妆"换掉：**1 ORD-0188 → 2 ORD-0191 → 3 贡山 E2E → 4 云和 → 5 可见流程 → 6 唤醒 Harness/HJ → 7 Hermes → 8 才谈一次窄范围 UI 借鉴**。
-  status: CLAIMED@2026-09-22T01:0x+08 by 494abfd7（指挥链自持单；P0 守护 + P7 唤醒 + NO-IDLE + 晨报 15 项）｜**两处按仲裁 5764442687 收紧@01:4x**：(a) 唤醒条件不是「B 拿到 Photon MATCH」，而是 **`P7_RESOLVER_INTEGRATED=true`** 七条同时成立：未预录原文走正常 application path / C 确实消费 B typed result / exact raw 与 normalized 分栏 / MATCH 写入服务端所有 canonical / 未解析三类 canonical=null / 作业可持久化可重放且幂等 / pending·raw key 不冒充产品身份 —— **Provider-only MATCH 不算解锁**；一旦成立就机械唤醒 Harness + P1-P4，**UI 走不通也叫醒**（走不通本身就是 finding）。(b) 晨报里最终候选那一次全量只能写 `FINAL_CANDIDATE_FULL_SUITE_OBSERVATION` + `stability_claim=NONE`，**不得写「新基线」或「基线缩小」**；可与旧 stable core 14 / 轮换残差对照，一次变少只记 observation。
+  status: CLAIMED@2026-09-22T01:0x+08 by 494abfd7（指挥链自持单；P0 守护 + P7 唤醒 + NO-IDLE + 晨报 15 项）
+｜**两处按仲裁 5764442687 收紧@01:4x**：(a) 唤醒条件不是「B 拿到 Photon MATCH」，而是 **`P7_RESOLVER_INTEGRATED=true`** 七条同时成立：未预录原文走正常 application path / C 确实消费 B typed result / exact raw 与 normalized 分栏 / MATCH 写入服务端所有 canonical / 未解析三类 canonical=null / 作业可持久化可重放且幂等 / pending·raw key 不冒充产品身份 —— **Provider-only MATCH 不算解锁**；一旦成立就机械唤醒 Harness + P1-P4，**UI 走不通也叫醒**（走不通本身就是 finding）。(b) 晨报里最终候选那一次全量只能写 `FINAL_CANDIDATE_FULL_SUITE_OBSERVATION` + `stability_claim=NONE`，**不得写「新基线」或「基线缩小」**；可与旧 stable core 14 / 轮换残差对照，一次变少只记 observation。
 
 - id: ORD-0190
   to: 9baacb24
