@@ -134,6 +134,104 @@ Do not delete/recreate the operation merely to obtain a new fingerprint.
 11. mutation: reintroducing `pending:<raw>` into canonical_destination_id makes the gate red;
 12. mutation: using destination_pending_key as canonical identity or catalog join key makes the gate red.
 
+## Provider-to-application split contract (ORD-0188 -> ORD-0167)
+
+The provider lane and the product/application lane are intentionally separate.
+
+### Provider lane B owns evidence acquisition only
+
+B may own the provider adapter implementation and adapter-bound isolated tests under:
+
+    backend/app/integrations/discovery/**
+
+B returns a typed provider-resolution result. At minimum the result must distinguish:
+
+    MATCH
+    AMBIGUOUS
+    NO_MATCH
+    RUNTIME_FAILURE
+
+The provider result may carry, as applicable:
+
+    provider name/version
+    normalized provider query
+    provider candidate identifier
+    provider display label
+    WGS84 coordinates
+    observed_at
+    candidate set for AMBIGUOUS
+    retryable flag / typed runtime error
+    raw provider evidence/provenance needed for audit
+
+The exact repository type names may differ, but the semantic distinctions above MUST remain
+machine-readable.
+
+B MUST NOT decide that a provider candidate is already a CityNexus canonical destination.
+B MUST NOT write application persistence, pending/canonical fields, planner joins, catalog side
+effects, or application idempotency.
+
+In particular:
+
+- provider timeout / transport/runtime failure MUST NOT become NO_MATCH;
+- ambiguous provider evidence MUST NOT be collapsed to MATCH merely to unblock planning;
+- a provider label or coordinate pair is evidence, not product identity by itself.
+
+### Application lane C owns product truth
+
+C consumes B's typed result and owns:
+
+- exact raw input vs normalized query separation;
+- unresolved canonical_destination_id = null;
+- pending operation persistence/history;
+- in-place transition from pending request to real canonical identity;
+- application retry/idempotency;
+- catalog hydration handoff;
+- planner/product joins;
+- final small-county end-to-end closure.
+
+Only C decides when provider evidence has satisfied the product's canonical-identity contract.
+
+### No cross-boundary "helping"
+
+Waiting for the other lane is NOT permission to cross the write boundary.
+
+If B stops at an interface needed by C:
+
+- B reports the interface/result shape and stops;
+- Commander/ledger forwards that interface unchanged;
+- C adapts only the application-side consumer.
+
+If C needs a provider-side shape change:
+
+- C files/records the requested contract delta;
+- B owns the provider-side modification;
+- C MUST NOT "just fix" files under integrations/discovery/** while waiting.
+
+Likewise B MUST NOT reach forward into anywhere_capability/application persistence to make its
+adapter appear end-to-end complete.
+
+A split task that requires both sides to change must use an explicit handoff receipt, not overlapping
+writes.
+
+Recommended handoff receipt:
+
+    provider_lane_source
+    provider_result_type_or_schema
+    outcome_enum
+    provenance_fields
+    runtime_failure_shape
+    ambiguity_shape
+    example_MATCH
+    example_AMBIGUOUS
+    example_NO_MATCH
+    example_RUNTIME_FAILURE
+    consumer_owner
+    write_boundary_confirmed
+
+Freeze sentence:
+
+> **B resolves provider evidence; C decides when that evidence becomes product truth. Waiting is a handoff state, not permission to cross the boundary.**
+
 ## Live small-county end-to-end closure for ORD-0167
 
 ORD-0167 is not fully closed by schema/unit tests alone. It must include one real end-to-end case
