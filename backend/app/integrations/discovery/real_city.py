@@ -1239,13 +1239,23 @@ def capture_real_city_candidates(
                 if anchor is None:
                     raise RuntimeError("NO_JOURNEY_DERIVED_CITY_ANCHOR")
                 stage = "category_search"
-                candidates = poi.search(
-                    query,
-                    latitude=float(anchor["latitude"]),
-                    longitude=float(anchor["longitude"]),
-                    radius_m=radius_m,
-                    limit=limit,
-                )
+                if hasattr(poi, "search_with_evidence"):
+                    candidates, overpass_attempts = poi.search_with_evidence(
+                        query,
+                        latitude=float(anchor["latitude"]),
+                        longitude=float(anchor["longitude"]),
+                        radius_m=radius_m,
+                        limit=limit,
+                    )
+                else:  # test doubles implement only the historical shape
+                    candidates = poi.search(
+                        query,
+                        latitude=float(anchor["latitude"]),
+                        longitude=float(anchor["longitude"]),
+                        radius_m=radius_m,
+                        limit=limit,
+                    )
+                    overpass_attempts = []
                 if not candidates:
                     # The bounded fallback is a *second* attempt at the same bounded
                     # question, so it must be asked with the same words: `city_code` is
@@ -1255,11 +1265,15 @@ def capture_real_city_candidates(
                     candidates = geocoder.search(query, city=city_label, limit=limit)
                 provider_status = {
                     "nominatim": "CAPTURED",
+                    # An answered mirror owns the answer even when it found nothing; only
+                    # "no endpoint replied" is a failure-shaped status.
                     "overpass": "CAPTURED"
-                    if candidates and candidates[0].provider_key == "overpass"
-                    else "NO_RESULTS",
+                    if any(a.get("answered") for a in overpass_attempts)
+                    else "NOT_ANSWERED",
                     "anchor": anchor,
                     "failure_stage": stage,
+                    # ORD-0192 ⑥: which endpoints were asked, what they said, how long they took.
+                    "attempts": overpass_attempts,
                 }
             except (
                 httpx.HTTPError,
