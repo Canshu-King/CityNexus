@@ -942,14 +942,21 @@ export function JourneyTrialSetup({
            quietly, so name what is missing.  Stable id: the blocked button describes itself
            with this element, so the relation cannot dangle between keystrokes. */
         <p className="trial-required-hint" id="trial-required-hint" data-testid="trial-required-hint" role="status">
-          {missingLine}
           {/* ORD-0135 ③: naming a missing field is a diagnosis; the traveller also needs the route.
-              Each item is a real control that puts the cursor in the field it names. */}
-          <span className="trial-required-jumps">
-            {missingNow.map((field) => (
+              Each item is a real control that puts the cursor in the field it names -- rendered inline
+              rather than as its own row, because a row of buttons pushed this wizard's sticky CTA
+              under the fixed simulation ball (measured by the mobile gate at 360x800: 33px). */}
+          {missingNow.length
+            ? zh
+              ? "还需要填写："
+              : "Still needed: "
+            : ""}
+          {missingNow.map((field, index) => (
+            <span key={field.target}>
+              {index > 0 ? (zh ? "、" : ", ") : ""}
               <button
-                key={field.target}
                 type="button"
+                className="trial-missing-jump"
                 data-testid="trial-missing-jump"
                 data-target={field.target}
                 onClick={() => {
@@ -963,8 +970,8 @@ export function JourneyTrialSetup({
               >
                 {field.label}
               </button>
-            ))}
-          </span>
+            </span>
+          ))}
         </p>
       )}
       {/* Polite, and empty until a tap is refused: the visible hint above already carries the

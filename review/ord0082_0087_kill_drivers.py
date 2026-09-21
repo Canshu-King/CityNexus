@@ -31,6 +31,7 @@ MAP = "src/components/v8/MapPanel.tsx"
 MAP_SPEC = "e2e/qoder-map-gesture-ownership.spec.ts"
 INBOX = "src/features/inbox/JourneyInboxWorkbench.tsx"
 EXPERIENCE = "src/app/V8Experience.tsx"
+ATTRIBUTION = "src/lib/failureAttribution.ts"
 INBOX_SPEC = "e2e/qoder-inbox-review-queue.spec.ts"
 EXIT_SPEC = "e2e/qoder-failure-has-an-exit.spec.ts"
 WIZARD = "src/features/setup/JourneyTrialSetup.tsx"
@@ -392,39 +393,69 @@ CASES = [
         "                {true\n",
         [(INBOX_SPEC, ["ord0146-a-protected-badge-needs-the-servers-commitment"])],
     ),
+    # NOTE: the three ORD-0126 mutants that stood here (killJ1 refusal-drops-the-id, killJ2
+    # journey-gone-branch-disabled, killJ3 health-probe-always-answers) were retired by the R14
+    # rewrite, not dropped for convenience: their anchor lines and their target nodes
+    # (`ord0126-*`) no longer exist, so running them would have produced NOT_MEASURED rather than a
+    # verdict.  Their subject matter is carried by killJ4 and killL1-L4 below, which are applied to
+    # the gates that are green on the unmutated tree.
     (
-        # ORD-0126 ③, the pre-fix behaviour itself: a refused read dropped the id and opened the
-        # create-trip wizard with nothing said about why.
-        "killJ1-refusal-drops-the-id-and-opens-the-wizard",
-        EXPERIENCE,
-        "            setLoadFailure(\n              error instanceof Error ? error.message : t(\"shell.loadError\"),\n            );\n            setBusy(false);\n            return;\n",
-        "            localStorage.removeItem(\"citynexus.v8.journey_id\");\n            setBusy(false);\n            return;\n",
-        [(EXIT_SPEC, ["ord0126-a-healthy-connection-is-never-called-a-network-failure"])],
-    ),
-    (
-        # ④: a journey the server no longer has must not keep being polled for.
-        "killJ2-journey-gone-branch-disabled",
-        EXPERIENCE,
-        "              error instanceof V8Rejection &&\n              (error.status === 404 ||\n",
-        "              false &&\n              (error.status === 404 ||\n",
-        [(EXIT_SPEC, ["ord0126-a-journey-this-server-loses-comes-back-to-choosing-one"])],
-    ),
-    (
-        # (a): ask nothing, assume the network is fine.  A survivor here would mean the probe is not
-        # load-bearing -- which is only true because every failure view carries its own retry.
-        "killJ3-health-probe-always-answers",
-        EXPERIENCE,
-        "    const response = await fetch(\"/api/v1/health\", { signal: controller.signal });\n    return response.ok;\n",
-        "    await fetch(\"/api/v1/health\", { signal: controller.signal });\n    return true;\n",
-        [(EXIT_SPEC, ["ord0126-the-cached-view-has-a-way-out-and-says-what-backs-it"])],
-    ),
-    (
-        # ORD-0164 ②: name the dead trip but keep the id -- the next reload walks into the same 404.
+        # ORD-0169 ②: name the dead trip but keep the id -- the next reload walks into the same 404.
         "killJ4-stale-id-never-cleared",
         EXPERIENCE,
-        "              localStorage.removeItem(\"citynexus.v8.journey_id\");\n              setOffline(null);\n",
-        "              setOffline(null);\n",
-        [(EXIT_SPEC, ["ord0126-a-journey-this-server-loses-comes-back-to-choosing-one"])],
+        "              const cleared = clearJourneyReferences();\n",
+        "              const cleared: string[] = [];\n",
+        [(EXIT_SPEC, ["ord0169-a-stale-journey-404-is-never-called-a-network-failure"])],
+    ),
+    (
+        # R14 §7 bullet 1: stale-journey 404 mapped to OFFLINE.  This is the defect as measured on the
+        # production bundle, and it is what the gate exists to catch.
+        "killL1-stale-404-becomes-offline",
+        ATTRIBUTION,
+        "      return make(\n        \"JOURNEY_NOT_FOUND\",\n",
+        "      return make(\n        \"NETWORK_UNAVAILABLE\",\n",
+        [(EXIT_SPEC, ["ord0169-a-stale-journey-404-is-never-called-a-network-failure"])],
+    ),
+    (
+        # R14 §7 bullet 2: true transport failure mapped to JOURNEY_NOT_FOUND -- the reverse direction,
+        # which is how "fixing" the first one by widening "not found" would break the product.
+        # SURVIVED, and the survival is informative: on this path the shell asks the health probe, the
+        # probe fails, and `classifyHealthProbe(false)` overwrites the attribution -- so the classifier's
+        # transport branch is not what decides the verdict.  killL2b mutates the branch that is.
+        "killL2-transport-failure-becomes-journey-not-found",
+        ATTRIBUTION,
+        "    return make(\"NETWORK_UNAVAILABLE\", \"TRANSPORT\", null, \"TRANSPORT\", true, \"read-only-cached\", \"failure.networkUnavailable\");\n",
+        "    return make(\"JOURNEY_NOT_FOUND\", \"TRANSPORT\", null, \"TRANSPORT\", true, \"choose-journey\", \"failure.journeyNotFound\");\n",
+        [(EXIT_SPEC, ["ord0169-a-real-transport-failure-still-says-offline"])],
+    ),
+    (
+        # The branch that really decides: a failed health probe is the evidence that says the network is
+        # unavailable.  Turn it into "the journey is gone" and the reverse defect is in place.
+        "killL2b-failed-probe-becomes-journey-not-found",
+        ATTRIBUTION,
+        "    : make(\"NETWORK_UNAVAILABLE\", \"HEALTH_PROBE\", null, \"TRANSPORT\", true, \"read-only-cached\", \"failure.networkUnavailable\");\n",
+        "    : make(\"JOURNEY_NOT_FOUND\", \"HEALTH_PROBE\", null, \"TRANSPORT\", true, \"choose-journey\", \"failure.journeyNotFound\");\n",
+        [(EXIT_SPEC, ["ord0169-a-real-transport-failure-still-says-offline"])],
+    ),
+    (
+        # R14 §7 bullet 6 / R14-P: a broad catch choosing the message instead of the structured reason.
+        # The evidence still arrives (the status is right there), so this is purely the UI inventing a
+        # cause -- and it is the shape the old code had.
+        "killL3-ui-catch-invents-the-cause",
+        EXPERIENCE,
+        "            let attribution = classifyReadFailure(error);\n",
+        "            let attribution = classifyReadFailure(new TypeError(\"gate-mutant: broad catch\"));\n",
+        [(EXIT_SPEC, ["ord0169-a-server-5xx-is-not-offline"])],
+    ),
+    (
+        # R14 §8: telemetry must record what the classifier decided, not what the fallback screen
+        # happened to be showing.  Reporting every failure as network_unavailable is the exact line
+        # the policy forbids.
+        "killL4-telemetry-borrows-the-fallback-cause",
+        ATTRIBUTION,
+        "    reason,\n    evidence_kind,\n    http_status,\n    source_layer,\n    retryable,\n    recovery_action,\n    message_key,\n    telemetry: [\n      `attribution_reason=${reason}`,\n",
+        "    reason,\n    evidence_kind,\n    http_status,\n    source_layer,\n    retryable,\n    recovery_action,\n    message_key,\n    telemetry: [\n      `attribution_reason=NETWORK_UNAVAILABLE`,\n",
+        [(EXIT_SPEC, ["ord0169-a-stale-journey-404-is-never-called-a-network-failure"])],
     ),
     (
         # ORD-0135 ②: the measured pre-fix line -- the confirmation step printed the stored key.

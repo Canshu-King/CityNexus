@@ -11,6 +11,14 @@ import { PlanComparison } from "../features/planning/PlanComparison";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { liveActivityWindow } from "../lib/executionWindow";
 import { installVisualViewportVars } from "../lib/visualViewport";
+import {
+  classifyHealthProbe,
+  classifyReadFailure,
+  clearJourneyReferences,
+  copyFor,
+  recordAttribution,
+  type Attribution,
+} from "../lib/failureAttribution";
 import { useElapsedSeconds } from "../lib/waitClock";
 import { readChoice, setThemeChoice, type ThemeChoice } from "../theme";
 import { MobilitySheet } from "../features/mobility/MobilitySheet";
@@ -438,14 +446,16 @@ export function V8Experience() {
   const [planAiOpen, setPlanAiOpen] = useState(false);
   // Reference screen 08: the dedicated activity detail surface.
   const [detailActivityId, setDetailActivityId] = useState<string | null>(null);
-  // Backend unreachable is a distinct state from "you have no trip": silently
-  // dropping the traveller to the create-trip screen would imply their journey
-  // vanished (master mission Phase 10).
-  const [unreachable, setUnreachable] = useState(false);
-  /* ORD-0126: "the trip is not on this server any more" and "the server refused this read" are two
-     different failures with two different exits, and both used to be printed as 网络不可用. */
-  const [journeyGone, setJourneyGone] = useState<string | null>(null);
-  const [loadFailure, setLoadFailure] = useState<string | null>(null);
+  /* R14 / ORD-0169: one classification per failure instance.  `failure` holds the Attribution that
+     the screen copy, the aria-live announcement, the telemetry record and the recovery button all
+     read; the three states it replaced (journeyGone / loadFailure / unreachable) each decided their
+     own cause, which is how a 404 became 网络不可用. */
+  const [failure, setFailure] = useState<{ attribution: Attribution; journeyId: string | null } | null>(
+    null,
+  );
+  /* The offline classification's recovery action has to lead somewhere: this flag renders the cached
+     read-only view on demand instead of reloading into the same failure screen. */
+  const [showCachedCopy, setShowCachedCopy] = useState(false);
   const [setupBusy, setSetupBusy] = useState(false);
   /* ORD-0047 — a cold city's first stay search measured 114.98s through the production
      preview, during which this screen showed nothing at all.  The shell is the only party
@@ -599,45 +609,36 @@ export function V8Experience() {
           try {
             await load(journeyId);
           } catch (error) {
-            /* Three different failures used to print one sentence.  Ask this same origin whether it
-               is answering before claiming anything about the network (R3-4 measured
-               `navigator.onLine === true` and three 2xx from /health while the screen read 网络不可用),
-               and never let "I have a local snapshot" be the evidence that the network is down. */
-            const up = await probeHealth();
+            /* R14-S/R14-P: classify once, from the strongest discriminating evidence, and let every
+               consumer read that.  An HTTP answer -- any status -- proves the request reached the
+               server, so it can never be reported as a network failure; only a transport exception
+               may say that.  The health probe exists to *rule the network out* when the read failed
+               without a response, not to overwrite a response that already arrived. */
+            let attribution = classifyReadFailure(error);
+            if (attribution.evidence_kind === "TRANSPORT") {
+              const healthy = await probeHealth();
+              if (cancelled) return;
+              if (!healthy) attribution = classifyHealthProbe(false);
+            }
+            recordAttribution(attribution, "shell.boot.journeyRead");
             if (cancelled) return;
-            if (!up) {
+            if (attribution.reason === "JOURNEY_NOT_FOUND") {
+              /* R14-S: the stored reference is invalid, so it is cleared (the whole family of keys,
+                 in one place) and the traveller is offered the picker -- never a silent fall back to
+                 the demo journey, never left on a stale read-only snapshot. */
+              const cleared = clearJourneyReferences();
+              recordAttribution(attribution, `shell.boot.cleared:${cleared.join("|") || "none"}`);
+              setOffline(null);
+            } else if (attribution.reason === "NETWORK_UNAVAILABLE") {
+              /* The one branch allowed to show the cached trip, and it keeps its retry (R3-4). */
               const saved = await readOfflineJourney(journeyId);
               if (cancelled) return;
-              if (saved) {
-                setOffline(saved);
-                setMessage(t("shell.offlineMsg"));
-                setBusy(false);
-                return;
-              }
-              setUnreachable(true);
-              setBusy(false);
-              return;
+              setOffline(saved);
             }
-            if (
-              error instanceof V8Rejection &&
-              (error.status === 404 ||
-                error.status === 410 ||
-                error.code === "NOT_FOUND" ||
-                error.code === "RESOURCE_NOT_FOUND")
-            ) {
-              /* The id this device remembered is not on this server any more -- after a full reset it
-                 is not, and the shell used to keep polling /twin for it (four ids, 404 every time,
-                 screen unchanged).  Say which id is gone and hand back the way in. */
-              localStorage.removeItem("citynexus.v8.journey_id");
-              setOffline(null);
-              setJourneyGone(journeyId);
+            if (!cancelled) {
+              setFailure({ attribution, journeyId });
               setBusy(false);
-              return;
             }
-            setLoadFailure(
-              error instanceof Error ? error.message : t("shell.loadError"),
-            );
-            setBusy(false);
             return;
           }
         }
@@ -648,17 +649,16 @@ export function V8Experience() {
         }
         if (!cancelled) setMessage(null);
       } catch (error) {
-        const journeyId = localStorage.getItem("citynexus.v8.journey_id");
-        const saved = journeyId ? await readOfflineJourney(journeyId) : null;
+        /* Reached when something outside the journey read itself threw (storage, the probe).  It goes
+           through the same classifier as everything else: R14-P forbids a broad catch that picks its
+           own prose, and this branch used to print the raw error message as if it were a diagnosis. */
+        const attribution = classifyReadFailure(error);
+        recordAttribution(attribution, "shell.boot.unexpected");
         if (!cancelled) {
-          setOffline(saved);
-          setMessage(
-            saved
-              ? t("shell.offlineMsg")
-              : error instanceof Error
-                ? error.message
-                : t("shell.loadError"),
-          );
+          setFailure({
+            attribution,
+            journeyId: localStorage.getItem("citynexus.v8.journey_id"),
+          });
         }
       }
       if (!cancelled) setBusy(false);
@@ -1132,28 +1132,74 @@ export function V8Experience() {
     ? allActivities.filter((item) => item.id !== detailActivity.id)
     : [];
 
-  /* ORD-0126 ③: a non-2xx has to be readable where the traveller was standing, with a door out --
-     and the door is a focusable button, not an `aria-disabled` suggestion. */
-  if (loadFailure && !data)
+  /* R14-P / ORD-0169: one failure view, driven by the classification that was made at the evidence
+     boundary.  The kicker, the headline, the body, the announcement and the recovery button are all
+     read off `failure.attribution`, so a 404 can no longer be shown as a network failure by a branch
+     that wrote its own sentence, and the map is not hidden unless the classified state says so. */
+  if (failure && !data) {
+    const copy = copyFor(failure.attribution, locale.startsWith("zh"), {
+      journeyId: failure.journeyId ?? undefined,
+      hasCachedCopy: Boolean(offline),
+    });
+    const action =
+      failure.attribution.recovery_action === "read-only-cached" && !offline
+        ? "retry"
+        : failure.attribution.recovery_action;
+    const recovery =
+      action === "choose-journey"
+        ? {
+            testId: "failure-choose-journey",
+            label: locale.startsWith("zh") ? "选一趟行程" : "Choose a trip",
+            run: () => {
+              setFailure(null);
+              setSetupOpen(true);
+            },
+          }
+        : action === "sign-in"
+          ? {
+              testId: "failure-sign-in",
+              label: locale.startsWith("zh") ? "重新登录" : "Sign in again",
+              run: () => {
+                setFailure(null);
+                window.location.reload();
+              },
+            }
+          : action === "read-only-cached"
+            ? {
+                testId: "failure-read-cached",
+                label: locale.startsWith("zh") ? "看已保存的只读副本" : "Read the saved copy",
+                run: () => {
+                  setFailure(null);
+                  setShowCachedCopy(true);
+                },
+              }
+            : {
+                testId: "failure-retry",
+                label: locale.startsWith("zh") ? "重试" : "Try again",
+                run: () => {
+                  setFailure(null);
+                  setBusy(true);
+                  window.location.reload();
+                },
+              };
     return (
       <section
         className="v8-page"
-        data-testid="load-failed"
+        data-testid="failure-view"
+        data-attribution-reason={failure.attribution.reason}
+        data-evidence-kind={failure.attribution.evidence_kind}
+        data-http-status={failure.attribution.http_status ?? ""}
+        data-source-layer={failure.attribution.source_layer}
+        data-recovery-action={action}
         role="alert"
         aria-live="assertive"
       >
         <div className="v8-page-intro compact">
           <div>
-            <p className="v8-kicker">
-              {locale.startsWith("zh") ? "这一次没读到" : "This read failed"}
-            </p>
-            <h1>
-              {locale.startsWith("zh")
-                ? "服务器接上了，但这趟行程没读回来"
-                : "The server answered, but not with your trip"}
-            </h1>
-            <p className="v8-lede" data-testid="load-failed-reason">
-              {loadFailure}
+            <p className="v8-kicker">{copy.kicker}</p>
+            <h1>{copy.title}</h1>
+            <p className="v8-lede" data-testid="failure-reason">
+              {copy.body}
             </p>
           </div>
         </div>
@@ -1161,111 +1207,35 @@ export function V8Experience() {
           <button
             type="button"
             className="v8-primary-button"
-            data-testid="load-failed-retry"
-            onClick={() => {
-              setLoadFailure(null);
-              setBusy(true);
-              window.location.reload();
-            }}
+            data-testid={recovery.testId}
+            onClick={recovery.run}
           >
-            {locale.startsWith("zh") ? "重试" : "Try again"}
+            {recovery.label}
           </button>{" "}
-          <button
-            type="button"
-            className="v8-outline-button"
-            data-testid="load-failed-choose"
-            onClick={() => {
-              localStorage.removeItem("citynexus.v8.journey_id");
-              setLoadFailure(null);
-              setSetupOpen(true);
-            }}
-          >
-            {locale.startsWith("zh") ? "换一趟行程" : "Choose another trip"}
-          </button>
+          {action !== "retry" && (
+            <button
+              type="button"
+              className="v8-outline-button"
+              data-testid="failure-retry"
+              onClick={() => {
+                setFailure(null);
+                setBusy(true);
+                window.location.reload();
+              }}
+            >
+              {locale.startsWith("zh") ? "重试" : "Try again"}
+            </button>
+          )}
         </div>
+        {/* The record the classifier actually produced, kept on screen for the same reason telemetry
+            keeps it: a false cause has to be discoverable without a screenshot. */}
+        <details className="v8-advanced" data-testid="failure-attribution">
+          <summary>{locale.startsWith("zh") ? "归因详情" : "Attribution detail"}</summary>
+          <code data-testid="failure-attribution-line">{failure.attribution.telemetry}</code>
+        </details>
       </section>
     );
-
-  /* ORD-0126 ④: the id this device remembered is not on this server.  Say so, name it, and give the
-     way back in -- the alternative was a shell that polls /twin for a dead id forever. */
-  if (journeyGone && !data)
-    return (
-      <section
-        className="v8-page"
-        data-testid="journey-gone"
-        role="alert"
-        aria-live="assertive"
-      >
-        <div className="v8-page-intro compact">
-          <div>
-            <p className="v8-kicker">
-              {locale.startsWith("zh") ? "连接正常" : "Connection is fine"}
-            </p>
-            <h1>
-              {locale.startsWith("zh")
-                ? "这台服务器上没有这一趟行程了"
-                : "This trip is not on this server"}
-            </h1>
-            <p className="v8-lede" data-testid="journey-gone-reason">
-              {locale.startsWith("zh")
-                ? `这台设备还记得行程 ${journeyGone.slice(0, 8)}…，但服务器说它不存在。你的账号和别的行程没有受影响。`
-                : `This device remembered trip ${journeyGone.slice(0, 8)}…, and the server says it is gone. Your other trips are untouched.`}
-            </p>
-          </div>
-        </div>
-        <button
-          type="button"
-          className="v8-primary-button"
-          data-testid="journey-gone-choose"
-          onClick={() => {
-            setJourneyGone(null);
-            setSetupOpen(true);
-          }}
-        >
-          {locale.startsWith("zh") ? "选一趟行程" : "Choose a trip"}
-        </button>
-      </section>
-    );
-
-  if (unreachable && !data)
-    return (
-      <section
-        className="v8-page"
-        data-testid="backend-unreachable"
-        role="alert"
-        aria-live="assertive"
-      >
-        <div className="v8-page-intro compact">
-          <div>
-            <p className="v8-kicker">
-              {locale.startsWith("zh") ? "连接" : "Connection"}
-            </p>
-            <h1>
-              {locale.startsWith("zh")
-                ? "连不上服务器"
-                : "Can't reach the server"}
-            </h1>
-            <p className="v8-lede">
-              {locale.startsWith("zh")
-                ? "你的行程数据没有丢失。请检查网络后重试。"
-                : "Your trip data has not been lost. Check your connection and try again."}
-            </p>
-          </div>
-        </div>
-        <button
-          type="button"
-          className="v8-primary-button"
-          data-testid="backend-unreachable-retry"
-          onClick={() => {
-            setUnreachable(false);
-            setBusy(true);
-            window.location.reload();
-          }}
-        >
-          {locale.startsWith("zh") ? "重试" : "Try again"}
-        </button>
-      </section>
-    );
+  }
 
   // Intentional, and ruled so (Amendment F #1): this return sits outside
   // `.v8-product-shell`, so the pre-Journey onboarding screen deliberately has no bottom
@@ -1310,7 +1280,7 @@ export function V8Experience() {
         <span>{t("shell.preparingSub")}</span>
       </div>
     );
-  if (!data && offline)
+  if (!data && offline && showCachedCopy)
     return <OfflineJourneyView value={offline} message={message} />;
   if (!data)
     return (

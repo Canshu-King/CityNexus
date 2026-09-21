@@ -601,6 +601,28 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   margin-top: 12px;
 }
 
+/* ORD-0135 ③: the missing-field jump is a text link inside the sentence, so the route to a field
+   costs no line of height.  Measured: giving it its own 24px box grew the hint by 58px, and the
+   wizard's sticky CTA then centred straight into the fixed stage ball (38px overlap at 360x800, and
+   the mobile gate's 44px chrome-coverage rule went red).  Inline targets inside a sentence are the
+   WGAC 2.5.8 inline exception -- the sentence line is the tap target -- and it stays a real button,
+   so it remains keyboard-reachable. */
+.trial-missing-jump {
+  display: inline;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--v8-accent, #0f766e);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+  line-height: inherit;
+  vertical-align: baseline;
+  text-decoration: underline;
+}
+
 /* The primary action must never be invisible or buried. */
 .trial-sticky-cta {
   position: sticky;
@@ -614,6 +636,15 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 }
 .trial-sticky-cta .v8-primary-button {
   min-width: 140px;
+}
+/* The onboarding surface sits outside `.v8-product-shell`, so it inherits no bottom band while the
+   stage ball is still mounted on it (V8Experience mounts `SimulationEntry` here too).  Without this
+   the sticky CTA rests in the same corner as the fixed ball: measured at 360x800, CTA 626..670
+   against ball 668..728, which the mobile gate reports as chrome covering the primary action. */
+@media (max-width: 680px) {
+  .trial-sticky-cta {
+    bottom: var(--cn-sim-float-clearance, 132px);
+  }
 }
 .v8-primary-button {
   background: var(--v8-accent, #0f766e);
