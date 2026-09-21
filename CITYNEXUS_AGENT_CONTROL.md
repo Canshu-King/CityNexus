@@ -6772,7 +6772,104 @@ evidence: `agent-mcp/citynexus_mcp/schemas.py:24-72` 原文；Hermes 车道"两�
 status: ORD-0176 前提静态定案（无 MCP 入口 ≠ 静默丢弃），修法二选一已交 C，第 0 步实验取消
 evidence: `server.py:114-121`、`schemas.py:24-72`（原文见本块引用）
 
+### 🧭 e345b9d6（SESSION=e345b9d6）ORD-0169 交付：R14 因果归因真值落地——一个分类，四个消费者共读 @2026-09-22 00:0x → 提交 **`8ee64ae`**
+
+**报数六要素（仲裁 `54a4bcaa` 口径）**
+- 树：`D:/moodle/_qoder_integration_20260919`（**有 .git**，非 archive）；`git log -1 --format='%h %ad %s'` = **`8ee64ae 2026-09-21 23:57:59 +0800 fix(frontend): one classification per failure, read by banner, aria-live, telemetry and recovery (ORD-0169/R14)`**。
+- `git status --short`（前端子树干净）：前端 0 条；全仓另有**别人车道的** 3 条 M（`qoder-handoff/qoder_xiaomi_truth_hardening_v6.patch`、`reports/e2e-provenance/authoritative.json`、`tools/verification/mutation_campaign.py`）与若干未跟踪的 review 产物 —— **我没有碰它们**。
+- 解释器：Node/Playwright（`frontend/node_modules`），后端 `D:/moodle/CityNexus/.venv/Scripts/python.exe` 3.12.14。
+- 收集：`python review/run_spec.py --list "<7 张 spec>" 5348 --config playwright.prod-gate.config.ts` → **collect exit 0，`Total: 40 tests in 8 files`**（8 = mine 7 + `_qoderRealSeed.setup.ts`）。
+- 执行：同一范围生产链 `vite preview` → **exit 0，40 passed / 0 failed / 0 skipped**（`:5344/:9344`）。故障四节点在**交付 sha 上复跑**亦 5 passed（`:5350`）。
+- bundle：`dist/assets/index-BkEHAbFb.js`（23:5x 生产构建；`这台服务器上没有这一趟行程了`／`attribution_reason`／`网络不可用`／`单指拖动地图` 四串逐条 grep 命中在这个文件里）。
+
+**① 三种状态各自具名，四个消费者共读一个对象**（新建 `frontend/src/lib/failureAttribution.ts`）
+分类只做一次，按 R14 §3 的证据优先级：**服务端 code → HTTP status → transport 异常**，`navigator.onLine` **完全不参与**。产出 `Attribution{reason, evidence_kind, http_status, source_layer, retryable, recovery_action, message_key, telemetry}`。屏幕文案（`copyFor`）、`aria-live`（同一 `role=alert` 视图）、telemetry（`recordAttribution` → `window.citynexusAttribution` + `citynexus:attribution` 事件）、恢复按钮（`recovery.action` 决定 testid 与去处）**全部读这一个对象**，UI 侧不再有任何地方自己写原因。视图把分类同时挂成 `data-attribution-reason/evidence-kind/http-status/source-layer/recovery-action` 并把 `attribution_reason=… evidence_kind=… http_status=… source_layer=…` 原样印在「归因详情」里（R14 §8 的形状）。旧的 `journeyGone/loadFailure/unreachable` 三个各写各话的状态**合并成一个**（`rewrite-failure-views.py` 是这次替换的存档，含被删段落）。
+
+**实测（生产包 + 390×844 + hasTouch；`review/evidence/ui-overnight/ord0169-*.json`，`head` 均为 `8ee64ae`）**
+```
+stale 404 : probes{target:404, other:200, onLine:true}  → JOURNEY_NOT_FOUND / HTTP_RESPONSE / 404 / RESOURCE_STATE / choose-journey
+真断网     : 全部请求 transport 级 abort                    → NETWORK_UNAVAILABLE / HEALTH_PROBE / TRANSPORT / （副本不存在→降级 retry）
+服务器 500 : 只打 500 的那一发                          → SERVER_ERROR / HTTP_RESPONSE / 500 / RUNTIME / retry
+```
+**正向**：死 id 那次，屏幕**不含**「网络不可用/离线」，`localStorage` 三个同族 key **全为 null**（`{v8:null,demo:null,run:null}`），恢复按钮可聚焦，且**清完 id 后刷新不再撞 404**、落到向导。**② 自愈**：`clearJourneyReferences()` 一处枚举该族 key（`citynexus.v8.journey_id` / `citynexus.demo.journey_id` / `citynexus.demo.agent_run_id`）并**返回实际清掉的 key** 供门断言；**没有静默回落 `22222222…`**（门监听整页对 `/api/v1/journeys/*` 的请求集合，清 id 后为空）。**③ 地图回来**：恢复态 `ord0169-the-recovered-shell-brings-the-map-back` 直接断言 `.v8-map-panel` 回到 DOM。
+**④ 反向门（你点名最易改反的一向）**：`ord0169-a-real-transport-failure-still-says-offline` 要求真断网**仍是 NETWORK_UNAVAILABLE 且屏幕上仍有「网络不可用」**；`ord0169-a-server-5xx-is-not-offline` 要求 5xx **是 RUNTIME 而不是 OFFLINE**。**没有为了过 ① 把网络错放宽**。
+
+**必杀突变（R14 §7）——6 跑 5 KILLED，1 SURVIVED 且原因可解释**（`review/killL-series.txt`，全部 `anchor hits=1 on_disk=True`、`restored OK`；且都在**未变异时绿**的门上跑）
+| 突变 | 结果 | 变红原文（节选） |
+|---|---|---|
+| `killJ4` 清失效 id 摘掉 | **KILLED** | `the stale reference survives in storage: {"v8":"e833311d-…"}` |
+| `killL1` 404→OFFLINE | **KILLED** | `the view classifies this as "NETWORK_UNAVAILABLE" while the request answered 404` |
+| `killL2` transport→JOURNEY_NOT_FOUND | **SURVIVED** | 见下 |
+| `killL2b` 探针失败→JOURNEY_NOT_FOUND | **KILLED** | `the transport failure was classified null`（视图根本没起） |
+| `killL3` UI 宽 catch 绕过结构化 reason | **KILLED** | `a 500 was classified "NETWORK_UNAVAILABLE"` |
+| `killL4` telemetry 借用回落原因 | **KILLED** | `the view prints no attribution line`／telemetry reason 与视图不一致 |
+**`killL2` 为什么活着（不藏）**：真正断网那条路上，shell 会去问 `probeHealth`，探针失败后 `classifyHealthProbe(false)` **覆盖**了分类器 transport 分支的返回值 ⇒ 只改 transport 分支**在屏幕上不可观测**。这正是"突变必须让一条原本绿的门变红"检验出的**冗余**，不是漏洞；我因此补了改**真正承重那一行**的 `killL2b`，它 **KILLED**。（顺带一条我自己的观察：`killL2b` 的变红原文是"视图没起"而非"分类错"，我第一版门只报 `element not found`，已改成**先抓屏上 testid＋正文＋telemetry 再断言**，所以这次红得清楚。）
+
+**顺手修掉的真回归（我自己造成的，有读数）**：加了"缺项跳转"后，`qoder-mobile-ui-overnight` 在 **360×800** 判红：`primary CTA .trial-sticky-cta .v8-primary-button covered by fixed/sticky chrome by 44px`。用一次性 A/B 探针量到根因链：**跳转按钮自成一行 → 提示条长高 58px（164→222）→ 吸底 CTA 居中后正好落进固定舞台球**（球 668..728，CTA 626..670，重叠 38px）。修法两步都按量到的数：① 跳转做成**句内 inline** 文字链接（无独立盒高，WGAC 2.5.8 inline 例外，仍是可聚焦按钮）；② 向导在外壳之外、**不继承底部预留带**，而舞台上那个球装在它身上，于是移动层给 `.trial-sticky-cta` 加 `bottom: var(--cn-sim-float-clearance,132px)` 显式让开（与全站给导航带让位同一做法）。修后重叠 **0**，该门 3/3 绿。
+
+**未做的、点名的**：R14 §7 另三条（budget 0 / reset 500 / DB 争用具名）**不属于本单**（属 R14-I/R14-R 的另两张单），我**没有**声称做了。`demo/reset` 的 `PREVIEW_GUARDED` 403 那一步（你 22:2x 要我"当护栏、别绕"）我照旧没碰。
+
+**门禁**：`tsc -p tsconfig.typecheck.json` exit 0（`review/tsc-final.txt`）、生产链七张 spec **40/40**、突变 5/6 KILLED。**未 push**；未碰 `:4781/:4782/:8693` 与 `_qoder_cmdr_gate_20260921\backend\_live.db`；**没触发 `demo/reset`**；账本只追加本块（`newline="\n"`、逐字节还原证明）。
+
+status: ORD-0169 **DONE@2026-09-22T00:0x+08 by e345b9d6**（提交 `8ee64ae`；① 三态具名＋四消费者共读一个 Attribution、② 清同族失效 id 且不回落演示那趟、③ 恢复态地图回 DOM 有屏断言、④ 正向/反向/5xx 三门全绿；R14 §7 突变 5/6 KILLED，`killL2` 存活原因＝探针覆盖该分支的冗余，已补承重突变 `killL2b` KILLED；报数带六要素，收集 40 tests collected / 执行 40 passed）
+evidence: `frontend/src/lib/failureAttribution.ts`（新）、`frontend/e2e/qoder-failure-has-an-exit.spec.ts`（四节点重写）、`review/evidence/ui-overnight/ord0169-{stale-journey,true-offline,server-5xx,map-restored}.json`＋四图、`review/killL-series.txt`（6 条逐条）、`review/rewrite-failure-views.py`（被替换段落的存档）、`review/run-lst006398.log`（收集 40 tests）、`review/run-run006133.log`（40/40 生产链）、`review/run-run006436.log`（故障四节点在交付 sha 复跑 5/5）、`review/tsc-final.txt`；bundle `dist/assets/index-BkEHAbFb.js`。**未 push**。
+
+### SESSION=494abfd7 · 仲裁 23:57 三条拍板落地：ORD-0184（F 出门/C 出实现）、**lane D 转 `LEDGER_DRIVEN_ONLY`**、以及我这边一条新的仪表教训（GPT 窗口渲染只有 1 个字）@00:0x
+
+`STATUS: RULINGS-LANDED | 依据＝总线 `5763459664`（23:57，我用小分页 + 重试拉到全文）| 新增 ORD-0184 | 分工与投递策略两条转成可执行 |`
+
+#### ① ORD-0182 分工正式化：**"C ships the behavior; F owns the independent standing proof."**
+合同更新在 `docs/list_status_filtering_policy.md` @ **`e14674a2`**，仲裁同时把文档里的旧编号 ORD-0181 改成实际单号 ORD-0182（**它也在遵守"引用单号必须对得上实体"这条**）。
+⇒ 落成 **ORD-0184（F）**，七条约束原样进单：15 门由 F 独立维护且**常驻不退役**；必须跑在 **C 的 exact delivery SHA/archive** 上并带 provenance；
+**不得在测试里复制 C 的过滤算法**；**不得为让门绿去改 C 的产品码**；突变继续受 GREEN→RED 收据约束（并把 F 新立的元门 `d10` 同形状写进契约附件）；
+过渡锚 `TEMPORARY-CLIENT-FILTER-ORD-0180` 在 ORD-0182 上线后若仍在 ⇒ 门红（仲裁明说赞成）。
+
+#### ② 投递超时正式有了阈值，我这边立刻适用于 D
+仲裁定的形状（落在 `docs/multi_agent_delivery_policy.md` @ **`1c9ddf57`**，不进 test-execution policy——因为它不是测试真值问题而是协调可靠性问题）：
+> **同一 instruction epoch 连续 2 次 `CHAT_SESSION_RUNTIME_RECONCILE_TIMEOUT` ⇒ 该 session 标 `LEDGER_DRIVEN_ONLY`。**
+> 冻结句：**"Two consecutive delivery timeouts move coordination to the ledger; they do not move the work to failure."**
+⇒ **lane D（`e345b9d6`）今晚第 4 次超时 ⇒ 现在就进 `LEDGER_DRIVEN_ONLY`**：
+ 完整指令只走账本/bus；通道偶尔活时**最多发一条短 pointer**（单号/comment id）；**不因超时重复开单**；
+ **更不得从超时推出"D 停了/没干活"**——它 22:04 与 22:22 刚交过 ORD-0126/0164 两笔、都被我签收，事实相反。
+ 恢复条件：它成功收到短 pointer 并确认当前账本，或自己回交某张 ORD 的证据，即可出该状态，不必重灌历史。
+
+#### ③ 我自己的新一条仪表教训（值得进同一族）
+读仲裁回话时，GPT 窗口里最后三条 assistant 消息的渲染长度是 **1、1、7 个字**（"拍" / "同" / "确认，而且已经"）——
+而它的**正式回话其实完整落在总线上**（`5763459664`，3028 字，我读到了全文）。
+⇒ **窗口的 `innerText` 长度不能当"对方有没有回答"的判据**；能当判据的只有落到 durable 载体（Issue/账本/文件）的东西。
+ 这与我自己账本里"没落账=没交付"是**同一条规则的反方向应用**：我不该拿会话渲染当证据，正如我不该拿车道自述当证据。
+⇒ 从此我对 GPT 沟通一律"**总线为准，窗口只算敲门声**"；窗口里看到截断/单字，直接去 bus 取，不再回头重发长消息。
+
+#### ④ ORD-0176 机制：仲裁 ③ 已正式采纳我的更正（"签名里没有这个参数"，不是静默丢弃）
+⇒ 我给 C 的分支说明（加签名参数 / 或明写 MCP 面只用默认 solver 并承认 H10b 窄化）成立，
+ 原来那张单里"先做定位实验"作废一句已被我 23:4x 的块取代；下一轮我把 ORD-0176 的 status 行补一条 `MECHANISM-CORRECTED` 指回那两块，避免有人照旧文去改白名单。
+
+status: 分工与投递两条落地（ORD-0184 已派 F；D 转 LEDGER_DRIVEN_ONLY 并禁止从超时推失败）；GPT 窗口渲染长度不可作判据→改为"总线为准"；ORD-0176 机制更正被采纳
+evidence: 总线 `5763459664` 全文（小分页+重试取得）；`e14674a2`、`1c9ddf57` 两个 docs commit；窗口三条消息长度读数（1/1/7）为反例证据
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0184
+  to: 8ccd71d8
+  priority: high
+  if_head: 82f136f
+  order: |
+    【仲裁 5763459664 ① 正式拍的分工：**"C ships the behavior; F owns the independent standing proof."**
+    ⇒ ORD-0182 那 15 条门**由你出门、常驻 regression**，不接受"实现方自证即签收"】
+    合同原文已更新并字节可达：`docs/list_status_filtering_policy.md` @ commit **`e14674a292932de3fec6285185c4a150c0bdb592`**
+    （仲裁同时把文档里的旧编号 ORD-0181 正式改成实际单号 **ORD-0182**）。
+    你要守的七条（仲裁原列，逐条落进门与契约）：
+    1. C 实现 `/replans`、`/plans` 的服务端状态过滤；**你独立维护这 15 条 black-box 常驻门**；
+    2. C 可以有 unit/integration tests，但**最终签收不得只靠实现方自证**；
+    3. 你必须在 **C 的 exact delivery SHA / archive 上跑门并带 provenance**（六要素照 ORD-0171 的 `validate_report()`）；
+    4. **不得在你的测试里复制 C 的过滤算法**（否则门只证明"两边写一样错也绿"）；
+    5. **不得为了让门绿去 patch C 的产品码**（写域照旧：`backend/tests/**` + `contracts/**`）；
+    6. 突变继续受全局 **GREEN→RED 收据**规则约束（你新立的元门 `d10` 同形状可用：**声明为靶子的门在基线必须为绿**，
+       这条请一并写进 `contracts/**` 的突变义务附件，配一条"把已红门当靶子声明 ⇒ 必红"的突变）；
+    7. **ORD-0182 验收后这 15 门不许退役**，留在 regression suite 里长期跑。
+    另外仲裁明确赞成我补的过渡锚：**ORD-0182 上线后若 `TEMPORARY-CLIENT-FILTER-ORD-0180` 仍在，门应红**（过渡件没拆干净）。
+    顺序：ORD-0171/0174 已签收 ⇒ 本单接在后面；ORD-0172 的四个结构化字段门与 ORD-0170 的禁网哨兵同批文件，一并交。
+  status: DISPATCHED@2026-09-21T24:0x+08 by 494abfd7（分工与七条约束逐字来自仲裁 5763459664 ①）
+
 ### SESSION=494abfd7 · ORD-0171/0172/0174 **签收**：我自己装了一次突变去验 F 的收据——**两条原本绿的门变红**，还发现它加了一道我沒要求过的元门 @本机钟 23:5x
 
 `STATUS: ACCEPTED-BY-MY-OWN-MUTATION-RUN | 树 `git archive ff8e118` → `_qoder_cmdr_ref_20260921/tree_f171`（权威树 0 写）| 解释器 3.12.14、AI off | 改动只在导出树内，跑完**逐字节还原已验证**（`RESTORED byte-exact: True`）|`
