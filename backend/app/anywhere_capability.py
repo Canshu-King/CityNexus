@@ -224,6 +224,11 @@ class DestinationResolution:
     resolver_attempted: bool = False
     resolver_status: str | None = None
     candidates: list[dict[str, Any]] = field(default_factory=list)
+    # Evidence the provider offered and this layer refused: an entity reference it cannot be held
+    # to, or a position that is not a legal WGS-84 point.  Deliberately a separate field, because
+    # `candidates` means "contenders a traveller may choose between" - broken evidence is not a
+    # choice to offer, and folding it in would let a refused record read as an option.
+    malformed_candidates: list[dict[str, Any]] = field(default_factory=list)
     retryable: bool = False
     pending_destination_label: str | None = None
     resolver_query_normalized: str | None = None
@@ -513,6 +518,61 @@ def _attempt_evidence(resolution: Any) -> list[dict[str, Any]]:
     return evidence
 
 
+def _world_answer_reason_names() -> frozenset[str]:
+    """The provider layer's reasons that describe the world, not this exchange.
+
+    Spelled by borrowing the provider layer's constant rather than repeating its text: this file has
+    no vocabulary of its own to add, and a copy is how two lists drift apart.
+    """
+
+    import app.integrations.discovery.provider_identity as provider_layer
+
+    return frozenset({provider_layer.REASON_NO_RESULTS})
+
+
+def _attribution_fields(resolution: "DestinationResolution") -> dict[str, Any]:
+    """The four fields R14 §8 names, derived once from what was actually measured.
+
+    The names follow the arbitration's wording (`attribution_reason`, `evidence_kind`,
+    `http_status`, `source_layer`) so the screen, the announcement, the telemetry and the recovery
+    action can all read one classification instead of writing their own - which is the whole point
+    of §8, and the reason one of the four on its own is not a delivery.
+
+    The tier that spoke is decided in the frozen priority order - a code from the service, then an
+    HTTP status, then a transport exception.  A transport answer reports `http_status: null` and
+    not `0`: a status that was never received is absent, and zero is a number somebody could
+    mistake for a reply.
+    """
+
+    observation = resolution.observation
+    if not isinstance(observation, dict):
+        return {}
+    reason = observation.get("reason")
+    if not reason:
+        return {}
+    attempts = [item for item in (observation.get("attempts") or []) if isinstance(item, dict)]
+    answered = [item for item in attempts if item.get("answered")]
+    if answered:
+        statuses = [
+            item.get("http_status") for item in answered if item.get("http_status") is not None
+        ]
+        evidence_kind = "HTTP_RESPONSE"
+        http_status = statuses[0] if statuses else None
+        source_layer = (
+            "RESOURCE_STATE" if str(reason) in _world_answer_reason_names() else "RUNTIME"
+        )
+    else:
+        evidence_kind = "TRANSPORT_EXCEPTION"
+        http_status = None
+        source_layer = "TRANSPORT"
+    return {
+        "attribution_reason": str(reason),
+        "evidence_kind": evidence_kind,
+        "http_status": http_status,
+        "source_layer": source_layer,
+    }
+
+
 def _candidate_fields(candidate: Any) -> dict[str, Any]:
     """One provider candidate, described without deciding anything about it."""
 
@@ -538,6 +598,48 @@ def _is_bounded_area(candidate: Any) -> bool:
     return str(getattr(candidate, "source_entity_id", "")).startswith("R:") and (
         len(getattr(candidate, "extent_wgs84", None) or ()) == 4
     )
+
+
+#: The element classes OpenStreetMap actually names things by.  Anything else is not a reference
+#: this product may carry into an identity column.
+OSM_ELEMENT_CLASSES = ("N", "W", "R")
+
+
+def _names_an_entity(candidate: Any) -> bool:
+    """Whether this candidate is something the provider can be quoted as having named.
+
+    The two conditions are the ones the acceptance wording names, and no others: a usable source id
+    and a legal WGS-84 position.  A provider reference has the grammar `<N|W|R>:<digits>` - an
+    element class and a positive integer - and a coordinate outside `[-90, 90] x [-180, 180]` is
+    refused rather than rounded, because a rounded number is a new fact.
+
+    Deliberately *not* required here: the provider layer's richer `provenance_complete` (which also
+    wants both timestamps).  It is reported downstream as its own field so a reader can see it;
+    refusing an identity for a missing `Date` header would be a third condition nobody ruled on, and
+    the mocked answers in this repository's doors carry no header.
+
+    Measured before this existed, with `osm_type` removed from a real answer: the candidate came
+    back `MATCH` and was adopted as `OSM:unknown:3289208`; with `osm_type=Z` it became
+    `OSM:Z:3289208`.  Both are identities the provider never claimed, and both were joinable,
+    cacheable and quotable from then on.
+    """
+
+    reference = str(getattr(candidate, "source_entity_id", "") or "")
+    element_class, _, identifier = reference.partition(":")
+    if element_class not in OSM_ELEMENT_CLASSES:
+        return False
+    if not identifier.isdigit() or int(identifier) <= 0:
+        return False
+    if str(getattr(candidate, "crs", "") or "") != "WGS84":
+        return False
+    centroid = getattr(candidate, "centroid_wgs84", None) or ()
+    if len(centroid) != 2:
+        return False
+    try:
+        latitude, longitude = float(centroid[0]), float(centroid[1])
+    except (TypeError, ValueError):
+        return False
+    return -90.0 <= latitude <= 90.0 and -180.0 <= longitude <= 180.0
 
 
 def _collapse_point_markers(candidates: list[Any]) -> tuple[list[Any], list[Any]]:
@@ -583,6 +685,7 @@ def _adopted(
     set_aside: list[Any],
     evidence: list[dict[str, Any]],
     status: str,
+    observation: dict[str, Any] | None = None,
 ) -> DestinationResolution:
     """Turn one provider candidate into server-owned canonical identity, with its audit trail."""
 
@@ -603,7 +706,13 @@ def _adopted(
         matched_label=fields["label"] or identity,
         resolver_attempted=True,
         resolver_status=status,
-        observation={"status": status, "stage": "resolving_destination"},
+        # The whole observation, not a two-key summary: which mirror answered, with what status and
+        # how long it took is exactly what a reader looks for when the answer is a good one, and the
+        # unresolved paths already carry it.  A success that reports less than a failure does is
+        # evidence that only exists in the direction that flatters it.
+        observation=dict(
+            observation or {"status": status, "stage": "resolving_destination", "attempts": evidence}
+        ),
         provenance=fields,
         **_resolved_identity(raw),
     )
@@ -615,6 +724,20 @@ def _unreachable_reason_name() -> str:
     import app.integrations.discovery.provider_identity as provider_layer
 
     return provider_layer.REASON_UNREACHABLE
+
+
+def _bad_response_reason_name() -> str:
+    """The provider layer's own word for "an answer arrived and does not decode", not a new one.
+
+    Naming a broken answer is the half of item C that this layer can decide on its own: `answered`
+    is true, so it is not an outage, and a candidate was offered, so it is not "there is no such
+    place".  Which word to use is the provider layer's to have chosen first, and it already chose
+    `REASON_BAD_RESPONSE` for a reply it cannot parse into what it claims.
+    """
+
+    import app.integrations.discovery.provider_identity as provider_layer
+
+    return provider_layer.REASON_BAD_RESPONSE
 
 
 def _provider_resolution(raw: str) -> DestinationResolution | None:
@@ -674,7 +797,9 @@ def _provider_resolution(raw: str) -> DestinationResolution | None:
         getattr(resolution, "outcome", "")
     )
     candidates = _exact_name_matches(list(getattr(resolution, "candidates", ()) or []), raw)
-    adopted, set_aside = _collapse_point_markers(candidates)
+    usable = [candidate for candidate in candidates if _names_an_entity(candidate)]
+    refused = [candidate for candidate in candidates if not _names_an_entity(candidate)]
+    adopted, set_aside = _collapse_point_markers(usable)
 
     if outcome_name == "RUNTIME_FAILURE":
         # The hard negative the contract names: an outage is never "there is no such place".
@@ -691,8 +816,31 @@ def _provider_resolution(raw: str) -> DestinationResolution | None:
             observation=observation,
             **unresolved,
         )
+    if refused and outcome_name in {"MATCH", "AMBIGUOUS"}:
+        # The provider says it found the place and then hands over a reference it cannot be held
+        # to.  That is a broken answer, not an answer about the world: NO_MATCH would tell the
+        # traveller "no such place", and inventing a digest would manufacture the place.  So the
+        # answer is the provider layer's own word for an undecodable reply, retryable, with the
+        # refused evidence kept where an auditor can read it.
+        return DestinationResolution(
+            query=raw,
+            canonical_destination_id=None,
+            city_code=None,
+            method="provider_evidence_malformed",
+            state="RUNTIME_FAILURE",
+            reason_code=REASON_RESOLVER_UNAVAILABLE,
+            retryable=True,
+            resolver_attempted=True,
+            resolver_status=status,
+            observation={**observation, "reason": _bad_response_reason_name()},
+            malformed_candidates=[_candidate_fields(candidate) for candidate in refused],
+            **unresolved,
+        )
     if len(adopted) == 1 and outcome_name in {"MATCH", "AMBIGUOUS"}:
-        return _adopted(raw, adopted[0], set_aside=set_aside, evidence=evidence, status=status)
+        return _adopted(
+            raw, adopted[0], set_aside=set_aside, evidence=evidence, status=status,
+            observation=observation,
+        )
     if len(adopted) > 1:
         return DestinationResolution(
             query=raw,
@@ -1184,6 +1332,9 @@ def evaluate_capability(
         "destination_resolution": resolution.method,
         "retryable": resolution.retryable,
         "candidates": resolution.candidates,
+        # Always present, empty when nothing was refused: a reader must be able to ask "was there
+        # evidence we could not use?" without first guessing which keys this answer chose to send.
+        "malformed_candidates": resolution.malformed_candidates,
         "matched_label": resolution.matched_label,
         "capability": verdict,
         "reason_code": reason,
@@ -1219,24 +1370,31 @@ def evaluate_capability(
         body["provider_status"] = [
             item for item in provider_observations if item.get("status") in PROVIDER_STATUSES
         ]
-    # `reason_code` stays the frozen *class* (DESTINATION_RESOLVER_UNAVAILABLE); this is the
+    # `reason_code` stays the frozen *class* (DESTINATION_RESOLVER_UNAVAILABLE); these four are the
     # distinct cause underneath it.  Collapsing seven provider shapes into the one class name is
     # exactly what F's six-shapes gate charges the layer below with, so the cause travels through
-    # here instead of being flattened at the boundary.
-    observation = resolution.observation
-    if isinstance(observation, dict) and observation.get("reason"):
-        body["attribution_reason"] = observation["reason"]
+    # here instead of being flattened at the boundary - and it travels as one classification, not as
+    # a lone reason the screen, the announcement, the telemetry and the recovery action each have to
+    # interpret for themselves (§8).
+    body.update(_attribution_fields(resolution))
     if resolution.provenance:
         # Only a provider answer carries this: for a destination the catalog named, the source is
         # the catalog itself and `provenance.source_kinds` already says so.
         body["destination_provenance"] = resolution.provenance
     observation = resolution.observation
-    if (
-        isinstance(observation, dict)
-        and observation.get("status") in PROVIDER_STATUSES
-        and not body.get("provider_status")
-    ):
-        body["provider_status"] = [observation]
+    # Appended rather than used only-when-empty.  This leg's own answer used to be the thin
+    # `{status, stage}` summary on success while the failure paths carried `answered`, `reason` and
+    # the per-attempt list, so the mirror that answered, with what status and how slowly was visible
+    # only when something went wrong - and a reader who looked in `provider_status` for it found
+    # nothing.  Coverage observations stay where they are; this one is additional evidence, not a
+    # fallback.
+    if isinstance(observation, dict) and observation.get("status") in PROVIDER_STATUSES:
+        existing = body.get("provider_status") or []
+        if not any(
+            isinstance(item, dict) and item.get("stage") == observation.get("stage")
+            for item in existing
+        ):
+            body["provider_status"] = [*existing, observation]
     if resolution.resolver_status and not body.get("provider_status"):
         body["provider_status"] = [{"status": resolution.resolver_status, "stage": "resolving"}]
     return body

@@ -495,3 +495,173 @@ def test_g9_provider_leg_never_writes_a_digest_or_a_placeholder(seeded, monkeypa
         f"期望：传输失败时任何身份字段都是空的；实际：{identity_fields}"
     )
     assert body["retryable"] is True, body["retryable"]
+
+
+# ---------------------------------------------------------------------------------------------
+# ORD-0191 尾巴 C / D + R14 §8：畸形证据、成功格的逐尝试、四字段同进同出
+#
+# Measured before these doors existed, on the same mocked-seam machinery (`1cce4bf`, one-off DB):
+#   osm_type 缺失   -> state=RESOLVED  canonical="OSM:unknown:3289208"
+#   osm_type="Z"    -> state=RESOLVED  canonical="OSM:Z:3289208"
+#   质心越界         -> state=RESOLVED  canonical 照收
+#   RESOLVED 的 provider_status = [{"status":"OK","stage":"resolving_destination"}]  # 没有逐尝试
+#   §8 四字段里只有 attribution_reason 存在
+# 三条都是"证据看着齐、其实没发生"，所以断言只认产品自己说出的话。
+# ---------------------------------------------------------------------------------------------
+def _raw_feature(properties: dict, *, coordinates=None) -> dict:
+    return {
+        "type": "Feature",
+        "geometry": {
+            "type": "Point",
+            "coordinates": list(coordinates or [COUNTY_CENTROID[1], COUNTY_CENTROID[0]]),
+        },
+        "properties": dict(properties),
+    }
+
+
+def _county_props(**changes) -> dict:
+    props = {
+        "osm_id": 3289208,
+        "osm_type": "R",
+        "name": RAW_COUNTY,
+        "country": "中国",
+        "type": "district",
+        "extent": COUNTY_EXTENT,
+    }
+    for key, value in changes.items():
+        if value is None:
+            props.pop(key, None)
+        else:
+            props[key] = value
+    return props
+
+
+def test_g13_a_successful_answer_carries_the_same_attempt_evidence_a_failure_does(
+    seeded, monkeypatch
+) -> None:
+    """包工头从 `provider_status` 读出 n_attempts=0 是对的：attempts 当时只在 provenance 里。"""
+
+    _enable(monkeypatch)
+    _answer(
+        monkeypatch,
+        features=(_feature(osm_id=3289208, osm_type="R", name=RAW_COUNTY, extent=COUNTY_EXTENT),),
+    )
+    body = _capability(RAW_COUNTY)
+    assert body["canonical_destination_id"] == COUNTY_CANONICAL, body["canonical_destination_id"]
+    destination_cells = [
+        item
+        for item in (body.get("provider_status") or [])
+        if isinstance(item, dict) and item.get("stage") == "resolving_destination"
+    ]
+    assert len(destination_cells) == 1, (
+        f"期望：这一问的观察在 provider_status 里有且只有一格；实际：{body.get('provider_status')}"
+    )
+    cell = destination_cells[0]
+    assert cell["status"] == "OK" and cell["answered"] is True, cell
+    attempts = cell.get("attempts") or []
+    assert len(attempts) == 1, f"期望：成功也要带逐尝试（和失败路径一样多）；实际：{cell}"
+    attempt = attempts[0]
+    assert attempt["answered"] is True and attempt["http_status"] == 200, attempt
+    assert isinstance(attempt["elapsed_ms"], (int, float)), attempt
+    assert "photon" in str(attempt["endpoint"]), attempt
+    # 同一件事不能两处读数不一致：provenance 里那份必须是同一批尝试。
+    provenance_attempts = (body.get("destination_provenance") or {}).get("provider_attempts") or []
+    assert provenance_attempts == attempts, (
+        f"期望：provider_status 与 provenance 是同一批尝试；实际：{provenance_attempts} vs {attempts}"
+    )
+
+
+def test_g14_a_reference_the_provider_cannot_be_held_to_never_becomes_identity(
+    seeded, monkeypatch
+) -> None:
+    """答了、也报了 MATCH，但它给不出可引用的实体号 ⇒ 这是坏证据，不是"这里有这个地方"。"""
+
+    _enable(monkeypatch)
+    cases = (
+        ("缺 osm_type", _county_props(osm_type=None)),
+        ("osm_type 不是 OSM 的元素类", _county_props(osm_type="Z")),
+        ("osm_type 写成小写", _county_props(osm_type="r")),
+    )
+    for label, props in cases:
+        _answer(monkeypatch, features=(_raw_feature(props),))
+        body = _capability(RAW_COUNTY)
+        assert body["destination_state"] == "RUNTIME_FAILURE", (
+            f"{label}：期望具名的运行时失败；实际 {body['destination_state']} / "
+            f"{body['destination_resolution']}"
+        )
+        assert body["canonical_destination_id"] is None, f"{label}：身份必须为空；实际 {body}"
+        assert body["retryable"] is True, (
+            f"{label}：坏证据要可重试，不是『换个地方』；实际 {body['retryable']}"
+        )
+        assert body["destination_resolution"] == "provider_evidence_malformed", body
+        assert body["attribution_reason"] == "PROVIDER_BAD_RESPONSE", (
+            f"{label}：期望复用 provider 层已有的名字；实际 {body.get('attribution_reason')!r}"
+        )
+        refused = body.get("malformed_candidates") or []
+        assert len(refused) == 1, f"{label}：被弃用的证据必须留痕；实际 {refused}"
+        assert str(refused[0]["source_entity_id"]).startswith(("unknown:", "Z:", "r:")), refused[0]
+        # 不许拿摘要/占位当身份：这一句是今晚第一次被拒的做法的延续。
+        for key, value in body.items():
+            if key.endswith("destination_id") or key == "city_code":
+                assert value is None, f"{label}：{key} 被填了 {value!r}"
+
+
+def test_g15_an_impossible_position_is_refused_not_rounded(seeded, monkeypatch) -> None:
+    """经纬度超出 WGS84 值域的证据不能被收成身份；四舍五入就是造新事实。"""
+
+    _enable(monkeypatch)
+    _answer(monkeypatch, features=(_raw_feature(_county_props(), coordinates=[200.0, 120.0]),))
+    body = _capability(RAW_COUNTY)
+    assert body["destination_state"] == "RUNTIME_FAILURE", body["destination_state"]
+    assert body["canonical_destination_id"] is None, body
+    assert body["destination_resolution"] == "provider_evidence_malformed", body
+    refused = (body.get("malformed_candidates") or [{}])[0]
+    assert refused["coordinate_system"] == "WGS84", refused
+    assert refused["centroid"] == {"latitude": 120.0, "longitude": 200.0}, (
+        f"期望：被弃用的坐标原样留痕（不修、不圆）；实际：{refused['centroid']}"
+    )
+
+
+def test_g16_the_four_attribution_fields_arrive_together_or_not_at_all(
+    seeded, monkeypatch
+) -> None:
+    """§8 要的是一个分类给四个消费者共读，不是四个各自可以缺的字段。"""
+
+    fields = ("attribution_reason", "evidence_kind", "http_status", "source_layer")
+    _enable(monkeypatch)
+
+    # 答了但证据不合格：说过话的那一层是 HTTP
+    _answer(monkeypatch, features=(_raw_feature(_county_props(osm_type="Z")),))
+    answered = _capability(RAW_COUNTY)
+    missing = [key for key in fields if key not in answered]
+    assert not missing, f"期望：有具名原因时四字段齐到；缺 {missing}；实际键名 {sorted(answered)}"
+    assert answered["evidence_kind"] == "HTTP_RESPONSE", answered["evidence_kind"]
+    assert answered["http_status"] == 200, answered["http_status"]
+    assert answered["source_layer"] == "RUNTIME", answered["source_layer"]
+
+    # 没人答（传输层）：http_status 必须是 null，不许是 0
+    _answer(monkeypatch, raise_with=httpx.ConnectError("connection refused"))
+    transport = _capability(RAW_COUNTY)
+    missing = [key for key in fields if key not in transport]
+    assert not missing, f"期望：传输失败也要四字段齐；缺 {missing}"
+    assert transport["evidence_kind"] == "TRANSPORT_EXCEPTION", transport["evidence_kind"]
+    assert transport["http_status"] is None, (
+        f"期望：没收到状态码就是没有，不许写 0 冒充；实际：{transport['http_status']!r}"
+    )
+    assert transport["source_layer"] == "TRANSPORT", transport["source_layer"]
+
+    # 答了并且如实说"这里没有"：归因说的是世界，不是这次交换
+    _answer(monkeypatch, features=())
+    empty = _capability(RAW_COUNTY)
+    assert empty["evidence_kind"] == "HTTP_RESPONSE", empty["evidence_kind"]
+    assert empty["source_layer"] == "RESOURCE_STATE", empty["source_layer"]
+    assert empty["attribution_reason"] == "PROVIDER_NO_RESULTS", empty["attribution_reason"]
+
+    # 成功没有原因可归：四个字段必须一起缺席，不许留半套
+    _answer(
+        monkeypatch,
+        features=(_feature(osm_id=3289208, osm_type="R", name=RAW_COUNTY, extent=COUNTY_EXTENT),),
+    )
+    ok = _capability(RAW_COUNTY)
+    present = [key for key in fields if key in ok]
+    assert present == [], f"期望：可归因的事没发生就不要摆出归因；实际出现了 {present}"

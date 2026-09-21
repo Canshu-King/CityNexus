@@ -370,6 +370,69 @@ x-testing-obligations:
       # 实测：kill baseline 5 门绿、cross baseline 10 门绿，5/5 KILLED + 6/6 KILLED+ISOLATED、restored=True。
       script: review/mutate_ord191_leg.py
 
+  broken-provider-evidence-is-a-runtime-failure-and-never-an-identity:
+    rule: >-
+      provider 答了、而且报 MATCH，不等于它给得出可引用的实体。收成 canonical 之前必须过两条**已被
+      验收口径点名**的条件：① 实体引用形如 `<N|W|R>:<正整数>`（OSM 的元素类只有这三个）；② 位置是合法
+      WGS84（lat ∈ [-90,90]、lon ∈ [-180,180]，越界只拒绝、不四舍五入、不修值）。任一条不满足 ⇒
+      `destination_state=RUNTIME_FAILURE`、`canonical_destination_id=null`、`retryable=true`、
+      `destination_resolution=provider_evidence_malformed`、具名 `attribution_reason=PROVIDER_BAD_RESPONSE`
+      （沿用 provider 层已有的词，不另造），并且被弃用的那条证据原样进 `malformed_candidates`。
+      明确禁止：写成 NO_MATCH（那是在说"世上没这个地方"）、写摘要/占位当身份、把它报成"联系不上"。
+    measured-on: 1cce4bf
+    measured-before: >-
+      修前实测（mocked transport、一次性库、seam=photon、正常入口 GET）：properties 去掉 `osm_type`
+      ⇒ state=RESOLVED / canonical=`OSM:unknown:3289208`；`osm_type="Z"` ⇒ canonical=`OSM:Z:3289208`；
+      质心 [200.0,120.0] ⇒ 照样收成身份。三者都会被下游当真实地点 join/缓存/引用。
+    open-item: >-
+      还有一件 C 侧看不到、因此**没有**假装修好的：provider 回了 feature、但每条都没有可用 osm_id 时，
+      provider 层在分级阶段就把候选丢掉，交给产品的是 `NO_MATCH + PROVIDER_NO_RESULTS`，与"真的一条都没回"
+      在同一个读数上不可区分（`ProviderResolution` 字段实测：outcome/query/normalized_query/candidates/
+      attempts/retryable/reason/answered/provider_replied，`ProviderAttempt` 不带会答条数）。要分开这句话
+      需要 provider 层把"看到了几条"交出来 ⇒ 已把两侧读数交给 B，不由 C 伸手进 integrations/discovery/** 改。
+
+  per-attempt-evidence-must-sit-in-the-cell-the-consumer-reads:
+    rule: >-
+      `provider_status` 里属于"目的地这一问"的那一格（`stage=resolving_destination`）必须与失败路径
+      带同样多的话：`status / answered / provider_replied / reason / attempts[]`（每条 attempt 有
+      `endpoint / answered / http_status / elapsed_ms / reason / retry_after_s`）。成功**不许**比失败
+      报得少：只在出错时才留痕的证据，是朝着自己好看的方向的证据。同一批 attempt 必须与
+      `destination_provenance.provider_attempts` 是同一份值（两处读数不一致即为缺陷）。
+      覆盖 observation 另占该格时不顶替、而是并列追加。
+    measured-on: 1cce4bf
+    live-reading: >-
+      seam=photon 一次 `GET /api/v1/destinations/capability?query=云和县`（一次性临时库
+      `ord167_e2e.db`，正常入口）⇒ canonical=`OSM:R:3289208` / RESOLVED / HYDRATABLE /
+      START_HYDRATION，`provider_status` 目的地格 attempts=[{endpoint: photon.komoot.io, answered: true,
+      http_status: 200, **elapsed_ms: 1342.4**}]。此前同一腿直接驱动 provider 类、绕过计时 transport 时，
+      同一次真调用记的是 `elapsed_ms=0.0` —— 已按"改了就要有门"补进门断言（数值只断存在，真数字由收据给）。
+
+  r14-section-8-attribution-fields-travel-as-one-group:
+    rule: >-
+      归因四字段 `attribution_reason / evidence_kind / http_status / source_layer` 由**同一处**从同一次
+      观察导出，**同进同出**：有具名原因时四个键必须都在（缺一即红），没有可归因的事时四个都不出现
+      （不许留半套让屏幕、播报、telemetry、恢复动作各自解释）。证据层级按冻结优先级判：服务侧码 →
+      HTTP 状态 → 传输异常；`http_status` 在传输层结论时必须是 `null`，不许写 0。
+      取值（拼写沿用仲裁正文与 provider 层已有词，不新增）：`evidence_kind ∈ {HTTP_RESPONSE,
+      TRANSPORT_EXCEPTION}`；`source_layer ∈ {RESOURCE_STATE, RUNTIME, TRANSPORT}` —— 只有 provider
+      如实回答了"这里没有"才算 RESOURCE_STATE，其余答了但不合格的都算 RUNTIME，没人答算 TRANSPORT。
+    measured-on: 1cce4bf
+    gates:
+      - backend/tests/test_qoder_provider_identity_leg.py::test_g13_a_successful_answer_carries_the_same_attempt_evidence_a_failure_does
+      - backend/tests/test_qoder_provider_identity_leg.py::test_g14_a_reference_the_provider_cannot_be_held_to_never_becomes_identity
+      - backend/tests/test_qoder_provider_identity_leg.py::test_g15_an_impossible_position_is_refused_not_rounded
+      - backend/tests/test_qoder_provider_identity_leg.py::test_g16_the_four_attribution_fields_arrive_together_or_not_at_all
+    reverse-mutants:
+      # M12 摘掉实体引用/坐标合格性 ⇒ g14、g15 红；M13 §8 少一格 ⇒ 只有 g16 红；
+      # M14 成功格退回两键摘要 ⇒ 只有 g13 红。交叉：C8/C9/C10 各点名"必须仍绿"的门，
+      # 证明这三处不是共用一条码路。实测：kill baseline 与 cross baseline（16 门）先量绿，
+      # 9/9 KILLED + 10/10 KILLED+ISOLATED，逐次 restored=True。
+      # 记一笔我自己的错：g15 第一版把单元素写成 `(_raw_feature(...))`（少了逗号 ⇒ 那是 dict 不是 tuple），
+      # provider 层收到 `features: ["type","geometry","properties"]` 抛 AttributeError，被 seam 分支写成
+      # PROVIDER_UNREACHABLE。门红了是我测错；顺带量到第二条真事实：**答了之后我们自己抛的异常，现在也被
+      # 说成"联系不上 provider"**（trace 已交 B/C 两侧看），这一条本轮未改。
+      script: review/mutate_ord191_leg.py
+
   runtime-egress-tripwire-is-required-beyond-the-static-scan:
     rule: >-
       §17C 的静态字面量扫描（G8a）**必要但不充分**：provider 域名可以完全来自 app/config 常量，

@@ -84,8 +84,32 @@ def launder(block: str) -> str:
 # the one line that carries that distinction up.  Flattening it is legal-looking (the class name is
 # a real registered reason) and is what makes an operator unable to tell "back off" from "data is
 # broken", so it gets its own sabotage and its own door.
-ATTRIBUTION_LINE = '        body["attribution_reason"] = observation["reason"]\n'
-ATTRIBUTION_FLATTENED = '        body["attribution_reason"] = REASON_RESOLVER_UNAVAILABLE\n'
+ATTRIBUTION_LINE = '        "attribution_reason": str(reason),\n'
+ATTRIBUTION_FLATTENED = (
+    '        "attribution_reason": "DESTINATION_RESOLVER_UNAVAILABLE",\n'
+)
+
+# Re-pointed at `1cce4bf`+: the answer stopped carrying one `attribution_reason` line and started
+# carrying the §8 group, so the sabotage has to attack the group's own value or the anchor silently
+# matches nothing (a 0-hit anchor is a no-op mutant, not a kill).
+
+ENTITY_FILTER = """    usable = [candidate for candidate in candidates if _names_an_entity(candidate)]
+    refused = [candidate for candidate in candidates if not _names_an_entity(candidate)]
+"""
+ENTITY_FILTER_OFF = """    usable = list(candidates)  # M12: any reference the provider offers is taken as one
+    refused: list[Any] = []
+"""
+LAYER_FIELD = """        "http_status": http_status,
+        "source_layer": source_layer,
+    }
+"""
+LAYER_FIELD_OFF = """        "http_status": http_status,
+    }
+"""
+ADOPTED_OBSERVATION = """        observation=dict(
+            observation or {"status": status, "stage": "resolving_destination", "attempts": evidence}
+        ),
+"""
 
 
 MUTANTS = [
@@ -124,6 +148,27 @@ MUTANTS = [
         "gates": ["test_g12_the_provider_cause_is_not_flattened_into_the_class_name"],
         "old": ATTRIBUTION_LINE,
         "new": ATTRIBUTION_FLATTENED,
+    },
+    {
+        "name": "M12 any reference the provider offers becomes an identity",
+        "gates": [
+            "test_g14_a_reference_the_provider_cannot_be_held_to_never_becomes_identity",
+            "test_g15_an_impossible_position_is_refused_not_rounded",
+        ],
+        "old": ENTITY_FILTER,
+        "new": ENTITY_FILTER_OFF,
+    },
+    {
+        "name": "M13 the §8 group loses source_layer and the rest read a partial classification",
+        "gates": ["test_g16_the_four_attribution_fields_arrive_together_or_not_at_all"],
+        "old": LAYER_FIELD,
+        "new": LAYER_FIELD_OFF,
+    },
+    {
+        "name": "M14 the successful answer goes back to the thin two-key observation",
+        "gates": ["test_g13_a_successful_answer_carries_the_same_attempt_evidence_a_failure_does"],
+        "old": ADOPTED_OBSERVATION,
+        "new": '        observation={"status": status, "stage": "resolving_destination"},\n',
     },
 ]
 
@@ -214,6 +259,48 @@ CROSS = [
         "expect_green": [
             "test_g2_a_provider_named_county_becomes_hydratable_not_dead",
             "test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural",
+        ],
+    },
+    {
+        "name": "C8 accepting a broken reference must not disturb the classification of good ones",
+        "old": ENTITY_FILTER,
+        "new": ENTITY_FILTER_OFF,
+        "expect_red": [
+            "test_g14_a_reference_the_provider_cannot_be_held_to_never_becomes_identity",
+            "test_g15_an_impossible_position_is_refused_not_rounded",
+        ],
+        "expect_green": [
+            "test_g2_a_provider_named_county_becomes_hydratable_not_dead",
+            "test_g5_two_disagreeing_answers_must_not_pick_one",
+            "test_g10_one_place_two_index_entries_collapses_under_a_named_version",
+            "test_g13_a_successful_answer_carries_the_same_attempt_evidence_a_failure_does",
+        ],
+    },
+    {
+        "name": "C9 losing one §8 field must not disturb the reason or the attempt evidence",
+        "old": LAYER_FIELD,
+        "new": LAYER_FIELD_OFF,
+        "expect_red": [
+            "test_g16_the_four_attribution_fields_arrive_together_or_not_at_all",
+        ],
+        "expect_green": [
+            "test_g12_the_provider_cause_is_not_flattened_into_the_class_name",
+            "test_g13_a_successful_answer_carries_the_same_attempt_evidence_a_failure_does",
+            "test_g14_a_reference_the_provider_cannot_be_held_to_never_becomes_identity",
+        ],
+    },
+    {
+        "name": "C10 thinning the success observation must not disturb the failure paths",
+        "old": ADOPTED_OBSERVATION,
+        "new": '        observation={"status": status, "stage": "resolving_destination"},\n',
+        "expect_red": [
+            "test_g13_a_successful_answer_carries_the_same_attempt_evidence_a_failure_does",
+        ],
+        "expect_green": [
+            "test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural",
+            "test_g7_a_resolved_identity_reaches_the_stored_operation_without_any_pending_token",
+            "test_g14_a_reference_the_provider_cannot_be_held_to_never_becomes_identity",
+            "test_g16_the_four_attribution_fields_arrive_together_or_not_at_all",
         ],
     },
 ]
