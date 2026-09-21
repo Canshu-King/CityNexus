@@ -6847,57 +6847,40 @@ evidence: `frontend/src/lib/failureAttribution.ts`（新）、`frontend/e2e/qode
 status: 分工与投递两条落地（ORD-0184 已派 F；D 转 LEDGER_DRIVEN_ONLY 并禁止从超时推失败）；GPT 窗口渲染长度不可作判据→改为"总线为准"；ORD-0176 机制更正被采纳
 evidence: 总线 `5763459664` 全文（小分页+重试取得）；`e14674a2`、`1c9ddf57` 两个 docs commit；窗口三条消息长度读数（1/1/7）为反例证据
 
-### SESSION=494abfd7 · ORD-0151 前提被我自己的探针推翻一半 + ORD-0154 收一半驳一半 + tip 漂移通告 @本机钟 21:0x
+### SESSION=494abfd7 · 向导"缺项态"实测（给 ORD-0135③ 的证据，含一条我认为不致一致的地方）@00:1x
 
-`STATUS: COMMANDER-RECHECK-R10-OWNER | 树：`git archive d26933c`→`_qoder_cmdr_ref_20260921/tree_head`（权威树 0 改动）| 库：`live_pre_tip.db` 的两份副本（`head_r10_recheck.db`/`head_r10_urls.db`），**未碰 `_live.db`** | 传输：`TestClient`（不起端口）| 解释器 `CityNexus/.venv` 3.12.14 | `REAL_CITY_ENABLED=true` + `MODE=live`、四把凭据 unset | evidence `live_checks/r10_owner_recheck.py`+`.out`、`r10_url_names.py`、`hydration_identity_trace.txt` | 生产码 0 改动 |`
+`STATUS: COMMANDER-OBSERVATION-NOT-A-DEFECT-VERDICT | 目标：部署后的生产包 `index-BkEHAbFb.js`，390×844，`:4782`（只读浏览）| 我**只改自己那个浏览器档案的 `localStorage` 草稿**，未点「确认创建」、未向 `:8693`/`_live.db` 写任何东西 | 结论只到我量到的范围 |`
 
-#### ① 我撤回：capability 与 catalog-hydrations **没有**各算一遍 identity（我连说两轮，仲裁已写进 R10）
-- `CHO.resolve_destination is AC.resolve_destination → **True**`（同一函数对象，不是同名）；定义处 `backend/app/anywhere_capability.py:165`；
-- hydration 侧两个调用点：`catalog_hydration_operations.py:293`（受理时算幂等指纹）、`:527`（作业时 `RESOLVING_DESTINATION` 阶段）；`:37` 就是 `from app.anywhere_capability import …`；
-- 实测三例两条端点返回**同一个** canonical：`云和县`/`贡山独龙族怒族自治县`/`zzxqvw-不存在县` 均 `pending:<原文>` 两边一致；
-⇒ 仲裁 R10 的"两条 endpoint 必须共用一个 resolver core"这个不变量**今天结构上已经满足**；"一条能解析、另一条说 NO_REGISTERED_SOURCE"这种自相矛盾**今天复现不出来**（我 20:3x 说"我今天已经实测到这一对"——那对其实是"能力说 UNAVAILABLE / 作业说 NO_REGISTERED_SOURCE"，**同一次解析的两句话**，不是两套身份）。
-- 真正要修的仍是那一个核心：它**从不问 provider**。它自己的 docstring 写着 "using only sources already in this process"（`anywhere_capability.py:166-173`）；模块内 `photon/overpass/geocoder` 只出现在 `:247` 的 provenance 分类集合里。
-- 出站计数（httpx _tripwire_，命名后不误导）：capability 与 hydration 各 **1 条**，且那 1 条是探针自己 `GET/POST http://testserver/…` ⇒ **provider 调用 0**。
+#### ① 我先量了"什么都不缺"的样子（免得把正常态当缺陷报）
+草稿完整（厦门 / 2 人 / 总预算 CNY 1500 / 住宿 450 / 抵达 高崎机场 / 离开 厦门北站 / step 3）⇒
+`trial-step-1..2 = done`、`step-3 = active`、**CTA 可点**（`disabled=false`、cursor pointer、opacity 1）、
+`trial-next-reason` **存在且为空** ⇒ 这一态**完全正常**，我不报问题。
 
-#### ② 我把自己 ORD-0113 块里的两处行号按当前 tip 重测了一遍（结论成立，行号漂了）
-- 全仓 `def get_session` **只有一处** = `backend/app/db/session.py:710`，体是 `try: yield / finally: session.close()`
-  ⇒ 我 20:0x 写的 `:696-701` 在 `e9efec6` 上成立，在 `d26933c` 上是 **`:710-715`**，"finally 跑到"这句**照旧成立**；
-- `main.py` 在 `2d3b3fb` 与 `d26933c` 是**同一 blob `cb325aa6…`**（⇒ 两 tip 之间行号不可能漂）；
-  全文件 `except OperationalError` **只有 1 处 = `:5907`**，`:5909` 判 `"database is locked" / "database is busy"`
-  ⇒ 我原写的 `:5808-5811` 更正为 **`:5907-5909`**；"twin 是唯一锁兜底"这条**加强成立**（1 处，不是"只有它优雅降级"，而是"整个 main.py 只有这一处捕获"）；
-- 顺手钉两个可能被误读的点：`main.py:162` = `from app.db.session import SessionLocal, ensure_schema, get_session`，
-  `Depends(get_session)` 在 `main.py` **136 处**；`main.py:8455-8460` 实读是 `SolverV2Option(option_key=f"KEEP:{item.id}", …)` 重规划求解器。
-- **记一笔我自己的过程错**：我一度以为车道递过一条"`get_session` 是 `:8458` 空壳、`Depends` 计数为 0"的更正，并据此要开一张质询单。
-  我在账本里**找不到**这段原话，而上面的 grep 读数也证明该说法不成立 ⇒ **指控不成立，那张单作废**（预留的 ORD-0159 不使用、不派任何人）。
-  教训按我 19:5x 那条自纪执行：**没找到原文就说没找到，不许把转述当交付去驳。**
+#### ② 再把必填项抹掉（`arrivalLocation=''`、`budgetMajor=null`）后重载，量到的是：
+| 读数 | 现场 |
+|---|---|
+| 缺项有没有被**点名** | **有**：屏上写「抵达 **未填写 · 必填** · 2026-09-25 11:00」⇒ 比"哑按钮"好，这一半已做到 |
+| 主行动按钮 | `确认创建` 仍然 **enabled**（`disabled=false`、无 `aria-disabled`、`cursor:pointer`、`opacity:1`） |
+| "为什么不能提交"的槽位 | `[data-testid="trial-next-reason"]` **存在但内容为空字符串** |
+| 无障碍 | 无 `role="alert"`；没有任何 `trial-jump*` / `*missing*` 控件可跳到缺项 |
+| 后端 | 我**没点**创建 ⇒ 服务器会答 422 还是客户端会拦，**我不知道，也不去试**（那会写你的库） |
 
-#### ③ ORD-0151 第 1 步（`23bdf9f`）：方向对、**但和仲裁刚落地的两句话打架**（要裁）
-实测落库行（`catalog_hydration_operations`，列 `canonical_destination_id` 在 `db/models.py:1174` 是 **NOT NULL**）：
-```
-('pending:云和县',                 '9b0dda148eefd12bfd6784c87d5e0724', 'UNAVAILABLE', 'NO_REGISTERED_SOURCE')
-('pending:贡山独龙族怒族自治县',      'ca3b5b6a5da9c5b02868907548bc76c3', 'UNAVAILABLE', 'NO_REGISTERED_SOURCE')
-('pending:zzxqvw不存在县',          '8d34605bff8f3155848581d2a09f57ad', 'QUEUED',      None)
-```
-- 好消息：禁 hash 这条**已达成**（同一测试里新增 `[0-9a-f]{12,}` 反摘要断言，回归成 hash 会红）；
-- 冲突 1：仲裁 5760650272/`docs/anywhere_capability.md` 要 no-match/runtime-failure 两类 **`canonical=null`**——而这一列 NOT NULL 且直接进 `fingerprint`；
-- 冲突 2：仲裁 R10 原文"raw text is user input, not identity"——而 `pending:<原文>` 正是把用户原文钉进身份列与幂等键；且 `zzxqvw-不存在县` 被归一为 `pending:zzxqvw不存在县`（**连字符被吃掉**，原文被改写）；
-- 我的第三条路（请仲裁点头我就写进 0151 验收）：响应 `canonical_destination_id=null` + 独立可读字段 `pending_destination_label`；作业行的幂等键改用**具名相关 token**（`destination_pending_key`，注释里明写"correlation only, never identity"），并把 `pending:` 从"身份"降级为"标签"。
+#### ③ 因此我只提一条**一致性**问题（不是"缺功能"指控）
+屏幕已经说得出"这一项必填未填写"，**但主按钮的外观与可点状态完全不反映这件事**，而产品自己预留的 `trial-next-reason` 槽位是空的。
+⇒ 这就是 ORD-0135③ 的正身：**把已经知道的"缺项"接到按钮与播报上**，而不是新做一套判断：
+- 有缺项 ⇒ CTA `aria-disabled="true"` + `aria-describedby` 指向 `trial-next-reason`，并把那句"抵达未填写·必填"原样填进槽位；
+- 每个缺项一个可聚焦跳转（"去补这一项" → 回到对应步骤并聚焦字段）；
+- **不许**用 `disabled` 把按钮打死（我们仓里 `aria-disabled` 才不会被 `click()` 挡住，也才可聚焦可读——见 ORD-0066 的旧结论）；
+- 若产品策略允许"点了再报"，那也必须**点了之后把原因播报出来**，不许静默。
 
-#### ④ 一条产品真相（今天就能上屏的那种，与用户"装死"投诉同源）
-未解析县的 `recommended_action` 实测是 **`CHOOSE_ANOTHER_DESTINATION`** ⇒ 对一个**真实存在**的县，产品现在对用户说的是"**换个目的地**"。
-仲裁新令要 `HYDRATABLE + PREPARE_DESTINATION`。这一句在 ORD-0151 修完之前**每次都会**把用户劝退。
+#### ④ 门（给 D 直接抄，两条都要求"先红后绿"）
+1. `arrivalLocation` 为空时：断言 CTA `aria-disabled="true"` **且** `trial-next-reason` 非空、文本含"抵达"与"必填"；
+2. 断言存在可聚焦的"去补这一项"控件，点击后对应字段 `document.activeElement` 就是它；
+3. 突变：只留"未填写"文案、不给按钮上 `aria-disabled` ⇒ 必须红（防"文字改绿、状态还是能点"这种半修）；
+4. 反向不变：草稿完整时 CTA 必须保持 enabled（别为了门把正常态也钝掉）。
 
-#### ⑤ ORD-0134②（`4176e7b`，lane D）代码级签收，门禁我**没有**复跑
-实读 diff：`MapPanel.tsx` 删 `cooperativeGestures: true`（+注释里写明 12/12 单指滑动页面 0px 的红基线）、hint 文案由"两指拖动"翻成"单指拖动地图"；`styles.css +10` 给 `.v8-map-caption/.v8-map-gesture-hint/.v8-map-tile-notice` 上 `pointer-events:none`；`review/ord0082_0087_kill_drivers.py +33`。
-⇒ 机制与我要的一致（**ACCEPT-CODE**）；它报的 27/27 与 killG 3/3 KILLED 是它自己跑的，**我没复跑 e2e**；真机复验仍挂 ORD-0129/0147（用户此刻看的 `:8693` 前端仍是 `index-DDgOVfG6.js`，未含此改）。
-
-#### ⑥ tip 漂移通告（对所有 `if_head: e9efec6` 的单生效）
-权威树现为 **`d26933c`**（`integration/frontend-apple-pass1`），`e9efec6` 之后 5 笔：
-`2d3b3fb`（AI 卡尺寸/页脚）→ `23bdf9f`（0151 第 1 步）→ `4176e7b`（0134②）→ `b2becb5`（booking 节点自钉前提）→ `d26933c`（账本追加工具自证）。
-各车道交付前请按**当时实读 tip** 重测行号；我账本里的 `main.py:5808-5811` 与 `session.py:696` 已在 ①② 更正。
-
-status: commander 亲测交付（① 自撤 R10 前提；② ORD-0154 收①驳②；③ `pending:` 与 canonical=null/NOT NULL 双冲突上呈；④ 未解析县现在答"换个目的地"；⑤ 0134② 代码级签收未复跑；⑥ tip 漂移）
-evidence: `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/`（r10_owner_recheck.py、r10_owner_recheck.out、r10_url_names.py、hydration_identity_trace.txt、cho_head.py、models_head.py、arbiter_docs/ 三份契约原文）
+status: 向导缺项态实测完成（缺项已点名 / 按钮状态与 reason 槽位不反映 / 无播报无跳转）；给 ORD-0135③ 四条可直接抄的门；未点创建因而不判定后端行为
+evidence: 本轮两次 evaluate 原样读数（完整态 vs 缺项态对照）
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 ### SESSION=494abfd7 · ORD-0169 **签收**（我自建 `8ee64ae` 的包、构建产物与车道报的 bundle 名一致，再在部署后的手机上量了归因）@00:0x
@@ -6934,129 +6917,6 @@ evidence: `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/`（r10_owner_recheck.
 status: ORD-0169 签收并部署（自建包名与车道一致；归因四消费者+telemetry+自愈全部实测在屏）；我自己差点用错属性名误报，已改为"先打印键名再指控"；D 的 e2e 链未复跑如实标注
 evidence: `live_checks/build_r14.log`、`dist_swap_0006.log`、本轮 Playwright 两次 evaluate 原样读数（bundle、五个 data-* 键名、telemetry JSON、stored_id=null、按钮文案）
 
-- id: ORD-0157
-  to: 8c66aa92
-  priority: P0-critical
-  if_head: d26933c
-  order: |
-    【ORD-0151 的更正与收敛——本单覆盖 0151 的"两处都要改"前提，其余判据照旧；两单一起结】
-    我 20:5x 自己探针推翻了我给你的前提：**identity 早就只有一个主人**。
-    `catalog_hydration_operations.py:37` 就是 `from app.anywhere_capability import resolve_destination`，
-    调用点在 `:293`（受理算指纹）与 `:527`（作业 RESOLVING_DESTINATION），`is` 比对 = True，
-    两条端点今天对同一输入返回同一个 canonical ⇒ **不要再"接两处"，也不要新造第二个 resolver**。
-    要做（按仲裁 `docs/anywhere_capability.md` @ `5238911f` 的 R10 段）：
-    ① 在**那一个** `resolve_destination`（`anywhere_capability.py:165`）里接 Photon：
-       `resolve_destination(raw) -> RESOLVED | AMBIGUOUS | NO_MATCH | RUNTIME_FAILURE`，
-       RESOLVED 必须带真实 provider id + canonical display name + WGS-84 centroid/extent + resolver provenance；
-       顺手把 `:166-173` 那句 docstring（"using only sources already in this process"）改掉——它是设计自述，不改就会有人当契约。
-    ② 四类必须分开，别再折叠（我实测现状只有前两类的形状）：
-       resolved + 本地证据不足 → **HYDRATABLE** + `recommended_action=PREPARE_DESTINATION`；
-       resolved + 共享 planner 已能出 SELECTABLE → READY + START_PLANNING（**不许为流程再跑一次 hydration**）；
-       resolver 健康 + 0 candidate → UNAVAILABLE + `NO_CANONICAL_IDENTITY`（**canonical=null**）；
-       resolver 超时/不可达 → 具名运行性（`REASON_RESOLVER_UNAVAILABLE` / `DESTINATION_RESOLVER_UNAVAILABLE` 已在词表里，
-       且已在 `TRANSIENT_REASONS`）→ 503/retryable，**不得**报结构性 UNAVAILABLE、**不得**写 hash。
-    ③ 枚举纪律：机器码只用现有 `PREPARE_DESTINATION`（`anywhere_v1.openapi.yaml` 的 `RecommendedAction` 里有），
-       **禁止**新增 `START_HYDRATION` 第二个枚举；UI 文案可以写"准备目的地"。
-       今天未解析县答的是 `CHOOSE_ANOTHER_DESTINATION`——那是对真实存在的县说"换个目的地"，必须消失。
-    ④ **挂起项（等我或仲裁裁，别自己拍）**：`pending:<原文>` 现在被写进 NOT NULL 的
-       `catalog_hydration_operations.canonical_destination_id`（`db/models.py:1174`）并被 sha 进 `fingerprint`，
-       且 `zzxqvw-不存在县` → `pending:zzxqvw不存在县`（原文被归一改写）。这与仲裁的
-       "canonical=null" + "raw text is not identity" 两句**不能同时成立**。
-       在裁定前：新代码路径**不许**再往 fingerprint 里喂用户原文；已落库的 `pending:` 行**不许删**（R10：兼容读 + 就地回填）。
-    验收：仲裁 R10 的 7 条门逐条（含"摘掉**任意一边**的 resolver 调用门必须红"——今天两边同源，
-       所以这条要用"调用点级"突变：把 `:293` 或 `:527` 任一处换成不经 provider 的本地路径必须判红）；
-       三例真输入（云和县/贡山/乱码县）+ 一例注入 timeout；**不许 mock 出 canonical**；
-       先红后绿（红基线 = 我 21:0x 的读数：provider 调用 0、三例全 `pending:`、`NO_REGISTERED_SOURCE`）；
-       全量红集合 ⊆ `eef24d9` 的 14 条基线。
-    【顺序】0157 > 0158 > 0125 > 0112 > 0155。禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`、禁 `demo/reset`（R13）、
-    解释器 3.12.14、凭据全清、不改 `data/mock/**`、交付只追加自己那块（`newline="\n"`，带"拿掉我的块必须逐字节还原"证明）。
-  status: DISPATCHED@2026-09-21T21:0x+08 by 494abfd7（覆盖 0151 的"两处"前提；provider 调用 0 是我自己量的）
-
-- id: ORD-0158
-  to: 8c66aa92
-  priority: P0-critical
-  if_head: d26933c
-  order: |
-    【ORD-0152 的验收升级——仲裁契约 `docs/planning_constraint_input_truth_policy.md` @ `52d7ccb6`，原单判据保留】
-    排查顺序必须是**边界链**，找"第一个把 1600 变成 0 的地方"，不许只在最后一层打补丁：
-    `raw user input → extraction → normalization → persistence → readback → planner request → feasibility core`，
-    每个边界都打印预算值 + 单位（minor/major 写明）。
-    硬语义：显式 0 才是 0；未提供 = null/UNKNOWN；抽取不确定 = NEEDS_CONFIRMATION/BLOCKED；抽取失败 = 具名 parse error；
-    **三种都不许 fallback 成 0**。产品自己丢了预算时 UI **不许**说"你去调整预算"，更不许把方案判成数学上不可行。
-    固定回归句（原样，一字不改）：`两个人三天全部加起来别超过一千六百块`
-    九条断言：①归一化 1600 CNY；②minor 表示正确（160000）；③party_size=2；④scope=TRIP_TOTAL（不是人均/不是按天）；
-    ⑤持久化后读回同值；⑥AI 入口与直接规划入口看到**同一个** normalized budget；⑦planner 除用户显式 0 外永不受 0；
-    ⑧突变"缺失/解析失败→0"必须被杀；⑨产品丢预算时不得吐出"预算太低"文案。
-    【与 0155 之外的那条已定位机制】我 20:4x 已把一处**捏造 0/1** 写进账本 `block_budget_zero_2046.md`：
-    `app/stay_mobility.py:159-176` 在 `JourneyTripContext` 缺失时凭空写 `party_size=1`、
-    `occupancy_json={"adults":1}`、`stay_budget_amount_minor=0`，并在 `:1774-1780` 把它发给 provider
-    （`models.py:801` server_default="0"；`operations/v9.py:1137` 也写 0）。
-    ⇒ 本单必须**分别**回答两问：(A) 行程总预算 `journeys.budget_amount_minor` 这条链有没有丢；
-    (B) 住/供应商侧 `stay_budget` 这条链是不是 0 的来源。两条都要读数，不许合并成"预算问题"一句。
-  status: DISPATCHED@2026-09-21T21:0x+08 by 494abfd7（与 0157 同 owner，排在 0157 之后）
-
-- id: ORD-0155
-  to: 8c66aa92
-  priority: high
-  if_head: d26933c
-  order: |
-    仲裁已裁 d6b（5760739440 ① + `docs/accessibility_evidence_mapping_policy.md` @ `fdda90d2`）：**选 A——加一层
-    OSM 标签 → canonical accessibility 证据的适配层**，而且**不要**新增 `source_kind=OSM_TAG_INFERRED` 去破坏现有 provenance 枚举。
-    要做：
-    ① 规范化边界：`raw provider record → accessibility evidence adapter → canonical predicates + provenance → hard-feasibility policy`；
-       planner 不许自己 parse OSM tag 字典，前端与 LLM 更不许各自解释原始 tag。
-    ② 谓词级映射（v1 最小集）：`wheelchair=yes` 只证 wheelchair 这一项；`no` = 冲突；`limited` = PARTIAL/LIMITED，
-       **不得偷升**为完全可达；无 tag / 看不懂 = UNKNOWN；`highway=steps` 这类显式冲突继续优先（`ACCESSIBILITY_CONFLICT` 是正例锚点，必须仍绿）。
-       不得从一个 tag 推出无关谓词（无障碍厕所/电梯/盲道/无障碍车位/协助人员都不许被发明）。
-       若将来要定义"wheelchair=yes ⇒ 无台阶入口"这类更宽关系，必须是**服务端版本化策略 + 有测试**，不能由调用方假设。
-    ③ provenance 必填：`source_provider`（用仓库现有 provider 标识）、`source_entity_id`、
-       `source_kind` 按获取方式取**现有**值（live 取 `REMOTE_PROVIDER`，冻结快照取 `OFFLINE_SNAPSHOT`/现有 fixture kind）、
-       用到的 tag key/value、`observed_at/fetched_at`（可知则填）、`fact_quality` 按现有服务端证据策略、
-       以及 derivation 标识 `OSM_ACCESSIBILITY_TAG_MAP_V1`。
-    ④ 冲突优先级：显式冲突/负证据 > 显式正证据 > UNKNOWN；冲突必须在 details/provenance 里看得见，不许折成"缺证据"。
-    验收 = 仲裁文档 §7 的八条（16 地点 × 6 措辞固定 corpus：现有两种形状不变、OSM 正例不再判缺证据、
-    缺失/无关继续 UNKNOWN 且**不得默认变可达**、冲突仍 `ACCESSIBILITY_CONFLICT`、limited 不升级、provenance 齐全、
-    三条突变必红：摘掉映射层⇒正例红；把 UNKNOWN 变 accessible⇒红；忽略冲突优先⇒红）。
-    §8 的屏幕语义也要：UNKNOWN 说"未核实"，不许说"不可进入"；冲突要说清冲突。
-    【顺序】排在 0157/0158/0125 之后；不许为过任何门而放宽 `UNKNOWN != ACCESSIBLE`。
-  status: DISPATCHED@2026-09-21T21:0x+08 by 494abfd7（按 to: 落 C；harness 侧量化见 ORD-0153/0160）
-
-- id: ORD-0156
-  to: 8ccd71d8
-  priority: high
-  if_head: d26933c
-  order: |
-    ORD-0155 的**门**归你（F），别让实现方自己给自己发通行证：
-    ① 把仲裁 `accessibility_evidence_mapping_policy.md` §7 的八条做成常驻门（固定 corpus 16×6，逐条断言 reason_code，
-       断言读**渲染出来的语义**不是内部字段）；
-    ② 三条必红突变写进门的 kill 清单：摘映射层 / UNKNOWN→accessible / 忽略冲突优先级；
-    ③ 加一条**边界不动**门：`UNKNOWN != ACCESSIBLE` 在映射层落地后仍须成立（缺失/无关 tag 的格子不许变绿），
-       这条是防止 A 方案被实现成"看见 OSM 就放行"的唯一保险；
-    ④ 契约侧：把 `OSM_ACCESSIBILITY_TAG_MAP_V1` 写成版本化 derivation 字段进契约（与 `readiness_policy_version` 同族），
-       并核 `source_kind` 只能用**现有**枚举值——仲裁明确不许新增 `OSM_TAG_INFERRED`。
-    红基线就用 ORD-0128 已交的 96/96（`{"tags":{"wheelchair":"yes"}}` 全判缺证据）。
-    【顺序】排在 ORD-0131、ORD-0133 之后；突变与门的写域只在 `backend/tests/**` 与 `contracts/**`，不改产品码。
-  status: DISPATCHED@2026-09-21T21:0x+08 by 494abfd7
-
-- id: ORD-0160
-  to: d291c9dc
-  priority: medium
-  if_head: d26933c
-  order: |
-    ORD-0153 解锁一条：**仲裁已经裁了**（5760739440 ①，A 方案 + `docs/accessibility_evidence_mapping_policy.md` @ `fdda90d2`），
-    你单里"在仲裁裁定之前不得改读法"这句的前置消失——但**读法不在 harness 里改**：
-    映射层落地归 C（ORD-0155）、门归 F（ORD-0156），你只做三件事：
-    ① 把 96 格证据形状表做成 lab 内常驻可复跑门（换 HEAD 能自测、与基线逐项 diff、变了 RC≠0）；
-    ② 扩到非轮椅硬需求（婴幼儿车 / 静音·感官 / 无阶梯路线 / 大件行李 / 开放时间硬要求），给同分母
-      （格数、被挡数、reason_code 分布）⇒ 判这是"无障碍专属"还是"证据形状通用缺陷"；
-    ③ 0155 落地当天**换树重测**并把新增被挡格子的具名 reason_code 贴回来（如果 `limited` 被偷升成 fully accessible，
-      你那 96 格表是唯一能抓到它的量具）。
-    禁令不变：不放宽断言、不加 skip、不许在 harness 侧接受裸 OSM 标签当"已核实"；
-    node_modules 只准真复制（禁 junction/symlink，D-7）用完删并回报剩余；端口只 :850x；
-    不碰 `:4781/:4782/:8693` 与 `_live.db`；全线禁 `demo/reset`（R13）；不调真 AI provider、不读凭据值；
-    不对 github.com 用 git 网络操作。
-  status: DISPATCHED@2026-09-21T21:0x+08 by 494abfd7（覆盖 ORD-0153 里"等裁定"那句）
-
 - id: ORD-0184
   to: 8ccd71d8
   priority: high
@@ -7077,7 +6937,7 @@ evidence: `live_checks/build_r14.log`、`dist_swap_0006.log`、本轮 Playwright
     7. **ORD-0182 验收后这 15 门不许退役**，留在 regression suite 里长期跑。
     另外仲裁明确赞成我补的过渡锚：**ORD-0182 上线后若 `TEMPORARY-CLIENT-FILTER-ORD-0180` 仍在，门应红**（过渡件没拆干净）。
     顺序：ORD-0171/0174 已签收 ⇒ 本单接在后面；ORD-0172 的四个结构化字段门与 ORD-0170 的禁网哨兵同批文件，一并交。
-  status: DISPATCHED@2026-09-21T24:0x+08 by 494abfd7（分工与七条约束逐字来自仲裁 5763459664 ①）
+  status: DELIVERED@2026-09-22 00:13:33 +0800 by 8ccd71d8（七条约束逐条落门与契约：分支 agent/f-ord184-20260921 @ 4092260，未 push；产品码 0 改动。新增三条独立证明元门 —— g0 provenance（拿不到 sha 就写 UNKNOWN，不许猜）、g0b 不复制实现算法（ast 扫 import + 枚举必须是合同字面量，且它自己杀得掉：临时 import 产品过滤函数 ⇒ 该门红）、g0c 过渡锚（TEMPORARY-CLIENT-FILTER-ORD-0180 未实现时报无结论、实现后仍在则红）；g13_meta 与 d10 同形状（共享仪器双向自证）。15 条门今天 5 红 / 11 绿，五条红全 implementation-not-yet 归 C。契约 .11 → .12 新增 division-of-labour-ORD-0184。交付块见下方）｜was: status: DISPATCHED@2026-09-21T24:0x+08 by 494abfd7（分工与七条约束逐字来自仲裁 5763459664 ①）
 
 ### SESSION=494abfd7 · ORD-0171/0172/0174 **签收**：我自己装了一次突变去验 F 的收据——**两条原本绿的门变红**，还发现它加了一道我沒要求过的元门 @本机钟 23:5x
 
@@ -7189,6 +7049,7 @@ evidence: `raw/ord0179_pan.cjs`、`raw/ord0179_pan.json`、`raw/ord0179_recon5.c
     **`status=PRESENTED` 绝不是授权 token**。
     顺序：ORD-0167 > 0158 > **0182** > 0176 > 0175 > 0125（NOT-STARTED）。报数口径照 `test_execution_truth_policy`。
   status: DISPATCHED@2026-09-21T23:4x+08 by 494abfd7（**取代 ORD-0181 的提问形式**；合同与 15 门逐条来自仲裁 5763138225，我只做了转录与本地字节校验）
+  note@F@2026-09-22 00:13:33 +0800: 门已按 ORD-0184 七条补齐并**常驻不退役**（`4092260`）。今天在 `git archive 4092260` 导出树、`CNX_UNDER_TEST_SHA=4092260` 下实读 **5 failed / 11 passed**：g1_2/g1_3/g5_5/g6_6/g8_8 五条红，全部 implementation-not-yet（两条端点仍是无条件 select）。三条 §8 突变先记 NOT_MEASURABLE_RED_BASE。C 的 delivery SHA 一出现，我用 `CNX_UNDER_TEST_SHA=<C 的 sha>` 在同一份 archive 上重跑并报并排读数。**未改产品码、未动本单 status。**
   note@F@2026-09-22 00:06:58 +0800: 门已由车道 F 先站住（`98ef789` 的 `backend/tests/test_qoder_plan_replan_status_filter.py`，15 条验收逐条成门，核心判据=抓真 SQL 读 WHERE 有没有 status 谓词）。写门时实读 `app/main.py:4627` / `:9512` 都还是无条件 `select` ⇒ 门上 6 条具名红（g1_2/g1_3/g5_5/g6_6/g8_8 + 突变声明那条），全部 implementation-not-yet。三条 §8 突变先记 NOT_MEASURABLE_RED_BASE（靶子当前为红，按 ORD-0174 ①），**不是** KILLED。**我没有改任何产品码，也没动本单的 status。**
 
 - id: ORD-0181
@@ -10496,6 +10357,57 @@ status: `DONE`（三单一批交；`ORD-0170` 的成对基线按你 ⑥ 的口�
 status: `DONE`（ORD-0174 的 ① 元门全线化 + ORD-0182 出门雏形；ORD-0182 实现归 C，门上 6 条红是 implementation-not-yet）
 evidence: `98ef789`（分支 `agent/f-ord182-20260921`，未 push）+ `_qoder_f_run/verify_98ef789`（收集复验导出树）+ 仪器与日志同前
 evidence: `ff8e118`（分支 `agent/f-ord171-20260921`，未 push）+ `_qoder_f_run/{receipts.json, collect2_o170.out, ord170_measure_v2.json, o170_domain_A.log, o170_domain_B.log}` + 仪器 `receipts_o156.py / bake_receipts.py / measure_o170.py / reds.py`（全在仓库外）
+
+### SESSION=8ccd71d8 · ORD-0184 交付 2026-09-22 00:13:33 +0800
+
+**块首六要素（ORD-0171 `validate_report()` 的形状）**
+- (a) `sha` = `4092260`（父 `98ef789`）；`worktree` = `D:/moodle/_qoder_f_o156_20260921`（分支 `agent/f-ord184-20260921`）；权威树我域 0 脏行
+- (b) `interpreter` = `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14）
+- (c) `command` = `CNX_UNDER_TEST_SHA=4092260 python -m pytest tests/test_qoder_plan_replan_status_filter.py -q -p no:cacheprovider`
+- (d) `collection` = `git archive 4092260` 导出树：**1157 tests collected in 4.00s，rc=0，errors=0**
+- (e) `execution` = **5 failed / 11 passed**（该门文件；四门合跑 12 failed / 32 passed）
+- (f) `git_status` = `clean`；下表量均在 `git archive 4092260` 导出树上、`CNX_UNDER_TEST_SHA=4092260` 下跑出
+
+**① 独立证明三条元门（ORD-0184 ③④ + 包工头补的过渡锚）**
+| 门 | 判什么 | 今天 |
+|---|---|---|
+| `test_g0` | **provenance**：这次判的是哪个 sha/树必须能说出来（`CNX_UNDER_TEST_SHA` 或 `git rev-parse`），拿不到就是 `UNKNOWN`、不许猜 | 绿 |
+| `test_g0b` | **不复制实现算法**：`ast` 扫本文件 import，只准拿被测评对象本身；两侧枚举必须是**合同字面量** | 绿，**且杀得掉**（见下） |
+| `test_g0c` | **过渡件拆干净**：`TEMPORARY-CLIENT-FILTER-ORD-0180` 服务端未实现时报"无结论"，一旦行为上真接受过滤就必须消失 | 绿（当前无结论） |
+
+`test_g0b` 的杀证：临时在门里加 `from app.main import list_replans`（=复制实现）⇒ 该门**红**（1 failed）；
+去掉后回到 11 passed。没有这条，"门与实现写得一样错也绿"没人挡 —— 这正是你 ④ 点名要防的。
+
+**② 与 `d10` 同形状的元门（⑥）**：`test_g13_meta` 用共享仪器
+`_qoder_mutation_receipts.baseline_green_violations()` 双向自证：**抓得住**"把已红门当靶子"，
+**放得过**合法声明。今天三条靶子（g1_2 / g5_5 / g8_8）都红 ⇒ 三条如实记 `NOT_MEASURABLE_RED_BASE`，
+不记 KILLED —— 与我在 ORD-0174 里改判后的写法一致。
+
+**③ 15 条门今天的状态**：**5 红 / 11 绿**，五条红全是 `implementation-not-yet`
+（g1_2 单值 / g1_3 多值 / g5_5 plans 单值 / g6_6 plans 多值 / g8_8 非法值 422），归 C 的 ORD-0182。
+写门时两条端点仍是无条件 `select`（实读 `app/main.py:4627 list_plans` / `:9512 list_replans`）。
+核心读数不是响应形状，而是**引擎实际下发的 SQL 的 WHERE 子句**（SQLAlchemy `before_cursor_execute`）——
+响应形状对但过滤在 Python 里做，是最容易被读成"已实现"的那种假绿，我把这条写进契约 `proxy-hazard`。
+
+**④ 常驻不退役（⑦）**已写进模块 docstring 与契约；这 15 条会跟着 regression suite 长期跑。
+**我没有为了让门绿去碰任何产品码**（写域只有 `backend/tests/**` + `contracts/**`），
+也没有替 C 认领它没交付的东西 —— C 的 delivery SHA 一出现，我就用 `CNX_UNDER_TEST_SHA=<C 的 sha>`
+在 `git archive` 上重跑并把两份读数并排报给你。
+
+**又栽一次同一族（今晚第四次）**：`test_g0b` 的枚举断言第一版没锚行首，`PLAN_STATES` 命中了
+`REPLAN_STATES` 里的同名子串 ⇒ 门自己红了。改成 `^` 锚定。四次是 `errors=0` / `1 passed` 行首空格 /
+SQL 整条子串 / 这次未锚行首 —— 全是"子串当记号"。
+
+**契约**：`0.94-annex.11 → .12`，纯增补回验：**删除键 0、变化的既有叶子只有 `/info/version`、
+新增 11 叶子、`paths` 仍 `{}`、0 CRLF**。新增段 `division-of-labour-ORD-0184`（七条约束逐条 + 过渡锚 +
+假绿警示）。提交前先过收集门：工作树 `1157 collected in 1.97s`、导出树 `4.00s`，都 rc=0 / 0 error。
+
+**说明一句口径**：你 23:5x 那条 `ACCEPTED-1-verified-2-format-checked` 我收下了 —— 本单我只对
+**自己亲跑过**的东西写"实测"，`test_g0b` 的杀证、5/11 的分母、收集尾行都是实读；C 交付时的
+并排复算我会照同一条规矩写清哪半是我跑的、哪半只核了格式。
+
+status: `DONE`（ORD-0184 的门与契约半；ORD-0182 实现归 C，门上 5 条红是 implementation-not-yet）
+evidence: `4092260`（分支 `agent/f-ord184-20260921`，未 push）+ `_qoder_f_run/verify_4092260`（带 provenance 的复算导出树）
 
 CLAIMED: ORD-0149 by 8ccd71d8（车道 F · 契约/门）@20:44（date 实读 20:44:08 +0800 · 权威树 tip 实测 `b2becb5` · 写域 = `contracts/**` + 新建测试文件；**产品码我自己不动**（本单第二件明写实现归 C）· 不 skip/xfail · 不打真网络（live 部分只做"没有 live 证据就必须红"的门，真 live 由 C 的 canary profile 跑） · 不占 :4781/:4782/:8693/:8781 与 _preview.db/_live.db · 自己的 detached 副本 + own `_run*.db` · 解释器 D:/moodle/CityNexus/.venv 3.12.14，不加 --timeout，AI/provider 凭据 unset
 ### SESSION=8ccd71d8 · ORD-0149 交付 @2026-09-21 21:09（date 实读 21:09:48 +0800）
