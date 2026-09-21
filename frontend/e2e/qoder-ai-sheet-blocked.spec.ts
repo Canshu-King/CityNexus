@@ -332,3 +332,156 @@ test("ord0107-ai-sheet-names-why-it-could-not-plan — 排不出来必须说得�
     "utf-8",
   );
 });
+
+/* ------------------------------------------- ORD-0104 ①: an example is about this trip or it is absent.
+ *
+ * The sheet used to show two hardcoded Xiamen itineraries on every city's screen -- placeholder and
+ * chips -- which is the screen stating facts it never learned.  Two arms: the real fixture (a city this
+ * server has no places for, so nothing may be suggested) and a stub that hands back two of the
+ * journey's own city's place names (so the suggestion must be about those).
+ */
+const FOREIGN_FACTS = ["厦门", "鼓浪屿", "环岛路", "沙茶面", "Xiamen", "Gulangyu"];
+
+test("ord0104-ai-sheet-examples-follow-the-destination — 例子要么跟这趟走，要么没有", async ({
+  page,
+}) => {
+  test.setTimeout(300_000);
+  const NODE = "ord0104-ai-sheet-examples-follow-the-destination";
+  const seeded = await readScene(page);
+  const journeyId = String(seeded.journey_id ?? "");
+  const cityCode = String(
+    ((await (await page.request.get(`/api/v1/journeys/${journeyId}`)).json()) as {
+      city_code?: string;
+    }).city_code ?? "",
+  );
+
+  const arms: Record<string, unknown> = {};
+  for (const [key, names] of [
+    ["real", null],
+    ["two-places", ["海河游船码头", "天津之眼"]],
+  ] as const) {
+    await page.unroute("**/api/v1/places?city_code=*");
+    let stubHits = 0;
+    const seen: string[] = [];
+    page.on("request", (request) => {
+      if (request.url().includes("/api/v1/places")) seen.push(request.url());
+    });
+    if (names) {
+      await page.route("**/api/v1/places?city_code=*", async (route) => {
+        stubHits += 1;
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(
+            names.map((name, index) => ({ id: `place-${index}`, name })),
+          ),
+        });
+      });
+    }
+    await openHubWithJourney(page, journeyId, "zh-CN");
+    await page.getByTestId("hub-plan-with-ai").click();
+    const sheet = page.getByTestId("plan-ai-sheet");
+    await expect(
+      sheet,
+      node(NODE, `${key}: the AI sheet did not open`),
+    ).toBeVisible({ timeout: 15_000 });
+    const chips = page.locator('[data-testid="plan-ai-examples"] button');
+    /* The suggestions come from an async read that starts when the sheet mounts.  Counting them at
+     first paint is a race the isolated run wins and the full chain loses -- measured, when this arm
+     read 0 chips in the chain and 2 on its own.  Wait for the count to settle instead. */
+    /* Wait for the read to land before counting anything: `data-examples-state` says "reading" until
+       the request answers, so an arm cannot pass by being measured too early. */
+    await expect
+      .poll(() => page.getByTestId("plan-ai-examples").getAttribute("data-examples-state"), {
+        timeout: 15_000,
+        intervals: [200],
+        message: node(NODE, `${key}: the sheet never finished reading this city's places, so a count of ${names ? 2 : 0} would prove nothing`),
+      })
+      .not.toBe("reading");
+    const count = await chips.count();
+    const chipTexts: string[] = [];
+    for (let index = 0; index < count; index += 1) {
+      chipTexts.push(clean(await chips.nth(index).innerText()));
+    }
+    let placeholder = "";
+    await expect
+      .poll(
+        async () => {
+          placeholder =
+            (await page.getByTestId("plan-ai-input").getAttribute("placeholder")) ?? "";
+          return placeholder;
+        },
+        {
+          timeout: 15_000,
+          intervals: [250],
+          message: node(NODE, `${key}: the input never got a placeholder to read`),
+        },
+      )
+      .not.toBe("");
+    const shown = `${chipTexts.join(" ")} ${placeholder}`;
+    for (const foreign of FOREIGN_FACTS) {
+      expect(
+        shown.includes(foreign),
+        node(NODE, `${key}: another city's concrete fact (${JSON.stringify(foreign)}) is on this screen for ${JSON.stringify(cityCode)}: ${JSON.stringify(shown)}`),
+      ).toBe(false);
+    }
+    if (names) {
+      expect(
+        count,
+        node(NODE, `${key}: the city has two catalogued places and the sheet offered ${count} suggestions (stub served ${stubHits} times; requests seen: ${JSON.stringify(seen)})`),
+      ).toBe(2);
+      for (const chip of chipTexts) {
+        expect(
+          names.some((name) => chip.includes(name)),
+          node(NODE, `${key}: a suggestion names no place this city actually has: ${JSON.stringify(chip)}`),
+        ).toBe(true);
+      }
+      expect(
+        names.some((name) => placeholder.includes(name)),
+        node(NODE, `${key}: the placeholder is not built from this city's places: ${JSON.stringify(placeholder)}`),
+      ).toBe(true);
+    } else {
+      expect(
+        count,
+        node(NODE, `${key}: with ${JSON.stringify(cityCode)} answering no places the sheet still invented a suggestion: ${JSON.stringify(chipTexts)}`),
+      ).toBe(0);
+      expect(
+        placeholder,
+        node(NODE, `${key}: no places to name, so the placeholder must stay destination-neutral: ${JSON.stringify(placeholder)}`),
+      ).toContain("用你自己的话说");
+    }
+    await sheet.screenshot({
+      path: evidencePath(`ui-overnight/ai-sheet-examples-${key}.png`),
+    });
+    arms[key] = { cityCode, chipCount: count, chipTexts, placeholder };
+    await page.getByTestId("plan-ai-dismiss").click();
+    /* The next arm registers its own stub *before* the sheet mounts, so the sheet has to be gone
+       first -- an arm that inherits the previous arm's open sheet silently reads the previous arm's
+       data.  Measured: that is exactly how `two-places` came back with 0 suggestions. */
+    await expect
+      .poll(() => page.getByTestId("plan-ai-sheet").count(), {
+        timeout: 10_000,
+        intervals: [200],
+        message: node(NODE, `${key}: the sheet stayed open, so the next arm would not be its own measurement`),
+      })
+      .toBe(0);
+  }
+  await page.unroute("**/api/v1/places?city_code=*");
+
+  writeFileSync(
+    evidencePath("ui-overnight/ord0104-ai-sheet-examples.json"),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        order: "ORD-0104 residual 1",
+        node: NODE,
+        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
+        forbiddenFacts: FOREIGN_FACTS,
+        arms,
+      },
+      null,
+      2,
+    ) + "\n",
+    "utf-8",
+  );
+});

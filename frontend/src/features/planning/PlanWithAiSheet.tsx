@@ -34,16 +34,41 @@ const PHASES: { key: PhaseKey; zh: string; en: string }[] = [
   },
 ];
 
-const EXAMPLES = [
-  {
-    zh: "我和朋友两个人去厦门，想轻松一点，想去鼓浪屿、环岛路，想吃沙茶面和海鲜，不想太赶，也想找性价比高的酒店。",
-    en: "Two of us in Xiamen, relaxed pace, Gulangyu and the Ring Road, local seafood, and a good-value hotel.",
-  },
-  {
-    zh: "带爸妈去厦门三天，不要走太多路，下午要有休息时间，酒店要靠近地铁。",
-    en: "Three days in Xiamen with my parents, not much walking, an afternoon rest, hotel near the metro.",
-  },
-];
+/*
+ * ORD-0104 ①: an example has to be about *this* trip, or there is no example.
+ *
+ * What used to sit here were two hardcoded Xiamen itineraries ("我和朋友两个人去厦门…鼓浪屿、环岛路、
+ * 沙茶面"), shown as the placeholder and as two chips -- so a traveller on a Tianjin or Beijing trip
+ * was handed another city's concrete facts as their own suggestion.  That is the same class of defect
+ * as a fabricated progress bar: the screen states something it did not learn.
+ *
+ * Now the sentences are built from place names the server actually returned for this journey's city,
+ * and when it returns fewer than two there is nothing to show -- an absent example is honest, an
+ * invented one is not.
+ */
+const NEUTRAL_PLACEHOLDER = {
+  zh: "用你自己的话说：这趟想怎么玩、想吃什么、哪儿一定要去。",
+  en: "In your own words: how you want this trip to go, what to eat, what you must not miss.",
+};
+
+function examplesFor(
+  placeNames: string[],
+  zh: boolean,
+): Array<{ zh: string; en: string }> {
+  const picked = placeNames.filter((name) => name.trim().length > 0).slice(0, 2);
+  if (picked.length < 2) return [];
+  const [first, second] = picked;
+  return [
+    {
+      zh: `我想去${first}和${second}，节奏轻松一点，再找点当地吃的。`,
+      en: `I would like to fit in ${first} and ${second} at an easy pace, with somewhere local to eat.`,
+    },
+    {
+      zh: `${first}排在下午，${second}放在傍晚，别排太满。`,
+      en: `Put ${first} in the afternoon and ${second} in the early evening, and leave the rest open.`,
+    },
+  ];
+}
 
 /**
  * The server's own names for "why there is nothing to plan with", and the one next step each of them
@@ -278,6 +303,13 @@ export function PlanWithAiSheet({
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
   const [text, setText] = useState("");
+  /* The destination's own words, from the same read the fallback uses.  Read once when the sheet
+     opens; a failure leaves `[]`, which means "no examples", not "use the old ones". */
+  const [placeNames, setPlaceNames] = useState<string[]>([]);
+  /* Whether the read that decides the suggestions has answered at all.  Without it the area under the
+     input means "this city has nothing to suggest" and "we are still looking" at once, and a traveller
+     watching suggestions appear a second later has no way to tell which happened. */
+  const [namesRead, setNamesRead] = useState(false);
   const [busy, setBusy] = useState(false);
   const [phase, setPhase] = useState<PhaseKey | null>(null);
   const [elapsed, setElapsed] = useState(0);
@@ -306,6 +338,39 @@ export function PlanWithAiSheet({
 
   /* Closing the sheet must not leave a request running that nobody can see or stop. */
   useEffect(() => () => abortRef.current?.abort(), []);
+
+  /* ORD-0104 ①: the examples are read from this journey's own city.  A non-2xx or a short list leaves
+     the list empty, and empty means "show no examples" -- the fallback is silence, not the old Xiamen
+     sentences. */
+  useEffect(() => {
+    let stale = false;
+    const controller = new AbortController();
+    void fetch(`/api/v1/places?city_code=${encodeURIComponent(cityCode ?? "")}`, {
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body) => {
+        if (stale) return;
+        setNamesRead(true);
+        if (!Array.isArray(body)) return;
+        setPlaceNames(
+          body
+            .map((item: { name?: string }) => (typeof item?.name === "string" ? item.name : ""))
+            .filter((name: string) => name.trim().length > 0)
+            .slice(0, 2),
+        );
+      })
+      .catch(() => {
+        /* aborted or unreachable: nothing to suggest, which is the honest state -- and it is settled,
+           not pending. */
+        if (!stale) setNamesRead(true);
+      });
+    return () => {
+      stale = true;
+      controller.abort();
+    };
+  }, [cityCode]);
 
   useEffect(() => {
     let stale = false;
@@ -588,6 +653,7 @@ export function PlanWithAiSheet({
   };
 
   const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null;
+  const examples = examplesFor(placeNames, zh);
   const here = phase ? PHASES.findIndex((item) => item.key === phase) : -1;
   const currentPhase = here >= 0 ? PHASES[here] : null;
   const phaseLabel = currentPhase
@@ -623,12 +689,27 @@ export function PlanWithAiSheet({
             value={text}
             disabled={busy}
             onChange={(event) => setText(event.target.value)}
-            placeholder={zh ? EXAMPLES[0].zh : EXAMPLES[0].en}
+            placeholder={
+              examples.length
+                ? zh
+                  ? examples[0].zh
+                  : examples[0].en
+                : zh
+                  ? NEUTRAL_PLACEHOLDER.zh
+                  : NEUTRAL_PLACEHOLDER.en
+            }
           />
         </label>
 
-        <div className="plan-ai-examples">
-          {EXAMPLES.map((item) => (
+        {/* No chips at all when this city has fewer than two catalogued places -- an absent
+            suggestion is honest, an invented one is a claim about a trip we know nothing about. */}
+        <div
+          className="plan-ai-examples"
+          data-testid="plan-ai-examples"
+          data-example-count={examples.length}
+          data-examples-state={!namesRead ? "reading" : examples.length ? "suggested" : "none"}
+        >
+          {examples.map((item) => (
             <button
               key={item.en}
               type="button"
