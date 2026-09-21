@@ -2815,9 +2815,10 @@ def destination_capability(query: str, session: Session = Depends(get_session)):
     """What the backend can actually plan for a destination - and which intent is missing.
 
     ORD-0095-1 §2: this is a server-side policy result, never a place count and never a screen's
-    guess.  `capability` is the structural axis (READY / HYDRATABLE / UNAVAILABLE); an observation
-    about *right now* is a separate field that is simply absent when nothing looked, because a
-    fabricated `OK` would be a measurement nobody took.
+    guess.  `capability` is the structural axis (READY / HYDRATABLE / NOT_ANSWERED / UNAVAILABLE -
+    the third added by the arbiter's answer "one" on 2026-09-22, always paired with
+    `retryable: true`); an observation about *right now* is a separate field that is simply absent
+    when nothing looked, because a fabricated `OK` would be a measurement nobody took.
     """
 
     return evaluate_capability(session, query)

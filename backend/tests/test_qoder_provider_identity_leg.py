@@ -245,8 +245,12 @@ def test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural(seeded,
     _answer(monkeypatch, raise_with=httpx.ConnectTimeout("connect timed out"))
     body = _capability(RAW_COUNTY)
     assert body["destination_state"] == "RUNTIME_FAILURE", body["destination_state"]
-    assert body["capability"] == "HYDRATABLE", (
-        f"期望：连不上不是结构结论，目的地仍是可准备的；实际：{body['capability']}"
+    assert body["capability"] == capability_module.NOT_ANSWERED, (
+        f"期望：连不上是『问了没人答』（仲裁『选项一』新格），既不是结构结论 UNAVAILABLE，"
+        f"也不是邀请准备的 HYDRATABLE；实际：{body['capability']}"
+    )
+    assert body["recommended_action"] == capability_module.ACTION_RETRY_LATER, (
+        f"期望：动作指向稍后重试，而不是开始准备；实际：{body['recommended_action']}"
     )
     assert body["reason_code"] == capability_module.REASON_RESOLVER_UNAVAILABLE, body["reason_code"]
     assert body["reason_code"] in capability_module.TRANSIENT_REASONS
@@ -665,3 +669,79 @@ def test_g16_the_four_attribution_fields_arrive_together_or_not_at_all(
     ok = _capability(RAW_COUNTY)
     present = [key for key in fields if key in ok]
     assert present == [], f"期望：可归因的事没发生就不要摆出归因；实际出现了 {present}"
+
+
+def test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_string(
+    seeded, monkeypatch
+) -> None:
+    """仲裁"选项一"要的是"这一格与 retryable 联动"，不是多一个看起来像状态的词。
+
+    所以这条门同时钉两面：① 凡是"问了、没人答得出"的三种成因（传输超时 / 我们自己那条腿起不来 /
+    答了但证据不合格）都必须落 `NOT_ANSWERED` + `retryable=true` + 动作 `RETRY_LATER`，并且
+    `provider_status` 必须在场（不在场就等于声称"看过"而没看过）；② **压根没去问**的时候
+    （seam=off）绝不能出现这一格 —— 那仍是结构答案 `UNAVAILABLE` + 缺席的观察，也就是本文件一直
+    拒绝 UNKNOWN 的那半条理由。
+    """
+
+    assert capability_module.CAPABILITY_STATES == (
+        "READY",
+        "HYDRATABLE",
+        "NOT_ANSWERED",
+        "UNAVAILABLE",
+    ), capability_module.CAPABILITY_STATES
+
+    sites = {
+        "传输超时": lambda stage: _answer(stage, raise_with=httpx.ConnectTimeout("timed out")),
+        "我们自己的腿起不来": _break_the_seam,
+        "答了但证据不合格": lambda stage: _answer(
+            stage, features=(_raw_feature(_county_props(osm_type="Z")),)
+        ),
+    }
+    # Each cause is armed inside its own patch context: leaving the exploding seam in place would
+    # make every later check in this door measure the wrong thing (it did, on the first run).
+    for label, arm in sites.items():
+        with monkeypatch.context() as stage:
+            _enable(stage)
+            arm(stage)
+            body = _capability(RAW_COUNTY)
+        assert body["destination_state"] == "RUNTIME_FAILURE", f"{label}: {body['destination_state']}"
+        assert body["capability"] == capability_module.NOT_ANSWERED, (
+            f"{label}：期望落新格；实际 {body['capability']} / {body['destination_resolution']}"
+        )
+        assert body["retryable"] is True, f"{label}：新格必须与 retryable 联动；实际 {body['retryable']}"
+        assert body["recommended_action"] == capability_module.ACTION_RETRY_LATER, (
+            f"{label}：动作不许再邀请准备；实际 {body['recommended_action']}"
+        )
+        assert body.get("provider_status"), f"{label}：说了没人答，却没留下看过的痕迹"
+        assert body["canonical_destination_id"] is None, f"{label}：新格不许带身份；实际 {body}"
+
+    # 反过来：没去问就不许冒充"问了没人答"。这一半是老的"不许有 UNKNOWN"还在守的东西。
+    monkeypatch.delenv("CITYNEXUS_ANYWHERE_RESOLVER", raising=False)
+    never_asked = _capability("zzxqvw-不存在的地方")
+    assert never_asked["capability"] == "UNAVAILABLE", never_asked["capability"]
+    assert never_asked["destination_state"] == "NO_MATCH", never_asked["destination_state"]
+    assert never_asked["retryable"] is False, never_asked["retryable"]
+    assert not never_asked.get("provider_status"), (
+        f"期望：没看过就没有观察；实际：{never_asked.get('provider_status')}"
+    )
+
+    # 答了并且说了话的两格，也不许滑进新格。（上面为了测“没去问”把 seam 关了，这里要重新开）
+    _enable(monkeypatch)
+    _answer(
+        monkeypatch,
+        features=(_feature(osm_id=3289208, osm_type="R", name=RAW_COUNTY, extent=COUNTY_EXTENT),),
+    )
+    resolved = _capability(RAW_COUNTY)
+    assert resolved["capability"] == "HYDRATABLE", resolved["capability"]
+    _answer(monkeypatch, features=())
+    empty = _capability(RAW_COUNTY)
+    assert empty["capability"] == "UNAVAILABLE", empty["capability"]
+
+
+def _break_the_seam(monkeypatch) -> None:
+    """Arm the third runtime cause: our own seam cannot even be constructed."""
+
+    def explode():
+        raise RuntimeError("receipt: the resolver leg cannot be built")
+
+    monkeypatch.setattr(capability_module, "_provider_identity_resolver", explode)

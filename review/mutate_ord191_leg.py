@@ -112,6 +112,33 @@ ADOPTED_OBSERVATION = """        observation=dict(
 """
 
 
+# The fourth capability cell (arbiter `5765903862`, answer "one") gets its own sabotages, because a
+# state that nothing can falsify is exactly the "fourth string that looks like a state" the ruling
+# was written to prevent.  M16 is the important one: it claims the cell for a question nobody
+# attempted, which is the old UNKNOWN wearing the new word.
+RUNTIME_VERDICT = """        verdict, reason, action = (
+            NOT_ANSWERED,
+            REASON_RESOLVER_UNAVAILABLE,
+            ACTION_RETRY_LATER,
+        )
+"""
+RUNTIME_VERDICT_OLD = """        verdict, reason, action = (
+            "HYDRATABLE",
+            REASON_RESOLVER_UNAVAILABLE,
+            ACTION_START_HYDRATION,
+        )
+"""
+STRUCTURAL_VERDICT = (
+    '        verdict, reason, action = "UNAVAILABLE", '
+    "REASON_NO_CANONICAL_IDENTITY, ACTION_CHOOSE_ANOTHER_DESTINATION\n"
+)
+STRUCTURAL_VERDICT_LAUNDERED = (
+    "        verdict, reason, action = NOT_ANSWERED, REASON_NO_CANONICAL_IDENTITY, "
+    "ACTION_RETRY_LATER\n"
+)
+RETRYABLE_PAIR = '        "retryable": bool(resolution.retryable) or verdict == NOT_ANSWERED,\n'
+RETRYABLE_PAIR_OFF = '        "retryable": bool(resolution.retryable),\n'
+
 MUTANTS = [
     {
         "name": "M6 the resolver call is un-wired (gate 1 must fall back to red)",
@@ -169,6 +196,35 @@ MUTANTS = [
         "gates": ["test_g13_a_successful_answer_carries_the_same_attempt_evidence_a_failure_does"],
         "old": ADOPTED_OBSERVATION,
         "new": '        observation={"status": status, "stage": "resolving_destination"},\n',
+    },
+    {
+        "name": "M15 the un-answered question goes back to HYDRATABLE + START_HYDRATION",
+        "gates": [
+            "test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural",
+            "test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_string",
+        ],
+        "old": RUNTIME_VERDICT,
+        "new": RUNTIME_VERDICT_OLD,
+    },
+    {
+        "name": "M16 a question nobody attempted borrows the new cell",
+        "gates": ["test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_string"],
+        "old": STRUCTURAL_VERDICT,
+        "new": STRUCTURAL_VERDICT_LAUNDERED,
+    },
+    {
+        "name": "M17 the retryable half of the pair is removed",
+        "gates": ["test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_string"],
+        "old": RETRYABLE_PAIR,
+        "new": RETRYABLE_PAIR_OFF,
+        # MEASURED SURVIVOR, kept on purpose rather than deleted to make the count clean: all three
+        # runtime sites already carry `retryable=True` from the resolver, so taking the explicit
+        # `or verdict == NOT_ANSWERED` away changes no reading.  What that proves is that the
+        # invariant is enforced twice - once upstream and once in the pairing - and the door that
+        # owns it is g17, which reddens the moment any runtime site stops being retryable.  The
+        # pairing stays because the ruling asks for the cell and the flag to be linked here, not at
+        # three places upstream that a later site could forget.
+        "expected_verdict": "SURVIVED",
     },
 ]
 
@@ -355,7 +411,9 @@ def main() -> int:
         CAPABILITY.write_bytes(original)
         restored = _sha(CAPABILITY.read_bytes()) == _sha(original)
         verdict = "KILLED" if code != 0 else "SURVIVED"
-        problems += 0 if verdict == "KILLED" else 1
+        expected = mutant.get("expected_verdict")
+        as_declared = verdict == (expected or "KILLED")
+        problems += 0 if (as_declared and restored) else 1
         report["mutants"].append(
             {
                 "name": mutant["name"],
@@ -363,10 +421,15 @@ def main() -> int:
                 "anchor_hits": mutant["anchor_hits"],
                 "returncode": code,
                 "verdict": verdict,
+                "expected_verdict": expected,
+                "as_declared": as_declared,
                 "restored": restored,
             }
         )
-        print(f"{verdict:9s} {mutant['name']} rc={code} restored={restored}")
+        print(
+            f"{verdict:9s} {mutant['name']} rc={code} restored={restored}"
+            + (f" (declared expected {expected})" if expected else "")
+        )
         if not restored:
             print("FATAL: byte restore failed")
             return 1
