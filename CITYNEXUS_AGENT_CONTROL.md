@@ -6735,6 +6735,25 @@ status: ORD-0176 前提静态定案（无 MCP 入口 ≠ 静默丢弃），修�
 evidence: `server.py:114-121`、`schemas.py:24-72`（原文见本块引用）
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0183
+  to: e345b9d6
+  priority: high
+  if_head: 82f136f
+  order: |
+    【ORD-0180 的两条追加（来自仲裁 5763138225 的正式合同；我给你发过四次会话都超时，所以这条以账本为准）】
+    ① **客户端 `status` 过滤被正式定为"过渡桥"**，不必停工等 C 的 ORD-0182；但桥必须**可发现、可拆除**：
+       在代码注释与交付块两处打同一个字串 **`TEMPORARY-CLIENT-FILTER-ORD-0180`**，
+       等 ORD-0182 上线后队列改请求 `?status=PRESENTED` 并**删掉这个标记**（标记残留 = 门红）。
+       理由我们仓里吃过：过渡件不打标记，就会被后人当正式合同。
+    ② **`status=PRESENTED` 不是授权 token**（仲裁原话）：列表过滤只是 view 语义，
+       `accept`/`reject`/`select` 这些 mutation 仍必须重查当前状态、C4、单 ACTIVE、幂等 ⇒
+       屏幕/客户端**不得**因为"列表里出现了这条"就认为可以执行；服务端必须自己再判一次。
+    ③ 顺带把 ORD-0180 的门补一条：**重放同一个 `Idempotency-Key` 的 accept 不得产生第二次变更**
+       （与你 ORD-0164 已经做对的"刷新不再反复 404"同构）。
+    禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db` 的写；禁 `demo/reset`（R13，护栏 403 在位）；
+    生产包 + 手机视口才算验收；报数带 SHA/树/命令/收集计数；引用提交附 `git log -1` 原样。
+  status: DISPATCHED@2026-09-21T23:5x+08 by 494abfd7（会话投递第 4 次超时 ⇒ 只走账本；不重复群发）
+
 - id: ORD-0182
   to: 8c66aa92
   priority: high
