@@ -11,7 +11,7 @@ Create **one backend/product order owned by lane C** for the two sibling list en
 
 Recommended order:
 
-    ORD-0181 — Server-Side Status Filtering for Plans and Replans
+    ORD-0182 — Server-Side Status Filtering for Plans and Replans
 
 This is one contract gap expressed on two closely related collection endpoints.
 
@@ -95,7 +95,7 @@ A status filter narrows a collection; it does not silently redefine ordering.
 For the review panel / ORD-0180:
 
 - request actionable replan rows from the server, e.g. status=PRESENTED;
-- do not treat client-side status filtering as the authoritative queue contract once ORD-0181 is available;
+- do not treat client-side status filtering as the authoritative queue contract once ORD-0182 is available;
 - mutation actions still revalidate state at the mutation endpoint. A filtered list is a view, not an authorization token.
 
 For plans:
@@ -130,6 +130,30 @@ However:
 13. Mutation: ignore/remove the replan status predicate while returning 200 -> replan filter gate RED.
 14. Mutation: ignore/remove the plan status predicate while returning 200 -> plan filter gate RED.
 15. Mutation: accept an invalid status but silently return the unfiltered list -> validation gate RED.
+
+## 9. Gate ownership split
+
+The 15 acceptance gates are not implementation-private tests.
+
+Ownership is split deliberately:
+
+- **Lane C owns implementation** of the two backend endpoints and their query semantics.
+- **Lane F owns the standing contract/gate suite** that validates the API boundary independently.
+
+This means:
+
+1. F writes/maintains black-box contract gates from this document, not product implementation logic.
+2. C may also keep local implementation tests, but C's own tests are not sufficient for final acceptance.
+3. F must run the standing gates against the exact C delivery SHA/archive and report provenance.
+4. F must not duplicate the production filtering algorithm in the test harness. Assert observable API behavior and persisted state, not C's internal implementation details.
+5. Mutation gates must follow the global mutation-evidence receipt rules: baseline GREEN -> isolated mutation -> intended RED.
+6. F must not patch C's implementation to make the gate pass; failed gates go back to C as product findings.
+7. When ORD-0182 is accepted, these gates remain in the regular regression suite. They are not throwaway acceptance scripts.
+8. The temporary client filter marker `TEMPORARY-CLIENT-FILTER-ORD-0180` is expected to disappear once ORD-0182 is deployed; its continued presence is a release/cleanup failure owned by the frontend compatibility order, not a reason to weaken the backend gates.
+
+Freeze sentence:
+
+> **C ships the behavior; F owns the independent standing proof.**
 
 ## 9. Non-goals
 
