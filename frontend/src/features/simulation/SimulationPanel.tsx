@@ -809,10 +809,71 @@ export function SimulationPanel({
 }
 
 /**
- * The one line the shell mounts.  Open by default -- an entry a traveller has to hunt for is not
- * an entry -- and collapsible with the same `<details>` shape the wizard's Advanced settings
- * already uses, so this adds no new overlay machinery to reason about.
+ * The one surface the shell mounts: a ball, and nothing else until it is pressed.
+ *
+ * It replaced an inline `<details>` block that was either a wall of eleven rows over the page or
+ * invisible, which is what the traveller meant by "别把屏幕挡住".  Closed at rest is therefore the
+ * default at every width, and the declaration the stage owes the reader lives in the ball's
+ * accessible name and in the window's first line rather than on a collapsed summary.
  */
+/**
+ * Where the bottom of the screen actually is.
+ *
+ * The first version of this widget parked itself at a number copied from the app's reserved band
+ * (`124px + safe-area`), and the full suite answered with two reds: on the wizard the ball covered the
+ * sticky primary CTA by 12-16px, and it sat inside the Copilot pill's resting band, so the pill yielded
+ * to it and -- being a permanent fixture rather than content passing by -- never came back.
+ * So the clearance is measured off the fixed chrome itself: the widget rests above the highest top edge
+ * it can find, and re-reads it when the layout changes.
+ */
+function useBottomChromeClearance(active: boolean) {
+  const [bottom, setBottom] = useState<number | null>(null);
+  useEffect(() => {
+    if (!active || typeof window === "undefined") return;
+    const measure = () => {
+      const selectors = [".v8-mobile-nav", ".cn-copilot-dock", ".trial-sticky-cta"];
+      let top = Number.POSITIVE_INFINITY;
+      for (const selector of selectors) {
+        for (const element of document.querySelectorAll(selector)) {
+          const box = element.getBoundingClientRect();
+          if (box.width < 1 || box.height < 1) continue;
+          top = Math.min(top, box.top);
+        }
+      }
+      if (!Number.isFinite(top)) return setBottom(null);
+      setBottom(Math.max(12, window.innerHeight - top + 12));
+    };
+    let timer = 0;
+    const schedule = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(measure, 220);
+    };
+    measure();
+    /* The CTA on the journey-creation screen mounts *after* this widget, and no scroll or resize
+       follows, so listening to the window alone left the ball 8px inside it. A mutation observer is
+       what notices the chrome arriving. */
+    const observed =
+      typeof MutationObserver === "function"
+        ? new MutationObserver(schedule)
+        : null;
+    observed?.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ["class", "style", "hidden"],
+    });
+    window.addEventListener("resize", schedule);
+    window.addEventListener("scroll", schedule, { passive: true });
+    return () => {
+      window.clearTimeout(timer);
+      observed?.disconnect();
+      window.removeEventListener("resize", schedule);
+      window.removeEventListener("scroll", schedule);
+    };
+  }, [active]);
+  return bottom;
+}
+
 export function SimulationEntry({
   viewingJourneyId = null,
   onStageChanged = null,
@@ -830,6 +891,9 @@ export function SimulationEntry({
   /* Unlike the old <details>, this disclosure has no default action fighting React: the click that
      opens it is the only thing that writes the flag. */
   const [open, setOpen] = useState<boolean>(() => defaultOpen ?? false);
+  /* Where the fixed bottom chrome ends, so the ball never rests on the nav, the Copilot pill or the
+     wizard's sticky primary CTA. */
+  const floatBottom = useBottomChromeClearance(true);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   /* Tap outside closes. Listening only while open keeps the ball's own click from being eaten by
@@ -888,6 +952,7 @@ export function SimulationEntry({
       data-testid="sim-float"
       data-open={open ? "true" : "false"}
       data-scene-phase={scene.phase}
+      style={floatBottom === null ? undefined : { bottom: `${floatBottom}px` }}
       /* Measured: with the handler only on the panel, Escape pressed right after opening the ball did
          nothing, because focus stayed on the ball, which is a sibling of the window. On this wrapper
          both positions reach it. */
