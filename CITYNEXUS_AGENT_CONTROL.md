@@ -6661,7 +6661,7 @@ GET  /api/v1/commitments/{commitment_id}              ← 存在
 status: 更正我 23:1x 的总线断言（入口存在，缺的是接线与筛选）；给 D 的 ORD-0180 按"复用已有端点"重写；甲方案的成本口径同步更正
 evidence: `main.py:9531` 路由原文、HEAD 路由清单 grep 结果、`probe-ord0164-review-routes.py` 的命名假设说明
 
-## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x · tip 实测 `82f136f`；走 `:4782` 只读浏览 + 我自有 chromium 独立 profile + hasTouch 390×844；读数只来自 `map.getCenter()/getZoom()` 与 `documentElement.scrollTop`，**不发任何写请求、不触发 demo/reset**、不碰 :4781/:8693/_live.db；量具脚本只写证据目录）
 - id: ORD-0180
   to: e345b9d6
   priority: high
@@ -6861,7 +6861,7 @@ evidence: `main.py:9531` 路由原文、HEAD 路由清单 grep 结果、`probe-o
        这条由你落到 `contracts/**` 的门/清单里，与 ORD-0168 的收集门同一批文件；**C 的 ORD-0155/0167 实现不动**。
     ⑤ ORD-0170 仍按 `17 → N` 交，但 `g8a` 那份未提交的 `_qoder_egress_guard.py` 记得先修 `AsyncHTTPTransport.handle_request` → `handle_async_request`
        并跑 `--collect-only`，否则 conftest 一挂整套又变 0 条执行（今晚 ORD-0166 重演）。
-  status: DISPATCHED@2026-09-21T22:5x+08 by 494abfd7（仲裁 5762378500 ②③ 的逐条落地；12 门 6红/6绿 那半我已独立复跑并签）
+  status: DELIVERED@2026-09-21 23:35:26 +0800 by 8ccd71d8（按仲裁 5762378500 ①②③④ 改判：上一轮点在人已红门上的两条如实改记 NOT_MEASURABLE_RED_BASE（留在文件里不删）；新立 GREEN sentinel test_d9（6 种「确实不知道」的输入 × 6 措辞，含 corpus 外取值）；三条突变靶子全部改报当前为绿的门（M1/M3→d3b、M2→d9），12 项收据 + 四栏汇总 KILLED=3 / SURVIVED=0 / NOT_MEASURABLE_RED_BASE=2 / INVALID=0；量在 git archive 5338353 导出 + 本门覆盖，逐条 sha256 还原一致，读数落 _qoder_f_run/receipts.json。交付块见下方）｜was: status: DISPATCHED@2026-09-21T22:5x+08 by 494abfd7（仲裁 5762378500 ②③ 的逐条落地；12 门 6红/6绿 那半我已独立复跑并签）
 
 - id: ORD-0172
   to: 8ccd71d8
@@ -6894,7 +6894,7 @@ evidence: `main.py:9531` 路由原文、HEAD 路由清单 grep 结果、`probe-o
     交付：`contracts/**` + `backend/tests/**`（不碰产品码，实现分别归 C/D）；一条 R14 元门——**故意把 404 折成 offline，门必须红**。
     【边界（仲裁自己加的，别再扩）】R14 只绑"会创建/转换/分类/传播/展示/恢复故障或状态原因"的 ORD；
     **不要求无关功能单平白新增 reason code**。不要把 R14 当万能牌去卡别人的 scope。
-  status: DISPATCHED@2026-09-21T22:4x+08 by 494abfd7（四层归属 + 生产可发现字段是我转录，仲裁 5762175466 为准）
+  status: DELIVERED@2026-09-21 23:35:26 +0800 by 8ccd71d8（R14 落成独立契约 contracts/r14-causal-attribution.yaml （R14_CAUSAL_ATTRIBUTION_V1：四层归属/强证据优先级/分类表/四个生产可发现字段的枚举+必填/六条 NOT ACCEPTED/产品侧落点登记）+ 门 backend/tests/test_qoder_r14_attribution.py：1/2/3/4a 绿（含把 404 折成 offline 必须红的元门，其 baseline 为绿），4b 是 implementation-not-yet 常驻红门（产品侧分类器 frontend/src/lib/failureAttribution.ts 此刻两处都未提交 ⇒ 归 D / ORD-0169+0130，落地自动升级）。产品码 0 改动）｜was: status: DISPATCHED@2026-09-21T22:4x+08 by 494abfd7（四层归属 + 生产可发现字段是我转录，仲裁 5762175466 为准）
 
 - id: ORD-0171
   to: 8ccd71d8
@@ -6920,7 +6920,7 @@ evidence: `main.py:9531` 路由原文、HEAD 路由清单 grep 结果、`probe-o
     ORD-0170 的根因哨兵门（`g8a`）是 ② 的第一个真实用户：它红 ⇒ 那批红同源；它被改绿而其余仍红 ⇒ 有人放宽断言。
     禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`（R13）；解释器 3.12.14；凭据全清；
     账本只追加自己那块（`io.open(..., newline="\n")` + "拿掉我的块必须逐字节还原"证明）。
-  status: DISPATCHED@2026-09-21T22:1x+08 by 494abfd7（与 ORD-0168 同一批交付；全线报数格式自本单起生效）
+  status: DELIVERED@2026-09-21 23:35:26 +0800 by 8ccd71d8（与 ORD-0168/0174/0172 同批：六要素 + 收集失败⇒UNKNOWN + TARGETED 不许外推，落成纯函数判据 test_4~test_6 并 5 种形状自证；分支 agent/f-ord171-20260921 @ ff8e118，未 push；产品码 0 改动。自证里我自己一处误判：拿 `errors=0` 当 'error' 子串 ⇒ 已改成数真实错误条数）｜was: status: DISPATCHED@2026-09-21T22:1x+08 by 494abfd7（与 ORD-0168 同一批交付；全线报数格式自本单起生效）
 
 - id: ORD-0170
   to: 8ccd71d8
@@ -9836,6 +9836,54 @@ evidence: `7bb77da` + `D:/moodle/_qoder_f_run/{full_FULL.json, full_FULL_run1.lo
 
 status: `DONE`（ORD-0170；ORD-0168 的基线在带边界后由本节 13 条接替，两节都留着 —— 那是两个不同事实）
 evidence: `5338353` + `D:/moodle/_qoder_f_run/{ord170_measure_v2.json, o170_as_is.log, o170_guarded.log, o170_domain_A.log, o170_domain_B.log, collect2_o170 输出见 measure 日志}` + 仪器 `measure_o170.py / collect2_o170.py / reds.py`（全在仓库外，只指自己副本）
+
+
+### SESSION=8ccd71d8 · ORD-0171 + ORD-0174 + ORD-0172 交付 2026-09-21 23:35:26 +0800
+
+**块首六要素（ORD-0171 ① 的格式，我自己的报告先按它写）**
+- (a) `sha` = `ff8e118`（父 `5338353`）；`worktree` = `D:/moodle/_qoder_f_o156_20260921`（分支 `agent/f-ord171-20260921`）；权威树 `_qoder_integration_20260919` 我域 0 脏行
+- (b) `interpreter` = `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14，无 `--timeout`）
+- (c) `command` = `python -m pytest <files> -q -p no:cacheprovider`
+- (d) `collection` = `git archive ff8e118` 导出树：**1140 tests collected in 3.40s，rc=0，errors=0**（工作树同命令 1.75s / 1140）
+- (e) `execution`（三个门文件合跑）= **7 failed / 20 passed，4.70 s**，逐条见下
+- (f) `git_status` = 工作树 `clean`（提交后）；下面所有量都用 `git archive <sha>` 的导出树，**内容恒等于该 commit 的 tracked 文件**
+
+**ORD-0171（报数真值成门）** —— `test_qoder_anywhere_collection_gate.py` 增 test_4/test_5/test_6（**全绿**）
+- 六要素做成纯函数 `validate_report()`，用 5 种合成形状自证：合法 archive 导出 / 收集坏 / **空 git_status 拒收** / 定向跑必须标 `TARGETED` / 脏树可以报但必须贴 `git status --short` 原文。
+- 收集失败 ⇒ `failed/passed/skipped/red_set` 全 `UNKNOWN`，且注记里**不许出现数字**（`= UNKNOWN` 对，`= 17` 就是产物）。仲裁那句"不要拿旧 SHA、脏树、targeted run 或别的 lane 的数字去补这个 UNKNOWN"照抄进契约。
+- 附件新增义务 `reporting-six-elements-and-unknown-propagation`（含"突变树只是收集坏了 ⇒ 该次量具 INVALID"）。
+- **自证里我自己的一个错**：第一版用 `"error" in collection` 判断收集好坏，而健康读数是 `(rc=0, errors=0)` —— 里面也有 "error"，把一条合法报告误判成收集失败。改成数**真实错误条数**（`\b(\d+)\s+errors?\b` + `Interrupted:`）。这条误判写进门注释了：判据自己先可判，才谈得上判别人。
+
+**ORD-0174（突变收据 + 只能从绿门里点名）** —— 你说得对，我上一轮那个"三条全杀"不能签
+- 你在固定快照上那个实验（`if not facts: return VERIFIED` ⇒ 依旧 6 failed / 6 passed）**我复现成立**，原因就是靶子本来在红。按 ① 改判：那两条点在人已红门（d2/d5/d3）上的突变**如实记 `NOT_MEASURABLE_RED_BASE`**，留在文件里不删（它们是这条规矩的可读证据）。
+- 按 ② 新立 **GREEN sentinel `test_d9`**：6 种"确实不知道"的输入 × 6 措辞 = 36 格，纯评估器 + 闸口渲染两层都不许读成已核实。其中三种（`wheelchair=maybe` / `wheelchair=""` / `step_free=unknown`）**不在 96 格 corpus 里**，是运行时才会见到的取值 —— 免得门只测自己写的那张表。**d5 的主张一个字没放宽**，它仍管非法 `source_kind` 那一格。
+- 三条突变靶子全部改报**当前为绿**的门，每条 12 项收据（`base_source / base_sha / base_tree_kind / target_nodeid / baseline_target_result / mutation_file / mutation_line_or_symbol / mutation_summary / mutation_collect_result / mutated_target_result / mutated_failure_excerpt / cleanup_or_restore_result`）：
+
+| 突变 | 文件:符号 | 靶子（基线绿） | 实测 |
+|---|---|---|---|
+| M1 摘掉映射层（tags 投影 ⇒ `{}`） | `app/capabilities.py::evaluate_accessibility_requirement` | `test_d3b` | base `1 passed` → mutated `1 failed`，摘录："期望闸口对显式冲突渲染 ACCESSIBILITY_CONFLICT…实际 `osm_steps_and_count/STEP_FREE_REQUIRED -> ['ACCESSIBILITY_UNVERIFIED:…','NEEDS_LIVE_EVIDENCE:…']`" |
+| M2 UNKNOWN ⇒ 已核实 | 同上，兜底 `return accessibility_state(facts)` | **`test_d9`** | base `1 passed` → mutated `1 failed`，摘录："6 种「确实不知道」的输入 × 6 措辞…实际 **24 格被洗白**" |
+| M3 冲突优先级倒置 | 同上，`STEP_FREE_REQUIRED` 分支前插 `wheelchair ⇒ VERIFIED` | `test_d3b` | base `1 passed` → mutated `1 failed`，摘录："`positive_with_conflict/STEP_FREE_REQUIRED -> []`" |
+
+- 四栏汇总：**`KILLED = 3 / SURVIVED = 0 / NOT_MEASURABLE_RED_BASE = 2 / INVALID_MUTATION_EVIDENCE = 0`**。
+- 量法：`git archive 5338353` 干净导出 + 本门覆盖（**不改共享树**），逐条突变后 `sha256(app/capabilities.py)` 还原一致；读数落 `_qoder_f_run/receipts.json`。另加 `test_d10`：把"靶子原本是绿的"从一句话变成一次**执行**。
+- **D10 我自己也栽了一次**：第一版用 `" 1 passed" in stdout` 判绿，而 `-q` 的汇总行是 `1 passed in 0.28s`（行首没空格）⇒ 把两条绿门误判成红。判据改成 rc + 尾部形状，误判写进注释。
+- 附件新增义务 `mutation-evidence-must-name-a-green-target`。
+
+**ORD-0172（R14 硬验收）** —— 契约 + 门，产品码 0 改动（实现归 C/D）
+- 新增**独立契约** `contracts/r14-causal-attribution.yaml`（`R14_CAUSAL_ATTRIBUTION_V1`）：四层归属（R14-I/R/S/P，各带 owner_ord 与 forbidden）、强证据优先级（`navigator.onLine` 单独不算证据）、**分类表**（stale-journey-404 ⇒ `JOURNEY_NOT_FOUND`/`RESOURCE_STATE`/不可重试/选行程 + 必须清除失效引用；5xx ⇒ SERVER_ERROR/RUNTIME；传输失败 ⇒ NETWORK_UNAVAILABLE/TRANSPORT/只读缓存；401 ⇒ UNAUTHORIZED）、**四个生产可发现字段的枚举+必填**（`attribution_reason` / `evidence_kind` / `http_status` / `source_layer`，`http_status` 在 TRANSPORT 证据时必须是 null 不许填 0）、六条 NOT ACCEPTED、产品侧落点登记。
+- 新增门 `backend/tests/test_qoder_r14_attribution.py`：**1/2/3/4a 绿** —— 四字段枚举自洽、分类表逐行自洽（失效资源不许给 retry、真离线不许让用户去选行程）、以及你点名的**元门**：拿同一份 404 证据，把分类表改成折成 offline ⇒ 判据必须红（元门 baseline 是绿的，所以"杀没杀"看得出来）。
+- **4b 是常驻红门（implementation-not-yet）**：产品侧分类器 `frontend/src/lib/failureAttribution.ts` 此刻**两处都未提交**（权威树 `git status` = `??`，我分支上没有）⇒ 红因是"实现还没到"，归 **D / ORD-0169+0130**，落地那天自动从存在性断言升级成真值检查。**我没有删门也没有放宽断言**换绿。
+- 边界照仲裁：R14 只绑会创建/转换/分类/传播/展示/恢复故障的 ORD，不要求无关功能**平白新增 reason code** —— 我把这句写进契约的 `acceptance_binding`。
+
+**契约**：`openapi-anywhere-draft.yaml` `0.94-annex.9 → .10`，纯增补回验：**删除键 0、变化的既有叶子只有 `/info/version`、新增 17 叶子、`paths` 仍 `{}`、0 CRLF**；R14 单独成文件（不塞附件）是因为它跨层、与端点无关，塞进去会跟着 annex 版本号漂。
+
+**你那条反例我照做了**：R14 门读的是**真状态** —— 契约解析后的对象、参考分类器返回值、`evaluate_feasibility().failures` 里真正会上屏的 token、子进程 rc 与汇总尾部；**没有一条**读 CSS / 属性 / 截图。附件条款里也写明了"读的是哪个字段"（`reads-real-state`）。
+
+**还没动的两件（等你一句话）**：① `ORD-0151 ⑤` / `ORD-0150` 仍挂着已作废的"14 条子集"口径（归 C，我只报未标）；② 要不要把"每条红必须在 `x-red-doors` 登记过"本身机械化（约 40 行，写域在我这边）。
+
+status: `DONE`（三单一批交；`ORD-0170` 的成对基线按你 ⑥ 的口径引用：**无边界 17 / 带边界 13**，"批次里消失的红≠绿"）
+evidence: `ff8e118`（分支 `agent/f-ord171-20260921`，未 push）+ `_qoder_f_run/{receipts.json, collect2_o170.out, ord170_measure_v2.json, o170_domain_A.log, o170_domain_B.log}` + 仪器 `receipts_o156.py / bake_receipts.py / measure_o170.py / reds.py`（全在仓库外）
 
 CLAIMED: ORD-0149 by 8ccd71d8（车道 F · 契约/门）@20:44（date 实读 20:44:08 +0800 · 权威树 tip 实测 `b2becb5` · 写域 = `contracts/**` + 新建测试文件；**产品码我自己不动**（本单第二件明写实现归 C）· 不 skip/xfail · 不打真网络（live 部分只做"没有 live 证据就必须红"的门，真 live 由 C 的 canary profile 跑） · 不占 :4781/:4782/:8693/:8781 与 _preview.db/_live.db · 自己的 detached 副本 + own `_run*.db` · 解释器 D:/moodle/CityNexus/.venv 3.12.14，不加 --timeout，AI/provider 凭据 unset
 ### SESSION=8ccd71d8 · ORD-0149 交付 @2026-09-21 21:09（date 实读 21:09:48 +0800）
