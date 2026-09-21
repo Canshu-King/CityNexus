@@ -18,6 +18,7 @@ with the corresponding failure before:
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 import threading
 import time
@@ -607,7 +608,14 @@ def test_an_unresolved_query_never_gets_a_confident_looking_identity(seeded) -> 
 
     with SessionLocal() as session:
         body = capability_module.evaluate_capability(session, UNSEEN_COUNTY)
-    assert body["canonical_destination_id"].startswith("unresolved:"), body["canonical_destination_id"]
+    assert body["canonical_destination_id"].startswith("pending:"), body["canonical_destination_id"]
+    assert UNSEEN_COUNTY in body["canonical_destination_id"], (
+        f"期望：未解析的身份要看得出问的是什么（R10 不许用哈希冒充 canonical）；实际："
+        f"{body['canonical_destination_id']}"
+    )
+    assert not re.search(r"[0-9a-f]{12,}", body["canonical_destination_id"]), (
+        f"期望：身份里不得出现不可逆摘要；实际：{body['canonical_destination_id']}"
+    )
     assert body["destination_resolution"] == "unresolved", body["destination_resolution"]
     assert body["capability"] == "UNAVAILABLE", body["capability"]
     assert body["reason_code"] not in capability_module.TRANSIENT_REASONS, body["reason_code"]

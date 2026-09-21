@@ -114,7 +114,10 @@ ACTION_ACCEPT_PARTIAL_PLAN = "ACCEPT_PARTIAL_PLAN"
 # A destination this build cannot name.  The id says so in its own text: an unresolved query must
 # not acquire a confident-looking identifier, because that identifier would then be what a
 # journey, a fingerprint and a catalog all quietly believe in.
-UNRESOLVED_PREFIX = "unresolved:"
+# R10 (arbiter): an unresolvable query must not be given a digest for an identity.  The
+# placeholder carries the question itself, so it is readable, reversible and honest about
+# being unresolved - and `pending` is the word a caller can branch on.
+PENDING_PREFIX = "pending:"
 
 _TRAVELER_FACING_LABELS = {
     "CNX-DEMO": ("demo", "演示", "模拟", "cnx-demo"),
@@ -172,7 +175,7 @@ def resolve_destination(session: Session, query: str) -> DestinationResolution:
     if not normalised:
         return DestinationResolution(
             query=str(query or ""),
-            canonical_destination_id=f"{UNRESOLVED_PREFIX}empty",
+            canonical_destination_id=f"{PENDING_PREFIX}(blank)",
             city_code=None,
             method="none",
             reason_code=REASON_NO_CANONICAL_IDENTITY,
@@ -214,10 +217,9 @@ def resolve_destination(session: Session, query: str) -> DestinationResolution:
             )
 
     # 3. nothing in this process can name it.
-    digest = hashlib.sha1(normalised.encode("utf-8")).hexdigest()[:16]
     return DestinationResolution(
         query=str(query),
-        canonical_destination_id=f"{UNRESOLVED_PREFIX}{digest}",
+        canonical_destination_id=f"{PENDING_PREFIX}{normalised}",
         city_code=None,
         method="unresolved",
         reason_code=REASON_NO_CANONICAL_IDENTITY,

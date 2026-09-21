@@ -445,7 +445,7 @@ def _survey(session: Session, canonical_destination_id: str) -> dict[str, Any]:
     """
 
     city_code = (
-        None if canonical_destination_id.startswith("unresolved:") else canonical_destination_id
+        None if canonical_destination_id.startswith("pending:") else canonical_destination_id
     )
     held = (
         int(
