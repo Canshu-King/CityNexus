@@ -350,6 +350,67 @@ Required proof sequence:
    - the retry does not create a second fake destination identity or duplicate canonical catalog
      identity.
 
+### Mobility-evidence milestone classification
+
+For the overnight Gongshan/Yunhe closure, a truthful chain may stop before SELECTABLE when the
+first real blocker is mobility evidence that is not hard-eligible.
+
+The milestone is considered materially achieved at that boundary only when all upstream proof is
+real and the blocker is named from the candidate's **actual used edges**.
+
+Allowed milestone outcome:
+
+    HYDRATABLE
+    blocker = MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE
+
+This is acceptable evidence of chain progress. It is NOT a SELECTABLE result.
+
+Hard rules:
+
+1. Do not enable live routing on the user's main preview merely to manufacture SELECTABLE.
+2. Do not upgrade EXPLICIT_FROZEN_FIXTURE / SYNTHETIC_DEFAULT / UNKNOWN evidence into hard-eligible
+   evidence for convenience.
+3. Aggregate repository counts such as "184/240 rows are SYNTHETIC_DEFAULT" are diagnostic context,
+   not proof that the current candidate is blocked. The E2E runner must inventory the exact edges
+   that the candidate actually uses.
+4. If all actual used edges are hard-eligible despite background synthetic rows, the candidate may
+   continue toward SELECTABLE.
+5. If any required used edge is not hard-eligible, stop honestly at the named mobility blocker.
+6. A canary-only live Valhalla run may be performed later as additional evidence, but it is not an
+   overnight acceptance prerequisite and must not change preview/live-user configuration.
+
+Required mobility blocker receipt:
+
+    candidate_id
+    used_edge_count
+    used_edge_ids
+    per_edge_source_kind
+    per_edge_provider_or_fixture
+    per_edge_fact_quality
+    per_edge_hard_eligible
+    hard_eligible_count
+    frozen_fixture_count
+    synthetic_default_count
+    unknown_count
+    first_blocking_edge_or_edges
+    final_product_state
+    blocker_reason
+
+The following upstream E2E facts remain hard requirements even when the final outcome is the named
+mobility gap:
+
+- pre-state proves no pre-recorded/golden destination/catalog satisfaction;
+- provider observations and provenance are retained;
+- provider extent/bbox is used when available rather than silently replacing it with a fixed 5 km
+  circle;
+- warm/retry path proves a real read/cache gate and is not merely another cold hydration;
+- canonical identity and provider-backed catalog truth reach the shared planner without pending/raw
+  identity substitution.
+
+Freeze sentence:
+
+> **Background synthetic evidence predicts risk; only the actual used-edge inventory proves the blocker. Stop truthfully at the first real gap, never fabricate SELECTABLE.**
+
 ### Negative companion case
 
 Run one structurally unresolvable input such as the standing nonsense-string regression.
