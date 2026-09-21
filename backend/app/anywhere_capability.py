@@ -60,10 +60,15 @@ MISSING = "MISSING"
 # Which intent each stored category serves.  This mapping *is* the policy: a category that is not
 # listed here serves no intent, which is a decision with a version number, not an oversight.
 INTENT_CATEGORIES: dict[str, tuple[str, ...]] = {
-    "attractions": ("museum", "heritage", "landmark", "park", "gallery", "attraction", "viewpoint"),
-    "food": ("food", "restaurant", "cafe", "street_food"),
-    "nightlife": ("nightlife", "bar", "club", "live_music"),
-    "lodging": ("lodging", "hotel", "hostel", "apartment"),
+    "attractions": (
+        "museum", "heritage", "landmark", "park", "gallery", "attraction", "attractions",
+        "viewpoint", "tourist_attraction", "sights", "monument", "temple", "garden", "景点", "景区",
+    ),
+    "food": ("food", "foods", "restaurant", "restaurants", "cafe", "street_food", "fast_food",
+             "bakery", "美食", "餐饮"),
+    "nightlife": ("nightlife", "night_life", "bar", "pub", "club", "live_music", "酒馆", "夜生活"),
+    "lodging": ("lodging", "hotel", "hostel", "apartment", "guest_house", "motel", "resort",
+                "accommodation", "住宿", "酒店"),
     # mobility and booking are not place categories; they are measured below.
     "mobility": (),
     "booking": (),
@@ -219,24 +224,43 @@ def resolve_destination(session: Session, query: str) -> DestinationResolution:
     )
 
 
+def _classify_source(provider_key: object, evidence: object) -> str:
+    """One rule for one class of source, shared by places and services.
+
+    The list is closed on purpose: an unrecognised provider is reported as the *weakest* thing it
+    could honestly be (`OFFLINE_SNAPSHOT`), because inventing `REMOTE_PROVIDER` for a row nobody
+    can account for is how a fixture ends up on screen as live data.
+    """
+
+    key = str(provider_key or "")
+    mark = str(evidence or "")
+    if key == "mock-city":
+        return "GOLDEN_FIXTURE"
+    if key in {"citynexus-demo", "mock-city-demo"}:
+        return "SIMULATED"
+    if mark in {"SEALED_REAL_REPLAY", "REPLAY"}:
+        return "REPLAY"
+    if mark == "OFFLINE_SNAPSHOT":
+        return "OFFLINE_SNAPSHOT"
+    if key in {"overpass", "photon", "amap", "valhalla"} or mark == "LIVE_PROVIDER":
+        return "REMOTE_PROVIDER"
+    return "OFFLINE_SNAPSHOT"
+
+
 def _source_kind(place: Place) -> str:
     """Classify a row by where it came from - and never strengthen that class."""
 
-    provider_key = str(place.provider_key or "")
     metadata = _loads(getattr(place, "metadata_json", None))
-    evidence = str((metadata.get("provenance") or "") if isinstance(metadata, dict) else "")
-    if provider_key == "mock-city":
-        return "GOLDEN_FIXTURE"
-    if provider_key in {"citynexus-demo", "mock-city-demo"}:
-        return "SIMULATED"
-    if evidence in {"SEALED_REAL_REPLAY", "REPLAY"}:
-        return "REPLAY"
-    if evidence == "OFFLINE_SNAPSHOT":
-        return "OFFLINE_SNAPSHOT"
-    if provider_key in {"overpass", "photon", "amap", "valhalla"} or evidence == "LIVE_PROVIDER":
-        return "REMOTE_PROVIDER"
-    # Unknown origin is reported as unknown-but-weak, never promoted to a stronger class.
-    return "OFFLINE_SNAPSHOT"
+    evidence = metadata.get("provenance") if isinstance(metadata, dict) else ""
+    return _classify_source(getattr(place, "provider_key", ""), evidence)
+
+
+def _service_source_kind(service: CityService) -> str:
+    """The same classification for a bookable service row: `FIXTURE` is not `OSM_FETCHED`."""
+
+    metadata = _loads(getattr(service, "metadata_json", None))
+    evidence = metadata.get("provenance") if isinstance(metadata, dict) else ""
+    return _classify_source(getattr(service, "provider_key", ""), evidence)
 
 
 def _loads(blob: Any) -> dict[str, Any]:
@@ -315,6 +339,14 @@ def coverage_detail(session: Session, city_code: str | None) -> dict[str, dict[s
     by_category: dict[str, list[Place]] = {}
     for place in places:
         by_category.setdefault(str(place.category or ""), []).append(place)
+    places_by_id = {str(place.id): place for place in places}
+    # A bookable service is about a place, so its source can be named: the service row first,
+    # and the linked place if the service itself carries no provider of its own.
+    places_by_service = {
+        str(service.id): places_by_id.get(str(service.place_id))
+        for service in services
+        if service.place_id
+    }
 
     ages = [
         age
@@ -324,6 +356,7 @@ def coverage_detail(session: Session, city_code: str | None) -> dict[str, dict[s
     stale = bool(places) and all(age > STALE_AFTER_DAYS for age in ages)
 
     for key in COVERAGE_KEYS:
+        contributors: list[Place] = []
         if key == "mobility":
             covered, total = _mobility_evidence(session, city_code)
             ratio = (covered / total) if total else 0.0
@@ -333,21 +366,37 @@ def coverage_detail(session: Session, city_code: str | None) -> dict[str, dict[s
                 if total and ratio >= MOBILITY_EXPLICIT_RATIO_READY and covered >= MIN_READY_CANDIDATES[key]
                 else (PARTIAL if covered else MISSING)
             )
+            # The legs are computed between catalogue places, so the places they connect are the
+            # source of this axis - and a fixture leg is not an OSM leg.
+            contributors = places
         elif key == "booking":
             bookable = [
                 item for item in services if str(item.service_type) in BOOKABLE_SERVICE_TYPES
             ]
             count = len(bookable)
             state = _state_for(count, MIN_READY_CANDIDATES[key])
+            contributors = [
+                places_by_service.get(str(item.id))
+                for item in bookable
+                if places_by_service.get(str(item.id)) is not None
+            ]
+            if contributors:
+                kinds = sorted({_service_source_kind(item) for item in bookable})
+            else:
+                contributors = []
+                kinds = []
         else:
             rows = [row for cat in INTENT_CATEGORIES[key] for row in by_category.get(cat, [])]
             count = len(rows)
             state = _state_for(count, MIN_READY_CANDIDATES[key])
+            contributors = rows
+        if key != "booking":
+            kinds = sorted({_source_kind(place) for place in contributors})
         detail[key] = {
             "state": state,
             "candidate_count": count,
             "min_ready": MIN_READY_CANDIDATES[key],
-            "source_kinds": sorted({_source_kind(place) for place in places}) if places else [],
+            "source_kinds": kinds,
             "stale": bool(stale),
         }
     return detail
@@ -359,6 +408,28 @@ def _state_for(count: int, minimum: int) -> str:
     if count >= minimum:
         return READY
     return PARTIAL
+
+
+def unclassified_material(session: Session, city_code: str | None) -> dict[str, int]:
+    """Categories the readiness policy does not name, and how many rows each holds.
+
+    Without this, a destination whose rows carry an unexpected category string reads as "zero
+    candidates" in every intent - the same shape as an empty catalog, which is how a capability
+    answer can lie while every number in it is technically true.  The map is reported, not merged
+    into `coverage`: the six keys are what the contract promises, and a seventh would break that.
+    """
+
+    if not city_code:
+        return {}
+    named = {category for bucket in INTENT_CATEGORIES.values() for category in bucket}
+    counts: dict[str, int] = {}
+    for category in session.scalars(
+        select(Place.category).where(Place.city_code == city_code)
+    ).all():
+        key = str(category or "")
+        if key and key not in named:
+            counts[key] = counts.get(key, 0) + 1
+    return counts
 
 
 def capability_fingerprint(canonical_destination_id: str) -> str:
@@ -447,6 +518,9 @@ def evaluate_capability(
         "coverage": flat,
         "coverage_detail": detail,
         "missing_categories": missing,
+        # Named rather than swallowed: if a category exists but no intent names it, a reader must
+        # be able to see that we have material we failed to classify, not infer an empty catalog.
+        "unclassified_categories": unclassified_material(session, resolution.city_code),
         "place_count": place_count,
         "provenance": {
             "source_kinds": source_kinds,

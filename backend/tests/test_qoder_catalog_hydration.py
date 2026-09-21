@@ -435,6 +435,45 @@ def test_an_observation_is_either_one_of_the_four_or_absent(seeded) -> None:
 # --------------------------------------------------------------------------------------
 # the readiness policy is a policy, not an arithmetic accident
 # --------------------------------------------------------------------------------------
+def test_a_city_the_catalog_already_holds_is_counted_from_that_catalog(seeded) -> None:
+    """The defect the Commander measured: a seeded city answering six times MISSING.
+
+    Beijing has eight rows in `places` on a seeded stage, so an answer of `candidate_count=0` on
+    every axis is not "this city has nothing" - it is the evaluator failing to read the material
+    it was given, and a front-end that trusts it would offer to hydrate a city that is already
+    plannable (§13/G2 asks the opposite: the existing journey stays plannable).
+    """
+
+    listed = client.get("/api/v1/places", params={"city_code": "CN-BEIJING"}).json()
+    assert len(listed) == 8, (
+        f"SETUP 失败：种子里北京不是 8 行，那这条门什么都证明不了；实际 {len(listed)} 行"
+    )
+    body = client.get(CAPABILITY, params={"query": "CN-BEIJING"}).json()
+    assert body["destination_resolution"] == "catalog", body["destination_resolution"]
+    assert body["coverage_detail"]["attractions"]["candidate_count"] > 0, body["coverage_detail"]
+    assert body["coverage"]["attractions"] == "READY", body["coverage"]
+    assert body["capability"] != "UNAVAILABLE", (
+        f"期望：库里就有的城市不得被答成『结构性不可用』；实际：{body['capability']} / "
+        f"{body['reason_code']} / {body['coverage']}"
+    )
+    assert body["provenance"]["source_kinds"] == ["GOLDEN_FIXTURE"], body["provenance"]
+    # §7: each axis names the class that filled it, so a fixture answer can never be read as a
+    # fetched one - and an axis with nothing behind it says so with an empty list, not `OK`.
+    assert body["coverage_detail"]["lodging"]["source_kinds"] == [], body["coverage_detail"]["lodging"]
+
+
+def test_material_the_policy_cannot_name_is_reported_instead_of_counted_as_zero(seeded) -> None:
+    """A category nobody maps must show up, or an unrecognised row reads as an empty catalog."""
+
+    _place("place-strange", "pet_grooming")
+    with SessionLocal() as session:
+        body = capability_module.evaluate_capability(session, STAGE_CITY)
+    assert body["coverage"]["attractions"] == "MISSING", body["coverage"]
+    assert body["unclassified_categories"] == {"pet_grooming": 1}, body["unclassified_categories"]
+    # Reporting it is not the same as counting it: unclassified material cannot raise an intent.
+    assert body["capability"] != "READY", body["capability"]
+
+
 def test_one_place_in_a_city_cannot_read_as_ready(seeded) -> None:
     """`places.length > 0` is the rule the arbitration forbids by name."""
 
