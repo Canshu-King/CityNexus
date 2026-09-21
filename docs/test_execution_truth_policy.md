@@ -72,6 +72,18 @@ At minimum include:
     execution summary
 
 If the worktree is dirty, include the diff/stat or state that the result is from a dirty tree.
+
+A clean `git archive <sha>` export is a valid alternative to `git status --short` because the
+export contains exactly the tracked tree of that commit and has no `.git` metadata. In that case
+the report must explicitly state:
+
+    source = git archive <exact-sha>
+    git_status = NOT_APPLICABLE_ARCHIVE_EXPORT
+    archive contains tracked files from that commit only
+
+Do not claim an archive export proves anything about untracked/staged/unstaged files from the
+source worktree; it proves the tracked commit tree only.
+
 A result from commit A must not be reported as the baseline of commit B.
 
 ## 5. Partial and targeted runs
