@@ -389,6 +389,43 @@ Freeze sentence:
 
 > **No reachability, no downstream verdict.**
 
-## 16. Freeze sentence
+## 16. Negative-claim field inventory rule
+
+A negative claim such as "field X is absent", "attribute Y is not rendered", "route Z does not
+exist", or "state Q is not present" must include the inventory of identifiers/fields that the
+probe actually observed.
+
+Do not prove absence by querying only the name you expected.
+
+Required evidence shape:
+
+    target_object_or_surface
+    inventory_command_or_method
+    observed_identifiers
+    queried_identifier
+    queried_result
+    negative_claim
+
+Examples:
+
+- DOM attributes: print `getAttributeNames()` (or equivalent) before concluding that an expected
+  attribute family is absent.
+- JSON/object payloads: print/object-enumerate actual keys before concluding a field is missing.
+- route surfaces: enumerate or inspect the authoritative route table before concluding a
+  capability has no endpoint merely because guessed route names returned 404.
+- CSS/layout: inspect the actual computed property set used by the implementation before claiming a
+  visual property is absent based on a guessed property name.
+
+If the inventory shows a semantically equivalent field under a different identifier, the claim is
+not "missing"; it becomes a naming/contract mismatch and must be classified accordingly.
+
+A probe that only reports "lookup of my guessed identifier returned null/404" is insufficient for a
+negative capability/field claim.
+
+Freeze sentence:
+
+> **Negative claims require the field/identifier inventory that was actually read, printed.**
+
+## 17. Freeze sentence
 
 **No collection, no denominator; no denominator, no red/green count.**
