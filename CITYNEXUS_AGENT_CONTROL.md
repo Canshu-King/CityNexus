@@ -190,6 +190,73 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=dc19d662 · ORD-0186 隧道侧只读验收（四条全量）@本机钟 date=00:5x —— ①✅ ②✅ ③**隧道侧 401 不复现（manifest 200 + SW active + 控制台 0 错）** ④✅ 但**含一条要你裁的分叉**
+
+`STATUS: ORD-0186-TUNNEL-VERIFIED-3-PASS-1-BRANCH | 路径：**公网隧道** host `fonts-facilities-hotel-installing.trycloudflare.com`（TLS 443 → cloudflared pid 39764 → `http://127.0.0.1:4782` 鉴权代理），**不是** `:4782` 直连、**不是** dev server | 部署对表：`index-BkEHAbFb.js`（与你 00:2x 说的包名一致）、tip `8ee64ae`、UA `HeadlessChrome/153.0.8010.12`（Windows NT 10.0; Win64; x64）、视口 390×844 + `hasTouch`、Node v24.14.0、Playwright 从 `CityNexus/frontend/node_modules` 载入 | 只读：未点任何创建/接受/重置、未触发 `demo/reset`、未碰 `:4781/:4782/:8693` 的写与 `_live.db`、未新开隧道 | 报告不含账号/口令/cookie 值（隧道只给 host）| evidence `raw/ord0186_tunnel.cjs`、`raw/ord0186_extra.cjs`、`raw/ord0186_offline2.cjs`、`raw/ord0186_tunnel.json`、`raw/ord0186_extra.json`、`raw/ord0186_offline2.json`、`raw/ord0186_readable.txt`、`raw/shots10/`|`
+
+#### ① 失效行程归因 → **通过**（且我这条同时给出了"修好了"的正面证据）
+读的字段：`localStorage["citynexus.v8.journey_id"]`、`document.body.innerText`、`/api/**` 的非 2xx 响应。
+
+```
+播种：死 id ca0f1ed1-485a-4d65-8c19-0087ce5e29fd 写进我自有 profile 的 localStorage
+screen-text（原样）：「连接正常 这台服务器上没有这一趟行程了 这台设备还记得行程 ca0f1ed1…，但服务器明确回答它不存在（HTTP 404）。
+                     这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。 [选一趟行程] [重试] [归因详情]」
+stored_after_load = null                       ← 该键被清空
+says_no_such_journey = true / says_network_unavailable = false / has_picker = true / wizard=0
+刷新第 2 次：stored 仍 null、文案同上、`/api/.../experience` 只报 1 次 404（首轮同样只有 1 次）
+```
+⇒ 「死 id ⇒ 说行程不在（而不是网络不可用）+ 清键 + 选一趟行程在屏」三条全中；而且它**主动把归因说清了**（"服务器明确回答它不存在（HTTP 404）·这不是网络问题"），比我预期好。
+（首轮那条"CN 正在准备城市周末行程…"是加载中转场文案，不是结论；**结论屏在刷新之后**，两次都不再重复撞 404。）
+
+#### ② 单指平移（隧道侧）→ **通过**，读的是 `map.getCenter()` 真值
+读的字段：`map.getCenter().lng/lat`、`map.getZoom()`、`document.scrollingElement.scrollTop`（实例经 React fiber 取，与你 23:2x 那条"别拿 CSS transform"一致）。
+```
+① 画布内单指拖(-170,-130)：
+   before {"scrollTop":0,"camera":{"lng":116.44089999999994,"lat":39.90557686984988,"zoom":9.263232800749604}}
+   after  {"scrollTop":0,"camera":{"lng":116.64681234430111,"lat":39.78468060340791,"zoom":9.263232800749604}}
+   delta  {dlng:+0.20591234, dlat:−0.12089627, dzoom:0, dscrollTop:0}     ⇒ 相机变、页面不动
+② 正文(hero)单指拖(0,-240)：
+   before {"scrollTop":0,  "camera":{lng/lat/zoom 同上}}
+   after  {"scrollTop":225,"camera":{lng/lat/zoom 逐位不变}}
+   delta  {dlng:0, dlat:0, dzoom:0, dscrollTop:+225}                       ⇒ 页面动、相机不动
+```
+⇒ 隧道侧与 `:4782` 侧同结论（数值不同是拖拽起点/幅度不同所致，**不是外推**——这两组是我在隧道上独立跑的）。
+
+#### ③ `manifest.webmanifest` 401 悬案 → **隧道侧 401 不复现；我判"仅控制台噪声"在隧道上不适用，因为这里根本没有噪声**
+读的字段：`/manifest.webmanifest` 与 SW 相关请求的 HTTP 响应码、`navigator.serviceWorker.getRegistrations()`、`console` error 计数、`fetch("/manifest.webmanifest").status`。
+```
+响应：/manifest.webmanifest → 200（唯一一条匹配请求，无 requestfailed）
+console errors: []                        ← 0 条
+fetch('/manifest.webmanifest') → 200，JSON 可解析，name = "CityNexus Live Journey"
+serviceWorker.getRegistrations() → 1 条，scope = https://<tunnel-host>/，active = true
+页面可用性：正文正常（北京之旅 · 3 天 · 2 人 · …），地图渲染，平移可用 ⇒ 功能不受影响
+```
+⇒ **隧道侧没有 401**：manifest 200、SW 注册成功且 active、控制台 0 错。**你在 `:4782` 量到的 2 次 401 我没在隧道上复现**——两条路径的鉴权形态不同（我在 `:4782` 也复现到过 401：无凭据直连返回 401；但**隧道上 Chrome 把 `httpCredentials` 用在了 manifest/SW 请求上**，所以它们都 200）。
+⇒ 按你的判据表：**"有 401 且功能受影响"不成立**；这里是"没有 401、功能正常"⇒ 不需要你为基础设施立单。
+⇒ **UNKNOWN 一条**：我没有量"PWA 能否真的安装"（需要用户手势与安装提示事件，属交互式安装流程，只读约束下我不点）⇒ 安装能力**未测**，只有 manifest 可解析 + SW active 这两条间接信号。
+
+#### ④ 反向（断网 ⇒ 仍须说"连不上服务器"）→ **通过**，但请你看这条分叉
+读的字段：`document.body.innerText`、导航结果、SW/caches 状态。我分两臂量，因为"断网"有两种：
+```
+(a) 浏览器级全断（ctx.setOffline(true) 后 reload）：
+    navigator.serviceWorker.getRegistrations() = 1 但 **controller = false**；caches.keys() = **[]（空）**
+    reload → net::ERR_INTERNET_DISCONNECTED，屏幕 body = ""（全白，什么都读不到）
+    ⇒ 结论：这台部署**没有可用的离线预缓存**，全断时是浏览器白屏，不是应用文案。这条不是 0169 的回归，是 PWA 离线能力本来就缺。
+(b) 应用级断网（文档照常加载，把所有 **/api/** 请求 abort）：
+    屏幕（原样）：「连接 网络不可用 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。
+                  这台设备上还没有可看的离线副本，所以现在没有可显示的内容。请检查网络后重试。 [重试] [归因详情]」
+    says_cannot_connect = true  /  says_journey_missing = false  /  has_retry = true
+```
+⇒ **你要的反向门成立**：真正的传输失败仍然被归成"网络不可用"，**没有被 0169 的修复顺手改成"行程不存在"**。
+⇒ 但 (a) 那一臂要给基础设施看：SW 注册存在却 **controller=false 且 caches 为空** ⇒ 这个 PWA 目前**不提供离线兜底**，全断网只有浏览器白屏。要不要给基础设施立单由你判（我按"只报读数不派单"的规矩不动）。
+
+#### 报告口径与两条仪器说明
+- **本报告所有读数都来自隧道路径**，没有一条从 `:4782` 外推；`:4782` 只用来确认"部署的是哪个包"（`index-BkEHAbFb.js`，与隧道一致）与复现你那条 401 的对照。
+- **凭据处理**：只从本机 `preview_auth.txt`（TAB 分隔）读取并注入 `httpCredentials`；报告与截图里**没有任何账号、口令、cookie 值**；隧道 URL 只写 host。
+- **UNKNOWN 两处**：③ 的"PWA 实际安装/离线启动能力"未测（只读约束下不触发安装流程）；(a) 臂的白屏我给的是 DOM 读数（body 空），没有截图以外的证据可加。
+
+status: ORD-0186 交付（①✅ 死 id 归因正确+清键+选行程在屏；②✅ 隧道侧相机真值移动/页面不动 两条；③隧道侧 manifest 200 + SW active + 0 console error ⇒ 你那条 401 我未复现，判不需要立单；④✅ 真网络失败仍归"网络不可用"；另报一条分叉：全断网时 SW controller=false、caches 为空、浏览器白屏）
+evidence: `D:/moodle/_qoder_redteam_anywhere_20260921/raw/`（ord0186_tunnel.cjs、ord0186_extra.cjs、ord0186_offline2.cjs、ord0186_tunnel.json、ord0186_extra.json、ord0186_offline2.json、ord0186_readable.txt）+ `raw/shots10/A1_dead_id.png`、`B1_canvas_swipe.png`、`E1_offline_after_sw.png`、`F1_full_offline.png`、`F2_api_offline.png`
 
 ### HERMES-REVIVAL-001（9baacb24）@2026-09-22 00:3x —— 按包工头 00:2x 口径补**唯一那张 H0–H10 表**（落数，不重跑）；H10b 改用新措辞，并附 H4–H9 读数与证据路径索引
 
@@ -7019,7 +7086,7 @@ CLAIMED: ORD-0186 by dc19d662（车道 E · 隧道侧只读验收 · 本机钟 d
     没量到的写 UNKNOWN，**不得**从 `:4782` 的读数外推成隧道的。
     禁令：只读浏览；不点任何创建/接受/重置；不碰 `:4781/:4782/:8693` 的写与 `_live.db`；禁 `demo/reset`（R13 护栏 ENFORCED）；
     不新开隧道；解释器/Node 版本照实报；账本只追加自己那块（`newline="\n"` + 逐字节还原证明，插前重测锚点）。
-  status: DISPATCHED@2026-09-22T00:2x+08 by 494abfd7（隧道侧是今晚唯一没人走过的验收路径）
+  status: DELIVERED@2026-09-22T00:5x+08 by dc19d662（隧道侧四条全量：①✅ 死 id →「这台服务器上没有这一趟行程了」+ 键清空 + 选一趟行程在屏，两次加载各只 1 次 404；②✅ getCenter 真值：画布内拖 dlng+0.2059/dlat−0.1209 且 scrollTop 恒 0，正文拖 scrollTop+225 且相机三值不变；③隧道侧 **401 不复现**：manifest 200 + SW active + console 0 错 + 页面功能正常 ⇒ 不需要立单（UNKNOWN：PWA 实际安装能力未测）；④✅ 仅 /api 断 ⇒ 仍说「网络不可用」、未被误判成行程不存在；另报分叉：全断网时 SW controller=false、caches 为空 ⇒ 浏览器白屏。读数在 ## DELIVERIES 的 SESSION=dc19d662 ORD-0186 块）
 
 - id: ORD-0185
   to: 8ccd71d8
@@ -7040,7 +7107,7 @@ CLAIMED: ORD-0186 by dc19d662（车道 E · 隧道侧只读验收 · 本机钟 d
     报数按 ORD-0171 六要素 + `65f1934f` 新增那句：**写"没有 X"之前先打印实际读到的键名清单**；
     突变只认**原绿门变红**（已红基线上的记 `NOT_MEASURABLE_RED_BASE`）。
     顺带更正现场：**tip 已到 `8ee64ae`**（不是 `d26933c`），基线仍成对引用 **无边界 17 / 带边界稳定核 13**。
-  status: DISPATCHED@2026-09-22T00:2x+08 by 494abfd7（§3 裁定落地；两条断言必须分开是这条的要点）
+  status: DELIVERED@2026-09-22 00:35:56 +0800 by 8ccd71d8（枚举与可采性两条独立断言：分支 agent/f-ord185-20260921 @ 16f05b0，未 push；产品码 0 改动。d12 枚举轴绿（同一份证据的命名结论唯一）、d13 可采性轴红（产品侧尚无判定，归 C 的 ORD-0155）、d14 判据承重绿；M4=删掉可采性判定 ⇒ d14 绿→红、**d12 仍绿**（两轴确实独立）、d13 仍红。判据放共享仪器 _qoder_accessibility_admissibility.py，与门分离才杀得掉。四栏 KILLED=4 / SURVIVED=0 / NOT_MEASURABLE_RED_BASE=2 / INVALID=0。自查一处：d12 第一版引用了可采性结论 ⇒ M4 会把它一起带红（两轴被耦合），已改为只主张命名。交付块见下方）｜was: status: DISPATCHED@2026-09-22T00:2x+08 by 494abfd7（§3 裁定落地；两条断言必须分开是这条的要点）｜**ACCEPTED by commander**@00:4x（我复跑 `16f05b0`：d12 绿/d13 红/d14 绿，与自报一致；交叉突变检查提为全线要求）
 
 ### SESSION=494abfd7 · ORD-0169 **签收**（我自建 `8ee64ae` 的包、构建产物与车道报的 bundle 名一致，再在部署后的手机上量了归因）@00:0x
 
@@ -7115,6 +7182,45 @@ BASELINE@8ee64ae (no boundary, full suite) = 16 red   [两次逐行一致]
 status: 基线更正为 16@8ee64ae（两次一致，0 swimmer）+ g3 的 TARGETED/FULL 矛盾禁止外推 + catalog_hydration 三兄弟成员可轮换；另落 ORD-0187（/health 假绿）与安全边界实测
 evidence: `live_checks/fullsuite_8ee64ae_r1.txt`、`_r2.txt`、`red_8ee_r1.txt`、`red_8ee_r2.txt`、三文件定向跑 `3 failed, 26 passed`、`/health` 与 `/api/v1/health` 两条原样响应、两次匿名 POST 401
 
+### SESSION=494abfd7 · ORD-0185 与 ORD-0184 **签收**（两条都在固定快照上我自己跑出同样读数）——顺带把"C 是关键路径"这件事量化成 5 条门 @00:4x
+
+`STATUS: TWO-ACCEPTED-BY-MY-OWN-RUNS | 我量的树：`git archive 16f05b0` → `v_16f05b0`，`git archive 4092260` → `v_4092260`（权威树 0 写）| 解释器 3.12.14、AI off | 两次都与车道自报读数逐位相符 |`
+
+#### ① ORD-0185（我那条"枚举 vs 可采性、两条必须分开"的裁定）= **ACCEPTED**
+我只跑那三个节点：
+```
+pytest -k "d12 or d13 or d14" tests/test_qoder_anywhere_accessibility_mapping.py
+→ .F.   1 failed, 2 passed
+   FAILED test_d13_the_product_must_not_treat_a_fixture_sourced_tag_as_verified_evidence
+```
+⇒ **同一份证据**（`source_kind=REMOTE_PROVIDER` 但 provenance 指向 fixture）：
+  命名轴 `d12` **绿**、可采性轴 `d13` **红**、承重门 `d14` **绿** —— 这正是我要的可执行形状：
+  **合并成一个 nodeid 就只能有一个结论，红的会吃掉绿的。**
+⇒ 车道还自查出一处我没预见的耦合：d12 第一版写了 `legal.kind in … and not legal.admissible`，
+  于是杀掉可采性判定时**命名门也跟着红**——**"拆成两个 nodeid"不够，两条断言还不能互相引用**。改完只主张命名。
+  这条我提给全线：**做"两条独立轴"的门时，必须做一次交叉突变检查**（杀 A 轴，B 轴必须不动）——它这次的 M4 正是这么做的。
+
+#### ② ORD-0184（15 条状态过滤门）= **ACCEPTED 出门部分**；红灯全部指向 C
+```
+CNX_UNDER_TEST_SHA=4092260 pytest tests/test_qoder_plan_replan_status_filter.py
+→ 5 failed, 11 passed
+   g1_2 replans 单值须进 SQL / g1_3 replans 多值须为并集
+   g5_5 plans 单值       / g6_6 plans 多值
+   g8_8 非法 status 必须是具名校验失败，不得回全量
+```
+⇒ 5 条红**全部是 `implementation-not-yet`**（车道实读写门时两端点仍是无条件 `select`，`main.py:4627 / :9512`），
+  与它的元门 `g0`（provenance 必须说得出在判哪个 sha）、`g0b`（**不许复制实现算法**，加 `from app.main import list_replans` 即红）、
+  `g0c`（过渡锚 `TEMPORARY-CLIENT-FILTER-ORD-0180` 在服务端真实现后必须消失）**一起构成"独立常驻证明"** —— 正是仲裁那句
+  "C ships the behavior; F owns the independent standing proof" 的实现形状。**这三条元门我认可，尤其 g0b。**
+⇒ 于是 **"C 是关键路径"不再是感觉，而是可数的：现在有 5 条门 + ORD-0167 的解析接线 + ORD-0176 + ORD-0187 在等同一个写者。**
+  我把这条量化后一并报给仲裁（它已欠我一个 甲/乙 顺位答复）。
+
+#### ③ 车道自报的收集数我也对过：`16f05b0` 导出树 1160 collected / rc=0；`4092260` 1157 collected / rc=0 —— 与它报的一致。
+（共享分母仍以权威 tip `8ee64ae` 全量 **16** 为准；分支上的 collected 数不同是门文件增加所致，**不是**产品红变化。）
+
+status: ORD-0185 签收（d12 绿/d13 红/d14 绿，我复跑一致；交叉突变检查提为全线要求）；ORD-0184 出门签收（5 红全部指向 C 的实现，g0/g0b/g0c 三条元门认可）；"C 为关键路径"已量化为 5 门 + 3 单
+evidence: `v_16f05b0`、`v_4092260` 两次我亲手跑的 pytest 原样输出；两次 `--collect-only` 计数
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 - id: ORD-0184
   to: 8ccd71d8
@@ -7136,7 +7242,7 @@ evidence: `live_checks/fullsuite_8ee64ae_r1.txt`、`_r2.txt`、`red_8ee_r1.txt`�
     7. **ORD-0182 验收后这 15 门不许退役**，留在 regression suite 里长期跑。
     另外仲裁明确赞成我补的过渡锚：**ORD-0182 上线后若 `TEMPORARY-CLIENT-FILTER-ORD-0180` 仍在，门应红**（过渡件没拆干净）。
     顺序：ORD-0171/0174 已签收 ⇒ 本单接在后面；ORD-0172 的四个结构化字段门与 ORD-0170 的禁网哨兵同批文件，一并交。
-  status: DELIVERED@2026-09-22 00:13:33 +0800 by 8ccd71d8（七条约束逐条落门与契约：分支 agent/f-ord184-20260921 @ 4092260，未 push；产品码 0 改动。新增三条独立证明元门 —— g0 provenance（拿不到 sha 就写 UNKNOWN，不许猜）、g0b 不复制实现算法（ast 扫 import + 枚举必须是合同字面量，且它自己杀得掉：临时 import 产品过滤函数 ⇒ 该门红）、g0c 过渡锚（TEMPORARY-CLIENT-FILTER-ORD-0180 未实现时报无结论、实现后仍在则红）；g13_meta 与 d10 同形状（共享仪器双向自证）。15 条门今天 5 红 / 11 绿，五条红全 implementation-not-yet 归 C。契约 .11 → .12 新增 division-of-labour-ORD-0184。交付块见下方）｜was: status: DISPATCHED@2026-09-21T24:0x+08 by 494abfd7（分工与七条约束逐字来自仲裁 5763459664 ①）
+  status: DELIVERED@2026-09-22 00:13:33 +0800 by 8ccd71d8（七条约束逐条落门与契约：分支 agent/f-ord184-20260921 @ 4092260，未 push；产品码 0 改动。新增三条独立证明元门 —— g0 provenance（拿不到 sha 就写 UNKNOWN，不许猜）、g0b 不复制实现算法（ast 扫 import + 枚举必须是合同字面量，且它自己杀得掉：临时 import 产品过滤函数 ⇒ 该门红）、g0c 过渡锚（TEMPORARY-CLIENT-FILTER-ORD-0180 未实现时报无结论、实现后仍在则红）；g13_meta 与 d10 同形状（共享仪器双向自证）。15 条门今天 5 红 / 11 绿，五条红全 implementation-not-yet 归 C。契约 .11 → .12 新增 division-of-labour-ORD-0184。交付块见下方）｜was: status: DISPATCHED@2026-09-21T24:0x+08 by 494abfd7（分工与七条约束逐字来自仲裁 5763459664 ①）｜**ACCEPTED 出门部分**@00:4x（我复跑 `4092260`：5 failed/11 passed，5 红全为 implementation-not-yet 归 ORD-0182；g0/g0b/g0c 三条元门认可）
 
 ### SESSION=494abfd7 · ORD-0171/0172/0174 **签收**：我自己装了一次突变去验 F 的收据——**两条原本绿的门变红**，还发现它加了一道我沒要求过的元门 @本机钟 23:5x
 
@@ -10607,6 +10713,61 @@ SQL 整条子串 / 这次未锚行首 —— 全是"子串当记号"。
 
 status: `DONE`（ORD-0184 的门与契约半；ORD-0182 实现归 C，门上 5 条红是 implementation-not-yet）
 evidence: `4092260`（分支 `agent/f-ord184-20260921`，未 push）+ `_qoder_f_run/verify_4092260`（带 provenance 的复算导出树）
+
+### SESSION=8ccd71d8 · ORD-0185 交付 2026-09-22 00:35:56 +0800
+
+**块首六要素**
+- (a) `sha` = `16f05b0`（父 `4092260`）；`worktree` = `D:/moodle/_qoder_f_o156_20260921`（分支 `agent/f-ord185-20260921`）；权威树我域 0 脏行
+- (b) `interpreter` = `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14）
+- (c) `command` = `python -m pytest tests/test_qoder_anywhere_accessibility_mapping.py -q -p no:cacheprovider`
+- (d) `collection` = `git archive 16f05b0` 导出树：**1160 tests collected in 4.92s，rc=0，errors=0**
+- (e) `execution` = **7 failed / 12 passed**（该文件；其中 d12 绿、d13 红、d14 绿 —— 见下）
+- (f) `git_status` = `clean`；下列量均在 `git archive 16f05b0` 导出树上跑出
+
+**① 两条断言分开写，方向不同（本单要点）**
+
+| 门 | 轴 | 主张 | 今天 |
+|---|---|---|---|
+| `test_d12_the_naming_axis_...` | **枚举**（名字合法） | 同一份"名字合法但来源指 fixture"的证据，命名轴结论**有且只有一个**：`REMOTE_PROVIDER` 在枚举里；另一份非法枚举值被命名轴拒绝并点名"不在现有枚举" | **绿** |
+| `test_d13_the_product_must_not_...` | **可采性**（证据配不配） | 同一份证据交给 `evaluate_accessibility_requirement()` **不得读成已核实** | **红**（产品未实现） |
+| `test_d14_the_admissibility_judge_is_load_bearing...` | 判据承重 | 共享仪器真的在管事（M4 可杀） | **绿** |
+
+⇒ 同一份证据：命名轴绿、可采性轴红 —— 这就是"两条不得合并"的可执行证据。
+写在一个 nodeid 里就只能有一个结论，红的会把绿的吃掉。
+
+**② 我自查出的一处耦合（本单最该记的一条）**：d12 第一版我写了
+`assert legal.kind in SOURCE_KIND_VALUES and not legal.admissible` —— 结果 M4 一杀掉可采性判定，
+**d12 也跟着变红**。那正是"两条轴被合并"的现场，虽然写在两条函数里。已改成只主张命名，
+并把这次耦合写进注释。⇒ **"分成两个 nodeid"不够，还要保证两条断言不互相引用。**
+
+**③ M4 杀证（照 ORD-0174 的 12 项收据）**：突变 = 把 `admissibility_verdict()` 里那段
+`if kind == "REMOTE_PROVIDER":` 判定**整体删除** ⇒
+**d14 绿→红**（1 passed → 1 failed）；**d12 绿→绿**（命名轴不受影响 ⇒ 两轴独立）；
+**d13 红→红**（产品未实现，与本突变无关）。突变前 d12/d13/d14 = `1 passed` / `1 failed` / `1 passed`；
+量在 `git archive` 导出树，事后 `sha256(_qoder_accessibility_admissibility.py)` 逐字节还原。
+汇总：**KILLED=4 / SURVIVED=0 / NOT_MEASURABLE_RED_BASE=2 / INVALID=0**。
+
+**④ 判据与门分离**：可采性判据放在共享仪器 `backend/tests/_qoder_accessibility_admissibility.py`
+（纯函数，不 import 产品代码）。d13 今天红 ⇒ 不能在它上面突变；所以判据独立成件，由 d14 承重。
+判据里同时规定：声称 `REMOTE_PROVIDER` 时 provider/entity 必须可回溯、`fact_quality` 不得是冻结/合成档、
+来源字样带 fixture/mock/golden/demo/synthetic/seed/stub 而自称远程 ⇒ 不合格；
+**反向不禁止** `OFFLINE_SNAPSHOT`/`GOLDEN_FIXTURE`（冻结的是远程事实，是诚实的）。
+
+**⑤ `65f1934f` 那句落成判据**：所有"缺 X"类断言先调 `inventory()` 打印**实际读到的键名清单**
+（facts 自身 + 5 个嵌套承载层），再谈缺什么。今晚同一类错第四次，这次不是口号而是函数。
+
+**⑥ 两处被自己的门当场抓住的疏漏**：① M4 漏写 `mutated_target_result` ⇒ `test_d8` 报"缺字段"；
+② `test_d8b` 把突变条数写死成 3 ⇒ 加 M4 后它自己红。两处都改成跟着清单走，**没放宽判据**。
+
+**契约**：`0.94-annex.12 → .13`，纯增补回验：**删除键 0、变化的既有叶子只有 `/info/version`、
+新增 12 叶子、`paths` 仍 `{}`、0 CRLF**。新增条款在
+`x-osm-accessibility-mapping.naming-and-admissibility-are-two-separate-assertions`（两条 nodeid、顺序、
+M4 杀证），并从 `x-testing-obligations` 加指路牌。提交前先过收集门：工作树 1160/2.47s、导出树 1160/4.92s。
+
+**现场更正已入账**：tip 我不再引 `d26933c`；基线成对写作**无边界 17 / 带边界稳定核 13**。
+
+status: `DONE`（ORD-0185 ①②③④ 全交；d13 红是 implementation-not-yet，归 C 的 ORD-0155）
+evidence: `16f05b0`（分支 `agent/f-ord185-20260921`，未 push）+ `_qoder_f_run/{receipts_o185.json, verify_16f05b0}` + 仪器 `receipts_o185.py`
 
 CLAIMED: ORD-0149 by 8ccd71d8（车道 F · 契约/门）@20:44（date 实读 20:44:08 +0800 · 权威树 tip 实测 `b2becb5` · 写域 = `contracts/**` + 新建测试文件；**产品码我自己不动**（本单第二件明写实现归 C）· 不 skip/xfail · 不打真网络（live 部分只做"没有 live 证据就必须红"的门，真 live 由 C 的 canary profile 跑） · 不占 :4781/:4782/:8693/:8781 与 _preview.db/_live.db · 自己的 detached 副本 + own `_run*.db` · 解释器 D:/moodle/CityNexus/.venv 3.12.14，不加 --timeout，AI/provider 凭据 unset
 ### SESSION=8ccd71d8 · ORD-0149 交付 @2026-09-21 21:09（date 实读 21:09:48 +0800）
