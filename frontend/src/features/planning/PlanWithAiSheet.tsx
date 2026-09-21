@@ -55,7 +55,13 @@ function examplesFor(
   placeNames: string[],
   zh: boolean,
 ): Array<{ zh: string; en: string }> {
-  const picked = placeNames.filter((name) => name.trim().length > 0).slice(0, 2);
+  /* Ordered by name rather than by the order the read happened to return, so this cannot become a
+     second `slice(0, 8)` in disguise (R7): which two places appear in an *example sentence* must not
+     be decided by a provider's row order, because that order is not a claim about the trip. */
+  const picked = placeNames
+    .filter((name) => name.trim().length > 0)
+    .sort((a, b) => a.localeCompare(b, zh ? "zh-CN" : "en"))
+    .slice(0, 2);
   if (picked.length < 2) return [];
   const [first, second] = picked;
   return [
@@ -357,8 +363,7 @@ export function PlanWithAiSheet({
         setPlaceNames(
           body
             .map((item: { name?: string }) => (typeof item?.name === "string" ? item.name : ""))
-            .filter((name: string) => name.trim().length > 0)
-            .slice(0, 2),
+            .filter((name: string) => name.trim().length > 0),
         );
       })
       .catch(() => {
