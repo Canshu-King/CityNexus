@@ -80,6 +80,14 @@ def launder(block: str) -> str:
     return block.replace('state="RUNTIME_FAILURE"', 'state="NO_MATCH"')
 
 
+# The provider layer distinguishes a timeout from a refusal from a malformed body; this anchor is
+# the one line that carries that distinction up.  Flattening it is legal-looking (the class name is
+# a real registered reason) and is what makes an operator unable to tell "back off" from "data is
+# broken", so it gets its own sabotage and its own door.
+ATTRIBUTION_LINE = '        body["attribution_reason"] = observation["reason"]\n'
+ATTRIBUTION_FLATTENED = '        body["attribution_reason"] = REASON_RESOLVER_UNAVAILABLE\n'
+
+
 MUTANTS = [
     {
         "name": "M6 the resolver call is un-wired (gate 1 must fall back to red)",
@@ -111,9 +119,26 @@ MUTANTS = [
         "old": BOUNDED_RETURN,
         "new": BOUNDED_INVERTED,
     },
+    {
+        "name": "M11 the distinct provider cause is flattened into the class name",
+        "gates": ["test_g12_the_provider_cause_is_not_flattened_into_the_class_name"],
+        "old": ATTRIBUTION_LINE,
+        "new": ATTRIBUTION_FLATTENED,
+    },
 ]
 
 CROSS = [
+    {
+        "name": "C7 flattening the cause must not disturb the state it sits in",
+        "old": ATTRIBUTION_LINE,
+        "new": ATTRIBUTION_FLATTENED,
+        "expect_red": ["test_g12_the_provider_cause_is_not_flattened_into_the_class_name"],
+        "expect_green": [
+            "test_g2_a_provider_named_county_becomes_hydratable_not_dead",
+            "test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural",
+            "test_g11_a_broken_seam_is_a_runtime_failure_too_not_a_verdict_about_the_world",
+        ],
+    },
     {
         "name": "C1 typed runtime failure laundered into NO_MATCH touches nothing else",
         "old": RUNTIME_TYPED,

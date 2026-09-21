@@ -355,6 +355,58 @@ def test_g11_a_broken_seam_is_a_runtime_failure_too_not_a_verdict_about_the_worl
     assert status.get("status") == "UNREACHABLE", body.get("provider_status")
 
 
+def test_g12_the_provider_cause_is_not_flattened_into_the_class_name(seeded, monkeypatch) -> None:
+    """reason 词汇不另造：B 给了几个形状，我这层就传几个具名原因。
+
+    `reason_code` 保持冻结的那个**类**（`DESTINATION_RESOLVER_UNAVAILABLE`），因为 capability 轴不许扩；
+    但底下"哪一种失败"必须原样上来，否则 429（该退避）、超时（该重试）、结构非法（该报数据坏）
+    在屏幕上就只有一句话可说。B 自己已有六个码，这里只做搬运，不做二次归类。
+    """
+
+    import app.integrations.discovery.provider_identity as provider_layer
+
+    request = httpx.Request("GET", "https://photon.test/api/")
+
+    def answer(response=None, error=None):
+        class Recorder(_Recorder):
+            def response(self, req):
+                if error is not None:
+                    raise error
+                return response
+
+        recorder = Recorder()
+        _install(monkeypatch, recorder)
+        _enable(monkeypatch)
+        return _capability(RAW_COUNTY)
+
+    timeout = answer(error=httpx.ReadTimeout("timed out", request=request))
+    refused = answer(response=httpx.Response(429, request=request, text="rate limited"))
+    server = answer(response=httpx.Response(502, request=request, text="bad gateway"))
+
+    for label, body, expected in (
+        ("timeout", timeout, provider_layer.REASON_TIMEOUT),
+        ("429", refused, provider_layer.REASON_RATE_LIMITED),
+        ("5xx", server, provider_layer.REASON_SERVER_ERROR),
+    ):
+        assert body["reason_code"] == capability_module.REASON_RESOLVER_UNAVAILABLE, (
+            f"{label}：期望 capability 轴仍用冻结的类原因；实际 {body['reason_code']!r}"
+        )
+        assert body.get("attribution_reason") == expected, (
+            f"{label}：期望具名原因原样传上来（{expected!r}）；"
+            f"实际 {body.get('attribution_reason')!r} —— 把形状塌成一个类名就是 F 那条六形状门在罚的事"
+        )
+        assert "Error" not in str(body.get("attribution_reason")) , (
+            f"{label}：具名原因里不得出现客户端类名（它会随 HTTP 库变）；实际 {body['attribution_reason']!r}"
+        )
+
+    distinct = {
+        body.get("attribution_reason") for body in (timeout, refused, server)
+    }
+    assert len(distinct) == 3, f"期望三种形状三个不同原因；实际 {sorted(map(str, distinct))}"
+    assert {body["destination_state"] for body in (timeout, refused, server)} == {"RUNTIME_FAILURE"}
+    assert all(body["retryable"] is True for body in (timeout, refused, server))
+
+
 # ---------------------------------------------------------------------------------------------
 # The identity has to survive into the job, not just the answer
 # ---------------------------------------------------------------------------------------------

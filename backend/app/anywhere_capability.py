@@ -598,6 +598,14 @@ def _adopted(
     )
 
 
+def _unreachable_reason_name() -> str:
+    """The provider layer's own word for "we could not ask", reused rather than re-invented."""
+
+    import app.integrations.discovery.provider_identity as provider_layer
+
+    return provider_layer.REASON_UNREACHABLE
+
+
 def _provider_resolution(raw: str) -> DestinationResolution | None:
     """Ask the authorised provider, and translate its four answers into destination truth.
 
@@ -633,6 +641,9 @@ def _provider_resolution(raw: str) -> DestinationResolution | None:
             observation={
                 "status": "UNREACHABLE",
                 "stage": "resolving_destination",
+                # The cause is this process' own, so it gets the provider layer's own named code
+                # rather than a class name: `type(exc)` in a reason field is what §14 forbids.
+                "reason": _unreachable_reason_name(),
                 "detail": f"{type(exc).__name__}: {exc}"[:200],
             },
             **unresolved,
@@ -1197,6 +1208,13 @@ def evaluate_capability(
         body["provider_status"] = [
             item for item in provider_observations if item.get("status") in PROVIDER_STATUSES
         ]
+    # `reason_code` stays the frozen *class* (DESTINATION_RESOLVER_UNAVAILABLE); this is the
+    # distinct cause underneath it.  Collapsing seven provider shapes into the one class name is
+    # exactly what F's six-shapes gate charges the layer below with, so the cause travels through
+    # here instead of being flattened at the boundary.
+    observation = resolution.observation
+    if isinstance(observation, dict) and observation.get("reason"):
+        body["attribution_reason"] = observation["reason"]
     if resolution.provenance:
         # Only a provider answer carries this: for a destination the catalog named, the source is
         # the catalog itself and `provenance.source_kinds` already says so.
