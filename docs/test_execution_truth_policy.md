@@ -189,6 +189,32 @@ At minimum:
 Package-integrity mismatch does not automatically invalidate a measured product observation, but
 it blocks any claim that the delivery is a self-consistent reproducible evidence bundle.
 
+For a final evidence bundle, the manifest validation itself MUST be replayable and report at least:
+
+    manifest_generated_at
+    newest_included_payload_mtime
+    referenced_evidence_count
+    manifest_covered_referenced_count
+    manifest_coverage_ratio
+    hash_match_count
+    hash_mismatch_count
+    missing_from_manifest
+    extra_manifest_entries
+    final_verdict
+
+Hard acceptance for a self-consistent final bundle requires:
+
+- manifest generation occurs after evidence payload freeze;
+- every evidence file cited by the final report is covered by the manifest unless explicitly
+  declared external/historical;
+- every covered payload hash/size matches the delivered bytes;
+- stale hashes or missing newly cited files make the manifest verdict RED;
+- historical originals remain immutable; create a new final manifest rather than overwriting old
+  evidence to make history appear cleaner.
+
+A manifest timestamp by itself is not enough. Coverage and delivered-byte consistency must be
+checked against the exact final evidence set.
+
 ## 10. Mutation evidence receipt
 
 Every mutation claimed as KILLED must carry a compact, replayable receipt.
@@ -483,6 +509,74 @@ Freeze sentence:
 
 > **Independent claims require cross-isolation proof: kill A, B stays green; kill B, A stays green.**
 
-## 18. Freeze sentence
+## 18. Baseline stability / residue rule
+
+A single full-suite run is an observation, not a stable baseline.
+
+Two identical full-suite runs are still insufficient to claim stability.
+
+For a baseline described as stable, run the same exact source/environment/command at least three
+times and report set semantics, not only aggregate counts.
+
+Required shape:
+
+    source_sha
+    tree_kind
+    environment
+    command
+    run_count >= 3
+    failed_set_per_run
+    stable_core = intersection(all failed sets)
+    observed_union = union(all failed sets)
+    failure_count_range = min..max
+    rotating_residue = observed_union - stable_core
+    named_rotating_members
+
+Freeze sentence:
+
+> **A baseline is an intersection over >=3 runs plus named residue; two identical runs are luck, not stability.**
+
+Any claim that "the red set got smaller" MUST include:
+
+- the previous stable core / range;
+- the new stable core / range;
+- the named members that disappeared from the intersection;
+- the named rotating/swimmer members;
+- whether the comparison used the same source, environment, and command.
+
+A lower count in one run is not evidence of product improvement if the missing failures are known
+rotating/context-sensitive members.
+
+If independent lanes obtain different counts on the same source, preserve both observations until
+the set intersection/union and concrete differing nodeids are reconciled. Do not force one lane to
+"match authority" merely because another reported first.
+
+### Context-dependent red rule
+
+A test whose result changes with execution context MUST be reported with both contexts explicitly.
+
+Examples:
+
+    TARGETED: RED
+    FULL_SUITE: GREEN
+
+or:
+
+    ISOLATED: GREEN
+    ORDERED_BATCH: RED
+
+Neither line may be promoted to a universal product verdict.
+
+A context-dependent claim needs at least one assertion/probe for each relevant context and a
+replayable description of what differs between them.
+
+If a later report shows only one side, classify the missing side as NOT_RUN / INCOMPLETE_CONTEXT,
+not as implicitly unchanged.
+
+Freeze sentence:
+
+> **Apparent stability needs repeated set evidence; context-dependent truth needs both lines.**
+
+## 19. Freeze sentence
 
 **No collection, no denominator; no denominator, no red/green count.**
