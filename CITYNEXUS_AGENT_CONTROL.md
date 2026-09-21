@@ -190,6 +190,103 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+
+### SESSION=8c66aa92 · ORD-0167 交付：一句问话不再被当成一座城 @2026-09-22 01:5x（本机钟）
+
+`STATUS: DELIVERED（单元 15 门 + 5/5 突变 + 端到端 11 项收据）| 提交 `f2708dd`（父 `f1bdbbe`）| 权威树 `D:/moodle/_qoder_integration_20260919` | 未 push（GITHUB_PUSH 未授权）| 未碰 `:4781/:4782/:8693` 与任何 `_live.db`，未触发活库 `demo/reset` |`
+
+#### ① 分母（先收集，再报数）
+
+```
+$ git -C D:/moodle/_qoder_integration_20260919 log -1 --format='%h %ad %s' --date=format:'%m-%d %H:%M' f2708dd
+f2708dd 09-22 01:19 fix(backend): a pending destination is a request, not an identity (ORD-0167/R10)
+```
+
+| 项 | 读数 |
+|---|---|
+| 解释器 | `D:/moodle/CityNexus/.venv/Scripts/python.exe` → `Python 3.12.14` |
+| 干净 detached 副本 | `D:/moodle/_qoder_ord125_wt` @ `f2708dd`（`git checkout --detach`，起跑前工作树干净） |
+| 收集 | `pytest --collect-only -q -p no:randomly` → **`1116 tests collected in 2.47s`**，`COLLECT_RC=0`，0 error 行 |
+| 全量执行 | `pytest -q -p no:randomly --tb=no` → **`11 failed, 1090 passed, 15 skipped in 103.77s`** |
+| 对照（同一台、同一命令、父提交） | `D:/moodle/_qoder_ord167_pre_wt` @ `f1bdbbe` → `1101 collected` / **`14 failed, 1072 passed, 15 skipped in 109.93s`** |
+| 落账时的权威树 | `git status --short -- backend contracts` 在提交后为空；脏条目只剩他人写域（`frontend/**`、`qoder-handoff/*.patch`、`reports/**`、`tools/verification/mutation_campaign.py`）—— 我一律没动 |
+
+**红集合逐行 diff（只允许少不允许多）**：`red-f1bdbbe.txt`（14）↔ `red-f2708dd.txt`（11）→ **−3 条、+0 条**，少的三条正是你点名的 0167 退出条件：
+`test_qoder_anywhere_capability_from_store.py::test_g19a_…`、`::test_g19b_…`、`::test_g19c_…`。
+11 条残留红全在 F 的门文件（g16b/g17a/g18a/g18b/gates::g5/g9b/g13d/g14b/g8a/g10/g11），**不是我引入的**，父提交里它们同样红。原文：`_qoder_ord30_evidence_20260920/ord167/{full-f1bdbbe.log,full-f2708dd.log,red-*.txt,collect-f2708dd.log}`。
+
+#### ② 契约 → 实现（仲裁 `e4b7faa3` 十二条逐条落点）
+
+| 契约行 | 树里的真值 | 门 |
+|---|---|---|
+| 1 未解析原文永不进身份列 | `resolve_destination()` 四个 return 全部 `canonical_destination_id=None`（除 RESOLVED） | g1 + g12（扫 `backend/app/**`：产品码里已无写点） |
+| 2 NO_MATCH ⇒ null | 同上 + `destination_state` 新轴 | g2、g11（`pending:(blank)` 也一并退役） |
+| 3 RUNTIME_FAILURE ⇒ null + 可重试具名失败 | `_display_labels` **不再吞异常**（旧代码 `except: return {}` 把「我的来源炸了」洗成「这地方不存在」）；作业侧 `FAILED + outcome=RESOLVER_RUNTIME_FAILURE` | g3、g3b |
+| 4 AMBIGUOUS ⇒ null + 候选另栏 | 两个以上编码对上同一名字 ⇒ 谁都不当赢家，`candidates=[…]` | g4（**披露**：现 vocabulary 16 个 label 实测 0 个重名，这条用扩表触发这个分支，不是编了座城） |
+| 5 RESOLVED ⇒ 真身份 + 来源具名 | `method ∈ {catalog, vocabulary}` + `provenance.source_kinds` 只取冻结枚举 | g5 |
+| 6 原文与归一化分栏 | 新列 `pending_destination_label`（逐字）/ `resolver_query_normalized`（匹配用） | g6、g3c（存储与线上同形） |
+| 7 标点丢失回归 | `zzxqvw-不存在县` 存下来仍带 `-`，归一化列才是掉标点的 | g7 |
+| 8 pending key 不可当身份 | `destination_pending_key = "pend-"+作业自己的 id`（**能力查询没开作业 ⇒ 不给 token**），`_survey` 只看 canonical；NO_MATCH 的 error.details 里带**真实 survey 计数** | g8、g3c |
+| 9 幂等不造身份 | 未命名 ⇒ 指纹 `pending-request-v1 + scope + 归一化查询 + 三版本`；已命名 ⇒ 原四段**一字未动**（旧作业键不会漂） | g9（含「终态作业不被复用、但重开那单仍同指纹」这半边） |
+| 10 legacy `pending:` 行就地回填 | 两阶段迁移：schema 脚本前把旧表 `RENAME` 让路（新表由 `db/schema.sql` 唯一权威建出），脚本后逐行搬回并 `COUNT` 比对，才 `DROP`；行 id/状态/时间戳/`request_json` 原样保留；旧指纹进 `legacy_fingerprint`；只剩归一化 payload 的行标 `LEGACY_NORMALIZED`；写一条 `audit_logs`（`CATALOG_HYDRATION_IDENTITY_MIGRATED`，前后计数）。SQLite 里 `NOT NULL` 不能就地改，**这就是"不删不重建"与物理形状之间唯一的走法** | g10（三行 legacy 现场：raw 回填 / 只剩归一化 / 真身份不动）+ g13（重放安全：两次 `ensure_schema` 不复制不吞行，列形状与全新库逐列一致） |
+| 11 突变：`pending:<raw>` 写回 canonical ⇒ 红 | M1 | 见 ③ |
+| 12 突变：pending key 当 join 键 ⇒ 红 | M2 | 见 ③ |
+
+**顺带同源的两条缺陷**（同一次改动带出，不是"顺手改"）：
+① `北京市` 从前解析不出 ⇒ 它的文本被当成身份，于是 北京/北京市 被当成两座城市去水合、去幂等、去缓存。现在匹配容忍 `省/市/区/县/自治州/自治县/地区/林区/特别行政区`（**只容忍在匹配上，原文照存**：`_match_forms` 用于比对，`_normalise` 永不写进 label）⇒ g19a/b/c 三条从红转绿，即上表那 −3。
+② `orchestration` 里能力判定新增两条状态：`RUNTIME_FAILURE ⇒ HYDRATABLE + DESTINATION_RESOLVER_UNAVAILABLE`（在 `TRANSIENT_REASONS` 里，我没新造词）；`AMBIGUOUS ⇒ UNAVAILABLE + DESTINATION_AMBIGUOUS + candidates`（"作为你刚打的这句话没法规划"，不是"这地方没救"）。
+
+**我改了 F 的门文件 2 行**：`test_qoder_anywhere_capability_from_store.py:26` 与 `:127` 的 `PENDING_PREFIX` → `LEGACY_PENDING_PREFIX`（产品常量退役改名，**断言一字未动**，语义仍是"文本派生的值不许当身份"）。为不再犯今晚那次「改名打断整套收集」：交前跑了全量 `--collect-only` = `1116 collected / 0 error / RC=0`。另 re-point 了**我自己** 0095-1 那条旧门（`test_an_unresolved_query_never_gets_a_confident_looking_identity`，原来断言 `pending:` 前缀在身份列里），现在是更强的形状：身份 null + 原文逐字 + 幂等靠指纹收敛。
+
+#### ③ 突变：baseline 7 门先量绿，再装，5/5 KILLED
+
+`review/mutate_ord167.py`（一笔入库）；baseline 同一脚本内先跑 `python -m pytest -q … 7 gates` → **`7 passed`**，然后逐个装：
+
+| | 装的那一下 | 归属门（原绿） | 结果 |
+|---|---|---|---|
+| M1 | `pending:<raw>` 写回 `canonical_destination_id` | g1 | **KILLED**（rc=1） |
+| M2 | 目录调查在 canonical 为空时回退用 `row.destination_pending_key` 当 join 键 | g8 | **KILLED**（rc=1） |
+| M3 | 归一化文本被当 exact raw 存 | g6、g7 | **KILLED**（rc=1） |
+| M4 | 运行时失败洗成结构性 NO_MATCH（并去掉 retryable） | g3、g3b | **KILLED**（rc=1） |
+| M5 | legacy 归一化残留的 fidelity 伪造成 `EXACT_RAW` | g10 | **KILLED**（rc=1） |
+
+每个突变 `anchor_hits=1`（不唯一当场停手）、跑完 `restored=True`（逐字节还原，sha256 比对）。收据：`ord167/kill-evidence.json`。
+
+**M2 第一次装是 SURVIVED 的，我把它记在账上**：那版装在「worker 现场新算的 resolution」上，而 resolution 现在不带 token ⇒ 突变成了空操作，门当然抓不到。改装成真实会犯的形状（从**行**上回退取 token）才被抓到。⇒ 「突变没红」当时不是门的错，是我靶子放错了；这条不是"门变严了"，是"那条突变本来就没在做事"。
+
+#### ④ 端到端 11 项收据（不是单元级证据）
+
+`_qoder_ord30_evidence_20260920/ord167/live_receipt.py` → `live-receipt.json`。它**故意不是 pytest 门**：§17C 禁止默认套件出网，而这条要的就是真 provider 尝试 ⇒ 只在显式 opt-in 下跑，且跑在自己的一次性库上（文件名写进收据：`%TEMP%/ord167_e2e_*/ord167_e2e.db`；`live_databases_touched: []`）。
+
+1. **source sha**：`f2708ddf04f4e4cd11388a0e23590fee9e9185ed`（+ subject 原样）
+2. **exact raw**：`云和县` / `zzxqvw-不存在县`（逐字进 label，`fidelity=EXACT_RAW`）
+3. **normalized query**：`云和县`（无标点可掉的那种），nonsense 那条 ⇒ `zzxqvw不存在县`（`-` 只丢在这一栏）
+4. **pre-state inventory（含正向对照）**：种子后库里 `places_total_in_store=16`、`cities_with_place_rows=2`；问 `北京` ⇒ `CN-BEIJING` 身份列下 `rows_held_under_this_identity=8`（证明计数查询不是坏的）、`places_named_for_this_text=0`（种子地点名是英文，两条读数一起给）；问 `云和县` ⇒ 身份 `null`、`rows_held_under_this_identity=0`、name 命中 0 ⇒ "不在种子里"是被量的，不是被说的
+5. **operation id**：`3d06589f-9d65-4ae0-8b84-80669bae22f9`
+6. **canonical before/after**：`null` → `null`（这一案到不了 provider，见 7/11 那条限制）
+7. **resolver/provider provenance**：真打公网 —— `https://photon.komoot.io/api/` **status 200**、`features_returned=3`、第一条 `external_id=R:3289208`、`name=云和县`、`country=中国`、`city=丽水市`、`lat 28.1185318 / lon 119.5684002`；同一句走产品自带的 `NominatimGeocoder` ⇒ `ConnectTimeout` → 具名 `PROVIDER_TIMEOUT`（不是"没这个地点"）
+8. **discovery/catalog provenance**：作业自己记下的 `survey={city_code: null, places_held: 0, pending_materialisations: 0}`（我现在把计数放进 NO_MATCH 的 `error.details`，"没有来源"这句才可核）
+9. **planner input identity**：`null`（作业与能力回答同值，g3c 钉的就是这两处不许各讲一套）
+10. **final product state**：`UNAVAILABLE / NO_REGISTERED_SOURCE / NO_MATCH / retryable=false / reason NO_CANONICAL_IDENTITY`；runtime companion 那条：`FAILED / RESOLVER_RUNTIME_FAILURE / RUNTIME_FAILURE / retryable=true / DESTINATION_RESOLVER_UNAVAILABLE`（两案分开，且 NO_MATCH 与 RUNTIME_FAILURE 没有互相冒充）
+11. **retry/idempotency**：把标点打回去再问一次 ⇒ 同一个 `fingerprint=fa257eb06835c315974769b090617cdc`、`canonical` 仍 `null`；"未终态时复用同一行"由 g9 在 worker 不启动的确定性安排下证（端到端里那一单已经终态，重开也仍是同一指纹 ⇒ 不是永久屏蔽，是同一件未完成的工作）
++ **legacy 行**：一台真有 `pending:云和县` 旧行的库过启动 ⇒ `rows_before=1 → rows_after=1`、`id=legacy-op-1` 保留、`canonical→null`、label 回填 `云和县`、token `pend-legacy-op-1`、旧指纹进 `legacy_fingerprint`、新指纹 `fa257eb0…` **与今天同一句问话算出来的完全相同**（跨迁移边界仍然复用，不会开第二单）
++ **冻结句的诚实半边**：`provider_leg_wired_in_product=false` —— `PhotonGeocoder` 在树上只被一个 mock-transport 单测引用，`resolve_destination` 没有任何 provider 腿。所以"happy path"今天能证到的是 **raw 保真 + 不造身份 + provider 真给了 `R:3289208`**，**证不到** `identity → provider-backed catalog → shared planner`。按 contract item 6 的口径，这就写"到不了 + 具名原因"，不拿 `200` 冒充走完闭环（见 ⑥ 要你拍的那件）。
+
+#### ⑤ 现场更正与账本卫生
+
+- 我 01:1x 报的 tip `8ee64ae` 当时就是错的：权威树已在 `f1bdbbe`（`git log -1` 原样贴在上面）。现场更正：起跑 `f1bdbbe`，我的 `f2708dd` 现为客户。
+- **`## ORDERS` 标题行现在全文件 0 命中**（`grep -n "^## ORDERS"` = 无；`^## ` 列表从 `## 三、ORD-0113…` 直接跳到 `## AMENDMENT H / I 落地`）。我的 IN-PROGRESS 标记因此**没写进去**：脚本按锚点数≠1 当场 `ANCHOR_MISSING` 停手，没有换锚硬写。`## DELIVERIES（车道交付登记处…` 1 命中 ⇒ 本块照规矩进。ORDERS 顶的锚点目前也是漂的（ORD-0186/0187 是插在最靠近的块之后）。按"谁改共享标题行谁负责"，这一行请你在车道外恢复。
+- 卫生：账本二进制读 + `io.open(..., newline="\n")` 写，写前同脚本内重量锚点、写后打印 CRLF/LF/bytes 与"拿掉我的块逐字节还原"；文件尾读回一致。
+
+#### ⑥ 要你拍的只有一件
+
+**「显式 hydration 允许出网」这一句**（= 我 0095-1 命名的那组三难：g9b 要看到真 LIVE_HOST HTTP、§17C 禁默认套件出网、0095-1 把数据面限定在已登记来源）。0167 的门与端到端都不再等它，但 **"Resolve a real place … carry only real canonical identity into planning" 的最后一腿**（provider 解析结果 → `canonical_destination_id` → catalog → 共享 planner）在树上没有代码路径，因为 resolver 按现行裁定只能读进程内来源。三条选一条：(A) 把 g9b 挪进 `tests/live/` opt-in；(B) 裁定"显式 hydration 可出网"（我 30 分钟内能补 happy-path 那条端到端，且 `provider_leg_wired_in_product` 变 true）；(C) 承认 0167 端到端的 happy path 归 ORD-0095-1 收口，我在 0095-1 名下交。你不发话我不自己扩。
+
+**其余两件我自己排**：ORD-0187（你 00:3x 派，`to: 8c66aa92`）已收 —— `/health` 假绿与 `/api/**` 兜底收口，按序排在 0167 之后；若你要它先（它红在用户预览那台），一句话我换序。0158 / 0182（F 出门我出实现）/ 0176（甲）/ 0175 / 0125(NOT-STARTED) 顺序不变。
+**没修好的**：批次敏感的三条 abandon 门（`test_a_job_stopped_before_its_worker_starts_still_closes_itself` / `test_abandon_reports_a_request_not_a_death` / `test_nothing_leaves_the_process_while_the_deterministic_plane_answers`）这次两棵全量里 0/3 红，但同族在 00:4x 之前仍见过 1-3 条轮换红；我把两扇门文件的舞台都改成显式清作业表（孤儿未终态作业会被按指纹复用 ⇒ 别人的 15s 超时），**这是卫生，不是根因**；根因还在 `_MAX_WORKERS=2` + 进程本地 abandon registry 那处，算 ORD-0095-1 的尾账，我不签它已结。
+
+evidence: `_qoder_ord30_evidence_20260920/ord167/`（`live_receipt.py` + `live-receipt.json` + `kill-evidence.json` + `collect-*.log` + `full-*.log` + `red-*.txt` + `receipt-run.log`）；契约登记在 `contracts/openapi-anywhere-draft.yaml` 新节 `a-pending-destination-is-a-request-not-a-place`（15 门 nodeid + 5 突变 + `measured-on: f1bdbbe`），`contracts/openapi.yaml` 的 capability 描述同步换成可空身份；`raw/set_order_status.py` 更新 ORD-0167 状态行。
+
 ### SESSION=dc19d662 · ORD-0186 隧道侧只读验收（四条全量）@本机钟 date=00:5x —— ①✅ ②✅ ③**隧道侧 401 不复现（manifest 200 + SW active + 控制台 0 错）** ④✅ 但**含一条要你裁的分叉**
 
 `STATUS: ORD-0186-TUNNEL-VERIFIED-3-PASS-1-BRANCH | 路径：**公网隧道** host `fonts-facilities-hotel-installing.trycloudflare.com`（TLS 443 → cloudflared pid 39764 → `http://127.0.0.1:4782` 鉴权代理），**不是** `:4782` 直连、**不是** dev server | 部署对表：`index-BkEHAbFb.js`（与你 00:2x 说的包名一致）、tip `8ee64ae`、UA `HeadlessChrome/153.0.8010.12`（Windows NT 10.0; Win64; x64）、视口 390×844 + `hasTouch`、Node v24.14.0、Playwright 从 `CityNexus/frontend/node_modules` 载入 | 只读：未点任何创建/接受/重置、未触发 `demo/reset`、未碰 `:4781/:4782/:8693` 的写与 `_live.db`、未新开隧道 | 报告不含账号/口令/cookie 值（隧道只给 host）| evidence `raw/ord0186_tunnel.cjs`、`raw/ord0186_extra.cjs`、`raw/ord0186_offline2.cjs`、`raw/ord0186_tunnel.json`、`raw/ord0186_extra.json`、`raw/ord0186_offline2.json`、`raw/ord0186_readable.txt`、`raw/shots10/`|`
