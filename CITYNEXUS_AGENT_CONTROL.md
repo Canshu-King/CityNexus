@@ -191,6 +191,30 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### SESSION=8c66aa92 · ORD-0191 十项对表（第一片 f2708dd 的缺项我按名点名，不拿计数糊）@02:0x
+
+`STATUS: 0191 IN PROGRESS | 九项有证、⑤ 无证 | 树 `D:/moodle/_qoder_integration_20260919`，我的片 `f2708dd`（现 tip `bfdeb1f`，`git merge-base --is-ancestor f2708dd HEAD` = 在链上）| 未 push | 未碰 `integrations/discovery/**`（0 文件，见下）|`
+
+| 0191 要证的 | 现在的证据 | 判定 |
+|---|---|---|
+| ① exact raw 原样保留 | 列 `pending_destination_label`；g6/g7/g3c + 端到端 `云和县`/`zzxqvw-不存在县` 逐字 | 已达 |
+| ② normalized 另栏 | 列 `resolver_query_normalized`；g6 断两列**不同值**（正是掉标点那条） | 已达 |
+| ③ 未解析三类 `canonical=null` | `resolve_destination` 四 return；g1/g2/g3/g4/g11 + g12 扫全 `backend/app` 无写点 | 已达 |
+| ④ 已落库 `pending:` 就地更新不删 | 两阶段迁移（旧表 RENAME 让路 → schema.sql 建新表 → 逐行搬回并 COUNT 比对 → 才 DROP）；g10（三种 legacy 现场）+ g13（重放不复制不吞行、列形状与全新库逐列一致）+ 端到端 `legacy-op-1` | 已达 |
+| **⑤ provider MATCH 成为服务端所有的 canonical identity** | **没有这条**：`PhotonGeocoder` 在树上只被一个 mock-transport 单测引用，`resolve_destination` 无 provider 腿（收据里 `provider_leg_wired_in_product=false`，原样贴了 Photon 的 `200 / R:3289208 / 云和县 / 丽水市 / 28.1185318,119.5684002` 与 Nominatim 的具名 `PROVIDER_TIMEOUT`） | **欠**：等 B 的 result contract（ORD-0188/0192，`PhotonIdentityProvider` 归 c01d72a3）⇒ 我一拿到形状就并入；**产品真值持久化归 C** 这句我照办，不伸进 `integrations/discovery/**` 顺手修（本批 11 个文件里 0 个在 `integrations/`） |
+| ⑥ AMBIGUOUS 显式、不静默选一个 | 两编码同名 ⇒ `canonical=null` + `candidates[]`；g4 的失败读数就是旧代码猜中 `CN-TWINA` 那一下。**披露**：现 vocabulary 16 label 实测 0 重名，该分支由扩表触发（编表不编城） | 已达（形状）， provider 侧歧义待 ⑤ 才有真数据 |
+| ⑦ NO_MATCH 结构性 | 作业 `UNAVAILABLE / NO_REGISTERED_SOURCE`，`error.details.survey` 带**真实计数**（`places_held=0`）⇒ "没有来源"可核 | 已达 |
+| ⑧ RUNTIME_FAILURE 保持可重试运行性 | `_display_labels` 不再 `except: return {}`（旧代码把来源炸了洗成"这地方不存在"）；作业 `FAILED / RESOLVER_RUNTIME_FAILURE / retryable=true`；g3 + g3b + 端到端 runtime companion；硬负例「超时/传输/运行性失败不得变 NO_MATCH」= M4 被 5/5 那批杀掉的那一条 | 已达 |
+| ⑨ pending/raw 永不当 join 真值 | `_survey` 只认 canonical；token = `pend-`+行自己的 id（能力查询不给 token）；g8 种一行 `city_code=pending key` 诱饵 ⇒ 作业自己记的计数仍为 0；M2 证明这条抓得住 | 已达 |
+| ⑩ 重放幂等 | 未命名 ⇒ `pending-request-v1 + scope + 归一化 + 三版本`；已命名 ⇒ 原四段一字未动（旧作业键不漂）；g9 + g10（迁移后旧行的新指纹 == 今天同一句问话算出的 `fa257eb0…`）+ 端到端 `same_fingerprint=true` | 已达 |
+
+**门禁与红集合（同一台、同一命令、两棵 detached 副本）**：`f1bdbbe` → `1101 collected / 14 failed / 1072 passed / 15 skipped in 109.93s`；`f2708dd` → `1116 collected RC=0 / 11 failed / 1090 passed / 15 skipped in 103.77s`；逐行 diff **−g19a −g19b −g19c，+0**（原文 `_qoder_ord30_evidence_20260920/ord167/`）。你 01:2x 复跑的 19/19 与我这两棵一致。
+**没修好的两件**：① ⑤ 仍欠（不假装完成）；② 批次敏感的三条 abandon 门本轮 0/3 红，两扇门文件的舞台我已改成显式清作业表（孤儿未终态作业会被按指纹复用 ⇒ 别人 15s 超时），**根因仍在 `_MAX_WORKERS=2` + 进程本地 abandon registry**，算 0095-1 尾账，我不签它已结。
+**顺序**：0191 的 ⑤ 一旦 B 交出形状我立刻并入（排在其他单之前）；等待期我按 0191 > 0158 走，现在开始 **ORD-0158**（预算真值 + R14 #1/#2：1600 CNY 不变量、缺失/不确定不得变 0、不许发明并落库 `party_size=1` / `stay_budget=0`）。
+**要你的一句话我撤回**：⑥ 里那条"显式 hydration 可否出网"已被 0191 的 ⑤ + 0192 的分工回答（provider 归 B、持久化归 C），不再挂在你那。
+**账本**：`## ORDERS` 标题行现在 1 命中，但落在 **line 7786**（夹在 lane D 的交付块之后、ORD-0191 之前），而 ORD-0186/0187 在它**上方** ⇒ 区段顺序是漂的；我这两块都按 `## DELIVERIES（…` 锚（1 命中）插入，写前写后 CRLF=0、`delete_restores=True` 逐字节还原证明。
+
+
 ### SESSION=8c66aa92 · ORD-0167 交付：一句问话不再被当成一座城 @2026-09-22 01:5x（本机钟）
 
 `STATUS: DELIVERED（单元 15 门 + 5/5 突变 + 端到端 11 项收据）| 提交 `f2708dd`（父 `f1bdbbe`）| 权威树 `D:/moodle/_qoder_integration_20260919` | 未 push（GITHUB_PUSH 未授权）| 未碰 `:4781/:4782/:8693` 与任何 `_live.db`，未触发活库 `demo/reset` |`
