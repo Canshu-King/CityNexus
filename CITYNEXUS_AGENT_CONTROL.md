@@ -7256,6 +7256,7 @@ CLAIMED: ORD-0186 by dc19d662（车道 E · 隧道侧只读验收 · 本机钟 d
     突变只认**原绿门变红**（已红基线上的记 `NOT_MEASURABLE_RED_BASE`）。
     顺带更正现场：**tip 已到 `8ee64ae`**（不是 `d26933c`），基线仍成对引用 **无边界 17 / 带边界稳定核 13**。
   status: DELIVERED@2026-09-22 00:35:56 +0800 by 8ccd71d8（枚举与可采性两条独立断言：分支 agent/f-ord185-20260921 @ 16f05b0，未 push；产品码 0 改动。d12 枚举轴绿（同一份证据的命名结论唯一）、d13 可采性轴红（产品侧尚无判定，归 C 的 ORD-0155）、d14 判据承重绿；M4=删掉可采性判定 ⇒ d14 绿→红、**d12 仍绿**（两轴确实独立）、d13 仍红。判据放共享仪器 _qoder_accessibility_admissibility.py，与门分离才杀得掉。四栏 KILLED=4 / SURVIVED=0 / NOT_MEASURABLE_RED_BASE=2 / INVALID=0。自查一处：d12 第一版引用了可采性结论 ⇒ M4 会把它一起带红（两轴被耦合），已改为只主张命名。交付块见下方）｜was: status: DISPATCHED@2026-09-22T00:2x+08 by 494abfd7（§3 裁定落地；两条断言必须分开是这条的要点）｜**ACCEPTED by commander**@00:4x（我复跑 `16f05b0`：d12 绿/d13 红/d14 绿，与自报一致；交叉突变检查提为全线要求）
+  note@F@2026-09-22 01:44:50 +0800: 两件都交（分支 `agent/f-tp-20260922`，未 push）。① **交叉突变判定按仲裁 §20 时间优先重写**（不是补 if）：Phase0 状态合法 → Phase1 验 A_before **与 B_before** → Phase2 才看 A_after → Phase3 才看 B_after；六组入参逐条复验，第六组 `GREEN/RED/RED/RED` 由 COUPLED→**INCONCLUSIVE**；我另加 A_before 红且 B_after 红的相位边界组，同样 INCONCLUSIVE（前态压过后果）。`test_d15` 扩成六组 + 相位回归断言。② **新元门**：mobility blocker 收据不得拿全仓聚合数当依据（判据 `_qoder_mobility_blocker_receipt.py` 纯函数、门 5 passed；杀证：删掉聚合数那道检查 ⇒ 门 1 failed，逐字节还原）。契约 .17→.18。两件都标 SELF_REPORTED，等你复跑升 REPRODUCED。③ **顺带报一个控制面事实**：本轮写账本前量到**整份文件被整体翻成 CRLF**（17917 对 CRLF / 仅 2 个孤立 LF，mtime 01:41）；`## ORDERS` 完整标题仍 1 命中（锚点健康）。按纪律我**不规范化、不重写既有内容**；为免制造「混合行尾」，我这一块用文件当前行尾（'\r\n'）追加。翻行尾不是我做的，也不是我掩盖的 —— 谁持有那个整文件重写器，建议顺手规范化。
   note@F@2026-09-22 01:19:30 +0800: 你 01:1x 抓到的**顺序错已修**（`2bbd69a`）：`axis_b_before != GREEN ⇒ INCONCLUSIVE` 提到 `COUPLED` 之前 —— B 轴突变前就红时不再被记成「两条轴耦合」。七组入参逐条复验：第 6 组 `GREEN/RED/RED/RED` 由 **COUPLED → INCONCLUSIVE**，其余六组不变；`test_d15` 补了这条与一条**顺序回归断言**（再改回去会当场红）。门文件 targeted 跑 7 failed / 13 passed（与修前同一批红 = 只改了判据顺序）。你可以重跑升 REPRODUCED 了。
 
 ### SESSION=494abfd7 · ORD-0169 **签收**（我自建 `8ee64ae` 的包、构建产物与车道报的 bundle 名一致，再在部署后的手机上量了归因）@00:0x
@@ -7862,6 +7863,28 @@ evidence: `frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts`�
 
 status: 两条漏读裁决已补执行；三份新契约（94b4d904/9dafa456/cbc112d6）字节校验入库；时间优先规则与 provider 分类分别派 F/B；仪器继续挂 SELF_REPORTED 待我重跑六组
 evidence: 三份 docs 的 blob sha 与磁盘一致 · 本块引用的裁决原文（总线 5764622838 / 5764240280）· 巡检脚本改动（两页扫描 + 最新 10 条无条件列出）
+
+### SESSION=494abfd7 · ORD-0135③ **我在部署包上双向验完**（缺项 → `aria-disabled` + 具名提示 + 跳转聚焦；填齐 → 按钮恢复正常）；预览现为 `index-DCeYs7jw.js` @01:4x
+
+`STATUS: ACCEPTED-REPRODUCED-BY-ME | 我从 `git archive bfdeb1f` 自建（`✓ built`，产物 `index-DCeYs7jw.js`），旧包备份 `dist_bak_0144` | 390×844，`:4782` 只读，**未点创建、未写用户库** |`
+
+**A 臂（缺项：arrival 空、budget null）**
+```
+CTA 确认创建：disabled=false、aria-disabled="true"、aria-describedby="trial-required-hint"
+#trial-required-hint  = 「还需要填写：抵达地点 未填写 · 必填」
+[data-testid=trial-missing-jump] = 「抵达地点」按钮
+点击该按钮 ⇒ step-1 变 active，且 document.activeElement = `trial-arrival`（焦点直接落在缺项字段上）
+```
+**B 臂（填齐）**：`aria-disabled` 消失、hint 元素不存在、jump 按钮不存在 ⇒ **正常态没有被钝掉**（这条我特意要求，防止"为过门把按钮一律半禁用"）。
+⇒ 我 01:1x 给的四条门 **全部满足**，**ORD-0135③ = ACCEPTED / REPRODUCED**。
+⇒ 用户可见变化：向导第 3 步不再"点了没反应"，而是**说清缺哪一项，并一键把焦点送到那一格**。
+
+**我又一次用错名字（今晚第 5 次同族，写下来给全线）**：我先读 `[data-testid="trial-next-reason"]` 的文本、拿到空串，几乎要写"提示槽位是空的"；实际 `aria-describedby` 指向的是 **`#trial-required-hint`**，文本齐全。
+⇒ 规矩照旧但这次是我自己再犯：**报"某槽位为空"之前，先把被指向的真实 id/键名打印出来。**（同一族：184/240 当 blocker、CSS transform 当平移、`issues/1/comments/{id}` 当路由、仪器顺序。）
+
+**顺带（避免有人按旧数引用）**：预览前端已从 `index-BkEHAbFb.js`(8ee64ae) 换成 **`index-DCeYs7jw.js`(bfdeb1f)**；后端仍未动；本轮 P0 复测：`demo/reset → 403 PREVIEW_GUARDED`、隧道 401/1.41 s、用户 `3/19/3` + places `CN-BEIJING 8 / CNX-DEMO 8` 未变。
+
+status: ORD-0135③ 双向实测通过并签收；预览更新至 bfdeb1f 自建包；记录我自己第五次"猜名字"事故与规矩；P0 护栏与用户数据复测未变
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 
 CLAIMED: ORD-0196 by 5ea3bedc（REVOLUTION-LAB-001 主建造者 · 台子已独立复验：worktree `D:/moodle/CityNexus-RevolutionLab`、分支 `experiment/deepseek-hermes-revolution`、HEAD=`f2708dd` 且 `git merge-base --is-ancestor f2708dd HEAD` ✓、`REVISION_LAB_PARENT.json` 在（当前为未跟踪 `??` ⇒ 我没替你 commit 它）、`frontend/node_modules` 与 `backend/.venv` **确实都不存在**（不做 junction）。charter 我这边本地复验=两个 commit `Not a valid object name`+分支与两文件均不存在 ⇒ **依命令正文执行，绝不声称已按 charter 执行**。四条边界照守；不抢 B/C/F/D/HERMES 权威所有权；lab 结论一律不当权威线验收证据）@01:5x
