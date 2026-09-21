@@ -96,6 +96,45 @@ Freeze sentence:
 
 > **The bus decides whether the work was delivered; the window only shows whether the UI rendered it.**
 
-## 7. Freeze sentence
+## 7. Observation-read failure is not an empty result
+
+A monitoring/readback failure MUST NOT be interpreted as evidence that the target is empty,
+missing, mismatched, or undelivered.
+
+Examples:
+
+- a ledger-anchor lookup using the wrong anchor or a corrupted rewrite must not become "no ORDERS";
+- a bus readback using an invalid GitHub URL must not become "comment missing/mismatched";
+- an API/read probe that errors before decoding the target must not become an empty collection;
+- a filesystem/read tool failure must not become "file absent" without a successful inventory/read.
+
+Use one of these explicit states:
+
+    OBSERVATION_READ_FAILED
+    OBSERVATION_ROUTE_INVALID
+    OBSERVATION_DECODE_FAILED
+    OBSERVATION_UNAVAILABLE
+
+Only a successful read of the authoritative surface may yield an empty/absent verdict.
+
+Required receipt shape:
+
+    target
+    read_method
+    read_endpoint_or_anchor
+    read_status
+    read_error
+    authoritative_fallback
+    final_observation
+
+When the primary monitor fails, use an independent authoritative read path if available. If the
+fallback succeeds, the monitor failure remains a tooling defect and MUST NOT contaminate the
+underlying delivery/state verdict.
+
+Freeze sentence:
+
+> **Read failure is unknown, not empty. Observe the authority before declaring absence.**
+
+## 8. Freeze sentence
 
 **Two consecutive delivery timeouts move coordination to the ledger; they do not move the work to failure.**
