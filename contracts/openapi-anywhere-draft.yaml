@@ -113,6 +113,11 @@ x-testing-obligations:
       provider 调用不得因并发而翻倍；`reused=true` 必须如实。
     # v0.2（docs/anywhere_capability.md 的 durable fingerprint）要的是**至少**这四段：
     fingerprint: canonical_destination_id + catalog_schema_version + readiness_policy_version + provider_policy_version
+    # ORD-0167（仲裁 `e4b7faa3`）把这句话补全成两半：**认得出目的地**时就是上面四段；
+    # **认不出**时身份列为 null，指纹换成 `pending-request-v1 + scope + 归一化查询 + 同三个版本`。
+    # 两者都不含用户原文、也不含 `destination_pending_key`（那是 correlation 材料，不是身份）；
+    # "raw text is not identity"，收敛由请求指纹完成，不靠给一句话发身份证。
+    fingerprint-unresolved: "pending-request-v1 + scope + resolver_query_normalized + catalog_schema_version + readiness_policy_version + provider_policy_version"
     gate: backend/tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation
   geometry-completeness:
     rule: >-
@@ -249,6 +254,11 @@ x-testing-obligations:
       # 更正（21:4x，产品已改）：`23bdf9f` 之后不再写 sha1，而是 `pending:<归一化查询原文>`——
       # 摘要那半解决了，"raw text is not identity" 仍未解决（G19b 因此继续红）；上面那行保留为
       # 当时实测的历史读数，不代表现在的形状。
+      # 收口（ORD-0167，09-22 凌晨复测）：`_match_forms` 认识 市/区/县/自治州… 之后
+      # query=北京市 → resolution=catalog, canonical_destination_id=CN-BEIJING，与裸名同身份、
+      # 同指纹、同 capability（g19a/g19b/g19c 转绿）；认不出的那句 ⇒
+      # canonical_destination_id=null + pending_destination_label=原文逐字 + 独立的归一化列，
+      # 上面那行历史读数里"由查询文本现造身份"的做法在产品码里已无写点（g12 扫全模块钉住）。
       根因 anywhere_capability.py:186-194 的别名集合 = {code, 去 CN- 前缀, _CITY_DISPLAY_NAMES 的光杆名字}，
       _normalise(:143) 不处理后缀，_TRAVELER_FACING_LABELS(:119) 今天只有 CNX-DEMO 一条；
       未命中即走 :217-226 mint 身份。连带后果：指纹按拼法生成 ⇒ §17D/G3 要的"同指纹收敛同一操作"
@@ -258,6 +268,48 @@ x-testing-obligations:
       - backend/tests/test_qoder_anywhere_capability_from_store.py::test_g19b_two_spellings_of_one_city_must_not_mint_two_canonical_identities
       - backend/tests/test_qoder_anywhere_capability_from_store.py::test_g19c_structural_capability_must_not_depend_on_how_the_city_is_spelled
       - backend/tests/test_qoder_anywhere_capability_from_store.py::test_g19d_zero_coverage_is_only_legitimate_when_the_store_really_has_nothing
+
+  a-pending-destination-is-a-request-not-a-place:
+    # 契约原文：`arbiter/anywhere-contract` → docs/pending_destination_identity_policy.md @ `e4b7faa3`
+    # 冻结句：Unknown destination text may identify a request to resolve a destination;
+    #        it does not identify a destination.
+    rule: >-
+      目的地解析只有四个结论：RESOLVED / AMBIGUOUS / NO_MATCH / RUNTIME_FAILURE。
+      后三者的 `canonical_destination_id` 一律 **null**；用户的原话进 `pending_destination_label`
+      （逐字，绝不 `_normalise`），用来匹配的字面进 `resolver_query_normalized`（也不是身份），
+      关联/幂等 token 叫 `destination_pending_key`（**correlation only, never identity**：
+      不得当 place/destination id 暴露、不得进 planner、不得作为目录 join 键）。
+      AMBIGUOUS 不得猜赢家，候选单独成栏；RUNTIME_FAILURE 必须可重试且**绝不**写成结构性结论（R1）。
+      未解析请求的幂等靠 `pending-request-v1` 请求指纹（归一化语义 + scope + 三个版本），
+      里面既没有 canonical 也没有原文。已有的 `pending:` 旧行**就地回填、不删不重建**：
+      operation id 与历史保留，canonical 置 null，label 从最佳可用 raw source 回填；
+      只剩归一化 payload 的行必须标 `LEGACY_NORMALIZED`，不许伪称 exact raw。
+    measured-on: f1bdbbe
+    gates:
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g1_unresolved_text_never_reaches_the_identity_column
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g2_no_match_names_itself_and_keeps_identity_null
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g3_a_broken_source_is_a_runtime_failure_not_a_structural_no_match
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g3b_a_runtime_failure_ends_the_job_retryable_and_never_structural
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g3c_the_job_projection_carries_the_same_identity_shape_and_prejudges_nothing
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g4_an_ambiguous_query_keeps_identity_null_and_lists_candidates_separately
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g5_a_resolved_destination_carries_a_real_canonical_identity
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g6_the_stored_label_is_separate_from_the_normalised_resolver_query
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g7_punctuation_is_not_lost_when_the_input_is_stored
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g8_the_pending_key_cannot_buy_a_place_join
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g9_repeated_unresolved_requests_share_one_job_and_invent_no_identity
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g10_legacy_pending_rows_migrate_in_place_without_losing_their_ids
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g13_rerunning_the_schema_migration_never_duplicates_or_eats_a_row
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g11_a_blank_request_answers_a_null_identity_and_echoes_the_input
+      - backend/tests/test_qoder_pending_destination_identity.py::test_g12_no_product_module_writes_user_text_into_an_identity_column
+    reverse-mutants:
+      # 仲裁要求的两条反向突变（外加本单自己加的三条），靶子必须是**当前绿的门**：
+      # M1 把 `pending:<raw>` 重新写回 canonical ⇒ g1 必须红；
+      # M2 让目录调查在 canonical 为空时回退去用 `destination_pending_key` 当 join 键 ⇒ g8 必须红；
+      # M3 把归一化文本当 exact raw 存 ⇒ g6/g7 必须红；
+      # M4 把运行时失败洗成结构性 NO_MATCH ⇒ g3/g3b 必须红；
+      # M5 把 legacy 归一化残留的 fidelity 伪造成 EXACT_RAW ⇒ g10 必须红。
+      # 实测：baseline 7 门全绿后装突变，5/5 KILLED，逐字节还原已验（review/mutate_ord167.py）。
+      script: review/mutate_ord167.py
 
   runtime-egress-tripwire-is-required-beyond-the-static-scan:
     rule: >-

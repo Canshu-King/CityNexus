@@ -81,6 +81,8 @@ def seeded(monkeypatch) -> str:
     reset = client.post("/api/v1/demo/reset")
     assert reset.status_code == 200, reset.text
     with SessionLocal() as session:
+        session.execute(CatalogHydrationOperation.__table__.delete())
+        session.commit()
         session.execute(text("DELETE FROM places WHERE city_code = :c"), {"c": STAGE_CITY})
         session.commit()
         assert session.scalar(
@@ -604,27 +606,41 @@ def test_geometry_is_recorded_as_wgs84_and_the_provider_s_system_stays_separate(
 
 
 def test_an_unresolved_query_never_gets_a_confident_looking_identity(seeded) -> None:
-    """An id that reads like a city code would be believed by everything downstream."""
+    """An id that reads like a city code would be believed by everything downstream.
+
+    ORD-0167 (arbiter `e4b7faa3`) tightened what "honest placeholder" means here: carrying the
+    question in the identity column was still carrying the question in the identity column.  The
+    answer must be *no identity at all*, with the words kept in their own field.
+    """
 
     with SessionLocal() as session:
         body = capability_module.evaluate_capability(session, UNSEEN_COUNTY)
-    assert body["canonical_destination_id"].startswith("pending:"), body["canonical_destination_id"]
-    assert UNSEEN_COUNTY in body["canonical_destination_id"], (
-        f"期望：未解析的身份要看得出问的是什么（R10 不许用哈希冒充 canonical）；实际："
-        f"{body['canonical_destination_id']}"
+    assert body["canonical_destination_id"] is None, (
+        f"期望：解析不出目的地时不发明身份，canonical_destination_id=null；实际："
+        f"{body['canonical_destination_id']!r}"
     )
-    assert not re.search(r"[0-9a-f]{12,}", body["canonical_destination_id"]), (
-        f"期望：身份里不得出现不可逆摘要；实际：{body['canonical_destination_id']}"
+    assert str(body["pending_destination_label"]) == UNSEEN_COUNTY, (
+        f"期望：用户原文逐字进 pending_destination_label；实际："
+        f"{body['pending_destination_label']!r}"
     )
+    for key, value in body.items():
+        if key in {"query", "pending_destination_label", "resolver_query_normalized"}:
+            continue
+        assert not (isinstance(value, str) and UNSEEN_COUNTY in value), (
+            f"期望：原文只出现在这三栏里；实际字段 {key!r} 也带着它（{value!r}）"
+        )
+    assert body["destination_state"] == "NO_MATCH", body["destination_state"]
     assert body["destination_resolution"] == "unresolved", body["destination_resolution"]
     assert body["capability"] == "UNAVAILABLE", body["capability"]
     assert body["reason_code"] not in capability_module.TRANSIENT_REASONS, body["reason_code"]
     assert body["recommended_action"], "期望：说不清目的地也要给一条出路；实际：没有 recommended_action"
     with SessionLocal() as session:
         other = capability_module.evaluate_capability(session, UNSEEN_COUNTY + " ")
-    assert other["canonical_destination_id"] == body["canonical_destination_id"], (
-        "期望：同一个问题（只差空白）必须落到同一个规范身份，否则幂等键会随措辞漂移"
+    assert other["fingerprint"] == body["fingerprint"], (
+        "期望：同一个问题（只差空白）落到同一个幂等指纹——收敛靠请求指纹，不靠伪造身份；实际："
+        f"{str(other['fingerprint'])[:16]!r} vs {str(body['fingerprint'])[:16]!r}"
     )
+    assert other["canonical_destination_id"] is None
 
 
 def test_a_hydration_cannot_invent_catalog_rows_it_did_not_fetch(seeded) -> None:

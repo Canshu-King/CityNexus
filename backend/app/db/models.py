@@ -1171,7 +1171,25 @@ class CatalogHydrationOperation(Base):
     __tablename__ = "catalog_hydration_operations"
     id: Mapped[str] = mapped_column(String, primary_key=True)
     fingerprint: Mapped[str] = mapped_column(String)
-    canonical_destination_id: Mapped[str] = mapped_column(String)
+    # Null is a legal, expected value: "this request has no destination identity yet" is a fact
+    # about the request, and the NOT NULL that used to sit here is what forced the build to write
+    # `pending:<the traveller's words>` into an identity column (ORD-0167 / arbiter `e4b7faa3`).
+    canonical_destination_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    # The user's own text, byte for byte, for the screen and the audit trail.  Never folded,
+    # never punctuation-stripped, and never an identifier.
+    pending_destination_label: Mapped[str | None] = mapped_column(String, nullable=True)
+    # The folded form the resolver matched on - kept apart so a match can be explained without
+    # claiming the machine saw what the traveller typed.  Also not an identifier.
+    resolver_query_normalized: Mapped[str | None] = mapped_column(String, nullable=True)
+    # CORRELATION ONLY, NEVER IDENTITY: a token that ties polls, abandons and audit lines to this
+    # operation.  It must not be joined to `places`, must not reach the planner, and must not
+    # appear in a fingerprint - convergence for a repeated request is the fingerprint's job.
+    destination_pending_key: Mapped[str | None] = mapped_column(String, nullable=True)
+    # Whether `pending_destination_label` is the exact input or the best a legacy row survived.
+    pending_label_fidelity: Mapped[str | None] = mapped_column(String, nullable=True)
+    # Audit, not state: the key this row carried before the identity fix recomputed it, so an
+    # old job can still be traced to the fingerprint it was opened under.
+    legacy_fingerprint: Mapped[str | None] = mapped_column(String, nullable=True)
     catalog_schema_version: Mapped[str] = mapped_column(String)
     readiness_policy_version: Mapped[str] = mapped_column(String)
     provider_policy_version: Mapped[str] = mapped_column(String)

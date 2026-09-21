@@ -968,7 +968,18 @@ CREATE INDEX IF NOT EXISTS idx_stay_generation_journey_recent
 CREATE TABLE IF NOT EXISTS catalog_hydration_operations (
     id TEXT PRIMARY KEY,
     fingerprint TEXT NOT NULL,
-    canonical_destination_id TEXT NOT NULL,
+    -- Nullable on purpose (ORD-0167): a request whose destination nobody can name has *no*
+    -- canonical identity.  The NOT NULL below used to force this build to invent one out of the
+    -- traveller's own words, and a fingerprint was then computed from that invention.
+    canonical_destination_id TEXT,
+    -- The three non-identity columns: verbatim input, folded input, correlation token.  None of
+    -- them is a destination identifier and none may be joined against `places`.
+    pending_destination_label TEXT,
+    resolver_query_normalized TEXT,
+    destination_pending_key TEXT,
+    pending_label_fidelity TEXT CHECK (pending_label_fidelity IS NULL OR pending_label_fidelity IN
+        ('EXACT_RAW','LEGACY_NORMALIZED')),
+    legacy_fingerprint TEXT,
     catalog_schema_version TEXT NOT NULL,
     readiness_policy_version TEXT NOT NULL,
     provider_policy_version TEXT NOT NULL,
@@ -981,7 +992,7 @@ CREATE TABLE IF NOT EXISTS catalog_hydration_operations (
     result_json TEXT NOT NULL DEFAULT '{}',
     error_json TEXT NOT NULL DEFAULT '{}',
     outcome TEXT CHECK (outcome IS NULL OR outcome IN
-        ('CATALOG_PREPARED','ALREADY_CURRENT','NO_REGISTERED_SOURCE','PENDING_CANDIDATES_UNAPPLIED','ABANDONED_BY_TRAVELLER','WORKER_LOST')),
+        ('CATALOG_PREPARED','ALREADY_CURRENT','NO_REGISTERED_SOURCE','PENDING_CANDIDATES_UNAPPLIED','ABANDONED_BY_TRAVELLER','WORKER_LOST','DESTINATION_AMBIGUOUS','RESOLVER_RUNTIME_FAILURE')),
     queued_at TEXT NOT NULL,
     started_at TEXT,
     finished_at TEXT,

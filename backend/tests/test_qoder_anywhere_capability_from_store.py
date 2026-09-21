@@ -23,7 +23,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 
-from app.anywhere_capability import PENDING_PREFIX
+from app.anywhere_capability import LEGACY_PENDING_PREFIX
 from app.db.models import Place
 from app.db.session import SessionLocal
 from app.main import _CITY_DISPLAY_NAMES, app
@@ -124,7 +124,7 @@ def test_g19b_two_spellings_of_one_city_must_not_mint_two_canonical_identities()
         plain = _capability(label)
         variant = _capability(suffixed)
         assert not str(variant.get("canonical_destination_id") or "").startswith(
-            PENDING_PREFIX
+            LEGACY_PENDING_PREFIX
         ), (
             f"期望：库里 {city_code} 有 {rows} 行地点时，问「{suffixed}」不得拿到一个由查询文本"
             f"派生的身份（无论摘要还是原文）；实际：canonical_destination_id="

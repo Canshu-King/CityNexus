@@ -80,6 +80,153 @@ SessionLocal = sessionmaker(bind=engine, class_=Session, expire_on_commit=False)
 
 QUARANTINE_STATUS = "QUARANTINED_DUPLICATE_IDENTITY"
 
+# The name the pre-ORD-0167 `catalog_hydration_operations` table is parked under while the schema
+# script builds the authoritative new one.  Renaming rather than dropping-and-recreating is what
+# keeps this a migration and not a deletion: the old rows stay on disk, untouched, until every one
+# of them has been written into the new shape and counted.
+PENDING_IDENTITY_PRESERVED = "catalog_hydration_operations__pre_identity_fix"
+
+# What the last boot's identity migration did, so a caller can ask instead of guessing.  Absent
+# (`None`) means this process never migrated anything, which is the normal case.
+LAST_PENDING_IDENTITY_MIGRATION: dict[str, int] | None = None
+
+
+def _pending_identity_needs_fix(connection) -> bool:
+    """True when `catalog_hydration_operations` still has the pre-ORD-0167 shape.
+
+    Three things moved together and none of them can be altered in place in SQLite: the identity
+    column lost its NOT NULL, five columns appeared, and the `outcome` CHECK gained two terminal
+    names.  Any one of those is enough to rebuild - and the rebuild is deliberately left to the
+    schema script, so the new table comes from `db/schema.sql` instead of a second copy of the
+    DDL typed in here where it can drift.
+    """
+
+    ddl = connection.exec_driver_sql(
+        "SELECT sql FROM sqlite_master WHERE type='table' AND name='catalog_hydration_operations'"
+    ).scalar()
+    if not ddl:
+        return False
+    columns = {
+        row[1]: row
+        for row in connection.exec_driver_sql("PRAGMA table_info(catalog_hydration_operations)")
+    }
+    if "pending_destination_label" not in columns or "legacy_fingerprint" not in columns:
+        return True
+    canonical = columns.get("canonical_destination_id")
+    if canonical is not None and int(canonical[3] or 0) == 1:
+        return True  # NOT NULL on an identity column is what forced `pending:<text>` in the first place
+    return "DESTINATION_AMBIGUOUS" not in ddl
+
+
+def _preserve_legacy_hydration_table(connection) -> None:
+    """Step the old table aside before the schema script runs, so `IF NOT EXISTS` means it."""
+
+    if not _pending_identity_needs_fix(connection):
+        return
+    connection.exec_driver_sql(
+        f"ALTER TABLE catalog_hydration_operations RENAME TO {PENDING_IDENTITY_PRESERVED}"
+    )
+
+
+def _backfill_legacy_hydration_rows(connection) -> None:
+    """Move every legacy row into the new shape, in place, losing none (arbiter ④ / R10).
+
+    The semantic decision - what the identity, label, fidelity and fingerprint become - belongs to
+    the module that owns that vocabulary, so it is asked, not reimplemented here.  What this
+    function owns is the physical part: no row leaves the old table without arriving in the new
+    one, the operation keeps its id and its history, the row count is compared before anything is
+    dropped, and the whole exchange is in the schema transaction so a failure rolls it back.
+    """
+
+    global LAST_PENDING_IDENTITY_MIGRATION
+
+    if not _table_exists(connection, PENDING_IDENTITY_PRESERVED):
+        return
+    from app.anywhere_capability import backfill_pending_identity_row  # vocabulary owner
+
+    legacy = connection.exec_driver_sql(f"SELECT * FROM {PENDING_IDENTITY_PRESERVED}")
+    legacy_keys = list(legacy.keys())
+    old_rows = [dict(zip(legacy_keys, row)) for row in legacy]
+    new_columns = [
+        row[1] for row in connection.exec_driver_sql("PRAGMA table_info(catalog_hydration_operations)")
+    ]
+    counts = {
+        "rows_before": len(old_rows),
+        "rows_after": 0,
+        "identities_nulled": 0,
+        "identities_untouched": 0,
+        "labels_exact_raw": 0,
+        "labels_legacy_normalized": 0,
+    }
+    placeholders = ", ".join("?" * len(new_columns))
+    columns_sql = ", ".join(new_columns)
+    # Upsert, not a bare INSERT: `executescript` commits, so a boot that died between parking the
+    # old table and dropping it leaves the rows behind.  The next boot must *finish* that job, and
+    # a primary-key collision on an id it already migrated is that case, not a corruption.
+    updates = ", ".join(
+        f"{name} = excluded.{name}" for name in new_columns if name != "id"
+    )
+    statement = (
+        f"INSERT INTO catalog_hydration_operations ({columns_sql}) VALUES ({placeholders})"
+        f" ON CONFLICT(id) DO UPDATE SET {updates}"
+    )
+    for old in old_rows:
+        fields = backfill_pending_identity_row(
+            old.get("canonical_destination_id"),
+            old.get("request_json"),
+            old.get("fingerprint"),
+            old.get("id"),
+        )
+        if fields["canonical_destination_id"] is None:
+            counts["identities_nulled"] += 1
+        else:
+            counts["identities_untouched"] += 1
+        if fields["pending_label_fidelity"] == "EXACT_RAW":
+            counts["labels_exact_raw"] += 1
+        elif fields["pending_label_fidelity"] == "LEGACY_NORMALIZED":
+            counts["labels_legacy_normalized"] += 1
+        values = dict(old)
+        values.update({name: value for name, value in fields.items() if name in new_columns})
+        connection.exec_driver_sql(
+            statement, tuple(values.get(name) for name in new_columns)
+        )
+    counts["rows_after"] = int(
+        connection.exec_driver_sql("SELECT COUNT(*) FROM catalog_hydration_operations").scalar()
+        or 0
+    )
+    if counts["rows_after"] < counts["rows_before"]:
+        raise RuntimeError(
+            "catalog_hydration_operations identity migration refused to continue: "
+            f"{counts['rows_before']} rows went in, {counts['rows_after']} came out. The schema "
+            "transaction is rolling back; no legacy job has been dropped."
+        )
+    connection.exec_driver_sql(f"DROP TABLE {PENDING_IDENTITY_PRESERVED}")
+
+    # One named line about what changed, on a database that has somewhere to put it.  A migration
+    # that cannot be described afterwards is indistinguishable from data loss.
+    if _table_exists(connection, "audit_logs") and counts["identities_nulled"]:
+        from datetime import datetime, timezone
+
+        stamp = datetime.now(timezone.utc).isoformat()
+        connection.exec_driver_sql(
+            "INSERT INTO audit_logs (id, actor_type, actor_id, journey_id, action, entity_type,"
+            " entity_id, before_json, after_json, trace_id, created_at) VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            (
+                f"pending-identity-migration-{stamp}",
+                "SYSTEM",
+                "db/session.py:_backfill_legacy_hydration_rows",
+                None,
+                "CATALOG_HYDRATION_IDENTITY_MIGRATED",
+                "catalog_hydration_operations",
+                None,
+                json.dumps({"pending_identity_rows": counts["identities_nulled"]}),
+                json.dumps(counts),
+                f"pending-identity-migration@{stamp}",
+                stamp,
+            ),
+        )
+    LAST_PENDING_IDENTITY_MIGRATION = counts
+
 
 
 
@@ -274,6 +421,8 @@ def ensure_schema(target_engine: Engine = engine) -> None:
         if target_engine.dialect.name == "sqlite":
             _quarantine_existing_duplicates(connection)
             _collapse_duplicate_active_plans(connection)
+            # ORD-0167: parked before the script so the new table is the one in `db/schema.sql`.
+            _preserve_legacy_hydration_table(connection)
         if hasattr(raw, "executescript"):
             raw.executescript(sql)
         else:  # pragma: no cover - retained for non-SQLite development engines
@@ -282,6 +431,7 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                     connection.exec_driver_sql(statement)
         if target_engine.dialect.name == "sqlite":
             _reconcile_real_place_candidate_scope(connection)
+            _backfill_legacy_hydration_rows(connection)
             journey_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(journeys)")
             }

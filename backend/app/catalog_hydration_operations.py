@@ -38,9 +38,14 @@ from app.anywhere_capability import (
     CATALOG_SCHEMA_VERSION,
     PROVIDER_POLICY_VERSION,
     READINESS_POLICY_VERSION,
+    REASON_DESTINATION_AMBIGUOUS,
+    REASON_NO_CANONICAL_IDENTITY,
+    REASON_RESOLVER_UNAVAILABLE,
     capability_fingerprint,
     evaluate_capability,
     fingerprint_parts,
+    identity_fields,
+    pending_correlation_key,
     resolve_destination,
 )
 from app.db.models import CatalogHydrationOperation, Place, RealPlaceCandidate
@@ -92,6 +97,11 @@ OUTCOME_NO_REGISTERED_SOURCE = "NO_REGISTERED_SOURCE"
 OUTCOME_PENDING_UNAPPLIED = "PENDING_CANDIDATES_UNAPPLIED"
 OUTCOME_ABANDONED = "ABANDONED_BY_TRAVELLER"
 OUTCOME_WORKER_LOST = "WORKER_LOST"
+# ORD-0167: two endings that were previously indistinguishable from "this place has no source".
+# An ambiguous query can be fixed by choosing; a resolver that broke can be fixed by retrying.
+# Neither may be reported as the other, and neither may be reported as the other one.
+OUTCOME_DESTINATION_AMBIGUOUS = "DESTINATION_AMBIGUOUS"
+OUTCOME_RESOLVER_RUNTIME_FAILURE = "RESOLVER_RUNTIME_FAILURE"
 
 logger = logging.getLogger("citynexus.catalog_hydration")
 
@@ -149,6 +159,28 @@ def retry_after_ms(row: CatalogHydrationOperation) -> int:
     return 5000
 
 
+def _state_of(row: CatalogHydrationOperation) -> str | None:
+    """Which of the four destination-request states this job record has *concluded*.
+
+    Not a column: `canonical_destination_id` being null plus an outcome already says which of
+    them it was, and storing a third copy would be a third thing that can disagree.  And not a
+    default: a job still in flight, or one that ended because a traveller walked away or a worker
+    died, has not concluded anything about the destination, so the honest answer is no answer.
+    Reporting `NO_MATCH` for a QUEUED row would be the same mistake as a fabricated `progress`.
+    """
+
+    if row.canonical_destination_id:
+        return "RESOLVED"
+    outcome = str(row.outcome or "")
+    if outcome == OUTCOME_DESTINATION_AMBIGUOUS:
+        return "AMBIGUOUS"
+    if outcome == OUTCOME_RESOLVER_RUNTIME_FAILURE:
+        return "RUNTIME_FAILURE"
+    if outcome == OUTCOME_NO_REGISTERED_SOURCE or row.status == UNAVAILABLE:
+        return "NO_MATCH"
+    return None
+
+
 def operation_payload(row: CatalogHydrationOperation) -> dict[str, Any]:
     """The projection every caller reads.  Note what is *not* in here: `progress`.
 
@@ -175,6 +207,14 @@ def operation_payload(row: CatalogHydrationOperation) -> dict[str, Any]:
         "elapsed_ms": _ms_since(_parse(row.queued_at), _parse(row.finished_at) if terminal else None),
         "retry_after_ms": 0 if terminal else retry_after_ms(row),
         "canonical_destination_id": row.canonical_destination_id,
+        # The three non-identity columns, named as what they are: the traveller's words, the
+        # folded form used to match them, and a token that correlates this job to nothing else.
+        "pending_destination_label": row.pending_destination_label,
+        "resolver_query_normalized": row.resolver_query_normalized,
+        "destination_pending_key": row.destination_pending_key,
+        "pending_label_fidelity": row.pending_label_fidelity,
+        "destination_state": _state_of(row),
+        "retryable": row.status == FAILED or str(row.outcome or "") == OUTCOME_RESOLVER_RUNTIME_FAILURE,
         "catalog_schema_version": row.catalog_schema_version,
         "readiness_policy_version": row.readiness_policy_version,
         "provider_policy_version": row.provider_policy_version,
@@ -290,8 +330,11 @@ def submit_operation(
     loser reads back and reports.
     """
 
-    canonical = resolve_destination(session, query).canonical_destination_id
-    fingerprint = capability_fingerprint(canonical)
+    resolution = resolve_destination(session, query)
+    fingerprint = capability_fingerprint(
+        resolution.canonical_destination_id,
+        resolver_query_normalized=resolution.resolver_query_normalized,
+    )
     existing = find_open_operation(session, fingerprint)
     if existing is not None:
         return existing, True
@@ -302,13 +345,19 @@ def submit_operation(
         sort_keys=True,
     )
     operation_id = str(uuid.uuid4())
+    # The token belongs to the operation, so it is named here and not by the resolver: a read that
+    # never opened a job has no correlation material to hand out.  Still never derived from the
+    # query text, and still never an identity - `places` must not become joinable on it.
+    fields = identity_fields(resolution)
+    if fields["canonical_destination_id"] is None:
+        fields["destination_pending_key"] = pending_correlation_key(operation_id)
     staged: list[CatalogHydrationOperation] = []
 
     def stage() -> CatalogHydrationOperation:
         row = CatalogHydrationOperation(
             id=operation_id,
             fingerprint=fingerprint,
-            canonical_destination_id=canonical,
+            **fields,
             catalog_schema_version=CATALOG_SCHEMA_VERSION,
             readiness_policy_version=READINESS_POLICY_VERSION,
             provider_policy_version=PROVIDER_POLICY_VERSION,
@@ -435,8 +484,13 @@ def _failure_payload(code: str, message: str, **details: Any) -> str:
     )
 
 
-def _survey(session: Session, canonical_destination_id: str) -> dict[str, Any]:
+def _survey(session: Session, canonical_destination_id: str | None) -> dict[str, Any]:
     """What the registered deterministic sources hold for this destination.  Read-only.
+
+    `canonical_destination_id` is the *identity or null* - the caller passes what the resolver
+    concluded, and null is answered by counting nothing.  It used to be answered by testing for a
+    `pending:` prefix, which meant the meaning of a row depended on a string convention instead of
+    on the database's own distinction between "this place" and "no place yet".
 
     `pending_materialisations` counts captured provider candidates that have not become
     catalogue rows yet - a real number from the store, not a promise that this build will act
@@ -444,9 +498,7 @@ def _survey(session: Session, canonical_destination_id: str) -> dict[str, Any]:
     scoped to existing sources; see the delivery note).
     """
 
-    city_code = (
-        None if canonical_destination_id.startswith("pending:") else canonical_destination_id
-    )
+    city_code = canonical_destination_id
     held = (
         int(
             session.scalar(select(func.count(Place.id)).where(Place.city_code == city_code))
@@ -528,6 +580,47 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
         survey = _survey(session, resolution.canonical_destination_id)
 
         set_phase(session, operation_id, "DISCOVERING_POIS")
+        if resolution.state == "RUNTIME_FAILURE":
+            # Retryable, and named as such (R1): one of our own sources failed, which says nothing
+            # about the destination.  Ending the job UNAVAILABLE here would be the same laundering
+            # this branch replaces, just written to a row instead of to a response.
+            mark(
+                session,
+                operation_id,
+                FAILED,
+                from_statuses=(RUNNING,),
+                outcome=OUTCOME_RESOLVER_RUNTIME_FAILURE,
+                phase="DISCOVERING_POIS",
+                error_json=_failure_payload(
+                    "DESTINATION_RESOLVER_UNAVAILABLE",
+                    "A destination source this build depends on could not be read; the request is "
+                    "unchanged and may be submitted again.",
+                    reason_code=REASON_RESOLVER_UNAVAILABLE,
+                    retryable=True,
+                    **identity_fields(resolution),
+                ),
+                finished_at=now_iso(),
+            )
+            return
+        if resolution.state == "AMBIGUOUS":
+            mark(
+                session,
+                operation_id,
+                UNAVAILABLE,
+                from_statuses=(RUNNING,),
+                outcome=OUTCOME_DESTINATION_AMBIGUOUS,
+                phase="DISCOVERING_POIS",
+                error_json=_failure_payload(
+                    "DESTINATION_AMBIGUOUS",
+                    f"'{resolution.query}' names more than one destination this product can see; "
+                    "no winner was guessed.",
+                    reason_code=REASON_DESTINATION_AMBIGUOUS,
+                    candidates=resolution.candidates,
+                    **identity_fields(resolution),
+                ),
+                finished_at=now_iso(),
+            )
+            return
         if not resolution.resolved:
             # Structural: nothing in this build can name the destination.  This is *not* the
             # branch a failing resolver takes - a provider that could not be reached stays
@@ -543,8 +636,12 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
                     "DESTINATION_IDENTITY_UNRESOLVED",
                     f"'{resolution.query}' cannot be resolved to a destination this product can "
                     "name from a traceable source.",
-                    reason_code="NO_CANONICAL_IDENTITY",
-                    canonical_destination_id=resolution.canonical_destination_id,
+                    reason_code=REASON_NO_CANONICAL_IDENTITY,
+                    # The claim is counted, not asserted: these are the rows the survey actually
+                    # found for *this* request.  A non-zero number here while the identity is null
+                    # would mean something was matched on text or on the correlation token.
+                    survey=survey,
+                    **identity_fields(resolution),
                 ),
                 finished_at=now_iso(),
             )
@@ -569,7 +666,7 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
             # able to see that the gaps it asked about are the gaps that remain.
             outcome = OUTCOME_PENDING_UNAPPLIED
         body = {
-            "canonical_destination_id": resolution.canonical_destination_id,
+            **identity_fields(resolution),
             "matched_label": resolution.matched_label,
             "capability_after": capability["capability"],
             "coverage_after": capability["coverage"],
@@ -714,7 +811,10 @@ def accept_hydration(
     )
     payload = operation_payload(row)
     payload["reused"] = reused
-    payload["fingerprint_parts"] = fingerprint_parts(row.canonical_destination_id)
+    payload["fingerprint_parts"] = fingerprint_parts(
+        row.canonical_destination_id,
+        resolver_query_normalized=row.resolver_query_normalized,
+    )
     return SubmittedJob(operation_id=row.id, reused=reused, payload=payload)
 
 
