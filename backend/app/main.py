@@ -194,6 +194,7 @@ from app.integrations.context.open_meteo import OpenMeteoContextProvider
 from app.integrations.context.weather_runtime import refresh_weather_runtime
 from app.integrations.discovery.real_city import (
     capture_real_city_candidates,
+    live_failure_reason,
     normalize_opening_hours,
 )
 from app.integrations.discovery.orchestration import orchestrate_discovery
@@ -10185,7 +10186,15 @@ def _copilot_place_answer(
             session, journey, query=query, limit=8, mode="live"
         )
     except (RuntimeError, ValueError, httpx.HTTPError) as exc:
-        result = {"candidates": [], "mode": "live-unavailable", "reason": str(exc)[:160]}
+        result = {
+            "candidates": [],
+            "mode": "live-unavailable",
+            "reason": str(exc)[:160],
+            # ORD-0099: the same named reason the discovery module publishes, so a caller can
+            # branch on a stable code instead of pattern-matching exception text. `reason`
+            # stays exactly as it was - this key is added beside it.
+            "reason_code": live_failure_reason(exc),
+        }
     candidates = list(result.get("candidates") or [])
     source = "live" if candidates else "captured-library"
 

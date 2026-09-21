@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import math
 import re
 from dataclasses import dataclass, field
@@ -29,6 +30,9 @@ from app.db.models import (
     StayJourneyOption,
     WebObservation,
 )
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 def _now() -> str:
@@ -481,6 +485,78 @@ def _city_label(city_code: str) -> str:
     if "-" in raw:
         raw = raw.split("-", 1)[1]
     return raw.replace("_", " ").replace("-", " ").strip() or str(city_code)
+
+
+#: Stable names for "why the live path did not answer" (ORD-0099). A Python exception class
+#: name is not a product reason: it changes with the HTTP client, means nothing to a
+#: traveller, and puts an implementation detail on a screen. Five outcomes are
+#: distinguishable, and each maps from a different failure shape.
+RESOLVER_UNREACHABLE = "RESOLVER_UNREACHABLE"
+PROVIDER_TIMEOUT = "PROVIDER_TIMEOUT"
+PROVIDER_RATE_LIMITED = "PROVIDER_RATE_LIMITED"
+PROVIDER_BAD_RESPONSE = "PROVIDER_BAD_RESPONSE"
+PROVIDER_NO_RESULTS = "PROVIDER_NO_RESULTS"
+#: Our own request was malformed (an internal city code reached a public geocoder).
+#: Reported separately on purpose: blaming a provider for a bug we sent is how a lane
+#: spends an evening chasing someone else's outage.
+RESOLVER_LABEL_CARRIES_INTERNAL_CODE = "RESOLVER_LABEL_CARRIES_INTERNAL_CODE"
+
+LIVE_FAILURE_REASONS = frozenset(
+    {
+        RESOLVER_UNREACHABLE,
+        PROVIDER_TIMEOUT,
+        PROVIDER_RATE_LIMITED,
+        PROVIDER_BAD_RESPONSE,
+        PROVIDER_NO_RESULTS,
+        RESOLVER_LABEL_CARRIES_INTERNAL_CODE,
+    }
+)
+
+
+def live_failure_reason(exc: BaseException) -> str:
+    """Name a live-discovery failure the way the product means it, not by exception class.
+
+    Order matters: `httpx.TimeoutException` and `httpx.ConnectError` are both
+    `httpx.HTTPError` subclasses, and an `HTTPStatusError` carries the response, so a 429
+    has to be read before the generic branch - otherwise rate limiting disappears into
+    "bad response" and the one failure an operator should retry differently is masked.
+    """
+
+    if isinstance(exc, ValueError) and "RESOLVER_LABEL_CARRIES_INTERNAL_CODE" in str(exc):
+        return RESOLVER_LABEL_CARRIES_INTERNAL_CODE
+    if isinstance(exc, httpx.TimeoutException):
+        return PROVIDER_TIMEOUT
+    if isinstance(exc, httpx.ConnectError):
+        return RESOLVER_UNREACHABLE
+    status = getattr(getattr(exc, "response", None), "status_code", None)
+    if status == 429:
+        return PROVIDER_RATE_LIMITED
+    if isinstance(status, int):
+        return PROVIDER_BAD_RESPONSE
+    if isinstance(exc, httpx.HTTPError):
+        return RESOLVER_UNREACHABLE
+    if isinstance(exc, RuntimeError) and "NO_JOURNEY_DERIVED_CITY_ANCHOR" in str(exc):
+        return PROVIDER_NO_RESULTS
+    return PROVIDER_BAD_RESPONSE
+
+
+def _resolver_city_label(city_code: str) -> str:
+    """The one label both geocode calls send, asserted free of our own internal codes.
+
+    `city_code` is a CityNexus identifier (`CN-TIANJIN`, `CNX-DEMO`). Forwarding it as the
+    place name asks Nominatim to look for a string no traveller ever typed, which is how the
+    bounded fallback kept answering "nothing found" (ORD-0099 ①). `_city_label` strips the
+    prefix for every code the product mints; this guard is the assertion that the strip
+    really happened, so a new code format cannot quietly reintroduce the bug.
+    """
+
+    label = str(_city_label(city_code)).strip()
+    # `_city_label` turns hyphens into spaces, so a still-prefixed label can read
+    # "CN TIANJIN" as easily as "CN-TIANJIN"; both are the same leak.
+    normalized = label.upper().replace("_", " ").replace("-", " ")
+    if re.match(r"^(CN|CNX|JP|SG|TH)\s", normalized):
+        raise ValueError("RESOLVER_LABEL_CARRIES_INTERNAL_CODE")
+    return label
 
 
 def _is_tianjin_replay_city(city_code: str) -> bool:
@@ -1087,6 +1163,7 @@ def capture_real_city_candidates(
     journey_anchor = derive_search_anchor(session, journey)
     if mode == "live":
         live_error: str | None = None
+        failure_stage: str | None = None
         candidates = []
         anchor = journey_anchor
         if not settings.real_city_enabled:
@@ -1094,10 +1171,11 @@ def capture_real_city_candidates(
         else:
             geocoder = NominatimGeocoder()
             poi = OverpassPOIProvider()
+            stage = "anchor_geocode"
             try:
                 # Nominatim grounds the Journey/city anchor and names; Overpass
                 # owns bounded category discovery around that server-derived anchor.
-                city_label = _city_label(journey.city_code)
+                city_label = _resolver_city_label(journey.city_code)
                 context = session.get(JourneyTripContext, journey.id)
                 arrival = _load_json(context.arrival_anchor_json if context else None, {})
                 anchor_query = str(arrival.get("location") or city_label)
@@ -1114,6 +1192,7 @@ def capture_real_city_candidates(
                     }
                 if anchor is None:
                     raise RuntimeError("NO_JOURNEY_DERIVED_CITY_ANCHOR")
+                stage = "category_search"
                 candidates = poi.search(
                     query,
                     latitude=float(anchor["latitude"]),
@@ -1122,13 +1201,19 @@ def capture_real_city_candidates(
                     limit=limit,
                 )
                 if not candidates:
-                    candidates = geocoder.search(query, city=journey.city_code, limit=limit)
+                    # The bounded fallback is a *second* attempt at the same bounded
+                    # question, so it must be asked with the same words: `city_code` is
+                    # our identifier, not a place name, and sending it asked Nominatim
+                    # for "tea shops, CN-TIANJIN" (ORD-0099 ①, measured).
+                    stage = "fallback_geocode"
+                    candidates = geocoder.search(query, city=city_label, limit=limit)
                 provider_status = {
                     "nominatim": "CAPTURED",
                     "overpass": "CAPTURED"
                     if candidates and candidates[0].provider_key == "overpass"
                     else "NO_RESULTS",
                     "anchor": anchor,
+                    "failure_stage": stage,
                 }
             except (
                 httpx.HTTPError,
@@ -1138,7 +1223,18 @@ def capture_real_city_candidates(
                 AttributeError,
                 RuntimeError,
             ) as exc:
-                live_error = type(exc).__name__
+                # Named, stable, and screen-safe. The exception class and its message go
+                # to the log, where an operator reads them; a caller gets one of five
+                # reason codes (ORD-0099 ②).
+                live_error = live_failure_reason(exc)
+                failure_stage = stage
+                LOGGER.warning(
+                    "real-city live discovery failed (%s) at %s: %s: %s",
+                    live_error,
+                    stage,
+                    type(exc).__name__,
+                    exc,
+                )
             finally:
                 geocoder.close()
                 poi.close()
@@ -1150,7 +1246,11 @@ def capture_real_city_candidates(
                     "nominatim": "REPLAY_FALLBACK",
                     "overpass": "REPLAY_FALLBACK",
                     "anchor": journey_anchor,
-                    "fallback_reason": live_error or "LIVE_NO_RESULTS",
+                    # One vocabulary for one question: a named reason, never an exception
+                    # class, and `PROVIDER_NO_RESULTS` when the providers answered but found
+                    # nothing (which is a different thing from answering at all).
+                    "fallback_reason": live_error or PROVIDER_NO_RESULTS,
+                    "failure_stage": failure_stage,
                 }
             else:
                 # A generic-city trial must fail visibly rather than importing
@@ -1161,7 +1261,8 @@ def capture_real_city_candidates(
                     "nominatim": "UNAVAILABLE",
                     "overpass": "UNAVAILABLE",
                     "anchor": journey_anchor,
-                    "fallback_reason": live_error or "LIVE_NO_RESULTS",
+                    "fallback_reason": live_error or PROVIDER_NO_RESULTS,
+                    "failure_stage": failure_stage,
                     "wrong_city_replay_blocked": True,
                 }
     else:
