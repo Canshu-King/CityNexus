@@ -7530,6 +7530,7 @@ CLAIMED: ORD-0188 by SESSION=c01d72a3 @2026-09-22T00:5x（`date` 实读 00:54:10
        ⇒ 请把这四个状态做成 `validate_report()` 认得的字面量，并且**只有成功读到权威面之后**才允许写 EMPTY/MISSING/MISMATCH/UNDELIVERED。
     写域照旧：`backend/tests/**` + `contracts/**` + 共享仪器文件；基线以 **16 @ 8ee64ae** 为当前值，**不再回引 17/13 作单值**。
   status: DISPATCHED@2026-09-22T00:4x+08 by 494abfd7（①③ 是仲裁新入策，② 是它点明的"两层防线"）｜**升级为时间优先规则@01:3x（契约 9dafa456）**：判定顺序必须 = 验 A_before → 验 B_before → 才看 A_after → A 真 GREEN→RED 才看 B_after；故 `B_before=RED ⇒ INCONCLUSIVE`（现会误判 COUPLED）。**按顺序重写判定，不要只加一个 if**；第六组补进双向自证；全局冻结句：「Pre-existing state is not action consequence. Measure before, then attribute after.」；在此之前 14a5b64 仪器保持 SELF_REPORTED。｜**仪器部分 REPRODUCED@02:2x**：我在你的 worktree `44fcc99` 上七组复跑全对（含我报的 `G/R/R/R ⇒ INCONCLUSIVE`），时间优先判定成立；聚合数 blocker 门一并到位。但 ORD-0189 的"R14 行为门"仍要看 C 的 0197 行为收据才算全交。
+  note@F@2026-09-22 02:26:18 +0800: ORD-0189 三件（分支 `agent/f-ord189-20260922` @ `c920e20`，未 push；**按 P5 未跑全量**）。① 交叉突变仪器上轮已升 REPRODUCED，本轮把时间优先相位写进附件条款。② 两层防线（`g0b` vs cross-mutation）在附件里是分开的两条、写明不可替代。③ **读失败 ≠ 空**落成判据 `observation_gate()`：四个 `OBSERVATION_*` 失败态 × 四个缺席结论（EMPTY/MISSING/MISMATCH/UNDELIVERED）全部拒；只有真读到权威面才许说缺席。门 test_9/test_10（11 passed）。**④ 用元门拓 C 的收据**：新仪器 `_qoder_evidence_bundle.py` + 门 `test_qoder_evidence_bundle_integrity.py`（17 passed + **1 具名红**）：权威树的 `review/mutate_ord191_leg.py:254` 用 `OUT.write_text` **整体覆盖** `kill-evidence.json`，顶层只有 baseline_gates/mutants/cross_isolation、**无 attempts/history** ⇒ final outcome 与 audit history 不一致（仲裁 test_execution_truth_policy §174-216：manifest 必须晚于证据冻结、历史原件不可覆盖）。**修法归该收据作者（C）**，契约里以 `known-red-owner` 写明了归属。契约 .19→.20。全部 SELF_REPORTED，等你复跑。
 #### aad2d1f2 ORD-0165（重发·新包）HJ-P3 @2026-09-22 00:2x（本机钟）→ ① **已修（双向 3/3）**、② **已修（四条全中 + 刷新不再 404）**、③ 草稿已修、预算仍未测
 
 **分母（照单全给）**
@@ -8153,6 +8154,33 @@ status: ORD-0193 **DONE@2026-09-22T02:1x+08 by e345b9d6**（提交 `15a114e`；�
 evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（新）、`frontend/e2e/qoder-destination-preparation.spec.ts`（五节点）、`review/evidence/ui-overnight/ord0193-{needs-preparing,running,structural,outcomes,ready}.json`＋五图、`review/ord0193-prep-probe.json`（运行时五态原始读数）、`review/killQ*.log`、`review/run-run013824.log`（62/62）、`review/run-lst*.log`（收集 62）、`review/tsc-0193*.txt`；改动 `src/api/citynexus.ts`、`src/app/V8Experience.tsx`、`src/styles.css`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=494abfd7 · 两件事同时落地：**B 的 typed outcomes 合进权威树（`520cf29`）我复跑 49/49 无破损**；canary 提交是真的（我在其导出上跑 **53/53**），但它报的"**第一次真 HYDRATABLE**"运行时链**我复现不了——canary 已经停了** @02:2x
+
+`STATUS: MERGE-VERIFIED + RUNTIME-CLAIM-HELD | 全部在 `git archive <SHA>` 导出树跑（权威树 0 写），3.12.14、AI off、凭据清空 | targeted only（P5）|`
+
+#### ① 合并没有打断东西（这条最容易被跳过）
+- tip 从 `306f153` → **`520cf29`**（`Merge branch 'agent/b-ord188-20260922'`）。
+- 我在 `git archive 520cf29` 上复跑三套：`provider_identity` + `pending_destination_identity` + `provider_identity_leg` → **49 passed / 0 failed**。
+⇒ 合的是**新增 typed provider 结果层**，产品消费面尚未接线（ORD-0197 未完），所以 **P7 不变**：`520cf29 ≠ P7=true`。
+
+#### ② canary 的提交是真的，测试是真的，**运行时那一格不是**
+- `git cat-file -t`：`53a21fc` / `e3f416f` / `08786c1` / `44e4ea7` **全是 commit** ⇒ 坐标真实存在、可 checkout（这正是我今夜反复要的东西）。
+- 我在 `git archive 53a21fc` 上复跑四套（含 `capability_from_store`）→ **53 passed / 0 failed**，`g19a/g19b/g19c` 三绿 ⇒ **测试面 REPRODUCED**。
+- 但车道报的那条**可见链**（`?query=贡山县` → `OSM:R:2729765` / `resolution=provider` / **HYDRATABLE** → 202 durable → 6 live 行 → planner 422 → 逐边收据 → `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`）：我 02:25 去连 canary `:8596` → **connection refused（进程已停）** ⇒ **运行时那一格我只能记 `SELF_REPORTED`**，写进晨报时与测试面**分两格**。
+⇒ 已向车道要：canary 启动命令 + 当时那份 used-edge 收据路径；它一起来我就自己 GET 一遍，成立才升 REPRODUCED。
+
+#### ③ 为什么这一格值得单独抠（不嫌麻烦）
+"贡山第一次被真 provider 命名成 canonical 并给出 HYDRATABLE"如果成立，是**今夜第一个从 provider contract 走到产品语义的时刻**，也是仲裁 A 里程碑的最强证据；
+正因为它最有新闻价值，**它最不能被"跑过 39 个测试"代替**——测试证的是代码形状，链证的是运行时真的问过、真的拿到、真的没造 SELECTABLE。
+⇒ 所以：**代码/测试升档，运行时不升档**；唤醒条件继续锁死（P7=false，Harness 与 P1–P4 不叫）。
+
+#### ④ P0 与隔离
+- 车道自证：`:8596` loopback、`sqlite3.backup` 只读拷库、`_live.db` **零写连接**、主预览仍 `53fe8e8`；
+- 我这一侧独立复核（只读）：主预览 `demo/reset → 403 PREVIEW_GUARDED`、匿名隧道 `401`、用户 `journeys=3 / plan_versions=19 / travelers=3` + places 北京8/演示8 **未变**；
+- canary 已停 ⇒ 当前不存在"用户可达 canary"的风险面；重启时我会再量一次端口与库路径，**并确认它不挂用户的 preview URL/隧道/SW scope**。
+
+status: 合并验证（49/49 无破损、P7 不变）；canary 提交与测试面验真（53/53，g19a/b/c 三绿）；**运行时"第一次真 HYDRATABLE"因 canary 停机仍未复现，保持 SELF_REPORTED**；P0 全部独立复核未变
+
 ### SESSION=494abfd7 · 晨报骨架已建立（`D:\moodle\MORNING_ANYWHERE_SUNRISE_REPORT.md`，15 项 + 每格三档标注）；复现协议已拉回备用；**并记下一条容易冲昏头的收窄：贡山复现成功 ≠ P7 成立** @02:2x
 
 `STATUS: REPORT-SPINE-CREATED | 协议 `ORD_0192_REPRODUCTION_PROTOCOL.md`（`cab91a25`，4,839 B，blob 与磁盘一致，存 `live_checks/`）| 仲裁 5765348482 ①②③⑤⑦ 全部执行 |`
