@@ -27,6 +27,8 @@ STAGE_SPEC = "e2e/qoder-today-follows-the-stage.spec.ts"
 SHEET_AI = "src/features/planning/PlanWithAiSheet.tsx"
 STYLES = "src/styles.css"
 AI_SPEC = "e2e/qoder-ai-sheet-blocked.spec.ts"
+MAP = "src/components/v8/MapPanel.tsx"
+MAP_SPEC = "e2e/qoder-map-gesture-ownership.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -333,11 +335,42 @@ CASES = [
         '  if (state === "NEVER_MATCHES_FROZEN")\n',
         [(STAGE_SPEC, ["sim-evidence-state-says-what-is-sealed"])],
     ),
+    (
+        # ORD-0134 ②: the defect itself.  Putting the cooperative flag back is exactly what made a
+        # finger do nothing, so the ownership gate has to go red the moment it returns.
+        "killG1-cooperative-gestures-back-on",
+        MAP,
+        "      interactive: true,\n",
+        "      interactive: true,\n      cooperativeGestures: true,\n",
+        [(MAP_SPEC, ["ord0134-map-gesture-ownership"])],
+    ),
+    (
+        # The caption band is painted over the canvas.  Give it pointer-events again and a finger that
+        # lands on the words talks to a `<p>` instead of the map.
+        "killG2-caption-wins-the-drag-again",
+        STYLES,
+        ".v8-map-tile-notice {\n  pointer-events: none;\n}",
+        ".v8-map-tile-notice {\n  pointer-events: auto;\n}",
+        [(MAP_SPEC, ["ord0134-map-gesture-ownership"])],
+    ),
+    (
+        # Words on the panel must match the gesture that answers.  Restore the cooperative-era promise
+        # and the gate has to notice the screen is lying.
+        "killG3-hint-still-promises-two-finger-pan",
+        MAP,
+        '          ? "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方"\n',
+        '          ? "双指拖动地图 · 单指无效 · 想翻这一页就拖地图以外的地方"\n',
+        [(MAP_SPEC, ["ord0134-map-gesture-ownership"])],
+    ),
 ]
 
 sha256 = lambda path: hashlib.sha256(open(path, "rb").read()).hexdigest()
 only = sys.argv[1:] or [case[0] for case in CASES]
 port = int(os.environ.get("KILL_PORT", "4531"))
+# ORD-0134 ② is a phone-viewport, production-build criterion, so its mutants cannot be judged on the
+# dev chain this harness defaults to.  Passing `--config` in per invocation keeps every earlier
+# batch's verdicts reproducible.
+extra = os.environ.get("KILL_EXTRA", "").strip()
 
 results: dict[str, str] = {}
 for name, rel, old, new, targets in CASES:

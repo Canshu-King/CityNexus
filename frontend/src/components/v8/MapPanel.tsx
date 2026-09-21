@@ -242,14 +242,18 @@ export function MapPanel({
       zoom: 11,
       attributionControl: false,
       /* `interactive: false` here switched off drag, zoom, rotate and pitch at once,
-         which is why the panel behaved like a static image.  Interaction is back on,
-         but with an explicit gesture split rather than by taking the page's scroll
-         away: cooperative gestures need two fingers to pan/zoom on touch (one finger
-         still scrolls the page) and Ctrl+wheel to zoom on a fine pointer.  Rotation
-         and pitch stay off because a tilted, spun city view is not readable on a
-         phone and nothing in this product depends on it. */
+         which is why the panel behaved like a static image.  Rotation and pitch stay off
+         because a tilted, spun city view is not readable on a phone and nothing in this
+         product depends on it.
+
+         ORD-0134 ②: `cooperativeGestures: true` is what made the panel dead under a finger.
+         It asks for two fingers to pan, and on the phones we tested one finger then does
+         neither thing -- the map refuses the drag and the page above it does not take it
+         either (measured: twelve of twelve one-finger swipes starting on the canvas moved
+         the page 0px, and the camera with it).  A traveller's words were "滑不动，用力滑就滑到
+         旁边的面板".  Single-finger drag therefore belongs to the map again, and the page is
+         scrolled from the page -- which is the ownership rule the new gate measures both ways. */
       interactive: true,
-      cooperativeGestures: true,
       dragRotate: false,
       pitchWithRotate: false,
       touchPitch: false,
@@ -388,8 +392,8 @@ export function MapPanel({
       </div>
       <p className="v8-map-gesture-hint" data-testid="v8-map-gesture-hint">
         {locale.startsWith("zh")
-          ? "两指拖动或缩放地图 · 单指仍然滚动页面"
-          : "Two fingers to pan or zoom · one finger still scrolls the page"}
+          ? "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方"
+          : "One finger drags the map · two fingers zoom · to move the page, drag outside the map"}
       </p>
     </div>
   );

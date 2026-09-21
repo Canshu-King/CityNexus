@@ -235,6 +235,16 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 
 /* Real-world trip-operation surfaces: provider geometry, mobile action hierarchy, and offline state. */
 .v8-map-panel:after { display: none; }
+/* ORD-0134 ②: an informational overlay must not be able to win a drag.  The caption, the gesture
+   hint and the tile notice all sit on top of the canvas with a painted background, so a finger that
+   lands on their band was talking to a `<p>` and the map saw nothing.  They are read-only text, so
+   they now pass the gesture through; anything interactive on this panel stays `pointer-events: auto`
+   by being a real control, not by covering the map. */
+.v8-map-caption,
+.v8-map-gesture-hint,
+.v8-map-tile-notice {
+  pointer-events: none;
+}
 .v9-map-marker { display: grid; place-items: center; width: 28px; height: 28px; border: 3px solid #fff; border-radius: 50%; color: #fff; background: #4658d9; box-shadow: 0 4px 14px #17294555; font-size: 10px; font-weight: 850; }
 .v9-map-marker.stay { background: #157a5c; }
 .v9-map-marker.protected { box-shadow: 0 0 0 4px #f4b942, 0 5px 16px #17294555; }
