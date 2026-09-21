@@ -5275,6 +5275,33 @@ DELIVERED: ORD-0148 | 报告 `_qoder_spike_20260921/ORD_0148_COLD_CHAIN.md`（11
 
 DELIVERED: ORD-0148（追加段·Step 0 交接件） | 报告 `ORD_0148_STEP0_HANDOVER.md` | 数据 `q151_step0_transport.json`＋`q151_photon_user_agent.json`＋`step0_gate1_counts.json`＋`step0_0151.db`（before 形状，给 C） | 复跑：`cd _qoder_spike_20260921 && rm -f step0_0151.db* && D:/moodle/CityNexus/.venv/Scripts/python.exe -u q151_step0_transport_probe.py`；`… step0_gate1_counts.py`（不起台） | blocker：无 | **CASE1 贡山冷链本体已交（本块上方 @21:3x）**，等 ORD-0151 绿了我按报告 §5 那十条命令原样重放，不改脚本
 
+#### (SESSION=c01d72a3) ORD-0188 交付 @01:1x（`date` 实读 01:15:57+0800）—— **provider 半段落地：typed outcome ＋ canonical candidate ＋ 逐字 provenance ＋ 反例门；一句话交接："B resolves provider evidence; C decides when that evidence becomes product truth" 我按这句停住了**
+
+**六要素**：基点 `8ee64ae`（＝单上 `if_head`）→ 提交 **`44e4ea7`**（完整 `44e4ea782caf587c2270d7e708e81f5c2c59d5d3`），新工作树 `D:/moodle/_qoder_b_ord188_20260922`、分支 `agent/b-ord188-20260922`（`git worktree add --no-checkout` ＋ `sparse-checkout set backend data`，9.0 MB；起树 `git status` 干净 ⇒ **不继承别的车道未提交的 `anywhere_capability.py` / `db/models.py` / `schema.sql`**）；解释器 **3.12.14** ＋ httpx 0.28.1 ＋ pytest 8.4.2；`python -m pytest tests/test_qoder_provider_identity.py --collect-only -q` ⇒ **24 collected（exit 0）**，执行 ⇒ **24 passed in 0.44s**（提交后同树再跑一次）；改动面 `git diff --name-only 8ee64ae..HEAD` 只有 `backend/app/integrations/discovery` ＋ `backend/tests{,/fixtures/provider_identity}`，`grep -c anywhere_capability` ⇒ **0**，13 files **＋1,110/−5**（`real_city.py` 仅 51/−5，非整文件重写）；**测试零外呼**（注入 transport ＋ `httpx.MockTransport`），四把 `*_API_KEY` 置空，本轮未起服务、未占端口、未碰 `:4781/:4782/:8693`/`_live.db`/`demo/reset`；**未 push**（共享动作等你放行：`git -C D:/moodle/_qoder_integration_20260919 push -u origin agent/b-ord188-20260922`）。
+
+**① 四类都构造得出来（全部逐字 fixture，来源写进 `CAPTURES.md`）**
+| 类 | 真实输入 | 输出（可判分） |
+|---|---|---|
+| MATCH | `photon_gongshan_full_match.json`（200/4 features） | 唯一 destination-grade `R:2729765`、centroid `(27.7443567, 98.6672235)`、extent 归一 `(98.132047, 27.4945677, 98.9182148, 28.3970972)`、`provenance_complete=True`、`retryable=False` |
+| AMBIGUOUS | `photon_yunhe_county_ambiguous.json` / `_short_` | 同名两实体 `R:3289208`(district, 有 extent) ＋ `N:244082768`(county, **无 extent**) ⇒ **不给 winner**（`single_candidate is None`），候选全留（R10 ⑦） |
+| NO_MATCH | `photon_unknown_place_zero_features.json`（200 `features:[]`）＋ `photon_reverse_gongshan_200_zero_features.body.json` | `answered=True`、`provider_replied=True`、`reason=PROVIDER_NO_RESULTS`、`retryable=False` |
+| RUNTIME_FAILURE | `photon_refused_default_user_agent.json`(**403**)、`_bad_request_400_`、注入 `ReadTimeout`/`ConnectError`/`429+Retry-After:9`/`500`/`200+非 JSON` | 一律 `outcome=RUNTIME_FAILURE`、`candidates=()`、`answered=False`；`retryable` 只对 timeout/unreachable/429 为 True |
+**接口**：`normalize_query()`、`PhotonIdentityProvider(transport, now).resolve(q)`、`resolve_from_endpoints(q, providers=[(key, transport)…])`、`build_httpx_client(transport=None)`；`ProviderResolution{outcome, candidates[source_provider, source_entity_id, display_name, centroid_wgs84, extent_wgs84, crs=WGS84, admin_level?, country_code, admin_area, observed_at, fetched_at, raw_feature 逐字, provenance_complete], attempts[endpoint, answered, http_status, elapsed_ms, reason, retry_after_s, error], answered, provider_replied, retryable, reason}`。**没有任何 canonical 字段**，并有一条测试专门钉这点（`assert not {a for a in fields if "canonical" in a}`）⇒ 我没替 C 决定"是否已成为 canonical identity"。
+
+**② 反例门（订单点名那条）已钉**：`test_timeout_never_becomes_no_match` ＋ `test_http_refusals_are_runtime_shaped_not_absence[403, 400]` ＋ `test_empty_query_is_not_reported_as_an_absence_of_the_place`；不变式 **`NO_MATCH ⇒ 至少一次 attempt.answered=True`**。（**我自己先被抓一次**：空查询我一开始写成 NO_MATCH、还标了 `provider_replied=True`，测试当场把它红了 ⇒ 现按运行性 `EMPTY_QUERY` 处理。）另把车道 F 的 `g11` 在 provider 层先答一半：**六个形状 ⇒ 六个不同 reason_code**（`PROVIDER_TIMEOUT / UNREACHABLE / RATE_LIMITED / SERVER_ERROR / BAD_RESPONSE / NO_RESULTS`），但 F 那条测试仍红，因为它量的是产品面携带 ⇒ 要 C 接线才绿，我不碰。
+
+**③ `real_city.py` 两处（51/−5，都在 discovery 内）**：(a) **答了 0 也算答了**——镜像轮询原本 `if elements: break` ⇒ 一台 200/0 元素会被继续往下传、最后一台的超时被 `raise`（今晚 13/15 次 discover 因此报 `PROVIDER_TIMEOUT`、中位 **100.3 s**，而同一查询文本直连 **2.3–8.4 s / 200 / 0**）；现在任何 2xx 立即结束并记 attempts，只有"没人答过"才抛（产品的 `live_failure_reason` 路径原样保留）。(b) 新增 **`search_with_evidence()` → (candidates, attempts)**，`search()` 变薄壳、签名不变（调用方零改动）；`build_httpx_client` 固定带身份 UA，因为 **Photon 对 `python-httpx/0.28.1` 回 403、对带身份 UA 回 200**（同分钟同 URL 两侧都存成 fixture）。
+
+**④ 交叉突变（新规矩①，杀一类看另三类）**：`q188_mutations.py` → `q188_mutation_results.json`；基线 24 passed，七次突变**每次都 `restored_sha_ok=True`**，收工再跑 24 passed。M1 运行性塌成"不存在" ⇒ 5 红（4 条运行性＋六码表）其余 19 绿｜M2 永不 AMBIGUOUS ⇒ 2 红｜M3 丢 extent ⇒ 1 红｜M4 恢复旧轮询 ⇒ 1 红｜M5 无 grade 报 MATCH ⇒ 4 红（含六码表）｜M6 SERVER_ERROR 折回 BAD_RESPONSE ⇒ 1 红｜M7 空查询报"不存在" ⇒ 1 红。**没有任何一次突变是空的**。
+
+**⑤ 红集合口径**：同树同 `data/` 下，13 个 discovery 相关测试文件基线 **8 failed / 31 passed**（`q188_pristine_with_data.txt`），带我改动 **同一 8 条、`comm` 两个方向差 0 行**（`q188_after_data.txt`）⇒ **新增红 0**；那 8 条是车道 F 立着的门（g11/g13d/g14b/g16b/g17a/g18a/g18b 等）。**当场更正我自己一次虚惊**：第一次跑出 53 failed 是**我的 sparse-checkout 漏了根目录 `data/`** 造成的假红，补上后基线与改动后同为 8 条 —— 两份名单都留了证据。
+
+**⑥ 请 C 接线的接口（我停在证据层，这两件不在我写域）**：(1) `real_city.py:1301-1317` 的 `ProviderCall` 现在恒写 `status="SUCCESS"`、`latency_ms=0`；我已把真数据备好成 `attempts`，**写进行为属产品真值**，三行改法：`answered=any(a["answered"])` 才 `SUCCESS`、`latency_ms=sum(...)`、`request_json` 带 `query_sent`＋`attempts`。(2) `resolve_destination()` 与 hydration 的 identity 步共用本模块，把 `outcome/reason` 翻成产品状态：`RUNTIME_FAILURE` ⇒ 运行性可重试（**不许**写 `UNAVAILABLE/NO_CANONICAL_IDENTITY`、**不许**落 hash）、`AMBIGUOUS` ⇒ 交人选、`NO_MATCH` ⇒ 才可说"没这个东西"、`MATCH` ⇒ 才谈 canonical。(3) 提醒：别用裸 httpx client 接 Photon（默认 UA 直接 403）。
+
+**⑦ 故意没做（防范围漂移）**：类别选择器表（`gallery` 那条 `"tourism"="gallery"|"amenity"="arts_centre"` 是**非法 Overpass 语法、实测 400**；nightlife 无分支；`viewpoint/hotel` 搭别支）＝F 的 `g18a/g18b` 仍红的那件事；discovery 的 TTL 读门（`g16b`）；`radius_m` 5 km 硬顶与"只用一个中心"（`g17a`）—— 三条都在产品/契约层，不在我半段。现场事实照单全交：Nominatim 本机 TCP 不可达（故零依赖）、Overpass 只有 2 slot（≥1.2 s 间隔仍吃 429，另存一条真 504 逐字件）、Photon 两县实测形状（含 `extent` 次序不是 (w,s,e,n) ⇒ 按 min/max 归一并保留逐字 raw_feature；`/reverse` 打县质心回 **0 features** ⇒ 反向腿不能当必经确认）。
+
+DELIVERED: ORD-0188 | 报告 `_qoder_spike_20260921/ORD_0188_PROVIDER_IDENTITY.md` | 代码 `44e4ea7`（树 `D:/moodle/_qoder_b_ord188_20260922`，分支 `agent/b-ord188-20260922`，基点 `8ee64ae`） | 数据 `q188_mutation_results.json`＋`q188_pristine_with_data.txt`＋`q188_after_data.txt`＋`backend/tests/fixtures/provider_identity/`（9 个逐字捕获＋`CAPTURES.md`） | 复跑：`cd D:/moodle/_qoder_b_ord188_20260922/backend && D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_provider_identity.py -q --no-header`（24 passed，零外呼）；突变：`… _qoder_spike_20260921/q188_mutations.py` | blocker：无（等 C 接线，见 ⑥）
+
 ### 1a986a24 ORD-0129 HJ-P1 第四轮 @2026-09-21 19:4x → ②假离线**在新包上复现且证据更硬**；③那个 404 **不是 id 串位**（同源已证），真卡点是"导入成功但没有审核入口"；④**北京 AI 规划第一次真出方案并给出价格**
 
 **归属**：本轮屏幕实到 `assets/index-6vq1iijw.js`（公网与环回两侧都读到同一个名）。人设 HJ-P1 穷游背包客（本轮 2 人、紧预算）。
@@ -7252,7 +7279,7 @@ CLAIMED: ORD-0188 by SESSION=c01d72a3 @2026-09-22T00:5x（`date` 实读 00:54:10
     禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`（R13 护栏 ENFORCED）；自有副本库 + :85xx；
     解释器 3.12.14；凭据全清；账本只追加自己那块（`newline="\n"` + 逐字节还原证明，写前后各跑一次
     `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/ledger_anchor_guard.py`）。
-  status: DISPATCHED@2026-09-22T00:4x+08 by 494abfd7（写域与禁止项逐条转录仲裁 5764162935 ①；这是 #4 主线的解阻塞单）
+  status: DONE@2026-09-22T01:1x+08 by c01d72a3（基点 `8ee64ae`、提交 **`44e4ea7`**（`git log -1`：`44e4ea7 2026-09-22 01:12:47 +0800 fix(discovery): an answered zero stops being rewritten into an outage, and identity resolution gets typed outcomes`）；写域内 13 files ＋1,110/−5，`anywhere_capability.py` 命中数 0；provider 测试 24 collected / 24 passed；反例门（超时≠NO_MATCH）与 7 次交叉突变已交；红集合＝基线同一 8 条、新增 0 条；**未 push**）
 
 - id: ORD-0189
   to: 8ccd71d8
@@ -7543,6 +7570,35 @@ status: ORD-0194 ACCEPTED 且升档 REPRODUCED（1163 collected、9 passed、tes
 - 这也回答了我为何**不**在夜里推动实时路由 canary：高变量实验会污染 B→C 交接的证据，而交接本身才是今晚真正的产出。
 
 status: A 裁定入账并写进 ORD-0191/0192 status 行；B/C 已按此改派；晨报里程碑口径改为"跑到第一个真实阻塞并准确命名"
+
+### SESSION=494abfd7 · 两份新契约已字节校验拉回并转成可执行派发；**我用六组入参探车道仪器，抓到一处判定顺序错**（B 轴本来红会被误判 COUPLED）@01:1x
+
+`STATUS: CONTRACTS-PULLED-INSTRUMENT-FLAW-FOUND | 树 `git archive 14a5b64` → `v_14a5b64`（权威树 0 写）| 直接 import `tests/_qoder_mutation_receipts.cross_mutation_verdict` 六组调用，全 targeted（按 P5 未跑全量）|`
+
+#### ① 两份新契约（仲裁分支尖端 `833d56acb`，我之前只跟到 `02d7d3f4`）
+- `docs/pending_destination_identity_policy.md` @ **`833d56acb`**（+61，本地 16,653 B，blob sha 已核）：**mobility-gap 里程碑**定义 —— 允许停在 `HYDRATABLE + MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`，但必须交 **14 项 used-edge 收据**（`candidate_id / used_edge_count / used_edge_ids / per_edge_source_kind / per_edge_provider_or_fixture / per_edge_fact_quality / per_edge_hard_eligible / hard_eligible_count / frozen_fixture_count / synthetic_default_count / unknown_count / first_blocking_edge_or_edges / final_product_state / blocker_reason`）。
+  六条硬规则里第 3 条**点名我的证成方式**：`184/240 = SYNTHETIC_DEFAULT` 这类聚合数**只能当背景**，blocker 必须由**该候选真正使用的 edge** 清点得出；第 4 条反向也管：**若真实 used edges 全 hard-eligible，就必须继续走 SELECTABLE**，不许拿宏观数据提前躺平。已原文转 B（ORD-0192）。
+- `docs/test_execution_truth_policy.md` @ **`4b0792ede`**（+38/-1，本地 21,762 B，blob sha 已核）：**单次全量只能算 observation**，不得称基线 ⇒ 转给 F：下次全量标 `FINAL_SUITE_OBSERVATION_ONLY`，基线一律"交集+区间+具名轮换成员"。
+
+#### ② 我自己探仪器，抓到一处**判定顺序**错（正是今晚反复出现的同一族）
+```
+真独立      GREEN/RED/GREEN/GREEN  -> INDEPENDENT            ✅
+假独立(耦合) GREEN/RED/GREEN/RED   -> COUPLED                ✅
+靶子本已红   RED/RED/GREEN/GREEN   -> INCONCLUSIVE           ✅
+突变没撬动   GREEN/GREEN/GREEN/GREEN-> INCONCLUSIVE           ✅
+非绿非红     …UNKNOWN…            -> INVALID_MUTATION_EVIDENCE✅
+B 本来就红   GREEN/RED/RED/RED     -> COUPLED                ❌ 应为 INCONCLUSIVE
+```
+⇒ 成因：`axis_b_before != GREEN` 的检查排在 `axis_b_after == RED → COUPLED` **之后**，于是"B 在突变前就红"被归因成"我的突变把 B 带红了"——**把先存的红算成本次突变的后果**，与我自己今晚"184/240 当 blocker 依据"、"快照统计当候选结论"是同一形状。
+⇒ 已要求：把 b_before 检查提到 COUPLED 之前，并把这第六组补进它的"双向自证"；**修完我重跑六组再升 REPRODUCED**（在此之前它的仪器继续记 SELF_REPORTED，我不会提前升档）。
+⇒ 另提议 F 加一道元门：E2E 收据**不得引全仓聚合数**当 blocker 依据，只能引该候选的 `used_edge_ids`。
+
+#### ③ 一条会把"工具问题"伪装成"产品结论"的现场风险（已入本地记忆，也转给 B）
+**Photon 拒默认 httpx User-Agent ⇒ 403；换描述性 UA 就 200。**
+⇒ 若冷链解析突然 `NO_MATCH`／解析失败，**先查 UA 再下结论**，并把 UA 固定写进适配器。"403 当 NO_MATCH"正是 R14 要禁的跨层误归因，而且是今晚最可能发生的一次（因为 B 正在真打 provider）。
+
+status: 两份新契约（833d56acb / 4b0792ede）拉回并转派 B/F；六组入参探出仪器判定顺序错（B 本已红误判 COUPLED），修后方升 REPRODUCED；Photon UA 403 风险已提示 B
+evidence: `v_14a5b64` 上六组 `cross_mutation_verdict` 原样返回值 · 两份 docs 的 blob sha 与磁盘一致 · 本地镜像 `arbiter_docs/`
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 - id: ORD-0191
