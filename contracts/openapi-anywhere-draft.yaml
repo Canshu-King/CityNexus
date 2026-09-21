@@ -16,7 +16,7 @@ openapi: 3.1.0
 # 那份文件才是真值源；切换点写在同一个文件里，不用另找人记这件事。
 info:
   title: CityNexus ANYWHERE contract annex (lane F) — authority lives in anywhere_v1.openapi.yaml
-  version: 0.94-annex.3
+  version: 0.94-annex.4
   description: >-
     Measurements, latency budget, test obligations and the point-by-point reconciliation
     against the arbiter's Anywhere v1 contract. Defines no operations and no reusable
@@ -75,6 +75,7 @@ info:
       - "④ 双向 parity：实现了却还把契约挂着未登记 ⇒ 红。防的正是这份附件被长期留在'草案'状态。"
       - "⑤ §9 矩阵上界（x-matrix-bound：N ≤ 20）与三枚矩阵门（单位 / cells 预检 / 直线距离不得冒充 travel_minutes）。ORD-0106 续，**纯增补**：0.94-annex.1 → .2 未改任何已定枚举、未删任何既有键，改动清单就是上面 ⑤ 与三条 obligations（留痕规则：改契约必须当场说出来）。"
       - "⑥ 服务端真值字段 x-server-truth-fields（provider_budget / discovery_area，readiness_policy_version 只是登记）与三条发现层 obligations（TTL 必须有人读 / 范围来自 extent / 没问的分类不得落默认集合），每条带 measured-on 与实测 finding。ORD-0106 继续，**纯增补**：.2 → .3 未改任何已定枚举、未删任何既有键、paths 仍为 {}。"
+      - "⑦ ORD-0118 的运行时绊线结论（runtime-egress-tripwire 条：静态扫描必要但不充分，真外呼在 test_agent_mission_runtime 那条绿测试里，401 已实测）＋ capability 拼写归零那条门 ＋ x-red-doors 红门台账（每条红标 kind/owner/cause/rerun）。**纯增补**：.3 → .4 未改任何已定枚举、未删任何既有键、paths 仍为 {}。"
     questions-closed-by-v0_2:
       - "stale 要不要把 READY 降下来 —— v0.2 已定：HYDRATABLE 的定义本身含 missing/stale/incomplete ⇒ 本地数据过期不是 READY+背景刷新，而是 HYDRATABLE。我上一轮写的『不自动降级但要说出来』作废；G1/G4 改成 READY 必须由带版本的服务端策略 readiness_policy_version 判定，过期即不得为 READY。"
       - "UNAVAILABLE 与 resolver 故障的分界 —— v0.2 R1 已定：三态只描述结构性能力；Photon 暂时不可达要回 DESTINATION_RESOLVER_UNAVAILABLE 且保持可重试，不得因解析器挂了就永久降成 UNAVAILABLE；已有 canonical 身份可直接答、不再探测。v1 解析器只有 Photon，Nominatim 不是 v1 依赖，且不得发 lang=zh（换写法=换身份）。G1 加了这条组合判定。"
@@ -233,6 +234,47 @@ x-testing-obligations:
     companion-gates:
       - backend/tests/test_qoder_anywhere_discovery_truth.py::test_g18a_nightlife_must_not_be_answered_with_a_cafe_query
 
+  a-catalogued-destination-must-not-answer-zero-because-of-spelling:
+    rule: >-
+      capability 的身份解析必须认得**库里已经有地点**的那座城的常见写法（含行政区后缀 市/区/县），
+      并且：同一 city_code 的两种写法 ⇒ 同一个 canonical_destination_id、同一个 fingerprint、同一个
+      capability。库里真有行时不得给出 place_count=0 + 六轴全 MISSING；也不得把"这个写法我没认出来"
+      洗成结构性 UNAVAILABLE（仲裁 R1：运行时事实不是结构结论）。反向半边同样钉：库里真没行的城
+      必须照样报零，不许为了让这条门绿而编数。
+    measured-on: 4922f6f
+    finding: >-
+      实测（同一进程、同一舞台）：query=北京 → resolution=catalog, place_count=8, capability=HYDRATABLE；
+      query=北京市 → resolution=unresolved, place_count=0, 六轴全 MISSING, capability=UNAVAILABLE,
+      canonical_destination_id=unresolved:15ef4634d57e865f（由查询文本 sha1 现造）。库里 CN-BEIJING 实有 8 行。
+      根因 anywhere_capability.py:186-194 的别名集合 = {code, 去 CN- 前缀, _CITY_DISPLAY_NAMES 的光杆名字}，
+      _normalise(:143) 不处理后缀，_TRAVELER_FACING_LABELS(:119) 今天只有 CNX-DEMO 一条；
+      未命中即走 :217-226 mint 身份。连带后果：指纹按拼法生成 ⇒ §17D/G3 要的"同指纹收敛同一操作"
+      对同一座城失效。归车道 C。
+    gate: backend/tests/test_qoder_anywhere_capability_from_store.py::test_g19a_a_catalogued_city_must_not_answer_zero_coverage_under_its_official_name
+    companion-gates:
+      - backend/tests/test_qoder_anywhere_capability_from_store.py::test_g19b_two_spellings_of_one_city_must_not_mint_two_canonical_identities
+      - backend/tests/test_qoder_anywhere_capability_from_store.py::test_g19c_structural_capability_must_not_depend_on_how_the_city_is_spelled
+      - backend/tests/test_qoder_anywhere_capability_from_store.py::test_g19d_zero_coverage_is_only_legitimate_when_the_store_really_has_nothing
+
+  runtime-egress-tripwire-is-required-beyond-the-static-scan:
+    rule: >-
+      §17C 的静态字面量扫描（G8a）**必要但不充分**：provider 域名可以完全来自 app/config 常量，
+      测试文件里一个字都不出现，却照样出网。默认套件还必须挂一条运行时绊线（httpx 传输层 +
+      getaddrinfo + socket.connect），任何非回环目标 ⇒ 点名 文件::用例 + URL + 产品调用栈。
+      绊线属测试基础设施（conftest / plugin slot），由 Commander 决定放哪；车道 F 不越域塞进去。
+    measured-on: 4922f6f
+    finding: >-
+      ORD-0118 读数：默认套件全量跑（14 failed / 1062 passed / 15 skipped / 131.21s）里**确实有一处真外呼** ——
+      tests/test_agent_mission_runtime.py::test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace
+      在**自己是绿的情况下** POST https://api.deepseek.com/responses，DNS 解析到公网 IP、TCP 连接建立、
+      对端回 **401 Authorization Required**（该测试把 key 换成占位串，所以没花钱，但一个来回真的走完了）。
+      机制：它在 tests/test_agent_mission_runtime.py:106 只 stub 了 chat-completions 客户端，
+      而 Responses API 那条腿自己建传输层 —— 产品栈：app/main.py:1056 run_agent_command →
+      app/main.py:10154 _copilot_fallback_or_ai → app/integrations/ai/semantic_compiler.py:315 →
+      app/integrations/ai/responses.py:306。G8a 看不见它（域名不在测试文件里）。
+      反过来，G8a 点名的 backend/tests/test_qoder_catalog_hydration.py:388 在同一次带绊线的运行里
+      **零条运行时记录** ⇒ 那是形状违规、今天不出网，两条要分开修。
+
 # -----------------------------------------------------------------------------
 # ⑤ §9 的矩阵上界：一趟行程最多 20 个可路由节点 —— 数字由实测换算来，不是拍的
 # -----------------------------------------------------------------------------
@@ -297,4 +339,99 @@ x-server-truth-fields:
         - backend/tests/test_qoder_anywhere_discovery_truth.py::test_g17a_the_discovery_range_must_honour_the_extent_asked_for_not_a_five_km_clamp
         - backend/tests/test_qoder_anywhere_discovery_truth.py::test_g17b_destinations_of_different_sizes_must_not_ask_the_same_question
 
+# -----------------------------------------------------------------------------
+# ⑦ 红门台账：每条红写清"红因是什么、归谁、怎么复跑"，免得下一个人误读成门错了
+# -----------------------------------------------------------------------------
+x-red-doors:
+  measured-on: 4922f6f
+  reading: 车道 F 全套门文件 @4922f6f = 11 failed / 30 passed，RC=1（日志路径见账本交付块）
+  kinds:
+    implementation-not-yet: >-
+      门是对的、实现还没做 —— 这类红不许通过改门消除，也不许读成"门太严"。
+    product-defect-named: >-
+      实现里有一处具名缺陷（多半是一行参数/一个分支缺失），门只是把它照出来。
+    shared-infra-missing: >-
+      端点或读侧还没落地，门已经先站住；这类红会随对应订单自己退掉。
+    suite-order-dependent: >-
+      单跑绿、全量红 —— 环境/顺序敏感，不是产品结论；按 Commander 的
+      FULL_SUITE_ENVIRONMENT_SENSITIVITY 口径处理，既不许当缺陷也不许当噪声藏掉。
+  doors:
+    - id: test_qoder_anywhere_matrix_truth.py::test_g13d_distance_must_survive_whichever_shape_the_provider_answers
+      kind: product-defect-named
+      owner: 车道 C（backend/app/integrations/**）
+      cause: >-
+        valhalla_http.py:185-187 调 _normalize_duration_matrix 时没传 payload 里的 distances
+        （:178 那条嵌套分支传了）⇒ provider 给了 0.75 公里，规范化后 distance_m=None。时长活着、距离死了。
+      rerun: pytest tests/test_qoder_anywhere_matrix_truth.py -k g13d
+    - id: test_qoder_anywhere_matrix_truth.py::test_g14b_no_request_may_carry_more_than_100_cells_and_every_pair_survives
+      kind: implementation-not-yet
+      owner: 车道 C（backend/app/integrations/**）
+      cause: >-
+        runtime.py:232 把全部节点一次发出（N=20 ⇒ 400 cells），而 provider 上限是 cells ≤ 100
+        （实测 N=10 ⇒ 200 / 100 cells / 1018 ms；N=11 ⇒ 400 / error_code 150）⇒ 今天整次捕获 FAILED。
+        门要的是"先按 cells 预检、再按 ⌈N/10⌉² 分片、且一格都不丢"。
+      not-this-doors-fault: >-
+        门没有把 N 写死成 10，也没有规定分片写法；红的是"没预检"这件事本身。矩阵分片没做 ≠ 矩阵门错。
+      rerun: pytest tests/test_qoder_anywhere_matrix_truth.py -k g14b
+    - id: test_qoder_anywhere_discovery_truth.py::test_g16b_an_unexpired_candidate_set_must_answer_without_going_outside
+      kind: implementation-not-yet
+      owner: 车道 C（real_city 读侧）
+      cause: expires_at 只写不读（real_city.py:966）；实测暖趟仍 2 次外呼。反向半边 G16c 必须与之同批交付。
+      rerun: pytest tests/test_qoder_anywhere_discovery_truth.py -k g16b
+    - id: test_qoder_anywhere_discovery_truth.py::test_g17a_the_discovery_range_must_honour_the_extent_asked_for_not_a_five_km_clamp
+      kind: implementation-not-yet
+      owner: 车道 C（已派 ORD-0114）
+      cause: real_city.py:716 的 min(radius_m, 5000)；范围应来自已解析目的地的 extent。
+      companion-note: G17b 今天绿，但绿在"夹子以下不动"上，不算这条门过。
+      rerun: pytest tests/test_qoder_anywhere_discovery_truth.py -k g17a
+    - id: test_qoder_anywhere_discovery_truth.py::test_g18a_nightlife_must_not_be_answered_with_a_cafe_query
+      kind: product-defect-named
+      owner: 车道 C（已派 ORD-0114）
+      cause: real_city.py:701-711 无 nightlife 分支 ⇒ 落默认集合；G18b 实测 6 个覆盖分类里 3 类塌缩。
+      rerun: pytest tests/test_qoder_anywhere_discovery_truth.py -k "g18a or g18b"
+    - id: test_qoder_anywhere_capability_from_store.py::test_g19a_a_catalogued_city_must_not_answer_zero_coverage_under_its_official_name
+      kind: product-defect-named
+      owner: 车道 C（本轮新报）
+      cause: >-
+        别名集合不认行政区后缀 ⇒ 「北京市」走 unresolved 分支、现造身份、六轴归零、capability=UNAVAILABLE，
+        而同城「北京」是 catalog / 8 / HYDRATABLE。G19b（身份与指纹）与 G19c（结构结论）是同因的另两面。
+      rerun: pytest tests/test_qoder_anywhere_capability_from_store.py -k g19
+    - id: test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+      kind: shared-infra-missing
+      owner: 车道 C（水合规范化产物）
+      cause: 端点已受理，但规范化产物的逐 kind 坐标与行数对账还没有可读产物 ⇒ 门的前提判据先红。
+      rerun: pytest tests/test_qoder_anywhere_provider_truth.py -k g10
+    - id: test_qoder_anywhere_provider_truth.py::test_g11_six_provider_shapes_must_not_collapse_into_one_reason_code
+      kind: product-defect-named
+      owner: 车道 C（provider 侧具名码）
+      cause: >-
+        5xx 与"结构非法"同落 PROVIDER_BAD_RESPONSE（6 形状 ⇒ 5 码），零结果仍靠异常字符串哨兵。
+        ORD-0108 那三枚码在 compose 路径（services.py），未触及此处 —— 不要把它当成"已修"。
+      rerun: pytest tests/test_qoder_anywhere_provider_truth.py -k g11
+    - id: test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls
+      kind: product-defect-named
+      owner: 车道 C（测试形状，不是生产码）
+      cause: >-
+        静态扫到 backend/tests/test_qoder_catalog_hydration.py:388 对公共 resolver 域名的字面调用；
+        同一次带运行时绊线的复跑里该节点零条出网记录 ⇒ 今天不出网，但形状违反 §17C，
+        且**真外呼另有其人**（见 x-testing-obligations 的 runtime-egress-tripwire 条）。
+      rerun: pytest tests/test_qoder_anywhere_provider_independence.py -k g8a
+    - id: test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was
+      kind: shared-infra-missing
+      owner: 车道 A/C（run.outcome 结构化）
+      cause: 实测 run.outcome=None 而 status=SKIPPED_EXTERNAL_DEPENDENCY；§11 的机器可读语义还没落。
+      rerun: pytest tests/test_qoder_anywhere_gates.py -k g5
+    - id: test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction
+      kind: shared-infra-missing
+      owner: 车道 C
+      cause: 水合端点已落地，但 §17E 要的"短读 → 释放 → 网络 → 短写"编排还没改成那条判据能读到的形状。
+      rerun: pytest tests/test_qoder_anywhere_lock_duration.py -k g9b
+    - id: test_qoder_catalog_hydration.py::test_abandon_reports_a_request_not_a_death
+      kind: suite-order-dependent
+      owner: 车道 C（它自己的门；报给 C，不由 F 修）
+      cause: >-
+        单跑绿；全量（14 failed / 1062 passed / 15 skipped / 131.21s）里该文件三条红，都停在 :129 的
+        _wait_terminal：操作卡在 ABANDON_REQUESTED，8.0 s / 15.0 s 内未进终态 ⇒ 在飞作业的 drain 与
+        套件共享 DB 的写锁争用。属已知 FULL_SUITE_ENVIRONMENT_SENSITIVITY 家族。
+      rerun: pytest tests/test_qoder_catalog_hydration.py            # 单跑；再全量对照
 paths: {}
