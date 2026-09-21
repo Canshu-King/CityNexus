@@ -161,6 +161,12 @@ test("ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来�
   /* The row names the activity it is aiming at, and the control beside it moves to the next
      candidate.  The demo plan carries one bookable activity and refuses the rest by name, so a
      node that pressed the first row would be proving its own guess, not the product. */
+  /* ORD-0100 ①'s visible shape: the row already points at the activity the server gave a window for,
+     so the first press is the one that books.  Before this round the default was whatever the plan
+     array held first, and this loop had to hunt through the candidates to find a 201. */
+  await page.getByTestId("sim-pop").screenshot({
+    path: evidencePath("ui-overnight/stage-walk-1-booking-row.png"),
+  });
   const attempts: string[] = [];
   const http: Array<{ status: number; body: unknown }> = [];
   page.on("response", (response) => {
@@ -204,6 +210,14 @@ test("ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来�
     node("ord0087-booked-commitment-is-on-the-wallet-screen",
       `no activity on this plan could be booked through the panel; the server answered ${JSON.stringify(http.slice(0, 6))} and the panel said ${JSON.stringify(attempts.slice(0, 6))}`),
   ).toBeTruthy();
+  expect(
+    attempts.length,
+    node("ord0087-booked-commitment-is-on-the-wallet-screen",
+      `the default target needed ${attempts.length} presses to book; ORD-0100 ① is that it needs one: ${JSON.stringify(attempts.slice(0, 4))}`),
+  ).toBe(1);
+  await page.getByTestId("sim-pop").screenshot({
+    path: evidencePath("ui-overnight/stage-walk-2-outcome.png"),
+  });
 
   /* Thumb-only walk, because the desktop route is not the phone's path.  `v8Routes.ts` leaves
      `bookings` off `mobileRoutes` on purpose (Wallet lives under Trips and Me), so a node that
@@ -235,6 +249,9 @@ test("ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来�
       "the commitment was created but never reaches the phone's Wallet screen (Today -> Trips -> 预订)"),
   ).toBeVisible({ timeout: 30_000 });
   const cardText = clean(await card.innerText());
+  await card.screenshot({
+    path: evidencePath("ui-overnight/stage-walk-3-wallet-card.png"),
+  });
   const listed = await page.request.get(`/api/v1/journeys/${journeyId}/wallet`);
   const wallet = (await listed.json()) as { commitments?: ServerCommitment[] };
   expect(
