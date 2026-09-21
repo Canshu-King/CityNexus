@@ -135,6 +135,81 @@ Freeze sentence:
 
 > **Read failure is unknown, not empty. Observe the authority before declaring absence.**
 
-## 8. Freeze sentence
+## 8. Verification-tool abort does not imply target corruption
+
+A coordination/guard/proof script may fail because its own assertion, arithmetic, parsing, or
+rollback proof is wrong. That failure MUST NOT be promoted into a claim that the ledger, bus,
+repository, or target content is corrupt.
+
+Use explicit classifications:
+
+    TOOL_GUARD_ABORTED
+    TOOL_PROOF_FAILED
+    TARGET_UNCHANGED_CONFIRMED
+    TARGET_STATE_UNKNOWN
+
+Rules:
+
+1. A fail-closed write helper is allowed to abort when its proof cannot establish safety.
+2. If the helper aborts before mutation and an authoritative post-check proves the target SHA/bytes
+   are unchanged, record:
+       TOOL_PROOF_FAILED + TARGET_UNCHANGED_CONFIRMED
+3. If the helper cannot prove whether a partial write occurred, record TARGET_STATE_UNKNOWN and stop.
+   Do not call the target healthy or damaged until an authoritative reread resolves it.
+4. A proof bug is a tooling defect even when fail-closed behavior successfully prevents damage.
+   Record both facts separately.
+5. Fixing the helper does not retroactively convert the aborted attempt into a successful write;
+   the later successful attempt needs its own receipt.
+
+Recommended receipt:
+
+    tool
+    intended_operation
+    pre_target_sha_or_digest
+    abort_stage
+    tool_failure_reason
+    write_started = true | false | unknown
+    post_target_sha_or_digest
+    target_verdict
+    corrected_tool_version
+    later_success_receipt
+
+This rule is the write-side companion to the observation rule above: an instrument can be wrong
+while the observed target remains correct.
+
+Freeze sentence:
+
+> **A failed proof is evidence about the instrument first; only authoritative target evidence can prove target damage.**
+
+## 9. Cross-lane write-boundary wait rule
+
+When work is split across lanes with mutually exclusive write domains, waiting for the upstream
+lane does not authorize the downstream lane to cross the boundary and "help".
+
+If lane A owns domain A and lane B owns domain B:
+
+- A may stop at a typed interface/handoff;
+- the Commander/ledger forwards the handoff;
+- B changes only domain B;
+- B must request, not perform, any required change in domain A;
+- A must request, not perform, any required change in domain B.
+
+Use a durable handoff when the dependency becomes blocking:
+
+    upstream_order
+    upstream_source
+    interface/schema/version
+    downstream_order
+    requested_delta
+    owner_of_requested_delta
+    status = READY | BLOCKED_ON_UPSTREAM | CHANGE_REQUESTED
+
+Do not resolve BLOCKED_ON_UPSTREAM by silently editing the upstream owner's files.
+
+Freeze sentence:
+
+> **A write boundary remains a boundary while waiting; blocked does not mean shared ownership.**
+
+## 10. Freeze sentence
 
 **Two consecutive delivery timeouts move coordination to the ledger; they do not move the work to failure.**
