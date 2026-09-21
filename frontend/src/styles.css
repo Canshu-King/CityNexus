@@ -623,6 +623,27 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   text-decoration: underline;
 }
 
+/* ORD-0193: the destination-preparation flow.  The verdict, the missing categories and the job's
+   own record all come from the server, so these rules only have to keep them readable on a phone --
+   no bar, because the server publishes no percentage to fill one with. */
+.prep-form { display: grid; gap: var(--cn-s-12); margin-top: var(--cn-s-16); }
+.prep-form label { display: grid; gap: 7px; color: var(--v8-ink); font-size: var(--cn-fs-body); font-weight: 750; }
+.prep-form input { min-width: 0; padding: var(--cn-s-12); border: 1px solid var(--cn-control-border); border-radius: var(--cn-r-control); color: var(--v8-ink); background: var(--v8-panel); font: inherit; }
+.prep-verdict, .prep-job { display: grid; gap: var(--cn-s-8); margin-top: var(--cn-s-16); padding: var(--cn-s-16); border: 1px solid var(--cn-hairline); border-radius: var(--cn-r-card); background: var(--v8-panel); }
+.prep-verdict h2, .prep-job h3 { margin: 0; color: var(--v8-ink); font-size: var(--cn-fs-title); }
+.prep-verdict p, .prep-job p { margin: 0; color: var(--v8-ink); font-size: var(--cn-fs-body); line-height: 1.5; }
+.prep-coverage, .prep-providers, .prep-candidates ul { display: grid; gap: 4px; margin: 0; padding-left: 18px; color: var(--v8-muted); font-size: var(--cn-fs-caption); overflow-wrap: anywhere; }
+.prep-actions { display: flex; flex-wrap: wrap; gap: var(--cn-s-8); margin-top: var(--cn-s-8); }
+.prep-server { color: var(--v8-muted); font-size: var(--cn-fs-caption); overflow-wrap: anywhere; }
+/* A job that has settled says so in words and in its border, so the state does not depend on colour
+   alone (the same rule the dark-contrast pass settled on). */
+.prep-job.running { border-style: dashed; }
+.prep-job.terminal { border-width: 2px; }
+@media (max-width: 680px) {
+  .prep-actions { display: grid; }
+  .prep-actions button { min-height: var(--cn-touch-min); width: 100%; }
+}
+
 /* The primary action must never be invisible or buried. */
 .trial-sticky-cta {
   position: sticky;

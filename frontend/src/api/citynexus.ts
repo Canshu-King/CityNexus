@@ -667,9 +667,98 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   return body as T;
 }
 
+/** `GET /destinations/capability` -- the server's structural verdict about a destination. */
+export interface DestinationCapability {
+  query: string;
+  /** READY / HYDRATABLE / UNAVAILABLE, decided server-side. */
+  capability: string;
+  reason_code: string;
+  recommended_action: string;
+  destination_state: string;
+  destination_resolution: string;
+  retryable: boolean;
+  /** Present only for AMBIGUOUS: what the traveller has to choose between. */
+  candidates?: Array<Record<string, unknown>>;
+  matched_label?: string | null;
+  canonical_destination_id?: string | null;
+  /** The traveller's exact raw words, kept separately from the normalised resolver query. */
+  pending_destination_label?: string | null;
+  resolver_query_normalized?: string | null;
+  coverage: Record<string, string>;
+  missing_categories: string[];
+  place_count: number;
+  /** Absent unless something actually looked -- a default `OK` would be a fabricated measurement. */
+  provider_status?: Array<{ provider?: string; status?: string; message?: string }>;
+}
+
+/** `POST/GET /catalog-hydrations[/{id}]` -- the job's own record.  No percentage by design. */
+export interface CatalogHydrationOperation {
+  operation_id: string;
+  status: string;
+  recorded_status: string;
+  /** The stage the worker is genuinely inside; one of the server's PHASES. */
+  phase: string;
+  outcome: string | null;
+  terminal: boolean;
+  elapsed_ms: number;
+  retry_after_ms: number;
+  retryable: boolean;
+  reused: boolean;
+  canonical_destination_id: string | null;
+  pending_destination_label: string | null;
+  resolver_query_normalized: string | null;
+  destination_state: string;
+  result: Record<string, unknown> | null;
+  /** The server's own error object; its `message_key` still has to be rendered as words. */
+  error: Record<string, unknown> | null;
+  journey_id: string | null;
+  submitted_at?: string | null;
+  started_at?: string | null;
+  finished_at?: string | null;
+  abandon_requested_at?: string | null;
+}
+
 export const cityNexusApi = {
   resetDemo(): Promise<DemoIds> {
     return requestJson<DemoIds>("/demo/reset", { method: "POST" });
+  },
+
+  /* ORD-0193: the destination-preparation surface.  These mirror the server's own projections --
+     `GET /destinations/capability` (anywhere_capability.evaluate_capability) and the three
+     catalog-hydration calls -- so the screen shows what the server decided rather than guessing a
+     verdict from a place count.  There is deliberately no progress percentage: the payload carries
+     `phase` and `elapsed_ms` and the backend refuses to invent a denominator. */
+  getDestinationCapability(query: string): Promise<DestinationCapability> {
+    return requestJson<DestinationCapability>(
+      "/destinations/capability?query=" + encodeURIComponent(query),
+    );
+  },
+
+  startCatalogHydration(
+    query: string,
+    options: { journeyId?: string | null; requestedCategories?: string[] } = {},
+  ): Promise<CatalogHydrationOperation> {
+    return requestJson<CatalogHydrationOperation>("/catalog-hydrations", {
+      method: "POST",
+      body: JSON.stringify({
+        query,
+        journey_id: options.journeyId ?? null,
+        requested_categories: options.requestedCategories,
+      }),
+    });
+  },
+
+  getCatalogHydration(operationId: string): Promise<CatalogHydrationOperation> {
+    return requestJson<CatalogHydrationOperation>(
+      "/catalog-hydrations/" + encodeURIComponent(operationId),
+    );
+  },
+
+  abandonCatalogHydration(operationId: string): Promise<CatalogHydrationOperation> {
+    return requestJson<CatalogHydrationOperation>(
+      "/catalog-hydrations/" + encodeURIComponent(operationId) + "/abandon",
+      { method: "POST" },
+    );
   },
 
   getJourney(journeyId: string): Promise<JourneyRecord> {
