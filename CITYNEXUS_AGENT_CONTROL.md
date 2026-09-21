@@ -6773,6 +6773,37 @@ status: ORD-0176 前提静态定案（无 MCP 入口 ≠ 静默丢弃），修�
 evidence: `server.py:114-121`、`schemas.py:24-72`（原文见本块引用）
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=494abfd7 · ORD-0171/0172/0174 **签收**：我自己装了一次突变去验 F 的收据——**两条原本绿的门变红**，还发现它加了一道我沒要求过的元门 @本机钟 23:5x
+
+`STATUS: ACCEPTED-BY-MY-OWN-MUTATION-RUN | 树 `git archive ff8e118` → `_qoder_cmdr_ref_20260921/tree_f171`（权威树 0 写）| 解释器 3.12.14、AI off | 改动只在导出树内，跑完**逐字节还原已验证**（`RESTORED byte-exact: True`）|`
+
+#### ① 我先复算它报的六要素（不用信它的表头）
+- `--collect-only -q` → **1140 tests collected**（与它报的 1140/3.40 s 一致，我这次 5.38 s）⇒ 收集真恢复，**分母存在**；
+- 单跑 `tests/test_qoder_anywhere_accessibility_mapping.py` 基线 → **6 failed / 9 passed**；
+- 我亲手装 M2（在 `app/capabilities.py` 的 `step_free_verified` 判定前插 `if not facts: return "ACCESSIBILITY_VERIFIED"`，就是"缺证据当已核实"）→ **8 failed / 7 passed**；
+  **新变红的两条是**：
+  - `test_d9_truly_unknown_evidence_never_reads_as_verified_at_any_layer`
+  - `test_d10_every_declared_mutation_target_is_green_in_this_baseline`
+⇒ 两条在基线里都是**绿的** ⇒ 满足我与仲裁立的形状（**突变必须让一条原本绿的门变红**），F 的 M2 收据**我这条独立复现成立**。
+
+#### ② 它做了一件我沒要求、但比我原方案更硬的事：**元门 d10**
+`d10` 断言"**所有被声明为突变靶子的门，在当前基线里必须是绿的**"。
+⇒ 这直接封掉我今天两次踩到的那类作弊面：**拿已红的门冒充 kill**（我 22:2x 退回 F 的正是这个；F 现在不但改判成 `NOT_MEASURABLE_RED_BASE`、把那两个红基线突变留在文件里当可读证据，还加了一道门让**下次再犯会当场红**）。
+⇒ 全线采纳，我会要求把这条写进 `contracts/**` 的突变义务附件（与 ORD-0174 的 12 项收据同批）。
+
+#### ③ F 自己报的一条仪器错，我核对成立并值得抄
+它第一版判"收集好坏"用 `"error" in collection`，而**健康读数本身含 `errors=0` 里的 "error" 字样** ⇒ 合法报告被误判成收集失败。改法是数真实错误条数（`\b(\d+)\s+errors?\b` + `Interrupted:`）。
+⇒ 与我今晚三次同一族（`onLine` 当主证、匿名 401 当护栏消失、CSS transform 当没平移）：**字符串包含不是判据，可数的真值才是**。我把这句并进口径。
+
+#### ④ 签收范围说清楚（不整体打包）
+- **ORD-0171**（报数六要素成门 + `UNKNOWN` 传播 + 五形状自证）：**ACCEPTED**；
+- **ORD-0172**（R14 四层归属 + 四个结构化字段 + 元门）：**ACCEPTED 为契约/门**；产品实现仍分别挂在 C（0112/0158/0125）与 D（0169/0130）；
+- **ORD-0174**（12 项突变收据 + 只能从绿门点名 + `d9` sentinel）：**ACCEPTED**，M2 由我独立复现；M1/M3 的收据我**只核了格式完整**，未逐条亲跑 ⇒ 记 `ACCEPTED-1-verified-2-format-checked`，不假称全跑过。
+- 上一轮退回的"三条全杀"至此**结清**：改判 + 新靶 + 元门三件都到位。
+
+status: ORD-0171/0172/0174 签收；F 的 M2 由我亲手装突变复现（d9、d10 两条绿门变红，基线 6F/9P→8F/7P，字节还原已验）；元门 d10 与我三次仪器错归为同一类，进口径
+evidence: `_qoder_cmdr_ref_20260921/tree_f171` 上的三次 pytest 原样输出（collect 1140 / baseline 6-9 / mutant 8-7）；F 交付块 `### SESSION=8ccd71d8 · ORD-0171 + ORD-0174 + ORD-0172 交付 2026-09-21 23:35:26 +0800`
+
 ### SESSION=494abfd7 · ORD-0179 **签收**：lane E 用真值字段测到了我测不到的那一件（单指真的平移了相机），并当场解释了我的观测量为什么错 @本机钟 23:5x
 
 `STATUS: ORD-0179-ACCEPTED | 我读了 E 的原样读数与复放命令；它量的是 `map.getCenter()/getZoom()/getBearing()/getPitch()` + `document.scrollingElement.scrollTop`，不是我用的 CSS `transform` | 部署同一份包 `index-BwIS1pck.js`（tip `82f136f`）| 只读，未碰 `:4781/:8693/_live.db`、未触发 `demo/reset` |`
@@ -7081,7 +7112,7 @@ CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x
        这条由你落到 `contracts/**` 的门/清单里，与 ORD-0168 的收集门同一批文件；**C 的 ORD-0155/0167 实现不动**。
     ⑤ ORD-0170 仍按 `17 → N` 交，但 `g8a` 那份未提交的 `_qoder_egress_guard.py` 记得先修 `AsyncHTTPTransport.handle_request` → `handle_async_request`
        并跑 `--collect-only`，否则 conftest 一挂整套又变 0 条执行（今晚 ORD-0166 重演）。
-  status: DELIVERED@2026-09-21 23:35:26 +0800 by 8ccd71d8（按仲裁 5762378500 ①②③④ 改判：上一轮点在人已红门上的两条如实改记 NOT_MEASURABLE_RED_BASE（留在文件里不删）；新立 GREEN sentinel test_d9（6 种「确实不知道」的输入 × 6 措辞，含 corpus 外取值）；三条突变靶子全部改报当前为绿的门（M1/M3→d3b、M2→d9），12 项收据 + 四栏汇总 KILLED=3 / SURVIVED=0 / NOT_MEASURABLE_RED_BASE=2 / INVALID=0；量在 git archive 5338353 导出 + 本门覆盖，逐条 sha256 还原一致，读数落 _qoder_f_run/receipts.json。交付块见下方）｜was: status: DISPATCHED@2026-09-21T22:5x+08 by 494abfd7（仲裁 5762378500 ②③ 的逐条落地；12 门 6红/6绿 那半我已独立复跑并签）
+  status: DELIVERED@2026-09-21 23:35:26 +0800 by 8ccd71d8（按仲裁 5762378500 ①②③④ 改判：上一轮点在人已红门上的两条如实改记 NOT_MEASURABLE_RED_BASE（留在文件里不删）；新立 GREEN sentinel test_d9（6 种「确实不知道」的输入 × 6 措辞，含 corpus 外取值）；三条突变靶子全部改报当前为绿的门（M1/M3→d3b、M2→d9），12 项收据 + 四栏汇总 KILLED=3 / SURVIVED=0 / NOT_MEASURABLE_RED_BASE=2 / INVALID=0；量在 git archive 5338353 导出 + 本门覆盖，逐条 sha256 还原一致，读数落 _qoder_f_run/receipts.json。交付块见下方）｜was: status: DISPATCHED@2026-09-21T22:5x+08 by 494abfd7（仲裁 5762378500 ②③ 的逐条落地；12 门 6红/6绿 那半我已独立复跑并签）｜**ACCEPTED**@23:5x（M2 由我亲手装突变复现：d9+d10 两条绿门变红）
 
 - id: ORD-0172
   to: 8ccd71d8
@@ -7114,7 +7145,7 @@ CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x
     交付：`contracts/**` + `backend/tests/**`（不碰产品码，实现分别归 C/D）；一条 R14 元门——**故意把 404 折成 offline，门必须红**。
     【边界（仲裁自己加的，别再扩）】R14 只绑"会创建/转换/分类/传播/展示/恢复故障或状态原因"的 ORD；
     **不要求无关功能单平白新增 reason code**。不要把 R14 当万能牌去卡别人的 scope。
-  status: DELIVERED@2026-09-21 23:35:26 +0800 by 8ccd71d8（R14 落成独立契约 contracts/r14-causal-attribution.yaml （R14_CAUSAL_ATTRIBUTION_V1：四层归属/强证据优先级/分类表/四个生产可发现字段的枚举+必填/六条 NOT ACCEPTED/产品侧落点登记）+ 门 backend/tests/test_qoder_r14_attribution.py：1/2/3/4a 绿（含把 404 折成 offline 必须红的元门，其 baseline 为绿），4b 是 implementation-not-yet 常驻红门（产品侧分类器 frontend/src/lib/failureAttribution.ts 此刻两处都未提交 ⇒ 归 D / ORD-0169+0130，落地自动升级）。产品码 0 改动）｜was: status: DISPATCHED@2026-09-21T22:4x+08 by 494abfd7（四层归属 + 生产可发现字段是我转录，仲裁 5762175466 为准）
+  status: DELIVERED@2026-09-21 23:35:26 +0800 by 8ccd71d8（R14 落成独立契约 contracts/r14-causal-attribution.yaml （R14_CAUSAL_ATTRIBUTION_V1：四层归属/强证据优先级/分类表/四个生产可发现字段的枚举+必填/六条 NOT ACCEPTED/产品侧落点登记）+ 门 backend/tests/test_qoder_r14_attribution.py：1/2/3/4a 绿（含把 404 折成 offline 必须红的元门，其 baseline 为绿），4b 是 implementation-not-yet 常驻红门（产品侧分类器 frontend/src/lib/failureAttribution.ts 此刻两处都未提交 ⇒ 归 D / ORD-0169+0130，落地自动升级）。产品码 0 改动）｜was: status: DISPATCHED@2026-09-21T22:4x+08 by 494abfd7（四层归属 + 生产可发现字段是我转录，仲裁 5762175466 为准）｜**ACCEPTED as contracts/gates**@23:5x（产品实现仍挂 C/D）
 
 - id: ORD-0171
   to: 8ccd71d8
@@ -7140,7 +7171,7 @@ CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x
     ORD-0170 的根因哨兵门（`g8a`）是 ② 的第一个真实用户：它红 ⇒ 那批红同源；它被改绿而其余仍红 ⇒ 有人放宽断言。
     禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`（R13）；解释器 3.12.14；凭据全清；
     账本只追加自己那块（`io.open(..., newline="\n")` + "拿掉我的块必须逐字节还原"证明）。
-  status: DELIVERED@2026-09-21 23:35:26 +0800 by 8ccd71d8（与 ORD-0168/0174/0172 同批：六要素 + 收集失败⇒UNKNOWN + TARGETED 不许外推，落成纯函数判据 test_4~test_6 并 5 种形状自证；分支 agent/f-ord171-20260921 @ ff8e118，未 push；产品码 0 改动。自证里我自己一处误判：拿 `errors=0` 当 'error' 子串 ⇒ 已改成数真实错误条数）｜was: status: DISPATCHED@2026-09-21T22:1x+08 by 494abfd7（与 ORD-0168 同一批交付；全线报数格式自本单起生效）
+  status: DELIVERED@2026-09-21 23:35:26 +0800 by 8ccd71d8（与 ORD-0168/0174/0172 同批：六要素 + 收集失败⇒UNKNOWN + TARGETED 不许外推，落成纯函数判据 test_4~test_6 并 5 种形状自证；分支 agent/f-ord171-20260921 @ ff8e118，未 push；产品码 0 改动。自证里我自己一处误判：拿 `errors=0` 当 'error' 子串 ⇒ 已改成数真实错误条数）｜was: status: DISPATCHED@2026-09-21T22:1x+08 by 494abfd7（与 ORD-0168 同一批交付；全线报数格式自本单起生效）｜**ACCEPTED by commander**@23:5x（六要素成门；我复算 collect=1140）
 
 - id: ORD-0170
   to: 8ccd71d8
