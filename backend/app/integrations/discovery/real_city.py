@@ -5,6 +5,7 @@ import json
 import logging
 import math
 import re
+import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -693,6 +694,26 @@ class OverpassPOIProvider:
         radius_m: int,
         limit: int,
     ) -> list[DiscoveryCandidate]:
+        candidates, _attempts = self.search_with_evidence(
+            query, latitude=latitude, longitude=longitude, radius_m=radius_m, limit=limit
+        )
+        return candidates
+
+    def search_with_evidence(
+        self,
+        query: str,
+        *,
+        latitude: float,
+        longitude: float,
+        radius_m: int,
+        limit: int,
+    ) -> tuple[list[DiscoveryCandidate], list[dict[str, Any]]]:
+        """Ask one bounded category question, and report which endpoints actually answered.
+
+        The attempts list exists because "nobody replied" and "somebody replied: none" are different
+        statements; a caller must never have to guess which one it got.
+        """
+
         requested = query.casefold()
         # The provider must answer the question that was actually asked.  A
         # single fixed cafe/restaurant tag set meant "any museums nearby" came
@@ -721,10 +742,12 @@ class OverpassPOIProvider:
         # collapsing into a permanent "providers unreachable" state.
         elements: list[dict[str, Any]] = []
         last_error: Exception | None = None
+        attempts: list[dict[str, Any]] = []
         urls = [f"{self.base_url}/interpreter"] + [
             url for url in OVERPASS_MIRRORS if url != f"{self.base_url}/interpreter"
         ]
         for url in urls:
+            started = time.monotonic()
             try:
                 response = self.client.post(
                     url,
@@ -733,15 +756,44 @@ class OverpassPOIProvider:
                         "User-Agent": "CityNexus/7.0 (+https://citynexus.local/real-city)"
                     },
                 )
+                status = response.status_code
+                retry_after = response.headers.get("Retry-After")
                 response.raise_for_status()
                 elements = response.json().get("elements", [])
-                if elements:
-                    break
+                attempts.append(
+                    {
+                        "endpoint": url,
+                        "answered": True,
+                        "http_status": status,
+                        "elapsed_ms": round((time.monotonic() - started) * 1000.0, 1),
+                        "elements": len(elements),
+                        "retry_after": retry_after,
+                    }
+                )
+                # A mirror that answered has answered the question, including with nothing.
+                # Falling through here is what made a valid zero look like an outage.
+                break
             except (httpx.HTTPError, ValueError, TypeError) as exc:
+                attempts.append(
+                    {
+                        "endpoint": url,
+                        "answered": False,
+                        "http_status": getattr(getattr(exc, "response", None), "status_code", None),
+                        "elapsed_ms": round((time.monotonic() - started) * 1000.0, 1),
+                        "error": f"{type(exc).__name__}: {str(exc)[:160]}",
+                    }
+                )
                 last_error = exc
                 continue
-        if not elements and last_error is not None:
-            raise last_error
+        if not attempts or all(not a["answered"] for a in attempts):
+            # Nothing replied: this is a runtime failure and must stay one.  The attempts we
+            # recorded are evidence, so they travel with the exception instead of being lost.
+            error = last_error if last_error is not None else RuntimeError("NO_PROVIDER_ATTEMPTED")
+            try:
+                error.provider_attempts = attempts  # type: ignore[attr-defined]
+            except Exception:  # noqa: BLE001 - frozen exception types refuse attributes
+                pass
+            raise error
         candidates: list[DiscoveryCandidate] = []
         for row in elements[:limit]:
             tags_data = row.get("tags") or {}
@@ -782,7 +834,7 @@ class OverpassPOIProvider:
                     cost_evidence=cost_evidence_from_tags(tags_data, source="overpass"),
                 )
             )
-        return candidates
+        return candidates, attempts
 
     def close(self) -> None:
         if self._owned_client:
@@ -1165,6 +1217,7 @@ def capture_real_city_candidates(
         live_error: str | None = None
         failure_stage: str | None = None
         candidates = []
+        overpass_attempts: list[dict[str, Any]] = []
         anchor = journey_anchor
         if not settings.real_city_enabled:
             live_error = "REAL_CITY_DISABLED"
@@ -1193,13 +1246,23 @@ def capture_real_city_candidates(
                 if anchor is None:
                     raise RuntimeError("NO_JOURNEY_DERIVED_CITY_ANCHOR")
                 stage = "category_search"
-                candidates = poi.search(
-                    query,
-                    latitude=float(anchor["latitude"]),
-                    longitude=float(anchor["longitude"]),
-                    radius_m=radius_m,
-                    limit=limit,
-                )
+                if hasattr(poi, "search_with_evidence"):
+                    candidates, overpass_attempts = poi.search_with_evidence(
+                        query,
+                        latitude=float(anchor["latitude"]),
+                        longitude=float(anchor["longitude"]),
+                        radius_m=radius_m,
+                        limit=limit,
+                    )
+                else:  # test doubles implement only the historical shape
+                    candidates = poi.search(
+                        query,
+                        latitude=float(anchor["latitude"]),
+                        longitude=float(anchor["longitude"]),
+                        radius_m=radius_m,
+                        limit=limit,
+                    )
+                    overpass_attempts = []
                 if not candidates:
                     # The bounded fallback is a *second* attempt at the same bounded
                     # question, so it must be asked with the same words: `city_code` is
@@ -1209,11 +1272,15 @@ def capture_real_city_candidates(
                     candidates = geocoder.search(query, city=city_label, limit=limit)
                 provider_status = {
                     "nominatim": "CAPTURED",
+                    # An answered mirror owns the answer even when it found nothing; only
+                    # "no endpoint replied" is a failure-shaped status.
                     "overpass": "CAPTURED"
-                    if candidates and candidates[0].provider_key == "overpass"
-                    else "NO_RESULTS",
+                    if any(a.get("answered") for a in overpass_attempts)
+                    else "NOT_ANSWERED",
                     "anchor": anchor,
                     "failure_stage": stage,
+                    # ORD-0192 ⑥: which endpoints were asked, what they said, how long they took.
+                    "attempts": overpass_attempts,
                 }
             except (
                 httpx.HTTPError,
@@ -1228,6 +1295,9 @@ def capture_real_city_candidates(
                 # reason codes (ORD-0099 ②).
                 live_error = live_failure_reason(exc)
                 failure_stage = stage
+                recovered = getattr(exc, "provider_attempts", None)
+                if isinstance(recovered, list) and recovered and not overpass_attempts:
+                    overpass_attempts = recovered
                 LOGGER.warning(
                     "real-city live discovery failed (%s) at %s: %s: %s",
                     live_error,
@@ -1264,6 +1334,9 @@ def capture_real_city_candidates(
                     "fallback_reason": live_error or PROVIDER_NO_RESULTS,
                     "failure_stage": failure_stage,
                     "wrong_city_replay_blocked": True,
+                    # Observations from before the failure: which endpoints were asked and
+                    # what each said.  Empty only when nothing was even attempted.
+                    "attempts": overpass_attempts,
                 }
     else:
         candidates = (
