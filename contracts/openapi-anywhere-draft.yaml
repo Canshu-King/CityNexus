@@ -16,7 +16,7 @@ openapi: 3.1.0
 # 那份文件才是真值源；切换点写在同一个文件里，不用另找人记这件事。
 info:
   title: CityNexus ANYWHERE contract annex (lane F) — authority lives in anywhere_v1.openapi.yaml
-  version: 0.94-annex.1
+  version: 0.94-annex.2
   description: >-
     Measurements, latency budget, test obligations and the point-by-point reconciliation
     against the arbiter's Anywhere v1 contract. Defines no operations and no reusable
@@ -73,6 +73,7 @@ info:
       - "② 延迟预算 p95<=1s / hard<=2s（§6 的数在两边都没写成字段约束，这里定成可断言形式）。"
       - "③ §17C/D/E 三条测试义务（下面 x-testing-obligations），正式契约只写了'provider 网络不得持写事务'这一条规则，没规定怎么证明。"
       - "④ 双向 parity：实现了却还把契约挂着未登记 ⇒ 红。防的正是这份附件被长期留在'草案'状态。"
+      - "⑤ §9 矩阵上界（x-matrix-bound：N ≤ 20）与三枚矩阵门（单位 / cells 预检 / 直线距离不得冒充 travel_minutes）。ORD-0106 续，**纯增补**：0.94-annex.1 → .2 未改任何已定枚举、未删任何既有键，改动清单就是上面 ⑤ 与三条 obligations（留痕规则：改契约必须当场说出来）。"
     questions-closed-by-v0_2:
       - "stale 要不要把 READY 降下来 —— v0.2 已定：HYDRATABLE 的定义本身含 missing/stale/incomplete ⇒ 本地数据过期不是 READY+背景刷新，而是 HYDRATABLE。我上一轮写的『不自动降级但要说出来』作废；G1/G4 改成 READY 必须由带版本的服务端策略 readiness_policy_version 判定，过期即不得为 READY。"
       - "UNAVAILABLE 与 resolver 故障的分界 —— v0.2 R1 已定：三态只描述结构性能力；Photon 暂时不可达要回 DESTINATION_RESOLVER_UNAVAILABLE 且保持可重试，不得因解析器挂了就永久降成 UNAVAILABLE；已有 canonical 身份可直接答、不再探测。v1 解析器只有 Photon，Nominatim 不是 v1 依赖，且不得发 lang=zh（换写法=换身份）。G1 加了这条组合判定。"
@@ -147,4 +148,70 @@ x-testing-obligations:
       仪器本身要先自证能看见写事务（否则"零重叠"可能只是"零观测"）；
       再用并发探针证明水合跑网络期间，另一条旅程的 plans/generate 不被锁住。
     gate: backend/tests/test_qoder_anywhere_lock_duration.py
+
+  matrix-units-must-be-pinned:
+    rule: >-
+      Valhalla 的 ``/route`` 与 ``/sources_to_targets`` 里 ``time`` 是**秒**、``length`` 与
+      ``distance`` 是**公里**。产品在 valhalla_http.py:99 / :225 / :275 三处各除一次 60，
+      仓库里没有任何东西钉住这个单位：漏除 ⇒ 20 分钟的腿报成 1200 分钟，多除 ⇒ 报成 1 分钟，
+      两者看着都是一个正常数字。门的判据不是"我们也除了一遍"，是**步行速度带** 1.5–9.0 km/h
+      （1.5 km / 20 分钟 = 4.5 km/h），单位一错必然出带。
+    gate: backend/tests/test_qoder_anywhere_matrix_truth.py::test_g13_route_summary_time_is_seconds_and_becomes_minutes_not_seconds
+    companion-gates:
+      - backend/tests/test_qoder_anywhere_matrix_truth.py::test_g13b_both_matrix_shapes_convert_the_same_seconds_to_the_same_minutes
+      - backend/tests/test_qoder_anywhere_matrix_truth.py::test_g13c_an_impossible_duration_is_refused_not_rescaled
+
+  matrix-preflight-is-in-cells-not-locations:
+    rule: >-
+      出网前必须先算 cells = sources × targets，>100 就分片或明确拒绝；不得按 provider 错误文案里
+      那个字面 "locations" 数预检。实测：N=10 ⇒ 100 cells / 200 / 1018 ms；N=11 ⇒ 121 cells / 400 /
+      error_code 150。今天 runtime.py:232 把全部节点一次发出（N=20 ⇒ 400 cells），整次捕获 FAILED。
+      分片还必须**不丢格**：只切第一片能骗过 ≤100 cells，骗不过"有序成对事实全覆盖"这一条。
+    why-not-the-literal: >-
+      今天的调用形状是方阵，cells 规则与 locations 规则恰好同解；换成 4×20=80 cells 的合法矩形，
+      "locations ≤ 10" 就误拒了。所以这条门钉的是 cells，并把"按文案分类"单独钉死：两份 400 只有
+      措辞不同（一份含 locations、一份不含），判定必须逐字段一致。
+    gate: backend/tests/test_qoder_anywhere_matrix_truth.py::test_g14b_no_request_may_carry_more_than_100_cells_and_every_pair_survives
+    companion-gates:
+      - backend/tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+      - backend/tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+
+  straight-line-distance-may-not-become-travel-minutes:
+    rule: >-
+      两点直线距离除一个速度常量，得到的分钟数没有来源，因此不得进入任何 travel_minutes 口径。
+      一条腿没有事实时，产品必须逐腿说 MOBILITY_DATA_UNAVAILABLE，并在投影里把它从
+      legs_hard_eligible 里掉出去（legs_total 不变）。allowlist（EXPLICIT_FROZEN_FIXTURE /
+      LIVE_PROVIDER_CAPTURE）之外的一切来源标签 —— 含 None、含 SYNTHETIC_DEFAULT、含一个
+      "看起来合理"的 6 分钟 —— 都不许被硬可行性采信。
+    gate: backend/tests/test_qoder_anywhere_matrix_truth.py::test_g15a_a_leg_with_no_sourced_fact_has_no_number_at_any_door
+    companion-gates:
+      - backend/tests/test_qoder_anywhere_matrix_truth.py::test_g15b_no_great_circle_helper_reaches_a_travel_time_name
+      - backend/tests/test_qoder_anywhere_matrix_truth.py::test_g15c_coverage_counts_the_unusable_leg_instead_of_guessing_it
+      - backend/tests/test_qoder_anywhere_matrix_truth.py::test_g15d_the_scene_read_reports_the_same_two_counts
+
+# -----------------------------------------------------------------------------
+# ⑤ §9 的矩阵上界：一趟行程最多 20 个可路由节点 —— 数字由实测换算来，不是拍的
+# -----------------------------------------------------------------------------
+x-matrix-bound:
+  max-routable-nodes-per-journey: 20
+  unit-of-provider-limit: cells            # sources × targets；见 matrix-preflight-is-in-cells-not-locations
+  provider-cells-cap: 100
+  tiles-per-costing: ceil(N / 10) ** 2
+  costings: 2                              # pedestrian + auto（runtime.py:216 各跑一套）
+  derived-rationale: >-
+    N=20 ⇒ 每套 costing ⌈20/10⌉² = 4 片，两套共 8 次请求；按实测单次 1018 ms（100 cells、200 OK）
+    串行估 ≈ 4.3 s。N=24 ⇒ 9 × 2 = 18 次 ≈ 9.6 s —— 已经越过本附件 x-latency-budget 那一档，
+    而且今天是**一把捕获**（runtime.py:255）：任何一片失败，整趟行程的机动事实全丢。
+    所以 20 的含义不是"最多塞得下多少"，是"在延迟预算内还重跑得起一次"的上界。
+    要往上抬必须先做两件事：片间并发（把 8 次压成一轮的常数倍）与失败局部化（一片丢只丢那一片的格，
+    其余事实照常封存），并且回来改这段依据 —— 不许只在代码里把常数改大。
+  measured-on: 68d5474
+  open-findings-blocking-a-raise:
+    - >-
+      valhalla_http.py:185-187：durations 形状这一分支没有把 payload 的 distances 传给
+      _normalize_duration_matrix（:178 那条嵌套分支传了）⇒ 同一格 provider 给了距离，规范化之后
+      distance_m=None。红门：test_g13d_distance_must_survive_whichever_shape_the_provider_answers。
+    - >-
+      runtime.py:232 无分片无预检 ⇒ N>10 的行程今天必吃 400/150。红门：
+      test_g14b_no_request_may_carry_more_than_100_cells_and_every_pair_survives。
 paths: {}
