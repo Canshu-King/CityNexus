@@ -6,6 +6,7 @@ import hashlib
 import logging
 import os
 import time
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from threading import RLock
@@ -275,7 +276,11 @@ from app.planning.hard_recovery import (
     recovery_state,
     resolve_recovery_events,
 )
-from app.replanning.provider_snapshots import MobilitySnapshot, TravelEstimateFact
+from app.replanning.provider_snapshots import (
+    HARD_FEASIBLE_QUALITIES,
+    MobilitySnapshot,
+    TravelEstimateFact,
+)
 from app.replanning.protected_commitments import active_c4_hard_constraints
 from app.replanning.verified_scoring import score_replan_candidate
 from app.schemas import (
@@ -403,7 +408,10 @@ from app.catalog_hydration_operations import (
 from app.catalog_hydration_operations import (
     reconcile_interrupted_operations as reconcile_hydrations,
 )
-from app.anywhere_capability import evaluate_capability
+from app.anywhere_capability import (
+    GAP_MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE,
+    evaluate_capability,
+)
 
 ensure_schema()
 # Rows still open at this point were left by a process that no longer exists, so no thread
@@ -7304,32 +7312,138 @@ class MobilityDataUnavailable(RuntimeError):
     the leg takes, so it must not declare a candidate infeasible (or feasible)
     on the strength of a fabricated constant.  See
     docs/MOBILITY_TRUTH_CONTRACT.md (T2).
+
+    `reason_code` / `evidence_state` ride on the exception so the collection
+    sites name the gap from a structured attribute instead of string-matching a
+    message - ORD-0199 (①) needs the product to emit a named reason, and a reason
+    derived by `in str(exc)` would be one renamed sentence away from disappearing.
     """
+
+    reason_code = "MOBILITY_DATA_UNAVAILABLE"
+    evidence_state = "NO_QUALIFIED_FACT_FOR_LEG"
 
     def __init__(self, origin: str | None, destination: str | None) -> None:
         self.origin = origin
         self.destination = destination
-        super().__init__(f"MOBILITY_DATA_UNAVAILABLE:{origin}|{destination}")
+        super().__init__(f"{self.reason_code}:{origin}|{destination}")
+
+
+class MobilityEvidenceNotHardEligible(MobilityDataUnavailable):
+    """The leg HAS a fact, and its recorded quality is named - just not an eligible one.
+
+    This is the second sentence, and it is not a variation of the first: "we never
+    learned this leg" and "we have a number, and it is the mock fixture's blanket
+    constant" point at different owners and different fixes.  Naming it is what
+    ORD-0199 asks for; the name must never be rendered as a network/offline
+    problem (R14-P, the reverse face of the rule that forbids writing an outage as
+    "no such place").  A leg in this state still may not be priced by an invented
+    constant, so the candidate is excluded exactly as before - only the reason is
+    more honest.
+    """
+
+    reason_code = "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE"
+    evidence_state = "FACT_PRESENT_BUT_NOT_HARD_ELIGIBLE"
+
+    def __init__(
+        self, origin: str | None, destination: str | None, fact_quality: str | None
+    ) -> None:
+        self.fact_quality = fact_quality
+        super().__init__(origin, destination)
+
+
+def _gap_cell(
+    origin: str | None,
+    destination: str | None,
+    reason_code: str,
+    evidence_state: str,
+    fact_quality: str | None = None,
+) -> dict[str, Any]:
+    """One leg's gap cell - the shape the envelope contract and the screen both read.
+
+    Key set stays constant (a strict client-side shape check drops an envelope over
+    missing keys), and `fact_quality` rides along only when the exception actually
+    carries one: an absent quality is not the same as an empty one.
+    """
+
+    cell: dict[str, Any] = {
+        "from_place_id": origin or None,
+        "to_place_id": destination or None,
+        "reason_code": reason_code,
+        "evidence_state": evidence_state,
+    }
+    if fact_quality is not None:
+        cell["fact_quality"] = fact_quality
+    return cell
 
 
 def _mobility_gap(text: str) -> dict[str, Any]:
-    """Turn a collected leg back into a named gap.
+    """Turn a collected leg message back into a named gap.
 
     The collection site stores the exception's own text, so the endpoints are parsed back out
     here rather than duplicated at every append.  An unparseable end stays `None`: inventing a
     place id to fill a column would be the same fabrication the missing leg already refuses.
+
+    The product's live path is :func:`_mobility_gap_from`, which reads the reason off the
+    exception's attributes; this parser stays for the collected messages (and the door that
+    pins their shape) and can only ever name the base reason - which is exactly why the
+    structured path exists.
     """
 
     _, _, argument = str(text).partition(":")
     origin, separator, destination = argument.partition("|")
-    return {
-        "from_place_id": origin or None,
-        "to_place_id": destination or None if separator else None,
-        "reason_code": "MOBILITY_DATA_UNAVAILABLE",
-        # There is no evidence for this leg at all - which is a different thing from a weak one,
-        # and is why the planner must not fall back to a default minute count or a straight line.
-        "evidence_state": "NO_QUALIFIED_FACT_FOR_LEG",
-    }
+    return _gap_cell(
+        origin or None,
+        destination or None if separator else None,
+        MobilityDataUnavailable.reason_code,
+        MobilityDataUnavailable.evidence_state,
+    )
+
+
+def _hard_leg_minutes(mobility: Any, origin: str, destination: str) -> int:
+    """The leg's minutes, through the product's own allowlist - naming why it refused.
+
+    `hard_minutes` is the gate (V3-1 / V4 #1 / V6): only a quality in
+    ``HARD_FEASIBLE_QUALITIES`` may drive a hard feasibility decision.  This helper
+    adds nothing to that rule - it reads the same mapping the gate reads so the
+    *reason* can be named from the fact itself rather than inferred from which
+    exception class happened to be raised:
+
+    * no fact for the pair, or a fact with NO recorded quality -> the existing
+      ``MOBILITY_DATA_UNAVAILABLE``: we cannot say what that number is;
+    * a fact whose quality is recorded and is not eligible (today:
+      ``SYNTHETIC_DEFAULT``, the fixture's blanket constant) ->
+      ``MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`` (ORD-0199 ①): we can say exactly what
+      it is, and it is not a measurement.
+    """
+
+    facts = getattr(mobility, "facts", None)
+    fact = facts.get((origin, destination)) if isinstance(facts, Mapping) else None
+    if (
+        fact is not None
+        and fact.fact_quality is not None
+        and fact.fact_quality not in HARD_FEASIBLE_QUALITIES
+    ):
+        raise MobilityEvidenceNotHardEligible(origin, destination, fact.fact_quality)
+    hard_minutes = getattr(mobility, "hard_minutes", None)
+    if callable(hard_minutes):
+        return int(hard_minutes(origin, destination))
+    return int(mobility.estimate_minutes(origin, destination))
+
+
+def _mobility_gap_from(exc: MobilityDataUnavailable) -> dict[str, Any]:
+    """The projection cell for one refused leg, read off the exception's attributes.
+
+    Deliberately not parsed out of the message: a reason that survives only as long
+    as somebody's sentence keeps its wording is not a contract field.
+    """
+
+    return _gap_cell(
+        exc.origin,
+        exc.destination,
+        exc.reason_code,
+        exc.evidence_state,
+        getattr(exc, "fact_quality", None),
+    )
 
 
 def _replan_estimate(
@@ -7355,18 +7469,15 @@ def _replan_estimate(
 
     if not origin or not destination or origin == destination:
         return 0
+    known_refusal: MobilityDataUnavailable | None = None
     try:
-        # ``hard_minutes`` (not the raw ``estimate_minutes``) so a leg whose
-        # quality is SYNTHETIC_DEFAULT — the blanket mock 20 the bulk replan
-        # capture may have pre-frozen — is rejected at this front door rather
-        # than flowing into feasibility as if it were measured (V2-T2 / B1).
-        # The real MobilitySnapshot always exposes it; duck-typed providers that
-        # predate quality tagging fall back to the raw accessor.
-        hard_minutes = getattr(mobility, "hard_minutes", None)
-        if callable(hard_minutes):
-            return int(hard_minutes(origin, destination))
-        return int(mobility.estimate_minutes(origin, destination))
-    except KeyError:
+        return _hard_leg_minutes(mobility, origin, destination)
+    except (KeyError, MobilityEvidenceNotHardEligible) as exc:
+        # Two different gaps reach the same next step: the pair is absent from the
+        # frozen evidence, or the only number it carries is a named constant the
+        # allowlist rejects.  A replan creates new adjacencies, so both get one
+        # strict attempt at a real provider - and neither is a licence to invent.
+        known_refusal = exc if isinstance(exc, MobilityDataUnavailable) else None
         try:
             captured = capture_runtime_mobility_snapshot(
                 session,
@@ -7375,15 +7486,14 @@ def _replan_estimate(
                 operation_key=operation_key,
                 require_explicit_facts=True,
             ).snapshot
-        except (MobilitySnapshotCaptureError, KeyError) as exc:
-            raise MobilityDataUnavailable(origin, destination) from exc
-        captured_hard = getattr(captured, "hard_minutes", None)
-        try:
-            if callable(captured_hard):
-                return int(captured_hard(origin, destination))
-            return int(captured.estimate_minutes(origin, destination))
-        except KeyError as exc:
-            raise MobilityDataUnavailable(origin, destination) from exc
+        except (MobilitySnapshotCaptureError, KeyError) as capture_exc:
+            # The recapture said nothing; what we already knew about this leg still
+            # stands.  Naming the fixture constant we hold is more true than falling
+            # back to "we never learned it" the moment a fresh attempt fails.
+            raise (known_refusal or MobilityDataUnavailable(origin, destination)) from (
+                capture_exc
+            )
+        return _hard_leg_minutes(captured, origin, destination)
 
 
 @app.post(
@@ -8237,6 +8347,10 @@ def generate_replan(
     created: list[ReplanProposalModel] = []
     failed_reasons: set[str] = set()
     mobility_unavailable_pairs: set[str] = set()
+    # ORD-0199 ①: the same legs, as structured cells. The set above stays for its
+    # message and de-duplication role; the reason each leg was refused comes from
+    # the exception's own attributes, not from parsing that message back apart.
+    mobility_gaps: list[dict[str, Any]] = []
     heuristic_specs: list[_ReplanCandidateSpec] = []
     # Set when a physical disruption has no material repair available.
     heuristic_specs_unresolved_reason: str | None = None
@@ -8291,7 +8405,8 @@ def generate_replan(
                         # infeasible either -- the candidate's feasibility is
                         # simply unknown.
                         mobility_unavailable_pairs.add(str(exc))
-                        failed_reasons.add("MOBILITY_DATA_UNAVAILABLE")
+                        mobility_gaps.append(_mobility_gap_from(exc))
+                        failed_reasons.add(exc.reason_code)
                         continue
                     budget_remaining = journey.budget_amount_minor - (
                         sum(item.estimated_cost_minor for item in source)
@@ -9110,7 +9225,8 @@ def generate_replan(
                 # fabricated constant and letting the gate reject it for the
                 # wrong reason.
                 mobility_unavailable_pairs.add(str(exc))
-                failed_reasons.add("MOBILITY_DATA_UNAVAILABLE")
+                mobility_gaps.append(_mobility_gap_from(exc))
+                failed_reasons.add(exc.reason_code)
                 abandoned = True
                 break
 
@@ -9440,12 +9556,33 @@ def generate_replan(
             # the log line and the existing doors read it - and the segments this loop already
             # collected ride along, named, so a screen can say *which* leg was unmeasurable
             # instead of "no feasible proposal".
-            gaps = [_mobility_gap(pair) for pair in sorted(mobility_unavailable_pairs)]
-            refusal.reason_code = "MOBILITY_DATA_UNAVAILABLE"
+            # Both collection sites append the message set and this list in the same
+            # statement, so the cells are the same legs - de-duplicated here only because a
+            # leg can be refused for two different candidates.  The messages are not parsed
+            # back into cells: that parser hard-codes one reason code and would relabel an
+            # ineligible-evidence leg as a missing one.
+            structured = {
+                (str(cell["from_place_id"]), str(cell["to_place_id"]), str(cell["reason_code"])): cell
+                for cell in mobility_gaps
+            }
+            gaps = sorted(structured.values(), key=lambda cell: str(cell["from_place_id"]))
+            reason_codes = sorted({str(cell["reason_code"]) for cell in gaps})
+            # ORD-0199 ①: "the frozen number for this leg is the fixture's blanket constant"
+            # is emitted under its own name instead of being filed as "no data".  It is still a
+            # refusal to decide, never a network/offline claim and never a `SELECTABLE` verdict -
+            # the candidate stays excluded and the traveller is told which leg lacks real evidence.
+            refusal.reason_code = (
+                GAP_MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE
+                if reason_codes == [GAP_MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE]
+                else "MOBILITY_DATA_UNAVAILABLE"
+            )
             refusal.error_details = {
                 "gaps": gaps[:20],
                 "gaps_total": len(gaps),
                 "legs_required": len(gaps),
+                # Aggregate view of the same truth: a consumer that only reads one field
+                # still learns *why* the repair stopped.
+                "reason_codes": reason_codes,
             }
             raise refusal
         details = ", ".join(sorted(failed_reasons)) or "NO_DISTINCT_CANDIDATE"

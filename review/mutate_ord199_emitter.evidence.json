@@ -1,0 +1,39 @@
+[
+  {
+    "id": "E1",
+    "file": "main.py",
+    "note": "the classification is computed and then thrown away - no reason is ever named",
+    "killed": [
+      "test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so"
+    ],
+    "survived": [],
+    "declared_green_held": true,
+    "collateral": [],
+    "restored": true
+  },
+  {
+    "id": "E2",
+    "file": "provider_snapshots.py",
+    "note": "the fixture constant becomes hard-eligible - the named gap must vanish with it",
+    "killed": [
+      "test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so",
+      "test_replans_never_freezes_synthetic_default_as_hard_fact"
+    ],
+    "survived": [],
+    "declared_green_held": true,
+    "collateral": [],
+    "restored": true
+  },
+  {
+    "id": "E3",
+    "file": "main.py",
+    "note": "the branch fires but carries the base name - the specific truth is lost",
+    "killed": [
+      "test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so"
+    ],
+    "survived": [],
+    "declared_green_held": true,
+    "collateral": [],
+    "restored": true
+  }
+]

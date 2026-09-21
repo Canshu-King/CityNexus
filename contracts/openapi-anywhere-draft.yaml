@@ -405,6 +405,37 @@ x-testing-obligations:
       `_qoder_ord30_evidence_20260920/ord191/repro_cmdr_malformed.py`，六种形状同入参、同一正常入口，
       逐条打印产品答案与 provider 层交出来的对象。
 
+  a-refused-leg-must-name-which-kind-of-evidence-is-missing:
+    rule: >-
+      planner 因为某条腿的 used-edge 证据不进硬判定而放弃候选时，服务器投影必须说得出**是哪一种缺**。
+      两条句子不是一回事：`MOBILITY_DATA_UNAVAILABLE` ＝ 这条腿我们根本没有任何事实（或事实没带质量标签，
+      无法说明它是什么）；`MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE` ＝ 这条腿**有**事实，而且它的质量是明确
+      记录过的，只是那个质量不许进硬判定（今天就是 mock 的整表常量 ``SYNTHETIC_DEFAULT``）。两家人**不许
+      合一**：把缺事实也叫成不合格，或反过来把不合格糊成缺数据，都是 R14 禁止的归因塌陷。
+      具名走**结构化属性**（异常自带 `reason_code` / `evidence_state`，投影读 `details.gaps[].reason_code`
+      与聚合 `details.reason_codes`，并点名腿的两端与 `fact_quality`），**不许**从异常 message 里 substring
+      猜——那等于让一个契约字段活在某句话的措辞上。
+      三条硬负例：① 这不是可选结论，投影里绝不出现 `SELECTABLE`；② 绝不写成网络/离线/超时（那是另一族
+      原因，方向也不同）；③ HTTP `message` 逐字保持 `MOBILITY_DATA_UNAVAILABLE`，因为日志与九处既有门读它。
+      反向路径同样是合同的一部分：used edges 全部合格时必须照常出方案，具名 gap **不许**变成长期挡箭牌；
+      因此"把所有边标成 eligible"这个突变必须让这个名字消失（E2 实测 3/3 killed）。
+    measured-on: a383bbd
+    doors:  # 措辞负例（网络/离线/SELECTABLE）与具名断言读同一份 422，合并进门 1，理由写在该条 docstring
+      - backend/tests/test_qoder_mobility_replan_endpoint.py::test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so
+      - backend/tests/test_qoder_mobility_replan_endpoint.py::test_ord199_a_leg_with_no_fact_at_all_is_not_called_ineligible
+      - backend/tests/test_qoder_mobility_replan_endpoint.py::test_ord199_the_named_gap_is_not_a_shield
+    mutants: >-
+      `review/mutate_ord199_emitter.py`：E1 删发射器 ⇒ 具名门 1/1 killed、其余四门照绿；
+      E2 把 ``HARD_FEASIBLE_QUALITIES`` 扩到含 ``SYNTHETIC_DEFAULT``（＝"所有边都合格"）⇒
+      具名门＋既有 synthetic 门 2/2 killed、反向门与分界门照绿；
+      E3 保留分支但换回旧名 ⇒ 具名门 killed（同一门也读措辞负例，所以 E1/E3 都杀它）。
+      三个突变各自 restored=True（按文件 SHA 回验），baseline 先量绿。
+    coverage-gap: >-
+      诚实地记一条没覆盖到的：`MOBILITY_DATA_UNAVAILABLE` 这一族今天在端点层**没有**自己的场景——demo
+      世界里被剥掉的腿一律冻结成 `SYNTHETIC_DEFAULT`（有名字的不合格证据），要造"真的没有事实"需要 strict
+      capture 失败（provider 不可达）。我没有为了凑宽突变造假场景，分界改由单元门
+      `test_ord199_a_leg_with_no_fact_at_all_is_not_called_ineligible` 守住。
+
   per-attempt-evidence-must-sit-in-the-cell-the-consumer-reads:
     rule: >-
       `provider_status` 里属于"目的地这一问"的那一格（`stage=resolving_destination`）必须与失败路径
