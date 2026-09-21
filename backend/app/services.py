@@ -5,7 +5,7 @@ from collections.abc import Mapping, Sequence
 from datetime import datetime, timedelta, timezone
 from itertools import permutations
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 from uuid import UUID, uuid5
 
 from sqlalchemy import select, text
@@ -588,6 +588,104 @@ def _templates() -> list[list[tuple[str, str, str, str]]]:
             ("place-skyline-dinner", "Skyline Dinner House", "17:00", "18:30"),
         ],
     ]
+
+
+def _hm_to_minutes(text: str) -> int | None:
+    try:
+        hour, minute = (int(part) for part in str(text).split(":", 1))
+    except (TypeError, ValueError):
+        return None
+    return hour * 60 + minute
+
+
+def _place_window(place: Place) -> tuple[int, int] | None:
+    """A place's own open/close as minutes-of-day, or None if it never says."""
+
+    hours = json.loads(place.opening_hours_json or "{}") if place.opening_hours_json else {}
+    opened = _hm_to_minutes(hours.get("open"))
+    closed = _hm_to_minutes(hours.get("close"))
+    if opened is None or closed is None or closed <= opened:
+        return None
+    return opened, closed
+
+
+def _place_duration(place: Place) -> int:
+    metadata = json.loads(place.metadata_json or "{}") if place.metadata_json else {}
+    try:
+        return max(15, int(metadata.get("duration_min", 60)))
+    except (TypeError, ValueError):
+        return 60
+
+
+def _catalogue_templates(
+    places: Mapping[str, Place],
+    travel: Callable[[str, str], int],
+    *,
+    day_start_minutes: int = 9 * 60,
+    variants: int = 3,
+) -> list[list[tuple[str, str, str, str]]]:
+    """Compose the template shape out of whatever the city's catalogue really holds.
+
+    `_templates()` is a fixture of `CNX-DEMO` place ids, and the no-anchor scheduler returns
+    `None` at the first id it cannot resolve.  So a city with its own real places - however
+    complete its catalogue and however valid its travel facts - could not be planned by the
+    default path at all: `plans/generate` answered 422 with "No feasible plan candidates",
+    which reads as "nothing works here" when the truth was "the only schedule we know how to
+    draw is somebody else's city" (measured with CN-BEIJING, ORD-0089).
+
+    The contract is kept identical, only its source changes: up to three day sequences of
+    `(place_id, title, start HH:MM, end HH:MM)`, built from each place's own open/close and
+    duration, with the frozen travel minutes between consecutive stops actually subtracted so
+    the literal windows are ones the gate can honour.  Stops are taken earliest-opening first
+    (ids break ties, so the order is reproducible), a stop that cannot fit before its own
+    closing time is dropped rather than squeezed in, and the variants rotate the queue so the
+    candidates are genuinely different plans instead of one plan three times.
+    """
+
+    ordered = sorted(
+        (place for place in places.values() if _place_window(place)),
+        key=lambda place: (_place_window(place) or (0, 0))[0],
+    )
+    if not ordered:
+        return []
+
+    def pack(sequence: Sequence[Place]) -> list[tuple[str, str, str, str]]:
+        schedule: list[tuple[str, str, str, str]] = []
+        previous_end: int | None = None
+        previous: str | None = None
+        for place in sequence:
+            window = _place_window(place)
+            if window is None:
+                continue
+            opened, closed = window
+            earliest = day_start_minutes if previous is None else previous_end + travel(
+                previous, place.id
+            )
+            start = max(earliest, opened)
+            end = start + _place_duration(place)
+            if end > closed:
+                # Dropped, not squeezed: an activity that cannot fit inside its own opening
+                # hours is not made honest by moving its minutes around.
+                continue
+            schedule.append(
+                (
+                    place.id,
+                    place.name,
+                    f"{start // 60:02d}:{start % 60:02d}",
+                    f"{end // 60:02d}:{end % 60:02d}",
+                )
+            )
+            previous_end = end
+            previous = place.id
+        return schedule
+
+    templates: list[list[tuple[str, str, str, str]]] = []
+    for offset in range(max(1, variants)):
+        rotated = list(ordered[offset % len(ordered) :]) + list(ordered[: offset % len(ordered)])
+        packed = pack(rotated)
+        if len(packed) >= 2 and packed not in templates:
+            templates.append(packed)
+    return templates
 
 
 def _safe_estimate_minutes(provider, origin: str | None, destination: str | None) -> int:
@@ -1223,7 +1321,15 @@ def generate_plans(
         ).all()
     }
     constraints = _journey_constraints_with_capabilities(session, journey)
-    raw_templates = _templates()
+    # The frozen fixture templates stay authoritative for the city they were authored for:
+    # taking only the templates whose every place id exists keeps `CNX-DEMO` on the identical
+    # path (all three resolve there) while a city with its own real catalogue - where none
+    # resolve - falls through to `_catalogue_templates` below instead of answering 422.
+    raw_templates = [
+        template
+        for template in _templates()
+        if all(place_id in places for place_id, *_ in template)
+    ]
     created: list[PlanVersion] = []
     now = iso_now()
     journey_start = parse_dt(journey.start_at)
@@ -1286,6 +1392,10 @@ def generate_plans(
                     for place_id, *_ in template
                     if place_id in places
                 ),
+                # A city with no frozen template of its own is priced over its whole
+                # catalogue: without this the matrix would be captured empty, and the
+                # derived day sequences below would have no travel minutes to respect.
+                *(sorted(places) if not raw_templates else ()),
                 *(anchor.place_id for anchor in anchors),
             ]
         )
@@ -1305,6 +1415,13 @@ def generate_plans(
         (origin, destination): fact.minutes
         for (origin, destination), fact in mobility_provider.facts.items()
     }
+    if not raw_templates:
+        # Derived from this city's own places, with the minutes above subtracted between
+        # stops, so the windows handed to the scheduler are ones the gate can honour.
+        raw_templates = _catalogue_templates(
+            places,
+            lambda origin, destination: travel_minutes.get((origin, destination), 0),
+        )
     schedules: list[list[CandidateActivity]] = []
     for template in raw_templates:
         schedule = schedule_template_with_anchors(

@@ -16,7 +16,29 @@
         "cancellable_before_payment": true,
         "loss_minor": 0
       }
+    },
+    "service-beijing-forbidden-city-ticket": {
+    "provider_key": "mock-booking",
+    "place_id": "place-beijing-forbidden-city",
+    "currency": "CNY",
+    "amount_minor": 6000,
+    "slots": [
+      {
+        "provider_slot_ref": "slot-forbidden-city-0900",
+        "start_at": "2026-09-22T09:00:00+08:00",
+        "end_at": "2026-09-22T11:00:00+08:00"
+      },
+      {
+        "provider_slot_ref": "slot-forbidden-city-1330",
+        "start_at": "2026-09-22T13:30:00+08:00",
+        "end_at": "2026-09-22T15:30:00+08:00"
+      }
+    ],
+    "cancellation_policy": {
+      "cancellable_before_payment": true,
+      "loss_minor": 0
     }
+  }
   },
   "order_services": {
     "service-food-preorder": {
@@ -27,6 +49,21 @@
         "local-lunch-box": {"name": "Local Lunch Box", "unit_amount_minor": 5800},
         "jasmine-tea": {"name": "Jasmine Tea", "unit_amount_minor": 1200}
       }
+    },
+    "service-beijing-quanjude-table": {
+    "provider_key": "mock-booking",
+    "place_id": "place-beijing-quanjude-qianmen",
+    "currency": "CNY",
+    "items": {
+      "roast-duck-half": {
+        "name": "Half Roast Duck",
+        "unit_amount_minor": 19800
+      },
+      "jasmine-tea": {
+        "name": "Jasmine Tea",
+        "unit_amount_minor": 1600
+      }
     }
+  }
   }
 }

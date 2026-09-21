@@ -28,5 +28,55 @@
     "name": "Nexus Bike Share",
     "place_id": "place-city-park",
     "availability": {"status": "available", "bikes": 12}
+  },
+  {
+    "id": "service-beijing-metro-hub",
+    "provider_key": "mock-city",
+    "external_id": "S101",
+    "city_code": "CN-BEIJING",
+    "service_type": "mobility_hub",
+    "name": "Beijing Metro Central Hub",
+    "place_id": null,
+    "availability": {"status": "available", "first_service": "05:00", "last_service": "23:30"}
+  },
+  {
+    "id": "service-beijing-visitor-support",
+    "provider_key": "mock-city",
+    "external_id": "S102",
+    "city_code": "CN-BEIJING",
+    "service_type": "visitor_support",
+    "name": "Tian'anmen Visitor Support Point",
+    "place_id": "place-beijing-tiananmen-square",
+    "availability": {"status": "available", "open": "09:00", "close": "17:00"}
+  },
+  {
+    "id": "service-beijing-shared-bikes",
+    "provider_key": "mock-city",
+    "external_id": "S103",
+    "city_code": "CN-BEIJING",
+    "service_type": "bike_share",
+    "name": "Nanluoguxiang Bike Share",
+    "place_id": "place-beijing-nanluoguxiang",
+    "availability": {"status": "available", "bikes": 24}
+  },
+  {
+    "id": "service-beijing-forbidden-city-ticket",
+    "provider_key": "mock-city",
+    "external_id": "BKG-P102",
+    "city_code": "CN-BEIJING",
+    "service_type": "bookable_experience",
+    "name": "Palace Museum Timed Ticket",
+    "place_id": "place-beijing-forbidden-city",
+    "availability": {"status": "available", "slot_source": "wp04_commerce_catalog.json"}
+  },
+  {
+    "id": "service-beijing-quanjude-table",
+    "provider_key": "mock-city",
+    "external_id": "ORD-P106",
+    "city_code": "CN-BEIJING",
+    "service_type": "tradable_food",
+    "name": "Quanjude Table Pre-order",
+    "place_id": "place-beijing-quanjude-qianmen",
+    "availability": {"status": "available", "catalog_source": "wp04_commerce_catalog.json"}
   }
 ]

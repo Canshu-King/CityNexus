@@ -115,7 +115,25 @@ def test_fixture_default_is_documented_as_a_constant() -> None:
 
     fixture = json.loads((MOCK_ROOT / "mobility_matrix.json").read_text(encoding="utf-8"))
     assert fixture["default_minutes"] == 20
-    assert len(fixture["minutes"]) == 9
+    # Pinned by value, not by count: the count coupled this guard to how many cities the
+    # fixture carries, so adding a second city's legs read as a contract change (ORD-0089).
+    demo_legs = {
+        "place-old-town|place-riverside-museum": 15,
+        "place-riverside-museum|place-food-hall": 15,
+        "place-food-hall|place-tech-art": 20,
+        "place-tech-art|place-river-cruise": 20,
+        "place-food-hall|place-city-park": 15,
+        "place-city-park|place-river-cruise": 20,
+        "place-food-hall|place-design-library": 15,
+        "place-design-library|place-river-cruise": 20,
+        "place-river-cruise|place-skyline-dinner": 20,
+    }
+    demo_in_fixture = {
+        key: value
+        for key, value in fixture["minutes"].items()
+        if not key.startswith("place-beijing-")
+    }
+    assert demo_in_fixture == demo_legs
     assert f"{EXPLICIT_PAIR[0]}|{EXPLICIT_PAIR[1]}" in fixture["minutes"]
     assert f"{MISSING_PAIR[0]}|{MISSING_PAIR[1]}" not in fixture["minutes"]
 
