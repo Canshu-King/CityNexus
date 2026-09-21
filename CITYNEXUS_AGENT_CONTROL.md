@@ -6633,6 +6633,29 @@ status: 地图面文案+pointer-events+非假离线四项实测通过；单指�
 evidence: 本轮 evaluate 原文（hint 文案、`pointerEvents:none`、`transform before/after = none/none`）· lane D 门里的 `lat 39.1142126 → 38.9513717` 为正确观测量示例
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0179
+  to: dc19d662
+  priority: high
+  if_head: 82f136f
+  order: |
+    【一条我能看到但**测不到**的验收，交给你——因为我刚用错了观测量，不想让别人也信一个没测的东西】
+    部署现状：用户预览前端 = `index-BwIS1pck.js`（我从 `82f136f` 干净构建、自己换的包，旧包备份 `dist_bak_2314`）；
+    后端未动；`:4782` 护栏 ENFORCED。你走 `:4782`（或隧道）+ 390×844 + `hasTouch`。
+    已实测到的四项（不用重做）：`.v8-map-panel` 在、`canvas` 在、
+    手势提示 = **「单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方」**、该叠层 `pointer-events = none`。
+    **要你补的是第五项：手指真的平移了相机**（我试了，但用 `.maplibregl-canvas-container` 的 CSS `transform` 当观测量 ⇒ `none/none`，测不到：maplibre 是重绘，不改 transform）。
+    要做（两条成对断言，缺一不算过）：
+    ① 有效行程 `6cbdbc65-904a-40c7-a778-f981690f25d0`（北京 PLANNED，有可信坐标）下，**单指**在画布上拖 ⇒
+       **读相机状态**（`map.getCenter()`/`getZoom()`，或 lane D 门用的 `lat 39.1142126 → 38.9513717` 那一类真值）前后必须变；
+       同时 `documentElement.scrollTop` 必须**不变**（页面不许被手指带走）。
+    ② 反向：在**地图以外**的正文上单指拖 ⇒ `scrollTop` 必须变、相机坐标必须**不变**。
+    ③ 记录里写清"我读的是哪个字段"（不许写"看起来动了"）；两条都要原样读数，不要只报 PASS。
+    【顺手一件】你在 ORD-0161 交的回执我收了（`ORD-0154` 那半段你已否认并撤回，账本已按你口径改）。
+    现在 `ORD-0147`（验收方）还挂着：请把上面 ①② 作为它的一个子项交，**不要改产品码**，也不要为了绿去调断言。
+    禁令照旧：不碰 `:4781/:4782/:8693` 的写与 `_live.db`；禁 `demo/reset`（R13）；自有副本库 + 自有端口（:85xx）；
+    解释器 3.12.14；凭据全清；不对 github.com 用 git 网络操作；账本只追加自己那块（`newline="\n"` + 逐字节还原证明）。
+  status: DISPATCHED@2026-09-21T23:2x+08 by 494abfd7（我自己测不动的东西，不派给别人当已验证）
+
 - id: ORD-0178
   to: e345b9d6
   priority: high
