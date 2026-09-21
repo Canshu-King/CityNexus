@@ -189,7 +189,7 @@ At minimum:
 Package-integrity mismatch does not automatically invalidate a measured product observation, but
 it blocks any claim that the delivery is a self-consistent reproducible evidence bundle.
 
-## 9. Mutation evidence receipt
+## 10. Mutation evidence receipt
 
 Every mutation claimed as KILLED must carry a compact, replayable receipt.
 
@@ -230,6 +230,89 @@ A campaign summary should count separately:
 
 Do not collapse these categories into a single "mutation pass" number.
 
-## 9. Freeze sentence
+## 11. Common-cause proof rule
+
+Multiple tests failing at the same time do **not** prove a common root cause.
+
+A cluster may be called common-cause only when at least one of these is demonstrated:
+
+1. removing/fixing cause A makes the whole claimed cluster turn GREEN while preserving the
+   individual business assertions; or
+2. the tests are shown to consume the same corrupted predicate/state/value and that shared
+   predicate is the reason each test fails.
+
+Merely observing simultaneous RED results is correlation, not causal proof.
+
+For network-isolation work specifically:
+
+- a default no-network boundary is test-environment hygiene;
+- it is not a product fix;
+- product assertions that remain RED with the boundary enabled remain product/test-contract
+  failures until separately resolved.
+
+Freeze sentence:
+
+> **Co-red is not co-causal. Prove the shared cause.**
+
+### Batch disappearance rule
+
+A test that disappears from a batch result is not automatically GREEN.
+
+If a previously RED test is absent from a later batch, classify it by a targeted rerun or record
+it as NOT_RUN / BATCH_SENSITIVE / ORDER_DEPENDENT as appropriate.
+
+Do not count "not seen in this batch" as "fixed".
+
+## 12. Identifier and claim provenance
+
+Human-typed identifiers are not evidence by themselves.
+
+Whenever a lane cites a commit SHA as proof, attach the raw output of:
+
+    git log -1 --format='%h %ad %s' --date=format:'%H:%M' <sha>
+
+or an equivalent repository-native canonical lookup that proves:
+
+- the commit exists in the claimed repository;
+- the short/full SHA resolves to that commit;
+- timestamp and subject match the claimed work.
+
+If the commit is not present locally but is verified by a repository API, include the canonical
+repository/ref/commit response instead.
+
+Do not accept a bare hand-typed SHA in an ORD delivery.
+
+Before copying another lane's or arbiter's implementation claim into an execution order, verify
+the relevant code once at the cited SHA/ref when the claim affects architecture, ownership,
+acceptance, or remediation scope.
+
+Examples that require re-verification before propagation:
+
+- "endpoint A and endpoint B use different resolvers";
+- "Agent surface exposes only four proposal fields";
+- "this commit contains scoped reset";
+- "this branch already includes the fix".
+
+A quoted conclusion without a replayable identifier/code check must remain attributed and
+unverified, not silently promoted to project fact.
+
+## 13. Test-instrument semantic equivalence
+
+A test harness may block real external I/O, but the block should preserve the semantic failure
+class that production code is designed to handle.
+
+For HTTPX-based code, a synthetic network denial should normally surface through the
+`httpx.TransportError` family (or the exact typed failure the contract intends to exercise),
+not an unrelated bare `RuntimeError`, unless the test explicitly targets that unexpected-error
+path.
+
+The instrument is allowed to change **whether** external I/O happens. It must not accidentally
+change **what kind of failure** the product observes, because that confounds the test.
+
+Likewise, command-line reporting quirks are not collection failures. A collection gate must use
+the pytest exit code / collection error signal and collected node data, not depend solely on one
+specific quiet-mode summary line such as `N tests collected`.
+
+## 14. Freeze sentence
 
 **No collection, no denominator; no denominator, no red/green count.**
