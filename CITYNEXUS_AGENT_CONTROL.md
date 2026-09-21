@@ -7487,6 +7487,44 @@ afterSecondLoad 仍是 1 row；readBack{found:true, rows:1}              caches=
 status: ORD-0178 + ORD-0180/0183 **DONE@2026-09-22T01:1x+08 by e345b9d6**（提交 `f1bdbbe`、`107e2db`；ORD-0178 ① 量出 `PERSISTED` 并**撤回**我此前的 `NO_PERSISTENCE`，②③ 由写后回读驱动、④ 双向门绿；ORD-0180 键稳定性＋ORD-0183 标记/非授权门绿，服务端重放不变量**未测且已写明**；突变 4 KILLED / 1 SURVIVED 附因；顺带修掉相邻门的竞态判据并回验 D 系列仍杀得掉）
 evidence: `review/evidence/ui-overnight/ord0178-{persistence,claim-vs-rowcount}.json`（四时间点＋双向两臂＋`note` 里写明撤回）、`review/evidence/ui-overnight/ord0180-{bridge,idempotent-accept}.json`（含 `notMeasured` 与 `stageRefusal` 原文）、`review/killM1*.log`／`review/killN*.log`、`review/run-run009898.log`（43/43）、`review/run-lst010159.log`（收集 43）、`review/tsc-0178*.txt`／`tsc-0180*.txt`、`review/rewrite-ord0180-gate.py`（本单改写存档）；改动 `src/lib/offlineJourney.ts`、`src/app/V8Experience.tsx`、`src/i18n/LocaleContext.tsx`、`src/features/simulation/SimulationPanel.tsx`、两个新 spec 与 `review/ord0082_0087_kill_drivers.py`。**未 push**。
 
+### SESSION=494abfd7 · ORD-0194 = **REPRODUCED**（今晚第一个由我复跑升档的项）；基线集合与 lane F **正式合并成一份**：交集 14、区间 14–17 @01:0x
+
+`STATUS: ACCEPTED-REPRODUCED-BY-COMMANDER | 我量的树 `git archive 2176774` → `v_2176774`（权威树 0 写）| 3.12.14、AI off、凭据清空 | 全部 targeted（按 P5，不跑全量）|`
+
+#### ① 我复跑的结果（车道自报 → 我复核升档）
+```
+--collect-only -q                       → 1163 tests collected in 4.56 s（车道报 1163 / 1.83 s，同数）
+tests/test_qoder_anywhere_collection_gate.py → 9 passed in 2.39 s（车道报 9 passed）
+其中新立的两条：
+  test_7（负断言必须先在真键清单上算"缺什么"）  → passed
+  test_8（守卫必须单实现：包装里出现 HEADING/board_start/lines.insert ⇒ 当场红）→ passed
+```
+⇒ **ORD-0194 = ACCEPTED，并在我这边标 `REPRODUCED`。**
+⇒ 车道这一轮**主动只标 SELF_REPORTED 并写着"我不替任何一项写 REPRODUCED，那是你的标记"**——这是晨报三档标注能被执行的样子，不是姿态。我已把它的 P5/基线集合化/守卫单实现三项从 `SELF_REPORTED` 升为 `REPRODUCED`；**交叉突变仪器（`14a5b64`）仍未复跑，保持 SELF_REPORTED**，明早我按同样方法升或不升。
+
+#### ② 基线正式合并为"一份集合"（我的三次 + 它的四次，同一 SHA `8ee64ae`）
+| 谁 | as-is（无边界）读数 | 两遍交集 |
+|---|---|---|
+| 我（3 次全量） | 16 / 16 / **14** | **14** |
+| lane F（2 次全量） | 17 / **14** | **14** |
+⇒ **两个独立来源的交集相同 = 14**，合并区间 **14 – 17**。⇒ 你我之前"16 vs 17"的冲突就此定性：**不是谁错，是单值这个说法本身错**（车道那句话我原样引用："真值是这个集合"）。
+⇒ 全线引用这一句：
+```
+BASELINE@8ee64ae = 交集 14（Commander 3 次 ∩ 与 lane F 2 次 ∩ 相同）· 区间 14–17
+具名轮换成员（只 3 个，全在 catalog_hydration 一族）：
+  test_a_job_stopped_before_its_worker_starts_still_closes_itself
+  test_abandon_reports_a_request_not_a_death
+  test_nothing_leaves_the_process_while_the_deterministic_plane_answers
+上下文依赖：g3 = TARGETED:RED / FULLSUITE:GREEN（两边都不得外推）
+带边界稳定核 15（车道两遍；我这边一次未做，明早一次跑在最终候选上）
+```
+⇒ 契约侧已由车道把 `baseline-is-a-set-not-a-number`（含 worked example）、`p5-targeted-only-until-the-stable-candidate`、`ledger-guard-single-implementation`、`morning-report-labelling` 四条落进 `0.94-annex.17`（我核了纯增补回验的说法与门文件行为一致）。
+
+#### ③ 顺带：`ledger-guard-single-implementation` 这条门正是我今晚担心的东西
+我上一轮怕的是"两份实现各修一半"（我修脚本、它包装），现在**这件事由门守着**：包装里若出现锚点判定逻辑就红。⇒ 我这边的动作：`ledger_anchor_guard.py` 保持**唯一实现**，我的巡检脚本只调用不复制。
+
+status: ORD-0194 ACCEPTED 且升档 REPRODUCED（1163 collected、9 passed、test_7/test_8 双绿，全部 targeted）；基线与 lane F 合并为交集 14 / 区间 14–17；交叉突变仪器仍 SELF_REPORTED 待我复跑
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 - id: ORD-0191
   to: 8c66aa92
@@ -7555,7 +7593,7 @@ evidence: `review/evidence/ui-overnight/ord0178-{persistence,claim-vs-rowcount}.
     **晨报必须分三级标注，不得压成一个"verified"**：`REPRODUCED` / `FORMAT_CHECKED` / `SELF_REPORTED`
     （这条我正对自己同样执行：今晚我对 ORD-0184/0185 的签收就分别标了我复跑与只核格式的部分）。
     另：ORD-0189 的交叉突变仪器 + 四个 `OBSERVATION_*` 状态仍在你名下，随夜里第一批门一起交即可，**不要为它重跑全量**。
-  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P5 独立证明与"全量只跑一次"）
+  status: DELIVERED@2026-09-22 01:06:07 +0800 by 8ccd71d8（P5 落契约 + 基线改集合口径 + 守卫单实现做成门：分支 agent/f-ord194-20260921 @ 2176774，未 push；targeted 跑门文件 9 passed、收集 1163/1.83s rc=0。本轮所有数字标 SELF_REPORTED，等包工头 REPRODUCED）｜was: status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P5 独立证明与"全量只跑一次"）｜**REPRODUCED@01:0x（我在 `2176774` 上复跑：1163 collected、gate 文件 9 passed、test_7/test_8 双绿；全集合与你的交集同为 14，区间合并 14–17）**
 
 - id: ORD-0195
   to: 494abfd7
@@ -11242,6 +11280,59 @@ telemetry 行四个字段齐。**在我这条没有 frontend 的分支上它按�
 
 status: `DONE`（① 交叉突变仪器 + 自证；② R14 四字段门与禁网哨兵同批，行为化并给了杀证）
 evidence: `14a5b64`（分支 `agent/f-ord186-20260921`，未 push）+ `_qoder_f_run/verify_r14`（带 D 分类器的复算树）+ 仪器 `kill_r14.py`
+
+### SESSION=8ccd71d8 · P5（ORD-0194）+ 基线集合化 + 守卫单实现 2026-09-22 01:06:07 +0800
+
+**块首六要素**
+- (a) `sha` = `2176774`（父 `14a5b64`）；`worktree` = `D:/moodle/_qoder_f_o156_20260921`（分支 `agent/f-ord194-20260921`）；权威树我域 0 脏行
+- (b) `interpreter` = `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14）
+- (c) `command` = `python -m pytest tests/test_qoder_anywhere_collection_gate.py -q -p no:cacheprovider`（**targeted**，按 P5）
+- (d) `collection` = `1163 tests collected in 1.83 s`，rc=0、0 error
+- (e) `execution` = 该门文件 **9 passed**
+- (f) `git_status` = `clean`
+
+**① P5 已落契约**：开发期只跑 targeted；只在稳定候选上跑一次更宽/全量。
+今晚的实测就是它的依据：同一 SHA 三次全量 = **16 / 16 / 14**。
+
+**② 基线按你的新口径交（交集 + 区间 + 具名轮换成员），不再报单值**
+
+`BASELINE@8ee64ae`（`git archive 8ee64ae`，3.12.14，AI off，凭据全清，各自建库）：
+
+| 上下文 | 我 run1 | 我 run2 | 你的读数 |
+|---|---|---|---|
+| as-is（无边界） | 17 | 14 | 16 / 16（逐行一致） |
+| 带边界 | 15 | 16 | — |
+
+- **区间**：as-is **14 – 17**；带边界 **15 – 16**（两遍）；合并看 **14 – 17**。
+- **交集**：as-is 两遍都红 **14 条**、带边界两遍都红 **15 条**（完整 nodeid 已在契约 `x-anywhere-red-baseline-o170.re-measured-on-8ee64ae` 逐条列出）。
+- **具名轮换成员**（换进换出的就是它们，报名字不报数字）：
+  `test_qoder_catalog_hydration.py::test_a_job_stopped_before_its_worker_starts_still_closes_itself`、
+  `::test_abandon_reports_a_request_not_a_death`、
+  `::test_nothing_leaves_the_process_while_the_deterministic_plane_answers`。
+- ⇒ 你我数字不同**不是谁错**：真值是这个集合；**"17→16 = 好转"不成立**（我在同一 SHA 量到 17 与 14）。
+
+**③ 锚点守卫保持"包装调用"关系，并做成机器可判**（新门 `test_8`）
+我的 `_qoder_f_run/_qoder_ledger_guard.py`（65 行）**不含任何锚点判定/修复逻辑**，
+只有 `subprocess.run(GUARD)` 调用你那份（74 行，唯一实现）。
+新门断言：你那份必须含 `HEADING`/`board_start`/可逆证明；我的包装出现 `HEADING`/`board_start`/`lines.insert` 任一 ⇒ 当场红。
+写入前后各跑一次：本轮两次都是 `anchor occurrences: 1 → HEALTHY`。
+
+**④ 负断言先打印真键清单**（新门 `test_7`）：判据必须先在**真键清单**上算"缺什么"，
+并用"拿猜的名字去问会全判缺"作反例自证（今晚四次误报全是这个形状）。
+
+**⑤ 晨报标注口径已写进契约**：每项标 `REPRODUCED` / `FORMAT_CHECKED` / `SELF_REPORTED`，不压成 "verified"。
+**我这一轮按此标注自己**：
+- 本页所有数字 = **SELF_REPORTED**（我自己跑的）；
+- 契约纯增补回验（删除键 0 / 变化叶子仅 `/info/version` / 新增 7 / `paths` 仍 `{}` / 0 CRLF）= **SELF_REPORTED**；
+- 交叉突变仪器与 R14 行为门（`14a5b64`）= **SELF_REPORTED**，等你的 `REPRODUCED` 复核。
+我**不替任何一项写 REPRODUCED** —— 那是你的标记，只有你跑过才算。
+
+**契约**：`0.94-annex.16 → .17`，纯增补回验如上。新增四条：
+`p5-targeted-only-until-the-stable-candidate`、`baseline-is-a-set-not-a-number`（含 8ee64ae 的 worked example）、
+`ledger-guard-single-implementation`、`morning-report-labelling`。
+
+status: `DONE`（P5 + 基线集合化 + 守卫单实现门；ORD-0184 的 15 门仍等 C 的 delivery SHA）
+evidence: `2176774`（分支 `agent/f-ord194-20260921`，未 push）+ `_qoder_f_run/{ord170_on_8ee64ae.json, _qoder_ledger_guard.py}`
 
 CLAIMED: ORD-0149 by 8ccd71d8（车道 F · 契约/门）@20:44（date 实读 20:44:08 +0800 · 权威树 tip 实测 `b2becb5` · 写域 = `contracts/**` + 新建测试文件；**产品码我自己不动**（本单第二件明写实现归 C）· 不 skip/xfail · 不打真网络（live 部分只做"没有 live 证据就必须红"的门，真 live 由 C 的 canary profile 跑） · 不占 :4781/:4782/:8693/:8781 与 _preview.db/_live.db · 自己的 detached 副本 + own `_run*.db` · 解释器 D:/moodle/CityNexus/.venv 3.12.14，不加 --timeout，AI/provider 凭据 unset
 ### SESSION=8ccd71d8 · ORD-0149 交付 @2026-09-21 21:09（date 实读 21:09:48 +0800）
