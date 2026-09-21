@@ -139,6 +139,13 @@ ACTION_ACCEPT_PARTIAL_PLAN = "ACCEPT_PARTIAL_PLAN"
 #: once, and raised as its own R1 question rather than smuggled in behind a state rename.
 ACTION_RETRY_LATER = "RETRY_LATER"
 
+#: The named gap the arbitration's acceptance wording asks for (ruling A: `HYDRATABLE` plus
+#: `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`).  Until this constant gained an emitter it existed only
+#: as a literal inside one door, which is how a ruling can read as satisfied while no product answer
+#: ever says it - a caller asking "why is this destination not plannable-as-hard" got no name from
+#: the service, only from a test.  Emitted by the product, read by the gate.
+GAP_MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE = "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE"
+
 # ---------------------------------------------------------------------------------------------
 # ORD-0167 (arbiter `e4b7faa3`): what a destination *request* is allowed to become.
 #
@@ -1094,15 +1101,23 @@ def _age_days(value: Any) -> float | None:
     return (datetime.now(timezone.utc) - moment).total_seconds() / 86400.0
 
 
-def _mobility_evidence(session: Session, city_code: str) -> tuple[int, int]:
-    """How many of this destination's place pairs have an explicit travel fact.
+def _mobility_evidence(session: Session, city_code: str) -> tuple[int, int, list[str]]:
+    """How many of this destination's place pairs have an explicit travel fact, and of what class.
 
     The fixture's blanket `default_minutes` is a constant, not a measurement, so it does not
     count: a destination where every leg answers "20" because the file says so has no mobility
     evidence, however many pairs there are.
+
+    The classes come back beside the count on purpose.  "Covered" and "usable as a hard constraint"
+    are different claims - a sealed fixture minute is real material for showing a traveller what
+    exists and not real enough for the planner to promise a budget holds - and until now the answer
+    carried the first without saying the second, which is how "mobility READY" could be read as a
+    guarantee by one consumer and as a hint by another.
     """
 
+    from app.db.models import MobilityFact
     from app.integrations.mock.providers import MOCK_ROOT
+    from app.replanning.provider_snapshots import EXPLICIT_FROZEN_FIXTURE, LIVE_PROVIDER_CAPTURE
 
     fixture = _loads((MOCK_ROOT / "mobility_matrix.json").read_text(encoding="utf-8"))
     explicit = fixture.get("minutes") if isinstance(fixture.get("minutes"), dict) else {}
@@ -1112,7 +1127,26 @@ def _mobility_evidence(session: Session, city_code: str) -> tuple[int, int]:
     ]
     pairs = [(origin, destination) for origin in ids for destination in ids if origin != destination]
     covered = sum(1 for origin, destination in pairs if f"{origin}|{destination}" in explicit)
-    return covered, len(pairs)
+    classes: list[str] = []
+    if covered:
+        classes.append(EXPLICIT_FROZEN_FIXTURE)
+    # A captured live route outranks the fixture only if it actually covers a pair of this
+    # destination; `mobility_facts` is journey-scoped, so its keys are matched against these places
+    # rather than counted in the abstract.  One column, not two: `scalars()` over a two-entity
+    # select yields the first column as a scalar, so indexing the "row" returned a single character
+    # and the comparison could never be true - a silent never-eligible reading, which is precisely
+    # the kind of bug a gate that only ever expects the gap cannot see.
+    captured = [
+        str(value)
+        for value in session.scalars(
+            select(MobilityFact.provenance).where(
+                MobilityFact.from_key.in_(ids), MobilityFact.to_key.in_(ids)
+            )
+        ).all()
+    ]
+    if LIVE_PROVIDER_CAPTURE in captured:
+        classes.append(LIVE_PROVIDER_CAPTURE)
+    return covered, len(pairs), sorted(set(classes))
 
 
 def coverage(session: Session, city_code: str | None) -> dict[str, str]:
@@ -1166,8 +1200,13 @@ def coverage_detail(session: Session, city_code: str | None) -> dict[str, dict[s
 
     for key in COVERAGE_KEYS:
         contributors: list[Place] = []
+        # Only the mobility axis grows these two fields. The other five are made of catalogue rows
+        # whose quality question is "is it stale, is it a fixture", already answered by
+        # `stale`/`source_kinds`; a hard-eligibility rule for them would be a second policy nobody
+        # wrote, so they keep the same shape they always had.
+        extras: dict[str, Any] = {}
         if key == "mobility":
-            covered, total = _mobility_evidence(session, city_code)
+            covered, total, classes = _mobility_evidence(session, city_code)
             ratio = (covered / total) if total else 0.0
             count = covered
             state = (
@@ -1178,6 +1217,15 @@ def coverage_detail(session: Session, city_code: str | None) -> dict[str, dict[s
             # The legs are computed between catalogue places, so the places they connect are the
             # source of this axis - and a fixture leg is not an OSM leg.
             contributors = places
+            from app.replanning.provider_snapshots import LIVE_PROVIDER_CAPTURE
+
+            extras = {
+                "source_classes": classes,
+                # "covered" answers whether material exists; this answers whether any of it may be
+                # treated as a constraint. A destination can legitimately be PARTIAL here and still
+                # have nothing hard-eligible, and the gap name is what lets a caller say so.
+                "hard_eligible": LIVE_PROVIDER_CAPTURE in classes,
+            }
         elif key == "booking":
             bookable = [
                 item for item in services if str(item.service_type) in BOOKABLE_SERVICE_TYPES
@@ -1207,6 +1255,7 @@ def coverage_detail(session: Session, city_code: str | None) -> dict[str, dict[s
             "min_ready": MIN_READY_CANDIDATES[key],
             "source_kinds": kinds,
             "stale": bool(stale),
+            **extras,
         }
     return detail
 
@@ -1378,6 +1427,25 @@ def evaluate_capability(
         else []
     )
     source_kinds = sorted({_source_kind(place) for place in places})
+    # The named gap, said by the service rather than inferred by a caller that noticed the counts.
+    # Three conditions, all measured, because the sentence has to mean one thing:
+    # the destination is named, this build really holds material for it, and the mobility material
+    # it holds is real but not of a class anything may treat as a constraint.  An *empty* mobility
+    # axis is not this gap - that is MISSING, and reporting a gap there would claim material exists.
+    mobility = detail["mobility"]
+    hard_gaps: list[str] = []
+    # `is False`, not `not ...`: a mobility report that never answered the eligibility question
+    # (a caller-built detail, an older shape) must not be read as "held, but not hard enough".  The
+    # gap claims material exists and falls short of a constraint; claiming it from silence would be
+    # the same class of overstatement in the other direction.
+    hard_eligible = mobility.get("hard_eligible")
+    if (
+        resolution.resolved
+        and place_count > 0
+        and int(mobility.get("candidate_count") or 0) > 0
+        and hard_eligible is False
+    ):
+        hard_gaps.append(GAP_MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE)
     body: dict[str, Any] = {
         "query": str(query),
         **identity_fields(resolution),
@@ -1398,6 +1466,10 @@ def evaluate_capability(
         "coverage": flat,
         "coverage_detail": detail,
         "missing_categories": missing,
+        # Named gaps, always present (empty when nothing is missing beyond the counts). A caller
+        # that wants to say "why this is not plannable as a hard commitment" reads this instead of
+        # writing its own rule about source classes and drifting from everyone else's.
+        "hard_gaps": hard_gaps,
         # Named rather than swallowed: if a category exists but no intent names it, a reader must
         # be able to see that we have material we failed to classify, not infer an empty catalog.
         "unclassified_categories": unclassified_material(session, resolution.city_code),

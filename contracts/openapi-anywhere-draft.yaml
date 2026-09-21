@@ -482,6 +482,46 @@ x-testing-obligations:
       # 11/12 killed + 10/10 cross-isolated，0 problem（幸存者为声明项），逐次 restored=True。
       script: review/mutate_ord191_leg.py
 
+  mobility-evidence-may-be-named-not-hard-eligible:
+    rule: >-
+      仲裁 A 的验收字符串是 `HYDRATABLE` + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`。这个字符串
+      之前在主线上**没有任何发射器**（`app/`、两份合同、`tests/` 全 0 命中），只在车道 F 的门里当字面量
+      ⇒ 一条裁定被读成"已满足"而产品从没说过它。现在由产品说：`coverage_detail.mobility` 增加
+      `source_classes`（枚举沿用 provider 层自己的 `EXPLICIT_FROZEN_FIXTURE / LIVE_PROVIDER_CAPTURE /
+      SYNTHETIC_DEFAULT`，不新造词）与 `hard_eligible`，顶层增加常驻字段 `hard_gaps`（无 gap 时为空列表）。
+    emits_when: >-
+      目的地被点出名（`resolution.resolved`）**且** 目录对这个身份真持有行（`place_count > 0`）**且**
+      mobility 轴有显式覆盖（`candidate_count > 0`）**且** 覆盖里没有任何 `LIVE_PROVIDER_CAPTURE`。
+      四条同时成立才发；缺一不发。
+    must_not_claim: >-
+      空轴（`MISSING`）不许借这个 gap —— 那等于凭空声称『这里有材料，只是不够硬』；没定出名字的目的地
+      也不许发。能力仍是 `HYDRATABLE`、动作仍是 `START_HYDRATION`（准备合法、硬承诺不合法），
+      所以这一格**不是**第五个能力态，也和 `NOT_ANSWERED` 无关。gap 同时写进作业自己的
+      `mobility_evidence`（`source_classes / hard_eligible / hard_gaps`），因为一周后还有人读的是库。
+    measured-on: 718a660（发射器与门在工作区，读数取自该格的实跑）
+    readings: >-
+      `CN-BEIJING`：mobility READY、56 条显式腿、classes=[EXPLICIT_FROZEN_FIXTURE]、
+      hard_eligible=false ⇒ hard_gaps=[MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE]（能力仍 HYDRATABLE）；
+      `CNX-DEMO`：PARTIAL 9 条 ⇒ 同样发射；`上海`：place_count=0、MISSING、classes=[] ⇒ hard_gaps=[]；
+      未解析文本：NO_MATCH ⇒ hard_gaps=[]。写入一条 `provenance=LIVE_PROVIDER_CAPTURE` 的真捕获腿之后
+      ⇒ classes 增一类、hard_eligible=true、**gap 自己消失**（这一条是防止发射器退化成"总印一行"的关键）。
+    bug_found_while_building: >-
+      第一版用 `session.scalars(select(A.provenance, A.provider_key))` 再取 `row[0]`：`scalars()` 在多实体
+      select 下**只交第一列的标量**，于是 `row[0]` 是字符串的第一个字符，比较永远为假 ⇒
+      "有真捕获也不合格"会静默成立。已改成单列 + 直接比较，并让 G4 那条门专门测"类别一变 gap 必须消失"。
+    gates:
+      - backend/tests/test_qoder_mobility_hard_gap.py::test_a_frozen_only_mobility_axis_names_the_gap_and_stays_hydratable
+      - backend/tests/test_qoder_mobility_hard_gap.py::test_the_gap_survives_into_the_stored_job_not_only_the_response
+      - backend/tests/test_qoder_mobility_hard_gap.py::test_an_axis_with_nothing_in_it_is_MISSING_and_claims_no_gap
+      - backend/tests/test_qoder_mobility_hard_gap.py::test_a_live_captured_route_removes_the_gap_it_named
+      - backend/tests/test_qoder_mobility_hard_gap.py::test_a_destination_that_never_resolved_claims_no_hard_gap
+    reverse-mutants:
+      # GG1 无条件发射 ⇒ "空轴/未解析"两条门红；GG2 永不发射 ⇒ 点名 gap 与作业载荷两条门红；
+      # GG3 把任何类别都算合格 ⇒ 三条（含"类别一变 gap 消失"）全红。交叉 3 条里 G4 从 expect_green
+      # 挪进 expect_red：它也断言"加捕获之前 gap 在"，所以是我点错了归属，不是突变太弱（已写在脚本里）。
+      # 实测：baseline 5 门先量绿，6/6 as declared、0 problem，逐次 restored=True。
+      script: review/mutate_ord191_gap.py
+
   runtime-egress-tripwire-is-required-beyond-the-static-scan:
     rule: >-
       §17C 的静态字面量扫描（G8a）**必要但不充分**：provider 域名可以完全来自 app/config 常量，

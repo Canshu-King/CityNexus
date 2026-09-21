@@ -778,6 +778,12 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
             "mobility_evidence": {
                 "explicit_pairs": mobility["candidate_count"],
                 "state": mobility["state"],
+                # Repeated here on purpose: the job is the record an auditor reads a week later,
+                # and "there were N legs" without "none of them was hard-eligible" is the half that
+                # made a prepared destination look stronger than it was.
+                "source_classes": mobility.get("source_classes") or [],
+                "hard_eligible": bool(mobility.get("hard_eligible")),
+                "hard_gaps": capability.get("hard_gaps") or [],
             },
             "source_kinds": capability["provenance"]["source_kinds"],
             "outcome": outcome,
