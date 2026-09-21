@@ -6319,6 +6319,37 @@ evidence: 总线 `5761941748`（22:15）· 本地 `live_checks/set17.txt`、`tre
 status: ORD-0135 **DONE@2026-09-21T22:5x+08 by e345b9d6**（提交 `82f136f`；② 泄漏点已修并更正 `strict`→`packed`；① 功能本已存在，交门＋可杀突变而非冒领；③ 缺项可跳转且保留可访问禁用态；三节点绿、killK1/K2/K3 3/3 KILLED）
 evidence: `frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts`、`review/evidence/ui-overnight/ord0135-{draft-refresh,review-words,missing-jumps}.json`＋两张图、`review/killK-series.txt`、`review/tsc-0135.txt`；改动 `frontend/src/features/setup/JourneyTrialSetup.tsx`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
 
+### SESSION=494abfd7 · ORD-0169 的成因我用**单变量实验**证死了：只改 localStorage 里那个 id，假"网络不可用"就消失、地图面板回来 @本机钟 22:4x
+
+`STATUS: ROOT-CAUSE-PROVEN | 树：无（前端运行时实验）| 目标：`:4782` 生产包 `index-BVbc7LUF.js`，390×844 | 唯一变量：`localStorage["citynexus.v8.journey_id"]` | 全程只动我自己那个 Playwright 持久档，未碰用户手机/活库/`:8693` |`
+
+**对照组（改之前，= 我 21:56 的读数）**
+- 屏幕：「网络不可用 · 正在显示只读的已保存行程」；
+- `.v8-map-panel` **不在 DOM**；
+- 同一次 evaluate 里 `fetch('/api/v1/demo/scene') → 200`、`navigator.onLine=true`；
+- 控制台 5 条错误，其中含 `…/journeys/ca0f1ed1-485a-4d65-8c19-0087ce5e29fd/experience → 404`。
+
+**实验**：只执行一行 —— 把那个 id 换成库里**真实存在**的 ACTIVE 行程 `22222222-2222-4222-8222-222222222222`，刷新。**其它任何东西都没动**（同一进程、同一包、同一代理、同一后端、同一视口）。
+
+**结果组（改之后）**
+| 读数 | 改前 | 改后 |
+|---|---|---|
+| 屏幕是否说"网络不可用" | **是** | **否** |
+| `.v8-map-panel` 在 DOM | 否 | **是** |
+| 控制台错误数 | 5 | **4**（少的那条正是 `…/ca0f1ed1…/experience → 404`） |
+| Today 屏幕内容 | 只读旧快照 | 正常渲染（"Demo之旅 1 天 · 1 人"、`现在 Riverside Museum`、`接下来 12:15 Central Fo…`、预算参考值） |
+
+⇒ **结论（给 D/C/仲裁同一句）**：假离线**不是**网络、不是代理、不是后端、不是包——**是客户端拿一个已失效的存储 id 去撞 404，然后把 404 折成"网络不可用"并顺带把地图整块摘掉**。
+⇒ 完全对上仲裁 R14-S 那句 *"404 is positive evidence that the request reached the server … it cannot be labeled 'network unavailable'"*，以及 R14-P 那句"不得因一个无关状态隐藏主界面大块"——**我这条实验就是那两句的现成红基线**。
+⇒ ORD-0169 的门现在有了确定形状：**把失效 id 换成有效 id 前后，屏幕分类必须都具名**（前：`JOURNEY_NOT_FOUND` + 清/隔离 + 真实下一步；后：正常），不许出现"banner 与 `onLine`/同源响应矛盾"的状态。
+
+**两点如实保留（不夸大）**
+1. `.v8-map-gesture-hint` 与 `canvas` 在这次快照里仍**没拿到**（面板挂载了，但画布/提示文案未在 DOM 里出现）⇒ 我**只能**说"地图面板回来了"，**不能说**"单指拖图已在屏上生效"。真机拖拽读数归 HJ-P3 的 ORD-0165（生产包 + 390×844 + hasTouch），我没跑过就是没跑过。
+2. 我改的是**自己那个持久档**（原先里面存的正是那个死 id）。它现在指向演示行程；这是实验副作用，不影响用户手机，也**不**是用户数据的改动。
+
+status: ORD-0169 根因以单变量实验证死（假离线⇔失效存储 id；地图面板随分类恢复），并给 R14-S/P 提供现成红基线；拖图仍未验（归 ORD-0165）
+evidence: 本块两组读数（同一 evaluate 形状，只差一个 localStorage 值）· 前值 `ca0f1ed1…`（库里不存在）/后值 `22222222…`（ACTIVE）
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 - id: ORD-0172
   to: 8ccd71d8
