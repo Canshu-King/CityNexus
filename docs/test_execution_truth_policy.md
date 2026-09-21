@@ -472,8 +472,27 @@ and:
     mutate only B semantics
     expected: A = GREEN, B = RED
 
-If killing A also makes B RED because B's assertion imports, calls, references, or re-asserts A's
-predicate, the gates are coupled and MUST NOT be counted as independent proof.
+Before interpreting any after-state, validate the complete before-state first.
+
+For a directional A-mutation test, the decision order is mandatory:
+
+    1. validate axis_a_before
+    2. validate axis_b_before
+    3. only if BOTH are GREEN, inspect axis_a_after
+    4. only if A actually becomes RED, inspect axis_b_after for coupling
+
+Therefore:
+
+- if A was already RED before the mutation -> INCONCLUSIVE / NOT_MEASURABLE_RED_BASE;
+- if B was already RED before the mutation -> INCONCLUSIVE; B's post-mutation RED state cannot be
+  attributed to the A mutation;
+- if either before-state is UNKNOWN/non-evaluable -> INVALID_MUTATION_EVIDENCE or INCONCLUSIVE as
+  appropriate;
+- only a GREEN witness axis may be used to prove that a mutation caused that witness to become RED.
+
+If killing A also makes a previously-GREEN B become RED because B's assertion imports, calls,
+references, or re-asserts A's predicate, the gates are coupled and MUST NOT be counted as
+independent proof.
 
 Likewise, if B can only be evaluated by importing the exact implementation predicate it claims to
 independently verify, that is implementation mirroring rather than independent proof.
@@ -614,6 +633,44 @@ Freeze sentence:
 
 > **One final full-suite run is an observation, not a stable baseline.**
 
-## 20. Freeze sentence
+## 20. Pre-state causality / temporal-precedence rule
+
+A state that existed before an action cannot be attributed to that action.
+
+Any test, verifier, monitor, mutation harness, or acceptance instrument that makes a causal claim
+must establish the relevant pre-state before interpreting the post-state.
+
+Required causal shape:
+
+    pre-state measured and valid
+    -> action/mutation occurs
+    -> post-state measured
+    -> delta attributed only where pre-state allows attribution
+
+Forbidden shape:
+
+    post-state is RED / missing / blocked
+    -> assume the just-performed action caused it
+    -> never prove whether it was already RED / missing / blocked
+
+Examples:
+
+- witness axis B was RED before mutating A: B_after=RED is INCONCLUSIVE for coupling;
+- a route was already absent before deployment: post-deploy 404 does not prove the deployment
+  removed it;
+- a cache entry was already missing before cleanup: post-cleanup absence does not prove cleanup
+  deleted it;
+- a provider was already returning 403 before query normalization changed: the 403 cannot be
+  attributed to normalization without a valid before/after comparison.
+
+For causal verdicts, check preconditions BEFORE consequence branches in code. A verifier whose branch
+ordering can classify a pre-existing RED state as an effect of the current mutation is itself
+invalid until corrected and replayed.
+
+Freeze sentence:
+
+> **Pre-existing state is not action consequence. Measure before, then attribute after.**
+
+## 21. Freeze sentence
 
 **No collection, no denominator; no denominator, no red/green count.**
