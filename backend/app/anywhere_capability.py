@@ -343,6 +343,32 @@ def identity_fields(resolution: "DestinationResolution") -> dict[str, Any]:
     }
 
 
+def audit_evidence(resolution: "DestinationResolution") -> dict[str, Any]:
+    """What was asked and what came back - the part of the answer that has to *survive* it.
+
+    Kept apart from `identity_fields` on purpose: those five columns decide what the product may
+    treat as a place, while this is history.  `final outcome != audit history` is the rule - a
+    conclusion of NO_MATCH is produced by whichever mirror answered, and the timeout that came
+    before it is a fact about our infrastructure that has to be readable afterwards.  Choosing to
+    keep only the last attempt would make an outage look like an empty region exactly where nobody
+    is looking at a response, because a job outlives the request that started it.
+
+    A named identity is only chaseable the same way: the entity reference, extent, WGS84 point and
+    the timestamps that came with them belong with the job that used them, not only with the read
+    that happened to render them.
+    """
+
+    evidence: dict[str, Any] = {}
+    observation = resolution.observation
+    if isinstance(observation, dict) and observation.get("attempts"):
+        evidence["provider_attempts"] = [dict(item) for item in observation["attempts"]]
+    if resolution.provenance:
+        evidence["destination_provenance"] = dict(resolution.provenance)
+    if resolution.malformed_candidates:
+        evidence["malformed_candidates"] = [dict(item) for item in resolution.malformed_candidates]
+    return evidence
+
+
 def backfill_pending_identity_row(
     canonical_destination_id: str | None,
     request_json: str | None,

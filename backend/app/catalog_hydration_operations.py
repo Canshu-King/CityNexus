@@ -44,6 +44,7 @@ from app.anywhere_capability import (
     capability_fingerprint,
     evaluate_capability,
     fingerprint_parts,
+    audit_evidence,
     identity_fields,
     pending_correlation_key,
     resolve_destination,
@@ -694,6 +695,9 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
                     reason_code=REASON_RESOLVER_UNAVAILABLE,
                     retryable=True,
                     **identity_fields(resolution),
+                    # Every attempt, not just the one that produced the conclusion: the row outlives
+                    # the request, and an outage has to stay visible after the job says NO_MATCH.
+                    **audit_evidence(resolution),
                 ),
                 finished_at=now_iso(),
             )
@@ -712,6 +716,7 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
                     reason_code=REASON_DESTINATION_AMBIGUOUS,
                     candidates=resolution.candidates,
                     **identity_fields(resolution),
+                    **audit_evidence(resolution),
                 ),
                 finished_at=now_iso(),
             )
@@ -736,6 +741,10 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
                     # would mean something was matched on text or on the correlation token.
                     survey=survey,
                     **identity_fields(resolution),
+                    # The transport contract this emptiness depends on is part of the record: an
+                    # answer that says "nothing" and a mirror that never replied are different facts,
+                    # and a reader must be able to tell them apart from the row alone.
+                    **audit_evidence(resolution),
                 ),
                 finished_at=now_iso(),
             )
@@ -772,6 +781,10 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
             },
             "source_kinds": capability["provenance"]["source_kinds"],
             "outcome": outcome,
+            # A COMPLETED/UNAVAILABLE ending that named a destination carries the provider's answer
+            # with it: entity reference, WGS84 point, extent, timestamps, and every attempt that led
+            # here.  Without this the identity in the column has nothing behind it to chase.
+            **audit_evidence(resolution),
         }
 
         set_phase(session, operation_id, "FINALIZING")

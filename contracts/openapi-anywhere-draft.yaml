@@ -400,6 +400,17 @@ x-testing-obligations:
       `destination_provenance.provider_attempts` 是同一份值（两处读数不一致即为缺陷）。
       覆盖 observation 另占该格时不顶替、而是并列追加。
     measured-on: 1cce4bf
+    durable-half: >-
+      同一批 attempt（以及命名成功时的 `destination_provenance`、被拒时的 `malformed_candidates`）必须
+      **落到作业自己的行里**：成立的收口写进 result 载荷，未成立的写进错误信封的 `details`（读的时候
+      两种形状都要看，否则会把"存在下一层"误读成"没存"）。理由不是对称好看，而是寿命：回答随请求消失，
+      作业比它活得久，一次故障只有在作业里留着全部尝试才可追。实测（`镜A 超时 + 镜B 语义空`，B 自己的
+      `resolve_from_endpoints` 转两个 transport）⇒ 结论 `NO_MATCH`、身份 null，而
+      `provider_attempts` 在回答里 2 条、在库里也是 2 条（`answered` 依次 false/true，失败那条带
+      `reason`）。守着这一条的门与突变：
+      `backend/tests/test_qoder_ord197_four_class_receipt.py::test_r5_…` 与
+      `review/mutate_ord197_receipt.py`（N1 什么都不存 ⇒ 六条门全红；N2 只留最后一条 ⇒ 只有 r5 红，
+      r1/r3/r4 仍绿）。
     live-reading: >-
       seam=photon 一次 `GET /api/v1/destinations/capability?query=云和县`（一次性临时库
       `ord167_e2e.db`，正常入口）⇒ canonical=`OSM:R:3289208` / RESOLVED / HYDRATABLE /
