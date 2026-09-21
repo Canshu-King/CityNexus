@@ -5508,6 +5508,26 @@ DELIVERED: ORD-0188 | 报告 `_qoder_spike_20260921/ORD_0188_PROVIDER_IDENTITY.m
 
 DELIVERED: ORD-0192 | 报告 `_qoder_spike_20260921/ORD_0192_CHAIN_EVIDENCE.md` | 数据 `q192_summary_stage{1,2,3}.json`＋`q192_summary_yunhe.json`＋`q192_chain{,_yunhe}.jsonl`＋`raw192{,_yunhe}/`＋四个 uvicorn 日志＋四份独立 `chain192_*.db` | 提交 `e3f416f`＋`08786c1`（树 `D:/moodle/_qoder_b_ord188_20260922`，分支 `agent/b-ord188-20260922`，**未 push**） | 复跑：报告 §5 四条命令＋一条零外呼单元证明 | blocker：无（0191 接线后同脚本重放即验 SELECTABLE 路径；C4 双锚与 answered-zero 兜底两处语义请 C 裁决）
 
+#### (SESSION=c01d72a3) ORD-0198 交付 @02:3x（`date` 实读 02:21:52+0800）—— **canary 建成并自证十项隔离；贡山链第一次有可见形状：provider canonical `OSM:R:2729765` → HYDRATABLE → 6 条 live 行 → planner 422 → used-edge 收据 verdict=`MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`；无 201、无 SELECTABLE、无唤醒**
+
+**十项隔离（全真，`q198_final_bundle.json → isolation`）**：① **:8596** boot 前 bind 探空、收摊后 **0 LISTENING**；② `canary_0198.db` 由 **`sqlite3.backup` API** 从**只读连接**的 `_live.db` 拷出（WAL 安全），快照指纹 **55 表 / journeys 3（`22222222`、`6cbdbc65`、`94669bae`）/ places 16**；③ canary 的 `DATABASE_URL` 只指副本，boot 后与链后两次只读回查 `_live.db` **3/16 纹丝未动**；④ boot 脚本与 env 零次出现 `4781/4782/8693/trycloudflare/serviceWorker`；⑤ `--host 127.0.0.1`＋无隧道 ⇒ 用户不可达；⑥ 主预览只读 `git log -1` ⇒ **仍 `53fe8e8`**；⑦ **没有发 `demo/reset` 写探针**（探针本身是写，禁令在验收之上）——护栏以 preview 树代码/测试为准，若包工头要亲按一次拿 403 数字，操作权在你；⑧ preview 的 boot env 未被触碰，live 路由/解析腿只在 :8596 自己的 env（`CITYNEXUS_ANYWHERE_RESOLVER=photon`）；⑨ canary 的 demo 语义全打在自己的 `DATABASE_URL` 上，链上实际未按 reset；⑩ canary 里 hydration 落了 `FAILED/HYDRATION_WORKER_DIED`（G8 死路复现）——**只躺在副本里**，无任何回写通道。冻结句照抄：**"An isolated, user-unreachable canary is verification infrastructure, not a deployment of the user's preview."**
+
+**可见形状链（逐步收据在 `q198_final_bundle.json → visible_shape_chain`）**：
+1. `GET /destinations/capability?query=贡山县` ⇒ **200 / 1.78 s / `canonical=OSM:R:2729765 · destination_resolution=provider · HYDRATABLE`**——仲裁要的"真 provider 命名目的地"第一次以产品形状出现。**衔接读数给 C**：全名 `贡山独龙族怒族自治县` ⇒ `provider_no_match`（`_exact_name_hits` 要求答案 name 精确等于问题，`61cde4b` `anywhere_capability.py:505-514`），只有 provider 自己的短名形式才命中——规则防"就近猜"是对的，但"全名≠短名"这个真实形状要不要吃，归 C 裁决。
+2. `POST /catalog-hydrations {query:贡山县}` ⇒ **202 durable**（`e3e846f7…`/fp `66ec130e…`）；4 s 后 **`FAILED / HYDRATION_WORKER_DIED / TransitionRefused: ABANDON_REQUESTED -> UNAVAILABLE`**——**0127 的 G8 死路在同一血统树复现**（收据 `q198_hydration_readback.json`，修法在 0127 交付里，归 C）。
+3. `POST …/provider-mesh/discover {hotel, live}` ⇒ **200 / 1,984 ms / mode=live / overpass=CAPTURED**，attempts `overpass-api.de 200/1,922 ms/6 elements` **随 `provider_calls` 落库**（0192 ⑥ 义务在 canary 血统成立）。
+4. `?query=CN-GONGSHAN` ⇒ `catalog / HYDRATABLE / COVERAGE_INCOMPLETE / place_count 6`。
+5. planner（显式 6 个 provider place_ids）⇒ **422**：`ACTIVITY_OVERLAP | C4_ACTIVITY_BEFORE_ARRIVAL | INSUFFICIENT_TRAVEL_GAP`（不去重、无机器字段，0148 D6 不变）。
+6. **used-edge 收据**（`q198_used_edge_receipt.json`）：**`blocker_basis=USED_EDGE_INVENTORY`**（逐边 `origin|destination:fact_quality` 从 422 文本去重列出）＋ **`aggregate_repository_counts_used_as_blocker=false`** ＋ provider 对的 `fact_quality=SYNTHETIC_DEFAULT` ∉ `{EXPLICIT_FROZEN_FIXTURE, LIVE_PROVIDER_CAPTURE}` ⇒ **verdict=`MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`**。
+库终态：canary journeys 4 / places 23 / provider_calls 6；**live 仍 3 / 16**。
+
+**否定清单逐条对照（订单原文）**：provider-only MATCH——**无**（Match 之后 hydration/discover/planner 全链都有收据）；直接塞 DB——**无**（catalog 全经产品 discover 物化，`provider_calls` 6 行可查）；API-only 成功——**无**（无 201 无 SELECTABLE）；mock 冒充 live——**无**（6 行全 `discovery_mode='live'`/`external_id='overpass:node/<id>'`，mobility 如实标 `SYNTHETIC_DEFAULT` 并以此拒答）。**Harness 与 P1–P4 继续睡**：本单没有唤醒动作，等 0197 落地后由你重判七条件。
+
+**债（如实）**：① `provider_call_attempts_kept=1/6`——C 的 resolver 腿（`61cde4b`）直接调 geocoder、未走我的 `provider_identity`（两套 provider 形状并存：他的 25 文件与我的 13 文件**零重叠**，merge `53a21fc` **零冲突**，合并后 **39 tests passed**）；下次并线时 `resolve_from_endpoints()` 的逐镜像 attempts 应成为唯一来源，届时 mobility gap 才能定到 `first_blocking_edge_or_edges` 的"第几面镜子"——本轮只到"边＋fact_quality"，如实声明。② G8 死路收据已留，归 C。③ exact-name vs 全名/短名，数据已给，归 C。④ ⑦ 的 403 数字我没有用写探针去拿。
+
+DELIVERED: ORD-0198 | 报告 `_qoder_spike_20260921/ORD_0198_CANARY.md` | 数据 `q198_final_bundle.json`＋`q198_isolation.json`＋`q198_receipts.json`＋`q198_used_edge_receipt.json`＋`q198_hydration_readback.json`＋`q198_summary.json`＋`q198_chain.jsonl`＋`raw198/` | 代码：canary 分支 `agent/canary-ord198-20260922`＝merge `53a21fc`（`61cde4b`×`08786c1`，零冲突，39 passed），**未 push** | 复跑：报告 §4（boot 自证脚本＋链脚本） | blocker：无（0197 并线后重放同脚本即验 SELECTABLE 路径；G8/兜底/exact-name 三处语义归 C）
+
+
 
 ### 1a986a24 ORD-0129 HJ-P1 第四轮 @2026-09-21 19:4x → ②假离线**在新包上复现且证据更硬**；③那个 404 **不是 id 串位**（同源已证），真卡点是"导入成功但没有审核入口"；④**北京 AI 规划第一次真出方案并给出价格**
 
@@ -8133,6 +8153,29 @@ status: ORD-0193 **DONE@2026-09-22T02:1x+08 by e345b9d6**（提交 `15a114e`；�
 evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（新）、`frontend/e2e/qoder-destination-preparation.spec.ts`（五节点）、`review/evidence/ui-overnight/ord0193-{needs-preparing,running,structural,outcomes,ready}.json`＋五图、`review/ord0193-prep-probe.json`（运行时五态原始读数）、`review/killQ*.log`、`review/run-run013824.log`（62/62）、`review/run-lst*.log`（收集 62）、`review/tsc-0193*.txt`；改动 `src/api/citynexus.ts`、`src/app/V8Experience.tsx`、`src/styles.css`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=494abfd7 · 晨报骨架已建立（`D:\moodle\MORNING_ANYWHERE_SUNRISE_REPORT.md`，15 项 + 每格三档标注）；复现协议已拉回备用；**并记下一条容易冲昏头的收窄：贡山复现成功 ≠ P7 成立** @02:2x
+
+`STATUS: REPORT-SPINE-CREATED | 协议 `ORD_0192_REPRODUCTION_PROTOCOL.md`（`cab91a25`，4,839 B，blob 与磁盘一致，存 `live_checks/`）| 仲裁 5765348482 ①②③⑤⑦ 全部执行 |`
+
+**报告里现在就有的一刀**：第 5 项与第 9 项各拆两格——
+- `树内已改（我复跑：19/19、四类 typed 24/24）`
+- `用户可见未改（部署后端仍 53fe8e8；我对部署侧直接 GET 到 `unresolved:8fccf2bbf123e3df` + `CHOOSE_ANOTHER_DESTINATION`）`
+⇒ 明早任何人看这份报告，**不可能把"测试绿"误读成"手机好了"**。
+
+**仲裁 ③ 的收窄已写进报告第 11/12 项与唤醒流程**：
+```text
+ORD-0192_GONGSHAN = REPRODUCED   与   P7_RESOLVER_INTEGRATED = false
+```
+两者**同时成立并不矛盾**：B 的 E2E 可以证明某条 provider→hydration→planner 链真跑到 mobility blocker，
+但权威产品路径仍未完成 `B typed result → C product truth` 的正式接线。
+⇒ 所以：**不因贡山复现而提前唤醒 Harness / P1–P4**；**不因 step 13 达成而说用户可见 Anywhere 已打通**；
+   P7 只由 C 的**七条件 + exact-SHA 行为复验**决定（口径 v2，grep/import 只算辅助证据）。
+
+**报告目前标注**（会随车道交付继续更新）：`REPRODUCED` 7 格 · `FORMAT_CHECKED` 2 格 · `SELF_REPORTED` 4 格 · `PENDING` 6 处（含最终候选那一次全量，夜里不提前跑）。
+**最后一节专门记我自己今夜的工具类错误**（6 类，含"按名字找→假缺失"三次、单次读数当稳定、总线回读 URL 写错、写入器查重缺陷、注记被重写吞掉、探针污染自己的档案）——统一归到仲裁那句：**观察失败 ≠ 目标不存在**。
+
+status: 晨报骨架 + 复现协议到位；P7 与 Mission A 解耦已写死（复现成功不解锁唤醒）；今夜工具类错误单独成节，避免被好结果掩盖
+
 ### SESSION=494abfd7 · 交叉突变仪器：**我七组复跑全对 → 升 REPRODUCED**（`44fcc99`）；顺带记录一件事的坐标差别（车道 worktree ≠ 权威树）@02:2x
 
 `STATUS: ACCEPTED-REPRODUCED-BY-ME | 树 `D:/moodle/_qoder_f_o156_20260921` @ `44fcc99`（只读 import 其 `tests/_qoder_mutation_receipts.py`，未改任何文件）| 权威 integration 树**没有**这份仪器 ⇒ 见 ③ |`
@@ -8276,7 +8319,7 @@ CLAIMED: ORD-0198 by SESSION=c01d72a3 @2026-09-22T02:1x（`date` 实读 02:11:29
       `aggregate_repository_counts_used_as_blocker=false`）；**provider-only MATCH、直接塞 DB、API-only 成功、mock 冒充 live 都不算 Mission A 成功**。
     ⇒ 禁令：不碰 `:4781/:4782/:8693` 与 `_live.db`（只读复核除外）；禁 `demo/reset`；自有端口段 :85xx；凭据不写入任何产物；
       `node_modules` 禁止 junction（D-7）。账本写入必须过 `ledger_write_preflight`（LF + 唯一局部锚点 + 可逆证明）。
-  status: DISPATCHED@2026-09-22T02:0x+08 by 494abfd7（仲裁批准但明确"可建不可叫醒"；十项隔离条件逐条自证）
+  status: DONE@2026-09-22T02:3x+08 by c01d72a3（十项隔离条件逐条自证为真——快照经 `sqlite3.backup` 只读拷出、:8596 loopback、`_live.db` 零写连接且跑后回查 3/16 未动、主预览仍 `53fe8e8`；可见形状链：`?query=贡山县` ⇒ **真 provider canonical `OSM:R:2729765` / resolution=provider / HYDRATABLE** ⇒ hydration 202 durable（G8 死路在canary 复现，收据留档）⇒ discover 200/6 live 行（attempts 落库）⇒ planner 422 ⇒ used-edge 收据 `blocker_basis=USED_EDGE_INVENTORY`＋`aggregate=false` ⇒ **verdict=`MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`**；无 201/无 SELECTABLE/无唤醒；canary 分支 `agent/canary-ord198-20260922`（merge `53a21fc` 零冲突，39 tests passed）；未 push）
 
 
 
