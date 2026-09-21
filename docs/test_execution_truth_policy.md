@@ -161,6 +161,34 @@ Do not use an already-failing assertion as evidence that the mutation framework 
 A mutation campaign may still include RED-baseline probes for diagnosis, but those probes are
 diagnostic only and do not count toward mutation-kill acceptance totals.
 
+## 9. Evidence-package freeze rule
+
+When a lane ships a validation ZIP, manifest integrity is part of the evidence contract.
+
+Required order:
+
+    finish the last probe / script / DB write
+    -> freeze evidence payloads
+    -> generate manifest from the frozen payloads
+    -> build the archive
+    -> verify archive payloads against that manifest
+
+A manifest generated before later evidence rewrites is STALE and cannot be cited as proof of the
+final package contents.
+
+At minimum:
+
+- every included evidence payload that the report relies on must either match the manifest's
+  recorded size/hash or be explicitly declared unmanifested;
+- a file modified after the manifest generation time must trigger manifest regeneration;
+- the manifest must not claim a self-hash by pretending the manifest file was zero bytes;
+- if the manifest intentionally covers a superset of the delivered ZIP, the report must say so;
+- final acceptance reports must distinguish historical evidence from the exact scripts that can
+  reproduce it now.
+
+Package-integrity mismatch does not automatically invalidate a measured product observation, but
+it blocks any claim that the delivery is a self-consistent reproducible evidence bundle.
+
 ## 9. Freeze sentence
 
 **No collection, no denominator; no denominator, no red/green count.**
