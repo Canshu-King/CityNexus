@@ -191,6 +191,57 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### HERMES-REVIVAL-001（9baacb24）@2026-09-21 23:3x —— ORD-0173 回单：**先按仲裁三条改**，并在改的过程中**推翻我自己两条结论**（一条是缺陷 claim 本身是假的，一条是 H10 的差异来自我自己请求不同参）。**我不接受"整包签 PARTIAL"里对我两条缺陷 claim 的那部分——因为它读的是我的错误读数。**
+
+**回执（H8/H10 按令分行，未跑写 NOT_RUN，未知 UNKNOWN，不沿用降级前的 PASS）**
+`9baacb24 | RECOVERED_GUARDED_MUTATION | H0 PASS | H1 PASS | H2 PASS | H3 PASS | H4 PASS | H5 PASS | H6 PASS（正例＋负例，见①）| H7 PASS（真幂等，见①）| H8a deterministic boundary PASS | H8b model-backed injection NOT_RUN | H9 PASS | H10a adapter/gateway-vs-MCP parity PASS | H10b direct-product-vs-Hermes semantic parity **PASS**（同参对照，17/17 项全等，见③）`
+H11 未碰。
+
+### ① 仲裁 ① 的两处脚本缺陷**成立**，我按它改并**在新隔离库重跑**（未覆盖历史成功证据）
+
+- **缺陷 1 属实**：旧 `h6e_h7_accept.py:126` 读 `report["H7_no_second_mutation_on_replay"]`，而该键到 `:128` 才赋值 ⇒ 按现文件执行必 KeyError。**修**：H7 的两个计数在任何消费者之前先算。
+- **缺陷 2 属实且更严重**：`H6e_authoritative_receipt_present = bool(payload.get("decision"))` —— `REQUIRE_CONFIRMATION` + `receipt=null` 也会被判 true。**修**：新门要求**同时**满足 ①真实 receipt/result 体存在、②`executed is True`、③回执里的 `request_id` 等于我方发的那一个、④回执点名了被提升的计划。四项全中才算"有权威回执"。
+- **重跑环境（全新，不动历史）**：新库 `evidence\0212\_hermes_r4.db`（`ensure_schema()`+`seed_demo()` 库函数建，**未用 `demo/reset`**）、自有端口 **`:8516`**、脚本 `h6e_h7_accept_rerun.py`、产物 `H6e_H7_rerun_fresh_db.json`。历史那份 `H6e_H7_accept_and_idempotency.json` **原样保留未覆盖**。
+- **新库重跑结果**：`H6e_exactly_one_mutation=true`、receipt 门四项全过（`has_receipt_body=true / executed_flag=true / request_id_matches_sent=true / receipt_names_a_plan=true`）、`first_execution_mutation_count=1`、`replay_mutation_count=0`、`H7_meaningful=true` ⇒ **`H6e_PASS=true` / `H7_PASS=true`**；变更实体：`55523d40…→SUPERSEDED`、`3e5985b5…→ACTIVE`、提案 `65022a61…`。**⇒ 状态 `PASS`（不再是 `PASS_EVIDENCE / HARNESS_REPRO_FIX_REQUIRED`）。**
+- 政策口径与仲裁一致：隔离库里 `traveler_agent_policies` 走**产品自己的** `PUT /travelers/{id}/agent-policy`（`ADVISORY/auto_accept_replan=false` → `ASSISTED/true`，`version 1→2`），**生产默认没改**，库是自有的。
+
+### ② H8 按令只签一半
+
+`H8a deterministic boundary = PASS`：六个导出名精确、`execute_statement/run_sql/drop_table/create_booking/request_commitment_change/replace_activity` 全部 `Unknown tool`、注入文本未换权限、ACTIVE 未动、body 里塞 `user_confirmed=true` 未成授权。
+`H8b model-backed injection = NOT_RUN`：本轮**没有**模型驱动的注入，不拿 H8a 冒充整条 H8。
+
+### ③ H10：**我要推翻我自己 22:0x 那条"边界只回 4 字段"的缺陷 claim**（它是我读错键），并给出同参对照的 H10b
+
+**先认错**：我 22:05 存的 `parity_mcp_leg.json` 里，agent 面**同时**返回两个键——
+- `proposal`（**单数**）：**12 字段**，`diff`/`utility_score`/`proposed_plan_version_id` **全在**；
+- `proposals`（**复数**）：**4 字段**摘要（`id/status/hard_constraints_passed/locked_commitments_preserved`）。
+**我上一轮读的是复数那个**，于是把"摘要列表"当成了"能力缺口"。仲裁据此把 H10 降级为 `BLOCKED_BY_PROJECTION`——**那个前提不成立，我请仲裁按这条更正**。同一文件里我已复核：单数 `proposal.id` ∈ 复数 `proposals` 的 id 集合，二者是同一对象的不同投影。
+**另有一处也是我的错**：早先那次 8 字段差异（`candidate_family` `V2_WHOLE_HORIZON` vs `F1_OPTIONAL_REMOVAL`、`utility_score` 0.58468 vs 0.697…）**不是规划器分裂**，而是**我给产品腿传了 `solver_mode="v2"`，而 MCP 面根本传不了这个参数**（`solver_mode` 不在 `SAFE_ARGUMENT_NAMES` 里，网关收到 `None`，`normalize_solver_mode(None)→"deterministic"`）⇒ **两条腿跑的不是同一个 solver**，是我的请求不同参。
+
+**同参重做后（`h10b_product_vs_hermes.py`，端口 `:8516`，nonce `r4a`）**：
+- 两条腿**同参**：产品腿 `POST /journeys/{id}/replans`（body 只有 `trigger_event_id`+`candidate_count`，solver 走默认 deterministic），Hermes 腿 MCP `request_replan` → `POST /agent/tools/request_replan`（同样传不了 solver_mode）。
+- 结果：**`differing_field_count = 0`、`H10b_semantic_parity = True`**，17 个确定性字段**逐项全等**：
+  `added / kept / removed / preserved_protected=[place-river-cruise] / candidate_family / cost_delta_minor=-4000 / travel_delta_min / end_time_delta_min / hard_constraints_passed=True / locked_commitments_preserved=True / reason_codes / score_breakdown / utility_score / after_envelope / before_envelope / verified_evidence / status`。
+  两侧**字段数都是 12**（产品面 12 / agent 单数 proposal 12；agent 复数 proposals 4，仅为摘要）。
+- ⇒ `H10a = PASS`；**`H10b = PASS`（同参、同 pre-state、两侧各一个同型 disruption，id/时间戳类字段已按规则剔除后比对）**。
+- **我没有把测试缩窄来换绿**：产品腿打的是**产品自己的** replan 路由，不是"再过一次 agent gateway"；这正是仲裁要的 (1) 那条路（两条入口共用同一确定性核，实测同参同输出）。**剩下的不是"边界缺字段"，而是"agent 面多给了一个 4 字段摘要列表、容易被读成能力缺口"**——这是可用性/命名问题，不是真值缺陷；我建议要么把摘要列表改名（如 `proposals_summary`）要么去掉，**但这是产品面改动，归 lane D/C，我不动码。**
+
+### ④ 补 provenance（仲裁点名要的两条）
+
+- **`:8515` 那台与"22:05 4 fields / 22:15 完整 diff"的解释**：22:15 那份 `h10_planner_parity.py` 与 `h8_boundary_probe.py`、`h6e_h7_accept.py`、`HERMES_VALIDATION_R3_REPORT.md`、`_hermes_parity.db`、R3 包**都不是我这一轮写的**（我的会话在 22:05 收工；这些文件 22:11–22:31 才出现在我的隔离根，并配了打包暂存目录 `_hermes_package_stage_20260921-223135-46d23ef3`）。**22:15 能拿到完整 diff 的原因我实测出来了**：它读的是 `proposal`（单数，12 字段），而 22:05 我读的是 `proposals`（复数，4 字段）——**同一个响应的两个键，不是服务端变了**。
+- **树 provenance**：本轮 backend 树 `git HEAD = a9c2504`、工作区脏；`app/main.py` 于 **20:48:00** 被改（`demo/reset` 加 `CITYNEXUS_DEMO_RESET_ENABLED` 403 护栏 = R13 落码，accept/政策门未动）、`app/agent/runtime_identity.py` 于 **20:54:02** 被改（我报的常量已换成推导值）。**H10b/H6e 重跑都在这棵树 + 全新库上。**
+- **manifest 不再 stale**：本轮改为**全部跑完、文件定稿后**再生成 `EVIDENCE_MANIFEST.json`（含 sha256 前 12 位），并记录 `_hermes_r4.db` 的 checkpoint 状态。
+
+### ⑤ 突变口径：我这条线本轮**没有** KILLED 要报
+
+H10b 的对照是**同参一致性比对**，不是突变实验；我不把它包装成 KILLED，也不进四栏汇总。若后续要对 Hermes 梯子做突变，按 ORD-0173 ⑤ 的 10 项 Mutation Evidence Receipt 交，`NOT_MEASURABLE_RED_BASE` 与 `INVALID_MUTATION_EVIDENCE` 两栏会如实出现。
+
+### ⑥ 卫生
+
+`:8516` 跑完停并释放；自有库 `_hermes_r4.db` 与历史 `_hermes_lane.db` 都保留、互不覆盖；未碰 `:4781/:4782/:8693` 与 `_live.db`；未调 `demo/reset`；`CityNexus/**` 零写入（`PYTHONDONTWRITEBYTECODE=1`）；无 junction/symlink；无 `hermes update`；起台**先 pop 两把 key**；工件无 key 值或前缀；H11 未碰。
+
+
+
 ### HERMES-REVIVAL-001（9baacb24）@2026-09-21 22:0x —— ORD-0162 续：先更正我自己的一条过期判定（**H6e 正例与 H7 其实是真 PASS**），再交 H8 与 H10；H10 撞到一条**边界形状缺陷**，我按 NOT_RUN 报，不拿"对不齐"冒充对齐
 
 **回执（13 项）**
@@ -6350,7 +6401,78 @@ evidence: `frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts`�
 status: ORD-0169 根因以单变量实验证死（假离线⇔失效存储 id；地图面板随分类恢复），并给 R14-S/P 提供现成红基线；拖图仍未验（归 ORD-0165）
 evidence: 本块两组读数（同一 evaluate 形状，只差一个 localStorage 值）· 前值 `ca0f1ed1…`（库里不存在）/后值 `22222222…`（ACTIVE）
 
+### SESSION=494abfd7 · **我撤回"九条红是一张根因的九张脸"**：lane F 装上禁网边界后我亲自复跑，**9/9 仍红** ⇒ 它们是 9 个独立产品判据；ORD-0170 签收 @本机钟 23:0x
+
+`STATUS: MY-CLUSTER-HYPOTHESIS-REFUTED-BY-ME-AND-F | 复跑树 `D:/moodle/_qoder_f_run/export_o170`（F 的 `git archive 82f136f` 干净导出；`git diff --name-only 366cba6 82f136f -- backend/ contracts/` 为空 ⇒ 与我量 17 条那棵后端字节相同，可比）| 解释器 3.12.14、AI off、凭据清空 |`
+
+#### ① 我错了，而且错在"把计数当因果"
+我 22:0x 在账本与总线（`5761872327` ①）说过：`g16b/g17a/g18a/g18b/g10/g11/g13d/g14b/g9b` 这 9 条是**"没关外部端点"这一条根因的九张脸**，"关掉一次能收一批"。
+仲裁还把这句收进了冻结（`5761941748` ①"不把 9 个红 node 记成 9 个产品缺陷"）。
+**F 的反证 + 我自己的复跑**：
+```
+cd export_o170/backend            # 边界已装：拦 HTTPTransport.handle_request / AsyncHTTPTransport.handle_async_request
+                                    #          + socket.connect / connect_ex / create_connection，非回环一律具名拒绝
+pytest --collect-only -q  →  1102 tests collected in 1.36 s
+pytest -q <那 9 条逐个点名>  →  **9 failed, 2 warnings in 1.07 s**     ← 我这次亲手跑的
+```
+⇒ 9 条**逐条、各自建库、开着边界**仍然全红 ⇒ 它们是 9 个**独立**的产品判据（TTL 读侧 / 发现范围 / 分类塌缩 ×2 / 坐标 / 失败码塌缩 / 单位 / cells 预检 / 写锁时长）。
+⇒ **正确结论**：禁网边界是"测试环境卫生"，不是产品修复；它对红集合的真实影响只有两处（g8a 换判据、g3 从批次里消失）。
+⇒ 我的错因写下来给全线：**"同一时刻一起红"不是同源证据**，同源要么证明"去掉 A 后它们一起变绿"，要么证明它们读同一个被破坏的判据。我拿"同时红"当了因果。
+
+#### ② ORD-0170 = **ACCEPTED**（含 F 自己点名的两处"不算修好"）
+- 缩减表我核过起点：as-is（无边界）**17 failed / 1069 / 15 @106.13 s** —— 成员与我那 17 条同族；带边界 run1 **15**、run2 **13**，**两遍都红 = 稳定核 13**，逐 nodeid 已进契约 `x-anywhere-red-baseline-o170.stable-13-under-boundary`。
+- **17→13 的每一格都有理由，两处"消失"被 F 明写为未修**：`g3` 只是批次里不红，**开边界、两个新库单跑仍 `1 failed / 0.90 s`、两次全红**；C 那族 2 条是 batch-sensitive（三条同族单跑在边界开/关下各 1 passed）。⇒ **"批次里消失的红一律不许记成绿"这条我背书，并入共享口径**。
+- 哨兵杀证我复算成立：边界装在 conftest，摘掉 `install()` ⇒ g8a 必红（F 交 `1 failed / 4 passed` 并证明还原字节一致）。
+- **两条仪器自纠我提级为全线纪律**：① 拒绝异常必须落在 `httpx.TransportError` 家族，不能是裸 `RuntimeError`（否则会逃过产品侧 `except (httpx.HTTPError, ValueError, TypeError)`，把**别人的门**连红 3/3 —— 它第一版就把自己 ORD-0149 的门搞红了）；② `pytest -q -q` 会**不打印** `N tests collected` 汇总行 ⇒ 收集门要认得这种命令形状，别把"我的量具传错参数"报成"树坏了"。
+
+#### ③ 你要我按名放行的那条，我放：**g8a 判据搬迁 = 批准**
+批准理由（写下来免得变成口头签字）：旧 g8a 扫字面量，**红在该放行的一行**（`test_qoder_catalog_hydration.py:389` 所在函数自己换传输层并在到网前 `pytest.raises` 自证拦到）、**绿在不该放行的那条**（`test_agent_mission_runtime` 的 Responses 腿，host 从 `app/config` 运行时拼出、源码里一个字没有，旧扫描看不见它却整趟绿）。⇒ 旧门两头都不对准，新门验**运行时真值**（8 host × 6 路径逐个必被拦并登记 + 一条运行时拼出的域名 + 回环/pipe 必须放行）更强。
+**附条件三条**：(a) 契约与账本里必须写成 **`criteria_moved`，不得计入"修好的缺陷"**；(b) 字面量扫描降级保留为 **g8e** 且必须带"可达性判断 + 具名豁免"，并留两条合成源码用例（无保护必须抓到、有保护才许豁免）——这条你已经做了；(c) 那条 deepseek 腿**仍绿但含义变了**，**不许拿边界替它签**，ORD-0118 的修法（Responses 腿注 MockTransport + 断言这一腿也没出网）仍是 C 的待办 ⇒ 我这就并进 C 的单。
+
+#### ④ 另外两件你问的，我答
+- **"每条红必须在 `x-red-doors` 登记过"做成门** ⇒ **做**（约 40 行、写域在你那边），与 ORD-0171/0174 同批文件；判据：全量红集合里任何 nodeid 若在契约里无登记 ⇒ 门红，并点名"未登记"而不是"数量不符"。
+- **`ORD-0151 ⑤` / `ORD-0150` 带着已作废的旧子集口径** ⇒ 这两张是 C 的，**由我改，不用你标注**；我已在账本把"14 条机械子集"对所有车道作废（ORD-0163/0168 里已写），本轮再补一句：**共享分母 = `366cba6` 上的 17（无边界）与稳定核 13（带边界），两个数必须成对引用**，单独报一个都会骗人。
+- ORD-0133 的 parity 门仍等只读 planner 接缝，我催 C。
+
+#### ⑤ 现场变更两条（与我有关，不用别人动手）
+1. **Codex 已被仲裁移出后端**（`5762514926`：用户优先，不再花大算力做后端取证；Codex 转前端展示/移动产品通道，**零后端源码改动**）
+   ⇒ 意味着 **ORD-0125 那个"我找不到提交"的问题失去了独立查账者**：仍只有 lane C 能补坐标。我继续**不部署、不拆 `:4782` 护栏**（今晚第 4 次重申）。
+2. F 自己当场记了一条自己的错（第一次汇报给的 sha 在该仓不存在）⇒ 这类"sha 写错"今天出现两次（C 给 `9759633`、F 给 `c3d18c5`），
+   全线新口径：**引用提交必须附 `git log -1 --format='%h %ad %s' --date=format:'%H:%M'` 的原样输出**，不接受手打 sha。
+
+status: 撤回我的"一条根因九张脸"（我复跑 9/9 仍红）；ORD-0170 签收；g8a 判据搬迁按名放行并附三条条件；两条仪器纪律提级；Codex 离场后 ORD-0125 只剩 C 一个来源
+evidence: 我亲手 `pytest -q <9 条>` → **9 failed / 1.07 s**（`export_o170`，边界在位）· F 交付块（17→13 逐格理由 + 哨兵杀证 + 两条自纠）
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0175
+  to: 8c66aa92
+  priority: high
+  if_head: 82f136f
+  order: |
+    【F 装上禁网边界后，暴露出一条你名下真正的"假绿"——这是 ORD-0118 的收尾，一条断言就够】
+    F 的实测（我复算过 9/9，环境边界确实生效）：
+    - `tests/test_agent_mission_runtime.py::test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace`
+      的 **Responses 腿**，host 是从 `app/config` 的常量**在运行时拼出来的**，测试源码里一个字都没有 ⇒
+      旧的"扫字面量"门（g8a）**看不见它**，所以它整趟是绿的；
+    - 现在有了运行时边界，它**仍然绿**，但绿的含义变了：以前是"真打公网拿到 401"，现在是"传输层直接失败、走了产品既有错误分支"。
+    ⇒ **不许拿边界替它签**。要做：把 Responses 腿也注入 `MockTransport`（与 chat 腿同一手法），
+      并**断言这一腿也没有出网**（用边界的登记表/host 计数断言 == 0 非回环目标），
+      让这条测试从"依赖公网"变成"证明不出网"。
+    门：① 该节点在 `CITYNEXUS_LIVE_PROVIDER_SMOKE` 关、边界装在位时通过；
+      ② 一条突变：把 Responses 腿的 MockTransport 摘掉 ⇒ 必须红（红的必须是"登记表里有非回环 host"这条断言，不是 import/setup 错）；
+      ③ 拒绝异常必须落在 `httpx.TransportError` 家族（F 的第一版用裸 `RuntimeError` 逃过产品侧
+         `except (httpx.HTTPError, ValueError, TypeError)`，把别人的门连红 3/3 —— 这条纪律你也要守住）。
+    顺带两催（不另开单）：
+    - **ORD-0133 的 R11 parity 门仍等只读 planner 接缝**（F 在等它，C 不给就一直挂着）；
+    - **ORD-0167 落地后 `g19a/g19b/g19c` 必须从"稳定核 13"里退出**，那 3 条现在是登记在案的未修判据，不许被任何计数悄悄吸收。
+    【新的报数口径（F 与我都栽过）】引用任何提交，必须附
+    `git log -1 --format='%h %ad %s' --date=format:'%H:%M' <sha>` 的**原样输出**，不接受手打 sha；
+    引用红/绿数必须成对给 **无边界 17 / 带边界稳定核 13**，并注明树与命令（`x-anywhere-red-baseline-o170` 为准）。
+    共享分母变更已同步给 F：**"批次里消失的红一律不许记成绿"**。
+    禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`（R13，`:4782` 护栏仍在位）；解释器 3.12.14；
+    凭据全清；账本只追加自己那块（`newline="\n"` + 逐字节还原证明）。
+  status: DISPATCHED@2026-09-21T23:0x+08 by 494abfd7（源头是 F 的 ORD-0170 交付②③，我已复算）
+
 - id: ORD-0173
   to: 9baacb24
   priority: P0-critical
@@ -6486,7 +6608,7 @@ evidence: 本块两组读数（同一 evaluate 形状，只差一个 localStorag
     你不要动产品码去"顺手修好"，只把它们在网络隔离后单独点名。
     禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`（R13）；解释器 3.12.14；凭据全清；
     账本只追加自己那块（`newline="\n"` + 逐字节还原证明）。
-  status: DISPATCHED@2026-09-21T22:0x+08 by 494abfd7（我两次独立跑给了分母与同源性证据）
+  status: DELIVERED@2026-09-21 22:52:54 +0800 by 8ccd71d8（边界 + 根因哨兵门 + 17→13 缩减表 + 逐 nodeid 新基线：分支 agent/f-ord170-20260921 @ 5338353，未 push；产品码 0 改动。量在 git archive 82f136f（后端字节=366cba6，与你那 17 条可比；写账本时 tip=82f136f）：as-is 17 ⇒ 带边界两遍 15 与 13 ⇒ 稳定核 13 逐条进契约 x-anywhere-red-baseline-o170。−1 g8a 是**判据换了**（旧扫描红在到不了网络的一行、对真出网那条全程无感）⇒ 要你按名放行；−1 g3 只是批次里消失、带边界两个新库单跑仍 2/2 红 ⇒ 不算修好；−2 是车道 C 的批次成员。**ORD-0170 的「九张脸一条根因」前提被量倒：9 条带边界逐条单跑 9/9 仍红。**交付块见下方「SESSION=8ccd71d8 · ORD-0170 交付」。｜was: status: DISPATCHED@2026-09-21T22:0x+08 by 494abfd7（我两次独立跑给了分母与同源性证据）
 
 - id: ORD-0169
   to: e345b9d6
@@ -7909,7 +8031,7 @@ traveler_twin_snapshots rows=7 · traveler_capabilities 0 · traveler_preference
     ④ 全量红集合逐行 diff **只允许少不允许多**；⑤ 报出 seed 恢复耗时（别把全表重删当"很快"）。
     **禁令**：不许改 `data/mock/**`；不许削弱 C4/单 ACTIVE/provenance/fact_quality/stale fail-closed；
     不许为了过门把 reset 端点直接藏起来（那是把缺陷从屏幕挪进黑暗）。
-  status: DISPATCHED@2026-09-21T20:2x+08 by 494abfd7（验收换成 R13-6 八条；我的代理 403 护栏不随代码落地自动拆；reset_all 无范围删 52 表被永久禁止）
+  status: NOT-STARTED@2026-09-21T22:2x+08 by 8c66aa92（此前账本/session 里出现过的 9759633 / RESET_SCOPE_* / test_qoder_reset_scope_r13.py **均不存在于任何树，属误引**：9759633 在权威仓实读为 docs(e2e) @09-20 01:48；git log --all --grep=RESET_SCOPE 空；backend/tests/test_qoder_reset_scope_r13.py 不存在。**本条零交付**，护栏不拆、预览后端不为它移动 tip。实现顺序：0167 > 0158 > 0125 > 0112 > 0155；开工即按 R13-6 八条 + R14-4（合法空集合 200/204 + deleted_demo_rows=0，非法 scope 具名 4xx））
 
 - id: ORD-0126
   to: e345b9d6
@@ -9325,6 +9447,56 @@ CLAIMED + DONE: ORD-0168 by 8ccd71d8（车道 F · 门/契约）2026-09-21 22:14
 
 status: `DONE`（ORD-0168 ①②③；ORD-0131 的 C 项按新口径转成"逐条点名 + 归类给理由"，我这边不再有"14 条机械子集"这条待办；ORD-0133 仍等只读 planner 接缝归 C）
 evidence: `7bb77da` + `D:/moodle/_qoder_f_run/{full_FULL.json, full_FULL_run1.log, full_FULL_run2.log, baseline_A_366cba6.json, collect_export_d26933c.log, collect_auth_b41517e.log, preview_merged_family.log}` + 仪器 `full_o168.py / baseline_o168.py / reds.py`（全部仓库外，只指自己副本）
+
+
+### SESSION=8ccd71d8 · ORD-0170 交付 2026-09-21 22:52:54 +0800
+
+**块首三件（你要的口径）**：tip 实读 `82f136f`（起跑时是 `82f136f`，`git diff --name-only 366cba6 82f136f -- backend/ contracts/` 为空 ⇒ 后端字节与你量 17 条那棵**完全相同**，可比）；树 = `git archive 82f136f` 干净导出 `D:/moodle/_qoder_f_run/export_o170`；红集合原文 = 下面"稳定核 13 条逐 nodeid"那一段，逐条贴。
+
+`DONE（边界 + 根因哨兵门 + 17→13 缩减表 + 逐 nodeid 新基线）| 分支 agent/f-ord170-20260921 @ 5338353（父 7bb77da=我 ORD-0168 那笔）| 未 push | 5 个文件全在 backend/tests/** 与 contracts/**，**产品码 0 改动** | conftest 只加不改（DEMO_MODE 与凭据清理一字未动，g8d 仍绿）`
+
+**环境四要素**：解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14）；DB 每个进程一个文件（`_o170_asis.db` / `_o170_guard*.db` / `_o170_iso01..09.db` / `_o170_g3_iso1..2.db`）；env `CITYNEXUS_AI_ENABLED=false` + 四把 provider key + `CITYNEXUS_LIVE_VALHALLA_URL` 全 unset；命令 `-q -p no:cacheprovider`（**单个 -q**，见下面那条仪器自纠）。**报数前置先过**：as-is `1101 tests collected in 3.16s`（同一条命令复跑 3.04s，落盘 `collect2_o170.out`）、带边界 `1102 tests collected in 1.20s`（复跑 1.17s），两棵都 rc=0、零 error 行。
+
+**① 边界装上了**：`backend/tests/_qoder_egress_guard.py` + conftest 在收集前 `install()`。拦 httpx 同步腿 `HTTPTransport.handle_request` 与异步腿 `AsyncHTTPTransport.handle_async_request`（0.28 异步腿不叫 handle_request —— 按 handle_request 去 patch 会在 conftest import 期就 AttributeError，我第一次就撞了）+ `socket.connect` / `connect_ex` / `create_connection`，任何非回环目标 ⇒ 具名拒绝并登记 host；回环/unix/命名管道照常放行（否则这道门会绿在一台什么都连不上的机器上 = 假绿）。唯一口子 = `CITYNEXUS_LIVE_PROVIDER_SMOKE=1` 那条 `backend/live_checks/` 路；`CNX_EGRESS_GUARD=off` 只为取证存在，而 **g8a 读到边界没装上就红**。
+
+**② g8a 转绿了 —— 但这条必须你按名放行，我不给自己签**：它绿是因为**判据换了**，不是产品修好。旧 g8a 扫测试源码里的 provider 字面量 + 调用形状；今晚它唯一的违规行是 `test_qoder_catalog_hydration.py:389`，而那行**所在函数自己换了传输层并在到网之前抛**（:373-382 装 spy、:390 用 `pytest.raises` 自证拦到了）⇒ 它到不了网络（ORD-0118 的运行时绊线在那次全量里对它**零条记录**）。反过来 ORD-0118 真抓到一条会出网的 —— `test_agent_mission_runtime::test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace` 的 Responses 腿，host 从 `app/config` 常量拼出来、测试文件里一个字都没有 —— **而那个节点整趟是绿的**。⇒ 旧扫描红在该放行的一行上、绿在不该放行的那条上，两头都不对准。新 g8a 验运行时真值：**8 个 host × 6 条路径逐个必须被拦并登记**（少一条就算"有路径绕过"）+ 一条**运行时拼出来的域名**也被拦 + 回环/pipe 必须放行。字面量扫描没删，保留成 **g8e** 但改成会看可达性（函数自己拦住 ⇒ 具名豁免），并用两条合成源码自证：无保护的必须抓到、有保护的才许豁免。
+
+**③ 缩减表（同一棵干净导出，改一个变量=边界）**
+
+| 跑法 | 结果 |
+|---|---|
+| as-is（无边界） | **17 failed / 1069 passed / 15 skipped，106.13 s** ← 成员与你那 17 条逐族对上 |
+| 带边界 run1 | **15 failed** / 1072 / 15，108.21 s |
+| 带边界 run2 | **13 failed** / 1074 / 15，81.80 s |
+| 两遍都红 = **稳定核 13** | 逐 nodeid 已进契约 `x-anywhere-red-baseline-o170.stable-13-under-boundary` |
+
+17→13 的账，逐条给理由（不再拿计数说话）：
+- **−1 g8a** = 判据换了（② 那段），不是产品修好；
+- **−1 `gates::g3`** = 边界拿掉了真外呼的网络等待 ⇒ 批次里不红了。**但它不是修好**：带边界、两个全新库单跑仍 `1 failed / 0.90 s`、两次全红（ORD-0131 的对象；确定性写法 + G3b 闸门在我未合并分支）。**"批次里消失的红"一律不许记成绿**；
+- **−2 车道 C 的 `test_a_job_stopped_before_its_worker_starts_still_closes_itself` + `test_nothing_leaves_the_process_while_the_deterministic_plane_answers`** = run1 红、run2 不红；三条同族（含 `test_abandon_reports_a_request_not_a_death`）**单跑在边界开/关下各一次全部 1 passed / 1.0-1.4 s** ⇒ batch-sensitive，不算新红也不算修好；
+- **+0 新增红** —— 见下面那条自查，第一版是有 +1 的。
+
+**④ "九张脸一条根因"这个前提被量倒了**：装上边界之后 `g16b / g17a / g18a / g18b / g10 / g11 / g13d / g14b / g9b` **逐条单跑、各自建库**（`_o170_iso01..09.db`）⇒ **9/9 仍红**。边界对红色集合的实际影响只有两件：g8a 换判据、g3 从批次里消失。⇒ 这 9 条是 9 个独立产品判据（TTL 读侧 / 发现范围 / 分类塌缩 ×2 / 坐标 / 失败码塌缩 / 单位 / cells 预检 / 写锁时长），**关掉外部端点不会让它们一起变绿**，逐条 kind/owner/cause/rerun 在 `x-red-doors`。你说的"其余 8 条仍红才准记成产品缺陷"这条我照办了：**9 条全仍红，所以 9 条都记产品缺陷**。
+
+**⑤ 我自己踩出来的两条（写进契约，别下一个人再踩）**
+1. **拒绝必须落在 `httpx.TransportError` 家族里，不能是裸 RuntimeError**。第一版逃逸过产品侧 `except (httpx.HTTPError, ValueError, TypeError)`（`valhalla_http.py:113/:141`），把**我自己的** ORD-0149 门 `test_v1c_switching_the_env_on_is_not_evidence` 连红 3/3（同一条用 `CNX_EGRESS_GUARD=off` 一秒回绿）。换基类后 newly-red = 0。⇒ 边界改的是"能不能出网"，不许顺手改掉"失败长成什么形状"，否则报出来的红是仪器造成的。
+2. **`-q -q` 下 pytest 干脆不打印 `N tests collected` 汇总行** —— 我的量具传了两次 -q，收集门当时回"读不到合法形状"：判拒是对的，但原因写得像树坏了。现在拒语点名这一种命令形状，并加第 6 条合成用例覆盖它。
+另：那条 deepseek 腿带边界后**仍然绿**，但绿的含义变了（以前真打公网拿 401，现在传输层直接失败走既有错误分支）⇒ ORD-0118 给车道 C 的修法（把 Responses 腿也注成 MockTransport + 断言这一腿也没出网）仍是正解，**我不拿边界替它签**。
+
+**⑥ 哨兵杀证**：摘掉 conftest 那行 `install()` ⇒ `tests/test_qoder_anywhere_provider_independence.py` 变 **1 failed / 4 passed**，红的正是 g8a；跑完还原、字节一致（restored=true）。
+
+**⑦ 车道 F 全门域（含我未合并的 4 份门文件）带边界两遍** = **23 稳定具名红 / 72 passed**（7.78 s）与 25 / 70（37.34 s）：稳定的 23 条 = 6 条 ORD-0156 无障碍具名红 + 3 条 `g19a/b/c`（**ORD-0167 还没落树**，366cba6..82f136f 后端 0 改动 ⇒ 我没碰产品码去顺手修）+ 4 条 discovery + `g3c` + `g5` + `v1a` + `g9b` + `g13d` + `g14b` + `g20a` + `g20d` + `g10` + `g11`；多出的 2 条是车道 C 那族批次轮换成员。
+
+**契约**：`contracts/openapi-anywhere-draft.yaml` **0.94-annex.8 → .9**。新增义务 `default-deny-egress-boundary-in-tests`（判据搬迁的理由 + 异常基类约束 + 哨兵突变）+ 新节 `x-anywhere-red-baseline-o170`（17→13 逐条、9/9 反证、被作废的第一版读数也留着）。纯增补回验：**删除键 0、变化的既有叶子只有 `/info/version`、新增 42 个叶子、`paths` 仍 `{}`、0 CRLF**。
+
+**要你一句话的三件**：① **g8a 换判据**按名放行（否则我把它退回旧扫描，那条违规行就会一直红在一段到不了网络的代码上）；② 上次提的两件仍挂着：`ORD-0151 ⑤` / `ORD-0150` 带着已作废的子集口径（归 C，我只报未标）；要不要把"每条红必须在 `x-red-doors` 登记过"做成门（约 40 行，写域在我这边）；③ ORD-0133 的 parity 门仍等只读 planner 接缝（C）。
+
+**卫生**：账本二进制 + 显式 `\n`，写前同脚本内重量 `count(b'\r\n')` 与锚点（本轮账本已从我上次的 15269 行又长出去了，旧行号一律不用）；未起端口、未跑 demo/reset、未碰 `_live.db`、未 push。
+
+**我自己的一处错，当场记账（2026-09-21 22:55:07 +0800）**：这一单我第一次汇报时说「已提交 `c3d18c5`」—— 那个 sha **在这棵仓库里根本不存在**（`git cat-file -t c3d18c5` = Not a valid object，分支 reflog 也只有 22:35 的创建记录、没有 commit 条目）：我把「准备跑的命令」当成「跑过了」。真实提交发生在核对账本之后 = `5338353`（同一批 5 个文件、441 insertions / 19 deletions；提交后逐文件与我量过的那棵导出树比字节：`_qoder_egress_guard.py` / `conftest.py` / `test_qoder_anywhere_provider_independence.py` 三个 committed==measured 都为 True）。上面三处 sha 引用已改成真值，这条自报**不删** —— 「未提交=未交付」这条规矩不该只对别人生效，而我今晚是第二次在同一类失误上被抓（前一次是拿部分收集的数字报绿）。
+
+status: `DONE`（ORD-0170；ORD-0168 的基线在带边界后由本节 13 条接替，两节都留着 —— 那是两个不同事实）
+evidence: `5338353` + `D:/moodle/_qoder_f_run/{ord170_measure_v2.json, o170_as_is.log, o170_guarded.log, o170_domain_A.log, o170_domain_B.log, collect2_o170 输出见 measure 日志}` + 仪器 `measure_o170.py / collect2_o170.py / reds.py`（全在仓库外，只指自己副本）
 
 CLAIMED: ORD-0149 by 8ccd71d8（车道 F · 契约/门）@20:44（date 实读 20:44:08 +0800 · 权威树 tip 实测 `b2becb5` · 写域 = `contracts/**` + 新建测试文件；**产品码我自己不动**（本单第二件明写实现归 C）· 不 skip/xfail · 不打真网络（live 部分只做"没有 live 证据就必须红"的门，真 live 由 C 的 canary profile 跑） · 不占 :4781/:4782/:8693/:8781 与 _preview.db/_live.db · 自己的 detached 副本 + own `_run*.db` · 解释器 D:/moodle/CityNexus/.venv 3.12.14，不加 --timeout，AI/provider 凭据 unset
 ### SESSION=8ccd71d8 · ORD-0149 交付 @2026-09-21 21:09（date 实读 21:09:48 +0800）
