@@ -388,6 +388,99 @@ test("today-attention-does-not-contradict-the-map — 同屏不能又\"没坐标
   );
 });
 
+test("today-scene-window-is-not-called-device-time — 有场景分钟、没投影时不许说\"设备自己的时间\"", async ({ page }) => {
+  test.setTimeout(240_000);
+  const seeded = await readScene(page);
+  const journeyId = String(seeded.journey_id ?? "");
+  expect(
+    journeyId.length > 0,
+    node("today-scene-window-is-not-called-device-time", "no journey to open Today with"),
+  ).toBe(true);
+  /* This arm is reachable: the two clocks come from two endpoints.  `/demo/scene` can answer ACTIVE
+     while `/journeys/{id}/twin` answers a payload with no `context.execution` -- an older build
+     behind the same proxy, or a twin request that degrades.  Today then picks its stations from the
+     time window measured against the **server's** scene minute, so a reading that calls that
+     window "this device's own time" describes a clock that is not in use. */
+  const stripped: string[] = [];
+  await page.route("**/api/v1/journeys/*/twin**", async (route) => {
+    const response = await route.fetch();
+    let body: Record<string, unknown>;
+    try {
+      body = (await response.json()) as Record<string, unknown>;
+    } catch {
+      return void route.fulfill({ response });
+    }
+    const context = { ...((body.context ?? {}) as Record<string, unknown>) };
+    if (context.execution !== undefined) {
+      delete context.execution;
+      stripped.push("execution removed");
+      body.context = context;
+    }
+    await route.fulfill({
+      status: response.status(),
+      contentType: "application/json",
+      body: JSON.stringify(body),
+    });
+  });
+
+  await openToday(page, journeyId, "zh-CN", "light", 390);
+  const source = page.getByTestId("today-clock-source");
+  /* The stub has to be proved to have fired: a node that passes because the twin never answered is
+     measuring a different arm than the one it names. */
+  await expect
+    .poll(() => stripped.length, {
+      timeout: 25_000,
+      intervals: [250],
+      message: node("today-scene-window-is-not-called-device-time",
+        "the twin never answered with a context.execution to strip, so this arm was never exercised"),
+    })
+    .toBeGreaterThan(0);
+  await expect(
+    source,
+    node("today-scene-window-is-not-called-device-time", "the hero line about which clock is in play vanished"),
+  ).toBeVisible();
+  await expect(
+    source,
+    node("today-scene-window-is-not-called-device-time", "the hero never settled on a clock statement"),
+  ).toContainText(/服务器场景/, { timeout: 25_000 });
+
+  const said = clean(await source.innerText());
+  expect(
+    /设备自己的时间|device's own time/i.test(said),
+    node("today-scene-window-is-not-called-device-time",
+      `the screen claims device time while the window is measured on the server's scene minute: ${JSON.stringify(said)}`),
+  ).toBe(false);
+  /* And it still has to say what is missing, rather than quietly drawing a station. */
+  expect(
+    /执行投影|projection/i.test(said),
+    node("today-scene-window-is-not-called-device-time",
+      `the sentence names no missing projection: ${JSON.stringify(said)}`),
+  ).toBe(true);
+  await expect
+    .poll(() => source.getAttribute("data-clock-source"), { timeout: 25_000, intervals: [250] })
+    .toBe("SCENE");
+  await expect
+    .poll(() => source.getAttribute("data-next-source"), { timeout: 25_000, intervals: [250] })
+    .toBe("SCENE_WINDOW");
+  writeFileSync(
+    evidencePath("ui-overnight/today-scene-window.json"),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        order: "ORD-0082",
+        node: "today-scene-window-is-not-called-device-time",
+        clockSource: "SCENE",
+        nextSource: "SCENE_WINDOW",
+        said,
+      },
+      null,
+      2,
+    ) + "\n",
+    "utf-8",
+  );
+  await page.unrouteAll({ behavior: "ignoreErrors" }).catch(() => undefined);
+});
+
 /* ----------------------------------------------------------------- ORD-0085: taps that go elsewhere.
  * The bottom nav is `position: fixed`, so a stage action can end up inside its band -- visible, and
  * the tap lands on the nav and changes page.  Three shapes were measured for this and only one of

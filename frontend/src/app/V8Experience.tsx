@@ -2297,7 +2297,12 @@ function Hub({
                 ? "SERVER_PROJECTION"
                 : byStage
                   ? "PROJECTION_UNUSABLE"
-                  : "DEVICE_WINDOW"
+                  : usingDeviceClock
+                    ? "DEVICE_WINDOW"
+                    : // The twin gave no projection but the stage gave a scene minute, and the time
+                      // window below is measured against *that* minute (nowMs = stageMs), not against
+                      // this box's clock -- which is why this arm is not called DEVICE_WINDOW.
+                      "SCENE_WINDOW"
             }
           >
             {(() => {

@@ -73,6 +73,37 @@ CASES = [
         ],
     ),
     (
+        # Substituting ORD-0088 #3's values asked whether the co-mandated gate reddens when the scene
+        # moves and Today's line does not.  Switching the projection read off was meant to be that
+        # shape; the measured answer is **SURVIVED, and that is the finding** -- with `byStage` off,
+        # the fallback window is still measured against `nowMs = stageMs`, i.e. the *server's* scene
+        # minute (ORD-0088 item 1), so the hero keeps following the stage.  The frozen-hero defect
+        # therefore cannot be put back by breaking one path; both clocks would have to go, which is
+        # what the two `today-scene-window-*` mutants below aim at instead.
+        "killA6-hero-still-follows-without-the-projection",
+        HERO,
+        "  const byStage = !usingDeviceClock && Boolean(execution);\n",
+        "  const byStage = false;\n",
+        [
+            (SCENE_SPEC, ["sim-scene-advances-on-server"]),
+            (STAGE_SPEC, ["sim-today-hero-follows-the-stage"]),
+        ],
+    ),
+    (
+        "killA7-scene-window-called-device-time-in-the-diagnostic",
+        HERO,
+        '                      "SCENE_WINDOW"\n',
+        '                      "DEVICE_WINDOW"\n',
+        [(STAGE_SPEC, ["today-scene-window-is-not-called-device-time"])],
+    ),
+    (
+        "killA8-scene-window-says-the-device-own-time-out-loud",
+        HERO,
+        '                      ? " · 服务器的执行投影还没到，这一屏没有按游标定位"\n',
+        '                      ? " · 这一屏用的是这台设备自己的时间，只是顺带没拿到游标"\n',
+        [(STAGE_SPEC, ["today-scene-window-is-not-called-device-time"])],
+    ),
+    (
         "killB1-running-action-has-no-signal",
         PANEL,
         '                aria-busy={running === row.id ? "true" : undefined}\n',
