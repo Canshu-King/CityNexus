@@ -54,7 +54,7 @@ import {
 import { desktopRoutes, mobileRoutes } from "../routes/v8Routes";
 import {
   readOfflineJourney,
-  saveOfflineJourney,
+  saveOfflineJourneyVerified,
   type OfflineJourney,
 } from "../lib/offlineJourney";
 import { useT, useLocale } from "../i18n/LocaleContext";
@@ -456,6 +456,11 @@ export function V8Experience() {
   /* The offline classification's recovery action has to lead somewhere: this flag renders the cached
      read-only view on demand instead of reloading into the same failure screen. */
   const [showCachedCopy, setShowCachedCopy] = useState(false);
+  /* ORD-0178: whether this device actually holds a readable read-only copy.  Set from the verified
+     save on the write path and from the read-back on the offline path, and the only thing that may
+     turn a "saved" sentence or a "read the saved copy" button on -- in-memory snapshot state is not
+     evidence that anything is on the device. */
+  const [cachedCopySaved, setCachedCopySaved] = useState(false);
   const [setupBusy, setSetupBusy] = useState(false);
   /* ORD-0047 — a cold city's first stay search measured 114.98s through the production
      preview, during which this screen showed nothing at all.  The shell is the only party
@@ -580,7 +585,8 @@ export function V8Experience() {
     setRuntimeStatus(nextRuntimeStatus);
     setWallet(nextWallet);
     setOffline(nextOffline);
-    await saveOfflineJourney(nextOffline);
+    /* ORD-0178 ③: whether a copy may be offered is a measurement, not an assumption. */
+    setCachedCopySaved(await saveOfflineJourneyVerified(nextOffline));
   };
 
   // Authoritative V12 mutations refetch PlanVersion/JourneyTwin through
@@ -596,7 +602,7 @@ export function V8Experience() {
       `/api/v1/journeys/${journeyId}/offline-snapshot`,
     );
     setOffline(nextOffline);
-    await saveOfflineJourney(nextOffline);
+    setCachedCopySaved(await saveOfflineJourneyVerified(nextOffline));
   };
 
   useEffect(() => {
@@ -630,10 +636,13 @@ export function V8Experience() {
               recordAttribution(attribution, `shell.boot.cleared:${cleared.join("|") || "none"}`);
               setOffline(null);
             } else if (attribution.reason === "NETWORK_UNAVAILABLE") {
-              /* The one branch allowed to show the cached trip, and it keeps its retry (R3-4). */
+              /* The one branch allowed to show the cached trip, and it keeps its retry (R3-4).  What
+                 it may claim is set from the read-back: no row, no "saved" sentence, no read-only
+                 button (ORD-0178 ④ 甲乙). */
               const saved = await readOfflineJourney(journeyId);
               if (cancelled) return;
               setOffline(saved);
+              setCachedCopySaved(Boolean(saved));
             }
             if (!cancelled) {
               setFailure({ attribution, journeyId });
@@ -1139,10 +1148,10 @@ export function V8Experience() {
   if (failure && !data) {
     const copy = copyFor(failure.attribution, locale.startsWith("zh"), {
       journeyId: failure.journeyId ?? undefined,
-      hasCachedCopy: Boolean(offline),
+      hasCachedCopy: cachedCopySaved,
     });
     const action =
-      failure.attribution.recovery_action === "read-only-cached" && !offline
+      failure.attribution.recovery_action === "read-only-cached" && !cachedCopySaved
         ? "retry"
         : failure.attribution.recovery_action;
     const recovery =
@@ -1280,7 +1289,7 @@ export function V8Experience() {
         <span>{t("shell.preparingSub")}</span>
       </div>
     );
-  if (!data && offline && showCachedCopy)
+  if (!data && offline && showCachedCopy && cachedCopySaved)
     return <OfflineJourneyView value={offline} message={message} />;
   if (!data)
     return (
@@ -3681,6 +3690,11 @@ function OfflineJourneyView({
           date: value.provider_freshness.latest_provider_capture_at
             ? date(value.provider_freshness.latest_provider_capture_at, locale)
             : t("offline.beforeSnapshot"),
+        })}
+      </small>
+      <small data-testid="offline-snapshot-age">
+        {t("offline.snapshotSavedAt", {
+          date: value.updated_at ? date(value.updated_at, locale) : t("offline.beforeSnapshot"),
         })}
       </small>
     </main>

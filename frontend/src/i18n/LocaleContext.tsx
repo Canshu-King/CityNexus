@@ -232,6 +232,7 @@ const en: Dict = {
   "offline.noNextStep": "No next step",
   "offline.providerRefresh": "Provider data last refreshed {date}. Financial actions are disabled offline.",
   "offline.beforeSnapshot": "before this snapshot",
+  "offline.snapshotSavedAt": "This device saved this copy {date}.",
 
   // ── Me ──
   "me.kicker": "Me",
@@ -885,6 +886,7 @@ const zhCN: Dict = {
   "offline.noNextStep": "无下一步",
   "offline.providerRefresh": "供应商数据最后刷新于 {date}。离线状态下财务操作已禁用。",
   "offline.beforeSnapshot": "此快照之前",
+  "offline.snapshotSavedAt": "这台设备保存这份副本的时间：{date}。",
 
   // ── Me ──
   "me.kicker": "我的",

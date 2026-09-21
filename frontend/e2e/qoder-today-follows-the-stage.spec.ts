@@ -1637,6 +1637,12 @@ test("sim-booking-target-is-an-activity-the-server-gives-a-slot-for — 默认�
       const response = await route.fetch();
       const body = (await response.json()) as Record<string, unknown>;
       body.journey_status = "PLANNED";
+      /* And the same plan this node verified above.  The panel keys its plan read on
+         `scene.scene.planVersionId`; when a preceding spec in the chain has moved the shared stage,
+         that resolved to a version with no activities and the row fell through to the generic
+         sentence -- green in isolation, red only in a chain.  Pinning it makes the gate's read and
+         the panel's read the same plan by construction, which is the only thing this node measures. */
+      body.plan_version_id = planId;
       await route.fulfill({
         status: response.status(),
         contentType: "application/json",

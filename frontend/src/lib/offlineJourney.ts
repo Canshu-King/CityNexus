@@ -43,6 +43,23 @@ export async function saveOfflineJourney(snapshot: OfflineJourney): Promise<void
   await database.journeys.put(snapshot);
 }
 
+/**
+ * ORD-0178 ③: "已保存" may only be claimed when the row was written **and read back**.  A `put()`
+ * that resolves is not evidence the copy is on the device -- a blocked or evicted store resolves
+ * differently, and the sentence was previously printed from in-memory state alone.  This returns
+ * whether the copy is genuinely there, so the caller can gate the sentence and the read-only action
+ * on a measurement rather than on a hope.
+ */
+export async function saveOfflineJourneyVerified(snapshot: OfflineJourney): Promise<boolean> {
+  try {
+    await database.journeys.put(snapshot);
+    const readBack = await database.journeys.get(snapshot.journey_id);
+    return Boolean(readBack && readBack.journey_id === snapshot.journey_id);
+  } catch {
+    return false;
+  }
+}
+
 export async function readOfflineJourney(journeyId: string): Promise<OfflineJourney | null> {
   return (await database.journeys.get(journeyId)) ?? null;
 }

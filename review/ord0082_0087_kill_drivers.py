@@ -36,6 +36,8 @@ INBOX_SPEC = "e2e/qoder-inbox-review-queue.spec.ts"
 EXIT_SPEC = "e2e/qoder-failure-has-an-exit.spec.ts"
 WIZARD = "src/features/setup/JourneyTrialSetup.tsx"
 WIZ_SPEC = "e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts"
+OFFLINE_LIB = "src/lib/offlineJourney.ts"
+OFFLINE_SPEC = "e2e/qoder-offline-persistence.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -480,6 +482,36 @@ CASES = [
         "    localStorage.setItem(TRIAL_DRAFT_KEY, JSON.stringify({ step, draft }));\n",
         "    void TRIAL_DRAFT_KEY; void step; void draft;\n",
         [(WIZ_SPEC, ["ord0135-the-wizard-survives-a-refresh-on-the-step-you-were-on"])],
+    ),
+    (
+        # ORD-0178 ④(丙): the rowcount check this order asked for, removed -- a copy is claimed from
+        # the request succeeding rather than from the row being read back.
+        # SURVIVED, and the survival is informative: the offline branch re-reads the row for itself
+        # (`readOfflineJourney` below), so this save-path check is redundant for the claim the screen
+        # makes.  killM1a mutates the read-back that actually decides it.
+        "killM1-copy-claimed-without-reading-it-back",
+        OFFLINE_LIB,
+        "    const readBack = await database.journeys.get(snapshot.journey_id);\n    return Boolean(readBack && readBack.journey_id === snapshot.journey_id);\n",
+        "    return true;\n",
+        [(OFFLINE_SPEC, ["ord0178-the-saved-copy-claim-follows-the-rowcount"])],
+    ),
+    (
+        # The load-bearing check: whether the device holds a readable row is what may turn the claim
+        # and the read-only action on.  Claiming it without asking is the defect the order names.
+        "killM1a-claim-without-asking-the-device",
+        EXPERIENCE,
+        "              setCachedCopySaved(Boolean(saved));\n",
+        "              setCachedCopySaved(true);\n",
+        [(OFFLINE_SPEC, ["ord0178-the-saved-copy-claim-follows-the-rowcount"])],
+    ),
+    (
+        # The other half: the screen treats the snapshot object as evidence that a copy exists,
+        # which is exactly the assumption ORD-0178 asks to replace with a measurement.
+        "killM2-screen-trusts-the-snapshot-object",
+        EXPERIENCE,
+        "      hasCachedCopy: cachedCopySaved,\n",
+        "      hasCachedCopy: true,\n",
+        [(OFFLINE_SPEC, ["ord0178-the-saved-copy-claim-follows-the-rowcount"])],
     ),
 ]
 
