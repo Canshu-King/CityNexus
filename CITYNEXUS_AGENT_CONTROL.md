@@ -5527,6 +5527,12 @@ DELIVERED: ORD-0192 | 报告 `_qoder_spike_20260921/ORD_0192_CHAIN_EVIDENCE.md` 
 
 DELIVERED: ORD-0198 | 报告 `_qoder_spike_20260921/ORD_0198_CANARY.md` | 数据 `q198_final_bundle.json`＋`q198_isolation.json`＋`q198_receipts.json`＋`q198_used_edge_receipt.json`＋`q198_hydration_readback.json`＋`q198_summary.json`＋`q198_chain.jsonl`＋`raw198/` | 代码：canary 分支 `agent/canary-ord198-20260922`＝merge `53a21fc`（`61cde4b`×`08786c1`，零冲突，39 passed），**未 push** | 复跑：报告 §4（boot 自证脚本＋链脚本） | blocker：无（0197 并线后重放同脚本即验 SELECTABLE 路径；G8/兜底/exact-name 三处语义归 C）
 
+#### (SESSION=c01d72a3) ORD-0198 **补记：canary 已重启待你复跑** @02:3x（`date` 实读 02:36:20+0800）—— **:8597 loopback 在跑（我停）。副本 `canary_0198c.db` 02:27 从只读 `_live.db` 拷出（3 journeys/16 places）。我预验：`?query=贡山县` ⇒ `OSM:R:2729765 / provider / HYDRATABLE`**
+
+**启动命令与库路径**（报告 `_qoder_spike_20260921/ORD_0198_CANARY_LIVE_FOR_CMDR.md` §①）：`cd D:/moodle/_qoder_b_ord188_20260922/backend && CITYNEXUS_DATABASE_URL="sqlite:///D:/moodle/_qoder_spike_20260921/canary_0198c.db" CITYNEXUS_DEMO_MODE=true CITYNEXUS_AI_ENABLED=false CITYNEXUS_REAL_CITY_ENABLED=true CITYNEXUS_REAL_CITY_MODE=live CITYNEXUS_REAL_CITY_TIMEOUT_SECONDS=90 CITYNEXUS_REAL_CITY_CACHE_TTL_SECONDS=900 CITYNEXUS_ANYWHERE_RESOLVER=photon DEEPSEEK_API_KEY= CITYNEXUS_AI_API_KEY= OPENAI_API_KEY= ANTHROPIC_API_KEY= D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8597`——**loopback、无隧道、无前端、SW 无涉**；副本由 `sqlite3.backup` API 从只读连接拷出，`_live.db` 零写入。
+**收据文件**：`_qoder_spike_20260921/q198_used_edge_receipt.json`（`blocker_basis=USED_EDGE_INVENTORY` ＋ `aggregate_repository_counts_used_as_blocker=false` ＋ `fact_quality=SYNTHETIC_DEFAULT` ＋ `verdict=MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`）；第二城 `q198_receipts_fugong.json`；总包 `q198_final_bundle.json`。
+**第二城我已先趟**：`?query=福贡县` ⇒ **`OSM:N:469622913 / provider / HYDRATABLE`**；其 discover 吃到 `overpass-api.de 504 → kumi 200/0 elements/86.2 s` ⇒ answered-zero ⇒ Nominatim 兜底 ⇒ `PROVIDER_TIMEOUT`（**与云和同一条缝**，attempts 在案）；重试三镜像全不答；capability 回 `CN-FUGONG / catalog / HYDRATABLE / place_count 1` ⇒ planner **422 `C4_ANCHOR_BLOCKED`**（单锚合法仍被挡＝0148 D11，C4 语义归 C）。`塔县`/全名塔什库尔干 ⇒ `provider_no_match`（exact-name 又一实例）。**Overpass 此刻状态差（504/90 s 为主）；验 provider 形状只需步骤 1/2 的两个 GET，30 秒，不依赖 Overpass。planner 422 与 MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE 是预期终态（无 live Valhalla），不是失败。**
+
 
 
 ### 1a986a24 ORD-0129 HJ-P1 第四轮 @2026-09-21 19:4x → ②假离线**在新包上复现且证据更硬**；③那个 404 **不是 id 串位**（同源已证），真卡点是"导入成功但没有审核入口"；④**北京 AI 规划第一次真出方案并给出价格**
@@ -8154,6 +8160,32 @@ status: ORD-0193 **DONE@2026-09-22T02:1x+08 by e345b9d6**（提交 `15a114e`；�
 evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（新）、`frontend/e2e/qoder-destination-preparation.spec.ts`（五节点）、`review/evidence/ui-overnight/ord0193-{needs-preparing,running,structural,outcomes,ready}.json`＋五图、`review/ord0193-prep-probe.json`（运行时五态原始读数）、`review/killQ*.log`、`review/run-run013824.log`（62/62）、`review/run-lst*.log`（收集 62）、`review/tsc-0193*.txt`；改动 `src/api/citynexus.ts`、`src/app/V8Experience.tsx`、`src/styles.css`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=494abfd7 · C 交了 P7 候选（`db4a91c`），我做了**行为探针**（不是 grep）：三项当场过、一项**从响应里根本看不见** ⇒ 已问清证据落在哪 @02:3x
+
+`STATUS: BEHAVIORAL-PROBE-PARTIAL | 树 `git archive db4a91c` → `v_db4a91c`；解释器 venv **3.12.14**（我第一次误用系统 3.10 → `StrEnum` ImportError，是我的错，已换回）；一次性临时库 `DATABASE_URL=sqlite:///…/probe.db`，AI off、provider 凭据清空；经**正常入口** `GET /api/v1/destinations/capability` |`
+
+**① 先报无破损**：`--collect-only` = **1151 collected / rc=0**；四套定向跑 = **54 passed / 0 failed**。
+
+**② 行为探针原样读数（两座未预录县）**
+```
+贡山县 → 200  canonical=null  resolution=unresolved  capability=UNAVAILABLE
+              reason=NO_CANONICAL_IDENTITY  action=CHOOSE_ANOTHER_DESTINATION
+              pending_destination_label="贡山县"（原文逐字保留）
+云和县 → 同上
+两次的响应键中**没有任何包含 "attempt" 的字段**（我把键名列出来才敢说这句，不是"没搜到"）
+```
+**当场通过的行为条件**：
+- 不再造 `unresolved:<hash>`（对比我 02:2x 在部署侧实测到的 `unresolved:8fccf2bbf123e3df`）⇒ **hash 冒充身份在这条路径上消失** `REPRODUCED`
+- `canonical=null` + **原文逐字保留** + 推荐动作与状态自洽 ⇒ 条件 3/5/7 的行为面成立 `REPRODUCED`
+
+**③ 我看不清的那一项（所以不签 P7）**：**响应里看不到"问过没有/问了几次"**。代码里确实存在与 `NO_CANONICAL_IDENTITY` **不同**的 `REASON_RESOLVER_UNAVAILABLE`（`anywhere_capability.py:629/665/744`），而我这次拿到的是前者 ⇒ 无法从响应区分"问过且为空"与"配置没让问"。
+⇒ **已问 C**：`ProviderAttempt[]` 落在哪（响应字段？operation/audit 行？给我 `表.列` + 那次 run 的关联键）。这正好是仲裁那句 **final outcome ≠ audit history** 的落地点：审计可以不在响应里，但**必须在**某个可复放的地方，且我的收据检查器要求它出现。
+⇒ 因此 **P7 仍 false**：MATCH/AMBIGUOUS/RUNTIME_FAILURE 三类我这次都没能从行为上触发（需要 provider 真被问一次，或 C 给可按的 fixture 收据）。
+
+**④ 顺序**：C 请补两样——(a) 一次 **LIVE_REQUEST/REPLAY** 的 MATCH 与 RUNTIME_FAILURE 收据（同一 SHA、正常入口）；(b) attempt 历史的存放位置。给了我就跑 `p7_check.py`，全绿才走五步唤醒。
+
+status: P7 候选 db4a91c 行为探针：无破损(1151/54✓)、hash 冒充已消失✓、canonical=null+原文保留✓；但 attempt 历史在响应中不可见 ⇒ 无法区分"问过为空"与"未问"，P7 继续 false，已索要 attempt 存放位置与 MATCH/RUNTIME 行为收据
+
 ### SESSION=494abfd7 · P7 验收**机械化**：模板已拉回（`aea25cc8`，5,001 B 字节校验）+ 我的检查器 `p7_check.py` 已建并**用一份故意弱的收据自证会 fail-closed（17 处拒绝）** @02:3x
 
 `STATUS: ACCEPTANCE-MECHANIZED | 我不再靠读散文判 P7；车道按模板交 JSON，我跑 `p7_check.py <receipt> --sha <delivery_sha>`，exit≠0 就不成立 |`
