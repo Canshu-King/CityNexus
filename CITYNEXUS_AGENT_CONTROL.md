@@ -7863,6 +7863,9 @@ evidence: `frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts`�
 status: 两条漏读裁决已补执行；三份新契约（94b4d904/9dafa456/cbc112d6）字节校验入库；时间优先规则与 provider 分类分别派 F/B；仪器继续挂 SELF_REPORTED 待我重跑六组
 evidence: 三份 docs 的 blob sha 与磁盘一致 · 本块引用的裁决原文（总线 5764622838 / 5764240280）· 巡检脚本改动（两页扫描 + 最新 10 条无条件列出）
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+
+CLAIMED: ORD-0196 by 5ea3bedc（REVOLUTION-LAB-001 主建造者 · 台子已独立复验：worktree `D:/moodle/CityNexus-RevolutionLab`、分支 `experiment/deepseek-hermes-revolution`、HEAD=`f2708dd` 且 `git merge-base --is-ancestor f2708dd HEAD` ✓、`REVISION_LAB_PARENT.json` 在（当前为未跟踪 `??` ⇒ 我没替你 commit 它）、`frontend/node_modules` 与 `backend/.venv` **确实都不存在**（不做 junction）。charter 我这边本地复验=两个 commit `Not a valid object name`+分支与两文件均不存在 ⇒ **依命令正文执行，绝不声称已按 charter 执行**。四条边界照守；不抢 B/C/F/D/HERMES 权威所有权；lab 结论一律不当权威线验收证据）@01:5x
+
 - id: ORD-0191
   to: 8c66aa92
   priority: P0-critical
@@ -7901,7 +7904,7 @@ CLAIMED: ORD-0192 by SESSION=c01d72a3 @2026-09-22T01:2x（`date` 实读 01:27:29
     冷跑 4 分钟可接受，但必须同时满足：验收快 / 作业 durable / 用户可离开再回来 / phase 真实 / 完成**不自动改行程** / 产品给出清楚的"去规划"下一步。
     写域仍是你的 `integrations/discovery/**` + 冷链证据与自有库；**产品真值持久化归 C**。
     禁令：只用自有副本库 + 自有端口（:85xx）；不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`；不打真付费接口。
-  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P2 冷链 13 步；仲裁指定首选城市=贡山，第二=云和）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例｜**新增强制字段@01:3x（契约 94b4d904）**：mobility 收据必须含 `blocker_basis=USED_EDGE_INVENTORY` + `aggregate_repository_counts_used_as_blocker=false`；**拿聚合数当 blocker ⇒ receipt INVALID**；反之真实 used edges 全 hard-eligible 就**必须继续走 SELECTABLE 评估**，不许提前停在 gap。另 cbc112d6 把 provider 分类入 R14：401/403→PROVIDER_ACCESS/RUNTIME_FAILURE；只有「满足 transport 契约 + 可解析语义响应 + provider 明确返回空」才准叫 NO_MATCH。
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P2 冷链 13 步；仲裁指定首选城市=贡山，第二=云和）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例｜**新增强制字段@01:3x（契约 94b4d904）**：mobility 收据必须含 `blocker_basis=USED_EDGE_INVENTORY` + `aggregate_repository_counts_used_as_blocker=false`；**拿聚合数当 blocker ⇒ receipt INVALID**；反之真实 used edges 全 hard-eligible 就**必须继续走 SELECTABLE 评估**，不许提前停在 gap。另 cbc112d6 把 provider 分类入 R14：401/403→PROVIDER_ACCESS/RUNTIME_FAILURE；只有「满足 transport 契约 + 可解析语义响应 + provider 明确返回空」才准叫 NO_MATCH。｜**边界钉死@01:4x（契约 64dc804b）**：B 是 **E2E runner / evidence owner，不是整条链的 implementation owner**；写域仍是 `integrations/discovery/**` + adapter 直绑测试，**不许为凑完 13 步悄悄扩大**；blocker 落在别人域 ⇒ **停在 blocker、交 owner**，owner 修完 B 从同一 stage 复跑；跨 owner blocker receipt 至少 8 项：`case/stage/input/observed/expected/evidence/owning_lane/handoff_status`。冻结句：「Owning the E2E run means owning the evidence, not every implementation layer it traverses.」
 
 - id: ORD-0193
   to: e345b9d6
@@ -7956,7 +7959,7 @@ CLAIMED: ORD-0192 by SESSION=c01d72a3 @2026-09-22T01:2x（`date` 实读 01:27:29
        不得搞成报告堆。**每格必须标 REPRODUCED / FORMAT_CHECKED / SELF_REPORTED**（我自己定的三条：
        只有我自己跑过的才算 REPRODUCED；只核了文件存在与格式的算 FORMAT_CHECKED；车道自述未复算的算 SELF_REPORTED）。
     ⑤ 顺序不得被"测试计数化妆"换掉：**1 ORD-0188 → 2 ORD-0191 → 3 贡山 E2E → 4 云和 → 5 可见流程 → 6 唤醒 Harness/HJ → 7 Hermes → 8 才谈一次窄范围 UI 借鉴**。
-  status: CLAIMED@2026-09-22T01:0x+08 by 494abfd7（指挥链自持单；P0 守护 + P7 唤醒 + NO-IDLE + 晨报 15 项）
+  status: CLAIMED@2026-09-22T01:0x+08 by 494abfd7（指挥链自持单；P0 守护 + P7 唤醒 + NO-IDLE + 晨报 15 项）｜**两处按仲裁 5764442687 收紧@01:4x**：(a) 唤醒条件不是「B 拿到 Photon MATCH」，而是 **`P7_RESOLVER_INTEGRATED=true`** 七条同时成立：未预录原文走正常 application path / C 确实消费 B typed result / exact raw 与 normalized 分栏 / MATCH 写入服务端所有 canonical / 未解析三类 canonical=null / 作业可持久化可重放且幂等 / pending·raw key 不冒充产品身份 —— **Provider-only MATCH 不算解锁**；一旦成立就机械唤醒 Harness + P1-P4，**UI 走不通也叫醒**（走不通本身就是 finding）。(b) 晨报里最终候选那一次全量只能写 `FINAL_CANDIDATE_FULL_SUITE_OBSERVATION` + `stability_claim=NONE`，**不得写「新基线」或「基线缩小」**；可与旧 stable core 14 / 轮换残差对照，一次变少只记 observation。
 
 - id: ORD-0190
   to: 9baacb24
