@@ -786,8 +786,14 @@ class OverpassPOIProvider:
                 last_error = exc
                 continue
         if not attempts or all(not a["answered"] for a in attempts):
-            # Nothing replied: this is a runtime failure and must stay one.
-            raise last_error if last_error is not None else RuntimeError("NO_PROVIDER_ATTEMPTED")
+            # Nothing replied: this is a runtime failure and must stay one.  The attempts we
+            # recorded are evidence, so they travel with the exception instead of being lost.
+            error = last_error if last_error is not None else RuntimeError("NO_PROVIDER_ATTEMPTED")
+            try:
+                error.provider_attempts = attempts  # type: ignore[attr-defined]
+            except Exception:  # noqa: BLE001 - frozen exception types refuse attributes
+                pass
+            raise error
         candidates: list[DiscoveryCandidate] = []
         for row in elements[:limit]:
             tags_data = row.get("tags") or {}
@@ -1289,6 +1295,9 @@ def capture_real_city_candidates(
                 # reason codes (ORD-0099 ②).
                 live_error = live_failure_reason(exc)
                 failure_stage = stage
+                recovered = getattr(exc, "provider_attempts", None)
+                if isinstance(recovered, list) and recovered and not overpass_attempts:
+                    overpass_attempts = recovered
                 LOGGER.warning(
                     "real-city live discovery failed (%s) at %s: %s: %s",
                     live_error,
