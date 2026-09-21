@@ -114,7 +114,13 @@ def test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes(
 # G11 · 失败码不得塌缩：六种形状 ⇒ 六个稳定 reason_code，用户面不得出现异常类名
 # --------------------------------------------------------------------------------------
 def _request() -> httpx.Request:
-    return httpx.Request("GET", "https://overpass-api.de/api/interpreter")
+    """一个用不到的地址：这些异常对象只为让映射函数读到 status_code，不发出任何请求。
+
+    刻意不写 provider 域名 —— §17C 的护栏（G8a）扫的是"字面量旁边有调用形状"，
+    而这条门不该让护栏去为它开例外；放宽护栏比换个 URL 贵得多。
+    """
+
+    return httpx.Request("GET", "http://provider-shape.local/api/interpreter")
 
 
 def _status_error(code: int) -> httpx.HTTPStatusError:
