@@ -191,6 +191,83 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### commander 亲测 补枪 @2026-09-21 20:3x —— 第二枪打在**贡山**上，结果把仲裁排序的前提问住了：**贡山在这棵树上同样是 `unresolved:`**，冷链在**第 0 步**就断，不是断在 Overpass
+
+同一脚本、同一副本库、同一实时模式（`live_checks/dod4_gongshan.txt`）：
+- `capability?query=贡山独龙族怒族自治县` → `canonical_destination_id=`**`unresolved:aeb41cef3b84ddbb`**、
+  `destination_resolution=unresolved`、`capability=UNAVAILABLE`、`reason_code=NO_CANONICAL_IDENTITY`；
+- `POST /catalog-hydrations` → **202 / 0.02 s**（受理仍然快，R8 那半达标）；
+- **3 秒后**作业就是 `state=UNAVAILABLE phase=DISCOVERING_POIS outcome=NO_REGISTERED_SOURCE`，`provider_status=null`；
+- 库里 `places` 仍只有 `CNX-DEMO 8`、`provider_key` 仍只有 `mock-city` ⇒ **零真 provider 实体**。
+
+**结论（我能证的部分）**：在这棵 `e9efec6` 上，**两个不同的县都拿不到 canonical identity**，
+而 `outcome` 是 `NO_REGISTERED_SOURCE` 而不是 `REAL_CITY_DISABLED`
+⇒ 我**不是**没开实时（`CITYNEXUS_REAL_CITY_ENABLED=true`、`_MODE=live` 都设了），
+是**能力评估/解析这一步根本没走到 resolver**，或者走到了但结果被丢。
+**#4 的堵点在 Step 0（原文→canonical），不在 Step 2（Overpass 冷发现）**——这和我 20:36 那块里的推测一致，现在两例都成立。
+
+**我要更正/请求确认的一件事（不甩锅）**：仲裁 5760530753 建议"贡山先做 CASE3，因为 Photon canonical identity + extent 已实测成立"。
+那句"实测成立"是 **ORD-0099/0109 时期对 provider 的直接探测**成立的；
+但**产品内的解析路径今天实测不成立**（两例都是 `unresolved:`）。
+所以"贡山能绕开 R10 污染"这个前提，在今天的树上不成立 —— 请先修 Step 0，再谈 CASE3/CASE4。
+
+**顺带三条实现事实（给 C/F 省时间）**：
+① `capability` 与 `catalog-hydrations` **都各自算了一遍 identity**，两处都给 hash ⇒ 修要一次修两处，别只修表面；
+② 作业表 `stay_generation_operations` 的列是 **`id`**（响应体里叫 `operation_id`）——契约对差（ORD-0123）记一笔；
+③ 我的量具错已撤回：**`UNAVAILABLE` 就是终态**，作业没有"永不结束"，是**它结束得太早、而没人会把这句话演给人看**。
+
+
+### commander 亲测 @2026-09-21 20:3x —— 我自己先把 #4 那条冷链跑了一遍（**副本库、实时模式**），第一枪打在云和县上，结果正好替仲裁的排序作了证
+
+**读数**（`live_checks/dod4_hydrate_probe.py`，库＝`live_snapshots/dod4_hydrate.db`，`_live.db` 未被触碰；
+env：`CITYNEXUS_REAL_CITY_ENABLED=true`、`CITYNEXUS_REAL_CITY_MODE=live`、`TIMEOUT=25`、AI/凭据全清、解释器 3.12.14）
+- `capability?query=云和县` → `canonical_destination_id=unresolved:8fccf2bbf123e3df`、`capability=UNAVAILABLE`、
+  `reason_code=NO_CANONICAL_IDENTITY`、`recommended_action=CHOOSE_ANOTHER_DESTINATION`；
+- `POST /api/v1/catalog-hydrations {"query":"云和县"}` → **202 / 0.03 s**，带 `fingerprint`、
+  `catalog_schema_version=catalog-v1`、`readiness_policy_version=…`、`retry_after_ms=1000`、`reused=false`
+  ⇒ **R8 的"受理 ≤1s、不绑前台"这一半是达标的**；
+- 但作业之后**每 3 秒读一次、连读 76 次（228 s）**始终是
+  `state=UNAVAILABLE phase=DISCOVERING_POIS outcome=NO_REGISTERED_SOURCE provider_status=null`；
+- 库里 `places` 仍然只有 `CNX-DEMO 8`、`provider_key` 只有 `mock-city` ⇒ **一个真 provider 实体都没长出来**。
+
+**我的判读（写清楚哪些是我证的、哪些是推的）**
+- 证到的：**身份未解析 ⇒ 冷链根本没有"注册源"可走**，于是它以 `NO_REGISTERED_SOURCE` 诚实拒绝——
+  这是 R10（哈希不是身份）与 #4（真数据长出来）之间**直接的因果链**，不是我原先猜的"provider 打不通"。
+- 推的（**待验，别当结论**）：注册源与 canonical id 绑死 ⇒ **R10 不修，贡山以外的大部分县都进不了冷链**；
+  但贡山有实测成立的 canonical identity + extent（B 的 ORD-0092/0109 数据），所以仲裁"先贡山、云和县留 CASE4"的排序是对的。
+- **我这次的量具错也记一下**：我第一版把 `UNAVAILABLE` 不当终态，傻等了 228 秒——
+  它其实就是**终态的诚实拒绝**。所以"作业永不结束"这条**不成立，我撤回**；成立的是"拒绝得早、但 UI 层没人会看到这句话"。
+- 顺手暴露的一条实现坑（给 C/F）：`stay_generation_operations` **没有 `operation_id` 列**（我 SQL 直接炸），
+  说明响应体里的 `operation_id` 与库内列名不同源——契约对差（ORD-0123）请把它记进去。
+
+**下一步**：同一脚本第二枪打**贡山独龙族怒族自治县**（`live_checks/dod4_gongshan.txt`），
+把它当作 B（ORD-0148）的 pre-flight：如果贡山也拒绝，我就把"注册源/身份"这一环直接派回 F/C，
+而不是让 B 一个案例一个案例地撞墙。
+
+
+### commander 转录 @2026-09-21 20:3x —— 仲裁 5760530753 回了我要的两个"要不要压"，两处都压，**顺序被它改写了**：#4 现在是产品能力主线，#18 允许继续红
+
+**它给的答案（原文要点，全文 `raw/arbiter_dod_press.md`）**
+1. **#4 真 provider 闭环：要，立即升为当前主线，不等 #18 全绿。** 但不抢已经在修的安全 P0（R13/ORD-0125、g3/裸 500 继续收口）。
+   首个案例选**贡山**（Photon canonical identity + extent 已实测成立），**云和县留作 CASE4**、等 R10 身份修好后走同一条链，
+   "不要选一个会同时被身份 bug 污染的案例"。**#18 可以继续红着**，它不许当 #4/#6/#7/#16 的前置借口。
+2. **#7 实时路由：要开，但不许直接在全量用户主预览上开。**
+   **Stage V1**＝同机 canary/review profile（同 SHA、独立库或一致快照副本、`REAL_CITY_ENABLED=true` + `LIVE_VALHALLA_URL`、
+   启动日志显式 `discovery=LIVE / routing=LIVE`、禁静默回落 mock、N≤20 / cells≤100 分块、自限流、live 失败具名化）；
+   **Stage V2**＝主预览切换要过 **8 条 promotion 门**（连续 ≥10 次无静默 mock、used-edge provenance 100% 真证据不含
+   `SYNTHETIC_DEFAULT`、超时/5xx 有 UI 恢复态、不制造新裸 500、P95 延迟实测、开关 fail-closed、切换前对用户 Journey 做一致快照、
+   切换后先 probe journey 只读验证不触发 reset）。
+   **#7 的最终定义**：只有当**一条正常 SELECTABLE 候选的实际 used edges 全部来自 live 证据**才算过——
+   "环境变量开了"不算、"偶尔返回 200"不算。
+3. 它给的分工：**B 真实 provider/冷链证据；F 契约/门；C 只在明确写域交接后落实现；E/HJ 从用户视角复验但不走 API 捷径。**
+   原话收尾：**"先证明 Anywhere 真的能从零长出来，再把它安全地推广到用户正在用的那台预览。"**
+
+**我据此下的三张单**：**ORD-0148（B，P0）**冷链端到端八硬门（贡山第一案，机器可复跑）；
+**ORD-0149（F，P0，排 0131/0133 后）**把 #7 定义钉成门 + 写 V1 契约 + 列 V2 八门；
+**ORD-0150（C，high，**QUEUED-BLOCKED**）**——等 0149 交接才动产品码，主预览在 V2 门过之前**不切**。
+**DoD 表里的顺序随之改**：#4/#6/#16/#7 上到 #12/#18 前面；但 #5（R13）与 #13（裸 500）不降级，因为它们决定我能不能把 #4 的成果推广到你那台机器上。
+
+
 ### commander 对账 @2026-09-21 20:2x —— ANYWHERE **DoD 18 条逐项对表**（全文 `D:\moodle\_qoder_recovery_20260919\raw\ANYWHERE_DOD_STATUS_2027.md`）：**达标 2、部分 5、未达 8、待我复验 1、达标但有局部缺口 2**
 
 - **达标（我亲测）**：#14 仿真 M1-M4（20:0x 活库一致副本上 15/15 步、C4 承诺原封不动）、#15 北京确定性 golden fixture。
@@ -4975,6 +5052,113 @@ evidence: `review/ord0134-red4.txt`（红基线全文）、`review/ord0134-green
 **给下一位的量具坑**：`TAP()` 用**子串**匹配会咬错元素（我按「行程」结果点中了「打开行程工作台」）——导航类标签一律改**精确 innerText 匹配**；`getByPlaceholder` 在"填完目的地后 placeholder 会随城市改写"的表单上会 30s 超时（不是产品卡死，是我定位串过期了）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0151
+  to: 8c66aa92
+  priority: P0-critical
+  if_head: e9efec6
+  order: |
+    **#4 的堵点被我两枪定位在 Step 0：产品内的"原文→canonical identity"这一步没有真的去问 resolver。**
+    读数（`live_checks/dod4_hydrate_probe.py` + `dod4_gongshan.txt`，副本库、`REAL_CITY_ENABLED=true` + `MODE=live`、3.12.14）：
+    - `云和县` → `unresolved:8fccf2bbf123e3df`；`贡山独龙族怒族自治县` → **`unresolved:aeb41cef3b84ddbb`**；两者 `capability=UNAVAILABLE / NO_CANONICAL_IDENTITY`；
+    - `POST /catalog-hydrations` 受理 **0.02-0.03 s / 202**，**3 秒后** `outcome=NO_REGISTERED_SOURCE`、`provider_status=null`；
+    - 库里 `places` 只有 `CNX-DEMO 8`、`provider_key` 只有 `mock-city` ⇒ **零真 provider 实体**。
+    关键判据：返回的是 **`NO_REGISTERED_SOURCE` 而不是 `REAL_CITY_DISABLED`**（`real_city.py:1169` 那条旗标分支没被走到），
+    而 **Photon 在 09-21 上午对同一个县是直接可解析的（ORD-0099/0109 实测 ~1 s + extent）** ⇒ 不是网络、不是开关，是**产品路径没调 resolver / 调了但结果被丢**。
+    要做：
+    ① 顺着 `GET /api/v1/destinations/capability?query=…` 与 `POST /api/v1/catalog-hydrations` 两条入口，
+      **把"什么时候才会去问 resolver"写成一条明确规则**（现状像"只有已注册 source 才问，而注册要求已有 canonical"，那是**死循环**）；
+    ② 修成：**未解析身份本身就是触发解析的理由**——`PhotonGeocoder`（`integrations/discovery/photon.py:20`，
+      今天仍是 built-but-never-wired，只被 `tests/test_foundation_http_adapters.py:90` 实例化）接进 capability/hydration 两条路；
+      默认 resolver 按 **R1** 走 Photon，Nominatim 只能显式兜底并记 provenance；
+    ③ **一次修两处**：`capability` 与 hydrate 各自算 identity，两处都得改（只修表面会出现"能力说可解析、作业说没源"）；
+    ④ 失败必须是**运行性** reason_code（`DESTINATION_RESOLVER_UNAVAILABLE` / `PROVIDER_TIMEOUT` / `PROVIDER_RATE_LIMITED` 一类），
+      **不许**把"我没去问"报成结构性 `UNAVAILABLE`；resolver 不可达**不许写 hash**（R10 第 6 条）；
+    ⑤ 交一份**能复跑**的 Step 0 证据：`云和县`、`贡山`、一个明显不存在的字符串（如 `zzz不存在的县xq`）三例，
+      分别给出 `canonical_destination_id`、`destination_resolution`、provider observations 计数、耗时、以及"有没有真发 HTTP"的传输层证据。
+    验收：① 三例里至少两例产出 **真 canonical**（provider id + extent + WGS-84 provenance），第三例是**具名运行性失败**而不是 hash；
+    ② `catalog-hydrations` 之后 `NO_REGISTERED_SOURCE` 不再出现在"能解析"的目的地身上；
+    ③ 先红后绿（红读数＝我上面两枪）；④ 一条杀得掉的突变（把 resolver 调用摘掉，门必须红）；
+    ⑤ 全量红集合是 `eef24d9` 14 条基线的**子集**。
+    【边界】不碰 `:4781/:4782/:8693` 与 `_live.db`；不触发 `demo/reset`（R13）；provider 实验用自有副本库/端口；
+    不许把真 AI key 带进实验；**不许为了过门去 mock 出 canonical**。
+    【与 ORD-0150 的关系】这张**排在 0150 之前**：canary 实时路由在没有真 canonical 之前是无本之木。
+  status: DISPATCHED@2026-09-21T20:3x+08 by 494abfd7
+
+CLAIMED: ORD-0148 by SESSION=c01d72a3 @2026-09-21T20:3x（`date` 实读 20:35:44+0800 · tip 按单上 `if_head=e9efec6`，我的只读副本 `pinned_0127/` 正是该 tip；自有副本库 `cold_0148.db` ＋自有端口 **:8587**；`DEMO_MODE=false`、`AI_ENABLED=false`、四把凭据清空；Photon/Overpass 走真 provider，Nominatim 本机 TCP 不可达（Q0 已量）故 anchor 必须有具名来源；不碰 `:4781/:4782/:8693` 与 `_live.db`，不按 `demo/reset`（R13）；首案 **贡山独龙族怒族自治县**，云和县留 CASE4）
+- id: ORD-0148
+  to: c01d72a3
+  priority: P0-critical
+  if_head: e9efec6
+  order: |
+    **仲裁 5760530753 把 #4 升为当前产品能力主线：现在并行做，不等 #18 变绿。**
+    你的车道（B）负责**真实 provider / cold-chain 证据**。首个端到端案例用**贡山独龙族怒族自治县**，
+    **不要拿云和县当第一案**（它同时被 R10 身份 bug 污染，留作 CASE4，等身份修好后走同一条链证明不是特例）。
+    **验收不是"接口都 200"，而是这条证据链完整**：
+    `raw destination text` → Photon canonical identity（真实 provider id + extent + WGS-84 provenance）
+    → Overpass 冷发现（**无 seed、无 mock places**）→ normalized persisted catalog（每个实体带 provider/source identity）
+    → DestinationCapability 从 HYDRATABLE 变成**真实可规划** → 共享 planner 出候选
+    → 候选的 used places **全部来自这次 provider 目录** → used mobility legs 走 hard-eligible 证据 → candidate **SELECTABLE**。
+    八条硬门（逐条要能复跑）：
+    ① 测前先证明该 canonical destination 在库里 **0 预录 places / 0 golden catalog**（给查询与计数）；
+    ② hydration operation 必须**保留 Photon/Overpass 的 provider observations**；
+    ③ 目录实体**不许**是 `mock` / `seed` / synthetic identity 冒充 live；
+    ④ provider 超时允许 PARTIAL，但**不许把"缺失类别"说成"物理不存在"**；
+    ⑤ warm 第二次必须命中 TTL/read gate，**provider call count 明显下降**（给两次的计数）；
+    ⑥ planner 失败必须能区分 catalog insufficiency / mobility gap / temporal gap，**不许再折成 generic validation**；
+    ⑦ 产出 SELECTABLE 的话，逐个 used-place / used-edge **回溯 provenance**；
+    ⑧ 最终交**机器可复跑**的 cold-chain evidence（脚本 + 日志 + 环境四要素），**不只截屏**。
+    【纪律】不碰 `:4781/:4782/:8693` 与 `_live.db`（用户此刻在用）；不触发 `demo/reset`（R13 关闭前禁）；
+    用**自有副本库 + 自有端口**；解释器 3.12.14；凭据全清；**不许拿真 AI key 进实验**；
+    交付写进 `## DELIVERIES`（追加自己那块，`newline="\n"`）。
+    【你手上 ORD-0127 的顺序】先交 0148 的冷链证据（它是任务命根），0127 的 R10 出口继续并行；
+    云和县 CASE4 等身份修复后回来跑，别现在改 hash 表示。
+  status: DISPATCHED@2026-09-21T20:3x+08 by 494abfd7
+
+- id: ORD-0149
+  to: 8ccd71d8
+  priority: P0-critical
+  if_head: e9efec6
+  order: |
+    同一条仲裁令（5760530753）把**契约与门**这一半交给你（F）。两件事，排在 ORD-0131 之后：
+    **一、#7 的最终定义钉成门**（仲裁原话）：
+    > #7 只有当**至少一条正常 SELECTABLE 候选的实际 used edges 全部来自 live Valhalla**
+    > （或契约允许的 hard-eligible 真实路由证据）、**且没有 `SYNTHETIC_DEFAULT` / mock 兜底**，才算过。
+    > "环境变量开了"不算；"Valhalla 偶尔返回 200"也不算——**必须落到一个真实候选的 used edges 上**。
+    所以门要断言：候选 `selectable=true` 时，逐条 used leg 的 `fact_quality ∈ 允许集`（不含 `SYNTHETIC_DEFAULT`），
+    并且 provider 字段指向 live；任何 live 失败必须落成**具名 mobility runtime/gap**，不许假成功。
+    **二、把 Stage V1「canary/review profile」的形状写成契约**（实现由 C 在写域交接后做，你不要自己改产品码）：
+    同一 SHA；独立库或 `_live.db` 的**一致快照副本**；`CITYNEXUS_REAL_CITY_ENABLED=true` +
+    `CITYNEXUS_LIVE_VALHALLA_URL=<live endpoint>`；**启动日志显式 `discovery=LIVE / routing=LIVE`**；
+    **禁止静默回落到 mock**；矩阵 **N≤20、单请求 cells≤100 分块**（Valhalla 那句报错文案说 "locations" 但按 cells 算，
+    预检别照文案写）；明确并发限流/退避（**公网 Valhalla 没有任何限速响应头**，只能自限）；
+    并列出 **V2 promotion 的 8 条门**（①canary 连续 ≥10 次 live 生成无静默 mock；②used-edge provenance 100% live/frozen
+    hard-eligible、不含 `SYNTHETIC_DEFAULT`；③Valhalla timeout/5xx 时 UI 有具名恢复态；④不制造新裸 500；
+    ⑤P95 额外延迟有实测；⑥开关 fail-closed，关闭时不许把 mock 冒充 live；⑦切换前对用户 Journey 做一致快照；
+    ⑧切换后先用 probe journey 只读/新建验证、不触发 reset）。
+    验收：每条门都要有先红读数（今天北京候选的 used legs 全 `EXPLICIT_FROZEN_FIXTURE`、快照里 184/240 是
+    `SYNTHETIC_DEFAULT` —— 这就是"门看不见合成值"的现成红基线）；一条杀得掉的突变；
+    全量红集合按 **ORD-0131 的 C 项口径（必须是 `eef24d9` 14 条基线的子集）**。
+  status: DISPATCHED@2026-09-21T20:3x+08 by 494abfd7（排在 0131、0133 之后）
+
+- id: ORD-0150
+  to: 8c66aa92
+  priority: high
+  if_head: e9efec6
+  order: |
+    仲裁令：**"C 只在明确写域交接后落实现"** ⇒ 本单**必须等 ORD-0149 的契约落地**再动手，别抢跑。
+    要实现的只有 Stage V1：**同机 canary/review profile**，不是把用户主预览全量切 live。
+    - 新建/启用一个 review profile：`CITYNEXUS_REAL_CITY_ENABLED=true`、`CITYNEXUS_LIVE_VALHALLA_URL=…`，
+      启动日志打 `discovery=LIVE / routing=LIVE`（**R6 要的可见性**）；
+    - **live 失败不得静默回落 mock**（今天的 `REPLAY_FALLBACK` + Python 异常类名当 reason 那形状必须收敛成具名 reason_code）；
+    - 矩阵分块按契约：N≤20、单请求 cells≤100、自限流与退避（公网无速率响应头）；
+    - **只对专用 probe journey / canary session 生效**，当前用户主预览（`:8693` + `_live.db`）不动；
+      主预览的切换要等 V2 的 8 条 promotion 门（列在 0149）全过，由我按门放行；
+    - 切换前必须对用户 Journey 做**一致快照**（`sqlite3.backup`，不是裸拷——今天裸拷丢了 WAL 害我误判过一次），
+      并**不许触发 `demo/reset`**（R13）。
+    验收：canary 上跑一次 live 生成，给出 used-edge provenance 全 live 的证据 + P95 延迟实测；
+    全量红集合**不得多于 `eef24d9` 基线**（子集口径）。
+  status: QUEUED-BLOCKED@2026-09-21T20:3x+08 by 494abfd7（等 ORD-0149 契约交接；先做 ORD-0125 / 0112）
+
 CLAIMED: ORD-0147 by dc19d662（车道 E · 验收方 · 本机钟 date=20:2x · tip 实测 2d3b3fb；实验树 tree6=git archive 2d3b3fb 导出，权威树 0 改动；自有端口 :8522-:8523 + 自有库复制件 _runF.db/_runG.db；不触发 demo/reset；不碰 :4781/:4782/:8693 与 _live.db；解释器 CityNexus/.venv 3.12.14、AI off、四把凭据 unset）
 ：先交 0112 未落地时的红基线（两次复跑逐条一致性 + 分母），并用现有唯一兜底（twin）做一次"摘掉兜底必须回红"的量具有牙证明；③ 的正式突变等 C 落地后跑。
 - id: ORD-0147
@@ -6241,6 +6425,14 @@ R1~R8 收到，`53fe8e8` 先交你点名的那半条 R5：**`details=null` 已�
 **三件没做的我先摆明，不悄悄排队**：① **R1 解除"不许换默认解析器"我还没执行**（默认 → `PhotonGeocoder`、Nominatim 仅显式配置、resolver provenance 分开记）——它动 provider 层与 ORD-0099 的形状，我把它放进 0122 一批做；你要它提前说一句。② **两份仲裁原文我这轮没读**（`raw/contracts_anywhere_v1.openapi.yaml`、`raw/docs_anywhere_provider_policy.md`）：这次只改你消息里语义已冻结的 R5 那一条，其余以原文为准，我开工 0111/0121 前先读再动。③ 我自己那 2 条 abandon 合跑红仍未收（轮换红 ⇒ 生命周期竞态）。
 
 队列确认：**0111 + 0121（同批）→ 0112 → capability 读现有目录修正（已交 `766932f`，等你回我那台的读数）→ 0114 → 0122 → 0095-1 收尾（含 g9b 与 §17C 互斥待你裁）→ 0115 → 0098 → 0068**。
+
+ORD-0125 开工前两条实测（都在 `2d3b3fb`，只读；开工副本 `D:/moodle/_qoder_ord125_wt` @`2d3b3fb` 已建好、自有库、不指 `_live.db`）：
+
+**① 破坏路径不止那一个端点**：`services.py:167-168 seed_demo()` 的**第一行就是 `reset_all(session)`** ⇒ 任何调用 seed_demo 的链路都会先无范围删 30+ 表，不只有 `POST /demo/reset` 这把按钮。所以"把 reset 端点做安全"是**不够**的：作用域必须落在 `reset_all()` 本身（或由 seed_demo 改走"恢复到 seed 态"而不是"删干净再播种"）。我按你 R13 的口径实现：**修的是删除范围，不是按钮**。
+
+**② 现有的那道 profile 判断不构成安全边界**：`main.py:1916-1921` 已经写了"非 `CITYNEXUS_DEMO_MODE=true` 就拒，且回 `details.tables_protected=true`"——**但预览台自己就是带着这个 flag 跑的**，所以公网浏览器点一下照样删（19:5x 那次 200 就是这么来的）。⇒ 单靠现有 flag 不满足你要的"shared preview profile 下端点永远被拒 / 只有 dedicated demo profile 才允许执行"。我的做法：新增 **`CITYNEXUS_DEMO_RESET_ENABLED=false` 默认 fail-closed**（与 `DEMO_MODE` 正交：前者是"这台机器允不允许清库"，后者是"这台机器演不演 demo"），profile 判定只看前者；这条也正是你说的"不许拿按钮藏起来当安全边界"的代码形式。
+
+下一条口径我记下了：**不为了让全量转绿改断言或 skip**，全量一律按 **`eef24d9` 那 14 条基线的子集**判；#18 的门禁数字可以继续红，但我不拿它当不证 #4/#6/#7/#16 的借口。0150 我不抢跑，等 F 的 0149 契约落地后由你写明写域交接再动。
 
 ACK: 8c66aa92 接 ORD-0125（止血，排在我一切单之前）@2026-09-21 20:5x 本机钟 —— 三件先说清，不让你猜我在哪：
 
