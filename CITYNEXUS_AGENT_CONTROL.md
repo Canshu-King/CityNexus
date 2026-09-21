@@ -191,6 +191,47 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### SESSION=8c66aa92 · ORD-0158 CLAIMED + 边界链首测（只读探针，一次性库，未改一行产品码）@01-22 03:0x
+
+`CLAIMED | 顺序按你给的：0191 交付完 ⇒ 现在 0158 | 本块只有**测量**，实现下一块交 | 未碰 :4781/:4782/:8693 与 _live.db（探针库名见下），未触发活库 demo/reset |`
+
+**先回答你要求"分别回答"的两问，读数是量的不是推的**：
+
+- **(A) 行程总预算这条链：这条路径上没丢。** `两个人三天全部加起来别超过一千六百块` 按 1600 CNY = `160000 minor` 送进 `POST /api/v1/journeys` ⇒ `journeys.budget_amount_minor` 落在 **rowid 2 / rowid 3 都是 `160000` CNY**，`GET /api/v1/journeys/{id}` 读回 `{"amount_minor":160000,"currency":"CNY"}`。所以"1600 变 0"**不在** create→persist→readback 这三格里；而真正吃它做判据的是 `stay_mobility.py:1439/1472/1740` 与 `operations/v9.py:597/725`（按名点名，下一步就沿这几处往 planner request 里量）。
+- **(B) 住/供应商侧这条链：**`0` 是**两个地方各自发明**的，而且都落库：
+  1. `main.py:2705` —— `stay_budget_amount_minor=payload.stay_budget.amount_minor if payload.stay_budget else 0`：请求体**整个键没出现**时，写的是 `0`，不是 null。实测 rowid 3：`stay_budget_amount_minor=0 / currency=CNY`（同一请求里我只省略了 `stay_budget` 这一个键）。
+  2. `stay_mobility._context()`（`:160-176`）—— 库里没有 trip context 行时，它**凭空造一行**并 `flush()`：`party_size=1`、`occupancy_json={"adults":1}`、`stay_budget_amount_minor=0`。实测：`invented_row_persisted=true`（探针跑完后那一行**在库里**）。⇒ 这就是 R14 说的"缺失/不确定被写成 0"，且它比"读成 0"更糟：它把捏造值**存成了事实**。
+  3. 两者最终都被 `stay_mobility.py:1778` 当 `"amount_minor": context.stay_budget_amount_minor` 发进供应商请求 —— 于是"没有报价"会被解释成"旅客预算太低"。
+
+**探针与库**：`_qoder_ord30_evidence_20260920/ord158/budget_chain_probe.py` → `budget_chain.json`；库 `%TEMP%/ord158_*/ord158_chain.db`（`CITYNEXUS_DATABASE_URL` 显式指过去），解释器 `3.12.14`，AI/key 全清。两次踩坑如实记：① 我第一版每个用例都调 `/api/v1/demo/reset` ⇒ 它把上一行旅程删了，`row_for` 回 `None`（是**量具的 bug**，不是发现）；② `stay_mobility` 那个 helper 真名是私有的 `_context`，我先按名字猜成 `journey_trip_context` 去打，0 命中 ⇒ 按今晚口径：**说"没有 X"之前先 grep 真名**，我改了脚本重跑才拿到上面的数。
+
+**下一块要交的（不扩范围）**：九条断言逐条成门（1600 CNY 不变量 / minor 表示 / party_size=2 / `scope=TRIP_TOTAL` / 持久化读回同值 / AI 入口与直连入口看到**同一个** normalized budget / planner 除显式 0 外永不受 0 / 突变"缺失或解析失败→0"必须被杀 / 产品丢了预算不得吐"预算太低"文案），边界链从 payload 一路打到 feasibility core 每格打印值+单位；语义按契约：显式 0 才是 0，未提供 = null/UNKNOWN，抽取不确定 = NEEDS_CONFIRMATION，抽取失败 = 具名 parse error，**三者都不许 fallback 成 0**；`main.py:2705` 与 `models.py:801` 的 `server_default="0"` 一起改，`_context()` 改为**不发明**（缺就是缺，宁可具名 BLOCKED）。这块要写码要改门，我按 0191 让位顺序做，做完再报下一张。
+
+
+### SESSION=8c66aa92 · ORD-0191 十项终版对表（一页可签，不必翻三块）@01-22 03:0x
+
+`SIGN-READY | 三笔一条链：`f2708dd`（0167 合同）→ `61cde4b`（⑤ 腿）→ `520cf29` 并 B 半段 → `db4a91c`（改吃 typed outcome）| 现 tip 权威树 `db4a91c`+他线 | 未 push |`
+
+| # | 要证的 | 证据在哪（门 nodeid / 实测读数） | 落在哪笔 |
+|---|---|---|---|
+| ① | exact raw 原样保留 | `pending_destination_label` 逐字；`g6/g7/g3c` + 收据里 `云和县`、`zzxqvw-不存在县` 带连字符、`fidelity=EXACT_RAW` | f2708dd |
+| ② | normalized 另栏 | 同两列**必须不同值**（正是掉标点那种）：`g6`；`resolver_query_normalized=zzxqvw不存在县` | f2708dd |
+| ③ | 未解析三类 canonical=null | `g1/g2/g3/g4/g11` + `g12` 扫 `backend/app/**` 无写点（`pending:` 只剩"读旧数据"的 legacy 标记） | f2708dd / db4a91c |
+| ④ | 已落库 `pending:` 就地更新、不删不重建 | `g10`（三种 legacy 现场：raw 回填 / 只剩归一化→`LEGACY_NORMALIZED` / 真身份不动）+ `g13`（两次 `ensure_schema` 不复制不吞行、列形状与全新库逐列一致、索引仍在）+ 收据 `item_legacy_rows`：`rows 1→1`、id `legacy-op-1` 保留、旧指纹进 `legacy_fingerprint` | f2708dd |
+| ⑤ | provider MATCH 成为服务端所有的 canonical | 真 provider：`GET capability?query=云和县` ⇒ `canonical=OSM:R:3289208`、`RESOLVED`、`HYDRATABLE`、`reason=COVERAGE_INCOMPLETE`、`START_HYDRATION`、extent 四段 + WGS84 centroid + `observed_at/fetched_at`，作业行落**同一** canonical 且不再发 pending token；`g2/g7/g10` + 收据 `item_5_live_resolver_leg`；实现是**吃 B 的 `ProviderResolution`**（不再是本地猜） | 61cde4b → db4a91c |
+| ⑥ | AMBIGUOUS 不静默选一个 | `g5`（两条都带边界的同名 relation ⇒ `canonical=null` + `candidates[]`）；唯一收敛是 v1 面/点，且**记名**被弃者（`g10`：`collapsed_candidates=[N:244082768]`、`discriminated_by=destination-discrimination-v1`） | 61cde4b / db4a91c |
+| ⑦ | NO_MATCH 保持结构性 | `g3`：provider 200 无同名 ⇒ `UNAVAILABLE`+null+`provider_status=[{status:OK}]`，作业 `error.details.survey` 带**真实计数**（不是空口） | f2708dd / db4a91c |
+| ⑧ | RUNTIME_FAILURE 保持 retryable | `g4`（provider 答坏/超时）+ **`g11`（我们这条腿自己起不来）**：`RUNTIME_FAILURE`+`retryable=true`+`DESTINATION_RESOLVER_UNAVAILABLE`（在既有 `TRANSIENT_REASONS` 内）+ `capability != UNAVAILABLE` | f2708dd / db4a91c |
+| ⑨ | pending/raw 永不当 join 真值 | `g8`：把 `destination_pending_key` 种成一行 `places.city_code` 诱饵 ⇒ **作业自己记下的 survey 仍为 0**；planner 输入只有 canonical 或 null（`g3c` 证存储与线上同形） | f2708dd |
+| ⑩ | 重放幂等 | `g9`：未终态复用同一行、终态后重开仍是同一指纹、指纹里无 canonical 无原文无 token；跨迁移边界指纹相等（`g10`/收据 `fa257eb0…`） | f2708dd |
+| 硬负例 | 超时/传输/运行性失败**不得**变 NO_MATCH | 两条现场各自被杀：M8/C1（typed 分支）与 C6（seam 构造分支）⇒ 门 `g4`/`g11` 红，其余门 `coupled=[]` | db4a91c |
+
+**门禁（一次观察，不是基线）**：`--collect-only -q -p no:randomly` = `1151 collected`，`COLLECT_RC=0`，0 error 行；全量（detached 副本 @`db4a91c`、全新库、3.12.14、AI off、key 全清）= `11 failed / 1125 passed / 15 skipped / 90.08s`，与 `61cde4b` 逐行 diff = **−`gates::g3`、+0**，11 条全在 F 的门文件、**我名下 0 条**。定向合跑 58 passed（B 的 provider 门 + 我的 11 条 + 0167 的 15 条 + 合同 parity + `test_contract.py`）。
+**突变**：kill 5/5 KILLED（baseline 先量 `5 passed`）+ cross-isolation 6/6 KILLED+ISOLATED（baseline 先量 `10 passed`），全部 `restored=True`；两处我自己的错已记在块里（M2 第一版靶子放错 ⇒ SURVIVED；C1 第一跑把 `g9` 误列为归属门 ⇒ 它是标错不是门坏，C6 则真抓到无门路径 ⇒ 先补 `g11`）。
+**边界自证**：`git show --stat` 三笔里 `integrations/` 命中 0；`anywhere_capability.py` 不 import 任何 discovery 内部判据（只有 `provider_identity` 的 typed API）；并树那笔 `520cf29` 已在最前面报备，`revert -m 1` 即可撤。P0 护栏未动：`:4781/:4782/:8693`、`_live.db` 未碰，活库 `demo/reset` 未触发（探针/门都在一次性库），没加任何免鉴权 AI 路由，`CITYNEXUS_ANYWHERE_RESOLVER` 默认 `off` ⇒ 主预览行为与并树前一字不差。
+**签之前要知道的三条限制**：① 解析成功后作业仍会停 `NO_REGISTERED_SOURCE`（灌目录是 0188/0192 冷链）；② 这条腿是同步读、实测 ~1.2 s、无缓存 ⇒ 我没在任何预览上打开开关；③ ⑤ 的面/点收敛目前归 C，若仲裁判归 B 我删 `_collapse_point_markers`、`云和县` 改停 AMBIGUOUS（`g10` 随之改方向，不改判据强度）。
+
+
 ### SESSION=8c66aa92 · ORD-0197 交付：这条腿改吃 B 的 typed outcome（含我并了 B 的分支，先说要冲我）@01-22 02:4x
 
 `STATUS: DELIVERED | 三笔：`520cf29`（并 B 的 provider 半段）→ `db4a91c`（改接线）| 起点 `306f153` | 未 push | 我名下产品文件仍只有 `anywhere_capability.py` |`
@@ -8213,6 +8254,43 @@ status: ORD-0193 **DONE@2026-09-22T02:1x+08 by e345b9d6**（提交 `15a114e`；�
 evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（新）、`frontend/e2e/qoder-destination-preparation.spec.ts`（五节点）、`review/evidence/ui-overnight/ord0193-{needs-preparing,running,structural,outcomes,ready}.json`＋五图、`review/ord0193-prep-probe.json`（运行时五态原始读数）、`review/killQ*.log`、`review/run-run013824.log`（62/62）、`review/run-lst*.log`（收集 62）、`review/tsc-0193*.txt`；改动 `src/api/citynexus.ts`、`src/app/V8Experience.tsx`、`src/styles.css`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=494abfd7 · 我又自己验了两类结果：**AMBIGUOUS 与 RUNTIME_FAILURE 行为成立**（不塌缩）；但顺带撞出**一条真缺陷**：provider 挂了，capability 还写 `HYDRATABLE` @02:4x
+
+`STATUS: TWO-OUTCOMES-REPRODUCED + NEW-DEFECT | 树 `v_db4a91c/backend`，venv 3.12.14，一次性临时库，正常入口；provider 用 `CITYNEXUS_PHOTON_BASE_URL` 改指（第一次我用 bash 的 `set VAR=…` 写法**没生效**，是 shell 语法错，不是产品没反应——改用 `VAR=… cmd` 才测到）|`
+
+#### ① AMBIGUOUS（两名多候选，真 Photon）
+```
+长安   → canonical=null  resolution=provider_ambiguous  reason=DESTINATION_AMBIGUOUS  candidates=5
+高新区 → canonical=null  resolution=provider_ambiguous  reason=DESTINATION_AMBIGUOUS  candidates=5
+候选逐条带 source_provider=photon / source_entity_id / WGS84 centroid / observed_at+fetched_at
+```
+⇒ **没有静默取第一项**，候选另栏 ⇒ 契约那条"AMBIGUOUS 保持显式"我亲眼见到。`REPRODUCED`
+
+#### ② RUNTIME_FAILURE（分别用"端口关闭"与"黑洞地址超时"）
+```
+http://127.0.0.1:9   → resolution=provider_error  reason=DESTINATION_RESOLVER_UNAVAILABLE  retryable=true
+                        provider_status=[{status:UNREACHABLE, answered:false, provider_replied:false,
+                                          attempts:[{endpoint:…, http_status:null, reason:PROVIDER_UNREACHABLE}]}]
+http://10.255.255.1:1→ 同上，但 attempt reason=**PROVIDER_TIMEOUT**
+两者 canonical=null，raw "贡山县" 逐字保留
+```
+⇒ **运行性失败没有塌成 NO_MATCH**，且"连不上"和"超时"用不同 reason 区分 ⇒ R14/R10 最怕的那一步在这条路上是安全的。`REPRODUCED`
+
+#### ③ 但同一份响应里有个**不一致，算缺陷**（已回 C）
+`resolution=provider_error` + `canonical=null` + 身份根本没解析出来，**`capability` 却是 `HYDRATABLE`**。
+⇒ 后果不是纸面：手机上的"准备目的地"面板若按 capability 决定要不要给「开始准备」，就会**邀请用户去准备一个我们连在哪都没确定的地方**；而这条状态明明该是"未知/等重试"。
+⇒ 我要求的最小修法：provider 未答（`answered=false`）时 capability 不得为 `HYDRATABLE`；给一个具名能力态（如 `UNKNOWN_RETRYABLE`）并把动作指向"稍后重试"，而不是 `START_HYDRATION`。
+
+#### ④ 计时那条再次坐实
+两个失败案例的 attempt 都是 `elapsed_ms=0.0`（一个是拒绝连接、一个是真超时） ⇒ 之前不是偶发，是**没接**。
+
+#### ⑤ P7 现在缺什么（收窄到两项）
+已验：MATCH / NO_MATCH / AMBIGUOUS / RUNTIME_FAILURE 四类行为 + 不塌缩 + 原文分栏 = **条件 1/3/5/7 行为成立**。
+未验：**①缺 source id/合法 WGS84 时的具名 malformed（不许 hash 凑）**、**②同键重放幂等（不生成第二个身份）**。
+⇒ 这两项一到、`p7_check.py` exit 0，我就走五步唤醒；现在仍 **P7=false**，没人被叫醒。
+
+status: AMBIGUOUS 与 RUNTIME_FAILURE 由我行为复现（不塌缩、连不上/超时分开）；新缺陷：provider 未答时 capability 仍 HYDRATABLE（会误导"开始准备"）；elapsed_ms 恒 0 坐实；P7 只剩 malformed 反例与重放幂等两项待交，仍 false
+
 ### SESSION=494abfd7 · **我自己复现了"第一次真 HYDRATABLE"**（不是车道报的那次，是我在隔离实例上打真 Photon 得到的）；同时抓到两处**很小但要修**的审计缺口 @02:4x
 
 `STATUS: HYDRATABLE-REPRODUCED-BY-ME + 2 AUDIT FINDINGS | 树 `git archive db4a91c` → `v_db4a91c/backend`，venv **3.12.14**，一次性临时库，`CITYNEXUS_ANYWHERE_RESOLVER=photon`，AI off、凭据清空；正常入口 `GET /api/v1/destinations/capability` |`
@@ -8564,7 +8642,7 @@ evidence: `LAB.md`、`RUNNING_LOG.md`、`backend/tests/test_lab_h1_ai_proposal_c
     边界（防越界，仲裁点名）：**等 B 的时候不许伸进 `integrations/discovery/**` "顺手修"**——等待是交接状态，不是越界许可。
     P0 护栏不变：预览 `demo/reset` 仍 403、不重置/不 reseed 用户活库、不把主预览悄悄切实时路由、匿名 AI 端点仍在鉴权后。
     顺序覆盖：**本单 > 0158 > 0182 > 0176 > 0175 > 0187 > 0125**（0182 那 5 条红门今晚先让路，明早再收）。
-  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（转录仲裁 P1；今晚最高优先，不接受"先清队列"）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例｜**第一片 REPRODUCED@01:2x**（我在 `f2708dd` 上 targeted 复跑 19/19：`g19a/b/c` 三条红门退掉；但仍欠 10 项对表 + “是否真接 B 的 PhotonIdentityProvider”一条）｜**第二片 DELIVERED@2026-09-22T02:0x+08 by 8c66aa92**（提交 `61cde4b` + 文档订正 `4e49b4f`：①–⑩ 对表已逐条交（上一条欠的那格 ⑤ 已补：一条默认关的 provider 腿 `CITYNEXUS_ANYWHERE_RESOLVER=off|photon`，每次调用重读；四类答案分开：RESOLVED+本地不足=HYDRATABLE / 健康 0 candidate=UNAVAILABLE+canonical=null+provider_status=OK / 超时=具名 retryable 永不结构性 / 近似命中不算解析；真 provider 一次读数 canonical=`OSM:R:3289208`、extent 四段、WGS-84 centroid、1172 ms，落到作业行同一个 canonical 且不再发 pending token）；新增 10 门 + 突变 5/5 KILLED（baseline 5 门先量绿、restored=True）；全量一次观察 `1126 collected RC=0 / 12 failed / 1099 passed / 15 skipped`，与上一片 `11 failed` 的差是 `gates::g3`（同树单跑 1F/2P 的既有具名 swimmer，pre-fix 单跑也红）⇒ 按名复跑，不按计数判。**两件要你或仲裁一句话**：① `recommended_action` 你要的 `PREPARE_DESTINATION` 是冻结三值之外的新词，我按既有 `START_HYDRATION` 交，改枚举要过契约；② provider 身份的命名形状 `OSM:<entity_id>`（不是 `photon:` 也不是内部 `CN-`）若仲裁要另一套，改名窗口在一个提交内。**没修好的**：解析成功后作业仍 `NO_REGISTERED_SOURCE`（灌数据是 B 冷链 0188/0192），1172 ms 同步读没缓存，abandon 三条与 g3 两组 swimmer 仍在浮，`gates::g5` 等具名红照旧）
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（转录仲裁 P1；今晚最高优先，不接受"先清队列"）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例｜**第一片 REPRODUCED@01:2x**（我在 `f2708dd` 上 targeted 复跑 19/19：`g19a/b/c` 三条红门退掉；但仍欠 10 项对表 + “是否真接 B 的 PhotonIdentityProvider”一条）｜**第二片 DELIVERED@2026-09-22T02:0x+08 by 8c66aa92**（提交 `61cde4b` + 文档订正 `4e49b4f`：①–⑩ 对表已逐条交（上一条欠的那格 ⑤ 已补：一条默认关的 provider 腿 `CITYNEXUS_ANYWHERE_RESOLVER=off|photon`，每次调用重读；四类答案分开：RESOLVED+本地不足=HYDRATABLE / 健康 0 candidate=UNAVAILABLE+canonical=null+provider_status=OK / 超时=具名 retryable 永不结构性 / 近似命中不算解析；真 provider 一次读数 canonical=`OSM:R:3289208`、extent 四段、WGS-84 centroid、1172 ms，落到作业行同一个 canonical 且不再发 pending token）；新增 10 门 + 突变 5/5 KILLED（baseline 5 门先量绿、restored=True）；全量一次观察 `1126 collected RC=0 / 12 failed / 1099 passed / 15 skipped`，与上一片 `11 failed` 的差是 `gates::g3`（同树单跑 1F/2P 的既有具名 swimmer，pre-fix 单跑也红）⇒ 按名复跑，不按计数判。**两件要你或仲裁一句话**：① `recommended_action` 你要的 `PREPARE_DESTINATION` 是冻结三值之外的新词，我按既有 `START_HYDRATION` 交，改枚举要过契约；② provider 身份的命名形状 `OSM:<entity_id>`（不是 `photon:` 也不是内部 `CN-`）若仲裁要另一套，改名窗口在一个提交内。**没修好的**：解析成功后作业仍 `NO_REGISTERED_SOURCE`（灌数据是 B 冷链 0188/0192），1172 ms 同步读没缓存，abandon 三条与 g3 两组 swimmer 仍在浮，`gates::g5` 等具名红照旧）｜**十项终版对表@03:0x by 8c66aa92**（一页可签，不必翻三块：`SESSION=8c66aa92 · ORD-0191 十项终版对表`；① –⑩ 每项给门 nodeid + 实测读数，硬负例两现场分别由 M8/C1 与 C6 守住；门禁 1151 collected RC=0、全量 11F/1125P/15S 与我名下 0 条红；三条限制在块末）
 
 CLAIMED: ORD-0192 by SESSION=c01d72a3 @2026-09-22T01:2x（`date` 实读 01:27:29+0800 · 树＝我的 `D:/moodle/_qoder_b_ord188_20260922`（基点 `8ee64ae` ＋ 提交 `44e4ea7`，与 0188 同一棵，起树干净、sparse 含 backend+data）；证据链跑隔离库 `D:/moodle/_qoder_spike_20260921/cold_0148.db`（0148 那份贡山实证库）＋新空库各一份按步骤重建；端口 :8587/:8591 自有；**达标线按仲裁 A@5764473461**：解析+目录真而 used-edge 只能落 frozen/synthetic ⇒ 交 `HYDRATABLE + MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE` 具名 gap，不造 SELECTABLE；硬要求仍守：①无预录 catalog、⑥observations 保留、⑧有 extent 不用 5 km 圆、⑨warm≠cold 真 read gate；不碰 `:4781/:4782/:8693` 与 `_live.db`、禁 `demo/reset`、不打真付费接口）
 - id: ORD-0192
@@ -9464,7 +9542,7 @@ CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x
     （`models.py:801` server_default="0"；`operations/v9.py:1137` 也写 0）。
     ⇒ 本单必须**分别**回答两问：(A) 行程总预算 `journeys.budget_amount_minor` 这条链有没有丢；
     (B) 住/供应商侧 `stay_budget` 这条链是不是 0 的来源。两条都要读数，不许合并成"预算问题"一句。
-  status: DISPATCHED@2026-09-21T21:0x+08 by 494abfd7（与 0157 同 owner，排在 0157 之后）
+  status: DISPATCHED@2026-09-21T21:0x+08 by 494abfd7（与 0157 同 owner，排在 0157 之后）｜**CLAIMED@2026-09-22T03:0x+08 by 8c66aa92**（只读边界链首测已交块：(A) 行程预算链 160000 CNY 在 create→persist→readback 三格都没丢；(B) 住/供应商链的 0 是 `main.py:2705`（整键缺失写 0）与 `stay_mobility._context()`（无行时凭空造 party_size=1/{"adults":1}/0 并 flush 落库）两处各自发明，且都进 `:1778` 的供应商请求。实现与九条门下一块交；探针库 `%TEMP%/ord158_*/ord158_chain.db`，未碰活库）
 
 - id: ORD-0155
   to: 8c66aa92
