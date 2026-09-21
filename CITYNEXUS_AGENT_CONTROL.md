@@ -7525,6 +7525,25 @@ BASELINE@8ee64ae = 交集 14（Commander 3 次 ∩ 与 lane F 2 次 ∩ 相同�
 
 status: ORD-0194 ACCEPTED 且升档 REPRODUCED（1163 collected、9 passed、test_7/test_8 双绿，全部 targeted）；基线与 lane F 合并为交集 14 / 区间 14–17；交叉突变仪器仍 SELF_REPORTED 待我复跑
 
+### SESSION=494abfd7 · **仲裁已拍 A**（`5764473461`）：今晚的达标线 = **把真链跑到第一个真实阻塞并准确命名**，不是凑一条 SELECTABLE @01:1x
+
+`STATUS: SCOPE-DECIDED-BY-ARBITER-NOT-BY-ME | 我已把裁定原文写进 ORD-0191/0192 的 status 行并转给 B/C，不让他们猜 |`
+
+**裁定四条硬规则（原样转录，不加我的判断）**
+1. 解析+目录链真实打通、但 used-edge 只能落到 `EXPLICIT_FROZEN_FIXTURE` / `SYNTHETIC_DEFAULT` ⇒ 今晚里程碑按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** **达成**；
+2. **不造 SELECTABLE**；**不把用户主预览切到实时 Valhalla**；
+3. 力气转投 **B→C 交接、贡山证据收口、云和第二例**；
+4. **canary 实时 Valhalla 只算后续/加分验证，不是今晚达标前置。**
+> 今晚的成功标准是"把真实链跑到第一个真实阻塞并准确命名"，不是为了凑 SELECTABLE 再引入一个高变量路由实验。
+
+**指挥链含义（我按此改派，不再自作主张）**
+- 我上一轮"我倾向 A"的猜测被采纳，但**决定权在裁定**——这正是我拒绝在夜里自己拍的原因：如果我拍了 A 而实际要 B，全晚的力气会放错地方。
+- **ORD-0192（B）的第 12/13 步**今天走 13 步里的 **13**：证据不足 ⇒ 交**具名 gap**，而不是把 mock 边说成可用。这与我今晚给 D 的"过渡件不得冒充正式合同"是同一件事的两侧。
+- **风险仍在**：`SYNTHETIC_DEFAULT` 出现在快照里（184/240）是**已知现状**，所以 A 这条几乎肯定会被触发；**触发不是失败**，晨报要按"链通到哪一步、卡在哪、命名是否准确"来写，而不是按"有没有 SELECTABLE"。
+- 这也回答了我为何**不**在夜里推动实时路由 canary：高变量实验会污染 B→C 交接的证据，而交接本身才是今晚真正的产出。
+
+status: A 裁定入账并写进 ORD-0191/0192 status 行；B/C 已按此改派；晨报里程碑口径改为"跑到第一个真实阻塞并准确命名"
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 - id: ORD-0191
   to: 8c66aa92
@@ -7542,7 +7561,7 @@ status: ORD-0194 ACCEPTED 且升档 REPRODUCED（1163 collected、9 passed、tes
     边界（防越界，仲裁点名）：**等 B 的时候不许伸进 `integrations/discovery/**` "顺手修"**——等待是交接状态，不是越界许可。
     P0 护栏不变：预览 `demo/reset` 仍 403、不重置/不 reseed 用户活库、不把主预览悄悄切实时路由、匿名 AI 端点仍在鉴权后。
     顺序覆盖：**本单 > 0158 > 0182 > 0176 > 0175 > 0187 > 0125**（0182 那 5 条红门今晚先让路，明早再收）。
-  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（转录仲裁 P1；今晚最高优先，不接受"先清队列"）
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（转录仲裁 P1；今晚最高优先，不接受"先清队列"）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例
 
 - id: ORD-0192
   to: c01d72a3
@@ -7563,7 +7582,7 @@ status: ORD-0194 ACCEPTED 且升档 REPRODUCED（1163 collected、9 passed、tes
     冷跑 4 分钟可接受，但必须同时满足：验收快 / 作业 durable / 用户可离开再回来 / phase 真实 / 完成**不自动改行程** / 产品给出清楚的"去规划"下一步。
     写域仍是你的 `integrations/discovery/**` + 冷链证据与自有库；**产品真值持久化归 C**。
     禁令：只用自有副本库 + 自有端口（:85xx）；不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`；不打真付费接口。
-  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P2 冷链 13 步；仲裁指定首选城市=贡山，第二=云和）
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P2 冷链 13 步；仲裁指定首选城市=贡山，第二=云和）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例
 
 - id: ORD-0193
   to: e345b9d6
@@ -7663,6 +7682,7 @@ status: ORD-0194 ACCEPTED 且升档 REPRODUCED（1163 collected、9 passed、tes
     另外仲裁明确赞成我补的过渡锚：**ORD-0182 上线后若 `TEMPORARY-CLIENT-FILTER-ORD-0180` 仍在，门应红**（过渡件没拆干净）。
     顺序：ORD-0171/0174 已签收 ⇒ 本单接在后面；ORD-0172 的四个结构化字段门与 ORD-0170 的禁网哨兵同批文件，一并交。
   status: DELIVERED@2026-09-22 00:13:33 +0800 by 8ccd71d8（七条约束逐条落门与契约：分支 agent/f-ord184-20260921 @ 4092260，未 push；产品码 0 改动。新增三条独立证明元门 —— g0 provenance（拿不到 sha 就写 UNKNOWN，不许猜）、g0b 不复制实现算法（ast 扫 import + 枚举必须是合同字面量，且它自己杀得掉：临时 import 产品过滤函数 ⇒ 该门红）、g0c 过渡锚（TEMPORARY-CLIENT-FILTER-ORD-0180 未实现时报无结论、实现后仍在则红）；g13_meta 与 d10 同形状（共享仪器双向自证）。15 条门今天 5 红 / 11 绿，五条红全 implementation-not-yet 归 C。契约 .11 → .12 新增 division-of-labour-ORD-0184。交付块见下方）｜was: status: DISPATCHED@2026-09-21T24:0x+08 by 494abfd7（分工与七条约束逐字来自仲裁 5763459664 ①）｜**ACCEPTED 出门部分**@00:4x（我复跑 `4092260`：5 failed/11 passed，5 红全为 implementation-not-yet 归 ORD-0182；g0/g0b/g0c 三条元门认可）
+  note@F@2026-09-22 01:11:06 +0800: 门已备好、等 C 的 delivery SHA。我按 P5 只跑 targeted，在**当前 tip** `git archive 107e2db` 上实读 **5 failed / 11 passed**（五条红全 implementation-not-yet，成员与 4092260 同一批）。另：过渡锚门 `g0c` 拿到杀证 —— 伪造'服务端已上线'前提 ⇒ 1 passed → 1 failed，还原逐字节。
 
 ### SESSION=494abfd7 · ORD-0171/0172/0174 **签收**：我自己装了一次突变去验 F 的收据——**两条原本绿的门变红**，还发现它加了一道我沒要求过的元门 @本机钟 23:5x
 
@@ -7833,6 +7853,7 @@ CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x
     你的会话我连着两次投递超时（`CHAT_SESSION_RUNTIME_RECONCILE_TIMEOUT`），所以这单**以账本为准**；
     另外 ORD-0164/0126 的签收、ORD-0178（"已保存"无存储背书）也都在账本里等你。
   status: DISPATCHED@2026-09-21T23:3x+08 by 494abfd7（前提由我更正：入口已存在，缺接线）
+  note@F@2026-09-22 01:11:43 +0800: 你的过渡标记 `TEMPORARY-CLIENT-FILTER-ORD-0180` 已在 `frontend/src/features/simulation/SimulationPanel.tsx` 出现（权威树 1 处）；我的门看得见它。判据是**行为**的：服务端一旦真接受过滤（合法值收敛 + 非法值 422），标记仍在即红；拆桥后自动转绿。杀证已做：伪造'已上线'前提 ⇒ g0c 1 passed → 1 failed，还原逐字节相同。
 
 - id: ORD-0179
   to: dc19d662
@@ -11333,6 +11354,51 @@ evidence: `14a5b64`（分支 `agent/f-ord186-20260921`，未 push）+ `_qoder_f_
 
 status: `DONE`（P5 + 基线集合化 + 守卫单实现门；ORD-0184 的 15 门仍等 C 的 delivery SHA）
 evidence: `2176774`（分支 `agent/f-ord194-20260921`，未 push）+ `_qoder_f_run/{ord170_on_8ee64ae.json, _qoder_ledger_guard.py}`
+
+### SESSION=8ccd71d8 · ORD-0180 过渡锚已可判（g0c 杀证）+ ORD-0182 门在当前 tip 的对照 2026-09-22 01:11:06 +0800
+
+**块首六要素**
+- (a) `sha` = `2176774`（我的分支未动；**被测树** = `git archive 107e2db`，即当前权威 tip）；`worktree` = `D:/moodle/_qoder_f_o156_20260921`（分支 `agent/f-ord194-20260921`）
+- (b) `interpreter` = `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14）
+- (c) `command` = `CNX_UNDER_TEST_SHA=107e2db python -m pytest tests/test_qoder_plan_replan_status_filter.py -q -p no:cacheprovider`（**targeted，按 P5 未跑全量**）
+- (d) `collection` = 该文件 16 项收集、两棵树的 `--collect-only` 均 rc=0（全量未跑，按 P5）
+- (e) `execution` = **5 failed / 11 passed**
+- (f) `git_status` = 我的树 `clean`；被测是 `git archive 107e2db` 导出（内容恒等于该 commit）
+
+**① ORD-0180 的过渡桥标记已出现，g0c 从"无结论"变成真的可判**
+`107e2db`（ORD-0180/0183）落下后，权威树里出现 **1 处**标记
+`TEMPORARY-CLIENT-FILTER-ORD-0180`（`frontend/src/features/simulation/SimulationPanel.tsx`）。
+我的 `g0c` 扫描**看得见它**（不是靠猜，是同一套 rglob 路径）。
+
+**② g0c 的杀证（证明它真会咬）**：`g0c` 的判据是"服务端**行为上**已接受过滤 + 标记仍在 ⇒ 红"。
+服务端今天还没实现，所以它此刻判"无结论"是**正确**的 —— 但"无结论"必须可被证明不是永久豁免：
+我在副本里让 `_server_filter_exists()` 返回 `True`（伪造"已上线"前提，**没碰产品码**）⇒
+`g0c` **1 passed → 1 failed**，红在"期望：服务端过滤已上线 ⇒ 过渡件标记 TEMPORARY-CLIENT-FILTER-ORD-0180 必须已被拆除；实际仍在 …"；
+跑完**逐字节还原**（sha256 相同）。
+⇒ C 的 ORD-0182 一落地，这条门会自动从"无结论"翻成**红**，提醒拆桥；桥拆了才转绿。**不需要谁记得回来改门**。
+
+**③ ORD-0182 那 15 门在**当前 tip** 上的对照（交付前快照）**
+`git archive 107e2db` + 我的门覆盖 + 缺的共享仪器补上后：
+**5 failed / 11 passed** —— 五条红仍是 `g1_2`（replans 单值）/ `g1_3`（replans 多值）/
+`g5_5`（plans 单值）/ `g6_6`（plans 多值）/ `g8_8`（非法 status 应 422），**全部 `implementation-not-yet`**。
+C 相对 `8ee64ae` **没动后端**（`git diff --name-only 8ee64ae 107e2db -- backend/ contracts/` 为空），
+所以这个 5/11 与我在 `4092260` 上量到的**同一批成员** —— 符合预期，不是回归。
+
+**④ 一处我自己的仪器缺件，如实报**：在 `107e2db` 上首次跑时是 **7 failed**，多出的两条
+（`g13_meta`、`g13_15`）红因是 `ModuleNotFoundError: No module named '_qoder_mutation_receipts'` ——
+**我的共享仪器只在另一条分支上**，不是产品缺陷。把缺件补进被测树后回到 5 failed / 11 passed。
+⇒ 这正是"数字必须带树"的又一个实例：同一份门在"带仪器"与"不带仪器"的两棵树上给出不同数字。
+
+**⑤ 按你的口径标注本轮**：以上全部 **`SELF_REPORTED`**（我自己跑的）；
+`g0c` 的杀证同属 **`SELF_REPORTED`**，等你夜里抽复跑升 `REPRODUCED`。
+契约未改（仍是 `0.94-annex.17`），本页不产生新的契约回验数字。
+
+**仍挂着的**：① 交叉突变仪器 + R14 行为门（`14a5b64`）等你复跑；
+② ORD-0184 的 15 门等 **C 的 delivery SHA**（今晚排在 ORD-0191 之后）—— 它一出现我就
+`CNX_UNDER_TEST_SHA=<C 的 sha>` 在同一份 `git archive` 上重跑并**两行并排**。
+
+status: `DONE`（ORD-0180 过渡锚可判 + g0c 杀证 + ORD-0182 门在当前 tip 的交付前对照；未跑全量，遵 P5）
+evidence: `_qoder_f_run/verify_107e2db`（被测导出树，含 g0c 杀证与还原证明）；我的分支仍是 `2176774`（未 push）
 
 CLAIMED: ORD-0149 by 8ccd71d8（车道 F · 契约/门）@20:44（date 实读 20:44:08 +0800 · 权威树 tip 实测 `b2becb5` · 写域 = `contracts/**` + 新建测试文件；**产品码我自己不动**（本单第二件明写实现归 C）· 不 skip/xfail · 不打真网络（live 部分只做"没有 live 证据就必须红"的门，真 live 由 C 的 canary profile 跑） · 不占 :4781/:4782/:8693/:8781 与 _preview.db/_live.db · 自己的 detached 副本 + own `_run*.db` · 解释器 D:/moodle/CityNexus/.venv 3.12.14，不加 --timeout，AI/provider 凭据 unset
 ### SESSION=8ccd71d8 · ORD-0149 交付 @2026-09-21 21:09（date 实读 21:09:48 +0800）
