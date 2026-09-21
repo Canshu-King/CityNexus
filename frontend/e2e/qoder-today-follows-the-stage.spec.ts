@@ -831,6 +831,16 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
         maxScroll,
         node(NODE, `${arm}: [data-testid="sim-panel"] itself scrolls ${maxScroll}px (scrollHeight ${panelExtents.panelScrollHeight}, clientHeight ${panelExtents.panelClientHeight}; chain ${JSON.stringify(panelExtents.scrollChain)}) -- the rows below the fold are unreachable`),
       ).toBeGreaterThan(0);
+      /* `maxScroll > 0` alone is not the criterion: an `overflow: hidden` box reports the same
+         scrollHeight/clientHeight difference and still cannot be scrolled by a finger.  So the
+         property that makes it scrollable is asserted next to the distance, on the same node. */
+      const panelOverflow = panelExtents.scrollChain.find(
+        (entry) => entry.testid === "sim-panel",
+      )?.overflowY;
+      expect(
+        ["auto", "scroll"].includes(String(panelOverflow)),
+        node(NODE, `${arm}: [data-testid="sim-panel"] has ${maxScroll}px to move but overflow-y=${JSON.stringify(panelOverflow)}, which a finger cannot scroll (chain ${JSON.stringify(panelExtents.scrollChain)})`),
+      ).toBe(true);
       /* And the pose has to be the pose: a resize followed by a navigation is how one honest probe
          ended up measuring a viewport that was no longer 390 wide. */
       expect(
