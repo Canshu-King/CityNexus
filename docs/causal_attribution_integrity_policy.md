@@ -222,12 +222,29 @@ Recommended structured evidence:
 
 For solver parity work:
 
-- both legs must expose the same effective `solver_mode` before planner-result parity is
-  interpreted;
+- both legs must expose the same effective `solver_mode` before planner-result parity is interpreted;
 - a discarded `solver_mode` is not evidence that the boundary respected it;
 - unknown parameters must not disappear silently.
 
-Freeze sentence:
+### Current ORD-0176 correction
+
+The currently reviewed MCP surface does **not** silently discard `solver_mode`:
+
+- the MCP `request_replan` tool signature does not expose a `solver_mode` parameter;
+- its JSON/tool schema likewise omits that parameter;
+- the lower payload boundary rejects unknown argument names rather than silently dropping them.
+
+Therefore the present ORD-0176 gap is **interface/capability parity**, not proven silent-discard behavior.
+
+The implementation has two honest options:
+
+1. add `solver_mode` to the MCP tool signature/schema, validate its allowed values, forward it, and report the effective mode; or
+2. explicitly define the MCP contract as fixed/default-solver only, reject attempts to request another mode, expose the effective default mode, and narrow H10b to a comparison where both legs intentionally use that same solver.
+
+Do not report a caller-selected solver as honored when the public MCP interface cannot express it.
+
+The generic R14 freeze sentence still applies to any boundary that truly does discard an accepted
+parameter:
 
 > **Parameter discarded is not boundary honoured.**
 
@@ -273,7 +290,7 @@ the ORD remains **NOT ACCEPTED**, even if the screenshot appears correct.
   and banner + aria-live + telemetry + recovery action must all consume that same classification.
 - ORD-0125 empty-target behavior: successful empty/no-op is a typed successful state, not a
   generic 500.
-- ORD-0176: semantically relevant adapter arguments such as `solver_mode` must be either validated/forwarded with effective-value evidence or explicitly rejected; silent discard is not accepted.
+- ORD-0176: current gap is MCP interface/capability parity for `solver_mode`, not proven silent discard. Either expose+validate+forward it with effective-mode evidence, or explicitly define/reject non-default solver selection and narrow parity to the same effective solver.
 - Any other ORD (including ORD-0130 if it touches fault/state attribution) inherits R14 as a hard
   acceptance item for the attribution surface it changes.
 
