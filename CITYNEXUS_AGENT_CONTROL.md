@@ -7440,6 +7440,53 @@ ORD-0195（**我自己**：P0 守护逐周期实测 / P7 解锁即唤醒 / NO-ID
 status: 夜间硬令已落成 5 张车道单 + 1 张指挥链自持单；顺序钉死；全量只跑一次、晨报三级标注、P0 守护逐周期实测三条我已接受
 evidence: `live_checks/overnight_order.txt`（原文 10,484 B）· 本块引用的单号 ORD-0191..0195 均已在 `## ORDERS` 内
 
+### 💾 e345b9d6（SESSION=e345b9d6）ORD-0178 + ORD-0180/ORD-0183 交付：先量后改的存储背书、审核动作的幂等键、过渡桥的标记 @2026-09-22 01:1x → 提交 **`f1bdbbe`**、**`107e2db`**
+
+**报数六要素**：树 `D:/moodle/_qoder_integration_20260919`（有 .git）；`git log -1` = **`107e2db 2026-09-22 01:01:24 +0800 feat(frontend): the review actions carry their idempotency key, and the bridge is marked (ORD-0180/0183)`**（前一笔 `f1bdbbe` 是 ORD-0178）；`git status --short -- frontend` **空**（前端子树干净，另有别人车道 3 条 M 未碰）；解释器 Node/Playwright ＋ 后端 `.venv` 3.12.14；收集 `python review/run_spec.py --list "<9 specs>" 5400 --config playwright.prod-gate.config.ts` → **exit 0，`Total: 43 tests in 10 files`**；执行同范围生产链 → **exit 0，43 passed / 0 failed / 0 skipped**（log `review/run-run009898.log`）。
+
+---
+
+#### ① ORD-0178：**我 22:2x 那条自曝，量完是错的，在此撤回**（提交 `f1bdbbe`）
+
+按 ① 先量。四个时间点，每库每 store 数行（`indexedDB.databases()` 逐 store `.count()`），加 `caches.keys()`：
+```
+before          无库                                                  caches=0  sw=true
+atHeroVisible   无库    ← 我上次就是在这一瞬间量的，所以我报了 0 行     caches=0  sw=true
+afterFirstLoad  citynexus-offline v10 · journeys = 1 row               caches=0  sw=true
+afterSecondLoad 仍是 1 row；readBack{found:true, rows:1}              caches=0  sw=true
+```
+⇒ **结论 `PERSISTED`**：`saveOfflineJourney()` **确实落行且能回读**。我此前说的 `NO_PERSISTENCE`（"从未落行、缓存视图根本到不了"）**是对的一半**：`caches=[]` 属实、`controller=true` 属实，**"从未落行"是错的**——那是我在 hero 刚可见、写入还没落地时取的读数。**这条撤回，两侧读数都在证据文件里**（新探针把那个瞬间单独记成 `atHeroVisible`，不再让它冒充终值）。我**没有**因此去删任何"伪证"：那句话是有背书的。
+
+按 ③ 让声明由**测量**驱动，而不是由内存里的快照对象推断：
+- 新 `saveOfflineJourneyVerified()`：**写后立刻回读**，返回这份副本是否真在设备上；两个写入点都改用它。
+- 离线分支按**它自己的回读**置位（`setCachedCopySaved(Boolean(saved))`），"已保存"句子、`hasCachedCopy`、"看已保存的只读副本"按钮**三处都只读这个标志**；只读视图还要求该标志为真才可渲染。
+- 只读副本新增 `data-testid="offline-snapshot-age"`，印**这台设备保存这份副本的时间**（④(乙) 要的新鲜度）。
+- **没有为了让"已保存"变真去塞 `caches`**（③ 明令禁止的换层再犯）。
+
+门（生产包＋390×844＋hasTouch）：`ord0178-measure-offline-persistence`（量＋在成功页上"无行却声称已保存"必须为假）、`ord0178-the-saved-copy-claim-follows-the-rowcount`（**双向**：Arm A 设备无副本 ⇒ 不许出现「已保存」也不许出现只读按钮；Arm B 有副本 ⇒ 允许出现，且点开后必须显示保存时间）。
+突变：**`killM1a-claim-without-asking-the-device` KILLED**；**`killM1`（摘掉写后回读）SURVIVED**——原因如实：离线分支自己又回读一次，所以写路径那次检查对该声明是**冗余**；我据此补了改**承重那一行**的 `killM1a`（KILLED）。另 `killM2`（把 `hasCachedCopy` 钉成 true）也 **KILLED**。
+
+#### ② ORD-0180 / ORD-0183：审核动作与过渡桥（提交 `107e2db`）
+
+- **动作接的是既有端点**：`POST /replans/{id}/accept` / `.../reject`，**带 `Idempotency-Key`**，`keyFor(scope)` 同一 proposal 跨重试复用同一个键（ORD-0082 那批已接，本单把它量出来并守起来）。④(丙) 的"按钮可点由服务器投影决定"沿用现状：只有 `advance` 一处是自猜的，**没有再加第二个**。
+- **ORD-0183 ① 过渡桥打标记**：过滤处打上字面串 **`TEMPORARY-CLIENT-FILTER-ORD-0180`**，注释写明**删除条件**——后端支持 `?status=PRESENTED`（ORD-0182）后，请求改成带参数、**过滤与标记同一次改动一起删**；标记残留＝门红。
+- **ORD-0183 ② 列表≠授权**：注释里写明"行出现在列表里只代表列表里有它"，门用**打桩的开放式行**证明：屏幕不因列表出现就放行，真服务器仍回 422，屏幕**如实播报拒绝**。
+
+实测（`review/evidence/ui-overnight/ord0180-*.json`）：`markerPresent=true · clientFilterPresent=true`；两次点击 accept → `sentAcceptRequests=[675067f3-…, 675067f3-…]`、**`distinctKeys` 长度 = 1**；屏幕原文「服务器拒绝了这个动作（HTTP 422，具名 `request.invalid`）。它的原话：Request validation failed。」⇒ ② 成立。
+**未测的、写明的**：`POST /replans` 在本 fixture 被服务器自己以 **422 `MOBILITY_DATA_UNAVAILABLE`** 拒绝（原响应存进 `staged.answers`），**没有真提案可接受**，所以"同一 `Idempotency-Key` 重放不产生第二次变更"这条**服务端不变量没有测到**——我把它写进证据的 `notMeasured` 字段，而不是用打桩的 200 假装通过。要它绿，需要一个 `MOBILITY_DATA_UNAVAILABLE` 不成立的行程（属 C 侧数据条件）。
+突变：**`killN1`（每次点都新造键）KILLED**、**`killN2`（只摘标记、留下过滤）KILLED**。
+
+#### ③ 顺带一条真回归：相邻门的**竞态**（不是产品缺陷，是我门的判据错）
+
+连跑时 `sim-booking-target-is-an-activity-the-server-gives-a-slot-for` 红、单跑绿。我没写"顺序噪声"，而是插了一支一次性诊断 spec 在**同样的连跑条件**下打印面板的请求与文案，量到：面板的**计划查询还在飞**时活动数为 0，于是它说的是**通用句**「服务器给的这份计划里没有可下单的活动」——而旧的"退出还在读"判据认为这就是终值。修法：判据改为**等计划读真的发出**（`performance` 资源表里出现 `/api/v1/plans/{id}`）且**行文案两次轮询不再变**；**不要求文案非空**（能点的行本来就没有拒绝文案——我第一版要求非空，把 positive 臂挂死了，同一次里已修）。修后连跑 **43/43**；并**回验 `killD11`/`killD12` 仍 KILLED**，证明判据没被放宽。
+
+**门禁**：`tsc -p tsconfig.typecheck.json` exit 0；生产链 **43/43**；本批突变共 5 条：**4 KILLED（`killM1a`/`killM2`/`killN1`/`killN2`）＋ 1 SURVIVED（`killM1`，冗余，原因已交）**。**未 push**；未碰 `:4781/:4782/:8693` 与 `_qoder_cmdr_gate_20260921\backend\_live.db`；**没触发 `demo/reset`**；账本只追加本块（`newline="\n"`＋逐字节还原证明）。bundle 我这边构建产物是 `dist/assets/` 下 01:0x 那一版；**真机复验请用你重建的包**（你 23:4x 的 `index-BwIS1pck.js` 只到我 `82f136f` 之前两笔，不含本块三笔）。
+
+**我这条线仍欠的**：ORD-0126 的"提交路径 id 与屏上 id 同源"独立断言、`demo/reset` 403 的更具体下一步（等 C 的具名响应）；`ORD-0088①` open；`ORD-0096` HELD。ORD-0177 的三条引用规矩我照办：本块每条"某车道交付了 X"都能引到账本块，引不到的我一律不具名。
+
+status: ORD-0178 + ORD-0180/0183 **DONE@2026-09-22T01:1x+08 by e345b9d6**（提交 `f1bdbbe`、`107e2db`；ORD-0178 ① 量出 `PERSISTED` 并**撤回**我此前的 `NO_PERSISTENCE`，②③ 由写后回读驱动、④ 双向门绿；ORD-0180 键稳定性＋ORD-0183 标记/非授权门绿，服务端重放不变量**未测且已写明**；突变 4 KILLED / 1 SURVIVED 附因；顺带修掉相邻门的竞态判据并回验 D 系列仍杀得掉）
+evidence: `review/evidence/ui-overnight/ord0178-{persistence,claim-vs-rowcount}.json`（四时间点＋双向两臂＋`note` 里写明撤回）、`review/evidence/ui-overnight/ord0180-{bridge,idempotent-accept}.json`（含 `notMeasured` 与 `stageRefusal` 原文）、`review/killM1*.log`／`review/killN*.log`、`review/run-run009898.log`（43/43）、`review/run-lst010159.log`（收集 43）、`review/tsc-0178*.txt`／`tsc-0180*.txt`、`review/rewrite-ord0180-gate.py`（本单改写存档）；改动 `src/lib/offlineJourney.ts`、`src/app/V8Experience.tsx`、`src/i18n/LocaleContext.tsx`、`src/features/simulation/SimulationPanel.tsx`、两个新 spec 与 `review/ord0082_0087_kill_drivers.py`。**未 push**。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 - id: ORD-0191
   to: 8c66aa92
@@ -8006,7 +8053,7 @@ CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x
     你不要动产品码去"顺手修好"，只把它们在网络隔离后单独点名。
     禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`（R13）；解释器 3.12.14；凭据全清；
     账本只追加自己那块（`newline="\n"` + 逐字节还原证明）。
-  status: DELIVERED@2026-09-21 22:52:54 +0800 by 8ccd71d8（边界 + 根因哨兵门 + 17→13 缩减表 + 逐 nodeid 新基线：分支 agent/f-ord170-20260921 @ 5338353，未 push；产品码 0 改动。量在 git archive 82f136f（后端字节=366cba6，与你那 17 条可比；写账本时 tip=82f136f）：as-is 17 ⇒ 带边界两遍 15 与 13 ⇒ 稳定核 13 逐条进契约 x-anywhere-red-baseline-o170。−1 g8a 是**判据换了**（旧扫描红在到不了网络的一行、对真出网那条全程无感）⇒ 要你按名放行；−1 g3 只是批次里消失、带边界两个新库单跑仍 2/2 红 ⇒ 不算修好；−2 是车道 C 的批次成员。**ORD-0170 的「九张脸一条根因」前提被量倒：9 条带边界逐条单跑 9/9 仍红。**交付块见下方「SESSION=8ccd71d8 · ORD-0170 交付」。｜was: status: DISPATCHED@2026-09-21T22:0x+08 by 494abfd7（我两次独立跑给了分母与同源性证据） ｜REMEASURED@8ee64ae@2026-09-22 00:52:47 +0800 by 8ccd71d8：新共享基线上 as-is **17 / 14**（两次不逐行相同）、带边界 **15 / 16**；差异成员全在 `test_qoder_catalog_hydration.py` 三兄弟（成员轮换）⇒ 引用报成员名，"17→16 = 好转"不成立。g3 报 **TARGETED=RED / FULLSUITE=GREEN** 两行并排。读数在分支 agent/f-ord170b-20260921 @ ec36b54。｜**ACCEPTED@00:5x**（新 tip 重测：稳定核 14 与我三次交集一致；未把我的数字当权威去对齐、如实并列并定位到成员；契约新增 context-dependent-red-needs-both-lines；锚点守卫以**包装调用**接入而非另写一份）
+  status: DELIVERED@2026-09-21 22:52:54 +0800 by 8ccd71d8（边界 + 根因哨兵门 + 17→13 缩减表 + 逐 nodeid 新基线：分支 agent/f-ord170-20260921 @ 5338353，未 push；产品码 0 改动。量在 git archive 82f136f（后端字节=366cba6，与你那 17 条可比；写账本时 tip=82f136f）：as-is 17 ⇒ 带边界两遍 15 与 13 ⇒ 稳定核 13 逐条进契约 x-anywhere-red-baseline-o170。−1 g8a 是**判据换了**（旧扫描红在到不了网络的一行、对真出网那条全程无感）⇒ 要你按名放行；−1 g3 只是批次里消失、带边界两个新库单跑仍 2/2 红 ⇒ 不算修好；−2 是车道 C 的批次成员。**ORD-0170 的「九张脸一条根因」前提被量倒：9 条带边界逐条单跑 9/9 仍红。**交付块见下方「SESSION=8ccd71d8 · ORD-0170 交付」。｜was: status: DISPATCHED@2026-09-21T22:0x+08 by 494abfd7（我两次独立跑给了分母与同源性证据） ｜REMEASURED@8ee64ae@2026-09-22 00:52:47 +0800 by 8ccd71d8：新共享基线上 as-is **17 / 14**（两次不逐行相同）、带边界 **15 / 16**；差异成员全在 `test_qoder_catalog_hydration.py` 三兄弟（成员轮换）⇒ 引用报成员名，"17→16 = 好转"不成立。g3 报 **TARGETED=RED / FULLSUITE=GREEN** 两行并排。读数在分支 agent/f-ord170b-20260921 @ ec36b54。｜**ACCEPTED@00:5x**（新 tip 重测：稳定核 14 与我三次交集一致；未把我的数字当权威去对齐、如实并列并定位到成员；契约新增 context-dependent-red-needs-both-lines；锚点守卫以**包装调用**接入而非另写一份）｜**ACCEPTED + 新 ORD-0194@01:0x（夜间硬令 P5）**：开发期只跑 targeted，**全量夜里只跑一次**在稳定集成候选上；晨报必须分 REPRODUCED / FORMAT_CHECKED / SELF_REPORTED 三档，不得压成“verified”；ORD-0189 仪器随第一批门交，不为它重跑全量
 
 - id: ORD-0169
   to: e345b9d6
