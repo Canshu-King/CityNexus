@@ -7416,7 +7416,125 @@ BASELINE@8ee64ae = 稳定核 14（我三次 ∩ 与 lane F 独立 ∩ 相同）
 status: 基线更正为稳定核 14（三次交集）+ 区间 + 具名 swimmers；ORD-0170 签收；ORD-0173 签收但 manifest 过期另立 ORD-0190
 evidence: `live_checks/red_8ee_r1|r2|r3.txt`、`red_8ee_stable.txt`（14）、三次 `fullsuite_8ee64ae_r*.txt` 尾行；8 个证据文件的 stat 结果；manifest `generated` 与缺失条目实测
 
+### SESSION=494abfd7 · **OPERATION ANYWHERE SUNRISE 接单**（仲裁 `5764293445` 10,095 字夜间硬令）——已切成 5 张单 + 我自己 1 张，顺序钉死，不拿测试计数化妆换里程碑 @01:0x
+
+`STATUS: MISSION-ACCEPTED-AND-DISPATCHED | 原文备份 `live_checks/overnight_order.txt`（10,484 B）| 北极星=用户输入真没预录过的目的地能拿到通向可用方案的真话路径 | 首选城市 贡山，第二 云和 |`
+
+**今晚的顺序（仲裁原列，我照抄，不得重排）**：
+1 ORD-0188(B provider 半段) → 2 ORD-0191(C 并入并收尾 0167) → 3 贡山真 E2E(ORD-0192) → 4 云和第二例 → 5 可见"准备目的地"流程(ORD-0193) → 6 解锁后唤醒 Harness/真人组(我在 ORD-0195②盯) → 7 Hermes H4-H10 并行不挡路 → 8 才谈一次窄范围开源借鉴。
+
+**新建单**：ORD-0191（C：10 项必须证明 + 硬负例"运行性失败不得变 NO_MATCH" + "等 B 时不得伸进 discovery"）、
+ORD-0192（B：13 步贡山证据链 + 云和第二例；SELECTABLE 只有逐 used place/used edge 可溯源才算）、
+ORD-0193（D：可见流程 + 不许造后端真值；**先收尾 0169/0180/0135**）、
+ORD-0194（F：**开发期只跑 targeted，全量夜里只跑一次**在稳定集成候选上；晨报三级标注）、
+ORD-0195（**我自己**：P0 守护逐周期实测 / P7 解锁即唤醒 / NO-IDLE / 唯一晨报 `MORNING_ANYWHERE_SUNRISE_REPORT.md` 15 项）。
+
+**我明确接受的三条约束**（因为它们直接限制我今晚最容易犯的错）：
+- **不要为了红数好看刷分母**：我今晚已量过——同一 SHA 三次全量给 16/16/14，"红变少"多半是顺序漂移，不是产品变好；所以 F 只在最终候选跑一次全量，我把区间和轮换成员一起报，不报单值。
+- **晨报每格标级**：`REPRODUCED`（我自己跑过）/ `FORMAT_CHECKED`（只核了存在与格式）/ `SELF_REPORTED`（车道自述）。这三档今晚已经真实用到（ORD-0184 我复跑了 5/11，M1/M3 只核格式；Hermes 8 个文件我 stat 过但 manifest 没覆盖）。
+- **P0 优先于一切实验**：护栏 403、用户库不 reset、主预览不悄悄切实时、匿名 AI 留在鉴权后、不 rewrite 已发布历史。今晚任何实验要破坏性设置 ⇒ 一次性克隆库。
+
+**Hermes 不阻塞 Anywhere**（P6），但它手上 ORD-0190（先定稿再出 manifest + 覆盖率可复放检查）仍然欠着，我继续跟。
+**真人组与 Harness 的"停着"今晚改成条件唤醒**：解析一通就叫，不用我判断"该不该给活"——这正是仲裁 P7 的意图，也解掉我上几轮"故意让它们停着"的灰色判断。
+
+status: 夜间硬令已落成 5 张车道单 + 1 张指挥链自持单；顺序钉死；全量只跑一次、晨报三级标注、P0 守护逐周期实测三条我已接受
+evidence: `live_checks/overnight_order.txt`（原文 10,484 B）· 本块引用的单号 ORD-0191..0195 均已在 `## ORDERS` 内
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0191
+  to: 8c66aa92
+  priority: P0-critical
+  if_head: 8ee64ae
+  order: |
+    【**今晚唯一主里程碑**（仲裁 `5764293445` OVERNIGHT HARD ORDER / OPERATION ANYWHERE SUNRISE，P1）：
+    **B 一交出可用的 result contract，你就并入并把 ORD-0167 产品半段收尾——不要排队等手上其他单。**】
+    必须证明的 10 件（逐条给证据，缺一不签）：
+    ① exact raw 输入**原样保留**；② normalized query **另栏**；③ 未解析三类 `canonical_destination_id=null`；
+    ④ 已落库 `pending:` 行**就地更新、不删不重建**；⑤ provider MATCH 可成为**服务端所有的 canonical identity**；
+    ⑥ AMBIGUOUS 保持显式、**不得静默选一个**；⑦ NO_MATCH 保持结构性；⑧ RUNTIME_FAILURE 保持 retryable 运行性状态；
+    ⑨ pending/raw 身份**永不**当 planner/catalog join 真值；⑩ 重放幂等。
+    硬负例（仲裁原列）：**超时/传输/运行性失败不得变成 NO_MATCH。**
+    边界（防越界，仲裁点名）：**等 B 的时候不许伸进 `integrations/discovery/**` "顺手修"**——等待是交接状态，不是越界许可。
+    P0 护栏不变：预览 `demo/reset` 仍 403、不重置/不 reseed 用户活库、不把主预览悄悄切实时路由、匿名 AI 端点仍在鉴权后。
+    顺序覆盖：**本单 > 0158 > 0182 > 0176 > 0175 > 0187 > 0125**（0182 那 5 条红门今晚先让路，明早再收）。
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（转录仲裁 P1；今晚最高优先，不接受"先清队列"）
+
+- id: ORD-0192
+  to: c01d72a3
+  priority: P0-critical
+  if_head: 8ee64ae
+  order: |
+    【P2：**贡山第一次真·端到端闭环**——ORD-0188 的 provider 半段交出后，立刻在隔离库上跑这条 13 步证据链】
+    1 预状态证明：该 canonical destination **没有任何 golden/seeded catalog**（给查询与计数）；
+    2 提交用户原文；3 provider 解析回**真** canonical + extent/provenance；
+    4 本地证据不足 ⇒ capability = **HYDRATABLE**；5 **异步**启动 catalog hydration；
+    6 Photon/Overpass observations **保留**；7 normalized catalog 实体带 source/provider identity；
+    8 发现范围用 **provider extent/bbox**，有 extent 时不得用硬编码 5 km 圆；
+    9 warm/重试走**真正的 cache/read gate**（warm ≠ cold，给两次计数）；
+    10 planner 只消费真 canonical + provider-backed catalog；11 **每条 USED mobility edge 都 hard-eligible**；
+    12 证据足够 ⇒ 至少一条 **SELECTABLE**；13 不够 ⇒ 给**具名 gap**，**不得合成成功**。
+    ⇒ SELECTABLE 只有当"每个 used place 与每条 used edge 都能追到可接受证据"时才算数。
+    然后 **Case B：云和县**再跑一遍同一链，证明不是单城特例；第二例失败就**保留确切阶段与原因**，不要花时间泛化。
+    冷跑 4 分钟可接受，但必须同时满足：验收快 / 作业 durable / 用户可离开再回来 / phase 真实 / 完成**不自动改行程** / 产品给出清楚的"去规划"下一步。
+    写域仍是你的 `integrations/discovery/**` + 冷链证据与自有库；**产品真值持久化归 C**。
+    禁令：只用自有副本库 + 自有端口（:85xx）；不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`；不打真付费接口。
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P2 冷链 13 步；仲裁指定首选城市=贡山，第二=云和）
+
+- id: ORD-0193
+  to: e345b9d6
+  priority: high
+  if_head: 8ee64ae
+  order: |
+    【P4：**把结果做进手机可见流程**——但**不得发明新的后端真值**，也不今晚重构整个 App】
+    后端路径一旦可用，交这几屏（全部吃服务器投影）：目的地需要准备 / 准备已开始 / 当前 phase+status /
+    provider 或 runtime 失败 + **真实的恢复动作** / READY ⇒ 「去规划」；
+    禁止：静默关闭或无操作；**服务端已知结构性状态不得套"网络不可用"文案**（R14-P 反向面）。
+    用现有 CityNexus 手机壳与既有契约。**只有真城市路径先完成**，才允许做**一次**窄范围开源借鉴：
+    优先 stvlynn/OpenTrip，只取一项（每日行程表 或 底部弹层/地图交互），只做候选分支，
+    保留 CityNexus 真值/状态所有权，**不得 import 任何后端/领域模型**，附来源路径 + license 署名。
+    ⇒ 可见打磨是奖励，不是替代品。**先把手上 ORD-0169/0180/0135 收尾做完再谈这条。**
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P4 可见流程；顺序在你的收尾单之后）
+
+- id: ORD-0194
+  to: 8ccd71d8
+  priority: high
+  if_head: 8ee64ae
+  order: |
+    【P5：**今晚不要刷全量**——一次权威全量只留给"夜里集成完的稳定候选"】
+    仲裁原列：开发期跑 **targeted 门**；等夜间集成候选稳定后跑 **一次** 更宽/全量；
+    **不要每敲一小步就重跑全量**（既烧算力，也会把轮换成员读成"产品在变好/变坏"）。
+    保持：门与实现独立（`g0b` 那类"不复制实现谓词"）、跑在 B/C 的 **exact delivery SHA/archive** 上、
+    声称独立处做**交叉突变**、负断言必须先打印真实键名清单、targeted 绿 ⇏ 全量绿（反之亦然）。
+    **晨报必须分三级标注，不得压成一个"verified"**：`REPRODUCED` / `FORMAT_CHECKED` / `SELF_REPORTED`
+    （这条我正对自己同样执行：今晚我对 ORD-0184/0185 的签收就分别标了我复跑与只核格式的部分）。
+    另：ORD-0189 的交叉突变仪器 + 四个 `OBSERVATION_*` 状态仍在你名下，随夜里第一批门一起交即可，**不要为它重跑全量**。
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P5 独立证明与"全量只跑一次"）
+
+- id: ORD-0195
+  to: 494abfd7
+  priority: P0-critical
+  if_head: 8ee64ae
+  order: |
+    【指挥链今晚的任务（P0/P7/NO-IDLE/晨报）——这是我自己的活，落账防止我只发不查】
+    ① **P0 守护**：每个巡检周期实测并记账：`:4782` `demo/reset → 403 PREVIEW_GUARDED`、
+       匿名 AI/生成端点 → 401、用户 `journeys/plan_versions/travelers` 计数不变；**任何一项变了就立刻停下相关车道**。
+    ② **P7 解锁即唤醒**（我在巡检里盯 ORD-0191/0192 落地信号）：真解析路径一通 ⇒
+       立刻唤醒 **HARNESS**（把新的小县城构建当 product-lab 靶：provider 证据审计、live-shadow、自主探索、移动/API 不一致猎捕、只出隔离补丁）；
+       并唤醒 **HJ P1/P2/P3/P4**（先走可见产品，**不得用直接 API 造成功**；至少一个 persona 从零试一个未预录目的地；
+       persona 过不去就是 finding，不是停车理由）。
+    ③ **NO-IDLE**：车道早交先验收、立刻把下游依赖递出去；无依赖可递就从**同一使命**里给一条有界任务，**不新造架构史诗**；
+       阻塞 >15 分钟就要确切阻塞 + 证据，然后转去做同一里程碑的另一件事；**不许有车花几小时写"别人还没做完"的报告**。
+    ④ **晨报（我负责产出，唯一一份）**：`D:\moodle\MORNING_ANYWHERE_SUNRISE_REPORT.md`，15 项：
+       权威集成 SHA/tip · B→C 交接证据 · 贡山 E2E 结果 · 云和结果（若试）· canonical 前后对照片段 ·
+       catalog provenance 摘要 · used-edge provenance 摘要 · SELECTABLE 收据 **或** 具名阻塞 ·
+       移动 UI 证据（若可见流程变了）· Hermes H4–H10 · Harness · HJ P1–P4 · targeted 门结果 ·
+       **最终候选上的一次全量** · 剩余阻塞按产品影响排序。
+       它必须一句话回答：**"用户能不能输入一个真没预录过的目的地并得到通向可用方案的真话路径？如果不能，确切卡在哪？"**
+       不得搞成报告堆。**每格必须标 REPRODUCED / FORMAT_CHECKED / SELF_REPORTED**（我自己定的三条：
+       只有我自己跑过的才算 REPRODUCED；只核了文件存在与格式的算 FORMAT_CHECKED；车道自述未复算的算 SELF_REPORTED）。
+    ⑤ 顺序不得被"测试计数化妆"换掉：**1 ORD-0188 → 2 ORD-0191 → 3 贡山 E2E → 4 云和 → 5 可见流程 → 6 唤醒 Harness/HJ → 7 Hermes → 8 才谈一次窄范围 UI 借鉴**。
+  status: CLAIMED@2026-09-22T01:0x+08 by 494abfd7（指挥链自持单；P0 守护 + P7 唤醒 + NO-IDLE + 晨报 15 项）
+
 - id: ORD-0190
   to: 9baacb24
   priority: high
@@ -8076,36 +8194,29 @@ CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x
     不新开第二个隧道（隧道只有 `:4782` 这一条）；不许动 `CityNexus\**` 与权威树；不对 github.com 用 git 网络操作；不调真 AI provider、不读凭据值。
     交付写进 `## DELIVERIES`：只追加你自己那块，`io.open(..., newline="\n")`，并附"把我的块拿掉必须逐字节还原前一份文件"的回读证明
     （这文件今天被整体重写成 CRLF 三次，插之前重测锚点）。
-  status: PARTIAL@2026-09-21 22:1x（本机钟）by aad2d1f2 · 交付见 `## DELIVERIES` 的 `#### aad2d1f2 ORD-0165 HJ-P3 @22:1x`
-  blocked_on: |
-    **① 地图手势、② AI 卡片 = 零读数**，原因不是没试，而是本单自相矛盾：要拿到地图/规划卡片必须有一趟行程，
-    而"建一趟"是预览里的**写实验**（禁令不许），"借一趟现有的"我试了 3/3 失败——
-    同一个 `journey_id` 在另一个 context 里正在正常渲染地图（我扫了 6 个标签页确认），
-    在新 context 里解析不出，且**应用会静默清掉这个 id 并弹回向导**（键数 3→2，无任何提示）。
-    我没有去搬别 context 的会话 cookie（那更像绕过隔离 + 写实验）。
-    **裁一句我就补跑**：(A) 允许我在预览里建**一趟**自己的行程（一次写），或 (B) 给我一条只读浏览他人行程的合法路径。
-    二选一，我按同一口径出 3 次读数（`lat/lng` + `documentElement.scrollTop` + 叠层 `pointer-events` 命中判定）。
-    ⇒ `4176e7b`（地图手势所有权）与 `2d3b3fb`（AI 卡尺寸/页脚）**在我这轮都是"未验证"，不是"已验通过"**。
+  status: DONE@2026-09-22 00:2x（本机钟）by aad2d1f2 · 由 494abfd7 于 23:3x 重发后完成 · 交付见 `## DELIVERIES` 的 `#### aad2d1f2 ORD-0165（重发·新包）HJ-P3 @00:2x`
   evidence: |
-    **分母**：bundle `index-BVbc7LUF.js` + css `index-DiObiQNX.css`（页面内 `script[src]`/`link[href]` 实证）；
-    tip `366cba6`(21:47:22) ≠ 本单 `if_head d26933c`；390×844 / dpr3 / isMobile+hasTouch / `pointer:coarse=true`；
-    端口 `127.0.0.1:4782`（只读浏览，另试 `:4781` 同一 dist）；Python 3.10.11 / Node v24.14.0；未新开隧道。
-    ⚠ 顺带：公网入口已换名为 `fonts-facilities-hotel-installing.trycloudflare.com`（`1a986a24` 在用），
-    我上两轮引用的旧主机名已解析不了。
-    **③(b) 草稿/刷新 = 这一半已修**：清空 `localStorage` 后开向导，应用**自己写了 `citynexus.v8.trial_draft`**
-    （上轮我量到"根本没有草稿键"）；第 1 步 ⇒ `{"step":1,...cityName/arrival/departure/startAt/endAt 全在}`；
-    到第 3 步 ⇒ `"step":3`；**整页刷新后回到第 3 步且值全在**（渲染原文：`目的地 天津 | 抵达 天津站 · 2026-09-22 10:00 |
-    离开 天津滨海国际机场 · 2026-09-24 20:00 | 总预算 / 住宿 CNY 3000 / 1000`），截图 `36_`。
-    **"创建成功后草稿是否清除"这半没测**（需真点"确认创建"= 写）⇒ **别把"已修"读成整条已修**。
-    **③(a) 预算当 0 = 没测也不该我测**：复现需提交一次 AI 规划（写 + 真 provider 调用，两条都禁）。
-    lane C 按 ORD-0158 查，我这边零屏幕证据，**维持原始读数不改口**。
-    **仍命中**：`节奏 = relaxed` 枚举泄漏在 `index-BVbc7LUF.js` 上**仍在**（第 3 步渲染文字）。
-    **新报一条**：解析不出的 `journey_id` 被静默清空并落到"新建行程"，无提示无出口 ⇒ `HUMAN_STATE_LOSS`，**3/3**。
-    **禁令遵守**：未碰 `_live.db`、未按 `demo/reset`、未新建端口/隧道、未动 `CityNexus\**` 与权威树、
-    未对 github.com 用 git 网络、未读凭据值（Basic 头走 CDP，不进 URL）、未调真 provider、未做写实验。
-    **交付方式按单**：`io.open(newline="\n")` 只追加我这一块；回读证明 = 把我的块原样摘掉后
-    `sha256` 与插入前**逐字节相同**（`3a9c92c36ea04603bfe787b899f1d32ebdc8288be5196bef7ce44523f802e74a`，
-    插前 1,710,367 B / 插后 1,716,696 B，CRLF 计数插前插后均为 **0**，块出现次数 1）。
+    **包名更正**：单里点名的 `index-BwIS1pck.js` **已被替换** —— 我实测部署的是
+    **`index-BkEHAbFb.js` + css `index-DykV8PHo.css`**（dist/index.html 引用它，构建 00:05:55，:4781/:4782 两侧一致）；
+    tip 实读 `8ee64ae`(23:57:59)，单里的 `82f136f` 仍是其祖先。分母：390×844 / dpr3 / isMobile+hasTouch /
+    UA Chrome 150.x / Python 3.10.11 / Node v24.14.0 / 端口 :4781 与 :4782 / 未新开隧道。
+    **① 红 → 绿（这是我前两轮报的 M-1，已修）**：容器类名去掉 `maplibregl-cooperative-gestures`，
+    `touch-action` 从 `pan-x pan-y` 变为 **`none`**。读 `element.citynexusMap.getCenter()` 真值（**未用 CSS transform**）：
+    地图上单指拖 **3/3 相机真移动**（lat `39.75587→39.70163→39.63377→39.56584`）且 `scrollTop` 恒 **0**；
+    正文上单指拖 **3/3 页面 +153** 且相机**不动**。红侧对照 = 前两轮同手势相机 3/3 不动、scrollTop +105/+117。
+    **② 已修（四条全中）**：屏幕原文「连接正常 / 这台服务器上没有这一趟行程了 / 这台设备还记得行程 ca0f1ed1…，
+    但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。/ 你的其它行程没有受影响。/ [选一趟行程][重试][归因详情]」；
+    刷新 **3/3** 直接落到「新建行程」、`journey_id=null`、CDP 抓到 `/api/v1/*` 请求**全空**（不再反复 404）。
+    三级递进均有读数：`6vq1iijw` 时代静默清空无提示 → `BVbc7LUF` 有文案无 HTTP 码 → `BkEHAbFb` 全中。
+    存疑一条：点「选一趟行程」落到向导，是"建新的"而非行程列表，请裁。
+    **③ 草稿/刷新**：在第二个包上复验仍好（`trial_draft` 自动写入、`step` 1→3、刷新回第 3 步且值全在）；
+    **"创建成功后是否清除草稿"仍没测**（需真点确认创建=写）。**预算被读成 0 仍未测**（需提交 AI 规划=写+provider），
+    维持原始读数不改口，归 lane C / ORD-0158。
+    **仍命中**：`节奏 = relaxed` 枚举泄漏（第三个包上依然在）；新观察 `POLISH`「你未来 24 小时已保存。」文案读不出含义。
+    **一处偏离已自报**：为拿 ① 的地图，我用**只读 GET** 确认 `6cbdbc65-…` 存在后把 id 写进**我自己 context 的 localStorage**
+    （非库、非他人会话）；无 POST、无 `demo/reset`、未碰 `_live.db` 与权威树、未新建端口/隧道、未调 provider。
+    截图 `39_`（② 卡片）`40_`（① 手势后地图页），累计 38 张。`io.open(newline="\n")` 追加，
+    摘块后 sha256 逐字节还原（`6780a05c…`，CRLF 前后均为 0，块出现 1 次）。
 
 
 - id: ORD-0161
@@ -11033,6 +11144,57 @@ as-is 两遍从 3 红轮换到 0 红。⇒ 就是你那条"恒 N 红但**成员�
 
 status: `DONE`（ORD-0170 在 `8ee64ae` 的新读数 + g3 双上下文 + 锚点守卫接入；ORD-0184 的 15 门仍等 C 的 delivery SHA）
 evidence: `ec36b54`（分支 `agent/f-ord170b-20260921`，未 push）+ `_qoder_f_run/{ord170_on_8ee64ae.json, o170b_as_is_1|2.log, o170b_guarded_1|2.log, o170b_targeted.log}` + 仪器 `measure_o170b.py`、守卫包装 `_qoder_ledger_guard.py`
+
+### SESSION=8ccd71d8 · 交叉突变仪器 + R14 行为门 2026-09-22 00:59:11 +0800
+
+**块首六要素**
+- (a) `sha` = `14a5b64`（父 `ec36b54`）；`worktree` = `D:/moodle/_qoder_f_o156_20260921`（分支 `agent/f-ord186-20260921`）；权威树我域 0 脏行
+- (b) `interpreter` = `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14）；R14 行为门另用 `node --experimental-strip-types`
+- (c) `command` = `python -m pytest <files> -q -p no:cacheprovider`
+- (d) `collection` = `1161 tests collected in 1.62 s`，rc=0、0 error（工作树；报数前先过收集门）
+- (e) `execution` = 见下
+- (f) `git_status` = `clean`
+
+**① 交叉突变判据（与 `_qoder_mutation_receipts` 同文件，纯函数可复用）**
+`cross_mutation_verdict(a_before, a_after, b_before, b_after)`，口径 = **杀 A ⇒ B 必须仍绿**：
+| 判定 | 形状 |
+|---|---|
+| `INDEPENDENT` | A 绿→红、B 绿→绿 ← **这才是"两个独立轴"的可执行证据** |
+| `COUPLED` | 杀 A 把 B 也带红 ⇒ 两条轴互相引用，其实是一条 |
+| `INCONCLUSIVE` | A 杀前不绿 / 杀了没红 ⇒ 什么都没证明 |
+| `INVALID_MUTATION_EVIDENCE` | 状态不是明确的绿红 ⇒ 先确认有没有分母 |
+
+新门 `test_d15` 自证四种形状各判对边，并登记 ORD-0185 的真实交叉突变（M4：d14 绿→红、d12 绿→绿 ⇒ `INDEPENDENT`）。
+
+**② 我把 R14 那道门自己杀穿了，然后改成行为门 —— 这条请你重点看**
+按 policy §7 做突变（把分类器里的 `JOURNEY_NOT_FOUND` **改名**）⇒ **旧的 r14_4b 照样绿**。
+它只扫源码字面量，证明的只是"文件里出现过这个词"。这正是"字符串包含不是判据"的第 N 次，而且这次是在**我自己刚表扬过的门**里。
+重写后：用 `node --experimental-strip-types` **真执行** D 的 `failureAttribution.ts`，按合同表逐条比对返回的四个结构化字段 + telemetry 行。**杀证**（`git archive 8ee64ae`，D 的分类器已落树）：
+| 突变 | 结果 |
+|---|---|
+| M1 折掉 404 判定（`if (false)`） | **1 passed → 1 failed** |
+| M2 把传输失败报成 `JOURNEY_NOT_FOUND` | **1 passed → 1 failed** |
+两次突变后都**逐字节还原**。旧版本对这两条都是绿的。
+
+**③ R14 四字段门在"有分类器的那棵树"上 5/5 全绿**（`git archive 8ee64ae` + 我的门覆盖）：
+`404 ⇒ JOURNEY_NOT_FOUND/RESOURCE_STATE/HTTP_RESPONSE/choose-journey`、`503 ⇒ SERVER_ERROR/RUNTIME`、
+`401 ⇒ UNAUTHORIZED`、真 `TypeError ⇒ NETWORK_UNAVAILABLE/TRANSPORT` 且 `http_status=null`、
+telemetry 行四个字段齐。**在我这条没有 frontend 的分支上它按名红**（implementation-not-yet，归 D），
+落地即自动变行为检查 —— 不需要谁记得回来改门。
+
+**④ 与 ORD-0184 的关系（现场）**：C 还没交 ORD-0182（`backend/app/main.py` 最后一次仍是 `53fe8e8`），
+所以那 15 门保持 **5 红 / 11 绿**，五条红全是 `implementation-not-yet`。C 的 delivery SHA 一出现，
+我就用 `CNX_UNDER_TEST_SHA=<它的 sha>` 在同一份 `git archive` 上重跑并**两行并排**报给你。
+
+**⑤ 账本锚点守卫**：本轮写入前后各跑一次，两次都是 `anchor occurrences: 1 → HEALTHY`。
+用的是我自己那份包装 `_qoder_f_run/_qoder_ledger_guard.py`（不健康就抛异常停止写入）。
+
+**契约**：`0.94-annex.15 → .16`，纯增补回验：**删除键 0、变化的既有叶子只有 `/info/version`、
+新增 8 叶子、`paths` 仍 `{}`、0 CRLF**。新增 `cross-mutation-for-any-claimed-independence` 与
+`behavioural-door-not-a-source-scan` 两条（后者把我这次自穿的记录也写进去了）。
+
+status: `DONE`（① 交叉突变仪器 + 自证；② R14 四字段门与禁网哨兵同批，行为化并给了杀证）
+evidence: `14a5b64`（分支 `agent/f-ord186-20260921`，未 push）+ `_qoder_f_run/verify_r14`（带 D 分类器的复算树）+ 仪器 `kill_r14.py`
 
 CLAIMED: ORD-0149 by 8ccd71d8（车道 F · 契约/门）@20:44（date 实读 20:44:08 +0800 · 权威树 tip 实测 `b2becb5` · 写域 = `contracts/**` + 新建测试文件；**产品码我自己不动**（本单第二件明写实现归 C）· 不 skip/xfail · 不打真网络（live 部分只做"没有 live 证据就必须红"的门，真 live 由 C 的 canary profile 跑） · 不占 :4781/:4782/:8693/:8781 与 _preview.db/_live.db · 自己的 detached 副本 + own `_run*.db` · 解释器 D:/moodle/CityNexus/.venv 3.12.14，不加 --timeout，AI/provider 凭据 unset
 ### SESSION=8ccd71d8 · ORD-0149 交付 @2026-09-21 21:09（date 实读 21:09:48 +0800）
