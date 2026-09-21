@@ -403,8 +403,8 @@ CASES = [
         # ④: a journey the server no longer has must not keep being polled for.
         "killJ2-journey-gone-branch-disabled",
         EXPERIENCE,
-        "            if (error instanceof V8Rejection && (error.status === 404 || error.status === 410)) {\n",
-        "            if (false) {\n",
+        "              error instanceof V8Rejection &&\n              (error.status === 404 ||\n",
+        "              false &&\n              (error.status === 404 ||\n",
         [(EXIT_SPEC, ["ord0126-a-journey-this-server-loses-comes-back-to-choosing-one"])],
     ),
     (
@@ -415,6 +415,14 @@ CASES = [
         "    const response = await fetch(\"/api/v1/health\", { signal: controller.signal });\n    return response.ok;\n",
         "    await fetch(\"/api/v1/health\", { signal: controller.signal });\n    return true;\n",
         [(EXIT_SPEC, ["ord0126-the-cached-view-has-a-way-out-and-says-what-backs-it"])],
+    ),
+    (
+        # ORD-0164 ②: name the dead trip but keep the id -- the next reload walks into the same 404.
+        "killJ4-stale-id-never-cleared",
+        EXPERIENCE,
+        "              localStorage.removeItem(\"citynexus.v8.journey_id\");\n              setOffline(null);\n",
+        "              setOffline(null);\n",
+        [(EXIT_SPEC, ["ord0126-a-journey-this-server-loses-comes-back-to-choosing-one"])],
     ),
 ]
 

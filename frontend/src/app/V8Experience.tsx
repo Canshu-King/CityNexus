@@ -618,7 +618,13 @@ export function V8Experience() {
               setBusy(false);
               return;
             }
-            if (error instanceof V8Rejection && (error.status === 404 || error.status === 410)) {
+            if (
+              error instanceof V8Rejection &&
+              (error.status === 404 ||
+                error.status === 410 ||
+                error.code === "NOT_FOUND" ||
+                error.code === "RESOURCE_NOT_FOUND")
+            ) {
               /* The id this device remembered is not on this server any more -- after a full reset it
                  is not, and the shell used to keep polling /twin for it (four ids, 404 every time,
                  screen unchanged).  Say which id is gone and hand back the way in. */

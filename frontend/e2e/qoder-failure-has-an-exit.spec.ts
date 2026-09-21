@@ -163,16 +163,28 @@ test("ord0126-a-journey-this-server-loses-comes-back-to-choosing-one — 行程�
 }) => {
   test.setTimeout(300_000);
   const NODE = "ord0126-a-journey-this-server-loses-comes-back-to-choosing-one";
+  /* Every journey the page dares to ask about, in order.  Two claims live on this list: the dead id
+     must stop being polled once it has been named and dropped, and nothing may be loaded *instead*
+     of it -- quietly opening the demo trip would be the same lie in a friendlier clothes. */
+  const askedJourneys: string[] = [];
+  page.on("request", (request) => {
+    const match = /\/api\/v1\/journeys\/([0-9a-f-]{8,})/i.exec(request.url());
+    if (match) askedJourneys.push(match[1]);
+  });
   /* A journey id this server has never heard of: exactly what a deleted journey looks like to the
      client.  No stub, so the 404 is the product's own.  `seed()` is not usable here -- it waits for
      the Today hero, and on a dead journey that hero never arrives, which is the whole point. */
   const ghost = "e833311d-0000-4000-8000-000000000001";
-  await page.addInitScript((id) => {
+  /* Seeded *after* the first navigation, not via `addInitScript`: an init script replays on every
+     reload and would re-insert the id the product had just cleared, so the node below would be
+     measuring its own instrument instead of the app. */
+  await page.goto("/v8/hub", { waitUntil: "load" });
+  await page.evaluate((id) => {
     localStorage.clear();
     localStorage.setItem("citynexus.v8.journey_id", id);
     localStorage.setItem("citynexus.locale", "zh-CN");
   }, ghost);
-  await page.goto("/v8/hub", { waitUntil: "load" });
+  await page.reload({ waitUntil: "load" });
 
   const gone = page.getByTestId("journey-gone");
   await expect(
@@ -202,10 +214,33 @@ test("ord0126-a-journey-this-server-loses-comes-back-to-choosing-one — 行程�
     page.getByTestId("journey-gone"),
     node(NODE, "pressing the exit did not leave the failure screen"),
   ).toHaveCount(0);
+  const askedBeforeReload = [...askedJourneys];
+  await page.reload({ waitUntil: "load" });
+  await expect(
+    page.getByTestId("trial-setup"),
+    node(NODE, `after the dead id was dropped a refresh did not land on the trip chooser (asked for ${JSON.stringify(askedBeforeReload)})`),
+  ).toBeVisible({ timeout: 20_000 });
+  await page.waitForTimeout(1_500);
+  const askedAfterReload = askedJourneys.slice(askedBeforeReload.length);
+  expect(
+    askedAfterReload,
+    node(
+      NODE,
+      `the refresh after clearing the id asked for ${JSON.stringify(askedAfterReload)} -- either the dead journey is still being polled, or a trip was loaded that she never chose`,
+    ),
+  ).toEqual([]);
   writeFileSync(
     evidencePath("ui-overnight/ord0126-journey-gone.json"),
     JSON.stringify(
-      { generatedBy: "e345b9d6", node: NODE, head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown", ghost, reasonOnScreen: reason },
+      {
+        generatedBy: "e345b9d6",
+        node: NODE,
+        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
+        ghost,
+        reasonOnScreen: reason,
+        journeysAskedBeforeReload: askedBeforeReload,
+        journeysAskedAfterReload: askedAfterReload,
+      },
       null,
       2,
     ) + "\n",
