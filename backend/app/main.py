@@ -7311,6 +7311,26 @@ class MobilityDataUnavailable(RuntimeError):
         super().__init__(f"MOBILITY_DATA_UNAVAILABLE:{origin}|{destination}")
 
 
+def _mobility_gap(text: str) -> dict[str, Any]:
+    """Turn a collected leg back into a named gap.
+
+    The collection site stores the exception's own text, so the endpoints are parsed back out
+    here rather than duplicated at every append.  An unparseable end stays `None`: inventing a
+    place id to fill a column would be the same fabrication the missing leg already refuses.
+    """
+
+    _, _, argument = str(text).partition(":")
+    origin, separator, destination = argument.partition("|")
+    return {
+        "from_place_id": origin or None,
+        "to_place_id": destination or None if separator else None,
+        "reason_code": "MOBILITY_DATA_UNAVAILABLE",
+        # There is no evidence for this leg at all - which is a different thing from a weak one,
+        # and is why the planner must not fall back to a default minute count or a straight line.
+        "evidence_state": "NO_QUALIFIED_FACT_FOR_LEG",
+    }
+
+
 def _replan_estimate(
     session: Session,
     journey: Journey,
@@ -9413,7 +9433,20 @@ def generate_replan(
         # tell the traveller that nothing can be done when the truth is that
         # the engine lacked travel evidence.
         if mobility_unavailable_pairs:
-            raise HTTPException(422, "MOBILITY_DATA_UNAVAILABLE")
+            refusal = HTTPException(422, "MOBILITY_DATA_UNAVAILABLE")
+            # R5 (arbiter provider policy): `details=null` on a refusal that already holds the
+            # legs is a contract defect, not a style choice.  The message stays byte-identical -
+            # the log line and the existing doors read it - and the segments this loop already
+            # collected ride along, named, so a screen can say *which* leg was unmeasurable
+            # instead of "no feasible proposal".
+            gaps = [_mobility_gap(pair) for pair in sorted(mobility_unavailable_pairs)]
+            refusal.reason_code = "MOBILITY_DATA_UNAVAILABLE"
+            refusal.error_details = {
+                "gaps": gaps[:20],
+                "gaps_total": len(gaps),
+                "legs_required": len(gaps),
+            }
+            raise refusal
         details = ", ".join(sorted(failed_reasons)) or "NO_DISTINCT_CANDIDATE"
         raise HTTPException(422, f"no feasible replan proposal: {details}")
 
