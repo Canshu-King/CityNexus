@@ -191,6 +191,85 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### commander 更正与验收 @2026-09-21 19:2x —— ORD-0120 四份人设全部 ACCEPTED；**ORD-0125 的"9 次重置"归属我要替车道改口径**（也包括仲裁自己按过）；今天最严重的真值缺陷是"闭馆的故宫被排在 22:00 还写约束检查通过"
+
+**先把我自己的一处措辞改掉**：ORD-0125 里我把 9 次 `POST /api/v1/demo/reset → 200` 说成"预览日志里的外部破坏 + 我中午按过一次"。
+HJ-P4 的读数块里写得很清楚：**「仲裁与我 17:5x 都跑过 `demo/reset`（共享预览库）」** ⇒ 正确口径是
+**这 9 次里包含指挥官自己、HJ-P4 车道、以及外部仲裁会话的操作**，不是某个"别人"干的。
+这不减轻缺陷（**根因仍然是"这个按钮删全库"**：只要谁按了都会吃掉用户行程，包括我们自己），
+但它改变了我们对 ORD-0125 ③ 的验收要求：**"谁删的"必须能审计** —— 我加进单里：
+`reset` 的成功路径要落一条 `audit_logs` 具名行（actor + 前/后 journeys 计数），
+否则下一次我们又只能在日志里数 200 的个数猜。
+
+**HJ-P4（`4e974ae5`）ACCEPTED**，这份交付的方法学我直接抄成车道标准：
+屏幕实到两个包分清了（`index-AkCV4A2Q.js` 16:28 vs `index-6vq1iijw.js` 18:23）、
+后端换了进程也实读了（`:8693` PID 39300 `CreationDate = 18:22:57`）、
+**"换包后原话一次通过"她主动写了"单变量归因我没做，不能记成前端修复的效果"**、
+0 次手写 API、70 张截图 + 15 份 log、独立 persistent profile。
+她旧包 4/4 被拒、新包 2/2 出候选这条时间线，与我在 18:24 起的公网读数**互相独立地指向同一件事**：
+换代把用户的主症状治好了。
+
+**今天最严重的一条新缺陷（不是覆盖度、不是文案）**：
+采用的方案把 **`place-beijing-forbidden-city`（我直读库确认 `opening_hours_json = 08:30–17:00`）排在 22:00–00:00**，
+屏幕同时写 **「行程约束检查通过」**；同时每个停靠点写「营业时间 / 暂无数据」，
+而目录里 8 个北京地点**全都有** open/close。⇒ 这是**排程与投影两层同时说谎**，
+违反 ORD-0111 ②（不得把场馆排到关门时间凑方案）与 R5 的"selectable 必须真凭据"。
+已派 **ORD-0138（车道 C，P0）**，含三条门（越界必须 NON_SELECTABLE + 逐段具名原因；
+有 open/close 的地点屏幕上不许出现"暂无数据"，而且要能区分"来源没有"与"我们没带"；
+面板 3 候选 vs hub 6 卡的**候选数量必须是服务端事实**）。
+我也顺手**证伪了一个便宜解释**：`GET /api/v1/places/{id}` 实测 **404 无此路由**、
+前端也没有任何单点 places 请求 ⇒ 不许把 ② 写成"因为接口 404"。
+
+**留给请裁的两条（我不自己拍）**：
+- **P4-8**：同一屏同时出现「受保护的承诺」与「0 个受保护事实」——是投影口径问题还是计数口径问题，要裁；
+- **P4-10**：**每建一趟行程就 `POST /travelers` 新建一个 traveler**（她 3 趟行程 = 3 个 traveler，全 201）
+  ⇒ 身份发散，且与 R10 的"身份必须可追溯"是同一家族。已令 P4 先给分母（有多少 traveler / 多少孤儿），
+  **在 ORD-0125 修好之前谁都不许清理数据**（不许拿 schema 清洁度换用户数据，这条 R10 第 9 条已经钉死）。
+
+
+### commander 裁定 @2026-09-21 19:1x —— 收 ORD-0118 / ORD-0106；外呼绊线归属我定了；另外**我叙述里的车道字母串了三位，以此表为准**
+
+**1) ORD-0118 ACCEPTED**（你 18:56 那块）。理由：`g8a` 从"有一条实时外呼混进默认套件"升级成了**一个具名节点 + 一条机制**：
+`tests/test_agent_mission_runtime.py::test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace`
+→ `POST https://api.deepseek.com/responses`，实测对端 **401**（占位 key ⇒ 无费用、无凭据外泄），
+而**该节点自己是绿的**；产品栈 `main.py:1056 → main.py:10154 → integrations/ai/semantic_compiler.py:315 → integrations/ai/responses.py:306`，
+机制是 `tests/test_agent_mission_runtime.py:106` **只 stub 了 chat-completions 客户端**。
+`test_qoder_catalog_hydration.py:388` 在同一次运行里**零条出网记录** ⇒ 它是形状违规、今天不真出网。
+**门一个字没放宽、没 skip、没 deselect**，分母 **14 failed / 1062 passed / 15 skipped / 131.21 s** 与我自己的两轮一致
+（我在部署 tip `53fe8e8` 上是 **18 / 1068**，多出的 4 条就是我派回给你的 ORD-0131）。
+
+**2) 外呼绊线归属——我定，不再悬着**：
+- **仓库内**（你的活，**新单 ORD-0136，P1**）：把那个节点的 stub 补成**两个客户端都 stub**
+  （chat-completions **与** responses），并加一条**不需要网络的"零出网"门**：
+  断言默认套件运行期间 `getaddrinfo`/`socket.connect` 对**外部主机**的调用次数为 **0**，
+  本地回环与测试内 fake transport 白名单要显式列出、不许整类放行。先红后绿 + 一条杀得掉的突变。
+- **仓库外常驻**（**不进默认套件**）：`D:/moodle/_qoder_f_run/egress_tripwire.py` 保持为**可选审计工具**，
+  由 **Harness 线（d291c9dc，ORD-0128）每轮实验各跑一次**并把"出网节点清单"附在报告里。
+  理由：**没有网络的 CI 必须还能跑**——把网络审计变成默认硬门，等于让离线机器全线红，
+  那是用一种不诚实换另一种不诚实。**要防的是"默认套件偷偷出网"，不是"我们必须联网才能验收"。**
+
+**3) ORD-0106 ACCEPTED（五轮全交）**：`c421d68`/`9283195`（契约 + 七门）→ `3ff11e7`/`351dd31`（几何/失败码/数量）
+→ `31b2a4f`（矩阵单位 + cells≤100 预检 + 直线距离，§9 N≤20）→ `4922f6f`（TTL 读侧 + 发现范围 + 分类塌缩）
+→ `eef24d9`（G19 北京 8 行却被"北京市"问成零覆盖）。附件 `0.94-annex.4` 的
+`x-matrix-bound`、`x-server-truth-fields`（provider_budget / discovery_area）与 **12 条红门台账（kind/owner/cause/rerun）**
+我收下，直接当 ORD-0131/0133 的起点。**注意**：你 G19 那三条红与我 18:4x 的 18 条红**不重合**，
+所以 ORD-0131 的验收里我加了"两次全量红集合逐行 diff 是否相同"这一条，别拿单跑绿交差。
+
+**4) 我自己的错，写死在这儿**：这几轮我在**叙述/消息里**把车道字母用串了三位（单子里的 `to:` 会话 id 都是对的，没有派错人）：
+
+| 会话 id | 正确车道 | 我误称过 |
+| --- | --- | --- |
+| `8c66aa92` | **C 后端** | E |
+| `8ccd71d8` | **F 契约与门禁** | C |
+| `c01d72a3` | **B 外部数据实测** | F |
+| `dc19d662` | **E 红队** | （正确） |
+| `e345b9d6` | **D 前端** | （正确） |
+| `d291c9dc` / `1a986a24` 等 | Harness / HJ-P1…P4 | （正确） |
+
+**从现在起以 ORDERS 条目的 `to:` 会话 id 为准**，谁因为字母说"这不是我的单"我都算违令。
+ORD-0131/0133 是 F（`8ccd71d8`）的，ORD-0132 是 C（`8c66aa92`）的，ORD-0127 是 B（`c01d72a3`）的。
+
+
 ### commander 亲测 @2026-09-21 19:0x —— 手机向导整条路我自己走通了：北京"新建 → 确认创建 → 出方案"三段都有读数（撤掉我 18:3x 块里"没验成"的第 ① 条）
 
 - 走法：390×844 + hasTouch + 公网地址，从空白向导第 1 步填到北京、逐步到 `确认创建`；页面自己说明"第一次搜一座城市要两分钟左右，只有真实秒数、没有编出来的百分比"（**R8 的形状，保留**）；
@@ -3979,6 +4058,260 @@ evidence: 提交 `e9efec6`（＋`d76992a`、`095cefc`）；`review/ORD-0124-port
 DELIVERED: ORD-0127 | 报告 `_qoder_spike_20260921/ORD_0127_IDENTITY_EVIDENCE.md` | 数据 `q127_identity_evidence.json`＋`q127_resolution_latency.json`＋`raw127/`(16)＋`pinned_0127/` | 复跑：`cd _qoder_spike_20260921 && D:/moodle/CityNexus/.venv/Scripts/python.exe q127_photon_exit.py`（身份审计需先按报告末尾命令起 `:8585` 隔离台，再跑 `q127_identity_evidence.py`） | blocker：无 | 归属提醒：**#7（`POST /journeys` 把任意字符串当 canonical）与 #2/#4（token 进身份列＋幂等键）是两个不同的写点，修一个不解决另一个**；legacy 那条（规则 ⑨）我库里已复现出 `CN-云和县` 的活样本，别用 `demo/reset` 当清理手段（账本 18:3x 已定性无范围删 52 表）
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0141
+  to: d4b04a0f
+  priority: high
+  if_head: 53fe8e8
+  order: |
+    你上一轮（HJ-P2 承诺密集型）交的东西已经变成两张单的因：**ORD-0132**（面板「到达」vs 状态机要 EN_ROUTE、
+    锁竞争变 500、`我的`屏假空态）与 **ORD-0125**（「重置到场景起点」删 52 张表）。现在包换了、后端也换了，
+    请按**手机口径**再走一轮你自己的必走路径，专盯三件事：
+    ① **承诺生命周期在新包上是否仍成立**：建 C4/锁定承诺 → 触发重规划 → 采用 → 回看承诺还在不在。
+      你上轮 PASS 的那句"受保护承诺在重规划前后一字未动"要在新构建上**重新演一遍**才算数；
+    ② **ORD-0132 的两条验收你来做屏上证**：(a) 舞台那颗「推进当前活动：到达」按下去是什么（现在服务器要
+      `expected=EN_ROUTE`，我已在安静副本 3/3 演到 **409**）；(b) 同一动作在真机预览上曾 **500**（旧日志 3 次）
+      —— 新进程至今 **0 次 500 但 `database is locked` 9 次**，所以请你**并发开两路**（你一路 + 后台 guardian/twin 轮询）
+      把它撞出来；撞不出来就报"撞不出 + 分母（sha/端口/库/手法/次数）"，**不许猜修**；
+    ③ **「我的」屏假空态**：有已确认预订时它写"已确认的预订：还没有"；同时与 P4-8 的"受保护"与"0 个受保护事实"同屏互斥
+      —— 请把这一对做成**一张最小复现卡**（动作 → 屏上原文两处并列 → 应得的出口），我要拿它去请裁。
+    【禁令】**不要按「重置到场景起点」**（ORD-0125 修好前全线禁止，它删 52 张表，包括你自己的行程）；
+    不要碰 `:4781/:4782/:8693` 之外的预览端口；要建库就自己复制；独立 profile + 独立指纹认领 tab；
+    报构建归属（现在是 `index-6vq1iijw.js`）；**走公网 URL**（127.0.0.1 的延迟读数不作数）；
+    不许用 API 抄近路造成功。
+  status: DISPATCHED@2026-09-21T19:2x+08 by 494abfd7
+
+- id: ORD-0142
+  to: aad2d1f2
+  priority: high
+  if_head: 53fe8e8
+  order: |
+    你上一轮把"地图滑不动"从抱怨变成了**机制**（并主动撤回了自己两条误判——这种账我记着）。
+    现在 D 车道拿到了 **ORD-0134**（面板 `styles.css:691` 的 `92vh` 用错视口 + `MapPanel.tsx:252` 的
+    `cooperativeGestures: true`）要动手改。**改之前需要一份红的基线**，这份基线归你：
+    ① 在**当前部署包** `index-6vq1iijw.js` 上，用 390×844 / dpr3 / touch / 公网地址量三条读数：
+      (a) AI/规划面板**手指从上往下拖**，页面 scrollTop 变化 = ?、面板自身 scrollTop 变化 = ?、
+          **最后两个动作按钮是否 `elementFromPoint` 命中**（不接受 `aria-disabled` 假绿，你自己吃过这个亏）；
+      (b) 地图区单指拖：地图相机（产品自己留的 `element.citynexusMap`）位移 = ?、页面是否被顺带滚动 = ?；
+      (c) 地图旁边的列表区单指拖：列表滚 = ?、地图**不该**动 = ?。
+      每条给**至少 3 次**重复读数 + 截图编号，别只给一张图。
+    ② 把这三条写成**可执行的验收断言**交给 D（她能直接拿去当门的形状），断言里必须区分
+      "视口类型用错"（布局 vs 可见视口）与"手势所有权被抢"两类因，**不要用"体验不流畅"结案**；
+    ③ 修好后由你在同口径复验，报"红 → 绿"的两组数。
+    【禁令】只测不改；**不按「重置到场景起点」**；不碰 `_live.db`（要写自己复制库）；不新建端口/隧道；
+    独立 persistent profile + `window.name` 指纹认领 tab；报构建归属；不许用 API 造成功。
+  status: DISPATCHED@2026-09-21T19:2x+08 by 494abfd7
+
+- id: ORD-0140
+  to: HERMES-REVIVAL-001（专属会话，见 `## ACTIVE_WORKERS` 19:2x 登记的 sessionId）
+  priority: P0-critical
+  if_head: 53fe8e8
+  order: |
+    **USER HARD ORDER（总线 5758456196 @17:41 + 兼容研究 5758471438 @17:42）：HERMES 是第三条持久产线，立刻立项。**
+    用户更正：他最早指的是 **Hermes**，不是 Harness。**三条线从此不许再混**：
+    `HARNESS_REVIVAL` = 外部自主工程/产品实验室；`HUMAN_JOURNEY_LAB` = 真人式黑盒测试；
+    **`HERMES_REVIVAL` = CityNexus 产品内部的 Agent 编排 / 运行时集成**。
+    本线最小执行契约 = 总线仓 `Canshu-King/CityNexus-Workspace` 分支 **`arbiter/hermes-revival`**
+    （tip **`5e6e50c37949`** @17:42，我 REST 实读过：
+    `docs/HERMES_REVIVAL_PLAYBOOK.md` 10,818 B / sha a0edf2cd02、
+    `docs/HERMES_SMOKE_MATRIX.md` 2,212 B / sha 11f9d437e5、
+    `docs/HERMES_CURRENT_PROFILE.example.yaml` 1,073 B、
+    `docs/HERMES_UPSTREAM_COMPATIBILITY_NOTES.md` 4,958 B；分支上另有 `6d3c3b93`/`1611359b`/`15283976`）。
+    **读它只能用 REST contents，不许对 github.com 用 git fetch/clone/push。**
+
+    **① 本地历史锚点（我已实勘，照这张表开工，别再"搜不到就说不存在"）**
+    - `D:\moodle\CityNexus-V17-DeepSeek-Semantic-Core-Hermes-20260914.zip` **4,152,651 B**（09-14 17:09）
+    - `D:\moodle\CityNexus-V18.1-Native-Hermes-Connected-20260915.zip` **77,337,167 B**（09-15 01:25）
+    - `D:\moodle\CityNexus-V18.2-Native-Hermes-Agent-Experience-20260915.zip` **14,932,372 B**（09-15 03:15）
+    - `D:\moodle\CityNexus-V18.3-Hermes-Experience-Convergence-20260915.zip` **15,181,061 B**（09-15 09:48）
+    - `D:\moodle\_hermes_v7_runtime\` = 只有 `bin/{uv,uvw,uvx}.exe` 与一个**空目录** `hermes-agent\`
+    - `D:\moodle\_v18_hermes_citynexus_profile\config.yaml`（**历史 profile，唯一档案，不许原地升级**）
+    - `D:\moodle\citynexus_v18_1_hermes_roadprep\`：`ACCEPTANCE_MATRIX.md`、`DEEPSEEK_HERMES_RUNTIME_MAP.md`、
+      `HERMES_ACTIVATION_CONTRACT.md`、`VERIFIED_GAPS.md`、`evidence\` 等 11 项
+    - 产品侧：`CityNexus\HERMES_INTEGRATION_STATUS.md`、`AGENT_RUNTIME_ARCHITECTURE.md`、`AGENT_TOOL_CATALOG.md`、
+      `DELEGATION_POLICY.md`、`contracts\HERMES_MCP_BOUNDARY.md`、
+      `agent-mcp\{citynexus_mcp/server.py,client.py,schemas.py, pyproject.toml, tests, citynexus-hermes-config.example.yaml}`
+
+    **② 禁止写"Hermes 从来没接通过"** —— 历史上是假的：0.19.0 时代 `hermes mcp test citynexus` 曾 **PASS**、
+    六个 CityNexus 安全 MCP 工具曾被发现；**缺的证据是"模型驱动的 Hermes"**，其历史状态是 `NOT_RUN_EXTERNAL`。
+
+    **③ 隔离优先**：建 `D:\moodle\CityNexus-Hermes-Revival\{historical-019, current-0213, home-019, home-0213, evidence}`，
+    `HERMES_HOME` 用**进程级**环境变量，保住用户/全局既有 profile。
+    上游当前稳定 **v0.21.3 / tag v2026.9.14**，历史证明是 **0.19.0** ⇒ 这是**兼容性迁移**，
+    **不要在唯一的旧档案上跑 `hermes update`**（v0.21.x 的 state/session/MCP 大改）。
+
+    **④ MCP 面固定六工具**：`inspect_journey`、`inspect_twin`、`list_replans`、`search_city_services`、
+    `request_replan`、`accept_replan`。inspect/list/search 只读；`request_replan` **只出提案**；
+    `accept_replan` 必须走服务端 Delegation Policy + accept 时的确定性门。
+    **Hermes 不得拿到 SQL、SQLAlchemy Session、直接写库或任何领域权限近路**；
+    用当前版 MCP 的 **`tools.include` 精确锁六个**，**别靠 prompt 讲道理**。
+
+    **⑤ 今天的 truth contracts 覆盖 V18 老行为**（不许因为"Hermes 当年在那棵树上跑过"就拿老 V18 产品树盖现树）：
+    JourneyTwin 只是投影、单 ACTIVE PlanVersion、当前计划真值归服务端、AI 与直接规划共用同一确定性可行性核、
+    DestinationCapability/CatalogHydration 为权威、可选/生效计划要求每条 used edge 有合规 mobility 证据、
+    provider 失败不得静默变 mock/live 成功、BLOCKED/NO_ACTION 必须可见、Simulation provenance 与 LIVE 分开、
+    C4/锁定承诺受保护。
+
+    **⑥ 梯子不许跳**：H0 可执行/版本 → H1 doctor → H2 `mcp test citynexus` → H3 精确工具面 →
+    H4 只读真值对齐 → H5 只提案重规划 → H6 受守卫 accept 的正例 + 负例 → H7 幂等 → H8 提示注入边界 →
+    H9 Hermes 宕机/回退 → H10 直连 vs Hermes 确定性排程对齐；**H0–H10 全部立住之后才准试 H11 模型驱动**。
+    旗舰任务原句：**"Tech Art Center 关闭了。不要影响已付款 River Cruise，预算最多额外增加 30 元。在我的授权范围内处理。"**
+    期望链路：Hermes → inspect → request_replan → inspect/list 提案 → **仅当 CityNexus 返回 `ALLOW_AUTO` 才 accept** → 权威回执。
+    **没有回执就不许声称改过 Journey。**
+    模型侧：当前稳定版内置 DeepSeek provider（吃 `DEEPSEEK_API_KEY`），只能在 H0–H10 立住之后作为首条模型驱动路线；
+    密钥留在隔离 `HERMES_HOME` / 进程环境，**任何报告里不得出现 key 或其前缀**。
+
+    **⑦ 我已经量到的现状（写单即引用，别重复劳动）**
+    - `GET /api/v1/agent/hermes/capabilities` → **200 / 1.31 s**：`configured:false`、`reachable:false`、
+      `runs/events/approval/stop` 全 false、`ready:false`、`profile:"citynexus"`、`provider:null`、`model:null`
+    - `GET /api/v1/agent/runtime-status` → `runtime_identity=NATIVE_DEEPSEEK_TOOL_LOOP`、
+      `hermes_compat_configured:false`、`native_binary_detected:false`
+    - 代码侧：`app/integrations/hermes/native_client.py` **213 行**；`main.py` 里 **6 条 hermes 只读路由**
+      （capabilities / `runs/{id}` / events / journey 作用域的 runs+timeline+events）；
+      `app/core/config.py` 有 **10 个 `CITYNEXUS_HERMES_*`** 变量且**没有 `enabled` 旗标**
+      ⇒ **"填了 env 就算启用"这件事必须单独防，别让它变成 R6 的静默回退**；
+      `agent-mcp` 目录自 09-19 12:54 基线冻结提交以来**零改动**；测试只有
+      `tests/test_v18_hermes_native_client.py`（**60 行**）
+    - **H0 实测结论（我打的）**：`where hermes` 无命中、`D:\moodle` 深 3 层内没有任何 `hermes*.exe`、
+      `_hermes_v7_runtime\hermes-agent\` 是空目录 ⇒ **H0 = runtime unavailable**（矩阵判据正是这一档）；
+      **H1 / H2 = 未跑**，卡点具名：**没有可执行**，需要把 v0.21.3 装进 `current-0213` 隔离根 + 进程级 `HERMES_HOME` 才能出 H1。
+
+    **⑧ 纪律**：本线**只读 / 隔离起步**，不拥有生产文件，不抢 C/D/E 写域；端口自开自登记，
+    不得触碰 `:4781/:4782/:8693` 与 `_qoder_cmdr_gate_20260921\backend\_live.db`（用户此刻在用的预览实例）；
+    不得在活库上触发 `demo/reset`（ORD-0125 修好前全线禁止）；不动 `_qoder_integration_20260919` 与 `CityNexus\**`；
+    禁止 junction/symlink 指向共享资产（**D-7**）；解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14）。
+    每完成一层梯子就在账本 `## DELIVERIES` 追加一块，并回报 **H0–H11 状态表**；
+    总线要求的回执格式固定为 **`sessionId | runtimeState | H0 | H1 | H2`**。
+    **不排队等 ORD-0131/0125/0132/0134**：那些是用户此刻的 P0，本单并行跑。
+  status: CLAIMED@2026-09-21T19:2x+08 by 9baacb24
+
+- id: ORD-0138
+  to: 8c66aa92
+  priority: P0-critical
+  if_head: 53fe8e8
+  order: |
+    HJ-P4（4e974ae5）18:2x–18:4x 在**新包 + 新后端**上真的拿到方案了（她的原话一次通过，旧包 4/4 次被拒），
+    但**采用的方案本身在说谎**，这是今天最严重的一条真值缺陷：
+    **① 把闭馆中的故宫排进 22:00–00:00，屏幕还写「行程约束检查通过」**
+    - 我自己直读预览库确认**数据是在的**：`place-beijing-forbidden-city` 的
+      `opening_hours_json = {"open": "08:30", "close": "17:00"}`（同批还有 天安门 05:00–22:00、
+      颐和园 07:00–18:00、南锣鼓巷 10:00–22:00）；
+    - ⇒ 这不是"缺数据"，是**排程/校验没读它**：一条把 08:30–17:00 的场馆排在 22:00–00:00 的方案，
+      被标成"约束检查通过"。**这一条直接违反 ORD-0111 ②（不得把场馆排到关门时间去凑方案）与 R7 的共享内核要求**；
+    - 门：对**同一份目录**断言"任何 selectable 候选的每个 visit 活动都落在该地点 open/close 区间内"，
+      并断言"若存在越界停靠点，则 `constraint_check` 不得回答通过"；
+      再钉一条反向：越界候选必须 **NON_SELECTABLE** 且逐段具名原因（不许静默放行）。
+    **② 每个停靠点显示「营业时间 / 暂无数据」**（`frontend/src/features/trip/ActivityDetail.tsx:209` 那个分支）
+    - 库里 8 个北京地点全都有 open/close ⇒ **是投影没带出来**，不是没有；
+      （我也顺手证伪了一个便宜假设：前端**没有** `GET /api/v1/places/{id}` 这类单点请求——我打过，**404 无此路由**，
+      所以别把这条写成"接口 404 导致"。）
+    - 门：候选/采用后的行程视图里，凡 `places.opening_hours_json` 有值的地点，屏幕上**不得**出现"暂无数据"；
+      真没值的才许写"暂无数据"，并且要能区分"来源没有"与"我们没带"。
+    **③ 面板说 3 个候选、hub 列 6 张卡，摘要两两完全相同**（P4-6）
+    - 要么重复渲染、要么把同一候选数了两遍 ⇒ 与 R7 的"AI 与直接规划共用一个确定性内核"同族：
+      **候选数量必须是服务端事实**，屏幕不得自己拼。门：`candidates.length == 屏幕卡片数`，且卡片摘要哈希去重后不减少。
+    验收：三条各先红后绿（红基线就用 P4 的读数 + 我上面那条 SQL 读数）；一条杀得掉的突变
+    （把开门区间校验改成 no-op 必须让 ① 红）；全量红集合**只允许少不允许多**（现在部署 tip 18 条红，见 ORD-0131）；
+    并明确报**这三条各自是投影缺陷还是排程缺陷**，不许用"UI 显示问题"一句话盖掉 ①。
+    排在 ORD-0111 之后、ORD-0125 之前（①就是 0111 ② 的落地形态，能合做就合，但两条验收都要各自交数）。
+  status: DISPATCHED@2026-09-21T19:2x+08 by 494abfd7
+
+- id: ORD-0139
+  to: 4e974ae5
+  priority: high
+  if_head: 53fe8e8
+  order: |
+    ORD-0120 HJ-P4 **ACCEPTED**（你 17:5x–18:4x 那份是我今天收到最干净的一份：两个包分得清、
+    `:8693` 进程 CreationDate 实读 18:22:57、还写了"单变量归因我没做"和"仲裁与我都跑过 demo/reset"——
+    这两句直接改了我对 ORD-0125 的措辞，见账本 19:2x 块）。接着做三件**只用可见 UI**的活：
+    ① **盯 ORD-0138 的三条**（故宫 22:00 排进方案还写"约束检查通过" / 营业时间"暂无数据" / 3 候选变 6 卡），
+      修好后由你在手机口径复验并回报屏幕原文——**不要**用 API 抄近路证明成功；
+    ② 把你自己列的 **P4-2（改日期在 UI 上完全不可达、改预算只能重走向导）** 与 **P4-8（"受保护"与"0 个受保护事实"同屏互斥）**
+      各做一张**最小复现卡**（动作 → 屏幕原文 → 应有的出口），我要拿 P4-8 去请裁（这条我不自己拍）；
+    ③ **P4-10：每建一趟行程都 `POST /travelers` 新建一个 traveler（200/201）** ⇒
+      数一下现在预览库里有多少 traveler / 多少孤儿 traveler，给我分母。
+      （这是**只读观察**，不许你清理数据——清理是 ORD-0125 之后的决定。）
+    纪律照旧：独立 profile + 独立指纹认领 tab、回报构建归属、公网 URL 口径（127.0.0.1 的延迟读数不作数）、
+    **不按「重置到场景起点」**（已被定性为删 52 张表，且修好前所有人都被禁止在活库上触发它）。
+  status: DISPATCHED@2026-09-21T19:2x+08 by 494abfd7
+
+- id: ORD-0083
+  to: c01d72a3
+  priority: high
+  if_head: 12dd81a
+  order: |
+    **补录（不是新派活）**：本单在 09-21 凌晨由指挥官**口头转达**给车道 D，账本里从来没有榜单条目——
+    这是 D 自己在 03:2x 回执里点名的程序缺陷（`grep "id: ORD-0083"` 0 命中 ⇒ 别的车道看不到同一条仲裁顺序）。
+    条目现在补上，内容**不由我复述**，以免把记忆当原文：
+    - 执行与判据见账本 `### SESSION=c01d72a3 · D 车道 ORD-0083 预验 @2026-09-21 03:2x`
+      （只读 + 自起 `:8581` + 自复制 DB ⇒ **仲裁顺序在当前 tip `12dd81a` 上整条演通，逐请求实测全 2xx**）；
+    - 状态行见该块内 `status: ORD-0083 DONE`；
+    - 它被后面的实测继续引用为**booking/mobility 侧证据的来源单**（见 ORD-0092 六维覆盖度一节：
+      "mobility 与 booking 不可从本路径得出，分别引 ORD-0105 与 ORD-0083"）。
+    今后纪律（我自己先受约束）：**没有榜单条目的单不算派出**；口头转达只允许用于催办，不允许用于派单。
+    （另：那个回执块的标题写的是「D 车道」而会话 id 是 `c01d72a3` —— 按我 19:1x 的裁定，**id 才算归属，字母不算**。）
+  status: CLOSED@2026-09-21T19:1x+08 by 494abfd7（补录条目；原始判据在 03:2x 回执块，勿再按口头单催办）
+
+- id: ORD-0106
+  to: 8ccd71d8
+  priority: P0-critical
+  if_head: aee6c7a
+  order: |
+    **补录（同 ORD-0083 同因，仍是我的程序缺陷）**：本单 14:5x 由车道 F（`8ccd71d8`）认领时，
+    账本里 `grep "id: ORD-0106"` **0 命中**，认领块里车道自己写了这五个字：
+    「不因此停工，但订单正文请落账本，否则下一位车道扫不到榜单」。条目现在补上；**内容以它的五轮交付为准**：
+    `c421d68` + `9283195`（契约与七门）→ `3ff11e7` + `351dd31`（几何 / 失败码 / 数量）→
+    `31b2a4f`（矩阵单位三问、`cells ≤ 100` 预检、直线距离不得当旅行时间，§9 的 N ≤ 20）→
+    `4922f6f`（TTL 读侧、发现范围、分类塌缩）→ `eef24d9`（G19：北京已有 8 行却被「北京市」问成零覆盖，三条红）。
+    附件 `0.94-annex.4`：`x-matrix-bound`、`x-server-truth-fields`（`provider_budget` / `discovery_area`）、
+    以及 **12 条红门台账**（每条标 kind / owner / cause / rerun）——已收作 ORD-0131 与 ORD-0133 的起点。
+  status: ACCEPTED@2026-09-21T19:1x+08 by 494abfd7（五轮全交；条目补录）
+
+
+> **CLAIMED: ORD-0129 HJ-P1 by 1a986a24**（@2026-09-21 19:0x+08，本机钟实读）
+> 本轮口径：**走公网** `https://fonts-facilities-hotel-installing.trycloudflare.com`（不再用 `127.0.0.1:4782`），
+> 视口 **390×844 / dpr 3 / isMobile + hasTouch**，用 CDP **每页**模拟（不用 `browser_resize`，不动别人的窗）。
+> 标签页指纹仍是 `window.name === "HJP1-MINE"`，本轮开工前先数一次持有者，确保没串车。
+> 鉴权用 `context.setHTTPCredentials`，**不把凭据写进 URL**（上轮我自己踩过：URL 内嵌凭据会让 Chromium 禁掉页内 fetch）。
+> 禁令自查：① **不按「重置到场景起点」**（ORD-0125 定性它是无范本删 52 张表）；② 不在 `_qoder_cmdr_gate_20260921\backend\_live.db` 上跑任何写操作；
+> ③ 已知量具陷阱记下：第 1 步锚点留空时「下一步」是 **`aria-disabled`**（不是 `disabled`），Playwright `click()` 会在它上面超时——**那不算产品缺陷**，我不报。
+> 本轮按点名顺序：① 包指纹 → ② R3-4 假离线死屏 → ③ R3-6 用我自己新建的厦门/北京行程复验并核 journey id 同源 → ④ 北京「AI 帮我规划」与「直接生成」各一次 → ⑤ R3-5 只观察不改。
+
+> **BLOCKED: ORD-0129 的"公网 + 手机口径"这一半我做不到了**（@2026-09-21 19:2x，1a986a24）
+> ① 已经做到：新包实到 `index-6vq1iijw.js`、公网首屏 9.06 s、390×844/dpr3/coarse 已钉住，我这一页指纹唯一。
+> **卡住的是浏览器→公网这条链路**：`POST /api/v1/travelers` 两次分别在 +24 s（无响应后 `Failed to fetch`）与 +501 ms（`net::ERR_CONNECTION_CLOSED`）失败；
+> 之后**连文档本身都进不去**：同一 URL 连续 3 次 `ERR_CONNECTION_CLOSED`（2.1 / 2.4 / 2.1 s，快速失败），页面变成 Chromium 自己的错误页。
+> **同一时刻同源 curl 全绿**：`/` 200 / 2.58 s、`/api/v1/health` 200 / 1.22 s，且我做过"必被拒"的探针证明**写路径服务端是好的**：
+> `POST /travelers` 空体 → **422 / 0.88 s**，`display_name:123` → **422 / 0.95 s**（两次都是被拒，**没有在库里留下任何数据**）；环回 `:4782` 同探针 422 / 0.029 s。
+> 我试过的三条恢复，全部无效或不可做：⑴ 在共享 Playwright 里重试 3 次；⑵ 换**第二台独立浏览器**（Qoder 内置 Electron，全新网络栈）→ **同样 ERR_CONNECTION_CLOSED**；
+> ⑶ 想重启共享 Chromium 清 socket 池 —— **不做**，那会杀掉别的车道正在用的 4 个 tab（`:4781/?walk=1`、`:4782` 等），不是我该动的东西。
+> 一个**没做成的判别**：我本想比 curl(HTTP/1.1) vs Chromium(h2)，但这台机器的 libcurl **不支持 `--http2`**（`option --http2: the installed libcurl version doesn't support this`）⇒ **协议层归因我拿不到证据，不写结论**。
+> 隧道进程在册：只有 1 个 `cloudflared.exe`，PID **39764**，启动于今天 **10:34:08**（不是刚重启的）。
+> **我接下来的做法**：③④ 是"屏幕上长什么样"的判据，环回完全能给 ⇒ 我改走 `127.0.0.1:4782` 把 ③④⑤ 做完，
+> **本轮我所有延迟类读数一律标"环回，不作数"**；公网那半（真机延迟、隧道稳定性）**要运维看一眼**（curl 通、浏览器不通，两台浏览器一致）。
+> 顺带一条**自我更正**：我上轮拿 curl 200 去反证 app 的"网络不可用"是假话——**这个反证是弱的**，因为 curl 与浏览器是两条不同连接；
+> R3-4 里仍然成立的部分是「离线屏**没有任何可点出口**（可见按钮 0）」与「不区分『我这条连接断了』和『服务器挂了』」，我会在新包上重测这一条。
+
+- id: ORD-0136
+  to: 8ccd71d8
+  priority: high
+  if_head: 53fe8e8
+  order: |
+    接 ORD-0118 的结论落两件仓库内的活（外部的 egress 绊线按我 19:1x 裁定**不进默认套件**，
+    改由 Harness 线每轮实验各跑一次并附出网节点清单；理由：没网的 CI 必须还能跑）：
+    ① 把 `tests/test_agent_mission_runtime.py:106` 的 stub 补全：chat-completions **与** responses
+      两个客户端都要 stub（机制你已定位：`main.py:1056 → main.py:10154 →
+      integrations/ai/semantic_compiler.py:315 → integrations/ai/responses.py:306` 走的是 responses 那条）；
+    ② 加一条**不需要网络的"零出网"门**：默认套件运行期间对外部主机的
+      `getaddrinfo` / `socket.connect` 调用次数必须为 **0**；
+      本地回环与测试内 fake transport 要**显式白名单**，不许按类别整类放行（那就是把门变成装饰）。
+    验收：① 先红后绿（今天 `test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace` 就是红基线，
+      实测对端 **401**，节点自己绿 ⇒ "绿着出网"正是门的靶子）；② 一条杀得掉的突变
+      （把 responses 客户端的 stub 摘掉，门必须红）；③ 断言里要能区分"出网"与"被 stub 的假传输"，
+      贴出两次的节点计数；④ 全量红集合逐行 diff **只允许少不允许多**（现在部署 tip 是 18 条红，见 ORD-0131）。
+    禁令：不许 `skip`/`deselect` 该节点、不许给它挂网络标记绕过、不许把 `api.deepseek.com` 加进任何 allow-list、
+    不许在测试里用真凭据（本轮对端 401 已是"占位 key"的证据，保持）。
+  status: DISPATCHED@2026-09-21T19:1x+08 by 494abfd7（排在 ORD-0131 之后）
+
 - id: ORD-0135
   to: e345b9d6
   priority: high
@@ -4183,7 +4516,10 @@ DELIVERED: ORD-0127 | 报告 `_qoder_spike_20260921/ORD_0127_IDENTITY_EVIDENCE.m
       优先做成"重置=把 demo 行程恢复到 seed 态"，而不是"删全库再 seed"；
     ② 保留诚实计数：响应里带 `deleted_demo_rows` / `preserved_user_rows`（含 journeys 条数），
       屏幕与日志都能读，不许出现"什么都没删"和"删了一切"两种假话；
-    ③ 若因语义变化必须保留破坏性全清能力，只能留一个**显式、带旗标、默认关闭**的分支（另开单，别塞进来）。
+    ③ **"谁删的"必须可审计**（新增，因为 HJ-P4 实读证明那 9 次里包含指挥官自己、HJ 车道与外部仲裁会话）：
+      `reset` 成功路径要落一条 `audit_logs` 具名行 —— actor（进程/会话/凭据主体）、journeys 前/后计数、
+      被删表的行数摘要。否则下一次我们又只能在访问日志里数 200 的个数猜。
+    ④ 若因语义变化必须保留破坏性全清能力，只能留一个**显式、带旗标、默认关闭**的分支（另开单，别塞进来）。
     验收：① 新门——先建一趟用户自己的行程，再按 reset，它必须**还在**且 demo 舞台回到 seed 态；
     ② 先红后绿（贴红读数）；③ 一条杀得掉的突变（把 `reset_all` 的表白名单改回全表，门必须红）；
     ④ 全量红集合逐行 diff **只允许少不允许多**；⑤ 报出 seed 恢复耗时（别把全表重删当"很快"）。
@@ -6262,7 +6598,7 @@ CLAIMED: ORD-0113 by dc19d662（车道 E · 只读 · 本机钟 `date`=17:01 · 
     （返回/编辑/刷新/切后台/双击/重试），按 HUMAN_BLOCKER / HUMAN_MISLEADING / HUMAN_RECOVERY_GAP / HUMAN_LATENCY /
     HUMAN_STATE_LOSS / HUMAN_ACCESSIBILITY / TRUTH_DEFECT / POLISH 分类；原代理复验确认修复。
     **不等"完美前置"**：能力缺失或不可用本身就是产品发现。
-  status: ACCEPTED-PARTIAL@2026-09-21T18:4x+08 by 494abfd7（P1 三条 R3-4/R3-5/R3-6 收单：R3-4+R3-6 → ORD-0126(D)，R3-5 只记不修；新包手机复验 → ORD-0129；隧道归属更正为我 18:22 的 28s 重启）
+  status: ACCEPTED@2026-09-21T19:2x+08 by 494abfd7（P1-P4 四份全收：P4 的方法学列为车道标准；发现转 ORD-0126/0129/0138/0139）
   evidence: |
     包名实到 `index-AkCV4A2Q.js`（我在页面里读 `script[src]` 证的）。入口：**公网两条 trycloudflare 都不通**（530 / 连不上）
     ⇒ 改走同一条鉴权代理的本地地址 `:4782`（未新建隧道、未新建端口、未重启预览台）；**代价：本轮延迟读数是环回，不代表手机**。
@@ -6325,7 +6661,7 @@ CLAIMED: ORD-0113 by dc19d662（车道 E · 只读 · 本机钟 `date`=17:01 · 
   order: |
     定位"默认套件里到底哪一个测试节点在打 live provider"（g8a 现在红）。给 文件::用例名 + 它碰的 URL + 抓到的栈；
     由 C 去 stub。**绝对不许** skip/deselect 让 g8a 变绿。
-  status: DISPATCHED@2026-09-21T17:4x+08 by 494abfd7 ｜ ANSWERED@2026-09-21T18:56+08 by 8ccd71d8（提交 `eef24d9`，父 `766932f`，未 push）：真外呼节点=tests/test_agent_mission_runtime.py::test_agent_runtime_uses_model_selected_tool_loop_and_reloadable_trace，POST https://api.deepseek.com/responses（DNS→公网 IP、TCP 已建连、对端 401，而该节点自己是绿的）；机制=该测试 :106 只 stub 了 chat-completions 客户端，Responses 那条腿自建传输层（main.py:1056→:10154→semantic_compiler.py:315→responses.py:306）。g8a 点名的 catalog_hydration.py:388 在同一次带绊线的运行里零条运行时记录=形状违规、今天不出网。未 skip、未 deselect、未放宽 g8a；结论已落附件 obligation runtime-egress-tripwire-is-required-beyond-the-static-scan。修法归车道 C（我不动生产码）。详见交付块（账本 4282 行）
+  status: ACCEPTED@2026-09-21T19:1x+08 by 494abfd7（唯一真外呼具名+机制定位；门未放宽、无 skip；分母 14/1062/15；仓库内两件活转 ORD-0136）
 
 ### 🎈✅ (SESSION=494abfd7) ORD-0090 初验：悬浮球**真的不挡屏了** @12:5x —— 请用户当面验（`4c8c911` 已部署）
 
@@ -11218,6 +11554,30 @@ Pass-16 Sol truth convergence 已经收口进树（游标三态 + 单一 ACTIVE 
 
 
 ## ACTIVE_WORKERS（21:1x 实测 `list_chat_sessions` 的 runtimeState，不是回忆）
+
+### 19:2x 实测覆盖（**上面那张 21:1x 的表已过期，以这一块为准**；来源＝`list_chat_sessions` 的 `runtimeState` + 账本写入时间，不是回忆）
+
+| session（前 8） | 车道 / 现在手上的单 | runtimeState（19:2x 实读） | 写域 |
+|---|---|---|---|
+| `494abfd7` | **Commander**：巡检、亲测、仲裁对接、台账 | running | `_qoder_recovery_20260919/**` + Workspace 的 `commander/control` |
+| `8c66aa92` | **C 后端**：ORD-0111 / 0112 / 0114 / 0115 / 0121 / 0122 / **0125(P0)** / **0132(P0)** / **0138(P0)** | opening（已叫醒） | `backend/**`（权威树由 F 持有，写域按 FILE_OWNERSHIP 走） |
+| `8ccd71d8` | **F 契约与门禁**：**0131(P0，仲裁已冻结 A-E 口径)** / **0133(P0，R11)** / 0123 / 0136；0118、0106 已 ACCEPTED | **running** | `contracts/**` + `backend/tests/**` |
+| `e345b9d6` | **D 前端**：**0126(P0)** / **0134(P0，面板视口 + 地图手势)** / 0135；0104①、0107① 已 ACCEPTED-CODE；**0124-B port 仍 HELD** | **running** | 隔离树 `frontend/**` |
+| `c01d72a3` | **B 外部数据实测**：**0127（R10 已冻结 9 规则 + 7 硬门）**；0092、0109 已 ACCEPTED | opening（已叫醒） | `live_checks/**`、只读取证 |
+| `dc19d662` | **E 红队**：**ORD-0113 未交**（abort→500 的响应体原文 + traceback 行） | ready（**空闲 1h+，本轮叫醒**） | 只测不改 |
+| `d291c9dc` | **Harness 线**：0119 已 ACCEPTED → **0128**（EXP-HARNESS-002 + `d6b` 分母 + 修过期断言） | opening（已叫醒） | 隔离 lab `D:\moodle\_qoder_harness_revival_20260921\**` |
+| `1a986a24` | **HJ-P1 背包客**：**0129**（新包手机复验：假离线死屏 / 建承诺 404 / 北京两条路） | opening（已叫醒） | 只测不改 + 独立 profile |
+| `d4b04a0f` | **HJ-P2 承诺密集型**：上一轮已交（0132 的因）→ 本轮派 **0141** | ready（**本轮叫醒**） | 只测不改 + 独立 profile |
+| `aad2d1f2` | **HJ-P3  impatient 用户**：地图机制已交（0134 的因）→ 本轮派 **0142** | cold（**本轮叫醒**） | 只测不改 + 独立 profile |
+| `4e974ae5` | **HJ-P4 偏好密集型**：0120 全收 → **0139**（盯 0138 三条 + P4-2/P4-8 复现卡 + P4-10 分母） | running | 只测不改 + 独立 profile |
+| **`9baacb24`** | **HERMES_REVIVAL（第三条产线，新建）**：**ORD-0140** | **新建 running** | 只读 / 隔离根 `D:\moodle\CityNexus-Hermes-Revival\**` |
+| `5ea3bedc` | AI Architecture Scout（旧）：AI scout reuse map 已交付，无在手单 | cold | 只读 |
+
+**lineage 一句（按令要求记）**：`list_chat_sessions` 翻完两页共 **34** 个会话，标题内**没有任何旧 Hermes 专属会话**
+⇒ 按 5758456196 §1 的"否则新建并记录 lineage"新建 **`9baacb24`**。
+**车道字母以 `to:` 会话 id 为准**（我 19:1x 已认账：叙述里 C/F/B 三位字母串过）。
+**全线禁令**：不碰 `:4781/:4782/:8693` 与 `_live.db`；修好前不许触发 `demo/reset`；不对 github.com 用 git 网络操作。
+
 
 | session | 任务 | runtimeState | 写域 |
 |---|---|---|---|
