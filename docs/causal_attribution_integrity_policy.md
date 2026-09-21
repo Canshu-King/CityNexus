@@ -190,6 +190,47 @@ This makes false-cause regressions discoverable in production instead of only fr
 - ORD-0112 owns DB-lock implementation details; R14 requires the resulting cause to stay named.
 - ORD-0169 owns stale-journey recovery; R14 defines the general attribution invariant.
 
+## 9.5 Boundary argument attribution
+
+A successful call must not claim that a caller-supplied parameter was honoured when the boundary
+actually discarded it.
+
+For semantically relevant arguments such as `solver_mode`, the boundary MUST choose one of two
+observable outcomes:
+
+1. **ACCEPTED**: validate the value, forward it, and expose the effective value used downstream; or
+2. **REJECTED**: return a named machine-readable error for unsupported/unsafe/unknown input.
+
+The following third state is forbidden:
+
+    caller supplies parameter
+    -> adapter silently drops parameter
+    -> request succeeds
+    -> downstream default is used
+    -> result is reported as if the requested parameter was honoured
+
+This is an R14 attribution failure because the observable success response misstates what the
+system actually executed.
+
+Recommended structured evidence:
+
+    requested_parameter
+    argument_disposition = ACCEPTED | REJECTED
+    effective_parameter
+    reason_code
+    source_layer = ADAPTER_BOUNDARY
+
+For solver parity work:
+
+- both legs must expose the same effective `solver_mode` before planner-result parity is
+  interpreted;
+- a discarded `solver_mode` is not evidence that the boundary respected it;
+- unknown parameters must not disappear silently.
+
+Freeze sentence:
+
+> **Parameter discarded is not boundary honoured.**
+
 ## 10. ORD acceptance binding
 
 R14 is a **hard acceptance condition** for any ORD whose scope creates, transforms, classifies,
@@ -232,6 +273,7 @@ the ORD remains **NOT ACCEPTED**, even if the screenshot appears correct.
   and banner + aria-live + telemetry + recovery action must all consume that same classification.
 - ORD-0125 empty-target behavior: successful empty/no-op is a typed successful state, not a
   generic 500.
+- ORD-0176: semantically relevant adapter arguments such as `solver_mode` must be either validated/forwarded with effective-value evidence or explicitly rejected; silent discard is not accepted.
 - Any other ORD (including ORD-0130 if it touches fault/state attribution) inherits R14 as a hard
   acceptance item for the attribution surface it changes.
 
