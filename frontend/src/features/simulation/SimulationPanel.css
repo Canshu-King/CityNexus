@@ -97,9 +97,17 @@
   line-height: 1.45;
   overflow-wrap: anywhere;
 }
-/* The rows scroll here and nowhere else, so the window keeps its promise about
-   the viewport while the ball stays exactly where it was. */
+/* The scroll lives on the panel itself, not on a wrapper around it.  Two probes of this widget
+   (mine and the Commander's) each spent a round arguing about a different node, because the
+   scroller was an inner box while everyone measured `[data-testid="sim-panel"]` -- whose own
+   `maxScroll` is then always 0, no matter whether the window scrolls.  One scrollable element, and
+   it is the one the testid names: the wrapper only passes the bounded height down the flex chain. */
 .cn-sim-pop-body {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+.cn-sim-pop-body > .cn-sim {
   min-height: 0;
   overflow-y: auto;
   overscroll-behavior: contain;

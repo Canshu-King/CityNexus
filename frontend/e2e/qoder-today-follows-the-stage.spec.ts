@@ -518,7 +518,13 @@ type FloatReading = {
   float: Rect | null;
   body: Rect | null;
   panel: Rect | null;
-  extents: { bodyScrollHeight: number; bodyClientHeight: number; panelScrollHeight: number } | null;
+  extents: {
+    panelScrollHeight: number;
+    panelClientHeight: number;
+    bodyScrollHeight: number;
+    bodyClientHeight: number;
+    scrollChain: Array<{ testid: string; overflowY: string; maxScroll: number }>;
+  } | null;
   viewport: { width: number; height: number };
   nav: Rect | null;
   dock: Rect | null;
@@ -603,9 +609,28 @@ async function measureFloat(page: Page): Promise<FloatReading> {
       extents:
         body && panel
           ? {
+              /* `panel` is the scroll element now (the CSS moved the overflow onto
+                 `[data-testid="sim-panel"]` itself), so these two pairs are the same box read two
+                 ways -- kept both because two probes argued past each other over which node was
+                 which, and the file should settle that by measurement rather than by naming. */
+              panelScrollHeight: panel.scrollHeight,
+              panelClientHeight: panel.clientHeight,
               bodyScrollHeight: body.scrollHeight,
               bodyClientHeight: body.clientHeight,
-              panelScrollHeight: panel.scrollHeight,
+              scrollChain: (() => {
+                const chain: Array<{ testid: string; overflowY: string; maxScroll: number }> = [];
+                let element: HTMLElement | null = panel;
+                while (element && chain.length < 6) {
+                  const style = getComputedStyle(element);
+                  chain.push({
+                    testid: element.getAttribute("data-testid") ?? element.className,
+                    overflowY: style.overflowY,
+                    maxScroll: element.scrollHeight - element.clientHeight,
+                  });
+                  element = element.parentElement;
+                }
+                return chain;
+              })(),
             }
           : null,
       viewport: { width: innerWidth, height: innerHeight },
@@ -788,7 +813,8 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
 
       /* ②⑦ inside the window: every row must come up to a position where its own centre takes the
             tap and where it is out of the band -- "the window is small" is not an excuse. */
-      const bodyLocator = page.getByTestId("sim-pop-body");
+      /* The scrollable element is the panel itself now; the wrapper only bounds its height. */
+      const bodyLocator = page.getByTestId("sim-panel");
       const extents = open.extents;
       expect(
         extents,
@@ -796,12 +822,21 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
       ).not.toBeNull();
       /* ORD-0100 ③'s first judgement, stated as a number: if the body has nothing to scroll then
          whatever is below the fold belongs to the test, not to the traveller. */
-      const maxScroll = (extents as NonNullable<FloatReading["extents"]>).bodyScrollHeight -
-        (extents as NonNullable<FloatReading["extents"]>).bodyClientHeight;
+      /* The Commander's criterion, read off the node his probe names: `[data-testid="sim-panel"]`
+         itself must have something to scroll.  It used to be a wrapper around it that scrolled,
+         which made the same window read as "does not scroll" to anyone measuring the panel. */
+      const panelExtents = extents as NonNullable<FloatReading["extents"]>;
+      const maxScroll = panelExtents.panelScrollHeight - panelExtents.panelClientHeight;
       expect(
         maxScroll,
-        node(NODE, `${arm}: the window's body scrolls ${maxScroll}px (scrollHeight ${(extents as NonNullable<FloatReading["extents"]>).bodyScrollHeight}, clientHeight ${(extents as NonNullable<FloatReading["extents"]>).bodyClientHeight}) -- the rows below the fold are unreachable`),
+        node(NODE, `${arm}: [data-testid="sim-panel"] itself scrolls ${maxScroll}px (scrollHeight ${panelExtents.panelScrollHeight}, clientHeight ${panelExtents.panelClientHeight}; chain ${JSON.stringify(panelExtents.scrollChain)}) -- the rows below the fold are unreachable`),
       ).toBeGreaterThan(0);
+      /* And the pose has to be the pose: a resize followed by a navigation is how one honest probe
+         ended up measuring a viewport that was no longer 390 wide. */
+      expect(
+        [open.viewport.width, open.viewport.height],
+        node(NODE, `${arm}: this arm is supposed to measure a 390x844 phone, and measured ${JSON.stringify(open.viewport)}`),
+      ).toEqual([width, 844]);
       /* "那两枚被谁盖住" has a readable answer, and it is not an overlay: at rest the window paints
          down to `box.bottom`, and every row whose centre sits below that line is clipped by the scroll
          body -- `elementFromPoint` there returns the page behind the window, which is what makes an
@@ -865,7 +900,26 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
         ).toBe(false);
         perRow[id] = { ...mine, reachedBy: "wheel" };
       }
+      /* Named, so the M3 half of the criterion is not hidden inside a loop: the last five actions
+         have to come up to a real tap after a wheel, by name. */
+      const lastFive = [
+        "sim-action-replan",
+        "sim-action-accept",
+        "sim-action-reject",
+        "sim-action-degrade",
+        "sim-action-restore",
+      ];
+      const unreachable = lastFive.filter((id) => {
+        const mine = perRow[id] as { visible?: boolean; centre?: boolean; inNavBand?: boolean } | undefined;
+        return !mine?.visible || !mine?.centre || mine.inNavBand;
+      });
+      expect(
+        unreachable,
+        node(NODE, `${arm}: after a real wheel these M3 actions are still not reachable by name: ${JSON.stringify(unreachable)} (maxScroll ${maxScroll}, panel ${JSON.stringify(panelExtents.panelClientHeight)}/${JSON.stringify(panelExtents.panelScrollHeight)})`),
+      ).toEqual([]);
       readings[`${arm}-open`] = {
+        lastFiveActions: lastFive,
+        lastFiveUnreachable: unreachable,
         ball: open.ball,
         window: box,
         nav: open.nav,
@@ -882,7 +936,7 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
          row with a wheel; this clause is the narrower claim that the *body itself* is the thing that
          moved -- a row could otherwise come into view by scrolling the page behind the window, which is
          exactly the confusion that let `killD6-window-body-cannot-be-scoped` survive its first run. */
-      const body = page.getByTestId("sim-pop-body");
+      const body = page.getByTestId("sim-panel");
       await body.evaluate((element) => {
         element.scrollTop = 0;
       });
@@ -906,7 +960,7 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
       /* The row loop above leaves the window scrolled to its last row; a picture of that is not
          evidence of what the widget looks like when a traveller opens it. */
       await page
-        .getByTestId("sim-pop-body")
+        .getByTestId("sim-panel")
         .evaluate((element) => {
           element.scrollTop = 0;
         });
@@ -1008,8 +1062,10 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
  * The Commander's probe on the deployed bundle (`_qoder_recovery_20260919/raw/panel_after_143d904.json`)
  * reported `maxScroll=0`, `overflowY=visible` and 2 of 11 rows hittable.  Both numbers are correct
  * about the node it measured: `.cn-sim` is the panel, and a panel is not the clipping box -- the
- * scroller is its *ancestor*, `[data-testid="sim-pop-body"]`, which is why "no `overflow:auto`
- * descendant" was also true.  What that probe never did is scroll, and a mouse wheel is not a finger.
+ * scroller was its *ancestor* `[data-testid="sim-pop-body"]`, which is why "no `overflow:auto`
+ * descendant" was also true.  The overflow has since been moved onto the panel itself so the node a
+ * probe names is the node that scrolls; what that probe never did is scroll, and a wheel is not a
+ * finger.
  *
  * So this node boots a touch-enabled context and sends real swipe gestures through CDP, then requires
  * the body to reach its own bottom and the eleventh row to take its own tap.
@@ -1036,11 +1092,11 @@ test("sim-window-scrolls-under-a-finger — 手指能滑到第十一枚按钮", 
     await openStageEntry(phone, "the finger pass");
     const atRest = await measureFloat(phone);
     const maxScroll = atRest.extents
-      ? atRest.extents.bodyScrollHeight - atRest.extents.bodyClientHeight
+      ? atRest.extents.panelScrollHeight - atRest.extents.panelClientHeight
       : 0;
     expect(
       maxScroll,
-      node(NODE, `the window's own body has nothing to scroll (${JSON.stringify(atRest.extents)}): nothing below the fold is reachable however the gesture is sent`),
+      node(NODE, `[data-testid="sim-panel"] has nothing to scroll (${JSON.stringify(atRest.extents)}): nothing below the fold is reachable however the gesture is sent`),
     ).toBeGreaterThan(0);
     const lastRowId = atRest.rows[atRest.rows.length - 1]?.id ?? "sim-action-restore";
     const before = atRest.rows.find((item) => item.id === lastRowId);
@@ -1049,7 +1105,8 @@ test("sim-window-scrolls-under-a-finger — 手指能滑到第十一枚按钮", 
       before?.visible,
       node(NODE, `${lastRowId} is already on screen at rest, so the swipe below would prove nothing: ${JSON.stringify(before)}`),
     ).toBe(false);
-    const bodyBox = atRest.body as Rect;
+    /* The panel is the scroll element, so the swipe is aimed at it and its own scrollTop is read. */
+    const bodyBox = atRest.panel as Rect;
     const scrollTops: number[] = [];
     for (let step = 0; step < 10; step += 1) {
       /* A finger, as the compositor sees it: touchStart, a column of touchMoves, touchEnd.
@@ -1072,7 +1129,7 @@ test("sim-window-scrolls-under-a-finger — 手指能滑到第十一枚按钮", 
       }
       await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
       const scrollTop = await phone
-        .getByTestId("sim-pop-body")
+        .getByTestId("sim-panel")
         .evaluate((element) => element.scrollTop);
       scrollTops.push(scrollTop);
       if (scrollTop >= maxScroll - 2) break;
@@ -1106,7 +1163,7 @@ test("sim-window-scrolls-under-a-finger — 手指能滑到第十一枚按钮", 
           lastRowId,
           beforeSwipe: before,
           afterSwipe: after,
-          note: "the Commander's reading measured .cn-sim, the panel, whose scroll box is not the clipping one; the scroller is its ancestor [data-testid=sim-pop-body]",
+          note: "measured before the overflow moved onto the panel: the reading of .cn-sim then described a box the ancestor clipped. [data-testid=sim-panel] is now the scroll element and its own maxScroll is what the gate asserts",
         },
         null,
         2,
