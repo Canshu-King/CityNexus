@@ -5,6 +5,7 @@ import json
 import logging
 import math
 import re
+import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -693,6 +694,26 @@ class OverpassPOIProvider:
         radius_m: int,
         limit: int,
     ) -> list[DiscoveryCandidate]:
+        candidates, _attempts = self.search_with_evidence(
+            query, latitude=latitude, longitude=longitude, radius_m=radius_m, limit=limit
+        )
+        return candidates
+
+    def search_with_evidence(
+        self,
+        query: str,
+        *,
+        latitude: float,
+        longitude: float,
+        radius_m: int,
+        limit: int,
+    ) -> tuple[list[DiscoveryCandidate], list[dict[str, Any]]]:
+        """Ask one bounded category question, and report which endpoints actually answered.
+
+        The attempts list exists because "nobody replied" and "somebody replied: none" are different
+        statements; a caller must never have to guess which one it got.
+        """
+
         requested = query.casefold()
         # The provider must answer the question that was actually asked.  A
         # single fixed cafe/restaurant tag set meant "any museums nearby" came
@@ -721,10 +742,12 @@ class OverpassPOIProvider:
         # collapsing into a permanent "providers unreachable" state.
         elements: list[dict[str, Any]] = []
         last_error: Exception | None = None
+        attempts: list[dict[str, Any]] = []
         urls = [f"{self.base_url}/interpreter"] + [
             url for url in OVERPASS_MIRRORS if url != f"{self.base_url}/interpreter"
         ]
         for url in urls:
+            started = time.monotonic()
             try:
                 response = self.client.post(
                     url,
@@ -733,15 +756,38 @@ class OverpassPOIProvider:
                         "User-Agent": "CityNexus/7.0 (+https://citynexus.local/real-city)"
                     },
                 )
+                status = response.status_code
+                retry_after = response.headers.get("Retry-After")
                 response.raise_for_status()
                 elements = response.json().get("elements", [])
-                if elements:
-                    break
+                attempts.append(
+                    {
+                        "endpoint": url,
+                        "answered": True,
+                        "http_status": status,
+                        "elapsed_ms": round((time.monotonic() - started) * 1000.0, 1),
+                        "elements": len(elements),
+                        "retry_after": retry_after,
+                    }
+                )
+                # A mirror that answered has answered the question, including with nothing.
+                # Falling through here is what made a valid zero look like an outage.
+                break
             except (httpx.HTTPError, ValueError, TypeError) as exc:
+                attempts.append(
+                    {
+                        "endpoint": url,
+                        "answered": False,
+                        "http_status": getattr(getattr(exc, "response", None), "status_code", None),
+                        "elapsed_ms": round((time.monotonic() - started) * 1000.0, 1),
+                        "error": f"{type(exc).__name__}: {str(exc)[:160]}",
+                    }
+                )
                 last_error = exc
                 continue
-        if not elements and last_error is not None:
-            raise last_error
+        if not attempts or all(not a["answered"] for a in attempts):
+            # Nothing replied: this is a runtime failure and must stay one.
+            raise last_error if last_error is not None else RuntimeError("NO_PROVIDER_ATTEMPTED")
         candidates: list[DiscoveryCandidate] = []
         for row in elements[:limit]:
             tags_data = row.get("tags") or {}
@@ -782,7 +828,7 @@ class OverpassPOIProvider:
                     cost_evidence=cost_evidence_from_tags(tags_data, source="overpass"),
                 )
             )
-        return candidates
+        return candidates, attempts
 
     def close(self) -> None:
         if self._owned_client:
