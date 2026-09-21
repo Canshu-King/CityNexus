@@ -189,6 +189,47 @@ At minimum:
 Package-integrity mismatch does not automatically invalidate a measured product observation, but
 it blocks any claim that the delivery is a self-consistent reproducible evidence bundle.
 
+## 9. Mutation evidence receipt
+
+Every mutation claimed as KILLED must carry a compact, replayable receipt.
+
+Required fields:
+
+    base_source
+    base_sha
+    base_tree_kind = WORKTREE | ARCHIVE_EXPORT
+    target_nodeid
+    baseline_target_result = GREEN
+    mutation_file
+    mutation_line_or_symbol
+    mutation_summary
+    mutation_collect_result
+    mutated_target_result = RED
+    mutated_failure_excerpt
+    cleanup_or_restore_result
+
+Rules:
+
+1. The target nodeid must be named **before** the mutation result is interpreted.
+2. The baseline target must be GREEN on the exact same base source.
+3. The mutation tree must still collect; import/collection failure is INVALID_MUTATION_EVIDENCE.
+4. The mutated target must fail for the intended semantic assertion, not for an unrelated setup error.
+5. Report the exact file:line (or stable symbol when line numbers are not stable) where the mutation was applied.
+6. Include the first relevant failure/assertion excerpt that demonstrates the intended GREEN -> RED transition.
+7. If the baseline target is already RED, record `NOT_MEASURABLE_RED_BASE`.
+8. Diagnostic mutations on red baselines are allowed, but they do not count toward kill totals.
+9. After an in-place mutation, prove the tree was restored before any later baseline is reported.
+10. Prefer an isolated mutation worktree or disposable archive extraction over mutating a shared lane tree.
+
+A campaign summary should count separately:
+
+    KILLED
+    SURVIVED
+    NOT_MEASURABLE_RED_BASE
+    INVALID_MUTATION_EVIDENCE
+
+Do not collapse these categories into a single "mutation pass" number.
+
 ## 9. Freeze sentence
 
 **No collection, no denominator; no denominator, no red/green count.**
