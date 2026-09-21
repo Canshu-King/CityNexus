@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from contextlib import contextmanager
 import os
 import re
 import uuid
@@ -413,130 +414,212 @@ def _display_labels() -> dict[str, str]:
     return {f"CN-{code}": label for code, label in (_CITY_DISPLAY_NAMES or {}).items()}
 
 
-def _provider_geocoder() -> Any:
-    """The resolver leg, built from the configuration this repository already registers.
+def _provider_transport() -> Any:
+    """The one seam a door injects an httpx transport through; production asks for the real stack.
 
-    Nothing here invents a URL, a timeout or a network policy: the base URL comes from
-    `ExternalProviderSettings.photon_base_url`, proxy behaviour from
-    `trust_environment_for_public_providers()`, and the timeout from the same bounded
-    `real_city_timeout_seconds` live discovery uses.  The one thing added by hand is the
-    User-Agent, because the measured reason this adapter is never called is that the host refuses
-    an unidentified httpx default: a request that gets 403 would otherwise be read as "the world
-    does not know this place", which is a fabricated product answer.
+    `None` means "whatever httpx would do", which keeps proxy policy where it already lives
+    (`build_httpx_client`, `docs/NETWORK_POLICY.md`).  A door hands this to `httpx.MockTransport`,
+    so the outcome it exercises is produced by the provider layer's own classification, not by a
+    copy of it made for the test.
     """
 
-    import httpx
+    return None
+
+
+@contextmanager
+def _provider_identity_resolver() -> Any:
+    """Lane B's identity provider, built from the configuration this repository already registers.
+
+    Per ORD-0197 (arbiter 甲) this module no longer speaks to `PhotonGeocoder`: "which of these
+    answers is a destination" can only be answered in one place, and two entrances writing that
+    rule each is exactly how the classification collapsed into `unresolved:<hash>` once already.
+    B asks the geocoder and returns a typed outcome with provenance-bearing candidates plus
+    per-attempt evidence; whether that evidence becomes CityNexus canonical identity is decided
+    below, here.
+
+    A context manager because the client it hands the provider holds a connection pool: opening one
+    per question and never closing it is a leak that only shows up after a thousand reads, which is
+    exactly the kind of defect a green suite hides.
+    """
 
     from app.core.config import settings
-    from app.integrations.discovery.photon import PhotonGeocoder
-    from app.integrations.provider_config import (
-        ExternalProviderSettings,
-        trust_environment_for_public_providers,
+    from app.integrations.discovery.provider_identity import (
+        HttpxTransport,
+        PhotonIdentityProvider,
+        build_httpx_client,
     )
+    from app.integrations.provider_config import ExternalProviderSettings
 
-    provider = ExternalProviderSettings()
-    client = httpx.AsyncClient(
-        timeout=settings.real_city_timeout_seconds,
-        headers={"User-Agent": "CityNexus-Anywhere/1.0 (+https://citynexus.local/)"},
-        trust_env=trust_environment_for_public_providers(),
-        follow_redirects=True,
-    )
-    return PhotonGeocoder(client=client, base_url=provider.photon_base_url)
+    provider_settings = ExternalProviderSettings()
+    client = build_httpx_client(transport=_provider_transport())
+    try:
+        yield PhotonIdentityProvider(
+            transport=HttpxTransport(
+                client=client, timeout_s=float(settings.real_city_timeout_seconds)
+            ),
+            base_url=provider_settings.photon_base_url,
+        )
+    finally:
+        client.close()
 
 
-def _run_provider_coroutine(coroutine: Any) -> Any:
-    """Bridge one adapter call into this synchronous resolver.
+def _provider_status_of(resolution: Any) -> str:
+    """Map the typed answer onto the frozen `provider_status` vocabulary.
 
-    If a loop is already running in this thread, running one here would corrupt somebody else's
-    scheduling, so it is named instead of quietly handled.  Every caller of `resolve_destination`
-    is a synchronous FastAPI endpoint (threadpool) or a worker thread today.
+    `answered` outranks `reason`: a provider that replied and knew nothing was reachable, and
+    calling that `UNREACHABLE` would launder "the answer is no" into "we could not ask" - the same
+    pair of confusions, pointed the other way.
     """
 
-    import asyncio
+    import app.integrations.discovery.provider_identity as provider_layer
 
-    try:
-        asyncio.get_running_loop()
-    except RuntimeError:
-        return asyncio.run(coroutine)
-    coroutine.close()
-    raise RuntimeError("ANYWHERE resolver leg requires a synchronous caller")
-
-
-def _provider_status_for(exc: BaseException) -> str:
-    """Map a transport failure onto the frozen `provider_status` vocabulary."""
-
-    import httpx
-
-    if isinstance(exc, httpx.TimeoutException) or isinstance(exc, httpx.ConnectError):
-        return "UNREACHABLE"
-    status = getattr(getattr(exc, "response", None), "status_code", None)
-    if status == 429:
+    if getattr(resolution, "answered", False):
+        return "OK"
+    if getattr(resolution, "reason", None) == provider_layer.REASON_RATE_LIMITED:
         return "RATE_LIMITED"
-    if isinstance(exc, httpx.HTTPError):
-        return "UNREACHABLE"
     return "UNREACHABLE"
 
 
-def _is_bounded_admin_entity(place: Any) -> bool:
-    """An administrative *area*: a relation carrying a four-number extent."""
+def _attempt_evidence(resolution: Any) -> list[dict[str, Any]]:
+    """What was asked, who answered, with what status - carried into the product's own record.
 
-    properties = (place.raw or {}).get("properties", {}) if isinstance(place.raw, dict) else {}
-    extent = list(properties.get("extent") or [])
-    is_relation = str(getattr(place, "external_id", "")).startswith("R:")
-    return is_relation and len(extent) == 4
-
-
-def _discriminate_destination_hits(hits: list[Any]) -> tuple[list[Any], list[Any]]:
-    """Apply `destination-discrimination-v1`: one area wins over the points that mark it.
-
-    Returns `(candidates, set_aside)`.  The collapse only happens when exactly one answer is a
-    bounded area, and whatever was set aside is returned so it can be *recorded* rather than
-    silently dropped - a tie between two areas is not a tie we are allowed to break.
+    The provider layer keeps attempts even on the failure path; R14's "name the cause" needs them
+    to survive into the job, not to stop one layer below the wire.
     """
 
-    if len(hits) < 2:
-        return list(hits), []
-    bounded = [place for place in hits if _is_bounded_admin_entity(place)]
-    if len(bounded) == 1:
-        return bounded, [place for place in hits if place is not bounded[0]]
-    return list(hits), []
+    evidence: list[dict[str, Any]] = []
+    for attempt in getattr(resolution, "attempts", ()) or ():
+        evidence.append(
+            {
+                "endpoint": getattr(attempt, "endpoint", None),
+                "answered": getattr(attempt, "answered", None),
+                "http_status": getattr(attempt, "http_status", None),
+                "elapsed_ms": getattr(attempt, "elapsed_ms", None),
+                "reason": getattr(attempt, "reason", None),
+                "retry_after_s": getattr(attempt, "retry_after_s", None),
+            }
+        )
+    return evidence
 
 
-def _exact_name_hits(places: list[Any], raw: str) -> list[Any]:
-    """Only an answer whose *name* is the question counts as naming the place.
+def _candidate_fields(candidate: Any) -> dict[str, Any]:
+    """One provider candidate, described without deciding anything about it."""
 
-    The provider is a search engine and will happily return the nearest thing it knows.  Adopting
-    one of those would be the same category of error as hashing the query text: a guess, filed
-    under "resolved".
+    centroid = getattr(candidate, "centroid_wgs84", None) or (None, None)
+    return {
+        "source_provider": getattr(candidate, "source_provider", None),
+        "source_entity_id": getattr(candidate, "source_entity_id", None),
+        "label": getattr(candidate, "display_name", None),
+        "country": getattr(candidate, "country_code", None),
+        "admin_area": getattr(candidate, "admin_area", None),
+        "admin_level": getattr(candidate, "admin_level", None),
+        "coordinate_system": getattr(candidate, "crs", None),
+        "centroid": {"latitude": centroid[0], "longitude": centroid[1]},
+        "extent": list(getattr(candidate, "extent_wgs84", None) or ()),
+        "observed_at": getattr(candidate, "observed_at", None),
+        "fetched_at": getattr(candidate, "fetched_at", None),
+    }
+
+
+def _is_bounded_area(candidate: Any) -> bool:
+    """An administrative *area*: a relation carrying a normalised four-number extent."""
+
+    return str(getattr(candidate, "source_entity_id", "")).startswith("R:") and (
+        len(getattr(candidate, "extent_wgs84", None) or ()) == 4
+    )
+
+
+def _collapse_point_markers(candidates: list[Any]) -> tuple[list[Any], list[Any]]:
+    """`destination-discrimination-v1`, applied to evidence the provider layer refused to rank.
+
+    B's own reading of this data is `AMBIGUOUS` - two entities claim the name, and their layer
+    will not choose.  It is right that they refuse.  It is also not the end of the question: when
+    one claim is an area with a boundary and the other is a point that marks that same area, a
+    traveller is not being asked to choose between two places, and answering AMBIGUOUS would push
+    our own index shape onto them.  So the choice is made *here*, narrowly: exactly one bounded
+    area among the claims, and every entity set aside is named in the record.  Two bounded areas of
+    the same name stay ambiguous, because that is a real tie.
+    """
+
+    if len(candidates) < 2:
+        return list(candidates), []
+    areas = [candidate for candidate in candidates if _is_bounded_area(candidate)]
+    if len(areas) == 1:
+        return areas, [c for c in candidates if c is not areas[0]]
+    return list(candidates), []
+
+
+def _exact_name_matches(candidates: list[Any], raw: str) -> list[Any]:
+    """Only a candidate whose *name* is the question may become a destination.
+
+    The geocoder is a search engine and returns the nearest things it knows.  Adopting one of those
+    would be the hash mistake with better credentials, so the caller's words are compared against
+    the label the provider reported before anything downstream is allowed to believe it.
     """
 
     wanted = _normalise(raw)
-    return [place for place in places if _normalise(place.name or "") == wanted]
+    return [
+        candidate
+        for candidate in candidates
+        if _normalise(getattr(candidate, "display_name", "") or "") == wanted
+    ]
+
+
+def _adopted(
+    raw: str,
+    candidate: Any,
+    *,
+    set_aside: list[Any],
+    evidence: list[dict[str, Any]],
+    status: str,
+) -> DestinationResolution:
+    """Turn one provider candidate into server-owned canonical identity, with its audit trail."""
+
+    entity_id = str(candidate.source_entity_id)
+    identity = f"{PROVIDER_IDENTITY_PREFIX}{entity_id}"
+    fields = _candidate_fields(candidate)
+    fields["provider_attempts"] = evidence
+    fields["discriminated_by"] = (
+        DESTINATION_DISCRIMINATION_POLICY_VERSION if set_aside else None
+    )
+    fields["collapsed_candidates"] = [_candidate_fields(other) for other in set_aside]
+    return DestinationResolution(
+        query=raw,
+        canonical_destination_id=identity,
+        city_code=identity,
+        method="provider",
+        state="RESOLVED",
+        matched_label=fields["label"] or identity,
+        resolver_attempted=True,
+        resolver_status=status,
+        observation={"status": status, "stage": "resolving_destination"},
+        provenance=fields,
+        **_resolved_identity(raw),
+    )
 
 
 def _provider_resolution(raw: str) -> DestinationResolution | None:
-    """Ask the authorised provider about a destination this process could not name.
+    """Ask the authorised provider, and translate its four answers into destination truth.
 
-    Returns `None` when no attempt is authorised - the caller then answers with the same structural
-    conclusion it always has, and no observation is claimed.  When an attempt *is* authorised the
-    four outcomes stay separate, because they ask four different things of a traveller:
+    Returns `None` when no attempt is authorised: the caller then gives the same structural answer
+    it always gave, and claims no observation.  The mapping keeps the classes apart, which is the
+    whole reason this layer is typed:
 
-    * one exact-name answer -> a real identity (the provider's entity, not our code word), still
-      `HYDRATABLE` until the catalog holds something for it;
-    * several exact-name answers -> `AMBIGUOUS`, no winner picked;
-    * a healthy answer with nothing in it -> structural `NO_MATCH`, identity null, and the
-      observation says `OK` because looking is what we did;
-    * any transport failure -> `RUNTIME_FAILURE`, retryable, never a structural verdict, never a
-      digest or a text-derived placeholder.
+    * MATCH (or an AMBIGUOUS that collapses to one area under v1) -> canonical identity, still
+      HYDRATABLE until this catalog holds something for it;
+    * AMBIGUOUS -> null identity, candidates in their own field, nobody silently installed;
+    * NO_MATCH -> null identity and a structural verdict, with `provider_status=OK` because looking
+      and being told "no" is a successful observation, not a failure;
+    * RUNTIME_FAILURE -> null identity, retryable, named, and never written as NO_MATCH.
     """
 
     if not anywhere_resolver_attempted():
         return None
     unresolved = _unresolved_identity(raw)
     try:
-        geocoder = _provider_geocoder()
-        places = _run_provider_coroutine(geocoder.search(raw, limit=8))
-    except Exception as exc:  # noqa: BLE001 - named below as a runtime state, never as structure
+        with _provider_identity_resolver() as provider:
+            resolution = provider.resolve(raw)
+    except Exception as exc:  # noqa: BLE001 - the seam itself broke; named below, never laundered
         return DestinationResolution(
             query=raw,
             canonical_destination_id=None,
@@ -546,14 +629,49 @@ def _provider_resolution(raw: str) -> DestinationResolution | None:
             reason_code=REASON_RESOLVER_UNAVAILABLE,
             retryable=True,
             resolver_attempted=True,
-            resolver_status=_provider_status_for(exc),
-            observation={"status": _provider_status_for(exc), "stage": "resolving_destination"},
+            resolver_status="UNREACHABLE",
+            observation={
+                "status": "UNREACHABLE",
+                "stage": "resolving_destination",
+                "detail": f"{type(exc).__name__}: {exc}"[:200],
+            },
             **unresolved,
         )
 
-    hits = _exact_name_hits(list(places or []), raw)
-    hits, set_aside = _discriminate_destination_hits(hits)
-    if len(hits) > 1:
+    status = _provider_status_of(resolution)
+    evidence = _attempt_evidence(resolution)
+    observation = {
+        "status": status,
+        "stage": "resolving_destination",
+        "reason": getattr(resolution, "reason", None),
+        "answered": bool(getattr(resolution, "answered", False)),
+        "provider_replied": bool(getattr(resolution, "provider_replied", False)),
+        "attempts": evidence,
+    }
+    outcome_name = getattr(getattr(resolution, "outcome", None), "value", None) or str(
+        getattr(resolution, "outcome", "")
+    )
+    candidates = _exact_name_matches(list(getattr(resolution, "candidates", ()) or []), raw)
+    adopted, set_aside = _collapse_point_markers(candidates)
+
+    if outcome_name == "RUNTIME_FAILURE":
+        # The hard negative the contract names: an outage is never "there is no such place".
+        return DestinationResolution(
+            query=raw,
+            canonical_destination_id=None,
+            city_code=None,
+            method="provider_error",
+            state="RUNTIME_FAILURE",
+            reason_code=REASON_RESOLVER_UNAVAILABLE,
+            retryable=True,
+            resolver_attempted=True,
+            resolver_status=status,
+            observation=observation,
+            **unresolved,
+        )
+    if len(adopted) == 1 and outcome_name in {"MATCH", "AMBIGUOUS"}:
+        return _adopted(raw, adopted[0], set_aside=set_aside, evidence=evidence, status=status)
+    if len(adopted) > 1:
         return DestinationResolution(
             query=raw,
             canonical_destination_id=None,
@@ -562,71 +680,22 @@ def _provider_resolution(raw: str) -> DestinationResolution | None:
             state="AMBIGUOUS",
             reason_code=REASON_DESTINATION_AMBIGUOUS,
             resolver_attempted=True,
-            resolver_status="OK",
-            observation={"status": "OK", "stage": "resolving_destination"},
-            candidates=[
-                {
-                    "source_provider": "photon",
-                    "source_entity_id": getattr(place, "external_id", None),
-                    "label": getattr(place, "name", None),
-                    "country": getattr(place, "country", None),
-                }
-                for place in hits
-            ],
+            resolver_status=status,
+            observation=observation,
+            candidates=[_candidate_fields(candidate) for candidate in adopted],
             **unresolved,
         )
-    if not hits:
-        return DestinationResolution(
-            query=raw,
-            canonical_destination_id=None,
-            city_code=None,
-            method="provider_no_match",
-            state="NO_MATCH",
-            reason_code=REASON_NO_CANONICAL_IDENTITY,
-            resolver_attempted=True,
-            resolver_status="OK",
-            observation={"status": "OK", "stage": "resolving_destination"},
-            **unresolved,
-        )
-
-    place = hits[0]
-    entity_id = str(place.external_id)
-    identity = f"{PROVIDER_IDENTITY_PREFIX}{entity_id}"
-    properties = (place.raw or {}).get("properties", {}) if isinstance(place.raw, dict) else {}
     return DestinationResolution(
         query=raw,
-        canonical_destination_id=identity,
-        city_code=identity,
-        method="provider",
-        state="RESOLVED",
-        matched_label=place.name or identity,
+        canonical_destination_id=None,
+        city_code=None,
+        method="provider_no_match",
+        state="NO_MATCH",
+        reason_code=REASON_NO_CANONICAL_IDENTITY,
         resolver_attempted=True,
-        resolver_status="OK",
-        observation={"status": "OK", "stage": "resolving_destination"},
-        provenance={
-            "source_provider": "photon",
-            "source_entity_id": entity_id,
-            "source_kind": "REMOTE_PROVIDER",
-            "coordinate_system": "WGS84",
-            "centroid": {"latitude": place.latitude, "longitude": place.longitude},
-            "extent": list(properties.get("extent") or []),
-            "country": place.country,
-            # Named, not hidden: when a point and an area carried the same name, this says which
-            # versioned rule chose, and which entity it chose against.
-            "discriminated_by": (
-                DESTINATION_DISCRIMINATION_POLICY_VERSION if set_aside else None
-            ),
-            "collapsed_candidates": [
-                {
-                    "source_provider": "photon",
-                    "source_entity_id": getattr(other, "external_id", None),
-                    "label": getattr(other, "name", None),
-                    "reason": "NOT_A_BOUNDED_ADMIN_ENTITY",
-                }
-                for other in set_aside
-            ],
-        },
-        **_resolved_identity(raw),
+        resolver_status=status,
+        observation=observation,
+        **unresolved,
     )
 
 

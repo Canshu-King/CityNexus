@@ -30,7 +30,6 @@ from sqlalchemy import select
 import app.anywhere_capability as capability_module
 from app.db.models import CatalogHydrationOperation, Place
 from app.db.session import SessionLocal
-from app.integrations.discovery.photon import PhotonGeocoder
 from app.main import app
 
 client = TestClient(app)
@@ -66,14 +65,14 @@ def _feature(
     centre=None,
     extent=None,
     country: str = "中国",
-    extra: str = "",
+    admin_type: str = "district",
 ) -> dict:
     properties = {
         "osm_id": osm_id,
         "osm_type": osm_type,
         "name": name,
         "country": country,
-        "type": "administrative",
+        "type": admin_type,  # destination-grade, as the live capture reports it
     }
     if extent:
         properties["extent"] = extent
@@ -102,13 +101,17 @@ class _Recorder:
 
 
 def _install(monkeypatch, recorder: _Recorder) -> None:
-    """Point the product's resolver leg at a transport that cannot reach a network."""
+    """Hand the provider layer a transport that cannot reach a network.
 
-    def build() -> PhotonGeocoder:
-        http = httpx.AsyncClient(transport=httpx.MockTransport(recorder.handler))
-        return PhotonGeocoder(client=http)
+    Only the transport is substituted: the classification these doors assert on is lane B's real
+    `PhotonIdentityProvider`, so a door that passes here passed through the typed outcome too.
+    """
 
-    monkeypatch.setattr(capability_module, "_provider_geocoder", build)
+    monkeypatch.setattr(
+        capability_module,
+        "_provider_transport",
+        lambda: httpx.MockTransport(recorder.handler),
+    )
 
 
 def _answer(monkeypatch, features=(), *, raise_with: Exception | None = None) -> _Recorder:
@@ -278,7 +281,7 @@ def test_g6_a_fuzzy_near_match_is_not_an_identity(seeded, monkeypatch) -> None:
     _enable(monkeypatch)
     _answer(
         monkeypatch,
-        features=(_feature(osm_id=1234567, osm_type="W", name="遂昌县", country="中国"),),
+        features=(_feature(osm_id=1234567, osm_type="W", name="遂昌县", country="中国", admin_type="district"),),
     )
     body = _capability("云合")
     assert body["destination_state"] == "NO_MATCH", body["destination_state"]
@@ -300,7 +303,10 @@ def test_g10_one_place_two_index_entries_collapses_under_a_named_version(seeded,
             _feature(
                 osm_id=3289208, osm_type="R", name=RAW_COUNTY, extent=COUNTY_EXTENT, centre=COUNTY_CENTROID
             ),
-            _feature(osm_id=244082768, osm_type="N", name=RAW_COUNTY, centre=[119.5779441, 28.1096051]),
+            _feature(
+                osm_id=244082768, osm_type="N", name=RAW_COUNTY, admin_type="county",
+                centre=[119.5779441, 28.1096051],
+            ),
         ),
     )
     body = _capability(RAW_COUNTY)
@@ -317,6 +323,36 @@ def test_g10_one_place_two_index_entries_collapses_under_a_named_version(seeded,
         f"期望：被放弃的那条要**记名**，不是静默丢；实际：{provenance['collapsed_candidates']}"
     )
     assert provenance["extent"] == COUNTY_EXTENT and len(provenance["extent"]) == 4
+
+
+def test_g11_a_broken_seam_is_a_runtime_failure_too_not_a_verdict_about_the_world(
+    seeded, monkeypatch
+) -> None:
+    """provider 没答错，是**我们自己这条腿**起不来（配置/构造炸了）。
+
+    This door exists because a cross-isolation run found nothing covered it: g4 exercises a provider
+    that answered badly, and while that door is green the seam-broken branch could launder a local
+    failure into "no such place" with no door reddening.  Two runtime sites, two doors.
+    """
+
+    def explode(*_args, **_kwargs):
+        raise RuntimeError("resolver seam cannot be built: bad provider configuration")
+
+    _enable(monkeypatch)
+    monkeypatch.setattr(capability_module, "_provider_identity_resolver", explode)
+    body = _capability(RAW_COUNTY)
+    assert body["destination_state"] == "RUNTIME_FAILURE", body["destination_state"]
+    assert body["capability"] != "UNAVAILABLE", (
+        f"期望：我们自己的腿起不来，不得被写成'这个地方不存在'；实际：{body['capability']}"
+    )
+    assert body["canonical_destination_id"] is None
+    assert body["retryable"] is True, body["retryable"]
+    assert body["reason_code"] == capability_module.REASON_RESOLVER_UNAVAILABLE, body["reason_code"]
+    assert body["pending_destination_label"] == RAW_COUNTY, (
+        f"期望：原话照旧留着，重试不必重打；实际：{body['pending_destination_label']!r}"
+    )
+    status = (body.get("provider_status") or [{}])[0]
+    assert status.get("status") == "UNREACHABLE", body.get("provider_status")
 
 
 # ---------------------------------------------------------------------------------------------
