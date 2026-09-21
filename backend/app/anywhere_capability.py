@@ -428,18 +428,22 @@ def _provider_transport() -> Any:
 
 @contextmanager
 def _provider_identity_resolver() -> Any:
-    """Lane B's identity provider, built from the configuration this repository already registers.
+    """A callable that asks the registered geocoders one question and returns B's typed answer.
 
     Per ORD-0197 (arbiter 甲) this module no longer speaks to `PhotonGeocoder`: "which of these
     answers is a destination" can only be answered in one place, and two entrances writing that
     rule each is exactly how the classification collapsed into `unresolved:<hash>` once already.
-    B asks the geocoder and returns a typed outcome with provenance-bearing candidates plus
-    per-attempt evidence; whether that evidence becomes CityNexus canonical identity is decided
-    below, here.
+    Whether an answer becomes CityNexus canonical identity is decided below, here.
 
-    A context manager because the client it hands the provider holds a connection pool: opening one
-    per question and never closing it is a leak that only shows up after a thousand reads, which is
-    exactly the kind of defect a green suite hides.
+    It goes through `resolve_from_endpoints` rather than driving `PhotonIdentityProvider`
+    directly, on measured grounds: that runner is what wraps the transport with `_TimingTransport`,
+    and asking the provider myself recorded every attempt as `elapsed_ms=0.0` on a call that
+    actually took 1.8 s - evidence that looks recorded and is not.  The runner also gives endpoint
+    failover for free when a second geocoder is ever registered.
+
+    A context manager because the httpx client holds a connection pool: opening one per question
+    and never closing it is a leak only visible after a thousand reads, which is precisely what a
+    green suite hides.
     """
 
     from app.core.config import settings
@@ -447,18 +451,25 @@ def _provider_identity_resolver() -> Any:
         HttpxTransport,
         PhotonIdentityProvider,
         build_httpx_client,
+        resolve_from_endpoints,
     )
     from app.integrations.provider_config import ExternalProviderSettings
 
     provider_settings = ExternalProviderSettings()
     client = build_httpx_client(transport=_provider_transport())
     try:
-        yield PhotonIdentityProvider(
-            transport=HttpxTransport(
-                client=client, timeout_s=float(settings.real_city_timeout_seconds)
-            ),
-            base_url=provider_settings.photon_base_url,
+        transport = HttpxTransport(
+            client=client, timeout_s=float(settings.real_city_timeout_seconds)
         )
+
+        def _ask(query: str) -> Any:
+            return resolve_from_endpoints(
+                query,
+                providers=[(PhotonIdentityProvider.provider_key, transport)],
+                base_url=provider_settings.photon_base_url,
+            )
+
+        yield _ask
     finally:
         client.close()
 
@@ -626,7 +637,7 @@ def _provider_resolution(raw: str) -> DestinationResolution | None:
     unresolved = _unresolved_identity(raw)
     try:
         with _provider_identity_resolver() as provider:
-            resolution = provider.resolve(raw)
+            resolution = provider(raw)
     except Exception as exc:  # noqa: BLE001 - the seam itself broke; named below, never laundered
         return DestinationResolution(
             query=raw,

@@ -202,6 +202,15 @@ def test_g2_a_provider_named_county_becomes_hydratable_not_dead(seeded, monkeypa
     )
     status = (body.get("provider_status") or [{}])[0]
     assert status.get("status") == "OK", body.get("provider_status")
+    # The attempt itself has to travel with the answer, not just a verdict: `elapsed_ms` is only
+    # asserted as present (a mocked transport is instant), while the live receipt reports the real
+    # number.  What must not come back is B's `resolve_from_endpoints` being bypassed, which
+    # measured as every attempt recording 0.0 ms on a call that took 1.8 s.
+    attempts = provenance.get("provider_attempts") or []
+    assert len(attempts) == 1, f"期望：逐尝试留痕带上来；实际 {attempts!r}"
+    assert attempts[0]["answered"] is True and attempts[0]["http_status"] == 200, attempts[0]
+    assert isinstance(attempts[0]["elapsed_ms"], (int, float)), attempts[0]
+    assert "photon" in str(attempts[0]["endpoint"]), attempts[0]["endpoint"]
 
 
 # ---------------------------------------------------------------------------------------------
