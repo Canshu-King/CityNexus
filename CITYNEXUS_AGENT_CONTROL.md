@@ -8302,7 +8302,7 @@ CLAIMED: ORD-0192 by SESSION=c01d72a3 @2026-09-22T01:2x（`date` 实读 01:27:29
     优先 stvlynn/OpenTrip，只取一项（每日行程表 或 底部弹层/地图交互），只做候选分支，
     保留 CityNexus 真值/状态所有权，**不得 import 任何后端/领域模型**，附来源路径 + license 署名。
     ⇒ 可见打磨是奖励，不是替代品。**先把手上 ORD-0169/0180/0135 收尾做完再谈这条。**
-  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P4 可见流程；顺序在你的收尾单之后）
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P4 可见流程；顺序在你的收尾单之后）｜**ACCEPTED / REPRODUCED@02:1x**（我从 `15a114e` 自建 `index-CnfHH2K_.js` 并部署，390×844 在 `/v8/discover` 输入贡山实测：UNAVAILABLE + 显式"这不是网络问题" + 无编造进度 + 每态有动作；同时注明 UNAVAILABLE 的成因是后端未部署）
 
 - id: ORD-0194
   to: 8ccd71d8
