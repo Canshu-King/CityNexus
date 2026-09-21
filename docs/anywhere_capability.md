@@ -243,3 +243,67 @@ Do not freeze an Amap-specific payload in Anywhere v1.
 The generic provider/provenance model intentionally supports future Amap integration,
 including `source_coordinate_system=GCJ02`. Amap remains an optional adapter/config hook
 until a credentialed spike produces measured request/response behavior.
+
+
+## R10 — One canonical resolver boundary for capability and hydration
+
+Destination identity must not be computed independently by
+`GET /destinations/capability` and `POST /catalog-hydrations`.
+
+Both entry points MUST call the same server-owned resolver core, conceptually:
+
+```text
+resolve_destination(raw_input)
+  -> RESOLVED(canonical identity, provider provenance)
+  -> AMBIGUOUS(candidate identities)
+  -> NO_MATCH
+  -> RUNTIME_FAILURE
+```
+
+The shared boundary owns:
+
+- Photon invocation and provider observations;
+- canonical destination identity;
+- canonical display name;
+- WGS-84 centroid/extent normalization;
+- resolver provenance;
+- ambiguity/no-match/runtime-failure classification;
+- cache reuse of an already resolved identity.
+
+### Endpoint parity invariant
+
+For the same raw destination input and the same resolver/provider state:
+
+- capability and catalog-hydration admission MUST produce/reuse the same canonical identity;
+- neither path may persist or return `unresolved:<hash>` as canonical identity;
+- neither path may require an already registered catalog source before attempting identity resolution;
+- a resolver outage is a retryable runtime failure on both paths, not structural UNAVAILABLE;
+- a healthy resolver returning zero candidates is a structural no-identity result on both paths;
+- an ambiguous resolver result must remain ambiguous rather than one endpoint guessing a winner.
+
+If one endpoint resolves a destination while the other says `NO_REGISTERED_SOURCE` for the same input, the parity gate fails.
+
+### State after successful identity resolution
+
+Resolution success does not by itself mean READY.
+
+- resolved identity + insufficient/missing local planning evidence -> `HYDRATABLE`;
+- resolved identity + sufficient compatible local catalog/evidence for a selectable shared-planner candidate -> `READY`;
+- resolver healthy + no canonical candidate -> `UNAVAILABLE` with no canonical id;
+- resolver unavailable -> runtime failure / retryable, not `UNAVAILABLE`.
+
+Use the existing machine action `PREPARE_DESTINATION` for the HYDRATABLE case rather than inventing a second action enum for "start hydration".
+
+### Required R10 parity gates
+
+At minimum test all of:
+
+1. a known resolvable county through capability;
+2. the same county through catalog-hydration admission;
+3. both return the same canonical identity and provider provenance;
+4. removing resolver invocation from either endpoint makes the test fail;
+5. Photon healthy + zero result -> no canonical id, structural no-identity result;
+6. Photon timeout/unreachable -> retryable resolver runtime failure, no hash persisted;
+7. legacy Journey raw city text remains preserved and is backfilled in place after successful resolution.
+
+The implementation may keep separate HTTP handlers, but identity truth must have exactly one owner.
