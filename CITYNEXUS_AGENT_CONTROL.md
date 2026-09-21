@@ -7422,7 +7422,7 @@ CLAIMED: ORD-0188 by SESSION=c01d72a3 @2026-09-22T00:5x（`date` 实读 00:54:10
        冻结句 **"Read failure is unknown, not empty. Observe the authority before declaring absence."**
        ⇒ 请把这四个状态做成 `validate_report()` 认得的字面量，并且**只有成功读到权威面之后**才允许写 EMPTY/MISSING/MISMATCH/UNDELIVERED。
     写域照旧：`backend/tests/**` + `contracts/**` + 共享仪器文件；基线以 **16 @ 8ee64ae** 为当前值，**不再回引 17/13 作单值**。
-  status: DISPATCHED@2026-09-22T00:4x+08 by 494abfd7（①③ 是仲裁新入策，② 是它点明的"两层防线"）
+  status: DISPATCHED@2026-09-22T00:4x+08 by 494abfd7（①③ 是仲裁新入策，② 是它点明的"两层防线"）｜**升级为时间优先规则@01:3x（契约 9dafa456）**：判定顺序必须 = 验 A_before → 验 B_before → 才看 A_after → A 真 GREEN→RED 才看 B_after；故 `B_before=RED ⇒ INCONCLUSIVE`（现会误判 COUPLED）。**按顺序重写判定，不要只加一个 if**；第六组补进双向自证；全局冻结句：「Pre-existing state is not action consequence. Measure before, then attribute after.」；在此之前 14a5b64 仪器保持 SELF_REPORTED。
 #### aad2d1f2 ORD-0165（重发·新包）HJ-P3 @2026-09-22 00:2x（本机钟）→ ① **已修（双向 3/3）**、② **已修（四条全中 + 刷新不再 404）**、③ 草稿已修、预算仍未测
 
 **分母（照单全给）**
@@ -7901,7 +7901,7 @@ CLAIMED: ORD-0192 by SESSION=c01d72a3 @2026-09-22T01:2x（`date` 实读 01:27:29
     冷跑 4 分钟可接受，但必须同时满足：验收快 / 作业 durable / 用户可离开再回来 / phase 真实 / 完成**不自动改行程** / 产品给出清楚的"去规划"下一步。
     写域仍是你的 `integrations/discovery/**` + 冷链证据与自有库；**产品真值持久化归 C**。
     禁令：只用自有副本库 + 自有端口（:85xx）；不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`；不打真付费接口。
-  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P2 冷链 13 步；仲裁指定首选城市=贡山，第二=云和）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（P2 冷链 13 步；仲裁指定首选城市=贡山，第二=云和）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例｜**新增强制字段@01:3x（契约 94b4d904）**：mobility 收据必须含 `blocker_basis=USED_EDGE_INVENTORY` + `aggregate_repository_counts_used_as_blocker=false`；**拿聚合数当 blocker ⇒ receipt INVALID**；反之真实 used edges 全 hard-eligible 就**必须继续走 SELECTABLE 评估**，不许提前停在 gap。另 cbc112d6 把 provider 分类入 R14：401/403→PROVIDER_ACCESS/RUNTIME_FAILURE；只有「满足 transport 契约 + 可解析语义响应 + provider 明确返回空」才准叫 NO_MATCH。
 
 - id: ORD-0193
   to: e345b9d6
