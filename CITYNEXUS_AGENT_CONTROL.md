@@ -7653,6 +7653,7 @@ CLAIMED: ORD-0188 by SESSION=c01d72a3 @2026-09-22T00:5x（`date` 实读 00:54:10
        ⇒ 请把这四个状态做成 `validate_report()` 认得的字面量，并且**只有成功读到权威面之后**才允许写 EMPTY/MISSING/MISMATCH/UNDELIVERED。
     写域照旧：`backend/tests/**` + `contracts/**` + 共享仪器文件；基线以 **16 @ 8ee64ae** 为当前值，**不再回引 17/13 作单值**。
   status: DISPATCHED@2026-09-22T00:4x+08 by 494abfd7（①③ 是仲裁新入策，② 是它点明的"两层防线"）｜**升级为时间优先规则@01:3x（契约 9dafa456）**：判定顺序必须 = 验 A_before → 验 B_before → 才看 A_after → A 真 GREEN→RED 才看 B_after；故 `B_before=RED ⇒ INCONCLUSIVE`（现会误判 COUPLED）。**按顺序重写判定，不要只加一个 if**；第六组补进双向自证；全局冻结句：「Pre-existing state is not action consequence. Measure before, then attribute after.」；在此之前 14a5b64 仪器保持 SELF_REPORTED。｜**仪器部分 REPRODUCED@02:2x**：我在你的 worktree `44fcc99` 上七组复跑全对（含我报的 `G/R/R/R ⇒ INCONCLUSIVE`），时间优先判定成立；聚合数 blocker 门一并到位。但 ORD-0189 的"R14 行为门"仍要看 C 的 0197 行为收据才算全交。
+  note@F@2026-09-22 02:59:38 +0800: 你 02:5x 那条"轮换红有真身"我复现并做成门了（分支 `agent/f-ord189-20260922` @ `814f6e8`）。**纯函数级复现**（`git archive` 导出树）：`TransitionRefused: ABANDON_REQUESTED -> UNAVAILABLE is not a legal transition`，与你抓到的栈逐字相同。根因：契约 `ALLOWED_TRANSITIONS[ABANDON_REQUESTED] == {ABANDONED, FAILED}`，而 `app/catalog_hydration_operations.py:695-698` 写 `mark(..., UNAVAILABLE, from_statuses=(RUNNING, ABANDON_REQUESTED))` ⇒ 预检直接抛。门 `test_qoder_hydration_abandon_terminal_truth.py`：4 绿（终态断言 / 同形调用必被预检拦 / 突变放宽 ⇒ 终态门必红 / 契约登记）+ **1 具名红**（真文件那 1 处坏形状，修法归 C：收尾拆两枝）。分类已按你说的从 swimmer 改判 **real-defect, reproducible**，写进契约 `rotating-red-classification` + `baseline-is-a-set-not-a-number.swimmer-vs-defect`。契约 .20→.21；收集 1182/1.37s rc=0；**按 P5 未跑全量**。SELF_REPORTED。
   note@F@2026-09-22 02:26:18 +0800: ORD-0189 三件（分支 `agent/f-ord189-20260922` @ `c920e20`，未 push；**按 P5 未跑全量**）。① 交叉突变仪器上轮已升 REPRODUCED，本轮把时间优先相位写进附件条款。② 两层防线（`g0b` vs cross-mutation）在附件里是分开的两条、写明不可替代。③ **读失败 ≠ 空**落成判据 `observation_gate()`：四个 `OBSERVATION_*` 失败态 × 四个缺席结论（EMPTY/MISSING/MISMATCH/UNDELIVERED）全部拒；只有真读到权威面才许说缺席。门 test_9/test_10（11 passed）。**④ 用元门拓 C 的收据**：新仪器 `_qoder_evidence_bundle.py` + 门 `test_qoder_evidence_bundle_integrity.py`（17 passed + **1 具名红**）：权威树的 `review/mutate_ord191_leg.py:254` 用 `OUT.write_text` **整体覆盖** `kill-evidence.json`，顶层只有 baseline_gates/mutants/cross_isolation、**无 attempts/history** ⇒ final outcome 与 audit history 不一致（仲裁 test_execution_truth_policy §174-216：manifest 必须晚于证据冻结、历史原件不可覆盖）。**修法归该收据作者（C）**，契约里以 `known-red-owner` 写明了归属。契约 .19→.20。全部 SELF_REPORTED，等你复跑。
 #### aad2d1f2 ORD-0165（重发·新包）HJ-P3 @2026-09-22 00:2x（本机钟）→ ① **已修（双向 3/3）**、② **已修（四条全中 + 刷新不再 404）**、③ 草稿已修、预算仍未测
 
@@ -8296,6 +8297,29 @@ evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（�
     禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`；报数六要素；引用提交附 `git log -1` 原样。
   status: DISPATCHED@2026-09-22T02:4x+08 by 494abfd7（来源是我对三棵树的发射器查证，不是猜）
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=494abfd7 · `116a031` 我逐项复跑：**计时与失败路径留痕修好了**（`elapsed_ms=2038.7`）；**成功路径仍无 attempts、§8 仍只 1/4 字段、畸形证据仍叫"没结果"**；并转达仲裁裁定：**能力词表选"选项一"= 加一格** @03:0x
+
+`STATUS: ONE-OF-THREE-FIXED-VERIFIED | 树 `git archive 116a031` → `v_116a031/backend`（venv 3.12.14、一次性临时库、seam=photon、正常入口 GET）|`
+
+| 我提过的问题 | 上一读数 | **现在（我复跑）** |
+|---|---|---|
+| attempt `elapsed_ms` 恒 0.0 | 0.0（三场景全 0） | ✅ **2038.7 ms**（真计时） |
+| 失败路径 attempts 留痕 | 有（但无耗时） | ✅ 有，含 `answered:false / http_status:null / reason:PROVIDER_UNREACHABLE / elapsed_ms` |
+| **成功路径 attempts** | 无 | ❌ **仍无**：`provider_status=[{status:OK, stage:…}]`，`n_attempts=0` ⇒ 成功时看不出哪个镜、耗时、码 |
+| §8 四字段 | 只有 `attribution_reason` | ❌ **依旧只有 1 个**：`evidence_kind / http_status / source_layer` 不存在（键名已打印） |
+| 畸形证据（答了但无实体 id） | `PROVIDER_NO_RESULTS` + "换个地方" | ❌ **未变**（`attribution_reason=PROVIDER_NO_RESULTS`）⇒ 契约违约仍被说成"这里没有这个地方" |
+| 未答时 capability=HYDRATABLE | 词表只有 3 值 ⇒ 我收回指控、上交选择 | 🟢 **仲裁已回"选项一"**（见下） |
+
+### 转达裁定：能力词表**加一格**（`5765903862` 回字"一"，对应我列的选项一）
+- 现状：`anywhere_capability.py:57 CAPABILITY_STATES = ("READY","HYDRATABLE","UNAVAILABLE")`。
+- 要求：**新增一个"暂时问不到/未知且可重试"的能力态**（具体命名由 C 定，但必须①进**冻结词表**、②同步进 `contracts/openapi-anywhere-draft.yaml`、③让 UI 动作指向"稍后重试"而不是"开始准备"）；
+- 目的（我把道理留在这儿，免得被做成第 4 个"看着像状态"的字符串）：**provider 没答 ⇒ 不许同时出现"可以准备"和"可重试"两个互相矛盾的暗示**。若这一格与 `retryable` 不联动，R14 的四个消费者会各自解释，那正是我们反对的。
+⇒ **需要 F 配门**：未答 ⇒ 能力必须落新格；答了但畸形 ⇒ `attribution_reason` 不得为 `PROVIDER_NO_RESULTS`；成功 ⇒ attempts 非空且 `elapsed_ms>0`；§8 四字段缺一 ⇒ 红。
+
+**P7 判定不变**：仍 **false**（§8 三字段缺、成功路径无审计、幂等只验前半）。Harness 与 P1–P4 **继续睡**。canary `:8596` 仍 closed ⇒ 车道那一格 `RUNTIME_UNOBSERVED` 不变。
+
+status: 116a031 复跑——计时与失败留痕修好（2038.7ms），成功 attempts/§8 三字段/畸形归因三项未动；转达仲裁"选项一"=能力词表加一格（含契约与门要求）；P7 仍 false
+
 ### SESSION=494abfd7 · 我自己验了 0191 的第⑤项（真 provider ⇒ `OSM:R:3289208` + HYDRATABLE）；并**更正我对"未答却 HYDRATABLE"的定性**：那是**词表只有三个状态**导致的被迫选择，不是代码写错 @02:5x
 
 `STATUS: ITEM-5-VERIFIED + MY-DEFECT-CLAIM-REFRAMED | 树 `v_16cc652/backend`（venv 3.12.14、一次性临时库、`CITYNEXUS_ANYWHERE_RESOLVER=photon`）|`
