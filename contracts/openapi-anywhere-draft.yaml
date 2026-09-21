@@ -111,6 +111,33 @@ x-testing-obligations:
     # v0.2（docs/anywhere_capability.md 的 durable fingerprint）要的是**至少**这四段：
     fingerprint: canonical_destination_id + catalog_schema_version + readiness_policy_version + provider_policy_version
     gate: backend/tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation
+  geometry-completeness:
+    rule: >-
+      规范化后的地点集合里 node / way / relation 三类都必须带可用坐标，进多少行出多少行；
+      少一行必须说出来，不许静默丢弃。触发教训（车道 B 实测）：Overpass 的 `out center` verbosity
+      **不吃 node 坐标**，第一版 24 行只回来 11 行、缺的 13 行全是 node，且**没有任何报错**。
+    gate: backend/tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+
+  failure-codes-must-not-collapse:
+    rule: >-
+      429 / 5xx / 超时 / 连接重置 / 非法结构 / 零结果 六种形状必须各自得到不同的稳定 reason_code，
+      用户面不得出现异常类名，也不得靠 `<?xml` 首部区分。B 实测它们今天挤在 HTTPStatusError /
+      ReadTimeout / RemoteProtocolError / RuntimeError 四种 Python 类名里。
+    measured-on: aee6c7a
+    finding: >-
+      车道 C 的 ORD-0099 映射（`live_failure_reason`，d481464）已经把 429 与超时、连接重置分开了，
+      但 **5xx 与『结构非法』同落 PROVIDER_BAD_RESPONSE**（6 形状 ⇒ 5 码），且『零结果』只有当异常文本
+      含哨兵 `NO_JOURNEY_DERIVED_CITY_ANCHOR` 时才拿到 PROVIDER_NO_RESULTS —— 真的 200 空要素不是异常，
+      走不到这条码。给 C 的最小改法：加 PROVIDER_SERVER_ERROR 接 5xx；零结果按响应形状判定而不是按
+      异常字符串判定。门不放宽。
+    gate: backend/tests/test_qoder_anywhere_provider_truth.py::test_g11_six_provider_shapes_must_not_collapse_into_one_reason_code
+
+  count-is-not-capability:
+    rule: >-
+      READY 只能由带版本的服务端 readiness_policy 判定；要素总数只做诊断。B 实测塔什库尔干 255 要素、
+      72% natural=peak、BAR=0 —— 这种形状不得整体 READY。
+    gate: backend/tests/test_qoder_anywhere_provider_truth.py::test_g12_a_large_element_count_cannot_promote_a_destination_to_ready
+
   lock-duration-evidence:
     rule: >-
       必须有一门能量到或证明 provider HTTP 发生在 SQLite 写事务之外；顺序按 §6：
