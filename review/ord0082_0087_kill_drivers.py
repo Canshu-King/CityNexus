@@ -38,6 +38,7 @@ WIZARD = "src/features/setup/JourneyTrialSetup.tsx"
 WIZ_SPEC = "e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts"
 OFFLINE_LIB = "src/lib/offlineJourney.ts"
 OFFLINE_SPEC = "e2e/qoder-offline-persistence.spec.ts"
+REPLAN_SPEC = "e2e/qoder-replan-review-actions.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -512,6 +513,24 @@ CASES = [
         "      hasCachedCopy: cachedCopySaved,\n",
         "      hasCachedCopy: true,\n",
         [(OFFLINE_SPEC, ["ord0178-the-saved-copy-claim-follows-the-rowcount"])],
+    ),
+    (
+        # ORD-0180 1: a fresh key per tap turns a replay into a second acceptance.  The gate asserts
+        # one distinct key across two taps, so minting per call has to go red.
+        "killN1-fresh-idempotency-key-per-tap",
+        PANEL,
+        "    const held = idempotencyKeys.current.get(scope);\n    if (held) return held;\n",
+        "    const held = undefined;\n    if (held) return held;\n",
+        [(REPLAN_SPEC, ["ord0180-the-bridge-is-marked-and-presence-is-not-permission"])],
+    ),
+    (
+        # ORD-0183 1: the bridge loses its marker while the filter stays -- the shim then reads as a
+        # contract to whoever finds it next, which is the exact failure the marker exists to prevent.
+        "killN2-bridge-marker-removed",
+        PANEL,
+        "  /* TEMPORARY-CLIENT-FILTER-ORD-0180 -- transitional bridge, not a contract.\n",
+        "  /* a client-side narrowing of the list.\n",
+        [(REPLAN_SPEC, ["ord0180-the-bridge-is-marked-and-presence-is-not-permission"])],
     ),
 ]
 

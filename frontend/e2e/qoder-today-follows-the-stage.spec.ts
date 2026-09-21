@@ -1697,22 +1697,42 @@ test("sim-booking-target-is-an-activity-the-server-gives-a-slot-for — 默认�
       : "";
     return { label, reason, disabled: await row.getAttribute("aria-disabled") };
   };
-  /* The row's availability now rests on three reads that start when the window opens, and the first
-     thing it says is "还在读…".  Measuring at that instant is how this node's first pass went red on a
+  /* The row's availability rests on three reads that start when the window opens, and the first thing
+     it says is "还在读…".  Measuring at that instant is how this node's first pass went red on a
      product that was simply still working: wait for the reading-shaped refusal to retire, then judge
-     what is left, which is always a statement about the server's answer. */
+     what is left, which is always a statement about the server's answer.
+     Retirement alone is not enough, and a chain measures it: while the plan query is still in flight
+     the panel has zero activities and says the *generic* sentence ("这份计划里没有可下单的活动"),
+     which is not the reading-shaped one and so passed the old detector -- hence the arm that went red
+     only when a preceding spec made that read slower.  So this also waits until the panel has
+     actually asked for a plan, and until the reason has stopped changing between polls. */
+  const planAsked = () =>
+    page.evaluate(() =>
+      performance
+        .getEntriesByType("resource")
+        .some((entry) => /\/api\/v1\/plans\/[^/?]+$/.test(entry.name)),
+    );
   const readSettledRow = async (arm: string) => {
     let last = { label: "", reason: "", disabled: null as string | null };
+    let previous: string | null = null;
     await expect
       .poll(
         async () => {
           last = await readRow();
-          return /还在读|正在逐个|仍在读/.test(last.reason) ? "reading" : "settled";
+          if (/还在读|正在逐个|仍在读/.test(last.reason)) return "reading";
+          if (!(await planAsked())) return "reading";
+          /* A row that is ready to press legitimately carries no refusal text, so "settled" cannot
+             mean "has a stable non-empty reason" -- that reading hung the positive arm, which is the
+             row working.  What must hold is: the reads finished, and whatever the row says has stopped
+             changing between polls. */
+          const stable = previous !== null && last.reason === previous;
+          previous = last.reason;
+          return stable ? "settled" : "reading";
         },
         {
-          timeout: 20_000,
-          intervals: [250],
-          message: node(NODE, `${arm}: the booking row never came out of "still reading", so nothing below was ever measured`),
+          timeout: 25_000,
+          intervals: [300],
+          message: node(NODE, `${arm}: the booking row never settled into a statement about the server's answer, so nothing below was ever measured`),
         },
       )
       .toBe("settled");

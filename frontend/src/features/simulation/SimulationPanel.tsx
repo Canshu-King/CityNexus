@@ -126,6 +126,15 @@ export function SimulationPanel({
     enabled: Boolean(journeyId),
     queryFn: () => cityNexusApi.listReplans(journeyId as string),
   });
+  /* TEMPORARY-CLIENT-FILTER-ORD-0180 -- transitional bridge, not a contract.
+     `GET /journeys/{id}/replans` answers the whole Journey-scoped list; the server has no status
+     filter yet (ORD-0180 ②, filed with C as ORD-0182, same gap on /plans).  Until that lands, the
+     panel narrows the list here.  When it does land, the request becomes `?status=PRESENTED` and this
+     filter AND this marker are deleted together -- a marker left behind is a gate failure, because an
+     unmarked shim becomes the next person's contract.
+     What this filter is NOT: an authorization token.  A row appearing here means "the list contained
+     it", nothing more -- `accept`/`reject` still re-read the current state server-side, and this
+     screen does not treat presence as permission (ORD-0183 ②). */
   const openProposals = (replans.data ?? []).filter(
     (item) =>
       !["ACCEPTED", "REJECTED", "DECLINED", "SUPERSEDED"].includes(String(item.status ?? "").toUpperCase()),
