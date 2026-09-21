@@ -20,14 +20,19 @@ breaking it before:
    normalisation may only report it, never strengthen it: a simulated row does not become a
    fetched one by passing through a converter.
 
-Everything here reads the database the product already has.  No network: this module answers
-"what can we plan with *now*", and a provider cannot make that answer truer.
+Everything here reads the database the product already has.  By default nothing leaves the
+process: this module answers "what can we plan with *now*", and a provider cannot make that answer
+truer.  The one exception is the ORD-0191 ⑤ leg below, which is off unless a deployment names a
+resolver (`CITYNEXUS_ANYWHERE_RESOLVER=photon`), because a place this catalog has never heard of is
+only *unusable* relative to what we are allowed to consult - and saying otherwise about 云和县,
+which exists, is its own kind of false answer.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import uuid
 from collections.abc import Iterable
@@ -154,6 +159,44 @@ _ADMINISTRATIVE_SUFFIXES = (
     "特别行政区", "自治区", "自治州", "自治县", "地区", "林区", "省", "市", "区", "县",
 )
 
+# ---------------------------------------------------------------------------------------------
+# ORD-0191 ⑤: a destination may also be named by a provider this process does not hold.
+#
+# The switch is **off by default** and read **per call**.  Both halves matter:
+#   * off by default (R6) because a capability read is on the hot path of ~1100 doors and of every
+#     screen paint; silently calling a public geocoder from it would be §17C's exact forbidden move,
+#     and would turn "we could not reach the world" into a product answer;
+#   * read per call because every import-time setting in this project has already been measured
+#     changing a whole suite from the shell it happened to be started from - a developer's exported
+#     key must not decide what the product believes about 云和县.
+# A deployment that wants the leg says so explicitly: `CITYNEXUS_ANYWHERE_RESOLVER=photon`.
+RESOLVER_ENV = "CITYNEXUS_ANYWHERE_RESOLVER"
+RESOLVER_SEAMS = ("off", "photon")
+# An identity that came from the world, not from a text derivative: the OpenStreetMap entity the
+# provider pointed at.  Prefixed so nobody reads it as one of our internal `CN-*` vocabulary codes.
+PROVIDER_IDENTITY_PREFIX = "OSM:"
+# Measured 2026-09-22 against the live resolver: asking for 云和县 returns the county boundary as
+# `R:3289208` (with a four-number extent) *and* a bare node `N:244082768` carrying the same name.
+# Those are not two places the traveller must choose between - they are one place expressed twice,
+# and answering AMBIGUOUS at that would be a machine asking a human to arbitrate its own index.
+# The rule is versioned and named because a caller must never assume it: an administrative **area**
+# is the destination; a point that merely marks it is not.  Two bounded areas with the same name
+# (e.g. the same county name in two countries) remain genuinely ambiguous and stay AMBIGUOUS.
+DESTINATION_DISCRIMINATION_POLICY_VERSION = "destination-discrimination-v1"
+
+
+def anywhere_resolver_name() -> str:
+    """Which seam may name a destination today (folded, defaulted, never guessed)."""
+
+    return (os.getenv(RESOLVER_ENV) or "off").strip().lower()
+
+
+def anywhere_resolver_attempted(name: str | None = None) -> bool:
+    """Is a provider attempt authorised?  A misspelled seam name is not an implicit yes."""
+
+    seam = (name if name is not None else anywhere_resolver_name())
+    return seam == "photon"
+
 _TRAVELER_FACING_LABELS = {
     "CNX-DEMO": ("demo", "演示", "模拟", "cnx-demo"),
 }
@@ -185,6 +228,10 @@ class DestinationResolution:
     resolver_query_normalized: str | None = None
     destination_pending_key: str | None = None
     pending_label_fidelity: str | None = None
+    # Only filled by a provider answer: the facts that make the identity somebody else's record
+    # rather than ours (entity id, WGS-84 centroid, extent) and the runtime observation behind it.
+    provenance: dict[str, Any] | None = None
+    observation: dict[str, Any] | None = None
 
     @property
     def resolved(self) -> bool:
@@ -366,8 +413,225 @@ def _display_labels() -> dict[str, str]:
     return {f"CN-{code}": label for code, label in (_CITY_DISPLAY_NAMES or {}).items()}
 
 
+def _provider_geocoder() -> Any:
+    """The resolver leg, built from the configuration this repository already registers.
+
+    Nothing here invents a URL, a timeout or a network policy: the base URL comes from
+    `ExternalProviderSettings.photon_base_url`, proxy behaviour from
+    `trust_environment_for_public_providers()`, and the timeout from the same bounded
+    `real_city_timeout_seconds` live discovery uses.  The one thing added by hand is the
+    User-Agent, because the measured reason this adapter is never called is that the host refuses
+    an unidentified httpx default: a request that gets 403 would otherwise be read as "the world
+    does not know this place", which is a fabricated product answer.
+    """
+
+    import httpx
+
+    from app.core.config import settings
+    from app.integrations.discovery.photon import PhotonGeocoder
+    from app.integrations.provider_config import (
+        ExternalProviderSettings,
+        trust_environment_for_public_providers,
+    )
+
+    provider = ExternalProviderSettings()
+    client = httpx.AsyncClient(
+        timeout=settings.real_city_timeout_seconds,
+        headers={"User-Agent": "CityNexus-Anywhere/1.0 (+https://citynexus.local/)"},
+        trust_env=trust_environment_for_public_providers(),
+        follow_redirects=True,
+    )
+    return PhotonGeocoder(client=client, base_url=provider.photon_base_url)
+
+
+def _run_provider_coroutine(coroutine: Any) -> Any:
+    """Bridge one adapter call into this synchronous resolver.
+
+    If a loop is already running in this thread, running one here would corrupt somebody else's
+    scheduling, so it is named instead of quietly handled.  Every caller of `resolve_destination`
+    is a synchronous FastAPI endpoint (threadpool) or a worker thread today.
+    """
+
+    import asyncio
+
+    try:
+        asyncio.get_running_loop()
+    except RuntimeError:
+        return asyncio.run(coroutine)
+    coroutine.close()
+    raise RuntimeError("ANYWHERE resolver leg requires a synchronous caller")
+
+
+def _provider_status_for(exc: BaseException) -> str:
+    """Map a transport failure onto the frozen `provider_status` vocabulary."""
+
+    import httpx
+
+    if isinstance(exc, httpx.TimeoutException) or isinstance(exc, httpx.ConnectError):
+        return "UNREACHABLE"
+    status = getattr(getattr(exc, "response", None), "status_code", None)
+    if status == 429:
+        return "RATE_LIMITED"
+    if isinstance(exc, httpx.HTTPError):
+        return "UNREACHABLE"
+    return "UNREACHABLE"
+
+
+def _is_bounded_admin_entity(place: Any) -> bool:
+    """An administrative *area*: a relation carrying a four-number extent."""
+
+    properties = (place.raw or {}).get("properties", {}) if isinstance(place.raw, dict) else {}
+    extent = list(properties.get("extent") or [])
+    is_relation = str(getattr(place, "external_id", "")).startswith("R:")
+    return is_relation and len(extent) == 4
+
+
+def _discriminate_destination_hits(hits: list[Any]) -> tuple[list[Any], list[Any]]:
+    """Apply `destination-discrimination-v1`: one area wins over the points that mark it.
+
+    Returns `(candidates, set_aside)`.  The collapse only happens when exactly one answer is a
+    bounded area, and whatever was set aside is returned so it can be *recorded* rather than
+    silently dropped - a tie between two areas is not a tie we are allowed to break.
+    """
+
+    if len(hits) < 2:
+        return list(hits), []
+    bounded = [place for place in hits if _is_bounded_admin_entity(place)]
+    if len(bounded) == 1:
+        return bounded, [place for place in hits if place is not bounded[0]]
+    return list(hits), []
+
+
+def _exact_name_hits(places: list[Any], raw: str) -> list[Any]:
+    """Only an answer whose *name* is the question counts as naming the place.
+
+    The provider is a search engine and will happily return the nearest thing it knows.  Adopting
+    one of those would be the same category of error as hashing the query text: a guess, filed
+    under "resolved".
+    """
+
+    wanted = _normalise(raw)
+    return [place for place in places if _normalise(place.name or "") == wanted]
+
+
+def _provider_resolution(raw: str) -> DestinationResolution | None:
+    """Ask the authorised provider about a destination this process could not name.
+
+    Returns `None` when no attempt is authorised - the caller then answers with the same structural
+    conclusion it always has, and no observation is claimed.  When an attempt *is* authorised the
+    four outcomes stay separate, because they ask four different things of a traveller:
+
+    * one exact-name answer -> a real identity (the provider's entity, not our code word), still
+      `HYDRATABLE` until the catalog holds something for it;
+    * several exact-name answers -> `AMBIGUOUS`, no winner picked;
+    * a healthy answer with nothing in it -> structural `NO_MATCH`, identity null, and the
+      observation says `OK` because looking is what we did;
+    * any transport failure -> `RUNTIME_FAILURE`, retryable, never a structural verdict, never a
+      digest or a text-derived placeholder.
+    """
+
+    if not anywhere_resolver_attempted():
+        return None
+    unresolved = _unresolved_identity(raw)
+    try:
+        geocoder = _provider_geocoder()
+        places = _run_provider_coroutine(geocoder.search(raw, limit=8))
+    except Exception as exc:  # noqa: BLE001 - named below as a runtime state, never as structure
+        return DestinationResolution(
+            query=raw,
+            canonical_destination_id=None,
+            city_code=None,
+            method="provider_error",
+            state="RUNTIME_FAILURE",
+            reason_code=REASON_RESOLVER_UNAVAILABLE,
+            retryable=True,
+            resolver_attempted=True,
+            resolver_status=_provider_status_for(exc),
+            observation={"status": _provider_status_for(exc), "stage": "resolving_destination"},
+            **unresolved,
+        )
+
+    hits = _exact_name_hits(list(places or []), raw)
+    hits, set_aside = _discriminate_destination_hits(hits)
+    if len(hits) > 1:
+        return DestinationResolution(
+            query=raw,
+            canonical_destination_id=None,
+            city_code=None,
+            method="provider_ambiguous",
+            state="AMBIGUOUS",
+            reason_code=REASON_DESTINATION_AMBIGUOUS,
+            resolver_attempted=True,
+            resolver_status="OK",
+            observation={"status": "OK", "stage": "resolving_destination"},
+            candidates=[
+                {
+                    "source_provider": "photon",
+                    "source_entity_id": getattr(place, "external_id", None),
+                    "label": getattr(place, "name", None),
+                    "country": getattr(place, "country", None),
+                }
+                for place in hits
+            ],
+            **unresolved,
+        )
+    if not hits:
+        return DestinationResolution(
+            query=raw,
+            canonical_destination_id=None,
+            city_code=None,
+            method="provider_no_match",
+            state="NO_MATCH",
+            reason_code=REASON_NO_CANONICAL_IDENTITY,
+            resolver_attempted=True,
+            resolver_status="OK",
+            observation={"status": "OK", "stage": "resolving_destination"},
+            **unresolved,
+        )
+
+    place = hits[0]
+    entity_id = str(place.external_id)
+    identity = f"{PROVIDER_IDENTITY_PREFIX}{entity_id}"
+    properties = (place.raw or {}).get("properties", {}) if isinstance(place.raw, dict) else {}
+    return DestinationResolution(
+        query=raw,
+        canonical_destination_id=identity,
+        city_code=identity,
+        method="provider",
+        state="RESOLVED",
+        matched_label=place.name or identity,
+        resolver_attempted=True,
+        resolver_status="OK",
+        observation={"status": "OK", "stage": "resolving_destination"},
+        provenance={
+            "source_provider": "photon",
+            "source_entity_id": entity_id,
+            "source_kind": "REMOTE_PROVIDER",
+            "coordinate_system": "WGS84",
+            "centroid": {"latitude": place.latitude, "longitude": place.longitude},
+            "extent": list(properties.get("extent") or []),
+            "country": place.country,
+            # Named, not hidden: when a point and an area carried the same name, this says which
+            # versioned rule chose, and which entity it chose against.
+            "discriminated_by": (
+                DESTINATION_DISCRIMINATION_POLICY_VERSION if set_aside else None
+            ),
+            "collapsed_candidates": [
+                {
+                    "source_provider": "photon",
+                    "source_entity_id": getattr(other, "external_id", None),
+                    "label": getattr(other, "name", None),
+                    "reason": "NOT_A_BOUNDED_ADMIN_ENTITY",
+                }
+                for other in set_aside
+            ],
+        },
+        **_resolved_identity(raw),
+    )
+
+
 def resolve_destination(session: Session, query: str) -> DestinationResolution:
-    """Turn a query into a canonical destination using only sources already in this process.
+    """Turn a query into a canonical destination, from the sources this build may consult.
 
     Four answers, and they are not interchangeable:
 
@@ -467,8 +731,15 @@ def resolve_destination(session: Session, query: str) -> DestinationResolution:
             **_resolved_identity(raw),
         )
 
-    # 3. nothing in this process can name it - and the answer is a null identity plus the words,
-    #    not a placeholder that a fingerprint or a join would go on believing.
+    # 3. nothing in this process can name it.  If this deployment authorised a provider, ask it -
+    #    and keep its four answers separate from ours (a near match, a tie and a timeout are three
+    #    different truths, and none of them is allowed to become an identity by default).
+    provider = _provider_resolution(raw)
+    if provider is not None:
+        return provider
+
+    # 4. nothing we are authorised to consult can name it - and the answer is a null identity plus
+    #    the words, not a placeholder that a fingerprint or a join would go on believing.
     return DestinationResolution(
         query=raw,
         canonical_destination_id=None,
@@ -857,6 +1128,17 @@ def evaluate_capability(
         body["provider_status"] = [
             item for item in provider_observations if item.get("status") in PROVIDER_STATUSES
         ]
+    if resolution.provenance:
+        # Only a provider answer carries this: for a destination the catalog named, the source is
+        # the catalog itself and `provenance.source_kinds` already says so.
+        body["destination_provenance"] = resolution.provenance
+    observation = resolution.observation
+    if (
+        isinstance(observation, dict)
+        and observation.get("status") in PROVIDER_STATUSES
+        and not body.get("provider_status")
+    ):
+        body["provider_status"] = [observation]
     if resolution.resolver_status and not body.get("provider_status"):
         body["provider_status"] = [{"status": resolution.resolver_status, "stage": "resolving"}]
     return body
