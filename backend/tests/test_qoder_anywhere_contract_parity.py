@@ -79,19 +79,24 @@ def test_control_route_is_served_so_a_404_means_something():
     )
 
 
-def test_draft_contract_lists_exactly_the_four_target_operations():
-    """The draft is not allowed to quietly grow a fifth endpoint without a gate for it."""
+def test_annex_declares_no_operations_of_its_own():
+    """The arbiter owns the operations now; a second definition here would be the next lie.
+
+    Demoting `openapi-anywhere-draft.yaml` to an annex is only honest if the annex really
+    stops defining endpoints: two sources of truth drift, and whichever is read later wins.
+    """
     draft = _draft()
-    listed = [
-        (method, path, operation["operationId"])
-        for path, item in (draft.get("paths") or {}).items()
-        for method, operation in item.items()
-        if isinstance(operation, dict) and "operationId" in operation
-    ]
-    expected = sorted((m, p, o) for o, m, p, _ in DRAFT_OPERATIONS)
-    assert sorted(listed) == expected, (
-        "期望：草案只登记 ORD-0094 那四个目标操作；"
-        f"实际：{sorted(listed)}。加端点要连着加门，不能只改契约"
+    assert (draft.get("paths") or {}) == {}, (
+        f"期望：附件不声明任何 path（真值源是 arbiter/anywhere-contract 的 "
+        f"contracts/anywhere_v1.openapi.yaml）；实际：又声明了 {sorted(draft['paths'])}"
+    )
+    authority = (draft.get("info") or {}).get("x-authority") or {}
+    for key in ("branch", "contract-file", "introduced-by"):
+        assert authority.get(key), f"期望：附件写明真值源 {key}；实际 x-authority={authority!r}"
+    recorded = ((draft.get("info") or {}).get("x-differential-evidence") or {}).get("targets") or []
+    assert len(recorded) == len(DRAFT_OPERATIONS), (
+        f"期望：附件把被门的四个操作连同实测读数一起登记（{len(DRAFT_OPERATIONS)} 条）；"
+        f"实际：{len(recorded)} 条"
     )
 
 
@@ -103,7 +108,7 @@ def test_every_draft_operation_is_reachable_on_the_running_app():
         if _router_absent(response):
             missing.append(f"{method.upper()} {probe} -> 404 Not Found（{operation_id}）")
     assert not missing, (
-        "期望：`contracts/openapi-anywhere-draft.yaml` 登记的四个操作在应用上可达（非路由级 404）；"
+        "期望：契约（arbiter v1，附件按它）登记的四个操作在应用上可达（非路由级 404）；"
         f"实际：仍缺 {len(missing)}/4 —— " + " ; ".join(missing) + "。"
         "这条红就是车道 C 的收口条件之一，不许改成 skip，也不许把断言放宽成'状态码是数字'"
     )

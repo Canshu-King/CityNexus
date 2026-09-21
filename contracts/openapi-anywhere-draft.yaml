@@ -1,50 +1,44 @@
 openapi: 3.1.0
 #
-# CITYNEXUS-ANYWHERE 目标契约草案（车道 F · ORD-0094 · 2026-09-21）
+# CITYNEXUS-ANYWHERE 契约 · 车道 F **附件**（ORD-0094 · 2026-09-21 13:5x）
 # =============================================================================
-# 这是一份 **草案**，不是一份现状说明。它刻意单独成文件：`contracts/openapi.yaml`
-# 里每一条都对应已实现的路由，把未实现的东西塞进去会让"契约里有、实现里没有"这个
-# 差集再也量不出来（那正是本项目反复被记账的 unknown-as-known）。
+# 这份文件原本是我（车道 F）写的目标契约草案。仲裁已在
+# `arbiter/anywhere-contract` 上交付正式契约：
+#   contracts/anywhere_v1.openapi.yaml  （commit `0c0aa82` "contract: define Anywhere
+#   capability and hydration v1"，分支 tip `e49dfb1`，536 行 / 22 schema）
+# 那份覆盖得更全（写事务规则、AgentOutcome、Provenance 的 source_kind 与 fact_quality
+# 不许升级，都在里面）。**所以我不再重复登记端点与 schema** —— 同一件事留两份定义，
+# 将来一定有一份在说谎。本文件降级为附件，只保留正式契约里没有、而 ORD-0094 要求的
+# 四块内容：实测差集、延迟预算、§17C/D/E 的测试义务、以及逐条对照表。
 #
-# 状态：**四个端点在当前权威树 `4c8c911` 上全部不存在。**
-# 实测证据（不是读路由表猜的；读数与命令在下面 `x-differential-evidence`）：
-#   GET  /api/v1/destinations/capability?query=贡山   -> 404 {"detail":"Not Found"}
-#   POST /api/v1/catalog-hydrations                  -> 404 {"detail":"Not Found"}
-#   GET  /api/v1/catalog-hydrations/{id}             -> 404 {"detail":"Not Found"}
-#   POST /api/v1/catalog-hydrations/{id}/abandon     -> 404 {"detail":"Not Found"}
-# 对照组（同一进程、同一时刻，证明服务真的在跑而不是连不上）：
-#   GET  /api/v1/health                              -> 200
-#   GET  /api/v1/demo/scene                          -> 200（已实现的读端点）
-#
-# 依据：`_qoder_recovery_20260919/raw/arbiter_mission_anywhere.md`
-#   §2 目标域（能力必须是后端真值）· §3 目的地解析（用户不该知道 city_code）·
-#   §5 分类归一 · §6 水合状态机 · §7 幂等/并发 · §8 缓存/新鲜度 ·
-#   §11 AgentOutcome · §13 既有旅程必须能恢复 · §14 provider 失败要可诊断。
-#
-# 三条不可协商的口径，写在这里以免实现时被"顺手"改掉：
-#   1. READY ≠ places.length > 0（§2 原话）：两间博物馆、没有餐饮/夜生活/住宿的
-#      目的地，不得对所有出行意图报 READY ⇒ `coverage` 是必答复对象，缺任一分类
-#      都要显式报 MISSING。
-#   2. 没有百分比进度（§6 原话 "No fake percentage"）：只有 `phase` +
-#      `elapsed_ms` + `retry_after_ms`；任何 `progress` 字段都是违约。
-#   3. provider 网络调用绝不跨越 SQLite 写事务（§6/§7，stay-generation 115 秒的
-#      教训）⇒ `x-concurrency` 里把短读/放锁/网络/短写的顺序钉成契约的一部分。
+# 正式契约落地到权威树之后，`backend/tests/test_qoder_anywhere_contract_parity.py`
+# 会从"对照下面这张表里的字面量"切换成"直接解析 contracts/anywhere_v1.openapi.yaml"，
+# 那份文件才是真值源；切换点写在同一个文件里，不用另找人记这件事。
 info:
-  title: CityNexus ANYWHERE target contract (DRAFT — not implemented)
-  version: 0.94-draft.1
+  title: CityNexus ANYWHERE contract annex (lane F) — authority lives in anywhere_v1.openapi.yaml
+  version: 0.94-annex.1
   description: >-
-    Draft contract for destination capability and catalog hydration, authored by lane F
-    under ORD-0094. None of these four operations exists on the current backend, which is
-    the point: the gates in `backend/tests/test_qoder_anywhere_contract_parity.py` fail
-    today with a measured 404 each and pass the day lane C ships them. The differential is
-    re-measurable, not asserted from a route table.
-  x-status: draft-unimplemented
+    Measurements, latency budget, test obligations and the point-by-point reconciliation
+    against the arbiter's Anywhere v1 contract. Defines no operations and no reusable
+    schemas on purpose: the operations are the arbiter's, and a second copy here would be
+    the next "the contract says one thing, the code another" incident.
+  x-authority:
+    branch: arbiter/anywhere-contract
+    contract-file: contracts/anywhere_v1.openapi.yaml
+    introduced-by: 0c0aa82
+    branch-tip-observed: e49dfb1
+    observed-at: "2026-09-21 13:5x +0800, read-only: git ls-remote --heads + git fetch + git ls-tree/git show (working tree untouched)"
+  x-status: annex-of-arbiter-contract
   x-authored-by: "lane F (session 8ccd71d8) · ORD-0094 · authoritative HEAD 4c8c911"
+
+  # -----------------------------------------------------------------------------
+  # ① 实测差集：契约里有、实现里没有 —— 四条全缺，且是活进程量出来的
+  # -----------------------------------------------------------------------------
   x-differential-evidence:
     measured-at: "2026-09-21 13:32:17 +0800 (machine clock)"
-    server: "lane F's own uvicorn on 127.0.0.1:8652, own sqlite file D:/moodle/_qoder_f_run/_runF1.db, CITYNEXUS_DEMO_MODE=true, CITYNEXUS_AI_ENABLED=false, provider credentials cleared; authoritative tree 4c8c911"
+    server: "lane F's own uvicorn on 127.0.0.1:8652, own sqlite file D:/moodle/_qoder_f_run/_runF1.db, CITYNEXUS_DEMO_MODE=true, AI off, provider credentials cleared, code = 4c8c911"
     interpreter: "D:/moodle/CityNexus/.venv/Scripts/python.exe (3.12.14)"
-    method: "curl -w '%{http_code}' plus the response body against the running process"
+    method: "curl -w '%{http_code}' plus the body, against the running process"
     targets:
       - "GET  /api/v1/destinations/capability?query=贡山独龙族怒族自治县 -> 404 {\"detail\":\"Not Found\"}"
       - "POST /api/v1/catalog-hydrations                                 -> 404 {\"detail\":\"Not Found\"}"
@@ -54,423 +48,74 @@ info:
       - "GET /api/v1/health      -> 200"
       - "GET /api/v1/demo/scene  -> 200"
     reading: >-
-      Four for four missing while the very same process answers 200 on two other routes, so
-      these are router-level absences, not a server that was down or unreachable. The
-      differential is therefore re-measurable by anyone: run the parity gate in
-      `backend/tests/test_qoder_anywhere_contract_parity.py`.
-servers:
-  - url: http://localhost:8000/api/v1
-tags:
-  - name: destinations
-    description: Backend truth about what a destination can currently carry.
-  - name: catalog-hydrations
-    description: Async, idempotent, resumable preparation of a destination's catalog.
-paths:
-  /destinations/capability:
-    get:
-      tags: [destinations]
-      operationId: getDestinationCapability
-      summary: What can this destination actually carry, and how do we know
-      description: >-
-        The one read that lets a screen stop guessing. Today the frontend infers
-        "supported" from a place count, an HTTP error string, or English copy - all three of
-        which §2 forbids. A caller may bring a free-text query (no CityNexus city code
-        required, §3); the response names the destination it resolved to, so an ambiguous or
-        unresolvable query cannot be answered with someone else's capability.
-        This endpoint never mutates. HYDRATABLE is a finding, not a request: preparing data is
-        the separate `POST /catalog-hydrations` call, so a browse or a poll cannot start a
-        provider storm.
-      parameters:
-        - name: query
-          in: query
-          required: true
-          description: >-
-            Anything a traveller would type: "Beijing", "北京市", a county name,
-            "city + province", "district + city". Canonical identity is decided by the
-            resolution layer, never by an LLM (§3).
-          schema: {type: string, minLength: 1, maxLength: 120}
-        - name: journey_id
-          in: query
-          required: false
-          description: >-
-            Optional. Scopes the answer to the journey that is asking, so the screen can prove
-            the capability it shows belongs to that journey's destination rather than to
-            whichever city was last prepared (§13 - an existing journey must become plannable
-            without being recreated).
-          schema: {type: string, format: uuid}
-      responses:
-        '200':
-          description: >-
-            Capability verdict for exactly one resolved destination, or an honest
-            UNAVAILABLE/ambiguous answer with a reason code.
-          content:
-            application/json:
-              schema: {$ref: '#/components/schemas/DestinationCapabilityResponse'}
-        '422':
-          $ref: '#/components/responses/ValidationError'
-  /catalog-hydrations:
-    post:
-      tags: [catalog-hydrations]
-      operationId: createCatalogHydration
-      summary: Prepare a destination's catalog, without holding a request open
-      description: >-
-        Acceptance is a durable queue entry, not finished work: p95 <= 1s, hard <= 2s on a
-        normal local DB (§6). Nothing provider-network happens inside this request, and
-        nothing provider-network may happen inside an open SQLite write transaction (§7).
-        Idempotent by fingerprint (canonical_destination + catalog_schema_version +
-        provider policy/version): a second caller for the same destination and version gets
-        the SAME operation_id back, never a second provider storm, never duplicate catalog
-        rows. Idempotency is enforced at the durable layer (unique index), not by a
-        process-local lock, because two uvicorn workers do not share one.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: {$ref: '#/components/schemas/CatalogHydrationRequest'}
-      responses:
-        '202':
-          description: >-
-            Queued or reused. `reused: true` distinguishes "I started this" from "someone
-            already had" so the UI can say which, and the operation_id is the same either way.
-          content:
-            application/json:
-              schema: {$ref: '#/components/schemas/CatalogHydrationAccepted'}
-        '409':
-          $ref: '#/components/responses/Conflict'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-  '/catalog-hydrations/{operation_id}':
-    get:
-      tags: [catalog-hydrations]
-      operationId: getCatalogHydration
-      summary: Where the preparation has got to, in phases it actually ran
-      description: >-
-        Read-only projection of the durable operation: phase, elapsed, retry_after_ms,
-        provider status, coverage discovered so far, terminal reason. A closed terminal state
-        never goes quiet: COMPLETED says what became READY, and FAILED / UNAVAILABLE /
-        ABANDONED carry the reason code the screen will show (§11/§14). If the process
-        restarts mid-flight the row must still answer with a phase, because a client that
-        reopens the page has to be able to resume rather than start over (§17-G).
-      parameters:
-        - $ref: '#/components/parameters/OperationId'
-      responses:
-        '200':
-          description: Current projection of the operation.
-          content:
-            application/json:
-              schema: {$ref: '#/components/schemas/CatalogHydration'}
-        '404':
-          $ref: '#/components/responses/NotFound'
-  '/catalog-hydrations/{operation_id}/abandon':
-    post:
-      tags: [catalog-hydrations]
-      operationId: abandonCatalogHydration
-      summary: Stop caring about this preparation, without erasing what it proved
-      description: >-
-        Same semantics as the stay-generation family already ships: abandon makes the caller's
-        wait false, marks the operation ABANDONED, and keeps the durable evidence (phase
-        history, provider responses already persisted). It must not delete catalog rows
-        already written - a half-prepared destination is still more truth than none - and it
-        must not claim the provider work stopped mid-call, because it may not have.
-        Idempotent: abandoning an already-terminal operation returns that terminal state
-        rather than 409.
-      parameters:
-        - $ref: '#/components/parameters/OperationId'
-      responses:
-        '200':
-          description: The operation, now ABANDONED or already terminal.
-          content:
-            application/json:
-              schema: {$ref: '#/components/schemas/CatalogHydration'}
-        '404':
-          $ref: '#/components/responses/NotFound'
-components:
-  parameters:
-    OperationId:
-      name: operation_id
-      in: path
-      required: true
-      schema: {type: string, format: uuid}
-  schemas:
-    CoverageLevel:
-      type: string
-      description: >-
-        Per-category truth. PARTIAL exists on purpose: a destination that found one category
-        and no others must not read as complete, and must not be flattened into MISSING either.
-      enum: [READY, PARTIAL, MISSING, UNKNOWN]
-    CapabilityState:
-      type: string
-      description: >-
-        §2's three states, plus UNKNOWN kept separate from UNAVAILABLE: "we could not tell"
-        and "we can never serve this" are different findings and must not share a branch.
-      enum: [READY, HYDRATABLE, UNAVAILABLE, UNKNOWN]
-    HydrationPhase:
-      type: string
-      description: >-
-        The §6 machine. `progress` is deliberately absent everywhere - percentage is the fake
-        this contract refuses to produce.
-      enum:
-        - QUEUED
-        - RESOLVING_DESTINATION
-        - DISCOVERING_POIS
-        - NORMALIZING
-        - BUILDING_MOBILITY
-        - PERSISTING
-        - COMPLETED
-        - FAILED
-        - UNAVAILABLE
-        - ABANDONED
-    ReasonCode:
-      type: string
-      description: >-
-        Machine-readable cause, stable across wording. §11's list plus §14's failure shapes;
-        lane C may extend, but must never collapse two causes into one code - "that destroys
-        diagnosability" is the order's words. A code is also what keeps the frontend from
-        classifying outcomes by matching English strings.
-      enum:
-        - DESTINATION_READY
-        - AMBIGUOUS_DESTINATION
-        - DESTINATION_UNRESOLVED
-        - CATALOG_EMPTY
-        - CATALOG_INSUFFICIENT
-        - CATALOG_PREPARING
-        - CATALOG_PROVIDER_UNAVAILABLE
-        - PROVIDER_TIMEOUT
-        - PROVIDER_NETWORK_FAILURE
-        - PROVIDER_RATE_LIMITED
-        - PROVIDER_SERVER_ERROR
-        - PROVIDER_INVALID_RESPONSE
-        - PROVIDER_ZERO_POIS
-        - PROVIDER_SINGLE_CATEGORY
-        - ROUTING_PROVIDER_UNAVAILABLE
-        - NO_FEASIBLE_PLAN
-        - NO_EXISTING_PLAN_TO_REPLAN
-        - MOBILITY_DATA_UNAVAILABLE
-        - HYDRATION_SUPERSEDED
-        - HYDRATION_ABANDONED
-    CategoryCoverage:
-      type: object
-      description: >-
-        Every category the product can plan with. Keys are fixed: a missing key is a contract
-        violation, not an absence of data, which is why `required` lists all six.
-      additionalProperties: false
-      required: [attractions, food, nightlife, lodging, mobility, booking]
-      properties:
-        attractions: {$ref: '#/components/schemas/CoverageLevel'}
-        food: {$ref: '#/components/schemas/CoverageLevel'}
-        nightlife: {$ref: '#/components/schemas/CoverageLevel'}
-        lodging: {$ref: '#/components/schemas/CoverageLevel'}
-        mobility: {$ref: '#/components/schemas/CoverageLevel'}
-        booking: {$ref: '#/components/schemas/CoverageLevel'}
-    PlaceProvenance:
-      type: string
-      description: >-
-        How a place became known, and it has to be distinguishable in data rather than in
-        prose: FIXTURE is a sealed repository fact, FETCHED came from a live provider,
-        SIMULATED came from the demo stage, INFERRED came from the LLM and therefore may only
-        annotate a place someone else verified (§5/§10 - the model never invents a persistent
-        physical place).
-      enum: [FIXTURE, FETCHED, SIMULATED, INFERRED, SYNTHETIC_DEFAULT, EXPLICIT_FROZEN_FIXTURE]
-    ResolvedDestination:
-      type: object
-      description: What the resolution layer decided, kept separate from the verdict so an ambiguous query cannot quietly pick a winner.
-      required: [canonical_destination, display_name, country_code, resolution]
-      properties:
-        canonical_destination: {type: string, description: "Stable identity, not a row id and not a city_code the user had to know."}
-        display_name: {type: string}
-        country_code: {type: string, minLength: 2, maxLength: 2}
-        admin_area: {type: [string, "null"]}
-        coordinates:
-          type: [object, "null"]
-          description: >-
-            CRS is stated, not implied. Provider data arrives WGS-84; anything the product
-            stores in GCJ-02 must say so at the field that carries it (§16/B-⑧ - the
-            conversion is a resolution-time fact, not a render-time guess).
-          required: [latitude, longitude, crs]
-          properties:
-            latitude: {type: number}
-            longitude: {type: number}
-            crs: {type: string, enum: [WGS-84, GCJ-02, UNKNOWN]}
-        provider_identifiers:
-          type: object
-          description: Provider-side ids kept so a later call need not re-resolve by name.
-          additionalProperties: {type: string}
-        resolution:
-          type: string
-          enum: [EXACT, RESOLVED_WITH_CANDIDATES, AMBIGUOUS, UNRESOLVED]
-        candidates:
-          type: array
-          description: Non-empty when resolution is AMBIGUOUS or RESOLVED_WITH_CANDIDATES; choosing between them is a user decision, not a default.
-          items:
-            type: object
-            required: [display_name]
-            properties:
-              display_name: {type: string}
-              admin_area: {type: [string, "null"]}
-              country_code: {type: string}
-    DestinationCapabilityResponse:
-      type: object
-      required: [destination, state, coverage, reason_code, observed_at]
-      properties:
-        destination: {$ref: '#/components/schemas/ResolvedDestination'}
-        state: {$ref: '#/components/schemas/CapabilityState'}
-        coverage: {$ref: '#/components/schemas/CategoryCoverage'}
-        reason_code: {$ref: '#/components/schemas/ReasonCode'}
-        catalog_version: {type: [string, "null"]}
-        observed_at: {type: string, format: date-time, description: "When the catalog we are describing was observed."}
-        prepared_at: {type: [string, "null"], description: "When hydration last completed for this version."}
-        providers:
-          type: array
-          description: "Provider selection must be explicit and observable (§3): which ones were consulted and what each returned."
-          items:
-            type: object
-            required: [provider_key, status]
-            properties:
-              provider_key: {type: string}
-              status: {type: string, enum: [OK, RATE_LIMITED, TIMEOUT, UNAVAILABLE, NOT_CONFIGURED, DISABLED]}
-              observed_at: {type: [string, "null"], format: date-time}
-        stale_while_refresh:
-          type: [string, "null"]
-          description: "§8: fresh -> READY now; stale-but-usable -> READY/PARTIAL plus background refresh; nothing usable -> HYDRATABLE. Never promoted to LIVE fact quality."
-        hydration:
-          type: [object, "null"]
-          description: "Present when a preparation for this destination is already running or last failed, so a screen can attach instead of starting a second one."
-          $ref: '#/components/schemas/CatalogHydrationSummary'
-        user_summary: {type: string, description: "One sentence a traveller can act on. Not a stack trace (§14)."}
-        recommended_action:
-          type: [string, "null"]
-          enum: [PREPARE_DESTINATION, RETRY, ADJUST_BUDGET, CHANGE_DATES, VIEW_AVAILABLE_PLACES, CHOOSE_CANDIDATE, null]
-    CatalogHydrationSummary:
-      type: object
-      required: [operation_id, phase]
-      properties:
-        operation_id: {type: string, format: uuid}
-        phase: {$ref: '#/components/schemas/HydrationPhase'}
-        reason_code: {type: [string, "null"]}
-    CatalogHydrationRequest:
-      type: object
-      required: [destination]
-      properties:
-        destination: {type: string, minLength: 1, description: "Free text, resolved by the backend. A city_code is not required to ask."}
-        journey_id:
-          type: [string, "null"]
-          format: uuid
-          description: >-
-            When given, hydration is bound to that journey's destination so the existing
-            journey becomes plannable in place - same id, no delete/recreate (§13).
-        reason: {type: [string, "null"], description: "What asked for it (planning, explicit user action). Recorded, never used to widen permissions."}
-    CatalogHydrationAccepted:
-      type: object
-      required: [operation_id, phase, reused, accepted_ms]
-      properties:
-        operation_id: {type: string, format: uuid}
-        phase: {$ref: '#/components/schemas/HydrationPhase'}
-        reused:
-          type: boolean
-          description: "true = an existing nonterminal operation for the same fingerprint was returned; the caller started nothing."
-        accepted_ms:
-          type: number
-          description: "Measured acceptance latency, so the <=1s p95 / <=2s hard limits are auditable rather than assumed."
-        fingerprint:
-          type: string
-          description: "canonical_destination + catalog_schema_version + provider policy/version. Echoed so 'why did I get someone else's operation' is answerable."
-    CatalogHydration:
-      type: object
-      required: [operation_id, destination, fingerprint, phase, terminal, elapsed_ms, retry_after_ms, observed_at]
-      properties:
-        operation_id: {type: string, format: uuid}
-        destination: {$ref: '#/components/schemas/ResolvedDestination'}
-        fingerprint: {type: string}
-        catalog_schema_version: {type: string}
-        phase: {$ref: '#/components/schemas/HydrationPhase'}
-        terminal: {type: boolean, description: "True only for COMPLETED / FAILED / UNAVAILABLE / ABANDONED."}
-        elapsed_ms: {type: number}
-        retry_after_ms:
-          type: [number, "null"]
-          description: "Honours a provider's own backoff; null means no provider-imposed wait."
-        reason_code: {$ref: '#/components/schemas/ReasonCode'}
-        coverage_so_far:
-          type: [object, "null"]
-          description: "What has been found at this moment. Explicitly not a percentage (§6 'No fake percentage')."
-          $ref: '#/components/schemas/CategoryCoverage'
-        providers:
-          type: array
-          items:
-            type: object
-            required: [provider_key, status]
-            properties:
-              provider_key: {type: string}
-              status: {type: string}
-              calls: {type: integer}
-              ms: {type: number}
-        places_written: {type: integer, description: "Durable rows this operation created, so 'it ran but nothing appeared' is distinguishable from 'it did not run'."}
-        observed_at: {type: string, format: date-time}
-        last_heartbeat_at:
-          type: [string, "null"]
-          format: date-time
-          description: "A phase with no heartbeat is a stuck claim, not progress; the UI must say so instead of spinning."
-        user_summary: {type: string}
-        technical_reference:
-          type: [object, "null"]
-          description: "Diagnostics for the disclosure accordion. Never the user-facing sentence (§14)."
-    ErrorEnvelope:
-      type: object
-      description: >-
-        The envelope the backend already sends (`app/main.py:425-436`): a stable `code`, a
-        `message_key` the screen looks up, and `details` it interpolates. Kept as-is so these
-        new routes cannot invent a second error shape.
-      required: [error]
-      properties:
-        error:
-          type: object
-          required: [code, message, message_key]
-          properties:
-            code: {type: string}
-            message: {type: string}
-            message_key: {type: string}
-            trace_id: {type: [string, "null"]}
-            details: {type: [object, "null"]}
-  responses:
-    ValidationError:
-      description: Request rejected before any state change.
-      content:
-        application/json:
-          schema: {$ref: '#/components/schemas/ErrorEnvelope'}
-    Conflict:
-      description: >-
-        Refused by a durable predicate (single active operation per fingerprint, journey no
-        longer plannable, etc.) - never by a process-local lock.
-      content:
-        application/json:
-          schema: {$ref: '#/components/schemas/ErrorEnvelope'}
-    NotFound:
-      description: No such operation or destination.
-      content:
-        application/json:
-          schema: {$ref: '#/components/schemas/ErrorEnvelope'}
-x-concurrency:
-  durable-uniqueness:
-    - "Exactly one nonterminal CatalogHydration per fingerprint, enforced by a unique index, not by a lock in one worker's memory."
-    - "Concurrent POSTs for the same new county: 2-5 callers, one operation_id, all converge (§7 / §17-D)."
-    - "No duplicate catalog rows for the same (canonical_destination, provider identifier)."
-  lock-duration:
-    order-of-operations:
-      - short DB read
-      - release session/transaction
-      - provider network work
-      - short persistence transaction
-      - release lock
-      - continue next phase
-    rule: >-
-      Provider HTTP must not execute while a SQLite write transaction is open. This is a
-      contract obligation, not an implementation preference: the stay-generation 115-second
-      hold is the failure mode §6 names, and a background job that only moves the lock to
-      another thread does not satisfy it.
+      Four for four absent while the very same process answers 200 on two other routes, so
+      these are router-level absences, not a server that was down. Re-measurable by anyone:
+      run backend/tests/test_qoder_anywhere_contract_parity.py.
+
+  # -----------------------------------------------------------------------------
+  # ② 对照表：哪条按仲裁的、哪条按车道 F 的
+  # -----------------------------------------------------------------------------
+  x-reconciliation:
+    follows-arbiter:
+      - "端点集合与 operationId：POST /catalog-hydrations 定为 createOrReuseCatalogHydration（我草案里叫 createCatalogHydration）—— 名字本身就写了'或复用'，按它。"
+      - "能力裁决字段名 `capability`（我草案叫 state）；枚举 READY|HYDRATABLE|UNAVAILABLE 三值，按它。"
+      - "我草案里私自加的第四个态 `UNKNOWN` 撤掉：'量不出来'走 ReasonCode（DESTINATION_RESOLVER_UNAVAILABLE / NO_TRACEABLE_CATALOG_SOURCE），不扩状态枚举。"
+      - "覆盖度：DestinationCoverage 六键 attractions/food/nightlife/lodging/mobility/booking，取值 READY|PARTIAL|MISSING（我多写的 UNKNOWN 撤掉），按它。"
+      - "水合操作是**双轴**：status（QUEUED|RUNNING|COMPLETED|FAILED|UNAVAILABLE|ABANDON_REQUESTED|ABANDONED）+ phase（QUEUED…FINALIZING）。我草案只有一条 phase，会分不清'放弃了但还在跑'与'跑完了'，按它。"
+      - "必填字段表：operation_id/fingerprint/reused/status/phase/elapsed_ms/retry_after_ms/status_url/abandon_url 全 required；我草案把 reused 写成可选，按它。"
+      - "Provenance 是对象不是单词：source_kind ∈ GOLDEN_FIXTURE|REMOTE_PROVIDER|SIMULATED|REPLAY|OFFLINE_SNAPSHOT，外加 fact_quality 且'归一化不得把 SIMULATED/PARTIAL/未知升成更强类'。我草案那套平铺 enum 作废，按它。"
+      - "ReasonCode 取它的 9 值；RecommendedAction 取它的 7 值（我草案里的 CHOOSE_CANDIDATE 撤，歧义由 candidates/AMBIGUOUS 路径表达）；ProviderStatus 取它的 OK|RATE_LIMITED|UNREACHABLE|PARTIAL。"
+      - "响应码：POST /catalog-hydrations 是 200/202/422/503（我写了 409，按它改成 422/503 分工）。"
+      - "capability 只接 `query` 一个参数（我加的 journey_id 撤）：绑定旅程发生在 POST /catalog-hydrations 的请求体里，它已带 journey_id/canonical_destination_id/requested_categories。"
+    lane-f-additions:
+      - "① 实测差集（正式契约不记录现实，只规定应然；这份把'四条全缺 + 同一进程对照 200'钉成可复跑读数）。"
+      - "② 延迟预算 p95<=1s / hard<=2s（§6 的数在两边都没写成字段约束，这里定成可断言形式）。"
+      - "③ §17C/D/E 三条测试义务（下面 x-testing-obligations），正式契约只写了'provider 网络不得持写事务'这一条规则，没规定怎么证明。"
+      - "④ 双向 parity：实现了却还把契约挂着未登记 ⇒ 红。防的正是这份附件被长期留在'草案'状态。"
+    open-questions-for-arbiter:
+      - "`stale_after` 与 `readiness_policy_version` 的关系：READY 是否随 stale_after 过期自动降级为 HYDRATABLE，还是仍报 READY + 背景刷新（§8 的 stale-while-refresh 两种都讲得通）。车道 C 需要一句话定死，我先按'不自动降级，但必须把 stale 说出来'实现门。"
+      - "UNAVAILABLE 与 503 的分界：目的地本身不可用 vs provider 解析器不可用，前者进 capability、后者进 HTTP 码，两边没写死。"
+
+  # -----------------------------------------------------------------------------
+  # ③ §6 的延迟预算（可断言形式）
+  # -----------------------------------------------------------------------------
 x-latency-budget:
   post-acceptance-p95-ms: 1000
   post-acceptance-hard-ms: 2000
-  note: "Measured on a local DB under normal conditions; a lane that cannot show the number has not met the budget."
-x-out-of-scope-for-this-draft:
-  - "The DeepSeek/LLM role (§10) and AgentOutcome on planning responses (§11) - those extend existing contracts, and lane F will not rewrite a shipped entry here. The gate for AI no-op visibility therefore asserts on the current agent-command shape instead."
-  - "A proprietary Amap adapter: allowed by §3 only if configuration already exists, and it must not be mandatory."
-  - "Any change to `contracts/openapi.yaml`. Implemented entries stay as they are; this file is additive and clearly labelled unimplemented."
+  measured-by: "CatalogHydrationOperation.elapsed_ms 之外，门侧另算墙钟：受理段不含任何 provider 调用"
+  note: "拿不出这个数字就等于没满足它（规则：先测量再宣称）。"
+
+# -----------------------------------------------------------------------------
+# ④ §17C / §17D / §17E 测试义务（Commander 13:4x 补发的三条，最容易漏）
+# -----------------------------------------------------------------------------
+x-testing-obligations:
+  suite-must-not-depend-on-live-providers:
+    rule: >-
+      常规后端套件（900+ 条）一律走确定性 fixture/mock，不许真打 photon.komoot.io /
+      overpass-api.de / overpass.private.coffee / overpass.kumi.systems /
+      nominatim.openstreetmap.org / restapi.amap.com / api.open-meteo.com /
+      api.deepseek.com（域名清单抄自 app/integrations/**，不是猜的）。
+    mechanism: >-
+      默认收集范围内不得出现对这些主机的真实出网；live 验证单独放
+      backend/tests/live/，必须显式 CITYNEXUS_LIVE_PROVIDER_SMOKE=1 才跑，且跑时必须
+      落盘：环境、出口（哪张网卡/哪个链路）、每次请求耗时与状态、原始响应路径。
+      opt-in 的实现方式不是 skip —— 未开开关时它**响亮地失败**（RC != 0 + 指名原因），
+      这样"忘了跑 live"不会被读成"live 已过"。
+    gate: backend/tests/test_qoder_anywhere_provider_independence.py
+  durable-idempotency-and-concurrency:
+    rule: >-
+      2~5 个同指纹并发必须收敛到同一个 operation_id；持久层同一指纹的非终态操作**至多一条**，
+      由唯一索引强制（不是进程内锁 —— 两个 uvicorn worker 不共享一把锁）；
+      provider 调用不得因并发而翻倍；`reused=true` 必须如实。
+    fingerprint: canonical destination + catalog_schema_version + provider policy/version
+    gate: backend/tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation
+  lock-duration-evidence:
+    rule: >-
+      必须有一门能量到或证明 provider HTTP 发生在 SQLite 写事务之外；顺序按 §6：
+      短读 → 释放 session → 网络 → 短持久化事务 → 释放 → 下一阶段。
+      stay-generation 那次 115 秒独占写锁不许重演：光把锁挪到别的线程不算过。
+    shape: >-
+      仪器本身要先自证能看见写事务（否则"零重叠"可能只是"零观测"）；
+      再用并发探针证明水合跑网络期间，另一条旅程的 plans/generate 不被锁住。
+    gate: backend/tests/test_qoder_anywhere_lock_duration.py
+paths: {}

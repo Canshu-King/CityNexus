@@ -41,7 +41,24 @@ HYDRATIONS = "/api/v1/catalog-hydrations"
 # 任务书硬要求的"从未预录的县"，车道 E 也用它做 CASE3。
 UNSEEN_COUNTY = "贡山独龙族怒族自治县"
 COVERAGE_KEYS = {"attractions", "food", "nightlife", "lodging", "mobility", "booking"}
-STATES = {"READY", "HYDRATABLE", "UNAVAILABLE", "UNKNOWN"}
+# 词表按 arbiter/anywhere-contract@0c0aa82 的 contracts/anywhere_v1.openapi.yaml：
+# 裁决字段叫 `capability`，三态、无 UNKNOWN（"量不出来"走 ReasonCode）。
+CAPABILITY_FIELD = "capability"
+STATES = {"READY", "HYDRATABLE", "UNAVAILABLE"}
+COVERAGE_STATES = {"READY", "PARTIAL", "MISSING"}
+HYDRATION_STATUSES = {
+    "QUEUED",
+    "RUNNING",
+    "COMPLETED",
+    "FAILED",
+    "UNAVAILABLE",
+    "ABANDON_REQUESTED",
+    "ABANDONED",
+}
+TERMINAL_STATUSES = {"COMPLETED", "FAILED", "UNAVAILABLE", "ABANDONED"}
+ACCEPTED_CODES = {200, 202}
+# G3 要拿它去查持久层的唯一索引；表名由车道 C 定，但必须在 inspector 里查得到。
+HYDRATION_TABLE_HINTS = ("catalog_hydration", "hydration")
 OUTCOME_STATUSES = {"PLAN_CREATED", "NO_ACTION", "BLOCKED"}
 
 
@@ -94,13 +111,19 @@ def test_g1_destination_capability_comes_from_the_backend_not_from_a_count():
     _require_endpoint("GET /api/v1/destinations/capability", response)
 
     body = response.json()
-    assert body.get("state") in STATES, (
-        f"期望：state ∈ {sorted(STATES)}（§2 的语义态，UNKNOWN 与 UNAVAILABLE 必须分开）；"
-        f"实际：state={body.get('state')!r}，完整响应 {_summary(response)}"
+    verdict = body.get(CAPABILITY_FIELD)
+    assert verdict in STATES, (
+        f"期望：`{CAPABILITY_FIELD}` ∈ {sorted(STATES)}（arbiter 契约 v1 就这三态；"
+        f"『量不出来』不是第四态，而是 ReasonCode）；"
+        f"实际：{CAPABILITY_FIELD}={verdict!r}，完整响应 {_summary(response)}"
     )
     coverage = body.get("coverage")
     assert isinstance(coverage, dict) and set(coverage) == COVERAGE_KEYS, (
         f"期望：coverage 六个分类一个不少（缺键是违约，不是「没有数据」）；实际：{coverage!r}"
+    )
+    wrong_values = {k: v for k, v in coverage.items() if v not in COVERAGE_STATES}
+    assert not wrong_values, (
+        f"期望：每个分类取值 ∈ {sorted(COVERAGE_STATES)}；实际：{wrong_values}"
     )
     assert body.get("reason_code"), (
         f"期望：状态伴随机器可读 reason_code，供界面查表而不是匹配英文句子（§11）；"
@@ -115,15 +138,27 @@ def test_g2_an_existing_journey_becomes_plannable_without_being_recreated():
     """§13 hard requirement: the user's journey id survives hydration; no delete/recreate."""
     journey_id = _seeded_journey_id()
 
-    hydration = client.post(HYDRATIONS, json={"destination": UNSEEN_COUNTY, "journey_id": journey_id})
+    hydration = client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY, "journey_id": journey_id})
     _require_endpoint("POST /api/v1/catalog-hydrations", hydration)
     operation_id = hydration.json().get("operation_id")
     assert operation_id, f"期望：202 返回 operation_id；实际：{_summary(hydration)}"
 
     status = client.get(f"{HYDRATIONS}/{operation_id}")
     _require_endpoint("GET /api/v1/catalog-hydrations/{operation_id}", status)
-    assert status.json().get("phase"), (
+    operation = status.json()
+    assert operation.get("phase"), (
         f"期望：投影里有真实 phase（§6 状态机的名字，不是百分比）；实际：{_summary(status)}"
+    )
+    assert operation.get("status") in HYDRATION_STATUSES, (
+        f"期望：还有独立的 lifecycle 轴 status ∈ {sorted(HYDRATION_STATUSES)}"
+        f"（arbiter v1：只有 phase 分不清『放弃了但还在跑』与『跑完了』）；"
+        f"实际：status={operation.get('status')!r}"
+    )
+    missing_fields = [f for f in ("operation_id", "fingerprint", "reused", "elapsed_ms", "retry_after_ms")
+                      if f not in operation]
+    assert not missing_fields, (
+        f"期望：契约 required 的字段都在（v1 把 status_url/abandon_url 等也列为 required）；"
+        f"实际缺 {missing_fields}，现有键 {sorted(operation)[:14]}"
     )
     assert "progress" not in status.json(), (
         f"期望：没有 progress 百分比字段（§6 原话 No fake percentage）；"
@@ -148,16 +183,22 @@ def test_g2_an_existing_journey_becomes_plannable_without_being_recreated():
 # --------------------------------------------------------------------------------------
 def test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation():
     """§7: reuse the same operation_id; no provider storm, no duplicate rows, no lock race."""
-    first = client.post(HYDRATIONS, json={"destination": UNSEEN_COUNTY})
+    first = client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY})
     _require_endpoint("POST /api/v1/catalog-hydrations", first)
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
         responses = list(
-            pool.map(lambda _: client.post(HYDRATIONS, json={"destination": UNSEEN_COUNTY}), range(5))
+            pool.map(lambda _: client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY}), range(5))
         )
     codes = sorted(response.status_code for response in responses)
-    assert all(code in (200, 201, 202, 409) for code in codes), (
-        f"期望：并发 2-5 个同指纹请求，只可能是受理或具名 409；实际状态码 {codes}"
+    assert all(code in ACCEPTED_CODES for code in codes), (
+        f"期望：同指纹并发一律被受理（{sorted(ACCEPTED_CODES)}；arbiter v1 的响应码就是 "
+        f"200/202/422/503，**没有 409**——撞指纹要复用而不是把人推开）；实际状态码 {codes}"
+    )
+    fingerprints = {response.json().get("fingerprint") for response in responses}
+    assert fingerprints == {first.json().get("fingerprint")} and None not in fingerprints, (
+        f"期望：五个请求回同一个 fingerprint（规范目的地 + catalog_schema_version + provider "
+        f"策略/版本），这样『为什么拿到别人的 operation』才答得出；实际：{sorted(str(f) for f in fingerprints)}"
     )
     ids = {response.json().get("operation_id") for response in responses if response.status_code != 409}
     assert len(ids) == 1, (
@@ -169,6 +210,27 @@ def test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation()
     assert reused >= 1, (
         f"期望：至少一个调用者被告知 reused=true（「我没开始，是接上别人的」）；"
         f"实际：reused=true 的数量是 {reused}。幂等如果不说实话，就等于没做"
+    )
+
+    # 幂等必须在**持久层**成立：两个 uvicorn worker 不共享一把进程内锁。
+    from sqlalchemy import inspect
+    from app.db.session import engine
+
+    inspector = inspect(engine)
+    tables = [t for t in inspector.get_table_names() if any(h in t for h in HYDRATION_TABLE_HINTS)]
+    assert tables, (
+        f"期望：有一张水合操作表可供查唯一索引（表名含 {list(HYDRATION_TABLE_HINTS)} 之一）；"
+        f"实际：库里没有 ⇒ '至多一条活动操作' 没有强制物，只能靠自觉"
+    )
+    unique_on_fingerprint = []
+    for table in tables:
+        for index in inspector.get_indexes(table):
+            cols = [c.lower() for c in (index.get("column_names") or [])]
+            if index.get("unique") and any("fingerprint" in c or "canonical" in c for c in cols):
+                unique_on_fingerprint.append((table, index.get("name"), cols))
+    assert unique_on_fingerprint, (
+        f"期望：水合表上有一个覆盖指纹/规范目的地的**唯一索引**（§7：durable 层强制）；"
+        f"实际：表 {tables} 的索引里没有。缺它，并发就会造出两条活动操作与两份 provider 风暴"
     )
 
 
@@ -183,17 +245,23 @@ def test_g4_partial_catalog_is_never_reported_as_fully_ready():
     coverage = body.get("coverage") or {}
     assert set(coverage) == COVERAGE_KEYS, f"期望：六个分类齐全；实际：{sorted(coverage) or coverage!r}"
 
-    if body.get("state") == "READY":
+    verdict = body.get(CAPABILITY_FIELD)
+    if verdict == "READY":
         not_ready = {key: value for key, value in coverage.items() if value != "READY"}
         assert not not_ready, (
-            f"期望：state=READY 时每个分类都是 READY；实际：{not_ready} —— "
+            f"期望：{CAPABILITY_FIELD}=READY 时每个分类都是 READY；实际：{not_ready} —— "
             "整体 READY、局部 MISSING 就是「能规划一切」的谎"
         )
+    partial = {k: v for k, v in coverage.items() if v in {"PARTIAL", "MISSING"}}
+    assert not (partial and verdict == "READY"), (
+        f"期望：只有两间博物馆的城市不得报成全量 READY（§2 READY != places.length > 0）；"
+        f"实际：{CAPABILITY_FIELD}=READY 而 {partial}"
+    )
     places = body.get("place_count")
     if places is not None:
-        assert not (places > 0 and body.get("state") != "READY"), (
-            f"期望：READY 不由地点数量决定（§2 READY != places.length > 0）；"
-            f"实际：place_count={places} 而 state={body.get('state')!r}"
+        assert not (places > 0 and verdict == "UNAVAILABLE"), (
+            f"期望：有地点就不可能同时是 UNAVAILABLE；实际：place_count={places} "
+            f"而 {CAPABILITY_FIELD}={verdict!r} —— 数地点来定状态正是 §2 禁的那种推断"
         )
 
 
@@ -249,15 +317,21 @@ def test_g5_an_ai_run_that_changed_must_say_which_it_was():
 # --------------------------------------------------------------------------------------
 # G6 · provenance stays distinguishable
 # --------------------------------------------------------------------------------------
-def test_g6a_contract_registers_provenance_values_that_can_be_told_apart():
-    """Contract-shape guard only, and labelled as such: it proves the vocabulary exists, not
-    that any route uses it. G6b is the behaviour half."""
+def test_g6a_annex_records_the_arbiters_provenance_vocabulary():
+    """Contract-shape guard only: it proves the annex transcribes the ruling, not that
+    provenance works anywhere. Behaviour is G6b; keeping them apart stops a green here
+    from being read as the door passing."""
     with DRAFT_PATH.open("r", encoding="utf-8") as handle:
         draft = yaml.safe_load(handle)
-    values = set(((draft.get("components") or {}).get("schemas") or {}).get("PlaceProvenance", {}).get("enum", []))
-    required = {"FIXTURE", "FETCHED", "SIMULATED", "INFERRED"}
-    assert required <= values, (
-        f"期望：契约里至少登记 {sorted(required)} 四种来源，彼此可区分；实际：{sorted(values)}"
+    follows = " ".join(((draft.get("info") or {}).get("x-reconciliation") or {}).get("follows-arbiter") or [])
+    for kind in ("GOLDEN_FIXTURE", "REMOTE_PROVIDER", "SIMULATED", "REPLAY", "OFFLINE_SNAPSHOT"):
+        assert kind in follows, (
+            f"期望：附件登记了仲裁 v1 的 source_kind 值 {kind}（来源必须分得开）；"
+            "实际：x-reconciliation.follows-arbiter 里没有它"
+        )
+    assert "fact_quality" in follows, (
+        "期望：附件记下『归一化不得把 SIMULATED/PARTIAL/未知升成更强类』这条 —— "
+        "它是 provenance 不说谎的另一半"
     )
 
 
@@ -309,15 +383,16 @@ def test_g7_a_destination_with_no_hand_authored_file_still_gets_an_answer():
     response = client.get(CAPABILITY, params={"query": UNSEEN_COUNTY})
     _require_endpoint("GET /api/v1/destinations/capability", response)
     body = response.json()
-    assert body.get("state") in {"HYDRATABLE", "READY", "UNAVAILABLE"}, (
+    assert body.get(CAPABILITY_FIELD) in STATES, (
         f"期望：未预录的 {UNSEEN_COUNTY} 也要得到一个语义态（能备 / 已可 / 确实不行）；"
-        f"实际：state={body.get('state')!r}，{_summary(response)}。"
+        f"实际：{CAPABILITY_FIELD}={body.get(CAPABILITY_FIELD)!r}，{_summary(response)}。"
         f"手工目录现在只有 {sorted(hand_authored)} 这 {len(hand_authored)} 个城市码，"
         "答案不该由它决定"
     )
-    assert body.get("recommended_action") or body.get("state") == "READY", (
+    assert body.get("recommended_action") or body.get(CAPABILITY_FIELD) == "READY", (
         f"期望：不能备就明说不能备，并给用户一条出路（§11/§14）；实际："
-        f"recommended_action={body.get('recommended_action')!r} state={body.get('state')!r}"
+        f"recommended_action={body.get('recommended_action')!r} "
+        f"{CAPABILITY_FIELD}={body.get(CAPABILITY_FIELD)!r}"
     )
 
 
