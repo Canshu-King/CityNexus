@@ -18,7 +18,7 @@ import { StayExplorer } from "../features/stay/StayExplorer";
 import { ControlTowerPanel } from "../features/intelligence/ControlTowerPanel";
 import { V10LiveExecutionPanel } from "../features/execution/V10LiveExecutionPanel";
 import { BookingArtifactScanner } from "../features/inbox/BookingArtifactScanner";
-import { JourneyInboxWorkbench } from "../features/inbox/JourneyInboxWorkbench";
+import { JourneyInboxWorkbench, fieldLabel } from "../features/inbox/JourneyInboxWorkbench";
 import { PushCapabilityCard } from "../features/notifications/PushCapabilityCard";
 import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { SortableActivityList } from "../features/studio/SortableActivityList";
@@ -85,6 +85,10 @@ type Wallet = {
     scheduled_departure_at: string;
     scheduled_arrival_at: string;
     realtime_status: string;
+    /* `_reservation_payload` (main.py:3527) links a reservation to the commitment it became.  This is
+       the only honest source for a "受保护" badge: without it the card was asserting a promise the
+       server had not made (ORD-0146 ③). */
+    commitment_id?: string | null;
     price: {
       amount_minor: number | null;
       currency: string | null;
@@ -371,6 +375,11 @@ export function V8Experience() {
   );
   const [busy, setBusy] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
+  /* ORD-0146: the structured-JSON aside and the review queue are siblings, and the sentence the
+     aside prints asks for a review the queue has to show.  Bumping this token is how the shell tells
+     the queue "the server has a new row" without either component pretending to know the other's
+     business. */
+  const [artifactImportedAt, setArtifactImportedAt] = useState(0);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   const [alertsOpen, setAlertsOpen] = useState(false);
@@ -984,26 +993,34 @@ export function V8Experience() {
     if (!data) return;
     setBusy(true);
     try {
-      const draft = await v8Request<{ id: string; status: string }>(
-        `/api/v1/journeys/${data.journey.id}/inbox/import`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            artifact_type: "STRUCTURED_JSON",
-            payload: { reservation },
-          }),
-        },
-      );
+      const draft = await v8Request<{
+        id: string;
+        status: string;
+        unresolved_fields?: string[];
+      }>(`/api/v1/journeys/${data.journey.id}/inbox/import`, {
+        method: "POST",
+        body: JSON.stringify({
+          artifact_type: "STRUCTURED_JSON",
+          payload: { reservation },
+        }),
+      });
       if (draft.status === "READY_FOR_CONFIRMATION")
         await v8Request(
           `/api/v1/journeys/${data.journey.id}/inbox/${draft.id}/confirm`,
           { method: "POST" },
         );
       await load(data.journey.id);
+      setArtifactImportedAt(Date.now());
+      /* "需要审核" on its own is an order with no address.  The server already named what it could
+         not resolve, so the sentence says that, and says where the review actually happens. */
       setMessage(
         draft.status === "READY_FOR_CONFIRMATION"
           ? t("shell.reservationConfirmed")
-          : t("shell.reservationReview"),
+          : t("shell.reservationReviewFields", {
+              fields: (draft.unresolved_fields ?? [])
+                .map((field) => fieldLabel(field, zh))
+                .join("、"),
+            }),
       );
     } finally {
       setBusy(false);
@@ -1479,6 +1496,7 @@ export function V8Experience() {
                 <JourneyInboxWorkbench
                   journeyId={data.journey.id}
                   decodedText={decodedArtifactText}
+                  importedAt={artifactImportedAt}
                   onConfirmed={() => load(data.journey.id)}
                 />
               </div>
@@ -3380,8 +3398,14 @@ function Bookings({
                       )}
                 </strong>
               </div>
-              <span className="v8-booking-state safe">
-                {zh ? "已确认 · 受保护" : "Confirmed · protected"}
+              <span className={`v8-booking-state${item.commitment_id ? " safe" : ""}`}>
+                {item.commitment_id
+                  ? zh
+                    ? "已确认 · 受保护"
+                    : "Confirmed · protected"
+                  : zh
+                    ? "已确认 · 未成承诺"
+                    : "Confirmed · no commitment"}
               </span>
             </article>
           ))}

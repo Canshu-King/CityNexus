@@ -29,6 +29,9 @@ STYLES = "src/styles.css"
 AI_SPEC = "e2e/qoder-ai-sheet-blocked.spec.ts"
 MAP = "src/components/v8/MapPanel.tsx"
 MAP_SPEC = "e2e/qoder-map-gesture-ownership.spec.ts"
+INBOX = "src/features/inbox/JourneyInboxWorkbench.tsx"
+EXPERIENCE = "src/app/V8Experience.tsx"
+INBOX_SPEC = "e2e/qoder-inbox-review-queue.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -361,6 +364,30 @@ CASES = [
         '          ? "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方"\n',
         '          ? "双指拖动地图 · 单指无效 · 想翻这一页就拖地图以外的地方"\n',
         [(MAP_SPEC, ["ord0134-map-gesture-ownership"])],
+    ),
+    (
+        # ORD-0146 ①, the defect as the order states it: the sentence stays, the entry disappears.
+        "killH1-review-entry-hidden-behind-the-sentence",
+        INBOX,
+        "  const unreviewed = (pending ?? []).filter((item) => item.status !== \"CONFIRMED\");\n",
+        "  const unreviewed = ([] as Draft[]).filter((item) => item.status !== \"CONFIRMED\");\n",
+        [(INBOX_SPEC, ["ord0146-review-entry-is-on-the-page-that-asked-for-review"])],
+    ),
+    (
+        # "前端不得自己决定哪条能过": stamp the verdict locally and never ask the server again.
+        "killH2-pass-verdict-minted-in-the-browser",
+        INBOX,
+        "    const fresh = (await readInbox()).find((item) => item.id === draftId) ?? null;\n",
+        "    const fresh = { ...draft, status: \"CONFIRMED\", confirmed_at: new Date().toISOString() };\n",
+        [(INBOX_SPEC, ["ord0146-passing-a-review-is-the-servers-answer"])],
+    ),
+    (
+        # A badge the screen asserts instead of earning: say 受保护 whether or not there is a commitment.
+        "killH3-protected-badge-earned-by-nobody",
+        EXPERIENCE,
+        "                {item.commitment_id\n",
+        "                {true\n",
+        [(INBOX_SPEC, ["ord0146-a-protected-badge-needs-the-servers-commitment"])],
     ),
 ]
 

@@ -58,6 +58,11 @@ type Props = {
   journeyId: string;
   decodedText?: string;
   onConfirmed?: () => Promise<void>;
+  /* ORD-0146: the structured-JSON aside on the same page can create a draft this surface has to
+     review, and it is not a child of this component.  The shell bumps this token after every import
+     so the queue re-reads without a remount -- otherwise "需要审核" points at a list that only
+     appears if you happened to create the draft here yourself. */
+  importedAt?: number;
 };
 
 type ExtractionResponse = {
@@ -177,7 +182,7 @@ function statusLabel(value: unknown, zh: boolean): string {
   return bookingStatusLabel(value, zh);
 }
 
-function fieldLabel(key: string, zh: boolean): string {
+export function fieldLabel(key: string, zh: boolean): string {
   const entry = FIELD_LABELS[key];
   if (entry) return zh ? entry.zh : entry.en;
   return key.replaceAll("_", " ");
@@ -225,13 +230,19 @@ function renderFact(value: unknown, zh: boolean): string {
   return text;
 }
 
-export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed }: Props) {
+export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, importedAt }: Props) {
   const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
   const [text, setText] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
+  /* ORD-0146: what the server is still holding for review.  This surface used to know only about the
+     draft created inside this same mount, which is why a page could demand a review and then offer
+     nowhere to do it. */
+  const [pending, setPending] = useState<Draft[] | null>(null);
+  const [pendingError, setPendingError] = useState<string | null>(null);
+  const [rawDetail, setRawDetail] = useState<string | null>(null);
   const [memory, setMemory] = useState<Memory | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -308,15 +319,46 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed }: P
     }
   };
 
+  /**
+   * ORD-0146: the queue is the server's list, read back -- `GET .../inbox` answers with `status` and
+   * `unresolved_fields`, so "needs review" and "what is missing" arrive from one place.  A failed
+   * read is named in the queue's own slot: an empty list and an unreadable list must not look alike.
+   */
+  const readInbox = async (): Promise<Draft[]> => {
+    try {
+      const body = await requestJson<{ drafts?: Draft[] }>(
+        `/api/v1/journeys/${journeyId}/inbox`,
+      );
+      const drafts = body.drafts ?? [];
+      setPending(drafts);
+      setPendingError(null);
+      return drafts;
+    } catch (error) {
+      setPending(null);
+      setPendingError(
+        error instanceof Error ? error.message : t("inbox.pendingUnreadable"),
+      );
+      return [];
+    }
+  };
+
   useEffect(() => {
     void loadMemory();
   }, [journeyId]);
+
+  useEffect(() => {
+    void readInbox();
+    // `importedAt` is the shell's nudge after a structured import made outside this component.
+  }, [journeyId, importedAt]);
 
   useEffect(() => {
     if (!draft) return;
     setRole(String(draft.extracted.anchor_role ?? "UNKNOWN"));
     setScheduledDeparture(dateInput(draft.extracted.scheduled_departure_at));
     setScheduledArrival(dateInput(draft.extracted.scheduled_arrival_at));
+    /* Whatever put a draft in this panel -- manual entry, a paste, a scan, a queue row -- the list
+       next to it has to agree with the server about it, or the queue goes stale on screen. */
+    void readInbox();
   }, [draft?.id]);
 
   const showResult = (result: ExtractionResponse) => {
@@ -398,19 +440,51 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed }: P
   };
 
   const confirm = async () => {
-    if (!draft || draft.unresolved_fields.length) return;
-    setBusy(true);
-    try {
-      await postJson(`/api/v1/journeys/${journeyId}/inbox/${draft.id}/confirm`, {});
-      setDraft({ ...draft, status: "CONFIRMED", confirmed_at: new Date().toISOString() });
-      await loadMemory();
-      await onConfirmed?.();
-      setMessage(t("inbox.confirmedProtected"));
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.confirmFailed"));
-    } finally {
-      setBusy(false);
+    if (!draft) return;
+    /* An unfinished draft is not this button's to pass -- but swallowing the click is how a traveller
+       ends up pressing a grey control three times.  Say which fields the server is still missing. */
+    if (draft.unresolved_fields.length) {
+      setMessage(
+        t("inbox.confirmNeedsFields", {
+          fields: draft.unresolved_fields.map((field) => fieldLabel(field, zh)).join("、"),
+        }),
+      );
+      return;
     }
+    const draftId = draft.id;
+    setBusy(true);
+    let failure: string | null = null;
+    try {
+      await postJson(`/api/v1/journeys/${journeyId}/inbox/${draftId}/confirm`, {});
+    } catch (error) {
+      failure = error instanceof Error ? error.message : t("inbox.confirmFailed");
+    }
+    /* The verdict is read back, never written here.  `confirm_reservation_draft` is the one that
+       decides, and its answer can still be "not passed" (a duplicate confirmation_ref, a field that
+       only resolves against the journey window); a locally stamped `status:"CONFIRMED"` with
+       `confirmed_at: new Date()` was the front end grading its own homework, which is exactly what
+       ORD-0146 ① forbids.  The raw server string stays in the technical fold -- paraphrasing it here
+       would mean matching on English words the contract never promised. */
+    const fresh = (await readInbox()).find((item) => item.id === draftId) ?? null;
+    setDraft(fresh ?? draft);
+    await loadMemory();
+    await onConfirmed?.();
+    setBusy(false);
+    const passed = fresh?.status === "CONFIRMED";
+    setRawDetail(passed ? null : failure ?? t("inbox.confirmUnreadable"));
+    setMessage(
+      passed
+        ? t("inbox.confirmedProtected")
+        : `${t("inbox.confirmRefused", {
+            status: statusLabel(fresh?.status ?? draft.status, zh),
+          })}${
+            fresh?.unresolved_fields.length
+              ? ` ${t("inbox.needsReview")} ${fresh.unresolved_fields
+                  .map((field) => fieldLabel(field, zh))
+                  .join("、")}`
+              : ""
+          }`,
+    );
   };
 
   const saveCorrections = async () => {
@@ -429,8 +503,17 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed }: P
           }),
         },
       );
-      setDraft(patched);
-      setMessage(t("inbox.correctionsSaved"));
+      /* What the corrections achieved is the server's answer, not this component's hope: re-read the
+         list (which is also what the queue beside the panel shows) and keep the row it reports. */
+      const fresh = (await readInbox()).find((item) => item.id === patched.id) ?? patched;
+      setDraft(fresh);
+      setMessage(
+        fresh.unresolved_fields.length
+          ? t("inbox.correctionsSavedStillNeeds", {
+              fields: fresh.unresolved_fields.map((field) => fieldLabel(field, zh)).join("、"),
+            })
+          : t("inbox.correctionsSaved"),
+      );
     } catch (error) {
       setMessage(error instanceof Error ? error.message : t("inbox.correctionsFailed"));
     } finally {
@@ -439,6 +522,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed }: P
   };
 
   const decision = draft?.smart_intake?.decision ?? "NEEDS_REVIEW";
+  const unreviewed = (pending ?? []).filter((item) => item.status !== "CONFIRMED");
   const target = draft?.interpretation?.semantic_target;
   const targetLabel = String(
     draft?.smart_intake?.resolved_target?.label ?? target?.resolved_label ?? target?.query ?? t("inbox.unboundTarget"),
@@ -601,6 +685,12 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed }: P
       </div>
       )}
       {message && <p className="v10-inbox-message" role="status">{message}</p>}
+      {rawDetail && (
+        <details className="v8-advanced" data-testid="inbox-confirm-detail">
+          <summary>{t("inbox.technicalDetail")}</summary>
+          <code>{rawDetail}</code>
+        </details>
+      )}
 
       <section className="v13-2-memory-panel" data-testid="v13-2-memory" aria-label={t("inbox.journeyMemory")}>
         <div className="v10-inbox-heading">
@@ -624,6 +714,60 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed }: P
         ) : (
           <p>{t("inbox.noArtifact")}</p>
         )}
+      </section>
+
+      {/* ORD-0146: the review the sentence asks for, for every draft the server is still holding --
+          not just the one this mount happened to create.  The row's own data comes from
+          `GET .../inbox` (`status`, `unresolved_fields`), so "需要审核" and "缺什么" are one read. */}
+      <section
+        className="v13-2-queue"
+        data-testid="inbox-pending-queue"
+        aria-label={t("inbox.pendingQueue")}
+      >
+        <b>{t("inbox.pendingQueue")}</b>
+        {pendingError ? (
+          <p className="v10-inbox-warning" role="alert" data-testid="inbox-pending-error">
+            {t("inbox.pendingUnreadable")}
+            <code> {pendingError}</code>{" "}
+            <button type="button" data-testid="inbox-pending-retry" onClick={() => void readInbox()}>
+              {t("inbox.retryQueue")}
+            </button>
+          </p>
+        ) : unreviewed.length === 0 ? (
+          <p data-testid="inbox-pending-empty">{t("inbox.queueEmpty")}</p>
+        ) : null}
+        {unreviewed.map((item) => (
+          <div className="v13-2-queue-row" key={item.id} data-testid="inbox-pending-row">
+            <span>
+              {artifactTypeLabel(item.artifact_type, zh)} · {statusLabel(item.status, zh)}
+            </span>
+            <b>
+              {String(
+                item.extracted.confirmation_ref ??
+                  item.extracted.title ??
+                  (zh ? "没有订单号的一条" : "an unnamed one"),
+              )}
+            </b>
+            <small>
+              {item.unresolved_fields.length
+                ? `${t("inbox.needsReview")} ${item.unresolved_fields
+                    .map((field) => fieldLabel(field, zh))
+                    .join("、")}`
+                : t("inbox.readyToConfirm")}
+            </small>
+            <button
+              type="button"
+              data-testid="inbox-open-review"
+              onClick={() => {
+                setDraft(item);
+                setMessage(null);
+                setRawDetail(null);
+              }}
+            >
+              {t("inbox.openReview")}
+            </button>
+          </div>
+        ))}
       </section>
 
       {draft && (
