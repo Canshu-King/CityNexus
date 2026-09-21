@@ -1576,14 +1576,33 @@ test("sim-booking-target-is-an-activity-the-server-gives-a-slot-for — 默认�
       activities?: Array<Record<string, unknown>>;
     }
   ).activities ?? [];
-  const openActivities = activities.filter(
-    (item) => !["COMPLETED", "SKIPPED", "CANCELLED"].includes(String(item.status)),
-  );
+  /* The two catalogue sentences only differ while the plan still holds an activity that has not
+     finished, and this node used to inherit that precondition from whoever ran before it.  In a
+     full-chain run a neighbour ran the stage down, the panel correctly said "这份计划里没有可下单的
+     活动", and the empty-catalogue arm went red on a product that was telling the truth about a
+     different state.  A node that depends on its neighbours' stage is not measuring the panel, so the
+     precondition is established here and used by both sides: the plan's real rows -- ids, titles,
+     windows all still the server's -- re-offered as not yet finished. */
+  const openActivities = activities.map((item) => ({ ...item, status: "PENDING" }));
 
   /* The booking row's own availability chain puts the journey's state first, and the shared stage is
      usually executing -- which would leave both catalogue arms with nothing to say.  So the state is
      forced to PLANNED here, the same way the ORD-0090 arm forces it, and every arm below asserts. */
   const forcePlanned = async () => {
+    /* Called once per arm; unroute first so an arm never stacks on the previous one's handler. */
+    await page.unroute("**/api/v1/plans/" + planId);
+    await page.route("**/api/v1/plans/" + planId, async (route) => {
+      const response = await route.fetch();
+      const body = (await response.json()) as Record<string, unknown>;
+      body.activities = ((body.activities ?? []) as Array<Record<string, unknown>>).map(
+        (item) => ({ ...item, status: "PENDING" }),
+      );
+      await route.fulfill({
+        status: response.status(),
+        contentType: "application/json",
+        body: JSON.stringify(body),
+      });
+    });
     await page.route("**/api/v1/demo/scene", async (route) => {
       const response = await route.fetch();
       const body = (await response.json()) as Record<string, unknown>;
@@ -1690,6 +1709,7 @@ test("sim-booking-target-is-an-activity-the-server-gives-a-slot-for — 默认�
     ).toContain(expectSentence);
     arms[mode] = { sceneLine: shown, ...read };
     await closeStageEntry(page, `the ${mode} booking arm`);
+    await page.unroute("**/api/v1/plans/" + planId);
     await page.unroute("**/api/v1/demo/scene");
   }
   await stub("off");
