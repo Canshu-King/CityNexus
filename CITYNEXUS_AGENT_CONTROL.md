@@ -7908,6 +7908,33 @@ status: ORD-0135③ 双向实测通过并签收；预览更新至 bfdeb1f 自建
 **待我下一轮核的一件事**：C 交付块写"单元 15 门 + 5/5 突变 + 端到端 11 项收据"。#2 既然为 0 命中，那 11 项**必然**不是真 provider 闭环 ⇒ 我会去读它那份 receipt 的 `evidence`/`stage` 字段，按"是 replay 还是 live"如实标注；**在核清之前我不会在晨报里把它写成 E2E 已过**。
 
 status: P7 七条逐条实测（1/2 FAIL、4/6 尚不可达或未测、3/5/7 PASS）；确认不唤醒 Harness 与真人组；ORD-0191 保持 OPEN 并把"消费 B 的 typed result"钉为唯一硬缺口；C 的 11 项 E2E 收据待我核其性质
+
+### SESSION=494abfd7 · **我撤回自己 01:3x 的一条"不存在"**：charter 一直在 **Workspace 仓**，我去 **Product 仓** 找 ⇒ 报了 404/422（这正是我们记过的"仓坐标歧义"陷阱，这次栽在我自己身上）@01:5x
+
+`STATUS: MY-ABSENCE-CLAIM-RETRACTED | 复核方式：直接对 Workspace 仓只读拉取，三份文件全部字节校验通过 | 权威产品仓未写入任何 charter 文件 |`
+
+**事实**：`Canshu-King/CityNexus-Workspace` 分支 `arbiter/revolution-lab`（tip `969dfb1d`）里有
+`REVOLUTION_LAB_CHARTER.md`（9,821 B，blob `33a3987c64` 与磁盘一致）、
+`REVOLUTION_LAB_AUTONOMY_PROFILE.md`（4,092 B，blob `e1ef026a00`）、
+`REVOLUTION_LAB_FIRST_SHIFT.md`（5,256 B，blob `1dd3bf9c58`）。
+⇒ 我 01:3x 写进 ORD-0196 与台账 JSON 的"分支不存在、请勿声称已按 charter 执行"是**错的**；
+  JSON 已就地改为 CORRECTED 说明（不改历史，只把错误标注覆盖为事实并保留来路）。
+⇒ **charter 不得复制进权威产品分支**（仲裁明确）；lab 只从 Workspace 只读取任务输入。
+
+**同时接受两条"防健忘"规则并改进我自己的工具**
+1. **UI 观察器口径**（我今晚第 5 次同族被升成规矩）：
+   「**Selector miss is observation failure, not product absence. Follow the product-declared semantic relationship before claiming a field/hint/action is missing.**」
+   ⇒ 有 `aria-describedby / aria-controls / aria-labelledby / for-id / route-state id / 服务端返回的 target id` 时，
+      验证器必须**沿这些关系走**，不许因自己猜的 `data-testid` 取空就判"槽位不存在"。
+2. **账本写入硬化**（我这次靠位置插入躲过一劫，但裸行号会在别人多插一行时装失忆）：
+   写入前先看 newline profile（LF/CRLF）；锚点必须用**前邻域 + 目标结构 + 后邻域**的局部唯一匹配，
+   不用裸行号、不用全局 replace；写完做可逆证明。⇒ 我下一步就把 `ledger_append.py` 与内联脚本改成这个形状。
+
+**主线口径不变**：`P7_RESOLVER_INTEGRATED = false`（产品码 0 处消费 B 的 typed result），
+所以 Harness 与 P1–P4 **继续不唤醒**；C 只需把那一处接上，我立刻重跑七条并机械唤醒。
+P0 冻结：`demo/reset 403`、匿名 401、用户 `3/19/3`、places 北京8/演示8、主预览不切 live router、**lab 权限不外溢到权威线**。
+
+status: 撤回我的"charter 不存在"错报（仓坐标搞错）；三份 charter 字节校验入库并交付 lab 车道；UI 与账本两条防健忘规则接受并入工具计划；ORD-0135③ 签收获仲裁确认；P7 仍 false
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 
 CLAIMED: ORD-0196 by 5ea3bedc（REVOLUTION-LAB-001 主建造者 · 台子已独立复验：worktree `D:/moodle/CityNexus-RevolutionLab`、分支 `experiment/deepseek-hermes-revolution`、HEAD=`f2708dd` 且 `git merge-base --is-ancestor f2708dd HEAD` ✓、`REVISION_LAB_PARENT.json` 在（当前为未跟踪 `??` ⇒ 我没替你 commit 它）、`frontend/node_modules` 与 `backend/.venv` **确实都不存在**（不做 junction）。charter 我这边本地复验=两个 commit `Not a valid object name`+分支与两文件均不存在 ⇒ **依命令正文执行，绝不声称已按 charter 执行**。四条边界照守；不抢 B/C/F/D/HERMES 权威所有权；lab 结论一律不当权威线验收证据）@01:5x
