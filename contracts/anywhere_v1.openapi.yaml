@@ -1,0 +1,536 @@
+openapi: 3.1.0
+info:
+  title: CityNexus Anywhere Capability API
+  version: 0.1.0-anywhere-v1
+  description: >-
+    Self-contained contract for destination capability truth and asynchronous catalog
+    hydration. Capability describes structural support; provider status describes
+    runtime availability. Deterministic truth is authoritative and AI must not invent
+    physical-world entities.
+servers:
+  - url: http://localhost:8000/api/v1
+tags:
+  - name: DestinationCapability
+  - name: CatalogHydration
+x-citynexus-invariants:
+  - Capability READY, HYDRATABLE, or UNAVAILABLE is backend truth and must not be inferred by the frontend.
+  - Runtime provider failure must not downgrade structural capability to UNAVAILABLE.
+  - Provider network I/O must not execute while holding a SQLite write transaction.
+  - The same canonical destination plus catalog policy version must reuse one durable nonterminal hydration operation.
+  - Normalized persisted coordinates are WGS-84; source coordinate systems remain explicit in provenance.
+  - AI may rank or explain verified entities but must not create persistent physical-world identities.
+paths:
+  /destinations/capability:
+    get:
+      tags: [DestinationCapability]
+      operationId: getDestinationCapability
+      summary: Resolve a destination and report structural planning capability
+      description: >-
+        Returns 200 for structural READY, HYDRATABLE, and UNAVAILABLE outcomes.
+        If resolution itself is temporarily unavailable, return 503 with
+        DESTINATION_RESOLVER_UNAVAILABLE rather than misclassifying the destination
+        as structurally UNAVAILABLE. A cached canonical identity may be used without
+        probing the resolver again.
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 1
+          description: User-entered city, county, district, or administrative-area text.
+      responses:
+        '200':
+          description: Structural destination capability and last observed provider state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DestinationCapability'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '503':
+          description: Destination resolution is temporarily unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /catalog-hydrations:
+    post:
+      tags: [CatalogHydration]
+      operationId: createOrReuseCatalogHydration
+      summary: Start or reuse destination catalog preparation
+      description: >-
+        Admission must be fast. The request creates or reuses one durable operation
+        identified by a server-owned fingerprint based on canonical destination,
+        catalog schema/readiness policy version, and provider policy. Long provider
+        work executes outside the request lifecycle and outside SQLite write
+        transactions.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CatalogHydrationRequest'
+      responses:
+        '200':
+          description: Existing terminal operation reused, or destination already ready.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogHydrationOperation'
+        '202':
+          description: New or existing nonterminal operation accepted.
+          headers:
+            Retry-After:
+              description: Suggested polling delay in seconds when representable.
+              schema: {type: integer, minimum: 0}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogHydrationOperation'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '503':
+          description: Admission/storage path is temporarily unavailable; no fake operation is created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /catalog-hydrations/{operation_id}:
+    get:
+      tags: [CatalogHydration]
+      operationId: getCatalogHydration
+      summary: Read resumable hydration state
+      parameters:
+        - $ref: '#/components/parameters/OperationId'
+      responses:
+        '200':
+          description: Current hydration state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogHydrationOperation'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /catalog-hydrations/{operation_id}/abandon:
+    post:
+      tags: [CatalogHydration]
+      operationId: abandonCatalogHydration
+      summary: Idempotently request hydration abandonment
+      description: >-
+        If provider I/O cannot be interrupted immediately, RUNNING may transition to
+        ABANDON_REQUESTED before ABANDONED. Once abandon is requested, no later
+        catalog persistence may promote the operation to COMPLETED.
+      parameters:
+        - $ref: '#/components/parameters/OperationId'
+      responses:
+        '200':
+          description: Operation after the idempotent abandon request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CatalogHydrationOperation'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    OperationId:
+      name: operation_id
+      in: path
+      required: true
+      schema:
+        type: string
+        minLength: 1
+  responses:
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    NotFound:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+  schemas:
+    CapabilityState:
+      type: string
+      enum: [READY, HYDRATABLE, UNAVAILABLE]
+      description: >-
+        Structural support. Runtime provider outages do not change this state by
+        themselves.
+    CoverageState:
+      type: string
+      enum: [READY, PARTIAL, MISSING]
+    ProviderStatus:
+      type: string
+      enum: [OK, RATE_LIMITED, UNREACHABLE, PARTIAL]
+      description: >-
+        Last observed runtime provider state. Omit a provider observation when it has
+        not been checked; do not fabricate an OK state.
+    CoordinateSystem:
+      type: string
+      enum: [WGS84, GCJ02, OTHER]
+    NormalizedCoordinateSystem:
+      type: string
+      const: WGS84
+      description: Canonical coordinate system for normalized persisted CityNexus geometry.
+    HydrationStatus:
+      type: string
+      enum:
+        - QUEUED
+        - RUNNING
+        - COMPLETED
+        - FAILED
+        - UNAVAILABLE
+        - ABANDON_REQUESTED
+        - ABANDONED
+    HydrationPhase:
+      type: string
+      enum:
+        - QUEUED
+        - RESOLVING_DESTINATION
+        - DISCOVERING_POIS
+        - NORMALIZING
+        - BUILDING_MOBILITY
+        - PERSISTING
+        - FINALIZING
+    ReasonCode:
+      type: string
+      enum:
+        - NO_TRACEABLE_CATALOG_SOURCE
+        - DESTINATION_RESOLVER_UNAVAILABLE
+        - CATALOG_EMPTY
+        - CATALOG_INSUFFICIENT
+        - CATALOG_PREPARING
+        - CATALOG_PROVIDER_UNAVAILABLE
+        - NO_FEASIBLE_PLAN
+        - NO_EXISTING_PLAN_TO_REPLAN
+        - MOBILITY_DATA_UNAVAILABLE
+      description: >-
+        Stable machine-readable reasons. Provider RATE_LIMITED, UNREACHABLE, or
+        PARTIAL detail belongs in provider_observations rather than creating brittle
+        user-facing string parsing.
+    GeoPoint:
+      type: object
+      additionalProperties: false
+      required: [latitude, longitude, coordinate_system]
+      properties:
+        latitude: {type: number, minimum: -90, maximum: 90}
+        longitude: {type: number, minimum: -180, maximum: 180}
+        coordinate_system:
+          $ref: '#/components/schemas/NormalizedCoordinateSystem'
+    BoundingBox:
+      type: object
+      additionalProperties: false
+      required: [west, south, east, north, coordinate_system]
+      properties:
+        west: {type: number, minimum: -180, maximum: 180}
+        south: {type: number, minimum: -90, maximum: 90}
+        east: {type: number, minimum: -180, maximum: 180}
+        north: {type: number, minimum: -90, maximum: 90}
+        coordinate_system:
+          $ref: '#/components/schemas/NormalizedCoordinateSystem'
+    DestinationIdentity:
+      type: object
+      additionalProperties: false
+      required:
+        - canonical_destination_id
+        - display_name
+        - country_code
+        - centroid
+        - resolution_provider
+      properties:
+        canonical_destination_id:
+          type: string
+          minLength: 1
+        display_name:
+          type: string
+          minLength: 1
+          description: >-
+            Canonical provider-backed display name. UI locale changes must not silently
+            replace identity with a different transliteration result.
+        country_code:
+          type: string
+          minLength: 2
+          maxLength: 2
+        admin_area:
+          type: string
+        admin_level:
+          type: integer
+        centroid:
+          $ref: '#/components/schemas/GeoPoint'
+        extent:
+          $ref: '#/components/schemas/BoundingBox'
+        resolution_provider:
+          type: string
+          description: Provider identifier, e.g. PHOTON.
+        provider_entity_id:
+          type: string
+          description: Provider-owned canonical entity identity when available.
+    CoverageDimension:
+      type: object
+      additionalProperties: false
+      required: [state, verified_candidate_count, source_providers]
+      properties:
+        state:
+          $ref: '#/components/schemas/CoverageState'
+        verified_candidate_count:
+          type: integer
+          minimum: 0
+          description: Diagnostic count only; count alone MUST NOT determine readiness.
+        source_providers:
+          type: array
+          uniqueItems: true
+          items: {type: string}
+    DestinationCoverage:
+      type: object
+      additionalProperties: false
+      required: [attractions, food, nightlife, lodging, mobility, booking]
+      properties:
+        attractions: {$ref: '#/components/schemas/CoverageDimension'}
+        food: {$ref: '#/components/schemas/CoverageDimension'}
+        nightlife: {$ref: '#/components/schemas/CoverageDimension'}
+        lodging: {$ref: '#/components/schemas/CoverageDimension'}
+        mobility: {$ref: '#/components/schemas/CoverageDimension'}
+        booking: {$ref: '#/components/schemas/CoverageDimension'}
+    ProviderObservation:
+      type: object
+      additionalProperties: false
+      required: [provider, role, status, observed_at]
+      properties:
+        provider: {type: string, minLength: 1}
+        role:
+          type: string
+          enum: [RESOLVER, CATALOG, MOBILITY]
+        status:
+          $ref: '#/components/schemas/ProviderStatus'
+        observed_at:
+          type: string
+          format: date-time
+        http_status:
+          type: integer
+          minimum: 100
+          maximum: 599
+        retry_after_ms:
+          type: integer
+          minimum: 0
+        diagnostic_code:
+          type: string
+          description: Stable internal diagnostic code; never a stack trace.
+    Provenance:
+      type: object
+      additionalProperties: false
+      required:
+        - source_provider
+        - source_identity
+        - source_kind
+        - source_coordinate_system
+        - normalized_coordinate_system
+        - fetched_at
+        - fact_quality
+      properties:
+        source_provider:
+          type: string
+          minLength: 1
+        source_entity_id:
+          type: string
+        source_identity:
+          type: string
+          minLength: 1
+        source_kind:
+          type: string
+          enum: [GOLDEN_FIXTURE, REMOTE_PROVIDER, SIMULATED, REPLAY, OFFLINE_SNAPSHOT]
+        source_coordinate_system:
+          $ref: '#/components/schemas/CoordinateSystem'
+        normalized_coordinate_system:
+          $ref: '#/components/schemas/NormalizedCoordinateSystem'
+        observed_at:
+          type: string
+          format: date-time
+        fetched_at:
+          type: string
+          format: date-time
+        fact_quality:
+          type: string
+          minLength: 1
+          description: >-
+            Preserve the existing CityNexus fact-quality vocabulary. Normalization must
+            never upgrade SIMULATED, PARTIAL, or unknown evidence into a stronger class.
+    DestinationCapability:
+      type: object
+      additionalProperties: false
+      required:
+        - destination
+        - capability
+        - coverage
+        - catalog_schema_version
+        - readiness_policy_version
+        - reason_code
+      properties:
+        destination:
+          $ref: '#/components/schemas/DestinationIdentity'
+        capability:
+          $ref: '#/components/schemas/CapabilityState'
+        coverage:
+          $ref: '#/components/schemas/DestinationCoverage'
+        catalog_schema_version:
+          type: string
+          minLength: 1
+        readiness_policy_version:
+          type: string
+          minLength: 1
+        reason_code:
+          oneOf:
+            - $ref: '#/components/schemas/ReasonCode'
+            - type: 'null'
+        prepared_at:
+          type: string
+          format: date-time
+        stale_after:
+          type: string
+          format: date-time
+        provider_observations:
+          type: array
+          items: {$ref: '#/components/schemas/ProviderObservation'}
+        provenance:
+          type: array
+          items: {$ref: '#/components/schemas/Provenance'}
+    CatalogHydrationRequest:
+      type: object
+      additionalProperties: false
+      anyOf:
+        - required: [query]
+        - required: [canonical_destination_id]
+      properties:
+        query:
+          type: string
+          minLength: 1
+        canonical_destination_id:
+          type: string
+          minLength: 1
+        journey_id:
+          type: string
+          description: >-
+            Optional existing Journey to prove identity-preserving recovery after
+            hydration. Hydration must never require recreating this Journey.
+        requested_categories:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+            enum: [attractions, food, nightlife, lodging, mobility, booking]
+    HydrationFailure:
+      type: object
+      additionalProperties: false
+      required: [reason_code, retryable, message_key]
+      properties:
+        reason_code:
+          $ref: '#/components/schemas/ReasonCode'
+        retryable:
+          type: boolean
+        message_key:
+          type: string
+          minLength: 1
+        technical_reference:
+          type: string
+          description: Correlation/reference only; no secret or stack trace.
+    CatalogHydrationOperation:
+      type: object
+      additionalProperties: false
+      required:
+        - operation_id
+        - fingerprint
+        - reused
+        - status
+        - phase
+        - elapsed_ms
+        - retry_after_ms
+        - status_url
+        - abandon_url
+      properties:
+        operation_id: {type: string, minLength: 1}
+        fingerprint:
+          type: string
+          minLength: 1
+          description: >-
+            Server-owned durable fingerprint for canonical destination plus catalog
+            schema/readiness/provider policy versions.
+        reused:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/HydrationStatus'
+        phase:
+          $ref: '#/components/schemas/HydrationPhase'
+        elapsed_ms:
+          type: integer
+          minimum: 0
+        retry_after_ms:
+          type: integer
+          minimum: 0
+        status_url:
+          type: string
+        abandon_url:
+          type: string
+        abandon_effective:
+          type: boolean
+        provider_observations:
+          type: array
+          items: {$ref: '#/components/schemas/ProviderObservation'}
+        current_coverage:
+          $ref: '#/components/schemas/DestinationCoverage'
+        result:
+          $ref: '#/components/schemas/DestinationCapability'
+        error:
+          $ref: '#/components/schemas/HydrationFailure'
+    AgentOutcomeStatus:
+      type: string
+      enum: [PLAN_CREATED, NO_ACTION, BLOCKED]
+    RecommendedAction:
+      type: string
+      enum:
+        - PREPARE_DESTINATION
+        - RETRY
+        - ADJUST_BUDGET
+        - CHANGE_DATES
+        - VIEW_AVAILABLE_PLACES
+        - START_PLANNING
+        - NONE
+    AgentOutcome:
+      type: object
+      additionalProperties: false
+      required: [status, reason_code, user_summary, recommended_action]
+      properties:
+        status:
+          $ref: '#/components/schemas/AgentOutcomeStatus'
+        reason_code:
+          oneOf:
+            - $ref: '#/components/schemas/ReasonCode'
+            - type: 'null'
+        user_summary:
+          type: string
+          minLength: 1
+        recommended_action:
+          $ref: '#/components/schemas/RecommendedAction'
+        technical_details:
+          type: object
+          additionalProperties: true
+          description: Optional bounded diagnostic data; never required for the primary UI.
+    ErrorEnvelope:
+      type: object
+      additionalProperties: false
+      required: [error_code, message_key, message]
+      properties:
+        error_code: {type: string, minLength: 1}
+        message_key: {type: string, minLength: 1}
+        message: {type: string, minLength: 1}
+        reason_code:
+          $ref: '#/components/schemas/ReasonCode'
+        retry_after_ms:
+          type: integer
+          minimum: 0
+        details:
+          type: object
+          additionalProperties: true
