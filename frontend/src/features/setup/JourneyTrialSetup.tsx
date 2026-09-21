@@ -257,6 +257,25 @@ const INTEREST_OPTIONS = [
 ] as const;
 
 /**
+ * ORD-0135 ②: the confirmation step prints what the traveller chose, in the words she chose it
+ * from.  A stored key (`relaxed`, `food`) is the product's own vocabulary; showing it asks the
+ * traveller to decode the form she just filled in.  An unrecognised key is answered "待确认" rather
+ * than echoed -- printing it would look like a label while being a leak.
+ */
+function optionLabels(
+  keys: readonly string[],
+  table: readonly { key: string; zh: string; en: string }[],
+  zh: boolean,
+): string {
+  return keys
+    .map((key) => {
+      const entry = table.find((item) => item.key === key);
+      return entry ? (zh ? entry.zh : entry.en) : zh ? "待确认" : "to confirm";
+    })
+    .join("、");
+}
+
+/**
  * The stages `createJourney` actually awaits (ORD-0047).  A waiting line may name nothing
  * outside this list: a fabricated step is worse than no step, because it teaches the
  * traveller to believe a progress bar that means nothing.
@@ -432,25 +451,38 @@ export function JourneyTrialSetup({
      placeholder, and a bare "—" on the review page -- so a legal-looking 4-day trip died on
      a 422 the traveller could not see.  Pre-validating here is what ruling ① allows; the
      backend stays the authority. */
+  /* Each item carries the control it points at: ORD-0135 ③ asked that "还需要填写" be an exit, not
+     only a diagnosis, so every named field is also a thing the traveller can be moved to. */
+  type MissingField = { label: string; target: string };
   const missingStep1 = [
-    draft.cityName.trim() ? null : zh ? "目的地" : "the destination",
-    draft.arrivalLocation.trim() ? null : zh ? "抵达地点" : "where you arrive",
-    draft.departureLocation.trim() ? null : zh ? "离开地点" : "where you leave",
-  ].filter(Boolean) as string[];
+    draft.cityName.trim()
+      ? null
+      : { label: zh ? "目的地" : "the destination", target: "trial-city" },
+    draft.arrivalLocation.trim()
+      ? null
+      : { label: zh ? "抵达地点" : "where you arrive", target: "trial-arrival" },
+    draft.departureLocation.trim()
+      ? null
+      : { label: zh ? "离开地点" : "where you leave", target: "trial-departure" },
+  ].filter(Boolean) as MissingField[];
   /* ORD-0066: step 2 can block too, and a blocked primary button that names the anchors on
      step 1 then falls silent one step later is the same defect moved down the wizard. */
   const missingStep2 = [
-    draft.partySize >= 1 ? null : zh ? "旅行人数" : "the number of travellers",
-    draft.budgetMajor > 0 ? null : zh ? "总预算" : "the total budget",
-  ].filter(Boolean) as string[];
+    draft.partySize >= 1
+      ? null
+      : { label: zh ? "旅行人数" : "the number of travellers", target: "trial-party" },
+    draft.budgetMajor > 0
+      ? null
+      : { label: zh ? "总预算" : "the total budget", target: "trial-budget" },
+  ].filter(Boolean) as MissingField[];
   const missingNow = step === 1 ? missingStep1 : step === 2 ? missingStep2 : [];
   const blockedNow = missingNow.length > 0;
   /* One sentence, read by the visible hint and by the announcement a blocked tap makes, so
      what a sighted traveller sees and what a screen reader says cannot diverge. */
   const missingLine = missingNow.length
     ? zh
-      ? `还需要填写：${missingNow.join("、")}`
-      : `Still needed: ${missingNow.join(", ")}`
+      ? `还需要填写：${missingNow.map((field) => field.label).join("、")}`
+      : `Still needed: ${missingNow.map((field) => field.label).join(", ")}`
     : "";
   /* The backend's own words, routed to the field it named. */
   const arrivalProblem = fieldProblem(message, /arrival_anchor/);
@@ -851,12 +883,14 @@ export function JourneyTrialSetup({
             </div>
             <div>
               <dt>{zh ? "节奏" : "Pace"}</dt>
-              <dd data-testid="review-pace">{draft.pace || "—"}</dd>
+              <dd data-testid="review-pace">
+                {optionLabels(draft.pace ? [draft.pace] : [], PACE_OPTIONS, zh) || "—"}
+              </dd>
             </div>
             <div>
               <dt>{zh ? "兴趣" : "Interests"}</dt>
               <dd data-testid="review-interests">
-                {(draft.interests ?? []).join(", ") || "—"}
+                {optionLabels(draft.interests ?? [], INTEREST_OPTIONS, zh) || "—"}
               </dd>
             </div>
             <div>
@@ -909,6 +943,28 @@ export function JourneyTrialSetup({
            with this element, so the relation cannot dangle between keystrokes. */
         <p className="trial-required-hint" id="trial-required-hint" data-testid="trial-required-hint" role="status">
           {missingLine}
+          {/* ORD-0135 ③: naming a missing field is a diagnosis; the traveller also needs the route.
+              Each item is a real control that puts the cursor in the field it names. */}
+          <span className="trial-required-jumps">
+            {missingNow.map((field) => (
+              <button
+                key={field.target}
+                type="button"
+                data-testid="trial-missing-jump"
+                data-target={field.target}
+                onClick={() => {
+                  const target =
+                    document.getElementById(field.target) ??
+                    document.querySelector<HTMLElement>(
+                      `[data-testid="${field.target}"]`,
+                    );
+                  target?.focus();
+                }}
+              >
+                {field.label}
+              </button>
+            ))}
+          </span>
         </p>
       )}
       {/* Polite, and empty until a tap is refused: the visible hint above already carries the

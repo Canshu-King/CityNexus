@@ -33,6 +33,8 @@ INBOX = "src/features/inbox/JourneyInboxWorkbench.tsx"
 EXPERIENCE = "src/app/V8Experience.tsx"
 INBOX_SPEC = "e2e/qoder-inbox-review-queue.spec.ts"
 EXIT_SPEC = "e2e/qoder-failure-has-an-exit.spec.ts"
+WIZARD = "src/features/setup/JourneyTrialSetup.tsx"
+WIZ_SPEC = "e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -423,6 +425,30 @@ CASES = [
         "              localStorage.removeItem(\"citynexus.v8.journey_id\");\n              setOffline(null);\n",
         "              setOffline(null);\n",
         [(EXIT_SPEC, ["ord0126-a-journey-this-server-loses-comes-back-to-choosing-one"])],
+    ),
+    (
+        # ORD-0135 ②: the measured pre-fix line -- the confirmation step printed the stored key.
+        "killK1-confirmation-prints-the-raw-pace-key",
+        WIZARD,
+        "                {optionLabels(draft.pace ? [draft.pace] : [], PACE_OPTIONS, zh) || \"—\"}\n",
+        "                {draft.pace || \"—\"}\n",
+        [(WIZ_SPEC, ["ord0135-the-confirmation-step-prints-no-internal-key"])],
+    ),
+    (
+        # ③: name the missing fields but offer no route to them.
+        "killK2-missing-fields-named-but-unreachable",
+        WIZARD,
+        "            {missingNow.map((field) => (\n",
+        "            {([] as MissingField[]).map((field) => (\n",
+        [(WIZ_SPEC, ["ord0135-a-missing-field-is-a-route-not-only-a-diagnosis"])],
+    ),
+    (
+        # ①: the persistence this order asked for, switched off -- the refresh lands back on step 1.
+        "killK3-draft-never-persisted",
+        WIZARD,
+        "    localStorage.setItem(TRIAL_DRAFT_KEY, JSON.stringify({ step, draft }));\n",
+        "    void TRIAL_DRAFT_KEY; void step; void draft;\n",
+        [(WIZ_SPEC, ["ord0135-the-wizard-survives-a-refresh-on-the-step-you-were-on"])],
     ),
 ]
 
