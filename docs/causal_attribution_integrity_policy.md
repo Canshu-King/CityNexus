@@ -248,6 +248,51 @@ parameter:
 
 > **Parameter discarded is not boundary honoured.**
 
+## 9.6 Provider HTTP / adapter attribution
+
+A provider transport or access response is not a semantic place-resolution result.
+
+For external resolver/discovery adapters:
+
+- HTTP 401/403 access rejection is PROVIDER_ACCESS / RUNTIME_FAILURE class, not NO_MATCH;
+- HTTP 429 is provider throttling/runtime state, not NO_MATCH;
+- HTTP 5xx is provider/runtime failure, not NO_MATCH;
+- timeout / DNS / transport error is runtime failure, not NO_MATCH;
+- NO_MATCH is valid only after a request that satisfied the provider transport/protocol contract
+  receives a successful semantic response whose parsed result set is explicitly empty/no-match.
+
+The adapter must preserve the discriminating evidence needed to tell these apart, including where
+available:
+
+    provider
+    request_kind
+    http_status
+    response_class
+    retryable
+    adapter_configuration_reason
+    observed_at
+
+### Photon User-Agent standing requirement
+
+For the currently configured Photon path, the adapter must send the descriptive User-Agent required
+by the provider contract instead of relying on the default httpx User-Agent.
+
+A 403 caused by an unacceptable/default User-Agent is an adapter/protocol-access failure. It MUST
+NOT be reported as "Gongshan/Yunhe could not be resolved" or as structural NO_MATCH.
+
+Required regression shape:
+
+1. adapter request contains the configured descriptive User-Agent;
+2. semantic empty-result response may map to NO_MATCH;
+3. provider 403 maps to a named provider-access/runtime result with HTTP evidence;
+4. timeout remains distinct from NO_MATCH;
+5. correcting the adapter header may permit the same query to succeed without changing the user
+   destination text or canonical semantics.
+
+Freeze sentence:
+
+> **Provider access failure is not geographic no-match; classify the HTTP/transport evidence before interpreting the place result.**
+
 ## 10. ORD acceptance binding
 
 R14 is a **hard acceptance condition** for any ORD whose scope creates, transforms, classifies,
