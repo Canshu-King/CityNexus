@@ -43,11 +43,11 @@ async function openTodayWithStage(page: Page, journeyId: string, scheme: "light"
     [journeyId],
   );
   await page.goto("/v8/hub", { waitUntil: "load" });
-  await expect(page.getByTestId("sim-entry"), node("sim-entry-390-declares-stage-in-plain-words",
-    "the Simulation entry is not rendered on Today at all")).toBeVisible({ timeout: 25_000 });
+  await expect(page.getByTestId("sim-ball"), node("sim-entry-390-declares-stage-in-plain-words",
+    "the stage ball is not rendered on Today at all")).toBeVisible({ timeout: 25_000 });
   await page.emulateMedia({ colorScheme: scheme, media: "screen" });
   await page.waitForTimeout(900);
-  /* The entry starts collapsed on a phone (ORD-0085), and every node below reads the panel. */
+  /* At rest the widget is one ball, so every node below has to open the window first. */
   await openStageEntry(page, "the stage gate");
 }
 
@@ -115,12 +115,11 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
           `the banner overflows 390px: ${JSON.stringify(box)}`),
       ).toBe(true);
 
-      const summary = page.getByTestId("sim-entry-summary");
-      const summaryBox = await summary.boundingBox();
+      const ballBox = await page.getByTestId("sim-ball").boundingBox();
       expect(
-        summaryBox && summaryBox.height >= 44,
+        ballBox && ballBox.width >= 44 && ballBox.height >= 44,
         node("sim-entry-390-declares-stage-in-plain-words",
-          `the entry's own tap target measures ${JSON.stringify(summaryBox)} at 390px`),
+          `the ball's own tap target measures ${JSON.stringify(ballBox)} at 390px`),
       ).toBe(true);
 
       const scan = await scanContrast(page, { scheme });
@@ -132,7 +131,7 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
         node("sim-entry-390-declares-stage-in-plain-words",
           `the Simulation surface adds contrast failures in ${scheme}: ${JSON.stringify(mine.slice(0, 3))}`),
       ).toEqual([]);
-      readings[scheme] = { text, bannerWidth: box?.width, summaryHeight: summaryBox?.height };
+      readings[scheme] = { text, bannerWidth: box?.width, ball: ballBox };
     }
 
     writeFileSync(

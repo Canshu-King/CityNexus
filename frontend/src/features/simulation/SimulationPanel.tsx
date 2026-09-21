@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocale } from "../../i18n/LocaleContext";
 import { cityNexusApi } from "../../api/citynexus";
@@ -80,34 +81,6 @@ const newKey = () =>
     : `sim-${Math.random().toString(36).slice(2, 12)}`;
 
 const shortId = (value: string | null) => (value ? value.slice(0, 8) : "—");
-
-/**
- * The phone breakpoint, as a fact the component can act on.
- *
- * ORD-0085 settled this: on a phone the entry opens **closed**.  The panel's action rows are
- * eleven deep, and the app's own geometry gate forbids any actionable element from overlapping the
- * fixed nav band at *any* settled scroll position -- an open panel in flow cannot satisfy that
- * (rows below the fold sit in the band), and taken out of flow it cannot either (a clipped row keeps
- * its unclipped rect, which is still in the band, and a fixed one covers the page's own primary
- * action instead).  Collapsed is the one shape with no overlap band at rest, and the summary keeps
- * saying what the stage is and whose clock is in use, so the honesty does not live behind a tap.
- */
-function usePhoneLayout(): boolean {
-  const [phone, setPhone] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(max-width: 680px)").matches,
-  );
-  useEffect(() => {
-    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return;
-    const query = window.matchMedia("(max-width: 680px)");
-    const onChange = () => setPhone(query.matches);
-    query.addEventListener("change", onChange);
-    return () => query.removeEventListener("change", onChange);
-  }, []);
-  return phone;
-}
 
 export function SimulationPanel({
   viewingJourneyId = null,
@@ -847,28 +820,34 @@ export function SimulationEntry({
 }: {
   viewingJourneyId?: string | null;
   onStageChanged?: ((action: ActionId) => void) | null;
-  /** Closed on the wizard, where the form owns the screen and the stage is one line to open.
-      `null` means "ask the layout": open on a tablet/desktop, closed on a phone (see
-      `usePhoneLayout` for why a phone cannot carry eleven rows past a fixed nav). */
+  /** `true` opens the window on first paint; `null`/`false` leave the ball closed, which is the
+      pose on a phone where a wall of rows over the content was the thing being complained about. */
   defaultOpen?: boolean | null;
 }) {
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
-  const phone = usePhoneLayout();
   const scene = useDemoScene();
-  /* The disclosure belongs to the browser. Mirroring it in React state made every open attempt
-     cancel itself: the click set the attribute, then the details' own default action toggled the
-     same attribute back, and the panel never appeared. The initial pose is still this screen's to
-     choose -- open on a wide layout, collapsed on a phone (see `usePhoneLayout`). */
-  const detailsRef = useRef<HTMLDetailsElement | null>(null);
+  /* Unlike the old <details>, this disclosure has no default action fighting React: the click that
+     opens it is the only thing that writes the flag. */
+  const [open, setOpen] = useState<boolean>(() => defaultOpen ?? false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+
+  /* Tap outside closes. Listening only while open keeps the ball's own click from being eaten by
+     the same gesture that opened it. */
   useEffect(() => {
-    const element = detailsRef.current;
-    if (!element) return;
-    const wasUntouched = !element.hasAttribute("data-user-toggled");
-    if (wasUntouched) element.open = defaultOpen ?? !phone;
-  }, [defaultOpen, phone]);
-  /* The declaration the stage owes the traveller is in the line they see without opening
-     anything: that this is a teaching simulation, and whose clock "now" comes from. */
+    if (!open) return;
+    const onPointerDown = (event: PointerEvent) => {
+      const root = rootRef.current;
+      if (root && !root.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => document.removeEventListener("pointerdown", onPointerDown);
+  }, [open]);
+
+  /* The line the stage owes the traveller: that this is a teaching simulation, and whose clock
+     "now" comes from. It used to sit on the collapsed line; a 44px ball cannot carry a sentence, so
+     it now lives in the window and in the ball's accessible name, and the dot only says
+     "there is a stage on stage" or "there isn't". */
   const declared =
     scene.phase === "loading"
       ? zh
@@ -885,35 +864,75 @@ export function SimulationEntry({
           : zh
             ? "这台部署没有开模拟舞台"
             : "this deployment has no simulation stage switched on";
-  return (
-    <details
-      ref={detailsRef}
-      className="cn-sim-entry"
-      data-testid="sim-entry"
-      onToggle={(event) =>
-        (event.currentTarget as HTMLDetailsElement).setAttribute(
-          "data-user-toggled",
-          "1",
-        )
-      }
+  const dotState =
+    scene.phase === "loading"
+      ? "CHECKING"
+      : scene.phase === "unavailable"
+        ? "UNREADABLE"
+        : scene.scene?.demoMode
+          ? "STAGE_LIVE"
+          : "NO_STAGE";
+  const ballName = zh
+    ? `模拟舞台（${dotState === "STAGE_LIVE" ? "舞台上有场景" : "暂无场景"}）：${declared}`
+    : `Simulation stage (${dotState === "STAGE_LIVE" ? "a scenario is on stage" : "no scenario yet"}): ${declared}`;
+
+  /* The portal is not a style preference. `design-tokens.css` gives `.v8-page` and every child of
+     it `animation: cn-rise … both`, which leaves an identity transform in place forever, and any
+     transformed ancestor becomes the containing block for `position: fixed` -- measured as the
+     last attempt at this widget parking itself at top -374 and riding the page off screen. On
+     document.body the ball belongs to the viewport, which is what "悬浮" means. */
+  return createPortal(
+    <div
+      ref={rootRef}
+      className="cn-sim-float"
+      data-testid="sim-float"
+      data-open={open ? "true" : "false"}
+      data-scene-phase={scene.phase}
+      /* Measured: with the handler only on the panel, Escape pressed right after opening the ball did
+         nothing, because focus stayed on the ball, which is a sibling of the window. On this wrapper
+         both positions reach it. */
+      onKeyDown={(event) => {
+        if (event.key === "Escape") setOpen(false);
+      }}
     >
-      <summary
-        className="cn-sim-summary"
-        data-testid="sim-entry-summary"
+      {open ? (
+        <div
+          id="cn-sim-pop"
+          className="v8-page cn-sim-pop"
+          data-testid="sim-pop"
+          role="group"
+          aria-label={ballName}
+        >
+          <p className="cn-sim-pop-decl" data-testid="sim-entry-decl">
+            {declared}
+          </p>
+          <div className="cn-sim-pop-body" data-testid="sim-pop-body">
+            <SimulationPanel
+              viewingJourneyId={viewingJourneyId}
+              onStageChanged={onStageChanged}
+              onClose={() => setOpen(false)}
+            />
+          </div>
+        </div>
+      ) : null}
+      <button
+        type="button"
+        className="cn-sim-ball"
+        data-testid="sim-ball"
         data-scene-phase={scene.phase}
+        aria-expanded={open}
+        aria-controls="cn-sim-pop"
+        aria-label={ballName}
+        onClick={() => setOpen((value) => !value)}
       >
-        {zh ? "模拟舞台（场景时间由服务器给）" : "Simulation stage (the server owns the scene time)"}
-        <span className="cn-sim-summary-decl" data-testid="sim-entry-decl">
-          {` · ${declared}`}
-        </span>
-      </summary>
-      <SimulationPanel
-        viewingJourneyId={viewingJourneyId}
-        onStageChanged={onStageChanged}
-        onClose={() => {
-          if (detailsRef.current) detailsRef.current.open = false;
-        }}
-      />
-    </details>
+        <span
+          className="cn-sim-ball-dot"
+          data-testid="sim-ball-dot"
+          data-state={dotState}
+          aria-hidden="true"
+        />
+      </button>
+    </div>,
+    document.body,
   );
 }

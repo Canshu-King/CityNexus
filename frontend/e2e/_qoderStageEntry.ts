@@ -1,31 +1,56 @@
 import { expect, type Page } from "@playwright/test";
 
 /**
- * Open the Simulation entry the way a traveller does.
+ * Open the stage the way a traveller does: press the floating ball.
  *
- * ORD-0085 settled the default: on a phone the entry is collapsed, because eleven action rows cannot
- * be laid out past a fixed bottom nav without either sitting in its band (in flow) or keeping
- * overlapping rects while clipped/covered (out of flow).  So any gate that presses a stage action has
- * to open the disclosure first, and it has to do so *instead of* assuming the panel is visible --
- * asserting against a collapsed `<details>` would just hang until the timeout and read as a product
- * failure.
+ * The widget used to be a `<details>` block inside Today, and the gates learned to open it instead
+ * of assuming the panel was visible -- asserting against a collapsed disclosure just hung until the
+ * timeout and read as a product failure. The shape changed (the traveller asked for a floating ball
+ * that does not cover the screen); the discipline did not: every gate that presses a stage action
+ * opens the window first, and proves it opened by reading the window rather than the ball.
  */
 export async function openStageEntry(page: Page, reason: string, timeout = 30_000) {
-  const entry = page.getByTestId("sim-entry");
+  const ball = page.getByTestId("sim-ball");
   await expect(
-    entry,
-    `${reason}: there is no Simulation entry on this screen to open`,
+    ball,
+    `${reason}: there is no stage ball on this screen to press`,
   ).toBeVisible({ timeout });
-  if (await entry.evaluate((element) => (element as HTMLDetailsElement).open)) return;
-  await page.getByTestId("sim-entry-summary").click();
+  if (await page.getByTestId("sim-pop").count()) return;
+  await ball.click();
   await expect(
-    entry,
-    `${reason}: the entry's summary was pressed and the disclosure never opened`,
-  ).toHaveJSProperty("open", true, { timeout });
+    page.getByTestId("sim-pop"),
+    `${reason}: the ball was pressed and no window appeared`,
+  ).toBeVisible({ timeout });
 }
 
-/** The declaration the collapsed line owes the reader, as one string. */
+/** Close it again, through the control the traveller would use. */
+export async function closeStageEntry(page: Page, reason: string, timeout = 30_000) {
+  await expect(
+    page.getByTestId("sim-pop"),
+    `${reason}: there is no open stage window to close`,
+  ).toBeVisible({ timeout });
+  await page.getByTestId("sim-ball").click();
+  await expect
+    .poll(() => page.getByTestId("sim-pop").count(), {
+      timeout,
+      intervals: [250],
+      message: `${reason}: the ball was pressed again and the window never went away`,
+    })
+    .toBe(0);
+}
+
+/**
+ * What the ball owes the reader without opening anything. It can no longer be a sentence -- a 48px
+ * ball carrying prose would be the "blocks the screen" complaint again -- so the claim is carried by
+ * the accessible name, and the dot only says whether a scenario is on stage.
+ */
 export async function stageDeclaration(page: Page) {
-  const text = await page.getByTestId("sim-entry-summary").innerText();
+  const name = await page.getByTestId("sim-ball").getAttribute("aria-label");
+  return String(name ?? "").replace(/\s+/g, " ").trim();
+}
+
+/** The same declaration as the window renders it in ink. */
+export async function stageWindowDeclaration(page: Page) {
+  const text = await page.getByTestId("sim-entry-decl").innerText();
   return text.replace(/\s+/g, " ").trim();
 }

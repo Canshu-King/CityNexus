@@ -67,9 +67,9 @@ async function arm(page: Page, setup: Arm["state"]): Promise<Arm> {
   /* On the wizard the stage entry is deliberately collapsed (the form owns that screen), so the
      controls exist but are not on screen -- and a click there waits for visibility forever.  A
      teacher opens it the same way; if there is no summary to open, that is the finding. */
-  const summary = page.getByTestId("sim-entry-summary");
-  const entryFound = (await summary.count()) > 0;
-  if (entryFound) await summary.click();
+  const ball = page.getByTestId("sim-ball");
+  const entryFound = (await ball.count()) > 0;
+  if (entryFound) await ball.click();
   const control = page.getByTestId("sim-action-reset");
   const controlFound = (await control.count()) > 0;
   const screenBefore = await screenOf(page);
@@ -169,15 +169,20 @@ test("ord0081-stage-chain-from-the-wizard-reaches-execution — 三步链真能�
   });
   await page.reload({ waitUntil: "load" });
   await expect(page.getByTestId("trial-setup")).toBeVisible({ timeout: 30_000 });
-  /* The wizard's stage entry is collapsed on purpose; opening it is the first teacher action in this
-     chain, and if there is nothing to open the chain does not exist. */
-  const summary = page.getByTestId("sim-entry-summary");
+  /* The widget is one ball at rest; pressing it is the first teacher action in this chain, and if
+     there is nothing to press the chain does not exist. */
+  const ball = page.getByTestId("sim-ball");
   await expect(
-    summary,
+    ball,
     node("ord0081-stage-chain-from-the-wizard-reaches-execution",
-      "the wizard screen has no stage entry to open, so no chain of real stage actions can start here"),
+      "the wizard screen has no stage ball, so no chain of real stage actions can start here"),
   ).toHaveCount(1);
-  await summary.click();
+  await ball.click();
+  await expect(
+    page.getByTestId("sim-pop"),
+    node("ord0081-stage-chain-from-the-wizard-reaches-execution",
+      "the ball was pressed and no stage window appeared"),
+  ).toBeVisible();
 
   const steps: string[] = [];
   const pressed = async (id: string) => {

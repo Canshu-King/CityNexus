@@ -116,6 +116,51 @@ CASES = [
         [(WALLET_SPEC, ["ord0087-booked-commitment-is-on-the-wallet-screen"])],
     ),
     (
+        # The floating widget (the traveller's "别把屏幕挡住"): one mutant per clause the new gate
+        # asserts, so "the gate is green" cannot mean "nobody ever broke any of the six promises".
+        "killD1-widget-opens-on-its-own",
+        PANEL,
+        "  const [open, setOpen] = useState<boolean>(() => defaultOpen ?? false);\n",
+        "  const [open, setOpen] = useState<boolean>(() => true);\n",
+        [(STAGE_SPEC, ["sim-stage-actions-are-reachable-and-never-in-the-nav-band"])],
+    ),
+    (
+        "killD2-ball-parked-in-the-nav-band",
+        SHEET,
+        "    --cn-sim-float-clearance: calc(124px + env(safe-area-inset-bottom, 0px) + 12px);\n",
+        "    --cn-sim-float-clearance: 24px;\n",
+        [(STAGE_SPEC, ["sim-stage-actions-are-reachable-and-never-in-the-nav-band"])],
+    ),
+    (
+        "killD3-escape-does-not-close-it",
+        PANEL,
+        '        if (event.key === "Escape") setOpen(false);\n',
+        "",
+        [(STAGE_SPEC, ["sim-stage-actions-are-reachable-and-never-in-the-nav-band"])],
+    ),
+    (
+        "killD4-tapping-outside-does-not-close-it",
+        PANEL,
+        '    document.addEventListener("pointerdown", onPointerDown);\n',
+        "",
+        [(STAGE_SPEC, ["sim-stage-actions-are-reachable-and-never-in-the-nav-band"])],
+    ),
+    (
+        "killD5-ball-carries-a-sentence",
+        PANEL,
+        '        onClick={() => setOpen((value) => !value)}\n      >\n        <span\n',
+        '        onClick={() => setOpen((value) => !value)}\n      >\n'
+        '        <span className="cn-sim-ball-text">模拟舞台（场景时间由服务器给）</span>\n        <span\n',
+        [(STAGE_SPEC, ["sim-stage-actions-are-reachable-and-never-in-the-nav-band"])],
+    ),
+    (
+        "killD6-window-body-cannot-be-scoped",
+        SHEET,
+        "  min-height: 0;\n  overflow-y: auto;\n",
+        "  min-height: 0;\n  overflow-y: hidden;\n",
+        [(STAGE_SPEC, ["sim-stage-actions-are-reachable-and-never-in-the-nav-band"])],
+    ),
+    (
         "killB1-running-action-has-no-signal",
         PANEL,
         '                aria-busy={running === row.id ? "true" : undefined}\n',

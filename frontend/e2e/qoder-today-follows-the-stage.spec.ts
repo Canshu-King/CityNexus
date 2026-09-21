@@ -1,7 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
 import { writeFileSync } from "node:fs";
 import { evidencePath } from "./_qoderEvidence";
-import { openStageEntry, stageDeclaration } from "./_qoderStageEntry";
+import {
+  openStageEntry,
+  stageDeclaration,
+  stageWindowDeclaration,
+} from "./_qoderStageEntry";
 
 /**
  * ORD-0082 -- Today's Now/Next must be chosen by the stage's cursor, not by the device clock.
@@ -481,22 +485,21 @@ test("today-scene-window-is-not-called-device-time — 有场景分钟、没投�
   await page.unrouteAll({ behavior: "ignoreErrors" }).catch(() => undefined);
 });
 
-/* ----------------------------------------------------------------- ORD-0085: taps that go elsewhere.
- * The bottom nav is `position: fixed`, so a stage action can end up inside its band -- visible, and
- * the tap lands on the nav and changes page.  Three shapes were measured for this and only one of
- * them is a fix:
- *   - `scroll-margin` moves programmatic scrolls and focus, never a finger: the resting layout still
- *     had `建一个硬承诺` centred at y=783 on 390x844;
- *   - taking the panel out of flow (`position: fixed` above the nav, its own scroll area) left the
- *     clipped rows' rects inside the band all the same -- `getBoundingClientRect` is not clipped --
- *     and it covered Today's own primary action;
- *   - on a phone the entry therefore starts **collapsed**: nothing overlaps at rest, the summary
- *     still states what the stage is and whose clock is in use, and every row remains reachable
- *     once it is opened.
- * So this node measures four things, all of them on the deployed surface: the collapsed default,
- * the declaration on the line the traveller sees, zero band overlap at every settled scroll
- * position, and one pressable position per action row once the stage is open.
+/* ------------------------------------------------------- The stage's floating widget (user's own words:
+ * "延时舞台系统我也用不明白，你改成悬浮窗形式，点一下会展开，里面有各种功能，但是别把屏幕挡住").
+ *
+ * Two overlays already live at the bottom of a phone: the fixed nav and the Copilot pill resting on
+ * top of its band (`styles.css:405` puts the dock at `bottom: 72px`, `.v8-content` reserves
+ * `124px + safe-area`).  So "floating" is only a fix if the widget clears both, at every scroll
+ * position, and still leaves each row centre-hittable -- the same failure ORD-0085 was about, now
+ * with a third way to get it wrong (a panel that covers the nav and eats its taps).
+ *
+ * What this node measures, on the deployed surface: the ball's geometry and hit-ability at rest, the
+ * declaration it owes without being opened, that the ball does not move when the page does, the open
+ * window's size budget, every row's centre hit and band clearance, that all five nav items are still
+ * pressable with the window open, and all four ways back out.
  */
+type Rect = { x: number; y: number; width: number; height: number; top: number; bottom: number; right: number };
 type Hit = {
   id: string | null;
   visible: boolean;
@@ -505,19 +508,51 @@ type Hit = {
   inNavBand: boolean;
   centreY: number;
 };
+type FloatReading = {
+  ball: Rect | null;
+  ballHitsItself: boolean;
+  ballTag: string;
+  ballText: string;
+  window: Rect | null;
+  nav: Rect | null;
+  dock: Rect | null;
+  navClickable: Array<{ id: string; ok: boolean; hit: string }>;
+  rows: Hit[];
+};
 
-async function hitTestActions(page: Page): Promise<Hit[]> {
+const overlaps = (a: Rect, b: Rect) =>
+  a.right > b.x + 1 && b.right > a.x + 1 && a.bottom > b.top + 1 && b.bottom > a.top + 1;
+
+async function measureFloat(page: Page): Promise<FloatReading> {
   return page.evaluate(() => {
-    const nav = document.querySelector(".v8-mobile-nav")?.getBoundingClientRect();
-    return [...document.querySelectorAll('[data-testid^="sim-action-"]')].map((element) => {
+    const rectOf = (element: Element | null | undefined) => {
+      if (!element) return null;
+      const box = element.getBoundingClientRect();
+      return {
+        x: box.x,
+        y: box.y,
+        width: box.width,
+        height: box.height,
+        top: box.top,
+        bottom: box.bottom,
+        right: box.right,
+      };
+    };
+    const nav = document.querySelector(".v8-mobile-nav");
+    const dock = document.querySelector(".cn-copilot-dock");
+    const ball = document.querySelector('[data-testid="sim-ball"]');
+    const ballBox = ball ? ball.getBoundingClientRect() : null;
+    const ballCentre = ballBox
+      ? document.elementFromPoint(ballBox.x + ballBox.width / 2, ballBox.y + ballBox.height / 2)
+      : null;
+    const window = document.querySelector('[data-testid="sim-pop"]');
+    const rows = [...document.querySelectorAll('[data-testid^="sim-action-"]')].map((element) => {
       const button = element as HTMLButtonElement;
       const box = button.getBoundingClientRect();
-      /* `display: none` (a collapsed disclosure) has no rect to speak of: it cannot be seen and
-         cannot be tapped, so it is not the defect. */
-      const shown =
-        box.width > 1 &&
-        box.height > 1 &&
-        !button.closest("details:not([open])");
+      /* The window is not in the document while closed, so a measured box here means a drawn row.
+         No `details` predicate: that disclosure is gone, and a clause that can never be false is how
+         a gate starts passing for free. */
+      const shown = box.width > 1 && box.height > 1;
       const centreX = box.x + box.width / 2;
       const centreY = box.y + box.height / 2;
       const inViewport =
@@ -527,11 +562,33 @@ async function hitTestActions(page: Page): Promise<Hit[]> {
         id: button.getAttribute("data-testid"),
         visible: shown && inViewport,
         centre: centre === button || Boolean(centre && button.contains(centre)),
-        hitTag: centre ? `${centre.tagName}.${centre.getAttribute("data-testid") ?? centre.className}` : "none",
-        inNavBand: Boolean(nav && shown && box.bottom > nav.top + 1 && nav.bottom > box.top + 1),
+        hitTag: centre
+          ? `${centre.tagName}.${centre.getAttribute("data-testid") ?? centre.className}`
+          : "none",
+        inNavBand: Boolean(nav && shown && box.bottom > nav.getBoundingClientRect().top + 1 && nav.getBoundingClientRect().bottom > box.top + 1),
         centreY: Math.round(centreY),
       };
     });
+    const navItems = [...document.querySelectorAll(".v8-mobile-nav [data-testid^='nav-']")].map((item) => {
+      const box = item.getBoundingClientRect();
+      const hit = document.elementFromPoint(box.x + box.width / 2, box.y + box.height / 2);
+      return {
+        id: item.getAttribute("data-testid") ?? "?",
+        ok: hit === item || Boolean(hit && item.contains(hit)),
+        hit: hit ? `${hit.tagName}.${hit.getAttribute("data-testid") ?? hit.className}` : "none",
+      };
+    });
+    return {
+      ball: rectOf(ball),
+      ballHitsItself: Boolean(ballCentre && ball && (ballCentre === ball || ball.contains(ballCentre))),
+      ballTag: ballCentre ? `${ballCentre.tagName}.${ballCentre.getAttribute("data-testid") ?? ballCentre.className}` : "none",
+      ballText: ball ? (ball as HTMLElement).innerText.replace(/\s+/g, " ").trim() : "",
+      window: rectOf(window),
+      nav: rectOf(nav),
+      dock: rectOf(dock),
+      navClickable: navItems,
+      rows,
+    };
   });
 }
 
@@ -548,99 +605,254 @@ const scrollEverywhere = (page: Page, where: "top" | "middle" | "bottom") =>
     window.scrollTo(0, target === "top" ? 0 : target === "middle" ? innerHeight / 2 : document.body.scrollHeight);
   }, where);
 
-const inBand = (hits: Hit[]) => hits.filter((item) => item.visible && item.inNavBand);
-
-test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 390×844 默认无重叠带、每行都可按", async ({ page }) => {
+test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不遮内容，展开后每行都可按、导航仍可点", async ({ page }) => {
   test.setTimeout(300_000);
   const NODE = "sim-stage-actions-are-reachable-and-never-in-the-nav-band";
   const seeded = await readScene(page);
-  await openToday(page, String(seeded.journey_id ?? ""), "zh-CN", "light", 390);
+  const journeyId = String(seeded.journey_id ?? "");
+  const sceneMinute = String(seeded.effective_now ?? "").slice(11, 16);
+  const readings: Record<string, unknown> = {
+    seeded: { status: seeded.journey_status, effective_now: seeded.effective_now },
+  };
 
-  /* 1. the default pose on a phone is collapsed, and the line the traveller sees carries the truth
-        in words -- what the stage is, and whose clock the screen is using. */
-  const entry = page.getByTestId("sim-entry");
-  expect(
-    await entry.evaluate((element) => (element as HTMLDetailsElement).open),
-    node(NODE, "the stage entry opens on a phone; an open wall of rows is the overlap band this order is about"),
-  ).toBe(false);
-  const declared = await stageDeclaration(page);
-  expect(
-    declared,
-    node(NODE, `the collapsed line does not say this is a teaching simulation: ${JSON.stringify(declared)}`),
-  ).toContain("模拟");
-  expect(
-    declared,
-    node(NODE, `the collapsed line does not say the server supplies the time: ${JSON.stringify(declared)}`),
-  ).toContain("服务器");
-  expect(
-    declared,
-    node(NODE, `the collapsed line does not carry the server's own scene minute (${JSON.stringify(seeded.effective_now)}): ${JSON.stringify(declared)}`),
-  ).toContain(String(seeded.effective_now ?? "").slice(11, 16));
-  expect(
-    declared,
-    node(NODE, `a flag name reached the traveller-facing line: ${JSON.stringify(declared)}`),
-  ).not.toContain("demo_mode");
+  /* ①②④⑤⑦ -- the ball at rest, and the opened window, at 390 and 412 in both themes. */
+  for (const width of [390, 412]) {
+    for (const scheme of ["light", "dark"] as const) {
+      const arm = `${width}-${scheme}`;
+      await openToday(page, journeyId, "zh-CN", scheme, width);
+      await expect(
+        page.getByTestId("sim-ball"),
+        node(NODE, `${arm}: the stage ball is not on screen at all`),
+      ).toBeVisible();
+      await expect
+        .poll(() => page.getByTestId("sim-pop").count(), {
+          timeout: 10_000,
+          intervals: [250],
+          message: node(NODE, `${arm}: the widget opens on its own, which is the "挡住屏幕" being complained about`),
+        })
+        .toBe(0);
 
-  /* 2. at every settled scroll position, in both themes: no stage action inside the nav's band. */
-  const readings: Record<string, unknown> = { declared, seeded: { status: seeded.journey_status, effective_now: seeded.effective_now } };
-  for (const scheme of ["light", "dark"] as const) {
-    await page.emulateMedia({ colorScheme: scheme, media: "screen" });
-    for (const where of ["top", "middle", "bottom"] as const) {
-      await scrollEverywhere(page, where);
-      const hits = await hitTestActions(page);
-      /* Not "nothing overlapped" -- nothing is on screen. The panel stays mounted so the summary can
-         keep quoting the server, so the assertion is about visibility, not presence. */
+      let atRest = await measureFloat(page);
       expect(
-        hits.filter((item) => item.visible).length,
-        node(NODE, `${scheme} at ${where}: the collapsed entry still shows ${hits.filter((item) => item.visible).length} action rows (${JSON.stringify(hits.slice(0, 3))})`),
-      ).toBe(0);
+        atRest.ball && atRest.ball.width >= 44 && atRest.ball.height >= 44,
+        node(NODE, `${arm}: the ball measures ${JSON.stringify(atRest.ball)}, under the 44px floor`),
+      ).toBe(true);
       expect(
-        inBand(hits),
-        node(NODE, `${scheme} at ${where}: stage actions sit inside the fixed nav's band: ${JSON.stringify(inBand(hits).slice(0, 4))}`),
+        atRest.ballHitsItself,
+        node(NODE, `${arm}: the ball is on screen but its own tap lands on ${JSON.stringify(atRest.ballTag)}`),
+      ).toBe(true);
+      expect(
+        atRest.ballText.length,
+        node(NODE, `${arm}: a ball must carry a dot, not a sentence -- it reads ${JSON.stringify(atRest.ballText)}`),
+      ).toBeLessThanOrEqual(2);
+      if (atRest.nav && atRest.ball) {
+        expect(
+          overlaps(atRest.ball, atRest.nav),
+          node(NODE, `${arm}: the ball sits in the nav's band: ball ${JSON.stringify(atRest.ball)} nav ${JSON.stringify(atRest.nav)}`),
+        ).toBe(false);
+      }
+      if (atRest.dock && atRest.ball) {
+        expect(
+          overlaps(atRest.ball, atRest.dock),
+          node(NODE, `${arm}: the ball covers the Copilot pill: ball ${JSON.stringify(atRest.ball)} dock ${JSON.stringify(atRest.dock)}`),
+        ).toBe(false);
+      }
+
+      /* ⑥ without opening anything: the dot says only "stage / no stage", so the words have to be in
+            the accessible name, and they are the same words the window shows. */
+      const declared = await stageDeclaration(page);
+      expect(
+        declared,
+        node(NODE, `${arm}: the ball does not say this is a teaching simulation: ${JSON.stringify(declared)}`),
+      ).toContain("模拟");
+      expect(
+        declared,
+        node(NODE, `${arm}: the ball does not say the server supplies the time: ${JSON.stringify(declared)}`),
+      ).toContain("服务器");
+      expect(
+        declared,
+        node(NODE, `${arm}: the ball omits the server's own scene minute (${JSON.stringify(seeded.effective_now)}): ${JSON.stringify(declared)}`),
+      ).toContain(sceneMinute);
+      expect(
+        declared,
+        node(NODE, `${arm}: a flag name reached the traveller-facing line: ${JSON.stringify(declared)}`),
+      ).not.toContain("demo_mode");
+
+      /* ① "列表滚动时保持悬浮": the ball belongs to the viewport, so scrolling must not move it. */
+      for (const where of ["middle", "bottom", "top"] as const) {
+        await scrollEverywhere(page, where);
+        const scrolled = await measureFloat(page);
+        expect(
+          scrolled.ball,
+          node(NODE, `${arm} at ${where}: the ball vanished from the screen once the page scrolled`),
+        ).not.toBeNull();
+        expect(
+          Math.abs((scrolled.ball as Rect).y - (atRest.ball as Rect).y) < 1 &&
+            Math.abs((scrolled.ball as Rect).x - (atRest.ball as Rect).x) < 1,
+          node(NODE, `${arm} at ${where}: the ball moved with the page (${JSON.stringify((atRest.ball as Rect).y)} -> ${JSON.stringify((scrolled.ball as Rect).y)}), so it is not floating`),
+        ).toBe(true);
+        expect(
+          scrolled.rows.filter((item) => item.visible).length,
+          node(NODE, `${arm} at ${where}: ${scrolled.rows.filter((item) => item.visible).length} action rows are drawn while the window is closed`),
+        ).toBe(0);
+        readings[`${arm}-closed-${where}`] = scrolled.ball;
+      }
+
+      /* ② the opened window: its own size budget, its own scroll, and nobody else's control covered. */
+      await openStageEntry(page, `${arm}: the geometry pass`);
+      await scrollEverywhere(page, "top");
+      const open = await measureFloat(page);
+      expect(
+        open.window,
+        node(NODE, `${arm}: the window was opened and is not measurable`),
+      ).not.toBeNull();
+      const box = open.window as Rect;
+      expect(
+        box.width <= width - 24 + 1,
+        node(NODE, `${arm}: the window is ${box.width}px wide at ${width}px (budget: width - 24)`),
+      ).toBe(true);
+      expect(
+        box.height <= 844 * 0.6 + 1,
+        node(NODE, `${arm}: the window is ${box.height}px tall (budget: 60% of 844)`),
+      ).toBe(true);
+      if (open.nav) {
+        expect(
+          overlaps(box, open.nav),
+          node(NODE, `${arm}: the open window covers the bottom navigation: window ${JSON.stringify(box)} nav ${JSON.stringify(open.nav)}`),
+        ).toBe(false);
+      }
+      if (open.dock) {
+        expect(
+          overlaps(box, open.dock),
+          node(NODE, `${arm}: the open window covers the Copilot pill: window ${JSON.stringify(box)} dock ${JSON.stringify(open.dock)}`),
+        ).toBe(false);
+      }
+      expect(
+        open.navClickable.filter((item) => !item.ok),
+        node(NODE, `${arm}: with the window open these nav items cannot be tapped: ${JSON.stringify(open.navClickable)}`),
       ).toEqual([]);
-      readings[`${scheme}-${where}-closed`] = hits;
+
+      /* ②⑦ inside the window: every row must come up to a position where its own centre takes the
+            tap and where it is out of the band -- "the window is small" is not an excuse. */
+      const ids = open.rows.map((item) => item.id).filter(Boolean) as string[];
+      expect(
+        ids.length,
+        node(NODE, `${arm}: the opened window drew ${ids.length} action rows; the stage has 11`),
+      ).toBeGreaterThanOrEqual(9);
+      const perRow: Record<string, unknown> = {};
+      for (const id of ids) {
+        const row = page.getByTestId(id);
+        await row.scrollIntoViewIfNeeded();
+        const mine = (await measureFloat(page)).rows.find((item) => item.id === id);
+        expect(
+          mine?.visible,
+          node(NODE, `${arm}: ${id} can never be brought on screen inside the window: ${JSON.stringify(mine)}`),
+        ).toBe(true);
+        expect(
+          mine?.centre,
+          node(NODE, `${arm}: ${id} is visible but its tap goes to ${JSON.stringify(mine?.hitTag)}: ${JSON.stringify(mine)}`),
+        ).toBe(true);
+        expect(
+          mine?.inNavBand,
+          node(NODE, `${arm}: ${id} is still inside the nav band: ${JSON.stringify(mine)}`),
+        ).toBe(false);
+        perRow[id] = mine;
+      }
+      readings[`${arm}-open`] = { ball: open.ball, window: box, nav: open.nav, dock: open.dock, perRow };
+      /* The claim being made here is visual ("别把屏幕挡住"), so it is filed as pictures at the same size
+         the numbers were measured on, viewport rather than full page: the widget belongs to the
+         viewport, not to the document. */
+      /* ② "内部自己滚动" is a finger fact, not a Playwright one.  The row loop above scrolls with
+         `scrollIntoViewIfNeeded`, and a browser will scroll an `overflow: hidden` box for that call too
+         -- which is exactly how `killD6-window-body-cannot-be-scoped` survived its first run.  So the
+         window's own body has to move under a real wheel event. */
+      const body = page.getByTestId("sim-pop-body");
+      await body.evaluate((element) => {
+        element.scrollTop = 0;
+      });
+      const bodyBox = await body.boundingBox();
+      expect(
+        bodyBox,
+        node(NODE, `${arm}: the window's scroll body has no box to aim a wheel at`),
+      ).not.toBeNull();
+      await page.mouse.move(
+        (bodyBox as Rect).x + (bodyBox as Rect).width / 2,
+        (bodyBox as Rect).y + Math.min(120, (bodyBox as Rect).height / 2),
+      );
+      await page.mouse.wheel(0, 320);
+      await expect
+        .poll(() => body.evaluate((element) => element.scrollTop), {
+          timeout: 5_000,
+          intervals: [150],
+          message: node(NODE, `${arm}: a wheel over the window does not scroll its own body, so the rows below the fold belong to the test, not to the traveller`),
+        })
+        .toBeGreaterThan(0);
+      /* The row loop above leaves the window scrolled to its last row; a picture of that is not
+         evidence of what the widget looks like when a traveller opens it. */
+      await page
+        .getByTestId("sim-pop-body")
+        .evaluate((element) => {
+          element.scrollTop = 0;
+        });
+      await page.screenshot({
+        path: evidencePath(`ui-overnight/stage-float-${arm}-open.png`),
+      });
+      await page.getByTestId("sim-close").click();
+      await expect
+        .poll(() => page.getByTestId("sim-pop").count(), {
+          timeout: 10_000,
+          intervals: [250],
+          message: node(NODE, `${arm}: the window's own close control did not close it`),
+        })
+        .toBe(0);
+      await page.screenshot({
+        path: evidencePath(`ui-overnight/stage-float-${arm}-closed.png`),
+      });
     }
   }
 
-  /* 3. opened: every row must have a position where it is on screen, hit-testable at its own centre,
-        and clear of the band -- otherwise "no overlap at rest" would just be hiding the buttons. */
-  await openStageEntry(page, "the reachability pass");
-  for (const scheme of ["light", "dark"] as const) {
-    await page.emulateMedia({ colorScheme: scheme, media: "screen" });
-    const ids = (await hitTestActions(page)).map((item) => item.id).filter(Boolean) as string[];
-    expect(
-      ids.length,
-      node(NODE, `${scheme}: the opened panel drew ${ids.length} action rows; the stage has 11`),
-    ).toBeGreaterThanOrEqual(9);
-    for (const id of ids) {
-      const row = page.getByTestId(id);
-      await row.scrollIntoViewIfNeeded();
-      const mine = (await hitTestActions(page)).find((item) => item.id === id);
-      expect(
-        mine?.visible,
-        node(NODE, `${scheme}: ${id} can never be brought on screen: ${JSON.stringify(mine)}`),
-      ).toBe(true);
-      expect(
-        mine?.centre,
-        node(NODE, `${scheme}: ${id} is on screen but its tap goes to ${JSON.stringify(mine?.hitTag)}: ${JSON.stringify(mine)}`),
-      ).toBe(true);
-      expect(
-        mine?.inNavBand,
-        node(NODE, `${scheme}: ${id} was scrolled into view and still sits in the nav's band: ${JSON.stringify(mine)}`),
-      ).toBe(false);
-    }
-    readings[`${scheme}-open-rows`] = await hitTestActions(page);
-  }
+  /* ③ the three other ways back out, in the language the traveller is reading. */
+  await openToday(page, journeyId, "zh-CN", "light", 390);
+  await openStageEntry(page, "the closing pass");
+  await page.getByTestId("sim-ball").click();
+  await expect
+    .poll(() => page.getByTestId("sim-pop").count(), { timeout: 10_000, intervals: [250] })
+    .toBe(0);
+  await openStageEntry(page, "the escape pass");
+  await page.keyboard.press("Escape");
+  await expect
+    .poll(() => page.getByTestId("sim-pop").count(), {
+      timeout: 10_000,
+      intervals: [250],
+      message: node(NODE, "Escape left the window open, so the keyboard traveller is trapped in it"),
+    })
+    .toBe(0);
+  await openStageEntry(page, "the outside-tap pass");
+  await page.mouse.click(10, 200);
+  await expect
+    .poll(() => page.getByTestId("sim-pop").count(), {
+      timeout: 10_000,
+      intervals: [250],
+      message: node(NODE, "tapping outside left the window open"),
+    })
+    .toBe(0);
 
-  /* 4. the sheet's own close returns the screen to the pose a traveller first meets. */
-  const close = page.getByTestId("sim-close");
-  if ((await close.count()) > 0 && await close.isVisible()) {
-    await close.click();
-    expect(
-      await entry.evaluate((element) => (element as HTMLDetailsElement).open),
-      node(NODE, "the close control left the entry open, so it is decoration rather than a control"),
-    ).toBe(false);
-  }
+  /* ⑦ the English arm gets the same contract, at least once: the ball's name and the ESC exit. */
+  await openToday(page, journeyId, "en", "dark", 412);
+  await openStageEntry(page, "the English arm");
+  const english = await stageWindowDeclaration(page);
+  expect(
+    english,
+    node(NODE, `the English window does not state the server's clock: ${JSON.stringify(english)}`),
+  ).toMatch(/server/i);
+  expect(
+    english,
+    node(NODE, `the English window leaks a flag name: ${JSON.stringify(english)}`),
+  ).not.toContain("demo_mode");
+  await page.keyboard.press("Escape");
+  await expect
+    .poll(() => page.getByTestId("sim-pop").count(), { timeout: 10_000, intervals: [250] })
+    .toBe(0);
 
   writeFileSync(
     evidencePath("ui-overnight/sim-action-hittest.json"),
@@ -648,6 +860,7 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 390×844 默
     "utf-8",
   );
 });
+
 
 
 /* ----------------------------------------------------------------- ORD-0082 (b): no proposal, no button.

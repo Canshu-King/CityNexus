@@ -94,12 +94,17 @@ test("ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来�
   /* From the wizard, through the stage's own actions: no dependence on which scenario an earlier
      node left on the stage, and no persistent storage script that would fight the hand-over. */
   await openFromWizard(page);
-  const summary = page.getByTestId("sim-entry-summary");
+  const ball = page.getByTestId("sim-ball");
   await expect(
-    summary,
-    node("ord0087-booked-commitment-is-on-the-wallet-screen", "the wizard has no stage entry to open"),
+    ball,
+    node("ord0087-booked-commitment-is-on-the-wallet-screen", "the wizard has no stage ball to press"),
   ).toHaveCount(1);
-  await summary.click();
+  await ball.click();
+  await expect(
+    page.getByTestId("sim-pop"),
+    node("ord0087-booked-commitment-is-on-the-wallet-screen",
+      "the ball was pressed and no stage window appeared on the wizard"),
+  ).toBeVisible();
 
   /* M4's order, measured rather than assumed: seed -> plan -> book -> start.  A booking is refused
      once the journey is executing (the server's own words, from `review/bookings-*.json`:
