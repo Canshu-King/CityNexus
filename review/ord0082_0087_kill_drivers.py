@@ -32,6 +32,7 @@ MAP_SPEC = "e2e/qoder-map-gesture-ownership.spec.ts"
 INBOX = "src/features/inbox/JourneyInboxWorkbench.tsx"
 EXPERIENCE = "src/app/V8Experience.tsx"
 INBOX_SPEC = "e2e/qoder-inbox-review-queue.spec.ts"
+EXIT_SPEC = "e2e/qoder-failure-has-an-exit.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -388,6 +389,32 @@ CASES = [
         "                {item.commitment_id\n",
         "                {true\n",
         [(INBOX_SPEC, ["ord0146-a-protected-badge-needs-the-servers-commitment"])],
+    ),
+    (
+        # ORD-0126 ③, the pre-fix behaviour itself: a refused read dropped the id and opened the
+        # create-trip wizard with nothing said about why.
+        "killJ1-refusal-drops-the-id-and-opens-the-wizard",
+        EXPERIENCE,
+        "            setLoadFailure(\n              error instanceof Error ? error.message : t(\"shell.loadError\"),\n            );\n            setBusy(false);\n            return;\n",
+        "            localStorage.removeItem(\"citynexus.v8.journey_id\");\n            setBusy(false);\n            return;\n",
+        [(EXIT_SPEC, ["ord0126-a-healthy-connection-is-never-called-a-network-failure"])],
+    ),
+    (
+        # ④: a journey the server no longer has must not keep being polled for.
+        "killJ2-journey-gone-branch-disabled",
+        EXPERIENCE,
+        "            if (error instanceof V8Rejection && (error.status === 404 || error.status === 410)) {\n",
+        "            if (false) {\n",
+        [(EXIT_SPEC, ["ord0126-a-journey-this-server-loses-comes-back-to-choosing-one"])],
+    ),
+    (
+        # (a): ask nothing, assume the network is fine.  A survivor here would mean the probe is not
+        # load-bearing -- which is only true because every failure view carries its own retry.
+        "killJ3-health-probe-always-answers",
+        EXPERIENCE,
+        "    const response = await fetch(\"/api/v1/health\", { signal: controller.signal });\n    return response.ok;\n",
+        "    await fetch(\"/api/v1/health\", { signal: controller.signal });\n    return true;\n",
+        [(EXIT_SPEC, ["ord0126-the-cached-view-has-a-way-out-and-says-what-backs-it"])],
     ),
 ]
 

@@ -150,14 +150,56 @@ function rejectionReason(body: any, status: number): string {
   return fields ? `${headline} — ${fields}` : headline;
 }
 
+/**
+ * A rejection with the two facts the screen needs to be honest: the status the server answered with
+ * and its named code.  Before this, every failure arrived as a bare `Error` and the boot path could
+ * only ask "was it a TypeError?" -- which is why a 404 for a deleted journey and a dead network both
+ * ended up printed as "网络不可用" (ORD-0126 R3-4/R3-6).
+ */
+class V8Rejection extends Error {
+  readonly status: number;
+  readonly code: string | null;
+  constructor(message: string, status: number, code: string | null) {
+    super(message);
+    this.name = "V8Rejection";
+    this.status = status;
+    this.code = code;
+  }
+}
+
 async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, {
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
   });
   const body = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(rejectionReason(body, response.status));
+  if (!response.ok) {
+    throw new V8Rejection(
+      rejectionReason(body, response.status),
+      response.status,
+      typeof body?.error?.code === "string" ? body.error.code : null,
+    );
+  }
   return body as T;
+}
+
+/**
+ * "Is the network up?" answered by the thing the screen is about to claim, not by `navigator.onLine`
+ * (which stays true when a captive portal or a dead backend is the actual problem) and not by the
+ * failed request itself.  Only a 2xx counts: ORD-0126 (a) is precisely "no 网络不可用 sentence may
+ * stand while a same-page probe of this origin is healthy".
+ */
+async function probeHealth(): Promise<boolean> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 4_000);
+  try {
+    const response = await fetch("/api/v1/health", { signal: controller.signal });
+    return response.ok;
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 const money = formatMinorMoney;
@@ -400,6 +442,10 @@ export function V8Experience() {
   // dropping the traveller to the create-trip screen would imply their journey
   // vanished (master mission Phase 10).
   const [unreachable, setUnreachable] = useState(false);
+  /* ORD-0126: "the trip is not on this server any more" and "the server refused this read" are two
+     different failures with two different exits, and both used to be printed as 网络不可用. */
+  const [journeyGone, setJourneyGone] = useState<string | null>(null);
+  const [loadFailure, setLoadFailure] = useState<string | null>(null);
   const [setupBusy, setSetupBusy] = useState(false);
   /* ORD-0047 — a cold city's first stay search measured 114.98s through the production
      preview, during which this screen showed nothing at all.  The shell is the only party
@@ -553,27 +599,40 @@ export function V8Experience() {
           try {
             await load(journeyId);
           } catch (error) {
-            const saved = await readOfflineJourney(journeyId);
-            if (saved) {
-              if (!cancelled) {
+            /* Three different failures used to print one sentence.  Ask this same origin whether it
+               is answering before claiming anything about the network (R3-4 measured
+               `navigator.onLine === true` and three 2xx from /health while the screen read 网络不可用),
+               and never let "I have a local snapshot" be the evidence that the network is down. */
+            const up = await probeHealth();
+            if (cancelled) return;
+            if (!up) {
+              const saved = await readOfflineJourney(journeyId);
+              if (cancelled) return;
+              if (saved) {
                 setOffline(saved);
                 setMessage(t("shell.offlineMsg"));
                 setBusy(false);
+                return;
               }
+              setUnreachable(true);
+              setBusy(false);
               return;
             }
-            // A network/backend failure is NOT proof the journey is gone.
-            // Keep the id and tell the traveller the truth.
-            const network = error instanceof TypeError;
-            if (network) {
-              if (!cancelled) {
-                setUnreachable(true);
-                setBusy(false);
-              }
+            if (error instanceof V8Rejection && (error.status === 404 || error.status === 410)) {
+              /* The id this device remembered is not on this server any more -- after a full reset it
+                 is not, and the shell used to keep polling /twin for it (four ids, 404 every time,
+                 screen unchanged).  Say which id is gone and hand back the way in. */
+              localStorage.removeItem("citynexus.v8.journey_id");
+              setOffline(null);
+              setJourneyGone(journeyId);
+              setBusy(false);
               return;
             }
-            localStorage.removeItem("citynexus.v8.journey_id");
-            journeyId = null;
+            setLoadFailure(
+              error instanceof Error ? error.message : t("shell.loadError"),
+            );
+            setBusy(false);
+            return;
           }
         }
         if (!journeyId) {
@@ -1066,6 +1125,101 @@ export function V8Experience() {
   const nearbyActivities = detailActivity
     ? allActivities.filter((item) => item.id !== detailActivity.id)
     : [];
+
+  /* ORD-0126 ③: a non-2xx has to be readable where the traveller was standing, with a door out --
+     and the door is a focusable button, not an `aria-disabled` suggestion. */
+  if (loadFailure && !data)
+    return (
+      <section
+        className="v8-page"
+        data-testid="load-failed"
+        role="alert"
+        aria-live="assertive"
+      >
+        <div className="v8-page-intro compact">
+          <div>
+            <p className="v8-kicker">
+              {locale.startsWith("zh") ? "这一次没读到" : "This read failed"}
+            </p>
+            <h1>
+              {locale.startsWith("zh")
+                ? "服务器接上了，但这趟行程没读回来"
+                : "The server answered, but not with your trip"}
+            </h1>
+            <p className="v8-lede" data-testid="load-failed-reason">
+              {loadFailure}
+            </p>
+          </div>
+        </div>
+        <div className="v8-sheet-primary">
+          <button
+            type="button"
+            className="v8-primary-button"
+            data-testid="load-failed-retry"
+            onClick={() => {
+              setLoadFailure(null);
+              setBusy(true);
+              window.location.reload();
+            }}
+          >
+            {locale.startsWith("zh") ? "重试" : "Try again"}
+          </button>{" "}
+          <button
+            type="button"
+            className="v8-outline-button"
+            data-testid="load-failed-choose"
+            onClick={() => {
+              localStorage.removeItem("citynexus.v8.journey_id");
+              setLoadFailure(null);
+              setSetupOpen(true);
+            }}
+          >
+            {locale.startsWith("zh") ? "换一趟行程" : "Choose another trip"}
+          </button>
+        </div>
+      </section>
+    );
+
+  /* ORD-0126 ④: the id this device remembered is not on this server.  Say so, name it, and give the
+     way back in -- the alternative was a shell that polls /twin for a dead id forever. */
+  if (journeyGone && !data)
+    return (
+      <section
+        className="v8-page"
+        data-testid="journey-gone"
+        role="alert"
+        aria-live="assertive"
+      >
+        <div className="v8-page-intro compact">
+          <div>
+            <p className="v8-kicker">
+              {locale.startsWith("zh") ? "连接正常" : "Connection is fine"}
+            </p>
+            <h1>
+              {locale.startsWith("zh")
+                ? "这台服务器上没有这一趟行程了"
+                : "This trip is not on this server"}
+            </h1>
+            <p className="v8-lede" data-testid="journey-gone-reason">
+              {locale.startsWith("zh")
+                ? `这台设备还记得行程 ${journeyGone.slice(0, 8)}…，但服务器说它不存在。你的账号和别的行程没有受影响。`
+                : `This device remembered trip ${journeyGone.slice(0, 8)}…, and the server says it is gone. Your other trips are untouched.`}
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          className="v8-primary-button"
+          data-testid="journey-gone-choose"
+          onClick={() => {
+            setJourneyGone(null);
+            setSetupOpen(true);
+          }}
+        >
+          {locale.startsWith("zh") ? "选一趟行程" : "Choose a trip"}
+        </button>
+      </section>
+    );
 
   if (unreachable && !data)
     return (
@@ -3497,6 +3651,16 @@ function OfflineJourneyView({
       <span className="v8-status-pill">{t("offline.readOnly")}</span>
       <h1>{t("offline.saved24h")}</h1>
       <p>{message}</p>
+      {/* R3-4: this screen was measured with zero visible buttons and it never healed on its own.
+          A cached view still has one honest action -- ask the server again. */}
+      <button
+        type="button"
+        className="v8-primary-button"
+        data-testid="offline-retry"
+        onClick={() => window.location.reload()}
+      >
+        {t("offline.retry")}
+      </button>
       {value.snapshot.execution && (
         <div className="v12-offline-now-next">
           <article>
