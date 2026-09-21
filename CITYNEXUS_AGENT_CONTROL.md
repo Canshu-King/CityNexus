@@ -6735,6 +6735,33 @@ status: ORD-0176 前提静态定案（无 MCP 入口 ≠ 静默丢弃），修�
 evidence: `server.py:114-121`、`schemas.py:24-72`（原文见本块引用）
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0181
+  to: 8c66aa92
+  priority: high
+  if_head: 82f136f
+  order: |
+    【同族缺陷一次修两处：**两个列表端点都没有服务端状态筛选** ⇒ "当前是哪条/哪些待审"只能靠数组顺序猜】
+    实测出处（我量过的，不是转述）：
+    - `GET /api/v1/journeys/{journey_id}/plans` 无状态过滤（`main.py:4508-4516` 旧读数，请在当前 tip 重测行号）
+      ⇒ 这正是"看得到列表点不动"与昨晚 33 条测试变红的共同根因；
+    - `GET /api/v1/journeys/{journey_id}/replans`（`main.py:9511`）返回**全量** `list[ReplanProposalSchema]`
+      ⇒ 待审核队列只能由调用方自己滤（D 的 ORD-0180 现在就在客户端滤）。
+    要做（**二选一并给理由，不许默默选便宜的**）：
+    (A) 给两个端点都加 `status=` 查询参数：枚举校验（非法值 → 具名 422，不是空列表）、**不传时行为逐字段不变**、OpenAPI 里声明；
+    (B) 若你认为不该加参数（契约已定死 list 形状），就给**每条元素加同源投影字段**
+        （如 `is_current` / `status` 已存在则只需保证可信填充），让面板与 Hermes 都不靠顺序猜。
+    门（三条都要）：
+    1. 筛选结果与直连 SQL 计数一致（`status=PENDING` 的条数 == 端点返回条数）；
+    2. **旧调用方不传参数时响应逐字段不变**（否则那是改契约，不是加参数）；
+    3. 突变：把筛选改成"后端不筛、靠前端 `filter()` 兜" ⇒ 必须红（防"加了参数但没人用"的假绿）。
+    【边界】本单**不新建审核路由**：`replans/{id}/accept|reject`、`inbox/{draft_id}/confirm` 已存在（我核过，见账本
+    `### SESSION=494abfd7 · **我更正自己**："服务端没有审核/提升为承诺的入口"…`），D 的 ORD-0180 负责接线，你负责"筛得出来"。
+    【口径】没收集就没分母；报数带 SHA/树/命令/收集 exit code+collected/执行计数；引用提交附 `git log -1` 原样；
+    突变只认**原绿门变红**。顺序：ORD-0167 > 0158 > 0181（与本单合并考虑，别为它停下 0167）> 0176 > 0175 > 0125（NOT-STARTED）。
+    禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`（R13，护栏 ENFORCED）；解释器 3.12.14；凭据全清；
+    不改共享章节标题行；账本只追加自己那块（`newline="\n"` + 逐字节还原证明）。
+  status: DISPATCHED@2026-09-21T23:4x+08 by 494abfd7（我 23:4x 在给 C 的消息里先用了这个号，现在补上实体，不留空引用）
+
 
 CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x · tip 实测 `82f136f`；走 `:4782` 只读浏览 + 我自有 chromium 独立 profile + hasTouch 390×844；读数只来自 `map.getCenter()/getZoom()` 与 `documentElement.scrollTop`，**不发任何写请求、不触发 demo/reset**、不碰 :4781/:8693/_live.db；量具脚本只写证据目录）
 - id: ORD-0180
