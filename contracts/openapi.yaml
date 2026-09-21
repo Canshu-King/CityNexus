@@ -1441,6 +1441,63 @@ paths:
       operationId: readDemoScene
       responses:
         '200': {description: 'demo_mode, the seeded journey window, its cursor-derived effective_now, and the evidence that window is priced with: evidence_state (REFERENCED | FROZEN_WITHOUT_TTL | EVIDENCE_REFERENCE_INCONSISTENT | NO_FROZEN_EVIDENCE | NO_SCENARIO), evidence_snapshot_id, evidence_reference_consistent, and mobility_legs_total versus mobility_legs_hard_eligible. The leg counts report how much of the plan the sealed facts already cover and license nothing - /replans decides for itself', content: {application/json: {schema: {type: object}}}}
+  /destinations/capability:
+    get:
+      operationId: getDestinationCapability
+      parameters:
+        - name: query
+          in: query
+          required: true
+          description: What the traveller typed (a name, not an internal city code).
+          schema: {type: string, minLength: 1, maxLength: 120}
+      responses:
+        '200': {description: 'capability (READY | HYDRATABLE | UNAVAILABLE - three structural states, deliberately no UNKNOWN: "not measured" is an absent provider_status, never a fabricated OK) + reason_code + recommended_action + coverage for all six intents (attractions, food, nightlife, lodging, mobility, booking) each READY | PARTIAL | MISSING + coverage_detail with the counts behind each state + canonical_destination_id and the four fingerprint segments (catalog_schema_version, readiness_policy_version, provider_policy_version) + provenance (source_kinds, never upgraded by normalisation). READY is only ever the versioned server-side policy result: a place count cannot produce it, and a resolver that could not be reached keeps a destination retryable instead of declaring it structurally unusable', content: {application/json: {schema: {type: object}}}}
+        '422': {description: Request validation failed, content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}}}
+  /catalog-hydrations:
+    post:
+      operationId: createOrReuseCatalogHydration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: {type: string, minLength: 1, maxLength: 120}
+                journey_id: {type: string, format: uuid, nullable: true}
+                requested_categories:
+                  type: array
+                  nullable: true
+                  maxItems: 6
+                  items: {type: string}
+      responses:
+        '202': {description: 'Accepted and started: operation_id, fingerprint, reused=false, status QUEUED, phase, elapsed_ms, retry_after_ms, status_url, abandon_url, and the four fingerprint segments. No provider is contacted before this answer is written', content: {application/json: {schema: {type: object}}}}
+        '200': {description: 'The same answer with reused=true: an open job for this identical fingerprint already exists and this caller joined it. There is deliberately no 409 - colliding with the work is success, and pushing the caller away would make them start a second chain', content: {application/json: {schema: {type: object}}}}
+        '422': {description: 'Unprocessable: an empty or over-long query, or a journey_id this backend does not have', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}}}
+        '503': {description: 'The catalog store could not record the job inside the acceptance budget (named, retryable, with retry_after_ms) - never a silent 500', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}}}
+  /catalog-hydrations/{operation_id}:
+    get:
+      operationId: getCatalogHydration
+      parameters:
+        - name: operation_id
+          in: path
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: 'The job read from the store: operation_id, fingerprint, reused, status (QUEUED | RUNNING | COMPLETED | FAILED | UNAVAILABLE | ABANDON_REQUESTED | ABANDONED - a lifecycle axis, separate from phase, because one axis cannot tell "abandoned but still running" from "finished"), phase (the stage the worker is genuinely inside), outcome, terminal, elapsed_ms, retry_after_ms, result or error, the four fingerprint segments, status_url, abandon_url. Deliberately no progress percentage - an invented denominator is not information', content: {application/json: {schema: {type: object}}}}
+        '404': {description: 'No such operation (app envelope, not a route-level 404)', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}}}
+  /catalog-hydrations/{operation_id}/abandon:
+    post:
+      operationId: abandonCatalogHydration
+      parameters:
+        - name: operation_id
+          in: path
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: 'Idempotent stop request: ABANDON_REQUESTED while in flight (never a claim that work already on the wire is dead), the real terminal state otherwise. An abandoned job writes no result', content: {application/json: {schema: {type: object}}}}
+        '404': {description: 'No such operation', content: {application/json: {schema: {'$ref': '#/components/schemas/ErrorEnvelope'}}}}
   /journeys/{journey_id}/stay-generations:
     post:
       operationId: submitStayGeneration
@@ -1743,6 +1800,12 @@ components:
             message: {type: string}
             details: {type: object, additionalProperties: true}
             trace_id: {type: string}
+            # Shipped by ORD-0101/ORD-0108: `code` is the HTTP-level class, `message_key` is what
+            # a screen looks up, and `reason_code` names *which* condition refused when one code
+            # covers several.  Present only where a raise site knows one, so absence is a real
+            # answer and not an empty string.
+            message_key: {type: string}
+            reason_code: {type: string}
     Error:
       $ref: '#/components/schemas/ErrorEnvelope'
     RecoveryState:

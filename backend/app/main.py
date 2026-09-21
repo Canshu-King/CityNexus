@@ -292,6 +292,7 @@ from app.schemas import (
     EventCreate,
     GeneratePlansRequest,
     AuthoritativeComposeRequest,
+    CatalogHydrationRequest,
     GuardianAutopilotStart,
     JourneyCreate,
     JourneyPatch,
@@ -388,11 +389,36 @@ from app.stay_generation_operations import (
     wait_for_operation,
 )
 
+from app.catalog_hydration_operations import (  # ORD-0095-1: the destination-scoped sibling
+    HydrationStoreBusy,
+    accept_hydration,
+    abandon_operation as abandon_hydration,
+)
+from app.catalog_hydration_operations import (
+    operation_payload as hydration_payload,
+)
+from app.catalog_hydration_operations import (
+    read_operation as read_hydration,
+)
+from app.catalog_hydration_operations import (
+    reconcile_interrupted_operations as reconcile_hydrations,
+)
+from app.anywhere_capability import evaluate_capability
+
 ensure_schema()
 # Rows still open at this point were left by a process that no longer exists, so no thread
 # here can ever finish them; they are closed as WORKER_LOST rather than left to be polled
 # (see app/stay_generation_operations.py).
 reconcile_interrupted_operations()
+# Catalog hydrations run on the same promise: a job is durable, a worker is not.  Wrapped,
+# because startup must not be held hostage by a cleanup pass on a database that predates this
+# table - the row that could not be closed is still reported as open, not silently skipped.
+try:  # pragma: no cover - startup hygiene, exercised by the operation's own doors
+    reconcile_hydrations()
+except Exception:  # noqa: BLE001
+    logging.getLogger("citynexus.catalog_hydration").exception(
+        "could not reconcile interrupted catalog hydrations at startup"
+    )
 app = FastAPI(title="CityNexus MVP API", version="0.1.0")
 logger = logging.getLogger(__name__)
 _trip_studio_accept_lock = RLock()
@@ -2782,6 +2808,80 @@ def capture_stay_offers(journey_id: UUID, session: Session = Depends(get_session
 def _generation_request(payload: StayPlanGenerateRequest | None) -> dict:
     request = payload or StayPlanGenerateRequest()
     return request.model_dump(mode="json")
+
+
+@app.get("/api/v1/destinations/capability")
+def destination_capability(query: str, session: Session = Depends(get_session)):
+    """What the backend can actually plan for a destination - and which intent is missing.
+
+    ORD-0095-1 §2: this is a server-side policy result, never a place count and never a screen's
+    guess.  `capability` is the structural axis (READY / HYDRATABLE / UNAVAILABLE); an observation
+    about *right now* is a separate field that is simply absent when nothing looked, because a
+    fabricated `OK` would be a measurement nobody took.
+    """
+
+    return evaluate_capability(session, query)
+
+
+@app.post("/api/v1/catalog-hydrations", status_code=202)
+def create_or_reuse_catalog_hydration(
+    payload: CatalogHydrationRequest,
+    session: Session = Depends(get_session),
+):
+    """Accept a preparation request, or point the caller at the job that already covers it.
+
+    There is no 409 here on purpose (arbitration v1): colliding with somebody else's identical
+    job is *success* - the work is happening - and the response says so with `reused`.  The
+    response is written before any source is consulted, so the answer cannot be late.
+    """
+
+    if payload.journey_id is not None:
+        require(session, Journey, str(payload.journey_id), "Journey")
+    try:
+        job = accept_hydration(
+            session,
+            payload.query,
+            journey_id=str(payload.journey_id) if payload.journey_id else None,
+            requested_categories=payload.requested_categories,
+        )
+    except HydrationStoreBusy:
+        return error(
+            "HYDRATION_STORE_BUSY",
+            "Another catalog write is in flight; this request was not recorded. Try again.",
+            status=503,
+            details={"retry_after_ms": 500},
+            message_key="hydration.store_busy",
+        )
+    body = dict(job.payload)
+    return JSONResponse(status_code=200 if job.reused else 202, content=body)
+
+
+@app.get("/api/v1/catalog-hydrations/{operation_id}")
+def read_catalog_hydration(operation_id: str, session: Session = Depends(get_session)):
+    """The job's own record: where it got to, whether it may still move, and what it found.
+
+    No percentage - `phase` names a stage the worker is genuinely inside and `elapsed_ms` says
+    how long it has run, which is the same information without the invented denominator.
+    """
+
+    row = read_hydration(session, operation_id)
+    if row is None:
+        raise HTTPException(404, f"Catalog hydration operation {operation_id} was not found")
+    return hydration_payload(row)
+
+
+@app.post("/api/v1/catalog-hydrations/{operation_id}/abandon")
+def abandon_catalog_hydration(
+    operation_id: str,
+    session: Session = Depends(get_session),
+):
+    """Stop using this job's result.  Idempotent, and never a claim it cannot keep."""
+
+    try:
+        row = abandon_hydration(session, operation_id)
+    except LookupError:
+        raise HTTPException(404, f"Catalog hydration operation {operation_id} was not found") from None
+    return hydration_payload(row)
 
 
 @app.post("/api/v1/journeys/{journey_id}/stay-generations", status_code=202)

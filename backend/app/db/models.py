@@ -468,6 +468,13 @@ class Place(Base):
     tags_json: Mapped[str] = mapped_column(Text)
     metadata_json: Mapped[str] = mapped_column(Text)
     updated_at: Mapped[str] = mapped_column(String)
+    # Arbitration R4 (ORD-0095-1): the geometry stored here is WGS-84 and the row says so itself,
+    # instead of leaving that to whoever reads the column.  `source_coordinate_system` records
+    # what a provider actually handed us (a future GCJ-02 source), so an inbound conversion can
+    # never be mistaken for the system the *stored* geometry is in.  Additive: no existing column
+    # changed, and legacy rows take WGS-84 through the server default.
+    coordinate_system: Mapped[str] = mapped_column(String, default="WGS84", server_default="WGS84")
+    source_coordinate_system: Mapped[str | None] = mapped_column(String, nullable=True)
 
     __table_args__ = (UniqueConstraint("provider_key", "external_id"),)
 
@@ -1136,6 +1143,48 @@ class StayGenerationOperation(Base):
     result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     # `outcome` is the four-way answer that `top_k: []` could never express.
+    outcome: Mapped[str | None] = mapped_column(String, nullable=True)
+    queued_at: Mapped[str] = mapped_column(String)
+    started_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    finished_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    abandon_requested_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String)
+
+
+class CatalogHydrationOperation(Base):
+    """One asynchronous "prepare this destination's catalog" job, and the state it may hold.
+
+    ORD-0095-1 (CITYNEXUS-ANYWHERE §6/§7).  The lifecycle is deliberately *not* invented here:
+    `status` plus `phase` are the two axes `stay_generation_operations` already proved - `phase`
+    says how far the work genuinely got and `status` says whether the job may still move -
+    because a single axis cannot tell "abandoned but still running" from "finished".  The one
+    addition is the arbitration's structural terminal state `UNAVAILABLE`: "no traceable source
+    for this destination" is a fact about the destination, not a timeout, and it must not be
+    written as `FAILED` (retryable) nor as a runtime failure.
+
+    `fingerprint` is the durable idempotency key: canonical destination + the three policy
+    versions that can change the answer.  The partial unique index in `db/schema.sql` is what
+    enforces "at most one open job per fingerprint" - a process-local lock cannot, since two
+    uvicorn workers do not share one.
+    """
+
+    __tablename__ = "catalog_hydration_operations"
+    id: Mapped[str] = mapped_column(String, primary_key=True)
+    fingerprint: Mapped[str] = mapped_column(String)
+    canonical_destination_id: Mapped[str] = mapped_column(String)
+    catalog_schema_version: Mapped[str] = mapped_column(String)
+    readiness_policy_version: Mapped[str] = mapped_column(String)
+    provider_policy_version: Mapped[str] = mapped_column(String)
+    # Optional: hydration is a destination-scoped job, so an id-less request still converges on
+    # the same row.  Where a journey asked for it, the pointer records who is waiting.
+    journey_id: Mapped[str | None] = mapped_column(
+        ForeignKey("journeys.id", ondelete="CASCADE"), nullable=True, index=True
+    )
+    status: Mapped[str] = mapped_column(String, default="QUEUED", server_default="QUEUED")
+    phase: Mapped[str | None] = mapped_column(String, nullable=True)
+    request_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    result_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
+    error_json: Mapped[str] = mapped_column(Text, default="{}", server_default="{}")
     outcome: Mapped[str | None] = mapped_column(String, nullable=True)
     queued_at: Mapped[str] = mapped_column(String)
     started_at: Mapped[str | None] = mapped_column(String, nullable=True)

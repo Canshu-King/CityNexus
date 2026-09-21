@@ -452,6 +452,20 @@ def ensure_schema(target_engine: Engine = engine) -> None:
                     connection.exec_driver_sql(
                         f"ALTER TABLE plan_versions ADD COLUMN {column} {declaration}"
                     )
+            place_columns = {
+                row[1] for row in connection.exec_driver_sql("PRAGMA table_info(places)")
+            }
+            # R4 is *additive*: an existing database keeps every row and column it had and gains
+            # the two coordinate facts, with WGS-84 as the recorded system of the geometry it
+            # already holds (measured: the fixtures and provider rows in this build are WGS-84).
+            for column, declaration in {
+                "coordinate_system": "TEXT NOT NULL DEFAULT 'WGS84'",
+                "source_coordinate_system": "TEXT",
+            }.items():
+                if place_columns and column not in place_columns:
+                    connection.exec_driver_sql(
+                        f"ALTER TABLE places ADD COLUMN {column} {declaration}"
+                    )
             commitment_columns = {
                 row[1] for row in connection.exec_driver_sql("PRAGMA table_info(commitments)")
             }

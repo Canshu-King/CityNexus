@@ -176,6 +176,12 @@ CREATE TABLE IF NOT EXISTS places (
     tags_json TEXT NOT NULL DEFAULT '[]',
     metadata_json TEXT NOT NULL DEFAULT '{}',
     updated_at TEXT NOT NULL,
+    -- ORD-0095-1 / arbitration R4: every geometry stored here is WGS-84, and the row says so
+    -- instead of leaving that to memory.  `source_coordinate_system` records the CRS a provider
+    -- handed us (a future GCJ-02 source), so an inbound conversion can never be mistaken for
+    -- the system the *stored* geometry is in.  Existing rows are backfilled by the default.
+    coordinate_system TEXT NOT NULL DEFAULT 'WGS84',
+    source_coordinate_system TEXT,
     UNIQUE(provider_key, external_id)
 );
 
@@ -953,3 +959,46 @@ CREATE UNIQUE INDEX IF NOT EXISTS ux_stay_generation_one_open_job
 
 CREATE INDEX IF NOT EXISTS idx_stay_generation_journey_recent
     ON stay_generation_operations(journey_id, queued_at);
+
+-- ORD-0095-1 (CITYNEXUS-ANYWHERE §6/§7): one catalog-hydration job per destination.
+-- The lifecycle is *not* invented here: `status` and `phase` are the two axes the stay-generation
+-- job already proved out (`stay_generation_operations`), with the arbitration's structural
+-- terminal state `UNAVAILABLE` added, and `phase` names are the arbiter's, one per stage this
+-- code can actually be inside.  A stage that never happens is never reported.
+CREATE TABLE IF NOT EXISTS catalog_hydration_operations (
+    id TEXT PRIMARY KEY,
+    fingerprint TEXT NOT NULL,
+    canonical_destination_id TEXT NOT NULL,
+    catalog_schema_version TEXT NOT NULL,
+    readiness_policy_version TEXT NOT NULL,
+    provider_policy_version TEXT NOT NULL,
+    journey_id TEXT REFERENCES journeys(id) ON DELETE CASCADE,
+    status TEXT NOT NULL DEFAULT 'QUEUED' CHECK (status IN
+        ('QUEUED','RUNNING','ABANDON_REQUESTED','COMPLETED','FAILED','UNAVAILABLE','ABANDONED')),
+    phase TEXT CHECK (phase IS NULL OR phase IN
+        ('QUEUED','RESOLVING_DESTINATION','DISCOVERING_POIS','NORMALIZING','BUILDING_MOBILITY','PERSISTING','FINALIZING')),
+    request_json TEXT NOT NULL DEFAULT '{}',
+    result_json TEXT NOT NULL DEFAULT '{}',
+    error_json TEXT NOT NULL DEFAULT '{}',
+    outcome TEXT CHECK (outcome IS NULL OR outcome IN
+        ('CATALOG_PREPARED','ALREADY_CURRENT','NO_REGISTERED_SOURCE','PENDING_CANDIDATES_UNAPPLIED','ABANDONED_BY_TRAVELLER','WORKER_LOST')),
+    queued_at TEXT NOT NULL,
+    started_at TEXT,
+    finished_at TEXT,
+    abandon_requested_at TEXT,
+    updated_at TEXT NOT NULL
+);
+
+-- Durable idempotency, not a polite convention: at most one *unfinished* job per identical
+-- fingerprint.  A process-local lock cannot satisfy this, because two uvicorn workers do not
+-- share one; a rejected insert is read back as the winner's id, so five concurrent taps of one
+-- county get one job and one provider chain, and every caller is told `reused`.
+CREATE UNIQUE INDEX IF NOT EXISTS ux_catalog_hydration_one_open_job
+    ON catalog_hydration_operations(fingerprint)
+    WHERE status IN ('QUEUED','RUNNING','ABANDON_REQUESTED');
+
+CREATE INDEX IF NOT EXISTS idx_catalog_hydration_destination_recent
+    ON catalog_hydration_operations(canonical_destination_id, queued_at);
+
+CREATE INDEX IF NOT EXISTS idx_catalog_hydration_journey_recent
+    ON catalog_hydration_operations(journey_id, queued_at);

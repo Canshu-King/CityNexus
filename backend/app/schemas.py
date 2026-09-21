@@ -423,6 +423,20 @@ class GeneratePlansRequest(BaseModel):
     place_ids: list[str] | None = Field(default=None, min_length=2, max_length=12)
 
 
+class CatalogHydrationRequest(BaseModel):
+    """Ask the backend to prepare one destination's catalog (ORD-0095-1 §6).
+
+    `query` is what the traveller typed, not an internal code: the whole point of the operation
+    is that a person can ask about a place they can name.  `journey_id` is optional because the
+    job belongs to the *destination* - two travellers preparing the same county under the same
+    policy share one job, and the fingerprint says why they did.
+    """
+
+    query: str = Field(min_length=1, max_length=120)
+    journey_id: UUID | None = None
+    requested_categories: list[str] | None = Field(default=None, max_length=6)
+
+
 class AuthoritativeComposeRequest(BaseModel):
     """User-selected bounded input for the V12 multi-day planner."""
 
