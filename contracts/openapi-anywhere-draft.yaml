@@ -16,7 +16,7 @@ openapi: 3.1.0
 # 那份文件才是真值源；切换点写在同一个文件里，不用另找人记这件事。
 info:
   title: CityNexus ANYWHERE contract annex (lane F) — authority lives in anywhere_v1.openapi.yaml
-  version: 0.94-annex.2
+  version: 0.94-annex.3
   description: >-
     Measurements, latency budget, test obligations and the point-by-point reconciliation
     against the arbiter's Anywhere v1 contract. Defines no operations and no reusable
@@ -74,6 +74,7 @@ info:
       - "③ §17C/D/E 三条测试义务（下面 x-testing-obligations），正式契约只写了'provider 网络不得持写事务'这一条规则，没规定怎么证明。"
       - "④ 双向 parity：实现了却还把契约挂着未登记 ⇒ 红。防的正是这份附件被长期留在'草案'状态。"
       - "⑤ §9 矩阵上界（x-matrix-bound：N ≤ 20）与三枚矩阵门（单位 / cells 预检 / 直线距离不得冒充 travel_minutes）。ORD-0106 续，**纯增补**：0.94-annex.1 → .2 未改任何已定枚举、未删任何既有键，改动清单就是上面 ⑤ 与三条 obligations（留痕规则：改契约必须当场说出来）。"
+      - "⑥ 服务端真值字段 x-server-truth-fields（provider_budget / discovery_area，readiness_policy_version 只是登记）与三条发现层 obligations（TTL 必须有人读 / 范围来自 extent / 没问的分类不得落默认集合），每条带 measured-on 与实测 finding。ORD-0106 继续，**纯增补**：.2 → .3 未改任何已定枚举、未删任何既有键、paths 仍为 {}。"
     questions-closed-by-v0_2:
       - "stale 要不要把 READY 降下来 —— v0.2 已定：HYDRATABLE 的定义本身含 missing/stale/incomplete ⇒ 本地数据过期不是 READY+背景刷新，而是 HYDRATABLE。我上一轮写的『不自动降级但要说出来』作废；G1/G4 改成 READY 必须由带版本的服务端策略 readiness_policy_version 判定，过期即不得为 READY。"
       - "UNAVAILABLE 与 resolver 故障的分界 —— v0.2 R1 已定：三态只描述结构性能力；Photon 暂时不可达要回 DESTINATION_RESOLVER_UNAVAILABLE 且保持可重试，不得因解析器挂了就永久降成 UNAVAILABLE；已有 canonical 身份可直接答、不再探测。v1 解析器只有 Photon，Nominatim 不是 v1 依赖，且不得发 lang=zh（换写法=换身份）。G1 加了这条组合判定。"
@@ -189,6 +190,49 @@ x-testing-obligations:
       - backend/tests/test_qoder_anywhere_matrix_truth.py::test_g15c_coverage_counts_the_unusable_leg_instead_of_guessing_it
       - backend/tests/test_qoder_anywhere_matrix_truth.py::test_g15d_the_scene_read_reports_the_same_two_counts
 
+  cached-discovery-must-be-read-not-only-written:
+    rule: >-
+      settings.real_city_cache_ttl_seconds=900 只在 real_city.py:964-966 写 RealPlaceCandidate.expires_at、
+      :1004 抄进 evidence_json，**全仓没有一处读它决定是否出网** ⇒ B 实测暖趟 242.9 s vs 冷趟 238.3 s。
+      判据用计数 client：同一 journey + 同一 provider + 未过期 ⇒ 第二次外呼必须为 0，且第二次产出的候选
+      不得变少；反向半边（过期之后必须回到 provider）同时钉住，免得"永远不出网"假装通过。
+      仪器先自证：冷趟必须看到 ≥1 次外呼，否则那个 0 什么也不是。
+    measured-on: fed1861
+    finding: >-
+      车道 F @fed1861 实测：冷趟 2 次外呼、落库 1 行且 expires_at 在未来；暖趟**仍然 2 次**
+      （/search + /interpreter）⇒ 这条门今天红，且红得与 B 的秒数差同向。归后端（real_city.py 读侧）。
+    gate: backend/tests/test_qoder_anywhere_discovery_truth.py::test_g16b_an_unexpired_candidate_set_must_answer_without_going_outside
+    companion-gates:
+      - backend/tests/test_qoder_anywhere_discovery_truth.py::test_g16a_the_counting_client_sees_every_outbound_call_or_the_zero_proves_nothing
+      - backend/tests/test_qoder_anywhere_discovery_truth.py::test_g16c_an_expired_candidate_set_must_go_back_to_the_provider
+
+  discovery-range-must-come-from-the-destination-extent:
+    rule: >-
+      real_city.py:716 的 around:{min(radius_m, 5000)} 把"水合一个县"变成"搜县城 5 公里圈"。
+      门不规定写法（bbox / area 多边形 / 按 extent 算半径都行），只规定两件事：发出去的几何必须
+      配得上调用方要的范围；两块不同尺度的目的地不得问出同一句话。等车道 C 的 ORD-0114 提供 extent。
+    measured-on: fed1861
+    finding: >-
+      实测：请求 radius_m=12000 ⇒ 发出 around:5000（红）。radius_m=3000 时发出 around:3000，
+      所以"两个尺度两种问法"这一半今天恰好绿 —— 绿的原因是夹在 5000 以下不动，不是因为范围来自 extent。
+      两条一起看才算这条门过。
+    gate: backend/tests/test_qoder_anywhere_discovery_truth.py::test_g17a_the_discovery_range_must_honour_the_extent_asked_for_not_a_five_km_clamp
+    companion-gates:
+      - backend/tests/test_qoder_anywhere_discovery_truth.py::test_g17b_destinations_of_different_sizes_must_not_ask_the_same_question
+
+  unasked-category-must-be-missing-not-defaulted:
+    rule: >-
+      real_city.py:701-711 的关键词分支里没有的覆盖分类，会落到默认集合
+      "amenity"~"cafe|restaurant|library|arts_centre|theatre" ⇒ 屏幕上的"夜生活"其实是咖啡馆的结果。
+      每个分类要么有自己的 tag 分支，要么明确 MISSING；不得借默认集合还魂，也不得两个分类共用同一句查询。
+    measured-on: fed1861
+    finding: >-
+      实测分母：6 个覆盖分类里 **3 个**（nightlife / mobility / booking）一字不差落默认集合，
+      attractions / food / lodging 有分支。这条门今天红，且红得能点名是哪三类。
+    gate: backend/tests/test_qoder_anywhere_discovery_truth.py::test_g18b_every_coverage_category_must_have_its_own_branch_or_say_missing
+    companion-gates:
+      - backend/tests/test_qoder_anywhere_discovery_truth.py::test_g18a_nightlife_must_not_be_answered_with_a_cafe_query
+
 # -----------------------------------------------------------------------------
 # ⑤ §9 的矩阵上界：一趟行程最多 20 个可路由节点 —— 数字由实测换算来，不是拍的
 # -----------------------------------------------------------------------------
@@ -214,4 +258,43 @@ x-matrix-bound:
     - >-
       runtime.py:232 无分片无预检 ⇒ N>10 的行程今天必吃 400/150。红门：
       test_g14b_no_request_may_carry_more_than_100_cells_and_every_pair_survives。
+# -----------------------------------------------------------------------------
+# ⑥ 服务端真值字段：三个"不得由前端传、不得用默认值冒充"的东西
+# -----------------------------------------------------------------------------
+x-server-truth-fields:
+  rule: >-
+    下面三个字段都是**服务端真值**：由服务端算出来、随能力/水合回答一起下发。前端不得把它们当参数
+    传进来，不得在本地猜，更不得在缺省时用一个默认值冒充 —— "没有来源的数冒充有来源的数"是
+    ORD-0101/0106 那一族谎话的共同形状。
+  fields:
+    readiness_policy_version:
+      status: 已定（仲裁 v0.2，本轮只是登记进附件）
+      meaning: 判 READY / PARTIAL / MISSING 的那一版服务端 readiness 策略的版本号
+      must: >-
+        READY 必须说得出是哪一版判的；换版本之后同一目的地的结论若变了，得能用版本号解释，
+        而不是让用户自己看见"昨天能订今天不能订"。
+    provider_budget:
+      meaning: 每个阶段允许的外呼次数与时间上限（阶段 × {calls, ms}），由服务端算并随回答下发
+      stages: [resolver, category_search, fallback_geocode, matrix]
+      must:
+        - 上限是**服务端给的事实**，不是前端请求里的参数；越界必须停在该阶段并点名 reason_code
+        - 与 TTL 联动：命中未过期候选 ⇒ 该阶段记账为 0 次外呼（"这趟没花预算"，不是"少打了一次"）
+        - matrix 阶段的界另见 x-matrix-bound（cells ≤ 100、N ≤ 20）
+      why: >-
+        B 实测暖趟 242.9 s vs 冷趟 238.3 s —— 因为没有任何一份"这趟允许花多少"的账，
+        expires_at 写了没人读（real_city.py:966 只写）。
+      gate: backend/tests/test_qoder_anywhere_discovery_truth.py::test_g16b_an_unexpired_candidate_set_must_answer_without_going_outside
+    discovery_area:
+      meaning: 本次发现所用范围的**来源与几何** —— 必须来自已解析目的地的 extent（行政区多边形或 bbox）
+      must:
+        - 下发形状含 source（RESOLVED_EXTENT / ADMIN_POLYGON / …）、geometry、以及本次实际发出的范围
+        - 只能退化成圆时必须说出半径，并说清它配不配得上目的地尺度；**不得静默地 min(radius_m, 5000)**
+        - 前端不得传 discovery_area 来"扩大搜索范围"：范围是目的地的属性，不是查询参数
+      why: >-
+        real_city.py:716 现在把 radius_m 硬夹到 5000 m ⇒ "水合一个县"实为"搜县城 5 公里圈"，
+        县域里的乡镇一律看不见，能力回答会把 PARTIAL 说成 READY。等车道 C 的 ORD-0114。
+      gates:
+        - backend/tests/test_qoder_anywhere_discovery_truth.py::test_g17a_the_discovery_range_must_honour_the_extent_asked_for_not_a_five_km_clamp
+        - backend/tests/test_qoder_anywhere_discovery_truth.py::test_g17b_destinations_of_different_sizes_must_not_ask_the_same_question
+
 paths: {}
