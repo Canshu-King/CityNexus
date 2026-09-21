@@ -426,6 +426,63 @@ Freeze sentence:
 
 > **Negative claims require the field/identifier inventory that was actually read, printed.**
 
-## 17. Freeze sentence
+## 17. Independence / cross-mutation rule
+
+Declaring two gates, axes, or consumers "independent" requires evidence that they are not coupled by
+the test itself.
+
+Separate nodeids are not sufficient.
+
+For every claimed pair of independent axes A and B, the standing proof MUST include at least one
+cross-mutation in each direction when the distinction is acceptance-critical:
+
+    baseline: A = GREEN, B = GREEN
+    mutate only A semantics
+    expected: A = RED, B = GREEN
+
+and:
+
+    baseline: A = GREEN, B = GREEN
+    mutate only B semantics
+    expected: A = GREEN, B = RED
+
+If killing A also makes B RED because B's assertion imports, calls, references, or re-asserts A's
+predicate, the gates are coupled and MUST NOT be counted as independent proof.
+
+Likewise, if B can only be evaluated by importing the exact implementation predicate it claims to
+independently verify, that is implementation mirroring rather than independent proof.
+
+Required receipt fields:
+
+    axis_a_nodeid
+    axis_b_nodeid
+    baseline_a
+    baseline_b
+    mutation_a_file_or_symbol
+    mutation_a_result_on_a
+    mutation_a_result_on_b
+    mutation_b_file_or_symbol
+    mutation_b_result_on_a
+    mutation_b_result_on_b
+    independence_verdict
+
+Valid verdicts:
+
+    INDEPENDENT
+    COUPLED_ASSERTION
+    IMPLEMENTATION_MIRRORING
+    NOT_MEASURABLE_RED_BASE
+    INCOMPLETE_CROSS_MUTATION
+
+The same rule applies beyond "axes". If four consumers are claimed to independently consume the
+same machine classification, the evidence must demonstrate that breaking one consumer does not
+silently make another consumer's gate depend on the same assertion helper. Shared source truth is
+allowed; shared test predicate that collapses independent consumers is not.
+
+Freeze sentence:
+
+> **Independent claims require cross-isolation proof: kill A, B stays green; kill B, A stays green.**
+
+## 18. Freeze sentence
 
 **No collection, no denominator; no denominator, no red/green count.**
