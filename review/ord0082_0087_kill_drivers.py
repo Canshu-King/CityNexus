@@ -532,6 +532,27 @@ CASES = [
         "  /* a client-side narrowing of the list.\n",
         [(REPLAN_SPEC, ["ord0180-the-bridge-is-marked-and-presence-is-not-permission"])],
     ),
+    (
+        # ORD-0135 3, the half-fix the commander named: the review step keeps printing 未填写 · 必填
+        # while the button loses its blocked state -- text corrected, control unchanged.
+        # First attempt appended `aria-disabled={undefined}` after the real attribute and SURVIVED:
+        # a later undefined prop does not override an earlier one in JSX, so the mutant removed
+        # nothing.  This one replaces the attribute itself.
+        "killP1-create-button-loses-its-blocked-state",
+        WIZARD,
+        '            aria-disabled={blockedNow ? "true" : undefined}\n            aria-describedby={blockedNow ? "trial-required-hint" : undefined}\n            onClick={() => {\n              if (blockedNow) {\n                speak(missingLine);\n                return;\n              }\n              void submit();\n',
+        "            onClick={() => {\n              void submit();\n",
+        [(WIZ_SPEC, ["ord0135-the-review-step-button-carries-what-the-screen-already-says"])],
+    ),
+    (
+        # The step-3 missing list itself: drop it and the screen still says 未填写 while nothing
+        # reaches the button, which is the measured pre-fix state.
+        "killP2-review-step-forgets-its-missing-list",
+        WIZARD,
+        "  const missingStep3 = missingStep1;\n",
+        "  const missingStep3: MissingField[] = [];\n",
+        [(WIZ_SPEC, ["ord0135-the-review-step-button-carries-what-the-screen-already-says"])],
+    ),
 ]
 
 sha256 = lambda path: hashlib.sha256(open(path, "rb").read()).hexdigest()

@@ -276,6 +276,18 @@ function optionLabels(
 }
 
 /**
+ * ORD-0135 ③: which step mounts each jump target.  A jump can be taken from the review step, where
+ * the input it names is not in the DOM yet, so the route is "go to the owning step, then focus".
+ */
+const STEP_OF_TARGET: Record<string, 1 | 2 | 3> = {
+  "trial-city": 1,
+  "trial-arrival": 1,
+  "trial-departure": 1,
+  "trial-party": 2,
+  "trial-budget": 2,
+};
+
+/**
  * The stages `createJourney` actually awaits (ORD-0047).  A waiting line may name nothing
  * outside this list: a fabricated step is worse than no step, because it teaches the
  * traveller to believe a progress bar that means nothing.
@@ -475,14 +487,25 @@ export function JourneyTrialSetup({
       ? null
       : { label: zh ? "总预算" : "the total budget", target: "trial-budget" },
   ].filter(Boolean) as MissingField[];
-  const missingNow = step === 1 ? missingStep1 : step === 2 ? missingStep2 : [];
+  /* ORD-0135 ③ (step 3): the review step already prints 「抵达 未填写 · 必填」 but computed no missing
+     list at all, so 确认创建 stayed fully pressable, the `trial-next-reason` slot was empty and no
+     jump existed -- the same known fact failing to reach the button.  The anchors are the fields the
+     API rejects (the 422 above is about `arrival_anchor.location`), so step 3 reuses the step-1 items
+     and their jump targets rather than inventing a second list that could disagree with the display. */
+  const missingStep3 = missingStep1;
+  const missingNow =
+    step === 1 ? missingStep1 : step === 2 ? missingStep2 : missingStep3;
   const blockedNow = missingNow.length > 0;
   /* One sentence, read by the visible hint and by the announcement a blocked tap makes, so
      what a sighted traveller sees and what a screen reader says cannot diverge. */
   const missingLine = missingNow.length
-    ? zh
-      ? `还需要填写：${missingNow.map((field) => field.label).join("、")}`
-      : `Still needed: ${missingNow.map((field) => field.label).join(", ")}`
+    ? step === 3
+      ? zh
+        ? `还需要填写：${missingNow.map((field) => `${field.label} 未填写 · 必填`).join("、")}`
+        : `Still needed: ${missingNow.map((field) => `${field.label} not filled in · required`).join(", ")}`
+      : zh
+        ? `还需要填写：${missingNow.map((field) => field.label).join("、")}`
+        : `Still needed: ${missingNow.map((field) => field.label).join(", ")}`
     : "";
   /* The backend's own words, routed to the field it named. */
   const arrivalProblem = fieldProblem(message, /arrival_anchor/);
@@ -960,16 +983,29 @@ export function JourneyTrialSetup({
                 data-testid="trial-missing-jump"
                 data-target={field.target}
                 onClick={() => {
-                  const target =
-                    document.getElementById(field.target) ??
-                    document.querySelector<HTMLElement>(
-                      `[data-testid="${field.target}"]`,
-                    );
-                  target?.focus();
+                  /* From step 3 the target lives on an earlier step, where focusing it would do
+                     nothing because the input is not mounted.  Move to the step that owns the field
+                     first, then focus it once it exists. */
+                  const owningStep = STEP_OF_TARGET[field.target] ?? step;
+                  if (owningStep !== step) setStep(owningStep);
+                  const focusTarget = () => {
+                    const target =
+                      document.getElementById(field.target) ??
+                      document.querySelector<HTMLElement>(
+                        `[data-testid="${field.target}"]`,
+                      );
+                    target?.focus();
+                  };
+                  if (owningStep === step) focusTarget();
+                  else window.setTimeout(focusTarget, 80);
                 }}
               >
                 {field.label}
               </button>
+              {/* ORD-0135 ③: the review step's rows already say 未填写 · 必填 for this field, and the
+                  reason the blocked 确认创建 points at should be that same sentence rather than a
+                  second phrasing of it. */}
+              {step === 3 ? (zh ? " 未填写 · 必填" : " not filled in · required") : ""}
             </span>
           ))}
         </p>
@@ -1067,7 +1103,19 @@ export function JourneyTrialSetup({
             className="v8-primary-button"
             data-testid="trial-create"
             disabled={busy}
-            onClick={() => void submit()}
+            /* ORD-0135 ③: the review step knows which fields are missing (it prints 未填写 · 必填 for
+               each) and that knowledge has to reach this control.  Same accessible form as 下一步:
+               `aria-disabled` rather than `disabled`, because a hard-disabled button leaves the tab
+               sequence and the reason beside it is then unreachable (ORD-0066 甲, measured). */
+            aria-disabled={blockedNow ? "true" : undefined}
+            aria-describedby={blockedNow ? "trial-required-hint" : undefined}
+            onClick={() => {
+              if (blockedNow) {
+                speak(missingLine);
+                return;
+              }
+              void submit();
+            }}
           >
             {busy ? t("trial.creating") : zh ? "确认创建" : "Create trip"}
           </button>

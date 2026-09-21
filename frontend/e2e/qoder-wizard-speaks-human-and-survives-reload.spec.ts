@@ -144,6 +144,138 @@ test("ord0135-the-confirmation-step-prints-no-internal-key — 确认页不许�
   await page.screenshot({ path: evidencePath("ui-overnight/ord0135-review-words.png"), fullPage: true });
 });
 
+test("ord0135-the-review-step-button-carries-what-the-screen-already-says — 确认创建也要反映缺项", async ({
+  page,
+}) => {
+  test.setTimeout(300_000);
+  const NODE = "ord0135-the-review-step-button-carries-what-the-screen-already-says";
+  const evidence: Record<string, unknown> = { node: NODE };
+
+  /* The commander measured this on the deployed bundle: the review step printed 「抵达 未填写 · 必填」
+     while 确认创建 was fully pressable with an empty `trial-next-reason` slot.  The screen already
+     knows; this node is about that knowledge reaching the control and the announcement. */
+
+  /* --- Line 4 first (the reverse direction): a complete draft must leave the CTA enabled, or the
+         fix would blunt the normal path.  Measured before anything is cleared. */
+  await openWizard(page);
+  await fillStep1(page);
+  await fillStep2(page);
+  const create = page.getByTestId("trial-create");
+  await expect(create).toBeVisible({ timeout: 10_000 });
+  /* `isDisabled()` counts `aria-disabled` as disabled too, so it cannot tell the two apart -- and
+     telling them apart is what this node is about.  The native attribute is the only reading that
+     answers it. */
+  const completeState = {
+    ariaDisabled: await create.getAttribute("aria-disabled"),
+    hardDisabled: await create.getAttribute("disabled"),
+  };
+  expect(
+    completeState.ariaDisabled,
+    node(NODE, `a complete draft left 确认创建 in the blocked state: ${JSON.stringify(completeState)}`),
+  ).toBeNull();
+  expect(
+    completeState.hardDisabled,
+    node(NODE, `a complete draft hard-disabled 确认创建: ${JSON.stringify(completeState)}`),
+  ).toBeNull();
+
+  /* --- Lines 1-3: clear an anchor and come back to the review step.  Done by editing the stored
+         draft and reloading -- the same route the commander's measurement took, and the one a
+         traveller hits when a draft survives a reload incomplete.  Clicking 下一步 back up through
+         step 1 is not available any more, by design: with the anchor cleared that button is exactly
+         what this node asserts is blocked. */
+  await page.evaluate(() => {
+    const raw = localStorage.getItem("citynexus.v8.trial_draft");
+    if (!raw) return;
+    const parsed = JSON.parse(raw) as { step?: number; draft?: Record<string, unknown> };
+    parsed.step = 3;
+    parsed.draft = { ...(parsed.draft ?? {}), arrivalLocation: "" };
+    localStorage.setItem("citynexus.v8.trial_draft", JSON.stringify(parsed));
+  });
+  await page.reload({ waitUntil: "load" });
+  await expect(page.getByTestId("trial-step3-body")).toBeVisible({ timeout: 20_000 });
+  await expect(
+    page.getByTestId("review-arrival"),
+    node(NODE, "clearing the arrival anchor did not reach the review step's own display"),
+  ).toContainText(/未填写/);
+
+  const blockedState = {
+    ariaDisabled: await create.getAttribute("aria-disabled"),
+    hardDisabled: await create.getAttribute("disabled"),
+    describedBy: await create.getAttribute("aria-describedby"),
+  };
+  expect(
+    blockedState.ariaDisabled,
+    node(NODE, `the screen says 抵达 未填写 · 必填 and 确认创建 still carries no blocked state: ${JSON.stringify(blockedState)}`),
+  ).toBe("true");
+  expect(
+    blockedState.hardDisabled,
+    node(NODE, `确认创建 uses a hard disabled attribute, which drops it out of the tab sequence and makes its reason unreachable: ${JSON.stringify(blockedState)}`),
+  ).toBeNull();
+  /* Focusable for the same reason: the argument for aria-disabled over disabled is that the reason
+     beside the button stays reachable. */
+  await create.focus();
+  expect(
+    await focusedTestId(page),
+    node(NODE, "the blocked 确认创建 cannot take focus, so a keyboard traveller never reaches its reason"),
+  ).toBe("trial-create");
+
+  const reasonId = blockedState.describedBy;
+  expect(
+    reasonId,
+    node(NODE, `the blocked 确认创建 does not point at its reason: ${JSON.stringify(blockedState)}`),
+  ).not.toBeNull();
+  const reasonText = ((await page.locator(`#${reasonId}`).innerText()) ?? "").replace(/\s+/g, " ");
+  expect(
+    /抵达/.test(reasonText) && /必填|填写/.test(reasonText),
+    node(NODE, `the reason slot reads ${JSON.stringify(reasonText)}; it has to name the field (抵达) and that it is required`),
+  ).toBe(true);
+  expect(
+    reasonText.includes("未填写 · 必填"),
+    node(NODE, `the reason does not carry the sentence the screen already shows: ${JSON.stringify(reasonText)}`),
+  ).toBe(true);
+
+  /* A refused tap has to speak, not sit silent (the order allows "refuse then report", not "refuse
+     silently").  The region is rewritten on a short timer, so it is awaited rather than read once. */
+  const spoken = page.getByTestId("trial-next-reason");
+  await create.click({ force: true }).catch(() => undefined);
+  await expect(
+    spoken,
+    node(NODE, "activating the blocked 确认创建 announced nothing, so a tap gives no feedback"),
+  ).toHaveText(/还需要填写/, { timeout: 10_000 });
+  const statuses = await page.getByRole("status").all();
+  const statusTexts: string[] = [];
+  for (const element of statuses) {
+    const text = ((await element.textContent()) ?? "").replace(/\s+/g, " ").trim();
+    if (/还需要填写/.test(text)) statusTexts.push((await element.getAttribute("data-testid")) ?? "unnamed");
+  }
+  expect(
+    statusTexts,
+    node(NODE, `the reason text is in the DOM but no status region carries it, so nothing is announced: ${JSON.stringify(statusTexts)}`),
+  ).toContain("trial-next-reason");
+
+  /* The jump: focus must land on the field the label names, from the review step. */
+  const jumps = page.getByTestId("trial-missing-jump");
+  const jumpCount = await jumps.count();
+  expect(
+    jumpCount,
+    node(NODE, "the review step names a missing field but offers no way to reach it"),
+  ).toBeGreaterThan(0);
+  const arrivalJump = jumps.filter({ hasText: "抵达" }).first();
+  await arrivalJump.click();
+  await page.waitForTimeout(300);
+  expect(
+    await focusedTestId(page),
+    node(NODE, "the jump for 抵达地点 did not move the caret to the field it names"),
+  ).toBe("trial-arrival");
+
+  writeFileSync(
+    evidencePath("ui-overnight/ord0135-review-blocked.json"),
+    JSON.stringify({ generatedBy: "e345b9d6", ...evidence, completeState, blockedState, reasonText, statusTexts, jumpCount }, null, 2) + "\n",
+    "utf-8",
+  );
+  await page.screenshot({ path: evidencePath("ui-overnight/ord0135-review-blocked.png"), fullPage: true });
+});
+
 test("ord0135-a-missing-field-is-a-route-not-only-a-diagnosis — 「还需要填写」要点得过去", async ({
   page,
 }) => {
