@@ -788,19 +788,55 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
 
       /* ②⑦ inside the window: every row must come up to a position where its own centre takes the
             tap and where it is out of the band -- "the window is small" is not an excuse. */
-      const ids = open.rows.map((item) => item.id).filter(Boolean) as string[];
+      const bodyLocator = page.getByTestId("sim-pop-body");
+      const extents = open.extents;
       expect(
-        ids.length,
+        extents,
+        node(NODE, `${arm}: the window's scroll body cannot be measured, so "内部自己滚动" is unverifiable`),
+      ).not.toBeNull();
+      /* ORD-0100 ③'s first judgement, stated as a number: if the body has nothing to scroll then
+         whatever is below the fold belongs to the test, not to the traveller. */
+      const maxScroll = (extents as NonNullable<FloatReading["extents"]>).bodyScrollHeight -
+        (extents as NonNullable<FloatReading["extents"]>).bodyClientHeight;
+      expect(
+        maxScroll,
+        node(NODE, `${arm}: the window's body scrolls ${maxScroll}px (scrollHeight ${(extents as NonNullable<FloatReading["extents"]>).bodyScrollHeight}, clientHeight ${(extents as NonNullable<FloatReading["extents"]>).bodyClientHeight}) -- the rows below the fold are unreachable`),
+      ).toBeGreaterThan(0);
+      const ids = open.rows.map((item) => item.id).filter(Boolean) as string[];
+      /* Eleven, not "at least nine": the stage has exactly eleven actions (重置/准备/承诺/开始/推进/
+         中断/重规划/接受/拒绝/降级/恢复), and a floor low enough to pass when two of them stop
+         rendering is how this window was nearly signed off half-empty. */
+      expect(
+        ids,
         node(NODE, `${arm}: the opened window drew ${ids.length} action rows; the stage has 11`),
-      ).toBeGreaterThanOrEqual(9);
+      ).toHaveLength(11);
+      /* Reach each row the way a finger does. `scrollIntoViewIfNeeded` was the first version's
+         instrument and it scrolls `overflow: hidden` boxes too -- it will happily report a row as
+         reachable that no swipe can bring on screen (measured: killD6 survived it). */
+      await bodyLocator.evaluate((element) => {
+        element.scrollTop = 0;
+      });
+      const wheelToReach = async (id: string): Promise<Hit | undefined> => {
+        for (let step = 0; step < 16; step += 1) {
+          const reading = await measureFloat(page);
+          const mine = reading.rows.find((item) => item.id === id);
+          if (mine?.visible && mine.centre && !mine.inNavBand) return mine;
+          if (!reading.body) return mine;
+          await page.mouse.move(
+            reading.body.x + reading.body.width / 2,
+            reading.body.y + Math.min(120, reading.body.height / 2),
+          );
+          await page.mouse.wheel(0, 160);
+          await page.waitForTimeout(120);
+        }
+        return (await measureFloat(page)).rows.find((item) => item.id === id);
+      };
       const perRow: Record<string, unknown> = {};
       for (const id of ids) {
-        const row = page.getByTestId(id);
-        await row.scrollIntoViewIfNeeded();
-        const mine = (await measureFloat(page)).rows.find((item) => item.id === id);
+        const mine = await wheelToReach(id);
         expect(
           mine?.visible,
-          node(NODE, `${arm}: ${id} can never be brought on screen inside the window: ${JSON.stringify(mine)}`),
+          node(NODE, `${arm}: ${id} can never be brought on screen inside the window with a wheel: ${JSON.stringify(mine)}`),
         ).toBe(true);
         expect(
           mine?.centre,
@@ -810,16 +846,23 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
           mine?.inNavBand,
           node(NODE, `${arm}: ${id} is still inside the nav band: ${JSON.stringify(mine)}`),
         ).toBe(false);
-        perRow[id] = mine;
+        perRow[id] = { ...mine, reachedBy: "wheel" };
       }
-      readings[`${arm}-open`] = { ball: open.ball, window: box, nav: open.nav, dock: open.dock, perRow };
+      readings[`${arm}-open`] = {
+        ball: open.ball,
+        window: box,
+        nav: open.nav,
+        dock: open.dock,
+        maxScroll,
+        perRow,
+      };
       /* The claim being made here is visual ("别把屏幕挡住"), so it is filed as pictures at the same size
          the numbers were measured on, viewport rather than full page: the widget belongs to the
          viewport, not to the document. */
-      /* ② "内部自己滚动" is a finger fact, not a Playwright one.  The row loop above scrolls with
-         `scrollIntoViewIfNeeded`, and a browser will scroll an `overflow: hidden` box for that call too
-         -- which is exactly how `killD6-window-body-cannot-be-scoped` survived its first run.  So the
-         window's own body has to move under a real wheel event. */
+      /* ② "内部自己滚动" is a finger fact, not a Playwright one.  The loop above already reaches each
+         row with a wheel; this clause is the narrower claim that the *body itself* is the thing that
+         moved -- a row could otherwise come into view by scrolling the page behind the window, which is
+         exactly the confusion that let `killD6-window-body-cannot-be-scoped` survive its first run. */
       const body = page.getByTestId("sim-pop-body");
       await body.evaluate((element) => {
         element.scrollTop = 0;
@@ -1145,6 +1188,455 @@ test("sim-booking-row-follows-the-journey-state — 行程不在 PLANNED 时先�
     );
   }
   await page.unroute("**/api/v1/demo/scene");
+});
+
+/* --------------------------------------------- ORD-0100 ②: the proposal on the screen is the proposal
+ * the row sends.
+ *
+ * E measured the panel printing `350b9e3c` while the accept request carried `f6691a42`: one
+ * `POST /replans` leaves more than one proposal on the stage, the receipt quoted the POST's own id and
+ * the row took its id from `GET /replans`, and the printed one later read INVALIDATED.  The fix makes
+ * both come from one read; this node proves the three names that must agree do agree -- the receipt's
+ * sentence, the row's label, and the path of the request the row actually puts on the wire.
+ *
+ * The accept route is intercepted and refused on purpose: the claim is about *which id is sent*, not
+ * about whether an acceptance succeeds, and a shared demo stage must not have its plan swapped by a
+ * gate.  So no proposal is accepted here, and the node says so in its own evidence.
+ */
+test("sim-replan-receipt-names-the-proposal-the-row-sends — 印出来的方案 id 就是被送出去的那一个", async ({ page }) => {
+  test.setTimeout(240_000);
+  const NODE = "sim-replan-receipt-names-the-proposal-the-row-sends";
+  const seeded = await readScene(page);
+  const journeyId = String(seeded.journey_id ?? "");
+  let sentUrl: string | null = null;
+  await page.route("**/api/v1/replans/*/accept", async (route) => {
+    sentUrl = route.request().url();
+    await route.fulfill({
+      status: 501,
+      contentType: "application/json",
+      body: JSON.stringify({
+        error: {
+          code: "GATE_REFUSES_TO_ACCEPT",
+          message: "this gate never accepts a proposal; it only reads which id was sent",
+          message_key: "request.invalid",
+        },
+      }),
+    });
+  });
+
+  /* Whether the server produces a proposal at all is its own business -- on this stage it currently
+     refuses the request with `MOBILITY_DATA_UNAVAILABLE` (measured, routed to the backend lanes),
+     which would leave the claim below unmeasurable here.  So the two shapes the claim is about are put
+     on the wire by this gate: the POST answers with one proposal while the list puts a *different* open
+     one first.  That is exactly the pair E caught the panel disagreeing about. */
+  const postedId = "bbbbbbbb-1111-4111-8111-111111111111";
+  const listedFirstOpenId = "aaaaaaaa-2222-4222-8222-222222222222";
+  let replanPostSeen = 0;
+  await page.route("**/api/v1/journeys/*/replans", async (route) => {
+    if (route.request().method() === "POST") {
+      replanPostSeen += 1;
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ id: postedId, status: "PROPOSED", journey_id: journeyId }),
+      });
+      return;
+    }
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify([
+        { id: "cccccccc-3333-4333-8333-333333333333", status: "SUPERSEDED" },
+        { id: listedFirstOpenId, status: "PROPOSED" },
+        { id: postedId, status: "PROPOSED" },
+      ]),
+    });
+  });
+
+  await openToday(page, journeyId, "zh-CN", "light", 390);
+  await openStageEntry(page, "the replan receipt");
+  const raised = await pressStageAction(page, "event");
+  expect(
+    raised.pressed,
+    node(NODE, `no disruption could be raised, so the replan row stays blocked: ${JSON.stringify(raised.reason)}`),
+  ).toBe(true);
+  const asked = await pressStageAction(page, "replan");
+  expect(
+    asked.pressed,
+    node(NODE, `no replan could be asked for: ${JSON.stringify(asked.reason)}`),
+  ).toBe(true);
+  expect(
+    replanPostSeen,
+    node(NODE, "the replan request never reached the wire, so the receipt below was not produced by the flow under test"),
+  ).toBeGreaterThan(0);
+
+  const receipt = (asked.outcome ?? "").trim();
+  const label = clean(await page.getByTestId("sim-action-accept").innerText());
+  const hex8 = (text: string) => (text.match(/\b[0-9a-f]{8}\b/gi) ?? []).map((v) => v.toLowerCase());
+  const printed = hex8(receipt);
+  const named = hex8(label);
+  expect(
+    printed.length,
+    node(NODE, `the receipt printed no proposal id at all: ${JSON.stringify(receipt)}`),
+  ).toBeGreaterThan(0);
+  expect(
+    named,
+    node(NODE, `the accept row does not name the single proposal it will send: ${JSON.stringify(label)}`),
+  ).toHaveLength(1);
+  expect(
+    printed[0],
+    node(NODE, `the receipt says ${JSON.stringify(printed)} while the row will send ${JSON.stringify(named)} -- one screen, two proposals`),
+  ).toBe(named[0]);
+  /* The receipt must name the proposal the list puts first -- the one the row acts on -- not the id the
+     POST answered with.  That substitution is the whole defect. */
+  expect(
+    printed[0],
+    node(NODE, `the receipt quotes the POST's own id ${JSON.stringify(printed)} instead of the proposal the row acts on: ${JSON.stringify(receipt)}`),
+  ).toBe(listedFirstOpenId.slice(0, 8).toLowerCase());
+
+  const pressed = await pressStageAction(page, "accept");
+  expect(
+    pressed.pressed,
+    node(NODE, `the accept row was blocked, so the request path could not be read: ${JSON.stringify(pressed.reason)}`),
+  ).toBe(true);
+  expect(
+    sentUrl,
+    node(NODE, "no accept request ever reached the wire, so the equality above says nothing about what the row sends"),
+  ).not.toBeNull();
+  /* The row prints eight characters and the request carries the whole uuid, so the comparison is on
+     the prefix -- which is exactly the seam where the two used to disagree. */
+  const sentId = /\/replans\/([0-9a-f-]{36})\/accept/i.exec(String(sentUrl))?.[1] ?? "";
+  expect(
+    sentId.slice(0, 8).toLowerCase(),
+    node(NODE, `the row printed ${named[0]} but the request went to ${JSON.stringify(sentUrl)}`),
+  ).toBe(named[0]);
+  /* The refusal is the point, not a failure: it proves nothing was accepted on the shared stage. */
+  /* The row quotes the envelope's `message`, which is what ORD-0082's refusal work established -- so
+     the proof that nothing was accepted is that sentence, not the code. */
+  expect(
+    (pressed.outcome ?? ""),
+    node(NODE, `the gate's own refusal did not reach the screen, so the accept may have gone through: ${JSON.stringify(pressed.outcome)}`),
+  ).toContain("this gate never accepts");
+
+  writeFileSync(
+    evidencePath("ui-overnight/sim-replan-id-sources.json"),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        order: "ORD-0100 residual 2",
+        node: NODE,
+        journeyId,
+        receiptSentence: receipt,
+        acceptRowLabel: label,
+        acceptRequestPath: sentUrl,
+        postedProposalId: postedId,
+        listedFirstOpenId,
+        replanListStubbed: true,
+        proposalAcceptedOnServer: false,
+        note: "the accept route is answered 501 by this gate, so the stage keeps its plan and only the sent id is asserted",
+      },
+      null,
+      2,
+    ) + "\n",
+    "utf-8",
+  );
+  await page.unroute("**/api/v1/replans/*/accept");
+});
+
+/* --------------------------------------- ORD-0100 ①: the booking row's target is the server's answer.
+ *
+ * Three arms, none of which writes anything to the stage:
+ *   A -- the catalogue is read as empty: the row must say "这座城的目录里没有可下单的服务类型", the
+ *        shape of the refusal that matches a server with nothing to offer.
+ *   B -- the catalogue lists orderable services but every slot read answers "no slots": the row must
+ *        say the *other* sentence, with the count it asked about.  This is the arm that notices a
+ *        panel which filters on the service type alone and then aims at a frozen-catalog refusal.
+ *   C -- no stubs: whatever activity the row names must be one the server really gives a window for,
+ *        checked against the same two reads the panel used.  This is the arm that notices a panel
+ *        which has slid back to "whatever the plan array lists first".
+ */
+test("sim-booking-target-is-an-activity-the-server-gives-a-slot-for — 默认目标由服务器说了才算", async ({ page }) => {
+  test.setTimeout(300_000);
+  const NODE = "sim-booking-target-is-an-activity-the-server-gives-a-slot-for";
+  const seeded = await readScene(page);
+  const journeyId = String(seeded.journey_id ?? "");
+  const planId = String(seeded.plan_version_id ?? "");
+  const cityCode = String(
+    ((await (await page.request.get(`/api/v1/journeys/${journeyId}`)).json()) as {
+      city_code?: string;
+    }).city_code ?? "",
+  );
+  const realServices = await (
+    await page.request.get(`/api/v1/city-services?city_code=${encodeURIComponent(cityCode)}`)
+  ).json();
+  const activities = (
+    (await (await page.request.get(`/api/v1/plans/${planId}`)).json()) as {
+      activities?: Array<Record<string, unknown>>;
+    }
+  ).activities ?? [];
+  const openActivities = activities.filter(
+    (item) => !["COMPLETED", "SKIPPED", "CANCELLED"].includes(String(item.status)),
+  );
+
+  /* The booking row's own availability chain puts the journey's state first, and the shared stage is
+     usually executing -- which would leave both catalogue arms with nothing to say.  So the state is
+     forced to PLANNED here, the same way the ORD-0090 arm forces it, and every arm below asserts. */
+  const forcePlanned = async () => {
+    await page.route("**/api/v1/demo/scene", async (route) => {
+      const response = await route.fetch();
+      const body = (await response.json()) as Record<string, unknown>;
+      body.journey_status = "PLANNED";
+      await route.fulfill({
+        status: response.status(),
+        contentType: "application/json",
+        body: JSON.stringify(body),
+      });
+    });
+  };
+
+  const stub = async (mode: "no-catalogue" | "no-slots" | "off") => {
+    await page.unroute("**/api/v1/city-services?city_code=*");
+    await page.unroute("**/api/v1/city-services/*/booking-slots*");
+    if (mode === "no-catalogue") {
+      await page.route("**/api/v1/city-services?city_code=*", async (route) =>
+        route.fulfill({ status: 200, contentType: "application/json", body: "[]" }),
+      );
+    }
+    if (mode === "no-slots") {
+      /* This fixture's own city answers no orderable service type at all (measured: the row says so
+         with the real catalogue in place), which would make this arm a second copy of the empty-
+         catalogue arm and leave the slot branch untested.  So the catalogue is answered with rows
+         hanging off the *plan's own* place ids -- the gate's invention, labelled as such, and the only
+         thing under test is which of its two sentences the panel picks once the slots come back empty. */
+      const offered = openActivities
+        .filter((item) => item.place_id)
+        .slice(0, 2)
+        .map((item, index) => ({
+          id: `gate-stub-service-${index}`,
+          name: "gate stub service",
+          service_type: "bookable_experience",
+          city_code: cityCode,
+          place_id: String(item.place_id),
+        }));
+      await page.route("**/api/v1/city-services?city_code=*", async (route) =>
+        route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify(offered),
+        }),
+      );
+      await page.route("**/api/v1/city-services/*/booking-slots*", async (route) =>
+        route.fulfill({ status: 200, contentType: "application/json", body: "[]" }),
+      );
+    }
+  };
+
+  const readRow = async () => {
+    const row = page.getByTestId("sim-action-book");
+    const label = clean(await row.innerText());
+    const reasonId = await row.getAttribute("aria-describedby");
+    const reason = reasonId
+      ? clean(await page.locator(`#${reasonId}`).innerText())
+      : "";
+    return { label, reason, disabled: await row.getAttribute("aria-disabled") };
+  };
+  /* The row's availability now rests on three reads that start when the window opens, and the first
+     thing it says is "还在读…".  Measuring at that instant is how this node's first pass went red on a
+     product that was simply still working: wait for the reading-shaped refusal to retire, then judge
+     what is left, which is always a statement about the server's answer. */
+  const readSettledRow = async (arm: string) => {
+    let last = { label: "", reason: "", disabled: null as string | null };
+    await expect
+      .poll(
+        async () => {
+          last = await readRow();
+          return /还在读|正在逐个|仍在读/.test(last.reason) ? "reading" : "settled";
+        },
+        {
+          timeout: 20_000,
+          intervals: [250],
+          message: node(NODE, `${arm}: the booking row never came out of "still reading", so nothing below was ever measured`),
+        },
+      )
+      .toBe("settled");
+    return last;
+  };
+
+  const arms: Record<string, unknown> = {};
+  for (const [mode, expectSentence] of [
+    ["no-catalogue", "没有一个挂着可下单的服务类型"],
+    ["no-slots", "一个都没给"],
+  ] as const) {
+    await forcePlanned();
+    await stub(mode);
+    await openToday(page, journeyId, "zh-CN", "light", 390);
+    await openStageEntry(page, `the ${mode} booking arm`);
+    const read = await readSettledRow(mode);
+    /* Prove the forced scene reached the screen before believing anything the row says about it. */
+    const shown = clean(await page.getByTestId("sim-journey").innerText());
+    expect(
+      shown,
+      node(NODE, `${mode}: the panel reads ${JSON.stringify(shown)}, so the forced PLANNED never reached the screen`),
+    ).toContain("PLANNED");
+    expect(
+      read.disabled,
+      node(NODE, `${mode}: the row is pressable while the server offers nothing: ${JSON.stringify(read)}`),
+    ).toBe("true");
+    expect(
+      read.reason,
+      node(NODE, `${mode}: the greyed row does not carry its own sentence: ${JSON.stringify(read)}`),
+    ).toContain(expectSentence);
+    arms[mode] = { sceneLine: shown, ...read };
+    await closeStageEntry(page, `the ${mode} booking arm`);
+    await page.unroute("**/api/v1/demo/scene");
+  }
+  await stub("off");
+
+  /* D -- the positive path, made deterministic: every open activity is offered as orderable, and the
+     server gives a window to exactly one of them -- deliberately *not* the first in the plan's array.
+     The row must name that one and no other.  Without this arm, a panel that read the service type and
+     ignored the slot answer, or one that slid back to "whatever the list has first", would still pass
+     everything above. */
+  const placeHolders = openActivities.filter((item) => item.place_id);
+  const chosen = placeHolders.length > 1 ? placeHolders[1] : placeHolders[0];
+  const offeredRows = placeHolders.map((item, index) => ({
+    id: `gate-stub-service-${index}`,
+    name: "gate stub service",
+    service_type: "bookable_experience",
+    city_code: cityCode,
+    place_id: String(item.place_id),
+  }));
+  const chosenIndex = placeHolders.findIndex((item) => item.id === chosen?.id);
+  await forcePlanned();
+  await page.route("**/api/v1/city-services?city_code=*", async (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(offeredRows),
+    }),
+  );
+  await page.route("**/api/v1/city-services/*/booking-slots*", async (route) => {
+    const serviceId =
+      /city-services\/([^/?]+)\/booking-slots/.exec(route.request().url())?.[1] ?? "";
+    const holder = serviceId === `gate-stub-service-${chosenIndex}`;
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(
+        holder
+          ? [
+              {
+                start_at: String(chosen?.start_at),
+                end_at: String(chosen?.end_at),
+                provider_key: "mock-city",
+                provider_slot_ref: "gate-stub-slot-1",
+              },
+            ]
+          : [],
+      ),
+    });
+  });
+  await openToday(page, journeyId, "zh-CN", "light", 390);
+  await openStageEntry(page, "the positive booking arm");
+  const positive = await readSettledRow("positive");
+  expect(
+    positive.disabled,
+    node(NODE, `the server gave a window for ${JSON.stringify(String(chosen?.title))} and the row is still greyed: ${JSON.stringify(positive)}`),
+  ).toBeNull();
+  expect(
+    positive.label,
+    node(NODE, `the row does not name the activity the server can book: ${JSON.stringify(positive)}`),
+  ).toContain(String(chosen?.title));
+  if (placeHolders.length > 1) {
+    expect(
+      positive.label,
+      node(NODE, `the row fell back to the plan's first activity ${JSON.stringify(String(placeHolders[0]?.title))} instead of the one with a slot: ${JSON.stringify(positive)}`),
+    ).not.toContain(String(placeHolders[0]?.title));
+  }
+  arms.positive = {
+    ...positive,
+    chosenTitle: chosen ? String(chosen.title) : null,
+    firstInArrayTitle: placeHolders[0] ? String(placeHolders[0].title) : null,
+    activitiesOfferedAsOrderable: offeredRows.length,
+    activitiesGivenASlot: 1,
+  };
+  await closeStageEntry(page, "the positive booking arm");
+  await page.unroute("**/api/v1/demo/scene");
+  await page.unroute("**/api/v1/city-services?city_code=*");
+  await page.unroute("**/api/v1/city-services/*/booking-slots*");
+
+  /* C -- the real reads, no stubs: whatever the row names must be something the server gives a window
+        for.  The check re-asks the two endpoints rather than trusting the panel's arithmetic. */
+  for (const [pose, forceStage] of [
+    ["real", false],
+    ["planned", true],
+  ] as const) {
+    /* On a stage that is executing, the journey-level block legitimately owns the row first, so the
+       catalogue branch would never be read.  The second pose forces only `journey_status`; the
+       catalogue and the slot reads stay the server's own answers. */
+    if (forceStage) await forcePlanned();
+    await openToday(page, journeyId, "zh-CN", "light", 390);
+    await openStageEntry(page, `the ${pose} booking arm`);
+    const read = await readSettledRow(pose);
+    const named = openActivities.find((item) => read.label.includes(String(item.title)));
+    if (named) {
+    const services = Array.isArray(realServices) ? realServices : [];
+    const service = services.find(
+      (row: { place_id?: string | null; service_type?: string }) =>
+        row.place_id === named.place_id &&
+        ["bookable_experience", "tradable_food"].includes(String(row.service_type)),
+    );
+    expect(
+      service,
+      node(NODE, `the row aims at ${JSON.stringify(String(named.title))}, which carries no orderable service type in ${JSON.stringify(cityCode)}: ${JSON.stringify(read)}`),
+    ).toBeTruthy();
+    const slots = await page.request.get(
+      `/api/v1/city-services/${encodeURIComponent(String((service as { id: unknown }).id))}/booking-slots` +
+        `?start_at=${encodeURIComponent(String(named.start_at))}&end_at=${encodeURIComponent(String(named.end_at))}`,
+    );
+    const body = await slots.json().catch(() => null);
+    expect(
+      Array.isArray(body) && body.length > 0,
+      node(NODE, `the row aims at ${JSON.stringify(String(named.title))} but the server gives it no slot (http ${slots.status()}, ${JSON.stringify(body)?.slice(0, 120)}): ${JSON.stringify(read)}`),
+    ).toBe(true);
+  } else {
+    /* No target named: the row must be greyed and must say why in one of the two server-derived
+       shapes -- "still reading" is not one of them, because the arm runs after the reads land. */
+    expect(
+      read.disabled,
+      node(NODE, `the row names no activity and is still pressable: ${JSON.stringify(read)}`),
+    ).toBe("true");
+    expect(
+      /没有一个挂着可下单的服务类型|一个都没给|没有可下单的活动|已经不在计划阶段/.test(read.reason),
+      node(NODE, `the row names no activity without saying why: ${JSON.stringify(read)}`),
+    ).toBe(true);
+  }
+  arms[`pose-${pose}`] = {
+    ...read,
+    namedTitle: named ? String(named.title) : null,
+    sceneLine: clean(await page.getByTestId("sim-journey").innerText()),
+  };
+  await closeStageEntry(page, `the ${pose} booking arm`);
+  await page.unroute("**/api/v1/demo/scene");
+  }
+
+  writeFileSync(
+    evidencePath("ui-overnight/sim-booking-target-arms.json"),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        order: "ORD-0100 residual 1",
+        node: NODE,
+        cityCode,
+        planVersionId: planId,
+        catalogueRows: Array.isArray(realServices) ? realServices.length : null,
+        arms,
+      },
+      null,
+      2,
+    ) + "\n",
+    "utf-8",
+  );
 });
 
 /* --------------------------------------------------------------------- ORD-0086: a wait you can see,

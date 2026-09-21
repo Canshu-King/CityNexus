@@ -15,11 +15,14 @@ import {
 import {
   describeBookingRefusal,
   describeFailure,
+  listCityServices,
   NEXT_STEP,
+  readBookableTargets,
   runStageAction,
   postSimulatedEvent,
   resetStage,
   transitionStage,
+  type CityServiceRow,
 } from "./simulationAdapter";
 import "./SimulationPanel.css";
 
@@ -254,18 +257,57 @@ export function SimulationPanel({
             }
           : null;
 
-  /* Which activity 「建一个硬承诺」 is aiming at.  The candidates are the server's own plan
-     activities that are still open, with the ones it gave a service identity first -- that ordering
-     is a hint about where to look, not a claim that any of them can be booked.  The label names the
-     target before the tap, and the row beside it moves to the next candidate. */
+  /* ORD-0100 ①: what activity 「建一个硬承诺」 aims at is now the server's answer, not the plan's
+     array order.  What used to sit here sorted by "the server gave this activity a service identity"
+     -- and `city_service_id` is null on **all six** activities of the demo plan
+     (`review/city-services-shape.json`), so that sort was vacuous, the default fell back to
+     `Old Town Gate`, and the 422 that followed was the server being right about a target this screen
+     had chosen by position.  Two reads replace it: the city's catalogue, then the slot window of each
+     activity whose place carries an orderable service type. */
   const [bookIndex, setBookIndex] = useState(0);
-  const bookCandidates = (plan.data?.activities ?? [])
-    .filter(
-      (item) =>
-        item &&
-        !["COMPLETED", "SKIPPED", "CANCELLED"].includes(String(item.status)),
-    )
-    .sort((a, b) => Number(Boolean((b as {city_service_id?: string | null}).city_service_id)) - Number(Boolean((a as {city_service_id?: string | null}).city_service_id)));
+  const openActivities = (plan.data?.activities ?? []).filter(
+    (item) =>
+      item &&
+      !["COMPLETED", "SKIPPED", "CANCELLED"].includes(String(item.status)),
+  );
+  const journeyRead = useQuery({
+    queryKey: ["sim-stage-journey", journeyId],
+    enabled: Boolean(journeyId),
+    queryFn: () => cityNexusApi.getJourney(journeyId as string),
+  });
+  const cityCode = journeyRead.data?.city_code ?? null;
+  const servicesRead = useQuery({
+    queryKey: ["sim-stage-city-services", cityCode],
+    enabled: Boolean(cityCode),
+    queryFn: () => listCityServices(cityCode as string),
+  });
+  const bookableRead = useQuery({
+    queryKey: ["sim-stage-bookable", planVersionId, cityCode],
+    enabled: Boolean(
+      planVersionId && cityCode && servicesRead.data && openActivities.length,
+    ),
+    queryFn: () =>
+      readBookableTargets(
+        openActivities.map((item) => ({
+          id: item.id,
+          place_id: item.place_id ?? null,
+          start_at: item.start_at,
+          end_at: item.end_at,
+        })),
+        servicesRead.data as CityServiceRow[],
+      ),
+  });
+  /* Only the activities the server gave a slot for, in the plan's own order.  The row's label and its
+     换一个活动 control both read from this list, so what the row names is what a press will send. */
+  const bookCandidates = bookableRead.data
+    ? bookableRead.data.targets
+        .map((target) =>
+          openActivities.find((item) => item.id === target.activityId),
+        )
+        .filter(
+          (item): item is (typeof openActivities)[number] => Boolean(item),
+        )
+    : [];
   const bookIndexClamped = bookCandidates.length
     ? Math.min(bookIndex, bookCandidates.length - 1)
     : 0;
@@ -287,6 +329,53 @@ export function SimulationPanel({
           zh: `服务器说这趟已经不在计划阶段（行程状态 ${journeyStatus}），而硬承诺只能建在还没开始的行程上：这时按下去，服务器对清单上每个活动都回同一句“booking requires a PLANNED Journey”。要改已经开始的这一趟，请用下面「请求重规划」。`,
           en: `The server says this journey is past the planning stage (status ${journeyStatus}), and a hard commitment is only taken for one that has not started: pressed now, the server answers every activity on the list with "booking requires a PLANNED Journey". To change a journey that has begun, use "Request a replan" below.`,
         }
+      : null;
+
+  /* The row's availability now rests on three reads, so "现在建不了" has three honest shapes and must
+     not collapse into the wrong one: still reading, the read failed, or the server answered and said
+     no.  A refusal about a read is marked `transient` so it retires with the next reading (ORD-0086). */
+  const bookReadWanted = Boolean(
+    planVersionId && cityCode && servicesRead.data && openActivities.length,
+  );
+  const bookReadBlocked =
+    journeyRead.isPending && Boolean(journeyId)
+      ? {
+          transient: true,
+          zh: "还在读这趟行程属于哪座城。",
+          en: "The journey's city is still being read.",
+        }
+      : journeyRead.isError
+        ? { transient: true, ...describeFailure(journeyRead.error) }
+        : servicesRead.isPending && Boolean(cityCode)
+          ? {
+              transient: true,
+              zh: "还在读这座城的服务目录（哪些地点挂着可下单的服务）。",
+              en: "The city's service catalogue is still being read.",
+            }
+          : servicesRead.isError
+            ? { transient: true, ...describeFailure(servicesRead.error) }
+            : bookableRead.isPending && bookReadWanted
+              ? {
+                  transient: true,
+                  zh: "目录里有带着可下单服务的活动，正在逐个按它自己的时间问服务器那一段有没有时段。",
+                  en: "Some activities carry an orderable service; their windows are being asked of the server.",
+                }
+              : bookableRead.isError
+                ? { transient: true, ...describeFailure(bookableRead.error) }
+                : null;
+  const nothingBookable =
+    bookableRead.data &&
+    bookableRead.data.targets.length === 0 &&
+    openActivities.length > 0
+      ? bookableRead.data.withOrderableService === 0
+        ? {
+            zh: `服务器说这座城的目录里，这趟 ${openActivities.length} 个还没结束的活动没有一个挂着可下单的服务类型，所以现在建不了硬承诺。要改这一趟，请用下面「请求重规划」。`,
+            en: `The server says none of this journey's ${openActivities.length} open activities carries an orderable service type in this city's catalogue, so there is nothing to build a hard commitment on. To change the journey, use "Request a replan" below.`,
+          }
+        : {
+            zh: `服务器说这趟有 ${bookableRead.data.withOrderableService} 个活动带着可下单的服务类型，但逐个按它自己的时间问时段时，一个都没给${bookableRead.data.unreadable ? `（另有 ${bookableRead.data.unreadable} 次没读到，那不是"没有时段"）` : ""}，所以现在建不了硬承诺。`,
+            en: `The server says ${bookableRead.data.withOrderableService} of this journey's activities carry an orderable service type, but asked for each one's own window it returned no slot at all${bookableRead.data.unreadable ? ` (${bookableRead.data.unreadable} reads did not answer, which is not the same as "no slot")` : ""}, so there is nothing to book right now.`,
+          }
       : null;
 
   const rows: Row[] = [
@@ -380,15 +469,15 @@ export function SimulationPanel({
         ? `建一个硬承诺：${bookTarget.title}`
         : "建一个硬承诺",
       en: bookTarget ? `Book a commitment: ${bookTarget.title}` : "Book a commitment",
-      /* Only some of the demo stage's activities can actually be booked (`_service_for_activity`
-         maps a `city_service_id` or two known `place_id`s; the rest match nothing), so the row says
-         *which* activity it will send before it is pressed, and offers the next candidate instead
-         of silently aiming at one the server will refuse.  When it still refuses, the traveller
-         reads the server's own sentence, not this screen's guess. */
+      /* ORD-0100 ①: the target is an activity the server gave a slot for, named on the row before the
+         tap; 换一个活动 moves between those, not between everything.  When the server refuses anyway,
+         the traveller reads its own sentence, not this screen's guess. */
       blocked:
         notReady ??
         noJourney ??
         notPlanned ??
+        bookReadBlocked ??
+        nothingBookable ??
         (!bookTarget
           ? {
               zh: "服务器给的这份计划里没有可下单的活动，所以这里没有可建承诺的东西。",
@@ -500,22 +589,46 @@ export function SimulationPanel({
               en: "A replan needs a triggering event (the server requires trigger_event_id). Raise a disruption above first.",
             }),
       run: async () => {
-        const proposal = await cityNexusApi.generateReplans(
+        await cityNexusApi.generateReplans(
           journeyId as string,
           lastEventId as string,
           3,
           newKey(),
         );
+        /* ORD-0100 ②: this sentence used to print the id the POST answered with, while 接受方案 took
+           its id from `GET /replans` -- and one POST leaves more than one proposal on the stage
+           (measured: printed `350b9e3c`, accepted `f6691a42`, and the printed one later read
+           INVALIDATED).  So the receipt no longer quotes the POST's id at all: it asks the same
+           question the accept row asks, and writes the answer into the very cache that row reads, so
+           the number on screen and the number in the request are one read apart from each other, not
+           two reads apart from the truth. */
+        const listed = await cityNexusApi.listReplans(journeyId as string);
+        client.setQueryData(["sim-replans", journeyId], listed);
+        const open = listed.filter(
+          (item) =>
+            !["ACCEPTED", "REJECTED", "DECLINED", "SUPERSEDED"].includes(
+              String(item.status ?? "").toUpperCase(),
+            ),
+        );
         return {
-          zh: `服务器给出方案 ${shortId(proposal.id)}（状态 ${proposal.status}）。接受才会换计划。`,
-          en: `The server produced proposal ${shortId(proposal.id)} (status ${proposal.status}). Accepting is what changes the plan.`,
+          zh: open.length
+            ? `服务器回了 ${listed.length} 份方案，其中 ${open.length} 份还开着；下面「接受方案」那一行现在拿的是 ${shortId(open[0].id)}。接受才会换计划。`
+            : `服务器回了方案，但它现在列出的 ${listed.length} 份里没有还开着的那一份，所以「接受方案」这一行会说不给按——理由在它自己那行。`,
+          en: open.length
+            ? `The server answered with ${listed.length} proposals, ${open.length} still open; "Accept the proposal" below now points at ${shortId(open[0].id)}. Accepting is what changes the plan.`
+            : `The server produced proposals, but none of the ${listed.length} it now lists is open, so "Accept the proposal" will refuse and say why on its own line.`,
         };
       },
     },
     {
       id: "accept",
-      zh: "接受方案",
-      en: "Accept the proposal",
+      /* ORD-0100 ②: the row says which proposal it will accept.  The receipt used to name one id and
+         this row send another, because the id came from the list while the sentence came from the POST
+         -- one read, one name, printed where the press goes. */
+      zh: proposalId ? `接受方案：${shortId(proposalId)}` : "接受方案",
+      en: proposalId
+        ? `Accept the proposal: ${shortId(proposalId)}`
+        : "Accept the proposal",
       blocked:
         notReady ??
         noJourney ??
@@ -538,8 +651,10 @@ export function SimulationPanel({
     },
     {
       id: "reject",
-      zh: "拒绝方案",
-      en: "Reject the proposal",
+      zh: proposalId ? `拒绝方案：${shortId(proposalId)}` : "拒绝方案",
+      en: proposalId
+        ? `Reject the proposal: ${shortId(proposalId)}`
+        : "Reject the proposal",
       blocked:
         notReady ??
         noJourney ??

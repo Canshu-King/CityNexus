@@ -395,3 +395,117 @@ export async function postSimulatedEvent(
   if (!response.ok) throw new CityNexusApiError(response.status, body, `events ${response.status}`);
   return body as { id: string; occurred_at: string; status: string };
 }
+
+/**
+ * ORD-0100 ①: which activity 「建一个硬承诺」 may honestly be aimed at.
+ *
+ * Two server reads, and no guessing in between:
+ *
+ *  - `GET /city-services?city_code=` names the places this city's catalogue carries an orderable
+ *    service for, in the server's own type words.
+ *  - `GET /city-services/{id}/booking-slots?start_at=&end_at=` is the only read that separates a
+ *    service the frozen catalogue can actually take from one that is merely listed.  Measured on a
+ *    throwaway stack (`review/bookable-target-shape.json`): of the demo plan's six activities, two
+ *    carry an orderable type; `service-food-preorder` is listed by `/city-services` and answers
+ *    **404 here**, and its booking is refused with `activity service is not available in the frozen
+ *    catalog`; `service-river-cruise-booking` answers 200 with one slot and books `201 CONFIRMED`.
+ *
+ * So a 404 on this path is not a failure to display -- it is the answer that retires the candidate.
+ * Anything else (5xx, a dropped connection) *is* unreadable, and gets said as such rather than being
+ * folded into "nothing can be booked", which would be the panel claiming a server fact it did not get.
+ */
+export const ORDERABLE_SERVICE_TYPES: readonly string[] = [
+  "bookable_experience",
+  "tradable_food",
+];
+
+export type CityServiceRow = {
+  id: string;
+  name: string;
+  service_type: string;
+  city_code: string;
+  place_id: string | null;
+};
+
+export async function listCityServices(
+  cityCode: string,
+): Promise<CityServiceRow[]> {
+  const response = await fetch(
+    `/api/v1/city-services?city_code=${encodeURIComponent(cityCode)}`,
+    { headers: { Accept: "application/json" } },
+  );
+  const text = await response.text();
+  let body: unknown = null;
+  if (text) {
+    try {
+      body = JSON.parse(text);
+    } catch {
+      body = text;
+    }
+  }
+  if (!response.ok) {
+    throw new CityNexusApiError(response.status, body, `city-services ${response.status}`);
+  }
+  return Array.isArray(body) ? (body as CityServiceRow[]) : [];
+}
+
+export type BookableTargets = {
+  /** activity ids the server gave a slot for, kept in the plan's own order */
+  targets: Array<{ activityId: string; serviceId: string; slots: number }>;
+  /** how many open activities carry an orderable service type at all */
+  withOrderableService: number;
+  /** how many of those the server could not be read on -- not the same answer as "no slot" */
+  unreadable: number;
+};
+
+export async function readBookableTargets(
+  activities: Array<{ id: string; place_id: string | null; start_at: string; end_at: string }>,
+  services: CityServiceRow[],
+): Promise<BookableTargets> {
+  const orderable = new Map<string, CityServiceRow[]>();
+  for (const row of services) {
+    if (!row.place_id || !ORDERABLE_SERVICE_TYPES.includes(row.service_type)) continue;
+    const held = orderable.get(row.place_id) ?? [];
+    held.push(row);
+    orderable.set(row.place_id, held);
+  }
+  const result: BookableTargets = { targets: [], withOrderableService: 0, unreadable: 0 };
+  for (const activity of activities) {
+    const candidates = activity.place_id ? orderable.get(activity.place_id) : undefined;
+    if (!candidates?.length) continue;
+    result.withOrderableService += 1;
+    for (const service of candidates) {
+      let response: Response;
+      try {
+        response = await fetch(
+          `/api/v1/city-services/${encodeURIComponent(service.id)}/booking-slots` +
+            `?start_at=${encodeURIComponent(activity.start_at)}` +
+            `&end_at=${encodeURIComponent(activity.end_at)}`,
+          { headers: { Accept: "application/json" } },
+        );
+      } catch {
+        result.unreadable += 1;
+        continue;
+      }
+      if (response.status === 404) {
+        /* The catalogue lists the service; the booking side has never heard of it.  That is an
+           answer, and it is the one the frozen-catalog refusal was hiding behind. */
+        continue;
+      }
+      if (!response.ok) {
+        result.unreadable += 1;
+        continue;
+      }
+      const slots = (await response.json().catch(() => null)) as unknown;
+      const count = Array.isArray(slots) ? slots.length : 0;
+      if (count > 0) {
+        result.targets.push({
+          activityId: activity.id,
+          serviceId: service.id,
+          slots: count,
+        });
+      }
+    }
+  }
+  return result;
+}

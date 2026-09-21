@@ -20,6 +20,7 @@ ROOT = "D:/moodle/_qoder_integration_20260919"
 FRONTEND = f"{ROOT}/frontend"
 HERO = "src/app/V8Experience.tsx"
 PANEL = "src/features/simulation/SimulationPanel.tsx"
+ADAPTER = "src/features/simulation/simulationAdapter.ts"
 SHEET = "src/features/simulation/SimulationPanel.css"
 CLOCK = "src/lib/sceneClock.ts"
 STAGE_SPEC = "e2e/qoder-today-follows-the-stage.spec.ts"
@@ -141,6 +142,33 @@ CASES = [
         "      setBottom(Math.max(12, window.innerHeight - top + 12));\n",
         "      setBottom(24);\n",
         [(STAGE_SPEC, ["sim-stage-actions-are-reachable-and-never-in-the-nav-band"])],
+    ),
+    (
+        # ORD-0100 ①: the slot answer is what separates "the catalogue lists it" from "the server can
+        # book it" -- measured in review/bookable-target-shape.json, where the food service is listed,
+        # answers no slot, and is refused as `not available in the frozen catalog`.
+        "killD10-booking-target-ignores-the-slot-answer",
+        ADAPTER,
+        "      const count = Array.isArray(slots) ? slots.length : 0;\n",
+        "      const count = 1;\n",
+        [(STAGE_SPEC, ["sim-booking-target-is-an-activity-the-server-gives-a-slot-for"])],
+    ),
+    (
+        # The defect the order was written about: with `city_service_id` null on every activity, the old
+        # ordering left the target at whatever the array holds first.
+        "killD11-booking-target-falls-back-to-array-order",
+        PANEL,
+        "    ? bookableRead.data.targets\n",
+        "    ? openActivities\n",
+        [(STAGE_SPEC, ["sim-booking-target-is-an-activity-the-server-gives-a-slot-for"])],
+    ),
+    (
+        # ORD-0100 ②: the row must say which proposal it is about to send.
+        "killD12-accept-row-does-not-name-its-target",
+        PANEL,
+        '      zh: proposalId ? `接受方案：${shortId(proposalId)}` : "接受方案",\n',
+        '      zh: "接受方案",\n',
+        [(STAGE_SPEC, ["sim-replan-receipt-names-the-proposal-the-row-sends"])],
     ),
     (
         "killD3-escape-does-not-close-it",
