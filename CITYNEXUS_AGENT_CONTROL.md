@@ -6295,7 +6295,64 @@ Causal attribution invariant = R14  Preview backend unchanged（:8693 仍 53fe8e
 status: R14 立项转录 + 8 门 6 突变归属表 + 我那条 404 读数的证成次序更正
 evidence: 总线 `5761941748`（22:15）· 本地 `live_checks/set17.txt`、`tree_f156` 突变试验、`arbiter_docs/` 两份契约
 
+### 🧪 e345b9d6（SESSION=e345b9d6）ORD-0135 交付（① ② ③ 全交）＋一条量具更正 @2026-09-21 22:5x → 提交 **`82f136f`**
+
+**② 内部枚举上屏（这条是真红，位置我核过）**：`JourneyTrialSetup.tsx:854` 就是 `<dd data-testid="review-pace">{draft.pace || "—"}</dd>`——把存下来的 key 直接印出来（`节奏 relaxed`），而**同文件 `:244` 的 `PACE_OPTIONS` 就带着 轻松/适中/紧凑**，`:747` 的选择按钮用的正是这张表。兴趣行 `:892` 同一族（`.join(", ")` 印 `food, culture`）。**更正你单里的一个名字**：第三个 key 是 **`packed`（紧凑）**，不是 `strict`——我按文件量的，门的黑名单里两个都留着。
+修法：一个 `optionLabels(keys, table, zh)` 小helper，认得的 key 出旅行者的词，**认不出的出「待确认」而不是把 token 回显**（回显看着像标签，其实是泄漏）。
+
+**① 草稿持久化：我没有"红基线"可交，因为它本来就在**——`readStoredTrial/writeStoredTrial`（`:17-55`）已经把 `{step, draft}` 写进 `citynexus.v8.trial_draft`，并且带形状校验（只接受与默认值同类型的字段）。所以这条我**不假装是自己修的**；我交的是**门＋一条把它关掉的突变**：`killK3-draft-never-persisted` → **KILLED**（刷新回到第 1 步就被判红），说明这条判据有牙而不是顺水推舟。
+
+**③ 「还需要填写」现在点得过去**：保留 `aria-disabled`（`ORD-0066 甲` 的实测理由写在代码注释里——硬 `disabled` 会把按钮踢出 tab 序，屏幕阅读器用户就永远听不到旁边的原因），每个缺项新增一个 `trial-missing-jump` 按钮，按下真的把光标送进那个控件（门里比的是 `document.activeElement` 的 testid，不是"看起来聚焦了"）。句子本身一字未改（`还需要填写：…`），所以既有门不受影响。
+
+**一条我自己踩的量具坑（写进门注释，省下一个人 5 分钟）**：门第一版 `click()` 了 `trial-next` ⇒ **挂到 300s 测试超时**，因为 Playwright 把 `aria-disabled=true` 当作"未启用"而一直等——这正是本仓记过的 7 条量具陷阱之一，我还是踩了。判据改成：断言 `aria-disabled="true"` ＋ 该按钮**可聚焦**（焦点真落在 `trial-next` 上），再走跳转。这样既满足你要的"禁用态用可访问状态表达"，也不拿"点不动"当缺陷。
+
+**读数（生产构建 `vite preview` ＋ 390×844 ＋ hasTouch，`:5306`/`:5308`）**
+- `ord0135-the-wizard-survives-a-refresh-on-the-step-you-were-on` 绿：填到第 3 步 → 刷新 → 仍在 `trial-step3-body`，`review-city`/`review-pace` 与刷新前**逐字段相等**。
+- `ord0135-the-confirmation-step-prints-no-internal-key` 绿：`review-pace` ∈ {轻松,适中,紧凑}；整页正文对 10 个内部 token 的扫描 `leaked=[]`（证据 `review/evidence/ui-overnight/ord0135-review-words.json` 带 `body` 前 400 字）。
+- `ord0135-a-missing-field-is-a-route-not-only-a-diagnosis` 绿：3 个缺项 3 个跳转，`focusAfterEachJump` 逐条等于目标 testid（`review/evidence/ui-overnight/ord0135-missing-jumps.json`）。
+- 突变 **3/3 KILLED**（`review/killK-series.txt`，sha 还原全 `restored OK`）：`killK1`（把 `:854` 换回原样）／`killK2`（只报名不给路）／`killK3`（关持久化）。
+
+**门禁**：`tsc` exit 0（`review/tsc-0135.txt`）、`npm run build` 在该链内 exit 0。**未 push**；未碰 `:4781/:4782/:8693` 与 `_qoder_cmdr_gate_20260921\backend\_live.db`；**没有触发 `demo/reset`**；e2e 全跑自有 `_run*.db`。
+
+**我这条线现在欠的（按单点名，不含糊）**：ORD-0126 的 **(b) 存储支撑**（`saveOfflineJourney` 实测 0 行＋SW `caches=[]`，要 C/基础设施）、**提交路径 id 与屏上 id 同源**的独立断言、以及 `demo/reset` 被 `PREVIEW_GUARDED` 403 挡下时"下一步"更具体的一句（404 已具名，403 我按护栏对待、没绕）。另 **ORD-0088①**（向导目的地按服务器真值标注）仍 open、**ORD-0096** 继续 HELD。预览包对账与 `manifest.webmanifest` 一条在上一块（`199067b`）里已报：`index-BVbc7LUF.js` 不在我能读的两棵树里，0146/0126/0135 三笔需要你再重建一次才能上真机验。
+
+status: ORD-0135 **DONE@2026-09-21T22:5x+08 by e345b9d6**（提交 `82f136f`；② 泄漏点已修并更正 `strict`→`packed`；① 功能本已存在，交门＋可杀突变而非冒领；③ 缺项可跳转且保留可访问禁用态；三节点绿、killK1/K2/K3 3/3 KILLED）
+evidence: `frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts`、`review/evidence/ui-overnight/ord0135-{draft-refresh,review-words,missing-jumps}.json`＋两张图、`review/killK-series.txt`、`review/tsc-0135.txt`；改动 `frontend/src/features/setup/JourneyTrialSetup.tsx`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0172
+  to: 8ccd71d8
+  priority: P0-critical
+  if_head: 366cba6
+  order: |
+    【R14 正式成为**硬验收条件**（仲裁 `5762175466` + `docs/causal_attribution_integrity_policy.md` @ `c812d5b2`，我已字节校验并落本地）
+    —— 请把它写进门与验收行；本单同时是给我自己几张单的"这一条不做就不许 ACCEPTED"清单】
+    本地镜像（车道可直接读，不必自己拉）：`D:\moodle\_qoder_cmdr_ref_20260921\arbiter_docs\causal_attribution_integrity_policy.md`（10369 B，blob sha 已核）。
+    冻结句：**"Fault attribution must come from the evidence that distinguishes the fault.
+    A lower or adjacent layer may carry the result, but it may not invent a different cause."**
+    **判定后果（仲裁原话）**：R14 范围内的 ORD 若没有具名 machine reason（或等价 typed 分类）+ 一条"可见/恢复行为由它驱动"的门，
+    **即使截图看起来对，也保持 NOT ACCEPTED**。
+    ⇒ 四种等价实现都算过：服务端 `reason_code`/typed error；**客户端 typed classifier（由 HTTP status + 结构化响应这类强证据派生）**；
+    解析/归一化的 typed input-state 枚举。
+    ⇒ 五种一律不过：纯文案修复；宽 `catch` 里直接挑句子；用英文字符串匹配猜原因；telemetry/aria/recovery 用了与 machine reason 不同的原因；
+    **有更强判别证据却用通用兜底原因**。
+    **四层归属（写门时按这个分）**：
+    - **R14-I 输入层** → ORD-0158（C）：explicit / missing / uncertain / parse-failure 四种 typed state 全程保留，**都不许变 0**；
+    - **R14-R 运行层** → ORD-0112（C）：DB 写争用必须是具名 transient db/runtime class（含 retry 语义），**不许裸 500**；
+      另 **ORD-0125**：合法但目标集为空 = typed 成功幂等 no-op（`200/204 + deleted_demo_rows=0`），不是 500；
+    - **R14-S 资源/状态层** → ORD-0169（D）：**404 是"请求到达并得到应用响应"的正向证据，因此不能标成"网络不可用"**；
+      检出失效 id 后必须清除/隔离该引用并给真实恢复路径，**不许把假离线状态留在客户端**；
+    - **R14-P 展示层** → ORD-0169 + ORD-0130（D）：屏幕文案、`aria-live`、telemetry、recovery action **必须消费同一个分类**；
+      前端**不许**把所有 fetch 失败都映射到 offline 横幅、**不许**因一个无关状态就隐藏主界面大块（地图正是被这么弄没的）。
+    **新增一条我原先没要求、仲裁补上的硬项**（请落进门）：一次故障实例要能在**生产里被事后发现**，
+    所以要带结构化字段，仲裁给的形状是
+    `attribution_reason=JOURNEY_NOT_FOUND / evidence_kind=HTTP_RESPONSE / http_status=404 / source_layer=RESOURCE_STATE`。
+    ⇒ 请为这四类字段做一条 schema/契约断言（枚举取值 + 必填），别让它变成"日志里随便写点啥"。
+    交付：`contracts/**` + `backend/tests/**`（不碰产品码，实现分别归 C/D）；一条 R14 元门——**故意把 404 折成 offline，门必须红**。
+    【边界（仲裁自己加的，别再扩）】R14 只绑"会创建/转换/分类/传播/展示/恢复故障或状态原因"的 ORD；
+    **不要求无关功能单平白新增 reason code**。不要把 R14 当万能牌去卡别人的 scope。
+  status: DISPATCHED@2026-09-21T22:4x+08 by 494abfd7（四层归属 + 生产可发现字段是我转录，仲裁 5762175466 为准）
+
 - id: ORD-0171
   to: 8ccd71d8
   priority: P0-critical
