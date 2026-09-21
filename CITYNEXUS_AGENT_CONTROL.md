@@ -7135,6 +7135,7 @@ CLAIMED: ORD-0186 by dc19d662（车道 E · 隧道侧只读验收 · 本机钟 d
     突变只认**原绿门变红**（已红基线上的记 `NOT_MEASURABLE_RED_BASE`）。
     顺带更正现场：**tip 已到 `8ee64ae`**（不是 `d26933c`），基线仍成对引用 **无边界 17 / 带边界稳定核 13**。
   status: DELIVERED@2026-09-22 00:35:56 +0800 by 8ccd71d8（枚举与可采性两条独立断言：分支 agent/f-ord185-20260921 @ 16f05b0，未 push；产品码 0 改动。d12 枚举轴绿（同一份证据的命名结论唯一）、d13 可采性轴红（产品侧尚无判定，归 C 的 ORD-0155）、d14 判据承重绿；M4=删掉可采性判定 ⇒ d14 绿→红、**d12 仍绿**（两轴确实独立）、d13 仍红。判据放共享仪器 _qoder_accessibility_admissibility.py，与门分离才杀得掉。四栏 KILLED=4 / SURVIVED=0 / NOT_MEASURABLE_RED_BASE=2 / INVALID=0。自查一处：d12 第一版引用了可采性结论 ⇒ M4 会把它一起带红（两轴被耦合），已改为只主张命名。交付块见下方）｜was: status: DISPATCHED@2026-09-22T00:2x+08 by 494abfd7（§3 裁定落地；两条断言必须分开是这条的要点）｜**ACCEPTED by commander**@00:4x（我复跑 `16f05b0`：d12 绿/d13 红/d14 绿，与自报一致；交叉突变检查提为全线要求）
+  note@F@2026-09-22 01:19:30 +0800: 你 01:1x 抓到的**顺序错已修**（`2bbd69a`）：`axis_b_before != GREEN ⇒ INCONCLUSIVE` 提到 `COUPLED` 之前 —— B 轴突变前就红时不再被记成「两条轴耦合」。七组入参逐条复验：第 6 组 `GREEN/RED/RED/RED` 由 **COUPLED → INCONCLUSIVE**，其余六组不变；`test_d15` 补了这条与一条**顺序回归断言**（再改回去会当场红）。门文件 targeted 跑 7 failed / 13 passed（与修前同一批红 = 只改了判据顺序）。你可以重跑升 REPRODUCED 了。
 
 ### SESSION=494abfd7 · ORD-0169 **签收**（我自建 `8ee64ae` 的包、构建产物与车道报的 bundle 名一致，再在部署后的手机上量了归因）@00:0x
 
@@ -7279,7 +7280,7 @@ CLAIMED: ORD-0188 by SESSION=c01d72a3 @2026-09-22T00:5x（`date` 实读 00:54:10
     禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`（R13 护栏 ENFORCED）；自有副本库 + :85xx；
     解释器 3.12.14；凭据全清；账本只追加自己那块（`newline="\n"` + 逐字节还原证明，写前后各跑一次
     `D:/moodle/_qoder_cmdr_ref_20260921/live_checks/ledger_anchor_guard.py`）。
-  status: DONE@2026-09-22T01:1x+08 by c01d72a3（基点 `8ee64ae`、提交 **`44e4ea7`**（`git log -1`：`44e4ea7 2026-09-22 01:12:47 +0800 fix(discovery): an answered zero stops being rewritten into an outage, and identity resolution gets typed outcomes`）；写域内 13 files ＋1,110/−5，`anywhere_capability.py` 命中数 0；provider 测试 24 collected / 24 passed；反例门（超时≠NO_MATCH）与 7 次交叉突变已交；红集合＝基线同一 8 条、新增 0 条；**未 push**）
+  status: DONE@2026-09-22T01:1x+08 by c01d72a3（基点 `8ee64ae`、提交 **`44e4ea7`**（`git log -1`：`44e4ea7 2026-09-22 01:12:47 +0800 fix(discovery): an answered zero stops being rewritten into an outage, and identity resolution gets typed outcomes`）；写域内 13 files ＋1,110/−5，`anywhere_capability.py` 命中数 0；provider 测试 24 collected / 24 passed；反例门（超时≠NO_MATCH）与 7 次交叉突变已交；红集合＝基线同一 8 条、新增 0 条；**未 push**）｜**ACCEPTED / REPRODUCED@01:2x**（我在 `44e4ea7` 上复跑：24 collected / 24 passed；timeout≠NO_MATCH、403=runtime、0 条=NO_MATCH、UA 固定、不含产品身份判断——五样都有门；接口已原文递 C）
 
 - id: ORD-0189
   to: 8ccd71d8
@@ -7599,6 +7600,36 @@ B 本来就红   GREEN/RED/RED/RED     -> COUPLED                ❌ 应为 INCO
 
 status: 两份新契约（833d56acb / 4b0792ede）拉回并转派 B/F；六组入参探出仪器判定顺序错（B 本已红误判 COUPLED），修后方升 REPRODUCED；Photon UA 403 风险已提示 B
 evidence: `v_14a5b64` 上六组 `cross_mutation_verdict` 原样返回值 · 两份 docs 的 blob sha 与磁盘一致 · 本地镜像 `arbiter_docs/`
+
+### SESSION=494abfd7 · **ORD-0188 = ACCEPTED / REPRODUCED**（B→C 交接已可用）——关键路径从"等"变成"接线"，我已把接口原样递给 C @01:2x
+
+`STATUS: HANDOFF-VERIFIED-BY-ME | 树 `git archive 44e4ea7` → `v_44e4ea7`（权威树 0 写）| 3.12.14、AI off、凭据清空 | 全 targeted（P5：不跑全量）|`
+
+**我复跑**：`tests/test_qoder_provider_identity.py` → **24 tests collected / 24 passed in 0.40 s**（rc=0，无 skip）。
+**测试名本身就是仲裁 ③ 那句硬负例的证明**（逐条我在意过）：
+`test_timeout_never_becomes_no_match` · `test_http_refusals_are_runtime_shaped_not_absence` ·
+`test_zero_features_reverse_capture_is_a_no_match_not_an_outage` ·
+`test_first_endpoint_failing_second_answering_zero_is_no_match` · `test_all_endpoints_failing_stays_runtime_and_keeps_every_attempt`
+⇒ **运行性失败与"没这个东西"被拆成两条通路**，且"第一个镜子失败、第二个镜子答了但 0 条 ⇒ NO_MATCH"这种最容易写反的分支被单独钉住。
+我 01:1x 提的 **UA 坑已被实现并成门**：`test_the_adapter_pins_an_identifying_user_agent`（`provider_identity.py:201` 合并 `User-Agent`）。
+**边界也被门守住**：`test_resolution_exposes_no_product_identity_verdict` ⇒ B 的结果里**不含**"这是否已成为产品 canonical identity"的判断，正是仲裁那句 **"B resolves provider evidence; C decides when that evidence becomes product truth."**
+
+#### 交给 C 的确切接口（`app/integrations/discovery/provider_identity.py`，字段名照抄，不要让 C 去猜）
+- `ProviderOutcome(str, Enum)` = `MATCH | AMBIGUOUS | NO_MATCH | RUNTIME_FAILURE`（`:64-68`）
+- `ProviderResolution`（`:128`）字段：`outcome / query / normalized_query / candidates / attempts / retryable / reason / answered / provider_replied`
+- `ProviderCanonicalCandidate`（`:97`）：`source_provider / source_entity_id / display_name / crs(=WGS84) / admin_level / country_code / admin_area / observed_at / fetched_at / raw_feature`
+  ⇒ **`crs` 是显式字段**（我 20:3x 提醒过 `places` 没有 CRS 列，这里补上了，C 不必再自己假定）
+- `ProviderAttempt`（`:84`）：`endpoint / answered / http_status / elapsed_ms / reason / retry_after_s / error` ⇒ **每个镜子的每次尝试都留痕**，R14 的"具名运行性失败"有依据可写
+- 入口：`PhotonIdentityProvider`（`:206`），可注入 `ProviderTransport`（`:176`）/ `HttpxTransport`（`:184`）⇒ 测试不需要真出网
+- 另有 `six_provider_shapes_yield_six_distinct_reason_codes` ⇒ **C 可直接把这些 reason 映射进 `attribution_reason`（R14 §8）**，不必另造词汇
+
+#### 指挥链动作
+1. 已把上述接口原文发给 C，并明确"队列让位"：`ORD-0191 > 0158 > 0182 > 0176 > 0175 > 0187 > 0125`。
+2. **贡山端到端（ORD-0192）的门槛条件已满足上游部分**：B 侧可给出 typed outcome + provenance；剩下卡在 C 接线与 used-edge 收据（14 项，见 `833d56acb`）。
+3. 我不因为"24/24 绿"就宣布链通：**C 的 10 项必证与 14 项 used-edge 收据还没做**；且 `test_qoder_provider_identity.py` 用的是**逐字 fixture 重放**，**没有打真 provider**——真网络那一腿要等 C 接线后由 B 的 canary 补，且不得改主预览配置。
+
+status: ORD-0188 ACCEPTED/REPRODUCED（24/24，硬负例与 UA 与边界三样都有门）；B→C 接口已原文递 C；贡山链上游解锁，下游仍待 C 接线与 used-edge 收据
+evidence: `v_44e4ea7/backend` 上 `--collect-only` 24 与 `-q` 24 passed 原样输出 · `provider_identity.py:64-206` 字段行号 · 18 个 test 名清单
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 - id: ORD-0191
