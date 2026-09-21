@@ -232,6 +232,68 @@ Freeze sentence:
 
 > **B resolves provider evidence; C decides when that evidence becomes product truth. Waiting is a handoff state, not permission to cross the boundary.**
 
+## End-to-end runner is not implementation owner
+
+An end-to-end order may be assigned to a lane as the **runner/evidence collector** even when the
+chain crosses components owned by other lanes.
+
+That assignment does NOT expand the runner's write domain.
+
+For the current ORD-0192 shape:
+
+- lane B may execute the full Gongshan/Yunhe chain, observe every stage, preserve evidence, and
+  name the exact blocker;
+- B may modify only its provider-owned write domain already defined above;
+- if the failure is in application identity/persistence, catalog orchestration, planner truth,
+  frontend visibility, or another owner's domain, B must stop at the blocker and hand it to the
+  owning lane;
+- B must not "finish the E2E" by patching downstream application files;
+- downstream owners must not reach backward into the provider domain to make the E2E pass.
+
+Required blocker receipt when the runner reaches another owner's defect:
+
+    runner_order
+    exact_source
+    case_name
+    stage
+    request/input
+    observed_result
+    expected_contract
+    evidence_files
+    owning_lane
+    handoff_status = BLOCKED_ON_OWNER | READY_FOR_RETRY
+
+The same runner must rerun the affected stage after the owning lane delivers a fix before the
+end-to-end case can be called closed.
+
+Freeze sentence:
+
+> **Owning the E2E run means owning the evidence, not every implementation layer it traverses.**
+
+### Resolver-integration unlock marker
+
+The mechanical "resolver is connected" trigger MUST mean product-level integration, not merely a
+provider MATCH inside lane B.
+
+Use the following minimum unlock condition:
+
+    P7_RESOLVER_INTEGRATED = true
+
+only when one previously-unseeded raw destination goes through the normal application path and
+proves all of:
+
+1. B's typed provider result is consumed by C;
+2. exact raw input and normalized resolver query remain separate;
+3. MATCH produces a server-owned real canonical identity;
+4. unresolved companion states keep canonical_destination_id = null;
+5. the operation is persisted/replayable with intended idempotency;
+6. no pending/raw key is used as product identity.
+
+A provider-only MATCH does not unlock P7.
+
+Once this marker is true, Harness/Human-Journey wakeup may proceed mechanically. If the visible
+product still cannot complete the journey, that is a product finding, not a reason to delay wakeup.
+
 ## Live small-county end-to-end closure for ORD-0167
 
 ORD-0167 is not fully closed by schema/unit tests alone. It must include one real end-to-end case
