@@ -190,6 +190,54 @@ This makes false-cause regressions discoverable in production instead of only fr
 - ORD-0112 owns DB-lock implementation details; R14 requires the resulting cause to stay named.
 - ORD-0169 owns stale-journey recovery; R14 defines the general attribution invariant.
 
+## 10. ORD acceptance binding
+
+R14 is a **hard acceptance condition** for any ORD whose scope creates, transforms, classifies,
+propagates, displays, logs, or recovers from an error/state distinction.
+
+Such an ORD MUST NOT be accepted merely because the visible copy looks correct.
+
+Acceptance requires a machine-readable causal classification at the appropriate evidence
+boundary, plus propagation of that classification to every downstream consumer that the ORD
+touches.
+
+Equivalent implementations are allowed:
+
+- a server-owned `reason_code` / typed error returned by the backend;
+- a typed client classifier derived from strong request-specific evidence such as HTTP status +
+  structured response, when the distinction is genuinely client-owned;
+- a typed input-state enum for parser/normalizer outcomes.
+
+What is not allowed:
+
+- copy-only fixes;
+- broad `catch` branches choosing prose directly;
+- English-string matching to infer cause;
+- telemetry/aria/recovery using a different cause from the machine classifier;
+- using a generic fallback reason where stronger discriminating evidence exists.
+
+### Acceptance consequence
+
+If an ORD in R14 scope does not provide a named machine reason/state (or equivalent typed
+classification) and a regression gate proving that the visible/recovery behavior is driven by it,
+the ORD remains **NOT ACCEPTED**, even if the screenshot appears correct.
+
+### Current mappings
+
+- ORD-0112: backend/runtime layer MUST return a named structured DB/runtime contention class;
+  a UI-only copy change does not satisfy R14-R.
+- ORD-0158: the normalized input pipeline MUST preserve typed states for explicit value /
+  missing / uncertain / parse failure; prose-only correction does not satisfy R14-I.
+- ORD-0169: stale journey / true offline / server runtime error MUST be distinct machine states
+  and banner + aria-live + telemetry + recovery action must all consume that same classification.
+- ORD-0125 empty-target behavior: successful empty/no-op is a typed successful state, not a
+  generic 500.
+- Any other ORD (including ORD-0130 if it touches fault/state attribution) inherits R14 as a hard
+  acceptance item for the attribution surface it changes.
+
+R14 is not a universal requirement to add new reason codes to unrelated feature work. It binds
+only where the ORD crosses a causal-attribution boundary.
+
 ## 10. Freeze sentence
 
 **Classify from discriminating evidence, propagate the classification, and never borrow a
