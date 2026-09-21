@@ -471,7 +471,25 @@ def _plan_staleness(item: PlanVersion) -> tuple[bool, str | None]:
     return False, None
 
 
-def plan_schema(session: Session, item: PlanVersion) -> PlanSchema:
+_CURRENT_UNRESOLVED = object()
+
+
+def plan_schema(
+    session: Session,
+    item: PlanVersion,
+    *,
+    current_plan_version_id: str | None | object = _CURRENT_UNRESOLVED,
+) -> PlanSchema:
+    """Project one PlanVersion onto the public contract.
+
+    `is_current` answers "is this the plan the journey runs" from the journey's own
+    `active_plan_version_id` pointer - the single statement of that fact in this system.
+    A caller that already loaded the Journey passes the value in (the list endpoint, so the
+    projection costs no query); `current_plan_version_id=None` is a *known* answer - no
+    pointer, therefore nothing is current - which is why "not supplied" needs its own
+    sentinel rather than a falsy default.
+    """
+
     activities = session.scalars(
         select(Activity).where(Activity.plan_version_id == item.id).order_by(Activity.sequence_no)
     ).all()
@@ -488,10 +506,14 @@ def plan_schema(session: Session, item: PlanVersion) -> PlanSchema:
     # Stale/recompose-required projection: an expired or evidence-less plan is
     # flagged so the API and UI never present it as a current recommendation.
     stale, stale_reason = _plan_staleness(item)
+    if current_plan_version_id is _CURRENT_UNRESOLVED:
+        owner = session.get(Journey, item.journey_id)
+        current_plan_version_id = owner.active_plan_version_id if owner is not None else None
     return PlanSchema(
         id=item.id,
         journey_id=item.journey_id,
         version_no=item.version_no,
+        is_current=str(current_plan_version_id or "") == item.id,
         planning_mode=item.planning_mode,
         status=item.status,
         source=item.source,

@@ -4507,13 +4507,28 @@ def authoritative_compose_journey(
 
 @app.get("/api/v1/journeys/{journey_id}/plans")
 def list_plans(journey_id: UUID, session: Session = Depends(get_session)):
-    require(session, Journey, str(journey_id), "Journey")
+    """Every version this journey has ever had, with the one it runs named explicitly.
+
+    The list stays unfiltered on purpose: CANDIDATE, SELECTED, ACTIVE, SUPERSEDED and REJECTED
+    rows are all part of what a caller may show or audit.  What used to be missing - and what
+    every consumer was guessing at from array position, which is how "the list is visible but
+    nothing is pressable" and the 33/35 cross-test pollution both got their shape (ORD-0097) -
+    is *which row is now*.  `is_current` answers it from `journey.active_plan_version_id`, the
+    system's only statement of that fact: not from `status`, not from order, not from
+    `version_no`.  A journey with no pointer gets `False` on every row rather than a default
+    first item.
+    """
+
+    journey = require(session, Journey, str(journey_id), "Journey")
     items = session.scalars(
         select(PlanVersion)
         .where(PlanVersion.journey_id == str(journey_id))
         .order_by(PlanVersion.version_no)
     ).all()
-    return [plan_schema(session, item) for item in items]
+    return [
+        plan_schema(session, item, current_plan_version_id=journey.active_plan_version_id)
+        for item in items
+    ]
 
 
 @app.get("/api/v1/plans/{plan_version_id}")
@@ -4644,31 +4659,42 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
         if match is not None:
             commitment.activity_id = match.id
     if abandoned_id is not None:
-        retired = session.execute(
-            update(PlanVersion)
-            .where(PlanVersion.id == abandoned_id, PlanVersion.status == "ACTIVE")
-            .values(status="SUPERSEDED")
-        )
-        if retired.rowcount != 1:
-            session.rollback()
-            raise HTTPException(
-                409, "the plan being replaced is no longer the ACTIVE plan"
+        # The pointer does not always name a plan the traveller is *executing*. A journey
+        # that was prepared but never started points at a SELECTED row, and that row is
+        # already retired to REJECTED above; running the guarded ACTIVE -> SUPERSEDE against
+        # it matched zero rows and answered 409 "the plan being replaced is no longer the
+        # ACTIVE plan" - which is what made switching a selection impossible on the demo
+        # stage (measured while writing the ORD-0097 gate that moves the pointer). The guard
+        # stays exactly as strict for the case it was written for.
+        abandoned = session.get(PlanVersion, abandoned_id)
+        if abandoned is not None and abandoned.status == "ACTIVE":
+            retired = session.execute(
+                update(PlanVersion)
+                .where(PlanVersion.id == abandoned_id, PlanVersion.status == "ACTIVE")
+                .values(status="SUPERSEDED")
             )
-        # The cursor named a step on the plan being abandoned.  Leaving it there would
-        # be exactly the stale-cursor state the projection contract refuses to render,
-        # so it moves to the first pending step of the plan now selected.
-        journey.current_activity_id = next(
-            (
-                item.id
-                for item in session.scalars(
-                    select(Activity)
-                    .where(Activity.plan_version_id == plan.id)
-                    .order_by(Activity.sequence_no)
-                ).all()
-                if item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
-            ),
-            None,
-        )
+            if retired.rowcount != 1:
+                session.rollback()
+                raise HTTPException(
+                    409, "the plan being replaced is no longer the ACTIVE plan"
+                )
+            # The cursor named a step on the plan being abandoned.  Leaving it there would
+            # be exactly the stale-cursor state the projection contract refuses to render,
+            # so it moves to the first pending step of the plan now selected.  Only the
+            # executing case has a cursor to move: a PLANNED journey that was never started
+            # keeps no cursor at all, and ORD-0078's stage contract depends on that.
+            journey.current_activity_id = next(
+                (
+                    item.id
+                    for item in session.scalars(
+                        select(Activity)
+                        .where(Activity.plan_version_id == plan.id)
+                        .order_by(Activity.sequence_no)
+                    ).all()
+                    if item.status not in {"COMPLETED", "SKIPPED", "CANCELLED"}
+                ),
+                None,
+            )
     journey.status = "PLANNED"
     journey.active_plan_version_id = plan.id
     journey.updated_at = datetime.now(timezone.utc).isoformat()

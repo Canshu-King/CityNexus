@@ -526,7 +526,7 @@ paths:
       operationId: listPlans
       responses:
         '200':
-          description: Journey plan versions
+          description: 'Every plan version this journey has ever had (CANDIDATE / SELECTED / ACTIVE / SUPERSEDED / REJECTED), in version_no order. Which one the journey runs is `is_current` - the server''s projection of `journey.active_plan_version_id` - and not the array position, the newest `version_no`, or the row''s `status` (ORD-0097); a journey with no pointer reports `is_current: false` on every row.'
           content:
             application/json:
               schema:
@@ -2166,6 +2166,9 @@ components:
         score_breakdown: {oneOf: [{$ref: '#/components/schemas/ScoreBreakdown'}, {type: 'null'}]}
         mobility_snapshot_id: {type: [string, 'null']}
         mobility_evidence: {type: object, additionalProperties: true}
+        # ORD-0097: the server's own answer to "is this the plan the journey runs", taken
+        # from journey.active_plan_version_id - never from status, order, or version_no.
+        is_current: {type: boolean, description: 'True only on the row named by journey.active_plan_version_id; false on all rows when the journey has no pointer'}
         activities:
           type: array
           items: {$ref: '#/components/schemas/Activity'}

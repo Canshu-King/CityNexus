@@ -409,6 +409,12 @@ class PlanVersion(BaseModel):
     stale: bool = False
     selectable: bool = True
     stale_reason: str | None = None
+    # ORD-0097: "which of these is the plan the journey is running", answered by the server.
+    # `GET /journeys/{id}/plans` returns every version - CANDIDATE, SELECTED, ACTIVE,
+    # SUPERSEDED, REJECTED - so an array position is not a fact anyone may read as truth.
+    # This mirrors `journey.active_plan_version_id` exactly: not derived from `status`, and
+    # not derived from order. With no pointer, nothing is current (all False).
+    is_current: bool = False
 
 
 class GeneratePlansRequest(BaseModel):
