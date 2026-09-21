@@ -6922,7 +6922,45 @@ evidence: 本轮两次 evaluate 原样读数（完整态 vs 缺项态对照）
 
 status: 假事故已自纠（探针字符串猜错 + 子串计数当分母）；账本无丢失（真条目 135）；巡检脚本口径改进行首锚定
 
+### SESSION=494abfd7 · 仲裁两条新 policy 我拉回并落单（含我 ③ 挂起项的裁定）@本机钟 00:2x
+
+`STATUS: ARBITER-DOCS-INGESTED | 树：权威 tip `d26933c` 未动 | 未碰 :4781/:4782/:8693 与 _live.db | 未触发 demo/reset | evidence `arbiter_docs/`（四份契约原文，REST contents 取回，未对 github.com 用 git 网络）|`
+
+- `docs/pending_destination_identity_policy.md` @ **`e4b7faa3`**（+103）：**我 ③ 的挂起项被采纳**——
+  身份列 `canonical_destination_id=null`、原文进 `pending_destination_label`、幂等/相关另用 `destination_pending_key`；
+  并新增两条**反向突变**门（把 `pending:<raw>` 写回 canonical 必须红；拿 pending key 当 catalog join key 必须红）。
+  ⇒ ORD-0157 ④ 解除挂起，C 可直接按此实现；`pending:` 现有落库行按 R10 就地回填、**不许删**。
+- 同文件新增 **ORD-0167 小县城端到端闭环**验收：pre-state inventory → raw 保真 → provider 解析 → provider-backed catalog
+  → 共享 planner（join 只许用真 canonical）→ 产品结果 → 重放幂等；三组（happy / NO_MATCH / RUNTIME_FAILURE），
+  收据 11 项（sha、exact raw、normalized query、operation id、canonical before/after、两层 provenance、planner input identity、final state、retry）。
+  冻结句：**Resolve a real place, preserve the user's raw request, and carry only real canonical identity into planning.**
+- `docs/test_execution_truth_policy.md` @ **`65f1934f`**（+38）：**"没有 X"必须先打印现场 inventory**——这条正是我今晚第四次
+  同族错（拿猜的字段名 `data-attribution-evidence-kind` 去问，实际叫 `data-evidence-kind`）换来的全线规矩；已并入 ORD-0166/0168 的报数口径。
+- 状态：手机预览链仍健康（`:4782` 200、隧道 401 即需鉴权、`POST /api/v1/demo/reset` → **403 `PREVIEW_GUARDED`** 我带正确凭据实测）；
+  后端未动，用户数据未动。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0185
+  to: 8ccd71d8
+  priority: high
+  if_head: 8ee64ae
+  order: |
+    【你 ORD-0156 里那句待裁的问题，我已拍（并同步仲裁 `5763777551` ③ 的建议）：**枚举与可采性都要，但必须两条独立断言**】
+    ① **枚举门（命名合法）**：`source_kind` 只能取现有枚举值，禁 `OSM_TAG_INFERRED` 这类新造（仲裁 §3 原禁令不变）；
+    ② **可采性门（证据配不配）**：hard-feasibility 独立判"这条来源能否支撑这个谓词"——
+       映射层若把**冻结快照/fixture** 里的 tag 标成 `REMOTE_PROVIDER`，**可采性门必须先红，即使枚举门全绿**。
+    ⇒ 顺序与独立性是关键：**先可采性、后命名**；绝不允许"名字合法"成为"来源是编的"的通道。
+    门（照 ORD-0174 的 12 项收据交）：
+    1. 合成一条 `source_kind=REMOTE_PROVIDER` 但 `source_entity_id`/provenance 指向 fixture 的证据 ⇒ **可采性红、枚举绿**（这就是"标签对了来源是假的"现形测试）；
+    2. 合成一条非法 `source_kind` ⇒ 枚举红；
+    3. 两条断言**不得合并成一条**（合并就会互相掩盖）——请写成两个 nodeid，别图省事；
+    4. 突变：把可采性判定挪到枚举之后 / 或直接删掉可采性判定 ⇒ 第 1 条必须从红变绿 ⇒ 门红（证明它真的在管一件事）。
+    写域照旧：`backend/tests/**` + `contracts/**`，**不改产品码**（实现是 C 的 ORD-0155）。
+    报数按 ORD-0171 六要素 + `65f1934f` 新增那句：**写"没有 X"之前先打印实际读到的键名清单**；
+    突变只认**原绿门变红**（已红基线上的记 `NOT_MEASURABLE_RED_BASE`）。
+    顺带更正现场：**tip 已到 `8ee64ae`**（不是 `d26933c`），基线仍成对引用 **无边界 17 / 带边界稳定核 13**。
+  status: DISPATCHED@2026-09-22T00:2x+08 by 494abfd7（§3 裁定落地；两条断言必须分开是这条的要点）
+
 ### SESSION=494abfd7 · ORD-0169 **签收**（我自建 `8ee64ae` 的包、构建产物与车道报的 bundle 名一致，再在部署后的手机上量了归因）@00:0x
 
 `STATUS: ORD-0169-ACCEPTED-AND-DEPLOYED | 我从 `git archive 8ee64ae` 自建：`npm run build` → **`✓ built in 13.06 s`**、产物 **`index-BkEHAbFb.js`** ⇒ **与 D 自报的 bundle 名逐字符相同**（同一 commit 两条独立构建可复现，这本身就是它交付真实性的旁证）| 部署：`_qoder_preview_20260920/dist`，换包前备份 **`dist_bak_0006`** |`
@@ -7736,7 +7774,7 @@ CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x
        全量红集合 ⊆ `eef24d9` 的 14 条基线。
     【顺序】0157 > 0158 > 0125 > 0112 > 0155。禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`、禁 `demo/reset`（R13）、
     解释器 3.12.14、凭据全清、不改 `data/mock/**`、交付只追加自己那块（`newline="\n"`，带"拿掉我的块必须逐字节还原"证明）。
-  status: DISPATCHED@2026-09-21T21:0x+08 by 494abfd7（覆盖 0151 的"两处"前提；provider 调用 0 是我自己量的）
+  status: DISPATCHED@2026-09-21T21:0x+08 by 494abfd7（覆盖 0151 的"两处"前提；provider 调用 0 是我自己量的）｜**④ 已裁 @00:2x**：仲裁 `e4b7faa3`/`pending_destination_identity_policy.md` 采纳我的第三条路——`canonical_destination_id=null` + `pending_destination_label` 保原文 + `destination_pending_key` 只作相关/幂等键；两条反向突变已写进门（把 `pending:<raw>` 写回 canonical、或拿 pending key 当 catalog join key，都必须红）。挂起解除，按此实现。
 
 - id: ORD-0158
   to: 8c66aa92
