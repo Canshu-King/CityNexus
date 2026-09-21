@@ -1584,19 +1584,49 @@ test("sim-booking-target-is-an-activity-the-server-gives-a-slot-for — 默认�
      precondition is established here and used by both sides: the plan's real rows -- ids, titles,
      windows all still the server's -- re-offered as not yet finished. */
   const openActivities = activities.map((item) => ({ ...item, status: "PENDING" }));
+  /* And the read itself is put on the record: an arm that goes red because the gate fetched an empty
+     or stale plan looks exactly like an arm that went red because the server offered no slot. */
+  expect(
+    activities.length,
+    node(
+      NODE,
+      `GET /plans/${planId} answered ${activities.length} activities while the scene reports plan_version_id=${JSON.stringify(seeded.plan_version_id)} -- the gate has no plan to build its arms on, which is not a statement about the panel`,
+    ),
+  ).toBeGreaterThan(0);
 
   /* The booking row's own availability chain puts the journey's state first, and the shared stage is
      usually executing -- which would leave both catalogue arms with nothing to say.  So the state is
      forced to PLANNED here, the same way the ORD-0090 arm forces it, and every arm below asserts. */
   const forcePlanned = async () => {
-    /* Called once per arm; unroute first so an arm never stacks on the previous one's handler. */
-    await page.unroute("**/api/v1/plans/" + planId);
-    await page.route("**/api/v1/plans/" + planId, async (route) => {
+    /* Called once per arm; unroute first so an arm never stacks on the previous one's handler.
+       Matched on any plan id on purpose: this node's own read of the scene and the panel's can disagree
+       once a neighbour has moved the stage onto another plan version, and pinning the id here left the
+       panel's fetch unforced -- which surfaced as the generic "没有可下单的活动" sentence, a statement
+       about the gate's scope rather than about the panel. */
+    await page.unroute("**/api/v1/plans/*");
+    await page.route("**/api/v1/plans/*", async (route) => {
+      const path = new URL(route.request().url()).pathname;
+      if (
+        route.request().method() !== "GET" ||
+        !/^\/api\/v1\/plans\/[^/]+$/.test(path)
+      ) {
+        await route.fallback();
+        return;
+      }
       const response = await route.fetch();
-      const body = (await response.json()) as Record<string, unknown>;
-      body.activities = ((body.activities ?? []) as Array<Record<string, unknown>>).map(
-        (item) => ({ ...item, status: "PENDING" }),
-      );
+      const body = (await response.json().catch(() => null)) as Record<string, unknown> | null;
+      if (!body || !Array.isArray(body.activities)) {
+        await route.fulfill({
+          status: response.status(),
+          contentType: "application/json",
+          body: JSON.stringify(body ?? {}),
+        });
+        return;
+      }
+      body.activities = (body.activities as Array<Record<string, unknown>>).map((item) => ({
+        ...item,
+        status: "PENDING",
+      }));
       await route.fulfill({
         status: response.status(),
         contentType: "application/json",
@@ -1709,7 +1739,7 @@ test("sim-booking-target-is-an-activity-the-server-gives-a-slot-for — 默认�
     ).toContain(expectSentence);
     arms[mode] = { sceneLine: shown, ...read };
     await closeStageEntry(page, `the ${mode} booking arm`);
-    await page.unroute("**/api/v1/plans/" + planId);
+    await page.unroute("**/api/v1/plans/*");
     await page.unroute("**/api/v1/demo/scene");
   }
   await stub("off");
