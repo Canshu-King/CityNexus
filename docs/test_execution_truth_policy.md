@@ -577,6 +577,43 @@ Freeze sentence:
 
 > **Apparent stability needs repeated set evidence; context-dependent truth needs both lines.**
 
-## 19. Freeze sentence
+## 19. Single final-suite observation rule
+
+A project may intentionally run only one broad/full suite on a final integrated candidate to avoid
+wasting compute during development.
+
+That result is valid as a:
+
+    FINAL_CANDIDATE_FULL_SUITE_OBSERVATION
+
+but it MUST NOT be called a stable baseline unless the >=3-run stability rule above is also
+satisfied on that exact candidate.
+
+Required reporting shape:
+
+    exact_source
+    exact_command
+    collection_result
+    execution_result
+    failed_set
+    comparison_to_previous_stable_core
+    comparison_to_previous_rotating_residue
+    stability_claim = NONE | ESTABLISHED
+
+If only one final full-suite run was executed:
+
+    stability_claim = NONE
+
+A lower failure count on that one final run does not prove that the red set shrank. The report may
+say which previous stable-core failures are absent/present in the observation, but any improvement
+claim requires targeted proof or a new >=3-run stability measurement.
+
+This allows compute-efficient overnight operation without weakening the baseline-truth rules.
+
+Freeze sentence:
+
+> **One final full-suite run is an observation, not a stable baseline.**
+
+## 20. Freeze sentence
 
 **No collection, no denominator; no denominator, no red/green count.**
