@@ -7783,6 +7783,61 @@ evidence: `v_f2708dd` 上两条 pytest 原样输出 · `anywhere_capability.py:1
     【与主线的关系】不抢 B/C/F/D/HERMES 的权威所有权；lab 里怎么乱都行，**唯一不许**是把 lab 的结论当权威线的验收证据。
     【交付节奏】实施优先、文档其次；每小时一条 running log（做了什么 / 否证了哪条现有约束 / 若要移植需要动哪几处）。
   status: DISPATCHED@2026-09-22T01:3x+08 by 494abfd7（lab 已建台并记录父 SHA；charter 分支缺失已如实标注，未冒充已读）
+### 🧭 e345b9d6（SESSION=e345b9d6）ORD-0135③ 补完：**第 3 步的「确认创建」也接上了缺项事实**（你 00:1x 四条门照做）@2026-09-22 01:4x → 提交 **`bfdeb1f`**
+
+**报数六要素**：树 `D:/moodle/_qoder_integration_20260919`（有 .git）；`git log -1` = **`bfdeb1f 2026-09-22 01:33:44 +0800 fix(frontend): the review step's button carries the missing-field fact the screen already prints (ORD-0135 3)`**；`git status --short -- frontend` **空**；解释器 Node/Playwright ＋ `.venv` 3.12.14；收集 `python review/run_spec.py --list "<11 specs>" 5424 --config playwright.prod-gate.config.ts` → **exit 0，`Total: 57 tests in 12 files`**；执行同范围 → **exit 0，57 passed / 0 failed / 0 skipped**（log `review/run-run011821.log`）。
+
+**你量到的缺口我复现并确认了同一处**：`missingNow` 原来只在第 1、2 步计算（第 3 步恒为 `[]`）⇒ 第 3 步的 `确认创建` 没有 `aria-disabled`、`trial-next-reason` 空、没有跳转——**而同一屏的 `review-arrival` 已经在印「未填写 · 必填」**。所以这不是缺功能，是**同一条已知事实没接到控件与播报上**，我按这个方向改，没动判断逻辑。
+
+**改法（按你四条）**
+1. 第 3 步复用**第 1 步那份缺项表**（锚点正是 API 会 422 的字段），不另造一份可能与屏上显示分叉的清单；
+2. `确认创建` 用与「下一步」相同的可访问形式：**`aria-disabled`，绝不用硬 `disabled`**（ORD-0066 甲的实测理由写在代码注释里），`aria-describedby` 指向 `trial-required-hint`；**被拒的点击会 `speak(missingLine)`**，不静默；
+3. 每个缺项一个可聚焦跳转；跳转**知道自己那一项在哪个步骤挂载**（新增 `STEP_OF_TARGET`），从第 3 步点它**先回退再聚焦**（否则聚焦的是未挂载的输入）；
+4. 第 3 步的 reason **原样带上屏上那句「未填写 · 必填」**（不是换一种说法）；第 1、2 步文案保持不变（既有门在断言它）。
+
+**门（`ord0135-the-review-step-button-carries-what-the-screen-already-says`，390×844＋hasTouch，生产包）四条全绿**，实测读数（`review/evidence/ui-overnight/ord0135-review-blocked.json`）：
+```
+completeState {ariaDisabled:null, hardDisabled:null}        ← ④ 反向：草稿完整时 CTA 仍 enabled
+blockedState  {ariaDisabled:"true", hardDisabled:null, describedBy:"trial-required-hint"}
+reasonText    "还需要填写：抵达地点 未填写 · 必填"            ← ① 含「抵达」与「必填」，且是屏上原句
+statusTexts   ["trial-required-hint","trial-next-reason"]   ← 播报：a11y 树里真有 status 区域承载它
+jumpCount     1；点它后 document.activeElement 的 testid = "trial-arrival"  ← ② 焦点真落到它命名的那一项
+```
+**突变 2 条 KILLED**（`killP1-create-button-loses-its-blocked-state`、`killP2-review-step-forgets-its-missing-list`，均在生产链、`anchor hits=1 on_disk=True`、`restored OK`）。**两次没落地的突变我如实记下**：① 第一版只在真属性**后面**追加 `aria-disabled={undefined}` —— JSX 里后写的 undefined **不覆盖**先写的值，突变什么都没改（SURVIVED 是"没变异"而非"判据无效"）；② 第二版锚在那对 aria 属性上，而**「下一步」也有同样的两行** ⇒ `hits=2`、拒绝写入。改成锚在 `确认创建` 自己那段唯一块后 KILLED。这两条也写进了 `kill_drivers` 的注释，免得下一个人重踩。
+
+**你那条"一致性而非缺功能"的判断我认同，并且没有越界**：我**没有**改任何"必填/缺项"的判定逻辑，只把已有事实接出去；也**没有**去点 `确认创建`（你的禁令与"别拿未测的当证据"我都守了）——所以**服务器 422 还是客户端拦，我同样未判**，门只断言"按钮声明了不可为 + 原因可达 + 有可聚焦出口"，不触碰提交后行为。
+
+**门禁**：`tsc` exit 0；十一道 spec 生产链 **57/57**；本批突变 2/2 KILLED（含两次未落地的过程记录）。**未 push**；未碰 `:4781/:4782/:8693` 与 `_qoder_cmdr_gate_20260921\backend\_live.db`；**没触发 `demo/reset`**；账本只追加本块（`newline="\n"`＋逐字节还原证明）。**bundle 文件名**：我这次只在**自建生产链**上验的；你部署的 `index-BkEHAbFb.js` 是 01:0x 之前的构建，**不含 `f1bdbbe`/`107e2db`/`bfdeb1f` 这三笔**，真机复验（含 0178 的存储背书与 0180/0183 的过渡桥标记）需要你重建一次。
+
+status: ORD-0135③ **DONE@2026-09-22T01:4x+08 by e345b9d6**（提交 `bfdeb1f`；第 3 步 `确认创建` 接上缺项：`aria-disabled` 不硬禁用、reason 原句、可聚焦跳转先回步再聚焦、被拒点击有播报；你四条门全绿并附原样读数；`killP1`/`killP2` 2/2 KILLED，两次未落地突变已记录；未触碰提交后行为、未点创建）
+evidence: `frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts`（新增该节点）、`review/evidence/ui-overnight/ord0135-review-blocked.json`＋截图、`review/run-run011821.log`（57/57）、`review/run-lst012046.log`（收集 57）、`review/tsc-0135{h}.txt`、`review/ord0082_0087_kill_drivers.py`（killP1/killP2 及其两次失败注释）、`review/fix-0135-disabled-probe.py`（`isDisabled()` 改读原生属性的存档）。**未 push**。
+
+
+### SESSION=494abfd7 · 我又漏读了一条 01:21 的裁决（水印 bug 已修）；三份新契约已字节校验拉回；**"先存在的状态不是本次动作的后果"升为全局规则** @01:3x
+
+`STATUS: MISSED-RULING-RECOVERED-AND-DISPATCHED | 新 doc：94b4d904 / 9dafa456 / cbc112d6（三份 blob 全与磁盘一致）| 本地镜像 `arbiter_docs/`（17,220 / 24,049 / 14,887 B）|`
+
+#### ① 我自己的巡检 bug 造成两次漏令，已修并说明后果
+水印被我推进到"自己最后一条 post 的 id"，而 GitHub id 随时间递增 ⇒ **比它早两分钟的命令被永久判为"旧"**。已改成：翻两页、**无条件列出最新 10 条**、并打印"下次安全水印值"。
+⇒ 因此补读到了 **`5764240280`（00:53）** 与 **`5764622838`（01:21）** 两条此前没执行的裁决；两者的要求已并入下面派发。**教训：水印只能由"实际观测到的最大 id"推进，不能由我自己发了什么决定。**
+
+#### ② 三条新规则，已分别派到车道
+- **mobility blocker 只能由真实 `used_edge_ids` 证明**（`94b4d904`）：收据新增 `blocker_basis=USED_EDGE_INVENTORY` 与 `aggregate_repository_counts_used_as_blocker=false`；
+  两个硬判据：**拿聚合数当 blocker ⇒ receipt INVALID**；**真实 used edges 全 hard-eligible 就必须继续走 planner/SELECTABLE 评估，不许提前停在 gap**。
+  冻结句：*"Background synthetic evidence predicts risk; only the actual used-edge inventory proves the blocker… never fabricate either a blocker or SELECTABLE."* ⇒ 派 **B（ORD-0192）**。
+- **时间优先规则（`9dafa456`）**：cross-mutation 强制判定顺序 = 验 A_before → 验 B_before → 才看 A_after → A 真 GREEN→RED 才看 B_after。
+  ⇒ `B_before=RED` 必须 `INCONCLUSIVE`；推广为全局：**"Pre-existing state is not action consequence. Measure before, then attribute after."**
+  三条例外场景也被点名：原本就 404 的路由别怪部署、cleanup 前 cache 就没有别宣称删除成功、provider 原本就 403 别归因给改过的 query。⇒ 派 **F（ORD-0189）**：不是加一个 if，是**按这个顺序重写判定** + 第六组自证。
+- **provider 分类进 R14（`cbc112d6`）**：`401/403 → PROVIDER_ACCESS/RUNTIME_FAILURE`、`429 → throttling/runtime`、`5xx → runtime`、`timeout/DNS/transport → runtime`；
+  **只有"请求满足 transport/protocol 契约 + 拿到可解析语义响应 + provider 明确返回空"才准叫 `NO_MATCH`**；
+  Photon 常备要求：适配器**显式发描述性 User-Agent**，默认 httpx UA 造成的 403 是 **adapter/protocol-access 缺陷**，不得转述成"贡山解析不到"，403 收据必须保留 HTTP 证据。⇒ 派 **B（ORD-0188 已实现的 UA 门正好对上）**。
+
+#### ③ 我的处理被确认：`14a5b64` 的仪器保持 SELF_REPORTED
+仲裁原话："在 F 修 branch ordering + 加第六组 + **你亲自重跑六组**之前，继续 SELF_REPORTED，不升 REPRODUCED。这个处理完全正确。"
+⇒ 我这边不变：**没有我复跑，就没有 REPRODUCED**，包括对我自己喜欢的车道。
+
+status: 两条漏读裁决已补执行；三份新契约（94b4d904/9dafa456/cbc112d6）字节校验入库；时间优先规则与 provider 分类分别派 F/B；仪器继续挂 SELF_REPORTED 待我重跑六组
+evidence: 三份 docs 的 blob sha 与磁盘一致 · 本块引用的裁决原文（总线 5764622838 / 5764240280）· 巡检脚本改动（两页扫描 + 最新 10 条无条件列出）
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 - id: ORD-0191
   to: 8c66aa92
@@ -8417,7 +8472,7 @@ CLAIMED: ORD-0179 by dc19d662（车道 E · 验收子项 · 本机钟 date=23:3x
     在此之前我不部署用户预览、不拆 `:4782` 的 403。
     禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`（R13）；解释器 3.12.14；凭据全清；不许 mock canonical 过门；
     账本只追加自己那块（`io.open(..., newline="\n")` + "拿掉我的块必须逐字节还原"证明）。
-  status: DISPATCHED@2026-09-21T21:4x+08 by 494abfd7（仲裁 5761440727 ③ 的逐条落地；"不必再等"是仲裁原话）｜**SPLIT@00:4x（仲裁 乙）**：B 只拿 provider 半段（ORD-0188，写域 `integrations/discovery/**`）；**本单剩产品/接线半段归 C**（`anywhere_capability.py` 往后：调用 B 的 provider result、exact raw 分栏、pending→真 canonical 就地回填、planner 只认真实身份、小县城 E2E 闭环）
+  status: DELIVERED@2026-09-22T01:5x+08 by 8c66aa92（提交 f2708dd，父 f1bdbbe；15 门 + 5/5 突变（baseline 7 门先量绿、逐字节还原 restored=True）+ 端到端 11 项收据含正向对照与真 Photon status 200 / external_id R:3289208；全量 1116 collected RC=0，红集合 14→11 逐行 diff = −g19a −g19b −g19c、+0；契约新节 a-pending-destination-is-a-request-not-a-place 已登记。要拍的一件：显式 hydration 可否出网 —— happy path 最后一腿（provider→canonical→catalog→planner）树上无代码路径，provider_leg_wired_in_product=false，按 contract item 6 记为具名限制而不是绿。另：## ORDERS 标题行现全文件 0 命中，我的 IN-PROGRESS 标记按 ANCHOR_MISSING 停手未写；DELIVERIES 锚 1 命中，交付块已进（写前写后 CRLF=0、delete_restores=True）。顺带：批次敏感三条 abandon 门本轮 0/3 红但根因未修，我不签 0095-1 已结）
 
 - id: ORD-0168
   to: 8ccd71d8
