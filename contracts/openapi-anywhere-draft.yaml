@@ -66,16 +66,17 @@ info:
       - "Provenance 是对象不是单词：source_kind ∈ GOLDEN_FIXTURE|REMOTE_PROVIDER|SIMULATED|REPLAY|OFFLINE_SNAPSHOT，外加 fact_quality 且'归一化不得把 SIMULATED/PARTIAL/未知升成更强类'。我草案那套平铺 enum 作废，按它。"
       - "ReasonCode 取它的 9 值；RecommendedAction 取它的 7 值（我草案里的 CHOOSE_CANDIDATE 撤，歧义由 candidates/AMBIGUOUS 路径表达）；ProviderStatus 取它的 OK|RATE_LIMITED|UNREACHABLE|PARTIAL。"
       - "响应码：POST /catalog-hydrations 是 200/202/422/503（我写了 409，按它改成 422/503 分工）。"
+      - "R2：结构与运行时是两条真值，我原先糊成一条。capability = READY|HYDRATABLE|UNAVAILABLE（三值，没有 UNKNOWN）；provider_status = OK|RATE_LIMITED|UNREACHABLE|PARTIAL（四值）。没有观测=没查过，不得写成 OK（R2 原话 do not fabricate OK）；PARTIAL=响应可解析但不完整。组合有含义：UNAVAILABLE+无故障=没有可追溯来源；HYDRATABLE+UNREACHABLE=能支持但现在到不了；HYDRATABLE+RATE_LIMITED=可重试，不得显示成永久不支持。"
       - "capability 只接 `query` 一个参数（我加的 journey_id 撤）：绑定旅程发生在 POST /catalog-hydrations 的请求体里，它已带 journey_id/canonical_destination_id/requested_categories。"
     lane-f-additions:
       - "① 实测差集（正式契约不记录现实，只规定应然；这份把'四条全缺 + 同一进程对照 200'钉成可复跑读数）。"
       - "② 延迟预算 p95<=1s / hard<=2s（§6 的数在两边都没写成字段约束，这里定成可断言形式）。"
       - "③ §17C/D/E 三条测试义务（下面 x-testing-obligations），正式契约只写了'provider 网络不得持写事务'这一条规则，没规定怎么证明。"
       - "④ 双向 parity：实现了却还把契约挂着未登记 ⇒ 红。防的正是这份附件被长期留在'草案'状态。"
-    open-questions-for-arbiter:
-      - "`stale_after` 与 `readiness_policy_version` 的关系：READY 是否随 stale_after 过期自动降级为 HYDRATABLE，还是仍报 READY + 背景刷新（§8 的 stale-while-refresh 两种都讲得通）。车道 C 需要一句话定死，我先按'不自动降级，但必须把 stale 说出来'实现门。"
-      - "UNAVAILABLE 与 503 的分界：目的地本身不可用 vs provider 解析器不可用，前者进 capability、后者进 HTTP 码，两边没写死。"
-
+    questions-closed-by-v0_2:
+      - "stale 要不要把 READY 降下来 —— v0.2 已定：HYDRATABLE 的定义本身含 missing/stale/incomplete ⇒ 本地数据过期不是 READY+背景刷新，而是 HYDRATABLE。我上一轮写的『不自动降级但要说出来』作废；G1/G4 改成 READY 必须由带版本的服务端策略 readiness_policy_version 判定，过期即不得为 READY。"
+      - "UNAVAILABLE 与 resolver 故障的分界 —— v0.2 R1 已定：三态只描述结构性能力；Photon 暂时不可达要回 DESTINATION_RESOLVER_UNAVAILABLE 且保持可重试，不得因解析器挂了就永久降成 UNAVAILABLE；已有 canonical 身份可直接答、不再探测。v1 解析器只有 Photon，Nominatim 不是 v1 依赖，且不得发 lang=zh（换写法=换身份）。G1 加了这条组合判定。"
+      - "R3（current-plan 用 per-plan is_current 派生、唯一持久真值仍是 journey.active_plan_version_id，不得持久化也不得独立改动）不在我这四张门范围内，记在这里是为了让车道 A/C 知道它已裁定，别再各写一份。"
   # -----------------------------------------------------------------------------
   # ③ §6 的延迟预算（可断言形式）
   # -----------------------------------------------------------------------------
@@ -107,7 +108,8 @@ x-testing-obligations:
       2~5 个同指纹并发必须收敛到同一个 operation_id；持久层同一指纹的非终态操作**至多一条**，
       由唯一索引强制（不是进程内锁 —— 两个 uvicorn worker 不共享一把锁）；
       provider 调用不得因并发而翻倍；`reused=true` 必须如实。
-    fingerprint: canonical destination + catalog_schema_version + provider policy/version
+    # v0.2（docs/anywhere_capability.md 的 durable fingerprint）要的是**至少**这四段：
+    fingerprint: canonical_destination_id + catalog_schema_version + readiness_policy_version + provider_policy_version
     gate: backend/tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation
   lock-duration-evidence:
     rule: >-

@@ -57,6 +57,11 @@ HYDRATION_STATUSES = {
 }
 TERMINAL_STATUSES = {"COMPLETED", "FAILED", "UNAVAILABLE", "ABANDONED"}
 ACCEPTED_CODES = {200, 202}
+# R2：运行时观测四值。"没有观测"必须靠缺席表达，不许出现 UNKNOWN/空串/编出来的 OK。
+PROVIDER_STATUSES = {"OK", "RATE_LIMITED", "UNREACHABLE", "PARTIAL"}
+# R1：解析器故障是运行时事实，不得把目的地永久判成结构不可用。
+TRANSIENT_REASONS = {"DESTINATION_RESOLVER_UNAVAILABLE", "PROVIDER_RATE_LIMITED", "PROVIDER_TIMEOUT",
+                     "PROVIDER_NETWORK_FAILURE", "PROVIDER_SERVER_ERROR", "CATALOG_PREPARING"}
 # G3 要拿它去查持久层的唯一索引；表名由车道 C 定，但必须在 inspector 里查得到。
 HYDRATION_TABLE_HINTS = ("catalog_hydration", "hydration")
 OUTCOME_STATUSES = {"PLAN_CREATED", "NO_ACTION", "BLOCKED"}
@@ -125,6 +130,29 @@ def test_g1_destination_capability_comes_from_the_backend_not_from_a_count():
     assert not wrong_values, (
         f"期望：每个分类取值 ∈ {sorted(COVERAGE_STATES)}；实际：{wrong_values}"
     )
+    # R2：观测值只能落在这四个里；"没查过"必须是**没有这条观测**，不是一个编出来的 OK。
+    observations = body.get("provider_status") or body.get("provider_observations") or []
+    invented = [
+        item for item in observations
+        if (item.get("status") if isinstance(item, dict) else item) not in PROVIDER_STATUSES
+    ]
+    assert not invented, (
+        f"期望：provider_status 取值 ∈ {sorted(PROVIDER_STATUSES)}（缺观测=不出现，不得伪造 OK/UNKNOWN/空值）；"
+        f"实际：{invented}"
+    )
+    # R1：解析器暂时不可达不是结构性 UNAVAILABLE，必须是可重试的那一条。
+    if verdict == "UNAVAILABLE":
+        assert body.get("reason_code") not in TRANSIENT_REASONS, (
+            f"期望：UNAVAILABLE 只用于『没有可追溯来源』这种结构结论（R1）；"
+            f"实际：UNAVAILABLE + reason_code={body.get('reason_code')!r} —— "
+            "解析器/网络暂时不可达应保持可重试，不得把目的地永久判死"
+        )
+    # READY 的判据是带版本的服务端策略，不是任何无版本魔法数。
+    if verdict == "READY":
+        assert body.get("readiness_policy_version"), (
+            f"期望：READY 必须说得出是哪一版 readiness_policy 判的（v0.2：只有服务端评估器能提升）；"
+            f"实际：字段缺失，键 {sorted(body)[:12]}"
+        )
     assert body.get("reason_code"), (
         f"期望：状态伴随机器可读 reason_code，供界面查表而不是匹配英文句子（§11）；"
         f"实际：reason_code={body.get('reason_code')!r}"
@@ -195,6 +223,19 @@ def test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation()
         f"期望：同指纹并发一律被受理（{sorted(ACCEPTED_CODES)}；arbiter v1 的响应码就是 "
         f"200/202/422/503，**没有 409**——撞指纹要复用而不是把人推开）；实际状态码 {codes}"
     )
+    accepted = first.json()
+    missing_pieces = [
+        field
+        for field in ("canonical_destination_id", "catalog_schema_version",
+                      "readiness_policy_version", "provider_policy_version")
+        if field not in accepted
+    ]
+    assert not missing_pieces, (
+        "期望：受理回答里能看出指纹四段 "
+        "canonical_destination_id + catalog_schema_version + readiness_policy_version + "
+        f"provider_policy_version（v0.2 的 durable fingerprint，车道 C 要按它建唯一索引）；"
+        f"实际缺 {missing_pieces}，现有键 {sorted(accepted)[:14]}"
+    )
     fingerprints = {response.json().get("fingerprint") for response in responses}
     assert fingerprints == {first.json().get("fingerprint")} and None not in fingerprints, (
         f"期望：五个请求回同一个 fingerprint（规范目的地 + catalog_schema_version + provider "
@@ -252,6 +293,22 @@ def test_g4_partial_catalog_is_never_reported_as_fully_ready():
             f"期望：{CAPABILITY_FIELD}=READY 时每个分类都是 READY；实际：{not_ready} —— "
             "整体 READY、局部 MISSING 就是「能规划一切」的谎"
         )
+    if verdict == "READY":
+        assert body.get("readiness_policy_version"), (
+            "期望：READY 出自带版本的服务端策略，不是 places.length>0 这类无版本魔法数（v0.2 明令禁止）；"
+            f"实际：readiness_policy_version={body.get('readiness_policy_version')!r}"
+        )
+    # 候选数只能用于诊断：v0.2 明写 candidate count alone cannot promote the destination to READY。
+    counts = {
+        key: value.get("candidate_count")
+        for key, value in coverage.items()
+        if isinstance(value, dict)
+    }
+    weak = {key: value for key, value in coverage.items() if isinstance(value, dict) and value.get("state") != "READY"}
+    assert not (counts and weak and verdict == "READY"), (
+        f"期望：有分类仍是 PARTIAL/MISSING 时，候选数量再多也不得把目的地举成 READY；"
+        f"实际：{weak}，候选数 {counts}"
+    )
     partial = {k: v for k, v in coverage.items() if v in {"PARTIAL", "MISSING"}}
     assert not (partial and verdict == "READY"), (
         f"期望：只有两间博物馆的城市不得报成全量 READY（§2 READY != places.length > 0）；"

@@ -34,8 +34,8 @@ POLITE_INTERVAL_S = 1.0  # ≤1 req/s，§15/任务书礼貌约束
 
 PROBES = [
     # (名字, 方法, URL 或 query 模板)
-    ("photon-unseen-county", "GET", "https://photon.komoot.io/api/?q={query}&lang=zh"),
-    ("nominatim-unseen-county", "GET", "https://nominatim.openstreetmap.org/search?q={query}&format=jsonv2&limit=3"),
+    # v0.2：v1 解析器只有 Photon，且**不得发 lang=zh**（默认结果保留中文写法，换写法=换身份）。
+    ("photon-unseen-county", "GET", "https://photon.komoot.io/api/?q={query}"),
     ("overpass-attractions", "POST", "https://overpass-api.de/api/interpreter"),
 ]
 QUERY = os.environ.get("CITYNEXUS_SMOKE_QUERY", "贡山独龙族怒族自治县")
