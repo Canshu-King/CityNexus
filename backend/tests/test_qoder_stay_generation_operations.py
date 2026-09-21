@@ -134,7 +134,7 @@ import pytest  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
-def _no_worker_outlives_its_test():
+def _no_worker_outlives_its_test(monkeypatch):
     """Wait for the operations *this test* started before the next one begins.
 
     A worker whose fake provider has already been un-patched would keep running against the
@@ -142,18 +142,41 @@ def _no_worker_outlives_its_test():
     an undrained job turns the next test into a lock timeout.  Rows a test inserts by hand
     are deliberately not waited for: they have no worker at all, which is the point of the
     tests that create them.
+
+    The `monkeypatch` parameter **is** the fix, and it is unused on purpose: fixture teardown
+    runs in reverse setup order, so an autouse fixture with no dependencies was set up first
+    and torn down *last* - after the provider patches had already been reverted. Measured on
+    `21a09e8` as a two-file pair (`stay_generation_operations` + `trip_shape_and_budget_reference`,
+    identical collection order both times): 31 failed / 8 passed in 62 s with
+    `database is locked` everywhere, against 38 passed in 13.77 s on `924461e`. Requesting the
+    fixture makes this one drain while its own fakes are still installed.
+
+    Before failing it, the stragglers are abandoned: a job this test started must not outlive
+    the test, and an abandoned job stops writing - which keeps the next module measurable
+    instead of leaving the suite to inherit the lock. That is a cleanup, not a softening: the
+    assertion below still fires.
     """
 
     _started.clear()
     yield
     deadline = time.monotonic() + 30.0
+    pending: list[str] = []
     while time.monotonic() < deadline:
         pending = [item for item in _started if not _settled(item)]
         if not pending:
             return
         for operation_id in pending:
             wait_for_operation(operation_id, deadline_seconds=2.0)
-    raise AssertionError(f"operations still open: {pending}")
+    still_open = [item for item in _started if not _settled(item)]
+    for operation_id in still_open:
+        with SessionLocal() as session:
+            row = session.get(StayGenerationOperation, operation_id)
+            if row is not None and row.journey_id:
+                abandon_operation(session, operation_id)
+    raise AssertionError(
+        f"operations still open: {still_open} - a worker outlived its provider patches, so "
+        "the next module runs against a database this one is still writing to"
+    )
 
 
 def _started_ids() -> None:
