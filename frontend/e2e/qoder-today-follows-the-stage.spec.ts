@@ -802,6 +802,23 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
         maxScroll,
         node(NODE, `${arm}: the window's body scrolls ${maxScroll}px (scrollHeight ${(extents as NonNullable<FloatReading["extents"]>).bodyScrollHeight}, clientHeight ${(extents as NonNullable<FloatReading["extents"]>).bodyClientHeight}) -- the rows below the fold are unreachable`),
       ).toBeGreaterThan(0);
+      /* "那两枚被谁盖住" has a readable answer, and it is not an overlay: at rest the window paints
+         down to `box.bottom`, and every row whose centre sits below that line is clipped by the scroll
+         body -- `elementFromPoint` there returns the page behind the window, which is what makes an
+         un-scrolled probe report "covered".  Filed per row, with the window's own painted bottom, so
+         the claim can be checked against a number instead of argued. */
+      const atRestRows = open.rows.map((item) => ({
+        id: item.id,
+        centreY: item.centreY,
+        insideTheWindow: item.centreY <= Math.round(box.bottom),
+        hitTag: item.hitTag,
+        visible: item.visible,
+      }));
+      const clippedWhileUnscrolled = atRestRows.filter((item) => !item.insideTheWindow);
+      expect(
+        clippedWhileUnscrolled.every((item) => item.centreY > Math.round(box.bottom)),
+        node(NODE, `${arm}: a row reported as unreachable is actually inside the window's painted box: ${JSON.stringify(clippedWhileUnscrolled)} vs bottom ${Math.round(box.bottom)}`),
+      ).toBe(true);
       const ids = open.rows.map((item) => item.id).filter(Boolean) as string[];
       /* Eleven, not "at least nine": the stage has exactly eleven actions (重置/准备/承诺/开始/推进/
          中断/重规划/接受/拒绝/降级/恢复), and a floor low enough to pass when two of them stop
@@ -854,6 +871,8 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
         nav: open.nav,
         dock: open.dock,
         maxScroll,
+        windowPaintedBottom: Math.round(box.bottom),
+        atRestRows,
         perRow,
       };
       /* The claim being made here is visual ("别把屏幕挡住"), so it is filed as pictures at the same size
@@ -982,6 +1001,122 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
     ) + "\n",
     "utf-8",
   );
+});
+
+/* ------------------------------------------ ORD-0100 ③, the finger half: does it scroll under a touch?
+ *
+ * The Commander's probe on the deployed bundle (`_qoder_recovery_20260919/raw/panel_after_143d904.json`)
+ * reported `maxScroll=0`, `overflowY=visible` and 2 of 11 rows hittable.  Both numbers are correct
+ * about the node it measured: `.cn-sim` is the panel, and a panel is not the clipping box -- the
+ * scroller is its *ancestor*, `[data-testid="sim-pop-body"]`, which is why "no `overflow:auto`
+ * descendant" was also true.  What that probe never did is scroll, and a mouse wheel is not a finger.
+ *
+ * So this node boots a touch-enabled context and sends real swipe gestures through CDP, then requires
+ * the body to reach its own bottom and the eleventh row to take its own tap.
+ */
+test("sim-window-scrolls-under-a-finger — 手指能滑到第十一枚按钮", async ({ page, browser }) => {
+  test.setTimeout(240_000);
+  const NODE = "sim-window-scrolls-under-a-finger";
+  const seeded = await readScene(page);
+  const journeyId = String(seeded.journey_id ?? "");
+  const use = test.info().project.use as {
+    baseURL?: string;
+    storageState?: string;
+  };
+  const touch = await browser.newContext({
+    hasTouch: true,
+    viewport: { width: 390, height: 844 },
+    baseURL: use.baseURL,
+    storageState: use.storageState,
+  });
+  const phone = await touch.newPage();
+  const cdp = await touch.newCDPSession(phone);
+  try {
+    await openToday(phone, journeyId, "zh-CN", "light", 390);
+    await openStageEntry(phone, "the finger pass");
+    const atRest = await measureFloat(phone);
+    const maxScroll = atRest.extents
+      ? atRest.extents.bodyScrollHeight - atRest.extents.bodyClientHeight
+      : 0;
+    expect(
+      maxScroll,
+      node(NODE, `the window's own body has nothing to scroll (${JSON.stringify(atRest.extents)}): nothing below the fold is reachable however the gesture is sent`),
+    ).toBeGreaterThan(0);
+    const lastRowId = atRest.rows[atRest.rows.length - 1]?.id ?? "sim-action-restore";
+    const before = atRest.rows.find((item) => item.id === lastRowId);
+    /* The swipe only means something if that row starts out of reach. */
+    expect(
+      before?.visible,
+      node(NODE, `${lastRowId} is already on screen at rest, so the swipe below would prove nothing: ${JSON.stringify(before)}`),
+    ).toBe(false);
+    const bodyBox = atRest.body as Rect;
+    const scrollTops: number[] = [];
+    for (let step = 0; step < 10; step += 1) {
+      /* A finger, as the compositor sees it: touchStart, a column of touchMoves, touchEnd.
+         `Input.synthesizeScrollGesture` with `gestureSourceType: "touch"` moves this body 0px in ten
+         attempts on headless Chromium while `"default"` moves it -- which says the harness is not
+         feeding the touch path there, not that the window cannot scroll.  So the events are sent by
+         hand, and the control below proves they are being delivered at all. */
+      const x = Math.round(bodyBox.x + bodyBox.width / 2);
+      const from = Math.round(bodyBox.y + bodyBox.height - 60);
+      const to = from - 240;
+      await cdp.send("Input.dispatchTouchEvent", {
+        type: "touchStart",
+        touchPoints: [{ x, y: from }],
+      });
+      for (let step = 1; step <= 8; step += 1) {
+        await cdp.send("Input.dispatchTouchEvent", {
+          type: "touchMove",
+          touchPoints: [{ x, y: Math.round(from + ((to - from) * step) / 8) }],
+        });
+      }
+      await cdp.send("Input.dispatchTouchEvent", { type: "touchEnd", touchPoints: [] });
+      const scrollTop = await phone
+        .getByTestId("sim-pop-body")
+        .evaluate((element) => element.scrollTop);
+      scrollTops.push(scrollTop);
+      if (scrollTop >= maxScroll - 2) break;
+    }
+    expect(
+      scrollTops[scrollTops.length - 1],
+      node(NODE, `${scrollTops.length} touch swipes moved the body to ${scrollTops[scrollTops.length - 1]}px of ${maxScroll}px -- it never reaches its bottom under a finger: ${JSON.stringify(scrollTops)}`),
+    ).toBeGreaterThanOrEqual(maxScroll - 2);
+    const after = (await measureFloat(phone)).rows.find(
+      (item) => item.id === lastRowId,
+    );
+    expect(
+      Boolean(after?.visible && after?.centre && !after?.inNavBand),
+      node(NODE, `after swiping to the bottom, ${lastRowId} still does not take its own tap: ${JSON.stringify(after)}`),
+    ).toBe(true);
+    await phone.screenshot({
+      path: evidencePath("ui-overnight/stage-float-390-touch-bottom.png"),
+    });
+    writeFileSync(
+      evidencePath("ui-overnight/sim-window-touch.json"),
+      JSON.stringify(
+        {
+          generatedBy: "e345b9d6",
+          order: "ORD-0100 residual 3",
+          node: NODE,
+          hasTouch: true,
+          gestureSourceType: "touch",
+          viewport: [390, 844],
+          maxScroll,
+          scrollTopAfterEachSwipe: scrollTops,
+          lastRowId,
+          beforeSwipe: before,
+          afterSwipe: after,
+          note: "the Commander's reading measured .cn-sim, the panel, whose scroll box is not the clipping one; the scroller is its ancestor [data-testid=sim-pop-body]",
+        },
+        null,
+        2,
+      ) + "\n",
+      "utf-8",
+    );
+  } finally {
+    await cdp.detach().catch(() => undefined);
+    await touch.close();
+  }
 });
 
 
