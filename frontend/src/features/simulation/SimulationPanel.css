@@ -14,14 +14,28 @@
   cursor: pointer;
   overflow-wrap: anywhere;
 }
+/* What the stage is and whose clock the screen uses, readable without opening anything. Full ink on
+   purpose: this is the honest declaration, not a caption about it. */
+.cn-sim-summary-decl {
+  display: block;
+  margin-top: var(--cn-s-4, 4px);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-caption);
+  font-weight: 500;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
 .cn-sim-entry[open] .cn-sim {
   border-top: 1px solid var(--cn-hairline, rgba(0, 0, 0, 0.16));
 }
+/* No rule here hides the closed panel: a mutant that forced `display: block` on it changed no
+   measurement, because the browser already keeps `::details-content` out of the layout. What stops
+   the overlap band is the collapsed phone default (SimulationPanel's `usePhoneLayout`), and
+   `sim-stage-actions-are-reachable-and-never-in-the-nav-band` kills that one. */
 @media (max-width: 680px) {
   .cn-sim-summary {
     min-height: var(--cn-touch-min);
-    display: flex;
-    align-items: center;
+    display: block;
   }
 }
 
@@ -65,6 +79,12 @@
 
 .cn-sim-retry {
   justify-self: start;
+}
+/* Hidden unless the panel is the phone sheet (see ORD-0085 below), where closing from inside is the
+   only way back. */
+.cn-sim-close {
+  display: none;
+  justify-self: end;
 }
 /* Diagnostic, not decoration: smaller than the banner, but full ink -- a flag that only reads in
    one theme is a flag nobody can check on a phone. */
@@ -173,6 +193,33 @@
 @media (max-width: 680px) {
   .cn-sim-actions button {
     min-height: var(--cn-touch-min);
+  }
+  /* ORD-0085: the bottom nav is `position: fixed`, so anything this panel puts on screen can end up
+     inside its band -- where a tap lands on the nav and the app changes page under the traveller.
+     Three shapes were measured, and two of them are not fixes:
+       - `scroll-margin` alone moves only programmatic scrolls, never a finger (the resting layout
+         had `建一个硬承诺` centred at y=783, under the nav);
+       - taking the panel out of flow (`position: fixed` above the nav) made it cover the page's own
+         primary action, and clipping it (`max-height` + `overflow`) left the clipped rows' rects in
+         the band anyway -- the app's dock-geometry gate counts geometric overlap at every settled
+         scroll position, so both still fail it;
+       - collapsing on a phone leaves no open action area to overlap at all.  That is what the
+         component does (see `usePhoneLayout`), and the summary carries the declaration so the truth
+         is visible without opening anything.
+     `scroll-margin` is kept because it is what makes a keyboard focus or a programmatic scroll land
+     clear of the band rather than behind it. */
+  .cn-sim-entry,
+  .cn-sim-entry * {
+    scroll-margin-block-start: 12px;
+    scroll-margin-block-end: calc(var(--cn-nav-clearance) + 16px);
+  }
+  /* On a phone an opened stage runs to the bottom of the screen; the close control is the short way
+     back when the summary has scrolled away. */
+  .v8-product-shell .cn-sim-entry[open] .cn-sim-close {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--cn-touch-min);
+    padding: 0 var(--cn-s-12);
   }
 }
 

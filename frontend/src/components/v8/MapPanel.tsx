@@ -4,12 +4,34 @@ import type { FeatureCollection } from "geojson";
 import type { V8Data } from "../../app/v8Types";
 import { useT, useLocale } from "../../i18n/LocaleContext";
 
+/**
+ * ORD-0082 ④: the map's own "there is nothing to centre this on" condition, as a pure function of
+ * the same fields the point list reads.  Exported because one viewport used to hold two
+ * contradictory answers -- the map panel saying this trip has no trustworthy coordinates while the
+ * attention band beside it said "一切正常".  One screen, one rule.
+ */
+export function tripHasNoCoordinates(data: V8Data | null): boolean {
+  if (!data) return true;
+  const locatedActivity = (data.active_plan?.activities ?? []).some(
+    (item) => item.metadata.longitude != null && item.metadata.latitude != null,
+  );
+  if (locatedActivity) return false;
+  return (data.offers ?? []).some(
+    (offer) => offer.location.longitude != null && offer.location.latitude != null,
+  ) === false;
+}
+
 export function MapPanel({
   data,
   option,
+  onNoLocationChange = null,
 }: {
   data: V8Data | null;
   option: V8Data["options"][number] | null;
+  /** ORD-0082 ④: only the map knows whether it found *something to centre on* -- route geometry
+      counts, and a trip with no located activity can still have a route.  Attention needs that
+      same answer or one screen can say "没有可信的坐标" and "一切正常" at once. */
+  onNoLocationChange?: ((value: boolean) => void) | null;
 }) {
   const host = useRef<HTMLDivElement | null>(null);
   // Map truth: never centre on a hardcoded city.  If the Journey has no
@@ -106,9 +128,11 @@ export function MapPanel({
         // No route geometry and no located activity: an honest empty state is
         // the correct answer, not another city's map.
         setNoLocation(true);
+        onNoLocationChange?.(true);
         return;
       }
       setNoLocation(false);
+      onNoLocationChange?.(false);
       /* Read the app's own palette out of the document rather than inventing a
          second set of literals inside the map style: the route lines then follow
          the light/dark binding the rest of the product already uses. */

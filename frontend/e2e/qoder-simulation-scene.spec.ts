@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { writeFileSync } from "node:fs";
 import { scanContrast } from "./_qoderContrastScan";
 import { evidencePath } from "./_qoderEvidence";
+import { openStageEntry } from "./_qoderStageEntry";
 
 /**
  * ORD-0059 -- the Simulation entry on a phone, against the server's typed scene state.
@@ -46,6 +47,8 @@ async function openTodayWithStage(page: Page, journeyId: string, scheme: "light"
     "the Simulation entry is not rendered on Today at all")).toBeVisible({ timeout: 25_000 });
   await page.emulateMedia({ colorScheme: scheme, media: "screen" });
   await page.waitForTimeout(900);
+  /* The entry starts collapsed on a phone (ORD-0085), and every node below reads the panel. */
+  await openStageEntry(page, "the stage gate");
 }
 
 async function openStage(page: Page, scheme: "light" | "dark" = "light") {
@@ -203,7 +206,7 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
     );
   });
 
-  test("sim-scene-advances-on-server — 服务器场景真的推进了（hero 是否跟随记进证据，归 ORD-0075）", async ({ page }) => {
+  test("sim-scene-advances-on-server — 服务器场景真的推进了，且 Today 那行字跟着变（两者共担）", async ({ page }) => {
     test.setTimeout(240_000);
     await page.setViewportSize({ width: 390, height: 844 });
     const scene = await openStage(page);
@@ -267,15 +270,23 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
     const after = clean(await page.getByTestId("today-next").innerText());
     const afterScene = clean(await page.getByTestId("sim-banner").innerText());
     const heroChanged = after !== before;
-    /* What this node owns is the server's scene moving, read through the component's own banner
-       (same string on both sides, so a format mismatch cannot make it "change" by itself).
-       Whether Today's hero line followed is a different claim: the hero still picks Now/Next with
-       `Date.now()` (V8Experience.tsx:1747), so on a staged scenario it does not move -- that is
-       ORD-0075's finding and this gate records it instead of masking it. */
+    /* What this node owns is two claims that used to be joined by `||`: the server's scene moved,
+       and Today's line moved with it.  Both are read through the component's own rendering, the same
+       string on both sides, so a format mismatch cannot make either one "change" by itself.  The
+       stronger claim -- that the station Today settled on is the one the server's twin names -- is
+       owned by `sim-today-hero-follows-the-stage`, and this node does not stand in for it. */
     expect(
       afterScene !== beforeScene,
       node("sim-scene-advances-on-server",
         `after ${taps} server step(s) the stage never moved: banner was ${JSON.stringify(beforeScene.slice(0, 120))}, still ${JSON.stringify(afterScene.slice(0, 120))}`),
+    ).toBe(true);
+    /* ORD-0088 #3: the two halves used to share one `||`, so this node was green while Today's line
+       sat still through eight taps -- the reading that started the order. Each half now carries its
+       own assertion: a moved scene with a frozen hero is a red, not a pass with a note. */
+    expect(
+      heroChanged,
+      node("sim-scene-advances-on-server",
+        `the server's scene moved but Today's line did not: before ${JSON.stringify(before.slice(0, 120))}, after ${JSON.stringify(after.slice(0, 120))} (banner ${JSON.stringify(afterScene.slice(0, 90))})`),
     ).toBe(true);
 
     writeFileSync(
@@ -292,9 +303,8 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
           bannerBefore: beforeScene,
           bannerAfter: afterScene,
           outcome: outcome.slice(0, 240),
-          note: heroChanged
-            ? "Today's hero followed the stage on this build."
-            : "ORD-0075: Today's hero still chooses Now/Next from Date.now(), so a staged scenario does not move it.",
+          note:
+            "asserted, not recorded: the banner moved and today-next moved with it (ORD-0088 #3 removed the `||`).",
         },
         null,
         2,
@@ -430,7 +440,10 @@ test.describe("ORD-0059 the Simulation entry reads the stage from the server", (
     ).not.toBeNull();
     const reason = (await page.locator(`#${reasonId}`).innerText()).replace(/\s+/g, " ").trim();
     expect(
-      /触发|中断|trigger/i.test(reason),
+      /* Any server-derived cause counts as an explanation; what this kills is a blocked row that
+         blocks silently.  Since 65e184d the first cause a teacher meets is the missing plan
+         rather than the missing trigger event, and both are true statements about the stage. */
+      /触发|中断|trigger|ACTIVE 计划|计划版本|重规划|replan/i.test(reason),
       node("sim-blocked-action-explains-itself-and-stays-reachable",
         `the blocked replan row explains itself with ${JSON.stringify(reason)}`),
     ).toBe(true);

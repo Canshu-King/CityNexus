@@ -41,6 +41,16 @@ function bodyOf(error: unknown): ErrorBody | null {
   return null;
 }
 
+/** The server's own sentence, when it sent one.  `message_key` names the *kind* of refusal and
+ *  `message` carries the reason; a screen that reads only the key reports "the request was invalid"
+ *  to someone who was told exactly which activity has no orderable service. */
+export function serverSentence(error: unknown): string {
+  const nested = bodyOf(error)?.error;
+  if (typeof nested?.message === "string" && nested.message.trim()) return nested.message.trim();
+  const detail = bodyOf(error)?.detail;
+  return typeof detail === "string" && detail.trim() ? detail.trim() : "";
+}
+
 /** The server's own name for the refusal: a code, a message key, or the HTTP status. */
 export function failureCode(error: unknown): { code: string; status: number } {
   if (error instanceof CityNexusApiError) {
@@ -130,14 +140,61 @@ export function describeFailure(error: unknown): NamedFailure {
       en: `The server refused this step's order (${code.replace("INVALID_ACTIVITY_TRANSITION:", "")}); the activity is unchanged. The row above follows the server's state to the step it allows.`,
     };
   }
-  /* No local wording for this one.  Say that, name it, and keep the number -- translating the
-     server's English sentence into a Chinese guess would be this lane inventing a reason. */
+  /* No local wording for this one.  Say that, name it, and quote the server's own sentence when it
+     sent one -- translating it into a Chinese guess would be inventing a reason, and dropping it
+     would be the named-reason-never-arrives defect again. */
+  const said = serverSentence(error);
   return {
     code,
     status,
-    zh: `服务器拒绝了这个动作（HTTP ${status}，具名码 ${code}）。我们没有这条拒绝的本地文案，所以不替它编造原因。`,
-    en: `The server refused this action (HTTP ${status}, code ${code}). There is no local wording for it, so no reason is invented here.`,
+    zh: said
+      ? `服务器拒绝了这个动作（HTTP ${status}，具名 ${code}）。它的原话：${said}。这条我们没有本地文案，所以照它说的给，不替它解释。`
+      : `服务器拒绝了这个动作（HTTP ${status}，具名码 ${code}）。我们没有这条拒绝的本地文案，所以不替它编造原因。`,
+    en: said
+      ? `The server refused this action (HTTP ${status}, ${code}). Its own words: ${said}. There is no local wording for it, so the sentence is passed through rather than explained.`
+      : `The server refused this action (HTTP ${status}, code ${code}). There is no local wording for it, so no reason is invented here.`,
   };
+}
+
+/**
+ * ORD-0085 / the booking gate: `POST /bookings` refuses an un-bookable activity with a **sentence**
+ * rather than a code (`main.py:10721` turns `CommerceValidationError` into `HTTPException(422,
+ * str(exc))`), and on the demo stage five of the six activities are of that kind -- `_service_for_
+ * activity` only maps a `city_service_id` or two known `place_id`s onto a catalog service.  So a
+ * row that assumes "any activity can be booked" hands the teacher a 422 on the spot, and a row that
+ * pastes the English sentence onto a Chinese screen is the ORD-0055 defect again.  These wordings
+ * quote the server's own reason and name the activity it refused; nothing is invented about why.
+ */
+const BOOKING_REFUSALS: Record<string, { zh: (t: string) => string; en: (t: string) => string }> = {
+  "activity has no supported tradable commerce service": {
+    zh: (t: string) => `${t} 这项活动没有可下单的服务（服务器的原话：activity has no supported tradable commerce service）。这一步没有发生，换一个活动试试。`,
+    en: (t: string) => `${t} has no service that can be ordered (the server's words: "activity has no supported tradable commerce service"). Nothing was booked; try another activity.`,
+  },
+  "activity service is not available in the frozen catalog": {
+    zh: (t: string) => `${t} 要的服务不在这台舞台的冻结目录里（服务器的原话：activity service is not available in the frozen catalog）。这一步没有发生。`,
+    en: (t: string) => `${t}'s service is not in this stage's frozen catalog (the server's words: "activity service is not available in the frozen catalog"). Nothing was booked.`,
+  },
+  "commerce service semantic identity does not match activity": {
+    zh: (t: string) => `${t} 的服务和活动指向的不是同一个地点（服务器的原话：commerce service semantic identity does not match activity），所以服务器不肯下单。`,
+    en: (t: string) => `The service behind ${t} points at a different place than the activity does (the server's words: "commerce service semantic identity does not match activity"), so it will not book.`,
+  },
+  "commerce service belongs to another city": {
+    zh: (t: string) => `${t} 的服务属于另一座城市（服务器的原话：commerce service belongs to another city），这一趟订不了。`,
+    en: (t: string) => `The service behind ${t} belongs to another city (the server's words: "commerce service belongs to another city"), so this trip cannot book it.`,
+  },
+};
+
+export function describeBookingRefusal(
+  error: unknown,
+  activityTitle: string,
+): NamedFailure {
+  const { code, status } = failureCode(error);
+  /* The reason arrives in `error.message` while `message_key` says only "request.invalid", so this
+     lookup is keyed on the sentence -- measured on a throwaway stack (`review/bookings-*.json`):
+     four of the six activities on the demo plan answer 422 with exactly these words. */
+  const hit = BOOKING_REFUSALS[serverSentence(error)];
+  if (hit) return { code, status, zh: hit.zh(activityTitle), en: hit.en(activityTitle) };
+  return describeFailure(error);
 }
 
 /**
@@ -255,6 +312,55 @@ export async function transitionStage(
     throw new CityNexusApiError(response.status, body, `activities/${activityId}/${step} ${response.status}`);
   }
   return body as TransitionTwin;
+}
+
+/**
+ * The two stage actions `65e184d` split out of reset: `prepare-scenario` runs `plans/generate`
+ * then `select` and stops at PLANNED, `start-scenario` runs `/start` with all of its gates.  Both
+ * answer 200 with a **report**, and a refused start is still a 200 with a named code -- so a
+ * caller that reads only the HTTP status would claim a stage that never started.
+ */
+export type StageAction = "prepare-scenario" | "start-scenario";
+
+export type StageReport = {
+  status: string;
+  journeyId: string | null;
+  journeyStatus: string | null;
+  planVersionId: string | null;
+  code: string | null;
+  advance: { steps: AdvanceStep[]; totalMs: number | null } | null;
+};
+
+export async function runStageAction(action: StageAction): Promise<StageReport> {
+  const response = await fetch(`/api/v1/demo/${action}`, {
+    method: "POST",
+    headers: { Accept: "application/json" },
+  });
+  const text = await response.text();
+  let body: Record<string, unknown> = {};
+  if (text) {
+    try {
+      body = JSON.parse(text) as Record<string, unknown>;
+    } catch {
+      body = {};
+    }
+  }
+  if (!response.ok) throw new CityNexusApiError(response.status, body, `demo/${action} ${response.status}`);
+  const error = body.error as { code?: unknown; message_key?: unknown } | undefined;
+  const advance = body.advance as { steps?: AdvanceStep[]; total_ms?: number } | undefined;
+  return {
+    status: typeof body.status === "string" ? body.status : `HTTP ${response.status}`,
+    journeyId: typeof body.journey_id === "string" ? body.journey_id : null,
+    journeyStatus: typeof body.journey_status === "string" ? body.journey_status : null,
+    planVersionId: typeof body.plan_version_id === "string" ? body.plan_version_id : null,
+    code: typeof error?.message_key === "string" ? error.message_key : typeof error?.code === "string" ? error.code : null,
+    advance: advance
+      ? {
+          steps: Array.isArray(advance.steps) ? advance.steps : [],
+          totalMs: typeof advance.total_ms === "number" ? advance.total_ms : null,
+        }
+      : null,
+  };
 }
 
 /**

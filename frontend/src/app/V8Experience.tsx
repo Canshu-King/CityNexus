@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "../components/v8/Icon";
-import { MapPanel } from "../components/v8/MapPanel";
+import { MapPanel, tripHasNoCoordinates } from "../components/v8/MapPanel";
 import { AgentComposer } from "../features/agent/AgentComposer";
 import { CopilotDock } from "../features/agent/CopilotDock";
 import { PlanWithAiSheet } from "../features/planning/PlanWithAiSheet";
@@ -23,6 +23,7 @@ import { TwinPanel } from "../features/traveler-twin/TwinPanel";
 import { SortableActivityList } from "../features/studio/SortableActivityList";
 import { V12AuthoritativeJourneyPanel } from "../features/execution/V12AuthoritativeJourneyPanel";
 import { SimulationEntry } from "../features/simulation/SimulationPanel";
+import { useDemoScene } from "../lib/sceneClock";
 import { V14RecoveryTruthPanel } from "../features/recovery/V14RecoveryTruthPanel";
 import { V14PreventivePanel } from "../features/recovery/V14PreventivePanel";
 import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPanel";
@@ -48,14 +49,24 @@ import {
   type OfflineJourney,
 } from "../lib/offlineJourney";
 import { useT, useLocale } from "../i18n/LocaleContext";
-import { currencyExponent, currencyMinorFactor, formatMinorMoney, majorToMinor } from "../lib/money";
+import {
+  currencyExponent,
+  currencyMinorFactor,
+  formatMinorMoney,
+  majorToMinor,
+} from "../lib/money";
 import { withViewTransition } from "../lib/viewTransition";
 import { isDisruptionOpen } from "../lib/disruptionState";
 import {
   budgetEvidenceCoverage,
   budgetVerdictAllowed as budgetVerdictAllowedFor,
 } from "../lib/budgetEvidence";
-import { v8Modes, type RecoveryState, type V8Data, type V8Mode } from "./v8Types";
+import {
+  v8Modes,
+  type RecoveryState,
+  type V8Data,
+  type V8Mode,
+} from "./v8Types";
 
 type Policy = {
   mode: "ADVISORY" | "ASSISTED" | "AUTONOMOUS";
@@ -85,6 +96,20 @@ type Wallet = {
     kind: string;
     external_ref: string | null;
     status: string;
+    /* `_commitment_payload` (main.py:5311) puts the money under `monetary_value` and says how much
+       is actually known in `monetary_value_status`; the schedule it protects is under `policy`.
+       Declaring less than this is how a committed booking ended up with no honest way to render. */
+    monetary_value?: {
+      amount_minor?: number | null;
+      currency?: string | null;
+    } | null;
+    monetary_value_status?: string | null;
+    policy?: {
+      semantic_key?: string | null;
+      scheduled_start_at?: string | null;
+      scheduled_end_at?: string | null;
+      fixed_schedule?: boolean | null;
+    } & Record<string, unknown>;
   }>;
   offline_ready: boolean;
 };
@@ -104,7 +129,9 @@ function rejectionReason(body: any, status: number): string {
   const fields = errors
     .map((entry) => {
       const item = entry as { loc?: unknown[]; msg?: unknown };
-      const loc = Array.isArray(item?.loc) ? item.loc.filter(Boolean).join(".") : "";
+      const loc = Array.isArray(item?.loc)
+        ? item.loc.filter(Boolean).join(".")
+        : "";
       const msg = typeof item?.msg === "string" ? item.msg : "";
       return loc || msg ? `${loc ? `${loc}: ` : ""}${msg}` : "";
     })
@@ -227,7 +254,11 @@ function date(value?: string, locale = "en-GB") {
 }
 
 /** Same as `date`, but rendered in the journey's time zone, not the device's. */
-function dateInZone(value: string | undefined, locale: string, timeZone: string) {
+function dateInZone(
+  value: string | undefined,
+  locale: string,
+  timeZone: string,
+) {
   if (!value) return "—";
   try {
     return new Intl.DateTimeFormat(locale === "zh-CN" ? "zh-CN" : "en-GB", {
@@ -267,7 +298,9 @@ const KNOWN_ROUTES = new Set<string>([
 ]);
 
 function routeFromPath() {
-  const raw = window.location.pathname.replace(/^\/v8\/?/, "").replace(/\/$/, "");
+  const raw = window.location.pathname
+    .replace(/^\/v8\/?/, "")
+    .replace(/\/$/, "");
   if (!raw) return "hub";
   const key = raw.split("/")[0].toLowerCase();
   // A real route wins over an alias, otherwise refresh changes the screen.
@@ -294,10 +327,9 @@ function greetingFor(hour: number, t: (key: string) => string) {
 
 function cityFromCode(code: string) {
   const segments = code.split("-");
-  const raw = (segments.length > 1 ? segments.slice(1).join(" ") : code).replace(
-    /_/g,
-    " ",
-  );
+  const raw = (
+    segments.length > 1 ? segments.slice(1).join(" ") : code
+  ).replace(/_/g, " ");
   return raw
     .split(" ")
     .filter(Boolean)
@@ -333,7 +365,9 @@ export function V8Experience() {
   const [mode, setMode] = useState<V8Mode>("TRANSIT");
   const [comparison, setComparison] = useState<V8Data["mobility_facts"]>([]);
   const [policy, setPolicy] = useState<Policy | null>(null);
-  const [runtimeStatus, setRuntimeStatus] = useState<AgentRuntimeStatus | null>(null);
+  const [runtimeStatus, setRuntimeStatus] = useState<AgentRuntimeStatus | null>(
+    null,
+  );
   const [busy, setBusy] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
@@ -345,7 +379,9 @@ export function V8Experience() {
   // a replan.  Read from /replans (which is authoritative for proposal status)
   // as well as from the event status, so the two can never disagree.
   const [handledEventIds, setHandledEventIds] = useState<string[]>([]);
-  const [decodedArtifactText, setDecodedArtifactText] = useState<string | undefined>();
+  const [decodedArtifactText, setDecodedArtifactText] = useState<
+    string | undefined
+  >();
   const [setupOpen, setSetupOpen] = useState(false);
   const [planAiOpen, setPlanAiOpen] = useState(false);
   // Reference screen 08: the dedicated activity detail surface.
@@ -372,7 +408,9 @@ export function V8Experience() {
   const [stayAttempts, setStayAttempts] = useState(0);
   // Ruling ④ asked for a choice, not just a contract: the root attribute and persistence
   // were already in place, but nothing on screen let anyone pick.
-  const [themeChoice, setThemeChoiceState] = useState<ThemeChoice>(() => readChoice());
+  const [themeChoice, setThemeChoiceState] = useState<ThemeChoice>(() =>
+    readChoice(),
+  );
   const { locale, switchLocale } = useLocale();
   const zh = locale.startsWith("zh");
   const t = useT();
@@ -388,9 +426,11 @@ export function V8Experience() {
     [data],
   );
   const isHandledDisruption = useCallback(
-    (item: V8Data["active_plan"] extends null
-      ? never
-      : NonNullable<V8Data["active_plan"]>["disruptions"][number]) => {
+    (
+      item: V8Data["active_plan"] extends null
+        ? never
+        : NonNullable<V8Data["active_plan"]>["disruptions"][number],
+    ) => {
       const acceptedTriggerIds: Set<string> = new Set(handledEventIds);
       return !isDisruptionOpen(item, acceptedTriggerIds);
     },
@@ -412,7 +452,9 @@ export function V8Experience() {
   const authoritativePlans = useAuthoritativePlans(data?.journey.id ?? null);
   const authoritativeTwin = useAuthoritativeTwin(data?.journey.id ?? null);
   const authoritativePlan =
-    authoritativePlans.data?.find((item) => item.status === "ACTIVE" || item.status === "SELECTED") ??
+    authoritativePlans.data?.find(
+      (item) => item.status === "ACTIVE" || item.status === "SELECTED",
+    ) ??
     authoritativePlans.data?.[0] ??
     null;
   // Distinct from ``authoritativePlan``: that one falls back to the first plan
@@ -443,28 +485,31 @@ export function V8Experience() {
       );
     // Which disruptions already have an accepted proposal behind them?
     try {
-      const replans = await v8Request<Array<{ trigger_event_id?: string | null; status?: string }>>(
-        `/api/v1/journeys/${journeyId}/replans`,
-      );
+      const replans = await v8Request<
+        Array<{ trigger_event_id?: string | null; status?: string }>
+      >(`/api/v1/journeys/${journeyId}/replans`);
       setHandledEventIds(
         (Array.isArray(replans) ? replans : [])
-          .filter((item) => String(item?.status ?? "").toUpperCase() === "ACCEPTED")
+          .filter(
+            (item) => String(item?.status ?? "").toUpperCase() === "ACCEPTED",
+          )
           .map((item) => String(item?.trigger_event_id ?? ""))
           .filter(Boolean),
       );
     } catch {
       setHandledEventIds([]);
     }
-    const [nextPolicy, nextWallet, nextOffline, nextRuntimeStatus] = await Promise.all([
-      v8Request<Policy>(
-        `/api/v1/travelers/${experience.journey.traveler_id}/agent-policy`,
-      ),
-      v8Request<Wallet>(`/api/v1/journeys/${journeyId}/wallet`),
-      v8Request<OfflineJourney>(
-        `/api/v1/journeys/${journeyId}/offline-snapshot`,
-      ),
-      v8Request<AgentRuntimeStatus>(`/api/v1/agent/runtime-status`),
-    ]);
+    const [nextPolicy, nextWallet, nextOffline, nextRuntimeStatus] =
+      await Promise.all([
+        v8Request<Policy>(
+          `/api/v1/travelers/${experience.journey.traveler_id}/agent-policy`,
+        ),
+        v8Request<Wallet>(`/api/v1/journeys/${journeyId}/wallet`),
+        v8Request<OfflineJourney>(
+          `/api/v1/journeys/${journeyId}/offline-snapshot`,
+        ),
+        v8Request<AgentRuntimeStatus>(`/api/v1/agent/runtime-status`),
+      ]);
     setPolicy(nextPolicy);
     setRuntimeStatus(nextRuntimeStatus);
     setWallet(nextWallet);
@@ -477,7 +522,10 @@ export function V8Experience() {
   // server snapshot immediately after those mutations as well; it must never
   // become a second, lagging execution source of truth.
   const refreshAuthoritativeTruth = async (journeyId: string) => {
-    await Promise.all([authoritativePlans.refetch(), authoritativeTwin.refetch()]);
+    await Promise.all([
+      authoritativePlans.refetch(),
+      authoritativeTwin.refetch(),
+    ]);
     const nextOffline = await v8Request<OfflineJourney>(
       `/api/v1/journeys/${journeyId}/offline-snapshot`,
     );
@@ -593,17 +641,14 @@ export function V8Experience() {
     setSetupBusy(true);
     setMessage(null);
     try {
-      const traveler = await v8Request<{ id: string }>(
-        "/api/v1/travelers",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            display_name: "City traveler",
-            locale: locale === "zh-CN" ? "zh-CN" : "en-GB",
-            timezone: "Asia/Shanghai",
-          }),
-        },
-      );
+      const traveler = await v8Request<{ id: string }>("/api/v1/travelers", {
+        method: "POST",
+        body: JSON.stringify({
+          display_name: "City traveler",
+          locale: locale === "zh-CN" ? "zh-CN" : "en-GB",
+          timezone: "Asia/Shanghai",
+        }),
+      });
       const journey = await v8Request<{ id: string }>("/api/v1/journeys", {
         method: "POST",
         body: JSON.stringify({
@@ -617,12 +662,22 @@ export function V8Experience() {
           stay_budget: { amount_minor: 70000, currency: "CNY" },
           party_size: 2,
           occupancy: { adults: 2, rooms: 1 },
-          arrival_anchor: { at: "2026-10-09T18:00:00+08:00", location: "Tianjin West Station" },
-          departure_anchor: { at: "2026-10-11T15:00:00+08:00", location: "Tianjin Binhai Airport" },
+          arrival_anchor: {
+            at: "2026-10-09T18:00:00+08:00",
+            location: "Tianjin West Station",
+          },
+          departure_anchor: {
+            at: "2026-10-11T15:00:00+08:00",
+            location: "Tianjin Binhai Airport",
+          },
         }),
       });
       localStorage.setItem("citynexus.v8.journey_id", journey.id);
-      await searchStayOptions(journey.id, "Tianjin stay-aware journey", new AbortController().signal);
+      await searchStayOptions(
+        journey.id,
+        "Tianjin stay-aware journey",
+        new AbortController().signal,
+      );
       await load(journey.id);
       setSetupOpen(false);
       navigate("discover");
@@ -637,18 +692,32 @@ export function V8Experience() {
    * with `top_k: []`, so the count -- not the 200 -- is what decides the next screen, and a
    * zero result gets its own state instead of Today's ordinary face.
    */
-  const searchStayOptions = async (journeyId: string, query: string, signal: AbortSignal) => {
+  const searchStayOptions = async (
+    journeyId: string,
+    query: string,
+    signal: AbortSignal,
+  ) => {
     setCreatePhase("stay-options");
     setStaySearch("searching");
     setStayAttempts((current) => current + 1);
     try {
-      const generated = await v8Request<{ top_k?: unknown; generation?: { outcome?: string } }>(
-        `/api/v1/journeys/${journeyId}/stay-options/generate`,
-        { method: "POST", body: JSON.stringify({ query }), signal },
-      );
-      const count = Array.isArray(generated?.top_k) ? generated.top_k.length : 0;
+      const generated = await v8Request<{
+        top_k?: unknown;
+        generation?: { outcome?: string };
+      }>(`/api/v1/journeys/${journeyId}/stay-options/generate`, {
+        method: "POST",
+        body: JSON.stringify({ query }),
+        signal,
+      });
+      const count = Array.isArray(generated?.top_k)
+        ? generated.top_k.length
+        : 0;
       // An absent outcome stays unknown: the reason on screen must be one the server gave.
-      setStayOutcome(typeof generated?.generation?.outcome === "string" ? generated.generation.outcome : null);
+      setStayOutcome(
+        typeof generated?.generation?.outcome === "string"
+          ? generated.generation.outcome
+          : null,
+      );
       setStaySearch(count === 0 ? "empty" : "found");
       return count;
     } catch (cause) {
@@ -679,7 +748,9 @@ export function V8Experience() {
       await load(data.journey.id);
     } catch (cause) {
       if (!isAbort(cause)) {
-        setMessage(cause instanceof Error ? cause.message : t("shell.loadError"));
+        setMessage(
+          cause instanceof Error ? cause.message : t("shell.loadError"),
+        );
       }
     } finally {
       createAbortRef.current = null;
@@ -708,8 +779,14 @@ export function V8Experience() {
       // city code (CN-XIAMEN).  Using the raw Chinese name produced CN-厦门,
       // which matched no places and silently yielded zero candidate plans.
       const cityCode = `${draft.countryCode.trim() || "CN"}-${cityCodeSlug(cityName)}`;
-      const startAt = localDateTimeInZoneToIso(draft.startAt, draft.timezone.trim());
-      const endAt = localDateTimeInZoneToIso(draft.endAt, draft.timezone.trim());
+      const startAt = localDateTimeInZoneToIso(
+        draft.startAt,
+        draft.timezone.trim(),
+      );
+      const endAt = localDateTimeInZoneToIso(
+        draft.endAt,
+        draft.timezone.trim(),
+      );
       setCreatePhase("traveler");
       const traveler = await v8Request<{ id: string }>("/api/v1/travelers", {
         method: "POST",
@@ -731,12 +808,24 @@ export function V8Experience() {
           timezone: draft.timezone.trim(),
           start_at: startAt,
           end_at: endAt,
-          budget: { amount_minor: majorToMinor(draft.budgetMajor, draft.currency), currency: draft.currency },
-          stay_budget: { amount_minor: majorToMinor(draft.stayBudgetMajor, draft.currency), currency: draft.currency },
+          budget: {
+            amount_minor: majorToMinor(draft.budgetMajor, draft.currency),
+            currency: draft.currency,
+          },
+          stay_budget: {
+            amount_minor: majorToMinor(draft.stayBudgetMajor, draft.currency),
+            currency: draft.currency,
+          },
           party_size: draft.partySize,
           occupancy: { adults: draft.partySize, rooms: draft.rooms },
-          arrival_anchor: { at: startAt, location: draft.arrivalLocation.trim() },
-          departure_anchor: { at: endAt, location: draft.departureLocation.trim() },
+          arrival_anchor: {
+            at: startAt,
+            location: draft.arrivalLocation.trim(),
+          },
+          departure_anchor: {
+            at: endAt,
+            location: draft.departureLocation.trim(),
+          },
         }),
       });
       tripWritten = true;
@@ -778,7 +867,9 @@ export function V8Experience() {
               : "Stopped waiting — no journey was created.",
         );
       } else {
-        setMessage(error instanceof Error ? error.message : t("shell.loadError"));
+        setMessage(
+          error instanceof Error ? error.message : t("shell.loadError"),
+        );
       }
     } finally {
       setSetupBusy(false);
@@ -844,8 +935,12 @@ export function V8Experience() {
       await load(data.journey.id);
       setMessage(
         result.executed
-          ? t("shell.autopilotRecovered", { mode: result.after_mode.toLowerCase() })
-          : t("shell.autopilotPaused", { reasons: result.reason_codes.join(" · ") }),
+          ? t("shell.autopilotRecovered", {
+              mode: result.after_mode.toLowerCase(),
+            })
+          : t("shell.autopilotPaused", {
+              reasons: result.reason_codes.join(" · "),
+            }),
       );
     } finally {
       setBusy(false);
@@ -924,7 +1019,9 @@ export function V8Experience() {
         });
         await load(data.journey.id);
         setMessage(
-          t("shell.locationUpdated", { n: Math.round(position.coords.accuracy) }),
+          t("shell.locationUpdated", {
+            n: Math.round(position.coords.accuracy),
+          }),
         );
       },
       () => setMessage(t("shell.locationDenied")),
@@ -933,13 +1030,14 @@ export function V8Experience() {
   };
 
   // Derived for the activity-detail surface (reference 08).
-  const allActivities = (data?.active_plan?.activities ?? []) as unknown as Array<{
+  const allActivities = (data?.active_plan?.activities ??
+    []) as unknown as Array<{
     id: string;
     title: string;
     place_id?: string | null;
   }>;
   const detailActivity = detailActivityId
-    ? allActivities.find((item) => item.id === detailActivityId) ?? null
+    ? (allActivities.find((item) => item.id === detailActivityId) ?? null)
     : null;
   // Nearby suggestions are other real stops on the same plan that the backend
   // actually returned; nothing is invented.
@@ -957,8 +1055,14 @@ export function V8Experience() {
       >
         <div className="v8-page-intro compact">
           <div>
-            <p className="v8-kicker">{locale.startsWith("zh") ? "连接" : "Connection"}</p>
-            <h1>{locale.startsWith("zh") ? "连不上服务器" : "Can't reach the server"}</h1>
+            <p className="v8-kicker">
+              {locale.startsWith("zh") ? "连接" : "Connection"}
+            </p>
+            <h1>
+              {locale.startsWith("zh")
+                ? "连不上服务器"
+                : "Can't reach the server"}
+            </h1>
             <p className="v8-lede">
               {locale.startsWith("zh")
                 ? "你的行程数据没有丢失。请检查网络后重试。"
@@ -989,24 +1093,32 @@ export function V8Experience() {
   // shell migration for one screen is a much larger change than the wording it would buy.
   if (setupOpen)
     return (
-      <JourneyTrialSetup
-        onCreate={createJourney}
-        onUseTianjinDemo={createTianjinDemo}
-        onCancel={data ? () => setSetupOpen(false) : undefined}
-        busy={setupBusy}
-        /* Both lanes landed this same line independently: this comment came from ORD-0034's
+      <>
+        <JourneyTrialSetup
+          onCreate={createJourney}
+          onUseTianjinDemo={createTianjinDemo}
+          onCancel={data ? () => setSetupOpen(false) : undefined}
+          busy={setupBusy}
+          /* Both lanes landed this same line independently: this comment came from ORD-0034's
            remainder (the wizard returns before the shell renders `message`, so a named
            backend rejection died in shell state), and ca65483 passed it again as part of
            ORD-0044's field-level 422 work. Keeping it because the block below the confirm
            button is gated on the wizard's own createAttemptFailed - without this prop the
            reason never arrives, and a stale message from an earlier step still cannot. */
-        message={message}
-        phase={createPhase}
-        startedAt={createStartedAt}
-        journeyCreated={journeyCreated}
-        stoppedWaiting={stoppedWaiting}
-        onStopWaiting={stopWaiting}
-      />
+          message={message}
+          phase={createPhase}
+          startedAt={createStartedAt}
+          journeyCreated={journeyCreated}
+          stoppedWaiting={stoppedWaiting}
+          onStopWaiting={stopWaiting}
+        />
+        {/* ORD-0081 ①: a teacher who has never created a journey is standing on this screen, and
+            `demo/reset` is the only action that puts a scenario on the stage.  The stage control
+            used to exist only inside Hub, which renders when a journey already does -- so the one
+            state that needs it had no way to reach it, and measured wizard -> wizard.  Collapsed
+            here so the wizard keeps the screen. */}
+        <SimulationEntry defaultOpen={false} />
+      </>
     );
   if (busy && !data)
     return (
@@ -1042,7 +1154,8 @@ export function V8Experience() {
         <nav className="v8-nav" aria-label="Product navigation">
           {desktopRoutes.map((item, index) => (
             <div key={item.key}>
-              {(index === 0 || desktopRoutes[index - 1].group !== item.group) && (
+              {(index === 0 ||
+                desktopRoutes[index - 1].group !== item.group) && (
                 <span className="v8-nav-group">{item.group}</span>
               )}
               <button
@@ -1060,7 +1173,8 @@ export function V8Experience() {
         <div className="v8-sidebar-bottom">
           <div className="v8-sync">
             <span className="status-dot" />
-            {t("shell.factsSynced")}<div>{t("shell.plansModes", { plans: data.options.length })}</div>
+            {t("shell.factsSynced")}
+            <div>{t("shell.plansModes", { plans: data.options.length })}</div>
           </div>
           <button className="v8-user" onClick={() => navigate("me")}>
             <span>{initialsFrom(cityName)}</span>
@@ -1087,7 +1201,27 @@ export function V8Experience() {
             <span>{t("shell.journeys")}</span>
             <b>/</b>
             <strong>
-              {t("nav." + (route in { hub: 1, trips: 1, studio: 1, stay: 1, discover: 1, live: 1, bookings: 1, intelligence: 1, twin: 1, agent: 1, authoritative: 1, map: 1, me: 1 } ? route : "hub"))}
+              {t(
+                "nav." +
+                  (route in
+                  {
+                    hub: 1,
+                    trips: 1,
+                    studio: 1,
+                    stay: 1,
+                    discover: 1,
+                    live: 1,
+                    bookings: 1,
+                    intelligence: 1,
+                    twin: 1,
+                    agent: 1,
+                    authoritative: 1,
+                    map: 1,
+                    me: 1,
+                  }
+                    ? route
+                    : "hub"),
+              )}
             </strong>
           </div>
           <div className="v8-top-actions">
@@ -1164,9 +1298,7 @@ export function V8Experience() {
                         </article>
                       ))
                     ) : (
-                      <p className="v8-muted">
-                        {t("shell.noDisruptions")}
-                      </p>
+                      <p className="v8-muted">{t("shell.noDisruptions")}</p>
                     )}
                   </div>
                 </>
@@ -1180,7 +1312,9 @@ export function V8Experience() {
         {message && (
           <div className="v8-message" role="status">
             {message}
-            <button onClick={() => setMessage(null)}>{t("shell.dismiss")}</button>
+            <button onClick={() => setMessage(null)}>
+              {t("shell.dismiss")}
+            </button>
           </div>
         )}
         <div className="v8-content">
@@ -1203,6 +1337,7 @@ export function V8Experience() {
               )}
               <Hub
                 data={data}
+                twin={authoritativeTwin.data ?? null}
                 selected={selected}
                 hasChosenPlan={hasChosenPlan}
                 isHandledDisruption={isHandledDisruption}
@@ -1214,6 +1349,10 @@ export function V8Experience() {
                 stayAttempts={stayAttempts}
                 waitStartedAt={createStartedAt}
                 onRetryStays={() => void retryStaySearch()}
+                onStageChanged={() => {
+                  void load(data.journey.id);
+                  void authoritativeTwin.refetch();
+                }}
               />
             </>
           )}
@@ -1341,7 +1480,11 @@ export function V8Experience() {
             </>
           )}
           {route === "intelligence" && (
-            <ControlTowerPanel policy={policy} runtimeStatus={runtimeStatus} onActivate={activateAutonomy} />
+            <ControlTowerPanel
+              policy={policy}
+              runtimeStatus={runtimeStatus}
+              onActivate={activateAutonomy}
+            />
           )}
           {route === "twin" && <TwinPanel data={data} />}
           {route === "authoritative" && (
@@ -1350,7 +1493,9 @@ export function V8Experience() {
               plan={authoritativePlan}
               twin={authoritativeTwin.data ?? null}
               policy={policy}
-              loading={authoritativePlans.isLoading || authoritativeTwin.isLoading}
+              loading={
+                authoritativePlans.isLoading || authoritativeTwin.isLoading
+              }
               recovery={data.recovery}
               flags={data.experience_flags}
               currency={data.journey.budget.currency}
@@ -1361,7 +1506,12 @@ export function V8Experience() {
             <AgentComposer data={data} busy={busy} onNavigate={navigate} />
           )}
           {route === "me" && (
-            <Me data={data} policy={policy} onActivate={activateAutonomy} wallet={wallet} />
+            <Me
+              data={data}
+              policy={policy}
+              onActivate={activateAutonomy}
+              wallet={wallet}
+            />
           )}
         </div>
       </main>
@@ -1392,7 +1542,18 @@ export function V8Experience() {
             onClick={() => navigate(item.key)}
           >
             <Icon name={item.icon} />
-            <span>{t(({ hub: "mobile.today", trips: "mobile.trips", agent: "mobile.copilot", bookings: "mobile.wallet" } as Record<string, string>)[item.key] ?? "nav." + item.key)}</span>
+            <span>
+              {t(
+                (
+                  {
+                    hub: "mobile.today",
+                    trips: "mobile.trips",
+                    agent: "mobile.copilot",
+                    bookings: "mobile.wallet",
+                  } as Record<string, string>
+                )[item.key] ?? "nav." + item.key,
+              )}
+            </span>
           </button>
         ))}
       </nav>
@@ -1417,9 +1578,15 @@ export function V8Experience() {
             </div>
             {drawerRoutes.map((item, index) => (
               <div key={item.key}>
-                {("group" in item && (index === 0 || !("group" in drawerRoutes[index - 1]) || (drawerRoutes[index - 1] as { group?: string }).group !== item.group)) && (
-                  <span className="v8-nav-group">{"group" in item ? item.group : "MORE"}</span>
-                )}
+                {"group" in item &&
+                  (index === 0 ||
+                    !("group" in drawerRoutes[index - 1]) ||
+                    (drawerRoutes[index - 1] as { group?: string }).group !==
+                      item.group) && (
+                    <span className="v8-nav-group">
+                      {"group" in item ? item.group : "MORE"}
+                    </span>
+                  )}
                 <button
                   className={route === item.key ? "active" : ""}
                   onClick={() => navigate(item.key)}
@@ -1443,7 +1610,6 @@ export function V8Experience() {
     </div>
   );
 }
-
 
 /**
  * Trips workspace.
@@ -1482,7 +1648,9 @@ function TripsWorkspace({
 }) {
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
-  const [tab, setTab] = useState<"itinerary" | "stay" | "bookings" | "spend">("itinerary");
+  const [tab, setTab] = useState<"itinerary" | "stay" | "bookings" | "spend">(
+    "itinerary",
+  );
   const tabs = [
     { key: "itinerary" as const, zh: "行程", en: "Itinerary" },
     { key: "stay" as const, zh: "住宿", en: "Stay" },
@@ -1495,15 +1663,19 @@ function TripsWorkspace({
   const chosenStayOption = chosen;
   const chosenStayPriceKnown = Boolean(
     chosenStayOption &&
-      ((chosenStayOption.stay?.nightly_amount_minor ?? 0) > 0 ||
-        (chosenStayOption.stay_total_minor ?? 0) > 0),
+    ((chosenStayOption.stay?.nightly_amount_minor ?? 0) > 0 ||
+      (chosenStayOption.stay_total_minor ?? 0) > 0),
   );
   const chosenStayTotalMinor = chosenStayPriceKnown
     ? chosenStayOption!.stay_total_minor
     : null;
   return (
     <>
-      <nav className="trips-tabs" data-testid="trips-tabs" aria-label={zh ? "行程分区" : "Trip sections"}>
+      <nav
+        className="trips-tabs"
+        data-testid="trips-tabs"
+        aria-label={zh ? "行程分区" : "Trip sections"}
+      >
         {tabs.map((item) => (
           <button
             key={item.key}
@@ -1534,7 +1706,9 @@ function TripsWorkspace({
               kept for developers behind an Advanced disclosure. */}
           <JourneyInboxWorkbench
             journeyId={data.journey.id}
-            onConfirmed={async () => { onRefresh(); }}
+            onConfirmed={async () => {
+              onRefresh();
+            }}
           />
           <details className="trips-advanced">
             <summary>{zh ? "高级 / 开发者" : "Advanced / developer"}</summary>
@@ -1565,7 +1739,10 @@ function TripsWorkspace({
           <dl className="trial-review">
             <div>
               <dt>{zh ? "总预算" : "Total budget"}</dt>
-              <dd>{data.journey.budget.currency} {Math.round(data.journey.budget.amount_minor / 100)}</dd>
+              <dd>
+                {data.journey.budget.currency}{" "}
+                {Math.round(data.journey.budget.amount_minor / 100)}
+              </dd>
             </div>
             <div>
               <dt>{zh ? "住宿合计（已选）" : "Stay total (selected)"}</dt>
@@ -1615,7 +1792,11 @@ function TripsWorkspace({
 const CURRENCY_CODE = /^[A-Z]{3}$/;
 
 /** `budgetMoney` rather than `money`: this module already aliases `money` to formatMinorMoney. */
-function budgetMoney(minorUnits: number, currency: string, locale: string): string {
+function budgetMoney(
+  minorUnits: number,
+  currency: string,
+  locale: string,
+): string {
   if (!CURRENCY_CODE.test(currency)) return "";
   try {
     return new Intl.NumberFormat(locale, {
@@ -1653,7 +1834,9 @@ function budgetAdvisory(
   // `floor_comparable` is the backend saying "this CNY price level applies to your money".
   // For a JPY or SGD budget it is false, and calling the trip tight would be a verdict
   // reached by comparing yen against yuan.
-  const tight = Boolean(reference.floor_comparable) && perPersonPerDay < (reference.floor_minor ?? 0);
+  const tight =
+    Boolean(reference.floor_comparable) &&
+    perPersonPerDay < (reference.floor_minor ?? 0);
   const amount = budgetMoney(perPersonPerDay, currency, locale);
   return {
     tight,
@@ -1676,6 +1859,7 @@ function budgetAdvisory(
 
 function Hub({
   data,
+  twin,
   selected,
   hasChosenPlan,
   isHandledDisruption,
@@ -1687,13 +1871,20 @@ function Hub({
   stayAttempts,
   waitStartedAt,
   onRetryStays,
+  onStageChanged,
 }: {
   data: V8Data;
+  /** ORD-0082 ②: carries the server's own NOW/NEXT projection (`context.execution`) -- the one
+      rule for "what is now / what is next".  Live already reads it; Today deriving a second rule
+      out of activity order was the defect. */
+  twin: JourneyTwin | null;
   selected: V8Data["options"][number] | null;
   /** True only when the traveller actually adopted a plan. */
   hasChosenPlan: boolean;
   /** Whether a disruption has already been dealt with (accepted replan). */
-  isHandledDisruption: (item: NonNullable<V8Data["active_plan"]>["disruptions"][number]) => boolean;
+  isHandledDisruption: (
+    item: NonNullable<V8Data["active_plan"]>["disruptions"][number],
+  ) => boolean;
   onNavigate: (route: string) => void;
   onNewJourney: () => void;
   onPlanWithAi: () => void;
@@ -1704,11 +1895,16 @@ function Hub({
   stayAttempts: number;
   waitStartedAt: number | null;
   onRetryStays: () => void;
+  /** ORD-0082: after the stage moves, Today must re-read the journey it is showing.  The panel
+      names which action ran; which journey to re-read stays this screen's own fact. */
+  onStageChanged: () => void;
 }) {
   const t = useT();
   const { locale, switchLocale } = useLocale();
   const zh = locale.startsWith("zh");
-  const stayWaited = useElapsedSeconds(staySearch === "searching" ? waitStartedAt : null);
+  const stayWaited = useElapsedSeconds(
+    staySearch === "searching" ? waitStartedAt : null,
+  );
   // The traveller may intentionally proceed after seeing a tight-budget warning.
   const [advisoryDismissed, setAdvisoryDismissed] = useState(false);
 
@@ -1737,6 +1933,15 @@ function Hub({
   // 08:00→20:00 trip "2 天" and then divided the budget by that invented second day.  A null
   // means the stored window cannot be ordered at all, which shows as unknown, never as 1.
   const tripDayCount = data.journey.temporal_shape?.day_count ?? null;
+  /* ORD-0082 ④: until the map reports, fall back on the data-level predicate; once it reports,
+      take *its* answer.  The predicate alone was wrong in one direction -- a trip with route
+      geometry but no located activity is perfectly placeable, and attention was calling that
+      "没有可信的坐标" while the map drew the route.  Converging on the map's decision removes
+      both directions of the contradiction without new wording. */
+  const [mapReportsNoLocation, setMapReportsNoLocation] = useState<
+    boolean | null
+  >(null);
+  const tripUnlocatable = mapReportsNoLocation ?? tripHasNoCoordinates(data);
   const advisory = budgetAdvisory(data.trip.budget_reference, zh, locale);
   const activities = (data.active_plan?.activities ?? []) as unknown as Array<{
     id: string;
@@ -1745,33 +1950,106 @@ function Hub({
     end_at: string;
     type?: string | null;
   }>;
-  const nowMs = Date.now();
+  /* ORD-0082: "now" on this screen is the stage's, not the device's.  Hub used to pick Now/Next
+     and its calendar day from `Date.now()`, so after the server had walked a scenario past a
+     stop, this screen still advertised it as upcoming -- one part of the same viewport saying
+     "现在 = 12:00" while the line under it said "接下来 · 09:00 Old Town Gate".  Parsing the
+     server's instant is not a second clock; reading the device is.  The device is only used when
+     there is no readable scenario, and which of the two is in play is said out loud below
+     (`today-clock-source`) -- a silent fallback is exactly how two clocks pass for one truth. */
+  const stage = useDemoScene();
+  const stageInstant = stage.scene?.effectiveNow ?? null;
+  const stageMs = stageInstant ? Date.parse(stageInstant) : null;
+  const usingDeviceClock = stageMs === null;
+  const nowMs = stageMs ?? Date.now();
   const nextStop =
-    activities.find((item) => Date.parse(item.end_at) >= nowMs) ?? activities[0] ?? null;
+    activities.find((item) => Date.parse(item.end_at) >= nowMs) ??
+    activities[0] ??
+    null;
   // "Today" is a calendar day in the city the traveller is in, not on the
   // device that happens to be open — and the clock must be the city's clock.
   const journeyTz = data.journey.timezone || "UTC";
-  const todayKey = dateKeyInZone(new Date().toISOString(), journeyTz);
+  const todayKey = dateKeyInZone(
+    stageInstant ?? new Date().toISOString(),
+    journeyTz,
+  );
   const todayStops = activities.filter(
     (item) => dateKeyInZone(item.start_at, journeyTz) === todayKey,
   );
-  const chosenStay = data.options.find((option) => option.status === "SELECTED") ?? null;
+  const chosenStay =
+    data.options.find((option) => option.status === "SELECTED") ?? null;
   const planDisruptions = data.active_plan?.disruptions ?? [];
   // A handled event is history, not an open problem.  An ACKNOWLEDGED trigger
   // stays in the plan payload (acknowledgement is not resolution), so it must
   // not keep Today in a permanent "needs attention" state.
-  const disruptions = planDisruptions.filter((item) => !isHandledDisruption(item));
-  const handledDisruptions = planDisruptions.filter((item) => isHandledDisruption(item));
+  const disruptions = planDisruptions.filter(
+    (item) => !isHandledDisruption(item),
+  );
+  const handledDisruptions = planDisruptions.filter((item) =>
+    isHandledDisruption(item),
+  );
   // Single-focus hero: "Now" only when something is genuinely in progress, and
   // "Next" as the one upcoming action. No empty current slot is ever fabricated.
-  const currentStop =
-    activities.find(
-      (item) => Date.parse(item.start_at) <= nowMs && Date.parse(item.end_at) >= nowMs,
-    ) ?? null;
-  const nextUp = currentStop
-    ? activities.find((item) => Date.parse(item.start_at) > Date.parse(currentStop.end_at)) ?? null
-    : nextStop;
+  /* ORD-0082 ②: one rule, and it is the server's.  The twin publishes `context.execution` -- now,
+     next, and whether its own cursor can be trusted -- off the persisted activity state machine,
+     and it is the same block Live reads.  Picking "next" here by activity order grew a second rule
+     that could disagree with the first while both were internally correct, which is exactly what
+     this order was opened against.  A cursor the server itself refuses (`STALE`: it names an
+     activity that is not on this plan) is a degraded screen rather than a station choice, so that
+     one case keeps the scheduled-window reading and says so in the line below. */
+  const execution = (
+    twin?.context as
+      | {
+          execution?: {
+            now_activity_id?: string | null;
+            next_activity_id?: string | null;
+            cursor_status?: string | null;
+          };
+        }
+      | undefined
+  )?.execution;
+  const cursorStatus =
+    execution?.cursor_status ?? data.active_plan?.cursor_status ?? null;
+  const byStage = !usingDeviceClock && Boolean(execution);
+  const useProjection = byStage && cursorStatus !== "STALE";
+  const projectedCurrent = useProjection
+    ? (activities.find((item) => item.id === execution?.now_activity_id) ??
+      null)
+    : null;
+  const projectedNext = useProjection
+    ? (activities.find((item) => item.id === execution?.next_activity_id) ??
+      null)
+    : null;
+  const windowCurrentStop = byStage
+    ? null
+    : (activities.find(
+        (item) =>
+          Date.parse(item.start_at) <= nowMs && Date.parse(item.end_at) >= nowMs,
+      ) ?? null);
+  const currentStop = useProjection
+    ? projectedCurrent
+    : windowCurrentStop;
+  const nextUp = useProjection
+    ? projectedNext
+    : windowCurrentStop
+      ? (activities.find(
+          (item) =>
+            Date.parse(item.start_at) > Date.parse(windowCurrentStop.end_at),
+        ) ?? null)
+      : nextStop;
   const heroClock = nextUp ? clockInZone(nextUp.start_at, journeyTz) : null;
+  /* ORD-0082 (a): how many stops the server still has after the advertised one, read off its own
+     sequence.  "暂无安排" may only be said when that number is actually zero. */
+  const remainingAfterNext = (() => {
+    const planned = data.active_plan?.activities ?? [];
+    const advertised = nextUp ? planned.find((item) => item.id === nextUp.id) ?? null : null;
+    if (!advertised) return 0;
+    return planned.filter(
+      (item) =>
+        item.sequence_no > advertised.sequence_no &&
+        !["COMPLETED", "SKIPPED", "CANCELLED"].includes(item.status),
+    ).length;
+  })();
 
   return (
     <section className="v8-page">
@@ -1788,7 +2066,11 @@ function Hub({
               : data.journey.title}
           </h1>
           {staySearch === "searching" && (
-            <div className="hub-stay-searching" data-testid="hub-stay-searching" data-stay-search="searching">
+            <div
+              className="hub-stay-searching"
+              data-testid="hub-stay-searching"
+              data-stay-search="searching"
+            >
               <strong>
                 {zh ? "正在搜索住宿" : "Looking for stays"} ·{" "}
                 <span data-testid="hub-stay-elapsed">
@@ -1803,11 +2085,23 @@ function Hub({
             </div>
           )}
           {staySearch === "failed" && (
-            <div className="hub-stay-refused" data-testid="hub-stay-refused" data-stay-search="failed" role="alert">
+            <div
+              className="hub-stay-refused"
+              data-testid="hub-stay-refused"
+              data-stay-search="failed"
+              role="alert"
+            >
               <strong>
-                {zh ? "住宿搜索失败了，行程本身还在。" : "The stay search failed — your trip is untouched."}
+                {zh
+                  ? "住宿搜索失败了，行程本身还在。"
+                  : "The stay search failed — your trip is untouched."}
               </strong>
-              <button type="button" className="v8-outline-button" data-testid="hub-stay-retry" onClick={onRetryStays}>
+              <button
+                type="button"
+                className="v8-outline-button"
+                data-testid="hub-stay-retry"
+                onClick={onRetryStays}
+              >
                 {zh ? "再查一次" : "Search again"}
               </button>
             </div>
@@ -1816,14 +2110,33 @@ function Hub({
             /* A 200 whose top_k is empty is a completed search with no answer in it. Rendering
                Today as if it had found stays is the same defect as showing a spinner forever:
                the traveller cannot tell an empty result from a working one. */
-            <section className="hub-stay-empty" data-testid="hub-no-stays" data-stay-search="empty" data-stay-outcome={stayOutcome ?? "unknown"} role="status">
-              <strong>{zh ? "这次没找到可推荐的住宿" : "No stay options came back this time"}</strong>
+            <section
+              className="hub-stay-empty"
+              data-testid="hub-no-stays"
+              data-stay-search="empty"
+              data-stay-outcome={stayOutcome ?? "unknown"}
+              role="status"
+            >
+              <strong>
+                {zh
+                  ? "这次没找到可推荐的住宿"
+                  : "No stay options came back this time"}
+              </strong>
               <p>{stayOutcomeLine(stayOutcome, zh)}</p>
               <div className="hub-stay-empty-actions">
-                <button type="button" className="v8-primary-button" data-testid="hub-stay-retry" onClick={onRetryStays}>
+                <button
+                  type="button"
+                  className="v8-primary-button"
+                  data-testid="hub-stay-retry"
+                  onClick={onRetryStays}
+                >
                   {zh ? "再查一次" : "Search again"}
                 </button>
-                <button type="button" className="v8-quiet-button" onClick={() => onNavigate("stay")}>
+                <button
+                  type="button"
+                  className="v8-quiet-button"
+                  onClick={() => onNavigate("stay")}
+                >
                   {zh ? "去住宿页看看" : "Open the stay page"}
                 </button>
               </div>
@@ -1865,7 +2178,8 @@ function Hub({
             </div>
           )}
           <p className="v8-lede" data-testid="today-when">
-            {dateInZone(data.journey.start_at, locale, journeyTz)} — {dateInZone(data.journey.end_at, locale, journeyTz)}
+            {dateInZone(data.journey.start_at, locale, journeyTz)} —{" "}
+            {dateInZone(data.journey.end_at, locale, journeyTz)}
             {" · "}
             {t("shell.travelers", { n: data.trip.party_size })}
             {" · "}
@@ -1885,13 +2199,26 @@ function Hub({
             full-width buttons competing with the hero. The duplicated language
             toggle is gone — the topbar already owns that control. */}
         <div className="v8-hub-actions" data-testid="hub-secondary-actions">
-          <button type="button" className="v8-quiet-button" data-testid="hub-plan-with-ai" onClick={onPlanWithAi}>
+          <button
+            type="button"
+            className="v8-quiet-button"
+            data-testid="hub-plan-with-ai"
+            onClick={onPlanWithAi}
+          >
             {locale.startsWith("zh") ? "AI 帮我规划" : "Plan my trip with AI"}
           </button>
-          <button type="button" className="v8-quiet-button" onClick={onNewJourney}>
+          <button
+            type="button"
+            className="v8-quiet-button"
+            onClick={onNewJourney}
+          >
             {t("trial.newJourney")}
           </button>
-          <button type="button" className="v8-quiet-button" onClick={() => onNavigate("studio")}>
+          <button
+            type="button"
+            className="v8-quiet-button"
+            onClick={() => onNavigate("studio")}
+          >
             {t("hub.openStudio")}
           </button>
         </div>
@@ -1899,7 +2226,12 @@ function Hub({
       {/* ORD-0059: the Simulation entry belongs on Today, because Today is the screen whose
           "now" is being staged.  Whether this deployment is a stage is the server's answer
           (`GET /demo/scene` -> demo_mode), never a path this file guesses at. */}
-      <SimulationEntry viewingJourneyId={data.journey.id} />
+      {/* ORD-0082 ②: the callback has to reach the panel, or "the stage moved" never arrives on
+          this screen -- a hero that is not told to re-read cannot follow anything. */}
+      <SimulationEntry
+        viewingJourneyId={data.journey.id}
+        onStageChanged={onStageChanged}
+      />
       <div className="v8-hero-grid">
         <article
           className="v8-trip-hero cn-now-next-hero"
@@ -1929,9 +2261,16 @@ function Hub({
                   ? zh
                     ? `今天还有 ${todayStops.length} 项安排`
                     : `${todayStops.length} stops today`
-                  : zh
-                    ? "下一站之后暂无安排"
-                    : "Nothing scheduled after this"}
+                  : /* An empty calendar day says nothing about whether further stops exist -- only
+                       the server's sequence does.  "暂无安排" beside a real later stop was the same
+                       contradiction in a smaller font. */
+                    remainingAfterNext > 0
+                      ? zh
+                        ? `后面还有 ${remainingAfterNext} 站`
+                        : `${remainingAfterNext} stops after this`
+                      : zh
+                        ? "这一趟到下一站就结束了"
+                        : "This trip ends at the next stop"}
               </small>
             ) : null}
           </div>
@@ -1946,8 +2285,71 @@ function Hub({
               {zh ? "查看实时行程" : "Open Live"}
             </button>
           ) : null}
+          {/* ORD-0082 ①: the fallback is allowed, silence is not.  Whichever clock chose these
+              two lines is named here, so a device reading is never mistaken for the stage's. */}
+          <small
+            className="cn-clock-source"
+            data-testid="today-clock-source"
+            data-clock-source={usingDeviceClock ? "DEVICE" : "SCENE"}
+            data-cursor-status={cursorStatus ?? "UNKNOWN"}
+            data-next-source={
+              useProjection
+                ? "SERVER_PROJECTION"
+                : byStage
+                  ? "PROJECTION_UNUSABLE"
+                  : "DEVICE_WINDOW"
+            }
+          >
+            {(() => {
+              if (!usingDeviceClock) {
+                const basis =
+                  stage.scene?.basis === "CURSOR"
+                    ? zh
+                      ? "执行游标"
+                      : "execution cursor"
+                    : zh
+                      ? "行程起点"
+                      : "journey start";
+                const cursorNote =
+                  cursorStatus && cursorStatus !== "VALID"
+                    ? zh
+                      ? `，游标状态 ${cursorStatus}`
+                      : `, cursor ${cursorStatus}`
+                    : "";
+                const stationNote = useProjection
+                  ? zh
+                    ? " · 现在/接下来由服务器的执行投影给出"
+                    : " · now/next come from the server's execution projection"
+                  : cursorStatus === "STALE"
+                    ? zh
+                      ? " · 服务器不认它自己的游标，这一屏的站位按时间窗读，不是按游标"
+                      : " · the server does not trust its own cursor, so this screen reads the stations by time window, not by cursor"
+                    : zh
+                      ? " · 服务器的执行投影还没到，这一屏没有按游标定位"
+                      : " · the server's execution projection has not arrived, so no station is claimed from the cursor";
+                return zh
+                  ? `“现在”取自服务器场景（${basis}${cursorNote}）：${stageInstant}${stationNote}`
+                  : `"now" comes from the server's scenario (${basis}${cursorNote}): ${stageInstant}${stationNote}`;
+              }
+              if (stage.phase === "loading")
+                return zh
+                  ? "还在读服务器场景，这一屏用的是这台设备自己的时间"
+                  : "The scenario is still being read; this screen uses this device's own time";
+              if (stage.phase === "unavailable")
+                return zh
+                  ? `读不到服务器场景（${stage.reason ?? "未知"}），这一屏用的是这台设备自己的时间`
+                  : `The scenario could not be read (${stage.reason ?? "unknown"}); this screen uses this device's own time`;
+              return zh
+                ? "台上没有场景，这一屏用的是这台设备自己的时间"
+                : "There is no scenario on stage; this screen uses this device's own time";
+            })()}
+          </small>
         </article>
-        <MapPanel data={data} option={selected} />
+        <MapPanel
+          data={data}
+          option={selected}
+          onNoLocationChange={setMapReportsNoLocation}
+        />
       </div>
       {/* Stay / booking steps OUT of the hero into a compact strip: the hero owns
           one action, lodging is secondary context (GPT Hero rules). */}
@@ -1980,15 +2382,20 @@ function Hub({
         className="cn-attention-band"
         data-testid="today-attention-band"
         data-attention={
-          disruptions.length ? "open" : handledDisruptions.length ? "handled" : "clear"
+          disruptions.length
+            ? "open"
+            : handledDisruptions.length
+              ? "handled"
+              : "clear"
         }
         aria-label={zh ? "需要关注" : "Needs attention"}
       >
         <div className="cn-attention-head">
           <span className="v8-kicker">{zh ? "需要关注" : "Attention"}</span>
           <strong
-            className={disruptions.length ? "warn" : "green"}
+            className={disruptions.length || tripUnlocatable ? "warn" : "green"}
             data-testid="today-attention"
+            data-no-coordinates={tripUnlocatable ? "true" : "false"}
           >
             {disruptions.length
               ? zh
@@ -1998,9 +2405,16 @@ function Hub({
                 ? zh
                   ? "已处理"
                   : "Handled"
-                : zh
-                  ? "一切正常"
-                  : "All clear"}
+                : tripUnlocatable
+                  ? /* Not a new word: the map panel owns this condition's sentence
+                       (MapPanel.tsx, "这个行程还没有可信的坐标…"), and the attention line quotes its
+                       own opening clause so the two surfaces on one screen cannot disagree. */
+                    zh
+                    ? "这个行程还没有可信的坐标"
+                    : "This trip has no trustworthy coordinates yet"
+                  : zh
+                    ? "一切正常"
+                    : "All clear"}
           </strong>
         </div>
         {disruptions.length > 0 || handledDisruptions.length > 0 ? (
@@ -2086,7 +2500,8 @@ function stayTotalLabel(
   locale: string,
 ): string {
   const known =
-    (option.stay.nightly_amount_minor ?? 0) > 0 || (option.stay_total_minor ?? 0) > 0;
+    (option.stay.nightly_amount_minor ?? 0) > 0 ||
+    (option.stay_total_minor ?? 0) > 0;
   if (!known) return t("studio.priceUnknown");
   return money(option.stay.total_amount_minor, option.stay.currency, locale);
 }
@@ -2115,7 +2530,10 @@ function Studio({
 }) {
   const t = useT();
   const { locale } = useLocale();
-  const [draftImpact, setDraftImpact] = useState<{ day: number; count: number } | null>(null);
+  const [draftImpact, setDraftImpact] = useState<{
+    day: number;
+    count: number;
+  } | null>(null);
   // How much of the budget is actually evidenced?  A single priced stop does
   // not verify a total, and a stop with no provider price is not a free stop.
   // The evidence lives on the authoritative plan's activities (`cost_status`),
@@ -2131,9 +2549,7 @@ function Studio({
         <div>
           <p className="v8-kicker">{t("studio.kicker")}</p>
           <h1>{t("studio.title")}</h1>
-          <p className="v8-lede">
-            {t("studio.lede")}
-          </p>
+          <p className="v8-lede">{t("studio.lede")}</p>
         </div>
         <button className="v8-outline-button" onClick={() => void onRain()}>
           {t("studio.reportRain")}
@@ -2163,22 +2579,35 @@ function Studio({
                 <SortableActivityList
                   activities={day.activities}
                   protectedFirst={day.anchor !== "STAY"}
-                  onDraft={(draft) => setDraftImpact({ day: day.day, count: draft.length })}
+                  onDraft={(draft) =>
+                    setDraftImpact({ day: day.day, count: draft.length })
+                  }
                 />
               </div>
             </article>
           ))}
         </div>
         {draftImpact && (
-          <div className="v8-impact-drawer" role="status" data-testid="v12-impact-preview">
+          <div
+            className="v8-impact-drawer"
+            role="status"
+            data-testid="v12-impact-preview"
+          >
             <b>{t("studio.draftPreview")}</b>
-            <span>{t("studio.dayActivities", { day: draftImpact.day, count: draftImpact.count })}</span>
+            <span>
+              {t("studio.dayActivities", {
+                day: draftImpact.day,
+                count: draftImpact.count,
+              })}
+            </span>
             <small>{t("studio.draftCheck")}</small>
           </div>
         )}
         <aside className="v8-studio-aside">
           <div className="v8-aside-heading">
-            <span>{chosen ? t("studio.selectedStay") : t("studio.noStaySelected")}</span>
+            <span>
+              {chosen ? t("studio.selectedStay") : t("studio.noStaySelected")}
+            </span>
             <button onClick={() => onNavigate("stay")}>
               {chosen ? t("studio.change") : t("studio.chooseStay")}
             </button>
@@ -2208,7 +2637,11 @@ function Studio({
                   ? t("studio.notChosen")
                   : (chosen.stay.nightly_amount_minor ?? 0) > 0 ||
                       (chosen.stay_total_minor ?? 0) > 0
-                    ? money(chosen.stay_total_minor, chosen.stay.currency ?? data.trip.stay_budget.currency, locale)
+                    ? money(
+                        chosen.stay_total_minor,
+                        chosen.stay.currency ?? data.trip.stay_budget.currency,
+                        locale,
+                      )
                     : t("studio.priceUnknown")}
               </b>
             </div>
@@ -2216,19 +2649,27 @@ function Studio({
               <span>{t("studio.dailyMovement")}</span>
               <b>
                 {chosen
-                  ? money(chosen.daily_travel_minor, chosen.stay.currency ?? data.journey.budget.currency, locale)
+                  ? money(
+                      chosen.daily_travel_minor,
+                      chosen.stay.currency ?? data.journey.budget.currency,
+                      locale,
+                    )
                   : t("studio.notChosen")}
               </b>
             </div>
             <div>
               <span>{t("studio.walkingExposure")}</span>
-              <b>{chosen ? `${chosen.walking_min} min` : t("studio.notChosen")}</b>
+              <b>
+                {chosen ? `${chosen.walking_min} min` : t("studio.notChosen")}
+              </b>
             </div>
             <div className="total">
               <span>{t("studio.planHealth")}</span>
               <b className={data.active_plan ? "green" : ""}>
                 {data.active_plan
-                  ? t("studio.protected", { n: chosen?.protected_margin_min ?? 0 })
+                  ? t("studio.protected", {
+                      n: chosen?.protected_margin_min ?? 0,
+                    })
                   : t("studio.notChosen")}
               </b>
             </div>
@@ -2260,7 +2701,10 @@ function Studio({
               </div>
             </div>
           ) : (
-            <div className="v8-feasibility pending" data-testid="studio-no-plan">
+            <div
+              className="v8-feasibility pending"
+              data-testid="studio-no-plan"
+            >
               <span className="status-dot" />
               <div>
                 <b>{t("studio.noPlanChecked")}</b>
@@ -2296,16 +2740,17 @@ function AuthoritativeExecution({
   onRefresh: () => void;
 }) {
   const t = useT();
-  const execution = (twin?.context as { execution?: { next_activity_id?: string | null } } | undefined)?.execution;
+  const execution = (
+    twin?.context as
+      { execution?: { next_activity_id?: string | null } } | undefined
+  )?.execution;
   return (
     <section className="v8-page" data-testid="v12-authoritative-page">
       <div className="v8-page-intro compact">
         <div>
           <p className="v8-kicker">{t("auth.kicker")}</p>
           <h1>{t("auth.title")}</h1>
-          <p className="v8-lede">
-            {t("auth.lede")}
-          </p>
+          <p className="v8-lede">{t("auth.lede")}</p>
         </div>
         <button className="v8-outline-button" type="button" onClick={onRefresh}>
           {t("auth.refresh")}
@@ -2338,9 +2783,18 @@ function AuthoritativeExecution({
             nextActivityId={execution?.next_activity_id ?? null}
             onTransition={onRefresh}
           />
-          <V12TripStudioPanel journeyId={journeyId} plan={plan} onAccepted={onRefresh} />
+          <V12TripStudioPanel
+            journeyId={journeyId}
+            plan={plan}
+            onAccepted={onRefresh}
+          />
           <V14PreventivePanel journeyId={journeyId} refreshKey={plan?.id} />
-          <V14RecoveryTruthPanel journeyId={journeyId} policy={policy} currency={currency} onAccepted={onRefresh} />
+          <V14RecoveryTruthPanel
+            journeyId={journeyId}
+            policy={policy}
+            currency={currency}
+            onAccepted={onRefresh}
+          />
         </>
       )}
     </section>
@@ -2377,12 +2831,12 @@ function Live({
         <div>
           <p className="v8-kicker">
             {t("live.kicker")}{" "}
-            {offline ? t("live.saved", { date: date(offline.updated_at, locale) }) : t("live.syncing")}
+            {offline
+              ? t("live.saved", { date: date(offline.updated_at, locale) })
+              : t("live.syncing")}
           </p>
           <h1>{t("live.title")}</h1>
-          <p className="v8-lede">
-            {t("live.lede")}
-          </p>
+          <p className="v8-lede">{t("live.lede")}</p>
         </div>
       </div>
       <div className="v8-live-main">
@@ -2410,22 +2864,24 @@ function Live({
                     : t("live.awaitingPlan")}
             </h2>
             <p>
-              {cursorUnresolved ? (
-                t("live.unresolvedStepHint")
-              ) : next ? (
-                t("live.nextLeg", {
-                  title: next.title,
-                  mode: modeLabel(nextLeg?.mode ?? mode, locale.startsWith("zh")),
-                  duration: nextLeg?.duration_min ?? t("live.durationPending"),
-                  unit: nextLeg ? " min" : "",
-                })
-              ) : data.active_plan ? (
-                // A plan that is spent is not a plan that is missing, and the
-                // sub-line used to claim the latter.
-                t("live.nothingDue")
-              ) : (
-                t("live.nextSelect")
-              )}
+              {cursorUnresolved
+                ? t("live.unresolvedStepHint")
+                : next
+                  ? t("live.nextLeg", {
+                      title: next.title,
+                      mode: modeLabel(
+                        nextLeg?.mode ?? mode,
+                        locale.startsWith("zh"),
+                      ),
+                      duration:
+                        nextLeg?.duration_min ?? t("live.durationPending"),
+                      unit: nextLeg ? " min" : "",
+                    })
+                  : data.active_plan
+                    ? // A plan that is spent is not a plan that is missing, and the
+                      // sub-line used to claim the latter.
+                      t("live.nothingDue")
+                    : t("live.nextSelect")}
             </p>
           </div>
           <strong>
@@ -2457,7 +2913,9 @@ function LiveSecondary({
   selected: V8Data["options"][number] | null;
   mode: V8Mode;
   comparison: V8Data["mobility_facts"];
-  isHandledDisruption: (item: NonNullable<V8Data["active_plan"]>["disruptions"][number]) => boolean;
+  isHandledDisruption: (
+    item: NonNullable<V8Data["active_plan"]>["disruptions"][number],
+  ) => boolean;
   onMode: (mode: V8Mode) => Promise<void>;
   onSheet: () => void;
   onRain: () => Promise<void>;
@@ -2468,7 +2926,9 @@ function LiveSecondary({
   const zh = locale.startsWith("zh");
   const { next, nextLeg } = liveActivityWindow(data.active_plan ?? null);
   const planDisruptions = data.active_plan?.disruptions ?? [];
-  const disruptions = planDisruptions.filter((item) => !isHandledDisruption(item));
+  const disruptions = planDisruptions.filter(
+    (item) => !isHandledDisruption(item),
+  );
   const destination =
     next?.metadata.longitude != null && next?.metadata.latitude != null
       ? data.journey.city_code.startsWith("CN-")
@@ -2529,13 +2989,21 @@ function LiveSecondary({
             <h3>{next?.title ?? t("live.awaitingPlan")}</h3>
             <p>
               {next
-                ? t("live.arriveBy", { date: dateInZone(next.start_at, locale, data.journey.timezone || "UTC") })
+                ? t("live.arriveBy", {
+                    date: dateInZone(
+                      next.start_at,
+                      locale,
+                      data.journey.timezone || "UTC",
+                    ),
+                  })
                 : t("live.selectPlan")}{" "}
               · {selected?.protected_margin_min ?? 0} min slack
             </p>
             <div className="v8-eta">
               <strong>
-                {next ? clockInZone(next.start_at, data.journey.timezone || "UTC") : "—"}
+                {next
+                  ? clockInZone(next.start_at, data.journey.timezone || "UTC")
+                  : "—"}
               </strong>
               <span>{t("live.eta", { mode: nextLeg?.mode ?? mode })}</span>
             </div>
@@ -2553,7 +3021,9 @@ function LiveSecondary({
               <b>{t("live.risk")}</b>
               <span>
                 {disruptions.length
-                  ? t("live.guardianMonitoring", { severity: disruptions[0].severity })
+                  ? t("live.guardianMonitoring", {
+                      severity: disruptions[0].severity,
+                    })
                   : t("live.routeCurrent")}
               </span>
             </div>
@@ -2579,7 +3049,11 @@ function LiveSecondary({
                 <strong>
                   {fact.cost_amount_minor == null
                     ? "—"
-                    : money(fact.cost_amount_minor, fact.currency ?? "CNY", locale)}
+                    : money(
+                        fact.cost_amount_minor,
+                        fact.currency ?? "CNY",
+                        locale,
+                      )}
                 </strong>
               </div>
             ))}
@@ -2620,7 +3094,9 @@ function MapPage({
         <MapPanel data={data} option={selected} />
         <div className="v8-map-facts">
           <span className="v8-kicker">{t("map.nextLeg")}</span>
-          <h2>{nextActivityOf(data.active_plan)?.title ?? t("map.awaitingPlan")}</h2>
+          <h2>
+            {nextActivityOf(data.active_plan)?.title ?? t("map.awaitingPlan")}
+          </h2>
           {comparison.slice(0, 3).map((fact) => (
             <div className="v8-route-row" key={fact.mode}>
               <b>{fact.mode}</b>
@@ -2630,7 +3106,11 @@ function MapPage({
               <strong>
                 {fact.cost_amount_minor == null
                   ? "—"
-                  : money(fact.cost_amount_minor, fact.currency ?? "CNY", locale)}
+                  : money(
+                      fact.cost_amount_minor,
+                      fact.currency ?? "CNY",
+                      locale,
+                    )}
               </strong>
             </div>
           ))}
@@ -2733,7 +3213,9 @@ function Bookings({
               </div>
               <div>
                 <span className="v8-selected-label">
-                  {chosen ? t("bookings.stayEvidence") : t("bookings.stayPreview")}
+                  {chosen
+                    ? t("bookings.stayEvidence")
+                    : t("bookings.stayPreview")}
                 </span>
                 <h2>{selected.stay.property_name}</h2>
                 <p>
@@ -2756,7 +3238,9 @@ function Bookings({
                 <Icon name="bed" />
               </div>
               <div>
-                <span className="v8-selected-label">{t("bookings.stayEvidence")}</span>
+                <span className="v8-selected-label">
+                  {t("bookings.stayEvidence")}
+                </span>
                 <h2>{t("bookings.noStay")}</h2>
                 <p>{t("bookings.noStaySub")}</p>
               </div>
@@ -2796,17 +3280,88 @@ function Bookings({
               </span>
             </article>
           ))}
+          {/* ORD-0087 / ORD-0084: `commitments` was declared on this file's own `Wallet` type and
+              drawn nowhere, so a commitment the server had confirmed could not reach the screen and
+              the truth it carries (is this mine, is it real, when is it due) died in the payload.
+              Every word here comes from a field: the simulated label only from an `external_ref` the
+              mock provider issued, the amount only when the server says it is KNOWN, and nothing at
+              all when there are no commitments -- an empty list is not a mock. */}
+          {(wallet?.commitments ?? []).map((item) => {
+            const simulated = String(item.external_ref ?? "").startsWith("mock-");
+            const known = item.monetary_value_status === "KNOWN";
+            const amountMinor = item.monetary_value?.amount_minor;
+            const start = item.policy?.scheduled_start_at ?? null;
+            const end = item.policy?.scheduled_end_at ?? null;
+            const tz = data.journey.timezone || undefined;
+            return (
+              <article
+                className="v8-booking-card"
+                key={item.id}
+                data-testid="wallet-commitment"
+                data-simulated={simulated ? "true" : "false"}
+                data-monetary-status={item.monetary_value_status ?? "UNSTATED"}
+              >
+                <div className="v8-booking-icon muted">
+                  <Icon name="ticket" />
+                </div>
+                <div>
+                  <span className="v8-selected-label">
+                    {item.kind} · {item.level} · {item.status}
+                    {simulated && (
+                      <b data-testid="wallet-commitment-simulated">
+                        {" · "}
+                        {zh ? "模拟承诺" : "simulated commitment"}
+                      </b>
+                    )}
+                  </span>
+                  <h2>
+                    {item.policy?.semantic_key ||
+                      `${zh ? "承诺" : "Commitment"} ${item.id.slice(0, 8)}`}
+                  </h2>
+                  <p data-testid="wallet-commitment-window">
+                    {start && end
+                      ? `${dateInZone(start, locale, tz ?? "UTC")} → ${dateInZone(end, locale, tz ?? "UTC")}`
+                      : zh
+                        ? "服务器没有给这项承诺的时间窗"
+                        : "The server gave no time window for this commitment"}
+                  </p>
+                  <strong data-testid="wallet-commitment-amount">
+                    {known && amountMinor != null
+                      ? money(amountMinor, item.monetary_value?.currency ?? "CNY", locale)
+                      : zh
+                        ? "价格未知"
+                        : t("bookings.priceUnknown")}
+                  </strong>
+                </div>
+                <span className="v8-booking-state safe">
+                  {item.policy?.fixed_schedule
+                    ? zh
+                      ? "时间已锁定"
+                      : "Schedule fixed"
+                    : zh
+                      ? "时间可调"
+                      : "Schedule flexible"}
+                </span>
+              </article>
+            );
+          })}
         </div>
         <aside className="v9-inbox">
-          <span className="v8-kicker">{zh ? "导入预订" : "Import a booking"}</span>
+          <span className="v8-kicker">
+            {zh ? "导入预订" : "Import a booking"}
+          </span>
           <p className="v8-lede">
             {zh
               ? "结构化导入在这里：展开下方「高级」粘贴 JSON 确认单。确认单文本与截图走行程收件箱。"
               : "Structured import lives here - expand Advanced below to paste a JSON confirmation. Confirmation text and screenshots go through the journey inbox."}
           </p>
           <details className="v8-advanced" data-testid="bookings-advanced">
-            <summary>{zh ? "高级：结构化数据" : "Advanced: structured data"}</summary>
-            <label htmlFor="reservation-json">{t("bookings.reservationJson")}</label>
+            <summary>
+              {zh ? "高级：结构化数据" : "Advanced: structured data"}
+            </summary>
+            <label htmlFor="reservation-json">
+              {t("bookings.reservationJson")}
+            </label>
             <textarea
               id="reservation-json"
               data-testid="bookings-json-input"
@@ -2815,7 +3370,9 @@ function Bookings({
                 setInput(event.target.value);
                 if (parseError) setParseError(null);
               }}
-              placeholder={'{"reservation_type":"RAIL", "confirmation_ref":"…"}'}
+              placeholder={
+                '{"reservation_type":"RAIL", "confirmation_ref":"…"}'
+              }
             />
             <button
               className="v8-primary"
@@ -2825,7 +3382,11 @@ function Bookings({
               {t("bookings.reviewProtect")}
             </button>
             {parseError && (
-              <p className="role-alert" role="alert" data-testid="bookings-parse-error">
+              <p
+                className="role-alert"
+                role="alert"
+                data-testid="bookings-parse-error"
+              >
                 {parseError}
               </p>
             )}
@@ -2851,7 +3412,16 @@ function OfflineJourneyView({
   const t = useT();
   const { locale } = useLocale();
   const stateKey = (s: string) =>
-    ({ EN_ROUTE: "exec.state.enRoute", ARRIVED: "exec.state.arrived", IN_PROGRESS: "exec.state.inProgress", ACTIVE: "exec.state.active", COMPLETED: "exec.state.completed", SKIPPED: "exec.state.skipped" } as Record<string, string>)[s] ?? null;
+    (
+      ({
+        EN_ROUTE: "exec.state.enRoute",
+        ARRIVED: "exec.state.arrived",
+        IN_PROGRESS: "exec.state.inProgress",
+        ACTIVE: "exec.state.active",
+        COMPLETED: "exec.state.completed",
+        SKIPPED: "exec.state.skipped",
+      }) as Record<string, string>
+    )[s] ?? null;
   return (
     <main className="v9-offline">
       <div className="v8-brand-mark">CN</div>
@@ -2861,12 +3431,29 @@ function OfflineJourneyView({
       {value.snapshot.execution && (
         <div className="v12-offline-now-next">
           <article>
-            <span>{t("exec.now")} · {stateKey(value.snapshot.execution.now_state) ? t(stateKey(value.snapshot.execution.now_state)!) : value.snapshot.execution.now_state.replaceAll("_", " ")}</span>
-            <b>{value.snapshot.execution.now?.title ?? t("offline.journeyComplete")}</b>
+            <span>
+              {t("exec.now")} ·{" "}
+              {stateKey(value.snapshot.execution.now_state)
+                ? t(stateKey(value.snapshot.execution.now_state)!)
+                : value.snapshot.execution.now_state.replaceAll("_", " ")}
+            </span>
+            <b>
+              {value.snapshot.execution.now?.title ??
+                t("offline.journeyComplete")}
+            </b>
           </article>
           <article>
-            <span>{t("exec.next")} · {value.snapshot.execution.next_state ? (stateKey(value.snapshot.execution.next_state) ? t(stateKey(value.snapshot.execution.next_state)!) : value.snapshot.execution.next_state.replaceAll("_", " ")) : "—"}</span>
-            <b>{value.snapshot.execution.next?.title ?? t("offline.noNextStep")}</b>
+            <span>
+              {t("exec.next")} ·{" "}
+              {value.snapshot.execution.next_state
+                ? stateKey(value.snapshot.execution.next_state)
+                  ? t(stateKey(value.snapshot.execution.next_state)!)
+                  : value.snapshot.execution.next_state.replaceAll("_", " ")
+                : "—"}
+            </span>
+            <b>
+              {value.snapshot.execution.next?.title ?? t("offline.noNextStep")}
+            </b>
           </article>
         </div>
       )}
@@ -2881,7 +3468,11 @@ function OfflineJourneyView({
         ))}
       </div>
       <small>
-        {t("offline.providerRefresh", { date: value.provider_freshness.latest_provider_capture_at ? date(value.provider_freshness.latest_provider_capture_at, locale) : t("offline.beforeSnapshot") })}
+        {t("offline.providerRefresh", {
+          date: value.provider_freshness.latest_provider_capture_at
+            ? date(value.provider_freshness.latest_provider_capture_at, locale)
+            : t("offline.beforeSnapshot"),
+        })}
       </small>
     </main>
   );
@@ -2914,12 +3505,20 @@ function Me({
     }
   };
   const cityLabel =
-    CITY_NAME_BY_SLUG[String(data.journey.city_code || "").split("-").pop()?.toUpperCase() ?? ""]?.[
-      zh ? "zh" : "en"
-    ] ?? String(data.journey.city_code || "").split("-").pop() ?? "";
+    CITY_NAME_BY_SLUG[
+      String(data.journey.city_code || "")
+        .split("-")
+        .pop()
+        ?.toUpperCase() ?? ""
+    ]?.[zh ? "zh" : "en"] ??
+    String(data.journey.city_code || "")
+      .split("-")
+      .pop() ??
+    "";
 
   const bookings = wallet?.reservations ?? [];
-  const stay = (data.options ?? []).find((o) => o.id === data.selected_option_id) ?? null;
+  const stay =
+    (data.options ?? []).find((o) => o.id === data.selected_option_id) ?? null;
   const [showAdvanced, setShowAdvanced] = useState(false);
 
   return (
@@ -2942,13 +3541,23 @@ function Me({
           <strong>{cityLabel}</strong>
           <p>
             {t("shell.travelers", { n: data.trip.party_size })} ·{" "}
-            {money(data.journey.budget.amount_minor, data.journey.budget.currency, locale)}
+            {money(
+              data.journey.budget.amount_minor,
+              data.journey.budget.currency,
+              locale,
+            )}
           </p>
         </article>
 
         <article className="v8-me-card">
           <span className="v8-kicker">{zh ? "住宿" : "Stay"}</span>
-          <strong>{stay ? stay.stay.property_name : zh ? "还没有选定" : "Not chosen yet"}</strong>
+          <strong>
+            {stay
+              ? stay.stay.property_name
+              : zh
+                ? "还没有选定"
+                : "Not chosen yet"}
+          </strong>
           <p>
             {stay
               ? zh
@@ -2961,7 +3570,9 @@ function Me({
         </article>
 
         <article className="v8-me-card">
-          <span className="v8-kicker">{zh ? "已确认的预订" : "Confirmed bookings"}</span>
+          <span className="v8-kicker">
+            {zh ? "已确认的预订" : "Confirmed bookings"}
+          </span>
           <strong>
             {bookings.length
               ? zh
@@ -2983,7 +3594,9 @@ function Me({
         </article>
 
         <article className="v8-me-card">
-          <span className="v8-kicker">{zh ? "改动偏好" : "Change preferences"}</span>
+          <span className="v8-kicker">
+            {zh ? "改动偏好" : "Change preferences"}
+          </span>
           <strong>{freedomLabel(policy?.mode)}</strong>
           <p>
             {zh
@@ -2995,7 +3608,9 @@ function Me({
             <input
               type="checkbox"
               data-testid="me-mode-toggle"
-              checked={String(policy?.mode ?? "").toUpperCase() === "AUTONOMOUS"}
+              checked={
+                String(policy?.mode ?? "").toUpperCase() === "AUTONOMOUS"
+              }
               onChange={() => void onActivate()}
             />
           </label>
@@ -3008,23 +3623,37 @@ function Me({
         <summary>{zh ? "高级详情" : "Advanced detail"}</summary>
         <div className="v8-me-grid">
           <article className="v8-me-card">
-            <span className="v8-kicker">{zh ? "委派范围" : "Delegation scope"}</span>
+            <span className="v8-kicker">
+              {zh ? "委派范围" : "Delegation scope"}
+            </span>
             <ul>
               <li>
                 {t("me.maxCost")}{" "}
-                {money(policy?.max_auto_replan_cost_delta_minor ?? 5000, data.journey.budget.currency, locale)}
+                {money(
+                  policy?.max_auto_replan_cost_delta_minor ?? 5000,
+                  data.journey.budget.currency,
+                  locale,
+                )}
               </li>
               <li>
-                {t("me.maxLoss")} {money(policy?.max_auto_loss_minor ?? 0, data.journey.budget.currency, locale)}
+                {t("me.maxLoss")}{" "}
+                {money(
+                  policy?.max_auto_loss_minor ?? 0,
+                  data.journey.budget.currency,
+                  locale,
+                )}
               </li>
               <li>
-                {t("me.scheduleDrift")} {policy?.max_auto_schedule_drift_min ?? 20} {t("me.minutes")}
+                {t("me.scheduleDrift")}{" "}
+                {policy?.max_auto_schedule_drift_min ?? 20} {t("me.minutes")}
               </li>
               <li>{t("me.protectedMoments")}</li>
             </ul>
           </article>
           <article className="v8-me-card">
-            <span className="v8-kicker">{zh ? "技术标识" : "Technical identifiers"}</span>
+            <span className="v8-kicker">
+              {zh ? "技术标识" : "Technical identifiers"}
+            </span>
             <ul className="me-identifiers">
               <li>
                 <b>mode</b> <code>{policy?.mode ?? "ADVISORY"}</code>
@@ -3036,8 +3665,18 @@ function Me({
                 <b>city_code</b> <code>{data.journey.city_code}</code>
               </li>
             </ul>
-            <button type="button" className="v8-outline-button" onClick={() => setShowAdvanced(!showAdvanced)}>
-              {showAdvanced ? (zh ? "收起" : "Hide") : zh ? "查看策略详情" : "View policy detail"}
+            <button
+              type="button"
+              className="v8-outline-button"
+              onClick={() => setShowAdvanced(!showAdvanced)}
+            >
+              {showAdvanced
+                ? zh
+                  ? "收起"
+                  : "Hide"
+                : zh
+                  ? "查看策略详情"
+                  : "View policy detail"}
             </button>
             {showAdvanced && (
               <pre className="me-policy-json" data-testid="me-policy-json">
@@ -3071,7 +3710,11 @@ function modeLabel(mode: string, zh: boolean): string {
     RIDE_HAIL: { zh: "网约车", en: "Ride-hail" },
   };
   const entry = labels[key];
-  return entry ? (zh ? entry.zh : entry.en) : key.replace("_", " ").toLowerCase();
+  return entry
+    ? zh
+      ? entry.zh
+      : entry.en
+    : key.replace("_", " ").toLowerCase();
 }
 
 const CITY_NAME_BY_SLUG: Record<string, { zh: string; en: string }> = {
@@ -3089,9 +3732,17 @@ const CITY_NAME_BY_SLUG: Record<string, { zh: string; en: string }> = {
 };
 
 const CITY_CODE_SLUGS: Record<string, string> = {
-  "厦门": "XIAMEN", "北京": "BEIJING", "上海": "SHANGHAI", "天津": "TIANJIN",
-  "福州": "FUZHOU", "广州": "GUANGZHOU", "深圳": "SHENZHEN",
-  "成都": "CHENGDU", "杭州": "HANGZHOU", "东京": "TOKYO", "新加坡": "SINGAPORE",
+  厦门: "XIAMEN",
+  北京: "BEIJING",
+  上海: "SHANGHAI",
+  天津: "TIANJIN",
+  福州: "FUZHOU",
+  广州: "GUANGZHOU",
+  深圳: "SHENZHEN",
+  成都: "CHENGDU",
+  杭州: "HANGZHOU",
+  东京: "TOKYO",
+  新加坡: "SINGAPORE",
 };
 
 function cityCodeSlug(name: string): string {

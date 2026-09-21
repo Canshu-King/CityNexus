@@ -160,7 +160,15 @@
   --cn-nav-item-h: max(48px, var(--cn-touch-min));
   --cn-nav-pad-top: 8px;
   --cn-nav-pad-bottom: 7px;
-  --cn-nav-h: calc(var(--cn-nav-item-h) + var(--cn-nav-pad-top) + var(--cn-nav-pad-bottom));
+  /* Measured, not derived. The old value was arithmetic -- item floor 48 + 8 + 7 = 63px -- while the
+     bar renders **76px** at 390x844 (two independent measurements: e2e evidence
+     `ui-overnight/nav-reservation.json`, and commander `raw/nav_clearance.json`). The extra ~12px is
+     content: icon + label + `gap: 4px` exceed the 48px floor, and `min-height` is a floor, not a
+     cap. `--cn-nav-clearance` below feeds `.v8-product-shell { padding-bottom }`, which every page
+     inherits, so the short number put the last 13px of any phone screen under the nav.
+     80 = 76 measured + 4 of margin. If the nav's content grows, this grows with it, and the gate
+     `nav-reservation-covers-the-rendered-bar` goes red when it does not. */
+  --cn-nav-h: 80px;
   --cn-nav-clearance: calc(var(--cn-nav-h) + env(safe-area-inset-bottom, 0px));
   --cn-safe-top: env(safe-area-inset-top, 0px);
 }
@@ -281,6 +289,17 @@
   font-size: 15px;
   font-weight: 500;
   line-height: var(--cn-lh-body);
+}
+/* ORD-0082: this line says which clock chose Now/Next, so it is not decoration and does not get
+   the secondary grey a caption would. */
+.cn-clock-source {
+  display: block;
+  margin-top: var(--cn-s-8);
+  color: var(--cn-ink);
+  font-size: var(--cn-fs-caption);
+  font-weight: 500;
+  line-height: var(--cn-lh-body);
+  overflow-wrap: anywhere;
 }
 .cn-hero-cta {
   align-self: start;
