@@ -480,13 +480,23 @@ _CURRENT_UNRESOLVED = object()
 #: destination has no data yet") - which is why they must not share a name.
 CATALOG_EMPTY = "CATALOG_EMPTY"
 CATALOG_INSUFFICIENT = "CATALOG_INSUFFICIENT"
+# ORD-0108: the explicit-POI path (`_generic_compose_plans`, which is what the AI sheet ends up
+# on) refuses for at least three *different* reasons, and every one of them reached the phone as
+# the same `VALIDATION_ERROR` + `GENERIC_COMPOSE_INFEASIBLE:...` blob.  These are the three names
+# the order adopted, one per condition the raise site can actually observe.
+PLACES_NOT_IN_CATALOG = "PLACES_NOT_IN_CATALOG"
+PLACE_COST_UNVERIFIED = "PLACE_COST_UNVERIFIED"
+PLACE_OUTSIDE_JOURNEY_WINDOW = "PLACE_OUTSIDE_JOURNEY_WINDOW"
 
 
-class CatalogShortfall(ValueError):
-    """A plan could not be composed, carrying the reason and the counts that show it.
+class CompositionRefusal(ValueError):
+    """A plan could not be composed, naming *which* condition refused and where it bit.
 
     A `ValueError` on purpose: the doors that translate it to 422, and the demo advance chain
     that catches it, keep working unchanged - this only adds what they may choose to publish.
+    The name is required rather than optional, because the whole point is that a refusal either
+    knows its cause at its raise site or stays anonymous; an empty `reason_code` would be the
+    same lie in a new field (ORD-0101: absence speaks, a fabricated value may not).
     """
 
     def __init__(
@@ -499,6 +509,14 @@ class CatalogShortfall(ValueError):
         super().__init__(message)
         self.reason_code = reason_code
         self.details = dict(details or {})
+
+
+class CatalogShortfall(CompositionRefusal):
+    """The ORD-0101 pair: `CATALOG_EMPTY` vs `CATALOG_INSUFFICIENT`.
+
+    Kept as its own name because that order's evidence, and the message it refuses with, are a
+    distinct rule from the explicit-POI refusals below.
+    """
 
 
 def plan_schema(
@@ -840,7 +858,18 @@ def _generic_compose_plans(
     }
     missing = [item for item in selected_ids if item not in places]
     if missing:
-        raise ValueError(f"GENERIC_COMPOSE_PLACE_NOT_FOUND:{','.join(missing)}")
+        # The ids come from a caller that may have invented them (the AI sheet hands over
+        # whatever `/places` returned, unsorted and unverified).  "Not found" is then a fact
+        # about *which* ids, so they ride along instead of dissolving into one blob.
+        raise CompositionRefusal(
+            f"GENERIC_COMPOSE_PLACE_NOT_FOUND:{','.join(missing)}",
+            reason_code=PLACES_NOT_IN_CATALOG,
+            details={
+                "city_code": journey.city_code,
+                "place_ids": list(missing),
+                "requested_place_ids": list(selected_ids),
+            },
+        )
     if len(places) < 2:
         raise ValueError("GENERIC_COMPOSE_REQUIRES_TWO_PLACES")
 
@@ -899,7 +928,17 @@ def _generic_compose_plans(
         metadata = json.loads(place.metadata_json or "{}")
         raw_cost = metadata.get("cost_minor")
         if raw_cost is None:
-            raise ValueError(f"GENERIC_COMPOSE_UNKNOWN_COST:{place_id}")
+            # "Unknown cost" is not "your budget is too tight": it means this place has no
+            # price we can vouch for, which is a catalog fact the caller can act on.
+            raise CompositionRefusal(
+                f"GENERIC_COMPOSE_UNKNOWN_COST:{place_id}",
+                reason_code=PLACE_COST_UNVERIFIED,
+                details={
+                    "city_code": journey.city_code,
+                    "place_ids": [place_id],
+                    "journey_budget_minor": journey.budget_amount_minor,
+                },
+            )
         cost_minor = int(raw_cost)
         duration_min = max(15, int(metadata.get("duration_min", 60)))
         travel_min = (
@@ -929,7 +968,19 @@ def _generic_compose_plans(
             day_used_min = 0
             travel_min = 0
         if end_at > journey_end:
-            raise ValueError(f"GENERIC_COMPOSE_JOURNEY_WINDOW_EXCEEDED:{place_id}")
+            # The stop genuinely does not fit before the trip ends - a fact about *this* place
+            # and *these* dates, not a verdict on the traveller's requirements.
+            raise CompositionRefusal(
+                f"GENERIC_COMPOSE_JOURNEY_WINDOW_EXCEEDED:{place_id}",
+                reason_code=PLACE_OUTSIDE_JOURNEY_WINDOW,
+                details={
+                    "city_code": journey.city_code,
+                    "place_ids": [place_id],
+                    "journey_start_at": journey.start_at,
+                    "journey_end_at": journey.end_at,
+                    "would_end_at": end_at.isoformat(),
+                },
+            )
         facts.append(
             FeasibilityActivity(
                 key=place_id,
@@ -1128,6 +1179,12 @@ def _generic_compose_variants(
 
     created: list[PlanVersion] = []
     failures: list[str] = []
+    # `str(exc)` is what flattens the three conditions into one blob: the scope loop kept the
+    # sentence and dropped the name, so the outermost refusal - the one a phone actually reads -
+    # was anonymous even when every inner failure knew exactly which place it blamed.
+    names: list[str] = []
+    offending: list[str] = []
+    shared: dict[str, Any] = {}
     for scope in scopes:
         try:
             created.extend(
@@ -1135,10 +1192,29 @@ def _generic_compose_variants(
             )
         except ValueError as exc:
             failures.append(str(exc))
+            name = getattr(exc, "reason_code", None)
+            if not name:
+                continue
+            names.append(str(name))
+            detail = getattr(exc, "details", None) or {}
+            for item in detail.get("place_ids") or []:
+                if str(item) not in offending:
+                    offending.append(str(item))
+            for key, value in detail.items():
+                if key != "place_ids" and key not in shared:
+                    shared[key] = value
     if not created:
-        raise ValueError(
-            "GENERIC_COMPOSE_INFEASIBLE:" + "|".join(failures[:3] or ["NO_VARIANT"])
-        )
+        message = "GENERIC_COMPOSE_INFEASIBLE:" + "|".join(failures[:3] or ["NO_VARIANT"])
+        # A name is published only when every scope tried blames the same condition.  Mixed or
+        # anonymous causes stay anonymous here, because "the widest scope failed on cost" would
+        # be a guess dressed up as a fact.
+        if names and len(names) == len(failures) and len(set(names)) == 1:
+            raise CompositionRefusal(
+                message,
+                reason_code=names[0],
+                details={"place_ids": offending, "scopes_tried": len(scopes), **shared},
+            )
+        raise ValueError(message)
     return created
 
 def _inject_anchors_into_generic(
