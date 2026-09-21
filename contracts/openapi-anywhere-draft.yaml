@@ -324,7 +324,7 @@ x-testing-obligations:
       `pending_destination_label`，`provider_status` 与 `destination_provenance` 只在真去看过时出现。
     discrimination_policy: "destination-discrimination-v1"
     discrimination_rule: >-
-      实测（02:2x 打真 provider 问 云和县，200 / 8 条）：同一座城会以 relation `R:3289208`（带
+      实测（01:5x 打真 provider 问 云和县，200 / 4 条被返回、其中 2 条同名）：同一座城会以 relation `R:3289208`（带
       4 段 extent）与裸 node `N:244082768` 两种表达各回一次。这是**一条记录的两种形状**，不是两座城，
       所以不许反问用户；收敛由版本化策略做：只有当"带 extent 的 relation"恰好一条时才折叠，
       且被放弃的实体必须进 `collapsed_candidates` 记名（不静默丢）。两条都带边界 ⇒ 仍然 AMBIGUOUS。
