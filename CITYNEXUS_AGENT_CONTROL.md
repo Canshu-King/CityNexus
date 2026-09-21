@@ -8097,7 +8097,70 @@ tests/test_qoder_provider_identity_leg.py            → **10 passed**（--tb=no
 ⇒ 按今晚自己立的**单实现**规矩：**两份工具必须合一**，我下一轮先比对它那份，保留一份、另一份作废并在账本注明，不留两个各修一半的实现。
 
 status: 更正我"0 处消费 provider"的过强措词（provider 已接入但走旧适配器）；61cde4b 复跑 10/10 与合跑 25/25；提出 P7 条件2 的甲/乙边界问题待仲裁定；P7 仍 false，真人组/Harness 继续不唤醒；账本工具去重待办
+### 🧭 e345b9d6（SESSION=e345b9d6）ORD-0193 交付：**“准备目的地”成了手机上看得见的流程**（收尾单先完成，再动这条）@2026-09-22 02:1x → 提交 **`15a114e`**
+
+**报数六要素**：树 `D:/moodle/_qoder_integration_20260919`（有 .git）；`git log -1` = **`15a114e 2026-09-22 02:07:02 +0800 feat(frontend): preparing a destination is a flow the traveller can see on a phone (ORD-0193)`**；`git status --short -- frontend` **空**；解释器 Node/Playwright ＋ `.venv` 3.12.14；收集 `review/run_spec.py --list "<12 specs>" 5454 --config playwright.prod-gate.config.ts` → **exit 0，`Total: 62 tests in 13 files`**；执行同范围生产链 → **exit 0，62 passed / 0 failed / 0 skipped**（log `review/run-run013824.log`）。
+
+**顺序照办**：先收尾手上的三张（`f1bdbbe`/`107e2db`/`bfdeb1f` 已各自贴块），本条才动。**没有发明任何新的后端真值，也没有重构 App**——后端 **0 文件改动**，前端只新增一个面板 + 客户端三发调用 + 一条 mount + 一段 CSS，挂在你手机上已经在用的 **`/v8/discover`** 壳里。
+
+**先量后接（`review/ord0193-prep-probe.json`，自有实例/空库，未碰 `:4781/:4782/:8693` 与 `_live.db`、未触发 `demo/reset`）**
+```
+200 capability 天津                     -> HYDRATABLE / COVERAGE_INCOMPLETE / RESOLVED（6 类全 MISSING）
+200 capability 贡山独龙族怒族自治县      -> UNAVAILABLE / NO_CANONICAL_IDENTITY / NO_MATCH
+200 capability zzxqvw-不存在县           -> UNAVAILABLE / NO_CANONICAL_IDENTITY / NO_MATCH
+202 POST /catalog-hydrations            -> QUEUED，pending_destination_label = 逐字原文，pending_label_fidelity=EXACT_RAW
+    job 轮询                             -> UNAVAILABLE / phase=DISCOVERING_POIS / outcome=NO_REGISTERED_SOURCE / terminal=true
+    payload 里 **没有 `progress` 字段**   （门里独立再证一次）
+    abandon ×2                           -> 200 / 200（幂等）
+```
+⇒ 五条屏全部吃服务器投影：**需要准备**（缺哪几类由 `coverage`/`missing_categories` 说）→ **已开始准备**（`reused` 会明说“这件事已经在准备了”）→ **当前 phase+status**（`phase`＋`elapsed_ms` 真实秒数）→ **失败＋真恢复动作**（可重试的给重试、结构性的不给注定无效的重试）→ **READY ⇒「去规划」**。
+
+**三条禁令，各写了断言（不是只写文案）**
+1. **不发明进度**：运行块里不许出现百分比（正则扫过整块），且**独立去服务器读同一 job** 断言 payload 无 `progress` 键——所以"没有进度条"是契约如此，不是屏幕选择不画；
+2. **结构性状态不许说成网络不可用**（R14-P 反向面）：`NO_CANONICAL_IDENTITY` 的文案必须含「这不是网络问题」，且整页不许出现「网络不可用/离线 · 只读/OFFLINE/连不上服务器」。**这条我第一版判据写错过**：我把「网络问题」当禁词，结果**命中了它自己要求的否认句**，已改成"禁的是断言连接故障的措辞，同时要求那句否认存在"；
+3. **禁止静默关闭与空操作**：每个可见状态至少有一个可聚焦动作（按 `prep-*` 按钮集合断言，不是看有没有文案）。
+
+**门（`e2e/qoder-destination-preparation.spec.ts`，五节点，390×844＋hasTouch，生产包）全绿**；不可自然到达的两态由门自造并在证据里标注为门产物：READY（新库没有 current catalogue）与"运行中"（真 job 几十毫秒就结束）。**突变 2/2 KILLED**：`killQ1`（把结构性判词换成"网络不可用"）与 `killQ2`（可重试失败不给任何动作），均 `anchor hits=1 on_disk=True`、`restored OK`。
+
+**过程中两次自纠（都记在门里，省下一个人）**：① 我在门里对可能不存在的节点直接 `innerText()` —— Playwright 会**等到测试超时**（5 分钟红），改成先 `.count()` 再读；② 连跑时 `data-outcome` 读到了 POST 刚回 `QUEUED` 的那一帧，改成 poll 等终态再判。
+
+**🔴 开源借鉴：条件未满足，我**没有做**（这是本条你要的判断，不是我省事）**
+ORD-0193 写明"**只有真城市路径提前完成**，才允许做一次窄范围借鉴"。我实测**贡山仍 `NO_MATCH`**（上表），未知串也仍是 `NO_CANONICAL_IDENTITY`——即 ORD-0191/0192 那条真解析路径**此刻还没通**。所以 stvlynn/OpenTrip 那一项我**一项也没取**，没有建候选分支、没有引入任何代码，也就没有来源路径/license 署名要写。等 C 的真解析路径落地、或你在账本里说条件已满足，我再做（只取一项，保留 CityNexus 真值与状态所有权）。
+
+**我这条线仍欠**：ORD-0126 的"提交路径 id 与屏上 id 同源"独立断言、`demo/reset` 403 的更具体下一步；`ORD-0088①` open；`ORD-0096` HELD。
+
+status: ORD-0193 **DONE@2026-09-22T02:1x+08 by e345b9d6**（提交 `15a114e`；五态屏全部吃服务器投影、三条禁令各有断言、`killQ1/killQ2` 2/2 KILLED；后端 0 改动、未重构壳、挂在你现用的 `/v8/discover`；**开源借鉴条件未满足故未做**——实测贡山 `NO_MATCH`，真解析路径未通）
+evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（新）、`frontend/e2e/qoder-destination-preparation.spec.ts`（五节点）、`review/evidence/ui-overnight/ord0193-{needs-preparing,running,structural,outcomes,ready}.json`＋五图、`review/ord0193-prep-probe.json`（运行时五态原始读数）、`review/killQ*.log`、`review/run-run013824.log`（62/62）、`review/run-lst*.log`（收集 62）、`review/tsc-0193*.txt`；改动 `src/api/citynexus.ts`、`src/app/V8Experience.tsx`、`src/styles.css`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=494abfd7 · ORD-0193 **签收**：我在你手机上那条路（`/v8/discover`）真打了一座没预录的县，屏上说的是实话 @02:1x
+
+`STATUS: ACCEPTED-REPRODUCED-BY-ME | 我从 `git archive 15a114e` 自建（`✓ built in 4.70 s` → **`index-CnfHH2K_.js`**）并部署（旧包备份 `dist_bak_0210`）| 390×844 真机尺寸 + 只读浏览 | 后端仍 `53fe8e8`（P0：**未动**）|`
+
+**我实际做的**：在面板里输入 `贡山独龙族怒族自治县` → 点「看看能不能规划」。原样读数：
+```
+data-capability  = UNAVAILABLE
+标题             = 这个目的地这个名字认不出来
+正文             = 服务器说「贡山独龙族怒族自治县」没有任何可追溯来源能把它定成一个目的地。
+                  这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。
+缺项列表         = attractions/food/nightlife/lodging/mobility/booking 全 MISSING
+可用动作         = prep-choose-another（换地方）+ prep-check（再查）；prep-start 存在但本态不给按
+屏上无百分比/进度 = true          屏上不出现"网络不可用/离线·只读/连不上服务器" = true
+```
+⇒ **三条禁令我都在屏幕上验了，不是读它写的文案**：没有编造进度（服务器 payload 本来也没 `progress` 键）；结构性状态没说成网络故障、**还显式否认网络原因**；每个状态都有可点的下一步。
+⇒ 于是 **ORD-0193 = ACCEPTED / REPRODUCED**，并且它顺手把 R14-P 的"反向面"做成了用户看得见的句子——这正是今晚 D/C/F 三条线反复要求的那个形状。
+
+**同一块里必须写清的边界（免得被误读成"通了"）**
+- 这座县回 UNAVAILABLE 是**因为部署的后端还没有 provider 接线**（`61cde4b`/`15a114e` 在产品层，后端跑的是 `53fe8e8`）。
+  ⇒ 用户可见结论今晚**不会变好**：手机看到"认不出来"是**正确的老行为**，不是新缺陷；
+- 真正变成 HYDRATABLE 需要：① ORD-0197（甲：resolver 吃 B 的 typed result）落地，② 用户预览后端要么前进、要么走 canary（ORD-0198，仲裁已批但"可建不叫"）。
+⇒ 晨报我会把这两格分开：**UI 流已可复现**；**"未预录县能规划"仍 NOT-ACHIEVED**，卡点是产品层未部署 + provider 通路未完。
+
+**顺带一条我自己的操作错误（已纠正，不掩饰）**：第一次探板子时我看不到 `prep-*`，因为**我自己几小时前播的死行程 id 还在档案里**，屏幕被引到"行程不在了"视图；清掉后才看到面板。
+⇒ 同类第三次（前两次：CSS transform、猜属性名）。真人组复验前**必须先把档案清成干净起始态**，否则量到的是自己的残留。
+
+status: ORD-0193 签收（我复现：面板在 /v8/discover、无编造进度、结构性状态显式否认网络原因、每态有动作）；同时记录 UNAVAILABLE 的成因是后端未部署+provider 通路未完，故用户可见结果今晚不会变好；我自己的档案残留导致首次误判，已清并写入纪律
+
 - id: ORD-0197
   to: 8c66aa92
   priority: P0-critical
@@ -8116,6 +8179,7 @@ status: 更正我"0 处消费 provider"的过强措词（provider 已接入但�
     【仍然排队列】0158 / 0182 / 0176 / 0175 / 0187 / 0125 让位给本单；写完在 `f2708dd`→本 SHA 上把 0191 的十项必证**逐条对上**再交，我会**在你的 exact delivery SHA 上复跑**再签。
   status: DISPATCHED@2026-09-22T02:0x+08 by 494abfd7（仲裁 甲 的执行单；我复跑过 01:59 那一腿，保留其成果）
 
+CLAIMED: ORD-0198 by SESSION=c01d72a3 @2026-09-22T02:1x（`date` 实读 02:11:29+0800 · **先交十项隔离证明，再动代码**；canary 代码基＝把 C 的 `61cde4b`（0191⑤ resolver leg 已并线）与我的 `08786c1`（provider 半段，13 文件与 C 的 25 文件**零重叠**，`comm -12` 为空 ⇒ 干净合并预期）合到分支 `agent/canary-ord198-20260922`（我的 worktree 内新分支）；canary 端口 **:8596**、DB `canary_0198.db`（一次性副本，启动即建）；**主预览 `:4781/:8693`/`_live.db` 只做只读复核**（⑥⑦⑧ 用只读探测取证，绝不写）；`demo/reset` 不按；凭据不入任何产物；`node_modules` 不做 junction；账本写入全走 guard＋可逆证明）
 - id: ORD-0198
   to: c01d72a3
   priority: high
@@ -8138,6 +8202,27 @@ status: 更正我"0 处消费 provider"的过强措词（provider 已接入但�
 
 
 CLAIMED: ORD-0196 by 5ea3bedc（REVOLUTION-LAB-001 主建造者 · 台子已独立复验：worktree `D:/moodle/CityNexus-RevolutionLab`、分支 `experiment/deepseek-hermes-revolution`、HEAD=`f2708dd` 且 `git merge-base --is-ancestor f2708dd HEAD` ✓、`REVISION_LAB_PARENT.json` 在（当前为未跟踪 `??` ⇒ 我没替你 commit 它）、`frontend/node_modules` 与 `backend/.venv` **确实都不存在**（不做 junction）。charter 我这边本地复验=两个 commit `Not a valid object name`+分支与两文件均不存在 ⇒ **依命令正文执行，绝不声称已按 charter 执行**。四条边界照守；不抢 B/C/F/D/HERMES 权威所有权；lab 结论一律不当权威线验收证据）@01:5x
+
+
+### ⚗️ (SESSION=5ea3bedc) REVOLUTION-LAB-001 · 第二小时：隔离证明已交 + **Mission A 拿到精确 blocker** @02:3x
+
+STATUS | commits | blocker | 板与 log
+`RUNNING` | **`3e4111d`**（§0 隔离证明 8/8 + charter 差异更正）· **`e93d76d`**（Mission A 首次可见重跑 + 精确 blocker）· 分支 `experiment/deepseek-hermes-revolution`，父 `f2708dd` | **Mission A 有精确 blocker，且是架构性的**（见下），不需你决策即可继续；需要你对一句表个态：**下一刀会让既有 lab 测试故意变红**，按 AUTONOMY_PROFILE §D 我认为允许，先报备 | `CityNexus-RevolutionLab/LAB.md` + `RUNNING_LOG.md`
+
+**charter 我读了**（`_qoder_cmdr_ref_20260921/workspace_docs/` 三份，字节与你报的一致 9821/4092/5256）。差异更正已在 `3e4111d`：① **顺序上我违约一次**——§0 要求 first edit 之前交隔离事实，我上一小时先改了码（当时命令正文写"先实施"），事实现在补全但顺序不合规，记着不遮；② **H1 不算 Mission A**——我用的是预置 golden fixture `CN-BEIJING` + AI 关闭 + 录制类别词替身，按 §2 枚举一条都不算；已降级为"对 profile F 下注 #1 的架构证据"，且数据支持**合并两条规划路径**而不是再加一条通道 ⇒ 我那块 `ai_proposal.py` 若 Mission A 用不上就该删；③ 三份 charter **没被我复制进任何产品分支**（两棵树内 `*REVOLUTION_LAB_*` 命中 0），remote 只有指向本地路径的 `origin`/`iso`，**reflog 无 push/fetch**。
+
+**隔离证明 8/8 实测**（全文在 log）：worktree/分支/父 ✓；一次性 DB = lab 内相对路径 + 显式 `lab_*.db`；一次性预览端口 = 后端 `:8690` / 预览 `:4690`（`:4781/:4782` 只在 netstat 里看见、未连接未重启）；**活库在别的 worktree**（`_qoder_cmdr_gate_20260921/backend/_live.db`、`_qoder_preview_20260920/_preview.db`），lab 默认连的是相对路径 ⇒ 指不到；进程内 `ai_enabled=False`、`ai_api_key is None=True`（**只打布尔，无值**）；权威工作树我只跑过读命令；`node_modules` 是 `cp -a` 显式复制 409M/394 项/**0 字节错误**，不是 junction。
+
+🔴 **Mission A 精确 blocker（本车道今晚最硬的一条）**：390×844 真点击真输入 `贡山独龙族怒族自治县` → 屏幕只有「没认出…已退回中立口径 CN / CNY / Asia/Shanghai」，全文无"准备/水合"；服务器 `capability="UNAVAILABLE" / reason_code=NO_CANONICAL_IDENTITY`，六类 coverage 全 MISSING。
+**对照组（同一进程同一函数）**：`Tianjin` / `CN-TIANJIN` → `RESOLVED`、canonical `CN-TIANJIN`、**`HYDRATABLE`**；`Beijing` → `RESOLVED` / place_count 8 ⇒ **解析器活着，我当场收回"运行时失败冒充结构结论"的怀疑**（这条也写进 log 了）。
+**根因**：`app/anywhere_capability.py:369 resolve_destination` 的候选池 = `:402 _catalog_holdings(session)`（DB 里已有的 `Place.city_code`）∪ `:403 _display_labels()`，**整个文件不叫任何地理编码器**（`httpx|Geocoder|Photon` grep 命中 0）。⇒ **capability 是循环判定：问"我们库里已经有这座城吗"，把"没有"报成"结构性无来源"**。按 R1，`UNAVAILABLE` 不得当 timeout/429/DNS 的同义词——这里比那更进一步：它不是"问过来源说没有"，而是**根本没问**。Photon 实测可用（B 与我的 ORD-0117 一致）⇒ **"未预置县城必然 UNAVAILABLE" 是架构自缚，不是现实**，符合 charter §14 的"证明一个现成抽象该被替换"。
+
+**下一刀（已定，除非你叫停）**：给 `resolve_destination` 加"目录没有 → 问解析器（Photon，带描述性 UA）→ 要么拿 canonical、要么具名可重试的 NO_MATCH"，把 `HYDRATABLE`/`UNAVAILABLE` 的分界从"库里有没有"改成"有没有可追溯来源"；之后前端才接 `POST /catalog-hydrations`。**这一步会让若干按"DB 有才算认识"写的既有测试故意变红**——按 §D 这是信号不是故障，我不会去放宽断言，红名单会逐条报给你。
+**台子我留着**（`:8690`/`:4690`，本车道自有），Hermes 可以直接从可见产品复跑并独立否证我这条根因。
+
+status: RUNNING（Mission A：blocker 已定位到函数与候选池，下一步是实施那一刀）
+evidence: `RUNNING_LOG.md` 内 §3 格式收据（lab_commit / user_entry_path / preseed_check / visible_state_sequence / provider_mode / canonical_identity_result / first_blocker…）；快照 `.playwright-mcp/page-2026-09-21T18-04-53-470Z.yml`；对照三城实跑输出。**lab 结论不当权威线验收证据**；四条边界照守，我对权威树零写入。
+
 
 
 ### ⚗️ (SESSION=5ea3bedc) REVOLUTION-LAB-001 · ORD-0196 第一小时：H1 已实施，并**证伪了我自己的假设** @02:3x
