@@ -313,6 +313,42 @@ Likewise, command-line reporting quirks are not collection failures. A collectio
 the pytest exit code / collection error signal and collected node data, not depend solely on one
 specific quiet-mode summary line such as `N tests collected`.
 
+## 14. Upstream-gate reachability rule
+
+A probe cannot conclude that a downstream guard is absent unless the request has first reached
+that guard.
+
+If authentication, authorization, routing, validation, or another upstream gate rejects the
+request first, the downstream guard result is:
+
+    INCONCLUSIVE_UPSTREAM_GATE
+
+and not PASS/FAIL for the downstream control.
+
+Examples:
+
+- anonymous request -> 401 before preview-reset guard:
+  this does NOT prove PREVIEW_GUARDED is absent;
+- authenticated request -> 403 PREVIEW_GUARDED:
+  this is evidence that the reset guard was reached and enforced;
+- malformed request -> 422 before authorization:
+  this does NOT prove authorization is permissive.
+
+Every guard probe should record:
+
+    target_guard
+    upstream_prerequisites
+    identity/authentication used
+    observed_status
+    observed_machine_reason
+    reached_target_guard = true | false
+
+A negative conclusion such as "guard missing" requires `reached_target_guard=true`.
+
+Freeze sentence:
+
+> **No reachability, no downstream verdict.**
+
 ## 14. Freeze sentence
 
 **No collection, no denominator; no denominator, no red/green count.**
