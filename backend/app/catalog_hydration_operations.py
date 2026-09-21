@@ -290,6 +290,114 @@ def mark(
     return result.rowcount == 1
 
 
+def _terminate(
+    session: Session,
+    operation_id: str,
+    to_status: str,
+    *,
+    phase: str,
+    **fields: Any,
+) -> str | None:
+    """Close a finished job in the state its stage earned, or in the named abandoned branch.
+
+    Why this exists rather than one wide `from_statuses`: `mark` checks every source a call names
+    against the table before it touches the store, and the table allows
+    `ABANDON_REQUESTED -> {ABANDONED, FAILED}` only.  Naming `ABANDON_REQUESTED` as a source for a
+    `COMPLETED` or `UNAVAILABLE` write therefore did not express a race at all - it raised on every
+    resolved job whatever the row happened to be, the worker died on its own bookkeeping, and the
+    traveller was left with a job that never reports a result.
+
+    The honest reading of "the row is no longer RUNNING" is that somebody asked this job to stop, so
+    the abandon wins and the terminal state is `ABANDONED`: publishing a verdict about a destination
+    to a request nobody is waiting for would be the laundering the rest of this file refuses.  The
+    abandoned branch deliberately carries no `result_json` and no `error_json` - a job that was
+    stopped has no result and did not fail.
+
+    Returns the status that landed, or `None` when the row is already terminal or gone.  Never
+    raises: the alternative is a dead worker and a job left open, which also keeps owning its
+    fingerprint through the partial unique index and hands every later request to a thread that no
+    longer exists.
+    """
+
+    finished = str(fields.pop("finished_at", None) or now_iso())
+    outcome = fields.pop("outcome", None)
+    if mark(
+        session,
+        operation_id,
+        to_status,
+        from_statuses=(RUNNING,),
+        commit=False,
+        outcome=outcome,
+        phase=phase,
+        finished_at=finished,
+        **fields,
+    ):
+        session.commit()
+        return to_status
+    session.rollback()
+    if _close_abandoned(session, operation_id, phase=phase, finished_at=finished):
+        return ABANDONED
+    return None
+
+
+def _close_abandoned(session: Session, operation_id: str, **fields: Any) -> bool:
+    """Land `ABANDONED` on a job the traveller stopped, however the row currently reads.
+
+    Two shapes, both reached through states the table already allows:
+
+    * the normal one - the durable request landed, so the row is `ABANDON_REQUESTED` and
+      `ABANDONED` is a legal next state from there;
+    * the one this helper exists for - this process recorded the request but the write that was
+      supposed to move the row did not land (another writer held the SQLite lock, which this
+      project's own shared-file setup makes routine), so the row still reads `RUNNING`.  Walking
+      `RUNNING -> ABANDON_REQUESTED -> ABANDONED` in one transaction keeps the state machine
+      honest; adding `RUNNING -> ABANDONED` to the table would not, and would let a job that never
+      saw a request close as abandoned.
+
+    Whether it landed is returned rather than swallowed: an ignored `False` is a job left open with
+    a flag nobody will honour, and the partial unique index then hands every later request for that
+    destination to a thread that has already gone.
+    """
+
+    stamp = str(fields.pop("finished_at", None) or now_iso())
+    fields.setdefault("outcome", OUTCOME_ABANDONED)
+    if mark(
+        session,
+        operation_id,
+        ABANDONED,
+        from_statuses=(ABANDON_REQUESTED,),
+        commit=False,
+        finished_at=stamp,
+        **fields,
+    ):
+        session.commit()
+        return True
+    session.rollback()
+    fresh = read_operation(session, operation_id)
+    if fresh is not None and fresh.status == RUNNING:
+        requested = mark(
+            session,
+            operation_id,
+            ABANDON_REQUESTED,
+            from_statuses=(RUNNING,),
+            commit=False,
+            abandon_requested_at=stamp,
+        )
+        if requested and mark(
+            session,
+            operation_id,
+            ABANDONED,
+            from_statuses=(ABANDON_REQUESTED,),
+            commit=False,
+            finished_at=stamp,
+            **fields,
+        ):
+            session.commit()
+            return True
+        session.rollback()
+    return False
+
+
 def set_phase(session: Session, operation_id: str, phase: str) -> None:
     """Record the stage the worker has actually entered, in its own short transaction.
 
@@ -540,14 +648,8 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
             # Returning here would leave it open forever: `ABANDON_REQUESTED` counts as an open
             # status, so the partial unique index would keep handing every later request with the
             # same fingerprint to a job that has no worker - and none of them would ever finish.
-            mark(
-                session,
-                operation_id,
-                ABANDONED,
-                from_statuses=(ABANDON_REQUESTED,),
-                outcome=OUTCOME_ABANDONED,
-                finished_at=now_iso(),
-            )
+            if not _close_abandoned(session, operation_id):
+                logger.error("could not close abandoned hydration %s", operation_id)
             return
         if row.status != QUEUED:
             return
@@ -564,14 +666,8 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
             # running a stage machine on a job that is no longer ours to run.
             fresh = read_operation(session, operation_id)
             if fresh is not None and fresh.status == ABANDON_REQUESTED:
-                mark(
-                    session,
-                    operation_id,
-                    ABANDONED,
-                    from_statuses=(ABANDON_REQUESTED,),
-                    outcome=OUTCOME_ABANDONED,
-                    finished_at=now_iso(),
-                )
+                if not _close_abandoned(session, operation_id):
+                    logger.error("could not close abandoned hydration %s", operation_id)
             return
 
         set_phase(session, operation_id, "RESOLVING_DESTINATION")
@@ -588,7 +684,7 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
                 session,
                 operation_id,
                 FAILED,
-                from_statuses=(RUNNING,),
+                from_statuses=(RUNNING, ABANDON_REQUESTED),
                 outcome=OUTCOME_RESOLVER_RUNTIME_FAILURE,
                 phase="DISCOVERING_POIS",
                 error_json=_failure_payload(
@@ -603,13 +699,12 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
             )
             return
         if resolution.state == "AMBIGUOUS":
-            mark(
+            _terminate(
                 session,
                 operation_id,
                 UNAVAILABLE,
-                from_statuses=(RUNNING,),
-                outcome=OUTCOME_DESTINATION_AMBIGUOUS,
                 phase="DISCOVERING_POIS",
+                outcome=OUTCOME_DESTINATION_AMBIGUOUS,
                 error_json=_failure_payload(
                     "DESTINATION_AMBIGUOUS",
                     f"'{resolution.query}' names more than one destination this product can see; "
@@ -625,13 +720,12 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
             # Structural: nothing in this build can name the destination.  This is *not* the
             # branch a failing resolver takes - a provider that could not be reached stays
             # retryable (R1), and there is no such failure here because no provider is consulted.
-            mark(
+            _terminate(
                 session,
                 operation_id,
                 UNAVAILABLE,
-                from_statuses=(RUNNING,),
-                outcome=OUTCOME_NO_REGISTERED_SOURCE,
                 phase="DISCOVERING_POIS",
+                outcome=OUTCOME_NO_REGISTERED_SOURCE,
                 error_json=_failure_payload(
                     "DESTINATION_IDENTITY_UNRESOLVED",
                     f"'{resolution.query}' cannot be resolved to a destination this product can "
@@ -682,38 +776,26 @@ def _run_operation(operation_id: str) -> None:  # noqa: PLR0912 - one stage per 
 
         set_phase(session, operation_id, "FINALIZING")
         if abandonment_requested(operation_id):
-            mark(
-                session,
-                operation_id,
-                ABANDONED,
-                from_statuses=(ABANDON_REQUESTED,),
-                phase="FINALIZING",
-                result_json="{}",
-                finished_at=now_iso(),
-            )
+            # The request is recorded in this process; whether the durable move landed is a separate
+            # question, and the row may still read `RUNNING` because another writer held the lock.
+            # `_close_abandoned` answers both shapes through states the table allows.
+            if not _close_abandoned(session, operation_id, phase="FINALIZING"):
+                logger.error("could not close abandoned hydration %s", operation_id)
             return
-        landed = mark(
+        # One call, two honest endings: the state this run earned if the row is still ours to
+        # finish, the named abandoned branch if an abandon moved it in between.  This line used to
+        # name `ABANDON_REQUESTED` as a source for a `COMPLETED`/`UNAVAILABLE` write, which the
+        # transition table forbids, so `mark` raised on every resolved job before it reached the
+        # store - see `_terminate` for why widening the table was the wrong repair.
+        _terminate(
             session,
             operation_id,
             COMPLETED if outcome != OUTCOME_NO_REGISTERED_SOURCE else UNAVAILABLE,
-            from_statuses=(RUNNING, ABANDON_REQUESTED),
-            commit=False,
-            outcome=outcome,
             phase="FINALIZING",
+            outcome=outcome,
             result_json=json.dumps(body, ensure_ascii=False, default=str),
             finished_at=now_iso(),
         )
-        if not landed:
-            session.rollback()
-            mark(
-                session,
-                operation_id,
-                ABANDONED,
-                from_statuses=(ABANDON_REQUESTED,),
-                commit=False,
-                finished_at=now_iso(),
-            )
-        session.commit()
     except BaseException as exc:  # noqa: BLE001 - an operation must never outlive its worker
         logger.exception("catalog hydration worker died for %s", operation_id)
         try:

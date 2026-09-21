@@ -307,27 +307,34 @@ def test_the_projection_carries_the_lifecycle_and_never_a_percentage(seeded) -> 
     assert terminal["journey_id"] == str(journey_id), terminal
 
 
-def test_a_job_stopped_before_its_worker_starts_still_closes_itself(seeded) -> None:
-    """Measured defect, kept closed: an abandon that wins the race must not orphan the row.
+def test_a_job_stopped_before_its_worker_starts_still_closes_itself(seeded, monkeypatch) -> None:
+    """Measured defect, kept closed: an abandon with no worker left must not orphan the row.
 
     `ABANDON_REQUESTED` is an open status, so a row left in it is not merely unfinished - the
     partial unique index keeps pointing every later request with the same fingerprint at a job
-    with no worker, and each of those callers waits for something that can never arrive.  The
-    first version of this door failed the *next* test in the file, which is how the shape was
-    found rather than imagined.
+    with no worker, and each of those callers waits for something that can never arrive.
+
+    The schedule is now pinned instead of raced.  The previous version fired an abandon at an
+    arbitrary moment after the POST and asserted that the abandon won, so which of two legal
+    endings the store held depended on thread interleaving, and this door was the file's
+    rotating red - a gate that can fail because of its own timing is not evidence either way.
+    Patching `dispatch` out makes "no worker will ever run this" a stated fact rather than a hope.
     """
 
-    accepted = client.post(HYDRATIONS, json={"query": "上海"})
-    assert accepted.status_code in (200, 202), accepted.text
-    operation_id = accepted.json()["operation_id"]
-    abandoned = client.post(f"{HYDRATIONS}/{operation_id}/abandon")
-    assert abandoned.status_code == 200, abandoned.text
+    with monkeypatch.context() as stage:
+        stage.setattr(hydration_module, "dispatch", lambda operation_id: None)
+        accepted = client.post(HYDRATIONS, json={"query": "上海"})
+        assert accepted.status_code in (200, 202), accepted.text
+        operation_id = accepted.json()["operation_id"]
+        abandoned = client.post(f"{HYDRATIONS}/{operation_id}/abandon")
+        assert abandoned.status_code == 200, abandoned.text
     terminal = _wait_terminal(operation_id, seconds=8.0)
     assert terminal["status"] == "ABANDONED", (
-        f"期望：worker 接手前就被放弃的作业就地收口；实际：{terminal['status']} / "
+        f"期望：没有 worker 会被叫起的作业，受理放弃时就地收口；实际：{terminal['status']} / "
         f"phase {terminal['phase']} / 无结果={not terminal['result']}"
     )
     assert not terminal["result"], "期望：放弃了就不要写出结果；实际：" + str(terminal["result"])[:160]
+    assert terminal["outcome"] == hydration_module.OUTCOME_ABANDONED, terminal
     following = client.post(HYDRATIONS, json={"query": "上海"})
     assert following.status_code in (200, 202), following.text
     assert following.json()["reused"] is False, (
@@ -336,6 +343,35 @@ def test_a_job_stopped_before_its_worker_starts_still_closes_itself(seeded) -> N
     )
     assert following.json()["operation_id"] != operation_id, following.json()
     _wait_terminal(following.json()["operation_id"], seconds=8.0)
+
+
+def test_a_worker_that_wakes_on_an_abandoned_row_closes_it_instead_of_running_it(
+    seeded, monkeypatch
+) -> None:
+    """The other half of the same promise, also scheduled rather than raced.
+
+    Nothing was dispatched, the traveller stopped the job, and this time the endpoint is told a
+    worker exists - so the durable row is left in `ABANDON_REQUESTED`, which is the state the
+    worker's own first branch has to deal with.  Dispatching afterwards makes that branch the
+    measured subject instead of a lucky interleaving.
+    """
+
+    real_dispatch = hydration_module.dispatch
+    monkeypatch.setattr(hydration_module, "dispatch", lambda operation_id: None)
+    monkeypatch.setattr(hydration_module, "has_worker", lambda operation_id: True)
+    accepted = client.post(HYDRATIONS, json={"query": "上海"})
+    operation_id = accepted.json()["operation_id"]
+    abandoned = client.post(f"{HYDRATIONS}/{operation_id}/abandon")
+    assert abandoned.status_code == 200, abandoned.text
+    assert abandoned.json()["recorded_status"] == "ABANDON_REQUESTED", abandoned.json()
+    monkeypatch.setattr(hydration_module, "has_worker", lambda operation_id: False)
+    real_dispatch(operation_id)
+    terminal = _wait_terminal(operation_id, seconds=8.0)
+    assert terminal["status"] == "ABANDONED", (
+        f"期望：接手时行已被放弃的 worker 只能就地收口，不许跑阶段机；实际：{terminal['status']} / "
+        f"phase {terminal['phase']}"
+    )
+    assert not terminal["result"], terminal
 
 
 def test_abandon_reports_a_request_not_a_death(seeded) -> None:
@@ -352,12 +388,193 @@ def test_abandon_reports_a_request_not_a_death(seeded) -> None:
     assert again.status_code == 200, again.text
     assert again.json()["status"] in ARBITER_STATUSES, again.json()
     terminal = _wait_terminal(operation_id)
+    error = terminal.get("error") or {}
+    assert error.get("code") != "HYDRATION_WORKER_DIED", (
+        f"期望：这条门不许把『worker 死掉』当成可接受的终态（它就是这样藏住了非法迁移）；实际："
+        f"{str(error.get('message'))[:200]}"
+    )
     if terminal["status"] == "ABANDONED":
         assert not terminal["result"], (
             f"期望：放弃了就不要写出结果；实际：{str(terminal['result'])[:160]}"
         )
     else:
         assert terminal["status"] in {"COMPLETED", "UNAVAILABLE", "FAILED"}, terminal
+
+
+# --------------------------------------------------------------------------------------
+# the terminal write must close the job it was given, not kill the thread that owns it
+#
+# Measured at `116a031`, deterministic, throwaway database, no network:
+#   POST /api/v1/catalog-hydrations {"query":"Beijing"} -> 202 (canonical CN-BEIJING)
+#   terminal: status=FAILED outcome=None phase=FINALIZING
+#             error.code=HYDRATION_WORKER_DIED
+#             error.message='TransitionRefused: ABANDON_REQUESTED -> COMPLETED is not a legal transition'
+# The final write declared `from_statuses=(RUNNING, ABANDON_REQUESTED)` while the table allows
+# ABANDON_REQUESTED -> {ABANDONED, FAILED} only, and `mark` validates every *declared* source before
+# it touches the store - so the pair raised on every resolved job regardless of the row's state.  No
+# door in this file saw it because the abandon doors accept FAILED as a terminal state, and the one
+# door that asserts `outcome == NO_REGISTERED_SOURCE` was pointed at a city that never resolves, so
+# it took the early structural branch and never reached the line that dies.
+# --------------------------------------------------------------------------------------
+def test_a_destination_the_catalog_resolves_closes_its_job_and_not_its_worker(seeded) -> None:
+    """A resolved destination's job must end with a real outcome, not with a dead worker."""
+
+    accepted = client.post(HYDRATIONS, json={"query": "Beijing"})
+    assert accepted.status_code in (200, 202), accepted.text
+    assert accepted.json()["canonical_destination_id"] == "CN-BEIJING", accepted.json()
+    terminal = _wait_terminal(accepted.json()["operation_id"])
+    error = terminal.get("error") or {}
+    assert error.get("code") != "HYDRATION_WORKER_DIED", (
+        f"期望：终态写入不许把 worker 打死（打死=作业永远拿不到结果）；实际："
+        f"{str(error.get('message'))[:200]}"
+    )
+    assert terminal["status"] == "COMPLETED", (
+        f"期望：北京有 8 行目录，作业如实收口为 COMPLETED；实际："
+        f"{terminal['status']} / outcome={terminal.get('outcome')} / phase={terminal.get('phase')}"
+    )
+    assert terminal["outcome"] == hydration_module.OUTCOME_ALREADY_CURRENT, terminal
+    survey = (terminal.get("result") or {}).get("survey") or {}
+    assert survey.get("places_held") == 8, (
+        f"期望：结果里的计数来自这次真的读到的行；实际：{survey}"
+    )
+
+
+def test_a_destination_the_provider_resolves_reaches_the_terminal_write_too(
+    seeded, monkeypatch
+) -> None:
+    """The ⑤ 后半 that matters to a traveller: a provider-named county must get a closed job.
+
+    Same machinery as the seam's own doors (mocked transport, so nothing leaves the process), driven
+    through the normal product entrance.  This is the case the Commander hit live with 贡山县 and the
+    one the receipt's `hydration_accept_status: 202` could not see: acceptance is not closure.
+    """
+
+    from test_qoder_provider_identity_leg import (
+        COUNTY_CANONICAL,
+        COUNTY_EXTENT,
+        RAW_COUNTY,
+        _answer,
+        _enable,
+        _feature,
+    )
+
+    _enable(monkeypatch)
+    _answer(
+        monkeypatch,
+        features=(_feature(osm_id=3289208, osm_type="R", name=RAW_COUNTY, extent=COUNTY_EXTENT),),
+    )
+    accepted = client.post(HYDRATIONS, json={"query": RAW_COUNTY})
+    assert accepted.status_code in (200, 202), accepted.text
+    body = accepted.json()
+    assert body["canonical_destination_id"] == COUNTY_CANONICAL, body
+    terminal = _wait_terminal(body["operation_id"])
+    error = terminal.get("error") or {}
+    assert error.get("code") != "HYDRATION_WORKER_DIED", (
+        f"期望：解析成功后这条腿自己起的作业不许死在终态写入上；实际：{str(error.get('message'))[:200]}"
+    )
+    assert terminal["status"] == "UNAVAILABLE", (
+        f"期望：有真身份但本构建无可登记来源 ⇒ 如实停在 UNAVAILABLE（有名字、没材料）；实际："
+        f"{terminal['status']} / outcome={terminal.get('outcome')}"
+    )
+    assert terminal["outcome"] == hydration_module.OUTCOME_NO_REGISTERED_SOURCE, terminal
+    assert terminal["canonical_destination_id"] == COUNTY_CANONICAL, terminal
+
+
+def test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned(
+    seeded, monkeypatch
+) -> None:
+    """A job abandoned by a writer this process cannot see still has to close, honestly.
+
+    The row is moved to `ABANDON_REQUESTED` straight in the store at a real stage boundary (the
+    survey), and the process-local abandonment registry is forced to say "no request here" - which is
+    exactly the cross-process case `PROCESS_LOCAL_ONLY` admits.  The terminal write must then resolve
+    into the named abandoned branch rather than raising on a transition the table forbids.
+    """
+
+    accepted = client.post(HYDRATIONS, json={"query": "Beijing"})
+    operation_id = accepted.json()["operation_id"]
+    original_survey = hydration_module._survey
+
+    def racing_survey(session, canonical_destination_id):
+        moved = hydration_module.mark(
+            session,
+            operation_id,
+            hydration_module.ABANDON_REQUESTED,
+            from_statuses=(hydration_module.RUNNING,),
+            abandon_requested_at=hydration_module.now_iso(),
+        )
+        assert moved is True, "SETUP 失败：竞态注入没改成 ABANDON_REQUESTED，这条门什么都没测"
+        return original_survey(session, canonical_destination_id)
+
+    monkeypatch.setattr(hydration_module, "_survey", racing_survey)
+    monkeypatch.setattr(hydration_module, "abandonment_requested", lambda _oid: False)
+    terminal = _wait_terminal(operation_id)
+    assert terminal["status"] == "ABANDONED", (
+        f"期望：被别处放弃的作业终态只能是 ABANDONED，且 worker 不抛；实际："
+        f"{terminal['status']} / outcome={terminal.get('outcome')} / "
+        f"error={str((terminal.get('error') or {}).get('message'))[:160]}"
+    )
+    assert not terminal["result"], (
+        f"期望：放弃了就不要把结果写出去；实际：{str(terminal['result'])[:160]}"
+    )
+    assert terminal["outcome"] == hydration_module.OUTCOME_ABANDONED, terminal
+
+
+def test_an_abandon_whose_own_write_never_landed_still_closes_the_job(seeded, monkeypatch) -> None:
+    """The second shape of the same hole: the request was recorded, the row never moved.
+
+    `abandon_operation` swallows a write that the store refused (another writer held the SQLite lock)
+    and the endpoint still answers 200 - so the row can be sitting in `RUNNING` with this process
+    holding an abandonment request nobody else can see.  Before `_close_abandoned` the worker's
+    closing write named only `ABANDON_REQUESTED` as its source, matched zero rows, and the job stayed
+    open with a spinner behind it.  The repair must go through the states the table allows, so this
+    door refuses both shortcuts: widening the table, and letting the job end as anything but
+    `ABANDONED`.
+    """
+
+    inside_survey = threading.Event()
+    released = threading.Event()
+    accepted = client.post(HYDRATIONS, json={"query": "Beijing"})
+    operation_id = accepted.json()["operation_id"]
+    original_survey = hydration_module._survey
+
+    def pausing_survey(session, canonical_destination_id):
+        inside_survey.set()
+        released.wait(timeout=10.0)
+        return original_survey(session, canonical_destination_id)
+
+    blocked = {"left": 1}
+    original_mark = hydration_module.mark
+
+    def refusing_mark(session, oid, to_status, **kw):
+        if to_status == hydration_module.ABANDON_REQUESTED and blocked["left"]:
+            blocked["left"] -= 1
+            raise hydration_module.TransitionRefused("simulated: the store refused this write")
+        return original_mark(session, oid, to_status, **kw)
+
+    monkeypatch.setattr(hydration_module, "_survey", pausing_survey)
+    monkeypatch.setattr(hydration_module, "mark", refusing_mark)
+    assert inside_survey.wait(timeout=10.0), "SETUP 失败：worker 没进到 survey 阶段，这条门什么都没测"
+    abandoned = client.post(f"{HYDRATIONS}/{operation_id}/abandon")
+    assert abandoned.status_code == 200, abandoned.text
+    assert abandoned.json()["recorded_status"] == "RUNNING", (
+        f"SETUP 失败：期望这次放弃的落库被拒（持久值仍应是 RUNNING；`status` 是本进程已经知道的"
+        f"请求，`recorded_status` 才是库里的行）；实际：recorded="
+        f"{abandoned.json().get('recorded_status')} / reported={abandoned.json().get('status')}"
+        f" / 被拒次数 {blocked['left']}"
+    )
+    released.set()
+    with monkeypatch.context() as inner:
+        inner.setattr(hydration_module, "mark", original_mark)
+        terminal = _wait_terminal(operation_id, seconds=10.0)
+    assert blocked["left"] == 0, "SETUP 失败：那次拒绝没有真的发生"
+    assert terminal["status"] == "ABANDONED", (
+        f"期望：落库被拒的放弃请求仍要经合法两步收口成 ABANDONED；实际："
+        f"{terminal['status']} / outcome={terminal.get('outcome')} / "
+        f"error={str((terminal.get('error') or {}).get('message'))[:160]}"
+    )
+    assert not terminal["result"], terminal
+    assert terminal["outcome"] == hydration_module.OUTCOME_ABANDONED, terminal
 
 
 # --------------------------------------------------------------------------------------
@@ -660,8 +877,17 @@ def test_a_hydration_cannot_invent_catalog_rows_it_did_not_fetch(seeded) -> None
         )
     assert held == 0, f"期望：水合没有凭空造出地点；实际：库里多了 {held} 行"
     assert terminal["outcome"] == hydration_module.OUTCOME_NO_REGISTERED_SOURCE, terminal
+    # Which branch answered matters: `CN-QINGPU` is not a destination this build can name, so this
+    # UNAVAILABLE is the structural ending taken before the terminal write.  A destination that *is*
+    # named and still has no material is the other door
+    # (`test_a_destination_the_provider_resolves_reaches_the_terminal_write_too`), and that is the
+    # one which reaches `FINALIZING`.
+    assert terminal["phase"] == "DISCOVERING_POIS", (
+        f"期望：本门测的是『点不出名字』那条早退支路（停在 DISCOVERING_POIS）；实际 phase="
+        f"{terminal['phase']}——如果它变成了 FINALIZING，说明解析变了，本门的断言就不再代表它以为的东西"
+    )
     result = terminal.get("result") or {}
     assert terminal["status"] == "UNAVAILABLE", (
-        f"期望：有名字但本构建没有任何可登记来源可填 ⇒ 如实停在 UNAVAILABLE（不是 COMPLETED 的空壳）；"
+        f"期望：点不出名字 ⇒ 本构建没有任何可登记来源可填 ⇒ 如实停在 UNAVAILABLE（不是 COMPLETED 的空壳）；"
         f"实际：{terminal['status']} / {terminal.get('outcome')} / {str(result)[:160]}"
     )
