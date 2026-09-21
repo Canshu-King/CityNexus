@@ -485,3 +485,314 @@ test("ord0104-ai-sheet-examples-follow-the-destination — 例子要么跟这趟
     "utf-8",
   );
 });
+
+/* --------------------------------------- ORD-0134 ①: the sheet belongs to the *visible* viewport.
+ *
+ * `styles.css:691` bounds `.plan-ai-sheet` with `max-height: 92vh`.  `vh` is the **layout**
+ * viewport, which does not change when a phone's toolbar or keyboard takes space -- the *visual*
+ * viewport does.  So the bottom row of the sheet (稍后 / 开始规划) can sit in a part of the layout
+ * box that is no longer on screen, and scrolling the sheet cannot rescue it because the sheet's own
+ * scrollport is the clipped box.
+ *
+ * The gate reproduces the squeeze with a virtual-keyboard overlay rect and then asks the only
+ * question that matters on a phone: does the last action button take its own tap, where it is
+ * painted, at 360 / 390 / 412?
+ */
+const SHEET_SIZES = [
+  { width: 360, height: 640 },
+  { width: 390, height: 844 },
+  { width: 412, height: 892 },
+  /* The keyboard pose.  Neither CDP path shrinks the *visual* viewport under headless Chromium
+     (both attempts are recorded in the evidence), so the mechanism is reproduced the way the user
+     experiences it: a viewport short enough that a sheet which scrolls its own footer buries the
+     two action buttons below its fold. */
+  { width: 390, height: 420 },
+] as const;
+
+test("ord0134-ai-sheet-actions-stay-inside-the-visible-viewport — 键盘顶起来时最后两枚动作仍要点得到", async ({
+  page,
+  browser,
+}) => {
+  test.setTimeout(300_000);
+  const NODE = "ord0134-ai-sheet-actions-stay-inside-the-visible-viewport";
+  const seeded = await readScene(page);
+  const journeyId = String(seeded.journey_id ?? "");
+  const use = test.info().project.use as { baseURL?: string; storageState?: string };
+  const readings: Record<string, unknown> = {};
+
+  for (const size of SHEET_SIZES) {
+    const pose = `${size.width}x${size.height}`;
+    const phone = await browser.newContext({
+      hasTouch: true,
+      viewport: { width: size.width, height: size.height },
+      baseURL: use.baseURL,
+      storageState: use.storageState,
+    });
+    const page2 = await phone.newPage();
+    const session = await phone.newCDPSession(page2);
+    /* Two ways to make the visible viewport smaller than the layout viewport, which is the whole
+       defect: `vh` keeps resolving against the layout box while the user sees less of it.  The
+       virtual-keyboard rect is the faithful one and this Chromium rejects it (recorded below), so
+       the page scale factor stands in: it shrinks `visualViewport.height` to
+       `innerHeight / factor` while `92vh` stays 92% of the layout height. */
+    const squeeze: Record<string, string> = {};
+    try {
+      await session.send("Emulation.setVirtualKeyboardOverlayRect", {
+        x: 0,
+        y: 0,
+        width: size.width,
+        height: Math.round(size.height * 0.35),
+      });
+      squeeze.virtualKeyboard = "applied";
+    } catch (error) {
+      squeeze.virtualKeyboard = `rejected: ${String(error).slice(0, 60)}`;
+    }
+    try {
+      await session.send("Emulation.setPageScaleFactor", { pageScaleFactor: 2 });
+      squeeze.pageScaleFactor = "applied";
+    } catch (error) {
+      squeeze.pageScaleFactor = `rejected: ${String(error).slice(0, 60)}`;
+    }
+    await page2.addInitScript(
+      ([id]) => {
+        localStorage.clear();
+        localStorage.setItem("citynexus.v8.journey_id", id as string);
+        localStorage.setItem("citynexus.locale", "zh-CN");
+      },
+      [journeyId],
+    );
+    await page2.route("**/api/v1/journeys/*/agent/commands", async (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          mission: { status: "COMPLETED", failure_reason: null, reasoning_summary: null },
+        }),
+      }),
+    );
+    await page2.route("**/api/v1/places?city_code=*", async (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify([{ id: "p1", name: "海河游船码头" }, { id: "p2", name: "天津之眼" }]),
+      }),
+    );
+    await page2.goto("/v8/hub", { waitUntil: "load" });
+    await expect(page2.getByTestId("today-hero")).toBeVisible({ timeout: 30_000 });
+    await page2.getByTestId("hub-plan-with-ai").click();
+    await expect(page2.getByTestId("plan-ai-sheet")).toBeVisible({ timeout: 15_000 });
+    /* An empty sheet is short, and a short sheet proves nothing about a fold.  The pose the user is
+       actually in is: they typed, they submitted, and the sheet is now carrying a long named refusal
+       with the keyboard still up -- so that is the state measured.  The two stubs only decide what
+       the server answers; every number below comes off the painted screen. */
+    await page2.getByTestId("plan-ai-input").fill(USER_SENTENCE);
+    await page2.getByTestId("plan-ai-submit").click();
+    await expect(
+      page2.getByTestId("plan-ai-result"),
+      node(NODE, `${pose}: the sheet never answered, so there was no long state to measure`),
+    ).toBeVisible({ timeout: 60_000 });
+    await page2.getByTestId("plan-ai-input").tap().catch(() => page2.getByTestId("plan-ai-input").click());
+    await page2.waitForTimeout(400);
+
+    const state = await page2.evaluate(() => ({
+      innerHeight,
+      visualHeight: window.visualViewport ? Math.round(window.visualViewport.height) : innerHeight,
+      visualTop: window.visualViewport ? Math.round(window.visualViewport.offsetTop) : 0,
+      vvVar: getComputedStyle(document.documentElement).getPropertyValue("--vv-height").trim(),
+    }));
+    const buttons = await page2.evaluate(() => {
+      const names = ["plan-ai-dismiss", "plan-ai-submit"];
+      return names.map((name) => {
+        const element = document.querySelector(`[data-testid="${name}"]`);
+        if (!element) return { name, found: false };
+        const box = element.getBoundingClientRect();
+        const centreX = box.x + box.width / 2;
+        const centreY = box.y + box.height / 2;
+        const hit = document.elementFromPoint(centreX, centreY);
+        const viewport = window.visualViewport;
+        const visibleBottom = viewport ? viewport.height + viewport.offsetTop : innerHeight;
+        return {
+          name,
+          found: true,
+          centreY: Math.round(centreY),
+          insideVisualViewport: centreY >= 0 && centreY <= visibleBottom,
+          hitSelf: hit === element || element.contains(hit),
+          hitTag: hit ? `${hit.tagName}.${(hit as HTMLElement).getAttribute("data-testid") ?? hit.className}` : "none",
+        };
+      });
+    });
+    /* The consequence the keyboard produces, measured without one: at the sheet's own top scroll
+       position, the last two actions must already be painted inside the sheet and take their own
+       tap.  A sheet that scrolls its footer fails this the moment its content is taller than it is. */
+    const atTopScroll = await page2.evaluate(() => {
+      const sheet = document.querySelector<HTMLElement>(".plan-ai-sheet");
+      if (!sheet) return { found: false };
+      sheet.scrollTop = 0;
+      const box = sheet.getBoundingClientRect();
+      const names = ["plan-ai-dismiss", "plan-ai-submit"];
+      return {
+        found: true,
+        sheetBottom: Math.round(box.bottom),
+        sheetScrollable: sheet.scrollHeight - sheet.clientHeight,
+        actions: names.map((name) => {
+          const element = document.querySelector(`[data-testid="${name}"]`);
+          if (!element) return { name, found: false };
+          const rect = element.getBoundingClientRect();
+          const centreY = rect.y + rect.height / 2;
+          const hit = document.elementFromPoint(rect.x + rect.width / 2, centreY);
+          return {
+            name,
+            found: true,
+            centreY: Math.round(centreY),
+            insideSheet: centreY <= box.bottom + 1 && centreY >= box.top - 1,
+            hitSelf: hit === element || element.contains(hit),
+            hitTag: hit
+              ? `${hit.tagName}.${(hit as HTMLElement).getAttribute("data-testid") ?? hit.className}`
+              : "none",
+          };
+        }),
+      };
+    });
+    const scrollRegions = await page2.evaluate(() =>
+      Array.from(document.querySelectorAll<HTMLElement>(".plan-ai-sheet *")).filter((element) => {
+        const style = getComputedStyle(element);
+        return /auto|scroll/.test(style.overflowY) && element.scrollHeight - element.clientHeight > 1;
+      }).length,
+    );
+    readings[pose] = { squeeze, state, buttons, atTopScroll, scrollRegions };
+    await page2
+      .getByTestId("plan-ai-sheet")
+      .screenshot({ path: evidencePath(`ui-overnight/ord0134-sheet-${pose}.png`) });
+    await phone.close();
+  }
+
+  /* The pose no headless browser can give us, manufactured honestly.  `Emulation.setVirtualKeyboard
+  OverlayRect` is rejected here and `setPageScaleFactor` does not shrink `visualViewport.height`, so
+  under headless `min(92vh, 100dvh)` and `92vh` are literally the same number -- a mutant that drops
+  the visual-viewport term survives *any* assertion written against the real viewport, and pretending
+  otherwise would be a fake kill.  What is testable is the wiring the fix depends on: if the sheet's
+  height is derived from `--vv-height`, then shrinking that variable to a keyboard-sized 300px must
+  shrink the sheet and keep its footer hittable.  A sheet still sized by `92vh` ignores the override
+  and buries the two buttons. */
+  {
+    const pose = "390x844-vv-300";
+    const phone = await browser.newContext({
+      hasTouch: true,
+      viewport: { width: 390, height: 844 },
+      baseURL: use.baseURL,
+      storageState: use.storageState,
+    });
+    const page3 = await phone.newPage();
+    await page3.route("**/api/v1/journeys/*/agent/commands", async (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          mission: { status: "COMPLETED", failure_reason: null, reasoning_summary: null },
+        }),
+      }),
+    );
+    await page3.route("**/api/v1/places?city_code=*", async (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify([{ id: "p1", name: "海河游船码头" }, { id: "p2", name: "天津之眼" }]),
+      }),
+    );
+    await page3.goto("/v8/hub", { waitUntil: "load" });
+    await expect(page3.getByTestId("today-hero")).toBeVisible({ timeout: 30_000 });
+    await page3.getByTestId("hub-plan-with-ai").click();
+    await expect(page3.getByTestId("plan-ai-sheet")).toBeVisible({ timeout: 15_000 });
+    await page3.getByTestId("plan-ai-input").fill(USER_SENTENCE);
+    await page3.getByTestId("plan-ai-submit").click();
+    await expect(page3.getByTestId("plan-ai-result")).toBeVisible({ timeout: 60_000 });
+    /* Stand in for the keyboard: publish what the browser would publish. */
+    await page3.evaluate(() => {
+      document.documentElement.style.setProperty("--vv-height", "300px");
+      document.documentElement.style.setProperty("--vv-offset", "0px");
+      document.documentElement.style.setProperty("--vv-bottom", "544px");
+    });
+    await page3.waitForTimeout(300);
+    const shrunk = await page3.evaluate(() => {
+      const sheet = document.querySelector<HTMLElement>(".plan-ai-sheet");
+      if (!sheet) return { found: false };
+      sheet.scrollTop = 0;
+      const box = sheet.getBoundingClientRect();
+      return {
+        found: true,
+        sheetHeight: Math.round(box.height),
+        sheetBottom: Math.round(box.bottom),
+        actions: ["plan-ai-dismiss", "plan-ai-submit"].map((name) => {
+          const element = document.querySelector(`[data-testid="${name}"]`);
+          if (!element) return { name, found: false };
+          const rect = element.getBoundingClientRect();
+          const centreY = rect.y + rect.height / 2;
+          const hit = document.elementFromPoint(rect.x + rect.width / 2, centreY);
+          return {
+            name,
+            centreY: Math.round(centreY),
+            insideSheet: centreY <= box.bottom + 1 && centreY >= box.top - 1,
+            hitSelf: hit === element || element.contains(hit),
+            hitTag: hit
+              ? `${hit.tagName}.${(hit as HTMLElement).getAttribute("data-testid") ?? hit.className}`
+              : "none",
+          };
+        }),
+      };
+    });
+    readings[pose] = { shrunk };
+    await page3
+      .getByTestId("plan-ai-sheet")
+      .screenshot({ path: evidencePath("ui-overnight/ord0134-sheet-vv-300.png") });
+    await phone.close();
+    const bad = ((shrunk as { actions?: Array<Record<string, unknown>> }).actions ?? []).filter(
+      (action) => action.insideSheet !== true || action.hitSelf !== true,
+    );
+    expect(
+      (shrunk as { sheetHeight?: number }).sheetHeight ?? 9999,
+      node(NODE, `the sheet did not follow --vv-height: it is still sized by the layout viewport (height ${JSON.stringify((shrunk as { sheetHeight?: number }).sheetHeight)}, expected <=300)`),
+    ).toBeLessThanOrEqual(301);
+    expect(
+      bad,
+      node(NODE, `with the visible height at 300px the sheet's own actions are not hittable: ${JSON.stringify(shrunk)}`),
+    ).toEqual([]);
+  }
+
+  writeFileSync(
+    evidencePath("ui-overnight/ord0134-sheet-viewport.json"),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        order: "ORD-0134 residual 1",
+        node: NODE,
+        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
+        cssUnderTest: "frontend/src/styles.css:691 max-height: 92vh on .plan-ai-sheet",
+        readings,
+      },
+      null,
+      2,
+    ) + "\n",
+    "utf-8",
+  );
+
+  const broken = Object.entries(readings).flatMap(([pose, value]) => {
+    const entry = value as {
+      buttons: Array<Record<string, unknown>>;
+      atTopScroll?: { found: boolean; actions?: Array<Record<string, unknown>> };
+    };
+    return [
+      ...(entry.atTopScroll?.actions ?? [])
+        .filter(
+          (action) =>
+            action.found === false ||
+            action.insideSheet !== true ||
+            action.hitSelf !== true,
+        )
+        .map((action) => `${pose}/${String(action.name)}: ${JSON.stringify(action)}`),
+    ];
+  });
+  expect(
+    broken,
+    node(NODE, `the sheet's last actions are not reachable in these poses (keyboard overlay and --vv-height per pose in ui-overnight/ord0134-sheet-viewport.json): ${JSON.stringify(broken)}`),
+  ).toEqual([]);
+});

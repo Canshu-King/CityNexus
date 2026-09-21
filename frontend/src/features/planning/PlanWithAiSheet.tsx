@@ -686,6 +686,8 @@ export function PlanWithAiSheet({
           </button>
         </header>
 
+        {/* Everything that may grow lives in one scroll region between two pinned ends. */}
+        <div className="plan-ai-scroll" data-testid="plan-ai-scroll">
         <label className="plan-ai-field">
           <span className="v8-sr-only">{zh ? "旅行需求" : "Trip request"}</span>
           <textarea
@@ -843,6 +845,8 @@ export function PlanWithAiSheet({
             )}
           </div>
         )}
+
+        </div>
 
         <div className="plan-ai-actions">
           <button

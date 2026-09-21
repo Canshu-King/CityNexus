@@ -10,6 +10,7 @@ import { HotelsPanel } from "../features/stay/HotelsPanel";
 import { PlanComparison } from "../features/planning/PlanComparison";
 import { LiveRecovery } from "../features/execution/LiveRecovery";
 import { liveActivityWindow } from "../lib/executionWindow";
+import { installVisualViewportVars } from "../lib/visualViewport";
 import { useElapsedSeconds } from "../lib/waitClock";
 import { readChoice, setThemeChoice, type ThemeChoice } from "../theme";
 import { MobilitySheet } from "../features/mobility/MobilitySheet";
@@ -599,6 +600,10 @@ export function V8Experience() {
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
+
+  /* ORD-0134 ①: bottom-anchored surfaces are bounded by what is actually visible, not by `vh`.
+     Installed once here because every overlay that owns a footer needs the same numbers. */
+  useEffect(() => installVisualViewportVars(), []);
 
   useEffect(() => {
     if (!navOpen && !alertsOpen) return;

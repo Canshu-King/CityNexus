@@ -25,6 +25,7 @@ SHEET = "src/features/simulation/SimulationPanel.css"
 CLOCK = "src/lib/sceneClock.ts"
 STAGE_SPEC = "e2e/qoder-today-follows-the-stage.spec.ts"
 SHEET_AI = "src/features/planning/PlanWithAiSheet.tsx"
+STYLES = "src/styles.css"
 AI_SPEC = "e2e/qoder-ai-sheet-blocked.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
@@ -171,6 +172,34 @@ CASES = [
         '      zh: proposalId ? `接受方案：${shortId(proposalId)}` : "接受方案",\n',
         '      zh: "接受方案",\n',
         [(STAGE_SPEC, ["sim-replan-receipt-names-the-proposal-the-row-sends"])],
+    ),
+    (
+        # ORD-0134 ①: the sheet must not be its own scrollport.  Let it scroll again and the pinned
+        # footer falls back below the fold -- the reading the Commander measured on a phone (360x640,
+        # submit centre y=790, `elementFromPoint` -> nothing).  An earlier version of this mutant
+        # switched the *middle's* overflow instead and SURVIVED: the footer is held by flex layout,
+        # not by that property, so the criterion was re-aimed at the line that carries it.
+        "killF1-sheet-scrolls-its-own-footer",
+        STYLES,
+        "  display: flex;\n  flex-direction: column;\n  overflow: hidden;\n",
+        "  display: flex;\n  flex-direction: column;\n  overflow: auto;\n",
+        [(AI_SPEC, ["ord0134-ai-sheet-actions-stay-inside-the-visible-viewport"])],
+    ),
+    (
+        # A footer that may shrink is a footer that gets squeezed out of the visible box.
+        "killF3-footer-may-shrink-again",
+        STYLES,
+        ".plan-ai-head,\n.plan-ai-actions {\n  flex: none;\n}",
+        ".plan-ai-head,\n.plan-ai-actions {\n  flex: 0 1 auto;\n}",
+        [(AI_SPEC, ["ord0134-ai-sheet-actions-stay-inside-the-visible-viewport"])],
+    ),
+    (
+        # The other half of the fix: bound by the visible viewport, not only by `vh`.
+        "killF2-sheet-sized-by-layout-viewport-only",
+        STYLES,
+        "  max-height: min(92vh, calc(var(--vv-height, 100dvh) - var(--vv-offset, 0px)));\n",
+        "  max-height: 92vh;\n",
+        [(AI_SPEC, ["ord0134-ai-sheet-actions-stay-inside-the-visible-viewport"])],
     ),
     (
         # ORD-0107: three silences this order closed, each with the arm that owns it.

@@ -687,11 +687,22 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
  * drift again when a new surface is added to it.
  * ------------------------------------------------------------------ */
 .plan-ai-sheet {
+  /* The budget is about what the traveller sees, so it applies to the border box: measured without
+     this, a `--vv-height` of 300px produced a 333px sheet -- the 16px padding top and bottom plus the
+     1px border landed *outside* the declared height, which is the same 33px of footer sitting below
+     the visible viewport that this whole order is about. */
+  box-sizing: border-box;
   width: min(520px, 100%);
-  max-height: 92vh;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
-  display: grid;
+  /* ORD-0134 ①: bounded by the *visible* viewport, with `100dvh` for a browser that never
+     publishes --vv-height.  `92vh` measured the layout box, so a keyboard or a toolbar could leave
+     the sheet's own action row painted below what the traveller can see -- and because the sheet
+     scrolled itself, the clipped box was also the scrollport: scrolling could not rescue the footer.
+     Measured at 360x640: `plan-ai-submit` centre y=790, `elementFromPoint` -> nothing. */
+  max-height: min(92vh, calc(var(--vv-height, 100dvh) - var(--vv-offset, 0px)));
+  /* One scroll region, and it is not the sheet: header and footer stay pinned, the middle moves. */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   gap: var(--cn-s-12);
   padding: var(--cn-s-16) var(--cn-s-16) calc(var(--cn-s-16) + env(safe-area-inset-bottom, 0px));
   border-radius: var(--cn-r-sheet) var(--cn-r-sheet) 0 0;
@@ -699,6 +710,20 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   background: var(--cn-surface);
   color: var(--v8-ink);
   box-shadow: var(--cn-shadow-raised);
+}
+/* The pinned ends and the single moving middle: the footer of an overlay that owns two buttons must
+   never be something the traveller has to scroll past -- or scroll to -- to press. */
+.plan-ai-head,
+.plan-ai-actions {
+  flex: none;
+}
+.plan-ai-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: grid;
+  gap: var(--cn-s-12);
 }
 .plan-ai-head {
   display: flex;
