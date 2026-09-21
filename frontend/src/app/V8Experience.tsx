@@ -1710,9 +1710,13 @@ function TripsWorkspace({
               onRefresh();
             }}
           />
+          <div className="v8-booking-grid" data-testid="trips-commitments">
+            <WalletCommitments wallet={wallet} timezone={data.journey.timezone || undefined} />
+          </div>
           <details className="trips-advanced">
             <summary>{zh ? "高级 / 开发者" : "Advanced / developer"}</summary>
             <Bookings
+              showCommitments={false}
               data={data}
               selected={selected}
               chosen={chosen}
@@ -3154,6 +3158,92 @@ function realtimeLabel(value: string | null | undefined, zh: boolean): string {
   return zh ? "状态未知" : "Status unknown";
 }
 
+/**
+ * ORD-0087 / ORD-0084: `commitments` was declared on this file's own `Wallet` type and drawn
+ * nowhere, so a commitment the server had confirmed could not reach the screen and the truth it
+ * carries (is this mine, is it real, when is it due) died in the payload.  Every word here comes
+ * from a field: the simulated label only from an `external_ref` the mock provider issued, the
+ * amount only when the server says it is KNOWN, and nothing at all when there are no commitments --
+ * an empty list is not a mock.
+ *
+ * Its own component because the phone's Trips -> 预订 tab kept the whole `Bookings` surface inside a
+ * disclosure labelled 高级 / 开发者, which is where a confirmed promise does not belong.
+ */
+function WalletCommitments({
+  wallet,
+  timezone,
+}: {
+  wallet: Wallet | null;
+  timezone?: string;
+}) {
+  const t = useT();
+  const { locale } = useLocale();
+  const zh = locale.startsWith("zh");
+  return (
+    <>
+      {(wallet?.commitments ?? []).map((item) => {
+        const simulated = String(item.external_ref ?? "").startsWith("mock-");
+        const known = item.monetary_value_status === "KNOWN";
+        const amountMinor = item.monetary_value?.amount_minor;
+        const start = item.policy?.scheduled_start_at ?? null;
+        const end = item.policy?.scheduled_end_at ?? null;
+        const tz = timezone || undefined;
+        return (
+          <article
+            className="v8-booking-card"
+            key={item.id}
+            data-testid="wallet-commitment"
+            data-simulated={simulated ? "true" : "false"}
+            data-monetary-status={item.monetary_value_status ?? "UNSTATED"}
+          >
+            <div className="v8-booking-icon muted">
+              <Icon name="ticket" />
+            </div>
+            <div>
+              <span className="v8-selected-label">
+                {item.kind} · {item.level} · {item.status}
+                {simulated && (
+                  <b data-testid="wallet-commitment-simulated">
+                    {" · "}
+                    {zh ? "模拟承诺" : "simulated commitment"}
+                  </b>
+                )}
+              </span>
+              <h2>
+                {item.policy?.semantic_key ||
+                  `${zh ? "承诺" : "Commitment"} ${item.id.slice(0, 8)}`}
+              </h2>
+              <p data-testid="wallet-commitment-window">
+                {start && end
+                  ? `${dateInZone(start, locale, tz ?? "UTC")} → ${dateInZone(end, locale, tz ?? "UTC")}`
+                  : zh
+                    ? "服务器没有给这项承诺的时间窗"
+                    : "The server gave no time window for this commitment"}
+              </p>
+              <strong data-testid="wallet-commitment-amount">
+                {known && amountMinor != null
+                  ? money(amountMinor, item.monetary_value?.currency ?? "CNY", locale)
+                  : zh
+                    ? "价格未知"
+                    : t("bookings.priceUnknown")}
+              </strong>
+            </div>
+            <span className="v8-booking-state safe">
+              {item.policy?.fixed_schedule
+                ? zh
+                  ? "时间已锁定"
+                  : "Schedule fixed"
+                : zh
+                  ? "时间可调"
+                  : "Schedule flexible"}
+            </span>
+          </article>
+        );
+      })}
+    </>
+  );
+}
+
 function Bookings({
   data,
   selected,
@@ -3161,6 +3251,7 @@ function Bookings({
   wallet,
   onImport,
   busy,
+  showCommitments = true,
 }: {
   data: V8Data;
   selected: V8Data["options"][number] | null;
@@ -3168,6 +3259,9 @@ function Bookings({
   wallet: Wallet | null;
   onImport: (reservation: Record<string, unknown>) => Promise<void>;
   busy: boolean;
+  /* False where the caller draws `WalletCommitments` itself, which is what the phone's Trips tab
+     does -- the alternative was a confirmed promise reachable only under 高级 / 开发者. */
+  showCommitments?: boolean;
 }) {
   const t = useT();
   const { locale } = useLocale();
@@ -3285,71 +3379,11 @@ function Bookings({
               </span>
             </article>
           ))}
-          {/* ORD-0087 / ORD-0084: `commitments` was declared on this file's own `Wallet` type and
-              drawn nowhere, so a commitment the server had confirmed could not reach the screen and
-              the truth it carries (is this mine, is it real, when is it due) died in the payload.
-              Every word here comes from a field: the simulated label only from an `external_ref` the
-              mock provider issued, the amount only when the server says it is KNOWN, and nothing at
-              all when there are no commitments -- an empty list is not a mock. */}
-          {(wallet?.commitments ?? []).map((item) => {
-            const simulated = String(item.external_ref ?? "").startsWith("mock-");
-            const known = item.monetary_value_status === "KNOWN";
-            const amountMinor = item.monetary_value?.amount_minor;
-            const start = item.policy?.scheduled_start_at ?? null;
-            const end = item.policy?.scheduled_end_at ?? null;
-            const tz = data.journey.timezone || undefined;
-            return (
-              <article
-                className="v8-booking-card"
-                key={item.id}
-                data-testid="wallet-commitment"
-                data-simulated={simulated ? "true" : "false"}
-                data-monetary-status={item.monetary_value_status ?? "UNSTATED"}
-              >
-                <div className="v8-booking-icon muted">
-                  <Icon name="ticket" />
-                </div>
-                <div>
-                  <span className="v8-selected-label">
-                    {item.kind} · {item.level} · {item.status}
-                    {simulated && (
-                      <b data-testid="wallet-commitment-simulated">
-                        {" · "}
-                        {zh ? "模拟承诺" : "simulated commitment"}
-                      </b>
-                    )}
-                  </span>
-                  <h2>
-                    {item.policy?.semantic_key ||
-                      `${zh ? "承诺" : "Commitment"} ${item.id.slice(0, 8)}`}
-                  </h2>
-                  <p data-testid="wallet-commitment-window">
-                    {start && end
-                      ? `${dateInZone(start, locale, tz ?? "UTC")} → ${dateInZone(end, locale, tz ?? "UTC")}`
-                      : zh
-                        ? "服务器没有给这项承诺的时间窗"
-                        : "The server gave no time window for this commitment"}
-                  </p>
-                  <strong data-testid="wallet-commitment-amount">
-                    {known && amountMinor != null
-                      ? money(amountMinor, item.monetary_value?.currency ?? "CNY", locale)
-                      : zh
-                        ? "价格未知"
-                        : t("bookings.priceUnknown")}
-                  </strong>
-                </div>
-                <span className="v8-booking-state safe">
-                  {item.policy?.fixed_schedule
-                    ? zh
-                      ? "时间已锁定"
-                      : "Schedule fixed"
-                    : zh
-                      ? "时间可调"
-                      : "Schedule flexible"}
-                </span>
-              </article>
-            );
-          })}
+          {/* The cards live in their own component so the phone's Trips -> 预订 tab can draw them
+              above its 高级 / 开发者 disclosure instead of buried inside it. */}
+          {showCommitments ? (
+            <WalletCommitments wallet={wallet} timezone={data.journey.timezone || undefined} />
+          ) : null}
         </div>
         <aside className="v9-inbox">
           <span className="v8-kicker">

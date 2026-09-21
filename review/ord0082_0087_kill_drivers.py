@@ -104,6 +104,18 @@ CASES = [
         [(STAGE_SPEC, ["today-scene-window-is-not-called-device-time"])],
     ),
     (
+        # The shape ORD-0087's residual actually was: the cards exist in the DOM on the phone's
+        # Trips -> 预订 tab but are drawn inside a disclosure labelled 高级 / 开发者, so they read
+        # `hidden` to a thumb and to Playwright.  Removing the hoisted section puts that back.
+        "killA9-commitments-only-under-the-developer-disclosure",
+        HERO,
+        '          <div className="v8-booking-grid" data-testid="trips-commitments">\n'
+        '            <WalletCommitments wallet={wallet} timezone={data.journey.timezone || undefined} />\n'
+        "          </div>\n",
+        "",
+        [(WALLET_SPEC, ["ord0087-booked-commitment-is-on-the-wallet-screen"])],
+    ),
+    (
         "killB1-running-action-has-no-signal",
         PANEL,
         '                aria-busy={running === row.id ? "true" : undefined}\n',

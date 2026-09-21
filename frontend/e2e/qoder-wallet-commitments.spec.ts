@@ -200,11 +200,34 @@ test("ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来�
       `no activity on this plan could be booked through the panel; the server answered ${JSON.stringify(http.slice(0, 6))} and the panel said ${JSON.stringify(attempts.slice(0, 6))}`),
   ).toBeTruthy();
 
-  await page.goto("/v8/bookings", { waitUntil: "load" });
+  /* Thumb-only walk, because the desktop route is not the phone's path.  `v8Routes.ts` leaves
+     `bookings` off `mobileRoutes` on purpose (Wallet lives under Trips and Me), so a node that
+     visited `/v8/bookings` would prove a screen no teacher can open on a 390px phone. */
+  await expect
+    .poll(() => page.getByTestId("nav-bookings").count(), {
+      timeout: 15_000,
+      intervals: [250],
+      message: node("ord0087-booked-commitment-is-on-the-wallet-screen",
+        "the phone bottom nav suddenly has a Wallet entry -- this walk was written for the case where it does not"),
+    })
+    .toBe(0);
+  const trips = page.getByTestId("nav-trips");
+  await expect(
+    trips,
+    node("ord0087-booked-commitment-is-on-the-wallet-screen", "the phone nav has no Trips tab to walk through"),
+  ).toBeVisible();
+  await trips.click();
+  const subTabs = page.getByTestId("trips-tabs");
+  await expect(
+    subTabs,
+    node("ord0087-booked-commitment-is-on-the-wallet-screen", "tapping Trips did not open the trip sections"),
+  ).toBeVisible({ timeout: 30_000 });
+  await subTabs.getByTestId("trips-tab-bookings").click();
   const card = page.getByTestId("wallet-commitment").first();
   await expect(
     card,
-    node("ord0087-booked-commitment-is-on-the-wallet-screen", "the commitment was created but never reaches the Wallet screen"),
+    node("ord0087-booked-commitment-is-on-the-wallet-screen",
+      "the commitment was created but never reaches the phone's Wallet screen (Today -> Trips -> 预订)"),
   ).toBeVisible({ timeout: 30_000 });
   const cardText = clean(await card.innerText());
   const listed = await page.request.get(`/api/v1/journeys/${journeyId}/wallet`);
@@ -260,6 +283,9 @@ test("ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来�
       {
         generatedBy: "e345b9d6",
         order: "ORD-0087",
+        /* What the pictures are of: the phone's own walk, not a URL typed by the test. */
+        reachedBy: "today -> nav-trips -> trips-tab-bookings",
+        cardText,
         head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
         runId: process.env.CITYNEXUS_E2E_RUN_ID ?? "unknown",
         frontendPort: process.env.CITYNEXUS_E2E_PORT ?? "unknown",
