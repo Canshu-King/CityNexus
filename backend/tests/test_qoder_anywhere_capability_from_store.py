@@ -23,7 +23,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 
-from app.anywhere_capability import UNRESOLVED_PREFIX
+from app.anywhere_capability import PENDING_PREFIX
 from app.db.models import Place
 from app.db.session import SessionLocal
 from app.main import _CITY_DISPLAY_NAMES, app
@@ -113,19 +113,24 @@ def test_g19a_a_catalogued_city_must_not_answer_zero_coverage_under_its_official
 # G19b · 一处地方一个身份：不得凭查询文本 mint 一个新 canonical id
 # --------------------------------------------------------------------------------------
 def test_g19b_two_spellings_of_one_city_must_not_mint_two_canonical_identities():
-    """`unresolved:<sha1(查询文本)>` 会被当成目的地身份用：指纹、幂等、并发收敛全建在它上面。"""
+    """文本派生的身份会被当成目的地身份用：指纹、幂等、并发收敛全建在它上面。
+
+    `23bdf9f` 之后产品不再写 sha1 摘要，换成了 ``pending:<归一化查询原文>``——摘要那半解决了，
+    **"同一条问句的两种拼法必须是同一个身份"没解决**，所以这条门仍该红；它现在盯的是原文进身份
+    （仲裁：raw text is not identity），断言因此比原来更强：无论摘要还是原文都不许当身份。
+    """
 
     for city_code, label, suffixed, rows in _municipality_cases():
         plain = _capability(label)
         variant = _capability(suffixed)
         assert not str(variant.get("canonical_destination_id") or "").startswith(
-            UNRESOLVED_PREFIX
+            PENDING_PREFIX
         ), (
-            f"期望：库里 {city_code} 有 {rows} 行地点时，问「{suffixed}」不得拿到一个由查询文本哈希"
-            f"造出来的身份；实际：canonical_destination_id="
-            f"{variant.get('canonical_destination_id')!r}（method=unresolved，"
-            f"anywhere_capability.py:217-226）。§17D/G3 要的是**同指纹收敛到同一操作**，"
-            "而这里的指纹是按拼法生成的：北京/北京市 会被当成两座城市去水合、去幂等、去缓存"
+            f"期望：库里 {city_code} 有 {rows} 行地点时，问「{suffixed}」不得拿到一个由查询文本"
+            f"派生的身份（无论摘要还是原文）；实际：canonical_destination_id="
+            f"{variant.get('canonical_destination_id')!r}（method=unresolved）。§17D/G3 要的是"
+            "**同指纹收敛到同一操作**，而文本派生的身份会让 北京/北京市 被当成两座城市去水合、"
+            "去幂等、去缓存"
         )
         assert variant.get("canonical_destination_id") == plain.get("canonical_destination_id"), (
             f"期望：两种写法同一个 canonical_destination_id（{plain.get('canonical_destination_id')!r}）；"

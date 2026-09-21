@@ -246,6 +246,9 @@ x-testing-obligations:
       实测（同一进程、同一舞台）：query=北京 → resolution=catalog, place_count=8, capability=HYDRATABLE；
       query=北京市 → resolution=unresolved, place_count=0, 六轴全 MISSING, capability=UNAVAILABLE,
       canonical_destination_id=unresolved:15ef4634d57e865f（由查询文本 sha1 现造）。库里 CN-BEIJING 实有 8 行。
+      # 更正（21:4x，产品已改）：`23bdf9f` 之后不再写 sha1，而是 `pending:<归一化查询原文>`——
+      # 摘要那半解决了，"raw text is not identity" 仍未解决（G19b 因此继续红）；上面那行保留为
+      # 当时实测的历史读数，不代表现在的形状。
       根因 anywhere_capability.py:186-194 的别名集合 = {code, 去 CN- 前缀, _CITY_DISPLAY_NAMES 的光杆名字}，
       _normalise(:143) 不处理后缀，_TRAVELER_FACING_LABELS(:119) 今天只有 CNX-DEMO 一条；
       未命中即走 :217-226 mint 身份。连带后果：指纹按拼法生成 ⇒ §17D/G3 要的"同指纹收敛同一操作"
