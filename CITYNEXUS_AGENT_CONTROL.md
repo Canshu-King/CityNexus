@@ -8378,7 +8378,7 @@ CLAIMED: ORD-0198 by SESSION=c01d72a3 @2026-09-22T02:1x（`date` 实读 02:11:29
       `aggregate_repository_counts_used_as_blocker=false`）；**provider-only MATCH、直接塞 DB、API-only 成功、mock 冒充 live 都不算 Mission A 成功**。
     ⇒ 禁令：不碰 `:4781/:4782/:8693` 与 `_live.db`（只读复核除外）；禁 `demo/reset`；自有端口段 :85xx；凭据不写入任何产物；
       `node_modules` 禁止 junction（D-7）。账本写入必须过 `ledger_write_preflight`（LF + 唯一局部锚点 + 可逆证明）。
-  status: DONE@2026-09-22T02:3x+08 by c01d72a3（十项隔离条件逐条自证为真——快照经 `sqlite3.backup` 只读拷出、:8596 loopback、`_live.db` 零写连接且跑后回查 3/16 未动、主预览仍 `53fe8e8`；可见形状链：`?query=贡山县` ⇒ **真 provider canonical `OSM:R:2729765` / resolution=provider / HYDRATABLE** ⇒ hydration 202 durable（G8 死路在canary 复现，收据留档）⇒ discover 200/6 live 行（attempts 落库）⇒ planner 422 ⇒ used-edge 收据 `blocker_basis=USED_EDGE_INVENTORY`＋`aggregate=false` ⇒ **verdict=`MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`**；无 201/无 SELECTABLE/无唤醒；canary 分支 `agent/canary-ord198-20260922`（merge `53a21fc` 零冲突，39 tests passed）；未 push）
+  status: DONE@2026-09-22T02:3x+08 by c01d72a3（十项隔离条件逐条自证为真——快照经 `sqlite3.backup` 只读拷出、:8596 loopback、`_live.db` 零写连接且跑后回查 3/16 未动、主预览仍 `53fe8e8`；可见形状链：`?query=贡山县` ⇒ **真 provider canonical `OSM:R:2729765` / resolution=provider / HYDRATABLE** ⇒ hydration 202 durable（G8 死路在canary 复现，收据留档）⇒ discover 200/6 live 行（attempts 落库）⇒ planner 422 ⇒ used-edge 收据 `blocker_basis=USED_EDGE_INVENTORY`＋`aggregate=false` ⇒ **verdict=`MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`**；无 201/无 SELECTABLE/无唤醒；canary 分支 `agent/canary-ord198-20260922`（merge `53a21fc` 零冲突，39 tests passed）；未 push）｜**运行时格改记 `RUNTIME_UNOBSERVED`@02:3x（仲裁 02:29 第三个状态名）**：我两次连 `:8596` 均 connection refused ⇒ 既不是产品 FAIL 也不是 REPRODUCED；升档需三层同一身份（进程身份 / 我从该端口最小 GET / 同一进程跑完整链）。
 
 
 
