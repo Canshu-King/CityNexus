@@ -45,13 +45,104 @@ const EXAMPLES = [
   },
 ];
 
+/**
+ * The server's own names for "why there is nothing to plan with", and the one next step each of them
+ * earns.  Keyed by `error.code` / `error.reason_code` and **never by an English sentence** -- a
+ * substring match on provider wording is how a screen ends up telling a traveller to "adjust the
+ * budget" when the real cause was an empty catalogue (ORD-0107).  The codes are the ones the backend
+ * lanes are putting names on (ORD-0101/0108: `services.py:843/:902/:932`, `CATALOG_EMPTY` at the
+ * compose exit); anything the table does not know is shown as unknown, with the server's own sentence
+ * under 技术详情, because inventing a paraphrase of a code we have not read is a lie waiting to happen.
+ */
+const BLOCKED_BY_CODE: Record<
+  string,
+  { zh: string; en: string; action: "another-city" | "retry" | "none" }
+> = {
+  CATALOG_EMPTY: {
+    zh: "这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。",
+    en: "We hold no place data for this city yet, so nothing about your wording failed — there was nothing to assemble a trip from.",
+    action: "another-city",
+  },
+  CATALOG_INSUFFICIENT: {
+    zh: "这座城我们手上的地点太少，配不平一天的行程。",
+    en: "We have too few places for this city to balance a day's itinerary.",
+    action: "another-city",
+  },
+  PLACES_NOT_IN_CATALOG: {
+    zh: "要排的地点不在我们的目录里，所以排不出行程。",
+    en: "The places this was asked to plan are not in our catalogue, so no itinerary could be built.",
+    action: "another-city",
+  },
+  PLACE_COST_UNVERIFIED: {
+    zh: "地点有了，但费用我们没能核实，所以没有给出带价格的方案。",
+    en: "The places were found but their costs could not be verified, so no priced plan was offered.",
+    action: "retry",
+  },
+  PLACE_OUTSIDE_JOURNEY_WINDOW: {
+    zh: "这些地点的开放时间和你这趟的日期对不上。",
+    en: "These places' opening hours do not fit the dates of this trip.",
+    action: "another-city",
+  },
+  MOBILITY_DATA_UNAVAILABLE: {
+    zh: "这趟的出行数据缺了一段（站与站之间的时间没读到），所以没排出来。",
+    en: "Part of this trip's mobility data is missing, so nothing could be scheduled.",
+    action: "retry",
+  },
+};
+
+/** The server's name for a refusal, from its envelope.  Empty when it gave none -- and then this
+    screen says it does not know, rather than guessing a cause. */
+function serverReasonCode(body: unknown): string {
+  const error = (body as { error?: Record<string, unknown> } | null)?.error;
+  if (!error || typeof error !== "object") return "";
+  for (const key of ["reason_code", "code", "message_key"]) {
+    const value = error[key];
+    if (typeof value === "string" && value.trim()) return value.trim().toUpperCase();
+  }
+  const detail = (body as { detail?: unknown }).detail;
+  return typeof detail === "string" ? detail.slice(0, 60).toUpperCase() : "";
+}
+
+/** The server's own sentence, kept verbatim for 技术详情. */
+function serverReasonSentence(body: unknown): string | null {
+  const error = (body as { error?: Record<string, unknown> } | null)?.error;
+  if (error && typeof error.message === "string" && error.message.trim()) return error.message;
+  const detail = (body as { detail?: unknown }).detail;
+  if (typeof detail === "string" && detail.trim()) return detail;
+  return null;
+}
+
+
 /** Map internal mission status -> traveller language. */
 function statusCopy(
   status: string,
   zh: boolean,
   planCount = 0,
-): { title: string; body: string; tone: "ok" | "warn" | "busy" | "neutral" } {
+): {
+  title: string;
+  body: string;
+  tone: "ok" | "warn" | "busy" | "neutral";
+  action?: "another-city" | "retry";
+} {
   const s = (status || "").toUpperCase();
+  /* A named block from the server's own envelope.  The code decides the words; nothing here is
+     inferred from how a provider phrased its sentence. */
+  if (s.startsWith("BLOCKED:")) {
+    const code = s.slice("BLOCKED:".length);
+    const known = BLOCKED_BY_CODE[code];
+    return {
+      title: zh ? "这次排不出方案：数据不够，不是你说的不对" : "No plan this time: the data is short, not your wording",
+      body: known
+        ? zh
+          ? `${known.zh}（服务器给的原因编号：${code}）`
+          : `${known.en} (server reason code: ${code})`
+        : zh
+          ? `服务器回的原因编号是 ${code || "（没给编号）"}，这条我们还没有本地文案，所以不替你解释它——原话在"技术详情"里。`
+          : `The server's reason code is ${code || "(none given)"} and we have no wording for it, so we quote rather than explain — the sentence is under "Technical detail".`,
+      tone: "warn",
+      action: known ? known.action === "another-city" ? "another-city" : "retry" : "retry",
+    };
+  }
   if (s === "COMPLETED" || s === "SUCCEEDED") {
     return {
       title: zh ? `已生成 ${planCount} 个可选方案` : `${planCount} candidate plans are ready`,
@@ -130,8 +221,8 @@ function statusCopy(
     return {
       title: zh ? "没有生成可行方案" : "No usable plans were produced",
       body: zh
-        ? "你的需求已理解，但这次没能排出可行方案。你的行程没有被改动，可以调整预算或换个说法再试。"
-        : "Your request was understood, but no feasible plan came out. Your trip is unchanged — adjust the budget or rephrase and try again.",
+        ? "服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。"
+        : "The server said no feasible plan came out but gave no reason code, so we will not guess whether that was your budget, your wording or our data. Your trip is unchanged; its sentence is under “Technical detail”. You can retry or try another city.",
       tone: "warn",
     };
   }
@@ -173,10 +264,15 @@ export function PlanWithAiSheet({
   cityCode,
   onClose,
   onPlanned,
+  onChooseAnotherCity,
 }: {
   journeyId: string;
   cityCode?: string;
   onClose: () => void;
+  /** Where the "换一座城市" next step goes.  Optional because the sheet is also mounted from paths
+      that have no city picker to open; without it the refusal still reads in full, it just has no
+      button to offer. */
+  onChooseAnotherCity?: () => void;
   onPlanned?: () => void;
 }) {
   const { locale } = useLocale();
@@ -348,6 +444,8 @@ export function PlanWithAiSheet({
       // product path: compose candidates from the city places that discovery
       // has already materialised for this journey.  Only attempted when the
       // baseline is KNOWN — otherwise we cannot attribute what it created.
+      let blockedCode = "";
+      let blockedSentence: string | null = null;
       if (baseline !== null && planCount === 0) {
         enter("fallback");
         try {
@@ -355,32 +453,71 @@ export function PlanWithAiSheet({
             `/api/v1/places?city_code=${encodeURIComponent(cityCode)}`,
             { headers: { Accept: "application/json" }, signal },
           );
-          const places = placesResponse.ok ? await placesResponse.json() : [];
-          const ids = Array.isArray(places)
-            ? places.map((item: { id?: string }) => item?.id).filter(Boolean).slice(0, 8)
-            : [];
-          if (ids.length >= 2) {
-            const generate = await fetch(
-              `/api/v1/journeys/${journeyId}/plans/generate`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ place_ids: ids, candidate_count: 3 }),
-                signal,
-              },
-            );
-            if (generate.ok) {
-              const created = await generate.json();
-              // Only artifacts this run created count as success.
-              newPlanIds = (Array.isArray(created) ? created : [])
-                .map((item: { id?: string }) => item?.id)
-                .filter(isNewPlanId);
-              if (newPlanIds.length === 0) {
-                const recounted = await countNewPlans();
-                if (recounted !== null) newPlanIds = recounted;
-              }
-              planCount = newPlanIds.length;
+          /* ORD-0107 ②: this read used to answer `[]` on any non-2xx, which made "we could not look"
+             indistinguishable from "this city has nothing" and, three lines later, from "your request
+             produced nothing".  A failed read is now its own named state. */
+          if (!placesResponse.ok) {
+            const unreadable = await placesResponse.json().catch(() => null);
+            setResult({
+              status: `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.status}`}`,
+              failureReason:
+                serverReasonSentence(unreadable) ?? `GET /places -> HTTP ${placesResponse.status}`,
+              summary: null,
+              planCount: -1,
+              newPlanIds: [],
+            });
+            return;
+          }
+          const catalogue = await placesResponse.json();
+          const knownIds = new Set(
+            (Array.isArray(catalogue) ? catalogue : [])
+              .map((item: { id?: string }) => item?.id)
+              .filter((id: unknown): id is string => typeof id === "string" && id.length > 0),
+          );
+          if (knownIds.size < 2) {
+            /* The old code simply did not send the request and the traveller saw nothing.  Two places is
+               the server's own floor (`schemas.py:423 min_length=2`), so this is a fact about our data,
+               said as one. */
+            setResult({
+              status: knownIds.size === 0 ? "BLOCKED:CATALOG_EMPTY" : "BLOCKED:CATALOG_INSUFFICIENT",
+              failureReason: `GET /places?city_code=${cityCode} -> ${knownIds.size} places`,
+              summary: null,
+              planCount: -1,
+              newPlanIds: [],
+            });
+            return;
+          }
+          /* ORD-0107 ①: the positional slice is gone.  Taking the first eight ids in whatever order the
+             read returned was this screen inventing a shortlist -- the model proposes no places at all
+             (`app/agent/mission.py:21-35` carries objectives and bounds, `:490-498` adds policy bounds;
+             neither has a place id), so there was no proposal to intersect and no basis for the order.
+             Sending no `place_ids` hands the choice back to the server's catalogue path
+             (`services.py` `_catalogue_templates`), the same one the demo stage plans through. */
+          const generate = await fetch(
+            `/api/v1/journeys/${journeyId}/plans/generate`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ candidate_count: 3 }),
+              signal,
+            },
+          );
+          if (generate.ok) {
+            const created = await generate.json();
+            // Only artifacts this run created count as success.
+            newPlanIds = (Array.isArray(created) ? created : [])
+              .map((item: { id?: string }) => item?.id)
+              .filter(isNewPlanId);
+            if (newPlanIds.length === 0) {
+              const recounted = await countNewPlans();
+              if (recounted !== null) newPlanIds = recounted;
             }
+            planCount = newPlanIds.length;
+          } else {
+            const refused = await generate.json().catch(() => null);
+            blockedCode = serverReasonCode(refused);
+            blockedSentence =
+              serverReasonSentence(refused) ?? `POST /plans/generate -> HTTP ${generate.status}`;
           }
         } catch (cause) {
           if (isAbort(cause)) throw cause;
@@ -407,6 +544,11 @@ export function PlanWithAiSheet({
         status = "COMPLETED";
       } else if (planCount > 0) {
         status = "PLANS_WITHOUT_AI";
+      } else if (blockedCode) {
+        /* Ahead of the "AI unavailable" branch on purpose: when the compose step named a data cause,
+           that is both more specific and more actionable than "retry later", and the mission's own
+           reason still sits under 技术详情. */
+        status = `BLOCKED:${blockedCode}`;
       } else if (missionStatus.includes("EXTERNAL") || missionStatus.includes("SKIPPED")) {
         status = "SKIPPED_EXTERNAL_DEPENDENCY";
       } else {
@@ -416,7 +558,8 @@ export function PlanWithAiSheet({
       setResult({
         status,
         newPlanIds,
-        failureReason: mission?.failure_reason ?? null,
+        failureReason:
+          mission?.failure_reason ?? blockedSentence ?? null,
         summary: mission?.reasoning_summary ?? null,
         planCount,
       });
@@ -585,6 +728,33 @@ export function PlanWithAiSheet({
               </details>
             )}
             {result?.summary && !result.failureReason && <p className="plan-ai-summary">{result.summary}</p>}
+            {/* A refusal the traveller cannot act on is a dead end, so the reason carries exactly one
+                next step -- and it is the step the server's own code earns, not a generic "try again". */}
+            {copy?.action === "another-city" && onChooseAnotherCity && (
+              <button
+                type="button"
+                className="v8-primary-button plan-ai-next-step"
+                data-testid="plan-ai-next-step"
+                data-next-step="another-city"
+                onClick={() => {
+                  onClose();
+                  onChooseAnotherCity();
+                }}
+              >
+                {zh ? "换一座有数据的城市" : "Try a city we have data for"}
+              </button>
+            )}
+            {copy?.action === "retry" && (
+              <button
+                type="button"
+                className="v8-primary-button plan-ai-next-step"
+                data-testid="plan-ai-next-step"
+                data-next-step="retry"
+                onClick={() => void submit()}
+              >
+                {zh ? "照原话再试一次" : "Try again with the same words"}
+              </button>
+            )}
           </div>
         )}
 

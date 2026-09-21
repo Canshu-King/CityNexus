@@ -24,6 +24,8 @@ ADAPTER = "src/features/simulation/simulationAdapter.ts"
 SHEET = "src/features/simulation/SimulationPanel.css"
 CLOCK = "src/lib/sceneClock.ts"
 STAGE_SPEC = "e2e/qoder-today-follows-the-stage.spec.ts"
+SHEET_AI = "src/features/planning/PlanWithAiSheet.tsx"
+AI_SPEC = "e2e/qoder-ai-sheet-blocked.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -169,6 +171,36 @@ CASES = [
         '      zh: proposalId ? `接受方案：${shortId(proposalId)}` : "接受方案",\n',
         '      zh: "接受方案",\n',
         [(STAGE_SPEC, ["sim-replan-receipt-names-the-proposal-the-row-sends"])],
+    ),
+    (
+        # ORD-0107: three silences this order closed, each with the arm that owns it.
+        "killE1-short-catalogue-is-silent-again",
+        SHEET_AI,
+        "          if (knownIds.size < 2) {\n",
+        "          if (false) {\n",
+        [(AI_SPEC, ["ord0107-ai-sheet-names-why-it-could-not-plan"])],
+    ),
+    (
+        "killE2-unreadable-catalogue-is-silence",
+        SHEET_AI,
+        "          if (!placesResponse.ok) {\n",
+        "          if (false) {\n",
+        [(AI_SPEC, ["ord0107-ai-sheet-names-why-it-could-not-plan"])],
+    ),
+    (
+        "killE3-reason-code-stops-routing-the-copy",
+        SHEET_AI,
+        '  if (s.startsWith("BLOCKED:")) {\n',
+        "  if (false) {\n",
+        [(AI_SPEC, ["ord0107-ai-sheet-names-why-it-could-not-plan"])],
+    ),
+    (
+        # The old defect itself: a shortlist built from the read's order.
+        "killE4-sheet-picks-places-by-position",
+        SHEET_AI,
+        "              body: JSON.stringify({ candidate_count: 3 }),\n",
+        "              body: JSON.stringify({ place_ids: [...knownIds].slice(0, 8), candidate_count: 3 }),\n",
+        [(AI_SPEC, ["ord0107-ai-sheet-names-why-it-could-not-plan"])],
     ),
     (
         "killD3-escape-does-not-close-it",

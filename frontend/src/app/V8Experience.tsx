@@ -1522,6 +1522,7 @@ export function V8Experience() {
           cityCode={data.journey.city_code}
           onClose={() => setPlanAiOpen(false)}
           onPlanned={() => void load(data.journey.id)}
+          onChooseAnotherCity={() => setSetupOpen(true)}
         />
       )}
       <nav className="v8-mobile-nav" aria-label="Mobile navigation">
