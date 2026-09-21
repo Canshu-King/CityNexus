@@ -339,12 +339,20 @@ def test_r1b_a_matched_answer_without_a_usable_id_or_position_refuses_instead_of
 @pytest.mark.xfail(
     strict=True,
     reason=(
-        "验收口径 v2 的 MATCH 反例还没全部成立：provider 回了 feature 但 properties 里没有可用 osm_id 时，"
-        "lane B 的分级层在把结果交给 C 之前就把候选丢掉，产品收到的是 NO_MATCH + PROVIDER_NO_RESULTS，"
-        "于是拿不到『malformed/invalid provider evidence』这个具名失败。C 侧能守的都守住了（见 r1b：身份仍为 "
-        "null、原文照旧、不造临时 hash），差的那一步需要 provider 层把『看到了几条/为什么丢掉』交出来 —— "
-        "已按名点名给 B（同一事实写在 contracts/openapi-anywhere-draft.yaml 的 open-item 里）。"
-        "这条 strict xfail 就是那台探针：B 修好后它会以 XPASS 报错，提醒把标记摘掉，而不是让这一格被遗忘。"
+        "验收口径 v2 的 MATCH 反例还没全部成立，且成因今晚量清楚了（探针 "
+        "`_qoder_ord30_evidence_20260920/ord191/repro_cmdr_malformed.py`：六种形状走同一正常入口，逐条打印 "
+        "provider 层交出来的东西）。实测两点：(1) 只缺 `osm_id` 的 feature 在 lane B 的分级层 "
+        "`integrations/discovery/provider_identity.py:318-321` 就被丢掉，C 收到的是 "
+        "`outcome=NO_MATCH / candidates=0 / reason=PROVIDER_NO_RESULTS`；同一过滤器还按 "
+        "`props['type'] not in DESTINATION_GRADE_TYPES` 丢，所以塌成『这个地方不存在』的形状不止一种。"
+        "(2) 探针把那两条 dataclass 的字段名整排打出来：ProviderAttempt 只有 "
+        "answered/elapsed_ms/endpoint/error/http_status/reason/retry_after_s，ProviderResolution 只有 "
+        "answered/attempts/candidates/normalized_query/outcome/provider_replied/query/reason/retryable "
+        "——**没有任何一条报『看到几条 feature』**，所以 C 侧无论怎么写都无法区分『答了但证据不合格』与"
+        "『答了且确实没有』。差的那一步按名点给 B，口径只要一个字段："
+        "`ProviderAttempt.features_viewed`（或等价的 `candidates_before_filter`＋丢弃原因）。"
+        "C 侧能守的都已守住（见 g14/r1b：身份 null、原文照旧、不造 hash）。"
+        "这条 strict xfail 就是那台探针：B 交出计数后它会以 XPASS 报错，提醒摘标记而不是让这一格被遗忘。"
     ),
 )
 def test_r1d_a_feature_without_any_usable_id_is_named_malformed_not_absent(
@@ -356,13 +364,24 @@ def test_r1d_a_feature_without_any_usable_id_is_named_malformed_not_absent(
     feature = _feature(osm_id=3289208, osm_type="R", name=RAW_COUNTY, extent=COUNTY_EXTENT)
     without_id = json.loads(json.dumps(feature))
     without_id["properties"].pop("osm_id", None)
-    _answer(monkeypatch, features=(without_id,))
-    body = _capability(RAW_COUNTY)
-    assert body["canonical_destination_id"] is None, body
-    assert body["destination_state"] == "RUNTIME_FAILURE", (
-        f"今天实测：{body['destination_state']} / {body.get('attribution_reason')}"
-    )
-    assert body["attribution_reason"] == "PROVIDER_BAD_RESPONSE", body.get("attribution_reason")
+    bad_type = json.loads(json.dumps(feature))
+    bad_type["properties"]["type"] = "not_a_destination_grade_type"
+    for label, payload in (("缺 osm_id", without_id), ("type 非目的地级", bad_type)):
+        _answer(monkeypatch, features=(payload,))
+        body = _capability(RAW_COUNTY)
+        assert body["canonical_destination_id"] is None, body
+        assert body["destination_state"] == "RUNTIME_FAILURE", (
+            f"{label} 今天实测：{body['destination_state']} / {body.get('attribution_reason')}"
+        )
+        assert body["attribution_reason"] == "PROVIDER_BAD_RESPONSE", (
+            f"{label} 今天实测 attribution_reason={body.get('attribution_reason')!r}"
+        )
+        assert body["reason_code"] != capability_module.REASON_NO_CANONICAL_IDENTITY, (
+            f"{label}：不许报成『这个地方不存在』；实际 reason_code={body['reason_code']!r}"
+        )
+        assert body["recommended_action"] != capability_module.ACTION_CHOOSE_ANOTHER_DESTINATION, (
+            f"{label}：动作不许是『换个地方』；实际 action={body['recommended_action']!r}"
+        )
 
 
 # ---------------------------------------------------------------------------------------------

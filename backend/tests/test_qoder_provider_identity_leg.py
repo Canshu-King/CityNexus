@@ -597,6 +597,18 @@ def test_g14_a_reference_the_provider_cannot_be_held_to_never_becomes_identity(
         assert body["retryable"] is True, (
             f"{label}：坏证据要可重试，不是『换个地方』；实际 {body['retryable']}"
         )
+        # 指挥使点名的两条判据，按"不得等于"写：写成等于新值的话，哪天漂到另一个错词还是绿的。
+        assert body["reason_code"] != capability_module.REASON_NO_CANONICAL_IDENTITY, (
+            f"{label}：上游答了、只是证据不合格，却报成『没有这个身份/这个地方不存在』；"
+            f"实际 reason_code={body['reason_code']!r}"
+        )
+        assert body["recommended_action"] != capability_module.ACTION_CHOOSE_ANOTHER_DESTINATION, (
+            f"{label}：动作不许是『换个地方』（那是结构性无身份的动作）；"
+            f"实际 action={body['recommended_action']!r}"
+        )
+        assert body["capability"] == capability_module.NOT_ANSWERED, (
+            f"{label}：证据不合格属于『没答上、可重试』那一格；实际 {body['capability']}"
+        )
         assert body["destination_resolution"] == "provider_evidence_malformed", body
         assert body["attribution_reason"] == "PROVIDER_BAD_RESPONSE", (
             f"{label}：期望复用 provider 层已有的名字；实际 {body.get('attribution_reason')!r}"

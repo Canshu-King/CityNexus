@@ -390,6 +390,20 @@ x-testing-obligations:
       在同一个读数上不可区分（`ProviderResolution` 字段实测：outcome/query/normalized_query/candidates/
       attempts/retryable/reason/answered/provider_replied，`ProviderAttempt` 不带会答条数）。要分开这句话
       需要 provider 层把"看到了几条"交出来 ⇒ 已把两侧读数交给 B，不由 C 伸手进 integrations/discovery/** 改。
+      今晚把这句话从推断升成实测，并扩了两格：塌陷点就是
+      `integrations/discovery/provider_identity.py:318-321` 的 `_is_destination_grade`，它同时按
+      `props["name"] is None`、`props["osm_id"] is None` **和** `props["type"] not in
+      DESTINATION_GRADE_TYPES` 丢弃整条 feature ⇒ 塌成"这个地方不存在"的形状不止缺 id 这一种；
+      探针把两侧 dataclass 的字段名整排打印出来，确认没有任何一条报"看到几条"。
+      按名点给 B 的口径收窄成一个字段：`ProviderAttempt.features_viewed`
+      （等价的 `candidates_before_filter` + 丢弃原因亦可），C 侧拿到它就能把
+      "答了但证据不合格"从"答了且确实没有"里分出来；那一天
+      `backend/tests/test_qoder_ord197_four_class_receipt.py::test_r1d_a_feature_without_any_usable_id_is_named_malformed_not_absent`
+      会以 XPASS 报错（strict），提醒摘标记。
+    re-measured: >-
+      2026-09-22 @ `d6d5ae6`（父提交上跑，本笔只改门与契约）：
+      `_qoder_ord30_evidence_20260920/ord191/repro_cmdr_malformed.py`，六种形状同入参、同一正常入口，
+      逐条打印产品答案与 provider 层交出来的对象。
 
   per-attempt-evidence-must-sit-in-the-cell-the-consumer-reads:
     rule: >-
