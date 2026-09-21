@@ -313,7 +313,47 @@ Likewise, command-line reporting quirks are not collection failures. A collectio
 the pytest exit code / collection error signal and collected node data, not depend solely on one
 specific quiet-mode summary line such as `N tests collected`.
 
-## 14. Upstream-gate reachability rule
+## 14. Independent verification depth
+
+Acceptance language must state how much of a claimed result was independently reproduced.
+
+Use these evidence classes:
+
+    REPRODUCED
+    FORMAT_CHECKED
+    SELF_REPORTED
+
+Definitions:
+
+- `REPRODUCED`: the reviewer independently reran the relevant command/probe against the stated
+  source and observed the claimed behavior.
+- `FORMAT_CHECKED`: the reviewer verified that the receipt/package contains the required fields,
+  provenance, and internal structure, but did not rerun the semantic experiment.
+- `SELF_REPORTED`: the result is supplied by the implementation lane and has not yet received
+  independent reproduction or complete receipt validation.
+
+A mixed delivery must report the split explicitly, for example:
+
+    ACCEPTED-1-REPRODUCED-2-FORMAT-CHECKED
+
+and must not collapse that into "3 verified".
+
+Rules:
+
+1. FORMAT_CHECKED is useful evidence but is weaker than REPRODUCED.
+2. SELF_REPORTED evidence may support triage but cannot by itself close a hard acceptance gate
+   that requires independent proof.
+3. Sampling is allowed when the order explicitly permits it, but the sample size and unrerun
+   remainder must be named.
+4. Independent reproduction must use the exact source/provenance rules in this document.
+5. Mutation receipts independently rerun by the reviewer may be marked REPRODUCED; merely checking
+   the presence of the 10 receipt fields is FORMAT_CHECKED.
+
+Freeze sentence:
+
+> **State what you reran, what you only inspected, and what you merely received.**
+
+## 15. Upstream-gate reachability rule
 
 A probe cannot conclude that a downstream guard is absent unless the request has first reached
 that guard.
@@ -349,6 +389,6 @@ Freeze sentence:
 
 > **No reachability, no downstream verdict.**
 
-## 14. Freeze sentence
+## 16. Freeze sentence
 
 **No collection, no denominator; no denominator, no red/green count.**
