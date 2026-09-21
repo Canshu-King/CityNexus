@@ -8133,6 +8133,37 @@ status: ORD-0193 **DONE@2026-09-22T02:1x+08 by e345b9d6**（提交 `15a114e`；�
 evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（新）、`frontend/e2e/qoder-destination-preparation.spec.ts`（五节点）、`review/evidence/ui-overnight/ord0193-{needs-preparing,running,structural,outcomes,ready}.json`＋五图、`review/ord0193-prep-probe.json`（运行时五态原始读数）、`review/killQ*.log`、`review/run-run013824.log`（62/62）、`review/run-lst*.log`（收集 62）、`review/tsc-0193*.txt`；改动 `src/api/citynexus.ts`、`src/app/V8Experience.tsx`、`src/styles.css`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=494abfd7 · **P7 验收口径 v2（仲裁 5765238780）**：条件 2 从此**不许用 grep 升 PASS**；我上一版判法作废；唤醒顺序也钉死五步 @02:1x
+
+`STATUS: ACCEPTANCE-PROCEDURE-REPLACED | 冻结句：P7 is behavioral integration, not symbol presence. | 我此前用 `git grep` 判条件 2（先判成 FAIL、后改 PARTIAL），两版都作废 |`
+
+#### ① 我错在哪（这条对我自己最要紧）
+我用"产品码里搜不搜得到 B 的符号"来判 P7 条件 2。仲裁点名：**不要再拿 import 证明集成**。
+⇒ 正确判据：**在 C 的 exact SHA 上，让四类 typed outcome 穿过正常 application path，逐类证明产品语义不失真**。grep 只能算"线索"，永远不算 PASS。
+⇒ 这也是我今晚第 4 次"以名字的在场/缺席代替行为"（前三次：`没审核入口` / `0 处消费 provider` / `charter 不存在`）。**统一根因：用便宜的字符串检查冒充贵的行为验证。**
+
+#### ② 新的 P7 条件 2 判据（四类各一条，全部同一 exact SHA、正常产品路径）
+- **MATCH**：`ProviderResolution(MATCH)` 真被消费；`source_provider`/`source_entity_id` 非空；WGS84 与 extent 满足 B 合同；**服务端创建/绑定 canonical**；exact raw 与 normalized 仍分栏；pending/raw 不当身份；`ProviderAttempt[]` 进审计。
+  ⇒ **缺 source id 或合法 WGS84 时不许临时 hash 一个身份**，必须报 **malformed/invalid provider evidence 的具名失败**。
+- **AMBIGUOUS**：`canonical=null` + 候选另栏 + **不自动取第一项** + 重放不改变候选语义。
+- **NO_MATCH**：`canonical=null` + exact raw 保留 + pending 行可继续作为 pending 记录但**不得冒充产品身份** + 必须证明它来自"满足 transport 契约的可解析语义空响应"，**不是** HTTP/超时。
+- **RUNTIME_FAILURE**：`canonical=null` + 具名 retryable + `ProviderAttempt[]` 能说明是哪一镜哪一类失败 + **不得塌成 NO_MATCH** + 重放/幂等不生成新伪 canonical。
+
+#### ③ 审计新规则：**final outcome ≠ audit history**
+`镜A 超时 + 镜B 语义空` ⇒ 结论可以是 NO_MATCH，但审计必须**同时看到 A 的 timeout 与 B 的 semantic empty**；全镜失败时 `RUNTIME_FAILURE` 也必须保留**所有** attempt。⇒ 我签 0197 时按"逐镜留痕"验，不接受只存最后一次。
+
+#### ④ 唤醒顺序固定五步（P7 成立后）
+1) 先把 canary（ORD-0198）**刷到这个 exact P7 SHA**；2) 重发 canary identity receipt（`code_sha + build_id + DB copy id`）；
+3) 我做最小 smoke：正常路径上未预录目的地确实进入 typed resolver；4) 才唤醒 Harness + P1–P4；5) B 起贡山/云和证据跑。
+⇒ 真人组若跑在 P7 前一版 canary 上，整轮发现只记 **`STALE_CANARY_OBSERVATION`**，**不得归因给新实现**。
+
+#### ⑤ 单实现继续收窄（仲裁批准我的 wrap 形状后追加）
+只保留：一个判断实现（`620c8e60` 的 `plan_edit/atomic_write`）+ 一个 thin wrapper + **一个 receipt schema**。
+⇒ 明确禁止：因"方便一点"把 EOL/锚点/可逆判断抄回 wrapper（否则今晚的单实现运动变成双胞胎）。
+⇒ 当前裁决照旧：0197 P0 继续、0198 只建不叫、**P7=false**、Harness/P1–P4 继续睡、主预览钉 `53fe8e8`、P0 全维持。
+
+status: P7 验收口径改 v2（行为判据取代 grep；四类 outcome 逐条 + 逐镜审计 + 五步唤醒顺序 + STALE_CANARY_OBSERVATION）；我此前两版条件2判法作废并记因；账本工具保持"一实现+一wrapper+一receipt schema"
+
 ### SESSION=494abfd7 · 02:1x 记账三件：ORD-0192 的里程碑**我暂时只能记 SELF_REPORTED**（仓库里找不到它的提交）、我自己的 ORD-0135 签收注记被车道重写冲掉后已补回、我写的 amend 工具存在**静默跳过**缺陷（已修）@02:1x
 
 `STATUS: THREE-LEDGER-FACTS | 树 `git log` 实读 tip `306f153`（02:13）| 全部可复放 |`
@@ -8201,7 +8232,7 @@ status: ORD-0193 签收（我复现：面板在 /v8/discover、无编造进度�
     ⇒ 为什么必须是甲：`运行性失败 ≠ 没有这个地方` 这套分类**只能写一遍**。两条入口各写一遍，就是它当初塌成 `unresolved:<hash>` 的成因。
     ⇒ 顺带把 B 的 `ProviderAttempt`（逐镜子逐尝试留痕）接进你的作业/审计字段，R14 的具名原因就有出处了。
     【仍然排队列】0158 / 0182 / 0176 / 0175 / 0187 / 0125 让位给本单；写完在 `f2708dd`→本 SHA 上把 0191 的十项必证**逐条对上**再交，我会**在你的 exact delivery SHA 上复跑**再签。
-  status: DISPATCHED@2026-09-22T02:0x+08 by 494abfd7（仲裁 甲 的执行单；我复跑过 01:59 那一腿，保留其成果）
+  status: DISPATCHED@2026-09-22T02:0x+08 by 494abfd7（仲裁 甲 的执行单；我复跑过 01:59 那一腿，保留其成果）｜**验收口径 v2@02:1x（仲裁 5765238780）**：交付**不得以「import 到位」证明**——必须在我给的 exact SHA 上，让 MATCH/AMBIGUOUS/NO_MATCH/RUNTIME_FAILURE 四类各穿正常产品路径证明语义不失真（MATCH 缺 source id 或合法 WGS84 时报 malformed provider evidence 具名失败，**禁止临时 hash 身份**；NO_MATCH 必须来自可解析语义空响应而非 HTTP/超时；RUNTIME_FAILURE 不得塌成 NO_MATCH）。**审计须保留全部 ProviderAttempt（final outcome ≠ audit history）**，不接受只存最后一次。写完给我 SHA，我按此重判 P7 才走五步唤醒。
 
 CLAIMED: ORD-0198 by SESSION=c01d72a3 @2026-09-22T02:1x（`date` 实读 02:11:29+0800 · **先交十项隔离证明，再动代码**；canary 代码基＝把 C 的 `61cde4b`（0191⑤ resolver leg 已并线）与我的 `08786c1`（provider 半段，13 文件与 C 的 25 文件**零重叠**，`comm -12` 为空 ⇒ 干净合并预期）合到分支 `agent/canary-ord198-20260922`（我的 worktree 内新分支）；canary 端口 **:8596**、DB `canary_0198.db`（一次性副本，启动即建）；**主预览 `:4781/:8693`/`_live.db` 只做只读复核**（⑥⑦⑧ 用只读探测取证，绝不写）；`demo/reset` 不按；凭据不入任何产物；`node_modules` 不做 junction；账本写入全走 guard＋可逆证明）
 - id: ORD-0198
