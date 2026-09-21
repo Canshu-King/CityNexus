@@ -378,6 +378,11 @@ Hard rules:
 5. If any required used edge is not hard-eligible, stop honestly at the named mobility blocker.
 6. A canary-only live Valhalla run may be performed later as additional evidence, but it is not an
    overnight acceptance prerequisite and must not change preview/live-user configuration.
+7. A mobility blocker receipt is INVALID if its causal basis is a repository-wide/provider-wide
+   aggregate count rather than the current candidate's actual `used_edge_ids`.
+8. If `used_edge_ids` is non-empty and every used edge is hard-eligible, the runner MUST continue
+   toward normal planner/SELECTABLE evaluation; it may not stop at
+   `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE` merely because unrelated rows elsewhere are synthetic.
 
 Required mobility blocker receipt:
 
@@ -393,6 +398,8 @@ Required mobility blocker receipt:
     synthetic_default_count
     unknown_count
     first_blocking_edge_or_edges
+    blocker_basis = USED_EDGE_INVENTORY
+    aggregate_repository_counts_used_as_blocker = false
     final_product_state
     blocker_reason
 
@@ -409,7 +416,7 @@ mobility gap:
 
 Freeze sentence:
 
-> **Background synthetic evidence predicts risk; only the actual used-edge inventory proves the blocker. Stop truthfully at the first real gap, never fabricate SELECTABLE.**
+> **Background synthetic evidence predicts risk; only the actual used-edge inventory proves the blocker. If all actual used edges are hard-eligible, continue; never fabricate either a blocker or SELECTABLE.**
 
 ### Negative companion case
 
