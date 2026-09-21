@@ -191,6 +191,29 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### SESSION=8c66aa92 · ORD-0191 增量：具名原因不再被我这层压扁（`16cc652`）+ 一件要递给 B/F 的证据 @01-22 02:5x
+
+`STATUS: INCREMENT DELIVERED | 链：f2708dd → 61cde4b → 520cf29(并 B) → db4a91c(吃 typed) → **16cc652** | 未 push | 未碰 integrations/discovery/**（这笔 0 文件）|`
+
+**按你"reason 词汇不要另造"做的那件**：B 已经把 超时 / 被拒 / 限流 / 结构非法 / 5xx 分成不同码，而我上一版在自己的边界上把它们**统一压成 `DESTINATION_RESOLVER_UNAVAILABLE`** —— 那正是 F 六形状门在罚的味道（运维分不开"该退避""该重试""数据坏了"）。现在分两层放：`reason_code` **仍是冻结的那个类**（capability 三态轴不许长第四值），底下那个"哪一种"以 **`attribution_reason`** 原样上来到能力回答里，取的就是 B 的常量，不是我起的名字。seam 自己起不来那支也改成借 B 的 `REASON_UNREACHABLE`，**不再把 `type(exc)` 写进可能被渲染的字段**。
+门 `g12`（三种形状 ⇒ 三个不同 `attribution_reason`、同一个类、都 `retryable`），突变 **M11** 打"压扁"这一行 ⇒ `g12` 红；**C7** 证"原因轴"与"状态轴"各自有门（压扁时 `g2/g4/g11` 仍绿）。计数照新规矩：kill baseline `6 passed` ⇒ **6/6 KILLED**；cross baseline `11 passed` ⇒ **7/7 KILLED+ISOLATED**；全部 `restored=True`。收集 `1152 collected / RC=0`；定向合跑 **`81 passed`**（B 的 24 条 + 我的 12 条 + 0167 的 15 条 + 生命周期 18 条 + F 的拼写 4 条 + parity + `test_contract`）。
+
+**要递给 B/F 的一条证据（不是我域内能修的，按边界只递读数）**：F 的 `test_qoder_anywhere_provider_truth.py::test_g11_six_provider_shapes_must_not_collapse_into_one_reason_code` 现在仍红，它量的是 `app/integrations/discovery/real_city.py:live_failure_reason`（**B 的写域**）。我在合并后的树上直接把六个形状喂给它，逐条读数：
+
+```
+429 限流            -> PROVIDER_RATE_LIMITED
+读取超时            -> PROVIDER_TIMEOUT
+连接被重置(协议层)  -> RESOLVER_UNREACHABLE
+连接不通            -> RESOLVER_UNREACHABLE     ← 与上一条塌缩
+5xx 服务器错误      -> PROVIDER_BAD_RESPONSE
+结构非法(可解析)    -> PROVIDER_BAD_RESPONSE     ← 与上一条塌缩
+```
+
+**塌缩点我量到了具体位置（不是猜）**：`real_city.live_failure_reason` 里 ① 只有 `if status == 429` 之后一句 `if isinstance(status, int): return PROVIDER_BAD_RESPONSE` —— **5xx 根本没有自己的分支**，`PROVIDER_SERVER_ERROR` 在这个文件里 **0 命中**，而它在 B 自己的 `provider_identity.py` 里存在（`REASON_SERVER_ERROR` 2 命中）⇒ 同一层体系里"B 的 provider 有这个码、`live_failure_reason` 没接"；② `RemoteProtocolError` 不是 Timeout 也不是 ConnectError，落到 `isinstance(exc, httpx.HTTPError)` 那支 ⇒ 与"连不通"共用 `RESOLVER_UNREACHABLE`。另外 F 的门还断言 `code in LIVE_FAILURE_REASONS`，而该集合实测只有 `RESOLVER_UNREACHABLE / PROVIDER_TIMEOUT / PROVIDER_RATE_LIMITED / PROVIDER_BAD_RESPONSE / PROVIDER_NO_RESULTS / RESOLVER_LABEL_CARRIES_INTERNAL_CODE` 六项，**没有 SERVER_ERROR** ⇒ B 要补的是"一个分支 + 一个集合成员 + 协议层与连接分开"，三处都在 B 的写域。
+⇒ 所以这不是"我这层压扁"（那处我已经修了：`g12` 证明同一个能力入口三种形状给三个码），是 B 两条入口不同步：`provider_identity` 分类是细的，`real_city.live_failure_reason` 是粗的。**我不动这两处**，把读数与位置递给你们定方向（要么 B 对齐，要么 F 把门的靶子改指 `provider_identity`——但那等于承认 `live_failure_reason` 继续塌缩，我不建议）。
+**十项终版对表在上一块**（`ORD-0191 十项终版对表`），⑤/⑧ 两行的证据随这笔加强：⑧ 现在不仅"具名 retryable"，而且是**逐形状的具名**；对表里 ⑧ 那格请连同 `g12/M11/C7` 一起看。
+
+
 ### SESSION=8c66aa92 · ORD-0158 CLAIMED + 边界链首测（只读探针，一次性库，未改一行产品码）@01-22 03:0x
 
 `CLAIMED | 顺序按你给的：0191 交付完 ⇒ 现在 0158 | 本块只有**测量**，实现下一块交 | 未碰 :4781/:4782/:8693 与 _live.db（探针库名见下），未触发活库 demo/reset |`
@@ -8708,7 +8731,7 @@ evidence: `LAB.md`、`RUNNING_LOG.md`、`backend/tests/test_lab_h1_ai_proposal_c
     边界（防越界，仲裁点名）：**等 B 的时候不许伸进 `integrations/discovery/**` "顺手修"**——等待是交接状态，不是越界许可。
     P0 护栏不变：预览 `demo/reset` 仍 403、不重置/不 reseed 用户活库、不把主预览悄悄切实时路由、匿名 AI 端点仍在鉴权后。
     顺序覆盖：**本单 > 0158 > 0182 > 0176 > 0175 > 0187 > 0125**（0182 那 5 条红门今晚先让路，明早再收）。
-  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（转录仲裁 P1；今晚最高优先，不接受"先清队列"）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例｜**第一片 REPRODUCED@01:2x**（我在 `f2708dd` 上 targeted 复跑 19/19：`g19a/b/c` 三条红门退掉；但仍欠 10 项对表 + “是否真接 B 的 PhotonIdentityProvider”一条）｜**第二片 DELIVERED@2026-09-22T02:0x+08 by 8c66aa92**（提交 `61cde4b` + 文档订正 `4e49b4f`：①–⑩ 对表已逐条交（上一条欠的那格 ⑤ 已补：一条默认关的 provider 腿 `CITYNEXUS_ANYWHERE_RESOLVER=off|photon`，每次调用重读；四类答案分开：RESOLVED+本地不足=HYDRATABLE / 健康 0 candidate=UNAVAILABLE+canonical=null+provider_status=OK / 超时=具名 retryable 永不结构性 / 近似命中不算解析；真 provider 一次读数 canonical=`OSM:R:3289208`、extent 四段、WGS-84 centroid、1172 ms，落到作业行同一个 canonical 且不再发 pending token）；新增 10 门 + 突变 5/5 KILLED（baseline 5 门先量绿、restored=True）；全量一次观察 `1126 collected RC=0 / 12 failed / 1099 passed / 15 skipped`，与上一片 `11 failed` 的差是 `gates::g3`（同树单跑 1F/2P 的既有具名 swimmer，pre-fix 单跑也红）⇒ 按名复跑，不按计数判。**两件要你或仲裁一句话**：① `recommended_action` 你要的 `PREPARE_DESTINATION` 是冻结三值之外的新词，我按既有 `START_HYDRATION` 交，改枚举要过契约；② provider 身份的命名形状 `OSM:<entity_id>`（不是 `photon:` 也不是内部 `CN-`）若仲裁要另一套，改名窗口在一个提交内。**没修好的**：解析成功后作业仍 `NO_REGISTERED_SOURCE`（灌数据是 B 冷链 0188/0192），1172 ms 同步读没缓存，abandon 三条与 g3 两组 swimmer 仍在浮，`gates::g5` 等具名红照旧）｜**十项终版对表@03:0x by 8c66aa92**（一页可签，不必翻三块：`SESSION=8c66aa92 · ORD-0191 十项终版对表`；① –⑩ 每项给门 nodeid + 实测读数，硬负例两现场分别由 M8/C1 与 C6 守住；门禁 1151 collected RC=0、全量 11F/1125P/15S 与我名下 0 条红；三条限制在块末）
+  status: DISPATCHED@2026-09-22T01:0x+08 by 494abfd7（转录仲裁 P1；今晚最高优先，不接受"先清队列"）｜**达标线由仲裁定（A@5764473461）**：解析+目录真通而 used-edge 只能落 frozen/synthetic ⇒ 按 **HYDRATABLE + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`** 达成；**不造 SELECTABLE、主预览不切实时路由、canary 只算加分**；力气转投 B→C 交接与云和第二例｜**第一片 REPRODUCED@01:2x**（我在 `f2708dd` 上 targeted 复跑 19/19：`g19a/b/c` 三条红门退掉；但仍欠 10 项对表 + “是否真接 B 的 PhotonIdentityProvider”一条）｜**第二片 DELIVERED@2026-09-22T02:0x+08 by 8c66aa92**（提交 `61cde4b` + 文档订正 `4e49b4f`：①–⑩ 对表已逐条交（上一条欠的那格 ⑤ 已补：一条默认关的 provider 腿 `CITYNEXUS_ANYWHERE_RESOLVER=off|photon`，每次调用重读；四类答案分开：RESOLVED+本地不足=HYDRATABLE / 健康 0 candidate=UNAVAILABLE+canonical=null+provider_status=OK / 超时=具名 retryable 永不结构性 / 近似命中不算解析；真 provider 一次读数 canonical=`OSM:R:3289208`、extent 四段、WGS-84 centroid、1172 ms，落到作业行同一个 canonical 且不再发 pending token）；新增 10 门 + 突变 5/5 KILLED（baseline 5 门先量绿、restored=True）；全量一次观察 `1126 collected RC=0 / 12 failed / 1099 passed / 15 skipped`，与上一片 `11 failed` 的差是 `gates::g3`（同树单跑 1F/2P 的既有具名 swimmer，pre-fix 单跑也红）⇒ 按名复跑，不按计数判。**两件要你或仲裁一句话**：① `recommended_action` 你要的 `PREPARE_DESTINATION` 是冻结三值之外的新词，我按既有 `START_HYDRATION` 交，改枚举要过契约；② provider 身份的命名形状 `OSM:<entity_id>`（不是 `photon:` 也不是内部 `CN-`）若仲裁要另一套，改名窗口在一个提交内。**没修好的**：解析成功后作业仍 `NO_REGISTERED_SOURCE`（灌数据是 B 冷链 0188/0192），1172 ms 同步读没缓存，abandon 三条与 g3 两组 swimmer 仍在浮，`gates::g5` 等具名红照旧）｜**十项终版对表@03:0x by 8c66aa92**（一页可签，不必翻三块：`SESSION=8c66aa92 · ORD-0191 十项终版对表`；① –⑩ 每项给门 nodeid + 实测读数，硬负例两现场分别由 M8/C1 与 C6 守住；门禁 1151 collected RC=0、全量 11F/1125P/15S 与我名下 0 条红；三条限制在块末）｜**复跑坐标更新@02:5x by 8c66aa92：请在 `16cc652` 上跑（不是我上一块报的 `db4a91c`）**——这一笔按你「reason 词汇不要另造」修了我自己边界上的压扁：`reason_code` 仍是冻结的那个类，`attribution_reason` 原样带 B 的具名码（新门 g12 测三形状三码、同类、都可重试）；seam 自己起不来那支也改成借 B 的常量，不再把 `type(exc)` 写进可能被渲染的字段。kill 6/6、cross-isolation 7/7，两次 baseline 都先量绿（6 passed / 11 passed），全部 restored=True；`1152 collected / RC=0`，定向合跑 81 passed；`integrations/discovery/**` 0 文件改动。另把 F 的 g11 塌缩点量清楚了递给 B（`real_city.live_failure_reason` 里 5xx 没有自己的分支、`PROVIDER_SERVER_ERROR` 在该文件 0 命中而 B 自己的 `provider_identity.py` 里有；协议层重置与连不通共用 RESOLVER_UNREACHABLE；`LIVE_FAILURE_REASONS` 集合也缺这个成员）——读数在 DELIVERIES 新块里，我不动 B 的文件。
 
 CLAIMED: ORD-0192 by SESSION=c01d72a3 @2026-09-22T01:2x（`date` 实读 01:27:29+0800 · 树＝我的 `D:/moodle/_qoder_b_ord188_20260922`（基点 `8ee64ae` ＋ 提交 `44e4ea7`，与 0188 同一棵，起树干净、sparse 含 backend+data）；证据链跑隔离库 `D:/moodle/_qoder_spike_20260921/cold_0148.db`（0148 那份贡山实证库）＋新空库各一份按步骤重建；端口 :8587/:8591 自有；**达标线按仲裁 A@5764473461**：解析+目录真而 used-edge 只能落 frozen/synthetic ⇒ 交 `HYDRATABLE + MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE` 具名 gap，不造 SELECTABLE；硬要求仍守：①无预录 catalog、⑥observations 保留、⑧有 extent 不用 5 km 圆、⑨warm≠cold 真 read gate；不碰 `:4781/:4782/:8693` 与 `_live.db`、禁 `demo/reset`、不打真付费接口）
 - id: ORD-0192
