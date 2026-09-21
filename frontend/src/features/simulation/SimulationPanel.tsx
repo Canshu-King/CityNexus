@@ -274,6 +274,21 @@ export function SimulationPanel({
     ? bookCandidates[(bookIndexClamped + 1) % bookCandidates.length]
     : null;
 
+  /* ORD-0090 residual 3, measured before it was written (`review/booking-when-active.json`, own port
+     and own DB): the same six activities asked twice -- while the journey is PLANNED the cruise books
+     (201) and the other five answer their own named refusal; after `start-scenario` puts the journey in
+     execution **all six** answer `422 / booking requires a PLANNED Journey`.  So the row is not
+     "occasionally refused" at that point, it is refused by a rule about the journey, and the traveller
+     learns it from the row instead of from six taps that all do the same thing. */
+  const journeyStatus = scene.scene?.journeyStatus ?? null;
+  const notPlanned =
+    !notReady && journeyStatus !== null && journeyStatus !== "PLANNED"
+      ? {
+          zh: `服务器说这趟已经不在计划阶段（行程状态 ${journeyStatus}），而硬承诺只能建在还没开始的行程上：这时按下去，服务器对清单上每个活动都回同一句“booking requires a PLANNED Journey”。要改已经开始的这一趟，请用下面「请求重规划」。`,
+          en: `The server says this journey is past the planning stage (status ${journeyStatus}), and a hard commitment is only taken for one that has not started: pressed now, the server answers every activity on the list with "booking requires a PLANNED Journey". To change a journey that has begun, use "Request a replan" below.`,
+        }
+      : null;
+
   const rows: Row[] = [
     {
       id: "reset",
@@ -373,6 +388,7 @@ export function SimulationPanel({
       blocked:
         notReady ??
         noJourney ??
+        notPlanned ??
         (!bookTarget
           ? {
               zh: "服务器给的这份计划里没有可下单的活动，所以这里没有可建承诺的东西。",
@@ -628,9 +644,6 @@ export function SimulationPanel({
       data-testid="sim-panel"
       aria-labelledby="sim-banner"
       aria-busy={scene.phase === "loading" ? "true" : undefined}
-      onKeyDown={(event) => {
-        if (event.key === "Escape") onClose?.();
-      }}
     >
       {onClose && (
         <button
@@ -757,7 +770,7 @@ export function SimulationPanel({
               </button>
               {/* The way out of a refusal that names the activity: move the booking row to the next
                   candidate the server's plan lists, instead of pressing the same 422 again. */}
-              {row.id === "book" && bookCandidates.length > 1 && (
+              {row.id === "book" && bookCandidates.length > 1 && !notPlanned && (
                 <button
                   type="button"
                   className="v8-quiet-button cn-sim-book-next"
@@ -908,6 +921,21 @@ export function SimulationEntry({
     return () => document.removeEventListener("pointerdown", onPointerDown);
   }, [open]);
 
+  /* Escape closes from wherever the focus happens to be.  It used to be a React `onKeyDown` on this
+     wrapper, which only sees the key when the event's target is inside the widget -- and a traveller
+     who taps into the window's own text loses focus from the ball to `body`, so the key did nothing.
+     Measured on the desktop as `closedByEsc=false`.  Registering on the document while open is the
+     one place that claim stops being true; on a phone nothing depends on it, since the ball, the row
+     inside the window and a tap outside all close it without a keyboard. */
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   /* The line the stage owes the traveller: that this is a teaching simulation, and whose clock
      "now" comes from. It used to sit on the collapsed line; a 44px ball cannot carry a sentence, so
      it now lives in the window and in the ball's accessible name, and the dot only says
@@ -953,12 +981,6 @@ export function SimulationEntry({
       data-open={open ? "true" : "false"}
       data-scene-phase={scene.phase}
       style={floatBottom === null ? undefined : { bottom: `${floatBottom}px` }}
-      /* Measured: with the handler only on the panel, Escape pressed right after opening the ball did
-         nothing, because focus stayed on the ball, which is a sibling of the window. On this wrapper
-         both positions reach it. */
-      onKeyDown={(event) => {
-        if (event.key === "Escape") setOpen(false);
-      }}
     >
       {open ? (
         <div

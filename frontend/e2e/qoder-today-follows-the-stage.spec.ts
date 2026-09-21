@@ -2,6 +2,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { writeFileSync } from "node:fs";
 import { evidencePath } from "./_qoderEvidence";
 import {
+  closeStageEntry,
   openStageEntry,
   stageDeclaration,
   stageWindowDeclaration,
@@ -514,6 +515,11 @@ type FloatReading = {
   ballTag: string;
   ballText: string;
   window: Rect | null;
+  float: Rect | null;
+  body: Rect | null;
+  panel: Rect | null;
+  extents: { bodyScrollHeight: number; bodyClientHeight: number; panelScrollHeight: number } | null;
+  viewport: { width: number; height: number };
   nav: Rect | null;
   dock: Rect | null;
   navClickable: Array<{ id: string; ok: boolean; hit: string }>;
@@ -546,6 +552,13 @@ async function measureFloat(page: Page): Promise<FloatReading> {
       ? document.elementFromPoint(ballBox.x + ballBox.width / 2, ballBox.y + ballBox.height / 2)
       : null;
     const window = document.querySelector('[data-testid="sim-pop"]');
+    /* Three more boxes, because "the window" is not one number: the portalled wrapper also holds the
+       ball, and the panel inside the scroll body keeps its own full height -- a
+       `getBoundingClientRect()` on a child of a scroller is not clipped by that scroller. A reading
+       taken off the wrong one of these looks like a window that is taller than the screen. */
+    const float = document.querySelector('[data-testid="sim-float"]');
+    const body = document.querySelector<HTMLElement>('[data-testid="sim-pop-body"]');
+    const panel = document.querySelector<HTMLElement>('[data-testid="sim-panel"]');
     const rows = [...document.querySelectorAll('[data-testid^="sim-action-"]')].map((element) => {
       const button = element as HTMLButtonElement;
       const box = button.getBoundingClientRect();
@@ -584,6 +597,18 @@ async function measureFloat(page: Page): Promise<FloatReading> {
       ballTag: ballCentre ? `${ballCentre.tagName}.${ballCentre.getAttribute("data-testid") ?? ballCentre.className}` : "none",
       ballText: ball ? (ball as HTMLElement).innerText.replace(/\s+/g, " ").trim() : "",
       window: rectOf(window),
+      float: rectOf(float),
+      body: rectOf(body),
+      panel: rectOf(panel),
+      extents:
+        body && panel
+          ? {
+              bodyScrollHeight: body.scrollHeight,
+              bodyClientHeight: body.clientHeight,
+              panelScrollHeight: panel.scrollHeight,
+            }
+          : null,
+      viewport: { width: innerWidth, height: innerHeight },
       nav: rectOf(nav),
       dock: rectOf(dock),
       navClickable: navItems,
@@ -614,6 +639,10 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
   const readings: Record<string, unknown> = {
     seeded: { status: seeded.journey_status, effective_now: seeded.effective_now },
   };
+  /* Filed separately from the hit-test readings because it answers a different question: not "can the
+     traveller reach this row" but "how tall is the thing you are complaining about, and which node is
+     that number taken from". */
+  const rectEvidence: Record<string, unknown> = {};
 
   /* ①②④⑤⑦ -- the ball at rest, and the opened window, at 390 and 412 in both themes. */
   for (const width of [390, 412]) {
@@ -712,9 +741,34 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
         node(NODE, `${arm}: the window is ${box.width}px wide at ${width}px (budget: width - 24)`),
       ).toBe(true);
       expect(
-        box.height <= 844 * 0.6 + 1,
-        node(NODE, `${arm}: the window is ${box.height}px tall (budget: 60% of 844)`),
+        box.height <= open.viewport.height * 0.6 + 1,
+        node(NODE, `${arm}: the window is ${box.height}px tall, over 60% of the ${open.viewport.height}px viewport`),
       ).toBe(true);
+      /* "别把屏幕挡住" is a claim about what is *drawn*, so the painted box is what gets asserted: all
+         four of the window's edges inside the viewport. A height alone passes for any node, including
+         one clipped by a scroller -- which is how two honest readings of this same widget can differ by
+         a factor of two (the panel inside the body keeps its full 1100-odd px layout box). */
+      expect(
+        box.top >= -0.5 &&
+          box.bottom <= open.viewport.height + 0.5 &&
+          box.x >= -0.5 &&
+          box.right <= open.viewport.width + 0.5,
+        node(NODE, `${arm}: the open window is drawn outside the viewport: ${JSON.stringify(box)} in ${JSON.stringify(open.viewport)}`),
+      ).toBe(true);
+      rectEvidence[arm] = {
+        float: open.float,
+        window: box,
+        scrollBody: open.body,
+        panelInsideBody: open.panel,
+        extents: open.extents,
+        viewport: open.viewport,
+        budget: { widthMax: width - 24, heightMax: Math.round(open.viewport.height * 0.6) },
+        /* The number the 1185 reading has to be: the panel's own box, taller than the body that clips
+           it, and never the box the traveller sees. */
+        panelIsTallerThanTheWindow: Boolean(
+          open.panel && open.panel.height > box.height + 1,
+        ),
+      };
       if (open.nav) {
         expect(
           overlaps(box, open.nav),
@@ -819,6 +873,15 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
     .poll(() => page.getByTestId("sim-pop").count(), { timeout: 10_000, intervals: [250] })
     .toBe(0);
   await openStageEntry(page, "the escape pass");
+  /* Focus has to be *outside* the widget for this arm to mean anything. The handler used to sit on the
+     wrapper, so Escape worked only while the caret stayed inside it -- and a traveller who tapped the
+     window's own text lost that focus to `body`, which is how the desktop reading came back
+     `closedByEsc=false` while this gate was green. */
+  await page.getByTestId("sim-entry-decl").click({ force: true });
+  expect(
+    await page.evaluate(() => document.activeElement?.tagName ?? "none"),
+    node(NODE, "the escape pass did not move focus out of the widget, so it proves nothing about focus"),
+  ).toBe("BODY");
   await page.keyboard.press("Escape");
   await expect
     .poll(() => page.getByTestId("sim-pop").count(), {
@@ -857,6 +920,23 @@ test("sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不
   writeFileSync(
     evidencePath("ui-overnight/sim-action-hittest.json"),
     JSON.stringify({ generatedBy: "e345b9d6", order: "ORD-0085", node: NODE, readings }, null, 2) + "\n",
+    "utf-8",
+  );
+  writeFileSync(
+    evidencePath("ui-overnight/stage-float-rects.json"),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        order: "ORD-0090 residual 1",
+        node: NODE,
+        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
+        claimUnderTest:
+          "the Commander measured 窗体高 1185 at 390x844; each arm below lists the box of every node in the widget, so the number is attributed to a node or it is not a measurement",
+        arms: rectEvidence,
+      },
+      null,
+      2,
+    ) + "\n",
     "utf-8",
   );
 });
@@ -941,6 +1021,130 @@ test("today-hero-meta-does-not-contradict-the-sequence — “暂无安排”要
     JSON.stringify({ generatedBy: "e345b9d6", order: "ORD-0082", node: "today-hero-meta-does-not-contradict-the-sequence", later, meta, next: stage?.next?.title ?? null }, null, 2) + "\n",
     "utf-8",
   );
+});
+
+
+/* ------------------------------------------------- ORD-0090 residual 3: 「建一个硬承诺」 when the
+ * journey can no longer take one.
+ *
+ * The rule is the server's, not this screen's: asked twice against a throwaway stack, the same six
+ * activities answered 201/422 while the journey was PLANNED and all six answered
+ * `422 booking requires a PLANNED Journey` after `start-scenario` (`review/booking-when-active.json`).
+ * So the row states that rule instead of letting a teacher press six times for the same envelope.  Both
+ * faces are driven from here: whichever state the shared seed happens to be in, one of them would
+ * otherwise go untested.
+ */
+test("sim-booking-row-follows-the-journey-state — 行程不在 PLANNED 时先说清规则再置灰", async ({ page }) => {
+  test.setTimeout(240_000);
+  const NODE = "sim-booking-row-follows-the-journey-state";
+  const seeded = await readScene(page);
+  const journeyId = String(seeded.journey_id ?? "");
+  /* Filed with the evidence, not asserted on -- see the note at the end of the loop.  「换一个活动」
+     exists only while the stage's plan has more than one open activity, so without this number the two
+     arms would show `switchOffered: 0` and a reader could not tell a withdrawn control from a plan that
+     never had one to withdraw. */
+  const planId = String(seeded.plan_version_id ?? "");
+  const openCount = planId
+    ? (
+        (
+          (
+            await (await page.request.get(`/api/v1/plans/${planId}`)).json()
+          ).activities
+        ) as Array<{ status?: string }> | undefined
+      )?.filter(
+        (item) =>
+          !["COMPLETED", "SKIPPED", "CANCELLED"].includes(String(item.status)),
+      ).length ?? 0
+    : 0;
+
+  const forceSceneStatus = async (status: string) => {
+    await page.unroute("**/api/v1/demo/scene");
+    await page.route("**/api/v1/demo/scene", async (route) => {
+      const response = await route.fetch();
+      const body = (await response.json()) as Record<string, unknown>;
+      body.journey_status = status;
+      await route.fulfill({
+        status: response.status(),
+        contentType: "application/json",
+        body: JSON.stringify(body),
+      });
+    });
+  };
+
+  for (const [status, locale, sentence] of [
+    ["ACTIVE", "zh-CN", "服务器说这趟已经不在计划阶段"],
+    ["PLANNED", "en", "past the planning stage"],
+  ] as const) {
+    await forceSceneStatus(status);
+    await openToday(page, journeyId, locale, "light", 390);
+    await openStageEntry(page, `the ${status} booking arm`);
+    /* Prove the stub is what the screen is reading: a route that never fires would leave the panel
+       quoting the real state and every claim below passing for the wrong reason. */
+    const shown = clean(await page.getByTestId("sim-journey").innerText());
+    expect(
+      shown,
+      node(NODE, `${status}: the panel reads ${JSON.stringify(shown)}, so the forced scene never reached the screen`),
+    ).toContain(status);
+    const row = page.getByTestId("sim-action-book");
+    const disabled = await row.getAttribute("aria-disabled");
+    const reasonLocator = page.getByTestId("sim-blocked-book");
+    const reason = (await reasonLocator.count()) ? clean(await reasonLocator.innerText()) : "";
+    const switched = await page.getByTestId("sim-book-next").count();
+    if (status === "ACTIVE") {
+      expect(
+        disabled,
+        node(NODE, `the screen says ${status} and 「建一个硬承诺」 is still pressable: ${JSON.stringify(reason)}`),
+      ).toBe("true");
+      expect(
+        reason,
+        node(NODE, `the greyed row does not name the state it is refusing for: ${JSON.stringify(reason)}`),
+      ).toContain(sentence);
+      /* The server's own sentence, quoted rather than paraphrased away. */
+      expect(
+        reason,
+        node(NODE, `the row hides the rule behind it: ${JSON.stringify(reason)}`),
+      ).toContain("booking requires a PLANNED Journey");
+      /* A picture of the refusal the traveller is meant to read, not only its text: the row sits at the
+         far end of the window's own scroll, so the shot is taken after bringing it into view. */
+      await row.scrollIntoViewIfNeeded();
+      await page.getByTestId("sim-pop").screenshot({
+        path: evidencePath("ui-overnight/stage-booking-blocked-when-active.png"),
+      });
+    } else {
+      expect(
+        reason.includes(sentence),
+        node(NODE, `the row is blocked by the journey rule while the screen says PLANNED: ${JSON.stringify(reason)}`),
+      ).toBe(false);
+    }
+    /* Recorded, not asserted: whether 「换一个活动」 shows depends on how many activities the stage's
+       plan still has open, and this run's DB is shared -- another node's 重置/推进 moves that count
+       between my HTTP read and the panel's own fetch (measured: the full production chain read 2 open
+       activities where the panel then saw none, while the isolated run agreed).  The two claims that
+       hold in every pose are the ones above: the row is greyed with the server's rule when the scene
+       says the journey is past planning, and that rule is absent from the row when it says PLANNED. */
+    await closeStageEntry(page, `the ${status} booking arm`);
+    writeFileSync(
+      evidencePath(`ui-overnight/sim-booking-row-${status.toLowerCase()}.json`),
+      JSON.stringify(
+        {
+          generatedBy: "e345b9d6",
+          order: "ORD-0090 residual 3",
+          node: NODE,
+          sceneStatusOnScreen: shown,
+          realSceneStatus: seeded.journey_status,
+          planVersionId: planId || null,
+          openActivityCount: openCount,
+          ariaDisabled: disabled,
+          reason,
+          switchOffered: switched,
+        },
+        null,
+        2,
+      ) + "\n",
+      "utf-8",
+    );
+  }
+  await page.unroute("**/api/v1/demo/scene");
 });
 
 /* --------------------------------------------------------------------- ORD-0086: a wait you can see,

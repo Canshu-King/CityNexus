@@ -125,6 +125,10 @@ CASES = [
         [(STAGE_SPEC, ["sim-stage-actions-are-reachable-and-never-in-the-nav-band"])],
     ),
     (
+        # SURVIVED by design, re-read this round: the resting position is no longer taken from this
+        # custom property.  `useBottomChromeClearance` measures the nav / Copilot pill / wizard CTA and
+        # writes an inline `bottom`, so the CSS value only covers the frame before the first
+        # measurement.  The behaviour it used to own is killD9 below.
         "killD2-ball-parked-in-the-nav-band",
         SHEET,
         "    --cn-sim-float-clearance: calc(124px + env(safe-area-inset-bottom, 0px) + 12px);\n",
@@ -132,11 +136,35 @@ CASES = [
         [(STAGE_SPEC, ["sim-stage-actions-are-reachable-and-never-in-the-nav-band"])],
     ),
     (
+        "killD9-ball-clearance-is-not-measured",
+        PANEL,
+        "      setBottom(Math.max(12, window.innerHeight - top + 12));\n",
+        "      setBottom(24);\n",
+        [(STAGE_SPEC, ["sim-stage-actions-are-reachable-and-never-in-the-nav-band"])],
+    ),
+    (
         "killD3-escape-does-not-close-it",
         PANEL,
-        '        if (event.key === "Escape") setOpen(false);\n',
+        '    document.addEventListener("keydown", onKeyDown);\n',
         "",
         [(STAGE_SPEC, ["sim-stage-actions-are-reachable-and-never-in-the-nav-band"])],
+    ),
+    (
+        # ORD-0090 residual 3, both faces: dropping the clause lets a refused tap back through, and
+        # widening it greys the row on a journey that would have booked.  Each half is owned by a
+        # different arm of the same node.
+        "killD7-booking-row-ignores-the-journeys-state",
+        PANEL,
+        "        notPlanned ??\n",
+        "",
+        [(STAGE_SPEC, ["sim-booking-row-follows-the-journey-state"])],
+    ),
+    (
+        "killD8-booking-row-refuses-even-a-planned-journey",
+        PANEL,
+        '    !notReady && journeyStatus !== null && journeyStatus !== "PLANNED"\n',
+        "    !notReady && journeyStatus !== null\n",
+        [(STAGE_SPEC, ["sim-booking-row-follows-the-journey-state"])],
     ),
     (
         "killD4-tapping-outside-does-not-close-it",
