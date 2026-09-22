@@ -1,0 +1,67 @@
+{
+  "artifact": "ORD-0224 map-gesture verification summary",
+  "lane": "1a986a24 HJ-P1 budget backpacker",
+  "source_coordinate_alignment": "源码坐标对齐于 0748a1f，被测包由 0748a1f 产出 (frontend/src/components/v8/MapPanel.tsx lines 44 / 266-268 / 270-274 / 378 / 384 verified with `git show 0748a1f:...`, identical line numbers to the working tree at tip 614ad4c)",
+  "artifact_under_test": {
+    "served_entry": "index-DtQ86lsQ.js",
+    "entry_bytes": 1231985,
+    "entry_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+    "note": "byte-identical to the bundle deployed on the user-facing preview; produced from 0748a1f, working tree not built"
+  },
+  "stack": {
+    "backend": "127.0.0.1:8791, PID 46244, python 3.13.13, cwd D:/moodle/_qoder_integration_20260919/backend, tree tip 614ad4c with `git status --porcelain backend/app` empty, openapi paths = 139",
+    "backend_env": {
+      "CITYNEXUS_DATABASE_URL": "sqlite:///D:/moodle/_qoder_hjp1_o207_20260922/_hjp1_gesture.db",
+      "CITYNEXUS_DEMO_MODE": "true",
+      "CITYNEXUS_AI_ENABLED": "false",
+      "CITYNEXUS_AI_API_KEY": "empty",
+      "DEEPSEEK_API_KEY": "empty",
+      "CITYNEXUS_LIVE_VALHALLA_URL": "empty"
+    },
+    "proxy": "127.0.0.1:8792, PID 55988, serve_gest.py, DIST=dist_gen_new",
+    "db_copy_lineage": "_hjp1_ui3_1.db --Connection.backup()--> _hjp1_gesture.db (44 journeys / 59 travelers); the only journey with rows in journey_legs is 9c6c3d73-8b8e-4f71-beaf-32bc87aba035 (36 legs server-side, 4 rendered on the active plan)",
+    "untouched": "ports 4781 / 4782 / 8693 (user phone-facing) and every shared database were not used by this run"
+  },
+  "entry_mode_and_its_reason": "localStorage citynexus.v8.journey_id seeded via addInitScript. This is the state a real phone already holds the second day it opens the app; it is not a shortcut around the UI, because there is no journey list or switcher reachable at 390px (the user chip has offsetParent null), so a persona cannot select a journey that has legs through any visible control. No API write was used to obtain the journey.",
+  "verdict": "GESTURE_CONTRACT_OK",
+  "repro": "3/3 independent browser processes (runs v1, v2, v3), plus earlier runs gz4, gz5, v5 on the same build",
+  "independence_caveat": "the three runs share one SQLite copy, so they prove the gesture contract repeats across browser processes, not across data copies",
+  "screen_copy_read_verbatim_from_leaf_element": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+  "arms": {
+    "A_horizontal_dominant_drag_inside_canvas": "camera moved, delta ~(+0.0874, -0.0536) deg across 3 runs; DOCUMENT scrollTop stayed 0; zero scroll subjects moved",
+    "A2_vertical_dominant_drag_inside_canvas": "the only swipe shape that could steal the page: camera moved (delta (0, -0.1087)), DOCUMENT stayed 0->0, zero scroll subjects moved, 3/3",
+    "control_zero_displacement_tap": "camera bit-identical 3/3, so a positive arm A cannot be background drift",
+    "B_same_displacement_outside_map": "camera bit-identical 3/3 on a neutral target (P.v8-lede inside DIV.v8-page-intro at 195,169, verified by elementFromPoint, not fixed, not a control)",
+    "C_long_vertical_swipe_outside_map": "DOCUMENT 0->305 with camera bit-identical, 3/3, on ARTICLE.v8-trip-hero at 195,551 - the page-turn clause is honoured",
+    "D_two_finger_spread_inside_canvas": "zoom delta +1.25/+1.26/+1.25, 3/3; no scroll subject moved"
+  },
+  "observations_not_filed_as_defects": [
+    "arm D also moved the camera centre (centerMoved=true) although the sentence only says 双指缩放; a horizontal spread around the canvas centre should be zoom-only. Judged POLISH, not misleading.",
+    "the map instance is reachable at container.citynexusMap on the Map's OWN container (div.v8-maplibre-canvas.maplibregl-map), NOT on .v8-map-panel - seamOnPanel measured false, seamOnContainer measured true. My gesture probe still needed the React-fiber walk because it starts from .v8-map-panel."
+  ],
+  "retracted_this_round": [
+    {
+      "claim": "MIRROR_ARM_FAIL / GESTURE_REGRESSION: dragging outside the map does not scroll the page, so the sentence 想翻这一页就拖地图以外的地方 is false (run gz3)",
+      "why_wrong": "my mirror arm used (-90,-60), a horizontal-dominant drag. Matrix run mtx2 measured a short PURE-vertical (0,-60) scrolling DOCUMENT 0->45 and a vertical-dominant (-60,-90) scrolling 0->78, while horizontal-dominant (-90,-60) never scrolled at start y 179 or 500, nor with 24 sub-steps. Direction, not length, decides whether the browser treats a touch drag as a page scroll. The product was never at fault.",
+      "also": "an earlier mirror-arm target was taken from an element's geometric centre, and a tall header container's centre sat inside the map canvas (195,740), so the 'off-map' drag was pressing the map. Fixed by requiring elementFromPoint at the exact coordinate to resolve outside .v8-map-panel, above the canvas top, and not onto a nav/button/fixed bar."
+    },
+    {
+      "claim": "matrix run mtx1 said the off-map drag failed to scroll because the displacement was too short",
+      "why_wrong": "superseded by mtx2 as above; mtx1's verdict string is retained unedited in ord0224_matrix_mtx1.json and is void."
+    },
+    {
+      "claim": "「底图未加载，显示的是路线示意。」 is a false degradation notice (it appeared while 9 OSM tiles had answered 200)",
+      "why_wrong": "not reproducible under a clean tile channel. Mechanism run tilemech2 measured raster200=0 with failures climbing 6->12->15, i.e. the basemap genuinely was not loading at that moment, and the notice was honest. Roughly ten browser restarts in half an hour each pulling ~20 tiles from tile.openstreetmap.org degraded the tile channel myself, so the earlier 200-then-notice reading cannot be separated from that pollution. Left UNATTRIBUTED rather than filed.",
+      "what_would_settle_it": "one run that pins tile.openstreetmap.org reachability before and after (per-tile status list), on a lane that has not been reloading the map for half an hour"
+    }
+  ],
+  "writes_performed": "zero non-GET /api requests in every run",
+  "files": {
+    "probe": "ord0224_gesture_probe.cjs",
+    "receipts": ["ord0224_gesture_v1.json", "ord0224_gesture_v2.json", "ord0224_gesture_v3.json"],
+    "matrix": "ord0224_drag_matrix.cjs",
+    "matrix_receipts": ["ord0224_matrix_mtx1.json (verdict retracted)", "ord0224_matrix_mtx2.json"],
+    "zero_touch_control": ["ord0224_notice_control.cjs", "ord0224_notice_noticect.json"],
+    "tile_mechanism": ["ord0224_tile_mechanism.cjs", "ord0224_tilemech_tilemech.json", "ord0224_tilemech_tilemech2.json"]
+  }
+}
