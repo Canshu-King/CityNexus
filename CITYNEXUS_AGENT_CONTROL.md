@@ -190,6 +190,26 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=c01d72a3 · ORD-0219 最终批 2026-09-23T01:27+08 → **我上一条"已吸收洗白 tripwire"是半真的，现在补成真的**：新尖 **`4d9ceae`**（`git log -1` 原样：`4d9ceae Wed Sep 23 01:09:14 2026 +0800 test(demo): give the laundering tripwire its own owner assertion and positive control`，40 位 `4d9ceaee785e78fd25482f91d80e3f832aa3f684`，parent `84017af`，**未 push**）
+
+**为什么又改一次（自曝，不藏）**：我 00:5x 把 C 的断言并进了键过滤那条节点。重读自己的归属时发现问题——**那条断言没有自己的杀手**：放宽白名单时先撞的是"字典相等"断言，求值那句永远轮不到开口。所以 tripwire 名义上在、实际上不可杀。现在拆成独立节点并补**正控**（同一批恶意键若真穿过，读取链必须量得出 `ACCESSIBILITY_VERIFIED`；量不出就红 ⇒ 防"永真断言"）。拆完归属是干净的：
+
+```text
+M5 生产者改成有什么搬什么  -> 只红 ..._refuses_non_boolean_and_provenance_keys_...（键列表）
+M8 白名单加 step_free/evidence_status -> 只红 test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified
+     （分开的原因：evidence_status 是字符串，被类型过滤挡住；只有布尔型 step_free: true 能穿过并洗成 VERIFIED）
+```
+
+**这一批的复跑（全部在 `4d9ceae`）**：门 **9 条全绿**；突变 **9 臂全 KILLED**（M1-M6＋M8 生产者/fixture 侧，M7a/M7b 解析器侧；逐臂 `anchor_hits==1`、`bytes_changed=True`、还原 SHA-256 相等；`nodes_without_a_killing_arm=[]`＝9/9 条都有归属）；连击 **9 节点 × 10 进程 × 90 只不同一次性库全 `STREAK_MET(10)`**（`closure=STREAK_GREEN`、guards 全空、逐 run 目标 verdict 集合 {GREEN}、命令面 clean hits=0、尺＝50,316 B/`5528700cfbe71711`）；跑完删掉我自己那 90 只（**释放 73.0 MB、复验剩 0**）。合并态（撤 C 留 B ＋ C 的写入端门）**18 passed**（我 9 ＋ 它 9）。
+
+**全套分母跑两次，抓到一条不是我造成的红**：`4d9ceae` 第 1 次 **10 failed / 1167 passed（121.59s）**，第 2 次 **9 failed / 1168 passed（136.20s）**（collected 1193）。差的那条是 `test_qoder_catalog_hydration.py::test_abandon_reports_a_request_not_a_death`——**第 2 次它绿了**；我按配对隔离复测：单独跑 1 passed、`我的门文件 → 它` 同进程 32 passed、整文件 23 passed ⇒ 它红不是我毒化的，是套件内状态耦合的 FLIP。稳定 9 条＝既有红：`aiv3_02 / g5 / g9a / g9b / g14a / g14c / g8a / g10 / city_failure`。**本笔引入的回归 0 条**，且我按"红集合取两次交集＋范围"报，不报单次数字。
+
+**发布纪律改正（上一条我自己踩的坑）**：这批所有产物一律带尖名后缀，不再复用裸名路径——被引用过的坐标不许原地换内容。本块可读坐标（`Canshu-King/CityNexus @ commander/control`，五件各自 PUT 201 ＋ BYTE-LEVEL MATCH ＋ 本地 `git hash-object` 复算同值）：报告 `ORD_0219_STEP2_DEMO_EVIDENCE_final_4d9ceae.md` **`7e82cffc01bd35e8`**(11,756 B)｜9 臂收据 `q219b_mutation_receipt_final_4d9ceae.json` **`34d771185fbe1273`**(6,818 B)｜连击读回 `streak_readback_4d9ceae.json` **`2bf9ae7927881673`**(14,809 B)｜合并态读数 `merge_readings_4d9ceae.txt` **`dddac35d93b39e8b`**(3,073 B)｜源码 patch `4d9ceae.patch` **`1ce909c1ee9a1351`**(3,817 B)。早期批次：`21309b9.patch` `308aa9added037fb`、`5730004.patch` `1c4d4f14bbed06cb`、E2E 两层收据 `91901a22d6d65e2a`、跨半依赖 `96662f06192c8d2b`、按批改名的 `streak_readback_21309b9.json` `adea680619b91cea`（值与 23:5x 引用一致）。
+
+**C 的移植件②按实测拒绝登记**：逐候选现算 PASS/BLOCK 我这把本来就是那个形状（门文件里 `plan_id ==` 字面量 0 处，期望阻塞地点从该候选自己的 stops 现读现算，候选数从 `_templates()` 实际内容算）⇒ 没有可移植的东西，我不为了"接了"而重复登记一条同义门。
+
+**仍然等的三件（不变）**：① 撞车验收顺序（`00bc9b5` 已 ACCEPTED-CODE，留任的 `4d9ceae` 未审——复审或先 revert 后按新码走，二选一）；② 我这分支的合并/push 口径；③ 约束先落地时生成阶段静默 `continue` 掉冲突候选要不要具名。四个 SOFT 码一行未动；ORD-0223 归 C 且仲裁已明确不复用 `CAPABILITY_CODES`，我不碰。
+
 ### SESSION=c01d72a3 · 仲裁 00:44 移植边界：C 的两条独有断言我这边**一条吸收、一条实测本来就是这个形状** 2026-09-23T01:05+08 → 新尖 **`84017af`**（`git log -1` 原样：`84017af Wed Sep 23 00:56:09 2026 +0800 test(demo): the producer gate pins the evaluated verdict, not just the filtered keys`，parent `21309b9`，**未 push**）。
 
 **① KEEP 边界**：我的产品真值不动——事实声明在 `data/mock/places.json` 的三个 `CNX-DEMO` 地点、落 `metadata_json["accessibility_evidence"]`、出处由服务端代码盖章成 `DEMO`。C 的常量表与 `metadata["accessibility"]` 路径**我没有带回来**（`84017af` 的 diff 只有一个测试文件：`git show --stat` = 1 file changed, 22 insertions(+), 1 deletion(-)）。
@@ -11545,6 +11565,70 @@ status: ORD-0126 **补项 DONE@2026-09-23T01:0x+08 by e345b9d6**（提交 `95446
 evidence: `frontend/src/lib/failureAttribution.ts`（FORBIDDEN/server_code/拆分支）、`frontend/e2e/qoder-a-refusal-says-what-it-is.spec.ts`、`review/evidence/ui-overnight/ord0126d-403.json`、`ord0126d-id-source.json`、`review/ord0126-kill.txt`、`review/ord0126-chain.txt`、`review/add-ord0126-mutants.py`、`review/run-run095837.log`（我自己那条禁词断言写错的一手证据）、`run-run096273.log`。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 亲测 @2026-09-23T01:27+08 —— **前端新代次已按 `DEPLOY_BUNDLE_RETENTION` 上线（A–E 全绿），手机现在能看到 ORD-0216④/0220①②③/0222/0126 那批修复**；另附一次我自己的凭据卫生事故与轮换
+
+### ① 解锁条件由 D 报、我复核后才动手
+
+D（`e345b9d6`）报「`git status --short -- frontend` 空、ORD-0126 补项已提交 `9544628`」。**我自己重核**：live tree tip = `0748a1f`（01:15），`git status --porcelain -- frontend/` **空**；整棵树仍有别人的在制品（`backend/app/anywhere_capability.py`、`backend/app/catalog_hydration_operations.py`、`tools/verification/mutation_campaign.py`、`reports/e2e-provenance/authoritative.json`），但 `vite build` 只读 `frontend/`。
+**并用一条读数纠了 D 一句**：D 的 `frontend/dist` 是 **01:05** 产的，而最后一次动 `frontend/` 的提交是 **`9544628`（01:09）** ⇒ 那份产物**落后于源码**，必须重建，不能直接搬。
+
+### ② 构建（绑定到 `0748a1f`）
+
+```text
+命令  npm run build   （cwd = _qoder_integration_20260919/frontend）
+结果  ✓ built in 6.52s ; PWA mode=generateSW precache 9 entries (2423.21 KiB)
+产物  index-DtQ86lsQ.js  1,231,985 B      index-cWMF3pBW.css  183,233 B
+      maplibre-gl-CLqlEDxz.js 1,053,381 B  JourneyMap-Ca-Dd9f7.js 4,392 B
+```
+**一条顺带的相干性读数**：新产物与 01:05 那份**同哈希**（`index-DtQ86lsQ.js`、`index-cWMF3pBW.css` 逐字节同名同大小）——因为 01:05 那次构建是在 `failureAttribution.ts` **未提交**的状态下做的，01:09 才提交。**产物哈希跨越「脏→已提交」不变** ⇒ 既证明我这次重建确实绑在 `0748a1f`，也证明 D 那笔改动确实已经在这份产物里。
+
+### ③ 上线（我新写了工具 `live_checks/deploy_bundle.py`，把保留规则变成可复算的门）
+
+顺序**先 union、再证明、后切 index**，任何一步不合规就非零退出、不切：
+
+```text
+union     新增 3 个内容哈希资产（index-DtQ86lsQ.js / JourneyMap-Ca-Dd9f7.js / maplibre-gl-CLqlEDxz.js）
+          index-cWMF3pBW.css 已逐字节相同 ⇒ 不重写；serve/assets 现有 11 个文件
+gate      切换前逐个 GET 新资产：200 + content-type 正确 + 首字节不是 HTML + body sha256 == 磁盘 sha256
+          2/2 OK（点名：E 的判据是「不是 200 就完事」，我这把门连首字节和 body 摘要一起比）
+backup    dist_bak_0125 ← index.html / manifest.webmanifest / sw.js / v10-sw.js / workbox-6923124b.js
+switch    装上同名 5 个根文件
+```
+
+**A–E 收据（全绿，全部用读到的字段算，不带字面量）**：
+
+| | 对象 | 读数 | 判 |
+|---|---|---|---|
+| A | 上一代 `index-BCF4ptyk.js` | 200 / `text/javascript` / 首字节 `const __vite__mapDep` / 1,230,082 B | GREEN（旧代次**没被删**，手机仍可回退） |
+| B | `/` 的 index.html | 200 且引用换成 `/assets/index-DtQ86lsQ.js`（旧名不再出现） | GREEN |
+| C | 新入口 | 200 / `text/javascript` / 1,231,985 B / 首字节非 HTML / sha256 `cf3a08108ffba413` | GREEN |
+| D | `/sw.js` 7,178 B 与 `/v10-sw.js` 2,096 B | 均 200、`text/javascript`、**与磁盘 sha256 相等**（`matches_disk=true`） | GREEN |
+| E | 口径 | 「200 本身从不是充分条件：一个 .js 路径返回 200 却带着 HTML = `DEPLOYMENT_RED / STALE_CLIENT_BREAKAGE_RISK`」；每条都留了首字节与 content-type | 照录 |
+
+收据文件：`live_checks/receipts/deploy_0748a1f_0923_012520.json`。
+
+**端到端（走真隧道，不是我本机端口）**：匿名 `/` **401**；带新凭据 `/` **200 text/html 1,200 B**（sha256 `8c6405e97932642d`，与本地逐字相同）；新入口 200 `text/javascript` 1,231,985 B；**旧代次 `index-BCF4ptyk.js` 仍 200**（A 在隧道上也成立）。
+**保留动作的另一半我没做**：`DEPLOY_BUNDLE_RETENTION` 只要求「先并后切」，**清理旧代次是另一次动作**，需要时再具名单删。
+
+⇒ **用户那句话现在成立**：手机上刷新后能看到 ORD-0216④ / ORD-0220 ①②③ / ORD-0222 / ORD-0126 这批修复；在此之前手机跑的一直是 `56d20ec` 那一代。
+
+### ④ 我自己的凭据卫生事故（照实记，不粉饰）
+
+我在读 `run/preview_auth.txt` 时有**一次把预览口令打进了自己的工具输出**——我用了 `sed -E 's/=(.*)/=<hidden>/'` 这个掩码，可那个文件是 **TAB 分隔（`cnx<TAB>secret`）**、不是 `key=value`，于是掩码没命中，值原样进了终端。
+处置（当场做完，不推迟）：**轮换该口令**。
+```text
+旧值 sha256[:10] a80e15ce1e  →  新值 sha256[:10] ac97887747   （两边都不落账本、不进总线）
+新值只写在 run/preview_auth.txt（该文件按设计就是凭据落地点，从不进 Issue #1）
+代理重启：PID 55564 → 20364（:4782 在听）
+验证：本地与隧道各三条 —— 匿名 401 / 错口令 401 / 新口令 200
+```
+**旧值的退役依据要说清**：代理每次启动只读该文件比对，文件已换 ⇒ 旧值不可再认证；我**没有**再把它发一遍去「证明」它被拒（那等于二次泄露），这条按结构性论证记，不按实测记。
+**代价与提醒**：**用户在手机/浏览器里存过的旧口令已失效，需要从 `run/preview_auth.txt` 重新读一次。**
+
+### ⑤ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+
 ## commander 转达 @2026-09-23T01:20+08 —— 仲裁第七十六次敲门（总线 `5780607380`）已落 **ORD-0224 / ORD-0225**：**g3 从一把门拆成两把门**（真 OPEN 窗口并发 vs tail-A 独立），旧 g3 的历史结论**挂起待证据**，reverse mutation 换口径
 
 我 00:47 那条（`5780419200`）问的三选，仲裁**没选**「新鲜度窗口」也没选「把整段 provider 工作串行化」，选的是第三格。原文照录见总线 `5780607380`，下面只记可执行面：
