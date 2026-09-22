@@ -1,0 +1,84 @@
+ORD-0232 mutation matrix -- lane e345b9d6, receipt ord0232-arms-six-arms.json, run six-arms at 2026-09-23T03:43:46+0800
+spec       : e2e/qoder-dropped-candidates-say-why.spec.ts
+run shape  : whole spec file (4 nodes + the real-seed setup project = '5 passed' when green), one fresh authoritative stack and one throwaway sqlite per run
+guard      : live_checks/mutation_anchor_guard.py :: temporary_guarded_replace
+nodes      : 1=['killB1-heading-without-rows', 'killB4-raw-code-reaches-the-prose', 'killB6-heading-count-off-by-one'], 2=['killB2-card-with-no-evidence'], 3=['killB1-heading-without-rows', 'killB3-fallback-leaks-the-raw-id', 'killB4-raw-code-reaches-the-prose'], 4=['killB1-heading-without-rows', 'killB4-raw-code-reaches-the-prose', 'killB5-spoken-but-never-seen']
+
+================================================================================================
+killB1-heading-without-rows  [KILLED]  owner=1  red=[1,3,4]  exclusive_to_owner=False
+  what it models : the count is printed but the named stops are not: the traveller learns something was dropped and not what
+  file           : V8Experience.tsx
+  guard          : anchor_hits=1 bytes_changed=True restored_exact=True
+  baseline       : exit=0 run_id=run106226 (5 passed (15.5s))
+  mutated        : exit=1 run_id=run106242 (2 passed (16.6s))
+  node verdicts  : 1:RED  2:GREEN  3:RED  4:RED
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run106242.log
+
+================================================================================================
+killB2-card-with-no-evidence  [KILLED]  owner=2  red=[2]  exclusive_to_owner=True
+  what it models : the card is claimed even when the audit fact says nothing was dropped -- an invented reason
+  file           : V8Experience.tsx
+  guard          : anchor_hits=1 bytes_changed=True restored_exact=True
+  baseline       : exit=0 run_id=run106260 (5 passed (15.3s))
+  mutated        : exit=1 run_id=run106277 (4 passed (25.5s))
+  node verdicts  : 1:GREEN  2:RED  3:GREEN  4:GREEN
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run106277.log
+
+================================================================================================
+killB3-fallback-leaks-the-raw-id  [KILLED]  owner=3  red=[3]  exclusive_to_owner=True
+  what it models : when the directory does not answer, the raw `place-…` id is dressed up as a place name (only the fallback path: the resolvable rows must stay green)
+  file           : candidateRejections.ts
+  guard          : anchor_hits=1 bytes_changed=True restored_exact=True
+  baseline       : exit=0 run_id=run106303 (5 passed (15.1s))
+  mutated        : exit=1 run_id=run106319 (4 passed (15.8s))
+  node verdicts  : 1:GREEN  2:GREEN  3:RED  4:GREEN
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run106319.log
+
+================================================================================================
+killB4-raw-code-reaches-the-prose  [KILLED]  owner=3  red=[1,3,4]  exclusive_to_owner=False
+  what it models : the internal enum is printed instead of labelled -- the ORD-0222 leak, one field later
+  file           : V8Experience.tsx
+  guard          : anchor_hits=1 bytes_changed=True restored_exact=True
+  baseline       : exit=0 run_id=run106336 (5 passed (14.9s))
+  mutated        : exit=1 run_id=run106353 (2 passed (16.4s))
+  node verdicts  : 1:RED  2:GREEN  3:RED  4:RED
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run106353.log
+
+================================================================================================
+killB5-spoken-but-never-seen  [KILLED]  owner=4  red=[4]  exclusive_to_owner=True
+  what it models : the reason exists only for a screen reader, so a sighted traveller still sees an unexplained short list
+  file           : V8Experience.tsx
+  guard          : anchor_hits=1 bytes_changed=True restored_exact=True
+  baseline       : exit=0 run_id=run106370 (5 passed (15.1s))
+  mutated        : exit=1 run_id=run106386 (4 passed (14.9s))
+  node verdicts  : 1:GREEN  2:GREEN  3:GREEN  4:RED
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run106386.log
+
+================================================================================================
+killB6-heading-count-off-by-one  [KILLED]  owner=1  red=[1]  exclusive_to_owner=True
+  what it models : the heading claims one more dropped candidate than there is evidence for -- node 1's own number, nothing else's
+  file           : V8Experience.tsx
+  guard          : anchor_hits=1 bytes_changed=True restored_exact=True
+  baseline       : exit=0 run_id=run106402 (5 passed (14.8s))
+  mutated        : exit=1 run_id=run106418 (4 passed (15.8s))
+  node verdicts  : 1:RED  2:GREEN  3:GREEN  4:GREEN
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run106418.log
+
+per-node killers (every arm that reddened the node):
+  1 <- killB1-heading-without-rows, killB4-raw-code-reaches-the-prose, killB6-heading-count-off-by-one
+  2 <- killB2-card-with-no-evidence
+  3 <- killB1-heading-without-rows, killB3-fallback-leaks-the-raw-id, killB4-raw-code-reaches-the-prose
+  4 <- killB1-heading-without-rows, killB4-raw-code-reaches-the-prose, killB5-spoken-but-never-seen
+
+exclusive killers (red set == the owner alone):
+  1 <- killB6-heading-count-off-by-one
+  2 <- killB2-card-with-no-evidence
+  3 <- killB3-fallback-leaks-the-raw-id
+  4 <- killB5-spoken-but-never-seen
+
+allArmsKilled=True everyNodeHasKiller=True invalidStackArms=[] treeUnchanged=True
+END-TO-END ARM: `review/ord0232_e2e_replay.py` -> exit 7 BLOCKED_ON_MERGE(a96fabf) while that commit
+  (branch agent/canary-ord198-20260922) is not an ancestor of the integration tip.  No green is
+  claimed for it, and the positive direction above is measured against B's real envelope replayed
+  through a route stub, which proves the rendering path rather than the whole pipeline.
+
