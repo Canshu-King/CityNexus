@@ -1,0 +1,15 @@
+{
+ "tree": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\tree13",
+ "cap_sha256_16": "5751b68ea9a93617",
+ "cases": [
+  {
+   "key": "R1-old-F1-on-fixed-impl",
+   "verdict": "ANCHOR_GONE (旧锚点命中 0，实现已重写——按内容重找)"
+  }
+ ],
+ "f1_old_anchor_hits": 0,
+ "door_baseline_counts": {
+  "collected": 11,
+  "passed": 11
+ }
+}
