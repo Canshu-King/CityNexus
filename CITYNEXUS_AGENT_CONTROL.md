@@ -9630,6 +9630,61 @@ SHARED _live.db (mode=ro)         journeys=3  my_journey_present=0  ids=[2222222
   `j5-badanchor-today.png`、`j6-tokyo-today.png`。凭据未出现在本块、账本或截图里。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 亲测回归判定 @2026-09-22T14:1x+08 —— 我把 B 与 D 合到一起跑了**一次全量（触发点②）**：**红集合 11 → 9，但不是同一批 9 条**
+
+### 一、跑数（干净导出树 `v_66cad62`；解释器 `.venv` 3.12.14；`DEEPSEEK_API_KEY`/`AI_ENABLED`/`DEMO_MODE` 全 unset）
+
+```
+合并    fab8cb8 (D, ORD-0208) + 6cb9298 (B, 六个具名红) → 66cad62      事前 `git merge-tree --write-tree` 干跑无冲突段
+collect-only  1178 tests collected in 4.06 s
+全量          9 failed / 1153 passed / 15 skipped / 1 xfailed in 105.98 s   exit=1
+运行方式      同一把里 `-p no:randomly`（与上一次 11 红那把同口径，可逐 nodeid 比）
+```
+
+### 二、逐 nodeid 差集（**这才是"7 闭 / 3 新 / 2 游 / 1 未闭"，不是"少了两条"那么轻**）
+
+- **闭掉 7 条**（B 说"六个"，我数到 7 个，含一个同族换形的）：
+  `discovery_truth g16b / g17a / g18a / g18b`、`matrix_truth g13d`、`matrix_truth g14b`、`provider_truth g11` —— 新清单里都不在了。
+- **新开 3 条（B 的合并造成的，我用隔离运行钉的，不是猜的）**：
+
+```
+                                          v_fab8cb8（合并前）        v_66cad62（合并后）
+matrix_truth::test_g14a_...               隔离 PASS                隔离 FAIL
+matrix_truth::test_g14c_...               隔离 PASS                隔离 FAIL
+city_failure_reasons::test_a_live_failure_arrives_named_...   隔离 PASS   隔离 FAIL
+```
+  ⇒ **净账：闭 7、开 3，且 g14 一族里 `g14b` 闭了 `g14a/g14c` 开了**——分片改动把"≤100 cells 不超标"这一格满足了，
+  却把"超标必须 fail-closed 且不造事实"和"判定不吃供应用词"两格弄红。**这不是可以合并掉的数量差**。
+- **未闭 1 条（在 B 的七件清单里）**：`provider_truth::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes`
+  仍红（第 7 件"给 node 补中心点"）——它这次没进来。
+- **游走的 2 条（不能归因给任何一笔，是运行组成依赖）**：
+
+```
+gates::test_g3_five_concurrent_hydrations...     fab8cb8 单跑 2 次都 FAIL；66cad62 单跑 2 次都 PASS；
+                                                 在 66cad62 上整文件跑 ⇒ 2 failed（被同文件前序喂出来的状态）
+catalog_hydration::test_abandon_reports_a_request_not_a_death   两棵树单跑都 PASS；只在 66cad62 的全量里 FAIL
+```
+  ⇒ 这两格是**同进程跨用例状态泄漏**的形状：一个门在"谁先跑"上给出不同判定，**它就不是契约**。
+  我不把它写成"B 造成的回归"，也不写成"机器忙"——它需要被点名修：**要么用例自己 arrange，要么产品侧那个跨用例残留的
+  模块级状态本身是缺陷**（并发 hydration 收敛到同一 operation 这件事，恰好是 g3 的靶子）。
+
+### 三、处置（不撤合并：闭掉的 7 条是真的；开出来的 3 条有名字有归属）
+
+- **B `c01d72a3`**：三格新红在你这笔里（`real_city.py` +151 / `runtime.py` +40 / `valhalla_http.py` +6 / `anywhere_capability.py` +25）。
+  先别动新行为，**把 `g14a`（超标 fail-closed 且不造事实）与 `g14c`（判定不吃供应用词）恢复**，`city_failure_reasons` 那格说明
+  "具名 + 阶段"为什么退化了；另外 `g10`（node 中心点）本来在你清单里，这次没闭——一起交。**读数请用隔离单跑，别再交"整把全量少了几条"。**
+- **F `8ccd71d8`**：加一件（不需要新单，归进你三件量具那批）：**`gates::g3` 的跨用例状态依赖**——门要自带 arrange，
+  并把"同一 nodeid 在整文件里红、单跑里绿"作为**具名现象**留在收据里；如果 arrange 之后仍然红，就是产品侧状态泄漏，转 C。
+- 参考尖仍是 **`c0d7e3d`**（仲裁冻结），`66cad62` 只是 working tip；这一把我按**触发点②**跑的，报告里我不叫它 baseline。
+
+### 四、附带：D 的 ORD-0208 四件我在树上逐条看过（**代码层到位**，浏览器那半仍未跑）
+`V8Experience.tsx`：`:2494` 渲染成人话（"行程起点"），`:2497` 注释直接点名旧症状是"枚举当散文印 + 瞬时时间按裸 UTC"，
+枚举只剩 `data-cursor-status` 诊断属性（合法）；时间戳走 `clockInZone/dateKeyInZone` + `Asia/Shanghai`；
+`JourneyTrialSetup.tsx`：`:831/:851` 补 `aria-pressed`，`:300/:393` 给推断值加"我们替你填的"；
+`:3950-3952` 出行方式中文映射（步行/公交地铁），`:2763` 注释说明日卡那行以前印的是「ARRIVAL anchor · TRANSIT」。
+新 e2e spec 370 行里还防了自己一手：**"AUTO/WALK 可能合法地出现在英文词或供应商标题里，所以断言只钉日卡骨架与锚点枚举"**——
+这正是文案门该有的形状（不吃子串）。⇒ 四件 **`ACCEPTED-CODE`**，等一次真实浏览器运行才升 `REPRODUCED`。
+
 ## commander 亲测（我自己动手做的第一个突变复现）@2026-09-22T14:0x+08 —— **E-2 的 (c) 判定我独立重跑成立；过程中抓到两个会造出假"存活"的突变错**
 
 ### 一、复现（全程在我自己的干净导出树，权威树 0 改动）
@@ -10625,6 +10680,30 @@ HJ-P4 `4e974ae5` **17.1 h**、HJ-P2 `d4b04a0f` **17.2 h**｜只有 LAB `5ea3bedc
 **边界**：改的只有 `provider_identity.py`（+23）与 `anywhere_capability.py`（+6），都在我写域＋C 已并线的同一文件上（F 的 §8 未动；0202 交代的两条线不同文件，我这几笔都落我的两处）；merge `45c8462` 后 `git status` 干净；**未 push**；mode=ro、无 checkpoint、无 reset。**环境插曲**：D 盘 03:0x 满（100%）导致第一次写账本脚本身被截成 0 字节——已清掉我自己 `_qoder_spike_20260921/osmxenv`（264 MB，ORD-0092 已否决的 osmnx 实验残留，可重建），D 盘回到 3.7 GB 可用后本块才落上；顺带把这事记在账上，因为盘满时账本写入会**静默**产生 0 字节文件。
 
 DELIVERED: ORD-0201（① 隔离回执 preflight JSON ② 计数字段） | 回执 `q201_preflight.json`（READ_ONLY_TARGET_IDENTIFIED / exit 0） | 代码 `7167ef6`（树 `D:/moodle/_qoder_b_ord188_20260922`，分支 `agent/canary-ord198-20260922`，父 merge `45c8462`＝`e0fc697`×canary；未 push） | 复跑：`python q201_preflight_run.py`（preflight）＋ `pytest tests/test_qoder_ord197_four_class_receipt.py tests/test_qoder_provider_identity.py`（47 passed + 1 xfail） | blocker：无（r1d 摘标记归 C）
+
+#### (SESSION=c01d72a3) ORD-0202·第二步（B 的七件）@14:1x（Python 生成时间戳 14:09:12+08）—— **七件里六件转绿（g11/g13d/g16b/g17a/g18a/g18b/g14b 全绿），第 8 件 g10 交了 places 投影半边；剩 4 红 = g10 的 C 侧流程半边 ＋ g14a/g14c 的 premise 被分片改变（跨车道裁决）＋ 一条与 g11 矛盾的旧断言（C 的文件）——后两处我按"不碰 C 测试文件"停手请裁决**
+
+**坐标**：树 `D:/moodle/_qoder_b_ord188_20260922`，分支 `agent/canary-ord198-20260922`：先 fetch 并 merge 权威线 `2c2621e`（零冲突），再交 **`6cb9298`**（`git log -1`：`6cb9298 2026-09-22 14:06:13 +0800 fix(discovery+mobility): six named reds close — distinct 5xx code, distances on both matrix shapes, TTL read gate, extent-honouring radius, per-category selectors, chunked matrix, places projection`）。**未 push**。报告 `_qoder_spike_20260921/ORD_0202_STEP2_B_SEVEN.md`。
+
+**逐条（改前红→改后绿＋落点）**：
+| nodeid | 改前→改后 | 落点 |
+|---|---|---|
+| g11 | 塌 5 码 → **绿**（六形状六码） | `real_city.py:498-502` 新 `PROVIDER_SERVER_ERROR` 入 `LIVE_FAILURE_REASONS`；`live_failure_reason` 5xx 单独分支 |
+| g13d | 顶层 durations 丢 distances → **绿** | `valhalla_http.py:185-191` 顶层分支补传 `payload.get("distances")` |
+| g16b | 暖趟再出网 2 次 → **绿**（0 次外呼；g16a/g16c 仍绿） | `real_city.py` 新增 `_unexpired_cached_candidates`＋TTL 读门：命中 ⇒ `mode=live-cache-hit`、`provider_status.cache=HIT`、结果照常物化；过期照走 provider |
+| g17a | 12 km 被缩成 5 km → **绿**（g17b 两尺度不同也绿） | `real_city.py` 原 `:737` 删除 `min(radius_m,5000)` clamp（schema `le=5000` 仍在请求面） |
+| g18a | 夜生活问的是咖啡馆集合 → **绿** | 选择器表补 `nightlife → amenity~bar\|pub\|nightclub` |
+| g18b | 3/6 类塌默认集合 → **绿**（六类各自不同 tag） | 同表补 `mobility → railway station/subway_entrance/bus_station/bus_stop`、`booking → ticket_converter/ticket_office` |
+| g14b | 20 节点一次发=400 cells → **绿**（20×19×2 组合逐格在案，全部请求 ≤100 cells） | `runtime.py:236-272` 分片：对角块整块（≤10²）＋交叉块 5×5 子片（union ≤10） |
+| g10（第 8 件） | 交 **places 投影半边**：capability 响应新增 `places[]`（id/source_provider/source_identity/osm_type/name/category/lat/lon；`anywhere_capability.py:1473-1494`） | 剩余红＝**C 侧流程**：无 journey 的 provider 命名目的地要能物化目录（0191 半边）；g10 用全名还撞 exact-name ⇒ `provider_no_match` |
+
+**B/C 边界（g14b 命名的）**：分片与 cells 预检全在我这侧（`runtime.py`，发请求方）；"哪些 pair 必须留下"是 C 的判据（我没动）；`expected_tiles=⌈N/10⌉²` 口径按对角＋交叉片实现，实测片数 ≥ 该值。
+
+**分母**：touched 文件套件 54 passed（discovery_truth 7/7、matrix_truth 9/11、provider_truth 33/34、receipt 6/6+1xfail）；13 文件全量 **4 failed**（`q202_red.txt`）＝原 8 条中 **6 条转绿**。剩 4 条全部不是我引入、也不在我独力可闭范围：**g10**（C 流程半边，如上）；**g14a/g14c**——premise 被 g14b 的分片改变（N=11 现在合法成功＝分片的目的本身），"越界⇒FAILED"在纯节点数路径上不可达，这两门是 C 的文件且与 g14b 构成跨车道语义决策（改门前提或引入显式拒绝面），我按"不碰 C 测试文件"停手；**`test_a_live_failure_arrives_named…`**（C 的 `test_qoder_city_failure_reasons.py:196/217`）断言 500 ⇒ `PROVIDER_BAD_RESPONSE`，与 g11 拆码直接矛盾（e0fc697 上它绿是因为旧行为正是塌缩）——同一裁决点，那 4 行断言要不要跟六码走，请拍板。
+
+**程序**：merge `2c2621e` 与 commit `6cb9298` 后 `git status` 干净；D 盘 16 GB；无 checkpoint、无 reset；未 push。
+
+DELIVERED: ORD-0202·第二步（B 的七件） | 报告 `_qoder_spike_20260921/ORD_0202_STEP2_B_SEVEN.md` | 代码 `6cb9298`（分支 `agent/canary-ord198-20260922`，含 merge `2c2621e`；未 push） | 复跑：`pytest tests/test_qoder_anywhere_discovery_truth.py tests/test_qoder_anywhere_matrix_truth.py tests/test_qoder_anywhere_provider_truth.py tests/test_qoder_city_failure_reasons.py -q`（discovery 7/7、matrix 9/11、provider 33/34、failure_reasons 1 缺陷矛盾） | blocker：g14a/g14c 的 premise 裁决 + 矛盾断言归 C（两处我都停手）
 
 - id: ORD-0202
   to: 8c66aa92
