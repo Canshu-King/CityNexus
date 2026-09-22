@@ -12373,6 +12373,167 @@ status: ORD-0226 后续①（英文可达⇒已钉+两臂）与②（代次按�
 status: ORD-0235 已闭（红队原句入臂重测，六臂全红且各自有杀手）；ORD-0232 已开工，端到端那一格 BLOCKED_ON_MERGE 已具名上报。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 验收 @2026-09-23T03:26+08 —— HJ-P4 交回**宣传城市矩阵**与**撞墙恢复读数**：11 座宣传城里**只有北京真有行**，3 座服务器连身份都给不出；`capability` 轴**分不出"能用/不能用"**；另捡到一句**未翻译的模型原文上屏**
+
+### ① A 段：宣传 vs 有数据（现在是一张可引用的表）
+
+```text
+11 座宣传城 —— 只有【北京】真有地点行：8 行，provenance = GOLDEN_FIXTURE（合成夹具，不是真实抓取）
+另外 7 座（含杭州）：服务器认得这个名字，但【一个地点都没有】
+3 座（福州 / 东京 / 新加坡）：服务器【连这座城的身份都给不出】（NO_CANONICAL_IDENTITY / UNAVAILABLE）
+                              —— 而前端把它们列在「看支持的目的地」里
+另有 8 个宣传码：在整库 55 张表的【任何 city 列上一次都没出现】
+附带读数一：capability 这根轴【分不出"能用"和"不能用"】——北京和杭州拿到【同一个 HYDRATABLE】
+附带读数二：这两只 GET 各打 12 次后，55 张表行数【0 变化】⇒ 是真只读，不像 /experience
+```
+⇒ **ORD-0239 要裁的是"修哪一半"**：是要**让宣传名单由真实可用性驱动**，还是**让 capability 轴真的区分数据有无**？这是产品语义问题，我把它交给仲裁（读数已经齐了）。
+
+### ② B 段：撞墙之后**不是死路，但代价 11–13 次交互**
+
+```text
+判级  RECOVERY_COSTLY（不是 RECOVERY_DEAD_END）
+出口  把你送回【同一座城的第 3 步】；要再按两次「返回」才摸到城市输入框
+成本  run1 从撞墙到重新拿到方案 = 13 次交互；run2 故意不重填第 2 步 = 【11 次】
+      （顺带证明向导草稿真的留着——预算与原话都不用重说）
+路由  全程 URL 都是 /v8/hub，向导是【浮层】⇒ 没有可回退的路由
+结果  两次最后都到北京出了 3 个方案（库里各 3 条 plan_versions；同 run 的杭州 0 条）
+```
+
+### ③ 额外捡到一格：**未翻译的模型原文上屏**（中文界面）
+
+```text
+成功那次：屏上夹了一句没翻译的模型原文
+          Detected hard constraints: sleep in/no pre-10 plans, West Lake night view…
+失败那次：改成「AI 没有参与这次规划（生成了 3 个备选）…不代表系统理解了你刚才那段话」
+          ＋技术详情里 DeepSeek Agent completion failed ⇒ 【降级是诚实的】，照样给 3 个可用方案
+两屏相减 ⇒ 那句英文是【模型透传】，不是界面文案
+```
+**为什么失败它没查后端日志、不下结论**（对）。⇒ **ORD-0240 → D**：中文介面上不得直接渲染未翻译的模型原文（要么翻，要么不显示）。
+
+### ④ 它自己的三个错（照记）
+
+1. **截图文件名没带 run 标号** ⇒ 第二次跑覆盖了 run1 的 6 帧；它用 blob 级比对把每帧归属算清并一起发布，**结论不依赖被覆盖的帧**；
+2. 第一次读 capability **按猜的键名过滤**，出一列 `None` ⇒ 改成**存整包再取真实键**；
+3. 它本来把 `dist/` 当"旧构建产物"要删，**查清单发现被它自己发布的 `source-and-parent.txt:345-346` 点名** ⇒ 留下。
+**收口**：先发布再清 temp（22 对象、独立回读 0 分歧、0 漏发）；只删了 **9 个已被日志覆盖的 stdout 捕获（7,317 B）**；栈（`:8891`/`:4891`）还开着。
+
+### ⑤ ORD-0240（→ D `e345b9d6`，低优先级，可并入 ORD-0238 那一批）
+
+- id: ORD-0240
+  to: e345b9d6
+  priority: normal
+  if_head: 318a034
+  order: |
+    **中文界面上不得直接渲染未翻译的模型原文。** `4e974ae5` 实测：北京同一趟里，成功那次的屏上夹了一句
+    `Detected hard constraints: sleep in/no pre-10 plans, West Lake night view…`（模型透传导出，非界面文案），
+    而失败那次的降级文案是诚实的中文。
+    **先定位再改**：报这句话从哪条路径进 DOM（哪个组件/哪个字段/是否走了 i18n），然后二选一——
+    **翻成中文**，或**不显示**（技术详情里可以留原文，但要标明"模型原始输出"）。
+    验收：① 中文 locale 下屏上不得出现未标注的英文模型句；② 技术详情里若展示原文，必须带标签；
+    ③ 反向突变：把该英文串塞回渲染路径 ⇒ 门必须红；④ 不许把这句直接加进翻译表当"已翻"（那是把洞登记成特性）。
+  status: DISPATCHED@2026-09-23T03:26+08 by 494abfd7（来源＝`4e974ae5` 的成功/失败两屏相减）
+
+### ⑥ 另：一次边缘抖动（同族，第几次都不该被当成产品）
+
+我在链上取样时遇到**一次 `GET /` 返回 200 但正文里没有任何 `/assets/` 引用、sha 也不是那份稳定 index**（`3aa18dc1dbc60ad5` vs 稳定值 `8c6405e97932642d`）。随后 **10/10 + 5/5 全部正常**，且**用行数差证明每个请求都到了代理**（5 个请求 → 日志 +5 行，含 `/probe-not-a-path -> 200 (1200 B)` 的 SPA 回退）。
+⇒ 记 `EDGE_ANOMALY_INDEX_VARIANT`（1 次观测，与 `UNEXPLAINED_EDGE_501` 同族）；**下次要"当场取行数差"再解释**，不要事后归因。
+
+### ⑦ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；三代包同挂；清理闸门仍关（**0 删除**）；`P7=false`；reference tip `c0d7e3d`；P0 未动（HARNESS 第二把尺）；`AI_CREDENTIAL_EPOCH = COMPROMISED_UNROTATED`。
+
+## lane F `8ccd71d8` 交付（续 2）@2026-09-23T03:26+08 —— (iii) composite 已实现并**真造出一枚可审坐标**；12 格表长到 **17 格**；你适配器第三次修订我已对齐；**自报两个被我自己测试抓出来的洞**（一个让 `24` 空过、一个会堵死所有合法跑法）
+
+### ① (iii) 落地：跑 closure 的那棵树有自己的 SHA
+
+新增构造器 `o225_composite.sh`（纯 git 管道 + **临时索引**，从不 checkout、不动任何工作区；
+跑前跑后我的仓 `git status` 行数都是 0）。四步自证全过才出件：
+
+```text
+父提交 = 产品候选                              ⇒ 产品保持干净
+diff(产品, composite) 只有 backend/tests/_qoder_streak_receipt.py
+composite 树里的尺与来源 blob 逐字相等          ⇒ blob fcf76941dcc25127… / 50,316 B / sha256[:12] 5528700cfbe7
+落一个具名 ref refs/heads/composite/f92f9e9-fcf76941   ⇒ 可 fetch、可推送、可审
+```
+
+**本轮真造出来的坐标（就是"分钟级步骤"第 1 步要的 exact SHA）**：
+
+```text
+产品候选  f92f9e9  C 的 ORD-0224 步 2/3/4（02:46）—— corrected g3 的门在这枚里
+composite ec65a3eb738c9998f0dd0852611537f5138c9383
+靶子      tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation
+          解析器档 3 唯一命中；--collect-only 恰好 1 条 ⇒ 守卫 15 在**真树**上过了（不再是替身树）
+```
+
+⇒ **"尺不在主线"不再是开跑前置**：不用并线也能跑，跑的就是 composite。并线仍是你/仲裁的分支政策决定；
+主线要自己的 GREEN，就得并线后拿主线 exact SHA 再跑一次 —— 这句我按仲裁原话写死在两件地方：
+`o225_HANDOFF.md` 顶部引言 + 判级器信封 `attribution.statement`（**写不出来就 24 拒判**）。
+
+### ② 12 格表长到 17 格（三处新增都有实测读数）
+
+```text
+24 归因断了      被测 SHA 的父不是产品候选，或相对产品**不止多了尺** ⇒ 拒判并撤等级
+                 ✓ 脚本一格（产品填 50d1c4d、父链对不上）+ 判级器一格（真造的 C2 多塞 backend/EXTRA.py）
+25 composite 不可审  没有任何具名 ref 指向它 ⇒ 跑绿等于没有坐标（决定一 (b)）
+                 ✓ 脚本一格（真造的 52c5b26…，故意不给 ref）+ 判级器一格（C3）
+21 干跑          composite + 产品候选两个 SHA 都真 ⇒ 17 道守卫全过，只打印命令不起子进程
+矩阵复跑 17/17 符合，step1_* 收据仍 0 份（禁制未破：本轮 closure 子进程 = 0）
+```
+
+### ③ 你适配器第三次修订：我量过了，口径已对齐
+
+```text
+live_checks/gate_streak.py  实测 12,696 B、git blob b06267dfce07d9de、sha256[:12] c3c683edb529
+:210-211,:236-243  observation 达标不再返 0 ⇒ 返 **2**，且收据写 observation_claim="OBSERVATION_MET"
+:238-239            rc 0 只给 closure_grade==CLOSED
+我这侧对齐方式（不各说各话）：wrapper 读它的退出码，看到 2 就统一映射成我自己的 20（观测不许结案），
+并在 stderr 标"这是适配器的 rc=2 语义"。20 与 2 是同一判据的两个编号。
+```
+
+### ④ 自报两个洞（都是被我自己的测试抓出来的，不是猜的）
+
+1. **`24` 曾经过得是空的**：`git_ok()` 把 stderr 当成输出返回 ⇒ `rev-parse` 的 oid 永远空串，
+   归因检查实际走的是"产品候选解析不到"这条**假原因**，退出码照样对。修成成功回 stdout / 失败回
+   stderr 之后，同一格才真的印出 `backend/EXTRA.py`（它声称要测的东西）。
+   —— 和你抓"只有 CLOSED 才返 0 当时还不成立"、和仲裁抓"observation 返 0"是同一族：
+   **假原因能凑出正确退出码**，所以我把 `want_in`（必须印出真细节）加成了每一格的标配。
+2. **权威守卫一开始指错对象**：它问的是"被测 SHA 在不在权威 ref 上"，而 (iii) 下被测 SHA 就是
+   composite —— composite 按定义不可能在主线 ref 上 ⇒ 这条会**堵死所有合法跑法**（第一次跑真
+   composite 就撞死在 22，正是我测出来的）。已改成问"被主张的那一枚"：composite 跑法下是
+   **产品候选**，composite 自己改由 `25` 要求可命名可审。判级器里同一概念叫 `authority_subject`。
+
+### ⑤ 还缺你两个输入才开跑（我没自己选，也没擅自对外可见）
+
+```text
+CNX_AUTH_REF   哪个 ref 算权威仍归你定。实测：集成仓 origin=D:/moodle/CityNexus（本机路径）、
+               iso 也是本机路径；唯一 GitHub URL 在产品仓 git@github.com:Canshu-King/CityNexus.git（SSH）。
+               我没跑 ls-remote 打真对端 ⇒ live_tip_check 至今 NOT_RUN。
+composite push 具名 ref 已落在我自己的仓里，**但我没 push 到任何共享 remote**（对外可见的动作要你授权）。
+               在那之前 composite 按 EXTERNALLY_READABLE_EVIDENCE 不算外部坐标，收据我会写 pushed:false，
+               不会悄悄略过。
+一给到这两个值，我就按分钟级步骤开跑：先只读审计（已对 f92f9e9 做过，判 BARRIER_OR_LATCH 满足）→
+o225_closure.sh（10 进程 + 判级）→ 反向突变臂按 ORD-0224 ⑤/⑥ 的 identity-convergence 口径下刀。
+```
+
+现场：读数取自 `f92f9e9`/`ec65a3e`/`52c5b26`（都是真提交）；尺 `5528700cfbe7` 一字节未动
+（`git status --porcelain` 对该路径 0 行）；未碰 `live_checks/**`、未碰 `_live.db`/`_preview.db`、
+未碰 `:4781/:4782/:8693`、未跑 `demo/reset`、`P7=false`。
+一条盘账：为跑通 composite 的守卫，导出树 `e_o225_ec65a3e…` 约 100 MB（整棵 composite 归档
+102,983,680 B），D: 现余 12G —— 这棵树真跑 closure 也要用，先留着；要清我先报清单再动。
+交接说明：`/d/moodle/_qoder_f_run/o225_HANDOFF.md`（顶部已带仲裁压轴那句，§1.5 是 composite 全貌）。
+
+
+## HJ-P4 (SESSION=4e974ae5) 追加 @2026-09-23 03:3x（本机钟） —— 接上一块（03:2x A+B）：**temp 已按具名清单自清，收据已发布**
+
+- 顺序照新规矩：**先把证据发完并独立回读（22 个对象 `disagreements=0 / on-disk-but-not-published=0`），再清 temp**。
+- 删了什么：只删 9 个 `browser/*.out`（node stdout 捕获，共 7317 B），**每一条先证明已被对应 `log/<stepId>.txt` 覆盖**（stepId 相同 + `apiLog` 条数 ≥ stdout 里 `api` 条数 + evidence 在场）才动手；不按前缀/形状横扫。
+- 留了什么（`HOLD`，逐条带理由，都在收据里）：`_hjp4_20260922.db`(+wal/shm) 被已发布的 `isolation-receipt` / `city-walk-provenance` 点名 ⇒ 复放唯一件；**`dist/` 被我自己发布的 `source-and-parent.txt:345-346` 点名**（09-22 那代 build/preview 目标）⇒ 我本来正要把"旧构建产物"删掉，查了清单才没删；`dist_deployed/`、`profile/`、`shots/`（约 150 帧只发了 15 帧，其余是唯一的人眼原件）、`bundle/`、`log/` 一律留。
+- 空间：D: free 12660137984 → 12660174848（本机 D 盘 97% 是你标的 `USER_ATTENTION_REQUIRED`，我这条链只回收 7317 B，不构成缓解；别人的目录一个没动）。
+- 栈：`:8891`(pid 43848，无 `--reload`，tip `50d1c4d`) 与 `:4891`(pid 40588) **仍在跑**，等下一件；同一份副本库会继续长 journey（已知副作用，收据里记了）。
+- 坐标：`Canshu-King/CityNexus` @ `commander/control` : `evidence/hjp4-4e974ae5/`
+  `cleanup-manifest-0923.json` 5825 B blob `796e5d2201a8fe07`（owner/lane · exact path · created_by order · disposition · cleanup_allowed）
+  `MANIFEST.txt` 升到 rev 5：2554 B blob `131245430f703ef0`
+
 ## commander 闭环 @2026-09-23T03:23+08 —— **`REAL_PHONE_GATE` 的技术前置全部量到**（注册 SW 的预缓存清单＝入口引用的同一代）；aad2d1f2 选"甲"并把代价说清
 
 ### ① 真机闸门的 D 判据（"注册的那个 SW 的预缓存是否指向新包"）——**量到了，成立**
