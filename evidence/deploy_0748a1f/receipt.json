@@ -1,0 +1,166 @@
+{
+ "sha": "0748a1f",
+ "src": "D:\\moodle\\_qoder_integration_20260919\\frontend\\dist",
+ "serve": "D:\\moodle\\_qoder_preview_20260920\\dist",
+ "t": "2026-09-23T01:25:18+0800",
+ "frontend_dirty": "",
+ "tree_tip": "0748a1f",
+ "new_index_refs": [
+  "/assets/index-DtQ86lsQ.js",
+  "/assets/index-cWMF3pBW.css"
+ ],
+ "old_index_refs": [
+  "/assets/index-BCF4ptyk.js",
+  "/assets/index-cWMF3pBW.css"
+ ],
+ "generation_OLD": {
+  "ref": "/assets/index-BCF4ptyk.js",
+  "probe": {
+   "path": "/assets/index-BCF4ptyk.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "length": "1230082",
+   "head_bytes": "const __vite__mapDeps=(i",
+   "sha256": "f3bda3d696d37cd1750e646a98ea6151c64d59247517c937b198dd369251d0e9",
+   "is_html_fallback": false,
+   "error": null,
+   "body_size": 1230082
+  },
+  "disk_bytes": 1230082
+ },
+ "assets_union": {
+  "added": [
+   "index-DtQ86lsQ.js",
+   "JourneyMap-Ca-Dd9f7.js",
+   "maplibre-gl-CLqlEDxz.js"
+  ],
+  "already_identical": [
+   "index-cWMF3pBW.css"
+  ],
+  "total_in_serve_assets": 11
+ },
+ "pre_switch_asset_probes": [
+  {
+   "path": "/assets/index-DtQ86lsQ.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "length": "1231985",
+   "head_bytes": "const __vite__mapDeps=(i",
+   "sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+   "is_html_fallback": false,
+   "error": null,
+   "body_size": 1231985,
+   "disk_bytes": 1231985,
+   "disk_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+   "verdict": "OK"
+  },
+  {
+   "path": "/assets/index-cWMF3pBW.css",
+   "status": 200,
+   "content_type": "text/css",
+   "length": "183233",
+   "head_bytes": ".v10-execution-panel{wid",
+   "sha256": "681c4b5fae6c423ba82553bee732f7d5794af6c7934f0ecb10623e4a44731d31",
+   "is_html_fallback": false,
+   "error": null,
+   "body_size": 183233,
+   "disk_bytes": 183233,
+   "disk_sha256": "681c4b5fae6c423ba82553bee732f7d5794af6c7934f0ecb10623e4a44731d31",
+   "verdict": "OK"
+  }
+ ],
+ "backup_dir": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_0125",
+ "backed_up": [
+  "index.html",
+  "manifest.webmanifest",
+  "sw.js",
+  "v10-sw.js",
+  "workbox-6923124b.js"
+ ],
+ "switched": [
+  "index.html",
+  "manifest.webmanifest",
+  "sw.js",
+  "v10-sw.js",
+  "workbox-6923124b.js"
+ ],
+ "served_after_switch_refs": [
+  "/assets/index-DtQ86lsQ.js",
+  "/assets/index-cWMF3pBW.css"
+ ],
+ "receipt_ABCDE": {
+  "A_OLD_ASSET_still_served": {
+   "ref": "/assets/index-BCF4ptyk.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "is_html": false,
+   "disk_bytes": 1230082,
+   "verdict": "GREEN"
+  },
+  "B_NEW_INDEX": {
+   "status": 200,
+   "refs_match_new": true,
+   "verdict": "GREEN"
+  },
+  "C_NEW_ASSET": [
+   {
+    "path": "/assets/index-DtQ86lsQ.js",
+    "status": 200,
+    "content_type": "text/javascript",
+    "length": "1231985",
+    "head_bytes": "const __vite__mapDeps=(i",
+    "sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+    "is_html_fallback": false,
+    "error": null,
+    "body_size": 1231985,
+    "disk_bytes": 1231985,
+    "verdict": "GREEN"
+   },
+   {
+    "path": "/assets/index-cWMF3pBW.css",
+    "status": 200,
+    "content_type": "text/css",
+    "length": "183233",
+    "head_bytes": ".v10-execution-panel{wid",
+    "sha256": "681c4b5fae6c423ba82553bee732f7d5794af6c7934f0ecb10623e4a44731d31",
+    "is_html_fallback": false,
+    "error": null,
+    "body_size": 183233,
+    "disk_bytes": 183233,
+    "verdict": "GREEN"
+   }
+  ],
+  "D_SERVICE_WORKER": [
+   {
+    "path": "/sw.js",
+    "status": 200,
+    "content_type": "text/javascript",
+    "length": "7178",
+    "head_bytes": "const SW_VERSION = \"city",
+    "sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+    "is_html_fallback": false,
+    "error": null,
+    "body_size": 7178,
+    "disk_bytes": 7178,
+    "matches_disk": true,
+    "verdict": "GREEN"
+   },
+   {
+    "path": "/v10-sw.js",
+    "status": 200,
+    "content_type": "text/javascript",
+    "length": "2096",
+    "head_bytes": "if(!self.define){let e,s",
+    "sha256": "d7716bb418a9565ba7da89ef726eb521056c29738095b70598ca5f03f995e814",
+    "is_html_fallback": false,
+    "error": null,
+    "body_size": 2096,
+    "disk_bytes": 2096,
+    "matches_disk": true,
+    "verdict": "GREEN"
+   }
+  ],
+  "E_NOTE": "200 alone is never sufficient: a 200 that carries HTML at a .js URL is DEPLOYMENT_RED / STALE_CLIENT_BREAKAGE_RISK. Every entry above records the first bytes and content-type, not just the status."
+ },
+ "overall": "GREEN"
+}
