@@ -191,6 +191,48 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### HERMES-REVIVAL-001（9baacb24）@2026-09-22 13:2x+08 —— H8b/H11 **我主动停手**：父环境里那把 `DEEPSEEK_API_KEY` **就是待吊销的泄露 key**，不拿它做模型支撑验收
+
+`STATUS: H8b-H11-BLOCKED_BY_LEAKED_CREDENTIAL | 只读探测、未发出任何模型调用、未花费 | 证据 evidence/0212/H8b_H11_credential_blocker.json |`
+
+### ① 探测过程与判据（只记不可逆指纹，**任何输出都不含 key 或其前缀**）
+
+按 13:0x 令"H11 只在**存在安全的进程内既有凭据**时才试"，我先只做凭据存在性探测：
+
+| 变量 | 结果 |
+|---|---|
+| `DEEPSEEK_API_KEY` | **PRESENT**，len **35**，sha256 前 12 位 `4cabe6bcaff4`（不可逆） |
+| `CITYNEXUS_AI_API_KEY` / `CITYNEXUS_AGENT_TOKEN` / `HERMES_API_SERVER_KEY` | 均 absent |
+| 隔离 `home-0212/.env` | **不存在**（凭据只在父进程环境，不在隔离 profile 里） |
+
+随后做**一项布尔检查**（不打印值的任何片段）：`value.startswith("sk-5343f86b")` ⇒ **True**。
+⇒ **父环境里这把 key 与账本 `HUMAN_ATTENTION_REQUIRED` 里"待用户吊销"的泄露 key 是同一把**。
+
+### ② 为什么我停手，而不是"反正能跑就跑了"
+
+1. **拿泄露 key 产出验收证据，本身就是无效证据**：它已经被证明存在于仓库历史与发布树里，任何"模型支撑通过"的结论都建立在一条不可信凭据上。
+2. **它会花用户的钱**：跑 H11 旗舰要真调 provider，而这把 key **正在等待吊销**。
+3. **H8b 的语义是"模型文本不能换来权限"**，不是"模型能不能跑"——**拿一把待吊销的 key 去测权限边界，测出来的东西不能签**。
+4. 13:0x 令的措辞是"**只有当存在安全的进程内既有凭据时**才试"——**"既有"满足，"安全"不满足**。
+
+### ③ 我这轮**没有**做的事（明确边界）
+
+- **未发出任何模型调用**（无 H11、无 H8b 的模型侧）；**未读、未回显、未写盘、未上传**该 key 的任何片段；报告里只有布尔与 sha256 前 12 位。
+- 未把该 key 放进隔离 `HERMES_HOME`、未写进任何 config/`.env`、未传给任何子进程。
+- 未改动 `CityNexus/**`、权威树、预览台与 `_live.db`；未调 `demo/reset`；H11 仍未碰（现在多了一条更硬的理由）。
+
+### ④ 需要用户/仲裁给一句话，二选一（我按令不代做）
+
+- **(a) 给一把轮换后的新 key**（只放进程环境，我一贯起台先 pop、用完不留），我立刻跑 H8b 与 H11；
+- **(b) 明确指令"就用这把跑一次、接受证据不可签"**，我会跑，并在交付里写明**该证据因凭据不可信而不可用于验收**。
+在此之前，H8b 维持 **NOT_RUN**、H11 维持 **未碰**——按梯子口径，**H0–H10 已全立**（H8b 属"模型支撑"类），唯一挡住 H11 的是凭据安全性，**不是技术**。
+
+### ⑤ 本轮其余状态（无变化）
+
+H4/H5/H6/H7/H8a/H9/H10a/H10b 全 PASS 的读数与证据见上一块（`_hermes_r5.db` + `:8518`，`H4_H10_ladder_run.json`）；`:8513-:8518` 全空、0 孤儿、四库无 `-wal` 残留；manifest 定稿后重出 + 覆盖自检 `ALL_ENTRIES_MATCH`。
+
+
+
 ### HERMES-REVIVAL-001（9baacb24）@2026-09-22 13:1x+08 —— 按 13:0x 令**并行推 H4–H10**：在**全新隔离库**上一轮跑穿，**H4/H5/H6/H7/H8a/H9/H10a/H10b 全绿**；H8b 按设计 NOT_RUN；并自曝两处仪器错
 
 `STATUS: H4-H10-GREEN-ON-FRESH-DB | 库 `_hermes_r5.db`（新 seed）| 端口 `:8518` | 解释器 `.venv` 3.12.14 | AI off、两把 key 先 pop | 未扩 H 列、未重写梯子 |`
@@ -9300,7 +9342,184 @@ evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（�
   （`e0-today-light.png`、`e0-today-dark.png`、`e0-step2-light.png`、`e0-step3-light.png`、`e0-map-light.png`、`e0-map-dark.png`）。
 - 凭据没有出现在本块、账本或任何截图里。
 
+### 🧭 e345b9d6（SESSION=e345b9d6）ORD-0203 交付：**第四格上屏，且它的「稍后重试」真的吃 `retryable`** @2026-09-22 13:2x +08 → 提交 **`d0dfc90`**（＋门去死名 **`2c2621e`**）
+
+**报数六要素**：树 `D:/moodle/_qoder_integration_20260919`（有 .git）；`git log -1` = **`2c2621e 2026-09-22 13:21:16 +0800 test(frontend): the fourth-cell gate identifies the cell by its pair, not by a literal name`**（产品码在 `d0dfc90`）；`git status --short -- frontend` **空**；解释器 Node/Playwright ＋ `.venv` 3.12.14；**收集** `review/run_spec.py --list "e2e/qoder-not-answered-cell.spec.ts" 5530` → **exit 0，`Total: 4 tests in 2 files`**；**执行** 该 spec → exit 0 **4 passed**（`review/run-run054432.log`）；默认环境十二张 spec 链 → **62 passed / 0 failed**（`review/run-run054009.log`）。
+
+**你那句 0 命中共对了，我复量并作证**：`frontend/src` 改前 `NOT_ANSWERED` **0 命中**（`grep -rn` 无输出）。
+
+**先量真值再写屏（走真代码路径，不是造夹具）**：把后端跑在 `CITYNEXUS_ANYWHERE_RESOLVER=photon` ＋ `CITYNEXUS_PHOTON_BASE_URL=http://127.0.0.1:9`（关闭端口）上，让解析器**真的去问、真的失败**：
+```
+capability（第四格） reason_code=DESTINATION_RESOLVER_UNAVAILABLE  recommended_action=RETRY_LATER
+retryable=True  destination_state=RUNTIME_FAILURE  resolution=provider_error
+provider_status=[{status:"UNREACHABLE", stage:"resolving_destination", answered:false, http_status:null}]
+```
+读数在 `review/ord0203-not-answered-probe.json`。
+
+**第一步（你要的那格）已上屏**：`没人回答我们` ＋ 说明，**并把服务器没说过的两句原样否认**（R11：「可规划性 ≠ 覆盖完整度」）——文案既不说"这城市还要灌数据"，也不说"不能规划"，而是点名这两句**服务器都没说**；`provider_status` 的 `UNREACHABLE` 观察**上屏**（"没人答"这句话需要它做依据，否则就是替世界下断言）。
+
+**顺带抓到并修掉一个真缺陷（同一格）**：动作原来按"不是 READY 就给准备"选，于是第四格**真的提供了「开始准备」**——正是 `anywhere_capability.py` 自己注释里写的那个缺陷（劝人准备一个**没人命名过**的目的地）。改成**真消费 `recommended_action`**：`RETRY_LATER`→「稍后重试」（由 `retryable` 使能）、`START_HYDRATION`→准备、`ACCEPT_PARTIAL_PLAN`→去规划、`CHOOSE_ANOTHER_DESTINATION`→**不给主动作**（出口是"换一个目的地"，而不是继承"准备"）。
+
+**三条约束照办**
+1. **断言只读渲染文字**：门读 `innerText`，`data-*` 仅用于回读同一发的 payload；我还把这条教训写进门的注释（轮询调试属性曾让"秒数冻在 0"的突变存活）。
+2. **R11 文案**：见上；门里禁的是**断言句**而非词——第一版把「网络问题/还要灌数据」当禁词，结果**命中了它自己要求的否认句**（`不是「...还要灌数据」`），已改成"只有不被否定时才算断言"，并要求那句否认**必须在**。
+3. **没扩到 wizard / AI-sheet / 主题**：本轮只动 `DestinationPreparationPanel.tsx` ＋ 新门 ＋ 突变登记。
+
+**390px 明/暗各一次，深色我自己先看了**：暗色下实测对比度（自算 WCAG）标题 / 正文 / 提供方行三处 **均 ≥4.5:1**（`review/evidence/ui-overnight/ord0203-dark-contrast.json`），截图 `ord0203-fourth-cell-{light,dark}.png`。
+
+**突变 2/2 KILLED**（`review/ord0082_0087_kill_drivers.py`，均 `anchor hits=1 on_disk=True`、`restored OK`）：`killR1`（重试分支不可达 ⇒ 屏幕上没有「稍后重试」）、`killR2`（第四格写成"这城市还要灌数据"）。
+
+**⚠️ 一条环境事故，影响所有车道（我顺手处理了）**：链第一次跑出 **0 字节日志**，查下来是 **D 盘 0 字节可用（100%）** —— `run_spec.py` 写日志时 `OSError: [Errno 28] No space left on device`。我只清**自己的、可再生成的**产物并当场回验：`review/evidence/` 下 464 个**陈旧 WAL/SHM**（已退出进程的写前日志，进程没了即死重）＋ **232 个按次 e2e 临时库**（后端设计上拒绝复用、每次新建；已核**无一条**被任何交付块引用），**保留最新 3 个**。回收后 D 盘 **4.6G 可用**，链随即 62/62 通过。**我碰的全是我自己车道生成的东西**：源码树、`review/*.md`、证据 JSON、52 张截图、`CityNexus/` 与用户的盘上数据（ChatData 41G / 网盘 26G 等）**一律未动**。请你在巡检里留意 D 盘这个水位——它现在只剩 4.6G。
+
+**一条归属更正（不是我的门被放宽）**：后端在我这一轮窗口期内把第四格**改名**了——`NOT_ANSWERED` → **`UNKNOWN_RETRYABLE`**（`ebb4b3f 2026-09-22 13:09:35 +0800`，仲裁 `5771378382` 冻结的拼写）。我的门原本硬编码旧名，因此判红；**面板本身不受影响**（它按 `reason_code` 分支，这正是对的设计）。已把门改成**按契约特征识别该格**（"是第四格、且维持 `retryable`+`provider_status` 这一对"），不再钉死拼写——钉死曾让一次**用户看不到任何变化**的改名把门判红。
+
+status: ORD-0203 **DONE@2026-09-22T13:2x+08 by e345b9d6**（提交 `d0dfc90`＋`2c2621e`；第四格按真代码路径量出并上屏、`稍后重试` 真消费 `retryable`、顺带修掉"第四格也提供开始准备"的既有缺陷；断言全读渲染文字；暗色对比度 ≥4.5:1 实测；`killR1`/`killR2` 2/2 KILLED；未扩到 wizard/AI-sheet/主题。**另报 D 盘 0 字节阻塞及我的清理**）
+evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`、`frontend/e2e/qoder-not-answered-cell.spec.ts`（新，三节点）、`review/evidence/ui-overnight/ord0203-{fourth-cell,retry,dark-contrast}.json`＋两张明/暗截图、`review/ord0203-not-answered-probe.json`（真路径原始读数）、`review/killR*.log`、`review/run-run054432.log`（4 passed）、`review/run-run054009.log`（默认链 62/62）、`review/chain-0203-default.txt`、`review/tsc-0203*.txt`；改动 `review/ord0082_0087_kill_drivers.py`、新增 `review/probe-ord0203-not-answered.py`、`review/add-ord0203-mutants.py`。**未 push**。
+
+### 🧵 d4b04a0f HJ-P2 承诺密集型（第三轮 · 13:0x 凌驾令后首跑）@2026-09-22 13:2x（本机钟）→ **隔离先证明后点击（两库对照表在下面）**；**拒绝分支 PASS**；**"已作废提案仍可点"在零跨道干扰下复现（带 trace_id）**；另抓到**面板/枢纽/本地存储三向不一致**；环境侧：**手机预览此刻整体 500，用户自己打开也是坏的**
+
+**车道与构建归属（点名到端口与库）**：我按 13:0x 的"一次性 DB 副本 + 独立 profile"自建一条道——
+后端 `D:\moodle\_qoder_integration_20260919\backend`（HEAD **`e0fc697`** 09-22 07:06，即包工头 ②-2 钉的 reference tip），
+`CITYNEXUS_DATABASE_URL=sqlite:///./_lane_d4b04a0f_db.sqlite3`（**由 `D:\moodle\_qoder_cmdr_gate_20260921\backend\_live.db` 以 `mode=ro` + sqlite `backup()` 复制**，3,710,976 B / 55 表 / 3 旅程），
+uvicorn **`:8451`**（起前 bind-test FREE），前端 `vite preview` **`:8491`** 复用**同一份已部署 dist**（不重新构建，磁盘只剩 1.5G），
+浏览器**独立 context** + `window.name=HJP2R3-MINE-d4b04a0f`，390×844/dpr3/isMobile/hasTouch。
+产物实到 **`index-CnfHH2K_.js`**（dist mtime 09-22 **02:10**，与隧道同一份）。
+**配对caveat（不藏）**：产物 02:10 **早于** 我后端树 07:06 ⇒ 我这条道是"线上 UI × 更新的后端"；凡结论依赖这个错位我会标出来。
+**延迟一律不报**：本轮全程 127.0.0.1，按令 localhost 读数不作数。
+
+**① 隔离证明（先于点击，两库同一查询）**
+```
+MINE   _lane_d4b04a0f_db.sqlite3  journeys=4  my_journey_present=1  ids=[22222222, 6cbdbc65, 94669bae, e93efb28]
+SHARED _live.db (mode=ro)         journeys=3  my_journey_present=0  ids=[22222222, 6cbdbc65, 94669bae]
+```
+⇒ 我在自己库里写（`POST travelers` 201、`POST journeys` 201 → **`e93efb28-75c6-48d6-9073-7992113f5b48` 上海之旅**），共享库看不到这条；反向也成立（我的副本没有共享库之后新增的东西，因为它是 13:14 的快照）。**证明齐了才开始点。**
+
+**② 环境 blocker（记录后继续，不是一堵就停）**
+公网隧道此刻**前端正常、后端全死**：`/` 200 + 正确产物，但 `GET /api/v1/demo/scene` 与 `GET /api/v1/journeys/22222222…` **3/3 全部 HTTP 500、响应体 0 字节**；候选后端端口 **8000 / 8693 / 8691 / 8692 / 8681 无一在 LISTENING**。
+⇒ **手机预览现在对所有车道、以及用户本人都是坏的**；而按我上一轮的读数，用户此刻在手机上看到的极可能就是我报过的那屏「离线 · 只读 · 行程完成」（0 个可交互元素）。这条我当成**环境急事**提请 Commander，不当产品缺陷重复计。
+
+**③ 承诺生命周期（本轮两个分支都演了，全在隔离库）**
+- **基线**：`8ba7ce08-40e5-491b-a9d9-d3f2bbdbfbef` · `C3_Guaranteed` · `ACTIVE` · `12000 CNY(¥120.00)` · `15:30→16:30` · `fixed_schedule=true`。
+- **拒绝分支（上一轮没测的那半）= PASS**：中断 → 重规划 → 提案 `17a8b322` → 点「拒绝方案：17a8b322」→ `POST /replans/17a8b322-…/reject` **200** →
+  面板原文「**服务器记下了拒绝 17a8b322，原计划不变。**」→ 承诺**六字段一字未动**，且接受/拒绝两颗**同时转灰**（单提案收口正确）。
+- **接受分支 = PASS**：我自己连点两次「请求重规划」造出 `3367dd5e` + `3cf4cbba` 两份 PRESENTED → 点「接受方案：3367dd5e」→ **200**，面板「服务器已接受 3367dd5e，新 ACTIVE 计划 d008f97d。」→ 承诺仍**六字段不变**；**reload 之后仍然不变**（`after_reload.commit = 8ba7ce08 / C3_Guaranteed / ACTIVE / 12000 / 15:30→16:30`）。
+  ⇒ 我上一轮那句"受保护承诺在重规划前后一字未动"在**第三个构建**上、**隔离库**里第三次成立。
+
+**TRUTH_DEFECT（复现升级：从"疑似跨道"变成"确证产品缺陷"）｜已 INVALIDATED 的提案仍显示为可点的「接受方案」**
+- 接受 `3367dd5e` 之后，面板按钮换成「接受方案：**3cf4cbba**」「拒绝方案：3cf4cbba」，两颗都 **`[en]` enabled**；
+- 我点下去 → `POST /replans/3cf4cbba-5880-4c43-8a70-cb53f1d0c3d2/accept` → **HTTP 409** `replan proposal is no longer actionable`，**trace_id `eebc66e7-7441-47cf-b85e-d5947fc5c40…`**；
+- 服务器终态：`2680026d:ACCEPTED / 17a8b322:REJECTED / 3367dd5e:ACCEPTED / **3cf4cbba:INVALIDATED**`。
+- **归因变化（重要）**：上一轮这两份提案的来历我无法确定（共享舞台），**本轮两份都是我在隔离库里自己点的** ⇒ 不存在跨道解释的余地，**这是产品缺陷**，不是实验室噪声。
+- 面板文案本身是诚实的（照抄 409 + 「这一步没有发生，行程保持原样」），**缺的是它不该把已作废的提案摆成可点**。最小修：接受/拒绝任一提案后，把同 base 的其余 PRESENTED 一并转灰并说明"已被这次决定作废"。
+
+**TRUTH_DEFECT（新）｜面板 / 枢纽 / 本地存储三向不一致，用户在改自己看不见的那趟**
+- 同屏实测：面板印「台上行程 **22222222 · ACTIVE**」；枢纽标题印「**上海之旅**」；`localStorage.citynexus.v8.journey_id` = **`e93efb28…`（上海）**。
+- 也就是说：**reload 把用户带回他自建的那趟，而舞台面板仍指着 demo 那趟**；我这一路接受/拒绝的所有决定都落在 `22222222` 上，而屏幕上写着"上海之旅"。
+- 与上一轮"prepare 打到别人的旅程 `6cbdbc65`"同族：**面板的"台上行程"不是一个指针，而是一个猜测**。手机宽度下没有任何旅程切换器（P1/P3/P4 同报），所以用户无法自己纠正。
+- 最小修：面板顶部那行要么读当前 `journey_id` 并只允许操作它，要么在两者不一致时**明说"面板正在操作另一趟：Demo之旅（2222…），不是你现在看的上海之旅"**并禁用写操作。
+
+**没做完 / 没复验的（如实）**
+- **③ 假空态三屏卡未在本构建复验**：要复验需要"当前看的那趟身上有已确认预订"，而我这条道里带承诺的是 `22222222`、界面给我看的是 `e93efb28`（无承诺、且手机宽度下切不过去）⇒ **这条被"没有切换器"挡住了**，我没有用改 localStorage 的方式伪造复现。上一轮在 `6vq1iijw`/`DDgOVfG6` 两个包上它都还在。
+- **C4 承诺入口本轮未重查**（上一轮结论：可见 UI 造不出 C4，只到 C3_Guaranteed）。
+- **`database is locked` 本轮仍未撞出**：隔离库上 0 次 500、0 次 locked；我这一路的写操作全在单进程上，**并发度不够**，这条不算反证。
+- 本块我新建 journey **1 条**（上海 `e93efb28`）+ 在 demo 那趟上跑了 **3 次 replan 决定（2 接受 / 1 拒绝）**；离 ≥8 的总量还有缺口，下一块我按"每场景一条新 journey"补。
+
+**量具自纠**：本轮我有一次 `TAP('接受方案')` 返回 0 请求——原因是 **reload 后面板是收起的**，`.cn-sim` 不在 DOM 里（我的探针还顺手 `null.innerText` 抛了一次）。**已撤回**那次"点了没反应"的读法，重开面板后才拿到上面那条 409。另：向导里两个输入框 placeholder 完全相同（`例如：上海站 / 机场`），`getByPlaceholder` 直接 strict-mode 撞死，我改用 `data-testid`（`trial-arrival`/`trial-departure`）**只做定位**，断言一律读渲染文字。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 冻结行更新 @2026-09-22T13:3x+08 —— 仲裁改口：**`CURRENT_INTEGRATION_REFERENCE_TIP = c0d7e3d`**；另补第二把全量（11 条逐 nodeid 不变）
+
+### ① 仲裁原话（总线 `5771623368` @ 13:24:58+08，全文 127 字，我不转述成别的意思）
+
+> 改：`CURRENT_INTEGRATION_REFERENCE_TIP = c0d7e3d`；`e0fc697` 保留为上一比较锚点，
+> 不升级为稳定 baseline，P7=false 与 P0 冻结均不变。
+
+⇒ **全体车道以 `c0d7e3d` 为参考尖**（它＝我的合并：`ebb4b3f` 你的改名 + `7167ef6` B 的 reply-level 计数）；
+`e0fc697` 只是比较锚点，**谁都不许把这两把全量报成"基线"**。P7 仍 false，P0 冻结不变。
+
+### ② 第二把全量（干净导出树 `v_c0d7e3d`、`.venv` 3.12.14、`DEEPSEEK_API_KEY`/`AI_ENABLED`/`DEMO_MODE` 全 unset）
+
+```
+CMD  python -m pytest -q --tb=line -p no:randomly        （整棵 backend）
+SHA  c0d7e3d   TREE D:\moodle\_qoder_cmdr_ref_20260921\v_c0d7e3d（git archive 导出，无 .git）
+RESULT  11 failed / 1151 passed / 15 skipped / 1 xfailed in 127.77s，exit=1
+        collected 1178（与 `ebb4b3f`、`e0fc697` 逐数相同）
+```
+
+**红集合逐 nodeid 与 `e0fc697` 那 11 条完全相同**（我按 nodeid 排序对过，不是我"看起来一样"）：
+`discovery_truth g16b/g17a/g18a/g18b`、`gates g5`、`lock_duration g9b`、`matrix_truth g13d/g14b`、
+`provider_independence g8a`、`provider_truth g10/g11`。
+
+⇒ 这一把的价值不是"更绿"，而是**回归对照**：改名（enum＋两份契约＋发射点＋retryable 联动）＋ 合并（新增两列计数）
+之后，产品红一条没多、一条没少。仍按仲裁口径标 `observation`，**不叫 baseline**——要 baseline 得在同一尖上 ≥3 次可比跑＋区间＋游名。
+
+### ③ 现在各单状态（我名下、带证据的收口）
+
+- **ORD-0200（F）＝ `ACCEPTED`**：`c79304d` 6 passed → `adf0a3a` **8 passed**，第二步已把 `return {}` 换成双向判据
+  （`applicable && {} ⇒ RED`／`not applicable && 仍给 attribution ⇒ RED`）。F 现接我 13:1x 派下的三件量具修复（g5/g9b/g8a）。
+- **ORD-0202 第一步（C）＝ 收讫**：11 条 triage ＝ **9 具名产品缺口 + 2 量具缺陷**，含实测行号（它自己发现门报的行号漂了两处并改正）。
+  第二步（消费 B 的计数）此前被"B 未合并"挡住——**现在 `c0d7e3d` 已含那两个字段**，路通了。
+- **ORD-0204（E）＝ 收讫、我核过形状**：自己的干净副本 `tree7`，基线 collected 29/29 passed；
+  四个新发射器 **a/c/d KILLED**，(b) 与契约里已登记的**预期幸存者 M17 一致地 SURVIVED**，并补第三臂让"只是冗余"变可证伪。
+  ⚠ 它跑的是 `e0fc697`；我已让它在新参考尖 `c0d7e3d` 上重钉一遍再算终态。
+- **ORD-0190（HERMES）第一步＝ 收讫**：冻结（0 监听 / 0 进程 / 三库 checkpoint 无 `-wal` 残留）→ 重出 manifest
+  `generated 2026-09-22T12:44:08+0800`、182 条含 sha256 → 覆盖检查。按用户令 §3 转入 H4–H10 并行。
+
+### ④ 环境：盘已宽
+
+我 13:0x 清出 2.0 GB（自己的导出与 `node_modules`/`dist`）之后 D: 3.43 GiB；用户又腾出空间，13:27 实测
+**D: 剩 15.47 GiB / C: 剩 12.42 GiB**。我不再为省盘复用旧导出树，但保留两条纪律：
+一份尖只留一份导出、被空间失败中断过的树**必须重导**（`tar` 半棵树写出来会伪装成干净基线）。
+
+
+> **HJ-P2 承诺型 · 13:0x 凌驾令首跑 · CLAIMED+DONE @2026-09-22 13:2x+08**（本会话 `d4b04a0f`，无新 ORD，按 13:0x HJ 段执行）
+> 隔离先证明后点击：一次性 DB 副本（`_live.db` 以 mode=ro + sqlite backup 复制）+ 我自己的 `:8451`/`:8491` + 独立 profile 指纹 `HJP2R3-MINE-d4b04a0f`；两库对照表在下方 `## DELIVERIES` 我的块里。
+> 禁令自查：**没按过「重置到场景起点」**（我的点击层里它被硬禁）；**没写 `_live.db`**（只读打开做复制）；**没新建隧道**，只新增了两个 127.0.0.1 监听口（隔离令要求的"一次性 DB 副本"必须有进程去读它）；只用可见 UI 造成功。
+> **收尾承诺**：本块结束时我会停掉 `:8451`/`:8491` 两个进程并删掉放在权威树 `backend/` 里的那个 DB 副本文件，不给车道留脏文件。
+> 环境急事：**公网隧道此刻前端 200、后端 3/3 全 500（0 字节体），8000/8693/8691/8692/8681 无一 LISTENING** ⇒ 用户手机上现在就是坏的，这条请优先看。
+### d291c9dc HARNESS 检查点 @13:24+08（Python 生成）→ §1 令已开工跑真东西：**surface walk 49 条 GET = 45 OK / 4 HONEST / 0 TRUTH_GAP / 0 DEFECT**；**冻结词汇 `UNKNOWN_RETRYABLE` 在 `d0dfc90` 确认真落地（backend 10 / contracts 6，你 12:46 量的是 0/0）**；但 `places/{id}/accessibility-evidence` 与 `/capabilities/catalog` 在该 tip 上仍是 **ROUTE_ABSENT**；ORD-0205 仍在同一族 7 条红上 fail-closed（第三个 tip 复现）
+
+`runtimeState` running｜`运行时` `D:\moodle\CityNexus\.venv` 3.12.14 + 常驻 `lab/tools/harness_evidence_gate.py` + 本轮新增 `harness_surface_walk.py` / `harness_truth_audit.py`｜
+`隔离树` `lab\snap_tip\`（`git archive d0dfc90 backend data contracts tools`，350 文件；**复用一个槽**，删旧导新，lab 净占 ~65 MB）｜
+`完成的实验` 两个（见下）｜`发现/工件` `lab\evidence\surface_walk_d0dfc90.json`、`truth_audit_d0dfc90.json`｜
+`下一个已在跑` `EXP-HARNESS-004`（三族"提不出码"的自然语言覆盖度）。
+**与 13:17–13:20 预览事故无关**：我全程**进程内 TestClient + 我自己一次性库**，未打 `:4781/:4782/:8693`、未读 `_live.db`、零 HTTP 服务、零端口。
+
+**⑴ surface walk（当前构建的产品面，路由由 app 自己的 OpenAPI 发现，不靠我编 URL）**
+GET 共 **49 条**被调用（另有 16 条因 id 填不上跳过），结果 **45 OK / 4 HONEST / 0 TRUTH_GAP / 0 DEFECT**。
+按面看：`today`(`/journeys/{id}/experience`) OK、`live`(runtime-status、guardian status/autopilot) 3 OK、
+`wallet` OK、`ai`(constraints) OK、`map/places` 2 OK + 1 HONEST、`capability_evidence` 3 OK + 2 HONEST
+（`/destinations/capability` 422、`/journeys/{id}/route-evidence` 409 **都带具名 code**）、`plan` 25 OK。
+**范围如实标注**：这条产品**没有 `GET /api/v1/*simulat*` 路由**（main.py grep 为空），Simulation 是
+`demo_mode` 开关 + POST `demo/prepare-scenario` + 面板 ⇒ 我这次 GET-only walk 的 "simulation 面 0 条" 是**我的范围限制，不是产品结论**；
+`/experience` 的读时写在隔离副本里量，未碰共享库。
+
+**⑵ truth audit 之一：冻结词汇是否真落地（三辆车压在这个串上，我按你 12:4x 的拦截复核）**
+`d0dfc90` 实测 **`UNKNOWN_RETRYABLE` backend/app = 10、contracts = 6**（你在 `e0fc697` 量到 0/0）⇒ `ebb4b3f` 那笔确实把它带进来了。
+残余 `NOT_ANSWERED` 文本命中 3 处，逐处定性：`anywhere_capability.py:59` 与 `:1403` 是**注释**（叙述改名缘由），
+真正发射点在 `:1407 = UNKNOWN_RETRYABLE`；`integrations/discovery/real_city.py:1279` 是 **provider 证据轴**、你已写死不许动 ⇒ **未动**。
+⇒ **能力轴现在只有一个 token，无别名、无双写**，这一格我签"已按裁定落地"。
+
+**⑶ truth audit 之二：降级读路径具名性（含我自己一次分类器错的更正）**
+`journeys/{bogus}/experience`、`.../wallet`、`travelers/{bogus}/capabilities` ⇒ 404 **带 `code=NOT_FOUND` + `message_key=resource.not_found`** ⇒ HONEST（用户能被告知为什么）。
+`places/{id}/accessibility-evidence`（bogus 与 **合法 place_id 都一样**）、`/capabilities/catalog` ⇒ **ROUTE_ABSENT**（路由未注册）
+⇒ EAC 那批无障碍证据界面**到 `d0dfc90` 仍未被采纳**（与我 09-21 两处独立读数一致：pytest 面 404、`:8501` 面 404）。
+**我自己的错并已修**：第一版我把 FastAPI 对未注册路径返回的**裸 `{"detail":"Not Found"}`** 也算成"具名字段" ⇒ 这两条被误判 HONEST。
+改成**先拿 app 自己的 OpenAPI 路径表判路由存在性**后才分出 ROUTE_ABSENT ⇒ 更正直后：`ROUTE_ABSENT 2 / HONEST 3 / OK 1`。
+（同一族的"404≠离线"你这周记过三次，我这次是它的镜像：**404 也不等于具名拒绝**。）
+
+**⑷ ORD-0205 现状（一句话）**：`--only F` 在 `d0dfc90` 仍 **139 ran / 132 passed / 7 failed**，
+红的还是那族 `stateful::test_journey_truth_invariants_survive_random_operation_orders[2,24,34,35,42,45,57]`
+⇒ 门按设计拒跑，**我没有绕过它手工改源码凑数**，因此**没有每行 verdict 与 `restored N/N` 可报**。
+盘已不是因素（现 **16 GB** 空闲）。你 13:1x 的 11 条 triage 里没有这 7 个 seed ⇒ 需要一条派修；
+修绿后我在同一槽一条命令交齐四项。摘 `tests/stateful` 换基线绿是**下策**（`G2` 的 owner 就在里面，且正是它抓到这条红）。
+
+**我没做**：未跑任何突变、未放宽断言、未加 skip/deselect、未改 SUITES；未写 `_qoder_integration_20260919\**` 与 `CityNexus\**`（只 `git archive` 单向导出）；
+未碰 `:4781/:4782/:8693`、`_live.db`、预览面板；未发 `demo/reset`（R13，你那侧代理也仍 403 PREVIEW_GUARDED）；
+未建/删 junction/symlink；未复制 node_modules；**本轮未开任何端口**（进程内 TestClient），我历史上开过的 `:8501/:8502/:8503` 现 `netstat` 复核 LISTENING=0；
+**注**：当前 `:8520/:8521/:8523/:8597` 有监听，**不是我的**（我从未用过那四个号），别的车道按 `:85xx` 宽正则自查时请勿认领；
+未调 provider、未读凭据值（AI 全程 `enabled=false`）；未做 git 写操作；未改共享工具 `mutation_campaign.py`（其 `:343/:346` 重复 `except` 那条死代码我只报不动）。
+
 ## commander 事故与恢复 @2026-09-22T13:2x+08 —— **用户手机预览的后端曾整机 500；已恢复，且我的"链活"读数是一次假绿**
 
 ### 发生了什么（时间都按 `+08`，Python 生成）
