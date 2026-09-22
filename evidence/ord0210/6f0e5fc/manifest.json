@@ -1,0 +1,100 @@
+{
+  "id": "ORD-0210 mechanism ACCEPTED addendum (scope vs provenance)",
+  "source_sha": "6f0e5fc",
+  "parent_sha": "a4079bc",
+  "branch_base": "50b35e0",
+  "branch": "agent/f-ord210-20260922",
+  "published_repo": "Canshu-King/CityNexus",
+  "published_ref": "commander/control",
+  "published_dir": "evidence/ord0210/6f0e5fc/",
+  "arbitration": {
+    "third_audit": "5775917170",
+    "fourth_audit": "5779720219",
+    "mechanism": "IMPLEMENTATION MECHANISM = ACCEPTED",
+    "open_for_CLOSED": "10 连绿 + 真产品 reverse mutation（等 C/ORD-0213 修根因）"
+  },
+  "scope_correction": {
+    "what_i_wrote_wrong": "上一条 manifest 与账本里写『引用定性必须带批次』",
+    "ruling": "scope 只有 (exact SHA, target node id, run shape)；batch 是 provenance",
+    "mechanical_consequence": "同一三元组的多批必须经 merge_target_observations() 并成一个结论；A 批 0/10 全红 + B 批 2/10 有绿 ⇒ FLIP_WITHOUT_SHARED_STATE(<shape>)，禁止两批各签 STABLE_RED 与 FLIP；三元组不等的批次不许并批",
+    "evidence": {
+      "helper": "merge_target_observations()",
+      "test": "test_4e",
+      "mutation": "M17",
+      "contract_section": "scope_vs_provenance"
+    },
+    "supersedes": "evidence/ord0210/a4079bc/manifest.json 里 acceptance_receipt.note 那句（该文件按『不重写已发布证据』原则保留原样，以本件为准）"
+  },
+  "changed_files": [
+    "backend/tests/_qoder_streak_receipt.py",
+    "backend/tests/test_qoder_db_isolation_same_verdict.py",
+    "contracts/gate-acceptance-streak.yaml"
+  ],
+  "door_readings": {
+    "collected": 23,
+    "passed": 22,
+    "skipped": 1,
+    "suite_collect": 1201,
+    "exit": 0
+  },
+  "mutations": {
+    "count": 17,
+    "killed": 17,
+    "ids": [
+      "M1",
+      "M2",
+      "M3",
+      "M4a",
+      "M4b",
+      "M5",
+      "M7",
+      "M8",
+      "M12",
+      "M13",
+      "M14",
+      "M15",
+      "M16",
+      "M17",
+      "M9",
+      "M10",
+      "M11"
+    ],
+    "baseline": {
+      "exit": 0,
+      "passed": 22,
+      "failed": 0,
+      "errors": 0
+    }
+  },
+  "local_blobs_before_upload": {
+    "50b35e0__6f0e5fc.patch": {
+      "bytes": 157579,
+      "blob_sha1": "5eda0e1f8b10acac8ab25ade1bc40c62b21847e4"
+    },
+    "_qoder_streak_receipt.py": {
+      "bytes": 50316,
+      "blob_sha1": "fcf76941dcc2512736c1d28fa362022b5f6c879a"
+    },
+    "a4079bc__6f0e5fc.patch": {
+      "bytes": 10848,
+      "blob_sha1": "41403845e42c37adcfdab732b6fa0c10a9e5633d"
+    },
+    "gate-acceptance-streak.yaml": {
+      "bytes": 14651,
+      "blob_sha1": "3dea2a9f6b3da10f6b079891c1766ece412e4aa2"
+    },
+    "receipts_o210c_mutation.json": {
+      "bytes": 12697,
+      "blob_sha1": "b447e6da0f052de608236f722b9e0042a39c859c"
+    },
+    "test_qoder_db_isolation_same_verdict.py": {
+      "bytes": 89297,
+      "blob_sha1": "c4eed37007a0755e8c73f1881e82fd50e00ed969"
+    }
+  },
+  "publisher_used": {
+    "path": "_qoder_cmdr_ref_20260921/live_checks/publish_evidence.py",
+    "blob": "d0b1bb1eeb3d87f21943bf76506376d29e2f47a5",
+    "status": "B5 在、B7 缺 ⇒ 按 commander 20:4x 令不作默认通道；本次上传前我自行扫过负载并逐件回读"
+  }
+}
