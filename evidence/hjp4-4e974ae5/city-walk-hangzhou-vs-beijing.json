@@ -1,142 +1,513 @@
 {
-  "hangzhou_no_places": {
-    "identity": {
-      "run": "hangzhou_no_places",
-      "built_at_utc": "2026-09-22T18:02:52.745630+00:00",
-      "built_at_local": "2026-09-23T02:02:52.745630+08:00",
-      "tz_offset_minutes": 480,
-      "source_log": "log/W_HZ_no_places.txt",
-      "source_log_sha256": "ea77634785e16798be56804173e15ae2b240fa66004c1cc2e8d4390c8d3e9172"
-    },
-    "generation_bundle": [
-      "index-DtQ86lsQ.js"
-    ],
-    "steps": [
-      {
-        "step": "step1_open",
-        "visible_text": "菜单\n/\n今天\n跟随系统\nEN\nBE\n还没休息\n北京之旅\n9月23日 10:00\n—\n9月25日 20:00\n·\n2 位旅行者\n·\n3 天\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n7 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n今天\n行程\n地图\nCopilot\n我的",
-        "sr_only_excluded": true
-      },
-      {
-        "step": "supported_list",
-        "visible_text": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n已自动设置：\n中国\n·\n人民币\n·\n中国标准时间\n看支持的目的地\n厦门\n北京\n上海\n天津\n福州\n广州\n深圳\n成都\n杭州\n东京\n新加坡\n抵达北京\n离开北京\n抵达时间\n离开时间\n高级设置\n国家/地区代码\n时区\n货币\n下一步",
-        "sr_only_excluded": true
-      },
-      {
-        "step": "advertised_list_membership",
-        "visible_text": "SUPPORTED contains 杭州? true 上海? true 北京? true 苏州? false"
-      },
-      {
-        "step": "after_typing_city",
-        "visible_text": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n已自动设置：\n中国\n·\n人民币\n·\n中国标准时间\n看支持的目的地\n厦门\n北京\n上海\n天津\n福州\n广州\n深圳\n成都\n杭州\n东京\n新加坡\n抵达杭州\n离开杭州\n抵达时间\n离开时间\n高级设置\n国家/地区代码\n时区\n货币\n下一步",
-        "sr_only_excluded": true
-      },
-      {
-        "step": "step3_review",
-        "visible_text": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n杭州\n抵达\n杭州东站\n·\n2026-09-23 10:00\n离开\n杭州东站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n兴趣\n自然\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n返回\n确认创建\n使用封存的演示行程",
-        "sr_only_excluded": true
-      },
-      {
-        "step": "creating_t6s",
-        "visible_text": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n杭州\n抵达\n杭州东站\n·\n2026-09-23 10:00\n离开\n杭州东站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n兴趣\n自然\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n正在搜索住宿\n已等待 6 秒\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n停止等待\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n返回\n正在创建…",
-        "sr_only_excluded": true
-      },
-      {
-        "step": "creating_t24s",
-        "visible_text": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n杭州\n抵达\n杭州东站\n·\n2026-09-23 10:00\n离开\n杭州东站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n兴趣\n自然\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n正在搜索住宿\n已等待 24 秒\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n停止等待\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n返回\n正在创建…",
-        "sr_only_excluded": true
-      },
-      {
-        "step": "creating_t42s",
-        "visible_text": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n杭州\n抵达\n杭州东站\n·\n2026-09-23 10:00\n离开\n杭州东站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n兴趣\n自然\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n正在搜索住宿\n已等待 42 秒\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n停止等待\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n返回\n正在创建…",
-        "sr_only_excluded": true
-      },
-      {
-        "step": "timing",
-        "visible_text": "hub reached in 48s"
-      },
-      {
-        "step": "hub_after_create",
-        "visible_text": "菜单\n/\n今天\n跟随系统\nEN\nHA\n行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。\n知道了\n还没休息\n杭州之旅\n9月23日 10:00\n—\n9月25日 20:00\n·\n2 位旅行者\n·\n3 天\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n5 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n这台服务已接入 AI 模型。\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的",
-        "sr_only_excluded": true
-      },
-      {
-        "step": "timing",
-        "visible_text": "AI elapsed 25s"
-      },
-      {
-        "step": "ai_verdict",
-        "visible_text": "AI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n5 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n方案概览\n每一天，紧密相连。\n对比住宿 →\n以下只是其中一个候选方案的预览，你还没有采用它。\n第 1 天\n星期三\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n这台服务已接入 AI 模型。\n这次排不出方案：数据不够，不是你说的不对\n这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：CATALOG_EMPTY）\n技术详情\nGET /places?city_code=CN-HANGZHOU -> 0 places\n换一座有数据的城市\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的",
-        "sr_only_excluded": true
-      }
-    ]
+  "identity": {
+    "lane": "HJ-P4",
+    "session": "4e974ae5",
+    "built_at_utc": "2026-09-22T18:34:15.973120+00:00",
+    "rev": 3,
+    "what_this_is": "a real user walk at 390x844 of an advertised city that has zero place rows, vs Beijing as control",
+    "viewport": "390x844 dpr3 zh-CN Asia/Shanghai hasTouch isMobile (own persistent chromium profile)",
+    "stack": "own one-off db copy + own uvicorn :8891 + own vite preview :4891 serving a COPY of the deployed dist; shared :4781/:4782/:8693 not touched"
   },
-  "beijing_control": {
-    "identity": {
-      "run": "beijing_control",
-      "built_at_utc": "2026-09-22T18:02:52.748620+00:00",
-      "built_at_local": "2026-09-23T02:02:52.748620+08:00",
-      "tz_offset_minutes": 480,
-      "source_log": "log/W_BJ_control.txt",
-      "source_log_sha256": "966c9e68cfe83800bfc4e1a101a67ba2d95c54d789c288decc8ad6543d147e4d"
+  "runs": [
+    {
+      "case": "hangzhou",
+      "run": "W_HZ_no_places",
+      "browser_clock": "Wed Sep 23 2026 01:53:39 GMT+0800 (中国标准时间)",
+      "log": "log/W_HZ_no_places.txt",
+      "log_sha256": "ea77634785e16798be56804173e15ae2b240fa66004c1cc2e8d4390c8d3e9172",
+      "log_bytes": 16606,
+      "served_bundle": [
+        "index-DtQ86lsQ.js"
+      ],
+      "api_calls": 33,
+      "api_methods": {
+        "GET": 29,
+        "POST": 4
+      },
+      "plans_generate_posted": false,
+      "places_preflight_gets": [
+        "200 GET /api/v1/places?city_code=CN-HANGZHOU",
+        "200 GET /api/v1/places?city_code=CN-HANGZHOU"
+      ],
+      "journey_ids_seen": [
+        "a4e2fdde-14f8-4af7-ae30-8da364bc6f53",
+        "aa2e49b8-5b25-4cab-85d9-4406ef9a11cd"
+      ],
+      "console_errors": [],
+      "verdict_text": "AI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n5 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n方案概览\n每一天，紧密相连。\n对比住宿 →\n以下只是其中一个候选方案的预览，你还没有采用它。\n第 1 天\n星期三\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n这台服务已接入 AI 模型。\n这次排不出方案：数据不够，不是你说的不对\n这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：CATALOG_EMPTY）\n技术详情\nGET /places?city_code=CN-HANGZHOU -> 0 places\n换一座有数据的城市\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的",
+      "eye_tags": [
+        "after_typing_city",
+        "ai_verdict",
+        "creating_t24s",
+        "creating_t42s",
+        "creating_t6s",
+        "hub_after_create",
+        "step1_open",
+        "step3_review",
+        "supported_list"
+      ],
+      "panel_probes": [],
+      "screenshots": [],
+      "harness_notes": [
+        "OK enter wizard",
+        "OK open supported list",
+        "SUPPORTED contains 杭州? true 上海? true 北京? true 苏州? false",
+        "OK close supported",
+        "OK type city",
+        "OK arrival",
+        "OK departure",
+        "OK next1",
+        "OK budget",
+        "OK stay",
+        "OK pace",
+        "OK interest",
+        "OK special",
+        "OK next2",
+        "OK create",
+        "hub reached in 48s",
+        "FAIL open AI sheet :: locator.click: Timeout 9000ms exceeded. Call log: \u001b[2m - waiting for locator('[data-testid=hub-plan-with-ai]').first()\u001b[",
+        "OK fill ai",
+        "OK submit ai",
+        "AI elapsed 25s",
+        "no 技术详情 button on screen this time"
+      ],
+      "step3_before_create": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n杭州\n抵达\n杭州东站\n·\n2026-09-23 10:00\n离开\n杭州东站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n兴趣\n自然\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n返回\n确认创建\n使用封存的演示行程",
+      "cta_landing_text": null,
+      "tech_details_text": null
     },
-    "generation_bundle": [
-      "index-DtQ86lsQ.js"
-    ],
-    "steps": [
-      {
-        "step": "step1_open",
-        "visible_text": "菜单\n/\n今天\n跟随系统\nEN\nHA\n还没休息\n杭州之旅\n9月23日 10:00\n—\n9月25日 20:00\n·\n2 位旅行者\n·\n3 天\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n5 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n今天\n行程\n地图\nCopilot\n我的",
-        "sr_only_excluded": true
+    {
+      "case": "hangzhou",
+      "run": "W_HZ2_no_places",
+      "browser_clock": "Wed Sep 23 2026 02:18:09 GMT+0800 (中国标准时间)",
+      "log": "log/W_HZ2_no_places.txt",
+      "log_sha256": "d5d75f4687356c610f569270742cf87cf09a149bbedcdeac230145df60aec090",
+      "log_bytes": 18212,
+      "served_bundle": [
+        "index-DtQ86lsQ.js"
+      ],
+      "api_calls": 34,
+      "api_methods": {
+        "GET": 30,
+        "POST": 4
       },
-      {
-        "step": "supported_list",
-        "visible_text": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n已自动设置：\n中国\n·\n人民币\n·\n中国标准时间\n看支持的目的地\n厦门\n北京\n上海\n天津\n福州\n广州\n深圳\n成都\n杭州\n东京\n新加坡\n抵达杭州\n离开杭州\n抵达时间\n离开时间\n高级设置\n国家/地区代码\n时区\n货币\n下一步",
-        "sr_only_excluded": true
+      "plans_generate_posted": false,
+      "places_preflight_gets": [
+        "200 GET /api/v1/places?city_code=CN-HANGZHOU",
+        "200 GET /api/v1/places?city_code=CN-HANGZHOU"
+      ],
+      "journey_ids_seen": [
+        "7f9f75bc-2531-43ff-ac2a-6c79adf80b5a",
+        "c665796b-176c-45bc-93e2-fbdaf06d0eb1"
+      ],
+      "console_errors": [],
+      "verdict_text": "AI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n5 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n方案概览\n每一天，紧密相连。\n对比住宿 →\n以下只是其中一个候选方案的预览，你还没有采用它。\n第 1 天\n星期三\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n这台服务已接入 AI 模型。\n这次排不出方案：数据不够，不是你说的不对\n这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：CATALOG_EMPTY）\n技术详情\nGET /places?city_code=CN-HANGZHOU -> 0 places\n换一座有数据的城市\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的",
+      "eye_tags": [
+        "after_typing_city",
+        "ai_verdict",
+        "creating_t24s",
+        "creating_t42s",
+        "creating_t6s",
+        "hub_after_create",
+        "step1_open",
+        "step3_review",
+        "supported_list"
+      ],
+      "panel_probes": [
+        {
+          "found": true,
+          "visible": true,
+          "rect": {
+            "top": 657,
+            "height": 56,
+            "width": 248
+          },
+          "text": "方案概览 ⏎ 每一天，紧密相连。",
+          "block_on_screen": true,
+          "trip_stop_cards": 0,
+          "day_headers": 3
+        }
+      ],
+      "screenshots": [
+        "W_HZ2_no_places__01_step1_open.png",
+        "W_HZ2_no_places__02_supported_list.png",
+        "W_HZ2_no_places__03_after_typing_city.png",
+        "W_HZ2_no_places__04_step3_review.png",
+        "W_HZ2_no_places__05_creating_t6s.png",
+        "W_HZ2_no_places__06_creating_t24s.png",
+        "W_HZ2_no_places__07_creating_t42s.png",
+        "W_HZ2_no_places__08_hub_after_create.png",
+        "W_HZ2_no_places__09_ai_verdict.png"
+      ],
+      "harness_notes": [
+        "OK enter wizard",
+        "OK open supported list",
+        "SUPPORTED contains 杭州? true 上海? true 北京? true 苏州? false",
+        "OK close supported",
+        "OK type city",
+        "OK arrival",
+        "OK departure",
+        "OK next1",
+        "OK budget",
+        "OK stay",
+        "OK pace",
+        "OK interest",
+        "OK special",
+        "OK next2",
+        "OK create",
+        "hub reached in 49s",
+        "FAIL open AI sheet :: locator.click: Timeout 9000ms exceeded. Call log: \u001b[2m - waiting for locator('[data-testid=hub-plan-with-ai]').first()\u001b[",
+        "OK fill ai",
+        "OK submit ai",
+        "AI elapsed 40s",
+        "no 技术详情 button on screen this time"
+      ],
+      "step3_before_create": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n杭州\n抵达\n杭州东站\n·\n2026-09-23 10:00\n离开\n杭州东站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n兴趣\n自然\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n返回\n确认创建\n使用封存的演示行程",
+      "cta_landing_text": null,
+      "tech_details_text": null
+    },
+    {
+      "case": "hangzhou",
+      "run": "W_HZ3_no_places",
+      "browser_clock": "Wed Sep 23 2026 02:21:26 GMT+0800 (中国标准时间)",
+      "log": "log/W_HZ3_no_places.txt",
+      "log_sha256": "df143a1d325e103c2c781af7a9e6644e65ba47ed0f7af05db48ec97e2114e7c2",
+      "log_bytes": 16734,
+      "served_bundle": [
+        "index-DtQ86lsQ.js"
+      ],
+      "api_calls": 32,
+      "api_methods": {
+        "GET": 28,
+        "POST": 4
       },
-      {
-        "step": "advertised_list_membership",
-        "visible_text": "SUPPORTED contains 杭州? true 上海? true 北京? true 苏州? false"
+      "plans_generate_posted": false,
+      "places_preflight_gets": [
+        "200 GET /api/v1/places?city_code=CN-HANGZHOU",
+        "200 GET /api/v1/places?city_code=CN-HANGZHOU"
+      ],
+      "journey_ids_seen": [
+        "7bcb4013-7ba9-4509-81a8-63edc63436f8",
+        "7f9f75bc-2531-43ff-ac2a-6c79adf80b5a"
+      ],
+      "console_errors": [],
+      "verdict_text": "AI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n5 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n方案概览\n每一天，紧密相连。\n对比住宿 →\n以下只是其中一个候选方案的预览，你还没有采用它。\n第 1 天\n星期三\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n这台服务已接入 AI 模型。\n这次排不出方案：数据不够，不是你说的不对\n这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：CATALOG_EMPTY）\n技术详情\nGET /places?city_code=CN-HANGZHOU -> 0 places\n换一座有数据的城市\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的",
+      "eye_tags": [
+        "after_typing_city",
+        "ai_verdict",
+        "creating_t6s",
+        "hub_after_create",
+        "step1_open",
+        "step3_review",
+        "supported_list",
+        "tech_details"
+      ],
+      "panel_probes": [
+        {
+          "found": true,
+          "visible": true,
+          "rect": {
+            "top": 657,
+            "height": 56,
+            "width": 248
+          },
+          "text": "方案概览 ⏎ 每一天，紧密相连。",
+          "block_on_screen": true,
+          "trip_stop_cards": 0,
+          "occluded_by": "SUMMARY.",
+          "day_headers": 3
+        }
+      ],
+      "screenshots": [
+        "W_HZ3_no_places__01_step1_open.png",
+        "W_HZ3_no_places__02_supported_list.png",
+        "W_HZ3_no_places__03_after_typing_city.png",
+        "W_HZ3_no_places__04_step3_review.png",
+        "W_HZ3_no_places__05_creating_t6s.png",
+        "W_HZ3_no_places__06_hub_after_create.png",
+        "W_HZ3_no_places__07_ai_verdict.png",
+        "W_HZ3_no_places__08_tech_details.png"
+      ],
+      "harness_notes": [
+        "OK enter wizard",
+        "OK open supported list",
+        "SUPPORTED contains 杭州? true 上海? true 北京? true 苏州? false",
+        "OK close supported",
+        "OK type city",
+        "OK arrival",
+        "OK departure",
+        "OK next1",
+        "OK budget",
+        "OK stay",
+        "OK pace",
+        "OK interest",
+        "OK special",
+        "OK next2",
+        "OK create",
+        "hub reached in 12s",
+        "FAIL open AI sheet :: locator.click: Timeout 9000ms exceeded. Call log: \u001b[2m - waiting for locator('[data-testid=hub-plan-with-ai]').first()\u001b[",
+        "OK fill ai",
+        "OK submit ai",
+        "AI elapsed 40s",
+        "OK open 技术详情"
+      ],
+      "step3_before_create": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n杭州\n抵达\n杭州东站\n·\n2026-09-23 10:00\n离开\n杭州东站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n兴趣\n—\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n返回\n确认创建\n使用封存的演示行程",
+      "cta_landing_text": null,
+      "tech_details_text": "AI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n5 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n方案概览\n每一天，紧密相连。\n对比住宿 →\n以下只是其中一个候选方案的预览，你还没有采用它。\n第 1 天\n星期三\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n这台服务已接入 AI 模型。\n这次排不出方案：数据不够，不是你说的不对\n这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：CATALOG_EMPTY）\n技术详情\nGET /places?city_code=CN-HANGZHOU -> 0 places\n换一座有数据的城市\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的"
+    },
+    {
+      "case": "hangzhou",
+      "run": "W_HZ4_no_places",
+      "browser_clock": "Wed Sep 23 2026 02:26:26 GMT+0800 (中国标准时间)",
+      "log": "log/W_HZ4_no_places.txt",
+      "log_sha256": "d5a750311dea4a40df0dee9ab292cf462ee5c32829850e269d9a9c36bc20d992",
+      "log_bytes": 23865,
+      "served_bundle": [
+        "index-DtQ86lsQ.js"
+      ],
+      "api_calls": 36,
+      "api_methods": {
+        "GET": 32,
+        "POST": 4
       },
-      {
-        "step": "after_typing_city",
-        "visible_text": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n已自动设置：\n中国\n·\n人民币\n·\n中国标准时间\n看支持的目的地\n厦门\n北京\n上海\n天津\n福州\n广州\n深圳\n成都\n杭州\n东京\n新加坡\n抵达北京\n离开北京\n抵达时间\n离开时间\n高级设置\n国家/地区代码\n时区\n货币\n下一步",
-        "sr_only_excluded": true
+      "plans_generate_posted": false,
+      "places_preflight_gets": [
+        "200 GET /api/v1/places?city_code=CN-HANGZHOU",
+        "200 GET /api/v1/places?city_code=CN-HANGZHOU"
+      ],
+      "journey_ids_seen": [
+        "4d2e3158-615b-4e3a-ad38-10d57526c7a3",
+        "be717922-e8a5-44a8-a07a-9b1af343aa35"
+      ],
+      "console_errors": [],
+      "verdict_text": "AI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n5 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n方案概览\n每一天，紧密相连。\n对比住宿 →\n以下只是其中一个候选方案的预览，你还没有采用它。\n第 1 天\n星期三\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n这台服务已接入 AI 模型。\n这次排不出方案：数据不够，不是你说的不对\n这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：CATALOG_EMPTY）\n技术详情\nGET /places?city_code=CN-HANGZHOU -> 0 places\n换一座有数据的城市\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的",
+      "eye_tags": [
+        "after_switch_city_cta",
+        "after_typing_city",
+        "ai_verdict",
+        "creating_t24s",
+        "creating_t42s",
+        "creating_t6s",
+        "hub_after_closing_sheet",
+        "hub_after_create",
+        "step1_open",
+        "step3_review",
+        "supported_list",
+        "tech_details"
+      ],
+      "panel_probes": [
+        {
+          "found": true,
+          "visible": true,
+          "rect": {
+            "top": 657,
+            "height": 56,
+            "width": 248
+          },
+          "text": "方案概览 ⏎ 每一天，紧密相连。",
+          "block_on_screen": true,
+          "trip_stop_cards": 0,
+          "occluded_by": "SUMMARY.",
+          "day_headers": 3
+        }
+      ],
+      "screenshots": [
+        "W_HZ4_no_places__01_step1_open.png",
+        "W_HZ4_no_places__02_supported_list.png",
+        "W_HZ4_no_places__03_after_typing_city.png",
+        "W_HZ4_no_places__04_step3_review.png",
+        "W_HZ4_no_places__05_creating_t6s.png",
+        "W_HZ4_no_places__06_creating_t24s.png",
+        "W_HZ4_no_places__07_creating_t42s.png",
+        "W_HZ4_no_places__08_hub_after_create.png",
+        "W_HZ4_no_places__09_ai_verdict.png",
+        "W_HZ4_no_places__10_tech_details.png",
+        "W_HZ4_no_places__11_hub_after_closing_sheet.png",
+        "W_HZ4_no_places__12_after_switch_city_cta.png"
+      ],
+      "harness_notes": [
+        "OK enter wizard",
+        "OK open supported list",
+        "SUPPORTED contains 杭州? true 上海? true 北京? true 苏州? false",
+        "OK close supported",
+        "OK type city",
+        "OK arrival",
+        "OK departure",
+        "OK next1",
+        "OK budget",
+        "OK stay",
+        "OK pace",
+        "OK interest",
+        "OK special",
+        "OK next2",
+        "OK create",
+        "hub reached in 49s",
+        "FAIL open AI sheet :: locator.click: Timeout 9000ms exceeded. Call log: \u001b[2m - waiting for locator('[data-testid=hub-plan-with-ai]').first()\u001b[",
+        "OK fill ai",
+        "OK submit ai",
+        "AI elapsed 35s",
+        "OK open 技术详情",
+        "OK escape sheet",
+        "OK tap 换一座有数据的城市",
+        "after CTA url=http://127.0.0.1:4891/v8/hub"
+      ],
+      "step3_before_create": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n杭州\n抵达\n杭州东站\n·\n2026-09-23 10:00\n离开\n杭州东站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n兴趣\n—\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n返回\n确认创建\n使用封存的演示行程",
+      "cta_landing_text": "新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n杭州\n抵达\n杭州东站\n·\n2026-09-23 10:00\n离开\n杭州东站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n·\n我们替你填的\n兴趣\n—\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n返回\n确认创建\n使用封存的演示行程",
+      "tech_details_text": "AI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n5 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n方案概览\n每一天，紧密相连。\n对比住宿 →\n以下只是其中一个候选方案的预览，你还没有采用它。\n第 1 天\n星期三\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我们两个人，想睡到自然醒，上午十点前别安排；想看西湖夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n这台服务已接入 AI 模型。\n这次排不出方案：数据不够，不是你说的不对\n这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：CATALOG_EMPTY）\n技术详情\nGET /places?city_code=CN-HANGZHOU -> 0 places\n换一座有数据的城市\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的"
+    },
+    {
+      "case": "beijing_control",
+      "run": "W_BJ_control",
+      "browser_clock": "Wed Sep 23 2026 01:56:48 GMT+0800 (中国标准时间)",
+      "log": "log/W_BJ_control.txt",
+      "log_sha256": "966c9e68cfe83800bfc4e1a101a67ba2d95c54d789c288decc8ad6543d147e4d",
+      "log_bytes": 12699,
+      "served_bundle": [
+        "index-DtQ86lsQ.js"
+      ],
+      "api_calls": 38,
+      "api_methods": {
+        "GET": 33,
+        "POST": 5
       },
-      {
-        "step": "step3_review",
-        "visible_text": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站\n·\n2026-09-23 10:00\n离开\n北京南站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n兴趣\n—\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n返回\n确认创建\n使用封存的演示行程",
-        "sr_only_excluded": true
+      "plans_generate_posted": true,
+      "places_preflight_gets": [
+        "200 GET /api/v1/places?city_code=CN-BEIJING",
+        "200 GET /api/v1/places?city_code=CN-BEIJING"
+      ],
+      "journey_ids_seen": [
+        "aa2e49b8-5b25-4cab-85d9-4406ef9a11cd",
+        "c665796b-176c-45bc-93e2-fbdaf06d0eb1"
+      ],
+      "console_errors": [],
+      "verdict_text": "AI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n7 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n方案概览\n每一天，紧密相连。\n对比住宿 →\n以下只是其中一个候选方案的预览，你还没有采用它。\n第 1 天\n星期三\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我们两个人，想睡到自然醒，上午十点前别安排；想看夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n我想去Houhai Lake Bar…\nHouhai Lake Bar St…\n这台服务已接入 AI 模型。\n已生成 3 个可选方案\n去“今天”对比这几个方案，选一个再继续。\n已整理为两人三天、总预算1600元、10点前不安排、自然醒、夜间看夜景并找氛围酒吧、本地餐饮、步行不超过15分钟的偏好；具体地点与行程需服务端解析。\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的",
+      "eye_tags": [
+        "after_typing_city",
+        "ai_verdict",
+        "hub_after_create",
+        "step1_open",
+        "step3_review",
+        "supported_list"
+      ],
+      "panel_probes": [],
+      "screenshots": [],
+      "harness_notes": [
+        "OK enter wizard",
+        "OK open supported list",
+        "SUPPORTED contains 杭州? true 上海? true 北京? true 苏州? false",
+        "OK close supported",
+        "OK type city",
+        "OK arrival",
+        "OK departure",
+        "OK next1",
+        "OK budget",
+        "OK stay",
+        "OK pace",
+        "OK interest",
+        "OK special",
+        "OK next2",
+        "OK create",
+        "hub reached in 6s",
+        "FAIL open AI sheet :: locator.click: Timeout 9000ms exceeded. Call log: \u001b[2m - waiting for locator('[data-testid=hub-plan-with-ai]').first()\u001b[",
+        "OK fill ai",
+        "OK submit ai",
+        "AI elapsed 30s",
+        "no 技术详情 button on screen this time"
+      ],
+      "step3_before_create": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站\n·\n2026-09-23 10:00\n离开\n北京南站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n兴趣\n—\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n返回\n确认创建\n使用封存的演示行程",
+      "cta_landing_text": null,
+      "tech_details_text": null
+    },
+    {
+      "case": "beijing_control",
+      "run": "W_BJ2_control",
+      "browser_clock": "Wed Sep 23 2026 02:22:43 GMT+0800 (中国标准时间)",
+      "log": "log/W_BJ2_control.txt",
+      "log_sha256": "2c1e2d2a1bec969d8e70957ce1df5b3348f85efe2e49b2b805872a41f8e775b4",
+      "log_bytes": 15237,
+      "served_bundle": [
+        "index-DtQ86lsQ.js"
+      ],
+      "api_calls": 32,
+      "api_methods": {
+        "GET": 27,
+        "POST": 5
       },
-      {
-        "step": "timing",
-        "visible_text": "hub reached in 6s"
-      },
-      {
-        "step": "hub_after_create",
-        "visible_text": "菜单\n/\n今天\n跟随系统\nEN\nBE\n行程已创建。告诉 AI 你想怎么玩，它会生成可选方案。\n知道了\n还没休息\n北京之旅\n9月23日 10:00\n—\n9月25日 20:00\n·\n2 位旅行者\n·\n3 天\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n7 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我想去Houhai Lake Bar…\nHouhai Lake Bar St…\n这台服务已接入 AI 模型。\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的",
-        "sr_only_excluded": true
-      },
-      {
-        "step": "timing",
-        "visible_text": "AI elapsed 30s"
-      },
-      {
-        "step": "ai_verdict",
-        "visible_text": "AI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n7 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n方案概览\n每一天，紧密相连。\n对比住宿 →\n以下只是其中一个候选方案的预览，你还没有采用它。\n第 1 天\n星期三\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我们两个人，想睡到自然醒，上午十点前别安排；想看夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n我想去Houhai Lake Bar…\nHouhai Lake Bar St…\n这台服务已接入 AI 模型。\n已生成 3 个可选方案\n去“今天”对比这几个方案，选一个再继续。\n已整理为两人三天、总预算1600元、10点前不安排、自然醒、夜间看夜景并找氛围酒吧、本地餐饮、步行不超过15分钟的偏好；具体地点与行程需服务端解析。\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的",
-        "sr_only_excluded": true
-      }
-    ]
-  },
+      "plans_generate_posted": true,
+      "places_preflight_gets": [
+        "200 GET /api/v1/places?city_code=CN-BEIJING",
+        "200 GET /api/v1/places?city_code=CN-BEIJING"
+      ],
+      "journey_ids_seen": [
+        "4d2e3158-615b-4e3a-ad38-10d57526c7a3",
+        "7bcb4013-7ba9-4509-81a8-63edc63436f8"
+      ],
+      "console_errors": [],
+      "verdict_text": "AI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n7 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n方案概览\n每一天，紧密相连。\n对比住宿 →\n以下只是其中一个候选方案的预览，你还没有采用它。\n第 1 天\n星期三\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我们两个人，想睡到自然醒，上午十点前别安排；想看夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n我想去Houhai Lake Bar…\nHouhai Lake Bar St…\n这台服务已接入 AI 模型。\nAI 没有参与这次规划（生成了 3 个备选）\n这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里。\n技术详情\nDeepSeek Agent completion failed\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的",
+      "eye_tags": [
+        "after_typing_city",
+        "ai_verdict",
+        "hub_after_create",
+        "step1_open",
+        "step3_review",
+        "supported_list",
+        "tech_details"
+      ],
+      "panel_probes": [
+        {
+          "found": true,
+          "visible": true,
+          "rect": {
+            "top": 657,
+            "height": 56,
+            "width": 248
+          },
+          "text": "方案概览 ⏎ 每一天，紧密相连。",
+          "block_on_screen": false,
+          "trip_stop_cards": 0,
+          "occluded_by": "P.",
+          "day_headers": 3
+        }
+      ],
+      "screenshots": [
+        "W_BJ2_control__01_step1_open.png",
+        "W_BJ2_control__02_supported_list.png",
+        "W_BJ2_control__03_after_typing_city.png",
+        "W_BJ2_control__04_step3_review.png",
+        "W_BJ2_control__05_hub_after_create.png",
+        "W_BJ2_control__06_ai_verdict.png",
+        "W_BJ2_control__07_tech_details.png"
+      ],
+      "harness_notes": [
+        "OK enter wizard",
+        "OK open supported list",
+        "SUPPORTED contains 杭州? true 上海? true 北京? true 苏州? false",
+        "OK close supported",
+        "OK type city",
+        "OK arrival",
+        "OK departure",
+        "OK next1",
+        "OK budget",
+        "OK stay",
+        "OK pace",
+        "OK interest",
+        "OK special",
+        "OK next2",
+        "OK create",
+        "hub reached in 6s",
+        "FAIL open AI sheet :: locator.click: Timeout 9000ms exceeded. Call log: \u001b[2m - waiting for locator('[data-testid=hub-plan-with-ai]').first()\u001b[",
+        "OK fill ai",
+        "OK submit ai",
+        "AI elapsed 25s",
+        "OK open 技术详情"
+      ],
+      "step3_before_create": "用你自己的城市试用 CityNexus\n新建行程\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站\n·\n2026-09-23 10:00\n离开\n北京南站\n·\n2026-09-25 20:00\n人数 / 房间\n2\n·\n1\n·\n我们替你填的\n总预算 / 住宿\nCNY\n1600\n/\n800\n节奏\n轻松\n兴趣\n自然\n特殊要求\n我们两个人，想睡到自然醒，上午十点前别安排；想看夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n自动设置\nCN\n·\nCNY\n·\nAsia/Shanghai\n返回当前行程\n返回\n确认创建\n使用封存的演示行程",
+      "cta_landing_text": null,
+      "tech_details_text": "AI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出\n1\n底图未加载，显示的是路线示意。\n路线上下文\n7 段路程\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n住宿\n还没有选定\n到达\n9月23日 10:00\n出发\n9月25日 20:00\n一切正常\n方案概览\n每一天，紧密相连。\n对比住宿 →\n以下只是其中一个候选方案的预览，你还没有采用它。\n第 1 天\n星期三\n✦\nCityNexus Copilot\nAI 帮我规划\n用你自己的话描述这趟旅行，越具体越好。\n×\n我们两个人，想睡到自然醒，上午十点前别安排；想看夜景，找个有氛围的酒吧；吃饭要本地馆子；预算很紧，两个人三天一共一千六；走路别超过十五分钟。\n我想去Houhai Lake Bar…\nHouhai Lake Bar St…\n这台服务已接入 AI 模型。\nAI 没有参与这次规划（生成了 3 个备选）\n这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里。\n技术详情\nDeepSeek Agent completion failed\n稍后\n开始规划\n今天\n行程\n地图\nCopilot\n我的"
+    }
+  ],
   "store_side": {
-    "identity": {
-      "run": "store-side",
-      "built_at_utc": "2026-09-22T18:02:52.752610+00:00",
-      "built_at_local": "2026-09-23T02:02:52.752610+08:00",
-      "tz_offset_minutes": 480
-    },
     "db": "D:\\moodle\\_qoder_hjp4_20260921/_hjp4_20260922.db",
-    "note": "one-off copy snapshot; NOT the live db",
+    "note": "one-off copy; NOT the live db; read-only connection (mode=ro)",
     "city_codes_with_place_rows": [
       [
         "CN-BEIJING",
@@ -147,31 +518,183 @@
         8
       ]
     ],
-    "hangzhou_journey": [
-      [
-        "aa2e49b8",
-        "杭州 · journey",
-        "CN-HANGZHOU",
-        "DRAFT"
-      ]
+    "journeys": [
+      {
+        "id8": "22222222",
+        "city": "CNX-DEMO",
+        "status": "ACTIVE",
+        "plan_versions": 7
+      },
+      {
+        "id8": "6cbdbc65",
+        "city": "CN-BEIJING",
+        "status": "PLANNED",
+        "plan_versions": 9
+      },
+      {
+        "id8": "94669bae",
+        "city": "CN-BEIJING",
+        "status": "DRAFT",
+        "plan_versions": 3
+      },
+      {
+        "id8": "dd7e2ca1",
+        "city": "CN-BEIJING",
+        "status": "PLANNED",
+        "plan_versions": 6
+      },
+      {
+        "id8": "4cf9464a",
+        "city": "CN-BEIJING",
+        "status": "PLANNED",
+        "plan_versions": 3
+      },
+      {
+        "id8": "f3f43d73",
+        "city": "CN-BEIJING",
+        "status": "PLANNED",
+        "plan_versions": 6
+      },
+      {
+        "id8": "72240359",
+        "city": "CN-BEIJING",
+        "status": "PLANNED",
+        "plan_versions": 3
+      },
+      {
+        "id8": "1da2cde7",
+        "city": "CN-BEIJING",
+        "status": "DRAFT",
+        "plan_versions": 0
+      },
+      {
+        "id8": "eb41e79a",
+        "city": "CN-BEIJING",
+        "status": "DRAFT",
+        "plan_versions": 0
+      },
+      {
+        "id8": "4df9bd63",
+        "city": "CN-BEIJING",
+        "status": "DRAFT",
+        "plan_versions": 0
+      },
+      {
+        "id8": "54c8726a",
+        "city": "CN-BEIJING",
+        "status": "DRAFT",
+        "plan_versions": 0
+      },
+      {
+        "id8": "a4e2fdde",
+        "city": "CN-BEIJING",
+        "status": "DRAFT",
+        "plan_versions": 0
+      },
+      {
+        "id8": "aa2e49b8",
+        "city": "CN-HANGZHOU",
+        "status": "DRAFT",
+        "plan_versions": 0
+      },
+      {
+        "id8": "c665796b",
+        "city": "CN-BEIJING",
+        "status": "DRAFT",
+        "plan_versions": 3
+      },
+      {
+        "id8": "7f9f75bc",
+        "city": "CN-HANGZHOU",
+        "status": "DRAFT",
+        "plan_versions": 0
+      },
+      {
+        "id8": "7bcb4013",
+        "city": "CN-HANGZHOU",
+        "status": "DRAFT",
+        "plan_versions": 0
+      },
+      {
+        "id8": "4d2e3158",
+        "city": "CN-BEIJING",
+        "status": "DRAFT",
+        "plan_versions": 3
+      },
+      {
+        "id8": "be717922",
+        "city": "CN-HANGZHOU",
+        "status": "DRAFT",
+        "plan_versions": 0
+      },
+      {
+        "id8": "dc258ac9",
+        "city": "CN-HANGZHOU",
+        "status": "DRAFT",
+        "plan_versions": 0
+      },
+      {
+        "id8": "66a44ea8",
+        "city": "CN-HANGZHOU",
+        "status": "DRAFT",
+        "plan_versions": 0
+      }
     ],
-    "places_for_CN_HANGZHOU": 0,
-    "journey_legs_rows_in_copy": 0,
-    "mobility_facts_rows_in_copy": 460
+    "journey_legs_rows_total": 0,
+    "hangzhou_journeys_all_zero_plan_versions": true,
+    "hangzhou_journey_count": 6
   },
-  "generation_string_counts": {
-    "index-DtQ86lsQ.js": {
-      "destinations/capability": 1,
-      "catalog-hydrations": 3,
-      "CATALOG_EMPTY": 2,
-      "不是你描述得不对": 1,
-      "换一座有数据的城市": 1,
-      "调整预算或换个说法": 0,
-      "我和朋友两个人去厦门": 0,
-      "HYDRATABLE": 0
-    },
-    "index-AkCV4A2Q.js (09-21 16:28)": "ABSENT-ON-DISK",
-    "index-6vq1iijw.js (09-21 18:23)": "ABSENT-ON-DISK"
+  "generation_string_counts_in_served_bundle": {
+    "destinations/capability": 1,
+    "catalog-hydrations": 3,
+    "CATALOG_EMPTY": 2,
+    "不是你描述得不对": 1,
+    "换一座有数据的城市": 1,
+    "调整预算或换个说法": 0,
+    "我和朋友两个人去厦门": 0,
+    "HYDRATABLE": 0,
+    "方案概览": 1,
+    "我们替你填的": 1
+  },
+  "served_bundle_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+  "wait_overlay": {
+    "log": "log/W_WAIT_probe.txt",
+    "log_sha256": "1e8c67e4ddc9cb9198f26b6917f30a44fe3262447aa49512731b880a00795707",
+    "browser_clock": "Wed Sep 23 2026 02:33:30 GMT+0800 (中国标准时间)",
+    "caveat": "this on-disk log is the THIRD probe run; an earlier run under the same stepId recorded \"已等待 8 秒\" then \"已等待 36 秒\" with byte-identical screenshots and was overwritten by my own re-run. The +8s occlusion reading reproduced in both runs (same PNG sha256).",
+    "evidence": [
+      {
+        "note": "city field present: 1"
+      },
+      {
+        "note": "WAITPROBE +8s [{\"text\":\"已等待 8 秒\",\"tag\":\"B\",\"cls\":\"\",\"aria_live\":null,\"rect\":{\"top\":677,\"left\":159,\"w\":87,\"h\":22},\"hiddenBy\":null,\"pixel_hit\":\"BUTTON|v8-primary-button\",\"same_element_at_pixel\":false}]"
+      },
+      {
+        "note": "WAITSHOT W_WAIT_probe_8s.png sha=6555ddea9638",
+        "file": "W_WAIT_probe_8s.png",
+        "png_sha256": "6555ddea9638bb28",
+        "png_bytes": 289951
+      },
+      {
+        "note": "WAITPROBE +28s []"
+      },
+      {
+        "note": "WAITSHOT W_WAIT_probe_28s.png sha=8f7a71ec0e7e",
+        "file": "W_WAIT_probe_28s.png",
+        "png_sha256": "8f7a71ec0e7ee834",
+        "png_bytes": 238241
+      },
+      {
+        "note": "AFTER_SCROLL null"
+      },
+      {
+        "note": "WAITSHOT2 W_WAIT_probe_scrolled.png sha=8f7a71ec0e7e",
+        "file": "W_WAIT_probe_scrolled.png",
+        "png_sha256": "8f7a71ec0e7ee834",
+        "png_bytes": 238241
+      }
+    ],
+    "instrument_note": "elementFromPoint at the counter centre returned BUTTON.v8-primary-button, so the seconds line is painted under the sticky button at the scroll position the app leaves the user in; whether scrolling reveals it was NOT measured (the +28s frame of this run had already navigated to the hub)."
   },
   "mechanism": {
     "request_sequences": {
