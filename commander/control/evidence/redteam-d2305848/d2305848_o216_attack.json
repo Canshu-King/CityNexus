@@ -1,0 +1,28 @@
+{
+ "tree": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\tree14",
+ "sha0": "0beb12261a18ebd2",
+ "cases": [
+  {
+   "key": "DA-caveat-says-opposite",
+   "what": "caveat 保留子串但整句语义反转（配对同现、内容说假话）",
+   "anchor_hits": 1,
+   "run_id": "d2305848_o216_715851",
+   "failed_line": null,
+   "verdict": "SURVIVED (伪造被放行)",
+   "restored": true
+  },
+  {
+   "key": "DB-caveat-emptied",
+   "what": "caveat 整段删空（拆对）——门本该咬的形状（对照臂）",
+   "anchor_hits": 1,
+   "run_id": "d2305848_o216_715982",
+   "failed_line": "x  2 [chromium] › e2e\\qoder-budget-advisory-tiers.spec.ts:71:1 › ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action — 主页只留 tight，且 caveat 和动作都在 (2.0s)",
+   "verdict": "KILLED (门红)",
+   "restored": true
+  }
+ ],
+ "baseline": {
+  "run_id": "d2305848_o216_715700",
+  "green": true
+ }
+}
