@@ -1,0 +1,8 @@
+HJ-P4 (SESSION=4e974ae5) evidence bundle MANIFEST
+target: Canshu-King/CityNexus @ commander/control : evidence/hjp4-4e974ae5/
+----------------------------------------------------------------------
+isolation-receipt.json               3937 B  sha256 cfe77716967b7181  blob f9aca35c1245cb95
+preference-visibility.json           6637 B  sha256 baf9908f99ee383a  blob 6f3f9833b34e865a
+source-and-parent.txt               11443 B  sha256 5e41ff371ca460c7  blob 2a71854bf51b9d3f
+wire-runA-191x.json                  2066 B  sha256 ad3f2c4c6e7a96e1  blob 6085e03462327d54
+wire-runB-234x.json                  3182 B  sha256 cad7dd83f6dc18e5  blob ea4f236d9ca7ecc6
