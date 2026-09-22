@@ -10194,6 +10194,93 @@ status: ORD-0212 **DONE@2026-09-22T15:3x+08 by e345b9d6**（提交 `56d20ec`；�
 evidence: `frontend/src/app/V8Experience.tsx`（tight 三条件渲染）、`frontend/e2e/qoder-budget-advisory-tiers.spec.ts`（新，三节点含 tripwire）、`frontend/e2e/qoder-trip-shape-and-budget.spec.ts`（JPY/CNY 两臂改指向）、`review/evidence/ui-overnight/ord0212-{tight,non-tight,tripwire}.json`＋`ord0212-tight-light.png`、`review/killU1-*.log`、`review/add-ord0212-mutant.py`、`review/redirect-ord0064-gate.py`、`review/tsc-0212*.txt`；运行日志 `review/run-run061808.log`（73+崩溃）、重跑 74/74 链 log。**未 push**。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 执行令 @2026-09-22T16:0x+08 —— 仲裁把 **GATE_ACCEPTANCE_STREAK** 冻结了（八条，比我提的更严）；红队 15:41 的四个洞落成 **ORD-0214 / 0215 / 0216**；`g3` 正式改判 `FLIP_WITHOUT_SHARED_STATE`
+
+### ① 冻结原文照录（来源＝总线 `5773071703` @15:58:48，仲裁→SESSION=EXTERNAL，第五十九次敲门回执）
+
+**适用面＝一切"跨隔离运行翻过判定"的并发/时序门**，含 **ORD-0210（F）与 ORD-0213（C）**，也含以后这类门：
+
+```text
+GATE_ACCEPTANCE_STREAK
+1. exact same product/test SHA;
+2. 10 CONSECUTIVE independent processes;
+3. each process gets a fresh app-resolved temp DB;
+4. receipt records: run_index, exit_code, resolved_absolute_db_path,
+   initial row counts, final row counts;
+5. all 10 runs GREEN;
+6. no sleep/retry/backoff/concurrency reduction/test-expectation
+   relaxation used to obtain the streak;
+7. no two runs may silently share the same temp DB path;
+8. one isolated GREEN is observation only, never closure.
+```
+
+分类两则（也冻结）：
+
+```text
+same resolved DB path + clean/dirty state changes verdict  => DIRTY_DB_FALSE_* / ISOLATION_BREACH
+different fresh DB paths + verdict still flips             => FLIP_WITHOUT_SHARED_STATE
+```
+
+⇒ 我 14 个独立进程、14 个不同临时库里 12 红 / 2 绿，**g3 从此不再归因给共享库**（ORD-0211 已切断那条因果链），正式名 **`g3 = FLIP_WITHOUT_SHARED_STATE`**，除非有人能证明两次读数其实落到同一个库。
+**外加一条他新加的"关闭之后"的反向要求（不另开单）**：修好后若存在可安全突变的并发保护点，用 `mutation_anchor_guard.py` 破坏它 ⇒ 必须重新出现 RED，或至少**打断 10/10 streak**；否则只能签 `STREAK_GREEN`，**不许宣称根因门咬得住回归**。
+仲裁原话：**"10 次全绿"是必要条件，不是拿来掩盖根因不明的免死金牌。**
+
+### ② 红队 `d2305848` 15:41 的四个读数 → 三张单（都不是微发现，是真洞）＋一件红队自己回收
+
+| 新单 | 归 | 红队给的正证（不是我推测的） | 我要的第一步 |
+|---|---|---|---|
+| **ORD-0214** | F `8ccd71d8` | 你的 §8 四字段门**被"合法形状伪造"绕过了一臂**（形状全对、内容是我造的） | 把那一臂的反例**变成门的必答题**：字段齐但语义为空/复制粘贴同值的 §8 证据必须 RED；两臂都要有反例，别再交"门绿了" |
+| **ORD-0215** | B `c01d72a3` | 你加的两个计数字段（`features_viewed` / `candidates_before_filter`）在现状下**无人看**：三个 SURVIVED ＋一条"序列红"自白 | 门必须钉**字段被消费**（读出来并参与判定），不是钉**字段存在**；顺带把你未闭的 g10 一起交 |
+| **ORD-0216** | D `e345b9d6` | 第四格"配对识别"门**两臂存活、一臂杀** | 三件按序：① tight 档在主页的**运行时**证据（我 15:5x 也只有代码级）；② 第四格改成**双向门**（配对必同现、拆对必红）；③ HJ-P1 15:04 那条 2/2 的 **"还需要填写：总预算"带进第 3 步且创建成功时仍在屏上**（HUMAN_MISLEADING） |
+| 回收（不另开单） | 红队自己 | ORD-0209 的反例跑到一半被**机器内存**打断 ⇒ `NOT_MEASURED`，你没报 verdict，这点诚实我认可 | 一次只测一臂、跑完再测下一臂；`REPRODUCED(canary)` 那一格我已签，你只需补反例臂 |
+
+### ③ 现场与点名（16:02 `list_chat_sessions`，用户令 §6）
+
+`running`＝F `8ccd71d8`（ORD-0210 在跑，我 15:31 叫醒生效）｜红队 `d2305848`｜我 `494abfd7`
+`ready` 但**已静默 40–70 分钟**＝D `e345b9d6`（15:11 后无新块）｜B `c01d72a3`（14:52）｜HJ-P1 `1a986a24`｜HJ-P4 `4e974ae5`｜HJ-P2 `d4b04a0f`
+`cold`＝**C `8c66aa92`（15:32，ORD-0213 未 CLAIMED！）**｜**HARNESS `d291c9dc`（14:53 起）**｜HERMES `9baacb24`｜LAB `5ea3bedc`｜HJ-P3 `aad2d1f2`（14:24）
+⇒ 16:0x 我逐条发窄定位（各一行、不含任务正文）：**C、HARNESS、HERMES、LAB、HJ-P3、D、B**；HARNESS 与 D 各自的第一步就是本块 ① 的 streak 形状与 ORD-0216 第①件。
+working tip 仍 `56d20ec`（15:22 后主线 0 新提交＝**40 分钟无交付**，这是本轮的实话）；reference tip `c0d7e3d`；`P7=false`；线上 bundle `index-BCF4ptyk.js`；用户库 3/19/3、护栏 403、匿名 401、`demo/reset` 从未触发、0 次 provider 出网；那把 key 仍未轮换（只有用户能做）。
+
+- id: ORD-0214
+  to: 8ccd71d8
+  priority: high
+  if_head: 56d20ec
+  order: |
+    **§8 四字段门有一条臂能被"合法形状伪造"绕过（红队 `d2305848` 15:41 正证：形状全对、内容是它造的）。**
+    第一步＝把那一臂变成门的**必答题**：四字段齐备但语义为空／同值复制粘贴／指向不存在的行 ⇒ 必须 RED，
+    并给出两臂各自的反例（"缺字段"与"字段齐全但内容是伪造"是两条不同的臂，前者过不代表后者过）。
+    验收形状按仲裁 15:58 冻结的 **GATE_ACCEPTANCE_STREAK**（原文在我 16:0x 执行令块 ①），八条不许打折；
+    ORD-0210 那条"干净库／脏库同判定"的门**同受这条约束**：单次绿只是观察，不是结案。
+    边界照旧：只许删自己导出树里的测试库，`_live.db` / `_preview.db` 一字节不碰，反例统一走 `mutation_anchor_guard.py`。
+  status: DISPATCHED@2026-09-22T16:0x+08 by 494abfd7（靶子来自红队 15:41 的实洞，不是我的猜测）
+- id: ORD-0215
+  to: c01d72a3
+  priority: high
+  if_head: 56d20ec
+  order: |
+    **你加的两个计数字段现状下"无人看"（红队 15:41：三个 SURVIVED ＋一条序列红自白）。**
+    门要钉的是**字段被消费**（被读出来、参与判定、缺值时报具名不足），不是**字段存在**。
+    形状：把 `features_viewed` / `candidates_before_filter` 的值改成任意别的值，门必须红；改不动就说明它没进门。
+    同单回收：`provider_truth g10`（每条归一化地点都要带可用坐标，含 node）仍未闭，一并交。
+    验收按 **GATE_ACCEPTANCE_STREAK**（我 16:0x 块 ① 原文），并且 g14a/g14c/city_failure 三条恢复要在**同一个 exact SHA** 上报数，不许分三把。
+  status: DISPATCHED@2026-09-22T16:0x+08 by 494abfd7
+- id: ORD-0216
+  to: e345b9d6
+  priority: high
+  if_head: 56d20ec
+  order: |
+    **三件同属你的 UI 队列，按序做，别混交：**
+    ① `tight` 档在主页的**运行时**证据——我 15:5x 亲测只到"没有那行参考值"，tight 那一档我只有代码级（`ACCEPTED-CODE`），
+       需要一次真造出紧预算的读数（屏上文案＋动作可点＋`elementFromPoint` 命中）。
+    ② 第四格"配对识别"门**两臂存活**（红队 15:41）：改成双向门——caveat 与数字必须同现、拆对必红；
+       只钉"名字/类名"的断言不算，读渲染文字。
+    ③ HJ-P1 15:04 的 2/2 真缺陷：修好被拦的字段后，**"还需要填写：总预算"会跟着进第 3 步确认屏，
+       并且在 `201 travelers`＋`201 journeys` 成功之后仍挂在屏上**（分类 `HUMAN_MISLEADING`）。
+       最小回归点：换步时按当前有效值重算该提示，或进入第 3 步即清空第 2 步的残留。
+    ⚠ 你那两文件门（`qoder-budget-advisory-tiers.spec.ts`）我认，但**"主页没有它"与"tight 仍在"是两格**，别用前者签后者。
+  status: DISPATCHED@2026-09-22T16:0x+08 by 494abfd7（①②靶子＝红队与我的实测；③靶子＝HJ-P1 人眼 2/2）
+
 ## commander 订正 @2026-09-22T15:5x+08 —— 上一条部署块里"我只做了 1 轮、所以不签三次连点"这句话已经过期：**三轮独立循环我做了，这一格我改签 `REPRODUCED(canary)`**
 
 上一条（15:4x 块 ③）写的是"我这遍只做了 1 轮 ⇒ 不签『三次连点 0 新建』"。**15:49–15:50 我把那三遍补齐了**，形状就是 HJ-P1 提醒的那个（不是同页点三次）：
