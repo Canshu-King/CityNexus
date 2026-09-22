@@ -23,37 +23,76 @@ BRANCH = "commander/control"
 HDRS = {"Authorization": f"Bearer {TOK}", "Accept": "application/vnd.github+json",
         "User-Agent": "citynexus-commander"}
 
-# --- fail-closed upload guard (arbiter 5775258233 §A: the publisher must refuse, not rely on
-# --- the operator remembering).  A refusal prints WHICH rule fired; nothing is sent.
+# --- fail-closed upload guard (arbiter 5775258233 §A + 5775473121 §1: the publisher must refuse,
+# --- not rely on the operator remembering).  A refusal prints WHICH rule fired; nothing is sent.
 FORBIDDEN_SUFFIXES = (
-    ".db", ".db-wal", ".db-shm", ".sqlite", ".sqlite3", ".sqlite3-wal", ".sqlite3-shm",
+    ".db", ".db-wal", ".db-shm", ".db-journal", ".db.bak", ".db.backup",
+    ".sqlite", ".sqlite3", ".sqlite-wal", ".sqlite-shm", ".sqlite-journal",
     ".pem", ".key", ".p12", ".pfx", ".jks", ".keystore",
+    ".bak", ".backup", ".old", ".orig",   # a DB copy under any of these names may lack the magic
 )
 FORBIDDEN_BASENAMES = {".env", "credentials", "credentials.json", "id_rsa", "id_ed25519"}
-FORBIDDEN_NAME_FRAGMENTS = ("token", "cookie", "secret", "credential", "password", "_live", "_preview")
+# The publisher's own token file is `.api_tok_20260920`; `api_tok` must be here or the publisher
+# can upload the very credential it depends on (arbiter's "hole A", called out as the worst one).
+FORBIDDEN_NAME_FRAGMENTS = (
+    "token", "cookie", "secret", "credential", "password", "_live", "_preview",
+    "api_tok", "_tok_", "apikey", "api_key",
+)
 ALLOWED_REPO_PREFIXES = ("evidence/", "live_checks/")
 SQLITE_MAGIC = b"SQLite format 3\x00"
+# Value-shaped content scan: match real secret VALUES, never the bare words (tests/docs mention
+# "token" constantly and must not be killed).
+import re as _re
+
+SECRET_VALUE_PATTERNS = (
+    _re.compile(rb"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
+    _re.compile(rb"(?im)^\s*(authorization|proxy-authorization)\s*:\s*\S+"),
+    _re.compile(rb"(?i)\b(bearer)\s+[A-Za-z0-9._\-]{20,}"),
+    _re.compile(rb"(?i)\b(api[_-]?key|secret|password|passwd|token|access[_-]?key)\b\s*[:=]\s*"
+                rb"['\"]?[A-Za-z0-9._\-/+]{16,}"),
+    _re.compile(rb"\b(gh[pousr]_[A-Za-z0-9]{20,}|sk-[A-Za-z0-9]{20,})\b"),
+)
+PLACEHOLDER_MARKERS = (b"YOUR_", b"EXAMPLE", b"REDACTED", b"PLACEHOLDER", b"xxxx", b"****", b"<", b"changeme")
 
 
-def guard(local_path: str, repo_path: str, blob: bytes) -> str | None:
+def _content_refusal(blob: bytes) -> str | None:
+    for pat in SECRET_VALUE_PATTERNS:
+        for m in pat.finditer(blob[:2_000_000]):
+            line = m.group(0)
+            if any(ph.lower() in line.lower() for ph in PLACEHOLDER_MARKERS):
+                continue
+            return f"FORBIDDEN_CONTENT(secret-shaped value: {line[:24].decode('utf-8', 'replace')}…)"
+    return None
+
+
+def guard(local_path: str, repo_path: str, blob: bytes, message: str = "") -> str | None:
     """Return a refusal reason, or None when the upload may proceed."""
     import os.path as _p
 
     name = _p.basename(local_path).lower()
-    if name in FORBIDDEN_BASENAMES or name.endswith(".env"):
-        return f"FORBIDDEN_BASENAME({name})"
-    if name.endswith(FORBIDDEN_SUFFIXES):
-        return f"FORBIDDEN_SUFFIX({name})"
-    hit = [f for f in FORBIDDEN_NAME_FRAGMENTS if f in name]
-    if hit:
-        return f"FORBIDDEN_NAME_FRAGMENT({hit[0]} in {name})"
+    real = _p.basename(_p.realpath(local_path)).lower()  # a symlink must not smuggle a denylisted file
+    for candidate in {name, real}:
+        if candidate in FORBIDDEN_BASENAMES or candidate.endswith(".env") or ".env." in candidate:
+            return f"FORBIDDEN_BASENAME({candidate})"
+        if candidate.endswith(FORBIDDEN_SUFFIXES):
+            return f"FORBIDDEN_SUFFIX({candidate})"
+        hit = [f for f in FORBIDDEN_NAME_FRAGMENTS if f in candidate]
+        if hit:
+            return f"FORBIDDEN_NAME_FRAGMENT({hit[0]} in {candidate})"
     if blob[:16] == SQLITE_MAGIC:
         return "FORBIDDEN_CONTENT(sqlite file header)"
+    refused = _content_refusal(blob)
+    if refused:
+        return refused
     rp = repo_path.replace("\\", "/")
     if ".." in rp.split("/"):
         return f"FORBIDDEN_REPO_PATH(traversal: {repo_path})"
     if not rp.startswith(ALLOWED_REPO_PREFIXES):
         return f"FORBIDDEN_REPO_PREFIX(must start with evidence/ or live_checks/: {repo_path})"
+    if message:
+        refused = _content_refusal(message.encode("utf-8", "replace"))
+        if refused:
+            return f"FORBIDDEN_COMMIT_MESSAGE({refused})"
     return None
 
 
@@ -78,7 +117,7 @@ def main() -> int:
     local_path, repo_path = sys.argv[1], sys.argv[2]
     message = sys.argv[3] if len(sys.argv) > 3 else f"commander: publish {repo_path}"
     blob = io.open(local_path, "rb").read()
-    refusal = guard(local_path, repo_path, blob)
+    refusal = guard(local_path, repo_path, blob, message)
     if refusal:
         print(f"REFUSED (fail-closed, nothing uploaded): {refusal}")
         print(f"  local={local_path}  repo_path={repo_path}  bytes={len(blob)}")
