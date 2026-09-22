@@ -86,6 +86,14 @@ ARMS = [
         EN_NODE,
         ZH_NODE,
     ),
+    (
+        "killAC6-redteam-e1-verbatim-in-english",
+        EN_FROZEN,
+        '  "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally. Don\'t worry, you have plenty.";\n',
+        "red team `d2305848` on e08131e, sentence copied verbatim -- it broke the English face where E1 broke the Chinese one",
+        EN_NODE,
+        ZH_NODE,
+    ),
 ]
 
 
