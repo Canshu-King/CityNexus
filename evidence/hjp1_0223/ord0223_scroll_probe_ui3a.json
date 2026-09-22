@@ -1,0 +1,86 @@
+{
+  "base": "http://127.0.0.1:8781",
+  "viewport": [
+    390,
+    844
+  ],
+  "steps": {
+    "onStep2": true,
+    "step1Present": true,
+    "A_beforePress": {
+      "scrollY": 0,
+      "docScrollHeight": 1496,
+      "innerHeight": 844,
+      "hintPresent": true,
+      "hintY": 1224,
+      "hintInView": false,
+      "hintVisibleText": "还需要填写：总预算",
+      "liveRegionText": "",
+      "liveRegionAriaLive": "polite"
+    },
+    "A_afterRefusedPress": {
+      "scrollY": 652,
+      "docScrollHeight": 1496,
+      "innerHeight": 844,
+      "hintPresent": true,
+      "hintY": 572,
+      "hintInView": true,
+      "hintVisibleText": "还需要填写：总预算",
+      "liveRegionText": "还需要填写：总预算",
+      "liveRegionAriaLive": "polite"
+    },
+    "B_manualInstant": "called",
+    "B_afterInstant": {
+      "scrollY": 652,
+      "docScrollHeight": 1496,
+      "innerHeight": 844,
+      "hintPresent": true,
+      "hintY": 572,
+      "hintInView": true,
+      "hintVisibleText": "还需要填写：总预算",
+      "liveRegionText": "还需要填写：总预算",
+      "liveRegionAriaLive": "polite"
+    },
+    "C_manualSmooth": "called",
+    "C_scrollYSamplesDuringSmooth": [
+      0,
+      566,
+      652,
+      652,
+      652,
+      652
+    ],
+    "D_afterFixingField": {
+      "scrollY": 0,
+      "docScrollHeight": 1404,
+      "innerHeight": 844,
+      "hintPresent": false,
+      "hintY": null,
+      "hintInView": null,
+      "hintVisibleText": null,
+      "liveRegionText": "",
+      "liveRegionAriaLive": "polite"
+    }
+  },
+  "run_label": "ui3a",
+  "pid": 52760,
+  "started_at": "2026-09-23T02:37:21.582+08:00",
+  "started_at_utc": "2026-09-22T18:37:21.582Z",
+  "browser": "chromium 153.0.8010.12",
+  "served_bundle": {
+    "file": "index-DtQ86lsQ.js",
+    "bytes": 1231985,
+    "sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a"
+  },
+  "nonGetRequests": [],
+  "verdict": {
+    "refusedPressMovedPage": true,
+    "instantScrollWorks": true,
+    "smoothScrollAdvanced": true,
+    "visibleHintRecomputedAfterFix": true,
+    "liveRegionStillStaleAfterFix": false
+  },
+  "ended_at": "2026-09-23T02:37:47.809+08:00",
+  "ended_at_utc": "2026-09-22T18:37:47.809Z",
+  "duration_ms": 26227
+}
