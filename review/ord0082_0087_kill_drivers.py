@@ -43,6 +43,7 @@ PREP = "src/features/discovery/DestinationPreparationPanel.tsx"
 PREP_SPEC = "e2e/qoder-destination-preparation.spec.ts"
 NA_SPEC = "e2e/qoder-not-answered-cell.spec.ts"
 TONGUE_SPEC = "e2e/qoder-speaks-the-travellers-language.spec.ts"
+DEMO_SPEC = "e2e/qoder-demo-entry-addresses-dont-create.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -624,6 +625,18 @@ CASES = [
         "                    {anchorLabel(day.anchor, locale.startsWith(\"zh\"))} \u00b7{\" \"}\n                    {modeLabel(day.mode, locale.startsWith(\"zh\"))}\n                  </small>\n",
         "                    {day.anchor} anchor · {day.mode}\n",
         [(TONGUE_SPEC, ["ord0208-the-day-card-speaks-the-language-the-screen-uses"])],
+    ),
+    (
+        # ORD-0209: the exact defect the arbitration ruled on -- the entry creates a traveller
+        # and a journey again.  The seed of the old body is restored in front of the addressing
+        # branch, so the network-count gate must go red on it.
+        "killT1-demo-entry-creates-again",
+        EXPERIENCE,
+        "      const sealedId = scene.journey_id ?? null;\n",
+        "      await v8Request<{ id: string }>(\"/api/v1/travelers\", { method: \"POST\", body: JSON.stringify({ display_name: \"City traveler\" }) });\n"
+        "      await v8Request<{ id: string }>(\"/api/v1/journeys\", { method: \"POST\", body: JSON.stringify({ title: \"Tianjin demo\" }) });\n"
+        "      const sealedId = scene.journey_id ?? null;\n",
+        [(DEMO_SPEC, ["ord0209-the-demo-entry-addresses-the-sealed-journey"])],
     ),
 ]
 

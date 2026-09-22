@@ -320,6 +320,7 @@ const PHASE_LABEL: Record<TrialPhase, [string, string]> = {
 export function JourneyTrialSetup({
   onCreate,
   onUseTianjinDemo,
+  sealedDemoUnavailable,
   onCancel,
   busy,
   message,
@@ -331,6 +332,8 @@ export function JourneyTrialSetup({
 }: {
   onCreate: (draft: JourneyTrialDraft) => Promise<void>;
   onUseTianjinDemo: () => Promise<void>;
+  /* ORD-0209: named fail-closed reason when the sealed demo cannot be addressed. */
+  sealedDemoUnavailable?: string | null;
   onCancel?: () => void;
   busy: boolean;
   /* The shell's createJourney catch writes the named backend error into its own state, and
@@ -1156,6 +1159,16 @@ export function JourneyTrialSetup({
       </div>
 
       {/* Secondary, de-emphasised: the sealed demo is not the golden path. */}
+      {sealedDemoUnavailable && (
+        /* ORD-0209 5: fail-closed with the reason, never a silent creation fallback. */
+        <p
+          className="trial-city-warning"
+          data-testid="trial-sealed-unavailable"
+          role="alert"
+        >
+          {sealedDemoUnavailable}
+        </p>
+      )}
       <div className="trial-secondary">
         <button
           type="button"

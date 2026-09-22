@@ -726,52 +726,50 @@ export function V8Experience() {
       setAlertsOpen(false);
     });
   };
-  const createTianjinDemo = async () => {
+  /* ORD-0209 (arbitration `5772122180`): the demo entry addresses the sealed demo journey; it does
+     not create one.  The previous body POSTed a traveller and a journey on every press -- HARNESS
+     measured 6/6 clicks creating rows.  Now: read the sealed id from the server-owned /demo/scene
+     (never a hard-coded UUID), navigate to it, and on any failure show a named fail-closed state.
+     The POST path is gone, not commented; the entry either addresses or it says why it cannot.
+     "Entry read-only" does not touch the demo-owned actions *inside* the journey (advance, booking,
+     interruption, replan) -- those keep their existing ownership constraints, which this order
+     explicitly leaves alone. */
+  const [sealedDemoUnavailable, setSealedDemoUnavailable] = useState<string | null>(null);
+  const enterSealedDemo = async () => {
     setSetupBusy(true);
     setMessage(null);
+    setSealedDemoUnavailable(null);
     try {
-      const traveler = await v8Request<{ id: string }>("/api/v1/travelers", {
-        method: "POST",
-        body: JSON.stringify({
-          display_name: "City traveler",
-          locale: locale === "zh-CN" ? "zh-CN" : "en-GB",
-          timezone: "Asia/Shanghai",
-        }),
-      });
-      const journey = await v8Request<{ id: string }>("/api/v1/journeys", {
-        method: "POST",
-        body: JSON.stringify({
-          traveler_id: traveler.id,
-          title: "Tianjin · stay-aware weekend",
-          city_code: "CN-TIANJIN",
-          timezone: "Asia/Shanghai",
-          start_at: "2026-10-09T18:00:00+08:00",
-          end_at: "2026-10-11T15:00:00+08:00",
-          budget: { amount_minor: 120000, currency: "CNY" },
-          stay_budget: { amount_minor: 70000, currency: "CNY" },
-          party_size: 2,
-          occupancy: { adults: 2, rooms: 1 },
-          arrival_anchor: {
-            at: "2026-10-09T18:00:00+08:00",
-            location: "Tianjin West Station",
-          },
-          departure_anchor: {
-            at: "2026-10-11T15:00:00+08:00",
-            location: "Tianjin Binhai Airport",
-          },
-        }),
-      });
-      localStorage.setItem("citynexus.v8.journey_id", journey.id);
-      await searchStayOptions(
-        journey.id,
-        "Tianjin stay-aware journey",
-        new AbortController().signal,
-      );
-      await load(journey.id);
+      const scene = await v8Request<{
+        demo_mode?: boolean;
+        journey_id?: string | null;
+        journey_status?: string | null;
+      }>("/api/v1/demo/scene");
+      const sealedId = scene.journey_id ?? null;
+      if (!scene.demo_mode || !sealedId) {
+        /* Fail closed, with the reason the server gave: no silent POST fallback. */
+        setSealedDemoUnavailable(
+          !scene.demo_mode
+            ? locale === "zh-CN"
+              ? "这台部署不是演示舞台（demo_mode=false），所以没有可进入的封存演示。"
+              : "This deployment is not a demo stage (demo_mode=false), so there is no sealed demo to enter."
+            : locale === "zh-CN"
+              ? "服务器当前没有给出可用的封存演示行程，所以这里进不去。稍后再试，或新建自己的行程。"
+              : "The server currently names no usable sealed demo journey, so this entry is closed. Try again later, or create your own trip.",
+        );
+        return;
+      }
+      localStorage.setItem("citynexus.v8.journey_id", sealedId);
+      await load(sealedId);
       setSetupOpen(false);
-      navigate("discover");
+      navigate("hub");
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("shell.loadError"));
+      /* The scene read itself failed: named and fail-closed, never a creation. */
+      setSealedDemoUnavailable(
+        error instanceof Error
+          ? `${locale === "zh-CN" ? "没读到封存演示的信息" : "The sealed demo could not be read"}: ${error.message}`
+          : t("shell.loadError"),
+      );
     } finally {
       setSetupBusy(false);
     }
@@ -1258,7 +1256,8 @@ export function V8Experience() {
       <>
         <JourneyTrialSetup
           onCreate={createJourney}
-          onUseTianjinDemo={createTianjinDemo}
+          onUseTianjinDemo={enterSealedDemo}
+          sealedDemoUnavailable={sealedDemoUnavailable}
           onCancel={data ? () => setSetupOpen(false) : undefined}
           busy={setupBusy}
           /* Both lanes landed this same line independently: this comment came from ORD-0034's
