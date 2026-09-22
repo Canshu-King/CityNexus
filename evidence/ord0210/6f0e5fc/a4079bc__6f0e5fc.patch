@@ -1,0 +1,174 @@
+diff --git a/backend/tests/_qoder_streak_receipt.py b/backend/tests/_qoder_streak_receipt.py
+index ebe4e24..fcf7694 100644
+--- a/backend/tests/_qoder_streak_receipt.py
++++ b/backend/tests/_qoder_streak_receipt.py
+@@ -501,6 +501,53 @@ def node_outcome_from_exit(
+ # ======================================================================================
+ # 第 10 条：给目标节点定性（范围 = exact SHA + target node id + run shape）
+ # ======================================================================================
++def merge_target_observations(batches: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
++    """把同一个 (SHA, target node id, run shape) 三元组下的**多批**读数并成一份定性输入。
++
++    仲裁 5779720219 的口径纠正（我上一版写反了）：**定性的 scope 只有那三元组**，
++    "第几批"只是 provenance。所以同一三元组下 A 批 0/10 全红、B 批 2/10 有绿 ⇒
++    合并后必须是 `FLIP_WITHOUT_SHARED_STATE(<shape>)`，**不许**两批各签一个
++    `STABLE_RED` 与 `FLIP` 互相打脸。三元组不一致的批次不许混批 ⇒ 直接 UNCLASSIFIED 并点名差在哪。
++
++    入参每批：`{sha, target_nodeid, run_shape, node_outcomes, resolved_db_paths, batch?}`
++    返回：`{sha, target_nodeid, run_shape, node_outcomes, resolved_db_paths, provenance, problems}`
++    —— 直接喂给 `classify_target_node(**merged)` 就行。
++    """
++
++    items = list(batches)
++    if not items:
++        return {"sha": "", "target_nodeid": "", "run_shape": "", "node_outcomes": [],
++                "resolved_db_paths": [], "provenance": [],
++                "problems": ["没有任何批次可合并：没有分母"]}
++    keys = {"sha": "exact SHA", "target_nodeid": "target node id", "run_shape": "run shape"}
++    problems: list[str] = []
++    head = items[0]
++    for idx, batch in enumerate(items[1:], start=2):
++        for field, label in keys.items():
++            if str(batch.get(field) or "") != str(head.get(field) or ""):
++                problems.append(
++                    f"第 {idx} 批的 {label} 与第 1 批不等（{batch.get(field)!r} ≠ "
++                    f"{head.get(field)!r}）⇒ 不同 scope 不许并成一次定性")
++    outcomes: list[str] = []
++    paths: list[Any] = []
++    provenance: list[dict[str, Any]] = []
++    for batch in items:
++        got = [str(o) for o in (batch.get("node_outcomes") or [])]
++        outcomes.extend(got)
++        paths.extend(list(batch.get("resolved_db_paths") or []))
++        provenance.append({
++            "batch": batch.get("batch") or f"batch-{len(provenance) + 1}",
++            "sha": str(batch.get("sha") or ""), "target_nodeid": str(batch.get("target_nodeid") or ""),
++            "run_shape": str(batch.get("run_shape") or ""), "runs": len(got),
++            "green": sum(1 for o in got if o == "GREEN"),
++            "red": sum(1 for o in got if o == "RED"),
++            "not_observed": sum(1 for o in got if o not in ("GREEN", "RED")),
++        })
++    return {"sha": str(head.get("sha") or ""), "target_nodeid": str(head.get("target_nodeid") or ""),
++            "run_shape": str(head.get("run_shape") or ""), "node_outcomes": outcomes,
++            "resolved_db_paths": paths, "provenance": provenance, "problems": problems}
++
++
+ def classify_target_node(
+     *,
+     sha: str,
+diff --git a/backend/tests/test_qoder_db_isolation_same_verdict.py b/backend/tests/test_qoder_db_isolation_same_verdict.py
+index 4cb216f..c4eed37 100644
+--- a/backend/tests/test_qoder_db_isolation_same_verdict.py
++++ b/backend/tests/test_qoder_db_isolation_same_verdict.py
+@@ -63,6 +63,7 @@ from _qoder_streak_receipt import (  # noqa: E402
+     NODE_WITH_PRECEDING_DOORS,
+     classify_target_node,
+     clause6_command_surface,
++    merge_target_observations,
+     corroborate_node_outcome,
+     decode_child_text,
+     node_outcome_from_exit,
+@@ -103,6 +104,8 @@ REVERSE_MUTATION_ENV = "CNX_ORD0210_REVERSE_MUTATION"
+ ACCEPTANCE_ROUNDS = 10
+ #: 机制模式只为验量具形状，默认 2 个进程（1 个证明不了"逐 run 互不相同"）。
+ MECHANISM_ROUNDS = 2
++#: 合并口径测试用的一个固定 SHA（只为可读；真实读数从收据里取）。
++SHA_MERGED = "a4079bc"
+ 
+ #: 账本与 commander 的锚点 guard（源审计 ②：不许只把"我跑过 guard"当纪律写在话里）。
+ #: 标题字面**由 guard 自己定义**（`HEADING`），我这里不留第二份，免得它改了还各自以为健康。
+@@ -732,6 +735,59 @@ def test_4c_one_isolated_observation_never_becomes_a_verdict():
+         f"期望：FLIP 结论本来就需要两种结果都出现过，不该背样本警告；实际 {flip['sample_note']!r}")
+ 
+ 
++def test_4e_batches_of_one_triple_merge_into_one_verdict():
++    """仲裁 5779720219 的口径纠正：**scope = (SHA, node, shape) 三元组；"第几批"只是 provenance。**
++
++    我上一版把它写反了（说"定性在批次内成立、引用必须带批次"）。真正要防的是：
++    同一三元组的 A 批全红、B 批偶绿，被两批各签一个 `STABLE_RED` 与 `FLIP` 互相打脸。
++    """
++
++    def batch(label, greens, sha=SHA_MERGED, node=TARGET_NODEID, shape=SINGLE_NODE):
++        outcomes = ["GREEN"] * greens + ["RED"] * (10 - greens)
++        return {"batch": label, "sha": sha, "target_nodeid": node, "run_shape": shape,
++                "node_outcomes": outcomes,
++                "resolved_db_paths": [f"C:/tmp/cnx_{label}_{i}/suite.db" for i in range(10)]}
++
++    merged = merge_target_observations([batch("A", 0), batch("B", 2)])
++    assert merged["problems"] == [], f"期望两批同三元组可合并；实际 {merged['problems']}"
++    assert len(merged["node_outcomes"]) == 20 and len(merged["resolved_db_paths"]) == 20, (
++        f"期望合并后分母是 20 run；实际 outcomes={len(merged['node_outcomes'])} "
++        f"paths={len(merged['resolved_db_paths'])}")
++    merged_cls = classify_target_node(**{k: v for k, v in merged.items()
++                                        if k in ("sha", "target_nodeid", "run_shape",
++                                                 "node_outcomes", "resolved_db_paths")})
++    assert merged_cls["named_shape"] == "FLIP_WITHOUT_SHARED_STATE(single-node)", (
++        f"期望：两批合并后只能有一个结论 FLIP（目标节点自己两种结果都有过）；"
++        f"实际 {merged_cls['named_shape']} —— {merged_cls['reason']}")
++    assert merged_cls["green"] == 2 and merged_cls["red"] == 18, (
++        f"期望合并计数 2 绿 / 18 红；实际 {merged_cls['green']}/{merged_cls['red']}")
++    assert [p["batch"] for p in merged["provenance"]] == ["A", "B"] and \
++        [p["green"] for p in merged["provenance"]] == [0, 2], (
++        f"期望 provenance 逐批保留（谁看了都知道 B 批才有绿）；实际 {merged['provenance']}")
++
++    only_keys = ("sha", "target_nodeid", "run_shape", "node_outcomes", "resolved_db_paths")
++    a_alone = classify_target_node(**{k: v for k, v in merged.items() if k in only_keys}
++                                   | {"node_outcomes": ["RED"] * 10,
++                                      "resolved_db_paths": batch("A", 0)["resolved_db_paths"]})
++    assert a_alone["classification"] == "STABLE_RED", (
++        "（内部对照）单独一批仍可判 STABLE_RED，但它在合并口径下不具权威性")
++    assert a_alone["sample_note"] or merged_cls["classification"] == "FLIP_WITHOUT_SHARED_STATE", (
++        "期望：单批 STABLE 与合并 FLIP 并存时，以合并结论为准（尺不许同时供两个权威标签）")
++
++    for label, kwargs in (
++        ("sha 不同", {"sha": "another_sha"}),
++        ("nodeid 不同", {"nodeids": None, "target_nodeid": "tests/other.py::g9"}),
++        ("形制不同", {"run_shape": WHOLE_FILE}),
++    ):
++        other = batch("B", 2)
++        other.update(kwargs)
++        mixed = merge_target_observations([batch("A", 0), other])
++        assert mixed["problems"], f"期望：{label} 的两批不许并成一次定性；实际放行了"
++        assert all("不等" in p for p in mixed["problems"]), (
++            f"期望具名指出是哪把键不等；实际 {mixed['problems'][:2]}")
++    assert merge_target_observations([])["problems"], "期望：空批次列表 = 没有分母，也要报警"
++
++
+ def test_4d_a_shared_db_path_is_not_a_flip_without_shared_state():
+     """仲裁两则分类的另一半：**同一个解析库** + 判定会翻 ⇒ ISOLATION_BREACH，不许叫 FLIP。"""
+ 
+@@ -1053,6 +1109,11 @@ def test_6_the_frozen_vocabulary_matches_the_contract():
+     assert "skip" in str(doc["outcome_corroboration"]["channel"]).lower(), (
+         f"期望契约写清假绿通道的成因（skip ⇒ exit 0）；实际 "
+         f"{doc['outcome_corroboration']['channel']!r}")
++    scope = str(doc["scope_vs_provenance"])
++    assert "provenance" in scope and "不许并批" in scope, (
++        f"期望契约写明 scope 只有三元组、批次只是 provenance；实际 {scope[:120]!r}")
++    assert "merge_target_observations" in scope, (
++        "期望契约点名合并必须走那个共享函数（否则两批各签各的）")
+     fresh_doc = doc["freshness_predicate"]
+     assert "streak_verdict" in str(fresh_doc["lives_in"]), (
+         f"期望契约写明 freshness 判据长在结论函数里（不在某扇门里）；实际 {fresh_doc['lives_in']!r}")
+diff --git a/contracts/gate-acceptance-streak.yaml b/contracts/gate-acceptance-streak.yaml
+index bb0b862..3dea2a9 100644
+--- a/contracts/gate-acceptance-streak.yaml
++++ b/contracts/gate-acceptance-streak.yaml
+@@ -106,6 +106,18 @@ run_shapes:
+   - node-with-preceding-doors-in-one-process
+   - whole-file
+ 
++scope_vs_provenance: |
++  仲裁 5779720219 口径纠正（F 上一版把这句写反了，说"引用定性必须带批次"）：
++  定性的 **scope 只有 (exact SHA, target node id, run shape) 三元组**；"第几批 / 哪天跑的 /
++  哪台机器"都只是 **provenance**，不是 scope 的一部分。
++  后果（机械要求，不是措辞）：
++  - 同一三元组下的多批读数必须经 `merge_target_observations()` 并成**一份**输入 ⇒ 只有**一个**结论；
++    A 批 0/10 全红 + B 批 2/10 有绿 ⇒ 合并后 `FLIP_WITHOUT_SHARED_STATE(<shape>)`。
++  - **禁止**两批各自签 `STABLE_RED` 与 `FLIP` 互相打脸；单批标签在合并口径下不具权威性。
++  - 三元组任一把键不等的批次**不许并批** ⇒ 直接 `UNCLASSIFIED_IN_THIS_SHAPE` 并点名差在哪。
++  - 批次信息保留在 `provenance` 里供复核（每批 runs/green/red/not_observed），
++    引用时写 `FLIP_WITHOUT_SHARED_STATE(single-node) @ <sha>` 即可，不必写"第 N 批"。
++
+ target_node_classifications:
+   - STABLE_GREEN
+   - STABLE_RED
