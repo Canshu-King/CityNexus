@@ -232,22 +232,35 @@ def test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture(
         "source": "data/mock/places.json#place-synthetic",
     }, f"生产者搬运了不该搬的东西，实际 {projected}"
 
-    # C 的移植件①（仲裁 00:44）：不止"键没穿过"，还要钉"求值没被洗白"。
-    # 一条婴儿车事实绝不能把整条记录说成"无台阶已验证"。
-    class _Record:
-        metadata_json = json.dumps({"accessibility_evidence": projected})
 
-    read_back = _accessibility_metadata(_Record()) or {}
-    assert "evidence_status" not in read_back and "step_free" not in read_back, (
-        f"整条记录的无障碍裁决被单点事实改写：{read_back}"
+def test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified():
+    """C 的移植件①（仲裁 00:44）：单点婴儿车事实绝不能把整条记录说成"无台阶已验证"。
+
+    这条只管求值，不管键列表（那是上一条的归属），这样"白名单被放宽"能指名到它自己。
+    """
+
+    hostile = {
+        "id": "place-synthetic",
+        "accessibility": {
+            "stroller_accessible": True,
+            "step_free": True,
+            "evidence_status": "VERIFIED",
+            "source_kind": "LIVE_PROVIDER_CAPTURE",
+        },
+    }
+    projected = _demo_accessibility_evidence(hostile) or {}
+    verdicts = {
+        "accessibility_state": accessibility_state(projected),
+        "STEP_FREE_REQUIRED": evaluate_accessibility_requirement("STEP_FREE_REQUIRED", projected),
+    }
+    assert "ACCESSIBILITY_VERIFIED" not in verdicts.values(), (
+        f"单点婴儿车事实把整条记录洗成已验证：{projected} -> {verdicts}"
     )
-    for verdict in (
-        accessibility_state(read_back),
-        evaluate_accessibility_requirement("STEP_FREE_REQUIRED", read_back),
-    ):
-        assert verdict != "ACCESSIBILITY_VERIFIED", (
-            f"只有 stroller 事实却量出 ACCESSIBILITY_VERIFIED（洗白）：{read_back} -> {verdict}"
-        )
+    # 正控：这些键一旦真的穿过，读取链就会量出 VERIFIED——所以上面那条不是永真断言。
+    crossed = {key: value for key, value in hostile["accessibility"].items() if key != "source_kind"}
+    assert evaluate_accessibility_requirement("STEP_FREE_REQUIRED", crossed) == "ACCESSIBILITY_VERIFIED", (
+        f"正控失效（读取链根本量不出 VERIFIED），这条 tripwire 就成了永真：{crossed}"
+    )
 
 
 # ------------------------------------------------------------------------------------------
