@@ -202,11 +202,19 @@ def main() -> int:
         reverse_mutation_required=True,
         reverse_mutation_result=os.environ.get("CNX_ORD0210_REVERSE_MUTATION", ""),
     )
+    grade = str(verdict.get("closure_grade", ""))
+    met = str(verdict.get("verdict", "")).startswith("STREAK_MET")
+    # Arbiter source-audit 2026-09-23: if process exit 0 means closure-grade success from now on, the
+    # observation exception must go - a caller reading only rc could otherwise take an observation for
+    # a CLOSED.  So an observation that met its own claim says it in WORDS, in the receipt, and exits
+    # non-zero (2).  rc 0 is reserved for closure_grade == CLOSED and nothing else.
+    observation_claim = "OBSERVATION_MET" if (observation_only and met) else None
     receipt = {
         "adapter": "thin - verdict/guards/argv all come from the shared module",
         "shared_module": str(backend / SHARED),
         "sha": args.sha, "target_nodeid": args.node, "run_shape": shared.SINGLE_NODE,
         "rounds": rounds, "observation_only": observation_only,
+        "observation_claim": observation_claim,
         "command": " ".join(argv),
         "clause6_command_surface_clean": clean, "clause6_command_surface_hits": hits,
         "run_shape_verification": shape,
@@ -224,18 +232,15 @@ def main() -> int:
                       ("sha", "target_nodeid", "run_shape", "rounds", "observation_only",
                        "clause6_command_surface_clean")}, ensure_ascii=False, indent=2))
     print("verdict:", verdict.get("verdict"), "| closure:", verdict.get("closure_grade"))
-    # Exit 0 means CLOSED and nothing else.  F 8ccd71d8 measured 2026-09-23 that the old line
-    # (`startswith("STREAK_MET") -> 0`) reads green while freshness / run_shape / clause 6 / reverse
-    # mutation may all still be unmet - i.e. the same lax-twin family as the deploy gauge.  An
-    # explicit observation run is allowed to exit 0 on STREAK_MET because that is what it claims.
-    grade = str(verdict.get("closure_grade", ""))
-    met = str(verdict.get("verdict", "")).startswith("STREAK_MET")
+    # Exit 0 means CLOSED and nothing else (arbiter source-audit 2026-09-23 removed the observation
+    # exception: an observation that met its claim is recorded as `observation_claim: OBSERVATION_MET`
+    # in the receipt and exits 2, so a caller that reads only rc can never take it for a closure).
     if grade == "CLOSED":
         return 0
-    if observation_only and met:
-        print("[adapter] observation-only run: STREAK_MET but closure_grade=", grade,
-              "-> exit 0 is this run's own claim, NOT a closure")
-        return 0
+    if observation_claim:
+        print("[adapter] OBSERVATION_MET recorded in the receipt; rc=2 is deliberate - an observation "
+              "is not a closure, and rc 0 is reserved for closure_grade == CLOSED")
+        return 2
     print("[adapter] NOT CLOSED: closure_grade=", grade, "| verdict=", verdict.get("verdict"))
     return 1
 
