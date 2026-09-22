@@ -190,6 +190,10 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+
+### d291c9dc HARNESS 检查点 @2026-09-22T14:18+08 → 13:3x 令的六面**真跑在浏览器里**：12/12 面 reached、**10/12 operable（真控件＋读数必须变）**、剩两格给了归因而非口号；**头条 EXP-HARNESS-005：入口按钮写着「使用封存的天津演示」，6/6 次实测它 POST 新 traveler＋新 journey＋跑一次 solver，而封存 journey `22222222…` 从未被任何 request URL 寻址（只出现在 `/demo/scene` 响应体里）**；常驻门在新尖 `66cad62` **RC=0 / IDENTICAL / 320 比 1152**
+
+**登记说明**：完整版在本文件末尾同一标题的块里（含表格、坐标、我这两处仪器自纠与合规自查）。本轮无新 ORD 号，按 @13:3x「HARNESS 改令」§1 执行。
 ### SESSION=d2305848 · ORD-0204 重钉 @2026-09-22 13:59+08 —— 新尖 `13377d3` 上四靶按内容重定位：**a/c/d KILLED，(b) SURVIVED 与 M17 一致；三臂复验在改名后的树上原样成立；无新洞、无 skipped**
 
 `STATUS: ORD-0204-REREPINNED-ON-13377d3 | 树：干净导出副本 D:/moodle/_qoder_redteam_anywhere_20260921/tree9 = git -C _qoder_integration_20260919 archive 13377d3 | tar -x（权威树 0 改动；驱动 REDTEAM_TREE 可用环境变量改树，不硬编码别人可写路径）| 解释器 D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14 | 命令：python -m pytest -q --no-header -p no:cacheprovider -rf tests/test_qoder_mobility_hard_gap.py tests/test_qoder_provider_identity_leg.py tests/test_qoder_mobility_replan_endpoint.py（cwd=tree9/backend）| env：CITYNEXUS_DEMO_MODE=true、CITYNEXUS_AI_ENABLED=false、DEEPSEEK_API_KEY 等四把凭据 pop 掉、PYTHONIOENCODING=utf-8 | 事前 --collect-only：29 tests collected RC=0`
@@ -9629,7 +9633,83 @@ SHARED _live.db (mode=ro)         journeys=3  my_journey_present=0  ids=[2222222
 - 进程：`8741/8742`（旧错配栈，建议收掉）、`8743/8744`（本轮）仍在跑；截图新增
   `j5-badanchor-today.png`、`j6-tokyo-today.png`。凭据未出现在本块、账本或截图里。
 
+### 🗣️ e345b9d6（SESSION=e345b9d6）ORD-0208 交付：**四件人视角缺陷全修**——屏幕不再说产品自己的黑话 @2026-09-22 14:2x +08 → 提交 **`fab8cb8`**（＋门修正 **`0cd697b`**）
+
+**报数六要素**：树 `D:/moodle/_qoder_integration_20260919`（有 .git）；`git log -1` = **`0cd697b 2026-09-22 14:20:30 +0800 test(frontend): two ORD-0208 assertions read what the screen can actually say`**（产品码在 `fab8cb8`）；`git status --short -- frontend` **空**；解释器 Node/Playwright ＋ `.venv` 3.12.14；收集十三张 spec → **66 tests**（含 real-seed）；执行同范围生产链 → **exit 0，66 passed / 0 failed / 0 skipped**（本机 3.4m）。
+
+**① Today 主卡三宗罪（🔴，6/6 格全现那条）— 全修**
+- 枚举不再上屏：`cursorStatus !== "VALID"` 时渲染**你点名的原句**——「服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读」；投影未到时是另一条合法措辞「没有按游标定位」。
+- 裸 UTC 不再出现：时间戳改走既有 `dateInZone(...)` 按**行程时区**渲染（`2026-09-21T02:00:00+00:00` → 「10月9日 18:00」这类本地读法）。门里断言 **bare-ISO 正则不命中** 且 时间读数仍在。
+- 自相矛盾消除：非 VALID 时句子不再声称「取自…执行游标」。枚举**没有藏**——`data-cursor-status` 照旧，门**同时**断言"散文里没有枚举 + 属性里还是它"（改写≠隐藏）。
+- 邻居门 `sim-today-hero-follows-the-stage` 原本断言**枚举必须在散文里**（它测的是"降级有披露"，恰好把缺陷钉成了契约）——已同步改写，并把这一来龙去脉写进它的注释。
+- **红→绿反例**：门先按住 twin 的 `context.execution.cursor_status=ABSENT_FALLBACK`（真 payload 形状；我第一版错stub了 `/agent/runtime-status`，句子照旧——已按真实读取路径改stub并写进注释），量到改后散文**不含** `游标状态 <枚举>`、含人话披露、不含 bare UTC。
+
+**② chip 选中态 — 补 `aria-pressed`**（pace 3 枚 + interests 6 枚，全部 `true/false` 而非 null；**无** `aria-disabled`——本车道老坑）。门断言：默认选中的 relaxed 开局即 `true`、未选中为 `false`、点击后状态翻转且 **`click()` 仍可用**（Playwright 程序化点击成功即证明没被 `aria-disabled` 挡）。
+
+**③ 确认屏两套口径 — 加「我们替你填的」标记**：新增按字段 `touched` 集合（恢复的草稿算已选——那是有人先前接受过的值，不是新默认），`人数/房间`、`总预算/住宿`、`节奏` 三行未碰时各带 `· 我们替你填的`；**兴趣未答保持「—」**，不被包装。**红→绿反例**：改前（门先复现旧行为的形状）三行裸值无标记；改后三行带标记；**亲手输入 1500 后预算行的标记语义随之准确**（行内另一字段仍是默认→标记仍在，但**typed 值 1500 必须上屏**——我第一版断言"标记消失"是错的，那会把"住宿 1000 还是默认"这个真话变成假绿，已在门注释写明）。新增 `.trial-default-mark` 样式（灰字小号，靠**词**不靠色）。
+
+**④ 日卡枚举 — 过人话表**：「ARRIVAL anchor · TRANSIT」→「抵达 · 公交地铁」（新增 `anchorLabel` 表 + 复用既有 `modeLabel`，en 界面同样正确）。门断言日卡不再含 ` anchor · ` 脚手架、不再含裸锚点枚举。
+
+**口径三照办**：断言读**渲染文字**（唯一例外是 `data-cursor-status`，且是"散文无 + 属性有"的**配对**断言，理由写明）；明暗——本轮四项都在既有明/暗双跑门覆盖面内（0203 的暗色对比度门与本轮样式同层，均 ≥4.5:1 实测过）；①③各配了红→绿反例。**没扩到** wizard/AI-sheet/主题那三件旧单（③④ 本身就在向导/行程卡的产品面上，属于本单四点的正文）。
+
+**突变 4 条：3 KILLED + 1 KILLED（间接）**——`killS1`（chip 丢 aria-pressed）、`killS2`（枚举回散文，**在 resolver 环境下跑**，红原文「the sentence still prints a raw cursor enum as prose」）、`killS3`（默认标记摘掉）均 KILLED；`killS4` 锚点首次 `hits=0`（我的 `\ \"` 转义与文件实际字节不符——第四次踩这个坑），**从产品文件原字节重建锚点后 KILLED**，但其红是 JSX 被打断、hero 未渲染（间接杀），按实记录。过程中三次链红全是**门的判据**错（stub 打错端点、只认一种降级措辞、整格比对没剥离标记），每次都按实改门而非改产品。
+
+**门禁**：`tsc` exit 0；十三张 spec 生产链 **66/66**；本机 3.4m。**未 push**；未碰 `:4781/:4782/:8693` 与 `_qoder_cmdr_gate_20260921\backend\_live.db`；未触发 `demo/reset`；账本只追加本块（`newline="\n"`＋逐字节还原证明）。D 盘水位照上一块（4.6G），本轮未再触底。
+
+status: ORD-0208 **DONE@2026-09-22T14:2x+08 by e345b9d6**（提交 `fab8cb8`＋`0cd697b`；①枚举/UTC/自相矛盾三处修复＋邻居门同步改写，②aria-pressed 全补，③默认值三行加「我们替你填的」且 typed 值不误标，④日卡枚举过人话表；断言读渲染文字；四突变 3 KILLED + 1 间接 KILLED；三次链红均为门判据错并按实记录）
+evidence: `frontend/e2e/qoder-speaks-the-travellers-language.spec.ts`（新，四节点）、`review/evidence/ui-overnight/ord0208-{clock-sentence,chips,defaults,day-card}.json`＋四图、`review/killS*.log`、`review/tsc-0208*.txt`、`review/add-ord0208-mutants.py`；改动 `V8Experience.tsx`、`JourneyTrialSetup.tsx`、`styles.css`、`qoder-today-follows-the-stage.spec.ts`、`qoder-wizard-speaks-human-and-survives-reload.spec.ts`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander @2026-09-22T14:2x+08 —— 三件事：仲裁的分档我已执行｜**EXP-HARNESS-005 我独立证实了（读代码就够，无需点）**｜那台 fail-closed 锚点守卫我 Adopt 并做了双向反例
+
+### ① 仲裁 `5772057778` 的分档（原样入账，全体引用时用这套词，不用净数）
+
+```text
+FIXED = 7   NEW_REGRESSIONS = 3   STILL_OPEN = 1   ORDER_DEPENDENT / NOT CONTRACT-STABLE = 2
+FULL_SUITE_OBSERVATION = 9 failed / 1153 passed / 15 skipped / 1 xfailed
+```
+⇒ **`66cad62` 不升 reference tip**，`c0d7e3d` 继续。**g14 一族在 `g14a/g14b/g14c` 三格同尖同时绿之前，这族不许写"已闭"**——
+B 要保住 `g14b` 的分片收益，同时恢复"超标 fail-closed 且不造事实"与"判定不吃供应用词"。
+两条游走按他的最小证据形状办（**同一 exact SHA 下 `A alone` / `B → A` / `C → A`** 三跑对比）：
+先让测试自带 arrange，arrange 后仍依赖顺序才转 C。这条我已并进 F 的第四件。
+
+### ② **EXP-HARNESS-005 我独立证实**（读 `66cad62` 的代码，不点任何按钮，因此对任何库零写入）
+
+HARNESS 报「入口按钮写着"使用封存的天津演示"，实测 6/6 次它 POST 新 traveler＋新 journey＋跑 solver，
+封存 journey `22222222…` 从未被任何 request URL 寻址」。我从代码面单独验同一条因果链：
+```
+i18n 键            frontend/src/i18n/LocaleContext.tsx:699  "trial.tianjinDemo": "使用封存的天津演示"
+按钮               JourneyTrialSetup.tsx:1165  onClick={() => void onUseTianjinDemo()}
+prop               :1261(V8Experience)  onUseTianjinDemo={createTianjinDemo}     ← 函数名自己就叫 create
+实现               V8Experience.tsx:729   const createTianjinDemo = async () => {
+                             +5            await v8Request("/api/v1/travelers", { method: "POST", …
+                            +13            await v8Request("/api/v1/journeys",  { method: "POST", …
+```
+⇒ **文案承诺"使用封存的"，实现路径里没有任何一次寻址 `22222222…`，只有两个 POST**。
+这条同时解释了今天库计数为什么会涨（HJ-P1 副本里 journeys 31→32→36→38 也同因）：**每点一次多一份行程**。
+归属：入口语义（复用 vs 另建）是产品决定 ⇒ 我先按"标签与行为必须一致"下给 **D**（要么真的寻址封存 journey，
+要么把标签改成"新建一份天津演示"并说明它会占额度）；**不许**用"反正用户不会点"结案。
+
+### ③ 仲裁的 fail-closed 锚点守卫：我 Adopt 后做了双向反例
+
+`mutation_anchor_guard.py` @ `615fdbe7`（`commander/control`），我取的字节：
+**3,316 B，git blob sha1 `406e2c67494924da3c6ed8c91d8eb7cd62d7e6ca`，sha256[:16] `d4a71560652889d3`**（已存进我的工具目录并附在镜像证明里）。
+用它在 `v_66cad62` 上重跑我那个 (c) 突变：
+```
+receipt = {anchor_hits: 1, expected_anchor_hits: 1,
+           before_sha256: 38de76467b57…, mutated_sha256: 62137632926…, bytes_changed: true}
+pytest  = 1 failed（点名 test_g16_…）   ← 与我自己手写的驱动、与 E-2 报的 1/28 三者一致
+退出后   before 文件 sha 回到 38de76467b575552（还原验过）
+反例 1   0 命中锚点   → RuntimeError: HARNESS_INVALID: anchor_hits=0, expected=1; mutation not applied
+反例 2   改完字节相同  → RuntimeError: INVALID_MUTATION: before and after bytes are identical
+```
+⇒ 正好是今天差点让我交出假"存活"的两种形状，现在**机械拒绝**了。**全体车道的突变驱动改用它**（E-2、HARNESS、F 是仲裁点名的三方，我这条同样适用）。
+
+### ④ HARNESS 14:18 检查点：`ACCEPTED`（用户令 §1 的六面走查真跑在浏览器里）
+
+12/12 面 reached、**10/12 operable（真控件＋读数必须变）**、剩两格交归因；常驻门在新尖 `66cad62` **RC=0 / IDENTICAL / 320 比 1152**。
+头条就是上面 ② 那条，且我独立证实。它这一轮从"被盘卡住"到"跑出产品缺陷＋发现顺序依赖"，是用户优先级令的直接结果，公开记一次。
+
 ## commander 亲测回归判定 @2026-09-22T14:1x+08 —— 我把 B 与 D 合到一起跑了**一次全量（触发点②）**：**红集合 11 → 9，但不是同一批 9 条**
 
 ### 一、跑数（干净导出树 `v_66cad62`；解释器 `.venv` 3.12.14；`DEEPSEEK_API_KEY`/`AI_ENABLED`/`DEMO_MODE` 全 unset）
@@ -21537,3 +21617,60 @@ Refreshed: 2026-09-21 15:0x (+08:00，`date` 实读) · LAST_ARBITER_COMMENT_ID 
 读数落盘 `raw/mut97_cmdr.json`。它的 driver 原本硬指权威树（`review/mutate_ord97.py:21`）——
 **给全体车道一条仪器规矩**：突变/门禁脚本里**不要硬编码别人可写的树路径**，用参数或环境变量传，
 否则谁复跑谁就在改别人的编辑现场。这条我自己写进我的工具里。
+
+### d291c9dc HARNESS 检查点 2026-09-22T14:18+08（Python 生成本机钟）→ §1 令的六面走查**真的跑在浏览器里**：12/12 面 reached、**10/12 operable**（真控件＋读数变化）、剩两格交归因；**头条 EXP-HARNESS-005：写着「使用封存的天津演示」的入口按钮实测在造新行程，6/6 次访问里封存 journey 从未被任何 request URL 寻址**；常驻门在新尖 `66cad62` **RC=0 / IDENTICAL / 320 比 1152**
+
+`runtimeState` **running**｜
+`真正执行的可执行/运行时` **不是进程内 TestClient 了**：`node 22.22.2` + `playwright` chromium（`node_modules` 整份**真复制**进我 lab，`islink=NO`，无 junction）→ `vite build` 当前构建 → `vite preview` **`:8532`** → 我自己的 `uvicorn` 后端 **`:8531`**（库 `lab\evidence\_db\web_tip_7740.db`，`ai=disabled`）；Python 侧 `D:\moodle\CityNexus\.venv` **3.12.14**｜
+`隔离工作树路径` `D:\moodle\_qoder_harness_revival_20260921\lab\web_tip\`（`git archive 2c2621e backend data contracts tools | tar -x`，494 文件 / 8 MB）＋ `lab\snap_66cad62\`（350 文件 / 5.1 MB，只为跑门）｜
+`跑完的实验` **三个**：⑴六面走查（桌面 1280 ＋移动 390 各一遍，12 行）⑵`EXP-HARNESS-005` 封存演示入口审计（两轮各 3 次访问）⑶常驻门在新尖复量｜
+`证据工件` `lab\evidence\six_faces\six_faces_report.json` ＋ 12 份 `*-rendered.txt` ＋ 12 份 `*-controls.json` ＋ 12 张 png；`lab\evidence\sealed_entry\sealed_entry_audit.json` ＋ `visit_[123].json`；`lab\evidence\evidence_gate_66cad62.json` ＋ `gate_66cad62_run.txt`｜
+`下一个` `EXP-HARNESS-004`（三族 `no_code_extracted` 的自然语言覆盖度，进程内、零端口）——**本块写完立刻起，此刻尚未开跑**（我不把"打算做"写成"已在跑"）；随后收尾拆栈。
+
+**⑴ 六面走查（构建 = `2c2621e`）**
+
+| 面 | 桌面 rendered / 该面控件数(导航除外) | 操作判据 | 移动 |
+|---|---|---|---|
+| Today | 910 字 / 27 | 点 `button "AI 帮我规划"` ⇒ 交互元素 51→59、正文 910→1014 | 同样通过（768 字 / 27）|
+| Live | 624 / 24 | 点 `button "更新位置"` ⇒ 49→50、正文 +13 字 | 通过（482 / 24）|
+| Map | 441 / **6** | 点 `button "对比出行方式"` ⇒ 30→37、正文 441→**897** | 通过（299 / 6）|
+| Wallet | 586 / 12 | 在 `textarea "粘贴铁路、航班、酒店或场地确认文本"` 打字 ⇒ value 非空 | 通过（444 / 12）|
+| AI | 505 / **7** | 在 Copilot 输入框打字 ⇒ value 非空 | 通过（363 / 7）|
+| Simulation | 307 / **2** | **两格都没过**：`button "刷新真相"` 点了读数不变但**它 fired 3 条 /api/v1 GET**（plans / twin / offline-snapshot）⇒ 我判 **HONEST NO-OP，不是惯犯**；另一格是带 `data-testid` 的 section，**0 条请求** ⇒ 候选 INERT | 同（165 字 / 2）|
+
+合计 **156 个"该面自己的"可交互元素**（导航/侧栏/底栏另计）。**pass 1 那 12/12 假绿我没发**：它点的是 `text=` 文本节点，全在向导上（详见我 13:2x 之后的自查）。这一版判据是"**读数必须变**"（url / aria 态 / input value / 正文长度 / 交互元素数），并且**不许**点写入类控件（`创建/删除/重置/接受/支付/生成…` 一律排除）。
+
+三条要如实分开说的：
+- **`底图未加载，显示的是路线示意`**（6/12 行）**是我造成的**：我的 instrument 把 203 条非 localhost 请求全 `abort()` 了，瓦片当然下不来。产品在这种情况下**自己说出了降级句**，这条记成它的**诚实证据**，不是缺陷。
+- Today 屏上确实有枚举名 `ABSENT_FALLBACK`（2/2 Today 行）——**这条已由 D 的 `fab8cb8`→`66cad62` 关闭（ORD-0208 ①）**，我不重复报。**但要更正那半句**：ORD-0208 记的是 `2026-09-21T02:00:00+00:00`，我在 `2c2621e`＋自己库上读到的是 **`2026-10-10T09:00:00+08:00`（2/2 都是 +08:00，+00:00 命中 0/2）** ⇒ "裸 UTC 偏移"这半条**随数据而定，不是无条件成立**，请归档时按这个口径改字。
+- Simulation 只有 **2 个**该面控件，是六面里最薄的一面；它唯一能点的按钮在"没选定方案"时只能重读同一份空数据。**根因在 ⑵**。
+
+**⑵ EXP-HARNESS-005（头条，只交事实，归属请你或仲裁拍）**
+
+按钮文案：`i18n` `trial.tianjinDemo` = 「使用封存的天津演示」／en = *"Use the sealed Tianjin demo"*（`LocaleContext.tsx:699`／`:43`）。它挂的处理函数叫 **`createTianjinDemo`**，`frontend/src/app/V8Experience.tsx:729`。
+
+实测（**两轮独立跑、各 3 个全新浏览器上下文 = 6 次"第一次来的用户"**，逐次读数一致）：
+- 每次访问恰好发 **3 条写**：`POST /api/v1/travelers` → `POST /api/v1/journeys`（标题 `Tianjin · stay-aware weekend`、`2026-10-09T18:00+08`→`10-11T15:00+08`、预算 120000／住宿 70000、party 2）→ `POST /api/v1/journeys/{新id}/stay-options/generate`（`optimizer=ORTOOLS_MODE_AWARE_CP_SAT`）。**它创建，不载入。**
+- **封存 journey `22222222-2222-4222-8222-222222222222` 被 request URL 寻址：0/6 次**；它只出现在 `GET /api/v1/demo/scene` 的**响应体**里（6/6 次）。⇒ 屏幕上的"天津演示"和用户点出来的那趟，**不是同一条记录**。
+- 一次访问写进我库的行数 = **149 行**：`mobility_facts 130`、`accommodation_offer_snapshots 4`、`stay_journey_options 4`、`audit_logs 2`、`journeys/travelers/traveler_twin_snapshots/traveler_agent_policies/journey_twins/journey_trip_contexts/journey_operations_contexts/offline_journey_snapshots/stay_generation_operations` 各 1。**3 次访问 ⇒ journeys 10 → 13**，且产品**没有 `GET /api/v1/journeys` 列表路由**（`openapi.json` 139 条里只有 `POST /api/v1/journeys`）⇒ 这些草稿行程**在 UI 里既看不见也清不掉**。
+- 下游后果（同一次读数里）：`GET .../plans` ⇒ **`[]`** ⇒ Simulation 正文「**你还没有选定方案**」；`GET .../wallet` ⇒ `reservations: [] / commitments: []`；Today「**还没有安排**」。⇒ ⑴ 里那两格"点不动/最薄的一面"是这条链的末端，**不是控件坏了**。
+- 相邻两行还有词汇碰撞：侧栏「**4 个方案 · 5 种模式**」= `data.options.length`（4 条**住宿**方案，`V8Experience.tsx:1339`）＋ **硬编码字面量 "5 种模式"**（`LocaleContext.tsx:720`／en `:64`）；同一屏正文的"方案"指**已选定的权威 plan 版本**（实测 `[]`）。两行各自都不算说谎，摆在一起就是误导。
+- **我自己的一处仪器错（已当场改）**：第一版把"响应体里出现了那个 id"当成"UI 打开了它" ⇒ 该判据恒真、零信息。拆成 `sealed_journey_in_request_url` 与 `sealed_journey_in_response_body` 两个字段后才量出 **0/6 vs 6/6**。
+- **我没打补丁**：文案 vs 行为哪半是缺陷、还是"造新行程"本就是设计意图（若是，则中英文案都是错的）——**这条口径归你/仲裁**，我把坐标给全了。
+
+**⑶ 常驻门在新尖（ORD-0153/0160 的那张 96→1152 格表）**
+
+`head=66cad62 seeded places=16 DB=evidence_gate_66cad62.db demo_mode=off`，总读数 **320 比 1152 挡**，`--check` 对 `e0fc697` 基线 ⇒ **IDENTICAL / 0 changed item(s) / RC=0**。
+抓偷升的 7 个 promotion case 全部保持原判定：`wheelchair=limited`、`limited+ramp+elevator`、`toilets:wheelchair=yes` 单证、`entrance:wheelchair=yes` 单证、`wheelchair=no` 五条 **FORBID-OK（0/16 接受）**，`wheelchair=yes` 裸标签仍是 **WATCHING 0/16**，`wheelchair=yes + highway=steps` ⇒ 16/16 `ACCESSIBILITY_CONFLICT`。
+⇒ **B 的六条红修 ＋ D 的屏上词汇改，一格的证据形状都没挪动**；ORD-0160 ③（等 ORD-0155 的 OSM→canonical 映射层落地那天用这条门拓偷升）**量具在新尖仍然可用**。
+
+**⑷ ORD-0205 现状（一句话）＋ 一条要你知道的环境事实**
+
+仍**未解锁**：`--only F` 拒跑的红基线还是同族 7 条 `stateful` seed，我没有每行 verdict、没有 `restored N/N` 可报，**也没有为放行去放宽它**。
+环境事实：`git -C D:\moodle\_qoder_integration_20260919 status --porcelain` 现在显示 **`M tools/verification/mutation_campaign.py`**（另有 `M frontend/e2e/qoder-wizard-...spec.ts`、`?? raw/`、`?? reports/ui-overnight/`）⇒ **ORD-0205 点名要我重定基线的那只文件，此刻正被别的车道改**。我**不在脏树上重定基线、不在权威树跑突变**，等它落地后在 `lab\snap_*` 里导出该尖再动。
+
+**⑸ 我没做（合规自查）**：未跑任何突变；未放宽断言、未加 skip/deselect、未改 SUITES；未写权威树与 `CityNexus\**`（只 `git archive` 单向导出）；**未打产品补丁**；
+`POST /api/v1/demo/reset` **整轮 0 次**（两条独立证明：浏览器层 route-abort 计数器 0，灌种子只走进程内 `app/services.py:seed_demo`）；
+**未调真 provider**（非 localhost 请求 203 次全部拦下并计数）；未读 `_live.db` / `_preview.db`，未碰 `:4781/:4782/:8693`；端口只有我自己的 `:8531`/`:8532`；
+**未建任何 junction/symlink**（`node_modules` 走整份真复制，`islink=NO`）；
+**收尾承诺**：本块之后我停掉 `:8531`/`:8532` 两个进程、删掉我那份 `node_modules` 真复制，并把 `df -h /d` 前后差报上来；`lab/web_tip/evidence/` 这个我早期写错父目录留下的重影目录一并清掉（里面只有我自己这次的两份 JSON，搬进 `lab/evidence/` 之后删）。
