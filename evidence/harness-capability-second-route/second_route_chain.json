@@ -1,0 +1,196 @@
+{
+ "generated_at": "2026-09-22T19:49:48+08:00",
+ "head_note": "export of dfdc5d5",
+ "place_records": "synthetic fixtures in-process",
+ "demo_reset_issued": 0,
+ "cases": [
+  {
+   "code": "STROLLER",
+   "evidence": {
+    "stroller_accessible": false
+   },
+   "expected_code": "STROLLER_ACCESS_UNAVAILABLE",
+   "put_status": 200,
+   "constraint_rows": 1,
+   "row_kinds": [
+    "HARD"
+   ],
+   "gate_passed": false,
+   "gate_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ],
+   "reason_chosen_by_product": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ],
+   "expectation_met": true
+  },
+  {
+   "code": "STROLLER",
+   "evidence": {
+    "stroller_accessible": true
+   },
+   "expected_code": null,
+   "put_status": 200,
+   "constraint_rows": 1,
+   "row_kinds": [
+    "HARD"
+   ],
+   "gate_passed": true,
+   "gate_codes": [],
+   "reason_chosen_by_product": [],
+   "expectation_met": true
+  },
+  {
+   "code": "LARGE_LUGGAGE",
+   "evidence": {
+    "luggage_accessible": false
+   },
+   "expected_code": "LUGGAGE_ACCESS_UNAVAILABLE",
+   "put_status": 200,
+   "constraint_rows": 1,
+   "row_kinds": [
+    "HARD"
+   ],
+   "gate_passed": false,
+   "gate_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ],
+   "reason_chosen_by_product": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ],
+   "expectation_met": true
+  },
+  {
+   "code": "LARGE_LUGGAGE",
+   "evidence": {
+    "luggage_accessible": true
+   },
+   "expected_code": null,
+   "put_status": 200,
+   "constraint_rows": 1,
+   "row_kinds": [
+    "HARD"
+   ],
+   "gate_passed": true,
+   "gate_codes": [],
+   "reason_chosen_by_product": [],
+   "expectation_met": true
+  },
+  {
+   "code": "SLOW_PACE",
+   "evidence": {
+    "stroller_accessible": false
+   },
+   "expected_code": "UNSUPPORTED_HARD_CONSTRAINT",
+   "put_status": 200,
+   "constraint_rows": 1,
+   "row_kinds": [
+    "HARD"
+   ],
+   "gate_passed": false,
+   "gate_codes": [
+    "UNSUPPORTED_HARD_CONSTRAINT"
+   ],
+   "reason_chosen_by_product": [
+    "UNSUPPORTED_HARD_CONSTRAINT"
+   ],
+   "expectation_met": true
+  },
+  {
+   "code": "QUIET_ENVIRONMENT",
+   "evidence": {
+    "stroller_accessible": false
+   },
+   "expected_code": "UNSUPPORTED_HARD_CONSTRAINT",
+   "put_status": 200,
+   "constraint_rows": 1,
+   "row_kinds": [
+    "HARD"
+   ],
+   "gate_passed": false,
+   "gate_codes": [
+    "UNSUPPORTED_HARD_CONSTRAINT"
+   ],
+   "reason_chosen_by_product": [
+    "UNSUPPORTED_HARD_CONSTRAINT"
+   ],
+   "expectation_met": true
+  },
+  {
+   "code": "INDOOR_PREFERRED",
+   "evidence": {
+    "stroller_accessible": false
+   },
+   "expected_code": "UNSUPPORTED_HARD_CONSTRAINT",
+   "put_status": 200,
+   "constraint_rows": 1,
+   "row_kinds": [
+    "HARD"
+   ],
+   "gate_passed": false,
+   "gate_codes": [
+    "UNSUPPORTED_HARD_CONSTRAINT"
+   ],
+   "reason_chosen_by_product": [
+    "UNSUPPORTED_HARD_CONSTRAINT"
+   ],
+   "expectation_met": true
+  },
+  {
+   "code": "SENSORY_LOW_STIMULATION",
+   "evidence": {
+    "stroller_accessible": false
+   },
+   "expected_code": "UNSUPPORTED_HARD_CONSTRAINT",
+   "put_status": 200,
+   "constraint_rows": 1,
+   "row_kinds": [
+    "HARD"
+   ],
+   "gate_passed": false,
+   "gate_codes": [
+    "UNSUPPORTED_HARD_CONSTRAINT"
+   ],
+   "reason_chosen_by_product": [
+    "UNSUPPORTED_HARD_CONSTRAINT"
+   ],
+   "expectation_met": true
+  },
+  {
+   "code": "STEP_FREE_REQUIRED",
+   "evidence": {
+    "step_free": false
+   },
+   "expected_code": "*ACCESSIBILITY*",
+   "put_status": 200,
+   "constraint_rows": 1,
+   "row_kinds": [
+    "HARD"
+   ],
+   "gate_passed": false,
+   "gate_codes": [
+    "ACCESSIBILITY_CONFLICT"
+   ],
+   "reason_chosen_by_product": [
+    "ACCESSIBILITY_CONFLICT"
+   ],
+   "expectation_met": true
+  }
+ ],
+ "summary": {
+  "cases": 9,
+  "expectation_met": 9,
+  "chain_closed_for": [
+   "STROLLER",
+   "LARGE_LUGGAGE",
+   "STEP_FREE_REQUIRED"
+  ],
+  "blocked_by_missing_gate_impl": [
+   "SLOW_PACE",
+   "QUIET_ENVIRONMENT",
+   "INDOOR_PREFERRED",
+   "SENSORY_LOW_STIMULATION"
+  ]
+ },
+ "db_files_left_behind": []
+}
