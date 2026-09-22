@@ -407,3 +407,45 @@ test("ord0220-3-a-refused-press-brings-its-reason-on-screen — 按下去什么�
   );
   await page.screenshot({ path: evidencePath("ui-overnight/ord0220-reason-on-screen.png"), fullPage: false });
 });
+
+test("ord0222-6-the-announcement-is-still-gone-after-the-trip-exists — 创建成功之后也不该再播那一句", async ({
+  page,
+}) => {
+  test.setTimeout(300_000);
+  const NODE = "ord0222-6-the-announcement-is-still-gone-after-the-trip-exists";
+  await reachStep2WithABlockedBudget(page);
+  await page.getByTestId("trial-next").click({ force: true });
+  await expect
+    .poll(() => surface(page, "#trial-next-reason").then((read) => read.text), {
+      message: node(NODE, "the refused press never wrote an announcement, so this arm would pass on nothing"),
+      timeout: 5_000,
+    })
+    .toContain("总预算");
+  await page.getByTestId("trial-budget").fill("1500");
+  await page.getByTestId("trial-next").click();
+  await expect(page.getByTestId("trial-step3-body")).toBeVisible({ timeout: 15_000 });
+  /* Create for real.  The row must exist before the claim "nothing stale is announced after the
+     trip exists" means anything. */
+  await page.getByTestId("trial-create").click();
+  await expect(page.getByTestId("today-heading")).toBeVisible({ timeout: 60_000 });
+  const afterCreate = await surface(page, "#trial-next-reason");
+  expect(
+    afterCreate.text.includes("总预算"),
+    node(NODE, `the trip exists and the announcement still names the fixed field: "${afterCreate.text}"`),
+  ).toBe(false);
+  writeFileSync(
+    evidencePath("ui-overnight/ord0222-after-create.json"),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        order: "ORD-0222 ②-follow-up (HJ-P1 19:46 wording)",
+        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
+        journeyOnScreen: ((await page.getByTestId("today-heading").innerText()) ?? "").trim(),
+        announcementAfterCreate: afterCreate,
+      },
+      null,
+      2,
+    ) + "\n",
+    "utf-8",
+  );
+});
