@@ -1,0 +1,24 @@
+commit 7f9ee06905ef6908ee37f0d18ac29b026d1e1b89
+Author: 仓鼠王 <yjianbin419@gmail.com>
+Date:   Wed Sep 23 02:33:43 2026 +0800
+
+    test(frontend): bound the caveat read -- an absent element cost the whole 300 s budget (ORD-0226 follow-up ②)
+
+diff --git a/frontend/e2e/qoder-budget-advisory-tiers.spec.ts b/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
+index 79436a0..98cb040 100644
+--- a/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
++++ b/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
+@@ -295,7 +295,12 @@ test("ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什
+   const text = (await block.innerText()).replace(/\s+/g, " ");
+   /* ① the hard one (ORD-0226): the caveat, read as its own element, must be the frozen sentence
+      exactly -- not "contains a risk word and no listed reassurance". */
+-  const caveat = ((await page.getByTestId("budget-advisory-caveat").innerText()) ?? "").replace(/\s+/g, " ").trim();
++  const caveatEl = page.getByTestId("budget-advisory-caveat");
++  await expect(
++    caveatEl,
++    node(NODE, "the caveat has no element of its own on screen, so a paraphrase could not be seen even if it happened"),
++  ).toBeVisible({ timeout: 20_000 });
++  const caveat = (await caveatEl.innerText()).replace(/\s+/g, " ").trim();
+   expect(
+     caveat,
+     node(
