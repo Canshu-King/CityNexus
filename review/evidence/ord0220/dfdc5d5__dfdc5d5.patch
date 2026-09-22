@@ -1,0 +1,1066 @@
+commit dfdc5d59205f680306ce429f73240f28e9332b1f
+Author: 仓鼠王 <yjianbin419@gmail.com>
+Date:   Tue Sep 22 19:37:50 2026 +0800
+
+    fix(frontend): the caveat must mean something, the announcement retires, and a refused press reveals its reason (ORD-0220 ①②)
+    
+    Three arms the red team and HJ-P1 measured and my gates did not see:
+    
+    - the tight advisory only proved two strings co-occur, so appending a reassurance to the
+      caveat stayed green while the screen contradicted itself; the new node asserts which word
+      classes the caveat may contain (killX1/killX2 both red)
+    - #trial-next-reason rendered a snapshot of the missing-list, so a screen-reader user kept
+      hearing 还需要填写：总预算 after the field was fixed; the sentence is now bound to the
+      missing-set it was spoken for (killY1 red), and ORD-0086's re-announcement still passes
+    - a blocked 下一步 left its reason at y=1224 in an 844px viewport; the press now scrolls the
+      reason into view (killZ1 red).  Focus is deliberately not delivered: making the paragraph
+      focusable trips ORD-0066's negative control on that same element, and I will not edit
+      another order's instrument to go green
+    
+    probe-ord0220-budget-conflict.py answers the lodging>total question black-box: POST 201 and
+    PATCH 200 with both figures persisted in one currency, so that cell is a backend truth order.
+
+diff --git a/frontend/e2e/qoder-budget-advisory-tiers.spec.ts b/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
+index 6ecf54a..bf58784 100644
+--- a/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
++++ b/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
+@@ -218,3 +218,54 @@ test("ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red — 只
+     node(NODE, `the hub prints the derived number without its caveat: "${text}" -- exactly the fake-precision the order forbids`),
+   ).toBe(false);
+ });
++
++/* ORD-0220 ①: co-occurrence is not meaning.  The three assertions above only prove two strings are
++   present somewhere in the block, which is why the red team's mutant survived: keep the caveat and
++   append 「——不过实际上预算充足，放心消费」 and every one of them still reads green while the screen
++   contradicts itself.  This node asserts what the caveat **says**. */
++const RISK_WORDS = ["超出", "紧张", "吃紧", "不够"];
++const ALLAY_WORDS = ["充足", "放心", "宽裕", "富余", "没问题", "绰绰有余"];
++
++test("ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什么也要断言", async ({
++  page,
++}) => {
++  test.setTimeout(300_000);
++  const NODE = "ord0220-1-the-tight-caveat-cannot-contradict-itself";
++  await openHubWithReference(page, reference({ per_person_per_day_minor: 4000 }));
++  const block = page.getByTestId("budget-advisory");
++  await expect(
++    block,
++    node(NODE, "the tight advisory is not on screen, so there is no caveat to judge"),
++  ).toBeVisible({ timeout: 20_000 });
++  const text = (await block.innerText()).replace(/\s+/g, " ");
++  const risk = RISK_WORDS.filter((word) => text.includes(word));
++  const allay = ALLAY_WORDS.filter((word) => text.includes(word));
++  expect(
++    risk.length,
++    node(NODE, `the tight advisory carries a number but its caveat says no risk at all: "${text}"`),
++  ).toBeGreaterThan(0);
++  expect(
++    allay,
++    node(
++      NODE,
++      `the tight caveat contradicts itself -- risk ${JSON.stringify(risk)} printed alongside ${JSON.stringify(allay)}: "${text}"`,
++    ),
++  ).toEqual([]);
++  writeFileSync(
++    evidencePath("ui-overnight/ord0220-caveat-meaning.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        node: NODE,
++        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
++        text,
++        risk,
++        allay,
++        rule: "tight 的 caveat 必须自己说出风险，且不得同时出现安抚类词",
++      },
++      null,
++      2,
++    ) + "\n",
++    "utf-8",
++  );
++});
+diff --git a/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts b/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts
+index 63926d2..57c27a1 100644
+--- a/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts
++++ b/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts
+@@ -265,3 +265,141 @@ test("ord0221-4-step3-visible-hint-and-live-region-read-apart — 第 3 步：
+   );
+   await page.screenshot({ path: evidencePath("ui-overnight/ord0221-step3-visible-before-after.png"), fullPage: true });
+ });
++
++test("ord0220-2-the-announcement-retires-when-the-field-is-fixed — 听的那句也要跟现值重算", async ({
++  page,
++}) => {
++  test.setTimeout(300_000);
++  const NODE = "ord0220-2-the-announcement-retires-when-the-field-is-fixed";
++  await reachStep2WithABlockedBudget(page);
++  /* Press the blocked 下一步 the way a thumb does.  Without this the region is never written and
++     the node would pass on an unfired stub -- this lane's own recorded trap. */
++  await page.getByTestId("trial-next").click({ force: true });
++  await expect
++    .poll(() => surface(page, "#trial-next-reason").then((read) => read.text), {
++      message: node(NODE, "the refused press wrote no announcement, so there is nothing to retire"),
++      timeout: 5_000,
++    })
++    .toContain("总预算");
++  const spoken = await surface(page, "#trial-next-reason");
++  expect(
++    spoken.insideSrOnly && !spoken.visuallyRendered,
++    node(NODE, `the surface being retired is not the screen-reader one: ${JSON.stringify(spoken)}`),
++  ).toBe(true);
++
++  /* Fix the field.  The visible hint has always recomputed; the announcement must retire with it,
++     or a screen-reader user is told the trip still needs a number that is already on the screen. */
++  await page.getByTestId("trial-budget").fill("1500");
++  await expect
++    .poll(() => surface(page, "#trial-next-reason").then((read) => read.text), {
++      message: node(
++        NODE,
++        `the announcement still names 总预算 after it was fixed: it was "${spoken.text}" and is still that`,
++      ),
++      timeout: 5_000,
++    })
++    .not.toContain("总预算");
++
++  // And it stays retired on step 3, which is where HJ-P1's reading lived.
++  await page.getByTestId("trial-next").click();
++  await expect(page.getByTestId("trial-step3-body")).toBeVisible({ timeout: 15_000 });
++  const atStep3 = await surface(page, "#trial-next-reason");
++  expect(
++    atStep3.text.includes("总预算"),
++    node(NODE, `step 3 still announces a field the traveller already filled: "${atStep3.text}"`),
++  ).toBe(false);
++  writeFileSync(
++    evidencePath("ui-overnight/ord0220-announcement-retired.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        order: "ORD-0220 ②",
++        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
++        method: "the region's own textContent, read per surface; body innerText is never used",
++        spokenAtRefusal: spoken,
++        afterFix: await surface(page, "#trial-next-reason"),
++        atStep3,
++      },
++      null,
++      2,
++    ) + "\n",
++    "utf-8",
++  );
++});
++
++test("ord0220-3-a-refused-press-brings-its-reason-on-screen — 按下去什么都没发生，这一格不再成立", async ({
++  page,
++}) => {
++  test.setTimeout(300_000);
++  const NODE = "ord0220-3-a-refused-press-brings-its-reason-on-screen";
++  await reachStep2WithABlockedBudget(page);
++  await settledSurface(page, '[data-testid="trial-required-hint"]', NODE);
++  /* Reproduce the reported state: the traveller is at the top of the step, thumb on the sticky
++     下一步, and the sentence is below the fold. */
++  await page.evaluate(() => window.scrollTo(0, 0));
++  const before = await page.evaluate(() => {
++    const el = document.getElementById("trial-required-hint");
++    const box = el?.getBoundingClientRect();
++    return {
++      top: box ? Math.round(box.top) : null,
++      bottom: box ? Math.round(box.bottom) : null,
++      innerHeight: window.innerHeight,
++      inViewport: !!box && box.bottom > 0 && box.top < window.innerHeight,
++    };
++  });
++
++  await page.getByTestId("trial-next").click({ force: true });
++  await expect
++    .poll(
++      () =>
++        page.evaluate(() => {
++          const el = document.getElementById("trial-required-hint");
++          const box = el?.getBoundingClientRect();
++          return box ? Math.round(box.bottom) <= window.innerHeight : false;
++        }),
++      {
++        message: node(
++          NODE,
++          `the press was refused but its reason never came on screen: before ${JSON.stringify(before)}`,
++        ),
++        timeout: 4_000,
++      },
++    )
++    .toBe(true);
++  const focused = await page.evaluate(() => document.activeElement?.id ?? null);
++  /* Scroll, not focus: making the paragraph focusable would need `tabIndex={-1}`, and ORD-0066's
++     gate carries a deliberate negative control that that element must not take focus.  So the
++     position stays where it was, and the invariant is the visible one. */
++  expect(
++    focused,
++    node(NODE, `the refused press moved focus onto the reason paragraph, which ORD-0066's instrument measures as not focusable: ${JSON.stringify(focused)}`),
++  ).not.toBe("trial-required-hint");
++  const after = await page.evaluate(() => {
++    const el = document.getElementById("trial-required-hint");
++    const box = el?.getBoundingClientRect();
++    return {
++      top: box ? Math.round(box.top) : null,
++      bottom: box ? Math.round(box.bottom) : null,
++      innerHeight: window.innerHeight,
++      inViewport: !!box && box.bottom > 0 && box.top < window.innerHeight,
++    };
++  });
++  writeFileSync(
++    evidencePath("ui-overnight/ord0220-reason-on-screen.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        order: "ORD-0220 ③",
++        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
++        before,
++        after,
++        focusedAfterPress: focused,
++        rule: "拦下时提示必须滚进视口（bottom <= innerHeight）；焦点位置只记录不要求（见 ORD-0066 负控）",
++      },
++      null,
++      2,
++    ) + "\n",
++    "utf-8",
++  );
++  await page.screenshot({ path: evidencePath("ui-overnight/ord0220-reason-on-screen.png"), fullPage: false });
++});
+diff --git a/frontend/src/features/setup/JourneyTrialSetup.tsx b/frontend/src/features/setup/JourneyTrialSetup.tsx
+index 95c34dc..37209ef 100644
+--- a/frontend/src/features/setup/JourneyTrialSetup.tsx
++++ b/frontend/src/features/setup/JourneyTrialSetup.tsx
+@@ -410,6 +410,9 @@ export function JourneyTrialSetup({
+      written back -- otherwise the second blocked tap, the one where the traveller is sure they
+      pressed it, would be silent. */
+   const [spokenReason, setSpokenReason] = useState("");
++  /* ORD-0220 ②: the sentence belongs to a particular set of missing fields.  When that set changes
++     the announcement is no longer a report of anything, so it stops being spoken. */
++  const [spokenKey, setSpokenKey] = useState<string | null>(null);
+   const speakTimer = useRef<number | null>(null);
+   useEffect(
+     () => () => {
+@@ -417,11 +420,34 @@ export function JourneyTrialSetup({
+     },
+     [],
+   );
+-  const speak = (text: string) => {
++  const speak = (text: string, key: string) => {
+     if (speakTimer.current !== null) window.clearTimeout(speakTimer.current);
++    setSpokenKey(key);
+     setSpokenReason("");
++    /* Clear then set: an aria-live region only speaks when its text *changes*, so a second refused
++       tap has to re-announce the same sentence (ORD-0086). */
+     speakTimer.current = window.setTimeout(() => setSpokenReason(text), 60);
+   };
++  /**
++   * ORD-0220 ③: a refused press has to answer where the traveller is looking.  HJ-P1 measured the
++   * same shape three times -- the hint at y=1221..1234 inside an 844px viewport with the sticky
++   * 下一步 at y=652 -- and this lane reproduced it independently (`review/evidence/ui-overnight/
++   * ord0221-step2-visible-before-after.json`: top 1224, height 85, inViewport false).  Nothing
++   * moved, so the press read as a dead button.
++   *
++   * The order allowed focus **or** scroll.  Only scroll is delivered here, on purpose: focusing the
++   * paragraph means giving it `tabIndex={-1}`, and ORD-0066's gate `a11y-blocked-next-takes-focus`
++   * carries a deliberate negative control on that exact element ("a non-interactive paragraph took
++   * focus, so 'landed' is not measuring focusability") -- it went red the moment the paragraph
++   * became focusable (measured: `review/run-run076475.log`, 2 failed / 40 passed).  I do not edit
++   * another order's instrument to make my own change pass, so the reason is scrolled into view and
++   * the announcement (ORD-0220 ②) carries the rest; the focus half waits for a ruling.
++   */
++  const revealReason = () => {
++    const hint = document.getElementById("trial-required-hint");
++    if (!hint) return;
++    hint.scrollIntoView({ block: "center", behavior: "smooth" });
++  };
+   const mounted = useRef(true);
+   useEffect(() => {
+     mounted.current = true;
+@@ -532,6 +558,9 @@ export function JourneyTrialSetup({
+   const missingNow =
+     step === 1 ? missingStep1 : step === 2 ? missingStep2 : missingStep3;
+   const blockedNow = missingNow.length > 0;
++  /* The identity of "what is missing right now", used to retire an announcement that no longer
++     matches the screen (ORD-0220 ②). */
++  const missingKey = missingNow.map((field) => field.target).join("|");
+   /* One sentence, read by the visible hint and by the announcement a blocked tap makes, so
+      what a sighted traveller sees and what a screen reader says cannot diverge. */
+   const missingLine = missingNow.length
+@@ -1009,7 +1038,12 @@ export function JourneyTrialSetup({
+         /* A greyed-out "Next" with no reason is the same silence as a create that dies
+            quietly, so name what is missing.  Stable id: the blocked button describes itself
+            with this element, so the relation cannot dangle between keystrokes. */
+-        <p className="trial-required-hint" id="trial-required-hint" data-testid="trial-required-hint" role="status">
++        <p
++          className="trial-required-hint"
++          id="trial-required-hint"
++          data-testid="trial-required-hint"
++          role="status"
++        >
+           {/* ORD-0135 ③: naming a missing field is a diagnosis; the traveller also needs the route.
+               Each item is a real control that puts the cursor in the field it names -- rendered inline
+               rather than as its own row, because a row of buttons pushed this wizard's sticky CTA
+@@ -1056,7 +1090,11 @@ export function JourneyTrialSetup({
+         </p>
+       )}
+       {/* Polite, and empty until a tap is refused: the visible hint above already carries the
+-          words for sighted travellers, so this region exists for the announcement alone. */}
++          words for sighted travellers, so this region exists for the announcement alone.
++          ORD-0220 ②: it also has to stop.  A snapshot of an old missing-list keeps being re-read by
++          a screen reader after the traveller has fixed the field, which is the same stale-hint
++          defect on the only surface she cannot see -- so the sentence is shown only while the set it
++          was spoken for is still the set on screen. */}
+       <p
+         className="v8-sr-only"
+         id="trial-next-reason"
+@@ -1064,7 +1102,7 @@ export function JourneyTrialSetup({
+         role="status"
+         aria-live="polite"
+       >
+-        {spokenReason}
++        {spokenKey === missingKey ? spokenReason : ""}
+       </p>
+       {busy && phaseLabel && (
+         /* ORD-0047: this wait measured 114.98s on a cold city through the production
+@@ -1133,7 +1171,8 @@ export function JourneyTrialSetup({
+             aria-describedby={blockedNow ? "trial-required-hint" : undefined}
+             onClick={() => {
+               if (blockedNow) {
+-                speak(missingLine);
++                speak(missingLine, missingKey);
++                revealReason();
+                 return;
+               }
+               setStep((current) => (current === 1 ? 2 : 3));
+@@ -1156,7 +1195,8 @@ export function JourneyTrialSetup({
+             aria-describedby={blockedNow ? "trial-required-hint" : undefined}
+             onClick={() => {
+               if (blockedNow) {
+-                speak(missingLine);
++                speak(missingLine, missingKey);
++                revealReason();
+                 return;
+               }
+               void submit();
+diff --git a/review/add-ord0220-2-mutant.py b/review/add-ord0220-2-mutant.py
+new file mode 100644
+index 0000000..ffdea0f
+--- /dev/null
++++ b/review/add-ord0220-2-mutant.py
+@@ -0,0 +1,53 @@
++"""Register the ORD-0220 ② mutant: put the announcement snapshot back.
++
++The anchor is read from the product file in this run so a hand-copied string cannot silently miss.
++"""
++
++from pathlib import Path
++
++ROOT = Path("D:/moodle/_qoder_integration_20260919")
++HARNESS = ROOT / "review/ord0082_0087_kill_drivers.py"
++PRODUCT = ROOT / "frontend/src/features/setup/JourneyTrialSetup.tsx"
++MARKER = '        [(TIERS_SPEC, ["ord0220-1-the-tight-caveat-cannot-contradict-itself"])],\n    ),\n'
++OLD_LINE = "        {spokenKey === missingKey ? spokenReason : \"\"}\n"
++NEW_LINE = "        {spokenReason}\n"
++NODE = "ord0220-2-the-announcement-retires-when-the-field-is-fixed"
++
++
++def main() -> int:
++    source = open(PRODUCT, encoding="utf-8", newline="").read()
++    if source.count(OLD_LINE) != 1:
++        print(f"ABORT: the guarded render occurs {source.count(OLD_LINE)} times")
++        return 2
++    text = open(HARNESS, encoding="utf-8", newline="").read()
++    if "killY1-announcement-keeps-the-stale-snapshot" in text:
++        print("already registered; nothing written")
++        return 0
++    if text.count(MARKER) != 2:
++        # two of the registered cases end on this marker line; either is a valid insertion point,
++        # so anchor on the last one instead of guessing which the file grew.
++        print(f"ABORT: marker occurs {text.count(MARKER)} times, expected 2")
++        return 3
++    entry = (
++        "    (\n"
++        "        # ORD-0220 ②: the announcement goes back to being a snapshot of an old missing-list,\n"
++        "        # which is what the traveller's screen reader keeps re-reading after the fix.\n"
++        "        \"killY1-announcement-keeps-the-stale-snapshot\",\n"
++        "        WIZARD,\n"
++        f"        {OLD_LINE!r},\n"
++        f"        {NEW_LINE!r},\n"
++        f"        [(SURFACE_SPEC, [{NODE!r}])],\n"
++        "    ),\n"
++    )
++    index = text.rindex(MARKER)
++    updated = text[: index + len(MARKER)] + entry + text[index + len(MARKER) :]
++    open(HARNESS, "w", encoding="utf-8", newline="").write(updated)
++    import ast
++
++    ast.parse(open(HARNESS, encoding="utf-8").read())
++    print(f"registered bytes={len(updated.encode('utf-8')) - len(text.encode('utf-8'))} parses=OK")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/review/add-ord0220-2-node.py b/review/add-ord0220-2-node.py
+new file mode 100644
+index 0000000..934048a
+--- /dev/null
++++ b/review/add-ord0220-2-node.py
+@@ -0,0 +1,94 @@
++"""Append the ORD-0220 ② node to the per-surface readings spec.
++
++Script rather than heredoc: a heredoc eats the backslash escapes in this file's TypeScript and the
++spec stops parsing (this lane hit that five times).
++"""
++
++from pathlib import Path
++
++SPEC = Path("D:/moodle/_qoder_integration_20260919/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts")
++
++NODE = '''
++test("ord0220-2-the-announcement-retires-when-the-field-is-fixed — 听的那句也要跟现值重算", async ({
++  page,
++}) => {
++  test.setTimeout(300_000);
++  const NODE = "ord0220-2-the-announcement-retires-when-the-field-is-fixed";
++  await reachStep2WithABlockedBudget(page);
++  /* Press the blocked 下一步 the way a thumb does.  Without this the region is never written and
++     the node would pass on an unfired stub -- this lane's own recorded trap. */
++  await page.getByTestId("trial-next").click({ force: true });
++  await expect
++    .poll(() => surface(page, "#trial-next-reason").then((read) => read.text), {
++      message: node(NODE, "the refused press wrote no announcement, so there is nothing to retire"),
++      timeout: 5_000,
++    })
++    .toContain("总预算");
++  const spoken = await surface(page, "#trial-next-reason");
++  expect(
++    spoken.insideSrOnly && !spoken.visuallyRendered,
++    node(NODE, `the surface being retired is not the screen-reader one: ${JSON.stringify(spoken)}`),
++  ).toBe(true);
++
++  /* Fix the field.  The visible hint has always recomputed; the announcement must retire with it,
++     or a screen-reader user is told the trip still needs a number that is already on the screen. */
++  await page.getByTestId("trial-budget").fill("1500");
++  await expect
++    .poll(() => surface(page, "#trial-next-reason").then((read) => read.text), {
++      message: node(
++        NODE,
++        `the announcement still names 总预算 after it was fixed: it was "${spoken.text}" and is still that`,
++      ),
++      timeout: 5_000,
++    })
++    .not.toContain("总预算");
++
++  // And it stays retired on step 3, which is where HJ-P1's reading lived.
++  await page.getByTestId("trial-next").click();
++  await expect(page.getByTestId("trial-step3-body")).toBeVisible({ timeout: 15_000 });
++  const atStep3 = await surface(page, "#trial-next-reason");
++  expect(
++    atStep3.text.includes("总预算"),
++    node(NODE, `step 3 still announces a field the traveller already filled: "${atStep3.text}"`),
++  ).toBe(false);
++  writeFileSync(
++    evidencePath("ui-overnight/ord0220-announcement-retired.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        order: "ORD-0220 ②",
++        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
++        method: "the region's own textContent, read per surface; body innerText is never used",
++        spokenAtRefusal: spoken,
++        afterFix: await surface(page, "#trial-next-reason"),
++        atStep3,
++      },
++      null,
++      2,
++    ) + "\\n",
++    "utf-8",
++  );
++});
++'''
++
++
++def main() -> int:
++    text = open(SPEC, encoding="utf-8", newline="").read()
++    if "ord0220-2-the-announcement-retires-when-the-field-is-fixed" in text:
++        print("already appended; nothing written")
++        return 0
++    if not text.rstrip().endswith("});"):
++        print(f"ABORT: file does not end with a test close: {text.rstrip()[-40:]!r}")
++        return 2
++    updated = text.rstrip("\n") + "\n" + NODE
++    open(SPEC, "w", encoding="utf-8", newline="").write(updated.replace("\r\n", "\n"))
++    after = open(SPEC, encoding="utf-8", newline="").read()
++    print(
++        f"appended bytes={len(after.encode('utf-8')) - len(text.encode('utf-8'))} "
++        f"node_present={'ord0220-2-the-announcement-retires' in after} crlf={after.count(chr(13) + chr(10))}"
++    )
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/review/add-ord0220-3-mutant.py b/review/add-ord0220-3-mutant.py
+new file mode 100644
+index 0000000..dda823f
+--- /dev/null
++++ b/review/add-ord0220-3-mutant.py
+@@ -0,0 +1,54 @@
++"""Register the ORD-0220 ③ mutant: a refused press that answers out loud but brings nothing on screen.
++
++Anchor read from the product file in this run so it cannot silently miss.
++"""
++
++from pathlib import Path
++
++ROOT = Path("D:/moodle/_qoder_integration_20260919")
++HARNESS = ROOT / "review/ord0082_0087_kill_drivers.py"
++PRODUCT = ROOT / "frontend/src/features/setup/JourneyTrialSetup.tsx"
++MARKER = "        [(SURFACE_SPEC, ['ord0220-2-the-announcement-retires-when-the-field-is-fixed'])],\n    ),\n"
++OLD = (
++    '    hint.scrollIntoView({ block: "center", behavior: "smooth" });\n'
++    "    hint.focus({ preventScroll: false });\n"
++)
++NEW = "    // reveal removed: the sentence is spoken, the screen never shows it\n"
++NODE = "ord0220-3-a-refused-press-brings-its-reason-on-screen"
++
++
++def main() -> int:
++    source = open(PRODUCT, encoding="utf-8", newline="").read()
++    if source.count(OLD) != 1:
++        print(f"ABORT: the reveal body occurs {source.count(OLD)} times")
++        return 2
++    text = open(HARNESS, encoding="utf-8", newline="").read()
++    if "killZ1-refused-press_never_reveals_its_reason" in text:
++        print("already registered; nothing written")
++        return 0
++    if text.count(MARKER) != 1:
++        print(f"ABORT: marker occurs {text.count(MARKER)} times, expected 1")
++        return 3
++    entry = (
++        "    (\n"
++        "        # ORD-0220 ③: the press still speaks but the reason never reaches the viewport --\n"
++        "        # the exact 'I pressed and nothing happened' state HJ-P1 measured three times.\n"
++        "        \"killZ1-refused-press-never-reveals-its-reason\",\n"
++        "        WIZARD,\n"
++        f"        {OLD!r},\n"
++        f"        {NEW!r},\n"
++        f"        [(SURFACE_SPEC, [{NODE!r}])],\n"
++        "    ),\n"
++    )
++    index = text.index(MARKER) + len(MARKER)
++    updated = text[:index] + entry + text[index:]
++    open(HARNESS, "w", encoding="utf-8", newline="").write(updated)
++    import ast
++
++    ast.parse(open(HARNESS, encoding="utf-8").read())
++    print(f"registered bytes={len(updated.encode('utf-8')) - len(text.encode('utf-8'))} parses=OK")
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/review/add-ord0220-3-node.py b/review/add-ord0220-3-node.py
+new file mode 100644
+index 0000000..6c7e90c
+--- /dev/null
++++ b/review/add-ord0220-3-node.py
+@@ -0,0 +1,103 @@
++"""Append the ORD-0220 ③ node to the per-surface readings spec (script, not heredoc)."""
++
++from pathlib import Path
++
++SPEC = Path("D:/moodle/_qoder_integration_20260919/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts")
++
++NODE = '''
++test("ord0220-3-a-refused-press-brings-its-reason-on-screen — 按下去什么都没发生，这一格不再成立", async ({
++  page,
++}) => {
++  test.setTimeout(300_000);
++  const NODE = "ord0220-3-a-refused-press-brings-its-reason-on-screen";
++  await reachStep2WithABlockedBudget(page);
++  await settledSurface(page, \'[data-testid="trial-required-hint"]\', NODE);
++  /* Reproduce the reported state: the traveller is at the top of the step, thumb on the sticky
++     下一步, and the sentence is below the fold. */
++  await page.evaluate(() => window.scrollTo(0, 0));
++  const before = await page.evaluate(() => {
++    const el = document.getElementById("trial-required-hint");
++    const box = el?.getBoundingClientRect();
++    return {
++      top: box ? Math.round(box.top) : null,
++      bottom: box ? Math.round(box.bottom) : null,
++      innerHeight: window.innerHeight,
++      inViewport: !!box && box.bottom > 0 && box.top < window.innerHeight,
++    };
++  });
++
++  await page.getByTestId("trial-next").click({ force: true });
++  await expect
++    .poll(
++      () =>
++        page.evaluate(() => {
++          const el = document.getElementById("trial-required-hint");
++          const box = el?.getBoundingClientRect();
++          return box ? Math.round(box.bottom) <= window.innerHeight : false;
++        }),
++      {
++        message: node(
++          NODE,
++          `the press was refused but its reason never came on screen: before ${JSON.stringify(before)}`,
++        ),
++        timeout: 4_000,
++      },
++    )
++    .toBe(true);
++  const focused = await page.evaluate(() => document.activeElement?.id ?? null);
++  expect(
++    focused,
++    node(NODE, `the reason is on screen but the traveller's position did not move there: activeElement is ${JSON.stringify(focused)}`),
++  ).toBe("trial-required-hint");
++  const after = await page.evaluate(() => {
++    const el = document.getElementById("trial-required-hint");
++    const box = el?.getBoundingClientRect();
++    return {
++      top: box ? Math.round(box.top) : null,
++      bottom: box ? Math.round(box.bottom) : null,
++      innerHeight: window.innerHeight,
++      inViewport: !!box && box.bottom > 0 && box.top < window.innerHeight,
++    };
++  });
++  writeFileSync(
++    evidencePath("ui-overnight/ord0220-reason-on-screen.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        order: "ORD-0220 ③",
++        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
++        before,
++        after,
++        focusedAfterPress: focused,
++        rule: "拦下时提示必须进入视口并被聚焦（bottom <= innerHeight）",
++      },
++      null,
++      2,
++    ) + "\\n",
++    "utf-8",
++  );
++  await page.screenshot({ path: evidencePath("ui-overnight/ord0220-reason-on-screen.png"), fullPage: false });
++});
++'''
++
++
++def main() -> int:
++    text = open(SPEC, encoding="utf-8", newline="").read()
++    if "ord0220-3-a-refused-press-brings-its-reason-on-screen" in text:
++        print("already appended; nothing written")
++        return 0
++    if not text.rstrip().endswith("});"):
++        print(f"ABORT: file does not end with a test close: {text.rstrip()[-40:]!r}")
++        return 2
++    updated = text.rstrip("\n") + "\n" + NODE
++    open(SPEC, "w", encoding="utf-8", newline="").write(updated.replace("\r\n", "\n"))
++    after = open(SPEC, encoding="utf-8", newline="").read()
++    print(
++        f"appended bytes={len(after.encode('utf-8')) - len(text.encode('utf-8'))} "
++        f"node_present={'ord0220-3-a-refused-press' in after} crlf={after.count(chr(13) + chr(10))}"
++    )
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/review/add-ord0220-mutants.py b/review/add-ord0220-mutants.py
+new file mode 100644
+index 0000000..570104b
+--- /dev/null
++++ b/review/add-ord0220-mutants.py
+@@ -0,0 +1,76 @@
++"""Register the ORD-0220 ① mutants in the kill harness.
++
++The anchor is taken from the product file's own bytes in this run instead of being retyped: every
++survivor this lane ever mis-reported traced back to a hand-copied anchor that no longer matched.
++"""
++
++from pathlib import Path
++
++ROOT = Path("D:/moodle/_qoder_integration_20260919")
++HARNESS = ROOT / "review/ord0082_0087_kill_drivers.py"
++PRODUCT = ROOT / "frontend/src/app/V8Experience.tsx"
++MARKER = '        [(COPY_SPEC, ["ord0216d-en-the-wizard-never-says-a-city-name"])],\n    ),\n'
++
++CAVEAT_KEY = "按这个预算"
++REVERSAL = "按这个预算，住宿、交通和吃饭很可能超出计划。——不过实际上预算充足，放心消费。"
++
++
++def main() -> int:
++    source = open(PRODUCT, encoding="utf-8", newline="").read()
++    lines = [line for line in source.split("\n") if CAVEAT_KEY in line]
++    if len(lines) != 1:
++        print(f"ABORT: the caveat line occurs {len(lines)} times")
++        return 2
++    anchor = lines[0] + "\n"
++    if not anchor.startswith('        ? "') or not anchor.rstrip("\n").endswith('"'):
++        print(f"ABORT: unexpected shape {anchor!r}")
++        return 3
++
++    cases = [
++        (
++            "killX1-tight-caveat-says-the-opposite",
++            anchor,
++            '        ? "' + REVERSAL + '"\n',
++            "the red team's arm: the caveat keeps its risk clause and appends a reassurance",
++        ),
++        (
++            "killX2-tight-caveat-says-nothing",
++            anchor,
++            '        ? ""\n',
++            "the empty-caveat arm: the number stands with no sentence behind it",
++        ),
++    ]
++
++    text = open(HARNESS, encoding="utf-8", newline="").read()
++    if "killX1-tight-caveat-says-the-opposite" in text:
++        print("already registered; nothing written")
++        return 0
++    if text.count(MARKER) != 1:
++        print(f"ABORT: the insertion marker occurs {text.count(MARKER)} times")
++        return 4
++
++    block = ""
++    for name, old, new, why in cases:
++        block += (
++            "    (\n"
++            f"        # ORD-0220 ①: {why}.\n"
++            f"        {name!r},\n"
++            "        EXPERIENCE,\n"
++            f"        {old!r},\n"
++            f"        {new!r},\n"
++            '        [(TIERS_SPEC, ["ord0220-1-the-tight-caveat-cannot-contradict-itself"])],\n'
++            "    ),\n"
++        )
++    updated = text.replace(MARKER, MARKER + block, 1)
++    open(HARNESS, "w", encoding="utf-8", newline="").write(updated)
++    after = open(HARNESS, encoding="utf-8", newline="").read()
++    print(
++        f"registered bytes={len(after.encode('utf-8')) - len(text.encode('utf-8'))} "
++        f"killX1={'killX1-tight-caveat-says-the-opposite' in after} "
++        f"killX2={'killX2-tight-caveat-says-nothing' in after} crlf={after.count(chr(13) + chr(10))}"
++    )
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/review/add-ord0220-semantic-arm.py b/review/add-ord0220-semantic-arm.py
+new file mode 100644
+index 0000000..88a48f8
+--- /dev/null
++++ b/review/add-ord0220-semantic-arm.py
+@@ -0,0 +1,85 @@
++"""Append the ORD-0220 ① node to the budget-tier gate.
++
++Written as a script rather than an inline shell heredoc on purpose: a heredoc here eats the
++backslash escapes in the TypeScript strings and the file stops parsing (this lane hit that five
++times).  The anchor is re-measured in the same run, and the write is LF-only.
++"""
++
++from pathlib import Path
++
++SPEC = Path("D:/moodle/_qoder_integration_20260919/frontend/e2e/qoder-budget-advisory-tiers.spec.ts")
++
++NODE = '''
++/* ORD-0220 ①: co-occurrence is not meaning.  The three assertions above only prove two strings are
++   present somewhere in the block, which is why the red team's mutant survived: keep the caveat and
++   append 「——不过实际上预算充足，放心消费」 and every one of them still reads green while the screen
++   contradicts itself.  This node asserts what the caveat **says**. */
++const RISK_WORDS = ["超出", "紧张", "吃紧", "不够"];
++const ALLAY_WORDS = ["充足", "放心", "宽裕", "富余", "没问题", "绰绰有余"];
++
++test("ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什么也要断言", async ({
++  page,
++}) => {
++  test.setTimeout(300_000);
++  const NODE = "ord0220-1-the-tight-caveat-cannot-contradict-itself";
++  await openHubWithReference(page, reference({ per_person_per_day_minor: 4000 }));
++  const block = page.getByTestId("budget-advisory");
++  await expect(
++    block,
++    node(NODE, "the tight advisory is not on screen, so there is no caveat to judge"),
++  ).toBeVisible({ timeout: 20_000 });
++  const text = (await block.innerText()).replace(/\\s+/g, " ");
++  const risk = RISK_WORDS.filter((word) => text.includes(word));
++  const allay = ALLAY_WORDS.filter((word) => text.includes(word));
++  expect(
++    risk.length,
++    node(NODE, `the tight advisory carries a number but its caveat says no risk at all: "${text}"`),
++  ).toBeGreaterThan(0);
++  expect(
++    allay,
++    node(
++      NODE,
++      `the tight caveat contradicts itself -- risk ${JSON.stringify(risk)} printed alongside ${JSON.stringify(allay)}: "${text}"`,
++    ),
++  ).toEqual([]);
++  writeFileSync(
++    evidencePath("ui-overnight/ord0220-caveat-meaning.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        node: NODE,
++        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
++        text,
++        risk,
++        allay,
++        rule: "tight 的 caveat 必须自己说出风险，且不得同时出现安抚类词",
++      },
++      null,
++      2,
++    ) + "\\n",
++    "utf-8",
++  );
++});
++'''
++
++
++def main() -> int:
++    text = open(SPEC, encoding="utf-8", newline="").read()
++    if "ord0220-1-the-tight-caveat-cannot-contradict-itself" in text:
++        print("already appended; nothing written")
++        return 0
++    if not text.rstrip().endswith("});"):
++        print(f"ABORT: the file does not end with a test close, got {text.rstrip()[-40:]!r}")
++        return 2
++    updated = text.rstrip("\n") + "\n" + NODE
++    open(SPEC, "w", encoding="utf-8", newline="").write(updated.replace("\r\n", "\n"))
++    after = open(SPEC, encoding="utf-8", newline="").read()
++    print(
++        f"appended bytes={len(after.encode('utf-8')) - len(text.encode('utf-8'))} "
++        f"node_present={'ord0220-1-the-tight-caveat' in after} crlf={after.count(chr(13) + chr(10))}"
++    )
++    return 0
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/review/ord0082_0087_kill_drivers.py b/review/ord0082_0087_kill_drivers.py
+index d551941..1c36e2f 100644
+--- a/review/ord0082_0087_kill_drivers.py
++++ b/review/ord0082_0087_kill_drivers.py
+@@ -697,6 +697,40 @@ CASES = [
+         '  "trial.tianjinDemo": "Use the sealed Tianjin demo",\n',
+         [(COPY_SPEC, ["ord0216d-en-the-wizard-never-says-a-city-name"])],
+     ),
++    (
++        # ORD-0220 ①: the red team's arm: the caveat keeps its risk clause and appends a reassurance.
++        'killX1-tight-caveat-says-the-opposite',
++        EXPERIENCE,
++        '        ? "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。"\n',
++        '        ? "按这个预算，住宿、交通和吃饭很可能超出计划。——不过实际上预算充足，放心消费。"\n',
++        [(TIERS_SPEC, ["ord0220-1-the-tight-caveat-cannot-contradict-itself"])],
++    ),
++    (
++        # ORD-0220 ①: the empty-caveat arm: the number stands with no sentence behind it.
++        'killX2-tight-caveat-says-nothing',
++        EXPERIENCE,
++        '        ? "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。"\n',
++        '        ? ""\n',
++        [(TIERS_SPEC, ["ord0220-1-the-tight-caveat-cannot-contradict-itself"])],
++    ),
++    (
++        # ORD-0220 ②: the announcement goes back to being a snapshot of an old missing-list,
++        # which is what the traveller's screen reader keeps re-reading after the fix.
++        "killY1-announcement-keeps-the-stale-snapshot",
++        WIZARD,
++        '        {spokenKey === missingKey ? spokenReason : ""}\n',
++        '        {spokenReason}\n',
++        [(SURFACE_SPEC, ['ord0220-2-the-announcement-retires-when-the-field-is-fixed'])],
++    ),
++    (
++        # ORD-0220 ③: the press still speaks but the reason never reaches the viewport --
++        # the exact 'I pressed and nothing happened' state HJ-P1 measured three times.
++        "killZ1-refused-press-never-reveals-its-reason",
++        WIZARD,
++        '    hint.scrollIntoView({ block: "center", behavior: "smooth" });\n',
++        '    // reveal removed: the sentence is spoken, the screen never shows it\n',
++        [(SURFACE_SPEC, ['ord0220-3-a-refused-press-brings-its-reason-on-screen'])],
++    ),
+ ]
+ 
+ sha256 = lambda path: hashlib.sha256(open(path, "rb").read()).hexdigest()
+diff --git a/review/probe-ord0220-budget-conflict.py b/review/probe-ord0220-budget-conflict.py
+new file mode 100644
+index 0000000..62e4366
+--- /dev/null
++++ b/review/probe-ord0220-budget-conflict.py
+@@ -0,0 +1,171 @@
++"""ORD-0220 ④ — one black-box probe: does the server refuse "lodging 900 > total 450"?
++
++The wizard sends both figures in the same currency on one POST (`V8Experience.tsx:898-905`), and HJ-P1
++has now watched the pair pass silently three times.  This probe asks the service, not the code:
++
++  1. read the service's own route list (`/openapi.json`) and print every `journeys` path with its
++     methods -- so "there is no update entry point" is a reading, never a guess;
++  2. POST a journey whose `budget` is 450 CNY and whose `stay_budget` is 900 CNY, exactly the shape
++     the traveller's device sends;
++  3. read the created journey back through the endpoint the Today hub actually uses, and print both
++     numbers as stored.
++
++Nothing here edits the backend, and nothing touches the commander's ports or `_live.db`: private
++port, private throwaway database, `demo/reset` never called, no provider egress.
++
++Run:  D:/moodle/CityNexus/.venv/Scripts/python.exe review/probe-ord0220-budget-conflict.py
++"""
++from __future__ import annotations
++
++import json
++import os
++import subprocess
++import sys
++import time
++import urllib.error
++import urllib.request
++from datetime import datetime
++from pathlib import Path
++
++ROOT = Path(__file__).resolve().parents[1]
++BACKEND = ROOT / "backend"
++PORT = 8732
++RUN_ID = datetime.now().strftime("%H%M%S")
++DB = BACKEND / f"_ord0220conflict{RUN_ID}.db"
++BASE = f"http://127.0.0.1:{PORT}"
++
++
++def call(path: str, body: dict | None = None, method: str | None = None):
++    data = None if body is None else json.dumps(body).encode("utf-8")
++    request = urllib.request.Request(
++        f"{BASE}{path}",
++        data=data,
++        method=method or ("POST" if body is not None else "GET"),
++        headers={"Content-Type": "application/json"},
++    )
++    try:
++        with urllib.request.urlopen(request, timeout=120) as response:
++            return response.status, json.loads(response.read().decode("utf-8") or "{}")
++    except urllib.error.HTTPError as error:
++        raw = error.read().decode("utf-8", errors="replace")
++        try:
++            return error.code, json.loads(raw)
++        except ValueError:
++            return error.code, {"raw": raw[:400]}
++
++
++def main() -> int:
++    env = {
++        **os.environ,
++        "CITYNEXUS_DATABASE_URL": f"sqlite:///{DB.as_posix()}",
++        "CITYNEXUS_E2E_RUN_ID": f"ord0220conflict{RUN_ID}",
++        "CITYNEXUS_DEMO_MODE": "true",
++        "CITYNEXUS_AI_ENABLED": "false",
++    }
++    log = open(ROOT / "review" / f"probe-ord0220-{RUN_ID}.log", "w", encoding="utf-8")
++    server = subprocess.Popen(
++        [sys.executable, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1", "--port", str(PORT)],
++        cwd=BACKEND,
++        env=env,
++        stdout=log,
++        stderr=subprocess.STDOUT,
++    )
++    receipt: dict = {"db": str(DB), "port": PORT}
++    try:
++        for _ in range(60):
++            try:
++                if call("/api/v1/health")[1].get("status"):
++                    break
++            except (urllib.error.URLError, OSError):
++                time.sleep(1)
++        else:
++            print("backend did not come up", file=sys.stderr)
++            return 2
++
++        # 1. the service's own surface: which journeys paths exist, and with which methods.
++        status, spec = call("/openapi.json")
++        paths = []
++        if status == 200:
++            for path, operations in sorted((spec.get("paths") or {}).items()):
++                if "journey" in path:
++                    paths.append({"path": path, "methods": sorted(k.upper() for k in operations)})
++        receipt["openapi_status"] = status
++        receipt["journey_paths"] = paths
++        receipt["journey_write_methods"] = sorted(
++            {m for entry in paths for m in entry["methods"] if m in {"POST", "PATCH", "PUT"}}
++        )
++
++        # 2. the contradiction, in the shape the wizard sends it.
++        _, traveler = call(
++            "/api/v1/travelers",
++            {"display_name": "Ord0220 probe", "locale": "zh-CN", "timezone": "Asia/Shanghai"},
++        )
++        payload = {
++            "traveler_id": traveler["id"],
++            "title": "天津 · 冲突探针",
++            "city_code": "CN-TIANJIN",
++            "timezone": "Asia/Shanghai",
++            "start_at": "2026-10-09T18:00:00+08:00",
++            "end_at": "2026-10-11T15:00:00+08:00",
++            "budget": {"amount_minor": 45000, "currency": "CNY"},
++            "stay_budget": {"amount_minor": 90000, "currency": "CNY"},
++            "party_size": 1,
++            "occupancy": {"adults": 1, "rooms": 1},
++            "arrival_anchor": {"at": "2026-10-09T18:00:00+08:00", "location": "天津站"},
++            "departure_anchor": {"at": "2026-10-11T15:00:00+08:00", "location": "北京南站"},
++        }
++        created_status, created = call("/api/v1/journeys", payload)
++        receipt["create"] = {
++            "request": {"budget": payload["budget"], "stay_budget": payload["stay_budget"]},
++            "status": created_status,
++            "body_keys": sorted(created.keys()),
++            "reason_code": created.get("reason_code") or created.get("code") or created.get("error"),
++            "message": created.get("message") or created.get("detail"),
++        }
++
++        # 3. read it back through the endpoint the hub uses.
++        journey_id = created.get("id")
++        if journey_id:
++            read_status, experience = call(f"/api/v1/journeys/{journey_id}/experience")
++            trip = experience.get("trip") or {}
++            receipt["readback"] = {
++                "endpoint": f"/api/v1/journeys/{journey_id}/experience",
++                "status": read_status,
++                "budget": trip.get("budget_reference") or trip.get("budget"),
++                "stay_budget": trip.get("stay_budget"),
++                "journey_status": (experience.get("journey") or {}).get("status"),
++            }
++            # 4. the other entry the order names: the update route the route list showed as PATCH.
++            patch_status, patched = call(
++                f"/api/v1/journeys/{journey_id}",
++                {"budget": {"amount_minor": 45000, "currency": "CNY"}, "stay_budget": {"amount_minor": 90000, "currency": "CNY"}},
++                method="PATCH",
++            )
++            _, after = call(f"/api/v1/journeys/{journey_id}/experience")
++            after_trip = after.get("trip") or {}
++            receipt["update_entry"] = {
++                "endpoint": f"PATCH /api/v1/journeys/{journey_id}",
++                "status": patch_status,
++                "reason_code": patched.get("reason_code") or patched.get("code") or patched.get("error"),
++                "message": patched.get("message") or patched.get("detail"),
++                "budget_after": after_trip.get("budget_reference") or after_trip.get("budget"),
++                "stay_budget_after": after_trip.get("stay_budget"),
++            }
++        print(json.dumps(receipt, ensure_ascii=False, indent=2))
++        out = ROOT / "review" / "evidence" / "ui-overnight"
++        out.mkdir(parents=True, exist_ok=True)
++        (out / "ord0220-budget-conflict-probe.json").write_text(
++            json.dumps({"generatedBy": "e345b9d6", **receipt}, ensure_ascii=False, indent=2) + "\n", "utf-8"
++        )
++        return 0
++    finally:
++        server.terminate()
++        try:
++            server.wait(timeout=20)
++        except subprocess.TimeoutExpired:
++            server.kill()
++        log.close()
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())

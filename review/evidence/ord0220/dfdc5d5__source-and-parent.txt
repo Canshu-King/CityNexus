@@ -1,0 +1,9 @@
+order           ORD-0220
+source_sha      dfdc5d59205f680306ce429f73240f28e9332b1f  (dfdc5d5)
+parent_sha      b41b4cce0e4143068bef216d96e2eab4a4116056
+subject         fix(frontend): the caveat must mean something, the announcement retires, and a refused press reveals its reason (ORD-0220 ①②)
+authored        2026-09-22 19:37 +0800
+lane            e345b9d6 (frontend/UI), tree D:\moodle\_qoder_integration_20260919
+interpreter     Node/Playwright for the gates; D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14 for the runner
+note            the working tip is not pushed by this lane, so a bare SHA answers 422 on GitHub;
+                these blobs are the readable coordinates for it.

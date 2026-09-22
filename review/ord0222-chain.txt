@@ -1,0 +1,92 @@
+run_id=run079055 port=4582/8582 target=e2e/qoder-today-follows-the-stage.spec.ts e2e/qoder-trip-shape-and-budget.spec.ts e2e/qoder-speaks-the-travellers-language.spec.ts e2e/qoder-mobile-overnight.spec.ts e2e/qoder-simulation-scene.spec.ts e2e/qoder-wallet-commitments.spec.ts e2e/qoder-generation-wait.spec.ts e2e/qoder-map-gesture-ownership.spec.ts e2e/qoder-raw-enums-never-reach-the-traveller.spec.ts
+  ok 25 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:164:5 › sim-today-hero-follows-the-stage [en@390] — hero 按服务器游标选站 (3.1s)
+  ok 26 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:297:5 › today-clock-source-is-spoken-when-device-time-is-used [en@390] — 回落不许静默 (285ms)
+  ok 27 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:164:5 › sim-today-hero-follows-the-stage [zh-CN@412] — hero 按服务器游标选站 (3.1s)
+  ok 28 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:297:5 › today-clock-source-is-spoken-when-device-time-is-used [zh-CN@412] — 回落不许静默 (335ms)
+  ok 29 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:164:5 › sim-today-hero-follows-the-stage [en@412] — hero 按服务器游标选站 (3.0s)
+  ok 30 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:297:5 › today-clock-source-is-spoken-when-device-time-is-used [en@412] — 回落不许静默 (324ms)
+  ok 31 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:360:1 › today-attention-does-not-contradict-the-map — 同屏不能又"没坐标"又"一切正常" (1.2s)
+  ok 32 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:412:1 › today-scene-window-is-not-called-device-time — 有场景分钟、没投影时不许说"设备自己的时间" (1.1s)
+  ok 33 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:674:1 › sim-stage-actions-are-reachable-and-never-in-the-nav-band — 悬浮球不遮内容，展开后每行都可按、导航仍可点 (10.6s)
+  x  34 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1099:1 › sim-window-scrolls-under-a-finger — 手指能滑到第十一枚按钮 (3.4s)
+  ok 35 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1211:1 › sim-replan-actions-follow-the-server-list — 没有方案就不许点 (1.7s)
+  ok 36 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1245:1 › today-hero-meta-does-not-contradict-the-sequence — “暂无安排”要真的是没有 (1.1s)
+  ok 37 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1298:1 › sim-booking-row-follows-the-journey-state — 行程不在 PLANNED 时先说清规则再置灰 (2.7s)
+  ok 38 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1424:1 › sim-replan-receipt-names-the-proposal-the-row-sends — 印出来的方案 id 就是被送出去的那一个 (1.9s)
+  ok 39 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1576:1 › sim-booking-target-is-an-activity-the-server-gives-a-slot-for — 默认目标由服务器说了才算 (8.3s)
+  ok 40 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1945:1 › sim-action-in-flight-is-perceivable — 按下去要看得出在跑 (1.5s)
+[refusal-node +7ms] scene id read
+[refusal-node +9ms] route held, navigating
+[refusal-node +73ms] goto resolved
+[refusal-node +161ms] hero visible
+[refusal-node +629ms] row scrolled into view
+[refusal-node +631ms] row reported blocked
+[refusal-node +640ms] row pressed
+[refusal-node +644ms] refusal on screen: "这个动作现在做不了：还在读服务器的场景状态。"
+[refusal-node +646ms] read released
+[refusal-node +675ms] banner ready
+[refusal-node +677ms] refusal retired
+  ok 41 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1985:1 › sim-refusal-does-not-outlive-the-reading — “还在读”不能读完还挂着 (774ms)
+  ok 42 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:2070:1 › today-attention-agrees-with-the-map-when-nothing-can-be-placed — 无坐标时两屏同一句话 (389ms)
+  ok 43 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:2147:1 › sim-evidence-state-says-what-is-sealed — 冻着但没到期不许读成没数据 (383ms)
+  ok 44 [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:2211:1 › nav-reservation-covers-the-rendered-bar — 预留高度不许比导航条本身矮 (1.1s)
+  ok 45 [chromium] › e2e\qoder-trip-shape-and-budget.spec.ts:100:3 › ORD-0063/0064a Today states the projected shape and currency › trip-length-comes-from-the-backend (5.2s)
+  ok 46 [chromium] › e2e\qoder-trip-shape-and-budget.spec.ts:146:3 › ORD-0063/0064a Today states the projected shape and currency › budget-line-never-borrows-a-symbol (6.7s)
+  ok 47 [chromium] › e2e\qoder-trip-shape-and-budget.spec.ts:223:3 › ORD-0063/0064a Today states the projected shape and currency › no-client-side-day-or-currency-invention (4ms)
+  x  48 [chromium] › e2e\qoder-wallet-commitments.spec.ts:91:1 › ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来的承诺要在 Wallet 上看得见 (4.3s)
+  ok 49 [chromium] › e2e\qoder-wallet-commitments.spec.ts:396:1 › ord0087-unknown-price-is-said-unknown — 不知道价格就不许显示 0 (415ms)
+  ok 50 [chromium] › e2e\qoder-wallet-commitments.spec.ts:428:1 › ord0087-simulated-label-comes-from-the-field — 真供应商不许被误标 (430ms)
+  ok 51 [chromium] › e2e\qoder-wallet-commitments.spec.ts:463:1 › ord0087-empty-list-is-not-labelled-mock — 没有承诺时不该有任何“模拟承诺” (256ms)
+
+
+  1) [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1099:1 › sim-window-scrolls-under-a-finger — 手指能滑到第十一枚按钮 
+
+    Error: e2e/qoder-today-follows-the-stage.spec.ts :: sim-window-scrolls-under-a-finger — 10 touch swipes moved the body to 783px of 806px -- it never reaches its bottom under a finger: [239,478,703,783,783,783,783,783,783,783]
+
+    expect(received).toBeGreaterThanOrEqual(expected)
+
+    Expected: >= 804
+    Received:    783
+
+      1164 |       scrollTops[scrollTops.length - 1],
+      1165 |       node(NODE, `${scrollTops.length} touch swipes moved the body to ${scrollTops[scrollTops.length - 1]}px of ${maxScroll}px -- it never reaches its bottom under a finger: ${JSON.stringify(scrollTops)}`),
+    > 1166 |     ).toBeGreaterThanOrEqual(maxScroll - 2);
+           |       ^
+      1167 |     const after = (await measureFloat(phone)).rows.find(
+      1168 |       (item) => item.id === lastRowId,
+      1169 |     );
+        at D:\moodle\_qoder_integration_20260919\frontend\e2e\qoder-today-follows-the-stage.spec.ts:1166:7
+
+    Error Context: test-results\qoder-today-follows-the-st-4a974-nder-a-finger-—-手指能滑到第十一枚按钮-chromium\error-context.md
+
+  2) [chromium] › e2e\qoder-wallet-commitments.spec.ts:91:1 › ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来的承诺要在 Wallet 上看得见 
+
+    Error: e2e/qoder-wallet-commitments.spec.ts :: ord0087-booked-commitment-is-on-the-wallet-screen — the booking row names no activity it will send (reads "建一个硬承诺"; the plan's activities are ["Old Town Gate","Riverside Museum","Central Food Hall","Tech Art Center","Nexus River Cruise Pier","Skyline Dinner House"])
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: true
+    Received: false
+
+      157 |     node("ord0087-booked-commitment-is-on-the-wallet-screen",
+      158 |       `the booking row names no activity it will send (reads ${JSON.stringify(announced)}; the plan's activities are ${JSON.stringify(planTitles.slice(0, 6))})`),
+    > 159 |   ).toBe(true);
+          |     ^
+      160 |
+      161 |   /* The row names the activity it is aiming at, and the control beside it moves to the next
+      162 |      candidate.  The demo plan carries one bookable activity and refuses the rest by name, so a
+        at D:\moodle\_qoder_integration_20260919\frontend\e2e\qoder-wallet-commitments.spec.ts:159:5
+
+    Error Context: test-results\qoder-wallet-commitments-o-e8e12-n-—-真链路建出来的承诺要在-Wallet-上看得见-chromium\error-context.md
+
+  2 failed
+    [chromium] › e2e\qoder-today-follows-the-stage.spec.ts:1099:1 › sim-window-scrolls-under-a-finger — 手指能滑到第十一枚按钮 
+    [chromium] › e2e\qoder-wallet-commitments.spec.ts:91:1 › ord0087-booked-commitment-is-on-the-wallet-screen — 真链路建出来的承诺要在 Wallet 上看得见 
+  49 passed (3.0m)
+[citynexus e2e] suite=prod-gate authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4582 backend=:8582 db=sqlite:///D:/moodle/_qoder_integration_20260919/review/evidence/_run079055.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=run079055 frontend=:4582 -> backend=:8582 ai=disabled db=_run079055.db
+[citynexus e2e] suite=prod-gate authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4582 backend=:8582 db=sqlite:///D:/moodle/_qoder_integration_20260919/review/evidence/_run079055.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=prod-gate authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4582 backend=:8582 db=sqlite:///D:/moodle/_qoder_integration_20260919/review/evidence/_run079055.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=prod-gate authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4582 backend=:8582 db=sqlite:///D:/moodle/_qoder_integration_20260919/review/evidence/_run079055.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=prod-gate authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4582 backend=:8582 db=sqlite:///D:/moodle/_qoder_integration_20260919/review/evidence/_run079055.db ai=disabled reuseExistingServer=false
+exit=1 log=D:/moodle/_qoder_integration_20260919/review/run-run079055.log

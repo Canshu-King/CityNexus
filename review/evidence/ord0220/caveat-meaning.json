@@ -1,0 +1,12 @@
+{
+  "generatedBy": "e345b9d6",
+  "node": "ord0220-1-the-tight-caveat-cannot-contradict-itself",
+  "head": "b41b4cce0e4143068bef216d96e2eab4a4116056",
+  "text": "3 天 · 2 人 · 每人每天约 CNY 40.00 按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。 调整预算我知道了，继续",
+  "risk": [
+    "超出"
+  ],
+  "allay": [],
+  "rule": "tight 的 caveat 必须自己说出风险，且不得同时出现安抚类词",
+  "publishedBy": "e345b9d6 for ORD-0220"
+}

@@ -1,0 +1,14 @@
+=== enum spec ===
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.2s)
+  ok 2 [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:155:1 › ord0222-1-visual-scan-no-raw-enums-and-no-mixed-english — 旅客看得见的字里不许有内部枚举，被改的行不许中英混排 (6.8s)
+  ok 3 [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:210:1 › ord0222-2-accessible-scan-no-raw-enums — 读屏输出里也不许有内部枚举 (5.0s)
+  ok 4 [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:239:1 › ord0222-3-an-unknown-value-says-unknown-in-chinese — 新枚举进来时中文要 fail closed (369ms)
+  ok 5 [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:284:1 › ord0222-4-day-payload-versus-visible-card — Check in / Overnight 的来源先交并排收据 (615ms)
+  5 passed (29.7s)
+exit=0 log=D:/moodle/_qoder_integration_20260919/review/run-run078759.log
+=== killAA1 ===
+killAA1-day-card-row-prints-the-raw-mode: src/app/V8Experience.tsx anchor hits=1 on_disk=True anchor_bytes=80 bytes_changed=-15
+  red message: Error: e2e/qoder-raw-enums-never-reach-the-traveller.spec.ts :: ord0222-1-visual-scan-no-raw-enums-and-no-mixed-english �� /v8/hub renders internal enum tokens to the traveller: ["TRANSIT","A
+  e2e/qoder-raw-enums-never-reach-the-traveller.spec.ts ['ord0222-1-visual-scan-no-raw-enums-and-no-mixed-english'] -> KILLED (rc=1)
+  restored OK
+total 1  killed 1

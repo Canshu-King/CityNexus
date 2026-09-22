@@ -1,0 +1,13 @@
+=== surface spec (instant reveal) ===
+  ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.2s)
+  ok 2 [chromium] › e2e\qoder-wizard-hint-surface-readings.spec.ts:150:1 › ord0221-3-step2-the-hint-clears-in-front-of-the-traveller — 第 2 步改完当场消失的可见文本 (1.8s)
+  ok 3 [chromium] › e2e\qoder-wizard-hint-surface-readings.spec.ts:208:1 › ord0221-4-step3-visible-hint-and-live-region-read-apart — 第 3 步：看见的与听到的分开量 (2.3s)
+  ok 4 [chromium] › e2e\qoder-wizard-hint-surface-readings.spec.ts:269:1 › ord0220-2-the-announcement-retires-when-the-field-is-fixed — 听的那句也要跟现值重算 (828ms)
+  ok 5 [chromium] › e2e\qoder-wizard-hint-surface-readings.spec.ts:330:1 › ord0220-3-a-refused-press-brings-its-reason-on-screen — 按下去什么都没发生，这一格不再成立 (2.1s)
+  5 passed (23.9s)
+exit=0 log=D:/moodle/_qoder_integration_20260919/review/run-run080751.log
+=== killZ1 ===
+killZ1-refused-press-never-reveals-its-reason: src/features/setup/JourneyTrialSetup.tsx anchor hits=1 on_disk=True anchor_bytes=46 bytes_changed=27
+  e2e/qoder-wizard-hint-surface-readings.spec.ts ['ord0220-3-a-refused-press-brings-its-reason-on-screen'] -> KILLED (rc=1)
+  restored OK
+total 1  killed 1
