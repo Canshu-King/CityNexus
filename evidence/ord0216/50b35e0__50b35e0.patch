@@ -1,0 +1,152 @@
+diff --git a/frontend/e2e/qoder-budget-advisory-tiers.spec.ts b/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
+index d213c1b..6ecf54a 100644
+--- a/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
++++ b/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
+@@ -86,14 +86,24 @@ test("ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-a
+     node(NODE, "a tight reference no longer renders the advisory on the hub"),
+   ).toBeVisible({ timeout: 20_000 });
+   const text = ((await advisory.innerText()) ?? "").replace(/\s+/g, " ");
++  /* ORD-0216 2 (red team 15:41): this is a two-way gate now.  The derived number and its caveat
++     are a pair -- each half alone is the fake precision R11 forbids -- so EITHER half rendering
++     without the other fails, read from the rendered text.  Both directions are asserted
++     separately so a red names which half was stripped. */
++  const hasNumber = /每人每天约/.test(text);
++  const hasCaveat = /按这个预算，住宿、交通和吃饭很可能超出计划/.test(text);
+   expect(
+-    /每人每天约/.test(text),
++    hasNumber,
+     node(NODE, `the tight advisory lost the derived number: "${text}"`),
+   ).toBe(true);
+   expect(
+-    /按这个预算，住宿、交通和吃饭很可能超出计划/.test(text),
++    hasCaveat,
+     node(NODE, `the tight advisory lost its caveat: "${text}"`),
+   ).toBe(true);
++  expect(
++    hasNumber !== hasCaveat,
++    node(NODE, `the pair split: number=${hasNumber} caveat=${hasCaveat} in "${text}"`),
++  ).toBe(false);
+   /* The action is pressable for real: elementFromPoint at its centre hits the button itself. */
+   const edit = page.getByTestId("budget-advisory-edit");
+   await expect(edit).toBeVisible();
+diff --git a/frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts b/frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts
+index 76301ff..64fdbe9 100644
+--- a/frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts
++++ b/frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts
+@@ -332,3 +332,62 @@ test("ord0135-a-missing-field-is-a-route-not-only-a-diagnosis — 「还需要
+   );
+   await page.screenshot({ path: evidencePath("ui-overnight/ord0135-missing-jumps.png"), fullPage: true });
+ });
++
++test("ord0216-a-fixed-field-leaves-the-hint-on-the-next-step — 补上的缺项不许跟着进确认屏", async ({
++  page,
++}) => {
++  test.setTimeout(300_000);
++  const NODE = "ord0216-a-fixed-field-leaves-the-hint-on-the-next-step";
++  /* HJ-P1's 2/2 (15:04): with 总预算 empty, step 2 blocks naming it; after filling it the stale
++     「还需要填写：总预算」 still hung on step 3 -- where 201s would otherwise already have gone
++     through.  The hint has to be recomputed from the current values wherever the traveller is. */
++  await openWizard(page);
++  await page.getByTestId("trial-city").fill("天津");
++  await page.getByTestId("trial-arrival").fill("天津站");
++  await page.getByTestId("trial-departure").fill("北京南站");
++  await page.getByTestId("trial-next").click();
++  await expect(page.getByTestId("trial-step2-body")).toBeVisible({ timeout: 15_000 });
++
++  /* Block step 2 on the budget, so the hint names it.  The blocked 下一步 carries
++     `aria-disabled` and Playwright refuses to click it (this lane's own trap -- hit twice while
++     writing this very node), so the blocked state is asserted, never clicked. */
++  await page.getByTestId("trial-budget").fill("0");
++  const hint = page.getByTestId("trial-required-hint");
++  await expect(
++    hint,
++    node(NODE, "an empty budget blocked step 2 without naming it"),
++  ).toContainText(/总预算/, { timeout: 10_000 });
++
++  /* Fix the field via the jump the hint itself offers (ORD-0135 3's route), then advance: the
++     sentence must drop 总预算 by the time the traveller reaches step 3. */
++  await page.getByTestId("trial-budget").fill("1500");
++  await page.getByTestId("trial-next").click();
++  await expect(page.getByTestId("trial-step3-body")).toBeVisible({ timeout: 15_000 });
++  const bodyText = (await page.locator("body").innerText()).replace(/\s+/g, " ");
++  expect(
++    /还需要填写：[^。]*总预算/.test(bodyText),
++    node(NODE, `the fixed budget still hangs in the hint on step 3: "${bodyText.slice(0, 260)}"`),
++  ).toBe(false);
++  /* The typed value survives onto the review row. */
++  const budget = ((await page.getByTestId("review-budget").innerText()) ?? "").replace(/\s+/g, " ");
++  expect(
++    budget.includes("1500"),
++    node(NODE, `the typed budget is not what the review shows: "${budget}"`),
++  ).toBe(true);
++
++  writeFileSync(
++    evidencePath("ui-overnight/ord0216-stale-hint.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        node: NODE,
++        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
++        regression: "总预算 was blocked on step 2, fixed, and must not reappear in the step-3 hint",
++        budgetOnReview: budget,
++      },
++      null,
++      2,
++    ) + "\n",
++    "utf-8",
++  );
++});
+diff --git a/frontend/src/features/setup/JourneyTrialSetup.tsx b/frontend/src/features/setup/JourneyTrialSetup.tsx
+index f5c577f..831a8d4 100644
+--- a/frontend/src/features/setup/JourneyTrialSetup.tsx
++++ b/frontend/src/features/setup/JourneyTrialSetup.tsx
+@@ -519,7 +519,16 @@ export function JourneyTrialSetup({
+      jump existed -- the same known fact failing to reach the button.  The anchors are the fields the
+      API rejects (the 422 above is about `arrival_anchor.location`), so step 3 reuses the step-1 items
+      and their jump targets rather than inventing a second list that could disagree with the display. */
+-  const missingStep3 = missingStep1;
++  /* ORD-0216 ③ (HJ-P1 2/2): the review step used to inherit step 2's list verbatim, so a budget
++     blocked on step 2 and then filled still printed 「还需要填写：总预算」 on step 3 -- after 201s
++     had already gone through.  A hint must be recomputed from the *current* values on every step:
++     step 3 carries the anchors (the API's 422 fields) plus the same step-2 predicates evaluated
++     against the draft as it stands now, so a field the traveller has since filled drops out of the
++     sentence wherever the traveller is. */
++  const missingStep3 = [
++    ...missingStep1,
++    ...missingStep2,
++  ];
+   const missingNow =
+     step === 1 ? missingStep1 : step === 2 ? missingStep2 : missingStep3;
+   const blockedNow = missingNow.length > 0;
+diff --git a/review/ord0082_0087_kill_drivers.py b/review/ord0082_0087_kill_drivers.py
+index 82355e0..6049642 100644
+--- a/review/ord0082_0087_kill_drivers.py
++++ b/review/ord0082_0087_kill_drivers.py
+@@ -45,6 +45,7 @@ NA_SPEC = "e2e/qoder-not-answered-cell.spec.ts"
+ TONGUE_SPEC = "e2e/qoder-speaks-the-travellers-language.spec.ts"
+ DEMO_SPEC = "e2e/qoder-demo-entry-addresses-dont-create.spec.ts"
+ TIERS_SPEC = "e2e/qoder-budget-advisory-tiers.spec.ts"
++WIZ2_SPEC = "e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts"
+ SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
+ WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
+ LOGDIR = f"{ROOT}/review"
+@@ -649,6 +650,19 @@ CASES = [
+         "              <div className=\"today-advisory-actions\">\n",
+         [(TIERS_SPEC, ["ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red"])],
+     ),
++    (
++        # ORD-0216 3: attempted mutant, recorded as a DOCUMENTED SURVIVOR.  Restoring the
++        # anchors-only review list did not reproduce HJ-P1's reading: their flow left the visible
++        # hint on step 3 through a route this node's path does not reach (the node advances only
++        # after the field is filled, so the recomputed list is empty either way).  The hint's
++        # recomputation-from-current-values itself is what the node guards; the survivor says the
++        # old spelling is redundant on this path, not that the fix is unnecessary.
++        "killV1-stale-budget-hint-follows-onto-step-3",
++        WIZARD,
++        "  const missingStep3 = [\n    ...missingStep1,\n    ...missingStep2,\n  ];\n",
++        "  const missingStep3 = missingStep1;\n",
++        [(WIZ2_SPEC, ["ord0216-a-fixed-field-leaves-the-hint-on-the-next-step"])],
++    ),
+ ]
+ 
+ sha256 = lambda path: hashlib.sha256(open(path, "rb").read()).hexdigest()
