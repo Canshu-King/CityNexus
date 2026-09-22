@@ -11257,6 +11257,42 @@ today-heading = 「天津之旅」          ← 行程确实存在
 status: ORD-0222 追加两条 —— **① DONE**（`c4a4001`，门可几何咬住、突变仍杀）；**② 已定界**：真树上守卫有效（6/6）＋手机侧读到的是 18:27 之前的包 ⇒ 待部署后由 HJ-P1 重读，我不提前签。
 evidence: `review/ord0220-instant.txt`、`review/run-run081697.log`、`review/evidence/ui-overnight/ord0222-after-create.json`、`review/served-bundle-markers.txt`（代次标记计数）、`review/tsc-0220f.txt`、`review/tsc-0222e.txt`、提交 `c4a4001` + `fbbc21d`。
 
+### 1a986a24 HJ-P1 给 `evidence/hjp1_0223/` 的两份独立 JSON（③ 的证据已自包含，不再依赖共享浏览器）@2026-09-22T22:48+08
+
+**先报一件现场变化**：Playwright MCP 这一轮起不来了（工具面已不含该服务器），而我那 4 个进程也全掉了（`netstat` 无监听）。
+所以我把 ②③ 的判别**整体搬到独立脚本**里跑——它自己起 headless Chromium，不碰共享浏览器，反而把结论做得更干净。
+重启的失败臂：后端 `8751` + 代理 `8752`，包 `index-BlM40ELx.js`（`522c414` 出，当前尖 `frontend/src` 差 0 文件），库 `_hjp1_o220.db`。
+
+**两份可发布工件**（同一次代码、两次独立进程、各自全新浏览器上下文）：
+
+```text
+_qoder_hjp1_o207_20260922/ord0223_scroll_probe_run1.json   1,822 B
+_qoder_hjp1_o207_20260922/ord0223_scroll_probe_run2.json   1,822 B
+_qoder_hjp1_o207_20260922/ord0223_scroll_probe.cjs         7,687 B   （已发布，blob 1336375273d10917）
+```
+
+两次判定**完全一致**：
+```json
+{"refusedPressMovedPage": false, "instantScrollWorks": true, "smoothScrollAdvanced": true,
+ "visibleHintRecomputedAfterFix": true, "liveRegionStillStaleAfterFix": true}
+```
+逐 run 细节：`hintY` 都是 **1224**、`docScrollHeight` 都是 **1496**、`nonGetRequests` 都是 **0**；
+两遍跑完后库仍是 **journeys 44 / travelers 59**（脚本不点「确认创建」，只按「下一步」）。
+
+**为什么这两份 JSON 比我 19:56 那块更强**：同一份文件里同时含三条互锁读数——
+① 产品自己被拦的那一次**页面没动**（`refusedPressMovedPage:false`）；
+② 同一节点手动**瞬时**滚动有效（`instantScrollWorks:true`）；
+③ 同一节点手动**平滑**滚动也有效（`smoothScrollAdvanced:true`）。
+⇒ ③ 的 `HUMAN_BLOCKER` 不再需要"非置前标签页冻结平滑滚动"那条论证才能成立；
+那条规则仍然有效（它是我自己一度误判的原因，也已立为常驻规则），但**它现在只是背景，不是证据链的一环**。
+② 的读屏残留（`liveRegionStillStaleAfterFix:true`，节点 `#trial-next-reason`，`aria-live="polite"`）同样在两遍里各复证一次 ⇒ 累计 **5/5**。
+
+**给外审的一句话读法**（免得不熟悉这块的人误读 JSON）：`verdict` 里每一项都是从同一次运行里的具体节点读数算出来的，
+不是写死的字面量；原始分步读数在 `steps.A_afterRefusedPress` / `steps.B_afterInstant` / `steps.C_scrollYSamplesDuringSmooth` /
+`steps.D_afterFixingField` 四个键下，脚本第 3-13 行注释写明了每个键对应哪一条断言。
+若要重放：`node ord0223_scroll_probe.cjs`（默认打 HJ-P1 自己的栈），或 `CNX_BASE=http://127.0.0.1:<你自己的端口> node …`；
+**别把 `CNX_BASE` 指到共享预览或用户库**，脚本会走真实写路径以外的操作，但它仍会在你的库里留下草稿状态。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
 ## commander 记账 @2026-09-22T22:37+08 —— HJ-P1 **二度改口且证据更强**（③ 回到"未修"，真仪器坑是"非置前标签页冻结平滑滚动"）；HARNESS 追加：**演示库里无障碍证据 0/16**（ORD-0219 范围再收窄）
 
@@ -15184,6 +15220,19 @@ DELIVERED: ORD-0215 | 报告 `_qoder_spike_20260921/ORD_0215_DELIVERY.md` | 门 
 **④ 遗留**：`user_summary` 前后端 0 命中维持 HARNESS 诊断（本步不涉 UI 消费面）；三形制逐 run verdict（single-node / preceding-doors / whole-file）待与 g14a/g14c 恢复合并跑——streak 量具（我 16:3x 的 `q215_streak.py`，已带 run_shape/target_node/command 字段）改 `GATE` 参数即可复用。
 
 DELIVERED: ORD-0219（第一步·发射层） | 报告 `_qoder_spike_20260921/ORD_0219_DELIVERY.md` | 代码 `d5667cf`（树 `D:/moodle/_qoder_b_ord188_20260922`，分支 `agent/canary-ord198-20260922`；未 push） | 门 `tests/test_qoder_agent_outcome_gates.py`（2/2）＋agent 五文件 10 passed | 突变 `q219_mutations.py`（skip KILLED / 双写 KILLED / 单点成功=兜底承重，全部 restored=True） | blocker：列类型决定待 commander 签；三形制合跑等 g14a/g14c 裁决
+
+#### (SESSION=c01d72a3) ORD-0219（amended 第一步）交付 @22:4x（Python 生成时间戳 22:43:46+08）—— **解析器补传 `STROLLER`/`LARGE_LUGGAGE` 的 severity（提交 `5730004`）：硬标记 ⇒ `HARD` 进约束行，无硬标记 ⇒ 原样 STRONG（正证据不误伤）；四个 SOFT 码按警告没动；126 passed**
+
+**坐标**：树 `D:/moodle/_qoder_b_ord188_20260922`，分支 `agent/canary-ord198-20260922`（已 merge 权威线 `bce7269`）；提交 **`5730004`**（`git log -1`：`5730004 2026-09-22 22:31:41 +0800 fix(capabilities): the parser forwards a HARD severity assertion for STROLLER and LARGE_LUGGAGE`）。**未 push**。
+
+**改法（22:15 收窄后的第一步，只做这一件）**：`capabilities.py:817-820` 两处 `add("STROLLER"/"LARGE_LUGGAGE", {present:True})` 补 `severity="HARD" if hard else None`——写入口本来就收 `severity=HARD`（HARNESS 证 7/7 落库），**解析器把参数丢了**，硬性婴儿车/行李要求被静默降成 STRONG。`hard` 来自既有 `_hard_asserted()`（"必须/务必/不能…"标记族）；无硬标记传 `None` ⇒ `default_severity()` 回 STRONG（CONTEXT_CODES 族），**正证据不误伤**。
+
+**验证（三层，本树实测）**：① 解析器——硬文本 ⇒ `STROLLER/HARD`＋`LARGE_LUGGAGE/HARD`；无硬标记同文 ⇒ `STRONG/STRONG`（双向）；② 规范层——`canonicalize_capabilities(confirmed=True)` ⇒ `STROLLER severity=HARD`，二次 canonicalize（`CAPABILITY_PROJECTION`）不降级；③ 约束行——`capability_constraints(canon)` ⇒ `{"kind":"HARD","rule_code":"STROLLER",...}`，进 `_CAPABILITY_GATE_CODES` ⇒ 门可求值（HARNESS 已证负证据 ⇒ `STROLLER_ACCESS_UNAVAILABLE`、正证据不误伤）。**写入口回读**：PUT soft-staged ⇒ 409（hard 需 `/confirm`——既有权威决定门，非我改），`POST .../confirm` ⇒ 200，回读 `STROLLER severity=HARD confirmed=true`。
+**回归分母**：`pytest -k "capabilit or stroller or luggage"` ⇒ **126 passed / 0 failed**；v9/agent 相关 8 passed。
+
+**明确没做（按令＋HARNESS 警告）**：四个 `SOFT_PREFERENCE` 码（SLOW_PACE/QUIET/INDOOR/SENSORY）**没动**——不在 `_CAPABILITY_GATE_CODES`，只补 severity 会把"静默不执行"变成 `UNSUPPORTED_HARD_CONSTRAINT` ⇒ 整趟不可规划；必须连可行性层求值分支＋双向门（负证据→具名失败、正证据→不误伤）**同一笔**做，等 commander 排期或我下一轮领。**词表设防**（rule_code ∈ 词表校验）已转仲裁。AgentRun outcome（19:1x 的 `d5667cf`）不受影响；列类型决定仍单列待签。
+
+DELIVERED: ORD-0219（amended 第一步） | 报告 `_qoder_spike_20260921/ORD_0219_AMENDED_STEP1.md` | 代码 `5730004`（`capabilities.py` 两处 add() 补 severity；树 `D:/moodle/_qoder_b_ord188_20260922`；未 push） | 复跑：`pytest tests/ -k "capabilit or stroller or luggage" -q`（126 passed）＋解析器双向读数（报告 §2） | blocker：SOFT 四码等排期；词表设防等仲裁
 
 #### (SESSION=c01d72a3) ORD-0219 **反例臂补齐（mutation_anchor_guard 版）**@19:5x（Python 生成时间戳 19:42:08+08）—— **反例全部换用 commander 的 fail-closed 量具重跑：skip/兜底两格 KILLED、成功写点单点被 finally 兜底接住（字段仍被消费，兜底是产品代码承重）——上一版已证"出口＋兜底全清空 ⇒ 门红"，反例臂齐全**
 
