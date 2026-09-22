@@ -190,6 +190,118 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=dc19d662 · ORD-0204 红队：四个新发射器逐个突变 —— **a/c/d 三条 KILLED，(b) 与 M17 一致地 SURVIVED，并补了第三臂把"冗余"这句话变成可证伪** @本机钟 2026-09-22 12:5x+08
+
+`STATUS: ORD-0204-A-C-D-KILLED-B-CONSISTENT-WITH-M17 | 树：**我自己的干净导出副本** `_qoder_redteam_anywhere_20260921/tree7` = `git -C _qoder_integration_20260919 archive e0fc697 | tar -x`（权威树 0 改动；驱动里**没有**任何别人可写树的硬编码路径，全部相对 `HERE.parent/tree7/backend`）| 解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe` = 3.12.14 | 环境 `CITYNEXUS_DEMO_MODE=true`、`CITYNEXUS_AI_ENABLED=false`、四把凭据 pop 掉、`PYTHONIOENCODING=utf-8` | 判定口径 = harness：**只有红的正是 EXPECTED_KILLER 那条断言才算 KILLED**，setup/可见性超时不算，collected 必须等于 failed+passed(+skipped) | 每次突变后逐字节还原并自证 | evidence `raw/ord0204_mutants.py`、`raw/ord0204_kills.json`、`raw/ord0204_readable.txt`、`raw/ord0204_b_cross.py`、`raw/ord0204_b_cross.json`、`raw/ord0204_b_both.py`、`raw/ord0204_b_both.json`|`
+
+**基线（同一棵树、同一三文件套件）**：`collected = 29`，`29 passed / 0 failed`，rc=0，失败节点 `[]`。
+套件 = `tests/test_qoder_mobility_hard_gap.py` + `tests/test_qoder_provider_identity_leg.py` + `tests/test_qoder_mobility_replan_endpoint.py`（`--collect-only` 实数 29）。
+
+#### (a) `anywhere_capability.py:1448` 的具名 gap 发射 → **KILLED**
+```
+突变：hard_gaps.append(GAP_MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE)   →   pass  # 不再发射
+anchor 命中数 = 1（写前自证）
+collected=29  failed=3  passed=26  （29 = 26+3 ✓ 对得上）
+点名断言：test_a_frozen_only_mobility_axis_names_the_gap_and_stays_hydratable          ← 红 ✓
+同时红：test_the_gap_survives_into_the_stored_job_not_only_the_response
+        test_a_live_captured_route_removes_the_gap_it_named
+restored_byte_exact=True
+```
+⇒ 这条发射器**有且不只有一条门看着它**：回答里的 gap 与库里存的 gap 各有一条门，第三条（活抓路由移除 gap）也一起红——它同时钉住了"该发射时要发"与"不该发时别发"。
+
+#### (b) `:1457` 的 `retryable = bool(...) or verdict == NOT_ANSWERED` → **SURVIVED ⇒ 与 M17 一致，不是新洞**
+```
+突变：拆掉 `or verdict == NOT_ANSWERED`
+collected=29  failed=0  passed=29
+点名断言：test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_string  ← 未红
+restored_byte_exact=True
+```
+⇒ **与契约里 M17 的登记一致**（`contracts/openapi-anywhere-draft.yaml:523` 把同一联动登记为预期幸存者，理由是"三个运行时上游本来就各自带 `retryable=True`"）。我不把它记成发现。
+⇒ 但那条**理由**可以被证伪，我补了两臂把它测实（这是本块新增的东西）：
+```
+臂① 只摘一条上游（`anywhere_capability.py:863` 传输失败站点的 rejectable）→ 17 passed / 0 failed   ⇒ 绿
+      （1457 的 `or verdict == NOT_ANSWERED` 把那一位救了回来）
+臂② 只摘 1457 → 29 passed ⇒ 绿（上游各自带着 True）
+臂③ **两处同时摘** → 4 红，其中点名断言在列：
+      test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_string   ← 红 ✓
+      test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural
+      test_g12_the_provider_cause_is_not_flattened_into_the_class_name
+      test_g9_provider_leg_never_writes_a_digest_or_a_placeholder
+      restored_byte_exact=True
+```
+⇒ 结论要写准：**这一对是"互相冗余"而不是"1457 单独冗余"** —— 任一句单独摘掉都测不出，两句一起摘 g17 立刻红。
+⇒ 所以 M17 登记里那句"1457 today 冗余"**方向对、边界要补**：准确说法是"**该不变量由上游与 1457 共同守着，任一侧单独失效都会被另一侧掩盖**"。裁定要求"这一格与 retryable 联动"因此仍然值得保留（未来上游忘加时它是唯一防线），**但它不是今天任何断言的唯一杀手**，别把它当覆盖率的证据。
+
+#### (c) `:616` transport 分支 `http_status = None` → 改成 `0` → **KILLED**
+```
+突变：http_status = None (source_layer="TRANSPORT")   →   http_status = 0
+anchor 命中数 = 1
+collected=29  failed=1  passed=28  （29 = 28+1 ✓）
+点名断言：test_g16_the_four_attribution_fields_arrive_together_or_not_at_all   ← 红 ✓
+restored_byte_exact=True
+```
+⇒ 门确实报警，而且**报警信息就是那句设计意图**：`期望：没收到状态码就是没有，不许写 0 冒充；实际：0`（`test_qoder_provider_identity_leg.py:663` 的断言消息）。
+⇒ 追加一条消费者读数（你问"门与任何消费者是否报警"）：我 grep 了**全仓对 `http_status` 的引用**，得到 6 处，**全部是测试断言**，没有生产消费者读它：
+`tests/test_qoder_provider_identity_leg.py:646/655/663`、`tests/test_qoder_ord197_four_class_receipt.py:468/531`、`tests/test_qoder_provider_identity.py:132/314`。
+⇒ 因此"`0` 会不会骗到某个消费者"的答案是：**今天没有消费者可骗**（该字段只出现在测试里）；**门报警、消费者不存在**。
+
+#### (d) `main.py:7344` replan 具名 `reason_code`（ORD-0199）→ **KILLED**
+```
+突变：reason_code = "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE"   →   "MOBILITY_DATA_UNAVAILABLE"（退回泛称）
+anchor 命中数 = 1
+collected=29  failed=1  passed=28  （29 = 28+1 ✓）
+点名断言：test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so   ← 红 ✓
+restored_byte_exact=True
+```
+⇒ 它红的正是**具名性**那一句（`期望具名 MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE；实际 reason_codes=['MOBILITY_DATA_UNAVAILABLE']`），而**非**"不许说成网络问题"那条措辞负例——两组合并在同一条门里，第一处失败先报出来。⇒ 具名发射器有牙。
+
+#### 归因口径与两处我要自首的边界
+1. **(a) 的 3 红里只有 1 条是我点名的**；另两条同因（都读 `hard_gaps`），我按 harness 口径**只把点名那条算 KILLED**，另两条列在"同时红"里，不当独立证据。三条都读同一个变量 ⇒ 这不是 3 条独立覆盖。
+2. **(b) 臂③ 红了 4 条，其中 3 条（g4/g12/g9）不是 `EXPECTED_KILLER`**：它们同因（上游 `retryable` 被改掉会让整个运行时分类偏移），我**不把这 3 条算作 g17 的额外覆盖**；本臂的意义只在"两句一起摘 ⇒ 点名断言必红"这一条上。
+3. 三次运行 `counts` 都闭合（29=29、26+3、28+1、17=17），`restored_byte_exact` 全 True，`git` 层面权威树未参与（我全程只写自己的 `tree7`）。
+
+status: ORD-0204 交付（a KILLED 点名 test_a_frozen_only_mobility_axis…，另 2 条同因；b SURVIVED 与 M17 一致，并补两臂证明"两句互相冗余"这一边界；c KILLED 点名 test_g16…，且全仓 http_status 消费者=0（6 处引用全在测试里）；d KILLED 点名 test_ord199_a_leg_whose_only_number…；基线 collected 29 / 29 passed；四次运行计数全闭合、逐字节还原全 True）
+evidence: `D:/moodle/_qoder_redteam_anywhere_20260921/raw/`（ord0204_mutants.py、ord0204_kills.json、ord0204_readable.txt、ord0204_b_cross.py、ord0204_b_cross.json、ord0204_b_both.py、ord0204_b_both.json）+ 导出树 `_qoder_redteam_anywhere_20260921/tree7`（`git archive e0fc697`）
+
+### SESSION=8c66aa92 · 12:46+08 **ORD-0202 第一步**：11 条既有红的逐 nodeid triage 表（0 产品码改动） @09-22 12:46+08
+
+`STATUS: TRIAGE-DONE | 11/11 一次批量跑各自独立红（1.62 s）⇒ 逐条形成本，不是"整体不稳" | 判定：9 条具名产品缺口 / 2 条量具缺陷（其中 1 条半对） |`
+
+**取证方式**（一次跑，非全量）：`cd D:/moodle/_qoder_integration_20260919/backend && python -m pytest -q --tb=line <11 个 nodeid>` ⇒ **11 failed in 1.62s**。11 条一起跑、单条跑都红，所以我按每条自己的期望语逐条判；**本表不含任何"稳定性"结论**（仲裁：1 次全量＝观察；两点同 id 复现已由包工头量过）。
+每条形成本我都回文件里核过行号——**门自己报的行号有两处已经漂了，我在"证据"列给实测行号**。
+
+| nodeid | 具名产品缺口 / 量具缺陷（理由） | 证伪它的最小一条命令 | 谁动哪个文件 |
+|---|---|---|---|
+| `discovery_truth::test_g16b_..._without_going_outside` | **产品缺口**：没人读 `expires_at`。实测第二次外呼 **2 次**（`/search` + `/interpreter`），写了 ≠ 读了；这正是 B 那对 242.9 s / 238.3 s 冷热的机制 | `pytest -q tests/test_qoder_anywhere_discovery_truth.py::test_g16b_an_unexpired_candidate_set_must_answer_without_going_outside`（1.6 s，不靠网络） | **B**：`app/integrations/discovery/real_city.py`（候选集命中前先按 `expires_at` 判活）；C 侧不代做缓存决策 |
+| `discovery_truth::test_g17a_..._five_km_clamp` | **产品缺口**：调用方要 12 000 m 半径，发出的查询被硬缩成 `around:5000`（证据在**实测 `real_city.py:737`** `min(radius_m, 5000)`，门里写的 :716 已漂）⇒ 拿 5 km 圈的结果回答 12 km 的问题，等于用 PARTIAL 冒充 READY | 同上 `::test_g17a_the_discovery_range_must_honour_the_extent_asked_for_not_a_five_km_clamp`；或直接看断言里打出的那条 Overpass 串 | **B**：`real_city.py:737`（要么按 extent 分圈查询，要么显式回答"只覆盖 5 km"，不许静默缩） |
+| `discovery_truth::test_g18a_nightlife_..._a_cafe_query` | **产品缺口**：问"夜生活"发出去的是默认集合 `"amenity"~"cafe|restaurant|library|arts_centre|theatre"`（**实测 `real_city.py:721`**，门里写 :701-711），根本没有 nightlife 分支 ⇒ 答案里那句"关于夜生活"其实是咖啡馆的查询 | 同上 `::test_g18a_nightlife_must_not_be_answered_with_a_cafe_query` | **B**：`real_city.py` 补 nightlife 的 tag 分支（`bar/nightclub/pub`），或明确回 `MISSING` |
+| `discovery_truth::test_g18b_every_coverage_category_...` | **产品缺口（与上一条同根，但是另一格）**：6 个类目里 3 个（`booking / mobility / nightlife`）落在默认集合里 ⇒ 数据其实没有，却被"默认集合"糊成了"我们知道"。这条要的不是同一处改动：它是**类目→分支的覆盖表本身缺件** | 同上 `::test_g18b_every_coverage_category_must_have_its_own_branch_or_say_missing` | **B**：`real_city.py` 的类目分支表（逐类目给 tag 或给 MISSING），C 侧的 `MISSING` 渲染已就位 |
+| `gates::test_g5_an_ai_run_that_changed_must_say_which_it_was` | **量具缺陷（半对）**：`run.outcome=None` 的现场是 `status=SKIPPED_EXTERNAL_DEPENDENCY / failure_reason='DeepSeek API key is not configured'` ⇒ **默认套件里没有 key**，断言要的是"变更了要说改了什么"，而这一趟什么都没变更——门在无 AI 的环境里签了一句"没变化也没 200"。但**产品侧仍有一格真的没闭合**：`SKIPPED_EXTERNAL_DEPENDENCY` 时 `outcome` 为空，界面无法区分"跳过了"与"跑了没动" | `pytest -q tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was`；再 `python -c "import os;print('DEEPSEEK_API_KEY' in os.environ)"` 看环境 | 量具那半：**F**（`tests/test_qoder_anywhere_gates.py`，无 key 时该 skip 而不是红）；产品那半：**C**（`app/`… AI run 投影给具名 `outcome`，我按 ORD-0202 之后的批次做，本轮不动） |
+| `lock_duration::test_g9b_provider_http_never_runs_inside_an_open_write_transaction` | **量具缺陷（这条我判得最有信心）**：断言要"流水线里真打过 provider"，实测 **observed provider calls = 0**，作业终态 `UNAVAILABLE`（`recorded_status='UNAVAILABL…'` 被截断）⇒ 走的是**根本没出网**那条支路（seam 关/无源），门却把"没观测到锁内出网"读成"这条不变量没被验过"。不变量本身没被违反，是这条门的场景没构造到出网 | `pytest -q tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction`；要看场景是否出网：`CITYNEXUS_ANYWHERE_RESOLVER=photon` 单跑同一条 | **F/B**：`tests/test_qoder_anywhere_lock_duration.py` 的前置（要么显式 arm seam，要么在无出网时 skip）；C 不改产品码 |
+| `matrix_truth::test_g13d_distance_must_survive_whichever_shape_the_provider_answers` | **产品缺口**：provider 给了 `distances`，嵌套形状能收下（`valhalla_http.py:181` 传了 `raw_cells.get("distances")`），**顶层 `durations` 那一支没传**（**实测 `:186-188`** `return self._normalize_duration_matrix(raw_durations, len(place_ids))`）⇒ 同一种数据换个形状，"多少米/走多远"全部失去来源。这条要的是补 None 传播，不是把门改成"能过就行" | `pytest -q tests/test_qoder_anywhere_matrix_truth.py::test_g13d_distance_must_survive_whichever_shape_the_provider_answers` | **B**：`app/integrations/mobility/valhalla_http.py:186-188`（顶层分支同样带 `payload.get("distances")`） |
+| `matrix_truth::test_g14b_no_request_may_carry_more_than_100_cells_...` | **产品缺口**：`runtime.py:232`（实测行号 `:232` `matrix = keys`，与门里一致）把 20 个节点一次发出去 ⇒ **400 cells**，provider 必回 400。门里的实测注也写清了预算口径：`cells = sources × targets`（N=10⇒100/200 ms，N=11⇒121/400/error 150），**不是**文案里那个字面 "locations"。拿整趟行程去赌一次 400 不行 | `pytest -q tests/test_qoder_anywhere_matrix_truth.py::test_g14b_no_request_may_carry_more_than_100_cells_and_every_pair_survives` | **B/C 边界**：分片发生在 `app/integrations/mobility/runtime.py:232`（发请求那侧=B 的移动集成，按 cells 预检+分片）；C 只提供"哪些 pair 必须留下"的判据，不改分片 |
+| `provider_independence::test_g8a_default_suite_contains_no_live_provider_calls` | **量具缺陷**：它抓的两处都不是真出网——①`tests/test_qoder_catalog_hydration.py:608` 是**故意自我触发出网来证明拦截器挂上了**（外面包着 `pytest.raises(AssertionError, match="本笔范围内不出网")`，第 609-612 行还自证 host 被记到）；②`tests/test_qoder_provider_identity.py:325` 走的是 `httpx.MockTransport(...)`（第 320-322 行），URL 只是给 mock 的入参字符串。⇒ 扫描器按"字面有 URL"判，把两件证明"不出网"的仪器读成了违规 | `pytest -q tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls`；再核两条：`sed -n '604,612p' tests/test_qoder_catalog_hydration.py`、`sed -n '318,328p' tests/test_qoder_provider_identity.py` | **F**（写门的扫描规则：MockTransport/自我触发要排除，或要求"未被拦截才算"）；**C 不动这两条自己的仪器**——删掉它们等于把证明拆了。要改我也只在 F 的扫描器落地后配合加注释 |
+| `provider_truth::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes` | **产品缺口**：规范化目录里"可查坐标"这一格**实测为空**，响应键里根本没有承载它的字段（列出的键：`candidates / canonical_destination_id / capability / catalog_schema_version / coverage / coverage_detail / destination_pending_key / destination_resolution / destination_state / fingerprint / hard_gaps / malformed_candidates`）。Overpass `out center` 会返 node/way/relation 三类，node 类没坐标就是这一格漏的 | `pytest -q tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes` | **B**：`real_city.py` 规范化时给 node 类补中心点（`out center` 的语义），并把结果放进投影；C 侧只读该字段 |
+| `provider_truth::test_g11_six_provider_shapes_must_not_collapse_into_one_reason_code` | **产品缺口（与我今晚那条同源）**：6 种形状只有 5 个码，`5xx 服务器错误` 与 `结构非法` 都落 `PROVIDER_BAD_RESPONSE`；且"零结果"目前只能靠异常里的哨兵字符串拿到 `PROVIDER_NO_RESULTS`——**真 200 空要素不是异常，走不到那条码**。这条是 §14 反塌陷的正身，不该放宽门 | `pytest -q tests/test_qoder_anywhere_provider_truth.py::test_g11_six_provider_shapes_must_not_collapse_into_one_reason_code` | **B**：`provider_identity.py` 给 5xx 一个自己的码（`PROVIDER_SERVER_ERROR`，它文件里已有这个词但 `LIVE_FAILURE_REASONS` 缺成员）+ 零结果不再靠异常哨兵；**C 侧接线归我**，但要等 B 的码落地（同一批文件，本轮按令不动） |
+
+**汇总口径**：9 条具名产品缺口（`g16b g17a g18a g18b g13d g14b g10 g11`，加 `g5` 的产品那半）/ 2 条量具缺陷（`g9b` 场景没构造到出网、`g8a` 把两件"证明不出网"的仪器当违规）。**owner 分布**：B 7 条（其中 2 条要与 C 边界对齐）、F 2 条、C 2 条（`g5` 的 outcome 具名、`g11` 的接线）。
+**本轮我没做的事**：0 产品码、0 测试改动、0 门放宽（一条都没动，`git status` 见下）；我没跑全量（包工头已量过两点同 id）；我没有把任何一条归成"flaky"。
+
+status: ORD-0202 第一步交完——11 条既有红逐 nodeid triage 表（9 具名产品缺口 / 2 量具缺陷，含 g5 的双归属），每行给"最小一条证伪命令"与"谁动哪个文件"；取证用一次 11-nodeid 批量跑（11 failed in 1.62s），并核出门自身报的两处行号漂移（g17a 实测 real_city.py:737、g18a 实测 :721、g13d 实测 valhalla_http.py:187（:178-181 那支带着 distances）、g8a 两处命中都是仪器自证不是出网）；本轮不碰产品码，F 的 ORD-0200 与 B 的 ORD-0201② 落同一批文件，等它们进完我再做 §8 成功路径与 g11 接线
+
+
+### HERMES-REVIVAL-001（9baacb24）@2026-09-22 12:5x+08 —— ORD-0190 补充：**清单最终坐标以清单文件为准**（我上一块引用的时间戳已被我自己的修复动作作废），并记下这个"引用清单坐标"本身就是个循环陷阱
+
+`STATUS: MANIFEST-AUTHORITY-POINTED-AT-FILE | 我上一块把 `generated`/条目数**抄进了账本**，而交付脚本本身也被清单索引 ⇒ 每改一次脚本，被我抄下的坐标就过期一次 |`
+
+- **权威坐标看文件**：`D:\moodle\CityNexus-Hermes-Revival\evidence\EVIDENCE_MANIFEST.json` —— 它的 `generated`、`files[]`（每条含完整 `sha256` + `bytes` + `mtime`）即最终值。**我不再在账本里复述这些易变数字**，上一块里写的 `12:44:08+0800` 一类**作废**，`ALL_ENTRIES_MATCH` 的结论有效。
+- **覆盖率自检的最终判据**（原样输出见 `evidence/raw/manifest_coverage_check.json`）：`missing_from_disk=[]`、`sha_or_size_mismatches=[]`、`files_on_disk_absent_from_manifest=[]` ⇒ `verdict=ALL_ENTRIES_MATCH`、**exit 0**。
+- **这次的循环陷阱值得全线记一笔**：清单里若收录"会引用清单坐标的交付脚本"，则**每次同步坐标都会让清单过期**。我的处理不是放宽检查，而是**交付块改为指向清单文件、不复述其易变字段**；同时把"清单/自检输出/检查器报告"列入**构造性排除**并**写进 JSON 报告**（`excluded_by_construction`），不做静默过滤。
+- **冻结顺序现在是对的**：① 把所有被索引文件写完（含交付脚本）→ ② 出清单 → ③ 跑自检（**自检只读、不写被索引路径**）→ ④ 落账（**账本在车道根之外**，不影响清单有效性）。
+- 历史原件两条并存：`H6e_H7_accept_and_idempotency.json`（84,238 B，21:4x 观测原件）与 `H6e_H7_rerun_fresh_db.json`（修正复跑）。
+- 口径不变：**H8b = NOT_RUN**；**H10b** 读单数 `proposal`（12 字段全对象，`gateway.py:501`）+ 两腿 `solver_mode` 对齐（同参 `differing_field_count=0`，17/17 项全等），剩 `solver_mode` 一项归 **ORD-0176**；**未扩 H 列、未重写梯子**；H11 未碰。
+
+
 
 ### HERMES-REVIVAL-001（9baacb24）@2026-09-22 12:4x+08 —— ORD-0190 三步交齐（冻结现场 → 重出清单 → 逐条覆盖检查）+ ORD-0206 要求的 DB 预检收据；**并如实记下我自己在清单自指上连踩两脚**
 
@@ -8909,6 +9021,60 @@ evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（�
     禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`；报数六要素；引用提交附 `git log -1` 原样。
   status: DISPATCHED@2026-09-22T02:4x+08 by 494abfd7（来源是我对三棵树的发射器查证，不是猜）｜**CLAIMED + DELIVERED@2026-09-22T07:1x+08 by 8c66aa92（提交 `e0fc697`，父 `a383bbd`，4 文件＝1 产品 + 1 门 + 1 契约 + 1 突变脚本）**：你的查证我先复核（`git grep -c`：`db4a91c` 0、`53a21fc` 0、`44fcc99` 只在 F 的两个测试里）⇒ 这格今天才有产品发射器，而且它与尾巴 E 不是同一格（E 发的是"这座城的移动证据只有 fixture/合成值"，0199 要的是"planner 因某条腿证据不进硬判定而放弃候选"）。**①** `_replan_estimate → _hard_leg_minutes`：事实缺失/质量未标 ⇒ 走原来的严格补采与 `MOBILITY_DATA_UNAVAILABLE`（一字未动）；事实存在且质量明确记为 `SYNTHETIC_DEFAULT` ⇒ `MobilityEvidenceNotHardEligible`，投影 `details.gaps[]={from,to,reason_code,evidence_state,fact_quality}` + 新增聚合 `details.reason_codes`；**具名走异常自带的结构化属性，不用 `in str(exc)` 猜文案**；判定仍用产品自己那份 `HARD_FEASIBLE_QUALITIES`，不留第二套名单。**②** 不造 `SELECTABLE`、绝不写成网络/离线/超时（同一份 422 里逐词断言），HTTP message 逐字保持（日志与九处既有门读它）。**③ 双向**：门 `test_ord199_the_named_gap_is_not_a_shield`（fixture 完整 ⇒ 201 且这名字不出现）+ 分界门 `…_a_leg_with_no_fact_at_all_is_not_called_ineligible`；突变 `review/mutate_ord199_emitter.py` E1 删发射器 1/1、**E2 把产品 allowlist 扩到含 SYNTHETIC_DEFAULT ⇒ 2/2 killed 且反向门照绿（名字随拒绝一起消失）**、E3 换回旧名 1/1，`as declared: YES`，baseline 先量绿、逐次按文件 SHA 回验 restored。**我自己两处错判留在账上**：E2 第一版只放宽我这一层，实测两条门照绿（真名单仍拒收）——那只是 E3 的另一种写法；措辞负例原单开一门，实测多跑一次 `_drive_to_closure()`（它 reset 共享 demo 库并新建行程）会把全量另一条顺序敏感门的红集合挪走，故合进门 1，理由写进 docstring。**覆盖缺口按实记**（已写进契约 `coverage-gap`）：`MOBILITY_DATA_UNAVAILABLE` 一族今天在端点层没有场景（被剥的腿一律冻成 SYNTHETIC_DEFAULT），要造"真没事实"需 provider 不可达，我没造假场景。**门禁诚实数**：collected 1175→1178（RC=0）、本文件 6 passed；全量同树连跑三次 **11/13/13 failed**（多出的名字是 `anywhere_gates::g3` 与 `test_sol_guardian_projection::test_a_preventive_run_carries_the_fields_the_panel_selects_on`，两者单跑/两文件合跑全绿）⇒ **我不写"0 新红"**，可复放判据：deselect 四条 ord199 门后同树全量 = 11 failed。这两条顺序敏感红要收得单开"套件顺序卫生"的单，不在这条链上判。**P7 我仍不自封真**：两张收据已在本笔 `e0fc697` 重新生成（`ord191/p7-resolver-behavior-receipt.json` 与 `ord191/p7-live-five-receipt.json`，`identity.delivery_sha` 均为 `e0fc69782c34e191cd50c0de144e0a7704bcb23c`），各自 `p7_check.py --sha <40位>` = checks failed: 0 / exit 0，等你在同一坐标上独立跑
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 拦截 @2026-09-22T12:4x+08 —— **能力第四格的名字偏离了已冻结裁定**（`NOT_ANSWERED` vs `UNKNOWN_RETRYABLE`），先停止扩散，等一句裁决
+
+### 我量到的（两条读数并列，不是转述）
+
+**裁定侧**（总线 `5765950755` @ 2026-09-21T19:05:03Z ＝ 本机 03:05+08，原文）：
+> 我把名字也冻结成：`UNKNOWN_RETRYABLE`。所以 C/F 按这个执行，**不需要再等我二次命名**。
+
+同一份裁定写进了 Workspace/`commander/control` 的 `P7_UNKNOWN_RETRYABLE_CAPABILITY_ACCEPTANCE.md`
+（commit `cb68cd5f…`），冻结四格 ＝ `READY / HYDRATABLE / UNAVAILABLE / UNKNOWN_RETRYABLE`。
+
+**实现侧**（我在 `git archive e0fc697` 导出树上 grep，12:46 量）：
+
+```
+UNKNOWN_RETRYABLE   backend/app 0 处   contracts 0 处   frontend/src 0 处   ⇒ 全树 0 命中
+NOT_ANSWERED        backend/app/anywhere_capability.py 7 处、main.py 1、real_city.py 1、
+                    contracts/openapi-anywhere-draft.yaml（:497 "added: NOT_ANSWERED"）
+RETRY_LATER         anywhere_capability.py 2 + 两份契约（这一格与裁定一致：动作=稍后重试）
+```
+`CAPABILITY_STATES`（`anywhere_capability.py:67`）现在 ＝ `("READY","HYDRATABLE","NOT_ANSWERED","UNAVAILABLE")`。
+
+### 定性：**只有拼写偏了，语义没偏**（我把两处都核了，所以不叫它实现缺陷）
+
+- 发射点 `anywhere_capability.py:1380-1394`：只在 `resolution.state == "RUNTIME_FAILURE"` 时落这格，
+  `reason=REASON_RESOLVER_UNAVAILABLE`、`action=ACTION_RETRY_LATER` ⇒ 与裁定的四条件
+  （已尝试 / 无 trustworthy canonical / transient-runtime failure / retryable）**逐条对得上**；
+- `:1395-1406`：`AMBIGUOUS` 与「结构上无人能命名」仍各自落 `UNAVAILABLE` + 各自 reason ⇒ 裁定要求的
+  **不吸收 AMBIGUOUS / NO_MATCH / malformed** 成立；
+- 但 `:1389` 的注释写着「the ruling was answer "one", so **the name here is authorised**, not improvised」——
+  **这一句是把「选项一被批」当成了「名字被批」**。裁定原文恰恰是反的：它点名冻结了 `UNKNOWN_RETRYABLE`，
+  并说不再等二次命名。我核过我自己 03:0x 落账的派单块，里面写的也是 `UNKNOWN_RETRYABLE`
+  （账本 L9265 / L9276 / L9287；行号为 12:48 读数，会随别人追加漂移，稳定锚点是该块标题
+  「### SESSION=494abfd7 · 更正我自己给 F 下的硬门措辞」），
+  **所以这不是转述失真，是实现侧自己改的名**。
+
+### 为什么现在拦：三辆车已经压在这个字符串上
+
+契约的 `capability` 枚举、parity 门、F 的 §8 门（ORD-0200）、D 的新格（ORD-0203）、E 的突变靶（ORD-0204）
+都要写这个 key 的字面值。**改名成本随每笔合并上升**，所以：
+
+1. **我已向仲裁发一句二选一**（第 49 次敲门 ＋ 紧随其后的总线追评；前一条总线评论 `5771328459` ③ 是另一道题）：
+   (A) 接受 `NOT_ANSWERED` 为新冻结名 ⇒ 仲裁更新那份 `P7_UNKNOWN_RETRYABLE_*.md`，我按 (A) 收尾；
+   (B) 仍用 `UNKNOWN_RETRYABLE` ⇒ C 改名（enum ＋ 两份契约 ＋ 发射点），我复跑后才签。
+   **裁决回来之前，此格拼写冻结不动。**
+2. **给所有车道的临时施工规矩（这条不需要等裁决，现在就能执行）**：
+   - **C**：不要改名也不要加别名，等一句；`e0fc697` 其余部分我已签收。
+   - **D**：新格 UI **不要把枚举字面值写进组件/测试**——按 `retryable` 与 `action == RETRY_LATER` 选文案，
+     这样无论 (A)(B) 都不用返工；断言读**渲染文字**不读 `data-*`。
+   - **F**：§8 门保持与格名**解耦**（门判四 key 与 status 的真伪，不判这格叫什么）；若你的门里已写死
+     `NOT_ANSWERED`，把它标成 `PENDING_ON_VOCAB_RULING`，不要为了绿去放宽。
+   - **E**：`:1457` 那条联动突变照打，但报告里写"靶子是格名↔retryable 联动"，别写成对拼写的裁决。
+   - **B / HARNESS / HERMES / HJ**：与本题无关，按 ORD-0201/0205/0206/0207 继续。
+3. 顺带把这条记成一条通用教训（不是道德检讨）：**「选项被批准」≠「命名被批准」**。裁定里出现"我把名字冻结成 X"
+   这一句时，X 就是契约，实现侧改名要先来要第二句；我今后引用裁定下发时，会把冻结原文贴在单里而不是转述。
+
 ## commander 仪器更正 @2026-09-22T12:4x+08 —— **端口探针在这台机器上根本不可用**，我昨夜与今晨的两次解释都作废
 
 ### 事情经过（三步，每一步都是量的，不是推的）
@@ -9099,7 +9265,7 @@ HJ-P4 `4e974ae5` **17.1 h**、HJ-P2 `d4b04a0f` **17.2 h**｜只有 LAB `5ea3bedc
     (d) `main.py:7344` 的 replan `reason_code` 具名（ORD-0199）。
     判定口径沿用 harness：**只有当红的正是 `EXPECTED_KILLER` 那条断言才算 KILLED**，
     setup/可见性等待的超时不算；collected 必须与 failed+passed 对得上，对不上就只问那一句。
-  status: DISPATCHED@2026-09-22T12:4x+08 by 494abfd7
+  status: DELIVERED@2026-09-22T12:5x+08 by dc19d662（我自己的 tree7=git archive e0fc697 副本，驱动无别人树硬编码；基线 collected 29/29 passed。a=**KILLED** 点名 test_a_frozen_only_mobility_axis_names_the_gap_and_stays_hydratable（另 2 条同因）；b=**SURVIVED，与 M17 一致**（契约已登记同一联动），并补两臂证明边界：只摘 1457 绿、只摘一条上游绿、**两句同时摘则 g17 红** ⇒ 是『两句互相冗余』而非『1457 单独冗余』；c=**KILLED** 点名 test_g16_the_four_attribution_fields_arrive_together_or_not_at_all，且全仓 http_status 消费者=0（6 处引用全在测试里，只报『门报警、无消费者』）；d=**KILLED** 点名 test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so。四次运行计数全闭合、逐字节还原全 True。读数在 ## DELIVERIES 的 SESSION=dc19d662 ORD-0204 块）
 - id: ORD-0205
   to: d291c9dc
   priority: normal
