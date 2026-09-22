@@ -1,0 +1,826 @@
+From f92f9e97d3d4da22843378e160764a1cbc7d19b2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=BB=93=E9=BC=A0=E7=8E=8B?= <yjianbin419@gmail.com>
+Date: Wed, 23 Sep 2026 02:46:42 +0800
+Subject: [PATCH] =?UTF-8?q?test(backend):=20split=20g3=20into=20one=20open?=
+ =?UTF-8?q?=20generation,=20tail-A=20on=20its=20own,=20and=20a=20measureme?=
+ =?UTF-8?q?nt=20package=20(ORD-0224=20=E6=AD=A5=202/3/4)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The arbitration suspended the old g3 readings (`12R/2G`, `0/10R`) as
+`SUSPENDED_PENDING_EVIDENCE` on the judgement that the retired node counted two generations as one:
+it fired a single POST first, whose job can reach a terminal status before its five successors
+arrive - and under the signed tail-A rule a terminal job must be answered by a new operation.
+Measured here rather than argued: shape A leaves **1 terminal + 1 open row** for one fingerprint
+while the label said "five concurrent requests".
+
+Three doors replace the one node, plus a retired witness kept on its own name:
+
+- `test_g3_concurrent_open_generation_five_callers_share_one_operation` - G3_CONCURRENT_OPEN_GENERATION.
+  Five route callers released by `threading.Barrier(5)`, with the product's own worker dispatched and
+  parked on a latch inside `_run_operation` so the row cannot leave QUEUED mid-burst; `worker_started`
+  is asserted, because without a live job in the window this door would silently mean "nobody worked,
+  so nobody diverged". Claims: 1 operation_id, exactly 1 winner + 4 reuse, 1 durable row, still OPEN,
+  one published key, fingerprint four segments, no 409.
+- `test_g3b_open_window_control_without_any_worker_dispatch` - the control shape: same burst with
+  `start_worker=False` and a counted `dispatch` (asserted 0), so the latched reading is separable
+  from the latch itself.
+- `test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse` - TAIL_A_NEW_GENERATION, the
+  retired node's later-request half, now independent: A closed synchronously, a follow-up submitted in
+  the same instant (measured, printed) must open B and must not be handed A. No freshness window is
+  introduced anywhere - a reuse-while-fresh rule would turn this door red by construction.
+- `test_g3d_durable_layer_still_holds_the_partial_unique_index` - the persistence witness the old node
+  carried, kept as its own door, plus the new claim that the index is *partial* (a full unique index
+  would let terminal history block the next generation forever).
+
+Measurement file `test_qoder_ord224_g3_generation_measurement.py` produces step 4's package as doors:
+shape A / shape B, four readings (resolution-call count, durable rows, distinct operation_ids,
+winner/reuse split + queued/started/finished timeline), per-request ids, and a named probe source per
+probe - and it asserts its own completeness, so a truncated package is red rather than missing.
+`CITYNEXUS_ORD224_OUT` writes the same dict to disk for the ledger to quote.
+
+Step 1's wording was aligned with the order in the same pass: `w1` now also asserts the contract's own
+phrase - additional provider resolution calls = 0 for a repeat of an open question.
+
+Honest reading from shape B (recorded, not smoothed): five callers converge on one operation while
+`resolve_destination` still runs **five** times - the pre-resolution read cannot see uncommitted work,
+so provider-work dedupe is not achieved under real concurrency. That is the claim the earlier door
+covers only for sequential repeats, and the reason "operation identity" and "provider-work dedupe"
+are now two doors with two mutations.
+
+Numbers: gates file 8 -> 11 collected; combined run of gates + weak-fix + measurement = 18 passed /
+1 failed (`test_g5…`, pre-existing and not in this scope) and identical across three repeats; full
+suite 1204 collected, 8 failed / 1180 passed, red set identical nodeid-for-nodeid to the `33034d7`
+baseline (8), so nothing here bought green by relaxing anything.
+---
+ backend/tests/test_qoder_anywhere_gates.py    | 364 +++++++++++++++---
+ ...est_qoder_ord213_ask_store_before_world.py |   6 +
+ ..._qoder_ord224_g3_generation_measurement.py | 343 +++++++++++++++++
+ 3 files changed, 666 insertions(+), 47 deletions(-)
+ create mode 100644 backend/tests/test_qoder_ord224_g3_generation_measurement.py
+
+diff --git a/backend/tests/test_qoder_anywhere_gates.py b/backend/tests/test_qoder_anywhere_gates.py
+index 41740fc..9f6606a 100644
+--- a/backend/tests/test_qoder_anywhere_gates.py
++++ b/backend/tests/test_qoder_anywhere_gates.py
+@@ -207,54 +207,314 @@ def test_g2_an_existing_journey_becomes_plannable_without_being_recreated():
+ 
+ 
+ # --------------------------------------------------------------------------------------
+-# G3 · hydration idempotency + concurrency
++# G3 · hydration idempotency + concurrency  (ORD-0224: re-scoped to ONE open generation)
+ # --------------------------------------------------------------------------------------
+-def test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation():
+-    """§7: reuse the same operation_id; no provider storm, no duplicate rows, no lock race."""
+-    first = client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY})
+-    _require_endpoint("POST /api/v1/catalog-hydrations", first)
+-
+-    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
+-        responses = list(
+-            pool.map(lambda _: client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY}), range(5))
++# The arbitration of 2026-09-23 splits what used to be one sentence into two doors, two
++# mutations and two sign-offs:
++#
++#   * **operation identity** -> `G3_CONCURRENT_OPEN_GENERATION` (the first door below): callers
++#     that are demonstrably inside one OPEN/admission window must be handed one durable job.
++#   * **provider-work dedupe** -> `tests/test_qoder_ord213_ask_store_before_world.py::test_w1_…`:
++#     how many times one question gets resolved, which is a different claim.
++#
++# Keeping them apart matters because they have different killers: moving the reuse lookup behind
++# `resolve_destination` costs provider work while five callers still converge, so that mutation
++# is evidence for the dedupe door only and must never be offered as g3's reverse mutation
++# (commander ORD-0224 step 6).
++#
++# The retired node `test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation`
++# opened with a **single** POST and then fired five more.  That first request starts a job which
++# can reach a terminal status before its successors arrive, and under the signed tail-A rule a
++# terminal job must be answered by a new one - so the node was counting two generations as one,
++# which is the instability the arbitration attributed to the instrument rather than the product.
++# Its later-request half is not lost: it is the third door below, on its own name.
++# No freshness window is introduced anywhere in this file.
++
++import threading
++
++from app.db.models import CatalogHydrationOperation
++from app.db.session import SessionLocal
++from sqlalchemy import delete, select, text
++
++
++def _pending_fingerprint(query: str) -> str:
++    from app.anywhere_capability import pending_request_fingerprint
++
++    return pending_request_fingerprint(query)
++
++
++def _clear_operations_for(fingerprint: str) -> int:
++    """Hygiene for the one table these three doors count - by fingerprint, never globally.
++
++    Measured, not assumed: `/api/v1/demo/reset` runs `services.reset_all`, which deletes 52 tables,
++    and `catalog_hydration_operations` is not one of them (0 hits in `app/services.py`), so rows
++    left by earlier doors in this file are still in the suite DB.  "Exactly one operation for this
++    key" is only meaningful from a known-zero start for that key.
++    """
++
++    with SessionLocal() as session:
++        removed = session.execute(
++            delete(CatalogHydrationOperation).where(
++                CatalogHydrationOperation.fingerprint == fingerprint
++            )
++        ).rowcount
++        session.commit()
++    return int(removed or 0)
++
++
++def _rows_for(fingerprint: str) -> list[tuple[str, str, str | None, str | None, str | None]]:
++    with SessionLocal() as session:
++        rows = list(
++            session.scalars(
++                select(CatalogHydrationOperation).where(
++                    CatalogHydrationOperation.fingerprint == fingerprint
++                )
++            ).all()
+         )
+-    codes = sorted(response.status_code for response in responses)
+-    assert all(code in ACCEPTED_CODES for code in codes), (
+-        f"期望：同指纹并发一律被受理（{sorted(ACCEPTED_CODES)}；arbiter v1 的响应码就是 "
+-        f"200/202/422/503，**没有 409**——撞指纹要复用而不是把人推开）；实际状态码 {codes}"
+-    )
+-    accepted = first.json()
+-    missing_pieces = [
+-        field
+-        for field in ("canonical_destination_id", "catalog_schema_version",
+-                      "readiness_policy_version", "provider_policy_version")
+-        if field not in accepted
++    return [
++        (str(r.id), str(r.status), r.queued_at, r.started_at, r.finished_at) for r in rows
+     ]
+-    assert not missing_pieces, (
+-        "期望：受理回答里能看出指纹四段 "
+-        "canonical_destination_id + catalog_schema_version + readiness_policy_version + "
+-        f"provider_policy_version（v0.2 的 durable fingerprint，车道 C 要按它建唯一索引）；"
+-        f"实际缺 {missing_pieces}，现有键 {sorted(accepted)[:14]}"
+-    )
+-    fingerprints = {response.json().get("fingerprint") for response in responses}
+-    assert fingerprints == {first.json().get("fingerprint")} and None not in fingerprints, (
+-        f"期望：五个请求回同一个 fingerprint（规范目的地 + catalog_schema_version + provider "
+-        f"策略/版本），这样『为什么拿到别人的 operation』才答得出；实际：{sorted(str(f) for f in fingerprints)}"
+-    )
+-    ids = {response.json().get("operation_id") for response in responses if response.status_code != 409}
+-    assert len(ids) == 1, (
+-        f"期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；"
+-        f"实际拿到 {len(ids)} 个不同的：{sorted(str(x) for x in ids)}。"
+-        "两个 operation 就是两次 provider 风暴加两份重复目录"
+-    )
+-    reused = sum(1 for response in responses if response.json().get("reused") is True)
+-    assert reused >= 1, (
+-        f"期望：至少一个调用者被告知 reused=true（「我没开始，是接上别人的」）；"
+-        f"实际：reused=true 的数量是 {reused}。幂等如果不说实话，就等于没做"
+-    )
+-
+-    # 幂等必须在**持久层**成立：两个 uvicorn worker 不共享一把进程内锁。
++
++
++def test_g3_concurrent_open_generation_five_callers_share_one_operation(monkeypatch) -> None:
++    """G3_CONCURRENT_OPEN_GENERATION: five callers in one OPEN window, one durable job.
++
++    Concurrency is *constructed and witnessed*, never hoped for: a `threading.Barrier(5)` keeps
++    every caller from leaving until all five are ready, and the product's own worker really is
++    dispatched - it parks on a latch inside `_run_operation`, before it can move the row out of
++    `QUEUED`.  `worker_started` is the state witness that the window held a live job; if it were
++    never set, this door would have silently degenerated into "there was no worker at all", and
++    that is asserted against.  No sleep is used as a synchroniser anywhere here.
++    """
++
++    import app.catalog_hydration_operations as operations
++
++    fingerprint = _pending_fingerprint(UNSEEN_COUNTY)
++    _clear_operations_for(fingerprint)
++
++    worker_started = threading.Event()
++    hold_worker = threading.Event()
++    original_run = operations._run_operation
++
++    def parked_worker(operation_id: str):
++        worker_started.set()
++        hold_worker.wait(10)
++        return original_run(operation_id)
++
++    monkeypatch.setattr(operations, "_run_operation", parked_worker)
++
++    gate = threading.Barrier(5)
++    results: list[dict] = []
++    collect = threading.Lock()
++
++    def caller(index: int) -> None:
++        gate.wait()
++        response = client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY})
++        try:
++            body = response.json()
++        except Exception:  # noqa: BLE001
++            body = {}
++        with collect:
++            results.append(
++                {
++                    "index": index,
++                    "code": response.status_code,
++                    "operation_id": body.get("operation_id"),
++                    "fingerprint": body.get("fingerprint"),
++                    "reused": body.get("reused"),
++                    "body": body,
++                }
++            )
++
++    threads = [threading.Thread(target=caller, args=(i,)) for i in range(5)]
++    try:
++        for thread in threads:
++            thread.start()
++        for thread in threads:
++            thread.join(timeout=30)
++
++        assert len(results) == 5, (
++            f"期望：五个 caller 都返回（barrier 放行后无人卡死）；实际只有 {len(results)} 个返回，"
++            f"活着没回来的线程={[t.name for t in threads if t.is_alive()]}"
++        )
++        assert worker_started.is_set(), (
++            "前提被破坏：这五发之间根本没有活着的 worker（`_run_operation` 从未进入）⇒ 本门退化成"
++            "『没有 worker 所以没收敛』的空断言；实际 worker 进入过="
++            f"{worker_started.is_set()}"
++        )
++        codes = sorted(item["code"] for item in results)
++        assert all(code in ACCEPTED_CODES for code in codes), (
++            f"期望：同键并发一律被受理（{sorted(ACCEPTED_CODES)}，**没有 409**——撞指纹要复用而不是"
++            f"把人推开）；实际状态码 {codes}"
++        )
++        ids = {str(item["operation_id"]) for item in results}
++        assert len(ids) == 1, (
++            f"期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 {len(ids)} 个："
++            f"逐请求={[(item['index'], item['operation_id'], item['reused']) for item in sorted(results, key=lambda r: r['index'])]}"
++        )
++        winners = [item for item in results if item["reused"] is False]
++        joiners = [item for item in results if item["reused"] is True]
++        assert len(winners) == 1 and len(joiners) == 4, (
++            f"期望：恰好 1 个 winner + 4 个 reuse（幂等必须说实话：『我没开始，是接上别人的』）；"
++            f"实际 reused=False {len(winners)} 个 / reused=True {len(joiners)} 个，"
++            f"逐请求 reused={[item['reused'] for item in sorted(results, key=lambda r: r['index'])]}"
++        )
++        rows = _rows_for(fingerprint)
++        assert len(rows) == 1, (
++            f"期望：本代次在库里只有 1 枚持久作业（durable 层，不是内存里的一次握手）；"
++            f"实际 {len(rows)} 行 {[(r[0][:8], r[1]) for r in rows]}"
++        )
++        assert rows[0][1] == "QUEUED", (
++            f"期望：判词取回时那枚作业仍然是 OPEN（窗口整段都开着，所以五发谈不上跨代次）；"
++            f"实际状态 {rows[0][1]}（queued_at={rows[0][2]} started_at={rows[0][3]} finished_at={rows[0][4]}）"
++        )
++        fingerprints = {item["fingerprint"] for item in results}
++        assert fingerprints == {fingerprint} and None not in fingerprints, (
++            f"期望：五枚回执说出的键就是登记着的那一把（同一代次可核对）；实际 "
++            f"{sorted(str(f)[:12] for f in fingerprints)} vs 库 {fingerprint[:12]}"
++        )
++        missing_pieces = [
++            field
++            for field in ("canonical_destination_id", "catalog_schema_version",
++                          "readiness_policy_version", "provider_policy_version")
++            if field not in results[0]["body"]
++        ]
++        assert not missing_pieces, (
++            "期望：受理回答里能看出指纹四段 canonical_destination_id + catalog_schema_version + "
++            f"readiness_policy_version + provider_policy_version（v0.2 的 durable fingerprint）；"
++            f"实际缺 {missing_pieces}，现有键 {sorted(results[0]['body'])[:14]}"
++        )
++    finally:
++        hold_worker.set()
++
++
++def test_g3b_open_window_control_without_any_worker_dispatch(monkeypatch) -> None:
++    """The control reading: same five-way burst, no worker at all, zero dispatches - and it still converges.
++
++    Written separately on purpose. If only the latched door existed, nobody could tell whether
++    `1 winner + 4 reuse` came from the admission logic or from the latch itself.
++    """
++
++    import app.catalog_hydration_operations as operations
++
++    fingerprint = _pending_fingerprint(UNSEEN_COUNTY)
++    _clear_operations_for(fingerprint)
++
++    dispatches: list[str] = []
++    original_dispatch = operations.dispatch
++
++    def counting_dispatch(operation_id: str) -> None:
++        dispatches.append(str(operation_id))
++        return original_dispatch(operation_id)
++
++    monkeypatch.setattr(operations, "dispatch", counting_dispatch)
++
++    gate = threading.Barrier(5)
++    seen: list[tuple[int, str, bool]] = []
++    collect = threading.Lock()
++
++    def caller(index: int) -> None:
++        gate.wait()
++        with SessionLocal() as session:
++            row, reused = operations.submit_operation(
++                session, UNSEEN_COUNTY, start_worker=False
++            )
++            outcome = (index, str(row.id), bool(reused))
++        with collect:
++            seen.append(outcome)
++
++    threads = [threading.Thread(target=caller, args=(i,)) for i in range(5)]
++    for thread in threads:
++        thread.start()
++    for thread in threads:
++        thread.join(timeout=30)
++
++    assert len(seen) == 5, f"期望：五发都返回；实际 {len(seen)}"
++    assert {o[1] for o in seen} == {seen[0][1]}, (
++        f"期望：无 worker 的开放窗口里五发同一枚作业；实际逐请求 {sorted(seen)}"
++    )
++    assert sum(1 for o in seen if not o[2]) == 1, (
++        f"期望：恰好一个 winner；实际 reused=False 有 {sum(1 for o in seen if not o[2])} 个 {sorted(seen)}"
++    )
++    assert dispatches == [], (
++        f"期望：`start_worker=False` 这一形制下 0 次 worker 派发（否则『窗口开着』就不成立了）；"
++        f"实际 {dispatches}"
++    )
++    assert len(_rows_for(fingerprint)) == 1, (
++        f"期望：库里 1 行；实际 {_rows_for(fingerprint)}"
++    )
++
++
++def test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse() -> None:
++    """TAIL_A_NEW_GENERATION: once A is terminal, the next same-key request opens B.
++
++    This is the half the retired g3 node was silently mixing into the five-way burst, and it is a
++    *separate* rule with the opposite direction of travel: inside an open window you must reuse,
++    after the window closes you must not.  Note what it also proves about freshness: the follow-up
++    is issued in the same instant A closes - measured, printed below - and still gets a new job.
++    Any "reuse the terminal result while it is fresh" window would turn this door red, which is
++    why the arbitration's rejected option is not smuggled back in as a green here.
++    """
++
++    import time
++
++    import app.catalog_hydration_operations as operations
++
++    fingerprint = _pending_fingerprint(UNSEEN_COUNTY)
++    _clear_operations_for(fingerprint)
++
++    with SessionLocal() as session:
++        first, first_reused = operations.submit_operation(
++            session, UNSEEN_COUNTY, start_worker=False
++        )
++        a_id, a_status = str(first.id), str(first.status)
++    assert first_reused is False and a_status == "QUEUED", (
++        f"前提：A 是这一代的开始者；实际 reused={first_reused} status={a_status}"
++    )
++
++    operations._run_operation(a_id)  # the worker body, synchronously: no sleep, no gamble
++    with SessionLocal() as session:
++        closed = session.get(CatalogHydrationOperation, a_id)
++        assert str(closed.status) in operations.TERMINAL_STATUSES, (
++            f"前提：A 确实走到终态；实际 {closed.status}（outcome={closed.outcome}，"
++            f"finished_at={closed.finished_at}）"
++        )
++        a_terminal_status, a_finished_at = str(closed.status), closed.finished_at
++
++    then = time.monotonic()
++    with SessionLocal() as session:
++        second, second_reused = operations.submit_operation(
++            session, UNSEEN_COUNTY, start_worker=False
++        )
++        b_id, b_status = str(second.id), str(second.status)
++    waited_ms = round((time.monotonic() - then) * 1000, 3)
++
++    assert second_reused is False and b_id != a_id, (
++        f"期望：A 已终态 ⇒ 后来的同键请求**不得**偷偷复用 A，必须另开一代；实际 reused={second_reused}，"
++        f"A={a_id[:8]}/{a_terminal_status} 拿到 {b_id[:8]}/{b_status}"
++    )
++    rows = _rows_for(fingerprint)
++    assert len(rows) == 2, f"期望：A（终态）+ B（开放）两行；实际 {rows}"
++    by_id = {row[0]: row for row in rows}
++    assert by_id[a_id][1] == a_terminal_status, (
++        f"期望：开了 B 不会把 A 从终态拽回来；实际 A 现在 {by_id[a_id][1]}"
++    )
++    assert by_id[b_id][1] == "QUEUED", f"期望：B 是新的开放代次；实际 {by_id[b_id][1]}"
++    print(
++        f"\n[tail-A 读数] A={a_id[:8]} {a_terminal_status} finished_at={a_finished_at} → "
++        f"B={b_id[:8]} {by_id[b_id][1]}，B 的提交在 A 终态后 {waited_ms} ms 内发出（没有 freshness window）"
++    )
++
++
++def test_g3d_durable_layer_still_holds_the_partial_unique_index() -> None:
++    """The persistence witness the retired node carried, kept as its own door.
++
++    Convergence for two uvicorn workers cannot rest on a process-local lock, so the thing that
++    must exist is a unique index over the fingerprint restricted to the open statuses.
++    """
++
+     from sqlalchemy import inspect
++
+     from app.db.session import engine
+ 
+     inspector = inspect(engine)
+@@ -270,11 +530,21 @@ def test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation()
+             if index.get("unique") and any("fingerprint" in c or "canonical" in c for c in cols):
+                 unique_on_fingerprint.append((table, index.get("name"), cols))
+     assert unique_on_fingerprint, (
+-        f"期望：水合表上有一个覆盖指纹/规范目的地的**唯一索引**（§7：durable 层强制）；"
+-        f"实际：表 {tables} 的索引里没有。缺它，并发就会造出两条活动操作与两份 provider 风暴"
++        f"期望：水合表上有一个覆盖指纹/规范目的地的**唯一索引**（§7：durable 层强制）；实际：表 {tables} "
++        f"的索引里没有。缺它，并发就会造出两条活动操作与两份 provider 风暴"
++    )
++    with engine.connect() as connection:
++        sql = connection.execute(
++            text(
++                "SELECT sql FROM sqlite_master WHERE type='index' AND name=:name"
++            ),
++            {"name": unique_on_fingerprint[0][1]},
++        ).scalar()
++    assert sql and "WHERE" in sql.upper(), (
++        f"期望：那把唯一索引是**部分**索引（只覆盖开放状态），否则终态历史会永久挡住同一个目的地再开"
++        f"一代——tail-A 就无从成立；实际索引定义：{sql!r}"
+     )
+ 
+-
+ # --------------------------------------------------------------------------------------
+ # G4 · category coverage
+ # --------------------------------------------------------------------------------------
+diff --git a/backend/tests/test_qoder_ord213_ask_store_before_world.py b/backend/tests/test_qoder_ord213_ask_store_before_world.py
+index d383bb8..1c21dcb 100644
+--- a/backend/tests/test_qoder_ord213_ask_store_before_world.py
++++ b/backend/tests/test_qoder_ord213_ask_store_before_world.py
+@@ -101,6 +101,7 @@ def _submit(query: str, *, start_worker: bool = False) -> tuple[dict, bool]:
+ def test_w1_a_repeat_of_an_open_question_asks_the_provider_once_not_twice(monkeypatch) -> None:
+     calls = _counting_resolve(monkeypatch)
+     first, first_reused = _submit(UNRESOLVED)
++    after_first_submit = len(calls)
+     second, second_reused = _submit(UNRESOLVED)
+ 
+     assert first_reused is False and second_reused is True, (
+@@ -109,6 +110,11 @@ def test_w1_a_repeat_of_an_open_question_asks_the_provider_once_not_twice(monkey
+     assert first["id"] == second["id"], (
+         f"期望：两次拿到同一个 operation_id（一个开放问题=一个作业）；实际 {first['id']} / {second['id']}"
+     )
++    # ORD-0224 步 1 的口径原话：第二次 submit 的 **additional provider resolution calls = 0**。
++    assert len(calls) - after_first_submit == 0, (
++        f"期望：已有 OPEN 同键作业时，重复 submit 带来的额外解析次数 = 0；"
++        f"实际额外 {len(calls) - after_first_submit} 次（全部={calls}）"
++    )
+     assert calls == [UNRESOLVED], (
+         f"期望：提供方/目录只被问了一次——改前是两次，因为键要等工作做完才算得出来；"
+         f"实际 {calls}"
+diff --git a/backend/tests/test_qoder_ord224_g3_generation_measurement.py b/backend/tests/test_qoder_ord224_g3_generation_measurement.py
+new file mode 100644
+index 0000000..73e723c
+--- /dev/null
++++ b/backend/tests/test_qoder_ord224_g3_generation_measurement.py
+@@ -0,0 +1,343 @@
++"""ORD-0224 step 4 - the third-measurement package for g3, produced by doors, not by prose.
++
++Why this file exists: the arbitration suspended the old readings (`12R/2G`, `0/10R`) with
++`OLD_G3_PRODUCT_DEFECT_CLASSIFICATION = SUSPENDED_PENDING_EVIDENCE`, on the judgement that the
++retired node very likely counted **two generations** as one - a single POST whose job reached a
++terminal status, then five more.  A suspended classification cannot be lifted by my describing the
++experiment; it needs the two shapes run side by side with the per-request evidence attached.  So the
++experiment is a door: if a field is missing, if a caller did not return, if a probe never fired, the
++door is red and the package does not exist.
++
++Two shapes, deliberately opposite:
++
++  shape A `TERMINAL_THEN_BURST`  - the retired domain.  Expectation is written as *two*
++                                   generations, because tail-A says a terminal job must be
++                                   answered by a new one.  What it measures is how many distinct
++                                   operation_ids a "five concurrent" label quietly contains.
++  shape B `CONCURRENT_OPEN_WINDOW` - the corrected domain (one open generation, latched worker,
++                                   barrier-released callers).  Expectation is 1 + 4 reuse.
++
++Four readings, per shape: ① provider/catalog resolution calls, ② durable rows for the key,
++③ distinct operation_ids the callers were handed, ④ the winner/reuse split plus the generation's
++state timeline (queued_at / started_at / finished_at, read from the same app-resolved DB).
++
++Every reading names its `probe_source`, and no probe replaces product behaviour: the resolution
++wrapper delegates to the product's own function, the worker latch calls through after waiting, and
++the row reads go through `SessionLocal` - the same session factory the app uses.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import threading
++import time
++from pathlib import Path
++
++import pytest
++from fastapi.testclient import TestClient
++from sqlalchemy import delete, select
++
++import app.catalog_hydration_operations as operations
++from app.db.models import CatalogHydrationOperation
++from app.db.session import SessionLocal, engine
++from app.main import app
++
++client = TestClient(app)
++HYDRATIONS = "/api/v1/catalog-hydrations"
++COUNTY = "贡山独龙族怒族自治县"
++CALLERS = 5
++OUT_ENV = "CITYNEXUS_ORD224_OUT"
++REQUIRED_READINGS = (
++    "resolution_call_count",
++    "durable_rows_for_key",
++    "distinct_operation_ids",
++    "winner_and_reuse_split",
++    "state_timeline",
++)
++
++
++def _fingerprint() -> str:
++    from app.anywhere_capability import pending_request_fingerprint
++
++    return pending_request_fingerprint(COUNTY)
++
++
++def _clear(fingerprint: str) -> None:
++    with SessionLocal() as session:
++        session.execute(
++            delete(CatalogHydrationOperation).where(
++                CatalogHydrationOperation.fingerprint == fingerprint
++            )
++        )
++        session.commit()
++
++
++def _instrument(monkeypatch) -> dict:
++    """Count the product's own resolution passes; the wrapper always calls through."""
++
++    calls: list[dict] = []
++    original = operations.resolve_destination
++
++    def counting(session, query):
++        calls.append({"thread": threading.current_thread().name, "query": str(query)})
++        return original(session, query)
++
++    monkeypatch.setattr(operations, "resolve_destination", counting)
++    return {"calls": calls, "probe_source": "wrapper on app.catalog_hydration_operations.resolve_destination"}
++
++
++def _rows(fingerprint: str) -> list[dict]:
++    with SessionLocal() as session:
++        rows = list(
++            session.scalars(
++                select(CatalogHydrationOperation).where(
++                    CatalogHydrationOperation.fingerprint == fingerprint
++                )
++            ).all()
++        )
++    return [
++        {
++            "operation_id": str(r.id),
++            "status": str(r.status),
++            "outcome": r.outcome,
++            "queued_at": r.queued_at,
++            "started_at": r.started_at,
++            "finished_at": r.finished_at,
++        }
++        for r in rows
++    ]
++
++
++def _burst_via_route() -> list[dict]:
++    """`CALLERS` posts that are released together; nobody starts until everyone is ready."""
++
++    gate = threading.Barrier(CALLERS)
++    seen: list[dict] = []
++    guard = threading.Lock()
++
++    def caller(index: int) -> None:
++        gate.wait()
++        started = time.monotonic()
++        response = client.post(HYDRATIONS, json={"query": COUNTY})
++        try:
++            body = response.json()
++        except Exception:  # noqa: BLE001
++            body = {}
++        with guard:
++            seen.append(
++                {
++                    "index": index,
++                    "status_code": response.status_code,
++                    "operation_id": body.get("operation_id"),
++                    "reused": body.get("reused"),
++                    "fingerprint": body.get("fingerprint"),
++                    "elapsed_ms": round((time.monotonic() - started) * 1000, 3),
++                }
++            )
++
++    threads = [threading.Thread(target=caller, args=(i,)) for i in range(CALLERS)]
++    for thread in threads:
++        thread.start()
++    for thread in threads:
++        thread.join(timeout=30)
++    assert len(seen) == CALLERS, f"探针不完整：{CALLERS} 发里只有 {len(seen)} 发返回"
++    return sorted(seen, key=lambda item: item["index"])
++
++
++def test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one(monkeypatch) -> None:
++    """The retired domain, measured rather than argued about."""
++
++    fingerprint = _fingerprint()
++    _clear(fingerprint)
++    probe = _instrument(monkeypatch)
++
++    # A is opened through the service with `start_worker=False`, then run by hand, so "the previous
++    # generation is closed" is a set-up fact.  Going through the route here raced with the route's
++    # own dispatched worker: it marked the row RUNNING first, and `_run_operation` returns by design
++    # when the row is no longer QUEUED - which left A at RUNNING and made this door's *precondition*
++    # fail (measured 2026-09-23, combined run).  That is an instrument race, not a product finding,
++    # and the fix is the deterministic schedule above - not a wait loop.
++    with SessionLocal() as session:
++        opened, opened_reused = operations.submit_operation(
++            session, COUNTY, start_worker=False
++        )
++        a_id = str(opened.id)
++    assert opened_reused is False, f"前提：A 是这一代的开始者；实际 reused={opened_reused}"
++    operations._run_operation(a_id)  # the worker body, synchronously: A really closes
++    with SessionLocal() as session:
++        closed = session.get(CatalogHydrationOperation, a_id)
++        assert str(closed.status) in operations.TERMINAL_STATUSES, (
++            f"前提：A 已进入终态（这才是『上一代已经关门』的形状）；实际 {closed.status}"
++        )
++
++    responses = _burst_via_route()
++    ids = {str(item["operation_id"]) for item in responses}
++    rows = _rows(fingerprint)
++    statuses = {row["operation_id"]: row["status"] for row in rows}
++
++    # What makes this shape A is not "the burst fans out" - it may well converge on one new job.
++    # It is that under one label of "five concurrent requests" the store holds **two generations**:
++    # the terminal A the retired node itself created, plus whatever its five successors opened.
++    assert a_id not in ids, (
++        f"期望：五发里没有任何一发被塞回终态的 A（tail-A：关门的那代不许复用）；实际拿到 A 的是 "
++        f"{[item['index'] for item in responses if item['operation_id'] == a_id]}"
++    )
++    terminal_rows = [r for r in rows if r["status"] in operations.TERMINAL_STATUSES]
++    open_rows = [r for r in rows if r["status"] not in operations.TERMINAL_STATUSES]
++    assert terminal_rows and open_rows, (
++        f"期望：这一形制在库里留下**两代**（A 已终态 + 后继另开一代）；实际 {len(rows)} 行 "
++        f"{[(r['operation_id'][:8], r['status']) for r in rows]}"
++    )
++    assert len({r["operation_id"] for r in terminal_rows} | {r["operation_id"] for r in open_rows}) >= 2, (
++        f"期望：终态代与开放代不是同一枚作业；实际 {statuses}"
++    )
++    assert len(probe["calls"]) >= 1, "探针必须真的量到过解析，否则这一档读数是空的"
++    # The sentence this shape exists to test: the retired node folded these two generations into
++    # one "five concurrent requests" label, which is what made its verdict unstable.
++    print(
++        "\n[shape A] 单请求先行 + 五发并发 → 代次数="
++        f"{len(terminal_rows)} 终态 + {len(open_rows)} 开放 = {len(rows)} 行；五发里的 distinct "
++        f"operation_ids={len(ids)}（读数，不是判据），解析次数={len(probe['calls'])}，A={a_id[:8]}"
++    )
++
++
++def test_shape_b_five_callers_in_one_open_window_converge(monkeypatch) -> None:
++    """The corrected domain: one live worker parked inside the window, five barrier-released callers."""
++
++    fingerprint = _fingerprint()
++    _clear(fingerprint)
++    probe = _instrument(monkeypatch)
++
++    worker_entered = threading.Event()
++    hold = threading.Event()
++    original_run = operations._run_operation
++
++    def parked_worker(operation_id: str):
++        worker_entered.set()
++        hold.wait(10)
++        return original_run(operation_id)
++
++    monkeypatch.setattr(operations, "_run_operation", parked_worker)
++    try:
++        responses = _burst_via_route()
++    finally:
++        hold.set()
++
++    assert worker_entered.is_set(), (
++        "前提破坏：窗口里没有活着的 worker（`_run_operation` 从未进入）⇒ 这一档只是『没人干活所以收敛』"
++    )
++    ids = {str(item["operation_id"]) for item in responses}
++    rows = _rows(fingerprint)
++    winners = [item for item in responses if item["reused"] is False]
++    joiners = [item for item in responses if item["reused"] is True]
++
++    assert len(ids) == 1, (
++        f"期望：一个开放代次里五发同一枚 operation_id；实际 {len(ids)} 个 {sorted(ids)}"
++    )
++    assert len(winners) == 1 and len(joiners) == CALLERS - 1, (
++        f"期望：1 winner + 4 reuse；实际 {len(winners)}/{len(joiners)}，"
++        f"逐请求 reused={[item['reused'] for item in responses]}"
++    )
++    assert len(rows) == 1, f"期望：库里这一代只有 1 行；实际 {rows}"
++    print(
++        "\n[shape B] barrier(5) + latched worker → 1 op、1 winner + 4 reuse、"
++        f"解析次数={len(probe['calls'])}、逐请求耗时={[item['elapsed_ms'] for item in responses]}"
++    )
++
++
++def test_measurement_package_is_complete_and_writable(tmp_path, monkeypatch) -> None:
++    """The package the arbitration asked for: both shapes, four readings, per-request ids, probe sources.
++
++    Completeness is asserted, not promised - and when `CITYNEXUS_ORD224_OUT` names a path, the same
++    dict is written there so the ledger can quote an artifact instead of my paraphrase.
++    """
++
++    fingerprint = _fingerprint()
++    _clear(fingerprint)
++    probe = _instrument(monkeypatch)
++
++    worker_entered = threading.Event()
++    hold = threading.Event()
++    original_run = operations._run_operation
++
++    def parked_worker(operation_id: str):
++        worker_entered.set()
++        hold.wait(10)
++        return original_run(operation_id)
++
++    monkeypatch.setattr(operations, "_run_operation", parked_worker)
++    before = time.monotonic()
++    try:
++        responses = _burst_via_route()
++    finally:
++        hold.set()
++    rows = _rows(fingerprint)
++
++    package = {
++        "gate_id": "G3_CONCURRENT_OPEN_GENERATION",
++        "order": "ORD-0224 step 4",
++        "measurement_only_for_old_readings": {
++            "OLD_G3_PRODUCT_DEFECT_CLASSIFICATION": "SUSPENDED_PENDING_EVIDENCE",
++            "suspended_labels": ["12R/2G", "0/10R"],
++        },
++        "database": {
++            "url": str(engine.url),
++            "probe_source": "app.db.session.engine (same factory the app uses)",
++        },
++        "fingerprint_under_test": fingerprint,
++        "shapes": {
++            "B_CONCURRENT_OPEN_WINDOW": {
++                "definition": "5 callers released by threading.Barrier(5) while one live worker is "
++                              "parked inside _run_operation, so the row stays QUEUED across the burst",
++                "per_request": responses,
++                "readings": {
++                    "resolution_call_count": len(probe["calls"]),
++                    "durable_rows_for_key": len(rows),
++                    "distinct_operation_ids": sorted({str(r["operation_id"]) for r in responses}),
++                    "winner_and_reuse_split": {
++                        "winners": sum(1 for r in responses if r["reused"] is False),
++                        "joiners": sum(1 for r in responses if r["reused"] is True),
++                    },
++                    "state_timeline": rows,
++                },
++                "probes": {
++                    "resolution": probe["probe_source"],
++                    "worker": "latch around app.catalog_hydration_operations._run_operation "
++                              f"(entered={worker_entered.is_set()})",
++                    "rows": "SELECT via SessionLocal on the app-resolved suite DB",
++                },
++                "burst_wall_ms": round((time.monotonic() - before) * 1000, 1),
++            },
++            "A_TERMINAL_THEN_BURST": {
++                "definition": "the retired domain: one POST, its job driven to a terminal status, "
++                              "then five barrier-released callers - i.e. two generations",
++                "measured_by": "test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one",
++                "why_it_is_not_a_convergence_verdict": "tail-A requires a terminal job to be answered "
++                                                        "by a NEW operation, so >1 id here is correct "
++                                                        "behaviour, not a failure to converge",
++            },
++        },
++    }
++
++    missing = [
++        field
++        for field in REQUIRED_READINGS
++        if field not in package["shapes"]["B_CONCURRENT_OPEN_WINDOW"]["readings"]
++    ]
++    assert not missing, f"期望：四档读数 + 状态时间线齐全；实际缺 {missing}"
++    for probe_name, source in package["shapes"]["B_CONCURRENT_OPEN_WINDOW"]["probes"].items():
++        assert isinstance(source, str) and source, f"探针 {probe_name} 没有交代来源"
++    assert len(package["shapes"]["B_CONCURRENT_OPEN_WINDOW"]["per_request"]) == CALLERS
++    assert all(item["operation_id"] for item in package["shapes"]["B_CONCURRENT_OPEN_WINDOW"]["per_request"]), (
++        "期望：每一发都留下它拿到的 operation_id；实际有空白项"
++    )
++
++    target = os.environ.get(OUT_ENV)
++    if target:
++        Path(target).write_text(
++            json.dumps(package, ensure_ascii=False, indent=2, default=str), encoding="utf-8", newline="\n"
++        )
++        print(f"\n[package] written -> {target}")
++    else:
++        print("\n[package] 未写文件（没有设 CITYNEXUS_ORD224_OUT）；字段完整性已在上面断言过")
+-- 
+2.45.1.windows.1
+
