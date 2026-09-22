@@ -191,6 +191,30 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### SESSION=8c66aa92 · 15:01 **ORD-0211 交付：套件现在开自己的临时库**（提交 `0a4cb23`，父＝working tip） @09-22 15:01+08
+
+`STATUS: LANDED | 四条边界写进文件 | 红集合换了形状而不是单调变少——这条是本次最该看的读数 | 未做（按令）：不重构 fixture`
+
+**做了什么**：`app.core.config` 读 `CITYNEXUS_DATABASE_URL`（无前缀的 `DATABASE_URL` 被 app 忽略，这条你已量两次），默认值是 `sqlite:///./citynexus.db` ⇒ **谁起进程谁决定开哪个库**，于是每次跑都在喂同一个文件。现在 `tests/conftest.py` 在任何 `app` import 之前钉一个本进程专用临时库，并把四条边界写进文件：runner 显式声明的目标**照用但仍检查**（权威 E2E/预览保持自己声明的那库，09-20 禁令不撤销）、`_live.db` 与开发者工作库 `citynexus.db` **直接拒绝启动**、收集期打印 **app resolved 的绝对路径**（环境变量名本身不算隔离证明）。收集期实读一行：
+
+```
+ORD-0211 test database: resolved=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_ja2x57o_\suite.db
+                         | exists=False | declared_by=conftest temp dir
+```
+
+**读数（这才是重点，别只数红条）**：
+- 以前"按顺序变脸"的那一对现在稳：`test_qoder_provider_identity_leg.py + test_qoder_ord197_four_class_receipt.py` ⇒ **23 passed + 1 xfailed**（没钉库之前，同两文件合跑会把 `r3` 顶成红、单跑又绿）。
+- 全量 ⇒ **7 failed / 1155 passed / 15 skipped / 1 xfailed / 99.83s**。但**红集合是换了形状，不是单调变少**：
+  - **由红转绿**（干净库下它们本来就不该红）：`anywhere_gates::g3`、`discovery_truth g16b/g17a/g18a/g18b`、`provider_truth::g11` ⇒ 这几条此前是被别的模块喂出来的绿/红，属**跨模块污染**，与我 ORD-0202 表里的定性要合着看；
+  - **由绿转红**（污染一直在替它们遮）：`matrix_truth::g14a`、`matrix_truth::g14c`、`test_qoder_city_failure_reasons::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at`。
+- `g3` 单跑干净库 **3/3 红**，全量里绿，失败形：五个**同 query** 的并发 hydration 请求落到**三个不同 operation_id**（断言要同一 operation_id）。⇒ 这条门的判定依赖"前面跑过什么"，是**门的缺陷**（归 ORD-0210），我先不拿它当产品结论，也不去改它——按令这一步不扩到重构 fixture。
+- 跑完工作库未被写入（`git status --porcelain -- backend/tests` 空；只提交了 conftest 一个文件）。
+
+**没做什么**：不重构 fixture、不做 per-module 隔离（令里写"别扩"）；`r1d` 那条 strict xfail 仍 xfail（摘标记仍等 `:470` 那行把计数并回 attempt——见 ORD-0201 我上一块的读数）。
+
+**下一步（我按队列自己排）**：① 偏好接线（14:2x 单：`_has_hard_marker` 复用 + 表驱动同义簇「走不快/节奏放慢/慢慢走」+ 双向门，明说不做开放式 LLM/embedding 猜意图，另配"表外说法 ⇒ 不产约束行也不谎称已识别"那一格）；② ORD-0197 那条 C 侧计数规则与它的两半门一起交（上次我退回了，因为没有门就不该留码）。
+
+
 ### HERMES-REVIVAL-001（9baacb24）@2026-09-22 15:0x+08 —— 推**不需要凭据的那半边**：H8 确定性注入三面全挡（PASS）；顺带在隔离库上撞出**一条产品真值缺陷：两条 PlanVersion 可同时为 ACTIVE**
 
 `STATUS: H8-DETERMINISTIC-PASS + NEW-PRODUCT-DEFECT | 库 `_hermes_r5.db`（单 ACTIVE，干净）+ `:8513` | 缺陷现场留在 `_hermes_r6.db` | 产品码 0 改动 |`
@@ -9827,7 +9851,10 @@ evidence: `frontend/e2e/qoder-speaks-the-travellers-language.spec.ts`（新，�
     不许直接删覆盖——那是我把这条缺陷钉住的那只手。
     ⚠ 派单来源是**用户当面指令**，优先级高于我此前给 ORD-0208 排的序；ORD-0209 那件（入口偷偷新建行程）仍要做，
     两件事都在你手上，按你能一次交清的方式排。
-  status: DISPATCHED@2026-09-22T15:0x+08 by 494abfd7（来源＝用户 15:00 指令）
+  status: DISPATCHED@2026-09-22T15:0x+08 by 494abfd7（来源＝用户 15:00 指令）**订正（我写在块尾的那句"要立刻消失我马上重建一次"是错的，撤回）**：现在重建**不会**让这句话消失——最新尖 `0cd697b` 里它照样渲染（`budgetAdvisory` 那三行代码仍在），线上 bundle 也仍含此文案。
+唯一能让它消失的顺序是：**D 交 ORD-0212 → 我重建 `dist`（带时间戳备份＋回验 bundle 名）→ 手机上才是改后的样子**。
+给用户的口径：不是"要不要现在重建"，而是"这一笔交完我多久重建一次"。我的默认=与 ORD-0209 一起交完后一次到位；
+若用户催，就**单独为这条先重建一次**（等 D 那一笔落地之后），不承诺"立刻"。
 
 ### 我这边要补的一句（关于"什么时候在你手机上消失"）
 线上部署的还是今天 **02:10 的 bundle**，所以这句话**此刻仍在**你手机主页上；我按原计划等 D 把
@@ -9951,7 +9978,7 @@ g3 = ISOLATION_BREACH / dirty-db false-green shape
     `DATABASE_URL` 这名字被 app 忽略这件事我已量过两次），并在收集期打印解析后的绝对路径；
     **(2)** 这一步**不许被当成"隔离问题已解决"**——同一运行内的互相喂数据仍由 ORD-0210 的门盯着。
     先交一次"改了之后 g3 在干净临时库上的判定与它在自己导出树上的判定一致"的证据即可，别扩到重构 fixture。
-  status: DISPATCHED@2026-09-22T14:4x+08 by 494abfd7（裁决＝仲裁 `5772261512`）
+  status: DISPATCHED@2026-09-22T14:4x+08 by 494abfd7（裁决＝仲裁 `5772261512`）｜**DELIVERED@2026-09-22T15:01+08 by 8c66aa92（提交 ，只 1 文件 ）**：套件现在在任何 app import 之前钉一个本进程临时库；四条边界写进文件——runner 显式声明的目标照用但仍检查（E2E/预览保持自己那库、09-20 禁令不撤）、 与开发者工作库直接拒绝启动、收集期打印 app resolved 绝对路径（实读 ，declared_by=conftest temp dir）。**读数（关键）：红集合是换了形状不是单调变少。**全量 7 failed / 1155 passed / 15 skipped / 1 xfailed / 99.83s；**由红转绿**（干净库下本来不该红）、、 ⇒ 此前是跨模块互相喂出来的判定；**由绿转红**（污染一直在遮）、、。 单跑干净库 3/3 红（五个同 query 并发落到三个不同 operation_id，断言要同一个），全量里绿 ⇒ 它的判定依赖前面跑过什么＝**门的缺陷**，按令归 ORD-0210 收，我不改它、也不拿它当产品结论。以前会按顺序变脸的那对现在稳： ⇒ 23 passed + 1 xfailed。工作库未被写。**按令没做**：不重构 fixture、不做 per-module 隔离。 仍 xfail（仍等  把计数并回 attempt，见 ORD-0201 我那块读数）。下一笔：14:2x 偏好接线（ 复用 + 表驱动同义簇 + 双向门 + 表外说法那一格），然后 ORD-0197 的计数规则连它的两半门一起交。块在 DELIVERIES
 
 ### ④ 扩词表这件事**上一轮已经裁了**（我和它错身而过，这里落字免得 C 再问）
 > **扩受控同义簇**（如「走不快／节奏放慢／慢慢走」），但**不启用开放式 LLM/embedding 猜意图**；
