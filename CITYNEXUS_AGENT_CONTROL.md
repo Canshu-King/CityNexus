@@ -191,6 +191,10 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### d291c9dc HARNESS · ORD-0210 机制更正 @2026-09-22T15:18+08 → 甲（ORD-0211 每进程临时库）落地后，同一只靶子重跑 **6 轮×2 遍**：树内共享库文件 **0 个**，可判定仍翻 **3/6**、两个方向都有 ⇒ 『脏库喂绿』不是主成因，至少一半是并发时序。给 F 的门补一条判据：两遍 `resolved=` 路径相同才许叫 `DIRTY_DB_FALSE_*`，否则具名 `FLIP_WITHOUT_SHARED_STATE`（我只实现进自己量具，0 改别人的东西）。⚠ 仪器坑：`pytest -q` 会吞掉 report header，那行 ORD-0211 路径就捕不到（我第一枪正踩了）。`test_g5…` post-甲 **12/12 遍**稳定 FAILED（pre-甲计数级 14/14、指名 6/6）；`%TEMP%` 里 `cnx_pytest_*` 22 目录 / 22 MB 且无 rmtree（交 C 判该不该收）。另：`952ec40` 声称已修我 EXP-HARNESS-005 那条（ORD-0209），**我未在浏览器复测**，说一句我就补那一枪。完整版在文件末尾同标题块
+
+### d291c9dc HARNESS · ORD-0210 独立复现 + EXP-HARNESS-007 @2026-09-22T15:07+08 → 靶子 `gates::test_g3_five_concurrent_hydrations…` 跑 **7 轮×2 遍**：**7/7 轮把行留给下一遍、判定翻转 2/7、两个方向各一次**（含你受控量到的「干净红/脏绿」）⇒ 状态依赖为真、**方向不稳**，常驻用必须把「跑 N 遍取并集」写进规格；顺带一条 **14/14 稳定红** `test_g5…`（真红非 flaky）。`0cd697b` 收集 **1178**（F 报 1188，差不在我树）。**007：六个码的天花板在解析器一个参数**（`:817-828` 从不传 severity），约束层 6/6 放行、`canonicalize` 不降级；**但 `SLOW_PACE` 在 `feasibility.py` 命中 0 次** ⇒ 慢节奏/安静/室内/低刺激是「缺 severity＋缺读者」两层都缺，行李/婴儿车只缺前者。A 组 JSON 被我同名覆盖一次（已修＋原文入档）。完整版在文件末尾同标题块
+
 ### SESSION=8c66aa92 · 15:01 **ORD-0211 交付：套件现在开自己的临时库**（提交 `0a4cb23`，父＝working tip） @09-22 15:01+08
 
 `STATUS: LANDED | 四条边界写进文件 | 红集合换了形状而不是单调变少——这条是本次最该看的读数 | 未做（按令）：不重构 fixture`
@@ -9811,7 +9815,253 @@ evidence: `frontend/e2e/qoder-speaks-the-travellers-language.spec.ts`（新，�
 - **构建归属**：实到包 **`index-CnfHH2K_.js` + css `index-jK0l3zzT.css`**（dist 构建 02:10:21）；但树 tip 已到 **`0cd697b`（14:20:30）**，最新前端提交 `fab8cb8`（14:06，ORD-0208）晚于 dist 构建 ⇒ **我跑的是 02:10 的包，不是 tip**；本轮读数归 `index-CnfHH2K_.js`。
 - **浏览器**：独立 `browser.newContext()`（390×844 / dpr3 / isMobile+hasTouch）+ `window.name=HJP3-LANE8464`，`localStorage` 全新（`journey_id=null`）。
 - 磁盘注意：D: 剩 16G（95%）——commander 上午刚撞过盘满；我这次只复制 5.6MB 库，未建导出树。
+### 1a986a24 HJ-P1 ①journeys 已够 8（实建 9）②**从活树构建会撞上别人未提交的编辑**（我撞上了，附现场）@2026-09-22T15:04+08
+
+#### ① journey 总量：今天在这份副本库里建了 **9 趟**（令 ≥8）
+
+库里读数（`mode=ro` 实查）：journeys **31 → 40**、travelers **45 → 55** = 9 趟 + 1 行上一轮报过的孤儿 traveler，
+**行数差与建趟数严格相等**，没有解释不掉的增量。
+（顺带一句：包工头在 ORD-0209 里替我挡了一条假因果——"HJ-P1 副本库 31→38"不是封存入口造成的，
+我自己逐轮记了 +2/+2；这个口径我认，后续也只引 HARNESS 的 6/6 与调用链那两条。）
+
+| # | 城市 / 口径 | 这一趟专门测什么 | 屏上结论 |
+|---|---|---|---|
+| J7 | 新加坡 · 1 人 · **总预算 0** | 空预算走哪条路 | 第 2 步就拦：「还需要填写：总预算」+ `aria-disabled="true"`，**不 POST**；改成 1200 后放行，摘要 `SGD 1200 / 500`、「自动设置 SG · SGD · Asia/Singapore」✓ |
+| J8 | 天津 · **1 人 / 3 间** · 450/500 | 房间数与人数矛盾 + 又一次预算冲突 | 建成「2 天 · 1 人 · 每人每天约 CNY 225.00」（450÷2 ✓）；**1 人 3 间全程无提示**；`住宿 500 > 总预算 450` 再次静默通过（与 C 条同类，第 2 次） |
+
+🔴 **新缺陷（J7 撞出来的，2/2）：修好之后，「还需要填写：总预算」会跟着你进入第 3 步确认屏。**
+- 序列：总预算写 0 → 下一步被拦（正确）→ 改成 1200/450 → 下一步进入第 3 步 →
+  第 3 步**同时**显示「总预算 / 住宿 SGD 1200 / 500」**和**「还需要填写：总预算」→ 按「确认创建」→
+  `201 travelers` + `201 journeys` + `200 stay-options/generate` **成功**，而那句红字还挂在屏上（一直到进入 Today 才消失）。
+- 复现率 **2/2**（新加坡、天津各一次）；而"改完当场就消失"只在**第 2 步**成立（1/2 次观察到即时清除，1/2 次没清）。
+- 分类 **HUMAN_MISLEADING**：屏幕一边告诉你"还缺东西"，一边把事情办成了。
+  最小回归点：换步时按当前有效值重算该提示（或进入第 3 步即清空第 2 步的残留）。
+- 一条**撤回**：我一度记成"这条提示在屏上重复两遍"——量了节点才发现只有一个可见实例 + 一个
+  `.v8-sr-only`（`1×1`、`clip: rect(0px,0px,0px,0px)`），`innerText` 会把读屏节点算进去。**两遍是我的量具错**，
+  和上一轮那次是同一个坑（读屏节点不是屏幕上的第二份）。
+
+#### ② 关于封存 demo 入口那一遗：我现在**不能签"人眼看过"**，原因在下面的现场里
+
+包工头要我等 D 交 ORD-0209 后用手机尺寸跑入口。我去把栈升到当前尖准备复验 0208 + 走入口，结果：
+
+```
+CONSOLE ReferenceError: createTianjinDemo is not defined
+    at sR (http://127.0.0.1:8746/assets/index-C0IR3rJ_.js:37:109047)
+屏上：「这里出了点问题 / 你的行程数据没有丢失。可以重试当前页面，或回到「今天」。 / 重试 / 返回今天 / 重新加载 / 技术详情」
+重新加载后仍崩（2/2，`document.querySelectorAll('*').length = 23`，`#root` 只剩错误边界）
+```
+
+**这不是产品缺陷，也不是 D 交出来的东西——是我从活树直接 `vite build` 撞上了他正在编辑的两行。** 证据三条：
+1. 构建那一刻 `git status --porcelain frontend/src` = ` M app/V8Experience.tsx` + ` M features/setup/JourneyTrialSetup.tsx`（**未提交**，正是 ORD-0209 调用链那两个文件）；
+2. 现在同一棵树里 `grep -rn createTianjinDemo frontend/src` ⇒ **0 命中**（定义已被删掉），
+   而我那份 bundle 里还留着这个符号 ⇒ 构建读到的是**两次保存之间**的中间态；
+3. HEAD 在我读它之后又动了（`0cd697b` 14:20 → `0a4cb23` 15:01），共享树里同时有 B/C/D 三条线在写。
+
+⇒ **给所有要从这棵树出包的人（包括门禁）**：`vite build` 之前之后各读一次
+`git log -1 --format=%h` 与 `git status --porcelain <你构建的路径>`，两次都为空/同一个 sha 才允许把产物归因给那个提交；
+否则一个"启动就白屏"的 P0 可以凭空出现——我这次差点报出来。
+（我用的构建命令：`npx vite build --outDir D:/moodle/_qoder_hjp1_o207_20260922/dist2 --emptyOutDir`，
+outDir 在仓库外，**没有往受保护树里写任何东西**。）
+
+#### ③ 因此 0208 那四条的复验状态是 **NOT-RE-VERIFIED**，不是"通过"
+
+我升上来的那一份是脏构建（见上），所以四条一条都没验：枚举上屏 / chip `aria-pressed` / 默认值标注 / legs 枚举未翻。
+D 提交后我会用带前后缀守卫的重建再逐条给读数；入口那一遗同样等那一刻。
+
+#### ④ 现场
+
+- 新增隔离栈：后端 `127.0.0.1:8745`（树 `0a4cb23`，139 条路径）+ 代理 `127.0.0.1:8746`（`serve_o209.py`，出 `dist2`）；
+  新副本库 `_hjp1_o209.db`（40 journeys / 55 travelers，`backup()` 自 `_hjp1_o207.db`）。
+  旧的两对（`8741/8742` 错配栈、`8743/8744`）仍在跑，`8741/8742` 建议收掉。
+- 我这一轮的 journey 都建在 **`_hjp1_o207.db`**（旧对）上；`_hjp1_o209.db` 目前只读不写。
+- 截图新增 `j7-stale-error.png`、`j5-badanchor-today.png`、`j6-tokyo-today.png`、`v2-today-light.png`（那张就是崩溃边界）。
+- 方案对比 → 选方案 → 建承诺 → 票夹 仍等 AI 授权那句话；凭据未出现在本块、账本或截图里。
+
+### 🚪 e345b9d6（SESSION=e345b9d6）ORD-0209 交付：**演示入口改为只读寻址封存行程，POST 新建整条移除** @2026-09-22 15:1x +08 → 提交 **`952ec40`**
+
+**报数六要素**：树 `D:/moodle/_qoder_integration_20260919`（有 .git）；`git log -1` = **`952ec40 2026-09-22 15:08:01 +0800 fix(frontend): the demo entry addresses the sealed journey instead of creating one (ORD-0209)`**；`git status --short -- frontend` **空**；解释器 Node/Playwright ＋ `.venv` 3.12.14；收集 `run_spec.py --list "e2e/qoder-demo-entry-addresses-dont-create.spec.ts" 5685` → **exit 0，`Total: 3 tests in 2 files`**；执行该 spec → exit 0 **3 passed**（`review/run-run*.log` 24 passed 链含受影响四张 spec 全绿）；`tsc` exit 0。
+
+**改法（纯前端一笔，与你预判一致，未要求 C 新增任何端点）**：`createTianjinDemo` 整个替换为 `enterSealedDemo`——**只** `GET /api/v1/demo/scene` 取服务器持有的封存 `journey_id`（**无任何硬编码 UUID**），存 localStorage → `load` → 进 hub。两个 POST（traveler +5 / journeys +13）**整段删除**，不是注释；`demo/reset` **没有任何调用**；进去后也没有再跑一次 stay search（封存行程自带其住宿状态，再造一次反而是写）。`LocaleContext.tsx` 的按钮文案**未动**（按你"不许只改文案掩住行为"的钉子——行为真的改了，文案无需伪装）。
+
+**四条验收形状，逐条交**：
+1. **渲染文字**：点完入口屏上载入的是封存那趟——读 localStorage 与该行程 **twin** 三方一致：`sealedId = storedId = twinId = 30a598b0-…`（`review/evidence/ui-overnight/ord0209-addresses.json`）；
+2. **网络层计数（承重位）**：**连点 3 次** ⇒ 从浏览器请求日志计 `POST /api/v1/travelers = 0`、`POST /api/v1/journeys = 0`（`requestLog: []`）——不是一次成功，是按 HARNESS 那个 6/6 的口径点了三次；
+3. **fail-closed**：两种"没有封存"形状（`demo_mode=false` / 场景无 journey_id——门按住服务器自己的字段，标注为门的发明）都渲染**具名人话**（「这台部署不是演示舞台（demo_mode=false）…」）到 `trial-sealed-unavailable`（`role=alert`），且**两轮失败后计数仍 0/0** ⇒ 关死，没有兜底新建；
+4. **突变**：`killT1-demo-entry-creates-again`（把两发 POST 种回寻址分支之前，锚点 `hits=1 on_disk=True`、`restored OK`）→ **KILLED**，命名的 nodeid `ord0209-the-demo-entry-addresses-the-sealed-journey` 整条红。**按实记**：这个杀有一部分是间接的——变异体建的旅程没有计划，`load()` 失败导致 hero 不出现，节点在计数断言之前就红了；`anchor guard` 工具（`live_checks/mutation_anchor_guard.py`）已按你的要求**复制进树内**（从 `_qoder_cmdr_ref_20260921/live_checks/`），后续突变继续用它机械拒绝 0 命中与字节未变。
+
+**归因只引你点名的两条**：HARNESS 6/6 实测 + `0cd697b` 调用链两发 POST。HJ-P1 副本库 +7 **没有**算到这个入口头上（你自己拆掉的假因果，我引用时已避开）。
+
+**边界没越**：进 demo 之后的 advance / booking / interruption / replan 的 demo ownership / R13 / `PREVIEW_GUARDED` 一层**一行未动**（本单只动入口）；门口校验题（锚点解析不出来照样能建）按你说的**不碰**，等仲裁裁。
+
+**过程中两笔自纠**：第一版 `tsc` 报错才发现我把 fail-closed 提示**写在哪**想岔了（它属于 wizard 的 props，不是 shell 的 message——shell message 是共享状态，ORD-0035 那次的教训）；killT1 第一版锚点用 `\\\"` 转义，文件里实际是普通引号——**第三次踩同一坑**，改为先读文件原字节再写锚。
+
+**门禁**：该 spec **3/3**；受影响五张 spec 链 **24/24**；`tsc` exit 0。**未 push**；未碰 `:4781/:4782/:8693` 与 `_live.db`；**未触发 `demo/reset`**；账本只追加本块（`newline="\n"`＋逐字节还原证明）。
+
+status: ORD-0209 **DONE@2026-09-22T15:1x+08 by e345b9d6**（提交 `952ec40`；①只读寻址 `/demo/scene`、②选择/导航到封存趟、③入口 0 新增 traveler/journey（3 次点击实测 0/0）、④无 reset 无 reseed、⑤无封存时具名 fail-closed 有屏读数且 0 POST；突变 killT1 KILLED（部分间接，按实记）；未动 demo 内动作层、未动门口校验、未改文案掩行）
+evidence: `frontend/e2e/qoder-demo-entry-addresses-dont-create.spec.ts`（新，两节点）、`review/evidence/ui-overnight/ord0209-{addresses,fail-closed}.json`＋两图、`review/killT1-*.log`、`review/add-ord0209-mutant.py`、`live_checks/mutation_anchor_guard.py`（入树）、`review/tsc-0209*.txt`；改动 `V8Experience.tsx`、`JourneyTrialSetup.tsx`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
+
+### 1a986a24 HJ-P1 封存入口「改前」基线（人眼看过版）＋ 给 D 的一条验收陷阱 @2026-09-22T15:10+08
+
+不等了——D 那两文件 15:0x 我轮询 7 次仍是未提交状态，所以我先在**干净旧包**（`index-CnfHH2K_.js` + 后端 `e0fc697` + 我的副本库）
+上把"改前"那一半用眼睛跑出来，这样 0209 落地时"改后"有配对的读数，而不是各说各话。
+
+**① 入口不在 Today 上，只在向导里。** 在 `/v8/hub` 整屏找 `使用封存的天津演示` ⇒ **按钮不存在**（`btn=null`，3 次找都空）；
+必须先按「试用其他城市」进向导才看得到它：`box = [x20, y752, 350×44]`（44 px 触控达标）。
+⇒ 这也解释了"0/6 寻址封存条"：**人从今天的屏幕上根本走不到这个入口**。
+
+**② 点 1 次就偷偷建了一趟**（不是 6/6 的转述，是我这一屏的读数）：
+```
+201 POST /api/v1/travelers
+201 POST /api/v1/journeys
+200 POST /api/v1/journeys/88058657-82eb-4113-8f84-81d2065889f0/stay-options/generate
+```
+库里前后：journeys **40 → 41**、travelers **55 → 56**；新行点名：
+`journeys.rowid=41 / id=88058657… / title="Tianjin · stay-aware weekend" / CN-TIANJIN / CNY 1200.00`，
+`travelers.rowid=56 / id=73baf6fc… / created_at=2026-09-22T07:09:27.723291+00:00`（与我那次点击同一秒）。
+**而封存那一行就在同一个库里**：`select count(*) from journeys where id like '22222222%'` ⇒ **1**（`One Day in Nexus City` / `CNX-DEMO`）
+⇒ 可寻址的封存行程存在、库里有、入口没去读它。这就是 ORD-0209 边界 1/3 的现场版。
+
+**③ 点完之后落屏不是那趟行程，是「城市探索」**：屏上「菜单 / 城市探索 / 准备目的地 / 先看这座城能不能规划…」。
+一个想"看看官方那份天津长什么样"的人，被丢进另一个功能的空输入页。
+
+**④  给 D 的验收陷阱：一次点击会把按钮带走，"点 3 次"必须重新进 3 次向导。**
+我这次 3 连点的真实读数是：tap1 `clicked=true` + 上面那 3 个 POST；**tap2/tap3 `clicked=false`、0 个 POST**——
+不是它变乖了，是**屏幕已经跳走、按钮不在了**。
+⇒ 如果门写成"在同一个页面上点 3 次 ⇒ 计数 0/0"，它会**天然通过**，而且证明不了任何事。
+建议形状：**3 次「重新进入向导 → 点入口」的独立循环**，每次断言 `POST /travelers == 0 && POST /journeys == 0`，
+并且断言屏上出现的是那趟封存行程（读渲染文字，不读 `data-*`）。
+
+**⑤ 顺手又抓到一条同链路的语言泄漏**：这个入口建出来的行程标题是**英文**「**Tianjin · stay-aware weekend**」，
+而我通过向导建的 9 趟都叫「天津 · journey」「厦门 · journey」——同一份中文界面里两种命名，
+而且它就长在 0209 要改的那条调用链上（`JourneyTrialSetup.tsx` → `onUseTianjinDemo`）。改入口时请一起处理，别只改 POST。
+
+**⑥ 还没做的（不含糊）**：0208 那四条的复验、以及入口"改后"那一遗，都**等 D 提交**；
+我升上来的那份 `dist2` 是脏构建（见上一块：`createTianjinDemo is not defined` 是我撞上未提交编辑），已作废、不再引用它的任何读数。
+D 提交后我按"构建前后各读一次 `git log -1` 与 `git status --porcelain frontend/src`，两次一致才归因"的规矩重出包再跑。
+journeys 计数提醒：②那 1 行是**入口**建的，不是我建的；我今天手动建的仍是 9 趟。
+
+#### aad2d1f2 HJ-P3 P3 急躁移动型 @2026-09-22 15:2x（本机钟）→ 隔离环境全绿；**两条红：AI 提交双击双跑、取消只关界面不杀任务**；地图手势三条全绿
+
+**环境（隔离收据已在账本单独一块）**：一次性库 `_lane_aad2d1f2_db.sqlite3`（复制自 `_qoder_cmdr_gate_20260921/backend/citynexus.db`，54 表）；
+后端 `.venv` 3.12.14 uvicorn @**:8424**（`CITYNEXUS_DATABASE_URL` 指我的库，`CITYNEXUS_DEMO_MODE=false`，health 200）；
+前端 `vite preview`（现有 dist）@**:8464** 代理 :8424；实到包 **`index-CnfHH2K_.js` + css `index-jK0l3zzT.css`**（dist 构建 02:10:21，
+**早于 tip `0cd697b` 14:20 的 `fab8cb8` ORD-0208** ⇒ 本轮读数归这个包）。浏览器：独立 context 390×844 / dpr3 / isMobile+hasTouch / `pointer:coarse=true`，
+`window.name=HJP3-LANE8464`。**共享库 / 共享 Playwright tab / 共享 profile 全程零接触**；
+未跑 `demo/reset`；未新开隧道；库副本仅 5.6 MB（D: 剩 16G，未建导出树）。
+
+##### R-1 `HUMAN_BLOCKER`：AI 提交的**双击真的双跑**——两个 run、两次真模型调用，只差 23ms 的点击间隔
+
+- 动作：AI 面板填需求 → 对「开始规划」**双击**（两次 click，间隔 60ms 设置、实测请求间隔 **23ms**）。
+- 网络（CDP 抓包）：`POST /api/v1/journeys/:j/agent/commands` **出现两次**（timestamp 差 23）。
+- **库实读**（我的库，`agent_runs` 表）：**2 行**，同一 `journey_id=d1bdc755…`，
+  `started_at 06:46:54 / 06:47:17`，都 `COMPLETED`，都带完整模型输出（第一次 4 步 read-only 探测、第二次同样整跑一遍）。
+  两次都调了 deepseek（`provider_key=deepseek`）。
+- 对照组（同场景**单击**只发一个 run；创建行程的「确认创建」双击后**库里只有 1 行 journey**——那条防重复是好的）。
+- 屏幕（顺带，好的部分）：失败文案现在说人话——「这次排不出方案：**数据不够，不是你说的不对**」+「（服务器给的原因编号：**CATALOG_EMPTY**）」+「换一座有数据的城市」按钮。我这条库本来就没有北京目录数据，提示是诚实的。
+- 期望：提交后按钮立即进入 in-flight 态、第二次点击要么被禁用要么被幂等键合并（replan 已有 Idempotency-Key 惯例，agent/commands 这里没有挡住）。
+- 最小回归点：E2E 断言"双击后 `agent_runs` 计数 = 1"；现在这条是 **2**。
+- 疑归：`agent/commands` 的幂等/去重缺失（前端 submit 未加 in-flight 锁，后端未做同 journey 在途 run 去重）。**钱和真 provider 配额在预览上被双倍消耗**，这条不只是 UX。
+
+##### R-2 `HUMAN_MISLEADING`：「取消并关闭」**只关面板，不取消任务**——用户以为停了，后台跑完 13 秒
+
+- 动作：提交 AI（"已等待 8 秒"）→ 点「取消并关闭」→ 面板立即关闭、等待文案消失（屏幕上看"取消成功"）。
+- **库实读**：第 3 个 run（我取消的那个）`started_at 07:11:01 → completed_at 07:11:14`，**照常 COMPLETED**，
+  且 outcome 是完整模型输出。取消后 15 秒屏幕上也没有再冒结果卡（`lateOutcome=''`）——用户侧安静，库里活干完了。
+- 期望：要么真取消（abandon 已有后端地基，ORD-0057 记过），要么按钮改叫「收起」/「后台运行」并说明"还会继续，不花你额外的钱"。
+- 分类：`HUMAN_MISLEADING`（按钮语义与行为不符）。最小回归点：断言"取消后 `agent_runs.status` 不得从 RUNNING 变 COMPLETED 完整落库"，或断言屏幕出现"已在后台完成，点查看"。
+
+##### 绿的部分（都值得钉住别回退）
+
+- **地图手势三条全绿**（读 `element.citynexusMap.getCenter()` 真值，非 transform）：
+  单指在图上 `lat 39.85193→39.83659`、`scrollTop` 恒 **0**；单指在图外页面 +135、相机**不动**；
+  **双指捏合 `zoom 12.5928→14.8152`、lat 也随捏合中心偏移**——M-1 那条在 02:10 的包上仍是好的（`touch-action:none`）。
+- **创建行程的双击防重**：双击「确认创建」后我的库里 journey 总数仍只 +1（demo 1 + 天津 1 + 北京 1）。
+- **刷新 / 后台 / 返回**：F5 后 h1 保住、ACTIVE 行程保住；后台 12 秒回来内容完整（`visibilitychange` 本机仍不触发，与 R1 结论一致，真机仍欠）；浏览器 back/forward 在 `/` 与 `/v8/hub` 间往返，落点与 URL 一致、不串行程。
+- **hub 对"没有行程数据的城市"现在说人话**（见 R-1 屏幕原文），且给「换一座有数据的城市」出口——这比我前几轮骂过的"没有生成可行方案"进步很大。
+
+##### 未覆盖（如实记）
+
+- 慢操作里"不等加载完就点别的 tab"只做了取消这条；中断生成（abandon）的正路径属 ORD-0057 面，没碰。
+- 深色、双击底部导航、弱网降级没做。
+- `:8464` 前端与我的库会话保持到 16:0x，若 lane 需要回收请 `lane_proof.cjs release --lane aad2d1f2`。
+
+##### 收尾
+
+- 截图 `41_`（后台返回）、`42_`（手势后地图）、`43_`（取消后面板已关）在 `D:\moodle\HJ-P3_evidence\`。
+- 库读数可复放：`python -c "import sqlite3;..."` 查 `_lane_aad2d1f2_db.sqlite3` 的 `agent_runs`（3 行：2 个双击 + 1 个被"取消"仍完成）。
+- 全程只读共享资产；我的写全部落在自己的库与自己的 context。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### commander 亲测 @2026-09-22T15:2x+08 —— ORD-0211 验收（`0a4cb23`）＋ g3 的 14 次独立进程读数 ＋ ORD-0213 下发（C）
+
+**① ORD-0211 = ACCEPTED（只签机制层，不签"隔离已解决"，边界照仲裁原文）。** 全部在 `git archive` 干净导出树上跑，解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe`（3.12.14），收据落 `live_checks/ord0211/receipt.json`：
+
+- **M1 对照（父提交 `0cd697b`，没有钉）**：在 `backend/` 植入一个带 canary 行的 `citynexus.db`，跑一道会写库的门，植入文件 sha256[:16] 由 `7c8c09284dffd5ba` 变成 `73aa25d9bd451015` ⇒ 泄漏是真的，M2 不是空判定（非空性＝`plant_mutated=true`）。
+- **M2 交付（`0a4cb23`）**：同一个植入文件跑完**逐字节不变**（`7c8c09284dffd5ba` → `7c8c09284dffd5ba`，`plant_untouched=true`），且收集期收据原文打印了解析后的绝对路径：`ORD-0211 test database: resolved=C:\Users\…\AppData\Local\Temp\cnx_pytest_rko0g_8g\suite.db | exists=False | declared_by=conftest temp dir`。跑完目录里只剩植入的那一个 `citynexus.db`，没有多出 WAL/sidecar。
+- **M3 拒绝分支（双向都试）**：把 `CITYNEXUS_DATABASE_URL` 声明成 `sqlite:///<一个不存在的临时目录>/_live.db`，pytest 退出码 4，conftest 抛 `RuntimeError: ORD-0211 boundary: the test suite must never open '_live.db' (preview/live target)`，而且那个路径跑完之后仍然不存在（`declared_path_exists_after=false`）⇒ 它是**先拒绝再谈打开**，不是打开之后再道歉。
+- 我这边的一处仪器错先自纠：第一版脚本用 `pytest -q`，而 `-q` 会把打印收据的 header 段一起压掉，于是把 `receipt_names_temp_dir` 误判成 false。去掉 `-q` 后收据照原样出现。这条红是我的量具，不是 C 的交付。
+
+**② g3（`gates::test_g3_five_concurrent_hydrations…`）的 14 次独立进程读数——请 ORD-0210 改验收口径。** 每次都是新进程、新的 `cnx_pytest_*` 临时库（14 次共 14 个不同临时目录），全在钉住树里：
+
+| 时段 | 进程数 | 红 | 绿 |
+|---|---|---|---|
+| 15:15（M2 那次） | 1 | 1 | 0 |
+| 15:16 手工三次 | 3 | 1 | 2 |
+| 15:18–15:20 burst | 8 | 8 | 0 |
+| 15:24 同树"预热后" burst | 4 | 4 | 0 |
+| 合计 | **14** | **12** | **2** |
+
+- 红的时候门自己报出 **2–4 枚**不同的 operation_id（例：`3a9c8765… / 978dd186… / d1957ab3…`），不是 1 枚。
+- 我试过并**反证**了一个解释：冷导出树 vs 已经跑过 12 次的同一棵树，两边都全红；两边文件差异只有 `.pytest_cache/**` 和那个植入诱饵。所以"热了就好了"不成立。
+- 对分类的一条更正（附读数，不是意见）：`ISOLATION_BREACH / dirty-db false-green` 只解释了"脏库能绿"那一半——**干净临时库同样绿过 2 次**，所以单次绿不能当修复证明。请 ORD-0210 的验收从"跑一次不红"改成**独立进程连跑 10 次全绿**，并把每次的 `exit` 与临时库绝对路径逐条列进收据。
+
+**③ ORD-0213 → C（只限这一道门）。** 靶子＝②里那个竞态本体：为什么五个并发请求会拿到 2–4 枚 operation_id。要求顺序是先给**机制判定**（先查后插？拿锁顺序？唯一约束缺位？）再谈修法；复现命令逐字可复放：
+
+```text
+cd <git archive 0a4cb23 导出树>\backend
+D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest \
+  tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation \
+  -p no:randomly --tb=line -rA
+```
+
+验收＝10 次独立进程全绿 ＋ 一条反例（把收敛点故意拆掉必须变红，用 `mutation_anchor_guard.py`）。**不许用 sleep/加重试把门哄绿**，那只会把 12/14 换成 0/10 而问题原样留在产品里。
+顺带一条小尾巴（HARNESS 15:1x 已量到 `%TEMP%` 里 22 个目录 / 22 MB 堆积，我不重复计数）：conftest 的 `mkdtemp(prefix="cnx_pytest_")` 没有进程退出清理，请在 ORD-0213 里一并收尾，或者至少把目录名落进收据好核对归属。
+
+**④ 车道规则（采纳 HJ-P1 15:04 的现场，全体适用）**：验证、构建、跑门一律从 `git archive <sha>` 的导出树做，不从活树构建——活树随时带着别人未提交的编辑（HJ-P1 撞上了，我这两棵树也照此办理）。
+
+**⑤ tip 与 P0。** working tip 现在是 `952ec40`（D 的 ORD-0209，15:08：demo 入口改为寻址已封存行程）。我只读了提交与代码，**没有跑 3 击 0 POST 的运行时复验**——HARNESS 15:1x 已声明用同一支 `harness_sealed_entry_audit.py` 复验，我不重复开枪、也不替它签。P0：本轮我 0 次触碰 `_live.db` / `_preview.db`，0 次 `demo/reset`，0 次 provider 出网，没读过也没写过用户库；我造的两个 `citynexus.db` 诱饵只存在于我自己的导出树里。
+
+- id: ORD-0213
+  to: 8c66aa92
+  priority: high
+  if_head: 952ec40
+  order: |
+    **五并发 hydration 收敛为一枚 operation_id 的竞态本体（只限这一道门，别的先不碰）。**
+    ORD-0211 我已经在干净导出树上亲测接受（对照树泄漏、交付树逐字节不变、`_live.db` 先拒绝后打开三条读数在
+    `## ORDERS` 顶部我 15:2x 那块里）。它带来的直接后果是：`gates::test_g3_five_concurrent_hydrations…`
+    现在**每次都是新临时库**，于是旧口径"脏库 false-green"只解释了一半——
+    **14 个独立进程读数：12 红 / 2 绿**，红的时候门自己报出 **2–4 枚**不同的 operation_id。
+    也就是说：**绿不能当修复证明**，单次绿更不能。
+
+    复现（逐字可复放，`git archive 0a4cb23` 的导出树，别在活树上跑）：
+    ```text
+    cd <export>\backend
+    D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest \
+      tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation \
+      -p no:randomly --tb=line -rA
+    ```
+    要求按顺序：
+    1. **先给机制判定**，再谈修法：五个并发请求为什么拿到 2–4 枚 id？是"先查后插"没有唯一约束兜底、
+       还是拿锁顺序/事务边界让第二个请求在第一个提交前就查不到？把证物写成 `文件:行` ＋一次真实读到的值。
+    2. 修完之后收据必须含**独立进程连跑 10 次全绿**（每次列 `exit` 与该次临时库绝对路径），
+       不是一次绿；F 的 ORD-0210 门会来复核同一道门的干净/脏同判定，两件不互相顶替。
+    3. 一条反例：**把收敛点故意拆掉，门必须变红**（用 `mutation_anchor_guard.py`，`anchor_hits==1`、
+       突变字节必须与原字节不同——noop 突变不算杀）。
+    4. **禁止**用 sleep、加重试、降并发、改断言把门哄绿；那只是把 12/14 变成 0/10 而问题原样留在产品里。
+    5. 小尾巴（HARNESS 15:1x 已量到 `%TEMP%` 堆积，我不重复计数）：conftest 的
+       `mkdtemp(prefix="cnx_pytest_")` 没有进程退出清理 ⇒ 顺手收尾，或在收据里写明目录归属。
+    边界照旧：不碰 `_live.db` / `_preview.db`、不碰权威树、不触发 `demo/reset`、密钥只以"那把 key"指代。
+  status: DISPATCHED@2026-09-22T15:2x+08 by 494abfd7（来源＝我对 ORD-0211 的亲测副产物：隔离一到位，门就从"看别人脸色"变成"暴露真竞态"）
+
 ## ORD-0212 @2026-09-22T15:0x+08 —— **用户直接指令**：主页那张"预算参考值"卡片是废话，别再占首页位置
 
 ### 用户原话（15:00，看到的正是线上那版）
@@ -9978,7 +10228,15 @@ g3 = ISOLATION_BREACH / dirty-db false-green shape
     `DATABASE_URL` 这名字被 app 忽略这件事我已量过两次），并在收集期打印解析后的绝对路径；
     **(2)** 这一步**不许被当成"隔离问题已解决"**——同一运行内的互相喂数据仍由 ORD-0210 的门盯着。
     先交一次"改了之后 g3 在干净临时库上的判定与它在自己导出树上的判定一致"的证据即可，别扩到重构 fixture。
-  status: DISPATCHED@2026-09-22T14:4x+08 by 494abfd7（裁决＝仲裁 `5772261512`）｜**DELIVERED@2026-09-22T15:01+08 by 8c66aa92（提交 ，只 1 文件 ）**：套件现在在任何 app import 之前钉一个本进程临时库；四条边界写进文件——runner 显式声明的目标照用但仍检查（E2E/预览保持自己那库、09-20 禁令不撤）、 与开发者工作库直接拒绝启动、收集期打印 app resolved 绝对路径（实读 ，declared_by=conftest temp dir）。**读数（关键）：红集合是换了形状不是单调变少。**全量 7 failed / 1155 passed / 15 skipped / 1 xfailed / 99.83s；**由红转绿**（干净库下本来不该红）、、 ⇒ 此前是跨模块互相喂出来的判定；**由绿转红**（污染一直在遮）、、。 单跑干净库 3/3 红（五个同 query 并发落到三个不同 operation_id，断言要同一个），全量里绿 ⇒ 它的判定依赖前面跑过什么＝**门的缺陷**，按令归 ORD-0210 收，我不改它、也不拿它当产品结论。以前会按顺序变脸的那对现在稳： ⇒ 23 passed + 1 xfailed。工作库未被写。**按令没做**：不重构 fixture、不做 per-module 隔离。 仍 xfail（仍等  把计数并回 attempt，见 ORD-0201 我那块读数）。下一笔：14:2x 偏好接线（ 复用 + 表驱动同义簇 + 双向门 + 表外说法那一格），然后 ORD-0197 的计数规则连它的两半门一起交。块在 DELIVERIES
+  status: DISPATCHED@2026-09-22T14:4x+08 by 494abfd7（裁决＝仲裁 `5772261512`）｜**DELIVERED@2026-09-22T15:01+08 by 8c66aa92（提交 `0a4cb23`，只 1 文件 `backend/tests/conftest.py`）**：套件现在在任何 app import 之前钉一个本进程专用临时库；四条边界写进文件——runner 显式声明的目标照用但仍检查（E2E/预览保持自己声明的那库，09-20 禁令不撤销）、`_live.db` 与开发者工作库 `citynexus.db` 直接拒绝启动、收集期打印 app resolved 的绝对路径。实读一行：`ORD-0211 test database: resolved=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_ja2x57o_\suite.db | exists=False | declared_by=conftest temp dir`。
+
+**读数（关键：红集合换了形状，不是单调变少）**。全量 ⇒ **7 failed / 1155 passed / 15 skipped / 1 xfailed / 99.83s**。
+- **由红转绿**（干净库下本来不该红）：`anywhere_gates::g3`、`discovery_truth g16b/g17a/g18a/g18b`、`provider_truth::g11` ⇒ 这些判定此前是别的模块喂出来的。
+- **由绿转红**（同一批污染一直在替它们遮）：`matrix_truth::g14a`、`matrix_truth::g14c`、`test_qoder_city_failure_reasons::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at`。
+- `g3` 在干净库上**单跑 3/3 红**（五个同 query 的并发 hydration 落到三个不同 operation_id，断言要同一个），在全量里却绿 ⇒ 它的判定依赖前面跑过什么，是**门的缺陷**，按令归 ORD-0210 收；我不改它，也不拿它当产品结论。
+- 以前会按顺序变脸的那对现在稳：`test_qoder_provider_identity_leg.py + test_qoder_ord197_four_class_receipt.py` ⇒ **23 passed + 1 xfailed**。工作库未被写（`git status --porcelain -- backend/tests` 只含 conftest 那一笔）。
+
+**按令没做**：不重构 fixture、不做 per-module 隔离。`r1d` 那条 strict xfail 仍 xfail——仍等 `provider_identity.py:470` 把带计数的 attempt 并回 runner 的计时 attempt（我上一块已给四形状实测：三栏到 C 时全是 None）。**下一笔**：14:2x 偏好接线（复用 `_has_hard_marker`、表驱动同义簇「走不快／节奏放慢／慢慢走」、双向门、外加"表外说法 ⇒ 不产约束行也不谎称已识别"那一格），然后 ORD-0197 的计数规则连它的两半门一起交。
 
 ### ④ 扩词表这件事**上一轮已经裁了**（我和它错身而过，这里落字免得 C 再问）
 > **扩受控同义簇**（如「走不快／节奏放慢／慢慢走」），但**不启用开放式 LLM/embedding 猜意图**；
@@ -10744,6 +11002,59 @@ P0：预览链我已恢复并持续只读核对（用户库 3/19/3、reset 403�
 3. 停靠点名称行我没抽到（正则抓到页头"菜单"），11 次营业时间读数按**列表顺序 + 停留时长**（40/45/120/120 分钟）对应到 天安门/护国寺/颐和园/故宫；**营业时间字段本身是逐字读到的**。
 
 **状态**：P4 工作块本轮已交（ORD-0138 复验 1 绿 2 红 + 6 条 P4 读，其中 P4-N6 是新的最重一条）。下一件我接着做：J3 + "解释为什么选这个地方"的出口，以及把 P4-N6 做成**单变量对照卡**（同输入、只换自由文本，两屏并排）。
+
+### 4e974ae5 (SESSION=4e974ae5) HJ-P4 检查点 @2026-09-22 14:5x–15:1x → **先纠正一条**：我 13:5x 那份交付块**在账本里**（第 9787–9852 行，锚点「### 4e974ae5 (SESSION=4e974ae5) HJ-P4 工作块 @2026-09-22 13:0x–13:5x」，`P4-N6` 三处命中，我用字节计数复核过），你那句"无交付块"应是写在我落笔之前。本块交两件：**① 隔离收据**、**② 你点名的那一格——硬声明到底有没有用**。结论：**没用。四趟行程、四种措辞（含五个"必须"），逐日安排一字不差**；五条偏好里**进入方案的是 0 条**，屏幕上唯一可见的地方是面板那一行复述。
+
+**读数归属**：包 `index-CGyAYAg5.js`（我自己从 tip `c0d7e3d` 构建，共享 dist 未动）· 后端 `127.0.0.1:8891`（代码 `c0d7e3d`，`DEMO_MODE=true`、`AI_ENABLED=true`）· 前端 `127.0.0.1:4891` · 库 = 我的一次性副本 · 独立 profile 390×844 dpr3 zh-CN。**只用可见 UI，0 次手写 API 造成功**；本轮模型调用 **3 次**（J5-SOFT、J5-HARD、J4），累计今日 6 次。延迟读数一律 127.0.0.1，不作手机口径。
+
+#### ① 隔离收据（你要的那张：一次性副本库 + 行数差）
+```
+副本来源  sqlite3 backup() 从 _qoder_cmdr_gate_20260921/backend/_live.db（快照时刻 mtime 09-22 01:12）
+副本文件  D:\moodle\_qoder_hjp4_20260921\_hjp4_20260922.db   主文件 3,710,976 B
+WAL 现场  -wal 3,621,512 B @13:48:18（我的写）· -shm @13:14:55 · 主文件 mtime 停在 13:12:37 = 上次 checkpoint
+          ⇒ 写入确实落在副本，不是主文件；主文件 mtime 不动是 WAL 模式正常现象，不是"没写进去"
+
+表                   我的副本   公网 _live.db   差（我造的）
+travelers                 5            3          +2
+journeys                  5            3          +2
+plan_versions            28           19          +9
+activities              203          134         +69
+journey_missions          5            2          +3
+commitments               1            1           0
+journey_legs              0            0           0
+
+交叉在场证明（这条才是硬证据）
+  journey dd7e2ca1…  我的副本 = PRESENT   |   _live.db = absent
+  journey 4cf9464a…  我的副本 = PRESENT   |   _live.db = absent
+  （本轮新增 72240359… / 另两趟同样只在副本内）
+_live.db 的 -wal mtime 14:56:55 = 别的车道在写它；我全程以 mode=ro 打开过它一次（取快照）+ 一次读数，
+从未持有写句柄，也不按「重置到场景起点」、不清理任何数据。
+```
+
+#### ② 你点名的那一格：软说 vs 硬说（同一趟、结构化输入完全相同，只有措辞变）
+- **软说臂**（「尽量晚一点…最好十点以后；走路尽量少一点…；吃饭随意…；有风景好的地方就安排上；中间能歇一歇就歇」）→ 面板原文：「已提取**晚出发、少步行、优先坐车、本地小吃、风景优先、可中途休息**等偏好；未提供可解析的具体活动ID，因此未填写活动引用。」→「已生成 3 个可选方案」→ 采用。
+- **硬说臂**（同一批要求，每条前面加「**必须**」，并给出可判数字：十点以后 / 走路不超过十分钟 / 不要游客店 / 每天一个风景点 / 每天中午回酒店午休）→ 面板原文（**英文，出现在中文界面**）：「**Parsed hard constraints**: depart after 10:00, limit walking to 10 minutes and prefer rides, choose local non-tourist restaurants, include one scenic place daily, and **return to hotel at noon for rest**. No explicit mutable activities were provided.」→「已生成 3 个可选方案」→ 采用。
+- **两臂采用后的逐日安排：一字不差** —— 「2 天行程 / 9月23日周三 4 项 / 9月24日周四 4 项 / 17:00 17:40 Tian'anmen Square (天安门广场) 40 分钟 / 18:00 18:45 Huguo Temple Snacks (护国寺小吃) 45 分钟 / 19:20 21:20 Summer Palace (颐和园) 2 小时 / **22:00 00:00 The Palace Museum (故宫博物院) 2 小时**」。三张候选卡的摘要也与软说臂、与昨天 J1/J2 完全相同（方案 A 6/8·490·8·天安门·护国寺·颐和园）。
+- **累计不变量：4 趟独立 journey × 4 种不同自由文本 ⇒ 同一份逐日安排**（J1 夜景+酒吧 / J2 步行10+忌辣+避游客街+午休 / J5-SOFT 五项软 / J4 五项硬）。⇒ 抽取层听得懂（每趟复述都不同且准确），**排程层一个字都不接**。
+- 与 HARNESS `d291c9dc` 14:2x 立案的根因**同一格，且我这半正好是他们没测的那半**：他们量的是 `app/capabilities.py` 的 `SOFT_CODES`/`CONTEXT_CODES` **按类**决定能不能生成约束行（`slow_pace` 0/8 出约束行、`必须` 只抬 `HARD_ACCESSIBILITY_NEED`），并明确写了「**Both findings are AI=off / deterministic-path only**」。我这轮是 **AI=on 的手机路径**：LLM 把五条全部解析成 hard constraints 并复述出来，**方案仍然与软说逐字相同** ⇒ 所以"必须没用"这件事**不只发生在确定性解析层，AI 解析层出了正确的结果之后，下游同样不接**。请把我的读数并到他们那一格的分母里，**不要写成我发现了根因**（根因是他们立的）。
+
+#### ③ 五条偏好的可见性逐条（你问的"哪些在屏上可见、哪些被静默吐掉"）
+| 偏好（P4 令） | 屏上唯一可见处 | 方案里有没有变化 | 有没有约束行/具名拒绝 | 判定 |
+|---|---|---|---|---|
+| 晚出发 | 面板那一行复述 | ❌ 首槽恒为 17:00（四趟都一样，与措辞无关） | ❌ 任何屏都没有 | **静默吐掉**（看着像满足，其实是脚手架默认） |
+| 少走路 | 面板复述 + 住宿卡「步行 / 32 分钟」 | ❌ 恒 32 分钟；花费页「步行暴露 / **尚未选择**」 | ❌ 没有"10/15 分钟内没有符合条件的住宿"这句话 | **静默吐掉，且被写成推荐理由** |
+| 饮食 | 面板复述 | ⚠ 护国寺小吃在方案里，但它在**所有**四趟里都在（包括只勾"自然"兴趣的那趟）⇒ **不可归因于我说的话** | ❌ 无 | **不可归因**（不能算落地） |
+| 风景 | 面板复述 | ❌ 无具名风景点；颐和园/故宫被排到关门之后 | ❌ 无 | **静默吐掉** |
+| 休息 | 面板复述（硬说臂明确写了"return to hotel at noon for rest"） | ❌ 2 天塞 8 项、无午休 | ❌ 无 | **静默吐掉** |
+⇒ **5/5 只活在那一行复述里；0/5 进方案；0/5 有任何"没被采用"的具名说明。** 对用户的主观感受就是：**它把我说的话漂亮地还给我，然后按原样排。**
+
+#### ④ 顺带两读（同一次实验里量到）
+- `HUMAN_MISLEADING`（新，轻）：**同一句硬声明，两次跑一次参与一次退出**。J5 的硬说臂（已采用过方案的趟）返回「**AI 没有参与这次规划**（生成了 3 个备选）」；J4 的硬说臂（全新趟）返回「已生成 3 个可选方案」并逐条复述。⇒ AI 腿的参与与否不稳定，且退出时它承诺的"技术详情"照旧拿不到（`getByRole('button',{name:/技术详情/})` 关掉面板后 0 命中，同我 13:5x 的 P4-N3）。
+- `TRUTH_DEFECT`（累计）：营业时间不上屏又加 2 次读数 ⇒ **今日累计 13 次停靠点详情读数全部「营业时间 / 暂无数据」**，库里 8/8 有 open/close。
+- 仪器自曝（2 条）：① J5 硬说臂我**只数了"不刷新"的卡（=0）**就下结论，差点把"硬声明无法对比"写成产品结论；补做 J4 + 刷新后采用才拿到真读数。② 我一度以为"AI 参与与不参与产出同一方案"，**该推断已撤回**——那只是因为新候选当时不可采用、屏幕仍是旧方案，不是同一方案被两次生成。③ 最后一格「花费」点击失败（详情层还盖着），所以硬说臂的花费页健康行没读到，我不猜它的内容。
+
+**下一格我接着做什么**（不用等我）：把"4 趟同方案"做成**一张并排卡**（四屏截图 + 一句话差异表）交给车道 C 当 ORD-0138 的补充验收；以及验「饮食」那条到底是不是**根本没进候选生成**——办法是同一趟里把兴趣全去掉、自由文本只留"要吃本地馆子"，看方案里的护国寺小吃还在不在。
+
 
 ## commander 冻结行更新 @2026-09-22T13:3x+08 —— 仲裁改口：**`CURRENT_INTEGRATION_REFERENCE_TIP = c0d7e3d`**；另补第二把全量（11 条逐 nodeid 不变）
 
@@ -22266,3 +22577,67 @@ Refreshed: 2026-09-21 15:0x (+08:00，`date` 实读) · LAST_ARBITER_COMMENT_ID 
 - **未做**：未跑突变、未放宽断言、未加 skip、未改 SUITES、未写权威树与 `CityNexus\**`、未打产品补丁、未读 `_live.db`/`_preview.db`、未碰 `:4781/:4782/:8693`、未发 `demo/reset`、未调真 provider、未建 junction。
 
 **⑸ 我这侧现在等的东西（不是 blocker，只是排程）**：`ORD-0205` 要等那族 7 条 `stateful` 红修掉（且权威树此刻 `M tools/verification/mutation_campaign.py` 正被别的车道改，我不在脏树上重定基线）；`ORD-0160 ③` 要等 `ORD-0155` 的映射层落地。**没有新令我也不睡**：下一条自驱实验是 `EXP-HARNESS-006`——**把这次的一次性六面走查做成常驻门**（任意 SHA 导出即跑，落"每面可见字数 / 该面控件清单 / 操作机制 / `demo/reset` 计数 / 出网计数"为基线，带 `--check` diff 与变红 RC≠0），形状与 `harness_evidence_gate.py` 一致；**优先级低于你任意一条派单**。
+
+### d291c9dc HARNESS · **ORD-0210 独立复现** + `EXP-HARNESS-007` 2026-09-22T15:07+08（接 494abfd7 14:5x 令"别停在检查点上"）→ **状态依赖复现成立、但方向不稳**：靶子 `gates::test_g3_five_concurrent_hydrations…` 我跑 **7 轮 ×2 遍**，**7/7 轮都把行留给下一遍**（`catalog_hydration_operations` 2→4，一轮到 5），判定翻转 **2/7**，而且**两个方向各一次**（`DIRTY_DB_FALSE_GREEN` 1、`DIRTY_DB_FALSE_RED` 1）⇒ 你受控量到的"干净红/脏绿"我这边重现了，但它**不是主方向**；**0cd697b 上我这棵树全量收集 `1178 tests collected`（F 收据写 1188，差不在我树里，我不动它）**。另：`EXP-HARNESS-007` 把"六个码永不生成约束行"钉成**两层结论**——**约束层不挡**（合成 HARD 载荷 6/6 都出 1 行，`canonicalize` 不降级），**挡在解析器一个参数**（`:817-828` 的 `add(code, params)` 从不传 severity）；**但其中 4 个码在 `feasibility.py` 里 0 次命中**（只被 `mock_replan_engine.py` 提），所以修不到"能进门"就没完
+
+**六要素（ORD-0210 要求的收据形状，全部我亲测）**
+`SHA` **`0cd697bbda73be05629cb1e6b2f8a8a193e04949`**（`0cd697b`，14:20＝本单 `if_head`）｜
+`工作树` `D:\moodle\_qoder_harness_revival_20260921\lab\snap_0cd697b\backend`（`git archive 0cd697b backend data contracts tools | tar -x`，350 文件 / 6 MB；**我没碰 F 的门**——`test_qoder_db_isolation_same_verdict.py` 在它未 push 的 `2dc3fa2` 上，本树 `git ls-tree` 里没有，已核）｜
+`解释器` `D:\moodle\CityNexus\.venv\Scripts\python.exe`（3.12.14，`sys.executable` 即该 venv）｜
+`命令` `python -m pytest tests/test_qoder_anywhere_gates.py -q --tb=line -p no:cacheprovider` **每轮两遍**，第一遍前只删本树 `citynexus.db*`｜
+`collected` `1178 tests collected in 3.63s`，rc=0（同一棵树两次调用尾部一致，另一时点 `3.33s`）｜
+`DB 绝对路径` `sqlite:///./citynexus.db` → **`D:\...\lab\snap_0cd697b\backend\citynexus.db`**（由 app 自己解析后打印，`ai_enabled False`）
+
+**逐轮（A 组 4 轮 + B 组 3 轮，B 组加了断言原文捕获后重跑）**
+
+| 组·轮 | 干净（删库后第一遍） | 脏（沿用留下的行） | 判定 | 行数变化 |
+|---|---|---|---|---|
+| A1 | 7p/1f g3 **PASS** | 7p/1f g3 PASS | CONSISTENT_GREEN | 2→4 |
+| A2 | 7p/1f g3 PASS | 6p/2f g3 **FAIL** | **DIRTY_DB_FALSE_RED** | 2→5 |
+| A3 / A4 | 7p/1f g3 PASS | 7p/1f g3 PASS | CONSISTENT_GREEN ×2 | 2→4 |
+| B1 / B2 | 7p/1f g3 PASS | 7p/1f g3 PASS | CONSISTENT_GREEN ×2 | 2→4 |
+| B3 | 6p/2f g3 **FAIL** | 7p/1f g3 **PASS** | **DIRTY_DB_FALSE_GREEN** | 2→4 |
+
+翻转的那一条断言就是幂等本身：`FAILED …test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation`（B3 干净遍）。
+⇒ **我的建议（不改任何人的东西，只报读数）**：这条门当常驻用时**"跑几遍取并集"必须写进规格里**——按我现在 2/7、F 自报 2/4 的检出率，单次跑约七成概率放过；且两次的方向配比不同，**"脏库只会喂绿"这句话不该写成断言**。
+**一条与翻转无关的稳定红**：`test_g5_an_ai_run_that_changed_must_say_which_it_was` 在 **14/14 个遍**（7 轮 ×2 遍）都 FAILED，干净库脏库都一样 ⇒ 按仲裁给的第二判据这是 `CONSISTENT_RED` 家族，**真红、不是仪器问题、不许叫 flaky**；它是否已在 11 条红集合里我没查（那是 B/F 的账），只报"这只文件里它有且稳定"。
+**我自己的一处证据管理错（已修）**：A 组的 JSON 被 B 组以**同一文件名覆盖**了一次（脚本按 `head` 命名）⇒ A 组现在只有控制台原文可凭，我把它逐行存进了 `lab\evidence\ORD0210_REPRO_d291c9dc.md`；脚本已改成文件名带**轮数＋时刻＋`--tag`**，重跑不再互相盖。`lab\evidence\ord0210_repro_0cd697b.json` 是 **B 组 3 轮**那一份。
+
+`EXP-HARNESS-007`（同树 `0cd697b`，进程内、零端口、零 DB、无 provider）：
+- **约束层不挡这六个码**：给 `SLOW_PACE / QUIET_ENVIRONMENT / INDOOR_PREFERRED / SENSORY_LOW_STIMULATION / STROLLER / LARGE_LUGGAGE` 各造一份 `severity=HARD` 载荷，`capability_constraints()`（`capabilities.py:901-925`，**只按 severity 过滤、不看 class**）**6/6 都出 1 条 `kind=HARD` 行**，`canonicalize_capabilities` **一条都不降级**（`HARD` 原样保留）。
+- **所以"用户怎么说都抬不上去"完全落在解析器**：`:817-828` 那六行 `add(code, params)` **从不传 severity** ⇒ 四条恒 `SOFT`、两条恒 `STRONG`（`STROLLER`/`LARGE_LUGGAGE`），而 `capability_constraints` 只收 HARD ⇒ 永远 0 行。
+- **但别把它读成"改一个参数就好"**：我按"谁真的读这个码"数了一遍（`grep -rn <CODE> app`，剔掉 `app/capabilities.py` 自己）——`SLOW_PACE` **0 个文件**；`QUIET_ENVIRONMENT`/`INDOOR_PREFERRED`/`SENSORY_LOW_STIMULATION` 只有 `mock_replan_engine.py`；`STROLLER` 与 `LARGE_LUGGAGE` **有 `feasibility.py`（分别 4 次 / 3 次命中）**。`feasibility.py` 对前四个码**命中 0 次**。
+  ⇒ 分层结论：**行李/婴儿车 = 有读者、缺 severity（一参数之差）；慢节奏/安静/室内/低刺激 = 既缺 severity 又缺读者**。控制组 `STEP_FREE_REQUIRED`/`AVOID_STAIRS`/`MAX_WALKING_PER_LEG_M` 三者在 `feasibility.py` + `mock_replan_engine.py` 都有，且解析器能真给 HARD。
+- 口径：**0 处产品码改动**。这两层是不是"设计如此"（软偏好本来就不该挡路）请仲裁说一句话；我这边能给的只是"哪一层缺什么"。
+工件：`lab\evidence\soft_code_ceiling_0cd697b.json` ＋ 脚本 `lab\tools\harness_soft_code_ceiling_007.py`、`harness_ord0210_repro.py`。
+
+**拆干净（本轮实测）**：`lab\snap_0cd697b\backend\citynexus.db` / `-wal` / `-shm`（847 KB + 32 KB）**已删，删后回验剩 0 个文件** ⇒ 不给下一次留脏库（这正是 ORD-0210 要的库卫生）；`netstat` 实读 **我这边 LISTENING=0**（`:853x` 一个不剩，上一轮拆的没复活）；`du -sm lab` = **86 MB**；`df -B1M /d` 可用 **20,310 MB**。
+**未做**：未跑突变；未放宽/未跳过任何断言；未改 SUITES；未改 F 的门、未改靶子、未改 `conftest`、未换任何人的库策略；未写权威树与 `CityNexus\**`（只 `git archive` 单向导出）；未碰 `_live.db`/`_preview.db`（删除函数按文件名硬拒＋要求绝对路径落在我 lab 内）；未调真 provider；未建 junction。
+
+### d291c9dc HARNESS · **把 ORD-0210 的成因改一句话** 2026-09-22T15:18+08（续我 15:07 那块；甲落地后立刻重测）→ 在 `952ec40`（含 C 的 ORD-0211 每进程临时库）上重跑同一件靶子 **6 轮×2 遍**：**共享库文件 0 个**（`<树>/backend/citynexus.db*` 跑前跑后都是 0，甲确实切断了跨运行喂数据），**可判定还是翻了 3/6 轮，且两向都有**；⇒ **"脏库喂绿"不是这条靶子的主成因，它至少一半是并发时序**。附带一条会影响别人读收据的仪器坑：**`pytest -q` 会吃掉 `pytest_report_header`，ORD-0211 那行"resolved=…"就打印不出来**——我第一次重跑正是用 `-q`，所以什么也没捕到，去掉 `-q` 才拿到路径
+
+**⑴ 前后对照（同命令、同靶子、不同尖）**
+
+| 尖 | 库策略 | 轮数 | 把行留给下一遍 | 靶子判定翻转 |
+|---|---|---|---|---|
+| `0cd697b`（甲之前） | 共享 `sqlite:///./citynexus.db` | 7 | **7/7**（`catalog_hydration_operations` 2→4，一轮 2→5） | **2/7**（1 假绿 1 假红） |
+| `952ec40`（甲之后） | 每进程 `cnx_pytest_*/suite.db` | 6 | **0/6**（树内 0 个 db 文件） | **3/6**（`after211` 2 次、`sharedstate` 1 次；两向都有） |
+
+⇒ 我的读法（不下结论的口吻）：**通道换了，抖动没换，甚至更明显**。样本还小（13 轮），不足以说"甲让情况变坏"；但足以说**"干净库/脏库两遍不同 ⇒ 脏库喂的"这条推理在 `952ec40` 上已经站不住**——现在两遍根本不用同一个库，不同照样翻。
+所以 F 的门在甲之后需要多一个判据：**两遍的 `resolved=` 路径相同**才允许叫 `DIRTY_DB_FALSE_*`；路径不同还翻，就该具名 **`FLIP_WITHOUT_SHARED_STATE`（时序/并发）**。我已把这一条实现进自己的量具（`harness_ord0210_repro.py` v3：捕 `ORD-0211 test database` 行、比较两遍路径、按是否共享库改名判定），**0 处产品码/0 处别人的门改动**。
+
+**⑵ 一条给所有车道的仪器坑（我今天亲踩，两次）**
+`pytest -q` **不打印 report header** ⇒ 任何"按 ORD-0211 把解析后的绝对库路径写进收据"的做法，**命令里带 `-q` 就拿不到那行**。证据：同一条 `tests/test_qoder_anywhere_gates.py`，带 `-q` 捕到 0 行、不带 `-q` 捕到
+`ORD-0211 test database: resolved=C:\Users\…\AppData\Local\Temp\cnx_pytest_084q19li\suite.db | exists=False | declared_by=conftest temp dir`。
+⚠ 顺带一句给 F（不是挑错，是对表）：你 14:53 收据里的命令是 `pytest … -q --tb=no`，那你的路径多半来自 `app.core.config` 而不是这一行——两者在甲之前等价，**甲之后就不等价了**（config 仍报 `./citynexus.db`，实际开的是 temp）。我这边不改动你任何东西，只把这个不等价摆出来。
+
+**⑶ 稳定红（甲之后仍然稳定）**：`test_g5_an_ai_run_that_changed_must_say_which_it_was` 在 post-甲 **12/12 遍**全部 FAILED（6 轮×2 遍，两份收据里逐遍可点），与库状态、与 `-q` 都无关。**分母要说清**：pre-甲 那 7 轮里每一遍都恰好有 1 条稳定失败（计数级 14/14），但**只有我加了断言捕获之后的 6 遍记了 nodeid**（那 6 遍都是 g5），前 8 遍当时只记计数 ⇒ 我不把它凑成"26/26 指名"。按仲裁第二判据是 `CONSISTENT_RED`（真红，不是仪器问题、不许叫 flaky）。它归谁修我没查（B/F 的账）。
+
+**⑷ 一条卫生观察给 C（不是缺陷申诉）**：`conftest` 每进程 `tempfile.mkdtemp(prefix="cnx_pytest_")` 且**没有 rmtree**，我 3 轮×2 遍**正好新增 6 个目录**（`before=16 → after=22`），`%TEMP%` 下现在 **22 个目录 / 22 MB**（`du -csm` 实读）。单进程量级小，但套件常被反复整体跑，会不会堆起来只有 C 知道该不该收。我**没删**——分不清哪些是我这 6 个之外的（别的车道也在跑），要清我可以只按 mtime 挑我窗口内那 6 个。
+
+**⑸ 我撤回自己一处命名**：`…_3r_1511_after211.json` 那份是在还不知道"两遍不同库"的情况下产出的，它的 `DIRTY_DB_FALSE_GREEN/RED` **标签在新尖上名不副实**（数据有效、名字错）。修正版是 `…_3r_1513_sharedstate.json`（带 `shared_db=false` 与 `FLIP_WITHOUT_SHARED_STATE`）。两份都在，别引用前一份的判定名。
+
+**⑹ 与我有关的一条已闭环（但我不签"已验证"）**：`952ec40` 的提交说明是 **"the demo entry addresses the sealed journey instead of creating one (ORD-0209)"**——正是我 14:1x 那块 EXP-HARNESS-005 的点。我**没有在浏览器里复测**（要再真复制一次 409 MB `node_modules` 才能跑那套 UI 仪器），所以这条我只写到"提交说明声称修了"；**要真复测我就重起栈、跑同一条 `harness_sealed_entry_audit.py`，量 3 件事：还发不发那 3 条 POST、封存条 `22222222…` 是否被 request URL 寻址、Today/Wallet 是否还是空**。谁要我补这一枪说一句即可。
+
+**收尾**：本轮**未开任何端口、未起任何 HTTP 服务、未调真 provider**（两个 key 变量显式清空；`conftest` 自己还会清 provider 环境）；**未发 `demo/reset`**（进程内 pytest 门，我另外也没点过它）；未碰 `_live.db`/`_preview.db`（我的删除函数按文件名硬拒 + 要求路径落在我 lab 内）；未写权威树与 `CityNexus\**`；未跑突变；未放宽任何断言。
+两份新导出各 350 文件（`lab\snap_0cd697b`、`lab\snap_952ec40`），**树内 `citynexus.db*` 均为 0**；`lab` 占用与 D: 余量见账本上一块与本轮回报。
