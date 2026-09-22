@@ -1,0 +1,16 @@
+source_sha      b41b4cce0e4143068bef216d96e2eab4a4116056  (b41b4cc)
+parent_sha      25165d9e193b61ba9751f946272d555543cf0444  (= 25165d9)
+subject         test(frontend): per-surface before/after readings for the wizard hint, and bytes_changed in the kill receipts (ORD-0221)
+authored        2026-09-22 19:02 +0800
+tree            D:\moodle\_qoder_integration_20260919 (a git repository; this lane's working tree)
+interpreter     Node/Playwright for the gates; D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14 for the runner
+
+commands that produced the readings quoted in this folder:
+  python review/run_spec.py "e2e/qoder-wizard-hint-surface-readings.spec.ts" 4532 --config playwright.prod-gate.config.ts
+  python review/run_spec.py "e2e/qoder-wizard-hint-surface-readings.spec.ts" 4534 --config playwright.prod-gate.config.ts
+  KILL_PORT=4536 python review/ord0082_0087_kill_drivers.py killU1-... killU2-... killV1-...
+  python review/verify-ord0221-evidence-surface.py
+
+git status --short -- frontend at run time: (empty; this commit covers frontend/src and frontend/e2e)
+external audit note: the working tip is never pushed by this lane, so a bare SHA in the ledger is not
+resolvable on GitHub (50b35e0 answers 422). These blobs are the readable coordinates.

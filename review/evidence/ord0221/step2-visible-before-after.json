@@ -1,0 +1,51 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0221 ③",
+  "head": "b41b4cce0e4143068bef216d96e2eab4a4116056",
+  "method": "per-element textContent + the element's own box; body innerText is never used",
+  "before": {
+    "selector": "[data-testid=\"trial-required-hint\"]",
+    "exists": true,
+    "text": "还需要填写：总预算",
+    "rect": {
+      "top": 1224,
+      "height": 85,
+      "width": 350
+    },
+    "visuallyRendered": true,
+    "insideSrOnly": false,
+    "inViewport": false,
+    "computed": {
+      "visibility": "visible",
+      "display": "block",
+      "opacity": "1"
+    }
+  },
+  "after": {
+    "selector": "[data-testid=\"trial-required-hint\"]",
+    "exists": false,
+    "text": "",
+    "rect": null,
+    "visuallyRendered": false,
+    "insideSrOnly": false,
+    "inViewport": false
+  },
+  "nextAriaDisabledAtBefore": "true",
+  "liveRegionsAfter": [
+    {
+      "selector": "#trial-next-reason",
+      "exists": true,
+      "text": "",
+      "rect": {
+        "top": 1223,
+        "height": 1,
+        "width": 1
+      },
+      "visuallyRendered": false,
+      "insideSrOnly": true,
+      "inViewport": false
+    }
+  ],
+  "publishedBy": "e345b9d6 for ORD-0221 3/4",
+  "visibility_rule": "each reading is one element's own textContent plus its own box; body innerText is never used, and a .v8-sr-only region is reported as insideSrOnly=true and visuallyRendered=false"
+}
