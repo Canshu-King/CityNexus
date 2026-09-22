@@ -78,6 +78,11 @@ def run_once(shared, backend: Path, argv: list[str], nodeid: str) -> dict:
     err_text, err_codec = shared.decode_child_text(proc.stderr or b"")
     path, path_source = shared.parse_resolved_path(out_text, err_text)
     nodeids_in_command = [a for a in argv if "::" in a or a.endswith(".py")]
+    raw_outcome = shared.node_outcome_from_exit(
+        proc.returncode, run_shape=shared.SINGLE_NODE, nodeids_in_command=nodeids_in_command)
+    counts = shared.summarize_pytest_counts(out_text or err_text)
+    node_outcome, corroboration = shared.corroborate_node_outcome(
+        raw_outcome, run_shape=shared.SINGLE_NODE, counts=counts)
     return {
         "argv": argv,
         "exit_code": proc.returncode,
@@ -87,8 +92,12 @@ def run_once(shared, backend: Path, argv: list[str], nodeid: str) -> dict:
         "resolved_absolute_db_path": path,
         "path_source": path_source,
         "nodeids_in_command": nodeids_in_command,
-        "node_outcome": shared.node_outcome_from_exit(
-            proc.returncode, run_shape=shared.SINGLE_NODE, nodeids_in_command=nodeids_in_command),
+        # F 801e90b: a skipped test exits 0, so the exit-derived outcome MUST be corroborated by
+        # the pytest summary counts; otherwise ten skipped runs would read STREAK_MET(10).
+        "raw_node_outcome": raw_outcome,
+        "node_outcome": node_outcome,
+        "outcome_corroboration": corroboration,
+        "pytest_counts": counts,
         "initial_row_counts": {"path_did_not_exist_before_this_run": None},  # filled below
         "final_row_counts": {},
         "temp_dirs_before_this_run": sorted(before_dirs),
