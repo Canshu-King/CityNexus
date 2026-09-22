@@ -1366,6 +1366,20 @@ def capability_fingerprint(
     return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:32]
 
 
+def pending_request_fingerprint(query: str) -> str:
+    """The key an *unnamed* destination is filed under - computable before a provider is asked.
+
+    Deliberately the same expression `identity_fields()` stores (see the
+    `capability_fingerprint(None, resolver_query_normalized=…)` call above), so a lookup by this key
+    can only ever reach a job that is itself waiting on an unnamed destination: a job that resolved
+    is keyed by its canonical id and is unreachable from here.  Normalised and namespaced exactly
+    like the stored value, and still **not** an identity - it says "the same open question", never
+    "the same place".
+    """
+
+    return capability_fingerprint(None, resolver_query_normalized=_normalise(query))
+
+
 def fingerprint_parts(
     canonical_destination_id: str | None,
     *,

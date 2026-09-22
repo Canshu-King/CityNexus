@@ -47,6 +47,7 @@ from app.anywhere_capability import (
     audit_evidence,
     identity_fields,
     pending_correlation_key,
+    pending_request_fingerprint,
     resolve_destination,
 )
 from app.db.models import CatalogHydrationOperation, Place, RealPlaceCandidate
@@ -438,6 +439,28 @@ def submit_operation(
     index - not a process-local lock - is what makes one of the two the winner, whose id the
     loser reads back and reports.
     """
+
+    # ORD-0213 weak fix (commander released 00:5x): ask the store before asking the world.
+    #
+    # What this buys: a repeat of a question that is *already being answered* costs one
+    # resolution, not two.  Before this line the key existed only after `resolve_destination`
+    # returned, so every duplicate request paid the provider/catalog pass and then arrived at a
+    # reuse check that could only see work already committed - which is §7's "provider 调用不得因
+    # 并发而翻倍" left unguarded.
+    #
+    # What it deliberately does NOT buy: a job that has already reached a terminal status is still
+    # answered with a **new** job (the signed tail-A rule), so this does not close ORD-0213/g3 - the
+    # door's own preceding single request can still finish before its five arrive.  Nobody may read
+    # this line as that closure.
+    #
+    # Why it cannot merge two different places: this key is what an *unnamed* destination is filed
+    # under; a job that resolved is keyed by its canonical id, which `pending_request_fingerprint`
+    # cannot produce.  And `ABANDON_REQUESTED` is excluded on purpose - that job is heading to
+    # ABANDONED because a traveller walked away, and joining it would strand the newcomer behind a
+    # job nobody is waiting for any more.
+    in_flight = find_open_operation(session, pending_request_fingerprint(query))
+    if in_flight is not None and str(in_flight.status) in (QUEUED, RUNNING):
+        return in_flight, True
 
     resolution = resolve_destination(session, query)
     fingerprint = capability_fingerprint(
