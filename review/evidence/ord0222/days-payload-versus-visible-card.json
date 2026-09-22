@@ -1,0 +1,80 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0222 ②",
+  "journeyId": "dfd9378f-cda5-4fe5-b9a8-eec442c23f62",
+  "rawDays": [
+    {
+      "label": "Friday · 09 Oct",
+      "date": "2026-10-09",
+      "anchor": "ARRIVAL",
+      "mode": "TRANSIT",
+      "activities": [
+        "Arrival",
+        "Check in · Haihe Riverside Hotel",
+        "Overnight · Haihe Riverside Hotel"
+      ]
+    },
+    {
+      "label": "Saturday · 10 Oct",
+      "date": "2026-10-10",
+      "anchor": "STAY",
+      "mode": "TRANSIT",
+      "activities": [
+        "Five Great Avenues",
+        "Tianjin Museum",
+        "Tianjin Eye",
+        "Overnight · Haihe Riverside Hotel"
+      ]
+    },
+    {
+      "label": "Sunday · 11 Oct",
+      "date": "2026-10-11",
+      "anchor": "DEPARTURE",
+      "mode": "AUTO",
+      "activities": [
+        "Check out · Haihe Riverside Hotel",
+        "Departure"
+      ]
+    }
+  ],
+  "visibleCards": [
+    {
+      "heading": "星期五",
+      "activities": "Arrival · Check in · Haihe Riverside Hotel · Overnight · Haihe Riverside Hotel",
+      "modeAnchorRow": "公交地铁 抵达锚点"
+    },
+    {
+      "heading": "星期六",
+      "activities": "Five Great Avenues · Tianjin Museum · Tianjin Eye · Overnight · Haihe Riverside Hotel",
+      "modeAnchorRow": "公交地铁 住宿锚点"
+    },
+    {
+      "heading": "星期日",
+      "activities": "Check out · Haihe Riverside Hotel · Departure",
+      "modeAnchorRow": "驾车 离开锚点"
+    }
+  ],
+  "sourceOf": {
+    "Check in": [
+      {
+        "day": 1,
+        "inLabel": false,
+        "inActivities": true
+      }
+    ],
+    "Overnight": [
+      {
+        "day": 1,
+        "inLabel": false,
+        "inActivities": true
+      },
+      {
+        "day": 2,
+        "inLabel": false,
+        "inActivities": true
+      }
+    ]
+  },
+  "boundary": "mode/anchor are client enums and are mapped here; `Check in`/`Overnight` arrive inside `options[].days[].activities[]` as server-authored display strings, and the weekday arrived in `days[].label`. The weekday is a form and is now rendered from `days[].date`; the activity titles are content and are handed to the plan projection rather than rewritten in the client.",
+  "publishedBy": "e345b9d6 for ORD-0222"
+}

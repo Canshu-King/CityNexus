@@ -1,0 +1,22 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0222 2",
+  "perScreen": {
+    "hub": {
+      "accessible": "菜单 / 今天 跟随系统 EN TI 晚上好 天津之旅 10月9日 18:00 — 10月11日 15:00 · 1 位旅行者 · 3 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Arrival 接下来 18:45 Check in · Haihe Riverside Hotel 今天还有 3 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月9日 18:00 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 7 8 9 路线上下文 8 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 住宿 Haihe Riverside Hotel 到达 10月9日 18:00 出发 10月11日 15:00 一切正常 方案概览 每一天，紧密相连。 对比住宿 → 第 1 天 星期五 Arrival · Check in · Haihe Riverside Hotel · Overnight · Haihe Riverside Hotel 公交地铁 抵达锚点 第 2 天 星期六 Five Great Avenues · Tianjin Museum · Tianjin Eye · Overnight · Haihe Riverside Hotel 公交地铁 住宿锚点 第 3 天 星期日 Check out · Haihe Riverside Hotel · Departure 驾车 离开锚点 今天 行程 地图 Copilot 我的 打开导航 Theme: following the system. Choose light, dark, or back to system. Switch language 行程地图 Map Arrival Check in · Haihe Riverside Hotel Overnight · Haihe Riverside Hotel Five Great Avenues Tianjin Museum Tianjin Eye Overnight · Haihe Riverside Hotel Check out · Haihe Riverside Hotel Departure 需要关注 Mobile navigation 模拟舞台（舞台上有场景）：教学模拟舞台 · 屏幕上的“现在”由服务器给定：2026-10-09 18:00 +08:00",
+      "hits": [],
+      "nodes": 85
+    },
+    "live": {
+      "accessible": "菜单 / 实时行程 跟随系统 EN TI 实时行程 · 已保存 9月22日 20:22 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 Arrival 下一步 · Check in · Haihe Riverside Hotel · 驾车 · 12 min 18:00 1 2 3 4 5 6 7 8 9 路线上下文 8 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 当前没有需要你决定的调整。 更新位置 报告降雨 下一段路程方式 选择平稳路线 步行 骑行 公交地铁 驾车 网约车 对比所有方式 下一步 · 最晚出发 Check in · Haihe Riverside Hotel 10月9日 18:45 前到达 · 余量 121 分钟 18:45 预计到达 · 驾车 开始导航 → 风险 低 · 路线证据有效 证据 供应商路线、时效、费用和可行性 路线证据 对比 驾车 12 分钟 · 步行 2 分钟 ¥12.00 骑行 19 分钟 · 步行 5 分钟 ¥6.00 供应商事实 · 未知费用不会被视为零 实时状态 当前正在发生什么 刚刚更新 时钟 08:23 PM Asia/Shanghai 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录 无网络观察具有权威性。搜索证据仅在服务端采集后出现。 今天 行程 地图 Copilot 我的 打开导航 Theme: following the system. Choose light, dark, or back to system. Switch language 行程地图 Map Arrival Check in · Haihe Riverside Hotel Overnight · Haihe Riverside Hotel Five Great Avenues Tianjin Museum Tianjin Eye Overnight · Haihe Riverside Hotel Check out · Haihe Riverside Hotel Departure Rain detected Mobile navigation",
+      "hits": [],
+      "nodes": 95
+    },
+    "map": {
+      "accessible": "菜单 / 地图 跟随系统 EN TI 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 1 2 3 4 5 6 7 8 9 路线上下文 8 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 下一段路程 Check in · Haihe Riverside Hotel 驾车 12 分钟 · 步行 2 分钟 ¥12.00 骑行 19 分钟 · 步行 5 分钟 ¥6.00 网约车 14 分钟 · 步行 2 分钟 — 未知费用保持未知。 今天 行程 地图 Copilot 我的 打开导航 Theme: following the system. Choose light, dark, or back to system. Switch language 行程地图 Map Arrival Check in · Haihe Riverside Hotel Overnight · Haihe Riverside Hotel Five Great Avenues Tianjin Museum Tianjin Eye Overnight · Haihe Riverside Hotel Check out · Haihe Riverside Hotel Departure Mobile navigation",
+      "hits": [],
+      "nodes": 55
+    }
+  },
+  "publishedBy": "e345b9d6 for ORD-0222"
+}
