@@ -9662,6 +9662,54 @@ status: ORD-0208 **DONE@2026-09-22T14:2x+08 by e345b9d6**（提交 `fab8cb8`＋`
 evidence: `frontend/e2e/qoder-speaks-the-travellers-language.spec.ts`（新，四节点）、`review/evidence/ui-overnight/ord0208-{clock-sentence,chips,defaults,day-card}.json`＋四图、`review/killS*.log`、`review/tsc-0208*.txt`、`review/add-ord0208-mutants.py`；改动 `V8Experience.tsx`、`JourneyTrialSetup.tsx`、`styles.css`、`qoder-today-follows-the-stage.spec.ts`、`qoder-wizard-speaks-human-and-survives-reload.spec.ts`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## ORD-0209 @2026-09-22T14:2x+08 —— 仲裁已裁：**"使用封存的天津演示"必须只读寻址封存 journey**（EXP-HARNESS-005 的修法）
+
+- id: ORD-0209
+  to: e345b9d6
+  priority: high
+  if_head: 0cd697b
+  order: |
+    **裁决原文（总线 `5772122180` @ 14:26+08）：要。入口改成只读寻址封存 demo journey，不再 POST 新建 traveler/journey。**
+    冻结边界（照录，逐条都要有证据）：
+    1. 点击入口 ⇒ **只从 server-owned `/demo/scene` 取当前封存 `journey_id`**（**不要**在前端硬编码 `22222222…`）；
+    2. ⇒ 选择／导航到该 journey；
+    3. ⇒ **入口动作本身 0 新增 Traveler、0 新增 Journey**；
+    4. ⇒ 不触发 `demo/reset`、不 reseed；
+    5. ⇒ 若 `/demo/scene` 当前**没有**可用封存 journey：给**具名、可恢复**的 fail-closed 状态，
+       **不得**退回到"静默 POST 新建"当兜底。
+    仲裁同时钉住两条容易被绕过去的：
+    - **不许**只把按钮文案改成"新建一份天津演示副本"来掩住现有行为（那是把谎言改成诚实，却没修污染）；
+    - "入口只读"≠"整个 Demo 只读"：进入之后 advance／booking／interruption／replan 这些**显式 demo-owned 动作**
+      继续受既有 demo ownership／R13／`PREVIEW_GUARDED` 约束，本单**不动**那一层。
+
+    **现场已经具备服务端条件，我量过**（13:20 我恢复预览后端后打的是带鉴权的真请求）：
+    `GET /api/v1/demo/scene` ⇒ 200，体里就是 `{"demo_mode": true, "journey_id": "22222222-…", "journey_status": "AC…"}`
+    ⇒ 这单**应该是前端一笔改动**，不需要 C 新增端点；如果你发现需要，先在账本具名说明为什么。
+    现在的错误链我已在 `0cd697b` 上逐跳核过（写进 EXP-HARNESS-005 的根因段）：
+    `LocaleContext.tsx:699` 文案 → `JourneyTrialSetup.tsx:1165` `onClick → onUseTianjinDemo()` →
+    `V8Experience.tsx:1261` `onUseTianjinDemo={createTianjinDemo}` → `:729` 体内只有
+    `POST /api/v1/travelers`（+5）与 `POST /api/v1/journeys`（+13），**全链没有一次寻址封存 journey**。
+
+    **验收形状（缺一项我就不签）**：
+    - 一条断言读**渲染文字**（入口点完之后屏上出现的是那趟封存行程，而不是一份新行程）；
+    - 一条**网络层计数**：整个入口点击期间 `POST /api/v1/travelers == 0` 且 `POST /api/v1/journeys == 0`
+      （这是这条缺陷的承重位，光看 UI 变化证明不了"没偷偷建"）；
+    - 一条无封存可用时的 fail-closed 读数（具名状态 + 人话 + **没有 POST**）；
+    - 一个突变反例：**把实现改回 `POST` 新建，门必须红**（锚点用 `live_checks/mutation_anchor_guard.py`，
+      它机械拒绝"0 命中"和"字节没变"两种假判定——今天差点骗过我的就是这两种）。
+    复现率口径沿用 HARNESS：**6/6 次点击**都在建新的，所以改完请给"点 3 次 ⇒ 计数仍 0/0"的读数，而不是一次成功。
+    ⚠ 顺手拆掉我自己刚才差点写下的一条**假因果**：HJ-P1 副本库里 journeys 从 31 涨到 38，
+    **不能**算成这个入口造成的污染——它自己逐轮记了"建了几趟 ⇒ 行数差严格相等（+2/+2）"，那些增量是它**故意建的**。
+    这个入口会偷偷建行的证据只有两条：HARNESS 的 6/6 次实测，和我在 `0cd697b` 上读到的调用链（只有两个 POST）。
+    引用时请只引这两条。
+  status: DISPATCHED@2026-09-22T14:2x+08 by 494abfd7（裁决＝仲裁 `5772122180`）
+
+### 与两条待决的关系（免得车道互相等）
+- **门口校验题（锚点解析不出来照样能建行程）** 我已按你的两栏问法发给仲裁（甲＝门口拒／乙＝允许建但强制归因），
+  没回之前 D 只动 ② 里那条"入口不建"的，不去碰锚点校验。
+- **偏好硬声明没接线**（`capabilities.py` 那几个 `add()` 从不传 severity）已给 C 第一步；
+  "要不要听懂『走不快』"这种**扩词表**的问题我原样转给仲裁了，不替产品定。
+
 ## commander 根因补一层 @2026-09-22T14:2x+08 —— HARNESS 的 `EXP-HARNESS-004/004b` 我核了，**机制比"措辞没命中"更硬：那四个"偏好码"根本不查硬声明标记**
 
 ### 我在 `0cd697b`（当前 working tip）上读到的（零写入，只看代码）
@@ -10827,6 +10875,19 @@ DELIVERED: ORD-0201（① 隔离回执 preflight JSON ② 计数字段） | 回�
 **程序**：merge `2c2621e` 与 commit `6cb9298` 后 `git status` 干净；D 盘 16 GB；无 checkpoint、无 reset；未 push。
 
 DELIVERED: ORD-0202·第二步（B 的七件） | 报告 `_qoder_spike_20260921/ORD_0202_STEP2_B_SEVEN.md` | 代码 `6cb9298`（分支 `agent/canary-ord198-20260922`，含 merge `2c2621e`；未 push） | 复跑：`pytest tests/test_qoder_anywhere_discovery_truth.py tests/test_qoder_anywhere_matrix_truth.py tests/test_qoder_anywhere_provider_truth.py tests/test_qoder_city_failure_reasons.py -q`（discovery 7/7、matrix 9/11、provider 33/34、failure_reasons 1 缺陷矛盾） | blocker：g14a/g14c 的 premise 裁决 + 矛盾断言归 C（两处我都停手）
+
+#### (SESSION=c01d72a3) ORD-0202·第三步（三格新红 + g10 残留）@14:4x（Python 生成时间戳 14:27:41+08）—— **零新增产品码；两格新红证明为"门的 premise 与 g14b 分片互斥"（需仲裁重新参数化，附 fail-closed 实质未退化的正向证明），一格是 C 的断言编码了旧塌缩（与 g11 逻辑互斥）；g10 的 B 半边已齐、残留在 C 的 0191 流程**
+
+**坐标**：树/分支/工作 tip 未变（`agent/canary-ord198-20260922` @ `6cb9298`）；本步 `git status` 干净、零产品码改动；所有读数为隔离单跑（3.12.14）。报告 `_qoder_spike_20260921/ORD_0202_STEP3_THREE_NEW.md`。
+
+**① g14a/g14c：互斥证明（不需跑，逻辑封闭）**
+g14a（N=11）要求 `status=FAILED`＋`error_type=ValhallaProviderError`＋`facts=[]`＋**`len(matrix_requests)==1`**（`test_qoder_anywhere_matrix_truth.py:392-396` 原文"第一片就被拒"）；g14b（N=20）要求全部请求 ≤100 cells＋`status=CAPTURED`＋20×19×2 组合逐格在案。任何满足 g14b 的产品对 N=11 必然分片 ⇒ 假 provider 全 200 ⇒ CAPTURED ⇒ g14a 四断言同假；任何满足 g14a 的产品对 N=20 只能拒绝 ⇒ g14b 必红。**不存在同时满足两者的确定性行为。** 但"超标 fail-closed 且不造事实"的**实质没退化**，正向证明（模拟 provider 在分片中途拒一片、与文案无关）：N=20、第 2 片 400 ⇒ `status=FAILED · error_type=ValhallaProviderError · facts=0 · route_provenance=NONE · time_basis=NOT_CAPTURED`。⇒ **请仲裁把 g14a/g14c 重新参数化**（最小改法：probe 拒"某一片"而非按 cells 拒），两条门断言我一行没动。
+
+**② city_failure_reasons::test_a_live_failure…：不是退化，是断言编码了旧塌缩**
+红在 `:196`（`_status_error(500) ⇒ PROVIDER_BAD_RESPONSE`，我返 `PROVIDER_SERVER_ERROR`）；同文件 `:217`（502 ⇒ 同码）同题。"具名＋阶段"都还在（`fallback_reason` 仍是 `LIVE_FAILURE_REASONS` 成员、`failure_stage=category_search` 不变）——变的是映射**变细**。它与 `provider_truth::g11`（六形状六码，你派给我的件）**逻辑上不能同时成立**：C 的这 3 行断言要不要跟六码走，请拍板。我一行没改。
+
+**③ g10 残留：B 半边交齐，剩 C 的 0191 流程**
+已交：capability `places[]` 投影（id/source_provider/source_identity/osm_type/name/category/lat/lon）；node 中心点本来就在物化（`real_city.py:748-752` 读 `row.get("center")`）。实测把缺口钉到流程：`POST /catalog-hydrations {query:贡山县}`（resolver 腿开）⇒ 202；4 s 后 capability ⇒ `canonical=OSM:R:2729765 / resolution=provider / place_count=0 / places=[]`——**provider 命名成功但作业侧没有 journey 就没有物化**（`materialize_candidates` 挂 journey 下）⇒ 目录零行 ⇒ 投影无从投影。这就是 0191 的"hydration 对 provider 命名的目的地落目录、不需 journey"。我的半边有正向证明：短名+真目录时投影正常（0198 交付 `?query=CN-GONGSHAN` 曾返回 6 行 provider places，同一投影代码）。另：g10 用全名撞 exact-name ⇒ `provider_no_match`，同一裁决点。
 
 - id: ORD-0202
   to: 8c66aa92
