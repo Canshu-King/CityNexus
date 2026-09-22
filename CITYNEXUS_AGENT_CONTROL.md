@@ -191,6 +191,8 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### d291c9dc HARNESS · EXP-HARNESS-004/004b @2026-09-22T14:24+08 → 措辞分母 64×8：**`SLOW_PACE` 0/8、控制族里也有一句（「必须完全无台阶」）0 码 0 行**；正对照钉死机制：**`SOFT_CODES`+`CONTEXT_CODES` 共 6 个码在任何措辞（含「必须」「硬性要求」）下都产 0 条约束行**，能进门的只有 `HARD_ACCESSIBILITY_NEED` ⇒ 与 HJ-P4「两句原话产出同一方案」在机制上对上；⚠ 只测确定性路径，端到端那半句请 HJ/B 签。完整版在文件末尾同标题块
+
 ### d291c9dc HARNESS 检查点 @2026-09-22T14:18+08 → 13:3x 令的六面**真跑在浏览器里**：12/12 面 reached、**10/12 operable（真控件＋读数必须变）**、剩两格给了归因而非口号；**头条 EXP-HARNESS-005：入口按钮写着「使用封存的天津演示」，6/6 次实测它 POST 新 traveler＋新 journey＋跑一次 solver，而封存 journey `22222222…` 从未被任何 request URL 寻址（只出现在 `/demo/scene` 响应体里）**；常驻门在新尖 `66cad62` **RC=0 / IDENTICAL / 320 比 1152**
 
 **登记说明**：完整版在本文件末尾同一标题的块里（含表格、坐标、我这两处仪器自纠与合规自查）。本轮无新 ORD 号，按 @13:3x「HARNESS 改令」§1 执行。
@@ -9660,6 +9662,47 @@ status: ORD-0208 **DONE@2026-09-22T14:2x+08 by e345b9d6**（提交 `fab8cb8`＋`
 evidence: `frontend/e2e/qoder-speaks-the-travellers-language.spec.ts`（新，四节点）、`review/evidence/ui-overnight/ord0208-{clock-sentence,chips,defaults,day-card}.json`＋四图、`review/killS*.log`、`review/tsc-0208*.txt`、`review/add-ord0208-mutants.py`；改动 `V8Experience.tsx`、`JourneyTrialSetup.tsx`、`styles.css`、`qoder-today-follows-the-stage.spec.ts`、`qoder-wizard-speaks-human-and-survives-reload.spec.ts`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 根因补一层 @2026-09-22T14:2x+08 —— HARNESS 的 `EXP-HARNESS-004/004b` 我核了，**机制比"措辞没命中"更硬：那四个"偏好码"根本不查硬声明标记**
+
+### 我在 `0cd697b`（当前 working tip）上读到的（零写入，只看代码）
+
+```
+backend/app/capabilities.py
+ :70-71   _HARD_MARKERS = ("必须", …)        ⇒ 模块里**确实有**硬声明识别
+ :493     某函数 return any(marker in value for marker in _HARD_MARKERS)
+ :812-815 REST_EVERY_MIN / TOILET_BREAK_EVERY_MIN → add(..., severity="HARD" if hard else "STRONG")   ← 用了它
+ :817-829 STROLLER / LARGE_LUGGAGE / SLOW_PACE / QUIET_ENVIRONMENT /
+          SENSORY_LOW_STIMULATION / INDOOR_PREFERRED  → add(code, {"preferred": True})                 ← **压根不传 severity**
+ :821     if any(token in value for token in ("慢一点","慢速","slow pace","take it slowly"))            ← 4 个连续子串，与 HARNESS 报的一致
+ :53/:350-363  HARD_ACCESSIBILITY_CODES = {STEP_FREE_REQUIRED, AVOID_STAIRS}；default_severity(...) 只给这两族与 PHYSICAL_LIMIT 升级
+```
+
+⇒ **两层原因，不是一层**：
+1. **触发层**：字面连续子串匹配，所以「走不快／节奏放慢／慢慢走」全部 0 命中（HARNESS 的 `SLOW_PACE 0/8` 成立，我在 `:821` 逐字核过）；
+2. **定层（这条是新增的）**：即使用户**说对了词**，`SLOW_PACE / QUIET_ENVIRONMENT / SENSORY_LOW_STIMULATION / INDOOR_PREFERRED`
+   这几个 `add()` **从不传 severity，也不查 `_HARD_MARKERS`**，所以"必须／硬性要求"对这些码**结构上不可能**升成 HARD ⇒
+   HARNESS 量到的"正对照全 `SOFT` / rows=0，且原话带『必须』『硬性要求』"不是解析失灵，**是这套代码里那条通道没接线**。
+
+### 为什么它值得单独记：这是**用户说过一次的偏好被静默丢弃**
+`必须` 和 `硬性要求` 已经在这个模块里被当成硬声明使用（`:70` / `:493` / `:812-815`），
+所以"同一模块、同一句话、换个偏好码就降级"不是设计，是**接线遗漏**。
+这条也直接撞上用户优先级令 §2 里 **P4 的验收点**："验证硬偏好与软偏好的可见性与解释"。
+
+### 给 C 的第一步（ bounded，不扩）
+`backend/app/capabilities.py`：
+1. 让 `SLOW_PACE / QUIET_ENVIRONMENT / SENSORY_LOW_STIMULATION / INDOOR_PREFERRED` 这几条 `add()`
+   与 `:812-815` 一样**接受 `_has_hard_marker(value)`**（同一个函数、同一套标记，不新造词汇判断）；
+2. 各配一条门：`"我们必须慢速"` ⇒ 该码 severity 不是 SOFT 且**产出约束行**；`"慢速"`（无硬词）⇒ 仍是偏好、不成行；
+   两向都要（只测正向的那类门我这周已经吃过多次）。
+3. **触发词扩不扩（「走不快」算不算慢速）是产品决定**，我不替你定：先只把"说对了话却没接线"这条修掉，
+   扩词与否请连同 HARNESS 的 64×8 分母一起交给仲裁一句裁。
+
+### 记 HARNESS 两次自我收窄（这类行为要留档）
+它先把自己上一块 `no_code_extracted` 的定性**从"这一族"降级成"我那一句"**（同族换措辞 `avoid_stairs` 从 0 行变 3 行、
+`large_luggage` 从 0 码变 7 码），并明确**门不改判定、不放宽，只是引用它必须带措辞口径**；
+上一块的浏览器栈也在本块之后拆掉了（改纯进程内、AI=off、密钥导入前清空、provider 不可达、零 HTTP/端口/DB 打开）。
+⇒ 六面走查 12/12 reached、10/12 operable 之后连着两条分母化实验，**这条线现在是全车队产出产品缺陷最多的之一**。
+
 ## commander @2026-09-22T14:2x+08 —— 三件事：仲裁的分档我已执行｜**EXP-HARNESS-005 我独立证实了（读代码就够，无需点）**｜那台 fail-closed 锚点守卫我 Adopt 并做了双向反例
 
 ### ① 仲裁 `5772057778` 的分档（原样入账，全体引用时用这套词，不用净数）
@@ -21674,3 +21717,44 @@ Refreshed: 2026-09-21 15:0x (+08:00，`date` 实读) · LAST_ARBITER_COMMENT_ID 
 **未调真 provider**（非 localhost 请求 203 次全部拦下并计数）；未读 `_live.db` / `_preview.db`，未碰 `:4781/:4782/:8693`；端口只有我自己的 `:8531`/`:8532`；
 **未建任何 junction/symlink**（`node_modules` 走整份真复制，`islink=NO`）；
 **收尾承诺**：本块之后我停掉 `:8531`/`:8532` 两个进程、删掉我那份 `node_modules` 真复制，并把 `df -h /d` 前后差报上来；`lab/web_tip/evidence/` 这个我早期写错父目录留下的重影目录一并清掉（里面只有我自己这次的两份 JSON，搬进 `lab/evidence/` 之后删）。
+
+### d291c9dc HARNESS · `EXP-HARNESS-004` + `004b` 2026-09-22T14:24+08（接我上一块的"下一个"，已跑完）→ 把门里那句 `no_code_extracted` 从"我这一句话没命中"升成**措辞分母**：64 条自然说法 × 8 族，**`SLOW_PACE` 0/8**、`SENSORY_LOW_STIMULATION` 1/8、控制族里也有一句（「必须完全无台阶」）**0 码 0 行**；再用正对照钉死机制：**`SOFT_CODES`/`CONTEXT_CODES` 两族共 6 个码在任何措辞下都产 0 条约束行**（`必须`/`硬性要求` 也抬不动），能进门的一直只有 `HARD_ACCESSIBILITY_NEED`
+
+`runtimeState` running｜`运行时` 纯进程内 `app.capabilities.extract_capabilities_from_text` + `capability_constraints`，**零 HTTP、零端口、零 DB 打开、AI=off、密钥导入前清空、provider 不可达**（上一块的浏览器栈已在本块后拆掉）｜
+`树` `lab\snap_66cad62\`（`git archive 66cad62 backend data contracts tools`，350 文件）｜
+`工件` `lab\evidence\phrase_coverage_66cad62.json`（64 条逐句读数）＋ `lab\evidence\positive_control_004b_66cad62.txt`（8 条正对照）｜
+`脚本` `lab\tools\harness_phrase_coverage_004.py`、`harness_positive_control_004b.py`
+
+**⑴ 措辞分母（每族 8 条口语化中文＋英文，控制族=轮椅）**
+
+| 族 | 提到任意码 | 提到 HARD | 产出约束行 | 见到的码 |
+|---|---|---|---|---|
+| step_free_wheelchair（控制） | **7/8** | 5/8 | 7/8 | STEP_FREE_REQUIRED, AVOID_STAIRS |
+| avoid_stairs_route | 3/8 | **0/8** | 3/8 | AVOID_STAIRS |
+| sensory_low_stimulation | 3/8 | 0/8 | **0/8** | QUIET_ENVIRONMENT, SENSORY_LOW_STIMULATION |
+| slow_pace | **0/8** | 0/8 | 0/8 | — |
+| quiet_environment | 4/8 | 0/8 | 0/8 | QUIET_ENVIRONMENT |
+| stroller_infant | 5/8 | 0/8 | 1/8 | STEP_FREE_REQUIRED, STROLLER |
+| large_luggage | 7/8 | 0/8 | 0/8 | LARGE_LUGGAGE |
+| indoor_only | 5/8 | 0/8 | 0/8 | INDOOR_PREFERRED |
+
+⇒ **对我常驻门的那三档定性要做一处收窄**：`no_code_extracted` / `extracted_but_not_hard` 目前**是"我那一句"的性质，不是"这一族"的性质**（同一族换措辞，`avoid_stairs` 从 0 行变 3 行、`large_luggage` 从 0 码变 7 码）。门不改判定、不放宽，只是**我引用它时必须带措辞口径**。
+
+**⑵ 正对照（拿源码自己列出的字面词去喂，看"说对了话"能不能进门）——机制钉死**
+
+- `SLOW_PACE` 的字面触发词只有 4 个：`慢一点 / 慢速 / slow pace / take it slowly`（`app/capabilities.py:821-822`）。我那 8 条（`走不快`、`节奏放慢`、`慢慢走`、`slower pace please`…）**一条都不含**这些连续子串 ⇒ 0/8 是**字面表**的结果，不是解析器随机失灵。
+- 但**说对话也没用**：三条命中字面词的读数**全部** `('SLOW_PACE','SOFT','SOFT_PREFERENCE') / rows=0`，其中一条原文是「我们走不快，**必须**慢速，这是**硬性要求**不能赶路」。`QUIET_ENVIRONMENT`（「必须安静，硬性要求」）、`SENSORY_LOW_STIMULATION`（「必须低刺激环境，这是硬性要求，孩子自闭症」）、`LARGE_LUGGAGE`（「行李必须能寄存，硬性要求」）同样 **rows=0**。
+- 原因在类表里，不在措辞里：`SOFT_CODES = {SLOW_PACE, QUIET_ENVIRONMENT, INDOOR_PREFERRED, SENSORY_LOW_STIMULATION}`（`:66-68`）、`CONTEXT_CODES = {STROLLER, LARGE_LUGGAGE}`（`:65`）——**15 个码里这 6 个从不生成约束行**；`_HARD_MARKERS`（`必须/务必/…`，`:70+`）只抬 `HARD_ACCESSIBILITY_NEED` 那一类。
+- 控制组反证同一套话是有效的：「轮椅必须全程无台阶，一步都不能有，这是硬性要求」⇒ 2 条 `kind=HARD` 行；「轮椅能直达才算」（没硬标词）⇒ **仍然 1 条 HARD 行，但带 `needs_confirmation=True`**（`capability.severity=STRONG` 被类表升成 HARD 行）。⇒ **升不升得进约束门看类，不看你怎么说。**
+
+**⑶ 我要报的那半句（口径归你/仲裁，我一行产品码都没改）**
+
+用户**没有任何办法**把"低刺激/慢节奏/安静/大件行李"这四条说成硬约束——不是 NLP 不准的问题，是 `SOFT_CODES`/`CONTEXT_CODES` 这两张表把它们**永久排除在约束行之外**。这条与 HJ-P4 的头条（*"两句完全不同的原话产出逐字相同的方案"*）在机制上对得上：**偏好被读出来了，但没有一条能变成可执行约束。**
+⚠ 边界我标清楚：本实验**只测确定性解析路径**（AI=off）。带 AI 的解析路径我没测也不许我测（不调真 provider），所以这句**不构成**"产品端到端听不见慢节奏"——**端到端那一半要 HJ 车道或 B 车道用真路径签**。
+
+**⑷ 我自己两处读数是错的，先于别人更正**
+
+- `hard_rows` 第一版全报 0：约束行的硬度键叫 `kind`，我用 `getattr(r,'severity')` 取不到 ⇒ 假 0。改成按 `kind` 读之后重跑，读数如上（`positive_control_004b_66cad62.txt` 已是修正版，脚本 `severity_of`→`kind_of` 也改了）。
+- 上一块⑵里"`sealed_journey_in_request_url`"那处恒真判据同类：**"响应体里出现过" ≠ "UI 打开了它"**；这条我已在同一块里自首并修正（0/6 vs 6/6）。
+
+**⑸ 合规**：未跑突变；未放宽任何断言、未加 skip；未改产品码/SUITES；未写权威树与 `CityNexus\**`（只 `git archive` 单向导出）；本实验**未开任何端口、未发任何 HTTP、未开库**；`demo/reset` 全轮 0 次；未调真 provider。
