@@ -1,0 +1,637 @@
+{
+ "pre": {
+  "receipt": "evidence_gate_dfdc5d5.json",
+  "head": "dfdc5d5",
+  "cells_total": 1152,
+  "cells_blocked": 320
+ },
+ "post": {
+  "receipt": "evidence_gate_4d9ceae_post0219.json",
+  "head": "4d9ceae",
+  "cells_total": 1152,
+  "cells_blocked": 354
+ },
+ "delta_blocked": 34,
+ "cells_compared": 1152,
+ "only_in_one_receipt": 0,
+ "newly_blocked_total": 34,
+ "newly_passed_total": 0,
+ "moved_families": [
+  "large_luggage",
+  "stroller_infant"
+ ],
+ "by_shape": {
+  "curated_false": 32,
+  "seed_native": 2
+ },
+ "families": [
+  {
+   "family": "avoid_stairs_route",
+   "pre": {
+    "codes": [],
+    "severities": [],
+    "constraint_rows": 0,
+    "why_no_rows": "no_code_extracted"
+   },
+   "post": {
+    "codes": [],
+    "severities": [],
+    "constraint_rows": 0,
+    "why_no_rows": "no_code_extracted"
+   },
+   "moved": false,
+   "cells_newly_blocked": 0,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "indoor_only",
+   "pre": {
+    "codes": [
+     "INDOOR_PREFERRED"
+    ],
+    "severities": [
+     "SOFT"
+    ],
+    "constraint_rows": 0,
+    "why_no_rows": "extracted_but_not_hard"
+   },
+   "post": {
+    "codes": [
+     "INDOOR_PREFERRED"
+    ],
+    "severities": [
+     "SOFT"
+    ],
+    "constraint_rows": 0,
+    "why_no_rows": "extracted_but_not_hard"
+   },
+   "moved": false,
+   "cells_newly_blocked": 0,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "infant_nap_window",
+   "pre": {
+    "codes": [
+     "INFANT_NAP_WINDOW"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "post": {
+    "codes": [
+     "INFANT_NAP_WINDOW"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "moved": false,
+   "cells_newly_blocked": 0,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "large_luggage",
+   "pre": {
+    "codes": [
+     "LARGE_LUGGAGE"
+    ],
+    "severities": [
+     "STRONG"
+    ],
+    "constraint_rows": 0,
+    "why_no_rows": "extracted_but_not_hard"
+   },
+   "post": {
+    "codes": [
+     "LARGE_LUGGAGE"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "moved": true,
+   "cells_newly_blocked": 17,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "max_walking_per_leg",
+   "pre": {
+    "codes": [
+     "MAX_WALKING_PER_LEG_M"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "post": {
+    "codes": [
+     "MAX_WALKING_PER_LEG_M"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "moved": false,
+   "cells_newly_blocked": 0,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "midday_rest_window",
+   "pre": {
+    "codes": [
+     "MIDDAY_REST_WINDOW"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "post": {
+    "codes": [
+     "MIDDAY_REST_WINDOW"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "moved": false,
+   "cells_newly_blocked": 0,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "quiet_environment",
+   "pre": {
+    "codes": [
+     "QUIET_ENVIRONMENT"
+    ],
+    "severities": [
+     "SOFT"
+    ],
+    "constraint_rows": 0,
+    "why_no_rows": "extracted_but_not_hard"
+   },
+   "post": {
+    "codes": [
+     "QUIET_ENVIRONMENT"
+    ],
+    "severities": [
+     "SOFT"
+    ],
+    "constraint_rows": 0,
+    "why_no_rows": "extracted_but_not_hard"
+   },
+   "moved": false,
+   "cells_newly_blocked": 0,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "rest_cadence",
+   "pre": {
+    "codes": [
+     "REST_EVERY_MIN"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "post": {
+    "codes": [
+     "REST_EVERY_MIN"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "moved": false,
+   "cells_newly_blocked": 0,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "sensory_low_stimulation",
+   "pre": {
+    "codes": [],
+    "severities": [],
+    "constraint_rows": 0,
+    "why_no_rows": "no_code_extracted"
+   },
+   "post": {
+    "codes": [],
+    "severities": [],
+    "constraint_rows": 0,
+    "why_no_rows": "no_code_extracted"
+   },
+   "moved": false,
+   "cells_newly_blocked": 0,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "slow_pace",
+   "pre": {
+    "codes": [],
+    "severities": [],
+    "constraint_rows": 0,
+    "why_no_rows": "no_code_extracted"
+   },
+   "post": {
+    "codes": [],
+    "severities": [],
+    "constraint_rows": 0,
+    "why_no_rows": "no_code_extracted"
+   },
+   "moved": false,
+   "cells_newly_blocked": 0,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "step_free_wheelchair",
+   "pre": {
+    "codes": [
+     "AVOID_STAIRS",
+     "STEP_FREE_REQUIRED"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 2,
+    "why_no_rows": ""
+   },
+   "post": {
+    "codes": [
+     "AVOID_STAIRS",
+     "STEP_FREE_REQUIRED"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 2,
+    "why_no_rows": ""
+   },
+   "moved": false,
+   "cells_newly_blocked": 0,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "stroller_infant",
+   "pre": {
+    "codes": [
+     "STROLLER"
+    ],
+    "severities": [
+     "STRONG"
+    ],
+    "constraint_rows": 0,
+    "why_no_rows": "extracted_but_not_hard"
+   },
+   "post": {
+    "codes": [
+     "STROLLER"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "moved": true,
+   "cells_newly_blocked": 17,
+   "cells_newly_passed": 0
+  },
+  {
+   "family": "toilet_cadence",
+   "pre": {
+    "codes": [
+     "TOILET_BREAK_EVERY_MIN"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "post": {
+    "codes": [
+     "TOILET_BREAK_EVERY_MIN"
+    ],
+    "severities": [
+     "HARD"
+    ],
+    "constraint_rows": 1,
+    "why_no_rows": ""
+   },
+   "moved": false,
+   "cells_newly_blocked": 0,
+   "cells_newly_passed": 0
+  }
+ ],
+ "families_moved": [
+  "large_luggage",
+  "stroller_infant"
+ ],
+ "newly_blocked_named": [
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-beijing-forbidden-city",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-beijing-houhai",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-beijing-huguo-si-snacks",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-beijing-nanluoguxiang",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-beijing-qianmen-dashilan",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-beijing-quanjude-qianmen",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-beijing-summer-palace",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-beijing-tiananmen-square",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-city-park",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-design-library",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-food-hall",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-old-town",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-river-cruise",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-riverside-museum",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-skyline-dinner",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "curated_false",
+   "place_id": "place-tech-art",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "large_luggage",
+   "shape": "seed_native",
+   "place_id": "place-design-library",
+   "post_codes": [
+    "LUGGAGE_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-beijing-forbidden-city",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-beijing-houhai",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-beijing-huguo-si-snacks",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-beijing-nanluoguxiang",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-beijing-qianmen-dashilan",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-beijing-quanjude-qianmen",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-beijing-summer-palace",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-beijing-tiananmen-square",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-city-park",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-design-library",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-food-hall",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-old-town",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-river-cruise",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-riverside-museum",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-skyline-dinner",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "curated_false",
+   "place_id": "place-tech-art",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  },
+  {
+   "family": "stroller_infant",
+   "shape": "seed_native",
+   "place_id": "place-tech-art",
+   "post_codes": [
+    "STROLLER_ACCESS_UNAVAILABLE"
+   ]
+  }
+ ],
+ "consistency_check": {
+  "sum_of_cell_flips_equals_delta_blocked": true,
+  "every_newly_blocked_cell_names_a_code": true,
+  "no_newly_blocked_cell_is_hours_only": true
+ },
+ "newly_blocked_codes_by_family": {
+  "large_luggage": {
+   "LUGGAGE_ACCESS_UNAVAILABLE": 17
+  },
+  "stroller_infant": {
+   "STROLLER_ACCESS_UNAVAILABLE": 17
+  }
+ },
+ "note": "derived by recomputing from both receipts' cells[]; nothing here is transcribed"
+}
