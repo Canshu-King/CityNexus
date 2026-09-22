@@ -1,0 +1,78 @@
+{
+  "base": "http://127.0.0.1:8752",
+  "viewport": [
+    390,
+    844
+  ],
+  "steps": {
+    "onStep2": true,
+    "step1Present": true,
+    "A_beforePress": {
+      "scrollY": 0,
+      "docScrollHeight": 1496,
+      "innerHeight": 844,
+      "hintPresent": true,
+      "hintY": 1224,
+      "hintInView": false,
+      "hintVisibleText": "还需要填写：总预算",
+      "liveRegionText": "",
+      "liveRegionAriaLive": "polite"
+    },
+    "A_afterRefusedPress": {
+      "scrollY": 0,
+      "docScrollHeight": 1496,
+      "innerHeight": 844,
+      "hintPresent": true,
+      "hintY": 1224,
+      "hintInView": false,
+      "hintVisibleText": "还需要填写：总预算",
+      "liveRegionText": "还需要填写：总预算",
+      "liveRegionAriaLive": "polite"
+    },
+    "B_manualInstant": "called",
+    "B_afterInstant": {
+      "scrollY": 652,
+      "docScrollHeight": 1496,
+      "innerHeight": 844,
+      "hintPresent": true,
+      "hintY": 572,
+      "hintInView": true,
+      "hintVisibleText": "还需要填写：总预算",
+      "liveRegionText": "还需要填写：总预算",
+      "liveRegionAriaLive": "polite"
+    },
+    "C_manualSmooth": "called",
+    "C_scrollYSamplesDuringSmooth": [
+      0,
+      566,
+      652,
+      652,
+      652,
+      652
+    ],
+    "D_afterFixingField": {
+      "scrollY": 0,
+      "docScrollHeight": 1404,
+      "innerHeight": 844,
+      "hintPresent": false,
+      "hintY": null,
+      "hintInView": null,
+      "hintVisibleText": null,
+      "liveRegionText": "还需要填写：总预算",
+      "liveRegionAriaLive": "polite"
+    }
+  },
+  "run_label": "runD",
+  "started_at": "2026-09-22T23:12:46.095+08:00",
+  "started_at_utc": "2026-09-22T15:12:46.095Z",
+  "local_utc_offset_minutes": 480,
+  "browser": "chromium 153.0.8010.12",
+  "nonGetRequests": [],
+  "verdict": {
+    "refusedPressMovedPage": false,
+    "instantScrollWorks": true,
+    "smoothScrollAdvanced": true,
+    "visibleHintRecomputedAfterFix": true,
+    "liveRegionStillStaleAfterFix": true
+  }
+}
