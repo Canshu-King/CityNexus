@@ -184,7 +184,11 @@ class ValhallaHTTPMobilityProvider:
             return self._normalize_cells(raw_cells, len(place_ids))
         raw_durations = payload.get("durations")
         if isinstance(raw_durations, list):
-            return self._normalize_duration_matrix(raw_durations, len(place_ids))
+            return self._normalize_duration_matrix(
+                raw_durations,
+                len(place_ids),
+                payload.get("distances"),
+            )
         raise ValhallaProviderError("Valhalla matrix response does not contain route cells")
 
     @staticmethod

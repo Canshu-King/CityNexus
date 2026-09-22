@@ -496,6 +496,10 @@ RESOLVER_UNREACHABLE = "RESOLVER_UNREACHABLE"
 PROVIDER_TIMEOUT = "PROVIDER_TIMEOUT"
 PROVIDER_RATE_LIMITED = "PROVIDER_RATE_LIMITED"
 PROVIDER_BAD_RESPONSE = "PROVIDER_BAD_RESPONSE"
+#: 5xx is operationally different from a malformed 2xx: one says "ask again soon",
+#: the other says "the answer came back in a shape we cannot read".  Collapsing them
+#: was lane F's g11 finding (six shapes, five codes).
+PROVIDER_SERVER_ERROR = "PROVIDER_SERVER_ERROR"
 PROVIDER_NO_RESULTS = "PROVIDER_NO_RESULTS"
 #: Our own request was malformed (an internal city code reached a public geocoder).
 #: Reported separately on purpose: blaming a provider for a bug we sent is how a lane
@@ -507,6 +511,7 @@ LIVE_FAILURE_REASONS = frozenset(
         RESOLVER_UNREACHABLE,
         PROVIDER_TIMEOUT,
         PROVIDER_RATE_LIMITED,
+        PROVIDER_SERVER_ERROR,
         PROVIDER_BAD_RESPONSE,
         PROVIDER_NO_RESULTS,
         RESOLVER_LABEL_CARRIES_INTERNAL_CODE,
@@ -533,6 +538,8 @@ def live_failure_reason(exc: BaseException) -> str:
     if status == 429:
         return PROVIDER_RATE_LIMITED
     if isinstance(status, int):
+        if 500 <= status < 600:
+            return PROVIDER_SERVER_ERROR
         return PROVIDER_BAD_RESPONSE
     if isinstance(exc, httpx.HTTPError):
         return RESOLVER_UNREACHABLE
@@ -729,12 +736,24 @@ class OverpassPOIProvider:
             (("park", "garden", "公园", "户外", "outdoor"), '"leisure"~"park|garden"'),
             (("hotel", "住宿", "酒店"), '"tourism"~"hotel|hostel|guest_house"'),
             (("attraction", "sight", "景点", "tourist"), '"tourism"~"attraction|viewpoint"'),
+            # The three coverage categories that used to borrow the default set (g18a/g18b):
+            # each asks its own question, so "0 answers" reads as a real zero per category
+            # instead of "the default cafe query found nothing".
+            (("nightlife", "夜生活", "酒吧", "夜店"), '"amenity"~"bar|pub|nightclub"'),
+            (
+                ("mobility", "地铁站", "公交", "交通站点"),
+                '"railway"~"station|subway_entrance"|"amenity"="bus_station"|"highway"="bus_stop"',
+            ),
+            (
+                ("booking", "门票预约", "票务", "售票"),
+                '"tourism"="ticket_converter"|"amenity"="ticket_office"',
+            ),
         ):
             if any(token in requested for token in keywords):
                 tags = candidate_tags
                 break
         query_text = (
-            f"[out:json][timeout:10];nwr[{tags}](around:{min(radius_m, 5000)},{latitude},{longitude});"
+            f"[out:json][timeout:10];nwr[{tags}](around:{radius_m},{latitude},{longitude});"
             "out center tags;"
         )
         # Public Overpass mirrors are individually flaky.  Rotating through
@@ -1193,6 +1212,71 @@ def materialize_candidates(
     return result
 
 
+def _unexpired_cached_candidates(
+    session: Session, journey: Journey, query: str, anchor: dict[str, Any] | None
+) -> list[DiscoveryCandidate] | None:
+    """Unexpired provider candidates for this journey+question, straight from the store.
+
+    The TTL gate (lane F's g16b): ``expires_at`` has been written since the first capture but
+    never read, so a warm ask paid the full cold cost again.  Returns None when nothing usable
+    is cached — the caller then goes to the providers as before.
+    """
+
+    now = datetime.fromisoformat(_now())
+    rows = session.scalars(
+        select(RealPlaceCandidate).where(RealPlaceCandidate.journey_id == journey.id)
+    ).all()
+    usable: list[DiscoveryCandidate] = []
+    for row in rows:
+        raw_expires = str(row.expires_at or "")
+        if not raw_expires:
+            continue
+        try:
+            expires = datetime.fromisoformat(raw_expires)
+        except ValueError:
+            continue
+        if expires <= now:
+            continue
+        if str(row.provider_key or "") != "overpass":
+            continue
+        evidence = _load_json(row.evidence_json, {})
+        recorded_query = str((evidence.get("request") or {}).get("query") or "")
+        if recorded_query and recorded_query != query:
+            continue
+        place = session.get(Place, row.materialized_place_id) if row.materialized_place_id else None
+        if place is None:
+            continue
+        distance = None
+        if anchor and anchor.get("latitude") is not None and anchor.get("longitude") is not None:
+            distance = _distance_m(
+                float(anchor["latitude"]),
+                float(anchor["longitude"]),
+                float(place.latitude),
+                float(place.longitude),
+            )
+        metadata = _load_json(place.metadata_json, {})
+        stored_cost = evidence.get("cost_evidence") or {
+            "status": "UNKNOWN",
+            "currency": "CNY",
+        }
+        usable.append(
+            DiscoveryCandidate(
+                provider_key=str(place.provider_key),
+                external_id=str(place.external_id),
+                name=str(place.name),
+                category=str(place.category),
+                latitude=float(place.latitude),
+                longitude=float(place.longitude),
+                tags=tuple(sorted(_load_json(place.tags_json, []) or [])),
+                opening_hours=normalize_opening_hours(_load_json(place.opening_hours_json, {})),
+                metadata={**metadata, "cache": "HIT"},
+                distance_m=distance,
+                cost_evidence=stored_cost,
+            )
+        )
+    return usable or None
+
+
 def capture_real_city_candidates(
     session: Session,
     journey: Journey,
@@ -1213,6 +1297,72 @@ def capture_real_city_candidates(
         )
     snapshot = _load_replay_snapshot() if mode == "captured_replay" else {}
     journey_anchor = derive_search_anchor(session, journey)
+    if mode == "live":
+        # g16b: an unexpired candidate set for this same journey+question answers without any
+        # outbound call.  The TTL has been written since the first capture; reading it is the half
+        # that was missing (242.9 s / 238.3 s cold/warm pair came exactly from this).
+        cached = _unexpired_cached_candidates(session, journey, query, journey_anchor)
+        if cached:
+            captured_at_hit = _now()
+            session.add(
+                ProviderCall(
+                    id=str(uuid4()),
+                    provider_key="real-city-provider-mesh",
+                    operation="discover_city_services",
+                    request_json=_json(
+                        {
+                            "city_code": journey.city_code,
+                            "limit": limit,
+                            "mode": "live-cache-hit",
+                            "query": query,
+                            "radius_m": radius_m,
+                            "requested_mode": requested_mode,
+                        }
+                    ),
+                    response_json=_json(
+                        {
+                            "count": len(cached),
+                            "providers": {
+                                "anchor": journey_anchor,
+                                "cache": "HIT",
+                                "overpass": "CACHED",
+                                "attempts": [],
+                            },
+                        }
+                    ),
+                    status="SUCCESS",
+                    latency_ms=0,
+                    created_at=captured_at_hit,
+                )
+            )
+            materialized_hit = materialize_candidates(
+                session, journey, cached, captured_at=captured_at_hit, mode="live"
+            )
+            return {
+                "journey_id": journey.id,
+                "city_code": journey.city_code,
+                "city_context": journey.city_code,
+                "mode": "live-cache-hit",
+                "captured_at": captured_at_hit,
+                "expires_at": (
+                    datetime.fromisoformat(captured_at_hit)
+                    + timedelta(seconds=settings.real_city_cache_ttl_seconds)
+                ).isoformat(),
+                "provider_status": {
+                    "anchor": journey_anchor,
+                    "cache": "HIT",
+                    "overpass": "CACHED",
+                    "nominatim": "CACHED",
+                    "attempts": [],
+                    "failure_stage": None,
+                    "fallback_reason": None,
+                },
+                "provider_evidence": {"snapshot_schema": None, "capture_anchor": None,
+                                      "mobility": None, "weather": None},
+                "provenance": "LIVE_PROVIDER",
+                "runtime_provenance": "LIVE_CACHE_HIT",
+                "candidates": materialized_hit,
+            }
     if mode == "live":
         live_error: str | None = None
         failure_stage: str | None = None

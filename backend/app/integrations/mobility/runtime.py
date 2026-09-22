@@ -229,7 +229,45 @@ def capture_journey_mobility_matrix(
                             "has_live_traffic": False,
                             "error_type": type(exc).__name__,
                         }
-                matrix = provider.matrix(keys)
+                # g14b: the provider refuses requests above 100 cells (sources x targets), and
+                # the count is cells, not the "locations" figure in its error text.  Square
+                # blocks over one key list stay inside the cap; cross blocks pair sub-chunks of
+                # 5 keys so their union never exceeds 10 entries.
+                block_size = max(1, int(100 ** 0.5))
+                cross_size = block_size // 2
+                matrix = [
+                    [None for _ in range(len(keys))] for _ in range(len(keys))
+                ]
+                block_starts = list(range(0, len(keys), block_size))
+                for start in block_starts:
+                    block_keys = keys[start : start + block_size]
+                    block = provider.matrix(block_keys)
+                    for local_row, source_key in enumerate(block_keys):
+                        row = matrix[keys.index(source_key)]
+                        for local_col, target_key in enumerate(block_keys):
+                            row[keys.index(target_key)] = block[local_row][local_col]
+                for source_start in block_starts:
+                    for target_start in block_starts:
+                        if source_start == target_start:
+                            continue
+                        source_block = keys[source_start : source_start + block_size]
+                        target_block = keys[target_start : target_start + block_size]
+                        for source_chunk_start in range(0, len(source_block), cross_size):
+                            source_chunk = source_block[source_chunk_start : source_chunk_start + cross_size]
+                            for target_chunk_start in range(0, len(target_block), cross_size):
+                                target_chunk = target_block[target_chunk_start : target_chunk_start + cross_size]
+                                union_keys = list(dict.fromkeys(source_chunk + target_chunk))
+                                if len(union_keys) ** 2 > 100:
+                                    raise ValhallaProviderError(
+                                        "matrix chunk exceeds the 100-cell provider cap"
+                                    )
+                                block = provider.matrix(union_keys)
+                                for source_key in source_chunk:
+                                    row = matrix[keys.index(source_key)]
+                                    for target_key in target_chunk:
+                                        row[keys.index(target_key)] = block[
+                                            union_keys.index(source_key)
+                                        ][union_keys.index(target_key)]
                 for source_index, row in enumerate(matrix):
                     for target_index, cell in enumerate(row):
                         if source_index == target_index or cell is None:
