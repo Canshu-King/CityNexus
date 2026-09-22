@@ -1,0 +1,25 @@
+commit b8ef632f97d4fa71bd9c8e6f5428e6fc98aa5723
+Author: 仓鼠王 <yjianbin419@gmail.com>
+Date:   Wed Sep 23 03:09:36 2026 +0800
+
+    test(review): arm the English pin with the red team's own sentence, verbatim (ORD-0235)
+
+diff --git a/review/ord0226_kill_arms.py b/review/ord0226_kill_arms.py
+index 1398a18..f93ea9b 100644
+--- a/review/ord0226_kill_arms.py
++++ b/review/ord0226_kill_arms.py
+@@ -86,6 +86,14 @@ ARMS = [
+         EN_NODE,
+         ZH_NODE,
+     ),
++    (
++        "killAC6-redteam-e1-verbatim-in-english",
++        EN_FROZEN,
++        '  "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally. Don\'t worry, you have plenty.";\n',
++        "red team `d2305848` on e08131e, sentence copied verbatim -- it broke the English face where E1 broke the Chinese one",
++        EN_NODE,
++        ZH_NODE,
++    ),
+ ]
+ 
+ 
