@@ -1,0 +1,198 @@
+{
+  "base": "http://127.0.0.1:8792",
+  "run_label": "noticect",
+  "pid": 28484,
+  "wait_ms": 22000,
+  "touchesDispatched": 0,
+  "started_at": "2026-09-23T03:45:22.561+08:00",
+  "samples": [
+    {
+      "atMs": 2517,
+      "raster200": 8,
+      "failed": 6,
+      "notice": {
+        "present": false,
+        "text": null,
+        "visible": null,
+        "scrollTop": 0,
+        "zoom": null,
+        "canvasBox": [
+          18,
+          588,
+          354,
+          245
+        ]
+      }
+    },
+    {
+      "atMs": 5019,
+      "raster200": 8,
+      "failed": 6,
+      "notice": {
+        "present": false,
+        "text": null,
+        "visible": null,
+        "scrollTop": 0,
+        "zoom": null,
+        "canvasBox": [
+          18,
+          588,
+          354,
+          245
+        ]
+      }
+    },
+    {
+      "atMs": 7529,
+      "raster200": 8,
+      "failed": 6,
+      "notice": {
+        "present": false,
+        "text": null,
+        "visible": null,
+        "scrollTop": 0,
+        "zoom": null,
+        "canvasBox": [
+          18,
+          588,
+          354,
+          245
+        ]
+      }
+    },
+    {
+      "atMs": 10044,
+      "raster200": 9,
+      "failed": 6,
+      "notice": {
+        "present": true,
+        "text": "底图未加载，显示的是路线示意。",
+        "visible": true,
+        "scrollTop": 0,
+        "zoom": null,
+        "canvasBox": [
+          18,
+          588,
+          354,
+          245
+        ]
+      }
+    },
+    {
+      "atMs": 12560,
+      "raster200": 9,
+      "failed": 6,
+      "notice": {
+        "present": true,
+        "text": "底图未加载，显示的是路线示意。",
+        "visible": true,
+        "scrollTop": 0,
+        "zoom": null,
+        "canvasBox": [
+          18,
+          588,
+          354,
+          245
+        ]
+      }
+    },
+    {
+      "atMs": 15066,
+      "raster200": 9,
+      "failed": 6,
+      "notice": {
+        "present": true,
+        "text": "底图未加载，显示的是路线示意。",
+        "visible": true,
+        "scrollTop": 0,
+        "zoom": null,
+        "canvasBox": [
+          18,
+          588,
+          354,
+          245
+        ]
+      }
+    },
+    {
+      "atMs": 17576,
+      "raster200": 9,
+      "failed": 6,
+      "notice": {
+        "present": true,
+        "text": "底图未加载，显示的是路线示意。",
+        "visible": true,
+        "scrollTop": 0,
+        "zoom": null,
+        "canvasBox": [
+          18,
+          588,
+          354,
+          245
+        ]
+      }
+    },
+    {
+      "atMs": 20080,
+      "raster200": 9,
+      "failed": 6,
+      "notice": {
+        "present": true,
+        "text": "底图未加载，显示的是路线示意。",
+        "visible": true,
+        "scrollTop": 0,
+        "zoom": null,
+        "canvasBox": [
+          18,
+          588,
+          354,
+          245
+        ]
+      }
+    },
+    {
+      "atMs": 22583,
+      "raster200": 9,
+      "failed": 6,
+      "notice": {
+        "present": true,
+        "text": "底图未加载，显示的是路线示意。",
+        "visible": true,
+        "scrollTop": 0,
+        "zoom": null,
+        "canvasBox": [
+          18,
+          588,
+          354,
+          245
+        ]
+      }
+    }
+  ],
+  "writes": [],
+  "tileOutcome": {
+    "raster200": 9,
+    "failed": 6,
+    "offOriginTotal": 16
+  },
+  "verdict": "NOTICE_APPEARS_WITHOUT_ANY_TOUCH: 「底图未加载」在零触摸的静置等待里也出现了 → 与手势无关，属瓦片批次/时序判定，不能记在我这一轮的手势路径上",
+  "ended_at": "2026-09-23T03:45:45.579+08:00",
+  "offOriginRequests": [
+    "200 blob:http://127.0.0.1:8792/40d881b9-756f-455d-b4bd-1f38dbb0029e",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3336/1777.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3337/1777.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3336/1776.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3337/1776.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3335/1777.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3335/1776.png",
+    "200 https://tile.openstreetmap.org/11/1669/888.png",
+    "200 https://tile.openstreetmap.org/11/1669/889.png",
+    "200 https://tile.openstreetmap.org/11/1668/888.png",
+    "200 https://tile.openstreetmap.org/11/1668/889.png",
+    "200 https://tile.openstreetmap.org/11/1667/888.png",
+    "200 https://tile.openstreetmap.org/11/1669/887.png",
+    "200 https://tile.openstreetmap.org/11/1667/889.png",
+    "200 https://tile.openstreetmap.org/11/1668/887.png",
+    "200 https://tile.openstreetmap.org/11/1667/887.png"
+  ]
+}
