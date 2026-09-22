@@ -1,0 +1,239 @@
+{
+  "counters_reported": [
+    "journeys",
+    "travelers",
+    "plan_versions",
+    "commitments",
+    "constraints",
+    "bookings"
+  ],
+  "lane": "HJ-P2 commitment-intensive traveller",
+  "open_mode": "sqlite URI mode=ro (no write statement issued by this process)",
+  "own_store": "D:/moodle/_qoder_hjp2_r6_20260922/_hjp2_r6.db",
+  "receipt": "hjp2_isolation_probe",
+  "run": {
+    "argv": [
+      "--label",
+      "runA"
+    ],
+    "cwd": "D:\\moodle\\_qoder_hjp2_r6_20260922",
+    "host": "my-Windows",
+    "label": "runA",
+    "pid": 41560,
+    "platform": "Windows-10-10.0.26200-SP0",
+    "python": "3.10.11",
+    "sqlite_library": "3.40.1",
+    "started_at_local": "2026-09-22T23:30:13+08:00",
+    "started_at_utc": "2026-09-22T15:30:13+00:00",
+    "user": "仓鼠王"
+  },
+  "session": "d4b04a0f",
+  "stores": {
+    "own_copy": {
+      "counts": {
+        "bookings": 1,
+        "commitments": 1,
+        "constraints": 3,
+        "journeys": 6,
+        "plan_versions": 22,
+        "travelers": 6
+      },
+      "exists": true,
+      "journey_ids": [
+        "94669bae",
+        "6cbdbc65",
+        "f34c8ff0",
+        "68f8c7a1",
+        "5e9fd913",
+        "22222222"
+      ],
+      "main_file_unchanged_by_probe": true,
+      "my_ids_present": [
+        "f34c8ff0",
+        "68f8c7a1",
+        "5e9fd913"
+      ],
+      "path": "D:/moodle/_qoder_hjp2_r6_20260922/_hjp2_r6.db",
+      "places_by_city_code": {
+        "CN-BEIJING": 8,
+        "CNX-DEMO": 8
+      },
+      "stat_after": {
+        "-main": {
+          "bytes": 3710976,
+          "mtime": "2026-09-22T16:34:23"
+        },
+        "-shm": {
+          "bytes": 32768,
+          "mtime": "2026-09-22T23:30:13"
+        },
+        "-wal": {
+          "bytes": 1932312,
+          "mtime": "2026-09-22T19:44:48"
+        }
+      },
+      "stat_before": {
+        "-main": {
+          "bytes": 3710976,
+          "mtime": "2026-09-22T16:34:23"
+        },
+        "-shm": {
+          "bytes": 32768,
+          "mtime": "2026-09-22T19:47:05"
+        },
+        "-wal": {
+          "bytes": 1932312,
+          "mtime": "2026-09-22T19:44:48"
+        }
+      },
+      "table_count": 55
+    },
+    "shared_cmdr_gate__live": {
+      "counts": {
+        "bookings": 1,
+        "commitments": 1,
+        "constraints": 3,
+        "journeys": 3,
+        "plan_versions": 19,
+        "travelers": 3
+      },
+      "exists": true,
+      "journey_ids": [
+        "94669bae",
+        "6cbdbc65",
+        "22222222"
+      ],
+      "main_file_unchanged_by_probe": true,
+      "my_ids_present": [],
+      "path": "D:/moodle/_qoder_cmdr_gate_20260921/backend/_live.db",
+      "places_by_city_code": {
+        "CN-BEIJING": 8,
+        "CNX-DEMO": 8
+      },
+      "stat_after": {
+        "-main": {
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32"
+        },
+        "-shm": {
+          "bytes": 32768,
+          "mtime": "2026-09-22T22:51:42"
+        },
+        "-wal": {
+          "bytes": 4243632,
+          "mtime": "2026-09-22T22:51:42"
+        }
+      },
+      "stat_before": {
+        "-main": {
+          "bytes": 3710976,
+          "mtime": "2026-09-22T13:40:32"
+        },
+        "-shm": {
+          "bytes": 32768,
+          "mtime": "2026-09-22T22:51:42"
+        },
+        "-wal": {
+          "bytes": 4243632,
+          "mtime": "2026-09-22T22:51:42"
+        }
+      },
+      "table_count": 55
+    },
+    "shared_preview__preview": {
+      "counts": {
+        "bookings": 0,
+        "commitments": 0,
+        "constraints": 3,
+        "journeys": 31,
+        "plan_versions": 9,
+        "travelers": 45
+      },
+      "exists": true,
+      "journey_ids": [
+        "1b849dc1",
+        "2ac9fb8a",
+        "901df55b",
+        "a30bea81",
+        "6b7d17e7",
+        "c30a7fe3",
+        "b464d8da",
+        "91acda09",
+        "a5b9b425",
+        "35c17845",
+        "cfee6014",
+        "6fd276eb",
+        "ff7acd3f",
+        "643cbf67",
+        "54967e61",
+        "5c3183a6",
+        "f9b7d2a3",
+        "ddcdefb5",
+        "147d6464",
+        "4a56aab5",
+        "ad634d8f",
+        "991ad748",
+        "30a01aaa",
+        "9c6c3d73",
+        "8c8b1f80",
+        "bbae229f",
+        "56eb15a9",
+        "841414ab",
+        "bc424a92",
+        "ab6fd95c",
+        "22222222"
+      ],
+      "main_file_unchanged_by_probe": true,
+      "my_ids_present": [],
+      "path": "D:/moodle/_qoder_preview_20260920/_preview.db",
+      "places_by_city_code": {
+        "CN-GUANGZHOU": 14,
+        "CNX-DEMO": 8
+      },
+      "stat_after": {
+        "-main": {
+          "bytes": 6828032,
+          "mtime": "2026-09-21T01:46:44"
+        },
+        "-shm": {
+          "bytes": 32768,
+          "mtime": "2026-09-22T23:30:13"
+        },
+        "-wal": {
+          "bytes": 4272472,
+          "mtime": "2026-09-21T02:40:46"
+        }
+      },
+      "stat_before": {
+        "-main": {
+          "bytes": 6828032,
+          "mtime": "2026-09-21T01:46:44"
+        },
+        "-shm": {
+          "bytes": 32768,
+          "mtime": "2026-09-22T19:44:18"
+        },
+        "-wal": {
+          "bytes": 4272472,
+          "mtime": "2026-09-21T02:40:46"
+        }
+      },
+      "table_count": 53
+    }
+  },
+  "verdict": {
+    "all_shared_stores_untouched": true,
+    "my_ids_present_in_any_shared_store": [],
+    "my_ids_present_in_own_copy": [
+      "f34c8ff0",
+      "68f8c7a1",
+      "5e9fd913"
+    ],
+    "own_copy_writable_by_this_lane": true,
+    "shared_main_files_unchanged_by_probe": {
+      "shared_cmdr_gate__live": true,
+      "shared_preview__preview": true
+    }
+  },
+  "verdict_sha256": "90d99fb44ef3f137ebb76b7436764ac1bb1789a04336865529a43cd55f58571e"
+}
