@@ -1,0 +1,85 @@
+diff --git a/backend/tests/test_qoder_db_isolation_same_verdict.py b/backend/tests/test_qoder_db_isolation_same_verdict.py
+index d1d466c..1f096d8 100644
+--- a/backend/tests/test_qoder_db_isolation_same_verdict.py
++++ b/backend/tests/test_qoder_db_isolation_same_verdict.py
+@@ -52,6 +52,8 @@ if str(TESTS_DIR) not in sys.path:  # 导出树的 rootdir/cwd 各种形状都
+ from _qoder_streak_receipt import (  # noqa: E402
+     CLASSIFICATIONS,
+     FORBIDDEN_DB_NAMES,
++    REQUIRED_RECEIPT_FIELDS,
++    REQUIRED_RUN_FIELDS,
+     RUN_SHAPES,
+     SINGLE_NODE,
+     WHOLE_FILE,
+@@ -794,6 +796,16 @@ def test_6_the_frozen_vocabulary_matches_the_contract():
+         f"期望契约把'同库+判定变化'指向 ISOLATION_BREACH；实际 {rules}")
+     assert set(doc["clauses"]) == set(range(1, 11)), (
+         f"期望契约十条齐全（1..10）；实际 {sorted(doc['clauses'])}")
++    # —— 字段名单与门/判据必须逐项同序：commander 补第 9/10 条时按这张表出字段就能直接喂进来 ——
++    assert tuple(doc["required_per_run_fields"]) == REQUIRED_RUN_FIELDS, (
++        f"期望逐 run 字段与判据的 REQUIRED_RUN_FIELDS 逐项同序（含 node_outcome 这一格）；"
++        f"契约 {doc['required_per_run_fields']} / 判据 {list(REQUIRED_RUN_FIELDS)}")
++    assert tuple(doc["required_receipt_fields"]) == REQUIRED_RECEIPT_FIELDS, (
++        f"期望收据头字段同序；契约 {doc['required_receipt_fields']} / "
++        f"判据 {list(REQUIRED_RECEIPT_FIELDS)}")
++    assert list(doc["required_for_closure"]) == ["clause6_declaration"], (
++        f"期望只有第 6b 条的自证文本是**结案**必填而非收据合规项；"
++        f"实际 {doc['required_for_closure']}")
+     for banned in doc["not_accepted"]:
+         assert isinstance(banned, str) and banned.strip(), (
+             f"期望 not_accepted 每条都是非空句子；实际 {banned!r}")
+diff --git a/contracts/gate-acceptance-streak.yaml b/contracts/gate-acceptance-streak.yaml
+index 0b89477..4ee4e37 100644
+--- a/contracts/gate-acceptance-streak.yaml
++++ b/contracts/gate-acceptance-streak.yaml
+@@ -76,6 +76,50 @@ division_of_labour:
+   shared_predicate: backend/tests/_qoder_streak_receipt.py（纯函数，门与引用方同一把尺）
+   note: 抽取器只有一份。门不解析多节点容器输出，只拒绝"拿容器 exit 当目标节点判定"。
+ 
++# ⇒ 推论（写死免得两边各印一套）：任何要喂给 `classify_target_node` / `streak_verdict` 的收据，
++#   必须带下面这些字段名。commander 的工具补第 9/10 条时按这张表出字段，我的判据就能直接吃。
++required_per_run_fields:
++  - run_index
++  - exit_code
++  - node_outcome                     # GREEN / RED / NOT_OBSERVED（第 10 条要的那一格）
++  - resolved_absolute_db_path
++  - initial_row_counts
++  - final_row_counts
++required_receipt_fields:
++  - sha
++  - target_nodeid
++  - run_shape                        # 第 9 条三选一，逐字照 run_shapes
++  - command
++required_for_closure:
++  - clause6_declaration              # 第 6b 条：可为"未声明"，但那一句必须在收据里；缺它 closure_allowed 恒 False
++
++# verdict 字面的权威写法。两边名字同源，**载荷**曾分叉（见下 measured_divergence）。
++verdict_vocabulary:
++  STREAK_MET: "STREAK_MET(<rounds>)"                       # 例 STREAK_MET(10)
++  STREAK_NOT_MET: "STREAK_NOT_MET(<green>/<rounds>_green)"  # 例 STREAK_NOT_MET(3/10_green)
++  STREAK_INVALID_shared_db_path: "STREAK_INVALID_shared_db_path(第 7 条：…<paths>)"
++  HARNESS_INVALID_no_resolved_db_path: "HARNESS_INVALID_no_resolved_db_path(run_index=[…])"
++  HARNESS_INVALID_target_verdict_not_scoped: "HARNESS_INVALID_target_verdict_not_scoped(N 个 run 拿不到目标节点判定…)"
++  HARNESS_INVALID_relaxed_command_surface: "HARNESS_INVALID_relaxed_command_surface(…<flags>)"
++  HARNESS_INVALID_run_numbering: "HARNESS_INVALID_run_numbering(期望 1..N，实际 …)"
++  RECEIPT_INCOMPLETE: "RECEIPT_INCOMPLETE(第 <n> 条：<缺的是什么>)"
++  ABORT_FORBIDDEN_TARGET: "ABORT_FORBIDDEN_TARGET"
++
++measured_divergence_20260922_190x: |
++  读 `live_checks/gate_streak.py`（盘上现件 7,497 B / sha256[:16] a3cab869f6f80cdd，
++  与账本 18:56 钉住的 6,954 B / 7110d0f3458329f8 **不是同一份**）量到三格分叉，**留给 commander 处置，
++  我没有动他的工具，也没有替他做第二份抽取器**：
++  1) 它印 `STREAK_MET(<green>/<runs>)`（例 `STREAK_MET(10/10)`），本表权威是 `STREAK_MET(10)`；
++     `STREAK_NOT_MET(9/10_green)` 两边一致。跨工具做字符串比对的人会看见一个并非数据分歧的差异。
++  2) 收据里没有 `run_shape`、也没有逐 run 的 `node_outcome`（全文件 0 命中）
++     ⇒ 它现在的产物喂进我的判据只能得到 `UNCLASSIFIED_IN_THIS_SHAPE` /
++     `HARNESS_INVALID_target_verdict_not_scoped`。这不是门挑刺：第 9/10 条正是这两格。
++  3) `subprocess.run(..., capture_output=True, text=True)` 仍无 `encoding=`（文件里两处 `encoding=`
++     分别在 `write_text` 与 `stdout.reconfigure`）⇒ F 16:2x 交的那条 cp936 缺陷在这份现件里还在；
++     含中文断言的靶子会丢子进程 stdout，被误判成 `HARNESS_INVALID_no_resolved_db_path`。
++     （时间线提示而非结论：18:40–18:56 那轮 bundle 回读曾把 `qoder_shield_replay.py` 退回旧版，
++     同一只手可能把这个路径也换回了旧件。）
++
+ interpretation_open_to_arbiter:
+   - |
+     本模块把"只有 1 个 run"读成 UNCLASSIFIED_IN_THIS_SHAPE（按第 8 条：单次孤立观测不结案），
