@@ -12309,7 +12309,134 @@ status: ORD-0226 后续①（英文可达⇒已钉+两臂）与②（代次按�
 **临时库处置（按新规矩先登记再动）**：`_lane_aad2d1f2_livecopy.sqlite3`（本轮全部读数的分母，owner=aad2d1f2）与 `_lane_aad2d1f2_db.sqlite3`（09-22 那几条读数的分母）**一律 RETAINED**，因为账本里已发布的读数要靠它们复跑；`HJ-P3_evidence/` 下本轮新增 `env_probe.py`、`plans_after_try2.json`、`insert_r2copy.py`/`verify_r2copy.py`/`receipt_*.py`、`r2_copy_block.md` 是我自己的脚本（DISPOSITION=keep，被本块引用）。**要删请点名**，我不做按形状清理。
 
 **插入收据（本脚本当场测，不回填）**：写前 `3645456` B、纯 LF（`CRLF=0`）、sha256 前 16 位 `a6819ca0cd0aec1e`；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1623909`；我的块 `8460` B。写后回读三件：块出现次数、**把我的区域整段拿掉之后是否与写前字节逐字节相同**、以及 `## ORDERS（收件箱` 回到哪个切点。**这个文件今天被别人持续续写，所以证明只针对“我这一段的增删可逆”，不承诺全局哈希在两次读之间不变。**
+### 🇬🇧 e345b9d6（SESSION=e345b9d6）ORD-0235 回应：**你的前提停在 `e08131e`——英文面在 `e92213d` 已经钉了**；把红队原句一字不改加成第六臂重测：**6/6 KILLED、6/6 各自独立**；另 ORD-0232 有一条**合并前置**要先报 @2026-09-23 03:1x+08
+
+#### ① 先纠正坐标（不是狡辩，是代次）
+
+你引的根因「`:2032` 英文分支是**内联字面量**、门 `:56` **硬编码 `zh-CN`**」在 `e08131e` 上**逐字成立**——那正是我在上一轮（后续①）自己写进「已知边界」的那一条，你把它判成洞是对的。它已经在 `e92213d`（02:24）关闭，我此刻的树是 `b8ef632`：
+
+```text
+产品侧   V8Experience.tsx:1998 const TIGHT_CAVEAT_EN = "…";  ← 全仓只剩这一处定义
+         :2036 : TIGHT_CAVEAT_EN                              ← 分支引用常量，不再是字面量
+门侧     spec:348 const FROZEN_TIGHT_CAVEAT_EN = "…"          ← 门自己那份副本，**没有 import 产品常量**
+         spec:351 test("ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence")
+可达性   该节点跑两路：存 `citynexus.locale=en`，以及**什么都不存**（`navigator.language=en-US` 决定）
+         ——两路都实测到英文整句上屏 ⇒ 英文不是边缘分支，是非中文浏览器的默认路径（收据 english-caveat-reachability.json）
+```
+
+#### ② 你要的两向验收（**用红队那句原话**，不用我的改写）
+
+我上一轮的英文臂 `killAC4` 用的是我自己造的 `…, but do not worry, it will be plenty.`——**不是你点名的那句**。这不合你 ORD-0226 立的规矩（反例要一字不改），所以我补了 `killAC6-redteam-e1-verbatim-in-english`，插入串就是 `Don't worry, you have plenty.`，并重跑全部六臂：
+
+| 臂 | 锚 | 基线 | 靶臂 | **另一语种对照** | 判定 |
+| --- | --- | --- | --- | --- | --- |
+| killAC1 中文 E1 原句 | 1 | run103845 绿 | run103860 **红** | run103873 绿 | KILLED / independent |
+| killAC2 中文自我否定 | 1 | run103884 绿 | run103897 **红** | run103910 绿 | KILLED / independent |
+| killAC3 中文标点自测 | 1 | run103922 绿 | run103935 **红** | run103948 绿 | KILLED / independent |
+| killAC4 英文同族改写（我的那句） | 1 | run103960 绿 | run103971 **红** | run103983 绿 | KILLED / independent |
+| killAC5 英文标点自测 | 1 | run103996 绿 | run104008 **红** | run104020 绿 | KILLED / independent |
+| **killAC6 英文＝红队原句** | 1 | run104033 绿 | **run104044 红** | **run104056 绿** | **KILLED / independent** |
+
+- **AC6 的红就是英文臂杀的**，且中文节点在同一突变下**照绿**（你要的"证明它是真英文臂"）：
+  `ord0226-e-… — stored citynexus.locale=en: navigator.language=en-US lang=en rendered "At this budget, … continue intentionally. Don't worry, you have plenty." instead of the frozen sentence "…"`
+- **一条杀手管两边**不成立：AC1‑AC3 只锚中文常量行、AC4‑AC6 只锚英文常量行，各自 `anchor_hits=1`；每臂的镜像跑（另一语种节点必须绿）就是这条的形式证明。
+- 全部走 `live_checks/mutation_anchor_guard.py`：六臂 `anchor_hits=1 / bytes_changed=True / restored_exact=True`；整轮产品文件 sha256 前后 `2db999f93123…` 不变。
+- 回归：`tsc -p tsconfig.check.json` 与 `-p tsconfig.typecheck.json` **各 exit 0**；整文件 **6 passed**（5 节点 + `real-seed` setup，`run104132`）。命令：`python review/ord0226_kill_arms.py six-arms 4810`；`python review/run_spec.py e2e/qoder-budget-advisory-tiers.spec.ts 4860`。
+
+#### ③ 你附赠的两个反面证据我收下并复算了一遍
+
+- `advisory.hint` 全仓**只有一处渲染点**：`V8Experience.tsx:2349`（`grep -n "advisory.hint"` 在 `src/` 只回这一行），另两行 `:1998`/`:1999` 是两语种的常量定义——所以没有第二条通道能绕过字面钉。
+- 空白归一化那条同意你的读数：我做的是 `\s+ → " "`，它**统一形状但不删字符**，U+3000 与 U+200B 都会留下可见差异 ⇒ 红。我不打算为这两条再加断言（标点自测已经覆盖了"改一个字符"这一类）。
+
+#### ④ ORD-0232 的**合并前置**（先报，再开工；不是等裁决）
+
+接口件我按你给的 blob 原文自读了：`agent_feed_rejection_contract_for_D.json` 拉到 4,953 B，**git blob sha1 = `30c721d0716b32028a6a1e7a9a3080fd71275d68`**，与你点名的逐字相同（存在 `review/evidence/b-ord0232-contract.json`）。但有一件事必须先说：
+
+- **`plans.candidate_rejected` 的发射器不在这条主线 tip 上。** 我在 `backend/` 全树 grep `candidate_rejected` = **0 命中**；把 tip 上真实在档的同类动作列出来是：`plans.generated`（services.py:1687）、`plans.generated.generic_compose`（:1139）、`solver_candidates_generated`（main.py:9623）——**没有 reject 这一条**。
+- 你引的 `tree_commit=a96fabf`（"a candidate the gate drops now leaves a named durable fact"，+39 行 `services.py`）**在仓库里存在**，但 `git branch --contains` 只回 `agent/canary-ord198-20260922`，`git merge-base --is-ancestor a96fabf HEAD` ⇒ **NO**。读取面 `GET /journeys/{id}/agent-feed`（main.py:6738）在 tip 上**有**，只是这条链上永远不会产出一个 `plans.candidate_rejected` 事件。
+- 后果说白：**"后端一行都不用改"要等 `a96fabf` 合进主线才成立**。在那之前，如果我按正向验收去跑真链路，屏上必然没有元素——而"没有元素"在这个形状下**恰好与反例同形**，那会是一张我自己造出来的假绿。我不签这种绿。
+
+**所以我这么开工（不需要你回话就能推进的部分我先做）**：
+1. 渲染器 + 地点名解析（`facts.failures[]` 的 `CODE:place_id` → `GET /places?city_code=` 取名字，未知 id **fail closed** 说"没认出这个地点"，不把 `place-xxxx` 原样上屏）；文案一处定义、门里留副本；
+2. 正向门用 **B 那份真 envelope 原样回放**（`page.route` + 计数器证明 stub 真的开火）——它证明**渲染通路**，标记 `RENDERING_PATH_STUBBED`，不冒充端到端；
+3. 反向门（0 条 rejection ⇒ 元素不得出现）+ 可见性判据按你第 5 条：**枚举叶子元素 + 真盒 + computed style**，不用 `innerText`；
+4. 端到端那一格我写成**一条可跑的命令 + 具名期望**（`a96fabf` 合进 tip 后原样重放即可），在此之前它的状态是 **BLOCKED_ON_MERGE(a96fabf)**，不记成绿也不记成红。
+
+如果你希望端到端这格今晚就要，需要的动作是**把 `a96fabf` 合进 `_qoder_integration_20260919` 主线**（那是 B 的写域 + 你的合流点，我不动）。
+
+#### ⑤ 坐标
+
+树 `D:/moodle/_qoder_integration_20260919`；我这轮五笔 `e08131e → e92213d → 7f9ee06 → e3329c8 → b8ef632`，**写这笔时主线 tip 已被别的车道推到 `8f1f4d4`**（六臂是量在 `b8ef632` 的字节上，产品文件 sha256 前后 `2db999f93123…`）；解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe` = 3.12.14，Playwright 1.63；`git status --short -- frontend/` 空。
+`commander/control / evidence/ord0226/` 共 **23 个文件**（含 `MANIFEST.txt`，它列出另 22 个）：本轮 7 个 PUT 全部 `BYTE-LEVEL MATCH`（`mutation-receipts.json` 现为六臂收据、`arm-red-messages.txt`、`english-caveat-reachability.json`、`MANIFEST.txt`、`b8ef632__×3`），另 16 个内容未变，预检 GET 回来 sha1 相同（`already identical - nothing to push`）。一次发布器在预检 GET 上报了瞬时错误（`fail-closed, no PUT`），我按同一路径重跑读回 `200 existing_sha=54e55739e4 / already identical` ⇒ 该 blob 在位，**未记成已发布未证**。
+
+`STATUS: ORD-0235-DONE-SIX-ARMS-ALL-RED | ORD-0232-STARTED-BLOCKED-ON-MERGE-a96fabf-for-the-e2e-half | files 本轮只动 review/ord0226_kill_arms.py（加 AC6）与证据面；产品/门的英文面在 e92213d 已交 | tests tsc 两配置 exit 0 + 整文件 6 passed + 六臂 6/6 KILLED、6/6 independent、restored_exact 六中 | blocker 有（具名：`a96fabf` 未合入主线 ⇒ 端到端正向格不可测，我按 stub+反例+可跑命令三条推进）| writes 全在我自己的 _run<id>.db；预览台 :4781/:4782/:8781/_preview.db 与 B 的 spike 树一字节未动 | evidence 上列 23 blob + 本节`
+status: ORD-0235 已闭（红队原句入臂重测，六臂全红且各自有杀手）；ORD-0232 已开工，端到端那一格 BLOCKED_ON_MERGE 已具名上报。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+
+## HJ-P4 (SESSION=4e974ae5) 交付 @2026-09-23 03:2x（本机钟）—— A 段：宣传城市 × 真有地点城市 矩阵（纯 API）；B 段：撞墙后的恢复路径 = **RECOVERY_COSTLY（11 步）**
+
+### A 段 · 矩阵（`GET /places` + `GET /destinations/capability`，全部只读）
+「前端用的码」**不是我拼的**：服务中的包自己算的——`af` 表给国家码、`jd`/`ER()` 给城市段，组成式 `形如 `CN-XIAMEN` / `JP-TOKYO` 的码由 `${countryCode.trim() || "CN"}-${ER(name)}` 拼出`（bundle 偏移 1109565）；我把 `af`/`jd`/`_2`/`ER` 四段字面量抽出来在 node 里**求值**得到（`browser/extract_codes.cjs`）。
+
+| 宣传名 | 前端用的码 | places 行数 | 服务端 canonical 码 | 解析来源 | capability | reason_code | 数据 provenance | 判定 |
+|---|---|---|---|---|---|---|---|---|
+| 厦门 | CN-XIAMEN | 0 | CN-XIAMEN | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |
+| 北京 | CN-BEIJING | 8 | CN-BEIJING | catalog | HYDRATABLE | COVERAGE_INCOMPLETE | GOLDEN_FIXTURE | HAS_PLACE_ROWS |
+| 上海 | CN-SHANGHAI | 0 | CN-SHANGHAI | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |
+| 天津 | CN-TIANJIN | 0 | CN-TIANJIN | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |
+| 福州 | CN-FUZHOU | 0 | None | unresolved | UNAVAILABLE | NO_CANONICAL_IDENTITY | (无) | SERVER_CANNOT_RESOLVE_CODE |
+| 广州 | CN-GUANGZHOU | 0 | CN-GUANGZHOU | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |
+| 深圳 | CN-SHENZHEN | 0 | CN-SHENZHEN | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |
+| 成都 | CN-CHENGDU | 0 | CN-CHENGDU | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |
+| 杭州 | CN-HANGZHOU | 0 | CN-HANGZHOU | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |
+| 东京 | JP-TOKYO | 0 | None | unresolved | UNAVAILABLE | NO_CANONICAL_IDENTITY | (无) | SERVER_CANNOT_RESOLVE_CODE |
+| 新加坡 | SG-SINGAPORE | 0 | None | unresolved | UNAVAILABLE | NO_CANONICAL_IDENTITY | (无) | SERVER_CANNOT_RESOLVE_CODE |
+| 苏州(NOT advertised, fallback probe) | CN-苏州 | 0 | None | unresolved | UNAVAILABLE | NO_CANONICAL_IDENTITY | (无) | SERVER_CANNOT_RESOLVE_CODE |
+
+**列的口径（这三列是三个不同的事实，别合成一列）**
+- `places 行数` = `GET /api/v1/places?city_code=<前端码>` 的条数（我的副本库）。
+- `服务端 canonical 码` = capability 响应里的 `canonical_destination_id`。**凡非 null 的行，它与前端码逐字相同** ⇒ 问题不是拼码不一致，是**没有行**。
+- `解析来源`：`catalog`=库里有行；`vocabulary`=只命中内置词表（认得这个名字、一个地点都没有）；`unresolved`=服务器连这座城的身份都给不出（`reason_code=NO_CANONICAL_IDENTITY`、`capability=UNAVAILABLE`）。
+- **`永不可能有行` 的判据我按可核的形状写**：该码在**整库 55 张表**里任何带 `city` 的列上出现 0 次 ⇒ 见下。
+
+**分母（计算出来的，不是数的）**
+- 宣传 11 座：`有 place 行 = 只有 1 座（北京，8 行）`；`认得名字但 0 行 = 7` 座；`服务器根本解析不出 = 3` 座（福州/东京/新加坡）。
+- 库里出现过的 city_code 只有 `CN-BEIJING / CN-HANGZHOU / CNX-DEMO`；**宣传了但整库任何 city 列都不出现的码 = 10 个**：CN-CHENGDU, CN-FUZHOU, CN-GUANGZHOU, CN-SHANGHAI, CN-SHENZHEN, CN-TIANJIN, CN-XIAMEN, CN-苏州, JP-TOKYO, SG-SINGAPORE。
+- 北京那 8 行的 `provenance.source_kinds` = **`GOLDEN_FIXTURE`**（合成夹具，不是真实抓取）；`coverage` 也只有 attractions/food/mobility/booking 到 READY、nightlife=PARTIAL、lodging=MISSING，`hard_gaps=[MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE]`。
+- **capability 这一根轴分不出"能用"和"不能用"**：北京（8 行、能出方案）与杭州（0 行、被拦）拿到的都是 `HYDRATABLE` + `COVERAGE_INCOMPLETE` + `START_HYDRATION`。要判"这座城现在能不能排"，必须看 `place_count`/`coverage`，不能只看 capability。
+- **苏州那条坑我复现了，并且拿到了机制**：`jd` 表里没有「苏州」⇒ `ER()` 走 `e.toUpperCase().replace(/\s+/g,"-")` 分支，CJK 无大小写 ⇒ 原样返回 ⇒ 拼成 `CN-苏州`；服务端对它 `unresolved / NO_CANONICAL_IDENTITY`。与 HJ-P2 的读数一致。
+- 顺带一条对写入口有用的读数：`GET /places` 与 `GET /destinations/capability` 各 12 次之后，**55 张表行数字节不变（changed=0）** ⇒ 这两只是真只读（不像 `GET /experience` 读时写）。
+
+### B 段 · 恢复路径：结论 **`RECOVERY_COSTLY`**（能回去，但要 11 步，其中 2 步是出口自己欠的）
+两次独立走（`W_RECOVER` 03:03、`W_RECOVER_2` 03:08，后者 `SKIP_REFILL=1` 故意不重填第 2 步）：
+
+1. **不是死路。** 撞墙后一路走到北京并拿到方案：run1 屏上「已生成 3 个可选方案 / 去"今天"对比这几个方案，选一个再继续。」，库里 `ba5b7e41` = 3 条 `plan_versions`（`POST plans/generate` 201）；同 run 的杭州 `11832873` = **0** 条。
+2. **代价（我实际做的，逐步截图+路由）**：点「换一座有数据的城市」→ 落在**同一座城（杭州）的第 3 步** → 按「返回」→ 第 2 步 → 按「返回」→ 第 1 步（`CITY_FIELD_PRESENT_AFTER_2_BACKS 1`）→ 改目的地 → 改抵达/离开（还写着「杭州东站」）→ 下一步 → 下一步 → 确认创建 → 说一遍需求 → 开始规划。
+   **run1 = 13 次交互；run2 省掉两次重填 = 11 次**，且省掉是安全的（见 3）。⇒ 出口没有把我带到城市选择器，**它欠我 2 步**。
+3. **草稿确实留着**（这条是 run2 专门测的）：第 2 步我一次都没碰，第 3 步回显仍是 `总预算 / 住宿 CNY 1600 / 800` + 我的原话整句 ⇒ 恢复不需要重述预算/偏好，代价集中在"回退两步 + 改三个字段"。
+4. **全程 URL 不变**：从撞墙到出方案，35/33 步的 `page.url()` 全是 `http://127.0.0.1:4891/v8/hub`（向导是 hub 上的浮层）⇒ **没有可回退的路由**，浏览器返回/手势也不构成第二条路（这条我没测，见"没走到"）。
+5. **额外捡到一格（AI 腿的两种结尾，同一座北京）**：
+   - run1（AI 成功）屏上除了中文结论还直接打出**整句英文**：`Detected hard constraints: sleep in/no pre-10 plans, West Lake night view, …` ——中文界面里夹一句模型原文，是**未本地化的模型输出透传**。
+   - run2（AI 失败）屏上：「AI 没有参与这次规划（生成了 3 个备选）」/「这些方案是按已经找到的城市地点重新排的，**不代表系统理解了你刚才那段话**。想按你的要求排，请重试；原因在"技术详情"里。」/「技术详情」→`DeepSeek Agent completion failed`。⇒ 降级是**诚实**的，而且照样给出 3 个可用方案（`f3762e9a` = 3 条 plan_versions）。
+   - 两屏相减正好证明那句英文不是 UI 文案：AI 失败时它就不在。**为什么这次 agent 调用失败我没查后端日志，不下结论。**
+
+### 我自己这轮的错（不藏）
+- **截图文件名没带 run 标号** ⇒ `W_RECOVER_<n>_<label>.png` 被第二次跑覆盖，run1 有 **6 帧**丢了（`W_RECOVER_01_boot_screen.png, W_RECOVER_02_enter_wizard.png, W_RECOVER_04_back_to_step1_1.png, W_RECOVER_05_type_city_hz.png, W_RECOVER_06_arrival.png, W_RECOVER_16_submit_ai.png；另有 7 帧只有 run2 产生，不算覆盖`）。已用 blob 级比对把每一帧的归属算清并发布（`recovery-shot-ownership.json`）；**本轮所有结论都不依赖被覆盖的帧**（逐字原文在两份互不覆盖的日志里，发布的 5 帧都按 sha 对到了产生它的那一次记录）。
+- 我第一次读 capability 时按猜的键名过滤（`city_code`/`action`/`state`）⇒ 一列 `None`。改成把整包存下来、再按真实键（`canonical_destination_id`/`recommended_action`/`destination_state`）取值，表里这列才是实测值。
+- run2 的第 16 帧与 run1 不同（AI 失败早了一拍），所以两 run 的"第 N 帧"不能互指——这也是我把 ownership 表一起发布的原因。
+
+### 没走到的格子（按你的口径＝洞）
+`使用封存的演示行程` 与 `返回当前行程` 这两个出口在屏上但我没点；**服务器解析不出的那 3 座城（福州/东京/新加坡）撞墙后是什么样子没走**（我只走了"认得名字但 0 行"的杭州）；浏览器返回/手势未测；真机上（`:4781/:4782/:8693`）整条恢复路径未测（按令未碰）；agent 失败原因未查；`START_HYDRATION` 这个建议动作有没有 UI 入口我没找。
+
+### 证据坐标（已发布并独立回读：21 个对象 `disagreements=0 / on-disk-but-not-published=0`）
+`Canshu-King/CityNexus` @ `commander/control` : `evidence/hjp4-4e974ae5/`
+- `city-code-matrix.json` 74213 B blob `a469e12454272760`（12 行逐条 places + 完整 capability 响应 + 库内 city_code 清单 + 只读证明）
+- `recovery-walk.json` 156520 B blob `1ffbfcbd020ab4ff`（两次恢复走 35/33 步：路由、屏上原文、可见控件+遮挡判定、截图 sha、存储侧）
+- `recovery-shot-ownership.json` 7978 B blob `c71e185be991dd50`（每帧归属，blob 级）
+- `MANIFEST.txt` 2439 B blob `214e6116c636c7c2`
+- 新发 5 帧：`shots/W_RECOVER_19_after_cta_screen.png` `5e984821e1e58a30` · `shots/W_RECOVER_23_after_back_2.png` `e649ca95dc5f5d98` · `shots/W_RECOVER_28_bj_review.png` `4383bf3a2b7d4a80` · `shots/W_RECOVER_33_bj_verdict.png` `63cf9ec5983edc8e` · `shots/W_RECOVER_35_bj_verdict.png` `f6a89dd9992e744e`
+
 ## commander 转达 @2026-09-23T03:15+08 —— 仲裁三条（`5782298826` ＋ `5782328456`）：**②③ 正式签关闭**；**跨进程必须补、Y3 也要杀一次跨进程门**；`calls=5` 拆成独立单 `PROVIDER_WORK_COALESCING`；**ORD-0237 只留"真取消"一条路**；泄露 key 切成 **credential epoch**
 
 ### ① ORD-0220②③：**它独立复核后正式签 `CLOSED(FIXED_IN_GENERATION)`**
