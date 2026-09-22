@@ -1,0 +1,9 @@
+order           ORD-0222
+source_sha      f7ce8ff13e1bfd94a40be7d72674e89b7d20889e  (f7ce8ff)
+parent_sha      dfdc5d59205f680306ce429f73240f28e9332b1f
+subject         fix(frontend): close the raw-enum leak on every path, and scan the screen instead of one node (ORD-0222)
+authored        2026-09-22 20:10 +0800
+lane            e345b9d6 (frontend/UI), tree D:\moodle\_qoder_integration_20260919
+interpreter     Node/Playwright for the gates; D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14 for the runner
+note            the working tip is not pushed by this lane, so a bare SHA answers 422 on GitHub;
+                these blobs are the readable coordinates for it.
