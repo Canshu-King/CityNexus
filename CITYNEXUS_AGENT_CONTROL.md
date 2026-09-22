@@ -190,6 +190,34 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=c01d72a3 · 仲裁 00:41 两笔收紧已照做；**但验收前提有一处冲突要裁：ACCEPTED-CODE 落在将被 revert 的那把上** 2026-09-23T00:51+08
+
+**⚑ 先说阻塞（这条不是我的偏好，是两个 verdict 撞在同一格）**：仲裁源审给 `00bc9b5` 的是 **ACCEPTED-CODE**，而 commander 的选型是**留 `21309b9`、由 C `git revert` 掉 `00bc9b5`**。照这个顺序做完，线上留下的正好是**没有被源审过的那把**，被撤的那把反而带着已签的 verdict。⇒ 请二选一并写进单：**(A)** 仲裁对 `21309b9` 复审后再 revert（我已把两把的 patch 都发到可读坐标，见下）；**(B)** 先 revert、`21309b9` 按**未审新代码**走一轮。我不动主线、不 push，等这一句；选型理由里"冻结边界原文是 produced server-side from deterministic demo fixtures，事实放 `data/mock/places.json` 比表内硬编码更贴字面"这条我收下，但它不改变"谁被审过"这个事实。
+
+**① E2E 收据分两层（照做，且当场抓到我自己的仪表错）**：收据里每个形制现在是 `parser_layer` + `feasibility_layer` 两个键，各自带 `feasibility_touched: false` / `parser_re_read_here: false`，不许再合成一句"端到端通过"。第一版跑出来 `parser_layer.rows = []`——**不是产品没落库，是我用 `getattr` 读 dict 行**；改成映射/属性双读后重跑，行层现在实测读到：
+```text
+「我们带婴儿车，这是必须的。」  parser: STROLLER=HARD  →  constraint rows 回读 [{'kind':'HARD','rule_code':'STROLLER','params':{'present':True}}]   feasibility: 生成 3→2 候选
+「我们拉一个大箱子，这是必须的。」parser: LARGE_LUGGAGE=HARD → 同上（LARGE_LUGGAGE）                                                             feasibility: 3→2
+两句同时 HARD                  parser: 两码 HARD → 两行 HARD 落库读回                                                                        feasibility: 3→1
+无断言                          parser: 无码无行                                                                                              feasibility: 3 候选不变
+```
+两层分开的收据：**12,734 B，blob `91901a22d6d65e2a`**（`evidence/b-ord0219-demo-evidence/q219b_demo_chain_receipt_v2.json`，PUT 201 ＋ BYTE-LEVEL MATCH）。**旧路径那份 `q219b_demo_chain_receipt.json` / blob `06392cdea7f6407b` 是 23:5x 引用的单层版**，仍在线上不覆盖，引用时请注明版本。
+
+**② 第⑤步突变最小集四臂（我的六臂是它的超集，逐臂都有 `anchor_hits==1` / `bytes_changed=True` / 还原 SHA-256 相等）**：
+```text
+stroller F->T      = M1   → 红 2 条（stroller 两向门、生成筛除门）
+luggage   F->T     = M6   → 红 1 条（luggage 两向门）
+source_kind->LIVE  = M3   → 红 2 条（DEMO 出处门、生产者白名单门）
+非 CNX-DEMO 注入   = M4   → 红 3 条（不泄漏门、精确集合门、UNKNOWN 门）
+另两臂（超出最小集）：M2 删除整条事实 → 红 2；M5 白名单失效 → 红 1
+8 条节点全部至少被一臂杀死：nodes_without_a_killing_arm = []
+```
+外加两臂是我自己加的跨半依赖（撤 severity 那一腿也要红），收据 blob `96662f06192c8d2b`。
+
+**给仲裁的两份源码 patch（可读坐标，逐字节回读通过）**：`evidence/b-ord0219-demo-evidence/21309b9.patch` blob **`308aa9added037fb`**(18,223 B，producer＋8 条门) ｜ `.../5730004.patch` blob **`1c4d4f14bbed06cb`**(2,351 B，parser severity)。合并态实测（撤 C 留 B）在 `.../q219b_merge_readings.txt` blob **`d49d9610e28e15e2`**：我的 8 条 ＋ C 的写入端门 9 条 = **17 passed**。
+
+**仍然等的（不变）**：能力写入口那格归谁（`CapabilityInput` 四条入口至今未设防，`e1580de` 设的是 constraints 路由）；`21309b9` 的合并/push 口径；生成阶段静默 `continue` 掉冲突候选要不要具名。四个 `SOFT_PREFERENCE` 码按令未动。
+
 ### SESSION=c01d72a3 · ORD-0219 撞车选型已读；**"撤 C 留 B"的合并态我实测过了**，给 C 的移植带五条读数 2026-09-23T00:45+08 → 主线 `8b9ea04` ＋我的 `services.py`/`places.json`/门文件（＝把 C 那把 producer 取走之后的形状）：**我的 8 条 ＋ C 的 `test_qoder_ord0219_write_side_rule_guard.py` 9 条 = 17 passed**，我没有一条需要为它那两层校验改动。逐节点读数已发布：`evidence/b-ord0219-demo-evidence/q219b_merge_readings.txt` blob **`d49d9610e28e15e2`**(2,964 B，PUT 201 ＋ BYTE-LEVEL MATCH，本地 `git hash-object` 复算同值)。
 
 **给 C / commander 的五条实测（省一轮来回）**
@@ -11463,6 +11491,22 @@ ORD-0221  外部可读坐标                -> DONE（本车道自己发的，�
 status: ORD-0222 ①、ORD-0221 坐标 = **已交付且已复核**（本块给读数）；D 队列现无阻塞在我这边的项。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander P0 读数 @2026-09-23T00:53+08 —— 用户库行数与**行同一性指纹**（本轮留底，供后续逐项比对）
+
+```text
+文件      D:\moodle\_qoder_cmdr_gate_20260921\backend\_live.db（只读 mode=ro 打开）
+journeys           rows=3   identity=e6d687d8feba0af4
+travelers          rows=3   identity=326d64d63fe667a1
+plan_versions      rows=19  identity=NO_TS_COL（该表无 updated_at/created_at 可读列，指纹基准不适用）
+commitments        rows=1   identity=66343d7b31f38de9
+bookings           rows=1   identity=da48704812032c6e
+replan_proposals   rows=1   identity=NO_TS_COL（同上）
+```
+**与今日先前读数逐项同数**（3/3/19/1/1/1）。四张表留了行同一性指纹；两张没有时间列的表如实标注"指纹基准不适用"，不拿它冒充"未变"。
+**边界照旧**：主文件哈希只作辅证（WAL 库"字节没变"不是不变的条件），本轮不给 main-file sha 下结论。
+现场：链三条端口在听；working tip `0437b5c`；`P7=false`；reference tip `c0d7e3d`；那把 key 仍未轮换。
+敲门 #76 仍在输入框待发（面板 hidden，正文 1048 字完好）。
+
 ## commander 记账 @2026-09-23T00:50+08 —— C 已执行 revert（`0437b5c`）；敲门 #76 正文在框内待发（面板 hidden）
 
 ```text
