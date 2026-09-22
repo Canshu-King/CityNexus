@@ -12879,7 +12879,12 @@ working tip `50b35e0`（16:41，D 的 ORD-0216）；reference tip `c0d7e3d`；`P
     （把该出口的 outcome 写回 null，门必须红）＋ 反例走 `mutation_anchor_guard.py`（`anchor_hits==1`、突变字节≠原字节）＋
     收据带 exact SHA、形制、命令面。**不许** deselect / skip / 放宽断言 / 用措辞匹配绕过。
     边界：不碰 `_live.db` / `_preview.db`、不触发 `demo/reset`、0 provider 出网。
-  status: DISPATCHED@2026-09-22T18:3x+08 by 494abfd7（来源＝HARNESS 18:14 诊断＋仲裁 `5773588112` 的立单口径）note@494abfd7@2026-09-22T22:15+08: **修法收窄（依据 HARNESS `EXP-HARNESS-008` 第二路径，我已在源码上逐条核实其三分结论）**：
+  status: DISPATCHED@2026-09-22T18:3x+08 by 494abfd7（来源＝HARNESS 18:14 诊断＋仲裁 `5773588112` 的立单口径）note@494abfd7@2026-09-22T22:15+08: **修法收窄（依据 HARNESS `EXP-HARNESS-008` 第二路径，我已在源码上逐条核实其三分结论）**：note@494abfd7@2026-09-22T22:57+08: 仲裁第二个产品决定（`5778570154`，第七十三次敲门回执）：**补演示库的无障碍证据生产者，不接受"只在合成夹具里可演示"**；范围只做 demo-owned、可追溯、非 LIVE 的最小证据链。
+  **冻结边界**：只限 sealed/demo-owned places；由确定性 demo fixtures 在服务端生产；provenance 必须显式 DEMO/SYNTHETIC_DEMO（或现有等价非-LIVE source kind）；**绝不标 LIVE_CAPTURE / provider truth**；不得泄进 normal-city/provider 路径；**与真实消费者同一 Place/evidence schema**（feasibility 走正常读取路径，不在 feasibility 里硬编码 demo 特例）。
+  **最小目标（只服务本单两码）**：STROLLER 至少 1 个 place `stroller_accessible=true` ＋ 1 个 `=false`；LARGE_LUGGAGE 同理（`luggage_accessible`）。必须能演示两向：证据满足时不误挡、冲突时给 `STROLLER_ACCESS_UNAVAILABLE` / `LUGGAGE_ACCESS_UNAVAILABLE`。`None/UNKNOWN` 仍按现有 unknown 语义，**禁止把缺证据默认成 accessible**。
+  **实现顺序（仲裁给 C 的五步，照录）**：① 先补 parser severity；② 再补 demo evidence producer/seed fixture；③ 走正常 `Place -> evidence -> feasibility` 消费链；④ 交一条 sealed-demo E2E（真实 demo journey 读这些 demo evidence，分别证明 pass/block 两向）；⑤ mutation：删掉/翻转 demo evidence 字段后门必须红。
+  **四个 SOFT_PREFERENCE 码维持上一裁定**：不跟本次 demo evidence producer 一起扩范围；severity + evaluator 必须同批落。
+  ⇒ **本单现在按 "parser + demo evidence producer + normal feasibility E2E" 推进，不必再等。**
   1. **第一步只补 `STROLLER`/`LARGE_LUGGAGE` 两个码的 `severity` 参数**（`capabilities.py:817-820` 的两处 `add(...)`）——HARNESS 已端到端跑通四道环节（写入口 `PUT /travelers/{id}/capabilities` 接受 `severity=HARD`（`schemas.py` `severity: Literal[...] = "SOFT"`）→ 约束行 1/1 → `evaluate_feasibility` → `STROLLER_ACCESS_UNAVAILABLE`/`LUGGAGE_ACCESS_UNAVAILABLE`、`passed=False`；正向证据不误伤），风险最低。
   2. **那四个 `SOFT_PREFERENCE` 码（`SLOW_PACE`/`QUIET_ENVIRONMENT`/`INDOOR_PREFERRED`/`SENSORY_LOW_STIMULATION`）不许只补 severity 一行**——它们不在 `_CAPABILITY_GATE_CODES`（`backend/app/replanning/feasibility.py:254-266`，11 码），硬规则进门即 `UNSUPPORTED_HARD_CONSTRAINT` ⇒ `passed=False` ⇒ **整趟被拒**。HARNESS 的原话：**"只补 severity 会把『静默不执行』变成『整趟旅程不可规划』"**。要做就连可行性层求值分支一起做，并带双向门（负证据→具名失败、正证据→不误伤）。
   3. **词表设防**：`ConstraintInput.rule_code` 是自由字符串，词表外 rule_code 也能以 `kind=HARD` 落库 ⇒ 一律 `UNSUPPORTED_HARD_CONSTRAINT`。要不要在写入端校验"∈ 词表/可执行集"——**已升级给仲裁**，等一句话；C 在等这句话期间不动写入端。
