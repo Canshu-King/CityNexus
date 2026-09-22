@@ -905,6 +905,8 @@ class Harness:
             {
                 "status": select_block_status,
                 "body": select_block,
+                "before": journey_before_select,
+                "after": journey_after_select_block,
                 "journey_before": journey_before_select,
                 "journey_after": journey_after_select_block,
                 "plan_before": {"id": plan_before_select.get("id"), "status": plan_before_select.get("status")},
@@ -947,6 +949,8 @@ class Harness:
             {
                 "status": start_block_status,
                 "body": start_block,
+                "before": journey_before_start,
+                "after": journey_after_start_block,
                 "journey_before": journey_before_start,
                 "journey_after": journey_after_start_block,
                 "plan_before": {"id": plan_before_start.get("id"), "status": plan_before_start.get("status")},
