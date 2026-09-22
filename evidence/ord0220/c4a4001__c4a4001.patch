@@ -1,0 +1,68 @@
+commit c4a40016d25842c221c6fd7a68a86923d0e437ff
+Author: 仓鼠王 <yjianbin419@gmail.com>
+Date:   Tue Sep 22 20:40:43 2026 +0800
+
+    fix(frontend): reveal the blocked reason instantly, not with an animation (commander's 19:48 rule)
+    
+    HJ-P1's discriminating test showed scrollIntoView({behavior:"smooth"}) sampled scrollY=0 six
+    times under this machine's mobile emulation while the same element moved 0 -> 650 instantly
+    five times out of five.  A reason that only arrives if the compositor animates is not a
+    testable product behaviour, so the reveal is now instant and the gate's wait is a guard
+    (1.5s) rather than an animation timer.  killZ1 re-anchored to the new line: still KILLED.
+
+diff --git a/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts b/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts
+index 57c27a1..ae64e9f 100644
+--- a/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts
++++ b/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts
+@@ -349,6 +349,10 @@ test("ord0220-3-a-refused-press-brings-its-reason-on-screen — 按下去什么
+   });
+ 
+   await page.getByTestId("trial-next").click({ force: true });
++  /* The reveal is instant (`scrollIntoView({block:"center"})`), so this bound is a guard, not an
++     animation timer: commander's 19:48 rule says a gate must not measure an animation, because
++     `behavior:"smooth"` sampled scrollY=0 six times on this machine while the same element moved
++     0 -> 650 instantly five times out of five. */
+   await expect
+     .poll(
+       () =>
+@@ -362,7 +366,7 @@ test("ord0220-3-a-refused-press-brings-its-reason-on-screen — 按下去什么
+           NODE,
+           `the press was refused but its reason never came on screen: before ${JSON.stringify(before)}`,
+         ),
+-        timeout: 4_000,
++        timeout: 1_500,
+       },
+     )
+     .toBe(true);
+diff --git a/frontend/src/features/setup/JourneyTrialSetup.tsx b/frontend/src/features/setup/JourneyTrialSetup.tsx
+index 37209ef..9ccbffe 100644
+--- a/frontend/src/features/setup/JourneyTrialSetup.tsx
++++ b/frontend/src/features/setup/JourneyTrialSetup.tsx
+@@ -446,7 +446,13 @@ export function JourneyTrialSetup({
+   const revealReason = () => {
+     const hint = document.getElementById("trial-required-hint");
+     if (!hint) return;
+-    hint.scrollIntoView({ block: "center", behavior: "smooth" });
++    /* Instant, not smooth.  HJ-P1's discriminating experiment (commander's 19:48 rule): the same
++       element moved 0 -> 650 with `scrollIntoView({block:"center"})` five times out of five, while
++       `behavior:"smooth"` sampled scrollY=0 six times over 1.2s -- the animation never advances in
++       this machine's mobile emulation.  A reason that arrives only if the compositor feels like
++       animating is not a testable product behaviour, and the traveller should not have to wait for
++       an animation to learn why her press did nothing. */
++    hint.scrollIntoView({ block: "center" });
+   };
+   const mounted = useRef(true);
+   useEffect(() => {
+diff --git a/review/ord0082_0087_kill_drivers.py b/review/ord0082_0087_kill_drivers.py
+index a1a1c25..127f0be 100644
+--- a/review/ord0082_0087_kill_drivers.py
++++ b/review/ord0082_0087_kill_drivers.py
+@@ -736,7 +736,7 @@ CASES = [
+         # the exact 'I pressed and nothing happened' state HJ-P1 measured three times.
+         "killZ1-refused-press-never-reveals-its-reason",
+         WIZARD,
+-        '    hint.scrollIntoView({ block: "center", behavior: "smooth" });\n',
++        '    hint.scrollIntoView({ block: "center" });\n',
+         '    // reveal removed: the sentence is spoken, the screen never shows it\n',
+         [(SURFACE_SPEC, ['ord0220-3-a-refused-press-brings-its-reason-on-screen'])],
+     ),
