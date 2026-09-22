@@ -172,14 +172,34 @@ def main() -> int:
     if st not in (200, 201):
         return 3
     time.sleep(2)
+    auth_anomaly = None
+    saw_a_dict = False
     for attempt in range(1, 4):
         st, after = call("GET", f"/repos/{REPO}/contents/{repo_path}?ref={BRANCH}")
-        if isinstance(after, dict) and after.get("sha") == want:
-            print("PROOF (git blob sha1 equality): BYTE-LEVEL MATCH")
-            print(f"local bytes {len(blob)} | remote size {after.get('size')} | sha1 {want[:16]}")
-            return 0
+        if st in (401, 403):
+            # SAFE-DEFAULT 2026-09-23 (arbiter 5775473121 §2, mirrored from mirror_v2.py): a 401 on
+            # the read-back is a MEASUREMENT failure, not a delivery failure.  The PUT already
+            # returned 2xx with a commit, so the artifact is published - but the byte-level proof
+            # was not taken.  The old code fell through to "MISMATCH after retries", which reports an
+            # unproven publish as a wrong publish.  Say which one it is; never rotate the token here.
+            auth_anomaly = (st, str(after)[:120])
+            print(f"AUTH_ANOMALY_TAIL_READ({st}) on GET /repos/{REPO}/contents/{repo_path}?ref={BRANCH}")
+            time.sleep(3)
+            continue
+        if isinstance(after, dict):
+            saw_a_dict = True
+            if after.get("sha") == want:
+                print("PROOF (git blob sha1 equality): BYTE-LEVEL MATCH")
+                print(f"local bytes {len(blob)} | remote size {after.get('size')} | sha1 {want[:16]}")
+                return 0
         print("attempt", attempt, "remote", str(after)[:80] if not isinstance(after, dict) else after.get("sha", "")[:10])
         time.sleep(3)
+    if auth_anomaly and not saw_a_dict:
+        print(f"PUBLISHED_UNPROVEN: the PUT succeeded (commit {commit}) so the artifact is on "
+              f"{BRANCH}, but every read-back answered {auth_anomaly[0]} - this is an AUTH/transport "
+              f"anomaly on the read path, NOT a hash mismatch and NOT a credential failure.")
+        print(f"  do not rotate or edit the token; re-run this publish to take the proof. body={auth_anomaly[1]}")
+        return 7
     print("MISMATCH after retries - do not claim the publish")
     return 4
 
