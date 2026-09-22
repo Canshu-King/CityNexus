@@ -134,6 +134,10 @@ def main() -> int:
     ap.add_argument("--observation-runs", type=int, default=0,
                     help="explicit observation-only sample size; never closure-grade")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--clause6-declared", dest="clause6_declared", default="",
+                    help="the delivering lane's clause-6 declaration; without it this adapter can never "
+                         "read CLOSED (fail-closed by design, and it now says so instead of silently "
+                         "hard-coding False)")
     args = ap.parse_args()
 
     backend = Path(args.tree).resolve()
@@ -177,11 +181,21 @@ def main() -> int:
         streams_separate=True, decoder=runs[0]["stdout_codec"],
     )
     clean, hits = shared.clause6_command_surface(argv)
+    # clause 6 is a DECLARATION by the lane that ran the command, so this adapter must not invent it
+    # (F 8ccd71d8 measured 2026-09-23: hard-coding False makes CLOSED unreachable through this tool
+    # alone - which is the safe direction, but it has to be SAID rather than discovered).  A lane that
+    # really is the delivering lane passes it explicitly; otherwise it stays False and we print why.
+    clause6_declared = bool(args.clause6_declared) or os.environ.get("CNX_CLAUSE6_DECLARED") == "1"
+    if not clause6_declared:
+        print("[adapter] clause6_declared=False -> the ruler's closure_allowed cannot be satisfied, so "
+              "this run can NEVER read CLOSED.  The delivering lane must declare clause 6; pass "
+              "--clause6-declared '<how the command surface stayed clean>' (or CNX_CLAUSE6_DECLARED=1) "
+              "in the second, judging step.  Measurement and judgement are two steps by design.")
     verdict = shared.streak_verdict(
         runs=[{k: v for k, v in r.items()} for r in runs],
         rounds=rounds, sha=args.sha, target_nodeid=args.node, run_shape=shared.SINGLE_NODE,
         command=" ".join(argv), independence_declared=True,
-        clause6_declared=False,  # the delivering lane must state HOW; this tool cannot prove it
+        clause6_declared=clause6_declared,
         clause6_command_surface_clean=clean, clause6_command_surface_hits=hits,
         run_shape_verified=shape.get("run_shape_verified", False),
         run_shape_problems=shape.get("problems", []),
@@ -210,7 +224,20 @@ def main() -> int:
                       ("sha", "target_nodeid", "run_shape", "rounds", "observation_only",
                        "clause6_command_surface_clean")}, ensure_ascii=False, indent=2))
     print("verdict:", verdict.get("verdict"), "| closure:", verdict.get("closure_grade"))
-    return 0 if str(verdict.get("verdict", "")).startswith("STREAK_MET") else 1
+    # Exit 0 means CLOSED and nothing else.  F 8ccd71d8 measured 2026-09-23 that the old line
+    # (`startswith("STREAK_MET") -> 0`) reads green while freshness / run_shape / clause 6 / reverse
+    # mutation may all still be unmet - i.e. the same lax-twin family as the deploy gauge.  An
+    # explicit observation run is allowed to exit 0 on STREAK_MET because that is what it claims.
+    grade = str(verdict.get("closure_grade", ""))
+    met = str(verdict.get("verdict", "")).startswith("STREAK_MET")
+    if grade == "CLOSED":
+        return 0
+    if observation_only and met:
+        print("[adapter] observation-only run: STREAK_MET but closure_grade=", grade,
+              "-> exit 0 is this run's own claim, NOT a closure")
+        return 0
+    print("[adapter] NOT CLOSED: closure_grade=", grade, "| verdict=", verdict.get("verdict"))
+    return 1
 
 
 if __name__ == "__main__":
