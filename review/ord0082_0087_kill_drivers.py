@@ -42,6 +42,7 @@ REPLAN_SPEC = "e2e/qoder-replan-review-actions.spec.ts"
 PREP = "src/features/discovery/DestinationPreparationPanel.tsx"
 PREP_SPEC = "e2e/qoder-destination-preparation.spec.ts"
 NA_SPEC = "e2e/qoder-not-answered-cell.spec.ts"
+TONGUE_SPEC = "e2e/qoder-speaks-the-travellers-language.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -591,6 +592,38 @@ CASES = [
         "            ? `服务器说这一问没有拿到答复（${reasonCode}）——是它去问的那一头没答话，不是「这个地方不能规划」，也不是「这城市还要灌数据」。这两句服务器都没说。可以稍后重试。`\n",
         "            ? `这城市还要灌数据，服务器暂时没有它的资料。`\n",
         [(NA_SPEC, ["ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable"])],
+    ),
+    (
+        # ORD-0208 2: the selected state goes back to colour alone.
+        "killS1-chips-lose-their-spoken-state",
+        WIZARD,
+        "                  aria-pressed={draft.pace === option.key}\n",
+        "                  aria-pressed={undefined}\n",
+        [(TONGUE_SPEC, ["ord0208-chips-carry-their-state-for-ears-not-only-eyes"])],
+    ),
+    (
+        # ORD-0208 1: the enum returns to the prose -- the measured pre-fix wording.
+        "killS2-clock-sentence-prints-the-enum-again",
+        EXPERIENCE,
+        "                    ? \"。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读\"\n",
+        "                    ? `，游标状态 ${cursorStatus}`\n",
+        [(TONGUE_SPEC, ["ord0208-the-clock-sentence-speaks-human"])],
+    ),
+    (
+        # ORD-0208 3: the inferred default passes for a typed answer again.
+        "killS3-defaults-pass-as-typed",
+        WIZARD,
+        "                {!touched.has(\"partySize\") && <DefaultMark zh={zh} />}\n",
+        "",
+        [(TONGUE_SPEC, ["ord0208-inferred-defaults-are-marked-on-the-confirmation-step"])],
+    ),
+    (
+        # ORD-0208 4: the day card prints the raw enums again.
+        "killS4-day-card-prints-raw-enums",
+        EXPERIENCE,
+        "                    {anchorLabel(day.anchor, locale.startsWith(\"zh\"))} \u00b7{\" \"}\n                    {modeLabel(day.mode, locale.startsWith(\"zh\"))}\n                  </small>\n",
+        "                    {day.anchor} anchor · {day.mode}\n",
+        [(TONGUE_SPEC, ["ord0208-the-day-card-speaks-the-language-the-screen-uses"])],
     ),
 ]
 

@@ -288,6 +288,21 @@ const STEP_OF_TARGET: Record<string, 1 | 2 | 3> = {
 };
 
 /**
+ * ORD-0208 3: the marker that keeps inferred values in their own grammar.  HJ-P1 measured the
+ * confirmation step printing 人数 2 / CNY 3000 / 轻松 -- all defaults nobody typed -- in exactly the
+ * same style as answers that were typed, beside an honest 「—」 for interests.  One screen, two
+ * vocabularies.  This marker is the third state: chosen, unanswered (「—」), and filled in for you.
+ */
+function DefaultMark({ zh }: { zh: boolean }) {
+  return (
+    <span className="trial-default-mark" data-testid="review-default-mark">
+      {" "}
+      · {zh ? "我们替你填的" : "we filled this in for you"}
+    </span>
+  );
+}
+
+/**
  * The stages `createJourney` actually awaits (ORD-0047).  A waiting line may name nothing
  * outside this list: a fabricated step is worse than no step, because it teaches the
  * traveller to believe a progress bar that means nothing.
@@ -372,6 +387,14 @@ export function JourneyTrialSetup({
   /* Read once, before either state exists: a reload must land on the step the traveller
      was on with what they had typed, which is the half of "没有保存记录" that was real. */
   const restored = useRef(readStoredTrial({ step: 1, draft: defaultDraft })).current;
+  /* ORD-0208 3: the confirmation step used to print inferred defaults (2 people, CNY 3000 / 1000,
+     轻松) in the same visual grammar as typed answers, while an unset interest showed the honest
+     「—」.  One screen, two vocabularies.  This set records which fields a person actually chose, so
+     the review step can mark the rest as 我们替你填的 instead of passing them off as typed.  A
+     restored draft counts as chosen: it is a value somebody accepted earlier, not a fresh default. */
+  const [touched, setTouched] = useState<Set<string>>(
+    () => new Set(Object.keys(restored.draft).filter((key) => restored.draft[key] !== defaultDraft[key as keyof JourneyTrialDraft])),
+  );
   const [step, setStep] = useState<1 | 2 | 3>(restored.step);
   const [advanced, setAdvanced] = useState(false);
   /* createJourney catches its own failure and does not rethrow, so a resolved
@@ -417,6 +440,7 @@ export function JourneyTrialSetup({
 
   const update = <K extends keyof JourneyTrialDraft>(key: K, value: JourneyTrialDraft[K]) => {
     setCreateAttemptFailed(false);
+    setTouched((current) => new Set(current).add(key as string));
     setDraft((current) => ({ ...current, [key]: value }));
   };
 
@@ -800,6 +824,11 @@ export function JourneyTrialSetup({
                   key={option.key}
                   type="button"
                   className={draft.pace === option.key ? "active" : ""}
+                  /* ORD-0208 2: the selected state was colour alone -- a screen reader or a
+                     colour-blind traveller could not tell which chip was on.  A toggle control
+                     carries its state in `aria-pressed`; it stays a plain click, and it is never
+                     `aria-disabled`, which this browser treats as unclickable. */
+                  aria-pressed={draft.pace === option.key}
                   data-testid={`trial-pace-${option.key}`}
                   onClick={() => update("pace", option.key)}
                 >
@@ -819,6 +848,7 @@ export function JourneyTrialSetup({
                     key={option.key}
                     type="button"
                     className={selected ? "active" : ""}
+                    aria-pressed={selected}
                     data-testid={`trial-interest-${option.key}`}
                     onClick={() =>
                       update(
@@ -896,18 +926,21 @@ export function JourneyTrialSetup({
               <dt>{zh ? "人数 / 房间" : "Travellers / rooms"}</dt>
               <dd data-testid="review-party">
                 {draft.partySize} · {draft.rooms}
+                {!touched.has("partySize") && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>
               <dt>{zh ? "总预算 / 住宿" : "Total / stay budget"}</dt>
               <dd data-testid="review-budget">
                 {draft.currency} {draft.budgetMajor} / {draft.stayBudgetMajor}
+                {(!touched.has("budgetMajor") || !touched.has("stayBudgetMajor")) && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>
               <dt>{zh ? "节奏" : "Pace"}</dt>
               <dd data-testid="review-pace">
                 {optionLabels(draft.pace ? [draft.pace] : [], PACE_OPTIONS, zh) || "—"}
+                {!touched.has("pace") && <DefaultMark zh={zh} />}
               </dd>
             </div>
             <div>

@@ -200,14 +200,30 @@ for (const viewport of [390, 412]) {
       const first = await readStage(page, stageJourneyId);
       /* The server does not always trust its own cursor: on a scenario the wall clock sits outside
          of, the projection says ABSENT_FALLBACK and Today legitimately falls back.  That case is
-         the degraded path, not the station choice under test, so the disclosure is asserted here
-         and the equality claim is reported as unmeasurable instead of being scored green. */
+         the degraded path, not the station choice under test.  ORD-0208 1 reworded the disclosure:
+         the raw enum must NOT be in the prose any more (it used to read 「游标状态 ABSENT_FALLBACK」,
+         measured on a phone), so the sentence is asserted in words and the enum stays where it is
+         inspectable -- the data attribute this gate already reads. */
       if (first?.cursorStatus && first.cursorStatus !== "VALID") {
+        const disclosed = clean(await page.getByTestId("today-clock-source").innerText());
         expect(
-          clean(await page.getByTestId("today-clock-source").innerText()),
+          disclosed,
           node("sim-today-hero-follows-the-stage",
-            `the server's cursor is ${first.cursorStatus} and the hero does not say so on screen`),
-        ).toContain(first.cursorStatus);
+            `the server's cursor is ${first.cursorStatus} and the hero neither discloses the degraded clock nor names the time window`),
+        ).toContain("时间窗");
+        expect(
+          disclosed,
+          node("sim-today-hero-follows-the-stage",
+            `the hero prints the raw enum ${first.cursorStatus} as prose -- the defect ORD-0208 1 names`),
+        ).not.toContain(first.cursorStatus);
+        const rawStatus = await page
+          .getByTestId("today-clock-source")
+          .getAttribute("data-cursor-status");
+        expect(
+          rawStatus,
+          node("sim-today-hero-follows-the-stage",
+            "the enum vanished from the inspectable attribute as well; hiding it is not the same as rewording it"),
+        ).toBe(first.cursorStatus);
         test.skip(true, `the server reports the cursor as ${first.cursorStatus}; no station to agree with`);
       }
       expect(

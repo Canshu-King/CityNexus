@@ -644,6 +644,10 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   .prep-actions button { min-height: var(--cn-touch-min); width: 100%; }
 }
 
+/* ORD-0208 3: the marker that separates an inferred default from a typed answer.  Words, not
+   colour, carry the distinction -- the same rule the dark-contrast pass settled on. */
+.trial-default-mark { color: var(--v8-muted, #8994a3); font-size: var(--cn-fs-caption, 11px); font-weight: 500; }
+
 /* The primary action must never be invisible or buried. */
 .trial-sticky-cta {
   position: sticky;

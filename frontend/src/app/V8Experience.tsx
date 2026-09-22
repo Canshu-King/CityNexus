@@ -2493,11 +2493,17 @@ function Hub({
                     : zh
                       ? "行程起点"
                       : "journey start";
+                /* ORD-0208 1: this sentence had three defects measured on a phone -- the internal
+                   enum (`游标状态 ABSENT_FALLBACK`) printed as prose, the instant shown as bare UTC
+                   (`2026-09-21T02:00:00+00:00`) to someone just told the trip runs on China Standard
+                   Time, and a self-contradiction ("取自服务器场景" beside a status that says ABSENT).
+                   A non-VALID cursor is now the plain sentence the order suggests; the enum stays in
+                   the `data-cursor-status` attribute, where it is inspectable without being prose. */
                 const cursorNote =
                   cursorStatus && cursorStatus !== "VALID"
                     ? zh
-                      ? `，游标状态 ${cursorStatus}`
-                      : `, cursor ${cursorStatus}`
+                      ? "。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读"
+                      : ". The server gave no execution cursor for this minute, so this screen reads time by the journey's window"
                     : "";
                 const stationNote = useProjection
                   ? zh
@@ -2511,8 +2517,8 @@ function Hub({
                       ? " · 服务器的执行投影还没到，这一屏没有按游标定位"
                       : " · the server's execution projection has not arrived, so no station is claimed from the cursor";
                 return zh
-                  ? `“现在”取自服务器场景（${basis}${cursorNote}）：${stageInstant}${stationNote}`
-                  : `"now" comes from the server's scenario (${basis}${cursorNote}): ${stageInstant}${stationNote}`;
+                  ? `“现在”取自服务器场景（${basis}${cursorNote}）：${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}${stationNote}`
+                  : `"now" comes from the server's scenario (${basis}${cursorNote}): ${dateInZone(stageInstant ?? undefined, locale, data.journey.timezone || "UTC")}${stationNote}`;
               }
               if (stage.phase === "loading")
                 return zh
@@ -2754,7 +2760,11 @@ function Studio({
                 <div>
                   <b>{day.label}</b>
                   <small>
-                    {day.anchor} anchor · {day.mode}
+                    {/* ORD-0208 4: this used to print the raw enums -- 「ARRIVAL anchor · TRANSIT」
+                        in a Chinese interface.  Both words have humanizer tables; the day card just
+                        never used them. */}
+                    {anchorLabel(day.anchor, locale.startsWith("zh"))} ·{" "}
+                    {modeLabel(day.mode, locale.startsWith("zh"))}
                   </small>
                 </div>
               </div>
@@ -3949,6 +3959,21 @@ function modeLabel(mode: string, zh: boolean): string {
       ? entry.zh
       : entry.en
     : key.replace("_", " ").toLowerCase();
+}
+
+/** ORD-0208 4: structural anchor roles reached the day card as raw enums (「ARRIVAL anchor」). */
+function anchorLabel(anchor: string, zh: boolean): string {
+  const key = String(anchor).toUpperCase();
+  const labels: Record<string, { zh: string; en: string }> = {
+    ARRIVAL: { zh: "抵达", en: "Arrival" },
+    DEPARTURE: { zh: "离开", en: "Departure" },
+    STAY: { zh: "住宿", en: "Stay" },
+    CHECK_IN: { zh: "入住", en: "Check-in" },
+    CHECK_OUT: { zh: "退房", en: "Check-out" },
+    ANCHOR: { zh: "锚点", en: "Anchor" },
+  };
+  const entry = labels[key];
+  return entry ? (zh ? entry.zh : entry.en) : key.replace("_", " ").toLowerCase();
 }
 
 const CITY_NAME_BY_SLUG: Record<string, { zh: string; en: string }> = {
