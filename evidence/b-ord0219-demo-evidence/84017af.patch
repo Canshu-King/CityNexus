@@ -1,0 +1,58 @@
+From 84017af12cd9e3db8ee3bf082fc6ef3e04244b20 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=BB=93=E9=BC=A0=E7=8E=8B?= <yjianbin419@gmail.com>
+Date: Wed, 23 Sep 2026 00:56:09 +0800
+Subject: [PATCH] test(demo): the producer gate pins the evaluated verdict, not
+ just the filtered keys
+
+Absorbs lane C's laundering assertion (arbiter port boundary 00:44): a single demo stroller fact
+must never make the whole record read as step-free verified. The node now reads the projected
+evidence back through the product's own accessibility readers and refuses ACCESSIBILITY_VERIFIED,
+so widening the producer whitelist reddens the claim rather than only the key list.
+---
+ .../test_qoder_demo_accessibility_evidence.py | 23 ++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
+
+diff --git a/backend/tests/test_qoder_demo_accessibility_evidence.py b/backend/tests/test_qoder_demo_accessibility_evidence.py
+index cd96c7f..fea7ef1 100644
+--- a/backend/tests/test_qoder_demo_accessibility_evidence.py
++++ b/backend/tests/test_qoder_demo_accessibility_evidence.py
+@@ -21,7 +21,11 @@ import json
+ from fastapi.testclient import TestClient
+ from sqlalchemy import select
+ 
+-from app.capabilities import extract_capabilities_from_text
++from app.capabilities import (
++    accessibility_state,
++    evaluate_accessibility_requirement,
++    extract_capabilities_from_text,
++)
+ from app.db.models import Activity, Journey, Place
+ from app.db.session import SessionLocal
+ from app.integrations.mock.providers import MockCityDataProvider
+@@ -228,6 +232,23 @@ def test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture(
+         "source": "data/mock/places.json#place-synthetic",
+     }, f"生产者搬运了不该搬的东西，实际 {projected}"
+ 
++    # C 的移植件①（仲裁 00:44）：不止"键没穿过"，还要钉"求值没被洗白"。
++    # 一条婴儿车事实绝不能把整条记录说成"无台阶已验证"。
++    class _Record:
++        metadata_json = json.dumps({"accessibility_evidence": projected})
++
++    read_back = _accessibility_metadata(_Record()) or {}
++    assert "evidence_status" not in read_back and "step_free" not in read_back, (
++        f"整条记录的无障碍裁决被单点事实改写：{read_back}"
++    )
++    for verdict in (
++        accessibility_state(read_back),
++        evaluate_accessibility_requirement("STEP_FREE_REQUIRED", read_back),
++    ):
++        assert verdict != "ACCESSIBILITY_VERIFIED", (
++            f"只有 stroller 事实却量出 ACCESSIBILITY_VERIFIED（洗白）：{read_back} -> {verdict}"
++        )
++
+ 
+ # ------------------------------------------------------------------------------------------
+ # 消费链：真实封存 demo journey，两向都测
+-- 
+2.45.1.windows.1
+
