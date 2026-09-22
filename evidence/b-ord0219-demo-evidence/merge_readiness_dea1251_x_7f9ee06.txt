@@ -1,0 +1,18 @@
+# ORD-0219 merge-readiness: dea1251 x main line 7f9ee06 (written for whoever lands ORD-0234)
+main line: 7f9ee06 Wed Sep 23 02:33:43 2026 +0800 test(frontend): bound the caveat read -- an absent element cost the whole 300 s budget (ORD-0226 follow-up ②)
+mine:      dea1251 Wed Sep 23 02:21:16 2026 +0800 test(demo): two hard constraints on file each name only their own blocker
+merge-tree: one conflict only -> backend/app/capabilities.py (the ORD-0234 line)
+main-line services.py vs common ancestor bce7269: 0 diff lines (0 = identical, so my overlay clobbers nothing)
+
+## same 3 gate files, same export shape (narrow: backend data contracts tools); only the spelling differs
+main line as-is (else "STRONG")  ->  27 passed, 2 warnings in 1.64s
+ORD-0234 applied (else None)       ->  27 passed, 2 warnings in 1.71s
+
+## full-tree export (git archive 7f9ee06 | tar -x) + my overlay + else None
+4 files (adds v18_3 convergence)  ->  31 passed, 2 warnings in 1.78s
+full suite on that tree: 8 failed / 1186 passed / 15 skipped / 1 xfailed, collected 1210, 132.56s
+  baseline-9 minus test_aiv3_02 (main line fixed it: standalone 1 passed on the full-tree export of 7f9ee06); my overlay adds 0 reds
+
+## retracted export-shape artifacts (appear only under the narrow export; both green full-tree)
+  test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged -> FileNotFoundError PACKAGE-MANIFEST.json
+  test_gpt_agent_authority_v3.py::test_aiv3_02_... -> ModuleNotFoundError: No module named 'citynexus_mcp'
