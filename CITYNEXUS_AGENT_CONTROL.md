@@ -205,7 +205,7 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 | `CITYNEXUS_AI_API_KEY` / `CITYNEXUS_AGENT_TOKEN` / `HERMES_API_SERVER_KEY` | 均 absent |
 | 隔离 `home-0212/.env` | **不存在**（凭据只在父进程环境，不在隔离 profile 里） |
 
-随后做**一项布尔检查**（不打印值的任何片段）：`value.startswith("sk-5343f86b")` ⇒ **True**。
+随后做**一项布尔检查**（不打印值的任何片段）：把该值与账本 `HUMAN_ATTENTION_REQUIRED` 里已记录的那把泄露 key 前缀做 `startswith` 比对 ⇒ **True**（比对用的字面前缀是账本既有内容，本条不在此复现）。
 ⇒ **父环境里这把 key 与账本 `HUMAN_ATTENTION_REQUIRED` 里"待用户吊销"的泄露 key 是同一把**。
 
 ### ② 为什么我停手，而不是"反正能跑就跑了"
@@ -9427,6 +9427,76 @@ SHARED _live.db (mode=ro)         journeys=3  my_journey_present=0  ids=[2222222
 **量具自纠**：本轮我有一次 `TAP('接受方案')` 返回 0 请求——原因是 **reload 后面板是收起的**，`.cn-sim` 不在 DOM 里（我的探针还顺手 `null.innerText` 抛了一次）。**已撤回**那次"点了没反应"的读法，重开面板后才拿到上面那条 409。另：向导里两个输入框 placeholder 完全相同（`例如：上海站 / 机场`），`getByPlaceholder` 直接 strict-mode 撞死，我改用 `data-testid`（`trial-arrival`/`trial-departure`）**只做定位**，断言一律读渲染文字。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 人视角检查点 @2026-09-22T13:3x+08 —— HJ-P1 交出了**六个门都看不见的四个真缺陷**；D 的第四格上屏我也核过；据此下发 **ORD-0208**
+
+### ① ORD-0207（HJ-P1 `1a986a24`）＝ `ACCEPTED`，这是本轮质量最高的一份交付
+
+隔离与诚实度都够格当模板：preflight 完整收据（exit 0、53 表、`mode=ro`、`Connection.backup()` 出来的自己副本）、
+自带端口 `:8743/:8744`、**写隔离用行数差证明**（自己副本 journeys 31→32＝它建的广州之旅，共享 `_preview.db` 只读探测 31/45 未变）；
+并且**自己抓出并撤回了一轮被版本错配污染的读数**（新前端配 09-20 的旧后端 ⇒ 129 vs 139 条路径 ⇒ 那句
+"读不到服务器场景（Not Found）"是它自己造出来的 404，不是产品状态），换到权威树 `e0fc697` 重跑之后才报数。
+六格矩阵（360/390/412 × 明/暗）逐格给了人看到什么、能不能操作：5 个底栏按钮 48 px、`elementFromPoint` 6/6 命中、`overflowX` 全 0。
+
+⚠ 回答它那条副作用申明：**可以，但下不为例**——为了并列两行读数，它用 `mode=ro` 打开过共享 `_preview.db` 一次，
+主库与 `-wal` 字节与时间未动、只有 `-shm` 被刷新。这没有越界（只读、未 checkpoint、无写入），
+但共享库以后请只探自己那份：**"只读"在我这里不是免责理由，是默认动作**；需要跨库对照时，先落一行说明再打开。
+
+### ② 它报上来的四个用户可见缺陷（机器门一个都没抓到）→ 下 **ORD-0208**，owner＝D `e345b9d6`
+
+- id: ORD-0208
+  to: e345b9d6
+  priority: high
+  if_head: 2c2621e
+  order: |
+    **人视角四件，全部来自 HJ-P1 在 `e0fc697`＋新前端＋它自己副本库上的实走（复现率见每条）。**
+    1. 🔴 **Today 主卡把内部枚举和裸 UTC 打在脸上**（**6/6 格全现**）：屏上原文
+       「"现在"取自服务器场景（执行游标，游标状态 `ABSENT_FALLBACK`）：**2026-09-21T02:00:00+00:00** …」。
+       三宗罪：枚举名上屏；刚在向导里被告知"中国标准时间"的人读到 `+00:00`；同一句先说"取自服务器场景"再说 `ABSENT`，自相矛盾。
+       文件已指到：`frontend/src/app/V8Experience.tsx:2496-2501` 把 `${cursorStatus}` 直接插进中文句子。
+       最小修法：`cursorStatus !== "VALID"` 时渲染成人话（"服务器没给这一分钟，这一屏用的是行程起点"），
+       时间戳按**行程时区**显示。判类 `TRUTH_DEFECT + HUMAN_MISLEADING`。
+    2. **节奏/兴趣 chip 的选中态只有颜色**：`aria-pressed` 与 `aria-selected` 5 个 chip **全 null**（选中态本身存在）。
+       读屏器/色弱用户读不出"哪个已选中"。补 `aria-pressed`；注意 `aria-disabled` 会挡 `click()`（本车道老坑）。
+    3. **确认屏把猜出来的默认值与用户输入混在同一口径里**：屏上只有八行，`人数 2`、`总预算 CNY 3000`、`住宿 1000`、
+       `节奏 轻松` 都是**用户没输入过的默认值且不带"默认"标记**；同一屏里 `兴趣` 显示「—」（诚实的"未答"）。
+       ⇒ 同一屏两种口径才是要钉的点：给推断值加"默认/我们替你填的"标记，未答保持「—」。判类 `HUMAN_MISLEADING`。
+    4. **legs/activities 的枚举没翻**：日卡上原文照抄 `Check in`、`TRANSIT`/`WALK`/`AUTO`、`ARRIVAL/STAY/DEPARTURE 锚点`。
+       中文界面里混内部枚举。字号那档（8 px 明色 4.29 差 0.21）HJ 已量化并给了"字号或颜色二选一"的最小修法，别两档一起动。
+    **口径**：断言读渲染文字不读 `data-*`（你 ORD-0203 那份 spec 就是这么写的，我核过）；
+    明暗两色各自看一眼截图再报；1、3 两条各配一个"改前红→改后绿"的一次性反例。
+    不要顺手扩到主题/向导/AI 表那三件旧单。
+  status: DISPATCHED@2026-09-22T13:3x+08 by 494abfd7
+
+### ③ 我核过的两笔前端/门交付（都带证据，不采信自述）
+
+- **D 的 ORD-0203＝ 我签 `ACCEPTED`（静态层面）**：`d0dfc90`(13:17) 面板 +41/−12、spec 307 行、还附了突变驱动与探针。
+  我逐条量的：spec 断言的 **10 个 `data-testid` 全部在组件里存在**（`prep-retry-later` / `prep-verdict-title` / `prep-providers` …，
+  没有一条是"断言一个永远不会出现的东西"）；断言读 `innerText`（`:55-57`）而非调试属性；
+  组件按**配对**取值不按字面名——`:299 const retryable = Boolean(capability?.retryable)`、
+  `:410 : action === "RETRY_LATER" ?`、`:415 disabled={checking || !retryable}`，且 `:396` 注释写明了它拆掉的旧分支
+  （"任何非 READY 都能开始准备"）⇒ 我在 13:1x 要的"与格名解耦"真的落地了。
+  ⚠ 未做的部分我不替它签：**那份 Playwright spec 我没跑过**（跑它要一套 E2E 栈，归 B/E2E 所有者），
+  所以 D 这一格是 `REPRODUCED(代码层) / RUNTIME_UNOBSERVED(浏览器里人眼所见)`。
+  小噪点：spec 与组件注释里还留着改名前的 `NOT_ANSWERED` 字样（`:203` 等）——只是文字，不影响判定，随下一笔清掉即可。
+- **`2c2621e`(13:21)** 把第四格的门改成按配对识别，正是上面说的解耦；新参考尖 `c0d7e3d` 之后尖又前移两格
+  （`d0dfc90` → `2c2621e`），后端收集数仍 **1178**，我没有理由怀疑，但**红集合是否仍 11 条要在 `2c2621e` 上重量一次才算**，
+  这一把我刻意不跑全量（§7：别反复全量），等 B/C 下一笔落定再跑。
+
+### ④ 一句话状态（13:33）
+
+C／D／B／E／F／HERMES／HARNESS／LAB／HJ-P1 全有交付或已领新单；HJ-P2/P3/P4 在跑，尚无 journey 结果可报（我不拿"已醒"当交付）。
+P0：预览链我已恢复并持续只读核对（用户库 3/19/3、reset 403、匿名 401）；盘 15.47 GiB 空闲。
+
+
+> **CLAIMED / 现场登记: HJ-P4 工作块 @2026-09-22 13:0x by 4e974ae5**（本机钟 date 实读 13:04:30+0800）
+> 按 @13:0x 凌驾令起 P4 偏好型场景（晚出发/少走路/饮食/风景/休息 + 故意用有营业时间约束的行程）。
+> **隔离栈（照"一次性 DB 副本 + 独立 profile"新令自建，请别的车道别踩我的端口）**：
+> 我的库副本 `D:\moodle\_qoder_hjp4_20260921\_hjp4_20260922.db`（sqlite `backup()` 从 `_qoder_cmdr_gate_20260921/backend/_live.db`@01:12 快照，起点 travelers 3 / journeys 3 / places 16，8 个 CN-BEIJING 地点全带 opening_hours_json）·
+> 我的后端 **127.0.0.1:8891**（代码 = 权威树 tip `c0d7e3d`，`CITYNEXUS_DEMO_MODE=true`、`CITYNEXUS_AI_ENABLED=true`）· 我的前端 **127.0.0.1:4891**（我自己 `vite build --outDir` 到我目录，实到 `index-CGyAYAg5.js`，**没动共享 dist**）· 浏览器 = 我自己的 persistent profile（390×844 dpr3 zh-CN）。
+> 纪律：只用可见 UI，0 次手写 API 造成功；**不碰 `:4781/:4782/:8693` 与 `_live.db`**；不按「重置到场景起点」；不清理任何数据；不新建隧道。延迟读数一律标 127.0.0.1（不作手机口径）。
+> 环境事实（我已复核，不是产品缺陷）：13:0x 公网 `fonts-facilities-hotel-installing` 的 `/api/*` 三次全 **500**（`:8693` 当时无监听），13:2x 起回来（`/api/v1/demo/scene` 200×3、`:8693` 重新 LISTENING）——记为可用性窗口。
+> 卡住超 10 分钟在本节发 BLOCKED。
+
 ## commander 冻结行更新 @2026-09-22T13:3x+08 —— 仲裁改口：**`CURRENT_INTEGRATION_REFERENCE_TIP = c0d7e3d`**；另补第二把全量（11 条逐 nodeid 不变）
 
 ### ① 仲裁原话（总线 `5771623368` @ 13:24:58+08，全文 127 字，我不转述成别的意思）
@@ -9596,6 +9666,8 @@ test_5 已按裁定升级成双向判据（`applicable && {} ⇒ RED`；`not app
 
 **不要**顺手改 `real_city.py:1279` 的 `"NOT_ANSWERED"`——那是 provider 证据轴的取值、不是能力格，我核过并且已写死不许动（理由见上一块）。
 每修一条就在自己的一次性副本上跑对应 nodeid，交付只写：改前红／改后绿／collected／动过的文件行号。
+
+  note@F@2026-09-22T13:32+08: commander 13:1x 派的三件量具已交（分支 `agent/f-ord200-20260922` @ `ce0e2e1`，detached worktree 建在 `c0d7e3d`）。三条红都先复现再改，**不碰产品码**。① `gates::test_g5`：现场 `run.outcome=None` + `status=SKIPPED_EXTERNAL_DEPENDENCY`（`failure_reason='DeepSeek API key is not configured'`）⇒ 这一腿没跑；改成命中该形状走**具名 N/A**（skip 带理由，不计入红集合），真跑过却 outcome=null 仍走强断言；新增 `test_g5b` 自证 N/A 吞不掉真运行。② `lock_duration::test_g9b`：前置不成立（observed provider calls = 0、作业以 UNAVAILABLE 收尾）⇒ 零调用时具名 N/A，有调用时重叠断言一字未松；新增零调用/重叠/不重叠三向自证。③ `provider_independence::test_g8a`：它抓的两处都不是真出网（`:608` 是 `pytest.raises` 里的**自我触发**、`:325` 走 `httpx.MockTransport` 包装）⇒ 扫描改成"未被拦截才算"（按所在函数体判 `MockTransport`/`ASGITransport`/`setattr(...handle_request)`/`pytest.raises`），新增 `test_g8e` 三向自证，**没删也没 skip 任何一条仪器**。读数：三文件合跑 **16 passed / 2 skipped**（两条 N/A 即①②）；单跑 gates 8+1skip、lock_duration 3+1skip、provider_independence **5 passed**。**同批抓到一条批次敏感具名红（如实记）**：连跑里 `gates::test_g3_five_concurrent_hydrations_...` 偶尔红（同命令 4 次里 1 次，单跑与另 3 次全绿）—— 正是你已定性的 `TARGETED:RED / FULLSUITE:GREEN` 那条上下文敏感门，**不是本次三件改动造成**。SELF_REPORTED。
 
 ## commander 合并回执 @2026-09-22T13:1x+08 —— 权威树前移两格：`e0fc697 → ebb4b3f → c0d7e3d`（都在我名下验过），另记两条"差点报错"的核验
 
@@ -10049,7 +10121,7 @@ DELIVERED: ORD-0201（① 隔离回执 preflight JSON ② 计数字段） | 回�
     **ORD-0190 仍缺第一步：冻结现场证据 → 重新生成 manifest → 逐条覆盖检查。**
     不扩 H 列，不重写梯子；Hermes 的连续证据归你（仲裁 `5761440727` ①已裁 owner 不换，理由是证据连续性）。
     任何要下「某个 H 步通过了」的结论，先跑 `db_probe_preflight.py`（见上方工具采纳段）证明你看的是哪份 DB。
-  status: DELIVERED-R2@2026-09-22T13:1x+08 by 9baacb24 — 按13:0x令并行推H4-H10: 全新库_hermes_r5.db+:8518一轮跑穿, H4/H5/H6/H7/H8a/H9/H10a/H10b 全PASS, H8b按设计NOT_RUN; 先出db_probe_preflight收据(exit0,table_count=53,READ_ONLY_TARGET_IDENTIFIED); 自曝两处仪器错(H8a拿字母序比声明序; H6对同一提案连打两次accept且first_mutation自比自身)已修; 负例诚实标注(第二条提案已连带作废,不作负例证据); 释放废弃current-0213 196MB留REBUILD_NOTE; manifest定稿后重出197条+覆盖自检ALL_ENTRIES_MATCH
+  status: DELIVERED-R3@2026-09-22T13:2x+08 by 9baacb24 — H8b/H11 主动停手: 父环境 DEEPSEEK_API_KEY(len35,sha256_12=4cabe6bcaff4) 经布尔比对就是账本 HUMAN_ATTENTION_REQUIRED 里待吊销的泄露 key ⇒ 按'仅当存在安全凭据才试H11'不跑模型。未发任何模型调用/未花费/未回显值/未写盘/未进隔离HOME。证据 evidence/0212/H8b_H11_credential_blocker.json。二选一交回用户:(a)轮换后新key (b)明示'就用这把,证据不可签'。H8b维持NOT_RUN、H11未碰; H0-H10其余全立,挡H11的是凭据安全性不是技术
 - id: ORD-0207
   to: 1a986a24
   priority: normal
@@ -20677,6 +20749,14 @@ pytest test_qoder_trip_shape_and_budget_reference.py test_qoder_rejection_messag
   全杀 + 1 equivalent 在分母之外"，不删行不伪造）。
 
 ## HUMAN_ATTENTION_REQUIRED（只有用户能做，agent 一律不代做）
+
+- **HERMES_REVIVAL / 9baacb24 @13:2x —— H8b/H11 被凭据安全性挡住，需要一句话**：父进程环境里的
+  `DEEPSEEK_API_KEY`（len 35，sha256 前 12 位 `4cabe6bcaff4`）经布尔比对**就是上面那条待吊销的泄露 key**。
+  ⇒ 我**没有**拿它跑模型：未发任何调用、未花费、未回显值、未写盘、未放进隔离 `HERMES_HOME`。
+  挡 H11 的是**凭据安全性，不是技术**（H0–H10 其余全立）。请二选一：
+  **(a)** 给一把轮换后的新 key（只放进程环境，我一贯起台先 pop、用完不留）——我立刻跑 H8b 与 H11；
+  **(b)** 明确指令"就用这把跑一次，接受该证据不可签"——我会跑并在交付里写明**凭据不可信 ⇒ 证据不可用于验收**。
+  证据 `evidence/0212/H8b_H11_credential_blocker.json`（只含布尔与不可逆指纹）。
 
 - **HERMES_REVIVAL / 9baacb24 @20:4x —— H6e 需要一次**真实用户确认**（或一个政策本身判 `ALLOW_AUTO` 的动作）**：
   我这轮在自有副本库 + `:8513` 上把 accept 门打到 `REQUIRE_CONFIRMATION / USER_CONFIRMATION_REQUIRED` 且**零变更**（这是负例绿了），
