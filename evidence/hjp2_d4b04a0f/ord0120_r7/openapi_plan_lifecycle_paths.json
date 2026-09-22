@@ -1,0 +1,58 @@
+{
+  "plan_lifecycle_paths": {
+    "/api/v1/commitments/{commitment_id}": [
+      "GET"
+    ],
+    "/api/v1/demo/start-scenario": [
+      "POST"
+    ],
+    "/api/v1/journeys/{journey_id}/guardian/autopilot/start": [
+      "POST"
+    ],
+    "/api/v1/journeys/{journey_id}/plans": [
+      "GET"
+    ],
+    "/api/v1/journeys/{journey_id}/plans/accept-reorder": [
+      "POST"
+    ],
+    "/api/v1/journeys/{journey_id}/plans/authoritative-compose": [
+      "POST"
+    ],
+    "/api/v1/journeys/{journey_id}/plans/generate": [
+      "POST"
+    ],
+    "/api/v1/journeys/{journey_id}/plans/preview-reorder": [
+      "POST"
+    ],
+    "/api/v1/journeys/{journey_id}/plans/{plan_version_id}/select": [
+      "POST"
+    ],
+    "/api/v1/journeys/{journey_id}/replans": [
+      "GET",
+      "POST"
+    ],
+    "/api/v1/journeys/{journey_id}/start": [
+      "POST"
+    ],
+    "/api/v1/journeys/{journey_id}/stay-options/{option_id}/select": [
+      "POST"
+    ],
+    "/api/v1/journeys/{journey_id}/trip-studio/accept": [
+      "POST"
+    ],
+    "/api/v1/plans/{plan_version_id}": [
+      "GET"
+    ],
+    "/api/v1/replans/{proposal_id}": [
+      "GET"
+    ],
+    "/api/v1/replans/{proposal_id}/accept": [
+      "POST"
+    ],
+    "/api/v1/replans/{proposal_id}/reject": [
+      "POST"
+    ]
+  },
+  "served_from": "http://127.0.0.1:8453/openapi.json (this lane backend over the copy store)",
+  "total_paths": 139
+}
