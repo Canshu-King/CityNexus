@@ -1,0 +1,41 @@
+From 57300046ab4136eda461aaaa72430644f0d956e3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=BB=93=E9=BC=A0=E7=8E=8B?= <yjianbin419@gmail.com>
+Date: Tue, 22 Sep 2026 22:31:41 +0800
+Subject: [PATCH] fix(capabilities): the parser forwards a HARD severity
+ assertion for STROLLER and LARGE_LUGGAGE
+
+ORD-0219 amended step 1.  The write entry accepts severity=HARD and the gate can
+evaluate both codes (both sit in _CAPABILITY_GATE_CODES), but the parser dropped
+the parameter at the two add() calls - a traveller's hard stroller/luggage
+requirement was silently downgraded to a STRONG preference.  Positive evidence
+is unaffected: without a hard marker the codes keep their default severity.
+
+The four SOFT_PREFERENCE codes stay out of scope: per HARNESS's warning, adding
+severity alone would turn silent non-execution into whole-journey unplannable,
+so they need a feasibility-layer branch plus a two-way gate in the same commit.
+---
+ backend/app/capabilities.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/backend/app/capabilities.py b/backend/app/capabilities.py
+index 2313536..b70fefa 100644
+--- a/backend/app/capabilities.py
++++ b/backend/app/capabilities.py
+@@ -815,9 +815,12 @@ def extract_capabilities_from_text(
+         add("TOILET_BREAK_EVERY_MIN", {"interval_min": toilet_every}, severity="HARD" if hard else "STRONG")
+ 
+     if any(token in value for token in ("婴儿车", "推车", "stroller", "buggy")):
+-        add("STROLLER", {"present": True})
++        # ORD-0219 (amended): the write entry accepts severity=HARD, but this parser dropped
++        # it — a traveller's hard stroller requirement became a silent STRONG preference even
++        # though the gate can evaluate the code.  Forward the assertion.
++        add("STROLLER", {"present": True}, severity="HARD" if hard else None)
+     if any(token in value for token in ("大箱子", "行李", "luggage", "suitcase", "baggage")):
+-        add("LARGE_LUGGAGE", {"present": True})
++        add("LARGE_LUGGAGE", {"present": True}, severity="HARD" if hard else None)
+     if any(token in value for token in ("慢一点", "慢速", "slow pace", "take it slowly")):
+         add("SLOW_PACE", {"preferred": True})
+     if any(token in value for token in ("安静", "quiet", "少刺激", "低刺激", "sensory", "low stimulation")):
+-- 
+2.45.1.windows.1
+
