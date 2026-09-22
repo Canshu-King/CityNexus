@@ -1,0 +1,41 @@
+{
+ "tree": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\tree12",
+ "door_sha": null,
+ "cases": [
+  {
+   "key": "F1-replay-on-tree12",
+   "receipt": {
+    "anchor_hits": 1,
+    "bytes_changed": true,
+    "mutated_sha256": "021e593322ddc626"
+   },
+   "observed": {
+    "rc": 1,
+    "counts": {
+     "failed": 1,
+     "passed": 10
+    },
+    "collected": 11,
+    "nodes": [
+     "tests/test_qoder_attribution_fields_hard_door.py::test_1d_a_reported_status_must_be_one_the_attempts_actually_carried"
+    ]
+   },
+   "counts_close": true,
+   "killer_present": true,
+   "verdict": "CONFIRMED (test_1d 咬住原 F1 臂)"
+  }
+ ],
+ "f1_anchor_hits_at_tip": 1,
+ "f1_line": 623,
+ "baseline": {
+  "rc": 1,
+  "counts": {
+   "failed": 1,
+   "passed": 10
+  },
+  "collected": 11,
+  "nodes": [
+   "tests/test_qoder_attribution_fields_hard_door.py::test_1c_the_implementation_must_not_answer_http_without_a_code"
+  ]
+ }
+}
