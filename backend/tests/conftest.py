@@ -24,13 +24,83 @@ the `CITYNEXUS_DEMO_MODE` line, and the authoritative version does not contain t
 list.  Overwriting either side wholesale would either re-lock the 140 test modules that use
 `/demo/reset` as their fixture door, or leave the suite credential-dependent.  Both halves
 have to survive in one file.
+
+ORD-0211 (arbiter `5772261512`) adds the third half, and its boundaries are the contract:
+
+```text
+backend pytest/unit-integration  => isolated temp DB allowed
+authoritative E2E / preview      => still its own declared exact DB/context (09-20 ban stands)
+never point tests at _live.db or the user DB
+the resolved absolute DB path must be printed / receipted
+```
+
+This does **not** close the isolation question: it stops runs feeding each other through
+`./citynexus.db` (measured: rows accumulate there, so a door can be green after a dirty run and
+red on a clean one).  Modules feeding each other *within* one run is ORD-0210's job, and its
+doors stay the judge.
 """
 
 from __future__ import annotations
 
 import os
+import pathlib
+import tempfile
 
 os.environ.setdefault("CITYNEXUS_DEMO_MODE", "true")
+
+# --- ORD-0211: which database does this pytest process actually open? -----------------------
+# `app.core.config` reads `CITYNEXUS_DATABASE_URL` (NOT the unprefixed `DATABASE_URL`, which the
+# app ignores - measured twice by the commander), and its default is `sqlite:///./citynexus.db`,
+# i.e. resolved against whatever directory started the process.  So the pin has to happen here,
+# before any test module imports `app`, and it has to be judged on the *resolved* value.
+_FORBIDDEN_BASENAMES = {"_live.db"}
+
+
+def _resolved_url() -> str:
+    return os.environ.get("CITYNEXUS_DATABASE_URL") or "sqlite:///./citynexus.db"
+
+
+def _guard_not_a_real_target(url: str) -> None:
+    """Refuse to run the suite against the preview DB or the developer's working database."""
+
+    path = url.replace("sqlite:///", "", 1)
+    name = pathlib.PurePath(path).name
+    if name in _FORBIDDEN_BASENAMES:
+        raise RuntimeError(
+            f"ORD-0211 boundary: the test suite must never open {name!r} (preview/live target) "
+            f"— resolved to {url!r}"
+        )
+    if not url.startswith("sqlite:///"):
+        return  # a non-SQLite target is declared elsewhere and is not this guard's business
+    working = (pathlib.Path.cwd() / "citynexus.db").resolve()
+    if pathlib.Path(path).resolve() == working and "pytest" not in str(working.parent):
+        raise RuntimeError(
+            f"ORD-0211 boundary: the suite resolved to the working database {working} instead of "
+            "an isolated temporary one"
+        )
+
+
+_EXTERNALLY_DECLARED = "CITYNEXUS_DATABASE_URL" in os.environ
+if not _EXTERNALLY_DECLARED:
+    _TEMP_DIR = pathlib.Path(tempfile.mkdtemp(prefix="cnx_pytest_"))
+    os.environ["CITYNEXUS_DATABASE_URL"] = f"sqlite:///{(_TEMP_DIR / 'suite.db').as_posix()}"
+    RESOLVED_TEST_DATABASE = os.environ["CITYNEXUS_DATABASE_URL"]
+else:
+    # Declared by the runner (authoritative E2E, a lane's own export, or a deliberate probe).
+    # Respected as declared - and still checked, because "I set the variable" is not isolation.
+    RESOLVED_TEST_DATABASE = _resolved_url()
+_guard_not_a_real_target(RESOLVED_TEST_DATABASE)
+
+
+def pytest_report_header() -> list[str]:
+    """Print the app-resolved absolute target at collection time (receipt-grade, not a name)."""
+
+    absolute = pathlib.Path(RESOLVED_TEST_DATABASE.replace("sqlite:///", "", 1)).expanduser().resolve()
+    return [
+        "ORD-0211 test database: "
+        f"resolved={absolute} | exists={absolute.exists()} | "
+        f"declared_by={'runner' if _EXTERNALLY_DECLARED else 'conftest temp dir'}"
+    ]
 
 # Real-provider credentials and provider-selection knobs that can make tests leave the
 # deterministic fallback path merely because a developer's terminal happens to be configured.
