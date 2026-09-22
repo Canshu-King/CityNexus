@@ -67,6 +67,13 @@ PLAN = {
         "ORD-0226",
         "ord0226-arms-six-arms.json",
     ),
+    "ord0232": (
+        [],
+        [],
+        [("ord0232-1-named-row.json", "rendered-row-and-diagnostics.json")],
+        "ORD-0232",
+        "ord0232-arms-six-arms.json",
+    ),
 }
 
 
