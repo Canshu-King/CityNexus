@@ -1,0 +1,72 @@
+{
+  "deployed_artifact": {
+    "bytes": 1230082,
+    "note": "tunnel hostname rotates on reboot; the digest is the durable coordinate",
+    "path": "/assets/index-BCF4ptyk.js",
+    "sha256": "f3bda3d696d37cd1750e646a98ea6151c64d59247517c937b198dd369251d0e9"
+  },
+  "directory": "evidence/hjp2_d4b04a0f/ord0120_r7",
+  "files": [
+    {
+      "bytes": 38447,
+      "file": "PlanWithAiSheet.tsx",
+      "git_blob_sha1": "8d58cfe9faf10562fe86164faa817bc7bbe0a769",
+      "publish_commit": "d617536793ec",
+      "published_path": "evidence/hjp2_d4b04a0f/ord0120_r7/PlanWithAiSheet.tsx",
+      "sha256": "5ea10fdbd43210c913d401b1d96077211a83c3ffa2853d4fec626d63ac839b39",
+      "what_it_proves": "git object at local tip b41b4cc == 8d58cfe9faf10562fe86164faa817bc7bbe0a769"
+    },
+    {
+      "bytes": 3175,
+      "file": "deployed_artifact_excerpt.txt",
+      "git_blob_sha1": "13b58e3dfa7ec49a634faffd65f764d6fac6e1e6",
+      "publish_commit": "0f9e041ecbe7",
+      "published_path": "evidence/hjp2_d4b04a0f/ord0120_r7/deployed_artifact_excerpt.txt",
+      "sha256": "eeea9e281a85543d2ec6f47c938b1ad3bf55d2b3bd4c84088fbaf237f7297d49",
+      "what_it_proves": "byte window read out of the served /assets/index-BCF4ptyk.js"
+    },
+    {
+      "bytes": 12744,
+      "file": "finding_hjp2_reading_01.md",
+      "git_blob_sha1": "c0149e3927c7eb535bd55b583632c50b88d2381a",
+      "publish_commit": "5da55bc551e5",
+      "published_path": "evidence/hjp2_d4b04a0f/ord0120_r7/finding_hjp2_reading_01.md",
+      "sha256": "6b3ff406c2c1d63f58b600831e92914ccf88ad797299d79c23e96f0d2ea1e2d2",
+      "what_it_proves": "the reading itself"
+    },
+    {
+      "bytes": 16056,
+      "file": "isolation_receipt_r7.json",
+      "git_blob_sha1": "1e78ebd6ad431c439b05b091273b507d57d5fa7e",
+      "publish_commit": "b4fa2fd988f1",
+      "published_path": "evidence/hjp2_d4b04a0f/ord0120_r7/isolation_receipt_r7.json",
+      "sha256": "a7f7d9343ac10289aa6c4daa129a023d23ae76dc3d7c6b60c8930edd88a92173",
+      "what_it_proves": "three mode=ro store probes + three db_probe_preflight runs"
+    },
+    {
+      "bytes": 221739,
+      "file": "r6_03_drawer.png",
+      "git_blob_sha1": "fda2415e998dc1036cd3a4b3f09eb5792deef84e",
+      "publish_commit": "ac019f7f721a",
+      "published_path": "evidence/hjp2_d4b04a0f/ord0120_r7/r6_03_drawer.png",
+      "sha256": "654cc101ca619a4a44b409a52c0d971c2b2413de9bce799046c97f0f9c6f2aed",
+      "what_it_proves": "empty-input pose: submit control rendered disabled"
+    },
+    {
+      "bytes": 262308,
+      "file": "r6_04_named_failure.png",
+      "git_blob_sha1": "b9d27f10a49aa3f829f6ccbf86a9389e341e0df3",
+      "publish_commit": "71e31d0c7135",
+      "published_path": "evidence/hjp2_d4b04a0f/ord0120_r7/r6_04_named_failure.png",
+      "sha256": "c97a7a985bd5485af1e2fce386c4bc674289c254fd8bf317c480d9936b6b2615",
+      "what_it_proves": "named failure card CATALOG_EMPTY - disproves my 18:52 'no feedback' line"
+    }
+  ],
+  "lane": "HJ-P2 commitment-intensive traveller",
+  "manifest": "hjp2_ord0120_r7_evidence",
+  "publisher": "live_checks/publish_evidence.py via this lane's publish_safe_r7.py (denylist applied locally)",
+  "ref": "commander/control",
+  "repo": "Canshu-King/CityNexus",
+  "session": "d4b04a0f",
+  "tree_tip_local_only": "b41b4cce0e4143068bef216d96e2eab4a4116056 (never pushed: NOT an audit coordinate)"
+}
