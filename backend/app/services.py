@@ -60,6 +60,38 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 MOCK_ROOT = PROJECT_ROOT / "data" / "mock"
 DEMO_NAMESPACE = UUID("aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa")
 
+# ORD-0219 step 2 (arbiter `5778570154`): the sealed demo carried **0/16** accessibility facts,
+# so the two codes this order is about could only be demonstrated against synthetic fixtures, and
+# a traveller reading the demo would never see either direction of a rule that already executes.
+#
+# Three demo-owned places, chosen so **both** directions are demonstrable inside the demo itself:
+# one that satisfies (must not block), one that contradicts STROLLER, one that contradicts
+# LARGE_LUGGAGE.  The other thirteen stay **without** evidence, because "missing evidence is not
+# accessible, and is not inaccessible either" is the semantics this product was built on and a
+# fully-populated demo would make it undemonstrable.
+#
+# Which place carries the contradiction is a measured choice, not a guess.  All three generated
+# candidates visit `place-old-town`, `place-riverside-museum` and `place-food-hall`; the places
+# that differ between candidates are `place-tech-art` (plan 1), `place-city-park` (plan 2) and
+# `place-design-library` (plan 3).  My first placement put the two False facts on shared places and
+# every candidate blocked, i.e. the ruling's "两向" was unsatisfiable while the door still looked
+# green.  On the variable places, one candidate blocks and another passes for each code - which is
+# what the doors now compute per candidate instead of assuming.
+DEMO_ACCESSIBILITY_EVIDENCE: dict[str, dict[str, object]] = {
+    "place-old-town": {"stroller_accessible": True, "luggage_accessible": True},
+    "place-tech-art": {"stroller_accessible": False},
+    "place-city-park": {"luggage_accessible": False},
+}
+
+
+def demo_accessibility_evidence(place_id: str) -> dict[str, object] | None:
+    """Deterministic demo-owned accessibility facts, or None when the place has none."""
+
+    facts = DEMO_ACCESSIBILITY_EVIDENCE.get(str(place_id))
+    if not facts:
+        return None
+    return {**facts, "source_kind": "SYNTHETIC_DEMO"}
+
 
 def iso_now() -> str:
     return datetime.now(timezone.utc).isoformat()
@@ -209,6 +241,15 @@ def seed_demo(session: Session) -> dict[str, str]:
         )
     city_provider = MockCityDataProvider()
     for item in city_provider.places():
+        metadata: dict = {
+            "duration_min": item["duration_min"],
+            "cost_minor": item["cost_minor"],
+        }
+        evidence = demo_accessibility_evidence(str(item["id"]))
+        if evidence:
+            # The same nested key a provider-carrying place uses, so the demo is read by the
+            # normal `Place -> evidence -> feasibility` path and not by a demo branch inside it.
+            metadata["accessibility"] = evidence
         session.add(
             Place(
                 id=item["id"],
@@ -221,9 +262,7 @@ def seed_demo(session: Session) -> dict[str, str]:
                 longitude=item["location"]["longitude"],
                 opening_hours_json=dump({"open": item["open"], "close": item["close"]}),
                 tags_json=dump(item["tags"]),
-                metadata_json=dump(
-                    {"duration_min": item["duration_min"], "cost_minor": item["cost_minor"]}
-                ),
+                metadata_json=dump(metadata),
                 updated_at=now,
             )
         )
