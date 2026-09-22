@@ -18,6 +18,7 @@ import hashlib
 import json
 import os
 import platform
+import sqlite3
 import subprocess
 import sys
 import traceback
@@ -30,7 +31,8 @@ ROOT = Path(__file__).resolve().parents[1]
 BACKEND = ROOT / "backend"
 SCENARIO_ID = "journey-replan-replay"
 C4_SCENARIO_ID = "c4-commitment-replay"
-SCENARIOS = (SCENARIO_ID, C4_SCENARIO_ID)
+CAPABILITY_SCENARIO_ID = "capability-fail-closed-replay"
+SCENARIOS = (SCENARIO_ID, C4_SCENARIO_ID, CAPABILITY_SCENARIO_ID)
 
 
 def _utc() -> str:
@@ -46,11 +48,131 @@ def _git_commit() -> str:
 def _jsonable(value: Any) -> Any:
     if isinstance(value, Path):
         return str(value)
+    if isinstance(value, bytes):
+        return {"__bytes_sha256__": hashlib.sha256(value).hexdigest(), "length": len(value)}
     if isinstance(value, dict):
         return {str(k): _jsonable(v) for k, v in value.items()}
     if isinstance(value, (list, tuple)):
         return [_jsonable(v) for v in value]
     return value
+
+
+def _sha256_json(value: Any) -> str:
+    raw = json.dumps(_jsonable(value), ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def _file_sha256(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _quote_sqlite_identifier(name: str) -> str:
+    return '"' + name.replace('"', '""') + '"'
+
+
+def _sqlite_logical_snapshot(db_path: Path) -> dict[str, Any]:
+    """Hash committed logical SQLite state, including data still resident in WAL.
+
+    Hashing only the main .db file is unsound when SQLite is in WAL mode: committed
+    rows can live in ``-wal`` while the main file remains byte-identical.  A normal
+    SQLite reader sees the committed logical state across both files, so we hash a
+    canonical table/row representation instead.
+    """
+    if not db_path.exists():
+        return {
+            "logical_state_sha256": hashlib.sha256(b"").hexdigest(),
+            "actual_schema_sha256": hashlib.sha256(b"").hexdigest(),
+            "table_row_counts": {},
+            "migration_identity": None,
+        }
+
+    uri = f"file:{db_path.as_posix()}?mode=ro"
+    with sqlite3.connect(uri, uri=True) as conn:
+        tables = [
+            row[0]
+            for row in conn.execute(
+                "SELECT name FROM sqlite_master "
+                "WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name"
+            )
+        ]
+        schema_rows = list(
+            conn.execute(
+                "SELECT type, name, tbl_name, COALESCE(sql, '') FROM sqlite_master "
+                "WHERE name NOT LIKE 'sqlite_%' ORDER BY type, name"
+            )
+        )
+        schema_payload = [list(row) for row in schema_rows]
+        table_payload: dict[str, Any] = {}
+        row_counts: dict[str, int] = {}
+        for table in tables:
+            qtable = _quote_sqlite_identifier(table)
+            columns = [row[1] for row in conn.execute(f"PRAGMA table_info({qtable})")]
+            rows = []
+            for raw_row in conn.execute(f"SELECT * FROM {qtable}"):
+                row = {column: _jsonable(value) for column, value in zip(columns, raw_row)}
+                rows.append(row)
+            rows.sort(key=lambda item: json.dumps(item, ensure_ascii=False, sort_keys=True, default=str))
+            table_payload[table] = {"columns": columns, "rows": rows}
+            row_counts[table] = len(rows)
+
+        migration_identity = None
+        if "alembic_version" in tables:
+            values = [row[0] for row in conn.execute("SELECT version_num FROM alembic_version ORDER BY version_num")]
+            migration_identity = values
+
+    conn.close()
+
+    return {
+        "logical_state_sha256": _sha256_json(table_payload),
+        "actual_schema_sha256": _sha256_json(schema_payload),
+        "table_row_counts": row_counts,
+        "migration_identity": migration_identity,
+    }
+
+
+def _stable_commitment_semantics(items: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Normalize C4 snapshots for cross-run replay comparison.
+
+    Generated row/activity/plan IDs are intentionally excluded.  Business identity,
+    protected time/money/status, place, and booking/provider semantics remain.
+    """
+    fields = (
+        "kind",
+        "level",
+        "status",
+        "monetary_value_minor",
+        "monetary_value_status",
+        "currency",
+        "external_ref",
+        "place_id",
+        "scheduled_start_at",
+        "scheduled_end_at",
+        "activity_status",
+        "activity_locked",
+        "booking_status",
+        "booking_amount_minor",
+        "booking_amount_status",
+        "booking_currency",
+        "booking_external_ref",
+        "booking_provider_key",
+    )
+    def stable_reference(value: Any) -> Any:
+        if not isinstance(value, str):
+            return value
+        parts = value.split(":")
+        if parts[0] in {"mock-booking", "mock-payment"} and len(parts) >= 3:
+            return f"{parts[0]}:<generated>:{parts[-1]}"
+        return value
+
+    normalized = []
+    for item in items:
+        row = {field: item.get(field) for field in fields}
+        row["external_ref"] = stable_reference(row["external_ref"])
+        row["booking_external_ref"] = stable_reference(row["booking_external_ref"])
+        normalized.append(row)
+    return sorted(normalized, key=lambda item: json.dumps(item, ensure_ascii=False, sort_keys=True, default=str))
 
 
 class Harness:
@@ -73,6 +195,7 @@ class Harness:
         self.replay_source_run_id: str | None = None
         self.replay_source_semantic: dict[str, Any] | None = None
         self.client = None
+        self.last_status: int | None = None
         self.ids: dict[str, Any] = {}
         self.input_payload = {
             "scenario_id": scenario_id,
@@ -94,6 +217,19 @@ class Harness:
                     "payment_provider": "mock-payment",
                 }
             )
+        if scenario_id == CAPABILITY_SCENARIO_ID:
+            self.input_payload.update(
+                {
+                    "capability": {
+                        "code": "STEP_FREE_REQUIRED",
+                        "severity": "HARD",
+                        "scope": "JOURNEY",
+                        "params": {"requirement": "step_free"},
+                    },
+                    "evidence_poor_state": "ACCESSIBILITY_UNVERIFIED",
+                    "verified_evidence": {"step_free": True, "wheelchair_access": True},
+                }
+            )
         if replay_receipt is not None:
             self._validate_replay_receipt(replay_receipt)
             self.replay_source_run_id = replay_receipt["run_id"]
@@ -104,6 +240,7 @@ class Harness:
         self.protected_commitments_after: list[dict[str, Any]] = []
         self.preserved_ids: list[str] = []
         self.changed_ids: list[str] = []
+        self.allowed_changes: list[dict[str, Any]] = []
         self.illegal_changes: list[str] = []
         self.semantic_match: bool | None = None
         self.semantic_mismatches: list[dict[str, Any]] = []
@@ -130,6 +267,7 @@ class Harness:
 
     def action(self, method: str, path: str, response: Any, payload: Any = None) -> Any:
         status = getattr(response, "status_code", None)
+        self.last_status = status
         body = response.json() if hasattr(response, "json") else response
         if isinstance(body, str) and len(body) > 4000:
             body = body[:4000] + "..."
@@ -275,6 +413,40 @@ class Harness:
                 )
             return sorted(result, key=lambda item: item["commitment_id"])
 
+    def _set_place_accessibility(self, evidence: dict[str, Any] | None) -> list[dict[str, Any]]:
+        from app.db.models import Place
+        from app.db.session import SessionLocal
+
+        with SessionLocal() as session:
+            places = list(session.query(Place).all())
+            for place in places:
+                metadata = json.loads(place.metadata_json or "{}")
+                if evidence is None:
+                    metadata.pop("accessibility", None)
+                else:
+                    metadata["accessibility"] = copy.deepcopy(evidence)
+                place.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
+            session.commit()
+        return self._place_evidence_states()
+
+    def _place_evidence_states(self) -> list[dict[str, Any]]:
+        from app.capabilities import evaluate_accessibility_requirement
+        from app.db.models import Place
+        from app.db.session import SessionLocal
+
+        with SessionLocal() as session:
+            rows = list(session.query(Place).order_by(Place.id).all())
+            return [
+                {
+                    "place_id": place.id,
+                    "state": evaluate_accessibility_requirement(
+                        self.input_payload["capability"]["code"],
+                        json.loads(place.metadata_json or "{}").get("accessibility") or {},
+                    ),
+                }
+                for place in rows
+            ]
+
     def _compare_commitments(self) -> None:
         before = {item["commitment_id"]: item for item in self.protected_commitments_before}
         after = {item["commitment_id"]: item for item in self.protected_commitments_after}
@@ -293,10 +465,22 @@ class Harness:
             "activity_locked", "booking_id", "booking_status", "booking_amount_minor", "booking_amount_status",
             "booking_currency", "booking_external_ref", "booking_provider_key",
         )
+        allowed_rebind_fields = ("activity_id", "activity_plan_version_id")
         for key in self.preserved_ids:
             for field in protected_fields:
                 if before[key].get(field) != after[key].get(field):
                     illegal.append(f"{key}.{field}: {before[key].get(field)!r} -> {after[key].get(field)!r}")
+            for field in allowed_rebind_fields:
+                if before[key].get(field) != after[key].get(field):
+                    self.allowed_changes.append(
+                        {
+                            "commitment_id": key,
+                            "field": field,
+                            "before": before[key].get(field),
+                            "after": after[key].get(field),
+                            "classification": "ALLOWED_REPLAN_REBIND",
+                        }
+                    )
         self.illegal_changes = illegal
 
     def _run_journey_replan(self) -> None:
@@ -375,6 +559,18 @@ class Harness:
             {"trigger_event_id": event["id"], "candidate_count": 3},
         )
         self.record_assertion("replan_generation_succeeds", bool(proposal.get("id")), proposal)
+        actual_hard_constraints_passed = proposal.get("hard_constraints_passed") is True
+        actual_locked_commitments_preserved = proposal.get("locked_commitments_preserved") is True
+        self.record_assertion(
+            "c4_replan_reports_hard_constraints_passed",
+            actual_hard_constraints_passed,
+            proposal,
+        )
+        self.record_assertion(
+            "c4_replan_reports_locked_commitments_preserved",
+            actual_locked_commitments_preserved,
+            proposal,
+        )
         accepted = self.post(
             f"/api/v1/replans/{proposal['id']}/accept",
             headers={"Idempotency-Key": "h2-c4-accept-0001"},
@@ -388,12 +584,97 @@ class Harness:
             "event_type": event.get("event_type"),
             "replan_exists": bool(proposal.get("id")),
             "replan_accepted": accepted.get("proposal", {}).get("status") == "ACCEPTED",
-            "hard_constraints_passed": True,
+            "hard_constraints_passed": actual_hard_constraints_passed,
+            "locked_commitments_preserved_claim": actual_locked_commitments_preserved,
             "protected_commitment_count": len(self.protected_commitments_before),
             "protected_commitment_outcome": not self.illegal_changes,
+            "protected_commitment_semantics": _stable_commitment_semantics(self.protected_commitments_after),
         }
         self.transition("ASSERT", self.semantic_output)
         self.transition("CAPTURE_EVIDENCE")
+        self.transition("REPLAY_READY")
+
+    def _run_capability_fail_closed(self) -> None:
+        self.transition("RESET")
+        self.ids = self.post("/api/v1/demo/reset")
+        self.record_assertion("reset_returns_journey", bool(self.ids.get("journey_id")), self.ids)
+        journey_id = self.ids["journey_id"]
+        self.transition("SEED", self.ids)
+        capability = self.input_payload["capability"]
+        capability_payload = [
+            {
+                "code": capability["code"],
+                "severity": capability["severity"],
+                "params": capability["params"],
+            }
+        ]
+        before = self.get(f"/api/v1/journeys/{journey_id}/capabilities")
+        self.transition("EXECUTE:CAPABILITY_CONFIRMED")
+        confirmed = self.post(f"/api/v1/journeys/{journey_id}/capabilities/confirm", capability_payload)
+        self.record_assertion("hard_capability_confirmation_succeeds", bool(confirmed.get("capabilities")), confirmed)
+        after = self.get(f"/api/v1/journeys/{journey_id}/capabilities")
+        self.transition("OBSERVE:EVIDENCE_POOR_CATALOG")
+        evidence_poor = self._set_place_accessibility(None)
+        self.record_assertion(
+            "evidence_poor_catalog_is_unknown",
+            bool(evidence_poor) and all(item["state"] == "ACCESSIBILITY_UNVERIFIED" for item in evidence_poor),
+            evidence_poor,
+        )
+        self.transition("EXECUTE:FAIL_CLOSED_GENERATION")
+        blocked = self.post(
+            f"/api/v1/journeys/{journey_id}/plans/generate",
+            {"candidate_count": self.input_payload["candidate_count"]},
+        )
+        blocked_status = self.last_status
+        blocked_error = blocked.get("error", {}) if isinstance(blocked, dict) else {}
+        blocked_message = str(blocked_error.get("message") or blocked)
+        self.record_assertion(
+            "unknown_evidence_blocks_plan",
+            blocked_status == 422 and bool(blocked_error.get("code")) and not isinstance(blocked, list),
+            {"status": blocked_status, "body": blocked, "product_reason": blocked_message},
+        )
+        self.record_assertion(
+            "unknown_is_not_accessible",
+            blocked_status == 422,
+            blocked,
+        )
+        self.transition("EXECUTE:VERIFIED_EVIDENCE_GENERATION")
+        verified_evidence = self._set_place_accessibility(self.input_payload["verified_evidence"])
+        generated = self.post(
+            f"/api/v1/journeys/{journey_id}/plans/generate",
+            {"candidate_count": self.input_payload["candidate_count"]},
+        )
+        generated_status = self.last_status
+        verified_plans = generated if isinstance(generated, list) else []
+        verified_selectable = [bool(plan.get("selectable")) for plan in verified_plans]
+        self.record_assertion(
+            "verified_evidence_is_reported",
+            all(item["state"] == "ACCESSIBILITY_VERIFIED" for item in verified_evidence),
+            verified_evidence,
+        )
+        self.record_assertion(
+            "verified_generation_is_product_truth",
+            generated_status == 201 and bool(verified_plans) and all(verified_selectable),
+            {"status": generated_status, "plans": verified_plans},
+        )
+        self.semantic_output = {
+            "journey_lifecycle": ["RESET", "CAPABILITY_CONFIRMED"],
+            "capability": {
+                "code": capability["code"],
+                "severity": capability["severity"],
+                "scope": capability["scope"],
+            },
+            "evidence_poor_states": sorted({item["state"] for item in evidence_poor}),
+            "blocked_generation_status": blocked_status,
+            "blocked_product_reason": blocked_message,
+            "blocked_is_fail_closed": blocked_status == 422,
+            "verified_evidence_states": sorted({item["state"] for item in verified_evidence}),
+            "verified_generation_status": generated_status,
+            "verified_plan_count": len(verified_plans),
+            "verified_selectable": verified_selectable,
+        }
+        self.transition("ASSERT", self.semantic_output)
+        self.transition("CAPTURE_EVIDENCE", {"capabilities_before": before, "capabilities_after": after})
         self.transition("REPLAY_READY")
 
     def run(self) -> dict[str, Any]:
@@ -406,6 +687,8 @@ class Harness:
                 self._run_journey_replan()
             elif self.scenario_id == C4_SCENARIO_ID:
                 self._run_c4_commitment()
+            elif self.scenario_id == CAPABILITY_SCENARIO_ID:
+                self._run_capability_fail_closed()
             else:
                 raise ValueError(f"unsupported scenario: {self.scenario_id}")
         except Exception as exc:  # noqa: BLE001 - receipt must contain the exact blocker
@@ -439,6 +722,9 @@ class Harness:
                 result = "FAIL"
                 blocker = {"type": "SemanticMismatch", "message": "receipt-driven replay diverged", "mismatches": self.semantic_mismatches}
 
+        if self.client is not None:
+            self.client.close()
+
         environment = {
             "cwd": str(ROOT),
             "python": sys.version,
@@ -447,16 +733,29 @@ class Harness:
             "ports": [],
             "external_actions": False,
         }
-        database_bytes = self.db_path.read_bytes() if self.db_path.exists() else b""
+        logical_db = _sqlite_logical_snapshot(self.db_path)
+        sidecars = {}
+        for suffix in ("", "-wal", "-shm"):
+            part = Path(str(self.db_path) + suffix)
+            if part.exists():
+                sidecars[part.name] = {
+                    "sha256": _file_sha256(part),
+                    "size": part.stat().st_size,
+                }
+        declared_schema = BACKEND / "db" / "schema.sql"
         database = {
             "path": str(self.db_path),
-            "identity": hashlib.sha256(database_bytes).hexdigest(),
+            "identity": logical_db["logical_state_sha256"],
             "path_identity": hashlib.sha256(str(self.db_path).encode()).hexdigest()[:16],
-            "state_sha256": hashlib.sha256(database_bytes).hexdigest(),
-            "schema_identity": hashlib.sha256((BACKEND / "db" / "schema.sql").read_bytes()).hexdigest(),
-            "deterministic_seed_identity": hashlib.sha256(
-                json.dumps(self.input_payload, sort_keys=True, ensure_ascii=False).encode()
-            ).hexdigest(),
+            "state_sha256": logical_db["logical_state_sha256"],
+            "logical_state_sha256": logical_db["logical_state_sha256"],
+            "physical_components": sidecars,
+            "schema_identity": logical_db["actual_schema_sha256"],
+            "actual_schema_sha256": logical_db["actual_schema_sha256"],
+            "declared_schema_sql_sha256": _file_sha256(declared_schema),
+            "migration_identity": logical_db["migration_identity"],
+            "table_row_counts": logical_db["table_row_counts"],
+            "deterministic_seed_identity": _sha256_json(self.input_payload),
             "disposable": True,
             "exists": self.db_path.exists(),
         }
@@ -499,6 +798,7 @@ class Harness:
             "protected_commitments_after": self.protected_commitments_after,
             "preserved_ids": self.preserved_ids,
             "changed_ids": self.changed_ids,
+            "allowed_changes": self.allowed_changes,
             "illegal_changes": self.illegal_changes,
             "result": result,
             "blocker": blocker,
