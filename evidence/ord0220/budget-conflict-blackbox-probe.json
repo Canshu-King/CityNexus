@@ -1,0 +1,683 @@
+{
+  "generatedBy": "e345b9d6",
+  "db": "D:\\moodle\\_qoder_integration_20260919\\backend\\_ord0220conflict190100.db",
+  "port": 8732,
+  "openapi_status": 200,
+  "journey_paths": [
+    {
+      "path": "/api/v1/edge/devices/{device_id}/journey-snapshot",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}",
+      "methods": [
+        "GET",
+        "PATCH"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/activities/{activity_id}/arrive",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/activities/{activity_id}/begin",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/activities/{activity_id}/complete",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/activities/{activity_id}/depart",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/activities/{activity_id}/skip",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/agent-feed",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/agent/approvals/{approval_id}/approve",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/agent/commands",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/events",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/stop",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/agent/hermes/runs/{run_id}/timeline",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/agent/runs/{run_id}",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/authoritative-compose",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/bookings",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/capabilities",
+      "methods": [
+        "GET",
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/capabilities/confirm",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/constraints",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/constraints/{constraint_id}",
+      "methods": [
+        "DELETE"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/copilot/messages",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/edge/devices",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/events",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/events/{event_id}/impact",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/execution-clock",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/experience",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/guardian/autopilot/start",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/guardian/autopilot/status",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/guardian/autopilot/stop",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/guardian/mission",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/guardian/provider-fixture",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/guardian/resilience",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/guardian/resilience/refresh",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/guardian/scan",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/guardian/signal-fixture",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/guardian/status",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/history",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/inbox",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/inbox/import",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/inbox/text-extract",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/inbox/vision",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/inbox/{draft_id}",
+      "methods": [
+        "PATCH"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/inbox/{draft_id}/confirm",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/inbox/{draft_id}/smart-apply",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/location",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/memory",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/mobility",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/mobility/compare",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/multiday",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/notifications",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/observability/traces",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/offline-snapshot",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/operations/luggage",
+      "methods": [
+        "PUT"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/operations/stream",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/orders",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/outcomes",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/plans",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/plans/accept-reorder",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/plans/authoritative-compose",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/plans/generate",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/plans/preview-reorder",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/plans/{plan_version_id}/select",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/provider-mesh",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/provider-mesh/discover",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/real-city/discover",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/real-city/intelligence",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/recovery/acknowledge",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/reflect",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/reflect/process",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/replans",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/reservations/{reservation_id}/schedule-change",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/resilience",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/resilience/counterfactuals",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/resilience/refresh",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/route-evidence",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/start",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stay-generations",
+      "methods": [
+        "GET",
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stay-generations/{operation_id}",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stay-generations/{operation_id}/abandon",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stay-mobility/providers",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stay-options",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stay-options/generate",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stay-options/{option_id}/autopilot/recover",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stay-options/{option_id}/mode",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stay-options/{option_id}/select",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stay-options/{option_id}/weather",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stays/offers/capture",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/stays/search",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/transactions",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/trip-studio/accept",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/trip-studio/preview",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/twin",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/wallet",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/weather/refresh",
+      "methods": [
+        "POST"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/web-observations",
+      "methods": [
+        "GET"
+      ]
+    },
+    {
+      "path": "/api/v1/journeys/{journey_id}/web-research",
+      "methods": [
+        "POST"
+      ]
+    }
+  ],
+  "journey_write_methods": [
+    "PATCH",
+    "POST",
+    "PUT"
+  ],
+  "create": {
+    "request": {
+      "budget": {
+        "amount_minor": 45000,
+        "currency": "CNY"
+      },
+      "stay_budget": {
+        "amount_minor": 90000,
+        "currency": "CNY"
+      }
+    },
+    "status": 201,
+    "body_keys": [
+      "active_plan_version_id",
+      "budget",
+      "city_code",
+      "current_activity_id",
+      "end_at",
+      "id",
+      "planning_mode",
+      "start_at",
+      "status",
+      "timezone",
+      "title",
+      "traveler_id"
+    ],
+    "reason_code": null,
+    "message": null
+  },
+  "readback": {
+    "endpoint": "/api/v1/journeys/39138446-4fda-4a32-b923-421345485f4a/experience",
+    "status": 200,
+    "budget": {
+      "available": true,
+      "amount_minor": 45000,
+      "currency": "CNY",
+      "party_size": 1,
+      "day_count": 3,
+      "per_day_minor": 15000,
+      "per_person_per_day_minor": 15000,
+      "floor_minor": 15000,
+      "floor_currency": "CNY",
+      "floor_comparable": true,
+      "reason": null
+    },
+    "stay_budget": {
+      "amount_minor": 90000,
+      "currency": "CNY"
+    },
+    "journey_status": "DRAFT"
+  },
+  "update_entry": {
+    "endpoint": "PATCH /api/v1/journeys/39138446-4fda-4a32-b923-421345485f4a",
+    "status": 200,
+    "reason_code": null,
+    "message": null,
+    "budget_after": {
+      "available": true,
+      "amount_minor": 45000,
+      "currency": "CNY",
+      "party_size": 1,
+      "day_count": 3,
+      "per_day_minor": 15000,
+      "per_person_per_day_minor": 15000,
+      "floor_minor": 15000,
+      "floor_currency": "CNY",
+      "floor_comparable": true,
+      "reason": null
+    },
+    "stay_budget_after": {
+      "amount_minor": 90000,
+      "currency": "CNY"
+    }
+  },
+  "publishedBy": "e345b9d6 for ORD-0220"
+}
