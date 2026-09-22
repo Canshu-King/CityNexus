@@ -1,0 +1,465 @@
+commit e92213d2f4cbe89355ab7eac1d2498b60b43da38
+Author: 仓鼠王 <yjianbin419@gmail.com>
+Date:   Wed Sep 23 02:24:41 2026 +0800
+
+    test(frontend): pin the English caveat too, after measuring that it reaches the screen (ORD-0226 follow-up ①)
+    
+    resolveLocale falls through to navigator.language, so a non-Chinese browser renders the English
+    sentence with nothing stored -- measured on both arms, not argued. Both literals are now frozen and
+    each has its own node; every arm additionally runs the other language's node under the same mutant so
+    the two pins are proven independent rather than sharing one judge.
+    
+    Adds playwright.deployed-bundle.config.ts, which previews the deployed artifact instead of building
+    the working tree, so a gate can report the generation the phone actually gets.
+
+diff --git a/frontend/e2e/qoder-budget-advisory-tiers.spec.ts b/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
+index 5e4e39e..79436a0 100644
+--- a/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
++++ b/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
+@@ -44,6 +44,16 @@ function reference(overrides: Record<string, unknown>) {
+   };
+ }
+ 
++/** Rewrite the trip's `budget_reference` on the way through the real endpoint. */
++async function patchExperience(route: import("@playwright/test").Route, ref: Record<string, unknown>) {
++  const real = await route.fetch();
++  const body = (await real.json()) as Record<string, unknown>;
++  const trip = (body.trip ?? {}) as Record<string, unknown>;
++  trip.budget_reference = ref;
++  body.trip = trip;
++  await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
++}
++
+ /** Load the hub with the trip's budget_reference patched to the given shape. */
+ async function openHubWithReference(page: Page, ref: Record<string, unknown>): Promise<void> {
+   const seeded = (await (await page.request.get("/api/v1/demo/scene")).json()) as {
+@@ -55,19 +65,51 @@ async function openHubWithReference(page: Page, ref: Record<string, unknown>): P
+     localStorage.setItem("citynexus.v8.journey_id", id as string);
+     localStorage.setItem("citynexus.locale", "zh-CN");
+   }, journeyId);
+-  await page.route("**/api/v1/journeys/*/experience", async (route) => {
+-    const real = await route.fetch();
+-    const body = (await real.json()) as Record<string, unknown>;
+-    const trip = (body.trip ?? {}) as Record<string, unknown>;
+-    trip.budget_reference = ref;
+-    body.trip = trip;
+-    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
+-  });
++  await page.route("**/api/v1/journeys/*/experience", (route) => patchExperience(route, ref));
+   await page.goto("/v8/hub", { waitUntil: "load" });
+   await expect(page.getByTestId("today-hero")).toBeVisible({ timeout: 30_000 });
+   await page.waitForTimeout(1_500);
+ }
+ 
++/**
++ * ORD-0226 ①: reachability is an observation, not an argument.  A page of its own is required
++ * because `addInitScript` is page-scoped -- the "no stored locale" arm has to start from a context
++ * where nothing ever wrote `citynexus.locale`, so `resolveLocale` falls through to
++ * `navigator.language` exactly as it does for a traveller whose browser is not Chinese.
++ */
++async function caveatReadingInLocale(
++  context: import("@playwright/test").BrowserContext,
++  ref: Record<string, unknown>,
++  storedLocale: string | null,
++) {
++  const seeded = (await (await context.request.get("/api/v1/demo/scene")).json()) as {
++    journey_id?: string;
++  };
++  const journeyId = String(seeded.journey_id ?? "");
++  const page = await context.newPage();
++  await page.addInitScript(([id, locale]) => {
++    localStorage.clear();
++    localStorage.setItem("citynexus.v8.journey_id", id as string);
++    if (locale) localStorage.setItem("citynexus.locale", locale as string);
++  }, [journeyId, storedLocale] as [string, string | null]);
++  await page.route("**/api/v1/journeys/*/experience", (route) => patchExperience(route, ref));
++  await page.goto("/v8/hub", { waitUntil: "load" });
++  const caveat = page.getByTestId("budget-advisory-caveat");
++  await expect(
++    caveat,
++    `no caveat element reached the screen with storedLocale=${JSON.stringify(storedLocale)}, ` +
++      `so the ${storedLocale ?? "navigator.language"} arm is not renderable here`,
++  ).toBeVisible({ timeout: 20_000 });
++  const reading = {
++    storedLocale,
++    navigatorLanguage: await page.evaluate(() => navigator.language),
++    documentLang: await page.evaluate(() => document.documentElement.lang || "(empty)"),
++    caveat: ((await caveat.innerText()) ?? "").replace(/\s+/g, " ").trim(),
++  };
++  await page.close();
++  return reading;
++}
++
+ test("ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action — 主页只留 tight，且 caveat 和动作都在", async ({
+   page,
+ }, testInfo) => {
+@@ -292,3 +334,48 @@ test("ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什
+     "utf-8",
+   );
+ });
++
++/**
++ * ORD-0226 follow-up ① (commander 02:1x): the same hole in the other language arm.  Kept in the gate
++ * for the same reason as the Chinese literal -- importing the product's constant would make the
++ * equality true by construction.
++ */
++const FROZEN_TIGHT_CAVEAT_EN =
++  "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.";
++
++test("ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence — 英文那句先量可达性再钉", async ({
++  context,
++}) => {
++  test.setTimeout(300_000);
++  const NODE = "ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence";
++  const tight = reference({ per_person_per_day_minor: 4000 });
++  /* Two ways a traveller lands on English: they picked it, or their browser is not Chinese and
++     nothing was ever stored. `resolveLocale` reads `citynexus.locale` first and `navigator.language`
++     second, so both arms have to be read, not argued about. */
++  const stored = await caveatReadingInLocale(context, tight, "en");
++  const fallback = await caveatReadingInLocale(context, tight, null);
++  const readings = {
++    generatedBy: "e345b9d6",
++    node: NODE,
++    head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
++    rule: "英文 caveat 是否真的能上屏（可达性），以及上屏的是不是那一句",
++    arms: { stored_en: stored, no_stored_locale: fallback },
++  };
++  writeFileSync(
++    evidencePath("ui-overnight/ord0226-en-reachability.json"),
++    JSON.stringify(readings, null, 2) + "\n",
++    "utf-8",
++  );
++  for (const [label, reading] of [
++    ["stored citynexus.locale=en", stored],
++    ["no stored locale (navigator.language decides)", fallback],
++  ] as const) {
++    expect(
++      reading.caveat,
++      node(
++        NODE,
++        `${label}: navigator.language=${reading.navigatorLanguage} lang=${reading.documentLang} rendered "${reading.caveat}" instead of the frozen sentence "${FROZEN_TIGHT_CAVEAT_EN}"`,
++      ),
++    ).toBe(FROZEN_TIGHT_CAVEAT_EN);
++  }
++});
+diff --git a/frontend/playwright.deployed-bundle.config.ts b/frontend/playwright.deployed-bundle.config.ts
+new file mode 100644
+index 0000000..7f457b2
+--- /dev/null
++++ b/frontend/playwright.deployed-bundle.config.ts
+@@ -0,0 +1,69 @@
++import { defineConfig } from "@playwright/test";
++import {
++  announce,
++  backendCommand,
++  backendEnv,
++  resolveE2eEnvironment,
++} from "./playwrightEnv";
++
++/**
++ * ORD-0226 follow-up ② (commander 02:1x): read this lane's targets against **the bytes the phone is
++ * served**, not against a build of the current working tree.
++ *
++ * `playwright.prod-gate.config.ts` builds first, and since `e08131e` a build of this tree no longer
++ * equals the deployed bundle -- so a green there would say "my tree", not "the generation on the
++ * phone".  `vite preview --outDir <deployed dist>` serves the deployed artifact as it sits in the
++ * preview chain's `dist/`, and `preview.proxy` in `vite.config.ts` still resolves `/api/v1` from
++ * `CITYNEXUS_BACKEND_PORT`, so the API side is **this run's own throwaway database**.  Nothing here
++ * opens `_preview.db`: the deployed directory is only ever read.
++ *
++ * Service workers are blocked on purpose.  This chain measures the bundle that `index.html` names;
++ * a precache from an earlier run on a reused port would silently answer for it.
++ */
++const env = resolveE2eEnvironment("deployed-bundle");
++announce(env, "deployed-bundle");
++
++const DEPLOYED_DIST = process.env.CITYNEXUS_DEPLOYED_DIST ?? "D:/moodle/_qoder_preview_20260920/dist";
++
++export default defineConfig({
++  testDir: "./e2e",
++  testIgnore: /[\\/]e2e[\\/]legacy[\\/]/,
++  ...(env.authoritative ? { globalSetup: "./e2e/_qoderAuthoritativeSetup.ts" } : {}),
++  projects: [
++    { name: "real-seed", testMatch: /_qoderRealSeed\.setup\.ts/ },
++    {
++      name: "chromium",
++      dependencies: ["real-seed"],
++      use: { storageState: "./e2e/.qoder-seed-state.json" },
++    },
++  ],
++  timeout: 420_000,
++  expect: { timeout: 15_000 },
++  workers: 1,
++  use: {
++    baseURL: `http://127.0.0.1:${env.frontendPort}`,
++    serviceWorkers: "block",
++  },
++  webServer: [
++    {
++      command: backendCommand(env),
++      cwd: "../backend",
++      env: backendEnv(env),
++      url: `http://127.0.0.1:${env.backendPort}/api/v1/health`,
++      reuseExistingServer: false,
++      timeout: 120_000,
++      stdout: "pipe",
++      stderr: "pipe",
++    },
++    {
++      // No `npm run build`: the whole point is to run the artifact that is already on disk.
++      command: `npm exec -- vite preview --host 127.0.0.1 --port ${env.frontendPort} --strictPort --outDir ${DEPLOYED_DIST}`,
++      cwd: ".",
++      url: `http://127.0.0.1:${env.frontendPort}/v8/hub`,
++      reuseExistingServer: false,
++      timeout: 240_000,
++      stdout: "pipe",
++      stderr: "pipe",
++    },
++  ],
++});
+diff --git a/frontend/src/app/V8Experience.tsx b/frontend/src/app/V8Experience.tsx
+index d533ef2..51d77e9 100644
+--- a/frontend/src/app/V8Experience.tsx
++++ b/frontend/src/app/V8Experience.tsx
+@@ -1989,10 +1989,14 @@ function budgetMoney(
+ }
+ 
+ /* ORD-0226 (red team arm E1): a word table cannot pin down what a caveat says, because paraphrase is
+-   unbounded.  This sentence is frozen and `e2e/qoder-budget-advisory-tiers.spec.ts` asserts it
+-   character for character -- so changing the copy means editing that gate in the same commit. */
++   unbounded.  Both sentences are frozen and `e2e/qoder-budget-advisory-tiers.spec.ts` asserts them
++   character for character -- so changing the copy means editing that gate in the same commit.  The
++   English arm is pinned too because it was measured on screen: `resolveLocale` falls through to
++   `navigator.language`, so a non-Chinese browser renders English by default. */
+ const TIGHT_CAVEAT_ZH =
+   "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。";
++const TIGHT_CAVEAT_EN =
++  "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.";
+ 
+ function budgetAdvisory(
+   reference: V8Data["trip"]["budget_reference"],
+@@ -2029,7 +2033,7 @@ function budgetAdvisory(
+     hint: tight
+       ? zh
+         ? TIGHT_CAVEAT_ZH
+-        : "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally."
++        : TIGHT_CAVEAT_EN
+       : reference.floor_comparable
+         ? zh
+           ? "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。"
+diff --git a/review/ord0226_kill_arms.py b/review/ord0226_kill_arms.py
+index 73fd113..9b8e4b0 100644
+--- a/review/ord0226_kill_arms.py
++++ b/review/ord0226_kill_arms.py
+@@ -1,10 +1,11 @@
+-"""ORD-0226 acceptance run: three arms through `live_checks/mutation_anchor_guard.py`.
++"""ORD-0226 acceptance run: five arms through `live_checks/mutation_anchor_guard.py`.
+ 
+ Order is fixed by the order: one green baseline, then one arm at a time, and a **fresh green
+ baseline before every arm** -- a red baseline would let any mutant "kill" the node for unrelated
+-reasons.  Every arm is measured on the same node, in the same whole-file-free shape (single node),
+-and the product file is restored by the guard's `finally`, whose own sha check raises on mismatch;
+-we re-hash after the context exits so `restored_exact` is a reading, not a promise.
++reasons.  Follow-up ① (commander 02:1x) added the English arm, so each language now has its own
++frozen literal and its own node, and every arm additionally runs **the other language's node under
++the same mutant**: that has to stay green, or the two pins share one judge and neither is proven
++independent.
+ 
+ The arms are the red team's (`d2305848`, 23:4x): E1 appended 「不过别担心，肯定够用」 to the frozen
+ caveat -- every word outside `ALLAY_WORDS`, which is why the old word-table gate stayed green.
+@@ -32,27 +33,58 @@ for _stream in (sys.stdout, sys.stderr):
+ 
+ PRODUCT = ROOT / "frontend/src/app/V8Experience.tsx"
+ SPEC = "e2e/qoder-budget-advisory-tiers.spec.ts"
+-NODE = "ord0220-1-the-tight-caveat-cannot-contradict-itself"
++ZH_NODE = "ord0220-1-the-tight-caveat-cannot-contradict-itself"
++EN_NODE = "ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence"
+ RECEIPT = ROOT / "review/evidence/ui-overnight/ord0226-arms.json"
+ PYTHON = "D:/moodle/CityNexus/.venv/Scripts/python.exe"
+ 
+-FROZEN = '  "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。";\n'
++ZH_FROZEN = '  "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。";\n'
++EN_FROZEN = (
++    '  "At this budget, lodging, transport and food are likely to exceed the plan. '
++    'Adjust the budget, or continue intentionally.";\n'
++)
+ 
++# name, anchor, mutant, why, node under test, node that must stay green under the same mutant
+ ARMS = [
+     (
+         "killAC1-e1-reassurance-outside-any-word-table",
++        ZH_FROZEN,
+         '  "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。不过别担心，肯定够用";\n',
+         "the red team's E1 arm verbatim: 别担心/肯定够 are not in ALLAY_WORDS, so only literal equality can catch it",
++        ZH_NODE,
++        EN_NODE,
+     ),
+     (
+         "killAC2-e2-the-caveat-denies-itself",
++        ZH_FROZEN,
+         '  "这个预算不会超出计划，你可以放心调整。";\n',
+         "arm E2's shape: the caveat stops warning and tells the traveller to relax",
++        ZH_NODE,
++        EN_NODE,
+     ),
+     (
+         "killAC3-selftest-one-punctuation-mark",
++        ZH_FROZEN,
+         '  "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以，";\n',
+         "acceptance 5: one full stop becomes one comma -- green here would mean the equality is not literal",
++        ZH_NODE,
++        EN_NODE,
++    ),
++    (
++        "killAC4-e1-shape-in-english",
++        EN_FROZEN,
++        '  "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally, but do not worry, it will be plenty.";\n',
++        "follow-up ①: the same E1 shape in the language arm the word tables never covered at all",
++        EN_NODE,
++        ZH_NODE,
++    ),
++    (
++        "killAC5-selftest-one-english-punctuation-mark",
++        EN_FROZEN,
++        '  "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally,";\n',
++        "follow-up ①: the English pin is literal too -- one final full stop becomes one comma",
++        EN_NODE,
++        ZH_NODE,
+     ),
+ ]
+ 
+@@ -61,9 +93,9 @@ def digest() -> str:
+     return sha256(PRODUCT.read_bytes()).hexdigest()
+ 
+ 
+-def run(label: str, port: int) -> dict:
++def run(label: str, port: int, node: str) -> dict:
+     """One node, one throwaway stack.  run_spec.py prints `exit=` and its own log path."""
+-    cmd = [PYTHON, str(ROOT / "review/run_spec.py"), SPEC, str(port), "--grep", NODE]
++    cmd = [PYTHON, str(ROOT / "review/run_spec.py"), SPEC, str(port), "--grep", node]
+     started = time.time()
+     proc = subprocess.run(
+         cmd,
+@@ -82,24 +114,25 @@ def run(label: str, port: int) -> dict:
+     if proc.returncode != 0:
+         # The assertion's own message carries the node id, so a red names the assertion that reddened.
+         for line in reversed(out.splitlines()):
+-            if NODE in line and ("frozen sentence" in line or "contradicts" in line or "no risk" in line):
++            if node in line and ("frozen sentence" in line or "not renderable" in line or "contradicts" in line):
+                 owner = " ".join(line.split())
+                 break
+         lines: list[str] = []
+         if log and Path(log).exists():
+             lines = Path(log).read_text(encoding="utf-8", errors="replace").splitlines()
+         for index, line in enumerate(lines):
+-            if line.strip().startswith("Error:") and NODE in line:
++            if line.strip().startswith("Error:") and node in line:
+                 block = "\n".join(item.strip()[:220] for item in lines[index : index + 4])
+                 break
+     print(
+-        f"[{label}] exit={proc.returncode} run_id={run_id} {round(time.time() - started)}s "
+-        f"summary={summary!r}",
++        f"[{label}] node={node.split('-')[0]} exit={proc.returncode} run_id={run_id} "
++        f"{round(time.time() - started)}s summary={summary!r}",
+         flush=True,
+     )
+     return {
+         "label": label,
+-        "command": " ".join(cmd[:3]) + f" {port} --grep {NODE}",
++        "node": node,
++        "command": " ".join(cmd[:3]) + f" {port} --grep {node}",
+         "exitCode": proc.returncode,
+         "runId": run_id,
+         "log": log,
+@@ -112,35 +145,41 @@ def run(label: str, port: int) -> dict:
+ def main() -> int:
+     with open(PRODUCT, encoding="utf-8", newline="") as fh:
+         source = fh.read()
+-    if source.count(FROZEN) != 1:
+-        print("ABORT: the frozen caveat line is not a single, unique occurrence in the product file")
+-        return 2
++    for anchor in (ZH_FROZEN, EN_FROZEN):
++        if source.count(anchor) != 1:
++            print(f"ABORT: anchor occurs {source.count(anchor)} times, expected 1: {anchor[:40]!r}")
++            return 2
+ 
+     tag = sys.argv[1] if len(sys.argv) > 1 else ""
+     port = int(sys.argv[2]) if len(sys.argv) > 2 else 4620
+     receipt_path = RECEIPT.with_name(f"ord0226-arms{'-' + tag if tag else ''}.json")
+     record = {
+         "generatedBy": "e345b9d6",
+-        "order": "ORD-0226",
++        "order": "ORD-0226 (+ follow-up ① English arm)",
+         "runTag": tag or "first",
+-        "fix": "A -- the tight caveat is a frozen literal in the product, and the gate asserts string equality",
++        "fix": "A -- both caveat sentences are frozen literals in the product; each gate holds its OWN copy and asserts string equality",
+         "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+         "guard": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace",
+-        "node": NODE,
++        "nodes": {"zh": ZH_NODE, "en": EN_NODE},
+         "spec": SPEC,
+-        "runShape": "single node (--grep on the exact node id) against an authoritative throwaway stack",
++        "runShape": (
++            "single node (--grep on the exact node id) against an authoritative throwaway stack; "
++            "the 'real-seed' setup project counts as one extra pass, so a green single-node run reads '2 passed'"
++        ),
+         "productFileBeforeSha256": digest(),
+         "arms": [],
+     }
+ 
+-    for name, mutant, why in ARMS:
++    for name, anchor, mutant, why, node, other in ARMS:
+         print(f"\n=== {name} ===", flush=True)
+-        baseline = run("baseline-before-arm", port)
++        baseline = run("baseline-before-arm", port, node)
+         port += 1
+         before = digest()
+-        with temporary_guarded_replace(PRODUCT, FROZEN.encode(), mutant.encode(), expected_hits=1) as receipt:
++        with temporary_guarded_replace(PRODUCT, anchor.encode(), mutant.encode(), expected_hits=1) as receipt:
+             mutated = receipt.mutated_sha256
+-            attempt = run("mutated-arm", port)
++            attempt = run("mutated-target-node", port, node)
++            port += 1
++            mirror = run("same-mutant-other-language-node", port, other)
+             port += 1
+         after = digest()
+         record["arms"].append(
+@@ -157,6 +196,7 @@ def main() -> int:
+                 "restored_exact": after == record["productFileBeforeSha256"] == before,
+                 "baseline": baseline,
+                 "mutated": attempt,
++                "mirror_other_language": mirror,
+                 "verdict": (
+                     "KILLED"
+                     if attempt["exitCode"] != 0 and baseline["exitCode"] == 0
+@@ -164,19 +204,27 @@ def main() -> int:
+                     if attempt["exitCode"] == 0
+                     else "BASELINE_RED -- arm not measured"
+                 ),
++                "independent": attempt["exitCode"] != 0 and mirror["exitCode"] == 0,
+             }
+         )
+ 
+     record["productFileAfterSha256"] = digest()
+     record["treeUnchangedByThisRun"] = record["productFileAfterSha256"] == record["productFileBeforeSha256"]
+     record["allArmsKilled"] = all(a["verdict"] == "KILLED" for a in record["arms"])
++    record["allArmsIndependent"] = all(a["independent"] for a in record["arms"])
+     receipt_path.parent.mkdir(parents=True, exist_ok=True)
+     receipt_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+     for arm in record["arms"]:
+-        print(f"{arm['verdict']:26s} {arm['name']}  anchor_hits={arm['anchor_hits']} bytes_changed={arm['bytes_changed']} restored_exact={arm['restored_exact']}")
+-    print(f"allArmsKilled={record['allArmsKilled']} treeUnchanged={record['treeUnchangedByThisRun']}")
++        print(
++            f"{arm['verdict']:26s} independent={str(arm['independent']):5s} {arm['name']}  "
++            f"anchor_hits={arm['anchor_hits']} bytes_changed={arm['bytes_changed']} restored_exact={arm['restored_exact']}"
++        )
++    print(
++        f"allArmsKilled={record['allArmsKilled']} allArmsIndependent={record['allArmsIndependent']} "
++        f"treeUnchanged={record['treeUnchangedByThisRun']}"
++    )
+     print(f"receipt={receipt_path}")
+-    return 0 if record["allArmsKilled"] and record["treeUnchangedByThisRun"] else 1
++    return 0 if (record["allArmsKilled"] and record["allArmsIndependent"] and record["treeUnchangedByThisRun"]) else 1
+ 
+ 
+ if __name__ == "__main__":
