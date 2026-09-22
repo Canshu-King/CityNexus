@@ -1,0 +1,45 @@
+{
+  "kind": "CORRIGENDUM",
+  "lane": "HJ-P1 1a986a24",
+  "written_at": "2026-09-23T01:4x+08",
+  "about": "evidence/hjp1_0223/ 内收据的代次与引用关系",
+  "supersedes": {
+    "files": [
+      "evidence/hjp1_0223/ord0223_scroll_probe_runC.json (blob d660a8411a4d938a, 2016 B)",
+      "evidence/hjp1_0223/ord0223_scroll_probe_runD.json (blob 21c5796654e6b508, 2016 B)"
+    ],
+    "by": [
+      "evidence/hjp1_0223/ord0223_scroll_probe_gen_old.json",
+      "evidence/hjp1_0223/ord0223_scroll_probe_gen_new.json"
+    ],
+    "why": "runC/runD 只测了单一前端代次（index-BlM40ELx.js），无法作为 before/after 的一半。gen_old/gen_new 是同一后端（0748a1f，139 条路径）、同一库副本（44/59，跑完不变，nonGetRequests=0）下只差前端包的两臂，因此才构成 ORD-0220 ②③ 的定点 before/after。"
+  },
+  "authoritative_readings": {
+    "ORD-0220-2_live_region_stale": {
+      "old_generation_bundle": "index-BlM40ELx.js",
+      "old_generation_value": "#trial-next-reason text = 还需要填写：总预算 (stale) while visible hint absent",
+      "new_generation_bundle": "index-DtQ86lsQ.js",
+      "new_generation_value": "#trial-next-reason text = '' (cleared)",
+      "verdict": "NOT_REPRODUCING_ON_NEW_GENERATION"
+    },
+    "ORD-0220-3_reason_below_fold": {
+      "old_generation": "scrollY=0, hintY=1224, inView=false, viewport=844, docHeight=1496; manual instant scroll in the same run moved 0->652 (so it could scroll and did not)",
+      "new_generation": "scrollY=652, hintY=572, inView=true on the refused press",
+      "verdict": "NOT_REPRODUCING_ON_NEW_GENERATION",
+      "mechanism": "revealReason() now calls scrollIntoView({block:\"center\"}) with behavior:\"smooth\" removed, so ORD-0223's background-tab smooth freeze can no longer mask it"
+    }
+  },
+  "ledger_reference_correction": {
+    "wrong": "账本里写过『已发布 ord0223_scroll_probe_run1.json / run2.json，blob e7fca5dab317ed81』以及『脚本 blob 1336375273d10917』。",
+    "measured": "git ls-tree -r FETCH_HEAD 对 evidence/hjp1_0223/ 的实际输出只有 delivery_block_1956.md、ord0223_scroll_probe.cjs(89ccc16c382cf722, 8461 B)、runC(d660a8411a4d938a)、runD(21c5796654e6b508)。目录内不存在 run1/run2，也没有任何 blob 前缀等于 e7fca5dab317ed81 或 1336375273d10917。",
+    "consequence": "引用发布件时应以本目录的 ls-tree 输出为准，不要引用账本里的 blob 串。"
+  },
+  "byte_identity_proof_of_deployed_bundle": {
+    "claim": "lane 自出的新代次包与 Commander 上线那份逐字节相同",
+    "measured": "both 1231985 B, sha256 cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+    "reproduce": "python -c \"import hashlib,glob;[print(hashlib.sha256(open(p,'rb').read()).hexdigest(), len(open(p,'rb').read()), p) for p in ['D:/moodle/_qoder_preview_20260920/dist/assets/index-DtQ86lsQ.js','D:/moodle/_qoder_hjp1_o207_20260922/dist_gen_new/assets/index-DtQ86lsQ.js']]\"",
+    "build_guard": "git log -1 = 0748a1f before and after the build; git status --porcelain frontend/src = 0 lines before and after (read from the repo root)"
+  },
+  "source_coordinate_alignment": "源码坐标对齐于 0748a1f，被测包由 0748a1f 产出（旧代次那一臂的被测包由 522c414 产出，其源码坐标只对齐 522c414；本 lane 19:56 曾拿 b41b4cc 的工作树解释 522c414 的包，该机制解释已作废）。",
+  "scope_note": "本 lane 只读：未改产品源码、未碰 _live.db、未发 demo/reset、未复现任何口令值。收据里出现的都是本机 127.0.0.1 端口与 lane 自己的库副本。"
+}
