@@ -48,6 +48,7 @@ TIERS_SPEC = "e2e/qoder-budget-advisory-tiers.spec.ts"
 WIZ2_SPEC = "e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts"
 I18N = "src/i18n/LocaleContext.tsx"
 COPY_SPEC = "e2e/qoder-demo-entry-copy-matches-the-stage.spec.ts"
+ENUM_SPEC = "e2e/qoder-raw-enums-never-reach-the-traveller.spec.ts"
 SURFACE_SPEC = "e2e/qoder-wizard-hint-surface-readings.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
@@ -712,6 +713,14 @@ CASES = [
         '        ? "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。"\n',
         '        ? ""\n',
         [(TIERS_SPEC, ["ord0220-1-the-tight-caveat-cannot-contradict-itself"])],
+    ),
+    (
+        # ORD-0222 4: the row HJ-P1 read twice goes back to printing the provider enum.
+        "killAA1-day-card-row-prints-the-raw-mode",
+        EXPERIENCE,
+        '              <span className="mode-mark">{modeLabel(day.mode, zh)}</span>{" "}\n',
+        '              <span className="mode-mark">{day.mode}</span>{" "}\n',
+        [(ENUM_SPEC, ['ord0222-1-visual-scan-no-raw-enums-and-no-mixed-english'])],
     ),
     (
         # ORD-0220 ②: the announcement goes back to being a snapshot of an old missing-list,

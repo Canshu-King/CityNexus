@@ -2671,11 +2671,15 @@ function Hub({
             onClick={() => onNavigate(hasChosenPlan ? "studio" : "hub")}
           >
             <span>{t("hub.day", { n: day.day })}</span>
-            <strong>{day.label.split(" · ")[0]}</strong>
+            <strong>{dayHeading(day, zh)}</strong>
             <p>{day.activities.join(" · ")}</p>
             <small>
-              <span className="mode-mark">{day.mode}</span>{" "}
-              {t("hub.anchor", { type: day.anchor })}
+              {/* ORD-0222 1: the *other* day-card path (the detail list at :2768 was fixed under
+                  ORD-0208 ④).  `day.mode` is an enum and `hub.anchor` is a template, so
+                  interpolating the enum produced 「TRANSIT锚点」 / "ARRIVAL anchor" on a Chinese
+                  screen.  The template stays; its parameter is now an already translated word. */}
+              <span className="mode-mark">{modeLabel(day.mode, zh)}</span>{" "}
+              {t("hub.anchor", { type: anchorLabel(day.anchor, zh) })}
             </small>
           </button>
         ))}
@@ -2760,7 +2764,10 @@ function Studio({
               <div className="v8-day-detail-title">
                 <span>0{day.day}</span>
                 <div>
-                  <b>{day.label}</b>
+                  <b>
+                    {dayHeading(day, locale.startsWith("zh"))}
+                    {day.date ? ` · ${day.date.slice(5)}` : ""}
+                  </b>
                   <small>
                     {/* ORD-0208 4: this used to print the raw enums -- 「ARRIVAL anchor · TRANSIT」
                         in a Chinese interface.  Both words have humanizer tables; the day card just
@@ -2854,8 +2861,10 @@ function Studio({
             </div>
             <div>
               <span>{t("studio.walkingExposure")}</span>
-              <b>
-                {chosen ? `${chosen.walking_min} min` : t("studio.notChosen")}
+              <b data-testid="studio-walking">
+                {chosen
+                  ? t("studio.walkingMinutes", { minutes: chosen.walking_min })
+                  : t("studio.notChosen")}
               </b>
             </div>
             <div className="total">
@@ -3182,7 +3191,7 @@ function LiveSecondary({
           <div className="v8-next-card">
             <span>{t("live.leaveBy")}</span>
             <h3>{next?.title ?? t("live.awaitingPlan")}</h3>
-            <p>
+            <p data-testid="live-leave-by">
               {next
                 ? t("live.arriveBy", {
                     date: dateInZone(
@@ -3192,7 +3201,7 @@ function LiveSecondary({
                     ),
                   })
                 : t("live.selectPlan")}{" "}
-              · {selected?.protected_margin_min ?? 0} min slack
+              · {t("live.slack", { minutes: selected?.protected_margin_min ?? 0 })}
             </p>
             <div className="v8-eta">
               <strong>
@@ -3200,7 +3209,7 @@ function LiveSecondary({
                   ? clockInZone(next.start_at, data.journey.timezone || "UTC")
                   : "—"}
               </strong>
-              <span>{t("live.eta", { mode: nextLeg?.mode ?? mode })}</span>
+              <span>{t("live.eta", { mode: modeLabel(nextLeg?.mode ?? mode, zh) })}</span>
             </div>
             {destination && (
               <a
@@ -3237,9 +3246,15 @@ function LiveSecondary({
                 className="v8-route-row"
                 key={`${fact.from_key}-${fact.to_key}-${fact.mode}`}
               >
-                <b>{fact.mode}</b>
+                {/* ORD-0222 1/②: `fact.mode` is a provider enum and the duration words were
+                    hardcoded English, so a Chinese traveller read "TRANSIT 12 min · 5 min walk"
+                    on the same row. */}
+                <b>{modeLabel(fact.mode, zh)}</b>
                 <span>
-                  {fact.duration_min} min · {fact.walking_min} min walk
+                  {t("live.routeDuration", {
+                    duration: fact.duration_min,
+                    walking: fact.walking_min,
+                  })}
                 </span>
                 <strong>
                   {fact.cost_amount_minor == null
@@ -3294,9 +3309,13 @@ function MapPage({
           </h2>
           {comparison.slice(0, 3).map((fact) => (
             <div className="v8-route-row" key={fact.mode}>
-              <b>{fact.mode}</b>
+              {/* ORD-0222 1/②: same row, same two leaks, on the map surface. */}
+              <b>{modeLabel(fact.mode, locale.startsWith("zh"))}</b>
               <span>
-                {fact.duration_min} min · {fact.walking_min} walk
+                {t("live.routeDuration", {
+                  duration: fact.duration_min,
+                  walking: fact.walking_min,
+                })}
               </span>
               <strong>
                 {fact.cost_amount_minor == null
@@ -3956,11 +3975,16 @@ function modeLabel(mode: string, zh: boolean): string {
     RIDE_HAIL: { zh: "网约车", en: "Ride-hail" },
   };
   const entry = labels[key];
+  /* ORD-0222: an unmapped value must not reach a Chinese screen as a latin token.  The old
+     fallback humanised `RIDE_SHARE_NEW` into "ride share_new" and printed it in zh anyway, which
+     is the same leak this order is fixing, just one enum later. */
   return entry
     ? zh
       ? entry.zh
       : entry.en
-    : key.replace("_", " ").toLowerCase();
+    : zh
+      ? "未识别的出行方式"
+      : key.replaceAll("_", " ").toLowerCase();
 }
 
 /** ORD-0208 4: structural anchor roles reached the day card as raw enums (「ARRIVAL anchor」). */
@@ -3975,7 +3999,33 @@ function anchorLabel(anchor: string, zh: boolean): string {
     ANCHOR: { zh: "锚点", en: "Anchor" },
   };
   const entry = labels[key];
-  return entry ? (zh ? entry.zh : entry.en) : key.replace("_", " ").toLowerCase();
+  /* ORD-0222: same rule as modeLabel -- unknown means unknown, in the traveller's language. */
+  return entry
+    ? zh
+      ? entry.zh
+      : entry.en
+    : zh
+      ? "未识别"
+      : key.replaceAll("_", " ").toLowerCase();
+}
+
+/**
+ * ORD-0222 ②: the day card's heading printed the server's own `label`, whose first segment is an
+ * English weekday ("Friday · 09 Oct"), so a Chinese screen showed English it did not need to.  The
+ * payload already carries the ISO `date` for that day, so the weekday is a form, not content: it is
+ * rendered in the traveller's language from the same date, and the server's text stays the fallback
+ * when there is no date to read.  The activity titles on the next line are a different case -- those
+ * are server-authored content and are handed off, not rewritten here.
+ */
+function dayHeading(day: { label: string; date?: string }, zh: boolean): string {
+  const iso = String(day.date ?? "");
+  if (/^\d{4}-\d{2}-\d{2}$/.test(iso)) {
+    return new Intl.DateTimeFormat(zh ? "zh-CN" : "en-GB", {
+      weekday: "long",
+      timeZone: "UTC",
+    }).format(new Date(`${iso}T00:00:00Z`));
+  }
+  return day.label.split(" · ")[0];
 }
 
 const CITY_NAME_BY_SLUG: Record<string, { zh: string; en: string }> = {
