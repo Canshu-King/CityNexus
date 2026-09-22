@@ -1,0 +1,18 @@
+{
+  "composite_commit": "ec65a3eb738c9998f0dd0852611537f5138c9383",
+  "tree": "8a504d6aac183ddde52564ff3624f8032074aa08",
+  "parent": "f92f9e97d3d4da22843378e160764a1cbc7d19b2",
+  "author_name": "仓鼠王",
+  "author_email": "yjianbin419@gmail.com",
+  "author_date_iso": "2026-09-23T02:59:10+08:00",
+  "committer_name": "仓鼠王",
+  "committer_email": "yjianbin419@gmail.com",
+  "committer_date_iso": "2026-09-23T02:59:10+08:00",
+  "message": "test(instrument): composite for the g3 closure run = product candidate f92f9e9 + lane F's shared streak ruler\n\nThe product candidate stays exactly as it is; the only added path is\n`backend/tests/_qoder_streak_receipt.py` (blob fcf76941dcc2512736c1d28fa362022b5f6c879a, from /d/moodle/_qoder_f_o210b_20260922@6f0e5fc).\n\nPer the arbiter (iii): the closure run is attributed to THIS commit, not to mainline.\nMainline wants GREEN, it re-runs with its own exact SHA.",
+  "product_candidate": "f92f9e97d3d4da22843378e160764a1cbc7d19b2",
+  "ruler_path": "backend/tests/_qoder_streak_receipt.py",
+  "patch_bytes": 51475,
+  "patch_blob_sha1": "e8de4569e190feef9b3e797a217c8d1f84ff2095",
+  "replayed_commit": "ec65a3eb738c9998f0dd0852611537f5138c9383",
+  "replay_matches": true
+}
