@@ -187,13 +187,6 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
             ? `服务器说「${capability.pending_destination_label ?? capability.query}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。`
             : `The server says "${capability.pending_destination_label ?? capability.query}" cannot be resolved to a destination from any traceable source. This is not a network problem: the server just answered. Try another spelling, or choose another place.`,
         };
-      case "DESTINATION_RESOLVER_UNAVAILABLE":
-        return {
-          title: zh ? "解析服务这次没能回答" : "The resolver could not answer this time",
-          body: zh
-            ? "服务器说这是它那边的一次运行性失败，不是「这个地方不存在」。可以重试。"
-            : "The server reports this as a runtime failure on its side, not as \"this place does not exist\". Retrying is right.",
-        };
       case "PROVIDER_RATE_LIMITED":
       case "PROVIDER_TIMEOUT":
       case "PROVIDER_NETWORK_FAILURE":
@@ -204,6 +197,19 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
           body: zh
             ? `服务器说这是提供方一侧的一次临时失败（${reasonCode}），可以重试；这不是「这个地方不存在」。`
             : `The server reports a transient failure on a provider's side (${reasonCode}); retrying is right, and this is not "the place does not exist".`,
+        };
+      case "DESTINATION_RESOLVER_UNAVAILABLE":
+        /* ORD-0203: the fourth cell.  Measured live (resolver on, Photon unreachable):
+           capability=NOT_ANSWERED, reason=DESTINATION_RESOLVER_UNAVAILABLE, action=RETRY_LATER,
+           retryable=true, provider_status=[{status:"UNREACHABLE", answered:false}].
+           R11 froze 「可规划性 ≠ 覆盖完整度」, so this says nobody answered -- NOT that the city
+           needs data poured in (that would be a claim about the place) and NOT that it cannot be
+           planned (that is the UNAVAILABLE cell's claim, which the server did not make). */
+        return {
+          title: zh ? "没人回答我们" : "Nobody answered us",
+          body: zh
+            ? `服务器说这一问没有拿到答复（${reasonCode}）——是它去问的那一头没答话，不是「这个地方不能规划」，也不是「这城市还要灌数据」。这两句服务器都没说。可以稍后重试。`
+            : `The server reports that nothing answered this request (${reasonCode}). That is not "this place cannot be planned" and not "this city still needs data loaded" -- the server said neither. Trying again later is the route.`,
         };
       default:
         return {
@@ -286,7 +292,11 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
     serverError && typeof serverError === "object"
       ? String((serverError as { message?: unknown }).message ?? "")
       : "";
-  const ready = verdict === CAPABILITY_READY;
+  /* The action comes from the server.  `retryable` is the pair the fourth cell is obliged to keep
+     (`NOT_ANSWERED => retryable is true and a provider_status exists`), so the retry action reads it
+     rather than deciding for itself that retrying is reasonable. */
+  const action = capability?.recommended_action ?? "";
+  const retryable = Boolean(capability?.retryable);
 
   return (
     <section
@@ -294,6 +304,8 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
       data-testid="prep-panel"
       data-verdict={verdict}
       data-reason={reasonCode}
+      data-action={action}
+      data-retryable={String(retryable)}
       data-job-id={job?.operation_id ?? ""}
     >
       <div className="v8-page-intro compact">
@@ -379,9 +391,13 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
             </div>
           )}
 
-          {/* Every verdict ends in a real action.  No silent close, no no-op. */}
+          {/* Every verdict ends in a real action.  No silent close, no no-op.  The action is the
+              server's `recommended_action`, not a local rule: measured on the fourth cell, the
+              server answers RETRY_LATER and the old "anything not READY may prepare" branch offered
+              开始准备 for a destination nobody had named -- the exact defect `anywhere_capability.py`
+              names in its own comment. */}
           <div className="prep-actions">
-            {ready ? (
+            {action === "ACCEPT_PARTIAL_PLAN" ? (
               <button
                 type="button"
                 className="v8-primary-button"
@@ -391,7 +407,17 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
               >
                 {zh ? "去规划" : "Go and plan"}
               </button>
-            ) : (
+            ) : action === "RETRY_LATER" ? (
+              <button
+                type="button"
+                className="v8-primary-button"
+                data-testid="prep-retry-later"
+                disabled={checking || !retryable}
+                onClick={() => void check()}
+              >
+                {checking ? (zh ? "正在重试…" : "Trying again…") : zh ? "稍后重试" : "Try again later"}
+              </button>
+            ) : action === "START_HYDRATION" ? (
               <button
                 type="button"
                 className="v8-primary-button"
@@ -401,7 +427,10 @@ export function DestinationPreparationPanel({ journeyId, onOpenPlan, initialQuer
               >
                 {busy ? (zh ? "正在开始…" : "Starting…") : zh ? "开始准备" : "Prepare this destination"}
               </button>
-            )}
+            ) : null}
+            {/* CHOOSE_ANOTHER_DESTINATION names no primary action of its own: the server's advice for
+                a destination it cannot name is to pick a different one, which is the button below.
+                Named explicitly so no future action string silently inherits "prepare this". */}
             <button
               type="button"
               className="v8-outline-button"

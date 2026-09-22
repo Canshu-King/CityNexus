@@ -41,6 +41,7 @@ OFFLINE_SPEC = "e2e/qoder-offline-persistence.spec.ts"
 REPLAN_SPEC = "e2e/qoder-replan-review-actions.spec.ts"
 PREP = "src/features/discovery/DestinationPreparationPanel.tsx"
 PREP_SPEC = "e2e/qoder-destination-preparation.spec.ts"
+NA_SPEC = "e2e/qoder-not-answered-cell.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -572,6 +573,24 @@ CASES = [
         "            {job.terminal && job.retryable && (\n",
         "            {false && (\n",
         [(PREP_SPEC, ["ord0193-a-retryable-runtime-failure-offers-a-retry-and-a-structural-one-does-not"])],
+    ),
+    (
+        # ORD-0203: the fourth cell's action stops being reachable -- the branch that renders the
+        # retry is renamed so nothing matches, which is how a control silently disappears.
+        "killR1-retry-later-is-not-rendered",
+        PREP,
+        '            ) : action === "RETRY_LATER" ? (\n',
+        '            ) : action === "RETRY_LATER_DISABLED_FOR_THIS_MUTANT" ? (\n',
+        [(NA_SPEC, ["ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable"])],
+    ),
+    (
+        # ORD-0203: the fourth cell rendered with the conflation R11 froze -- plannability written
+        # as coverage completeness.  This is the exact sentence the order forbids.
+        "killR2-fourth-cell-claims-the-city-needs-data",
+        PREP,
+        "            ? `服务器说这一问没有拿到答复（${reasonCode}）——是它去问的那一头没答话，不是「这个地方不能规划」，也不是「这城市还要灌数据」。这两句服务器都没说。可以稍后重试。`\n",
+        "            ? `这城市还要灌数据，服务器暂时没有它的资料。`\n",
+        [(NA_SPEC, ["ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable"])],
     ),
 ]
 
