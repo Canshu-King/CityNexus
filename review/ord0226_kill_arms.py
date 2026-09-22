@@ -89,6 +89,19 @@ ARMS = [
 ]
 
 
+def port_busy(port: int) -> bool:
+    """`netstat` is the only honest probe here: a TCP connect can hang instead of refusing."""
+    out = subprocess.run(
+        "netstat -ano -p tcp",
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        shell=True,
+    ).stdout
+    return any(f":{port} " in line and "LISTENING" in line for line in out.splitlines())
+
+
 def digest() -> str:
     return sha256(PRODUCT.read_bytes()).hexdigest()
 
@@ -129,9 +142,15 @@ def run(label: str, port: int, node: str) -> dict:
         f"{round(time.time() - started)}s summary={summary!r}",
         flush=True,
     )
+    if not summary:
+        print(
+            f"[{label}] INVALID_STACK: no per-test summary at all (port {port}); this run measured nothing",
+            flush=True,
+        )
     return {
         "label": label,
         "node": node,
+        "stackStarted": bool(summary),
         "command": " ".join(cmd[:3]) + f" {port} --grep {node}",
         "exitCode": proc.returncode,
         "runId": run_id,
@@ -152,6 +171,11 @@ def main() -> int:
 
     tag = sys.argv[1] if len(sys.argv) > 1 else ""
     port = int(sys.argv[2]) if len(sys.argv) > 2 else 4620
+    span = list(range(port, port + 3 * len(ARMS)))
+    busy = sorted({p for p in span + [p + 4000 for p in span] if port_busy(p)})
+    if busy:
+        print(f"ABORT: these ports are already listening: {busy} -- another chain owns them")
+        return 6
     receipt_path = RECEIPT.with_name(f"ord0226-arms{'-' + tag if tag else ''}.json")
     record = {
         "generatedBy": "e345b9d6",
@@ -198,13 +222,17 @@ def main() -> int:
                 "mutated": attempt,
                 "mirror_other_language": mirror,
                 "verdict": (
-                    "KILLED"
+                    "INVALID_STACK"
+                    if not all(r["stackStarted"] for r in (baseline, attempt, mirror))
+                    else "KILLED"
                     if attempt["exitCode"] != 0 and baseline["exitCode"] == 0
                     else "SURVIVED"
                     if attempt["exitCode"] == 0
                     else "BASELINE_RED -- arm not measured"
                 ),
-                "independent": attempt["exitCode"] != 0 and mirror["exitCode"] == 0,
+                "independent": all(r["stackStarted"] for r in (baseline, attempt, mirror))
+                and attempt["exitCode"] != 0
+                and mirror["exitCode"] == 0,
             }
         )
 
@@ -212,6 +240,7 @@ def main() -> int:
     record["treeUnchangedByThisRun"] = record["productFileAfterSha256"] == record["productFileBeforeSha256"]
     record["allArmsKilled"] = all(a["verdict"] == "KILLED" for a in record["arms"])
     record["allArmsIndependent"] = all(a["independent"] for a in record["arms"])
+    record["invalidStackArms"] = [a["name"] for a in record["arms"] if a["verdict"] == "INVALID_STACK"]
     receipt_path.parent.mkdir(parents=True, exist_ok=True)
     receipt_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     for arm in record["arms"]:
