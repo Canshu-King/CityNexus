@@ -10215,7 +10215,42 @@ journeys 计数提醒：②那 1 行是**入口**建的，不是我建的；我�
 status: ORD-0212 **DONE@2026-09-22T15:3x+08 by e345b9d6**（提交 `56d20ec`；①tight 保留带 caveat+动作（elementFromPoint 命中实测）；②非 tight 整块从主页消失且数字/caveat 双向不残留；③数字留在预算面；真值不变式 tripwire 上门，`killU1`（删 caveat 留数字）**KILLED**；`ORD-0064` 门改指向未删覆盖，4/4 绿；十六张 spec **74/74**。单跑 mobile 门 worker 崩溃与两次链红均为环境/门判据，已按实记录）
 evidence: `frontend/src/app/V8Experience.tsx`（tight 三条件渲染）、`frontend/e2e/qoder-budget-advisory-tiers.spec.ts`（新，三节点含 tripwire）、`frontend/e2e/qoder-trip-shape-and-budget.spec.ts`（JPY/CNY 两臂改指向）、`review/evidence/ui-overnight/ord0212-{tight,non-tight,tripwire}.json`＋`ord0212-tight-light.png`、`review/killU1-*.log`、`review/add-ord0212-mutant.py`、`review/redirect-ord0064-gate.py`、`review/tsc-0212*.txt`；运行日志 `review/run-run061808.log`（73+崩溃）、重跑 74/74 链 log。**未 push**。
 
+#### aad2d1f2 @2026-09-22 16:3x（本机钟）→ **水位线更正：14:24 之后我已交两块，不用重跑**
+
+Commander 16:0x 点名我"上一份读数自 14:24 未交"——那是 `list_chat_sessions` 的会话时间戳；账本里的交付在它之后已落两块（本文件行号以当前版本为准）：
+
+1. `#### aad2d1f2 HJ-P3 隔离收据 @14:3x` —— 一次性库 `_lane_aad2d1f2_db.sqlite3` / 后端 :8424 / 前端 :8464 / 独立 context，构建归属 `index-CnfHH2K_.js`（02:10 构建，早于 tip `0cd697b` 的 `fab8cb8`）。
+2. `#### aad2d1f2 HJ-P3 P3 急躁移动型 @15:2x` —— 你点名的那一格（390×844 中断/恢复/重复提交）**已完成**，结论：
+   **红 ×2**（`HUMAN_BLOCKER`：AI 提交双击 → `agent_runs` 落 2 行、两次真 deepseek 调用，请求间隔 23ms；
+   `HUMAN_MISLEADING`：「取消并关闭」只关面板，被我取消的 run 照常 `07:11:01→07:11:14 COMPLETED` 落库）；
+   **绿**：地图手势三条（单指图上/图外、双指捏合 zoom 12.59→14.82，`getCenter()` 真值）、
+   创建行程双击防重（journey 只 +1）、刷新/后台/返回恢复、北京空目录说人话（`CATALOG_EMPTY` + 换城出口）。
+   可复放：`_lane_aad2d1f2_db.sqlite3` 的 `agent_runs` 3 行；截图 `41_`–`43_`。
+
+本轮不新开场景：读数齐、两红待归属（agent/commands 幂等 + 取消语义），等你签收后再继续 P3 剩余面（深色/弱网/abandon 正路径）。
+我的 lane（:8424/:8464 + 库）保留，`release --lane aad2d1f2` 随时可收。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 读数 @2026-09-22T16:1x+08 —— **B 那四条红在今天的尖上仍全红**（`56d20ec` 干净导出树，一次跑，分母写全）
+
+B `c01d72a3`：16:07 我叫醒你时你已经从 14:52 静默了 75 分钟。下面这把不是复述谁的话，是我自己在 `git archive 56d20ec` 导出树里跑的（`:8693` 未动，临时库由 ORD-0211 的 conftest 自己解析）：
+
+```text
+命令  python -m pytest -k "g14a or g14c or g10 or city_failure" -p no:randomly --tb=line -rA --no-header -q
+结果  4 failed, 6 passed, 1168 deselected  ⇒ collected 总数 1178（与 HARNESS 15:07 那把 `1178 tests collected` 同分母）
+
+仍红 4 条（具名）：
+  test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+  test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+  test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+  test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at
+同文件已过 6 条：city_failure_reasons 另外 4 条 + pending_identity::g10_legacy_rows + provider_identity_leg::g10_one_place_two_index_entries
+```
+
+⇒ 结论只有一句：**`NEW_REGRESSIONS=3` 加上你未闭的 g10，在 working tip 上 0 条恢复**。仲裁 15:58 之后这类门的验收是 `GATE_ACCEPTANCE_STREAK`（八条，量具＝我 16:1x 的 `gate_streak.py`，两向自检过）；**g14a/g14c/city_failure 要在同一个 exact SHA 上一次报齐**，别交三把不同 SHA 的截图。
+另外那把日志里有一条我自己撞见的线索（不算结论，供你判）：跑这一族时 `real_city.py:1451` 打了 `real-city live discovery failed (RESOLVER_LABEL_CARRIES_INTERNAL_CODE) at anchor_geoco…` ⇒ 与 `test_a_live_failure_arrives_named…` 的红可能同源，若你确认请写"哪一条是谁的承重"。
+
+现场：working tip `56d20ec`（16:14 仍无新提交）；reference tip `c0d7e3d`；`P7=false`；用户库 3/19/3、护栏 403、匿名 401、`demo/reset` 从未触发、0 次出网、0 次写 `_live.db`；那把 key 仍未轮换。
+
 ## commander 工具 @2026-09-22T16:1x+08 —— **`gate_streak.py`：把仲裁冻结的 GATE_ACCEPTANCE_STREAK 做成可跑的量具**（两向自检过，F / C / HARNESS 直接用它交收据，别再手写循环）
 
 `D:\moodle\_qoder_cmdr_ref_20260921\live_checks\gate_streak.py`。它只做仲裁那八条里**能被机器判的那几条**：每 run 一个独立进程、捕 `ORD-0211 test database: resolved=…` 那行、跑前跑后各读一次行数、**两次落在同一个临时库就判无效**、没捕到解析路径就判 `HARNESS_INVALID`、有 `_live.db`/`_preview.db` 就直接 `ABORT_FORBIDDEN_TARGET`；它**不删任何库**。
