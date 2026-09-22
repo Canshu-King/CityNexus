@@ -34,12 +34,14 @@ C4_SCENARIO_ID = "c4-commitment-replay"
 CAPABILITY_SCENARIO_ID = "capability-fail-closed-replay"
 CAPABILITY_REVALIDATION_SCENARIO_ID = "capability-revalidation-replay"
 ACTIVE_CAPABILITY_RECOVERY_SCENARIO_ID = "active-capability-recovery-replay"
+RECOVERY_REPLACEMENT_SCENARIO_ID = "recovery-no-alternative-replacement-replay"
 SCENARIOS = (
     SCENARIO_ID,
     C4_SCENARIO_ID,
     CAPABILITY_SCENARIO_ID,
     CAPABILITY_REVALIDATION_SCENARIO_ID,
     ACTIVE_CAPABILITY_RECOVERY_SCENARIO_ID,
+    RECOVERY_REPLACEMENT_SCENARIO_ID,
 )
 
 
@@ -225,7 +227,7 @@ class Harness:
                     "payment_provider": "mock-payment",
                 }
             )
-        if scenario_id in {CAPABILITY_SCENARIO_ID, CAPABILITY_REVALIDATION_SCENARIO_ID, ACTIVE_CAPABILITY_RECOVERY_SCENARIO_ID}:
+        if scenario_id in {CAPABILITY_SCENARIO_ID, CAPABILITY_REVALIDATION_SCENARIO_ID, ACTIVE_CAPABILITY_RECOVERY_SCENARIO_ID, RECOVERY_REPLACEMENT_SCENARIO_ID}:
             self.input_payload.update(
                 {
                     "capability": {
@@ -501,9 +503,115 @@ class Harness:
             "params": item.get("params"),
         }
 
+    def _plan_status_snapshot(self, journey_id: str) -> list[dict[str, Any]]:
+        """Read plan-version ownership truth from the disposable Harness DB."""
+        from app.db.models import PlanVersion
+        from app.db.session import SessionLocal
+        from sqlalchemy import select
+
+        with SessionLocal() as session:
+            rows = list(
+                session.scalars(
+                    select(PlanVersion)
+                    .where(PlanVersion.journey_id == journey_id)
+                    .order_by(PlanVersion.version_no, PlanVersion.id)
+                ).all()
+            )
+            return [
+                {
+                    "id": row.id,
+                    "version_no": row.version_no,
+                    "status": row.status,
+                    "source": row.source,
+                    "parent_plan_version_id": row.parent_plan_version_id,
+                }
+                for row in rows
+            ]
+
     @staticmethod
-    def _blocker_attribution(message: str, *, capability_code: str, place_ids: list[str]) -> dict[str, Any]:
+    def _stable_plan_semantics(plan: dict[str, Any]) -> dict[str, Any]:
+        """Normalize PlanVersion truth for no-silent-rewrite comparisons."""
+        if not isinstance(plan, dict):
+            return {}
+        activity_fields = (
+            "id",
+            "sequence_no",
+            "activity_type",
+            "place_id",
+            "city_service_id",
+            "start_at",
+            "end_at",
+            "travel_from_prev_min",
+            "estimated_cost",
+            "currency",
+            "status",
+            "locked",
+        )
+        activities = []
+        for item in plan.get("activities", []) or []:
+            if isinstance(item, dict):
+                activities.append({key: item.get(key) for key in activity_fields})
+        return {
+            "id": plan.get("id"),
+            "journey_id": plan.get("journey_id"),
+            "version_no": plan.get("version_no"),
+            "planning_mode": plan.get("planning_mode"),
+            "status": plan.get("status"),
+            "source": plan.get("source"),
+            "parent_plan_version_id": plan.get("parent_plan_version_id"),
+            "total_cost": plan.get("total_cost"),
+            "mobility_snapshot_id": plan.get("mobility_snapshot_id"),
+            "activities": activities,
+        }
+
+    def _recovery_event_snapshot(self, journey_id: str) -> dict[str, Any] | None:
+        """Read the durable recovery Event without changing product state."""
+        from app.db.models import Event
+        from app.db.session import SessionLocal
+        from sqlalchemy import select
+
+        with SessionLocal() as session:
+            row = session.scalar(
+                select(Event)
+                .where(
+                    Event.journey_id == journey_id,
+                    Event.provider_key == "citynexus-capability-recovery",
+                    Event.status.in_(("DETECTED", "ACKNOWLEDGED")),
+                )
+                .order_by(Event.detected_at.desc())
+            )
+            if row is None:
+                return None
+            try:
+                payload = json.loads(row.payload_json or "{}")
+            except json.JSONDecodeError:
+                payload = {"__invalid_json__": row.payload_json}
+            return {
+                "id": row.id,
+                "event_type": row.event_type,
+                "provider_key": row.provider_key,
+                "provenance": row.provenance,
+                "severity": row.severity,
+                "status": row.status,
+                "detected_at": row.detected_at,
+                "resolved_at": row.resolved_at,
+                "payload": payload,
+            }
+
+    @staticmethod
+    def _blocker_attribution(
+        message: str,
+        *,
+        capability_code: str,
+        place_ids: list[str],
+    ) -> dict[str, Any]:
+        """Measure only what the raw human-facing failure text actually says.
+
+        The noun EVIDENCE inside a state such as NEEDS_LIVE_EVIDENCE is not a
+        recovery action.  Actionability needs an action verb/phrase.
+        """
         text = str(message or "")
+        folded = text.casefold()
         names_capability = capability_code in text
         names_evidence_state = any(
             token in text
@@ -514,14 +622,89 @@ class Harness:
             )
         )
         named_places = sorted({place_id for place_id in place_ids if place_id and place_id in text})
-        recovery_tokens = ("retry", "verify", "evidence", "choose", "replace", "重试", "验证", "证据", "更换")
-        has_recovery_action = any(token.casefold() in text.casefold() for token in recovery_tokens)
+        recovery_phrases = (
+            "retry",
+            "re-try",
+            "revalidate",
+            "re-validate",
+            "verify ",
+            "verify:",
+            "refresh",
+            "choose another",
+            "choose a different",
+            "replace ",
+            "replan",
+            "provide evidence",
+            "supply evidence",
+            "重试",
+            "重新验证",
+            "验证 ",
+            "刷新",
+            "重新规划",
+            "更换",
+            "另选",
+            "提供证据",
+        )
+        has_recovery_action = any(token in folded for token in recovery_phrases)
         return {
             "names_capability": names_capability,
             "names_evidence_state": names_evidence_state,
             "named_place_ids": named_places,
             "has_recovery_action": has_recovery_action,
-            "diagnosable": bool(names_capability and (names_evidence_state or named_places) and has_recovery_action),
+            "diagnosable": bool(
+                names_capability
+                and (names_evidence_state or named_places)
+                and has_recovery_action
+            ),
+        }
+
+    @classmethod
+    def _structured_recovery_attribution(
+        cls,
+        failures: list[str],
+        *,
+        recovery: dict[str, Any] | None,
+        capability_code: str,
+        place_ids: list[str],
+    ) -> dict[str, Any]:
+        """Combine raw feasibility failures with the structured recovery contract.
+
+        H5 already returns a machine recovery object containing capability_code
+        and actions.  Do not falsely call that product contract unactionable
+        merely because the raw failure strings are terse.
+        """
+        raw_text = " | ".join(str(item) for item in failures)
+        raw = cls._blocker_attribution(
+            raw_text,
+            capability_code=capability_code,
+            place_ids=place_ids,
+        )
+        recovery = recovery if isinstance(recovery, dict) else {}
+        actions = [
+            str(item)
+            for item in recovery.get("actions", [])
+            if str(item or "").strip()
+        ]
+        structured_capability = (
+            str(recovery.get("capability_code") or "") == capability_code
+        )
+        structured_action = bool(actions)
+        names_capability = bool(raw["names_capability"] or structured_capability)
+        has_recovery_action = bool(raw["has_recovery_action"] or structured_action)
+        diagnosable = bool(
+            names_capability
+            and (raw["names_evidence_state"] or raw["named_place_ids"])
+            and has_recovery_action
+        )
+        return {
+            **raw,
+            "names_capability": names_capability,
+            "has_recovery_action": has_recovery_action,
+            "structured_capability_code": recovery.get("capability_code"),
+            "structured_actions": actions,
+            "structured_recovery_state": recovery.get("state"),
+            "raw_text_diagnosable": raw["diagnosable"],
+            "diagnosable": diagnosable,
         }
 
     def _compare_commitments(self) -> None:
@@ -1158,13 +1341,13 @@ class Harness:
             "late_capability_does_not_silently_rewrite_active_plan",
             active_after_confirm.get("status") == active_before.get("status") == "ACTIVE"
             and active_after_confirm.get("active_plan_version_id") == plan_id
-            and plan_after_confirm.get("id") == plan_before.get("id")
-            and plan_after_confirm.get("status") == plan_before.get("status"),
+            and self._stable_plan_semantics(plan_after_confirm)
+            == self._stable_plan_semantics(plan_before),
             {
                 "journey_before": active_before,
                 "journey_after": active_after_confirm,
-                "plan_before_status": plan_before.get("status"),
-                "plan_after_status": plan_after_confirm.get("status"),
+                "plan_before": self._stable_plan_semantics(plan_before),
+                "plan_after": self._stable_plan_semantics(plan_after_confirm),
             },
         )
 
@@ -1198,6 +1381,7 @@ class Harness:
             and bool(recovery_ack),
             {"acknowledge": acknowledged, "flags": flags_ack, "recovery": recovery_ack},
         )
+        recovery_event_before_projection = self._recovery_event_snapshot(journey_id)
 
         self.transition("RESTORE:ACTIVE_PLAN_ACCESSIBILITY_EVIDENCE")
         restored_states = self._set_place_accessibility(
@@ -1219,13 +1403,21 @@ class Harness:
             if isinstance(experience_after_restore_before_reconfirm, dict)
             else None
         )
+        recovery_event_after_projection = self._recovery_event_snapshot(journey_id)
         self.record_assertion(
             "projection_read_does_not_resolve_durable_recovery",
             isinstance(flags_before_reconfirm, dict)
             and flags_before_reconfirm.get("needs_review") is True
             and flags_before_reconfirm.get("recovery_required") is True
-            and bool(recovery_before_reconfirm),
-            {"flags": flags_before_reconfirm, "recovery": recovery_before_reconfirm},
+            and bool(recovery_before_reconfirm)
+            and recovery_event_before_projection is not None
+            and recovery_event_after_projection == recovery_event_before_projection,
+            {
+                "flags": flags_before_reconfirm,
+                "recovery": recovery_before_reconfirm,
+                "event_before": recovery_event_before_projection,
+                "event_after": recovery_event_after_projection,
+            },
         )
 
         reconfirmed = self.post(
@@ -1271,8 +1463,11 @@ class Harness:
             },
         )
 
-        late_failure_attribution = self._blocker_attribution(
-            failure_text, capability_code=capability["code"], place_ids=plan_place_ids
+        late_failure_attribution = self._structured_recovery_attribution(
+            failures,
+            recovery=recovery,
+            capability_code=capability["code"],
+            place_ids=plan_place_ids,
         )
         if not late_failure_attribution.get("diagnosable"):
             self.findings.append(
@@ -1327,6 +1522,411 @@ class Harness:
         self.transition("CAPTURE_EVIDENCE")
         self.transition("REPLAY_READY")
 
+
+    def _run_recovery_no_alternative_replacement(self) -> None:
+        """Prove durable no-alternative truth and replacement-plan ownership.
+
+        This scenario deliberately moves beyond H5's direct evidence restore.
+        It forces an actual failed plan-generation attempt while recovery is
+        open, then an actual feasible replacement generation/selection cycle.
+
+        The load-bearing invariant is single authoritative plan ownership:
+        changing recovery plans must never leave an old ACTIVE/SELECTED plan
+        alongside the new authoritative plan.
+        """
+        self.transition("RESET")
+        self.ids = self.post("/api/v1/demo/reset")
+        self.record_assertion("reset_returns_journey", bool(self.ids.get("journey_id")), self.ids)
+        journey_id = self.ids["journey_id"]
+        capability = dict(self.input_payload["capability"])
+
+        caps_before = self.get(f"/api/v1/journeys/{journey_id}/capabilities")
+        self.record_assertion(
+            "hard_capability_absent_before_execution",
+            not any(
+                str(item.get("code") or "") == capability["code"]
+                and str(item.get("severity") or "").upper() == "HARD"
+                for item in (caps_before.get("capabilities") or [])
+            ),
+            caps_before,
+        )
+        unknown_states = self._set_place_accessibility(None)
+        self.record_assertion(
+            "accessibility_unknown_before_execution",
+            bool(unknown_states)
+            and all(item["state"] == "ACCESSIBILITY_UNVERIFIED" for item in unknown_states),
+            unknown_states,
+        )
+
+        initial_plans = self.post(
+            f"/api/v1/journeys/{journey_id}/plans/generate",
+            {"candidate_count": self.input_payload["candidate_count"]},
+        )
+        self.record_assertion(
+            "initial_candidate_generation_succeeds_without_hard_capability",
+            self.last_status == 201 and isinstance(initial_plans, list) and bool(initial_plans),
+            initial_plans,
+        )
+        initial_plan = initial_plans[0]
+        initial_plan_id = str(initial_plan["id"])
+        used_place_ids = sorted(
+            {
+                str(activity.get("place_id"))
+                for activity in initial_plan.get("activities", [])
+                if activity.get("place_id")
+            }
+        )
+        self.record_assertion("initial_candidate_has_place_ids", bool(used_place_ids), used_place_ids)
+
+        selected = self.post(
+            f"/api/v1/journeys/{journey_id}/plans/{initial_plan_id}/select"
+        )
+        self.record_assertion(
+            "initial_candidate_selects",
+            self.last_status == 200
+            and selected.get("status") == "PLANNED"
+            and selected.get("active_plan_version_id") == initial_plan_id,
+            selected,
+        )
+        started = self.post(f"/api/v1/journeys/{journey_id}/start")
+        active_before = self.get(f"/api/v1/journeys/{journey_id}")
+        self.record_assertion(
+            "initial_journey_is_active",
+            self.last_status == 200
+            and started.get("projection_status") == "READY"
+            and active_before.get("status") == "ACTIVE"
+            and active_before.get("active_plan_version_id") == initial_plan_id,
+            {"start": started, "journey": active_before},
+        )
+        plans_before_recovery = self._plan_status_snapshot(journey_id)
+
+        self.transition("EXECUTE:CONFIRM_HARD_CAPABILITY_WHILE_ACTIVE")
+        confirm_payload = [
+            {
+                "code": capability["code"],
+                "severity": capability["severity"],
+                "params": capability["params"],
+            }
+        ]
+        confirmed = self.post(
+            f"/api/v1/journeys/{journey_id}/capabilities/confirm",
+            confirm_payload,
+        )
+        feasibility = (
+            confirmed.get("active_plan_feasibility")
+            if isinstance(confirmed, dict)
+            else None
+        )
+        recovery_open = confirmed.get("recovery") if isinstance(confirmed, dict) else None
+        recovery_event_id = (
+            str(recovery_open.get("event_id"))
+            if isinstance(recovery_open, dict) and recovery_open.get("event_id")
+            else ""
+        )
+        self.record_assertion(
+            "late_hard_capability_opens_recovery",
+            self.last_status == 200
+            and isinstance(feasibility, dict)
+            and feasibility.get("passed") is False
+            and feasibility.get("state") == "REPLAN_REQUIRED"
+            and isinstance(recovery_open, dict)
+            and recovery_open.get("state") == "RECOVERY_REQUIRED"
+            and bool(recovery_event_id),
+            confirmed,
+        )
+
+        self.transition("EXECUTE:REPLAN_ATTEMPT_NO_ALTERNATIVE")
+        failed_generation = self.post(
+            f"/api/v1/journeys/{journey_id}/plans/generate",
+            {"candidate_count": self.input_payload["candidate_count"]},
+        )
+        failed_generation_status = self.last_status
+        experience_no_alt = self.get(
+            f"/api/v1/journeys/{journey_id}/experience"
+        )
+        no_alt_recovery = (
+            experience_no_alt.get("recovery")
+            if isinstance(experience_no_alt, dict)
+            else None
+        )
+        no_alt_flags = (
+            experience_no_alt.get("experience_flags")
+            if isinstance(experience_no_alt, dict)
+            else {}
+        )
+        journey_no_alt = self.get(f"/api/v1/journeys/{journey_id}")
+        plans_no_alt = self._plan_status_snapshot(journey_id)
+        self.record_assertion(
+            "failed_replan_attempt_persists_no_alternative_truth",
+            failed_generation_status == 422
+            and isinstance(no_alt_recovery, dict)
+            and no_alt_recovery.get("event_id") == recovery_event_id
+            and no_alt_recovery.get("state") == "RECOVERY_REQUIRED_NO_ALTERNATIVE"
+            and no_alt_recovery.get("replan_attempted") is True
+            and no_alt_recovery.get("no_alternative") is True
+            and int(no_alt_recovery.get("candidate_plan_count") or 0) == 0
+            and list(no_alt_recovery.get("candidate_plan_ids") or []) == []
+            and isinstance(no_alt_flags, dict)
+            and no_alt_flags.get("needs_review") is True
+            and no_alt_flags.get("recovery_required") is True
+            and journey_no_alt.get("status") == "ACTIVE"
+            and journey_no_alt.get("active_plan_version_id") == initial_plan_id
+            and plans_no_alt == plans_before_recovery,
+            {
+                "failed_generation": failed_generation,
+                "recovery": no_alt_recovery,
+                "flags": no_alt_flags,
+                "journey": journey_no_alt,
+                "plans": plans_no_alt,
+            },
+        )
+
+        # Structured recovery attribution is the actual machine contract here.
+        failures = list(no_alt_recovery.get("failures") or []) if isinstance(no_alt_recovery, dict) else []
+        no_alt_attribution = self._structured_recovery_attribution(
+            failures,
+            recovery=no_alt_recovery,
+            capability_code=capability["code"],
+            place_ids=used_place_ids,
+        )
+        self.record_assertion(
+            "no_alternative_recovery_contract_is_structurally_diagnosable",
+            no_alt_attribution.get("diagnosable") is True,
+            no_alt_attribution,
+        )
+
+        self.transition("RESTORE:ACCESSIBILITY_AND_GENERATE_REPLACEMENT")
+        restored_states = self._set_place_accessibility(
+            self.input_payload["verified_evidence"],
+            place_ids=used_place_ids,
+        )
+        self.record_assertion(
+            "used_places_restored_verified",
+            bool(restored_states)
+            and all(item["state"] == "ACCESSIBILITY_VERIFIED" for item in restored_states),
+            restored_states,
+        )
+        replacement_plans = self.post(
+            f"/api/v1/journeys/{journey_id}/plans/generate",
+            {"candidate_count": self.input_payload["candidate_count"]},
+        )
+        replacement_generation_status = self.last_status
+        self.record_assertion(
+            "replacement_candidate_generation_succeeds",
+            replacement_generation_status == 201
+            and isinstance(replacement_plans, list)
+            and bool(replacement_plans),
+            replacement_plans,
+        )
+        replacement_plan = replacement_plans[0]
+        replacement_plan_id = str(replacement_plan["id"])
+        self.record_assertion(
+            "replacement_candidate_is_new_plan",
+            replacement_plan_id != initial_plan_id,
+            {
+                "initial_plan_id": initial_plan_id,
+                "replacement_plan_id": replacement_plan_id,
+            },
+        )
+
+        experience_candidate = self.get(
+            f"/api/v1/journeys/{journey_id}/experience"
+        )
+        candidate_recovery = (
+            experience_candidate.get("recovery")
+            if isinstance(experience_candidate, dict)
+            else None
+        )
+        candidate_flags = (
+            experience_candidate.get("experience_flags")
+            if isinstance(experience_candidate, dict)
+            else {}
+        )
+        self.record_assertion(
+            "candidate_availability_does_not_resolve_recovery_before_selection",
+            isinstance(candidate_recovery, dict)
+            and candidate_recovery.get("event_id") == recovery_event_id
+            and candidate_recovery.get("state") == "RECOVERY_REQUIRED"
+            and candidate_recovery.get("replan_attempted") is True
+            and candidate_recovery.get("no_alternative") is False
+            and replacement_plan_id in list(candidate_recovery.get("candidate_plan_ids") or [])
+            and isinstance(candidate_flags, dict)
+            and candidate_flags.get("recovery_required") is True
+            and candidate_flags.get("needs_review") is True,
+            {"recovery": candidate_recovery, "flags": candidate_flags},
+        )
+
+        self.transition("EXECUTE:SELECT_REPLACEMENT")
+        selected_replacement = self.post(
+            f"/api/v1/journeys/{journey_id}/plans/{replacement_plan_id}/select"
+        )
+        select_replacement_status = self.last_status
+        journey_after_select = self.get(f"/api/v1/journeys/{journey_id}")
+        plans_after_select = self._plan_status_snapshot(journey_id)
+        experience_after_select = self.get(
+            f"/api/v1/journeys/{journey_id}/experience"
+        )
+        flags_after_select = (
+            experience_after_select.get("experience_flags")
+            if isinstance(experience_after_select, dict)
+            else {}
+        )
+
+        authoritative_statuses = [
+            row for row in plans_after_select if row.get("status") in {"ACTIVE", "SELECTED"}
+        ]
+        referenced = next(
+            (row for row in plans_after_select if row.get("id") == journey_after_select.get("active_plan_version_id")),
+            None,
+        )
+        expected_status = (
+            "ACTIVE"
+            if journey_after_select.get("status") == "ACTIVE"
+            else "SELECTED"
+            if journey_after_select.get("status") == "PLANNED"
+            else None
+        )
+        select_alignment_ok = bool(
+            select_replacement_status == 200
+            and journey_after_select.get("active_plan_version_id") == replacement_plan_id
+            and journey_after_select.get("status") in {"PLANNED", "ACTIVE"}
+            and isinstance(referenced, dict)
+            and referenced.get("status") == expected_status
+            and len(authoritative_statuses) == 1
+            and authoritative_statuses[0].get("id") == replacement_plan_id
+            and isinstance(flags_after_select, dict)
+            and flags_after_select.get("recovery_required") is False
+            and flags_after_select.get("needs_review") is False
+        )
+        self.assertions.append(
+            {
+                "name": "replacement_selection_has_single_authoritative_plan",
+                "passed": select_alignment_ok,
+                "details": _jsonable(
+                    {
+                        "selection": selected_replacement,
+                        "journey": journey_after_select,
+                        "plans": plans_after_select,
+                        "authoritative_statuses": authoritative_statuses,
+                        "experience_flags": flags_after_select,
+                    }
+                ),
+            }
+        )
+
+        self.semantic_output = {
+            "journey_lifecycle": [
+                "RESET",
+                "CANDIDATE",
+                "PLANNED",
+                "ACTIVE",
+                "RECOVERY_REQUIRED",
+                "RECOVERY_REQUIRED_NO_ALTERNATIVE",
+                "RECOVERY_REQUIRED_WITH_CANDIDATE",
+                "REPLACEMENT_SELECTED",
+            ],
+            "capability_code": capability["code"],
+            "accessibility_evidence_mode": "SYNTHETIC_HARNESS_FIXTURE",
+            "used_place_ids": used_place_ids,
+            "failed_replan_status": failed_generation_status,
+            "no_alternative_state": (
+                no_alt_recovery.get("state")
+                if isinstance(no_alt_recovery, dict)
+                else None
+            ),
+            "no_alternative_replan_attempted": (
+                no_alt_recovery.get("replan_attempted")
+                if isinstance(no_alt_recovery, dict)
+                else None
+            ),
+            "candidate_recovery_state": (
+                candidate_recovery.get("state")
+                if isinstance(candidate_recovery, dict)
+                else None
+            ),
+            "candidate_plan_count": (
+                candidate_recovery.get("candidate_plan_count")
+                if isinstance(candidate_recovery, dict)
+                else None
+            ),
+            "recovery_event_stable": bool(
+                isinstance(candidate_recovery, dict)
+                and candidate_recovery.get("event_id") == recovery_event_id
+            ),
+            "replacement_generation_status": replacement_generation_status,
+            "replacement_select_status": select_replacement_status,
+            "post_select_journey_status": journey_after_select.get("status"),
+            "post_select_authoritative_plan_count": len(authoritative_statuses),
+            "post_select_authoritative_statuses": [
+                {
+                    "version_no": row.get("version_no"),
+                    "status": row.get("status"),
+                    "is_replacement": row.get("id") == replacement_plan_id,
+                }
+                for row in authoritative_statuses
+            ],
+            "post_select_recovery_required": (
+                flags_after_select.get("recovery_required")
+                if isinstance(flags_after_select, dict)
+                else None
+            ),
+        }
+        self.transition("ASSERT:SELECT_OWNERSHIP", self.semantic_output)
+
+        if not select_alignment_ok:
+            raise AssertionError(
+                "replacement_selection_has_single_authoritative_plan: "
+                "replacement selection left stale ACTIVE/SELECTED plan ownership or unresolved recovery"
+            )
+
+        # A PLANNED replacement must be explicitly started; an implementation
+        # that atomically keeps the Journey ACTIVE may skip this step.
+        if journey_after_select.get("status") == "PLANNED":
+            self.transition("EXECUTE:START_REPLACEMENT")
+            replacement_start = self.post(
+                f"/api/v1/journeys/{journey_id}/start"
+            )
+            self.record_assertion(
+                "replacement_start_succeeds",
+                self.last_status == 200
+                and replacement_start.get("projection_status") == "READY",
+                replacement_start,
+            )
+
+        final_journey = self.get(f"/api/v1/journeys/{journey_id}")
+        final_plans = self._plan_status_snapshot(journey_id)
+        final_authoritative = [
+            row for row in final_plans if row.get("status") in {"ACTIVE", "SELECTED"}
+        ]
+        self.record_assertion(
+            "final_active_plan_ownership_is_unique",
+            final_journey.get("status") == "ACTIVE"
+            and final_journey.get("active_plan_version_id") == replacement_plan_id
+            and len(final_authoritative) == 1
+            and final_authoritative[0].get("id") == replacement_plan_id
+            and final_authoritative[0].get("status") == "ACTIVE",
+            {
+                "journey": final_journey,
+                "plans": final_plans,
+                "authoritative_statuses": final_authoritative,
+            },
+        )
+        self.semantic_output["journey_lifecycle"].append("ACTIVE_REPLACEMENT")
+        self.semantic_output["final_journey_status"] = final_journey.get("status")
+        self.semantic_output["final_authoritative_plan_count"] = len(final_authoritative)
+        self.semantic_output["final_authoritative_statuses"] = [
+            {
+                "version_no": row.get("version_no"),
+                "status": row.get("status"),
+                "is_replacement": row.get("id") == replacement_plan_id,
+            }
+            for row in final_authoritative
+        ]
+        self.transition("ASSERT:FINAL_OWNERSHIP", self.semantic_output)
+
+        self.transition("CAPTURE_EVIDENCE")
+        self.transition("REPLAY_READY")
+
     def run(self) -> dict[str, Any]:
         started_at = _utc()
         result = "PASS"
@@ -1343,6 +1943,8 @@ class Harness:
                 self._run_capability_revalidation()
             elif self.scenario_id == ACTIVE_CAPABILITY_RECOVERY_SCENARIO_ID:
                 self._run_active_capability_recovery()
+            elif self.scenario_id == RECOVERY_REPLACEMENT_SCENARIO_ID:
+                self._run_recovery_no_alternative_replacement()
             else:
                 raise ValueError(f"unsupported scenario: {self.scenario_id}")
         except Exception as exc:  # noqa: BLE001 - receipt must contain the exact blocker
