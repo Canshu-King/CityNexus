@@ -1,0 +1,13 @@
+ORD-0220 evidence surface, lane e345b9d6, commits c4a4001 + dfdc5d5
+
+    1339 B  sha256 2ed99ab2f86b5f630726d7b33290af2fc87bb4173abfb5edaca0b51ca4aa60db  announcement-retired.json
+   13948 B  sha256 3288937a4f4040226a24e9ed18cda51fadf16819577989c8a31459f1a8922782  budget-conflict-blackbox-probe.json
+    3758 B  sha256 4af7547a23e635b08322856e0e3e27211ac3385ecd091394fe990d1082b7b177  c4a4001__c4a4001.patch
+     246 B  sha256 24217ca26c28604ddec5ffced0f5f5eb9ea19d24a555c5ef3d174583d9e43ee4  c4a4001__changed-files.txt
+     666 B  sha256 59b427aee8874281b0c52f401d29d07e4718f229d6d02184c8c60c819cc0cd61  c4a4001__source-and-parent.txt
+     541 B  sha256 80a780b63c2b2c41b494b7d5a85636c84c659bc1a3c31066c9b674c5a6ebe77a  caveat-meaning.json
+     536 B  sha256 a5d0a463a9e58f166a091ff7905e27031c6886ca09a8ae7d5d5296fcaed8da23  dfdc5d5__changed-files.txt
+   46724 B  sha256 6efe692dea1ca914b613fe219caae2cb1cfb1c20784d0e990f36c1376b773633  dfdc5d5__dfdc5d5.patch
+     697 B  sha256 f352788a760abb6c2c2c489a46e20544cc0c8ba3a04d31dfd62d5ce1f31200a1  dfdc5d5__source-and-parent.txt
+    3174 B  sha256 804a8e666718bd9dabcb9f9e5614094d8704115793b16702ad06c10632256e99  mutation-receipts.json
+     518 B  sha256 7469a85e614ebfab22f7b68fde1362329a8ff1ec31dcb469d050e49b5d076bd3  reason-on-screen-before-after.json
