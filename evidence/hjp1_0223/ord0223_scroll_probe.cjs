@@ -29,17 +29,34 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 (async () => {
   const browser = await chromium.launch({ headless: true });
   const RUN = process.env.CNX_RUN || 'run';
-  const now = new Date();
-  const offMin = -now.getTimezoneOffset(); /* minutes east of UTC; +480 on this box */
-  const sign = offMin >= 0 ? '+' : '-';
-  const pad = n => String(n).padStart(2, '0');
-  const startedAt = new Date(now.getTime() + offMin * 60000).toISOString().replace('Z', '')
-    + sign + pad(Math.floor(Math.abs(offMin) / 60)) + ':' + pad(Math.abs(offMin) % 60);
+  const localIso = (d) => {
+    const offMin = -d.getTimezoneOffset();
+    const sign = offMin >= 0 ? '+' : '-';
+    const pad = n => String(n).padStart(2, '0');
+    return new Date(d.getTime() + offMin * 60000).toISOString().replace('Z', '')
+      + sign + pad(Math.floor(Math.abs(offMin) / 60)) + ':' + pad(Math.abs(offMin) % 60);
+  };
+  const started = new Date();
   out.run_label = RUN;
-  out.started_at = startedAt;
-  out.started_at_utc = now.toISOString();
-  out.local_utc_offset_minutes = offMin;
+  out.pid = process.pid;
+  out.started_at = localIso(started);
+  out.started_at_utc = started.toISOString();
   out.browser = 'chromium ' + browser.version();
+
+  /* Prove which bundle this arm actually served, over HTTP, so the port<->package mapping
+     lives inside the receipt and an auditor does not need serve_genold/new.py to check it. */
+  const http = require('http');
+  const crypto = require('crypto');
+  const get = (u) => new Promise((res, rej) => http.get(u, r => { const c = []; r.on('data', d => c.push(d)); r.on('end', () => res(Buffer.concat(c))); }).on('error', rej));
+  try {
+    const html = (await get(BASE + '/')).toString();
+    const m = html.match(/assets\/(index-[^".]+\.js)/);
+    if (m) {
+      const asset = await get(BASE + '/assets/' + m[1]);
+      out.served_bundle = { file: m[1], bytes: asset.length, sha256: crypto.createHash('sha256').update(asset).digest('hex') };
+    } else { out.served_bundle = { file: null, note: 'no index-*.js found in served HTML' }; }
+  } catch (e) { out.served_bundle = { error: String(e.message).slice(0, 80) }; }
+
   const ctx = await browser.newContext({ viewport: { width: VW, height: VH }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'zh-CN', timezoneId: 'Asia/Shanghai' });
   const page = await ctx.newPage();
   const writes = [];
@@ -162,6 +179,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     };
   })();
 
+  const ended = new Date();
+  out.ended_at = localIso(ended);
+  out.ended_at_utc = ended.toISOString();
+  out.duration_ms = ended.getTime() - started.getTime();
   const named = 'ord0223_scroll_probe_' + (RUN === 'run' ? 'latest' : RUN) + '.json';
   fs.writeFileSync(path.join(__dirname, named), JSON.stringify(out, null, 2));
   fs.writeFileSync(path.join(__dirname, 'ord0223_scroll_probe.json'), JSON.stringify(out, null, 2));
