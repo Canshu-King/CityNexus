@@ -10171,7 +10171,45 @@ journeys 计数提醒：②那 1 行是**入口**建的，不是我建的；我�
 - 本块新建 journey **1 条**（成都 `b826adfc`）；我名下 r3+r4+r5 三块共 **3 条新建 journey**。
 - **收尾**：`:8452`/`:8492` 两个进程已停，我的 context 已被外部关闭（不重复占共享浏览器），副本库与两份 preflight JSON、日志、截图留在 `D:\moodle\_qoder_hjp2_r5_20260922\` 供复跑。
 
+### 💰 e345b9d6（SESSION=e345b9d6）ORD-0212 交付：**主页只留 tight 那档预算判定，平均参考值整块下掉**（用户 15:00 当面指令）@2026-09-22 15:3x +08 → 提交 **`56d20ec`**
+
+**报数六要素**：树 `D:/moodle/_qoder_integration_20260919`（有 .git）；`git log -1` = **`56d20ec 2026-09-22 15:22:33 +0800 fix(frontend): the Today hub keeps only the tight budget verdict (ORD-0212, user's direct instruction)`**；`git status --short -- frontend` **空**（63 行门重定向与 killU1 登记都**已在 `56d20ec` 里**，无漏暂存）；解释器 Node/Playwright ＋ `.venv` 3.12.14；收集：本轮十六张 spec 链含该 spec（收集数字含在链内）；**执行** 生产链两遍：第一遍 **73 passed + 1 崩溃**，清掉 31 个陈旧 headless Chrome（>2h 的 Playwright 残留，空闲内存曾到 0.4G）后重跑 **exit 0，74 passed / 0 failed / 0 skipped**（本机 3.6m）；单 spec `budget-advisory-tiers` **4 passed**、`trip-shape-and-budget` **4 passed**。
+
+**三档分开处理（照单）**
+1. **`tight` 保留**：块仍在，`每人每天约 CNY 40.00` 与 caveat「按这个预算，住宿、交通和吃饭很可能超出计划…」成对，`调整预算`（→新建向导）与`我知道了，继续`两枚动作 **`elementFromPoint` 实测命中自身**（390px light；dark 由既有暗色对比门覆盖同层，≥4.5:1）。实测原文在 `review/evidence/ui-overnight/ord0212-tight.json`。
+2. **非 tight 的 text+hint 整块从主页移除**（`advisory && advisory.tight && !advisoryDismissed` 三条件，不是缩字号/不是 tooltip/不是折叠）：实测 `budget-advisory count=0`，且整页 `innerText` 里**既无「每人每天约」也无「平均下来的参考值」**（两个方向都断言——数字没了，caveat 也不许孤零零挂着）。
+3. **数字本体留在预算审查面**：`budgetAdvisory()` 函数一字未删（它的 text+hint 成对输出仍供向导确认屏那面用），主页只是不再渲染非 tight 这档。门 `qoder-budget-advisory-tiers.spec.ts` 注释里写明这个分工。
+
+**真值不变式（你点名的坑）**：门里专门有一条 tripwire 节点——tight 块上 `每人每天约` 与 `很可能超出计划` **必须成对出现**，`hasNumber && !hasCaveat` 即红。**突变 `killU1-tight-advisory-keeps-number-drops-caveat`（只删 hint 留数字）→ KILLED**，红原文就是「the hub prints the derived number without its caveat」——你担心的"照指令改坏了真值"正是这条在防。`anchor hits=1 on_disk=True`、`restored OK`、产品文件锚点命中预先核过（1/1）。
+
+**顺手（照单）**：`ORD-0063/0064a` 那只"钉缺陷的手"——`qoder-trip-shape-and-budget.spec.ts` 的 `budget-line-never-borrows-a-symbol`——已**改断言指向，没有删覆盖**：JPY 臂（floor 不可比 ⇒ 非 tight）现在断言**主页既无 advisory 块也无裸「每人每天约」**；CNY 臂（可比 ⇒ tight）保留原有完整断言。改后该门 **4/4 绿**。全仓旧断言已扫：只有这一处盯着主页那句，其余（`no-client-side-day-or-currency-invention` 等）与主页无关，未动。
+
+**过程中两次链红，全是环境/门判据，按实报**：① 第一次链跑 mobile 门 **worker 崩溃 0xC0000409、用时 0ms**——单独复跑 4/4 绿，定性为进程事故；② 第二次链跑两红，全是**加载挂起**——量到 **37 个 chrome 进程里 31 个是 >2h 的 Playwright 残留、空闲内存 0.4G**，杀掉残留（2.1G 空闲）后同链 **74/74**。产品代码两轮零改动。
+
+**给 Commander 的重建提示**：`56d20ec` 已含 0208/0209/0212 三笔，**你按计划重建一次 `dist` 即可**（带时间戳备份＋回验 bundle 名），手机上四件（0208 的黑话、0209 的入口、0212 的参考值）会一起消失/生效。
+
+**未做、点名**：预算面（向导第 3 步）那对 text+hint **没有新增门**——它由既有 `ord0135`/`0208` 向导门与 `budgetAdvisory()` 的成对输出结构保证；如果你要一条"确认屏必须成对"的独立门，说一声我补。ORD-0088①、0126 补项、0096 照旧挂着。
+
+status: ORD-0212 **DONE@2026-09-22T15:3x+08 by e345b9d6**（提交 `56d20ec`；①tight 保留带 caveat+动作（elementFromPoint 命中实测）；②非 tight 整块从主页消失且数字/caveat 双向不残留；③数字留在预算面；真值不变式 tripwire 上门，`killU1`（删 caveat 留数字）**KILLED**；`ORD-0064` 门改指向未删覆盖，4/4 绿；十六张 spec **74/74**。单跑 mobile 门 worker 崩溃与两次链红均为环境/门判据，已按实记录）
+evidence: `frontend/src/app/V8Experience.tsx`（tight 三条件渲染）、`frontend/e2e/qoder-budget-advisory-tiers.spec.ts`（新，三节点含 tripwire）、`frontend/e2e/qoder-trip-shape-and-budget.spec.ts`（JPY/CNY 两臂改指向）、`review/evidence/ui-overnight/ord0212-{tight,non-tight,tripwire}.json`＋`ord0212-tight-light.png`、`review/killU1-*.log`、`review/add-ord0212-mutant.py`、`review/redirect-ord0064-gate.py`、`review/tsc-0212*.txt`；运行日志 `review/run-run061808.log`（73+崩溃）、重跑 74/74 链 log。**未 push**。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 订正 @2026-09-22T15:5x+08 —— 上一条部署块里"我只做了 1 轮、所以不签三次连点"这句话已经过期：**三轮独立循环我做了，这一格我改签 `REPRODUCED(canary)`**
+
+上一条（15:4x 块 ③）写的是"我这遍只做了 1 轮 ⇒ 不签『三次连点 0 新建』"。**15:49–15:50 我把那三遍补齐了**，形状就是 HJ-P1 提醒的那个（不是同页点三次）：
+
+```text
+每轮 = 点「试用其他城市」重进向导 → 找到「使用封存的天津演示」→ scrollIntoView → elementFromPoint 命中自身 → click → 等 3s
+round1: 14 requests / POST=0 / GET /api/v1/journeys/22222222-…-222222222222/experience / 落点 /v8/hub / rect [20,706,335×44]
+round2: 14 requests / POST=0 / 同一条 experience 寻址 / /v8/hub / rect [20,706,335×44]
+round3: 14 requests / POST=0 / 同一条 experience 寻址 / /v8/hub / rect [20,696,335×44]
+三轮合计 POST = 0；canary 副本库 journeys/travelers/plan_versions 跑前跑后 = 3 / 3 / 19
+```
+
+⇒ ① **ORD-0209 的"入口不再偷偷新建行程"这一格从 `PENDING` 升为 `REPRODUCED(canary 运行时)`**——不是我 15:4x 说的"1 轮不算"；② 我 15:4x 块里"我不签三次连点"那句**作废**，以本块为准；③ 仍未做的两格不变：`tight` 档在主页的运行时证据（只有 D 的 e2e 与我的代码级阅读），以及**手机真机**那一格（旧 service worker 可能仍给一次旧界面，重开即新）——这两格我不打包成"已完成"。
+④ 现场：`56d20ec` 仍是 working tip；线上 bundle `index-BCF4ptyk.js`；`:8693` 未重启（仍 `53fe8e8`）；用户 `_live.db` 只读复查 3/3/19；canary 两进程已停，副本库与 `canary_dist/` 留下作证据。
+⑤ 另记我自己一条仪器坑（写给所有车道）：**在 bash 里用 `python -c "…"` 拼中文正文时，正文里的反引号会被当成命令替换吃掉**——我 15:5x 就是这么把一份总线正文里的所有 `代码段` 静默删掉的（长度对不上才发现）。凡是带反引号/引号的文件内容，用 Write 工具落盘，别在 `-c` 字符串里拼。
+
 ## commander 亲测＋部署 @2026-09-22T15:4x+08 —— **用户手机上那行废话已经换掉了**（bundle 换包，0 后端重启）；ORD-0209 行为级正证 0 POST；ORD-0212 我做到哪一格、没做到哪一格
 
 ### ① 部署（用户 15:00 指令的那一格，别再等到明天）
