@@ -10931,6 +10931,41 @@ repo  Canshu-King/CityNexus      ref  commander/control (tip d3d306f)
    建议改名成 `x.selftest`（或挪进 `live_checks/` 的 fixture 目录），省掉将来一次假警报。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 工具修正 @2026-09-22T19:31+08 —— 发布器**二次硬化**（仲裁 `5775473121` 的 A–D 四个洞）；401 改成 fail-closed（按它 §2）；`bus_new.py` 长期算法记下待改
+
+### ① 发布器二次硬化（它第二次拒签 SAFE-DEFAULT，四个洞我逐条堵）
+
+| 它的洞 | 我加的规则 | 自测 |
+|---|---|---|
+| **A. 脚本自己的凭据文件名含 `api_tok`，现有片段表不拦** | `FORBIDDEN_NAME_FRAGMENTS` 加 `api_tok` / `_tok_` / `apikey` / `api_key` | 直接拿 **`.api_tok_20260920`** 测 ⇒ `REFUSED FORBIDDEN_NAME_FRAGMENT(api_tok …)` |
+| **B. `.env` 家族没封完** | 除 `endswith(".env")` 外再加 `".env." in name` | `.env.local` ⇒ `FORBIDDEN_BASENAME`；`prod.env.production` ⇒ `FORBIDDEN_BASENAME` |
+| **C. DB sidecar/backup 词表不全** | 后缀表加 `.db-journal/.db.bak/.db.backup/.sqlite-wal/.sqlite-journal`，并加裸 `.bak/.backup/.old/.orig` | `app.db-journal`、`app.sqlite-wal`、`db.bak`、`a.old`、`a.orig`、`a.backup` ⇒ 全部 `FORBIDDEN_SUFFIX` |
+| **D. 内容层只认 SQLite magic；commit_message 未过 guard** | 加**值形状**扫描（PEM 私钥头、`Authorization:` 行、`Bearer <20+>`、`(api_key\|secret\|password\|token\|access_key)` 后跟 16+ 非占位值、`ghp_/gho_/sk-` 前缀）；`message` 也过同一扫描 | `innocent.txt`（PEM 头）⇒ 拒；`plain.txt`（`api_key = 8f3a…`）⇒ 拒；**`doc.txt`（`YOUR_TOKEN_HERE_PLACEHOLDER`）⇒ 放行**；secret 形状的 commit message ⇒ `FORBIDDEN_COMMIT_MESSAGE` |
+| 它另点一条：symlink 可能走私 | 同时查 `basename(realpath())` | 与 basename 一起过同一组规则 |
+
+**它明确警告的那条我照做了**：**"不要做『只要源码里出现 token 这个词就拒』的傻扫描，测试/文档会被误杀；内容门必须针对值形状。"** ⇒ 我的占位符白名单（`YOUR_`/`EXAMPLE`/`REDACTED`/`PLACEHOLDER`/`xxxx`/`****`/`<`/`changeme`）就是为此；自测里 `doc.txt` 放行、`plain.txt` 被拒，**这一对是我为"不误杀"专门设计的对照**。
+**自测里我又抓到自己一个洞**：`db.bak` 第一次**没被拒**（我只写了 `.db.bak`，没写裸 `.bak`）⇒ 当场补 `.bak/.backup/.old/.orig` 并复测通过。
+**残留清理**：自测期间仓库里出现过的 `evidence/x.txt`、`evidence/x.env`、`evidence/_selftest_none.txt`、`evidence/_g2_check.txt` 全部 DELETE 200；本地 `_g2/` 与临时目录已删。
+**硬化版已发布**：`live_checks/publish_evidence.py` **7,186 B**，blob **`9781ac005b5c83a5`** ⇒ 请复签 SAFE-DEFAULT。
+
+### ② 401：按你 §2 改成 **fail-closed**（我上一轮加了自动重试，**撤回**）
+
+你原话：**"不要在 publisher 里自动吞掉/自动重试 401；认证失败继续 fail closed。"**
+⇒ 我把上一轮加进 `mirror_v2.py` 的"401 自动重试一次"**撤掉**，改成：打印 `AUTH_ANOMALY_401`（说明同分钟读成功、同一请求稍后 200）、明确写 **"NOT a credential failure - do NOT rotate or edit the token"**、然后 `exit 4` 让人重跑。
+收据侧照你说的只补 `status + endpoint + GitHub request id + 相邻成功调用`，**绝不记录 Authorization/header/token 内容**。
+
+### ③ `bus_new.py`：三页是热修，长期算法我记下
+
+你说得对——**"长期正确算法不该依赖『最后 N 页刚好够』"**。你的建议（持久化 `last_seen_id + last_seen_created_at`，下轮用 `since=` 拉取并**分页到空页**，再按 `id > last_seen_id` 去重）我**接受为待办**，但它不是当前阻塞；我先把"三页 + 打印 max id"作为热修留着，并把你的算法原文写进本块，免得它随我的记忆丢失。
+
+### ④ ORD-0221 的 `EXTERNAL_AUDIT_BLOCKED`：已转达 D（它自己发布）
+
+你查 `commander/control/evidence/ord0221` 不存在 ⇒ D 的 `b41b4cc` 你不能签。我按第五条执行令**让 D 自己发布**（source+parent SHA、changed-files、patch、两条 mutation receipt、Step 2/3 可见 before→after、blob sha1）。**不由我代发**——那是它的交付，坐标得从它手里出。
+
+### ⑤ 现场
+
+working tip `b41b4cc`；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+
 ## commander 故障排查 @2026-09-22T19:26+08 —— 镜像 **401 Bad credentials 是间歇性的**（不是凭据失效、不是体积）：同一请求第 3 次 200；八个探针文件已清；镜像回读 BYTE-LEVEL MATCH
 
 ### ① 现象与排查（我先做过三种假设，两种被自己的读数推翻）
@@ -10983,17 +11018,19 @@ working tip `b41b4cc`；链三条端口在听；`P7=false`；reference tip `c0d7
 每个 blob 都由发布器逐字节回读过，我又用一次**独立的目录 GET** 复验 7/7 全部可解析 ⇒ `ALL_BLOBS_RESOLVABLE`）：
 
 ```text
-finding_hjp2_reading_01.md   12,744 B  blob c0149e3927c7eb535bd55b583632c50b88d2381a  commit 5da55bc551e5   ← 读数正文
-manifest.json                 3,344 B  blob 0c68ff4816ac434b5378bb6ebd7b63e522d7b140  commit 37d47f46a534   ← 六件清单+各自 blob/sha256
+finding_hjp2_reading_01.md   13,573 B  blob ed74f8c7ad457a121f537d4037affe49ba217857  commit 76474794f36c   ← 读数正文（v2，端口角色已更正）
+manifest.json                 3,863 B  blob 3eecb6f7576572d8d5dac51ba7f2c20dbc19c47c  commit 23e034219b0e   ← 六件清单+各自 blob/sha256+被替换号
 PlanWithAiSheet.tsx          38,447 B  blob 8d58cfe9faf10562fe86164faa817bc7bbe0a769  commit d617536793ec   ← 远端 blob == 本地 git 对象，逐字节
 deployed_artifact_excerpt.txt 3,175 B  blob 13b58e3dfa7ec49a634faffd65f764d6fac6e1e6  commit 0f9e041ecbe7   ← 线上产物字节窗口+offset
-isolation_receipt_r7.json    16,056 B  blob 1e78ebd6ad431c439b05b091273b507d57d5fa7e  commit b4fa2fd988f1   ← 隔离收据
+isolation_receipt_r7.json    16,354 B  blob 46145e5ca335db579e5b20b27280c27eacf4400b  commit 974dbaa82820   ← 隔离收据（v2）
 r6_03_drawer.png            221,739 B  blob fda2415e998dc1036cd3a4b3f09eb5792deef84e  commit ac019f7f721a   ← 空输入：按钮渲染为禁用
 r6_04_named_failure.png     262,308 B  blob b9d27f10a49aa3f829f6ccbf86a9389e341e0df3  commit 71e31d0c7135   ← 具名失败卡（下面第①件的反证）
 LOCAL-ONLY, no resolvable coordinate：工作树尖 b41b4cc / 25165d9 / 522c414 / 56d20ec 均未 push；
   我的副本库 _hjp2_r6.db 属禁载物，**故意不上传**；公网隧道主机名每次重启会换，
   线上产物的耐久坐标 = index-BCF4ptyk.js，1,230,082 B，sha256 f3bda3d696d37cd1750e646a98ea6151c64d59247517c937b198dd369251d0e9。
 ```
+
+**自纠（发布后 20 分钟内，我自己抓到）**：第一版收据与读数正文把本车道端口角色写反了（uvicorn 记成 `:8493`、vite 记成 `:8453`）。按 `backend2.log`（`Uvicorn running on http://127.0.0.1:8453`）与车道自身导航 URL（浏览器开 `:8493`）更正后**重发**，被替换的旧 blob：`1e78ebd6…`→`46145e5c…`（收据）、`c0149e39…`→`ed74f8c7…`（正文）、`0c68ff48…`→`3eecb6f7…`（清单）；**旧 blob 在 git 里仍可解析（内容寻址删不掉），以新值为准**；除这两处角色外读数未变。
 
 ### ① 先撤我自己 18:52 那句话（本块最重要的一句）
 
