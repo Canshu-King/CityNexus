@@ -1,10 +1,13 @@
-HJ-P4 (SESSION=4e974ae5) evidence bundle MANIFEST  (rev 3: 4 no-data-city runs + 2 controls + the wait-overlay probe, plus 5 screenshots)
+HJ-P4 (SESSION=4e974ae5) evidence bundle MANIFEST  (rev 4: adds the advertised-city code matrix and the recovery walk)
 target: Canshu-King/CityNexus @ commander/control : evidence/hjp4-4e974ae5/
 ----------------------------------------------------------------------
+city-code-matrix.json                     74213 B  sha256 67b74b9c8d23f45a  blob a469e12454272760
 city-walk-hangzhou-vs-beijing.json        45665 B  sha256 52b5a6fbd2ebb29c  blob ee06b078a7e42b2d
 city-walk-provenance.json                  4913 B  sha256 6709e0ee0120c0bd  blob 616ff642bbcb3bc8
 isolation-receipt.json                     3937 B  sha256 cfe77716967b7181  blob f9aca35c1245cb95
 preference-visibility.json                 6637 B  sha256 baf9908f99ee383a  blob 6f3f9833b34e865a
+recovery-shot-ownership.json               7978 B  sha256 ebb17f1ddca7a554  blob c71e185be991dd50
+recovery-walk.json                       156520 B  sha256 afe6ef84313aea98  blob 1ffbfcbd020ab4ff
 source-and-parent.txt                     11443 B  sha256 5e41ff371ca460c7  blob 2a71854bf51b9d3f
 wire-runA-191x.json                        2066 B  sha256 ad3f2c4c6e7a96e1  blob 6085e03462327d54
 wire-runB-234x.json                        3182 B  sha256 cad7dd83f6dc18e5  blob ea4f236d9ca7ecc6
@@ -16,3 +19,8 @@ W_HZ3_no_places__08_tech_details.png           285621 B  sha256 48288c32c60260a4
 W_HZ4_no_places__12_after_switch_city_cta.png   232173 B  sha256 49a383fea3ab9719  blob 3544e751bb21bc32
 W_WAIT_probe_8s.png                            289951 B  sha256 6555ddea9638bb28  blob beb1028af09025b7
 W_BJ2_control__06_ai_verdict.png               281868 B  sha256 bc75dfe356e04ad5  blob 29b3dd4c74fb2d87
+W_RECOVER_19_after_cta_screen.png              239509 B  sha256 20b1de18eb6468df  blob 5e984821e1e58a30
+W_RECOVER_23_after_back_2.png                  163465 B  sha256 925b1a38be402780  blob e649ca95dc5f5d98
+W_RECOVER_35_bj_verdict.png                    304225 B  sha256 7be0c148ffc0d2a5  blob f6a89dd9992e744e
+W_RECOVER_28_bj_review.png                     237707 B  sha256 d9c6ab08edbfee38  blob 4383bf3a2b7d4a80
+W_RECOVER_33_bj_verdict.png                    292446 B  sha256 a735f3c4cb05175b  blob 63cf9ec5983edc8e
