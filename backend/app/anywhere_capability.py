@@ -570,6 +570,12 @@ def _attempt_evidence(resolution: Any) -> list[dict[str, Any]]:
                 "elapsed_ms": getattr(attempt, "elapsed_ms", None),
                 "reason": getattr(attempt, "reason", None),
                 "retry_after_s": getattr(attempt, "retry_after_s", None),
+                # Reply-level counts from the provider layer (ORD-0201 ②): a reply that carried
+                # features but no destination-grade candidates is "malformed/off-grade evidence",
+                # not "the place does not exist".  None on all three means no parsed reply.
+                "features_viewed": getattr(attempt, "features_viewed", None),
+                "candidates_before_filter": getattr(attempt, "candidates_before_filter", None),
+                "drop_summary": getattr(attempt, "drop_summary", None),
             }
         )
     return evidence

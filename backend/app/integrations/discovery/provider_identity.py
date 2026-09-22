@@ -91,6 +91,13 @@ class ProviderAttempt:
     reason: str | None = None
     retry_after_s: float | None = None
     error: str | None = None
+    #: Reply-level counts, filled only when the call produced a parseable reply.  `features_viewed`
+    #: is what the provider actually sent; `candidates_before_filter` counts destination-grade
+    #: entities before id/name/type drops; `drop_summary` names why each grade was refused.  All
+    #: three being None means "no parsed reply to count", never "counted zero".
+    features_viewed: int | None = None
+    candidates_before_filter: int | None = None
+    drop_summary: str | None = None
 
 
 @dataclass(frozen=True)
@@ -263,12 +270,25 @@ class PhotonIdentityProvider:
         fetched_at = _iso(self._now())
         observed_at = headers.get("last-modified") or headers.get("date") or fetched_at
         features = payload.get("features") or []
+        drops = {"no_geometry": 0, "no_name_or_id": 0, "not_destination_grade": 0}
+        for feature in features:
+            props = feature.get("properties") or {}
+            geometry = feature.get("geometry") or {}
+            if not (geometry.get("coordinates") or []):
+                drops["no_geometry"] += 1
+            elif props.get("name") is None or props.get("osm_id") is None:
+                drops["no_name_or_id"] += 1
+            elif props.get("type") not in DESTINATION_GRADE_TYPES:
+                drops["not_destination_grade"] += 1
         graded = [
             _candidate(f, self.provider_key, observed_at, fetched_at)
             for f in features
             if _is_destination_grade(f)
         ]
         graded = [c for c in graded if c is not None]
+        drop_summary = "; ".join(
+            "%s=%d" % (k, v) for k, v in drops.items() if v
+        ) or "none"
         return ProviderResolution(
             outcome=_grade_outcome(graded),
             query=str(query),
@@ -280,6 +300,9 @@ class PhotonIdentityProvider:
                     answered=True,
                     http_status=status,
                     elapsed_ms=0.0,
+                    features_viewed=len(features),
+                    candidates_before_filter=sum(1 for f in features if _is_destination_grade(f)),
+                    drop_summary="drops: " + drop_summary,
                 ),
             ),
             answered=True,
