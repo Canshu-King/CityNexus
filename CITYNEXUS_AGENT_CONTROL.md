@@ -190,6 +190,8 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+
+### d291c9dc · EXP-HARNESS-008 六码第二路径 @2026-09-22T19:55+08 → **更正我 15:07 那句「用户没有任何办法把它说成硬约束」**：写入口 `PUT /travelers/{id}/capabilities` 收 `severity=HARD`、**7/7 持久化成功、每码各 1 条约束行**；端到端跑完门后分两类——**`STROLLER`/`LARGE_LUGGAGE` 补上负证据就出 `STROLLER_ACCESS_UNAVAILABLE`/`LUGGAGE_ACCESS_UNAVAILABLE`（正向证据不误伤）⇒ 只差解析器一个 severity 参数**；而 `SLOW_PACE`/`QUIET`/`INDOOR`/`SENSORY` 不在 `_CAPABILITY_GATE_CODES`(11) 里 ⇒ 得到 **`UNSUPPORTED_HARD_CONSTRAINT`、整趟被拒**，**警告：只补 severity 会把「静默不执行」变成「不可规划」**。另：`ConstraintInput.rule_code` 不收词表，要不要写入端校验请仲裁一句话。计算式期望 9/9（我第一版把控制码期望猜成 `ACCESSIBILITY_UNVERIFIED` 已改）。坐标：`commander/control` 三 blob `bd6604a115e3f101`/`222a9d0ef5e5fd85`/`f076cd3122914ad6`（BYTE-LEVEL MATCH）。完整版在文件末尾同标题块
 ### SESSION=d2305848 @2026-09-22 19:1x+08 —— ORD-0222 的红队预打样（零写入，源码级）：**commander 的四坐标全部属实，且我把第 2 件「Check in / Overnight 归属」查到了数据源**——它们是**服务器投影的 activity title 原文**（`stay_mobility.py:332/:385/:574`），不是任何 mode/anchor 枚举；另外全文件枚举插值扫描**没有第五处**，:2677/:3240/:3297 就是全部
 
 **一、四坐标逐行核实（`git show 25165d9:frontend/src/app/V8Experience.tsx`）**
@@ -13148,7 +13150,17 @@ g3 = ISOLATION_BREACH / dirty-db false-green shape
     收据必须写 `SHA / 工作树 / 解释器 / 命令 / collected / 两遍各自的 failed+passed / 两遍的 DB 绝对路径与行数`。
     顺带把这条也纳入你已交的双向判据风格：既有"脏库喂出的假绿要报警"，也要"干净库里真红不被误判成仪器问题"。
     突变反例请用 `live_checks/mutation_anchor_guard.py`（0 命中与字节未变两种假判定它都机械拒）。
-  status: DISPATCHED@2026-09-22T14:4x+08 by 494abfd7（裁决＝仲裁 `5772261512`）note@494abfd7@2026-09-22T19:10+08: 仲裁源审计结论（总线 `5775258233` @18:58）= **`CHANGES_REQUIRED`**，不是还在排队。已签四格：runtime receipt/classification `ACCEPTED-EVIDENCE`、triple-scope classifier `ACCEPTED`、target-node exit isolation `ACCEPTED`、no-relaxation diff `ACCEPTED`。
+  status: DISPATCHED@2026-09-22T14:4x+08 by 494abfd7（裁决＝仲裁 `5772261512`）note@494abfd7@2026-09-22T19:10+08: 仲裁源审计结论（总线 `5775258233` @18:58）= **`CHANGES_REQUIRED`**，不是还在排队。已签四格：runtime receipt/classification `ACCEPTED-EVIDENCE`、triple-scope classifier `ACCEPTED`、target-node exit isolation `ACCEPTED`、no-relaxation diff `ACCEPTED`。note@494abfd7@2026-09-22T19:54+08: 仲裁第三次源审（`5775917170` §2/§3）逐项判定：
+  ```text
+  protected-db guard        = ACCEPTED        （path_is_forbidden 已下沉共享模块、走 normcase+casefold，钉了 _LIVE.DB/_Preview.DB 反例）
+  reverse closure semantics = ACCEPTED-MECHANISM（KILLED/STREAK_BROKEN 才算 closure-grade；SURVIVED/NOT_MEASURED 停在 STREAK_GREEN）
+                              ⚠ 但 external CLOSED 仍需 auditor-readable mutation receipt：`CNX_ORD0210_REVERSE_MUTATION=KILLED` 只是字符串声明，不能凭它签 CLOSED
+  freshness shared predicate= RED             （`_instrument_problems()` 仍在 test 文件里；`streak_verdict()/receipt_problems()` 共享模块本身无机械检查 ⇒ 别的引用方仍可绕过）
+  run-shape exactness       = RED（新增洞）   （`verify_run_shape()` 只查声明 target 是否出现在 argv，未精确抽出 selector 集合并要求相等；
+                                               它举了你们测试里的反例：cross=[... TARGET_NODEID, ..., 'tests/seed.py::test_seed'] ⇒ run_shape_verified=True）
+  ```
+  **修法（它给的）**：解析 argv 中 pytest positional selectors —— single-node 必须**恰好一条且等于 TARGET_NODEID**；
+  preceded 形制 selector 序列与声明 nodeids **逐项同序相等**；whole-file 恰好一个 file selector。修完发可读 patch，它直接二审。
   **三处窄修（修完发一个可读 patch，他直接二审）**：
   1. **closure 语义 RED**：`closure_allowed` 现在只要 `STREAK_MET + rounds>=10 + clause6_declared + independence_declared` 就 True ⇒ 没有 reverse mutation 也能 CLOSED，违背 15:58 冻结。加独立 guard：`reverse_mutation_required=true` 且 `reverse_mutation_result in {KILLED, STREAK_BROKEN}`；未交反向证据时 10/10 绿最多 `STREAK_GREEN`。
   2. **freshness 未真咬合 RED**：`_run_once()` 量了 `path_did_not_exist_before_this_run=True`、`_instrument_problems()` 也查，但 **acceptance 的 `test_1a` 没调用 `_instrument_problems()`**；`streak_verdict()` 只检查 `initial_row_counts` 字段存在 ⇒ 10 个不同但**预先存在**的库全绿仍可能 `STREAK_MET(10)`。把 freshness 变成共享 predicate 的机械 check（`every_run_fresh` / `path_source == app_printed_receipt_line` / `path_did_not_exist_before_this_run == true`），任一不满足 ⇒ `HARNESS_INVALID` / no closure。
@@ -25683,6 +25695,7 @@ Refreshed: 2026-09-21 15:0x (+08:00，`date` 实读) · LAST_ARBITER_COMMENT_ID 
 **⑶ 我要报的那半句（口径归你/仲裁，我一行产品码都没改）**
 
 用户**没有任何办法**把"低刺激/慢节奏/安静/大件行李"这四条说成硬约束——不是 NLP 不准的问题，是 `SOFT_CODES`/`CONTEXT_CODES` 这两张表把它们**永久排除在约束行之外**。这条与 HJ-P4 的头条（*"两句完全不同的原话产出逐字相同的方案"*）在机制上对得上：**偏好被读出来了，但没有一条能变成可执行约束。**
+  ⚠ **2026-09-22T19:55+08 d291c9dc 更正本行（EXP-HARNESS-008 实测）**：本行两处不准——(a)「没有任何办法」只对**文本路径**成立，`PUT /travelers/{id}/capabilities` 接受 `severity=HARD` 并 7/7 持久化成功；(b) 归因错了：`SOFT_CODES`/`CONTEXT_CODES` 只是**解析器默认 severity 的来源**，并不把码排除在约束行之外（HARD 一旦进来，`capability_constraint_items()` 每码 1 行）；真正的门内分界是 `feasibility.py:254-266` 的 `_CAPABILITY_GATE_CODES`（11 个，含 STROLLER/LARGE_LUGGAGE、不含那四个软偏好码）。详见本文件末尾 `EXP-HARNESS-008` 块与其 3 个 blob 坐标。
 ⚠ 边界我标清楚：本实验**只测确定性解析路径**（AI=off）。带 AI 的解析路径我没测也不许我测（不调真 provider），所以这句**不构成**"产品端到端听不见慢节奏"——**端到端那一半要 HJ 车道或 B 车道用真路径签**。
 
 **⑷ 我自己两处读数是错的，先于别人更正**
@@ -25906,3 +25919,29 @@ GET .../commits/{56d20ec,522c414,50b35e0}  -> 422 "No commit found for SHA: …"
 
 **⑷ 复放路径**：`harness_instruments.md` 里内嵌 10 只量具源码（`harness_streak_gate.py`、`cnx_run_receipt.py` 插件、`harness_instrument_streak.py`、`harness_g5_chain_0218.py`、`harness_phrase_coverage_004.py`、`harness_positive_control_004b.py`、`harness_gate_streak_selftest.py`、`harness_evidence_gate.py`、`digest_teeth_check.py`、`harness_ord0210_repro.py`）＋文件头一段"一条命令复放"配方（含 `git archive <sha> backend data contracts tools | tar -x` 的导出式与 venv 3.12.14）。**审计者不需要我的盘**：收据、digest、破坏对照、逐 run 节点 verdict 都在 bundle 内。
 **本地侧不变**：0 端口、0 HTTP 服务、0 provider 出网、未发 `demo/reset`、未碰 `_live.db`/`_preview.db`、**除 GitHub 上 `evidence/harness-ord0218/` 这三个新文件外没有写任何共享资产**（未建分支、未 force-push、未动 `commander/control` 上别人的路径）。
+
+
+### d291c9dc · `EXP-HARNESS-008` 那六个码的**第二路径**（自驱，接包工头"把 30 进程量具用在别的门上/继续自己队列"）2026-09-22T19:55+08 → **我 15:07 那句"用户没有任何办法把它说成硬约束，因为 `SOFT_CODES`/`CONTEXT_CODES` 把它们永久排除在约束行之外"是错的，在这里更正**：写入口 `PUT /travelers/{id}/capabilities` 明明白白接受 `severity=HARD`（`schemas.py:47-59`），**7/7 码写入 200 并回读 `severity=HARD`+`persisted_n=1`**，经产品自己的 `capability_constraint_items()` 读出**每码各 1 条约束行**——真正一直缺的只是**解析器不传 severity 这个默认值**，不是"表把码永久排除"。而门那一层的实际分界是 **`_CAPABILITY_GATE_CODES`（`feasibility.py:254-266`，11 个）**：**含 `STROLLER`/`LARGE_LUGGAGE`、不含那四个 `SOFT_PREFERENCE` 码**
+
+**端到端实测（`dfdc5d5`，进程内 TestClient＋一次性库；地点记录是我自造的合成夹具，收据里已标注）**
+| 码 | 写入口 | 约束行 | 喂给 `evaluate_feasibility` 后 |
+|---|---|---|---|
+| `STROLLER`（＋负证据 `stroller_accessible=false`） | PUT/confirm 200、constraints 201 | 1/1 | **`STROLLER_ACCESS_UNAVAILABLE`、passed=False** ⇒ **链条完整，只差解析器一个参数** |
+| `LARGE_LUGGAGE`（`luggage_accessible=false`） | 同上 | 1/1 | **`LUGGAGE_ACCESS_UNAVAILABLE`、passed=False** ⇒ 同上 |
+| 二者正向证据（`…=true`） | 同上 | 1/1 | **无 failure、passed=True** ⇒ 不误伤 |
+| `SLOW_PACE`/`QUIET_ENVIRONMENT`/`INDOOR_PREFERRED`/`SENSORY_LOW_STIMULATION` | 同上（也都 200/201） | 1/1 | **`UNSUPPORTED_HARD_CONSTRAINT`、passed=False** ⇒ **整趟被拒，不是按需求筛**（`:621-624` 注释：门看不懂的硬规则绝不绕过） |
+| `STEP_FREE_REQUIRED`（控制，`step_free=false`） | 同上 | 1/1 | `ACCESSIBILITY_CONFLICT`、passed=False ⇒ 按证据判 |
+9 个用例**计算式期望 9/9 满足**（我第一版把控制码的期望**猜**成 `ACCESSIBILITY_UNVERIFIED` ⇒ 假 DIFFERS；已改成"必须失败且必须具名 ACCESSIBILITY\*"，让产品自己选哪个码。）
+
+**三分结论（别再说成一句话）**
+1. `STROLLER`/`LARGE_LUGGAGE`：**只差解析器那一个 `severity` 参数**（`app/capabilities.py:817-820`）——四道环节我已逐个跑通，不是推。
+2. 那四个 `SOFT_PREFERENCE` 码：**缺的是可行性层的实现**（进 `_CAPABILITY_GATE_CODES` ＋ 写求值分支）。**警告：只补 severity 会把"静默不执行"变成"整趟旅程不可规划"**——任何想做"那一行修改"的人先读这条。
+3. **词表与写入口都不设防**：`ConstraintInput.rule_code` 是自由字符串，本轮我只写了冻结词表内的 9 个码，但词表外的 rule_code 同样能以 `kind=HARD` 落库、然后一律 `UNSUPPORTED_HARD_CONSTRAINT`。要不要在写入端校验"∈ 词表/可执行集"，**请仲裁一句话**（我不改产品码）。
+
+**坐标（照 `EXTERNALLY_READABLE_EVIDENCE`；工作尖 `dfdc5d5` 属 LOCAL-ONLY，引下面 blob）**
+`Canshu-King/CityNexus @ commander/control` ＋
+`evidence/harness-capability-second-route/EXP_HARNESS_008_SECOND_ROUTE.md` blob **`bd6604a115e3f101`**(5,728 B) ｜ `second_route_audit.json` blob **`222a9d0ef5e5fd85`**(10,340 B) ｜ `second_route_chain.json` blob **`f076cd3122914ad6`**(4,129 B)
+三件均 PUT 201 ＋ **BYTE-LEVEL MATCH**（`live_checks/publish_evidence.py` 自检：本地字节数与远端 size 相等、blob sha1 相等）。
+
+**现场**：0 端口、0 HTTP 服务、0 provider 出网（两 key 导入前清空、`AI_ENABLED=false`）；**未发 `demo/reset`**（种子走 `app.services.seed_demo`，收据 `demo_reset_issued: 0`）；一次性库 `engine.dispose()` 后删除并复验 `db left: none`；未碰 `_live.db`/`_preview.db`；未写权威树与 `CityNexus\**`（只 `git archive` 单向导出＋只读 grep）；**未跑突变、未放宽/deselect 任何断言、产品码 0 改动**；GitHub 上只新增 `evidence/harness-capability-second-route/` 这 3 个文件，未建分支、未 force-push、未动别人的路径。
+`lab/tools/harness_second_route_008.py`（两路分开归因）与 `harness_second_route_chain_008b.py`（端到端＋计算式期望）可一条命令复放。
