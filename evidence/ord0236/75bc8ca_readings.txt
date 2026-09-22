@@ -1,0 +1,50 @@
+probe db: sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/q236_probe_iyr93k_w/probe.db | exists before: False
+
+places in DB: 16
+carrying (evaluator sees evidence): 3 ['place-tech-art', 'place-city-park', 'place-design-library']
+declared (fixture asserts facts) : 3 ['place-city-park', 'place-design-library', 'place-tech-art']
+equal? True
+
+tagged_without_evidence: 12
+    place-old-town -> ['culture', 'history', 'outdoor']
+    place-riverside-museum -> ['culture', 'indoor']
+    place-food-hall -> ['local_food', 'indoor']
+    place-river-cruise -> ['waterfront', 'scenic', 'outdoor']
+    place-beijing-tiananmen-square -> ['culture', 'history', 'outdoor']
+    place-beijing-forbidden-city -> ['culture', 'history', 'indoor']
+    place-beijing-summer-palace -> ['waterfront', 'outdoor', 'history']
+    place-beijing-nanluoguxiang -> ['local_food', 'street', 'outdoor']
+    place-beijing-qianmen-dashilan -> ['culture', 'shopping', 'outdoor']
+    place-beijing-quanjude-qianmen -> ['local_food', 'indoor', 'signature_dish']
+    place-beijing-huguo-si-snacks -> ['local_food', 'indoor']
+    place-beijing-houhai -> ['waterfront', 'night_view', 'bars']
+untagged and unevidenced: 1
+
+--- verdicts per channel (single synthetic place) ---
+
+[raw tags column only] _accessibility_metadata -> None
+    STROLLER             []
+    LARGE_LUGGAGE        []
+    STEP_FREE_REQUIRED   ['ACCESSIBILITY_UNVERIFIED:P', 'NEEDS_LIVE_EVIDENCE:P']
+
+[taxonomy tags only] _accessibility_metadata -> None
+    STROLLER             []
+    LARGE_LUGGAGE        []
+    STEP_FREE_REQUIRED   ['ACCESSIBILITY_UNVERIFIED:P', 'NEEDS_LIVE_EVIDENCE:P']
+
+[normalized accessibility_evidence] _accessibility_metadata -> {"luggage_accessible": false, "stroller_accessible": false}
+    STROLLER             ['STROLLER_ACCESS_UNAVAILABLE:P']
+    LARGE_LUGGAGE        ['LUGGAGE_ACCESS_UNAVAILABLE:P']
+    STEP_FREE_REQUIRED   ['ACCESSIBILITY_UNVERIFIED:P', 'NEEDS_LIVE_EVIDENCE:P']
+
+[normalized osm_tags] _accessibility_metadata -> {"osm_tags": {"highway": "steps", "step_count": "12"}}
+    STROLLER             []
+    LARGE_LUGGAGE        []
+    STEP_FREE_REQUIRED   ['ACCESSIBILITY_CONFLICT:P']
+
+[nested accessibility (shadow)] _accessibility_metadata -> {"stroller_accessible": false}
+    STROLLER             ['STROLLER_ACCESS_UNAVAILABLE:P']
+    LARGE_LUGGAGE        []
+    STEP_FREE_REQUIRED   ['ACCESSIBILITY_UNVERIFIED:P', 'NEEDS_LIVE_EVIDENCE:P']
+
+DONE
