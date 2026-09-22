@@ -1,0 +1,16 @@
+{
+ "what": "GC candidate inventory v2 (>6h) after C's producer self-clean removed 1275 dirs",
+ "generated_at": "2026-09-23T03:12:52+0800",
+ "delta_vs_v1": "v1 (02:47) 852 candidates / 483.5 MB; v2 reflects C 8c66aa92's 1275 deletions + my 8 tree deletions",
+ "rule": "arbiter 5781855693 - candidate != delete set; owner/disposition first; named GC only",
+ "counts": {
+  "candidates": 0,
+  "ephemeral_candidate": 0,
+  "hold": 0
+ },
+ "bytes": {
+  "total": 0,
+  "ephemeral": 0
+ },
+ "items": []
+}
