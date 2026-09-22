@@ -10299,6 +10299,32 @@ Commander 16:0x 点名我"上一份读数自 14:24 未交"——那是 `list_cha
 - 方案对比 → 选方案 → 建承诺 → 票夹 仍等 AI 授权；凭据未出现在本块、账本或截图里。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0217
+  to: 8c66aa92
+  priority: high
+  if_head: c8472fd
+  order: |
+    **F 的 ORD-0214 门对**真实现**报一条具名红，我已在 `c8472fd` 独立复跑确认：`
+    `test_qoder_attribution_fields_hard_door.py::test_1c_the_implementation_must_not_answer_http_without_a_code`
+    ⇒ 现状是 `answered=true` 却没有任何非空 `http_status` 时，`_attribution_fields()` 仍写
+    `evidence_kind="HTTP_RESPONSE"` ＋ `http_status=None`——**"我收到了 HTTP 回答"与"我没有状态码"自相矛盾**，
+    而这正是红队 15:41 那条"合法形状伪造"能穿过去的支路（实现层随便编一个 200 就完全合规）。
+    F 给了两条修法并**故意没替你选**：① answered 却无码时落 `TRANSPORT_EXCEPTION`（语义上真的没收到码）；
+    ② 拒绝产出这个组合。我要求：先写一句"为什么选这条而不是那条"，再改；两条都不许放宽 F 的其余 10 条断言。
+    验收（四件齐）：`test_1c` 绿 ＋ 同文件其余 10 条仍绿（收集 11）＋ 一条突变反例（把保护点改回 `HTTP_RESPONSE`+null，门必须红，
+    走 `mutation_anchor_guard.py`）＋ 收据写清跑的 SHA 与临时库绝对路径。
+    **排序**：这一条排在 ORD-0213 前面——它是**挂在套件里的一条常红**，每多留一小时就多污染一次别人的红集合读数；
+    0213 那道并发竞态是大工程，别用它当这条小红的借口。
+  status: DISPATCHED@2026-09-22T16:3x+08 by 494abfd7（靶子＝F 的门＋我独立复跑的那一条红）
+
+## commander 亲测 @2026-09-22T16:3x+08 —— ORD-0214（F）**验收通过**；HJ-P1 独立构建**逐字节复现了线上包**；HARNESS 把 streak 的"跑法形制"问题摆出来了
+
+- **ORD-0214 → ACCEPTED**。我在 `git archive c8472fd` 干净导出树上自己跑：`git diff --name-only 56d20ec..c8472fd` **只有 1 个文件**（`backend/tests/test_qoder_attribution_fields_hard_door.py`），`backend/app` 命中 **0** ⇒ F 那句"产品码 0 改动"是真的；收集 **11**、**10 passed / 1 failed**，唯一那条失败正是它点名归实现方的 `test_1c`。⇒ 我不但收到一把门，还收到一条**被门钉住的真缺陷**，已按 ORD-0217 交给 C（排在 ORD-0213 前面，理由写在单里：它是套件里的常红，会污染别人的红集合读数）。
+- **HJ-P1 16:22 那把给了我一次免费的独立复现**：它从 `56d20ec` 自己构建出**同名同字节**的 `index-BCF4ptyk.js`（1,230,082 B，sha256 前缀 `f3bda3d696d37cd1`）与线上文件逐字节相同 ⇒ "线上部署的确实是 `56d20ec`"这句话现在有**两个来源**。它另外量的两臂我也引用：`demo_mode=false` 时入口给的是**具名可恢复文案**且 0 写；`demo_mode=true` 时直接进 Today 且 0 写。
+- **HJ-P1 新报一条（我判定成立，归 D）**：按钮文案还写「使用封存的**天津**演示」，而服务器给的是**广州**那趟 ⇒ 文案与落地内容不一致，属 `HUMAN_MISLEADING` 家族。这条与 ORD-0216 ③ 同车道，我把它并进 D 的队列而不另开单。
+- **HARNESS 16:27 的 30 进程读数值得全体改口径**：同一只 `56d20ec`、每形 10 个独立进程、10 个不同临时库、无 sleep/无重试/未降并发/未放宽断言 ⇒ **g3 单门 1/10 绿、g1+g2+g3 同进程 7/10 绿、整文件 0/10 绿（但那是 `g5` 10/10 稳定红造成的）**。它提的问题我认同并转给仲裁：**`FLIP_WITHOUT_SHARED_STATE` 必须写明"跑法形制"**——单门形是"近乎恒红"，不是翻转；把两种形制混在一个名字下，以后一定有人拿 7/10 说"它在翻"、拿 1/10 说"它恒红"，两边都没错。我的 `gate_streak.py` 用 `--node` 把形制写死在收据里，交单时请把**形制**一并报。
+- 现场：working tip 仍 `56d20ec`（`c8472fd` 在 F 的分支上、未合入主线，我不擅自合）；reference tip `c0d7e3d`；`P7=false`；用户库 3/19/3、护栏 403、匿名 401、`demo/reset` 从未触发、0 次 provider 出网；那把 key 仍未轮换。
+
 ## commander 亲测（看图）@2026-09-22T16:2x+08 —— **线上那一格我用自己的眼睛看过了**：主页不再有那句参考值；顺带抓到一处"演示入口落地页"的真缺陷线索
 
 我把**线上正在服务的那份 `dist`**（`index-BCF4ptyk.js`）挂到一个隔离静态口 `:4185`，后端用 `53fe8e8` 的码＋**库副本** `:8694`（绝不拿用户库做点击实验），390×844 走完"重进向导 → 点封存演示"，然后**截图自己看**：
@@ -10543,7 +10569,7 @@ F2  transport 分支带 503         ⇒ 5 红（含 test_1d/test_1c/test_2b）
        并且在 `201 travelers`＋`201 journeys` 成功之后仍挂在屏上**（分类 `HUMAN_MISLEADING`）。
        最小回归点：换步时按当前有效值重算该提示，或进入第 3 步即清空第 2 步的残留。
     ⚠ 你那两文件门（`qoder-budget-advisory-tiers.spec.ts`）我认，但**"主页没有它"与"tight 仍在"是两格**，别用前者签后者。
-  status: DISPATCHED@2026-09-22T16:0x+08 by 494abfd7（①②靶子＝红队与我的实测；③靶子＝HJ-P1 人眼 2/2）
+  status: DISPATCHED@2026-09-22T16:0x+08 by 494abfd7（①②靶子＝红队与我的实测；③靶子＝HJ-P1 人眼 2/2）**追加第④件（HJ-P1 16:22 人眼，我判定成立）**：按钮文案仍写「使用封存的**天津**演示」，而服务器给的是**广州**那趟 ⇒ 文案与落地内容不一致（`HUMAN_MISLEADING` 家族）。修法二选一并写清理由：文案改成城市无关（"使用封存的演示行程"），或让入口显式选中天津那趟；**不许把文案改成"广州"来蒙过**——那只是把不一致挪了个地方。
 
 ## commander 订正 @2026-09-22T15:5x+08 —— 上一条部署块里"我只做了 1 轮、所以不签三次连点"这句话已经过期：**三轮独立循环我做了，这一格我改签 `REPRODUCED(canary)`**
 
@@ -23119,6 +23145,7 @@ pytest test_qoder_trip_shape_and_budget_reference.py test_qoder_rejection_messag
 ```
 
 ## BLOCKERS
+- **HERMES_REVIVAL / 9baacb24 @16:3x —— 唯一 blocker：模型支撑类门被凭据安全性挡住（不是技术，也不是缺人手）**。父进程环境的 `DEEPSEEK_API_KEY`（len 35，sha256 前 12 位 `4cabe6bcaff4`）经布尔比对**就是 `HUMAN_ATTENTION_REQUIRED` 里待吊销的泄露 key** ⇒ **H8b（模型注入）与 H11（模型支撑旗舰）我不跑**：拿已泄露的 key 产出的"模型支撑通过"不可签，且会花用户的钱。**不需要凭据的部分我已经推到尽头**：H0–H10 除 H8b 外全部有真实读数（H4/H5/H6/H7/H8a/H8-确定性注入三面/H9/H10a/H10b 均 PASS），另交出两条独立真缺陷（agent 边界默认不做主体隔离、两条 PlanVersion 可同时 ACTIVE）。**求解**：① 给一把轮换后的新 key（只放进程环境，我一贯起台先 pop）→ 我立刻跑 H8b+H11；或 ② 明示"就用这把、接受证据不可签"。**不等凭据也能继续的**：把已交的 H8/H10 收据按仲裁 15:58 冻结的 `GATE_ACCEPTANCE_STREAK` 八条重跑成 10 连续独立进程读数（不需要模型、不需要 build）——我已自行开工，见下一块交付。
 - **HERMES_REVIVAL / ORD-0140 @19:5x（仅本车道，不影响其他线）**：**当前稳定版 Hermes 0.21.3 在这台机器上取不到** ⇒ H0-on-0.21.3 = NOT_RUN。具名证据：PyPI `hermes-agent` 11 个 release **最高 0.19.0**；GitHub tag `v2026.9.14`（→ `345cd2b0`）**assets: 0**；`codeload.github.com/.../legacy.tar.gz/refs/tags/v2026.9.14` HTTP 200 后 **`curl (56)` 断流**（14,259,663 B / 767.6 s / ≈18.6 KB/s，tar 截断），续传 **`curl (33)` 不支持 byte ranges**；git 路线被本单禁止、官方 one-liner 即 git install；四个 V17/V18 zip **0 可执行件 0 wheel**。**已用 0.21.2 顶上**（本机磁盘上找到的 V18.3 同源运行时，重建到隔离根）⇒ H0/H1/H2/H3 全部拿到真读数。**求解（任一即可，属用户/仲裁可做的事）**：把 0.21.3 的 wheel/sdist 放到可取位置，或明确解禁 `NousResearch/hermes-agent` @ `v2026.9.14` 的 git 路线，或直接裁定 0.21.2 即为受试当前线。
 - **当前无阻塞性故障。** 仲裁 Amendment D 三条裁定已收到并落实（04:2x 那批"待裁"全部作废，别再问）。
 - 已关闭的旧待决：RX-4 归属（保持独立 Worker，已交付并入树）、前端墙上时间推断（已入本轮，
