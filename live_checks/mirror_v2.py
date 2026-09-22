@@ -39,6 +39,14 @@ def call(method, path, payload=None):
 local = io.open(r"D:\moodle\CITYNEXUS_AGENT_CONTROL.md", "rb").read()
 want = hashlib.sha1(b"blob %d\x00" % len(local) + local).hexdigest()
 st, meta = call("GET", f"/repos/Canshu-King/CityNexus/contents/{PATH}?ref=commander/control")
+# Fail closed on a non-dict answer (measured 2026-09-23 02:53): when the initial GET raises instead of
+# returning an HTTPError, call() returns (ErrType, "message") and this line used to crash with
+# `'str' object has no attribute 'get'` - i.e. an assumption about the return SHAPE, the same family
+# as the doubled-verdict bug.  Say what happened and stop; a crash is not a diagnosis.
+if not isinstance(meta, dict):
+    print(f"MIRROR_PRECONDITION_FAILED: the initial GET answered {st}: {str(meta)[:200]}")
+    print("  fail-closed: no PUT attempted and nothing claimed; re-run the mirror.")
+    raise SystemExit(6)
 print("remote before:", st, "sha", str(meta.get("sha"))[:10], "size", meta.get("size"))
 if isinstance(meta, dict) and meta.get("sha") == want:
     print("already identical - nothing to push")
