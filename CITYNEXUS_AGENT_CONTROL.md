@@ -9750,6 +9750,34 @@ evidence: `frontend/e2e/qoder-speaks-the-travellers-language.spec.ts`（新，�
 - **浏览器**：独立 `browser.newContext()`（390×844 / dpr3 / isMobile+hasTouch）+ `window.name=HJP3-LANE8464`，`localStorage` 全新（`journey_id=null`）。
 - 磁盘注意：D: 剩 16G（95%）——commander 上午刚撞过盘满；我这次只复制 5.6MB 库，未建导出树。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander @2026-09-22T14:4x+08 —— HARNESS 自己撤回一条读数（**它的 v1 移动端仪器错了**），v1 工件就地封存；受影响引用与一条留给仲裁的产品题
+
+### 撤回与替换（照它的记录，我核过形状）
+- **v1 报"点『今天』之后 url/正文都没变"作废**，成因在它自己那侧：`click()` 的异常被 `catch(() => {})` 吞掉，
+  且 `:has-text("今天")` 在 390 px 下**先匹配到隐藏的桌面侧栏节点** ⇒ "没变"是**它的点击没落上**，不是产品惯性。
+  v1 的 JSON 改名留在 `lab\evidence\six_faces\mobile_golden_path_v1_WITHDRAWN.json`，**今后不得被引用**（这个处理方式我认可：改名留档，不删）。
+- **v2 换了判据**（只点"看得见且有盒子"的控件、失败必须带异常原文），实测走通：入口 ⇒ `/v8/discover`；
+  `菜单` ⇒ 抽屉三枚大卡；抽屉里点`今天` ⇒ 回 `/v8/hub`，正文 441→788 字。
+- 它**主动限制了自己的结论**：底栏那枚`今天`在几帧里都可见、导航后带 `active`，**但它没有单独点过**，
+  所以不写成"底栏直接可回"；"入口送到的那一面没有底栏入口"是 `v8Routes.ts` 的 `mobileRoutes` 设计事实，**它不判缺陷**。
+
+### 一条留给仲裁（或用户）的产品题，我不自己定
+**"要回到今天必须多开一次抽屉"这一跳，对第一次来的人算不算绕？** HARNESS 只交正证，把判断留给裁层。
+我这边只补一个可测的口径建议：若要做成门，判据应是"**从 `/v8/discover` 回到主导航面的点击次数 ≤ 1**"，
+而不是"底栏是否存在"（后者会被 active 类骗过——今天差点骗过的就是这类断言）。
+
+### 另一条 provenance 更正（全体引用它数字时要知道）
+它 14:1x 那块写"运行时 = `D:\moodle\CityNexus\.venv` 3.12.14"**写窄了**：实际是**两个解释器**——
+浏览器栈里的后端 uvicorn 跑在 `C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-…\python.exe`（它读 PID 命令行核实的），
+进程内测（门/004/审计）跑在 `D:\moodle\CityNexus\.venv\Scripts\python.exe`。同为 3.12.14 ⇒ 读数不受影响，
+但**"哪个进程做的测量"要写进收据**，这条并入我对全体的报数六要素。
+
+### 不受影响的结论（明确一下，免得撤回被过度引申）
+**EXP-HARNESS-005 仍然成立**：入口按钮「使用封存的天津演示」6/6 次实测 POST 新 traveler＋新 journey，
+且我在 `0cd697b` 上独立读到同一条链（`LocaleContext.tsx:699 → JourneyTrialSetup.tsx:1165 → V8Experience.tsx:1261 → :729` 两个 POST，
+全链无一处寻址封存 journey）。裁决已落成 **ORD-0209**，正在等 D 的实现与"连点 3 次 POST 计数为 0"的读数。
+（另：D: 现 **19.98 GiB** 空闲，用户又腾了量；我这边 14:4x 清掉两份对照导出与累积的测试库。）
+
 ## commander 更正 + 新机制 @2026-09-22T14:3x+08 —— 我说 `gates::g3` 是"顺序依赖"，**机制查出来更糟也更好修：它依赖的是 CWD 里那份共享 SQLite 的累计行数**；同时我把 A/B 复测在**受控状态**下重做了一遍
 
 ### ① 先更正我自己（14:32 总线与 14:1x 账本里那条"游走"读数）
