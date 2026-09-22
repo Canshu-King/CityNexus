@@ -1,0 +1,90 @@
+{
+  "advertised_destinations": {
+    "count": 11,
+    "names": [
+      "厦门",
+      "北京",
+      "上海",
+      "天津",
+      "福州",
+      "广州",
+      "深圳",
+      "成都",
+      "杭州",
+      "东京",
+      "新加坡"
+    ],
+    "printed_under": "看支持的目的地"
+  },
+  "check": "hjp2_supported_vs_places",
+  "lane": "HJ-P2 commitment-intensive traveller",
+  "open_mode": "sqlite URI mode=ro",
+  "order": "ORD-0120 / finding d4b04a0f/01",
+  "own_copy_store": "D:/moodle/_qoder_hjp2_r6_20260922/_hjp2_r6.db",
+  "places_coverage_in_served_store": {
+    "codes_with_places": [
+      "CN-BEIJING",
+      "CNX-DEMO"
+    ],
+    "counts": {
+      "CN-BEIJING": 8,
+      "CNX-DEMO": 8
+    },
+    "distinct_city_codes": 2,
+    "table_count": 55
+  },
+  "run": {
+    "argv": [],
+    "host": "my-Windows",
+    "pid": 36628,
+    "python": "3.10.11",
+    "sqlite_library": "3.40.1",
+    "started_at_local": "2026-09-22T23:31:17+08:00",
+    "started_at_utc": "2026-09-22T15:31:17+00:00"
+  },
+  "served_store": "D:/moodle/_qoder_cmdr_gate_20260921/backend/_live.db",
+  "session": "d4b04a0f",
+  "source_under_test": {
+    "CITY_FACTS_starts_at_line": 105,
+    "bytes": 56869,
+    "file": "D:/moodle/_qoder_integration_20260919/frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "git_blob_sha1": "9ccbffe87de9de2a5aeeaae778900571f4bcdd77",
+    "note": "SUPPORTED_CITIES at :163-168 is Object.keys(CITY_FACTS) filtered by script, so the advertised list is country/timezone/currency knowledge, not data coverage"
+  },
+  "this_lanes_journeys_measured": [
+    {
+      "city_code_stored": "CN-HANGZHOU",
+      "code_was_typed_verbatim": false,
+      "how_created": "杭州 typed at the destination field (round 6)",
+      "journey_id_prefix": "f34c8ff0",
+      "places_for_that_code_own_copy": 0,
+      "places_for_that_code_served_store": 0
+    },
+    {
+      "city_code_stored": "CN-苏州",
+      "code_was_typed_verbatim": true,
+      "how_created": "苏州 typed at the destination field (round 6)",
+      "journey_id_prefix": "68f8c7a1",
+      "places_for_that_code_own_copy": 0,
+      "places_for_that_code_served_store": 0
+    },
+    {
+      "city_code_stored": "CN-BEIJING",
+      "code_was_typed_verbatim": false,
+      "how_created": "北京 typed at the destination field (round 7)",
+      "journey_id_prefix": "5e9fd913",
+      "places_for_that_code_own_copy": 8,
+      "places_for_that_code_served_store": 8
+    }
+  ],
+  "verdict": {
+    "advertised_count": 11,
+    "codes_with_any_place_row_in_served_store": 2,
+    "invented_city_code_seen": true,
+    "mismatch": true,
+    "planner_can_only_answer_cities_in": [
+      "CN-BEIJING",
+      "CNX-DEMO"
+    ]
+  }
+}
