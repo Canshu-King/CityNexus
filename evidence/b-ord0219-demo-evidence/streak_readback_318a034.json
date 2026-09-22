@@ -1,0 +1,556 @@
+{
+ "rows": [
+  {
+   "node": "test_a_dropped_candidate_leaves_a_named_fact_on_a_route_the_frontend_already_calls",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_a_refusal_with_no_surviving_candidate_names_which_rules_broke_them",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_demo_evidence_stays_out_of_non_sealed_cities",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_demo_producer_lands_every_claimed_fact_with_demo_provenance",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_demo_producer_reaches_exactly_the_places_the_fixture_claims",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_hard_luggage_names_the_blocker_and_does_not_misfire",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_hard_stroller_names_the_blocker_and_does_not_misfire",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_missing_demo_evidence_is_unknown_and_never_implicit_access",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_the_named_reason_points_at_the_stop_whose_demo_evidence_conflicted",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  },
+  {
+   "node": "test_two_hard_constraints_each_name_their_own_blocker",
+   "sha": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "run_shape": "single-node",
+   "run_shape_verified": true,
+   "rounds": 10,
+   "green": 10,
+   "red": 0,
+   "not_observed": 0,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "closure_allowed": false,
+   "duplicate_db_paths": [],
+   "runs_missing_db_path": [],
+   "forbidden_targets": [],
+   "every_run_fresh": true,
+   "clause6_command_surface_clean": true,
+   "clause6_hits": [],
+   "reverse_mutation_result": "KILLED",
+   "per_run_node_outcomes": [
+    "GREEN"
+   ],
+   "per_run_raw_outcomes": [
+    "GREEN"
+   ],
+   "temp_dir_appeared_all": true,
+   "distinct_db_paths": 10,
+   "corroboration_examples": [
+    "退出码与摘要计数一致"
+   ],
+   "problems": []
+  }
+ ],
+ "all_met": true,
+ "all_fresh": true,
+ "all_shapes_verified": true,
+ "no_duplicate_db_paths": true,
+ "own_db_paths": [
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_8z3qiiyu\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_bu90ii5w\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_f6lx4adn\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_pq73snrs\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_m0fgh_qp\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_uz443db9\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_899s1bib\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_moprdh8k\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest__pmpovk5\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_1t_s9kv8\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_qnwk1xb9\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_x171g14k\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_k3kilrrt\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_ueff_l8q\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_r6webp6d\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_476sisuy\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_j25mfj_h\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_qm5q61ni\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_pyvsjkpw\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_mp4r4awt\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_s347a_nd\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_x4e7wq_y\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_8rg09w5w\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_fp121ji1\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_u3c1t457\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_6k7isjk9\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_wigip3pu\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_gxvv9rxa\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_if59nsy5\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_l5pg2ta5\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_e5bkuxvm\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_k0j8v3dd\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_pa7kdbx7\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_m9xqk8ua\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_hexovgma\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest__iw2959w\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_jm2xwn3n\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_lvyxcn5_\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_lkc4qint\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_81kuctmm\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_cmi8wdoq\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_zrrn13lg\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_19_4l306\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_bgcybdqg\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_g9d2p1ia\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_1pyi4czj\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_80axda30\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest__dvidi19\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_4quoa6j_\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_l4662sa5\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_9gi3pkut\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest__4g239oh\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_952d898h\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_h7_gxqom\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_02eq4392\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_gb13p1tj\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_0k62p57v\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_412ekjl8\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_gd2i84o0\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_yye7zys1\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_b78f8woh\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_g56vtcn4\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_2ytonkl1\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_cufyavpd\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_fdij4865\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_395vw3se\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_5ddsk_tu\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_f4msvnjp\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_6rp0hkkh\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_ccumhi8b\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_10dak5c2\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_w5cvm4mw\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_aw4fd37b\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest__9_9reju\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_w089wd5t\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest__2sa4i5a\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_dl1ywl_a\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_olb5lw3n\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_j6uj7v48\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_wfcr0ld_\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_pwhxvf7b\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_8i64sumb\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_ccw_op1b\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_efe23mwi\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_vs3vrzl3\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_wiq7j7bd\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_vvnz3odc\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_qql1xdxo\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_q_hd9cau\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_v4vajzrt\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_7sjyruqw\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_voscgc45\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_wvqi7n4m\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_elo8z1i5\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_lz_w4i2q\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_rq6k1rwv\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_n0riwuyr\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_edlxvqds\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_a_attnon\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_t93bt3g1\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_jug034_k\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_cvfcvnuz\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_0x0ja8d1\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_i1o6_5rm\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_b9q21ix6\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_96glu4u8\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_pchochk9\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_zc_8f4i9\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_6zngnbzr\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_qvfh6o7x\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_0l_6zhm5\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_ww2phfcp\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_h4e86ke5\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_2k3kp8ux\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_m9fqjhxk\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_lsu4t801\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_65zvcq1o\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_ux92kme9\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_ho6r3d89\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_bfkjj16y\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_uwvhxu25\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_h6wo1y74\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_ifqyu10t\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_86n11l8h\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_ssdum5jp\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_c22szibs\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_zto_zkb6\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_0ex2ljdo\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_fkkrrzb2\\suite.db",
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_wb035qdg\\suite.db"
+ ]
+}
