@@ -116,7 +116,7 @@ catalog_hydration_operations 行数：我的副本 0 / 线上库 0
 - `plan_versions` 全程 19：**我一个方案都没生成**——第 3 节就是它的成因。
 - 三个库的**主文件 stat（size+mtime）在探测前后逐项相同** ⇒ 我这轮的只读探测没写任何东西（WAL 的 `-wal/-shm` mtime 可能被只读打开刷新，这一点收据里也记了）。
 - 库绑定方式与强度：见 `isolation_receipt_r7.json` 的 `store_binding`——我是用"号令者 19:10 自己写的 P0 读数 `3/3/19/1/1` 与 `_live.db` 逐项吻合"来推断线上库身份的，**不是**读到了那个 uvicorn 进程的环境变量；这条按推断记，不按观察记。
-- 端口/进程归属：本车道自起 `127.0.0.1:8453`（前端）/`:8493`（后端），bind-test 后起，**收尾已停**；未占 `:4781/:4782/:8693`；未新建隧道；未出网。
+- 端口/进程归属：本车道自起 `127.0.0.1:8453`（**后端 uvicorn**）/`:8493`（**前端 vite preview**，浏览器打开的是这一支），bind-test 后起，**收尾已停**；未占 `:4781/:4782/:8693`；未新建隧道；未出网。
 - 禁令自查：本轮**没按**「重置到场景起点」、**没写**任何共享库、**没上传**任何 `.db`/凭据（发布前跑的是本车道自带的禁载物拒绝，见第 5 节末）。
 
 ---
@@ -130,7 +130,7 @@ catalog_hydration_operations 行数：我的副本 0 / 线上库 0
 ```text
 PlanWithAiSheet.tsx              38,447 B  blob 8d58cfe9faf10562fe86164faa817bc7bbe0a769  commit d617536793ec
 deployed_artifact_excerpt.txt     3,175 B  blob 13b58e3dfa7ec49a634faffd65f764d6fac6e1e6  commit 0f9e041ecbe7
-isolation_receipt_r7.json        16,056 B  blob 1e78ebd6ad431c439b05b091273b507d57d5fa7e  commit b4fa2fd988f1
+isolation_receipt_r7.json        16,354 B  blob 46145e5ca335db579e5b20b27280c27eacf4400b  commit (republished)
 r6_03_drawer.png                221,739 B  blob fda2415e998dc1036cd3a4b3f09eb5792deef84e  commit ac019f7f721a
 r6_04_named_failure.png         262,308 B  blob b9d27f10a49aa3f829f6ccbf86a9389e341e0df3  commit 71e31d0c7135
 finding_hjp2_reading_01.md  （本文件，坐标见 manifest.json / 账本交付行）
@@ -139,6 +139,15 @@ finding_hjp2_reading_01.md  （本文件，坐标见 manifest.json / 账本交�
 **交叉校验（这是本条最有说服力的一处）**：`PlanWithAiSheet.tsx` 发布后的远端 blob sha1 = `8d58cfe9faf10562fe86164faa817bc7bbe0a769`，与本地
 `git rev-parse HEAD:frontend/src/features/planning/PlanWithAiSheet.tsx` **完全相同** ⇒ 审计者在 `commander/control` 上打开的那份，就是树里那个 git 对象本身，逐字节；
 第 2/3 节引用的 `:383-392`、`:741`、`:867` 行号可在那份文件上直接核对。
+
+**更正记录 @19:3x（本文件重发一次）**：第一版把本车道的端口角色写反了（`isolation_receipt_r7.json` 里把 uvicorn 记成 `:8493`，本文件第 4 节把 `:8453` 标成前端）。
+按 `backend2.log`（`Uvicorn running on http://127.0.0.1:8453`）与车道自己的导航 URL（浏览器打开 `:8493`）更正后重发：
+
+```text
+isolation_receipt_r7.json   1e78ebd6ad431c439b05b091273b507d57d5fa7e  ->  46145e5ca335db579e5b20b27280c27eacf4400b
+finding_hjp2_reading_01.md  c0149e3927c7eb535bd55b583632c50b88d2381a  ->  新值见 manifest.json（本文件不能自含自己的对象号）
+```
+旧 blob 在 git 里仍可解析（内容寻址，删不掉），**以新值为准**；本车道除这两处端口角色外的读数未变。
 
 **必须点明的不可解析坐标（按第五条"不写就等于没交"的反面，我主动写）**：
 
