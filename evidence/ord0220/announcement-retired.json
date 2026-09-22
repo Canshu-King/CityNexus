@@ -1,0 +1,61 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0220 ②",
+  "head": "a09096fd514685b800f45c261049bc060c5a2cc0",
+  "method": "the region's own textContent, read per surface; body innerText is never used",
+  "spokenAtRefusal": {
+    "selector": "#trial-next-reason",
+    "exists": true,
+    "text": "还需要填写：总预算",
+    "rect": {
+      "top": 663,
+      "height": 1,
+      "width": 1
+    },
+    "visuallyRendered": false,
+    "insideSrOnly": true,
+    "inViewport": true,
+    "computed": {
+      "visibility": "visible",
+      "display": "block",
+      "opacity": "1"
+    }
+  },
+  "afterFix": {
+    "selector": "#trial-next-reason",
+    "exists": true,
+    "text": "",
+    "rect": {
+      "top": 580,
+      "height": 1,
+      "width": 1
+    },
+    "visuallyRendered": false,
+    "insideSrOnly": true,
+    "inViewport": true,
+    "computed": {
+      "visibility": "visible",
+      "display": "block",
+      "opacity": "1"
+    }
+  },
+  "atStep3": {
+    "selector": "#trial-next-reason",
+    "exists": true,
+    "text": "",
+    "rect": {
+      "top": 580,
+      "height": 1,
+      "width": 1
+    },
+    "visuallyRendered": false,
+    "insideSrOnly": true,
+    "inViewport": true,
+    "computed": {
+      "visibility": "visible",
+      "display": "block",
+      "opacity": "1"
+    }
+  },
+  "publishedBy": "e345b9d6 for ORD-0220"
+}
