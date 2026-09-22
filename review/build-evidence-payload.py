@@ -60,9 +60,12 @@ PLAN = {
     "ord0226": (
         [],
         [],
-        [],
+        [
+            ("ord0226-en-reachability.json", "english-caveat-reachability.json"),
+            ("phone-bundle-readings.json", "deployed-generation-readings.json"),
+        ],
         "ORD-0226",
-        "ord0226-arms.json",
+        "ord0226-arms-six-arms.json",
     ),
 }
 
