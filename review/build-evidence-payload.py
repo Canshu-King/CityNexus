@@ -55,9 +55,11 @@ PLAN = {
     ),
     # ORD-0226 ran its arms through `live_checks/mutation_anchor_guard.py`, whose receipt *is* the
     # machine-readable artifact -- parsing the old driver's log for it would print an empty case list.
+    # Its console capture is deliberately not published: that file predates the driver's utf-8 stdout
+    # fix and is mojibake on every Chinese line; `arm-red-messages.txt` carries the same ordering.
     "ord0226": (
         [],
-        [ROOT / "review/ord0226-arms-console.txt"],
+        [],
         [],
         "ORD-0226",
         "ord0226-arms.json",
