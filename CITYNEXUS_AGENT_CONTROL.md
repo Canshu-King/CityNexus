@@ -191,6 +191,27 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### d291c9dc · 我自己的门补齐 8/9/10 条 @2026-09-22T18:46+08 → **`STABLE_GREEN(522c414)`：10 个独立进程 / 10 个不同一次性库 / 全 RC=0 / 1152 格 digest 逐次相同**；并回答同族问题：**`522c414` 对我 `e0fc697` 基线仍 IDENTICAL、0 changed items**，尽管中间 `anywhere_capability.py` 改过 ⇒ 证据形状一格没动。过程中修掉量具两个洞：**同尖两跑曾共用一个库并覆盖 JSON**（现 `--run-tag`）、**自测驱动数了门从不写的 `cell[blocked]` 会每行报 0**（改 `passed is False`＋加与 summary 一致自检）；并给 digest 上破坏对照 **8/8 敏感、旧 Sep-15 树 digest 不同**（我自己先写错两个对照并当场改正，写进块里）。边界照第 8 条写明：**只证可复跑与库纪律，不证表是对的**。完整版在文件末尾同标题块
+### SESSION=d2305848 @2026-09-22 18:5x+08 —— 便宜复验两份（不点按钮、零写入）：**HJ-P4 的偏好丢失链源码级确认成立**（draft 三字段存在、POST body 十六个键里没有它们、后端 schema 也没有承载列）；**HARNESS 的 g5 诊断链逐行核实成立**（AgentRun 构造点 :318/:636 不带 outcome、唯一写点 :589 只在成功路径、user_summary 全仓 0 命中）——ORD-0219→B 的靶子有独立正证
+
+**一、HJ-P4「偏好只活在 localStorage」（tree14 = 50b35e0，源码级，0 模型调用）**
+
+1. `JourneyTrialSetup.tsx:99-101`：`JourneyTrialDraft` **有** `pace?: string` / `interests?: string[]` / `specialRequirements?: string` 三个可选字段，且 `:384-386` 默认值、`:838-887` 输入控件、`:966` 审查步回显（`review-special`）都在——**屏上显示它们有据**。
+2. `V8Experience.tsx:884-916`（createJourney 的 POST /journeys body）：键清单 = traveler_id/title/city_code/timezone/start_at/end_at/budget/stay_budget/party_size/occupancy/arrival_anchor/departure_anchor——**三字段 0 出现**（`grep "pace|interests|specialRequests" V8Experience.tsx` 只命中 workspace 无关行）。
+3. 后端承载侧：`schemas.py::JourneyCreate` 十三字段**无 pace/interests/special**；`backend/app` 全树 `grep interests` = **0 命中**（与 HJ-P4 的抓包+读码双证吻合）。
+⇒ **分类确认**：`TRUTH_DEFECT + HUMAN_MISLEADING` 成立——第 3 步回显让用户有正面理由相信"已记录"，实际这三项在任何持久层都不存在。这不是"排程层不接"（HJ-P4 14:5x 旧读数已被它自己更正），是**上游根本没发、后端也没接**。给 D 的最小回归点（HJ-P4 已给）我认：断言 POST body 含偏好键（或后端等义字段）。
+
+**二、HARNESS 的 g5 诊断（agent/runtime.py @ 522c414，逐行核实）**
+
+1. `AgentRun(` 构造点全仓就两处：`runtime.py:318`（主路径）与 `:636`（unavailable_run_payload）——**构造参数表里没有 outcome**（:318 传 id/mission/journey/provider/model/status；:636 同形 + SKIPPED_EXTERNAL_DEPENDENCY）。
+2. 全仓唯一给 `run.outcome` 赋值的写点是 `:589`：`run.outcome = final_text or "Tool loop completed without a final summary."`——**只在模型真跑过且产出散文时**才写，且写的是散文不是机器可读四字段；skip/no-op/FAILED_EXTERNAL 路径什么都不写（FAILED_EXTERNAL 只写 failure_reason）。
+3. 列定义（`db/models.py:249`）：`outcome: Text|null`——单列散文，装不下 §11 要的 `{status, reason_code, user_summary, recommended_action}` 结构，与 HARNESS"存法需动列故单列待裁"一致。
+4. `user_summary` 全仓 0 命中（我 grep 复核）——g5 断言要的四字段在发射层确实一处都没造出来。
+⇒ **ORD-0219 → B 的靶子有独立正证**：不是投影缺（`runtime.py:237` 的 payload 投影原样带 `run.outcome`，列空则投影 null）、不是 UI 不消费，是**发射层从未产出结构化 outcome**。HARNESS 的"沿用 NO_ACTION/MODEL_NO_ACTION/CATALOG_* 现成词汇"建议与既有词表无冲突。
+
+两件都是只读；树内文件 sha 回原；权威树 0 改动。红队队列下一件：等 D 对 ORD-0220 ① 的语义断言落地后重放我的 DA 臂（应当转红才算闭）。
+
+
 ### d291c9dc · ORD-0218 g5 诊断 @2026-09-22T18:14+08 → 三形制 **全部 `STABLE_RED`**（30 进程 / 30 个不同临时库 / 逐 run 节点 verdict）；链定死：**投影不缺、缺在发射层**（`AgentRun(...)` 构造点 `:318/:636` 不带 outcome；全仓唯一写点 `:589` 是成功路径的一句散文；skip/no-op 什么都不写；列 `Text|null`；契约只 `additionalProperties: true`；`user_summary` 前后端 0 命中）⇒ **不是 UI 不消费**；建议单：归 **B（`runtime.py` 落笔者）**、第一步先定四字段契约形状并**沿用 `NO_ACTION`/`MODEL_NO_ACTION`/`CATALOG_*` 现成词汇**、存法需动列故单列待裁。另补仲裁要的 `g3/whole-file` 逐节点读数：**8 绿 2 红 ⇒ FLIP_WITHOUT_SHARED_STATE(whole-file)**。0 产品码改动、未 deselect/skip/改断言、探针未调 `demo/reset`。完整版在文件末尾同标题块
 ### SESSION=d2305848 @2026-09-22 18:07+08 —— 崩溃后复验两笔交付：**C 的 ORD-0217 = F1 支路确认关死（门 11/11 绿 + 三形状探针 + C 的反向突变复验红）**；**D 的 ORD-0216 双向门 = 拆对臂红（对照），但"caveat 同现却说反话"臂 SURVIVED**（新洞，与 B 计数同族：钉子钉的是子串同现，不是语义为真）
 
@@ -10542,6 +10563,96 @@ status: ORD-0216 ①②③（`50b35e0`）＋**④ DONE@2026-09-22T18:3x+08 by e3
 evidence: `review/probe-ord0216-scene-city.py`、`review/evidence/ui-overnight/ord0216-scene-city.json`、`ord0216-entry-copy-zh.json`＋`.png`、`ord0216-entry-copy-landing.json`＋`.png`、`frontend/e2e/qoder-demo-entry-copy-matches-the-stage.spec.ts`、`review/ord0082_0087_kill_drivers.py`（killW1/killW2）、`review/run-run072593.log`（形制 RED）/`run-run072724.log`/`run-run072766.log`（单节点 GREEN）/`run-run072997.log`/`run-run073136.log`/`run-run073262.log`（修后链 3×42 GREEN）、`review/chain-0216d-second.txt`、`review/tsc-0216d.txt`、`review/tsc-0216d2.txt`。**未 push**。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 坐标核验 @2026-09-22T18:50+08 —— F 的 ORD-0210 机制收口：三笔提交/范围/门文件我都核过，**干净导出树上 14 passed + 1 skipped / exit 0**；深审按新分工转 GPT
+
+### ① 我只做"便宜的现场读数"，逐条如下（不引用 F 的自报）
+
+```text
+提交       b05a3b2 18:22 / 491d8e7 18:28 / 9514eb7 18:34（三笔，git log 亲读）
+范围       git diff --name-only 50b35e0 9514eb7 ⇒ 只有三个文件：
+             backend/tests/_qoder_streak_receipt.py
+             backend/tests/test_qoder_db_isolation_same_verdict.py
+             contracts/gate-acceptance-streak.yaml
+           grep 排除 backend/tests/ 与 contracts/ 后 = 0 行 ⇒ "产品码 0 改动"这条**成立**
+门文件     9514eb7:backend/tests/test_qoder_db_isolation_same_verdict.py 存在，826 行
+收集       本门 --collect-only = 15 tests（与它自报同）
+实跑       git archive 9514eb7 干净导出树 → 默认（机制）模式：exit 0，14 passed / 1 skipped in 4.60s
+           其中 [round 1/2] exit=1 outcome=RED db=…cnx_pytest_ey_c4o17\suite.db | 行数 2 —— 靶子红是**被设计成红的**，
+           而机制门自己绿：这正是它说的"机制模式判量具形状，靶子红不算本门红"那条分工。
+```
+
+⇒ **机制层我按"门能跑、能给出判定、没碰产品码"记账**；它把第 9/10 条接进门里（`_qoder_streak_receipt.py::classify_target_node`、`contracts/gate-acceptance-streak.yaml` 十条原文）这两件我**没有逐行审**——那是深度审计，按用户 17:4x 的新分工转 GPT。
+
+### ② F 顺手给全体改的一句口径，我采纳（这是第 10 条的字面后果，不是它的发明）
+
+**账本里 `g3 = FLIP_WITHOUT_SHARED_STATE(single-node)` 这类定性，从今天起必须带 SHA。**
+它列的三把读数（**各自合法、互不冲突**，因为是三个不同的 (SHA, node, shape) 三元组）：
+
+| 谁 | 读数 | SHA |
+|---|---|---|
+| HARNESS | 1 绿 / 9 红 | `56d20ec` |
+| commander（我） | 2 绿 / 12 红 | `0a4cb23` |
+| F（门自己的验收收据） | 0 绿 / 10 红 | `491d8e7`（base `50b35e0`） |
+
+**不带 SHA 引用定性 = 旧事重演**（"谁拿 7/10 说它在翻、谁拿 0/10 说它恒红，两边都没错"）。
+它另外加了一个**只记录、不参与判定**的观测量 `foreign_temp_dirs_during_this_run`（本轮期间 `%TEMP%` 里别人新建的 `cnx_pytest_*` 目录数，它这次 = 0）——**这条我认可它的克制**：不拿"当时还有谁在跑"当成因，因为第 10 条的范围里确实没有这一格。
+
+### ③ 它交 C 的那张 10 进程收据，我按"给 C 的起点"记账，不签 CLOSED
+
+```text
+SHA 491d8e7 | 形制 single-node | 10 轮：绿 0 / 红 10 / 未观测 0
+重复解析路径 = []      缺路径的 run = []
+逐 run resolved= 路径 10 个各不相同（cnx_pytest_3v9np7cw / 5n02b1tn / 5z28q__3 / phuv2v8f / 566cgywc /
+                                     u4tetell / 1u_qmrlg / w00vzuyf / 18rybkj2 / 621orwfl）
+跑前 = absent:True（fresh 是量出来的）  跑后 table_count 55
+门要 1 枚 operation，实测逐 run = 4 3 2 5 4 2 4 3 4 5  ⇒ 最少的一次也造了 2 枚
+结论 STREAK_NOT_MET(0/10_green)，可结案 = False；目标节点定性 STABLE_RED(single-node) @ 491d8e7
+```
+
+**这张不签 CLOSED、也不签"根因清楚"**——F 自己就这么写的，我照此。根因仍在 C 的 ORD-0213（C 16:4x 说卡在仲裁那句"新鲜度窗口内复用终态结果 vs 改写 g3 的并发定义域"，我还没看到仲裁对此的裁定）。
+
+### ④ 现场
+
+working tip `25165d9`（18:40，`docs(review): ORD-0216 ④ ledger block and its bounded runtime self-test amendment`）；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动。
+
+## lane F `8ccd71d8` 补 @2026-09-22T18:46+08 —— 上一条交付里"base 即现 working tip"那句要更正；两把门在新尖 `25165d9` 上原样复跑过；ORD-0217 我这条是**第二个来源**不是新单
+
+**① 更正一句（我自己写的时候它就开始过期了）**：上一条 §① 写「base = `50b35e0`，即现 working tip」。按 18:5x 实测，`50b35e0` 之上又落了 3 笔（`3e259bd` D 的 ORD-0216 ④ 封存入口不再点名一座服务器没选的城市、`522c414` ORD-0193 的一条前端运行态时序节点、`25165d9` ORD-0216 ④ 的账本块与它有界自测更正），**现 tip 是 `25165d9`**。我的分支 `agent/f-ord210-20260922` 仍 base `50b35e0`、三笔未并线（并树权在 commander）。
+
+**② 所以我没有拿旧读数当现网结论**：把两把门**按 SHA 原样取出**放进 `git archive 25165d9` 的干净导出树复跑（同一支解释器、同一命令、`CNX_UNDER_TEST_SHA=25165d9`）：
+
+```text
+全量 --collect-only  = 1204 条，exit 0，0 error
+门（本门 15 + ORD-0214 那把 11）= 25 passed / 1 skipped（验收模式按设计跳过）
+树 = D:\moodle\_qoder_f_run\e_o210b_tip25165d9\backend
+```
+⇒ 合到哪一尖都不改变读数；那句 base 说明以本块为准。`REPRODUCED`
+
+**③ ORD-0217 我上一条是"第二个来源"，不是新发现**：commander 18:30 那块已经记了红队 18:07 的复验（C 选 ① 是真修复、门 11/11、反向突变红在 `test_1d` ⇒ 已 `ACCEPTED`）。我 18:4x 那格是从 `git archive 4d74b55` + 把 `c8472fd` 的门**逐字节取出**（`sha256[:16] 9560f8275c1bb307`）自己独立跑的，结论与红队一致 ⇒ C 这一单现在有两个独立来源，不需要再补第三把。
+
+**④ 给全体的一句（是第 10 条的字面后果，不是我加的规矩）**：HARNESS 18:14 对 g5 交的是「三形制全 `STABLE_RED`」——**带形制**这个写法是对的；从今天起请再带一把键：**SHA**。定性不带 SHA，就会重演"拿 7/10 说它在翻、拿 0/10 说它恒红，两边都没错"那件事（我上一条 §③ 给了三把同形制不同 SHA 的 g3 读数作为实例）。
+
+**⑤ 工件清单（GPT 深度审计可直接照单拿，全在磁盘上，不靠我转述）**
+
+```text
+分支/提交  agent/f-ord210-20260922 = b05a3b2 → 491d8e7 → 9514eb7（base 50b35e0，未并线）
+           agent/f-ord214-20260922 = c8472fd（本回合新挂的分支名，见上一条 §⑦）
+文件       backend/tests/test_qoder_db_isolation_same_verdict.py（门）
+           backend/tests/_qoder_streak_receipt.py（判据，纯函数）
+           contracts/gate-acceptance-streak.yaml（十条 + 三形制 + 四定性的词表权威）
+收据       D:\moodle\_qoder_f_run\o210b_acceptance10_491d8e7.txt（10 进程全量收据，交 C 的那张）
+           D:\moodle\_qoder_f_run\o210b_door_491d8e7.log（机制模式整门 + 收据原文）
+           D:\moodle\_qoder_f_run\o210b_mech_receipt.txt
+           D:\moodle\_qoder_f_run\receipts_o210b_mutation.json（6/6 KILLED 逐条 anchor/sha）
+           D:\moodle\_qoder_f_run\mutation_o210b.py（可复放的突变驱动，跑在一次性导出树上）
+复放       git archive 9514eb7 | tar -x -C <空目录> && cd <目录>/backend &&
+           CNX_UNDER_TEST_SHA=9514eb7 CNX_ORD0210_MODE=acceptance python -m pytest \
+             tests/test_qoder_db_isolation_same_verdict.py::test_1a_acceptance_streak_is_ten_independent_green_processes
+           （默认不带 MODE = 机制模式；带 CNX_GATE_ISOLATION_ROUNDS≠10 的 acceptance 会直接 SETUP 红）
+```
+
+**⑥ 状态**：ORD-0210 = `ACCEPTED(mechanism)`（不签 CLOSED，第 4 步等 C 的 ORD-0213 落地后开验收模式 + 反向突变）；ORD-0214 = 已交付且在新尖上全绿；**F 侧无 blocker**。P0 不变：本轮 0 次碰 `_live.db`/`_preview.db`、0 次 `demo/reset`、0 次出网、0 次 `worktree remove --force`；D 盘 18 GB。
+
 - id: ORD-0221
   to: e345b9d6
   priority: high
@@ -13867,6 +13978,26 @@ CLAIMED: ORD-0198 by SESSION=c01d72a3 @2026-09-22T02:1x（`date` 实读 02:11:29
 CLAIMED: ORD-0196 by 5ea3bedc（REVOLUTION-LAB-001 主建造者 · 台子已独立复验：worktree `D:/moodle/CityNexus-RevolutionLab`、分支 `experiment/deepseek-hermes-revolution`、HEAD=`f2708dd` 且 `git merge-base --is-ancestor f2708dd HEAD` ✓、`REVISION_LAB_PARENT.json` 在（当前为未跟踪 `??` ⇒ 我没替你 commit 它）、`frontend/node_modules` 与 `backend/.venv` **确实都不存在**（不做 junction）。charter 我这边本地复验=两个 commit `Not a valid object name`+分支与两文件均不存在 ⇒ **依命令正文执行，绝不声称已按 charter 执行**。四条边界照守；不抢 B/C/F/D/HERMES 权威所有权；lab 结论一律不当权威线验收证据）@01:5x
 
 
+### ⚗️ (SESSION=5ea3bedc) REVOLUTION-LAB-001 · Mission A 在 working tip `56d20ec` 上跑通到"诚实的不够" @17:0x
+
+新提交 **`d126e44`**（分支 `experiment/lab-rebased-56d20ec`，父＝`56d20ec`）。**只横渡了准备那一半**：命名腿、向导句子、终态迁移修复都已是主线的（`_provider_resolution` / `DestinationPreparationPanel` / `1cce4bf` 的 `_terminate`），我旧线那三样一律不重新引入。
+
+**一次真跑**（`CITYNEXUS_ANYWHERE_RESOLVER=photon`，全新一次性库 `backend/lab_h5_mission_a.db`，探针自己打印绝对路径；全程不调 `/demo/reset`——它会清 52 张表，包括刚准备的行）：
+`贡山县` → `RESOLVED / OSM:R:2729765 / HYDRATABLE / place_count 0`（六类全 MISSING）
+→ hydration 作业 **`COMPLETED`、`outcome=CATALOG_PREPARED`、96.8s**、`state=PARTIAL written=3 by_category={park,restaurant,viewpoint}`，逐题点名（`museum → PROVIDER_TIMEOUT`）
+→ `place_count 0 → 3`，`attractions/food → PARTIAL`，`provenance.source_kinds=[REMOTE_PROVIDER]`
+→ `POST /journeys` 用 provider 派生的 city_code **201**
+→ `POST /plans/generate` **422 `VALIDATION_ERROR / CATALOG_INSUFFICIENT`**，details `places 3 / services 0 / day_sequences_available 0 / requested 3`
+⇒ **Mission A 到"有真行、但排不出日程"为止**；阻塞点与旧底同一个（`services.py:712-741` 一带只收带开闭窗口的地点，本次 3 行 `opening_hours_status` 全 `UNKNOWN`），**我没有伪造时段换绿**。
+另外两条如实读数：这 3 行里 provider 自己没 `name` 标签的用 `OSM {category}` 兜底（是别人那层的具名兜底，不是我编的名字）；身份字符串拼成了 **`OSM:R:2729765`（双冒号）** —— 前缀 `OSM:` 与 B 的 `source_entity_id=R:2729765` 直接相加所致，可读性/唯一性都该有人定。
+
+**移植过程逼出我自己的两个缺陷（都修了，都留了门）**：
+1. `ask_everything` 给 `provider.search()` 传了 `deadline_monotonic/request_timeout_s` —— 那两个参数是我早先在**别人的文件**里加的，换底只搬自己的模块后就变成每题 `TypeError`，而失败映射的兜底把它报成 **6 次 `PROVIDER_BAD_RESPONSE`**：**我们自己的 bug 穿了 provider 的制服**。现在不改别人的签名（时限在"要不要问下一题"这一层生效），本地异常改抛 `PreparationLocalFailure`，不再冒充来源结论。
+2. 我在准备后又调一次 `_survey` 当"保险"，**不免费**：一条门正是把跨进程放弃竞态注入挂在这个函数上，第二次调用对着已非 RUNNING 的行 `mark`，于是**它自己的 SETUP 断言在 worker 里炸**，作业落成 `FAILED`。改成只有本次真写了行才重量。（单跑复现：修后门 2 由红转绿。）
+
+**门数（同一命令、同一解释器 3.12.14，13 文件）**：把我代码摘掉 ⇒ **6 failed**；带上 ⇒ **8 failed**。+2 是：`the_terminal_write_too`（等 15.0s 收尾，而真准备要 15–100s）、`nothing_leaves_the_process`（禁止本准备必须做的那次出网）。**两条都不是靠改门修掉的**：一条是时限预算假设，一条是"决定面不得出网"与"作业必须真抓 provider"的对撞（`g8a_default_suite_contains_no_live_provider_calls` 在基线就已红，说明这条对撞主线自己已经写成了要求）。`nothing_leaves…` 在不同运行组合下会翻，我按冻结口径记作**随组合翻动、未追到根因**，不当结论用。我自己的 8 条 lab 门 2.93s 全绿、一次不出网。
+
+**下一步（不再扩面）**：准备格在新底已成立；要继续只剩两条路，且都要别人点头——① 我那条"精确名相等门"的递单（已在账本，归 C）；② "没有 `opening_hours` 的真实地点要不要以**具名假设**进入日程"（这是产品口径，不是我能替 `services.py` 决定的）。台子留着：`lab_h5_mission_a.db` 与两份证据 `backend/review/lab_h5_mission_a.py|.json`。**lab 结论不当权威线验收证据；不整枝合并。**
 ### 🧾 (SESSION=5ea3bedc) LAB 递单提案 → 归 **C `8c66aa92`**（请你编号；与 ORD-0197 同一条腿、与未 CLAIMED 的 ORD-0213 同文件）@16:1x
 
 **题目建议**：`目的地裁定层用"字符串相等"复核 B 已经判过的 MATCH，官方全名被答成"没这个地方"`（**准备/水合那一格因此在可见产品里根本不可达** —— 这是它该排队的理由，不是美学问题）。
@@ -24313,3 +24444,25 @@ Refreshed: 2026-09-21 15:0x (+08:00，`date` 实读) · LAST_ARBITER_COMMENT_ID 
 量具按第 9/10 条改过：收据现在带 `run_shape`＋`target_node_ids`＋命令面，节点未被选中记 `node_not_selected`、**没有报告记 `no_report`，两者都不算绿**（这一条是"容器 exit 不能替目标节点定性"的下一层）。
 一页诊断：`D:\moodle\_qoder_harness_revival_20260921\lab\evidence\ORD_0218_G5_DIAGNOSIS.md`；建议单在诊断第 4 节，**ORD 号留给你签**。
 合规：探针未调 `demo/reset`（测试 setup 调，我改走进程内 `seed_demo`，只写我自己的临时库）；`AI=off`、两个 key 清空、0 端口、0 provider 出网、未碰 `_live.db`/`_preview.db`、未 deselect/skip/改断言；`SHA 56d20ec` 与 `50b35e0` 之间 **backend 文件差异 0**（`git diff --name-only` 亲量）⇒ 本诊断在最新尖同样成立。
+
+### d291c9dc · **把我自己那条门的「单次绿」按到冻结的 8/9/10 条上重跑** 2026-09-22T18:46+08（我名下无新单，包工头让我用 30 进程那套量具去别的门上）→ **`STABLE_GREEN(522c414)`：10 个独立进程 / 10 个各不相同的一次性库 / 全部 RC=0 / 1152 格内容 digest 逐次相同 `c3fcd91aa6f81be5`**；顺带答了包工头 ② 那句"**红集合是否仍要在 `2c2621e` 上重量**"的同族问题——**`522c414` 对我 `e0fc697` 基线 `--check` 仍 IDENTICAL / 0 changed items / RC=0**，尽管这中间 **`backend/app/anywhere_capability.py` 确实改过**（`git diff --name-only 56d20ec HEAD -- backend` 亲量），**证据形状一格没动**
+
+**⑴ 为什么这条欠着**：我 09-21 交 ORD-0153 时写的是「同树 `--check` RC=0 IDENTICAL」——**那是 1 次运行**。按冻结第 8 条"单次 GREEN 只是观察，不是结案"，那条门当时只完成了一半。这次补齐形状：
+`run_shape`（第 9 条）**＝独立门进程 × 一只 `git archive` 导出的单一尖，进程内 seed、零 HTTP、零端口、零 provider、demo_mode=off**；10 次连续、每次一个机会、**无重试无 sleep**；每次一个自己的 SQLite 文件（`--run-tag r1..r10`）。
+
+**⑵ 修掉量具自身两个洞（不修这条 streak 就是假的）**
+- **第 7 条不满足**：门原来把库与输出都按 `evidence_gate_{head}` 命名 ⇒ **同一尖两次运行共用一个库、且后一次覆盖前一次的 JSON**（我 16:1x 已经因同名覆盖自首过一次，这次是同一族）。现加 `--run-tag`；本 streak 复验 **`distinct_db_paths=10`、`shared_db_path=false`**。
+- **一列假读数**：我第一版自测驱动数 `cell["blocked"]`——**门从来不写这个键**（格子上是 `passed`），于是每行都会报 `blocked=0`，而同一份 summary 写着 320 ⇒ **典型的「反布尔读反方向」**。改成 `passed is False` 并加一条 `blocked_column_matches_summary` 自检：现在 10/10 次都是 `320 == 320 = true`。
+
+**⑶ digest 有没有牙（不验就等于「10 次都一样」是我说了算）**：对同一份 1152 格表做定向破坏，逐个看 digest 变不变——
+`cell.passed 翻转` / `cell.codes 改名` / `删掉一格(→1151)` / `summary.per_family_shape[family/shape].cells 16→17` / `summary.family_rollup 任一值` / `summary.cells_blocked 320→321` / `promotion_guard 某条 verdict 翻转` / `summary.places 16→15` ⇒ **8/8 全部改变 digest**；未改动的深拷贝 **不变**；**Sep-15 旧树 digest=`e12ee67766194ce1`（80/576）与新树不同**。
+⚠ 我自己在这一步先写错过两个对照：**CONTROL-D 第一版改的是原表、比的却是改动前的副本 ⇒ 假「不变」**；**CONTROL-I 用 `r['cells'][:1].__setitem__`（切片是新列表）根本没写回 ⇒ 假阴性**。两个都是我的控件错、不是门的错，改对后如上。写下来是因为**「digest 相同」这句话的值，取决于破坏对照做过没有**。
+
+**⑷ 这条 streak 证成什么、不证成什么（第 8 条要求我把边界写清）**
+✅ 证成：**可复跑性**（同 SHA 十个独立进程给同一张表）、**库路径纪律**（十库各异、跑后即删）、**RC 语义稳定**（`--check` 对基线十次都 RC=0）。
+❌ 不证成：**这张表是对的**——判定「有没有牙」靠的是 09-21 那份 `harness_promotion_killtest.py`（naive mapper 一接上去立刻 3 条 VIOLATION）和换树时 RC=3 的那一枪；也**不改变** 13 族里仍有 **6 族 `NOT_EXERCISED` / 3 族 `FIXTURE_LIMITED`** 这个覆盖率事实——**streak 只会把同一个洞重复十遍**。ORD-0160 ③ 仍在 PARKED 等 ORD-0155 的映射层。
+
+**⑸ 顺手一条引用规则给包工头**：`56d20ec → 522c414` 之间 **backend 只差 `anywhere_capability.py` 一个文件**，而它正是我这扇门的读对象；如果哪天 `--check` 报 RC≠0，**先分清是「产品真值变了」还是「我的措辞/形状表跟不上了」**——两种都长同一个样。这条判据我 09-21 用过一次（打 Sep-15 树 RC=3 / 73 组变化），现在写进门自己的收据里。
+
+**六要素**：`SHA 522c4143…`（`git log -1` 实读，18:32）｜`树 lab\snap_522c414\`（350 文件）｜`解释器 D:\moodle\CityNexus\.venv\Scripts\python.exe` 3.12.14｜`命令 python lab/tools/harness_evidence_gate.py --export lab/snap_522c414 --head 522c414 --run-tag rN --baseline lab/evidence/evidence_gate_e0fc697.json --check`（N=1..10，由 `lab\tools\harness_gate_streak_selftest.py` 顺序起停）｜`每 run 收据 run_index/exit_code/绝对 db 路径/cells=1152/blocked=320/digest/check 行`｜`工件 lab\evidence\gate_selfstreak_522c414_10r_1843.json` ＋ `evidence_gate_522c414_r[1..10].json` ＋ 破坏对照 `lab\tools\digest_teeth_check.py`。
+**合规与收尾**：0 端口、0 HTTP、0 provider 出网（两 key 清空）、**未发 `demo/reset`**（门走进程内 `seed_demo`）、未碰 `_live.db`/`_preview.db`、未写权威树与 `CityNexus\**`（只 `git archive` 单向导出）；**未跑突变、未放宽任何断言、未 deselect**；十个一次性库跑完即删（复验 `_db/evidence_gate_522c414_r*` 剩 0）。
