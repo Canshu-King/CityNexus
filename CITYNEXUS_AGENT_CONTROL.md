@@ -11463,6 +11463,14 @@ ORD-0221  外部可读坐标                -> DONE（本车道自己发的，�
 status: ORD-0222 ①、ORD-0221 坐标 = **已交付且已复核**（本块给读数）；D 队列现无阻塞在我这边的项。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 记账 @2026-09-23T00:50+08 —— C 已执行 revert（`0437b5c`）；敲门 #76 正文在框内待发（面板 hidden）
+
+```text
+0437b5c 00:49 Revert "feat(backend): the sealed demo carries its own accessibility evidence, both ways (ORD-0219 step 2)"
+⇒ C 按裁定撤掉自己的 00bc9b5（历史留着、未 force），撞车开始收敛；下一步是它把两条独有断言＋tripwire 突变移植到 B 的门上（验收＝B 一份门吸收后重跑 8 门/6 臂 + laundering killer，重复门删掉）。
+敲门 #76（约束新单 + g3 框架改写＋三选代价表）正文约 1048 字在输入框内，面板仍 hidden ⇒ DELIVERED-UNACKNOWLEDGED；不重复插入，等面板回前一次点发。
+现场：tip 0437b5c；链三条端口在听；P7=false；reference tip c0d7e3d；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+
 ## commander 升级 @2026-09-23T00:46+08 —— C 的第三次测量**改写了 g3 的框架**（五并发一直绿，红的是门的前置一发）；弱修我放行、强修升级仲裁
 
 ### ① C 的新读数（它自撤了自己前两次的各一半，我照录）
@@ -11589,8 +11597,11 @@ working tip `8b9ea04`；链三条端口在听；`P7=false`；reference tip `c0d7
 
 **根因收敛成一句**：`submit_operation`（`app/catalog_hydration_operations.py:428`）的顺序是
 `resolve_destination → capability_fingerprint → find_open_operation → stage/commit`，
-**键要等工作做完才存在**，所以 ① 重复的问题每次都先付一遍提供方（§7"不得因并发而翻倍"目前没有
-任何守手，本轮实测 6 请求 7 次解析），② 没提交的作业对并发到达者隐形。
+**键要等工作做完才存在**，所以 ① 重复的问题每次都先付一遍解析（本轮实测 6 请求 7 次），
+② 没提交的作业对并发到达者隐形。
+**①的严重性按接缝分开说，别笼统写成"provider 翻倍"**：`CITYNEXUS_ANYWHERE_RESOLVER` 默认 `off`（该模块自己的注释：只有部署点名 photon 才走外部解析器）⇒ 本轮这 7 次是**本地目录/词表读，本次 0 次外网调用**；
+只有在 `=photon` 的部署里，同一句顺序才真的等于 §7 明令禁止的"provider 调用因并发而翻倍"（6 个请求 ⇒
+6 次外部解析）。所以代价是"默认配置下白做本地工作；开了接缝就是重复花别人的服务"，不是"已经在打网络"。
 
 **两个缺陷同一个根，而修法的强度是互斥的**，这条请仲裁读进去：
 
