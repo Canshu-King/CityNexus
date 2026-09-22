@@ -1,0 +1,209 @@
+{
+ "measured_at": {
+  "db": "sqlite:///D:/moodle/_qoder_spike_20260921/q219b_handoff.db",
+  "tree_commit": "a96fabf"
+ },
+ "endpoint": {
+  "method": "GET",
+  "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed",
+  "query": {
+   "limit": 200
+  },
+  "already_called_by_frontend": [
+   "frontend/src/api/citynexus.ts:855 getAgentFeed",
+   "frontend/src/main.tsx:213 (journey 载入时的 Promise.all)",
+   "frontend/src/main.tsx:336 refreshAuthoritativeFeed -> setAgentFeed(feed.events)"
+  ]
+ },
+ "state_1_hard_stroller_on_file": {
+  "capability_rows": [
+   {
+    "code": "STROLLER",
+    "severity": "HARD"
+   }
+  ],
+  "plans_generate_status": 201,
+  "candidates_returned": 2,
+  "rejection_event_count": 1,
+  "envelope_keys": [
+   "actor_id",
+   "actor_type",
+   "decision",
+   "entity_id",
+   "entity_type",
+   "event_type",
+   "facts",
+   "id",
+   "journey_id",
+   "proposal_id",
+   "reason_codes",
+   "source",
+   "summary",
+   "timestamp",
+   "tool",
+   "trace_id",
+   "type"
+  ],
+  "envelope_field_types_and_samples": {
+   "actor_id": {
+    "type": "NoneType",
+    "sample": null
+   },
+   "actor_type": {
+    "type": "str",
+    "sample": "system"
+   },
+   "decision": {
+    "type": "NoneType",
+    "sample": null
+   },
+   "entity_id": {
+    "type": "str",
+    "sample": "22222222-2222-4222-8222-222222222222"
+   },
+   "entity_type": {
+    "type": "str",
+    "sample": "Journey"
+   },
+   "event_type": {
+    "type": "str",
+    "sample": "plans.candidate_rejected"
+   },
+   "facts": {
+    "type": "dict",
+    "sample": {
+     "reason_codes": [
+      "CANDIDATE_REJECTED_BY_FEASIBILITY_GATE"
+     ],
+     "summary": "candidate dropped before persistence: STROLLER_ACCESS_UNAVAILABLE:place-tech-art",
+     "failures": [
+      "STROLLER_ACCESS_UNAVAILABLE:place-tech-art"
+     ],
+     "hard_rule_codes": [
+      "BUDGET_MAX",
+      "JOURNEY_END_BY",
+      "STROLLER"
+     ],
+     "candidate_sequence": 0,
+     "stops": [
+      "place-old-town",
+      "place-riverside-museum",
+      "place-food-hall",
+      "place-tech-art",
+      "place-river-cruise",
+      "place-skyline-dinner"
+     ]
+    }
+   },
+   "id": {
+    "type": "str",
+    "sample": "79dd1c84-7329-46bc-8fe0-71b92c9e0a28"
+   },
+   "journey_id": {
+    "type": "str",
+    "sample": "22222222-2222-4222-8222-222222222222"
+   },
+   "proposal_id": {
+    "type": "NoneType",
+    "sample": null
+   },
+   "reason_codes": {
+    "type": "list",
+    "sample": [
+     "CANDIDATE_REJECTED_BY_FEASIBILITY_GATE"
+    ]
+   },
+   "source": {
+    "type": "str",
+    "sample": "audit_log"
+   },
+   "summary": {
+    "type": "str",
+    "sample": "candidate dropped before persistence: STROLLER_ACCESS_UNAVAILABLE:place-tech-art"
+   },
+   "timestamp": {
+    "type": "str",
+    "sample": "2026-09-22T18:10:20.570399+00:00"
+   },
+   "tool": {
+    "type": "NoneType",
+    "sample": null
+   },
+   "trace_id": {
+    "type": "str",
+    "sample": "c32b8383-d8df-4c5d-88d2-37e0531b50b6"
+   },
+   "type": {
+    "type": "str",
+    "sample": "plans.candidate_rejected"
+   }
+  },
+  "facts_keys": [
+   "candidate_sequence",
+   "failures",
+   "hard_rule_codes",
+   "reason_codes",
+   "stops",
+   "summary"
+  ],
+  "reason_codes_verbatim": [
+   "CANDIDATE_REJECTED_BY_FEASIBILITY_GATE"
+  ],
+  "failures_verbatim": [
+   "STROLLER_ACCESS_UNAVAILABLE:place-tech-art"
+  ],
+  "hard_rule_codes_verbatim": [
+   "BUDGET_MAX",
+   "JOURNEY_END_BY",
+   "STROLLER"
+  ],
+  "named_place_field": "facts.stops[] （place id）与 facts.failures[] 里的 \"<CODE>:<place_id>\" 串"
+ },
+ "state_2_nothing_asserted": {
+  "plans_generate_status": 201,
+  "candidates_returned": 3,
+  "rejection_event_count": 0,
+  "first_envelope_if_any": null,
+  "response_top_level_keys": [
+   "events",
+   "journey_id",
+   "source"
+  ],
+  "events_len_in_same_call": 1
+ },
+ "place_id_to_name_join": {
+  "route": "GET /api/v1/places?city_code=CNX-DEMO",
+  "already_in_frontend_state": "listPlaces 在 main.tsx:212 同一批 Promise.all 里",
+  "sample_stops_resolved": {
+   "place-old-town": {
+    "name": "Old Town Gate",
+    "keys_present": [
+     "category",
+     "city_code",
+     "id",
+     "location",
+     "name",
+     "tags"
+    ]
+   },
+   "place-riverside-museum": {
+    "name": "Riverside Museum",
+    "keys_present": [
+     "category",
+     "city_code",
+     "id",
+     "location",
+     "name",
+     "tags"
+    ]
+   }
+  },
+  "unresolved_ids": []
+ },
+ "caveats_from_measurement": {
+  "candidate_sequence": "值是生成时模板序号（本例读到 0），不是稳定 id：别拿它当 key 去 diff 两次请求",
+  "summary_is_prose": "facts.summary 是拼接句，含失败原文；要图标化请读 facts.failures 的 \"CODE:place_id\" 结构，不要 parse summary",
+  "no_trace_field_for_ui": "envelope 带 trace_id（每次写新生成），不能当幂等键",
+  "event_type_is_verbatim_action": "投影里走的是 else 分支（event_type == action 名），所以前端认这个字符串就够：plans.candidate_rejected"
+ }
+}
