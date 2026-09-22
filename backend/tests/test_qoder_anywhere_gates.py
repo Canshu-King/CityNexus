@@ -237,6 +237,19 @@ from app.db.session import SessionLocal
 from sqlalchemy import delete, select, text
 
 
+def _own_question(tag: str) -> str:
+    """A per-door question, so no door measures another door's leftover worker.
+
+    Still an *unnamed* destination (the resolver knows no place by this name), so the code path under
+    test is unchanged; the suffix survives `_normalise`, so each door really does get its own
+    fingerprint. Without this, the five g3 doors share one row set and a worker released by door N is
+    still running inside door N+1 (measured: mutant Y1a reddened `test_g3e_…` only in the combined
+    run shape, never when that door ran alone).
+    """
+
+    return f"{UNSEEN_COUNTY}{tag}"
+
+
 def _pending_fingerprint(query: str) -> str:
     from app.anywhere_capability import pending_request_fingerprint
 
@@ -289,7 +302,8 @@ def test_g3_concurrent_open_generation_five_callers_share_one_operation(monkeypa
 
     import app.catalog_hydration_operations as operations
 
-    fingerprint = _pending_fingerprint(UNSEEN_COUNTY)
+    question = _own_question("门A")
+    fingerprint = _pending_fingerprint(question)
     _clear_operations_for(fingerprint)
 
     worker_started = threading.Event()
@@ -309,7 +323,7 @@ def test_g3_concurrent_open_generation_five_callers_share_one_operation(monkeypa
 
     def caller(index: int) -> None:
         gate.wait()
-        response = client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY})
+        response = client.post(HYDRATIONS, json={"query": question})
         try:
             body = response.json()
         except Exception:  # noqa: BLE001
@@ -397,7 +411,8 @@ def test_g3b_open_window_control_without_any_worker_dispatch(monkeypatch) -> Non
 
     import app.catalog_hydration_operations as operations
 
-    fingerprint = _pending_fingerprint(UNSEEN_COUNTY)
+    question = _own_question("门B")
+    fingerprint = _pending_fingerprint(question)
     _clear_operations_for(fingerprint)
 
     dispatches: list[str] = []
@@ -417,7 +432,7 @@ def test_g3b_open_window_control_without_any_worker_dispatch(monkeypatch) -> Non
         gate.wait()
         with SessionLocal() as session:
             row, reused = operations.submit_operation(
-                session, UNSEEN_COUNTY, start_worker=False
+                session, question, start_worker=False
             )
             outcome = (index, str(row.id), bool(reused))
         with collect:
@@ -460,12 +475,13 @@ def test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse() -> 
 
     import app.catalog_hydration_operations as operations
 
-    fingerprint = _pending_fingerprint(UNSEEN_COUNTY)
+    question = _own_question("门C")
+    fingerprint = _pending_fingerprint(question)
     _clear_operations_for(fingerprint)
 
     with SessionLocal() as session:
         first, first_reused = operations.submit_operation(
-            session, UNSEEN_COUNTY, start_worker=False
+            session, question, start_worker=False
         )
         a_id, a_status = str(first.id), str(first.status)
     assert first_reused is False and a_status == "QUEUED", (
@@ -484,7 +500,7 @@ def test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse() -> 
     then = time.monotonic()
     with SessionLocal() as session:
         second, second_reused = operations.submit_operation(
-            session, UNSEEN_COUNTY, start_worker=False
+            session, question, start_worker=False
         )
         b_id, b_status = str(second.id), str(second.status)
     waited_ms = round((time.monotonic() - then) * 1000, 3)
@@ -506,41 +522,39 @@ def test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse() -> 
     )
 
 
-def test_g3e_admission_race_five_callers_resolve_before_any_commit(monkeypatch) -> None:
-    """The strict admission window: nobody may commit until all five have finished resolving.
+def test_g3e_admission_race_no_caller_may_see_another_before_commit(monkeypatch) -> None:
+    """The strict admission window: nobody can see an open row at decision time, so only the durable layer can save them.
 
-    `test_g3_concurrent_open_generation_…` releases five callers together, which is real but not
-    exhaustive - measured twice (`f92f9e9`, `b2c6153`, differing only by a comment), the reverse
-    mutation `Y3` reddened 4/4 identity doors once and 3/4 the other time: with a favourable
-    interleaving the later callers are answered from an already-committed row and never reach the
-    durable conflict. A mutation that only sometimes reddens a door is not that door's mutation, so
-    this door *forces* the unlucky interleaving: the resolution wrapper parks every caller until all
-    five have resolved, so no row can be committed while the others are still looking.
+    Five callers each get their first two `find_open_operation` answers replaced by "nothing open" -
+    which is precisely what the earliest interleaving looks like to a caller that has to decide alone.
+    The third and later calls are NOT blinded, and that is the point: the only remaining way to hand
+    five callers one operation is the partial unique index rejecting the losers plus the product's own
+    read-back inside the `IntegrityError` handler. So this door measures the mechanism, not a lucky
+    ordering, and its reverse mutation is expected to be deterministic (see
+    `ord213/probe_y3_determinism_*.json`).
 
-    What is then asserted is the same product promise - one operation for five callers - but under
-    the interleaving where only the durable layer (partial unique index + the loser reading back the
-    winner's id) can possibly deliver it.
-
-    What is deliberately NOT claimed: no counter here observes which of the five collided at the
-    index, because the product does not expose that (and inventing one for a test would be a product
-    change). The door's strength is therefore measured, not asserted from inside: `Y3` must redden it
-    in every batch (see `mutate_ord0224_convergence_mechanism*.evidence.json`).
+    What this door does not claim: it cannot observe which caller collided (the product exposes no such
+    counter, and adding one for a test would be a product change). It also does not replace
+    `test_g3_concurrent_open_generation_…`, which measures the honest-but-timing-dependent version.
     """
 
     import app.catalog_hydration_operations as operations
 
-    fingerprint = _pending_fingerprint(UNSEEN_COUNTY)
+    question = _own_question("门E")
+    fingerprint = _pending_fingerprint(question)
     _clear_operations_for(fingerprint)
 
-    resolved = threading.Barrier(5)
-    original_resolve = operations.resolve_destination
+    original_find = operations.find_open_operation
+    blinds = threading.local()
 
-    def hold_after_resolution(session, query):
-        outcome = original_resolve(session, query)
-        resolved.wait(10)  # all five finish resolving before any of them may commit
-        return outcome
+    def blind_first_two_lookups(session, key):
+        count = getattr(blinds, "lookups", 0) + 1
+        blinds.lookups = count
+        if count <= 2:  # the pre-resolution and post-resolution reads decide blindly
+            return None
+        return original_find(session, key)
 
-    monkeypatch.setattr(operations, "resolve_destination", hold_after_resolution)
+    monkeypatch.setattr(operations, "find_open_operation", blind_first_two_lookups)
 
     gate = threading.Barrier(5)
     results: list[dict] = []
@@ -549,7 +563,7 @@ def test_g3e_admission_race_five_callers_resolve_before_any_commit(monkeypatch) 
     def caller(index: int) -> None:
         gate.wait()
         with SessionLocal() as session:
-            row, reused = operations.submit_operation(session, UNSEEN_COUNTY, start_worker=False)
+            row, reused = operations.submit_operation(session, question, start_worker=False)
             outcome = {"index": index, "operation_id": str(row.id), "reused": bool(reused),
                        "status": str(row.status)}
         with collect:
@@ -561,19 +575,22 @@ def test_g3e_admission_race_five_callers_resolve_before_any_commit(monkeypatch) 
     for thread in threads:
         thread.join(timeout=30)
 
-    assert len(results) == 5, f"期望：五发都返回；实际 {len(results)}（卡住就是仪器问题，不是产品结论）"
+    assert len(results) == 5, (
+        f"期望：五发都返回（读被遮蔽不等于谁被卡住）；实际只有 {len(results)} 发，"
+        f"仍活着={[t.name for t in threads if t.is_alive()]}"
+    )
     ids = {item["operation_id"] for item in results}
     assert len(ids) == 1, (
-        f"期望：五发全部解完之后才提交，仍然只有一枚作业（durable 层必须兜住）；实际 {len(ids)} 枚："
-        f"逐请求={sorted((item['index'], item['operation_id'][:8], item['reused']) for item in results)}"
+        f"期望：每发都在看不见别人的情况下决定，最后仍只有一枚作业（只有 durable 层做得到）；实际 "
+        f"{len(ids)} 枚：逐请求={sorted((i['index'], i['operation_id'][:8], i['reused']) for i in results)}"
     )
     winners = [item for item in results if not item["reused"]]
     assert len(winners) == 1, (
-        f"期望：恰好一个 winner、四个 reuse（败者必须上报赢家的 id，而不是各自宣称开始了）；实际 "
-        f"reused=False 有 {len(winners)} 个，逐请求 reused={sorted(item['reused'] for item in results)}"
+        f"期望：恰好一个 winner、四个 reuse（败者必须回读并上报赢家的 id）；实际 reused=False 有 "
+        f"{len(winners)} 个，逐请求 reused={sorted(i['reused'] for i in results)}"
     )
     rows = _rows_for(fingerprint)
-    assert len(rows) == 1, f"期望：库里 1 行；实际 {rows}"
+    assert len(rows) == 1, f"期望：库里只有 1 行；实际 {rows}"
     assert rows[0][1] == "QUEUED", f"期望：那一行仍是开放代次；实际 {rows[0][1]}"
 
 
