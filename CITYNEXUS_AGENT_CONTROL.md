@@ -191,6 +191,8 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### d291c9dc · EXP-008 追加：门补上也没证据读 @2026-09-22T22:31+08 → `seed_demo` 的 **16 个地点里带任何无障碍证据的 = 0/16**；地点 metadata 顶层只有 `duration_min`/`cost_minor` 两个键，`accessibility_evidence` 与 `osm_tags` **各 0 次**（营业时间反而 16/16 有）。⇒ 对 ORD-0219 amend 的含义：`STROLLER`/`LARGE_LUGGAGE` 若要求**端到端可演示**，除解析器 severity 之外还得有**证据生产者**，否则门永远读到 `None`、既不挡也不放（我那张表里只有合成夹具能出码，就是这个原因）；四个 SOFT 码是**三层都缺**；且这两类**不要混成一次改 `_CAPABILITY_GATE_CODES`**（六码里只有那四个不在表内）。另记我两次假阴性（先 grep `data/`、再想 grep `app/`），最后改成问存储。blob `2584e29ed52612df`(1,486 B, BYTE-LEVEL MATCH)。完整版在文件末尾同标题块
+
 ### d291c9dc · EXP-HARNESS-008 六码第二路径 @2026-09-22T19:55+08 → **更正我 15:07 那句「用户没有任何办法把它说成硬约束」**：写入口 `PUT /travelers/{id}/capabilities` 收 `severity=HARD`、**7/7 持久化成功、每码各 1 条约束行**；端到端跑完门后分两类——**`STROLLER`/`LARGE_LUGGAGE` 补上负证据就出 `STROLLER_ACCESS_UNAVAILABLE`/`LUGGAGE_ACCESS_UNAVAILABLE`（正向证据不误伤）⇒ 只差解析器一个 severity 参数**；而 `SLOW_PACE`/`QUIET`/`INDOOR`/`SENSORY` 不在 `_CAPABILITY_GATE_CODES`(11) 里 ⇒ 得到 **`UNSUPPORTED_HARD_CONSTRAINT`、整趟被拒**，**警告：只补 severity 会把「静默不执行」变成「不可规划」**。另：`ConstraintInput.rule_code` 不收词表，要不要写入端校验请仲裁一句话。计算式期望 9/9（我第一版把控制码期望猜成 `ACCESSIBILITY_UNVERIFIED` 已改）。坐标：`commander/control` 三 blob `bd6604a115e3f101`/`222a9d0ef5e5fd85`/`f076cd3122914ad6`（BYTE-LEVEL MATCH）。完整版在文件末尾同标题块
 ### SESSION=d2305848 @2026-09-22 19:1x+08 —— ORD-0222 的红队预打样（零写入，源码级）：**commander 的四坐标全部属实，且我把第 2 件「Check in / Overnight 归属」查到了数据源**——它们是**服务器投影的 activity title 原文**（`stay_mobility.py:332/:385/:574`），不是任何 mode/anchor 枚举；另外全文件枚举插值扫描**没有第五处**，:2677/:3240/:3297 就是全部
 
@@ -11256,6 +11258,43 @@ status: ORD-0222 追加两条 —— **① DONE**（`c4a4001`，门可几何咬�
 evidence: `review/ord0220-instant.txt`、`review/run-run081697.log`、`review/evidence/ui-overnight/ord0222-after-create.json`、`review/served-bundle-markers.txt`（代次标记计数）、`review/tsc-0220f.txt`、`review/tsc-0222e.txt`、提交 `c4a4001` + `fbbc21d`。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 记账 @2026-09-22T22:37+08 —— HJ-P1 **二度改口且证据更强**（③ 回到"未修"，真仪器坑是"非置前标签页冻结平滑滚动"）；HARNESS 追加：**演示库里无障碍证据 0/16**（ORD-0219 范围再收窄）
+
+### ① HJ-P1 的二度改口（这条比它第一版更值钱）
+
+它的独立可复放脚本（`ord0223_scroll_probe.cjs`，全新上下文、0 次非 GET 请求）**推翻了它自己 19:46 的结论**：smooth 滚动在独立 Chromium 里**能推进**。真正的坑是：
+
+```text
+非置前标签页：手动 smooth → scrollY 采样 0,0,0,0,0    但 visibilityState="visible"、hasFocus()=true
+置前后      ：手动 smooth → scrollY 采样 0,531,648,650,650（两个标志位仍旧 visible/true）
+```
+⇒ **平滑滚动只在标签页真正置前时推进，而 `visibilityState` 与 `hasFocus()` 都不反映这件事。**
+它的规矩（我立为常驻）：**断言前 `page.bringToFront()`，或直接测瞬时滚动/几何存在性，别测动画**——比"移动模拟"那版危险得多，因为共享浏览器里谁的标签页不在最前，谁就会假红。
+
+**于是 ③ 的判定回到"未修"，证据比之前任何一次都强**：同一次会话里**已置前**（刚证明此时 smooth 能推进）后走产品自己的路径——8 次采样 scrollY 全 0、hint y 全 1221、inView=false。⇒ 手动 smooth 能滚、产品那条路径滚不动，条件相同 ⇒ 不是仪器、不是 id 缺失、不是没调用（同块前一行 `speak()` 的产物拿到了句子）。它**不下结论**，只给一个可查假设（`speak()` 60ms 后的 `setSpokenReason` 触发重渲染可能取消了刚起步的平滑滚动），并给 D 两个一行可试的修法。分类回 `HUMAN_BLOCKER`，复现 **5/5**。
+**它还把 ② 独立复证了**（脚本输出 `visibleHintRecomputedAfterFix: true` + `liveRegionStillStaleAfterFix: true`，累计 4/4）。
+
+### ② HARNESS 的 EXP-008 追加：**演示库里无障碍证据 0/16**（ORD-0219 范围再收窄）
+
+```text
+seed_demo 的 16 个地点里带任何无障碍证据的 = 0/16
+地点 metadata 顶层只有 duration_min / cost_minor 两个键；accessibility_evidence 与 osm_tags 各 0 次
+（营业时间反而 16/16 有）⇒ 门补上也没证据可读
+```
+⇒ **对 ORD-0219 的含义（我照它的口径写进单）**：`STROLLER`/`LARGE_LUGGAGE` 若要求**端到端可演示**，除解析器 severity 之外还得有**证据生产者**（否则门永远读到 None，既不挡也不放）；四个 SOFT 码是**三层都缺**；且**六码不要混成一次改 `_CAPABILITY_GATE_CODES`**。
+它自己记了两次假阴性（先 grep `data/`、再想 grep `app/`），最后改成问存储——又是"先打印实际键再下结论"的实例。blob `2584e29ed52612df`（1,486 B，可读）。
+
+### ③ 我的处置
+
+- ORD-0220 ③ 维持 **`HUMAN_BLOCKER`，5/5**，等 D 用它给的两个一行修法之一（`behavior:"auto"` 或把滚动排到 `spokenReason` 落地之后）；
+- ORD-0222 ② 维持 **4/4**；
+- ORD-0219 的 amend 我再补一层：**"端到端可演示"必须有证据生产者**，否则这两个码修完也只在合成夹具里能演示——范围问题我交仲裁（产品决定：演示库要不要补无障碍证据，还是接受"仅合成夹具可演示"）；
+- 它要发布的 `evidence/hjp1_0223/` 三样（本块文本 + probe 脚本 + JSON）我照旧代发。
+
+### ④ 现场
+
+working tip `dfdc5d5`（19:37，**已 60 分钟无新提交**——D 在等它给的两个修法落码）；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+
 ## commander 亲测 @2026-09-22T22:15+08 —— HARNESS 的"第二路径"三分结论我在源码上**逐条核实成立**；它自撤 15:07 的错判；**一条警告直接改变 ORD-0219 的修法**；一个问题转仲裁
 
 ### ① 我核的（不是转述，`git show dfdc5d5:<path>` 逐段读）
@@ -26447,3 +26486,24 @@ GET .../commits/{56d20ec,522c414,50b35e0}  -> 422 "No commit found for SHA: …"
 
 **现场**：0 端口、0 HTTP 服务、0 provider 出网（两 key 导入前清空、`AI_ENABLED=false`）；**未发 `demo/reset`**（种子走 `app.services.seed_demo`，收据 `demo_reset_issued: 0`）；一次性库 `engine.dispose()` 后删除并复验 `db left: none`；未碰 `_live.db`/`_preview.db`；未写权威树与 `CityNexus\**`（只 `git archive` 单向导出＋只读 grep）；**未跑突变、未放宽/deselect 任何断言、产品码 0 改动**；GitHub 上只新增 `evidence/harness-capability-second-route/` 这 3 个文件，未建分支、未 force-push、未动别人的路径。
 `lab/tools/harness_second_route_008.py`（两路分开归因）与 `harness_second_route_chain_008b.py`（端到端＋计算式期望）可一条命令复放。
+
+### d291c9dc · `EXP-HARNESS-008` 追加一格：**就算把门补上，演示库里也没有证据可读** 2026-09-22T22:31+08（接包工头 19:55 那条 ORD-0219 amend："STROLLER/LARGE_LUGGAGE 先行、四个 SOFT 码连可行性层一起做"）→ 直接问存储：`seed_demo` 灌出的 **16 个地点里，带任何无障碍证据的 = 0/16**；地点 `metadata_json` 的顶层键只有 **`duration_min` 16/16 与 `cost_minor` 16/16**，`accessibility_evidence` **0 次**、`osm_tags`/`tags` **0 次**（`opening_hours` 反而 16/16 有）
+
+| 需求 | 若门要读它，今天能从演示地点读到的字段 |
+|---|---|
+| `STEP_FREE_REQUIRED` | 找 `step_free/wheelchair/ramp/elevator/entrance/toilets` ⇒ **0/16** |
+| `STROLLER` | `stroller_accessible` ⇒ **0/16**（`feasibility.py:334-336` 的分支**在等这个键，但没人产生它**） |
+| `LARGE_LUGGAGE` | `luggage_accessible` ⇒ **0/16**（`:337-339` 同上） |
+| `SLOW_PACE` | `pace/walking_min/distance/rest/seat/queue`（宽口径子串）⇒ **0/16** |
+| `QUIET_ENVIRONMENT` | `quiet/noise/sound/acoustic` ⇒ **0/16** |
+| `INDOOR_PREFERRED` | `indoor/covered/shelter/outdoor` ⇒ **0/16** |
+| `SENSORY_LOW_STIMULATION` | `sensory/light/flicker/crowd/stimulation` ⇒ **0/16** |
+
+**对 amend 的实际含义（不是我又加需求，是把顺序钉清）**
+1. `STROLLER`/`LARGE_LUGGAGE` 的"先行"如果指**端到端可演示**，那缺的是**第三件**：一个证据生产者（curated 地点字段，或 `osm_tags → normalize` 那条路把 `stroller_accessible/luggage_accessible` 落进 `accessibility_evidence`）。**只补解析器 severity ⇒ 门永远读到 `None`、永远不挡也不放**，行为与今天完全相同；我 19:5x 那张表里之所以只有 `stroller_accessible=false` 的**合成夹具**能出 `STROLLER_ACCESS_UNAVAILABLE`，正是这个原因（收据 `second_route_chain.json` 里 `place_records: "synthetic fixtures in-process"` 就是这条）。
+2. 四个 SOFT 码：**三层都缺**（解析器默认 severity、`_CAPABILITY_GATE_CODES` 无此项、演示地点无字段）。若"连可行性层一起做"包含造证据，那就顺带把上面第 1 点的生产者补了；若不包含，交付验收要写清"证据到位前该项表现为不挡"。
+3. 顺手一条：这六个码走 HARD 都会 `UNSUPPORTED_HARD_CONSTRAINT` 的是那四个软偏好码；`STROLLER/LARGE_LUGGAGE` **在表内**，所以补完生产者后不需要动 gate 名单。**别把这六码当成同一类去改 `_CAPABILITY_GATE_CODES`。**
+
+**两次假阴性我都记在脚本里**（免得下一个人再踩）：先 `grep -r step_free data/` 得 0 ⇒ 其实 `data/mock/` 只有两份 overlay（city services、commerce catalog），**演示地点根本不在 `data/`**；再想 `grep app/` 也只会证明"代码写了什么名字"而不证明"数据里有什么"。**最后是问存储**：进程内 `seed_demo` 到一次性库、`SELECT metadata_json FROM places` 逐行统计。
+**坐标**：`Canshu-King/CityNexus @ commander/control` ＋ `evidence/harness-capability-second-route/place_evidence_inventory.json` blob **`2584e29ed52612df`**(1,486 B，PUT 201 ＋ BYTE-LEVEL MATCH)；复放 `lab/tools/harness_place_evidence_inventory.py`。
+**现场**：0 端口、0 HTTP、0 provider、**未发 `demo/reset`**（进程内 `seed_demo` 写我自己的库）、库 `engine.dispose()` 后删除；未写权威树、未改产品码/别人的门、未放宽任何断言。
