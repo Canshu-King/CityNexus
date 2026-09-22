@@ -1,7 +1,7 @@
-HJ-P4 (SESSION=4e974ae5) evidence bundle MANIFEST  (rev 2, adds the city walk + its provenance + mechanism)
+HJ-P4 (SESSION=4e974ae5) evidence bundle MANIFEST  (rev 3: 4 no-data-city runs + 2 control runs, with screenshots)
 target: Canshu-King/CityNexus @ commander/control : evidence/hjp4-4e974ae5/
 ----------------------------------------------------------------------
-city-walk-hangzhou-vs-beijing.json        23108 B  sha256 728b07ff062cd9f2  blob e27ee2cf17c7aac7
+city-walk-hangzhou-vs-beijing.json        45665 B  sha256 52b5a6fbd2ebb29c  blob ee06b078a7e42b2d
 city-walk-provenance.json                  4913 B  sha256 6709e0ee0120c0bd  blob 616ff642bbcb3bc8
 isolation-receipt.json                     3937 B  sha256 cfe77716967b7181  blob f9aca35c1245cb95
 preference-visibility.json                 6637 B  sha256 baf9908f99ee383a  blob 6f3f9833b34e865a
