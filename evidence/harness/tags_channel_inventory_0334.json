@@ -1,0 +1,559 @@
+{
+ "generated_at": "2026-09-23T03:34:00+08:00",
+ "used_demo_reset": false,
+ "matcher_control": {
+  "checks": {
+   "dict and array shapes both counted": true,
+   "joined-feature evidence excludes r4 from tags-only": true,
+   "same-row column evidence excludes r3 but still counts it present": true,
+   "atmosphere-only row is counted in its own class": true,
+   "atmosphere row never enters the accessibility verdict": true,
+   "substring pass fires on the same data (a live second measure, not a dead one)": true,
+   "feature child join discovered": true
+  },
+  "passed": true,
+  "observed": {
+   "tags_only_accessibility": {
+    "wheelchair": 2,
+    "steps": 1
+   },
+   "tags_present_accessibility": {
+    "wheelchair": 3,
+    "steps": 2
+   },
+   "tags_only_atmosphere": {
+    "outdoor": 1,
+    "quiet": 1,
+    "culture": 1
+   },
+   "substring_hits_accessibility_family": {
+    "wheelchair": 3,
+    "step": 2
+   },
+   "feature_child_tables_discovered": [
+    {
+     "parent_table": "places",
+     "child_table": "place_accessibility_features",
+     "child_rows": 1,
+     "child_column": "place_id",
+     "parent_column": "id"
+    }
+   ]
+  }
+ },
+ "scanned_accessibility_keys": [
+  "wheelchair",
+  "steps",
+  "ramp",
+  "elevator",
+  "lift",
+  "braille",
+  "tactile_paving",
+  "blind",
+  "deaf",
+  "hearing",
+  "sensory",
+  "wheelchair_accessible",
+  "step_free",
+  "stroller_accessible"
+ ],
+ "scanned_atmosphere_keys": [
+  "outdoor",
+  "indoor",
+  "quiet",
+  "noise",
+  "capacity",
+  "culture",
+  "history",
+  "local_food",
+  "waterfront",
+  "art",
+  "scenic",
+  "view",
+  "relaxed",
+  "street",
+  "shopping",
+  "signature_dish",
+  "night_view",
+  "bars",
+  "vibe",
+  "atmosphere"
+ ],
+ "scanned_substrings": [
+  "wheelchair",
+  "step",
+  "stroller",
+  "luggage",
+  "ramp",
+  "elevator",
+  "lift",
+  "accessib",
+  "braille",
+  "sensory",
+  "toilet",
+  "rollator",
+  "mobility",
+  "disab",
+  "handicap",
+  "outdoor",
+  "indoor",
+  "quiet",
+  "vibe"
+ ],
+ "evidence_markers": [
+  "accessibility_evidence",
+  "step_free",
+  "stroller_accessible",
+  "luggage_accessible",
+  "wheelchair_access",
+  "accessible",
+  "features"
+ ],
+ "stores": {
+  "materialization_path_seed_demo": {
+   "store": {
+    "store_label": "seed_demo of snap_4d9ceae -> tagscan_54780.db",
+    "access_mode": "fixture created and written by seed_demo in this run; scanned through mode=ro + query_only=1",
+    "query_only_readback": 1,
+    "journal_mode": "wal",
+    "tables_scanned": 55,
+    "tags_columns_discovered": [
+     "places.tags_json",
+     "real_place_candidates.tags_json"
+    ],
+    "candidate_normalized_columns_discovered": [
+     "accommodation_offer_snapshots.evidence_json",
+     "activities.metadata_json",
+     "city_services.metadata_json",
+     "counterfactual_simulations.evidence_json",
+     "external_reservation_drafts.extracted_json",
+     "external_reservation_drafts.extraction_mode",
+     "guardian_runs.evidence_fingerprint",
+     "guardian_runs.evidence_json",
+     "impact_assessments.independent_evidence_count",
+     "mobility_facts.evidence_json",
+     "places.metadata_json",
+     "plan_versions.mobility_evidence_json",
+     "real_place_candidates.metadata_json",
+     "real_place_candidates.evidence_json",
+     "traveler_preference_evidence.evidence_type",
+     "traveler_preference_evidence.evidence_count",
+     "traveler_twin_snapshots.evidence_count",
+     "web_observations.evidence_fingerprint"
+    ],
+    "feature_child_tables_discovered": [],
+    "columns": [
+     {
+      "table": "places",
+      "tags_column": "tags_json",
+      "rows_scanned": 16,
+      "rows_with_nonempty_parseable_tags": 16,
+      "normalized_columns_read_on_row": [
+       "metadata_json"
+      ],
+      "normalized_feature_joins": [],
+      "rows_with_normalized_evidence": 3,
+      "tags_only_accessibility": {},
+      "tags_present_accessibility": {},
+      "tags_only_atmosphere": {
+       "outdoor": 6,
+       "culture": 5,
+       "history": 4,
+       "indoor": 5,
+       "local_food": 5,
+       "waterfront": 3,
+       "scenic": 1,
+       "view": 1,
+       "street": 1,
+       "shopping": 1,
+       "signature_dish": 1,
+       "night_view": 1,
+       "bars": 1
+      },
+      "tags_present_atmosphere": {
+       "outdoor": 7,
+       "culture": 7,
+       "history": 4,
+       "indoor": 7,
+       "local_food": 5,
+       "waterfront": 4,
+       "scenic": 1,
+       "view": 1,
+       "street": 1,
+       "shopping": 1,
+       "signature_dish": 1,
+       "night_view": 1,
+       "bars": 1,
+       "art": 1,
+       "relaxed": 1,
+       "quiet": 1
+      },
+      "substring_hits_accessibility_family": {},
+      "normalized_evidence_rows_named": [
+       {
+        "rowid": 4,
+        "pk": [
+         "place-tech-art"
+        ],
+        "marker_hits": [
+         {
+          "marker": "accessibility_evidence",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":80,\"cost_minor\":5000,\"accessibility_evidence\":{\"stroller_accessible\":false,\"luggage_accessible\":true,\"source_kind\":\"DEMO\",\"source\":\"data/mock/pl"
+         },
+         {
+          "marker": "stroller_accessible",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":80,\"cost_minor\":5000,\"accessibility_evidence\":{\"stroller_accessible\":false,\"luggage_accessible\":true,\"source_kind\":\"DEMO\",\"source\":\"data/mock/pl"
+         },
+         {
+          "marker": "luggage_accessible",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":80,\"cost_minor\":5000,\"accessibility_evidence\":{\"stroller_accessible\":false,\"luggage_accessible\":true,\"source_kind\":\"DEMO\",\"source\":\"data/mock/pl"
+         },
+         {
+          "marker": "accessible",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":80,\"cost_minor\":5000,\"accessibility_evidence\":{\"stroller_accessible\":false,\"luggage_accessible\":true,\"source_kind\":\"DEMO\",\"source\":\"data/mock/pl"
+         }
+        ],
+        "joined_feature_keys": []
+       },
+       {
+        "rowid": 7,
+        "pk": [
+         "place-city-park"
+        ],
+        "marker_hits": [
+         {
+          "marker": "accessibility_evidence",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":60,\"cost_minor\":0,\"accessibility_evidence\":{\"stroller_accessible\":true,\"luggage_accessible\":true,\"source_kind\":\"DEMO\",\"source\":\"data/mock/places"
+         },
+         {
+          "marker": "stroller_accessible",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":60,\"cost_minor\":0,\"accessibility_evidence\":{\"stroller_accessible\":true,\"luggage_accessible\":true,\"source_kind\":\"DEMO\",\"source\":\"data/mock/places"
+         },
+         {
+          "marker": "luggage_accessible",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":60,\"cost_minor\":0,\"accessibility_evidence\":{\"stroller_accessible\":true,\"luggage_accessible\":true,\"source_kind\":\"DEMO\",\"source\":\"data/mock/places"
+         },
+         {
+          "marker": "accessible",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":60,\"cost_minor\":0,\"accessibility_evidence\":{\"stroller_accessible\":true,\"luggage_accessible\":true,\"source_kind\":\"DEMO\",\"source\":\"data/mock/places"
+         }
+        ],
+        "joined_feature_keys": []
+       },
+       {
+        "rowid": 8,
+        "pk": [
+         "place-design-library"
+        ],
+        "marker_hits": [
+         {
+          "marker": "accessibility_evidence",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":60,\"cost_minor\":2000,\"accessibility_evidence\":{\"stroller_accessible\":true,\"luggage_accessible\":false,\"source_kind\":\"DEMO\",\"source\":\"data/mock/pl"
+         },
+         {
+          "marker": "stroller_accessible",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":60,\"cost_minor\":2000,\"accessibility_evidence\":{\"stroller_accessible\":true,\"luggage_accessible\":false,\"source_kind\":\"DEMO\",\"source\":\"data/mock/pl"
+         },
+         {
+          "marker": "luggage_accessible",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":60,\"cost_minor\":2000,\"accessibility_evidence\":{\"stroller_accessible\":true,\"luggage_accessible\":false,\"source_kind\":\"DEMO\",\"source\":\"data/mock/pl"
+         },
+         {
+          "marker": "accessible",
+          "column": "metadata_json",
+          "excerpt": "{\"duration_min\":60,\"cost_minor\":2000,\"accessibility_evidence\":{\"stroller_accessible\":true,\"luggage_accessible\":false,\"source_kind\":\"DEMO\",\"source\":\"data/mock/pl"
+         }
+        ],
+        "joined_feature_keys": []
+       }
+      ],
+      "substring_hits_atmosphere_family": {
+       "outdoor": 7,
+       "indoor": 7,
+       "quiet": 1
+      },
+      "raw_shapes_seen": {
+       "list": 16
+      },
+      "all_tags_tokens_seen": {
+       "culture": 7,
+       "outdoor": 7,
+       "indoor": 7,
+       "local_food": 5,
+       "history": 4,
+       "waterfront": 4,
+       "art": 1,
+       "scenic": 1,
+       "view": 1,
+       "relaxed": 1,
+       "quiet": 1,
+       "street": 1,
+       "shopping": 1,
+       "signature_dish": 1,
+       "night_view": 1,
+       "bars": 1
+      },
+      "raw_samples": [
+       {
+        "rowid": 1,
+        "tags_raw": "[\"culture\",\"history\",\"outdoor\"]"
+       },
+       {
+        "rowid": 2,
+        "tags_raw": "[\"culture\",\"indoor\"]"
+       },
+       {
+        "rowid": 3,
+        "tags_raw": "[\"local_food\",\"indoor\"]"
+       }
+      ]
+     },
+     {
+      "table": "real_place_candidates",
+      "tags_column": "tags_json",
+      "rows_scanned": 0,
+      "rows_with_nonempty_parseable_tags": 0,
+      "normalized_columns_read_on_row": [
+       "metadata_json",
+       "evidence_json"
+      ],
+      "normalized_feature_joins": [],
+      "rows_with_normalized_evidence": 0,
+      "tags_only_accessibility": {},
+      "tags_present_accessibility": {},
+      "tags_only_atmosphere": {},
+      "tags_present_atmosphere": {},
+      "substring_hits_accessibility_family": {},
+      "normalized_evidence_rows_named": [],
+      "substring_hits_atmosphere_family": {},
+      "raw_shapes_seen": {},
+      "all_tags_tokens_seen": {},
+      "raw_samples": []
+     }
+    ],
+    "accessibility_tags_only_row_hits": 0,
+    "per_key_accessibility": [],
+    "conclusion": "0 accessibility keys are stranded in tags on this store (denominator: tables/columns/rows/keys below); what the raw channel does hold is atmosphere adjectives, which are not accessibility facts"
+   }
+  },
+  "live_store": {
+   "stats_before": {
+    "_live.db": {
+     "size_bytes": 3710976,
+     "mtime": "2026-09-22T13:40:32+08:00"
+    },
+    "_live.db-shm": {
+     "size_bytes": 32768,
+     "mtime": "2026-09-22T22:51:42+08:00"
+    },
+    "_live.db-wal": {
+     "size_bytes": 4243632,
+     "mtime": "2026-09-22T22:51:42+08:00"
+    }
+   },
+   "write_probes": [
+    {
+     "sql": "UPDATE places SET updated_at = updated_at WHERE 1 = 0",
+     "refused": true,
+     "error": "OperationalError: attempt to write a readonly database",
+     "refused_because_readonly": true
+    },
+    {
+     "sql": "DELETE FROM places WHERE 1 = 0",
+     "refused": true,
+     "error": "OperationalError: attempt to write a readonly database",
+     "refused_because_readonly": true
+    },
+    {
+     "sql": "INSERT INTO places SELECT * FROM places WHERE 0",
+     "refused": true,
+     "error": "OperationalError: attempt to write a readonly database",
+     "refused_because_readonly": true
+    }
+   ],
+   "store": {
+    "store_label": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+    "access_mode": "mode=ro uri + PRAGMA query_only=1 (set and read back)",
+    "query_only_readback": 1,
+    "journal_mode": "wal",
+    "tables_scanned": 55,
+    "tags_columns_discovered": [
+     "places.tags_json",
+     "real_place_candidates.tags_json"
+    ],
+    "candidate_normalized_columns_discovered": [
+     "accommodation_offer_snapshots.evidence_json",
+     "activities.metadata_json",
+     "city_services.metadata_json",
+     "counterfactual_simulations.evidence_json",
+     "external_reservation_drafts.extracted_json",
+     "external_reservation_drafts.extraction_mode",
+     "guardian_runs.evidence_fingerprint",
+     "guardian_runs.evidence_json",
+     "impact_assessments.independent_evidence_count",
+     "mobility_facts.evidence_json",
+     "places.metadata_json",
+     "plan_versions.mobility_evidence_json",
+     "real_place_candidates.metadata_json",
+     "real_place_candidates.evidence_json",
+     "traveler_preference_evidence.evidence_type",
+     "traveler_preference_evidence.evidence_count",
+     "traveler_twin_snapshots.evidence_count",
+     "web_observations.evidence_fingerprint"
+    ],
+    "feature_child_tables_discovered": [],
+    "columns": [
+     {
+      "table": "places",
+      "tags_column": "tags_json",
+      "rows_scanned": 16,
+      "rows_with_nonempty_parseable_tags": 16,
+      "normalized_columns_read_on_row": [
+       "metadata_json"
+      ],
+      "normalized_feature_joins": [],
+      "rows_with_normalized_evidence": 0,
+      "tags_only_accessibility": {},
+      "tags_present_accessibility": {},
+      "tags_only_atmosphere": {
+       "outdoor": 7,
+       "culture": 7,
+       "history": 4,
+       "indoor": 7,
+       "local_food": 5,
+       "art": 1,
+       "waterfront": 4,
+       "scenic": 1,
+       "view": 1,
+       "relaxed": 1,
+       "quiet": 1,
+       "street": 1,
+       "shopping": 1,
+       "signature_dish": 1,
+       "night_view": 1,
+       "bars": 1
+      },
+      "tags_present_atmosphere": {
+       "outdoor": 7,
+       "culture": 7,
+       "history": 4,
+       "indoor": 7,
+       "local_food": 5,
+       "art": 1,
+       "waterfront": 4,
+       "scenic": 1,
+       "view": 1,
+       "relaxed": 1,
+       "quiet": 1,
+       "street": 1,
+       "shopping": 1,
+       "signature_dish": 1,
+       "night_view": 1,
+       "bars": 1
+      },
+      "substring_hits_accessibility_family": {},
+      "normalized_evidence_rows_named": [],
+      "substring_hits_atmosphere_family": {
+       "outdoor": 7,
+       "indoor": 7,
+       "quiet": 1
+      },
+      "raw_shapes_seen": {
+       "list": 16
+      },
+      "all_tags_tokens_seen": {
+       "culture": 7,
+       "outdoor": 7,
+       "indoor": 7,
+       "local_food": 5,
+       "history": 4,
+       "waterfront": 4,
+       "art": 1,
+       "scenic": 1,
+       "view": 1,
+       "relaxed": 1,
+       "quiet": 1,
+       "street": 1,
+       "shopping": 1,
+       "signature_dish": 1,
+       "night_view": 1,
+       "bars": 1
+      },
+      "raw_samples": [
+       {
+        "rowid": 1,
+        "tags_raw": "[\"culture\",\"history\",\"outdoor\"]"
+       },
+       {
+        "rowid": 2,
+        "tags_raw": "[\"culture\",\"indoor\"]"
+       },
+       {
+        "rowid": 3,
+        "tags_raw": "[\"local_food\",\"indoor\"]"
+       }
+      ]
+     },
+     {
+      "table": "real_place_candidates",
+      "tags_column": "tags_json",
+      "rows_scanned": 0,
+      "rows_with_nonempty_parseable_tags": 0,
+      "normalized_columns_read_on_row": [
+       "metadata_json",
+       "evidence_json"
+      ],
+      "normalized_feature_joins": [],
+      "rows_with_normalized_evidence": 0,
+      "tags_only_accessibility": {},
+      "tags_present_accessibility": {},
+      "tags_only_atmosphere": {},
+      "tags_present_atmosphere": {},
+      "substring_hits_accessibility_family": {},
+      "normalized_evidence_rows_named": [],
+      "substring_hits_atmosphere_family": {},
+      "raw_shapes_seen": {},
+      "all_tags_tokens_seen": {},
+      "raw_samples": []
+     }
+    ],
+    "accessibility_tags_only_row_hits": 0,
+    "per_key_accessibility": [],
+    "conclusion": "0 accessibility keys are stranded in tags on this store (denominator: tables/columns/rows/keys below); what the raw channel does hold is atmosphere adjectives, which are not accessibility facts"
+   },
+   "stats_after": {
+    "_live.db": {
+     "size_bytes": 3710976,
+     "mtime": "2026-09-22T13:40:32+08:00"
+    },
+    "_live.db-shm": {
+     "size_bytes": 32768,
+     "mtime": "2026-09-22T22:51:42+08:00"
+    },
+    "_live.db-wal": {
+     "size_bytes": 4243632,
+     "mtime": "2026-09-22T22:51:42+08:00"
+    }
+   },
+   "stats_unchanged": true
+  }
+ },
+ "fixture": {
+  "path": "D:\\moodle\\_qoder_harness_revival_20260921\\lab\\evidence\\_db\\tagscan_54780.db",
+  "existed_before_this_run": false
+ },
+ "write_probes_all_refused_as_readonly": true,
+ "write_connection_opened": false,
+ "fixture_cleanup": "removed tagscan_54780.db:741376B, tagscan_54780.db-wal:0B, tagscan_54780.db-shm:32768B"
+}
