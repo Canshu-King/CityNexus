@@ -1,0 +1,90 @@
+{
+  "kind": "GENERATION_SERVER_MAP",
+  "lane": "HJ-P1 1a986a24",
+  "written_at": "2026-09-23T02:40+08",
+  "purpose": "Let an auditor resolve port -> dist root -> served entry bundle -> producing commit without trusting any prose in the ledger. Every value below was read over HTTP or by hashing the file on disk, not asserted.",
+  "backend": {
+    "tree": "D:/moodle/_qoder_integration_20260919",
+    "source_sha": "0748a1f",
+    "openapi_path_count": 139,
+    "note": "one backend binary for both generations; the only variable between arms is the frontend package"
+  },
+  "arms": [
+    {
+      "role": "old_generation",
+      "base_url": "http://127.0.0.1:8762",
+      "proxy_script": "serve_genold.py (line 15 DIST=dist5, line 16 API 8761, line 77 default port 8762)",
+      "dist_root": "D:/moodle/_qoder_hjp1_o207_20260922/dist5",
+      "served_index_ref": "assets/index-BlM40ELx.js",
+      "entry_bytes": 1230166,
+      "entry_sha256": "af8291f9d3b6f590 (prefix; full value in each receipt's served_bundle.sha256)",
+      "producing_commit": "522c414",
+      "db_copy": "_hjp1_o220.db (44 journeys / 59 travelers)"
+    },
+    {
+      "role": "new_generation",
+      "base_url": "http://127.0.0.1:8763",
+      "proxy_script": "serve_gennew.py (line 15 DIST=dist_gen_new, line 16 API 8761, line 77 default port 8763)",
+      "dist_root": "D:/moodle/_qoder_hjp1_o207_20260922/dist_gen_new",
+      "served_index_ref": "assets/index-DtQ86lsQ.js",
+      "entry_bytes": 1231985,
+      "entry_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+      "producing_commit": "0748a1f",
+      "db_copy": "_hjp1_gen.db (44 journeys / 59 travelers)"
+    },
+    {
+      "role": "new_generation_replication_1",
+      "base_url": "http://127.0.0.1:8781",
+      "proxy_script": "serve_ui3_1.py (DIST=dist_gen_new, API 8771, listen 8781)",
+      "dist_root": "D:/moodle/_qoder_hjp1_o207_20260922/dist_gen_new",
+      "served_index_ref": "assets/index-DtQ86lsQ.js",
+      "entry_bytes": 1231985,
+      "entry_sha256_prefix": "cf3a08108ffba413",
+      "producing_commit": "0748a1f",
+      "db_copy": "_hjp1_ui3_1.db"
+    },
+    {
+      "role": "new_generation_replication_2",
+      "base_url": "http://127.0.0.1:8782",
+      "proxy_script": "serve_ui3_2.py (DIST=dist_gen_new, API 8772, listen 8782)",
+      "served_index_ref": "assets/index-DtQ86lsQ.js",
+      "entry_sha256_prefix": "cf3a08108ffba413",
+      "producing_commit": "0748a1f",
+      "db_copy": "_hjp1_ui3_2.db"
+    },
+    {
+      "role": "new_generation_replication_3",
+      "base_url": "http://127.0.0.1:8783",
+      "proxy_script": "serve_ui3_3.py (DIST=dist_gen_new, API 8773, listen 8783)",
+      "served_index_ref": "assets/index-DtQ86lsQ.js",
+      "entry_sha256_prefix": "cf3a08108ffba413",
+      "producing_commit": "0748a1f",
+      "db_copy": "_hjp1_ui3_3.db"
+    }
+  ],
+  "sealed_baseline_for_replication": {
+    "cloned_from": "D:/moodle/_qoder_hjp1_o207_20260922/_hjp1_gen.db",
+    "method": "sqlite3 Connection.backup() from a mode=ro open (never a file copy while a server holds it)",
+    "copies": ["_hjp1_ui3_1.db", "_hjp1_ui3_2.db", "_hjp1_ui3_3.db"],
+    "all_three_identical": "sha256 prefix 5417dd51c92f4b91, 13,221,888 B each, journeys 44 / travelers 59 / journey_operations_contexts 27",
+    "user_db_touched": false
+  },
+  "ui_generation_replication_result_ORD-0220-3": {
+    "shape": "same frontend generation (index-DtQ86lsQ.js / 0748a1f), same backend code, same viewport 390x844 DPR2 zh-CN Asia/Shanghai, same probe, 3 independent browser processes, each on its own fresh DB copy from one sealed baseline",
+    "runs": [
+      { "run_label": "ui3a", "pid": 52760, "started_at": "2026-09-23T02:37:21.582+08:00", "ended_at": "2026-09-23T02:37:47.809+08:00", "scrollY": 652, "hintY": 572, "inView": true, "result": "PASS" },
+      { "run_label": "ui3b", "pid": 51876, "started_at": "2026-09-23T02:37:48.349+08:00", "ended_at": "2026-09-23T02:38:14.170+08:00", "scrollY": 652, "hintY": 572, "inView": true, "result": "PASS" },
+      { "run_label": "ui3c", "pid": 56868, "started_at": "2026-09-23T02:38:14.691+08:00", "ended_at": "2026-09-23T02:38:40.620+08:00", "scrollY": 652, "hintY": 572, "inView": true, "result": "PASS" }
+    ],
+    "verdict": "3/3 PASS => CLOSED(FIXED_IN_GENERATION) candidate; no FLIP",
+    "receipts_distinguishable": "three different sha256 (a0c2375339c25050 / 6a499caa8c3386d5 / c0a007dd833daa44); same length 2,249 B because only pid/timestamps differ in length-neutral fields"
+  },
+  "wal_note_from_red_team": {
+    "observation": "red team saw -wal mtime move between arms, concluding the DB was not zero-write",
+    "measured": "each replication run left journeys/travelers/journey_operations_contexts unchanged at 44/59/27 with 0 non-GET requests, while a 24,752 B -wal exists per copy",
+    "reading": "the WAL grows from read-time writes on GET endpoints (this product's GET /experience writes on read), not from POSTs. So 'zero write' must be stated as 'zero non-GET requests and unchanged row counts in the tables the wizard owns', not 'the DB file was untouched'.",
+    "corollary_for_gates": "a run-shape that reuses one DB copy across runs cannot tell reproducibility from residue; that is why the arbiter's per-run copy requirement is right, and it is applied here."
+  },
+  "publish_status_note": "serve_genold.py (blob 66f7796ee930c4ec4221d6ab33181e18bae6bff6) and serve_gennew.py (blob 61080b192a94d9ec4221d6ab33181e18bae6bff6) were already on commander/control as of commit 2ec2cc45afdd / e3255435b774 (published 02:2x). The arbiter's NOT_FOUND check predated that push; re-check against FETCH_HEAD after afad4de.",
+  "scope": "read-only lane: no product source edited, no _live.db, no demo/reset, no credential values reproduced anywhere (preview auth was not used in these runs at all)."
+}
