@@ -33,7 +33,14 @@ SCENARIO_ID = "journey-replan-replay"
 C4_SCENARIO_ID = "c4-commitment-replay"
 CAPABILITY_SCENARIO_ID = "capability-fail-closed-replay"
 CAPABILITY_REVALIDATION_SCENARIO_ID = "capability-revalidation-replay"
-SCENARIOS = (SCENARIO_ID, C4_SCENARIO_ID, CAPABILITY_SCENARIO_ID, CAPABILITY_REVALIDATION_SCENARIO_ID)
+ACTIVE_CAPABILITY_RECOVERY_SCENARIO_ID = "active-capability-recovery-replay"
+SCENARIOS = (
+    SCENARIO_ID,
+    C4_SCENARIO_ID,
+    CAPABILITY_SCENARIO_ID,
+    CAPABILITY_REVALIDATION_SCENARIO_ID,
+    ACTIVE_CAPABILITY_RECOVERY_SCENARIO_ID,
+)
 
 
 def _utc() -> str:
@@ -218,7 +225,7 @@ class Harness:
                     "payment_provider": "mock-payment",
                 }
             )
-        if scenario_id in {CAPABILITY_SCENARIO_ID, CAPABILITY_REVALIDATION_SCENARIO_ID}:
+        if scenario_id in {CAPABILITY_SCENARIO_ID, CAPABILITY_REVALIDATION_SCENARIO_ID, ACTIVE_CAPABILITY_RECOVERY_SCENARIO_ID}:
             self.input_payload.update(
                 {
                     "capability": {
@@ -871,6 +878,7 @@ class Harness:
         )
         self.record_assertion("candidate_has_place_ids", bool(plan_place_ids), plan)
         journey_before_select = self.get(f"/api/v1/journeys/{journey_id}")
+        plan_before_select = self.get(f"/api/v1/plans/{plan['id']}")
 
         # Invalidate exactly the concrete places consumed by this candidate,
         # not unrelated rows elsewhere in the fixture catalog.
@@ -885,17 +893,22 @@ class Harness:
         select_block = self.post(f"/api/v1/journeys/{journey_id}/plans/{plan['id']}/select")
         select_block_status = self.last_status
         journey_after_select_block = self.get(f"/api/v1/journeys/{journey_id}")
+        plan_after_select_block = self.get(f"/api/v1/plans/{plan['id']}")
         self.record_assertion(
             "selection_revalidates_and_fails_closed",
             select_block_status in {409, 422}
             and journey_after_select_block.get("active_plan_version_id")
                 == journey_before_select.get("active_plan_version_id")
-            and journey_after_select_block.get("status") == journey_before_select.get("status"),
+            and journey_after_select_block.get("status") == journey_before_select.get("status")
+            and plan_after_select_block.get("status") == plan_before_select.get("status")
+            and plan_after_select_block.get("id") == plan_before_select.get("id"),
             {
                 "status": select_block_status,
                 "body": select_block,
-                "before": journey_before_select,
-                "after": journey_after_select_block,
+                "journey_before": journey_before_select,
+                "journey_after": journey_after_select_block,
+                "plan_before": {"id": plan_before_select.get("id"), "status": plan_before_select.get("status")},
+                "plan_after": {"id": plan_after_select_block.get("id"), "status": plan_after_select_block.get("status")},
             },
         )
 
@@ -915,23 +928,29 @@ class Harness:
         )
 
         journey_before_start = self.get(f"/api/v1/journeys/{journey_id}")
+        plan_before_start = self.get(f"/api/v1/plans/{plan['id']}")
         self.transition("MUTATE:USED_PLACE_EVIDENCE_UNKNOWN_BEFORE_START")
         unknown_start_states = self._set_place_accessibility(None, place_ids=plan_place_ids)
         start_block = self.post(f"/api/v1/journeys/{journey_id}/start")
         start_block_status = self.last_status
         journey_after_start_block = self.get(f"/api/v1/journeys/{journey_id}")
+        plan_after_start_block = self.get(f"/api/v1/plans/{plan['id']}")
         self.record_assertion(
             "start_revalidates_and_fails_closed",
             start_block_status in {409, 422}
             and journey_after_start_block.get("status") == journey_before_start.get("status")
             and journey_after_start_block.get("active_plan_version_id")
                 == journey_before_start.get("active_plan_version_id")
-            and journey_after_start_block.get("status") != "ACTIVE",
+            and journey_after_start_block.get("status") != "ACTIVE"
+            and plan_after_start_block.get("status") == plan_before_start.get("status")
+            and plan_after_start_block.get("id") == plan_before_start.get("id"),
             {
                 "status": start_block_status,
                 "body": start_block,
-                "before": journey_before_start,
-                "after": journey_after_start_block,
+                "journey_before": journey_before_start,
+                "journey_after": journey_after_start_block,
+                "plan_before": {"id": plan_before_start.get("id"), "status": plan_before_start.get("status")},
+                "plan_after": {"id": plan_after_start_block.get("id"), "status": plan_after_start_block.get("status")},
             },
         )
 
@@ -942,11 +961,15 @@ class Harness:
         )
         started = self.post(f"/api/v1/journeys/{journey_id}/start")
         start_restore_status = self.last_status
+        final_journey = self.get(f"/api/v1/journeys/{journey_id}")
         self.record_assertion(
             "start_succeeds_after_evidence_restore",
             start_restore_status == 200
-            and started.get("projection_status") == "READY",
-            started,
+            and started.get("projection_status") == "READY"
+            and str((started.get("context") or {}).get("journey_status") or "") == "ACTIVE"
+            and final_journey.get("status") == "ACTIVE"
+            and final_journey.get("active_plan_version_id") == plan["id"],
+            {"start": started, "journey": final_journey},
         )
 
         select_message = (
@@ -959,6 +982,26 @@ class Harness:
             if isinstance(start_block, dict)
             else str(start_block)
         )
+        select_attribution = self._blocker_attribution(
+            select_message, capability_code=capability["code"], place_ids=plan_place_ids
+        )
+        start_attribution = self._blocker_attribution(
+            start_message, capability_code=capability["code"], place_ids=plan_place_ids
+        )
+        for stage, attribution, message in (
+            ("SELECT", select_attribution, select_message),
+            ("START", start_attribution, start_message),
+        ):
+            if not attribution.get("diagnosable"):
+                self.findings.append(
+                    {
+                        "code": "CAPABILITY_LIFECYCLE_BLOCKER_ATTRIBUTION_GAP",
+                        "severity": "PRODUCT_RECOVERY_GAP",
+                        "stage": stage,
+                        "message": "The lifecycle gate fails closed, but the blocker is not fully actionable for a user.",
+                        "evidence": {"blocker": message, **attribution},
+                    }
+                )
         self.semantic_output = {
             "journey_lifecycle": ["RESET", "CAPABILITY_CONFIRMED", "CANDIDATE", "PLANNED", "ACTIVE"],
             "capability": actual_capability,
@@ -968,14 +1011,313 @@ class Harness:
             "selection_unknown_states": sorted({item["state"] for item in unknown_states}),
             "selection_block_status": select_block_status,
             "selection_block_reason": select_message,
+            "selection_block_attribution": select_attribution,
             "selection_restore_status": select_restore_status,
             "selection_restore_states": sorted({item["state"] for item in restored_select_states}),
             "start_unknown_states": sorted({item["state"] for item in unknown_start_states}),
             "start_block_status": start_block_status,
             "start_block_reason": start_message,
+            "start_block_attribution": start_attribution,
             "start_restore_status": start_restore_status,
             "start_restore_states": sorted({item["state"] for item in restored_start_states}),
             "final_projection_status": started.get("projection_status"),
+            "final_journey_status": final_journey.get("status"),
+            "final_active_plan_version_id": final_journey.get("active_plan_version_id"),
+        }
+        self.transition("ASSERT", self.semantic_output)
+        self.transition("CAPTURE_EVIDENCE")
+        self.transition("REPLAY_READY")
+
+    def _run_active_capability_recovery(self) -> None:
+        """Prove a newly-confirmed HARD need invalidates an already-ACTIVE plan.
+
+        H4 proves a known HARD capability is enforced at generate/select/start.
+        H5 attacks a different stale-truth shape: the traveller changes their
+        safety/accessibility requirement only after execution has begun.  The
+        need must be accepted as truth, the current plan must be revalidated,
+        durable recovery must open, acknowledgement must not resolve it, and a
+        later evidence repair must close recovery only after revalidation.
+        """
+        self.transition("RESET")
+        self.ids = self.post("/api/v1/demo/reset")
+        self.record_assertion("reset_returns_journey", bool(self.ids.get("journey_id")), self.ids)
+        journey_id = self.ids["journey_id"]
+        capability = self.input_payload["capability"]
+
+        # The negative arm must start without the HARD capability.  Keep the
+        # fixture accessibility unknown so the active plan becomes infeasible
+        # only when the traveller later confirms the requirement.
+        initial_caps = self.get(f"/api/v1/journeys/{journey_id}/capabilities")
+        initial_capability = self._confirmed_capability_semantics(initial_caps, capability["code"])
+        self.record_assertion(
+            "hard_capability_absent_before_execution",
+            not bool(initial_capability),
+            initial_caps,
+        )
+        initial_states = self._set_place_accessibility(None)
+        self.record_assertion(
+            "accessibility_unknown_before_execution",
+            bool(initial_states)
+            and all(item["state"] == "ACCESSIBILITY_UNVERIFIED" for item in initial_states),
+            initial_states,
+        )
+
+        self.transition("EXECUTE:GENERATE_WITHOUT_HARD_CAPABILITY")
+        plans = self.post(
+            f"/api/v1/journeys/{journey_id}/plans/generate",
+            {"candidate_count": self.input_payload["candidate_count"]},
+        )
+        generation_status = self.last_status
+        self.record_assertion(
+            "candidate_generation_without_hard_capability_succeeds",
+            generation_status == 201 and isinstance(plans, list) and bool(plans),
+            plans,
+        )
+        if not isinstance(plans, list) or not plans:
+            raise RuntimeError("H5 requires one candidate before late capability confirmation")
+        plan = plans[0]
+        plan_id = str(plan["id"])
+        plan_place_ids = sorted(
+            {
+                str(activity.get("place_id"))
+                for activity in plan.get("activities", [])
+                if activity.get("place_id")
+            }
+        )
+        self.record_assertion("candidate_has_place_ids", bool(plan_place_ids), plan_place_ids)
+
+        selected = self.post(f"/api/v1/journeys/{journey_id}/plans/{plan_id}/select")
+        select_status = self.last_status
+        self.record_assertion(
+            "candidate_selects_before_late_hard_capability",
+            select_status == 200
+            and selected.get("status") == "PLANNED"
+            and selected.get("active_plan_version_id") == plan_id,
+            selected,
+        )
+        started = self.post(f"/api/v1/journeys/{journey_id}/start")
+        start_status = self.last_status
+        active_before = self.get(f"/api/v1/journeys/{journey_id}")
+        plan_before = self.get(f"/api/v1/plans/{plan_id}")
+        self.record_assertion(
+            "journey_is_active_before_late_hard_capability",
+            start_status == 200
+            and started.get("projection_status") == "READY"
+            and active_before.get("status") == "ACTIVE"
+            and active_before.get("active_plan_version_id") == plan_id,
+            {"start": started, "journey": active_before, "plan": plan_before},
+        )
+
+        self.transition("EXECUTE:CONFIRM_HARD_CAPABILITY_WHILE_ACTIVE")
+        confirm_payload = [
+            {
+                "code": capability["code"],
+                "severity": capability["severity"],
+                "params": capability["params"],
+            }
+        ]
+        confirmed = self.post(
+            f"/api/v1/journeys/{journey_id}/capabilities/confirm", confirm_payload
+        )
+        confirm_status = self.last_status
+        caps_after = self.get(f"/api/v1/journeys/{journey_id}/capabilities")
+        actual_capability = self._confirmed_capability_semantics(caps_after, capability["code"])
+        self.record_assertion(
+            "late_hard_capability_is_accepted_and_persisted",
+            confirm_status == 200
+            and bool(actual_capability)
+            and actual_capability.get("severity") == "HARD"
+            and actual_capability.get("confirmed") is True
+            and actual_capability.get("active") is True,
+            {"confirm": confirmed, "persisted": actual_capability},
+        )
+
+        feasibility = confirmed.get("active_plan_feasibility") if isinstance(confirmed, dict) else None
+        recovery = confirmed.get("recovery") if isinstance(confirmed, dict) else None
+        failures = list(feasibility.get("failures") or []) if isinstance(feasibility, dict) else []
+        failure_text = " | ".join(str(item) for item in failures)
+        named_places = sorted({place_id for place_id in plan_place_ids if place_id in failure_text})
+        self.record_assertion(
+            "late_hard_capability_invalidates_active_plan",
+            isinstance(feasibility, dict)
+            and feasibility.get("passed") is False
+            and str(feasibility.get("state") or "") == "REPLAN_REQUIRED"
+            and bool(recovery)
+            and "ACCESSIBILITY_UNVERIFIED" in failure_text
+            and set(named_places) == set(plan_place_ids),
+            {"feasibility": feasibility, "recovery": recovery, "named_place_ids": named_places},
+        )
+
+        active_after_confirm = self.get(f"/api/v1/journeys/{journey_id}")
+        plan_after_confirm = self.get(f"/api/v1/plans/{plan_id}")
+        self.record_assertion(
+            "late_capability_does_not_silently_rewrite_active_plan",
+            active_after_confirm.get("status") == active_before.get("status") == "ACTIVE"
+            and active_after_confirm.get("active_plan_version_id") == plan_id
+            and plan_after_confirm.get("id") == plan_before.get("id")
+            and plan_after_confirm.get("status") == plan_before.get("status"),
+            {
+                "journey_before": active_before,
+                "journey_after": active_after_confirm,
+                "plan_before_status": plan_before.get("status"),
+                "plan_after_status": plan_after_confirm.get("status"),
+            },
+        )
+
+        experience_open = self.get(f"/api/v1/journeys/{journey_id}/experience")
+        flags_open = experience_open.get("experience_flags") if isinstance(experience_open, dict) else {}
+        recovery_open = experience_open.get("recovery") if isinstance(experience_open, dict) else None
+        self.record_assertion(
+            "recovery_is_durable_and_user_visible",
+            isinstance(flags_open, dict)
+            and flags_open.get("needs_review") is True
+            and flags_open.get("recovery_required") is True
+            and bool(recovery_open),
+            {"flags": flags_open, "recovery": recovery_open},
+        )
+
+        self.transition("EXECUTE:ACKNOWLEDGE_RECOVERY")
+        acknowledged = self.post(f"/api/v1/journeys/{journey_id}/recovery/acknowledge")
+        acknowledge_status = self.last_status
+        experience_ack = self.get(f"/api/v1/journeys/{journey_id}/experience")
+        flags_ack = experience_ack.get("experience_flags") if isinstance(experience_ack, dict) else {}
+        recovery_ack = experience_ack.get("recovery") if isinstance(experience_ack, dict) else None
+        self.record_assertion(
+            "acknowledgement_does_not_resolve_infeasibility",
+            acknowledge_status == 200
+            and acknowledged.get("acknowledged") is True
+            and acknowledged.get("resolved") is False
+            and isinstance(flags_ack, dict)
+            and flags_ack.get("needs_review") is True
+            and flags_ack.get("recovery_required") is True
+            and flags_ack.get("acknowledged") is True
+            and bool(recovery_ack),
+            {"acknowledge": acknowledged, "flags": flags_ack, "recovery": recovery_ack},
+        )
+
+        self.transition("RESTORE:ACTIVE_PLAN_ACCESSIBILITY_EVIDENCE")
+        restored_states = self._set_place_accessibility(
+            self.input_payload["verified_evidence"], place_ids=plan_place_ids
+        )
+        # A projection read may observe that the plan is feasible again, but it
+        # must not silently resolve the durable recovery event.  Resolution is
+        # a transactional truth change, not a side effect of GET.
+        experience_after_restore_before_reconfirm = self.get(
+            f"/api/v1/journeys/{journey_id}/experience"
+        )
+        flags_before_reconfirm = (
+            experience_after_restore_before_reconfirm.get("experience_flags")
+            if isinstance(experience_after_restore_before_reconfirm, dict)
+            else {}
+        )
+        recovery_before_reconfirm = (
+            experience_after_restore_before_reconfirm.get("recovery")
+            if isinstance(experience_after_restore_before_reconfirm, dict)
+            else None
+        )
+        self.record_assertion(
+            "projection_read_does_not_resolve_durable_recovery",
+            isinstance(flags_before_reconfirm, dict)
+            and flags_before_reconfirm.get("needs_review") is True
+            and flags_before_reconfirm.get("recovery_required") is True
+            and bool(recovery_before_reconfirm),
+            {"flags": flags_before_reconfirm, "recovery": recovery_before_reconfirm},
+        )
+
+        reconfirmed = self.post(
+            f"/api/v1/journeys/{journey_id}/capabilities/confirm", confirm_payload
+        )
+        reconfirm_status = self.last_status
+        restored_feasibility = (
+            reconfirmed.get("active_plan_feasibility") if isinstance(reconfirmed, dict) else None
+        )
+        experience_resolved = self.get(f"/api/v1/journeys/{journey_id}/experience")
+        flags_resolved = (
+            experience_resolved.get("experience_flags")
+            if isinstance(experience_resolved, dict)
+            else {}
+        )
+        recovery_resolved = (
+            experience_resolved.get("recovery")
+            if isinstance(experience_resolved, dict)
+            else None
+        )
+        final_journey = self.get(f"/api/v1/journeys/{journey_id}")
+        self.record_assertion(
+            "revalidation_resolves_recovery_only_after_evidence_restore",
+            reconfirm_status == 200
+            and isinstance(restored_feasibility, dict)
+            and restored_feasibility.get("passed") is True
+            and all(item["state"] == "ACCESSIBILITY_VERIFIED" for item in restored_states)
+            and isinstance(flags_resolved, dict)
+            and flags_resolved.get("needs_review") is False
+            and flags_resolved.get("recovery_required") is False
+            and (
+                recovery_resolved is None
+                or str((recovery_resolved or {}).get("state") or "").upper() == "RESOLVED"
+            )
+            and final_journey.get("status") == "ACTIVE"
+            and final_journey.get("active_plan_version_id") == plan_id,
+            {
+                "reconfirm": reconfirmed,
+                "flags": flags_resolved,
+                "recovery": recovery_resolved,
+                "journey": final_journey,
+                "restored_states": restored_states,
+            },
+        )
+
+        late_failure_attribution = self._blocker_attribution(
+            failure_text, capability_code=capability["code"], place_ids=plan_place_ids
+        )
+        if not late_failure_attribution.get("diagnosable"):
+            self.findings.append(
+                {
+                    "code": "ACTIVE_CAPABILITY_RECOVERY_ATTRIBUTION_GAP",
+                    "severity": "PRODUCT_RECOVERY_GAP",
+                    "message": "The active-plan recovery truth is correct, but its raw failure list is not a complete user recovery explanation.",
+                    "evidence": {"failures": failures, **late_failure_attribution},
+                }
+            )
+
+        self.semantic_output = {
+            "journey_lifecycle": ["RESET", "CANDIDATE", "PLANNED", "ACTIVE", "RECOVERY_REQUIRED", "RECOVERY_ACKNOWLEDGED", "RECOVERY_RESOLVED"],
+            "late_capability": actual_capability,
+            "accessibility_evidence_mode": "SYNTHETIC_HARNESS_FIXTURE",
+            "plan_place_ids": plan_place_ids,
+            "generation_status": generation_status,
+            "select_status": select_status,
+            "start_status": start_status,
+            "confirm_status": confirm_status,
+            "active_plan_feasibility": {
+                "passed": feasibility.get("passed") if isinstance(feasibility, dict) else None,
+                "state": feasibility.get("state") if isinstance(feasibility, dict) else None,
+                "failures": failures,
+            },
+            "late_failure_attribution": late_failure_attribution,
+            "recovery_open": bool(recovery_open),
+            "acknowledge_status": acknowledge_status,
+            "acknowledged": bool(isinstance(flags_ack, dict) and flags_ack.get("acknowledged")),
+            "read_after_restore_still_requires_recovery": bool(
+                isinstance(flags_before_reconfirm, dict)
+                and flags_before_reconfirm.get("recovery_required")
+            ),
+            "reconfirm_status": reconfirm_status,
+            "restored_feasibility_passed": (
+                restored_feasibility.get("passed")
+                if isinstance(restored_feasibility, dict)
+                else None
+            ),
+            "final_needs_review": (
+                flags_resolved.get("needs_review") if isinstance(flags_resolved, dict) else None
+            ),
+            "final_recovery_required": (
+                flags_resolved.get("recovery_required")
+                if isinstance(flags_resolved, dict)
+                else None
+            ),
+            "final_journey_status": final_journey.get("status"),
+            "final_active_plan_version_id": final_journey.get("active_plan_version_id"),
         }
         self.transition("ASSERT", self.semantic_output)
         self.transition("CAPTURE_EVIDENCE")
@@ -995,6 +1337,8 @@ class Harness:
                 self._run_capability_fail_closed()
             elif self.scenario_id == CAPABILITY_REVALIDATION_SCENARIO_ID:
                 self._run_capability_revalidation()
+            elif self.scenario_id == ACTIVE_CAPABILITY_RECOVERY_SCENARIO_ID:
+                self._run_active_capability_recovery()
             else:
                 raise ValueError(f"unsupported scenario: {self.scenario_id}")
         except Exception as exc:  # noqa: BLE001 - receipt must contain the exact blocker
