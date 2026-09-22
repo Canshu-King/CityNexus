@@ -26,22 +26,22 @@
       "what_it_proves": "byte window read out of the served /assets/index-BCF4ptyk.js"
     },
     {
-      "bytes": 12744,
+      "bytes": 13573,
       "file": "finding_hjp2_reading_01.md",
-      "git_blob_sha1": "c0149e3927c7eb535bd55b583632c50b88d2381a",
-      "publish_commit": "5da55bc551e5",
+      "git_blob_sha1": "ed74f8c7ad457a121f537d4037affe49ba217857",
+      "publish_commit": "76474794f36c",
       "published_path": "evidence/hjp2_d4b04a0f/ord0120_r7/finding_hjp2_reading_01.md",
-      "sha256": "6b3ff406c2c1d63f58b600831e92914ccf88ad797299d79c23e96f0d2ea1e2d2",
-      "what_it_proves": "the reading itself"
+      "sha256": "4dae74a7fa1bb3869730158e6fa4629f4014084e915b32fb28bf465e2bcfd75d",
+      "what_it_proves": "the reading itself; republished with corrected port roles + correction record"
     },
     {
-      "bytes": 16056,
+      "bytes": 16354,
       "file": "isolation_receipt_r7.json",
-      "git_blob_sha1": "1e78ebd6ad431c439b05b091273b507d57d5fa7e",
-      "publish_commit": "b4fa2fd988f1",
+      "git_blob_sha1": "46145e5ca335db579e5b20b27280c27eacf4400b",
+      "publish_commit": "974dbaa82820",
       "published_path": "evidence/hjp2_d4b04a0f/ord0120_r7/isolation_receipt_r7.json",
-      "sha256": "a7f7d9343ac10289aa6c4daa129a023d23ae76dc3d7c6b60c8930edd88a92173",
-      "what_it_proves": "three mode=ro store probes + three db_probe_preflight runs"
+      "sha256": "20ad750b2aeaed7febddc8a546bd8d0ffe9b2fbdcc48cedffaf2a10ac7ccc924",
+      "what_it_proves": "three mode=ro store probes + three db_probe_preflight runs; republished with corrected port roles"
     },
     {
       "bytes": 221739,
@@ -68,5 +68,10 @@
   "ref": "commander/control",
   "repo": "Canshu-King/CityNexus",
   "session": "d4b04a0f",
+  "superseded_blobs": {
+    "finding_hjp2_reading_01.md": "c0149e3927c7eb535bd55b583632c50b88d2381a",
+    "isolation_receipt_r7.json": "1e78ebd6ad431c439b05b091273b507d57d5fa7e",
+    "reason": "first published versions swapped this lane's port roles (uvicorn recorded as :8493, vite as :8453); corrected from backend2.log and the lane's own navigation URL. Old blobs stay resolvable in git - the new values govern."
+  },
   "tree_tip_local_only": "b41b4cce0e4143068bef216d96e2eab4a4116056 (never pushed: NOT an audit coordinate)"
 }
