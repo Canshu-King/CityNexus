@@ -1,0 +1,68 @@
+{
+ "what": "ORD-0239 input: advertised-city matrix, with each column attributed to whoever measured it",
+ "generated_at": "2026-09-23T03:48:32+0800",
+ "trees": {
+  "phone_chain": {
+   "path": "_qoder_cmdr_gate_20260921/backend",
+   "head": "53fe8e8",
+   "capability_states": "3 values (READY/HYDRATABLE/UNAVAILABLE)",
+   "route": "GET /api/v1/destinations/capability exists (main.py:2813)",
+   "note": "this is what the phone consumes today"
+  },
+  "live_line": {
+   "path": "_qoder_integration_20260919/backend",
+   "head": "349c4fa",
+   "capability_states": "4 values (adds UNKNOWN_RETRYABLE, frozen by arbiter 5771378382)",
+   "route": "GET /api/v1/destinations/capability (main.py:2823)",
+   "file_sha256_16": "cb0e24c14fa7ad73",
+   "bytes": 75980,
+   "note": "roadmap target; the phone will not see the 4th state until a backend generation change"
+  }
+ },
+ "place_rows_measured_by_commander_on_the_phone_chain": {
+  "method": "GET /api/v1/places?city_code=<code> via the public tunnel with credentials, 03:27+08",
+  "results": {
+   "CN-BEIJING": 8,
+   "CNX-DEMO": 8,
+   "CN-HANGZHOU": 0,
+   "CN-TOKYO": 0,
+   "CN-FUZHOU": 0,
+   "CN-苏州": 0,
+   "CN-SUZHOU": 0
+  },
+  "instrument_note": "an unknown city_code answers 200 + [] (NOT 404/422): a 200 here does not mean 'has data'"
+ },
+ "identity_and_capability_column_measured_by_lane_4e974ae5": {
+  "source": "lane 4e974ae5 on its own lane (live-line commit 50d1c4d); bundle published under evidence/hjp4-4e974ae5/",
+  "attribution": "NOT independently re-measured by the commander; the capability-identity axis was not probed on the phone chain",
+  "results": {
+   "only_beijing_has_rows": true,
+   "beijing_provenance": "GOLDEN_FIXTURE (synthetic fixture, not a live capture)",
+   "recognised_but_zero_places": 7,
+   "identity_unresolvable": [
+    "福州",
+    "东京",
+    "新加坡"
+   ],
+   "identity_unresolvable_codes": [
+    "NO_CANONICAL_IDENTITY",
+    "UNAVAILABLE"
+   ],
+   "advertised_codes_absent_from_every_city_column_across_55_tables": 8,
+   "capability_axis_cannot_distinguish": "Beijing and Hangzhou both returned HYDRATABLE"
+  }
+ },
+ "code_reading_by_commander": {
+  "file": "_qoder_integration_20260919/backend/app/anywhere_capability.py",
+  "line_74": "CAPABILITY_STATES = (READY, HYDRATABLE, UNKNOWN_RETRYABLE, UNAVAILABLE)",
+  "line_823": "HYDRATABLE until this catalog holds something for it => identity-resolved + catalog-empty + hydratable, NOT has-data",
+  "line_13_docstring": "says three values with no fourth unknown - correct for the PINNED tree, stale for the live line",
+  "implication": "Beijing(HYDRATABLE) vs Hangzhou(HYDRATABLE) is definition-consistent; the FALSE SUPPORT is created at the UI consumption layer"
+ },
+ "arbiter_ruling_ref": {
+  "comment": 5782717232,
+  "choice": "(iii)",
+  "shape": "four orthogonal facts (identity / catalogue-readiness / hydration-capability / user-visible support); UI consumes the final support state only"
+ },
+ "sandbox_note": "no credentials, cookies or Authorization values are included"
+}
