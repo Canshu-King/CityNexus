@@ -11567,7 +11567,16 @@ working tip `25165d9`；链**鉴权 health 200 / 首页 200（bundle `index-BCF4
     3. **一条"全屏扫描"断言**（这是本条真正的门）：渲染后取 `innerText`，断言**整屏不含**任何裸枚举词表 `["ARRIVAL","TRANSIT","WALK","BICYCLE","RIDE_HAIL","Overnight","Check in"]`——不是只查日卡那一个节点。今天两次漏报正是因为门只盯了一处；
     4. 一条**红→绿反例**：把 `:2677` 改回裸印，门必须红（走 `mutation_anchor_guard.py`，`anchor_hits==1`、突变字节≠原字节）。
     ⚠ 口径照旧：断言读**渲染文字**，不读 `data-*`；明暗两色各看一眼。**别只交"我改了映射"**——门要的是整屏扫描。
-  status: DISPATCHED@2026-09-22T19:0x+08 by 494abfd7（靶子＝我在 25165d9 源码上逐行读出的三处裸印坐标；HJ-P1 两次人眼读数与之吻合）note@494abfd7@2026-09-22T19:12+08: 仲裁 `5775347624` 接受降级并独立复核了我的六个坐标，但**改了两处验收形状**（照录）：
+  status: DISPATCHED@2026-09-22T19:0x+08 by 494abfd7（靶子＝我在 25165d9 源码上逐行读出的三处裸印坐标；HJ-P1 两次人眼读数与之吻合）note@494abfd7@2026-09-22T19:12+08: 仲裁 `5775347624` 接受降级并独立复核了我的六个坐标，但**改了两处验收形状**（照录）：note@494abfd7@2026-09-22T19:49+08: HJ-P1 19:46 实测追加两条硬要求（我已在源码上核实）：
+  ① **`revealReason()` 用了 `behavior:"smooth"`**（`frontend/src/features/setup/JourneyTrialSetup.tsx:449`，调用点 `:1175`/`:1199`，在 `dfdc5d5` 上）。
+     实测：同一元素 instant 能滚（scrollY 0→650，5 次采样一致），而 smooth **6 次采样（每 200ms）全 0** ⇒
+     **smooth 滚动在本机 Playwright/CDP 移动模拟里从不推进**。改 `behavior:"auto"`（瞬时）或把提示渲染进 sticky 动作条上方。
+     ⚠ 这是**影响所有车道**的仪器规则：任何"被拦后解释进入视口"的门若用 smooth + `scrollY`/`inViewport` 断言，
+     会在产品正确时红、或在 CI 里靠时序侥幸绿。门不许把动画当被测对象。
+  ② **读屏 live region 仍未按值重算**：改成 420 后可见 `#trial-required-hint` 已消失，但 `#trial-next-reason`（`v8-sr-only`, `aria-live=polite`）
+     仍写着「还需要填写：总预算」；复现 **3/3**。源码守卫 `:1105 {spokenKey === missingKey ? spokenReason : ""}`、
+     `missingKey` 来自 `:563 missingNow.map(f=>f.target).join("|")`。HJ-P1 只交事实、不猜原因（可能比 60ms 定时器与状态更新的次序），
+     节点 id 已给全，D 可直接下断点。分类 `HUMAN_ACCESSIBILITY` 不变。
   **A. 全屏 innerText 扫描不能当法官** —— 拆两层门：`VISUAL_TEXT_SCAN`（只扫旅客可见渲染文字，排除 `.v8-sr-only`/`aria-hidden`/`display:none`/`visibility:hidden`/zero-render）＋ `ACCESSIBLE_TEXT_SCAN`（单独跑，读屏输出也不得含 raw internal enum）。原话："不能一边把这个量具判有罪，一边下一张单又让它当法官。"
   **B. `Check in` / `Overnight` 不许塞进 mode/anchor 两张表糊过去** —— 它在 exact source 里查到 `Check in` 0 个 literal hit、`Overnight` 只在"零晚住宿"说明处且不在 day-card 渲染路径；day-card 有三个未翻译数据直通口（`:2674 day.label.split(" · ")[0]`、`:2675 day.activities.join(" · ")`、`:2763 day.label`）。要求**先交并排收据**（`selected.days` 原始 payload vs 实际可见日卡文本），定位真正的数据→文案边界后再修。
   **它另补三条（同单收，不另开）**：① `:3203 t("live.eta", { mode: nextLeg?.mode ?? mode })` 是第四个潜在 raw-mode 入口；② `:3242`/`:3299` 的 `min · … min walk` 中文 locale 下仍英文，与 3240/3297 同行同组件，建议同一 diff 收掉；③ `modeLabel/anchorLabel` 对未知值 fallback 成 `key.replace("_"," ").toLowerCase()`，中文 UI 遇新 enum 仍泄英文 ⇒ 中文 fail closed 成「未识别的出行方式 / 未识别的行程锚点」，英文再做 humanized。
