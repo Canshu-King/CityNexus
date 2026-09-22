@@ -1,0 +1,289 @@
+{
+  "base": "http://127.0.0.1:8792",
+  "run_label": "tilemech2",
+  "pid": 28344,
+  "started_at": "2026-09-23T03:50:06.122+08:00",
+  "samples": [
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": false,
+      "noticeText": null,
+      "raster200": 0,
+      "rasterFail": 6,
+      "atMs": 2016
+    },
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": false,
+      "noticeText": null,
+      "raster200": 0,
+      "rasterFail": 6,
+      "atMs": 4030
+    },
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": false,
+      "noticeText": null,
+      "raster200": 0,
+      "rasterFail": 6,
+      "atMs": 6049
+    },
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": false,
+      "noticeText": null,
+      "raster200": 0,
+      "rasterFail": 6,
+      "atMs": 8054
+    },
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": false,
+      "noticeText": null,
+      "raster200": 0,
+      "rasterFail": 6,
+      "atMs": 10059
+    },
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": true,
+      "noticeText": "底图未加载，显示的是路线示意。",
+      "raster200": 0,
+      "rasterFail": 12,
+      "atMs": 12067
+    },
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": true,
+      "noticeText": "底图未加载，显示的是路线示意。",
+      "raster200": 0,
+      "rasterFail": 12,
+      "atMs": 14077
+    },
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": true,
+      "noticeText": "底图未加载，显示的是路线示意。",
+      "raster200": 0,
+      "rasterFail": 12,
+      "atMs": 16085
+    },
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": true,
+      "noticeText": "底图未加载，显示的是路线示意。",
+      "raster200": 0,
+      "rasterFail": 12,
+      "atMs": 18100
+    },
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": true,
+      "noticeText": "底图未加载，显示的是路线示意。",
+      "raster200": 0,
+      "rasterFail": 12,
+      "atMs": 20111
+    },
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": true,
+      "noticeText": "底图未加载，显示的是路线示意。",
+      "raster200": 0,
+      "rasterFail": 12,
+      "atMs": 22125
+    },
+    {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": true,
+      "noticeText": "底图未加载，显示的是路线示意。",
+      "raster200": 0,
+      "rasterFail": 15,
+      "atMs": 24134
+    }
+  ],
+  "firstAppearance": {
+    "atMs": 12067,
+    "prevSample": {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": false,
+      "noticeText": null,
+      "raster200": 0,
+      "rasterFail": 6,
+      "atMs": 10059
+    },
+    "thisSample": {
+      "mapFound": true,
+      "seamOnPanel": false,
+      "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+      "seamOnContainer": true,
+      "zoom": 9.638941766230726,
+      "bucketCount": 1,
+      "tileStates": {
+        "total": 0,
+        "byState": {}
+      },
+      "loadedPredicate": false,
+      "notice": true,
+      "noticeText": "底图未加载，显示的是路线示意。",
+      "raster200": 0,
+      "rasterFail": 12,
+      "atMs": 12067
+    }
+  },
+  "offOriginSample": [
+    "OK200 blob:http://127.0.0.1:8792/0737beab-00f8-41a6-9bac-c65659b2f043",
+    "FAIL net::ERR_ABORTED https://tile.openstreetmap.org/12/3336/1777.png",
+    "FAIL net::ERR_ABORTED https://tile.openstreetmap.org/12/3337/1777.png",
+    "FAIL net::ERR_ABORTED https://tile.openstreetmap.org/12/3336/1776.png",
+    "FAIL net::ERR_ABORTED https://tile.openstreetmap.org/12/3337/1776.png",
+    "FAIL net::ERR_ABORTED https://tile.openstreetmap.org/12/3335/1777.png",
+    "FAIL net::ERR_ABORTED https://tile.openstreetmap.org/12/3335/1776.png",
+    "FAIL net::ERR_CONNECTION_CLOSED https://tile.openstreetmap.org/11/1668/888.png",
+    "FAIL net::ERR_CONNECTION_CLOSED https://tile.openstreetmap.org/11/1667/888.png",
+    "FAIL net::ERR_CONNECTION_CLOSED https://tile.openstreetmap.org/11/1668/889.png",
+    "FAIL net::ERR_CONNECTION_CLOSED https://tile.openstreetmap.org/11/1669/888.png",
+    "FAIL net::ERR_CONNECTION_CLOSED https://tile.openstreetmap.org/11/1667/889.png",
+    "FAIL net::ERR_CONNECTION_CLOSED https://tile.openstreetmap.org/11/1669/889.png",
+    "FAIL net::ERR_CONNECTION_CLOSED https://tile.openstreetmap.org/11/1668/887.png",
+    "FAIL net::ERR_CONNECTION_CLOSED https://tile.openstreetmap.org/11/1669/887.png",
+    "FAIL net::ERR_CONNECTION_CLOSED https://tile.openstreetmap.org/11/1667/887.png"
+  ],
+  "mapAccessAtEnd": {
+    "mapFound": true,
+    "containerIdent": "div.v8-maplibre-canvas.maplibregl-map",
+    "seamOnContainer": true,
+    "seamOnPanel": false
+  },
+  "verdict": "MECHANISM_READ: 提示在 12067ms 出现，该样本 raster200=0 rasterFail=12 瓦片状态={\"total\":0,\"byState\":{}} loaded谓词=false",
+  "ended_at": "2026-09-23T03:50:30.590+08:00"
+}
