@@ -1,5 +1,5 @@
 {
-  "built_at_local": "2026-09-22T19:16:50",
+  "built_at_local": "2026-09-22T19:24:47",
   "headline": "Every write this lane made went to a one-off copy of the served store; the served store and the other shared store both still lack this lane's two journey ids.",
   "lane": "HJ-P2 commitment-intensive traveller",
   "order": "ORD-0120 / P2 persona lane",
@@ -57,7 +57,8 @@
         "table_count": 55
       }
     },
-    "read_by": "this lane's own uvicorn on 127.0.0.1:8493 (bind-tested before start, stopped at teardown)",
+    "read_by": "this lane's own uvicorn backend on 127.0.0.1:8453; the vite preview front end on 127.0.0.1:8493 is what the browser opened (both bind-tested before start, stopped at teardown)",
+    "read_by_amendment": "first published version said 'uvicorn on 127.0.0.1:8493' - roles were swapped; corrected from backend2.log (Uvicorn running on http://127.0.0.1:8453) and the lane's own navigation URL",
     "row_delta": {
       "bookings": "1 -> 1",
       "commitments": "1 -> 1",
