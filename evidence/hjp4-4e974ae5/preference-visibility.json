@@ -1,0 +1,92 @@
+{
+  "identity": {
+    "run": "preference-visibility",
+    "built_at_utc": "2026-09-22T15:50:25.172040+00:00",
+    "built_at_local": "2026-09-22T15:50:25.172040+00:00",
+    "tz_offset_minutes": 0,
+    "host_clock_tzname": [
+      "中国标准时间",
+      "中国夏令时"
+    ]
+  },
+  "per_journey_day_rows_derived_from_logs": {
+    "J1_nightlife_bar": {
+      "source_log": "log/S_J1b_adopt_and_hours.txt",
+      "source_log_sha256": "6b00ff9a4ec5f933ce1eb271d38f0b04cf56e0374bded044187d452edaa17794",
+      "trips_text_head": "菜单 / / / 行程 / 跟随系统 / EN / BE / 行程 / 住宿 / 预订 / 花费 / 行程 / 2 天行程 / 逐日安排。已确认的预订会被标记为受保护。 / 9月23日周三 / 4 项 / 9月24日周四 / 4 项 / 17:00 / 17:40 / Tian'anmen Square (天安门广场) / 40 分钟 / 详情 › / 18:00 / 18:45 / Huguo Temple Snacks (护国寺小吃) / 45 分钟 / 详情 › / 19:20 / 21:20 / Summer Palace (颐和园) / 2 小时 / 详情 › / 22:00 / 00:00 / The Palace Museum (故宫博物院) / 2 小时 / 详情 › / ✦ / CityNexus Copilot / 今天 / 行程 / 地图 / Copilot / 我的",
+      "day_rows": [
+        "17:00/17:40/Tian'anmen Square (天安门广场)/40 分钟",
+        "18:00/18:45/Huguo Temple Snacks (护国寺小吃)/45 分钟",
+        "19:20/21:20/Summer Palace (颐和园)/2 小时",
+        "22:00/00:00/The Palace Museum (故宫博物院)/2 小时"
+      ]
+    },
+    "J2_walk10_nap": {
+      "source_log": "log/S_J2b_cards_need_reload.txt",
+      "source_log_sha256": "51c9859d291575840ddb670a65d68be868c5e6c0b7befc70e23c9de20181dcc8",
+      "trips_text_head": "菜单 / / / 行程 / 跟随系统 / EN / BE / 行程 / 住宿 / 预订 / 花费 / 行程 / 2 天行程 / 逐日安排。已确认的预订会被标记为受保护。 / 9月23日周三 / 4 项 / 9月24日周四 / 4 项 / 17:00 / 17:40 / Tian'anmen Square (天安门广场) / 40 分钟 / 详情 › / 18:00 / 18:45 / Huguo Temple Snacks (护国寺小吃) / 45 分钟 / 详情 › / 19:20 / 21:20 / Summer Palace (颐和园) / 2 小时 / 详情 › / 22:00 / 00:00 / The Palace Museum (故宫博物院) / 2 小时 / 详情 › / ✦ / CityNexus Copilot / 今天 / 行程 / 地图 / Copilot / 我的",
+      "day_rows": [
+        "17:00/17:40/Tian'anmen Square (天安门广场)/40 分钟",
+        "18:00/18:45/Huguo Temple Snacks (护国寺小吃)/45 分钟",
+        "19:20/21:20/Summer Palace (颐和园)/2 小时",
+        "22:00/00:00/The Palace Museum (故宫博物院)/2 小时"
+      ]
+    },
+    "J5_soft_phrasing": {
+      "source_log": "log/S05_soft_vs_hard_declared.txt",
+      "source_log_sha256": "4061f536e29d0e84925bad11c1514470a5ac9da9e8a057b1e82e3bd1d00afd02",
+      "trips_text_head": "菜单 / / / 行程 / 跟随系统 / EN / BE / 行程 / 住宿 / 预订 / 花费 / 行程 / 2 天行程 / 逐日安排。已确认的预订会被标记为受保护。 / 9月23日周三 / 4 项 / 9月24日周四 / 4 项 / 17:00 / 17:40 / Tian'anmen Square (天安门广场) / 40 分钟 / 详情 › / 18:00 / 18:45 / Huguo Temple Snacks (护国寺小吃) / 45 分钟 / 详情 › / 19:20 / 21:20 / Summer Palace (颐和园) / 2 小时 / 详情 › / 22:00 / 00:00 / The Palace Museum (故宫博物院) / 2 小时 / 详情 › / ✦ / CityNexus Copilot / 今天 / 行程 / 地图 / Copilot / 我的",
+      "day_rows": [
+        "17:00/17:40/Tian'anmen Square (天安门广场)/40 分钟",
+        "18:00/18:45/Huguo Temple Snacks (护国寺小吃)/45 分钟",
+        "19:20/21:20/Summer Palace (颐和园)/2 小时",
+        "22:00/00:00/The Palace Museum (故宫博物院)/2 小时"
+      ]
+    },
+    "J4_hard_phrasing": {
+      "source_log": "log/S06_hard_arm_adopt_compare.txt",
+      "source_log_sha256": "eceb2d1262ada8fa05e8cc27dece867f2e8a2fe3605ffd41a8c93f73dad13dd8",
+      "trips_text_head": "菜单 / / / 行程 / 跟随系统 / EN / BE / 行程 / 住宿 / 预订 / 花费 / 行程 / 2 天行程 / 逐日安排。已确认的预订会被标记为受保护。 / 9月23日周三 / 4 项 / 9月24日周四 / 4 项 / 17:00 / 17:40 / Tian'anmen Square (天安门广场) / 40 分钟 / 详情 › / 18:00 / 18:45 / Huguo Temple Snacks (护国寺小吃) / 45 分钟 / 详情 › / 19:20 / 21:20 / Summer Palace (颐和园) / 2 小时 / 详情 › / 22:00 / 00:00 / The Palace Museum (故宫博物院) / 2 小时 / 详情 › / ✦ / CityNexus Copilot / 今天 / 行程 / 地图 / Copilot / 我的",
+      "day_rows": [
+        "17:00/17:40/Tian'anmen Square (天安门广场)/40 分钟",
+        "18:00/18:45/Huguo Temple Snacks (护国寺小吃)/45 分钟",
+        "19:20/21:20/Summer Palace (颐和园)/2 小时",
+        "22:00/00:00/The Palace Museum (故宫博物院)/2 小时"
+      ]
+    }
+  },
+  "computed": {
+    "journeys_compared": 4,
+    "distinct_day_row_sets": 1,
+    "all_journeys_identical": true
+  },
+  "ai_sheet_verbatim_hard_arm": "AI SHEET | CityNexus Copilot / AI 帮我规划 / 用你自己的话描述这趟旅行，越具体越好。 / × / 旅行需求 / 我想去Houhai Lake Bar… / Houhai Lake Bar St… / 这台服务已接入 AI 模型。 / 已生成 3 个可选方案 / 去“今天”对比这几个方案，选一个再继续。 / Parsed hard constraints: depart after 10:00, limit walking to 10 minutes and prefer rides, choose local non-tourist restaurants, include one scenic place daily, and return to hotel at noon for rest. No explicit mutable activities were provided. / 稍后 / 开始规划 / 今天 / 行程 / 地图 / Copilot / 我的",
+  "five_preferences": {
+    "late_start": {
+      "visible_in": "AI sheet paraphrase only",
+      "changed_the_plan": false,
+      "note": "first slot is 17:00 in every journey regardless of wording"
+    },
+    "less_walking": {
+      "visible_in": "AI sheet + stay card \"步行 / 32 分钟\"",
+      "changed_the_plan": false,
+      "note": "the violated limit is printed as the recommendation reason"
+    },
+    "food": {
+      "visible_in": "AI sheet",
+      "changed_the_plan": null,
+      "note": "Huguo Temple Snacks appears in ALL journeys incl. ones that never asked -> not attributable"
+    },
+    "scenery": {
+      "visible_in": "AI sheet",
+      "changed_the_plan": false,
+      "note": "no named scenic stop; closed venues scheduled at 19:20/22:00"
+    },
+    "rest": {
+      "visible_in": "AI sheet",
+      "changed_the_plan": false,
+      "note": "no midday rest; 8 activities across 2 days"
+    }
+  },
+  "mechanism_reference": "see wire-runA/runB: the wizard POST bodies carry none of interests/pace/special"
+}
