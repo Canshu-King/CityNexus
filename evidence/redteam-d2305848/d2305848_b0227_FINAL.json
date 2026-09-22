@@ -1,0 +1,76 @@
+{
+ "tree": "tree19 = git archive dea1251",
+ "gate_file_sha256_16": "ecbdfd0306b2196c",
+ "fixture_sha256_16": "46dc1835312e4519",
+ "baseline": "12 passed (re-run before each arm)",
+ "arms": {
+  "A1_same_candidate_both_conflicts": {
+   "shape": "place-tech-art 的 luggage 也改 false ⇒ 一个候选同时与两把冲突",
+   "receipt": {
+    "anchor_hits": 1,
+    "bytes_changed": true,
+    "restored_exact": true
+   },
+   "gate": {
+    "collected": 12,
+    "failed": 1,
+    "passed": 11,
+    "red_nodes": [
+     "test_two_hard_constraints_each_name_their_own_blocker"
+    ],
+    "other_red": []
+   },
+   "product_response": {
+    "plan": "55523d40",
+    "status": 422,
+    "message": "PlanVersion 55523d40-... is infeasible: LUGGAGE_ACCESS_UNAVAILABLE:place-tech-art, STROLLER_ACCESS_UNAVAILABLE:place-tech-art"
+   },
+   "verdict": "FALSE_RED (门误报)：产品同时点了两个名字（正确），门因假设每候选只冲突一把而红"
+  },
+  "A2_three_hard_constraints": {
+   "shape": "STROLLER + LARGE_LUGGAGE + STEP_FREE_REQUIRED 三把 HARD 同时在档（API 直写，绕过解析器）",
+   "receipt": "N/A (API probe, no fixture/source mutation)",
+   "product_response": {
+    "confirm": 200,
+    "generate": 422,
+    "message": "No feasible plan candidates satisfy the journey constraints",
+    "details": {
+     "city_code": "CNX-DEMO",
+     "places_in_catalog": 8,
+     "city_services_in_catalog": 5,
+     "day_sequences_available": 3,
+     "requested_candidates": 3
+    },
+    "names_STEP_FREE_REQUIRED": false,
+    "names_UNSUPPORTED": false
+   },
+   "verdict": "FALSE_RED + 产品面读数：门在三把场景红在 setup（assert 201 得 422）；产品给出泛化 422、第三把零具名"
+  },
+  "A3_substring_temptation": {
+   "shape": "把冲突地点 id 改成 place-tech-art-LUGGAGE_ACCESS_UNAVAILABLE（让响应点名时带出另一把码串）",
+   "receipt": {
+    "anchor_hits": 1,
+    "bytes_changed": true,
+    "restored_exact": true
+   },
+   "gate": {
+    "collected": 12,
+    "failed": 4,
+    "passed": 8,
+    "red_nodes": [
+     "test_hard_stroller_names_the_blocker_and_does_not_misfire",
+     "test_two_hard_constraints_each_name_their_own_blocker",
+     "test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability",
+     "test_a_dropped_candidate_leaves_a_named_fact_on_a_route_the_frontend_already_cal"
+    ]
+   },
+   "attribution_caveat": "改 id 会破坏 _templates() 的硬编码匹配（实测 seed 后模板仍含旧 id）⇒ 4 条红是复合副作用，不可归因给子串判据",
+   "code_level": {
+    "two_codes_are_not_substrings_of_each_other": true,
+    "response_shape": "message = \"...infeasible: <CODE>:<place_id>, ...\" ⇒ 只有 place_id 能带入另一把码串",
+    "reachable_with_current_fixture_ids": false
+   },
+   "verdict": "NOT_MEASURED (构造不可单变量)；代码级：判据确是子串，但触发需 id 含码串，当前 fixture 不可达"
+  }
+ }
+}
