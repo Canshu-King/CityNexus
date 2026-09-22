@@ -34,6 +34,11 @@ _CANDIDATE_LEGS = (
     "place-design-library|place-river-cruise",
 )
 
+#: The name ORD-0199 requires the product to emit. Spelled here on purpose:
+#: a door that reads the constant out of the module under test cannot see a rename.
+GAP = "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE"
+
+
 
 @pytest.fixture()
 def _strip_explicit_legs(monkeypatch):
@@ -173,4 +178,107 @@ def test_replans_keeps_the_explicit_candidate_when_only_another_is_default(
     )
     assert not any("place-design-library" in a for a in added), (
         "a candidate resting on refused synthetic-default mobility was offered: " + str(added)
+    )
+
+
+# ---------------------------------------------------------------------------------------------
+# ORD-0199 - the refusal must be able to say *which* kind of missing evidence it is holding.
+# Written after the emitter, so the red-first proof lives in review/mutate_ord199_emitter.py
+# (delete the classification -> these go red), not in a claimed-before-it-was-written order.
+# ---------------------------------------------------------------------------------------------
+def _refusal_parts(response) -> dict:
+    body = response.json()
+    # The envelope is `{"error": {code, message, message_key, reason_code, details}}`; reading
+    # those off the top level returns None, which would fail the door on its own instrument.
+    envelope = body.get("error") if isinstance(body.get("error"), dict) else body
+    return {
+        "message": envelope.get("message"),
+        "reason_code": envelope.get("reason_code"),
+        "code": envelope.get("code"),
+        "details": envelope.get("details"),
+        "body": body,
+    }
+
+
+def test_ord199_a_leg_with_no_fact_at_all_is_not_called_ineligible() -> None:
+    """分界的另一侧：真的一条事实都没有，不许被新名字顺手盖过去。"""
+
+    from app.main import MobilityEvidenceNotHardEligible, _hard_leg_minutes
+
+    class _NoFact:
+        facts: dict = {}
+
+        def hard_minutes(self, origin: str, destination: str) -> int:
+            raise KeyError(f"missing frozen travel estimate: {origin}|{destination}")
+
+        def estimate_minutes(self, origin: str, destination: str) -> int:
+            raise KeyError(origin)
+
+    # `MobilityDataUnavailable` is raised one level up (by `_replan_estimate`, which then tries a
+    # strict recapture); what this primitive owes is only the boundary: an absent pair is NOT
+    # named "ineligible evidence", and it is never answered with a number.
+    try:
+        minutes = _hard_leg_minutes(_NoFact(), "place-a", "place-b")
+    except MobilityEvidenceNotHardEligible as exc:
+        pytest.fail(f"缺事实被叫成了『证据不合格』，两家人合一了：{exc}")
+    except KeyError:
+        pass
+    else:
+        pytest.fail(f"这条腿没有任何事实，却给出了 {minutes} 分钟")
+
+
+def test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so(_strip_explicit_legs) -> None:
+    """"没有这条腿的数据"和"这条腿只有 mock 常量 20"是两句话，投影里必须能分开读。
+
+    措辞负例（不许写成网络/离线、不许出现 SELECTABLE）合并在这一条里读**同一个** 422：
+    再开一条门就要多跑一次 `_drive_to_closure()`（它 reset 共享 demo 库并新建行程），实测会把
+    一套全量里另一条顺序敏感的门的红集合挪走；而 E1/E2/E3 三个突变对这两组断言的杀伤是同一因，
+    拆开换不来归因，只换来套件不稳定。要拆之前先量一次顺序影响。
+    """
+
+    _strip_explicit_legs(_CANDIDATE_LEGS)
+    jid, event_id = _drive_to_closure()
+    response = client.post(
+        f"/api/v1/journeys/{jid}/replans",
+        json={"trigger_event_id": event_id, "candidate_count": 3},
+    )
+    assert response.status_code == 422, response.text
+    parts = _refusal_parts(response)
+    # The message stays byte-identical: a log line and nine existing doors read it.
+    assert parts["message"] == "MOBILITY_DATA_UNAVAILABLE", parts["body"]
+    details = parts["details"] or {}
+    assert details.get("reason_codes") == [GAP], (
+        f"期望具名 {GAP}；实际 reason_codes={details.get('reason_codes')!r} / body={parts['body']}"
+    )
+    gaps = details.get("gaps") or []
+    assert gaps, f"期望点名到腿；实际 {parts['body']}"
+    named = [gap for gap in gaps if gap.get("reason_code") == GAP]
+    assert named, f"每一格都可读成『缺数据』就是没发出具名原因；实际 {gaps}"
+    for gap in named:
+        assert gap.get("evidence_state") == "FACT_PRESENT_BUT_NOT_HARD_ELIGIBLE", gap
+        assert gap.get("fact_quality") == "SYNTHETIC_DEFAULT", gap
+        assert gap.get("from_place_id") and gap.get("to_place_id"), (
+            f"点名叫了哪条腿必须给两端，不是一句聚合数；实际 {gap}"
+        )
+    assert parts["reason_code"] == GAP, (
+        f"聚合字段也要点名；实际 {parts['reason_code']!r}"
+    )
+    # R14-P 的反面：坏证据不是网络问题，也不是可选结论（同一份 422，不再多跑一次场景）。
+    text = response.text.upper()
+    for forbidden in ("OFFLINE", "NETWORK", "UNREACHABLE", "TIMEOUT", "SELECTABLE"):
+        assert forbidden not in text, f"拒绝里出现了 {forbidden}：{text[:300]}"
+    assert parts["code"] == "VALIDATION_ERROR", parts["body"]
+
+
+def test_ord199_the_named_gap_is_not_a_shield(_strip_explicit_legs) -> None:
+    """反向路径：证据合格时必须照常出方案，具名 gap 不能变成长期挡箭牌。"""
+
+    jid, event_id = _drive_to_closure()  # golden fixture intact, nothing stripped
+    response = client.post(
+        f"/api/v1/journeys/{jid}/replans",
+        json={"trigger_event_id": event_id, "candidate_count": 3},
+    )
+    assert response.status_code == 201, response.text
+    assert GAP not in response.text, (
+        f"证据合格的一趟里出现了 {GAP}：发射器退化成每行都印"
     )

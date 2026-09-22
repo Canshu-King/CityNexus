@@ -38,6 +38,7 @@ import { V14PreventivePanel } from "../features/recovery/V14PreventivePanel";
 import { RecoveryRequiredPanel } from "../features/recovery/RecoveryRequiredPanel";
 import { V12TripStudioPanel } from "../features/studio/V12TripStudioPanel";
 import { RealCityDiscoveryPanel } from "../features/discovery/RealCityDiscoveryPanel";
+import { DestinationPreparationPanel } from "../features/discovery/DestinationPreparationPanel";
 import {
   JourneyTrialSetup,
   localDateTimeInZoneToIso,
@@ -1535,12 +1536,22 @@ export function V8Experience() {
             />
           )}
           {route === "discover" && (
-            <RealCityDiscoveryPanel
-              journeyId={data.journey.id}
-              cityCode={data.journey.city_code}
-              onComplete={() => refreshAuthoritativeTruth(data.journey.id)}
-              onOpenPlan={() => navigate("authoritative")}
-            />
+            <>
+              {/* ORD-0193: whether this destination can be planned, and what to do about it, in
+                  front of the discovery console -- both read the same server projections, and this
+                  one owns the "prepare / wait / go and plan" loop. */}
+              <DestinationPreparationPanel
+                journeyId={data.journey.id}
+                onOpenPlan={() => navigate("authoritative")}
+                initialQuery={data.journey.city_code ?? ""}
+              />
+              <RealCityDiscoveryPanel
+                journeyId={data.journey.id}
+                cityCode={data.journey.city_code}
+                onComplete={() => refreshAuthoritativeTruth(data.journey.id)}
+                onOpenPlan={() => navigate("authoritative")}
+              />
+            </>
           )}
           {route === "live" && (
             <div

@@ -313,6 +313,14 @@ x-testing-obligations:
 
   destination-identity-may-come-from-an-authorised-provider:
     # ORD-0191 ⑤（仲裁 5764293445 OVERNIGHT HARD ORDER 的第一片；Commander 02:1x 指名接线）
+    consumed_shape: >-
+      ORD-0197（仲裁 甲）之后这条腿不再自己碰 `PhotonGeocoder`：它调用 B 的
+      `integrations/discovery/provider_identity.py` 拿 `ProviderResolution`
+      （`outcome / query / normalized_query / candidates / attempts / retryable / reason /
+      answered / provider_replied`），四类由 B 定型，C 只决定"这条证据是否成为 CityNexus 的身份"。
+      于是"运行性失败不得写成没有这个地方"这套分类在树上只有一份实现；C 侧的门也因此穿过 B 的
+      真实分类代码跑（门只换 httpx transport，不换判据）。两个 runtime 现场（provider 答坏 vs
+      我们这条腿起不来）各有自己的门（g4 / g11），交叉突变证明互不掩盖。
     switch: >-
       `CITYNEXUS_ANYWHERE_RESOLVER`，取值 `off`（默认）| `photon`。**每次调用都重读**：本项目已经有
       实测记录说明 import 期常量会让开发者 shell 里一个 export 改掉整套套件的判定（33/13 幽灵失败）。
@@ -324,7 +332,7 @@ x-testing-obligations:
       `pending_destination_label`，`provider_status` 与 `destination_provenance` 只在真去看过时出现。
     discrimination_policy: "destination-discrimination-v1"
     discrimination_rule: >-
-      实测（02:2x 打真 provider 问 云和县，200 / 8 条）：同一座城会以 relation `R:3289208`（带
+      实测（01:5x 打真 provider 问 云和县，200 / 4 条被返回、其中 2 条同名）：同一座城会以 relation `R:3289208`（带
       4 段 extent）与裸 node `N:244082768` 两种表达各回一次。这是**一条记录的两种形状**，不是两座城，
       所以不许反问用户；收敛由版本化策略做：只有当"带 extent 的 relation"恰好一条时才折叠，
       且被放弃的实体必须进 `collapsed_candidates` 记名（不静默丢）。两条都带边界 ⇒ 仍然 AMBIGUOUS。
@@ -350,12 +358,214 @@ x-testing-obligations:
       - backend/tests/test_qoder_provider_identity_leg.py::test_g8_the_seam_is_read_per_call_and_defaults_off
       - backend/tests/test_qoder_provider_identity_leg.py::test_g9_provider_leg_never_writes_a_digest_or_a_placeholder
       - backend/tests/test_qoder_provider_identity_leg.py::test_g10_one_place_two_index_entries_collapses_under_a_named_version
+      - backend/tests/test_qoder_provider_identity_leg.py::test_g11_a_broken_seam_is_a_runtime_failure_too_not_a_verdict_about_the_world
     reverse-mutants:
       # M6 摘掉 resolver 调用 ⇒ g2 必回红（Commander 原样点的那一条）；
       # M7 把"搜到的近似结果"当身份 ⇒ g6 红；M8 传输失败写成 NO_MATCH ⇒ g4 红；
       # M9 两条带边界面积也折叠 ⇒ g5 红；M10 反过来偏好裸点 ⇒ g10 红。
       # 实测：baseline 5 门先量绿，5/5 KILLED，逐字节还原 restored=True。
+      # 交叉突变（f5afdcf9）另加六条：每条同时点名"必须红的门"和"必须仍绿的门"。
+      # C6 第一次跑就抓到真东西：seam 自身起不来的分支被洗成 NO_MATCH 时**没有任何门红**
+      # （g4 管的是 provider 答坏，不是我们构造失败）⇒ 先补门 g11 再把期望挪上去，没有降级突变。
+      # 实测：kill baseline 5 门绿、cross baseline 10 门绿，5/5 KILLED + 6/6 KILLED+ISOLATED、restored=True。
       script: review/mutate_ord191_leg.py
+
+  broken-provider-evidence-is-a-runtime-failure-and-never-an-identity:
+    rule: >-
+      provider 答了、而且报 MATCH，不等于它给得出可引用的实体。收成 canonical 之前必须过两条**已被
+      验收口径点名**的条件：① 实体引用形如 `<N|W|R>:<正整数>`（OSM 的元素类只有这三个）；② 位置是合法
+      WGS84（lat ∈ [-90,90]、lon ∈ [-180,180]，越界只拒绝、不四舍五入、不修值）。任一条不满足 ⇒
+      `destination_state=RUNTIME_FAILURE`、`canonical_destination_id=null`、`retryable=true`、
+      `destination_resolution=provider_evidence_malformed`、具名 `attribution_reason=PROVIDER_BAD_RESPONSE`
+      （沿用 provider 层已有的词，不另造），并且被弃用的那条证据原样进 `malformed_candidates`。
+      明确禁止：写成 NO_MATCH（那是在说"世上没这个地方"）、写摘要/占位当身份、把它报成"联系不上"。
+    measured-on: 1cce4bf
+    measured-before: >-
+      修前实测（mocked transport、一次性库、seam=photon、正常入口 GET）：properties 去掉 `osm_type`
+      ⇒ state=RESOLVED / canonical=`OSM:unknown:3289208`；`osm_type="Z"` ⇒ canonical=`OSM:Z:3289208`；
+      质心 [200.0,120.0] ⇒ 照样收成身份。三者都会被下游当真实地点 join/缓存/引用。
+    open-item: >-
+      还有一件 C 侧看不到、因此**没有**假装修好的：provider 回了 feature、但每条都没有可用 osm_id 时，
+      provider 层在分级阶段就把候选丢掉，交给产品的是 `NO_MATCH + PROVIDER_NO_RESULTS`，与"真的一条都没回"
+      在同一个读数上不可区分（`ProviderResolution` 字段实测：outcome/query/normalized_query/candidates/
+      attempts/retryable/reason/answered/provider_replied，`ProviderAttempt` 不带会答条数）。要分开这句话
+      需要 provider 层把"看到了几条"交出来 ⇒ 已把两侧读数交给 B，不由 C 伸手进 integrations/discovery/** 改。
+      今晚把这句话从推断升成实测，并扩了两格：塌陷点就是
+      `integrations/discovery/provider_identity.py:318-321` 的 `_is_destination_grade`，它同时按
+      `props["name"] is None`、`props["osm_id"] is None` **和** `props["type"] not in
+      DESTINATION_GRADE_TYPES` 丢弃整条 feature ⇒ 塌成"这个地方不存在"的形状不止缺 id 这一种；
+      探针把两侧 dataclass 的字段名整排打印出来，确认没有任何一条报"看到几条"。
+      按名点给 B 的口径收窄成一个字段：`ProviderAttempt.features_viewed`
+      （等价的 `candidates_before_filter` + 丢弃原因亦可），C 侧拿到它就能把
+      "答了但证据不合格"从"答了且确实没有"里分出来；那一天
+      `backend/tests/test_qoder_ord197_four_class_receipt.py::test_r1d_a_feature_without_any_usable_id_is_named_malformed_not_absent`
+      会以 XPASS 报错（strict），提醒摘标记。
+    re-measured: >-
+      2026-09-22 @ `d6d5ae6`（父提交上跑，本笔只改门与契约）：
+      `_qoder_ord30_evidence_20260920/ord191/repro_cmdr_malformed.py`，六种形状同入参、同一正常入口，
+      逐条打印产品答案与 provider 层交出来的对象。
+
+  a-refused-leg-must-name-which-kind-of-evidence-is-missing:
+    rule: >-
+      planner 因为某条腿的 used-edge 证据不进硬判定而放弃候选时，服务器投影必须说得出**是哪一种缺**。
+      两条句子不是一回事：`MOBILITY_DATA_UNAVAILABLE` ＝ 这条腿我们根本没有任何事实（或事实没带质量标签，
+      无法说明它是什么）；`MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE` ＝ 这条腿**有**事实，而且它的质量是明确
+      记录过的，只是那个质量不许进硬判定（今天就是 mock 的整表常量 ``SYNTHETIC_DEFAULT``）。两家人**不许
+      合一**：把缺事实也叫成不合格，或反过来把不合格糊成缺数据，都是 R14 禁止的归因塌陷。
+      具名走**结构化属性**（异常自带 `reason_code` / `evidence_state`，投影读 `details.gaps[].reason_code`
+      与聚合 `details.reason_codes`，并点名腿的两端与 `fact_quality`），**不许**从异常 message 里 substring
+      猜——那等于让一个契约字段活在某句话的措辞上。
+      三条硬负例：① 这不是可选结论，投影里绝不出现 `SELECTABLE`；② 绝不写成网络/离线/超时（那是另一族
+      原因，方向也不同）；③ HTTP `message` 逐字保持 `MOBILITY_DATA_UNAVAILABLE`，因为日志与九处既有门读它。
+      反向路径同样是合同的一部分：used edges 全部合格时必须照常出方案，具名 gap **不许**变成长期挡箭牌；
+      因此"把所有边标成 eligible"这个突变必须让这个名字消失（E2 实测 3/3 killed）。
+    measured-on: a383bbd
+    doors:  # 措辞负例（网络/离线/SELECTABLE）与具名断言读同一份 422，合并进门 1，理由写在该条 docstring
+      - backend/tests/test_qoder_mobility_replan_endpoint.py::test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so
+      - backend/tests/test_qoder_mobility_replan_endpoint.py::test_ord199_a_leg_with_no_fact_at_all_is_not_called_ineligible
+      - backend/tests/test_qoder_mobility_replan_endpoint.py::test_ord199_the_named_gap_is_not_a_shield
+    mutants: >-
+      `review/mutate_ord199_emitter.py`：E1 删发射器 ⇒ 具名门 1/1 killed、其余四门照绿；
+      E2 把 ``HARD_FEASIBLE_QUALITIES`` 扩到含 ``SYNTHETIC_DEFAULT``（＝"所有边都合格"）⇒
+      具名门＋既有 synthetic 门 2/2 killed、反向门与分界门照绿；
+      E3 保留分支但换回旧名 ⇒ 具名门 killed（同一门也读措辞负例，所以 E1/E3 都杀它）。
+      三个突变各自 restored=True（按文件 SHA 回验），baseline 先量绿。
+    coverage-gap: >-
+      诚实地记一条没覆盖到的：`MOBILITY_DATA_UNAVAILABLE` 这一族今天在端点层**没有**自己的场景——demo
+      世界里被剥掉的腿一律冻结成 `SYNTHETIC_DEFAULT`（有名字的不合格证据），要造"真的没有事实"需要 strict
+      capture 失败（provider 不可达）。我没有为了凑宽突变造假场景，分界改由单元门
+      `test_ord199_a_leg_with_no_fact_at_all_is_not_called_ineligible` 守住。
+
+  per-attempt-evidence-must-sit-in-the-cell-the-consumer-reads:
+    rule: >-
+      `provider_status` 里属于"目的地这一问"的那一格（`stage=resolving_destination`）必须与失败路径
+      带同样多的话：`status / answered / provider_replied / reason / attempts[]`（每条 attempt 有
+      `endpoint / answered / http_status / elapsed_ms / reason / retry_after_s`）。成功**不许**比失败
+      报得少：只在出错时才留痕的证据，是朝着自己好看的方向的证据。同一批 attempt 必须与
+      `destination_provenance.provider_attempts` 是同一份值（两处读数不一致即为缺陷）。
+      覆盖 observation 另占该格时不顶替、而是并列追加。
+    measured-on: 1cce4bf
+    durable-half: >-
+      同一批 attempt（以及命名成功时的 `destination_provenance`、被拒时的 `malformed_candidates`）必须
+      **落到作业自己的行里**：成立的收口写进 result 载荷，未成立的写进错误信封的 `details`（读的时候
+      两种形状都要看，否则会把"存在下一层"误读成"没存"）。理由不是对称好看，而是寿命：回答随请求消失，
+      作业比它活得久，一次故障只有在作业里留着全部尝试才可追。实测（`镜A 超时 + 镜B 语义空`，B 自己的
+      `resolve_from_endpoints` 转两个 transport）⇒ 结论 `NO_MATCH`、身份 null，而
+      `provider_attempts` 在回答里 2 条、在库里也是 2 条（`answered` 依次 false/true，失败那条带
+      `reason`）。守着这一条的门与突变：
+      `backend/tests/test_qoder_ord197_four_class_receipt.py::test_r5_…` 与
+      `review/mutate_ord197_receipt.py`（N1 什么都不存 ⇒ 六条门全红；N2 只留最后一条 ⇒ 只有 r5 红，
+      r1/r3/r4 仍绿）。
+    live-reading: >-
+      seam=photon 一次 `GET /api/v1/destinations/capability?query=云和县`（一次性临时库
+      `ord167_e2e.db`，正常入口）⇒ canonical=`OSM:R:3289208` / RESOLVED / HYDRATABLE /
+      START_HYDRATION，`provider_status` 目的地格 attempts=[{endpoint: photon.komoot.io, answered: true,
+      http_status: 200, **elapsed_ms: 1342.4**}]。此前同一腿直接驱动 provider 类、绕过计时 transport 时，
+      同一次真调用记的是 `elapsed_ms=0.0` —— 已按"改了就要有门"补进门断言（数值只断存在，真数字由收据给）。
+
+  r14-section-8-attribution-fields-travel-as-one-group:
+    rule: >-
+      归因四字段 `attribution_reason / evidence_kind / http_status / source_layer` 由**同一处**从同一次
+      观察导出，**同进同出**：有具名原因时四个键必须都在（缺一即红），没有可归因的事时四个都不出现
+      （不许留半套让屏幕、播报、telemetry、恢复动作各自解释）。证据层级按冻结优先级判：服务侧码 →
+      HTTP 状态 → 传输异常；`http_status` 在传输层结论时必须是 `null`，不许写 0。
+      取值（拼写沿用仲裁正文与 provider 层已有词，不新增）：`evidence_kind ∈ {HTTP_RESPONSE,
+      TRANSPORT_EXCEPTION}`；`source_layer ∈ {RESOURCE_STATE, RUNTIME, TRANSPORT}` —— 只有 provider
+      如实回答了"这里没有"才算 RESOURCE_STATE，其余答了但不合格的都算 RUNTIME，没人答算 TRANSPORT。
+    measured-on: 1cce4bf
+    gates:
+      - backend/tests/test_qoder_provider_identity_leg.py::test_g13_a_successful_answer_carries_the_same_attempt_evidence_a_failure_does
+      - backend/tests/test_qoder_provider_identity_leg.py::test_g14_a_reference_the_provider_cannot_be_held_to_never_becomes_identity
+      - backend/tests/test_qoder_provider_identity_leg.py::test_g15_an_impossible_position_is_refused_not_rounded
+      - backend/tests/test_qoder_provider_identity_leg.py::test_g16_the_four_attribution_fields_arrive_together_or_not_at_all
+    reverse-mutants:
+      # M12 摘掉实体引用/坐标合格性 ⇒ g14、g15 红；M13 §8 少一格 ⇒ 只有 g16 红；
+      # M14 成功格退回两键摘要 ⇒ 只有 g13 红。交叉：C8/C9/C10 各点名"必须仍绿"的门，
+      # 证明这三处不是共用一条码路。实测：kill baseline 与 cross baseline（16 门）先量绿，
+      # 9/9 KILLED + 10/10 KILLED+ISOLATED，逐次 restored=True。
+      # 记一笔我自己的错：g15 第一版把单元素写成 `(_raw_feature(...))`（少了逗号 ⇒ 那是 dict 不是 tuple），
+      # provider 层收到 `features: ["type","geometry","properties"]` 抛 AttributeError，被 seam 分支写成
+      # PROVIDER_UNREACHABLE。门红了是我测错；顺带量到第二条真事实：**答了之后我们自己抛的异常，现在也被
+      # 说成"联系不上 provider"**（trace 已交 B/C 两侧看），这一条本轮未改。
+      script: review/mutate_ord191_leg.py
+
+  capability-axis-gained-not-answered-by-arbitration:
+    ruling: >-
+      仲裁 `5765903862` 回"选项一"= 词表加一格（经 Commander 于 ORD-0197 验收注转达）。命名由 C 定，
+      三条硬条件：① 进冻结词表；② 同步进本 annex 与 openapi.yaml；③ 与 `retryable` 联动，UI 动作指向
+      "稍后重试"而不是"开始准备"。
+    added: NOT_ANSWERED
+    meaning: >-
+      问了，没有任何一方能答。它**不是**本文件一直拒绝的 UNKNOWN："没人去看"仍然是缺席的
+      `provider_status` + 结构答案 `UNAVAILABLE`；这一格只用于"看过而没人答得出"这一种被测量到的
+      运行时事实。三种成因共用它：传输/超时、我们自己的解析腿起不来、provider 答了但证据不合格
+      （见 broken-provider-evidence-...）。
+    invariant: >-
+      NOT_ANSWERED ⇒ `retryable is true` 且 `provider_status` 在场，且
+      `recommended_action=RETRY_LATER`。三者缺一就不是这一格，是第四个"看起来像状态"的字符串。
+    action_word: >-
+      `RETRY_LATER` 是第四格带出的第四个动作词：三元组 {START_HYDRATION, CHOOSE_ANOTHER_DESTINATION,
+      ACCEPT_PARTIAL_PLAN} 里没有一个表达"稍后"，而裁定第③条要求动作必须指向稍后重试。⇒ 这一格**顺带
+      扩了动作词表**，属于 R1 面，写在账上请仲裁确认或否决命名，不算被状态改名偷偷带过去。
+    measured-on: 5d39096（改动在工作区，读数取自该格的门）
+    gates:
+      - backend/tests/test_qoder_provider_identity_leg.py::test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural
+      - backend/tests/test_qoder_provider_identity_leg.py::test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_string
+    gate-followup-for-lane-f: >-
+      F 的 `tests/test_qoder_anywhere_gates.py:47 STATES = {"READY","HYDRATABLE","UNAVAILABLE"}` 是本地
+      副本，没读产品的 `CAPABILITY_STATES`。本轮**没有**去改 F 的文件（改了就是替 F 把门配绿）。
+      全量实测：这一改动**没让任何一条现有门变红**（seam 默认关 ⇒ 未答仍是 UNAVAILABLE，不落入新格），
+      所以 F 可以在自己节奏里把 STATES 改为引用产品常量并补"未答 ⇒ 新格"的门。
+    reverse-mutants:
+      # M15 把运行时失败退回 HYDRATABLE + START_HYDRATION ⇒ g4、g17 红；
+      # M16 把"根本没去问"的问题借用新格（= 老 UNKNOWN 换皮）⇒ g17 红。这两条是 12 个突变里
+      # 唯一能证伪"这一格只是多一个词"的，都 KILLED。
+      # M17 拆掉 `or verdict == NOT_ANSWERED` 的联动 ⇒ **SURVIVED，且已按"预期幸存者"登记而不是删掉**：
+      # 三个运行时上游本来就各自带 retryable=True，所以这一句今天是冗余的；真正守着这个不变量的是
+      # g17（任一上游不再可重试即红）。留着联动是因为裁定要的是"这一格与 retryable 联动"，写在一处
+      # 比依赖三处上游不忘更符合要求。实测：kill baseline 11 门绿、cross baseline 16 门绿，
+      # 11/12 killed + 10/10 cross-isolated，0 problem（幸存者为声明项），逐次 restored=True。
+      script: review/mutate_ord191_leg.py
+
+  mobility-evidence-may-be-named-not-hard-eligible:
+    rule: >-
+      仲裁 A 的验收字符串是 `HYDRATABLE` + 具名 gap `MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE`。这个字符串
+      之前在主线上**没有任何发射器**（`app/`、两份合同、`tests/` 全 0 命中），只在车道 F 的门里当字面量
+      ⇒ 一条裁定被读成"已满足"而产品从没说过它。现在由产品说：`coverage_detail.mobility` 增加
+      `source_classes`（枚举沿用 provider 层自己的 `EXPLICIT_FROZEN_FIXTURE / LIVE_PROVIDER_CAPTURE /
+      SYNTHETIC_DEFAULT`，不新造词）与 `hard_eligible`，顶层增加常驻字段 `hard_gaps`（无 gap 时为空列表）。
+    emits_when: >-
+      目的地被点出名（`resolution.resolved`）**且** 目录对这个身份真持有行（`place_count > 0`）**且**
+      mobility 轴有显式覆盖（`candidate_count > 0`）**且** 覆盖里没有任何 `LIVE_PROVIDER_CAPTURE`。
+      四条同时成立才发；缺一不发。
+    must_not_claim: >-
+      空轴（`MISSING`）不许借这个 gap —— 那等于凭空声称『这里有材料，只是不够硬』；没定出名字的目的地
+      也不许发。能力仍是 `HYDRATABLE`、动作仍是 `START_HYDRATION`（准备合法、硬承诺不合法），
+      所以这一格**不是**第五个能力态，也和 `NOT_ANSWERED` 无关。gap 同时写进作业自己的
+      `mobility_evidence`（`source_classes / hard_eligible / hard_gaps`），因为一周后还有人读的是库。
+    measured-on: 718a660（发射器与门在工作区，读数取自该格的实跑）
+    readings: >-
+      `CN-BEIJING`：mobility READY、56 条显式腿、classes=[EXPLICIT_FROZEN_FIXTURE]、
+      hard_eligible=false ⇒ hard_gaps=[MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE]（能力仍 HYDRATABLE）；
+      `CNX-DEMO`：PARTIAL 9 条 ⇒ 同样发射；`上海`：place_count=0、MISSING、classes=[] ⇒ hard_gaps=[]；
+      未解析文本：NO_MATCH ⇒ hard_gaps=[]。写入一条 `provenance=LIVE_PROVIDER_CAPTURE` 的真捕获腿之后
+      ⇒ classes 增一类、hard_eligible=true、**gap 自己消失**（这一条是防止发射器退化成"总印一行"的关键）。
+    bug_found_while_building: >-
+      第一版用 `session.scalars(select(A.provenance, A.provider_key))` 再取 `row[0]`：`scalars()` 在多实体
+      select 下**只交第一列的标量**，于是 `row[0]` 是字符串的第一个字符，比较永远为假 ⇒
+      "有真捕获也不合格"会静默成立。已改成单列 + 直接比较，并让 G4 那条门专门测"类别一变 gap 必须消失"。
+    gates:
+      - backend/tests/test_qoder_mobility_hard_gap.py::test_a_frozen_only_mobility_axis_names_the_gap_and_stays_hydratable
+      - backend/tests/test_qoder_mobility_hard_gap.py::test_the_gap_survives_into_the_stored_job_not_only_the_response
+      - backend/tests/test_qoder_mobility_hard_gap.py::test_an_axis_with_nothing_in_it_is_MISSING_and_claims_no_gap
+      - backend/tests/test_qoder_mobility_hard_gap.py::test_a_live_captured_route_removes_the_gap_it_named
+      - backend/tests/test_qoder_mobility_hard_gap.py::test_a_destination_that_never_resolved_claims_no_hard_gap
+    reverse-mutants:
+      # GG1 无条件发射 ⇒ "空轴/未解析"两条门红；GG2 永不发射 ⇒ 点名 gap 与作业载荷两条门红；
+      # GG3 把任何类别都算合格 ⇒ 三条（含"类别一变 gap 消失"）全红。交叉 3 条里 G4 从 expect_green
+      # 挪进 expect_red：它也断言"加捕获之前 gap 在"，所以是我点错了归属，不是突变太弱（已写在脚本里）。
+      # 实测：baseline 5 门先量绿，6/6 as declared、0 problem，逐次 restored=True。
+      script: review/mutate_ord191_gap.py
 
   runtime-egress-tripwire-is-required-beyond-the-static-scan:
     rule: >-

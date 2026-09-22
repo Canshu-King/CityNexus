@@ -39,6 +39,8 @@ WIZ_SPEC = "e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts"
 OFFLINE_LIB = "src/lib/offlineJourney.ts"
 OFFLINE_SPEC = "e2e/qoder-offline-persistence.spec.ts"
 REPLAN_SPEC = "e2e/qoder-replan-review-actions.spec.ts"
+PREP = "src/features/discovery/DestinationPreparationPanel.tsx"
+PREP_SPEC = "e2e/qoder-destination-preparation.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -552,6 +554,24 @@ CASES = [
         "  const missingStep3 = missingStep1;\n",
         "  const missingStep3: MissingField[] = [];\n",
         [(WIZ_SPEC, ["ord0135-the-review-step-button-carries-what-the-screen-already-says"])],
+    ),
+    (
+        # ORD-0193 / R14-P reverse face: a server-known structural state dressed as connectivity.
+        # This is the exact defect the order forbids, so the gate must go red on it.
+        "killQ1-structural-verdict-blamed-on-the-network",
+        PREP,
+        "            ? `服务器说「${capability.pending_destination_label ?? capability.query}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。`\n",
+        "            ? `网络不可用，暂时没法确认这个目的地。请检查网络后重试。`\n",
+        [(PREP_SPEC, ["ord0193-a-structural-verdict-is-not-called-a-network-failure"])],
+    ),
+    (
+        # A settled state with nothing to press: the order's "禁止静默关闭与空操作".  Removing the
+        # retry action from a retryable failure leaves the traveller on a dead screen.
+        "killQ2-a-retryable-failure-offers-no-action",
+        PREP,
+        "            {job.terminal && job.retryable && (\n",
+        "            {false && (\n",
+        [(PREP_SPEC, ["ord0193-a-retryable-runtime-failure-offers-a-retry-and-a-structural-one-does-not"])],
     ),
 ]
 
