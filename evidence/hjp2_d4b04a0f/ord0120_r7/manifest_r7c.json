@@ -1,0 +1,162 @@
+{
+  "deployed_artifact": {
+    "bytes": 1230082,
+    "path": "/assets/index-BCF4ptyk.js",
+    "sha256": "f3bda3d696d37cd1750e646a98ea6151c64d59247517c937b198dd369251d0e9"
+  },
+  "directory": "evidence/hjp2_d4b04a0f/ord0120_r7",
+  "files": [
+    {
+      "bytes": 13573,
+      "file": "finding_hjp2_reading_01.md",
+      "git_blob_sha1": "ed74f8c7ad457a121f537d4037affe49ba217857",
+      "sha256": "4dae74a7fa1bb3869730158e6fa4629f4014084e915b32fb28bf465e2bcfd75d"
+    },
+    {
+      "bytes": 7930,
+      "file": "finding_hjp2_reading_02.md",
+      "git_blob_sha1": "dfabc897437dc74d6fb5c227ca71c60ed6fd8def",
+      "sha256": "518923557dea38c7317821708cc4202af2fa31956721b4dfbf66a15c635b36bb"
+    },
+    {
+      "bytes": 38447,
+      "file": "PlanWithAiSheet.tsx",
+      "git_blob_sha1": "8d58cfe9faf10562fe86164faa817bc7bbe0a769",
+      "sha256": "5ea10fdbd43210c913d401b1d96077211a83c3ffa2853d4fec626d63ac839b39"
+    },
+    {
+      "bytes": 3175,
+      "file": "deployed_artifact_excerpt.txt",
+      "git_blob_sha1": "13b58e3dfa7ec49a634faffd65f764d6fac6e1e6",
+      "sha256": "eeea9e281a85543d2ec6f47c938b1ad3bf55d2b3bd4c84088fbaf237f7297d49"
+    },
+    {
+      "bytes": 16354,
+      "file": "isolation_receipt_r7.json",
+      "git_blob_sha1": "46145e5ca335db579e5b20b27280c27eacf4400b",
+      "sha256": "20ad750b2aeaed7febddc8a546bd8d0ffe9b2fbdcc48cedffaf2a10ac7ccc924"
+    },
+    {
+      "bytes": 6703,
+      "file": "beijing_chain_r7.json",
+      "git_blob_sha1": "f816e073a4d3d92f5439b58b0cf5c06e8811615e",
+      "sha256": "340bb20577c17e8a9506c1fea3a5e419e69e0585bb5c7dffbdda6d8428df7e15"
+    },
+    {
+      "bytes": 1397,
+      "file": "openapi_plan_lifecycle_paths.json",
+      "git_blob_sha1": "567208dd0eba1a75e971d88e7c5a8b534f7422c7",
+      "sha256": "61177e9d1aaafc6596dfbb1e1c8b9275e37fbefa6fd7f73cb85332580058be7d"
+    },
+    {
+      "bytes": 5585,
+      "file": "hjp2_isolation_probe.py",
+      "git_blob_sha1": "07acd7d177cdc4aad106bfb9e5730928064cdf4c",
+      "sha256": "6f51400428a355344699fec265d975e7bd8e66f9d0a73d5271d39fc9e7e488c9"
+    },
+    {
+      "bytes": 5876,
+      "file": "hjp2_supported_vs_places.py",
+      "git_blob_sha1": "801e925cf2173b41cc9bb758ec11dac88a2b0d32",
+      "sha256": "ccaca0efadddeb91ac996ad4d379e7ae5d677b0d2c5eaaf9949cabb85af5d612"
+    },
+    {
+      "bytes": 5640,
+      "file": "isolation_probe_runA.json",
+      "git_blob_sha1": "db87166a5aeabe1efaa4276755b603ad96d581eb",
+      "sha256": "7c99e176cf778049e218d36652420f8f0984f2da704839891e76eb022571d00b"
+    },
+    {
+      "bytes": 5640,
+      "file": "isolation_probe_runB.json",
+      "git_blob_sha1": "96e4e952d98ec1f77b3cb804118628bb883bd966",
+      "sha256": "5cbabcc96739ce524da912510257c9fb7e0f70dfd6de7541a441b8b514f70bcc"
+    },
+    {
+      "bytes": 2692,
+      "file": "supported_vs_places.json",
+      "git_blob_sha1": "c29456c9e62ff470b27704f28498865f09ae85a9",
+      "sha256": "2ee6d747557b25bfe9cc5807ac7d518a57a1cc5e7749bda601f2ff56f6fedf2a"
+    },
+    {
+      "bytes": 221739,
+      "file": "r6_03_drawer.png",
+      "git_blob_sha1": "fda2415e998dc1036cd3a4b3f09eb5792deef84e",
+      "sha256": "654cc101ca619a4a44b409a52c0d971c2b2413de9bce799046c97f0f9c6f2aed"
+    },
+    {
+      "bytes": 262308,
+      "file": "r6_04_named_failure.png",
+      "git_blob_sha1": "b9d27f10a49aa3f829f6ccbf86a9389e341e0df3",
+      "sha256": "c97a7a985bd5485af1e2fce386c4bc674289c254fd8bf317c480d9936b6b2615"
+    },
+    {
+      "bytes": 151036,
+      "file": "r7_07_workbench.png",
+      "git_blob_sha1": "7ccc689fd40e2ac38d73e751c807a6088dc63b3c",
+      "sha256": "1c6c419515ff859c83591a16eb96e404ed3c5bfc8cf46ebeff94daf185359389"
+    },
+    {
+      "bytes": 369051,
+      "file": "r7_09_daycard.png",
+      "git_blob_sha1": "98d6e5302b3b7fa403d3e5d76ca3f28ea3cbcd5a",
+      "sha256": "91bea13898cfe36cd5658b2be77918be83224f101a102e823bc532f550c5df9f"
+    }
+  ],
+  "lane": "HJ-P2 commitment-intensive traveller",
+  "local_tip_not_a_coordinate": "b41b4cc (working tree tip, never pushed)",
+  "manifest": "hjp2_ord0120_r7c",
+  "readback": "directory listing fetched once over the REST API; every entry compared by git blob sha1",
+  "readings": {
+    "reading_01": "finding_hjp2_reading_01.md - isolation receipt + the AI-off submit gate + the self-retraction of my own 'no feedback' line",
+    "reading_02": "finding_hjp2_reading_02.md - the Beijing chain: 3 CANDIDATE plans with no select control on 3 walked surfaces, the false empty state on /v8/trips, and commitment_preservation=0.98 on a journey with 0 commitments"
+  },
+  "ref": "commander/control",
+  "repo": "Canshu-King/CityNexus",
+  "session": "d4b04a0f",
+  "superseded_blobs": {
+    "finding_hjp2_reading_01.md": "c0149e3927c7eb535bd55b583632c50b88d2381a",
+    "isolation_receipt_r7.json": "1e78ebd6ad431c439b05b091273b507d57d5fa7e",
+    "manifest.json": "0c68ff4816ac434b5378bb6ebd7b63e522d7b140",
+    "reason": "port-role attribution was swapped in the first publication; corrected and republished"
+  },
+  "two_run_receipt_check": {
+    "bytes_differ": true,
+    "identity_differ": {
+      "labels": [
+        "runA",
+        "runB"
+      ],
+      "pids": [
+        41560,
+        45836
+      ],
+      "started_at_utc": [
+        "2026-09-22T15:30:13+00:00",
+        "2026-09-22T15:30:15+00:00"
+      ]
+    },
+    "purpose": "the 23:20 finding: two runs of the same store must be distinguishable from one run copied twice",
+    "sha256_differ": true,
+    "verdict": {
+      "all_shared_stores_untouched": true,
+      "my_ids_present_in_any_shared_store": [],
+      "my_ids_present_in_own_copy": [
+        "f34c8ff0",
+        "68f8c7a1",
+        "5e9fd913"
+      ],
+      "own_copy_writable_by_this_lane": true,
+      "shared_main_files_unchanged_by_probe": {
+        "shared_cmdr_gate__live": true,
+        "shared_preview__preview": true
+      }
+    },
+    "verdict_identical": true,
+    "verdict_sha256": [
+      "90d99fb44ef3f137ebb76b7436764ac1bb1789a04336865529a43cd55f58571e",
+      "90d99fb44ef3f137ebb76b7436764ac1bb1789a04336865529a43cd55f58571e"
+    ]
+  },
+  "verdict": "ALL_BLOBS_RESOLVABLE"
+}
