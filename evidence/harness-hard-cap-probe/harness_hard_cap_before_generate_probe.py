@@ -22,6 +22,10 @@ Discipline:
     `app.services.seed_demo` - `POST /api/v1/demo/reset` is never issued (R13 / ORD-0125);
   * the producer precheck decides whether a result may be interpreted at all;
   * `--dry-run` proves only wiring (import, route presence, request schema) and measures nothing.
+    Note for whoever reads the dry-run receipt: importing `app.main` creates the schema at
+    `CITYNEXUS_DATABASE_URL`, so a dry run leaves an **empty** database behind - measured once at
+    `0437b5c`: 55 tables, 0 total rows, 0 non-empty tables. Nothing is seeded by a dry run and no
+    request is issued; the leftover file is deleted by the operator, not by the probe.
 
 Run it later with:  python lab/tools/harness_hard_cap_before_generate_probe.py --head <sha>
 """
