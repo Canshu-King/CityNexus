@@ -1,0 +1,31 @@
+{
+ "tree": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\tree18",
+ "arm": "C",
+ "sha0": "da2b0c8603cfe3ca",
+ "cases": [
+  {
+   "key": "C1_ideographic_space",
+   "receipt": {
+    "anchor_hits": 1,
+    "bytes_changed": true
+   },
+   "gate": {
+    "red": true,
+    "green": false
+   },
+   "restored_exact": true
+  },
+  {
+   "key": "C2_zero_width",
+   "receipt": {
+    "anchor_hits": 1,
+    "bytes_changed": true
+   },
+   "gate": {
+    "red": true,
+    "green": false
+   },
+   "restored_exact": true
+  }
+ ]
+}
