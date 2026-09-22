@@ -196,7 +196,7 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 | 文件 | bytes | git blob sha1 | 对应交付块 |
 |---|---|---|---|
-| d2305848_ord0204_tree9.py | 10,297 | （未发布，见下） | 13:59 ORD-0204 重钉驱动 |
+| d2305848_ord0204_tree9.py | 10,297 | `d21c34d1c8d3620f` | 13:59 ORD-0204 重钉驱动 |
 | d2305848_o214_verify.py / .json | 4,352 / 943 | `bb23b55422fabd20` / `7952d9d5e97c282a` | 16:35 F ORD-0214 复验 |
 | d2305848_o217_verify.py / .json | 5,107 / 358 | `f0810053fd73f711` / `e5a5f76648609047` | 18:07 C ORD-0217 复验 |
 | d2305848_o216_attack.py / .json | 5,813 / 961 | `8f6d80e51dfac9be` / `da7ecc7ee693733f` | 18:07 D ORD-0216 双向门攻击 |
@@ -204,8 +204,8 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 | d2305848_ord0209_kill.json | 1,536 | `f121183015c877c7` | 16:0x ORD-0209 反例收据 |
 
 **逐块合规状态**：
-- 13:59（ORD-0204 重钉）：驱动+收据**仍未发布**（本轮漏了两份，下一批补）；其余数字本地可复放。**LOCAL-ONLY**。
-- 15:41（红队三连）：0200/0201 收据未发布（含第一轮被序列红污染的 JSON——发布反而会误导，保留本地并在文件名下已注明），0203 已发布；0204 收据未发布。**部分 LOCAL-ONLY**。
+- 13:59（ORD-0204 重钉）：驱动 `d21c34d1c8d3620f` + 收据 `175a7cf9bc050c53` 已补发（上一行表已更新）。
+- 15:41（红队三连）：0203 已发布；0200/0201 的 JSON 含第一轮被序列红污染的读数，发布反而会误导 ⇒ 保留本地并明示 **LOCAL-ONLY**（污染轮不作为审计坐标）。
 - 16:0x / 16:35 / 18:07 / 18:5x：核心收据已发布（上表）。
 - **审计者路径**：`https://github.com/Canshu-King/CityNexus/tree/commander/control/evidence/redteam-d2305848`——blob sha1 即上表，拿源对象本身。
 - 上载前扫描：8 文件 0 凭据原文/前缀（grep sk-/Bearer/api_tok 复核）；e2e log 与 tree 未上载（体积大且可由驱动+收据重建）。
@@ -10673,7 +10673,184 @@ locator.click('调整预算') -> 成功（无异常）
   ② 修正后断言 `.v8-sr-only` 里不再出现该字段名。
   ⚠ 再次提醒：**可见性断言不要用 `innerText.includes`**（我就是这么把 live region 读成"挂在屏上"的）。
 
+### 1a986a24 HJ-P1 ORD-0220 ②③ 各 2/2 复跑 + 按新规则声明证据坐标 @2026-09-22T19:02+08
+
+**先按 `EXTERNALLY_READABLE_EVIDENCE` 交代坐标（不写就等于没交）**：
+
+```text
+本块引用的两个提交（40 位全写）：
+  522c414102fa956a0af7c4e5567da2b6badfccfd  ← 我这份包所出自的树
+  25165d9e193b61ba9751f946272d555543cf0444  ← 当前工作尖
+本地实测（不联网的硬证）：
+  git branch -r --contains 522c414  => 0 条
+  git branch -r --contains 25165d9  => 0 条
+  git remote -v  => origin = D:/moodle/CityNexus, iso = D:/moodle/_qoder_th_20260918   ← 都是本地目录
+⇒ **LOCAL-ONLY, no resolvable coordinate**。而且比"没 push"更糟一层：
+   这条集成线的 origin/iso 本身就是本地路径，所以 `refs/remotes/*` 里**永远不可能**出现 GitHub 可解析的引用；
+   账本里写 `522c414` 对外部审计者等于不存在（与包工头 18:54 块 ① 里那四个 422 同因）。
+我**没有**用 live_checks/publish_evidence.py 上传：我的车道约束是只读（不 push、不建分支）。
+⇒ 需要外部审计的这三样请包工头代发，我给齐清单：
+   1) 本交付块文本；
+   2) `_qoder_hjp1_o207_20260922/shots/o219-stale-hint-step3.png`（110,410 B）与 `o219-hint-scrolled.png`（70,891 B）；
+   3) 复放脚本＝下面"形制"那一节原样（无 secret、无库文件、无用户数据）。
+```
+
+**栈凭据**：包 `dist5/assets/index-BlM40ELx.js`（从 `522c414` 出，构建前后从**仓库根**读 `git status --porcelain frontend/src` 均 0 行）；
+当前尖 `25165d9` 与 `522c414` 之间 `git diff --name-only … -- frontend/src` = **0 文件**（那是一笔 `docs(review)`），
+所以这份包对当前尖仍然有效；后端 `127.0.0.1:8751` + 代理 `8752`；库 `_hjp1_o220.db`；
+`AI=disabled`、`DEMO_MODE=false`、key 清空、无隧道、无 provider 出网。
+**本轮 0 次创建**：库前后都是 journeys 44 / travelers 59（我只走到第 3 步，没点「确认创建」）。
+
+#### 两格各 2/2（同一序列一次跑完，两个独立页面会话）
+
+| 读数点 | pass 1 | pass 2 |
+|---|---|---|
+| 被拦瞬间 `.trial-required-hint` 的 y / 高 | **y=1221 / h=85** | **y=1221** |
+| 它是否在视口内（视口 844） | **inView=false** | **inView=false** |
+| 此刻 `scrollY` | 0 | 0 |
+| 同屏 sticky 主按钮「下一步」的 y | **652** | **652** |
+| 把总预算改成有效值后 `.v8-sr-only` 里 | **「还需要填写：总预算」** | **「还需要填写：总预算」** |
+| 进入第 3 步后：可见 `.trial-required-hint` 实例数 | **0** | **0** |
+| 进入第 3 步后：`.v8-sr-only` 含该句 | **1 个（仍在）** | **1 个（仍在）** |
+
+- **形制（这轮我按第 9/10 条自己钉上）**：pass 2 之前我先 `localStorage.removeItem('citynexus.v8.trial_draft.step')` 再 `reload`，
+  所以两遍不是同一份草稿状态；两遍都是"重新加载 → 点「试用其他城市」→ 需要时按「返回」到第 2 步 → 总预算写 0 → 点主按钮被拦 → 改成有效值 → 再点主按钮进第 3 步"，
+  每遍一次独立页面会话，没有复用上一遍的 DOM。
+- **ORD-0220 ③（提示渲染在折叠外）＝仍在，2/2**（累计 **4/4**，坐标与 `50b35e0` 完全同型）：
+  解释条在 y=1221、视口只到 844，而 sticky 主按钮就在 y=652 的拇指位；页面停在 `scrollY=0`，产品既不滚动也不聚焦。
+  人的体验＝"按了没反应"。分类 **HUMAN_BLOCKER**。
+- **ORD-0220 ②（sr-only live region 不重算）＝仍在，2/2**（累计 **2/2**）：
+  字段**当场**改好之后读屏节点还写着「还需要填写：总预算」，进入第 3 步仍在；
+  同一时刻**可见**提示实例数为 **0** ⇒ 这正是我 18:07 改判的形状：不是明眼人的谎，是**读屏用户的谎**。
+
+#### 给 D 的两条断言（可直接抄，都不依赖 `innerText`）
+
+```ts
+// ① 被拦瞬间，解释必须在视口内（否则按了像没反应）
+const hint = page.locator('.trial-required-hint');
+await expect(hint).toBeVisible();
+const box = await hint.boundingBox();
+expect(box!.y + box!.height).toBeLessThanOrEqual(844);   // 视口高，按 emulate 写死或读 innerHeight
+
+// ② 字段修好后，读屏 live region 不得再留这句
+await budgetInput.fill('420');
+const stale = await page.evaluate(() =>
+  [...document.querySelectorAll('.v8-sr-only')].filter(e => (e.textContent || '').includes('还需要填写：总预算')).length);
+expect(stale).toBe(0);
+```
+
+⚠ 我特意**没有**写成 `expect(locator).toHaveCount(0)`：本车道账本记过这个写法会挂（等到超时），
+一次性读节点数组再断言长度不会。抄的时候别换回去。
+
+⚠ 两条禁令（我今天各栽过一次）：**不要用 `innerText.includes(...)` 判"屏上有没有话"**——它把 `.v8-sr-only` 算进去，
+我就是因此把"读屏残留"报成了"挂在屏上"；以及**判遮挡前先确认那个浮层是不是你自己开的**
+（`sheetOpen` 只有显式 `onSheet` 会置真，我 16:22 那条 blocker 就是这么来的，已自撤）。
+
+### 🔬 e345b9d6（SESSION=e345b9d6）ORD-0221 交付：仲裁要的四件运行读数（①blob 我从 GitHub 自己回读核对；②两条配对反例＋一条按实报的 SURVIVED；③④可见文本 before→after，逐面分开量）@2026-09-22 19:0x +08 → 提交 **`b41b4cc`**
+
+**报数六要素**：树 `D:/moodle/_qoder_integration_20260919`（有 .git）；`git log -1` = **`b41b4cc 2026-09-22 19:0x +0800 test(frontend): per-surface before/after readings for the wizard hint, and bytes_changed in the kill receipts (ORD-0221)`**；解释器 Node/Playwright ＋ `D:/moodle/CityNexus/.venv/Scripts/python.exe` = **3.12.14**；收集＝执行同一把形制：`python review/run_spec.py "e2e/qoder-wizard-hint-surface-readings.spec.ts" 4532 --config playwright.prod-gate.config.ts` → 收集 **3 节点**（1 real-seed ＋ 2 读数节点），执行 **exit 0 / 3 passed**（`review/run-run074597.log`；同形制前一把 `run-run074473.log` 亦 3/3）；`tsc --noEmit -p tsconfig.check.json` **exit 0**（`review/tsc-0221b.txt`）；`git status --short -- frontend` 空（`backend/tests/conftest.py`、`tools/verification/mutation_campaign.py` 两个**不是我的**脏文件我原样留着）。
+**这些读数跑在 `b41b4cc`/`25165d9` 上，审的是 `50b35e0` 的行为——这条我用 diff 证明而不是声明**：`git diff 50b35e0..HEAD -- frontend/src` 只动 3 个文件、29+/14-，其中 `JourneyTrialSetup.tsx` 的代码行只有 `onUseTianjinDemo → onUseSealedDemo` 三行改名，**`missingStep` 在 ± 行里出现 0 次**（提示重算那段一个字节都没变）；`V8Experience.tsx` 1 行（同名改名的调用点）；`LocaleContext.tsx` 全是文案。**不混交**：`3e259bd`/`522c414` 的语义不在这四件里被签收，也没被我拿来当证据。
+
+**① 证据面我自己在 GitHub 上回读了一遍**（`review/verify-ord0221-evidence-surface.py`，走 contents API，token 从 git credential helper 取、不打印）：
+
+```text
+https://github.com/Canshu-King/CityNexus/tree/commander/control/evidence/ord0216
+  50b35e0__50b35e0.patch        8,343 B  blob d6b5caa03c34adda  -> MATCHES
+  3e259bd__3e259bd.patch       27,113 B  blob dfb25bda4e2784e9  -> MATCHES
+  522c414__522c414.patch        1,590 B  blob 74b2270ea3d29043  -> MATCHES
+  50b35e0__50b35e0.files.txt      202 B  blob 41eac4f6df89156e  -> MATCHES
+quoted-but-absent=[]  present-but-unquoted=[]
+```
+
+⇒ 四个 blob 名字、字节、sha16 与单里所引逐项一致，目录里既无缺也无多。**我接受这条结构性事实**：账本里的 SHA 对外部审计者等于不存在，`50b35e0` 我自己复核也是 422。今后我的交付块把"外部可读坐标"当成必字段——发布仍归你（`publish_evidence.py` 是你那条通道），我这侧负责把 patch 与清单交齐、并在块里引用你发布后的 blob。
+
+**② 两条配对门反例（形制＝单节点 `--grep`，exact SHA `b41b4cc`，每把独立进程＋独立临时库；`bytes_changed` 是量具在磁盘上实测的文件字节差，不是字符串长度差）**：
+
+| 反例 | 靶文件:锚 | mutation（改成什么） | anchor_hits | anchor_bytes | bytes_changed | exact nodeid | verdict |
+|---|---|---|---|---|---|---|---|
+| 留数字、删 caveat | `src/app/V8Experience.tsx` `<strong>{advisory.text}</strong>\n<span>{advisory.hint}</span>\n<div class="today-advisory-actions">` | 删掉 `<span>{advisory.hint}</span>` 一行 | 1 | 98 B | **−43** | `e2e/qoder-budget-advisory-tiers.spec.ts :: ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red` | **KILLED** |
+| 留 caveat、删数字（killU1 从未覆盖的方向，本轮新增） | 同上锚（90 B 段） | 删掉 `<strong>{advisory.text}</strong>` 一行 | 1 | 90 B | **−47** | `... :: ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action` | **KILLED** |
+
+两条变红原文（截自 `review/kill-0221-pair.txt`，控制台按 gbk 出所以 CJK 糊了，JSON/日志里是原字）：`the hub prints the derived number without its caveat: "3 天 · 2 人 · 每人每天约…"` ／ `the tight advisory lost the derived number: "按这个预算，住宿、交通和吃饭…"`。两把都 `restored OK`（跑完 SHA-256 还原）。
+
+**⚠ 同一次里我把 `killV1` 也重跑了一遍，并把新的分面读数节点加进它的靶子——两条都 SURVIVED，这是按实报不是凑数**：`missingStep3 = [...missingStep1, ...missingStep2]` 改回 `= missingStep1`（anchor 72 B，bytes_changed **−35**）→ `ord0216-a-fixed-field-leaves-the-hint-on-the-next-step` **SURVIVED**，`ord0221-4-step3-visible-hint-and-live-region-read-apart` **也 SURVIVED**。原因由 ③④ 的读数给出，不是解释：**在第 3 步，两种拼写的可见提示都是"元素不存在"**（下面 ④ 原文），所以任何只读可见文本的断言都不可能杀掉它——旧缺陷真正残留的地方是 `.v8-sr-only` 播报区。⇒ 我此前 ③ 那句"最小回归点已修"的**门侧证明不成立**（那条门只能防"提示写死不含现值"这一类，防不住 HJ-P1 报的那一条），这条我按红队的判定收回，并按 ORD-0220 ② 重做。
+
+**③ 第 2 步"改完当场消失"的 before→after 可见文本**（逐元素读 `textContent` ＋ 元素自己的 box；收据 `review/evidence/ui-overnight/ord0221-step2-visible-before-after.json`）：
+
+```text
+before（总预算=0，下一步 aria-disabled=true）
+  元素 [data-testid="trial-required-hint"]  文本「还需要填写：总预算」
+  rect top=1224 h=85 w=350   computed visibility=visible display=block opacity=1
+  visuallyRendered=true   insideSrOnly=false   inViewport=false
+after（同一屏把总预算改成 1500，中间不跳转、不刷新）
+  元素 exists=false  文本 ""   —— 提示整块消失，不是被改写
+```
+
+量具自纠一条（写在这里免得下一个人重踩）：第一次我把"可见"定义为"有渲染盒且非 sr-only"，结果读到 `opacity: 0.282` 的**半透明淡入中间态**——提示是带 fade 上屏的（实测：刚拦下时 opacity 0，1.5s 后为 1，`review/run-run074395.log`）。现在 before 要求 `visuallyRendered && opacity === "1"`，有界 10s，等不到就带着最后一次读数报红。
+
+**④ 第 3 步同一项的 before→after，并且"看见的"与"听到的"分开量**（先按 HJ-P1 的原路**强制按下**被拦的 下一步 让播报区真的被写过——防"没触发的桩读成绿"；收据 `ord0221-step3-visible-before-after.json`）：
+
+```text
+按下被拦的 下一步 时（播报区写入瞬间）
+  #trial-next-reason  文本「还需要填写：总预算」  rect 1x1  insideSrOnly=true  visuallyRendered=false
+第 3 步（把总预算改成 1500 后进入确认屏）
+  可见提示 [data-testid="trial-required-hint"]  exists=false  文本 ""      ← 屏幕上确实没有残留（HJ-P1 18:07 的自撤成立）
+  播报区 #trial-next-reason                     文本「还需要填写：总预算」  insideSrOnly=true  ← 仍在播这一句（陈旧）
+  确认行 review-budget                          「CNY 1500 / 1000 · 我们替你填的」
+```
+
+⇒ 这一格按仲裁的口径落定：**没有可见残留可给我签**，残留只在读屏路径上 ⇒ 判类 `HUMAN_ACCESSIBILITY`，靶子是那个 live region 不按现值重算——我按 ORD-0220 ② 修，修完再交一条能杀的门。禁令遵守：全程没用 `body.innerText` 判可见（`method` 字段写进两份收据），没有拿提交说明代替读数。
+
+**门禁**：新 spec 3/3（两把独立进程）；`tsc` exit 0；突变两杀一实录存活。**本车道 0 次 push**（按单："我已经替你把证据面建好了…不用自己发 GitHub"）——对外可解析坐标就是你那四个 blob，`b41b4cc` 若要上同一个证据面，说一声我把 patch 交给你发、不自己动 `commander/control`；未碰 `:4781/:4782/:8693` 与 `_live.db`；未 `demo/reset`；0 次 provider 出网；账本只追加本块。
+
+status: ORD-0221 **DONE@2026-09-22T19:0x+08 by e345b9d6**（四件齐：①blob 4/4 逐项 MATCHES；②killU1/killU2 KILLED 带 anchor_hits/bytes_changed/变红原文，killV1 双节点 SURVIVED 按实报；③④可见文本 before→after 逐面读数）。**同时收回**我 ORD-0216 ③ 的门侧证明（该门防不住 HJ-P1 那条），改由 ORD-0220 ② 承接。
+evidence: `frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts`、`review/evidence/ui-overnight/ord0221-step2-visible-before-after.json`＋`.png`、`ord0221-step3-visible-before-after.json`＋`.png`、`review/kill-0221-pair.txt`、`review/verify-ord0221-evidence-surface.py`、`review/run-run074473.log`/`run-run074597.log`/`run-run074395.log`、`review/tsc-0221b.txt`、`review/ord0082_0087_kill_drivers.py`（killU2 新增、bytes_changed 上报、killV1 双靶）。**未 push**。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 记账 @2026-09-22T19:06+08 —— 新规第一次实战：HJ-P1 申报坐标并**发现比"没 push"更深一层**（这条集成线的 origin 本身是本地路径）；我代它发布三份证据
+
+### ① HJ-P1 按 `EXTERNALLY_READABLE_EVIDENCE` 申报，并且比我们昨天那条更狠
+
+它写（我照录，不加工）：
+
+```text
+git branch -r --contains 522c414 => 0 条 ;  25165d9 => 0 条
+git remote -v => origin = D:/moodle/CityNexus, iso = D:/moodle/_qoder_th_20260918   ← 都是本地目录
+⇒ LOCAL-ONLY, no resolvable coordinate。
+   而且比"没 push"更糟一层：这条集成线的 origin/iso 本身就是本地路径，
+   所以 refs/remotes/* 里永远不可能出现 GitHub 可解析的引用。
+```
+
+**我核过这句话**：`git remote -v` 在这个树里确实只指向本地目录（`D:/moodle/CityNexus` 与 `_qoder_th_20260918`），没有 GitHub remote。
+⇒ **这条发现比"我们忘了 push"更根本**：即使车道想 push 也没地方 push；**外部可读坐标只能由我经 contents API 发布**。
+这条我记进账本，并说明**它不是我发明的补救、而是这条线的结构**——所以 `publish_evidence.py` 不是"锦上添花"，是**唯一通路**。
+
+### ② 它请求代发的三样，我已发（它只读，不 push）
+
+```text
+https://github.com/Canshu-King/CityNexus/tree/commander/control/evidence/hjp1_0220
+  delivery_block_1902.md            2,830 B  blob 7594b01f1ba7cb8c
+  o219-stale-hint-step3.png       110,410 B  blob a1084e68ef22ff97
+  o219-hint-scrolled.png           70,891 B  blob 0f5b20434d95c354
+```
+
+**两张截图我自己看了**（不是只听它说）：`o219-hint-scrolled.png` 显示手动滚动后「还需要填写：总预算」确实进入视口、`下一步` 就在下方；`o219-stale-hint-step3.png` 显示第 3 步确认屏（目的地 成都 / 人数 1·1 / 总预算 450 / 节奏 轻松·我们替你填的 / 兴趣 —），**屏上没有那句残留提示**——与它"可见实例数 0、只有 `.v8-sr-only` 里还有"的读数一致。
+
+### ③ 它这轮的两格读数（我按它的数记账，不重复开枪）
+
+| 格 | 结果 | 累计 |
+|---|---|---|
+| **ORD-0220 ③** 被拦时提示渲染在折叠外（`y=1221` vs 视口 844、sticky 按钮 `y=652`、`scrollY=0`、产品不滚不聚焦） | **仍在，2/2** | **4/4**（与 `50b35e0` 同型） |
+| **ORD-0220 ②** `sr-only` live region 不随修正重算（字段改好后读屏节点仍写「还需要填写：总预算」） | **仍在，2/2** | 2/2 |
+
+它按第 9/10 条自己钉了形制：**pass 2 之前先 `localStorage.removeItem('citynexus.v8.trial_draft.step')` 再 reload**，两遍不是同一份草稿状态；两遍都是"重载 → 进向导 → 回第 2 步 → 总预算写 0 → 被拦 → 改成有效值 → 进第 3 步"，各一次独立页面会话。
+**它给 D 的两条断言可直接抄**（都不依赖 `innerText`；它特意避开 `toHaveCount(0)`——那条本车道记过会挂）：① 被拦瞬间 `hint.boundingBox().y + height <= innerHeight`；② 改成有效值后 `.v8-sr-only` 里该句计数为 0。
+
+### ④ 现场
+
+working tip `25165d9`；链**鉴权 health 200 / 首页 200（bundle `index-BCF4ptyk.js`）**（我 19:04 走隧道实测，不用 401 证 upstream）；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+**一件我评估后决定不做的事**：tip 比线上新 3 笔（含 `3e259bd` 文案修复），但 `53fe8e8..25165d9` 的 backend 差集是 **29 个文件** ⇒ 全量部署必须重启后端、会有中断；而用户能感觉到的那条（主页那句废话）**已经在线上了**。所以我不做这次高风险换包，**等 ORD-0222 落地后与前端一起换**，避免两次中断。
+
 - id: ORD-0222
   to: e345b9d6
   priority: high
