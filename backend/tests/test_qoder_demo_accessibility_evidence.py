@@ -309,6 +309,56 @@ def test_hard_luggage_names_the_blocker_and_does_not_misfire():
     _two_way("LARGE_LUGGAGE")
 
 
+def test_two_hard_constraints_each_name_their_own_blocker():
+    """两条 HARD 同时在档：每个冲突候选只许点自己那把的名字，不许串台（红队 A2 的形状）。
+
+    产品今天就是这么做的，但没有节点钉它 - 这条补的是覆盖边界，不是缺陷。
+    """
+
+    _seed()
+    plans = _generate()
+    assert len(plans) == len(_templates()), f"SETUP：无断言时应有 {len(_templates())} 个候选，实际 {len(plans)}"
+    for code in ("STROLLER", "LARGE_LUGGAGE"):
+        _confirm_capability(code)
+    other = {"STROLLER": "LARGE_LUGGAGE", "LARGE_LUGGAGE": "STROLLER"}
+    expected = {
+        plan_id: {
+            code: [
+                place_id
+                for place_id in _conflicting_stops(plan_id, _fact_key_for(code))
+            ]
+            for code in ("STROLLER", "LARGE_LUGGAGE")
+        }
+        for plan_id in plans
+    }
+    assert any(expected[plan_id]["STROLLER"] for plan_id in plans), "没有候选与 STROLLER 冲突，这条就成了空断言"
+    assert any(expected[plan_id]["LARGE_LUGGAGE"] for plan_id in plans), "没有候选与 LARGE_LUGGAGE 冲突，这条就成了空断言"
+    seen_codes = set()
+    for plan_id in plans:
+        response = _select(plan_id)
+        for code in ("STROLLER", "LARGE_LUGGAGE"):
+            places = expected[plan_id][code]
+            if places:
+                seen_codes.add(code)
+                assert NAMED_BLOCKER[code] in response.text, (
+                    f"{plan_id} 与 {code} 冲突（{places}）却没被点名：{response.status_code} {response.text[:200]}"
+                )
+                assert NAMED_BLOCKER[other[code]] not in response.text, (
+                    f"{plan_id} 只因 {code} 冲突，却把 {other[code]} 的名字也报出来了（串台）：{response.text[:220]}"
+                )
+        if not any(expected[plan_id].values()):
+            assert response.status_code == 200, (
+                f"无任何冲突的候选被挡了：{response.status_code} {response.text[:200]}"
+            )
+            for code in ("STROLLER", "LARGE_LUGGAGE"):
+                assert NAMED_BLOCKER[code] not in response.text, (
+                    f"干净候选里出现了 {code} 的阻塞名：{response.text[:200]}"
+                )
+    assert seen_codes == {"STROLLER", "LARGE_LUGGAGE"}, (
+        f"两种具名阻塞没能各被观察到一次：{seen_codes}"
+    )
+
+
 def test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability():
     """约束先落在文件上时，权威门在落库之前就把它看得懂的候选筛掉（feasibility 里没有 demo 特例）。"""
 
