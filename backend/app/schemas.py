@@ -5,6 +5,9 @@ from typing import Any, Literal
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic_core import PydanticCustomError  # not re-exported by `pydantic` at 2.13.5
+
+from app.capabilities import capability_write_refusal
 
 PlanningMode = Literal["balanced", "budget", "explore", "strict_schedule"]
 
@@ -60,6 +63,40 @@ class CapabilityInput(BaseModel):
     explicit: bool = True
     confirmed: bool = False
     active: bool = True
+
+    @model_validator(mode="after")
+    def _refuse_rules_the_product_cannot_hold_to(self) -> "CapabilityInput":
+        """Two checks, in order, on the request body - before any row can exist.
+
+        This is deliberately the model rather than the route handlers: `CapabilityInput` is the body
+        type of all four capability write routes (`main.py` `PUT /travelers/{id}/capabilities`,
+        `POST /travelers/{id}/capabilities/confirm`, the two journey twins) plus the shared
+        `_capability_input_rows` helper, and it is neither constructed internally nor used as a
+        response model - so one validator here covers every door a client can knock on, with no edit
+        to `main.py` (that file is another lane's write domain).  A pydantic failure becomes FastAPI's
+        existing 422, so the session is never touched.
+
+        The two refusals keep distinct `type` values on purpose (`main.py`'s handler derives
+        `message_key` from `type`, never from the English message), and the rules themselves come from
+        `capabilities.py` so this schema cannot grow its own opinion about what is executable.
+        `STRONG` is checked like `SOFT`: only `HARD` items reach the feasibility gate.
+        """
+
+        refusal = capability_write_refusal(self.code, self.severity)
+        if refusal == "UNKNOWN_RULE_CODE":
+            raise PydanticCustomError(
+                "unknown_rule_code",
+                "UNKNOWN_RULE_CODE: {code} is not a capability rule this product understands",
+                {"code": str(self.code), "severity": str(self.severity)},
+            )
+        if refusal == "HARD_RULE_NOT_EXECUTABLE":
+            raise PydanticCustomError(
+                "hard_rule_not_executable",
+                "HARD_RULE_NOT_EXECUTABLE: {code} is a preference, so HARD cannot be enforced "
+                "against the plan",
+                {"code": str(self.code), "severity": str(self.severity)},
+            )
+        return self
 
 
 class AgentPolicyPayload(BaseModel):

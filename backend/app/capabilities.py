@@ -67,6 +67,42 @@ SOFT_CODES = frozenset(
     {"SLOW_PACE", "QUIET_ENVIRONMENT", "INDOOR_PREFERRED", "SENSORY_LOW_STIMULATION"}
 )
 
+
+def hard_executable_capability_codes() -> frozenset[str]:
+    """The capability codes a `HARD` write may actually be held to.
+
+    **Derived, never re-typed**: the vocabulary minus the four soft preferences.  There is
+    deliberately no fourth hand-written list here - the moment one exists, the write layer and the
+    gate can drift apart and the drift is invisible.  The equality against the feasibility gate's own
+    set (`_CAPABILITY_GATE_CODES`) is pinned by a door that imports both sides
+    (`test_qoder_ord0219_capability_write_vocabulary.py`), because importing `feasibility` here would
+    invert the dependency: `feasibility` imports this module.
+    """
+
+    return frozenset(CAPABILITY_CODES) - SOFT_CODES
+
+
+def capability_write_refusal(code: object, severity: object) -> str | None:
+    """Two questions, in order, about a capability a client wants to store.
+
+    1. is `code` one the product has a meaning for at all             -> `UNKNOWN_RULE_CODE`
+    2. if `severity` is `HARD`, can the gate hold the plan to it     -> `HARD_RULE_NOT_EXECUTABLE`
+
+    The names stay separate because the fixes are different: "that rule does not exist" versus
+    "that rule exists but is a preference, so declaring it hard would later fail the whole plan as
+    `UNSUPPORTED_HARD_CONSTRAINT`" (HARNESS 22:31: "只补 severity 会把『静默不执行』变成
+    『整趟旅程不可规划』").  `STRONG` is checked like `SOFT` on purpose:
+    `capability_constraints` (:911) forwards only `HARD` items to the gate, so a `STRONG`
+    preference is already non-gating and must not be refused.
+    """
+
+    normalized = str(code or "").strip().upper()
+    if normalized not in CAPABILITY_CODES:
+        return "UNKNOWN_RULE_CODE"
+    if str(severity or "").strip().upper() == "HARD" and normalized not in hard_executable_capability_codes():
+        return "HARD_RULE_NOT_EXECUTABLE"
+    return None
+
 _HARD_MARKERS = (
     "必须",
     "务必",
