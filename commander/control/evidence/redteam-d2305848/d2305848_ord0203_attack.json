@@ -1,0 +1,29 @@
+{
+ "D1-retryable-always-true": {
+  "key": "D1-retryable-always-true",
+  "what": "retryable 改恒真：server retryable=false 时按钮也亮（配对被拆）",
+  "anchor_hits": 1,
+  "rc": 0,
+  "failed_line": null,
+  "verdict": "SURVIVED (伪造被放行)",
+  "restored": true
+ },
+ "D2-retry-button-ignores-retryable": {
+  "key": "D2-retry-button-ignores-retryable",
+  "what": "重试按钮不再吃 retryable（识别与动作解耦）",
+  "anchor_hits": 1,
+  "rc": 0,
+  "failed_line": null,
+  "verdict": "SURVIVED (伪造被放行)",
+  "restored": true
+ },
+ "D3-verdict-title-reworded": {
+  "key": "D3-verdict-title-reworded",
+  "what": "第四格标题换成 UNAVAILABLE 格的措辞家族（文案换词）",
+  "anchor_hits": 1,
+  "rc": 1,
+  "failed_line": "x  2 [chromium] › e2e\\qoder-not-answered-cell.spec.ts:82:1 › ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable — 第四格上屏，重试真的吃 retryable (5.1s)",
+  "verdict": "KILLED (门红)",
+  "restored": true
+ }
+}
