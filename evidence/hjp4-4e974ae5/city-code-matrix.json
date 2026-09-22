@@ -1,0 +1,2436 @@
+{
+  "identity": {
+    "lane": "HJ-P4",
+    "session": "4e974ae5",
+    "started_utc": "2026-09-22T18:57:23Z",
+    "local_clock": "2026-09-23 02:57:23 +0800",
+    "base": "http://127.0.0.1:8891",
+    "db": "D:\\moodle\\_qoder_hjp4_20260921/_hjp4_20260922.db",
+    "db_is": "one-off copy, NOT _live.db",
+    "frontend_code_derivation": "browser/extract_codes.cjs evaluated the served bundle literals af/jd/_2 + function ER",
+    "served_bundle": "index-DtQ86lsQ.js"
+  },
+  "matrix": [
+    {
+      "name": "厦门",
+      "frontend_code": "CN-XIAMEN",
+      "in_label_table": true,
+      "places_http": 200,
+      "places_rows": 0,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "厦门",
+        "canonical_destination_id": "CN-XIAMEN",
+        "pending_destination_label": "厦门",
+        "resolver_query_normalized": "厦门",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "RESOLVED",
+        "destination_resolution": "vocabulary",
+        "places": [],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": "厦门",
+        "capability": "HYDRATABLE",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "coverage": {
+          "attractions": "MISSING",
+          "food": "MISSING",
+          "nightlife": "MISSING",
+          "lodging": "MISSING",
+          "mobility": "MISSING",
+          "booking": "MISSING"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "food": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false,
+            "source_classes": [],
+            "hard_eligible": false
+          },
+          "booking": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "attractions",
+          "food",
+          "nightlife",
+          "lodging",
+          "mobility",
+          "booking"
+        ],
+        "hard_gaps": [],
+        "unclassified_categories": {},
+        "place_count": 0,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "0960bcf178aaa457e845a95fd77416bb",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "HYDRATABLE",
+        "retryable": false,
+        "place_count": 0,
+        "destination_state": "RESOLVED",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "matched_label": "厦门",
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": "CN-XIAMEN",
+      "resolution_kind": "vocabulary",
+      "place_count_server": 0,
+      "coverage": {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      },
+      "source_kinds": [],
+      "hard_gaps": [],
+      "missing_categories": [
+        "attractions",
+        "food",
+        "nightlife",
+        "lodging",
+        "mobility",
+        "booking"
+      ],
+      "code_agrees_frontend": true,
+      "verdict": "RESOLVED_BUT_ZERO_PLACE_ROWS"
+    },
+    {
+      "name": "北京",
+      "frontend_code": "CN-BEIJING",
+      "in_label_table": true,
+      "places_http": 200,
+      "places_rows": 8,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "北京",
+        "canonical_destination_id": "CN-BEIJING",
+        "pending_destination_label": "北京",
+        "resolver_query_normalized": "北京",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "RESOLVED",
+        "destination_resolution": "catalog",
+        "places": [
+          {
+            "id": "place-beijing-tiananmen-square",
+            "source_provider": "mock-city",
+            "source_identity": "P101",
+            "osm_type": "p101",
+            "name": "Tian'anmen Square (天安门广场)",
+            "category": "landmark",
+            "latitude": 39.9042,
+            "longitude": 116.3974
+          },
+          {
+            "id": "place-beijing-forbidden-city",
+            "source_provider": "mock-city",
+            "source_identity": "P102",
+            "osm_type": "p102",
+            "name": "The Palace Museum (故宫博物院)",
+            "category": "museum",
+            "latitude": 39.9163,
+            "longitude": 116.3972
+          },
+          {
+            "id": "place-beijing-summer-palace",
+            "source_provider": "mock-city",
+            "source_identity": "P103",
+            "osm_type": "p103",
+            "name": "Summer Palace (颐和园)",
+            "category": "park",
+            "latitude": 39.9999,
+            "longitude": 116.2755
+          },
+          {
+            "id": "place-beijing-nanluoguxiang",
+            "source_provider": "mock-city",
+            "source_identity": "P104",
+            "osm_type": "p104",
+            "name": "Nanluoguxiang Snack Street (南锣鼓巷)",
+            "category": "food",
+            "latitude": 39.937,
+            "longitude": 116.403
+          },
+          {
+            "id": "place-beijing-qianmen-dashilan",
+            "source_provider": "mock-city",
+            "source_identity": "P105",
+            "osm_type": "p105",
+            "name": "Qianmen Dashilan Street (前门大栅栏)",
+            "category": "heritage",
+            "latitude": 39.8991,
+            "longitude": 116.3974
+          },
+          {
+            "id": "place-beijing-quanjude-qianmen",
+            "source_provider": "mock-city",
+            "source_identity": "P106",
+            "osm_type": "p106",
+            "name": "Quanjude Roast Duck, Qianmen (全聚德·前门店)",
+            "category": "restaurant",
+            "latitude": 39.8979,
+            "longitude": 116.3957
+          },
+          {
+            "id": "place-beijing-huguo-si-snacks",
+            "source_provider": "mock-city",
+            "source_identity": "P107",
+            "osm_type": "p107",
+            "name": "Huguo Temple Snacks (护国寺小吃)",
+            "category": "food",
+            "latitude": 39.934,
+            "longitude": 116.375
+          },
+          {
+            "id": "place-beijing-houhai",
+            "source_provider": "mock-city",
+            "source_identity": "P108",
+            "osm_type": "p108",
+            "name": "Houhai Lake Bar Street (后海酒吧街)",
+            "category": "nightlife",
+            "latitude": 39.941,
+            "longitude": 116.383
+          }
+        ],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": "北京",
+        "capability": "HYDRATABLE",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "coverage": {
+          "attractions": "READY",
+          "food": "READY",
+          "nightlife": "PARTIAL",
+          "lodging": "MISSING",
+          "mobility": "READY",
+          "booking": "READY"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "READY",
+            "candidate_count": 4,
+            "min_ready": 3,
+            "source_kinds": [
+              "GOLDEN_FIXTURE"
+            ],
+            "stale": false
+          },
+          "food": {
+            "state": "READY",
+            "candidate_count": 3,
+            "min_ready": 3,
+            "source_kinds": [
+              "GOLDEN_FIXTURE"
+            ],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "PARTIAL",
+            "candidate_count": 1,
+            "min_ready": 2,
+            "source_kinds": [
+              "GOLDEN_FIXTURE"
+            ],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "READY",
+            "candidate_count": 56,
+            "min_ready": 3,
+            "source_kinds": [
+              "GOLDEN_FIXTURE"
+            ],
+            "stale": false,
+            "source_classes": [
+              "EXPLICIT_FROZEN_FIXTURE"
+            ],
+            "hard_eligible": false
+          },
+          "booking": {
+            "state": "READY",
+            "candidate_count": 2,
+            "min_ready": 2,
+            "source_kinds": [
+              "GOLDEN_FIXTURE"
+            ],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "nightlife",
+          "lodging"
+        ],
+        "hard_gaps": [
+          "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE"
+        ],
+        "unclassified_categories": {},
+        "place_count": 8,
+        "provenance": {
+          "source_kinds": [
+            "GOLDEN_FIXTURE"
+          ],
+          "by_category": {
+            "attractions": [
+              "GOLDEN_FIXTURE"
+            ],
+            "food": [
+              "GOLDEN_FIXTURE"
+            ],
+            "nightlife": [
+              "GOLDEN_FIXTURE"
+            ],
+            "lodging": [],
+            "mobility": [
+              "GOLDEN_FIXTURE"
+            ],
+            "booking": [
+              "GOLDEN_FIXTURE"
+            ]
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "c52f2d4122998d42fe470639d69f5d3d",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "HYDRATABLE",
+        "retryable": false,
+        "place_count": 8,
+        "destination_state": "RESOLVED",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "matched_label": "北京",
+        "provenance": {
+          "source_kinds": [
+            "GOLDEN_FIXTURE"
+          ],
+          "by_category": {
+            "attractions": [
+              "GOLDEN_FIXTURE"
+            ],
+            "food": [
+              "GOLDEN_FIXTURE"
+            ],
+            "nightlife": [
+              "GOLDEN_FIXTURE"
+            ],
+            "lodging": [],
+            "mobility": [
+              "GOLDEN_FIXTURE"
+            ],
+            "booking": [
+              "GOLDEN_FIXTURE"
+            ]
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": "CN-BEIJING",
+      "resolution_kind": "catalog",
+      "place_count_server": 8,
+      "coverage": {
+        "attractions": "READY",
+        "food": "READY",
+        "nightlife": "PARTIAL",
+        "lodging": "MISSING",
+        "mobility": "READY",
+        "booking": "READY"
+      },
+      "source_kinds": [
+        "GOLDEN_FIXTURE"
+      ],
+      "hard_gaps": [
+        "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE"
+      ],
+      "missing_categories": [
+        "nightlife",
+        "lodging"
+      ],
+      "code_agrees_frontend": true,
+      "verdict": "HAS_PLACE_ROWS"
+    },
+    {
+      "name": "上海",
+      "frontend_code": "CN-SHANGHAI",
+      "in_label_table": true,
+      "places_http": 200,
+      "places_rows": 0,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "上海",
+        "canonical_destination_id": "CN-SHANGHAI",
+        "pending_destination_label": "上海",
+        "resolver_query_normalized": "上海",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "RESOLVED",
+        "destination_resolution": "vocabulary",
+        "places": [],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": "上海",
+        "capability": "HYDRATABLE",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "coverage": {
+          "attractions": "MISSING",
+          "food": "MISSING",
+          "nightlife": "MISSING",
+          "lodging": "MISSING",
+          "mobility": "MISSING",
+          "booking": "MISSING"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "food": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false,
+            "source_classes": [],
+            "hard_eligible": false
+          },
+          "booking": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "attractions",
+          "food",
+          "nightlife",
+          "lodging",
+          "mobility",
+          "booking"
+        ],
+        "hard_gaps": [],
+        "unclassified_categories": {},
+        "place_count": 0,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "6b9e890c209bbdf9b4775abca08f0324",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "HYDRATABLE",
+        "retryable": false,
+        "place_count": 0,
+        "destination_state": "RESOLVED",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "matched_label": "上海",
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": "CN-SHANGHAI",
+      "resolution_kind": "vocabulary",
+      "place_count_server": 0,
+      "coverage": {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      },
+      "source_kinds": [],
+      "hard_gaps": [],
+      "missing_categories": [
+        "attractions",
+        "food",
+        "nightlife",
+        "lodging",
+        "mobility",
+        "booking"
+      ],
+      "code_agrees_frontend": true,
+      "verdict": "RESOLVED_BUT_ZERO_PLACE_ROWS"
+    },
+    {
+      "name": "天津",
+      "frontend_code": "CN-TIANJIN",
+      "in_label_table": true,
+      "places_http": 200,
+      "places_rows": 0,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "天津",
+        "canonical_destination_id": "CN-TIANJIN",
+        "pending_destination_label": "天津",
+        "resolver_query_normalized": "天津",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "RESOLVED",
+        "destination_resolution": "vocabulary",
+        "places": [],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": "天津",
+        "capability": "HYDRATABLE",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "coverage": {
+          "attractions": "MISSING",
+          "food": "MISSING",
+          "nightlife": "MISSING",
+          "lodging": "MISSING",
+          "mobility": "MISSING",
+          "booking": "MISSING"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "food": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false,
+            "source_classes": [],
+            "hard_eligible": false
+          },
+          "booking": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "attractions",
+          "food",
+          "nightlife",
+          "lodging",
+          "mobility",
+          "booking"
+        ],
+        "hard_gaps": [],
+        "unclassified_categories": {},
+        "place_count": 0,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "9c0be3a6fecd0f66a57eac01f32a7ccc",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "HYDRATABLE",
+        "retryable": false,
+        "place_count": 0,
+        "destination_state": "RESOLVED",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "matched_label": "天津",
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": "CN-TIANJIN",
+      "resolution_kind": "vocabulary",
+      "place_count_server": 0,
+      "coverage": {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      },
+      "source_kinds": [],
+      "hard_gaps": [],
+      "missing_categories": [
+        "attractions",
+        "food",
+        "nightlife",
+        "lodging",
+        "mobility",
+        "booking"
+      ],
+      "code_agrees_frontend": true,
+      "verdict": "RESOLVED_BUT_ZERO_PLACE_ROWS"
+    },
+    {
+      "name": "福州",
+      "frontend_code": "CN-FUZHOU",
+      "in_label_table": true,
+      "places_http": 200,
+      "places_rows": 0,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "福州",
+        "canonical_destination_id": null,
+        "pending_destination_label": "福州",
+        "resolver_query_normalized": "福州",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "NO_MATCH",
+        "destination_resolution": "unresolved",
+        "places": [],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": null,
+        "capability": "UNAVAILABLE",
+        "reason_code": "NO_CANONICAL_IDENTITY",
+        "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+        "coverage": {
+          "attractions": "MISSING",
+          "food": "MISSING",
+          "nightlife": "MISSING",
+          "lodging": "MISSING",
+          "mobility": "MISSING",
+          "booking": "MISSING"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "food": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "booking": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "attractions",
+          "food",
+          "nightlife",
+          "lodging",
+          "mobility",
+          "booking"
+        ],
+        "hard_gaps": [],
+        "unclassified_categories": {},
+        "place_count": 0,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "1aa4afc43a876a028cd95033469292ee",
+        "namespace": "pending-request-v1",
+        "scope": "catalog-hydration-v1",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "UNAVAILABLE",
+        "retryable": false,
+        "place_count": 0,
+        "destination_state": "NO_MATCH",
+        "reason_code": "NO_CANONICAL_IDENTITY",
+        "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+        "matched_label": null,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "namespace",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "scope",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": null,
+      "resolution_kind": "unresolved",
+      "place_count_server": 0,
+      "coverage": {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      },
+      "source_kinds": [],
+      "hard_gaps": [],
+      "missing_categories": [
+        "attractions",
+        "food",
+        "nightlife",
+        "lodging",
+        "mobility",
+        "booking"
+      ],
+      "code_agrees_frontend": null,
+      "verdict": "SERVER_CANNOT_RESOLVE_CODE"
+    },
+    {
+      "name": "广州",
+      "frontend_code": "CN-GUANGZHOU",
+      "in_label_table": true,
+      "places_http": 200,
+      "places_rows": 0,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "广州",
+        "canonical_destination_id": "CN-GUANGZHOU",
+        "pending_destination_label": "广州",
+        "resolver_query_normalized": "广州",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "RESOLVED",
+        "destination_resolution": "vocabulary",
+        "places": [],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": "广州",
+        "capability": "HYDRATABLE",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "coverage": {
+          "attractions": "MISSING",
+          "food": "MISSING",
+          "nightlife": "MISSING",
+          "lodging": "MISSING",
+          "mobility": "MISSING",
+          "booking": "MISSING"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "food": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false,
+            "source_classes": [],
+            "hard_eligible": false
+          },
+          "booking": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "attractions",
+          "food",
+          "nightlife",
+          "lodging",
+          "mobility",
+          "booking"
+        ],
+        "hard_gaps": [],
+        "unclassified_categories": {},
+        "place_count": 0,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "a0ad7eb33e9ee33015c81133b531c559",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "HYDRATABLE",
+        "retryable": false,
+        "place_count": 0,
+        "destination_state": "RESOLVED",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "matched_label": "广州",
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": "CN-GUANGZHOU",
+      "resolution_kind": "vocabulary",
+      "place_count_server": 0,
+      "coverage": {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      },
+      "source_kinds": [],
+      "hard_gaps": [],
+      "missing_categories": [
+        "attractions",
+        "food",
+        "nightlife",
+        "lodging",
+        "mobility",
+        "booking"
+      ],
+      "code_agrees_frontend": true,
+      "verdict": "RESOLVED_BUT_ZERO_PLACE_ROWS"
+    },
+    {
+      "name": "深圳",
+      "frontend_code": "CN-SHENZHEN",
+      "in_label_table": true,
+      "places_http": 200,
+      "places_rows": 0,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "深圳",
+        "canonical_destination_id": "CN-SHENZHEN",
+        "pending_destination_label": "深圳",
+        "resolver_query_normalized": "深圳",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "RESOLVED",
+        "destination_resolution": "vocabulary",
+        "places": [],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": "深圳",
+        "capability": "HYDRATABLE",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "coverage": {
+          "attractions": "MISSING",
+          "food": "MISSING",
+          "nightlife": "MISSING",
+          "lodging": "MISSING",
+          "mobility": "MISSING",
+          "booking": "MISSING"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "food": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false,
+            "source_classes": [],
+            "hard_eligible": false
+          },
+          "booking": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "attractions",
+          "food",
+          "nightlife",
+          "lodging",
+          "mobility",
+          "booking"
+        ],
+        "hard_gaps": [],
+        "unclassified_categories": {},
+        "place_count": 0,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "7fd1294b7529b70fca3cb93f38a05f26",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "HYDRATABLE",
+        "retryable": false,
+        "place_count": 0,
+        "destination_state": "RESOLVED",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "matched_label": "深圳",
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": "CN-SHENZHEN",
+      "resolution_kind": "vocabulary",
+      "place_count_server": 0,
+      "coverage": {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      },
+      "source_kinds": [],
+      "hard_gaps": [],
+      "missing_categories": [
+        "attractions",
+        "food",
+        "nightlife",
+        "lodging",
+        "mobility",
+        "booking"
+      ],
+      "code_agrees_frontend": true,
+      "verdict": "RESOLVED_BUT_ZERO_PLACE_ROWS"
+    },
+    {
+      "name": "成都",
+      "frontend_code": "CN-CHENGDU",
+      "in_label_table": true,
+      "places_http": 200,
+      "places_rows": 0,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "成都",
+        "canonical_destination_id": "CN-CHENGDU",
+        "pending_destination_label": "成都",
+        "resolver_query_normalized": "成都",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "RESOLVED",
+        "destination_resolution": "vocabulary",
+        "places": [],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": "成都",
+        "capability": "HYDRATABLE",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "coverage": {
+          "attractions": "MISSING",
+          "food": "MISSING",
+          "nightlife": "MISSING",
+          "lodging": "MISSING",
+          "mobility": "MISSING",
+          "booking": "MISSING"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "food": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false,
+            "source_classes": [],
+            "hard_eligible": false
+          },
+          "booking": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "attractions",
+          "food",
+          "nightlife",
+          "lodging",
+          "mobility",
+          "booking"
+        ],
+        "hard_gaps": [],
+        "unclassified_categories": {},
+        "place_count": 0,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "d20b2f87a4d3165672a18a8d7e678fa1",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "HYDRATABLE",
+        "retryable": false,
+        "place_count": 0,
+        "destination_state": "RESOLVED",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "matched_label": "成都",
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": "CN-CHENGDU",
+      "resolution_kind": "vocabulary",
+      "place_count_server": 0,
+      "coverage": {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      },
+      "source_kinds": [],
+      "hard_gaps": [],
+      "missing_categories": [
+        "attractions",
+        "food",
+        "nightlife",
+        "lodging",
+        "mobility",
+        "booking"
+      ],
+      "code_agrees_frontend": true,
+      "verdict": "RESOLVED_BUT_ZERO_PLACE_ROWS"
+    },
+    {
+      "name": "杭州",
+      "frontend_code": "CN-HANGZHOU",
+      "in_label_table": true,
+      "places_http": 200,
+      "places_rows": 0,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "杭州",
+        "canonical_destination_id": "CN-HANGZHOU",
+        "pending_destination_label": "杭州",
+        "resolver_query_normalized": "杭州",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "RESOLVED",
+        "destination_resolution": "vocabulary",
+        "places": [],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": "杭州",
+        "capability": "HYDRATABLE",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "coverage": {
+          "attractions": "MISSING",
+          "food": "MISSING",
+          "nightlife": "MISSING",
+          "lodging": "MISSING",
+          "mobility": "MISSING",
+          "booking": "MISSING"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "food": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false,
+            "source_classes": [],
+            "hard_eligible": false
+          },
+          "booking": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "attractions",
+          "food",
+          "nightlife",
+          "lodging",
+          "mobility",
+          "booking"
+        ],
+        "hard_gaps": [],
+        "unclassified_categories": {},
+        "place_count": 0,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "99123c9fed3cbdcdef670762a534c948",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "HYDRATABLE",
+        "retryable": false,
+        "place_count": 0,
+        "destination_state": "RESOLVED",
+        "reason_code": "COVERAGE_INCOMPLETE",
+        "recommended_action": "START_HYDRATION",
+        "matched_label": "杭州",
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": "CN-HANGZHOU",
+      "resolution_kind": "vocabulary",
+      "place_count_server": 0,
+      "coverage": {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      },
+      "source_kinds": [],
+      "hard_gaps": [],
+      "missing_categories": [
+        "attractions",
+        "food",
+        "nightlife",
+        "lodging",
+        "mobility",
+        "booking"
+      ],
+      "code_agrees_frontend": true,
+      "verdict": "RESOLVED_BUT_ZERO_PLACE_ROWS"
+    },
+    {
+      "name": "东京",
+      "frontend_code": "JP-TOKYO",
+      "in_label_table": true,
+      "places_http": 200,
+      "places_rows": 0,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "东京",
+        "canonical_destination_id": null,
+        "pending_destination_label": "东京",
+        "resolver_query_normalized": "东京",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "NO_MATCH",
+        "destination_resolution": "unresolved",
+        "places": [],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": null,
+        "capability": "UNAVAILABLE",
+        "reason_code": "NO_CANONICAL_IDENTITY",
+        "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+        "coverage": {
+          "attractions": "MISSING",
+          "food": "MISSING",
+          "nightlife": "MISSING",
+          "lodging": "MISSING",
+          "mobility": "MISSING",
+          "booking": "MISSING"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "food": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "booking": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "attractions",
+          "food",
+          "nightlife",
+          "lodging",
+          "mobility",
+          "booking"
+        ],
+        "hard_gaps": [],
+        "unclassified_categories": {},
+        "place_count": 0,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "afbe01d4d2d54a7bab45f1a1b8951d27",
+        "namespace": "pending-request-v1",
+        "scope": "catalog-hydration-v1",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "UNAVAILABLE",
+        "retryable": false,
+        "place_count": 0,
+        "destination_state": "NO_MATCH",
+        "reason_code": "NO_CANONICAL_IDENTITY",
+        "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+        "matched_label": null,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "namespace",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "scope",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": null,
+      "resolution_kind": "unresolved",
+      "place_count_server": 0,
+      "coverage": {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      },
+      "source_kinds": [],
+      "hard_gaps": [],
+      "missing_categories": [
+        "attractions",
+        "food",
+        "nightlife",
+        "lodging",
+        "mobility",
+        "booking"
+      ],
+      "code_agrees_frontend": null,
+      "verdict": "SERVER_CANNOT_RESOLVE_CODE"
+    },
+    {
+      "name": "新加坡",
+      "frontend_code": "SG-SINGAPORE",
+      "in_label_table": true,
+      "places_http": 200,
+      "places_rows": 0,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "新加坡",
+        "canonical_destination_id": null,
+        "pending_destination_label": "新加坡",
+        "resolver_query_normalized": "新加坡",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "NO_MATCH",
+        "destination_resolution": "unresolved",
+        "places": [],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": null,
+        "capability": "UNAVAILABLE",
+        "reason_code": "NO_CANONICAL_IDENTITY",
+        "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+        "coverage": {
+          "attractions": "MISSING",
+          "food": "MISSING",
+          "nightlife": "MISSING",
+          "lodging": "MISSING",
+          "mobility": "MISSING",
+          "booking": "MISSING"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "food": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "booking": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "attractions",
+          "food",
+          "nightlife",
+          "lodging",
+          "mobility",
+          "booking"
+        ],
+        "hard_gaps": [],
+        "unclassified_categories": {},
+        "place_count": 0,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "b822de0e79ec28b60d975162fcc784fd",
+        "namespace": "pending-request-v1",
+        "scope": "catalog-hydration-v1",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "UNAVAILABLE",
+        "retryable": false,
+        "place_count": 0,
+        "destination_state": "NO_MATCH",
+        "reason_code": "NO_CANONICAL_IDENTITY",
+        "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+        "matched_label": null,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "namespace",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "scope",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": null,
+      "resolution_kind": "unresolved",
+      "place_count_server": 0,
+      "coverage": {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      },
+      "source_kinds": [],
+      "hard_gaps": [],
+      "missing_categories": [
+        "attractions",
+        "food",
+        "nightlife",
+        "lodging",
+        "mobility",
+        "booking"
+      ],
+      "code_agrees_frontend": null,
+      "verdict": "SERVER_CANNOT_RESOLVE_CODE"
+    },
+    {
+      "name": "苏州(NOT advertised, fallback probe)",
+      "frontend_code": "CN-苏州",
+      "in_label_table": false,
+      "places_http": 200,
+      "places_rows": 0,
+      "places_elapsed_s": 0.0,
+      "capability_http": 200,
+      "capability_elapsed_s": 0.0,
+      "capability_full": {
+        "query": "苏州(NOT advertised, fallback probe)",
+        "canonical_destination_id": null,
+        "pending_destination_label": "苏州(NOT advertised, fallback probe)",
+        "resolver_query_normalized": "苏州(notadvertisedfallbackprobe)",
+        "destination_pending_key": null,
+        "pending_label_fidelity": "EXACT_RAW",
+        "destination_state": "NO_MATCH",
+        "destination_resolution": "unresolved",
+        "places": [],
+        "retryable": false,
+        "candidates": [],
+        "malformed_candidates": [],
+        "matched_label": null,
+        "capability": "UNAVAILABLE",
+        "reason_code": "NO_CANONICAL_IDENTITY",
+        "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+        "coverage": {
+          "attractions": "MISSING",
+          "food": "MISSING",
+          "nightlife": "MISSING",
+          "lodging": "MISSING",
+          "mobility": "MISSING",
+          "booking": "MISSING"
+        },
+        "coverage_detail": {
+          "attractions": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "food": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "nightlife": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "lodging": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          },
+          "mobility": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 3,
+            "source_kinds": [],
+            "stale": false
+          },
+          "booking": {
+            "state": "MISSING",
+            "candidate_count": 0,
+            "min_ready": 2,
+            "source_kinds": [],
+            "stale": false
+          }
+        },
+        "missing_categories": [
+          "attractions",
+          "food",
+          "nightlife",
+          "lodging",
+          "mobility",
+          "booking"
+        ],
+        "hard_gaps": [],
+        "unclassified_categories": {},
+        "place_count": 0,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        },
+        "fingerprint": "3a55560d527274b92bbd558fd561f324",
+        "namespace": "pending-request-v1",
+        "scope": "catalog-hydration-v1",
+        "catalog_schema_version": "catalog-v1",
+        "readiness_policy_version": "readiness-v1",
+        "provider_policy_version": "provider-v1"
+      },
+      "capability": {
+        "capability": "UNAVAILABLE",
+        "retryable": false,
+        "place_count": 0,
+        "destination_state": "NO_MATCH",
+        "reason_code": "NO_CANONICAL_IDENTITY",
+        "recommended_action": "CHOOSE_ANOTHER_DESTINATION",
+        "matched_label": null,
+        "provenance": {
+          "source_kinds": [],
+          "by_category": {
+            "attractions": [],
+            "food": [],
+            "nightlife": [],
+            "lodging": [],
+            "mobility": [],
+            "booking": []
+          },
+          "upgraded_by_normalisation": false
+        }
+      },
+      "server_resolved_code": null,
+      "capability_keys": [
+        "candidates",
+        "canonical_destination_id",
+        "capability",
+        "catalog_schema_version",
+        "coverage",
+        "coverage_detail",
+        "destination_pending_key",
+        "destination_resolution",
+        "destination_state",
+        "fingerprint",
+        "hard_gaps",
+        "malformed_candidates",
+        "matched_label",
+        "missing_categories",
+        "namespace",
+        "pending_destination_label",
+        "pending_label_fidelity",
+        "place_count",
+        "places",
+        "provenance",
+        "provider_policy_version",
+        "query",
+        "readiness_policy_version",
+        "reason_code",
+        "recommended_action",
+        "resolver_query_normalized",
+        "retryable",
+        "scope",
+        "unclassified_categories"
+      ],
+      "server_canonical_id": null,
+      "resolution_kind": "unresolved",
+      "place_count_server": 0,
+      "coverage": {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      },
+      "source_kinds": [],
+      "hard_gaps": [],
+      "missing_categories": [
+        "attractions",
+        "food",
+        "nightlife",
+        "lodging",
+        "mobility",
+        "booking"
+      ],
+      "code_agrees_frontend": null,
+      "verdict": "SERVER_CANNOT_RESOLVE_CODE"
+    }
+  ],
+  "store_city_code_inventory": {
+    "CN-BEIJING": [
+      "journeys.city_code x13",
+      "places.city_code x8",
+      "city_services.city_code x5"
+    ],
+    "CN-HANGZHOU": [
+      "journeys.city_code x6"
+    ],
+    "CNX-DEMO": [
+      "journeys.city_code x1",
+      "places.city_code x8",
+      "city_services.city_code x5"
+    ]
+  },
+  "get_side_effects": {
+    "tables_whose_row_count_changed": {},
+    "total_tables_counted": 55
+  },
+  "places_group_by_city": [
+    [
+      "CN-BEIJING",
+      8
+    ],
+    [
+      "CNX-DEMO",
+      8
+    ]
+  ],
+  "table_markdown": "| 宣传名 | 前端用的码 | places 行数 | 服务端 canonical 码 | 解析来源 | capability | reason_code | 数据 provenance | 判定 |\n|---|---|---|---|---|---|---|---|---|\n| 厦门 | CN-XIAMEN | 0 | CN-XIAMEN | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |\n| 北京 | CN-BEIJING | 8 | CN-BEIJING | catalog | HYDRATABLE | COVERAGE_INCOMPLETE | GOLDEN_FIXTURE | HAS_PLACE_ROWS |\n| 上海 | CN-SHANGHAI | 0 | CN-SHANGHAI | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |\n| 天津 | CN-TIANJIN | 0 | CN-TIANJIN | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |\n| 福州 | CN-FUZHOU | 0 | None | unresolved | UNAVAILABLE | NO_CANONICAL_IDENTITY | (无) | SERVER_CANNOT_RESOLVE_CODE |\n| 广州 | CN-GUANGZHOU | 0 | CN-GUANGZHOU | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |\n| 深圳 | CN-SHENZHEN | 0 | CN-SHENZHEN | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |\n| 成都 | CN-CHENGDU | 0 | CN-CHENGDU | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |\n| 杭州 | CN-HANGZHOU | 0 | CN-HANGZHOU | vocabulary | HYDRATABLE | COVERAGE_INCOMPLETE | (无) | RESOLVED_BUT_ZERO_PLACE_ROWS |\n| 东京 | JP-TOKYO | 0 | None | unresolved | UNAVAILABLE | NO_CANONICAL_IDENTITY | (无) | SERVER_CANNOT_RESOLVE_CODE |\n| 新加坡 | SG-SINGAPORE | 0 | None | unresolved | UNAVAILABLE | NO_CANONICAL_IDENTITY | (无) | SERVER_CANNOT_RESOLVE_CODE |\n| 苏州(NOT advertised, fallback probe) | CN-苏州 | 0 | None | unresolved | UNAVAILABLE | NO_CANONICAL_IDENTITY | (无) | SERVER_CANNOT_RESOLVE_CODE |",
+  "column_notes": {
+    "前端用的码": "由服务中的包自己算出来的：`af` 表给国家码、`jd`/`ER()` 给城市段，组成式 `${countryCode.trim() || \"CN\"}-${ER(name)}`（bundle 偏移 1109565）。不是我拼的。",
+    "places 行数": "`GET /api/v1/places?city_code=<前端码>` 返回的条数（我的副本库）。",
+    "服务端 canonical 码": "`GET /api/v1/destinations/capability?query=<宣传名>` 里的 `canonical_destination_id`。null = 服务器连这座城的身份都给不出。",
+    "解析来源": "`destination_resolution`：catalog=库里有行；vocabulary=只命中内置词表（认得这个名字，但没有地点）；unresolved=没认出来。",
+    "数据 provenance": "`provenance.source_kinds`——北京那 8 行是 GOLDEN_FIXTURE（合成夹具），不是真实抓取。",
+    "两侧码是否一致": "凡 canonical 非 null 的行，canonical 与前端码**逐字相同**（11/11 中可比的 8 个）⇒ 不是拼码不一致的问题，是**没有行**的问题。"
+  },
+  "readings": {
+    "advertised_total": 11,
+    "with_place_rows": [
+      "北京"
+    ],
+    "resolved_but_zero_rows": [
+      "厦门",
+      "上海",
+      "天津",
+      "广州",
+      "深圳",
+      "成都",
+      "杭州"
+    ],
+    "server_cannot_resolve": [
+      "福州",
+      "东京",
+      "新加坡",
+      "苏州(NOT advertised, fallback probe)"
+    ],
+    "codes_appearing_anywhere_in_store": [
+      "CN-BEIJING",
+      "CN-HANGZHOU",
+      "CNX-DEMO"
+    ],
+    "codes_advertised_but_absent_from_store": [
+      "CN-CHENGDU",
+      "CN-FUZHOU",
+      "CN-GUANGZHOU",
+      "CN-SHANGHAI",
+      "CN-SHENZHEN",
+      "CN-TIANJIN",
+      "CN-XIAMEN",
+      "CN-苏州",
+      "JP-TOKYO",
+      "SG-SINGAPORE"
+    ],
+    "beijing_hard_gaps": [
+      [
+        "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE"
+      ]
+    ],
+    "beijing_coverage": [
+      {
+        "attractions": "READY",
+        "food": "READY",
+        "nightlife": "PARTIAL",
+        "lodging": "MISSING",
+        "mobility": "READY",
+        "booking": "READY"
+      }
+    ],
+    "hangzhou_coverage": [
+      {
+        "attractions": "MISSING",
+        "food": "MISSING",
+        "nightlife": "MISSING",
+        "lodging": "MISSING",
+        "mobility": "MISSING",
+        "booking": "MISSING"
+      }
+    ],
+    "capability_cannot_distinguish_working_from_blocked": true
+  }
+}
