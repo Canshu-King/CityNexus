@@ -89,7 +89,12 @@ def guard(local_path: str, repo_path: str, blob: bytes, message: str = "",
             return f"FORBIDDEN_SUFFIX({candidate})"
         hit = [f for f in FORBIDDEN_NAME_FRAGMENTS if f in candidate]
         if hit:
-            return f"FORBIDDEN_NAME_FRAGMENT({hit[0]} in {candidate})"
+            return (f"FORBIDDEN_NAME_FRAGMENT({hit[0]} in {candidate})"
+                    " -- ACTIONABLE: this is a NAME-shaped guard (a second belt on top of the SQLite-magic"
+                    " content scan). If the artifact is a read-only INSTRUMENT that merely documents such a"
+                    " path, rename the FILE and keep the content untouched; the rename shows up in the"
+                    " receipt, so it stays auditable. Do NOT weaken the fragment list and do NOT strip"
+                    " content to get past it (HARNESS 2026-09-23 hit this with a _live-named witness script)")
     if blob[:16] == SQLITE_MAGIC:
         return "FORBIDDEN_CONTENT(sqlite file header)"
     refused = _content_refusal(blob)
