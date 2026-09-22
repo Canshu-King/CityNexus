@@ -190,6 +190,25 @@ def _demo_accessibility_evidence(item: Mapping[str, Any]) -> dict[str, Any] | No
     return facts
 
 
+def hard_rule_codes_on_file(constraints: Sequence[Any]) -> list[str]:
+    """The HARD rule codes in force, read across the two row shapes this list actually holds.
+
+    Capability constraints come in as dicts and journey constraints as ORM rows; an
+    attribute-only read drops the former without complaining.
+    """
+
+    codes: set[str] = set()
+    for item in constraints:
+        is_mapping = isinstance(item, Mapping)
+        kind = item.get("kind") if is_mapping else getattr(item, "kind", None)
+        if str(kind or "") != "HARD":
+            continue
+        code = item.get("rule_code") if is_mapping else getattr(item, "rule_code", None)
+        if code:
+            codes.add(str(code))
+    return sorted(codes)
+
+
 def seed_demo(session: Session) -> dict[str, str]:
     reset_all(session)
     # The fixture is deliberately frozen so two reset/seed runs produce the
@@ -1633,6 +1652,26 @@ def generate_plans(
             activity_facts,
         )
         if not gate.passed:
+            # SILENT_CANDIDATE_LOSS (API half): the candidate disappears either way, so the
+            # durable fact is written here. Only names the product already emitted go into it -
+            # the gate's own failure strings plus the hard rule codes on file for this journey.
+            # Nothing raises and the response stays a list; surviving candidates still ship.
+            record_audit(
+                session,
+                action="plans.candidate_rejected",
+                entity_type="Journey",
+                entity_id=journey.id,
+                journey_id=journey.id,
+                after={
+                    "reason_codes": ["CANDIDATE_REJECTED_BY_FEASIBILITY_GATE"],
+                    "summary": "candidate dropped before persistence: "
+                    + ", ".join(gate.failures[:4]),
+                    "failures": list(gate.failures),
+                    "hard_rule_codes": hard_rule_codes_on_file(constraints),
+                    "candidate_sequence": offset,
+                    "stops": [item.place_id for item in activity_facts if item.place_id],
+                },
+            )
             continue
         # Version numbers remain contiguous among accepted candidates even
         # when an earlier raw template is rejected by a hard constraint.

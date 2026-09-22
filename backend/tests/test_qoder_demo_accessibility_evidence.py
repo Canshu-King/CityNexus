@@ -337,3 +337,84 @@ def test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capabi
     assert len(plans) == len(clean_templates), (
         f"候选数应等于无冲突模板数：实际 {len(plans)} vs 期望 {len(clean_templates)}"
     )
+
+
+# ------------------------------------------------------------------------------------------
+# SILENT_CANDIDATE_LOSS 的 API 半边：被筛掉的候选必须留下具名持久事实，且从"前端已经在调"的读取面能拿到
+# ------------------------------------------------------------------------------------------
+def _rejection_events() -> list[dict]:
+    """读 `GET /journeys/{id}/agent-feed`（前端 citynexus.ts:857 调的就是它）。"""
+
+    feed = client.get("/api/v1/journeys/%s/agent-feed" % _JOURNEY, params={"limit": 200})
+    assert feed.status_code == 200, f"agent-feed 实际 {feed.status_code} {feed.text[:200]}"
+    body = feed.json()
+    events = body if isinstance(body, list) else (body.get("events") or body.get("items") or [])
+    assert isinstance(events, list), f"agent-feed 形状不认识：{str(body)[:200]}"
+    return [
+        event for event in events
+        if isinstance(event, dict) and event.get("event_type") == "plans.candidate_rejected"
+    ]
+
+
+def test_a_dropped_candidate_leaves_a_named_fact_on_a_route_the_frontend_already_calls():
+    """两向：断言在档 ⇒ 被丢的候选留下具名事实；什么都没断言 ⇒ 一个具名事实都不许出现。"""
+
+    _seed()
+    plain = client.post("/api/v1/journeys/%s/plans/generate" % _JOURNEY, json={})
+    assert plain.status_code == 201, f"无断言时生成期望 201，实际 {plain.status_code} {plain.text[:200]}"
+    assert len(plain.json()) == len(_templates()), "无断言就不该少候选"
+    assert _rejection_events() == [], (
+        f"什么都没冲突却写出了具名拒绝事实：{_rejection_events()}"
+    )
+
+    _seed()
+    _confirm_capability("STROLLER")
+    generated = client.post("/api/v1/journeys/%s/plans/generate" % _JOURNEY, json={})
+    assert generated.status_code == 201, f"带硬性婴儿车要求仍要能出可用方案（不许抛错）：{generated.status_code} {generated.text[:200]}"
+    kept = generated.json()
+    assert len(kept) < len(_templates()), (
+        f"本单要的就是「有候选被筛掉」这一格：{len(kept)} vs {len(_templates())}"
+    )
+    events = _rejection_events()
+    assert len(events) == len(_templates()) - len(kept), (
+        f"被丢几个候选就该有几条具名事实：{len(events)} vs 期望 {len(_templates()) - len(kept)}"
+    )
+    for event in events:
+        facts = event.get("facts") or {}
+        assert "CANDIDATE_REJECTED_BY_FEASIBILITY_GATE" in (facts.get("reason_codes") or []), (
+            f"具名事实没有可寻址的 reason code：{facts}"
+        )
+        assert facts.get("failures"), f"具名事实里一个门自己叫出的失败名都没有：{facts}"
+        assert "STROLLER" in (facts.get("hard_rule_codes") or []), (
+            f"在档的硬性规则没进事实：{facts.get('hard_rule_codes')}"
+        )
+
+
+def test_the_named_reason_points_at_the_stop_whose_demo_evidence_conflicted():
+    """事实里点名的地点必须就是「该候选自己的 stop 且证据为 False」那个——不许写死。"""
+
+    fact_key = _fact_key_for("STROLLER")
+    _seed()
+    _confirm_capability("STROLLER")
+    generated = client.post("/api/v1/journeys/%s/plans/generate" % _JOURNEY, json={})
+    assert generated.status_code == 201, f"SETUP：生成实际 {generated.status_code}"
+    events = _rejection_events()
+    assert events, "没有任何具名拒绝事实，这条归因就成了空断言"
+    for event in events:
+        facts = event.get("facts") or {}
+        stops = [str(place_id) for place_id in (facts.get("stops") or [])]
+        assert stops, f"事实里没留下候选自己的地点清单：{facts}"
+        blocking = [place_id for place_id in stops if _evidence(place_id).get(fact_key) is False]
+        assert blocking, (
+            f"这个被丢的候选里没有一个地点的 {fact_key} 是 False，那它凭什么被丢：{stops} -> {facts.get('failures')}"
+        )
+        for code in facts.get("hard_rule_codes") or []:
+            if code != "STROLLER":
+                continue
+            named = [
+                failure for failure in (facts.get("failures") or [])
+                if any(place_id in str(failure) for place_id in blocking)
+            ]
+            assert named, (
+                f"事实点名的冲突地点与实际证据不符：期望提到 {blocking} 之一，实际 {facts.get('failures')}"
+            )
