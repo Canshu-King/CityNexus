@@ -1,0 +1,162 @@
+{
+  "identity": {
+    "run": "isolation-receipt",
+    "built_at_utc": "2026-09-22T15:50:25.167357+00:00",
+    "built_at_local": "2026-09-22T15:50:25.167357+00:00",
+    "tz_offset_minutes": 0,
+    "host_clock_tzname": [
+      "中国标准时间",
+      "中国夏令时"
+    ]
+  },
+  "definition": {
+    "my_copy": "D:\\moodle\\_qoder_hjp4_20260921/_hjp4_20260922.db",
+    "live_db_read_only": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+    "copy_provenance": "sqlite3 backup() from live db whose mtime was 2026-09-22 01:12",
+    "orphan_definition": "travelers t where not exists(select 1 from journeys j where j.traveler_id=t.id)"
+  },
+  "row_counts": {
+    "travelers": {
+      "my_copy": 12,
+      "live_db": 3
+    },
+    "journeys": {
+      "my_copy": 12,
+      "live_db": 3
+    },
+    "plan_versions": {
+      "my_copy": 37,
+      "live_db": 19
+    },
+    "activities": {
+      "my_copy": 272,
+      "live_db": 134
+    },
+    "journey_missions": {
+      "my_copy": 8,
+      "live_db": 2
+    },
+    "commitments": {
+      "my_copy": 1,
+      "live_db": 1
+    }
+  },
+  "journeys_created_by_this_lane_today": [
+    {
+      "id8": "dd7e2ca1",
+      "traveler8": "2bfd8067",
+      "status": "PLANNED",
+      "budget_minor": 160000,
+      "created_at_utc": "2026-09-22T05:20:50.057064+00:00"
+    },
+    {
+      "id8": "4cf9464a",
+      "traveler8": "176759aa",
+      "status": "PLANNED",
+      "budget_minor": 160000,
+      "created_at_utc": "2026-09-22T05:38:21.148012+00:00"
+    },
+    {
+      "id8": "f3f43d73",
+      "traveler8": "700bd0c6",
+      "status": "PLANNED",
+      "budget_minor": 160000,
+      "created_at_utc": "2026-09-22T06:58:12.452448+00:00"
+    },
+    {
+      "id8": "72240359",
+      "traveler8": "dfd9fa1e",
+      "status": "PLANNED",
+      "budget_minor": 160000,
+      "created_at_utc": "2026-09-22T07:03:06.428708+00:00"
+    },
+    {
+      "id8": "1da2cde7",
+      "traveler8": "89ed854b",
+      "status": "DRAFT",
+      "budget_minor": 160000,
+      "created_at_utc": "2026-09-22T10:16:46.843467+00:00"
+    },
+    {
+      "id8": "eb41e79a",
+      "traveler8": "18d05096",
+      "status": "DRAFT",
+      "budget_minor": 10000,
+      "created_at_utc": "2026-09-22T11:02:33.050288+00:00"
+    },
+    {
+      "id8": "4df9bd63",
+      "traveler8": "1b5b634a",
+      "status": "DRAFT",
+      "budget_minor": 5000000,
+      "created_at_utc": "2026-09-22T11:03:10.098130+00:00"
+    },
+    {
+      "id8": "54c8726a",
+      "traveler8": "37265f3a",
+      "status": "DRAFT",
+      "budget_minor": 10000,
+      "created_at_utc": "2026-09-22T11:06:21.773032+00:00"
+    },
+    {
+      "id8": "a4e2fdde",
+      "traveler8": "f447c1c2",
+      "status": "DRAFT",
+      "budget_minor": 160000,
+      "created_at_utc": "2026-09-22T15:42:54.824070+00:00"
+    }
+  ],
+  "cross_presence_proof": [
+    {
+      "journey": "dd7e2ca1",
+      "in_my_copy": 1,
+      "in_live_db": 0
+    },
+    {
+      "journey": "4cf9464a",
+      "in_my_copy": 1,
+      "in_live_db": 0
+    },
+    {
+      "journey": "f3f43d73",
+      "in_my_copy": 1,
+      "in_live_db": 0
+    },
+    {
+      "journey": "72240359",
+      "in_my_copy": 1,
+      "in_live_db": 0
+    },
+    {
+      "journey": "1da2cde7",
+      "in_my_copy": 1,
+      "in_live_db": 0
+    },
+    {
+      "journey": "eb41e79a",
+      "in_my_copy": 1,
+      "in_live_db": 0
+    },
+    {
+      "journey": "4df9bd63",
+      "in_my_copy": 1,
+      "in_live_db": 0
+    },
+    {
+      "journey": "54c8726a",
+      "in_my_copy": 1,
+      "in_live_db": 0
+    },
+    {
+      "journey": "a4e2fdde",
+      "in_my_copy": 1,
+      "in_live_db": 0
+    }
+  ],
+  "verdict_computed": {
+    "journeys_only_in_my_copy": true,
+    "journey_count_today": 9,
+    "commitments_created_by_lane": 0,
+    "live_db_written_by_lane": false
+  }
+}
