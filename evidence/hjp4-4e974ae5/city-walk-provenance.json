@@ -1,0 +1,115 @@
+{
+  "backend": {
+    "launch_log": "lane_backend5.log",
+    "launch_log_sha256": "3f94cc62f58a912df7cac4e96c47cbc333ab735beb3c3aadf5f01de96f9bf34c",
+    "head_at_launch_line": "HEAD at launch: 50d1c4d",
+    "db_line": "DB -> sqlite:///D:/moodle/_qoder_hjp4_20260921/_hjp4_20260922.db | demo true | ai true | key present True",
+    "reload_flag_present": false,
+    "argv": "uvicorn app.main:app --host 127.0.0.1 --port 8891",
+    "live_matching_processes": [
+      {
+        "pid": 49424,
+        "created": "/Date(1790099130158)/",
+        "cmd": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe lane_backend.py"
+      },
+      {
+        "pid": 43848,
+        "created": "/Date(1790099130173)/",
+        "cmd": "\"C:\\Users\\仓鼠王\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" lane_backend.py"
+      },
+      {
+        "pid": 40588,
+        "created": "/Date(1790099224633)/",
+        "cmd": "\"C:\\Program Files\\nodejs\\node.exe\" node_modules/vite/bin/vite.js preview --outDir D:/moodle/_qoder_hjp4_20260921/dist_deployed --host 127.0.0.1 --port 4891"
+      }
+    ],
+    "tree_tip_now": "e863914f92e97d0d294a247402fdb6f5f82aa854",
+    "tree_tip_now_subject": "e863914 2026-09-23 02:05:12 +0800 tools(review): let a guard-driven evidence entry publish its own receipt instead of a parsed log",
+    "tree_dirty_entries_now": 346,
+    "note": "git rev-parse was re-run at publish time and has MOVED since the walk; the uvicorn process has no --reload flag, so it served the code it imported at its launch time, not the current tree tip. Both are recorded instead of one being asserted."
+  },
+  "frontend_served_now": {
+    "url": "http://127.0.0.1:4891/",
+    "index_sha256": "8c6405e97932642ddd8c41aef2814bc383f240f4b5a8b6051fa74da6394f951e",
+    "asset_refs": [
+      {
+        "path": "/assets/index-DtQ86lsQ.js",
+        "http": 200
+      },
+      {
+        "path": "/assets/index-cWMF3pBW.css",
+        "http": 200
+      }
+    ],
+    "dist_dir": "D:\\moodle\\_qoder_hjp4_20260921/dist_deployed",
+    "dist_is_copy_of_deployed_not_built": true,
+    "note": "dist_deployed was copied from the shared preview dist at 01:45; I did not build from a dirty tree."
+  },
+  "walks": {
+    "hangzhou_no_places": {
+      "log": "log/W_HZ_no_places.txt",
+      "log_sha256": "ea77634785e16798be56804173e15ae2b240fa66004c1cc2e8d4390c8d3e9172",
+      "browser_clock": "Wed Sep 23 2026 01:53:39 GMT+0800 (中国标准时间)",
+      "base": "http://127.0.0.1:4891",
+      "api_calls_total": 33,
+      "api_methods": {
+        "GET": 29,
+        "POST": 4
+      },
+      "journey_ids_seen": [
+        "a4e2fdde-14f8-4af7-ae30-8da364bc6f53",
+        "aa2e49b8-5b25-4cab-85d9-4406ef9a11cd"
+      ],
+      "console_errors": [],
+      "eye_step_count": 18
+    },
+    "beijing_control": {
+      "log": "log/W_BJ_control.txt",
+      "log_sha256": "966c9e68cfe83800bfc4e1a101a67ba2d95c54d789c288decc8ad6543d147e4d",
+      "browser_clock": "Wed Sep 23 2026 01:56:48 GMT+0800 (中国标准时间)",
+      "base": "http://127.0.0.1:4891",
+      "api_calls_total": 38,
+      "api_methods": {
+        "GET": 33,
+        "POST": 5
+      },
+      "journey_ids_seen": [
+        "aa2e49b8-5b25-4cab-85d9-4406ef9a11cd",
+        "c665796b-176c-45bc-93e2-fbdaf06d0eb1"
+      ],
+      "console_errors": [],
+      "eye_step_count": 12
+    }
+  },
+  "ai_calls": {
+    "pattern_counts": {
+      "chat/completions": 0,
+      "deepseek": 0,
+      "ai_parse": 0,
+      "AiParse": 0,
+      "plans/generate": 1
+    },
+    "DEEPSEEK_API_KEY_present_in_env_of_launch_log": true,
+    "note": "counts read from my own backend log; the value of the key is never written anywhere."
+  },
+  "interpreters": {
+    "python": "3.10.11",
+    "node": "v24.14.0",
+    "playwright_package": "n/a"
+  },
+  "commands": [
+    "python lane_backend.py            # :8891, CITYNEXUS_DATABASE_URL=one-off copy, DEMO_MODE=true, AI_ENABLED=true",
+    "node .../vite.js preview --outDir D:/moodle/_qoder_hjp4_20260921/dist_deployed --host 127.0.0.1 --port 4891",
+    "node browser/walk.js browser/spec_hz.json W_HZ_no_places",
+    "node browser/walk.js browser/spec_bj.json W_BJ_control",
+    "python build_bundle2.py",
+    "python provenance_rev2.py"
+  ],
+  "not_walked": [
+    "the other 9 advertised cities (only CN-HANGZHOU was walked as the no-data case, CN-BEIJING as control)",
+    "the HYDRATABLE answer state (string count 0 in the served bundle; no city exercised that path)",
+    "whether the 「技术详情」 control is reachable by a real tap (its text was on screen; I did not click it)",
+    "what happens for a city_code the frontend does not advertise (e.g. 苏州, which HJ-P2 measured becomes CN-苏州)",
+    "the shared phone-facing chain :4781/:4782/:8693 (deliberately not touched this round)"
+  ]
+}
