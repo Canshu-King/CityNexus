@@ -190,6 +190,37 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 · ORD-0204 重钉 @2026-09-22 13:59+08 —— 新尖 `13377d3` 上四靶按内容重定位：**a/c/d KILLED，(b) SURVIVED 与 M17 一致；三臂复验在改名后的树上原样成立；无新洞、无 skipped**
+
+`STATUS: ORD-0204-REREPINNED-ON-13377d3 | 树：干净导出副本 D:/moodle/_qoder_redteam_anywhere_20260921/tree9 = git -C _qoder_integration_20260919 archive 13377d3 | tar -x（权威树 0 改动；驱动 REDTEAM_TREE 可用环境变量改树，不硬编码别人可写路径）| 解释器 D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14 | 命令：python -m pytest -q --no-header -p no:cacheprovider -rf tests/test_qoder_mobility_hard_gap.py tests/test_qoder_provider_identity_leg.py tests/test_qoder_mobility_replan_endpoint.py（cwd=tree9/backend）| env：CITYNEXUS_DEMO_MODE=true、CITYNEXUS_AI_ENABLED=false、DEEPSEEK_API_KEY 等四把凭据 pop 掉、PYTHONIOENCODING=utf-8 | 事前 --collect-only：29 tests collected RC=0`
+
+**承接说明**：前任 `dc19d662` 在 tree8(=2c2621e) 已跑过一轮，其 a/c/d 读数有效，但 **(b) 因驱动锚点仍是旧字串 `NOT_ANSWERED` 而 anchor_hits=0 → HARNESS_INVALID**（它 13:34 的 `ord0204_kills_tip.json` 里 case b verdict=HARNESS_INVALID，不是 survived）。本块在 `13377d3`（与 2c2621e 只差 handoff patch 脱敏一行，产品码零差异，已 `git diff --name-status` 亲验）上按内容重定锚全部重跑。
+
+**四个靶的实际行号（tree9，按内容定位，锚点命中数写前自证均为 1）**：
+- (a) `anywhere_capability.py:1464` `hard_gaps.append(GAP_MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE)` → 突变为不再发射
+- (b) `anywhere_capability.py:1473` `"retryable": bool(resolution.retryable) or verdict == UNKNOWN_RETRYABLE,` → 拆掉 or 联动（**新字串**；旧字串 `NOT_ANSWERED` 在本文件只剩 :59/:1403 两处注释，未被骗）
+- (c) `anywhere_capability.py:629` transport 分支 `http_status = None` → 改 0
+- (d) `main.py:7344` `reason_code = "MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE"` → 退回 `MOBILITY_DATA_UNAVAILABLE`
+
+**读数（collected 每次都是 29；29 = failed+passed 全部闭合；六次运行后逐字节还原全部 True；cap sha256 前 16 位 `f7b59d0835341826`、main `05cad70e2c8e6f8d`）**：
+| 靶 | 判定 | failed/passed | 点名断言红 | 其他红 |
+|---|---|---|---|---|
+| a | **KILLED** | 3/26 | test_a_frozen_only_mobility_axis_names_the_gap_and_stays_hydratable ✓ | 另 2 条同因（gap 存活进库 / 活抓路由移除），按口径不计独立覆盖 |
+| b | **SURVIVED** | 0/29 | （g17 未红） | 无 |
+| c | **KILLED** | 1/28 | test_g16_the_four_attribution_fields_arrive_together_or_not_at_all ✓ | 无 |
+| d | **KILLED** | 1/28 | test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so ✓ | 无 |
+
+**(b) 三臂复验（在改名后的树上原样成立，M17 的"互相冗余"边界仍准）**：
+- 臂② 只摘上游（`anywhere_capability.py:873` 传输失败站点六行块 `retryable=True`→`False`，全文件唯一）→ **29 passed / 0 failed 绿**（:1473 联动救回）；
+- 臂②'（M17 主突变）只摘 :1473 → **29 passed 绿**（上表 b 行）；
+- 臂③ 两处同时摘 → **4 红，点名 g17 在列** ✓（另 g4/g12/g9 三条同因，不计独立覆盖）。
+
+**与契约核对**：M17 在新尖 `contracts/openapi-anywhere-draft.yaml:523` 亲验在案，且已带"互相冗余"边界说明——本轮读数与登记一致。
+
+**一句话结论**：新尖 `13377d3` 上，四个靶里 **(b) 仍然只有预期幸存者 M17（且三臂证明它由上游+联动共同守着）**；a/c/d 的门在新尖照常有牙；**没有新洞出现，也没有锚点 skipped**。
+
+evidence: `D:/moodle/_qoder_redteam_anywhere_20260921/raw/d2305848_ord0204_tree9.py`（驱动）+ `d2305848_ord0204_tree9.json`（收据）+ 导出树 tree9
+
 
 ### HERMES-REVIVAL-001（9baacb24）@2026-09-22 13:2x+08 —— H8b/H11 **我主动停手**：父环境里那把 `DEEPSEEK_API_KEY` **就是待吊销的泄露 key**，不拿它做模型支撑验收
 
@@ -9599,6 +9630,27 @@ SHARED _live.db (mode=ro)         journeys=3  my_journey_present=0  ids=[2222222
   `j5-badanchor-today.png`、`j6-tokyo-today.png`。凭据未出现在本块、账本或截图里。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 亲测 @2026-09-22T14:00+08 —— **手机上现在到底能看到什么**（用部署 bundle 与源码的字符串对照量的，不是推断）
+
+线上 bundle：`_qoder_preview_20260920/dist/assets/index-CnfHH2K_.js`，**1,228,395 B，mtime 09-22 02:10**。
+在同一份 bundle 与当前尖 `13377d3` 的源码里各查一遍关键文案（`grep -ao` 计数）：
+
+| 文案 / 症状 | 在 02:10 的 bundle 里 | 在源码尖里 | 结论（用户此刻能看到什么） |
+|---|---|---|---|
+| `每人每天约`、`不是最终花费` | **1 / 2 次命中** | 2 / 2 | ⇒ 那条"把 12 小时当天行程说成 2 天、再按 invented 第二天摊预算"的修复**已经在你手机上生效** |
+| `已自动设置`（城市识别降级句） | 1 | 1 | 已上线，HJ-P1 夸的就是这一格 |
+| **`游标状态`** | **1 次命中** | 1 | ⇒ **HJ-P1 报的第一件（枚举 `ABSENT_FALLBACK` 与裸 `+00:00` 打在脸上）此刻在线上就存在**，不是只在源码里 |
+| `还需要填写`（兜底提示） | 3 | — | 已上线 |
+
+顺带纠正账本里一条**已过期的旧注**：早前有一块写"前端 diff 还没进树，所以屏幕上那两处症状（『2 天』『¥200』）仍未消失"——
+**在 `13377d3` 上已不成立**：`:2022` 用的是 `${days} 天 · ${people} 人 · 每人每天约 ${amount}`，
+`:2111` 与 `:1964` 两处注释正是在解释它当年怎么把 12 小时当天行程算成 2 天（也就是修复已落地，注释留作反例）。
+⇒ 那条"不许把后端已修读成用户已看不到"的告诫本身仍然有效，但**它举的这两个例子现在应该翻案**，别让人去重修一遍。
+
+**没上线的部分（说清楚）**：今天 13:09 之后的四格改名、`稍后重试` 上屏（`d0dfc90` 13:17）、门按配对识别（`2c2621e` 13:21）
+都**还没进这个 bundle**——线上还是 02:10 那版。等 D 把 ORD-0208 那四件（含上面那处枚举泄漏）交完，
+我做**一次**带时间戳备份的重建与替换，并把 bundle 名变化当证据报出来；用户若要现在立刻上，说一句即可。
+
 ## commander 落冻结句 @2026-09-22T13:5x+08 —— 仲裁给 LAB Mission A 定的**分档措辞**（原样照录，全体车道引用时用这两行）
 
 总线 `5771851709`（本机 13:54:46+08）：
