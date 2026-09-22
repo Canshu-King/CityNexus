@@ -295,7 +295,12 @@ test("ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什�
   const text = (await block.innerText()).replace(/\s+/g, " ");
   /* ① the hard one (ORD-0226): the caveat, read as its own element, must be the frozen sentence
      exactly -- not "contains a risk word and no listed reassurance". */
-  const caveat = ((await page.getByTestId("budget-advisory-caveat").innerText()) ?? "").replace(/\s+/g, " ").trim();
+  const caveatEl = page.getByTestId("budget-advisory-caveat");
+  await expect(
+    caveatEl,
+    node(NODE, "the caveat has no element of its own on screen, so a paraphrase could not be seen even if it happened"),
+  ).toBeVisible({ timeout: 20_000 });
+  const caveat = (await caveatEl.innerText()).replace(/\s+/g, " ").trim();
   expect(
     caveat,
     node(
