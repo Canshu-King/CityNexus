@@ -1,0 +1,528 @@
+diff --git a/backend/tests/_qoder_streak_receipt.py b/backend/tests/_qoder_streak_receipt.py
+index ed4509f..becb266 100644
+--- a/backend/tests/_qoder_streak_receipt.py
++++ b/backend/tests/_qoder_streak_receipt.py
+@@ -242,6 +242,67 @@ def parse_resolved_path(stdout: str, stderr: str = "") -> tuple[str, str]:
+     return "", f"{why}；{err_why}"
+ 
+ 
++#: 摘要行里能读到的计数名字（pytest 的 `N passed / N failed / N skipped / …`）。
++SUMMARY_COUNTERS: tuple[str, ...] = (
++    "passed", "failed", "skipped", "xfailed", "xpassed", "deselected", "error", "errors",
++)
++
++
++def summarize_pytest_counts(text: str) -> dict[str, int]:
++    """从子进程输出末尾那行摘要里读**计数**（不是逐 nodeid verdict —— 那仍是抽取器的活）。
++
++    只要一个数就够钉住今天这格假绿：`passed`。所以这一句不解析多节点结果，
++    也就不与 commander 那份抽取器长成两把尺。
++    """
++
++    import re
++
++    counts: dict[str, int] = {}
++    for line in reversed([ln for ln in str(text or "").splitlines() if ln.strip()]):
++        if not any(f" {c}" in line for c in SUMMARY_COUNTERS):
++            continue
++        for unit in SUMMARY_COUNTERS:
++            found = re.search(rf"(\d+)[=~]? ?{unit}\b", line)
++            if found:
++                counts["errors" if unit == "error" else unit] = int(found.group(1))
++        if counts:
++            counts["summary_line"] = 1 if any(k in counts for k in SUMMARY_COUNTERS) else 0
++            return counts
++    return counts
++
++
++def corroborate_node_outcome(outcome: str, *, run_shape: str,
++                             counts: dict[str, int] | None) -> tuple[str, str]:
++    """用**摘要计数**佐证一次退出码；佐不到就把结论降级成 `NOT_OBSERVED`。
++
++    实测出来的假绿通道（2026-09-22 19:5x–20:0x，我自己那把尺）：靶子整条 `@pytest.mark.skip`
++    ⇒ pytest **exit 0** ⇒ `node_outcome_from_exit()` 报 `GREEN`，而那条用例一次都没跑。
++    同一形状还有 exit 1 来自收集错误而非用例失败。第 10 条要的是"目标节点自己的结果"，
++    没跑过就没有结果 ⇒ 一律 `NOT_OBSERVED`（宁可让 streak 判 `HARNESS_INVALID`，
++    也不能让 10 次 skipped 报成 `STREAK_MET(10)`）。
++    这份函数是**唯一实现**：commander 的 `gate_streak.py` 现在直接 import 共享模块，
++    所以他那条通道跟着一起修好，不需要第二处改。
++    """
++
++    if run_shape != SINGLE_NODE:
++        return outcome, "非单节点形制：逐 nodeid verdict 由抽取器负责，这里不动"
++    got = counts or {}
++    if not got:
++        return "NOT_OBSERVED", "没有可读的摘要计数 ⇒ 退出码无法佐证（fail-closed）"
++    ran = got.get("passed", 0) + got.get("failed", 0) + got.get("error", 0) \
++        + got.get("errors", 0) + got.get("xfailed", 0) + got.get("xpassed", 0)
++    if ran == 0:
++        return "NOT_OBSERVED", (f"摘要里没有任何执行计数（{got}）"
++                               f"；skipped={got.get('skipped', 0)} ⇒ 目标节点没跑过，不算结果")
++    if outcome == "GREEN" and got.get("passed", 0) < 1:
++        return "NOT_OBSERVED", (f"exit 0 但 passed=0（skipped={got.get('skipped', 0)} "
++                               f"xfailed={got.get('xfailed', 0)} xpassed={got.get('xpassed', 0)}）"
++                               " ⇒ 不许当绿")
++    if outcome == "RED" and got.get("failed", 0) + got.get("errors", 0) + got.get("error", 0) < 1:
++        return "NOT_OBSERVED", f"exit≠0 但摘要里没有 failed/error 计数（{got}）⇒ 红来自中断还是失败分不清"
++    return outcome, "退出码与摘要计数一致"
++
++
+ #: 三种形制的**精确**命令面。第 9 条说形制是收据的一部分；那命令面就得能逐字对得上，
+ #: 否则"我声明了 single-node"和"我跑的其实是别的形状"分不开（仲裁源审计 ③ 的那句：
+ #: "single-node may currently run with cross isolation and may then classify itself STABLE_GREEN"）。
+@@ -441,8 +502,7 @@ def classify_target_node(
+         return name("UNCLASSIFIED_IN_THIS_SHAPE",
+                     f"这些 run 没有解析出的临时库绝对路径（run_index={bad_paths or '数量不符'}）："
+                     "无法证明各 run 之间不共享状态")
+-    forbidden = [p for p in paths if str(p).rsplit("/", 1)[-1].rsplit("\\", 1)[-1]
+-                 in FORBIDDEN_DB_NAMES]
++    forbidden = [p for p in paths if path_is_forbidden(p)]
+     if forbidden:
+         return name("UNCLASSIFIED_IN_THIS_SHAPE",
+                     f"解析路径里出现被保护的库（{forbidden[:2]}）：这批读数不属本门，判不了")
+@@ -476,6 +536,48 @@ def flips_without_shared_state(result: Mapping[str, Any]) -> bool:
+ # ======================================================================================
+ # 第 2/4/5/6/7/9 条：streak 结论（"验收已接线"里被机器判的那几条）
+ # ======================================================================================
++def run_freshness_problems(row: Mapping[str, Any]) -> list[str]:
++    """第 3 条"每进程一个 app 解析的新临时库"——**放在共享模块里**，不是放在某扇门里。
++
++    仲裁第三次源审（`5775917170` §3）把 freshness 判 `RED` 的原话要点：
++    检查只在 test 文件里 ⇒ `streak_verdict()/receipt_problems()` 本身没有机械判据，
++    **别的引用方仍可绕过**；"10 个不同但**预先存在**的库全绿仍可能 `STREAK_MET(10)`"。
++    所以这一支必须长在结论函数里：谁调 `streak_verdict` 都躲不过。
++    键名同时兼容门内（`child_decoder`）与 commander 适配器（`stdout_codec`/`stderr_codec`），
++    这样两边共用一把尺，不需要第二份实现。
++    """
++
++    problems: list[str] = []
++    source = str(row.get("path_source") or "")
++    if not source.startswith("app_printed_receipt_line"):
++        problems.append(f"path_source={source!r} 不是 app 打印的收集期收据"
++                        "（差集猜出来的路径不算隔离证据）")
++    initial = row.get("initial_row_counts")
++    if not isinstance(initial, dict):
++        problems.append("没有 initial_row_counts ⇒ 跑前状态没量过")
++    elif "path_did_not_exist_before_this_run" not in initial:
++        problems.append("initial_row_counts 里没有 `path_did_not_exist_before_this_run`"
++                        " ⇒ 不知道这库是不是本次新建的")
++    elif initial.get("path_did_not_exist_before_this_run") is not True:
++        problems.append(f"该临时库在本次进程之前就存在（{initial}）"
++                        " ⇒ 不是 fresh 的 app 解析库，这一 run 不配当独立观测")
++    elif not initial.get("absent", True):
++        problems.append(f"跑前库里已有表/行（{initial}）⇒ 起始状态不为零，判定可能被喂绿")
++    path = str(row.get("resolved_absolute_db_path") or "")
++    path_problems = (row.get("resolved_path_problems")
++                     if isinstance(row.get("resolved_path_problems"), list)
++                     else resolved_path_problems(path))
++    problems.extend(f"resolved 路径不合规：{p}" for p in (path_problems or []))
++    decoder = str(row.get("child_decoder")
++                  or f"stdout={row.get('stdout_codec', '')};stderr={row.get('stderr_codec', '')}")
++    if "replace" in decoder:
++        problems.append(f"解码器 {decoder!r} 会静默替换坏字节（路径/锚点可能被改而无人报警）")
++    for key in ("stdout_damage", "stderr_damage"):
++        if row.get(key):
++            problems.append(f"{key} 量到解码受损：{row[key]}")
++    return problems
++
++
+ def streak_verdict(
+     *,
+     runs: Sequence[Mapping[str, Any]],
+@@ -516,8 +618,9 @@ def streak_verdict(
+     not_printed = [rows[i].get("run_index") for i, p in enumerate(paths)
+                    if not str(p or "").strip() or str(p).strip() == "NOT_PRINTED"]
+     dupes = sorted({str(p) for p in paths if p and list(paths).count(p) > 1})
+-    forbidden = [str(p) for p in paths
+-                 if str(p or "").rsplit("/", 1)[-1].rsplit("\\", 1)[-1] in FORBIDDEN_DB_NAMES]
++    forbidden = [str(p) for p in paths if path_is_forbidden(p)]
++    freshness = {r.get("run_index"): run_freshness_problems(r) for r in rows}
++    stale_rows = [idx for idx, probs in freshness.items() if probs]
+     indices = [r.get("run_index") for r in rows]
+     checks = {
+         "all_runs_reported": len(rows) == rounds,
+@@ -527,6 +630,7 @@ def streak_verdict(
+         "target_nodeid_named": bool(str(target_nodeid or "").strip()),
+         "run_shape_named": run_shape in RUN_SHAPES and bool(str(command or "").strip()),
+         "every_run_resolved_a_db": not not_printed,
++        "every_run_fresh": not stale_rows,
+         "no_two_runs_share_a_temp_db": not dupes,
+         "no_forbidden_target": not forbidden,
+         "row_counts_recorded": not missing_field_rows,
+@@ -575,6 +679,12 @@ def streak_verdict(
+                           f"不出 streak 结论；{checks['run_shape_problems'][:3]})")
+     elif not checks["every_run_resolved_a_db"]:
+         out["verdict"] = (f"HARNESS_INVALID_no_resolved_db_path(run_index={not_printed})")
++    elif stale_rows:
++        # 第 3 条：库不是本次新建的 / 路径不是 app 打印的 ⇒ 这一批不配当独立观测。
++        # 放在 all_green **之前**：仲裁点名的洞正是"10 个不同但预先存在的库全绿 ⇒ STREAK_MET(10)"。
++        first = freshness[stale_rows[0]]
++        out["verdict"] = (f"HARNESS_INVALID_run_not_fresh(第 3 条：这些 run 的临时库不是本次新建"
++                          f"或路径不是 app 打印的 run_index={stale_rows}；首个原因：{first[0]})")
+     elif not checks["clause6_command_surface_clean"]:
+         out["verdict"] = (f"HARNESS_INVALID_relaxed_command_surface(第 6 条可机械判的那半："
+                           f"命令面出现放宽开关 {list(clause6_command_surface_hits) or ['未列出命中项']})")
+@@ -600,6 +710,7 @@ def streak_verdict(
+         reverse_value in CLOSURE_GRADE_REVERSE_RESULTS)
+     out["closure_allowed"] = bool(out["acceptance_reached"]
+                                   and rounds >= 10
++                                  and checks["every_run_fresh"]
+                                   and checks["clause6_declared_for_closure"]
+                                   and independence_declared
+                                   and out["reverse_mutation_closure_grade"])
+diff --git a/backend/tests/test_qoder_db_isolation_same_verdict.py b/backend/tests/test_qoder_db_isolation_same_verdict.py
+index d680495..ec5f32b 100644
+--- a/backend/tests/test_qoder_db_isolation_same_verdict.py
++++ b/backend/tests/test_qoder_db_isolation_same_verdict.py
+@@ -63,15 +63,18 @@ from _qoder_streak_receipt import (  # noqa: E402
+     NODE_WITH_PRECEDING_DOORS,
+     classify_target_node,
+     clause6_command_surface,
++    corroborate_node_outcome,
+     decode_child_text,
+     node_outcome_from_exit,
+     observation_only,
+     has_decoding_damage,
++    summarize_pytest_counts,
+     parse_resolved_path,
+     path_is_forbidden,
+     receipt_problems,
+     read_text_bytes,
+     resolved_path_problems,
++    run_freshness_problems,
+     shape_command,
+     streak_verdict,
+     verify_run_shape,
+@@ -243,6 +246,13 @@ def _run_once(index: int, before: set[str]) -> dict[str, Any]:
+     decoder = f"stdout={stdout_codec};stderr={stderr_codec}"
+     after = _temp_dirs()
+ 
++    # 退出码要能被**摘要计数**佐证，否则不许当结果（实测的假绿通道：整条 skip ⇒ exit 0）。
++    counts = summarize_pytest_counts(stdout or stderr)
++    raw_outcome = node_outcome_from_exit(proc.returncode, run_shape=RUN_SHAPE,
++                                        nodeids_in_command=[TARGET_NODEID])
++    outcome, corroboration = corroborate_node_outcome(raw_outcome, run_shape=RUN_SHAPE,
++                                                     counts=counts)
++
+     printed, path_source = parse_resolved_path(stdout, stderr)
+     created = sorted(after - before)
+     if not printed and created:
+@@ -276,8 +286,9 @@ def _run_once(index: int, before: set[str]) -> dict[str, Any]:
+     return {
+         "run_index": index,
+         "exit_code": proc.returncode,
+-        "node_outcome": node_outcome_from_exit(proc.returncode, run_shape=RUN_SHAPE,
+-                                               nodeids_in_command=[TARGET_NODEID]),
++        "node_outcome": outcome,
++        "node_outcome_uncorroborated": raw_outcome,
++        "pytest_counts": counts, "corroboration": corroboration,
+         "resolved_absolute_db_path": db_path,
+         "initial_row_counts": initial,
+         "final_row_counts": _row_counts(db_path) if db_path != "NOT_PRINTED"
+@@ -396,33 +407,18 @@ def _instrument_problems(receipt: dict[str, Any]) -> list[str]:
+ 
+     problems = receipt_problems(receipt)
+     for row in receipt["runs"]:
++        # freshness / 路径合规 / 解码受损 这三条**判据在共享模块里**（仲裁 §3：判据留在 test
++        # 文件里 ⇒ 别的引用方可绕过）。门只转述共享判据的结果，不再各算一遍。
++        for shared_problem in run_freshness_problems(row):
++            problems.append(f"run {row['run_index']}：{shared_problem}")
+         for key in ("initial_row_counts", "final_row_counts"):
+             counts = row.get(key)
+             if isinstance(counts, dict) and "error" in counts:
+                 problems.append(f"run {row['run_index']} 的 {key} 读失败（{counts['error']}）："
+                                 "解析出来的路径打不开 = 收据里的路径不可信，不是产品红")
+-        if isinstance(row["initial_row_counts"], dict) \
+-                and "error" not in row["initial_row_counts"] \
+-                and not row["initial_row_counts"].get("path_did_not_exist_before_this_run"):
+-            problems.append(f"run {row['run_index']} 没量到『跑前该路径不存在』"
+-                            f"（{row['initial_row_counts']}）：第 3 条的 fresh 必须是读出来的")
+-        if not str(row["path_source"]).startswith("app_printed_receipt_line"):
+-            problems.append(f"run {row['run_index']} 的解析路径不是 app 打印出来的"
+-                            f"（path_source={row['path_source']}）：第 1 条边界"
+-                            "『resolved absolute DB path must be printed/receipted』")
+-        for key in ("stdout_damage", "stderr_damage"):
+-            if row.get(key):
+-                problems.append(f"run {row['run_index']} 的 {key} 量到解码受损：{row[key]}"
+-                                "（这条读数的字节已经被改过，标签说什么不算）")
+-        decoder = str(row.get("child_decoder") or "")
+-        if "replace" in decoder or not decoder:
+-            problems.append(f"run {row['run_index']} 的子进程解码器 {decoder!r} "
+-                            "会静默替换坏字节：路径/锚点可能被改而无人报警（源审计 ①）")
+         if not row.get("run_shape_verified"):
+             problems.append(f"run {row['run_index']} 的形制证据没过校验（第 9 条）："
+                             f"{row.get('run_shape_problems')}")
+-        for bad in row.get("resolved_path_problems") or []:
+-            problems.append(f"run {row['run_index']} 的 resolved 路径不合规：{bad}")
+     cls = receipt["classification"]
+     if cls.get("classification") not in CLASSIFICATIONS + SHARED_NAMES:
+         problems.append(f"定性名字不在冻结词表里：{cls.get('classification')!r}")
+@@ -506,7 +502,7 @@ def test_1b_the_instrument_judge_acts_on_both_directions():
+     inferred = _fake_receipt([_fake_row(1, _paths(2)[0]),
+                               _fake_row(2, _paths(2)[1])], ["RED", "GREEN"])
+     inferred["runs"][1]["path_source"] = "temp_dir_diff_only"
+-    assert any("不是 app 打印出来的" in p for p in _instrument_problems(inferred)), (
++    assert any("不是 app 打印的" in msg for msg in _instrument_problems(inferred)), (
+         "期望：路径只是靠临时目录差集猜出来的 ⇒ 必须报警（第 1 条边界要的是 app 自己打印）；"
+         f"实际 {_instrument_problems(inferred)}")
+ 
+@@ -748,8 +744,11 @@ def test_4d_a_shared_db_path_is_not_a_flip_without_shared_state():
+     streak = streak_verdict(
+         runs=[{"run_index": i + 1, "exit_code": 0 if i < 5 else 1,
+                "node_outcome": "GREEN" if i < 5 else "RED",
+-               "resolved_absolute_db_path": one_path,
+-               "initial_row_counts": {"absent": True}, "final_row_counts": {"journeys": i}}
++               "resolved_absolute_db_path": one_path, "path_source": "app_printed_receipt_line",
++               "child_decoder": "stdout=utf-8;stderr=utf-8",
++               "initial_row_counts": {"absent": True,
++                                      "path_did_not_exist_before_this_run": True},
++               "final_row_counts": {"journeys": i}}
+               for i in range(10)],
+         rounds=10, sha="50b35e0", target_nodeid=TARGET_NODEID, run_shape=SINGLE_NODE,
+         command="pytest " + TARGET_NODEID, run_shape_verified=True)
+@@ -765,8 +764,10 @@ def _synthetic(outcomes: list[str], paths: list[str] | None = None) -> list[dict
+     exit_of = {"GREEN": 0, "RED": 1}
+     return [
+         {"run_index": i + 1, "exit_code": exit_of.get(o, 2), "node_outcome": o,
+-         "resolved_absolute_db_path": paths[i],
+-         "initial_row_counts": {"absent": True}, "final_row_counts": {"journeys": 1}}
++         "resolved_absolute_db_path": paths[i], "path_source": "app_printed_receipt_line",
++         "child_decoder": "stdout=utf-8;stderr=utf-8",
++         "initial_row_counts": {"absent": True, "path_did_not_exist_before_this_run": True},
++         "final_row_counts": {"journeys": 1}}
+         for i, o in enumerate(outcomes)]
+ 
+ 
+@@ -862,6 +863,70 @@ def test_5_the_streak_ladder_names_every_failure_shape():
+         f"期望：解析路径里出现 _live.db ⇒ 立刻中止，红绿都不许往下算；实际 {v['verdict']}")
+ 
+ 
++def test_5e_ten_distinct_but_pre_existing_databases_are_never_a_streak():
++    """仲裁第三次源审 §3 点名的洞：
++
++    > `streak_verdict()` 只检查 `initial_row_counts` 字段存在 ⇒
++    > 10 个不同但**预先存在**的库全绿仍可能 `STREAK_MET(10)`。
++
++    所以判据必须长在**共享模块**里（谁调都躲不过），这里逐格试：
++    预先存在 / 路径靠差集猜 / 压根没量过 —— 三格都不得出 streak，正向对照必须仍然绿。
++    """
++
++    def rows_with(initial=None, source="app_printed_receipt_line"):
++        rows = _synthetic(["GREEN"] * 10)
++        for row in rows:
++            if initial is not None:
++                row["initial_row_counts"] = dict(initial)
++            row["path_source"] = source
++        return rows
++
++    stale = streak_verdict(runs=rows_with({"absent": False, "journeys": 4182,
++                                          "path_did_not_exist_before_this_run": False}),
++                           rounds=10, sha="800b682", target_nodeid=TARGET_NODEID,
++                           run_shape=SINGLE_NODE, command="pytest " + TARGET_NODEID,
++                           run_shape_verified=True, clause6_declared=True,
++                           independence_declared=True,
++                           reverse_mutation_required=True, reverse_mutation_result="KILLED")
++    assert stale["checks"]["every_run_fresh"] is False, (
++        "期望：库在本次进程之前就存在 ⇒ every_run_fresh False")
++    assert stale["verdict"].startswith("HARNESS_INVALID_run_not_fresh"), (
++        f"期望：这种批次具名判量具不合法，**不得** STREAK_MET；实际 {stale["verdict"]}")
++    assert stale["closure_allowed"] is False and stale["closure_grade"] == "NOT_MET", (
++        f"期望不可结案；实际 {stale['closure_allowed']}/{stale['closure_grade']}")
++    assert any("every_run_fresh" in p for p in receipt_problems(stale)), (
++        f"期望 receipt_problems 点名 freshness 这一格；实际 {receipt_problems(stale)[:3]}")
++
++    inferred = streak_verdict(runs=rows_with({"absent": True,
++                                             "path_did_not_exist_before_this_run": True},
++                                             source="temp_dir_diff_only"),
++                              rounds=10, sha="800b682", target_nodeid=TARGET_NODEID,
++                              run_shape=SINGLE_NODE, command="pytest " + TARGET_NODEID,
++                              run_shape_verified=True)
++    assert inferred["verdict"].startswith("HARNESS_INVALID_run_not_fresh"), (
++        f"期望：路径是差集猜出来的也不算隔离证据；实际 {inferred["verdict"]}")
++
++    unmeasured = streak_verdict(runs=rows_with({"absent": True}),
++                                rounds=10, sha="800b682", target_nodeid=TARGET_NODEID,
++                                run_shape=SINGLE_NODE, command="pytest " + TARGET_NODEID,
++                                run_shape_verified=True)
++    assert unmeasured["verdict"].startswith("HARNESS_INVALID_run_not_fresh"), (
++        f"期望：没量过跑前状态 = 不知道新不新 ⇒ fail-closed；"
++        f"实际 {unmeasured["verdict"]}")
++
++    fresh = streak_verdict(runs=rows_with({"absent": True,
++                                          "path_did_not_exist_before_this_run": True}),
++                           rounds=10, sha="800b682", target_nodeid=TARGET_NODEID,
++                           run_shape=SINGLE_NODE, command="pytest " + TARGET_NODEID,
++                           run_shape_verified=True, clause6_declared=True,
++                           independence_declared=True,
++                           reverse_mutation_required=True, reverse_mutation_result="KILLED")
++    assert fresh["verdict"] == "STREAK_MET(10)" and fresh["closure_allowed"] is True, (
++        f"期望正向对照：三格都真量到 fresh 时 streak 与结案照常成立（判据不是无脑拒绝）；"
++        f"实际 {fresh['verdict']}/{fresh['closure_allowed']}")
++    assert receipt_problems(fresh) == [], f"期望齐证收据合规；实际 {receipt_problems(fresh)[:3]}"
++
++
+ def test_5b_exit_code_five_is_not_a_green_run():
+     """最容易被自己骗的一格：`collected 0` 的退出码是 5，"没报错"不等于"跑绿了"。
+ 
+@@ -876,7 +941,11 @@ def test_5b_exit_code_five_is_not_a_green_run():
+     v = streak_verdict(
+         runs=[{"run_index": i + 1, "exit_code": 5, "node_outcome": derived[i],
+                "resolved_absolute_db_path": _paths(10)[i],
+-               "initial_row_counts": {"absent": True}, "final_row_counts": {"absent": True}}
++               "path_source": "app_printed_receipt_line",
++               "child_decoder": "stdout=utf-8;stderr=utf-8",
++               "initial_row_counts": {"absent": True,
++                                      "path_did_not_exist_before_this_run": True},
++               "final_row_counts": {"absent": True}}
+               for i in range(10)],
+         rounds=10, sha="50b35e0", target_nodeid=TARGET_NODEID, run_shape=SINGLE_NODE,
+         command="pytest " + TARGET_NODEID, run_shape_verified=True)
+@@ -975,6 +1044,38 @@ def test_6_the_frozen_vocabulary_matches_the_contract():
+     assert tuple(argv_tail) == SHAPE_REQUIRED_FLAGS[SINGLE_NODE], (
+         f"期望契约的单节点 argv 尾巴与判据一致；契约 {argv_tail} / "
+         f"判据 {list(SHAPE_REQUIRED_FLAGS[SINGLE_NODE])}")
++    corrob = doc["outcome_corroboration"]["helpers"]
++    import _qoder_streak_receipt as _shared
++    for helper in corrob:
++        assert callable(getattr(_shared, helper, None)), (
++            f"期望契约点名的佐证函数真的存在且可调用：{helper}；共享模块里没有这个名字")
++    assert "skip" in str(doc["outcome_corroboration"]["channel"]).lower(), (
++        f"期望契约写清假绿通道的成因（skip ⇒ exit 0）；实际 "
++        f"{doc['outcome_corroboration']['channel']!r}")
++    fresh_doc = doc["freshness_predicate"]
++    assert "streak_verdict" in str(fresh_doc["lives_in"]), (
++        f"期望契约写明 freshness 判据长在结论函数里（不在某扇门里）；实际 {fresh_doc['lives_in']!r}")
++    stale_row = _fake_row(1, _paths(1)[0])
++    stale_row["initial_row_counts"] = {"absent": False, "journeys": 7,
++                                      "path_did_not_exist_before_this_run": False}
++    assert run_freshness_problems(stale_row), (
++        "期望：预先存在的库被共享判据点名（这条红 = 判据又退回只在门里）")
++    stale_row2 = _fake_row(2, _paths(1)[0])
++    stale_row2["initial_row_counts"] = {"absent": True}
++    assert any("path_did_not_exist_before_this_run" in m for m in run_freshness_problems(stale_row2)), (
++        f"期望：没量过跑前状态也算不合规；实际 {run_freshness_problems(stale_row2)}")
++    assert not run_freshness_problems(_fake_row(3, _paths(1)[0])), (
++        f"期望正向对照：齐证的行判为干净；实际 {run_freshness_problems(_fake_row(3, _paths(1)[0]))}")
++    stale_probe = streak_verdict(
++        runs=[dict(_fake_row(i + 1, _paths(10)[i]),
++                   initial_row_counts={"absent": False,
++                                       "path_did_not_exist_before_this_run": False})
++              for i in range(2)],
++        rounds=2, sha="418c37a", target_nodeid=TARGET_NODEID, run_shape=SINGLE_NODE,
++        command="pytest " + TARGET_NODEID, run_shape_verified=True)
++    assert stale_probe["verdict"].startswith(str(fresh_doc["verdict_when_violated"])), (
++        f"期望契约写的 verdict 名字与阶梯实际产出一致（契约 {fresh_doc['verdict_when_violated']!r}）；"
++        f"实际 {stale_probe['verdict'][:70]!r}")
+     assert "replace" in str(doc["reader_chain"]["never"]), (
+         f"期望契约把 errors=\"replace\" 明确列为禁止；实际 {doc['reader_chain']['never']!r}")
+ 
+@@ -1108,6 +1209,78 @@ def test_9_the_single_node_shape_cannot_be_backed_by_other_argv():
+         f"期望：形制没校验过 ⇒ streak_verdict 不出结论（第 9 条）；实际 {receipt['verdict']}")
+ 
+ 
++def test_9b_a_skipped_target_is_never_counted_as_a_green_run():
++    """实测出来的假绿通道（我这把尺自己的）：整条 `@pytest.mark.skip` ⇒ pytest **exit 0**，
++    而 `node_outcome_from_exit(0)` 会说 GREEN ⇒ 十条 skipped 就能拼出 `STREAK_MET(10)`。
++
++    用**真子进程**验三件：先证 exit 真的是 0（不成立就没有通道要堵），再证佐证层把它降级，
++    最后拿正向对照证明降级不是无脑拒绝（真跑过的 GREEN/RED 必须保留）。
++    """
++
++    import tempfile
++
++    root = pathlib.Path(tempfile.mkdtemp(prefix="cnx_f_skipprobe_"))
++    (root / "pytest.ini").write_text("[pytest]" + chr(10), encoding="utf-8")
++    node = "test_probe.py::test_probe_case"
++    skipped_src = (
++        "import pytest" + chr(10) * 2
++        + "@pytest.mark.skip(reason='ORD-0210 假绿通道探针')" + chr(10)
++        + "def test_probe_case():" + chr(10) + "    assert True" + chr(10)
++    )
++    (root / "test_probe.py").write_text(skipped_src, encoding="utf-8")
++    argv = [sys.executable, "-m", "pytest", node, "--tb=short", "--import-mode=importlib"]
++
++    proc = subprocess.run(argv, cwd=str(root), capture_output=True, timeout=300)
++    stdout, _ = decode_child_text(proc.stdout or b"")
++    counts = summarize_pytest_counts(stdout)
++    assert proc.returncode == 0, (
++        f"（前提）这条 skipped 探针的 exit 应当是 0 —— 不是 0 就没有假绿可堵；"
++        f"实际 {proc.returncode}；摘要 {stdout.splitlines()[-1:]!r}")
++    assert counts.get("skipped", 0) >= 1 and counts.get("passed", 0) == 0, (
++        f"期望摘要读到『skipped≥1 且 passed=0』；实际 {counts}")
++
++    raw = node_outcome_from_exit(proc.returncode, run_shape=SINGLE_NODE,
++                                nodeids_in_command=[node])
++    assert raw == "GREEN", (
++        f"（前提）旧口径会说绿；这一格红说明旧口径已经改过，本测试的前提要重估。实际 {raw}")
++    fixed, why = corroborate_node_outcome(raw, run_shape=SINGLE_NODE, counts=counts)
++    assert fixed == "NOT_OBSERVED", (
++        f"期望：exit 0 但 passed=0 ⇒ 降级 NOT_OBSERVED；实际 {fixed} / {why[:120]}")
++
++    rows = []
++    for i in range(10):
++        row = _fake_row(i + 1, _paths(10)[i])
++        row.update(node_outcome="NOT_OBSERVED", exit_code=0, pytest_counts=dict(counts))
++        rows.append(row)
++    receipt = streak_verdict(runs=rows, rounds=10, sha="800b682", target_nodeid=node,
++                            run_shape=SINGLE_NODE, command=" ".join(argv[1:]),
++                            run_shape_verified=True, clause6_declared=True,
++                            independence_declared=True)
++    assert receipt["green"] == 0, f"期望十条 skipped 的绿数为 0；实际 {receipt['green']}"
++    assert receipt["verdict"].startswith("HARNESS_INVALID_target_verdict_not_scoped"), (
++        f"期望：这种批次判量具不合法，**绝不** STREAK_MET；实际 {receipt['verdict']}")
++    assert receipt["closure_allowed"] is False and receipt["closure_grade"] == "NOT_MET", (
++        f"期望不可结案；实际 {receipt['closure_allowed']}/{receipt['closure_grade']}")
++    assert any("no_unobserved_run" in p for p in receipt_problems(receipt)), (
++        f"期望 receipt_problems 点名这一格；实际 {receipt_problems(receipt)}")
++
++    (root / "test_probe.py").write_text(
++        "def test_probe_case():" + chr(10) + "    assert True" + chr(10), encoding="utf-8")
++    proc2 = subprocess.run(argv, cwd=str(root), capture_output=True, timeout=300)
++    stdout2, _ = decode_child_text(proc2.stdout or b"")
++    counts2 = summarize_pytest_counts(stdout2)
++    kept, why2 = corroborate_node_outcome("GREEN", run_shape=SINGLE_NODE, counts=counts2)
++    assert proc2.returncode == 0 and kept == "GREEN" and "一致" in why2, (
++        f"期望正向对照：真通过的一轮 GREEN 必须保留（不然判据就是误伤机器）；"
++        f"实际 exit={proc2.returncode} kept={kept} counts={counts2} why={why2[:80]}")
++    kept_red, why_red = corroborate_node_outcome("RED", run_shape=SINGLE_NODE,
++                                                counts={"failed": 1})
++    assert kept_red == "RED", f"期望 failed=1 时 RED 保留；实际 {kept_red} / {why_red[:80]}"
++    no_counts, why_nc = corroborate_node_outcome("GREEN", run_shape=SINGLE_NODE, counts=None)
++    assert no_counts == "NOT_OBSERVED", (
++        f"期望：没计数就没佐证 ⇒ fail-closed 降级；实际 {no_counts} / {why_nc[:80]}")
++
++
+ def test_10_the_ledger_anchor_guard_is_machine_gated_not_a_promise():
+     """源审计 ②：我不许再靠话说"写前写后各跑了一次 guard"。门里真跑它。"""
+ 
+diff --git a/contracts/gate-acceptance-streak.yaml b/contracts/gate-acceptance-streak.yaml
+index ea7d702..7990e21 100644
+--- a/contracts/gate-acceptance-streak.yaml
++++ b/contracts/gate-acceptance-streak.yaml
+@@ -24,6 +24,26 @@ reverse_mutation:
+   rejected_results: [SURVIVED, NOT_MEASURED]
+   field: reverse_mutation_result      # 词表外的值本身 = 收据缺陷（checks.reverse_mutation_value_valid）
+ 
++outcome_corroboration:            # 19:5x–20:0x 实测出来的假绿通道，堵在我这把共享尺上
++  channel: 靶子整条 @pytest.mark.skip ⇒ pytest exit 0 ⇒ 只看退出码会报 GREEN
++  rule: 退出码必须有摘要计数佐证；passed=0（或没有可解析的计数）⇒ 降级 NOT_OBSERVED
++  also: exit≠0 但摘要里没有 failed/error 计数 ⇒ 同样降级（中断/收集错误不能当"用例红了"）
++  helpers: [summarize_pytest_counts, corroborate_node_outcome]
++  consequence: 十条 skipped 的批次只能得 HARNESS_INVALID_target_verdict_not_scoped，永不得 STREAK_MET
++  adapter_note: commander 的 live_checks/gate_streak.py 现在是薄适配层并 import 本模块 ⇒ 这一格两边同修，不留第二把尺
++
++freshness_predicate:              # 仲裁第三次源审 §3 把这条从"门里"提到"尺里"
++  lives_in: streak_verdict() 内（不再只在 test 文件的 _instrument_problems 里）
++  per_run_conditions:
++    - path_source 以 app_printed_receipt_line 开头（差集猜出来的路径不算）
++    - initial_row_counts.path_did_not_exist_before_this_run 必须**为 true**（缺字段或 false 都不行）
++    - resolved_path_problems 为空（绝对、像 .db、无解码受损、大小写归一后不撞被保护库）
++  verdict_when_violated: HARNESS_INVALID_run_not_fresh
++  also_blocks: closure_allowed
++  why: 判据留在 test 文件里 ⇒ 别的引用方（含薄适配层、含未来任何车道）仍可绕过；
++       "10 个不同但预先存在的库全绿"就会假报 STREAK_MET(10)
++  inherited_by: [test_qoder_db_isolation_same_verdict.py, live_checks/gate_streak.py]
++
+ # 第 9 条的可机器判形状（源审计 ③）：形制不能只是收据里一个自由文本字段。
+ run_shape_argv:
+   single-node: [-m, pytest, "<恰好一条 nodeid>", --tb=short, --import-mode=importlib]
