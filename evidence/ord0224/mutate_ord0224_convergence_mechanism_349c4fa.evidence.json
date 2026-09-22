@@ -1,0 +1,181 @@
+{
+  "tree": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa",
+  "sha_tag": "349c4fa",
+  "run_shape": "one pytest process over the 13 declared nodeids per mutant",
+  "results": [
+    {
+      "mutant": "Y1a",
+      "layer": "A - pre-resolution read",
+      "note": "预查不再复用：应当只打掉 provider-work dedupe，身份门全绿",
+      "file": "catalog_hydration_operations.py",
+      "anchor_receipt": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "7154dad09b8cf7f2a31c22e32e7041e3fa4957337b5211b176667371019783d9",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "verdict_declared": "KILLED_AS_DECLARED",
+      "verdict_observed": "KILLED_AS_DECLARED",
+      "matches_declaration": true,
+      "expect_red": [
+        "tests/test_qoder_ord213_ask_store_before_world.py::test_w1_a_repeat_of_an_open_question_asks_the_provider_once_not_twice"
+      ],
+      "tolerated_red": [],
+      "observed_red": [
+        "tests/test_qoder_ord213_ask_store_before_world.py::test_w1_a_repeat_of_an_open_question_asks_the_provider_once_not_twice"
+      ],
+      "tolerated_red_observed": [],
+      "unexpected_red": [],
+      "green_broken": [],
+      "tail": [
+        "================== 1 failed, 12 passed, 2 warnings in 2.31s ==================="
+      ]
+    },
+    {
+      "mutant": "Y1b",
+      "layer": "A - post-resolution read",
+      "note": "解析后那次读关掉：声明为冗余件（预查 + 索引/败者回读已覆盖）",
+      "file": "catalog_hydration_operations.py",
+      "anchor_receipt": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "951de0fa020db5e4146cb69fe0044cd9ed2060004226c23959a69c06b33090c3",
+        "bytes_changed": true
+      },
+      "exit_code": 0,
+      "verdict_declared": "SURVIVED_REDUNDANT",
+      "verdict_observed": "SURVIVED_REDUNDANT",
+      "matches_declaration": true,
+      "expect_red": [],
+      "tolerated_red": [],
+      "observed_red": [],
+      "tolerated_red_observed": [],
+      "unexpected_red": [],
+      "green_broken": [],
+      "tail": [
+        "======================= 13 passed, 2 warnings in 2.03s ========================"
+      ]
+    },
+    {
+      "mutant": "Y2",
+      "layer": "B - partial unique index",
+      "note": "谓词永不命中：durable 层不再阻止两枚开放同键作业",
+      "file": "schema.sql",
+      "anchor_receipt": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\db\\schema.sql",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+        "mutated_sha256": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "verdict_declared": "KILLED_AS_DECLARED",
+      "verdict_observed": "KILLED_AS_DECLARED",
+      "matches_declaration": true,
+      "expect_red": [
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch"
+      ],
+      "tolerated_red": [
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable"
+      ],
+      "observed_red": [
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch",
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge"
+      ],
+      "tolerated_red_observed": [
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge"
+      ],
+      "unexpected_red": [],
+      "green_broken": [],
+      "tail": [
+        "================== 3 failed, 10 passed, 2 warnings in 2.26s ==================="
+      ]
+    },
+    {
+      "mutant": "Y3",
+      "layer": "C - loser read-back",
+      "note": "撞索引的败者不再上报 winner（抛 HydrationStoreBusy）",
+      "file": "catalog_hydration_operations.py",
+      "anchor_receipt": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "verdict_declared": "KILLED_AS_DECLARED",
+      "verdict_observed": "KILLED_AS_DECLARED",
+      "matches_declaration": true,
+      "expect_red": [
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable"
+      ],
+      "tolerated_red": [
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+      ],
+      "observed_red": [
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch",
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge"
+      ],
+      "tolerated_red_observed": [],
+      "unexpected_red": [],
+      "green_broken": [],
+      "tail": [
+        "=================== 4 failed, 9 passed, 9 warnings in 2.10s ==================="
+      ]
+    },
+    {
+      "mutant": "Y4",
+      "layer": "B made total (tail-A's witness)",
+      "note": "去掉 WHERE ⇒ 终态历史永久挡住下一代 ⇒ tail-A 一族必须红（上一版声明写窄了，按实测扩到四条）",
+      "file": "schema.sql",
+      "anchor_receipt": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\db\\schema.sql",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+        "mutated_sha256": "f1e36802a6372ca644017359095095a293ab11e7ae5a54adfca1f5dffd986612",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "verdict_declared": "KILLED_AS_DECLARED",
+      "verdict_observed": "KILLED_AS_DECLARED",
+      "matches_declaration": true,
+      "expect_red": [
+        "tests/test_qoder_anywhere_gates.py::test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse",
+        "tests/test_qoder_anywhere_gates.py::test_g3d_durable_layer_still_holds_the_partial_unique_index",
+        "tests/test_qoder_ord213_ask_store_before_world.py::test_w2_a_terminal_job_is_still_answered_by_a_new_attempt",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one"
+      ],
+      "tolerated_red": [],
+      "observed_red": [
+        "tests/test_qoder_anywhere_gates.py::test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse",
+        "tests/test_qoder_anywhere_gates.py::test_g3d_durable_layer_still_holds_the_partial_unique_index",
+        "tests/test_qoder_ord213_ask_store_before_world.py::test_w2_a_terminal_job_is_still_answered_by_a_new_attempt",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one"
+      ],
+      "tolerated_red_observed": [],
+      "unexpected_red": [],
+      "green_broken": [],
+      "tail": [
+        "=================== 4 failed, 9 passed, 7 warnings in 2.80s ==================="
+      ]
+    }
+  ]
+}
