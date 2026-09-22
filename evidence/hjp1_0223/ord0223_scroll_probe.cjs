@@ -28,6 +28,18 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
+  const RUN = process.env.CNX_RUN || 'run';
+  const now = new Date();
+  const offMin = -now.getTimezoneOffset(); /* minutes east of UTC; +480 on this box */
+  const sign = offMin >= 0 ? '+' : '-';
+  const pad = n => String(n).padStart(2, '0');
+  const startedAt = new Date(now.getTime() + offMin * 60000).toISOString().replace('Z', '')
+    + sign + pad(Math.floor(Math.abs(offMin) / 60)) + ':' + pad(Math.abs(offMin) % 60);
+  out.run_label = RUN;
+  out.started_at = startedAt;
+  out.started_at_utc = now.toISOString();
+  out.local_utc_offset_minutes = offMin;
+  out.browser = 'chromium ' + browser.version();
   const ctx = await browser.newContext({ viewport: { width: VW, height: VH }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, locale: 'zh-CN', timezoneId: 'Asia/Shanghai' });
   const page = await ctx.newPage();
   const writes = [];
@@ -150,6 +162,8 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
     };
   })();
 
+  const named = 'ord0223_scroll_probe_' + (RUN === 'run' ? 'latest' : RUN) + '.json';
+  fs.writeFileSync(path.join(__dirname, named), JSON.stringify(out, null, 2));
   fs.writeFileSync(path.join(__dirname, 'ord0223_scroll_probe.json'), JSON.stringify(out, null, 2));
   console.log(JSON.stringify({ base: BASE, error: out.error || null, onStep2: out.steps.onStep2, verdict: out.verdict, nonGetRequests: writes.length }, null, 2));
   await browser.close();
