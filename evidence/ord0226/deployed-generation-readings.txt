@@ -1,0 +1,55 @@
+ORD-0226 follow-up ② -- this lane's targets re-read on the generation the phone is served
+assembled by e345b9d6 from the run logs named below; probe receipt taken at 2026-09-22T18:50:39.645Z (UTC, the box is +08)
+
+BUNDLE COORDINATE (content, not a filename):
+  served by :4781      assets/index-DtQ86lsQ.js  1231985 B
+  sha256 served        cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a
+  sha256 deployed dist cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a
+  sameBytes            True   (D:/moodle/_qoder_preview_20260920/dist)
+  chain used           playwright.deployed-bundle.config.ts -- `vite preview --outDir <deployed dist>`,
+                       no build step, so the bytes are the deployed artifact rather than this tree.
+                       backend = this run's own throwaway sqlite; _preview.db was never opened.
+  serviceWorkers=block, so a precache cannot answer in place of the file being measured.
+
+RUN run101513  --  qoder-wizard-hint-surface-readings.spec.ts
+  summary: 6 passed (21.0s)
+    GREEN [real-seed] e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.9s)
+    GREEN [chromium] e2e\qoder-wizard-hint-surface-readings.spec.ts:150:1 › ord0221-3-step2-the-hint-clears-in-front-of-the-traveller
+    GREEN [chromium] e2e\qoder-wizard-hint-surface-readings.spec.ts:208:1 › ord0221-4-step3-visible-hint-and-live-region-read-apart
+    GREEN [chromium] e2e\qoder-wizard-hint-surface-readings.spec.ts:269:1 › ord0220-2-the-announcement-retires-when-the-field-is-fixed
+    GREEN [chromium] e2e\qoder-wizard-hint-surface-readings.spec.ts:330:1 › ord0220-3-a-refused-press-brings-its-reason-on-screen
+    GREEN [chromium] e2e\qoder-wizard-hint-surface-readings.spec.ts:411:1 › ord0222-6-the-announcement-is-still-gone-after-the-trip-exists
+
+RUN run101929  --  qoder-demo-entry-copy-matches-the-stage.spec.ts
+  summary: 4 passed (15.0s)
+    GREEN [real-seed] e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.8s)
+    GREEN [chromium] e2e\qoder-demo-entry-copy-matches-the-stage.spec.ts:92:1 › ord0216d-zh-the-wizard-never-says-a-city-name
+    GREEN [chromium] e2e\qoder-demo-entry-copy-matches-the-stage.spec.ts:119:1 › ord0216d-en-the-wizard-never-says-a-city-name
+    GREEN [chromium] e2e\qoder-demo-entry-copy-matches-the-stage.spec.ts:139:1 › ord0216d-the-city-the-traveller-lands-on-comes-from-data
+
+RUN run101582  --  qoder-budget-advisory-tiers.spec.ts / ord0220-1 (generation discriminator)
+  summary: 1 passed (5.2m)
+    GREEN [real-seed] e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.4s)
+    RED   [chromium] e2e\qoder-budget-advisory-tiers.spec.ts:284:1 › ord0220-1-the-tight-caveat-cannot-contradict-itself
+
+RUN run103328  --  same discriminator again after 7f9ee06 bounded the read
+  summary: 1 passed (32.5s)
+    GREEN [real-seed] e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.5s)
+    RED   [chromium] e2e\qoder-budget-advisory-tiers.spec.ts:284:1 › ord0220-1-the-tight-caveat-cannot-contradict-itself
+
+WHAT THE PROBE ADDED (read-only on the live preview at :4781; creation POSTs aborted by construction,
+  blockedWrites=[] creationPostsAttempted=0)
+  ORD-0216 ④  entry label '使用封存的演示行程', city named on the wizard screen: False
+  ORD-0222 ①  150 ms after the refused press the hint is already in the viewport (scrollY=652, inViewport=True, opacity=1),
+              position=static stickyAncestor=False  -> instant reveal, not a sticky bar
+              computed scroll-behavior html=auto body=auto -> no tween to depend on
+  ORD-0220 ②  live region after press '还需要填写：总预算'; after fixing the field ''; at step 3 '' -> it retires
+  ORD-0222 ②  not readable here (no create is clicked); same bytes with a real 确认创建: node ord0222-6-the-announcement-is-still-gone-after-the-trip-exists, played against the deployed dist with a real create on this lane's own throwaway database (run101513, playwright.deployed-bundle.config.ts)
+
+GENERATION DISCRIMINATOR: the caveat node above is RED on these bytes on purpose -- the caveat element
+(`budget-advisory-caveat`) arrived in e08131e, which is newer than the deployed bundle. A chain that
+had built this tree would have gone green, so the red is the proof that the deployed artifact, not a
+fresh build, was measured. NOT-DEPLOYED, not REPRODUCED, for that one node.
+The discriminator appears twice above on purpose: the first is before `7f9ee06` bounded the read and
+the second after, and the two durations are the difference between the two.
+
