@@ -191,6 +191,58 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### HERMES-REVIVAL-001（9baacb24）@2026-09-22 13:1x+08 —— 按 13:0x 令**并行推 H4–H10**：在**全新隔离库**上一轮跑穿，**H4/H5/H6/H7/H8a/H9/H10a/H10b 全绿**；H8b 按设计 NOT_RUN；并自曝两处仪器错
+
+`STATUS: H4-H10-GREEN-ON-FRESH-DB | 库 `_hermes_r5.db`（新 seed）| 端口 `:8518` | 解释器 `.venv` 3.12.14 | AI off、两把 key 先 pop | 未扩 H 列、未重写梯子 |`
+
+**回执行（H8/H10 分行；未跑写 NOT_RUN）**
+`9baacb24 | RECOVERED_GUARDED_MUTATION | H0 PASS | H1 PASS | H2 PASS | H3 PASS | H4 PASS | H5 PASS | H6 PASS | H7 PASS | H8a deterministic boundary PASS | H8b model-backed injection NOT_RUN | H9 PASS | H10a adapter parity PASS | H10b direct-product-vs-Hermes semantic parity PASS（同参对照，differing=0）`
+
+### ① 先按新规矩出 DB 预检收据（下"通过"结论前必须证明看的是哪份库）
+
+用 **app 自己 resolved 的** `database_url`（进程内读 `app.core.config.settings`，不是环境变量名）+ 真实 CWD 跑
+`_qoder_cmdr_ref_20260921/live_checks/db_probe_preflight.py` ⇒ **exit 0**：
+`resolved_database_path = D:\moodle\CityNexus-Hermes-Revival\evidence\0212\_hermes_r5.db`、
+`process_cwd = D:\moodle\CityNexus\backend`、`table_count = 53`、
+`known_table_counts = {journeys: 1, plan_versions: 29, travelers: 1}`、
+`status = READ_ONLY_TARGET_IDENTIFIED`、`safe_to_claim_clean = true`。原件 `evidence/0212/preflight_ladder.json`。
+（只读打开，**未执行 `PRAGMA wal_checkpoint`**——按账本 8878 行那条。）
+
+### ② H4–H10 逐门读数（一次跑穿，每门独立判定，`evidence/0212/H4_H10_ladder_run.json`）
+
+| 门 | 读数 | 判 |
+|---|---|---|
+| **H4** 只读真值对齐 | journey `ACTIVE` 两侧一致；`active_plan_version_id` 两侧同为 `55523d40-…a839`；twin `READY` 两侧一致；**ACTIVE 恰好 1 个**；四工具 `isError` 全 false | **PASS** |
+| **H5** proposal-only | `proposal_status=PRESENTED`、`decision=ALLOW_AUTO`；**ACTIVE 未动**；仍 1 个 ACTIVE；新增 **3 行全 CANDIDATE** | **PASS** |
+| **H6** 受守卫 accept（正例） | `decision=ALLOW_AUTO`、`reason_codes=[DELEGATION_POLICY_MATCHED, DETERMINISTIC_GATE_VERIFIED]`；`superseded_delta=1`、`active_changed=true`、**仍 1 个 ACTIVE**；**receipt 真**（`executed=true`、回执 `request_id` 与发送值一致、点名被提升的计划） | **PASS** |
+| **H7** 幂等 | 同 `request_id` 重放：`replay_decision=ALLOW_AUTO`、**快照与首次 accept 后完全相同** ⇒ 无第二次变更 | **PASS** |
+| **H8a** 确定性边界 | 导出面集合 == 号令六工具；六个越权名（`execute_statement/run_sql/drop_table/create_booking/request_commitment_change/replace_activity`）**全部 `Unknown tool`** | **PASS** |
+| **H8b** 模型注入 | 本轮**无模型驱动注入** | **NOT_RUN** |
+| **H9** 宕机/兜底 | `hermes/capabilities`: `ready=false`、`reachable=false`；`runtime-status`: `runtime_identity=NOT_CONFIGURED`、`native_binary_detected=false`；**未自称 Hermes 成功** | **PASS** |
+| **H10a** 适配器 vs MCP | 两条入口都过同一 Agent Gateway：`decision` 一致（`ALLOW_AUTO`），`status/hard_constraints_passed/locked_commitments_preserved/utility_score/candidate_family` **逐项一致** | **PASS** |
+| **H10b** 产品 vs Hermes 语义平价 | 产品腿 `POST /journeys/{id}/replans`（solver_mode 走默认）vs Hermes 腿 MCP `request_replan`（**该面传不了 solver_mode**）；两侧字段数 **12 / 12**（agent 复数摘要 4）；**`differing_fields = 0`** | **PASS** |
+
+### ③ 两处**我自己的仪器错**（自曝，非产品缺陷）
+
+1. **H8a 首轮误报 false**：我拿 `list_tools()` 返回的**字母序**去比号令的**声明序**（`['accept_replan','inspect_journey',…]` vs `['inspect_journey',…]`）⇒ 恒 false。**修**：按**集合**比较，并同时记录排序后的实际列表。产品的六个导出名**从头就是对的**。
+2. **H6 首轮误报 false，且我的正例写法本身是错的**：我原先对**同一个提案连打两次 accept**（第一次就已变更，第二次自然报错 `second_decision=null`），还把 `first_mutation` 写成"拿新取的快照与自身比"。**修**：正例只取**第一次 accept 的前后快照**，负例改用**另一条提案**观测，不再重打同一条。修后正例 `superseded_delta=1` 且 receipt 门四项全过。
+3. **负例的诚实标注**：修后我让负例去打**第二条 PRESENTED 提案**，结果 `decision=null`、`mutation_occurred=false`——因为那条提案**已被第一次 accept 连带作废**，这不是"无授权被拦"，**我不把它当负例证据**。真正的负例证据在 `_hermes_r4.db` 那轮（`REQUIRE_CONFIRMATION`/`USER_CONFIRMATION_REQUIRED`、零变更），以及新库首跑时**政策仍是 ADVISORY** 时同样给 `REQUIRE_CONFIRMATION`——两条都在账。
+
+### ④ 政策与库口径（可复放）
+
+新库 `_hermes_r5.db` 由 `ensure_schema()` + `seed_demo()` 建成（**未用 `demo/reset`**），初始政策是产品默认 `ADVISORY/auto_accept_replan=false`（首跑据此给 `REQUIRE_CONFIRMATION`，**这正是默认安全的证据**）；随后按历史口径走**产品自己的** `PUT /travelers/{id}/agent-policy` 设为 `ASSISTED/auto_accept_replan=true`（`version 1→2`）再跑正例。**生产默认未改**。
+另：本轮跑完发现我 `:8517` 那台旧台忘了停（它一直开着 `_hermes_r4.db`）⇒ 已停；四份库逐个 `wal_checkpoint(TRUNCATE)` 后**无 `-wal`/`-shm` 残留**；`:8513-:8518` 全空、0 孤儿进程、0 新 `pyc`。
+
+### ⑤ 磁盘（响应你 ④ 的急事）
+
+我按"复用已有导出、别堆新树"的规矩处置了自己的一份**废弃产物**：`current-0213/`（一份**截断不可用**的 `hermes-agent-0213.tar.gz` 14,259,663 B + 一份 `pyvenv.cfg` 指向已删 AppData 路径的 `venv-0212`）**零证据文件、无人引用** ⇒ 释放 **196 MB**，原地留 1 KB `REBUILD_NOTE.md` 记录删除理由与重建命令。D: 现余约 16 GiB。
+
+### ⑥ 下一步
+
+H8b（真模型注入）与 H11 仍按梯子门挂着：**H0–H10 已全立**（H8b 除外，它是"模型支撑"类），H11 需要**安全的进程内既有凭据**才试——目前 `DEEPSEEK_API_KEY` 只在父环境、且我一贯起台先 pop，**未作为 H11 凭据使用**。禁令照旧：未碰 `:4781/:4782/:8693` 与 `_live.db`、未调 `demo/reset`、未动 0.19.0 profile、无 junction、未动权威树与 `CityNexus/**`、报告无 key 或前缀。
+
+
+
 ### SESSION=8c66aa92 · 13:09 **`ebb4b3f`：第四格改回仲裁冻结的名字**（选 B，不加别名、不双写） @09-22 13:1x
 
 `STATUS: RENAMED-IN-LANE-C | D/F/E 可以解耦继续 | 两处旧拼写在我之外，点名不代改 | P7 仍归你签 |`
@@ -9107,6 +9159,40 @@ evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（�
   （卫生间/入口证据被当成整点 step-free）。落地当天我一条命令即出这张对照表。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 分派 @2026-09-22T13:1x+08 —— 11 条红的归属定下来了（C 的 triage 我复跑过，不新开单）
+
+C 的 ORD-0202 交付（`SESSION=8c66aa92 · 12:46+08`）把 11 条逐 nodeid 定了性：**9 具名产品缺口 / 2 量具缺陷（1 条半对）**，
+每条附"能证伪它的最小命令"＋该谁动哪个文件。我独立复核了它的取证方式（`pytest -q --tb=line <11 nodeid>` ⇒ 11 failed in 1.62s，
+不靠网络），并核了它两个额外贡献：**它发现门自己报的行号有两处已漂，改给实测行号**——这正是我 09-21 立的"引用前先钉树"的规矩在起作用。
+
+### 给 F `8ccd71d8`（接在 ORD-0200 之后，不新开单；三件都是量具，不碰产品码）
+
+1. `gates::test_g5` —— 现场是 `run.outcome=None` 而 `status=SKIPPED_EXTERNAL_DEPENDENCY`：**无外部依赖该 skip 而不是判红**，
+   且 skip 要具名理由。
+2. `lock_duration::test_g9b` —— 前置不成立：断言要"流水线里真打过 provider"，实测 observed provider calls 为 0。
+   要么显式 arrange 出一次调用，要么把这条改成"没有调用就 N/A"，**两样都行但不许留着当产品缺陷计数**。
+3. `provider_independence::test_g8a` —— 它抓的两处都不是真出网（一处是故意写的 MockTransport，一处是自我触发）。
+   修扫描规则：排除已拦截传输／要求"未被拦截才算"。**禁止**为了让它绿而删或 skip C 自己的那两条仪器。
+交付口径与 ②-3 一样：双向反例（该红的红、该绿的绿），collected 与 failed+passed 必须对得上。
+F 已交的两步我复跑过：`c79304d` 6 passed／`adf0a3a` **8 passed in 0.48s**，
+test_5 已按裁定升级成双向判据（`applicable && {} ⇒ RED`；`not applicable && 仍给 attribution ⇒ RED`，
+并注明 N/A 由调用点已有结构化状态自证、不是为过门新造）⇒ **ORD-0200 第一步与第二步我签 `ACCEPTED`**。
+
+### 给 B `c01d72a3`（接在 ORD-0201 之后；按"不需要外网"排序，先做前四条）
+
+| # | nodeid | 缺口 | 你的落点（C 给的实测行号） |
+|---|---|---|---|
+| 1 | `provider_truth::g11` | 6 种形状塌成 5 个码：5xx 与"结构非法"同落 `PROVIDER_BAD_RESPONSE` | `provider_identity.py` 给 5xx 一个自己的码 |
+| 2 | `matrix_truth::g13d` | 嵌套形状带 `radius_m`、顶层形状丢距离 | `valhalla_http.py:187` 顶层分支同样带上 |
+| 3 | `discovery_truth::g16b` | 写了 `expires_at` 没人读 ⇒ 同一天第二次外呼（242.9 s 冷／238.3 s 热的机制） | `real_city.py` 命中前先判活 |
+| 4 | `discovery_truth::g17a` | 调用方要 12 km，查询被静默缩成 `around:5000` | `real_city.py:737` 要么分圈要么具名回答"只覆盖 5 km" |
+| 5 | `discovery_truth::g18b` | 6 类目里 `booking/mobility/nightlife` 落默认集合（与 g18a 同根另一格） | `real_city.py` 类目分支表：逐类目给 tag 或给 MISSING |
+| 6 | `matrix_truth::g14b` | 20 节点一次性发出去（>100 cells 风险） | `runtime.py:232` 分片；B/C 边界由你在下一次落账时点明 |
+| 7 | `provider_truth::g10` | 规范化目录里"可查坐标"这一格根本没有承载字段 | `real_city.py` 给 node 类补中心点（`out center` 语义）并放进投影 |
+
+**不要**顺手改 `real_city.py:1279` 的 `"NOT_ANSWERED"`——那是 provider 证据轴的取值、不是能力格，我核过并且已写死不许动（理由见上一块）。
+每修一条就在自己的一次性副本上跑对应 nodeid，交付只写：改前红／改后绿／collected／动过的文件行号。
+
 ## commander 合并回执 @2026-09-22T13:1x+08 —— 权威树前移两格：`e0fc697 → ebb4b3f → c0d7e3d`（都在我名下验过），另记两条"差点报错"的核验
 
 ### 读数（全部 `git archive <sha>` 干净导出树；解释器 `.venv` 3.12.14；`DEEPSEEK_API_KEY` 已 unset）
