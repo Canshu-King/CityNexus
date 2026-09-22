@@ -43,3 +43,4 @@ frontend/storybook-static/
 frontend/dev-dist/
 backend/citynexus_backend.egg-info/
 frontend/reports/
+output/harness/
