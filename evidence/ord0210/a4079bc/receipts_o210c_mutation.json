@@ -1,0 +1,384 @@
+{
+  "tree": "D:\\moodle\\_qoder_f_run\\e_f_a4079bc",
+  "target_sha256_12_final": "ef608a34f9a3",
+  "baseline": {
+    "exit": 0,
+    "passed": 21,
+    "failed": 0,
+    "errors": 0
+  },
+  "mutations": [
+    {
+      "id": "M1",
+      "claim": "定性把『两种结果都出现过』换成多数表决 ⇒ 1 绿/9 红被说成恒红",
+      "expected_killers": [
+        "test_4a_the_four_frozen_readings_classify_as_the_arbiter_wrote_them",
+        "test_4b_many_reds_is_not_the_same_as_always_red"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "66a06abf62bf",
+      "run_exit": 1,
+      "failed": [
+        "test_1b_the_instrument_judge_acts_on_both_directions",
+        "test_4a_the_four_frozen_readings_classify_as_the_arbiter_wrote_them",
+        "test_4b_many_reds_is_not_the_same_as_always_red",
+        "test_4d_a_shared_db_path_is_not_a_flip_without_shared_state"
+      ],
+      "passed": 17,
+      "failed_n": 4,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_4a_the_four_frozen_readings_classify_as_the_arbiter_wrote_them",
+        "test_4b_many_reds_is_not_the_same_as_always_red"
+      ]
+    },
+    {
+      "id": "M2",
+      "claim": "未知退出码（含 collected=0）读成 GREEN",
+      "expected_killers": [
+        "test_5b_exit_code_five_is_not_a_green_run",
+        "test_5c_only_the_single_node_shape_may_read_a_verdict_off_the_exit_code"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "12c203ddb280",
+      "run_exit": 1,
+      "failed": [
+        "test_5b_exit_code_five_is_not_a_green_run",
+        "test_5c_only_the_single_node_shape_may_read_a_verdict_off_the_exit_code"
+      ],
+      "passed": 19,
+      "failed_n": 2,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_5b_exit_code_five_is_not_a_green_run",
+        "test_5c_only_the_single_node_shape_may_read_a_verdict_off_the_exit_code"
+      ]
+    },
+    {
+      "id": "M3",
+      "claim": "取消第 9 条形制要求（收据头）",
+      "expected_killers": [
+        "test_5_the_streak_ladder_names_every_failure_shape"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "fc3a4bb31e6d",
+      "run_exit": 1,
+      "failed": [
+        "test_5_the_streak_ladder_names_every_failure_shape"
+      ],
+      "passed": 20,
+      "failed_n": 1,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_5_the_streak_ladder_names_every_failure_shape"
+      ]
+    },
+    {
+      "id": "M4a",
+      "claim": "定性层忽略重复解析路径",
+      "expected_killers": [
+        "test_4d_a_shared_db_path_is_not_a_flip_without_shared_state",
+        "test_1b_the_instrument_judge_acts_on_both_directions"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "0f940cc08828",
+      "run_exit": 1,
+      "failed": [
+        "test_1b_the_instrument_judge_acts_on_both_directions",
+        "test_4d_a_shared_db_path_is_not_a_flip_without_shared_state"
+      ],
+      "passed": 19,
+      "failed_n": 2,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_4d_a_shared_db_path_is_not_a_flip_without_shared_state",
+        "test_1b_the_instrument_judge_acts_on_both_directions"
+      ]
+    },
+    {
+      "id": "M4b",
+      "claim": "streak 层忽略第 7 条",
+      "expected_killers": [
+        "test_4d_a_shared_db_path_is_not_a_flip_without_shared_state",
+        "test_1b_the_instrument_judge_acts_on_both_directions"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "00f160d47ffe",
+      "run_exit": 1,
+      "failed": [
+        "test_1b_the_instrument_judge_acts_on_both_directions",
+        "test_4d_a_shared_db_path_is_not_a_flip_without_shared_state"
+      ],
+      "passed": 19,
+      "failed_n": 2,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_4d_a_shared_db_path_is_not_a_flip_without_shared_state",
+        "test_1b_the_instrument_judge_acts_on_both_directions"
+      ]
+    },
+    {
+      "id": "M5",
+      "claim": "取消小样本警告",
+      "expected_killers": [
+        "test_4c_one_isolated_observation_never_becomes_a_verdict"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "4ee4d94b9c2e",
+      "run_exit": 1,
+      "failed": [
+        "test_4c_one_isolated_observation_never_becomes_a_verdict"
+      ],
+      "passed": 20,
+      "failed_n": 1,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_4c_one_isolated_observation_never_becomes_a_verdict"
+      ]
+    },
+    {
+      "id": "M7",
+      "claim": "形制未校验也照样出 streak 结论（第 9 条那一格白装）",
+      "expected_killers": [
+        "test_9_the_single_node_shape_cannot_be_backed_by_other_argv"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "b2d95b07a247",
+      "run_exit": 1,
+      "failed": [
+        "test_9_the_single_node_shape_cannot_be_backed_by_other_argv"
+      ],
+      "passed": 20,
+      "failed_n": 1,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_9_the_single_node_shape_cannot_be_backed_by_other_argv"
+      ]
+    },
+    {
+      "id": "M8",
+      "claim": "解码链第一档就 errors=\"replace\" ⇒ 坏字节被伪装成不存在",
+      "expected_killers": [
+        "test_8_the_byte_reader_handles_gb18030_invalid_bytes_and_valid_utf8"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "694d8fa8cad8",
+      "run_exit": 1,
+      "failed": [
+        "test_8_the_byte_reader_handles_gb18030_invalid_bytes_and_valid_utf8"
+      ],
+      "passed": 20,
+      "failed_n": 1,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_8_the_byte_reader_handles_gb18030_invalid_bytes_and_valid_utf8"
+      ]
+    },
+    {
+      "id": "M12",
+      "claim": "把『量到解码受损就报警』那支判词关掉（受损读数被当干净用）",
+      "expected_killers": [
+        "test_1b_the_instrument_judge_acts_on_both_directions"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "3b47d5c68f18",
+      "run_exit": 1,
+      "failed": [
+        "test_1b_the_instrument_judge_acts_on_both_directions"
+      ],
+      "passed": 20,
+      "failed_n": 1,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_1b_the_instrument_judge_acts_on_both_directions"
+      ]
+    },
+    {
+      "id": "M13",
+      "claim": "绕过退出码的计数佐证（凭空造一个 passed 计数）⇒ 整条 skipped(exit 0) 又能当绿",
+      "expected_killers": [
+        "test_9b_a_skipped_target_is_never_counted_as_a_green_run"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "06733bf3da65",
+      "run_exit": 1,
+      "failed": [
+        "test_1_the_mechanism_produces_a_valid_receipt_for_a_flipping_target",
+        "test_9b_a_skipped_target_is_never_counted_as_a_green_run"
+      ],
+      "passed": 19,
+      "failed_n": 2,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_9b_a_skipped_target_is_never_counted_as_a_green_run"
+      ]
+    },
+    {
+      "id": "M14",
+      "claim": "把结论阶梯里的 freshness 分支摘掉 ⇒ 预先存在的库又能算 streak",
+      "expected_killers": [
+        "test_5e_ten_distinct_but_pre_existing_databases_are_never_a_streak"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "9595f412f0a9",
+      "run_exit": 1,
+      "failed": [
+        "test_5e_ten_distinct_but_pre_existing_databases_are_never_a_streak",
+        "test_6_the_frozen_vocabulary_matches_the_contract"
+      ],
+      "passed": 19,
+      "failed_n": 2,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_5e_ten_distinct_but_pre_existing_databases_are_never_a_streak"
+      ]
+    },
+    {
+      "id": "M15",
+      "claim": "stale_rows 计算被抹平 ⇒ every_run_fresh 永远 True、closure 也放行",
+      "expected_killers": [
+        "test_5e_ten_distinct_but_pre_existing_databases_are_never_a_streak"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "e6b592c99652",
+      "run_exit": 1,
+      "failed": [
+        "test_5e_ten_distinct_but_pre_existing_databases_are_never_a_streak",
+        "test_6_the_frozen_vocabulary_matches_the_contract"
+      ],
+      "passed": 19,
+      "failed_n": 2,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_5e_ten_distinct_but_pre_existing_databases_are_never_a_streak"
+      ]
+    },
+    {
+      "id": "M16",
+      "claim": "selector 只抽第一条 ⇒ 多带一条 seed selector 的命令仍被签成 single-node",
+      "expected_killers": [
+        "test_9_the_single_node_shape_cannot_be_backed_by_other_argv",
+        "test_9c_selector_parsing_does_not_invent_or_miss_selectors"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "36b513a8f90a",
+      "run_exit": 1,
+      "failed": [
+        "test_9_the_single_node_shape_cannot_be_backed_by_other_argv",
+        "test_9c_selector_parsing_does_not_invent_or_miss_selectors"
+      ],
+      "passed": 19,
+      "failed_n": 2,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_9_the_single_node_shape_cannot_be_backed_by_other_argv",
+        "test_9c_selector_parsing_does_not_invent_or_miss_selectors"
+      ]
+    },
+    {
+      "id": "M9",
+      "claim": "受损路径判词永远返回干净 ⇒ U+FFFD 混进 resolved 路径也不报",
+      "expected_killers": [
+        "test_11_a_protected_database_cannot_be_reached_under_another_case"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "dd7c21c91a16",
+      "run_exit": 1,
+      "failed": [
+        "test_11_a_protected_database_cannot_be_reached_under_another_case"
+      ],
+      "passed": 20,
+      "failed_n": 1,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_11_a_protected_database_cannot_be_reached_under_another_case"
+      ]
+    },
+    {
+      "id": "M10",
+      "claim": "被保护库的比较退回裸字面 ⇒ `_LIVE.DB` 绕过",
+      "expected_killers": [
+        "test_11_a_protected_database_cannot_be_reached_under_another_case"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "1ead68b951e7",
+      "run_exit": 1,
+      "failed": [
+        "test_11_a_protected_database_cannot_be_reached_under_another_case"
+      ],
+      "passed": 20,
+      "failed_n": 1,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_11_a_protected_database_cannot_be_reached_under_another_case"
+      ]
+    },
+    {
+      "id": "M11",
+      "claim": "任何反向突变值都算结案级（把 STREAK_GREEN 与 CLOSED 又糊成一个）",
+      "expected_killers": [
+        "test_5_the_streak_ladder_names_every_failure_shape"
+      ],
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256_12": "cc41d4fae334",
+      "run_exit": 1,
+      "failed": [
+        "test_5_the_streak_ladder_names_every_failure_shape"
+      ],
+      "passed": 20,
+      "failed_n": 1,
+      "errors": 0,
+      "restored_ok": true,
+      "verdict": "KILLED",
+      "killers_hit": [
+        "test_5_the_streak_ladder_names_every_failure_shape"
+      ]
+    }
+  ]
+}
