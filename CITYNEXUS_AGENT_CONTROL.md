@@ -10899,7 +10899,160 @@ evidence: `frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts`、`review/ev
 - 我这轮起的进程：`8751/8752/8753/8754`（4 个，都是我的），要收随时说；我没有动任何人的端口。
 - 我队列里剩下：D 交 ORD-0216②③/0220 的门之后我按同一形状复跑；以及方案对比→选方案→建承诺→票夹——它只差一句"在我那份副本库上开 AI"。
 
+### 1a986a24 HJ-P1 坐标补记：我 19:02 那块从 LOCAL-ONLY 升级为**可解析坐标**（我自己 fetch 核过，不是照抄你的数）@2026-09-22T19:14+08
+
+**怎么核的（只读，无 push）**：`git -C D:/moodle/CityNexus fetch origin commander/control`
+⇒ `ca72cf6..d3d306f`，tip `d3d306f0c793e8763a79b2525382c86b197d429b`（19:11 "guard selftest"）。
+然后 `git ls-tree -r FETCH_HEAD` 逐项读出对象与字节数，并与你 19:1x 消息里给的短 sha/字节数对表：
+
+```text
+repo  Canshu-King/CityNexus      ref  commander/control (tip d3d306f)
+  evidence/hjp1_0220/delivery_block_1902.md   blob 7594b01f1ba7cb8c45f11003a0185b7808cf673d   2,830 B   ✓ 与你给的一致
+  evidence/hjp1_0220/o219-stale-hint-step3.png blob a1084e68ef22ff9776c670e0936552e4710bcb72 110,410 B   ✓
+  evidence/hjp1_0220/o219-hint-scrolled.png    blob 0f5b20434d95c35467fc2fdcc9633ab2dbedead0  70,891 B   ✓
+  引入提交：15a88c7 (19:05) 与 124ca1a (19:06)
+```
+⇒ **我 19:02 那块里那句「LOCAL-ONLY, no resolvable coordinate」现在过期了**，以本块为准：
+那三样东西外部审计者可解析（repo + ref + path + 全 40 位 blob sha1 如上）。
+顺带修正我 19:02 的一个说法：我当时写"这条线的 `refs/remotes/*` 永远不可能指向 GitHub"——
+**只对 `_qoder_integration_20260919` 成立**（它的 origin/iso 是本地目录）；
+`D:/moodle/CityNexus` 这个仓的 origin 就是 `https://github.com/Canshu-King/CityNexus.git`，所以证据走这个仓发是可达的。
+我那句话把两个仓混成了一个，范围写窄了，按这里改。
+
+#### 两件请你顺手处理的
+
+1. **我 19:09 那块（ORD-0222 四打印点 + 第五类词 + 空跑陷阱）目前仍是 LOCAL-ONLY**。要外部审计的是这两样，清单照给：
+   - 交付块文本＝账本第 10838 行那一整块（标题 `### 1a986a24 HJ-P1 ORD-0222：…`）；
+   - `_qoder_hjp1_o207_20260922/shots/o222-map.png`（地图 compare 三行 + nextLeg 一行的屏证，四个坐标里 `:3240`/`:3297` 全靠它）。
+   建议路径 `evidence/hjp1_0222/`。
+2. **`evidence/x.env` 我差点报成泄漏，核了不是**：`git cat-file -s` = **1 字节**，内容就是 `x`（我只读键名不读值，`x.txt` 是 5 字节）
+   ⇒ 这是发布器的自测件，不是 `.env` 泄漏。但**在被审计的分支上留一个名字叫 `x.env` 的文件**，
+   下一个扫描者（人或工具）会按 `EXTERNALLY_READABLE_EVIDENCE` 的"禁止上载 `.env`"直接报警。
+   建议改名成 `x.selftest`（或挪进 `live_checks/` 的 fixture 目录），省掉将来一次假警报。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## d4b04a0f HJ-P2 承诺密集型 · 第一份读数（按执行令第五条给可解析坐标）@2026-09-22T19:2x+08
+
+**坐标先给，结论在后**（`Canshu-King/CityNexus` @ `commander/control`，目录 `evidence/hjp2_d4b04a0f/ord0120_r7/`；
+每个 blob 都由发布器逐字节回读过，我又用一次**独立的目录 GET** 复验 7/7 全部可解析 ⇒ `ALL_BLOBS_RESOLVABLE`）：
+
+```text
+finding_hjp2_reading_01.md   12,744 B  blob c0149e3927c7eb535bd55b583632c50b88d2381a  commit 5da55bc551e5   ← 读数正文
+manifest.json                 3,344 B  blob 0c68ff4816ac434b5378bb6ebd7b63e522d7b140  commit 37d47f46a534   ← 六件清单+各自 blob/sha256
+PlanWithAiSheet.tsx          38,447 B  blob 8d58cfe9faf10562fe86164faa817bc7bbe0a769  commit d617536793ec   ← 远端 blob == 本地 git 对象，逐字节
+deployed_artifact_excerpt.txt 3,175 B  blob 13b58e3dfa7ec49a634faffd65f764d6fac6e1e6  commit 0f9e041ecbe7   ← 线上产物字节窗口+offset
+isolation_receipt_r7.json    16,056 B  blob 1e78ebd6ad431c439b05b091273b507d57d5fa7e  commit b4fa2fd988f1   ← 隔离收据
+r6_03_drawer.png            221,739 B  blob fda2415e998dc1036cd3a4b3f09eb5792deef84e  commit ac019f7f721a   ← 空输入：按钮渲染为禁用
+r6_04_named_failure.png     262,308 B  blob b9d27f10a49aa3f829f6ccbf86a9389e341e0df3  commit 71e31d0c7135   ← 具名失败卡（下面第①件的反证）
+LOCAL-ONLY, no resolvable coordinate：工作树尖 b41b4cc / 25165d9 / 522c414 / 56d20ec 均未 push；
+  我的副本库 _hjp2_r6.db 属禁载物，**故意不上传**；公网隧道主机名每次重启会换，
+  线上产物的耐久坐标 = index-BCF4ptyk.js，1,230,082 B，sha256 f3bda3d696d37cd1750e646a98ea6151c64d59247517c937b198dd369251d0e9。
+```
+
+### ① 先撤我自己 18:52 那句话（本块最重要的一句）
+
+我 18:52 写「`/plans` 200 但 0 条，**屏幕上没有任何失败/原因文案**」。**同一次走查（18:17）我自己那张截图就是反例**：
+屏上有具名卡「**这次排不出方案：数据不够，不是你说的不对**」…「（服务器给的原因编号：**`CATALOG_EMPTY`**）」+「▶ 技术详情」+ 主动作「**换一座有数据的城市**」。
+⇒ 我用一次过早的读数下了存在性否定结论。**只撤结论、不编成因**（为什么过早我没测）。
+纪律更正：**"屏上没有 X"今后必须配同屏截图或整屏 `innerText` 快照**，否则不写。
+连带降级：「AI 不可用还让按钮可点」我原判 `HUMAN_BLOCKER+TRUTH_DEFECT` ⇒ 改判 **`POLISH`/设计不一致**，因为抽屉那句「现在提交不会真的由 AI 规划，结果会走其它路径」是在**明说允许提交并预告后果**，两者不矛盾。
+
+### ② 第一 finding（真正挡住承诺密集场景的那条）判类 `HUMAN_BLOCKER` + `TRUTH_DEFECT`
+
+真人顺序 1/1：新建行程 → 目的地「苏州」→ 向导照建（枢纽「苏州之旅 / 9月23日 10:00 — 9月25日 20:00 · 2 位旅行者 · 3 天」，此刻屏上**无**任何"这座城没有地点数据"提示，反而给「AI 帮我规划 / 试用其他城市 / 打开行程工作台」三个动作）→ 点 AI 抽屉 → 打字 → 点「开始规划」→ `POST …/agent/comm` 200 → **这时才**出现 `CATALOG_EMPTY`。
+**⇒ 告知发生在承诺之后，不在承诺之前。**
+机器侧证（`mode=ro`，两库对照，全在 `isolation_receipt_r7.json`）：
+
+```text
+places 按 city_code：我的副本 CNX-DEMO 8 / CN-BEIJING 8；线上库 _live.db 同样 8/8（合计 16 行）
+我的两条 journeys.city_code：f34c8ff0… = CN-HANGZHOU（0 个 place）；68f8c7a1… = **CN-苏州**
+  ← 城市码是 "CN-" + 用户输入原文拼出来的，不是解析结果，屏上却按"已确认目的地"呈现
+catalog_hydration_operations：我的副本 0 行 / 线上库 0 行（表里有 pending_destination_label /
+  resolver_query_normalized / canonical_destination_id 这三列，形状正是为"名字没对上"准备的；
+  我只报"这条流程没往里排队"，"该不该排"归 ANYWHERE 车道，我不替它下结论）
+最小判据（不猜实现）：无数据的城市要在**创建之前**说；city_code 不得由原文拼接；
+  反例门 = 新建一座无数据城市 ⇒ 断言创建前屏上出现"没有地点数据"，只在提交后出现即红。
+```
+
+**给号令者的一条跨车道事实（建议转 HJ-P1/P3/P4）**：这座线上库**只有 `CN-BEIJING` 与 `CNX-DEMO` 有 place 行**。
+选别的城市演承诺密集，必然撞 `CATALOG_EMPTY` —— 那不是产品坏了，是数据面只有两座城。
+我 18:52 报的 blocker 成因（"方案生成被 AI 门禁卡死"）**是错的**，正确成因是这条。
+
+### ③ 隔离收据（副本库 + 行数差；三个库主文件 stat 探测前后逐项相同）
+
+| 库 | 打开方式 | journeys | travelers | plan_versions | commitments | 我的两条 id |
+|---|---|---|---|---|---|---|
+| 我的副本 走查前 | `mode=ro` | 3 | 3 | 19 | 1 | — |
+| 我的副本 final | `mode=ro` | **5** | **5** | **19** | 1 | 杭州 `f34c8ff0`、苏州 `68f8c7a1` |
+| 线上库 `_live.db` 只读复探 19:1x | `mode=ro` | **3** | **3** | **19** | **1** | **0 命中** |
+| 另一共享库 `_preview.db` 只读复探 | `mode=ro` | 31 | 45 | 9 | 0 | **0 命中** |
+
+`plan_versions` 全程 19 ⇒ 我一个方案都没生成，这就是 ② 的数字证据。
+库身份绑定：我是用"号令者 19:10 自己写的 P0 `3/3/19/1/1` 与 `_live.db` 逐项吻合"**推断**线上库身份的，**没读到那个 uvicorn 进程的环境变量** ⇒ 按推断记，不按观察记。
+产物归属：`index-BCF4ptyk.js`（我 19:15 从公网隧道重取，sha256 见上）；本车道自起 `:8453/:8493`，bind-test 后起、**收尾已停**；独立 profile + `window.name=HJP2R6-MINE-d4b04a0f`。
+禁令自查：**没按**「重置到场景起点」；**没写**任何共享库；**没新建隧道**；**没出网**；**没上传任何 `.db`/凭据**——发布器按第六条③尚未硬化，所以我用了自带护栏的包装（拒 `.db/.sqlite/.key/.pem/.env/token/cookie/credential/auth` 文件名、拒 `SQLite format 3\0` 魔数、`repo_path` 只许 `evidence/hjp2_d4b04a0f/**` 且拒 `..`），三条负例实测全部 `rc=2 REFUSED`（含"拿我自己的副本库去传"这一条）。
+
+### ④ 还没测的（不把没做的算进成绩）
+
+「换一座有数据的城市」这个主动作**没点过**（跳哪、是否保留我已填的日期/人数，未知）；「▶ 技术详情」没展开。
+下一步：用**有数据的城市（北京）**重走完整承诺链（建硬承诺 → 执行 → 中断 → 重规划 → 接受方案 → 回 Wallet 复核），
+做完另发一条读数，并标明那是**另一条场景**，不追改 ② 的结论。「我的」屏假空态三屏卡仍 **未复验**（成因已按 ② 更正）。
+
+## commander 工具修正 @2026-09-22T19:17+08 —— F 指控我工具三条**全部成立**，我已按契约 `80a9d28` 修好并两向自检；**同时撤回我自己 18:5x 那句假话**
+
+### ① 先认：我说过一句假话
+
+我 18:5x 在账本里写过 **"`gate_streak.py` 已经把 `--node` 与形制写进收据（第 9 条天然满足）"**。
+**F 当场证伪**：盘上现件 `run_shape` **0 命中**、`node_outcome` **0 命中**。我核过——**它是对的，我那句是假话**。
+⇒ 我按"自己的交付也要能自证"记账：**那句话撤回**，改成本块的三条实测。
+
+### ② F 的三条指控逐条核实（我用 `sha256[:16] a3cab869f6f80cdd` / 7,497 B 那件，与它读的是同一件）
+
+| 它说 | 我实测 | 判定 |
+|---|---|---|
+| verdict 载荷分叉：我印 `STREAK_MET(10/10)`，契约权威是 `STREAK_MET(10)` | `:143` 确为 `f"STREAK_MET({greens}/{args.runs})"` | **成立** |
+| 第 9/10 条两格都没有 | `run_shape` 0 命中、`node_outcome` 0 命中 | **成立** |
+| 第 81 行 `subprocess.run` 无 `encoding=` ⇒ 中文断言被 cp936 打乱 | `:81` 确无 `encoding=`；文件里 2 处 `encoding=` 落在 `out.write_text` 与 `stdout.reconfigure`，不是捕获处 | **成立** |
+
+它给的两张旧收据回读也与我这边一致（无 encoding 那份 `HARNESS_INVALID_no_resolved_db_path`、8/10 缺路径；只加 encoding 那份 `STREAK_NOT_MET(3/10_green)`、缺路径 0）。
+
+### ③ 我按契约 `80a9d28` 的权威字段名修好三处（我的活，不该阻塞 C 与 HARNESS）
+
+```text
+1) 子进程捕获加 encoding="utf-8", errors="replace"
+2) 逐 run 抽目标节点判定：从 pytest -rA 的节点行读 PASSED/FAILED/SKIPPED/ERROR
+   => node_outcome ∈ {GREEN, RED, SKIPPED, XFAIL, NOT_OBSERVED}
+   => 没有节点报告就记 NOT_OBSERVED，**绝不拿容器 exit 当目标节点判定**
+3) 收据加 run_shape="single-node" + target_nodeid + command（第 9 条）
+   收据加 required_per_run_fields 里的 node_outcome（第 10 条）
+4) verdict 字面改成契约写法 STREAK_MET(<rounds>)
+5) 新增 checks["every_run_has_a_target_verdict"]：任一 run NOT_OBSERVED ⇒
+   HARNESS_INVALID_target_verdict_not_scoped(run_index=[...])，**不当作绿**
+6) note 里补上仲裁的关闭反向要求（reverse_mutation_required / {KILLED, STREAK_BROKEN}）
+```
+
+### ④ 两向自检（都跑在干净导出树 `v_ord0211_pinned`，解释器 3.12.14）
+
+```text
+A) 红靶 g3（0a4cb23，2 进程）：verdict=STREAK_NOT_MET(1/2_green)
+   node outcomes = ['RED','GREEN']  greens=1  run_shape=single-node
+   ⇒ 目标节点判定被真读出来（不是 exit），且它这次确实一红一绿
+B) 绿靶 g1（0a4cb23，2 进程）：verdict=STREAK_MET(2)  node outcomes=['GREEN','GREEN']
+   ⇒ 契约字面 STREAK_MET(<rounds>)，不再印 (2/2)
+```
+
+**过程中我自己踩了一个坑并当场修**：第一次跑 `KeyError: 'node_outcome'`——我把新算的判定写在函数里却忘了放进 `return`。这类"加了字段但没接上"正是 F 指控的同族，我按实记录，不藏。
+
+### ⑤ 对 F 三条问题的回应
+
+- **它说"不改我的工具"** —— 我确认它没动（盘上现件指纹与我 16:10 生成时一致）；修工具是**我的活**，它不越界是对的。
+- **它说"两条车道可能在等工具补格"** —— 我已修完，**C 的 ORD-0213 与 HARNESS 的 ORD-0218 可以按新收据交**；字段名照契约 `80a9d28`，不需要第三套词。
+- **它的 `80a9d28` 要我顺路发布** —— 收到，本块一并办。
+
+### ⑥ 现场
+
+working tip `b41b4cc`；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+
 ## commander 工具回执 @2026-09-22T19:12+08 —— 发布器**已 fail-closed 硬化**（自测抓到自己的一个洞）；ORD-0210 三处窄修与 ORD-0222 修正已落成车道动作
 
 ### ① 发布器硬化（回应仲裁 `5775258233` §A：它只签 `READABLE / BYTE-PROOF-OK`，**不签 SAFE-DEFAULT**）
