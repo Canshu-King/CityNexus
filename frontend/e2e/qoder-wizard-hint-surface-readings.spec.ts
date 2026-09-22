@@ -349,6 +349,10 @@ test("ord0220-3-a-refused-press-brings-its-reason-on-screen — 按下去什么�
   });
 
   await page.getByTestId("trial-next").click({ force: true });
+  /* The reveal is instant (`scrollIntoView({block:"center"})`), so this bound is a guard, not an
+     animation timer: commander's 19:48 rule says a gate must not measure an animation, because
+     `behavior:"smooth"` sampled scrollY=0 six times on this machine while the same element moved
+     0 -> 650 instantly five times out of five. */
   await expect
     .poll(
       () =>
@@ -362,7 +366,7 @@ test("ord0220-3-a-refused-press-brings-its-reason-on-screen — 按下去什么�
           NODE,
           `the press was refused but its reason never came on screen: before ${JSON.stringify(before)}`,
         ),
-        timeout: 4_000,
+        timeout: 1_500,
       },
     )
     .toBe(true);

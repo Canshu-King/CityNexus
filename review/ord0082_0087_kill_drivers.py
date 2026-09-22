@@ -736,7 +736,7 @@ CASES = [
         # the exact 'I pressed and nothing happened' state HJ-P1 measured three times.
         "killZ1-refused-press-never-reveals-its-reason",
         WIZARD,
-        '    hint.scrollIntoView({ block: "center", behavior: "smooth" });\n',
+        '    hint.scrollIntoView({ block: "center" });\n',
         '    // reveal removed: the sentence is spoken, the screen never shows it\n',
         [(SURFACE_SPEC, ['ord0220-3-a-refused-press-brings-its-reason-on-screen'])],
     ),

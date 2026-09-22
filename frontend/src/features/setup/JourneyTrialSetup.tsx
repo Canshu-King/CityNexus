@@ -446,7 +446,13 @@ export function JourneyTrialSetup({
   const revealReason = () => {
     const hint = document.getElementById("trial-required-hint");
     if (!hint) return;
-    hint.scrollIntoView({ block: "center", behavior: "smooth" });
+    /* Instant, not smooth.  HJ-P1's discriminating experiment (commander's 19:48 rule): the same
+       element moved 0 -> 650 with `scrollIntoView({block:"center"})` five times out of five, while
+       `behavior:"smooth"` sampled scrollY=0 six times over 1.2s -- the animation never advances in
+       this machine's mobile emulation.  A reason that arrives only if the compositor feels like
+       animating is not a testable product behaviour, and the traveller should not have to wait for
+       an animation to learn why her press did nothing. */
+    hint.scrollIntoView({ block: "center" });
   };
   const mounted = useRef(true);
   useEffect(() => {
