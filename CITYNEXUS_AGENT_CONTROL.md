@@ -190,6 +190,27 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-23 02:1x+08 —— 三臂打完（tree17 = git archive 4d9ceae，门文件 sha256[:16] `143169fbdadc56e3`，每臂前基线 9 passed）：**三臂全部没穿**——B 的九条门对"别的载荷形状"是硬的；附两条我自己的探针 bug 自首 + 一条门的覆盖边界（多 HARD 场景它自己没覆盖）
+
+| 臂 | 形状 | 是否穿透 | 读数 | 判词落在哪个节点的哪一句 |
+|---|---|---|---|---|
+| **A1** | 14 个洗白载荷形状：`"true"` 字符串 / `"TRUE"` 大写 / 整数 `1` / 嵌套 `{"value":true}` / `step_free:true` / `step_free:"true"` / `evidence_status` 组合 / `step_free_verified` / `route_step_free` / `wheelchair` / `osm_tags` 嵌套 / `tags` 嵌套 / `subject+status` | **没穿（14/14）** | 投影只出白名单键（`stroller_accessible`/`luggage_accessible`/`source_kind=DEMO`/`source`），**无一个形状漏出白名单外键，也无一个求值出 `ACCESSIBILITY_VERIFIED`** | `test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture`（白名单投影）+ `test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified`（洗白 tripwire）——两处都咬住 |
+| **A1e** | 端到端 **tags 通道**：往 Place 行的 `tags_json` 塞 `step_free:"yes"` + `evidence_status:"VERIFIED"` + `wheelchair:"yes"`（`seed_demo` 把 fixture 的 tags **整体**搬进这一列，白名单管不到它） | **没穿** | 消费侧 `_accessibility_metadata(row)` 返回 **null** ⇒ 判 UNKNOWN。根因：它只读 `metadata_json`（`_record_metadata` 不合并 `tags_json`），而 `seed_demo` 的 metadata 是白名单构造（只有 `duration_min`/`cost_minor`/`accessibility_evidence`）⇒ tags 分支不可达 | 同 A1 两条（我这条是**补它没测的通道**，实测不可达） |
+| **A2** | **两个 HARD 同时**（STROLLER + LARGE_LUGGAGE 都 confirm）+ 逐个 select **无约束时生成的** 3 个候选 | **没穿，且不误报** | 候选 `55523d40`（含 `place-tech-art`）⇒ **422 点名 `STROLLER_ACCESS_UNAVAILABLE:place-tech-art`**；候选 `0a1dcd9c`（干净）⇒ **200**；候选 `6c07d3ca`（含 `place-design-library`）⇒ **422 点名 `LUGGAGE_ACCESS_UNAVAILABLE:place-design-library`**。三臂 `right_place=true`、`wrong_place=false`（点名地点全对、无交叉、无错指） | `test_hard_stroller_names_the_blocker_and_does_not_misfire` / `..._luggage_...` 的 `_two_way` 判词——**我把它扩到"两 HARD 同时"，行为仍正确** |
+| **A3** | **先持久化再报冲突**的时序形状：confirm 后 generate，然后**直接查库**（B 的门只读响应） | **没穿** | 库里 2 行 `PlanVersion`（status=CANDIDATE），**全部在响应里**（`persisted_but_not_returned=[]`）、**全部无冲突**（`persisted_conflicting=[]`） | `test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability`——我从**库**这一侧独立验了它只从响应侧断言的那句 |
+
+**纪律项**：`anchor_hits / bytes_changed / restored_exact` = **N/A**——这三臂是**输入形状探针**（构造新载荷/新场景），**不改任何源码**，没有突变锚点可报；A1e 在**库层面**临时插一行 Place 又删（非文件突变）。权威树 0 改动、未碰 `_live.db`、未发 `demo/reset`。
+
+**两条我自己的探针 bug（自首，第一版读数作废）**：
+1. **A2 第一版把顺序搞反了**（我先 confirm 再 generate）⇒ 冲突候选在生成期就被筛掉，我得到"无冲突候选、门会在 setup 红"的假读数。B 的 `_two_way` 是**先 generate 后 confirm**（这样候选里才有冲突地点）。修正后才是上表读数。**我一度差点把那个假读数报成"门的覆盖缺口"——那是我的 bug，不是门的。**
+2. 我的脚本每次运行**覆盖同一个 OUT 文件**，第一轮 A1/A1e 的详细读数因此丢失（只剩终端片段）；改成按臂分文件后重跑。两处都记在收据里。
+
+**一条真实的门覆盖边界（建议，不是缺陷）**：`_two_way` 的 setup 断言 `assert any(blocked_expected.values())`（"必须存在含冲突的候选"）**只在当前 fixture 的三模板布局下成立**（模板0含 stroller 冲突、模板2含 luggage 冲突、模板1干净）。**B 的两条门各测一个 code，没有"两个 HARD 同时"的节点**——我补测了（上表 A2），产品正确；若以后有人把这个门复用到多 HARD 场景，注意 setup 前置可能落空 ⇒ 报"门是空的"而非产品红。建议加一条 `test_two_hard_constraints_each_name_their_own_blocker`（用我上表的三候选读数即可）。
+
+**发布坐标（随交随发）**：探针 `d2305848_b0219_arms.py` blob `970218bbc21f82ed`（10,672 B）、合并收据 `d2305848_b0219_arms_FINAL.json` blob `637f4ef36ba8af00`（6,921 B），均在 `commander/control/evidence/redteam-d2305848/`，BYTE-LEVEL MATCH。
+
+**回报形状小结**：A1 `没穿`｜A1e `没穿`｜A2 `没穿（且不误报）`｜A3 `没穿`。**没有为交东西而造洞**：三臂全部"没穿"，我按纪律照报，并把两处自己的 bug 摊开。
+
 ### SESSION=d2305848 @2026-09-23 02:2x+08 —— 砸 HJ-P1 两臂证据（只读，未重跑它的浏览器实验）：**声明 2 CONFIRMED（我自己从 0748a1f 重建，逐字节同 sha）**；**声明 1 部分可核（端口↔包映射我通过 serve 脚本+dist 目录核到了，但 JSON 里没有包身份字段）＋找不出第二个可解释翻转的变量，却抓到一条更要紧的：新代次只跑了 1 次**；**声明 3 一半 CONFIRMED 一半 NOT_INDEPENDENTLY_CHECKABLE**
 
 **声明 1「两臂只差前端包」——`PARTIALLY_CHECKABLE`；第二变量：找不出，但单次采样是硬伤**
@@ -11743,7 +11764,156 @@ ord0223_scroll_probe.cjs            8,461 B   sha256[:16] d4c7ac905ab569fc
 - 只读守住：未改任何产品源码、未碰 `_live.db`、未发 `demo/reset`、未复现口令值（新口令我只从 `run/preview_auth.txt` 知道存在，本轮根本没用上）。
 - 结论一句话：**②③ 在新代次 `index-DtQ86lsQ.js` 上都不再复现，我此前的 5/5 只适用于旧代次**；两格可以按"已修"走，前提是把这两份 gen_* JSON 一起附上。
 
+### 🧊 e345b9d6（SESSION=e345b9d6）ORD-0226 交付：caveat 从「词表匹配」换成「字面相等」——E1 原句一字不改、E2、以及"改一个标点"三条反例**全红** @2026-09-23 02:0x+08 → 提交 **`e08131e`**（父 `50d1c4d`）
+
+#### ① 我选 **A（caveat 整句钉成冻结常量 + 断言字面相等）**，理由三条
+
+1. **B 防不住我要防的那件事。** 后端下发只把"谁写这句话"从前端搬到后端；红队的打法是**改写**，不是**改位置**。文案一旦在后端也是散文，同一把词表门换个地方照样被绕。要闭的是"屏上这句话可以是任何同义句"，那只有**字面相等**这一把尺。
+2. **A 的代价我算过并且愿意付**：改文案必须同批改门。这正是我想要的性质——它把一次文案改动从"静默改写"变成"一次有评审的编辑"。产品侧句子提成了 `V8Experience.tsx:1994 TIGHT_CAVEAT_ZH`，门侧**故意保留自己那份字面量**（`FROZEN_TIGHT_CAVEAT_ZH`）：门若 import 产品常量，相等就变成恒真，突变会直接穿过去。这一点写进了两边的注释，免得以后有人"顺手去重"。
+3. **B 还有一笔没算的账**：跨端一步意味着 hint 要走 `/experience` 投影，而 ORD-0220④ 那条口径（住宿>总预算到底谁裁决）现在还没裁下来。文案通道和真值通道搅在一起，只会让那条单更难验收。
+
+#### ② 验收逐条对上（三臂一臂一臂打，每臂前先重跑绿基线）
+
+| 臂 | 突变内容 | 基线（改前） | 该臂（改后） | 判定 |
+| --- | --- | --- | --- | --- |
+| `killAC1-e1-reassurance-outside-any-word-table` | 在冻结句尾**一字不改**接上「不过别担心，肯定够用」（红队 E1 原臂） | `run099849` exit=0 | `run099870` **exit=1** | **KILLED** |
+| `killAC2-e2-the-caveat-denies-itself` | 整句换成「这个预算不会超出计划，你可以放心调整。」 | `run099888` exit=0 | `run099904` **exit=1** | **KILLED** |
+| `killAC3-selftest-one-punctuation-mark` | 只把句末 **。改成 ，**（你要的那条自测） | `run099924` exit=0 | `run099939` **exit=1** | **KILLED** |
+
+**三臂都是被"字面相等"那条断言杀红的，不是词表**——红句原文（AC1）：
+`ord0220-1-the-tight-caveat-cannot-contradict-itself — the rendered caveat is not the frozen sentence, character for character. expected "按这个预算…也可以。" / got "按这个预算…也可以。不过别担心，肯定够用"`
+
+- **靶节点（精确）**：`ord0220-1-the-tight-caveat-cannot-contradict-itself`，`frontend/e2e/qoder-budget-advisory-tiers.spec.ts:242`
+- **run shape**：单节点（`--grep` 精确节点 id）＋每臂一台全新权威栈（前端 :4620‑:4625 逐臂 +1、独立 `_run<id>.db`、`CITYNEXUS_E2E_AUTHORITATIVE=1`、AI disabled）。**"2 passed" 是这个形状的分母**：靶节点 + `real-seed` setup 项目各一条；突变臂读作 `1 passed` + 靶节点 failed。
+- **命令**：`D:/moodle/CityNexus/.venv/Scripts/python.exe review/ord0226_kill_arms.py`（内部逐次调用 `review/run_spec.py e2e/qoder-budget-advisory-tiers.spec.ts <port> --grep <node>`）
+- **guard**：`live_checks/mutation_anchor_guard.py :: temporary_guarded_replace`（你点名的那把）——三臂均 `anchor_hits=1`、`expected_anchor_hits=1`、`bytes_changed=True`、**`restored_exact=True`**；整轮跑完产品文件 sha256 `da2b0c8603cf…` 与开跑前**逐字节相同**。
+
+#### ③ 顺带把回归也量了
+
+- `tsc --noEmit -p tsconfig.check.json` **exit 0**。
+- 整文件形状：`review/run_spec.py e2e/qoder-budget-advisory-tiers.spec.ts 4680` → **`run100121` 5 passed / exit 0**（4 节点 + setup），提成常量后 ORD-0212 那三条同源门没退化。
+- 你提醒的那两件我都没碰：`:3238`/`:3296` 的 `key={fact.mode}` 保持原始稳定值未翻译，映射表这一轮一字未改。
+
+#### ④ 我这一轮自己的账（不藏）
+
+1. **我先把同样的三臂在"内联字面量"形状上跑了一遍**（三臂同样全红，收据 `supporting-earlier-pass-inline-anchor.json` 已发布），之后才把句子提成 `TIGHT_CAVEAT_ZH` 并重跑。**两轮判定一致** ⇒ 结论不依赖锚点形状。
+2. **驱动脚本一条仪器缺陷**：我没给 stdout 设 utf-8，终端捕获全文在重定向时变成 gbk 乱码（收据 JSON 是显式 utf-8 写的，不受影响）。已按 `run_spec.py` 的办法修好；**那份乱码 console 我没有发布**，避免有人拿它当读数。
+3. **`Path.read_text(newline=)` 在 3.12 直接 TypeError**，第一次跑在量到任何东西之前就死了；改成 `open(..., newline="")` 才看到锚点。老坑，又踩一次，记着。
+
+#### ⑤ 这次修法留下的**边界**（说清楚，免得被当成"全防住了"）
+
+- 断言前对 `innerText` 做了 `\s+ → " "` 归一化（Playwright 会把布局换行带进来）。所以"字面"覆盖的是**字符序列**，不是空白形状；你要的那条标点自测证明它对字符确实是字面的。
+- **英文那句仍是内联字面量，门只钉 zh**。要对等就再钉一条 EN 字面量——我没顺手扩范围。
+- `RISK_WORDS`/`ALLAY_WORDS` 仍在，降为**次要臂**（E1 是靠字面相等杀的）。别把词表删掉：它现在管的是"数字旁边的话里不许出现安抚词"这一层，与字面相等互补。
+- 这是门与源码级读数，**不含真机**；红队若要复跑，请仍用它 23:4x 那三句原句，靶子换成了 `e08131e` 之后的树。
+
+#### ⑥ 可读坐标（我已自己发布并逐字节回验，`Canshu-King/CityNexus @ commander/control`）
+
+```text
+evidence/ord0226/MANIFEST.txt                                  737 B  blob 6564486371f4a0d4   BYTE-LEVEL MATCH
+evidence/ord0226/e08131e__source-and-parent.txt                668 B  blob 38d10deb6562d9b1   BYTE-LEVEL MATCH
+evidence/ord0226/e08131e__changed-files.txt                    283 B  blob 109ec19af85e151a   BYTE-LEVEL MATCH
+evidence/ord0226/e08131e__e08131e.patch                      19082 B  blob 3380434857dbbbb6   BYTE-LEVEL MATCH
+evidence/ord0226/mutation-receipts.json                       7279 B  blob 6fec4e6059342cb0   BYTE-LEVEL MATCH
+evidence/ord0226/arm-red-messages.txt                         3544 B  blob e7a90e344630945c   BYTE-LEVEL MATCH
+evidence/ord0226/supporting-earlier-pass-inline-anchor.json   7153 B  blob 23d9ce4d4d4e468a   BYTE-LEVEL MATCH
+```
+
+本地树：`D:/moodle/_qoder_integration_20260919`，写这笔时 tip `e863914`（`tools(review)` 一条，只动我自己那把发布工具）；解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe` = 3.12.14；Playwright 1.63。`git status --short -- frontend/` 为空。
+
+`STATUS: ORD-0226-DONE-OPTION-A-THREE-ARMS-ALL-RED | files 只写我自己的靶子：V8Experience.tsx（冻结常量 + caveat testid）、qoder-budget-advisory-tiers.spec.ts（字面相等断言）、review/ord0226_kill_arms.py、review/ord0226_red_messages.py、review/build-evidence-payload.py | tests 单节点 3×(绿基线→红) + 整文件 5 passed | blocker 无 | writes 全在我自己的 _run<id>.db，预览台 :4781/:4782/:8781 未发一字节 | evidence 上列 7 个 blob + 账本本节`
+status: ORD-0226 交付（A 案）；红队可在新靶子上复跑 E1；ORD-0220④ 那条口径仍等裁。
+
+#### aad2d1f2 R-1/R-2 新代复验 @2026-09-23 02:1x（本机钟）→ **两条在新代 `index-DtQ86lsQ.js` 上均未改变**（R-1 仍双跑；R-2 无法触发取消按钮——本身即一条新读数）
+
+**代次坐标（按你要求带 bundle 名）**：
+- 浏览器实读 `script[src]` = **`index-DtQ86lsQ.js`**（01:24 构建、1,231,985 B，与你给的数字一致）。
+- 我自己的 lane：后端 `:8424`（health 200、`ai:"disabled"`——**注意**：这轮后端日志显示 AI 是 disabled，
+  但 `agent_runs` 照样落 COMPLETED 且有完整模型输出 ⇒ 后端另有 provider 通道，不影响 R-1 判定）+ 前端 `:8464`
+  代理同库 `_lane_aad2d1f2_db.sqlite3`。**所有权已证**：端口监听 + 我的 marker 行（`fbfba7b2`/`d1bdc755`）
+  经 `:8424` 可读——没拿"端口在听"当"我的实例在听"。
+- 工具变更（如实报）：Playwright MCP 本轮**不在了**，改用 `browser-use` 共享面板 ⇒ **无视口模拟、无 CDP 手势、无截图**
+  （`NATIVE_BROWSER_VIEWPORT_UNAVAILABLE`），证据用 accessibility 快照 + DOM 读数 + 库读数。
+  屏幕文字全部读自 `innerText` / snapshot 文本；证据文件 `45_dtq86lsq_outcome_snapshot.txt`。
+- 库基线：`agent_runs` 6 → 结束 10。
+
+##### R-1 AI 提交双击 —— **仍成立（新代未改变）**
+
+- 动作：AI 面板填需求 → 单击提交（对照）→ 等 → 再**双击**提交（同一 evaluate 里两次 `.click()`）。
+- 读数：双击后 `agent_runs` **6 → 8**：`18:00:07→18:00:22`（15s）与 `18:00:22→18:00:40`（18s），
+  同 `journey_id=d1bdc755…`，**两个都 COMPLETED、都有完整模型输出**（真跑了 provider）。
+- 屏幕：sheet 内出现失败卡（我的库无北京目录数据，`CATALOG_EMPTY` 说人话——这条不变，仍是好的）。
+- ⚠ 一个**新观察**：上轮（`CnfHH2K_` 包）我量到第二次点击会**先禁用**再放行（我当时的 `.click()` 第二下失败过）；
+  这轮第二次 `.click()` **直接成功**。不能据此说新代"更容易双跑"（我没有逐 run 对齐请求时间戳），
+  只说结论：**R-1 在新代未修复，双击仍产生两个真实 run**。
+- 判定写法（按你给的话术）：**"新代未改变这条，缺陷不在本次修复批次里。"**
+
+##### R-2 取消语义 —— **在新代上我连「取消并关闭」都没能见到**（这是一条新的读数，不是复验成功）
+
+- 动作：提交 → 轮询等待期。两次尝试（一次等 8 秒、一次提交后立即查）都发现：**等待期文案与取消按钮都没出现**，
+  等我下一次 evaluate 到位时，run 已经结束、sheet 直接显示结果卡（我的库空目录 ⇒ run 只要 7–18 秒）。
+- 库读数：第 9 个 run（`18:03:58→18:04:14`，单击对照）与第 10 个 run 都 COMPLETED。
+- **两种解释，我分不清，要 D 裁或给新代重验条件**：
+  (a) 新代**加长了 run 时长/改了取消按钮出现时机**——我的空库 run 太快，"已等待"窗一闪而过，我够不着取消按钮；
+  (b) 新代**改了等待 UI**（比如不再显示"已等待 N 秒/取消并关闭"）——那 R-2 的按钮本身在新代上换了形态，原判定需要重写。
+- 我**不下"R-2 已修"的结论**（没有任何一次成功点到取消按钮，也没有任何一次 run 被取消），
+  也**不下"R-2 仍成立"**（同样没证据）。**R-2 在新代 = 未验**，缺一个 run 足够慢（>20 秒）的场景——
+  那需要带目录数据的库或真 provider 慢响应，我这条空目录库给不了。
+- **附带新读数（新代上可见的产品变化）**：向导第 1 步现在有 `还需要填写：目的地、抵达地点、离开地点`
+  的实时提示 + 字段级 `aria-invalid`/`required`（ORD-0216 的成果，我 45_ 快照里逐字可读）；
+  hub 地图提示语更新为 **"单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方"**——
+  手势文案与 `CnfHH2K_` 时代的"两指拖动或缩放地图 · 单指仍然滚动页面"**完全相反**，
+  ⇒ `cooperativeGestures` 的取舍被翻转了。**我没有在这轮验证新手势是否真的成立**（browser-use 无 CDP 触摸），
+  这条挂着：等 Playwright 回来或给一个有手势能力的会话，用我 ORD-0142 交的 A2/A3 断言（`getCenter()` 真值）跑一遍。
+
+##### 收尾
+
+- `agent_runs` 6 → 10（4 个新 run 全部 COMPLETED，可复放：`_lane_aad2d1f2_db.sqlite3`）。
+- lane 保留在册（:8424/:8464）；截图不可用，快照文本 `45_dtq86lsq_outcome_snapshot.txt` 在 `D:\moodle\HJ-P3_evidence\`。
+- 纪律：未改产品源码、未碰共享库、未发 `demo/reset`、未新开隧道；新 Basic 口令未出现在任何读数里（我的 lane 走 :8464 无鉴权直连，根本没用口令）。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 验收 @2026-09-23T02:11+08 —— **D `e345b9d6` 闭掉了红队的 E1 存活臂（ORD-0226）**，而且比我要求的更硬：**字面量故意留在门里**（不 import 产品常量），并加了一条标点级自测
+
+### ① 它选了 A，并把 A 做对了一处我没写到的细节
+
+```text
+把警告句钉成产品常量   V8Experience.tsx:1994  TIGHT_CAVEAT_ZH
+门禁断言换成          逐字相等（literal equality）
+关键：字面量故意【留在门里】，不 import 产品常量
+理由：若 import，相等就恒真，任何突变直接穿过
+```
+**它否掉 B 的理由我认**：红队的打法是**改写文案**，B 案（后端下发）只是换了写文案的人，同义词改写照样绕——所以 B 不解决红队那条臂。
+
+### ② 三条反例全红（每臂前先重跑绿基线，逐臂一臂）
+
+| 臂 | 结果 |
+|---|---|
+| E1 原句一字不改 + 「不过别担心，肯定够用」 | 基线 `run099849` 绿 → 臂 `run099870` **红 KILLED** |
+| 整句自我否定「不会超出计划…放心调整」（E2 形状） | `run099888` 绿 → `run099904` **红 KILLED** |
+| **自测：句号改逗号** | `run099924` 绿 → `run099939` **红 KILLED** |
+
+三臂都走 `live_checks/mutation_anchor_guard.py`：`anchor_hits=1 / bytes_changed=True / restored_exact=True`，**整轮跑完产品文件 sha256 与开跑前逐字节相同**；**杀红的是字面相等那条断言，不是词表**。回归：`tsc` exit 0，整文件 `run100121` **5 passed**。红队点过的 `key={fact.mode}` 两处未动，映射表一字未改。
+
+### ③ 它自己写进账本的"没做到"（我照收，不许后来人当成已做）
+
+- **英文那句仍是内联字面量，门只钉中文**；
+- 断言前对 `innerText` 做了**空白归一化** ⇒ 钉的是**字符序列，不是空白形状**。
+**⇒ ORD-0226 记 `CLOSED(E1_KILLED_ON_THE_LITERAL_ASSERTION)`，但上面两条是它的已知边界，出现在任何"语义门已彻底加固"的说法里都算越界。**
+
+### ④ 它自己踩的两个坑（照记）
+
+- `Path.read_text(newline=)` 在 3.12 **直接崩**；
+- 驱动脚本没设 utf-8 stdout ⇒ 终端捕获全文变 gbk 乱码。**那份乱码文件它没有发布、已改名隔离**（这个处理对）。
+
+### ⑤ 还欠我一件（我在 01:30 要过、它这轮没交）
+
+**新代次上的定点重读**：ORD-0222①（提示是否已进 sticky 条 / smooth 已去）、ORD-0222②（创建成功后播报是否还在）、ORD-0216④，都要带**bundle 文件名**作代次坐标。它 22:5x 那句"手机跑的还是 `56d20ec` 那一代"**前提已经变了**（01:25 已换 `index-DtQ86lsQ.js`）。我已向它重申。
+**另**：`USER_VISIBLE_HALF`（具名原因上屏）**先不派**——B 正在给我**字段级交接清单**，等清单到手我再原样转给它，不让它反推接口。
+
+### ⑥ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；新代 `index-DtQ86lsQ.js` 在线、旧代 `index-BCF4ptyk.js` 未删仍 200；清理闸门仍关（0 删除）；`P7=false`；reference tip `c0d7e3d`；P0 未动（3 行程 / 19 计划版本 / 3 出行人 / 16 地点，01:58 复核）；那把 key 仍未轮换。D 的新提交 `e08131e`（+ 工具提交 `e863914`）；证据 7 blob 已由它自己发布到 `commander/control @ evidence/ord0226/`，全部 BYTE-LEVEL MATCH。
+
 ## commander 验收 @2026-09-23T02:08+08 —— **B 找到 C 路：静默丢失的具名原因可以落在一条「前端已经在调」的读取面上，`main.py` 一行都不用动**；F 交 ORD-0225（我据此修了自己适配器的两个缺陷）
 
 ### ① B `c01d72a3` 的 ORD-0219③ 落点（我签，这是本轮最好的 C 路证据）
@@ -28817,3 +28987,27 @@ places              16         16     updated_at(该表无 created_at，用实�
 > **8c66aa92 C 补一条精度（2026-09-23T02:07+08，接我上一块的 ⑥）**：那句「本轮 0 次出网」我当时给的理由是「`CITYNEXUS_*` 未设 live 项」——**那不是测量**，是一句推断，所以我去把它量了：把 `socket.getaddrinfo` 换成记录型阻塞器后在**同一进程**里重跑这五门，`5 passed / EXIT=0 / 名字解析尝试 0 次`（仪器与原始输出：`ord213/nosock_guard.py`、`ord213/nosock.log`）。
 >
 > 顺带把一件容易被我的收据误读的事写清：基线红集合里的 `test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls` 是**静态扫描**红，它点的是别的车道两处文件行号（`tests/test_qoder_catalog_hydration.py:608`、`tests/test_qoder_provider_identity.py:325`）里的 provider 域名字符串；608 那处是**故意自触发、在拦截器里先 raise** 的仪器自检（包在 `pytest.raises(AssertionError)` 内）。**它的红不是流量证据，也不是本单带来的**。
+
+### 🔀 8c66aa92 (SESSION=8c66aa92) C · ORD-0217 撞车移植件：**B 已经吸收了我那两条断言**（在 `4d9ceae` 上实测 9 门全绿）；但两线合流会在 `backend/app/capabilities.py` 撞 **1 个语义分叉**，请你裁一句 @2026-09-23T02:10+08
+
+**① 移植件的实测读数（不是推断）**
+- B 的门文件 `backend/tests/test_qoder_demo_accessibility_evidence.py` 在 `4d9ceae` 上 `--collect-only` = **9 nodes**（你说的是 8 门/6 臂，我按文件里实际有的 `def test_` 数：9 条节点，其中 `_two_way` 被两条码共用 ⇒ 3 候选 × 2 = 6 臂，与你的说法一致）；单文件跑 **9 passed in 2.34s**（树：`ord213/snap_b_4d9ceae`，`git archive 4d9ceae`）。
+- 我的**断言①**（单点婴儿车事实不得把整条记录洗成 `STEP_FREE` verified）：B 文件里 `test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified`，docstring 自己写着「C 的移植件①（仲裁 00:44）」，并且带了**正控**（把 `source_kind` 摘掉后读取链确实量出 `ACCESSIBILITY_VERIFIED`）⇒ 那条 tripwire 不是永真断言。
+- 我的**断言②**（PASS/BLOCK 期望集按候选现算）：B 的 `_two_way` 里 `blocked_expected = {plan_id: _conflicting_stops(...) for plan_id in plans}`，并额外断言"负例存在"且"正例存在"两条都不许空 ⇒ 与我那条等价，且比我原来的写法更严。
+- **重复门**：我那两份（`00bc9b5` 的常量与 `metadata['accessibility']` 生产者路径）已被 `0437b5c` 从我线上撤下；`git status --short backend/` = 0 行，我线上没有 `test_qoder_demo_accessibility_evidence.py`，也没有第二个 `DEMO_ACCESSIBILITY_EVIDENCE`。
+- 结论：**移植验收的内容条件已经满足，缺的只是"同一棵树"这一步**——而这一步不是我能单方面做的，见 ②。
+
+**② 合流会撞的那一格（`git merge-tree` 只读预测，未动任何树）**
+- `git merge-tree --write-tree HEAD(50d1c4d) 4d9ceae` → **EXIT=1**，唯一冲突路径 `backend/app/capabilities.py`（stage1 base `2313536c` / stage2 ours `4ad4bd87` / stage3 theirs `b70fefa8`）；其余文件（`services.py`、B 的门文件、`data/mock/places.json`）**全部干净自动合并**。
+- 冲突不是格式，是一个语义分叉：同一个 `add("STROLLER"/"LARGE_LUGGAGE", ...)`，
+  - 我的 `e1580de`：`severity="HARD" if hard else "STRONG"`
+  - B 的 `5730004`：`severity="HARD" if hard else None`
+  ⇒ 非硬断言时存进 `severity` 的值不同（显式 `STRONG` vs 交给 `default_severity` 兜底）。两版都同意"硬断言要进门"，不同意"没硬的时候标什么"。
+- 另外那 46 行删除是**假象**：B 分支早于我的 `e1580de/33034d7`，它那边根本没有 `hard_executable_capability_codes()` 与 `capability_write_refusal()`（`git merge-base --is-ancestor`：`e1580de`/`33034d7`/`50d1c4d` 对 `4d9ceae` 全部 NO）。所以合并时"他们的版本"会把我这两函数整块带走 ⇒ 我的 6 条能力词汇门会连环保红。
+- **我没有单方面解这个冲突**（既因为你说别和 B 抢同一文件，也因为 `None` vs `"STRONG"` 是真产品语义）。给你三个可执行选项：(a) 我把 ours/theirs 两侧都留住、冲突只解在 `else` 那一处，取你指定的那个字面量；(b) 先合 B 的**门文件与 services 真值**（能干净合），`capabilities.py` 单独留一个 ORD 给 B 或我；(c) 你直接定 `STRONG`/`None` 哪个是产品真值，我按它做一侧收敛并补门。
+- 我要的只是这一句裁定；拿到之后一次提交就能收口（我已把两侧 blob、冲突路径、门名都记在这里，不需要你再去找）。
+
+**③ 顺带两件现场事实**
+- `4d9ceae` 里还有 `d5667cf fix(agent): AgentRun.outcome carries a named classification at every exit` —— 那是 g5/ORD-0218 的方向；合 B 分支就会把别人未验收的一件一起带进来，请把它算进你的合并决定里。
+- 我的主线树**没有** F 的共享判据模块（`backend/tests/_qoder_streak_receipt.py`）也没有 `live_checks/gate_streak.py`；这次连击是把 F 的 `evid_a4079bc` 那份复制进一次性导出才跑起来的（细节与 `SHARED_MODULE_MISSING` 原文在 `ORD-0213_weakfix_receipt.md` §5）。
+
