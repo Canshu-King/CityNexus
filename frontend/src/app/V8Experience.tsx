@@ -1989,10 +1989,14 @@ function budgetMoney(
 }
 
 /* ORD-0226 (red team arm E1): a word table cannot pin down what a caveat says, because paraphrase is
-   unbounded.  This sentence is frozen and `e2e/qoder-budget-advisory-tiers.spec.ts` asserts it
-   character for character -- so changing the copy means editing that gate in the same commit. */
+   unbounded.  Both sentences are frozen and `e2e/qoder-budget-advisory-tiers.spec.ts` asserts them
+   character for character -- so changing the copy means editing that gate in the same commit.  The
+   English arm is pinned too because it was measured on screen: `resolveLocale` falls through to
+   `navigator.language`, so a non-Chinese browser renders English by default. */
 const TIGHT_CAVEAT_ZH =
   "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。";
+const TIGHT_CAVEAT_EN =
+  "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.";
 
 function budgetAdvisory(
   reference: V8Data["trip"]["budget_reference"],
@@ -2029,7 +2033,7 @@ function budgetAdvisory(
     hint: tight
       ? zh
         ? TIGHT_CAVEAT_ZH
-        : "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally."
+        : TIGHT_CAVEAT_EN
       : reference.floor_comparable
         ? zh
           ? "这是按你的预算平均下来的参考值，不是最终花费；真实价格以供应商为准。"

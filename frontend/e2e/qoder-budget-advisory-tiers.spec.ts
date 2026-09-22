@@ -44,6 +44,16 @@ function reference(overrides: Record<string, unknown>) {
   };
 }
 
+/** Rewrite the trip's `budget_reference` on the way through the real endpoint. */
+async function patchExperience(route: import("@playwright/test").Route, ref: Record<string, unknown>) {
+  const real = await route.fetch();
+  const body = (await real.json()) as Record<string, unknown>;
+  const trip = (body.trip ?? {}) as Record<string, unknown>;
+  trip.budget_reference = ref;
+  body.trip = trip;
+  await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
+}
+
 /** Load the hub with the trip's budget_reference patched to the given shape. */
 async function openHubWithReference(page: Page, ref: Record<string, unknown>): Promise<void> {
   const seeded = (await (await page.request.get("/api/v1/demo/scene")).json()) as {
@@ -55,17 +65,49 @@ async function openHubWithReference(page: Page, ref: Record<string, unknown>): P
     localStorage.setItem("citynexus.v8.journey_id", id as string);
     localStorage.setItem("citynexus.locale", "zh-CN");
   }, journeyId);
-  await page.route("**/api/v1/journeys/*/experience", async (route) => {
-    const real = await route.fetch();
-    const body = (await real.json()) as Record<string, unknown>;
-    const trip = (body.trip ?? {}) as Record<string, unknown>;
-    trip.budget_reference = ref;
-    body.trip = trip;
-    await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(body) });
-  });
+  await page.route("**/api/v1/journeys/*/experience", (route) => patchExperience(route, ref));
   await page.goto("/v8/hub", { waitUntil: "load" });
   await expect(page.getByTestId("today-hero")).toBeVisible({ timeout: 30_000 });
   await page.waitForTimeout(1_500);
+}
+
+/**
+ * ORD-0226 ①: reachability is an observation, not an argument.  A page of its own is required
+ * because `addInitScript` is page-scoped -- the "no stored locale" arm has to start from a context
+ * where nothing ever wrote `citynexus.locale`, so `resolveLocale` falls through to
+ * `navigator.language` exactly as it does for a traveller whose browser is not Chinese.
+ */
+async function caveatReadingInLocale(
+  context: import("@playwright/test").BrowserContext,
+  ref: Record<string, unknown>,
+  storedLocale: string | null,
+) {
+  const seeded = (await (await context.request.get("/api/v1/demo/scene")).json()) as {
+    journey_id?: string;
+  };
+  const journeyId = String(seeded.journey_id ?? "");
+  const page = await context.newPage();
+  await page.addInitScript(([id, locale]) => {
+    localStorage.clear();
+    localStorage.setItem("citynexus.v8.journey_id", id as string);
+    if (locale) localStorage.setItem("citynexus.locale", locale as string);
+  }, [journeyId, storedLocale] as [string, string | null]);
+  await page.route("**/api/v1/journeys/*/experience", (route) => patchExperience(route, ref));
+  await page.goto("/v8/hub", { waitUntil: "load" });
+  const caveat = page.getByTestId("budget-advisory-caveat");
+  await expect(
+    caveat,
+    `no caveat element reached the screen with storedLocale=${JSON.stringify(storedLocale)}, ` +
+      `so the ${storedLocale ?? "navigator.language"} arm is not renderable here`,
+  ).toBeVisible({ timeout: 20_000 });
+  const reading = {
+    storedLocale,
+    navigatorLanguage: await page.evaluate(() => navigator.language),
+    documentLang: await page.evaluate(() => document.documentElement.lang || "(empty)"),
+    caveat: ((await caveat.innerText()) ?? "").replace(/\s+/g, " ").trim(),
+  };
+  await page.close();
+  return reading;
 }
 
 test("ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action — 主页只留 tight，且 caveat 和动作都在", async ({
@@ -291,4 +333,49 @@ test("ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什�
     ) + "\n",
     "utf-8",
   );
+});
+
+/**
+ * ORD-0226 follow-up ① (commander 02:1x): the same hole in the other language arm.  Kept in the gate
+ * for the same reason as the Chinese literal -- importing the product's constant would make the
+ * equality true by construction.
+ */
+const FROZEN_TIGHT_CAVEAT_EN =
+  "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally.";
+
+test("ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence — 英文那句先量可达性再钉", async ({
+  context,
+}) => {
+  test.setTimeout(300_000);
+  const NODE = "ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence";
+  const tight = reference({ per_person_per_day_minor: 4000 });
+  /* Two ways a traveller lands on English: they picked it, or their browser is not Chinese and
+     nothing was ever stored. `resolveLocale` reads `citynexus.locale` first and `navigator.language`
+     second, so both arms have to be read, not argued about. */
+  const stored = await caveatReadingInLocale(context, tight, "en");
+  const fallback = await caveatReadingInLocale(context, tight, null);
+  const readings = {
+    generatedBy: "e345b9d6",
+    node: NODE,
+    head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
+    rule: "英文 caveat 是否真的能上屏（可达性），以及上屏的是不是那一句",
+    arms: { stored_en: stored, no_stored_locale: fallback },
+  };
+  writeFileSync(
+    evidencePath("ui-overnight/ord0226-en-reachability.json"),
+    JSON.stringify(readings, null, 2) + "\n",
+    "utf-8",
+  );
+  for (const [label, reading] of [
+    ["stored citynexus.locale=en", stored],
+    ["no stored locale (navigator.language decides)", fallback],
+  ] as const) {
+    expect(
+      reading.caveat,
+      node(
+        NODE,
+        `${label}: navigator.language=${reading.navigatorLanguage} lang=${reading.documentLang} rendered "${reading.caveat}" instead of the frozen sentence "${FROZEN_TIGHT_CAVEAT_EN}"`,
+      ),
+    ).toBe(FROZEN_TIGHT_CAVEAT_EN);
+  }
 });
