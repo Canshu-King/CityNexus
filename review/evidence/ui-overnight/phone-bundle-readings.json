@@ -1,0 +1,94 @@
+{
+  "generatedBy": "e345b9d6",
+  "at": "2026-09-22T17:31:31.990Z",
+  "base": "http://127.0.0.1:4781",
+  "servedBundle": "assets/index-DtQ86lsQ.js",
+  "read_only_guarantee": {
+    "note": "non-GET to /travelers or /journeys is aborted in-page; 确认创建 is never clicked",
+    "blockedWrites": [],
+    "requestsSeen": 1,
+    "creationPostsAttempted": 0
+  },
+  "ord0216_4_entry_copy": {
+    "label": "使用封存的演示行程",
+    "wizardScreenMentionsCity": false
+  },
+  "ord0220_3_and_0222_1_hint_reachability": {
+    "afterPress": {
+      "selector": "[data-testid=\"trial-required-hint\"]",
+      "exists": true,
+      "text": "还需要填写：总预算",
+      "rect": {
+        "top": 572,
+        "bottom": 656,
+        "height": 85,
+        "width": 350
+      },
+      "insideSrOnly": false,
+      "opacity": "1",
+      "scrollY": 652,
+      "inViewport": true
+    },
+    "afterFix": {
+      "selector": "[data-testid=\"trial-required-hint\"]",
+      "exists": false,
+      "text": "",
+      "rect": null,
+      "inViewport": false
+    }
+  },
+  "ord0220_2_announcement": {
+    "afterPress": {
+      "selector": "#trial-next-reason",
+      "exists": true,
+      "text": "还需要填写：总预算",
+      "rect": {
+        "top": 663,
+        "bottom": 664,
+        "height": 1,
+        "width": 1
+      },
+      "insideSrOnly": true,
+      "opacity": "1",
+      "scrollY": 652,
+      "inViewport": true
+    },
+    "afterFix": {
+      "selector": "#trial-next-reason",
+      "exists": true,
+      "text": "",
+      "rect": {
+        "top": 834,
+        "bottom": 835,
+        "height": 1,
+        "width": 1
+      },
+      "insideSrOnly": true,
+      "opacity": "1",
+      "scrollY": 389,
+      "inViewport": true
+    },
+    "atStep3": {
+      "selector": "#trial-next-reason",
+      "exists": true,
+      "text": "",
+      "rect": {
+        "top": 580,
+        "bottom": 581,
+        "height": 1,
+        "width": 1
+      },
+      "insideSrOnly": true,
+      "opacity": "1",
+      "scrollY": 0,
+      "inViewport": true
+    }
+  },
+  "ord0222_2_visible_hint_at_step3": {
+    "selector": "[data-testid=\"trial-required-hint\"]",
+    "exists": false,
+    "text": "",
+    "rect": null,
+    "inViewport": false
+  }
+}
