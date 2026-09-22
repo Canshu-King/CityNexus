@@ -1,0 +1,113 @@
+{
+  "id": "ORD-0210 fourth-audit bundle",
+  "source_sha": "a4079bc",
+  "parent_sha": "018680e",
+  "branch_base": "50b35e0",
+  "branch": "agent/f-ord210-20260922",
+  "published_repo": "Canshu-King/CityNexus",
+  "published_ref": "commander/control",
+  "published_dir": "evidence/ord0210/a4079bc/",
+  "changed_files_50b35e0_to_a4079bc": [
+    "backend/tests/_qoder_streak_receipt.py",
+    "backend/tests/test_qoder_db_isolation_same_verdict.py",
+    "contracts/gate-acceptance-streak.yaml"
+  ],
+  "commits": [
+    "a4079bc test(gates): a shape claim must match the selectors actually passed, not merely contain them",
+    "018680e test(gates): pin the contract's freshness verdict name against the ladder's actual output",
+    "418c37a test(gates): move the freshness check into the verdict function, where nothing can bypass it",
+    "872150f test(gates): date the skip-corroboration finding by the ledger's own readback",
+    "801e90b test(gates): a skipped target exits 0, so an exit code alone is not a verdict",
+    "800b682 test(gates): measure decode damage instead of trusting the decoder label",
+    "e94a07c test(gates): close the four source-audit gaps in ORD-0210's mechanism (arbiter 5775293071)",
+    "80a9d28 test(contract): make the streak vocabulary and field lists something another instrument can align to",
+    "9514eb7 test(gates): derive the exit-5 outcome instead of writing it down",
+    "491d8e7 test(gates): keep a small sample from reading as a stable verdict, and record host load",
+    "b05a3b2 test(gates): wire the streak verdict and per-shape target classification into ORD-0210's door"
+  ],
+  "door_readings": {
+    "collected": 22,
+    "passed": 21,
+    "skipped": 1,
+    "suite_collect": 1200,
+    "exit": 0
+  },
+  "mutations": {
+    "count": 16,
+    "killed": 16,
+    "ids": [
+      "M1",
+      "M2",
+      "M3",
+      "M4a",
+      "M4b",
+      "M5",
+      "M7",
+      "M8",
+      "M12",
+      "M13",
+      "M14",
+      "M15",
+      "M16",
+      "M9",
+      "M10",
+      "M11"
+    ],
+    "baseline": {
+      "exit": 0,
+      "passed": 21,
+      "failed": 0,
+      "errors": 0
+    }
+  },
+  "acceptance_receipt": {
+    "sha": "a4079bc",
+    "runs": 10,
+    "distinct_dbs": 10,
+    "green": 0,
+    "red": 10,
+    "streak_verdict": "STREAK_NOT_MET(0/10_green)",
+    "classification": "STABLE_RED(single-node)",
+    "closure_grade": "NOT_MET   ← 10/10 绿但没有反向",
+    "duplicate_db_paths": "[]",
+    "shape_verified": "True；不合规项 []",
+    "source_file": "evidence/ord0210/a4079bc/o210e_acceptance10_a4079bc.txt",
+    "note": "本批 0/10 全红 ⇒ STABLE_RED(single-node)；同产品码在 018680e 那批是 2/10 ⇒ FLIP。两者不冲突（定性范围含批次内读数），但说明引用定性必须带批次，不能只带 SHA。"
+  },
+  "local_blobs_before_upload": {
+    "018680e__a4079bc.patch": {
+      "bytes": 14866,
+      "blob_sha1": "7a4d9784f14450f95d8936125e57fb12e5f7ce39"
+    },
+    "50b35e0__a4079bc.patch": {
+      "bytes": 149614,
+      "blob_sha1": "8c8adf34b047c54ab0ba1a044213d365ed072b1c"
+    },
+    "_qoder_streak_receipt.py": {
+      "bytes": 47572,
+      "blob_sha1": "ebe4e24c177d8e18309732c3f8b7ee16e3c9a97d"
+    },
+    "gate-acceptance-streak.yaml": {
+      "bytes": 13640,
+      "blob_sha1": "bb0b862987d00b08d8ee2371cb1c5e0080a6bb22"
+    },
+    "o210e_acceptance10_a4079bc.txt": {
+      "bytes": 10820,
+      "blob_sha1": "44d149756e5e1dccbc3aba54e5561b066313b8e1"
+    },
+    "receipts_o210c_mutation.json": {
+      "bytes": 11991,
+      "blob_sha1": "6da07ab712871ffeb2e91e9d5e967eaa6a6cf341"
+    },
+    "test_qoder_db_isolation_same_verdict.py": {
+      "bytes": 85207,
+      "blob_sha1": "4cb216fbc59580aa2fb70c73ddc1cc9c242f86b6"
+    }
+  },
+  "publisher_used": {
+    "path": "_qoder_cmdr_ref_20260921/live_checks/publish_evidence.py",
+    "blob": "d0b1bb1eeb3d87f21943bf76506376d29e2f47a5",
+    "note": "分支上那份仍是 9781ac00；commander 说的 d7782a35 两仓不可达，所以我用本地现件并在上传前自行扫过 6 个负载（形态/魔数/文件名片均无命中）"
+  },
+  "second_look_scope": "第 4 格：single-node 声明必须等于 argv 抽出的 selector 序列；见 test_9(bad_b/claim)、test_9c、突变 M16"
+}
