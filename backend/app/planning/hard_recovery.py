@@ -178,6 +178,8 @@ def record_replan_outcome(
     payload["no_alternative"] = not feasible_candidate_ids
     if failures:
         payload["replan_failures"] = list(failures)
+    else:
+        payload.pop("replan_failures", None)
     event.payload_json = _json(payload)
     return event
 

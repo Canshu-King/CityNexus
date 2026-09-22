@@ -3996,6 +3996,16 @@ def select_plan(journey_id: UUID, plan_version_id: UUID, session: Session = Depe
     )
     if plan is None:
         raise HTTPException(404, f"PlanVersion {plan_version_id} was not found")
+    # Generic selection is a pre-execution workflow. Once a Journey is ACTIVE,
+    # replacement must go through governed ReplanProposal acceptance, which
+    # owns execution-position and protected-commitment remapping.
+    if journey.status == "ACTIVE":
+        if journey.active_plan_version_id == plan.id and plan.status == "ACTIVE":
+            return journey_schema(journey)
+        raise HTTPException(
+            409,
+            "ACTIVE_JOURNEY_PLAN_REPLACEMENT_REQUIRES_GOVERNED_REPLAN",
+        )
     # Selecting the already-current selected plan is a safe idempotent read.
     # Do this before the normal transition/audit path so retries do not emit a
     # second plan.selected audit event.
@@ -8442,6 +8452,13 @@ def generate_replan(
         )
 
     created.sort(key=_proposal_rank)
+    # A feasible governed proposal supersedes a previous no-alternative
+    # observation, but recovery stays open until one proposal is accepted.
+    record_replan_outcome(
+        session,
+        journey,
+        feasible_candidate_ids=[str(item.proposed_plan_version_id) for item in created],
+    )
     response = _replan_payload(created[0])
     if generation_idempotency_key is not None and generation_signature is not None:
         now = datetime.now(timezone.utc)
@@ -8586,8 +8603,6 @@ def _accept_replan_impl(
     journey.current_activity_id = replacement_current.id if replacement_current else None
     proposal.status = "ACCEPTED"
     proposal.decided_at = decided_at
-    if trigger_event.status == "DETECTED":
-        trigger_event.status = "ACKNOWLEDGED"
 
     # Commitment.activity_id is PlanVersion-local. The durable authority is
     # the stable semantic/time anchor in policy_json, but JourneyTwin exposes
@@ -8695,6 +8710,8 @@ def _accept_replan_impl(
             },
         )
 
+    resolved_recovery_events = resolve_recovery_events(session, journey)
+
     record_audit(
         session,
         action="replan.accepted",
@@ -8705,6 +8722,7 @@ def _accept_replan_impl(
         actor_id=actor_id,
         after={
             "status": proposal.status,
+            "resolved_recovery_events": resolved_recovery_events,
             "policy_version": policy_version,
             "authorization_decision": authorization_decision,
             "reason_codes": list(reason_codes),
