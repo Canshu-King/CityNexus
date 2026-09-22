@@ -48,6 +48,7 @@ TIERS_SPEC = "e2e/qoder-budget-advisory-tiers.spec.ts"
 WIZ2_SPEC = "e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts"
 I18N = "src/i18n/LocaleContext.tsx"
 COPY_SPEC = "e2e/qoder-demo-entry-copy-matches-the-stage.spec.ts"
+SURFACE_SPEC = "e2e/qoder-wizard-hint-surface-readings.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -653,6 +654,16 @@ CASES = [
         [(TIERS_SPEC, ["ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red"])],
     ),
     (
+        # ORD-0221 ②: the other half of the pair.  A caveat with no figure behind it is the same
+        # claim with nothing to check it against, so dropping the number must go red too -- this is
+        # the direction killU1 does not cover.
+        "killU2-tight-advisory-keeps-caveat-drops-number",
+        EXPERIENCE,
+        "              <strong>{advisory.text}</strong>\n              <span>{advisory.hint}</span>\n",
+        "              <span>{advisory.hint}</span>\n",
+        [(TIERS_SPEC, ["ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action"])],
+    ),
+    (
         # ORD-0216 3: attempted mutant, recorded as a DOCUMENTED SURVIVOR.  Restoring the
         # anchors-only review list did not reproduce HJ-P1's reading: their flow left the visible
         # hint on step 3 through a route this node's path does not reach (the node advances only
@@ -663,7 +674,12 @@ CASES = [
         WIZARD,
         "  const missingStep3 = [\n    ...missingStep1,\n    ...missingStep2,\n  ];\n",
         "  const missingStep3 = missingStep1;\n",
-        [(WIZ2_SPEC, ["ord0216-a-fixed-field-leaves-the-hint-on-the-next-step"])],
+        [
+            (WIZ2_SPEC, ["ord0216-a-fixed-field-leaves-the-hint-on-the-next-step"]),
+            # ORD-0221 ②: the same mutant against the per-surface reading.  Whatever it does to the
+            # visible hint is the answer to "why did the first node not catch this".
+            (SURFACE_SPEC, ["ord0221-4-step3-visible-hint-and-live-region-read-apart"]),
+        ],
     ),
     # ORD-0216 ④: the entry may not name a city, because /demo/scene decides which sealed journey it
     # hands over.  These two mutants put HJ-P1's wording back -- one per language arm of the gate.
@@ -703,7 +719,14 @@ for name, rel, old, new, targets in CASES:
     open(path, "w", encoding="utf-8", newline="").write(mutated)
     on_disk = open(path, encoding="utf-8", newline="").read()
     applied = hits == 1 and on_disk == mutated
-    print(f"\n{name}: {rel} anchor hits={hits} on_disk={applied}", flush=True)
+    # ORD-0221 ②: the receipt has to say how many bytes the mutant actually moved, measured on the
+    # file, not inferred from the strings in this list.
+    delta = len(on_disk.encode("utf-8")) - len(text.encode("utf-8"))
+    print(
+        f"\n{name}: {rel} anchor hits={hits} on_disk={applied} "
+        f"anchor_bytes={len(old.encode('utf-8'))} bytes_changed={delta}",
+        flush=True,
+    )
     if not applied:
         print("  MUTANT NOT ON DISK -- skipped; the suite would be judging an untouched build")
         open(path, "w", encoding="utf-8", newline="").write(text)
