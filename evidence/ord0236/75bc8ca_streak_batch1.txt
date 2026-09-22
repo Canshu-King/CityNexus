@@ -1,0 +1,78 @@
+receipt prefix: q236_streak_
+====================================================================================================
+tag                              t1
+node                             test_t1_raw_tags_column_alone_never_causes_a_hard_verdict
+shape                            single-node
+rounds                           10
+command                          D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t1_raw_tags_column_alone_never_causes_a_hard_verdict --tb=short --import-mode=importlib
+shape_verified                   True
+shape_problems                   []
+receipt_problems                 []
+exits                            {0: 10}
+node_outcomes                    {'GREEN': 10}
+raw_outcomes                     {'GREEN': 10}
+corroboration                    {'"\\u9000\\u51fa\\u7801\\u4e0e\\u6458\\u8981\\u8ba1\\u6570\\u4e00\\u81f4"': 10}
+distinct_db_paths                10
+fresh_parent_every_run           True
+parents_sample                   ['cnx_pytest_04ys4pen', 'cnx_pytest_3m8zehuq', 'cnx_pytest_cg7xztay']
+final_table_counts               {'{"absent": true}': 10}
+decoders                         {'["gb18030", "utf-8"]': 10}
+verdict                          STREAK_MET(10)
+closure_grade                    STREAK_GREEN
+closure_allowed                  False
+why_not_closed                   ['reverse_mutation_closure_grade', 'closure_allowed']
+every_run_has_target_verdict     None
+one_sha_across_runs              None
+====================================================================================================
+tag                              t2
+node                             test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker
+shape                            single-node
+rounds                           10
+command                          D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker --tb=short --import-mode=importlib
+shape_verified                   True
+shape_problems                   []
+receipt_problems                 []
+exits                            {0: 10}
+node_outcomes                    {'GREEN': 10}
+raw_outcomes                     {'GREEN': 10}
+corroboration                    {'"\\u9000\\u51fa\\u7801\\u4e0e\\u6458\\u8981\\u8ba1\\u6570\\u4e00\\u81f4"': 10}
+distinct_db_paths                10
+fresh_parent_every_run           True
+parents_sample                   ['cnx_pytest_2jmn7kmw', 'cnx_pytest_5eimq5mx', 'cnx_pytest_6coiek5q']
+final_table_counts               {'{"absent": true}': 10}
+decoders                         {'["gb18030", "utf-8"]': 10}
+verdict                          STREAK_MET(10)
+closure_grade                    STREAK_GREEN
+closure_allowed                  False
+why_not_closed                   ['reverse_mutation_closure_grade', 'closure_allowed']
+every_run_has_target_verdict     None
+one_sha_across_runs              None
+====================================================================================================
+tag                              t3
+node                             test_t3_display_taxonomy_tags_never_become_accessibility_evidence
+shape                            single-node
+rounds                           10
+command                          D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t3_display_taxonomy_tags_never_become_accessibility_evidence --tb=short --import-mode=importlib
+shape_verified                   True
+shape_problems                   []
+receipt_problems                 []
+exits                            {0: 10}
+node_outcomes                    {'GREEN': 10}
+raw_outcomes                     {'GREEN': 10}
+corroboration                    {'"\\u9000\\u51fa\\u7801\\u4e0e\\u6458\\u8981\\u8ba1\\u6570\\u4e00\\u81f4"': 10}
+distinct_db_paths                10
+fresh_parent_every_run           True
+parents_sample                   ['cnx_pytest_3l4akbtc', 'cnx_pytest_73ve3o0t', 'cnx_pytest_83jnyt34']
+final_table_counts               {'{"absent": false, "table_count": 55}': 10}
+decoders                         {'["gb18030", "utf-8"]': 10}
+verdict                          STREAK_MET(10)
+closure_grade                    STREAK_GREEN
+closure_allowed                  False
+why_not_closed                   ['reverse_mutation_closure_grade', 'closure_allowed']
+every_run_has_target_verdict     None
+one_sha_across_runs              None
+====================================================================================================
+all three met 10/10 green: True
+all three fresh per-run DBs: True
+no NOT_OBSERVED anywhere: True
+shared ruler module: D:\moodle\_qoder_spike_20260921\snap_ord0236\backend\tests\_qoder_streak_receipt.py
