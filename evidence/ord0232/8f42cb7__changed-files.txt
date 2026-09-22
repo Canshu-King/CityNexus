@@ -1,0 +1,9 @@
+commit 8f42cb7d87175e996d2b81473200e5920d6a3ba3
+parent 349c4faadab6aca3662844274a7a002be875654b
+
+
+A	frontend/e2e/_qoderTextScan.ts
+A	frontend/e2e/qoder-dropped-candidates-say-why.spec.ts
+A	frontend/src/api/candidateRejections.ts
+M	frontend/src/app/V8Experience.tsx
+M	frontend/src/i18n/LocaleContext.tsx
