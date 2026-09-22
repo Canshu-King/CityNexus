@@ -467,6 +467,12 @@ def submit_operation(
         resolution.canonical_destination_id,
         resolver_query_normalized=resolution.resolver_query_normalized,
     )
+    # Kept by the commander's disposition (ORD-0224, 2026-09-23 03:0x) and by measurement, not by
+    # habit: mutant **Y1b** at `f92f9e9` switched this read off and all twelve doors stayed green, so
+    # **no gate depends on it today** - it is a second chance, behind the pre-resolution read and in
+    # front of the durable index + loser read-back that actually carry convergence (`Y3`).  Deleting it
+    # now would reopen the concurrency path for no evidence, and that is the strong fix's work surface;
+    # if it ever goes, it goes in that order, in writing.
     existing = find_open_operation(session, fingerprint)
     if existing is not None:
         return existing, True
