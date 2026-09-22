@@ -1,182 +1,195 @@
 #!/usr/bin/env python3
-"""GATE_ACCEPTANCE_STREAK runner — the receipt shape the arbiter froze on 2026-09-22T15:58+08
-(bus comment 5773071703), implemented so a lane cannot hand-wave it.
+"""Thin adapter over F's shared streak module - NOT a second ruler.
 
-Frozen clauses this tool enforces mechanically (it refuses to sign what it did not observe):
+The arbiter's third audit (bus 5775917170 §4) rejected the previous version of this file: it
+reimplemented verdicts, the forbidden-DB list and the command surface, and those copies disagreed
+with `backend/tests/_qoder_streak_receipt.py` on at least seven points (initial row counts measured
+after the child had already exited, free-form --runs, injectable --pytest-arg, duplicate-DB check
+ordered after the green check, SKIPPED counted as red, case-sensitive protected names, and a real
+command carrying `-rA`/`-p` which that contract forbids for this shape).
 
-  1. exact same product/test SHA        -> --sha is required and echoed into the receipt
-  2. N CONSECUTIVE independent processes -> one subprocess per run, no reuse
-  3. each process gets a fresh app-resolved temp DB
-  4. receipt records run_index, exit_code, resolved_absolute_db_path,
-     initial row counts, final row counts
-  7. no two runs may silently share the same temp DB path -> checked, dupes are a hard fail
-  8. one isolated GREEN is observation only                -> verdict needs N greens
+So this file now does exactly two things:
+  1. orchestration: one subprocess per run, a fresh app-resolved temp DB each time;
+  2. sampling: stdout/stderr kept SEPARATE, decoded through the shared decoder, and each run's
+     resolved path / target-node outcome taken from the shared helpers.
 
-Only SQLite targets are inspected for row counts; a non-SQLite resolved path is recorded as
-`row_counts: NOT_APPLICABLE` rather than invented.  Nothing here deletes or mutates a database.
+Every verdict, every guard and every literal comes from the shared module imported out of the tree
+under test. If the shared module is missing, this tool refuses to run rather than guessing.
 
-Usage (from the export tree's backend directory):
-
-  python gate_streak.py --tree D:/moodle/_qoder_cmdr_ref_20260921/v_ord0211_pinned/backend \
-      --node "tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation" \
-      --sha 0a4cb23 --runs 10 --out ord0213/streak_g3.json
+Usage:
+  python gate_streak.py --tree <export>/backend --node <nodeid> --sha <exact SHA> [--out f.json]
+                        [--observation-runs N]
 """
-
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import os
-import re
-import sqlite3
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 PYTHON = "D:/moodle/CityNexus/.venv/Scripts/python.exe"
-RECEIPT_PREFIX = "ORD-0211 test database: resolved="
-COUNT_TABLES = ("journeys", "plan_versions", "travelers", "catalog_hydration_operations")
-FORBIDDEN_BASENAMES = {"_live.db", "_preview.db"}
 CLEAN_ENV_KEYS = (
-    "CITYNEXUS_DATABASE_URL", "DATABASE_URL", "DEEPSEEK_API_KEY",
-    "CITYNEXUS_AI_ENABLED", "CITYNEXUS_AI_API_KEY", "CITYNEXUS_DEMO_MODE",
-    "CITYNEXUS_LIVE_VALHALLA_URL", "CITYNEXUS_PHOTON_BASE_URL",
+    "CITYNEXUS_DATABASE_URL", "DATABASE_URL", "DEEPSEEK_API_KEY", "CITYNEXUS_AI_ENABLED",
+    "CITYNEXUS_AI_API_KEY", "CITYNEXUS_DEMO_MODE", "CITYNEXUS_LIVE_VALHALLA_URL",
+    "CITYNEXUS_PHOTON_BASE_URL", "CNX_ORD0210_REVERSE_MUTATION", "CNX_UNDER_TEST_SHA",
 )
+SHARED = "tests/_qoder_streak_receipt.py"
 
 
-def db_path_from_receipt(line: str | None) -> Path | None:
-    if not line or RECEIPT_PREFIX not in line:
-        return None
-    raw = line.split(RECEIPT_PREFIX, 1)[1].split("|", 1)[0].strip()
-    return Path(raw)
-
-
-def row_counts(path: Path | None) -> dict:
-    """Read-only counts; an absent file means 'the app had not created it yet'."""
-    if path is None:
-        return {"error": "NO_RESOLVED_PATH_CAPTURED"}
+def load_shared(backend: Path):
+    """Import the ONE shared module out of the tree under test; refuse if absent."""
+    path = backend / SHARED
     if not path.is_file():
+        raise SystemExit(
+            f"SHARED_MODULE_MISSING: {path} not found. This adapter deliberately has no local copy "
+            "of the verdict/guard logic; point --tree at a tree that carries the shared module."
+        )
+    spec = importlib.util.spec_from_file_location("_cnx_streak_shared", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def temp_dir_snapshot() -> set[str]:
+    """Names of cnx_pytest_* dirs in %TEMP% right now.  Sampled BEFORE each child starts, so the
+    receipt can prove the parent directory the child resolves into did not exist beforehand."""
+    try:
+        root = Path(tempfile.gettempdir())
+        return {p.name for p in root.iterdir() if p.is_dir() and p.name.startswith("cnx_pytest_")}
+    except OSError:
+        return set()
+
+
+def run_once(shared, backend: Path, argv: list[str], nodeid: str) -> dict:
+    env = dict(os.environ)
+    for k in CLEAN_ENV_KEYS:
+        env.pop(k, None)
+    before_dirs = temp_dir_snapshot()
+    proc = subprocess.run(
+        list(argv), cwd=str(backend), env=env, capture_output=True, timeout=1800,
+    )
+    # Streams stay separate all the way to the decoder - joining them is the exact bug the shared
+    # module calls out (pytest header on stdout, progress on stderr).
+    out_text, out_codec = shared.decode_child_text(proc.stdout or b"")
+    err_text, err_codec = shared.decode_child_text(proc.stderr or b"")
+    path, path_source = shared.parse_resolved_path(out_text, err_text)
+    nodeids_in_command = [a for a in argv if "::" in a or a.endswith(".py")]
+    return {
+        "argv": argv,
+        "exit_code": proc.returncode,
+        "stdout_codec": out_codec,
+        "stderr_codec": err_codec,
+        "streams_separate": True,
+        "resolved_absolute_db_path": path,
+        "path_source": path_source,
+        "nodeids_in_command": nodeids_in_command,
+        "node_outcome": shared.node_outcome_from_exit(
+            proc.returncode, run_shape=shared.SINGLE_NODE, nodeids_in_command=nodeids_in_command),
+        "initial_row_counts": {"path_did_not_exist_before_this_run": None},  # filled below
+        "final_row_counts": {},
+        "temp_dirs_before_this_run": sorted(before_dirs),
+        "temp_dir_appeared": None,
+    }
+
+
+def row_counts(path: str | None) -> dict:
+    import sqlite3
+
+    if not path or path == "NOT_PRINTED":
+        return {"absent": True, "note": "no resolved path"}
+    p = Path(path)
+    if not p.is_file():
         return {"absent": True}
     try:
-        con = sqlite3.connect(f"file:{path.as_posix()}?mode=ro", uri=True)
+        con = sqlite3.connect(f"file:{p.as_posix()}?mode=ro", uri=True)
     except sqlite3.Error as exc:
         return {"error": f"READ_ONLY_OPEN_FAILED: {type(exc).__name__}"}
     try:
         have = {r[0] for r in con.execute(
             "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")}
-        out: dict = {"absent": False, "table_count": len(have)}
-        for t in COUNT_TABLES:
-            out[t] = con.execute(f'SELECT COUNT(*) FROM "{t}"').fetchone()[0] if t in have else "NO_TABLE"
-        return out
+        return {"absent": False, "table_count": len(have)}
     finally:
         con.close()
 
 
-def run_once(backend: Path, node: str, extra: list[str]) -> dict:
-    env = dict(os.environ)
-    for k in CLEAN_ENV_KEYS:
-        env.pop(k, None)
-    proc = subprocess.run(
-        [PYTHON, "-m", "pytest", node, "-p", "no:randomly", "--tb=line", "-rA", *extra],
-        cwd=str(backend), env=env, capture_output=True, text=True,
-        encoding="utf-8", errors="replace", timeout=1800,
-    )
-    blob = (proc.stdout or "") + (proc.stderr or "")
-    receipt = next((ln.strip() for ln in blob.splitlines() if RECEIPT_PREFIX in ln), None)
-    summary = next((ln.strip() for ln in reversed(blob.splitlines())
-                    if "passed" in ln or "failed" in ln or "error" in ln), None)
-    # Clause 10: read the TARGET NODE's own verdict, never the container command's exit.
-    # pytest prints a per-node result line; `-rA` gives PASSED/FAILED/SKIPPED/ERROR by nodeid.
-    node_name = node.split("::")[-1]
-    node_line = next((ln for ln in blob.splitlines()
-                      if node_name in ln and ln.split()[0] in
-                      ("PASSED", "FAILED", "SKIPPED", "ERROR", "XFAIL", "XPASS")), None)
-    if node_line:
-        head = node_line.split()[0]
-        node_outcome = {"PASSED": "GREEN", "FAILED": "RED", "SKIPPED": "SKIPPED",
-                        "ERROR": "RED", "XFAIL": "XFAIL", "XPASS": "RED"}[head]
-    else:
-        node_outcome = "NOT_OBSERVED"  # no per-node report => never guess a verdict from the exit code
-    return {"receipt_line": receipt, "db_path": db_path_from_receipt(receipt),
-            "exit": proc.returncode, "summary": summary, "node_outcome": node_outcome,
-            "tail": blob.strip()[-300:]}
-
-
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--tree", required=True, help="exported backend dir (git archive export)")
+    ap.add_argument("--tree", required=True)
     ap.add_argument("--node", required=True)
-    ap.add_argument("--sha", required=True, help="exact commit under test (clause 1)")
-    ap.add_argument("--runs", type=int, default=10)
+    ap.add_argument("--sha", required=True)
+    ap.add_argument("--runs", type=int, default=10, help="must be 10 for a closure-grade streak")
+    ap.add_argument("--observation-runs", type=int, default=0,
+                    help="explicit observation-only sample size; never closure-grade")
     ap.add_argument("--out", default=None)
-    ap.add_argument("--pytest-arg", action="append", default=[], dest="extra")
     args = ap.parse_args()
 
     backend = Path(args.tree).resolve()
-    if not (backend / "tests").is_dir():
-        raise SystemExit(f"BAD_TREE: no tests/ under {backend} (point --tree at <export>/backend)")
+    shared = load_shared(backend)
 
-    rows = []
-    for i in range(args.runs):
-        one = run_once(backend, args.node, list(args.extra))
-        p = one.pop("db_path")
-        before = row_counts(p)
-        rows.append({
-            "run_index": i + 1, "exit_code": one["exit"],
-            "node_outcome": one["node_outcome"],
-            "resolved_absolute_db_path": str(p) if p else None,
-            "initial_row_counts": before, "one": one,
-        })
-        print(f"run {i+1}: exit={one['exit']} db={p} initial={before.get('journeys', before)}", flush=True)
-        rows[-1]["final_row_counts"] = row_counts(p)
+    observation_only = args.observation_runs > 0
+    rounds = args.observation_runs if observation_only else args.runs
+    if not observation_only and rounds != 10:
+        raise SystemExit(
+            f"REFUSED: closure-grade streaks are exactly 10 runs (frozen clause 2); you asked for "
+            f"{rounds}. Use --observation-runs N for a deliberately non-closure sample."
+        )
 
-    paths = [r["resolved_absolute_db_path"] for r in rows]
-    # Clause 10: green/red come from the TARGET NODE's verdict, never from the container exit.
-    greens = sum(1 for r in rows if r["node_outcome"] == "GREEN")
-    unobserved = [r["run_index"] for r in rows if r["node_outcome"] == "NOT_OBSERVED"]
-    dupes = sorted({p for p in paths if p and paths.count(p) > 1})
-    missing = [r["run_index"] for r in rows if not r["resolved_absolute_db_path"]]
-    forbidden = [p for p in paths if p and Path(p).name in FORBIDDEN_BASENAMES]
-    checks = {
-        "all_runs_reported": len(rows) == args.runs,
-        "all_green": greens == args.runs,
-        "every_run_resolved_a_db": not missing,
-        "no_two_runs_share_a_temp_db": not dupes,
-        "no_forbidden_target": not forbidden,
-        "every_run_has_a_target_verdict": not unobserved,
-        "row_counts_recorded": all(
-            isinstance(r["initial_row_counts"], dict) and isinstance(r["final_row_counts"], dict)
-            for r in rows),
-    }
-    if forbidden:
-        verdict = "ABORT_FORBIDDEN_TARGET"
-    elif not checks["every_run_resolved_a_db"]:
-        verdict = f"HARNESS_INVALID_no_resolved_db_path(run_index={missing})"
-    elif not checks["every_run_has_a_target_verdict"]:
-        verdict = f"HARNESS_INVALID_target_verdict_not_scoped(run_index={unobserved})"
-    elif not checks["all_green"]:
-        verdict = f"STREAK_NOT_MET({greens}/{args.runs}_green)"
-    elif not checks["no_two_runs_share_a_temp_db"]:
-        verdict = "STREAK_INVALID_shared_db_path"
-    else:
-        verdict = f"STREAK_MET({args.runs})"  # contract literal: STREAK_MET(<rounds>)
+    # The command comes from the shared module - this adapter never assembles its own argv.
+    # shape_command(python=...) yields [python, "-m", "pytest", <nodeids>, <flags>], which is exactly
+    # the shape the shared verifier checks (args[1:3] == ["-m","pytest"]).  Spawn it verbatim.
+    argv = list(shared.shape_command(shared.SINGLE_NODE, [args.node], python=PYTHON))
+
+    runs = []
+    for i in range(rounds):
+        one = run_once(shared, backend, argv, args.node)
+        path = one["resolved_absolute_db_path"]
+        # Freshness proof: the resolved parent must be a cnx_pytest_* dir that did NOT exist before
+        # this child started.  Sampled before the run, checked after.
+        parent = Path(path).parent.name if path and path != "NOT_PRINTED" else ""
+        one["initial_row_counts"] = {
+            "path_did_not_exist_before_this_run": bool(
+                parent.startswith("cnx_pytest_") and parent not in one["temp_dirs_before_this_run"]),
+            "resolved_parent": parent,
+        }
+        one["temp_dir_appeared"] = parent not in one["temp_dirs_before_this_run"]
+        one["final_row_counts"] = row_counts(path)
+        one["run_index"] = i + 1
+        one["resolved_path_problems"] = shared.resolved_path_problems(path)
+        runs.append(one)
+        print(f"run {i+1}: exit={one['exit_code']} node={one['node_outcome']} db={path}", flush=True)
+
+    shape = shared.verify_run_shape(
+        run_shape=shared.SINGLE_NODE, argv=argv, nodeids=[args.node],
+        nodeids_in_command=runs[0]["nodeids_in_command"],
+        streams_separate=True, decoder=runs[0]["stdout_codec"],
+    )
+    clean, hits = shared.clause6_command_surface(argv)
+    verdict = shared.streak_verdict(
+        runs=[{k: v for k, v in r.items()} for r in runs],
+        rounds=rounds, sha=args.sha, target_nodeid=args.node, run_shape=shared.SINGLE_NODE,
+        command=" ".join(argv), independence_declared=True,
+        clause6_declared=False,  # the delivering lane must state HOW; this tool cannot prove it
+        clause6_command_surface_clean=clean, clause6_command_surface_hits=hits,
+        run_shape_verified=shape.get("run_shape_verified", False),
+        run_shape_problems=shape.get("problems", []),
+        reverse_mutation_required=True,
+        reverse_mutation_result=os.environ.get("CNX_ORD0210_REVERSE_MUTATION", ""),
+    )
     receipt = {
-        "clause_source": "bus 5773071703 GATE_ACCEPTANCE_STREAK (+ 5773588112 clauses 9/10)",
-        "sha": args.sha, "target_nodeid": args.node, "run_shape": "single-node",
-        "command": f"python -m pytest {args.node} --tb=line -rA -p no:randomly {' '.join(args.extra)}".strip(),
-        "tree": str(backend), "node": args.node,
-        "interpreter": PYTHON, "processes": args.runs,
-        "green": greens, "red": args.runs - greens,
-        "duplicate_db_paths": dupes, "runs_missing_db_path": missing,
-        "runs_without_target_verdict": unobserved,
-        "checks": checks, "verdict": verdict,
-        "note": "clause 6 (no sleep/retry/concurrency reduction) cannot be proven by this tool; "
-                "the delivering lane must state it and the diff must show it. "
-                "A green streak alone is NOT closure of the root cause (arbiter's reverse clause): "
-                "closure additionally needs reverse_mutation_required=true and a "
-                "reverse_mutation_result in {KILLED, STREAK_BROKEN}.",
-        "runs": [{k: v for k, v in r.items() if k != "one"} | {
-            "summary": r["one"]["summary"], "receipt_line": r["one"]["receipt_line"]} for r in rows],
+        "adapter": "thin - verdict/guards/argv all come from the shared module",
+        "shared_module": str(backend / SHARED),
+        "sha": args.sha, "target_nodeid": args.node, "run_shape": shared.SINGLE_NODE,
+        "rounds": rounds, "observation_only": observation_only,
+        "command": " ".join(argv),
+        "clause6_command_surface_clean": clean, "clause6_command_surface_hits": hits,
+        "run_shape_verification": shape,
+        "verdict": verdict,
+        "problems": shared.receipt_problems({"runs": runs, **verdict}) if hasattr(shared, "receipt_problems") else [],
+        "runs": runs,
     }
     text = json.dumps(receipt, ensure_ascii=False, indent=2) + "\n"
     if args.out:
@@ -184,8 +197,11 @@ def main() -> int:
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_text(text, encoding="utf-8", newline="\n")
         print("receipt ->", out)
-    print(text)
-    return 0 if checks["all_green"] else 1
+    print(json.dumps({k: receipt[k] for k in
+                      ("sha", "target_nodeid", "run_shape", "rounds", "observation_only",
+                       "clause6_command_surface_clean")}, ensure_ascii=False, indent=2))
+    print("verdict:", verdict.get("verdict"), "| closure:", verdict.get("closure_grade"))
+    return 0 if str(verdict.get("verdict", "")).startswith("STREAK_MET") else 1
 
 
 if __name__ == "__main__":
