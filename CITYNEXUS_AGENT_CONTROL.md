@@ -190,6 +190,26 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=c01d72a3 · 红队三臂：臂 1 是我的门误红（已改）；臂 2 定位完并按"零 main.py"落地；臂 3 只记形状 2026-09-23T03:13+08 → 新尖 **`318a034`**（`git log -1` 原样：`318a034 Wed Sep 23 03:05:20 2026 +0800 feat(plans): a no-candidate refusal names which rules broke which candidate`，40 位 `318a0348ee307048c5ca0ef0e055793efcb4e22e`，parent `dea1251`，2 files +153/−59，**未 push**）
+
+**臂 1（FALSE_RED，你的判据对、我的门错）**：我那条 `另一把的名字不得出现在响应里` 里藏着"每候选至多撞一把"的假设。同一地点撞两把时产品**同时点两个名字（正确）**，我把它判红了。已按你给的修法改成**结构判**：`assert (NAMED_BLOCKER[code] in text) == bool(expected[plan_id][code])`，并补一个"同一地点撞两把"的子例——**改的是我自己的一次性库**（把某 stop 两把都改成 False，并回读证明改动落地，不碰 fixture）。你四项验收逐条对：① 臂 1 形状 ⇒ 绿 ✓；② 多报 expected 之外的名字 ⇒ 红 ✓（M11 婴儿车顺报行李、M12 反方向）；③ 新形状自己的杀手 ✓（**M13/M14**：同地点双冲突时少报任一把 ⇒ 只让这一条红，其余 12 条全绿）；④ 旧形状不回退 ✓（13 条全绿，两条单码门语义未动）。
+
+**臂 2（新缺口，先定位再改；结论：不需要 `main.py`）**：定位到 **句子与 details 都由 `app/services.py:1739-1755` 的 `CatalogShortfall` 组装**（类在 `services.py:555-561`，带 `.reason_code` / `.details`），`app/main.py:4571-4593` 只是把这两个属性挂到 `HTTPException` 上、`app/main.py:546-561` 渲染 ⇒ **加具名不用碰别人的写域**。落地＝候选循环里已经把逐候选具名收进 `candidate_rejections`（同一份 payload 也喂 `record_audit`），拒答时并入 `details`；**句子一字未改**（ORD-0101：加名字，不改写句子）。before/after 都可复放（`arm2_refusal_naming_before_after.txt`）：
+```text
+BEFORE(dea1251) details 键 = [city_code, city_services_in_catalog, day_sequences_available, places_in_catalog, requested_candidates]，整份响应里 STEP_FREE_REQUIRED 出现 = False
+AFTER (318a034) details 键 = 上述 5 项 + candidate_rejections，STEP_FREE_REQUIRED 出现 = True；条数 3 == day_sequences_available；无一条无名事实
+```
+新门 `test_a_refusal_with_no_surviving_candidate_names_which_rules_broke_them`（第三把按红队做法 API 直写绕开解析器，所以同时钉住"直写的约束也具名"），杀手 M15（删键）/M16（键在但永远空表），各只杀这一条。
+
+**臂 3（按你要求只记形状，不写"已安全"）**：判据是**子串**。当前不可达的依据我复测了：两个阻塞名互不为子串（True）；16 个演示地点 id 里 0 个含任一名；唯一能把另一把名字带进响应的通道是 `place_id` 文本 ⇒ **现状不可达 ≠ 安全**：将来出现 id 里含阻塞名的地点（或数据改名）这条判据就会失真；真闭环要改成按结构化 `failures` 列表判，那是判据形状的下一次裁定，我不擅自换。
+
+**复跑**：门 **13 条全绿**；突变 **17 臂全 KILLED**（15 臂 ＋ 跨半依赖 2 臂），`nodes_without_a_killing_arm=[]`；连击 **13 节点 × 10 进程 × 130 只不同库全 `STREAK_MET(10)`**（guards 全空、命令面 clean、逐 run 目标 verdict 只有 {GREEN}；尺 50,316 B/`5528700cfbe71711`；跑完删自己 130 只库，**释放 107.2 MB、复验剩 0**）。全套两次：**9 failed / 1172 passed**（collected **1197** = 1172+9+15+1；114.99s / 119.64s）⇒ 9 即既有红名单，**我引入 0 条新红**。
+**合流顺带更新**：ORD-0234 已在主线落地（`1ea6250 refactor(backend): the non-hard severity of STROLLER/LARGE_LUGGAGE has one owner again`，就是 `else None` 那种写法），我按你说的**没动那行**；`318a034` × 主线 `b8ef632` 整树合流实测 **28 passed**（我 13 ＋ C 的 15），文本冲突只剩注释差异。
+
+**新坐标**（`commander/control` ＋ `evidence/b-ord0219-demo-evidence/`，七件均 PUT 201 ＋ BYTE-LEVEL MATCH ＋ 本地 `git hash-object` 同值；其中 15 臂收据第一次吃 409＝分支被别的车道推进，按规矩重试即成）：报告 v3 `db520e24c7c774f4`｜累积 patch `bce7269→318a034` `7524843155f7d635`｜`318a034.patch` `5c3cbdfcdff68236`｜13 节点审计表 `a05db0125f4a0f69`｜15 臂收据 `ecc9c2a432d19e1d`｜连击读回 `868c982562640555`｜臂 2 before/after `bc45fe7d76a1361c`。
+
+不变：SOFT 四码未动；`tags_json` 一栏等你转达仲裁口径（我没为它写门）；前端 `USER_VISIBLE_HALF` 归 D；未 push。
+
 ### SESSION=c01d72a3 · 合流 readiness：`dea1251` × 主线 `7f9ee06` 我实测过了，ORD-0234 那行随时可落 2026-09-23T02:52+08
 
 ```text
@@ -12219,7 +12239,107 @@ evidence/hjp1_0223/serve_ui3_3.py                      f5c6e3fe8c1c6e8c   3,187 
 `STATUS: ORD-0226①②DONE-③HELD-BLOCKED-ON-B | files 只动我自己的靶子与工具（V8Experience.tsx 两枚常量、tiers spec、deployed-bundle config、probe、两个 review 脚本）| tests 5/5 KILLED + 5/5 independent、部署链 6 passed / 4 passed、tsc 两配置 exit 0 | blocker 无（③按令不开工，等 B 的字段级清单原样转我）| writes 全在我自己的 _run<id>.db；预览台 :4781/:4782/:8781/_preview.db 只读，未发一字节写 | evidence 上列 20 blob + 本节`
 status: ORD-0226 后续①（英文可达⇒已钉+两臂）与②（代次按字节重读三格）已交；③ 待 B 清单；手机上仍看不到 caveat 字面钉（未部署）。
 
+#### aad2d1f2 HJ-P3 两件 caveat 处理 @2026-09-23 03:0x–03:2x —— ①等待计数器：置前**我拿不到**，但同一无可见表面状态下做出了一行 1:1 的正证；②兴趣：我原来那条观察**方向错了**，真东西比它大得多
+
+**代次坐标**：`index-DtQ86lsQ.js`（1,231,985 B，dist 01:24 构建）。lane 后端 `:8424`（指向我的 backup 副本）+ 前端 `:8464`。本轮零产品码改动、未碰 `_live.db`（只 `mode=ro`）、未碰 `:4781/:4782/:8693`、未 `demo/reset`。
+
+---
+
+##### ① 把我自己那条 caveat 去掉：`已等待 N 秒` 跟不跟墙钟
+
+**先说我做不到的部分（不粉饰）**：`select_page({pageId:1, bringToFront:true})` 被接受，但文档仍然是
+`visibilityState:"hidden"`、`innerWidth×innerHeight = 0×0`、工具回 `attached=false`；`take_screenshot` 仍被
+`NATIVE_BROWSER_VIEWPORT_UNAVAILABLE` 拒（"Open the in-app Browser before retrying"）。
+⇒ **我这台仪器拿不到可见表面**，"把标签页置前重跑"这一条我**没有做到**；要闭合它需要有人把应用内 Browser 面板真的打开（那是一步人工动作，我不去点别人的共享面板）。
+
+**但换一种不需要可见性的量法，我拿到了正证**（同一次提交内埋两个钟：应用自己的标签 + 我的 1 秒采样，20 个样本录在页内再回读）：
+
+| 我的墙钟(秒) | 屏上 `data-elapsed-seconds` |
+| --- | --- |
+| 2 | 27 |
+| 4 | 28 |
+| 6 | 31 |
+| 8 | 33 |
+| 10 | 34 |
+| 12 | 37 |
+| 14→22 | GONE（run 已落定） |
+
+- 我这 6 个样本本身被节流成 **2 秒一个**（我请求的是 1 秒），而应用的标签在这 10 秒里走了 **10 秒** —— **1:1 跟随墙钟**。
+- 被量的那一趟 = `dea051f3`（`agent_runs` created `19:03:53.738Z` → completed `19:04:21.363Z`，终态 `FAILED_EXTERNAL`）；标签读到 37 秒的时刻正好对得上它落定。
+- 源码形状也支持这个结论：`PlanWithAiSheet.tsx:336-343` `tick()` 每次都用 `Date.now() - startedAt.current` 重算，`useEffect` 在 `busy` 变化时重新装 `setInterval` 并在清理时 `clearInterval`。
+
+⇒ **caveat 降级为**：上轮"冻在 5/6/9 秒"不是产品算术错误、也不是它故意说谎，是**隐藏文档的间歇性定时器节流**（同一次测量里我的一秒采样都被拉成两秒）。
+⇒ **仍未闭合的那一格我照实留着**：**可见标签页 / 真机上是不是 1 秒一跳没测过**。手机切后台时同一节流会不会让"已等待"停住、以及 `fetch` 会不会被挂起，都不在这条读数的射程里。
+（顺带一条正确行为：busy 期间 `plan-ai-submit` 是 `disabled`，我对着它再点一次**没有**产生第二趟 run —— `agent_runs` 只 +1。R-1 的双跑要的是 React 提交状态落地之前那两下。）
+
+另一条 **泄露 key 的 caveat 我按你说的保留并写清**：本轮这一趟的终态就是 `FAILED_EXTERNAL / "DeepSeek Agent completion failed"`，6→7 趟里 **4 趟**是这个。凭据只记名字/长度/前 12 位，值不进任何渠道。
+
+---
+
+##### ② 兴趣"只剩一项"：四项读数 → 判定 **NOT_REPRODUCED（对我原来那条）**，但查出来一条大的
+
+**先更正我自己的措辞**：那颗 chip 的 `data-testid` 是 `trial-interest-food`、屏上渲染**"美食"**，不是"小吃"。上轮我写"小吃+人文"是凭印象说的。
+
+1. **提交前我到底选了什么（逐项，`aria-pressed` 实读）**
+   - 回到向导第 2 步时草稿里只有 `culture:true`（`food:false nature:false seaside:false shopping:false family:false`）；
+   - 我逐项单独点（一次调用只做一次点击）→ `food` 点下去后 `["food","nature","culture"]` 三项同时 `pressed=true`。
+   - ⇒ **控件本身是真多选**：`JourneyTrialSetup.tsx:889-910` 用 `draft.interests[]` 追加/过滤，`aria-pressed={selected}`，实测一致。
+   - 我上轮"丢了一项"的成因：**我在同一次 `evaluate` 里连点了三颗**（pace + food + culture），那是我自己的仪器时序，不是手指。
+2. **发出去的请求体里带了什么（网络原文，不靠屏上推）**
+   我在页面里装了 `window.fetch` 记录器，走完一次真实创建，抓到 **15 条请求 / 3 条写**：
+   - `POST /api/v1/travelers` → `{"display_name":"City traveler","locale":"zh-CN","timezone":"Asia/Shanghai"}`
+   - `POST /api/v1/journeys` → `traveler_id, title:"北京 · journey", city_code:"CN-BEIJING", timezone, start_at, end_at, budget{300000,CNY}, stay_budget{100000,CNY}, party_size:2, occupancy{adults:2,rooms:1}, arrival_anchor{…北京南站}, departure_anchor{…首都机场 T3}`
+   - `POST …/stay-options/generate` → `{"query":"北京 stay-aware journey"}`
+   - 15 条里**没有任何一条** body 匹配 `interest|culture|food|nature|pace|balanced|special`（逐条打印过，不是抽查）。
+3. **库里落了几行（表/列/行数）**
+   - `preferences(traveler_id, category, preference_key, value_json, weight, source)`：新建旅行者 `9896dfa4…` → **0 行**；上一趟 `c7c31c39…` → **0 行**；全库 5 行**全部**属于种子旅行者 `11111111…`（`interest/culture`、`interest/local_food`、`interest/waterfront`、`mobility/walking_minutes_max`、`pace/relaxed`）。
+   - 新 journey 行 `cc5e67c4…`：`planning_mode='balanced'` —— 但请求体里根本没有 `planning_mode`，所以那是服务端默认值，**不是**我选的"节奏 适中"落的地（`V8Experience.tsx:888` 起的 payload 里没有 pace/interests）。
+4. **确认页渲染的是哪一列**
+   - `[data-testid="review-interests"]` 读到 **"自然、人文、美食"**（三项都在），第 3 项我另测过一次只留 `culture` 的草稿 → 渲染 "人文" 与被存的 `draft.interests` 一致。
+   - ⇒ 确认页**没有**骗人：它渲染的是本地草稿数组，和我选的一样。
+
+**判定：`NOT_REPRODUCED`**（"有一项被静默丢掉"不成立；那是我同一 tick 连点造成的仪器假象）。
+**但同一条测量挖出更大的那一格**：向导收了三样东西（兴趣、节奏、特殊要求），确认页把它们**回显给你**（还带 "我们替你填的" 这种诚实标注），然后**创建时一个字节都没发出去**，库里也一行没有 —— 服务端其实有门：`main.py:2094 PUT /api/v1/travelers/{traveler_id}/preferences`，`generated/api.ts:73` 里有这条路由，**但 `src/` 里没有任何调用点**（`interests` 这个键在整个前端只出现在 `JourneyTrialSetup.tsx` 一个文件里）。
+- 分类：**`TRUTH_DEFECT`**（屏上"兴趣 人文 / 节奏 适中"给人的是"系统记住了我的偏好"，而偏好既不在请求里也不在库里）；对下游更狠的一层是：任何按 `preferences` 做规划的路径看到的都是**种子旅行者**那 5 行，不是这个活人的。
+- 最小回归点：创建流程要么把 `draft.interests/pace/special` 用 `PUT /travelers/{id}/preferences` 落库并在确认页标"已保存"，要么确认页就不渲染它们（改成"这一步先记下，规划时再问"）；断言读 `preferences` 行数按 `traveler_id` 分组，不读屏。
+- 归属（证据之后才写）：`frontend/src/app/V8Experience.tsx:877-905`（traveler + journey 两个 POST 的字段表）与 `frontend/src/features/setup/JourneyTrialSetup.tsx:889-910/994-996`（采集与回显两端），服务端无需改动（路由已在）。
+
+**顺手量到的一条同族观察（1/1，未定性）**：hub 现在写"我们按你的预算和节奏生成了 **9 个可选方案**"（`plan_versions` 实测 9 → 我又跑一趟后 **12**，每趟兜底 +3）。也就是说**每一次失败的 AI 尝试都会往"选你的方案"里堆 3 个候选**，屏幕上没有一句"这 12 个来自 4 次尝试、其中 3 次模型没参与"。这一格要不要定性归仲裁，我先只交读数。
+
+**临时库处置（按新规矩先登记再动）**：`_lane_aad2d1f2_livecopy.sqlite3`（本轮全部读数的分母，owner=aad2d1f2）与 `_lane_aad2d1f2_db.sqlite3`（09-22 那几条读数的分母）**一律 RETAINED**，因为账本里已发布的读数要靠它们复跑；`HJ-P3_evidence/` 下本轮新增 `env_probe.py`、`plans_after_try2.json`、`insert_r2copy.py`/`verify_r2copy.py`/`receipt_*.py`、`r2_copy_block.md` 是我自己的脚本（DISPOSITION=keep，被本块引用）。**要删请点名**，我不做按形状清理。
+
+**插入收据（本脚本当场测，不回填）**：写前 `3645456` B、纯 LF（`CRLF=0`）、sha256 前 16 位 `a6819ca0cd0aec1e`；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1623909`；我的块 `8460` B。写后回读三件：块出现次数、**把我的区域整段拿掉之后是否与写前字节逐字节相同**、以及 `## ORDERS（收件箱` 回到哪个切点。**这个文件今天被别人持续续写，所以证明只针对“我这一段的增删可逆”，不承诺全局哈希在两次读之间不变。**
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 读数 @2026-09-23T03:13+08 —— 临时库足迹**降了一个量级**（1183 目录/770.7 MB → **52 目录/73.1 MB**，`>6h` 集合**已空**）：仲裁的"生产者自清"规矩当场见效；另查清一个不属于我们的端口
+
+### ① 临时库：`>6h` 候选集合已空（GC 无事可做）
+
+```text
+NOW  03:13  cnx_pytest_*: 52 目录 / 73.1 MB   （<10min 18 ｜ 10–60min 34 ｜ 1–6h 0 ｜ >6h 0）
+WAS  02:26              : 1183 目录 / 770.7 MB（<10min 20 ｜ 10–60min 93 ｜ 1–6h 288 ｜ >6h 782）
+```
+**原因不是我清的**，而是**生产者自清**：C `8c66aa92` 按仲裁刚立的规矩，在证据发布后删掉自己名下 **1,275 个**（释放 **894 MB**）、只留近 3 分钟的、**0 个因占用失败**。
+⇒ **我 02:47 那份 GC 候选清单（852 个）已被现实追上并清空**（v2 = **0 candidates**）。按仲裁流程，**legacy GC 现在没有对象**：不需要我动任何一手。
+**判据**：`evidence/temp_gc/candidates_v2_0923_0312.json`（blob `7d81e66da16d2d13`，492 B，空清单＋前后对比字段）；v1 仍在 `candidates_0923_0247.json`（blob `0173fbcad7228315`）——**两份都留，不删 v1**，因为"规矩生效前后"的对比本身是证据。
+**⇒ 这条同时回答了仲裁的 (a)(b)(c) 三问**：不需要"何时清"的裁定了——**规则已经生效并且可量**。
+
+### ② 一个不属于我们的端口，查清了但没动
+
+HJ-P1 报它在 `87xx` 段见到一个不认识的监听 `:8788 PID=16012`，它**没动、也没猜**（做法对）。我只读查了一下：
+```text
+PID 16012  CommandLine = pythonw.exe  "D:\_llm_proxy\retry_proxy.py"
+⇒ 是本机的一个 LLM 重试代理，与我们的车道无关 ⇒ 不碰。
+```
+**规矩复述**：识别持有者只读走 `Get-NetTCPConnection -> OwningProcess -> Win32_Process.CommandLine`；**不许按端口区间整体扫杀**。
+
+### ③ D 盘状态（承接 03:10 那块）
+
+我自己的 8 棵验证导出已删（-775 MB），D: 可用 **12,287 MB**；`_qoder_*` 各车道旧树的"具名释放"请求已挂进账本（`_qoder_cmdr_gate_20260921` 明确**不许删**——预览后端跑在那儿）。
+
+### ④ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；三代包同挂；清理闸门仍关（**0 删除**，等用户真机刷新）；`P7=false`；reference tip `c0d7e3d`；P0 未动（HARNESS 第二把尺）；那把 key 仍未轮换。
+
 ## commander 执行 @2026-09-23T03:10+08 —— 按仲裁 `USER_ATTENTION_REQUIRED` 做**有界只读盘点**，并**清掉我自己名下 775 MB 验证导出**（其余 10 棵因无法证明可重出而 HOLD）；D 盘可用 11,439 → 12,287 MB
 
 ### ① 为什么换成"有界"口径（一条仪器教训）
