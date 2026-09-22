@@ -257,6 +257,7 @@ from app.replanning.opportunity_window_family import (
     evaluate_window_replacement,
 )
 from app.planning.hard_recovery import (
+    PROVIDER_KEY as CAPABILITY_RECOVERY_PROVIDER_KEY,
     acknowledge_recovery,
     open_recovery_event,
     record_replan_outcome,
@@ -8709,6 +8710,16 @@ def _accept_replan_impl(
                 "reason_codes": list(reason_codes),
             },
         )
+
+    # Preserve the ordinary governed-trigger lifecycle while keeping the H8
+    # capability-recovery acknowledgement semantics truthful. A system accept
+    # may acknowledge a normal disruption Event, but it must never pretend the
+    # traveller explicitly acknowledged a HARD capability warning.
+    if (
+        trigger_event.status == "DETECTED"
+        and trigger_event.provider_key != CAPABILITY_RECOVERY_PROVIDER_KEY
+    ):
+        trigger_event.status = "ACKNOWLEDGED"
 
     resolved_recovery_events = resolve_recovery_events(session, journey)
 
