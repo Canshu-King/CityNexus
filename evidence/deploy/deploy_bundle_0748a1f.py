@@ -123,6 +123,42 @@ def selftest(serve: pathlib.Path) -> int:
                  "got": asset_verdict("/manifest.webmanifest", "javascript", live)})
     arms.append({"arm": "killer:missing_asset_spa_html_fallback", "expect": "RED",
                  "got": asset_verdict("/assets/__cnx_no_such_asset__.js", "javascript", live)})
+    # B-arm (redteam 2026-09-23): the live index must name refs that actually resolve, and the
+    # previous generation's entry must be absent.  Both halves are asserted as separate fields so
+    # "the old name is gone" is a claim rather than something derived from a before/after diff.
+    idx = http_get("/")
+    body_html = ""
+    if idx["status"] == 200:
+        req = urllib.request.Request(BASE + "/")
+        req.add_header("Cache-Control", "no-cache")
+        with urllib.request.urlopen(req, timeout=60) as r:
+            body_html = r.read().decode("utf-8", "replace")
+    live_refs = asset_refs(body_html)
+    resolved = all(asset_verdict(r, "css" if r.endswith(".css") else "javascript", live)["verdict"] == "GREEN"
+                   for r in live_refs) if live_refs else False
+    arms.append({"arm": "B1:live_index_refs_all_resolve", "expect": "GREEN",
+                 "got": {"verdict": "GREEN" if (idx["status"] == 200 and resolved) else "RED",
+                         "status": idx["status"], "content_type": idx["content_type"],
+                         "is_html_fallback": idx["is_html_fallback"], "sha256": idx["sha256"],
+                         "disk_sha256": None, "disk_bytes": None, "body_size": idx.get("body_size")}})
+    old_ref = os.environ.get("CNX_DEPLOY_SELFTEST_OLD_REF")
+    if old_ref:
+        absent = old_ref not in body_html
+        arms.append({"arm": f"B2:previous_generation_absent({old_ref})", "expect": "GREEN",
+                     "got": {"verdict": "GREEN" if absent else "RED",
+                             "status": idx["status"], "content_type": idx["content_type"],
+                             "is_html_fallback": idx["is_html_fallback"], "sha256": idx["sha256"],
+                             "disk_sha256": None, "disk_bytes": None, "body_size": idx.get("body_size")}})
+        arms.append({"arm": f"B2-neg:absent-check-can-fail(names the CURRENT ref {live_refs[0] if live_refs else '?'})",
+                     "expect": "RED",
+                     # This arm must feed the ABSENCE predicate the live entry's own name: absence is
+                     # false there, so the predicate must read RED.  (First version computed the
+                     # presence predicate instead and the control failed on its own polarity, not on
+                     # the gauge - which is exactly what a negative control is for.)
+                     "got": {"verdict": "RED" if (live_refs and live_refs[0] in body_html) else "GREEN",
+                             "status": idx["status"], "content_type": idx["content_type"],
+                             "is_html_fallback": idx["is_html_fallback"], "sha256": idx["sha256"],
+                             "disk_sha256": None, "disk_bytes": None, "body_size": idx.get("body_size")}})
     ok = True
     for arm in arms:
         got = arm["got"]["verdict"]
@@ -297,13 +333,20 @@ def main() -> int:
     b_new = http_get("/")
     b_body_ok = (b_new["status"] == 200 and isinstance(b_new.get("head_bytes"), str))
     b_refs_ok = None
+    b_new_refs_present = None
+    b_old_refs_absent = None
     if b_body_ok:
         req = urllib.request.Request(BASE + "/")
         req.add_header("Cache-Control", "no-cache")
         with urllib.request.urlopen(req, timeout=60) as r:
             served_html = r.read().decode("utf-8", "replace")
         got_refs = asset_refs(served_html)
-        b_refs_ok = all(r in served_html for r in new_refs) and (old_js is None or old_js not in served_html)
+        # Split the two claims into two fields (redteam 2026-09-23): the old version stored one
+        # combined boolean named refs_match_new, so "the previous bundle name is gone" was only
+        # derivable from a before/after diff rather than asserted.  Both must now be GREEN.
+        b_new_refs_present = all(r in served_html for r in new_refs)
+        b_old_refs_absent = (old_js is None) or (old_js not in served_html)
+        b_refs_ok = b_new_refs_present and b_old_refs_absent
         receipt["served_after_switch_refs"] = got_refs
     c_new = []
     for ref in new_refs:
@@ -320,6 +363,8 @@ def main() -> int:
     receipt["receipt_ABCDE"] = {
         "A_OLD_ASSET_still_served": a_old,
         "B_NEW_INDEX": {"status": b_new["status"], "refs_match_new": b_refs_ok,
+                        "new_refs_present": b_new_refs_present, "old_refs_absent": b_old_refs_absent,
+                        "old_ref_tested": old_js,
                         "verdict": "GREEN" if (b_new["status"] == 200 and b_refs_ok) else "RED"},
         "C_NEW_ASSET": c_new,
         "D_SERVICE_WORKER": d_sw,
