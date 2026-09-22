@@ -1,0 +1,27 @@
+diff --git a/frontend/e2e/qoder-destination-preparation.spec.ts b/frontend/e2e/qoder-destination-preparation.spec.ts
+index d35e9cb..d0aad90 100644
+--- a/frontend/e2e/qoder-destination-preparation.spec.ts
++++ b/frontend/e2e/qoder-destination-preparation.spec.ts
+@@ -153,6 +153,22 @@ test("ord0193-starting-the-preparation-shows-the-servers-own-phase-and-no-invent
+     job,
+     node(NODE, "starting a preparation produced no job block at all"),
+   ).toBeVisible({ timeout: 20_000 });
++  /* My instrument, not the product: the block is first painted straight from the POST's own answer
++     (`DestinationPreparationPanel.tsx:116`), and that answer is honestly `QUEUED` -- the route above
++     pins only the polled `GET`.  Reading the block once at first paint therefore flipped under chain
++     load on this tip: 1 RED ("QUEUED", `review/run-run072593.log`) / 1 GREEN (`run-run072814.log`)
++     in the ten-file shape, 2 GREEN single-node (`run-run072724.log`, `run-run072766.log`).  The wait
++     is bounded and its message names what never arrived, so a running state that truly does not
++     reach the screen still goes red; no assertion below is relaxed. */
++  await expect
++    .poll(() => job.getAttribute("data-status"), {
++      message: node(
++        NODE,
++        "the server's running state never reached the screen: [data-status] stayed at what the POST answered",
++      ),
++      timeout: 20_000,
++    })
++    .toBe("RUNNING");
+   const read = {
+     status: await job.getAttribute("data-status"),
+     phase: await job.getAttribute("data-phase"),
