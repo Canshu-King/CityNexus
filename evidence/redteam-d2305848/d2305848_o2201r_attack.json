@@ -1,0 +1,37 @@
+{
+ "tree": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\tree16",
+ "sha0": "5ff6aeaf14838bce",
+ "cases": [
+  {
+   "key": "E1-allay-outside-wordlist",
+   "what": "安抚语用词表外反转词（不用担心/肯定够用），不含六个 ALLAY 词",
+   "anchor_hits": 1,
+   "run_id": "d2305848_o2201r_985221",
+   "failed_line": null,
+   "verdict": "SURVIVED (新绕过形状被放行)",
+   "restored": true
+  },
+  {
+   "key": "E2-risk-negated",
+   "what": "风险词被否定（不会超出）——含 RISK 词但整句是宽裕语义",
+   "anchor_hits": 1,
+   "run_id": "d2305848_o2201r_985352",
+   "failed_line": "x  2 [chromium] › e2e\\qoder-budget-advisory-tiers.spec.ts:229:1 › ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什么也要断言 (2.1s)",
+   "verdict": "SURVIVED (新绕过形状被放行)",
+   "restored": true
+  },
+  {
+   "key": "E3-original-DA-replay",
+   "what": "原始 DA 臂重放（对照：必须转红）",
+   "anchor_hits": 1,
+   "run_id": "d2305848_o2201r_985493",
+   "failed_line": "x  2 [chromium] › e2e\\qoder-budget-advisory-tiers.spec.ts:229:1 › ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什么也要断言 (2.1s)",
+   "verdict": "SURVIVED (新绕过形状被放行)",
+   "restored": true
+  }
+ ],
+ "baseline": {
+  "run_id": "d2305848_o2201r_985060",
+  "green": true
+ }
+}
