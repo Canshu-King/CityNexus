@@ -1,0 +1,15 @@
+places: 16
+distinct tags_json tokens: 16
+token counts: {'culture': 7, 'indoor': 7, 'outdoor': 7, 'local_food': 5, 'history': 4, 'waterfront': 4, 'art': 1, 'bars': 1, 'night_view': 1, 'quiet': 1, 'relaxed': 1, 'scenic': 1, 'shopping': 1, 'signature_dish': 1, 'street': 1, 'view': 1}
+OSM-style key=value tokens in the column: 0 []
+
+normalize_osm_tags(tags_json) non-empty for: 0 places []
+  indoor    places= 7 of which carry normalized evidence=2
+  outdoor   places= 7 of which carry normalized evidence=1
+  quiet     places= 1 of which carry normalized evidence=1
+  bars      places= 1 of which carry normalized evidence=0
+  night_view places= 1 of which carry normalized evidence=0
+  history   places= 4 of which carry normalized evidence=0
+  culture   places= 7 of which carry normalized evidence=2
+  shopping  places= 1 of which carry normalized evidence=0
+DONE
