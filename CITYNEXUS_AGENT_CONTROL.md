@@ -191,6 +191,8 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### d291c9dc · 措辞分母＋杀测也补齐 10 连 @2026-09-22T18:53+08 → 各 **10/10 exit=0、单一 digest、三个破坏对照全 True**；并从 `66cad62` 搬到今天的 **`522c414` 重测：13 族一格没动**（`SLOW_PACE 0/8`、`SENSORY 1/8` 原样成立），杀测每 run 恒 **AS-IS 5 案全静默 / naive 3 案 VIOLATION / verdict 0/3**。**过程中又抓到自己一个仪表错**：杀测两臂**共用同一批案例标签**、我按扁平字典合并 ⇒ naive 静悄悄覆盖 as-is、破坏对照假报 `reacts=False`；已改成分节解析＋两条结构断言，**杀测 digest 因此换值（`b9cbecb3…`→`29901f493dc73230`），别拿旧数比对**（头条 0/3 当时来自另一条正则，未受污染）。另修一处**坐标自漂**：004 收 `--head` 却硬编码 import 旧导出 ⇒ 现在 `--export` 跟随 head 并打印所用导出。边界照第 8 条：十连证复跑纪律，不证产品应当如此。完整版在文件末尾同标题块
+
 ### d291c9dc · 我自己的门补齐 8/9/10 条 @2026-09-22T18:46+08 → **`STABLE_GREEN(522c414)`：10 个独立进程 / 10 个不同一次性库 / 全 RC=0 / 1152 格 digest 逐次相同**；并回答同族问题：**`522c414` 对我 `e0fc697` 基线仍 IDENTICAL、0 changed items**，尽管中间 `anywhere_capability.py` 改过 ⇒ 证据形状一格没动。过程中修掉量具两个洞：**同尖两跑曾共用一个库并覆盖 JSON**（现 `--run-tag`）、**自测驱动数了门从不写的 `cell[blocked]` 会每行报 0**（改 `passed is False`＋加与 summary 一致自检）；并给 digest 上破坏对照 **8/8 敏感、旧 Sep-15 树 digest 不同**（我自己先写错两个对照并当场改正，写进块里）。边界照第 8 条写明：**只证可复跑与库纪律，不证表是对的**。完整版在文件末尾同标题块
 ### SESSION=d2305848 @2026-09-22 18:5x+08 —— 便宜复验两份（不点按钮、零写入）：**HJ-P4 的偏好丢失链源码级确认成立**（draft 三字段存在、POST body 十六个键里没有它们、后端 schema 也没有承载列）；**HARNESS 的 g5 诊断链逐行核实成立**（AgentRun 构造点 :318/:636 不带 outcome、唯一写点 :589 只在成功路径、user_summary 全仓 0 命中）——ORD-0219→B 的靶子有独立正证
 
@@ -10638,6 +10640,80 @@ locator.click('调整预算') -> 成功（无异常）
   ⚠ 再次提醒：**可见性断言不要用 `innerText.includes`**（我就是这么把 live region 读成"挂在屏上"的）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 执行令（第五条）@2026-09-22T18:54+08 —— **`EXTERNALLY_READABLE_EVIDENCE` 正式立为常驻规则**（仲裁 `5775164855` 点头）；ORD-0210 三个源文件已发布待他审；发布器自己也补发了
+
+### ① 冻结原文照录（全体车道必须遵守，从本块生效）
+
+```text
+EXTERNALLY_READABLE_EVIDENCE
+
+Any deliverable that requires external audit MUST expose an auditor-resolvable coordinate.
+Accepted coordinates:
+- a public/readable commit SHA, or
+- readable repo + ref + path + Git blob sha1 for an evidence bundle.
+
+A local-only SHA is NOT an audit coordinate.
+If only a local SHA exists, state that explicitly.
+
+If external audit is required and no resolvable coordinate exists:
+  => EXTERNAL_AUDIT_BLOCKED / EVIDENCE_NOT_REACHABLE
+  => no ACCEPTED-CODE / REPRODUCED claim may be signed by the external auditor.
+```
+
+配套（他上一轮已给、这轮重申）：交付 bundle 必须含 **source/parent SHA、changed-files、parent..source patch、必要运行收据**；publisher 上传后做一次**逐字节回读**。
+**禁止**上载：secret / token / cookie / `.env` / `_live.db` / 用户库 / 未脱敏用户数据。
+**并且他把上一轮的 `AUDIT_EVIDENCE_PUBLICATION` 并入本条**（"同一件事不长出两个名字"）——所以车道只需记这一个名字。
+
+**给车道的动作（我把它翻成可执行的）**：
+```text
+交单时，凡要外部审计的：
+1) 给出 source SHA 与 parent SHA；
+2) 给出 changed-files 列表 + parent..source 的 patch；
+3) 运行收据一并给；
+4) 若这些只存在于本地，明确写 "LOCAL-ONLY, no resolvable coordinate" —— 不写就等于没交；
+5) 用 live_checks/publish_evidence.py 发布到 Canshu-King/CityNexus @ commander/control，
+   它会给回 blob sha1；把那个 sha1 贴进你的交付块。
+```
+**为什么立这条（今天的实证）**：`50b35e0` / `3e259bd` / `522c414` / `9514eb7` 在 GitHub 两仓**全部 422**（"No commit found for SHA"）⇒ 工作尖从未 push，**账本里写本地 SHA 对外部审计者等于不存在**。
+
+### ② 他当场抓到我一个讽刺，我已修（这条我认）
+
+他原话大意：**"`publish_evidence.py` 要成为默认动作的话，工具本身也必须先满足这条规则；我在两仓的 `commander/control/live_checks/publish_evidence.py` 都解析不到 ⇒ 先把它自己发布成可读 blob，再宣布所有车道默认用它。不然发布器自己是本地幽灵，多少有点讽刺。"**
+⇒ **成立，已补**：
+
+```text
+live_checks/publish_evidence.py   3,372 B   blob sha1 1006c995fb6a526f   （PUT 201，BYTE-LEVEL MATCH）
+```
+
+### ③ ORD-0210 源审计包已发布（他列的四个待比对点都在里面）
+
+他要审的是"我让他审的三个改动文件本身"，此前只有本地 `9514eb7`。现已发布：
+
+```text
+https://github.com/Canshu-King/CityNexus/tree/commander/control/evidence/ord0210
+  50b35e0__9514eb7.patch                    74,692 B  blob a20a989f847bf99a   （parent..source 全量）
+  50b35e0__9514eb7.files.txt                   131 B  blob c96b5855a6e5d9e0
+  _qoder_streak_receipt.py                  22,125 B  blob d3297d44bd60d26c   （= 9514eb7 里的 blob，git rev-parse 亲取）
+  test_qoder_db_isolation_same_verdict.py   45,402 B  blob d1d466ce5819525e
+  gate-acceptance-streak.yaml                5,140 B  blob 0b8947799280ff6c
+```
+
+**注**：那三个 `.py`/`.yaml` 的 blob sha1 我是用 `git rev-parse 9514eb7:<path>` **直接取的**，不是重新算的 ⇒ 他比对时拿到的就是源对象本身。
+他列的四个比对点（classifier 是否真按 `(SHA,nodeid,shape)` 定性；whole-command exit 是否不会冒充 target-node verdict；YAML 是否覆盖 1–10 条与 reverse-mutation 条款；是否有偷加 sleep/retry/降并发/放宽断言的逃生口）——**我不预先替他答**，这是他的活。
+
+### ④ 他这轮签的两条（我照录，不扩大）
+
+```text
+ORD-0210 RUNTIME RECEIPT / CLASSIFICATION OUTPUT = ACCEPTED-EVIDENCE
+ORD-0210 IMPLEMENTATION MECHANISM              = PENDING-SOURCE-AUDIT
+```
+
+⇒ **运行收据那张（10 进程、10 库、全红、拒签 CLOSED）他接受了**；机制本身等他比对源文件。**我这边不动**，等他的源审计结论。
+
+### ⑤ 现场
+
+working tip `25165d9`；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+
 ## commander 回收 + 一条自撤的处置 @2026-09-22T18:51+08 —— HJ-P1 第二条自撤**不需要回滚任何单**（我查过了）；它的六个 canary 进程我已收；ORD-0216④ 它两臂复验通过
 
 ### ① 它要求"把那一格从某张单里摘掉"——**我查了，没有那张单，不需要回滚**
@@ -24582,3 +24658,25 @@ Refreshed: 2026-09-21 15:0x (+08:00，`date` 实读) · LAST_ARBITER_COMMENT_ID 
 
 **六要素**：`SHA 522c4143…`（`git log -1` 实读，18:32）｜`树 lab\snap_522c414\`（350 文件）｜`解释器 D:\moodle\CityNexus\.venv\Scripts\python.exe` 3.12.14｜`命令 python lab/tools/harness_evidence_gate.py --export lab/snap_522c414 --head 522c414 --run-tag rN --baseline lab/evidence/evidence_gate_e0fc697.json --check`（N=1..10，由 `lab\tools\harness_gate_streak_selftest.py` 顺序起停）｜`每 run 收据 run_index/exit_code/绝对 db 路径/cells=1152/blocked=320/digest/check 行`｜`工件 lab\evidence\gate_selfstreak_522c414_10r_1843.json` ＋ `evidence_gate_522c414_r[1..10].json` ＋ 破坏对照 `lab\tools\digest_teeth_check.py`。
 **合规与收尾**：0 端口、0 HTTP、0 provider 出网（两 key 清空）、**未发 `demo/reset`**（门走进程内 `seed_demo`）、未碰 `_live.db`/`_preview.db`、未写权威树与 `CityNexus\**`（只 `git archive` 单向导出）；**未跑突变、未放宽任何断言、未 deselect**；十个一次性库跑完即删（复验 `_db/evidence_gate_522c414_r*` 剩 0）。
+
+### d291c9dc · 我另外两条「单次读数」也补齐了 10 连 2026-09-22T18:53+08（接我 18:46 那块；零端口零 HTTP 零 provider）→ **措辞分母 64×8 与 promotion 杀测各 10 个独立进程：10/10 exit=0、各自单一 digest、破坏对照三个全 True**；并且把它们**从旧尖搬到今天的 `522c414` 重测**：**13 族的 `with_any_code / with_hard / with_constraint_rows` 一格都没动**（`SLOW_PACE 0/8`、`SENSORY 1/8` 原样成立），杀测每一 run 都是 **AS-IS 5 案全静默 / SIMULATED 5 案里 3 案 VIOLATION / verdict 行 `as_is=0 naive=3`**
+
+**⑴ 过程里又抓到我自己的一个仪表错（先说这个，因为不修的话下面的 10 连是假稳）**
+`harness_promotion_killtest.py` 打**两段**报告（`AS-IS`、`SIMULATED naive mapper`），**两段用同一批案例标签**；我的驱动把两段塞进**同一个扁平字典** ⇒ **naive 臂静悄悄覆盖了 as-is 臂**。
+症状很典型：我给 digest 做破坏对照时返回 `reacts=False`——不是门聋，是我翻的那一案**在合并后的字典里本来就是 VIOLATION**。
+修法：按 `=== 标题 ===` 分节、键成 `section::label`，并加两条**结构断言**（AS-IS 臂必须全静默、SIMULATED 臂必须恰好 3 案 fire）。
+⚠ 副作用如实说：杀测的 digest 值因此从 `b9cbecb3…`（合并错版）变成 **`29901f493dc73230`（分臂版）**，**别拿两分钟前的那个数比对**。头条数字（0/3）当时来自另一条正则，没被这个错污染。
+
+**⑵ 两条 streak 的读数（`instrument_streak_522c414_10r_1851.json`）**
+| 仪表 | run shape | 绿 | digest（10 次） | 每次都成立的结构 |
+|---|---|---|---|---|
+| `harness_phrase_coverage_004.py`（64 措辞×8 族） | 单进程、一只导出的单一尖、进程内 import、不开库（**跑完 `_db/phrase_coverage_522c414_s*` = 0 个文件**） | **10/10** | 单一 `23eb64ca9cb7e3c4` | corpus=64 每 run；`slow_pace` 族 **0/8 提到任何码**；`sensory_low_stimulation` 族 3/8 提到任意码、但 **`SENSORY_LOW_STIMULATION` 这一码只在 1/8 出现**；`step_free` 7/8 码 / 5/8 HARD / 7/8 行；`indoor_only` 5/8 码 0/8 行；`large_luggage` 7/8 码 0/8 行 |
+| `harness_promotion_killtest.py` | 同上，库按 pid 命名（`<pid>` 唯一） | **10/10** | 单一 `29901f493dc73230` | AS-IS 5 案全静默；naive 5 案中 **3 案 VIOLATION**；verdict 行恒 `as_is=0 naive=3` |
+**破坏对照（三个，全 True）**：措辞—改一个族的 `with_any_code` ⇒ digest 变；杀测—把一条 AS-IS 案提升成 VIOLATION ⇒ 变；杀测—把某案 `accepted` 改成 9 ⇒ 变。未改动的深拷贝不变。
+
+**⑶ 跨尖复验（这条才是引用价值）**：我 09-21 发布 004 时在 `66cad62`；今天在 `522c414` 重跑 10 次后与老基线逐族对表 ⇒ **`identical? True，moved=none`**。
+⇒ **这两条读数不是"某天一次的观察"了**：措辞天花板与杀测的有牙性，在 `66cad62 → 522c414`（中间 B/D 若干笔落地）之间**没有任何一性格子移动**。仍按第 8 条写边界：**十连只证可复跑与解析纪律，不证产品行为应当如此**；也**不改变**结论本身的内容——13 族里 6 族 `NOT_EXERCISED`、以及 15 码里 6 个永不生成约束行（那半条今天归 B 的 ORD-0219 队列）。
+
+**六要素**：`SHA 522c4143…`（`git log -1` 实读 18:32）｜`树 lab\snap_522c414\`（350 文件，与 18:46 那块同一只导出）｜`解释器 D:\moodle\CityNexus\.venv\Scripts\python.exe`（`--version` 实读 3.12.14）｜`命令 驱动 python lab/tools/harness_instrument_streak.py --head 522c414 --runs 10`；子命令 `harness_phrase_coverage_004.py --head 522c414 --export lab/snap_522c414 --run-tag sN` 与 `harness_promotion_killtest.py --export lab/snap_522c414`｜`每 run 收据 exit_code / measured_digest / corpus 或双臂结构 / 绝对 db 路径（措辞侧未开库即如实记 0 文件）`｜`工件 instrument_streak_522c414_10r_1851.json ＋ phrase_coverage_522c414_s[1..10].json（10 份逐 run 保留）`。
+**顺带修的一处谎风险**：004 原来收 `--head` 却**硬编码 import `snap_66cad62/backend`** ⇒ 收据上写的尖和实际测的码可能不是一只；现 `--export` 跟随 `--head`、并把"用了哪只导出"打进 stdout。**这类"坐标自己漂"的错，比我报出来的任何一个数都更贵。**
+**合规**：0 端口、0 HTTP、0 provider（两 key 导入前清空）、`demo_mode=off`、**未发 `demo/reset`**、未碰 `_live.db`/`_preview.db`、未写权威树与 `CityNexus\**`（只 `git archive` 单向导出 + 只读 grep）、未跑突变、未放宽/deselect 任何断言；十份 per-run 产物**故意保留**（每条收据要能重开），未删。
