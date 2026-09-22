@@ -103,8 +103,12 @@ test("ord0208-the-clock-sentence-speaks-human — 游标缺失说人话，时间
     node(NODE, `the sentence still prints a raw cursor enum as prose: "${sentence.slice(0, 240)}"`),
   ).toBe(false);
   /* 1b. And it says the thing the order suggested, in words. */
+  /* The degraded disclosure has two legitimate wordings, chosen by how far the projection got:
+     `没有给出这一分钟的执行游标…时间窗` when the projection is present but the cursor is not, and
+     `没有按游标定位` when it has not arrived at all.  The first chain run caught the node asserting
+     only one of them. */
   expect(
-    /没有给出这一分钟的执行游标|时间窗/.test(sentence),
+    /没有给出这一分钟的执行游标|时间窗|没有按游标定位/.test(sentence),
     node(NODE, `the degraded clock is not disclosed in words: "${sentence.slice(0, 240)}"`),
   ).toBe(true);
   /* 1c. The instant is in the journey's timezone, not bare UTC.  A bare `+00:00` (or any raw

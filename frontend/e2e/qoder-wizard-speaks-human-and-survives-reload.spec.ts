@@ -120,7 +120,10 @@ test("ord0135-the-confirmation-step-prints-no-internal-key — 确认页不许�
   await openWizard(page);
   await fillStep1(page);
   await fillStep2(page);
-  const pace = ((await page.getByTestId("review-pace").innerText()) ?? "").trim();
+  /* ORD-0208 3 added a 我们替你填的 marker to this row, so the cell is no longer exactly the pace
+     word -- read the pace value before the marker instead of comparing the whole cell. */
+  const paceCell = ((await page.getByTestId("review-pace").innerText()) ?? "").trim();
+  const pace = paceCell.split("·")[0].trim();
   const interests = ((await page.getByTestId("review-interests").innerText()) ?? "").trim();
   const body = (await page.locator("body").innerText()).replace(/\s+/g, " ");
   expect(
