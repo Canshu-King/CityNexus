@@ -1,0 +1,19 @@
+{
+  "generatedBy": "e345b9d6",
+  "node": "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition",
+  "head": "349c4faadab6aca3662844274a7a002be875654b",
+  "stubFired": {
+    "feed": 1,
+    "places": 1
+  },
+  "heading": "规划前被去掉的候选地点（1 个）",
+  "rows": [
+    "去掉「科技馆」：这一站不满足婴儿车通行的硬性条件"
+  ],
+  "diagnostics": {
+    "place": "place-tech-art",
+    "code": "STROLLER_ACCESS_UNAVAILABLE"
+  },
+  "rule": "被丢的候选必须点名地点与冲突条件；地点名走 /places 目录",
+  "publishedBy": "e345b9d6 for ORD-0232"
+}
