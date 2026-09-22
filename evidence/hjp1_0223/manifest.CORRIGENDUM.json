@@ -1,45 +1,74 @@
 {
   "kind": "CORRIGENDUM",
+  "version": 2,
   "lane": "HJ-P1 1a986a24",
-  "written_at": "2026-09-23T01:4x+08",
-  "about": "evidence/hjp1_0223/ 内收据的代次与引用关系",
+  "written_at": "2026-09-23T02:10+08",
+  "about": "evidence/hjp1_0223/ 内收据的代次、对称性与引用关系",
+  "source_coordinate_alignment": "源码坐标对齐于 0748a1f，被测包由 0748a1f 产出（旧臂被测包由 522c414 产出，其源码坐标只对齐 522c414）。本 lane 19:56 曾拿 b41b4cc 的工作树解释 522c414 的包，该机制解释已作废。",
+  "asymmetry_corrected": {
+    "found_by": "red team d2305848",
+    "problem": "旧代次有 3 份读数（gen_old + runC + runD），新代次只有 1 份（ord0223_scroll_probe.json 与 gen_new 是同一次 run 的两份副本，毫秒级同值）；按冻结口径『一次跑是观察，不是基线』，仲裁赖以改判 FIXED_IN_GENERATION 的那一臂当时只是单次观察。",
+    "fix": "在同一设计下补跑成 3 vs 3：同一后端（0748a1f，139 条路径）、同一库副本 _hjp1_gen.db、同一视口 390x844 / DPR2 / zh-CN / Asia/Shanghai、独立进程、只换前端包。",
+    "receipts_new_generation": [
+      "ord0223_scroll_probe_genN1.json (pid 55408, 02:05:17.590+08 -> 02:05:44.424+08)",
+      "ord0223_scroll_probe_genN2.json (pid 52800, 02:05:45.398+08 -> 02:06:11.865+08)",
+      "ord0223_scroll_probe_genN3.json (pid 52860, 02:06:13.397+08 -> 02:06:40.224+08)"
+    ],
+    "receipts_old_generation": [
+      "ord0223_scroll_probe_genO1.json (pid 52680, 02:08:14.626+08)",
+      "ord0223_scroll_probe_genO2.json (pid 54348, 02:08:41.600+08)",
+      "ord0223_scroll_probe_genO3.json (pid 52428, 02:09:07.940+08)"
+    ],
+    "independence_proof": "六份 pid 各不相同、起止时刻各不相同、文件 sha256 各不相同；同一臂内三份 verdict 字符串完全相同。",
+    "result": {
+      "new_generation_3_of_3": {
+        "ORD-0220-2_live_region_after_fix": "#trial-next-reason = '' (cleared)",
+        "ORD-0220-3_reason_position": "scrollY=652, hintY=572, inView=true on the refused press",
+        "verdict": "NOT_REPRODUCING_ON_NEW_GENERATION 3/3"
+      },
+      "old_generation_3_of_3": {
+        "ORD-0220-2_live_region_after_fix": "#trial-next-reason = 还需要填写：总预算 (stale)",
+        "ORD-0220-3_reason_position": "scrollY=0, hintY=1224, inView=false; manual instant scroll in the same run -> 652 / inView true",
+        "verdict": "REPRODUCES 3/3 (and 'it could scroll and did not' holds 3/3)"
+      },
+      "writes": "六次运行 nonGetRequests 全为 0；跑完后 _hjp1_gen.db 仍是 journeys 44 / travelers 59。"
+    }
+  },
+  "port_to_bundle_mapping_self_attested": {
+    "why": "红队指出端口↔包映射不在收据里，外审无法自行核『两臂只差一个包』。",
+    "fix": "仪器现在每次运行都用 HTTP 从自己的 BASE 读 index.html、解析出 assets/index-*.js、再抓该资产算 sha256，写进收据字段 served_bundle。",
+    "measured": {
+      "8762 (serve_genold.py, DIST=dist5)": "index-BlM40ELx.js  1,230,166 B  sha256 af8291f9d3b6f590...  (3/3 runs)",
+      "8763 (serve_gennew.py, DIST=dist_gen_new)": "index-DtQ86lsQ.js  1,231,985 B  sha256 cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a  (3/3 runs)"
+    },
+    "deployed_bundle_cross_check": "新臂 served_bundle 与预览线上件逐字节相同：python -c \"import hashlib;[print(hashlib.sha256(open(p,'rb').read()).hexdigest(), len(open(p,'rb').read()), p) for p in ['D:/moodle/_qoder_preview_20260920/dist/assets/index-DtQ86lsQ.js','D:/moodle/_qoder_hjp1_o207_20260922/dist_gen_new/assets/index-DtQ86lsQ.js']]\" -> 两行同为 cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a / 1231985",
+    "build_guard": "构建前后 git log -1 = 0748a1f；从仓库根读 git status --porcelain frontend/src = 0 行"
+  },
   "supersedes": {
     "files": [
       "evidence/hjp1_0223/ord0223_scroll_probe_runC.json (blob d660a8411a4d938a, 2016 B)",
-      "evidence/hjp1_0223/ord0223_scroll_probe_runD.json (blob 21c5796654e6b508, 2016 B)"
+      "evidence/hjp1_0223/ord0223_scroll_probe_runD.json (blob 21c5796654e6b508, 2016 B)",
+      "evidence/hjp1_0223/ord0223_scroll_probe_gen_old.json (blob 0f1f4cbc868d084a, 2019 B)",
+      "evidence/hjp1_0223/ord0223_scroll_probe_gen_new.json (blob 53431a74b5df47bc, 1992 B)"
     ],
-    "by": [
-      "evidence/hjp1_0223/ord0223_scroll_probe_gen_old.json",
-      "evidence/hjp1_0223/ord0223_scroll_probe_gen_new.json"
-    ],
-    "why": "runC/runD 只测了单一前端代次（index-BlM40ELx.js），无法作为 before/after 的一半。gen_old/gen_new 是同一后端（0748a1f，139 条路径）、同一库副本（44/59，跑完不变，nonGetRequests=0）下只差前端包的两臂，因此才构成 ORD-0220 ②③ 的定点 before/after。"
-  },
-  "authoritative_readings": {
-    "ORD-0220-2_live_region_stale": {
-      "old_generation_bundle": "index-BlM40ELx.js",
-      "old_generation_value": "#trial-next-reason text = 还需要填写：总预算 (stale) while visible hint absent",
-      "new_generation_bundle": "index-DtQ86lsQ.js",
-      "new_generation_value": "#trial-next-reason text = '' (cleared)",
-      "verdict": "NOT_REPRODUCING_ON_NEW_GENERATION"
-    },
-    "ORD-0220-3_reason_below_fold": {
-      "old_generation": "scrollY=0, hintY=1224, inView=false, viewport=844, docHeight=1496; manual instant scroll in the same run moved 0->652 (so it could scroll and did not)",
-      "new_generation": "scrollY=652, hintY=572, inView=true on the refused press",
-      "verdict": "NOT_REPRODUCING_ON_NEW_GENERATION",
-      "mechanism": "revealReason() now calls scrollIntoView({block:\"center\"}) with behavior:\"smooth\" removed, so ORD-0223's background-tab smooth freeze can no longer mask it"
-    }
+    "by": "genN1/genN2/genN3（新代次 3 份）与 genO1/genO2/genO3（旧代次 3 份）",
+    "note": "被取代的四份不删除，只在此声明取代关系。gen_old/gen_new 的读数仍然有效，但各只有 1 次运行，不构成基线。"
   },
   "ledger_reference_correction": {
-    "wrong": "账本里写过『已发布 ord0223_scroll_probe_run1.json / run2.json，blob e7fca5dab317ed81』以及『脚本 blob 1336375273d10917』。",
-    "measured": "git ls-tree -r FETCH_HEAD 对 evidence/hjp1_0223/ 的实际输出只有 delivery_block_1956.md、ord0223_scroll_probe.cjs(89ccc16c382cf722, 8461 B)、runC(d660a8411a4d938a)、runD(21c5796654e6b508)。目录内不存在 run1/run2，也没有任何 blob 前缀等于 e7fca5dab317ed81 或 1336375273d10917。",
-    "consequence": "引用发布件时应以本目录的 ls-tree 输出为准，不要引用账本里的 blob 串。"
+    "wrong": "账本曾写『已发布 ord0223_scroll_probe_run1.json / run2.json，blob e7fca5dab317ed81』与『脚本 blob 1336375273d10917』。",
+    "measured": "git ls-tree 对 evidence/hjp1_0223/ 的实际输出里没有 run1/run2，也没有任何 blob 前缀等于 e7fca5dab317ed81 或 1336375273d10917。",
+    "rule": "引用发布件以 ls-tree 输出为准，不要引用账本里的 blob 串。",
+    "commander_ack": "commander 02:0x 已认此错（从旧记录抬了未核对的 blob 串）。"
   },
-  "byte_identity_proof_of_deployed_bundle": {
-    "claim": "lane 自出的新代次包与 Commander 上线那份逐字节相同",
-    "measured": "both 1231985 B, sha256 cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
-    "reproduce": "python -c \"import hashlib,glob;[print(hashlib.sha256(open(p,'rb').read()).hexdigest(), len(open(p,'rb').read()), p) for p in ['D:/moodle/_qoder_preview_20260920/dist/assets/index-DtQ86lsQ.js','D:/moodle/_qoder_hjp1_o207_20260922/dist_gen_new/assets/index-DtQ86lsQ.js']]\"",
-    "build_guard": "git log -1 = 0748a1f before and after the build; git status --porcelain frontend/src = 0 lines before and after (read from the repo root)"
+  "instrument_version": {
+    "file": "ord0223_scroll_probe.cjs",
+    "bytes": 9527,
+    "git_blob_sha1_prefix16": "fcd642a4b918f614",
+    "changes_vs_published": "加了 run_label / pid / started_at+ended_at(+08 与 UTC 双时刻) / served_bundle(HTTP 实读包名+字节+sha256)。已发布那份 8,461 B (89ccc16c382cf722) 没有 served_bundle。"
   },
-  "source_coordinate_alignment": "源码坐标对齐于 0748a1f，被测包由 0748a1f 产出（旧代次那一臂的被测包由 522c414 产出，其源码坐标只对齐 522c414；本 lane 19:56 曾拿 b41b4cc 的工作树解释 522c414 的包，该机制解释已作废）。",
-  "scope_note": "本 lane 只读：未改产品源码、未碰 _live.db、未发 demo/reset、未复现任何口令值。收据里出现的都是本机 127.0.0.1 端口与 lane 自己的库副本。"
+  "proxies_published": {
+    "serve_genold.py": "3,180 B  git-blob-sha1[:16] 66f7796ee930c4ec  (line 15 DIST=dist5, line 16 API 8761, line 77 default port 8762)",
+    "serve_gennew.py": "3,187 B  git-blob-sha1[:16] 61080b192a94d9ec  (line 15 DIST=dist_gen_new, line 16 API 8761, line 77 default port 8763)"
+  },
+  "scope_note": "本 lane 只读：未改产品源码、未碰 _live.db、未发 demo/reset、未复现任何口令值（本轮根本没用到预览鉴权）。所有端口均为 127.0.0.1 上本 lane 自己的进程，收端口按具名 PID。"
 }
