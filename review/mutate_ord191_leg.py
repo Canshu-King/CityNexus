@@ -117,7 +117,7 @@ ADOPTED_OBSERVATION = """        observation=dict(
 # was written to prevent.  M16 is the important one: it claims the cell for a question nobody
 # attempted, which is the old UNKNOWN wearing the new word.
 RUNTIME_VERDICT = """        verdict, reason, action = (
-            NOT_ANSWERED,
+            UNKNOWN_RETRYABLE,
             REASON_RESOLVER_UNAVAILABLE,
             ACTION_RETRY_LATER,
         )
@@ -133,10 +133,10 @@ STRUCTURAL_VERDICT = (
     "REASON_NO_CANONICAL_IDENTITY, ACTION_CHOOSE_ANOTHER_DESTINATION\n"
 )
 STRUCTURAL_VERDICT_LAUNDERED = (
-    "        verdict, reason, action = NOT_ANSWERED, REASON_NO_CANONICAL_IDENTITY, "
+    "        verdict, reason, action = UNKNOWN_RETRYABLE, REASON_NO_CANONICAL_IDENTITY, "
     "ACTION_RETRY_LATER\n"
 )
-RETRYABLE_PAIR = '        "retryable": bool(resolution.retryable) or verdict == NOT_ANSWERED,\n'
+RETRYABLE_PAIR = '        "retryable": bool(resolution.retryable) or verdict == UNKNOWN_RETRYABLE,\n'
 RETRYABLE_PAIR_OFF = '        "retryable": bool(resolution.retryable),\n'
 
 MUTANTS = [
@@ -219,7 +219,7 @@ MUTANTS = [
         "new": RETRYABLE_PAIR_OFF,
         # MEASURED SURVIVOR, kept on purpose rather than deleted to make the count clean: all three
         # runtime sites already carry `retryable=True` from the resolver, so taking the explicit
-        # `or verdict == NOT_ANSWERED` away changes no reading.  What that proves is that the
+        # `or verdict == UNKNOWN_RETRYABLE` away changes no reading.  What that proves is that the
         # invariant is enforced twice - once upstream and once in the pairing - and the door that
         # owns it is g17, which reddens the moment any runtime site stops being retryable.  The
         # pairing stays because the ruling asks for the cell and the flag to be linked here, not at

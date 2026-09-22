@@ -487,7 +487,7 @@ def test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match(
     assert body["destination_state"] == "RUNTIME_FAILURE", body["destination_state"]
     assert body["canonical_destination_id"] is None, body
     assert body["retryable"] is True, body
-    assert body["capability"] == capability_module.NOT_ANSWERED, body["capability"]
+    assert body["capability"] == capability_module.UNKNOWN_RETRYABLE, body["capability"]
     cells = [
         item
         for item in (body.get("provider_status") or [])

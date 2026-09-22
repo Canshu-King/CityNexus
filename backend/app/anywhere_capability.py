@@ -53,18 +53,25 @@ CATALOG_SCHEMA_VERSION = "catalog-v1"
 READINESS_POLICY_VERSION = "readiness-v1"
 PROVIDER_POLICY_VERSION = "provider-v1"
 
-# The arbiter's structural axis, plus the cell the arbiter named on 2026-09-22 (answer "one" of
-# `5765903862`, relayed by ORD-0197).  This is not the UNKNOWN this file has always refused:
-# "nobody looked" stays an absent `provider_status` and a structural answer.  `NOT_ANSWERED` means
+# The arbiter's structural axis, plus the cell added on 2026-09-22 (answer "one" of `5765903862`,
+# relayed by ORD-0197).  **The name on this cell is the arbiter's, not this file's.** Ruling
+# `5771378382` (choose B) froze `UNKNOWN_RETRYABLE` in
+# `P7_UNKNOWN_RETRYABLE_CAPABILITY_ACCEPTANCE.md`; this module had shipped it as `NOT_ANSWERED`
+# while a comment here claimed the name was authorised - that conflated "adding a cell is approved"
+# with "you may name it", and three more lanes had already started keying off the spelling by then.
+# No alias and no dual-write: one token, and callers that should not care are kept decoupled by
+# reading `retryable` + `recommended_action` instead of the cell name.
+# This is not the UNKNOWN this file has always refused: "nobody looked" stays an absent
+# `provider_status` and a structural answer.  `UNKNOWN_RETRYABLE` means
 # the opposite - we looked, and nothing that could answer did - which is a measured runtime fact and
 # therefore has to be sayable without choosing between the two lies a three-cell vocabulary forced:
 # `UNAVAILABLE` ("this place cannot be planned") and `HYDRATABLE + START_HYDRATION` ("you may
 # prepare it now").  The measured consequence of that forced choice is the panel inviting a
 # traveller to prepare a destination nobody has named, with answered=false.
 # The invariant that keeps the new cell from becoming a fifth "looks like a state" string is
-# mechanical, not conventional: NOT_ANSWERED => retryable is True and a provider_status exists.
+# mechanical, not conventional: UNKNOWN_RETRYABLE => retryable is True and a provider_status exists.
 # A caller that reads the state without the pair has not read this answer, it has read a word.
-CAPABILITY_STATES = ("READY", "HYDRATABLE", "NOT_ANSWERED", "UNAVAILABLE")
+CAPABILITY_STATES = ("READY", "HYDRATABLE", "UNKNOWN_RETRYABLE", "UNAVAILABLE")
 COVERAGE_STATES = ("READY", "PARTIAL", "MISSING")
 COVERAGE_KEYS = ("attractions", "food", "nightlife", "lodging", "mobility", "booking")
 # Runtime axis (R2).  Emitted only when an observation actually exists.
@@ -74,7 +81,7 @@ SOURCE_KINDS = ("GOLDEN_FIXTURE", "REMOTE_PROVIDER", "SIMULATED", "REPLAY", "OFF
 READY = "READY"
 PARTIAL = "PARTIAL"
 MISSING = "MISSING"
-NOT_ANSWERED = "NOT_ANSWERED"
+UNKNOWN_RETRYABLE = "UNKNOWN_RETRYABLE"
 
 # Which intent each stored category serves.  This mapping *is* the policy: a category that is not
 # listed here serves no intent, which is a decision with a version number, not an oversight.
@@ -1386,9 +1393,12 @@ def evaluate_capability(
         # three words: it told a traveller they may prepare a destination nobody has named, with
         # `answered=false` in the same body (measured at `16cc652`, and the reason the commander
         # took it to the arbiter rather than letting this file add a fourth string on its own).
-        # The ruling was answer "one", so the name here is authorised, not improvised.
+        # Answer "one" approved *adding the cell*; it did not approve a name, and this file supplied
+        # one anyway (`NOT_ANSWERED`). `5771378382` (choose B) froze the arbiter's own spelling, so
+        # that invented token is gone from every surface this lane owns. Approving a cell is not
+        # approving what to call it - the cost of confusing the two was three lanes waiting on it.
         verdict, reason, action = (
-            NOT_ANSWERED,
+            UNKNOWN_RETRYABLE,
             REASON_RESOLVER_UNAVAILABLE,
             ACTION_RETRY_LATER,
         )
@@ -1451,10 +1461,10 @@ def evaluate_capability(
         **identity_fields(resolution),
         "destination_state": resolution.state,
         "destination_resolution": resolution.method,
-        # The pair the new cell is obliged to keep: `NOT_ANSWERED` without `retryable` would be a
+        # The pair the new cell is obliged to keep: `UNKNOWN_RETRYABLE` without `retryable` would be a
         # fourth "looks like a state" string, which is precisely what the ruling forbade when it
         # authorised adding a cell.  Every other verdict reports exactly what was measured.
-        "retryable": bool(resolution.retryable) or verdict == NOT_ANSWERED,
+        "retryable": bool(resolution.retryable) or verdict == UNKNOWN_RETRYABLE,
         "candidates": resolution.candidates,
         # Always present, empty when nothing was refused: a reader must be able to ask "was there
         # evidence we could not use?" without first guessing which keys this answer chose to send.

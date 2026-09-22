@@ -494,14 +494,14 @@ x-testing-obligations:
       仲裁 `5765903862` 回"选项一"= 词表加一格（经 Commander 于 ORD-0197 验收注转达）。命名由 C 定，
       三条硬条件：① 进冻结词表；② 同步进本 annex 与 openapi.yaml；③ 与 `retryable` 联动，UI 动作指向
       "稍后重试"而不是"开始准备"。
-    added: NOT_ANSWERED
+    added: UNKNOWN_RETRYABLE
     meaning: >-
       问了，没有任何一方能答。它**不是**本文件一直拒绝的 UNKNOWN："没人去看"仍然是缺席的
       `provider_status` + 结构答案 `UNAVAILABLE`；这一格只用于"看过而没人答得出"这一种被测量到的
       运行时事实。三种成因共用它：传输/超时、我们自己的解析腿起不来、provider 答了但证据不合格
       （见 broken-provider-evidence-...）。
     invariant: >-
-      NOT_ANSWERED ⇒ `retryable is true` 且 `provider_status` 在场，且
+      UNKNOWN_RETRYABLE ⇒ `retryable is true` 且 `provider_status` 在场，且
       `recommended_action=RETRY_LATER`。三者缺一就不是这一格，是第四个"看起来像状态"的字符串。
     action_word: >-
       `RETRY_LATER` 是第四格带出的第四个动作词：三元组 {START_HYDRATION, CHOOSE_ANOTHER_DESTINATION,
@@ -520,7 +520,7 @@ x-testing-obligations:
       # M15 把运行时失败退回 HYDRATABLE + START_HYDRATION ⇒ g4、g17 红；
       # M16 把"根本没去问"的问题借用新格（= 老 UNKNOWN 换皮）⇒ g17 红。这两条是 12 个突变里
       # 唯一能证伪"这一格只是多一个词"的，都 KILLED。
-      # M17 拆掉 `or verdict == NOT_ANSWERED` 的联动 ⇒ **SURVIVED，且已按"预期幸存者"登记而不是删掉**：
+      # M17 拆掉 `or verdict == UNKNOWN_RETRYABLE` 的联动 ⇒ **SURVIVED，且已按"预期幸存者"登记而不是删掉**：
       # 三个运行时上游本来就各自带 retryable=True，所以这一句今天是冗余的；真正守着这个不变量的是
       # g17（任一上游不再可重试即红）。留着联动是因为裁定要的是"这一格与 retryable 联动"，写在一处
       # 比依赖三处上游不忘更符合要求。实测：kill baseline 11 门绿、cross baseline 16 门绿，
@@ -541,7 +541,7 @@ x-testing-obligations:
     must_not_claim: >-
       空轴（`MISSING`）不许借这个 gap —— 那等于凭空声称『这里有材料，只是不够硬』；没定出名字的目的地
       也不许发。能力仍是 `HYDRATABLE`、动作仍是 `START_HYDRATION`（准备合法、硬承诺不合法），
-      所以这一格**不是**第五个能力态，也和 `NOT_ANSWERED` 无关。gap 同时写进作业自己的
+      所以这一格**不是**第五个能力态，也和 `UNKNOWN_RETRYABLE` 无关。gap 同时写进作业自己的
       `mobility_evidence`（`source_classes / hard_eligible / hard_gaps`），因为一周后还有人读的是库。
     measured-on: 718a660（发射器与门在工作区，读数取自该格的实跑）
     readings: >-

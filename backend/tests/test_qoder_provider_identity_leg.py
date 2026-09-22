@@ -245,7 +245,7 @@ def test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural(seeded,
     _answer(monkeypatch, raise_with=httpx.ConnectTimeout("connect timed out"))
     body = _capability(RAW_COUNTY)
     assert body["destination_state"] == "RUNTIME_FAILURE", body["destination_state"]
-    assert body["capability"] == capability_module.NOT_ANSWERED, (
+    assert body["capability"] == capability_module.UNKNOWN_RETRYABLE, (
         f"期望：连不上是『问了没人答』（仲裁『选项一』新格），既不是结构结论 UNAVAILABLE，"
         f"也不是邀请准备的 HYDRATABLE；实际：{body['capability']}"
     )
@@ -606,7 +606,7 @@ def test_g14_a_reference_the_provider_cannot_be_held_to_never_becomes_identity(
             f"{label}：动作不许是『换个地方』（那是结构性无身份的动作）；"
             f"实际 action={body['recommended_action']!r}"
         )
-        assert body["capability"] == capability_module.NOT_ANSWERED, (
+        assert body["capability"] == capability_module.UNKNOWN_RETRYABLE, (
             f"{label}：证据不合格属于『没答上、可重试』那一格；实际 {body['capability']}"
         )
         assert body["destination_resolution"] == "provider_evidence_malformed", body
@@ -689,7 +689,7 @@ def test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_stri
     """仲裁"选项一"要的是"这一格与 retryable 联动"，不是多一个看起来像状态的词。
 
     所以这条门同时钉两面：① 凡是"问了、没人答得出"的三种成因（传输超时 / 我们自己那条腿起不来 /
-    答了但证据不合格）都必须落 `NOT_ANSWERED` + `retryable=true` + 动作 `RETRY_LATER`，并且
+    答了但证据不合格）都必须落 `UNKNOWN_RETRYABLE` + `retryable=true` + 动作 `RETRY_LATER`，并且
     `provider_status` 必须在场（不在场就等于声称"看过"而没看过）；② **压根没去问**的时候
     （seam=off）绝不能出现这一格 —— 那仍是结构答案 `UNAVAILABLE` + 缺席的观察，也就是本文件一直
     拒绝 UNKNOWN 的那半条理由。
@@ -698,7 +698,7 @@ def test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_stri
     assert capability_module.CAPABILITY_STATES == (
         "READY",
         "HYDRATABLE",
-        "NOT_ANSWERED",
+        "UNKNOWN_RETRYABLE",
         "UNAVAILABLE",
     ), capability_module.CAPABILITY_STATES
 
@@ -717,7 +717,7 @@ def test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_stri
             arm(stage)
             body = _capability(RAW_COUNTY)
         assert body["destination_state"] == "RUNTIME_FAILURE", f"{label}: {body['destination_state']}"
-        assert body["capability"] == capability_module.NOT_ANSWERED, (
+        assert body["capability"] == capability_module.UNKNOWN_RETRYABLE, (
             f"{label}：期望落新格；实际 {body['capability']} / {body['destination_resolution']}"
         )
         assert body["retryable"] is True, f"{label}：新格必须与 retryable 联动；实际 {body['retryable']}"
