@@ -80,14 +80,91 @@ def asset_refs(html: str) -> list[str]:
     return ordered
 
 
+def asset_verdict(ref: str, expect_ct: str, serve: pathlib.Path) -> dict:
+    """THE single strict judge for one served asset.
+
+    Deliberately the only place this predicate lives: the arbiter caught the previous version
+    assigning `verdict` twice, where the second (lax) assignment silently overrode the strict one
+    and left only `200 and not html`.  One predicate means the gauge that ships is the gauge that
+    was tested against a mutant in --selftest.
+    """
+    g = http_get(ref)
+    on_disk = serve / ref.lstrip("/")
+    g["disk_bytes"] = on_disk.stat().st_size if on_disk.is_file() else None
+    g["disk_sha256"] = sha256(on_disk) if on_disk.is_file() else None
+    g["expect_content_type_substring"] = expect_ct
+    g["verdict"] = "GREEN" if (
+        g["status"] == 200
+        and g["is_html_fallback"] is False                       # E: 200+HTML at a .js URL is RED
+        and isinstance(g["content_type"], str)
+        and expect_ct in g["content_type"].lower()                # MIME must match the extension
+        and g["sha256"] is not None
+        and (g["disk_sha256"] is None or g["sha256"] == g["disk_sha256"])   # body == disk bytes
+        and (g["disk_bytes"] is None or g.get("body_size") == g["disk_bytes"])
+    ) else "RED"
+    return g
+
+
+def selftest(serve: pathlib.Path) -> int:
+    """Prove the asset gauge BOTH ways against the live server, without touching the deploy.
+
+    Arms 1-2 are the true positives (the assets the live index actually references must be GREEN).
+    Arms 3-4 are the killers the arbiter's strict-vs-lax finding demands: an object that answers 200
+    with a *non-HTML* body but the wrong MIME must be RED (the lax twin read that as GREEN), and a
+    missing path must be RED because vite preview answers it with the SPA index — the exact
+    `200 + HTML at a .js URL = STALE_CLIENT_BREAKAGE_RISK` case of rule E.
+    """
+    live = pathlib.Path(os.environ.get("CNX_DEPLOY_SELFTEST_ROOT", str(serve)))
+    served = serve / "index.html"
+    refs = asset_refs(served.read_text(encoding="utf-8")) if served.is_file() else []
+    arms = [{"arm": f"true_positive:{r}", "expect": "GREEN",
+             "got": asset_verdict(r, "css" if r.endswith(".css") else "javascript", live)} for r in refs]
+    arms.append({"arm": "killer:wrong_mime_non_html(/manifest.webmanifest as js)", "expect": "RED",
+                 "got": asset_verdict("/manifest.webmanifest", "javascript", live)})
+    arms.append({"arm": "killer:missing_asset_spa_html_fallback", "expect": "RED",
+                 "got": asset_verdict("/assets/__cnx_no_such_asset__.js", "javascript", live)})
+    ok = True
+    for arm in arms:
+        got = arm["got"]["verdict"]
+        match = got == arm["expect"]
+        ok = ok and match
+        print(f"  [{'OK ' if match else 'BAD'}] {arm['arm']}  expect={arm['expect']} got={got}"
+              f"  status={arm['got']['status']} ct={arm['got']['content_type']} "
+              f"html={arm['got']['is_html_fallback']} body_sha={str(arm['got']['sha256'])[:12]}")
+    print(f"SELFTEST {'GREEN' if ok else 'RED'} ({sum(1 for a in arms if a['got']['verdict'] == a['expect'])}"
+          f"/{len(arms)} arms matched)")
+    out = pathlib.Path(__file__).with_name("receipts")
+    out.mkdir(exist_ok=True)
+    dest = out / f"gauge_selftest_{time.strftime('%m%d_%H%M%S')}.json"
+    dest.write_text(json.dumps({
+        "what": "deploy_bundle.py asset-gauge selftest (true positives + the two killers)",
+        "why": "arbiter 5781096542 found the C verdict assigned twice, the second (lax) one winning",
+        "base": BASE, "serve": str(serve), "overall": "GREEN" if ok else "RED",
+        "arms": [{"arm": a["arm"], "expect": a["expect"], "got": a["got"]["verdict"],
+                  "status": a["got"]["status"], "content_type": a["got"]["content_type"],
+                  "is_html_fallback": a["got"]["is_html_fallback"],
+                  "body_sha256": a["got"]["sha256"], "disk_sha256": a["got"]["disk_sha256"],
+                  "body_size": a["got"].get("body_size"), "disk_bytes": a["got"]["disk_bytes"]}
+                 for a in arms]}, indent=1, ensure_ascii=False), encoding="utf-8", newline="\n")
+    print(f"[receipt] {dest}")
+    return 0 if ok else 9
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--src", required=True)
+    ap.add_argument("--src")
     ap.add_argument("--serve", required=True)
-    ap.add_argument("--live-tree", required=True)
-    ap.add_argument("--sha", required=True)
+    ap.add_argument("--live-tree")
+    ap.add_argument("--sha")
     ap.add_argument("--skip-build-check", action="store_true")
+    ap.add_argument("--selftest", action="store_true",
+                    help="prove the asset gauge both ways against the live server; no deploy is performed")
     a = ap.parse_args()
+    if a.selftest:
+        return selftest(pathlib.Path(a.serve))
+    if not a.src or not a.live_tree or not a.sha:
+        print("REFUSED: --src, --live-tree and --sha are required unless --selftest is given")
+        return 5
     src, serve, tree = pathlib.Path(a.src), pathlib.Path(a.serve), pathlib.Path(a.live_tree)
 
     receipt: dict = {"sha": a.sha, "src": str(src), "serve": str(serve), "t": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
@@ -230,13 +307,8 @@ def main() -> int:
         receipt["served_after_switch_refs"] = got_refs
     c_new = []
     for ref in new_refs:
-        g = http_get(ref)
-        disk = serve / ref.lstrip("/")
-        g["disk_bytes"] = disk.stat().st_size if disk.is_file() else None
-        g["verdict"] = "GREEN" if (g["status"] == 200 and g["is_html_fallback"] is False
-                                   and g["disk_bytes"] == g["body_size" if "body_size" in g else "length"] or True) else "RED"
-        g["verdict"] = "GREEN" if (g["status"] == 200 and g["is_html_fallback"] is False) else "RED"
-        c_new.append(g)
+        expect_ct = "css" if ref.endswith(".css") else "javascript"
+        c_new.append(asset_verdict(ref, expect_ct, serve))
     d_sw = []
     for name in ("sw.js", "v10-sw.js"):
         g = http_get("/" + name)
