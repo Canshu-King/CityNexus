@@ -23,6 +23,39 @@ BRANCH = "commander/control"
 HDRS = {"Authorization": f"Bearer {TOK}", "Accept": "application/vnd.github+json",
         "User-Agent": "citynexus-commander"}
 
+# --- fail-closed upload guard (arbiter 5775258233 §A: the publisher must refuse, not rely on
+# --- the operator remembering).  A refusal prints WHICH rule fired; nothing is sent.
+FORBIDDEN_SUFFIXES = (
+    ".db", ".db-wal", ".db-shm", ".sqlite", ".sqlite3", ".sqlite3-wal", ".sqlite3-shm",
+    ".pem", ".key", ".p12", ".pfx", ".jks", ".keystore",
+)
+FORBIDDEN_BASENAMES = {".env", "credentials", "credentials.json", "id_rsa", "id_ed25519"}
+FORBIDDEN_NAME_FRAGMENTS = ("token", "cookie", "secret", "credential", "password", "_live", "_preview")
+ALLOWED_REPO_PREFIXES = ("evidence/", "live_checks/")
+SQLITE_MAGIC = b"SQLite format 3\x00"
+
+
+def guard(local_path: str, repo_path: str, blob: bytes) -> str | None:
+    """Return a refusal reason, or None when the upload may proceed."""
+    import os.path as _p
+
+    name = _p.basename(local_path).lower()
+    if name in FORBIDDEN_BASENAMES or name.endswith(".env"):
+        return f"FORBIDDEN_BASENAME({name})"
+    if name.endswith(FORBIDDEN_SUFFIXES):
+        return f"FORBIDDEN_SUFFIX({name})"
+    hit = [f for f in FORBIDDEN_NAME_FRAGMENTS if f in name]
+    if hit:
+        return f"FORBIDDEN_NAME_FRAGMENT({hit[0]} in {name})"
+    if blob[:16] == SQLITE_MAGIC:
+        return "FORBIDDEN_CONTENT(sqlite file header)"
+    rp = repo_path.replace("\\", "/")
+    if ".." in rp.split("/"):
+        return f"FORBIDDEN_REPO_PATH(traversal: {repo_path})"
+    if not rp.startswith(ALLOWED_REPO_PREFIXES):
+        return f"FORBIDDEN_REPO_PREFIX(must start with evidence/ or live_checks/: {repo_path})"
+    return None
+
 
 def call(method, path, payload=None):
     req = urllib.request.Request("https://api.github.com" + path, method=method)
@@ -45,6 +78,11 @@ def main() -> int:
     local_path, repo_path = sys.argv[1], sys.argv[2]
     message = sys.argv[3] if len(sys.argv) > 3 else f"commander: publish {repo_path}"
     blob = io.open(local_path, "rb").read()
+    refusal = guard(local_path, repo_path, blob)
+    if refusal:
+        print(f"REFUSED (fail-closed, nothing uploaded): {refusal}")
+        print(f"  local={local_path}  repo_path={repo_path}  bytes={len(blob)}")
+        return 5
     want = hashlib.sha1(b"blob %d\x00" % len(blob) + blob).hexdigest()
 
     st, meta = call("GET", f"/repos/{REPO}/contents/{repo_path}?ref={BRANCH}")
