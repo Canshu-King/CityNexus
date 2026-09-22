@@ -1,0 +1,45 @@
+{
+ "head": "21309b996ecb474d9122f88b81fba2216a006833",
+ "as_is": {
+  "test_demo_producer_lands_every_claimed_fact_with_demo_provenance": "PASSED",
+  "test_demo_producer_reaches_exactly_the_places_the_fixture_claims": "PASSED",
+  "test_demo_evidence_stays_out_of_non_sealed_cities": "PASSED",
+  "test_missing_demo_evidence_is_unknown_and_never_implicit_access": "PASSED",
+  "test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture": "PASSED",
+  "test_hard_stroller_names_the_blocker_and_does_not_misfire": "PASSED",
+  "test_hard_luggage_names_the_blocker_and_does_not_misfire": "PASSED",
+  "test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability": "PASSED"
+ },
+ "arms": [
+  {
+   "id": "M7a 撤掉 STROLLER 的 severity 转发（只留证据那一半）",
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "restored_sha256": true,
+   "before_sha256": "f0dbfa480424f0d4fdca736e03671de732313e98ddfed0b7fb9e89f7d24b4698",
+   "mutated_sha256": "98a5eff4543e9de9aef7847ba8d4759c1f82466e5b6ee127eb6a4570dc21514e",
+   "suite": "=================== 2 failed, 6 passed, 2 warnings in 1.37s ===================",
+   "red_nodes": [
+    "test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability",
+    "test_hard_stroller_names_the_blocker_and_does_not_misfire"
+   ]
+  },
+  {
+   "id": "M7b 撤掉 LARGE_LUGGAGE 的 severity 转发",
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "restored_sha256": true,
+   "before_sha256": "f0dbfa480424f0d4fdca736e03671de732313e98ddfed0b7fb9e89f7d24b4698",
+   "mutated_sha256": "c755e854a41188ad69d290fbee844ee28cf24f8afb8c64b9550f945184a0ea83",
+   "suite": "=================== 1 failed, 7 passed, 2 warnings in 1.39s ===================",
+   "red_nodes": [
+    "test_hard_luggage_names_the_blocker_and_does_not_misfire"
+   ]
+  }
+ ],
+ "nodes_that_need_both_halves": [
+  "test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability",
+  "test_hard_luggage_names_the_blocker_and_does_not_misfire",
+  "test_hard_stroller_names_the_blocker_and_does_not_misfire"
+ ]
+}
