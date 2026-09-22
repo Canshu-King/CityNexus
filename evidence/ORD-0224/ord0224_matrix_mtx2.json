@@ -1,0 +1,136 @@
+{
+  "base": "http://127.0.0.1:8792",
+  "run_label": "mtx2",
+  "pid": 51472,
+  "started_at": "2026-09-23T03:38:30.450+08:00",
+  "cells": [
+    {
+      "label": "C1 head-of-page, long vertical",
+      "start": [
+        195,
+        179
+      ],
+      "disp": [
+        0,
+        -320
+      ],
+      "steps": 10,
+      "hitElement": "p.v8-lede",
+      "scrollTop": [
+        0,
+        305
+      ],
+      "scrolled": true
+    },
+    {
+      "label": "C2 mid-page, long vertical (diag1 control)",
+      "start": [
+        195,
+        500
+      ],
+      "disp": [
+        0,
+        -320
+      ],
+      "steps": 10,
+      "hitElement": "article.v8-trip-hero",
+      "scrollTop": [
+        0,
+        305
+      ],
+      "scrolled": true
+    },
+    {
+      "label": "C3 head-of-page, small diagonal (mirror arm as shipped)",
+      "start": [
+        195,
+        179
+      ],
+      "disp": [
+        -90,
+        -60
+      ],
+      "steps": 10,
+      "hitElement": "p.v8-lede",
+      "scrollTop": [
+        0,
+        0
+      ],
+      "scrolled": false
+    },
+    {
+      "label": "C4 mid-page, small diagonal",
+      "start": [
+        195,
+        500
+      ],
+      "disp": [
+        -90,
+        -60
+      ],
+      "steps": 10,
+      "hitElement": "article.v8-trip-hero",
+      "scrollTop": [
+        0,
+        0
+      ],
+      "scrolled": false
+    },
+    {
+      "label": "C5 head-of-page, same diagonal spread over more moves",
+      "start": [
+        195,
+        179
+      ],
+      "disp": [
+        -90,
+        -60
+      ],
+      "steps": 24,
+      "hitElement": "p.v8-lede",
+      "scrollTop": [
+        0,
+        0
+      ],
+      "scrolled": false
+    },
+    {
+      "label": "D1 mid-page, vertical-dominant same spread (-60,-90)",
+      "start": [
+        195,
+        500
+      ],
+      "disp": [
+        -60,
+        -90
+      ],
+      "steps": 10,
+      "hitElement": "article.v8-trip-hero",
+      "scrollTop": [
+        0,
+        78
+      ],
+      "scrolled": true
+    },
+    {
+      "label": "D2 mid-page, short pure vertical (0,-60)",
+      "start": [
+        195,
+        500
+      ],
+      "disp": [
+        0,
+        -60
+      ],
+      "steps": 10,
+      "hitElement": "article.v8-trip-hero",
+      "scrollTop": [
+        0,
+        45
+      ],
+      "scrolled": true
+    }
+  ],
+  "verdict": "HORIZONTAL_COMPONENT_BLOCKS: 纯垂直 60px 能滚(D2=true) 而 (-90,-60) 不能(C3/C4=false) → 我上一轮说\"位移幅度不足\"是错的，真因是水平分量主导让浏览器不把它当纵向滚动候选",
+  "ended_at": "2026-09-23T03:38:49.474+08:00"
+}
