@@ -101,6 +101,7 @@ def _submit(query: str, *, start_worker: bool = False) -> tuple[dict, bool]:
 def test_w1_a_repeat_of_an_open_question_asks_the_provider_once_not_twice(monkeypatch) -> None:
     calls = _counting_resolve(monkeypatch)
     first, first_reused = _submit(UNRESOLVED)
+    after_first_submit = len(calls)
     second, second_reused = _submit(UNRESOLVED)
 
     assert first_reused is False and second_reused is True, (
@@ -108,6 +109,11 @@ def test_w1_a_repeat_of_an_open_question_asks_the_provider_once_not_twice(monkey
     )
     assert first["id"] == second["id"], (
         f"期望：两次拿到同一个 operation_id（一个开放问题=一个作业）；实际 {first['id']} / {second['id']}"
+    )
+    # ORD-0224 步 1 的口径原话：第二次 submit 的 **additional provider resolution calls = 0**。
+    assert len(calls) - after_first_submit == 0, (
+        f"期望：已有 OPEN 同键作业时，重复 submit 带来的额外解析次数 = 0；"
+        f"实际额外 {len(calls) - after_first_submit} 次（全部={calls}）"
     )
     assert calls == [UNRESOLVED], (
         f"期望：提供方/目录只被问了一次——改前是两次，因为键要等工作做完才算得出来；"

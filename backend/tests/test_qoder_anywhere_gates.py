@@ -207,54 +207,314 @@ def test_g2_an_existing_journey_becomes_plannable_without_being_recreated():
 
 
 # --------------------------------------------------------------------------------------
-# G3 · hydration idempotency + concurrency
+# G3 · hydration idempotency + concurrency  (ORD-0224: re-scoped to ONE open generation)
 # --------------------------------------------------------------------------------------
-def test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation():
-    """§7: reuse the same operation_id; no provider storm, no duplicate rows, no lock race."""
-    first = client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY})
-    _require_endpoint("POST /api/v1/catalog-hydrations", first)
+# The arbitration of 2026-09-23 splits what used to be one sentence into two doors, two
+# mutations and two sign-offs:
+#
+#   * **operation identity** -> `G3_CONCURRENT_OPEN_GENERATION` (the first door below): callers
+#     that are demonstrably inside one OPEN/admission window must be handed one durable job.
+#   * **provider-work dedupe** -> `tests/test_qoder_ord213_ask_store_before_world.py::test_w1_…`:
+#     how many times one question gets resolved, which is a different claim.
+#
+# Keeping them apart matters because they have different killers: moving the reuse lookup behind
+# `resolve_destination` costs provider work while five callers still converge, so that mutation
+# is evidence for the dedupe door only and must never be offered as g3's reverse mutation
+# (commander ORD-0224 step 6).
+#
+# The retired node `test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation`
+# opened with a **single** POST and then fired five more.  That first request starts a job which
+# can reach a terminal status before its successors arrive, and under the signed tail-A rule a
+# terminal job must be answered by a new one - so the node was counting two generations as one,
+# which is the instability the arbitration attributed to the instrument rather than the product.
+# Its later-request half is not lost: it is the third door below, on its own name.
+# No freshness window is introduced anywhere in this file.
 
-    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
-        responses = list(
-            pool.map(lambda _: client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY}), range(5))
+import threading
+
+from app.db.models import CatalogHydrationOperation
+from app.db.session import SessionLocal
+from sqlalchemy import delete, select, text
+
+
+def _pending_fingerprint(query: str) -> str:
+    from app.anywhere_capability import pending_request_fingerprint
+
+    return pending_request_fingerprint(query)
+
+
+def _clear_operations_for(fingerprint: str) -> int:
+    """Hygiene for the one table these three doors count - by fingerprint, never globally.
+
+    Measured, not assumed: `/api/v1/demo/reset` runs `services.reset_all`, which deletes 52 tables,
+    and `catalog_hydration_operations` is not one of them (0 hits in `app/services.py`), so rows
+    left by earlier doors in this file are still in the suite DB.  "Exactly one operation for this
+    key" is only meaningful from a known-zero start for that key.
+    """
+
+    with SessionLocal() as session:
+        removed = session.execute(
+            delete(CatalogHydrationOperation).where(
+                CatalogHydrationOperation.fingerprint == fingerprint
+            )
+        ).rowcount
+        session.commit()
+    return int(removed or 0)
+
+
+def _rows_for(fingerprint: str) -> list[tuple[str, str, str | None, str | None, str | None]]:
+    with SessionLocal() as session:
+        rows = list(
+            session.scalars(
+                select(CatalogHydrationOperation).where(
+                    CatalogHydrationOperation.fingerprint == fingerprint
+                )
+            ).all()
         )
-    codes = sorted(response.status_code for response in responses)
-    assert all(code in ACCEPTED_CODES for code in codes), (
-        f"期望：同指纹并发一律被受理（{sorted(ACCEPTED_CODES)}；arbiter v1 的响应码就是 "
-        f"200/202/422/503，**没有 409**——撞指纹要复用而不是把人推开）；实际状态码 {codes}"
-    )
-    accepted = first.json()
-    missing_pieces = [
-        field
-        for field in ("canonical_destination_id", "catalog_schema_version",
-                      "readiness_policy_version", "provider_policy_version")
-        if field not in accepted
+    return [
+        (str(r.id), str(r.status), r.queued_at, r.started_at, r.finished_at) for r in rows
     ]
-    assert not missing_pieces, (
-        "期望：受理回答里能看出指纹四段 "
-        "canonical_destination_id + catalog_schema_version + readiness_policy_version + "
-        f"provider_policy_version（v0.2 的 durable fingerprint，车道 C 要按它建唯一索引）；"
-        f"实际缺 {missing_pieces}，现有键 {sorted(accepted)[:14]}"
+
+
+def test_g3_concurrent_open_generation_five_callers_share_one_operation(monkeypatch) -> None:
+    """G3_CONCURRENT_OPEN_GENERATION: five callers in one OPEN window, one durable job.
+
+    Concurrency is *constructed and witnessed*, never hoped for: a `threading.Barrier(5)` keeps
+    every caller from leaving until all five are ready, and the product's own worker really is
+    dispatched - it parks on a latch inside `_run_operation`, before it can move the row out of
+    `QUEUED`.  `worker_started` is the state witness that the window held a live job; if it were
+    never set, this door would have silently degenerated into "there was no worker at all", and
+    that is asserted against.  No sleep is used as a synchroniser anywhere here.
+    """
+
+    import app.catalog_hydration_operations as operations
+
+    fingerprint = _pending_fingerprint(UNSEEN_COUNTY)
+    _clear_operations_for(fingerprint)
+
+    worker_started = threading.Event()
+    hold_worker = threading.Event()
+    original_run = operations._run_operation
+
+    def parked_worker(operation_id: str):
+        worker_started.set()
+        hold_worker.wait(10)
+        return original_run(operation_id)
+
+    monkeypatch.setattr(operations, "_run_operation", parked_worker)
+
+    gate = threading.Barrier(5)
+    results: list[dict] = []
+    collect = threading.Lock()
+
+    def caller(index: int) -> None:
+        gate.wait()
+        response = client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY})
+        try:
+            body = response.json()
+        except Exception:  # noqa: BLE001
+            body = {}
+        with collect:
+            results.append(
+                {
+                    "index": index,
+                    "code": response.status_code,
+                    "operation_id": body.get("operation_id"),
+                    "fingerprint": body.get("fingerprint"),
+                    "reused": body.get("reused"),
+                    "body": body,
+                }
+            )
+
+    threads = [threading.Thread(target=caller, args=(i,)) for i in range(5)]
+    try:
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join(timeout=30)
+
+        assert len(results) == 5, (
+            f"期望：五个 caller 都返回（barrier 放行后无人卡死）；实际只有 {len(results)} 个返回，"
+            f"活着没回来的线程={[t.name for t in threads if t.is_alive()]}"
+        )
+        assert worker_started.is_set(), (
+            "前提被破坏：这五发之间根本没有活着的 worker（`_run_operation` 从未进入）⇒ 本门退化成"
+            "『没有 worker 所以没收敛』的空断言；实际 worker 进入过="
+            f"{worker_started.is_set()}"
+        )
+        codes = sorted(item["code"] for item in results)
+        assert all(code in ACCEPTED_CODES for code in codes), (
+            f"期望：同键并发一律被受理（{sorted(ACCEPTED_CODES)}，**没有 409**——撞指纹要复用而不是"
+            f"把人推开）；实际状态码 {codes}"
+        )
+        ids = {str(item["operation_id"]) for item in results}
+        assert len(ids) == 1, (
+            f"期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 {len(ids)} 个："
+            f"逐请求={[(item['index'], item['operation_id'], item['reused']) for item in sorted(results, key=lambda r: r['index'])]}"
+        )
+        winners = [item for item in results if item["reused"] is False]
+        joiners = [item for item in results if item["reused"] is True]
+        assert len(winners) == 1 and len(joiners) == 4, (
+            f"期望：恰好 1 个 winner + 4 个 reuse（幂等必须说实话：『我没开始，是接上别人的』）；"
+            f"实际 reused=False {len(winners)} 个 / reused=True {len(joiners)} 个，"
+            f"逐请求 reused={[item['reused'] for item in sorted(results, key=lambda r: r['index'])]}"
+        )
+        rows = _rows_for(fingerprint)
+        assert len(rows) == 1, (
+            f"期望：本代次在库里只有 1 枚持久作业（durable 层，不是内存里的一次握手）；"
+            f"实际 {len(rows)} 行 {[(r[0][:8], r[1]) for r in rows]}"
+        )
+        assert rows[0][1] == "QUEUED", (
+            f"期望：判词取回时那枚作业仍然是 OPEN（窗口整段都开着，所以五发谈不上跨代次）；"
+            f"实际状态 {rows[0][1]}（queued_at={rows[0][2]} started_at={rows[0][3]} finished_at={rows[0][4]}）"
+        )
+        fingerprints = {item["fingerprint"] for item in results}
+        assert fingerprints == {fingerprint} and None not in fingerprints, (
+            f"期望：五枚回执说出的键就是登记着的那一把（同一代次可核对）；实际 "
+            f"{sorted(str(f)[:12] for f in fingerprints)} vs 库 {fingerprint[:12]}"
+        )
+        missing_pieces = [
+            field
+            for field in ("canonical_destination_id", "catalog_schema_version",
+                          "readiness_policy_version", "provider_policy_version")
+            if field not in results[0]["body"]
+        ]
+        assert not missing_pieces, (
+            "期望：受理回答里能看出指纹四段 canonical_destination_id + catalog_schema_version + "
+            f"readiness_policy_version + provider_policy_version（v0.2 的 durable fingerprint）；"
+            f"实际缺 {missing_pieces}，现有键 {sorted(results[0]['body'])[:14]}"
+        )
+    finally:
+        hold_worker.set()
+
+
+def test_g3b_open_window_control_without_any_worker_dispatch(monkeypatch) -> None:
+    """The control reading: same five-way burst, no worker at all, zero dispatches - and it still converges.
+
+    Written separately on purpose. If only the latched door existed, nobody could tell whether
+    `1 winner + 4 reuse` came from the admission logic or from the latch itself.
+    """
+
+    import app.catalog_hydration_operations as operations
+
+    fingerprint = _pending_fingerprint(UNSEEN_COUNTY)
+    _clear_operations_for(fingerprint)
+
+    dispatches: list[str] = []
+    original_dispatch = operations.dispatch
+
+    def counting_dispatch(operation_id: str) -> None:
+        dispatches.append(str(operation_id))
+        return original_dispatch(operation_id)
+
+    monkeypatch.setattr(operations, "dispatch", counting_dispatch)
+
+    gate = threading.Barrier(5)
+    seen: list[tuple[int, str, bool]] = []
+    collect = threading.Lock()
+
+    def caller(index: int) -> None:
+        gate.wait()
+        with SessionLocal() as session:
+            row, reused = operations.submit_operation(
+                session, UNSEEN_COUNTY, start_worker=False
+            )
+            outcome = (index, str(row.id), bool(reused))
+        with collect:
+            seen.append(outcome)
+
+    threads = [threading.Thread(target=caller, args=(i,)) for i in range(5)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=30)
+
+    assert len(seen) == 5, f"期望：五发都返回；实际 {len(seen)}"
+    assert {o[1] for o in seen} == {seen[0][1]}, (
+        f"期望：无 worker 的开放窗口里五发同一枚作业；实际逐请求 {sorted(seen)}"
     )
-    fingerprints = {response.json().get("fingerprint") for response in responses}
-    assert fingerprints == {first.json().get("fingerprint")} and None not in fingerprints, (
-        f"期望：五个请求回同一个 fingerprint（规范目的地 + catalog_schema_version + provider "
-        f"策略/版本），这样『为什么拿到别人的 operation』才答得出；实际：{sorted(str(f) for f in fingerprints)}"
+    assert sum(1 for o in seen if not o[2]) == 1, (
+        f"期望：恰好一个 winner；实际 reused=False 有 {sum(1 for o in seen if not o[2])} 个 {sorted(seen)}"
     )
-    ids = {response.json().get("operation_id") for response in responses if response.status_code != 409}
-    assert len(ids) == 1, (
-        f"期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；"
-        f"实际拿到 {len(ids)} 个不同的：{sorted(str(x) for x in ids)}。"
-        "两个 operation 就是两次 provider 风暴加两份重复目录"
+    assert dispatches == [], (
+        f"期望：`start_worker=False` 这一形制下 0 次 worker 派发（否则『窗口开着』就不成立了）；"
+        f"实际 {dispatches}"
     )
-    reused = sum(1 for response in responses if response.json().get("reused") is True)
-    assert reused >= 1, (
-        f"期望：至少一个调用者被告知 reused=true（「我没开始，是接上别人的」）；"
-        f"实际：reused=true 的数量是 {reused}。幂等如果不说实话，就等于没做"
+    assert len(_rows_for(fingerprint)) == 1, (
+        f"期望：库里 1 行；实际 {_rows_for(fingerprint)}"
     )
 
-    # 幂等必须在**持久层**成立：两个 uvicorn worker 不共享一把进程内锁。
+
+def test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse() -> None:
+    """TAIL_A_NEW_GENERATION: once A is terminal, the next same-key request opens B.
+
+    This is the half the retired g3 node was silently mixing into the five-way burst, and it is a
+    *separate* rule with the opposite direction of travel: inside an open window you must reuse,
+    after the window closes you must not.  Note what it also proves about freshness: the follow-up
+    is issued in the same instant A closes - measured, printed below - and still gets a new job.
+    Any "reuse the terminal result while it is fresh" window would turn this door red, which is
+    why the arbitration's rejected option is not smuggled back in as a green here.
+    """
+
+    import time
+
+    import app.catalog_hydration_operations as operations
+
+    fingerprint = _pending_fingerprint(UNSEEN_COUNTY)
+    _clear_operations_for(fingerprint)
+
+    with SessionLocal() as session:
+        first, first_reused = operations.submit_operation(
+            session, UNSEEN_COUNTY, start_worker=False
+        )
+        a_id, a_status = str(first.id), str(first.status)
+    assert first_reused is False and a_status == "QUEUED", (
+        f"前提：A 是这一代的开始者；实际 reused={first_reused} status={a_status}"
+    )
+
+    operations._run_operation(a_id)  # the worker body, synchronously: no sleep, no gamble
+    with SessionLocal() as session:
+        closed = session.get(CatalogHydrationOperation, a_id)
+        assert str(closed.status) in operations.TERMINAL_STATUSES, (
+            f"前提：A 确实走到终态；实际 {closed.status}（outcome={closed.outcome}，"
+            f"finished_at={closed.finished_at}）"
+        )
+        a_terminal_status, a_finished_at = str(closed.status), closed.finished_at
+
+    then = time.monotonic()
+    with SessionLocal() as session:
+        second, second_reused = operations.submit_operation(
+            session, UNSEEN_COUNTY, start_worker=False
+        )
+        b_id, b_status = str(second.id), str(second.status)
+    waited_ms = round((time.monotonic() - then) * 1000, 3)
+
+    assert second_reused is False and b_id != a_id, (
+        f"期望：A 已终态 ⇒ 后来的同键请求**不得**偷偷复用 A，必须另开一代；实际 reused={second_reused}，"
+        f"A={a_id[:8]}/{a_terminal_status} 拿到 {b_id[:8]}/{b_status}"
+    )
+    rows = _rows_for(fingerprint)
+    assert len(rows) == 2, f"期望：A（终态）+ B（开放）两行；实际 {rows}"
+    by_id = {row[0]: row for row in rows}
+    assert by_id[a_id][1] == a_terminal_status, (
+        f"期望：开了 B 不会把 A 从终态拽回来；实际 A 现在 {by_id[a_id][1]}"
+    )
+    assert by_id[b_id][1] == "QUEUED", f"期望：B 是新的开放代次；实际 {by_id[b_id][1]}"
+    print(
+        f"\n[tail-A 读数] A={a_id[:8]} {a_terminal_status} finished_at={a_finished_at} → "
+        f"B={b_id[:8]} {by_id[b_id][1]}，B 的提交在 A 终态后 {waited_ms} ms 内发出（没有 freshness window）"
+    )
+
+
+def test_g3d_durable_layer_still_holds_the_partial_unique_index() -> None:
+    """The persistence witness the retired node carried, kept as its own door.
+
+    Convergence for two uvicorn workers cannot rest on a process-local lock, so the thing that
+    must exist is a unique index over the fingerprint restricted to the open statuses.
+    """
+
     from sqlalchemy import inspect
+
     from app.db.session import engine
 
     inspector = inspect(engine)
@@ -270,10 +530,20 @@ def test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation()
             if index.get("unique") and any("fingerprint" in c or "canonical" in c for c in cols):
                 unique_on_fingerprint.append((table, index.get("name"), cols))
     assert unique_on_fingerprint, (
-        f"期望：水合表上有一个覆盖指纹/规范目的地的**唯一索引**（§7：durable 层强制）；"
-        f"实际：表 {tables} 的索引里没有。缺它，并发就会造出两条活动操作与两份 provider 风暴"
+        f"期望：水合表上有一个覆盖指纹/规范目的地的**唯一索引**（§7：durable 层强制）；实际：表 {tables} "
+        f"的索引里没有。缺它，并发就会造出两条活动操作与两份 provider 风暴"
     )
-
+    with engine.connect() as connection:
+        sql = connection.execute(
+            text(
+                "SELECT sql FROM sqlite_master WHERE type='index' AND name=:name"
+            ),
+            {"name": unique_on_fingerprint[0][1]},
+        ).scalar()
+    assert sql and "WHERE" in sql.upper(), (
+        f"期望：那把唯一索引是**部分**索引（只覆盖开放状态），否则终态历史会永久挡住同一个目的地再开"
+        f"一代——tail-A 就无从成立；实际索引定义：{sql!r}"
+    )
 
 # --------------------------------------------------------------------------------------
 # G4 · category coverage
