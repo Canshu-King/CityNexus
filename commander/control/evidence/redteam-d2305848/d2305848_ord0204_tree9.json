@@ -1,0 +1,205 @@
+{
+ "tree": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\tree9",
+ "tip": "13377d3 (git archive export, tree9)",
+ "suite": [
+  "tests/test_qoder_mobility_hard_gap.py",
+  "tests/test_qoder_provider_identity_leg.py",
+  "tests/test_qoder_mobility_replan_endpoint.py"
+ ],
+ "cases": [
+  {
+   "anchor_hits": {
+    "        hard_gaps.append(GAP_MOBILITY_EV": 1
+   },
+   "observed": {
+    "rc": 1,
+    "counts": {
+     "failed": 3,
+     "passed": 26
+    },
+    "collected": 29,
+    "nodes": [
+     "tests/test_qoder_mobility_hard_gap.py::test_a_frozen_only_mobility_axis_names_the_gap_and_stays_hydratable",
+     "tests/test_qoder_mobility_hard_gap.py::test_the_gap_survives_into_the_stored_job_not_only_the_response",
+     "tests/test_qoder_mobility_hard_gap.py::test_a_live_captured_route_removes_the_gap_it_named"
+    ]
+   },
+   "tail": "_PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ===========================\nFAILED tests/test_qoder_mobility_hard_gap.py::test_a_frozen_only_mobility_axis_names_the_gap_and_stays_hydratable\nFAILED tests/test_qoder_mobility_hard_gap.py::test_the_gap_survives_into_the_stored_job_not_only_the_response\nFAILED tests/test_qoder_mobility_hard_gap.py::test_a_live_captured_route_removes_the_gap_it_named\n3 failed, 26 passed, 2 warnings in 2.38s\n",
+   "verdict": "KILLED",
+   "other_failed_nodes": [
+    "tests/test_qoder_mobility_hard_gap.py::test_the_gap_survives_into_the_stored_job_not_only_the_response",
+    "tests/test_qoder_mobility_hard_gap.py::test_a_live_captured_route_removes_the_gap_it_named"
+   ],
+   "counts_close": true,
+   "restored_byte_exact_cap": true,
+   "restored_byte_exact_main": true,
+   "sha256_prefix": {
+    "cap": "f7b59d0835341826",
+    "main": "05cad70e2c8e6f8d"
+   },
+   "key": "a",
+   "what": "hard_gaps.append(GAP_MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE) 不再发射（anywhere_capability.py）",
+   "expected_killer": "test_a_frozen_only_mobility_axis_names_the_gap_and_stays_hydratable"
+  },
+  {
+   "anchor_hits": {
+    "        \"retryable\": bool(resolution.ret": 1
+   },
+   "observed": {
+    "rc": 0,
+    "counts": {
+     "passed": 29
+    },
+    "collected": 29,
+    "nodes": []
+   },
+   "tail": "`httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n..\\..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n29 passed, 2 warnings in 2.32s\n",
+   "verdict": "SURVIVED",
+   "other_failed_nodes": [],
+   "counts_close": true,
+   "restored_byte_exact_cap": true,
+   "restored_byte_exact_main": true,
+   "sha256_prefix": {
+    "cap": "f7b59d0835341826",
+    "main": "05cad70e2c8e6f8d"
+   },
+   "key": "b",
+   "what": "拆掉 or verdict == UNKNOWN_RETRYABLE 联动（改名后新字串）",
+   "expected_killer": "test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_string",
+   "note": "契约 M17 登记为预期幸存者；存活⇒与 M17 一致，不是新洞"
+  },
+  {
+   "anchor_hits": {
+    "        http_status = None\n        sourc": 1
+   },
+   "observed": {
+    "rc": 1,
+    "counts": {
+     "failed": 1,
+     "passed": 28
+    },
+    "collected": 29,
+    "nodes": [
+     "tests/test_qoder_provider_identity_leg.py::test_g16_the_four_attribution_fields_arrive_together_or_not_at_all"
+    ]
+   },
+   "tail": "ient.py:53\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ===========================\nFAILED tests/test_qoder_provider_identity_leg.py::test_g16_the_four_attribution_fields_arrive_together_or_not_at_all\n1 failed, 28 passed, 2 warnings in 2.45s\n",
+   "verdict": "KILLED",
+   "other_failed_nodes": [],
+   "counts_close": true,
+   "restored_byte_exact_cap": true,
+   "restored_byte_exact_main": true,
+   "sha256_prefix": {
+    "cap": "f7b59d0835341826",
+    "main": "05cad70e2c8e6f8d"
+   },
+   "key": "c",
+   "what": "transport 分支 http_status None -> 0",
+   "expected_killer": "test_g16_the_four_attribution_fields_arrive_together_or_not_at_all"
+  },
+  {
+   "anchor_hits": {
+    "    reason_code = \"MOBILITY_EVIDENCE_NOT": 1
+   },
+   "observed": {
+    "rc": 1,
+    "counts": {
+     "failed": 1,
+     "passed": 28
+    },
+    "collected": 29,
+    "nodes": [
+     "tests/test_qoder_mobility_replan_endpoint.py::test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so"
+    ]
+   },
+   "tail": ".py:53\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n=========================== short test summary info ===========================\nFAILED tests/test_qoder_mobility_replan_endpoint.py::test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so\n1 failed, 28 passed, 2 warnings in 2.41s\n",
+   "verdict": "KILLED",
+   "other_failed_nodes": [],
+   "counts_close": true,
+   "restored_byte_exact_cap": true,
+   "restored_byte_exact_main": true,
+   "sha256_prefix": {
+    "cap": "f7b59d0835341826",
+    "main": "05cad70e2c8e6f8d"
+   },
+   "key": "d",
+   "what": "replan 具名 reason_code 退回泛称",
+   "expected_killer": "test_ord199_a_leg_whose_only_number_is_the_fixture_constant_says_so"
+  },
+  {
+   "anchor_hits": {
+    "            method=\"provider_error\",\n   ": 1
+   },
+   "observed": {
+    "rc": 0,
+    "counts": {
+     "passed": 29
+    },
+    "collected": 29,
+    "nodes": []
+   },
+   "tail": "`httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.\n    from starlette.testclient import TestClient as TestClient  # noqa\n\n..\\..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53\n  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.\n    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n29 passed, 2 warnings in 2.16s\n",
+   "verdict": "GREEN (期望绿臂)",
+   "counts_close": true,
+   "restored_byte_exact_cap": true,
+   "restored_byte_exact_main": true,
+   "sha256_prefix": {
+    "cap": "f7b59d0835341826",
+    "main": "05cad70e2c8e6f8d"
+   },
+   "key": "b-arm2-upstream-only",
+   "what": "只摘一条上游（传输失败站点）retryable=True→False；1457/1473 联动应救回 ⇒ 期望绿"
+  },
+  {
+   "anchor_hits": {
+    "            method=\"provider_error\",\n   ": 1,
+    "        \"retryable\": bool(resolution.ret": 1
+   },
+   "observed": {
+    "rc": 1,
+    "counts": {
+     "failed": 4,
+     "passed": 25
+    },
+    "collected": 29,
+    "nodes": [
+     "tests/test_qoder_provider_identity_leg.py::test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural",
+     "tests/test_qoder_provider_identity_leg.py::test_g12_the_provider_cause_is_not_flattened_into_the_class_name",
+     "tests/test_qoder_provider_identity_leg.py::test_g9_provider_leg_never_writes_a_digest_or_a_placeholder",
+     "tests/test_qoder_provider_identity_leg.py::test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_string"
+    ]
+   },
+   "tail": ".html\n=========================== short test summary info ===========================\nFAILED tests/test_qoder_provider_identity_leg.py::test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural\nFAILED tests/test_qoder_provider_identity_leg.py::test_g12_the_provider_cause_is_not_flattened_into_the_class_name\nFAILED tests/test_qoder_provider_identity_leg.py::test_g9_provider_leg_never_writes_a_digest_or_a_placeholder\nFAILED tests/test_qoder_provider_identity_leg.py::test_g17_the_new_cell_keeps_the_pair_that_stops_it_being_a_vague_fourth_string\n4 failed, 25 passed, 2 warnings in 2.44s\n",
+   "verdict": "KILLED",
+   "other_failed_nodes": [
+    "tests/test_qoder_provider_identity_leg.py::test_g4_a_timeout_stays_a_named_runtime_failure_and_never_structural",
+    "tests/test_qoder_provider_identity_leg.py::test_g12_the_provider_cause_is_not_flattened_into_the_class_name",
+    "tests/test_qoder_provider_identity_leg.py::test_g9_provider_leg_never_writes_a_digest_or_a_placeholder"
+   ],
+   "counts_close": true,
+   "restored_byte_exact_cap": true,
+   "restored_byte_exact_main": true,
+   "sha256_prefix": {
+    "cap": "f7b59d0835341826",
+    "main": "05cad70e2c8e6f8d"
+   },
+   "key": "b-arm3-both",
+   "what": "两处同时摘 ⇒ g17 应红（证明该不变量由这一对共同守着）"
+  }
+ ],
+ "anchor_lines": {
+  "a": 1464,
+  "b": 1473,
+  "c": 629,
+  "d": 7344,
+  "b_upstream_block": 873
+ },
+ "baseline": {
+  "rc": 0,
+  "counts": {
+   "passed": 29
+  },
+  "collected": 29,
+  "nodes": []
+ }
+}
