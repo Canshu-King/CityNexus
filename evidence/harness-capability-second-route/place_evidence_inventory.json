@@ -1,0 +1,80 @@
+{
+ "seed_summary": {
+  "traveler_id": "11111111-1111-4111-8111-111111111111",
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "city_code": "CNX-DEMO"
+ },
+ "places": 16,
+ "top_level_metadata_keys": {
+  "duration_min": 16,
+  "cost_minor": 16
+ },
+ "accessibility_evidence_keys": {},
+ "osm_tag_keys": {},
+ "places_with_any_accessibility_evidence": 0,
+ "places_with_hours": 16,
+ "need_to_evidence_field_availability": {
+  "STEP_FREE_REQUIRED": {
+   "looked_for": [
+    "step_free",
+    "wheelchair",
+    "ramp",
+    "elevator",
+    "entrance",
+    "toilets"
+   ],
+   "places_carrying_any": 0
+  },
+  "STROLLER": {
+   "looked_for": [
+    "stroller_accessible"
+   ],
+   "places_carrying_any": 0
+  },
+  "LARGE_LUGGAGE": {
+   "looked_for": [
+    "luggage_accessible"
+   ],
+   "places_carrying_any": 0
+  },
+  "SLOW_PACE": {
+   "looked_for": [
+    "pace",
+    "walking_min",
+    "distance",
+    "rest",
+    "seat",
+    "queue"
+   ],
+   "places_carrying_any": 0
+  },
+  "QUIET_ENVIRONMENT": {
+   "looked_for": [
+    "quiet",
+    "noise",
+    "sound",
+    "acoustic"
+   ],
+   "places_carrying_any": 0
+  },
+  "INDOOR_PREFERRED": {
+   "looked_for": [
+    "indoor",
+    "covered",
+    "shelter",
+    "outdoor"
+   ],
+   "places_carrying_any": 0
+  },
+  "SENSORY_LOW_STIMULATION": {
+   "looked_for": [
+    "sensory",
+    "light",
+    "flicker",
+    "crowd",
+    "stimulation"
+   ],
+   "places_carrying_any": 0
+  }
+ }
+}
