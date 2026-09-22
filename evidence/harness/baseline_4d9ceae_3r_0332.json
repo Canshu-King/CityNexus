@@ -1,0 +1,209 @@
+{
+ "generated_at": "2026-09-23T03:32:25+08:00",
+ "head": "4d9ceae",
+ "backend": "D:\\moodle\\_qoder_harness_revival_20260921\\lab\\snap_4d9ceae\\backend",
+ "interpreter": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+ "command": "python -m pytest tests --tb=line -p no:cacheprovider",
+ "rounds": [
+  {
+   "round": 1,
+   "exit_code": 1,
+   "counts": {
+    "passed": 1166,
+    "failed": 11,
+    "skipped": 15,
+    "error": 0
+   },
+   "red_count": 11,
+   "failed_nodeids": [
+    "test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+    "test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools",
+    "test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+    "test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+    "test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+    "test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation",
+    "test_g5_an_ai_run_that_changed_must_say_which_it_was",
+    "test_g8a_default_suite_contains_no_live_provider_calls",
+    "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+    "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+    "test_release_metadata_and_map_entrypoint_are_converged"
+   ],
+   "collected_line": "collected 1193 items",
+   "resolved_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_1b704wsj\\suite.db",
+   "path_source": "app_printed_receipt_line",
+   "conftest_own_reading_existed_before": "False",
+   "declared_by": "conftest",
+   "other_python_processes_alive_at_round_start": [
+    "55944|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8693",
+    "55960|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8693",
+    "20364|C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe preview_auth_proxy.py",
+    "49424|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe lane_backend.py",
+    "43848|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" lane_backend.py",
+    "49248|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8424",
+    "27144|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8424",
+    "46244|C:\\Users\\������\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8791 --log-level info",
+    "55988|C:\\Users\\������\\AppData\\Local\\Programs\\Python\\Python313\\python.exe D:\\moodle\\_qoder_hjp1_o207_20260922\\serve_gest.py 8792",
+    "14912|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe tools/harness_baseline_rounds.py --head 4d9ceae --rounds 3",
+    "50108|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" tools/harness_baseline_rounds.py --head 4d9ceae --rou"
+   ],
+   "path_did_not_exist_before_this_run": true,
+   "seconds": 111.8,
+   "summary_tail": [
+    "FAILED tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint",
+    "= 11 failed, 1166 passed, 15 skipped, 1 xfailed, 2 warnings in 109.04s (0:01:49)"
+   ]
+  },
+  {
+   "round": 2,
+   "exit_code": 1,
+   "counts": {
+    "passed": 1165,
+    "failed": 12,
+    "skipped": 15,
+    "error": 0
+   },
+   "red_count": 12,
+   "failed_nodeids": [
+    "test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+    "test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools",
+    "test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+    "test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+    "test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+    "test_g5_an_ai_run_that_changed_must_say_which_it_was",
+    "test_g8a_default_suite_contains_no_live_provider_calls",
+    "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+    "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+    "test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage",
+    "test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match",
+    "test_release_metadata_and_map_entrypoint_are_converged"
+   ],
+   "collected_line": "collected 1193 items",
+   "resolved_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_htfk6hzy\\suite.db",
+   "path_source": "app_printed_receipt_line",
+   "conftest_own_reading_existed_before": "False",
+   "declared_by": "conftest",
+   "other_python_processes_alive_at_round_start": [
+    "55944|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8693",
+    "55960|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8693",
+    "20364|C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe preview_auth_proxy.py",
+    "49424|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe lane_backend.py",
+    "43848|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" lane_backend.py",
+    "49248|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8424",
+    "27144|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8424",
+    "46244|C:\\Users\\������\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8791 --log-level info",
+    "55988|C:\\Users\\������\\AppData\\Local\\Programs\\Python\\Python313\\python.exe D:\\moodle\\_qoder_hjp1_o207_20260922\\serve_gest.py 8792",
+    "14912|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe tools/harness_baseline_rounds.py --head 4d9ceae --rounds 3",
+    "50108|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" tools/harness_baseline_rounds.py --head 4d9ceae --rou",
+    "29916|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests -p no:cacheprovider",
+    "35720|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 -m pytest tests -p no:cacheprovider",
+    "35988|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m pytest tests/test_qoder_ord0236_raw_tags_not_evidence.py -p no:cacheprovider",
+    "28624|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m pytest tests/test_qoder_ord0236_raw_tags_not_evide"
+   ],
+   "path_did_not_exist_before_this_run": true,
+   "seconds": 115.0,
+   "summary_tail": [
+    "FAILED tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint",
+    "= 12 failed, 1165 passed, 15 skipped, 1 xfailed, 2 warnings in 111.92s (0:01:51)"
+   ]
+  },
+  {
+   "round": 3,
+   "exit_code": 1,
+   "counts": {
+    "passed": 1167,
+    "failed": 10,
+    "skipped": 15,
+    "error": 0
+   },
+   "red_count": 10,
+   "failed_nodeids": [
+    "test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+    "test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools",
+    "test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+    "test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+    "test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+    "test_g5_an_ai_run_that_changed_must_say_which_it_was",
+    "test_g8a_default_suite_contains_no_live_provider_calls",
+    "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+    "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+    "test_release_metadata_and_map_entrypoint_are_converged"
+   ],
+   "collected_line": "collected 1193 items",
+   "resolved_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_qiyrcbxv\\suite.db",
+   "path_source": "app_printed_receipt_line",
+   "conftest_own_reading_existed_before": "False",
+   "declared_by": "conftest",
+   "other_python_processes_alive_at_round_start": [
+    "55944|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8693",
+    "55960|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8693",
+    "20364|C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe preview_auth_proxy.py",
+    "49424|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe lane_backend.py",
+    "43848|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" lane_backend.py",
+    "49248|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8424",
+    "27144|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8424",
+    "46244|C:\\Users\\������\\AppData\\Local\\Programs\\Python\\Python313\\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8791 --log-level info",
+    "55988|C:\\Users\\������\\AppData\\Local\\Programs\\Python\\Python313\\python.exe D:\\moodle\\_qoder_hjp1_o207_20260922\\serve_gest.py 8792",
+    "14912|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe tools/harness_baseline_rounds.py --head 4d9ceae --rounds 3",
+    "50108|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" tools/harness_baseline_rounds.py --head 4d9ceae --rou",
+    "51880|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -u review/ord0232_kill_arms.py five-arms 4900",
+    "33100|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -u review/ord0232_kill_arms.py five-arms 4900",
+    "41820|D:/moodle/CityNexus/.venv/Scripts/python.exe D:\\moodle\\_qoder_integration_20260919\\review\\run_spec.py e2e/qoder-dropped-candidates-say-why.spec.",
+    "51360|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" D:\\moodle\\_qoder_integration_20260919\\review\\run_spec",
+    "35416|D:/moodle/CityNexus/.venv/Scripts/python.exe  -m uvicorn app.main:app --host 127.0.0.1 --port 8900",
+    "3168|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8900",
+    "44672|D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 campaign_ord0224_v2.py D:/moodle/_qoder_ord30_evidence_20260920/ord213/snap_349c4fa 349c4fa",
+    "55436|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 campaign_ord0224_v2.py D:/moodle/_qoder_ord30",
+    "55044|D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_calle",
+    "19704|\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 -m pytest tests/test_qoder_anywhere_gates.py:"
+   ],
+   "path_did_not_exist_before_this_run": true,
+   "seconds": 118.0,
+   "summary_tail": [
+    "FAILED tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint",
+    "= 10 failed, 1167 passed, 15 skipped, 1 xfailed, 2 warnings in 115.03s (0:01:55)"
+   ]
+  }
+ ],
+ "baseline": {
+  "rounds_executed": 3,
+  "red_count_range": [
+   10,
+   12
+  ],
+  "intersection_named": [
+   "test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+   "test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools",
+   "test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+   "test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+   "test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+   "test_g5_an_ai_run_that_changed_must_say_which_it_was",
+   "test_g8a_default_suite_contains_no_live_provider_calls",
+   "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+   "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+   "test_release_metadata_and_map_entrypoint_are_converged"
+  ],
+  "union": [
+   "test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+   "test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools",
+   "test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+   "test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+   "test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+   "test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation",
+   "test_g5_an_ai_run_that_changed_must_say_which_it_was",
+   "test_g8a_default_suite_contains_no_live_provider_calls",
+   "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+   "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+   "test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage",
+   "test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match",
+   "test_release_metadata_and_map_entrypoint_are_converged"
+  ],
+  "swimmers_only_in_some_rounds": [
+   "test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation",
+   "test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage",
+   "test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match"
+  ],
+  "distinct_db_paths": 3,
+  "any_path_shared": false
+ },
+ "note": "B's numbers are reference only; this file carries only what these rounds measured"
+}
