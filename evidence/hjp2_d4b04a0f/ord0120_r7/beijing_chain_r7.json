@@ -1,0 +1,216 @@
+{
+  "activities_across_those_plans": 23,
+  "artifact_served": "index-BCF4ptyk.js (sha256 f3bda3d696d37cd1750e646a98ea6151c64d59247517c937b198dd369251d0e9) via this lane's vite preview on 127.0.0.1:8493",
+  "backend": "this lane's uvicorn on 127.0.0.1:8453 over the copy store; /api/v1/agent/runtime-status reported deepseek_configured=true (the AI-ready arm; round 6 measured the unconfigured arm)",
+  "built_at_local": "2026-09-22T19:47:05",
+  "columns_probed": {
+    "activities": [
+      "id",
+      "plan_version_id",
+      "sequence_no",
+      "activity_type",
+      "title",
+      "place_id",
+      "city_service_id",
+      "start_at",
+      "end_at",
+      "travel_from_prev_min",
+      "estimated_cost_minor",
+      "currency",
+      "status",
+      "locked",
+      "metadata_json",
+      "created_at",
+      "updated_at"
+    ],
+    "commitments": [
+      "id",
+      "journey_id",
+      "activity_id",
+      "kind",
+      "level",
+      "status",
+      "monetary_value_minor",
+      "monetary_value_status",
+      "currency",
+      "external_ref",
+      "policy_json",
+      "created_at",
+      "updated_at"
+    ],
+    "constraints": [
+      "id",
+      "journey_id",
+      "kind",
+      "category",
+      "rule_code",
+      "params_json",
+      "weight",
+      "active",
+      "created_at",
+      "updated_at"
+    ],
+    "journeys": [
+      "id",
+      "traveler_id",
+      "title",
+      "city_code",
+      "timezone",
+      "start_at",
+      "end_at",
+      "budget_currency",
+      "budget_amount_minor",
+      "planning_mode",
+      "status",
+      "active_plan_version_id",
+      "current_activity_id",
+      "created_at",
+      "updated_at"
+    ],
+    "plan_versions": [
+      "id",
+      "journey_id",
+      "version_no",
+      "planning_mode",
+      "status",
+      "source",
+      "parent_plan_version_id",
+      "total_cost_minor",
+      "currency",
+      "estimated_duration_min",
+      "utility_score",
+      "score_breakdown_json",
+      "explanation_json",
+      "mobility_snapshot_id",
+      "mobility_evidence_json",
+      "created_at"
+    ]
+  },
+  "commitments_for_this_journey": 0,
+  "constraints_for_this_journey": 0,
+  "isolation_after_run": {
+    "authoritative_tree_residue_matching_hjp2": 0,
+    "lane_ports_listening_after_teardown": 0,
+    "my_journey_present_in_shared_live": false,
+    "own_copy_journeys": 6,
+    "own_copy_plan_versions": 22,
+    "shared__live_db_after_run": {
+      "commitments": 1,
+      "journeys": 3,
+      "plan_versions": 19,
+      "travelers": 3
+    }
+  },
+  "journey": {
+    "active_plan_version_id": null,
+    "city_code": "CN-BEIJING",
+    "created_at": "2026-09-22T11:37:17.399846+00:00",
+    "created_via": "visible wizard only (目的地=北京, 抵达/离开=北京南站, defaults left as offered)",
+    "current_activity_id": null,
+    "end_at": "2026-09-25T12:00:00+00:00",
+    "id": "5e9fd913-104a-4252-bbfa-9d02383d5cc9",
+    "start_at": "2026-09-23T02:00:00+00:00",
+    "status": "DRAFT",
+    "title": "北京 · journey"
+  },
+  "key_contrast": {
+    "controls_found": "no visible control mentioning 采用/选定/激活/生效 on hub, on the /v8/trips 行程 tab, or after tapping the day card (3 surfaces walked)",
+    "hub_prints": "以下只是其中一个候选方案的预览，你还没有采用它。  (and a full 3-day preview of that candidate)",
+    "server_has": [
+      "/api/v1/journeys/{journey_id}/plans/{plan_version_id}/select",
+      "/api/v1/journeys/{journey_id}/stay-options/{option_id}/select"
+    ],
+    "server_side": "3 plan version(s) exist for this journey, status CANDIDATE; commitments=0",
+    "trips_tab_prints": "还没有可看的行程 / 这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。"
+  },
+  "lane": "HJ-P2 commitment-intensive traveller",
+  "openapi_plan_lifecycle_paths": [
+    "/api/v1/demo/start-scenario",
+    "/api/v1/journeys/{journey_id}/guardian/autopilot/start",
+    "/api/v1/journeys/{journey_id}/plans",
+    "/api/v1/journeys/{journey_id}/plans/accept-reorder",
+    "/api/v1/journeys/{journey_id}/plans/authoritative-compose",
+    "/api/v1/journeys/{journey_id}/plans/generate",
+    "/api/v1/journeys/{journey_id}/plans/preview-reorder",
+    "/api/v1/journeys/{journey_id}/plans/{plan_version_id}/select",
+    "/api/v1/journeys/{journey_id}/replans",
+    "/api/v1/journeys/{journey_id}/start",
+    "/api/v1/journeys/{journey_id}/stay-options/{option_id}/select",
+    "/api/v1/journeys/{journey_id}/trip-studio/accept",
+    "/api/v1/plans/{plan_version_id}",
+    "/api/v1/replans/{proposal_id}",
+    "/api/v1/replans/{proposal_id}/accept",
+    "/api/v1/replans/{proposal_id}/reject"
+  ],
+  "plan_versions_for_this_journey": [
+    {
+      "id": "09704a7f-c004-5134-a467-a50faa42ba37",
+      "score_breakdown": {
+        "budget_fit": 0.9,
+        "commitment_preservation": 0.98,
+        "mobility_fit": 0.88,
+        "opportunity_value": 0.82,
+        "preference_fit": 0.92,
+        "robustness": 0.9,
+        "stability": 0.95,
+        "time_reliability": 0.94,
+        "total": 0.9298
+      },
+      "source": "INITIAL",
+      "status": "CANDIDATE",
+      "total_cost_minor": 49000,
+      "utility_score": 0.9298,
+      "version_no": 1
+    },
+    {
+      "id": "4821bff0-353f-5d52-b869-36acd00600fc",
+      "score_breakdown": {
+        "budget_fit": 0.96,
+        "commitment_preservation": 0.98,
+        "mobility_fit": 0.93,
+        "opportunity_value": 0.78,
+        "preference_fit": 0.9,
+        "robustness": 0.92,
+        "stability": 0.93,
+        "time_reliability": 0.96,
+        "total": 0.9356
+      },
+      "source": "INITIAL",
+      "status": "CANDIDATE",
+      "total_cost_minor": 49000,
+      "utility_score": 0.9356,
+      "version_no": 2
+    },
+    {
+      "id": "bd6f2e26-4b4a-524f-88c5-b06647fd676c",
+      "score_breakdown": {
+        "budget_fit": 0.95,
+        "commitment_preservation": 0.98,
+        "mobility_fit": 0.91,
+        "opportunity_value": 0.8,
+        "preference_fit": 0.91,
+        "robustness": 0.91,
+        "stability": 0.92,
+        "time_reliability": 0.95,
+        "total": 0.9312
+      },
+      "source": "INITIAL",
+      "status": "CANDIDATE",
+      "total_cost_minor": 45000,
+      "utility_score": 0.9312,
+      "version_no": 3
+    }
+  ],
+  "reading": "hjp2_beijing_chain_r7",
+  "session": "d4b04a0f",
+  "store": {
+    "journeys_total": 6,
+    "open_mode": "sqlite URI mode=ro",
+    "path": "D:/moodle/_qoder_hjp2_r6_20260922/_hjp2_r6.db",
+    "plan_versions_total": 22
+  },
+  "traveller_stated_bookings_in_the_brief": [
+    "第二天上午必须去故宫，门票已经买好了，不能改时间",
+    "晚上和朋友在后海吃饭，位子已经订好"
+  ]
+}
