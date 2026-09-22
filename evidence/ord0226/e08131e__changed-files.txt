@@ -1,0 +1,9 @@
+commit e08131e31339977516e1e7a2f3f70c906f37a2d2
+parent 50d1c4da424dcad042d22ae25a128cf626cf2971
+
+
+M	frontend/e2e/qoder-budget-advisory-tiers.spec.ts
+M	frontend/src/app/V8Experience.tsx
+M	review/build-evidence-payload.py
+A	review/ord0226_kill_arms.py
+A	review/ord0226_red_messages.py
