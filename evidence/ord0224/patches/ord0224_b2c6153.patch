@@ -1,0 +1,39 @@
+From b2c61532ce17c3f0910da00a2201a88487faa75d Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=BB=93=E9=BC=A0=E7=8E=8B?= <yjianbin419@gmail.com>
+Date: Wed, 23 Sep 2026 03:03:04 +0800
+Subject: [PATCH] docs(backend): say out loud why the second reuse read stays,
+ and what measured it (ORD-0224 disposition 2)
+
+Mutant Y1b at f92f9e9 switched `existing = find_open_operation(session, fingerprint)` off and all
+twelve doors stayed green, so no gate depends on this read today - it is a second chance behind the
+pre-resolution read and in front of the durable index + loser read-back that carry convergence (Y3).
+Kept by the commander's order; behaviour and the anchor for future mutations are unchanged (the
+anchor still counts exactly 1), so only a comment moved.
+
+Readings after the edit (same interpreter, `-X utf8`): gates + weak-fix doors + measurement package
+= 19 collected, 18 passed / 1 failed (`test_g5_an_ai_run_that_changed_must_say_which_it_was`,
+pre-existing and owned by ORD-0218).
+---
+ backend/app/catalog_hydration_operations.py | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/backend/app/catalog_hydration_operations.py b/backend/app/catalog_hydration_operations.py
+index bc2ba60..c6fe73e 100644
+--- a/backend/app/catalog_hydration_operations.py
++++ b/backend/app/catalog_hydration_operations.py
+@@ -467,6 +467,12 @@ def submit_operation(
+         resolution.canonical_destination_id,
+         resolver_query_normalized=resolution.resolver_query_normalized,
+     )
++    # Kept by the commander's disposition (ORD-0224, 2026-09-23 03:0x) and by measurement, not by
++    # habit: mutant **Y1b** at `f92f9e9` switched this read off and all twelve doors stayed green, so
++    # **no gate depends on it today** - it is a second chance, behind the pre-resolution read and in
++    # front of the durable index + loser read-back that actually carry convergence (`Y3`).  Deleting it
++    # now would reopen the concurrency path for no evidence, and that is the strong fix's work surface;
++    # if it ever goes, it goes in that order, in writing.
+     existing = find_open_operation(session, fingerprint)
+     if existing is not None:
+         return existing, True
+-- 
+2.45.1.windows.1
+
