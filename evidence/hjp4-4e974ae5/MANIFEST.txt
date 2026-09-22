@@ -1,9 +1,10 @@
-HJ-P4 (SESSION=4e974ae5) evidence bundle MANIFEST  (rev 4: adds the advertised-city code matrix and the recovery walk)
+HJ-P4 (SESSION=4e974ae5) evidence bundle MANIFEST  (rev 5: + cleanup manifest, written after publication per the 生产者自清 rule)
 target: Canshu-King/CityNexus @ commander/control : evidence/hjp4-4e974ae5/
 ----------------------------------------------------------------------
 city-code-matrix.json                     74213 B  sha256 67b74b9c8d23f45a  blob a469e12454272760
 city-walk-hangzhou-vs-beijing.json        45665 B  sha256 52b5a6fbd2ebb29c  blob ee06b078a7e42b2d
 city-walk-provenance.json                  4913 B  sha256 6709e0ee0120c0bd  blob 616ff642bbcb3bc8
+cleanup-manifest-0923.json                 5825 B  sha256 24e2e9fa72246888  blob 796e5d2201a8fe07
 isolation-receipt.json                     3937 B  sha256 cfe77716967b7181  blob f9aca35c1245cb95
 preference-visibility.json                 6637 B  sha256 baf9908f99ee383a  blob 6f3f9833b34e865a
 recovery-shot-ownership.json               7978 B  sha256 ebb17f1ddca7a554  blob c71e185be991dd50
