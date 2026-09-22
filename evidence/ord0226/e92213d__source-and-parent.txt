@@ -1,0 +1,9 @@
+order           ORD-0226
+source_sha      e92213d2f4cbe89355ab7eac1d2498b60b43da38  (e92213d)
+parent_sha      e863914f92e97d0d294a247402fdb6f5f82aa854
+subject         test(frontend): pin the English caveat too, after measuring that it reaches the screen (ORD-0226 follow-up ①)
+authored        2026-09-23 02:24 +0800
+lane            e345b9d6 (frontend/UI), tree D:\moodle\_qoder_integration_20260919
+interpreter     Node/Playwright for the gates; D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14 for the runner
+note            the working tip is not pushed by this lane, so a bare SHA answers 422 on GitHub;
+                these blobs are the readable coordinates for it.
