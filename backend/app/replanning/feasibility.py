@@ -13,7 +13,12 @@ from dataclasses import dataclass
 from datetime import datetime, time, timedelta, timezone
 from typing import Any, Iterable, Mapping, Sequence
 
-from app.capabilities import accessibility_state, evaluate_accessibility_requirement, normalize_osm_tags
+from app.capabilities import (
+    CAPABILITY_CODES,
+    accessibility_state,
+    evaluate_accessibility_requirement,
+    normalize_osm_tags,
+)
 from app.integrations.mock.providers import MockMobilityProvider
 from app.replanning.reference_replanner import Activity as ReferenceActivity
 from app.replanning.reference_replanner import Candidate as ReferenceCandidate
@@ -264,6 +269,57 @@ _CAPABILITY_GATE_CODES = {
     "STROLLER",
     "LARGE_LUGGAGE",
 }
+
+# ----------------------------------------------------------------------------------------------
+# ORD-0219 / arbiter `5778314066`: the write layer asks this module two questions, in this order.
+#
+#   1. is `rule_code` in the canonical vocabulary at all          -> else UNKNOWN_RULE_CODE
+#   2. if `kind=HARD`, can this gate actually execute it          -> else HARD_RULE_NOT_EXECUTABLE
+#
+# The two names stay separate on purpose: "I have never heard of that rule" and "that rule is
+# real but a hard trip constraint would be refused later as UNSUPPORTED_HARD_CONSTRAINT" are
+# different refusals with different fixes, and collapsing them is what let a free-text
+# `ConstraintInput.rule_code` reach the database and then blacken a whole journey.
+# SOFT is never refused for not being executable - a preference the gate ignores is still a
+# preference the ranker and the explanation may carry.
+#
+# Both sets are *derived*, never re-typed: `EXECUTED_HARD_RULE_CODES` is the literal list of
+# codes the dispatch in `evaluate_feasibility` (:573 onwards) interprets plus the capability
+# gates it reads evidence for, and the canonical vocabulary adds whatever the parser owns that
+# is not executable.  If the evaluator gains a branch, the write layer follows it automatically;
+# a hand-copied second list here is the drift this order exists to end.
+EXECUTED_HARD_RULE_CODES = frozenset(
+    {
+        "BUDGET_MAX",
+        "JOURNEY_END_BY",
+        "JOURNEY_START_AT",
+        "PLACE_UNAVAILABLE",
+        "PLACE_CLOSED",
+        "SERVICE_UNAVAILABLE",
+        "SERVICE_CLOSED",
+        "REQUIRE_PLACE",
+        "LOCKED_COMMITMENT",
+    }
+) | frozenset(_CAPABILITY_GATE_CODES)
+
+# Written by the demo seed as a SOFT preference (`data/mock/demo_journey.json`); the gate does not
+# execute it, and refusing it would break the sealed demo for no product reason.
+SOFT_ONLY_RULE_CODES = (frozenset(CAPABILITY_CODES) - frozenset(_CAPABILITY_GATE_CODES)) | frozenset(
+    {"MINIMISE_PLAN_CHANGES"}
+)
+
+CANONICAL_RULE_CODES = EXECUTED_HARD_RULE_CODES | SOFT_ONLY_RULE_CODES
+
+
+def constraint_write_refusal(kind: object, rule_code: object) -> str | None:
+    """Return the reason this (kind, rule_code) pair must not be written, or None."""
+
+    code = str(rule_code or "").strip().upper()
+    if code not in CANONICAL_RULE_CODES:
+        return "UNKNOWN_RULE_CODE"
+    if str(kind or "").strip().upper() == "HARD" and code not in EXECUTED_HARD_RULE_CODES:
+        return "HARD_RULE_NOT_EXECUTABLE"
+    return None
 
 
 def _record_metadata(record: Any) -> dict[str, Any]:

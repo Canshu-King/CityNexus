@@ -663,9 +663,14 @@ def test_material_wp01_wp03_mutations_emit_audit_records():
         ).status_code
         == 200
     )
+    # Payload changed by ORD-0219: the write layer now refuses a rule_code outside the canonical
+    # vocabulary, and `NOOP` was one.  This door's subject is the audit trail, so it keeps using a
+    # row the store accepts - `SLOW_PACE` is canonical and, being a preference, is never executed
+    # as a hard gate.  That the old payload is now *refused* is pinned by
+    # tests/test_qoder_ord0219_write_side_rule_guard.py, not silently here.
     constraint = client.post(
         f"/api/v1/journeys/{JOURNEY_ID}/constraints",
-        json={"kind": "SOFT", "category": "test", "rule_code": "NOOP", "params": {}},
+        json={"kind": "SOFT", "category": "test", "rule_code": "SLOW_PACE", "params": {}},
     )
     assert constraint.status_code == 201
     assert (

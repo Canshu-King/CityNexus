@@ -814,10 +814,18 @@ def extract_capabilities_from_text(
     if toilet_every is not None and any(token in value for token in ("厕所", "卫生间", "toilet", "bathroom")):
         add("TOILET_BREAK_EVERY_MIN", {"interval_min": toilet_every}, severity="HARD" if hard else "STRONG")
 
+    # Severity is named here, not left to `default_severity`, because these two codes are in
+    # `_CAPABILITY_GATE_CODES` while `default_severity` does not know them: they came back SOFT,
+    # and `capability_constraints` (:911) only forwards HARD items - so an explicitly asserted
+    # "我必须推婴儿车 / 我带大箱子" never reached the accessibility gate that already knows how to
+    # read evidence for both (feasibility :818).  The fix is deliberately at the call site: moving
+    # these codes into `HARD_ACCESSIBILITY_CODES` or `CARE_CODES` would also reclassify them via
+    # `capability_class_for` and arm the never-downgrade rule at :865, which is a wider decision
+    # than "a hard-asserted need gates; a mentioned one ranks".
     if any(token in value for token in ("婴儿车", "推车", "stroller", "buggy")):
-        add("STROLLER", {"present": True})
+        add("STROLLER", {"present": True}, severity="HARD" if hard else "STRONG")
     if any(token in value for token in ("大箱子", "行李", "luggage", "suitcase", "baggage")):
-        add("LARGE_LUGGAGE", {"present": True})
+        add("LARGE_LUGGAGE", {"present": True}, severity="HARD" if hard else "STRONG")
     if any(token in value for token in ("慢一点", "慢速", "slow pace", "take it slowly")):
         add("SLOW_PACE", {"preferred": True})
     if any(token in value for token in ("安静", "quiet", "少刺激", "低刺激", "sensory", "low stimulation")):

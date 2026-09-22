@@ -258,9 +258,11 @@ from app.planning.solver_v2 import (
 )
 from app.replanning.candidate_evidence import verified_interest_preference_fit
 from app.replanning.feasibility import (
+    CANONICAL_RULE_CODES,
     FeasibilityActivity,
     activity_from_record,
     build_context,
+    constraint_write_refusal,
     evaluate_feasibility,
 )
 from app.replanning.mock_replan_engine import partition_execution, rank_closure_replacements
@@ -4433,6 +4435,34 @@ def add_constraint(
     journey_id: UUID, payload: ConstraintInput, session: Session = Depends(get_session)
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
+    # Two layers, in this order (arbiter `5778314066`): a rule the product has never heard of,
+    # and a rule that is real but that the feasibility gate cannot execute as a hard constraint.
+    # Both used to be persisted - `ConstraintInput.rule_code` is a free string - and the refusal
+    # then surfaced much later as `UNSUPPORTED_HARD_CONSTRAINT`, which fails the whole plan
+    # (`只补 severity 会把「静默不执行」变成「整趟旅程不可规划」`, HARNESS 22:31).  A write that
+    # will be refused at evaluation must be refused here, where the caller still has a chance to
+    # fix it, and nothing has been added to the session by the time this returns.
+    refusal = constraint_write_refusal(payload.kind, payload.rule_code)
+    if refusal is not None:
+        return error(
+            refusal,
+            f"constraint rule_code {str(payload.rule_code)!r} with kind {payload.kind} is not "
+            "writable: the feasibility gate has no branch that executes it",
+            status=422,
+            details={
+                "rule_code": str(payload.rule_code),
+                "kind": payload.kind,
+                "category": payload.category,
+                "reason_code": refusal,
+                "canonical_rule_codes": sorted(CANONICAL_RULE_CODES),
+            },
+            message_key=(
+                "constraint.unknown_rule_code"
+                if refusal == "UNKNOWN_RULE_CODE"
+                else "constraint.hard_rule_not_executable"
+            ),
+            reason_code=refusal,
+        )
     now = datetime.now(timezone.utc).isoformat()
     item = JourneyConstraint(
         id=str(uuid4()),
