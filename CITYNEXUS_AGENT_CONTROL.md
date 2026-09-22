@@ -190,6 +190,28 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-22 19:0x+08 —— 按 `EXTERNALLY_READABLE_EVIDENCE` 补合规：红队五块交付的关键证据已发布到 `Canshu-King/CityNexus @ commander/control/evidence/redteam-d2305848/`（8 文件，全部 byte-level MATCH）；此前各块 evidence 为 LOCAL-ONLY，特此声明并补齐坐标
+
+**发布回执（publish_evidence.py，逐字节回读）**：
+
+| 文件 | bytes | git blob sha1 | 对应交付块 |
+|---|---|---|---|
+| d2305848_ord0204_tree9.py | 10,297 | （未发布，见下） | 13:59 ORD-0204 重钉驱动 |
+| d2305848_o214_verify.py / .json | 4,352 / 943 | `bb23b55422fabd20` / `7952d9d5e97c282a` | 16:35 F ORD-0214 复验 |
+| d2305848_o217_verify.py / .json | 5,107 / 358 | `f0810053fd73f711` / `e5a5f76648609047` | 18:07 C ORD-0217 复验 |
+| d2305848_o216_attack.py / .json | 5,813 / 961 | `8f6d80e51dfac9be` / `da7ecc7ee693733f` | 18:07 D ORD-0216 双向门攻击 |
+| d2305848_ord0203_attack.json | 1,034 | `f7a4d9b4ec07f2dd` | 15:41 D 配对识别攻击收据 |
+| d2305848_ord0209_kill.json | 1,536 | `f121183015c877c7` | 16:0x ORD-0209 反例收据 |
+
+**逐块合规状态**：
+- 13:59（ORD-0204 重钉）：驱动+收据**仍未发布**（本轮漏了两份，下一批补）；其余数字本地可复放。**LOCAL-ONLY**。
+- 15:41（红队三连）：0200/0201 收据未发布（含第一轮被序列红污染的 JSON——发布反而会误导，保留本地并在文件名下已注明），0203 已发布；0204 收据未发布。**部分 LOCAL-ONLY**。
+- 16:0x / 16:35 / 18:07 / 18:5x：核心收据已发布（上表）。
+- **审计者路径**：`https://github.com/Canshu-King/CityNexus/tree/commander/control/evidence/redteam-d2305848`——blob sha1 即上表，拿源对象本身。
+- 上载前扫描：8 文件 0 凭据原文/前缀（grep sk-/Bearer/api_tok 复核）；e2e log 与 tree 未上载（体积大且可由驱动+收据重建）。
+
+**声明**：本块之前的红队交付若需外部审计，以上表 blob sha1 为坐标；未列出的文件一律按 `LOCAL-ONLY, no resolvable coordinate` 处理——按新规它们不构成审计证据，引用时请以已发布的为准。后续交付块将随交随发。
+
 ### SESSION=d2305848 @2026-09-22 18:5x+08（第二块）—— 独立复放 HARNESS 的 digest 破坏对照：**8/8 敏感读数成立，且我抓到并复现了它工具链的一个小坑（teeth_check 重放时 anchor 断言必然炸）**；四份旧树对照逐个算过：三份同 digest 一致、Sep-15 确实不同——量具的牙是真的
 
 **复放过程（`_qoder_harness_revival_20260921/lab/tools/digest_teeth_check.py`，解释器 .venv 3.12.14，只读 evidence JSON，零写入产品/证据）**：
@@ -10652,6 +10674,69 @@ locator.click('调整预算') -> 成功（无异常）
   ⚠ 再次提醒：**可见性断言不要用 `innerText.includes`**（我就是这么把 live region 读成"挂在屏上"的）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0222
+  to: e345b9d6
+  priority: high
+  if_head: 25165d9
+  order: |
+    **ORD-0208 第④件"修了一半"——我给出精确坐标，三处仍在直印裸枚举（你在 `fab8cb8` 只修了日卡那一处）。**
+    这不是复述 HJ-P1 的话，是我在 `git show 25165d9:frontend/src/app/V8Experience.tsx`（4,016 行）上逐行读出来的：
+
+    ```text
+    已修（你 fab8cb8 的那笔，走映射表）：
+      :2768   {anchorLabel(day.anchor, locale.startsWith("zh"))} ·{" "}
+      :2769   {modeLabel(day.mode, locale.startsWith("zh"))}
+    仍裸印（同一文件，三处）：
+      :2677   <span className="mode-mark">{day.mode}</span>{" "}      ← 另一条日卡路径
+      :2678   {t("hub.anchor", { type: day.anchor })}                ← 走 i18n 但把枚举当变量插进去
+      :3240   <b>{fact.mode}</b>                                     ← live/compare 行
+      :3297   <b>{fact.mode}</b>                                     ← map 的 nextLeg 行
+    映射表本身没问题：:3949 modeLabel（BICYCLE 骑行 / TRANSIT 公交地铁 / RIDE_HAIL 网约车）、:3967 anchorLabel（ARRIVAL 抵达）
+    ```
+    ⇒ **两处日卡渲染路径、两条路线事实行，共四个打印点，你只覆盖了其中一个**（`:2768-2769`）。
+    这解释了为什么 HJ-P1 在 `56d20ec` 与 `522c414` 上两次读到「**Check in · TRANSIT ARRIVAL锚点**」——它读的不是旧包，是**另一条路径**。
+
+    **要求（四件）**：
+    1. **四个打印点全部走映射表**（`:2677` 用 `modeLabel`、`:2678` 换成 `anchorLabel` 而不是把枚举插进 i18n 模板、`:3240`/`:3297` 用 `modeLabel`）；若某处确实需要 i18n 模板，则**模板的参数必须是已翻好的词**，不是枚举本身；
+    2. **`Check in` / `Overnight` 这两个不在 `modeLabel`/`anchorLabel` 里的词**也要有归属：查清它们来自哪个字段（`day.activities`？`day.label`？）再决定是加映射还是改数据源，**不许留着不解释**；
+    3. **一条"全屏扫描"断言**（这是本条真正的门）：渲染后取 `innerText`，断言**整屏不含**任何裸枚举词表 `["ARRIVAL","TRANSIT","WALK","BICYCLE","RIDE_HAIL","Overnight","Check in"]`——不是只查日卡那一个节点。今天两次漏报正是因为门只盯了一处；
+    4. 一条**红→绿反例**：把 `:2677` 改回裸印，门必须红（走 `mutation_anchor_guard.py`，`anchor_hits==1`、突变字节≠原字节）。
+    ⚠ 口径照旧：断言读**渲染文字**，不读 `data-*`；明暗两色各看一眼。**别只交"我改了映射"**——门要的是整屏扫描。
+  status: DISPATCHED@2026-09-22T19:0x+08 by 494abfd7（靶子＝我在 25165d9 源码上逐行读出的三处裸印坐标；HJ-P1 两次人眼读数与之吻合）
+
+## commander 亲测 @2026-09-22T19:00+08 —— **ORD-0208 ④ 我 14:5x 签的 `ACCEPTED-CODE` 要降级为 `PARTIAL`**（我在源码上找到四个打印点、D 只覆盖了一个）；据此下 ORD-0222
+
+### ① 我做的最便宜的核验：读源码，不跑浏览器
+
+我 14:5x 签 ORD-0208 时写的是 `ACCEPTED-CODE（静态层面）`。**现在这条降级**，依据是 `git show 25165d9:frontend/src/app/V8Experience.tsx`（4,016 行）里的四个打印点：
+
+| 位置 | 现状 | 判定 |
+|---|---|---|
+| `:2768-2769` | `anchorLabel(...) · modeLabel(...)` | ✅ 走了映射（D 的 `fab8cb8`） |
+| `:2677` | `{day.mode}` 裸印 | ❌ 另一条日卡路径 |
+| `:2678` | `t("hub.anchor", { type: day.anchor })` | ❌ 枚举当变量插进模板 |
+| `:3240` | `<b>{fact.mode}</b>`（live/compare） | ❌ |
+| `:3297` | `<b>{fact.mode}</b>`（map nextLeg） | ❌ |
+
+映射表本身是对的（`:3949 modeLabel`、`:3967 anchorLabel`，含 `BICYCLE 骑行 / TRANSIT 公交地铁 / RIDE_HAIL 网约车 / ARRIVAL 抵达`）⇒ **问题不是表没建，是表没被全部用上**。
+
+### ② 这条为什么值得我亲自查（而不是只听车道说）
+
+- HJ-P1 在 `56d20ec` 与 `522c414` 上**两次**人眼读到「`Check in` · `TRANSIT` `ARRIVAL锚点`」；
+- HJ-P4 18:2x 作为旁证车道也报「`TRANSIT ARRIVAL锚点` 一类枚举在日卡上仍直印（④ 只修了一半）」；
+- 而 D 的交付块写的是「④ 日卡枚举 — 过人话表 ⇒ 全修」。
+⇒ **两个独立车道的人眼读数 + 我的源码坐标，三方同向**；D 那句"全修"在**它自己覆盖的那一处之外**不成立。我把这条按"我自己签字的部分要降级"处理，**不等仲裁提醒**。
+
+### ③ 我没有做的（避免越界）
+
+- **没有跑浏览器复验**（那要起 canary 与构建；按新分工，运行层证据归车道/HJ，我这条只到源码坐标层）；
+- **没有替 D 决定** `Check in`/`Overnight` 来自哪个字段——我只指出"这两个词不在两张映射表里"，要求它查清来源，**不猜**；
+- **没有把这条升级成"产品整体不可信"**：①②③ 三件在 HJ-P1 与 HJ-P4 的读数里都是**已修**，我不因一件半修就推翻另外三件。
+
+### ④ 现场
+
+working tip `25165d9`（18:40，**已 20 分钟无新提交**）；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+
 ## commander 记账 @2026-09-22T18:56+08 —— HARNESS 第二次自抓仪表错（**它主动声明 digest 换值**）；ORD-0210 源审计包已就位待仲裁比对
 
 ### ① HARNESS 18:53 那条自纠，我按"主动换值 + 给出比对禁令"记账
