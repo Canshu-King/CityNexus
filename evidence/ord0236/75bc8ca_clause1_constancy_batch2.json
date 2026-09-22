@@ -1,0 +1,43 @@
+{
+ "clause1_constancy_by_orchestrator": true,
+ "note": "the shared ruler has no per-run SHA field; this is the lane's own check, not a ruler verdict",
+ "distinct_head_commits_across_runs": 1,
+ "one_sha_across_runs": true,
+ "content_pin_identical": {
+  "backend_app_tree_digest": true,
+  "gate_sha256": true,
+  "feasibility_sha256": true
+ },
+ "before": {
+  "label": "before_streaks",
+  "backend_app_tree_digest": "65f04811a845d9b7be7747f4e50ff6c66571de5fdc8749117bec6f68ed602485",
+  "gate_sha256": "9495bb933216042d3b72d30ffda40634bc8b5d856222262d7b73a8c7af1b1a1c",
+  "gate_bytes": 7369,
+  "feasibility_sha256": "87bbb2c5dfa0d0de4c0b9a8b89733a86d81a052313bd7f0e8ca48263c0684bd1",
+  "feasibility_bytes": 40032,
+  "head_commit_declared_by_orchestrator": "75bc8ca192db547a6169540ce28ce2f6f2d9fe4d"
+ },
+ "after": {
+  "label": "after_streaks",
+  "backend_app_tree_digest": "65f04811a845d9b7be7747f4e50ff6c66571de5fdc8749117bec6f68ed602485",
+  "gate_sha256": "9495bb933216042d3b72d30ffda40634bc8b5d856222262d7b73a8c7af1b1a1c",
+  "gate_bytes": 7369,
+  "feasibility_sha256": "87bbb2c5dfa0d0de4c0b9a8b89733a86d81a052313bd7f0e8ca48263c0684bd1",
+  "feasibility_bytes": 40032,
+  "head_commit_declared_by_orchestrator": "75bc8ca192db547a6169540ce28ce2f6f2d9fe4d"
+ },
+ "streak_runs": [
+  {
+   "tag": "t1",
+   "rc": 1
+  },
+  {
+   "tag": "t2",
+   "rc": 1
+  },
+  {
+   "tag": "t3",
+   "rc": 1
+  }
+ ]
+}
