@@ -1,0 +1,43 @@
+{
+ "tree": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\tree11",
+ "panel_sha256_16": "f461dff0f45f29dd",
+ "cases": [
+  {
+   "key": "T1-post-traveler-and-journey-restored",
+   "what": "D 的 killT1 同款：两发 POST 种回寻址分支之前",
+   "receipt": {
+    "anchor_hits": 1,
+    "expected_anchor_hits": 1,
+    "before_sha256": "f461dff0f45f29dd",
+    "mutated_sha256": "9644531d8a6365cd",
+    "bytes_changed": true
+   },
+   "run_id": "d2305848_t209_641271",
+   "failed_line": "x  2 [chromium] › e2e\\qoder-demo-entry-addresses-dont-create.spec.ts:60:1 › ord0209-the-demo-entry-addresses-the-sealed-journey — 点 3 次入口，0 次新建，进去的是封存那趟 (30.9s)",
+   "verdict": "KILLED (门红)",
+   "restored": true
+  },
+  {
+   "key": "T2-post-traveler-only",
+   "what": "只种一发 traveler POST（少建一行的形状，门是否也咬）",
+   "receipt": {
+    "anchor_hits": 1,
+    "expected_anchor_hits": 1,
+    "before_sha256": "f461dff0f45f29dd",
+    "mutated_sha256": "d306b4a8d77f7139",
+    "bytes_changed": true
+   },
+   "run_id": "d2305848_t209_641702",
+   "failed_line": "x  2 [chromium] › e2e\\qoder-demo-entry-addresses-dont-create.spec.ts:60:1 › ord0209-the-demo-entry-addresses-the-sealed-journey — 点 3 次入口，0 次新建，进去的是封存那趟 (30.8s)",
+   "verdict": "KILLED (门红)",
+   "restored": true
+  }
+ ],
+ "baseline": {
+  "run_id": "d2305848_t209_641130",
+  "green": true,
+  "summary": [
+   "  2 passed (13.5s)"
+  ]
+ }
+}
