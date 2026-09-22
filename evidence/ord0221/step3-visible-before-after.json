@@ -1,0 +1,73 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0221 ④",
+  "head": "b41b4cce0e4143068bef216d96e2eab4a4116056",
+  "method": "per-element textContent + the element's own box; body innerText is never used",
+  "visibleHint": {
+    "step2_before": {
+      "selector": "[data-testid=\"trial-required-hint\"]",
+      "exists": true,
+      "text": "还需要填写：总预算",
+      "rect": {
+        "top": 1224,
+        "height": 85,
+        "width": 350
+      },
+      "visuallyRendered": true,
+      "insideSrOnly": false,
+      "inViewport": false,
+      "computed": {
+        "visibility": "visible",
+        "display": "block",
+        "opacity": "1"
+      }
+    },
+    "step3_after": {
+      "selector": "[data-testid=\"trial-required-hint\"]",
+      "exists": false,
+      "text": "",
+      "rect": null,
+      "visuallyRendered": false,
+      "insideSrOnly": false,
+      "inViewport": false
+    }
+  },
+  "spokenAtRefusal": {
+    "selector": "#trial-next-reason",
+    "exists": true,
+    "text": "还需要填写：总预算",
+    "rect": {
+      "top": 1191,
+      "height": 1,
+      "width": 1
+    },
+    "visuallyRendered": false,
+    "insideSrOnly": true,
+    "inViewport": false,
+    "computed": {
+      "visibility": "visible",
+      "display": "block",
+      "opacity": "1"
+    }
+  },
+  "reviewBudget": "CNY 1500 / 1000 · 我们替你填的",
+  "allAnnouncementSurfaces": [
+    {
+      "selector": "#trial-next-reason",
+      "exists": true,
+      "text": "",
+      "rect": {
+        "top": 580,
+        "height": 1,
+        "width": 1
+      },
+      "visuallyRendered": false,
+      "insideSrOnly": true,
+      "inViewport": true
+    }
+  ],
+  "nonVisibleSurfacesStillNamingTheField": [],
+  "note": "ORD-0220 ② owns the live-region staleness recorded here; this node only refuses to call it visible",
+  "publishedBy": "e345b9d6 for ORD-0221 3/4",
+  "visibility_rule": "each reading is one element's own textContent plus its own box; body innerText is never used, and a .v8-sr-only region is reported as insideSrOnly=true and visuallyRendered=false"
+}
