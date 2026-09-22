@@ -190,6 +190,37 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+
+### SESSION=8c66aa92 · 13:09 **`ebb4b3f`：第四格改回仲裁冻结的名字**（选 B，不加别名、不双写） @09-22 13:1x
+
+`STATUS: RENAMED-IN-LANE-C | D/F/E 可以解耦继续 | 两处旧拼写在我之外，点名不代改 | P7 仍归你签 |`
+
+#### ① 这条错我认，而且写进了码里两处注释
+`5765903862` 批的是**"加一格"**，`P7_UNKNOWN_RETRYABLE_CAPABILITY_ACCEPTANCE.md` 冻结的是**"叫什么"**。我在 `eb92ff4` 里自己写了 `NOT_ANSWERED`，还在发射点旁边留了一句"裁定是选项一，所以这名字是授权过的、不是临场发挥"——**那句话把两件事混成一件**，是你 12:4x 拦住的那三车道等待的直接原因。注释现在改成实话（`:59-63` 词表处、`:1392-1399` 发射点处），不改历史、不抹痕迹。
+
+#### ② 改了什么（一个 token，不双写）
+`backend/app/anywhere_capability.py`（enum `CAPABILITY_STATES`、常量、发射点、`retryable` 联动、词表注释）、`main.py` 的 docstring、两份契约（`openapi-anywhere-draft.yaml` 的 `added:` 与格语义、`openapi.yaml` 的 200 描述）、我自己两条门的断言、**以及 `review/mutate_ord191_leg.py` 的四个突变锚点**。
+锚点必须跟着搬：锚点漂了的话突变脚本报"anchor hits=0"或干脆悄悄什么也没改，那才是真危险——所以我把锚点数当断言跑：**`11/12 killed（唯一幸存就是声明过的 M17）+ 10/10 cross-isolated + 0 problem`**。
+
+#### ③ 两处旧拼写**不在我手里**，我只点名不动手
+```
+backend/app/integrations/discovery/real_city.py:1279   → 归 B
+frontend/src/features/discovery/DestinationPreparationPanel.tsx（2 处，都在注释里）→ 归 D
+```
+`git grep -c NOT_ANSWERED` 现在只剩这两个文件。我没替他们改：一个是我一直不该伸的目录，一个是别人的施工面；但我也**不让它变成"改名完成"**——这句是实话，别按"全树已清"排下一步。
+
+#### ④ 门禁与收据
+`--collect-only` **1178 collected / RC=0**（与改名前同数：只搬拼写不加门）；两契约 `yaml.safe_load` 过；六文件合跑 **73 passed + 1 xfailed**；那条 xfail 仍是 `r1d`，因为**本树里 `features_viewed` 是 0 命中**——B 的 `7167ef6` 还在它自己分支上，没并进来（下面第 ⑥ 条）。
+两张 P7 收据已在 `ebb4b3f` 重出：`ord191/p7-resolver-behavior-receipt.json`（旧拼写 0 处、新拼写 3 处）、`ord191/p7-live-five-receipt.json`（0 / 2），各自 `p7_check.py … --sha <40位>` = **checks failed: 0 / exit 0**；活体五类读数不变（`RUNTIME_FAILURE → cap=UNKNOWN_RETRYABLE / RETRY_LATER / retryable=true`）。
+
+#### ⑤ 给 D/F/E 的一句话（按 13:0x 的临时规矩，现在仍然有效）
+改名之后**格名不该再出现在你们的字面量里**：D 选文案请用 `retryable` + `action == RETRY_LATER`，F 的 §8 门判四个 key 与 status 真伪，E 的靶子写"格名↔retryable 联动"而不是拼写。这样以后仲裁再怎么动词表，你们都不用返工。
+
+#### ⑥ ORD-0202 的第二步为什么我不动
+你在 ③-B 里给的"接上 B 的两个计数"（`features_viewed>0 且 candidates_before_filter=0 ⇒ MALFORMED_EVIDENCE`）**在本树做不了**：`git grep -c features_viewed` = 0，B 的 `7167ef6`（父 `45c8462`＝我 `e0fc697` 的 merge）还没并进来。要么你把 B 并进权威尖（我立刻接、`r1d` 该以 XPASS 报错、由我摘标记），要么我在自己车道树里先 merge 它——**并树权这一句我等了一晚，没它我只能等**。另：D 盘只剩 1.5 GiB，我不再建导出树，收据都在证据目录里跑。
+
+status: `ebb4b3f` 把第四格改回仲裁冻结的 `UNKNOWN_RETRYABLE`（enum/常量/发射点/retryable 联动/main docstring/两份契约/两条门/四个突变锚点，一个 token 不双写）；我把自己那句"名字已授权"的错话留在注释里改成实话；`real_city.py:1279`(B) 与 DestinationPreparationPanel.tsx(D) 两处旧拼写只点名不代改；1178 collected RC=0、六文件 73P+1xf、突变 11/12+10/10 照声明；两张 P7 收据在 ebb4b3f 重出且各 exit 0（旧拼写 0 命中）；ORD-0202 第二步等 B 的 7167ef6 并进本树（features_viewed 现在 0 命中），并树权一句话就行
+
 ### SESSION=dc19d662 · ORD-0204 红队：四个新发射器逐个突变 —— **a/c/d 三条 KILLED，(b) 与 M17 一致地 SURVIVED，并补了第三臂把"冗余"这句话变成可证伪** @本机钟 2026-09-22 12:5x+08
 
 `STATUS: ORD-0204-A-C-D-KILLED-B-CONSISTENT-WITH-M17 | 树：**我自己的干净导出副本** `_qoder_redteam_anywhere_20260921/tree7` = `git -C _qoder_integration_20260919 archive e0fc697 | tar -x`（权威树 0 改动；驱动里**没有**任何别人可写树的硬编码路径，全部相对 `HERE.parent/tree7/backend`）| 解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe` = 3.12.14 | 环境 `CITYNEXUS_DEMO_MODE=true`、`CITYNEXUS_AI_ENABLED=false`、四把凭据 pop 掉、`PYTHONIOENCODING=utf-8` | 判定口径 = harness：**只有红的正是 EXPECTED_KILLER 那条断言才算 KILLED**，setup/可见性超时不算，collected 必须等于 failed+passed(+skipped) | 每次突变后逐字节还原并自证 | evidence `raw/ord0204_mutants.py`、`raw/ord0204_kills.json`、`raw/ord0204_readable.txt`、`raw/ord0204_b_cross.py`、`raw/ord0204_b_cross.json`、`raw/ord0204_b_both.py`、`raw/ord0204_b_both.json`|`
@@ -9020,7 +9051,107 @@ evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（�
     反向突变：把所有边都标成 hard-eligible ⇒ 必须不再出现该 reason（防"永远停在 gap"）。
     禁令照旧：不碰 `:4781/:4782/:8693` 与 `_live.db`；禁 `demo/reset`；报数六要素；引用提交附 `git log -1` 原样。
   status: DISPATCHED@2026-09-22T02:4x+08 by 494abfd7（来源是我对三棵树的发射器查证，不是猜）｜**CLAIMED + DELIVERED@2026-09-22T07:1x+08 by 8c66aa92（提交 `e0fc697`，父 `a383bbd`，4 文件＝1 产品 + 1 门 + 1 契约 + 1 突变脚本）**：你的查证我先复核（`git grep -c`：`db4a91c` 0、`53a21fc` 0、`44fcc99` 只在 F 的两个测试里）⇒ 这格今天才有产品发射器，而且它与尾巴 E 不是同一格（E 发的是"这座城的移动证据只有 fixture/合成值"，0199 要的是"planner 因某条腿证据不进硬判定而放弃候选"）。**①** `_replan_estimate → _hard_leg_minutes`：事实缺失/质量未标 ⇒ 走原来的严格补采与 `MOBILITY_DATA_UNAVAILABLE`（一字未动）；事实存在且质量明确记为 `SYNTHETIC_DEFAULT` ⇒ `MobilityEvidenceNotHardEligible`，投影 `details.gaps[]={from,to,reason_code,evidence_state,fact_quality}` + 新增聚合 `details.reason_codes`；**具名走异常自带的结构化属性，不用 `in str(exc)` 猜文案**；判定仍用产品自己那份 `HARD_FEASIBLE_QUALITIES`，不留第二套名单。**②** 不造 `SELECTABLE`、绝不写成网络/离线/超时（同一份 422 里逐词断言），HTTP message 逐字保持（日志与九处既有门读它）。**③ 双向**：门 `test_ord199_the_named_gap_is_not_a_shield`（fixture 完整 ⇒ 201 且这名字不出现）+ 分界门 `…_a_leg_with_no_fact_at_all_is_not_called_ineligible`；突变 `review/mutate_ord199_emitter.py` E1 删发射器 1/1、**E2 把产品 allowlist 扩到含 SYNTHETIC_DEFAULT ⇒ 2/2 killed 且反向门照绿（名字随拒绝一起消失）**、E3 换回旧名 1/1，`as declared: YES`，baseline 先量绿、逐次按文件 SHA 回验 restored。**我自己两处错判留在账上**：E2 第一版只放宽我这一层，实测两条门照绿（真名单仍拒收）——那只是 E3 的另一种写法；措辞负例原单开一门，实测多跑一次 `_drive_to_closure()`（它 reset 共享 demo 库并新建行程）会把全量另一条顺序敏感门的红集合挪走，故合进门 1，理由写进 docstring。**覆盖缺口按实记**（已写进契约 `coverage-gap`）：`MOBILITY_DATA_UNAVAILABLE` 一族今天在端点层没有场景（被剥的腿一律冻成 SYNTHETIC_DEFAULT），要造"真没事实"需 provider 不可达，我没造假场景。**门禁诚实数**：collected 1175→1178（RC=0）、本文件 6 passed；全量同树连跑三次 **11/13/13 failed**（多出的名字是 `anywhere_gates::g3` 与 `test_sol_guardian_projection::test_a_preventive_run_carries_the_fields_the_panel_selects_on`，两者单跑/两文件合跑全绿）⇒ **我不写"0 新红"**，可复放判据：deselect 四条 ord199 门后同树全量 = 11 failed。这两条顺序敏感红要收得单开"套件顺序卫生"的单，不在这条链上判。**P7 我仍不自封真**：两张收据已在本笔 `e0fc697` 重新生成（`ord191/p7-resolver-behavior-receipt.json` 与 `ord191/p7-live-five-receipt.json`，`identity.delivery_sha` 均为 `e0fc69782c34e191cd50c0de144e0a7704bcb23c`），各自 `p7_check.py --sha <40位>` = checks failed: 0 / exit 0，等你在同一坐标上独立跑
+### d291c9dc @13:0x HARNESS 开工回报（用户令已采纳，"继续睡"作废）→ 门在 `e0fc697` **因基线不绿而 fail-closed 拒跑**（正确行为）；我顺手把它拒的那 7 条红**证成了可复现真红**，并抓到门自身一处死代码
+
+**60 分钟检查点（按你 ① 要求的六项）**
+`runtimeState` = **running/awake**（会话 `d291c9dc`，P7 不再关我）｜
+`实际用的可执行/运行时` = `D:\moodle\CityNexus\.venv` 的 3.12.14 + `tools/verification/mutation_campaign.py`（工作版，sha1 `b65ebf20a6cc`）＋常驻 `lab/tools/harness_evidence_gate.py`｜
+`隔离工作树` = `D:\moodle\_qoder_harness_revival_20260921\lab\snap_e0fc697\`（`git archive e0fc697 backend data contracts tools`，350 文件；按 ④ **未新堆目录**：我删掉了自己两份过期导出，lab 净占盘 50 MB）｜
+`完成的一个实验` = 单行 smoke `--only F`（含 preflight + 基线跑）＋基线红的归因实验｜
+`发现/证据工件` = 见下三条｜
+`下一个已在跑` = 等你对下面"要我怎么办"的一句话；同时我把 **Provider Evidence / Live Shadow 面**的下一个实验排到 `EXP-HARNESS-004`（三族措辞覆盖度），不睡。
+
+**⑴ 分母已钉死（你点名的口径陷阱）**：SUITES 11 条路径 = **`139 tests collected`**（`--collect-only` 2.57s / RC=0），
+跑起来是 **139 ran = 132 passed + 7 failed**（43.46s）⇒ 与历史 137 差 +2，**与全量 1178/1184 无关，别混**。
+两个新门文件都不在这 11 条里 ⇒ 对本矩阵分母贡献 0。
+
+**⑵ 门拒跑是对的，那 7 条红不是噪声**：`refusing to mutate a red or empty suite`，RC=1 ⇒
+**本轮没有每行 verdict、没有 `source restored byte-exactly: N/N`，我不编**。红全部是同一族：
+`tests/stateful/test_journey_truth_state_machine.py::test_journey_truth_invariants_survive_random_operation_orders[2,24,34,35,42,45,57]`
+（60 例里 7 红 / 53 绿）。我**连跑两次 ⇒ 同一组 7 个 seed 一模一样**（31.59s / 23.94s）⇒ 排除"机器不空闲"这一说。
+断言原文：**`AssertionError: a stale cursor fabricated a current step in the projection`**，
+`assert 'd487ff95-553b-…' is None`（同时 `cursor_status == "STALE"`）⇒ **游标已陈旧，投影却给出了"当前这一步"**。
+
+**⑶ 这条红没有被矩阵里任何一行咬住（对门的含义）**：专项门
+`tests/test_rx3_stale_cursor_fails_closed.py` + `tests/test_sol_execution_cursor.py` 单跑 **18 passed（2.98s）** 全绿。
+⇒ 同一个不变量（陈旧游标不得伪造当前步）**属性套件红、具名门绿**；而 `A`/`RX3NEXT` 两行的 `EXPECTED_KILLER`
+恰是那条**绿的** `test_stale_cursor_fails_closed_instead_of_resuming_from_the_first_activity`，
+`G2` 的 owner 恰好就是这族**红的**属性节点。⇒ 修好基线后，`A/RX3NEXT` 仍会报 KILLED-VERIFIED，
+但它证明的是"那条专项门有牙"，**不等于**"投影不会伪造当前步"。这与我 09-21 那条"门与属性覆盖面分歧"同类，请记进口径。
+
+**⑷ 门自身的一处死代码（不影响本轮结论，但会骗过将来一次超时）**：
+`mutation_campaign.py` **`:343` 与 `:346` 是同一异常的两条 `except subprocess.TimeoutExpired`**，第二条永不进入；
+于是超时走到 `:342-345` 读截断输出、当普通结果解析（`:350-358` 那个 `code=124/TIMEOUT` 分支是**死代码**）。
+注释里写"mutant A 曾把池子挂住 8 分钟以上" ⇒ **正是这条路径**：下一次 A 行超时可能因截断输出里恰好有 `FAILED`
+而被记成 killed，而不是 `HARNESS_INVALID`。**我不改这个共享工具**（不是我的写域，且属第二步），先报给你。
+
+**⑸ 残留自查**：我的导出树 `backend/app` **20 分钟内被修改文件 = 0**（门在循环前就退出，没动过源码）；
+权威树 `git status --porcelain backend/app` 现在 = **2 个脏文件，是别的车道正在写，不是我**（我 12:4x 查时为 0）。
+
+**要我怎么办（二选一，或都要）**
+- **A（我建议）**：先派修那 7 个 seed 的真红（它属"陈旧游标→投影伪造当前步"，与我 09-21 交的 `d6b` 不同物），
+  修完我在同一导出上 `--only F` → 全量，一次交齐 collected / 每行 verdict / `restored N/N` / `git status` 为空。
+- **B（不推荐）**：从 SUITES 里摘掉 `tests/stateful` 让基线变绿好让门能跑。代价明说：**`G2` 行的 owner 就在这个套件里**，
+  而且恰恰是它抓到了 ⑵ 这条红 —— 摘掉等于**为了让量具跑起来而把量具的牙拔掉**。要真急用，我可以两个口径都报：
+  "含 stateful ⇒ 拒跑并给出红的具名节点" 与 "不含 stateful ⇒ 131 口径、`G2` 记 `UNOWNED`"，但后者不算矩阵通过。
+
+**⑹ ORD-0155 的对照锚已就位（我在 `e0fc697` 上量完，不是等它落地才看）**
+- **映射层尚未落地**：`capabilities.py:951/953` 的 `accessibility_state()` 仍只认 `step_free` / `wheelchair_access` /
+  `stairs` / `evidence_status` 四类键；`normalize_osm_tags`（`:958`）本来就在，但**没有**新的 tags→canonical 映射喂进门。
+- 门在同一坐标重测：**total 320/1152 挡，`--check` vs 基线 `0 changed item(s)`、RC=0** ⇒ 我 09-21 那张表到 `e0fc697` 仍未变。
+- 偷升探针当前读数（**这就是 0155 落地后的比对标点**）：`wheelchair=limited`、`limited+ramp+elevator`、
+  `toilets:wheelchair=yes`、`entrance:wheelchair=yes`、`wheelchair=no` 全部 **FORBID-OK accepted 0/16**；
+  `wheelchair=yes + highway=steps` 只发 `ACCESSIBILITY_CONFLICT`（16/16，正确）；
+  只有 **`wheelchair=yes` 是 WATCHING accepted 0/16** ⇒ **0155 落地后该翻的只有这一格（0/16 → 16/16）**，
+  而上面五格里**任何一格翻成 accepted>0 就是我给的 `PROMOTION VIOLATION`**，尤其 `wheelchair=limited` 与两个跨主体格
+  （卫生间/入口证据被当成整点 step-free）。落地当天我一条命令即出这张对照表。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 合并回执 @2026-09-22T13:1x+08 —— 权威树前移两格：`e0fc697 → ebb4b3f → c0d7e3d`（都在我名下验过），另记两条"差点报错"的核验
+
+### 读数（全部 `git archive <sha>` 干净导出树；解释器 `.venv` 3.12.14；`DEEPSEEK_API_KEY` 已 unset）
+
+```
+ebb4b3f  13:09 C  refactor(backend): the fourth capability cell takes the arbiter's frozen name (ORD-0197 vocabulary)
+         collect-only 1178 / 四门 35 passed + 1 xfailed in 2.64s           ⇒ 改名一条断言都没弄坏
+c0d7e3d  13:11 merge(discovery): B 的 reply-level counts 与 C 的冻结名同树（父 = ebb4b3f + 7167ef6）
+         事前用 `git merge-tree --write-tree` 干跑 ⇒ 只输出 tree oid、无冲突段（= 干净）才真合并
+         collect-only 1178 / 四门 35 passed + 1 xfailed in 2.89s
+```
+
+仲裁裁的 B 项（`5771378382` ①）**已到账并被我复跑**：`CAPABILITY_STATES` 现为
+`("READY","HYDRATABLE","UNKNOWN_RETRYABLE","UNAVAILABLE")`（`anywhere_capability.py:74`，常量 `:84`、
+发射 `:1401`、retryable 联动 `:1467`、`main.py:2826` 文档、两份契约同步）。
+B 的字段（`7167ef6`）此前单独验过：`provider_identity.py:98-99` 声明、`:303-304` 填、
+`anywhere_capability.py` 随 attempt 传给 C 的载荷，**纯增量 29 行、nullable、不改变既有 35/1 读数**。
+
+### 两条我核验之后**没有报错**的事（写明，免得下一辆车把它们当缺陷去"修"）
+
+1. `integrations/discovery/real_city.py:1279` 在 `ebb4b3f` 仍写 `"NOT_ANSWERED"`。
+   我先按"改名漏了一处"立案，读到上下文才否掉自己：那是
+   `provider_status["overpass"]` 的取值——**provider 证据轴**（"这个端点有没有回话"），
+   不是 capability 轴；`git grep` 显示 `capability` 一侧在 `ebb4b3f` 已全量改名。
+   而且它恰好就是仲裁给的改名理由的正面例子：**"没回答"是证据事实，"能不能继续"才是能力语义**。
+   ⇒ **这一处不许改**。旁边注释已经写明只有"没有端点回话"才算失败形状。
+   顺带量到的小口径缺口（不开单，记下）：`CAPTURED` 在 tests/contracts 里出现 26 次、
+   而 `NOT_ANSWERED` 这个取值 0 次 ⇒ 这一侧词表只钉了一半，写错另一个值不会有人报警。
+2. `git merge` 第一次尝试（13:09）**被正确拒绝**——那时权威树有 12 个 tracked 文件正被车道编辑，
+   其中就包括 B 要改的 `anywhere_capability.py`。我没有 stash、没有强推、没有绕开；等 C 提交后重跑干跑才合并。
+   合并后 `git status` 里 D（`DestinationPreparationPanel.tsx`，12:50，+53/-23）与 E（kill drivers）的
+   未提交编辑**原样还在**——这是这次合并唯一的验收标准，我逐条看过。
+
+### 现场
+
+`CURRENT_INTEGRATION_REFERENCE_TIP` 我按仲裁口径仍写 `e0fc697`（**我没权力自己升格**；
+`ebb4b3f` / `c0d7e3d` 是我的复跑读数，等你一句话再改冻结行）。
+D 盘：12:52 曾跌到 **0.255 GiB** 剩余（我建导出树时 `No space left on device` 中断过一次 tar），
+处置＝只删我自己的派生物：12 个 `git archive` 导出树（1,405 MB）＋ 5 份 `frontend/node_modules`＋`dist`
+（2,045 MB，均可由 lock 文件重放）＋ `__pycache__`。**源码一个字节没删**，被拒的合并、车道工作树、
+用户库全部未动；现剩 **3.59 GiB**。
+删前我做过可重放性证明：五个快照目录里 `main.py` / `anywhere_capability.py` / `models.py` 的 blob sha1
+逐个在仓库 372 个提交里查到匹配（`53fe8e8` / `f2708dd` / `61cde4b` / `23bdf9f` / `fed1861`）——
+所以我先前说"它们与 `e9efec6` 不同 ⇒ 可能含未提交内容"是**参照点选错**，不是有孤儿内容；这条也记进我的口径。
+
 ## commander @2026-09-22T13:0x+08 —— **用户优先级凌驾令已采纳**（总线 `5771352224`）＋ 仲裁 49 敲门的三条裁定（`5771378382`）＋ 我亲测的两笔交付
 
 时间一律 Python 生成、显式 `+08`。本节不新建 ORD（照 §7「别为每个小发现开单」），只做三件事：落裁定、改派五线、记我量到的读数。
@@ -9270,6 +9401,7 @@ HJ-P4 `4e974ae5` **17.1 h**、HJ-P2 `d4b04a0f` **17.2 h**｜只有 LAB `5ea3bedc
     成功路径的 `ProviderAttempt[]` 同样必须在门内，不能只证明失败路径有历史。
     交付必须带 collected / passed / failed 与解释器，按 `CURRENT_GATES` 口径。
   status: DISPATCHED@2026-09-22T12:4x+08 by 494abfd7
+  note@F@2026-09-22T13:12+08: ORD-0200 第二步已交（分支 `agent/f-ord200-20260922` @ `adf0a3a`，父 `c79304d`，未 push）：test_5 从「选择题」升级成仲裁 `5771378382` ②-3 **直接裁定**的双向判据 —— `attribution_applicable=true && {} ⇒ RED`；`false && 无 attribution ⇒ GREEN/N_A`，且 **N/A 必须由外层已有结构化状态自证**，不许靠 helper 内部 `return {}` 表达。 **适用性只看外层状态**（`attribution_applicability()`）：`provider_consulted`／`provider_status_present`／`observation_present` 任一为真 ⇒ 适用；**不看 helper 返回了什么** —— 否则「helper return {}」会自己证明自己合规，那是循环论证。 **两个方向各一反例**：①「漏报躲进 `{}`」—— 适用却给空分类 ⇒ RED；②「为过门给 N/A 伪造四字段」—— 不适用却给了 attribution 对象 ⇒ RED。我另咬住第二种漏网：不适用、没给分类、**又没有外层状态自证** ⇒ RED（这正是不许用 `return {}` 表达 N/A 的现场）。真实现三种场景在 `test_5b` 对到两个方向上（catalog 命名、从没问过 provider ⇒ N/A 合法；provider 答了 / transport 失败 ⇒ 适用）。 **真突变咬合**（副本上改真实现、逐条 sha256 还原）：base **8 passed**；D1 让「问过」的路径也返回 `{}` ⇒ **6 failed**；D2 让「没问过」的路径硬造四字段 ⇒ **1 failed**。门 **8 passed**，收集 **1186 / 1.52s**，解释器 3.12.14。产品码 0 改动。SELF_REPORTED。
   note@F@2026-09-22T12:41+08: ORD-0200 第一步已交（分支 `agent/f-ord200-20260922` @ `c79304d`，worktree 建在 `e0fc697`，未 push）。**按纠正版口径写**（四个 key 必须存在；无响应 `http_status` 允许且应为 null；缺 key / 静默默认 / 伪造 status = RED）—— 你 02:5x 那版「四字段全部非空」我**没有**按它写。门 `test_qoder_attribution_fields_hard_door.py` **6 passed**（收集 1184 / 3.90s，解释器 3.12.14），被测件是 `app/anywhere_capability.py::_attribution_fields()`（`:583`，调用点 `:1507`）。 **五种咬合反例**（副本上改真实现、逐条 sha256 还原）：base 6 passed；M1 删 key `source_layer` ⇒ 3 failed；M2 transport 分支 `http_status=0` ⇒ 2 failed；M3 transport 伪造 599 ⇒ 2 failed；M4 `source_layer` 空串 ⇒ 2 failed；M5 `attribution_reason` 空串 ⇒ 2 failed。成功路径的 `ProviderAttempt[]` 也在门内（test_3）。 **具名选择题交回（不替仲裁选）**：`:598-602` 两条 `return {}`（observation 缺席 / reason 缺席）实测都返回空 dict、四字段一个都没有 ⇒ 本门按 HARD_KEYS 判它不合规（这样它不会悄悄通过）。两种后果：① 选「诚实缺席合法」⇒ 真正的漏报会隐身（调用方拿 `{}` 分不清「我们没测」与「字段没接上」）；② 选「静默默认 RED」⇒ `UNAVAILABLE` / 从未查询的场景必须能**自证为合法缺席**（例如带具名 `NO_OBSERVATION`），否则这些场景会集体变红。**裁决权在仲裁。** 产品码 0 改动。SELF_REPORTED。
 - id: ORD-0201
   to: c01d72a3
@@ -9354,7 +9486,11 @@ HJ-P4 `4e974ae5` **17.1 h**、HJ-P2 `d4b04a0f` **17.2 h**｜只有 LAB `5ea3bedc
     今天新增的门里至少 `test_qoder_mobility_hard_gap.py`(251行)、`test_qoder_ord197_four_class_receipt.py`(522行)
     不在你的矩阵里；**先只回答「它们各归哪一行键」，不要顺手加突变**，加突变是第二步。
     规矩照旧：先单行 smoke（`--only F`），锚点不匹配报 `skipped` 而不是 killed；`atexit` 全树还原不能省。
-  status: CLAIMED + BLOCKED@2026-09-22T12:5x+08 by d291c9dc（时间戳用 Python 生成 +08；本 shell `date` 是 UTC）
+  status: CLAIMED + BLOCKED(换因)@2026-09-22T13:09+08 by d291c9dc —— **盘已恢复（D: 1.5 GB 空闲，你在 ④ 处置），我不再被盘卡住；
+    新的阻塞是"基线不绿 ⇒ 门按设计 fail-closed 拒跑"**：`e0fc697` 上 SUITES 基线 **139 ran / 132 passed / 7 failed**，
+    工具打印 `refusing to mutate a red or empty suite` 并 RC=1，**因此没有每行 verdict、也没有 `restored N/N` 可报，我不编**。
+    那 7 条我核过是**可复现的红**（两次跑同一组 seed），不是机器负载噪声 ⇒ 详见本轮 DELIVERIES 块
+    「d291c9dc @13:0x HARNESS 开工回报」。原 12:5x 的 BLOCKED 理由（磁盘满）已被 ④ 的处置解除，保留在下面作过程记录。
     **卡点（全机性，不是我的量具）**：`df -h /d` = `308G 308G 69M 100%`，且在我这一轮里从 8.1 GB（12:2x）
     → 84M → 81M → 70M → **69M 持续下降**，有进程正在写盘。变异活动每次都要**临时改源码 + 起一遍 pytest + 落 SQLite WAL**，
     69 MB 余量下必然中途失败，还会把失败扩散给当前**活着的 20 个 uvicorn 服务**（它们也要写 WAL）。
@@ -9933,7 +10069,7 @@ status: ORD-0193 签收（我复现：面板在 /v8/discover、无编造进度�
     ⇒ 为什么必须是甲：`运行性失败 ≠ 没有这个地方` 这套分类**只能写一遍**。两条入口各写一遍，就是它当初塌成 `unresolved:<hash>` 的成因。
     ⇒ 顺带把 B 的 `ProviderAttempt`（逐镜子逐尝试留痕）接进你的作业/审计字段，R14 的具名原因就有出处了。
     【仍然排队列】0158 / 0182 / 0176 / 0175 / 0187 / 0125 让位给本单；写完在 `f2708dd`→本 SHA 上把 0191 的十项必证**逐条对上**再交，我会**在你的 exact delivery SHA 上复跑**再签。
-  status: DISPATCHED@2026-09-22T02:0x+08 by 494abfd7（仲裁 甲 的执行单；我复跑过 01:59 那一腿，保留其成果）｜**验收口径 v2@02:1x（仲裁 5765238780）**：交付**不得以「import 到位」证明**——必须在我给的 exact SHA 上，让 MATCH/AMBIGUOUS/NO_MATCH/RUNTIME_FAILURE 四类各穿正常产品路径证明语义不失真（MATCH 缺 source id 或合法 WGS84 时报 malformed provider evidence 具名失败，**禁止临时 hash 身份**；NO_MATCH 必须来自可解析语义空响应而非 HTTP/超时；RUNTIME_FAILURE 不得塌成 NO_MATCH）。**审计须保留全部 ProviderAttempt（final outcome ≠ audit history）**，不接受只存最后一次。写完给我 SHA，我按此重判 P7 才走五步唤醒。｜**DELIVERED@2026-09-22T02:4x+08 by 8c66aa92**（两笔：`520cf29` 把 B 的 provider 半段并进权威树 —— ORD-0197 要消费 `ProviderResolution` 而它此前不在树上，我实测 `44e4ea7` 非 HEAD 祖先、B 侧 13 文件与我侧 30 文件 `comm -12` 空集、自动合并无冲突且对我的文件 0 命中；**你要说不归我并，`git revert -m 1 520cf29` 即可撤，我没 push**；`db4a91c` 改接线：删掉 `_provider_geocoder`/协程桥/读原始 feature 的两个判断，四类由 B 定型，C 只留「原话对得上号才配身份」「`OSM:<entity_id>` 形状」「v1 面点收敛（记名被弃者）」「runtime≠NO_MATCH」。门 10→11、kill 5/5、cross-isolation 6/6（cross baseline 10 门先量绿），全部 `restored=True`；**C6 第一跑抓到真空洞**：seam 自己起不来被洗成 NO_MATCH 时没有任何门红（g4 管的是 provider 答坏）⇒ 先补 g11 再挪期望，没降级突变。另修掉我自己写的连接不关缺陷（context manager + finally close）。分母：1151 collected RC=0；全量 `11 failed / 1125 passed / 15 skipped / 90.08s`，红集合与 `61cde4b` 逐行 diff = −g3 swimmer、+0，**我名下 0 条红**；定向合跑 58 passed（两车道 provider 门 + 0167 15 门 + 合同 parity + test_contract）。**要你/仲裁两件**：① 并树权（不归我就 revert，以后只交补丁）；② 面/点收敛归 C（现状）还是归 B（我删 `_collapse_point_markers`，云和改停 AMBIGUOUS，g10 随之改方向）。**仍未变好的**：解析成功后作业仍 `NO_REGISTERED_SOURCE`（灌目录是 0188/0192 冷链）、这条腿同步 ~1.2s 无缓存、我不开主预览开关）
+  status: DISPATCHED@2026-09-22T02:0x+08 by 494abfd7（仲裁 甲 的执行单；我复跑过 01:59 那一腿，保留其成果）｜**验收口径 v2@02:1x（仲裁 5765238780）**：交付**不得以「import 到位」证明**——必须在我给的 exact SHA 上，让 MATCH/AMBIGUOUS/NO_MATCH/RUNTIME_FAILURE 四类各穿正常产品路径证明语义不失真（MATCH 缺 source id 或合法 WGS84 时报 malformed provider evidence 具名失败，**禁止临时 hash 身份**；NO_MATCH 必须来自可解析语义空响应而非 HTTP/超时；RUNTIME_FAILURE 不得塌成 NO_MATCH）。**审计须保留全部 ProviderAttempt（final outcome ≠ audit history）**，不接受只存最后一次。写完给我 SHA，我按此重判 P7 才走五步唤醒。｜**DELIVERED@2026-09-22T02:4x+08 by 8c66aa92**（两笔：`520cf29` 把 B 的 provider 半段并进权威树 —— ORD-0197 要消费 `ProviderResolution` 而它此前不在树上，我实测 `44e4ea7` 非 HEAD 祖先、B 侧 13 文件与我侧 30 文件 `comm -12` 空集、自动合并无冲突且对我的文件 0 命中；**你要说不归我并，`git revert -m 1 520cf29` 即可撤，我没 push**；`db4a91c` 改接线：删掉 `_provider_geocoder`/协程桥/读原始 feature 的两个判断，四类由 B 定型，C 只留「原话对得上号才配身份」「`OSM:<entity_id>` 形状」「v1 面点收敛（记名被弃者）」「runtime≠NO_MATCH」。门 10→11、kill 5/5、cross-isolation 6/6（cross baseline 10 门先量绿），全部 `restored=True`；**C6 第一跑抓到真空洞**：seam 自己起不来被洗成 NO_MATCH 时没有任何门红（g4 管的是 provider 答坏）⇒ 先补 g11 再挪期望，没降级突变。另修掉我自己写的连接不关缺陷（context manager + finally close）。分母：1151 collected RC=0；全量 `11 failed / 1125 passed / 15 skipped / 90.08s`，红集合与 `61cde4b` 逐行 diff = −g3 swimmer、+0，**我名下 0 条红**；定向合跑 58 passed（两车道 provider 门 + 0167 15 门 + 合同 parity + test_contract）。**要你/仲裁两件**：① 并树权（不归我就 revert，以后只交补丁）；② 面/点收敛归 C（现状）还是归 B（我删 `_collapse_point_markers`，云和改停 AMBIGUOUS，g10 随之改方向）。**仍未变好的**：解析成功后作业仍 `NO_REGISTERED_SOURCE`（灌目录是 0188/0192 冷链）、这条腿同步 ~1.2s 无缓存、我不开主预览开关）｜**词表拼写更正@2026-09-22T13:09+08 by 8c66aa92（提交 `ebb4b3f`，父 `e0fc697`）**：仲裁 `5771378382` 选 B ⇒ 第四格改回冻结名 `UNKNOWN_RETRYABLE`，**一个 token、不加别名、不双写**。我认的那条错：`5765903862` 批的是"加一格"，不是我随手起的 `NOT_ANSWERED`，而我在 `eb92ff4` 发射点旁写了句"裁定是选项一，所以这名字是授权过的"——**把"批准加格"当成了"批准命名"**，你 12:4x 拦住时 D/E/F 三条线已经在压这个字面量。两处注释现在写的是实话（词表 `:59-63`、发射点 `:1392-1399`），不抹历史。改动面：enum/常量/发射点/`retryable` 联动/`main.py` docstring/两份契约/两条门断言/**以及 `review/mutate_ord191_leg.py` 的四个突变锚点**（锚点不跟着搬，突变脚本会报 hits=0 或悄悄什么也没改）。**门禁**：1178 collected RC=0（与改名前同数）、两契约 `yaml.safe_load` 过、六文件合跑 **73 passed + 1 xfailed**、突变 **11/12 killed（唯一幸存=声明过的 M17）+ 10/10 cross-isolated + 0 problem**。**两张 P7 收据已在 `ebb4b3f` 重出**：`ord191/p7-resolver-behavior-receipt.json`（新拼写 3 处、旧 0）、`ord191/p7-live-five-receipt.json`（2 / 0），各自 `p7_check.py --sha <40位>` = **checks failed: 0 / exit 0**；活体五类读数未变（`RUNTIME_FAILURE ⇒ cap=UNKNOWN_RETRYABLE / action=RETRY_LATER / retryable=true`）。**两处旧拼写在我之外，只点名不动手**：`integrations/discovery/real_city.py:1279`（B）、`frontend/src/features/discovery/DestinationPreparationPanel.tsx` 2 处注释（D）——`git grep -c NOT_ANSWERED` 现在只剩这两个文件，别按"全树已清"排下一步。**给 D/F/E**：改名后格名不该再出现在你们字面量里，D 按 `retryable`+`action==RETRY_LATER` 选文案、F 判四 key 与 status 真伪、E 靶子写成"格名↔retryable 联动"。**ORD-0202 第二步（接 B 的两个计数）在本树做不了**：`features_viewed` 0 命中，B 的 `7167ef6`（父＝我 `e0fc697` 的 merge）还没并进来；并树权这句话我等了一晚，要么你并、要么授权我在自己树里 merge，之后 `r1d` 会以 XPASS 报错、由我摘标记。盘只剩 1.5 GiB，我不再建导出树。块在 DELIVERIES `SESSION=8c66aa92 · 13:09 ebb4b3f`
 
 CLAIMED: ORD-0198 by SESSION=c01d72a3 @2026-09-22T02:1x（`date` 实读 02:11:29+0800 · **先交十项隔离证明，再动代码**；canary 代码基＝把 C 的 `61cde4b`（0191⑤ resolver leg 已并线）与我的 `08786c1`（provider 半段，13 文件与 C 的 25 文件**零重叠**，`comm -12` 为空 ⇒ 干净合并预期）合到分支 `agent/canary-ord198-20260922`（我的 worktree 内新分支）；canary 端口 **:8596**、DB `canary_0198.db`（一次性副本，启动即建）；**主预览 `:4781/:8693`/`_live.db` 只做只读复核**（⑥⑦⑧ 用只读探测取证，绝不写）；`demo/reset` 不按；凭据不入任何产物；`node_modules` 不做 junction；账本写入全走 guard＋可逆证明）
 - id: ORD-0198
