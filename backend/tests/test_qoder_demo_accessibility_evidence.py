@@ -84,6 +84,16 @@ def _evidence(place_id: str) -> dict:
     return _accessibility_metadata(row) or {}
 
 
+def demo_city_place_ids() -> list[str]:
+    """该城现在真的有哪几个地点（从库里读，不写死 id）。"""
+
+    with SessionLocal() as session:
+        rows = session.execute(
+            select(Place.id).where(Place.city_code == DEMO_CITY)
+        ).all()
+    return sorted(str(row[0]) for row in rows)
+
+
 def _plan_stops(plan_id: str) -> list[str]:
     with SessionLocal() as session:
         rows = (
@@ -103,6 +113,26 @@ def _conflicting_stops(plan_id: str, fact_key: str) -> list[str]:
         for place_id in _plan_stops(plan_id)
         if _evidence(place_id).get(fact_key) is False
     ]
+
+
+def _force_both_facts_false(plan_id: str) -> str:
+    """把该候选第一个有无障碍证据的地点在我自己的一次性库里改成两把都 False，并回读证明改动落地。"""
+
+    target = next((place_id for place_id in _plan_stops(plan_id) if _evidence(place_id)), None)
+    assert target, f"{plan_id} 的地点里没有任何一条无障碍证据可改"
+    with SessionLocal() as session:
+        row = session.get(Place, target)
+        metadata = json.loads(row.metadata_json or "{}")
+        evidence = dict(metadata.get("accessibility_evidence") or {})
+        evidence.update({"stroller_accessible": False, "luggage_accessible": False})
+        metadata["accessibility_evidence"] = evidence
+        row.metadata_json = json.dumps(metadata, ensure_ascii=False)
+        session.commit()
+    read_back = _evidence(target)
+    assert read_back.get("stroller_accessible") is False and read_back.get("luggage_accessible") is False, (
+        f"改动没落地（回读 {read_back}）：那条双具名断言就成了空跑"
+    )
+    return target
 
 
 def _fact_key_for(code: str) -> str:
@@ -309,56 +339,6 @@ def test_hard_luggage_names_the_blocker_and_does_not_misfire():
     _two_way("LARGE_LUGGAGE")
 
 
-def test_two_hard_constraints_each_name_their_own_blocker():
-    """两条 HARD 同时在档：每个冲突候选只许点自己那把的名字，不许串台（红队 A2 的形状）。
-
-    产品今天就是这么做的，但没有节点钉它 - 这条补的是覆盖边界，不是缺陷。
-    """
-
-    _seed()
-    plans = _generate()
-    assert len(plans) == len(_templates()), f"SETUP：无断言时应有 {len(_templates())} 个候选，实际 {len(plans)}"
-    for code in ("STROLLER", "LARGE_LUGGAGE"):
-        _confirm_capability(code)
-    other = {"STROLLER": "LARGE_LUGGAGE", "LARGE_LUGGAGE": "STROLLER"}
-    expected = {
-        plan_id: {
-            code: [
-                place_id
-                for place_id in _conflicting_stops(plan_id, _fact_key_for(code))
-            ]
-            for code in ("STROLLER", "LARGE_LUGGAGE")
-        }
-        for plan_id in plans
-    }
-    assert any(expected[plan_id]["STROLLER"] for plan_id in plans), "没有候选与 STROLLER 冲突，这条就成了空断言"
-    assert any(expected[plan_id]["LARGE_LUGGAGE"] for plan_id in plans), "没有候选与 LARGE_LUGGAGE 冲突，这条就成了空断言"
-    seen_codes = set()
-    for plan_id in plans:
-        response = _select(plan_id)
-        for code in ("STROLLER", "LARGE_LUGGAGE"):
-            places = expected[plan_id][code]
-            if places:
-                seen_codes.add(code)
-                assert NAMED_BLOCKER[code] in response.text, (
-                    f"{plan_id} 与 {code} 冲突（{places}）却没被点名：{response.status_code} {response.text[:200]}"
-                )
-                assert NAMED_BLOCKER[other[code]] not in response.text, (
-                    f"{plan_id} 只因 {code} 冲突，却把 {other[code]} 的名字也报出来了（串台）：{response.text[:220]}"
-                )
-        if not any(expected[plan_id].values()):
-            assert response.status_code == 200, (
-                f"无任何冲突的候选被挡了：{response.status_code} {response.text[:200]}"
-            )
-            for code in ("STROLLER", "LARGE_LUGGAGE"):
-                assert NAMED_BLOCKER[code] not in response.text, (
-                    f"干净候选里出现了 {code} 的阻塞名：{response.text[:200]}"
-                )
-    assert seen_codes == {"STROLLER", "LARGE_LUGGAGE"}, (
-        f"两种具名阻塞没能各被观察到一次：{seen_codes}"
-    )
-
-
 def test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability():
     """约束先落在文件上时，权威门在落库之前就把它看得懂的候选筛掉（feasibility 里没有 demo 特例）。"""
 
@@ -437,6 +417,114 @@ def test_a_dropped_candidate_leaves_a_named_fact_on_a_route_the_frontend_already
         assert facts.get("failures"), f"具名事实里一个门自己叫出的失败名都没有：{facts}"
         assert "STROLLER" in (facts.get("hard_rule_codes") or []), (
             f"在档的硬性规则没进事实：{facts.get('hard_rule_codes')}"
+        )
+
+
+def test_two_hard_constraints_each_name_their_own_blocker():
+    """两条 HARD 同时在档：一个候选可能同时撞两把（同一地点也算），具名必须与 expected 结构相等。
+
+    红队臂 1 打出的正是我原先的隐含假设"每候选只撞一把"：产品在同一地点两把都冲突时
+    会同时点两个名字（正确），而我的 `另一把的名字不得出现` 判据把它判成误红。
+    判据改成"具名当且仅当 expected 非空"⇒ 只有**多报了 expected 之外的名字**才红。
+    """
+
+    codes = ("STROLLER", "LARGE_LUGGAGE")
+    _seed()
+    plans = _generate()
+    assert len(plans) == len(_templates()), f"SETUP：无断言时应有 {len(_templates())} 个候选，实际 {len(plans)}"
+    for code in codes:
+        _confirm_capability(code)
+    expected = {
+        plan_id: {code: _conflicting_stops(plan_id, _fact_key_for(code)) for code in codes}
+        for plan_id in plans
+    }
+    assert any(expected[plan_id]["STROLLER"] for plan_id in plans), "没有候选与 STROLLER 冲突，这条就成了空断言"
+    assert any(expected[plan_id]["LARGE_LUGGAGE"] for plan_id in plans), "没有候选与 LARGE_LUGGAGE 冲突，这条就成了空断言"
+    seen = {code: 0 for code in codes}
+    for plan_id in plans:
+        response = _select(plan_id)
+        for code in codes:
+            named = NAMED_BLOCKER[code] in response.text
+            places = expected[plan_id][code]
+            assert named == bool(places), (
+                f"{plan_id} 的具名与证据不符：{code} expected={places} 名字出现={named} "
+                f"（{response.status_code} {response.text[:220]}）"
+            )
+            seen[code] += 1 if places else 0
+        if not any(expected[plan_id].values()):
+            assert response.status_code == 200, (
+                f"无任何冲突的候选被挡了：{response.status_code} {response.text[:200]}"
+            )
+    assert all(seen[code] for code in codes), f"两把具名各至少要被观察到一次：{seen}"
+
+    # 同一地点撞两把（红队臂 1 的形状）：两个名字都必须在。
+    # 改的是我自己的一次性库，不碰 fixture、不碰产品默认值。
+    target_plan = plans[0]
+    forced_stop = _force_both_facts_false(target_plan)
+    again = _select(target_plan)
+    assert again.status_code == 422, f"两把都冲突的候选竟然可选：{again.status_code} {again.text[:200]}"
+    for code in codes:
+        assert f"{NAMED_BLOCKER[code]}:{forced_stop}" in again.text, (
+            f"同一地点 {forced_stop} 两把都 False，响应里却少了 {code} 的具名：{again.text[:260]}"
+        )
+
+
+def test_a_refusal_with_no_surviving_candidate_names_which_rules_broke_them():
+    """红队臂 2 的形状：三把 HARD 同时在档 ⇒ 泛化 422 不能只报计数，必须点名是谁把它撞死的。
+
+    第三把按红队做法用 API 直写（绕开解析器），所以这条同时钉住"直写的约束也会具名"。
+    """
+
+    codes = ("STROLLER", "LARGE_LUGGAGE", "STEP_FREE_REQUIRED")
+    _seed()
+    payload = []
+    for text in (HARD_SENTENCES["STROLLER"], HARD_SENTENCES["LARGE_LUGGAGE"]):
+        payload += [
+            {**dict(item), "confirmed": True}
+            for item in extract_capabilities_from_text(text, scope="TRAVELER")
+        ]
+    payload.append({
+        "code": "STEP_FREE_REQUIRED",
+        "class": "HARD_ACCESSIBILITY_NEED",
+        "severity": "HARD",
+        "params": {},
+        "confirmed": True,
+    })
+    confirmed = client.post(
+        "/api/v1/travelers/%s/capabilities/confirm" % _TRAVELER, json=payload
+    )
+    assert confirmed.status_code == 200, f"三把 HARD 直写期望 200，实际 {confirmed.status_code} {confirmed.text[:200]}"
+    on_file = {row.get("code") for row in confirmed.json()["capabilities"] if row.get("severity") == "HARD"}
+    assert set(codes) <= on_file, f"三把硬性约束没都落库：{sorted(on_file)}"
+
+    generated = client.post("/api/v1/journeys/%s/plans/generate" % _JOURNEY, json={})
+    assert generated.status_code == 422, f"三个候选都该被撞死，期望 422，实际 {generated.status_code}"
+    error = generated.json().get("error", {})
+    details = error.get("details") or {}
+    assert details.get("reason_code", error.get("reason_code")), "拒答连 reason code 都没有"
+    rejections = details.get("candidate_rejections")
+    assert isinstance(rejections, list) and rejections, (
+        f"422 的 details 里只有计数、没有逐候选具名：{sorted(details)}"
+    )
+    assert len(rejections) == details.get("day_sequences_available"), (
+        f"具名条数应等于被评估的候选数：{len(rejections)} vs {details.get('day_sequences_available')}"
+    )
+    named_codes = {code for entry in rejections for code in (entry.get("hard_rule_codes") or [])}
+    assert set(codes) <= named_codes, f"在档的硬性规则没能全部具名：{sorted(named_codes)}"
+    for code, fact_key in (("STROLLER", "stroller_accessible"), ("LARGE_LUGGAGE", "luggage_accessible")):
+        expected_places = {
+            place_id
+            for place_id in demo_city_place_ids()
+            if _evidence(place_id).get(fact_key) is False
+        }
+        assert expected_places, f"演示城里没有 {fact_key}=False 的地点，这一格成了空断言"
+        text = json.dumps(rejections, ensure_ascii=False)
+        assert any(
+            f"{NAMED_BLOCKER[code]}:{place_id}" in text for place_id in expected_places
+        ), f"具名事实里没有 {code} 的阻塞名（期望点名 {sorted(expected_places)}）：{text[:300]}"
+    for entry in rejections:
+        assert (entry.get("failures") or []) and (entry.get("hard_rule_codes") or []), (
+            f"存在一条无名的拒答事实：{entry}"
         )
 
 

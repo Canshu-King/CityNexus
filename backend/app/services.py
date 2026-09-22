@@ -1610,6 +1610,7 @@ def generate_plans(
         )
         if schedule is not None:
             schedules.append(schedule)
+    candidate_rejections: list[dict] = []
     for offset, schedule in enumerate(schedules):
         if len(created) >= candidate_count:
             break
@@ -1656,21 +1657,23 @@ def generate_plans(
             # durable fact is written here. Only names the product already emitted go into it -
             # the gate's own failure strings plus the hard rule codes on file for this journey.
             # Nothing raises and the response stays a list; surviving candidates still ship.
+            rejection = {
+                "reason_codes": ["CANDIDATE_REJECTED_BY_FEASIBILITY_GATE"],
+                "summary": "candidate dropped before persistence: "
+                + ", ".join(gate.failures[:4]),
+                "failures": list(gate.failures),
+                "hard_rule_codes": hard_rule_codes_on_file(constraints),
+                "candidate_sequence": offset,
+                "stops": [item.place_id for item in activity_facts if item.place_id],
+            }
+            candidate_rejections.append(rejection)
             record_audit(
                 session,
                 action="plans.candidate_rejected",
                 entity_type="Journey",
                 entity_id=journey.id,
                 journey_id=journey.id,
-                after={
-                    "reason_codes": ["CANDIDATE_REJECTED_BY_FEASIBILITY_GATE"],
-                    "summary": "candidate dropped before persistence: "
-                    + ", ".join(gate.failures[:4]),
-                    "failures": list(gate.failures),
-                    "hard_rule_codes": hard_rule_codes_on_file(constraints),
-                    "candidate_sequence": offset,
-                    "stops": [item.place_id for item in activity_facts if item.place_id],
-                },
+                after=rejection,
             )
             continue
         # Version numbers remain contiguous among accepted candidates even
@@ -1750,6 +1753,9 @@ def generate_plans(
                 "city_services_in_catalog": len(services),
                 "day_sequences_available": len(raw_templates),
                 "requested_candidates": candidate_count,
+                # Which candidate died on which named rule (services assembles this; the
+                # route forwards `details` verbatim, so no main.py change is needed).
+                "candidate_rejections": candidate_rejections,
             },
         )
     record_audit(
