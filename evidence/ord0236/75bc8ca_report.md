@@ -133,8 +133,10 @@ sealed demo 库 16 个地点的 `tags_json` 共 **16 种 token，全部是裸展
 
 本地提交 `75bc8ca192db547a6169540ce28ce2f6f2d9fe4d` 是**树内坐标**，不是仲裁可读的坐标
 （工作 tip SHA 在 GitHub 返回 422，已量过多次）。所以本单一律发布到
-`Canshu-King/CityNexus @ commander/control`，下表每一行都是**远端读回**得到的
-（`GET /contents/<path>?ref=commander/control`，读回时刻分支头 `39ed5aa03b5d`）：
+`Canshu-King/CityNexus @ commander/control`。下表 7 件都是**远端读回**
+（`GET /contents/<path>?ref=commander/control`）确认可读的：读回做了两次，分支头分别是
+`39ed5aa03b5d`（第一次，其中 `gate.patch` 与 `mutation_receipt` 吃 `SSL UNEXPECTED_EOF` 噪声）与
+`1ff0c6f267c5`（第二次，7 件全部可读）；下表 sha1 取第二次那次。
 
 | path | 远端 git blob sha1 | bytes |
 | --- | --- | --- |
