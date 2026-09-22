@@ -1,0 +1,426 @@
+{
+ "W_RECOVER_01_boot_screen.png": {
+  "now": "88c1f80e989e",
+  "recorded": {
+   "W_RECOVER": "d691e5e04ab3",
+   "W_RECOVER_2": "88c1f80e989e"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_02_enter_wizard.png": {
+  "now": "f1b94ddffd68",
+  "recorded": {
+   "W_RECOVER": "4ab55f312c2b",
+   "W_RECOVER_2": "f1b94ddffd68"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_03_back_to_step1_0.png": {
+  "now": "1e4291854688",
+  "recorded": {
+   "W_RECOVER": "1e4291854688",
+   "W_RECOVER_2": "1e4291854688"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_04_back_to_step1_1.png": {
+  "now": "6b9b2e379a16",
+  "recorded": {
+   "W_RECOVER": "e98139608fdd",
+   "W_RECOVER_2": "6b9b2e379a16"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_05_type_city_hz.png": {
+  "now": "65dcca191865",
+  "recorded": {
+   "W_RECOVER": "e98139608fdd",
+   "W_RECOVER_2": "65dcca191865"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_06_arrival.png": {
+  "now": "3d30d26741ac",
+  "recorded": {
+   "W_RECOVER": "276c9d597edf",
+   "W_RECOVER_2": "3d30d26741ac"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_07_departure.png": {
+  "now": "bda9840f8456",
+  "recorded": {
+   "W_RECOVER": "bda9840f8456",
+   "W_RECOVER_2": "bda9840f8456"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_08_next1.png": {
+  "now": "1e4291854688",
+  "recorded": {
+   "W_RECOVER": "1e4291854688",
+   "W_RECOVER_2": "1e4291854688"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_09_budget.png": {
+  "now": "31a6300c2dd8",
+  "recorded": {
+   "W_RECOVER": "31a6300c2dd8",
+   "W_RECOVER_2": "31a6300c2dd8"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_10_special.png": {
+  "now": "65653f91c986",
+  "recorded": {
+   "W_RECOVER": "65653f91c986",
+   "W_RECOVER_2": "65653f91c986"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_11_next2.png": {
+  "now": "20b1de18eb64",
+  "recorded": {
+   "W_RECOVER": "20b1de18eb64",
+   "W_RECOVER_2": "20b1de18eb64"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_12_review_step3.png": {
+  "now": "20b1de18eb64",
+  "recorded": {
+   "W_RECOVER": "20b1de18eb64",
+   "W_RECOVER_2": "20b1de18eb64"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_13_create.png": {
+  "now": "6555ddea9638",
+  "recorded": {
+   "W_RECOVER": "6555ddea9638",
+   "W_RECOVER_2": "6555ddea9638"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_14_hub_after_create.png": {
+  "now": "8f7a71ec0e7e",
+  "recorded": {
+   "W_RECOVER": "8f7a71ec0e7e",
+   "W_RECOVER_2": "8f7a71ec0e7e"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_15_fill_ai.png": {
+  "now": "d926c73bcc2c",
+  "recorded": {
+   "W_RECOVER": "d926c73bcc2c",
+   "W_RECOVER_2": "d926c73bcc2c"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_16_submit_ai.png": {
+  "now": "0593f4652aa5",
+  "recorded": {
+   "W_RECOVER": "1dc448d61e5a",
+   "W_RECOVER_2": "0593f4652aa5"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_17_blocked_verdict.png": {
+  "now": "431d374ffd4a",
+  "recorded": {
+   "W_RECOVER": "431d374ffd4a",
+   "W_RECOVER_2": "431d374ffd4a"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_18_tap_switch_city_cta.png": {
+  "now": "20b1de18eb64",
+  "recorded": {
+   "W_RECOVER": "20b1de18eb64",
+   "W_RECOVER_2": "20b1de18eb64"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_19_after_cta_screen.png": {
+  "now": "20b1de18eb64",
+  "recorded": {
+   "W_RECOVER": "20b1de18eb64",
+   "W_RECOVER_2": "20b1de18eb64"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_20_try_back.png": {
+  "now": "1e6f068b6b79",
+  "recorded": {
+   "W_RECOVER": "1e6f068b6b79",
+   "W_RECOVER_2": "1e6f068b6b79"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_21_after_back_1.png": {
+  "now": "1e6f068b6b79",
+  "recorded": {
+   "W_RECOVER": "1e6f068b6b79",
+   "W_RECOVER_2": "1e6f068b6b79"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_22_try_back_again.png": {
+  "now": "925b1a38be40",
+  "recorded": {
+   "W_RECOVER": "925b1a38be40",
+   "W_RECOVER_2": "925b1a38be40"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_23_after_back_2.png": {
+  "now": "925b1a38be40",
+  "recorded": {
+   "W_RECOVER": "925b1a38be40",
+   "W_RECOVER_2": "925b1a38be40"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_24_retype_city_bj.png": {
+  "now": "2650a9b97c96",
+  "recorded": {
+   "W_RECOVER": "2650a9b97c96",
+   "W_RECOVER_2": "2650a9b97c96"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_25_bj_arrival.png": {
+  "now": "a9c0e80a8ba5",
+  "recorded": {
+   "W_RECOVER": "a9c0e80a8ba5",
+   "W_RECOVER_2": "a9c0e80a8ba5"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_26_bj_next1.png": {
+  "now": "1e6f068b6b79",
+  "recorded": {
+   "W_RECOVER": "1e6f068b6b79",
+   "W_RECOVER_2": "1e6f068b6b79"
+  },
+  "matches": [
+   "W_RECOVER",
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_27_bj_budget.png": {
+  "now": "14499a153fc1",
+  "recorded": {
+   "W_RECOVER": "14499a153fc1"
+  },
+  "matches": [
+   "W_RECOVER"
+  ]
+ },
+ "W_RECOVER_27_bj_next2.png": {
+  "now": "d9c6ab08edbf",
+  "recorded": {
+   "W_RECOVER_2": "d9c6ab08edbf"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_28_bj_review.png": {
+  "now": "d9c6ab08edbf",
+  "recorded": {
+   "W_RECOVER_2": "d9c6ab08edbf"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_28_bj_special.png": {
+  "now": "65653f91c986",
+  "recorded": {
+   "W_RECOVER": "65653f91c986"
+  },
+  "matches": [
+   "W_RECOVER"
+  ]
+ },
+ "W_RECOVER_29_bj_create.png": {
+  "now": "38cbbc8f1e91",
+  "recorded": {
+   "W_RECOVER_2": "38cbbc8f1e91"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_29_bj_next2.png": {
+  "now": "d9c6ab08edbf",
+  "recorded": {
+   "W_RECOVER": "d9c6ab08edbf"
+  },
+  "matches": [
+   "W_RECOVER"
+  ]
+ },
+ "W_RECOVER_30_bj_hub.png": {
+  "now": "38cbbc8f1e91",
+  "recorded": {
+   "W_RECOVER_2": "38cbbc8f1e91"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_30_bj_review.png": {
+  "now": "d9c6ab08edbf",
+  "recorded": {
+   "W_RECOVER": "d9c6ab08edbf"
+  },
+  "matches": [
+   "W_RECOVER"
+  ]
+ },
+ "W_RECOVER_31_bj_create.png": {
+  "now": "38cbbc8f1e91",
+  "recorded": {
+   "W_RECOVER": "38cbbc8f1e91"
+  },
+  "matches": [
+   "W_RECOVER"
+  ]
+ },
+ "W_RECOVER_31_bj_fill_ai.png": {
+  "now": "5051799026a7",
+  "recorded": {
+   "W_RECOVER_2": "5051799026a7"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_32_bj_hub.png": {
+  "now": "38cbbc8f1e91",
+  "recorded": {
+   "W_RECOVER": "38cbbc8f1e91"
+  },
+  "matches": [
+   "W_RECOVER"
+  ]
+ },
+ "W_RECOVER_32_bj_submit_ai.png": {
+  "now": "2be4d9536f12",
+  "recorded": {
+   "W_RECOVER_2": "2be4d9536f12"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_33_bj_fill_ai.png": {
+  "now": "5051799026a7",
+  "recorded": {
+   "W_RECOVER": "5051799026a7"
+  },
+  "matches": [
+   "W_RECOVER"
+  ]
+ },
+ "W_RECOVER_33_bj_verdict.png": {
+  "now": "a735f3c4cb05",
+  "recorded": {
+   "W_RECOVER_2": "a735f3c4cb05"
+  },
+  "matches": [
+   "W_RECOVER_2"
+  ]
+ },
+ "W_RECOVER_34_bj_submit_ai.png": {
+  "now": "2be4d9536f12",
+  "recorded": {
+   "W_RECOVER": "2be4d9536f12"
+  },
+  "matches": [
+   "W_RECOVER"
+  ]
+ },
+ "W_RECOVER_35_bj_verdict.png": {
+  "now": "7be0c148ffc0",
+  "recorded": {
+   "W_RECOVER": "7be0c148ffc0"
+  },
+  "matches": [
+   "W_RECOVER"
+  ]
+ }
+}
