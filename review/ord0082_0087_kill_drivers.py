@@ -697,6 +697,40 @@ CASES = [
         '  "trial.tianjinDemo": "Use the sealed Tianjin demo",\n',
         [(COPY_SPEC, ["ord0216d-en-the-wizard-never-says-a-city-name"])],
     ),
+    (
+        # ORD-0220 ①: the red team's arm: the caveat keeps its risk clause and appends a reassurance.
+        'killX1-tight-caveat-says-the-opposite',
+        EXPERIENCE,
+        '        ? "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。"\n',
+        '        ? "按这个预算，住宿、交通和吃饭很可能超出计划。——不过实际上预算充足，放心消费。"\n',
+        [(TIERS_SPEC, ["ord0220-1-the-tight-caveat-cannot-contradict-itself"])],
+    ),
+    (
+        # ORD-0220 ①: the empty-caveat arm: the number stands with no sentence behind it.
+        'killX2-tight-caveat-says-nothing',
+        EXPERIENCE,
+        '        ? "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。"\n',
+        '        ? ""\n',
+        [(TIERS_SPEC, ["ord0220-1-the-tight-caveat-cannot-contradict-itself"])],
+    ),
+    (
+        # ORD-0220 ②: the announcement goes back to being a snapshot of an old missing-list,
+        # which is what the traveller's screen reader keeps re-reading after the fix.
+        "killY1-announcement-keeps-the-stale-snapshot",
+        WIZARD,
+        '        {spokenKey === missingKey ? spokenReason : ""}\n',
+        '        {spokenReason}\n',
+        [(SURFACE_SPEC, ['ord0220-2-the-announcement-retires-when-the-field-is-fixed'])],
+    ),
+    (
+        # ORD-0220 ③: the press still speaks but the reason never reaches the viewport --
+        # the exact 'I pressed and nothing happened' state HJ-P1 measured three times.
+        "killZ1-refused-press-never-reveals-its-reason",
+        WIZARD,
+        '    hint.scrollIntoView({ block: "center", behavior: "smooth" });\n',
+        '    // reveal removed: the sentence is spoken, the screen never shows it\n',
+        [(SURFACE_SPEC, ['ord0220-3-a-refused-press-brings-its-reason-on-screen'])],
+    ),
 ]
 
 sha256 = lambda path: hashlib.sha256(open(path, "rb").read()).hexdigest()

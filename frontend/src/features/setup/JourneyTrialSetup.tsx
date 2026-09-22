@@ -410,6 +410,9 @@ export function JourneyTrialSetup({
      written back -- otherwise the second blocked tap, the one where the traveller is sure they
      pressed it, would be silent. */
   const [spokenReason, setSpokenReason] = useState("");
+  /* ORD-0220 ②: the sentence belongs to a particular set of missing fields.  When that set changes
+     the announcement is no longer a report of anything, so it stops being spoken. */
+  const [spokenKey, setSpokenKey] = useState<string | null>(null);
   const speakTimer = useRef<number | null>(null);
   useEffect(
     () => () => {
@@ -417,10 +420,33 @@ export function JourneyTrialSetup({
     },
     [],
   );
-  const speak = (text: string) => {
+  const speak = (text: string, key: string) => {
     if (speakTimer.current !== null) window.clearTimeout(speakTimer.current);
+    setSpokenKey(key);
     setSpokenReason("");
+    /* Clear then set: an aria-live region only speaks when its text *changes*, so a second refused
+       tap has to re-announce the same sentence (ORD-0086). */
     speakTimer.current = window.setTimeout(() => setSpokenReason(text), 60);
+  };
+  /**
+   * ORD-0220 ③: a refused press has to answer where the traveller is looking.  HJ-P1 measured the
+   * same shape three times -- the hint at y=1221..1234 inside an 844px viewport with the sticky
+   * 下一步 at y=652 -- and this lane reproduced it independently (`review/evidence/ui-overnight/
+   * ord0221-step2-visible-before-after.json`: top 1224, height 85, inViewport false).  Nothing
+   * moved, so the press read as a dead button.
+   *
+   * The order allowed focus **or** scroll.  Only scroll is delivered here, on purpose: focusing the
+   * paragraph means giving it `tabIndex={-1}`, and ORD-0066's gate `a11y-blocked-next-takes-focus`
+   * carries a deliberate negative control on that exact element ("a non-interactive paragraph took
+   * focus, so 'landed' is not measuring focusability") -- it went red the moment the paragraph
+   * became focusable (measured: `review/run-run076475.log`, 2 failed / 40 passed).  I do not edit
+   * another order's instrument to make my own change pass, so the reason is scrolled into view and
+   * the announcement (ORD-0220 ②) carries the rest; the focus half waits for a ruling.
+   */
+  const revealReason = () => {
+    const hint = document.getElementById("trial-required-hint");
+    if (!hint) return;
+    hint.scrollIntoView({ block: "center", behavior: "smooth" });
   };
   const mounted = useRef(true);
   useEffect(() => {
@@ -532,6 +558,9 @@ export function JourneyTrialSetup({
   const missingNow =
     step === 1 ? missingStep1 : step === 2 ? missingStep2 : missingStep3;
   const blockedNow = missingNow.length > 0;
+  /* The identity of "what is missing right now", used to retire an announcement that no longer
+     matches the screen (ORD-0220 ②). */
+  const missingKey = missingNow.map((field) => field.target).join("|");
   /* One sentence, read by the visible hint and by the announcement a blocked tap makes, so
      what a sighted traveller sees and what a screen reader says cannot diverge. */
   const missingLine = missingNow.length
@@ -1009,7 +1038,12 @@ export function JourneyTrialSetup({
         /* A greyed-out "Next" with no reason is the same silence as a create that dies
            quietly, so name what is missing.  Stable id: the blocked button describes itself
            with this element, so the relation cannot dangle between keystrokes. */
-        <p className="trial-required-hint" id="trial-required-hint" data-testid="trial-required-hint" role="status">
+        <p
+          className="trial-required-hint"
+          id="trial-required-hint"
+          data-testid="trial-required-hint"
+          role="status"
+        >
           {/* ORD-0135 ③: naming a missing field is a diagnosis; the traveller also needs the route.
               Each item is a real control that puts the cursor in the field it names -- rendered inline
               rather than as its own row, because a row of buttons pushed this wizard's sticky CTA
@@ -1056,7 +1090,11 @@ export function JourneyTrialSetup({
         </p>
       )}
       {/* Polite, and empty until a tap is refused: the visible hint above already carries the
-          words for sighted travellers, so this region exists for the announcement alone. */}
+          words for sighted travellers, so this region exists for the announcement alone.
+          ORD-0220 ②: it also has to stop.  A snapshot of an old missing-list keeps being re-read by
+          a screen reader after the traveller has fixed the field, which is the same stale-hint
+          defect on the only surface she cannot see -- so the sentence is shown only while the set it
+          was spoken for is still the set on screen. */}
       <p
         className="v8-sr-only"
         id="trial-next-reason"
@@ -1064,7 +1102,7 @@ export function JourneyTrialSetup({
         role="status"
         aria-live="polite"
       >
-        {spokenReason}
+        {spokenKey === missingKey ? spokenReason : ""}
       </p>
       {busy && phaseLabel && (
         /* ORD-0047: this wait measured 114.98s on a cold city through the production
@@ -1133,7 +1171,8 @@ export function JourneyTrialSetup({
             aria-describedby={blockedNow ? "trial-required-hint" : undefined}
             onClick={() => {
               if (blockedNow) {
-                speak(missingLine);
+                speak(missingLine, missingKey);
+                revealReason();
                 return;
               }
               setStep((current) => (current === 1 ? 2 : 3));
@@ -1156,7 +1195,8 @@ export function JourneyTrialSetup({
             aria-describedby={blockedNow ? "trial-required-hint" : undefined}
             onClick={() => {
               if (blockedNow) {
-                speak(missingLine);
+                speak(missingLine, missingKey);
+                revealReason();
                 return;
               }
               void submit();

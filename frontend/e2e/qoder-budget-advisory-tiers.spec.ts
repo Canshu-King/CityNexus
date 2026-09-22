@@ -218,3 +218,54 @@ test("ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red — 只�
     node(NODE, `the hub prints the derived number without its caveat: "${text}" -- exactly the fake-precision the order forbids`),
   ).toBe(false);
 });
+
+/* ORD-0220 ①: co-occurrence is not meaning.  The three assertions above only prove two strings are
+   present somewhere in the block, which is why the red team's mutant survived: keep the caveat and
+   append 「——不过实际上预算充足，放心消费」 and every one of them still reads green while the screen
+   contradicts itself.  This node asserts what the caveat **says**. */
+const RISK_WORDS = ["超出", "紧张", "吃紧", "不够"];
+const ALLAY_WORDS = ["充足", "放心", "宽裕", "富余", "没问题", "绰绰有余"];
+
+test("ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什么也要断言", async ({
+  page,
+}) => {
+  test.setTimeout(300_000);
+  const NODE = "ord0220-1-the-tight-caveat-cannot-contradict-itself";
+  await openHubWithReference(page, reference({ per_person_per_day_minor: 4000 }));
+  const block = page.getByTestId("budget-advisory");
+  await expect(
+    block,
+    node(NODE, "the tight advisory is not on screen, so there is no caveat to judge"),
+  ).toBeVisible({ timeout: 20_000 });
+  const text = (await block.innerText()).replace(/\s+/g, " ");
+  const risk = RISK_WORDS.filter((word) => text.includes(word));
+  const allay = ALLAY_WORDS.filter((word) => text.includes(word));
+  expect(
+    risk.length,
+    node(NODE, `the tight advisory carries a number but its caveat says no risk at all: "${text}"`),
+  ).toBeGreaterThan(0);
+  expect(
+    allay,
+    node(
+      NODE,
+      `the tight caveat contradicts itself -- risk ${JSON.stringify(risk)} printed alongside ${JSON.stringify(allay)}: "${text}"`,
+    ),
+  ).toEqual([]);
+  writeFileSync(
+    evidencePath("ui-overnight/ord0220-caveat-meaning.json"),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        node: NODE,
+        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
+        text,
+        risk,
+        allay,
+        rule: "tight 的 caveat 必须自己说出风险，且不得同时出现安抚类词",
+      },
+      null,
+      2,
+    ) + "\n",
+    "utf-8",
+  );
+});
