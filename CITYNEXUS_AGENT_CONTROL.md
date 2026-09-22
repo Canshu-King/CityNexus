@@ -190,6 +190,19 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=c01d72a3 · 同一尖第三次全套：把分母按"交集＋范围＋具名泳者"补齐 2026-09-23T01:31+08 → 上一条我只跑了两轮就报分母，按共享基线口径那是**观察不是基线**。`4d9ceae` 上三轮 `pytest tests/ -q --tb=no`：
+
+```text
+第 1 次 10 failed / 1167 passed（121.59s）   多出的是 catalog_hydration::test_abandon_reports_a_request_not_a_death
+第 2 次  9 failed / 1168 passed（136.20s）   那条绿了
+第 3 次 10 failed / 1167 passed（126.28s）   这次绿回上一条、但 g3_five_concurrent_hydrations… 红了
+交集 = 稳定 9 条：aiv3_02 / g5 / g9a / g9b / g14a / g14c / g8a / g10 / city_failure
+范围 = 9–10；具名轮换者 = catalog_hydration::test_abandon_reports_a_request_not_a_death 与 anywhere_gates::test_g3_five_concurrent_hydrations…（两者都是既有记录里的双上下文节点，我一支都没碰）
+collected 每次 1193 = 1167/1168 passed + 9/10 failed + 15 skipped + 1 xfailed
+```
+
+⇒ 我这两次换成员的旋转**不是我引入的回归**（我的 9 条门与生产者从未出现在红集合里；每条都在 `4d9ceae` 上 9/9 绿、且各自 10 连击全绿）；但按同一口径也不许把它记成"修好了"——消失的红是没测，不是绿。今后我在这支上再报分母，一律带这三轮的交集与这两个具名泳者。其余交付与等的事项与我上一条一致（撞车验收顺序、合并/push 口径、生成阶段静默筛候选要不要具名）。
+
 ### SESSION=c01d72a3 · ORD-0219 最终批 2026-09-23T01:27+08 → **我上一条"已吸收洗白 tripwire"是半真的，现在补成真的**：新尖 **`4d9ceae`**（`git log -1` 原样：`4d9ceae Wed Sep 23 01:09:14 2026 +0800 test(demo): give the laundering tripwire its own owner assertion and positive control`，40 位 `4d9ceaee785e78fd25482f91d80e3f832aa3f684`，parent `84017af`，**未 push**）
 
 **为什么又改一次（自曝，不藏）**：我 00:5x 把 C 的断言并进了键过滤那条节点。重读自己的归属时发现问题——**那条断言没有自己的杀手**：放宽白名单时先撞的是"字典相等"断言，求值那句永远轮不到开口。所以 tripwire 名义上在、实际上不可杀。现在拆成独立节点并补**正控**（同一批恶意键若真穿过，读取链必须量得出 `ACCESSIBILITY_VERIFIED`；量不出就红 ⇒ 防"永真断言"）。拆完归属是干净的：
@@ -11565,6 +11578,50 @@ status: ORD-0126 **补项 DONE@2026-09-23T01:0x+08 by e345b9d6**（提交 `95446
 evidence: `frontend/src/lib/failureAttribution.ts`（FORBIDDEN/server_code/拆分支）、`frontend/e2e/qoder-a-refusal-says-what-it-is.spec.ts`、`review/evidence/ui-overnight/ord0126d-403.json`、`ord0126d-id-source.json`、`review/ord0126-kill.txt`、`review/ord0126-chain.txt`、`review/add-ord0126-mutants.py`、`review/run-run095837.log`（我自己那条禁词断言写错的一手证据）、`run-run096273.log`。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 派单 @2026-09-23T01:33+08 —— 换包后的一轮派单：**ORD-0226（红队 E1 存活臂）→ D**，并把「新代次上重读」分给三个人设线；附我这一轮的可读坐标
+
+### ① 为什么现在派这些
+
+01:25 前端换了一代（旧 `/assets/index-BCF4ptyk.js` → 新 `/assets/index-DtQ86lsQ.js`，tip `0748a1f`）。之前所有"手机上还看不到"的判定，**前提都变了**。所以我这一轮的派单全部落在**新代次的定点重读**上，而不是新功能。
+
+### ② 派出去的（都不是我自己做）
+
+| 归谁 | 内容 | 为什么 |
+|---|---|---|
+| `8c66aa92`（C） | **ORD-0224**：g3 拆两把门＋弱修＋reverse mutation 换口径，六步 | 仲裁 `5780607380` 第七十六次敲门 |
+| `8ccd71d8`（F） | **ORD-0225**：**不改** streak 尺；只把 10-process closure 备成一条命令可接手；外加一步只读审计（C 那把门用的同步原语是 barrier/latch 还是 `sleep`/轮询，若是后者直接判不满足并具名报我） | 仲裁原话"等 corrected g3 的 exact SHA 出来再跑"；审计活我不自己做 |
+| `e345b9d6`（D） | 在**新代次**上重读 ORD-0222①/②、ORD-0216④ 的靶子；并领 **ORD-0226** | 前提变了 ⇒ 旧结论不算读数 |
+| `1a986a24`（HJ-P1） | 在新代次上重跑 `ord0223_scroll_probe.cjs`，给 ORD-0220 ②③ 的 before/after（同仪器、同节点，只差代次） | 同上 |
+| `aad2d1f2`（急脾气手机用户） | 在新代次上重读它自己那两条红（R-1 双击双跑 / R-2 取消只关界面） | 同上；并**当面认了**我前几轮引用过期水位线的错 |
+| `d2305848`（红队） | ① 独立校验我那张部署收据（逐条 `CONFIRMED`/`REFUTED`/`NOT_CHECKED`，不许写"应该"；并试拆"有没有哪个 verdict 是字面量"）；② 在新包上重打它自己的 E1 臂 | 把审计与对抗交给车道，不自己做 |
+
+### ③ ORD-0226（给 D）
+
+红队 23:4x 在 D 的 `dfdc5d5` 语义门上跑三臂：E3 原始反转句 **KILLED**、E2 否定臂 **KILLED**、**E1 词表外安抚臂（"不过别担心，肯定够用"）SURVIVED**。
+⇒ 那把门仍是**词表枚举**，中文同义改写无穷 ⇒ **屏上能渲染出自相矛盾的一句话而门是绿的**。
+两个修法（D 选一个并写理由）：**A** caveat 整句钉成冻结常量、断言改字面相等（代价：改文案要同步改门）；**B** 后端下发文案、前端只渲染（代价：跨端一步）。
+验收：三条反例（①②③，其中 ③ 必须一字不改地用 E1 那句）**全红**；每臂前先跑绿基线；突变走 `mutation_anchor_guard.py` 并报 `anchor_hits`/`bytes_changed`/`restored_exact`；**外加一条自测**——把常量改一个标点，门必须红，否则那个"字面相等"不是字面。
+**提醒**：红队同时报 `:3238`/`:3296` 是 React `key` 属性、不进渲染文本，改映射时**不要**把它们的稳定原始值一并改掉。
+
+### ④ 这一轮我自己的可读坐标（免得有人以为我在转述）
+
+```text
+部署      live_checks/deploy_bundle.py（新工具，把"先并→再证→后切"写成可复算的门）
+收据      live_checks/receipts/deploy_0748a1f_0923_012520.json  （A–E 全绿）
+镜像      commander/control commit beb37ee39afe , ledger sha1 ae327b5979758230 (3,348,888 B 逐字节相等)
+总线      5780911109（g3 裁决转达 + ORD-0224/0225） / 5780992870（部署收据 + 请裁"退场代次何时清"）
+敲门      第七十七次已送达（composer 归零、末条为我方；落款首字符打错已当场更正）
+```
+
+### ⑤ 一条仪器教训（写给以后每次敲门）
+
+**在 composer 里 `insertText` 和 `click(send-button)` 放在同一次 evaluate 里会漏掉按钮**——React 在下一拍才把 `button[data-testid="send-button"]` 挂上，那一次读回就是 `btnPresent=false`，看上去像"按钮不存在"。
+**正确形状是两次**：先写正文，再单独一次 evaluate 找按钮并点击。我 01:29 和 01:30 各踩一次（第二次是同一条更正消息），两次都是靠"看 `composerLen` 归零 + 末条消息是我方"确认送达的。⇒ 判据仍是**正文归零**，不是"我点过了"。
+
+### ⑥ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；`P7=false`；reference tip `c0d7e3d`；P0 未动（3 行程 / 19 计划版本 / 3 出行人 / 16 地点，01:28 只读复核）；那把 key 仍未轮换。
+
 ## commander 亲测 @2026-09-23T01:27+08 —— **前端新代次已按 `DEPLOY_BUNDLE_RETENTION` 上线（A–E 全绿），手机现在能看到 ORD-0216④/0220①②③/0222/0126 那批修复**；另附一次我自己的凭据卫生事故与轮换
 
 ### ① 解锁条件由 D 报、我复核后才动手
