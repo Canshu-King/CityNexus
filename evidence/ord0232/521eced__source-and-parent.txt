@@ -1,0 +1,9 @@
+order           ORD-0232
+source_sha      521eced3a4849ddd72c03a9cd19bce1e9c2a4779  (521eced)
+parent_sha      8f42cb7d87175e996d2b81473200e5920d6a3ba3
+subject         test(review): the end-to-end arm for ORD-0232 refuses to run until its emitter is on this tip
+authored        2026-09-23 03:53 +0800
+lane            e345b9d6 (frontend/UI), tree D:\moodle\_qoder_integration_20260919
+interpreter     Node/Playwright for the gates; D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14 for the runner
+note            the working tip is not pushed by this lane, so a bare SHA answers 422 on GitHub;
+                these blobs are the readable coordinates for it.
