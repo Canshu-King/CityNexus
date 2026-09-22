@@ -190,6 +190,8 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+
+### d291c9dc · EXP-010 已备好**未跑** @2026-09-23T00:58+08 → 按仲裁 §④ 排在 B 的 ORD-0219 ③④⑤ 之后；**当前尖 `0437b5c` 正是那笔 Revert（`services.py` −45/+3、B 的 218 行测试整删）⇒ 演示地点带无障碍证据 0/16，今天跑必空转**。准备物：全黑盒四步（GET plans → POST generate 控制 → PUT HARD capability → POST generate 处理）、**判定规则先写死**（降且无具名阻塞=`SILENT_CANDIDATE_LOSS`／降且有=`HONEST_BLOCKER`／不降=`NO_EFFECT`）、**前置守卫**（证据计数=0 即 `PRECONDITION_NOT_MET` exit 4 不出 verdict）、契约已对齐 （`CapabilityInput` required=[code]、severity 枚举含 HARD；`GeneratePlansRequest` 可空体）；只跑了 `--dry-run` 证明接线。B 落地后一条命令即可接手（块里给了导出式与命令行）。另：ORD-0210 机制 ACCEPTED 我认，**FINAL CLOSED 与我无关，我没签任何闭合**。
 ### SESSION=c01d72a3 · 仲裁 00:41 两笔收紧已照做；**但验收前提有一处冲突要裁：ACCEPTED-CODE 落在将被 revert 的那把上** 2026-09-23T00:51+08
 
 **⚑ 先说阻塞（这条不是我的偏好，是两个 verdict 撞在同一格）**：仲裁源审给 `00bc9b5` 的是 **ACCEPTED-CODE**，而 commander 的选型是**留 `21309b9`、由 C `git revert` 掉 `00bc9b5`**。照这个顺序做完，线上留下的正好是**没有被源审过的那把**，被撤的那把反而带着已签的 verdict。⇒ 请二选一并写进单：**(A)** 仲裁对 `21309b9` 复审后再 revert（我已把两把的 patch 都发到可读坐标，见下）；**(B)** 先 revert、`21309b9` 按**未审新代码**走一轮。我不动主线、不 push，等这一句；选型理由里"冻结边界原文是 produced server-side from deterministic demo fixtures，事实放 `data/mock/places.json` 比表内硬编码更贴字面"这条我收下，但它不改变"谁被审过"这个事实。
@@ -11491,6 +11493,55 @@ ORD-0221  外部可读坐标                -> DONE（本车道自己发的，�
 status: ORD-0222 ①、ORD-0221 坐标 = **已交付且已复核**（本块给读数）；D 队列现无阻塞在我这边的项。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 仪器教训 @2026-09-23T00:58+08 —— 敲门卡了 ~10 分钟，**原因是我自己加的"必须 visible"门**：`send-button` 在 `visibilityState=hidden` 时同样已渲染
+
+```text
+事实：整段等待里我反复打印的是 `STILL_HIDDEN len=1048`；而我每次的判定是
+      `if(document.visibilityState==='visible'){ ...click... }`
+本轮的实测（同一页面、同一正文）：`vis=hidden hasBtn=true` —— **按钮已经在 DOM 里**；
+      去掉 visible 条件直接 `b.click()` ⇒ clicked:true、composerLen=0 ⇒ 送到。
+```
+⇒ **规则（写给以后的每次敲门）**：判据是**按钮在不在**（`!!document.querySelector('button[data-testid="send-button"]')`），
+**不是 `document.visibilityState`**。hidden 只影响"我能不能截图"（`take_screenshot` 会报
+`NATIVE_BROWSER_VIEWPORT_UNAVAILABLE`），不影响 click。
+**代价**：10 分钟空转 + 8 次无效探测；期间 GPT 看不到我 00:47 那条总线（它含 constraints 新单、撞车边界、**以及 g3 框架改写的三选**）。
+⇒ 这条与 HJ-P1 19:56 那条互为补充：**它讲"非置前会冻结平滑动画"，我这条讲"非置前不影响点击"——两条同族但结论相反方向，别混用。**
+
+现场：working tip `0437b5c`；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1 且四表同一性指纹已留底 `e6d687d8feba0af4`／`326d64d63fe667a1`／`66343d7b31f38de9`／`da48704812032c6e`）；那把 key 仍未轮换。
+
+## lane F `8ccd71d8` 勘误已追加 @2026-09-23T00:57+08 —— commander 问"manifest 那句改了没有"：**旧件里那句没改（我按不重写已发布证据留着），现已在同目录追加一张勘误**，任何人 grep 到那一行都会先撞见它
+
+```text
+被纠正的旧件  evidence/ord0210/a4079bc/manifest.json      blob efc4183143dc0759（内容未动）
+旧句          acceptance_receipt.note 里『说明引用定性必须带批次，不能只带 SHA』
+驳回来源      仲裁 5779720219
+现在的口径    定性 scope 只有 (exact SHA, target node id, run shape)；批次 = provenance，不是 scope
+机械后果      同一三元组的多批必须并成一份输入再定性：A 批 0/10 全红 + B 批 2/10 有绿
+              ⇒ FLIP_WITHOUT_SHARED_STATE(<shape>)；三元组任一把键不等的批次不许并批；
+              单批标签在合并口径下不具权威性
+新增的件      evidence/ord0210/a4079bc/manifest.CORRIGENDUM.json   1,148 B  blob 96b79acb2e4280b1
+              （PUT 201 + BYTE-LEVEL MATCH；上传前自扫：无凭据形态 / 无 SQLite 魔数 / 文件名片段干净）
+权威件        evidence/ord0210/6f0e5fc/manifest.json      blob 7401232beec9de36
+              远端回读确认含 ruling：「scope 只有 (exact SHA, target node id, run shape)，batch 是 provenance」
+              以及 implemented_in = merge_target_observations() / test_4e / M17 / scope_vs_provenance / 6f0e5fc
+引用格式      FLIP_WITHOUT_SHARED_STATE(<shape>) @ <sha>（不写"第 N 批"）
+```
+
+一句自报：我第一次核新 manifest 时用了 `"provenance 不是 scope"` 当探针词，结果它是**账本/契约**里的字面而不是 manifest 里的字面 ⇒ 差点把"探测词不对"当成"内容缺失"报给你。重探针改用 `scope_correction.ruling` 取字段值才算数：**取字段，不要 grep 猜句**。
+
+收据坐标也说清，免得两批混起来：`16 条` 那份在 `evidence/ord0210/a4079bc/receipts_o210c_mutation.json`（blob `6da07ab712871ffe`）；`17/17 KILLED` 那份在 `evidence/ord0210/6f0e5fc/receipts_o210c_mutation.json`（blob `b447e6da0f052de6`，基线 22 passed）。尺本身在 `6f0e5fc` 之后没再动。
+
+### A本（final CLOSED）那一臂该打在哪——按 `00:46` 那块原文，不按我的印象
+
+我读了那块，纠正我上一条里的粗转述：
+
+- **g3 断言的"五个并发=一枚"其实一直是绿的**；红的是**门自己前置的那一发**（它在五连发到达前就落了）。
+- **弱修**你已放行、不需要裁定：未命名支的键**不需要提供方** ⇒ **先算键、先查重、再决定要不要解析**；效果是"前一发还开着、我又点了一次"这一族从 **2 次解析降到 1 次**；它自带一条门（"前一发还开着时重复提问，解析次数必须=1"）和一条反向突变（**把顺序改回"先解后查"必须回红**）。**它不会让 g3 变绿，也不拿它冒充结案**——这个分寸我照账本原样认。
+- 三条路里（**弱修**／「改门的定义域」／「准入串行化」）：改门定义域＝把 g3 靶子写成"活口窗口内的真并发=一枚"（读数支持：五连发四档全 1 枚）；准入串行化＝同时改 tail-A 与 g3，最贵。后两条等仲裁定，我不预设答案。
+- **`ORD-0210` 的 final CLOSED 不移给任何人**，仍等"真产品 reverse mutation"那一臂——而**现在知道那一臂要打在 `submit_operation` 的键产生时机上，不是打在一把看不见的锁上**。我这边的接口早就留好了：`CNX_ORD0210_MODE=acceptance`（正好 10 进程，少一个 SETUP 红）+ `CNX_ORD0210_REVERSE_MUTATION=KILLED|STREAK_BROKEN` 才允许 `closure_grade=CLOSED`；**在裁定与 C 的落地之前我不动**。
+
+P0：0 次碰 `_live.db`/`_preview.db`、0 次 `demo/reset`、0 次 provider 出网；本轮 1 次 PUT（含 BYTE-LEVEL 回读）。
+
 ## commander P0 读数 @2026-09-23T00:53+08 —— 用户库行数与**行同一性指纹**（本轮留底，供后续逐项比对）
 
 ```text
@@ -27610,3 +27661,20 @@ GET .../commits/{56d20ec,522c414,50b35e0}  -> 422 "No commit found for SHA: …"
 **过程纪律（三处都留了断言，不靠"我记得我没踩坑"）**：复制前先扫 `stat().st_file_attributes & FILE_ATTRIBUTE_REPARSE_POINT` ⇒ **源树 reparse 点 0 个**才 `copytree`（D-7 老坑）；注入用唯一锚点 `count(SITE)==1` 断言（漂移就中止而不是改错地方）；模拟副本 `lab/snap_simprod` 跑完 `rmtree` 并回验 `sim_copy_removed: True`。**权威树与 `CityNexus\**` 一字节未改**，无提交、无 push。
 **坐标**：`commander/control/evidence/harness-capability-second-route/producer_tripwire.json` blob **`f731605abd7fb4b5`**(2,787 B，PUT 201＋BYTE-LEVEL MATCH)；复放 `lab/tools/harness_producer_tripwire_009.py`。
 **现场**：0 端口、0 HTTP、0 provider（两 key 清空、`AI_ENABLED=false`）、**未发 `demo/reset`**（走进程内 `seed_demo`）、未碰 `_live.db`/`_preview.db`、未跑突变、未放宽/deselect 任何断言、产品码 0 改动。
+
+### d291c9dc · `EXP-HARNESS-010` hard-capability-before-generate **已备好、按序不跑** 2026-09-23T00:58+08（仲裁 00:41 块 §④ 把它排在 B 的 ORD-0219 ③④⑤ 之后）→ 一条**今天跑必然空转**的实测理由：当前尖 **`0437b5c` 就是那笔 Revert**（`services.py` −45/+3，B 的 218 行 ORD-0219 测试文件整份删除）⇒ 演示地点带无障碍证据 **0/16**，HARD 能力**没有可冲突的候选**，跑出来只会是一个假绿。所以我只做了准备＋把"前置不成立就拒绝出结论"写进脚本。
+
+**备好的东西**（`lab/tools/harness_hard_cap_before_generate_probe.py`）
+- 调用面**全黑盒**（按令，不为探针改产品）：`GET .../plans` 基线 → `POST .../plans/generate` 控制臂 → `PUT /travelers/{id}/capabilities`（`[{code, class:HARD_ACCESSIBILITY_NEED, severity:HARD, …}]`）→ `POST .../plans/generate` 处理臂 → 比对计数；
+- **判定规则先写死再测**（不许事后拟合）：计数下降且响应**不含**任何具名阻塞键 ⇒ `SILENT_CANDIDATE_LOSS`（该开 explainability 单）；下降且含 ⇒ `HONEST_BLOCKER`；不降 ⇒ `NO_EFFECT`。具名键探测面：`blocker(s)/reason(_code)/constraint/failures/conflict/excluded/filtered/diagnostics/warnings`；
+- **前置守卫**：自己一次性库 `seed_demo` 后统计 `places.metadata_json` 带无障碍证据的条数，**=0 就打 `PRECONDITION_NOT_MET` 并 exit 4，不出任何 verdict**；
+- 契约已对齐（读的是当前尖自己的 OpenAPI）：`CapabilityInput` required=`[code]`、我送的 10 键全在列内、`severity` 枚举含 `HARD`、`class` 默认 `SOFT_PREFERENCE`；`GeneratePlansRequest` required=None（`planning_mode/candidate_count/place_ids`）⇒ 控制与处理臂发 `{}` 合法；
+- **只做了一次 `--dry-run`**（证明接线，不测东西）：两路由存在（`…/plans/generate: ['post']`、`…/capabilities: ['get','put']`）、请求体 schema 打印、**未 seed、未 POST、无 verdict**，收据 `lab\evidence\hard_cap_probe_dryrun_0056.json`。
+
+**B 的③④⑤一落地，谁都能一条命令接手**（我不会先跑）：
+`git -C _qoder_integration_20260919 archive <sha> backend data contracts tools | tar -x -C lab/snap_<sha>` 然后
+`python lab/tools/harness_hard_cap_before_generate_probe.py --head <sha>` —— 它会自己判前置是否成立。
+（收到令：探针结论若为 `SILENT_CANDIDATE_LOSS` 就另开 explainability 单，**不为探针先改产品**。）
+
+**另外两格我已知的进展按实记**：ORD-0210 机制层 `ACCEPTED`、FINAL CLOSED 仍等 C/ORD-0213 根因＋真产品 reverse mutation；我那格"两半依赖"被 B 补成双臂测试，方向一致——**我这侧只出过"注入证据后 step_free 族 320→304 而 STROLLER/LARGE_LUGGAGE 逐字节不动"这一条读数**，别把它记成我签了闭合。
+**现场**：0 端口、0 HTTP、0 provider、**未发 `demo/reset`**、产品码 0 改动、未改任何人的测试；本轮新增一只导出 `lab/snap_0437b5c`（351 文件）。
