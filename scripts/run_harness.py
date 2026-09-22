@@ -32,7 +32,8 @@ BACKEND = ROOT / "backend"
 SCENARIO_ID = "journey-replan-replay"
 C4_SCENARIO_ID = "c4-commitment-replay"
 CAPABILITY_SCENARIO_ID = "capability-fail-closed-replay"
-SCENARIOS = (SCENARIO_ID, C4_SCENARIO_ID, CAPABILITY_SCENARIO_ID)
+CAPABILITY_REVALIDATION_SCENARIO_ID = "capability-revalidation-replay"
+SCENARIOS = (SCENARIO_ID, C4_SCENARIO_ID, CAPABILITY_SCENARIO_ID, CAPABILITY_REVALIDATION_SCENARIO_ID)
 
 
 def _utc() -> str:
@@ -217,7 +218,7 @@ class Harness:
                     "payment_provider": "mock-payment",
                 }
             )
-        if scenario_id == CAPABILITY_SCENARIO_ID:
+        if scenario_id in {CAPABILITY_SCENARIO_ID, CAPABILITY_REVALIDATION_SCENARIO_ID}:
             self.input_payload.update(
                 {
                     "capability": {
@@ -244,6 +245,7 @@ class Harness:
         self.illegal_changes: list[str] = []
         self.semantic_match: bool | None = None
         self.semantic_mismatches: list[dict[str, Any]] = []
+        self.findings: list[dict[str, Any]] = []
 
     def _validate_replay_receipt(self, receipt: dict[str, Any]) -> None:
         required = ("run_id", "scenario_id", "inputs", "result", "semantic_output")
@@ -294,8 +296,13 @@ class Harness:
 
     def bootstrap(self) -> None:
         self.run_dir.mkdir(parents=True, exist_ok=True)
-        if self.db_path.exists():
-            self.db_path.unlink()
+        # Reusing an evidence directory must still start from a genuinely clean
+        # SQLite identity.  Removing only the main file can leave stale WAL/SHM
+        # sidecars behind.
+        for suffix in ("", "-wal", "-shm"):
+            part = Path(str(self.db_path) + suffix)
+            if part.exists():
+                part.unlink()
         os.environ.update(
             {
                 "PYTHONDONTWRITEBYTECODE": "1",
@@ -413,12 +420,25 @@ class Harness:
                 )
             return sorted(result, key=lambda item: item["commitment_id"])
 
-    def _set_place_accessibility(self, evidence: dict[str, Any] | None) -> list[dict[str, Any]]:
+    def _set_place_accessibility(
+        self,
+        evidence: dict[str, Any] | None,
+        *,
+        place_ids: list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Apply a deterministic accessibility fixture inside the disposable DB.
+
+        This is intentionally a HARNESS FIXTURE, not provider evidence.  The
+        receipt must never describe this mutation as LIVE/provider-backed truth.
+        """
         from app.db.models import Place
         from app.db.session import SessionLocal
 
         with SessionLocal() as session:
-            places = list(session.query(Place).all())
+            query = session.query(Place)
+            if place_ids:
+                query = query.filter(Place.id.in_(list(dict.fromkeys(place_ids))))
+            places = list(query.all())
             for place in places:
                 metadata = json.loads(place.metadata_json or "{}")
                 if evidence is None:
@@ -427,15 +447,22 @@ class Harness:
                     metadata["accessibility"] = copy.deepcopy(evidence)
                 place.metadata_json = json.dumps(metadata, ensure_ascii=False, sort_keys=True)
             session.commit()
-        return self._place_evidence_states()
+        return self._place_evidence_states(place_ids=place_ids)
 
-    def _place_evidence_states(self) -> list[dict[str, Any]]:
+    def _place_evidence_states(
+        self,
+        *,
+        place_ids: list[str] | None = None,
+    ) -> list[dict[str, Any]]:
         from app.capabilities import evaluate_accessibility_requirement
         from app.db.models import Place
         from app.db.session import SessionLocal
 
         with SessionLocal() as session:
-            rows = list(session.query(Place).order_by(Place.id).all())
+            query = session.query(Place)
+            if place_ids:
+                query = query.filter(Place.id.in_(list(dict.fromkeys(place_ids))))
+            rows = list(query.order_by(Place.id).all())
             return [
                 {
                     "place_id": place.id,
@@ -446,6 +473,49 @@ class Harness:
                 }
                 for place in rows
             ]
+
+    @staticmethod
+    def _confirmed_capability_semantics(payload: dict[str, Any], code: str) -> dict[str, Any]:
+        items = payload.get("capabilities") if isinstance(payload, dict) else None
+        items = items if isinstance(items, list) else []
+        item = next((row for row in items if str(row.get("code") or "") == code), None)
+        if not isinstance(item, dict):
+            return {}
+        return {
+            "code": item.get("code"),
+            "class": item.get("class"),
+            "severity": item.get("severity"),
+            "scope": item.get("scope"),
+            "source": item.get("source"),
+            "provenance": item.get("provenance"),
+            "explicit": item.get("explicit"),
+            "confirmed": item.get("confirmed"),
+            "active": item.get("active"),
+            "params": item.get("params"),
+        }
+
+    @staticmethod
+    def _blocker_attribution(message: str, *, capability_code: str, place_ids: list[str]) -> dict[str, Any]:
+        text = str(message or "")
+        names_capability = capability_code in text
+        names_evidence_state = any(
+            token in text
+            for token in (
+                "ACCESSIBILITY_UNVERIFIED",
+                "ACCESSIBILITY_CONFLICT",
+                "NEEDS_LIVE_EVIDENCE",
+            )
+        )
+        named_places = sorted({place_id for place_id in place_ids if place_id and place_id in text})
+        recovery_tokens = ("retry", "verify", "evidence", "choose", "replace", "重试", "验证", "证据", "更换")
+        has_recovery_action = any(token.casefold() in text.casefold() for token in recovery_tokens)
+        return {
+            "names_capability": names_capability,
+            "names_evidence_state": names_evidence_state,
+            "named_place_ids": named_places,
+            "has_recovery_action": has_recovery_action,
+            "diagnosable": bool(names_capability and (names_evidence_state or named_places) and has_recovery_action),
+        }
 
     def _compare_commitments(self) -> None:
         before = {item["commitment_id"]: item for item in self.protected_commitments_before}
@@ -613,6 +683,18 @@ class Harness:
         confirmed = self.post(f"/api/v1/journeys/{journey_id}/capabilities/confirm", capability_payload)
         self.record_assertion("hard_capability_confirmation_succeeds", bool(confirmed.get("capabilities")), confirmed)
         after = self.get(f"/api/v1/journeys/{journey_id}/capabilities")
+        actual_capability = self._confirmed_capability_semantics(after, capability["code"])
+        self.record_assertion(
+            "confirmed_capability_is_actual_hard_journey_truth",
+            bool(actual_capability)
+            and actual_capability.get("code") == capability["code"]
+            and actual_capability.get("severity") == "HARD"
+            and actual_capability.get("scope") == "JOURNEY"
+            and actual_capability.get("confirmed") is True
+            and actual_capability.get("active") is True,
+            actual_capability,
+        )
+
         self.transition("OBSERVE:EVIDENCE_POOR_CATALOG")
         evidence_poor = self._set_place_accessibility(None)
         self.record_assertion(
@@ -633,11 +715,26 @@ class Harness:
             blocked_status == 422 and bool(blocked_error.get("code")) and not isinstance(blocked, list),
             {"status": blocked_status, "body": blocked, "product_reason": blocked_message},
         )
-        self.record_assertion(
-            "unknown_is_not_accessible",
-            blocked_status == 422,
-            blocked,
+        self.record_assertion("unknown_is_not_accessible", blocked_status == 422, blocked)
+
+        # Negative control: explicit inaccessibility must also fail closed.
+        self.transition("EXECUTE:CONFLICT_EVIDENCE_GENERATION")
+        conflict_evidence = self._set_place_accessibility(
+            {"step_free": False, "wheelchair_access": False}
         )
+        conflict = self.post(
+            f"/api/v1/journeys/{journey_id}/plans/generate",
+            {"candidate_count": self.input_payload["candidate_count"]},
+        )
+        conflict_status = self.last_status
+        self.record_assertion(
+            "conflicting_accessibility_blocks_plan",
+            conflict_status == 422
+            and bool(conflict_evidence)
+            and all(item["state"] == "ACCESSIBILITY_CONFLICT" for item in conflict_evidence),
+            {"status": conflict_status, "body": conflict, "states": conflict_evidence},
+        )
+
         self.transition("EXECUTE:VERIFIED_EVIDENCE_GENERATION")
         verified_evidence = self._set_place_accessibility(self.input_payload["verified_evidence"])
         generated = self.post(
@@ -657,24 +754,231 @@ class Harness:
             generated_status == 201 and bool(verified_plans) and all(verified_selectable),
             {"status": generated_status, "plans": verified_plans},
         )
+        generated_place_ids = sorted(
+            {
+                str(activity.get("place_id"))
+                for plan in verified_plans
+                for activity in plan.get("activities", [])
+                if activity.get("place_id")
+            }
+        )
+        verified_state_by_place = {item["place_id"]: item["state"] for item in verified_evidence}
+        self.record_assertion(
+            "generated_plan_places_have_verified_accessibility_fixture",
+            bool(generated_place_ids)
+            and all(
+                verified_state_by_place.get(place_id) == "ACCESSIBILITY_VERIFIED"
+                for place_id in generated_place_ids
+            ),
+            {"plan_place_ids": generated_place_ids, "states": verified_state_by_place},
+        )
+
+        attribution = self._blocker_attribution(
+            blocked_message,
+            capability_code=capability["code"],
+            place_ids=[item["place_id"] for item in evidence_poor],
+        )
+        if not attribution["diagnosable"]:
+            self.findings.append(
+                {
+                    "code": "CAPABILITY_BLOCKER_ATTRIBUTION_GAP",
+                    "severity": "PRODUCT_RECOVERY_GAP",
+                    "message": (
+                        "Fail-closed behavior is correct, but the public blocker does not name "
+                        "the HARD capability/evidence state/place plus a recovery action."
+                    ),
+                    "evidence": attribution,
+                }
+            )
+
         self.semantic_output = {
             "journey_lifecycle": ["RESET", "CAPABILITY_CONFIRMED"],
-            "capability": {
-                "code": capability["code"],
-                "severity": capability["severity"],
-                "scope": capability["scope"],
-            },
+            "capability": actual_capability,
+            "accessibility_evidence_mode": "SYNTHETIC_HARNESS_FIXTURE",
             "evidence_poor_states": sorted({item["state"] for item in evidence_poor}),
             "blocked_generation_status": blocked_status,
             "blocked_product_reason": blocked_message,
             "blocked_is_fail_closed": blocked_status == 422,
+            "blocker_attribution": attribution,
+            "conflict_evidence_states": sorted({item["state"] for item in conflict_evidence}),
+            "conflict_generation_status": conflict_status,
             "verified_evidence_states": sorted({item["state"] for item in verified_evidence}),
             "verified_generation_status": generated_status,
             "verified_plan_count": len(verified_plans),
             "verified_selectable": verified_selectable,
+            "verified_plan_place_ids": generated_place_ids,
+        }
+        self.transition(
+            "CAPTURE_EVIDENCE",
+            {
+                "capabilities_before": before,
+                "capabilities_after": after,
+                "accessibility_evidence_mode": "SYNTHETIC_HARNESS_FIXTURE",
+            },
+        )
+        self.transition("REPLAY_READY")
+
+    def _run_capability_revalidation(self) -> None:
+        """Prove HARD accessibility is revalidated beyond generation.
+
+        A candidate that was feasible when generated must fail closed at
+        selection/start if its currently-used place evidence becomes unknown.
+        """
+        self.transition("RESET")
+        self.ids = self.post("/api/v1/demo/reset")
+        self.record_assertion("reset_returns_journey", bool(self.ids.get("journey_id")), self.ids)
+        journey_id = self.ids["journey_id"]
+        capability = self.input_payload["capability"]
+        payload = [
+            {
+                "code": capability["code"],
+                "severity": capability["severity"],
+                "params": capability["params"],
+            }
+        ]
+        self.transition("EXECUTE:CAPABILITY_CONFIRMED")
+        self.post(f"/api/v1/journeys/{journey_id}/capabilities/confirm", payload)
+        after = self.get(f"/api/v1/journeys/{journey_id}/capabilities")
+        actual_capability = self._confirmed_capability_semantics(after, capability["code"])
+        self.record_assertion(
+            "hard_capability_is_confirmed",
+            bool(actual_capability)
+            and actual_capability.get("severity") == "HARD"
+            and actual_capability.get("scope") == "JOURNEY"
+            and actual_capability.get("confirmed") is True,
+            actual_capability,
+        )
+
+        self.transition("EXECUTE:GENERATE_WITH_VERIFIED_FIXTURE")
+        self._set_place_accessibility(self.input_payload["verified_evidence"])
+        plans = self.post(
+            f"/api/v1/journeys/{journey_id}/plans/generate",
+            {"candidate_count": self.input_payload["candidate_count"]},
+        )
+        generation_status = self.last_status
+        self.record_assertion(
+            "verified_candidate_generation_succeeds",
+            generation_status == 201 and isinstance(plans, list) and bool(plans),
+            plans,
+        )
+        plan = plans[0]
+        plan_place_ids = sorted(
+            {
+                str(activity.get("place_id"))
+                for activity in plan.get("activities", [])
+                if activity.get("place_id")
+            }
+        )
+        self.record_assertion("candidate_has_place_ids", bool(plan_place_ids), plan)
+        journey_before_select = self.get(f"/api/v1/journeys/{journey_id}")
+
+        # Invalidate exactly the concrete places consumed by this candidate,
+        # not unrelated rows elsewhere in the fixture catalog.
+        self.transition("MUTATE:USED_PLACE_EVIDENCE_UNKNOWN_BEFORE_SELECT")
+        unknown_states = self._set_place_accessibility(None, place_ids=plan_place_ids)
+        self.record_assertion(
+            "used_places_are_now_unverified",
+            bool(unknown_states)
+            and all(item["state"] == "ACCESSIBILITY_UNVERIFIED" for item in unknown_states),
+            unknown_states,
+        )
+        select_block = self.post(f"/api/v1/journeys/{journey_id}/plans/{plan['id']}/select")
+        select_block_status = self.last_status
+        journey_after_select_block = self.get(f"/api/v1/journeys/{journey_id}")
+        self.record_assertion(
+            "selection_revalidates_and_fails_closed",
+            select_block_status in {409, 422}
+            and journey_after_select_block.get("active_plan_version_id")
+                == journey_before_select.get("active_plan_version_id")
+            and journey_after_select_block.get("status") == journey_before_select.get("status"),
+            {
+                "status": select_block_status,
+                "body": select_block,
+                "before": journey_before_select,
+                "after": journey_after_select_block,
+            },
+        )
+
+        self.transition("RESTORE:USED_PLACE_EVIDENCE_BEFORE_SELECT")
+        restored_select_states = self._set_place_accessibility(
+            self.input_payload["verified_evidence"],
+            place_ids=plan_place_ids,
+        )
+        selected = self.post(f"/api/v1/journeys/{journey_id}/plans/{plan['id']}/select")
+        select_restore_status = self.last_status
+        self.record_assertion(
+            "selection_succeeds_after_evidence_restore",
+            select_restore_status == 200
+            and selected.get("active_plan_version_id") == plan["id"]
+            and selected.get("status") == "PLANNED",
+            selected,
+        )
+
+        journey_before_start = self.get(f"/api/v1/journeys/{journey_id}")
+        self.transition("MUTATE:USED_PLACE_EVIDENCE_UNKNOWN_BEFORE_START")
+        unknown_start_states = self._set_place_accessibility(None, place_ids=plan_place_ids)
+        start_block = self.post(f"/api/v1/journeys/{journey_id}/start")
+        start_block_status = self.last_status
+        journey_after_start_block = self.get(f"/api/v1/journeys/{journey_id}")
+        self.record_assertion(
+            "start_revalidates_and_fails_closed",
+            start_block_status in {409, 422}
+            and journey_after_start_block.get("status") == journey_before_start.get("status")
+            and journey_after_start_block.get("active_plan_version_id")
+                == journey_before_start.get("active_plan_version_id")
+            and journey_after_start_block.get("status") != "ACTIVE",
+            {
+                "status": start_block_status,
+                "body": start_block,
+                "before": journey_before_start,
+                "after": journey_after_start_block,
+            },
+        )
+
+        self.transition("RESTORE:USED_PLACE_EVIDENCE_BEFORE_START")
+        restored_start_states = self._set_place_accessibility(
+            self.input_payload["verified_evidence"],
+            place_ids=plan_place_ids,
+        )
+        started = self.post(f"/api/v1/journeys/{journey_id}/start")
+        start_restore_status = self.last_status
+        self.record_assertion(
+            "start_succeeds_after_evidence_restore",
+            start_restore_status == 200
+            and started.get("projection_status") == "READY",
+            started,
+        )
+
+        select_message = (
+            str(select_block.get("error", {}).get("message") or select_block)
+            if isinstance(select_block, dict)
+            else str(select_block)
+        )
+        start_message = (
+            str(start_block.get("error", {}).get("message") or start_block)
+            if isinstance(start_block, dict)
+            else str(start_block)
+        )
+        self.semantic_output = {
+            "journey_lifecycle": ["RESET", "CAPABILITY_CONFIRMED", "CANDIDATE", "PLANNED", "ACTIVE"],
+            "capability": actual_capability,
+            "accessibility_evidence_mode": "SYNTHETIC_HARNESS_FIXTURE",
+            "plan_place_ids": plan_place_ids,
+            "generation_status": generation_status,
+            "selection_unknown_states": sorted({item["state"] for item in unknown_states}),
+            "selection_block_status": select_block_status,
+            "selection_block_reason": select_message,
+            "selection_restore_status": select_restore_status,
+            "selection_restore_states": sorted({item["state"] for item in restored_select_states}),
+            "start_unknown_states": sorted({item["state"] for item in unknown_start_states}),
+            "start_block_status": start_block_status,
+            "start_block_reason": start_message,
+            "start_restore_status": start_restore_status,
+            "start_restore_states": sorted({item["state"] for item in restored_start_states}),
+            "final_projection_status": started.get("projection_status"),
         }
         self.transition("ASSERT", self.semantic_output)
-        self.transition("CAPTURE_EVIDENCE", {"capabilities_before": before, "capabilities_after": after})
+        self.transition("CAPTURE_EVIDENCE")
         self.transition("REPLAY_READY")
 
     def run(self) -> dict[str, Any]:
@@ -689,6 +993,8 @@ class Harness:
                 self._run_c4_commitment()
             elif self.scenario_id == CAPABILITY_SCENARIO_ID:
                 self._run_capability_fail_closed()
+            elif self.scenario_id == CAPABILITY_REVALIDATION_SCENARIO_ID:
+                self._run_capability_revalidation()
             else:
                 raise ValueError(f"unsupported scenario: {self.scenario_id}")
         except Exception as exc:  # noqa: BLE001 - receipt must contain the exact blocker
@@ -800,6 +1106,7 @@ class Harness:
             "changed_ids": self.changed_ids,
             "allowed_changes": self.allowed_changes,
             "illegal_changes": self.illegal_changes,
+            "findings": self.findings,
             "result": result,
             "blocker": blocker,
             "artifact_log_paths": {"evidence": str(self.receipt_path)},
