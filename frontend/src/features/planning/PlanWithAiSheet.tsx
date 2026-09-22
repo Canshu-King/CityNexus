@@ -3,44 +3,177 @@
  *
  * Design rules honoured here:
  *  - the traveller types plain language; no internal vocabulary is shown;
- *  - progress is a REAL stepper; the backend exposes no percentage, so no
- *    percentage is fabricated (design corrections §6);
+ *  - progress shows only what this component can prove.  `POST /agent/commands`
+ *    is synchronous and the backend reports no intermediate phase, so the wait is
+ *    shown as elapsed seconds and an honest "no stage signal", never as a step that
+ *    ticked by on a timer (ORD-0038 §2: a fake progress bar is worse than none,
+ *    because it makes people believe the system is working);
+ *  - the steps that ARE listed are the ones this file actually awaits -- baseline
+ *    read, request, verification re-count, and the fallback re-plan when it really
+ *    runs;
  *  - internal action enums (REQUEST_REPLAN, ACCEPT_REPLAN, …) and mission
  *    internals are never rendered;
  *  - a provider failure is shown honestly with a retry, never faked as success
- *    (master mission Phase 10).
+ *    (master mission Phase 10), and a cancellation is neither.
  */
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
 
-type Stage = { key: string; zh: string; en: string };
+/** The phases this component itself drives, in the order it can enter them. */
+type PhaseKey = "baseline" | "request" | "verify" | "fallback";
 
-const STAGES: Stage[] = [
-  { key: "understand", zh: "理解你的需求", en: "Understanding your request" },
-  { key: "places", zh: "搜索真实地点", en: "Searching real places" },
-  { key: "check", zh: "检查时间与交通", en: "Checking time and travel" },
-  { key: "compose", zh: "生成可选方案", en: "Building candidate plans" },
-];
-
-const EXAMPLES = [
+const PHASES: { key: PhaseKey; zh: string; en: string }[] = [
+  { key: "baseline", zh: "读取已有方案作为基线", en: "Reading existing plans as a baseline" },
+  { key: "request", zh: "发出请求，等待模型返回", en: "Request sent, waiting for the model" },
+  { key: "verify", zh: "核对本次是否真的产出了新方案", en: "Checking whether this run produced plans" },
   {
-    zh: "我和朋友两个人去厦门，想轻松一点，想去鼓浪屿、环岛路，想吃沙茶面和海鲜，不想太赶，也想找性价比高的酒店。",
-    en: "Two of us in Xiamen, relaxed pace, Gulangyu and the Ring Road, local seafood, and a good-value hotel.",
-  },
-  {
-    zh: "带爸妈去厦门三天，不要走太多路，下午要有休息时间，酒店要靠近地铁。",
-    en: "Three days in Xiamen with my parents, not much walking, an afternoon rest, hotel near the metro.",
+    key: "fallback",
+    zh: "改用已发现的城市地点重新排一版",
+    en: "Re-planning from the places already discovered",
   },
 ];
+
+/*
+ * ORD-0104 ①: an example has to be about *this* trip, or there is no example.
+ *
+ * What used to sit here were two hardcoded Xiamen itineraries ("我和朋友两个人去厦门…鼓浪屿、环岛路、
+ * 沙茶面"), shown as the placeholder and as two chips -- so a traveller on a Tianjin or Beijing trip
+ * was handed another city's concrete facts as their own suggestion.  That is the same class of defect
+ * as a fabricated progress bar: the screen states something it did not learn.
+ *
+ * Now the sentences are built from place names the server actually returned for this journey's city,
+ * and when it returns fewer than two there is nothing to show -- an absent example is honest, an
+ * invented one is not.
+ */
+const NEUTRAL_PLACEHOLDER = {
+  zh: "用你自己的话说：这趟想怎么玩、想吃什么、哪儿一定要去。",
+  en: "In your own words: how you want this trip to go, what to eat, what you must not miss.",
+};
+
+function examplesFor(
+  placeNames: string[],
+  zh: boolean,
+): Array<{ zh: string; en: string }> {
+  /* Ordered by name rather than by the order the read happened to return, so this cannot become a
+     second `slice(0, 8)` in disguise (R7): which two places appear in an *example sentence* must not
+     be decided by a provider's row order, because that order is not a claim about the trip. */
+  const picked = placeNames
+    .filter((name) => name.trim().length > 0)
+    .sort((a, b) => a.localeCompare(b, zh ? "zh-CN" : "en"))
+    .slice(0, 2);
+  if (picked.length < 2) return [];
+  const [first, second] = picked;
+  return [
+    {
+      zh: `我想去${first}和${second}，节奏轻松一点，再找点当地吃的。`,
+      en: `I would like to fit in ${first} and ${second} at an easy pace, with somewhere local to eat.`,
+    },
+    {
+      zh: `${first}排在下午，${second}放在傍晚，别排太满。`,
+      en: `Put ${first} in the afternoon and ${second} in the early evening, and leave the rest open.`,
+    },
+  ];
+}
+
+/**
+ * The server's own names for "why there is nothing to plan with", and the one next step each of them
+ * earns.  Keyed by `error.code` / `error.reason_code` and **never by an English sentence** -- a
+ * substring match on provider wording is how a screen ends up telling a traveller to "adjust the
+ * budget" when the real cause was an empty catalogue (ORD-0107).  The codes are the ones the backend
+ * lanes are putting names on (ORD-0101/0108: `services.py:843/:902/:932`, `CATALOG_EMPTY` at the
+ * compose exit); anything the table does not know is shown as unknown, with the server's own sentence
+ * under 技术详情, because inventing a paraphrase of a code we have not read is a lie waiting to happen.
+ */
+const BLOCKED_BY_CODE: Record<
+  string,
+  { zh: string; en: string; action: "another-city" | "retry" | "none" }
+> = {
+  CATALOG_EMPTY: {
+    zh: "这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。",
+    en: "We hold no place data for this city yet, so nothing about your wording failed — there was nothing to assemble a trip from.",
+    action: "another-city",
+  },
+  CATALOG_INSUFFICIENT: {
+    zh: "这座城我们手上的地点太少，配不平一天的行程。",
+    en: "We have too few places for this city to balance a day's itinerary.",
+    action: "another-city",
+  },
+  PLACES_NOT_IN_CATALOG: {
+    zh: "要排的地点不在我们的目录里，所以排不出行程。",
+    en: "The places this was asked to plan are not in our catalogue, so no itinerary could be built.",
+    action: "another-city",
+  },
+  PLACE_COST_UNVERIFIED: {
+    zh: "地点有了，但费用我们没能核实，所以没有给出带价格的方案。",
+    en: "The places were found but their costs could not be verified, so no priced plan was offered.",
+    action: "retry",
+  },
+  PLACE_OUTSIDE_JOURNEY_WINDOW: {
+    zh: "这些地点的开放时间和你这趟的日期对不上。",
+    en: "These places' opening hours do not fit the dates of this trip.",
+    action: "another-city",
+  },
+  MOBILITY_DATA_UNAVAILABLE: {
+    zh: "这趟的出行数据缺了一段（站与站之间的时间没读到），所以没排出来。",
+    en: "Part of this trip's mobility data is missing, so nothing could be scheduled.",
+    action: "retry",
+  },
+};
+
+/** The server's name for a refusal, from its envelope.  Empty when it gave none -- and then this
+    screen says it does not know, rather than guessing a cause. */
+function serverReasonCode(body: unknown): string {
+  const error = (body as { error?: Record<string, unknown> } | null)?.error;
+  if (!error || typeof error !== "object") return "";
+  for (const key of ["reason_code", "code", "message_key"]) {
+    const value = error[key];
+    if (typeof value === "string" && value.trim()) return value.trim().toUpperCase();
+  }
+  const detail = (body as { detail?: unknown }).detail;
+  return typeof detail === "string" ? detail.slice(0, 60).toUpperCase() : "";
+}
+
+/** The server's own sentence, kept verbatim for 技术详情. */
+function serverReasonSentence(body: unknown): string | null {
+  const error = (body as { error?: Record<string, unknown> } | null)?.error;
+  if (error && typeof error.message === "string" && error.message.trim()) return error.message;
+  const detail = (body as { detail?: unknown }).detail;
+  if (typeof detail === "string" && detail.trim()) return detail;
+  return null;
+}
+
 
 /** Map internal mission status -> traveller language. */
 function statusCopy(
   status: string,
   zh: boolean,
   planCount = 0,
-): { title: string; body: string; tone: "ok" | "warn" | "busy" } {
+): {
+  title: string;
+  body: string;
+  tone: "ok" | "warn" | "busy" | "neutral";
+  action?: "another-city" | "retry";
+} {
   const s = (status || "").toUpperCase();
+  /* A named block from the server's own envelope.  The code decides the words; nothing here is
+     inferred from how a provider phrased its sentence. */
+  if (s.startsWith("BLOCKED:")) {
+    const code = s.slice("BLOCKED:".length);
+    const known = BLOCKED_BY_CODE[code];
+    return {
+      title: zh ? "这次排不出方案：数据不够，不是你说的不对" : "No plan this time: the data is short, not your wording",
+      body: known
+        ? zh
+          ? `${known.zh}（服务器给的原因编号：${code}）`
+          : `${known.en} (server reason code: ${code})`
+        : zh
+          ? `服务器回的原因编号是 ${code || "（没给编号）"}，这条我们还没有本地文案，所以不替你解释它——原话在"技术详情"里。`
+          : `The server's reason code is ${code || "(none given)"} and we have no wording for it, so we quote rather than explain — the sentence is under "Technical detail".`,
+      tone: "warn",
+      action: known ? known.action === "another-city" ? "another-city" : "retry" : "retry",
+    };
+  }
   if (s === "COMPLETED" || s === "SUCCEEDED") {
     return {
       title: zh ? `已生成 ${planCount} 个可选方案` : `${planCount} candidate plans are ready`,
@@ -48,6 +181,62 @@ function statusCopy(
         ? "去“今天”对比这几个方案，选一个再继续。"
         : "Compare them on Today, then choose one to continue.",
       tone: "ok",
+    };
+  }
+  if (s === "CANCELLED") {
+    return {
+      title: zh ? "已取消" : "Cancelled",
+      body: zh
+        ? "请求已中止，你的行程没有被改动。可以改个说法再来一次。"
+        : "The request was aborted. Your trip is untouched — rephrase and try again.",
+      tone: "neutral",
+    };
+  }
+  if (s === "CANCELLED_AFTER_SEND") {
+    return {
+      title: zh ? "已中止后续核对" : "Stopped before verification",
+      body: zh
+        ? "请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。"
+        : "The request had already been sent, so it may have produced plans. Refresh and check before submitting again.",
+      tone: "warn",
+    };
+  }
+  if (s === "NETWORK") {
+    return {
+      title: zh ? "连不上服务端" : "The server could not be reached",
+      body: zh
+        ? "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。"
+        : "Neither the network nor the backend answered — this is not about what you typed. Your trip is unchanged; retry once you are connected.",
+      tone: "warn",
+    };
+  }
+  if (s === "HTTP_422") {
+    return {
+      title: zh ? "这个要求被明确拒绝" : "The request was refused",
+      body: zh
+        ? "服务端说明了原因（见“技术详情”）。你的行程没有被改动，按原因调整条件或换个说法再试。"
+        : "The backend gave a reason (see “Technical detail”). Your trip is unchanged — adjust to that reason and retry.",
+      tone: "warn",
+    };
+  }
+  if (s.startsWith("HTTP_5")) {
+    return {
+      title: zh ? "服务端处理失败" : "The server failed to finish",
+      body: zh
+        ? "这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。"
+        : "The server errored out — not your request. Your trip is unchanged; retry later and keep the technical detail if it repeats.",
+      tone: "warn",
+    };
+  }
+  if (s === "PLANS_WITHOUT_AI") {
+    return {
+      title: zh
+        ? `AI 没有参与这次规划（生成了 ${planCount} 个备选）`
+        : `AI did not take part — ${planCount} options were still assembled`,
+      body: zh
+        ? "这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里。"
+        : "These were assembled from places already found for this city; they do not show that your request was understood. Retry to plan from what you typed — the reason is under “Technical detail”.",
+      tone: "warn",
     };
   }
   if (s === "BASELINE_UNAVAILABLE") {
@@ -63,8 +252,8 @@ function statusCopy(
     return {
       title: zh ? "没有生成可行方案" : "No usable plans were produced",
       body: zh
-        ? "你的需求已理解，但这次没能排出可行方案。你的行程没有被改动，可以调整预算或换个说法再试。"
-        : "Your request was understood, but no feasible plan came out. Your trip is unchanged — adjust the budget or rephrase and try again.",
+        ? "服务器说这次没排出可行方案，但没有给出具体原因编号，所以我们不替你猜是预算、措辞还是数据的问题。你的行程没有被改动；原因原文在“技术详情”里，可以再试一次或换一座城市。"
+        : "The server said no feasible plan came out but gave no reason code, so we will not guess whether that was your budget, your wording or our data. Your trip is unchanged; its sentence is under “Technical detail”. You can retry or try another city.",
       tone: "warn",
     };
   }
@@ -93,22 +282,46 @@ function statusCopy(
   };
 }
 
+/**
+ * fetch() rejects a cancelled request with a DOMException named AbortError.  Without
+ * this, "I pressed cancel" and "the network died" collapse into the same message.
+ */
+function isAbort(cause: unknown): boolean {
+  return cause instanceof Error && cause.name === "AbortError";
+}
+
 export function PlanWithAiSheet({
   journeyId,
   cityCode,
   onClose,
   onPlanned,
+  onChooseAnotherCity,
 }: {
   journeyId: string;
   cityCode?: string;
   onClose: () => void;
+  /** Where the "换一座城市" next step goes.  Optional because the sheet is also mounted from paths
+      that have no city picker to open; without it the refusal still reads in full, it just has no
+      button to offer. */
+  onChooseAnotherCity?: () => void;
   onPlanned?: () => void;
 }) {
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
   const [text, setText] = useState("");
+  /* The destination's own words, from the same read the fallback uses.  Read once when the sheet
+     opens; a failure leaves `[]`, which means "no examples", not "use the old ones". */
+  const [placeNames, setPlaceNames] = useState<string[]>([]);
+  /* Whether the read that decides the suggestions has answered at all.  Without it the area under the
+     input means "this city has nothing to suggest" and "we are still looking" at once, and a traveller
+     watching suggestions appear a second later has no way to tell which happened. */
+  const [namesRead, setNamesRead] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [stage, setStage] = useState(0);
+  const [phase, setPhase] = useState<PhaseKey | null>(null);
+  const [elapsed, setElapsed] = useState(0);
+  const [aiState, setAiState] = useState<"checking" | "ready" | "unconfigured" | "unknown">(
+    "checking",
+  );
   const [result, setResult] = useState<null | {
     status: string;
     failureReason: string | null;
@@ -116,9 +329,76 @@ export function PlanWithAiSheet({
     planCount?: number;
     newPlanIds?: string[];
   }>(null);
-  const timer = useRef<number | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+  const startedAt = useRef(0);
 
-  useEffect(() => () => { if (timer.current) window.clearInterval(timer.current); }, []);
+  /* The only number this sheet is allowed to animate is one it can prove: seconds
+     that really passed since the request was made. */
+  useEffect(() => {
+    if (!busy) return;
+    const tick = () => setElapsed(Math.floor((Date.now() - startedAt.current) / 1000));
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
+  }, [busy]);
+
+  /* Closing the sheet must not leave a request running that nobody can see or stop. */
+  useEffect(() => () => abortRef.current?.abort(), []);
+
+  /* ORD-0104 ①: the examples are read from this journey's own city.  A non-2xx or a short list leaves
+     the list empty, and empty means "show no examples" -- the fallback is silence, not the old Xiamen
+     sentences. */
+  useEffect(() => {
+    let stale = false;
+    const controller = new AbortController();
+    void fetch(`/api/v1/places?city_code=${encodeURIComponent(cityCode ?? "")}`, {
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body) => {
+        if (stale) return;
+        setNamesRead(true);
+        if (!Array.isArray(body)) return;
+        setPlaceNames(
+          body
+            .map((item: { name?: string }) => (typeof item?.name === "string" ? item.name : ""))
+            .filter((name: string) => name.trim().length > 0),
+        );
+      })
+      .catch(() => {
+        /* aborted or unreachable: nothing to suggest, which is the honest state -- and it is settled,
+           not pending. */
+        if (!stale) setNamesRead(true);
+      });
+    return () => {
+      stale = true;
+      controller.abort();
+    };
+  }, [cityCode]);
+
+  useEffect(() => {
+    let stale = false;
+    void fetch("/api/v1/agent/runtime-status", { headers: { Accept: "application/json" } })
+      .then((response) => (response.ok ? response.json() : null))
+      .then((body) => {
+        if (stale) return;
+        setAiState(
+          body && typeof body.deepseek_configured === "boolean"
+            ? body.deepseek_configured
+              ? "ready"
+              : "unconfigured"
+            : "unknown",
+        );
+      })
+      .catch(() => {
+        /* A failed pre-flight is reported as unknown, never as "ready". */
+        if (!stale) setAiState("unknown");
+      });
+    return () => {
+      stale = true;
+    };
+  }, []);
 
   /**
    * Ids of every candidate plan that already existed, or `null` when the
@@ -129,10 +409,11 @@ export function PlanWithAiSheet({
    * empty baseline — otherwise an old plan appears later and is mis-attributed
    * to THIS run.  `null` = the baseline is indeterminate.
    */
-  const existingPlanIds = async (): Promise<Set<string> | null> => {
+  const existingPlanIds = async (signal: AbortSignal): Promise<Set<string> | null> => {
     try {
       const response = await fetch(`/api/v1/journeys/${journeyId}/plans`, {
         headers: { Accept: "application/json" },
+        signal,
       });
       if (!response.ok) return null;
       const plans = await response.json();
@@ -141,7 +422,9 @@ export function PlanWithAiSheet({
       return new Set(
         plans.map((item: { id?: string }) => item?.id).filter(Boolean) as string[],
       );
-    } catch {
+    } catch (cause) {
+      // A cancellation is a decision, not an indeterminate baseline.
+      if (isAbort(cause)) throw cause;
       return null;
     }
   };
@@ -149,27 +432,54 @@ export function PlanWithAiSheet({
   const submit = async () => {
     const command = text.trim();
     if (command.length < 8) return;
+    const controller = new AbortController();
+    abortRef.current = controller;
+    const signal = controller.signal;
     setBusy(true);
     setResult(null);
-    setStage(0);
-    // This run must be judged on what IT produced.  Counting all plans let an
-    // old ACTIVE/SELECTED plan satisfy a failed new run.  `null` means we could
-    // not read the baseline at all, so nothing can be attributed to this run —
-    // fail CLOSED instead of assuming an empty baseline.
-    const baseline = await existingPlanIds();
-    // Indeterminate stepper: we advance through the real stages we can name,
-    // and stop at the last one. No fabricated percentage.
-    timer.current = window.setInterval(() => {
-      setStage((current) => Math.min(current + 1, STAGES.length - 1));
-    }, 1200);
+    setElapsed(0);
+    startedAt.current = Date.now();
+    /* How far we actually got, kept in a local because state is stale inside this
+       closure.  A cancel before the request leaves is a clean cancellation; one after
+       it is not, because the backend may already have produced plans. */
+    let reached: PhaseKey = "baseline";
+    const enter = (next: PhaseKey) => {
+      reached = next;
+      setPhase(next);
+    };
+    enter("baseline");
+    let baseline: Set<string> | null = null;
     try {
+      // This run must be judged on what IT produced.  Counting all plans let an
+      // old ACTIVE/SELECTED plan satisfy a failed new run.  `null` means we could
+      // not read the baseline at all, so nothing can be attributed to this run —
+      // fail CLOSED instead of assuming an empty baseline.
+      baseline = await existingPlanIds(signal);
+      enter("request");
       const response = await fetch(`/api/v1/journeys/${journeyId}/agent/commands`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({ command }),
+        signal,
       });
       const body = await response.json().catch(() => null);
       const mission = body?.mission ?? null;
+      if (!response.ok) {
+        /* A refused or failed request is reported as what it is.  Letting the
+           fallback re-plan run here would let a synthetic plan answer for a request
+           the backend explicitly rejected. */
+        setResult({
+          status: `HTTP_${response.status}`,
+          failureReason:
+            (typeof body?.detail === "string" ? body.detail : null) ??
+            (typeof body?.error?.message === "string" ? body.error.message : null) ??
+            `HTTP ${response.status}`,
+          summary: null,
+          planCount: -1,
+          newPlanIds: [],
+        });
+        return;
+      }
       // A plan id only counts as "new" when we KNOW it was absent from the
       // pre-run baseline.  With an indeterminate baseline there is no such id.
       const isNewPlanId = (id: string | undefined): id is string =>
@@ -184,15 +494,18 @@ export function PlanWithAiSheet({
         try {
           const plansResponse = await fetch(`/api/v1/journeys/${journeyId}/plans`, {
             headers: { Accept: "application/json" },
+            signal,
           });
           if (!plansResponse.ok) return null;
           const plans = await plansResponse.json();
           if (!Array.isArray(plans)) return null;
           return plans.map((item: { id?: string }) => item?.id).filter(isNewPlanId);
-        } catch {
+        } catch (cause) {
+          if (isAbort(cause)) throw cause;
           return null;
         }
       };
+      enter("verify");
       const counted = await countNewPlans();
       let newPlanIds: string[] = counted ?? [];
       let planCount = counted === null ? -1 : newPlanIds.length;
@@ -201,44 +514,94 @@ export function PlanWithAiSheet({
       // product path: compose candidates from the city places that discovery
       // has already materialised for this journey.  Only attempted when the
       // baseline is KNOWN — otherwise we cannot attribute what it created.
+      let blockedCode = "";
+      let blockedSentence: string | null = null;
       if (baseline !== null && planCount === 0) {
+        enter("fallback");
         try {
           const placesResponse = await fetch(
             `/api/v1/places?city_code=${encodeURIComponent(cityCode)}`,
-            { headers: { Accept: "application/json" } },
+            { headers: { Accept: "application/json" }, signal },
           );
-          const places = placesResponse.ok ? await placesResponse.json() : [];
-          const ids = Array.isArray(places)
-            ? places.map((item: { id?: string }) => item?.id).filter(Boolean).slice(0, 8)
-            : [];
-          if (ids.length >= 2) {
-            const generate = await fetch(
-              `/api/v1/journeys/${journeyId}/plans/generate`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ place_ids: ids, candidate_count: 3 }),
-              },
-            );
-            if (generate.ok) {
-              const created = await generate.json();
-              // Only artifacts this run created count as success.
-              newPlanIds = (Array.isArray(created) ? created : [])
-                .map((item: { id?: string }) => item?.id)
-                .filter(isNewPlanId);
-              if (newPlanIds.length === 0) {
-                const recounted = await countNewPlans();
-                if (recounted !== null) newPlanIds = recounted;
-              }
-              planCount = newPlanIds.length;
-            }
+          /* ORD-0107 ②: this read used to answer `[]` on any non-2xx, which made "we could not look"
+             indistinguishable from "this city has nothing" and, three lines later, from "your request
+             produced nothing".  A failed read is now its own named state. */
+          if (!placesResponse.ok) {
+            const unreadable = await placesResponse.json().catch(() => null);
+            setResult({
+              status: `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.status}`}`,
+              failureReason:
+                serverReasonSentence(unreadable) ?? `GET /places -> HTTP ${placesResponse.status}`,
+              summary: null,
+              planCount: -1,
+              newPlanIds: [],
+            });
+            return;
           }
-        } catch {
+          const catalogue = await placesResponse.json();
+          const knownIds = new Set(
+            (Array.isArray(catalogue) ? catalogue : [])
+              .map((item: { id?: string }) => item?.id)
+              .filter((id: unknown): id is string => typeof id === "string" && id.length > 0),
+          );
+          if (knownIds.size < 2) {
+            /* The old code simply did not send the request and the traveller saw nothing.  Two places is
+               the server's own floor (`schemas.py:423 min_length=2`), so this is a fact about our data,
+               said as one. */
+            setResult({
+              status: knownIds.size === 0 ? "BLOCKED:CATALOG_EMPTY" : "BLOCKED:CATALOG_INSUFFICIENT",
+              failureReason: `GET /places?city_code=${cityCode} -> ${knownIds.size} places`,
+              summary: null,
+              planCount: -1,
+              newPlanIds: [],
+            });
+            return;
+          }
+          /* ORD-0107 ①: the positional slice is gone.  Taking the first eight ids in whatever order the
+             read returned was this screen inventing a shortlist -- the model proposes no places at all
+             (`app/agent/mission.py:21-35` carries objectives and bounds, `:490-498` adds policy bounds;
+             neither has a place id), so there was no proposal to intersect and no basis for the order.
+             Sending no `place_ids` hands the choice back to the server's catalogue path
+             (`services.py` `_catalogue_templates`), the same one the demo stage plans through. */
+          const generate = await fetch(
+            `/api/v1/journeys/${journeyId}/plans/generate`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ candidate_count: 3 }),
+              signal,
+            },
+          );
+          if (generate.ok) {
+            const created = await generate.json();
+            // Only artifacts this run created count as success.
+            newPlanIds = (Array.isArray(created) ? created : [])
+              .map((item: { id?: string }) => item?.id)
+              .filter(isNewPlanId);
+            if (newPlanIds.length === 0) {
+              const recounted = await countNewPlans();
+              if (recounted !== null) newPlanIds = recounted;
+            }
+            planCount = newPlanIds.length;
+          } else {
+            const refused = await generate.json().catch(() => null);
+            blockedCode = serverReasonCode(refused);
+            blockedSentence =
+              serverReasonSentence(refused) ?? `POST /plans/generate -> HTTP ${generate.status}`;
+          }
+        } catch (cause) {
+          if (isAbort(cause)) throw cause;
           /* keep planCount at 0 and report honestly */
         }
       }
 
       const missionStatus = String(mission?.status ?? "").toUpperCase();
+      /* A mission that did not complete is not a success, however many rows exist
+         afterwards.  Measured on the production build with no model configured: the
+         mission came back with `DeepSeek API key is not configured`, the fallback re-plan
+         produced 2 plans, and the sheet reported "已生成 2 个可选方案" as plain success.
+         Those rows are real, but nothing about them answers what the traveller typed. */
+      const missionCompleted = missionStatus === "COMPLETED" || missionStatus === "SUCCEEDED";
       let status: string;
       if (baseline === null) {
         // Indeterminate baseline: whatever we see afterwards cannot be
@@ -247,12 +610,17 @@ export function PlanWithAiSheet({
         status = "BASELINE_UNAVAILABLE";
         planCount = -1;
         newPlanIds = [];
-      } else if (planCount > 0) {
+      } else if (planCount > 0 && missionCompleted) {
         status = "COMPLETED";
+      } else if (planCount > 0) {
+        status = "PLANS_WITHOUT_AI";
+      } else if (blockedCode) {
+        /* Ahead of the "AI unavailable" branch on purpose: when the compose step named a data cause,
+           that is both more specific and more actionable than "retry later", and the mission's own
+           reason still sits under 技术详情. */
+        status = `BLOCKED:${blockedCode}`;
       } else if (missionStatus.includes("EXTERNAL") || missionStatus.includes("SKIPPED")) {
         status = "SKIPPED_EXTERNAL_DEPENDENCY";
-      } else if (!response.ok) {
-        status = `HTTP_${response.status}`;
       } else {
         // Compiled, but produced nothing the traveller can use.
         status = "NO_PLANS_PRODUCED";
@@ -260,20 +628,46 @@ export function PlanWithAiSheet({
       setResult({
         status,
         newPlanIds,
-        failureReason: mission?.failure_reason ?? null,
+        failureReason:
+          mission?.failure_reason ?? blockedSentence ?? null,
         summary: mission?.reasoning_summary ?? null,
         planCount,
       });
       if (status === "COMPLETED") onPlanned?.();
-    } catch {
-      setResult({ status: "NETWORK", failureReason: null, summary: null });
+    } catch (cause) {
+      if (isAbort(cause)) {
+        /* `reached` is "request" or later once the POST has been issued, which is
+           the point after which cancelling no longer guarantees nothing happened. */
+        setResult({
+          status: reached === "baseline" ? "CANCELLED" : "CANCELLED_AFTER_SEND",
+          failureReason: null,
+          summary: null,
+        });
+      } else {
+        setResult({ status: "NETWORK", failureReason: null, summary: null });
+      }
     } finally {
-      if (timer.current) window.clearInterval(timer.current);
+      abortRef.current = null;
       setBusy(false);
+      setPhase(null);
     }
   };
 
+  const cancel = () => {
+    abortRef.current?.abort();
+  };
+
   const copy = result ? statusCopy(result.status, zh, result.planCount ?? 0) : null;
+  const examples = examplesFor(placeNames, zh);
+  const here = phase ? PHASES.findIndex((item) => item.key === phase) : -1;
+  const currentPhase = here >= 0 ? PHASES[here] : null;
+  const phaseLabel = currentPhase
+    ? zh
+      ? currentPhase.zh
+      : currentPhase.en
+    : zh
+      ? "正在处理"
+      : "Working";
 
   return (
     <div className="v8-sheet-backdrop" role="dialog" aria-modal="true" data-testid="plan-ai-sheet">
@@ -292,6 +686,8 @@ export function PlanWithAiSheet({
           </button>
         </header>
 
+        {/* Everything that may grow lives in one scroll region between two pinned ends. */}
+        <div className="plan-ai-scroll" data-testid="plan-ai-scroll">
         <label className="plan-ai-field">
           <span className="v8-sr-only">{zh ? "旅行需求" : "Trip request"}</span>
           <textarea
@@ -300,12 +696,27 @@ export function PlanWithAiSheet({
             value={text}
             disabled={busy}
             onChange={(event) => setText(event.target.value)}
-            placeholder={zh ? EXAMPLES[0].zh : EXAMPLES[0].en}
+            placeholder={
+              examples.length
+                ? zh
+                  ? examples[0].zh
+                  : examples[0].en
+                : zh
+                  ? NEUTRAL_PLACEHOLDER.zh
+                  : NEUTRAL_PLACEHOLDER.en
+            }
           />
         </label>
 
-        <div className="plan-ai-examples">
-          {EXAMPLES.map((item) => (
+        {/* No chips at all when this city has fewer than two catalogued places -- an absent
+            suggestion is honest, an invented one is a claim about a trip we know nothing about. */}
+        <div
+          className="plan-ai-examples"
+          data-testid="plan-ai-examples"
+          data-example-count={examples.length}
+          data-examples-state={!namesRead ? "reading" : examples.length ? "suggested" : "none"}
+        >
+          {examples.map((item) => (
             <button
               key={item.en}
               type="button"
@@ -317,21 +728,79 @@ export function PlanWithAiSheet({
           ))}
         </div>
 
+        {aiState !== "checking" && (
+          <p
+            className={`plan-ai-preflight ${aiState}`}
+            data-testid="plan-ai-preflight"
+            data-ai-state={aiState}
+          >
+            {aiState === "ready" &&
+              (zh ? "这台服务已接入 AI 模型。" : "A model is configured on this server.")}
+            {aiState === "unconfigured" &&
+              (zh
+                ? "这台服务没有接入 AI 模型：现在提交不会真的由 AI 规划，结果会走其它路径。"
+                : "No model is configured here, so submitting will not be planned by AI.")}
+            {aiState === "unknown" &&
+              (zh
+                ? "读不到 AI 状态（状态接口没有应答）。这只说明我们不知道，不代表它可用或不可用。"
+                : "The AI status endpoint did not answer. That means we do not know — not that it works or that it is broken.")}
+          </p>
+        )}
+
         {busy && (
-          <ol className="plan-ai-steps" data-testid="plan-ai-steps">
-            {STAGES.map((item, index) => (
-              <li key={item.key} className={index < stage ? "done" : index === stage ? "active" : ""}>
-                <span className="plan-ai-dot">{index < stage ? "✓" : index === stage ? "●" : "○"}</span>
-                <span>{zh ? item.zh : item.en}</span>
-              </li>
-            ))}
-          </ol>
+          <div
+            className="plan-ai-live"
+            data-testid="plan-ai-live"
+            data-elapsed-seconds={elapsed}
+            data-phase={phase ?? ""}
+          >
+            <p className="plan-ai-live-line" data-testid="plan-ai-elapsed">
+              <span className="plan-ai-pulse" aria-hidden="true" />
+              <span>
+                {phaseLabel} · {zh ? `已等待 ${elapsed} 秒` : `waiting ${elapsed}s`}
+              </span>
+            </p>
+            <p className="plan-ai-live-note">
+              {zh
+                ? "后端不会中途汇报进度，所以这里只有真实等待时间，没有百分比，也没有猜。"
+                : "The backend reports nothing until it finishes, so this is measured waiting time — no percentage, no guessing."}
+            </p>
+            <ol className="plan-ai-steps" data-testid="plan-ai-steps">
+              {PHASES.map((item, index) => {
+                if (item.key === "fallback" && phase !== "fallback") return null;
+                const state = index < here ? "done" : index === here ? "active" : "";
+                return (
+                  <li
+                    key={item.key}
+                    className={state}
+                    data-phase={item.key}
+                    data-phase-state={state || "pending"}
+                  >
+                    <span className="plan-ai-dot" aria-hidden="true">
+                      {state === "done" ? "✓" : state === "active" ? "●" : "○"}
+                    </span>
+                    <span>{zh ? item.zh : item.en}</span>
+                  </li>
+                );
+              })}
+            </ol>
+            <button
+              type="button"
+              className="plan-ai-cancel v8-outline-button"
+              data-testid="plan-ai-cancel"
+              onClick={cancel}
+            >
+              {zh ? "取消" : "Cancel"}
+            </button>
+          </div>
         )}
 
         {copy && (
           <div
             className={`plan-ai-result ${copy.tone}`}
             data-testid="plan-ai-result"
+            data-result-status={result?.status ?? ""}
+            data-result-tone={copy.tone}
             data-plan-count={result?.planCount ?? 0}
             data-new-plan-ids={(result?.newPlanIds ?? []).join(",")}
             role="status"
@@ -340,17 +809,56 @@ export function PlanWithAiSheet({
             <p>{copy.body}</p>
             {result?.failureReason && (
               <details className="plan-ai-detail">
-                <summary>{zh ? "技术详情" : "Technical detail"}</summary>
+                <summary data-testid="plan-ai-detail-toggle">
+                  {zh ? "技术详情" : "Technical detail"}
+                </summary>
                 <code data-testid="plan-ai-reason">{result.failureReason}</code>
               </details>
             )}
             {result?.summary && !result.failureReason && <p className="plan-ai-summary">{result.summary}</p>}
+            {/* A refusal the traveller cannot act on is a dead end, so the reason carries exactly one
+                next step -- and it is the step the server's own code earns, not a generic "try again". */}
+            {copy?.action === "another-city" && onChooseAnotherCity && (
+              <button
+                type="button"
+                className="v8-primary-button plan-ai-next-step"
+                data-testid="plan-ai-next-step"
+                data-next-step="another-city"
+                onClick={() => {
+                  onClose();
+                  onChooseAnotherCity();
+                }}
+              >
+                {zh ? "换一座有数据的城市" : "Try a city we have data for"}
+              </button>
+            )}
+            {copy?.action === "retry" && (
+              <button
+                type="button"
+                className="v8-primary-button plan-ai-next-step"
+                data-testid="plan-ai-next-step"
+                data-next-step="retry"
+                onClick={() => void submit()}
+              >
+                {zh ? "照原话再试一次" : "Try again with the same words"}
+              </button>
+            )}
           </div>
         )}
 
+        </div>
+
         <div className="plan-ai-actions">
-          <button type="button" className="v8-outline-button" onClick={onClose} disabled={busy}>
-            {zh ? "稍后" : "Later"}
+          <button
+            type="button"
+            className="v8-outline-button"
+            data-testid="plan-ai-dismiss"
+            onClick={() => {
+              abortRef.current?.abort();
+              onClose();
+            }}
+          >
+            {busy ? (zh ? "取消并关闭" : "Cancel & close") : zh ? "稍后" : "Later"}
           </button>
           <button
             type="button"

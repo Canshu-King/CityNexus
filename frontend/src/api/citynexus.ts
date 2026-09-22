@@ -1066,7 +1066,10 @@ export const cityNexusApi = {
     });
   },
 
-  rejectReplan(proposalId: string): Promise<ReplanProposal> {
-    return requestJson<ReplanProposal>("/replans/" + proposalId + "/reject", { method: "POST" });
+  rejectReplan(proposalId: string, idempotencyKey?: string): Promise<ReplanProposal> {
+    return requestJson<ReplanProposal>("/replans/" + proposalId + "/reject", {
+      method: "POST",
+      headers: idempotencyKey ? { "Idempotency-Key": idempotencyKey } : undefined,
+    });
   },
 };

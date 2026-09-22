@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { evidencePath } from "./_qoderEvidence";
 
 async function readOfflineSnapshot(page: import("@playwright/test").Page, journeyId: string) {
   return page.evaluate(async (id) => {
@@ -47,7 +48,7 @@ test("accepted authoritative execution truth converges to Dexie offline truth", 
   expect(serverBody.snapshot.execution.now_state).toBe("EN_ROUTE");
   expect(serverBody.snapshot.active_plan_version_id).toBe(plan.id);
 
-  await page.screenshot({ path: "../reports/product-v13/authoritative-online-before-offline.png", fullPage: true });
+  await page.screenshot({ path: evidencePath("product-v13/authoritative-online-before-offline.png"), fullPage: true });
   await expect.poll(async () => page.evaluate(() => navigator.serviceWorker?.ready.then(() => true))).toBeTruthy();
   await expect.poll(async () => page.evaluate(() => Boolean(navigator.serviceWorker?.controller))).toBeTruthy();
   // The dev server intentionally does not precache its HTML shell.  Simulate
@@ -66,5 +67,5 @@ test("accepted authoritative execution truth converges to Dexie offline truth", 
   await expect(page.getByRole("heading", { name: "Your next 24 hours are saved." })).toBeVisible();
   await expect(page.getByText("NOW · EN ROUTE", { exact: true })).toBeVisible();
   await expect(page.getByText(/Financial actions are disabled offline/)).toBeVisible();
-  await page.screenshot({ path: "../reports/product-v13/authoritative-offline.png", fullPage: true });
+  await page.screenshot({ path: evidencePath("product-v13/authoritative-offline.png"), fullPage: true });
 });

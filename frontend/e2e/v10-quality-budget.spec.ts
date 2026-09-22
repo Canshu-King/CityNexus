@@ -1,9 +1,15 @@
 import { expect, test } from "@playwright/test";
+import { createFreshJourney, useJourney } from "./_qoderFreshJourney";
 
 test.describe("V10 product-quality budget", () => {
   test("Live Journey becomes usable without layout or server-error regressions", async ({
     page,
+    request,
   }) => {
+  await page.addInitScript(() => localStorage.setItem("citynexus.locale", "en"));
+  const { journeyId } = await createFreshJourney(request);
+  await useJourney(page, journeyId);
+
     await page.setViewportSize({ width: 390, height: 844 });
     const consoleErrors: string[] = [];
     const serverErrors: string[] = [];

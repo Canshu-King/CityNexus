@@ -121,8 +121,13 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 @media (max-width: 560px) { .command-toolbar { grid-template-columns: 1fr; } .run-steps li { grid-template-columns: 24px 1fr; } .step-result { grid-column: 2; } }
 @media (max-width: 760px) { .provenance-lanes { grid-template-columns: 1fr 1fr; } .guardian-actions { grid-template-columns: 1fr; } }
 
-/* V8 product shell — map-first, calm canvas, semantic states, keyboard-visible controls. */
-.v8-product-shell { --v8-ink: #14233b; --v8-muted: #68758a; --v8-canvas: #f6f7fb; --v8-panel: #fff; --v8-line: #e5e8ef; --v8-indigo: #4658d9; --v8-green: #16835b; --v8-amber: #b86d2e; --v8-coral: #d65e56; --v8-violet: #8063d7; min-height: 100vh; display: flex; color: var(--v8-ink); background: var(--v8-canvas); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+/* V8 product shell — map-first, calm canvas, semantic states, keyboard-visible controls.
+   The --v8-* defaults live on :root, not on the shell, because JourneyTrialSetup is
+   returned before .v8-product-shell exists (V8Experience.tsx:818) and would otherwise
+   inherit nothing.  design-tokens.css rebinds these to the Apple palette at :root too,
+   and wins by load order — the two must move together or the shell reverts. */
+:root { --v8-ink: #14233b; --v8-muted: #68758a; --v8-canvas: #f6f7fb; --v8-panel: #fff; --v8-line: #e5e8ef; --v8-indigo: #4658d9; --v8-green: #16835b; --v8-amber: #b86d2e; --v8-coral: #d65e56; --v8-violet: #8063d7; }
+.v8-product-shell { min-height: 100vh; display: flex; color: var(--v8-ink); background: var(--v8-canvas); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 .v8-product-shell button { font: inherit; }
 .v8-sidebar { width: 252px; min-height: 100vh; box-sizing: border-box; display: flex; flex-direction: column; padding: 24px 16px 18px; background: #fff; border-right: 1px solid var(--v8-line); }
 .v8-brand { display: flex; align-items: center; gap: 11px; padding: 0 10px 30px; }
@@ -170,7 +175,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .v8-chain .v8-chain-arrow { margin-left: 11px; color: #8fa7d3; }
 .v8-message { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 18px 46px -7px; padding: 11px 14px; border: 1px solid #f0d1b5; border-radius: 8px; color: #8e5f32; background: #fffaf4; font-size: 11px; }.v8-message button { width: auto; margin: 0; padding: 0; border: 0; color: inherit; background: transparent; cursor: pointer; font-size: 10px; font-weight: 800; }.v8-loading { display: grid; place-items: center; align-content: center; gap: 8px; min-height: 100vh; color: var(--v8-ink); background: var(--v8-canvas); }.v8-loading p { margin: 10px 0 0; font-weight: 700; }.v8-loading span { color: var(--v8-muted); font-size: 12px; }.v8-mobile-nav, .v8-mobile-menu { display: none; }
 @media (max-width: 960px) { .v8-sidebar { width: 205px; }.v8-content { padding: 32px 26px 70px; }.v8-topbar { padding: 0 26px; }.v8-message { margin-left: 26px; margin-right: 26px; }.v8-hero-grid, .v8-studio-layout, .v8-stay-layout, .v8-live-grid, .v8-intelligence-grid { grid-template-columns: 1fr; }.v8-map-panel { min-height: 260px; }.v8-stay-detail { grid-row: 1; }.v8-stay-list { grid-row: 2; }.v8-intel-facts { grid-template-columns: repeat(3, 1fr); }.v8-twin-grid { grid-template-columns: repeat(2, 1fr); }.v8-boundary-card { grid-column: 1 / -1; } }
-@media (max-width: 680px) { .v8-product-shell { display: block; padding-bottom: 63px; }.v8-sidebar { display: none; }.v8-topbar { height: 58px; padding: 0 17px; }.v8-mobile-menu { display: block; width: auto; margin: 0; padding: 0; color: var(--v8-ink); font-size: 0; }.v8-mobile-menu:after { content: "≡"; font-size: 20px; }.v8-breadcrumb span, .v8-runtime, .v8-icon-button { display: none; }.v8-top-actions { gap: 8px; }.v8-content { padding: 27px 17px 34px; }.v8-message { margin: 13px 17px -5px; }.v8-page-intro { display: block; margin-bottom: 24px; }.v8-page-intro .v8-primary, .v8-page-intro .v8-outline-button, .v8-page-intro .v8-rain-button { margin-top: 18px; }.v8-page h1 { font-size: 30px; }.v8-lede { font-size: 13px; }.v8-trip-hero { padding: 22px 19px; }.v8-trip-hero-head { display: block; }.v8-trip-hero-head .v8-quiet-button { margin-top: 15px; }.v8-trip-hero h2 { font-size: 21px; }.v8-trip-metrics { gap: 8px; }.v8-trip-metrics strong { font-size: 15px; }.v8-trip-metrics small { line-height: 1.35; }.v8-anchor-row { gap: 9px; }.v8-anchor-row small { max-width: 110px; }.v8-day-row, .v8-twin-grid, .v8-intel-facts { grid-template-columns: 1fr; }.v8-day-card { min-height: 120px; }.v8-section-heading { margin-top: 30px; }.v8-section-heading h2 { font-size: 19px; }.v8-map-panel { min-height: 245px; }.v8-studio-layout { gap: 13px; }.v8-day-detail { padding: 16px; }.v8-activity-list { margin-left: 0; }.v8-stay-card { gap: 10px; }.v8-hotel-thumb.large { width: 90px; height: 110px; }.v8-stay-card h3 { font-size: 13px; }.v8-stay-impact { flex-wrap: wrap; }.v8-live-main > .v8-map-panel { min-height: 285px; }.v8-live-now { align-items: start; }.v8-live-now > strong { font-size: 14px; }.v8-mode-chooser { display: block; }.v8-mode-chips { justify-content: start; margin-top: 14px; }.v8-intel-hero h2 { font-size: 24px; }.v8-chain { gap: 5px; }.v8-chain span { padding: 6px 7px; font-size: 9px; }.v8-mobile-nav { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; display: grid; grid-template-columns: repeat(5, 1fr); padding: 8px 5px 7px; border-top: 1px solid var(--v8-line); background: #fffffff2; backdrop-filter: blur(12px); }.v8-mobile-nav button { display: grid; justify-items: center; gap: 4px; padding: 3px 0; border: 0; color: #8b95a4; background: transparent; cursor: pointer; font-size: 9px; }.v8-mobile-nav svg { width: 17px; height: 17px; }.v8-mobile-nav button.active { color: var(--v8-indigo); font-weight: 750; } }
+@media (max-width: 680px) { .v8-product-shell { display: block; padding-bottom: var(--cn-nav-clearance); }.v8-sidebar { display: none; }.v8-topbar { min-height: 58px; padding: var(--cn-safe-top) 17px 0; }.v8-mobile-menu { display: block; width: auto; margin: 0; padding: 0; color: var(--v8-ink); font-size: 0; }.v8-mobile-menu:after { content: "≡"; font-size: 20px; }.v8-breadcrumb span, .v8-runtime, .v8-icon-button { display: none; }.v8-top-actions { gap: 8px; }.v8-content { padding: 27px 17px 34px; }.v8-message { margin: 13px 17px -5px; }.v8-page-intro { display: block; margin-bottom: 24px; }.v8-page-intro .v8-primary, .v8-page-intro .v8-outline-button, .v8-page-intro .v8-rain-button { margin-top: 18px; }.v8-page h1 { font-size: 30px; }.v8-lede { font-size: 13px; }.v8-trip-hero { padding: 22px 19px; }.v8-trip-hero-head { display: block; }.v8-trip-hero-head .v8-quiet-button { margin-top: 15px; }.v8-trip-hero h2 { font-size: 21px; }.v8-trip-metrics { gap: 8px; }.v8-trip-metrics strong { font-size: 15px; }.v8-trip-metrics small { line-height: 1.35; }.v8-anchor-row { gap: 9px; }.v8-anchor-row small { max-width: 110px; }.v8-day-row, .v8-twin-grid, .v8-intel-facts { grid-template-columns: 1fr; }.v8-day-card { min-height: 120px; }.v8-section-heading { margin-top: 30px; }.v8-section-heading h2 { font-size: 19px; }.v8-map-panel { min-height: 245px; }.v8-studio-layout { gap: 13px; }.v8-day-detail { padding: 16px; }.v8-activity-list { margin-left: 0; }.v8-stay-card { gap: 10px; }.v8-hotel-thumb.large { width: 90px; height: 110px; }.v8-stay-card h3 { font-size: 13px; }.v8-stay-impact { flex-wrap: wrap; }.v8-live-main > .v8-map-panel { min-height: 285px; }.v8-live-now { align-items: start; }.v8-live-now > strong { font-size: 14px; }.v8-mode-chooser { display: block; }.v8-mode-chips { justify-content: start; margin-top: 14px; }.v8-intel-hero h2 { font-size: 24px; }.v8-chain { gap: 5px; }.v8-chain span { padding: 6px 7px; font-size: 9px; }.v8-mobile-nav { position: fixed; right: 0; bottom: 0; left: 0; z-index: 10; display: grid; grid-template-columns: repeat(5, 1fr); padding: var(--cn-nav-pad-top) 5px calc(var(--cn-nav-pad-bottom) + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--v8-line); background: var(--cn-nav-bg); backdrop-filter: blur(12px); }.v8-mobile-nav button { min-height: var(--cn-nav-item-h); display: grid; justify-items: center; align-content: center; gap: 4px; padding: 3px 0; border: 0; color: var(--cn-ink-secondary); background: transparent; cursor: pointer; font-size: var(--cn-fs-caption); }.v8-mobile-nav svg { width: 19px; height: 19px; }.v8-mobile-nav button.active { color: var(--cn-accent-text); font-weight: 750; } }
 
 /* Keep the quiet travel UI legible at WCAG AA contrast on the live surface. */
 .v8-product-shell { --v8-muted: #5f6c80; --v8-amber: #8a4f1d; --v8-coral: #a83d36; }
@@ -230,6 +235,16 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 
 /* Real-world trip-operation surfaces: provider geometry, mobile action hierarchy, and offline state. */
 .v8-map-panel:after { display: none; }
+/* ORD-0134 ②: an informational overlay must not be able to win a drag.  The caption, the gesture
+   hint and the tile notice all sit on top of the canvas with a painted background, so a finger that
+   lands on their band was talking to a `<p>` and the map saw nothing.  They are read-only text, so
+   they now pass the gesture through; anything interactive on this panel stays `pointer-events: auto`
+   by being a real control, not by covering the map. */
+.v8-map-caption,
+.v8-map-gesture-hint,
+.v8-map-tile-notice {
+  pointer-events: none;
+}
 .v9-map-marker { display: grid; place-items: center; width: 28px; height: 28px; border: 3px solid #fff; border-radius: 50%; color: #fff; background: #4658d9; box-shadow: 0 4px 14px #17294555; font-size: 10px; font-weight: 850; }
 .v9-map-marker.stay { background: #157a5c; }
 .v9-map-marker.protected { box-shadow: 0 0 0 4px #f4b942, 0 5px 16px #17294555; }
@@ -257,7 +272,7 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .v12-offline-now-next article span { color: #51756b; font-size: 10px; font-weight: 750; letter-spacing: .06em; }
 @media (max-width: 680px) { .v12-offline-now-next { grid-template-columns: 1fr; } }
 @media (max-width: 680px) { .v9-live-actions { align-items: stretch; flex-direction: column; }.v9-live-actions button { margin-top: 8px !important; }.v9-wallet-layout { grid-template-columns: 1fr; }.v9-offline { margin-top: 20px; padding: 22px; } }
-@media (max-width: 680px) { .v8-mobile-nav button { min-height: 48px; }.v8-mobile-nav button span { font-size: 10px; }.v8-mode-chips button, .v8-compare-button { min-height: 44px; }.v8-page-intro button { min-height: 44px; } }
+@media (max-width: 680px) { .v8-mobile-nav button { min-height: var(--cn-nav-item-h); }.v8-mobile-nav button span { font-size: var(--cn-fs-caption); }.v8-mode-chips button, .v8-compare-button { min-height: var(--cn-touch-min); }/* The 44px floor had holes: every one of these is a deliberate tap, and .v8-quiet-button carried no min-height at all, so Today's three secondary actions measured 30px. */.v8-quiet-button, .v8-primary, .v8-outline-button, .v8-rain-button, .v8-page-intro button, .trial-chips button, .trial-sticky-cta button { min-height: var(--cn-touch-min); } }
 
 /* Progressive disclosure, mobile comparison, and accessible focus states. */
 .v8-product-shell button:focus-visible, .v8-product-shell [role="button"]:focus-visible, .v8-product-shell textarea:focus-visible { outline: 3px solid #9aa8ff; outline-offset: 3px; }
@@ -268,6 +283,12 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 .v8-sheet-heading { display: flex; align-items: start; justify-content: space-between; gap: 20px; }.v8-sheet-heading h2 { margin: 0; font-size: 22px; letter-spacing: -.03em; }.v8-close-button { width: auto; margin: 0; padding: 0 4px; color: #7d8899; background: transparent; font-size: 24px; font-weight: 400; }
 .v8-mode-comparison { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 20px; }.v8-mode-option { min-height: 128px; margin: 0; padding: 12px 10px; border: 1px solid #e5e8ef; border-radius: 10px; color: var(--v8-ink); background: #fff; text-align: left; cursor: pointer; }.v8-mode-option.active { border-color: #8792e9; background: #f2f3ff; box-shadow: inset 0 0 0 1px #8792e9; }.v8-mode-option:disabled { color: #a7afba; background: #f5f6f8; cursor: not-allowed; }.v8-mode-option strong, .v8-mode-option span, .v8-mode-option b, .v8-mode-option small { display: block; }.v8-mode-option strong { color: var(--v8-indigo); font-size: 10px; letter-spacing: .05em; }.v8-mode-option span { margin-top: 13px; color: #718095; font-size: 10px; }.v8-mode-option b { margin-top: 7px; font-size: 12px; }.v8-mode-option small { margin-top: 8px; color: #9aa4b3; font-size: 9px; line-height: 1.35; }.v8-sheet-primary { margin-top: 18px; }.v8-sheet-note { margin: 12px 0 0; color: #8793a3; font-size: 10px; text-align: center; }
 .v8-map-page-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(280px, .6fr); gap: 16px; }.v8-map-page-grid > .v8-map-panel { min-height: 570px; }.v8-map-facts { align-self: start; padding: 22px; border: 1px solid var(--v8-line); border-radius: 12px; background: #fff; }.v8-map-facts h2 { margin: 8px 0 20px; font-size: 22px; }.v8-map-facts > small { display: block; margin-top: 14px; color: #8c97a6; font-size: 10px; }
+/* ORD-0146: the wallet must fit the phone it is opened on, whatever the booking reference says.
+   The card's text column had no `min-width: 0`, so one long `confirmation_ref` set the flex row's
+   min-content width and the whole grid measured 508px inside a 360px viewport; the status chip is
+   `white-space: nowrap`, so any badge longer than 已确认 · 受保护 hung off the right edge. */
+.v8-booking-card > div { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 680px) { .v8-booking-state { max-width: 45%; white-space: normal; text-align: right; } }
 .v8-booking-grid { display: grid; gap: 12px; }.v8-booking-card { display: flex; align-items: center; gap: 16px; padding: 20px; border: 1px solid var(--v8-line); border-radius: 12px; background: #fff; }.v8-booking-card.selected { border-color: #b8c0f1; background: #fbfbff; }.v8-booking-icon { display: grid; place-items: center; flex: none; width: 52px; height: 52px; border-radius: 10px; color: var(--v8-indigo); background: #eef0ff; }.v8-booking-icon svg { width: 24px; }.v8-booking-icon.muted { color: #718095; background: #f1f3f6; }.v8-booking-card h2 { margin: 8px 0 5px; font-size: 16px; }.v8-booking-card p { margin: 0 0 9px; color: #8994a3; font-size: 11px; }.v8-booking-card strong { font-size: 13px; }.v8-booking-state { margin-left: auto; padding: 7px 9px; border-radius: 6px; color: #8e6b34; background: #fff6e8; font-size: 9px; font-weight: 800; white-space: nowrap; }.v8-booking-state.safe { color: var(--v8-green); background: #effaf5; }.v8-selected-label.neutral { color: #68758a; background: #f1f3f6; }.v8-no-payment { display: flex; gap: 12px; align-items: baseline; margin-top: 18px; padding: 15px 17px; border: 1px solid #dcefe7; border-radius: 9px; color: #46655a; background: #f6fcf9; font-size: 11px; }.v8-no-payment b { flex: none; color: var(--v8-green); }.v8-no-payment span { color: #728d83; line-height: 1.45; }
 .v8-agent-composer-card { display: grid; grid-template-columns: .8fr 1.2fr; gap: 24px; padding: 27px; border-radius: 14px; color: #fff; background: #172945; box-shadow: 0 14px 30px #14233b22; }.v8-agent-mark { display: inline-block; padding: 6px 8px; border: 1px solid #506b97; border-radius: 6px; color: #b9c8e1; font-size: 10px; font-weight: 800; letter-spacing: .08em; }.v8-agent-copy h2 { margin: 20px 0 9px; font-size: 24px; }.v8-agent-copy p { color: #bbc8db; font-size: 13px; line-height: 1.55; }.v8-agent-boundary { margin-top: 28px; padding: 12px; border-left: 3px solid #8fa7ff; color: #dce6f7; font-size: 11px; line-height: 1.5; }.v8-agent-boundary b, .v8-agent-boundary span { display: block; }.v8-agent-boundary span { margin-top: 5px; color: #aebed8; }.v8-agent-input { display: grid; align-content: center; }.v8-agent-input label { margin-bottom: 8px; color: #b9c8e1; font-size: 11px; font-weight: 750; }.v8-agent-input textarea { min-height: 150px; box-sizing: border-box; padding: 14px; border: 1px solid #526b94; border-radius: 9px; resize: vertical; color: #f4f7ff; background: #0e1930; font: inherit; font-size: 13px; line-height: 1.55; }.v8-agent-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; color: #aebed8; font-size: 10px; }.v8-agent-toolbar .v8-primary { flex: none; }.v8-agent-progress { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; padding: 17px; border: 1px solid var(--v8-line); border-radius: 11px; background: #fff; }.v8-agent-progress > .v8-kicker { grid-column: 1 / -1; margin: 0; }.v8-agent-progress div { display: grid; gap: 5px; padding: 11px 12px; border-left: 2px solid #dfe3ee; }.v8-agent-progress b { font-size: 11px; }.v8-agent-progress span { color: #8490a0; font-size: 10px; line-height: 1.4; }
 .v8-me-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }.v8-me-card { padding: 22px; border: 1px solid var(--v8-line); border-radius: 12px; background: #fff; }.v8-me-card > strong { display: block; margin: 14px 0 9px; font-size: 25px; letter-spacing: -.04em; }.v8-me-card p { color: #7e8999; font-size: 12px; line-height: 1.55; }.v8-me-card ul { display: grid; gap: 11px; margin: 17px 0 0; padding-left: 18px; color: #667487; font-size: 11px; line-height: 1.4; }.v8-me-card .v8-primary { margin-top: 18px; }
@@ -580,6 +601,29 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   margin-top: 12px;
 }
 
+/* ORD-0135 ③: the missing-field jump is a text link inside the sentence, so the route to a field
+   costs no line of height.  Measured: giving it its own 24px box grew the hint by 58px, and the
+   wizard's sticky CTA then centred straight into the fixed stage ball (38px overlap at 360x800, and
+   the mobile gate's 44px chrome-coverage rule went red).  Inline targets inside a sentence are the
+   WGAC 2.5.8 inline exception -- the sentence line is the tap target -- and it stays a real button,
+   so it remains keyboard-reachable. */
+.trial-missing-jump {
+  display: inline;
+  width: auto;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--v8-accent, #0f766e);
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 750;
+  line-height: inherit;
+  vertical-align: baseline;
+  text-decoration: underline;
+}
+
 /* The primary action must never be invisible or buried. */
 .trial-sticky-cta {
   position: sticky;
@@ -587,12 +631,26 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   z-index: 5;
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
   justify-content: flex-end;
   padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
-  background: linear-gradient(to top, var(--v8-surface, #0b1f24) 70%, transparent);
+  background: linear-gradient(to top, var(--v8-canvas) 70%, transparent);
+}
+.trial-sticky-cta .trial-required-hint {
+  flex: 1 0 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 .trial-sticky-cta .v8-primary-button {
   min-width: 140px;
+}
+/* The onboarding surface sits outside `.v8-product-shell`, so it inherits no bottom band. Keep the
+   action band at the viewport edge: its explanation is part of the band, and lifting the whole band
+   by the old simulation-ball clearance made the taller 412px band cover the date inputs. */
+@media (max-width: 680px) {
+  .trial-sticky-cta {
+    bottom: 0;
+  }
 }
 .v8-primary-button {
   background: var(--v8-accent, #0f766e);
@@ -605,6 +663,14 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   cursor: pointer;
 }
 .v8-primary-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+/* ORD-0066 (甲): the wizard's blocked "Next" is aria-disabled so a keyboard and screen-reader
+   traveller can reach it and hear why it will not advance.  It must still *look* like a control
+   that cannot advance -- same wash as :disabled, plus the focus ring the browser now gives it. */
+.v8-primary-button[aria-disabled="true"],
+.v8-outline-button[aria-disabled="true"] {
   opacity: 0.45;
   cursor: not-allowed;
 }
@@ -664,68 +730,109 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 
 /* ------------------------------------------------------------------ *
  * "AI 帮我规划" planning sheet.
+ *
+ * This block used to be light-only by construction: the sheet hardcoded #f9fbfd,
+ * never declared a foreground, and its textarea / example chips / close button all
+ * said `color: inherit`.  Under a dark system theme body hands back --cn-ink (#f5f5f7),
+ * so near-white text landed on a near-white panel — the "一片白，字看不清" report.
+ * The fix is not a fourth !important patch section: every declaration below now names a
+ * token that already flips, so the sheet is theme-correct by construction and cannot
+ * drift again when a new surface is added to it.
  * ------------------------------------------------------------------ */
 .plan-ai-sheet {
+  /* The budget is about what the traveller sees, so it applies to the border box: measured without
+     this, a `--vv-height` of 300px produced a 333px sheet -- the 16px padding top and bottom plus the
+     1px border landed *outside* the declared height, which is the same 33px of footer sitting below
+     the visible viewport that this whole order is about. */
+  box-sizing: border-box;
   width: min(520px, 100%);
-  max-height: 92vh;
-  overflow: auto;
-  -webkit-overflow-scrolling: touch;
+  /* ORD-0134 ①: bounded by the *visible* viewport, with `100dvh` for a browser that never
+     publishes --vv-height.  `92vh` measured the layout box, so a keyboard or a toolbar could leave
+     the sheet's own action row painted below what the traveller can see -- and because the sheet
+     scrolled itself, the clipped box was also the scrollport: scrolling could not rescue the footer.
+     Measured at 360x640: `plan-ai-submit` centre y=790, `elementFromPoint` -> nothing. */
+  max-height: min(92vh, calc(var(--vv-height, 100dvh) - var(--vv-offset, 0px)));
+  /* One scroll region, and it is not the sheet: header and footer stay pinned, the middle moves. */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  gap: var(--cn-s-12);
+  padding: var(--cn-s-16) var(--cn-s-16) calc(var(--cn-s-16) + env(safe-area-inset-bottom, 0px));
+  border-radius: var(--cn-r-sheet) var(--cn-r-sheet) 0 0;
+  border-top: 1px solid var(--cn-hairline);
+  background: var(--cn-surface);
+  color: var(--v8-ink);
+  box-shadow: var(--cn-shadow-raised);
+}
+/* The pinned ends and the single moving middle: the footer of an overlay that owns two buttons must
+   never be something the traveller has to scroll past -- or scroll to -- to press. */
+.plan-ai-head,
+.plan-ai-actions {
+  flex: none;
+}
+.plan-ai-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: grid;
-  gap: 12px;
-  padding: 18px 16px calc(18px + env(safe-area-inset-bottom, 0px));
-  border-radius: 18px 18px 0 0;
-  background: #f9fbfd;
-  box-shadow: 0 -12px 40px #14233b33;
+  gap: var(--cn-s-12);
 }
 .plan-ai-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--cn-s-12);
 }
 .plan-ai-head b {
-  font-size: 15px;
+  font-size: var(--cn-fs-secondary);
 }
+/* opacity used to do the de-emphasis here (0.72), which lowers the *measured* contrast
+   ratio along with the visual weight. --v8-muted is the AA-checked subordinate ink. */
 .plan-ai-head small {
   display: block;
   margin-top: 4px;
-  font-size: 11px;
-  opacity: 0.72;
+  font-size: var(--cn-fs-body);
+  color: var(--v8-muted);
   line-height: 1.45;
 }
 .plan-ai-close {
+  min-height: 30px;
   border: 0;
   background: transparent;
   font-size: 22px;
   line-height: 1;
   cursor: pointer;
-  color: inherit;
+  color: var(--v8-muted);
   padding: 0 4px;
 }
 .plan-ai-field textarea {
   width: 100%;
   box-sizing: border-box;
+  min-height: 34px;
   font: inherit;
-  font-size: 13px;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid rgba(127, 127, 127, 0.35);
-  background: #fff;
-  color: inherit;
+  font-size: var(--cn-fs-body);
+  padding: var(--cn-s-12);
+  border-radius: var(--cn-r-control);
+  border: 1px solid var(--cn-control-border);
+  background: var(--cn-surface);
+  color: var(--v8-ink);
   resize: vertical;
 }
+.plan-ai-field textarea::placeholder { color: var(--cn-ink-tertiary); }
 .plan-ai-examples {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
 }
 .plan-ai-examples button {
-  border-radius: 999px;
+  min-height: 30px;
+  border-radius: var(--cn-r-pill);
   padding: 5px 10px;
-  font-size: 11px;
-  border: 1px solid rgba(127, 127, 127, 0.4);
-  background: transparent;
-  color: inherit;
+  font-size: var(--cn-fs-body);
+  border: 1px solid var(--cn-hairline);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
   cursor: pointer;
 }
 .plan-ai-steps {
@@ -734,58 +841,254 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   padding: 0;
   display: grid;
   gap: 6px;
-  font-size: 12px;
+  font-size: var(--cn-fs-body);
+  /* Was --v8-muted, which styles.css overrides theme-blind: pending rows were small
+     grey text nobody could read.  The ○/●/✓ marker and the weight carry the state now,
+     so the words do not have to. */
+  color: var(--v8-ink);
 }
 .plan-ai-steps li {
   display: flex;
   align-items: center;
-  gap: 8px;
-  opacity: 0.5;
+  gap: var(--cn-s-8);
+}
+.plan-ai-steps li.active {
+  font-weight: 600;
 }
 .plan-ai-steps li.active,
 .plan-ai-steps li.done {
-  opacity: 1;
+  color: var(--v8-ink);
 }
 .plan-ai-dot {
   width: 16px;
   text-align: center;
 }
+/* ORD-0038 — the sheet says only what it can prove: the phase it is genuinely in,
+   the seconds that really elapsed, and the fact that the backend sends nothing between
+   "sent" and "answered". */
+.plan-ai-preflight {
+  margin: 0;
+  padding: var(--cn-s-8) var(--cn-s-12);
+  border: 1px solid var(--cn-hairline);
+  border-left: 3px solid var(--cn-ink-tertiary);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+.plan-ai-preflight.ready { border-left-color: var(--cn-success); }
+.plan-ai-preflight.unconfigured { border-left-color: var(--cn-warning); }
+.plan-ai-live {
+  display: grid;
+  gap: var(--cn-s-8);
+  padding: var(--cn-s-12);
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+}
+.plan-ai-live-line {
+  display: flex;
+  align-items: center;
+  gap: var(--cn-s-8);
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  font-weight: 600;
+}
+.plan-ai-live-note {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+.plan-ai-pulse {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cn-accent);
+}
+@keyframes plan-ai-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+/* A waiting indicator may move, but never to a traveller who asked us not to. */
+@media (prefers-reduced-motion: no-preference) {
+  .plan-ai-pulse {
+    animation: plan-ai-pulse 1.6s ease-in-out infinite;
+  }
+}
+
+/* ORD-0047 — the create flow's wait.  Same rule as the sheet above: name the stage, count
+   the seconds, and never animate for someone who asked not to. */
+.trial-wait {
+  display: grid;
+  gap: var(--cn-s-8);
+  margin: 0 0 var(--cn-s-12);
+  padding: var(--cn-s-12);
+  border: 1px solid var(--cn-hairline);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+}
+.trial-wait-line {
+  display: flex;
+  align-items: center;
+  gap: var(--cn-s-8);
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  font-weight: 600;
+}
+.trial-wait-line b {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+.trial-wait-note,
+.trial-wait-hint {
+  margin: 0;
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.trial-wait-hint {
+  font-size: var(--cn-fs-caption);
+}
+.trial-wait-pulse {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cn-accent);
+}
+@keyframes trial-wait-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .trial-wait-pulse {
+    animation: trial-wait-pulse 1.6s ease-in-out infinite;
+  }
+}
+.trial-wait-outcome {
+  display: grid;
+  gap: var(--cn-s-8);
+  margin: 0 0 var(--cn-s-12);
+  padding: var(--cn-s-12) var(--cn-s-16);
+  border-left: 3px solid var(--cn-accent);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+.trial-wait-outcome strong {
+  font-weight: 750;
+}
+.trial-wait-outcome span {
+  color: var(--v8-ink);
+  overflow-wrap: anywhere;
+}
+
+/* Today's stay-search outcome: waiting, refused and empty are three different faces, and
+   none of them is the ordinary Today. */
+.hub-stay-searching,
+.hub-stay-refused,
+.hub-stay-empty {
+  display: grid;
+  gap: var(--cn-s-8);
+  margin-top: var(--cn-s-12);
+  padding: var(--cn-s-12) var(--cn-s-16);
+  border-radius: var(--cn-r-control);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
+  font-size: var(--cn-fs-body);
+  line-height: 1.45;
+}
+.hub-stay-searching {
+  border: 1px solid var(--cn-hairline);
+}
+.hub-stay-refused {
+  border-left: 3px solid var(--cn-danger);
+}
+.hub-stay-empty {
+  border-left: 3px solid var(--cn-accent);
+}
+.hub-stay-searching strong,
+.hub-stay-refused strong,
+.hub-stay-empty strong {
+  font-weight: 750;
+}
+.hub-stay-searching span,
+.hub-stay-refused span,
+.hub-stay-empty p,
+.hub-stay-empty small {
+  margin: 0;
+  color: var(--v8-ink);
+  overflow-wrap: anywhere;
+}
+.hub-stay-empty small {
+  font-size: var(--cn-fs-caption);
+}
+.hub-stay-empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cn-s-8);
+}
 .plan-ai-result {
-  border-radius: 10px;
-  padding: 10px 12px;
-  font-size: 12px;
+  border-radius: var(--cn-r-control);
+  padding: var(--cn-s-12);
+  font-size: var(--cn-fs-body);
   line-height: 1.5;
+  /* The three tones used to be literal pale fills (#e8f6ee / #fff6e6 / #eef2fb), i.e. three
+     white slabs on a dark sheet.  Same-token surface plus a semantic rule keeps the
+     distinction without making the colour the only carrier of meaning. */
+  border: 1px solid var(--cn-hairline);
+  background: var(--cn-secondary);
+  color: var(--v8-ink);
 }
-.plan-ai-result.ok {
-  background: #e8f6ee;
-  border: 1px solid #b6e0c8;
-}
-.plan-ai-result.warn {
-  background: #fff6e6;
-  border: 1px solid #f0d1a5;
-}
-.plan-ai-result.busy {
-  background: #eef2fb;
-  border: 1px solid #cdd8f0;
-}
+.plan-ai-result.ok { border-left: 3px solid var(--cn-success); }
+.plan-ai-result.warn { border-left: 3px solid var(--cn-warning); }
+.plan-ai-result.busy { border-left: 3px solid var(--cn-accent); }
+/* A cancellation is neither success nor failure, so it must not borrow either tone. */
+.plan-ai-result.neutral { border-left: 3px solid var(--cn-ink-tertiary); }
 .plan-ai-result p {
   margin: 4px 0 0;
 }
 .plan-ai-detail summary {
   cursor: pointer;
-  font-size: 11px;
-  opacity: 0.7;
+  font-size: var(--cn-fs-body);
+  color: var(--v8-muted);
 }
 .plan-ai-detail code {
   display: block;
   margin-top: 4px;
-  font-size: 11px;
+  font-size: var(--cn-fs-body);
   word-break: break-word;
 }
 .plan-ai-actions {
   display: flex;
   gap: 10px;
   justify-content: flex-end;
+}
+/* Amendment F-2: the >=44px contract belongs to the touch layer; desktop keeps 30px. */
+@media (max-width: 680px) {
+  .plan-ai-close,
+  .plan-ai-cancel,
+  .plan-ai-examples button,
+  .plan-ai-field textarea,
+  .plan-ai-actions button { min-height: var(--cn-touch-min); }
 }
 
 /* ------------------------------------------------------------------ *

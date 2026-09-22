@@ -28,7 +28,7 @@ function SortableActivity({ activity, label, index, protectedActivity }: { activ
 }
 
 export function SortableActivityList({ activities, protectedFirst, onDraft, labels }: { activities: string[]; protectedFirst: boolean; onDraft?: (activities: string[]) => void; labels?: Record<string, string> }) {
-  const [items, setItems] = useState(activities);
+  const [items, setItems] = useState<string[]>(activities);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
   useEffect(() => {
     setItems(activities);
@@ -37,7 +37,7 @@ export function SortableActivityList({ activities, protectedFirst, onDraft, labe
     if (!over || active.id === over.id) return;
     const oldIndex = items.indexOf(String(active.id));
     const newIndex = items.indexOf(String(over.id));
-    const next = arrayMove(items, oldIndex, newIndex);
+    const next = arrayMove<string>(items, oldIndex, newIndex);
     setItems(next);
     onDraft?.(next);
   };

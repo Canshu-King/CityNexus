@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { evidencePath } from "./_qoderEvidence";
 
 function reservation(role: "ARRIVAL" | "MID_TRIP" | "DEPARTURE") {
   if (role === "ARRIVAL") {
@@ -64,9 +65,30 @@ test("City Discovery renders the fully grounded Journey proof", async ({ page, r
   await page.goto("/v8/discover");
   await expect(page.getByTestId("v13-discovery")).toBeVisible();
   await page.getByTestId("v13-discover-submit").click();
-  await expect(page.getByTestId("v13-discovery-result")).toBeVisible();
+  const result = page.getByTestId("v13-discovery-result");
+  await expect(result).toBeVisible();
   await expect(page.getByText("FULLY GROUNDED", { exact: true })).toBeVisible();
   await expect(page.getByText("valhalla", { exact: true })).toBeVisible();
   await expect(page.getByTestId("v13-discovery-selected-plan")).toContainText("SELECTED");
-  await page.screenshot({ path: "../reports/product-v13.5/fully-grounded-discovery.png", fullPage: true });
+  /* The screenshot is the artefact a human reviews, so it has to be taken once the
+     surface has settled.  Measured on this pass: every assertion above passed and
+     the shipped PNG still showed an empty page — the card fades in, and
+     `toBeVisible()` is true at opacity 0.  Scoped to this subtree on purpose: the
+     app runs infinite pulse animations elsewhere, so a document-wide wait could
+     never finish. */
+  await expect
+    .poll(
+      () =>
+        result.evaluate((element) =>
+          element
+            .getAnimations({ subtree: true })
+            .every((animation) => animation.playState === "finished"),
+        ),
+      {
+        message: "the discovery result never stopped animating, so a capture of it is not evidence",
+        timeout: 10_000,
+      },
+    )
+    .toBe(true);
+  await page.screenshot({ path: evidencePath("product-v13.5/fully-grounded-discovery.png"), fullPage: true });
 });

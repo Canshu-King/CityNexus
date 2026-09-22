@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "typecheck": "tsc -p tsconfig.check.json --noEmit",
+    "typecheck:all": "tsc -p tsconfig.typecheck.json --noEmit",
     "test:e2e": "playwright test",
     "storybook": "set STORYBOOK=1&& storybook dev -p 6006",
     "storybook:build": "set STORYBOOK=1&& storybook build"
@@ -29,6 +31,8 @@
     "@axe-core/playwright": "^4.10.2",
     "@playwright/test": "^1.54.0",
     "@storybook/react-vite": "^9.1.20",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
     "@vitejs/plugin-react": "^4.7.0",
     "openapi-typescript": "^7.5.0",
     "storybook": "^9.1.20",

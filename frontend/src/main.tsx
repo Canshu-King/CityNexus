@@ -36,7 +36,16 @@ import { journeyModeMachine } from "./state/journeyModeMachine";
 import { V8Experience } from "./app/V8Experience";
 import { ProductErrorBoundary } from "./components/ProductErrorBoundary";
 import { LocaleProvider } from "./i18n/LocaleContext";
+import { applyTheme, followSystemTheme } from "./theme";
 import "./styles.css";
+import "./design-tokens.css";
+
+/* Resolve the theme root contract before the first paint.  The stylesheets key their dark
+   tables off `:root[data-theme]`, so the attribute must exist by the time anything is
+   painted; doing it here rather than in a component keeps the first render correct and
+   avoids a second copy of the OS check. */
+applyTheme();
+followSystemTheme();
 
 const journeyStorageKey = "citynexus.demo.journey_id";
 const agentRunStorageKey = "citynexus.demo.agent_run_id";
@@ -746,7 +755,7 @@ function LegacyApp() {
     );
     if (!riverCruise) throw new Error("Accepted plan lost the protected River Cruise activity");
     setSession({
-      journeyId: session.journeyId,
+      ...session,
       plan: acceptedPlan,
       techArt:
         acceptedPlan.activities.find((item) => item.place_id === "place-tech-art") ?? null,
@@ -1396,7 +1405,7 @@ function LegacyApp() {
             ) : (
               travelerTwin.explicit_preferences.map((item, index) => (
                 <span key={(String(item.dimension ?? "explicit")) + index}>
-                  {String(item.dimension ?? item.category ?? "preference")} · {item.explanation ?? "user-provided"}
+                  {String(item.dimension ?? item.category ?? "preference")} · {String(item.explanation ?? "user-provided")}
                 </span>
               ))
             )}
@@ -1669,13 +1678,84 @@ createRoot(document.getElementById("root")!).render(
   </QueryClientProvider>,
 );
 
+const serviceWorkerReloadMarkerKey = "citynexus.sw.controller-transition";
+
+/**
+ * Caches the previous strategies left behind under names nothing owns any more.
+ * Deliberately not a prefix sweep: the versioned `citynexus-pages-*` / `citynexus-static-*`
+ * caches belong to the generated worker, and wiping them from the page would recreate the
+ * "refresh shows the old shell" bug from the other side.
+ */
+async function removeLegacyServiceWorkerCaches() {
+  if (!("caches" in window)) return;
+  const legacyCacheNames = new Set([
+    "citynexus-trip-operations-v1",
+    "citynexus-pages",
+    "citynexus-static",
+  ]);
+  const cacheNames = await caches.keys();
+  await Promise.all(
+    cacheNames
+      .filter(
+        (name) =>
+          legacyCacheNames.has(name) || name.startsWith("citynexus-trip-operations-v"),
+      )
+      .map((name) => caches.delete(name)),
+  );
+}
+
+/** A production worker left running by a same-origin preview must not drive Vite/HMR. */
+async function unregisterProductionServiceWorkers() {
+  const registrations = await navigator.serviceWorker.getRegistrations();
+  await Promise.all(
+    registrations
+      .filter((registration) => (registration.active?.scriptURL ?? registration.installing?.scriptURL ?? "").includes("/v10-sw.js"))
+      .map((registration) => registration.unregister()),
+  );
+}
+
+async function registerProductionServiceWorker() {
+  const controllerBefore = navigator.serviceWorker.controller?.scriptURL ?? null;
+
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    const controllerAfter = navigator.serviceWorker.controller?.scriptURL ?? null;
+    if (!controllerBefore || !controllerAfter || controllerBefore === controllerAfter) return;
+
+    const transition = `${controllerBefore}->${controllerAfter}`;
+    if (sessionStorage.getItem(serviceWorkerReloadMarkerKey) === transition) return;
+
+    // Reload exactly once when an already-controlled page moves to a new worker, so an old
+    // shell cannot keep executing against a new asset graph after an auto-update.
+    sessionStorage.setItem(serviceWorkerReloadMarkerKey, transition);
+    window.location.reload();
+  });
+
+  const registration = await navigator.serviceWorker.register("/v10-sw.js", {
+    scope: "/",
+    updateViaCache: "none",
+  });
+  await registration.update();
+  await navigator.serviceWorker.ready;
+  await removeLegacyServiceWorkerCaches();
+}
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    // The PWA plugin emits the versioned worker in production.  Vite's dev
-    // server serves the checked-in worker instead; registering the production
-    // path during development returns the SPA HTML with a JavaScript MIME
-    // type and creates a noisy console error in the quality gate.
-    const serviceWorkerPath = import.meta.env.DEV ? "/sw.js" : "/v10-sw.js";
-    void navigator.serviceWorker.register(serviceWorkerPath);
+    if (import.meta.env.DEV) {
+      /* Development registers only the checked-in recovery/dev worker -- never the
+         generated production one, whose precache graph is not the code being edited -- and
+         drops a production worker a previous same-origin preview left in control. */
+      void unregisterProductionServiceWorkers()
+        .then(() => navigator.serviceWorker.register("/sw.js", { scope: "/" }))
+        .catch((error) => {
+          console.warn("CityNexus could not set up the development service worker", error);
+        });
+      return;
+    }
+
+    void registerProductionServiceWorker().catch((error) => {
+      // A worker failing to register must not stop the application from booting.
+      console.warn("CityNexus service worker registration failed", error);
+    });
   });
 }

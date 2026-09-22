@@ -1,0 +1,35 @@
+{
+  "scope": "frontend-only mobile golden path",
+  "branch": "codex/mobile-golden-path-20260922",
+  "status": "fixed",
+  "defects": [
+    {
+      "id": "CMG-001",
+      "surface": "Setup / step 1",
+      "severity": "high",
+      "before": "Global button width/display rules made missing-field jump buttons render as separate full-width rows and commas; the missing reason was visually separated from the sticky Next action. The lifted sticky band could also cover the date/time row after the reason was moved.",
+      "root_cause": "`.trial-missing-jump` did not override the global button width, and the sticky action band had no explicit full-width hint row or mobile bottom placement.",
+      "fix": "Keep the existing accessible jump buttons inline, add `width:auto`, put the existing required hint inside `.trial-sticky-cta`, allow the hint to occupy a full row, and pin the mobile band to bottom: 0.",
+      "evidence_before": ["output/evidence/before/setup-step1-light-412x915.png", "output/evidence/before/setup-step1-dark-412x915.png"],
+      "evidence_after": ["output/evidence/after/setup-step1-light-412x915.png", "output/evidence/after/setup-step1-dark-412x915.png"],
+      "regression": "codex-mobile-golden-path.spec.ts — blocked setup geometry at 360/390/412/430",
+      "changed_files": ["frontend/src/features/setup/JourneyTrialSetup.tsx", "frontend/src/styles.css"]
+    },
+    {
+      "id": "CMG-002",
+      "surface": "Wallet / dark mode",
+      "severity": "high",
+      "before": "Booking cards, inbox, and no-payment authority panel kept white/light fills on the black theme; the visual hierarchy and text readability broke.",
+      "root_cause": "Older Wallet/JSON surfaces used hard-coded light backgrounds and foregrounds outside the newer token pass.",
+      "fix": "Add dark-mode token overrides for booking cards, selected states, icon/state chips, reservation copy, no-payment authority panel, inbox textarea, and related labels.",
+      "evidence_before": ["output/evidence/before/wallet-dark-412x915.png"],
+      "evidence_after": ["output/evidence/after/wallet-dark-412x915.png"],
+      "regression": "codex-mobile-golden-path.spec.ts — dark Wallet card/inbox colors and heading contrast >= 4.5:1",
+      "changed_files": ["frontend/src/design-tokens.css"]
+    }
+  ],
+  "not_defects": [
+    "Today/Live horizontal overflow at 360/412/430 was already green and remains green.",
+    "Map code was not touched; no map-specific product claim is made beyond route/screenshot sanity."
+  ]
+}
