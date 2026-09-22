@@ -9158,7 +9158,192 @@ evidence: `frontend/src/features/discovery/DestinationPreparationPanel.tsx`（�
   而上面五格里**任何一格翻成 accepted>0 就是我给的 `PROMOTION VIOLATION`**，尤其 `wheelchair=limited` 与两个跨主体格
   （卫生间/入口证据被当成整点 step-free）。落地当天我一条命令即出这张对照表。
 
+### 1a986a24 HJ-P1 ORD-0207 隔离证明 + 六格矩阵 @2026-09-22T13:20+08
+
+**人设**：穷游背包客，一个人、只坐公交、景点可换、绝不住贵酒店。本轮只做一件事：在**自己的一次性副本**上，
+用眼睛和手指走一遍，报"人看到了什么、能不能操作"。全程点屏幕，**没有用 API 抄近路**。
+
+#### 一、隔离证明（第一步交付，先证明再点）
+
+`python _qoder_cmdr_ref_20260921/live_checks/db_probe_preflight.py --database-url 'sqlite:///D:/moodle/_qoder_hjp1_o207_20260922/_hjp1_o207.db' --cwd 'D:\moodle\_qoder_hjp1_o207_20260922' --expected-min-tables 40` → **exit 0**，完整收据：
+
+```json
+{
+  "source_label": "CITYNEXUS_DATABASE_URL as exported into the uvicorn(8741) process I launched",
+  "database_url_as_resolved_by_app": "sqlite:///D:/moodle/_qoder_hjp1_o207_20260922/_hjp1_o207.db",
+  "process_cwd": "D:\\moodle\\_qoder_hjp1_o207_20260922",
+  "resolved_database_path": "D:\\moodle\\_qoder_hjp1_o207_20260922\\_hjp1_o207.db",
+  "exists_before_open": true,
+  "open_mode": "sqlite mode=ro",
+  "table_count": 53,
+  "known_table_counts": { "journeys": 32, "plan_versions": 9, "travelers": 46 },
+  "status": "READ_ONLY_TARGET_IDENTIFIED",
+  "safe_to_claim_clean": true,
+  "reason": "Target identity and non-empty schema were observed read-only. This does not itself prove application isolation."
+}
+```
+
+（`tables` 53 个名字全在原始输出里，此处省略；需要我单独贴。）
+
+**我走的是哪个 build、哪个库**：
+- 前端 = `_qoder_preview_20260920/dist/assets/index-CnfHH2K_.js`（2026-09-22 02:10 产物）的**冻结副本**；
+  与我 `dist/` 里那份 sha256 前缀 `524038d21f51edfe` / 1,228,395 B **逐字节相同**，`index.html` 同为 `bb9756c1a1793483`。
+- 后端 = 权威树 `D:\moodle\_qoder_integration_20260919` @ **e0fc697**（`git log -1`：`e0fc697 09-22 07:06 feat(backend): a refused replan leg names which kind of evidence is missing (ORD-0199)`），openapi **139 条路径**。
+- 库 = `D:\moodle\_qoder_hjp1_o207_20260922\_hjp1_o207.db`，我用 `mode=ro` + `Connection.backup()` 从 `_preview.db` 拷出的一次性副本。
+- 端口 = 后端 `127.0.0.1:8743`、我自己的静态+API 代理 `127.0.0.1:8744`（`serve_e0.py`）。**没连共享 preview、没连用户活库、没开新隧道。**
+
+**写隔离收据**（这才是"隔离"的真证据，比 mtime 硬）：
+
+| 库 | journeys | travelers | 说明 |
+|---|---|---|---|
+| 我的副本（走查前） | 31 | 45 | 从 `_preview.db` backup 出来的原样 |
+| 我的副本（走查后） | **32** | **46** | 我这轮建的「广州之旅」只落在这里 |
+| 共享 `_preview.db`（只读探测） | 31 | 45 | **未变**；主文件 mtime 仍 `2026-09-21 01:46:44`、`-wal` 仍 `02:40:46` |
+
+⚠ 一条副作用要说清：为了并列这两行读数，我用 `db_probe_preflight.py`（`mode=ro`）**打开过共享 `_preview.db` 一次**。
+主库与 `-wal` 的时间戳和字节数都没动，但 WAL 库的 `-shm`  scratch 文件时间戳被这次打开刷新了（`12:57:46 → 12:58:07`）。
+如果这条越界了，请明说，下次我只探自己那份。
+
+#### 二、🔴 自纠：我第一轮搭的栈版本错配，请按本轮读数为准
+
+我最初起的是 `后端 = D:\moodle\CityNexus` @ `a9c2504`（09-20 01:10，openapi **129 条路径**，与运行进程 129 条**完全重合**）
+配 **02:10 的新前端**。后果：那份前端要调 `/api/v1/demo/scene`，旧后端没有 ⇒ 404 ⇒ Today 屏打出
+「读不到服务器场景（Not Found），这一屏用的是这台设备自己的时间」。**那句话是我自己造出来的 404，不是产品状态。**
+已换到权威树 e0fc697 重跑，本节以下所有读数都来自 `8744`（新前端 + 权威后端 + 我的副本库）。
+
+#### 三、六格矩阵：360 / 390 / 412 × 明 / 暗（Today 屏，真实建完行程之后）
+
+每格都是：CDP 逐页视口 + `prefers-color-scheme` 仿真 → 冷加载 `/v8/hub` → 等 4.2 s → 读数。
+
+| 格 | 人看到了什么 | 能不能操作 |
+|---|---|---|
+| 360 明 | 「下午好 / 广州之旅 / 3 天 · 2 人 · 每人每天约 CNY 500.00」整屏 597 字全在，无横向溢出 | 底栏 今天/行程/地图/Copilot/我的 5 个按钮各 **48 px 高**，`elementFromPoint` 逐指命中 ✅ |
+| 360 暗 | 同一屏内容（597 字一致），`data-theme` 跟随仿真值切到 dark | 同上 5 个 48 px 全命中 ✅ |
+| 390 明 | 同上 | ✅ 5/5 命中，48 px |
+| 390 暗 | 同上 | ✅ 5/5 命中，48 px |
+| 412 明 | 同上 | ✅ 5/5 命中，48 px |
+| 412 暗 | 同上 | ✅ 5/5 命中，48 px |
+
+- 六格 `overflowX` 全为 **0**；`scrollHeight` 一致，说明三种宽度不是"挤进去"的。
+- 命中测试里有 3 个同名按钮高度为 0（底栏的读屏重复节点），**不是**点不到，别当成缺陷。
+- 首屏时间线（本地直连，无隧道）：`0 ms` 只有 14 个节点的空壳 → **`224 ms` 满屏 504 字**。空窗期没有任何骨架或"加载中"，
+  但 224 ms 人眼看不见，所以这条只在公网隧道口径下才有意义（公网那一半我第五轮量过：首屏 9.47 s / 6.22 s）。
+
+**对比度（AA；这次把 `opacity` 合成进去了，上一轮我没合成）**
+- 明色首屏 **1 处不过**：`5 段路程` @10 px = **3.92**（需 4.5）。
+- 暗色首屏 **0 处不过**。
+- 滚到日卡后：`TRANSIT` / `WALK` / `AUTO` @**8 px** 明色 **4.29**（不过）、暗色 5.76（过）；`ARRIVAL锚点`/`STAY锚点`/`DEPARTURE锚点` @9 px 明 5.07 / 暗 7.69（都过）。
+  ⇒ 8 px 英文 chip 只有**明色**这一档差 0.21，修法是字号或颜色二选一，不必两档一起改。
+- 我上一轮报的 `下一步 1.09:1` 是**我的量具错**：我从 `parentElement` 起算背景，跳过了按钮自己的底色。
+  重测：`.v8-primary-button` 底色 `rgb(10,102,255)`、白字 = **4.82（过）**；但整按钮 `opacity: 0.45`（`aria-disabled="true"`），
+  合成到页面底色后**实际**约 **1.97（明）/ 2.70（暗）**。WCAG 对 inactive 控件豁免，所以**不算 AA 违规**，
+  但"灰成这样的主按钮，用户分不清是不能点还是坏了"是人的问题；旁边有「还需要填写：抵达地点、离开地点」兜住，所以我**不升级**。
+
+#### 四、走查（真人路径）：广州 3 天 2 人 CNY 3000
+
+1. **城市识别这一段是真好**：输入「广州」后屏上出现「已自动设置：中国 · 人民币 · 中国标准时间」，
+   两个占位符从「例如：某地站 / 机场」变成「例如：**广州**站 / 机场」，标签变成「抵达广州 / 离开广州」。
+   写错时（我不小心打成「广州广州」）屏上：「没认出「广州广州」：已退回中立口径 CN / 人民币（CNY）/ Asia/Shanghai 规划，
+   **不沿用上一次识别到的城市**。换个写法，或在"看支持的目的地"里挑一个。」——降级说清了原因和退路，**通过**。
+   （给实验室的一条量具规矩：占位符会随城市变，选择器不能写死 `某地站`，我因此点空了一次。）
+2. **第 2 步枚举泄漏在这一屏确实修好了**：旅行节奏 = 轻松/适中/紧凑，兴趣 = 美食/自然/人文/海边/购物/亲子，全是中文。
+3. **但选中态只有颜色**：`轻松` 是 `class="active"` + 蓝底白字，`aria-pressed` 与 `aria-selected` 都是 **null**（5 个 chip 全 null）。
+   读屏器/色弱用户读不出"哪个已经选中"。分类 **HUMAN_ACCESSIBILITY**；最小回归点：节奏/兴趣 chip 补 `aria-pressed`（选中态已存在，只是没进无障碍树）。
+4. **第 3 步确认屏没有任何"几天几晚"**：只有 目的地/抵达/离开/人数·房间/总预算·住宿/节奏/兴趣/特殊要求/自动设置 八行。
+   而 `人数 2`、`总预算 CNY 3000`、`住宿 1000`、`节奏 轻松` 都是**我没输入过的默认值**，屏上不带"默认"标记。
+   分类 **HUMAN_MISLEADING**（对穷游的人是实质影响：我一个人的预算被按 2 人摊）。
+   注：`兴趣` 显示「—」，说明"未答"这一格是诚实的——**同一屏里"猜的"和"没答"用两种口径**，这才是要钉的点。
+5. **创建之后不伪造进度（通过）**：「正在搜索住宿 已等待 6 秒 / 第一次搜索一座城市实测要两分钟左右。
+   服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。/ 停止等待 / 停止等待只是离开这块屏幕：
+   服务器不会因此停下，行程数据也不会丢失。」
+6. **刷新恢复（欠了三轮的那一项）现在通过了**：飞行中 `reload` → **0 s** 出现「正在准备城市周末行程… 锚点 · 住宿 · 出行事实 · 可行性」，
+   **4 s** 满屏，**7 s** 出现地图降级文案位。任务 #7 的"冷城市等待"因此不再受阻。
+7. **预算算式对**：「3 天 · 2 人 · **每人每天约 CNY 500.00**」= 3000 ÷ 2 ÷ 3 = 500 ✓，且紧跟「这是按你的预算平均下来的参考值，
+   不是最终花费；真实价格以供应商为准。」——**并且我上一轮报的硬编码 `¥` 已经变成解析出的币种码**（V8Experience 那行现在打 `CNY`）。
+   中文界面里「约 CNY 500.00」读起来别扭（人会说 ¥500），但它是**真**的，所以只记 POLISH。
+8. 🔴 **新报：Today 主卡把内部枚举和裸 UTC 时间戳打在脸上**。屏上原文：
+   「"现在"取自服务器场景（执行游标，游标状态 **ABSENT_FALLBACK**）：**2026-09-21T02:00:00+00:00** · 现在/接下来由服务器的执行投影给出」
+   - ① 枚举名上屏；② 刚在向导里被告诉"中国标准时间"的人，这里读到 `+00:00`；③ 同一句先说"取自服务器场景"再说 `ABSENT`，自相矛盾。
+   - 分类 **TRUTH_DEFECT + HUMAN_MISLEADING**；复现率 **6/6**（六格全现）。
+   - 证据后指文件：`frontend/src/app/V8Experience.tsx:2496-2501` —— `` `，游标状态 ${cursorStatus}` `` 直接把枚举插进中文句子。
+   - 最小回归点：`cursorStatus !== "VALID"` 时渲染成人话（"服务器没给这一分钟，这一屏用的是行程起点"），时间戳按行程时区显示。
+9. **legs/activities 的枚举没翻**（第 1/2/3 天卡上原文照抄）：`Check in`、`Check out`、`Overnight`、`TRANSIT`、`WALK`、`AUTO`、
+   `ARRIVAL锚点`、`DEPARTURE锚点`、`STAY锚点`，以及「第 1 天 **Wednesday**」中英并排；`/v8/map` 的对比出行方式里还有 `BICYCLE`、`RIDE_HAIL`。
+   ⇒ 节奏/兴趣翻了，legs 没翻，**同一屏两套语言口径**。分类 POLISH（不影响操作，影响"这是不是给我看的"）。
+10. 🔴 **地图降级提示是间歇的，我上一轮的"暗色没有/明色没有"都是撞上的**。同一主题连跑：
+    - `/v8/map` 冷加载 **明色 0/6** 出现「底图未加载，显示的是路线示意。」（屏上文字长度 283，六次一致）；
+    - 但**从 hub 点进地图**时出现过（那一轮明 299 / 暗 283），换直接 goto 后暗色 2/2 有、明色 0/2 有 ⇒ **方向会翻，主题不是变量**。
+    - 机制（读完源码才敢指）：`components/v8/MapPanel.tsx:269-275` 在 `map.on("load")` 里判
+      `const loaded = raster?.tiles?.some(...)`，再 `if (loaded === false) setTilesUnavailable(true)`。
+      源对象尚未挂上 `tiles` 时 `loaded` 是 **undefined**，严格 `=== false` 漏判 ⇒ 提示不出现。
+    - 后果（人看到的）：一整块浅色面板 + 一条橙色折线 + 一个「1」，屏上同时写着「整座城市，行程叠加其上」「供应商支持的路线 · WGS84」，
+      并且手势说明浮在中间。分类 **HUMAN_MISLEADING**；复现率 **冷加载 0/6 有提示**；最小回归点：把"未证实加载成功"也算降级，或加一次超时后复查。
+    - **环境事实，不记在产品头上**：这台机器根本到不了 `tile.openstreetmap.org`（Node 直连 15 s 超时；浏览器侧 `net::ERR_ABORTED`）。
+      触发条件是网络，**缺的那个稳定降级态才是产品问题**（裁定③ 已经要求过）。
+11. **暗色下地图面板不跟随主题**：`.v8-map-panel` 计算底色 明 `rgb(223,234,232)` / 暗 `rgb(28,28,30)` —— CSS 是跟了主题的，
+    但截图里暗屏中那块**亮浅绿**来自 canvas 自身（maplibre 样式没有 dark 变体）。分类 POLISH（刺眼 + 像坏图）。
+12. **运维口径泄漏到用户首屏**：向导底部一个按钮写着「模拟舞台（暂无场景）：这台部署没有开模拟舞台」。
+    第一次来的人读到的是"这台部署"。分类 POLISH；如果这是预览台专用，请在预览台上说明，别让它进用户流。
+
+#### 五、我没走到的部分（不猜、不编）
+
+我这台栈 `ai: disabled`（health 实读 `{"status":"ok","database":"ok","ai":"disabled",...}`），所以
+**AI 帮我规划 → 方案对比 → 选一个 → 建承诺 → 票夹** 这一半**没在隔离副本上走**。
+开 AI 会花用户付费的那把 key，所以我没自己开——**要不要我在自己这份副本上开 AI 走完这一半？**
+（承诺路径我第五轮已在共享预览上走过：journey-id 同源 201/31 ms，真堵点是缺复核入口 = ORD-0146。）
+
+#### 六、进程与现场（按端口收，别照抄 PID）
+
+- 仍在跑：`8741`（旧栈后端，CityNexus@a9c2504）、`8742`（旧代理）、`8743`（权威树后端 e0fc697）、`8744`（新代理 `serve_e0.py`）。
+- 我的 Playwright 标签页按 URL `127.0.0.1:874x` 认领，`window.name = HJP1-MINE`；全程没碰别的标签页。
+- 留了一个回滚副本 `_qoder_hjp1_o207_20260922/_hjp1_o207_preE0.db.bak`；证据在 `_qoder_hjp1_o207_20260922/shots/`
+  （`e0-today-light.png`、`e0-today-dark.png`、`e0-step2-light.png`、`e0-step3-light.png`、`e0-map-light.png`、`e0-map-dark.png`）。
+- 凭据没有出现在本块、账本或任何截图里。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 事故与恢复 @2026-09-22T13:2x+08 —— **用户手机预览的后端曾整机 500；已恢复，且我的"链活"读数是一次假绿**
+
+### 发生了什么（时间都按 `+08`，Python 生成）
+
+- **13:17** 我按 E 落账里"bundle 已对齐 `index-BPtBTSpD.js`"去复核预览，打真请求时看到：
+  `/api/v1/health`、`/api/v1/demo/scene`、`/api/v1/journeys`、`/api/v1/travelers` **全部 500、响应体 0 字节**。
+  proxy 自己的日志（`run/auth_proxy.log`）在同一分钟逐行写 `UP … -> 500`；
+  `netstat -ano -p tcp` 里 **:8693 无 LISTENING 行**（只有 `:4781/:4782` 在听）⇒ **不是"链活、某路不通"，是预览后端根本没在跑**。
+  静态 `/` 仍 200（1,200 B，包的 script 名仍是 `index-CnfHH2K_.js` ⇒ E 说的 `BPtBTSpD` 那一版**并未在当前提供路径上**）。
+- **13:19–13:20** 我把它拉回来了：`cd D:\moodle\_qoder_cmdr_gate_20260921\backend`
+  → `python -m uvicorn app.main:app --host 127.0.0.1 --port 8693`，
+  环境变量按**代码里的真开关**给（`app/core/config.py:10,15,16,22-24` 实测，不是我猜的名字）：
+  `CITYNEXUS_DATABASE_URL=sqlite:///./_live.db`（先跑一次解析确认它确实指到 `_live.db`）、
+  `CITYNEXUS_DEMO_MODE=true`（Simulation 入口的开关，默认 OFF）、`CITYNEXUS_AI_ENABLED=true`（AI 的总闸）。
+  凭据从进程环境继承，**全程没有打印、没有复制值**（只打过 `bool()`）。
+  第一次拉起时漏了 `CITYNEXUS_AI_ENABLED`，`/health` 老实报 `ai: disabled`——我按这个读数重启补上，没有靠"看起来好了"就收工。
+
+### 13:20 复验（都是真请求，不是日志）
+
+```
+proxy /api/v1/health      200 {"status":"ok","database":"ok","ai":"enabled"}
+proxy /api/v1/demo/scene  200 583 B  {"demo_mode":true,"journey_id":"22222222-…","journey_status":"AC…"}
+未鉴权 GET /api/v1/demo/scene        401        （护栏仍生效）
+带鉴权 POST /api/v1/demo/reset       403 PREVIEW_GUARDED（R13 代理层护栏未拆）
+用户活库只读 journeys 3 / plan_versions 19 / travelers 3
+  _live.db 主文件 sha256[:16] e6ed3bf38a561f46（3,710,976 B）、-wal 4,243,632 B —— 与我 12:28 的读数逐字节相同 ⇒ 未 reset、未 reseed
+```
+
+### 我自己要记的一条假绿（并进 `CURRENT_GATES`）
+
+**`401` 不能证明后端活着。** 我 12:29 那次巡逻写的是「tunnel `/api/v1/demo/scene` 未鉴权 401 in 1.18s（chain alive）」——
+那个 401 是 **proxy 自己的鉴权墙**返回的，后端当时已经死了。同一族的错误我这周第三次（404≠离线、connect_ex≠refused）。
+新规矩：**预览链健康必须打一个带鉴权、会真的穿过 proxy 打到上游的端点**（我今后固定用
+`GET /api/v1/health` 与 `GET /api/v1/demo/scene` 两条，都要求 **200 且响应体含 `status/demo_mode` 字段**），
+并且把"未鉴权 401 仍然要在"作为**另一条独立断言**（它证明护栏，不证明后端）。
+
+### 另一个具名产品缺陷（不是我这轮的锅，但顺手钉住，给 ORD 系列补一条判据）
+
+上游死了的时候，proxy 给用户的是 **`500` + 空响应体**——没有 `message_key`、没有一句人话。
+手机侧因此只能把"服务器挂了"显示成"网络不可用"一类（与 09-21 那晚"死 journey id 显示成网络不可用"同族）。
+⇒ **D／E**：这条要的不大——上游不可达时代理应给一个具名、非空、可渲染的错误体；前端必须把它和"网络不可用"分开。
+按 §7 我不新开 ORD，先挂在既有 ORD-0126 同族下面，谁在自己回合里顺手能做就做，做之前先落 `CLAIMED`。
+
 ## commander 分派 @2026-09-22T13:1x+08 —— 11 条红的归属定下来了（C 的 triage 我复跑过，不新开单）
 
 C 的 ORD-0202 交付（`SESSION=8c66aa92 · 12:46+08`）把 11 条逐 nodeid 定了性：**9 具名产品缺口 / 2 量具缺陷（1 条半对）**，
@@ -9490,6 +9675,7 @@ HJ-P4 `4e974ae5` **17.1 h**、HJ-P2 `d4b04a0f` **17.2 h**｜只有 LAB `5ea3bedc
   note@F@2026-09-22T13:12+08: ORD-0200 第二步已交（分支 `agent/f-ord200-20260922` @ `adf0a3a`，父 `c79304d`，未 push）：test_5 从「选择题」升级成仲裁 `5771378382` ②-3 **直接裁定**的双向判据 —— `attribution_applicable=true && {} ⇒ RED`；`false && 无 attribution ⇒ GREEN/N_A`，且 **N/A 必须由外层已有结构化状态自证**，不许靠 helper 内部 `return {}` 表达。 **适用性只看外层状态**（`attribution_applicability()`）：`provider_consulted`／`provider_status_present`／`observation_present` 任一为真 ⇒ 适用；**不看 helper 返回了什么** —— 否则「helper return {}」会自己证明自己合规，那是循环论证。 **两个方向各一反例**：①「漏报躲进 `{}`」—— 适用却给空分类 ⇒ RED；②「为过门给 N/A 伪造四字段」—— 不适用却给了 attribution 对象 ⇒ RED。我另咬住第二种漏网：不适用、没给分类、**又没有外层状态自证** ⇒ RED（这正是不许用 `return {}` 表达 N/A 的现场）。真实现三种场景在 `test_5b` 对到两个方向上（catalog 命名、从没问过 provider ⇒ N/A 合法；provider 答了 / transport 失败 ⇒ 适用）。 **真突变咬合**（副本上改真实现、逐条 sha256 还原）：base **8 passed**；D1 让「问过」的路径也返回 `{}` ⇒ **6 failed**；D2 让「没问过」的路径硬造四字段 ⇒ **1 failed**。门 **8 passed**，收集 **1186 / 1.52s**，解释器 3.12.14。产品码 0 改动。SELF_REPORTED。
   note@F@2026-09-22T12:41+08: ORD-0200 第一步已交（分支 `agent/f-ord200-20260922` @ `c79304d`，worktree 建在 `e0fc697`，未 push）。**按纠正版口径写**（四个 key 必须存在；无响应 `http_status` 允许且应为 null；缺 key / 静默默认 / 伪造 status = RED）—— 你 02:5x 那版「四字段全部非空」我**没有**按它写。门 `test_qoder_attribution_fields_hard_door.py` **6 passed**（收集 1184 / 3.90s，解释器 3.12.14），被测件是 `app/anywhere_capability.py::_attribution_fields()`（`:583`，调用点 `:1507`）。 **五种咬合反例**（副本上改真实现、逐条 sha256 还原）：base 6 passed；M1 删 key `source_layer` ⇒ 3 failed；M2 transport 分支 `http_status=0` ⇒ 2 failed；M3 transport 伪造 599 ⇒ 2 failed；M4 `source_layer` 空串 ⇒ 2 failed；M5 `attribution_reason` 空串 ⇒ 2 failed。成功路径的 `ProviderAttempt[]` 也在门内（test_3）。 **具名选择题交回（不替仲裁选）**：`:598-602` 两条 `return {}`（observation 缺席 / reason 缺席）实测都返回空 dict、四字段一个都没有 ⇒ 本门按 HARD_KEYS 判它不合规（这样它不会悄悄通过）。两种后果：① 选「诚实缺席合法」⇒ 真正的漏报会隐身（调用方拿 `{}` 分不清「我们没测」与「字段没接上」）；② 选「静默默认 RED」⇒ `UNAVAILABLE` / 从未查询的场景必须能**自证为合法缺席**（例如带具名 `NO_OBSERVATION`），否则这些场景会集体变红。**裁决权在仲裁。** 产品码 0 改动。SELF_REPORTED。
 - id: ORD-0201
+
   to: c01d72a3
   priority: high
   if_head: e0fc697
@@ -9510,7 +9696,26 @@ HJ-P4 `4e974ae5` **17.1 h**、HJ-P2 `d4b04a0f` **17.2 h**｜只有 LAB `5ea3bedc
     现有字段：endpoint / answered / http_status / elapsed_ms / reason / retry_after_s / error —— 确实没有任何计数。
     交付 = 一个字段（`features_viewed` 或 `candidates_before_filter` + 原因串），可被测试直接读到；
     交成之后那条 xfail 会以 XPASS 报错，那时由 C 摘标记（**你不要去改 C 的测试文件**）。
-  status: DISPATCHED@2026-09-22T12:4x+08 by 494abfd7
+  status: DONE@2026-09-22T12:5x+08 by c01d72a3（① preflight 完整 JSON 已贴，含第一枪自中陷阱记录：canary resolved URL=`sqlite:///D:/moodle/_qoder_spike_20260921/canary_0198c.db` ⇒ READ_ONLY_TARGET_IDENTIFIED / exit 0（55 表、journeys 4 / plan_versions 19 / travelers 4 / catalog_hydration_operations 0）；② 计数字段已交：提交 `7167ef6`（基于 merge `45c8462`＝`e0fc697`×canary），`features_viewed / candidates_before_filter / drop_summary` 进 ProviderAttempt 并随 provider_attempts 上行，47 provider 血统 tests passed＋13 文件红集合仍 8；C 的 r1d strict xfail 仍 xfail——它首断言要产品层 RUNTIME_FAILURE/PROVIDER_BAD_RESPONSE，计数只是它需要的输入，摘标记归 C；mode=ro 全程、零 wal_checkpoint）
+
+#### (SESSION=c01d72a3) ORD-0201 两件交付 @13:1x（Python 生成时间戳 13:16:25+08）—— **① preflight 完整 JSON（先自中一枪，如实报）＝ canary 观察面 READ_ONLY_TARGET_IDENTIFIED；② 计数字段已交 `7167ef6`，C 的 r1d xfail 仍 xfail（它要的产品层形状还差别的东㢟，摘标记归 C）**
+
+**① canary 隔离回执（仲裁工具 `db_probe_preflight.py` @ `4f2fc3d0`，完整 JSON 落盘 `_qoder_spike_20260921/q201_preflight.json`）**
+- **app 自己 resolved 的 URL**：在同一解释器里 `from app.core.config import settings` 实读 ⇒ **`sqlite:///D:/moodle/_qoder_spike_20260921/canary_0198c.db`**（boot env `CITYNEXUS_DATABASE_URL`，进程 CWD `D:/moodle/_qoder_b_ord188_20260922/backend`）；
+- preflight 结果：**`status=READ_ONLY_TARGET_IDENTIFIED / exit 0`**，`resolved_database_path=D:\\moodle\\_qoder_spike_20260921\\canary_0198c.db`、`exists_before_open=true`、`open_mode="sqlite mode=ro"`、`table_count=55`、`known_table_counts={journeys: 4, plan_versions: 19, travelers: 4, catalog_hydration_operations: 0}`（journeys 4＝live 的 3＋福贡链 1，与 0198 交付一致；`catalog_hydration_operations=0` 是这张新副本上还没人发过 hydration）；
+- **先自中一枪，如实报**：第一次跑我的 helper **没把 env 传进子进程**，app 在 CWD 里解析出默认 `./citynexus.db`，preflight 照样 `READ_ONLY_TARGET_IDENTIFIED`（我 worktree 里那个 02:11 的杂库，55 表）——**恰好复现了你中的枪**：preflight 只证"观察面非空"，不证"这就是你以为的那一库"；隔离声明必须由 **resolved URL＋预期行数** 两栏一起读（我的第二跑 `known_table_counts.journeys=4` 才对上 canary 副本）。工具没问题，报 TARGET_MISSING/错库都是调用方的路径问题，与你说的一致。
+- **程序两项照办**：全程 `mode=ro`、**零 `wal_checkpoint`**；"观察面为空 ⇒ UNKNOWN/UNMEASURED" 的分支未触发（55 表）。
+
+**② C 点名的计数字段（提交 `7167ef6`，`git log -1`：`7167ef6 2026-09-22 12:47:54 +0800 feat(discovery): attempts carry reply-level counts, so malformed evidence is no longer shapeless`；父＝merge `45c8462`＝`e0fc697`×canary 血统，**零冲突**）**
+- `ProviderAttempt` 新增三栏（`provider_identity.py`）：**`features_viewed`**（reply 里到底有几条 feature）、**`candidates_before_filter`**（目的地级过滤前的条数）、**`drop_summary`**（丢弃原因逐项计数串：`no_geometry=N; no_name_or_id=N; not_destination_grade=N`，全 0 ⇒ `"drops: none"`）；**三者全 None ⇒ "没有可解析的 reply"，永不等于"数了零条"**。`resolve()` 的成功路径把每次 reply 的分类计数填进去；
+- `anywhere_capability._attempt_evidence` 同步携带三栏 ⇒ **C 层现在能区分"答了但证据不合格"（features_viewed>0、candidates=0、drop_summary 具名）与"答了且确实没有"（features_viewed=0）**；
+- 测试分母：合并后 provider 血统套件 **47 passed + 1 xfailed**（r1d 在内）；13 文件红基线集合 **8 条不变**（`q201_red.txt`）；`g10/g11` 红两条在我改动前就已红（stash 双向验证过），不是本次引入。
+- **如实报：r1d strict xfail 仍 xfail（没有 XPASS）**。它第一条断言就要产品层 `destination_state=RUNTIME_FAILURE / attribution_reason=PROVIDER_BAD_RESPONSE`——那需要 C 侧把"畸形证据"映射成运行性失败，计数字段只是它需要的**输入**，不是它的全部。按令我没碰 C 的测试文件；摘标记的时机由 C 定。
+
+**边界**：改的只有 `provider_identity.py`（+23）与 `anywhere_capability.py`（+6），都在我写域＋C 已并线的同一文件上（F 的 §8 未动；0202 交代的两条线不同文件，我这几笔都落我的两处）；merge `45c8462` 后 `git status` 干净；**未 push**；mode=ro、无 checkpoint、无 reset。**环境插曲**：D 盘 03:0x 满（100%）导致第一次写账本脚本身被截成 0 字节——已清掉我自己 `_qoder_spike_20260921/osmxenv`（264 MB，ORD-0092 已否决的 osmnx 实验残留，可重建），D 盘回到 3.7 GB 可用后本块才落上；顺带把这事记在账上，因为盘满时账本写入会**静默**产生 0 字节文件。
+
+DELIVERED: ORD-0201（① 隔离回执 preflight JSON ② 计数字段） | 回执 `q201_preflight.json`（READ_ONLY_TARGET_IDENTIFIED / exit 0） | 代码 `7167ef6`（树 `D:/moodle/_qoder_b_ord188_20260922`，分支 `agent/canary-ord198-20260922`，父 merge `45c8462`＝`e0fc697`×canary；未 push） | 复跑：`python q201_preflight_run.py`（preflight）＋ `pytest tests/test_qoder_ord197_four_class_receipt.py tests/test_qoder_provider_identity.py`（47 passed + 1 xfail） | blocker：无（r1d 摘标记归 C）
+
 - id: ORD-0202
   to: 8c66aa92
   priority: high
@@ -9625,7 +9830,7 @@ HJ-P4 `4e974ae5` **17.1 h**、HJ-P2 `d4b04a0f` **17.2 h**｜只有 LAB `5ea3bedc
     **ORD-0190 仍缺第一步：冻结现场证据 → 重新生成 manifest → 逐条覆盖检查。**
     不扩 H 列，不重写梯子；Hermes 的连续证据归你（仲裁 `5761440727` ①已裁 owner 不换，理由是证据连续性）。
     任何要下「某个 H 步通过了」的结论，先跑 `db_probe_preflight.py`（见上方工具采纳段）证明你看的是哪份 DB。
-  status: DELIVERED@2026-09-22T12:4x+08 by 9baacb24 — 第一步(冻结现场→重出manifest→逐条覆盖检查)已交，见 ## DELIVERIES L193；并按新规矩先跑 db_probe_preflight.py 贴完整JSON: app resolved database_url=sqlite:///D:/.../evidence/0212/_hermes_r4.db, cwd=D:\moodle\CityNexus\backend, resolved path一致, table_count=53(非空), known counts journeys1/plan_versions21/travelers1, status=READ_ONLY_TARGET_IDENTIFIED, exit 0。未扩H列/未重写梯子; H8b NOT_RUN, H10b 读单数proposal+solver_mode对齐(剩1项归ORD-0176)
+  status: DELIVERED-R2@2026-09-22T13:1x+08 by 9baacb24 — 按13:0x令并行推H4-H10: 全新库_hermes_r5.db+:8518一轮跑穿, H4/H5/H6/H7/H8a/H9/H10a/H10b 全PASS, H8b按设计NOT_RUN; 先出db_probe_preflight收据(exit0,table_count=53,READ_ONLY_TARGET_IDENTIFIED); 自曝两处仪器错(H8a拿字母序比声明序; H6对同一提案连打两次accept且first_mutation自比自身)已修; 负例诚实标注(第二条提案已连带作废,不作负例证据); 释放废弃current-0213 196MB留REBUILD_NOTE; manifest定稿后重出197条+覆盖自检ALL_ENTRIES_MATCH
 - id: ORD-0207
   to: 1a986a24
   priority: normal
@@ -9638,7 +9843,7 @@ HJ-P4 `4e974ae5` **17.1 h**、HJ-P2 `d4b04a0f` **17.2 h**｜只有 LAB `5ea3bedc
     的完整 JSON：resolved URL / CWD / 绝对路径 / table inventory）+ 一句「我走的是哪个 build、哪个库」。
     证明之前不要开始点：`GET /experience` 是**读时写**的，走错库就是在改用户数据。
     走查矩阵 = 360/390/412 × 明/暗，报「人看到了什么、能不能操作」，不要报断言计数。
-  status: DISPATCHED@2026-09-22T12:4x+08 by 494abfd7
+  status: DISPATCHED@2026-09-22T12:4x+08 by 494abfd7｜**CLAIMED + DELIVERED@2026-09-22T13:21+08 by 1a986a24**：隔离证明 + 六格矩阵见 DELIVERIES 同名块（行 9161）。⚠ 我第一版栈是「新前端 index-CnfHH2K_.js + 旧后端 CityNexus@a9c2504（129 路由）」⇒ 版本错配（那句 Not Found 是我造的），已换权威树 e0fc697（139 路由）重跑，块内第二节自纠。
 
 ### LAB / HARNESS / HJ 其余窗口的状态说明（不是新单）
 
