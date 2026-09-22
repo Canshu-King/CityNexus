@@ -850,18 +850,25 @@ def extract_capabilities_from_text(
     if toilet_every is not None and any(token in value for token in ("厕所", "卫生间", "toilet", "bathroom")):
         add("TOILET_BREAK_EVERY_MIN", {"interval_min": toilet_every}, severity="HARD" if hard else "STRONG")
 
-    # Severity is named here, not left to `default_severity`, because these two codes are in
-    # `_CAPABILITY_GATE_CODES` while `default_severity` does not know them: they came back SOFT,
-    # and `capability_constraints` (:911) only forwards HARD items - so an explicitly asserted
-    # "我必须推婴儿车 / 我带大箱子" never reached the accessibility gate that already knows how to
-    # read evidence for both (feasibility :818).  The fix is deliberately at the call site: moving
-    # these codes into `HARD_ACCESSIBILITY_CODES` or `CARE_CODES` would also reclassify them via
-    # `capability_class_for` and arm the never-downgrade rule at :865, which is a wider decision
-    # than "a hard-asserted need gates; a mentioned one ranks".
+    # Severity is named here only for the HARD half, and that half is not decoration:
+    # `default_severity` answers "STRONG" for both of these codes whether or not `hard_asserted` is
+    # set (measured: both live in CONTEXT_CODES, so it never promotes them), and
+    # `capability_constraints` (:911) forwards only HARD items - so an explicitly asserted
+    # "我必须推婴儿车 / 我带大箱子" would never reach the accessibility gate that already knows how to
+    # read evidence for both (feasibility :818).
+    #
+    # The non-hard half is left to `default_severity` on purpose (ORD-0234): writing `"STRONG"` here
+    # too would put the same answer in two places, and the second copy is the one that goes
+    # unnoticed when the first moves.  Earlier text here claimed these codes came back SOFT - that
+    # was true before they joined CONTEXT_CODES and is false now, which is exactly the drift a
+    # duplicated literal invites.
+    #
+    # Deliberately *not* touched: `TOILET_BREAK_EVERY_MIN` just above keeps its own literal - it is
+    # outside this ruling, and moving it would be somebody else's decision about a different code.
     if any(token in value for token in ("婴儿车", "推车", "stroller", "buggy")):
-        add("STROLLER", {"present": True}, severity="HARD" if hard else "STRONG")
+        add("STROLLER", {"present": True}, severity="HARD" if hard else None)
     if any(token in value for token in ("大箱子", "行李", "luggage", "suitcase", "baggage")):
-        add("LARGE_LUGGAGE", {"present": True}, severity="HARD" if hard else "STRONG")
+        add("LARGE_LUGGAGE", {"present": True}, severity="HARD" if hard else None)
     if any(token in value for token in ("慢一点", "慢速", "slow pace", "take it slowly")):
         add("SLOW_PACE", {"preferred": True})
     if any(token in value for token in ("安静", "quiet", "少刺激", "低刺激", "sensory", "low stimulation")):
