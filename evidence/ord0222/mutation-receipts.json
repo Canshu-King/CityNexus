@@ -1,0 +1,47 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0222",
+  "harness": "review/ord0082_0087_kill_drivers.py",
+  "run_shape": "single node per target via --grep, one fresh process and one fresh throwaway sqlite per mutant; the product file is restored and sha256-compared after every case",
+  "cases": [
+    {
+      "case": "killAA1-day-card-row-prints-the-raw-mode:",
+      "file": "src/app/V8Experience.tsx",
+      "anchor_hits": 1,
+      "on_disk": "True",
+      "anchor_bytes": "80",
+      "bytes_changed": "-15",
+      "red_message": " Error: e2e/qoder-raw-enums-never-reach-the-traveller.spec.ts :: ord0222-1-visual-scan-no-raw-enums-and-no-mixed-english �� /v8/hub renders internal enum tokens to the traveller: [\"TRANSIT\",\"A",
+      "verdict_line": "e2e/qoder-raw-enums-never-reach-the-traveller.spec.ts ['ord0222-1-visual-scan-no-raw-enums-and-no-mixed-english'] -> KILLED (rc=1)"
+    },
+    {
+      "case": "killU1-tight-advisory-keeps-number-drops-caveat:",
+      "file": "src/app/V8Experience.tsx",
+      "anchor_hits": 1,
+      "on_disk": "True",
+      "anchor_bytes": "98",
+      "bytes_changed": "-43",
+      "red_message": " Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red �� the hub prints the derived number without its caveat: \"3 �� �� 2 �� �� ÿ��ÿ��Լ",
+      "verdict_line": "e2e/qoder-budget-advisory-tiers.spec.ts ['ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red'] -> KILLED (rc=1)"
+    },
+    {
+      "case": "killU2-tight-advisory-keeps-caveat-drops-number:",
+      "file": "src/app/V8Experience.tsx",
+      "anchor_hits": 1,
+      "on_disk": "True",
+      "anchor_bytes": "90",
+      "bytes_changed": "-47",
+      "red_message": " Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action �� the tight advisory lost the derived number: \"�����Ԥ�㣬ס�ޡ���ͨ�ͳ�",
+      "verdict_line": "e2e/qoder-budget-advisory-tiers.spec.ts ['ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action'] -> KILLED (rc=1)"
+    },
+    {
+      "case": "killV1-stale-budget-hint-follows-onto-step-3:",
+      "file": "src/features/setup/JourneyTrialSetup.tsx",
+      "anchor_hits": 1,
+      "on_disk": "True",
+      "anchor_bytes": "72",
+      "bytes_changed": "-35",
+      "verdict_line": "e2e/qoder-wizard-hint-surface-readings.spec.ts ['ord0221-4-step3-visible-hint-and-live-region-read-apart'] -> SURVIVED (rc=0)"
+    }
+  ]
+}
