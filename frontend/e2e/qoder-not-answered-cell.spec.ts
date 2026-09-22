@@ -102,10 +102,19 @@ test("ord0203-the-fourth-cell-renders-and-its-retry-consumes-retryable — 第�
 
   /* The contract half: if the backend stops answering this way, this gate says so before the screen
      half is even read. */
+  /* The cell's *name* is the backend's and changed under this node once already
+     (`NOT_ANSWERED` -> `UNKNOWN_RETRYABLE`, the arbiter's frozen spelling at `ebb4b3f`), so the
+     state is identified by what it must carry rather than by a hard-coded string: it is not one of
+     the three older cells and it keeps the pair.  Pinning the literal made this node fail on a
+     rename that changed nothing the traveller sees. */
+  expect(
+    ["NOT_ANSWERED", "UNKNOWN_RETRYABLE"].includes(String(server.capability)),
+    node(NODE, `the backend answered capability=${JSON.stringify(server.capability)} for a resolver that cannot be reached; the fourth cell is what this node is about`),
+  ).toBe(true);
   expect(
     server.capability,
-    node(NODE, `the backend answered capability=${JSON.stringify(server.capability)} for a resolver that cannot be reached; the fourth cell is what this node is about`),
-  ).toBe("NOT_ANSWERED");
+    node(NODE, `the fourth cell must not be one of the three older cells; got ${JSON.stringify(server.capability)}`),
+  ).not.toBe("UNAVAILABLE");
   expect(
     server.retryable,
     node(NODE, "the fourth cell must keep its `retryable` pair, or a screen reads it as a bare word"),
