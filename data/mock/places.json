@@ -53,7 +53,8 @@
     "close": "18:00",
     "duration_min": 80,
     "cost_minor": 5000,
-    "tags": ["culture", "art", "indoor"]
+    "tags": ["culture", "art", "indoor"],
+    "accessibility": {"stroller_accessible": false, "luggage_accessible": true}
   },
   {
     "id": "place-river-cruise",
@@ -95,7 +96,8 @@
     "close": "21:00",
     "duration_min": 60,
     "cost_minor": 0,
-    "tags": ["waterfront", "relaxed", "outdoor"]
+    "tags": ["waterfront", "relaxed", "outdoor"],
+    "accessibility": {"stroller_accessible": true, "luggage_accessible": true}
   },
   {
     "id": "place-design-library",
@@ -109,7 +111,8 @@
     "close": "19:00",
     "duration_min": 60,
     "cost_minor": 2000,
-    "tags": ["culture", "quiet", "indoor"]
+    "tags": ["culture", "quiet", "indoor"],
+    "accessibility": {"stroller_accessible": true, "luggage_accessible": false}
   },
   {
     "id": "place-beijing-tiananmen-square",

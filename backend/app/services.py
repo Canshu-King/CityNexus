@@ -164,6 +164,32 @@ def reset_all(session: Session) -> None:
     session.commit()
 
 
+_DEMO_ACCESSIBILITY_FACTS = ("stroller_accessible", "luggage_accessible")
+
+
+def _demo_accessibility_evidence(item: Mapping[str, Any]) -> dict[str, Any] | None:
+    """Project the demo fixture's accessibility facts onto a sealed demo place.
+
+    Only the whitelisted booleans cross over, and the provenance is stamped here
+    rather than read from the fixture: editing JSON must not be able to label a
+    demo place as provider truth.
+    """
+
+    claimed = item.get("accessibility")
+    if not isinstance(claimed, Mapping):
+        return None
+    facts = {
+        key: claimed[key]
+        for key in _DEMO_ACCESSIBILITY_FACTS
+        if isinstance(claimed.get(key), bool)
+    }
+    if not facts:
+        return None
+    facts["source_kind"] = "DEMO"
+    facts["source"] = "data/mock/places.json#%s" % item["id"]
+    return facts
+
+
 def seed_demo(session: Session) -> dict[str, str]:
     reset_all(session)
     # The fixture is deliberately frozen so two reset/seed runs produce the
@@ -209,6 +235,13 @@ def seed_demo(session: Session) -> dict[str, str]:
         )
     city_provider = MockCityDataProvider()
     for item in city_provider.places():
+        metadata: dict[str, Any] = {
+            "duration_min": item["duration_min"],
+            "cost_minor": item["cost_minor"],
+        }
+        evidence = _demo_accessibility_evidence(item)
+        if evidence:
+            metadata["accessibility_evidence"] = evidence
         session.add(
             Place(
                 id=item["id"],
@@ -221,9 +254,7 @@ def seed_demo(session: Session) -> dict[str, str]:
                 longitude=item["location"]["longitude"],
                 opening_hours_json=dump({"open": item["open"], "close": item["close"]}),
                 tags_json=dump(item["tags"]),
-                metadata_json=dump(
-                    {"duration_min": item["duration_min"], "cost_minor": item["cost_minor"]}
-                ),
+                metadata_json=dump(metadata),
                 updated_at=now,
             )
         )
