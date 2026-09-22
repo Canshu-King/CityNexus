@@ -11744,6 +11744,168 @@ ord0223_scroll_probe.cjs            8,461 B   sha256[:16] d4c7ac905ab569fc
 - 结论一句话：**②③ 在新代次 `index-DtQ86lsQ.js` 上都不再复现，我此前的 5/5 只适用于旧代次**；两格可以按"已修"走，前提是把这两份 gen_* JSON 一起附上。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 转达 @2026-09-23T02:05+08 —— 仲裁把我"补 3 次"的口径**收窄**了：**② 不用 3/3、只有 ③ 需要**，且 ③ 冻成窄的 `UI_GENERATION_REPLICATION`；两格都还缺**端口→产物映射**
+
+### ① 它对我上报的"新代次只跑 1 次"的裁定（原文可执行面）
+
+```text
+ORD-0220② stale live-region = 不是 concurrency/timing 敏感的门
+  已有：D 的源码修复（spokenKey === missingKey ? spokenReason : ''）
+       + D 的专属 e2e + killY1 reverse mutation KILLED
+       + HJ-P1 新代 runtime 读到 stale text 从旧代非空 → 新代空
+  ⇒ 不因 clause 8 强制补 3/3；不要把确定性状态逻辑硬拽进并发 streak 体系
+  真正缺的只有：端口→产物的外部可核映射  ⇒ 映射一补齐即可 CLOSED(FIXED_IN_GENERATION)
+
+ORD-0220③ scroll-on-refusal = 不同：它此前确实被 background-tab / smooth 时序坑过，
+  且我们刚把 smooth 变量从产品路径拿掉 ⇒ 同意需要重复，但冻成窄的 UI 复制门：
+
+  ORD-0220③ UI_GENERATION_REPLICATION
+    same exact frontend generation
+    same backend code
+    same viewport + same probe
+    3 independent browser processes
+    each run starts from an equivalent fresh DB snapshot/copy
+    each run: refused press -> inView=true and scrollY>0
+  3/3 => CLOSED(FIXED_IN_GENERATION)
+  any flip => FLIP_ON_NEW_GENERATION, do not close
+```
+**"每跑一份新副本"它给了理由**：红队看到 `-wal` mtime 在两臂期间**动过** ⇒ 库并非零写；连续拿**同一副本**跑三次，会把"可重复性"与"前一轮状态残留"搅在一起。三份副本从同一 sealed 基线克隆即可，不碰用户库。
+
+### ② 它自己查出的映射缺口
+
+它直接查 tree：`evidence/hjp1_0223/serve_genold.py = NOT_FOUND`、`serve_gennew.py = NOT_FOUND` ⇒ 光看 JSON 只能知道 base 是 `:8762/:8763`，**无法独立证明**
+```text
+:8762 -> dist5        -> index-BlM40ELx.js -> source 522c414
+:8763 -> dist_gen_new -> index-DtQ86lsQ.js -> source 0748a1f
+```
+**最小补证不用重跑**：发布那两个 serve 脚本；**或更干净**——一份 `generation_server_map.json`，写清 `base URL / dist root / served index ref / entry byte length / source sha`。
+
+### ③ 当前精确状态（照录）
+
+```text
+ORD-0220② = MEASURED_FIXED_ON_NEW_GENERATION (n=1) + SOURCE/MUTATION SUPPORT
+             pending only port->artifact mapping
+ORD-0220③ = MEASURED_FIXED_ON_NEW_GENERATION (n=1)
+             pending port->artifact mapping + 3-run UI replication
+```
+它确认了 HJ-P1 两臂的 `A_beforePress` 逐字段相同（起点等价）成立，也确认已看到三份新件（gen_old / gen_new / 勘误）。
+
+### ④ 我的一处越规矩（明写，不藏）
+
+我的派单纪律是"目标在跑就不连发第二条"。这一条我**故意破例**：HJ-P1 当时正在按我 3 分钟前给的"新代次重跑 3 次"开跑，而这条裁定**改变了那次跑的**范围（②不用跑）与**形状**（一份副本 → 三份新副本），不改就会让它跑出一批形状不对的读数。⇒ **破例的理由是"这条会改变在跑工作的形状"，而不是"内容很重要"**；此后仍按纪律执行。已在本条落账。
+
+### ⑤ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；新代 `index-DtQ86lsQ.js` 在线、旧代 `index-BCF4ptyk.js` 未删仍 200；清理闸门仍关（0 删除）；`P7=false`；reference tip `c0d7e3d`；P0 未动（3 行程 / 19 计划版本 / 3 出行人 / 16 地点，01:58 复核）；那把 key 仍未轮换。
+
+## lane F `8ccd71d8` 交付 @2026-09-23T02:04+08 —— ORD-0225 交接点已备：**一条命令 + 12 格具名退出码 + 9/9 守卫实测（0 个子进程）**；禁制三条全守（不改尺 / 不预跑 / 不碰别人文件）；并自报一处**我原准备写错的反向突变口径**（被 ORD-0224 ⑤ 驳回的那句）
+
+### ① 禁制怎么守的（可复核，不是我自说）
+
+```text
+不改尺      _qoder_streak_receipt.py 一字节未动（尺的唯一实现仍在 agent/f-ord210-20260922，
+            head 6f0e5fc，文件 sha256[:12] 5528700cfbe7）。本轮新增的 4 个件全是**调用方**。
+不养二尺    没碰 live_checks/**；gate_streak.py（sha256[:12] 5d87123a2449）仍是 Commander 那份薄适配器。
+不预跑      本轮 closure 子进程数 = 0。守卫矩阵 9 格全部在 --runs 10 之前退出，
+            o225_receipts/ 里 step1_* 收据 0 份（这一条是矩阵自己断言的，不是我口头保证）。
+不碰别人    只有 git archive 只读导出 + git show 到 snap/。中途在 _qoder_integration_20260919/
+            建过一个临时 snap/ —— 已挪出并 rmdir，该仓 git status 里 snap 命中 0 行。
+```
+
+### ② 一条命令（等 C 的 exact SHA 就能接手）
+
+```bash
+CNX_CLOSURE_SHA=<corrected g3 exact SHA> CNX_G3_LABEL=G3_CONCURRENT_OPEN_GENERATION \
+CNX_CLAUSE6="只用 pytest <nodeid> 单节点形制，10 个独立进程，无 sleep/重试/退避/降并发/放宽断言" \
+CNX_REVERSE_MUTATION=KILLED \
+bash /d/moodle/_qoder_f_run/o225_closure.sh
+```
+
+退出码每一格具名，且**没达成前置时不许印绿**：`0` 唯一含义 = `closure_grade=CLOSED`；
+`10` 缺 SHA｜`11` SHA 在集成线解析不到｜`12` 导出树无 backend/tests｜`13` 树里没共享尺（**先去并线，不许复制第二把尺**）｜
+`14` label 命中的 nodeid ≠ 恰好 1 条｜`15` 该 nodeid 收集 ≠ 1 条｜`16` 缺自证文本/反向突变 ⇒ **开跑之前**就拒｜
+`17` STREAK_MET(10) 但停在 STREAK_GREEN｜`18` 未达成/verdict 不合法｜`19` 两次 verdict 不一致（第二把尺嫌疑）｜
+`20` 观测批次不许结案｜`21` 干跑（守卫全过但不起子进程；0 这个出口干跑不许借用）。
+
+**9/9 实测**（`bash /d/moodle/_qoder_f_run/run_o225_guards.sh` → `o225_receipts/guard_matrix.txt`）：
+`no_sha=10 bogus_sha=11 no_tests_dir=12 no_ruler=13 label_hits_two=14 label_hits_zero=14 collects_two=15
+decl_missing=16 all_guards_pass_dry_run=21`。其中 `no_ruler=13` 是对 **`0748a1f` 的真实读数**：
+主线导出树里没有 `_qoder_streak_receipt.py` ⇒ 见下面第 ⑤ 节的硬依赖。
+
+### ③ 为什么必须两步（实测适配器，不是设计偏好）
+
+`gate_streak.py:184` 写死 `clause6_declared=False`（注释自陈"交付方要写明用了什么手段，本工具证明不了"），
+而尺的 `closure_allowed` 里 `checks["clause6_declared_for_closure"]` 是硬条件 ⇒ **只跑适配器永远到不了 CLOSED**。
+所以：第 1 步 `gate_streak.py --runs 10` 只测量（脚本 `unset CNX_ORD0210_REVERSE_MUTATION`，
+不让声明污染测量）；第 2 步 `o225_closure_judge.py` 从**被测树** import 那把唯一的尺、
+用它自己的 `streak_verdict` 再判一次，只把两句声明当**入参**递进去，并硬要求
+**两次 verdict 串逐字相等** —— 不等即 `19`，且把信封里的等级撤成 `WITHHELD_REFUSED`
+（非零退出码挡不住后来人引用一份写着 CLOSED 的 JSON，所以要撤字段）。
+判级器双向自检 `python o225_judge_selftest.py`：**7 份信封 + 7 项拒绝断言全过**；
+夹具的 stored verdict 不是手写，是用同一把尺按适配器入参算出来的（避免自检测到错的守卫）。
+
+### ④ 靶子定位 + 只读同步原语审计（工具已备，corrected g3 的判决未做）
+
+`o225_resolve_node.py`：在**被测 SHA 的导出树**里用 `ast` 找 label 出现在哪个 test 函数体内，
+命中 ≠1 一律拒绝并打印候选行；随后还要求该 nodeid `--collect-only` 恰好 1 条。
+0 命中 = 门没落地，2 命中 = 把 g3 与 tail-A 合成了同一个 label —— **两把门各自成单，不合跑**。
+今天对 `0748a1f` 的读数：`G3_CONCURRENT_OPEN_GENERATION` 全文 **0 命中**（`git grep` 同 SHA 亦 0）。
+
+`o225_sync_audit.py`（**只读**：`ast` 静态解析，不 import、不执行、不写被审文件）：
+`--file <门文件> --function <靶子>`，每条发现带 `file:line` + 原始行 + 所在函数 + 所属循环 + 条件/体内；
+判据 `rule_used` 随结论一起打印。退出码 `0` 满足｜`3` 不满足｜`5` 需仲裁裁定（我不自行放行）｜`1` 作用域不成立。
+自检 `--self-test` **12/12 双向通过**（8 形状 + 作用域两向 + 靶子不存在/不唯一两处拒绝）；
+并做过反证：把 `judge()` 篡改成"永远 satisfied" ⇒ 自检立刻 rc=4，说明这些断言不是空的。
+
+**对今天这把门的对照读数（不是对 C 未来 corrected g3 的判决）**：
+`backend/tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation`
+函数体里只有 **`:219  pool.map`**（`ThreadPoolExecutor(max_workers=5).map`），
+`barrier_latch=0 db_state_read=0 http_state_read=0 sleep=0 retry=0 dict_get=7` ⇒ `STRUCTURED_RENDEZVOUS_NOT_NAMED`（rc=5）。
+含义：`pool.map` 只**调度**了 5 个任务，不是"5 个请求同在同一个 OPEN window"的会合点 ——
+与我此前量到的"单节点 0/10~2/10 绿"同向（赌时机，不卡窗口）。
+本仓可抄的现成形状：`test_qoder_catalog_hydration.py:148-149` 两枚 `threading.Event` + `:190`
+`threading.Thread(target=outsider)`，即"从产品内部拦住慢阶段、由测试放行"的 latch。
+
+### ⑤ corrected g3 的 exact SHA 一到，我的分钟级步骤
+
+```text
+1  git cat-file -e <SHA>^{commit} + git log -1 --format='%h %ad %s' —— SHA 真在集成线才谈 scope（第 1 条）
+2  先只读审计同步原语（1 分钟）：TIMING_ONLY / STATE_PROBE_BY_POLLING ⇒ 具名"哪文件哪行写了什么"报你，不开跑
+3  原语过关 → bash o225_closure.sh（第 1 步 10 进程 + 第 2 步判级），预计 3–8 分钟
+4  自查读数：every_run_fresh、10 个互不相同 resolved 路径、run_shape_verified=true、命令面干净、绿/红计数
+5  反向突变（口径见 ⑥）→ 写进 CNX_REVERSE_MUTATION → 只有 KILLED/STREAK_BROKEN 才允许 CLOSED
+6  收据 → publish_evidence.py 上证据面 → 账本块（anchor guard 前后各一次）→ 回你
+```
+
+### ⑥ 我自己差点写错的一条（趁还没动手先更正）
+
+我上一轮的准备动作是"反向突变打在 `submit_operation` 的 **key 生成时机**上"。
+读到 `ORD-0224` ⑤/⑥ 后确认这条**已被仲裁驳回**：corrected g3 测的是 **operation identity convergence**，
+必须破坏真正让 5 个 caller 收敛的机制（`绕过 open-operation reuse` / `破坏 durable uniqueness 或
+atomic winner` / `让 loser 自己创建 operation`）并实测使 g3 重新 RED；"把 lookup 移到 provider 之后"
+只算 **provider-work dedupe mutation**，只能进 ① 的弱修门，不许给 g3 充数。
+⇒ `o225_HANDOFF.md` 第 6 节已按新口径改写；三把门（g3 ② / 弱修 ① / tail-A ③）= 三种 mutation、三个签字，
+一条 label 一条命令，不合跑。
+
+### ⑦ 没做到的部分（明写，不当"已完成"）
+
+```text
+真 10-process closure   没跑（禁制；本轮 0 子进程）。
+corrected g3 原语审计   没做 —— 靶子还不存在（0748a1f 上 label 0 命中）。备好的是工具+12 格自检+今天的对照读数。
+tail-A / 弱修门         未登记 label，本轮只钉 G3_CONCURRENT_OPEN_GENERATION 一条；
+                        C 落地后各来一条同形状命令即可，但**不与 g3 合跑**。
+尺不在主线（硬依赖）    0748a1f 导出树没有 _qoder_streak_receipt.py ⇒ 守卫 13 现在必红、gate_streak.py 会
+                        SHARED_MODULE_MISSING。要不要并 agent/f-ord210-20260922（head 6f0e5fc）是你的并线决定，
+                        我不替你动手 —— 但 closure 开窗之前这一步必须有人做，请先在账本上钉一下。
+适配器 clause6 写死      没改（不是我的文件）。若你更想一步出 CLOSED，那是 gate_streak.py:184 你那份的一行。
+证据未发布              本轮产物全在本地 _qoder_f_run/，无可引用 SHA；按 EXTERNALLY_READABLE_EVIDENCE，
+                        这些是**工具**不是**结论**，等 C 的 SHA 到了一起上证据面。
+```
+
+现场：本轮读数取自 `0748a1f`（`git log -1` 01:15:45）；账本上 ORD-0224/0225 的 `if_head` 仍写 `0437b5c`，
+比集成线旧 ⇒ 交接按 **C 的 SHA 钉靶**，不跟移动中的 tip。未碰 `_live.db`/`_preview.db`、未碰
+`:4781/:4782/:8693`、未跑 `demo/reset`、`P7=false`。
+
 ## commander 验收 + 两处自我更正 @2026-09-23T02:02+08 —— 红队砸两臂证据：**新代次只跑了 1 次 ⇒ 两臂不对称**；HJ-P1 已补发布；我错引了一个 blob、也说错了 409 的成因
 
 ### ① 红队 `d2305848` 的结论（我签）
@@ -28572,3 +28734,42 @@ places              16         16     updated_at(该表无 created_at，用实�
 > **d291c9dc 补一条精度（2026-09-23T01:46+08，接我上一块）**：那句「dry-run 未 seed」我现在有数了——`import app.main` 会按 `CITYNEXUS_DATABASE_URL` 建出空 schema，所以我那只 dry-run 遗留库实测为 **55 张表 / 总行数 0 / 非空表 0**：结构与空库是真的，**没有任何 fixture 数据被写入**，也没有任何 POST。遗留库已删（`_db/hard_cap_probe_*` 现 0 个）。顺带把这条写进探针文档，因为下次有人看收据会问同样的问题。
 
 > **d291c9dc 探针 blob 更新（2026-09-23T01:47+08）**：我 01:4x 那句「顺带写进探针文档」已兑现，`evidence/harness-hard-cap-probe/harness_hard_cap_before_generate_probe.py` 因追加那段说明而**换了 blob**：`ff77ee6271759547`(10,967 B) → **`1f71d0ba4ac77f97`(11,341 B)**（PUT 200 覆盖同一路径＋BYTE-LEVEL MATCH）。**以前那个 sha1 引用作废**，别拿旧号比对。其余三个 blob（`1db06c3ecb4b63f0` / `82ec8f16db52040a` / `4f4590cc932dbcdd`）未变。
+
+
+### 🧪 8c66aa92 (SESSION=8c66aa92) C · **ORD-0213 弱修已落码并提交** `50d1c4d`：先算键 → 先查存储 → 再决定要不要解析；**它不结 g3**，g3 在此 SHA 单节点形制第 1 批仍 3/10 绿 @2026-09-23T02:03+08
+
+> 时间戳由 `datetime.now().astimezone()` 生成，不是我手写。**核钟回话**：我当时实测本机系统钟读 `00:43+08`（你说 00:45），两边是一致的——错的是我手写的那个 `02:05`，不是钟快；从这一版起所有块内时间都是脚本取的。
+
+**① 改了什么（产品码 +37 行，其中注释 18 行）**
+- `app/anywhere_capability.py` +14：新增 `pending_request_fingerprint(query)`——未具名目的地**登记时用的那把键**，在问外部世界之前就能算出来。它是 `identity_fields()` 存储侧同一个表达式的复用，规范化与命名空间完全一致，因此它仍然**不是身份**，只表示"同一个还没回答的问题"。
+- `app/catalog_hydration_operations.py` +23：`submit_operation` 在 `resolve_destination` **之前**查一次存储，命中 `QUEUED/RUNNING` 就直接把那枚作业交给新 caller。
+- 为什么这样才谈得上 §7：改前键是从解析结果里长出来的，所以重复请求必须先付一次解析，才走到"能不能复用"的判断——提供方/目录调用天然随并发翻倍，且**没提交的工作对谁都是隐形的**。
+- `main.py` 0 行、`provider_identity.py` 0 行。本单范围外我没碰。
+
+**② 它买到什么、没买到什么（不冒充）**
+- 买到：开放中的重复提问只解一次；两次拿到同一个 `operation_id`；库里一行。
+- 没买到（三条，都在门里写着）：
+  1. 终态之后的同指纹**仍然另开一枚**（已签收的尾巴 A）⇒ 门 `w2` 直接把这条钉成断言，并写明"这就是不结 g3 的地方"。
+  2. `ABANDON_REQUESTED` **不被新步骤接管**（新步骤故意排除），但改前就有的解析后查找仍会把新 caller 挂到那件没人等的作业上 ⇒ 门 `w4` 原样记录现状，不粉饰。
+  3. 跨 worker：两个 uvicorn 互相看不见对方未提交的行，弱修不承诺；能保证落库不重的那道仍然是部分唯一索引。
+- **强修（准入串行化）我一行没动**，等仲裁回话。
+
+**③ 门与收据（全部在 exact SHA `50d1c4d` 的不可变导出树上跑）**
+- 新门文件 `backend/tests/test_qoder_ord213_ask_store_before_world.py`（5 条，245 行）：`collect-only` 5 items/exit 0；整文件 5 passed；**5 条各自单进程各跑一遍 = 5/5 绿**（5 个不同临时库）。排程是产品自己的 `start_worker=False` 与同步 `_run_operation`，没有 sleep/retry/降并发/放宽断言。
+- **10 进程连击（用你的尺 `live_checks/gate_streak.py`，判据 import F 的共享模块，blob `ebe4e24c177d8e18`）**：`w1` 单节点形制 `verdict: STREAK_MET(10) | closure: STREAK_GREEN`，逐 run 目标判定 10 个 GREEN，10 个互不相同且"跑前不存在"的临时库，`clause6_command_surface_clean: true`，problems 空。
+- **反向突变（`mutation_anchor_guard`，5 个，逐条声明了 expect_red/expect_green）**：
+  - **X1 = 你点名的那条**："改回先解后查" ⇒ `w1` 立刻回红，其余 4 条仍绿（杀伤局限在保护点上，不是一片红）。
+  - X2 让预查接管全部 OPEN 状态 ⇒ 只有 `w4` 红；X3 预查改用对账键 ⇒ 只有 `w1` 红；X5 预查换 pending 作用域 ⇒ `w1+w3+w5` 红、`w2+w4` 绿。
+  - X4（去掉折叠）**声明为幸存者并已解释**：`fingerprint_material:1343` 会再折一次，所以那是改字节不改行为——它量到的是我 helper 里那层折叠属于防御性重复。
+  - 跑完两文件 sha256 与权威树逐字节相同（`cb0e24c14fa7ad73` / `945b5488799bbede`）。
+- **g3 在此 SHA 的观测批**（尺自己签 `observation_only: true`）：逐 run `[G,G,R,R,R,R,G,R,R,R]` = **3/10 绿** ⇒ `(50d1c4d, g3, single-node)` 第 1 批仍是 `FLIP_WITHOUT_SHARED_STATE`。弱修没让它稳定绿，也没让它稳定红；批间差异（历史上同节点同形制还读过 0/10、1/10、2/10）不合并成一句话。
+
+**④ 两件要交给你的事实（不是抱怨，是坐标）**
+1. **主线树上没有 F 的共享判据模块**：`_qoder_integration_20260919` 里 `backend/tests/_qoder_streak_receipt.py` 与 `live_checks/gate_streak.py` 均为 0 命中。你的尺对主线直接拒跑（`SHARED_MODULE_MISSING`，实测原文在收据里），我这次是把 F 的 `evid_a4079bc` 那份复制进一次性导出才吃到的。ORD-0210 机制既然已 ACCEPTED，**这条通道要么合进主线，要么在账本里钉死"交连击前先补这层"**，否则每条车道各自复制一份判据＝又养第二把尺。
+2. **你的尺会把文件选择子签成 `single-node`**：我传 `tests/test_qoder_ord213_ask_store_before_world.py`（argv 里就这一个选择子），收据仍是 `run_shape: single-node`，且 `raw_node_outcome` 取自摘要计数（`passed: 5`）。按 ⑨/⑩ 那**不算** whole-file 形制的目标节点判定，所以我在收据里没把它当第三种形制用。修法在你手上，我只是把我这边的读数贴出来。
+
+**⑤ 全量三批（同口径 nodeid 集合）**：A 权威树未提交 8 红 / B exact-sha 导出 10 红 / C 干净权威树 8 红。基线 `33034d7` 8 红；**A、C 与基线逐 nodeid 相同**。B 多出的两条在 `test_qoder_ord197_four_class_receipt.py`（`r3`/`r4`），**同一棵导出树单跑整个文件是 6 passed + 1 xfailed** ⇒ 记为整套单进程形制下的跨文件状态/负载依赖，**待单独定性**，我不替它们宣布与本单无关。collected：A/C 1198、B 1198。
+
+**⑥ 现场与 P0 自证**：本轮 0 次出网（`CITYNEXUS_*` 未设 live 项）、0 次碰 `_live.db`/`_preview.db`、连击/突变全部落在 `%TEMP%\cnx_pytest_*` 的 app-resolved 新库里；`demo/reset` 只被门自己的夹具调用（它清 52 张表，但**不清** `catalog_hydration_operations`——实测：`services.py` 里 0 命中，所以我按表名在自己文件里清了那一章，注释写明为什么）。本地新增导出 `ord213/snap_50d1c4d`（106 MB，可删）；D 盘剩 13 GB。**ORD-0213 状态：弱修已交付；CLOSED 仍等强修裁决。**
+
+收据：`D:\moodle\_qoder_ord30_evidence_20260920\ord213\ORD-0213_weakfix_receipt.md`（由 `build_receipt.py` 从日志/JSON/`git` 生成，无手写数字）＋ 突变证据 `mutate_ord0213_weakfix.evidence.json` ＋ 三张连击收据 `streak_*.json`。
