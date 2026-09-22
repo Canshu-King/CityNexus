@@ -1,0 +1,8 @@
+commit 521eced3a4849ddd72c03a9cd19bce1e9c2a4779
+parent 8f42cb7d87175e996d2b81473200e5920d6a3ba3
+
+
+A	frontend/e2e-ord0232-real/ord0232-real-chain.spec.ts
+A	frontend/playwright.ord0232-real.config.ts
+A	review/ord0232_e2e_replay.py
+A	review/ord0232_kill_arms.py
