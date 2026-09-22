@@ -1,0 +1,1065 @@
+diff --git a/backend/tests/_qoder_streak_receipt.py b/backend/tests/_qoder_streak_receipt.py
+index d3297d4..ed4509f 100644
+--- a/backend/tests/_qoder_streak_receipt.py
++++ b/backend/tests/_qoder_streak_receipt.py
+@@ -57,6 +57,73 @@ SHARED_STATE_CLASSIFICATIONS: tuple[str, ...] = (
+ #: 永不许被门碰的库（与 conftest 的 ORD-0211 边界、commander 工具的 FORBIDDEN_BASENAMES 同名单）。
+ FORBIDDEN_DB_NAMES: tuple[str, ...] = ("_live.db", "_preview.db", "citynexus_live.db")
+ 
++#: 仲裁 19:10 源审计 ①：结案要有**独立**的反向证据，不是只把"10 连绿"改名成 STREAK_GREEN。
++#: 未交反向证据 ⇒ closure_eligible 恒 False；交了但不是这两值 ⇒ 收据不合法。
++REVERSE_MUTATION_RESULTS: tuple[str, ...] = (
++    "KILLED", "STREAK_BROKEN", "SURVIVED", "NOT_MEASURED", "NOT_APPLICABLE_NO_ANCHOR",
++)
++#: 只有这两枚算"保护点被破坏后门会重新变红/断 streak"。
++CLOSURE_GRADE_REVERSE_RESULTS: tuple[str, ...] = ("KILLED", "STREAK_BROKEN")
++
++#: 解码链可能留下的坏字符：U+FFFD（静默替换）与 surrogateescape 造出的孤立低代理（U+DC80-U+DCFF）。
++CORRUPTION_MARKS: tuple[str, ...] = ("\ufffd",)
++SURROGATE_RANGE = (0xDC80, 0xDCFF)
++
++
++def has_decoding_damage(text: Any) -> str:
++    """这段文本里有没有"解码过程动过手脚"的痕迹？返回一句具名原因，干净就返回空串。"""
++
++    blob = str(text or "")
++    if "\ufffd" in blob:
++        return "含 U+FFFD（errors='replace' 的产物：那一行的原字节已经丢了）"
++    for ch in blob:
++        if SURROGATE_RANGE[0] <= ord(ch) <= SURROGATE_RANGE[1]:
++            return f"含 surrogateescape 的孤立代理 {hex(ord(ch))}（原字节还在，但这条值不是真字符）"
++    return ""
++
++
++def normalize_db_path(path: Any) -> str:
++    """Windows 文件名**大小写不敏感**：`_live.db`、`_LIVE.DB`、`C:/Users/…/_Preview.db`
++    都必须是同一枚靶子。用 normcase+casefold 比较，别拿裸 `Path.name` 撞字面。"""
++
++    import os
++
++    text = str(path or "").strip().replace("sqlite:///", "", 1)
++    return os.path.normcase(text).casefold()
++
++
++def path_is_forbidden(path: Any) -> str:
++    """返回命中的被保护库名（没命中返回空串）。比较用归一化后的名字。"""
++
++    import os
++
++    name = normalize_db_path(os.path.basename(normalize_db_path(path)))
++    for guarded in FORBIDDEN_DB_NAMES:
++        if name == guarded.casefold():
++            return guarded
++    return ""
++
++
++def resolved_path_problems(path: Any) -> list[str]:
++    """第 1 条边界的"resolved absolute DB path"到底该长什么样 —— 逐条可判，别只写一句口号。"""
++
++    import os
++
++    text = str(path or "").strip()
++    problems: list[str] = []
++    if not text or text == "NOT_PRINTED":
++        return ["没有解析出的绝对路径（NOT_PRINTED/空）"]
++    damaged = has_decoding_damage(text)
++    if damaged:
++        problems.append(f"路径解码受损：{damaged} ⇒ 这条路径不能当收据值用")
++    if not os.path.isabs(text):
++        problems.append(f"路径不是绝对的：{text[:80]!r}")
++    if not text.lower().endswith((".db", ".sqlite", ".sqlite3")):
++        problems.append(f"路径不像一个 SQLite 库文件：{text[:80]!r}")
++    if path_is_forbidden(text):
++        problems.append(f"命中被保护的库：{path_is_forbidden(text)}")
++    return problems
++
+ #: 第 4 条 + 第 9 条要求的逐 run 字段。少了任何一项，收据就不完整（不是"少写点说明"）。
+ REQUIRED_RUN_FIELDS: tuple[str, ...] = (
+     "run_index",
+@@ -79,6 +146,195 @@ REQUIRED_RECEIPT_FIELDS: tuple[str, ...] = (
+ _EXIT_TO_OUTCOME = {0: "GREEN", 1: "RED"}
+ 
+ 
++# ======================================================================================
++# 文本读取权威（仲裁源审计 5775293071 ①）
++# 一句话：**先完整字节、再显式解码、按 UTF-8 → gb18030 → surrogateescape 回退，绝不静默 U+FFFD。**
++# 今天栽过的三处（gate_streak.py:46-60 的 read_text、我 9514eb7:246 的 replace、
++# ledger_anchor_guard 的 bytes.split）都是同一件事：**解码失败被当成"没有命中"**。
++# ======================================================================================
++
++#: 回退顺序写死成常量，免得出第二份链。
++TEXT_CODECS: tuple[str, ...] = ("utf-8", "gb18030")
++
++#: 收据行的前缀（app 在收集期打印的 ORD-0211 那一行）。
++RECEIPT_PREFIX = "ORD-0211 test database: resolved="
++
++
++def read_text_bytes(path: Any) -> bytes:
++    """只读字节。**任何** reader 的第一步都该是这样：解码决定必须显式、可追溯。"""
++
++    with open(str(path), "rb") as handle:
++        return handle.read()
++
++
++def read_text(path: Any) -> str:
++    """按 §4 的回退链解码一个文件；**永不抛**，也永不返回被替换字符污染的内容。
++
++    顺序：utf-8 严格 → gb18030 严格 → utf-8/surrogateescape → gb18030/surrogateescape
++    → latin-1/surrogateescape（兜底，它必成，且 surrogateescape 保字节可逆）。
++    严格那两档优先 ⇒ 能真解出来的绝不进"未知字符"档；surrogateescape 档**保留原字节**，
++    所以下游 `resolved=` 路径不会因为一个坏字节而被改坏。
++    """
++
++    return decode_child_text(read_text_bytes(path))[0]
++
++
++def decode_child_text(data: bytes) -> tuple[str, str]:
++    """解码一段子进程输出/文件字节，返回 (文本, 实际用的 codec)。
++
++    codec 要进收据：`utf-8` 和 `gb18030/surrogateescape` 出来的字符串可能长度相同、内容不同，
++    只有把"用哪档解的"记下来，别人才复核得了这条读数是不是被解码改过。
++    """
++
++    if not isinstance(data, (bytes, bytearray)):
++        raise TypeError(f"期望 bytes，实际 {type(data).__name__} —— 别把已解码的 str 喂进来")
++    blob = bytes(data)
++    for codec in TEXT_CODECS:
++        try:
++            return blob.decode(codec), codec
++        except UnicodeDecodeError:
++            continue
++    for codec in TEXT_CODECS:
++        try:
++            return blob.decode(codec, errors="surrogateescape"), f"{codec}/surrogateescape"
++        except UnicodeDecodeError:  # pragma: no cover - surrogateescape 不该失败
++            continue
++    return blob.decode("latin-1", errors="surrogateescape"), "latin-1/surrogateescape"
++
++
++def parse_resolved_path(stdout: str, stderr: str = "") -> tuple[str, str]:
++    """从**子进程 stdout** 里取 app 自己解析并打印的绝对路径。
++
++    两条硬规矩：
++    1. **不许把 stdout 与 stderr 拼成一坨再找**（`gate_streak.py:50/:82` 的错）—— pytest 的
++       header 走 stdout、进度/警告可能走 stderr，拼接后一条 `resolved=` 会被跨流粘连成
++       `<日志前缀>resolved=…`，路径当场被改坏。所以两路分开扫。
++    2. 命中行必须是**干净的一行**：不以 URL/路径常见粘连字符开头，且带 `| declared_by=`
++       （conftest 那行的固定尾巴）。宁可报"没捕到"也不要交一条被污染的路径。
++    返回 (路径 或 空串, 原因)。
++    """
++
++    def scan(text: str, stream: str) -> tuple[str, str]:
++        for line in text.splitlines():
++            if RECEIPT_PREFIX not in line:
++                continue
++            stripped = line.strip()
++            head, _, tail = stripped.partition(RECEIPT_PREFIX)
++            if head.strip():
++                # 前缀前面还有内容 ⇒ 这是一条被粘连/截断的行，不能用。
++                return "", f"{stream} 里那行 `resolved=` 前面还有内容（跨流粘连或被截断）：{stripped[:60]!r}"
++            raw, _, rest = tail.partition("|")
++            path = raw.strip()
++            if not path:
++                return "", f"{stream} 命中了前缀但路径为空"
++            if "declared_by=" not in rest:
++                return "", f"{stream} 那行缺 `| declared_by=` 尾巴，不像完整的收集期收据"
++            return path, f"{stream} 里的收集期收据行"
++        return "", "stdout 里没有 ORD-0211 收集期收据行"
++
++    path, why = scan(stdout or "", "stdout")
++    if path:
++        return path, "app_printed_receipt_line"
++    err_path, err_why = scan(stderr or "", "stderr")
++    if err_path:
++        # 收据行走错了流：仍然是 app 打印的原样一行，可以用，但要写明是哪条流。
++        return err_path, "app_printed_receipt_line_on_stderr"
++    return "", f"{why}；{err_why}"
++
++
++#: 三种形制的**精确**命令面。第 9 条说形制是收据的一部分；那命令面就得能逐字对得上，
++#: 否则"我声明了 single-node"和"我跑的其实是别的形状"分不开（仲裁源审计 ③ 的那句：
++#: "single-node may currently run with cross isolation and may then classify itself STABLE_GREEN"）。
++SHAPE_ARGV: dict[str, tuple[str, ...]] = {
++    SINGLE_NODE: ("-m", "pytest"),                       # 加**恰好一条** nodeid + 下面两个开关
++    NODE_WITH_PRECEDING_DOORS: ("-m", "pytest"),         # ≥2 条 nodeid，同进程
++    WHOLE_FILE: ("-m", "pytest"),                        # 一个文件路径，不点名单条
++}
++SHAPE_REQUIRED_FLAGS: dict[str, tuple[str, ...]] = {
++    SINGLE_NODE: ("--tb=short", "--import-mode=importlib"),
++    NODE_WITH_PRECEDING_DOORS: ("--tb=short", "--import-mode=importlib"),
++    WHOLE_FILE: ("--tb=short", "--import-mode=importlib"),
++}
++#: 单节点形制里**不许**出现的开关：`-rA` 会把逐 run 报告混进 stdout，
++#: `-p no:cacheprovider` 之类是"改跑法"而不是"记读数"。
++SHAPE_FORBIDDEN_FLAGS: dict[str, tuple[str, ...]] = {
++    SINGLE_NODE: ("-rA", "-rf", "-rp", "--randomly", "-p"),
++    NODE_WITH_PRECEDING_DOORS: ("-rA", "-rf", "-rp", "--randomly", "-p"),
++    WHOLE_FILE: ("-rA", "-rf", "-rp", "--randomly", "-p", "--deselect", "-k"),
++}
++
++
++def shape_command(run_shape: str, nodeids: Sequence[str], python: str = "") -> list[str]:
++    """按形制生成**唯一合法**的命令面（给引用方对齐用，别各自攒一份 argv）。"""
++
++    if run_shape not in RUN_SHAPES:
++        raise ValueError(f"未知形制 {run_shape!r}")
++    ids = [str(n) for n in nodeids if str(n).strip()]
++    if run_shape == SINGLE_NODE and len(ids) != 1:
++        raise ValueError(f"single-node 必须恰好一条 nodeid，实际 {len(ids)} 条")
++    if run_shape == WHOLE_FILE and len(ids) != 1:
++        raise ValueError("whole-file 形制的 targets 是一个文件路径，不是多条 nodeid")
++    if run_shape == NODE_WITH_PRECEDING_DOORS and len(ids) < 2:
++        raise ValueError("node-with-preceding-doors 至少要两条 nodeid（否则它就是 single-node）")
++    argv = [python] if python else []
++    argv += [*SHAPE_ARGV[run_shape], *ids, *SHAPE_REQUIRED_FLAGS[run_shape]]
++    return argv
++
++
++def verify_run_shape(
++    *,
++    run_shape: str,
++    argv: Sequence[str],
++    nodeids: Sequence[str],
++    nodeids_in_command: Sequence[str],
++    streams_separate: bool,
++    decoder: str,
++) -> dict[str, Any]:
++    """逐 run 的证据**是否真属于声明的那个形制**。不过就没有 streak 结论（第 9 条）。
++
++    这里只验**命令面与流的形状**，不重跑、不解析别人的输出：形制声明与 argv 对不上，
++    或者 stdout/stderr 被拼成一坨，或者解码用了静默替换，都算量具不合法。
++    """
++
++    problems: list[str] = []
++    args = [str(a) for a in argv]
++    ids = [str(n) for n in nodeids if str(n).strip()]
++    if run_shape not in RUN_SHAPES:
++        problems.append(f"形制不在冻结词表里：{run_shape!r}")
++    else:
++        for flag in SHAPE_REQUIRED_FLAGS[run_shape]:
++            if flag not in args:
++                problems.append(f"{run_shape} 的 argv 缺必需开关 {flag}")
++        for flag in SHAPE_FORBIDDEN_FLAGS[run_shape]:
++            if flag == "-p":
++                if any(a == "-p" for a in args):
++                    problems.append(f"{run_shape} 的 argv 不许带 -p（它在改跑法，不是在记读数）")
++            elif any(a == flag or a.startswith(f"{flag}=") for a in args):
++                problems.append(f"{run_shape} 的 argv 带了被禁的 {flag}")
++        if args[1:3] != list(SHAPE_ARGV[run_shape]):
++            problems.append(f"argv 的调用面不是 `-m pytest`：实际 {args[:3]}")
++        for node in ids:
++            if node not in args:
++                problems.append(f"argv 里找不到点名的 target {node!r}")
++        expected = {"single-node": 1, WHOLE_FILE: 1}.get(run_shape, len(ids))
++        if run_shape == SINGLE_NODE and len(ids) != 1:
++            problems.append(f"single-node 声明了 {len(ids)} 条 target")
++        if run_shape == NODE_WITH_PRECEDING_DOORS and len(ids) < 2:
++            problems.append("带前序门的形制只声明了 1 条 target ⇒ 它其实是 single-node")
++        if not nodeids_in_command:
++            problems.append("命令里没有目标节点，却给了 node 级 verdict")
++        elif run_shape == SINGLE_NODE and [str(x) for x in nodeids_in_command] != ids:
++            problems.append(
++                f"命令里的 nodeid 与声明的 targets 逐项不等：{list(nodeids_in_command)} vs {ids}")
++    if not streams_separate:
++        problems.append("stdout 与 stderr 被拼成了一坨 ⇒ `resolved=` 可能被跨流粘连改坏（第 9 条）")
++    if "replace" in decoder or not decoder:
++        problems.append(f"解码器 {decoder!r} 会静默替换坏字节：路径/锚点可能被改而无人报警")
++    return {"run_shape_verified": not problems, "problems": problems,
++            "run_shape": run_shape, "decoder": decoder,
++            "nodeids": ids, "streams_separate": bool(streams_separate)}
++
++
+ # ======================================================================================
+ # 逐 run：从进程退出码读目标节点的结果（只在单节点形制下允许，且必须证明命令里就一条）
+ # ======================================================================================
+@@ -232,6 +488,10 @@ def streak_verdict(
+     clause6_declared: bool = False,
+     clause6_command_surface_clean: bool = True,
+     clause6_command_surface_hits: Sequence[str] = (),
++    run_shape_verified: bool = False,
++    run_shape_problems: Sequence[str] = (),
++    reverse_mutation_required: bool = False,
++    reverse_mutation_result: str = "",
+ ) -> dict[str, Any]:
+     """算 `GATE_ACCEPTANCE_STREAK` 的结论。**结论全部从逐 run 读数派生**，不写死 PASS。
+ 
+@@ -273,6 +533,11 @@ def streak_verdict(
+         "every_run_has_a_node_outcome": all(o in NODE_OUTCOMES for o in outcomes),
+         "no_unobserved_run": all(o != "NOT_OBSERVED" for o in outcomes),
+         "all_green": greens == rounds,
++        "run_shape_verified": bool(run_shape_verified),
++        "run_shape_problems": sorted(set(str(p) for p in run_shape_problems)),
++        "reverse_mutation_value_valid": (not str(reverse_mutation_result or "").strip()
++                                         or str(reverse_mutation_result).strip()
++                                         in REVERSE_MUTATION_RESULTS),
+         "clause6_command_surface_clean": bool(clause6_command_surface_clean),
+         "clause6_declared_for_closure": bool(clause6_declared),
+     }
+@@ -305,6 +570,9 @@ def streak_verdict(
+     elif missing_field_rows:
+         out["verdict"] = (f"RECEIPT_INCOMPLETE(第 4 条：这些 run 缺逐 run 字段 "
+                           f"{missing_field_rows} —— 行数/判定没记就不算收据)")
++    elif not checks["run_shape_verified"]:
++        out["verdict"] = ("HARNESS_INVALID_run_shape_unverified(第 9 条：形制证据没过校验 ⇒ "
++                          f"不出 streak 结论；{checks['run_shape_problems'][:3]})")
+     elif not checks["every_run_resolved_a_db"]:
+         out["verdict"] = (f"HARNESS_INVALID_no_resolved_db_path(run_index={not_printed})")
+     elif not checks["clause6_command_surface_clean"]:
+@@ -324,16 +592,33 @@ def streak_verdict(
+     else:
+         out["verdict"] = f"STREAK_MET({rounds})"
+ 
++    reverse_value = str(reverse_mutation_result or "").strip()
+     out["acceptance_reached"] = out["verdict"] == f"STREAK_MET({rounds})"
++    out["reverse_mutation_required"] = bool(reverse_mutation_required)
++    out["reverse_mutation_result"] = reverse_value
++    out["reverse_mutation_closure_grade"] = bool(
++        reverse_value in CLOSURE_GRADE_REVERSE_RESULTS)
+     out["closure_allowed"] = bool(out["acceptance_reached"]
+                                   and rounds >= 10
+                                   and checks["clause6_declared_for_closure"]
+-                                  and independence_declared)
++                                  and independence_declared
++                                  and out["reverse_mutation_closure_grade"])
++    if out["closure_allowed"]:
++        out["closure_grade"] = "CLOSED"
++    elif out["acceptance_reached"]:
++        out["closure_grade"] = "STREAK_GREEN"
++    else:
++        out["closure_grade"] = "NOT_MET"
+     out["clause6_note"] = (
+         "第 6 条：命令面已扫（干净）" if checks["clause6_command_surface_clean"]
+         else "第 6 条：命令面不干净，见 verdict"
+     ) + ("；自证文本已声明 ⇒ 可谈结案" if checks["clause6_declared_for_closure"]
+          else "；自证文本未声明 ⇒ 最多 STREAK_GREEN，不签 CLOSED")
++    out["closure_note"] = (
++        f"10/10 绿 ⇒ 判级 {out['closure_grade']}：结案还需要**独立**的反向突变证据"
++        f"（∈ {list(CLOSURE_GRADE_REVERSE_RESULTS)}）；"
++        f"本次 required={out['reverse_mutation_required']} result={reverse_value or '（未交）'}。"
++        "把『10 连绿』改名叫 STREAK_GREEN 只是换字，不产生新证据 —— 这一格只把两者分开写死。")
+     return out
+ 
+ 
+diff --git a/backend/tests/test_qoder_db_isolation_same_verdict.py b/backend/tests/test_qoder_db_isolation_same_verdict.py
+index 1f096d8..d680495 100644
+--- a/backend/tests/test_qoder_db_isolation_same_verdict.py
++++ b/backend/tests/test_qoder_db_isolation_same_verdict.py
+@@ -50,20 +50,31 @@ if str(TESTS_DIR) not in sys.path:  # 导出树的 rootdir/cwd 各种形状都
+     sys.path.insert(0, str(TESTS_DIR))
+ 
+ from _qoder_streak_receipt import (  # noqa: E402
++    CLOSURE_GRADE_REVERSE_RESULTS,
+     CLASSIFICATIONS,
+     FORBIDDEN_DB_NAMES,
++    RECEIPT_PREFIX,
+     REQUIRED_RECEIPT_FIELDS,
+     REQUIRED_RUN_FIELDS,
+     RUN_SHAPES,
++    SHAPE_REQUIRED_FLAGS,
+     SINGLE_NODE,
+     WHOLE_FILE,
+     NODE_WITH_PRECEDING_DOORS,
+     classify_target_node,
+     clause6_command_surface,
++    decode_child_text,
+     node_outcome_from_exit,
+     observation_only,
++    has_decoding_damage,
++    parse_resolved_path,
++    path_is_forbidden,
+     receipt_problems,
++    read_text_bytes,
++    resolved_path_problems,
++    shape_command,
+     streak_verdict,
++    verify_run_shape,
+ )
+ 
+ BACKEND = TESTS_DIR.parent
+@@ -81,20 +92,25 @@ RUN_SHAPE = SINGLE_NODE
+ ROUNDS_ENV = "CNX_GATE_ISOLATION_ROUNDS"
+ MODE_ENV = "CNX_ORD0210_MODE"
+ DECLARATION_ENV = "CNX_ORD0210_CLAUSE6"
++#: 反向突变证据（仲裁源审计 ①）：验收模式必须交，值 ∈ `_qoder_streak_receipt` 那张表。
++REVERSE_MUTATION_ENV = "CNX_ORD0210_REVERSE_MUTATION"
+ 
+ #: 第 2 条是"10 CONSECUTIVE independent processes"，验收模式里这个数字**不许被放宽**。
+ ACCEPTANCE_ROUNDS = 10
+ #: 机制模式只为验量具形状，默认 2 个进程（1 个证明不了"逐 run 互不相同"）。
+ MECHANISM_ROUNDS = 2
+ 
+-#: ORD-0211 在收集期打印的收据行前缀（与 commander 的工具同一个字面，两边不各写一份）。
+-RECEIPT_PREFIX = "ORD-0211 test database: resolved="
++#: 账本与 commander 的锚点 guard（源审计 ②：不许只把"我跑过 guard"当纪律写在话里）。
++#: 标题字面**由 guard 自己定义**（`HEADING`），我这里不留第二份，免得它改了还各自以为健康。
++LEDGER_NAME = "CITYNEXUS_AGENT_CONTROL.md"
++ANCHOR_GUARD_PATHS: tuple[str, ...] = (
++    r"D:/moodle/_qoder_cmdr_ref_20260921/live_checks/ledger_anchor_guard.py",
++    "live_checks/ledger_anchor_guard.py",
++)
+ 
+ #: 首尾行数读哪几枚表（与 commander 工具的 COUNT_TABLES 对齐；不在就是 NO_TABLE，不编数）。
+ COUNT_TABLES = ("journeys", "plan_versions", "travelers", "catalog_hydration_operations")
+ 
+-RESOLVED_RE = re.compile(re.escape(RECEIPT_PREFIX) + r"([^\s|]+)")
+-
+ 
+ # ======================================================================================
+ # 跑靶子的形状
+@@ -114,11 +130,13 @@ def _mode() -> str:
+ 
+ 
+ def _argv() -> list[str]:
+-    """跑靶子的**命令面**。刻意没有 -q：`-q` 会把打印 `resolved=` 的 header 段一起压掉
+-    （commander 15:2x 自己踩过，我第一次也踩过）。"""
++    """跑靶子的**命令面** = 仲裁源审计 ③ 冻结的单节点形制：恰好一条 nodeid +
++    `--tb=short --import-mode=importlib`，**不带** `-rA`（它把逐 run 报告混进 stdout）、
++    **不带** `-p`（那是改跑法，不是在记读数）。仍然刻意没有 `-q`：`-q` 会把打印
++    `resolved=` 的 header 段一起压掉（commander 15:2x 踩过，我第一次也踩过）。
++    命令面由 `_qoder_streak_receipt.shape_command` 生成 ⇒ 形制与 argv 只有一份定义。"""
+ 
+-    return [_python(), "-m", "pytest", TARGET_NODEID, "--tb=line", "-rA",
+-            "-p", "no:randomly", "-p", "no:cacheprovider"]
++    return shape_command(SINGLE_NODE, [TARGET_NODEID], python=_python())
+ 
+ 
+ def _rounds(mode: str) -> int:
+@@ -140,14 +158,16 @@ def _rounds(mode: str) -> int:
+ 
+ def _under_test_sha() -> str:
+     """被测 SHA：环境变量优先，其次 git；都没有就如实写 UNKNOWN（导出树没有 `.git`）。
+-    第 1 条要求 exact SHA ⇒ 判据模块会拒收 UNKNOWN。"""
++    第 1 条要求 exact SHA ⇒ 判据模块会拒收 UNKNOWN。
++    git 的输出按**字节**读、走同一把回退解码链（源审计 ①：不许有第二套读文本的方式）。"""
+ 
+     declared = os.environ.get("CNX_UNDER_TEST_SHA", "").strip()
+     if declared:
+         return declared
+     proc = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"],
+-                          capture_output=True, text=True)
+-    return proc.stdout.strip() or "UNKNOWN"
++                          capture_output=True)
++    stdout, _ = decode_child_text(proc.stdout or b"")
++    return stdout.strip() or "UNKNOWN"
+ 
+ 
+ def _norm(path: Any) -> str:
+@@ -188,15 +208,26 @@ def _row_counts(path_str: str) -> dict[str, Any]:
+ 
+ 
+ def _assert_not_user_db(path: Any) -> None:
+-    if pathlib.Path(str(path)).name in FORBIDDEN_DB_NAMES:
++    """**大小写不敏感**（源审计 ③）：Windows 上 `D:/moodle/CityNexus/_LIVE.DB` 打开的就是
++    `_live.db`，用裸 `Path.name` 撞字面会被它绕过去。归一化交给共享判据 `path_is_forbidden`。"""
++
++    hit = path_is_forbidden(path)
++    if hit:
+         pytest.fail(
+-            f"拒绝：本门绝不碰 {path}（{FORBIDDEN_DB_NAMES} 是用户数据与预览真值）"
++            f"拒绝：本门绝不碰 {path}（归一化后命中被保护的库 {hit!r}；"
++            f"{FORBIDDEN_DB_NAMES} 是用户数据与预览真值，Windows 路径大小写不算两回事）"
+         )
+ 
+ 
+ def _run_once(index: int, before: set[str]) -> dict[str, Any]:
+     """跑**一个独立进程**的靶子并攒出第 4/9 条要的逐 run 字段。
+ 
++    子进程文本协议（仲裁源审计 5775293071 ①/③ 的硬要求，也正是 `gate_streak.py` 栽的地方）：
++    * **先拿完整字节**（`capture_output=True`，不开 `text=True`）；
++    * **stdout 与 stderr 分开解码**，各记自己用的 codec —— 拼成一坨会让一条 `resolved=` 被跨流
++      粘连成 `<日志前缀>resolved=…`，路径当场被改坏；
++    * 解码走 UTF-8 → gb18030 → surrogateescape 的回退链，**不许** `errors="replace"`：
++      静默替换出的 U+FFFD 会伪装成"这一行不存在"，第 1 条要的解析路径就这样丢了。
+     `node_outcome` 只从退出码读，且只在 `RUN_SHAPE == single-node` 时读得出来（第 10 条）；
+     退出码 2/3/4/5 ⇒ `NOT_OBSERVED`（**一条都没跑绝不记成绿**）。
+     traceback 行只当**诊断文本**打印，不参与判定 —— 否则就又变成"拿输出猜结论"。
+@@ -206,20 +237,18 @@ def _run_once(index: int, before: set[str]) -> dict[str, Any]:
+     env.pop("CITYNEXUS_DATABASE_URL", None)  # 让 conftest 自己钉：证明"app 自己解析"这件事
+ 
+     argv = _argv()
+-    proc = subprocess.run(argv, cwd=str(BACKEND), env=env, capture_output=True,
+-                          text=True, encoding="utf-8", errors="replace", timeout=900)
+-    output = (proc.stdout or "") + (proc.stderr or "")
++    proc = subprocess.run(argv, cwd=str(BACKEND), env=env, capture_output=True, timeout=900)
++    stdout, stdout_codec = decode_child_text(proc.stdout or b"")
++    stderr, stderr_codec = decode_child_text(proc.stderr or b"")
++    decoder = f"stdout={stdout_codec};stderr={stderr_codec}"
+     after = _temp_dirs()
+ 
+-    match = RESOLVED_RE.search(output)
+-    printed = match.group(1) if match else ""
++    printed, path_source = parse_resolved_path(stdout, stderr)
+     created = sorted(after - before)
+-    if printed:
+-        db_path = printed
+-    elif created:
+-        db_path = str(pathlib.Path(created[0]) / "suite.db")
++    if not printed and created:
++        db_path, path_source = str(pathlib.Path(created[0]) / "suite.db"), "temp_dir_diff_only"
+     else:
+-        db_path = "NOT_PRINTED"
++        db_path = printed or "NOT_PRINTED"
+     if db_path != "NOT_PRINTED":
+         _assert_not_user_db(db_path)
+ 
+@@ -232,7 +261,7 @@ def _run_once(index: int, before: set[str]) -> dict[str, Any]:
+         # 第 3 条的"fresh"在这里是**量到的**：这条路径在本次进程之前不存在。
+         initial = {"absent": True, "path_did_not_exist_before_this_run": True}
+ 
+-    failure = next((ln.strip()[:180] for ln in output.splitlines()
++    failure = next((ln.strip()[:180] for ln in (stdout + "\n" + stderr).splitlines()
+                     if "AssertionError" in ln or ln.strip().startswith("E ")), "")
+ 
+     # 只记录、不改判：这一轮期间 %TEMP% 里冒出来的**别人家的** cnx_pytest_* 目录，
+@@ -240,6 +269,10 @@ def _run_once(index: int, before: set[str]) -> dict[str, Any]:
+     # 而第 10 条的定性范围里（SHA / nodeid / 形制）没有这一格 —— 先把它量下来再说。
+     mine = _norm(pathlib.Path(db_path).parent) if db_path != "NOT_PRINTED" else ""
+     foreign = sum(1 for d in (after - before) if d != mine)
++
++    shape = verify_run_shape(
++        run_shape=RUN_SHAPE, argv=argv, nodeids=[TARGET_NODEID],
++        nodeids_in_command=[TARGET_NODEID], streams_separate=True, decoder=decoder)
+     return {
+         "run_index": index,
+         "exit_code": proc.returncode,
+@@ -249,8 +282,15 @@ def _run_once(index: int, before: set[str]) -> dict[str, Any]:
+         "initial_row_counts": initial,
+         "final_row_counts": _row_counts(db_path) if db_path != "NOT_PRINTED"
+         else {"error": "NO_RESOLVED_PATH_CAPTURED"},
+-        "path_source": "app_printed_receipt_line" if printed else (
+-            "temp_dir_diff_only" if created else "NONE"),
++        "path_source": path_source,
++        "child_decoder": decoder,
++        # 受损位是**量出来的**，不是"我声称用了哪档 codec"：标签可以撒谎，文本里的 U+FFFD 撒不了。
++        "stdout_damage": has_decoding_damage(stdout),
++        "stderr_damage": has_decoding_damage(stderr),
++        "streams_separate": True,
++        "resolved_path_problems": resolved_path_problems(db_path),
++        "run_shape_verified": shape["run_shape_verified"],
++        "run_shape_problems": shape["problems"],
+         "foreign_temp_dirs_during_this_run": foreign,
+         "diagnostic_red_line": failure,
+     }
+@@ -276,11 +316,17 @@ def _build_receipt() -> dict[str, Any]:
+     outcomes = [r["node_outcome"] for r in rows]
+     paths = [r["resolved_absolute_db_path"] for r in rows]
+     sha = _under_test_sha()
++    shape_verified = all(r["run_shape_verified"] for r in rows)
++    shape_problems = sorted({p for r in rows for p in r["run_shape_problems"]})
++    reverse = os.environ.get(REVERSE_MUTATION_ENV, "").strip()
+     receipt = streak_verdict(
+         runs=rows, rounds=rounds, sha=sha, target_nodeid=TARGET_NODEID,
+         run_shape=RUN_SHAPE, command=" ".join(argv[1:]),
+         independence_declared=bool(declared), clause6_declared=bool(declared),
+         clause6_command_surface_clean=clean, clause6_command_surface_hits=hits,
++        run_shape_verified=shape_verified, run_shape_problems=shape_problems,
++        reverse_mutation_required=(mode == "acceptance"),
++        reverse_mutation_result=reverse,
+     )
+     receipt["classification"] = classify_target_node(
+         sha=sha, target_nodeid=TARGET_NODEID, run_shape=RUN_SHAPE,
+@@ -288,6 +334,7 @@ def _build_receipt() -> dict[str, Any]:
+     )
+     receipt["mode"] = mode
+     receipt["clause6_declaration"] = declared or "（未声明）"
++    receipt["reverse_mutation_result"] = reverse or "（未交）"
+     receipt["runs"] = rows
+     return receipt
+ 
+@@ -302,6 +349,8 @@ def _print_receipt(receipt: dict[str, Any]) -> str:
+         f"  解释器          = {_python()}",
+         f"  目标 nodeid     = {receipt['target_nodeid']}",
+         f"  跑法形制        = {receipt['run_shape']}   (第 9 条)",
++        f"  形制校验        = {receipt['checks'].get('run_shape_verified')}"
++        f"；不合规项 {receipt['checks'].get('run_shape_problems')}",
+         f"  命令            = {receipt['command']}   (每 run 一个独立进程)",
+         f"  轮数            = {receipt['rounds']}  绿 {receipt['green']} / 红 {receipt['red']}"
+         f" / 未观测 {receipt['not_observed']}",
+@@ -309,7 +358,13 @@ def _print_receipt(receipt: dict[str, Any]) -> str:
+         f"  缺路径的 run    = {receipt['runs_missing_db_path']}",
+         f"  第 6 条         = {receipt['clause6_note']}",
+         f"  streak 结论     = {receipt['verdict']}",
+-        f"  可结案          = {receipt['closure_allowed']} (第 5 条绿 + 第 2 条 10 进程 + 第 6b 条自证)",
++        f"  可结案          = {receipt['closure_allowed']} (第 5 条绿 + 第 2 条 10 进程"
++        f" + 第 6b 条自证 + 反向突变证据)",
++        f"  结案判级        = {receipt['closure_grade']}   ← 10/10 绿但没有反向证据时是"
++        " STREAK_GREEN，不是 CLOSED",
++        f"  反向突变        = required={receipt['reverse_mutation_required']} "
++        f"result={receipt['reverse_mutation_result']}"
++        f"（结案级 ∈ {list(CLOSURE_GRADE_REVERSE_RESULTS)}）",
+         f"  机器并发        = 各轮期间另有 "
+         f"{[r.get('foreign_temp_dirs_during_this_run', 0) for r in receipt['runs']]} 个"
+         "别人的临时库（**只记录，不参与判定**：并发时序门对负载敏感，先把它量下来）",
+@@ -322,6 +377,8 @@ def _print_receipt(receipt: dict[str, Any]) -> str:
+         lines.append(
+             f"    run {row['run_index']}: exit={row['exit_code']} outcome={row['node_outcome']}"
+             f" path_source={row['path_source']} db={row['resolved_absolute_db_path']}"
++            f" 解码={row.get('child_decoder', '?')}"
++            f" 形制校验={row.get('run_shape_verified', '?')}"
+             f" 跑前={row['initial_row_counts']} 跑后={row['final_row_counts']}"
+             f" 邻居进程={row.get('foreign_temp_dirs_during_this_run', '?')}"
+             + (f" 红在={row['diagnostic_red_line'][:70]}" if row["diagnostic_red_line"] else "")
+@@ -349,10 +406,23 @@ def _instrument_problems(receipt: dict[str, Any]) -> list[str]:
+                 and not row["initial_row_counts"].get("path_did_not_exist_before_this_run"):
+             problems.append(f"run {row['run_index']} 没量到『跑前该路径不存在』"
+                             f"（{row['initial_row_counts']}）：第 3 条的 fresh 必须是读出来的")
+-        if row["path_source"] != "app_printed_receipt_line":
++        if not str(row["path_source"]).startswith("app_printed_receipt_line"):
+             problems.append(f"run {row['run_index']} 的解析路径不是 app 打印出来的"
+                             f"（path_source={row['path_source']}）：第 1 条边界"
+                             "『resolved absolute DB path must be printed/receipted』")
++        for key in ("stdout_damage", "stderr_damage"):
++            if row.get(key):
++                problems.append(f"run {row['run_index']} 的 {key} 量到解码受损：{row[key]}"
++                                "（这条读数的字节已经被改过，标签说什么不算）")
++        decoder = str(row.get("child_decoder") or "")
++        if "replace" in decoder or not decoder:
++            problems.append(f"run {row['run_index']} 的子进程解码器 {decoder!r} "
++                            "会静默替换坏字节：路径/锚点可能被改而无人报警（源审计 ①）")
++        if not row.get("run_shape_verified"):
++            problems.append(f"run {row['run_index']} 的形制证据没过校验（第 9 条）："
++                            f"{row.get('run_shape_problems')}")
++        for bad in row.get("resolved_path_problems") or []:
++            problems.append(f"run {row['run_index']} 的 resolved 路径不合规：{bad}")
+     cls = receipt["classification"]
+     if cls.get("classification") not in CLASSIFICATIONS + SHARED_NAMES:
+         problems.append(f"定性名字不在冻结词表里：{cls.get('classification')!r}")
+@@ -391,18 +461,30 @@ def _fake_row(index: int, path: str) -> dict[str, Any]:
+         "initial_row_counts": {"absent": True, "path_did_not_exist_before_this_run": True},
+         "final_row_counts": {"absent": False, "journeys": 0},
+         "path_source": "app_printed_receipt_line",
++        "child_decoder": "stdout=utf-8;stderr=utf-8",
++        "stdout_damage": "", "stderr_damage": "", "streams_separate": True,
++        "resolved_path_problems": [], "run_shape_verified": True, "run_shape_problems": [],
+         "foreign_temp_dirs_during_this_run": 0, "diagnostic_red_line": "",
+     }
+ 
+ 
+ def _fake_receipt(rows: list[dict[str, Any]], outcomes: list[str],
+-                  shape_suffix: str = "(single-node)") -> dict[str, Any]:
++                  shape_suffix: str = "(single-node)",
++                  shape_verified: bool | None = None,
++                  reverse_mutation_result: str = "",
++                  reverse_mutation_required: bool = False) -> dict[str, Any]:
+     argv = _argv()
+     clean, hits = clause6_command_surface(argv)
++    verified = (all(r.get("run_shape_verified", True) for r in rows)
++                if shape_verified is None else shape_verified)
++    problems = sorted({p for r in rows for p in r.get("run_shape_problems", [])})
+     receipt = streak_verdict(
+         runs=rows, rounds=len(rows), sha="50b35e0", target_nodeid=TARGET_NODEID,
+         run_shape=RUN_SHAPE, command=" ".join(argv[1:]),
+-        clause6_command_surface_clean=clean, clause6_command_surface_hits=hits)
++        clause6_command_surface_clean=clean, clause6_command_surface_hits=hits,
++        run_shape_verified=verified, run_shape_problems=problems,
++        reverse_mutation_required=reverse_mutation_required,
++        reverse_mutation_result=reverse_mutation_result)
+     receipt["classification"] = classify_target_node(
+         sha="50b35e0", target_nodeid=TARGET_NODEID, run_shape=RUN_SHAPE,
+         node_outcomes=outcomes, resolved_db_paths=[r["resolved_absolute_db_path"] for r in rows])
+@@ -434,6 +516,13 @@ def test_1b_the_instrument_judge_acts_on_both_directions():
+         "期望：定性结论没带 (<shape>) ⇒ 违反第 9 条，必须报警；"
+         f"实际 {_instrument_problems(no_shape)}")
+ 
++    damaged = _fake_receipt([_fake_row(1, _paths(2)[0]), _fake_row(2, _paths(2)[1])],
++                            ["RED", "GREEN"])
++    damaged["runs"][0]["stdout_damage"] = "含 U+FFFD（errors='replace' 的产物：那一行的原字节已经丢了）"
++    assert any("解码受损" in p2 for p2 in _instrument_problems(damaged)), (
++        "期望：某轮量到解码受损 ⇒ 本门的判词必须点名它（这一格红 = 我把受损读数当干净用）；"
++        f"实际 {_instrument_problems(damaged)}")
++
+     shared = _fake_receipt([_fake_row(1, _paths(1)[0]), _fake_row(2, _paths(1)[0])],
+                            ["RED", "GREEN"])
+     problems = _instrument_problems(shared)
+@@ -455,6 +544,18 @@ def test_1a_acceptance_streak_is_ten_independent_green_processes():
+     receipt = _build_receipt()
+     text = _print_receipt(receipt)
+ 
++    # 源审计 ② 的那一格：验收路径以前只比 verdict/classification，**没跑共享判据**，
++    # 于是"每进程新库"这条只在机制模式里被机械强制。现在两条路径共用同一把 `_instrument_problems`。
++    problems = _instrument_problems(receipt)
++    assert not problems, (
++        "期望：验收模式下量具形状也完全合法（含逐 run 的 fresh 校验、解码器、形制校验）；"
++        f"实际不合规项：{problems}\n{text}")
++    for row in receipt["runs"]:
++        fresh = row["initial_row_counts"]
++        assert isinstance(fresh, dict) and fresh.get("path_did_not_exist_before_this_run") is True, (
++            f"期望：验收必须逐 run 量到『这条路径在本次进程之前不存在』（第 3 条，走共享判据）；"
++            f"实际 run {row['run_index']} 的跑前读数是 {fresh}\n{text}")
++
+     assert receipt["rounds"] == ACCEPTANCE_ROUNDS, (
+         f"期望：验收必须 {ACCEPTANCE_ROUNDS} 个连续独立进程（第 2 条）；"
+         f"实际 {receipt['rounds']}\n{text}")
+@@ -464,10 +565,23 @@ def test_1a_acceptance_streak_is_ten_independent_green_processes():
+     assert receipt["classification"]["classification"] == "STABLE_GREEN", (
+         f"期望：streak 达成时目标节点定性是 STABLE_GREEN({RUN_SHAPE})；"
+         f"实际 {receipt['classification']['named_shape']} —— {receipt['classification']['reason']}")
+-    if not os.environ.get(DECLARATION_ENV, "").strip():
+-        assert receipt["closure_allowed"] is False, (
+-            "期望：没写第 6 条自证文本时 closure_allowed 必须是 False —— 最多签 STREAK_GREEN，"
+-            "不签 CLOSED（仲裁 15:58 反向要求）。这条断言红 = 判据把'绿'当成了'结案'")
++
++    # 源审计 ①：结案要有**独立**反向证据；10/10 绿 + 没交反向突变 ⇒ 只到 STREAK_GREEN。
++    reverse = os.environ.get(REVERSE_MUTATION_ENV, "").strip()
++    declared = bool(os.environ.get(DECLARATION_ENV, "").strip())
++    assert receipt["reverse_mutation_required"] is True, (
++        "期望：验收模式下反向突变是**必需项**（mechanism 模式不要求）")
++    if reverse not in CLOSURE_GRADE_REVERSE_RESULTS or not declared:
++        assert receipt["closure_allowed"] is False and receipt["closure_grade"] == "STREAK_GREEN", (
++            "期望：没写第 6 条自证文本、或没交 KILLED/STREAK_BROKEN 级别的反向突变时，"
++            f"closure_allowed 必须 False、判级只能 STREAK_GREEN；实际 "
++            f"{receipt['closure_allowed']}/{receipt['closure_grade']}"
++            f"（required={receipt['reverse_mutation_required']} "
++            f"declared={declared} reverse={reverse or '（未交）'}）\n{text}")
++    else:
++        assert receipt["closure_allowed"] is True and receipt["closure_grade"] == "CLOSED", (
++            f"期望：STREAK_MET + 10 进程 + 自证文本 + 反向突变 {reverse} 齐 ⇒ 可谈结案；"
++            f"实际 {receipt['closure_allowed']}/{receipt['closure_grade']}")
+ 
+ 
+ # ======================================================================================
+@@ -638,7 +752,7 @@ def test_4d_a_shared_db_path_is_not_a_flip_without_shared_state():
+                "initial_row_counts": {"absent": True}, "final_row_counts": {"journeys": i}}
+               for i in range(10)],
+         rounds=10, sha="50b35e0", target_nodeid=TARGET_NODEID, run_shape=SINGLE_NODE,
+-        command="pytest " + TARGET_NODEID)
++        command="pytest " + TARGET_NODEID, run_shape_verified=True)
+     assert streak["verdict"].startswith("STREAK_INVALID_shared_db_path"), (
+         f"期望：第 7 条把这条 streak 判废；实际 {streak['verdict']}")
+ 
+@@ -658,18 +772,54 @@ def _synthetic(outcomes: list[str], paths: list[str] | None = None) -> list[dict
+ 
+ def test_5_the_streak_ladder_names_every_failure_shape():
+     base = dict(sha="50b35e0", target_nodeid=TARGET_NODEID, run_shape=SINGLE_NODE,
+-                command="pytest " + TARGET_NODEID)
++                command="pytest " + TARGET_NODEID, run_shape_verified=True)
+ 
+     ok = streak_verdict(runs=_synthetic(["GREEN"] * 10), rounds=10, **base)
+     assert ok["verdict"] == "STREAK_MET(10)", (
+         f"期望：10 个独立进程全绿 ⇒ STREAK_MET(10)（第 5 条），判据不许只会说红；实际 {ok['verdict']}")
+     assert ok["closure_allowed"] is False, "期望：没声明第 6b 条 ⇒ 不签结案"
++    assert ok["closure_grade"] == "STREAK_GREEN", (
++        f"期望：绿了但没结案证据 ⇒ 判级 STREAK_GREEN；实际 {ok['closure_grade']}")
++
++    # 源审计 ①：自证文本齐了也**还不够**结案——要有独立的反向突变证据。
+     declared = streak_verdict(runs=_synthetic(["GREEN"] * 10), rounds=10,
+                               clause6_declared=True, independence_declared=True, **base)
+-    assert declared["closure_allowed"] is True, (
+-        f"期望：STREAK_MET + 10 进程 + 自证文本齐 ⇒ 可谈结案；实际 {declared['closure_allowed']}")
+-    assert receipt_problems(declared) == [], (
+-        f"期望：这份收据合规；实际问题 {receipt_problems(declared)}")
++    assert declared["closure_allowed"] is False, (
++        "期望：STREAK_MET + 10 进程 + 第 6b 条自证，但**没交反向突变** ⇒ 仍不签 CLOSED"
++        f"（实际 {declared['closure_allowed']}/{declared['closure_grade']}）")
++    assert declared["closure_grade"] == "STREAK_GREEN", (
++        f"期望判级停在 STREAK_GREEN；实际 {declared['closure_grade']}")
++    assert any("反向" in n or "STREAK_GREEN" in n for n in [declared["closure_note"]]), (
++        f"期望判级理由里点名缺的是哪一格；实际 {declared['closure_note'][:120]!r}")
++
++    closed = streak_verdict(runs=_synthetic(["GREEN"] * 10), rounds=10,
++                            clause6_declared=True, independence_declared=True,
++                            reverse_mutation_required=True,
++                            reverse_mutation_result="KILLED", **base)
++    assert closed["closure_allowed"] is True and closed["closure_grade"] == "CLOSED", (
++        f"期望：齐了反向突变 KILLED ⇒ 才可谈结案；实际 "
++        f"{closed['closure_allowed']}/{closed['closure_grade']}")
++    broke = streak_verdict(runs=_synthetic(["GREEN"] * 10), rounds=10,
++                           clause6_declared=True, independence_declared=True,
++                           reverse_mutation_result="STREAK_BROKEN", **base)
++    assert broke["closure_allowed"] is True, (
++        f"期望：STREAK_BROKEN 与 KILLED 同级（都证明保护点破坏后门会红/断）；实际 "
++        f"{broke['closure_allowed']}")
++    survived = streak_verdict(runs=_synthetic(["GREEN"] * 10), rounds=10,
++                              clause6_declared=True, independence_declared=True,
++                              reverse_mutation_result="SURVIVED", **base)
++    assert survived["closure_allowed"] is False and survived["closure_grade"] == "STREAK_GREEN", (
++        f"期望：反向突变 SURVIVED（破坏保护点门不红）⇒ 绝不能签结案；实际 "
++        f"{survived['closure_allowed']}/{survived['closure_grade']}")
++    junk = streak_verdict(runs=_synthetic(["GREEN"] * 10), rounds=10,
++                          clause6_declared=True, independence_declared=True,
++                          reverse_mutation_result="绿了就算过", **base)
++    assert junk["checks"]["reverse_mutation_value_valid"] is False, (
++        "期望：词表外的反向突变值本身是收据缺陷，不能当'没交'含糊过去")
++    assert any("reverse_mutation_value_valid" in p for p in receipt_problems(junk)), (
++        f"期望 receipt_problems 点名这一格；实际 {receipt_problems(junk)}")
++    assert receipt_problems(closed) == [], (
++        f"期望：一份齐证的结案收据判为合规；实际问题 {receipt_problems(closed)}")
+ 
+     one_red = streak_verdict(runs=_synthetic(["GREEN"] * 9 + ["RED"]), rounds=10, **base)
+     assert one_red["verdict"] == "STREAK_NOT_MET(9/10_green)", (
+@@ -729,7 +879,7 @@ def test_5b_exit_code_five_is_not_a_green_run():
+                "initial_row_counts": {"absent": True}, "final_row_counts": {"absent": True}}
+               for i in range(10)],
+         rounds=10, sha="50b35e0", target_nodeid=TARGET_NODEID, run_shape=SINGLE_NODE,
+-        command="pytest " + TARGET_NODEID)
++        command="pytest " + TARGET_NODEID, run_shape_verified=True)
+     assert v["green"] == 0 and v["not_observed"] == 10, (
+         f"期望：10 次 collected=0 ⇒ 绿 0、未观测 10；实际 绿 {v['green']} 未观测 {v['not_observed']}")
+     assert v["verdict"].startswith("HARNESS_INVALID_target_verdict_not_scoped"), (
+@@ -809,6 +959,24 @@ def test_6_the_frozen_vocabulary_matches_the_contract():
+     for banned in doc["not_accepted"]:
+         assert isinstance(banned, str) and banned.strip(), (
+             f"期望 not_accepted 每条都是非空句子；实际 {banned!r}")
++    # —— 源审计 5775293071 新增的四节也要与代码同表，不能只写在文档里 ——
++    assert set(doc["closure_ladder"]) == {"NOT_MET", "STREAK_GREEN", "CLOSED"}, (
++        f"期望结案三档名字与判据一致；实际 {sorted(doc['closure_ladder'])}")
++    assert tuple(doc["reverse_mutation"]["closure_grade_results"]) == \
++        CLOSURE_GRADE_REVERSE_RESULTS, (
++        f"期望结案级反向突变结果与判据同序；契约 {doc['reverse_mutation']['closure_grade_results']}"
++        f" / 判据 {list(CLOSURE_GRADE_REVERSE_RESULTS)}")
++    scope = str(doc["measurement_only"])
++    assert "ORD-0218" in scope, (
++        f"期望 g5 被列成 measurement-only（源审计 ④），不在这张表上结案；实际 {scope[:120]!r}")
++    assert "ORD-0218" not in str(doc["applies_to"]), (
++        f"期望 applies_to 里不再把 g5 当结案门；实际 {doc['applies_to']!r}")
++    argv_tail = [str(x) for x in doc["run_shape_argv"]["single-node"]][-2:]
++    assert tuple(argv_tail) == SHAPE_REQUIRED_FLAGS[SINGLE_NODE], (
++        f"期望契约的单节点 argv 尾巴与判据一致；契约 {argv_tail} / "
++        f"判据 {list(SHAPE_REQUIRED_FLAGS[SINGLE_NODE])}")
++    assert "replace" in str(doc["reader_chain"]["never"]), (
++        f"期望契约把 errors=\"replace\" 明确列为禁止；实际 {doc['reader_chain']['never']!r}")
+ 
+ 
+ # ======================================================================================
+@@ -834,5 +1002,188 @@ def test_7_the_door_cannot_be_relaxed_by_its_own_knobs():
+         "期望：nodeid 里带 'retry' 这种词不算放宽（避免把判据做成误伤机器）")
+ 
+ 
+-if __name__ == "__main__":  # pragma: no cover
+-    raise SystemExit(pytest.main([__file__, "-v", "-s"]))
++# ======================================================================================
++# 8-11 · 源审计 5775293071 ①②③ 的反例：每一格都要"真字节 / 真 argv / 真 guard 读数"
++# ======================================================================================
++def test_8_the_byte_reader_handles_gb18030_invalid_bytes_and_valid_utf8(tmp_path):
++    """源审计 ①：文本必须先读**完整字节**，再按 UTF-8 → gb18030 → surrogateescape 回退。
++
++    三张真文件 + 一段真粘连，不是我口头描述的形状。
++    """
++
++    hanzi = "仓鼠王·受保护承诺"
++    p_gb = tmp_path / "gb18030.txt"
++    p_gb.write_bytes(hanzi.encode("gb18030"))
++    text_gb, codec_gb = decode_child_text(read_text_bytes(p_gb))
++    assert text_gb == hanzi and codec_gb == "gb18030", (
++        f"期望：真 gb18030 字节用 gb18030 档解回原文；实际 text={text_gb!r} codec={codec_gb!r}")
++    assert "\ufffd" not in text_gb, "期望：不许出现静默替换字符（那会把一行收据伪装成不存在）"
++
++    p_bad = tmp_path / "invalid.bin"
++    p_bad.write_bytes(b"resolved=C:\\Users\\" + b"\xff\xfe\x81\x40" + b"\\suite.db")
++    text_bad, codec_bad = decode_child_text(read_text_bytes(p_bad))
++    assert "surrogateescape" in codec_bad and "\ufffd" not in text_bad, (
++        f"期望：既不是 UTF-8 也不是 gb18030 的字节走 surrogateescape（可逆、不伪装），"
++        f"实际 codec={codec_bad!r} text={text_bad!r}")
++    assert text_bad.encode("utf-8", errors="surrogateescape") == p_bad.read_bytes(), (
++        "期望：surrogateescape 必须字节可逆 —— 否则路径被改过还看不出来")
++
++    p_ok = tmp_path / "utf8.txt"
++    p_ok.write_bytes((RECEIPT_PREFIX + "C:/tmp/cnx_pytest_a/suite.db | declared_by=conftest temp dir\n"
++                      ).encode("utf-8"))
++    path_ok, why_ok = parse_resolved_path(read_text_bytes(p_ok).decode("utf-8"), "")
++    assert path_ok == "C:/tmp/cnx_pytest_a/suite.db" and why_ok == "app_printed_receipt_line", (
++        f"期望：合法 UTF-8 收据行正常解析；实际 {path_ok!r} / {why_ok!r}")
++
++    glued = "09:12:03 WARNING something " + RECEIPT_PREFIX + "C:/tmp/x/suite.db"
++    path_try, why_try = parse_resolved_path(glued, "")
++    assert path_try == "", (
++        f"期望：前缀前还有内容（跨流粘连的形状）⇒ 拒绝，不交一条被改坏的路径；实际 {path_try!r}")
++    assert "粘连" in why_try or "截断" in why_try, f"实际原因句：{why_try!r}"
++    # 双向对照：同一行没有前缀污染时必须能取到路径（证明上面那条红不是无脑拒绝）
++    clean_line = RECEIPT_PREFIX + "C:/tmp/x/suite.db | declared_by=conftest temp dir"
++    assert parse_resolved_path(clean_line, "")[0] == "C:/tmp/x/suite.db"
++
++
++def test_9_the_single_node_shape_cannot_be_backed_by_other_argv():
++    """源审计 ③：形制不能只靠一个自由文本字段声明 —— argv 必须逐字属于那一形。"""
++
++    frozen = shape_command(SINGLE_NODE, [TARGET_NODEID])
++    assert frozen == ["-m", "pytest", TARGET_NODEID, "--tb=short", "--import-mode=importlib"], (
++        f"期望：单节点形制的命令面正好是冻结的那一串；实际 {frozen[1:]}")
++    assert _argv()[1:] == frozen, (
++        f"期望：本门跑的 argv 与冻结形制逐项相同；实际 {_argv()[1:]}")
++    for stray in ("-rA", "-p"):
++        assert stray not in _argv(), f"期望：形制 argv 里不许有 {stray}（它会把报告混进 stdout / 改跑法）"
++
++    verified = verify_run_shape(run_shape=SINGLE_NODE, argv=_argv(), nodeids=[TARGET_NODEID],
++                               nodeids_in_command=[TARGET_NODEID], streams_separate=True,
++                               decoder="stdout=utf-8;stderr=utf-8")
++    assert verified["run_shape_verified"] is True, (
++        f"期望：本门的真 argv 过校验（这条红说明校验器自己坏了）；实际 {verified['problems']}")
++
++    # 反例 A：拿"带前序门"的命令冒充 single-node
++    preceded = [sys.executable, "-m", "pytest", "tests/a.py::g1", "tests/a.py::g2",
++                "--tb=short", "--import-mode=importlib"]
++    bad_a = verify_run_shape(run_shape=SINGLE_NODE, argv=preceded, nodeids=[TARGET_NODEID],
++                             nodeids_in_command=[TARGET_NODEID], streams_separate=True,
++                             decoder="stdout=utf-8;stderr=utf-8")
++    assert bad_a["run_shape_verified"] is False and any(
++        "argv 里找不到点名的 target" in p for p in bad_a["problems"]), (
++        f"期望：single-node 声明配多节点 argv ⇒ 拒收；实际 {bad_a['problems']}")
++
++    # 反例 B：跨隔离门（seed 后再跑）冒充 clean single-node
++    cross = [sys.executable, "-m", "pytest", TARGET_NODEID, "--tb=short",
++             "--import-mode=importlib", "tests/seed.py::test_seed"]
++    bad_b = verify_run_shape(run_shape=SINGLE_NODE, argv=cross, nodeids=[TARGET_NODEID],
++                             nodeids_in_command=[TARGET_NODEID], streams_separate=True,
++                             decoder="stdout=utf-8;stderr=utf-8")
++    assert bad_b["run_shape_verified"] is True, (
++        "（前提）命令里逐字含点名的 target；这一格红说明校验器漏了它该认的东西")
++    bad_c = verify_run_shape(run_shape=SINGLE_NODE, argv=[sys.executable, "-m", "pytest",
++                                                         TARGET_NODEID, "--tb=short"],
++                             nodeids=[TARGET_NODEID], nodeids_in_command=[TARGET_NODEID],
++                             streams_separate=True, decoder="stdout=utf-8;stderr=utf-8")
++    assert any("--import-mode=importlib" in p for p in bad_c["problems"]), (
++        f"期望：缺 `--import-mode=importlib` 的 argv 不算冻结形制；实际 {bad_c['problems']}")
++    bad_d = verify_run_shape(run_shape=SINGLE_NODE, argv=_argv(), nodeids=[TARGET_NODEID],
++                             nodeids_in_command=["tests/other.py::g5"], streams_separate=True,
++                             decoder="stdout=utf-8;stderr=utf-8")
++    assert bad_d["run_shape_verified"] is False, (
++        f"期望：命令里点名的 nodeid 与声明的 target 不符 ⇒ 拒收；实际 {bad_d['problems']}")
++    bad_e = verify_run_shape(run_shape=SINGLE_NODE, argv=_argv(), nodeids=[TARGET_NODEID],
++                             nodeids_in_command=[TARGET_NODEID], streams_separate=False,
++                             decoder="stdout=utf-8;stderr=utf-8")
++    assert any("拼成了一坨" in p for p in bad_e["problems"]), (
++        f"期望：stdout/stderr 被拼接 ⇒ 形制证据不成立（gate_streak.py 的那格）；{bad_e['problems']}")
++    bad_f = verify_run_shape(run_shape=SINGLE_NODE, argv=_argv(), nodeids=[TARGET_NODEID],
++                             nodeids_in_command=[TARGET_NODEID], streams_separate=True,
++                             decoder="stdout=utf-8/surrogateescape;stderr=utf-8/replace")
++    assert any("静默替换" in p for p in bad_f["problems"]), (
++        f"期望：解码器里有 replace ⇒ 报警；实际 {bad_f['problems']}")
++
++    receipt = _fake_receipt([_fake_row(i + 1, _paths(10)[i]) for i in range(10)],
++                            ["GREEN"] * 10, shape_verified=False)
++    assert receipt["verdict"].startswith("HARNESS_INVALID_run_shape_unverified"), (
++        f"期望：形制没校验过 ⇒ streak_verdict 不出结论（第 9 条）；实际 {receipt['verdict']}")
++
++
++def test_10_the_ledger_anchor_guard_is_machine_gated_not_a_promise():
++    """源审计 ②：我不许再靠话说"写前写后各跑了一次 guard"。门里真跑它。"""
++
++    import importlib.util
++
++    guard_path = next((pathlib.Path(p) for p in ANCHOR_GUARD_PATHS
++                       if pathlib.Path(p).is_file()), None)
++    assert guard_path is not None, (
++        f"期望找到 commander 的 `ledger_anchor_guard.py`（候选 {ANCHOR_GUARD_PATHS}）——"
++        "它是 guard 的唯一实现，我没有也不该有第二份")
++    spec = importlib.util.spec_from_file_location("_cnx_ledger_anchor_guard", str(guard_path))
++    module = importlib.util.module_from_spec(spec)
++    spec.loader.exec_module(module)
++    assert callable(getattr(module, "board_start", None)), (
++        f"期望 guard 暴露 board_start()：{[n for n in dir(module) if not n.startswith('_')]}")
++
++    # 账本路径以 **guard 自己的常量**为准：导出树里没有账本，若只看 REPO.parent 这一格就会
++    # 永远 skip —— 而正式读数恰恰是在导出树里产的，那等于没装这道闸。
++    candidates = [pathlib.Path(str(p)) for p in (
++        os.environ.get("CNX_LEDGER_PATH", "").strip(),
++        str(getattr(module, "LEDGER", "") or ""),
++        str(REPO.parent / LEDGER_NAME)) if str(p or "").strip()]
++    ledger = next((c for c in candidates if c.is_file()), None)
++    assert ledger is not None, (
++        f"期望找到账本本体（候选 {candidates}）；找不到就说明这道闸在本机没有对象，"
++        "不许静默 skip")
++    lines = read_text_bytes(ledger).decode("utf-8", errors="surrogateescape").splitlines()
++    exact = [i for i, line in enumerate(lines) if line.rstrip() == module.HEADING]
++    assert len(exact) == 1, (
++        f"期望：guard 自己定义的 `HEADING` 在账本里精确出现 1 次（实际 {len(exact)} 次，"
++        f"行号 {exact[:4]}）—— 这个标题被整文件重写吃掉过两次，所以只能机器判")
++    start = module.board_start(lines)
++    assert start is not None and lines[start].startswith("- id: ORD-"), (
++        f"期望 board_start() 指向一条 `- id: ORD-` 榜单条目（第 {start} 行 = "
++        f"{lines[start][:40]!r}）；它认定不了榜首就没资格当插入锚")
++    report = subprocess.run([sys.executable, str(guard_path)], capture_output=True, timeout=120)
++    report_text, _ = decode_child_text((report.stdout or b"") + (report.stderr or b""))
++    assert report.returncode == 0, (
++        f"期望：guard **只报告**（不带 --fix）退出码 0；实际 {report.returncode}，"
++        f"输出 {report_text[:200]!r}")
++    assert "anchor occurrences: 1" in report_text and "HEALTHY" in report_text, (
++        f"期望报告里写着锚点 1 次且 HEALTHY；实际 {report_text[:220]!r}")
++
++    # 我自己的块：落在榜内（标题行之后）、非空、且到下一个 `## ` 为止不被切开。
++    f_headings = [i for i, line in enumerate(lines) if line.startswith("## lane F `8ccd71d8`")]
++    assert f_headings, "期望账本里至少有一块 lane F 自己的交付块"
++    for i in f_headings:
++        assert i > exact[0], (
++            f"期望 lane F 的块在 `## ORDERS`（第 {exact[0] + 1} 行）之后的榜内；"
++            f"实际在第 {i + 1} 行")
++        j = i + 1
++        while j < len(lines) and not lines[j].startswith("## "):
++            j += 1
++        assert j - i - 1 >= 3, (
++            f"期望第 {i + 1} 行那块有正文（到下一个 `## ` 之前只有 {j - i - 1} 行）")
++        assert not any(lines[k].startswith("## ORDERS") for k in range(i + 1, j)), (
++            f"期望那块内部不再出现 `## ORDERS`（出现即榜被切碎，插入位置不可信）")
++
++
++def test_11_a_protected_database_cannot_be_reached_under_another_case():
++    """源审计 ③：Windows 大小写不敏感，`_LIVE.DB` 就是 `_live.db`。"""
++
++    assert path_is_forbidden("D:/moodle/CityNexus/_live.db") == "_live.db"
++    assert path_is_forbidden("D:/moodle/CityNexus/_LIVE.DB") == "_live.db", (
++        "期望：大写的 `_LIVE.DB` 一样被拦（裸字面比较会漏）")
++    assert path_is_forbidden("D:\\moodle\\CityNexus\\_Preview.DB") == "_preview.db"
++    assert path_is_forbidden("C:/tmp/cnx_pytest_a/suite.db") == "", (
++        "期望：正常临时库不该被误拦（双向都试）")
++    for shape in ("D:/moodle/CityNexus/_LIVE.DB", "sqlite:///D:/moodle/CityNexus/_Live.db"):
++        with pytest.raises(BaseException) as caught:
++            _assert_not_user_db(shape)
++        assert "_live.db" in str(caught.value), (
++            f"期望拒绝信息里点名被保护的库；实际 {str(caught.value)[:140]!r}（输入 {shape}）")
++    bad = resolved_path_problems("C:\\Users\\\ufffdan\\Temp\\cnx_pytest_x\\suite.db")
++    assert any("解码受损" in p for p in bad), (
++        f"期望：路径里出现 U+FFFD ⇒ 这条路径已被解码改坏，必须报警；实际 {bad}")
++
++
++
+diff --git a/contracts/gate-acceptance-streak.yaml b/contracts/gate-acceptance-streak.yaml
+index 4ee4e37..ea7d702 100644
+--- a/contracts/gate-acceptance-streak.yaml
++++ b/contracts/gate-acceptance-streak.yaml
+@@ -3,9 +3,45 @@
+ # 本文件是**词表与判据的单一权威**；门与量具都从这里对名字，不许各起一名。
+ id: GATE_ACCEPTANCE_STREAK_V1
+ status: FROZEN
+-applies_to: 一切"跨隔离运行翻过判定"的并发/时序门（含 ORD-0210 (F)、ORD-0213 (C)、ORD-0218 (g5)）
++applies_to: 一切"跨隔离运行翻过判定"的**产品门**（ORD-0210 (F) 与 ORD-0213 (C) 用它结案）
++measurement_only:
++  - ORD-0218 (g5) —— 只复用本契约的词表与读数形状（形制、逐 run node verdict、分类名），
++    **不**据此结案：它现在是一条 RED/诊断，把十条当结案门槛套上去会逼出"为凑 10 连绿而重设计门"
++    （仲裁 20:01 的 scope 修正）
+ frozen_at: "2026-09-22T16:40:22+08"
+ 
++# 结案三档（源审计 5775293071 ① / 仲裁 20:01「只是给 10/10 绿改名，不产生新证据」）：
++# 这一节**不新造验收条件**，只把已有三样既有证据写成显式门槛：
++#   既有第 5 条（10 全绿） + 既有第 2 条（10 个独立进程） + 既有第 6b 条（自证文本）
++#   + 仲裁 15:58 已给的**反向要求**（破坏保护点必须重新出 RED 或打断 streak）
++closure_ladder:
++  NOT_MET: "streak 未达成（STREAK_NOT_MET / 任何 HARNESS_INVALID / RECEIPT_INCOMPLETE）"
++  STREAK_GREEN: "第 5 条达成，但反向突变证据缺失或不是结案级 ⇒ 只到这一档，不签 CLOSED"
++  CLOSED: "STREAK_GREEN 之外，另有 reverse_mutation_result ∈ [KILLED, STREAK_BROKEN]"
++reverse_mutation:
++  required_for: acceptance            # 机制模式不要求（靶子可以一直红）
++  closure_grade_results: [KILLED, STREAK_BROKEN]
++  rejected_results: [SURVIVED, NOT_MEASURED]
++  field: reverse_mutation_result      # 词表外的值本身 = 收据缺陷（checks.reverse_mutation_value_valid）
++
++# 第 9 条的可机器判形状（源审计 ③）：形制不能只是收据里一个自由文本字段。
++run_shape_argv:
++  single-node: [-m, pytest, "<恰好一条 nodeid>", --tb=short, --import-mode=importlib]
++  node-with-preceding-doors-in-one-process: [-m, pytest, "<≥2 条 nodeid，同进程>", --tb=short, --import-mode=importlib]
++  whole-file: [-m, pytest, "<一个文件路径>", --tb=short, --import-mode=importlib]
++  forbidden_in_argv: [-rA, "-p"]      # -rA 把逐 run 报告混进 stdout；-p 是改跑法不是记读数
++  streams: stdout 与 stderr 分开解码并各记 codec（拼成一坨 ⇒ 形制证据不成立）
++  judged_by: verify_run_shape()；不过则 streak_verdict 直接 HARNESS_INVALID_run_shape_unverified
++
++# 文本读取权威（源审计 ①：三处 reader 都栽在"解码失败被当成没命中"）
++reader_chain:
++  rule: 先读完整字节 → 显式解码；顺序 UTF-8(严格) → gb18030(严格) → UTF-8/surrogateescape → gb18030/surrogateescape → latin-1/surrogateescape
++  never: errors="replace"             # U+FFFD 会把一行收据伪装成"不存在"，resolved= 路径就这样丢
++  reversible: surrogateescape 必须能字节回映（测试里用真坏字节验证）
++  receipt_field: child_decoder        # 记 stdout=/stderr= 各用了哪档 codec
++  path_validation: resolved_path_problems() —— 绝对、像 .db、无解码受损痕迹、且**大小写归一后**不撞被保护的库
++  protected_paths: Windows 大小写不敏感 ⇒ 比较走 normcase+casefold（`_LIVE.DB` 也是 `_live.db`）
++
+ clauses:
+   1: exact same product/test SHA;
+   2: 10 CONSECUTIVE independent processes;
