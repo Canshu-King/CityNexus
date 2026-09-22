@@ -1,0 +1,24 @@
+# ORD-0219 merge-readiness @4d9ceae: main line 8b9ea04 + B's services.py/places.json/gate (C's producer implementation taken away)
+theirs: 8b9ea04 Wed Sep 23 00:28:48 2026 +0800 docs(review): status receipt for the twice-relayed ORD-0222 and ORD-0221 items
+mine:   4d9ceae Wed Sep 23 01:09:14 2026 +0800 test(demo): give the laundering tripwire its own owner assertion and positive control
+also measured: full-suite twice at 4d9ceae -> 10 failed then 9 failed (the difference is test_qoder_catalog_hydration.py::test_abandon_reports_a_request_not_a_death = a suite-coupled FLIP, green when run alone / with my file / with its own module)
+
+tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_lands_every_claimed_fact_with_demo_provenance PASSED [  5%]
+tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_reaches_exactly_the_places_the_fixture_claims PASSED [ 11%]
+tests/test_qoder_demo_accessibility_evidence.py::test_demo_evidence_stays_out_of_non_sealed_cities PASSED [ 16%]
+tests/test_qoder_demo_accessibility_evidence.py::test_missing_demo_evidence_is_unknown_and_never_implicit_access PASSED [ 22%]
+tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture PASSED [ 27%]
+tests/test_qoder_demo_accessibility_evidence.py::test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified PASSED [ 33%]
+tests/test_qoder_demo_accessibility_evidence.py::test_hard_stroller_names_the_blocker_and_does_not_misfire PASSED [ 38%]
+tests/test_qoder_demo_accessibility_evidence.py::test_hard_luggage_names_the_blocker_and_does_not_misfire PASSED [ 44%]
+tests/test_qoder_demo_accessibility_evidence.py::test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability PASSED [ 50%]
+tests/test_qoder_ord0219_write_side_rule_guard.py::test_1a_an_unknown_rule_code_is_refused_before_it_can_be_stored PASSED [ 55%]
+tests/test_qoder_ord0219_write_side_rule_guard.py::test_1b_the_unknown_refusal_gives_a_screen_a_key_and_the_offending_value PASSED [ 61%]
+tests/test_qoder_ord0219_write_side_rule_guard.py::test_2_a_real_rule_the_gate_cannot_execute_is_refused_under_its_own_name PASSED [ 66%]
+tests/test_qoder_ord0219_write_side_rule_guard.py::test_3_the_two_refusals_do_not_collapse_into_one_name PASSED [ 72%]
+tests/test_qoder_ord0219_write_side_rule_guard.py::test_4_a_soft_preference_the_gate_ignores_is_still_written PASSED [ 77%]
+tests/test_qoder_ord0219_write_side_rule_guard.py::test_5_an_executable_hard_rule_is_stored_and_not_prejudged_by_the_write_layer PASSED [ 83%]
+tests/test_qoder_ord0219_write_side_rule_guard.py::test_6_every_rule_code_the_sealed_demo_seed_writes_stays_writable PASSED [ 88%]
+tests/test_qoder_ord0219_write_side_rule_guard.py::test_7_the_written_sets_are_derived_from_the_evaluator_not_retyped PASSED [ 94%]
+tests/test_qoder_ord0219_write_side_rule_guard.py::test_8_an_asserted_stroller_need_becomes_a_gate_a_mentioned_one_does_not PASSED [100%]
+======================= 18 passed, 2 warnings in 1.76s ========================
