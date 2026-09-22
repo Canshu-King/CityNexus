@@ -1,0 +1,9 @@
+order           ORD-0226
+source_sha      e08131e31339977516e1e7a2f3f70c906f37a2d2  (e08131e)
+parent_sha      50d1c4da424dcad042d22ae25a128cf626cf2971
+subject         fix(frontend): freeze the tight budget caveat as one sentence the gate compares literally (ORD-0226)
+authored        2026-09-23 02:04 +0800
+lane            e345b9d6 (frontend/UI), tree D:\moodle\_qoder_integration_20260919
+interpreter     Node/Playwright for the gates; D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14 for the runner
+note            the working tip is not pushed by this lane, so a bare SHA answers 422 on GitHub;
+                these blobs are the readable coordinates for it.
