@@ -1,0 +1,19 @@
+publisher SAFE-DEFAULT selftest transcript  2026-09-22T17:50:55Z
+tool: publish_evidence.py sha1 01f563e87795842f (10540 B)
+--- case auth401 ---
+GET evidence/probe/publisher_selftest.json: 404 existing_sha=None
+PUT -> 201 commit=aaaaaaaaaaaa
+AUTH_ANOMALY_TAIL_READ(401) on GET /repos/Canshu-King/CityNexus/contents/evidence/probe/publisher_selftest.json?ref=commander/control
+AUTH_ANOMALY_TAIL_READ(401) on GET /repos/Canshu-King/CityNexus/contents/evidence/probe/publisher_selftest.json?ref=commander/control
+AUTH_ANOMALY_TAIL_READ(401) on GET /repos/Canshu-King/CityNexus/contents/evidence/probe/publisher_selftest.json?ref=commander/control
+PUBLISHED_UNPROVEN: the PUT succeeded (commit aaaaaaaaaaaa) so the artifact is on commander/control, but every read-back answered 401 - this is an AUTH/transport anomaly on the read path, NOT a hash mismatch and NOT a credential failure.
+  do not rotate or edit the token; re-run this publish to take the proof. body={"message":"Bad credentials","status":"401"}
+CASE auth401: expect 7 got 7 -> OK
+--- case mismatch ---
+GET evidence/probe/publisher_selftest.json: 404 existing_sha=None
+PUT -> 201 commit=aaaaaaaaaaaa
+attempt 1 remote bbbbbbbbbb
+attempt 2 remote bbbbbbbbbb
+attempt 3 remote bbbbbbbbbb
+MISMATCH after retries - do not claim the publish
+CASE mismatch: expect 4 got 4 -> OK
