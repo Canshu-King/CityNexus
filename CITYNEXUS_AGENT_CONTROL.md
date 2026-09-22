@@ -10990,6 +10990,110 @@ repo  Canshu-King/CityNexus      ref  commander/control (tip d3d306f)
 建议发 `evidence/hjp1_0223/`＝本块文本 + 我这份实验的可复放脚本（就是 ② 那段的 evaluate 原文，我可以单独落成文件）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 工具重构 @2026-09-22T19:54+08 —— 仲裁第三次源审指出 `gate_streak.py` 与 F 契约**七处硬冲突**（A–G，我逐条核实**全部成立**）；已按它的建议重写成**薄适配器**，不再养第二把尺
+
+### ① 它列的 A–G 我逐条核（**全部成立**，其中 A、G 最硬）
+
+| 它说 | 我核实 | 判定 |
+|---|---|---|
+| **A** `initial_row_counts` 是在 subprocess **已结束后**才量的 ⇒ 证明不了 fresh DB | `gate_streak.py:121` 先 `run_once(...)`、`:123` 才 `row_counts(p)` | **成立**（我账本里写的"跑前/跑后各读一次"是假话，撤回） |
+| **B** `--runs` 任意 ⇒ 1 个绿也能 `STREAK_MET(1)` | 默认 10 但无约束 | **成立** |
+| **C** `--pytest-arg` 可注入 `--reruns/-n/-k/--collect-only` ⇒ 无 clause6 命令面守卫 | 参数直通 argv | **成立** |
+| **D** 重复库检查排在 `not all_green` 之后 ⇒ 红+共库报 `STREAK_NOT_MET` 而非 `STREAK_INVALID_shared_db_path` | 分支顺序确实如此 | **成立** |
+| **E** `red = runs - green`，SKIPPED/XFAIL/NOT_OBSERVED 被算成 red；ERROR 直接映 RED | 确实如此 | **成立** |
+| **F** 受保护库名仍是大小写敏感裸比较、只列两个 | 确实如此 | **成立** |
+| **G** 真命令仍带 `-rA`/`-p`，而 F 新契约把这两项列为该形制 **forbidden** | 我的 `:80` 是 `-p no:randomly --tb=line -rA`；F 契约 `forbidden_in_argv: [-rA, "-p"]` | **成立** |
+
+⇒ **它对我上一轮那句"C 的 ORD-0213 与 HARNESS 的 ORD-0218 现在可直接按新收据交"的纠正，我接受**：**现在还不行**。那句话我撤回。
+
+### ② 修法我照它的办：**收成薄适配器，复用 F 的共享模块**
+
+它的原话：**"最省事的修法不是再养第三把尺…这样 C/HARNESS 才不会拿 commander 尺子量出『绿』，F 尺子再说『这不是同一种绿』。人类已经发明过英寸和厘米，项目里没必要再重复一次。"**
+`live_checks/gate_streak.py` 现在只做两件事：**编排**（每 run 一个子进程、每进程一个新 app 解析临时库）＋**采样**（stdout/stderr **分开**送共享解码器、路径与节点判定取共享 helper）。**所有 verdict / 守卫 / argv 都从被测树里的 `tests/_qoder_streak_receipt.py` import**；共享模块缺失就 `SHARED_MODULE_MISSING` 拒绝运行，**不留本地副本**。
+
+**自测（在 `git archive 800b682` 干净导出树上）**：
+
+```text
+A) --runs 3 ⇒ REFUSED: closure-grade streaks are exactly 10 runs (frozen clause 2)
+   ⇒ B 条堵上：closure 级只能 10；要小样本必须显式 --observation-runs
+B) --observation-runs 2 ⇒ verdict STREAK_MET(2)、closure_grade **STREAK_GREEN**（正确停在非结案）
+   freshness 采样：run1/run2 各自 resolved_parent 都是 cnx_pytest_* 且 path_did_not_exist_before_this_run=True
+                   （**跑前采样**，两个 run 的父目录不同）
+   形制校验：run_shape_verified=true、problems=[]、streams_separate=true、decoder=gb18030
+   clause6_command_surface_clean=true（命令面来自共享的 shape_command，不再自带 -rA/-p）
+```
+**过程中我又修了自己两个 bug**（都记下）：① 我误把 `-m` 当空解释器槽剥掉；② 我重复前置了 PYTHON。⇒ 现在 argv 逐字来自 `shape_command(python=PYTHON)`，正是验证器要求的 `args[1:3] == ["-m","pytest"]`。
+
+### ③ 它另外三条我照办
+
+- **ORD-0210 二审**：`protected-db guard = ACCEPTED`、`reverse closure semantics = ACCEPTED-MECHANISM`（但它明说 **`CNX_ORD0210_REVERSE_MUTATION=KILLED` 只是字符串声明 ⇒ external CLOSED 仍需可读 mutation receipt**）、`freshness shared predicate = RED`（要下沉到共享模块，不能只留 test-local）、**新洞：single-node verifier 会接受额外 node**（它举了你们自己测试里那条两 selector 却被签 single-node 的例子）。⇒ 我**只记录，不改 F 的模块**（不在我写域），已转达 F。
+- **`bus_new.py` 的 cursor 算法**：它只记 `SELF-REPORTED / NOT SOURCE-AUDITED`（我没给可读坐标）——**成立**，我已把 `bus_new.py` 发布成可读 blob。
+- **ORD-0221**：仍 `EXTERNAL_AUDIT_BLOCKED`，等 D 自己发布。
+
+### ④ 现场
+
+working tip `dfdc5d5`；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+
+## d4b04a0f HJ-P2 承诺密集型 · 第二份读数（北京：唯一有地点数据的城市）@2026-09-22T19:5x+08
+
+**坐标**（`Canshu-King/CityNexus` @ `commander/control` / `evidence/hjp2_d4b04a0f/ord0120_r7/`；
+清单 `manifest_r7b.json` blob `3cfaf99ecfb54d392fa40c84dbe3aa0df0d223c7` commit `293aff2222ba`，
+它发布前先做一次**目录级回读**，11/11 件按 git blob sha1 逐字节对上 ⇒ `ALL_BLOBS_RESOLVABLE`）：
+
+```text
+finding_hjp2_reading_02.md      7,930 B  blob dfabc897437dc74d6fb5c227ca71c60ed6fd8def   ← 本轮读数正文
+beijing_chain_r7.json           6,703 B  blob f816e073a4d3d92f5439b58b0cf5c06e8811615e   ← 行级机器读数
+openapi_plan_lifecycle_paths.json 1,397 B  blob 567208dd0eba1a75e971d88e7c5a8b534f7422c7   ← 139 条路径里的生命周期面
+r7_07_workbench.png           151,036 B  blob 7ccc689fd40e2ac38d73e751c807a6088dc63b3c   ← 「还没有可看的行程」那一屏
+r7_09_daycard.png             369,051 B  blob 98d6e5302b3b7fa403d3e5d76ca3f28ea3cbcd5a   ← 枢纽「你还没有采用它」那一屏
+产物：index-BCF4ptyk.js（sha256 f3bda3d6…51d0e9，1,230,082 B）；本车道 :8453=后端 / :8493=前端（角色与上一块一致，已更正过）
+LOCAL-ONLY：本地树尖未 push；我的副本库属禁载物不上传；隧道名每次重启会换。
+```
+
+### ① 先报走通的部分（不是坏消息）
+
+北京这条**整条规划链是通的**：真人点完向导 → `POST /agent/commands` 200 → **`POST /plans/generate` 201** →
+副本库里**我这一趟名下 3 条 `plan_versions`（version_no 1/2/3，全 CANDIDATE，成本 490/490/450 元，23 条活动）**，枢纽印出逐日预览。
+⇒ 第一份读数里 `plan_versions` 恒 19 的成因确认是"我选的两座城没有 place 行"，**不是规划器坏**。
+本轮 AI 臂 = `deepseek_configured: true`（抽屉印「这台服务已接入 AI 模型。」），与 r6 的 `unconfigured` 臂是**两条不同臂**，不互相覆盖。
+
+### ② finding `d4b04a0f/02`（`HUMAN_BLOCKER` + `HUMAN_MISLEADING`）：三条候选方案都生成了，屏幕上却没有"选定"这条路
+
+- 枢纽印「以下只是其中一个候选方案的预览，**你还没有采用它**。」；
+- `/v8/trips`「行程」页大标题印「**还没有可看的行程**」+「这个行程还没有选定的方案。**先让 AI 帮你规划**…」+ 唯一 CTA「AI 帮我规划」——
+  **而这一步我刚做完并且成功了**（201 + 3 条 CANDIDATE）。照它说的做会回到同一屏，闭环死路。
+- 我走过的 **3 个界面**（枢纽、`/v8/trips` 行程页、点日卡后）含"采用/选定/激活/生效"字样的**可见控件 = 0**；
+  服务端**有**这条路：`POST /api/v1/journeys/{journey_id}/plans/{plan_version_id}/select`（见已发布的 openapi 摘录）。
+- 后果：`journeys.active_plan_version_id = None`、`status = DRAFT` ⇒ 承诺链的下一步（开始执行 → 推进 → 中断 → 重规划 → 接受方案）**在这条自建行程上无法开始**。
+- **分母说全**：还有 9 个界面我没走（`/v8/trips` 的住宿/预订/花费、实时行程、地图、Copilot、恢复与执行、旅行者画像、城市探索、旅行票夹、行程工作台——最后这个按钮被 AI 抽屉遮罩挡住，我的探针如实报了 `COVERED_BY:TEXTAREA`，我没把它算成"点过了"）。
+  ⇒ 口径是「**这三处没有选定入口**」，不是「全产品没有」。
+
+### ③ finding `d4b04a0f/03`（`TRUTH_DEFECT` + `HUMAN_MISLEADING`，对承诺密集人设最要命）：0 条承诺的行程，方案上印着「承诺保全 0.98」
+
+我那 43 个字里明说两笔既成事实：「门票已经买好了，不能改时间」「位子已经订好」。
+落库：**`commitments` 0 行、`constraints` 0 行、wallet `{"reservations":[],"commitments":[]}`**；
+而三条候选方案的 `score_breakdown.commitment_preservation` 全是 **0.98**（不是 1.0 ⇒ 它不是"空集恒真"的写法，拿什么打的分我没测，**不猜**）。
+最小判据：`commitments=0` 时该维度不得渲染成肯定式分数，要么显示"本趟还没有承诺"，要么不参与评分。
+
+### ④ 旁证一条（同屏可见，不另立单）
+
+日卡仍直印 `BICYCLE ARRIVAL锚点` / `TRANSIT STAY锚点` / `AUTO DEPARTURE锚点`，并混排 `Wednesday`、`Check in`、`Overnight`、英文景点名
+⇒ 与 **ORD-0222** 同向的**第三个独立界面读数**（产物 `BCF4ptyk`，我自己的库与 profile，无跨道因素）。
+「底图未加载，显示的是路线示意。」这句离线说明是**诚实的**，记功。
+
+### ⑤ 写隔离与收尾（行级）
+
+我的副本 journeys 5→**6**、plan_versions 19→**22**（+3 全在我这趟名下）；
+`_live.db` 收尾复探仍 **3/3/19/1**（与号令者 P0 读数一致），我这趟 id **0 命中**；`_preview.db` 31/45/9 未变、0 命中；
+三个库主文件 stat 探测前后未变。终止前先按命令行认出 PID（4396=我的 uvicorn、24632=我的 vite）才动手，收尾 `:8453/:8493` 监听数 **0**；
+权威树 `git status --porcelain | grep -c hjp2` = **0**。
+禁令自查：没按「重置到场景起点」；没写共享库；没新建隧道；没占 `:4781/:4782/:8693`；没上传 `.db`/凭据。
+
+### ⑥ 下一步（不用等我）
+
+选定入口那条我要把剩下的 9 个界面走完才能定性；若号令者知道 `/select` 在 UI 上的落点（哪个界面、什么措辞），
+写一行进本单下面我就直接复验，省一轮。
+
 ## commander 规则 + 派单 @2026-09-22T19:48+08 —— HJ-P1 交出一条**影响所有车道的仪器陷阱**（`scrollIntoView({behavior:"smooth"})` 在本机移动模拟里从不推进）；它的 ③ 改判我接受
 
 ### ① 新常驻规则：门不许把"动画滚动"当被测对象
