@@ -1,4 +1,4 @@
-ORD-0226 arm red messages -- lane e345b9d6, receipt ord0226-arms-final.json, run final at 2026-09-23T02:45:16+0800
+ORD-0226 arm red messages -- lane e345b9d6, receipt ord0226-arms-six-arms.json, run six-arms at 2026-09-23T03:04:05+0800
 nodes under test: zh=ord0220-1-the-tight-caveat-cannot-contradict-itself, en=ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence
 run shape       : single node (--grep on the exact node id) against an authoritative throwaway stack; the 'real-seed' setup project counts as one extra pass, so a green single-node run reads '2 passed'  (the 'real-seed' setup project counts as one extra pass)
 product sha256  : 2db999f9312321bbbe37548e0e704495c63d2a009a90c7f19ecf0b3da1ccfa43 (restored to this after every arm)
@@ -8,11 +8,11 @@ killAC1-e1-reassurance-outside-any-word-table  [KILLED]
   why            : the red team's E1 arm verbatim: 别担心/肯定够 are not in ALLAY_WORDS, so only literal equality can catch it
   node under test: ord0220-1-the-tight-caveat-cannot-contradict-itself
   guard          : anchor_hits=1 bytes_changed=True restored_exact=True
-  baseline before: exit=0 run_id=run102716 (2 passed (16.5s))
-  mutated arm    : exit=1 run_id=run102734 (1 passed (13.5s))
-  other language : exit=0 run_id=run102749 node=ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence -> independent=True
+  baseline before: exit=0 run_id=run103845 (2 passed (14.0s))
+  mutated arm    : exit=1 run_id=run103860 (1 passed (11.7s))
+  other language : exit=0 run_id=run103873 node=ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence -> independent=True
   mutated sha256 : e33f242a6759df6a912ebd3b8f69e6c28e559b0b20bd50aa26bad48c48e61bd2
-  log            : D:/moodle/_qoder_integration_20260919/review/run-run102734.log
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run103860.log
   red            :
         Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0220-1-the-tight-caveat-cannot-contradict-itself — the rendered caveat is not the frozen sentence, character for character. expected "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以
     
@@ -24,11 +24,11 @@ killAC2-e2-the-caveat-denies-itself  [KILLED]
   why            : arm E2's shape: the caveat stops warning and tells the traveller to relax
   node under test: ord0220-1-the-tight-caveat-cannot-contradict-itself
   guard          : anchor_hits=1 bytes_changed=True restored_exact=True
-  baseline before: exit=0 run_id=run102764 (2 passed (12.6s))
-  mutated arm    : exit=1 run_id=run102777 (1 passed (13.0s))
-  other language : exit=0 run_id=run102792 node=ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence -> independent=True
+  baseline before: exit=0 run_id=run103884 (2 passed (11.9s))
+  mutated arm    : exit=1 run_id=run103897 (1 passed (11.9s))
+  other language : exit=0 run_id=run103910 node=ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence -> independent=True
   mutated sha256 : c434d7421ecc487a6e9e2d75790a9a9f012001cd333266d7068185ad53a73399
-  log            : D:/moodle/_qoder_integration_20260919/review/run-run102777.log
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run103897.log
   red            :
         Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0220-1-the-tight-caveat-cannot-contradict-itself — the rendered caveat is not the frozen sentence, character for character. expected "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以
     
@@ -40,11 +40,11 @@ killAC3-selftest-one-punctuation-mark  [KILLED]
   why            : acceptance 5: one full stop becomes one comma -- green here would mean the equality is not literal
   node under test: ord0220-1-the-tight-caveat-cannot-contradict-itself
   guard          : anchor_hits=1 bytes_changed=True restored_exact=True
-  baseline before: exit=0 run_id=run102806 (2 passed (14.0s))
-  mutated arm    : exit=1 run_id=run102822 (1 passed (18.8s))
-  other language : exit=0 run_id=run102842 node=ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence -> independent=True
+  baseline before: exit=0 run_id=run103922 (2 passed (11.9s))
+  mutated arm    : exit=1 run_id=run103935 (1 passed (11.8s))
+  other language : exit=0 run_id=run103948 node=ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence -> independent=True
   mutated sha256 : a83d0c725b77a8920616af3da2cc687ed57dcade86caa34b5d22c0b6613acb91
-  log            : D:/moodle/_qoder_integration_20260919/review/run-run102822.log
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run103935.log
   red            :
         Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0220-1-the-tight-caveat-cannot-contradict-itself — the rendered caveat is not the frozen sentence, character for character. expected "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以
     
@@ -56,11 +56,11 @@ killAC4-e1-shape-in-english  [KILLED]
   why            : follow-up ①: the same E1 shape in the language arm the word tables never covered at all
   node under test: ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence
   guard          : anchor_hits=1 bytes_changed=True restored_exact=True
-  baseline before: exit=0 run_id=run102856 (2 passed (15.7s))
-  mutated arm    : exit=1 run_id=run102873 (1 passed (18.9s))
-  other language : exit=0 run_id=run102894 node=ord0220-1-the-tight-caveat-cannot-contradict-itself -> independent=True
+  baseline before: exit=0 run_id=run103960 (2 passed (10.9s))
+  mutated arm    : exit=1 run_id=run103971 (1 passed (10.7s))
+  other language : exit=0 run_id=run103983 node=ord0220-1-the-tight-caveat-cannot-contradict-itself -> independent=True
   mutated sha256 : 87d856667a70591475fc5a27c946a12a15dc8fab0af9a3c94045d45da2b35ba9
-  log            : D:/moodle/_qoder_integration_20260919/review/run-run102873.log
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run103971.log
   red            :
         Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence — stored citynexus.locale=en: navigator.language=en-US lang=en rendered "At this budget, lodging, tra
     
@@ -72,11 +72,27 @@ killAC5-selftest-one-english-punctuation-mark  [KILLED]
   why            : follow-up ①: the English pin is literal too -- one final full stop becomes one comma
   node under test: ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence
   guard          : anchor_hits=1 bytes_changed=True restored_exact=True
-  baseline before: exit=0 run_id=run102910 (2 passed (12.0s))
-  mutated arm    : exit=1 run_id=run102923 (1 passed (11.6s))
-  other language : exit=0 run_id=run102936 node=ord0220-1-the-tight-caveat-cannot-contradict-itself -> independent=True
+  baseline before: exit=0 run_id=run103996 (2 passed (10.8s))
+  mutated arm    : exit=1 run_id=run104008 (1 passed (10.8s))
+  other language : exit=0 run_id=run104020 node=ord0220-1-the-tight-caveat-cannot-contradict-itself -> independent=True
   mutated sha256 : 995eb69d62dccbcfd944a68b81a7e0f1ebeb1051241ed994f8625d83e1901238
-  log            : D:/moodle/_qoder_integration_20260919/review/run-run102923.log
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run104008.log
+  red            :
+        Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence — stored citynexus.locale=en: navigator.language=en-US lang=en rendered "At this budget, lodging, tra
+    
+        expect(received).toBe(expected) // Object.is equality
+    
+
+====================================================================================================
+killAC6-redteam-e1-verbatim-in-english  [KILLED]
+  why            : red team `d2305848` on e08131e, sentence copied verbatim -- it broke the English face where E1 broke the Chinese one
+  node under test: ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence
+  guard          : anchor_hits=1 bytes_changed=True restored_exact=True
+  baseline before: exit=0 run_id=run104033 (2 passed (10.8s))
+  mutated arm    : exit=1 run_id=run104044 (1 passed (10.8s))
+  other language : exit=0 run_id=run104056 node=ord0220-1-the-tight-caveat-cannot-contradict-itself -> independent=True
+  mutated sha256 : db830762e488686cb566943a7ffcfc2bc23243291bc19919feb4933aec89476b
+  log            : D:/moodle/_qoder_integration_20260919/review/run-run104044.log
   red            :
         Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence — stored citynexus.locale=en: navigator.language=en-US lang=en rendered "At this budget, lodging, tra
     
