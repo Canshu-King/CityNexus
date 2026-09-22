@@ -12169,6 +12169,61 @@ evidence/hjp1_0223/serve_ui3_3.py                      f5c6e3fe8c1c6e8c   3,187 
 - 队列不变：D 的 ORD-0220①/④ 与 ORD-0222 的门落地后我复跑；方案对比→选方案→建承诺→票夹 仍等 AI 授权那一句。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 验收 + 关闭 @2026-09-23T02:58+08 —— **ORD-0220②③ 双双满足关闭条件**（HJ-P1 ③ 按收窄形状 3/3 无 FLIP ＋ 端口→产物映射已发布）；aad2d1f2 把 R-2 从"未验"变成 **STILL_STANDS 3/3 且机制具名**（新开 ORD-0237）
+
+### ① HJ-P1 `1a986a24`：ORD-0220③ **3/3 PASS、无 FLIP**（形状完全照仲裁收窄版）
+
+```text
+同一前端代次 + 同一后端代码 + 同一视口与探针
+3 个独立浏览器进程 + 每跑一份从同一 sealed 基线克隆的新副本
+run   浏览器 pid   臂（base→静态→库）               scrollY / hintY / inView
+ui3a  52760        :8781→:8771→_hjp1_ui3_1.db        652 / 572 / true
+ui3b  51876        :8782→:8772→_hjp1_ui3_2.db        652 / 572 / true
+ui3c  56868        :8783→:8773→_hjp1_ui3_3.db        652 / 572 / true
+三份副本同源同哈希（backup() 自 _hjp1_gen.db，sha256 前缀 5417dd51c92f4b91，各 44/59/27）；三份收据 sha256 互不相同
+② 按裁定不再当基线用，只是三次顺带都读到 ''
+```
+**它把红队那条 `-wal` 测清了**：每跑结束后自己那份副本的 `journeys/travelers/journey_operations_contexts` 仍是 **44/59/27** 且 `nonGetRequests=0`，但每份都有一个 **24,752 B 的 `-wal`** ⇒ 正确说法不是"零写"，而是**没有非 GET 请求、向导拥有的表行数不变；WAL 增长来自"读时写"的 GET 端点**。**这正是"每跑一份新副本"的理由。**
+**端口→产物映射已发布**：`generation_server_map.json`（每条臂的 base / dist root / served index ref / entry bytes / sha256 / 产出提交 / 自己的库副本，全部 HTTP 实读或哈希实测）。
+**事实校正（它提的）**：仲裁查到的 `serve_genold/new.py = NOT_FOUND` **早于它 02:2x 的推送**；现在 `ls-tree` 里两者都在 ⇒ **请按 `afad4de` 之后的引用复查**。
+**发布 8 件、一次通过无 409、全部 BYTE-LEVEL MATCH**：`generation_server_map.json 63add3bb3712a69e`(5,833 B)｜`ui3a b0eabb67ebc7a0ba`、`ui3b f9677d9e1548ea38`、`ui3c c85caa2bcc129c43`(各 2,249 B)｜`manifest.CORRIGENDUM.json c3bd975b960a1c9f`(7,160 B，v3：**ui3a/b/c 才是权威复制件**，`genN*` 因共用一份副本只作旁证)｜`serve_ui3_1/2/3.py`(各 3,187 B)。
+**它自曝一个汇总 bug**：上一条打印把"distinct bytes"算成**长度集合**（得 1），差点写成"三份不可区分"——**判可区分要比 sha256 不是比长度**，已重算并写进块。
+**进程按监听 PID 收完**，自己这批端口 0 监听；`4781/4782/8693` 未碰；另有个 `:8788 PID=16012` **不是它的端口**，没动也没猜它是谁。
+
+⇒ **按仲裁冻结的形状（`ORD-0220③ UI_GENERATION_REPLICATION`，3/3 ⇒ CLOSED）＋ 映射已给**：
+```text
+ORD-0220② = CLOSED(FIXED_IN_GENERATION)     旧代「还需要填写：总预算」→ 新代 ''（HJ-P1 三跑均读到空）
+ORD-0220③ = CLOSED(FIXED_IN_GENERATION)     旧代 scrollY=0/inView=false → 新代 652/572/true，3/3 无 FLIP
+```
+**两个条件的证据都在外部可读面**（映射件 + 三份权威复制件 + 勘误 v3）。
+
+### ② aad2d1f2 `aad2d1f2`：R-2 从"未验"变成 **STILL_STANDS 3/3**，且它**推翻了自己上轮的读数**
+
+- **取消按钮一直都在，从 `已等待 0 秒` 就在**（4/4 次提交都在 1.2 秒内可见）。**我给的两种解释都被否证**：三代包的 `取消并关闭/已等待/plan-ai-cancel/plan-ai-live` 字面量计数**完全相同**；源码 `PlanWithAiSheet.tsx:750 {busy && …}`、`:861` 无阈值。**上轮"从没看到"是因为它只在 run 落定后才读屏**——它把这条记在自己头上。
+- **3/3 在飞取消**（点击时刻 4 s / 23 s / 23 s，墙钟由**页内定时臂**保证）：`855ed7ce` COMPLETED（3,766 字符产出，**7 步全在点击后**）；`d819c925` FAILED_EXTERNAL（**17 步里 14 步在点击后**，点击→终态 +27 s）；`118db007` COMPLETED（3,424 字符，**4/5 步在点击后**）。三笔对 `plan_versions` 贡献 **0**；硬刷新 + 翻 `/v8/agent` 都没有任何出口 ⇒ **按钮说谎 ＋ 结果静默丢弃**，机制指到 `:851-860`（只做 `abort()` + `onClose()`）。
+- **前置按我要求补齐**：`Connection.backup()`（`mode=ro`）出 3,710,976 B 副本，`CN-BEIJING` = **8 places / 5 city_services**；归属双向证明（副本专属 id 200、旧库专属 id 404）；走真 UI 建了 `3dadf0c1…`。
+- **两条它坚持挂在分母上的**：① 它用的 `DEEPSEEK_API_KEY` 就是账本里那**待吊销的泄露 key**（只记名字/长度/前 12 位），6 趟里 3 趟 `FAILED_EXTERNAL` ⇒ 新代这条 AI 腿是**半通半断**；② 本轮在**隐藏面板**里跑，"已等待 N 秒"被 `setInterval` 节流冻在 5/6/9 秒（墙钟 21–37 s）⇒ **只记观察、不定级**，要可见标签页或真机复测。
+- 顺带三格：**FIXED**——上轮"行程被删静默落到新建"现在会明说「这台服务器上没有这一趟行程了…这不是网络问题」并给两个出口；**POLISH**——中文界面吃英文场所名（chips `我想去Houhai Lake Bar…`）；另记一次未定级的"兴趣 小吃+人文 → 确认页只剩 人文"。
+- 它**保留 lane（`:8424`/`:8464`）不 release**，因为地图新手势那一格还欠验。
+
+### ③ ORD-0237（→ D `e345b9d6`，排在其手上队列之后）
+
+- id: ORD-0237
+  to: e345b9d6
+  priority: high
+  if_head: e08131e
+  order: |
+    **「取消并关闭」按钮说谎：点了它，那一趟 run 照样跑完，产出静默丢弃。**（`aad2d1f2` 在新代上 3/3 实测）
+    证据：点击时刻 4 s / 23 s / 23 s；`855ed7ce` COMPLETED（7 步全在点击后）、`d819c925` FAILED_EXTERNAL（14/17 步在点击后）、`118db007` COMPLETED（4/5 步在点击后）；**三笔对 `plan_versions` 贡献 0**、硬刷新与 `/v8/agent` 都无出口；机制指到 `PlanWithAiSheet.tsx:851-860`（只做 `abort()` + `onClose()`）。
+    **二选一，不许第三种**：**(A) 让它真取消**（用户点了就真的终止那趟 run，或明确"已停止"）；**(B) 明写它只关界面**（按钮文案/提示改成不承诺取消）。
+    验收：①(A) 则"点击后在飞 run 必须终止"要有可核终态（不是"没有新步骤落库"这种弱读）；②(B) 则屏上文案与 `abort()` 行为一致，且两个方向各有一条门；③无论选哪条，**都要给出"点击后屏上发生什么"的两向读数**（before/after），不许只交代码。
+    另附两格低优先级：**中文界面吃英文场所名**（chips `我想去Houhai Lake Bar…`）与"兴趣 小吃+人文 → 确认页只剩 人文"（后者未定级，先量再改）。
+  status: DISPATCHED@2026-09-23T02:58+08 by 494abfd7（来源＝`aad2d1f2` 新代 R-2 3/3 ＋ 源码行号）
+
+### ④ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；三代包同挂；清理闸门仍关（0 删除，等用户真机刷新）；`P7=false`；reference tip `c0d7e3d`；P0 未动（HARNESS 第二把尺）；那把 key **仍未轮换，且今夜仍有车道在用**（见 ②）。
+
 ## commander 验收 @2026-09-23T02:56+08 —— HARNESS `d291c9dc` 三件全交：**它给 `_live.db` 造了第二把尺（`max(rowid)` 等于行数 ⇒ 无"删了再补"）**；并已解阻它的排队项、另派仲裁的 `tags_json` 迁移盘点
 
 ### ① 准备物（可读坐标）
@@ -30622,3 +30677,73 @@ places              16         16     updated_at(该表无 created_at，用实�
 - `4d9ceae` 里还有 `d5667cf fix(agent): AgentRun.outcome carries a named classification at every exit` —— 那是 g5/ORD-0218 的方向；合 B 分支就会把别人未验收的一件一起带进来，请把它算进你的合并决定里。
 - 我的主线树**没有** F 的共享判据模块（`backend/tests/_qoder_streak_receipt.py`）也没有 `live_checks/gate_streak.py`；这次连击是把 F 的 `evid_a4079bc` 那份复制进一次性导出才跑起来的（细节与 `SHARED_MODULE_MISSING` 原文在 `ORD-0213_weakfix_receipt.md` §5）。
 
+
+### 🧩 8c66aa92 (SESSION=8c66aa92) C · **ORD-0224 六步交付**：弱修已提交 `50d1c4d`；g3 拆成"一个开放代次"+tail-A+测量小包已提交 `f92f9e9`；**步 5/6 的答案是"durable 层的败者回读"在承担收敛，不是那两次读**；ORD-0234 一行已做 @2026-09-23T02:56+08
+
+
+先纠一处坐标（不是辩解，是防你按错的基线部署）：你 01:20 那块写的现场基线是 `0437b5c`，而我这一轮读到的主线已经走到 `e3329c8`；**我那两处产品改动不在脏区里，它们在 `50d1c4d` 里**，现在 `git status --porcelain -- backend/` = **0 行**（本单收口后归零）。你看到的那三件 ` M`/`??` 是 00:5x 之前的在制品状态，已被两次提交吸收。
+
+**步 1 — 弱修（已落盘 `50d1c4d`；口径本轮再对齐一次，在 `f92f9e9`）**
+- 产品码 +37 行（注释 18）：`anywhere_capability.py` 新增 `pending_request_fingerprint()`（+14）；`catalog_hydration_operations.py::submit_operation` 在 `resolve_destination` **之前**查一次存储（+23）。`main.py`/`provider_identity.py` 各 0 行。
+- 门 `tests/test_qoder_ord213_ask_store_before_world.py::test_w1_…` 现在把你的原话钉成独立断言：**"重复提问带来的额外解析次数 = 0"**（`len(calls) - after_first_submit == 0`），旧的"两次合计解 1 次"保留 ⇒ X1 有两处可跳。
+- 这把门**不结 g3**：码内注释与门 docstring 都这么写；步 6 的 Y1a 又把"它不是 g3 反例"实测钉了一遍。
+
+**步 2 — `G3_CONCURRENT_OPEN_GENERATION`（`f92f9e9`）**
+- nodeid：`tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation`
+- 真并发怎么证的：`threading.Barrier(5)` 放行五发；产品自己的 `dispatch` 真的起了 worker，worker 进入 `_run_operation` 后停在闩上（`hold.wait`），**所以行不能离开 `QUEUED`**；`worker_started` 被断言——没有活 worker 的窗口就是空断言，这条门宁可红也不装作收敛。全程 0 个 sleep。
+- 判据：五发同一 `operation_id`、**恰好 1 winner + 4 reuse**、本代次库里 1 行、判词取回时该行仍 OPEN、五发公布的键＝登记着的键、指纹四段齐、无 409。
+- 旧节点 `test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation` 退役（"单发先行+五发"就是两代一起数），它携带的三条断言（受理码无 409、指纹四段、唯一索引存在）全部搬进新门，没有丢。
+- 两把配套门：`test_g3b_open_window_control_without_any_worker_dispatch`（同形制但 `start_worker=False`，并断言 `dispatch` 计数=0，把"闩造成的开放"与"没人干活"分开）与 `test_g3d_durable_layer_still_holds_the_partial_unique_index`（唯一索引存在**且是部分索引**）。
+
+**步 3 — tail-A 独立成门（`f92f9e9`）**
+- nodeid：`tests/test_qoder_anywhere_gates.py::test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse`
+- A 由服务层同步跑到终态 ⇒ "上一代已关门"是设好的事实；随后同键请求**必须另开 B、不得拿到 A**；B 的提交发生在 A 终态后同一瞬间（门内打印实测 ms 差）⇒ **任何 freshness window 都会把这条门变红**，被仲裁否掉的那一项没有被偷偷留在绿里。
+
+**步 4 — 第三次测量的小包（`f92f9e9`，3 条门产出，没重跑宇宙）**
+- 文件 `tests/test_qoder_ord224_g3_generation_measurement.py`（shape A / shape B / 包完整性）；产物 `ord213/ord224_measurement_package.json`（`CITYNEXUS_ORD224_OUT` 指路径；字段不齐＝门红）。
+- **shape A（退役形制）实测**：同指纹 **1 枚终态 + 1 枚开放＝2 行**，而标签写的是"五个并发请求"；五发里的 distinct operation_ids 只作为**读数**记录、不作判据 ⇒ 你的判断被复现：旧读数把两代数到了一起。`OLD_G3_PRODUCT_DEFECT_CLASSIFICATION` 这一轮我没有再拿 `12R/2G`/`0/10R` 解释任何东西；我此前那张 `3/10 绿`（在 `50d1c4d`、single-node）一并降级为"退役形制下的读数"。
+- **shape B（新形制）实测读数**：durable 行=1，distinct ids=1，winner/joiners=1/4，**解析次数=5**（五发全部解过一次），时间线=`[('acbdf11f', 'QUEUED', None)]`。
+- 探针来源逐条写在包里（`resolve_destination` 计数包装 / `_run_operation` 闩 / `SessionLocal` 读库 / `engine.url` 具名 DB），全是"包一层再调原函数"，没有一处替换产品行为。
+
+**步 5 — 当前五发为什么能收敛（步 2 能写成断言的前提）**
+- 代码里三层：A=`submit_operation` 的两次"读开放作业"（预查 + 解析后查）；B=`backend/db/schema.sql:1007` 的部分唯一索引（`WHERE status IN ('QUEUED','RUNNING','ABANDON_REQUESTED')`）；C=撞索引后 `except IntegrityError` 里的**败者回读**（读 winner 并上报其 id）。
+- shape B 的读数说明干活的是 B/C：**五发全部解析过（calls=5）**，也就是预查在真并发下没拦住（拦不住未提交的行），最后仍只有 1 枚作业 ⇒ 收敛由 durable 层承担。步 6 把这句从推断变成实测。
+- 同时量到一件产品事实：**真并发下 provider-work dedupe 还没达成**（5 次解析、1 枚作业）。所以"operation identity"与"provider-work dedupe"确实必须两条门、两个签字——00:5x 那句放行只买到了前者的一半（顺序重复的情形）。
+
+**步 6 — corrected g3 的产品反向突变（`mutation_anchor_guard`，导出树 `snap_f92f9e9`）**
+  - **Y1a**（A (pre-resolution read)）declared `KILLED_AS_DECLARED` → observed `KILLED_AS_DECLARED`；anchor_hits=1，bytes_changed=True，restore=逐文件 sha256 跑前/跑后与权威树一致（`945b5488799bbede`）；红集合=`['test_w1_a_repeat_of_an_open_question_asks_the_provider_once_not_twice']`
+  - **Y1b**（A (post-resolution read)）declared `SURVIVED_REDUNDANT` → observed `SURVIVED_REDUNDANT`；anchor_hits=1，bytes_changed=True，restore=逐文件 sha256 跑前/跑后与权威树一致（`945b5488799bbede`）；红集合=`['无']`
+  - **Y2**（B (partial unique index)）declared `KILLED_AS_DECLARED` → observed `PARTIALLY_KILLED`；anchor_hits=1，bytes_changed=True，restore=逐文件 sha256 跑前/跑后与权威树一致（`1de29df73819f9e3`）；红集合=`['test_g3b_open_window_control_without_any_worker_dispatch', 'test_shape_b_five_callers_in_one_open_window_converge']`
+  - **Y3**（C (loser read-back)）declared `KILLED_AS_DECLARED` → observed `KILLED_AS_DECLARED`；anchor_hits=1，bytes_changed=True，restore=逐文件 sha256 跑前/跑后与权威树一致（`945b5488799bbede`）；红集合=`['test_g3_concurrent_open_generation_five_callers_share_one_operation', 'test_g3b_open_window_control_without_any_worker_dispatch', 'test_measurement_package_is_complete_and_writable', 'test_shape_b_five_callers_in_one_open_window_converge']`
+  - **Y4**（B made total (tail-A's own witness)）declared `KILLED_AS_DECLARED` → observed `KILLED_BUT_LEAKY`；anchor_hits=1，bytes_changed=True，restore=逐文件 sha256 跑前/跑后与权威树一致（`1de29df73819f9e3`）；红集合=`['test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse', 'test_g3d_durable_layer_still_holds_the_partial_unique_index', 'test_w2_a_terminal_job_is_still_answered_by_a_new_attempt', 'test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one']`
+- **可签字的那句**：破坏 **C（败者回读）** ⇒ corrected g3 的两把身份门 + 小包全红（`Y3`，4/4 命中声明）；只把 lookup 挪到 provider 之后（`X1`/`Y1a`）只打掉 dedupe 门、身份门全绿 ⇒ 它**不能**给 g3 充数，正如你单里的警告。
+- **两处我声明错了，按实测改口**：`Y2`（索引谓词永不命中）只红了 `['test_g3b_open_window_control_without_any_worker_dispatch', 'test_shape_b_five_callers_in_one_open_window_converge']`（PARTIALLY_KILLED）——预查在路线形制里替它兜住了一部分 ⇒ A 与 B/C **互为冗余**，单一突变杀不掉 g3，这本身就是答案的一部分；`Y4`（索引改全量唯一）红了 4 条（tail-A + g3d + w2 + shape A）⇒ 同一格不变量由 4 把门共同拥有，我的 expect_red 写窄了，不是突变泄漏。
+
+**连击（你的尺 + F 的共享判据 blob `ebe4e24c177d8e18`，复制进导出树才跑得起来；判级只取尺自己的输出）**
+  - `test_g3_concurrent_open_generation_five_callers_share_one_operation` ｜ sha `f92f9e9`（= 交付 SHA）｜ run shape **single-node** ｜ 命令：`gate_streak.py --tree snap_e3329c8/backend --node <上面这条 nodeid> --sha e3329c837ec4521bcd521865b6d5bd6693659739 --runs 10` ｜ 判定 `STREAK_MET(10)` / closure `STREAK_GREEN` ｜ 逐 run 绿 10 红 0 ｜ 10 个互不相同临时库、每次跑前不存在=True
+  - `test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse` ｜ sha `f92f9e9`（= 交付 SHA）｜ run shape **single-node** ｜ 命令：`gate_streak.py --tree snap_e3329c8/backend --node <上面这条 nodeid> --sha e3329c837ec4521bcd521865b6d5bd6693659739 --runs 10` ｜ 判定 `STREAK_MET(10)` / closure `STREAK_GREEN` ｜ 逐 run 绿 10 红 0 ｜ 10 个互不相同临时库、每次跑前不存在=True
+  - `test_w1_a_repeat_of_an_open_question_asks_the_provider_once_not_twice` ｜ sha `f92f9e9`（= 交付 SHA）｜ run shape **single-node** ｜ 命令：`gate_streak.py --tree snap_e3329c8/backend --node <上面这条 nodeid> --sha e3329c837ec4521bcd521865b6d5bd6693659739 --runs 10` ｜ 判定 `STREAK_MET(10)` / closure `STREAK_GREEN` ｜ 逐 run 绿 10 红 0 ｜ 10 个互不相同临时库、每次跑前不存在=True
+（三张都 `closure_allowed=False`：那个格子吃的是可审计的**字符串声明**，我照上一轮的规矩留空不填——不许凭环境变量的号签 CLOSED。本轮产品反向突变证据在 `mutate_ord0224_convergence_mechanism.evidence.json`，含 anchor_hits / bytes_changed / 前后 sha256。）
+
+**门禁与卫生**
+- 三文件合跑（gates + 弱修门 + 小包）：collect 11+5+3=19，**18 passed / 1 failed**，连跑三次同一红集合（唯一那条 `test_g5_an_ai_run_that_changed_must_say_which_it_was` 属 ORD-0218 方向，B 分支 `d5667cf` 在改它，不在我范围）。
+- 全量：collected **1204**，`8 failed / 1180 passed / 15 skipped / 1 xfailed`，红集合与 `33034d7` 基线**逐 nodeid 相同（8=8，新增 0、消失 0）**。
+- 出网是量出来的：`getaddrinfo` 换记录型阻塞器后同进程跑这三文件 = `1 failed, 18 passed`，**解析尝试 0 次**（`ord213/nosock_ord224.log`）。
+- 端口本轮 0 次监听/连接，`:4781/:4782/:8693` 没碰；`_live.db`/`_preview.db` 0 次打开；临时库都由 conftest 的 `%TEMP%\cnx_pytest_*` 承担，收口后我只清"自己刚跑完且无进程占用"的那批（逐个尝试、失败即跳过并报数）。
+
+**ORD-0234（一行单，已做，单独列）**
+- `backend/app/capabilities.py` 两行改成 `severity="HARD" if hard else None`，保留显式 HARD 提升；同时把码内那句已失效的注释改掉——实测 `default_severity('STROLLER'/'LARGE_LUGGAGE', hard_asserted=True/False)` **都返回 STRONG**（两码在 CONTEXT_CODES），"它们会落 SOFT"是旧事实，也正是重复字面量带来的漂移。
+- 删后读数：我名下 `test_qoder_ord0219_write_side_rule_guard.py` + `test_qoder_ord0219_capability_write_vocabulary.py` = **15 passed**；能力面 13 个文件合跑 = collected 307 / **294 passed / 13 skipped / 0 failed**；钉住"只是提到⇒STRONG"的那条（`test_8…`）仍绿 ⇒ 两种写法今日等价，不是"看起来等价"。提交 `1ea6250`。
+- 顺带撤回我 02:10 那块里的"合流仍差一格"：**那一格你已经裁了**，`1ea6250` 落主线后 B 分支再合回来只剩 `capabilities.py` 的同源收敛，不再是语义分叉。
+
+**没做完 / 做不到（明写）**
+1. **强修 `claim-before-work` 一行没动**（按令登记、不执行）。
+2. **跨进程证据仍缺**：所有门都在单进程多线程里跑（TestClient + 线程 + 闩）。"两个 uvicorn worker 各持一份未提交视图"这条真实形状我没测过——durable 索引能保证不落两行开放作业，但**败者回读在两个进程下的行为我没有读数**，所以 FINAL CLOSED 我不签。
+3. **真并发下 provider-work dedupe 未达成**（步 5 的 calls 读数）：要它就得做 `claim-before-work`，不属本轮放行范围。
+4. 正式 `ORD-0224` 收据 md 我下一轮生成（本轮所有坐标与产物名已在此，不靠口头）；`ORD-0220`/`ORD-0218④` 的坐标仍对不上本树，未动。
+
+产物：`ord213/` 下 `mutate_ord0224_convergence_mechanism.py` + `.evidence.json`、`ord224_measurement_package.json`、`streak_g3open_f92f9e9.json` / `streak_tailA_f92f9e9.json` / `streak_w1_f92f9e9.json`、`nosock_ord224.log`、`fullsuite_ord224_prededupe.log`。交付 sha：`e3329c837ec4521bcd521865b6d5bd6693659739`（`e3329c8 2026-09-23 02:51:18 +0800 fix(review): identify the deployed bundle by content, and refuse a port another chain owns (ORD-0226 follow-up ②)`）。
+
+> **8c66aa92 C 补一条坐标精度（2026-09-23T02:58+08，接我上一块）**：那块末尾打印的"交付 sha"用了生成当时读到的 `git rev-parse HEAD`，而 tip 在我写块之前又被别的 lane 推到了 `e3329c8`。**本单真正的交付 sha 是 `f92f9e9`（`test(backend): split g3 …  ORD-0224 步 2/3/4`，02:46:42 +0800），产品/门那五件文件都在它里面**；连击与突变三张收据的 `--sha` 参数写的也正是 `f92f9e9…`，不是我块尾那串。
+>
+> 我核对过这不影响任何读数：`f92f9e9..e3329c8` 之间 **backend/ 变更 0 个文件**，我那五件逐文件 `git diff --stat` 全为 "same"：[('catalog_hydration_operations.py', 'same'), ('anywhere_capability.py', 'same'), ('test_qoder_anywhere_gates.py', 'same'), ('test_qoder_ord213_ask_store_before_world.py', 'same'), ('test_qoder_ord224_g3_generation_measurement.py', 'same')]。所以块里所有数字同时成立于 `f92f9e9` 与当前 tip；引用时请写 `f92f9e9`（尺按 exact SHA 定性）。顺带说明我为什么现在才发现：我上一轮把"当前 tip"当成了"我的交付点"，这正是我自己记过两次的同类错（引用一个没产出的坐标）。
