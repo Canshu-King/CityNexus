@@ -1,0 +1,173 @@
+{
+  "owner_lane": "HJ-P4",
+  "session": "4e974ae5",
+  "order": "commander 派单 @2026-09-23 03:1x A段+B段",
+  "written_utc": "2026-09-22T19:20:46Z",
+  "local_clock": "2026-09-23 03:20:46 +0800",
+  "rule_followed": "生产者自清 + 具名清单；不按键/形状横扫；只删 stdout 捕获且逐条证明已被 per-run JSON 日志覆盖",
+  "evidence_published_before_cleanup": true,
+  "entries": [
+    {
+      "path": "browser/log_b.out",
+      "bytes": 884,
+      "created_by": "commander 派单 @2026-09-23 03:1x A段+B段",
+      "disposition": "EPHEMERAL",
+      "proof": "log has stepId=W_RECOVER apiLog=64 (stdout api=12) evidence=141",
+      "deleted": true
+    },
+    {
+      "path": "browser/log_b2.out",
+      "bytes": 774,
+      "created_by": "commander 派单 @2026-09-23 03:1x A段+B段",
+      "disposition": "EPHEMERAL",
+      "proof": "log has stepId=W_RECOVER_2 apiLog=58 (stdout api=12) evidence=134",
+      "deleted": true
+    },
+    {
+      "path": "browser/log_bj2.out",
+      "bytes": 764,
+      "created_by": "commander 派单 @2026-09-23 03:1x A段+B段",
+      "disposition": "EPHEMERAL",
+      "proof": "log has stepId=W_BJ2_control apiLog=32 (stdout api=12) evidence=43",
+      "deleted": true
+    },
+    {
+      "path": "browser/log_hz2.out",
+      "bytes": 769,
+      "created_by": "commander 派单 @2026-09-23 03:1x A段+B段",
+      "disposition": "EPHEMERAL",
+      "proof": "log has stepId=W_HZ2_no_places apiLog=34 (stdout api=12) evidence=49",
+      "deleted": true
+    },
+    {
+      "path": "browser/log_hz3.out",
+      "bytes": 769,
+      "created_by": "commander 派单 @2026-09-23 03:1x A段+B段",
+      "disposition": "EPHEMERAL",
+      "proof": "log has stepId=W_HZ3_no_places apiLog=32 (stdout api=12) evidence=46",
+      "deleted": true
+    },
+    {
+      "path": "browser/log_hz4.out",
+      "bytes": 747,
+      "created_by": "commander 派单 @2026-09-23 03:1x A段+B段",
+      "disposition": "EPHEMERAL",
+      "proof": "log has stepId=W_HZ4_no_places apiLog=36 (stdout api=12) evidence=61",
+      "deleted": true
+    },
+    {
+      "path": "browser/log_wait.out",
+      "bytes": 1056,
+      "created_by": "commander 派单 @2026-09-23 03:1x A段+B段",
+      "disposition": "EPHEMERAL",
+      "proof": "log has stepId=W_WAIT_probe apiLog=26 (stdout api=11) evidence=7",
+      "deleted": true
+    },
+    {
+      "path": "browser/log_wait2.out",
+      "bytes": 758,
+      "created_by": "commander 派单 @2026-09-23 03:1x A段+B段",
+      "disposition": "EPHEMERAL",
+      "proof": "log has stepId=W_WAIT_probe apiLog=26 (stdout api=12) evidence=7",
+      "deleted": true
+    },
+    {
+      "path": "browser/log_wait3.out",
+      "bytes": 796,
+      "created_by": "commander 派单 @2026-09-23 03:1x A段+B段",
+      "disposition": "EPHEMERAL",
+      "proof": "log has stepId=W_WAIT_probe apiLog=26 (stdout api=12) evidence=7",
+      "deleted": true
+    },
+    {
+      "path": "_hjp4_20260922.db",
+      "bytes": 5275648,
+      "created_by": "this lane (09-21..09-23)",
+      "disposition": "HOLD",
+      "proof": "named inside published evidence (isolation-receipt / city-walk-provenance); replay-critical",
+      "deleted": false
+    },
+    {
+      "path": "_hjp4_20260922.db-wal",
+      "bytes": 4293072,
+      "created_by": "this lane (09-21..09-23)",
+      "disposition": "HOLD",
+      "proof": "same store, still held by my running uvicorn",
+      "deleted": false
+    },
+    {
+      "path": "_hjp4_20260922.db-shm",
+      "bytes": 32768,
+      "created_by": "this lane (09-21..09-23)",
+      "disposition": "HOLD",
+      "proof": "same store",
+      "deleted": false
+    },
+    {
+      "path": "dist/",
+      "bytes": 2505012,
+      "created_by": "this lane (09-21..09-23)",
+      "disposition": "HOLD",
+      "proof": "named by published source-and-parent.txt:345-346 as the 09-22 build+preview target",
+      "deleted": false
+    },
+    {
+      "path": "dist_deployed/",
+      "bytes": 7264050,
+      "created_by": "this lane (09-21..09-23)",
+      "disposition": "HOLD",
+      "proof": "the bundle my 09-23 readings were served from",
+      "deleted": false
+    },
+    {
+      "path": "profile/",
+      "bytes": 22033363,
+      "created_by": "this lane (09-21..09-23)",
+      "disposition": "HOLD",
+      "proof": "own chromium profile; re-running the walks depends on it",
+      "deleted": false
+    },
+    {
+      "path": "shots/",
+      "bytes": 52860721,
+      "created_by": "this lane (09-21..09-23)",
+      "disposition": "HOLD",
+      "proof": "only 15 of ~150 frames are published; the rest are the only human-eye originals for unpublished steps",
+      "deleted": false
+    },
+    {
+      "path": "bundle/",
+      "bytes": 318993,
+      "created_by": "this lane (09-21..09-23)",
+      "disposition": "HOLD",
+      "proof": "the published payload itself",
+      "deleted": false
+    },
+    {
+      "path": "log/",
+      "bytes": 1609573,
+      "created_by": "this lane (09-21..09-23)",
+      "disposition": "HOLD",
+      "proof": "per-run logs every reading is derived from",
+      "deleted": false
+    }
+  ],
+  "free_space_before": {
+    "total": 330024611840,
+    "used": 317364473856,
+    "free": 12660137984
+  },
+  "free_space_after": {
+    "total": 330024611840,
+    "used": 317364436992,
+    "free": 12660174848
+  },
+  "ephemeral_candidates": 9,
+  "deleted": 9,
+  "cleanup_allowed_for_the_rest": false,
+  "stack_left_running": {
+    "uvicorn": ":8891 pid 43848 (no --reload, tip 50d1c4d)",
+    "vite preview": ":4891 pid 40588",
+    "why": "commander said 自己的栈自己管、跑完自己收；我先收 temp，进程留着等下一件（要停我随时停）"
+  }
+}
