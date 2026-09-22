@@ -12373,6 +12373,73 @@ status: ORD-0226 后续①（英文可达⇒已钉+两臂）与②（代次按�
 status: ORD-0235 已闭（红队原句入臂重测，六臂全红且各自有杀手）；ORD-0232 已开工，端到端那一格 BLOCKED_ON_MERGE 已具名上报。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 转达 @2026-09-23T03:36+08 —— 仲裁 `5782717232`：**`real_phone_gate_preflight.json` 签 `ACCEPTED-EVIDENCE`**；**ORD-0239 选 (iii) 且要拆成四个正交事实**（不能把 `HYDRATABLE` 硬改成"有没有数据"）；含 9 项验收矩阵 ＋ 服务端 parity 门 ＋ 排序
+
+### ① 那份小收据被签了
+
+它读的是 blob **`4b07d036e2f83666ed67e69b0de812dfd748c43f`**（2,806 B），并**逐字段重核**：`/v10-sw.js` 200 text/javascript 2,096 B、precache = `index-DtQ86lsQ.js` + `index-cWMF3pBW.css`；`/` 200 text/html 1,200 B、asset_refs 同代；current JS 1,231,985 B、sha256 `cf3a08108ffba413…`；`/sw.js` 7,178 B、`prod_registered=false`、`carries_hashed_index_assets=false`；retention CURRENT `DtQ86lsQ` / PREVIOUS `BCF4ptyk` / N-2 `CnfHH2K_`；`tech_preconditions = MET`。
+⇒ **`real_phone_gate_preflight.json = ACCEPTED-EVIDENCE`**。**闸门仍只差用户那一跳；清理 0 删除。**
+
+### ② ORD-0239：裁 **(iii)**，但**不是**把 `HYDRATABLE` 硬改成"有没有数据"
+
+它要求把"可用性"**拆成四个正交事实**：
+```text
+identity / catalogue-readiness / hydration-capability / user-visible support
+⇒ UI 只能消费【最终 support state】
+```
+**按 support state 的推荐行为（照录）**：
+```text
+LIVE_READY / DEMO_READY
+  -> 可直接选择；DEMO_READY 必须明示"演示数据"
+HYDRATABLE_ON_DEMAND
+  -> 可以列，但标签必须是"需要加载数据"
+  -> 选择后先 hydrate；hydration 成功并【重新判 READY】后才进入后续向导
+UNAVAILABLE
+  -> 不出现在"支持目的地"，或以 disabled / coming-soon 单独展示
+```
+⇒ **这是 (i)+(ii) 都要，但有先后**：**先修名单 truth，再把 capability 后端做成能可靠驱动名单的多轴事实**。
+**压轴**：**`HYDRATABLE` 不是"可用"的同义词，`GOLDEN_FIXTURE` 也不是 LIVE。**
+
+### ③ `RECOVERY_COSTLY` 并进 ORD-0239（不另开同源单）
+
+理由：11–13 次交互才能换城、且向导是浮层无可回退路由，与"错误的 support 承诺"是**同一个用户伤口**。关闭条件加：
+```text
+如果 hydration/availability 在选择后失败：
+  保留用户已填字段 / 显示具名 reason /
+  <= 1 个显式 in-app action 返回城市选择或打开城市输入 /
+  不要求重走 11-13 步
+（沿用 SECONDARY_SURFACE_RECOVERY 精神，不再发明恢复哲学）
+```
+
+### ④ 验收矩阵（它直接给实现车道）
+
+```text
+A. READY live city            -> listed/selectable
+B. DEMO fixture city          -> 只以 DEMO 标签列出，绝不声称 LIVE
+C. RESOLVED + 0 eligible + hydratable -> 不得宣传为"立即可用"；需先 hydrate 再继续
+D. UNRESOLVED identity        -> 不进 supported list
+E. 未知城返回 HTTP 200 []     -> support_state != READY
+F. 突变：把不可用城硬塞回 supported list -> UI parity 门 RED
+G. 突变：把 DEMO_READY 折叠成 LIVE_READY -> provenance 门 RED
+H. 突变：把 200 [] 当成 READY  -> readiness 门 RED
+I. 恢复：失败的 hydration 在 <=1 个显式动作内回到城市选择且草稿保留
+```
+**另加一条服务端 parity 门**：前端显示为可选的 city codes，必须是后端 `support_state` 可选中集合的**子集/精确投影**——**不能靠两份名单"碰巧一样"**。
+
+### ⑤ 排序（它点名）
+
+**不要打断 C 正在补的 `G3_XPROC_LOSER_READBACK`。** ORD-0239 先由**只读 / HARNESS 车道**把 **11 城矩阵 ＋ 后端 support contract 规格**钉出来；**等 C 的 identity closure 完成后**，再由 owning backend 车道落 `support_state`。**D 只消费契约，不自己推断 `place_count` / canonical identity。**
+**ORD-0240 方向维持**：模型原文是动态内容，**不能塞进静态翻译表冒充已翻**；中文 UI 要么生成/呈现中文摘要，要么把原文放进明确标注的"模型原始输出/技术详情"。
+
+### ⑥ 我的派单落地（本轮）
+
+- **ORD-0239** 状态：`SPEC_PENDING`，**归只读车道（HARNESS）先钉矩阵与契约规格**；实现在 C 的 identity closure 之后开单（**我会挂 `blockedBy: C 的 G3_XPROC_LOSER_READBACK`**）。
+- **ORD-0240** 已派 D，方向与它一致（不塞翻译表）。
+
+### ⑦ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；三代包同挂；清理闸门仍关（**0 删除**）；`P7=false`；reference tip `c0d7e3d`；P0 未动（HARNESS 第二把尺）；`AI_CREDENTIAL_EPOCH = COMPROMISED_UNROTATED`。
+
 ## commander 验收 @2026-09-23T03:31+08 —— F `8ccd71d8` 交回 **composite**（`ec65a3e`，父 `f92f9e9`，尺未动），构造器**从不 checkout**；它自己的测试抓出**两个洞**（含一个"守卫会堵死所有合法跑法"）
 
 ### ① 它做了什么（都有实测）
@@ -31546,3 +31613,36 @@ places              16         16     updated_at(该表无 created_at，用实�
 > **8c66aa92 C 补一条坐标精度（2026-09-23T02:58+08，接我上一块）**：那块末尾打印的"交付 sha"用了生成当时读到的 `git rev-parse HEAD`，而 tip 在我写块之前又被别的 lane 推到了 `e3329c8`。**本单真正的交付 sha 是 `f92f9e9`（`test(backend): split g3 …  ORD-0224 步 2/3/4`，02:46:42 +0800），产品/门那五件文件都在它里面**；连击与突变三张收据的 `--sha` 参数写的也正是 `f92f9e9…`，不是我块尾那串。
 >
 > 我核对过这不影响任何读数：`f92f9e9..e3329c8` 之间 **backend/ 变更 0 个文件**，我那五件逐文件 `git diff --stat` 全为 "same"：[('catalog_hydration_operations.py', 'same'), ('anywhere_capability.py', 'same'), ('test_qoder_anywhere_gates.py', 'same'), ('test_qoder_ord213_ask_store_before_world.py', 'same'), ('test_qoder_ord224_g3_generation_measurement.py', 'same')]。所以块里所有数字同时成立于 `f92f9e9` 与当前 tip；引用时请写 `f92f9e9`（尺按 exact SHA 定性）。顺带说明我为什么现在才发现：我上一轮把"当前 tip"当成了"我的交付点"，这正是我自己记过两次的同类错（引用一个没产出的坐标）。
+
+### 🔁 8c66aa92 (SESSION=8c66aa92) C · **ORD-0224 补强：我自己复跑推翻了自己那句「Y3 就是 g3 的反例」**（步 6 自打脸 + 我自己仪器的两个缺陷）@2026-09-23T03:35+08
+
+**先推翻我自己 03:0x 那句话。** 我写过「Y3（破坏败者回读）⇒ corrected g3 4/4 全红，这就是仲裁点名的产品反例」。我把**同一个战役**在只差一段注释的树上复跑：**Y3 只红 3/4**——`test_g3_concurrent_open_generation_…` 这一次活了。两树 `f92f9e9` vs `b2c6153` 之间 backend/ 只差注释、行为完全相同 ⇒ 结论不是"哪个 sha 更绿"，而是**我把一次观测当反例用了**。原因在产品形状：并发五发里后来者有时是在**已提交的行**上被回答的，根本没撞到 durable 冲突，所以打掉败者回读**有时**才要紧。「时有时无的突变不算那把门的反例」——这条是我自己写进过程的，这次轮到自己踩。
+
+**于是修了自己仪器的两个缺陷（提交 `349c4fa`）**
+1. **跨门耦合**：`Y1a` 在合跑形制里打红了 `test_g3e_…`，而同一突变下单跑那把门是绿的。根因是五把 g3 门共用 `UNSEEN_COUNTY` ⇒ 共用指纹，而前一道门释放的 worker 线程还在后一道门的窗口里干活 ⇒ 一门的成绩部分测的是邻门的时序。现在每把门问自己那条未具名问题（`_own_question`，仍然解析不到、仍走同一条码路）。
+2. **闩会饿死**：我第一版 `g3e` 把五发 parked 在 `resolve_destination` 里的 `Barrier(5)` 上，这假设"五发都会去解"；预查活着时，晚到的 caller 复用即返回、根本不进解析 ⇒ barrier 人数不足 ⇒ 门死在自己的 10 s 超时上（实测：合跑 12.3 s 且红，别的批次绿）。换成 **`test_g3e_admission_race_no_caller_may_see_another_before_commit`**：爆发期内每发**前两次** `find_open_operation` 被答"没有开放的"（那正是最早交错的模样），而 `IntegrityError` 里的**败者回读不遮蔽** ⇒ 剩下唯一能交付"五发一枚作业"的只有部分唯一索引 + 败者回读，也就是被检验的那个机制。门不假装能看见谁撞了索引（产品没暴露，为测试造计数器就是改产品），它的强度改用**批量**证明。
+
+**Y3 的 10 轮批量判定（每轮：装突变 → 跑 5 把门一个进程 → 复原并核对 sha256）**
+  - `test_g3e_admission_race_no_caller_may_see_another_before_commit` ⇒ RED **10/10**、GREEN 0、NOT_OBSERVED 0；**每轮必红 = True**
+  - `test_g3b_open_window_control_without_any_worker_dispatch` ⇒ RED **10/10**、GREEN 0、NOT_OBSERVED 0；**每轮必红 = True**
+  - `test_shape_b_five_callers_in_one_open_window_converge` ⇒ RED **10/10**、GREEN 0、NOT_OBSERVED 0；**每轮必红 = True**
+  - `test_measurement_package_is_complete_and_writable` ⇒ RED **9/10**、GREEN 1、NOT_OBSERVED 0；**每轮必红 = False**
+  - `test_g3_concurrent_open_generation_five_callers_share_one_operation` ⇒ RED **10/10**、GREEN 0、NOT_OBSERVED 0；**每轮必红 = True**
+
+（证据：`ord213/probe_y3_determinism_349c4fa.json`，sha 锚点 `349c4fa`。）⇒ **可签字的那句**：`Y3` 是强制交错门 `g3e` 的反例（10/10 必红）。
+
+**而且是耦合修好之后才看见的**：barrier-only 那把 `test_g3_concurrent_open_generation_…` 在 `8f1f4d4` 只有 6/10，去掉跨门共用指纹之后在 `349c4fa` 变 10/10 ⇒ 它当初「活下来」是我的仪器（邻门释放的 worker 串味），不是产品偶尔不需要败者回读。唯一没到 10/10 的是包完整性门（9/10），那一条我不主张、也不拿它当反例依据。
+
+**五突变战役在 `349c4fa` 重跑（expect_red 改成按门名列，不再用列表下标——上一版插了一扇门之后我的声明全体错位，这是另一个我自己的错）**
+  - `Y1a`（A - pre-resolution read）declared `KILLED_AS_DECLARED` → observed `KILLED_AS_DECLARED`（命中声明=True）；anchor_hits=1、bytes_changed=True、前后 sha256[:16] `7d51d7acc1eddfa6`→`7154dad09b8cf7f2`；红=`['test_w1_a_repeat_of_an_open_question_asks_the_provider_once_not_twice']`
+  - `Y1b`（A - post-resolution read）declared `SURVIVED_REDUNDANT` → observed `SURVIVED_REDUNDANT`（命中声明=True）；anchor_hits=1、bytes_changed=True、前后 sha256[:16] `7d51d7acc1eddfa6`→`951de0fa020db5e4`；红=`无`
+  - `Y2`（B - partial unique index）declared `KILLED_AS_DECLARED` → observed `KILLED_AS_DECLARED`（命中声明=True）；anchor_hits=1、bytes_changed=True、前后 sha256[:16] `1de29df73819f9e3`→`4ecc1c1092e83fa4`；红=`['test_g3b_open_window_control_without_any_worker_dispatch', 'test_g3e_admission_race_no_caller_may_see_another_before_commit', 'test_shape_b_five_callers_in_one_open_window_converge']`
+  - `Y3`（C - loser read-back）declared `KILLED_AS_DECLARED` → observed `KILLED_AS_DECLARED`（命中声明=True）；anchor_hits=1、bytes_changed=True、前后 sha256[:16] `7d51d7acc1eddfa6`→`583540f6394bd976`；红=`['test_g3b_open_window_control_without_any_worker_dispatch', 'test_g3e_admission_race_no_caller_may_see_another_before_commit', 'test_measurement_package_is_complete_and_writable', 'test_shape_b_five_callers_in_one_open_window_converge']`
+  - `Y4`（B made total (tail-A's witness)）declared `KILLED_AS_DECLARED` → observed `KILLED_AS_DECLARED`（命中声明=True）；anchor_hits=1、bytes_changed=True、前后 sha256[:16] `1de29df73819f9e3`→`f1e36802a6372ca6`；红=`['test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse', 'test_g3d_durable_layer_still_holds_the_partial_unique_index', 'test_w2_a_terminal_job_is_still_answered_by_a_new_attempt', 'test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one']`
+
+**其它三件**
+1. **形状升级（我自己以后的规矩，也是给 F 的量具反馈）**：并发门的反例必须 ≥10 轮批量，单轮只回答"这批打到了谁"；尺的 `--runs 10` 是给绿的门槛，同样该给杀。
+2. **正式收据已按你要求一生成**：`ord213/ORD-0224_receipt.md`（脚本汇编；每条判定带 SHA + nodeid + 命令 + run shape；§3bis 直接读上面那份 JSON，不读我的嘴）。跨进程那一格按令只交方案：`ord213/cross_process_evidence_plan.md`，里面回答了你那句"现有那把尺能不能跑这个形状"：**能**（`gate_streak.py:72-73` 每子进程预算 1800 s；`FORBIDDEN_COMMAND_FLAGS = --maxfail/-x/--reruns/--timeout/--deselect/-k/-n/--collect-only`，我的方案一样都不 needed，两进程由门自己 spawn），**但尺的判据里没有跨进程所有权**，marker 行必须门自己做。
+3. **门禁**：`349c4fa` 全量 `8 failed, 1181 passed, 15 skipped, 1 xfailed, 2 warnings in 110.76s (0:01:50)`；gates + 弱修门 + 小包合跑 20 collected → 19 passed / 1 failed（`test_g5…`，ORD-0218 名下既有红）连跑三次一致，且 10 s 停顿消失（2.1–2.4 s）。
+
+**没变的两件事**：强修 `claim-before-work` 一行没动；`ORD-0210 FINAL CLOSED = BLOCKED_ON_CROSS_PROCESS_EVIDENCE` 仍然成立（补强门解决的是"反例是否必然"，不解决"两进程下是否同样"）。提交链：['349c4fa test(backend): give each g3 door its own question, and force the admission race without a barrier (ORD-0224 step 6 follow-up 2)', '614ad4c tools(review): publish the six-arm receipt and derive the deployed-generation readings from the logs', '8f1f4d4 test(backend): force the admission race, because my own reverse mutation proved the old window too forgiving (ORD-0224 step 6 follow-up)']。
