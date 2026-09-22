@@ -169,28 +169,49 @@ test.describe("ORD-0063/0064a Today states the projected shape and currency", ()
           floor_comparable: arm.comparable,
         });
       });
-      await openHubWithJourney(page, ["today-heading", "budget-advisory"]);
-      const advisory = page.getByTestId("budget-advisory");
-      const text = (await advisory.innerText()).replace(/\s+/g, " ").trim();
-      seen[arm.currency] = text;
-      expect(
-        text.includes("¥"),
-        node("budget-line-never-borrows-a-symbol",
-          `${arm.currency}: the advisory prints a symbol again, and ¥ is ambiguous between CNY and JPY: ${JSON.stringify(text)}`),
-      ).toBe(false);
-      expect(
-        text,
-        node("budget-line-never-borrows-a-symbol", `${arm.currency}: the ISO code the money is in never reaches the line`),
-      ).toContain(arm.currency);
-      // An incomparable floor must not produce a tightness verdict: that would be comparing
-      // yen against yuan and reporting the result as advice.
-      expect(
-        await advisory.getAttribute("data-tight"),
-        node("budget-line-never-borrows-a-symbol",
-          `${arm.currency}: floor_comparable=${arm.comparable} but the screen chose ${JSON.stringify(
-            await advisory.getAttribute("data-tight"),
-          )}, expected ${arm.wantTight}`),
-      ).toBe(arm.wantTight);
+      /* ORD-0212 (user, 15:00): the hub keeps only the `tight` verdict.  A non-tight reference
+         no longer renders the advisory at all, so the two arms now assert different things:
+         JPY (incomparable, non-tight) -> the block is absent from the hub, and CNY (comparable,
+         tight) -> the block is present with its verdict.  The full text+hint pair still lives on
+         the budget-review surface. */
+      if (arm.wantTight === "true") {
+        await openHubWithJourney(page, ["today-heading", "budget-advisory"]);
+        const advisory = page.getByTestId("budget-advisory");
+        const text = (await advisory.innerText()).replace(/\s+/g, " ").trim();
+        seen[arm.currency] = text;
+        expect(
+          text.includes("¥"),
+          node("budget-line-never-borrows-a-symbol",
+            `${arm.currency}: the advisory prints a symbol again, and ¥ is ambiguous between CNY and JPY: ${JSON.stringify(text)}`),
+        ).toBe(false);
+        expect(
+          text,
+          node("budget-line-never-borrows-a-symbol", `${arm.currency}: the ISO code the money is in never reaches the line`),
+        ).toContain(arm.currency);
+        expect(
+          await advisory.getAttribute("data-tight"),
+          node("budget-line-never-borrows-a-symbol",
+            `${arm.currency}: floor_comparable=${arm.comparable} but the screen chose ${JSON.stringify(
+              await advisory.getAttribute("data-tight"),
+            )}, expected ${arm.wantTight}`),
+        ).toBe(arm.wantTight);
+      } else {
+        await openHubWithJourney(page, ["today-heading"]);
+        await page.waitForTimeout(1_500);
+        const advisoryCount = await page.getByTestId("budget-advisory").count();
+        const hubText = (await page.locator("body").innerText()).replace(/\s+/g, " ");
+        seen[arm.currency] = `budget-advisory count=${advisoryCount}`;
+        expect(
+          advisoryCount,
+          node("budget-line-never-borrows-a-symbol",
+            `${arm.currency}: the hub still renders the averaged-reference advisory that ORD-0212 removed (count=${advisoryCount})`),
+        ).toBe(0);
+        expect(
+          /每人每天约/.test(hubText),
+          node("budget-line-never-borrows-a-symbol",
+            `${arm.currency}: the derived per-person number still appears on the hub without its tier: "${hubText.slice(0, 200)}"`),
+        ).toBe(false);
+      }
     }
     writeFileSync(
       evidencePath("ui-overnight/budget-reference.json"),

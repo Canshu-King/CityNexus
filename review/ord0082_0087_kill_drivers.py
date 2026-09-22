@@ -44,6 +44,7 @@ PREP_SPEC = "e2e/qoder-destination-preparation.spec.ts"
 NA_SPEC = "e2e/qoder-not-answered-cell.spec.ts"
 TONGUE_SPEC = "e2e/qoder-speaks-the-travellers-language.spec.ts"
 DEMO_SPEC = "e2e/qoder-demo-entry-addresses-dont-create.spec.ts"
+TIERS_SPEC = "e2e/qoder-budget-advisory-tiers.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -637,6 +638,16 @@ CASES = [
         "      await v8Request<{ id: string }>(\"/api/v1/journeys\", { method: \"POST\", body: JSON.stringify({ title: \"Tianjin demo\" }) });\n"
         "      const sealedId = scene.journey_id ?? null;\n",
         [(DEMO_SPEC, ["ord0209-the-demo-entry-addresses-the-sealed-journey"])],
+    ),
+    (
+        # ORD-0212's own warned trap: following "remove the tier" so literally that the caveat
+        # is stripped while the derived number stays -- a vague sentence replaced by a
+        # fake-precision figure.  The invariant tripwire must catch exactly that.
+        "killU1-tight-advisory-keeps-number-drops-caveat",
+        EXPERIENCE,
+        "              <span>{advisory.hint}</span>\n              <div className=\"today-advisory-actions\">\n",
+        "              <div className=\"today-advisory-actions\">\n",
+        [(TIERS_SPEC, ["ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red"])],
     ),
 ]
 

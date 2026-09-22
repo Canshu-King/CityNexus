@@ -2324,7 +2324,12 @@ function Hub({
               )}
             </section>
           )}
-          {advisory && !advisoryDismissed && (
+          {advisory && advisory.tight && !advisoryDismissed && (
+            /* ORD-0212 (user, 15:00): the hub keeps only the `tight` verdict -- it carries real
+               information and an action.  The averaged-reference tier (text + hint without tight)
+               is gone from the hub entirely; its paired text+hint still lives on the budget-review
+               surface.  Invariant: `每人每天约 X` never appears without its caveat, so when this
+               block is absent the number is absent with it. */
             <div
               className={`today-advisory${advisory.tight ? " tight" : ""}`}
               data-testid="budget-advisory"
@@ -2332,26 +2337,24 @@ function Hub({
             >
               <strong>{advisory.text}</strong>
               <span>{advisory.hint}</span>
-              {advisory.tight && (
-                <div className="today-advisory-actions">
-                  <button
-                    type="button"
-                    className="v8-outline-button"
-                    data-testid="budget-advisory-edit"
-                    onClick={onNewJourney}
-                  >
-                    {zh ? "调整预算" : "Adjust budget"}
-                  </button>
-                  <button
-                    type="button"
-                    className="v8-quiet-button"
-                    data-testid="budget-advisory-continue"
-                    onClick={() => setAdvisoryDismissed(true)}
-                  >
-                    {zh ? "我知道了，继续" : "Got it, continue"}
-                  </button>
-                </div>
-              )}
+              <div className="today-advisory-actions">
+                <button
+                  type="button"
+                  className="v8-outline-button"
+                  data-testid="budget-advisory-edit"
+                  onClick={onNewJourney}
+                >
+                  {zh ? "调整预算" : "Adjust budget"}
+                </button>
+                <button
+                  type="button"
+                  className="v8-quiet-button"
+                  data-testid="budget-advisory-continue"
+                  onClick={() => setAdvisoryDismissed(true)}
+                >
+                  {zh ? "我知道了，继续" : "Got it, continue"}
+                </button>
+              </div>
             </div>
           )}
           <p className="v8-lede" data-testid="today-when">
