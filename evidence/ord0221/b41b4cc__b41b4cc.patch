@@ -1,0 +1,428 @@
+commit b41b4cce0e4143068bef216d96e2eab4a4116056
+Author: 仓鼠王 <yjianbin419@gmail.com>
+Date:   Tue Sep 22 19:02:41 2026 +0800
+
+    test(frontend): per-surface before/after readings for the wizard hint, and bytes_changed in the kill receipts (ORD-0221)
+    
+    Body innerText cannot answer "is this on screen": .v8-sr-only is clipped to 1px, not
+    removed, so a body-text check counts a screen-reader sentence as visible.  The new spec
+    reads each surface's own text plus its own box and computed opacity, and records the
+    visible hint and the live region separately.  The harness now prints anchor_bytes and
+    bytes_changed, and killU2 adds the direction killU1 never covered (caveat kept, number
+    dropped).  killV1 is re-run against the per-surface node as well: it survives both, which
+    is the measurement that explains the original survivor.
+
+diff --git a/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts b/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts
+new file mode 100644
+index 0000000..63926d2
+--- /dev/null
++++ b/frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts
+@@ -0,0 +1,267 @@
++/**
++ * ORD-0221 ③④ -- the runtime readings the arbitration asked for, surface by surface.
++ *
++ * Two standing bans shape this file:
++ *  - **`innerText` of the body may not be used to decide what is on screen.**  `.v8-sr-only` is
++ *    clipped to 1px, not `display:none`, so a body-text check counts a screen-reader sentence as
++ *    visible -- that is exactly how HJ-P1's 15:04 reading went wrong and why he retracted the
++ *    visible half of it at 18:07.  Every reading here names the element it came from and carries its
++ *    own geometry, so "visible" is computed, not assumed.
++ *  - **a commit message is not a reading.**  Each item is a before→after pair taken from the running
++ *    screen, written out verbatim to the evidence file.
++ *
++ * ③ step 2, in front of the traveller: budget 0 blocks the step and the visible hint names 总预算;
++ *   the value is corrected on the same screen; the same element's text is read again without any
++ *   navigation in between.
++ * ④ step 3, the same field: the visible hint and the live regions are read separately, so the
++ *   receipt shows what a sighted traveller sees and what a screen-reader user is told.  The live
++ *   region's staleness is *recorded* here and fixed under ORD-0220 ② -- this node does not assert it
++ *   green, and says so in the file it writes.
++ */
++import { expect, test, type Page } from "@playwright/test";
++import { writeFileSync } from "node:fs";
++import { evidencePath } from "./_qoderEvidence";
++
++const FILE = "e2e/qoder-wizard-hint-surface-readings.spec.ts";
++const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
++
++const VIEWPORT = { width: 390, height: 844 };
++test.use({ viewport: VIEWPORT, hasTouch: true });
++
++type Surface = {
++  selector: string;
++  exists: boolean;
++  text: string;
++  rect: { top: number; height: number; width: number } | null;
++  /** Computed from the element's own box: a 1px-clipped live region is never counted as visible. */
++  visuallyRendered: boolean;
++  insideSrOnly: boolean;
++  inViewport: boolean;
++  computed?: { visibility: string; display: string; opacity: string };
++};
++
++/** One element, read as rendered: its text plus the geometry that decides "on screen or not". */
++async function surface(page: Page, selector: string): Promise<Surface> {
++  return await page.evaluate((target) => {
++    const el = document.querySelector(target);
++    if (!el) {
++      return {
++        selector: target,
++        exists: false,
++        text: "",
++        rect: null,
++        visuallyRendered: false,
++        insideSrOnly: false,
++        inViewport: false,
++      };
++    }
++    const box = el.getBoundingClientRect();
++    const style = getComputedStyle(el);
++    const insideSrOnly = !!el.closest(".v8-sr-only");
++    return {
++      selector: target,
++      exists: true,
++      text: (el.textContent ?? "").replace(/\s+/g, " ").trim(),
++      rect: { top: Math.round(box.top), height: Math.round(box.height), width: Math.round(box.width) },
++      visuallyRendered:
++        !insideSrOnly &&
++        box.width > 1 &&
++        box.height > 1 &&
++        style.visibility !== "hidden" &&
++        style.display !== "none" &&
++        Number(style.opacity) > 0,
++      insideSrOnly,
++      inViewport: box.bottom > 0 && box.top < window.innerHeight,
++      computed: { visibility: style.visibility, display: style.display, opacity: style.opacity },
++    };
++  }, selector);
++}
++
++/** Every announcement surface on the screen, each with its own visibility verdict. */
++async function liveRegions(page: Page): Promise<Surface[]> {
++  return await page.evaluate(() =>
++    Array.from(document.querySelectorAll('[aria-live], [role="status"], [role="alert"]')).map((el) => {
++      const box = el.getBoundingClientRect();
++      const style = getComputedStyle(el);
++      const insideSrOnly = !!el.closest(".v8-sr-only");
++      return {
++        selector: el.id ? `#${el.id}` : `${el.tagName.toLowerCase()}${el.className ? `.${String(el.className).trim().split(/\s+/).join(".")}` : ""}`,
++        exists: true,
++        text: (el.textContent ?? "").replace(/\s+/g, " ").trim(),
++        rect: { top: Math.round(box.top), height: Math.round(box.height), width: Math.round(box.width) },
++        visuallyRendered:
++          !insideSrOnly &&
++          box.width > 1 &&
++          box.height > 1 &&
++          style.visibility !== "hidden" &&
++          style.display !== "none" &&
++          Number(style.opacity) > 0,
++        insideSrOnly,
++        inViewport: box.bottom > 0 && box.top < window.innerHeight,
++      };
++    }),
++  );
++}
++
++/**
++ * The hint rises with a fade, so a read taken at first paint catches its own `opacity: 0` --
++ * measured on this tip: opacity 0 right after the block, 1 with the same text 1.5s later
++ * (`review/run-run074395.log`), and a settled-text read once landed mid-fade at 0.282.  "Before"
++ * has to mean the screen the traveller actually looks at, so the surface is waited for until it is
++ * rendered **and** fully opaque; the bound and the last reading stay in the message, so a hint that
++ * never becomes visible goes red instead of being waited away.
++ */
++async function settledSurface(page: Page, selector: string, owner: string): Promise<Surface> {
++  let last: Surface | null = null;
++  await expect
++    .poll(
++      async () => {
++        last = await surface(page, selector);
++        return last.visuallyRendered && last.computed?.opacity === "1";
++      },
++      {
++        message: node(owner, `the surface never became a settled, visible thing to read from: ${JSON.stringify(last)}`),
++        timeout: 10_000,
++      },
++    )
++    .toBe(true);
++  return last as Surface;
++}
++
++async function openWizard(page: Page): Promise<void> {
++  await page.addInitScript(() => {
++    localStorage.clear();
++    localStorage.setItem("citynexus.locale", "zh-CN");
++  });
++  await page.goto("/v8/hub", { waitUntil: "load" });
++  await expect(page.getByTestId("trial-setup")).toBeVisible({ timeout: 30_000 });
++}
++
++async function reachStep2WithABlockedBudget(page: Page): Promise<void> {
++  await openWizard(page);
++  await page.getByTestId("trial-city").fill("天津");
++  await page.getByTestId("trial-arrival").fill("天津站");
++  await page.getByTestId("trial-departure").fill("北京南站");
++  await page.getByTestId("trial-next").click();
++  await expect(page.getByTestId("trial-step2-body")).toBeVisible({ timeout: 15_000 });
++  await page.getByTestId("trial-budget").fill("0");
++}
++
++test("ord0221-3-step2-the-hint-clears-in-front-of-the-traveller — 第 2 步改完当场消失的可见文本", async ({
++  page,
++}) => {
++  test.setTimeout(300_000);
++  const NODE = "ord0221-3-step2-the-hint-clears-in-front-of-the-traveller";
++  await reachStep2WithABlockedBudget(page);
++
++  const hint = page.getByTestId("trial-required-hint");
++  await expect(
++    hint,
++    node(NODE, "an empty budget did not leave a hint element to read"),
++  ).toHaveCount(1);
++  const before = await settledSurface(page, '[data-testid="trial-required-hint"]', NODE);
++  expect(
++    before.insideSrOnly,
++    node(NODE, `the surface being read is a screen-reader region, not the screen: ${JSON.stringify(before)}`),
++  ).toBe(false);
++  expect(
++    before.text.includes("总预算"),
++    node(NODE, `with 总预算 at 0 the visible hint does not name it: "${before.text}"`),
++  ).toBe(true);
++  // The step really is blocked at this moment -- otherwise "it disappeared" would be trivially true.
++  expect(
++    await page.getByTestId("trial-next").getAttribute("aria-disabled"),
++    node(NODE, "the hint names a missing field while 下一步 is not blocked"),
++  ).toBe("true");
++
++  /* Correct the value on the same screen.  No navigation, no reload: this is the "当场" the order
++     asks about. */
++  await page.getByTestId("trial-budget").fill("1500");
++  const after = await surface(page, "[data-testid=\"trial-required-hint\"]");
++  expect(
++    after.text.includes("总预算"),
++    node(NODE, `the corrected budget is still named in the visible hint: before "${before.text}" / after "${after.text}"`),
++  ).toBe(false);
++
++  const live = await liveRegions(page);
++  writeFileSync(
++    evidencePath("ui-overnight/ord0221-step2-visible-before-after.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        order: "ORD-0221 ③",
++        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
++        method: "per-element textContent + the element's own box; body innerText is never used",
++        before,
++        after,
++        nextAriaDisabledAtBefore: "true",
++        liveRegionsAfter: live,
++      },
++      null,
++      2,
++    ) + "\n",
++    "utf-8",
++  );
++  await page.screenshot({ path: evidencePath("ui-overnight/ord0221-step2-visible-before-after.png"), fullPage: true });
++});
++
++test("ord0221-4-step3-visible-hint-and-live-region-read-apart — 第 3 步：看见的与听到的分开量", async ({
++  page,
++}) => {
++  test.setTimeout(300_000);
++  const NODE = "ord0221-4-step3-visible-hint-and-live-region-read-apart";
++  await reachStep2WithABlockedBudget(page);
++  const atStep2 = await settledSurface(page, '[data-testid="trial-required-hint"]', NODE);
++  /* HJ-P1's route, not a hypothetical one: press the blocked 下一步.  `aria-disabled` keeps
++     Playwright's ordinary click away (this lane's own trap), so the press is forced -- which is what
++     the traveller's thumb does, and the refusal writes the announcement region. */
++  await page.getByTestId("trial-next").click({ force: true });
++  await expect(
++    page.locator("#trial-next-reason"),
++    node(NODE, "the refused press wrote no announcement at all, so there is no live-region reading to take"),
++  ).not.toHaveText("", { timeout: 5_000 });
++  const spokenAtRefusal = await surface(page, "#trial-next-reason");
++  await page.getByTestId("trial-budget").fill("1500");
++  await page.getByTestId("trial-next").click();
++  await expect(page.getByTestId("trial-step3-body")).toBeVisible({ timeout: 15_000 });
++
++  const atStep3 = await surface(page, "[data-testid=\"trial-required-hint\"]");
++  expect(
++    atStep3.text.includes("总预算"),
++    node(NODE, `the corrected budget still hangs in the visible hint on step 3: "${atStep3.text}" (step 2 said "${atStep2.text}")`),
++  ).toBe(false);
++  const budget = ((await page.getByTestId("review-budget").innerText()) ?? "").replace(/\s+/g, " ");
++  expect(
++    budget.includes("1500"),
++    node(NODE, `the review step does not show the corrected value: "${budget}"`),
++  ).toBe(true);
++
++  /* What a screen-reader user is told, read as its own surface.  Recorded, not asserted green: the
++     live region keeping its stale sentence is ORD-0220 ②, and pretending otherwise here would be
++     the "innerText counts sr-only as visible" error with the labels swapped. */
++  const live = await liveRegions(page);
++  const staleLive = live.filter(
++    (region) => !region.visuallyRendered && region.text.includes("总预算"),
++  );
++  writeFileSync(
++    evidencePath("ui-overnight/ord0221-step3-visible-before-after.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        order: "ORD-0221 ④",
++        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
++        method: "per-element textContent + the element's own box; body innerText is never used",
++        visibleHint: { step2_before: atStep2, step3_after: atStep3 },
++        spokenAtRefusal,
++        reviewBudget: budget,
++        allAnnouncementSurfaces: live,
++        nonVisibleSurfacesStillNamingTheField: staleLive,
++        note: "ORD-0220 ② owns the live-region staleness recorded here; this node only refuses to call it visible",
++      },
++      null,
++      2,
++    ) + "\n",
++    "utf-8",
++  );
++  await page.screenshot({ path: evidencePath("ui-overnight/ord0221-step3-visible-before-after.png"), fullPage: true });
++});
+diff --git a/review/ord0082_0087_kill_drivers.py b/review/ord0082_0087_kill_drivers.py
+index 0fc169a..d551941 100644
+--- a/review/ord0082_0087_kill_drivers.py
++++ b/review/ord0082_0087_kill_drivers.py
+@@ -48,6 +48,7 @@ TIERS_SPEC = "e2e/qoder-budget-advisory-tiers.spec.ts"
+ WIZ2_SPEC = "e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts"
+ I18N = "src/i18n/LocaleContext.tsx"
+ COPY_SPEC = "e2e/qoder-demo-entry-copy-matches-the-stage.spec.ts"
++SURFACE_SPEC = "e2e/qoder-wizard-hint-surface-readings.spec.ts"
+ SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
+ WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
+ LOGDIR = f"{ROOT}/review"
+@@ -652,6 +653,16 @@ CASES = [
+         "              <div className=\"today-advisory-actions\">\n",
+         [(TIERS_SPEC, ["ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red"])],
+     ),
++    (
++        # ORD-0221 ②: the other half of the pair.  A caveat with no figure behind it is the same
++        # claim with nothing to check it against, so dropping the number must go red too -- this is
++        # the direction killU1 does not cover.
++        "killU2-tight-advisory-keeps-caveat-drops-number",
++        EXPERIENCE,
++        "              <strong>{advisory.text}</strong>\n              <span>{advisory.hint}</span>\n",
++        "              <span>{advisory.hint}</span>\n",
++        [(TIERS_SPEC, ["ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action"])],
++    ),
+     (
+         # ORD-0216 3: attempted mutant, recorded as a DOCUMENTED SURVIVOR.  Restoring the
+         # anchors-only review list did not reproduce HJ-P1's reading: their flow left the visible
+@@ -663,7 +674,12 @@ CASES = [
+         WIZARD,
+         "  const missingStep3 = [\n    ...missingStep1,\n    ...missingStep2,\n  ];\n",
+         "  const missingStep3 = missingStep1;\n",
+-        [(WIZ2_SPEC, ["ord0216-a-fixed-field-leaves-the-hint-on-the-next-step"])],
++        [
++            (WIZ2_SPEC, ["ord0216-a-fixed-field-leaves-the-hint-on-the-next-step"]),
++            # ORD-0221 ②: the same mutant against the per-surface reading.  Whatever it does to the
++            # visible hint is the answer to "why did the first node not catch this".
++            (SURFACE_SPEC, ["ord0221-4-step3-visible-hint-and-live-region-read-apart"]),
++        ],
+     ),
+     # ORD-0216 ④: the entry may not name a city, because /demo/scene decides which sealed journey it
+     # hands over.  These two mutants put HJ-P1's wording back -- one per language arm of the gate.
+@@ -703,7 +719,14 @@ for name, rel, old, new, targets in CASES:
+     open(path, "w", encoding="utf-8", newline="").write(mutated)
+     on_disk = open(path, encoding="utf-8", newline="").read()
+     applied = hits == 1 and on_disk == mutated
+-    print(f"\n{name}: {rel} anchor hits={hits} on_disk={applied}", flush=True)
++    # ORD-0221 ②: the receipt has to say how many bytes the mutant actually moved, measured on the
++    # file, not inferred from the strings in this list.
++    delta = len(on_disk.encode("utf-8")) - len(text.encode("utf-8"))
++    print(
++        f"\n{name}: {rel} anchor hits={hits} on_disk={applied} "
++        f"anchor_bytes={len(old.encode('utf-8'))} bytes_changed={delta}",
++        flush=True,
++    )
+     if not applied:
+         print("  MUTANT NOT ON DISK -- skipped; the suite would be judging an untouched build")
+         open(path, "w", encoding="utf-8", newline="").write(text)
+diff --git a/review/verify-ord0221-evidence-surface.py b/review/verify-ord0221-evidence-surface.py
+new file mode 100644
+index 0000000..1438cc9
+--- /dev/null
++++ b/review/verify-ord0221-evidence-surface.py
+@@ -0,0 +1,76 @@
++"""ORD-0221 ① -- read back the evidence surface the commander published, from GitHub itself.
++
++The arbitration's reason for not signing was that `50b35e0` is 422 on GitHub: a working-tip SHA in
++the ledger is not an audit coordinate.  This script does not re-publish anything; it asks the
++service what is actually there at `Canshu-King/CityNexus @ commander/control / evidence/ord0216`,
++prints name/size/blob-sha for every entry, and compares each one against the sha16 the order
++quotes.  The token is read from the git credential helper and never printed.
++
++Run:  D:/moodle/CityNexus/.venv/Scripts/python.exe review/verify-ord0221-evidence-surface.py
++"""
++from __future__ import annotations
++
++import json
++import subprocess
++import urllib.request
++
++OWNER_REPO = "Canshu-King/CityNexus"
++REF = "commander/control"
++PATH = "evidence/ord0216"
++
++# What ORD-0221 quotes, copied from the ledger entry.
++QUOTED = {
++    "50b35e0__50b35e0.patch": ("8343", "d6b5caa03c34adda"),
++    "3e259bd__3e259bd.patch": ("27113", "dfb25bda4e2784e9"),
++    "522c414__522c414.patch": ("1590", "74b2270ea3d29043"),
++    "50b35e0__50b35e0.files.txt": ("202", "41eac4f6df89156e"),
++}
++
++
++def token() -> str:
++    out = subprocess.run(
++        ["git", "credential", "fill"],
++        input="protocol=https\nhost=github.com\n\n",
++        capture_output=True,
++        text=True,
++        check=True,
++    ).stdout
++    for line in out.splitlines():
++        if line.startswith("password="):
++            return line[len("password=") :]
++    raise SystemExit("no github credential from the helper")
++
++
++def main() -> int:
++    request = urllib.request.Request(
++        f"https://api.github.com/repos/{OWNER_REPO}/contents/{PATH}?ref={REF}",
++        headers={
++            "Authorization": f"Bearer {token()}",
++            "Accept": "application/vnd.github+json",
++            "User-Agent": "qoder-e345b9d6-verify",
++        },
++    )
++    with urllib.request.urlopen(request, timeout=90) as response:
++        entries = json.loads(response.read().decode("utf-8"))
++
++    print(f"https://github.com/{OWNER_REPO}/tree/{REF}/{PATH}")
++    if isinstance(entries, dict):
++        print(f"API answered: {entries.get('message')}")
++        return 2
++    on_repo = {entry["name"]: (str(entry["size"]), entry["sha"][:16]) for entry in entries}
++    for name in sorted(on_repo):
++        size, sha16 = on_repo[name]
++        quoted = QUOTED.get(name)
++        if quoted is None:
++            verdict = "NOT-IN-THE-ORDER"
++        else:
++            verdict = "MATCHES" if quoted == (size, sha16) else f"MISMATCH order={quoted}"
++        print(f"  {name:34s} {size:>7s} B  blob {sha16}  -> {verdict}")
++    missing = sorted(set(QUOTED) - set(on_repo))
++    extra = sorted(set(on_repo) - set(QUOTED))
++    print(f"quoted-but-absent={missing} present-but-unquoted={extra}")
++    return 0 if not missing and not extra else 3
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
