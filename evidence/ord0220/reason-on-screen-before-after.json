@@ -1,0 +1,20 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0220 ③",
+  "head": "a09096fd514685b800f45c261049bc060c5a2cc0",
+  "before": {
+    "top": 1224,
+    "bottom": 1308,
+    "innerHeight": 844,
+    "inViewport": false
+  },
+  "after": {
+    "top": 572,
+    "bottom": 656,
+    "innerHeight": 844,
+    "inViewport": true
+  },
+  "focusedAfterPress": "",
+  "rule": "拦下时提示必须滚进视口（bottom <= innerHeight）；焦点位置只记录不要求（见 ORD-0066 负控）",
+  "publishedBy": "e345b9d6 for ORD-0220"
+}
