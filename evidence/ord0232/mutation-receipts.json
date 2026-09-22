@@ -1,0 +1,338 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0232",
+  "runTag": "six-arms",
+  "at": "2026-09-23T03:43:46+0800",
+  "guard": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace",
+  "spec": "e2e/qoder-dropped-candidates-say-why.spec.ts",
+  "runShape": "whole spec file (4 nodes + the real-seed setup project = '5 passed' when green), one fresh authoritative stack and one throwaway sqlite per run",
+  "filesBefore": {
+    "V8Experience.tsx": "21bc60bdbfd4f058a4315c4485a61a560b0d17bdf4f22d12494a6c4a1560a70a",
+    "candidateRejections.ts": "947f40d1ae5da85d1c60edb79ef1f77df30d7ba06415c5774116f4080ec00069"
+  },
+  "arms": [
+    {
+      "name": "killB1-heading-without-rows",
+      "why": "the count is printed but the named stops are not: the traveller learns something was dropped and not what",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\app\\V8Experience.tsx",
+      "ownerNode": "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "ca735f0acdfe2cc90335191127127cf92c8abe74ec845d6013c1d3f529de1ece",
+      "restored_sha256": "21bc60bdbfd4f058a4315c4485a61a560b0d17bdf4f22d12494a6c4a1560a70a",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-before-arm",
+        "exitCode": 0,
+        "runId": "run106226",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106226.log",
+        "summary": "5 passed (15.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "GREEN",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "GREEN",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "GREEN",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated",
+        "exitCode": 1,
+        "runId": "run106242",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106242.log",
+        "summary": "2 passed (16.6s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "RED",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "GREEN",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "RED",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "RED"
+        }
+      },
+      "redSet": [
+        "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition",
+        "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader",
+        "ord0232-4-the-card-is-painted-not-only-spoken"
+      ],
+      "exclusiveToOwner": false,
+      "othersGreen": false,
+      "verdict": "KILLED",
+      "independent": false
+    },
+    {
+      "name": "killB2-card-with-no-evidence",
+      "why": "the card is claimed even when the audit fact says nothing was dropped -- an invented reason",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\app\\V8Experience.tsx",
+      "ownerNode": "ord0232-2-no-rejection-event-puts-nothing-on-the-screen",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "15d1b53dde730dbf080e5e2ab26a4206ce78798175d69772aed076fa2d1adac8",
+      "restored_sha256": "21bc60bdbfd4f058a4315c4485a61a560b0d17bdf4f22d12494a6c4a1560a70a",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-before-arm",
+        "exitCode": 0,
+        "runId": "run106260",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106260.log",
+        "summary": "5 passed (15.3s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "GREEN",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "GREEN",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "GREEN",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated",
+        "exitCode": 1,
+        "runId": "run106277",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106277.log",
+        "summary": "4 passed (25.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "GREEN",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "RED",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "GREEN",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0232-2-no-rejection-event-puts-nothing-on-the-screen"
+      ],
+      "exclusiveToOwner": true,
+      "othersGreen": true,
+      "verdict": "KILLED",
+      "independent": true
+    },
+    {
+      "name": "killB3-fallback-leaks-the-raw-id",
+      "why": "when the directory does not answer, the raw `place-…` id is dressed up as a place name (only the fallback path: the resolvable rows must stay green)",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\api\\candidateRejections.ts",
+      "ownerNode": "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "83a54ca7b1d97093c13fd01c399491eca1561680689d2853a32e7eeed10c101d",
+      "restored_sha256": "947f40d1ae5da85d1c60edb79ef1f77df30d7ba06415c5774116f4080ec00069",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-before-arm",
+        "exitCode": 0,
+        "runId": "run106303",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106303.log",
+        "summary": "5 passed (15.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "GREEN",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "GREEN",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "GREEN",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated",
+        "exitCode": 1,
+        "runId": "run106319",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106319.log",
+        "summary": "4 passed (15.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "GREEN",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "GREEN",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "RED",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader"
+      ],
+      "exclusiveToOwner": true,
+      "othersGreen": true,
+      "verdict": "KILLED",
+      "independent": true
+    },
+    {
+      "name": "killB4-raw-code-reaches-the-prose",
+      "why": "the internal enum is printed instead of labelled -- the ORD-0222 leak, one field later",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\app\\V8Experience.tsx",
+      "ownerNode": "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "ae832f312e0b077b5cfce15093437c9de0399a4a3c249dc012f656a1df14d672",
+      "restored_sha256": "21bc60bdbfd4f058a4315c4485a61a560b0d17bdf4f22d12494a6c4a1560a70a",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-before-arm",
+        "exitCode": 0,
+        "runId": "run106336",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106336.log",
+        "summary": "5 passed (14.9s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "GREEN",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "GREEN",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "GREEN",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated",
+        "exitCode": 1,
+        "runId": "run106353",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106353.log",
+        "summary": "2 passed (16.4s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "RED",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "GREEN",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "RED",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "RED"
+        }
+      },
+      "redSet": [
+        "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition",
+        "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader",
+        "ord0232-4-the-card-is-painted-not-only-spoken"
+      ],
+      "exclusiveToOwner": false,
+      "othersGreen": false,
+      "verdict": "KILLED",
+      "independent": false
+    },
+    {
+      "name": "killB5-spoken-but-never-seen",
+      "why": "the reason exists only for a screen reader, so a sighted traveller still sees an unexplained short list",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\app\\V8Experience.tsx",
+      "ownerNode": "ord0232-4-the-card-is-painted-not-only-spoken",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "6e41723c131e1d193196e03e09c7dfaa447682032c823416607660183e2d647a",
+      "restored_sha256": "21bc60bdbfd4f058a4315c4485a61a560b0d17bdf4f22d12494a6c4a1560a70a",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-before-arm",
+        "exitCode": 0,
+        "runId": "run106370",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106370.log",
+        "summary": "5 passed (15.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "GREEN",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "GREEN",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "GREEN",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated",
+        "exitCode": 1,
+        "runId": "run106386",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106386.log",
+        "summary": "4 passed (14.9s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "GREEN",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "GREEN",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "GREEN",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "RED"
+        }
+      },
+      "redSet": [
+        "ord0232-4-the-card-is-painted-not-only-spoken"
+      ],
+      "exclusiveToOwner": true,
+      "othersGreen": true,
+      "verdict": "KILLED",
+      "independent": true
+    },
+    {
+      "name": "killB6-heading-count-off-by-one",
+      "why": "the heading claims one more dropped candidate than there is evidence for -- node 1's own number, nothing else's",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\app\\V8Experience.tsx",
+      "ownerNode": "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "ec6a06843319793fdba0dd43652e60623c3a9f4124196baa81b36d4700ee75f4",
+      "restored_sha256": "21bc60bdbfd4f058a4315c4485a61a560b0d17bdf4f22d12494a6c4a1560a70a",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-before-arm",
+        "exitCode": 0,
+        "runId": "run106402",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106402.log",
+        "summary": "5 passed (14.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "GREEN",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "GREEN",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "GREEN",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated",
+        "exitCode": 1,
+        "runId": "run106418",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run106418.log",
+        "summary": "4 passed (15.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": "RED",
+          "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": "GREEN",
+          "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": "GREEN",
+          "ord0232-4-the-card-is-painted-not-only-spoken": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition"
+      ],
+      "exclusiveToOwner": true,
+      "othersGreen": true,
+      "verdict": "KILLED",
+      "independent": true
+    }
+  ],
+  "filesAfter": {
+    "V8Experience.tsx": "21bc60bdbfd4f058a4315c4485a61a560b0d17bdf4f22d12494a6c4a1560a70a",
+    "candidateRejections.ts": "947f40d1ae5da85d1c60edb79ef1f77df30d7ba06415c5774116f4080ec00069"
+  },
+  "treeUnchangedByThisRun": true,
+  "allArmsKilled": true,
+  "everyNodeKilled": {
+    "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": [
+      "killB1-heading-without-rows",
+      "killB4-raw-code-reaches-the-prose",
+      "killB6-heading-count-off-by-one"
+    ],
+    "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": [
+      "killB2-card-with-no-evidence"
+    ],
+    "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": [
+      "killB1-heading-without-rows",
+      "killB3-fallback-leaks-the-raw-id",
+      "killB4-raw-code-reaches-the-prose"
+    ],
+    "ord0232-4-the-card-is-painted-not-only-spoken": [
+      "killB1-heading-without-rows",
+      "killB4-raw-code-reaches-the-prose",
+      "killB5-spoken-but-never-seen"
+    ]
+  },
+  "exclusiveKiller": {
+    "ord0232-1-a-dropped-candidate-names-its-stop-and-its-condition": [
+      "killB6-heading-count-off-by-one"
+    ],
+    "ord0232-2-no-rejection-event-puts-nothing-on-the-screen": [
+      "killB2-card-with-no-evidence"
+    ],
+    "ord0232-3-raw-ids-and-raw-codes-reach-neither-the-eye-nor-a-screen-reader": [
+      "killB3-fallback-leaks-the-raw-id"
+    ],
+    "ord0232-4-the-card-is-painted-not-only-spoken": [
+      "killB5-spoken-but-never-seen"
+    ]
+  },
+  "invalidStackArms": [],
+  "publishedBy": "e345b9d6 for ORD-0232",
+  "guardPath": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace"
+}
