@@ -1,0 +1,54 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-8.4.2, pluggy-1.6.0
+ORD-0211 test database: resolved=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_egktdc2w\suite.db | exists=False | declared_by=conftest temp dir
+rootdir: D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend
+configfile: pyproject.toml
+plugins: anyio-4.15.1, asyncio-0.26.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 1 item
+
+tests\test_qoder_db_isolation_same_verdict.py [round 1/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_ksdoqncq\suite.db | 行数 4 | D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhere_gates.py:245: Ass
+[round 2/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_z0p1my72\suite.db | 行数 3 | D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhere_gates.py:245: Ass
+[round 3/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_q6ei93_c\suite.db | 行数 2 | D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhere_gates.py:245: Ass
+[round 4/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_l010le9s\suite.db | 行数 5 | D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhere_gates.py:245: Ass
+[round 5/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_2bybb85x\suite.db | 行数 4 | D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhere_gates.py:245: Ass
+[round 6/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_zi54vza9\suite.db | 行数 2 | D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhere_gates.py:245: Ass
+[round 7/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_v6tsl9av\suite.db | 行数 4 | D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhere_gates.py:245: Ass
+[round 8/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_thoaqmom\suite.db | 行数 3 | D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhere_gates.py:245: Ass
+[round 9/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_u31shxw4\suite.db | 行数 4 | D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhere_gates.py:245: Ass
+[round 10/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_gt3e48vs\suite.db | 行数 5 | D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhere_gates.py:245: Ass
+
+[ORD-0210 收据 · 机制层已接线]
+  模式            = acceptance
+  SHA             = 491d8e7   (第 1 条)
+  工作树          = D:\moodle\_qoder_f_run\e_o210b_491d8e7
+  解释器          = D:\moodle\CityNexus\.venv\Scripts\python.exe
+  目标 nodeid     = tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation
+  跑法形制        = single-node   (第 9 条)
+  命令            = -m pytest tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation --tb=line -rA -p no:randomly -p no:cacheprovider   (每 run 一个独立进程)
+  轮数            = 10  绿 0 / 红 10 / 未观测 0
+  重复解析路径    = []
+  缺路径的 run    = []
+  第 6 条         = 第 6 条：命令面已扫（干净）；自证文本未声明 ⇒ 最多 STREAK_GREEN，不签 CLOSED
+  streak 结论     = STREAK_NOT_MET(0/10_green)
+  可结案          = False (第 5 条绿 + 第 2 条 10 进程 + 第 6b 条自证)
+  机器并发        = 各轮期间另有 [0, 0, 0, 1, 0, 0, 0, 0, 0, 0] 个别人的临时库（**只记录，不参与判定**：并发时序门对负载敏感，先把它量下来）
+  目标节点定性    = STABLE_RED(single-node)
+  定性依据        = 10/10 全红（逐 run 目标节点判定）—— 恒红不是翻转
+    run 1: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_ksdoqncq\suite.db 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 4} 邻居进程=0 红在=D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhe
+    run 2: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_z0p1my72\suite.db 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 3} 邻居进程=0 红在=D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhe
+    run 3: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_q6ei93_c\suite.db 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 2} 邻居进程=0 红在=D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhe
+    run 4: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_l010le9s\suite.db 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 5} 邻居进程=1 红在=D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhe
+    run 5: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_2bybb85x\suite.db 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 4} 邻居进程=0 红在=D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhe
+    run 6: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_zi54vza9\suite.db 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 2} 邻居进程=0 红在=D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhe
+    run 7: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_v6tsl9av\suite.db 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 4} 邻居进程=0 红在=D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhe
+    run 8: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_thoaqmom\suite.db 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 3} 邻居进程=0 红在=D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhe
+    run 9: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_u31shxw4\suite.db 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 4} 邻居进程=0 红在=D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhe
+    run 10: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_gt3e48vs\suite.db 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 5} 邻居进程=0 红在=D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_anywhe
+F
+
+================================== FAILURES ===================================
+D:\moodle\_qoder_f_run\e_o210b_491d8e7\backend\tests\test_qoder_db_isolation_same_verdict.py:459: AssertionError: 期望：第 5 条『all 10 runs GREEN』；实际 STREAK_NOT_MET(0/10_green)（绿 0/10）
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_db_isolation_same_verdict.py::test_1a_acceptance_streak_is_ten_independent_green_processes
+============================= 1 failed in 32.21s ==============================
