@@ -46,6 +46,8 @@ TONGUE_SPEC = "e2e/qoder-speaks-the-travellers-language.spec.ts"
 DEMO_SPEC = "e2e/qoder-demo-entry-addresses-dont-create.spec.ts"
 TIERS_SPEC = "e2e/qoder-budget-advisory-tiers.spec.ts"
 WIZ2_SPEC = "e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts"
+I18N = "src/i18n/LocaleContext.tsx"
+COPY_SPEC = "e2e/qoder-demo-entry-copy-matches-the-stage.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -662,6 +664,22 @@ CASES = [
         "  const missingStep3 = [\n    ...missingStep1,\n    ...missingStep2,\n  ];\n",
         "  const missingStep3 = missingStep1;\n",
         [(WIZ2_SPEC, ["ord0216-a-fixed-field-leaves-the-hint-on-the-next-step"])],
+    ),
+    # ORD-0216 ④: the entry may not name a city, because /demo/scene decides which sealed journey it
+    # hands over.  These two mutants put HJ-P1's wording back -- one per language arm of the gate.
+    (
+        "killW1-entry-copy-names-a-city-zh",
+        I18N,
+        '  "trial.tianjinDemo": "使用封存的演示行程",\n',
+        '  "trial.tianjinDemo": "使用封存的天津演示",\n',
+        [(COPY_SPEC, ["ord0216d-zh-the-wizard-never-says-a-city-name"])],
+    ),
+    (
+        "killW2-entry-copy-names-a-city-en",
+        I18N,
+        '  "trial.tianjinDemo": "Use the sealed demo trip",\n',
+        '  "trial.tianjinDemo": "Use the sealed Tianjin demo",\n',
+        [(COPY_SPEC, ["ord0216d-en-the-wizard-never-says-a-city-name"])],
     ),
 ]
 

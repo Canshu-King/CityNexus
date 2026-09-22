@@ -1256,7 +1256,7 @@ export function V8Experience() {
       <>
         <JourneyTrialSetup
           onCreate={createJourney}
-          onUseTianjinDemo={enterSealedDemo}
+          onUseSealedDemo={enterSealedDemo}
           sealedDemoUnavailable={sealedDemoUnavailable}
           onCancel={data ? () => setSetupOpen(false) : undefined}
           busy={setupBusy}

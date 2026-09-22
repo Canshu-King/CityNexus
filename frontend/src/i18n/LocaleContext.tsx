@@ -36,11 +36,17 @@ const en: Dict = {
   "shell.brand": "CityNexus",
   "shell.tagline": "journey intelligence",
   "trial.kicker": "Try CityNexus with your own city",
-  "trial.title": "Start a real journey, not only the Tianjin demo.",
-  "trial.lede": "Choose your destination and travel anchors. Non-Tianjin journeys use live city providers when enabled; CityNexus will not silently substitute Tianjin replay data.",
+  "trial.title": "Start a real journey, not only the sealed demo.",
+  "trial.lede": "Choose your destination and travel anchors. Cities with no sealed replay use live city providers when enabled; CityNexus will not quietly substitute another city's replay data for the one you asked for.",
   "trial.liveTitle": "Generic-city trial",
-  "trial.liveNote": "For cities without a sealed replay, use live providers. If providers are unavailable, CityNexus will tell you instead of inventing Tianjin facts.",
-  "trial.tianjinDemo": "Use the sealed Tianjin demo",
+  "trial.liveNote": "For cities without a sealed replay, use live providers. If providers are unavailable, CityNexus will tell you instead of inventing facts about the city.",
+  /* ORD-0216 ④: no city name here, on purpose.  `GET /api/v1/demo/scene` picks the sealed journey
+     from server data -- the one an ACTIVE plan points at, else the most recently seeded one
+     (backend/app/main.py:6331-6335) -- so the entry cannot know which city it hands over until the
+     server has answered.  HJ-P1 read 「使用封存的天津演示」 on a stage whose sealed journey is
+     Guangzhou (`review/evidence/ui-overnight/ord0216-scene-city.json` reproduces the selection
+     rule).  Naming *any* city here is the `HUMAN_MISLEADING` defect; so would be "Guangzhou". */
+  "trial.tianjinDemo": "Use the sealed demo trip",
   "trial.city": "Destination city",
   "trial.country": "Country/region code",
   "trial.timezone": "Time zone",
@@ -374,7 +380,7 @@ const en: Dict = {
   "discovery.notRanked": "not ranked",
   "discovery.sourceCaptured": "Source evidence captured from {url}",
   "discovery.authoritativeNext": "Authoritative next step",
-  "discovery.genericCityLiveNote": "This city has no sealed Tianjin replay. Live provider mode is selected to prevent wrong-city demo data from entering the Journey.",
+  "discovery.genericCityLiveNote": "This city has no sealed replay. Live provider mode is selected to prevent another city's demo data from entering the Journey.",
   "discovery.authoritativeSub": "The plan you chose is now used by Today, Trips, the map and Live.",
   "discovery.openAuthoritative": "Open authoritative plan",
   "discovery.rejectedIds": "Rejected model IDs:",
@@ -692,11 +698,15 @@ const zhCN: Dict = {
   "shell.brand": "CityNexus",
   "shell.tagline": "行程智能",
   "trial.kicker": "用你自己的城市试用 CityNexus",
-  "trial.title": "创建真实行程，不只局限于天津演示。",
-  "trial.lede": "选择目的地和出发/返程锚点。非天津行程在启用时使用实时城市数据源；CityNexus 不会悄悄拿天津回放数据冒充其他城市。",
+  "trial.title": "创建真实行程，不只局限于封存演示。",
+  "trial.lede": "选择目的地和出发/返程锚点。没有封存回放的城市在启用时使用实时城市数据源；CityNexus 不会悄悄拿别的城市的封存数据冒充你要去的地方。",
   "trial.liveTitle": "通用城市试用",
-  "trial.liveNote": "没有封存回放的城市应使用实时数据源。若数据源不可用，系统会明确告诉你，而不是编造天津数据。",
-  "trial.tianjinDemo": "使用封存的天津演示",
+  "trial.liveNote": "没有封存回放的城市应使用实时数据源。若数据源不可用，系统会明确告诉你，而不是编造这座城市的资料。",
+  /* ORD-0216 ④：这里刻意不写城市名。封存演示是哪一趟由服务器的 /api/v1/demo/scene 决定（有 ACTIVE
+     方案的那趟，否则最近 seed 的那趟，backend/app/main.py:6331-6335），入口在服务器回答之前无从知道
+     城市。HJ-P1 在封存那趟为广州的舞台上读到「使用封存的天津演示」（`ord0216-scene-city.json` 复现了
+     这条选择规则）。写任何城市名都是 `HUMAN_MISLEADING`；改成"广州"同样只是把不一致挪个地方。 */
+  "trial.tianjinDemo": "使用封存的演示行程",
   "trial.city": "目的城市",
   "trial.country": "国家/地区代码",
   "trial.timezone": "时区",
@@ -1028,7 +1038,7 @@ const zhCN: Dict = {
   "discovery.notRanked": "未排名",
   "discovery.sourceCaptured": "来源证据采集自 {url}",
   "discovery.authoritativeNext": "权威下一步",
-  "discovery.genericCityLiveNote": "这个城市没有天津封存回放。系统已选择实时数据源模式，避免把错误城市的演示数据写进行程。",
+  "discovery.genericCityLiveNote": "这个城市没有封存回放。系统已选择实时数据源模式，避免把别的城市的演示数据写进行程。",
   "discovery.authoritativeSub": "你选择的方案现在会用于今天、行程、地图和实时行程。",
   "discovery.openAuthoritative": "打开权威方案",
   "discovery.rejectedIds": "已拒绝的模型 ID：",

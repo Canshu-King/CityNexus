@@ -319,7 +319,7 @@ const PHASE_LABEL: Record<TrialPhase, [string, string]> = {
 
 export function JourneyTrialSetup({
   onCreate,
-  onUseTianjinDemo,
+  onUseSealedDemo,
   sealedDemoUnavailable,
   onCancel,
   busy,
@@ -331,7 +331,7 @@ export function JourneyTrialSetup({
   onStopWaiting,
 }: {
   onCreate: (draft: JourneyTrialDraft) => Promise<void>;
-  onUseTianjinDemo: () => Promise<void>;
+  onUseSealedDemo: () => Promise<void>;
   /* ORD-0209: named fail-closed reason when the sealed demo cannot be addressed. */
   sealedDemoUnavailable?: string | null;
   onCancel?: () => void;
@@ -1179,12 +1179,17 @@ export function JourneyTrialSetup({
         </p>
       )}
       <div className="trial-secondary">
+        {/* ORD-0216 ④: the label comes from `trial.tianjinDemo` and must stay **city-neutral** --
+            `GET /api/v1/demo/scene` decides which sealed journey this hands over, so naming a city
+            here is the `HUMAN_MISLEADING` defect HJ-P1 read with her own eyes.  The test id keeps
+            its original spelling deliberately: it is a gate hook other specs select on, not text a
+            traveller can see, and renaming it would break their reach for no product gain. */}
         <button
           type="button"
           className="trial-back-link"
           data-testid="trial-tianjin-demo"
           disabled={busy}
-          onClick={() => void onUseTianjinDemo()}
+          onClick={() => void onUseSealedDemo()}
         >
           {t("trial.tianjinDemo")}
         </button>
