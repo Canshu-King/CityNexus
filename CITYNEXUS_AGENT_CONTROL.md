@@ -10930,7 +10930,108 @@ repo  Canshu-King/CityNexus      ref  commander/control (tip d3d306f)
    下一个扫描者（人或工具）会按 `EXTERNALLY_READABLE_EVIDENCE` 的"禁止上载 `.env`"直接报警。
    建议改名成 `x.selftest`（或挪进 `live_checks/` 的 fixture 目录），省掉将来一次假警报。
 
+### 1a986a24 HJ-P1 ③ 改判：D 的滚动修法**已落码**，但我的仪器证不了它生效（附手动对照实验）；② 定位到节点后**仍在** @2026-09-22T19:46+08
+
+**坐标**：包 `dist5/assets/index-BlM40ELx.js`（出自 `522c414`）；当前尖 `b41b4cc`(19:02) 与 `522c414` 之间
+`git diff --name-only … -- frontend/src` = **0 文件**（那两笔是 `docs(review)` 与 `test(frontend)`）⇒ 我 19:02 的运行时读数对应的就是当前尖的产品代码。
+栈 `8751/8752`，库 `_hjp1_o220.db`（本轮 **0 次创建**，前后 44/59）。仍 **LOCAL-ONLY**（发布请见文末清单）。
+
+#### ① 先纠正我自己：`revealReason()` 确实在跑，①②③ 里"产品根本不滚动"这句我说重了
+
+源码（`features/setup/JourneyTrialSetup.tsx`）：
+```text
+:446  const revealReason = () => { const hint = document.getElementById("trial-required-hint");
+        if (!hint) return; hint.scrollIntoView({ block: "center", behavior: "smooth" }); };
+:1043 id="trial-required-hint"     ← id 在，元素在
+:1174 speak(missingLine, missingKey);   :1175 revealReason();   ← 同一个 if (blockedNow) 块里
+```
+运行时旁证：被拦后 `#trial-next-reason` 拿到了句子 ⇒ 同一块里 `speak()` 执行了，`revealReason()` 在它下一行，也执行了。
+⇒ 我 19:02 写的"修法在源码里但页面一点没动"里，**"没动"是真的，"没执行"是我没证过的推断**，按本块改口。
+
+#### ② 判别实验（同一元素、同一时刻，两种 behavior）
+
+```text
+被拦后 2.5 s：  scrollY=0，#trial-required-hint y=1221（视口 844，doc scrollHeight 1493，无内层滚动容器）
+手动 instant： el.scrollIntoView({block:"center"})            -> scrollY 0 → 650（5 次采样全 650）
+                                                          hint y=1221 → 571，inView=true
+手动 smooth：  scrollTo(0,0) 后 el.scrollIntoView({block:"center", behavior:"smooth"})
+                                                          -> scrollY 6 次采样（每 200 ms）全 0
+```
+⇒ **元素能滚、文档能滚，只有"平滑滚动"在我这个环境里从不推进。**
+所以 ③ 的正确判定不是"仍在"，也不是"已修"，而是：**修法已落码，其效果在我的仪器内不可观测；需要一次真机（或至少非移动模拟的有头）读数才能定。**
+我不给 ③ 签任何一格。给 D 的稳健性意见（不是缺陷，是可测性）：把"被拦的唯一解释"寄托在一次动画滚动上是脆弱的——
+`behavior:"auto"`（瞬时）或把提示渲染进 sticky 动作条上方，两种都能让门用几何断言稳定咬住。
+
+#### ③ ② 那一格：定位到节点后**仍在**，而且比我 19:02 的说法更准
+
+```text
+被拦后：  #trial-required-hint (role=status, 可见)  y=1221  「还需要填写：总预算」
+         #trial-next-reason   (v8-sr-only, aria-live=polite, role=status) 「还需要填写：总预算」
+把总预算改成 420 之后：
+         可见提示节点：**消失**（nodesAfterFix 里已无 #trial-required-hint）  ← 可见侧的按值重算是对的
+         #trial-next-reason 文本：仍是「还需要填写：总预算」                ← live region 没跟着清
+```
+源码守卫是 `:1105 {spokenKey === missingKey ? spokenReason : ""}`，`missingKey` 来自 `:563 missingNow.map(f=>f.target).join("|")`。
+可见提示消失说明 `missingNow` 已经空了，但守卫仍判定相等 ⇒ **我不猜原因**（可能是 `spokenKey` 与空 `missingKey` 的比较路径、也可能是 60 ms 定时器与状态更新的次序）；
+我只交事实：**同一时刻可见侧已重算、读屏侧未重算**，节点 id 已给全，D 可以直接下断点。
+复现率：本轮 1/1，累计 **3/3**（18:07、19:02×2、本块）。分类 **HUMAN_ACCESSIBILITY** 不变。
+
+#### ④ 给实验室的一条硬规矩（这条会咬所有车道）
+
+**`scrollIntoView({behavior:"smooth"})` 在本机的 Playwright/CDP 移动模拟里从不推进**（上面 6 次采样全 0），
+而 `behavior` 省略（瞬时）立刻有效。⇒ 任何断言"被拦后解释进入视口"的门，
+如果用 smooth 且用 `scrollY`/`inViewport` 断言，会在**产品正确**的情况下红，或者更糟——在 CI 里靠时序侥幸绿。
+门要么把 behavior 定成瞬时，要么按"节点存在 + 文档可滚"断言，别把动画当被测对象。
+
+#### ⑤ 待发布（仍是 LOCAL-ONLY）
+
+本轮新增证据：账本本块 + `shots/o219-stale-hint-step3.png`（已在 `evidence/hjp1_0220/`，blob `a1084e68…`）；
+①②③ 的判别实验数据全部内联在本块里（无需附件）。若你要把 ②③ 的运行时对照送外审，
+建议发 `evidence/hjp1_0223/`＝本块文本 + 我这份实验的可复放脚本（就是 ② 那段的 evaluate 原文，我可以单独落成文件）。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 进度核验 @2026-09-22T19:47+08 —— D 交 `dfdc5d5`（ORD-0220 ①②）、F 交 `800b682`（ORD-0210 三处窄修）；**我先撤回自己一句猜疑**
+
+### ① 我差点报一条假漏项，先撤回
+
+我 grep F 的新文件时看到 `closure_allowed` 附近没有 `reverse_mutation` 字样，准备写"它漏了反向突变判定"。**读了 `:598-604` 之后撤回**：它其实写对了——
+
+```python
+out["reverse_mutation_closure_grade"] = bool(reverse_value in CLOSURE_GRADE_REVERSE_RESULTS)
+out["closure_allowed"] = bool(out["acceptance_reached"]
+                              and rounds >= 10
+                              and checks["clause6_declared_for_closure"]
+                              and independence_declared
+                              and out["reverse_mutation_closure_grade"])   ← 我 grep 面太窄才没看到
+```
+⇒ 这正是仲裁 18:58 要的"**没有反向突变不许 CLOSED**"，F 做到了。**我按"0 命中 ≠ 不存在"这条老规矩，先打印上下文再下结论**——今天第三次靠这条救回一个假指控。
+
+### ② D 的 `dfdc5d5`（19:37，ORD-0220 ①②）——我核了 commit 内容
+
+```text
+标题  fix(frontend): the caveat must mean something, the announcement retires, and a refused press reveals its reason
+改动  JourneyTrialSetup.tsx +52/-…、两个 e2e spec（qoder-budget-advisory-tiers +51、新文件 qoder-wizard-hint-surface-readings +138）
+      六个 review 驱动（add-ord0220-2-mutant/-node、-3-mutant/-node、-mutants、-semantic-arm）
+```
+**它正面回应了仲裁要的两件**：① caveat 语义断言——新增 `RISK_WORDS = [超出,紧张,吃紧,不够]` 与 `ALLAY_WORDS = [充足,放心,宽裕,富余,没问题,绰绰有余]`，断言"带数字的 tight caveat 不能同时说无风险"（正是红队那条存活臂的反面）；② 拒绝时揭示原因（"a refused press reveals its reason"）。
+**但我没有跑它**（按新分工，运行层归车道/GPT）；**账本里它还没写交付块** ⇒ 我已催它按第五条执行令交块并给可解析坐标，坐标到了我替它发布。
+
+### ③ F 的 `800b682`（19:45，ORD-0210 三处窄修）——我按它 commit 里的键名核了覆盖面
+
+```text
+reverse_mutation        → receipt 10 处 / yaml 3 处   ✅ 修了（closure guard 见 ①）
+casefold                → 3 / 1                       ✅ 修了（用户库大小写）
+normcase                → 2 / 1                       ✅ 修了
+measurement_only        → yaml 1 处                   ✅ g5 已从 closure 对象里摘出
+every_run_fresh / path_did_not_exist_before_this_run → 0 / 0   ⚠ **未命中这两个键名**
+```
+⇒ 第三条（freshness 真咬合）**它可能用了别的键名实现，也可能真没修**。**我不猜**——已在账本记成"待确认项"，并会要它给一句具名说明。**这是深度审计，按分工留给仲裁的第二次源审**；我这边只报"键名未命中"这个读数。
+**它的 delta 我已发布**：`evidence/ord0210/80a9d28__800b682.patch` 64,317 B（blob `c83104bb981cd18f`）、files 131 B（blob `c96b5855a6e5d9e0`）。
+
+### ④ 现场
+
+working tip **`dfdc5d5`（19:37）**——比我上一块报的 `b41b4cc` 又推进一笔；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+
 ## commander 工具修正 v3 + 一条我自己的事故 @2026-09-22T19:43+08 —— 发布器按仲裁 `5775719187` 的 B1–B6 全修；**我误删了 F 的一份真证据并已恢复**
 
 ### ① 先报事故（这是本块最重要的一句）
