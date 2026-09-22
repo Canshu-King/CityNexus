@@ -1,0 +1,57 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.14, pytest-8.4.2, pluggy-1.6.0
+ORD-0211 test database: resolved=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_t7f7p2k3\suite.db | exists=False | declared_by=conftest temp dir
+rootdir: D:\moodle\_qoder_f_run\e_f_a4079bc\backend
+configfile: pyproject.toml
+plugins: anyio-4.15.1, asyncio-0.26.0
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 1 item
+
+tests\test_qoder_db_isolation_same_verdict.py [round 1/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_win52mep\suite.db | 行数 2 | E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实际拿到 2 个不同的：['1db5028
+[round 2/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_4xlvz3m3\suite.db | 行数 2 | E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实际拿到 2 个不同的：['77c6740
+[round 3/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_26tcrzyx\suite.db | 行数 2 | E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实际拿到 2 个不同的：['228e025
+[round 4/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_xd8n2dem\suite.db | 行数 4 | E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实际拿到 4 个不同的：['14b94b8
+[round 5/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_3uxmetg6\suite.db | 行数 3 | E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实际拿到 3 个不同的：['4eecc57
+[round 6/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest__ybq69f6\suite.db | 行数 5 | E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实际拿到 5 个不同的：['446cb36
+[round 7/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_zu884px1\suite.db | 行数 2 | E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实际拿到 2 个不同的：['4250792
+[round 8/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_edb43kbf\suite.db | 行数 4 | E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实际拿到 4 个不同的：['3a2904d
+[round 9/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_y0stvrvs\suite.db | 行数 2 | E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实际拿到 2 个不同的：['024554d
+[round 10/10] exit=1 outcome=RED db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_u1667_r2\suite.db | 行数 4 | E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实际拿到 4 个不同的：['17fe726
+
+[ORD-0210 收据 · 机制层已接线]
+  模式            = acceptance
+  SHA             = a4079bc   (第 1 条)
+  工作树          = D:\moodle\_qoder_f_run\e_f_a4079bc
+  解释器          = D:\moodle\CityNexus\.venv\Scripts\python.exe
+  目标 nodeid     = tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation
+  跑法形制        = single-node   (第 9 条)
+  形制校验        = True；不合规项 []
+  命令            = -m pytest tests/test_qoder_anywhere_gates.py::test_g3_five_concurrent_hydrations_of_one_county_converge_on_one_operation --tb=short --import-mode=importlib   (每 run 一个独立进程)
+  轮数            = 10  绿 0 / 红 10 / 未观测 0
+  重复解析路径    = []
+  缺路径的 run    = []
+  第 6 条         = 第 6 条：命令面已扫（干净）；自证文本未声明 ⇒ 最多 STREAK_GREEN，不签 CLOSED
+  streak 结论     = STREAK_NOT_MET(0/10_green)
+  可结案          = False (第 5 条绿 + 第 2 条 10 进程 + 第 6b 条自证 + 反向突变证据)
+  结案判级        = NOT_MET   ← 10/10 绿但没有反向证据时是 STREAK_GREEN，不是 CLOSED
+  反向突变        = required=True result=（未交）（结案级 ∈ ['KILLED', 'STREAK_BROKEN']）
+  机器并发        = 各轮期间另有 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 个别人的临时库（**只记录，不参与判定**：并发时序门对负载敏感，先把它量下来）
+  目标节点定性    = STABLE_RED(single-node)
+  定性依据        = 10/10 全红（逐 run 目标节点判定）—— 恒红不是翻转
+    run 1: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_win52mep\suite.db 解码=stdout=utf-8;stderr=utf-8 形制校验=True 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 2} 邻居进程=0 红在=E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实
+    run 2: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_4xlvz3m3\suite.db 解码=stdout=utf-8;stderr=utf-8 形制校验=True 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 2} 邻居进程=0 红在=E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实
+    run 3: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_26tcrzyx\suite.db 解码=stdout=utf-8;stderr=utf-8 形制校验=True 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 2} 邻居进程=0 红在=E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实
+    run 4: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_xd8n2dem\suite.db 解码=stdout=utf-8;stderr=utf-8 形制校验=True 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 4} 邻居进程=0 红在=E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实
+    run 5: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_3uxmetg6\suite.db 解码=stdout=utf-8;stderr=utf-8 形制校验=True 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 3} 邻居进程=0 红在=E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实
+    run 6: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest__ybq69f6\suite.db 解码=stdout=utf-8;stderr=utf-8 形制校验=True 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 5} 邻居进程=0 红在=E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实
+    run 7: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_zu884px1\suite.db 解码=stdout=utf-8;stderr=utf-8 形制校验=True 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 2} 邻居进程=0 红在=E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实
+    run 8: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_edb43kbf\suite.db 解码=stdout=utf-8;stderr=utf-8 形制校验=True 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 4} 邻居进程=0 红在=E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实
+    run 9: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_y0stvrvs\suite.db 解码=stdout=utf-8;stderr=utf-8 形制校验=True 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 2} 邻居进程=0 红在=E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实
+    run 10: exit=1 outcome=RED path_source=app_printed_receipt_line db=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_u1667_r2\suite.db 解码=stdout=utf-8;stderr=utf-8 形制校验=True 跑前={'absent': True, 'path_did_not_exist_before_this_run': True} 跑后={'absent': False, 'table_count': 55, 'journeys': 0, 'plan_versions': 0, 'travelers': 0, 'catalog_hydration_operations': 4} 邻居进程=0 红在=E   AssertionError: 期望：五个并发请求收敛到**同一个** operation_id（§7 幂等；§17-D 并发）；实
+F
+
+================================== FAILURES ===================================
+D:\moodle\_qoder_f_run\e_f_a4079bc\backend\tests\test_qoder_db_isolation_same_verdict.py:559: AssertionError: 期望：第 5 条『all 10 runs GREEN』；实际 STREAK_NOT_MET(0/10_green)（绿 0/10）
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_db_isolation_same_verdict.py::test_1a_acceptance_streak_is_ten_independent_green_processes
+============================= 1 failed in 19.49s ==============================
