@@ -1,0 +1,97 @@
+V8Experience.tsx @ 25165d9 -- raw-enum render sites (commander read, line numbers exact)
+
+===== day-card path A (UNMAPPED)  lines 2665-2682 =====
+ 2665        )}
+ 2666        <div className="v8-day-row">
+ 2667          {selected?.days.map((day) => (
+ 2668            <button
+ 2669              key={day.day}
+ 2670              className="v8-day-card"
+ 2671              onClick={() => onNavigate(hasChosenPlan ? "studio" : "hub")}
+ 2672            >
+ 2673              <span>{t("hub.day", { n: day.day })}</span>
+ 2674              <strong>{day.label.split(" · ")[0]}</strong>
+ 2675              <p>{day.activities.join(" · ")}</p>
+ 2676              <small>
+ 2677                <span className="mode-mark">{day.mode}</span>{" "}
+ 2678                {t("hub.anchor", { type: day.anchor })}
+ 2679              </small>
+ 2680            </button>
+ 2681          ))}
+ 2682        </div>
+
+===== day-card path B (MAPPED by fab8cb8)  lines 2762-2772 =====
+ 2762                  <div>
+ 2763                    <b>{day.label}</b>
+ 2764                    <small>
+ 2765                      {/* ORD-0208 4: this used to print the raw enums -- 「ARRIVAL anchor · TRANSIT」
+ 2766                          in a Chinese interface.  Both words have humanizer tables; the day card just
+ 2767                          never used them. */}
+ 2768                      {anchorLabel(day.anchor, locale.startsWith("zh"))} ·{" "}
+ 2769                      {modeLabel(day.mode, locale.startsWith("zh"))}
+ 2770                    </small>
+ 2771                  </div>
+ 2772                </div>
+
+===== live/compare route rows (UNMAPPED)  lines 3232-3245 =====
+ 3232                <span>{t("live.routeEvidence")}</span>
+ 3233                <button onClick={onSheet}>{t("live.compare")}</button>
+ 3234              </div>
+ 3235              {comparison.slice(0, 2).map((fact) => (
+ 3236                <div
+ 3237                  className="v8-route-row"
+ 3238                  key={`${fact.from_key}-${fact.to_key}-${fact.mode}`}
+ 3239                >
+ 3240                  <b>{fact.mode}</b>
+ 3241                  <span>
+ 3242                    {fact.duration_min} min · {fact.walking_min} min walk
+ 3243                  </span>
+ 3244                  <strong>
+ 3245                    {fact.cost_amount_minor == null
+
+===== map nextLeg rows (UNMAPPED)  lines 3290-3300 =====
+ 3290          <div className="v8-map-facts">
+ 3291            <span className="v8-kicker">{t("map.nextLeg")}</span>
+ 3292            <h2>
+ 3293              {nextActivityOf(data.active_plan)?.title ?? t("map.awaitingPlan")}
+ 3294            </h2>
+ 3295            {comparison.slice(0, 3).map((fact) => (
+ 3296              <div className="v8-route-row" key={fact.mode}>
+ 3297                <b>{fact.mode}</b>
+ 3298                <span>
+ 3299                  {fact.duration_min} min · {fact.walking_min} walk
+ 3300                </span>
+
+===== the two mapping tables (correct)  lines 3945-3975 =====
+ 3945  // Reverse of CITY_CODE_SLUGS: a created Journey stores the latin slug, but the
+ 3946  // traveller reads the city in their own language.
+ 3947  // Travel modes are internal enum values (WALK, RIDE_HAIL).  The traveller
+ 3948  // reads a normal word for how they will move.
+ 3949  function modeLabel(mode: string, zh: boolean): string {
+ 3950    const key = String(mode).toUpperCase();
+ 3951    const labels: Record<string, { zh: string; en: string }> = {
+ 3952      WALK: { zh: "步行", en: "Walk" },
+ 3953      BICYCLE: { zh: "骑行", en: "Cycle" },
+ 3954      TRANSIT: { zh: "公交地铁", en: "Transit" },
+ 3955      AUTO: { zh: "驾车", en: "Drive" },
+ 3956      RIDE_HAIL: { zh: "网约车", en: "Ride-hail" },
+ 3957    };
+ 3958    const entry = labels[key];
+ 3959    return entry
+ 3960      ? zh
+ 3961        ? entry.zh
+ 3962        : entry.en
+ 3963      : key.replace("_", " ").toLowerCase();
+ 3964  }
+ 3965  
+ 3966  /** ORD-0208 4: structural anchor roles reached the day card as raw enums (「ARRIVAL anchor」). */
+ 3967  function anchorLabel(anchor: string, zh: boolean): string {
+ 3968    const key = String(anchor).toUpperCase();
+ 3969    const labels: Record<string, { zh: string; en: string }> = {
+ 3970      ARRIVAL: { zh: "抵达", en: "Arrival" },
+ 3971      DEPARTURE: { zh: "离开", en: "Departure" },
+ 3972      STAY: { zh: "住宿", en: "Stay" },
+ 3973      CHECK_IN: { zh: "入住", en: "Check-in" },
+ 3974      CHECK_OUT: { zh: "退房", en: "Check-out" },
+ 3975      ANCHOR: { zh: "锚点", en: "Anchor" },
+
