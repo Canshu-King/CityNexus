@@ -1,0 +1,45 @@
+{
+ "generated_at": "2026-09-22T23:19:50+08:00",
+ "note": "simulated producer inside a COPY of my own export; no product file touched",
+ "src_head": "dfdc5d5 (export)",
+ "site": "app/services.py:224-226",
+ "reparse_points_in_source": [],
+ "patch_applied": true,
+ "gate_as_is": {
+  "rc": 0,
+  "total_line": "total 320/1152 blocked   wrote D:\\moodle\\_qoder_harness_revival_20260921\\lab\\evi",
+  "cells_blocked": 320,
+  "cells_total": 1152,
+  "family_lines": {
+   "step_free_wheelchair": "step_free_wheelchair       evidence-DEPENDENT                                             by_shape={'seed_native': 16, 'curated_true': 0, 'no_evidence': 16, 'unrelated_osm': 16, 'curated_false': 16, 'osm_native': 16}",
+   "stroller_infant": "stroller_infant            NOT_EXERCISED:extracted_but_not_hard                           by_shape={'seed_native': 0, 'curated_true': 0, 'no_evidence': 0, 'unrelated_osm': 0, 'curated_false': 0, 'osm_native': 0}",
+   "large_luggage": "large_luggage              NOT_EXERCISED:extracted_but_not_hard                           by_shape={'seed_native': 0, 'curated_true': 0, 'no_evidence': 0, 'unrelated_osm': 0, 'curated_false': 0, 'osm_native': 0}"
+  },
+  "artifact": "evidence_gate_dfdc5d5_trip_base.json"
+ },
+ "gate_simulated": {
+  "rc": 0,
+  "total_line": "total 304/1152 blocked   wrote D:\\moodle\\_qoder_harness_revival_20260921\\lab\\evi",
+  "cells_blocked": 304,
+  "cells_total": 1152,
+  "family_lines": {
+   "step_free_wheelchair": "step_free_wheelchair       evidence-DEPENDENT                                             by_shape={'seed_native': 0, 'curated_true': 0, 'no_evidence': 16, 'unrelated_osm': 16, 'curated_false': 16, 'osm_native': 16}",
+   "stroller_infant": "stroller_infant            NOT_EXERCISED:extracted_but_not_hard                           by_shape={'seed_native': 0, 'curated_true': 0, 'no_evidence': 0, 'unrelated_osm': 0, 'curated_false': 0, 'osm_native': 0}",
+   "large_luggage": "large_luggage              NOT_EXERCISED:extracted_but_not_hard                           by_shape={'seed_native': 0, 'curated_true': 0, 'no_evidence': 0, 'unrelated_osm': 0, 'curated_false': 0, 'osm_native': 0}"
+  },
+  "artifact": "evidence_gate_simprod_s1.json"
+ },
+ "check_sim_vs_baseline": {
+  "rc": 3,
+  "diff_lines": [
+   "DIFF per_family_shape:step_free_wheelchair/seed_native: baseline={'cells': 16, 'blocked': 16, 'blocked_absent_evidence_only': 16, 'codes': {'ACCESSIBI",
+   "DIFF family_rollup:step_free_wheelchair: baseline={'exercised': True, 'why_not_exercised': '', 'fixture_limited': False, 'reached_gate': True, 'eviden",
+   "DIFF cells_blocked: baseline=320 now=304"
+  ],
+  "verdict_lines": [
+   "3 changed item(s) -> RC=3"
+  ],
+  "diff_count": 3
+ },
+ "sim_copy_removed": true
+}
