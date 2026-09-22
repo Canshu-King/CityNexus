@@ -31871,3 +31871,31 @@ path-limited 同形、`-- backend/app`=9,268 B、`format-patch --stdout bce7269.
 
 **现场**：0 端口、0 HTTP 对外、0 provider/0 AI 调用；**未发 `demo/reset`**；权威树与 `CityNexus\**`、活库、用户库 **0 写入**；
 没改任何人的测试、没 skip/没放宽断言换绿；本轮新增导出 `lab/snap_4d9ceae`；我的临时库已按具名清单删净（§③）。
+
+### 📤 8c66aa92 (SESSION=8c66aa92) C · **ORD-0224 外读面补齐**：仲裁点的五项清单已全部发到 `Canshu-King/CityNexus @ commander/control`，逐件独立回读 PROVEN @2026-09-23T03:53+08
+
+先接受形状冻结：**跨进程 = 必须补**，门名 `G3_XPROC_LOSER_READBACK`，10/10 fresh cross-process，且 **Y3 必须再杀它一次**；g3 的杀手只要 Y3 一种（我的"A 与 B/C 互为冗余、单突变杀不掉 g3"被接受）。`calls=5` 拆成独立单 `PROVIDER_WORK_COALESCING` ⇒ **强修我一行不动**，等 identity closure 拍死再开单。这两条今晚**只登记、未开工**（下一件就是它，方案已经外读，见下面第 2 件）。
+
+**发布面**：分支 `commander/control`，目录 `evidence/ord0224/`（含 `patches/`）。每件都做了**两次**独立验证：发布器自己的 `PUT 201 + BYTE-LEVEL MATCH`，以及我用 `GET /contents/<path>?ref=commander/control` 逐件回读比对 **git blob sha1 + size** ⇒ **15/15 PROVEN、0 MISMATCH、0 PUBLISHED_UNPROVEN**。中途两次网络形状不谎报：目录列表 GET 一次 `URLError`（所以改逐件读回），`f92f9e9` 的 patch 第一次 PUT 吃 `400 malformed`，按 GitHub 自己的提示重发一次即 `201 + MATCH`（同一个 blob 号 `3cb234e294bb…`，不是换了内容）。
+
+| 外部路径 | git blob sha1[:16] | bytes | 是什么 |
+|---|---|---|---|
+| `evidence/ord0224/ORD-0224_receipt.md` | `52c2d0ef55f891e4` | 21311 | 正式收据（要求一） |
+| `evidence/ord0224/cross_process_evidence_plan.md` | `1939b56f1885c0d9` | 7257 | 跨进程那一格的方案（处置一） |
+| `evidence/ord0224/ord224_measurement_package_349c4fa.json` | `6e271eecc4196366` | 3411 | 步 4 小包（shape A/B + 四档读数 + 探针来源） |
+| `evidence/ord0224/probe_y3_determinism_349c4fa.json` | `0e9b32dc6526ad0c` | 13274 | Y3 的 10 轮批量（反例是否必然） |
+| `evidence/ord0224/mutate_ord0224_convergence_mechanism_349c4fa.evidence.json` | `8dcbebeb60861ca0` | 8983 | Y1a/Y1b/Y2/Y3/Y4 突变收据（anchor_hits/bytes/sha256） |
+| `evidence/ord0224/streak_g3open_349c4fa.json` | `95332d5cb4a23742` | 64865 | corrected g3 十连 |
+| `evidence/ord0224/streak_g3e_349c4fa.json` | `b969e32b3e685541` | 67861 | 强制交错门十连 |
+| `evidence/ord0224/streak_tailA_349c4fa.json` | `db99ffc498452eb7` | 71143 | tail-A 门十连 |
+| `evidence/ord0224/streak_w1_349c4fa.json` | `b2f6ed602912ef75` | 74607 | w1 dedupe 门十连 |
+| `evidence/ord0224/patches/ord0224_50d1c4d.patch` | `50254e02b0af2803` | 18880 | 提交 `50d1c4d` 的完整补丁 |
+| `evidence/ord0224/patches/ord0224_f92f9e9.patch` | `3cb234e294bbb4b6` | 41271 | 提交 `f92f9e9` 的完整补丁 |
+| `evidence/ord0224/patches/ord0224_b2c6153.patch` | `b79c33ad120773bd` | 2199 | 提交 `b2c6153` 的完整补丁 |
+| `evidence/ord0224/patches/ord0224_1ea6250.patch` | `c7ee44c9cd1a7cfa` | 4838 | 提交 `1ea6250` 的完整补丁 |
+| `evidence/ord0224/patches/ord0224_8f1f4d4.patch` | `b0033e0caf38f8c2` | 6237 | 提交 `8f1f4d4` 的完整补丁 |
+| `evidence/ord0224/patches/ord0224_349c4fa.patch` | `07e187061fbadb1e` | 12466 | 提交 `349c4fa` 的完整补丁 |
+
+**源/测试的 exact SHA（仲裁要的"corrected g3 source/patch coordinate"）**：`50d1c4d`（弱修产品码）→ `1ea6250`（ORD-0234）→ `f92f9e9`（g3 拆分 + 小包）→ `b2c6153`（处置二注释）→ `8f1f4d4`（补强门 v1）→ **`349c4fa`（补强门 v2 + 我自己的两个仪器缺陷修复 = 本包所有连击/突变的判定锚点）**；当前 tip `8f42cb7 2026-09-23 03:53:40 +0800 feat(frontend): the hub names the stop a hard rule dropped, in words and not in ids (ORD-0232)`；`git status --porcelain -- backend/` = 0 行。发布器拦名字不拦内容：我这批文件名里没有 `_live`/`.db` 片段，一次都没被 NAME 守卫挡下（HARNESS 踩过的那格我提前避开了）。
+
+**第 5 问（我名下旧树能不能自放）——先给判据再给能说的部分**：判据沿用你确认的那条 = **源 SHA 记着、`git archive` 可重出、且事实已进收据/账**才删。今天我已按它删了四个一次性导出（`snap_50d1c4d`、`snap_b_4d9ceae`、`snap_f92f9e9`、`snap_b2c6153`），只留 `snap_349c4fa`（现在外读了，可删，等我把跨进程跑完再删）。**`_qoder_f_run` 不是我的**（车道 F 的树，我这轮只从里面*读*了一份判据模块 `ebe4e24c177d8e18`），我不替别的车道删它的现场；我名下的 `_qoder_ord30_evidence_20260920` 是证据树（现在也是外读面的本地副本），删它等于毁掉复跑能力，所以我留。我刚试了给这批目录量尺寸，`du` 扫到第 4 个就超时被我自己掐了（node_modules 级别的树不该盲扫）——所以**尺寸我只有已删那四个的（每个 ~106–113 MB）和 `%TEMP` 的两轮（894 MB + 158 MB）**，别的不报虚数。你要腾 D 盘，最省的是让各车道自己按同一判据自清，或者你点名哪棵是已死车道的归档，我再动。
