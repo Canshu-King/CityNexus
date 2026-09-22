@@ -1,0 +1,52 @@
+# Deployed-artifact excerpt - HJ-P2 finding d4b04a0f/01 (AI-off submit gate)
+
+Artifact actually served to the phone at measurement time. Nothing in this file is a local
+build: the byte range below was read out of the response body of a public HTTPS GET.
+
+```text
+served file      /assets/index-BCF4ptyk.js
+bytes            1230082
+sha256           f3bda3d696d37cd1750e646a98ea6151c64d59247517c937b198dd369251d0e9
+fetched_at_local 2026-09-22 19:15 (+08) via the public preview tunnel
+fetch command    curl -s -u <proxy-basic-auth> $TUNNEL/assets/index-BCF4ptyk.js
+                   (tunnel host rotates on reboot; the sha256 above is the durable
+                    coordinate for these exact bytes)
+```
+
+## 1. The submit control's disabled expression (byte offsets are into the file above)
+
+```text
+offset 377945 (probe hit) | window shown = bytes 377775..378155
+
+plan-ai-dismiss",onClick:()=>{H.current?.abort(),n()},children:x?l?"取消并关闭":"Cancel & close":l?"稍后":"Later"}),d.jsx("button",{type:"button",className:"v8-primary-button","data-testid":"plan-ai-submit",disabled:x||c.trim().length<8,onClick:()=>{ee()},children:x?l?"规划中…":"Planning…":l?"开始规划":"Plan my trip"})]})]})})}const fb={ARRIVAL:{zh:"抵达",en:"Arrival"},DEPARTURE:{zh:"出发",en:"D
+```
+
+`x` is the in-flight/busy flag and `c` is the textarea content. The variable that holds
+AI availability is `D` - the same variable the preflight paragraph binds to its
+`data-ai-state` attribute two sections below. `D` does **not** appear in this expression,
+so on the shipped artifact the only two conditions that can disable the primary action are
+'a request is in flight' and 'fewer than 8 characters typed'.
+
+## 2. The same closure does know the AI state, and prints it as words
+
+```text
+offset 374954 (probe hit) | window shown = bytes 374834..375384
+
+(0,26)+"…"},de.en))}),D!=="checking"&&d.jsxs("p",{className:`plan-ai-preflight ${D}`,"data-testid":"plan-ai-preflight","data-ai-state":D,children:[D==="ready"&&(l?"这台服务已接入 AI 模型。":"A model is configured on this server."),D==="unconfigured"&&(l?"这台服务没有接入 AI 模型：现在提交不会真的由 AI 规划，结果会走其它路径。":"No model is configured here, so submitting will not be planned by AI."),D==="unknown"&&(l?"读不到 AI 状态（状态接口没有应答）。这只说明我们不知道，不代表它可用或不可用。":"The AI status endpoint did not answer. That means we do not know — not that it works or that it is broken.")]}),x&&d.jsxs("div"
+```
+
+The disclosure sentence rendered here, in zh-CN, is:
+
+    这台服务没有接入 AI 模型：现在提交不会真的由 AI 规划，结果会走其它路径。
+
+which invites the traveller to submit anyway - while section 1's gate is what actually
+decides whether the button is pressable.
+
+## 3. Probe summary (counts inside the served bytes, not assertions about source)
+
+```text
+submit_button_gate       needle='data-testid":"plan-ai-submit"' hits=1
+ai_state_disclosure      needle='data-ai-state":D' hits=1
+ai_state_setter          needle='deepseek_configured' hits=2
+length<8 in gate         hits=5
+```
