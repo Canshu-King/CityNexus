@@ -191,6 +191,78 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### HERMES-REVIVAL-001（9baacb24）@2026-09-22 16:3x+08 —— 按仲裁 15:58 冻结的 **GATE_ACCEPTANCE_STREAK** 把 H4–H10 收据重跑成 **10 连续独立进程**：**10/10 全绿，八条全满足**
+
+`STATUS: STREAK_GREEN(10/10) on H4-H10 | 产品 SHA `a9c25042…`（10 轮同一 SHA）| 每轮独立进程 + 独立新库 + 独立端口 | 未用 sleep/retry/降并发/放宽期望 |`
+
+**回执行（H8b 属模型支撑类，仍在 blocker 里）**
+`9baacb24 | RECOVERED_GUARDED_MUTATION | H0 PASS | H1 PASS | H2 PASS | H3 PASS | H4 PASS | H5 PASS | H6 PASS | H7 PASS | H8a deterministic boundary PASS | H8 确定性注入三面 PASS | H8 跨主体越权 RED | H8b model-backed injection NOT_RUN | H9 PASS | H10a adapter parity PASS | H10b direct-product-vs-Hermes semantic parity PASS`
+
+### ① 为什么做这个（不是我加戏）
+
+仲裁 `5773071703` @15:58 把 `GATE_ACCEPTANCE_STREAK` 冻结成**跨隔离运行翻过判定**的门的验收形状，并写明 **"10 次全绿"是必要条件**、**单次绿只是观察不是结案**。我此前交的 H4–H10 是**单次隔离 GREEN** ⇒ 按第 8 条只能算观察。这轮把它补成 10 连跑。
+
+### ② 八条逐条对上（收据 `evidence/0212/GATE_ACCEPTANCE_STREAK_H4_H10.json`）
+
+| # | 条件 | 实测 |
+|---|---|---|
+| 1 | 同一 product/test SHA | `a9c2504274dd3284b1a98b6707f7c4c9f7071cc3`，`same_sha_across_runs=true` |
+| 2 | **10 个连续独立进程** | 驱动每轮 `subprocess` 起一个**独立** ladder 进程，`runs_completed=10` |
+| 3 | 每进程**全新的 app-resolved 临时库** | 每轮先 `seed_lane_db.py` 造新库；收据里 `initial_row_counts.plan_versions=0` **10/10** 成立 |
+| 4 | 收据字段：`run_index` / `exit_code` / `resolved_absolute_db_path` / 初始行数 / 终行数 | 五字段**逐轮齐备**（见下表） |
+| 5 | 10 轮全绿 | `all_green=true`、`streak=10`（H4/H5/H6/H7/H8a/H9/H10a/H10b 每轮皆 true） |
+| 6 | 无 sleep/retry/backoff/降并发/放宽期望 | `no_sleep_or_retry_used=true`；驱动里没有重试循环，端口/并发未变，ladder 断言一字未改 |
+| 7 | 无两轮共享同一临时库路径 | `distinct_db_paths=10`、`no_shared_db_path=true`（10 个 `_streak_run{i}.db` **保留**在证据目录，可逐轮复核） |
+| 8 | 单次绿只是观察 | 本轮是 10 连，不是拿单次冒充结案 |
+
+**逐轮收据（原样）**
+
+```
+run 1..10: rc=0 green=True policy={'mode':'ASSISTED','auto_accept_replan':True,'version':2}
+           db=_streak_run{i}.db  initial_plan_versions=0  final_plan_versions=14
+```
+
+### ③ 中途抓到的**我自己的仪器缺口**（写下来，因为它正好说明 streak 有用）
+
+头两轮 smoke（`--runs 2`）**全红，且恰好只有 H6 红、其余全绿，两轮行数一模一样**——**可复现**。
+根因**不是产品**：新 seed 的库政策是产品默认 `ADVISORY / auto_accept_replan=false`（这本身是**默认安全**的证据），而 H6 正例需要 `ASSISTED`。我此前的**单次**跑是手工设过政策的，**驱动里漏了这一步**。
+⇒ **修法**：驱动在每轮通过**产品自己的** `PUT /travelers/{id}/agent-policy` 设 `ASSISTED`（**不手改库**），并把 `isolated_policy_set` 的 before/after **记进收据**（10 轮全部 `ADVISORY/v1 → ASSISTED/v2`），让这个前置条件**可见而不是被假定**。修后 10/10 全绿。
+**这条的意义**：如果只交单次绿，我会把"手工设过政策"这个前置当成隐形条件带进结论；10 连跑把它逼出来了。
+
+### ④ 边界与卫生
+
+- 每轮 `HERMES_HOME`/`CITYNEXUS_DATABASE_URL` 都在**该进程作用域**；AI off、起台**先 pop 两把 key**。
+- 未碰 `:4781/:4782/:8693` 与 `_live.db`；**未调 `demo/reset`**；未动 0.19.0 profile；无 junction；未动权威树与 `CityNexus/**`（`PYTHONDONTWRITEBYTECODE=1` 全程）。
+- 跑完 `:8531-:8540` **全释放**、0 孤儿 uvicorn；10 个 run 库 checkpoint 后无 `-wal`/`-shm` 残留。
+- 报告**无 key 值或前缀**；**H11 未碰**。
+
+### ⑤ Blocker（已写入 `## BLOCKERS`）
+
+**唯一 blocker：模型支撑类门被凭据安全性挡住**——父环境 `DEEPSEEK_API_KEY`（len 35，sha256 前 12 位 `4cabe6bcaff4`）经布尔比对**就是待吊销的泄露 key**，故 H8b/H11 不跑。求解二选一：(a) 轮换后的新 key；(b) 明示"就用这把、接受证据不可签"。**其余不需要凭据的 H 面已推到尽头**（含 10 连绿）。
+
+
+### SESSION=d2305848 @2026-09-22 16:35+08 —— 两件：**F 的 ORD-0214 我独立复验 = CONFIRMED**（test_1d 真咬我原 F1 臂，不是换了个别的红）；**① ORD-0209 反例臂确认已闭合**（16:0x 补账块的 T1/T2 就是反例臂，纯净基线已交，无新增臂可跑）
+
+**一、F 的 ORD-0214 复验（tree12 = git archive c8472fd）**
+
+- 基线：门 11 collected，**1 failed / 10 passed**——那条红是 `test_1c`（对真实现报红、归实现方，F 已按名注明），与 F 自报一致。
+- 我的原 F1 臂（`statuses[0] if statuses else None` → `else 200`，在 tree12 的 `:623`，锚点 hits=1）打上后：**红的正是 `test_1d_a_reported_status_must_be_one_the_attempts_actually_carried`**，counts 闭合，逐字节还原（cap sha 回 `38de76467b575552`）。
+- **结论：F 的"真解"成立**——只看输出四字段永远抓不到编造的 200，`test_1d` 把输入 attempts 拉进来对照，正是补我 15:41 指的那块盲。门文件 sha256[:16] = `9560f8275c1bb307`（与 F 自报同值）。
+- 一条提醒留给 C（改实现时别绕过 test_1d）：修 `test_1c` 那个红时若选"answered 却无码时落 TRANSPORT_EXCEPTION"，注意 §8 语义——attempts 里明明有 HTTP 交换（200 的 headers/body 都到了），把它标成 TRANSPORT 类会不会与"transport = 没收到响应"冲突，这个选择归实现方与仲裁，我不代裁。
+
+**二、ORD-0209 反例臂状态 = 已闭合，无新增臂**
+
+commander 15:5x 的 `REPRODUCED(canary)` 已签入口主行为；反例半在我 16:0x 补账块已交：T1（D 的 killT1 同款两发 POST）+ T2（单发 traveler POST）双 KILLED、纯净基线（sha `f461dff0f45f29dd`）2 passed、间接杀按实标注。若"一次一臂"指的是当时被内存打断的那轮——它已经用纯净基线重跑完毕（本轮就是补的那次），没有第三臂要测。
+
+**三、对三张新单立案表述的核对（commander 要求当场改口径，两处小更正）**
+
+- ORD-0215 表述"三个 SURVIVED"准确；补一个分母：B4 臂（elapsed_ms 占位）是**证明现状无门咬**的负向事实，不是"漏测"。门验收应要求"把计数改成任意别的值 ⇒ 门红"，即 F 的 test_1d 同款**对照输入**思路——计数字段在 r1d 的 xfail 里只验存在，永远抓不到"填 0 冒充"。
+- ORD-0216 ② 的"第四格改成双向门"若指 e2e 的配对负例：我的 D1/D2 臂的失败模式是**后端永远答 retryable=true**，所以 e2e 只能测正例。D 需要的不是改屏，是**造一个 retryable=false 的服务端应答形状**（fixture 或假 provider）再断言按钮不可点——只加断言不加形状，门还是只有正例。
+- 其余表述与我 15:41/16:0x 两块一致，无翻错。
+
+evidence: `raw/d2305848_o214_verify.py` + `d2305848_o214_verify.json`；树 tree12 权威导出 0 改动
+
+
 ### d291c9dc HARNESS · GATE_ACCEPTANCE_STREAK 照做 @2026-09-22T16:27+08 → 同一尖 `56d20ec`、**30 个独立进程 / 30 个不同临时库 / 零 sleep-零重试-零降并发-零放宽**：**g3 单跑 1/10 绿、g1+g2+g3 同进程 7/10 绿、整文件 0/10 绿（是 `g5` 10/10 稳定红造成的，不是 g3）**。⇒ 更正我自己 15:18 那句『至少一半是时序』：实为三源，且**单门形不是翻转、是 9/10 近乎恒红**，请仲裁在 `FLIP_WITHOUT_SHARED_STATE` 上钉一句「须写明跑法形制」；另提醒 F/C：**条件 5 必须先声明 node id**，否则会被无关稳定红永久卡死（而 deselect 就踩条件 6）。附带两条仪器坑：`pytest -q` 吞掉甲的 resolved 行、子进程 cp936 把中文断言变乱码。ORD-0211 卫生：%TEMP% `cnx_pytest_*` **170 目录/131 MB 全在 C:**，**我一个没删**（分不清谁的活库），交 C 处置。完整版在文件末尾同标题块
 ### SESSION=d2305848 · ORD-0209 反例补账 @2026-09-22 16:0x+08 —— **T1/T2 双 KILLED，但红是"间接杀"（hero 先红，计数断言没被独立触达）；途中我自己的量具事故一次，已修复并以纯净基线重跑**；更正上一块 ④ 的 NOT_MEASURED
 
@@ -10299,6 +10371,44 @@ Commander 16:0x 点名我"上一份读数自 14:24 未交"——那是 `list_cha
 - 方案对比 → 选方案 → 建承诺 → 票夹 仍等 AI 授权；凭据未出现在本块、账本或截图里。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 执行令（第三条）@2026-09-22T16:4x+08 —— 仲裁把 **`DEPLOY_BUNDLE_RETENTION` 裁成常驻部署门**（不开新 ORD）；我先按它**自纠一次**：我 15:39 那次换包的**顺序不合规**
+
+来源＝总线 `5773505790`（16:33:46，第六十一次敲门回执）。冻结原文照录：
+
+```text
+DEPLOY_BUNDLE_RETENTION — frontend deploys are additive-before-switch:
+1. publish/union the new hashed assets without deleting or overwriting the previously-served bundle assets;
+2. then switch index.html to the new bundle;
+3. at minimum, the immediately previous served bundle generation must remain directly reachable after the switch;
+4. a request for an old asset must never be satisfied by SPA/index fallback.
+
+Post-deploy receipt must prove:
+A. OLD_ASSET: old bundle URL -> 200, Content-Type is JavaScript, body is not HTML, JS size > 100 KB
+B. NEW_INDEX: index.html references the new bundle and no longer references the old one as primary
+C. NEW_ASSET: new bundle URL -> 200, correct MIME, real JS not SPA fallback
+D. SERVICE_WORKER: registered SW's precache names the new bundle, and the served SW is the intended version
+E. FAILURE RULE: HTTP 200 alone is never sufficient for an asset probe;
+   "200 + HTML fallback at a .js URL" = DEPLOYMENT_RED / STALE_CLIENT_BREAKAGE_RISK
+```
+
+仲裁补的长期边界：**"不要把这条理解成 dist 永久只增不减"**——清理旧 generation 必须是**独立的 cleanup 动作**，部署当下不得"边切新 index 边删旧 bundle"；至少保留"当前＋上一代"，直到显式清理条件成立。
+
+### 我自己先照这把尺子量一次（**结论：我 15:39 那次不合规**）
+
+```text
+我实际做的顺序：整目录换 dist（rm -rf dist → 拷新包）→ 复测发现旧包 URL 返回 200/1200 B 的 HTML → 才 cp -n 把旧 assets 并回去
+按新门的第 1/2 条（additive-before-switch）：❌ 顺序反了 —— 我先切了 index，再补旧资产
+按第 3/4 条（切换后旧包必须可达）：❌ 在 **15:39:47 换包 → 16:20 并回旧 assets** 这约 **40 分钟**的窗口内不成立，正是 E 条定义的 DEPLOYMENT_RED
+按 A/B/C/D（最终态）：✅ 16:41 走隧道复测齐全 —— 旧包 `200 / Content-Type: text/javascript / 1,228,395 B / 非 HTML`；新包 `200 / text/javascript / 1,230,082 B`；`index.html` 只引用新包；`/v10-sw.js` `200 / text/javascript / 2,096 B` 且 precache 只列新包（带 `skipWaiting`＋`clientsClaim`）
+```
+
+⇒ 措辞我按仲裁的口径写死：**最终态合规，过程在切换窗口内是 `DEPLOYMENT_RED / STALE_CLIENT_BREAKAGE_RISK`**，不写成"已按新规执行"。下一次部署（等 ORD-0216/0217 落地后批量做一次）我按 **先 union → 再切 index → 再出 A–E 收据** 的顺序做，并把这四条读数原样贴进账本。
+**这条门对所有车道生效**：谁做 frontend dist swap，先过 A–E；`200` 不算证据，MIME＋体积＋非 HTML 三件齐了才算。
+
+### 现场
+
+`56d20ec` 仍是 working tip；`c8472fd`（F 的 ORD-0214 门）在 F 分支上**未合**，等我对 ORD-0217 的下游有读数后再决定合并窗口；reference tip `c0d7e3d`；`P7=false`；用户库 3/19/3、护栏 403、匿名 401、`demo/reset` 从未触发、0 次 provider 出网；敲门 #62 已送达（页面回读命中、输入框空）；那把 key 仍未轮换。
+
 - id: ORD-0217
   to: 8c66aa92
   priority: high
@@ -12310,6 +12420,23 @@ DELIVERED: ORD-0201（① 隔离回执 preflight JSON ② 计数字段） | 回�
 
 DELIVERED: ORD-0202·第二步（B 的七件） | 报告 `_qoder_spike_20260921/ORD_0202_STEP2_B_SEVEN.md` | 代码 `6cb9298`（分支 `agent/canary-ord198-20260922`，含 merge `2c2621e`；未 push） | 复跑：`pytest tests/test_qoder_anywhere_discovery_truth.py tests/test_qoder_anywhere_matrix_truth.py tests/test_qoder_anywhere_provider_truth.py tests/test_qoder_city_failure_reasons.py -q`（discovery 7/7、matrix 9/11、provider 33/34、failure_reasons 1 缺陷矛盾） | blocker：g14a/g14c 的 premise 裁决 + 矛盾断言归 C（两处我都停手）
 
+#### (SESSION=c01d72a3) ORD-0215 交付 @16:3x（Python 生成时间戳 16:36:43+08）—— **计数字段从"被携带"到"被消费"：根因修在 `resolve_from_endpoints` 的重建（数字死在中间层），消费门 4 条上门，红队两个 SURVIVED 双双 KILLED，STREAK 10/10 按 GATE_ACCEPTANCE_STREAK 八条交付（same-SHA）**
+
+**坐标**：树 `D:/moodle/_qoder_b_ord188_20260922`，分支 `agent/canary-ord198-20260922`（已先 merge 权威线 `56d20ec`）；交前 commit **`a3e7220`**（`git log -1`：`a3e7220 2026-09-22 16:26:53 +0800 test(discovery): counts must be consumed, not carried — thresholds on both surfaces`）；streak 证据、门、修复合在**同一个 exact SHA**（rule1：两个文件的 `git hash-object` 与磁盘逐一比对，断言在 runner 里）。**未 push**。
+
+**① 根因（红队 15:41 两个 SURVIVED 的机制）**：`PhotonIdentityProvider.resolve()` 把计数放进自己新建的 ProviderAttempt，但 `resolve_from_endpoints` 用 `_TimingTransport` 的 sink **重建** resolution——重建体的 attempts 没有计数字段 ⇒ 数字死在中间层，capability 与 job 审计两个消费面都只看到 None（0 断言自然绿）。**修法**：`resolve()` 构造 `counted` attempt 后**原位回填** sink 最后一条（同次调用、同线路事实＋计数），resolve 的 attempts 直接用 `counted`（`provider_identity.py`）。产品侧读取（ORD-0201 的三栏）不变。
+
+**② 消费门**（新 `tests/test_qoder_count_consumption.py`，4 条，全走正常产品路径）：N 条 feature ⇒ `features_viewed==3` 且 `candidates_before_filter==3`（**数值相等断言**，突变改 0/改值即红）；缺 osm_id 混合格品 ⇒ `2 与 1` 且 **`before < viewed`**、`drop_summary` 含 `no_name_or_id=1` ⇒ **畸形证据与"真没有"（0/0）从此可区分**；真空答复 ⇒ 被读出来的 0；同一批计数进 hydration 作业的 `provider_attempts` 审计（读库存行）。
+**突变臂**：`features_viewed→0` 与 `candidates_before_filter→0` 两条 ⇒ 门 **3 failed / 1 passed（KILLED）**，`restored=True`（字节级还原）——红队 15:41 的两个 SURVIVED 在本门上双双转 KILLED。
+
+**③ GATE_ACCEPTANCE_STREAK 收据**（`_qoder_spike_20260921/q215_streak_receipt.json`，八条逐条对应关系写在 runner 顶部）：**10 个连续独立 subprocess**、每轮**新临时库**（`len(set(paths))==10` 断言）、每轮先过 `db_probe_preflight`（`READ_ONLY_TARGET_IDENTIFIED`）＋ settings 回读、收据含 run_index/exit_code/resolved path/**initial+final row counts**（journeys/travelers/catalog_hydration_operations 逐轮）、**10/10 exit=0 "4 passed"**、无 sleep/retry/降并发（门自身 0.05s 终态轮询除外）、rule1 same-SHA 断言。**STREAK 10/10 all_green=True。**
+
+**④ g10（同单回收）**：B 半边（places 投影＋node 中心点）0198 已交、本树在位；**剩余红的实测成因**＝g10 用**全名**撞 exact-name ⇒ `provider_no_match`，且**无 journey 的 provider 命名目的地不物化目录**（`materialize_candidates` 挂 journey 下，短名命名成功后 `place_count=0`）——这半边是 C 的 0191，落地我立即重跑。
+
+**⑤ g14a/g14c/city_failure 三条恢复**：第四步已交互斥证明与"实质未退化"双向证明（`ORD_0202_STEP4_RESTORE.md` §1-2）——恢复需要仲裁改门（甲案：probe 拒某一片）＋C 的 3 行断言跟六码，均非 B 单方可闭；本单 same-SHA 报数如需这三条，等裁决落地同 SHA 重跑。
+
+DELIVERED: ORD-0215 | 报告 `_qoder_spike_20260921/ORD_0215_DELIVERY.md` | 门 `tests/test_qoder_count_consumption.py`（4 collected / 4 passed ×10 连续进程） | 代码 `a3e7220`（树 `D:/moodle/_qoder_b_ord188_20260922`，分支 `agent/canary-ord198-20260922`，含 merge `56d20ec`；未 push） | 收据 `_qoder_spike_20260921/q215_streak_receipt.json`（10/10，八条逐条） | 突变复跑：报告 §2 两条（KILLED + restored=True） | blocker：g10 剩 C 的 0191 流程；g14a/g14c/city_failure 等仲裁改门裁决
+
 #### (SESSION=c01d72a3) ORD-0202·第四步（恢复三格：受控读数＋两门互斥的仲裁申请）@15:0x（Python 生成时间戳 14:58:11+08）—— **受控复测与你逐格一致；g14a/g14c 的"恢复"需要仲裁重新参数化（互斥是两门文本的数学性质，附实质未退化的双向证明）；city_failure_reasons 的恢复= C 把 3 行断言跟六码走（我一行未动）；本步零产品码**
 
 **受控复测（我的树，跑前 `rm -f citynexus.db*`，与你 ② 同口径）**：`g14a FAIL · g14c FAIL · city_failure FAIL ⇒ 3 failed` ——与你 `clean 66cad62` **逐格一致**，归属无争议。报告 `_qoder_spike_20260921/ORD_0202_STEP4_RESTORE.md`。
@@ -12451,7 +12578,7 @@ g14a（N=11）要求 `status=FAILED`＋`error_type=ValhallaProviderError`＋`fac
     **ORD-0190 仍缺第一步：冻结现场证据 → 重新生成 manifest → 逐条覆盖检查。**
     不扩 H 列，不重写梯子；Hermes 的连续证据归你（仲裁 `5761440727` ①已裁 owner 不换，理由是证据连续性）。
     任何要下「某个 H 步通过了」的结论，先跑 `db_probe_preflight.py`（见上方工具采纳段）证明你看的是哪份 DB。
-  status: DELIVERED-R5@2026-09-22T15:4x+08 by 9baacb24 — 继续最高H门: H8第四面跨主体越权读实测RED。在隔离库用产品API建第二个旅行者00490150+其旅程17a7a674, 经真MCP inspect_journey读到非己journey的id与title(Probe Other Journey), isError=false ⇒ foreign_data_leaked=true。根因: app/agent/principal.py:63 把跨主体校验放在 if settings.agent_allowed_traveler_ids: 之后, 而该配置默认空元组(app/core/config.py:36-39) ⇒ 校验被短路永不403; grep tests/ 零覆盖。按纪律未探写路径(避免改别人记录)。建议: agent面启用时强制非空白名单 或 白名单空时默认拒绝 + 常驻'外来journey_id必须403'测试。产品码0改动。H8b/H11仍卡凭据(泄露key)。此前另报: 两条PlanVersion可同时ACTIVE
+  status: DELIVERED-R6@2026-09-22T16:3x+08 by 9baacb24 — 按仲裁15:58冻结的GATE_ACCEPTANCE_STREAK把H4-H10重跑成10连续独立进程: 10/10全绿八条全满足(SHA a9c25042恒定/每轮独立进程+新库+独立端口/收据五字段齐/无sleep-retry-降并发-放宽/10个不同库路径且保留可复核/单次绿不作结案)。中途抓到我自己的仪器缺口: 头两轮恰好只H6红且可复现, 根因是新库默认ADVISORY而驱动漏设ASSISTED(非产品缺陷, 默认安全是好事); 修法=每轮走产品PUT agent-policy设ASSISTED并把before/after记进收据, 修后10/10。唯一blocker已写入## BLOCKERS: 模型支撑类门(H8b/H11)被凭据安全性挡住(待吊销泄露key), 求解二选一
 - id: ORD-0207
   to: 1a986a24
   priority: normal
