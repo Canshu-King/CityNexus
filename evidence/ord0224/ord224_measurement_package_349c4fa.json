@@ -1,0 +1,95 @@
+{
+  "gate_id": "G3_CONCURRENT_OPEN_GENERATION",
+  "order": "ORD-0224 step 4",
+  "measurement_only_for_old_readings": {
+    "OLD_G3_PRODUCT_DEFECT_CLASSIFICATION": "SUSPENDED_PENDING_EVIDENCE",
+    "suspended_labels": [
+      "12R/2G",
+      "0/10R"
+    ]
+  },
+  "database": {
+    "url": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_pytest_9h8cpgig/suite.db",
+    "probe_source": "app.db.session.engine (same factory the app uses)"
+  },
+  "fingerprint_under_test": "2d373c471fa007e5612db8267aef8040",
+  "shapes": {
+    "B_CONCURRENT_OPEN_WINDOW": {
+      "definition": "5 callers released by threading.Barrier(5) while one live worker is parked inside _run_operation, so the row stays QUEUED across the burst",
+      "per_request": [
+        {
+          "index": 0,
+          "status_code": 200,
+          "operation_id": "4a136a1a-93fe-4104-bb14-3eff4f4e8964",
+          "reused": true,
+          "fingerprint": "2d373c471fa007e5612db8267aef8040",
+          "elapsed_ms": 16.0
+        },
+        {
+          "index": 1,
+          "status_code": 202,
+          "operation_id": "4a136a1a-93fe-4104-bb14-3eff4f4e8964",
+          "reused": false,
+          "fingerprint": "2d373c471fa007e5612db8267aef8040",
+          "elapsed_ms": 16.0
+        },
+        {
+          "index": 2,
+          "status_code": 200,
+          "operation_id": "4a136a1a-93fe-4104-bb14-3eff4f4e8964",
+          "reused": true,
+          "fingerprint": "2d373c471fa007e5612db8267aef8040",
+          "elapsed_ms": 16.0
+        },
+        {
+          "index": 3,
+          "status_code": 200,
+          "operation_id": "4a136a1a-93fe-4104-bb14-3eff4f4e8964",
+          "reused": true,
+          "fingerprint": "2d373c471fa007e5612db8267aef8040",
+          "elapsed_ms": 16.0
+        },
+        {
+          "index": 4,
+          "status_code": 200,
+          "operation_id": "4a136a1a-93fe-4104-bb14-3eff4f4e8964",
+          "reused": true,
+          "fingerprint": "2d373c471fa007e5612db8267aef8040",
+          "elapsed_ms": 16.0
+        }
+      ],
+      "readings": {
+        "resolution_call_count": 5,
+        "durable_rows_for_key": 1,
+        "distinct_operation_ids": [
+          "4a136a1a-93fe-4104-bb14-3eff4f4e8964"
+        ],
+        "winner_and_reuse_split": {
+          "winners": 1,
+          "joiners": 4
+        },
+        "state_timeline": [
+          {
+            "operation_id": "4a136a1a-93fe-4104-bb14-3eff4f4e8964",
+            "status": "QUEUED",
+            "outcome": null,
+            "queued_at": "2026-09-22T19:31:41.946830+00:00",
+            "started_at": null,
+            "finished_at": null
+          }
+        ]
+      },
+      "probes": {
+        "resolution": "wrapper on app.catalog_hydration_operations.resolve_destination",
+        "worker": "latch around app.catalog_hydration_operations._run_operation (entered=True)",
+        "rows": "SELECT via SessionLocal on the app-resolved suite DB"
+      },
+      "burst_wall_ms": 31.0
+    },
+    "A_TERMINAL_THEN_BURST": {
+      "definition": "the retired domain: one POST, its job driven to a terminal status, then five barrier-released callers - i.e. two generations",
+      "measured_by": "test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one",
+      "why_it_is_not_a_convergence_verdict": "tail-A requires a terminal job to be answered by a NEW operation, so >1 id here is correct behaviour, not a failure to converge"
+    }
+  }
+}
