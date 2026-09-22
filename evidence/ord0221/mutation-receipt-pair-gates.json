@@ -1,0 +1,54 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0221 2",
+  "sha_under_test": "b41b4cce0e4143068bef216d96e2eab4a4116056",
+  "run_shape": "single-node, --grep per node, one fresh process and one fresh throwaway sqlite per mutant",
+  "harness": "review/ord0082_0087_kill_drivers.py (anchor_hits measured, mutant read back from disk, file restored and sha256-compared)",
+  "cases": [
+    {
+      "name": "killU1-tight-advisory-keeps-number-drops-caveat",
+      "file": "frontend/src/app/V8Experience.tsx",
+      "mutation": "delete the caveat line `<span>{advisory.hint}</span>` from the tight advisory block",
+      "anchor_hits": 1,
+      "anchor_bytes": 98,
+      "bytes_changed": -43,
+      "nodeid": "e2e/qoder-budget-advisory-tiers.spec.ts :: ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red",
+      "verdict": "KILLED",
+      "red_message": "the hub prints the derived number without its caveat"
+    },
+    {
+      "name": "killU2-tight-advisory-keeps-caveat-drops-number",
+      "file": "frontend/src/app/V8Experience.tsx",
+      "mutation": "delete the number line `<strong>{advisory.text}</strong>`, keeping the caveat",
+      "anchor_hits": 1,
+      "anchor_bytes": 90,
+      "bytes_changed": -47,
+      "nodeid": "e2e/qoder-budget-advisory-tiers.spec.ts :: ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action",
+      "verdict": "KILLED",
+      "red_message": "the tight advisory lost the derived number"
+    },
+    {
+      "name": "killV1-stale-budget-hint-follows-onto-step-3",
+      "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+      "mutation": "missingStep3 = [...missingStep1, ...missingStep2]  ->  missingStep3 = missingStep1",
+      "anchor_hits": 1,
+      "anchor_bytes": 72,
+      "bytes_changed": -35,
+      "nodeid": [
+        "e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts :: ord0216-a-fixed-field-leaves-the-hint-on-the-next-step",
+        "e2e/qoder-wizard-hint-surface-readings.spec.ts :: ord0221-4-step3-visible-hint-and-live-region-read-apart"
+      ],
+      "verdict": "SURVIVED",
+      "why_measured_not_narrated": "at step 3 the visible hint element does not exist under either spelling (see the step-3 receipt: exists=false), so no visible-text assertion can catch this mutant; the residue lives in the .v8-sr-only announcement, which is ORD-0220 2"
+    }
+  ],
+  "log_excerpt": [
+    "killU1-tight-advisory-keeps-number-drops-caveat: src/app/V8Experience.tsx anchor hits=1 on_disk=True anchor_bytes=98 bytes_changed=-43",
+    "  e2e/qoder-budget-advisory-tiers.spec.ts ['ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red'] -> KILLED (rc=1)",
+    "killU2-tight-advisory-keeps-caveat-drops-number: src/app/V8Experience.tsx anchor hits=1 on_disk=True anchor_bytes=90 bytes_changed=-47",
+    "  e2e/qoder-budget-advisory-tiers.spec.ts ['ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-action'] -> KILLED (rc=1)",
+    "killV1-stale-budget-hint-follows-onto-step-3: src/features/setup/JourneyTrialSetup.tsx anchor hits=1 on_disk=True anchor_bytes=72 bytes_changed=-35",
+    "  e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts ['ord0216-a-fixed-field-leaves-the-hint-on-the-next-step'] -> SURVIVED (rc=0)",
+    "  e2e/qoder-wizard-hint-surface-readings.spec.ts ['ord0221-4-step3-visible-hint-and-live-region-read-apart'] -> SURVIVED (rc=0)"
+  ]
+}
