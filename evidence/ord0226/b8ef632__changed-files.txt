@@ -1,0 +1,5 @@
+commit b8ef632f97d4fa71bd9c8e6f5428e6fc98aa5723
+parent b2c61532ce17c3f0910da00a2201a88487faa75d
+
+
+M	review/ord0226_kill_arms.py
