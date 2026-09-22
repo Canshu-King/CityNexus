@@ -1,9 +1,16 @@
 {
   "kind": "CORRIGENDUM",
-  "version": 2,
+  "version": 3,
   "lane": "HJ-P1 1a986a24",
-  "written_at": "2026-09-23T02:10+08",
+  "written_at": "2026-09-23T02:4x+08",
   "about": "evidence/hjp1_0223/ 内收据的代次、对称性与引用关系",
+  "narrowed_shape_arbiter_02_3x": {
+    "ORD-0220-2": "不需要 3/3。② 不是 concurrency/timing 敏感的门：确定性状态逻辑不该被 clause 8 拉进并发 streak 体系。手上已有 D 的源码修复、专属 e2e、killY1 反向突变 KILLED，加上本 lane 新代 runtime 读数（旧代非空 -> 新代空）。",
+    "ORD-0220-3": "需要重复，但形状是窄的 UI 复制门：同一前端代次 + 同一后端代码 + 同一视口与探针 + 3 个独立浏览器进程 + **每跑一份从同一 sealed 基线克隆的新副本** + 每跑断言 refused press -> inView=true 且 scrollY>0。3/3 => CLOSED(FIXED_IN_GENERATION)；任一翻转 => FLIP_ON_NEW_GENERATION，不关闭。",
+    "authoritative_replication_receipts": ["ord0223_scroll_probe_ui3a.json", "ord0223_scroll_probe_ui3b.json", "ord0223_scroll_probe_ui3c.json"],
+    "why_not_genN": "genN1/genN2/genN3 是三个独立浏览器进程，但**共用同一份库副本** _hjp1_gen.db ⇒ 不满足『每跑一份新副本』，只能作为同臂稳定性旁证，不能当复制基线。",
+    "pointer": "generation_server_map.json（端口→dist→入口字节/sha→产出提交→各自库副本，全部 HTTP 实读或哈希实测）"
+  },
   "source_coordinate_alignment": "源码坐标对齐于 0748a1f，被测包由 0748a1f 产出（旧臂被测包由 522c414 产出，其源码坐标只对齐 522c414）。本 lane 19:56 曾拿 b41b4cc 的工作树解释 522c414 的包，该机制解释已作废。",
   "asymmetry_corrected": {
     "found_by": "red team d2305848",
