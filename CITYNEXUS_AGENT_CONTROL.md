@@ -191,6 +191,8 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### d291c9dc HARNESS · 六面补充＋拆栈 @2026-09-22T14:32+08 → 移动端「点不动」那条**是我 v1 吞了异常＋选中隐藏控件**，撤回；v2 按可见控件重测：入口 ⇒ `/v8/discover`（不在移动端底栏 5 枚里），实测回路是 **菜单 ⇒ 抽屉大卡 今天**（`/v8/discover → /v8/hub`，441→788 字；底栏那枚 今天 我只看见、没单独点）⇒ 不判缺陷，只把"多开一次抽屉算不算绕"交你/仲裁；栈已拆（`:8531/:8532` LISTENING=0）、409 MB 真复制 `node_modules` 已删且主树完好、D: 可用 20,485 MB。完整版在文件末尾同标题块
+
 ### d291c9dc HARNESS · EXP-HARNESS-004/004b @2026-09-22T14:24+08 → 措辞分母 64×8：**`SLOW_PACE` 0/8、控制族里也有一句（「必须完全无台阶」）0 码 0 行**；正对照钉死机制：**`SOFT_CODES`+`CONTEXT_CODES` 共 6 个码在任何措辞（含「必须」「硬性要求」）下都产 0 条约束行**，能进门的只有 `HARD_ACCESSIBILITY_NEED` ⇒ 与 HJ-P4「两句原话产出同一方案」在机制上对上；⚠ 只测确定性路径，端到端那半句请 HJ/B 签。完整版在文件末尾同标题块
 
 ### d291c9dc HARNESS 检查点 @2026-09-22T14:18+08 → 13:3x 令的六面**真跑在浏览器里**：12/12 面 reached、**10/12 operable（真控件＋读数必须变）**、剩两格给了归因而非口号；**头条 EXP-HARNESS-005：入口按钮写着「使用封存的天津演示」，6/6 次实测它 POST 新 traveler＋新 journey＋跑一次 solver，而封存 journey `22222222…` 从未被任何 request URL 寻址（只出现在 `/demo/scene` 响应体里）**；常驻门在新尖 `66cad62` **RC=0 / IDENTICAL / 320 比 1152**
@@ -9661,7 +9663,137 @@ SHARED _live.db (mode=ro)         journeys=3  my_journey_present=0  ids=[2222222
 status: ORD-0208 **DONE@2026-09-22T14:2x+08 by e345b9d6**（提交 `fab8cb8`＋`0cd697b`；①枚举/UTC/自相矛盾三处修复＋邻居门同步改写，②aria-pressed 全补，③默认值三行加「我们替你填的」且 typed 值不误标，④日卡枚举过人话表；断言读渲染文字；四突变 3 KILLED + 1 间接 KILLED；三次链红均为门判据错并按实记录）
 evidence: `frontend/e2e/qoder-speaks-the-travellers-language.spec.ts`（新，四节点）、`review/evidence/ui-overnight/ord0208-{clock-sentence,chips,defaults,day-card}.json`＋四图、`review/killS*.log`、`review/tsc-0208*.txt`、`review/add-ord0208-mutants.py`；改动 `V8Experience.tsx`、`JourneyTrialSetup.tsx`、`styles.css`、`qoder-today-follows-the-stage.spec.ts`、`qoder-wizard-speaks-human-and-survives-reload.spec.ts`、`review/ord0082_0087_kill_drivers.py`。**未 push**。
 
+### 🪪 d4b04a0f HJ-P2 承诺密集型 · 13:0x §2（第四轮）隔离证明 + 场景 @2026-09-22T14:0x+08（本机钟实读）
+
+**人设**：很在意"预订/承诺会不会丢"的旅行者。本轮只做一件事：在**自己的一次性副本**上，用手指走真实路径，报"人看到了什么、能不能操作"。
+全程点屏幕，**没有用 API 抄近路造成功**（fetch 只用来读回状态码/响应体当证据）。**没按过「重置到场景起点」**——尽管这轮它在我的副本上已经伤不到任何人，禁令就是禁令。
+
+#### 一、隔离证明（第一步交付，先证明再点）
+
+`python _qoder_cmdr_ref_20260921/live_checks/db_probe_preflight.py --database-url 'sqlite:///D:/moodle/_qoder_hjp2_r4_20260922/_hjp2_r4.db' --cwd 'D:\moodle\_qoder_integration_20260919\backend' --expected-min-tables 40` → **exit 0**，完整收据存 `D:\moodle\_qoder_hjp2_r4_20260922\preflight_after.json`，关键字段：
+
+```json
+{
+  "source_label": "app.settings.database_url",
+  "database_url_as_resolved_by_app": "sqlite:///D:/moodle/_qoder_hjp2_r4_20260922/_hjp2_r4.db",
+  "process_cwd": "D:\\moodle\\_qoder_integration_20260919\\backend",
+  "resolved_database_path": "D:\\moodle\\_qoder_hjp2_r4_20260922\\_hjp2_r4.db",
+  "exists_before_open": true,
+  "open_mode": "sqlite mode=ro",
+  "table_count": 55,
+  "known_table_counts": { "journeys": 4, "plan_versions": 19, "travelers": 4, "catalog_hydration_operations": 0 },
+  "status": "READ_ONLY_TARGET_IDENTIFIED",
+  "safe_to_claim_clean": true,
+  "reason": "Target identity and non-empty schema were observed read-only. This does not itself prove application isolation."
+}
+```
+（`source_label` 是工具默认值；真实出处见下一段。）
+
+**我走的是哪个 build、哪个库、哪些端口**：
+- 前端 = `_qoder_preview_20260920/dist/assets/index-CnfHH2K_.js`，**sha256 前缀 `524038d21f51edfe` / 1,228,395 B / mtime 09-22 02:10** —— 与 HJ-P1 签收那把**逐字节同一份产物**；我的页面 `script[src]` 实测也是它。
+- 后端 = 权威树 `D:\moodle\_qoder_integration_20260919`，`backend/app` **无未提交改动**，openapi **139 条路径**（与 P1 报的 `e0fc697` 那把**路径数一致** ⇒ 两把读数在同一 API 面上可比）。
+  ⚠ **该树在我起进程之后仍在被别的车道提交**：我 import 时 HEAD 已是 **`13377d3`（09-22 13:41 security(hygiene): redact the credential literal…）**，而 P1 那把是 `e0fc697`（07:06）；`e0fc697..HEAD` 之间有 3 笔动过 `backend/app`（`7167ef6` / `ebb4b3f` / `c0d7e3d`）。所以我的后端只能钉到"**≥13:41 那一笔**"，钉不到 P1 的 sha。
+- 库 = `D:\moodle\_qoder_hjp2_r4_20260922\_hjp2_r4.db`，用 `mode=ro` + `Connection.backup()` 从 `_qoder_cmdr_gate_20260921\backend\_live.db` 拷出的一次性副本（3,710,976 B / 55 表 / 3 journeys 起点）。
+- 端口 = 后端 `127.0.0.1:8452`、我的 `vite preview` `127.0.0.1:8492`（起前 bind-test 均 FREE，`CITYNEXUS_BACKEND_PORT=8452`）。**没连共享 preview、没开新隧道、没往权威树里写过任何文件**（上一轮我不小心把副本放进 `backend/`，这轮改用绝对 URL `sqlite:///D:/moodle/...` 放在自己目录，收尾时权威树 `git status` 里我的残留 = 0）。
+- 浏览器 = 独立 context（全新 profile）+ `window.name=HJP2R4-MINE-d4b04a0f`，390×844 / dpr3 / isMobile / hasTouch。
+
+**写隔离收据（这才是"隔离"的真证据）**：
+
+| 库 | journeys | travelers | 说明 |
+|---|---|---|---|
+| 我的副本（走查前） | 3 | 3 | 从 `_live.db` backup 出来的原样 |
+| 我的副本（走查后） | **4** | **4** | 本轮「广州之旅」`1784be9c` 只落在这里 |
+| 共享 `_live.db`（同一工具只读探测） | **3** | **3** | **未变**，主文件 mtime 仍 `09-22 13:40:32` |
+
+⚠ **一条副作用要说清（照 P1 的规矩）**：为了并列第三行，我用同一工具以 `mode=ro` 打开过共享 `_live.db` 一次。主库文件没动，但 **`_live.db-wal` 的 mtime 变成 `14:01:34`，正是我探测的时刻** ⇒ **WAL 模式下"只读探测"不是字节中性的**。如果这条算越界请明说，下次我只探自己那份。
+
+#### 二、TRUTH_DEFECT（本轮最值钱的一条）｜**"选定方案"只有 AI 一条路 ⇒ 承诺能力被模型调用独占**
+- 我自建了「广州之旅」`1784be9c-3355-4a29-b56c-2d309c1874dc`（`POST travelers` 201 → `POST journeys` 201，向导 8 秒落库），然后按真人反应去找"把方案定下来"的入口：
+  - `/v8/studio` 全部可见按钮（**12 枚，原样打印**）：`菜单 / 跟随系统 / EN / GU / 报告降雨中断 / 选择住宿 / CityNexus Copilot / 今天 / 行程 / 地图 / Copilot / 我的` —— **没有"生成方案"也没有"选定方案"**。
+  - `/v8/trips` 全部可见按钮（**15 枚**）：`菜单 / 跟随系统 / EN / GU / 行程 / 住宿 / 预订 / 花费 / AI 帮我规划 / CityNexus Copilot / 今天 / 行程 / 地图 / Copilot / 我的`。
+  - 屏上原文：「行程 / **还没有可看的行程** / 这个行程还没有选定的方案。**先让 AI 帮你规划**，选定方案后这里会显示逐日安排。」
+  - 关键词扫描：`采用 / 生成方案 / 使用这个方案 / 采用方案` **0 命中**；`选定方案` 只在上面那句**说明文字**里出现，不是控件。
+- 而服务器侧我前两轮已实测两次：硬承诺只能建在 PLANNED 上（原话 `booking requires a PLANNED Journey`，面板灰态引用）。
+- **串起来就是**：`建承诺` ← 需要 `PLANNED` ← **只有 `AI 帮我规划` 这一条路**。也就是说**一个不想用/不能用 AI 的用户，在这套界面里根本造不出一条硬承诺**。我这条道是故意把 `DEEPSEEK_API_KEY` unset 起的（按 Commander 的口径），所以 AI 那一步我**没有**替它编成功——我停在"没有非 AI 入口"这个具名事实上。
+- 分类 **TRUTH_DEFECT + HUMAN_ACCESSIBILITY（能力可达性）**；复现 **1/1**（我自己的库、自己的 profile、无跨道因素）。
+- 最小修法（供裁）：要么在 studio 给一个确定性的"用当前候选方案生成/选定"按钮（demo 舞台的 `prepare-scenario` 证明这条服务端路径本来就存在），要么在「行程」空态那句里**明说"不使用 AI 就无法选定方案"**，别让人以为后面还有手动入口。
+
+#### 三、HUMAN_MISLEADING｜「报告降雨中断」是枚惰性按钮
+- 在 `/v8/studio` 上它 `enabled`（`disabled=false`、无 `aria-disabled`）、44 px 高、手指可达；我点下去之后：**0 个 POST、屏幕文案一字未变**（「方案健康度 / 尚未选择 / 尚未核对」原样留着），也没有任何"为什么现在不能报"的话。
+- 对照：同一屏另一枚「选择住宿」是有真实去向的。⇒ **不是所有灰区都诚实**：不可用的时候它不置灰、不解释，只是安静地什么都不做。
+- 分类 **HUMAN_MISLEADING**（次级 HUMAN_BLOCKER）；复现 1/1。
+
+#### 四、本轮印证到的 ORD-0208 条目（给 `e345b9d6` 旁证，不另开单）
+- **第 3 条（默认值与用户输入同口径）成立**：广州确认屏原文「人数 / 房间 **2 · 1** / 总预算 / 住宿 **CNY 3000 / 1000** / 节奏 **轻松** / 兴趣 **—**」——我只输入过城市+抵达+离开三项，其余全是猜出来的默认值且**不带"默认"标记**，而同屏「兴趣 —」是诚实的未答。⇒ 同一屏两种口径，与 ORD-0208 ③ 的定性一致。
+- **第 4 条（枚举没翻）成立**：头像 chip 显示「**GU**」（广州取首字母？没有任何解释）；上一轮同位置是「BE」「CN」。
+- 第 2 条（chip 无 `aria-pressed`）我第二轮在 `6vq1iijw` 上独立量到（5 枚 chip `aria-pressed` 全 null），本轮未重测。
+
+#### 五、诚实的 PASS 项（这轮又看到的）
+- `/v8/studio` 空态原文：「**尚未核对** / 你还没有选定方案，因此没有可核对的内容。先选定方案——**CityNexus 不会宣称没有做过的检查。**」⇒ 这正是"不许假装成功"该有的写法，我要给它记一功。
+- 向导等待文案仍是真实秒数、不编进度：「正在搜索住宿 / 已等待 7 秒 / 第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字」+「停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失」。
+- 向导示例跟目的地走（填"广州"后 placeholder 变 `例如：广州站 / 机场`）——ORD-0104 ① 的修在第三把产物上仍然在。
+
+#### 六、我没做完 / 故意没做的（如实）
+- **③ 假空态三屏卡仍未在本构建复验**：要复验得让"当前正在看的那趟"身上有已确认预订，而带承诺的是 demo 那趟 `22222222`、界面给我的是广州；手机宽度下**没有旅程切换器**（P1/P3/P4 同报）。我**没有**用改 `localStorage` 的方式伪造一次复现——那样拿到的不是用户能看到的东西。上一轮在 `6vq1iijw`/`DDgOVfG6` 两把上它都还在。
+- **C4 承诺入口**本轮未重查（第二轮结论：可见 UI 只到 `C3_Guaranteed`）。
+- **`database is locked` 本轮仍未撞出**：我这轮是单进程单道，并发度不够，**不算反证**。
+- 本块新建 journey **1 条**（广州 `1784be9c`）；连同 13:2x 那块（上海 `e93efb28` + demo 那趟 3 次 replan 决定），我名下这两块共 **2 条新建 journey**。离 ≥8 的总量缺口请 Commander 按四道合计核，我下一块继续按"每场景一条新 journey"补。
+- **收尾**：本块结束时我会停掉 `:8452`/`:8492`、关掉我的 context，副本库与截图留在 `D:\moodle\_qoder_hjp2_r4_20260922\` 供复跑。
+
+#### aad2d1f2 HJ-P3 隔离收据 @2026-09-22 14:3x（本机钟）→ 开点前的证明，P3 急躁移动型（13:0x 用户令 §2）
+
+- **一次性库副本**：`D:\moodle\_lane_aad2d1f2_db.sqlite3`（5,562,368 B，复制自 `_qoder_cmdr_gate_20260921/backend/citynexus.db` @09-21 04:40；实测 54 表 / journeys 1 / travelers 1）。**共享库零写入**：`:4782` 的 `_preview.db` 与 `_live.db` 只读未碰。
+- **槽位**：`lane_proof.cjs claim --lane aad2d1f2` ⇒ 后端 **:8424** / 前端 **:8464**（`_lane_registry.json` 已记录，`list` 显示独占；dc19d662 的 8438/8478 未动）。
+- **后端**：`.venv` 3.12.14 + uvicorn，`CITYNEXUS_DATABASE_URL=sqlite:///D:/moodle/_lane_aad2d1f2_db.sqlite3`，`CITYNEXUS_DEMO_MODE=false`（**不跑 demo/reset**），health 200。
+- **前端**：`vite preview --outDir <预览现有 dist>` @127.0.0.1:8464，代理到 :8424（`/api/v1/health` 经前端 = 200）。
+- **构建归属**：实到包 **`index-CnfHH2K_.js` + css `index-jK0l3zzT.css`**（dist 构建 02:10:21）；但树 tip 已到 **`0cd697b`（14:20:30）**，最新前端提交 `fab8cb8`（14:06，ORD-0208）晚于 dist 构建 ⇒ **我跑的是 02:10 的包，不是 tip**；本轮读数归 `index-CnfHH2K_.js`。
+- **浏览器**：独立 `browser.newContext()`（390×844 / dpr3 / isMobile+hasTouch）+ `window.name=HJP3-LANE8464`，`localStorage` 全新（`journey_id=null`）。
+- 磁盘注意：D: 剩 16G（95%）——commander 上午刚撞过盘满；我这次只复制 5.6MB 库，未建导出树。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 更正 + 新机制 @2026-09-22T14:3x+08 —— 我说 `gates::g3` 是"顺序依赖"，**机制查出来更糟也更好修：它依赖的是 CWD 里那份共享 SQLite 的累计行数**；同时我把 A/B 复测在**受控状态**下重做了一遍
+
+### ① 先更正我自己（14:32 总线与 14:1x 账本里那条"游走"读数）
+我写过：「`g3` 在 `fab8cb8` 单跑两次都 FAIL、在 `66cad62` 单跑两次都 PASS ⇒ 同一 nodeid 判定随运行组成变化」。
+**这个对比不成立**：两棵树的累计数据库状态不同（`v_66cad62` 被我的全量＋突变跑写过行，`v_fab8cb8` 只被我碰过几行）。
+⇒ 那不是顺序敏感，是**我拿两棵脏脏程度不同的树比**。撤回该措辞，换成下面受控后的结论。
+
+### ② 受控复测（各自**全新导出**＋跑前 `rm -f citynexus.db*`＋两种节点顺序各一遍）
+
+```
+clean fab8cb8（B 合并前）:  g3 FAIL | g14a PASS | g14c PASS | city_failure PASS   ⇒ 1 failed, 3 passed（正反序一致）
+clean 66cad62（B 合并后）:  g3 FAIL | g14a FAIL | g14c FAIL | city_failure FAIL   ⇒ 4 failed（正反序一致）
+```
+⇒ **两条结论同时变硬**：
+1. **`NEW_REGRESSIONS = 3` 成立**，且确实是 B 这笔造成的（受控状态下前后一致，不再是"可能我的树不一样脏"）。仲裁与 B 可以照原判定继续修。
+2. **`g3` 不是 B 的回归，也不是"随机 flaky"**：它在**干净库**上两棵树都红；**脏库（有累计行）时才绿**。
+   也就是——**这条门需要前序运行留下的行才通过**。它此前从未出现在 11 条红清单里，恰恰因为
+   那几把全量都是**在同一棵已经被自己写过的树**里跑的（我 13:2x 那把之前先跑过 targeted）。
+
+### ③ 机制证据（一次真实读取，不是推断）
+```
+cwd = D:\moodle\_qoder_cmdr_ref_20260921\v_66cad62\backend
+app.core.config.settings.database_url = sqlite:///./citynexus.db      ← CWD 相对，进程环境里没有 DATABASE_URL 覆盖
+跑 4 条门之后:  citynexus.db = 733,184 B；表内 catalog_hydration_operations = 11, journeys = 1, travelers = 1
+```
+⇒ 后端测试套件**默认写进工作目录里那份共享库**；两次运行之间**行不会消失**，所以任何"收敛到一条 operation""计数为 N"这类断言
+都可能被前一次运行喂成绿。**这不是 flaky，是缺 per-run 隔离**，而且它同样能解释本周我们叫过"轮换红"的那一族。
+
+### ④ 一道要仲裁一句定的问题（我不自己定，因为 09-20 有禁令在先）
+`TEST_INFRA_SHARED_DB_BLOCKER` 当初是 **CLOSED**、并**禁止 per-worker temp DB**（那是针对 **E2E 权威跑**的裁定：不许每个 worker 一份库，免得测到邻居）。
+现在量到的是**后端单测/门在同一棵树的 `./citynexus.db` 上跨运行累计**，导致 `g3` 这类门"要脏库才绿"。请一句定：
+- **(甲)** 后端套件（非 E2E）允许 **per-session 临时库**（跑完即弃，不违反 E2E 那条禁令的精神：E2E 要的是共享真值）；
+- **(乙)** 保持共享库，但要求 `g3` 这类门**自带 arrange + 显式清理自己造的行**，并加一条常驻门：
+  **"同一 node id 在干净库与脏库上必须同判定"**（这条我可以让 F 现在就写，因为它不需要新库策略就能实现）；
+- **(丙)** 甲 + 乙都做。
+**我的建议是丙**，但先做 (乙) 里那条"干净/脏必须同判定"的门——它不改变任何人的环境，且会立刻把这类假绿变成具名红。
+在裁决前**我不改任何测试基建**，也不让车道改（那是环境级动作）。
+
+### ⑤ 对今天已有结论的影响面（我自己扫过一遍）
+- `FIXED = 7`：**不受影响**（那 7 条是"从红变绿"，脏库只会让它们更容易绿；受控复测里它们在全新库上也不再红——B 那笔的语义我另做复核）。
+- `NEW_REGRESSIONS = 3`：**变硬**（见 ②）。
+- `ORDER_DEPENDENT = 2`：改名为 **`STATE_DEPENDENT / PASSES_ONLY_ON_A_DIRTY_DB`**，`abandon_reports_a_request_not_a_death` 那条同族，**待同样受控复测**（我下一把做）。
+- 我 13:12 之后所有"红集合逐 nodeid 相同"的对比**仍然成立**（都是同一棵树内的一次性全量对比），但**跨树比较**今后必须先声明 DB 状态。
+
 ## ORD-0209 @2026-09-22T14:2x+08 —— 仲裁已裁：**"使用封存的天津演示"必须只读寻址封存 journey**（EXP-HARNESS-005 的修法）
 
 - id: ORD-0209
@@ -10132,6 +10264,8 @@ git rev-list --count 466c862..c0d7e3d          ⇒ 25      （你落后参考尖
 
 这份 handoff `v6` 补丁在 09-19 是我这条线推进集成的，所以**我欠这条检测**：我当时看过那个文件的行数与形状，
 没有扫过它携带的字面量。这条并入我的"负向断言要先打印清单"那一族（同族这周已第七次）。
+
+  note@F@2026-09-22T14:34+08: 13:4x 两件都交了（分支 `agent/f-ord200-20260922` 同一条线，detached worktree 建在 `c0d7e3d`；`22411bd` = g3 arrange + 转 C，`6b71aab` = 凭据字面量常驻门）。**产品码 0 改动。****① 凭据门第一次跑就抓到 2 处**：`frontend/e2e/qoder-e2e-config-guard.spec.ts:140`（长度 23，是该门自己的自证样本，合法）与 `qoder-handoff/qoder_xiaomi_truth_hardening_v6.patch:6348`（**长度 35**）。第二条要紧：**受版本控制的 blob 里仍是 35 字符形状**，我用**相等比较**核过它与当前进程环境那把 key `sha256[:12]=4cabe6bcaff4` **不相等**（`EQUAL_TO_LIVE_ENV_KEY=False`）⇒ 是历史里那一把、不是现在这把，但它**仍在受版本控制路径里**。**口径差异必须说清**：权威树工作副本已被 `13377d3` 脱敏成 23 字符，而**我这条线 `c0d7e3d` 的 blob 仍是 35 字符** ⇒ 脱敏只改了工作副本、**没进我这条历史**；本门报的是**受版本控制的那一份**（`git show HEAD:<path>` 实测），这正是它该报的。门含咬合反例（真形状必红/三种占位必绿/补丁 `+` 行必抓）+ 承重自证；**只报位置与形状，绝不打印原文或前缀**。**② g3**：先复现（整文件 8 次里 1 次、12 次里 5 次红；单跑恒绿），按令**先自带 arrange**（reset + 等到该指纹无未终态作业，**判据一字未松**）⇒ **arrange 后仍红**（12 次里 5 次），**按令转 C**。机制我量了现场给 C：部分唯一索引 `db/schema.sql:1007` 只覆盖 `WHERE status IN ('QUEUED','RUNNING','ABANDON_REQUESTED')`，而 `UNSEEN_COUNTY` 无 provider ⇒ 作业**很快落 `UNAVAILABLE`**，索引随即不再覆盖 ⇒ 第二个插入合法。现场：先等终态再并发 ⇒ burst 拿到**另一个** id（`99773dda` ≠ 首发 `6c4308a4`，`reused=[F,T,T,T,T]`）；20 次并发里 1 次窗口内分裂，**两个 id 都已 `UNAVAILABLE`、都 `reused=False`**（各自都当创建者）。读数：三文件合跑 **15 passed / 1 failed / 2 skipped**（failed 即转 C 的 g3）；凭据门 **3 passed / 1 failed**（failed 即上面 2 处）；收集 1185。SELF_REPORTED。
 
 ## commander 立规 @2026-09-22T13:4x+08 —— 仲裁给的**全量触发口径**（六条）照录进 `CURRENT_GATES`；另清一笔我量了年龄的卫生债
 
@@ -21819,3 +21953,33 @@ Refreshed: 2026-09-21 15:0x (+08:00，`date` 实读) · LAST_ARBITER_COMMENT_ID 
 - 上一块⑵里"`sealed_journey_in_request_url`"那处恒真判据同类：**"响应体里出现过" ≠ "UI 打开了它"**；这条我已在同一块里自首并修正（0/6 vs 6/6）。
 
 **⑸ 合规**：未跑突变；未放宽任何断言、未加 skip；未改产品码/SUITES；未写权威树与 `CityNexus\**`（只 `git archive` 单向导出）；本实验**未开任何端口、未发任何 HTTP、未开库**；`demo/reset` 全轮 0 次；未调真 provider。
+
+### d291c9dc HARNESS · 六面补充＋拆栈回报 2026-09-22T14:32+08 → 移动端"回不来"这条**是我 v1 仪器的错，已撤回**（选中的是被隐藏的另一枚同名控件）：按可见控件重测，「使用封存的天津演示」⇒ `/v8/discover`，底栏 5 枚（今天/行程/地图/Copilot/我的）与抽屉 菜单⇒今天/实时行程/地图 **都能点动**（`/v8/discover → /v8/hub`，正文 441→788 字）；栈已全部拆除，`:8531/:8532` LISTENING=0，删掉 409 MB 真复制 `node_modules`，D: 可用 **20,485 MB**
+
+**⑴ 我撤回一条没发出去的读数（先说错在哪）**
+`mobile_golden_path.mjs`（v1）报"点 今天 之后 url/正文都没变"。它把 `click()` 的异常 `catch(() => {})` 吞掉了，而 `:has-text("今天")` 在 390 px 下**先匹配到隐藏的桌面侧栏节点** ⇒ "没变"是我的点击没落上，不是产品惯性。**v1 的 JSON 已改名留在** `lab\evidence\six_faces\mobile_golden_path_v1_WITHDRAWN.json`，不许再被引用。
+
+**⑵ v2（只点"看得见且有盒子"的控件，失败必须带异常原文）实测**
+
+| 步 | 屏幕 | 发生了什么 |
+|---|---|---|
+| 01 | `/v8/hub` 163 字 | 三步向导，入口按钮 `data-testid=trial-tianjin-demo` 唯一命中 |
+| 02 | **`/v8/discover`** 325 字 | 点它 ⇒ url 变、正文 163→325；向导已收起（`trial-create` 控件消失）|
+| 03 | `/v8/discover` 441 字 | 点 **菜单**（`class=v8-mobile-menu`，记到的盒子是 `17,-357`，即视口上方）⇒ 点击成功、抽屉打开，正文 +116 字，露出 今天/实时行程/地图 三枚 271×292 大卡 |
+| 04 | **`/v8/hub`** 788 字 | 点 **今天**：3 枚同名里选中 `14,114` 那枚 = **抽屉里那张大卡** ⇒ url 回到 hub、正文 441→788 |
+| 05 | — | 此时再点 实时行程 报"没有可见控件"：**抽屉已被上一步导航关掉**，是我的顺序产物，不是产品结论 |
+
+⇒ **结论（这次有正证，也只写到正证为止）**：入口把移动端用户送到 **`城市探索`——它不在移动端底栏 5 枚里**（底栏 = 今天/行程/地图/Copilot/我的）。**实测走通的回路是 `菜单` ⇒ 抽屉大卡 `今天`**；底栏那枚 今天 在 02/03/04 帧都可见、导航后带 `active` 类，**但我没有单独点过它 ⇒ 这句不算"底栏直接可回"的证词**。所以"送到一面没有底栏入口的面"是**设计事实**（`v8Routes.ts` 的 mobileRoutes 就 5 条），**我不判缺陷**；要判的只有"多开一次抽屉这一跳对第一次来的人算不算绕"——**口径归你/仲裁，我一行产品码没动**。
+`demo/reset` 本轮 **0 次**；被拦非 localhost 请求 32 次。
+
+**⑶ 一处 provenance 更正（我 14:1x 那块写窄了）**
+那块的 `运行时` 写的是 `D:\moodle\CityNexus\.venv` 3.12.14。实际是**两个解释器**：常驻的浏览器栈里 **后端 uvicorn 跑在 `C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\python.exe`**（`Stop-Process` 前用 `Get-CimInstance` 读到 PID 48888 的完整命令行核实的），而我所有**进程内**测量（门、004、审计）跑在 `D:\moodle\CityNexus\.venv\Scripts\python.exe` 3.12.14（`sys.executable` 实读）。同为 3.12.14，**渲染/HTTP 读数不受影响**，但引用我数字的人该知道哪条腿是哪个。
+
+**⑷ 拆栈与盘（照 13:3x 环境与 ORD-0128 禁令自查）**
+- `:8531`（PID 48888）与 `:8532`（PID 53436）已 `Stop-Process`，`netstat` 复核实读 **LISTENING=0**；
+- `lab\web_tip\frontend\node_modules` 删除前核过**不是 junction/symlink、399 个子项 0 个 reparse point**（`os.stat().st_file_attributes & FILE_ATTRIBUTE_REPARSE_POINT`），删后 **`D:\moodle\CityNexus\frontend\node_modules` 完好、仍是 409 MB** ⇒ D-7 没被踩；
+- 我早期写错父目录留下的 `lab\web_tip\evidence\`（3 份被取代的 visit JSON + 1 份探针）已搬正/删除；
+- `lab` 现占 **81 MB**；`df -B1M /d` = `314736 总 / 294252 用 / 20485 可用 MB`（本轮开始时约 20,300 MB）。
+- **未做**：未跑突变、未放宽断言、未加 skip、未改 SUITES、未写权威树与 `CityNexus\**`、未打产品补丁、未读 `_live.db`/`_preview.db`、未碰 `:4781/:4782/:8693`、未发 `demo/reset`、未调真 provider、未建 junction。
+
+**⑸ 我这侧现在等的东西（不是 blocker，只是排程）**：`ORD-0205` 要等那族 7 条 `stateful` 红修掉（且权威树此刻 `M tools/verification/mutation_campaign.py` 正被别的车道改，我不在脏树上重定基线）；`ORD-0160 ③` 要等 `ORD-0155` 的映射层落地。**没有新令我也不睡**：下一条自驱实验是 `EXP-HARNESS-006`——**把这次的一次性六面走查做成常驻门**（任意 SHA 导出即跑，落"每面可见字数 / 该面控件清单 / 操作机制 / `demo/reset` 计数 / 出网计数"为基线，带 `--check` diff 与变红 RC≠0），形状与 `harness_evidence_gate.py` 一致；**优先级低于你任意一条派单**。
