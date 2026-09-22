@@ -1988,6 +1988,12 @@ function budgetMoney(
   }
 }
 
+/* ORD-0226 (red team arm E1): a word table cannot pin down what a caveat says, because paraphrase is
+   unbounded.  This sentence is frozen and `e2e/qoder-budget-advisory-tiers.spec.ts` asserts it
+   character for character -- so changing the copy means editing that gate in the same commit. */
+const TIGHT_CAVEAT_ZH =
+  "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。";
+
 function budgetAdvisory(
   reference: V8Data["trip"]["budget_reference"],
   zh: boolean,
@@ -2022,7 +2028,7 @@ function budgetAdvisory(
       : `${days} days · ${people} people · about ${amount} per person per day`,
     hint: tight
       ? zh
-        ? "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。"
+        ? TIGHT_CAVEAT_ZH
         : "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally."
       : reference.floor_comparable
         ? zh
@@ -2336,7 +2342,7 @@ function Hub({
               data-tight={advisory.tight ? "true" : "false"}
             >
               <strong>{advisory.text}</strong>
-              <span>{advisory.hint}</span>
+              <span data-testid="budget-advisory-caveat">{advisory.hint}</span>
               <div className="today-advisory-actions">
                 <button
                   type="button"

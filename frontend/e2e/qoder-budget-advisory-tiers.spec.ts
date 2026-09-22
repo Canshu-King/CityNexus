@@ -226,6 +226,19 @@ test("ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red — 只�
 const RISK_WORDS = ["超出", "紧张", "吃紧", "不够"];
 const ALLAY_WORDS = ["充足", "放心", "宽裕", "富余", "没问题", "绰绰有余"];
 
+/**
+ * ORD-0226 (red team `d2305848` 23:4x, arm E1): a word table cannot win.  Their third arm appended
+ * 「不过别担心，肯定够用」 -- every word outside `ALLAY_WORDS` -- so `risk=["超出"]`, `allay=[]`, both
+ * assertions green, and the traveller still read a warning and a reassurance in one breath.  Chinese
+ * paraphrase is unbounded; the only stable predicate is **this sentence, character for character**.
+ * The literal lives in the gate on purpose: if the gate imported the product's own constant, the
+ * equality would be true by construction and the mutant would sail through.  The cost is real and
+ * accepted -- changing this copy now requires touching this file, which makes a copy change a
+ * deliberate, reviewed edit instead of a silent one.  The product's own copy now lives in
+ * `TIGHT_CAVEAT_ZH`; do not import it here, or this node stops measuring anything.
+ */
+const FROZEN_TIGHT_CAVEAT_ZH = "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。";
+
 test("ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什么也要断言", async ({
   page,
 }) => {
@@ -238,6 +251,16 @@ test("ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什�
     node(NODE, "the tight advisory is not on screen, so there is no caveat to judge"),
   ).toBeVisible({ timeout: 20_000 });
   const text = (await block.innerText()).replace(/\s+/g, " ");
+  /* ① the hard one (ORD-0226): the caveat, read as its own element, must be the frozen sentence
+     exactly -- not "contains a risk word and no listed reassurance". */
+  const caveat = ((await page.getByTestId("budget-advisory-caveat").innerText()) ?? "").replace(/\s+/g, " ").trim();
+  expect(
+    caveat,
+    node(
+      NODE,
+      `the rendered caveat is not the frozen sentence, character for character. expected "${FROZEN_TIGHT_CAVEAT_ZH}" / got "${caveat}"`,
+    ),
+  ).toBe(FROZEN_TIGHT_CAVEAT_ZH);
   const risk = RISK_WORDS.filter((word) => text.includes(word));
   const allay = ALLAY_WORDS.filter((word) => text.includes(word));
   expect(

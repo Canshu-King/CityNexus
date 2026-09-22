@@ -53,7 +53,21 @@ PLAN = {
         ],
         "ORD-0222",
     ),
+    # ORD-0226 ran its arms through `live_checks/mutation_anchor_guard.py`, whose receipt *is* the
+    # machine-readable artifact -- parsing the old driver's log for it would print an empty case list.
+    "ord0226": (
+        [],
+        [ROOT / "review/ord0226-arms-console.txt"],
+        [],
+        "ORD-0226",
+        "ord0226-arms.json",
+    ),
 }
+
+
+def _plan(value: tuple) -> tuple:
+    """Legacy entries carry four fields; a guard-driven delivery carries a fifth (its receipt file)."""
+    return value if len(value) == 5 else value + ("",)
 
 
 def git(*args: str) -> str:
@@ -64,7 +78,8 @@ def git(*args: str) -> str:
 
 def main() -> int:
     key = sys.argv[1]
-    commits, kill_log_paths, extras, label = PLAN[key]
+    commits, kill_log_paths, extras, label, guard_receipt = _plan(PLAN[key])
+    commits = commits or sys.argv[2:]
     out = ROOT / "review/evidence" / key
     out.mkdir(parents=True, exist_ok=True)
 
@@ -119,16 +134,28 @@ def main() -> int:
         elif line.strip().startswith("red message:"):
             if cases:
                 cases[-1]["red_message"] = line.strip()[len("red message:") :][:400]
-    receipt = {
-        "generatedBy": "e345b9d6",
-        "order": label,
-        "harness": "review/ord0082_0087_kill_drivers.py",
-        "run_shape": "single node per target via --grep, one fresh process and one fresh throwaway sqlite per mutant; the product file is restored and sha256-compared after every case",
-        "cases": cases,
-    }
+    receipt = (
+        json.loads((EVID / guard_receipt).read_text(encoding="utf-8"))
+        if guard_receipt
+        else {
+            "generatedBy": "e345b9d6",
+            "order": label,
+            "harness": "review/ord0082_0087_kill_drivers.py",
+            "run_shape": "single node per target via --grep, one fresh process and one fresh throwaway sqlite per mutant; the product file is restored and sha256-compared after every case",
+            "cases": cases,
+        }
+    )
+    if guard_receipt:
+        receipt["publishedBy"] = f"e345b9d6 for {label}"
+        receipt["guardPath"] = "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace"
     (out / "mutation-receipts.json").write_text(
         json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n"
     )
+    for path in kill_log_paths:
+        if path.exists():
+            (out / path.name).write_text(
+                path.read_text(encoding="utf-8", errors="replace"), encoding="utf-8", newline="\n"
+            )
 
     for src, dst in extras:
         source = EVID / src
