@@ -332,3 +332,62 @@ test("ord0135-a-missing-field-is-a-route-not-only-a-diagnosis — 「还需要�
   );
   await page.screenshot({ path: evidencePath("ui-overnight/ord0135-missing-jumps.png"), fullPage: true });
 });
+
+test("ord0216-a-fixed-field-leaves-the-hint-on-the-next-step — 补上的缺项不许跟着进确认屏", async ({
+  page,
+}) => {
+  test.setTimeout(300_000);
+  const NODE = "ord0216-a-fixed-field-leaves-the-hint-on-the-next-step";
+  /* HJ-P1's 2/2 (15:04): with 总预算 empty, step 2 blocks naming it; after filling it the stale
+     「还需要填写：总预算」 still hung on step 3 -- where 201s would otherwise already have gone
+     through.  The hint has to be recomputed from the current values wherever the traveller is. */
+  await openWizard(page);
+  await page.getByTestId("trial-city").fill("天津");
+  await page.getByTestId("trial-arrival").fill("天津站");
+  await page.getByTestId("trial-departure").fill("北京南站");
+  await page.getByTestId("trial-next").click();
+  await expect(page.getByTestId("trial-step2-body")).toBeVisible({ timeout: 15_000 });
+
+  /* Block step 2 on the budget, so the hint names it.  The blocked 下一步 carries
+     `aria-disabled` and Playwright refuses to click it (this lane's own trap -- hit twice while
+     writing this very node), so the blocked state is asserted, never clicked. */
+  await page.getByTestId("trial-budget").fill("0");
+  const hint = page.getByTestId("trial-required-hint");
+  await expect(
+    hint,
+    node(NODE, "an empty budget blocked step 2 without naming it"),
+  ).toContainText(/总预算/, { timeout: 10_000 });
+
+  /* Fix the field via the jump the hint itself offers (ORD-0135 3's route), then advance: the
+     sentence must drop 总预算 by the time the traveller reaches step 3. */
+  await page.getByTestId("trial-budget").fill("1500");
+  await page.getByTestId("trial-next").click();
+  await expect(page.getByTestId("trial-step3-body")).toBeVisible({ timeout: 15_000 });
+  const bodyText = (await page.locator("body").innerText()).replace(/\s+/g, " ");
+  expect(
+    /还需要填写：[^。]*总预算/.test(bodyText),
+    node(NODE, `the fixed budget still hangs in the hint on step 3: "${bodyText.slice(0, 260)}"`),
+  ).toBe(false);
+  /* The typed value survives onto the review row. */
+  const budget = ((await page.getByTestId("review-budget").innerText()) ?? "").replace(/\s+/g, " ");
+  expect(
+    budget.includes("1500"),
+    node(NODE, `the typed budget is not what the review shows: "${budget}"`),
+  ).toBe(true);
+
+  writeFileSync(
+    evidencePath("ui-overnight/ord0216-stale-hint.json"),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        node: NODE,
+        head: process.env.CITYNEXUS_E2E_GIT_HEAD ?? "unknown",
+        regression: "总预算 was blocked on step 2, fixed, and must not reappear in the step-3 hint",
+        budgetOnReview: budget,
+      },
+      null,
+      2,
+    ) + "\n",
+    "utf-8",
+  );
+});

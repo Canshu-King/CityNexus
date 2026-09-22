@@ -45,6 +45,7 @@ NA_SPEC = "e2e/qoder-not-answered-cell.spec.ts"
 TONGUE_SPEC = "e2e/qoder-speaks-the-travellers-language.spec.ts"
 DEMO_SPEC = "e2e/qoder-demo-entry-addresses-dont-create.spec.ts"
 TIERS_SPEC = "e2e/qoder-budget-advisory-tiers.spec.ts"
+WIZ2_SPEC = "e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -648,6 +649,19 @@ CASES = [
         "              <span>{advisory.hint}</span>\n              <div className=\"today-advisory-actions\">\n",
         "              <div className=\"today-advisory-actions\">\n",
         [(TIERS_SPEC, ["ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red"])],
+    ),
+    (
+        # ORD-0216 3: attempted mutant, recorded as a DOCUMENTED SURVIVOR.  Restoring the
+        # anchors-only review list did not reproduce HJ-P1's reading: their flow left the visible
+        # hint on step 3 through a route this node's path does not reach (the node advances only
+        # after the field is filled, so the recomputed list is empty either way).  The hint's
+        # recomputation-from-current-values itself is what the node guards; the survivor says the
+        # old spelling is redundant on this path, not that the fix is unnecessary.
+        "killV1-stale-budget-hint-follows-onto-step-3",
+        WIZARD,
+        "  const missingStep3 = [\n    ...missingStep1,\n    ...missingStep2,\n  ];\n",
+        "  const missingStep3 = missingStep1;\n",
+        [(WIZ2_SPEC, ["ord0216-a-fixed-field-leaves-the-hint-on-the-next-step"])],
     ),
 ]
 

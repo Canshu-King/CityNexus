@@ -86,14 +86,24 @@ test("ord0212-the-hub-keeps-only-the-tight-verdict-and-it-keeps-its-caveat-and-a
     node(NODE, "a tight reference no longer renders the advisory on the hub"),
   ).toBeVisible({ timeout: 20_000 });
   const text = ((await advisory.innerText()) ?? "").replace(/\s+/g, " ");
+  /* ORD-0216 2 (red team 15:41): this is a two-way gate now.  The derived number and its caveat
+     are a pair -- each half alone is the fake precision R11 forbids -- so EITHER half rendering
+     without the other fails, read from the rendered text.  Both directions are asserted
+     separately so a red names which half was stripped. */
+  const hasNumber = /每人每天约/.test(text);
+  const hasCaveat = /按这个预算，住宿、交通和吃饭很可能超出计划/.test(text);
   expect(
-    /每人每天约/.test(text),
+    hasNumber,
     node(NODE, `the tight advisory lost the derived number: "${text}"`),
   ).toBe(true);
   expect(
-    /按这个预算，住宿、交通和吃饭很可能超出计划/.test(text),
+    hasCaveat,
     node(NODE, `the tight advisory lost its caveat: "${text}"`),
   ).toBe(true);
+  expect(
+    hasNumber !== hasCaveat,
+    node(NODE, `the pair split: number=${hasNumber} caveat=${hasCaveat} in "${text}"`),
+  ).toBe(false);
   /* The action is pressable for real: elementFromPoint at its centre hits the button itself. */
   const edit = page.getByTestId("budget-advisory-edit");
   await expect(edit).toBeVisible();

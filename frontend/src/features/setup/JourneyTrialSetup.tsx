@@ -519,7 +519,16 @@ export function JourneyTrialSetup({
      jump existed -- the same known fact failing to reach the button.  The anchors are the fields the
      API rejects (the 422 above is about `arrival_anchor.location`), so step 3 reuses the step-1 items
      and their jump targets rather than inventing a second list that could disagree with the display. */
-  const missingStep3 = missingStep1;
+  /* ORD-0216 ③ (HJ-P1 2/2): the review step used to inherit step 2's list verbatim, so a budget
+     blocked on step 2 and then filled still printed 「还需要填写：总预算」 on step 3 -- after 201s
+     had already gone through.  A hint must be recomputed from the *current* values on every step:
+     step 3 carries the anchors (the API's 422 fields) plus the same step-2 predicates evaluated
+     against the draft as it stands now, so a field the traveller has since filled drops out of the
+     sentence wherever the traveller is. */
+  const missingStep3 = [
+    ...missingStep1,
+    ...missingStep2,
+  ];
   const missingNow =
     step === 1 ? missingStep1 : step === 2 ? missingStep2 : missingStep3;
   const blockedNow = missingNow.length > 0;
