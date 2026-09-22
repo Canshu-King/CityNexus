@@ -1,0 +1,19 @@
+{
+ "tree": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\tree18",
+ "arm": "B",
+ "sha0": "da2b0c8603cfe3ca",
+ "cases": [
+  {
+   "key": "B_text_allay",
+   "receipt": {
+    "anchor_hits": 1,
+    "bytes_changed": true
+   },
+   "gate": {
+    "red": true,
+    "green": false
+   },
+   "restored_exact": true
+  }
+ ]
+}
