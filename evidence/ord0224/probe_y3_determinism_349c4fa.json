@@ -1,0 +1,281 @@
+{
+  "tree": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa",
+  "sha_tag": "349c4fa",
+  "mutant": "Y3 (loser stops reporting the winner)",
+  "rounds": 10,
+  "run_shape": "one pytest process over the 5 declared nodeids per round, mutant applied and restored (sha256 re-verified) every round",
+  "per_door": {
+    "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit": {
+      "red": 10,
+      "green": 0,
+      "not_observed": 0,
+      "sequence": [
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED"
+      ],
+      "deterministic_kill": true
+    },
+    "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch": {
+      "red": 10,
+      "green": 0,
+      "not_observed": 0,
+      "sequence": [
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED"
+      ],
+      "deterministic_kill": true
+    },
+    "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge": {
+      "red": 10,
+      "green": 0,
+      "not_observed": 0,
+      "sequence": [
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED"
+      ],
+      "deterministic_kill": true
+    },
+    "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable": {
+      "red": 9,
+      "green": 1,
+      "not_observed": 0,
+      "sequence": [
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "GREEN",
+        "RED",
+        "RED"
+      ],
+      "deterministic_kill": false
+    },
+    "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": {
+      "red": 10,
+      "green": 0,
+      "not_observed": 0,
+      "sequence": [
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED",
+        "RED"
+      ],
+      "deterministic_kill": true
+    }
+  },
+  "rounds_detail": [
+    {
+      "run_index": 1,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "verdicts": {
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+      }
+    },
+    {
+      "run_index": 2,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "verdicts": {
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+      }
+    },
+    {
+      "run_index": 3,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "verdicts": {
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+      }
+    },
+    {
+      "run_index": 4,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "verdicts": {
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+      }
+    },
+    {
+      "run_index": 5,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "verdicts": {
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+      }
+    },
+    {
+      "run_index": 6,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "verdicts": {
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+      }
+    },
+    {
+      "run_index": 7,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "verdicts": {
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+      }
+    },
+    {
+      "run_index": 8,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "verdicts": {
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable": "GREEN",
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+      }
+    },
+    {
+      "run_index": 9,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "verdicts": {
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+      }
+    },
+    {
+      "run_index": 10,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "verdicts": {
+        "tests/test_qoder_anywhere_gates.py::test_g3e_admission_race_no_caller_may_see_another_before_commit": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3b_open_window_control_without_any_worker_dispatch": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_b_five_callers_in_one_open_window_converge": "RED",
+        "tests/test_qoder_ord224_g3_generation_measurement.py::test_measurement_package_is_complete_and_writable": "RED",
+        "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+      }
+    }
+  ]
+}
