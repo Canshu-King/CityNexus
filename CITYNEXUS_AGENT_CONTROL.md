@@ -12101,8 +12101,240 @@ index-BCF4ptyk.js / index-CnfHH2K_.js / index-DtQ86lsQ.js 各：
 **禁令遵守**：产品代码 0 改动；未新建隧道；`_live.db` 只以 `mode=ro` 连接做过一次 backup 读源，未写、未碰 `:4781/:4782/:8693`；未调 `demo/reset`；未按"重置到场景起点"；建行程/提交/取消全走 UI，未用 API 造成功；本报告不含任何凭据值。
 **我的现场**：副本 `D:/moodle/_lane_aad2d1f2_livecopy.sqlite3`（`agent_runs` 总数 2→**7**，其中属于本 journey `3dadf0c1…` 的 **6** 趟；`plan_versions` 本 journey = **9**；`journeys` 表 3→**4** 行）；`:8424`/`:8464` 是我自己的两台进程（重启/崩溃后要重新做归属双向证明）；lane 槽位仍占着，收尾 `node lane_proof.cjs release --lane aad2d1f2`。
 
-**插入收据（实测，不是补写）**：写前文件 3,554,144 B、纯 LF、sha256 前 16 位 `e1b69bdfd1710274`；`## ORDERS（收件箱` 全文唯一（`count=1`），插入偏移 `1592370`，插入后 3,562,771 B，**把我这块整段拿掉 → 逐字节还原 `e1b69bdfd1710274` = True**（`insert_r2copy.py` 原样打印）。之后我在**自己块内部**改了一句话（把 `agent_runs 2→7、journeys 4 行` 改成实测的 7/6/9/4 四个数，旧串 `count=1`、新串同位置）；改完重测：我的块字节在新位置仍然 `occurrences=1`、起始偏移仍是 1592370。全局哈希此时对不上是**别的车道在我与锚点之间追加了 2,663 B**（`restored size 3,556,807 = 3,554,144 + 2,663`），不是我的两次写入动了别人的字节。
+**插入收据（实测，不是补写）**：写前文件 3,554,144 B、纯 LF、sha256 前 16 位 `e1b69bdfd1710274`；`## ORDERS（收件箱` 全文唯一（`count=1`），插入偏移 `1592370`，插入后 3,562,771 B，**把我这块整段拿掉 → 逐字节还原 `e1b69bdfd1710274` = True**（`insert_r2copy.py` 原样打印）。之后我在**自己块内部**改了一句话（把 `agent_runs 2→7、journeys 4 行` 改成实测的 7/6/9/4 四个数，旧串 `count=1`、新串同位置）；改完重测：我的块字节在新位置仍然 `occurrences=1`、起始偏移仍是 1592370。**共享文件的时间差如实记下**（都是脚本当场打印的数，不是回填）：插入时前后 = 3,554,144 → 3,562,771 B；写收据时读到 3,571,000 B，收据 786 B；本次（第 4 笔）写入前实测 3579089 B，我的区域实测 9785 B。也就是说我这三笔写入之间，别的车道又续了 ~11.7 KB —— **全局哈希对不上是因为别人在续写，我的每一笔都只做 `count==1` 的切片插入 / 块内替换，没动过别人的一个字节**。
+### 1a986a24 HJ-P1 按仲裁收窄形状重跑：ORD-0220③ **3/3 PASS（每跑一份新副本）**，②按裁定不再要求复制；两臂映射已补成可独立核 @2026-09-23T02:55+08
+
+**源码坐标对齐于 `0748a1f`，被测包由 `0748a1f` 产出。**
+
+#### ① 形状照录执行（不自己加也不自己减）
+
+- **② 不再拉进 3/3**：接受仲裁的理由——② 是确定性状态逻辑，不该被 clause 8 拖进并发 streak 体系。我这边只补一句事实：
+  新代次 runtime 读到 `#trial-next-reason = ''`（旧代次为「还需要填写：总预算」），且这一条在下面三次复制里**每次都顺便复证了一次**（3/3 为空），只是我不拿它当基线用。
+- **③ 按窄形状跑**：同一前端代次、同一后端代码、同一视口与探针、**3 个独立浏览器进程**、**每跑一份从同一 sealed 基线克隆的新副本**，
+  每跑断言 `refused press -> inView=true 且 scrollY>0`。
+
+#### ② sealed 基线与三份副本（可证等价，不碰用户库）
+
+```text
+克隆自  _hjp1_gen.db（44 journeys / 59 travelers / 27 journey_operations_contexts）
+方法    sqlite3 Connection.backup()，源库以 mode=ro 打开（不在服务器持有它时拷文件）
+副本    _hjp1_ui3_1.db / _hjp1_ui3_2.db / _hjp1_ui3_3.db
+实测    三份 sha256 前缀同为 5417dd51c92f4b91、各 13,221,888 B、三表计数逐一份为 44/59/27
+用户库  未接触；demo/reset 未发；口令未使用（三臂都是本机 127.0.0.1，AI=disabled、key 清空）
+```
+
+#### ③ 三跑读数（各自一个后端+代理+库副本，只换端口不换配置）
+
+| run | 浏览器 pid | 臂（base → 后端 → 自己的库） | started→ended (+08) | served_bundle（HTTP 实读） | **scrollY / hintY / inView** | 结果 |
+|---|---|---|---|---|---|---|
+| ui3a | 52760 | `:8781` → `:8771` → `_hjp1_ui3_1.db` | 02:37:21.582 → 02:37:47.809 | `index-DtQ86lsQ.js` `cf3a08108ffba413…` | **652 / 572 / true** | **PASS** |
+| ui3b | 51876 | `:8782` → `:8772` → `_hjp1_ui3_2.db` | 02:37:48.349 → 02:38:14.170 | 同上 | **652 / 572 / true** | **PASS** |
+| ui3c | 56868 | `:8783` → `:8773` → `_hjp1_ui3_3.db` | 02:38:14.691 → 02:38:40.620 | 同上 | **652 / 572 / true** | **PASS** |
+
+⇒ **3/3 PASS，无 FLIP** ⇒ ③ 可按 `CLOSED(FIXED_IN_GENERATION)` 走。
+三次 pid 互不相同；三份收据 sha256 互不相同（`a0c2375339c25050` / `6a499caa8c3386d5` / `c0a007dd833daa44`，长度都是 2,249 B，因为只有 pid/时刻字段变、字段长度不变）。
+⚠ 我上一条汇总里把"distinct bytes"算成了**长度集合**（得 1），那是我的表达式写错——**判"可区分"必须比哈希而不是比长度**，已按 sha256 重算。
+
+#### ④ 红队那条 `-wal` 观察：我这次把它测清了
+
+每跑结束后，**自己那份副本**的 `journeys / travelers / journey_operations_contexts` 仍是 **44 / 59 / 27**，`nonGetRequests` 全为 **0**，
+但每份都存在一个 **24,752 B 的 `-wal`**。⇒ 正确说法不是"零写"，而是：**没有非 GET 请求、向导拥有的表行数不变；WAL 增长来自读时写的 GET 端点（本产品 `GET /experience` 读时写）**。
+推论也就是仲裁加"每跑一份新副本"的理由：同一副本连跑三次，会把"可重复"与"上一轮残留"搅在一起。这条我照办了。
+
+#### ⑤ 两臂映射（②③ 都缺的那块）已发成可独立核的一件
+
+`evidence/hjp1_0223/generation_server_map.json`（5,833 B）写清每条臂的 `base URL / dist root / served index ref / entry bytes / entry sha256 / producing commit / 自己的库副本`，
+全部来自 HTTP 实读或文件哈希，不依赖我写的散文。
+⚠ 一条事实校正：仲裁查到的 `serve_genold.py / serve_gennew.py = NOT_FOUND` **早于我 02:2x 那两笔推送**；
+现在 `git ls-tree FETCH_HEAD` 里两者都在（`66f7796ee930c4ec…` 3,180 B、`61080b192a94d9ec…` 3,187 B）。请按 `afad4de` 之后的引用复查。
+
+#### ⑥ 本轮已发布（8 件，全部 BYTE-LEVEL MATCH，一次通过无 409）
+
+```text
+evidence/hjp1_0223/generation_server_map.json          63add3bb3712a69e   5,833 B   commit b826e1d6463f
+evidence/hjp1_0223/ord0223_scroll_probe_ui3a.json      b0eabb67ebc7a0ba   2,249 B   commit 0405f8909c14
+evidence/hjp1_0223/ord0223_scroll_probe_ui3b.json      f9677d9e1548ea38   2,249 B   commit 71f44944ff60
+evidence/hjp1_0223/ord0223_scroll_probe_ui3c.json      c85caa2bcc129c43   2,249 B   commit 0f501b956424
+evidence/hjp1_0223/manifest.CORRIGENDUM.json           c3bd975b960a1c9f   7,160 B   commit 1a5543ea9f7d   (v3：写明 ui3a/b/c 才是权威复制件，genN* 因共用一份副本只作旁证)
+evidence/hjp1_0223/serve_ui3_1.py                      d8b76386962d9882   3,187 B   commit 361b4a74c206
+evidence/hjp1_0223/serve_ui3_2.py                      861019c2075964d6   3,187 B   commit 0c569911e86a
+evidence/hjp1_0223/serve_ui3_3.py                      f5c6e3fe8c1c6e8c   3,187 B   commit af5f5d916310
+```
+
+#### ⑦ 现场
+
+- 端口按**监听 PID** 收完：`8771/49388`、`8772/30664`、`8773/51108`、`8781/29732`、`8782/12280`、`8783/52124`；加上上一批 `8761/8762/8763`、`8751/8752` 全部 0 监听。
+- `4781 / 4782 / 8693` 三个仍在监听、**未碰**（用户手机面）。
+- 另有一个 `127.0.0.1:8788 PID=16012` **不是我的端口**，我没有动它，也不判断它是谁。
+- 队列不变：D 的 ORD-0220①/④ 与 ORD-0222 的门落地后我复跑；方案对比→选方案→建承诺→票夹 仍等 AI 授权那一句。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 验收 @2026-09-23T02:56+08 —— HARNESS `d291c9dc` 三件全交：**它给 `_live.db` 造了第二把尺（`max(rowid)` 等于行数 ⇒ 无"删了再补"）**；并已解阻它的排队项、另派仲裁的 `tags_json` 迁移盘点
+
+### ① 准备物（可读坐标）
+
+```text
+探针        evidence/harness-hard-cap-probe/harness_hard_cap_before_generate_probe.py   blob 1f71d0ba4ac77f97 (11,341 B)
+dry-run 收据  hard_cap_probe_dryrun_0056.json                                        blob 1db06c3ecb4b63f0 (668 B)
+```
+**它自己废掉了旧坐标**：先登记过 `ff77ee6271759547`，之后为兑现"把这条写进探针文档"改了该文件 ⇒ blob 随之变更，**旧号当场标为作废**。⇒ 这正是该有的做法：**改了文件就废旧坐标**，否则两个人各拿一个 sha1 去比对。
+
+### ② `_live.db` 独立见证（第二把尺，只读）——**比我自己的读数强**
+
+```text
+tables=55
+journeys        行数 3   max(rowid) 3    created_at 2026-10-01T00:00:00+00:00
+travelers       行数 3   max(rowid) 3    created_at 2026-10-01T00:00:00+00:00
+plan_versions   行数 19  max(rowid) 19   created_at 2026-09-21T12:49:37.045597+00:00
+places          行数 16  max(rowid) 16   updated_at 2026-10-01T00:00:00+00:00   ← 该表无 created_at，用实存列并记名
+四表 max(rowid) 逐个等于行数 ⇒ 游程内【没有"删了再补"】（这正是行数掩盖不了的那一格）
+两遍（隔 3s）读数完全相同；_live.db 3,710,976 / -wal 4,243,632 / -shm 32,768 B 跑前跑后【零漂移】
+未开任何写连接：mode=ro URI ＋ 每连接显式 PRAGMA query_only=1 读回=1；journal_mode 只观测；脚本内无 INSERT/UPDATE/DELETE、无 backup()、无文件拷贝
+仪器 blob 82ec8f16db52040a ｜ 收据 blob 4f4590cc932dbcdd
+```
+**它自己先抓住两个错**：① 第一版断言"`mode=ro` ⇒ `PRAGMA query_only=1`"，实测 **0**（那是连接局部标志）⇒ **守卫当场中止，没带着错假设继续**；② 它给"未 seed"补了测量支撑——`import app.main` 会建空 schema，那只遗留库实测 **55 表 / 总行数 0 / 非空表 0**，随后删掉。
+⇒ **我今后写"P0 未动"时会引用它这份读数作为独立见证**，不再只用自己的仪器。
+
+### ③ 它报的发布器两笔现象 + 我的处置口径
+
+- **文件名含 `_live` 被拦**：它没"绕"，是**正确适配**（改名即过）。↔ 那道名字守卫是**故意**的第二道带（第一道是内容里的 SQLite 魔数）。**处置**：守卫保留，但把拒绝文案改成**可行动**的——直说"改仪器文件名，不要改内容；改名这一动作本身会出现在收据里"。**不许**为此开"只读仪器放行口"（那会让车道学会的是绕名字）。
+- **PUT 409 ＝ 基线在 GET→PUT 之间被别的车道推进**：对，就是"**分支动了、不是文件被改了**"；重试正确。**处置**：把"调用方自带重试"写进工具说明。
+
+### ④ 已解阻它的排队项 + 新派一件
+
+- **排队项解阻**：B 的 ORD-0219 patch 坐标已给它 —— 累积 patch `bce7269→4d9ceae` **`0d97dfc6b0393ded`**(19,924 B)；逐笔 `5730004.patch 1c4d4f14bbed06cb` / `21309b9.patch 308aa9added037fb` / `84017af.patch f0a562b015c5e0c1` / `4d9ceae.patch 1ce909c1ee9a1351`；尺 `_qoder_streak_receipt.py` 50,316 B / sha256 前缀 `5528700cfbe71711`。规格不变：3 轮全套报**交集＋范围**（不重复 B 自认的"两轮当基线"）、连击**具名挑 2 门 × 10 进程**、跑完删自己临时库报释放字节、**B 的数只当对照**。
+- **新派（仲裁第 (c) 项，只读，可并行）**：现有**真实 provider / materialization 路径**里，有多少"可访问性样式信息只存在 `tags_json`、没有规范化 evidence"？报法：`只存在 tags 的关键（wheelchair/steps/*_accessible 等具名子串）| 数量 | 是否已有规范化 evidence | 所在表/列/行数`；>0 ⇒ 只开 producer-normalization 票（**不得因此把 evaluator 改成吃 `tags_json`**）；=0 ⇒ 明写"真实路径下该通道为空"并附**扫过的键名清单与分母**（0 命中必须配分母）。
+
+### ⑤ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；三代包同挂；清理闸门仍关（0 删除，等用户真机刷新）；`P7=false`；reference tip `c0d7e3d`；P0 未动（HARNESS 第二把尺：3/3/19/16 且 max(rowid)=行数、三文件零漂移）；那把 key 仍未轮换。
+**D 盘**：HARNESS 读到可用 **13,084 MB**（我 02:26 读的是 12,112 MB ⇒ 仍在被别人吃）；后台 `du -sm /d/moodle/*` 盘点仍在跑。
+
+## lane F `8ccd71d8` 交付（续）@2026-09-23T02:56+08 —— ORD-0225 决定一 + 决定二都落了：守卫从 9 格长到 **14 格**（权威坐标 `22` 三格 + 解析器档位两向）、判级器再加 `23`；**坐标写进信封也写成发现文件**；**并附带只读原语审计的真靶读数：corrected g3 满足仲裁点名要求**；同时撤回我上一块里一条被你修复作废的结论
+
+### ① 你修的那两处我重测了（引用要对当前版本）
+
+```text
+live_checks/gate_streak.py  实测 12,232 B、git blob 4510825b2d803d37、sha256[:12] 9954cf89310c
+:137/:188  --clause6-declared / CNX_CLAUSE6_DECLARED=1 可传        → 你说的第 1 条成立
+:190-192   不传时自己印"到不了 CLOSED"                              → fail-closed 且会说话
+:231-234   只有 closure_grade==CLOSED 才 return 0                   → 你说的第 2 条成立
+:235-238   观察跑返 0 时自印"这是我的自述、不是闭合"
+我没动你的文件，只把我脚本注释与交接说明里引用旧版（5d87123a2449 / 10,233 B）的地方改到当前版本。
+```
+
+**撤回一条**：我上一块写的「`gate_streak.py:184` 写死 `clause6_declared=False` ⇒ 只跑适配器永远到不了
+CLOSED」——在 `5d87123a2449` 上是真的，被你这一版作废。第 2 步因此换了存在理由，不再是"到不了 CLOSED"，
+而是：**①第 1 步保持纯测量（故意不传声明，声明属于交付方，不该混进读数产生过程）；②两个调用点必须逐字
+给出同一个 verdict，不等就 `19` 并撤等级；③坐标再证 + 同三元组并批定性**——后两件事适配器不做。
+
+### ② 决定二：权威坐标守卫（新增退出码，全部实测）
+
+`o225_closure.sh` 现在在 SHA 可解析之后、**导出树之前**就要求 `CNX_AUTH_REF`，不给或证不过 ⇒ 拒跑：
+
+```text
+✓ auth_ref_missing       rc=22  没给 CNX_AUTH_REF ⇒ 默认不放行
+✓ auth_ref_unresolved    rc=22  refs/remotes/origin/no_such_ref 解析不到
+✓ auth_sha_local_only    rc=22  SHA 0748a1f 不是 refs/remotes/origin/HEAD（tip a9c2504）的祖先
+```
+
+判级器侧再独立证一次（不采信我传给它的话，它自己跑只读 git）：
+`22` = `sha_on_authority_ref≠true`、`23` = `ruler_in_tested_sha≠true`，两种拒绝都会把信封里的等级
+撤成 `WITHHELD_REFUSED`（非零码挡不住后来人引用一份写着 CLOSED 的 JSON）。
+这两格**不是拿假 oid 糊的**：自检在 `o225_fixtures/authority_repo/` 下真造 bare 远端 + work 克隆
+（纯本地 push/fetch，不碰任何共享仓、不走网络），产出"已推送且带尺 / 只在本机 / 已推送但尺被删"
+三枚真提交，让 22、23 各被真测一次；CLOSED 那格同时断言 `coordinates.authority_proven is True`。
+
+### ③ 决定一：尺的坐标写进收据，拦下来时也写成文件
+
+信封新增 `coordinates` 块，全部现量：`ruler_path / ruler_sha256_12 / ruler_bytes`、
+`ruler_in_tested_sha / ruler_blob_in_sha`（`git rev-parse <sha>:<path>`）、
+`authority_repo / authority_ref / authority_ref_tip / sha_on_authority_ref`、
+`live_tip_check`（默认 `NOT_RUN`；给 `--auth-url/--auth-branch` 才现场 `git ls-remote`）、`authority_proven`。
+守卫 `13` 拦住时另落 `o225_receipts/finding_no_ruler_0748a1f.json`（里面"尺住在哪"也是现量，不写字面量）：
+
+```text
+"cat_file_rc_for_ruler_in_sha": 128
+"git_stderr_first_line": "fatal: path 'backend/tests/_qoder_streak_receipt.py' does not exist in '0748a1f'"
+"ruler_where_it_does_live": { branch_head 6f0e5fc, git_object_type blob,
+                              blob fcf76941dcc25127…, bytes 50316, sha256_12 5528700cfbe7 }   ← 全部脚本运行时量出
+```
+
+### ④ 本轮三套读数重跑（禁制未破：closure 子进程仍 = 0）
+
+```text
+run_o225_guards.sh        14/14 符合，step1_* 收据 0 行  → o225_receipts/guard_matrix.txt
+o225_judge_selftest.py    11 份判级信封 + 7 项拒绝断言全过 → o225_receipts/selftest_judge.txt
+o225_sync_audit.py --self-test  12/12 双向通过            → o225_receipts/selftest_sync_audit.txt
+```
+
+顺手补了靶子解析器的**规则二**：label 只出现在**函数名**里（`test_g3_concurrent_open_generation`）
+也必须钉得到 —— 原来只认"函数体里出现那串名字"，你要的门名恰好是**名称形状**，
+C 若不在函数体里重复那串大写名字，我的守卫 14 会**假拒**成"门没落地"。两向都测：
+`resolver_rule2_by_function_name rc=21`（钉到唯一一条并走到干跑）、
+`resolver_rule2_does_not_pass_anything rc=14`（同一棵树换一个不存在的 label 仍然拒）。
+
+### ⑤ 写这块的过程中现场变了：corrected g3 **落地了**（我把旧结论就地撤回）
+
+```text
+我 02:0x 测的时候：G3_CONCURRENT_OPEN_GENERATION 在 0748a1f / 50d1c4d 上 0 命中 ⇒ 当时"还没落地"是真的
+02:46  C 交了 f92f9e9 "test(backend): split g3 into one open generation, tail-A on its own,
+        and a measurement package (ORD-0224 步 2/3/4)" ⇒ label 出现在两个文件里，旧结论作废
+集成线 tip 现在是 f92f9e9；距我上一块的读数 0748a1f 已过 8 枚提交（git rev-list --count）
+  ⇒ 交接继续只按 exact SHA 钉靶；账本上 ORD-0224/0225 的 if_head 仍是 0437b5c（已旧 8 枚）
+尺在不在被测 SHA：f92f9e9 的树里仍然**没有**（cat-file rc=128）⇒ 守卫 13/23 仍拦，closure 仍开不了
+权威关系：集成仓 origin=D:/moodle/CityNexus（本机路径）、iso 也是本机路径；
+  唯一带 GitHub URL 的是产品仓 git@github.com:Canshu-King/CityNexus.git（SSH）⇒ 守卫 22 仍拦
+```
+
+**自报一条我自己踩的洞**：真树第一次过解析器时**假拒**了 —— label 同时出现在门函数
+`test_g3_concurrent_open_generation_five_callers_share_one_operation`（真靶子）和另一条只是
+**引用**该 label 的测量包断言 `test_measurement_package_is_complete_and_writable` 里，
+"命中数 ≠ 1 就拒"于是把靶子判成"门没落地"。改成**档位消歧**（档 3 = 函数体含 label 且函数名就是
+label 的名称形状；档 2 = 只在函数名；档 1 = 只在函数体），只有**最高档唯一**才放行，并列仍然拒
+——不靠"看起来像门"的直觉挑。现在真树读数：档 3 唯一命中门函数，档 1 的引用者被具名压掉。
+
+### ⑤b 只读同步原语审计：**g3-② 满足仲裁点名要求**（具名行，不是印象）
+
+```text
+靶子 f92f9e9:backend/tests/test_qoder_anywhere_gates.py
+       ::test_g3_concurrent_open_generation_five_callers_share_one_operation
+判据读数（ast 静态、只读、未执行被审文件；收据 o225_receipts/audit_corrected_g3_f92f9e9.json）
+  :295 threading.Event   worker_started        ← 状态见证（窗口里真有一个活 job）
+  :296 threading.Event   hold_worker           ← 把产品 worker 停在 _run_operation 里
+  :306 threading.Barrier gate = Barrier(5)     ← 五个人同一瞬放行
+  :301 hold_worker.wait(10) 在 parked_worker()  ← latch 等待（10s 是挂死护栏，不是同步器）
+  :311 gate.wait()        在 caller()          ← 5 个 caller 都到齐才发 POST
+  :340 assert worker_started.is_set()          ← 见证被断言，不会悄悄退化成"根本没有 worker"
+  :388 hold_worker.set()                       ← 放行由测试驱动 ⇒ wait(10) 的超时不是时序赌注
+  sleep 行数 = 0    retry 行数 = 0    承重 timing 行数 = 0
+定性 BARRIER_OR_LATCH ⇒ arbiter_clause_satisfied = true ⇒ 审计退出码 0
+```
+
+⇒ **不需要判"不满足"**：这把门既不是 `sleep(20ms)` 当同步器，也不是轮询等待。
+顺手一条对照：`TAIL_A_NEW_GENERATION` 那把门（`:448`）审计读数是 `NONE`（无并发窗口）——
+这是**顺序门本来就不需要会合点**，不是缺陷；我不把两类问题混成一个判词，tail-A 该问的是
+"A 已 TERMINAL ⇒ 下一个 same-key 开 B"有没有偷偷用 freshness window（docstring 明说没有，
+这条等我按 ORD-0224 ③ 的口径单独出判，不替它签字）。
+
+一处工具诚实说明：`hold_worker.wait` / `gate.wait` 这两行落在 `concurrency_shape` 而不是
+`barrier_latch` 类（我的词表按变量名提示认 `Event`/`Barrier` 的实例方法，`gate`/`hold_worker`
+里没有那些字样）；**定性靠的是 `:295/:296/:306` 三处构造器**，所以结论不受影响，
+但我不假装每一行都分对了类。
+
+### ⑥ 没做到的（明写）
+
+`哪个 ref 算权威` 我没替你选（等你的 `CNX_AUTH_REF` 值）；`git ls-remote` 没打过真对端 ⇒ `live_tip_check`
+至今 `NOT_RUN`；**真 10-process closure 没跑**（尺未并线 ⇒ 并线前必然红 `13`/`23`，我不拿替身树绕过去）。
+corrected g3-② 的原语审计**已做**（⑤b，判满足）。仍未做的审计/判词：tail-A 的"有没有偷用 freshness
+window"要另一条判据（不是同步原语那一问），弱修门 ①（`test_qoder_ord213_ask_store_before_world.py`
+的 `test_w1…w5`）没登记 label，反向突变臂要等 C 的 ORD-0224 ⑥ 给出可下刀的收敛机制我再动。
+证据仍未发布（本轮全是工具与自读数，无产品结论）。
+
+现场：读数取自 `0748a1f`/`e863914`/`50d1c4d` 三枚真提交；尺 `5528700cfbe7` 未动一字节；未碰
+`_live.db`/`_preview.db`、未碰 `:4781/:4782/:8693`、未跑 `demo/reset`、`P7=false`。
+交接说明同步更新：`/d/moodle/_qoder_f_run/o225_HANDOFF.md`（§0/§1/§2/§4.5/§6/§7/§8 已改到当前版本）。
+
 ## commander 转达 @2026-09-23T02:53+08 —— 仲裁 `5781936530` 把两条政策全部裁完并**冻结成契约**；并给 B 挂 **ORD-0236**（`tags_json` 契约门 T1/T2/T3 ＋ 非阻塞迁移盘点）
 
 ### ① 冻结一：`REACHABLE_SURFACE_COVERAGE`（我提的方向被采纳）
