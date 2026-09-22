@@ -125,6 +125,12 @@ const en: Dict = {
   "hub.compareStays": "Compare stays →",
   "hub.day": "DAY {n}",
   "hub.anchor": "{type} anchor",
+  // ORD-0232: why the plan has fewer stops than the traveller asked for.  The count sits in
+  // parentheses so no plural rule has to be invented here.
+  "hub.droppedCandidates": "Candidate stops removed before planning ({count})",
+  "hub.droppedCandidateRow": "Removed {place}: the {rule} condition is not met at this stop",
+  "hub.droppedCandidateUnknownPlace": "a stop whose name we could not read",
+  "hub.droppedCandidateUnknownRule": "an unnamed hard condition",
 
   // ── Studio ──
   "studio.kicker": "Trip Studio · multi-day plan",
@@ -788,6 +794,11 @@ const zhCN: Dict = {
   "hub.compareStays": "对比住宿 →",
   "hub.day": "第 {n} 天",
   "hub.anchor": "{type}锚点",
+  // ORD-0232：为什么行程里的地点比旅客要的少。数量放在括号里，这里就不发明复数规则。
+  "hub.droppedCandidates": "规划前被去掉的候选地点（{count} 个）",
+  "hub.droppedCandidateRow": "去掉「{place}」：这一站不满足{rule}的硬性条件",
+  "hub.droppedCandidateUnknownPlace": "一个没认出名字的地点",
+  "hub.droppedCandidateUnknownRule": "一条未识别的硬性条件",
 
   // ── Studio ──
   "studio.kicker": "行程工作台 · 多日方案",

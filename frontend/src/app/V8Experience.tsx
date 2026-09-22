@@ -52,6 +52,7 @@ import {
   type JourneyTwin,
   type PlanVersion,
 } from "../api/v12Authoritative";
+import { useCandidateRejections } from "../api/candidateRejections";
 import { desktopRoutes, mobileRoutes } from "../routes/v8Routes";
 import {
   readOfflineJourney,
@@ -2089,6 +2090,9 @@ function Hub({
   const t = useT();
   const { locale, switchLocale } = useLocale();
   const zh = locale.startsWith("zh");
+  /* ORD-0232: "fewer stops than I asked for" needs its reason on the same screen that shows the
+     stops.  An empty list is also what a still-running or failed read gives: no rows, no claims. */
+  const dropped = useCandidateRejections(data.journey.id, data.journey.city_code).data ?? [];
   const stayWaited = useElapsedSeconds(
     staySearch === "searching" ? waitStartedAt : null,
   );
@@ -2366,6 +2370,40 @@ function Hub({
                 </button>
               </div>
             </div>
+          )}
+          {dropped.length > 0 && (
+            /* ORD-0232: the number of stops the traveller asked for and the number the plan can
+               defend are different, and the difference is a server fact with a named cause.  The raw
+               id and the raw code live in data-* only -- what reaches the eye, and what a screen
+               reader speaks, is a place name and a condition a person can read. */
+            <section
+              className="today-dropped"
+              data-testid="dropped-candidates"
+              data-count={dropped.length}
+            >
+              <strong data-testid="dropped-candidates-heading">
+                {t("hub.droppedCandidates", { count: dropped.length })}
+              </strong>
+              <ul>
+                {dropped.map((row) => (
+                  <li
+                    key={row.key}
+                    data-testid="dropped-candidate-row"
+                    data-place-id={row.placeId ?? "unresolved"}
+                    data-rule-code={row.ruleCode ?? "unresolved"}
+                  >
+                    {t("hub.droppedCandidateRow", {
+                      place: row.placeName ?? t("hub.droppedCandidateUnknownPlace"),
+                      rule: hardRuleLabel(
+                        row.ruleCode,
+                        zh,
+                        t("hub.droppedCandidateUnknownRule"),
+                      ),
+                    })}
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
           <p className="v8-lede" data-testid="today-when">
             {dateInZone(data.journey.start_at, locale, journeyTz)} —{" "}
@@ -3975,6 +4013,23 @@ function Me({
 // traveller reads the city in their own language.
 // Travel modes are internal enum values (WALK, RIDE_HAIL).  The traveller
 // reads a normal word for how they will move.
+/**
+ * ORD-0232: the audit fact names the constraint as `"<RULE>_ACCESS_UNAVAILABLE"`.  A rule this file
+ * does not know gets the caller's "unnamed condition" wording rather than a humanised code -- the
+ * `modeLabel` leak this lane already fixed was exactly "an unmapped enum, prettified and printed".
+ */
+function hardRuleLabel(code: string | null, zh: boolean, unknown: string): string {
+  const labels: Record<string, { zh: string; en: string }> = {
+    STROLLER: { zh: "婴儿车通行", en: "stroller access" },
+    LUGGAGE: { zh: "大件行李", en: "large luggage" },
+  };
+  const key = String(code ?? "")
+    .toUpperCase()
+    .replace(/_ACCESS_UNAVAILABLE$/, "");
+  const entry = labels[key];
+  return entry ? (zh ? entry.zh : entry.en) : unknown;
+}
+
 function modeLabel(mode: string, zh: boolean): string {
   const key = String(mode).toUpperCase();
   const labels: Record<string, { zh: string; en: string }> = {
