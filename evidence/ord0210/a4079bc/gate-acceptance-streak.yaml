@@ -1,0 +1,199 @@
+# 冻结来源：仲裁 2026-09-22T15:58:48+08（总线 5773071703）八条 + 2026-09-22T16:40:22+08
+# （总线 5773588112）追加第 9/10 条。账本「commander 执行令 @16:0x」「（第四条）@17:5x」照录。
+# 本文件是**词表与判据的单一权威**；门与量具都从这里对名字，不许各起一名。
+id: GATE_ACCEPTANCE_STREAK_V1
+status: FROZEN
+applies_to: 一切"跨隔离运行翻过判定"的**产品门**（ORD-0210 (F) 与 ORD-0213 (C) 用它结案）
+measurement_only:
+  - ORD-0218 (g5) —— 只复用本契约的词表与读数形状（形制、逐 run node verdict、分类名），
+    **不**据此结案：它现在是一条 RED/诊断，把十条当结案门槛套上去会逼出"为凑 10 连绿而重设计门"
+    （仲裁 20:01 的 scope 修正）
+frozen_at: "2026-09-22T16:40:22+08"
+
+# 结案三档（源审计 5775293071 ① / 仲裁 20:01「只是给 10/10 绿改名，不产生新证据」）：
+# 这一节**不新造验收条件**，只把已有三样既有证据写成显式门槛：
+#   既有第 5 条（10 全绿） + 既有第 2 条（10 个独立进程） + 既有第 6b 条（自证文本）
+#   + 仲裁 15:58 已给的**反向要求**（破坏保护点必须重新出 RED 或打断 streak）
+closure_ladder:
+  NOT_MET: "streak 未达成（STREAK_NOT_MET / 任何 HARNESS_INVALID / RECEIPT_INCOMPLETE）"
+  STREAK_GREEN: "第 5 条达成，但反向突变证据缺失或不是结案级 ⇒ 只到这一档，不签 CLOSED"
+  CLOSED: "STREAK_GREEN 之外，另有 reverse_mutation_result ∈ [KILLED, STREAK_BROKEN]"
+reverse_mutation:
+  required_for: acceptance            # 机制模式不要求（靶子可以一直红）
+  closure_grade_results: [KILLED, STREAK_BROKEN]
+  rejected_results: [SURVIVED, NOT_MEASURED]
+  field: reverse_mutation_result      # 词表外的值本身 = 收据缺陷（checks.reverse_mutation_value_valid）
+
+outcome_corroboration:            # 19:5x–20:0x 实测出来的假绿通道，堵在我这把共享尺上
+  channel: 靶子整条 @pytest.mark.skip ⇒ pytest exit 0 ⇒ 只看退出码会报 GREEN
+  rule: 退出码必须有摘要计数佐证；passed=0（或没有可解析的计数）⇒ 降级 NOT_OBSERVED
+  also: exit≠0 但摘要里没有 failed/error 计数 ⇒ 同样降级（中断/收集错误不能当"用例红了"）
+  helpers: [summarize_pytest_counts, corroborate_node_outcome]
+  consequence: 十条 skipped 的批次只能得 HARNESS_INVALID_target_verdict_not_scoped，永不得 STREAK_MET
+  adapter_note: commander 的 live_checks/gate_streak.py 现在是薄适配层并 import 本模块 ⇒ 这一格两边同修，不留第二把尺
+
+freshness_predicate:              # 仲裁第三次源审 §3 把这条从"门里"提到"尺里"
+  lives_in: streak_verdict() 内（不再只在 test 文件的 _instrument_problems 里）
+  per_run_conditions:
+    - path_source 以 app_printed_receipt_line 开头（差集猜出来的路径不算）
+    - initial_row_counts.path_did_not_exist_before_this_run 必须**为 true**（缺字段或 false 都不行）
+    - resolved_path_problems 为空（绝对、像 .db、无解码受损、大小写归一后不撞被保护库）
+  verdict_when_violated: HARNESS_INVALID_run_not_fresh
+  also_blocks: closure_allowed
+  why: 判据留在 test 文件里 ⇒ 别的引用方（含薄适配层、含未来任何车道）仍可绕过；
+       "10 个不同但预先存在的库全绿"就会假报 STREAK_MET(10)
+  inherited_by: [test_qoder_db_isolation_same_verdict.py, live_checks/gate_streak.py]
+
+# 第 9 条的可机器判形状（源审计 ③）：形制不能只是收据里一个自由文本字段。
+run_shape_argv:
+  single-node: [-m, pytest, "<恰好一条 nodeid>", --tb=short, --import-mode=importlib]
+  node-with-preceding-doors-in-one-process: [-m, pytest, "<≥2 条 nodeid，同进程>", --tb=short, --import-mode=importlib]
+  whole-file: [-m, pytest, "<一个文件路径>", --tb=short, --import-mode=importlib]
+  forbidden_in_argv: [-rA, "-p"]      # -rA 把逐 run 报告混进 stdout；-p 是改跑法不是记读数
+  streams: stdout 与 stderr 分开解码并各记 codec（拼成一坨 ⇒ 形制证据不成立）
+  selector_rule: |
+    仲裁第四次源审（commander 转达；本条定位未附总线 id ⇒ 我不编 id）：形制不能靠"声明的 target 出现在 argv 里"成立。
+    `parse_pytest_selectors()` 精确抽出 positional selector（跳过 argv[0]、`-m pytest`、开关及其取值），
+    然后 `verify_run_shape()` 要求：
+      single-node                         恰好 1 条，且 == 声明的那一条
+      node-with-preceding-doors-in-one-process  与声明 nodeids **逐项同序相等**（条数也要等）
+      whole-file                          恰好 1 条，且是 .py 文件路径（不含 ::）
+    任何声明之外的 selector ⇒ 具名拒绝；调用方声称的 nodeids_in_command 与抽出的不等 ⇒ 不采信。
+    返回体带 argv_selectors / selector_positions，别人复核得起。
+  judged_by: verify_run_shape()；不过则 streak_verdict 直接 HARNESS_INVALID_run_shape_unverified
+
+# 文本读取权威（源审计 ①：三处 reader 都栽在"解码失败被当成没命中"）
+reader_chain:
+  rule: 先读完整字节 → 显式解码；顺序 UTF-8(严格) → gb18030(严格) → UTF-8/surrogateescape → gb18030/surrogateescape → latin-1/surrogateescape
+  never: errors="replace"             # U+FFFD 会把一行收据伪装成"不存在"，resolved= 路径就这样丢
+  reversible: surrogateescape 必须能字节回映（测试里用真坏字节验证）
+  receipt_field: child_decoder        # 记 stdout=/stderr= 各用了哪档 codec
+  path_validation: resolved_path_problems() —— 绝对、像 .db、无解码受损痕迹、且**大小写归一后**不撞被保护的库
+  protected_paths: Windows 大小写不敏感 ⇒ 比较走 normcase+casefold（`_LIVE.DB` 也是 `_live.db`）
+
+clauses:
+  1: exact same product/test SHA;
+  2: 10 CONSECUTIVE independent processes;
+  3: each process gets a fresh app-resolved temp DB;
+  4: |
+    receipt records: run_index, exit_code, resolved_absolute_db_path,
+    initial row counts, final row counts;
+  5: all 10 runs GREEN;
+  6: |
+    no sleep/retry/backoff/concurrency reduction/test-expectation
+    relaxation used to obtain the streak;
+  7: no two runs may silently share the same temp DB path;
+  8: one isolated GREEN is observation only, never closure.
+  9: |
+    RUN_SHAPE_IS_PART_OF_THE_RECEIPT
+    Every streak receipt must name the exact run shape and command surface:
+    - single-node
+    - node-with-preceding-doors-in-one-process
+    - whole-file
+    It must also record the exact target node id(s), ordering, and command.
+  10: |
+    CLASSIFY_THE_TARGET_NODE_WITHIN_THE_SHAPE
+    Classification is scoped to: (exact SHA, target node id, run shape).
+    FLIP_WITHOUT_SHARED_STATE(<shape>) => the TARGET NODE itself has both GREEN and RED outcomes
+      across fresh independent DB/process runs.
+    STABLE_RED(<shape>)   => the TARGET NODE itself is RED in every run of that same shape.
+    STABLE_GREEN(<shape>) => the TARGET NODE itself is GREEN in every run of that same shape.
+    Whole-command/file exit is not a proxy for the target node.
+    A whole-file run that is RED because another node failed cannot classify the target node.
+
+run_shapes:
+  - single-node
+  - node-with-preceding-doors-in-one-process
+  - whole-file
+
+target_node_classifications:
+  - STABLE_GREEN
+  - STABLE_RED
+  - FLIP_WITHOUT_SHARED_STATE
+  - UNCLASSIFIED_IN_THIS_SHAPE
+
+# 仲裁 15:58 同时冻结的两则"共享状态 vs 无共享状态"分类（翻转的一半归这里，不许混进 FLIP_*）
+shared_state_rules:
+  same_resolved_db_path_and_verdict_changes: [ISOLATION_BREACH, DIRTY_DB_FALSE_GREEN, DIRTY_DB_FALSE_RED]
+  different_fresh_db_paths_and_still_flips: [FLIP_WITHOUT_SHARED_STATE]
+
+# 每一条由谁机器判、哪几条只能自证 + 复核（免得有人把"工具没判"当成"这条已过"）
+judged_by:
+  mechanical:
+    1: 收据字段 sha（门拒收 UNKNOWN）
+    2: 每 run 一个 subprocess（门的 _run_once 形状）
+    4: 门逐 run 记 run_index/exit/node_outcome/解析路径/首尾行数，缺字段即 RECEIPT_INCOMPLETE
+    5: streak_verdict -> STREAK_MET / STREAK_NOT_MET(g/n)
+    6a: clause6_command_surface(argv) -> 命令面出现 --maxfail/-x/--reruns/--timeout/--deselect/-k/-n/--collect-only
+        或非白名单 -p ⇒ HARNESS_INVALID_relaxed_command_surface（含"每次只收集"这种从空分母报绿）
+    7: streak_verdict -> STREAK_INVALID_shared_db_path；classify_target_node 对重复路径拒绝谈"无共享状态"
+    9: streak_verdict -> RECEIPT_INCOMPLETE(第 9 条)；定性结论必须带 (<shape>) 后缀
+    10: classify_target_node 只接受逐 run 的 node_outcome；NOT_OBSERVED ⇒ UNCLASSIFIED_IN_THIS_SHAPE
+  self_declared_then_reviewed:
+    3: 由 ORD-0211 的 conftest 保证（每进程新临时目录），门用"路径逐 run 互不相同 + 跑前该路径不存在"复核
+    6b: 测试体里有没有真的加 sleep —— 工具判不了；交付方必须在收据里写明达成手段，commander 按 diff 复核。
+        门侧的编码：**未声明不改绿/红数字，但 closure_allowed 恒为 False**（最多签 STREAK_GREEN）
+    8: 语义条款；门侧落成"少于 2 个 run 一律 UNCLASSIFIED + observation_only() 判词"
+
+division_of_labour:
+  extractor: live_checks/gate_streak.py（commander 17:5x 认领第 10 条的逐 run 抽取器修正）
+  resident_door: backend/tests/test_qoder_db_isolation_same_verdict.py（ORD-0210 机制）
+  shared_predicate: backend/tests/_qoder_streak_receipt.py（纯函数，门与引用方同一把尺）
+  note: 抽取器只有一份。门不解析多节点容器输出，只拒绝"拿容器 exit 当目标节点判定"。
+
+# ⇒ 推论（写死免得两边各印一套）：任何要喂给 `classify_target_node` / `streak_verdict` 的收据，
+#   必须带下面这些字段名。commander 的工具补第 9/10 条时按这张表出字段，我的判据就能直接吃。
+required_per_run_fields:
+  - run_index
+  - exit_code
+  - node_outcome                     # GREEN / RED / NOT_OBSERVED（第 10 条要的那一格）
+  - resolved_absolute_db_path
+  - initial_row_counts
+  - final_row_counts
+required_receipt_fields:
+  - sha
+  - target_nodeid
+  - run_shape                        # 第 9 条三选一，逐字照 run_shapes
+  - command
+required_for_closure:
+  - clause6_declaration              # 第 6b 条：可为"未声明"，但那一句必须在收据里；缺它 closure_allowed 恒 False
+
+# verdict 字面的权威写法。两边名字同源，**载荷**曾分叉（见下 measured_divergence）。
+verdict_vocabulary:
+  STREAK_MET: "STREAK_MET(<rounds>)"                       # 例 STREAK_MET(10)
+  STREAK_NOT_MET: "STREAK_NOT_MET(<green>/<rounds>_green)"  # 例 STREAK_NOT_MET(3/10_green)
+  STREAK_INVALID_shared_db_path: "STREAK_INVALID_shared_db_path(第 7 条：…<paths>)"
+  HARNESS_INVALID_no_resolved_db_path: "HARNESS_INVALID_no_resolved_db_path(run_index=[…])"
+  HARNESS_INVALID_target_verdict_not_scoped: "HARNESS_INVALID_target_verdict_not_scoped(N 个 run 拿不到目标节点判定…)"
+  HARNESS_INVALID_relaxed_command_surface: "HARNESS_INVALID_relaxed_command_surface(…<flags>)"
+  HARNESS_INVALID_run_numbering: "HARNESS_INVALID_run_numbering(期望 1..N，实际 …)"
+  RECEIPT_INCOMPLETE: "RECEIPT_INCOMPLETE(第 <n> 条：<缺的是什么>)"
+  ABORT_FORBIDDEN_TARGET: "ABORT_FORBIDDEN_TARGET"
+
+measured_divergence_20260922_190x: |
+  读 `live_checks/gate_streak.py`（盘上现件 7,497 B / sha256[:16] a3cab869f6f80cdd，
+  与账本 18:56 钉住的 6,954 B / 7110d0f3458329f8 **不是同一份**）量到三格分叉，**留给 commander 处置，
+  我没有动他的工具，也没有替他做第二份抽取器**：
+  1) 它印 `STREAK_MET(<green>/<runs>)`（例 `STREAK_MET(10/10)`），本表权威是 `STREAK_MET(10)`；
+     `STREAK_NOT_MET(9/10_green)` 两边一致。跨工具做字符串比对的人会看见一个并非数据分歧的差异。
+  2) 收据里没有 `run_shape`、也没有逐 run 的 `node_outcome`（全文件 0 命中）
+     ⇒ 它现在的产物喂进我的判据只能得到 `UNCLASSIFIED_IN_THIS_SHAPE` /
+     `HARNESS_INVALID_target_verdict_not_scoped`。这不是门挑刺：第 9/10 条正是这两格。
+  3) `subprocess.run(..., capture_output=True, text=True)` 仍无 `encoding=`（文件里两处 `encoding=`
+     分别在 `write_text` 与 `stdout.reconfigure`）⇒ F 16:2x 交的那条 cp936 缺陷在这份现件里还在；
+     含中文断言的靶子会丢子进程 stdout，被误判成 `HARNESS_INVALID_no_resolved_db_path`。
+     （时间线提示而非结论：18:40–18:56 那轮 bundle 回读曾把 `qoder_shield_replay.py` 退回旧版，
+     同一只手可能把这个路径也换回了旧件。）
+
+interpretation_open_to_arbiter:
+  - |
+    本模块把"只有 1 个 run"读成 UNCLASSIFIED_IN_THIS_SHAPE（按第 8 条：单次孤立观测不结案），
+    而第 10 条字面写的是"every run of that same shape"⇒ 1 绿可读成 STABLE_GREEN。
+    取了**保守那一半**并钉在 test_4c 上；若仲裁要字面读法，改这一处即可，别改其余三条判定。
+
+not_accepted:
+  - 用 sleep / 重试 / 退避 / 降并发 / 放宽断言 换来的 streak
+  - 单次绿当修复证明
+  - 整文件红了就给里面某一条节点定 STABLE_RED
+  - 两个 run 落在同一个临时库却报 FLIP_WITHOUT_SHARED_STATE
+  - 收据里没有 exact SHA / 形制 / 精确 nodeid
