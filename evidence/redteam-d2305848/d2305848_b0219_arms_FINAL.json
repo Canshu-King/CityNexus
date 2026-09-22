@@ -1,0 +1,239 @@
+{
+ "tree": "tree17 = git archive 4d9ceae",
+ "gate_file_sha256_16": "143169fbdadc56e3",
+ "baseline": "9 passed (re-run before each arm)",
+ "arms": {
+  "A1_shapes": {
+   "shapes": [
+    {
+     "shape": "bool_true_baseline",
+     "projected": {
+      "stroller_accessible": true,
+      "source_kind": "DEMO",
+      "source": "data/mock/places.json#place-synthetic"
+     },
+     "verdicts": {
+      "accessibility_state": "ACCESSIBILITY_UNVERIFIED",
+      "STEP_FREE_REQUIRED": "ACCESSIBILITY_UNVERIFIED"
+     },
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "string_true",
+     "projected": null,
+     "verdicts": {},
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "string_TRUE_upper",
+     "projected": null,
+     "verdicts": {},
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "int_one",
+     "projected": null,
+     "verdicts": {},
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "nested_value",
+     "projected": null,
+     "verdicts": {},
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "step_free_bool",
+     "projected": {
+      "stroller_accessible": true,
+      "source_kind": "DEMO",
+      "source": "data/mock/places.json#place-synthetic"
+     },
+     "verdicts": {
+      "accessibility_state": "ACCESSIBILITY_UNVERIFIED",
+      "STEP_FREE_REQUIRED": "ACCESSIBILITY_UNVERIFIED"
+     },
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "step_free_string",
+     "projected": {
+      "stroller_accessible": true,
+      "source_kind": "DEMO",
+      "source": "data/mock/places.json#place-synthetic"
+     },
+     "verdicts": {
+      "accessibility_state": "ACCESSIBILITY_UNVERIFIED",
+      "STEP_FREE_REQUIRED": "ACCESSIBILITY_UNVERIFIED"
+     },
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "evidence_status_only",
+     "projected": {
+      "stroller_accessible": true,
+      "source_kind": "DEMO",
+      "source": "data/mock/places.json#place-synthetic"
+     },
+     "verdicts": {
+      "accessibility_state": "ACCESSIBILITY_UNVERIFIED",
+      "STEP_FREE_REQUIRED": "ACCESSIBILITY_UNVERIFIED"
+     },
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "step_free_verified",
+     "projected": {
+      "stroller_accessible": true,
+      "source_kind": "DEMO",
+      "source": "data/mock/places.json#place-synthetic"
+     },
+     "verdicts": {
+      "accessibility_state": "ACCESSIBILITY_UNVERIFIED",
+      "STEP_FREE_REQUIRED": "ACCESSIBILITY_UNVERIFIED"
+     },
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "route_step_free",
+     "projected": {
+      "stroller_accessible": true,
+      "source_kind": "DEMO",
+      "source": "data/mock/places.json#place-synthetic"
+     },
+     "verdicts": {
+      "accessibility_state": "ACCESSIBILITY_UNVERIFIED",
+      "STEP_FREE_REQUIRED": "ACCESSIBILITY_UNVERIFIED"
+     },
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "wheelchair_bool",
+     "projected": {
+      "stroller_accessible": true,
+      "source_kind": "DEMO",
+      "source": "data/mock/places.json#place-synthetic"
+     },
+     "verdicts": {
+      "accessibility_state": "ACCESSIBILITY_UNVERIFIED",
+      "STEP_FREE_REQUIRED": "ACCESSIBILITY_UNVERIFIED"
+     },
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "osm_tags_nested",
+     "projected": {
+      "stroller_accessible": true,
+      "source_kind": "DEMO",
+      "source": "data/mock/places.json#place-synthetic"
+     },
+     "verdicts": {
+      "accessibility_state": "ACCESSIBILITY_UNVERIFIED",
+      "STEP_FREE_REQUIRED": "ACCESSIBILITY_UNVERIFIED"
+     },
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "tags_nested",
+     "projected": {
+      "stroller_accessible": true,
+      "source_kind": "DEMO",
+      "source": "data/mock/places.json#place-synthetic"
+     },
+     "verdicts": {
+      "accessibility_state": "ACCESSIBILITY_UNVERIFIED",
+      "STEP_FREE_REQUIRED": "ACCESSIBILITY_UNVERIFIED"
+     },
+     "leaked_keys": [],
+     "pierced": false
+    },
+    {
+     "shape": "subject_status",
+     "projected": {
+      "stroller_accessible": true,
+      "source_kind": "DEMO",
+      "source": "data/mock/places.json#place-synthetic"
+     },
+     "verdicts": {
+      "accessibility_state": "ACCESSIBILITY_UNVERIFIED",
+      "STEP_FREE_REQUIRED": "ACCESSIBILITY_UNVERIFIED"
+     },
+     "leaked_keys": [],
+     "pierced": false
+    }
+   ],
+   "any_pierced": false
+  },
+  "A1e_tags_channel": {
+   "metadata_read": null,
+   "accessibility_state": null,
+   "STEP_FREE_REQUIRED": null,
+   "pierced": false,
+   "note": "tags_json 里的 step_free/evidence_status 是否被消费侧读到"
+  },
+  "A2_two_hard": {
+   "confirm": {
+    "status": 200,
+    "codes": [
+     "LARGE_LUGGAGE",
+     "STROLLER"
+    ]
+   },
+   "plan_count": 3,
+   "selects": [
+    {
+     "plan": "55523d40-cafe-5bd2-b30a-de057ec7a839",
+     "status": 422,
+     "stroller_conflicts": [
+      "place-tech-art"
+     ],
+     "luggage_conflicts": [],
+     "names_stroller": true,
+     "names_luggage": false,
+     "mentions_each_conflict": [
+      "place-tech-art"
+     ],
+     "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"PlanVersion 55523d40-cafe-5bd2-b30a-de057ec7a839 is infeasible: STROLLER_ACCESS_UNAVAILABLE:place-tech-art\",\"message_key\":\"request.invalid\",\"trace_id\":\"e788c263-3a3b-4d52-bd"
+    },
+    {
+     "plan": "0a1dcd9c-85cc-54bc-943c-5b46d6f3426c",
+     "status": 200,
+     "stroller_conflicts": [],
+     "luggage_conflicts": [],
+     "names_stroller": false,
+     "names_luggage": false,
+     "mentions_each_conflict": [],
+     "body_head": "{\"id\":\"22222222-2222-4222-8222-222222222222\",\"traveler_id\":\"11111111-1111-4111-8111-111111111111\",\"title\":\"One Day in Nexus City\",\"city_code\":\"CNX-DEMO\",\"timezone\":\"Asia/Shanghai\",\"start_at\":\"2026-10-10T09:00:00+08:00\",\""
+    },
+    {
+     "plan": "6c07d3ca-60ed-5699-a09d-e0ac568c6de6",
+     "status": 422,
+     "stroller_conflicts": [],
+     "luggage_conflicts": [
+      "place-design-library"
+     ],
+     "names_stroller": false,
+     "names_luggage": true,
+     "mentions_each_conflict": [
+      "place-design-library"
+     ],
+     "body_head": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"PlanVersion 6c07d3ca-60ed-5699-a09d-e0ac568c6de6 is infeasible: LUGGAGE_ACCESS_UNAVAILABLE:place-design-library\",\"message_key\":\"request.invalid\",\"trace_id\":\"336044d9-585b-4e"
+    }
+   ],
+   "both_hard_confirmed": true
+  },
+  "A3": "LOAD_FAIL [Errno 2] No such file or directory: 'd2305848_b0219_arms_a3.json'"
+ }
+}
