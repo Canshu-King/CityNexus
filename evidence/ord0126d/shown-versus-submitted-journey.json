@@ -1,0 +1,11 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0126 ④",
+  "node": "ord0126d-c-the-screen-submits-the-journey-it-shows",
+  "journeyOnScreen": "d13b129b-7a62-4beb-82af-d398964a42e3",
+  "storedReferenceAfterLoad": "77777777-7777-4777-8777-777777777777",
+  "submittedRequests": [
+    "POST d13b129b-7a62-4beb-82af-d398964a42e3"
+  ],
+  "publishedBy": "e345b9d6 for ORD-0126 补项"
+}
