@@ -1,0 +1,103 @@
+{
+ "what": "REAL_PHONE_GATE technical preflight - field-measured, NO secrets included",
+ "measured_at": "2026-09-23T03:22+08 (chain) / 03:25+08 (sw+index)",
+ "chain": {
+  "surface": "public tunnel (authenticated)",
+  "proxy": "127.0.0.1:4782 -> 127.0.0.1:4781",
+  "preview_backend": "127.0.0.1:8693 (pinned tree _qoder_cmdr_gate_20260921)",
+  "ports_untouched_by_lanes": true
+ },
+ "four_point_chain": {
+  "GET /api/v1/health": {
+   "status": 200,
+   "body_head": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"enabled\"}"
+  },
+  "GET /api/v1/demo/scene": {
+   "status": 200,
+   "bytes": 583,
+   "note": "demo_mode:true present"
+  },
+  "GET /api/v1/demo/scene (anonymous)": {
+   "status": 401,
+   "note": "guard assertion, separate from chain health"
+  },
+  "POST /api/v1/demo/reset (authenticated)": {
+   "status": 403,
+   "note": "R13 guard; also left a GUARD line in auth_proxy.log; user DB unchanged (3/3/19/16, max journey rowid 3)"
+  }
+ },
+ "service_worker": {
+  "registered_in_prod": "/v10-sw.js",
+  "v10_sw": {
+   "status": 200,
+   "bytes": 2096,
+   "content_type": "text/javascript",
+   "precache_hashed_index_assets": [
+    "assets/index-DtQ86lsQ.js",
+    "assets/index-cWMF3pBW.css"
+   ]
+  },
+  "sw_js": {
+   "status": 200,
+   "bytes": 7178,
+   "content_type": "text/javascript",
+   "is_prod_registered": false,
+   "carries_hashed_index_assets": false,
+   "note": "legacy dev-only SW; main.tsx registers /sw.js in dev and /v10-sw.js in prod"
+  }
+ },
+ "index": {
+  "status": 200,
+  "content_type": "text/html",
+  "bytes": 1200,
+  "sha256_16": "8c6405e97932642d",
+  "asset_refs": [
+   "/assets/index-DtQ86lsQ.js",
+   "/assets/index-cWMF3pBW.css"
+  ]
+ },
+ "assets": [
+  {
+   "path": "/assets/index-DtQ86lsQ.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "bytes": 1231985,
+   "sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a"
+  },
+  {
+   "path": "/assets/index-cWMF3pBW.css",
+   "status": 200,
+   "content_type": "text/css",
+   "bytes": 183233
+  }
+ ],
+ "generations_retained": [
+  {
+   "path": "/assets/index-DtQ86lsQ.js",
+   "bytes": 1231985,
+   "role": "current"
+  },
+  {
+   "path": "/assets/index-BCF4ptyk.js",
+   "bytes": 1230082,
+   "role": "previous"
+  },
+  {
+   "path": "/assets/index-CnfHH2K_.js",
+   "bytes": 1228395,
+   "role": "previous-but-one"
+  }
+ ],
+ "verdict": {
+  "REAL_PHONE_GATE.tech_preconditions": "MET(field-measured)",
+  "REAL_PHONE_GATE.user_action": "PENDING",
+  "asset_cleanup": "0 delete"
+ },
+ "user_action_spec": [
+  "phone refresh/reopen reaches the app",
+  "server sees a GET on the CURRENT hashed entry in the same window",
+  "at least one normal business GET 2xx",
+  "no white screen / no stale generation symptom"
+ ],
+ "sandbox_note": "no credentials, cookies or Authorization values are included anywhere in this file"
+}
