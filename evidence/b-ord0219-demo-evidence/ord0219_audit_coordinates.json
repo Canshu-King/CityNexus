@@ -1,0 +1,242 @@
+{
+ "order": "ORD-0219",
+ "kept_implementation": {
+  "tree": "D:\\moodle\\_qoder_b_ord188_20260922",
+  "branch": "agent/canary-ord198-20260922",
+  "local_sha": "4d9ceaee785e78fd25482f91d80e3f832aa3f684",
+  "pushed": false,
+  "note": "本地 SHA 不是审计坐标；下面每个 blob 才是"
+ },
+ "readable_coordinates": {
+  "repo": "Canshu-King/CityNexus",
+  "ref": "commander/control",
+  "path_prefix": "evidence/b-ord0219-demo-evidence",
+  "files": {
+   "bce7269__4d9ceae_ord0219.patch": {
+    "local_file": "bce7269__4d9ceae_ord0219.patch",
+    "published_path": "evidence/b-ord0219-demo-evidence/bce7269__4d9ceae_ord0219.patch",
+    "blob_sha1": "0d97dfc6b0393ded3a20c47d47778460b3415047",
+    "bytes": 19924,
+    "sha256": "0613e61a202892f5b2a663ca4a309943d30a204c42393fea3aab9c4567e439ef"
+   },
+   "4d9ceae.patch": {
+    "local_file": "4d9ceae.patch",
+    "published_path": "evidence/b-ord0219-demo-evidence/4d9ceae.patch",
+    "blob_sha1": "1ce909c1ee9a135101032d07e76a33b2979b5f8d",
+    "bytes": 3817,
+    "sha256": "444c12b36a5393f7135fd19ee436b589f2c760446e3a5aadfa08267bcb8a7dae"
+   },
+   "84017af.patch": {
+    "local_file": "84017af.patch",
+    "published_path": "evidence/b-ord0219-demo-evidence/84017af.patch",
+    "blob_sha1": "f0a562b015c5e0c159ee2d4dd5c93c347ce44d34",
+    "bytes": 2769,
+    "sha256": "6c993c229b56b2425589319b5317bc009a6516be0a21cc867edccfcbd6ec31cd"
+   },
+   "21309b9.patch": {
+    "local_file": "21309b9.patch",
+    "published_path": "evidence/b-ord0219-demo-evidence/21309b9.patch",
+    "blob_sha1": "308aa9added037fb78bf80e6e8a4634828347ea7",
+    "bytes": 18223,
+    "sha256": "9d8a430f368d5071086b45dcbcfd3d3b29169f7e3f282fe8323e910c4e6222b2"
+   },
+   "5730004.patch": {
+    "local_file": "5730004.patch",
+    "published_path": "evidence/b-ord0219-demo-evidence/5730004.patch",
+    "blob_sha1": "1c4d4f14bbed06cb06eabd5d5dd40a048772b54a",
+    "bytes": 2351,
+    "sha256": "ea0459c4d59ed4e7d5dcce66009c24d38cf4d337a6c888726cb32a36e082ef56"
+   },
+   "q219b_mutation_receipt_final_4d9ceae.json": {
+    "local_file": "q219b_mutation_receipt.json",
+    "published_path": "evidence/b-ord0219-demo-evidence/q219b_mutation_receipt_final_4d9ceae.json",
+    "blob_sha1": "34d771185fbe1273caef122c18a61de1714457e4",
+    "bytes": 6818,
+    "sha256": "af0619a97231c3fecd2cf5a3ac281be0cc887dc1c771b2135787f2071c1729b5"
+   },
+   "q219b_severity_dependency_receipt.json": {
+    "local_file": "q219b_severity_dependency_receipt.json",
+    "published_path": "evidence/b-ord0219-demo-evidence/q219b_severity_dependency_receipt.json",
+    "blob_sha1": "96662f06192c8d2b623b6aeb320a410f90bcaac3",
+    "bytes": 2077,
+    "sha256": "76ca26763a18e0b2a6dc96742cc0046ffef38032345408935bbd80dcb983f9de"
+   },
+   "streak_readback_4d9ceae.json": {
+    "local_file": "streak_4d9ceae/streak_readback.json",
+    "published_path": "evidence/b-ord0219-demo-evidence/streak_readback_4d9ceae.json",
+    "blob_sha1": "2bf9ae7927881673972081c2fe06bbb766e1a025",
+    "bytes": 14809,
+    "sha256": "3b346f09b12587a1e498232840ddd80c5e0429561cccff3f3104cc828fff6e29"
+   }
+  }
+ },
+ "commit_chain": [
+  {
+   "sha": "5730004",
+   "subject": "Tue Sep 22 22:31:41 2026 +0800 fix(capabilities): the parser forwards a HARD severity assertion for STROLLER and LARGE_LUGGAGE",
+   "patch": "5730004.patch"
+  },
+  {
+   "sha": "21309b9",
+   "subject": "Tue Sep 22 23:35:29 2026 +0800 feat(demo): the sealed demo produces accessibility evidence the stroller and luggage gates can read",
+   "patch": "21309b9.patch"
+  },
+  {
+   "sha": "84017af",
+   "subject": "Wed Sep 23 00:56:09 2026 +0800 test(demo): the producer gate pins the evaluated verdict, not just the filtered keys",
+   "patch": "84017af.patch"
+  },
+  {
+   "sha": "4d9ceae",
+   "subject": "Wed Sep 23 01:09:14 2026 +0800 test(demo): give the laundering tripwire its own owner assertion and positive control",
+   "patch": "4d9ceae.patch"
+  }
+ ],
+ "cumulative_patch_scope": [
+  "backend/app/capabilities.py",
+  "backend/app/services.py",
+  "data/mock/places.json",
+  "backend/tests/test_qoder_demo_accessibility_evidence.py"
+ ],
+ "ruler": {
+  "module": "backend/tests/_qoder_streak_receipt.py",
+  "bytes": 50316,
+  "sha256_prefix": "5528700cfbe71711",
+  "note": "尺不是我这尖的产物；引用读数必须带尺版本"
+ },
+ "nodes": [
+  {
+   "target_nodeid": "tests/test_qoder_demo_accessibility_evidence.py::test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified",
+   "run_shape": "single-node",
+   "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified --tb=short --import-mode=importlib",
+   "argv_of_run_1": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified --tb=short --import-mode=importlib",
+   "rounds": 10,
+   "green": 10,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "reverse_mutation_result": "KILLED",
+   "owning_mutation_arms": [
+    "M5",
+    "M8"
+   ]
+  },
+  {
+   "target_nodeid": "tests/test_qoder_demo_accessibility_evidence.py::test_demo_evidence_stays_out_of_non_sealed_cities",
+   "run_shape": "single-node",
+   "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_demo_evidence_stays_out_of_non_sealed_cities --tb=short --import-mode=importlib",
+   "argv_of_run_1": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_demo_evidence_stays_out_of_non_sealed_cities --tb=short --import-mode=importlib",
+   "rounds": 10,
+   "green": 10,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "reverse_mutation_result": "KILLED",
+   "owning_mutation_arms": [
+    "M4"
+   ]
+  },
+  {
+   "target_nodeid": "tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_lands_every_claimed_fact_with_demo_provenance",
+   "run_shape": "single-node",
+   "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_lands_every_claimed_fact_with_demo_provenance --tb=short --import-mode=importlib",
+   "argv_of_run_1": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_lands_every_claimed_fact_with_demo_provenance --tb=short --import-mode=importlib",
+   "rounds": 10,
+   "green": 10,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "reverse_mutation_result": "KILLED",
+   "owning_mutation_arms": [
+    "M3"
+   ]
+  },
+  {
+   "target_nodeid": "tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_reaches_exactly_the_places_the_fixture_claims",
+   "run_shape": "single-node",
+   "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_reaches_exactly_the_places_the_fixture_claims --tb=short --import-mode=importlib",
+   "argv_of_run_1": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_reaches_exactly_the_places_the_fixture_claims --tb=short --import-mode=importlib",
+   "rounds": 10,
+   "green": 10,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "reverse_mutation_result": "KILLED",
+   "owning_mutation_arms": [
+    "M4"
+   ]
+  },
+  {
+   "target_nodeid": "tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture",
+   "run_shape": "single-node",
+   "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture --tb=short --import-mode=importlib",
+   "argv_of_run_1": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture --tb=short --import-mode=importlib",
+   "rounds": 10,
+   "green": 10,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "reverse_mutation_result": "KILLED",
+   "owning_mutation_arms": [
+    "M3",
+    "M5"
+   ]
+  },
+  {
+   "target_nodeid": "tests/test_qoder_demo_accessibility_evidence.py::test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability",
+   "run_shape": "single-node",
+   "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability --tb=short --import-mode=importlib",
+   "argv_of_run_1": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability --tb=short --import-mode=importlib",
+   "rounds": 10,
+   "green": 10,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "reverse_mutation_result": "KILLED",
+   "owning_mutation_arms": [
+    "M1",
+    "M2",
+    "M7a"
+   ]
+  },
+  {
+   "target_nodeid": "tests/test_qoder_demo_accessibility_evidence.py::test_hard_luggage_names_the_blocker_and_does_not_misfire",
+   "run_shape": "single-node",
+   "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_hard_luggage_names_the_blocker_and_does_not_misfire --tb=short --import-mode=importlib",
+   "argv_of_run_1": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_hard_luggage_names_the_blocker_and_does_not_misfire --tb=short --import-mode=importlib",
+   "rounds": 10,
+   "green": 10,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "reverse_mutation_result": "KILLED",
+   "owning_mutation_arms": [
+    "M6",
+    "M7b"
+   ]
+  },
+  {
+   "target_nodeid": "tests/test_qoder_demo_accessibility_evidence.py::test_hard_stroller_names_the_blocker_and_does_not_misfire",
+   "run_shape": "single-node",
+   "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_hard_stroller_names_the_blocker_and_does_not_misfire --tb=short --import-mode=importlib",
+   "argv_of_run_1": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_hard_stroller_names_the_blocker_and_does_not_misfire --tb=short --import-mode=importlib",
+   "rounds": 10,
+   "green": 10,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "reverse_mutation_result": "KILLED",
+   "owning_mutation_arms": [
+    "M1",
+    "M2",
+    "M7a"
+   ]
+  },
+  {
+   "target_nodeid": "tests/test_qoder_demo_accessibility_evidence.py::test_missing_demo_evidence_is_unknown_and_never_implicit_access",
+   "run_shape": "single-node",
+   "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_missing_demo_evidence_is_unknown_and_never_implicit_access --tb=short --import-mode=importlib",
+   "argv_of_run_1": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_demo_accessibility_evidence.py::test_missing_demo_evidence_is_unknown_and_never_implicit_access --tb=short --import-mode=importlib",
+   "rounds": 10,
+   "green": 10,
+   "verdict": "STREAK_MET(10)",
+   "closure_grade": "STREAK_GREEN",
+   "reverse_mutation_result": "KILLED",
+   "owning_mutation_arms": [
+    "M4"
+   ]
+  }
+ ]
+}
