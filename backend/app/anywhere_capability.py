@@ -1467,6 +1467,31 @@ def evaluate_capability(
         **identity_fields(resolution),
         "destination_state": resolution.state,
         "destination_resolution": resolution.method,
+        # g10 (lane F): the normalized catalog carries coordinates for every geometry kind.
+        # `out center` gives nodes a point too, so node rows are not silently coordinate-less.
+        **(
+            {
+                "places": [
+                    {
+                        "id": str(place.id),
+                        "source_provider": place.provider_key,
+                        "source_identity": place.external_id,
+                        "osm_type": str(place.external_id).split(":", 1)[0].lower()
+                        if place.external_id
+                        else None,
+                        "name": place.name,
+                        "category": place.category,
+                        "latitude": place.latitude,
+                        "longitude": place.longitude,
+                    }
+                    for place in session.scalars(
+                        select(Place).where(Place.city_code == resolution.city_code)
+                    ).all()
+                ]
+            }
+            if resolution.city_code
+            else {"places": []}
+        ),
         # The pair the new cell is obliged to keep: `UNKNOWN_RETRYABLE` without `retryable` would be a
         # fourth "looks like a state" string, which is precisely what the ruling forbade when it
         # authorised adding a cell.  Every other verdict reports exactly what was measured.
