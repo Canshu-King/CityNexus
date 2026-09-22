@@ -1,0 +1,18 @@
+{
+  "kind": "CORRIGENDUM",
+  "about": "evidence/ord0210/a4079bc/manifest.json  (blob efc4183143dc0759)",
+  "wrong_sentence": "说明引用定性必须带批次，不能只带 SHA。",
+  "why_wrong": "它把『批次』升成第四把 scope 键，等于允许同一节点在两批里各签 STABLE_RED 与 FLIP 互相打脸。",
+  "ruling_now": "定性 scope 只有 (exact SHA, target node id, run shape) 三元组；批次是 provenance，不是 scope。",
+  "mechanical_consequence": "同一三元组的多批读数必须并成一份输入再定性：A 批 0/10 全红 + B 批 2/10 有绿 ⇒ FLIP_WITHOUT_SHARED_STATE(<shape>)；三元组任一把键不等的批次不许并批。单批标签在合并口径下不具权威性。",
+  "implemented_in": {
+    "helper": "merge_target_observations()",
+    "test": "test_4e",
+    "mutation_killed": "M17",
+    "contract_section": "scope_vs_provenance",
+    "sha": "6f0e5fc",
+    "authoritative_manifest": "evidence/ord0210/6f0e5fc/manifest.json (blob 7401232beec9de36)"
+  },
+  "quote_format": "FLIP_WITHOUT_SHARED_STATE(<shape>) @ <sha>（不写『第 N 批』）",
+  "written_by": "lane F 8ccd71d8"
+}
