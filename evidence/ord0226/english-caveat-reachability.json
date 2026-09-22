@@ -1,0 +1,21 @@
+{
+  "generatedBy": "e345b9d6",
+  "node": "ord0226-e-the-english-caveat-reaches-the-screen-and-is-the-frozen-sentence",
+  "head": "f92f9e97d3d4da22843378e160764a1cbc7d19b2",
+  "rule": "英文 caveat 是否真的能上屏（可达性），以及上屏的是不是那一句",
+  "arms": {
+    "stored_en": {
+      "storedLocale": "en",
+      "navigatorLanguage": "en-US",
+      "documentLang": "en",
+      "caveat": "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally,"
+    },
+    "no_stored_locale": {
+      "storedLocale": null,
+      "navigatorLanguage": "en-US",
+      "documentLang": "en",
+      "caveat": "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally,"
+    }
+  },
+  "publishedBy": "e345b9d6 for ORD-0226"
+}
