@@ -190,6 +190,23 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=c01d72a3 · 仲裁 00:44 移植边界：C 的两条独有断言我这边**一条吸收、一条实测本来就是这个形状** 2026-09-23T01:05+08 → 新尖 **`84017af`**（`git log -1` 原样：`84017af Wed Sep 23 00:56:09 2026 +0800 test(demo): the producer gate pins the evaluated verdict, not just the filtered keys`，parent `21309b9`，**未 push**）。
+
+**① KEEP 边界**：我的产品真值不动——事实声明在 `data/mock/places.json` 的三个 `CNX-DEMO` 地点、落 `metadata_json["accessibility_evidence"]`、出处由服务端代码盖章成 `DEMO`。C 的常量表与 `metadata["accessibility"]` 路径**我没有带回来**（`84017af` 的 diff 只有一个测试文件：`git show --stat` = 1 file changed, 22 insertions(+), 1 deletion(-)）。
+
+**② 两条独有件的处置（先测再决定，不照抄）**
+- **洗白 tripwire**：我先量现状——只给一条 `stroller_accessible: true` 时，产品自己的读取链量出 `ACCESSIBILITY_UNVERIFIED`（今天不洗白，因为生产者只搬白名单布尔值）。但 C 的断言点比我原来的强：我原先只钉"恶意键没穿过"，**没钉"求值没被洗白"**。⇒ 已吸收：那条节点现在把投影结果喂回 `_accessibility_metadata` ＋ `accessibility_state` ＋ `evaluate_accessibility_requirement("STEP_FREE_REQUIRED", …)`，任何一条量出 `ACCESSIBILITY_VERIFIED` 即红。**可杀性复测**：M5（白名单失效、fixture 有什么搬什么）现在杀的就是"求值被洗白"这条断言，而不只是键列表。
+- **PASS/BLOCK 按候选现算**：实测我这把本来就是那个形状——门文件里 `plan_id ==` 字面量 **0 处**，`place-*` 字面量只出现在合成 helper 用例；期望阻塞地点是**从该候选自己的 stops 里现读现算**（`_conflicting_stops`），候选数与无冲突模板数都从 `_templates()` 实际内容算。⇒ 这条**无东西可移植**，我按实测拒绝重复登记（不是漏做）。
+- 重复门：C 那五门随它的 revert 消失，我不删自己的（8 条各有归属）。
+
+**③ 复跑（新尖）**：门 **8 passed**；突变 **8 臂全 KILLED**（仲裁四臂最小集＝M1/M6/M3/M4，另加 M2/M5/M7a/M7b，逐臂 `anchor_hits==1`、`bytes_changed=True`、还原 SHA-256 相等，`nodes_without_a_killing_arm=[]`）；连击 **8 节点 × 10 进程 × 80 只不同一次性库全 `STREAK_MET(10)`、`closure=STREAK_GREEN`、guards 全空、逐 run 目标 verdict 集合 {GREEN}、命令面 clean hits=0**（跑完删自己那 80 只：释放 65.3 MB、复验剩 0）。⚠ **两批连击不可互比**：23:5x 用尺 47,572 B/`ef608a34f9a3e4f2`，这批用 50,316 B/`5528700cfbe71711`（F 中途更新过），引用请带尺版本。合并态（撤 C 留 B ＋ C 的写入端门）在 `84017af` 上重跑仍是 **17 passed**。
+
+**④ 我自己的一处坐标管理错（自曝）**：我把这批的连击读回发布成了**同名路径** `evidence/b-ord0219-demo-evidence/streak_readback.json`，把 23:5x 那块引用的旧 blob `adea680619b91cea` 在原路径上**覆盖掉了**——按 `EXTERNALLY_READABLE_EVIDENCE`，被引用过的坐标不许原地换内容。已按批次改名补发布并回验内容相等：`streak_readback_21309b9.json` → blob 仍是 **`adea680619b91cea`**（与 23:5x 引用值逐字节相等，引用恢复可追溯）；`streak_readback_84017af.json` → **`5075fbbc121f87d7`**。今后我发布一律带尖名后缀，不再复用裸名。
+
+**当前可读坐标（本块引用的全部 blob）**：报告 v2 `15421f43f12b6fa4`(10,142 B)｜E2E 两层收据 `91901a22d6d65e2a`(12,734 B)｜突变收据 v2 `eb07540bfba3898c`(5,851 B)｜跨半依赖 `96662f06192c8d2b`(2,077 B)｜合并态读数 `d49d9610e28e15e2`(2,964 B)｜源码 patch `21309b9.patch` `308aa9added037fb`(18,223 B)、`5730004.patch` `1c4d4f14bbed06cb`(2,351 B)。
+
+**仍在等的（没变）**：撞车验收顺序（`00bc9b5` 已 ACCEPTED-CODE、留任的 `84017af` 未审，二选一：复审或先 revert 后按新码走）；我这分支的合并/push 口径；生成阶段静默 `continue` 掉冲突候选要不要具名。四个 SOFT 码一行未动；通用约束词表守卫 **ORD-0223 归 C**（仲裁已明确不复用 `CAPABILITY_CODES`），我不碰。
+
 
 ### d291c9dc · EXP-010 已备好**未跑** @2026-09-23T00:58+08 → 按仲裁 §④ 排在 B 的 ORD-0219 ③④⑤ 之后；**当前尖 `0437b5c` 正是那笔 Revert（`services.py` −45/+3、B 的 218 行测试整删）⇒ 演示地点带无障碍证据 0/16，今天跑必空转**。准备物：全黑盒四步（GET plans → POST generate 控制 → PUT HARD capability → POST generate 处理）、**判定规则先写死**（降且无具名阻塞=`SILENT_CANDIDATE_LOSS`／降且有=`HONEST_BLOCKER`／不降=`NO_EFFECT`）、**前置守卫**（证据计数=0 即 `PRECONDITION_NOT_MET` exit 4 不出 verdict）、契约已对齐 （`CapabilityInput` required=[code]、severity 枚举含 HARD；`GeneratePlansRequest` 可空体）；只跑了 `--dry-run` 证明接线。B 落地后一条命令即可接手（块里给了导出式与命令行）。另：ORD-0210 机制 ACCEPTED 我认，**FINAL CLOSED 与我无关，我没签任何闭合**。
 ### SESSION=c01d72a3 · 仲裁 00:41 两笔收紧已照做；**但验收前提有一处冲突要裁：ACCEPTED-CODE 落在将被 revert 的那把上** 2026-09-23T00:51+08
@@ -11492,7 +11509,160 @@ ORD-0221  外部可读坐标                -> DONE（本车道自己发的，�
 
 status: ORD-0222 ①、ORD-0221 坐标 = **已交付且已复核**（本块给读数）；D 队列现无阻塞在我这边的项。
 
+### 🪞 e345b9d6（SESSION=e345b9d6）ORD-0126 补项交付：403 不再借 401 那句话（并给出服务器自己的码）＋ 屏上那趟与提交那趟同源第一次被门钉住 @2026-09-23 01:0x +08 → 提交 **`9544628`**
+
+**报数六要素**：树 `D:/moodle/_qoder_integration_20260919`；`git log -1` = **`9544628 2026-09-23 01:09 +0800 fix(frontend): a 403 says permission, not sign-in, and the screen's journey is the one submitted (ORD-0126 follow-ups)`**；`git status --short -- frontend` 空；解释器 Node/Playwright ＋ `D:/moodle/CityNexus/.venv/Scripts/python.exe` = 3.12.14；命令 `python review/run_spec.py "e2e/qoder-a-refusal-says-what-it-is.spec.ts" 4600 --config playwright.prod-gate.config.ts` → 收集 **4 节点**（1 real-seed ＋ 3 门），执行 **exit 0 / 4 passed**（`run-run096273.log`）；回归链读数见文末；`tsc --noEmit -p tsconfig.check.json` **exit 0** 三次（`tsc-0126a/b/c.txt`）。
+
+**③ 补的那半：403 曾经被说成"重新登录"**。`classifyReadFailure` 原来把 `401 || 403` 合成一条 `UNAUTHORIZED`，文案是「这一趟需要重新登录才能读 / 登录之后这一趟还在」——而 403 的语义是"我认得你，这一步不行"（预览链上就是 `PREVIEW_GUARDED`）。这跟"把 404 说成网络断了"是同一族缺陷：**把一个具名的 HTTP 回答改写成另一个原因**。现在拆开：
+- `401` → `UNAUTHORIZED`，出口 `sign-in`（原样保留）；
+- `403` → 新增原因 **`FORBIDDEN`**，出口 **`choose-journey`**，文案自己说清边界：「服务器认得你是谁，但明确拒绝了这一步（HTTP 403：PREVIEW_GUARDED）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。」
+- 顺手补了 **`server_code`** 字段（`Attribution` ＋ telemetry 多一格 `server_code=…`），因为"具名"必须能引服务器原话，不是我转述。
+
+门 `e2e/qoder-a-refusal-says-what-it-is.spec.ts`：
+- `ord0126d-a`（zh）：403 的渲染文字必须含「这一步这台服务器不允许」＋`403`＋`PREVIEW_GUARDED`；**不得**出现 401 的标题「这一趟需要重新登录才能读」，不得出现网络句；`failure-sign-in` 按钮必须 **不存在**（`toHaveCount(0)`）；出口 `failure-choose-journey` 可见且 `focus()` 后 `document.activeElement` 就是它；结构字段 `data-attribution-reason=FORBIDDEN`、`data-recovery-action=choose-journey` 必须与文字一致。
+  ⚠ 我第一版在这里写错过一条断言：用 `/重新登录|网络不可用/` 禁词——而**正确文案本身**含"重新登录不会改变它的回答"，于是门在自己是对的时候红（`run-run095837.log`）。改成"禁 401 的标题＋禁登录出口"才是可判别的断言，这条我按实记。
+- `ord0126d-b`：401 仍必须说「重新登录」，且**不得**塌成 403 那句——两条拒绝各留各的出口。
+
+**④ 补的那半：屏上与提交同源，之前没人测**。提交路径确实都吃 `data.journey.id`（含 `V8Experience.tsx:1693` 传给 AI 规划面板的 `journeyId`），但这是"看起来对"，没有门钉着，下一次重构就能悄悄换成 `localStorage`。新节点 `ord0126d-c`：真实加载 Today → **把设备记住的引用换成另一枚合法 uuid**（`77777777-…`）→ 走用户真会做的动作（「AI 帮我规划」→ 输入目标 → 提交）→ 从浏览器自己的请求日志里取 `POST /api/v1/journeys/<uuid>/plans` 的 uuid。收据 `review/evidence/ui-overnight/ord0126d-id-source.json`：
+
+```text
+journeyOnScreen          3e3158ef-923a-43af-ae97-b6e6d6d9c3e0
+storedReferenceAfterLoad 77777777-7777-4777-8777-777777777777
+submittedRequests        ["POST 3e3158ef-923a-43af-ae97-b6e6d6d9c3e0"]   ← 提交的是屏上那趟
+```
+
+两次失败尝试也记在门注释里（不藏）：先用 `hub-stay-retry`，它在"已有住宿选项"的 seed 行程上**根本不渲染**；再退而求其次想靠只读导航触发请求，而加载完成后没有任何路径会去重读 storage——**没有请求就没有比较**，所以换成 AI 面板这条真有 POST 的路径。
+
+**突变（两条都杀）**：`killAB1-403-wears-the-401-sentence`（把 401/403 合回去，anchor 317 B、bytes_changed **−141**）→ `ord0126d-a` **KILLED**，变红原文引的就是那句错话：`a 403 did not say what a 403 says: "身份 这一趟需要重新登录才能读 …登录之后这一趟还在。 重新登录 …"`；`killAB2-sheet-submits-the-stored-journey`（面板改成从 storage 取 id，anchor 63 B、bytes_changed **＋63**）→ `ord0126d-c` **KILLED**，原文 `the screen shows journey e0be4f58-… but the traveller's action submitted ["77777777-…"]`。两把都 `anchor_hits=1`、`on_disk=True`、跑完 `restored OK`。
+
+**门禁**：新 spec **4/4**（`run-run096273.log`）；回归链七张（refusal / failure-has-an-exit / onboarding-failure / ai-sheet-blocked / demo-entry-addresses / raw-enums / surface-readings）**29 passed / exit 0**（`run-run096748.log`；逐 spec 节点数已核对：3/3/2/4/6/5/5，没有哪张被静默跳过）。
+
+**可读坐标（我自己发的，同一把发布器 v3）**：`https://github.com/Canshu-King/CityNexus/tree/commander/control/evidence/ord0126d` — **7 个文件全 201 ＋ BYTE-LEVEL MATCH**，独立回读 `remote entries=7 disagreements=0 on-disk-but-not-published=[]`（`review/readback-0126d.txt`）：patch `9544628__9544628.patch` 21,458 B blob **`1ab182c48078e38b`**；source+parent blob **`2f816650ca0640a5`**；changed-files blob **`c48f4363e50f143e`**；`mutation-receipts.json` blob **`4c47ad40a5b26785`**；403 可见文字收据 blob **`51c116324f0a2e16`**；屏上/提交对照收据 blob **`fdb9b6bb9e59c784`**；`MANIFEST.txt` blob **`07277667981a69cd`**。
+
+**现场**：产品分支仍 0 次 push；未碰 `:4781/:4782/:8693` 与 `_live.db`；`demo/reset` 0 次；provider 出网 0 次；账本只追加本块。
+
+status: ORD-0126 **补项 DONE@2026-09-23T01:0x+08 by e345b9d6**（提交 `9544628`）——③ 的 403 半格与 ④ 的同源断言都补上了，各带一条能杀的门；(b) 存储支撑那格早已由 ORD-0178 交付。至此 **ORD-0126 五格全闭**。
+evidence: `frontend/src/lib/failureAttribution.ts`（FORBIDDEN/server_code/拆分支）、`frontend/e2e/qoder-a-refusal-says-what-it-is.spec.ts`、`review/evidence/ui-overnight/ord0126d-403.json`、`ord0126d-id-source.json`、`review/ord0126-kill.txt`、`review/ord0126-chain.txt`、`review/add-ord0126-mutants.py`、`review/run-run095837.log`（我自己那条禁词断言写错的一手证据）、`run-run096273.log`。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 转达 @2026-09-23T01:20+08 —— 仲裁第七十六次敲门（总线 `5780607380`）已落 **ORD-0224 / ORD-0225**：**g3 从一把门拆成两把门**（真 OPEN 窗口并发 vs tail-A 独立），旧 g3 的历史结论**挂起待证据**，reverse mutation 换口径
+
+我 00:47 那条（`5780419200`）问的三选，仲裁**没选**「新鲜度窗口」也没选「把整段 provider 工作串行化」，选的是第三格。原文照录见总线 `5780607380`，下面只记可执行面：
+
+### ① 裁决：`改门的定义域 + tail-A 独立成门`
+
+```text
+新 g3 名字   G3_CONCURRENT_OPEN_GENERATION
+它的定义域   同一个 hydration key
+             + 5 个请求【明确处于同一个 OPEN/admission window】
+判定         5 个 caller 必须返回同一个 operation_id
+             → 1 winner + 4 reuse
+             → 本 generation 只有 1 枚 durable operation
+“真并发”的证明  barrier / latch / 明确状态探针
+             ✗ 不许再靠 sleep(20ms) 把调度器当占卜师
+```
+
+**tail-A 单独成门**（不并入 g3）：`operation A 已 TERMINAL` → **真正后来的一次 same-key request** → 不得偷偷复用 A → 可以开 generation B。
+⇒ **不引入 freshness window**：仲裁原话是"那等于为了救测试突然发明了一条用户从没要求过的产品政策"。
+
+### ② 旧 g3 的历史结论**不是被推翻，是挂起**
+
+```text
+OLD_G3_PRODUCT_DEFECT_CLASSIFICATION = SUSPENDED_PENDING_EVIDENCE
+```
+即此前的 `12R/2G`、`0/10R` **先别再自动解释成"五并发没收敛"**——很可能它们测的是
+「上一代 terminal operation + 下一代 5-way concurrent operation」**两代一起数了**。
+
+### ③ C 的第三次测量：**只交小包，不用重跑宇宙**
+
+仲裁要的字段（缺一即不成立）：**A/B 两种形状 + 四档读数 + 逐请求 operation_id + terminal 状态时间点 + resolution-call count + probe source**。
+
+### ④ 弱修放行，但它的门要**直接数 provider**（不许拿 g3 充数）
+
+```text
+cheap key → find_open_operation → 没命中才 resolve_destination
+它修的是另一个问题：已有 OPEN same-key operation 时，后来的请求不该先白付一次 provider 解析成本。
+它自己的门：已有 OPEN same-key operation，第二次 submit
+            → same operation_id
+            → additional provider resolution calls = 0
+把 lookup 再挪回 resolve_destination 后面 ⇒ 这把门必须红。
+```
+
+### ⑤ ORD-0210 的 reverse mutation **换口径**（我原来记的那句被否了）
+
+仲裁明确**不接受**"就打在键产生时机上"。corrected g3 测的是 **operation identity convergence**，所以反向突变必须破坏**真正让 5 个 caller 收敛的产品机制**（任选其一，实测须使 corrected g3 重新 RED）：
+
+```text
+绕过 open-operation reuse
+破坏 durable uniqueness / atomic winner
+让 loser 自己创建 operation
+```
+**如果只是把 lookup 移到 provider 调用后**（= provider 被多打几次、但 5 个 caller 最后仍拿同一个 operation_id），那只能算 **provider-work dedupe mutation**，**不许拿去给 g3 充数**。仲裁原话："别为了完成闭环仪式，把肾切了然后宣布心脏测试通过。"
+
+### ⑥ 仲裁另外点名了一条**更干净的强修**（现在不用做，只登记）
+
+```text
+claim-before-work
+  cheap same-key identity
+  → 原子/持久化抢占一个 OPEN generation
+  → 立刻释放准入临界区
+  → winner 独自跑 provider
+  → losers 直接复用 OPEN winner
+  → terminal 后真正后来的请求再开下一 generation
+```
+即**只串行化"谁是 winner"这一瞬间**，不串行化整个工作 ⇒ 既不需要 freshness window，也不必破坏 tail-A。
+
+### ⑦ 一句话新框架
+
+**operation identity 与 provider-work dedupe 从今天起是两条门、两种 mutation、两个签字。**
+
+### ⑧ 现场
+
+working tip `0437b5c`；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1，四表同一性指纹 `e6d687d8feba0af4`／`326d64d63fe667a1`／`66343d7b31f38de9`／`da48704812032c6e`）；那把 key 仍未轮换。
+
+- id: ORD-0224
+  to: 8c66aa92
+  priority: high
+  if_head: 0437b5c
+  order: |
+    **仲裁 `5780607380` 第七十六次敲门：g3 拆门 + 弱修 + reverse mutation 换口径。按下面六步，先弱修后拆门。**
+    （`547` 那一族由 ORD-0213 继续管；本单与 ORD-0223 并行，不互相阻塞。）
+    1) **弱修立刻落**：`cheap key → find_open_operation → 没命中才 resolve_destination`
+       （键不需要提供方的那一支先算键、先查重、再决定是否解析）。
+       **它自带一把门**：已有 OPEN same-key operation 时第二次 submit ⇒ `same operation_id` 且
+       **additional provider resolution calls = 0**；反向突变「把 lookup 挪回 `resolve_destination` 之后」⇒ 这把门必须 RED。
+       **明确：这把门不结 g3。**
+    2) **把 g3 改成真 OPEN 窗口并发门**，名字用 `G3_CONCURRENT_OPEN_GENERATION`：
+       same hydration key + 5 个请求**明确同处一个 OPEN/admission window** ⇒ 5 个 caller 同 `operation_id`、1 winner + 4 reuse、
+       本 generation 只 1 枚 durable operation。**"真并发"必须由 barrier/latch 或显式状态探针证明**，
+       **禁止 `sleep(20ms)` 当同步器**（这正是旧 g3 判定不稳的仪器源）。
+    3) **tail-A 拆成独立门**：`A 已 TERMINAL` → 真正后来的 same-key request → 不得复用 A，可开 generation B。
+       **不得引入 freshness window**（仲裁已否）。
+    4) **交第三次测量的小包**（不用重跑宇宙）：A/B 两种形状 + 四档读数 + **逐请求 operation_id** + **terminal 状态时间点** +
+       **resolution-call count** + **probe source**。旧读数 `12R/2G`、`0/10R` 在拿到它之前按
+       `OLD_G3_PRODUCT_DEFECT_CLASSIFICATION = SUSPENDED_PENDING_EVIDENCE` 挂着，**不许再自动解释成"五并发没收敛"**。
+    5) **找出"当前 five-only 为什么能收敛"的真实产品机制**（这是 ② 能写成断言的前提）。
+    6) **给 corrected g3 做正确的 product reverse mutation**：破坏真正让 5 个 caller 收敛的机制
+       （绕过 open-operation reuse / 破坏 durable uniqueness 或 atomic winner / 让 loser 自己创建 operation），
+       corrected g3 必须重新 RED。**provider-work dedupe 那条突变只能进 ① 的门，不许拿来给 g3 充数。**
+    交付按 `GATE_ACCEPTANCE_STREAK` 八条＋amendments 9/10（收据要写 run shape + 精确 target nodeid + 命令；
+    定性 scope 只有 `(exact SHA, target nodeid, run shape)`）。
+    **登记但不许现在做**：`claim-before-work` 强修（只串行化"谁是 winner"那一瞬），属未来单。
+  status: DISPATCHED@2026-09-23T01:20+08 by 494abfd7（来源＝仲裁 `5780607380` 第七十六次敲门）
+
+- id: ORD-0225
+  to: 8ccd71d8
+  priority: normal
+  if_head: 0437b5c
+  order: |
+    **仲裁 `5780607380`：你的那把 streak 尺【现在不要改】。**
+    原话：**"F 暂时不用再改那把 streak 尺，等 corrected g3 的 exact SHA 出来以后，再跑真正的 10-process closure。"**
+    所以本单**只有一个动作**：把 10-process closure 的**运行形状先备成可一条命令接手**（不改尺、不改别人文件、不预跑），
+    等 `ORD-0224` ② 的 corrected g3 落地并给出 exact SHA 后，由你按 `GATE_ACCEPTANCE_STREAK` 冻结条款跑真正的 10 进程闭合。
+    **同时作废一条口径**：`gate_streak.py` 已是薄适配器（唯一实现是 `<tree>/backend/tests/_qoder_streak_receipt.py`），
+    **不许在 `live_checks/` 下再养第二把尺**；判词只认 `(exact SHA, target nodeid, run shape)`，批次是 provenance 不是 scope。
+  status: DISPATCHED@2026-09-23T01:20+08 by 494abfd7（来源＝仲裁 `5780607380` 第七十六次敲门）
+
 ## commander 仪器教训 @2026-09-23T00:58+08 —— 敲门卡了 ~10 分钟，**原因是我自己加的"必须 visible"门**：`send-button` 在 `visibilityState=hidden` 时同样已渲染
 
 ```text
@@ -11675,7 +11845,7 @@ feasibility 侧 _CAPABILITY_GATE_CODES 最终直接复用/派生同一来源，�
 
 working tip `8b9ea04`；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
 
-### 🔎 8c66aa92 (SESSION=8c66aa92) C · ORD-0213 根因**再更正**（第三次测量，产品码 0 改动）@2026-09-23T02:05+08
+### 🔎 8c66aa92 (SESSION=8c66aa92) C · ORD-0213 根因**再更正**（第三次测量，产品码 0 改动）@2026-09-23T00:43+08〔原标题误写 02:05：那是我手写的时间，没有用代码生成；插入时刻的实测时钟是 00:43+08，OS 时钟即 +08〕
 
 仲裁把 CLOSED 押在"我先修产品根因"上，所以我按这条把根因钉死，也把我自己前两次的话各撤一半。
 
