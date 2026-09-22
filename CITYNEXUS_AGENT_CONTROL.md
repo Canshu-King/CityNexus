@@ -190,6 +190,30 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-23 02:2x+08 —— 砸 HJ-P1 两臂证据（只读，未重跑它的浏览器实验）：**声明 2 CONFIRMED（我自己从 0748a1f 重建，逐字节同 sha）**；**声明 1 部分可核（端口↔包映射我通过 serve 脚本+dist 目录核到了，但 JSON 里没有包身份字段）＋找不出第二个可解释翻转的变量，却抓到一条更要紧的：新代次只跑了 1 次**；**声明 3 一半 CONFIRMED 一半 NOT_INDEPENDENTLY_CHECKABLE**
+
+**声明 1「两臂只差前端包」——`PARTIALLY_CHECKABLE`；第二变量：找不出，但单次采样是硬伤**
+
+- **可区分字段清单（从两份 JSON 逐字段读，非转述）**：`base` 8762 vs 8763｜`run_label` gen_old/gen_new｜`started_at` 01:32:50.871 vs 01:33:17.499（**+26.6 s**）｜`viewport` 390×844 **同**｜`browser` chromium 153.0.8010.12 **同**｜`innerHeight` 844 **同**｜`docScrollHeight`(A) 1496 **同**｜`A_beforePress` **全字段逐字节相同**（scrollY 0 / hintY 1224 / hintInView false / liveRegionText ""）｜后端 8761 **同**｜库 `_hjp1_gen.db` **同**。
+- **端口↔包映射我独立核到了**（这是 JSON 里**没有**的字段）：`serve_genold.py:15 DIST=…/dist5`、`serve_gennew.py:15 DIST=…/dist_gen_new`；`dist5/assets/` 里是 `index-BlM40ELx.js`（1,230,166 B）、`dist_gen_new/assets/` 里是 `index-DtQ86lsQ.js`（1,231,985 B）——与它块里报的两个包名一致 ⇒ **"哪臂服务哪个包"可核**，但**核它的坐标不在它发布的 JSON 里**（JSON 无 bundle 名/sha 字段），外审必须拿到这两个 serve 脚本或 dist 目录。
+- **第二变量**：唯一"变了且不是自变量"的是**时间差 26.6 s**。但 `A_beforePress` 两臂逐字段相同 ⇒ **进入观测阶段时两臂起点等价**，时间差不能被用来解释翻转。两个静态服务器（serve_*.py）无自身状态（纯 DIST 常量 + 代理到同一个 8761）。**⇒ 我找不出第二个可解释翻转的变量。**
+- **但我抓到一条比"第二变量"更要紧的**：**新代次只跑了 1 次**。目录里 `ord0223_scroll_probe.json` 与 `ord0223_scroll_probe_gen_new.json` 是**同一 run 的两份副本**（base/label/started_at 到毫秒全同）——外审读到两份会误以为跑了两次。全清单：新代次 **1 次**（gen_new）；旧代次 **3 次**（gen_old 8762 ＋ runC/runD 8752，三次都是 `refusedPressMovedPage=False`）。**⇒ "旧代次 5/5 有缺陷"有重复支撑，"新代次已修"是单次观察**——按 `GATE_ACCEPTANCE_STREAK` 第 8 条与 commander 自己的口径，**单次绿只是观察**。这条不否证它的结论，但把它从"已修"降回"单次观察"，两臂**不对称**。
+
+**声明 2「自出的包与上线那份逐字节相同（cf3a08108ffba413）」——`CONFIRMED`（我自己重建）**
+
+- 我的方法：`git archive 0748a1f` → 干净树 tree16 → `npm run build`（cwd=tree16/frontend，依赖已装）。
+- 结果：产物 `dist/assets/index-DtQ86lsQ.js` **1,231,985 B，sha256 = `cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a`**；与**权威 dist**（`_qoder_integration_20260919/frontend/dist/assets/index-DtQ86lsQ.js`）**逐字节相同**；与 HJ-P1 报的 sha256[:16] 相同。⇒ **它的声明成立，且构建可从源码复现**（Vite 内容哈希，同源同产物）。
+
+**声明 3「nonGetRequests=0 与库未变 44/59」——前半 `NOT_INDEPENDENTLY_CHECKABLE`，后半一半 CONFIRMED**
+
+- `nonGetRequests: []`：它是**脚本自己进程内** `page.on('request')` 收集的（`ord0223_scroll_probe.cjs:152 out.nonGetRequests = writes`），JSON 里的空数组是**它自己的声明**。**外部独立复现最少需要**：后端 `8761` 的访问日志（证明后端只收到 GET）**或**一次网络抓包——**目录里没有后端日志**（只有 build*.log），也没发布抓包 ⇒ **NOT_INDEPENDENTLY_CHECKABLE（需要它未发布的东西）**。
+- `44 journeys / 59 travelers`：**我独立核到了**——只读连 `_hjp1_gen.db`（`mode=ro`，未发 `wal_checkpoint`）：`journeys=44 / travelers=59`，55 张表 ⇒ **"跑后 = 44/59" CONFIRMED**。但**"跑前也是 44/59"（即"库未变"）需要跑前快照，未发布** ⇒ 这半是 **NOT_INDEPENDENTLY_CHECKABLE**。
+- 附一条我看到的边角：`_hjp1_gen.db-wal` 的 mtime 是 **01:32**（两臂期间）⇒ **两臂期间库确有写活动**（很可能是 `GET /experience` 读时写的 `journey_twins` 快照，那正是它自己引的 ORD-0207 机制）。**所以"库未变"只能读成"行数口径 44/59 未变"，不能读成"库零写入"**——两个说法常被混用，这里明确分开。
+
+**总结（回报形状）**：① `PARTIALLY_CHECKABLE`（映射可核但坐标不在 JSON 里；第二变量找不出；**新代次单次采样**）｜② `CONFIRMED`（我自建复现）｜③ `NOT_INDEPENDENTLY_CHECKABLE`（两个数都需要它未发布的日志/快照；其中 44/59 的"跑后值"我 CONFIRMED，但"未变"不可核）。**没有为交东西而造洞**：三处我查了不成立/查不到的，都按"不可核"或"找不出"写。
+
+零写入（只读 JSON/脚本/库 + 我自己导出树里 build）；未碰 `_live.db`、未动它的进程；权威树 0 改动。
+
 ### SESSION=d2305848 @2026-09-23 02:0x+08 —— 复验 B 的 ORD-0219 ③「生成端静默丢弃」链（源码级零写入）：**它的链成立**（响应裸 list ＋ `services.py:1604 if not gate.passed: continue` 静默丢弃）；**它的 55/100 分母我用自己的判据独立量到 49 模块/252 处**（量级一致、方向一致、我的更宽 ⇒ 加强它的结论）；**它的 header 落法我找到一个它没说的消费端缺口**：`v8Request` 只解析 body、把 response headers 丢了
 
 **一、链复验（逐行）**
@@ -11653,6 +11677,8 @@ status: ORD-0126 **补项 DONE@2026-09-23T01:0x+08 by e345b9d6**（提交 `95446
 evidence: `frontend/src/lib/failureAttribution.ts`（FORBIDDEN/server_code/拆分支）、`frontend/e2e/qoder-a-refusal-says-what-it-is.spec.ts`、`review/evidence/ui-overnight/ord0126d-403.json`、`ord0126d-id-source.json`、`review/ord0126-kill.txt`、`review/ord0126-chain.txt`、`review/add-ord0126-mutants.py`、`review/run-run095837.log`（我自己那条禁词断言写错的一手证据）、`run-run096273.log`。
 
 ### 1a986a24 HJ-P1 ORD-0220 ②③ 新代次定点重读：**两格都不再复现（已修）**，并更正我 19:56 的一处归因错误 @2026-09-23T01:36+08
+**源码坐标对齐于 0748a1f，被测包由 0748a1f 产出**（旧代次那一臂的被测包由 522c414 产出，其源码坐标只对齐 522c414；本 lane 19:56 曾拿 b41b4cc 的工作树解释 522c414 的包，该机制解释已作废。规矩来源＝commander 裁定三 @01:4x）
+
 
 **实验设计（单一变量＝前端代次）**：同一个后端 `127.0.0.1:8761`（树 `0748a1f`，139 条路径）+ 同一个库
 `_hjp1_o220.db` 的一次性副本 `_hjp1_gen.db`（44 journeys / 59 travelers，两次跑完仍是 **44/59**，脚本 `nonGetRequests=0`），
@@ -11718,6 +11744,50 @@ ord0223_scroll_probe.cjs            8,461 B   sha256[:16] d4c7ac905ab569fc
 - 结论一句话：**②③ 在新代次 `index-DtQ86lsQ.js` 上都不再复现，我此前的 5/5 只适用于旧代次**；两格可以按"已修"走，前提是把这两份 gen_* JSON 一起附上。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 亲测 @2026-09-23T01:59+08 —— 换包+换口令之后**链四点核验通过**；并记一条**来源不明的边缘 501**与发现它的量具（`auth_proxy.log` 行数差）
+
+### ① 四点核验（全部走真隧道，带正确凭据）
+
+```text
+GET  /api/v1/health        → 200 application/json   {"status":"ok","database":"ok","ai":"enabled", ...}
+GET  /api/v1/demo/scene    → 200 application/json   583 B，{"demo_mode":true,"journey_id":"22222222-…","journey_status":"ACTIVE", …}
+匿名 GET /api/v1/demo/scene → 401                    （这是**独立的护栏断言**，不是链健康）
+POST /api/v1/demo/reset    → 403 + 恰好一行 GUARD 日志（正确凭据）
+GET  /                     → 200，引用 /assets/index-DtQ86lsQ.js（1,231,985 B）+ index-cWMF3pBW.css（183,233 B）
+```
+⇒ **后端活着、库活着、AI 开着、R13 守卫在、入口指向新代次。** 用户刷新前该成立的都成立。
+
+### ② 用户库只读复核：**未被动**
+
+```text
+journeys 3 | travelers 3 | places 16 | plan_versions 19 | max(journeys.rowid) 3
+```
+（01:28 与 01:58 两次读数一致。）
+
+### ③ 一条**来源不明的边缘 501**（照记，不粉饰）
+
+现象：`GET /` 从隧道回来时，**偶发**返回一个 `501 + text/html` 的英文错误页，而**不是**代理那面 401。
+```text
+观测 1  匿名 GET /            5 次采样里 1 次 501（其余 4 次 401）
+观测 2  带凭据 POST demo/reset  两次里 1 次 501（另一次 403 + GUARD 日志）
+随后    匿名 GET /            20 次全 401；401/405/404 各若干次无 501
+```
+**它既不是代理、也不是产品**，判据有两层：
+1. 代理每次请求**恰好写一行**日志（我拿行数差当量具：POST /api/v1/health → 405 且 +1 行、POST/GET 一个不存在路径 → 404 且各 +1 行）；而带凭据的 `demo/reset` 那次 **403 留下了 GUARD 行**，说明带凭据的请求确实到了代理并被守卫拦下；
+2. 产品面答的是 JSON（`{"detail":"Method Not Allowed"}` / 守卫的中文 JSON），**这个 501 是 HTML**，风格是 Python `http.server` 的默认错误页。
+⇒ 定性：**`UNEXPLAINED_EDGE_501`**——发生在代理**之前**的某一段（本机网关 TLS-MITM 或隧道边缘，本机是已知会 MITM 的网络），**低频、突发、不可按需复现**（约 28 次采样里 2 次）。
+
+**→ 新量具（值得推广）**：`auth_proxy.log` 的行数差可以把"**这条响应到底是不是代理答的**"判定出来——**没留下日志行的请求，根本没到代理**。以后再遇到可疑状态码，先取行数差再解释，不要先给产品定罪。
+**→ 对用户的影响要写实**：手机上如果偶尔看到一页英文报错，那是**链路边缘抖动**，重开一次即可，不是产品坏了（与此前"打开是空的"那类投诉不是同一码事）。
+
+### ④ 我此前那句"一键删库仍是 403 被挡"要加一个字
+
+`POST /api/v1/demo/reset` **实测 403、守卫日志落行、库未被删**——结论不变；但**三次探针里有两次**（含一次不带行数差的、无法归属的那次）不宜当作"必然 403"来写。今后我按"**403 且留下 GUARD 行且库未变**"三件一起写。
+
+### ⑤ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；新代 `index-DtQ86lsQ.js` 在线、旧代 `index-BCF4ptyk.js` 未删仍 200；清理闸门仍关（0 删除，等用户真机刷新）；`P7=false`；reference tip `c0d7e3d`；那把 key 仍未轮换。
+
 ## commander 验收 @2026-09-23T01:52+08 —— 红队 `d2305848` 独立复验 B 的 ORD-0219③ 链，并指出一处**消费端缺口**：`v8Request()` 丢弃 response headers ⇒ B 提议的那个头**现有前端路径根本读不到**
 
 ### ① 它复验了 B 的链（成立）
