@@ -1,0 +1,109 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0226",
+  "fix": "A -- the tight caveat is a frozen literal in the product, and the gate asserts string equality",
+  "at": "2026-09-23T01:53:07+0800",
+  "guard": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace",
+  "node": "ord0220-1-the-tight-caveat-cannot-contradict-itself",
+  "spec": "e2e/qoder-budget-advisory-tiers.spec.ts",
+  "runShape": "single node (--grep on the exact node id) against an authoritative throwaway stack",
+  "productFileBeforeSha256": "27768b24c480e0dd370a5d5174ee030e646a11f73d6c66767ea7a1d40fe5c0f4",
+  "arms": [
+    {
+      "name": "killAC1-e1-reassurance-outside-any-word-table",
+      "why": "the red team's E1 arm verbatim: 别担心/肯定够 are not in ALLAY_WORDS, so only literal equality can catch it",
+      "anchorPath": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\app\\V8Experience.tsx",
+      "anchor_hits": 1,
+      "expected_anchor_hits": 1,
+      "bytes_changed": true,
+      "before_sha256": "27768b24c480e0dd370a5d5174ee030e646a11f73d6c66767ea7a1d40fe5c0f4",
+      "mutated_sha256": "b942d4474db6bfaa744f0b87de3055aaed702071ae534554501fe683adc9ace1",
+      "restored_sha256": "27768b24c480e0dd370a5d5174ee030e646a11f73d6c66767ea7a1d40fe5c0f4",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-before-arm",
+        "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe D:\\moodle\\_qoder_integration_20260919\\review\\run_spec.py e2e/qoder-budget-advisory-tiers.spec.ts 4620 --grep ord0220-1-the-tight-caveat-cannot-contradict-itself",
+        "exitCode": 0,
+        "runId": "run099587",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run099587.log",
+        "summary": "2 passed (19.8s)",
+        "ownerAssertion": ""
+      },
+      "mutated": {
+        "label": "mutated-arm",
+        "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe D:\\moodle\\_qoder_integration_20260919\\review\\run_spec.py e2e/qoder-budget-advisory-tiers.spec.ts 4621 --grep ord0220-1-the-tight-caveat-cannot-contradict-itself",
+        "exitCode": 1,
+        "runId": "run099608",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run099608.log",
+        "summary": "1 passed (12.6s)",
+        "ownerAssertion": "Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0220-1-the-tight-caveat-cannot-contradict-itself — the rendered caveat is not the frozen sentence, character for character. expected \"按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。\" / got \"按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。不过别担心，肯定够用\""
+      },
+      "verdict": "KILLED"
+    },
+    {
+      "name": "killAC2-e2-the-caveat-denies-itself",
+      "why": "arm E2's shape: the caveat stops warning and tells the traveller to relax",
+      "anchorPath": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\app\\V8Experience.tsx",
+      "anchor_hits": 1,
+      "expected_anchor_hits": 1,
+      "bytes_changed": true,
+      "before_sha256": "27768b24c480e0dd370a5d5174ee030e646a11f73d6c66767ea7a1d40fe5c0f4",
+      "mutated_sha256": "fd22953fe8f30dd109cc850017757573ec6880ecf5078be233ecf64acbe6cadd",
+      "restored_sha256": "27768b24c480e0dd370a5d5174ee030e646a11f73d6c66767ea7a1d40fe5c0f4",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-before-arm",
+        "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe D:\\moodle\\_qoder_integration_20260919\\review\\run_spec.py e2e/qoder-budget-advisory-tiers.spec.ts 4622 --grep ord0220-1-the-tight-caveat-cannot-contradict-itself",
+        "exitCode": 0,
+        "runId": "run099622",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run099622.log",
+        "summary": "2 passed (12.3s)",
+        "ownerAssertion": ""
+      },
+      "mutated": {
+        "label": "mutated-arm",
+        "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe D:\\moodle\\_qoder_integration_20260919\\review\\run_spec.py e2e/qoder-budget-advisory-tiers.spec.ts 4623 --grep ord0220-1-the-tight-caveat-cannot-contradict-itself",
+        "exitCode": 1,
+        "runId": "run099636",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run099636.log",
+        "summary": "1 passed (12.4s)",
+        "ownerAssertion": "Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0220-1-the-tight-caveat-cannot-contradict-itself — the rendered caveat is not the frozen sentence, character for character. expected \"按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。\" / got \"这个预算不会超出计划，你可以放心调整。\""
+      },
+      "verdict": "KILLED"
+    },
+    {
+      "name": "killAC3-selftest-one-punctuation-mark",
+      "why": "acceptance 5: one full stop becomes one comma -- green here would mean the equality is not literal",
+      "anchorPath": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\app\\V8Experience.tsx",
+      "anchor_hits": 1,
+      "expected_anchor_hits": 1,
+      "bytes_changed": true,
+      "before_sha256": "27768b24c480e0dd370a5d5174ee030e646a11f73d6c66767ea7a1d40fe5c0f4",
+      "mutated_sha256": "43fe77d6aabd539311c9ac4cd5c72809edf25d1134bf00eff41c2e48cbccc132",
+      "restored_sha256": "27768b24c480e0dd370a5d5174ee030e646a11f73d6c66767ea7a1d40fe5c0f4",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-before-arm",
+        "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe D:\\moodle\\_qoder_integration_20260919\\review\\run_spec.py e2e/qoder-budget-advisory-tiers.spec.ts 4624 --grep ord0220-1-the-tight-caveat-cannot-contradict-itself",
+        "exitCode": 0,
+        "runId": "run099649",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run099649.log",
+        "summary": "2 passed (12.4s)",
+        "ownerAssertion": ""
+      },
+      "mutated": {
+        "label": "mutated-arm",
+        "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe D:\\moodle\\_qoder_integration_20260919\\review\\run_spec.py e2e/qoder-budget-advisory-tiers.spec.ts 4625 --grep ord0220-1-the-tight-caveat-cannot-contradict-itself",
+        "exitCode": 1,
+        "runId": "run099663",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run099663.log",
+        "summary": "1 passed (13.1s)",
+        "ownerAssertion": "Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0220-1-the-tight-caveat-cannot-contradict-itself — the rendered caveat is not the frozen sentence, character for character. expected \"按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。\" / got \"按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以，\""
+      },
+      "verdict": "KILLED"
+    }
+  ],
+  "productFileAfterSha256": "27768b24c480e0dd370a5d5174ee030e646a11f73d6c66767ea7a1d40fe5c0f4",
+  "treeUnchangedByThisRun": true,
+  "allArmsKilled": true
+}
