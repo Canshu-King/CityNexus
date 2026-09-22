@@ -1,0 +1,468 @@
+{
+ "generated_at": "2026-09-22T19:45:34+08:00",
+ "head_note": "export of dfdc5d5 (lab/snap_dfdc5d5)",
+ "seed": {
+  "traveler_id": "11111111-1111-4111-8111-111111111111",
+  "journey_id": "22222222-2222-4222-8222-222222222222",
+  "city_code": "CNX-DEMO"
+ },
+ "demo_reset_issued": 0,
+ "codes": {
+  "SLOW_PACE": {
+   "http": {
+    "put_status": 200,
+    "put_echo": "",
+    "confirm_status": 200,
+    "constraints_post_status": 201,
+    "constraints_post_echo": "",
+    "get_status": 200,
+    "persisted": [
+     {
+      "severity": "HARD",
+      "class": "SOFT_PREFERENCE",
+      "confirmed": true,
+      "active": true
+     }
+    ]
+   },
+   "rows": {
+    "from_capabilities": 1,
+    "capability_row_kind": [
+     "HARD"
+    ],
+    "capability_category": [
+     "SOFT_PREFERENCE"
+    ],
+    "from_journey_constraint_table": 1,
+    "journey_constraint_kinds": [
+     "HARD"
+    ]
+   },
+   "gate": {
+    "control_no_constraint": {
+     "constraints_used": 0,
+     "passed": true,
+     "codes": []
+    },
+    "capability_route_only": {
+     "constraints_used": 1,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "journey_constraint_route_only": {
+     "constraints_used": 1,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "both_routes": {
+     "constraints_used": 2,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "capability_route_only_reacted": true,
+    "journey_constraint_route_only_reacted": true,
+    "both_routes_reacted": true,
+    "attributed_to": [
+     "capability_route_only",
+     "journey_constraint_route_only"
+    ]
+   }
+  },
+  "QUIET_ENVIRONMENT": {
+   "http": {
+    "put_status": 200,
+    "put_echo": "",
+    "confirm_status": 200,
+    "constraints_post_status": 201,
+    "constraints_post_echo": "",
+    "get_status": 200,
+    "persisted": [
+     {
+      "severity": "HARD",
+      "class": "SOFT_PREFERENCE",
+      "confirmed": true,
+      "active": true
+     }
+    ]
+   },
+   "rows": {
+    "from_capabilities": 1,
+    "capability_row_kind": [
+     "HARD"
+    ],
+    "capability_category": [
+     "SOFT_PREFERENCE"
+    ],
+    "from_journey_constraint_table": 1,
+    "journey_constraint_kinds": [
+     "HARD"
+    ]
+   },
+   "gate": {
+    "control_no_constraint": {
+     "constraints_used": 0,
+     "passed": true,
+     "codes": []
+    },
+    "capability_route_only": {
+     "constraints_used": 1,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "journey_constraint_route_only": {
+     "constraints_used": 1,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "both_routes": {
+     "constraints_used": 2,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "capability_route_only_reacted": true,
+    "journey_constraint_route_only_reacted": true,
+    "both_routes_reacted": true,
+    "attributed_to": [
+     "capability_route_only",
+     "journey_constraint_route_only"
+    ]
+   }
+  },
+  "INDOOR_PREFERRED": {
+   "http": {
+    "put_status": 200,
+    "put_echo": "",
+    "confirm_status": 200,
+    "constraints_post_status": 201,
+    "constraints_post_echo": "",
+    "get_status": 200,
+    "persisted": [
+     {
+      "severity": "HARD",
+      "class": "SOFT_PREFERENCE",
+      "confirmed": true,
+      "active": true
+     }
+    ]
+   },
+   "rows": {
+    "from_capabilities": 1,
+    "capability_row_kind": [
+     "HARD"
+    ],
+    "capability_category": [
+     "SOFT_PREFERENCE"
+    ],
+    "from_journey_constraint_table": 1,
+    "journey_constraint_kinds": [
+     "HARD"
+    ]
+   },
+   "gate": {
+    "control_no_constraint": {
+     "constraints_used": 0,
+     "passed": true,
+     "codes": []
+    },
+    "capability_route_only": {
+     "constraints_used": 1,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "journey_constraint_route_only": {
+     "constraints_used": 1,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "both_routes": {
+     "constraints_used": 2,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "capability_route_only_reacted": true,
+    "journey_constraint_route_only_reacted": true,
+    "both_routes_reacted": true,
+    "attributed_to": [
+     "capability_route_only",
+     "journey_constraint_route_only"
+    ]
+   }
+  },
+  "SENSORY_LOW_STIMULATION": {
+   "http": {
+    "put_status": 200,
+    "put_echo": "",
+    "confirm_status": 200,
+    "constraints_post_status": 201,
+    "constraints_post_echo": "",
+    "get_status": 200,
+    "persisted": [
+     {
+      "severity": "HARD",
+      "class": "SOFT_PREFERENCE",
+      "confirmed": true,
+      "active": true
+     }
+    ]
+   },
+   "rows": {
+    "from_capabilities": 1,
+    "capability_row_kind": [
+     "HARD"
+    ],
+    "capability_category": [
+     "SOFT_PREFERENCE"
+    ],
+    "from_journey_constraint_table": 1,
+    "journey_constraint_kinds": [
+     "HARD"
+    ]
+   },
+   "gate": {
+    "control_no_constraint": {
+     "constraints_used": 0,
+     "passed": true,
+     "codes": []
+    },
+    "capability_route_only": {
+     "constraints_used": 1,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "journey_constraint_route_only": {
+     "constraints_used": 1,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "both_routes": {
+     "constraints_used": 2,
+     "passed": false,
+     "codes": [
+      "UNSUPPORTED_HARD_CONSTRAINT"
+     ]
+    },
+    "capability_route_only_reacted": true,
+    "journey_constraint_route_only_reacted": true,
+    "both_routes_reacted": true,
+    "attributed_to": [
+     "capability_route_only",
+     "journey_constraint_route_only"
+    ]
+   }
+  },
+  "STROLLER": {
+   "http": {
+    "put_status": 200,
+    "put_echo": "",
+    "confirm_status": 200,
+    "constraints_post_status": 201,
+    "constraints_post_echo": "",
+    "get_status": 200,
+    "persisted": [
+     {
+      "severity": "HARD",
+      "class": "TRIP_CONTEXT",
+      "confirmed": true,
+      "active": true
+     }
+    ]
+   },
+   "rows": {
+    "from_capabilities": 1,
+    "capability_row_kind": [
+     "HARD"
+    ],
+    "capability_category": [
+     "TRIP_CONTEXT"
+    ],
+    "from_journey_constraint_table": 1,
+    "journey_constraint_kinds": [
+     "HARD"
+    ]
+   },
+   "gate": {
+    "control_no_constraint": {
+     "constraints_used": 0,
+     "passed": true,
+     "codes": []
+    },
+    "capability_route_only": {
+     "constraints_used": 1,
+     "passed": true,
+     "codes": []
+    },
+    "journey_constraint_route_only": {
+     "constraints_used": 1,
+     "passed": true,
+     "codes": []
+    },
+    "both_routes": {
+     "constraints_used": 2,
+     "passed": true,
+     "codes": []
+    },
+    "capability_route_only_reacted": false,
+    "journey_constraint_route_only_reacted": false,
+    "both_routes_reacted": false,
+    "attributed_to": []
+   }
+  },
+  "LARGE_LUGGAGE": {
+   "http": {
+    "put_status": 200,
+    "put_echo": "",
+    "confirm_status": 200,
+    "constraints_post_status": 201,
+    "constraints_post_echo": "",
+    "get_status": 200,
+    "persisted": [
+     {
+      "severity": "HARD",
+      "class": "TRIP_CONTEXT",
+      "confirmed": true,
+      "active": true
+     }
+    ]
+   },
+   "rows": {
+    "from_capabilities": 1,
+    "capability_row_kind": [
+     "HARD"
+    ],
+    "capability_category": [
+     "TRIP_CONTEXT"
+    ],
+    "from_journey_constraint_table": 1,
+    "journey_constraint_kinds": [
+     "HARD"
+    ]
+   },
+   "gate": {
+    "control_no_constraint": {
+     "constraints_used": 0,
+     "passed": true,
+     "codes": []
+    },
+    "capability_route_only": {
+     "constraints_used": 1,
+     "passed": true,
+     "codes": []
+    },
+    "journey_constraint_route_only": {
+     "constraints_used": 1,
+     "passed": true,
+     "codes": []
+    },
+    "both_routes": {
+     "constraints_used": 2,
+     "passed": true,
+     "codes": []
+    },
+    "capability_route_only_reacted": false,
+    "journey_constraint_route_only_reacted": false,
+    "both_routes_reacted": false,
+    "attributed_to": []
+   }
+  },
+  "STEP_FREE_REQUIRED": {
+   "http": {
+    "put_status": 200,
+    "put_echo": "",
+    "confirm_status": 200,
+    "constraints_post_status": 201,
+    "constraints_post_echo": "",
+    "get_status": 200,
+    "persisted": [
+     {
+      "severity": "HARD",
+      "class": "HARD_ACCESSIBILITY_NEED",
+      "confirmed": true,
+      "active": true
+     }
+    ]
+   },
+   "rows": {
+    "from_capabilities": 1,
+    "capability_row_kind": [
+     "HARD"
+    ],
+    "capability_category": [
+     "HARD_ACCESSIBILITY_NEED"
+    ],
+    "from_journey_constraint_table": 1,
+    "journey_constraint_kinds": [
+     "HARD"
+    ]
+   },
+   "gate": {
+    "control_no_constraint": {
+     "constraints_used": 0,
+     "passed": true,
+     "codes": []
+    },
+    "capability_route_only": {
+     "constraints_used": 1,
+     "passed": false,
+     "codes": [
+      "ACCESSIBILITY_UNVERIFIED",
+      "NEEDS_LIVE_EVIDENCE"
+     ]
+    },
+    "journey_constraint_route_only": {
+     "constraints_used": 1,
+     "passed": false,
+     "codes": [
+      "ACCESSIBILITY_UNVERIFIED",
+      "NEEDS_LIVE_EVIDENCE"
+     ]
+    },
+    "both_routes": {
+     "constraints_used": 2,
+     "passed": false,
+     "codes": [
+      "ACCESSIBILITY_UNVERIFIED",
+      "NEEDS_LIVE_EVIDENCE"
+     ]
+    },
+    "capability_route_only_reacted": true,
+    "journey_constraint_route_only_reacted": true,
+    "both_routes_reacted": true,
+    "attributed_to": [
+     "capability_route_only",
+     "journey_constraint_route_only"
+    ]
+   }
+  }
+ },
+ "feasibility_static_mentions": {
+  "SLOW_PACE": 0,
+  "QUIET_ENVIRONMENT": 0,
+  "INDOOR_PREFERRED": 0,
+  "SENSORY_LOW_STIMULATION": 0,
+  "STROLLER": 4,
+  "LARGE_LUGGAGE": 3,
+  "STEP_FREE_REQUIRED": 3
+ }
+}
