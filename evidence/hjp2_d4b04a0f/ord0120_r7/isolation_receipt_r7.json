@@ -1,0 +1,532 @@
+{
+  "built_at_local": "2026-09-22T19:16:50",
+  "headline": "Every write this lane made went to a one-off copy of the served store; the served store and the other shared store both still lack this lane's two journey ids.",
+  "lane": "HJ-P2 commitment-intensive traveller",
+  "order": "ORD-0120 / P2 persona lane",
+  "own_store": {
+    "how_created": "sqlite3 mode=ro attach of the served store + Connection.backup() into this lane's own directory",
+    "journeys_created_by_this_lane": [
+      {
+        "city": "Hangzhou",
+        "created_via": "visible wizard only",
+        "id_prefix": "f34c8ff0"
+      },
+      {
+        "city": "Suzhou",
+        "created_via": "visible wizard only",
+        "id_prefix": "68f8c7a1"
+      }
+    ],
+    "path": "D:/moodle/_qoder_hjp2_r6_20260922/_hjp2_r6.db",
+    "preflight_probe_tool": "live_checks/db_probe_preflight.py (Commander's receipt tool), exit 0 on all three runs",
+    "preflight_runs": {
+      "after": {
+        "counts": {
+          "catalog_hydration_operations": 0,
+          "journeys": 4,
+          "plan_versions": 19,
+          "travelers": 4
+        },
+        "open_mode": "sqlite mode=ro",
+        "resolved_database_path": "D:\\moodle\\_qoder_hjp2_r6_20260922\\_hjp2_r6.db",
+        "status": "READ_ONLY_TARGET_IDENTIFIED",
+        "table_count": 55
+      },
+      "before": {
+        "counts": {
+          "catalog_hydration_operations": 0,
+          "journeys": 3,
+          "plan_versions": 19,
+          "travelers": 3
+        },
+        "open_mode": "sqlite mode=ro",
+        "resolved_database_path": "D:\\moodle\\_qoder_hjp2_r6_20260922\\_hjp2_r6.db",
+        "status": "READ_ONLY_TARGET_IDENTIFIED",
+        "table_count": 55
+      },
+      "final": {
+        "counts": {
+          "catalog_hydration_operations": 0,
+          "journeys": 5,
+          "plan_versions": 19,
+          "travelers": 5
+        },
+        "open_mode": "sqlite mode=ro",
+        "resolved_database_path": "D:\\moodle\\_qoder_hjp2_r6_20260922\\_hjp2_r6.db",
+        "status": "READ_ONLY_TARGET_IDENTIFIED",
+        "table_count": 55
+      }
+    },
+    "read_by": "this lane's own uvicorn on 127.0.0.1:8493 (bind-tested before start, stopped at teardown)",
+    "row_delta": {
+      "bookings": "1 -> 1",
+      "commitments": "1 -> 1",
+      "constraints": "3 -> 3",
+      "journeys": "3 -> 5",
+      "plan_versions": "19 -> 19 (no plan was ever generated: this is the numeric evidence for finding d4b04a0f/01)",
+      "travelers": "3 -> 5"
+    }
+  },
+  "receipt": "hjp2_isolation_r7",
+  "session": "d4b04a0f",
+  "shared_stores_read_only": {
+    "note_for_auditor": "mode=ro URI connections only; no write statement was issued. On a WAL database even a read-only open can refresh the -wal/-shm mtimes, so the probe records the main file's size+mtime before and after and reports whether it moved.",
+    "stores": {
+      "copy_hjp2_r6": {
+        "counts": {
+          "bookings": 1,
+          "commitments": 1,
+          "constraints": 3,
+          "journeys": 5,
+          "plan_versions": 19,
+          "travelers": 5
+        },
+        "exists": true,
+        "journal_mode": "wal",
+        "journey_rows": [
+          {
+            "created": "2026-09-21T10:06:55",
+            "id": "94669bae",
+            "label": "北京 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-21T12:00:54",
+            "id": "6cbdbc65",
+            "label": "北京 · journey",
+            "state": "PLANNED"
+          },
+          {
+            "created": "2026-09-22T08:41:05",
+            "id": "f34c8ff0",
+            "label": "杭州 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-22T10:13:07",
+            "id": "68f8c7a1",
+            "label": "苏州 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-10-01T00:00:00",
+            "id": "22222222",
+            "label": "One Day in Nexus City",
+            "state": "ACTIVE"
+          }
+        ],
+        "journeys_columns_probed": [
+          "id",
+          "traveler_id",
+          "title",
+          "city_code",
+          "timezone",
+          "start_at",
+          "end_at",
+          "budget_currency",
+          "budget_amount_minor",
+          "planning_mode",
+          "status",
+          "active_plan_version_id",
+          "current_activity_id",
+          "created_at",
+          "updated_at"
+        ],
+        "journeys_label_column": "title",
+        "journeys_state_column": "status",
+        "main_file_unchanged": true,
+        "my_ids_present": [
+          "f34c8ff0",
+          "68f8c7a1"
+        ],
+        "path": "D:/moodle/_qoder_hjp2_r6_20260922/_hjp2_r6.db",
+        "stat_after": {
+          "-main": {
+            "bytes": 3710976,
+            "mtime": "2026-09-22T16:34:23"
+          },
+          "-shm": {
+            "bytes": 32768,
+            "mtime": "2026-09-22T19:14:02"
+          },
+          "-wal": {
+            "bytes": 1013552,
+            "mtime": "2026-09-22T18:16:30"
+          }
+        },
+        "stat_before": {
+          "-main": {
+            "bytes": 3710976,
+            "mtime": "2026-09-22T16:34:23"
+          },
+          "-shm": {
+            "bytes": 32768,
+            "mtime": "2026-09-22T18:11:15"
+          },
+          "-wal": {
+            "bytes": 1013552,
+            "mtime": "2026-09-22T18:16:30"
+          }
+        },
+        "table_count": 55
+      },
+      "shared_cmdr_gate__live": {
+        "counts": {
+          "bookings": 1,
+          "commitments": 1,
+          "constraints": 3,
+          "journeys": 3,
+          "plan_versions": 19,
+          "travelers": 3
+        },
+        "exists": true,
+        "journal_mode": "wal",
+        "journey_rows": [
+          {
+            "created": "2026-09-21T10:06:55",
+            "id": "94669bae",
+            "label": "北京 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-21T12:00:54",
+            "id": "6cbdbc65",
+            "label": "北京 · journey",
+            "state": "PLANNED"
+          },
+          {
+            "created": "2026-10-01T00:00:00",
+            "id": "22222222",
+            "label": "One Day in Nexus City",
+            "state": "ACTIVE"
+          }
+        ],
+        "journeys_columns_probed": [
+          "id",
+          "traveler_id",
+          "title",
+          "city_code",
+          "timezone",
+          "start_at",
+          "end_at",
+          "budget_currency",
+          "budget_amount_minor",
+          "planning_mode",
+          "status",
+          "active_plan_version_id",
+          "current_activity_id",
+          "created_at",
+          "updated_at"
+        ],
+        "journeys_label_column": "title",
+        "journeys_state_column": "status",
+        "main_file_unchanged": true,
+        "my_ids_present": [],
+        "path": "D:/moodle/_qoder_cmdr_gate_20260921/backend/_live.db",
+        "stat_after": {
+          "-main": {
+            "bytes": 3710976,
+            "mtime": "2026-09-22T13:40:32"
+          },
+          "-shm": {
+            "bytes": 32768,
+            "mtime": "2026-09-22T17:48:37"
+          },
+          "-wal": {
+            "bytes": 4243632,
+            "mtime": "2026-09-22T17:48:37"
+          }
+        },
+        "stat_before": {
+          "-main": {
+            "bytes": 3710976,
+            "mtime": "2026-09-22T13:40:32"
+          },
+          "-shm": {
+            "bytes": 32768,
+            "mtime": "2026-09-22T17:48:37"
+          },
+          "-wal": {
+            "bytes": 4243632,
+            "mtime": "2026-09-22T17:48:37"
+          }
+        },
+        "table_count": 55
+      },
+      "shared_preview__preview": {
+        "counts": {
+          "bookings": 0,
+          "commitments": 0,
+          "constraints": 3,
+          "journeys": 31,
+          "plan_versions": 9,
+          "travelers": 45
+        },
+        "exists": true,
+        "journal_mode": "wal",
+        "journey_rows": [
+          {
+            "created": "2026-09-20T01:13:48",
+            "id": "1b849dc1",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T01:14:00",
+            "id": "2ac9fb8a",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T01:15:35",
+            "id": "901df55b",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T01:16:46",
+            "id": "a30bea81",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T01:24:51",
+            "id": "6b7d17e7",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T01:24:54",
+            "id": "c30a7fe3",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T01:45:06",
+            "id": "b464d8da",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T02:14:43",
+            "id": "91acda09",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T07:26:56",
+            "id": "a5b9b425",
+            "label": "厦门 · walk",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T08:58:47",
+            "id": "35c17845",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T08:59:34",
+            "id": "cfee6014",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T09:01:47",
+            "id": "6fd276eb",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T09:02:46",
+            "id": "ff7acd3f",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T09:23:50",
+            "id": "643cbf67",
+            "label": "Tianjin · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T09:25:22",
+            "id": "54967e61",
+            "label": "Tianjin · stay-aware weekend",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T09:26:38",
+            "id": "5c3183a6",
+            "label": "Tianjin · stay-aware weekend",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T09:28:49",
+            "id": "f9b7d2a3",
+            "label": "Xiamen · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T09:30:03",
+            "id": "ddcdefb5",
+            "label": "Xiamen probe",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T09:32:01",
+            "id": "147d6464",
+            "label": "Tianjin probe",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T11:31:46",
+            "id": "4a56aab5",
+            "label": "天津 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T11:40:14",
+            "id": "ad634d8f",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T11:43:56",
+            "id": "991ad748",
+            "label": "厦门 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T11:54:09",
+            "id": "30a01aaa",
+            "label": "Tianjin · stay-aware weekend",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T11:54:19",
+            "id": "9c6c3d73",
+            "label": "广州 · journey",
+            "state": "ACTIVE"
+          },
+          {
+            "created": "2026-09-20T12:05:33",
+            "id": "8c8b1f80",
+            "label": "天津 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T12:06:11",
+            "id": "bbae229f",
+            "label": "东京 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T12:08:52",
+            "id": "56eb15a9",
+            "label": "新加坡 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T13:07:56",
+            "id": "841414ab",
+            "label": "Tianjin · stay-aware weekend",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T17:23:44",
+            "id": "bc424a92",
+            "label": "东京 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-09-20T17:27:23",
+            "id": "ab6fd95c",
+            "label": "东京 · journey",
+            "state": "DRAFT"
+          },
+          {
+            "created": "2026-10-01T00:00:00",
+            "id": "22222222",
+            "label": "One Day in Nexus City",
+            "state": "DRAFT"
+          }
+        ],
+        "journeys_columns_probed": [
+          "id",
+          "traveler_id",
+          "title",
+          "city_code",
+          "timezone",
+          "start_at",
+          "end_at",
+          "budget_currency",
+          "budget_amount_minor",
+          "planning_mode",
+          "status",
+          "active_plan_version_id",
+          "current_activity_id",
+          "created_at",
+          "updated_at"
+        ],
+        "journeys_label_column": "title",
+        "journeys_state_column": "status",
+        "main_file_unchanged": true,
+        "my_ids_present": [],
+        "path": "D:/moodle/_qoder_preview_20260920/_preview.db",
+        "stat_after": {
+          "-main": {
+            "bytes": 6828032,
+            "mtime": "2026-09-21T01:46:44"
+          },
+          "-shm": {
+            "bytes": 32768,
+            "mtime": "2026-09-22T19:14:02"
+          },
+          "-wal": {
+            "bytes": 4272472,
+            "mtime": "2026-09-21T02:40:46"
+          }
+        },
+        "stat_before": {
+          "-main": {
+            "bytes": 6828032,
+            "mtime": "2026-09-21T01:46:44"
+          },
+          "-shm": {
+            "bytes": 32768,
+            "mtime": "2026-09-22T14:55:14"
+          },
+          "-wal": {
+            "bytes": 4272472,
+            "mtime": "2026-09-21T02:40:46"
+          }
+        },
+        "table_count": 53
+      }
+    }
+  },
+  "store_binding": {
+    "claim": "the served store behind the public preview is _live.db, not _preview.db",
+    "method": [
+      "the running preview backend is a uvicorn process whose resolved DATABASE_URL is not printed in its log, so identity was not taken from env",
+      "_live.db reads journeys 3 / travelers 3 / plan_versions 19 / commitments 1 / constraints 3 / bookings 1",
+      "the Commander's own standing P0 line in this ledger reads '用户库 3/3/19/1/1' at 19:10 - the same five figures",
+      "_preview.db reads journeys 31 / travelers 45 / plan_versions 9 - a different, busier store that matches nobody's P0 line",
+      "this lane's copy was backed up from _live.db, which is why its pre-walk counts were 3/3/19/1/1"
+    ],
+    "strength": "convergent readings, not a read of the process environment - stated as inference, not as observation"
+  },
+  "verdict": {
+    "forbidden_actions_this_round": {
+      "demo_reset_called": false,
+      "new_tunnel_created": false,
+      "outbound_calls_from_lane": "none beyond localhost",
+      "reset_to_scene_start_pressed": false,
+      "writes_to_shared_stores": false
+    },
+    "my_ids_found_in_any_shared_store": false,
+    "own_copy_has_my_two_journeys": true,
+    "shared_main_files_changed_by_probe": false
+  }
+}
