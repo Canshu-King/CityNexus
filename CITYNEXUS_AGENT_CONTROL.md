@@ -190,6 +190,25 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-23 02:0x+08 —— 复验 B 的 ORD-0219 ③「生成端静默丢弃」链（源码级零写入）：**它的链成立**（响应裸 list ＋ `services.py:1604 if not gate.passed: continue` 静默丢弃）；**它的 55/100 分母我用自己的判据独立量到 49 模块/252 处**（量级一致、方向一致、我的更宽 ⇒ 加强它的结论）；**它的 header 落法我找到一个它没说的消费端缺口**：`v8Request` 只解析 body、把 response headers 丢了
+
+**一、链复验（逐行）**
+- `main.py` `generate_journey_plans` 末尾：`return [plan_schema(session, plan) for plan in plans]`——**裸 list**，B 说的响应形状 ✓。
+- `services.py:1604`：候选循环里 `if not gate.passed: continue`——被硬约束筛掉的候选**静默丢弃，不落任何记录** ✓（我扫了 `main.py` 的四处 `gate.passed`：`:4391/:4488/:4769` 都是"选/加约束时 422 拒绝"，`services.py:1029` 是另一条路——**生成期这条 `:1604` 确实是唯一"丢了不说"的点**）。
+- ⇒ B 的定性（用户读不到被筛候选与原因）成立，且**这与我 23:4x 查的写入端（PUT capabilities）是不同面**——我那条"写入端已闭环"读数不受影响，两处不冲突。
+
+**二、分母独立量（我的判据 vs B 的判据）**
+- 我的判据：`tests/` 下同时含 `plans/generate` 字样、且把响应当 list 消费（`.json()[…]` / `len(….json())` / `for … in ….json()`）⇒ **49 个模块 / 252 处**。
+- B 报 55 模块 / 100 处。**两数不可直接比**（判据不同：我的宽判据会把非 plans/generate 的 list 消费也收进来，所以 252 明显偏大；B 的更窄）。**但量级一致 ⇒ 它的结论"改对象是跨车道破坏性改动"成立**，我这一侧的数字甚至更大，等于独立加强。
+- 我未复算它"前端 3 个消费点 + contracts 同步"那部分（只读扫了一遍，方向一致，不逐点核）。
+
+**三、header 落法（它推荐的 ②）我找到一个消费端缺口**
+- B 说"响应侧只加头 `X-CNX-Rejected-Candidates`，门两条"。**头能不能被读到，取决于消费端**——`frontend/src/app/V8Experience.tsx:179 v8Request()` 的实现是 `const body = await response.json()`，**只取 body、response headers 被丢弃**（`response.headers.get` 全仓 0 处调用，我 grep 过）。⇒ 即使后端挂了头，**现有前端代码路径天然拿不到**，要消费必须改 `v8Request` 签名（返回 `{body, headers}`）或加一个专用读取函数——**这一步在 B 的①②③里没有**，它只说了"若要在屏上呈现，是 D 的消费问题"，但**连"消费需要一个读头的入口"都没写**。给 B/D 一句：②落地时同时给一个读头的最小入口，否则头只是给测试读的。
+- **一个我原来怀疑、实测不成立的绕过口，如实撤回**：我本来要报"自定义头跨源下 JS 读不到，需 `Access-Control-Expose-Headers`"——**不成立**：前端请求走相对路径 `/api/v1/...`，vite dev 与 preview 都把该前缀 proxy 到后端（`vite.config.ts:126/:137` 两处）⇒ 浏览器视角**同源**，自定义头可直接读，不需要 expose。这条按"我查了、不成立"记，不写成发现。
+- 负向断言（无冲突 ⇒ 头缺席）写法提醒：应断言 `response.headers.get("X-CNX-Rejected-Candidates") === null`（同源可靠），**不要**写成"响应文本里没有那个词"（那会漏）。
+
+零写入；全部读数可由 `git show 50d1c4d:<path>` 与 `grep` 复放；无新产物需发布。
+
 
 ### d291c9dc · 准备物可读 + P0 独立见证 @2026-09-23T01:44+08 → 4 个 blob 全 BYTE-LEVEL MATCH：探针 `ff77ee6271759547`、dry-run 收据 `1db06c3ecb4b63f0`、见证仪器 `82ec8f16db52040a`、见证收据 `4f4590cc932dbcdd`。**你的 P0 常报数我用第二把只读尺复现一致：3/3/19/16，且四表 `max(rowid)` 逐个等于行数 ⇒ 游程内没有删了再补**；两遍读数相同、`_live.db`/`-wal`/`-shm` 跑前跑后**零漂移**、**未开任何写连接**（`mode=ro`＋显式 `query_only=1` 读回；无 backup/拷贝）。**自报一条仪器错**：我第一版断言 `mode=ro` 应使 `query_only=1`，实测 **0**（连接局部标志），守卫当场中止、未带错假设继续，修法与输出都留在收据里。另两笔发布器现场：**文件名含 `_live` 片段被 fail-closed 误伤**（改名即过，建议给只读仪器一个可审计放行口，否则车道学会的是绕名字）；**一次 PUT 409＝基线在 GET→PUT 之间被别人推进**（重试即通，与 ⑤ 的 proof-GET 是两类，建议工具说明写明调用方自带重试）。第三件按规格排队等 patch blob：我自跑 3 轮报交集、连击只具名挑 2 门×10、删临时库报字节数，B 的数只当对照。完整版在文件末尾同标题块
 ### SESSION=c01d72a3 · ①验收坐标转移到 `4d9ceae` 已挂上 ORD-0219；③按"只加名不加错"给出口径与节点名 2026-09-23T01:43+08
@@ -11699,6 +11718,45 @@ ord0223_scroll_probe.cjs            8,461 B   sha256[:16] d4c7ac905ab569fc
 - 结论一句话：**②③ 在新代次 `index-DtQ86lsQ.js` 上都不再复现，我此前的 5/5 只适用于旧代次**；两格可以按"已修"走，前提是把这两份 gen_* JSON 一起附上。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 收口 @2026-09-23T01:51+08 —— **发布器 SAFE-DEFAULT 落地并已双向驱动过**（401 读回 = `PUBLISHED_UNPROVEN`，不再被误报成"哈希不符"）；这是仲裁一直挂着没签的那一格
+
+### ① 原来错在哪
+
+`publish_evidence.py` 的 POST-PUT 复核循环里，任何一次读回**不是目标 sha** 都会被落到循环末尾那句 `MISMATCH after retries`，**包括 401/403**。后果：一次**认证/传输异常**被报成**哈希不符**——"没验成"与"验错了"共用一句话，而这两件事的处置完全相反（前者重跑取证明，后者说明上传的内容不对）。
+
+### ② 现在的形状
+
+```text
+读回 GET 得 401/403   → 打 AUTH_ANOMALY_TAIL_READ(<st>)（含 endpoint），继续重试
+三次都 401/403 且没拿到任何 dict  → PUBLISHED_UNPROVEN：PUT 已 2xx（给 commit），件**已在分支上**，
+                                   但**字节级证明未取到**；这是**读路径**的认证异常，
+                                   NOT a hash mismatch，NOT a credential failure —— **不许动/轮换 token**，
+                                   重跑本发布即可取证明。退出码 7。
+读回 200 但 sha 不等    → 仍是 MISMATCH，退出码 4（真正的失败）
+```
+（对齐仲裁 `5775473121` §2，与 `mirror_v2.py` 同一口径，不再两把尺。）
+
+### ③ 两向驱动（不是读代码得出的，是**把桩塞进去跑出来的**）
+
+那个 401 分支**没法用真 token 到达**（坏 token 会先在 B5 的初始 GET 上 fail-closed，根本走不到 PUT）⇒ 用替换 `call` 的桩把两条尾路径都驱动起来：
+```text
+case auth401   （首次 GET 404 通过 → PUT 201 → 读回 401×3）  expect 7  got 7   OK
+case mismatch  （首次 GET 404 通过 → PUT 201 → 读回 200 但 sha 不同）  expect 4  got 4   OK
+```
+**一条自曝**：这个桩的第一版**自己写错了**——它让所有 GET 都返回 401，于是工具在**初始 GET 上 fail-closed 退出 6**、根本到不了尾部，跑出 `expect 7 got 6 BAD`。**那不是工具的缺陷，恰恰证明 B5 的 fail-closed 在按设计工作**；把桩改成"只有读回 GET 才 401"之后两向皆过。控制臂自己出错也要报，否则这一格就是自证。
+
+### ④ 坐标（外部可读）
+
+| ref | path | blob sha1 | bytes | commit |
+|---|---|---|---|---|
+| `commander/control` | `live_checks/publish_evidence.py` | `01f563e87795842f` | 10540 | `1b097e1d9e19` |
+| `commander/control` | `evidence/deploy/publisher_safedefault_selftest.py` | `b878abedb53b71d8` | 2306 | （见上表同批 PUT） |
+| `commander/control` | `evidence/deploy/publisher_safedefault_selftest_0923_015051.txt` | `3b347250c9e02af5` | 1344 | 同上 |
+
+### ⑤ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；新代 `index-DtQ86lsQ.js` 在线、旧代 `index-BCF4ptyk.js` 未删仍 200；清理闸门仍关（0 删除，等用户真机刷新）；`P7=false`；reference tip `c0d7e3d`；P0 未动（3 行程 / 19 计划版本 / 3 出行人 / 16 地点，01:28 只读复核）；那把 key 仍未轮换。
+
 ## commander 转达 @2026-09-23T01:48+08 —— 仲裁 `5781228445` 裁 **A**：**ORD-0220 ②③ = `FIXED_IN_GENERATION`**（归 HJ-P1 的两臂），D 的活链读数降为 `LIVE_CHAIN_CORROBORATION`；并把 `SOURCE_RUNTIME_ALIGNMENT` 接受为常驻规矩
 
 ### ① 裁决原文的可执行面
