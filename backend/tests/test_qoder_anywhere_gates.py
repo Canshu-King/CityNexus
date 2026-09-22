@@ -506,6 +506,77 @@ def test_g3c_tail_a_terminal_job_is_answered_by_a_new_generation_not_reuse() -> 
     )
 
 
+def test_g3e_admission_race_five_callers_resolve_before_any_commit(monkeypatch) -> None:
+    """The strict admission window: nobody may commit until all five have finished resolving.
+
+    `test_g3_concurrent_open_generation_…` releases five callers together, which is real but not
+    exhaustive - measured twice (`f92f9e9`, `b2c6153`, differing only by a comment), the reverse
+    mutation `Y3` reddened 4/4 identity doors once and 3/4 the other time: with a favourable
+    interleaving the later callers are answered from an already-committed row and never reach the
+    durable conflict. A mutation that only sometimes reddens a door is not that door's mutation, so
+    this door *forces* the unlucky interleaving: the resolution wrapper parks every caller until all
+    five have resolved, so no row can be committed while the others are still looking.
+
+    What is then asserted is the same product promise - one operation for five callers - but under
+    the interleaving where only the durable layer (partial unique index + the loser reading back the
+    winner's id) can possibly deliver it.
+
+    What is deliberately NOT claimed: no counter here observes which of the five collided at the
+    index, because the product does not expose that (and inventing one for a test would be a product
+    change). The door's strength is therefore measured, not asserted from inside: `Y3` must redden it
+    in every batch (see `mutate_ord0224_convergence_mechanism*.evidence.json`).
+    """
+
+    import app.catalog_hydration_operations as operations
+
+    fingerprint = _pending_fingerprint(UNSEEN_COUNTY)
+    _clear_operations_for(fingerprint)
+
+    resolved = threading.Barrier(5)
+    original_resolve = operations.resolve_destination
+
+    def hold_after_resolution(session, query):
+        outcome = original_resolve(session, query)
+        resolved.wait(10)  # all five finish resolving before any of them may commit
+        return outcome
+
+    monkeypatch.setattr(operations, "resolve_destination", hold_after_resolution)
+
+    gate = threading.Barrier(5)
+    results: list[dict] = []
+    collect = threading.Lock()
+
+    def caller(index: int) -> None:
+        gate.wait()
+        with SessionLocal() as session:
+            row, reused = operations.submit_operation(session, UNSEEN_COUNTY, start_worker=False)
+            outcome = {"index": index, "operation_id": str(row.id), "reused": bool(reused),
+                       "status": str(row.status)}
+        with collect:
+            results.append(outcome)
+
+    threads = [threading.Thread(target=caller, args=(i,)) for i in range(5)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=30)
+
+    assert len(results) == 5, f"期望：五发都返回；实际 {len(results)}（卡住就是仪器问题，不是产品结论）"
+    ids = {item["operation_id"] for item in results}
+    assert len(ids) == 1, (
+        f"期望：五发全部解完之后才提交，仍然只有一枚作业（durable 层必须兜住）；实际 {len(ids)} 枚："
+        f"逐请求={sorted((item['index'], item['operation_id'][:8], item['reused']) for item in results)}"
+    )
+    winners = [item for item in results if not item["reused"]]
+    assert len(winners) == 1, (
+        f"期望：恰好一个 winner、四个 reuse（败者必须上报赢家的 id，而不是各自宣称开始了）；实际 "
+        f"reused=False 有 {len(winners)} 个，逐请求 reused={sorted(item['reused'] for item in results)}"
+    )
+    rows = _rows_for(fingerprint)
+    assert len(rows) == 1, f"期望：库里 1 行；实际 {rows}"
+    assert rows[0][1] == "QUEUED", f"期望：那一行仍是开放代次；实际 {rows[0][1]}"
+
+
 def test_g3d_durable_layer_still_holds_the_partial_unique_index() -> None:
     """The persistence witness the retired node carried, kept as its own door.
 
