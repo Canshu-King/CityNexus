@@ -26,6 +26,11 @@ export type AttributionReason =
   | "NETWORK_UNAVAILABLE"
   | "SERVER_ERROR"
   | "UNAUTHORIZED"
+  /* ORD-0126 补项: 403 is not 401.  A 403 means the server knows who is asking and still refuses
+     *this step* -- telling that traveller to sign in again promises a fix that cannot arrive, which
+     is the same "rewrite a named HTTP answer into a different cause" defect this module exists to
+     stop. */
+  | "FORBIDDEN"
   | "UNKNOWN_FAILURE";
 
 export type EvidenceKind = "HTTP_RESPONSE" | "TRANSPORT" | "HEALTH_PROBE";
@@ -49,6 +54,8 @@ export type Attribution = {
   recovery_action: RecoveryAction;
   /** Stable key for the copy table, so a message is looked up rather than written at a catch site. */
   message_key: string;
+  /** The server's own code, when it gave one.  A refusal must be quotable, not paraphrased. */
+  server_code?: string | null;
   /** Short, greppable line for production logs.  Shape follows R14 §8. */
   telemetry: string;
 };
@@ -70,6 +77,7 @@ function make(
   retryable: boolean,
   recovery_action: RecoveryAction,
   message_key: string,
+  server_code?: string | null,
 ): Attribution {
   return {
     reason,
@@ -79,6 +87,7 @@ function make(
     retryable,
     recovery_action,
     message_key,
+    ...(server_code ? { server_code } : {}),
     telemetry: [
       `attribution_reason=${reason}`,
       `evidence_kind=${evidence_kind}`,
@@ -86,6 +95,7 @@ function make(
       `source_layer=${source_layer}`,
       `retryable=${retryable ? "true" : "false"}`,
       `recovery_action=${recovery_action}`,
+      ...(server_code ? [`server_code=${server_code}`] : []),
     ].join(" "),
   };
 }
@@ -112,8 +122,11 @@ export function classifyReadFailure(error: unknown, server?: ServerErrorShape | 
         "failure.journeyNotFound",
       );
     }
-    if (status === 401 || status === 403) {
-      return make("UNAUTHORIZED", "HTTP_RESPONSE", status, "RESOURCE_STATE", false, "sign-in", "failure.unauthorized");
+    if (status === 401) {
+      return make("UNAUTHORIZED", "HTTP_RESPONSE", status, "RESOURCE_STATE", false, "sign-in", "failure.unauthorized", code);
+    }
+    if (status === 403) {
+      return make("FORBIDDEN", "HTTP_RESPONSE", status, "RESOURCE_STATE", false, "choose-journey", "failure.forbidden", code);
     }
     if (status >= 500) {
       return make("SERVER_ERROR", "HTTP_RESPONSE", status, "RUNTIME", true, "retry", "failure.serverError");
@@ -253,6 +266,14 @@ export function copyFor(
         body: zh
           ? `服务器拒绝了这次读取（HTTP ${attribution.http_status}）。登录之后这一趟还在。`
           : `The server refused this read (HTTP ${attribution.http_status}). Your trip is still there once you sign in.`,
+      };
+    case "failure.forbidden":
+      return {
+        kicker: zh ? "权限" : "Permission",
+        title: zh ? "这一步这台服务器不允许" : "This server will not allow this step",
+        body: zh
+          ? `服务器认得你是谁，但明确拒绝了这一步（HTTP ${attribution.http_status}${attribution.server_code ? `：${attribution.server_code}` : ""}）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。`
+          : `The server knows who you are and still refused this step (HTTP ${attribution.http_status}${attribution.server_code ? `: ${attribution.server_code}` : ""}). This is not a network problem and not a sign-in problem -- signing in again will not change its answer. Choose another trip, or go back to the picker.`,
       };
     default:
       return {

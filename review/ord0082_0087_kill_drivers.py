@@ -50,6 +50,8 @@ I18N = "src/i18n/LocaleContext.tsx"
 COPY_SPEC = "e2e/qoder-demo-entry-copy-matches-the-stage.spec.ts"
 ENUM_SPEC = "e2e/qoder-raw-enums-never-reach-the-traveller.spec.ts"
 SURFACE_SPEC = "e2e/qoder-wizard-hint-surface-readings.spec.ts"
+REFUSAL_SPEC = "e2e/qoder-a-refusal-says-what-it-is.spec.ts"
+FAILURE_LIB = "src/lib/failureAttribution.ts"
 SCENE_SPEC = "e2e/qoder-simulation-scene.spec.ts"
 WALLET_SPEC = "e2e/qoder-wallet-commitments.spec.ts"
 LOGDIR = f"{ROOT}/review"
@@ -739,6 +741,24 @@ CASES = [
         '    hint.scrollIntoView({ block: "center" });\n',
         '    // reveal removed: the sentence is spoken, the screen never shows it\n',
         [(SURFACE_SPEC, ['ord0220-3-a-refused-press-brings-its-reason-on-screen'])],
+    ),
+    (
+        # ORD-0126 补项: 403 folds back into the 401 sentence again -- the traveller is told
+        # to sign in for a refusal that a sign-in cannot change.
+        "killAB1-403-wears-the-401-sentence",
+        FAILURE_LIB,
+        '    if (status === 401) {\n      return make("UNAUTHORIZED", "HTTP_RESPONSE", status, "RESOURCE_STATE", false, "sign-in", "failure.unauthorized", code);\n    }\n    if (status === 403) {\n      return make("FORBIDDEN", "HTTP_RESPONSE", status, "RESOURCE_STATE", false, "choose-journey", "failure.forbidden", code);\n    }\n',
+        '    if (status === 401 || status === 403) {\n      return make("UNAUTHORIZED", "HTTP_RESPONSE", status, "RESOURCE_STATE", false, "sign-in", "failure.unauthorized", code);\n    }\n',
+        [(REFUSAL_SPEC, ['ord0126d-a-403-says-permission-and-not-login'])],
+    ),
+    (
+        # ORD-0126 ④: the planning sheet takes the journey id from storage again instead of
+        # from the journey on screen, so it can submit a trip the traveller is not looking at.
+        "killAB2-sheet-submits-the-stored-journey",
+        EXPERIENCE,
+        '        <PlanWithAiSheet\n          journeyId={data.journey.id}\n',
+        '        <PlanWithAiSheet\n          journeyId={(localStorage.getItem("citynexus.v8.journey_id") ?? data.journey.id) as string}\n',
+        [(REFUSAL_SPEC, ['ord0126d-c-the-screen-submits-the-journey-it-shows'])],
     ),
 ]
 
