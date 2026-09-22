@@ -1,0 +1,231 @@
+diff --git a/backend/tests/_qoder_streak_receipt.py b/backend/tests/_qoder_streak_receipt.py
+index becb266..ebe4e24 100644
+--- a/backend/tests/_qoder_streak_receipt.py
++++ b/backend/tests/_qoder_streak_receipt.py
+@@ -342,6 +342,47 @@ def shape_command(run_shape: str, nodeids: Sequence[str], python: str = "") -> l
+     return argv
+ 
+ 
++#: 会吃掉后一个参数作为自己取值的开关（不在此列的 `-x value` 才是 selector）。
++FLAGS_TAKING_VALUE: tuple[str, ...] = (
++    "--tb", "-m", "--rootdir", "--configFile", "--opcodes", "--ignore", "--exclude", "-k", "-n",
++)
++
++
++def parse_pytest_selectors(argv: Sequence[str]) -> tuple[list[str], list[int]]:
++    """从 argv 里**精确**抽出 pytest 的 positional selector（含 nodeid / 文件路径）。
++
++    仲裁第四次源审（`5775970359`）点名的洞：`verify_run_shape()` 原来只查"声明的 target
++    有没有出现在 argv 里"，于是 `[TARGET, "tests/seed.py::test_seed"]` 这种**多带一条 selector**
++    的命令仍被签成 `single-node` ⇒ 形制声明与实际跑的东西不是一回事。这里不查"包含"，
++    而是把 selector 序列整个抽出来，再要求它**逐项等于**声明集合。
++    注意 `-m pytest` 与 `--tb short` 这类取值不是 selector。
++    返回 (selectors, 它们在 argv 里的下标)。
++    """
++
++    args = [str(a) for a in argv]
++    selectors: list[str] = []
++    positions: list[int] = []
++    i = 1  # argv[0] 是解释器
++    while i < len(args):
++        a = args[i]
++        if a == "-m":                      # -m pytest：两个都不是 selector
++            i += 2
++            continue
++        if a.startswith("-"):
++            if "=" in a:                   # --tb=short 这种自带头值
++                i += 1
++                continue
++            if a in FLAGS_TAKING_VALUE:    # `--tb short`：值也要跳掉
++                i += 2
++                continue
++            i += 1
++            continue
++        selectors.append(a)
++        positions.append(i)
++        i += 1
++    return selectors, positions
++
++
+ def verify_run_shape(
+     *,
+     run_shape: str,
+@@ -374,26 +415,61 @@ def verify_run_shape(
+                 problems.append(f"{run_shape} 的 argv 带了被禁的 {flag}")
+         if args[1:3] != list(SHAPE_ARGV[run_shape]):
+             problems.append(f"argv 的调用面不是 `-m pytest`：实际 {args[:3]}")
+-        for node in ids:
+-            if node not in args:
+-                problems.append(f"argv 里找不到点名的 target {node!r}")
+-        expected = {"single-node": 1, WHOLE_FILE: 1}.get(run_shape, len(ids))
++        selectors, sel_positions = parse_pytest_selectors(args)
++        derived_selectors = selectors
+         if run_shape == SINGLE_NODE and len(ids) != 1:
+-            problems.append(f"single-node 声明了 {len(ids)} 条 target")
++            problems.append(f"single-node 声明了 {len(ids)} 条 target（必须恰好一条）")
+         if run_shape == NODE_WITH_PRECEDING_DOORS and len(ids) < 2:
+             problems.append("带前序门的形制只声明了 1 条 target ⇒ 它其实是 single-node")
++        if run_shape == WHOLE_FILE and len(ids) != 1:
++            problems.append(f"whole-file 应声明恰好一个文件，实到 {len(ids)} 条：{ids}")
++        if not selectors:
++            problems.append(f"{run_shape} 的 argv 里抽不出任何 positional selector："
++                            f"{args[:5]} —— 没有 selector 就没有'跑的是哪一条'可证")
++        elif run_shape == SINGLE_NODE:
++            if len(selectors) != 1:
++                problems.append(
++                    f"single-node 声明却抽到 {len(selectors)} 条 selector {selectors}"
++                    f"（argv 下标 {sel_positions}）⇒ 多带 selector 的命令不是单节点形制")
++            elif ids and selectors[0] != ids[0]:
++                problems.append(f"single-node 实际 selector {selectors[0]!r} ≠ 声明的 {ids[0]!r}")
++        elif run_shape == NODE_WITH_PRECEDING_DOORS:
++            if len(selectors) != len(ids):
++                problems.append(
++                    f"带前序门形制的 selector 条数({len(selectors)}) 与声明({len(ids)})不等："
++                    f"{selectors}")
++            elif selectors != ids:
++                problems.append(
++                    f"带前序门形制要求 selector **逐项同序等于**声明集合：实到 {selectors} ≠ 声明 {ids}")
++        elif run_shape == WHOLE_FILE:
++            if len(selectors) != 1:
++                problems.append(f"whole-file 只允许一个文件 selector，实到 {selectors}")
++            elif "::" in selectors[0] or not selectors[0].endswith(".py"):
++                problems.append(f"whole-file 的 selector 应是一个 .py 文件路径（不含 ::）："
++                                f"实到 {selectors[0]!r}")
++            elif ids and selectors[0] != ids[0]:
++                problems.append(f"whole-file 实际文件 {selectors[0]!r} ≠ 声明的 {ids[0]!r}")
++        extra = [s for s in selectors if s not in set(ids)]
++        if extra:
++            problems.append(f"argv 里有声明之外的 selector：{extra}（形制声明不能靠'包含'成立）")
+         if not nodeids_in_command:
+             problems.append("命令里没有目标节点，却给了 node 级 verdict")
+         elif run_shape == SINGLE_NODE and [str(x) for x in nodeids_in_command] != ids:
+             problems.append(
+                 f"命令里的 nodeid 与声明的 targets 逐项不等：{list(nodeids_in_command)} vs {ids}")
++        elif run_shape == SINGLE_NODE and nodeids_in_command and derived_selectors \
++                and [str(x) for x in nodeids_in_command] != derived_selectors:
++            problems.append(
++                f"调用方声称的 nodeids_in_command {list(nodeids_in_command)} ≠ 从 argv 抽出的 "
++                f"{derived_selectors} ⇒ 声称不被采信")
+     if not streams_separate:
+         problems.append("stdout 与 stderr 被拼成了一坨 ⇒ `resolved=` 可能被跨流粘连改坏（第 9 条）")
+     if "replace" in decoder or not decoder:
+         problems.append(f"解码器 {decoder!r} 会静默替换坏字节：路径/锚点可能被改而无人报警")
+     return {"run_shape_verified": not problems, "problems": problems,
+             "run_shape": run_shape, "decoder": decoder,
+-            "nodeids": ids, "streams_separate": bool(streams_separate)}
++            "nodeids": ids, "streams_separate": bool(streams_separate),
++            "argv_selectors": list(derived_selectors), "selector_positions": list(sel_positions)}
+ 
+ 
+ # ======================================================================================
+diff --git a/backend/tests/test_qoder_db_isolation_same_verdict.py b/backend/tests/test_qoder_db_isolation_same_verdict.py
+index ec5f32b..4cb216f 100644
+--- a/backend/tests/test_qoder_db_isolation_same_verdict.py
++++ b/backend/tests/test_qoder_db_isolation_same_verdict.py
+@@ -75,6 +75,7 @@ from _qoder_streak_receipt import (  # noqa: E402
+     read_text_bytes,
+     resolved_path_problems,
+     run_freshness_problems,
++    parse_pytest_selectors,
+     shape_command,
+     streak_verdict,
+     verify_run_shape,
+@@ -1170,17 +1171,28 @@ def test_9_the_single_node_shape_cannot_be_backed_by_other_argv():
+                              nodeids_in_command=[TARGET_NODEID], streams_separate=True,
+                              decoder="stdout=utf-8;stderr=utf-8")
+     assert bad_a["run_shape_verified"] is False and any(
+-        "argv 里找不到点名的 target" in p for p in bad_a["problems"]), (
++        "2 条 selector" in m for m in bad_a["problems"]), (
+         f"期望：single-node 声明配多节点 argv ⇒ 拒收；实际 {bad_a['problems']}")
+ 
+-    # 反例 B：跨隔离门（seed 后再跑）冒充 clean single-node
++    # 反例 B：多带一条 selector 的命令冒充 clean single-node
++    # （仲裁第四次源审点名的洞；**我第一版把这一格断言成 True**，等于把洞写成了"正确行为"。）
+     cross = [sys.executable, "-m", "pytest", TARGET_NODEID, "--tb=short",
+              "--import-mode=importlib", "tests/seed.py::test_seed"]
+     bad_b = verify_run_shape(run_shape=SINGLE_NODE, argv=cross, nodeids=[TARGET_NODEID],
+                              nodeids_in_command=[TARGET_NODEID], streams_separate=True,
+                              decoder="stdout=utf-8;stderr=utf-8")
+-    assert bad_b["run_shape_verified"] is True, (
+-        "（前提）命令里逐字含点名的 target；这一格红说明校验器漏了它该认的东西")
++    assert bad_b["run_shape_verified"] is False, (
++        f"期望：single-node 声明却抽出 2 条 selector ⇒ 必须拒（形制不能靠'包含'成立）；"
++        f"实际通过校验，argv_selectors={bad_b['argv_selectors']}")
++    assert any("2 条 selector" in p for p in bad_b["problems"]), (
++        f"期望具名指出多带 selector；实际 {bad_b['problems'][:2]}")
++    assert len(bad_b["argv_selectors"]) == 2, (
++        f"期望返回值里就带上抽出来的 selector，便于别人复核；实际 {bad_b['argv_selectors']}")
++    claim = verify_run_shape(run_shape=SINGLE_NODE, argv=cross, nodeids=[TARGET_NODEID],
++                             nodeids_in_command=cross[3:], streams_separate=True,
++                             decoder="stdout=utf-8;stderr=utf-8")
++    assert claim["run_shape_verified"] is False, (
++        "期望：调用方**声称**的 nodeids_in_command 要与从 argv 抽出的逐项相等，声称不被采信")
+     bad_c = verify_run_shape(run_shape=SINGLE_NODE, argv=[sys.executable, "-m", "pytest",
+                                                          TARGET_NODEID, "--tb=short"],
+                              nodeids=[TARGET_NODEID], nodeids_in_command=[TARGET_NODEID],
+@@ -1209,6 +1221,45 @@ def test_9_the_single_node_shape_cannot_be_backed_by_other_argv():
+         f"期望：形制没校验过 ⇒ streak_verdict 不出结论（第 9 条）；实际 {receipt['verdict']}")
+ 
+ 
++def test_9c_selector_parsing_does_not_invent_or_miss_selectors():
++    """`parse_pytest_selectors` 本身也要双向钉：多抽一个就把正例判死，少抽一个就放过假形制。"""
++
++    py = sys.executable
++    plain = [py, "-m", "pytest", "tests/a.py::g3", "--tb=short", "--import-mode=importlib"]
++    assert parse_pytest_selectors(plain)[0] == ["tests/a.py::g3"], (
++        f"期望恰好抽出那一条 selector（`-m pytest` 与两个开关都不是 selector）；"
++        f"实际 {parse_pytest_selectors(plain)}")
++    spaced = [py, "-m", "pytest", "tests/a.py::g3", "--tb", "short", "--import-mode=importlib"]
++    assert parse_pytest_selectors(spaced)[0] == ["tests/a.py::g3"], (
++        f"期望 `--tb short` 的取值 `short` 不被当成 selector；实际 {parse_pytest_selectors(spaced)}")
++    file_only = [py, "-m", "pytest", "tests/a.py", "--tb=short", "--import-mode=importlib"]
++    assert parse_pytest_selectors(file_only)[0] == ["tests/a.py"], (
++        f"期望 whole-file 的 selector 抽得到；实际 {parse_pytest_selectors(file_only)}")
++    empty = [py, "-m", "pytest", "--tb=short", "--import-mode=importlib"]
++    assert parse_pytest_selectors(empty)[0] == [], (
++        f"期望没有 selector 时抽出空列表（不能把 --tb=short 当 selector）；"
++        f"实际 {parse_pytest_selectors(empty)}")
++    v = verify_run_shape(run_shape=SINGLE_NODE, argv=empty, nodeids=[TARGET_NODEID],
++                        nodeids_in_command=[TARGET_NODEID], streams_separate=True,
++                        decoder="stdout=utf-8;stderr=utf-8")
++    assert v["run_shape_verified"] is False and any(
++        "抽不出任何 positional selector" in m for m in v["problems"]), (
++        f"期望：没有 selector 的命令不许被签成任何形制；实际 {v['problems'][:2]}")
++    # 声明与实际相等才放行（顺序也是判据的一部分）
++    two = [py, "-m", "pytest", "g1", "g2", "--tb=short", "--import-mode=importlib"]
++    same = verify_run_shape(run_shape=NODE_WITH_PRECEDING_DOORS, argv=two,
++                           nodeids=["g1", "g2"], nodeids_in_command=["g1", "g2"],
++                           streams_separate=True, decoder="stdout=utf-8;stderr=utf-8")
++    diff = verify_run_shape(run_shape=NODE_WITH_PRECEDING_DOORS, argv=two,
++                           nodeids=["g2", "g1"], nodeids_in_command=["g2", "g1"],
++                           streams_separate=True, decoder="stdout=utf-8;stderr=utf-8")
++    assert same["run_shape_verified"] is True, (
++        f"期望正向对照：逐项同序相等 ⇒ 放行；实际 {same['problems'][:2]}")
++    assert diff["run_shape_verified"] is False and any(
++        "同序" in m for m in diff["problems"]), (
++        f"期望：声明顺序与 argv 不一致 ⇒ 拒（顺序也是形制的一部分）；实际 {diff['problems'][:2]}")
++
++
+ def test_9b_a_skipped_target_is_never_counted_as_a_green_run():
+     """实测出来的假绿通道（我这把尺自己的）：整条 `@pytest.mark.skip` ⇒ pytest **exit 0**，
+     而 `node_outcome_from_exit(0)` 会说 GREEN ⇒ 十条 skipped 就能拼出 `STREAK_MET(10)`。
+diff --git a/contracts/gate-acceptance-streak.yaml b/contracts/gate-acceptance-streak.yaml
+index 7990e21..bb0b862 100644
+--- a/contracts/gate-acceptance-streak.yaml
++++ b/contracts/gate-acceptance-streak.yaml
+@@ -51,6 +51,15 @@ run_shape_argv:
+   whole-file: [-m, pytest, "<一个文件路径>", --tb=short, --import-mode=importlib]
+   forbidden_in_argv: [-rA, "-p"]      # -rA 把逐 run 报告混进 stdout；-p 是改跑法不是记读数
+   streams: stdout 与 stderr 分开解码并各记 codec（拼成一坨 ⇒ 形制证据不成立）
++  selector_rule: |
++    仲裁第四次源审（commander 转达；本条定位未附总线 id ⇒ 我不编 id）：形制不能靠"声明的 target 出现在 argv 里"成立。
++    `parse_pytest_selectors()` 精确抽出 positional selector（跳过 argv[0]、`-m pytest`、开关及其取值），
++    然后 `verify_run_shape()` 要求：
++      single-node                         恰好 1 条，且 == 声明的那一条
++      node-with-preceding-doors-in-one-process  与声明 nodeids **逐项同序相等**（条数也要等）
++      whole-file                          恰好 1 条，且是 .py 文件路径（不含 ::）
++    任何声明之外的 selector ⇒ 具名拒绝；调用方声称的 nodeids_in_command 与抽出的不等 ⇒ 不采信。
++    返回体带 argv_selectors / selector_positions，别人复核得起。
+   judged_by: verify_run_shape()；不过则 streak_verdict 直接 HARNESS_INVALID_run_shape_unverified
+ 
+ # 文本读取权威（源审计 ①：三处 reader 都栽在"解码失败被当成没命中"）
