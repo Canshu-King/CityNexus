@@ -1,0 +1,417 @@
+{
+  "base": "http://127.0.0.1:8792",
+  "run_label": "v3",
+  "pid": 56684,
+  "viewport": [
+    390,
+    844
+  ],
+  "displacement_rationale": "Arms A and B share (-90,-60), a horizontal-dominant drag, so B is a same-gesture specificity control for the camera. RETRACTED: matrix run mtx1 said the off-map drag failed to scroll because 60px was \"too short\". mtx2 refuted that — a short PURE-vertical (0,-60) scrolls DOCUMENT 0->45 and a vertical-dominant (-60,-90) scrolls 0->78, while horizontal-dominant (-90,-60) never scrolls at either start y or step count. Direction, not length, decides whether the browser treats a touch drag as a page scroll. Consequence: arm A2 drags vertical-dominant (0,-120) INSIDE the canvas, because that is the only swipe shape that could steal the page scroll, and arm C uses a long vertical (0,-320) OUTSIDE it to test the page-turn clause of the on-screen sentence.",
+  "started_at": "2026-09-23T03:40:58.425+08:00",
+  "started_at_utc": "2026-09-22T19:40:58.425Z",
+  "browser": "chromium 153.0.8010.12",
+  "served_bundle": {
+    "file": "index-DtQ86lsQ.js",
+    "bytes": 1231985,
+    "sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a"
+  },
+  "entry_mode": "seeded localStorage journey_id = 9c6c3d73-8b8e-4f71-beaf-32bc87aba035",
+  "landing": {
+    "heading": "广州之旅",
+    "hasMapPanel": true,
+    "hasMobileNav": true,
+    "url": "/v8/hub",
+    "textStart": "菜单 / 今天 跟随系统 EN GU 还没休息 广州之旅 9月21日 10:00 — 9月22日 18:00 · 1 位旅行者 · 2 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 广州南站 接下来 14:00 Check in · 7天酒店 后面还有 3 站 查看实时"
+  },
+  "via": "hub already shows the map",
+  "map_handle": {
+    "ok": true,
+    "depth": 7,
+    "via": "fiber.stateNode.__reactFiber$6yktivx7k3e.return.memoizedState.memoizedState.current.citynexusMap",
+    "start_center": [
+      113.31589740000004,
+      23.143324854971638
+    ],
+    "zoom": 9.638941766230726,
+    "routeLegsAttr": "4",
+    "modesAttr": "AUTO WALK"
+  },
+  "precondition": {
+    "routeLegs": 4,
+    "canvasPresent": true,
+    "gestureCopy": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+    "degradationNotice": "菜单 / 今天 跟随系统 EN GU 还没休息 广州之旅 9月21日 10:00 — 9月22日 18:00 · 1 位旅行者 · 2 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 广州南站 接下来 14:00 Check in · 7天酒店 后面还有 3 站 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 09:00 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 底图未加载，显示的是路线示意。",
+    "scrollTop": 0
+  },
+  "armA": {
+    "where": "inside map canvas",
+    "box": [
+      18,
+      588,
+      354,
+      245
+    ],
+    "before": {
+      "center": [
+        113.31589740000004,
+        23.143324854971638
+      ],
+      "zoom": 9.638941766230726,
+      "scrollTop": 0,
+      "docScrollHeight": 1590,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        588,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1590,
+          "ch": 844
+        }
+      ]
+    },
+    "after": {
+      "center": [
+        113.40347793014848,
+        23.089625810628846
+      ],
+      "zoom": 9.638941766230726,
+      "scrollTop": 0,
+      "docScrollHeight": 1590,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        588,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1590,
+          "ch": 844
+        }
+      ]
+    },
+    "centerMoved": true,
+    "centerDelta": [
+      0.087581,
+      -0.053699
+    ],
+    "pageScrolled": false,
+    "anyScrollerMoved": [],
+    "scrollSubjects": [
+      "DOCUMENT 0/1590>844"
+    ]
+  },
+  "armA2": {
+    "where": "vertical-dominant drag starting inside map canvas",
+    "box": [
+      18,
+      588,
+      354,
+      245
+    ],
+    "before": {
+      "center": [
+        113.40347793014848,
+        23.089625810628846
+      ],
+      "zoom": 9.638941766230726,
+      "scrollTop": 0,
+      "docScrollHeight": 1590,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        588,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1590,
+          "ch": 844
+        }
+      ]
+    },
+    "after": {
+      "center": [
+        113.40347793014791,
+        22.980505573834634
+      ],
+      "zoom": 9.638941766230726,
+      "scrollTop": 0,
+      "docScrollHeight": 1590,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        588,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1590,
+          "ch": 844
+        }
+      ]
+    },
+    "centerMoved": true,
+    "centerDelta": [
+      0,
+      -0.10912
+    ],
+    "pageScrolled": false,
+    "anyScrollerMoved": []
+  },
+  "controlTap": {
+    "where": "same map point, no movement",
+    "before": [
+      113.40347793014791,
+      22.980505573834634
+    ],
+    "after": [
+      113.40347793014791,
+      22.980505573834634
+    ],
+    "centerDrifted": false
+  },
+  "armB": {
+    "where": "body text outside map, same displacement as arm A",
+    "target": {
+      "tag": "DIV",
+      "cls": "v8-page-intro",
+      "txt": "还没休息广州之旅9月21日 10:00 — 9月",
+      "x": 195,
+      "y": 169,
+      "hitTag": "P",
+      "hitCls": "v8-lede",
+      "hitPosition": "static",
+      "rejectedBefore": [
+        [
+          195,
+          788,
+          "below-map-top"
+        ],
+        [
+          195,
+          740,
+          "in-map"
+        ]
+      ]
+    },
+    "before": {
+      "center": [
+        113.40347793014791,
+        22.980505573834634
+      ],
+      "zoom": 9.638941766230726,
+      "scrollTop": 0,
+      "docScrollHeight": 1590,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        588,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1590,
+          "ch": 844
+        }
+      ]
+    },
+    "after": {
+      "center": [
+        113.40347793014791,
+        22.980505573834634
+      ],
+      "zoom": 9.638941766230726,
+      "scrollTop": 0,
+      "docScrollHeight": 1590,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        588,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1590,
+          "ch": 844
+        }
+      ]
+    },
+    "centerMoved": false,
+    "centerBitIdentical": true
+  },
+  "armD": {
+    "where": "two-finger spread inside map canvas",
+    "before": {
+      "center": [
+        113.40347793014791,
+        22.980505573834634
+      ],
+      "zoom": 9.638941766230726,
+      "scrollTop": 0,
+      "docScrollHeight": 1590,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        588,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1590,
+          "ch": 844
+        }
+      ]
+    },
+    "after": {
+      "center": [
+        113.40347793014007,
+        22.98028431823046
+      ],
+      "zoom": 10.895144828657214,
+      "scrollTop": 0,
+      "docScrollHeight": 1590,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        588,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1590,
+          "ch": 844
+        }
+      ]
+    },
+    "zoomDelta": 1.256203,
+    "zoomChanged": true,
+    "centerMoved": true,
+    "anyScrollerMoved": []
+  },
+  "armC": {
+    "where": "long vertical swipe outside the map",
+    "target": {
+      "tag": "DIV",
+      "cls": "v8-hero-grid",
+      "txt": "现在广州南站接下来14:00 Check in ",
+      "x": 195,
+      "y": 551,
+      "hitTag": "ARTICLE",
+      "hitCls": "v8-trip-hero",
+      "hitPosition": "static",
+      "rejectedBefore": []
+    },
+    "before": {
+      "center": [
+        113.40347793014007,
+        22.98028431823046
+      ],
+      "zoom": 10.895144828657214,
+      "scrollTop": 0,
+      "docScrollHeight": 1590,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        588,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1590,
+          "ch": 844
+        }
+      ]
+    },
+    "after": {
+      "center": [
+        113.40347793014007,
+        22.98028431823046
+      ],
+      "zoom": 10.895144828657214,
+      "scrollTop": 305,
+      "docScrollHeight": 1590,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        283,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 305,
+          "sh": 1590,
+          "ch": 844
+        }
+      ]
+    },
+    "documentScrolled": true,
+    "anyScrollerMoved": [
+      {
+        "el": "DOCUMENT",
+        "from": 0,
+        "to": 305
+      }
+    ],
+    "cameraUntouched": true,
+    "scrollSubjects": [
+      "DOCUMENT 0/1590>844"
+    ]
+  },
+  "verdict": "GESTURE_CONTRACT_OK: 单指拖地图→相机动且无任何可滚主体位移；地图外同位移→相机逐位不变；地图外 -320px 长滑→页面翻（[{\"el\":\"DOCUMENT\",\"from\":0,\"to\":305}]）；双指分离→zoom Δ1.256203；无位移轻点→相机不动",
+  "ended_at": "2026-09-23T03:41:13.693+08:00",
+  "ended_at_utc": "2026-09-22T19:41:13.693Z",
+  "nonGetRequests": []
+}
