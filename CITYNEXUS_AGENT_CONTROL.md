@@ -11452,6 +11452,117 @@ ORD-0221  外部可读坐标                -> DONE（本车道自己发的，�
 status: ORD-0222 ①、ORD-0221 坐标 = **已交付且已复核**（本块给读数）；D 队列现无阻塞在我这边的项。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0223
+  to: 8c66aa92
+  priority: normal
+  if_head: 8b9ea04
+  order: |
+    **通用约束写入的新词表守卫（仲裁 `5780322197` 新开单，与 ORD-0219 分开）。**
+    裁决原文：**"要设防，但不要复用 `CAPABILITY_CODES`；通用 `/journeys/{id}/constraints` 的合法词表归一个中立的
+    `ConstraintRuleRegistry`（约束域单一真值源），`ConstraintInput` 只按该 registry 校验 `rule_code + kind`，
+    capability 只是其中一个子集，feasibility/scoring 只消费 registry 的执行元数据。"**
+    它独立核过：`ConstraintInput.rule_code` 仍是自由 `str`；通用 feasibility 明确认得 `BUDGET_MAX` / `JOURNEY_END_BY` /
+    `LOCKED_COMMITMENT` 等**非 capability** 规则 ⇒ 把 `CAPABILITY_CODES` 直接套过去会误杀合法写入。
+    最小落法（照录）：
+    ```text
+    ConstraintRuleRegistry (neutral domain module, no schemas/main/feasibility imports back into it)
+      code
+      allowed_kinds: {HARD, SOFT}
+      execution_layer: FEASIBILITY | SCORING | CAPABILITY | ...
+      hard_executable: bool
+
+    ConstraintInput:
+      unknown code                    -> 422 UNKNOWN_RULE_CODE, 0 row
+      known code + disallowed kind    -> 422 RULE_KIND_NOT_ALLOWED, 0 row
+      HARD + hard_executable=false    -> 422 HARD_RULE_NOT_EXECUTABLE, 0 row
+      otherwise                       -> handler may persist
+    ```
+    `UNSUPPORTED_HARD_CONSTRAINT` **继续留在 feasibility**（兜历史脏数据/旧版本/防御性读取），**不再充当新写入的正常校验器**。
+    验收：三条 422 各一条正例/反例（合法 SOFT 写入仍 2xx、非法 kind 拒、HARD 不可执行拒）＋ 0 行落库读回 ＋
+    一条突变（把 registry 的 `hard_executable` 翻真，门必须红）；反例走 `mutation_anchor_guard.py`。
+    **排程**：这是并行单，**不阻塞 ORD-0219**；你名下 ORD-0213（产品并发根因）仍是最终 CLOSED 的闸门，优先级高于本单。
+  status: DISPATCHED@2026-09-23T00:44+08 by 494abfd7（来源＝仲裁 `5780322197` 第七十五次敲门回执）
+
+## commander 转达 @2026-09-23T00:44+08 —— 仲裁接受我的更正与裁定，并把三件事钉死：**constraints 新单**、**撞车移植边界**、**HARD_EXECUTABLE 派生等式**
+
+### ① constraints 路由：**新开 ORD-0223**（不复用 `CAPABILITY_CODES`）
+
+裁决照录进 `- id: ORD-0223`：中立域模块 `ConstraintRuleRegistry`（**不许反向 import schemas/main/feasibility**），
+`ConstraintInput` 按它校验 `rule_code + kind`；三格 422（`UNKNOWN_RULE_CODE` / `RULE_KIND_NOT_ALLOWED` / `HARD_RULE_NOT_EXECUTABLE`）各 0 行落库；
+`UNSUPPORTED_HARD_CONSTRAINT` 留在 feasibility 兜历史脏数据，**不当新写入的正常校验器**。**与 ORD-0219 分开，不阻塞它。**
+
+### ② 撞车移植边界（它把我的裁定细化了，照录）
+
+```text
+KEEP product truth（B）:
+  B fixture facts in data/mock/places.json
+  B producer -> metadata.accessibility_evidence
+  B server-stamped DEMO provenance
+
+PORT from C（只搬独有断言）:
+  1) stroller/luggage 单点事实不得把整条记录洗成 STEP_FREE verified
+  2) PASS/BLOCK 期望集合按候选现算，不按 plan 序号写死
+  3) 对应的 tripwire 突变
+
+DO NOT PORT:
+  C 的 DEMO_ACCESSIBILITY_EVIDENCE 常量
+  C 的 metadata['accessibility'] 生产者路径
+```
+它原话：**"否则嘴上说『只留一把尺』，代码里还是两套数据源，只是其中一套穿了测试文件的马甲。"**
+**移植后的最小验收**：让 **B 的一份门**吸收 C 的这两条独有断言 → 重跑 B 的 8 门/6 臂 → **新增那条 laundering tripwire 的 killer** → **重复门删掉**（不是两套测试文件永久并存）。
+
+### ③ `HARD_EXECUTABLE_CAPABILITY_CODES`：按 C 量到的等式实现，不写第四份名单
+
+```text
+HARD_EXECUTABLE_CAPABILITY_CODES = frozenset(CAPABILITY_CODES) - SOFT_CODES
+feasibility 侧 _CAPABILITY_GATE_CODES 最终直接复用/派生同一来源，并留 parity test 防漂移
+```
+
+### ④ 现场
+
+working tip `8b9ea04`；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+
+### 🔎 8c66aa92 (SESSION=8c66aa92) C · ORD-0213 根因**再更正**（第三次测量，产品码 0 改动）@2026-09-23T02:05+08
+
+仲裁把 CLOSED 押在"我先修产品根因"上，所以我按这条把根因钉死，也把我自己前两次的话各撤一半。
+
+**新读数**（`ord213/ord213_publish_window_probe.py`，一次性临时库、每档一个进程、延迟只注在探针里）：
+
+```text
+（A）只有门里那五连发：注入解析延迟 0 / 5 / 20 / 60 ms 四档，全部 rows=1、distinct=1、reused=4
+（B）门的完整形状（先 1 发，再 5 连发）：0 ms→rows 2、5 ms→rows 2、20 ms→rows 1(joined_pre True)、60 ms→rows 2
+     每一档 resolution calls = 7（六个请求）
+```
+
+⇒ **g3 断言的"五个并发=一枚"其实一直是绿的**；红的是**门自己前置的那一发**——它在五连发到达前就落了
+终态，于是五连发按已签收的 tail-A 另开一枚。把解析人为变慢也救不了（只有恰好还在跑的那一档撞上）。
+
+**根因收敛成一句**：`submit_operation`（`app/catalog_hydration_operations.py:428`）的顺序是
+`resolve_destination → capability_fingerprint → find_open_operation → stage/commit`，
+**键要等工作做完才存在**，所以 ① 重复的问题每次都先付一遍提供方（§7"不得因并发而翻倍"目前没有
+任何守手，本轮实测 6 请求 7 次解析），② 没提交的作业对并发到达者隐形。
+
+**两个缺陷同一个根，而修法的强度是互斥的**，这条请仲裁读进去：
+
+* **弱修（不需要裁定，我可以立刻落）**：未命名那一支的键**不需要提供方**——
+  `capability_fingerprint` 的注释自己写着"five concurrent requests for one *unnamed* county are one
+  job too, which is the whole reason the unnamed branch is deterministic"。所以可以先算键、先查重、
+  再决定要不要解析。效果：**"前一发还开着、我又点了一次"这一族从 2 次解析降到 1 次**；
+  真同时到达仍是每发各付一次（键在各自的工作里）。**它不会让 g3 变绿**，别拿它当结案。
+* **强修（要一句裁定）**：要让并发也只付一次，就得把同键的准入串行化（先占锁再工作）。
+  而我试推过、这里明确否定自己：**排队只会让后到的请求更晚看见**——"晚于终态"恰恰是 tail-A 要求
+  另开一枚的那种情况，所以强修必然踩 tail-A；不踩 tail-A 的并发单次解析，等价于"终态之后开一个
+  新鲜度窗口"。绕不开那二选一。
+* 撤回清单：① 上一版"竞态被输掉了吗——没有，索引会挡"这条**保留**（run27 现场 REJECTED 仍然成立）；
+  ② 上一版"只剩新鲜度窗口/改门二选一"**保留**，但我当时给的理由（重叠窗口太短）是**错的**，
+  真正的原因是门的前置一发；③ 本轮中间我一度写"准入锁是第三条路"——**作废**，理由见上。
+
+**我要的那一句**仍然是仲裁 16:40 那道选择题，但现在它有了明确的代价表：选"新鲜度窗口"要先改
+tail-A 那句；选"改门的定义域"就是把 g3 的靶子写成"活口窗口内的真并发=一枚"（读数支持：五连发四档全
+1 枚）；选"准入串行化"则同时改变 tail-A 与 g3，是第三条最贵的路。**弱修我可以现在就落**（含门：
+"前一发还开着时重复提问，解析次数必须=1"；反向突变：把顺序改回"先解后查"必须回红），
+但它不结 g3——我不拿它冒充。
+
 ## commander 记账 @2026-09-23T00:42+08 —— D 的反馈我认（我连转三次已完成项）；**换包被"活树脏"挡住**（不推半成品到用户手机）；D 的三条待办逐条回
 
 ### ① D 的反馈：**我连着三轮转达同一对已完成的项**（我的派单卫生问题）
