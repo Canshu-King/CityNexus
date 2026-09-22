@@ -10532,7 +10532,7 @@ seed 那趟（CN-TIANJIN）经 create→generate→select 后 active_plan_versio
 
 **⚠ 我这条链里量到的一条红是**我自己的门**，按新第 9/10 条（跑法形制入收据）报**：`ord0193-starting-the-preparation-shows-the-servers-own-phase-and-no-invented-progress` 在**十文件链形制**下首跑 **RED**（`the job block reports status "QUEUED"`，`run-run072593.log`）；同一 SHA 单节点形制复跑 2/2 **GREEN**（`run-run072724`、`run-run072766`）⇒ 形制内 `FLIP_WITHOUT_SHARED_STATE`，不是恒红也不是"复现不出就算别人的"。根因是我自己的量具：作业块第一次上屏吃的是 **POST 自己**的答复（`DestinationPreparationPanel.tsx:116`，那时 `QUEUED` 是诚实的），而我的 route 只钉了轮询的 `GET` ⇒ 首画那一瞬读一次就会翻。修法 `522c414`：换有界 `expect.poll` 等 RUNNING 上屏（消息点名"没到来的东西"），**下面每条断言原样保留、0 放宽**；修后链形制 **3/3 GREEN**（`run-run072997`、`run-run073136`、`run-run073262`，各 **42 passed / exit 0**）。这条不是我今天才有的毛病，但它此前只在满载时才翻，所以以前那些绿是运气。
 
-**运行时亲测（你 17:5x 说 `50b35e0` 还没做，我这轮全做了）**：十文件链（copy / demo-entry-addresses / wizard-city-copy / wizard-city-basis / wizard-speaks / wizard-blocked-a11y / reset-from-wizard / speaks-travellers-language / budget-advisory-tiers / destination-preparation）**42 节点**，522c414 之后连跑三把全绿；`tsc --noEmit -p tsconfig.check.json` exit **0** 两次（④改动后、门修复后）。
+**运行时亲测（你 17:5x 说 `50b35e0` 还没做，我这轮全做了）**：十文件链（copy / demo-entry-addresses / wizard-city-copy / wizard-city-basis / wizard-speaks / wizard-blocked-a11y / reset-from-wizard / speaks-travellers-language / budget-advisory-tiers / destination-preparation）**42 节点**，522c414 之后连跑三把全绿；`tsc --noEmit -p tsconfig.check.json` exit **0** 两次（④改动后、门修复后）。另补四文件链（trip-shape / onboarding-failure / offline-persistence / mobile-overnight）**12 节点 GREEN**（`run-run073461`，exit 0）⇒ 覆盖 ORD-0216 ①②③④ 全部节点的运行时读数为 **54 节点 / 4 把独立进程 / 4 个不同临时库 / 0 红**（无 sleep、无重试、未降并发、未放宽断言）。
 
 **现场读数（不是回忆，全部 18:3x 实测）**：D: 空闲 **18.15 GB**（16:4x 那波 0 字节已不是现状）；`:4781`(PID 40756) / `:4782`(48120) / `:8693`(21900) **三个端口现在都在监听**——你 17:5x 写的是"全部无监听"，我按读数报，**我一个都没动**；`GET :4781/` 200 且 `index.html` 引用的仍是 **`assets/index-BCF4ptyk.js`**（= `56d20ec` 那把包）⇒ **手机上今天这四件一件都看不见**：ORD-0216 ①②③（`50b35e0`）与 ④（`3e259bd`）都只在树上，没进部署。按你 16:4x 的 `DEPLOY_BUNDLE_RETENTION` 口径，换包（先 union → 再切 index → 再出 A–E 收据）是你的动作，我没有代做。**未 push**；未 `demo/reset`；0 次 provider 出网；账本只追加本块。
 
@@ -10542,6 +10542,161 @@ status: ORD-0216 ①②③（`50b35e0`）＋**④ DONE@2026-09-22T18:3x+08 by e3
 evidence: `review/probe-ord0216-scene-city.py`、`review/evidence/ui-overnight/ord0216-scene-city.json`、`ord0216-entry-copy-zh.json`＋`.png`、`ord0216-entry-copy-landing.json`＋`.png`、`frontend/e2e/qoder-demo-entry-copy-matches-the-stage.spec.ts`、`review/ord0082_0087_kill_drivers.py`（killW1/killW2）、`review/run-run072593.log`（形制 RED）/`run-run072724.log`/`run-run072766.log`（单节点 GREEN）/`run-run072997.log`/`run-run073136.log`/`run-run073262.log`（修后链 3×42 GREEN）、`review/chain-0216d-second.txt`、`review/tsc-0216d.txt`、`review/tsc-0216d2.txt`。**未 push**。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+- id: ORD-0221
+  to: e345b9d6
+  priority: high
+  if_head: 522c414
+  order: |
+    **仲裁 18:37 不签 ORD-0216，理由两条：① 你的 `50b35e0` 在 GitHub 上不可解析（我复核：422 "No commit found for SHA"，
+    两个仓都是）；② 红队 18:07 的语义反转臂 SURVIVED ⇒ 门还没证明实现。**
+    我已经替你把**证据面**建好了（你只需要**补上运行读数**，不用自己发 GitHub）：
+    ```text
+    https://github.com/Canshu-King/CityNexus/tree/commander/control/evidence/ord0216
+      50b35e0__50b35e0.patch          8,343 B  blob sha1 d6b5caa03c34adda
+      3e259bd__3e259bd.patch         27,113 B  blob sha1 dfb25bda4e2784e9
+      522c414__522c414.patch          1,590 B  blob sha1 74b2270ea3d29043
+      50b35e0__50b35e0.files.txt        202 B  blob sha1 41eac4f6df89156e
+    父提交 4d74b5596049a085b534d961af128b30774d3e7c（= 4d74b55，16:40，C 的 ORD-0217）
+    ```
+    **四件（照抄仲裁原话，别改口径）：**
+    1. `50b35e0^..50b35e0` 的 changed-files ＋ patch —— **已由我发布**（上面第一、四项），你只需在收据里引用这四个 blob sha1；
+    2. 两条 paired-gate 反例各自的 **exact nodeid / mutation / anchor_hits / bytes_changed / verdict**——你交，写成表格；
+    3. 第 2 步"改完当场消失"的 **before→after 可见文本**读数；
+    4. 第 3 步同一项的 **before→after 可见文本**读数。
+    ⚠ 仲裁点名两条禁令：**不要用 `innerText` 把 `.sr-only` 算成屏幕可见**（HJ-P1 今天正是栽在这上面），
+    **不要拿提交说明代替运行读数**。
+    另：你 `3e259bd`（18:27，ORD-0216 ④ 文案不再点城市）和 `522c414`（18:32，ORD-0193 running-state 节点）我都记在账上了，
+    **不要在这四件里混交**——仲裁审的是 `50b35e0` 那一笔。
+  status: DISPATCHED@2026-09-22T18:4x+08 by 494abfd7（来源＝仲裁 `5775017441` 第六十四次敲门回执）
+
+## commander 回执 @2026-09-22T18:42+08 —— 仲裁接了审计，我照办并**替他把证据面建好**；`住宿 900>450` 按他的裁定并入 ORD-0220 ④
+
+### ① 仲裁 18:37 的两条裁定（照录要点）
+
+```text
+ORD-0216 implementation = PARTIAL / working-tip present
+ORD-0216 gate             = RED (semantic-reversal arm survives)
+ORD-0216 external audit   = PENDING_EVIDENCE_SURFACE
+⇒ 他不签；Commander 不需要复跑；只让 D 把四件暴露到可读证据面
+```
+
+**他看不见 `50b35e0` 这件事我先复核了**：GitHub API 对 `Canshu-King/CityNexus` **和** `CityNexus-Workspace` 都返回
+**422 "No commit found for SHA: 50b35e0"**（`522c414` / `3e259bd` 同）。⇒ 不是他读错，是**工作尖从来没 push 过**。
+**这是本轮最该记住的一条结构性事实**：账本里写 SHA 对本地有意义，对**外部审计者等于不存在**。我以前默认"我写了 sha 就等于给了坐标"，今天被这条推翻。
+**处置**：我建了 `publish_evidence.py`（走 contents API，与账本镜像同一机制、同样出 blob sha1 逐字节证明），把 ORD-0216 的 patch 与文件清单发到
+**`Canshu-King/CityNexus @ commander/control / evidence/ord0216/`** —— 四份全部 `PUT 201` 且 `PROOF: BYTE-LEVEL MATCH`：
+
+| 文件 | 字节 | blob sha1[:16] |
+|---|---|---|
+| `50b35e0__50b35e0.patch` | 8,343 | `d6b5caa03c34adda` |
+| `3e259bd__3e259bd.patch` | 27,113 | `dfb25bda4e2784e9` |
+| `522c414__522c414.patch` | 1,590 | `74b2270ea3d29043` |
+| `50b35e0__50b35e0.files.txt` | 202 | `41eac4f6df89156e` |
+
+**这一条我按新分工自己做、也只做这一件**：仲裁要的是"证据面"，那是**搬运**不是**审计**，而且只有我能碰镜像分支。四件里的第 2–4 件（反例表、两步的可见文本 before→after）是**运行读数**，必须 D 自己交 ⇒ 已下 **ORD-0221**。
+
+### ② `住宿 900 > 总预算 450` —— 仲裁裁"先并入 ORD-0220，不另开 UI 单"
+
+他的口径（照录）：同 currency ＋ 同 scope 时才做这个数学判定；**量纲不同先统一语义，不能硬比**。
+冻结成 0220 ④：不许静默通过 ⇒ 第 2 步必须给出**可见、具体**的冲突 ⇒ 按 Next 要把该冲突**聚焦/滚进视口** ⇒ 矛盾未消除时第 3 步不可达 ⇒ 改好后冲突立刻消失、Next 可用。
+并要 D **只做一次黑盒 API 探针**（同样的矛盾 payload 直接走创建/更新入口），**不让它越权改后端**：
+- server 已具名拒绝 ⇒ 0220 只收 UI/HUMAN 层；
+- server 仍 2xx/落库 ⇒ **那才新开一张 backend truth 单**，建议机器原因 `BUDGET_COMPONENT_EXCEEDS_TOTAL`，归 backend writer，**不塞给 D**。
+我已把这段原样落进 ORD-0220 的 ④（见下一条 amend）。
+
+### ③ 现场
+
+working tip 已是 **`522c414`（18:32）**——崩溃后已推进两笔：`3e259bd`（18:27，封存入口不再点城市，ORD-0216 ④）＋`522c414`（18:32，ORD-0193 running-state 节点）。
+`:4781/:4782/:8693` 三条仍在听；隧道 `brochure-humor-twisted-broadcast` 可用。`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+
+## lane F `8ccd71d8` 交付 @2026-09-22T18:42+08 —— **ORD-0210 机制收口：第 9/10 条已经接进门里**（不再是靠我手写循环），一张 10 进程的失败收据交 C / ORD-0213，ORD-0217 我自己复核过了
+
+### ① 坐标（报数六要素，先给分母）
+
+```text
+分支     agent/f-ord210-20260922（base = 50b35e0，即现 working tip；未并线，并树权在 commander）
+提交     b05a3b2 → 491d8e7 → 9514eb7（三笔，全部只碰 backend/tests/** 与 contracts/**）
+解释器   D:/moodle/CityNexus/.venv/Scripts/python.exe（3.12.14）
+树       git archive 9514eb7 | tar -x  →  D:\moodle\_qoder_f_run\e_o210b_9514eb7\backend
+命令     python -m pytest tests/test_qoder_db_isolation_same_verdict.py
+         [--tb=line -rA -p no:randomly -p no:cacheprovider]（外加 CNX_UNDER_TEST_SHA / MODE / ROUNDS）
+收集     全量 --collect-only = 1193，exit 0，0 error（新共享模块没打断任何人的收集）
+         本门 --collect-only = 15
+读数     25 passed（本门 14 + 我 ORD-0214 那把 11）/ 1 skipped（验收模式，按设计）——`REPRODUCED`
+```
+
+### ② 16:10 冻结清单里点名的两件，现在落在哪
+
+| 冻结项 | 落在哪 | 机器判据 |
+|---|---|---|
+| `FLIP_WITHOUT_SHARED_STATE classification` | `backend/tests/_qoder_streak_receipt.py::classify_target_node` | 定性范围 = (exact SHA, target nodeid, run shape)，缺任一把键 ⇒ `UNCLASSIFIED_IN_THIS_SHAPE`；结论字符串必带 `(<shape>)` |
+| `acceptance-streak logic wired` | `test_qoder_db_isolation_same_verdict.py::test_1a`（验收模式）+ 同一模块 `streak_verdict` | 第 4/5/7/9 条逐格具名；第 6 条拆成"命令面可扫的那半（硬判）+ 自证文本（只卡结案）" |
+| 词表单一权威 | `contracts/gate-acceptance-streak.yaml`（十条原文 + 三形制 + 四定性 + 谁判哪条） | `test_6` 逐条对表：形制序列、定性名单、两则共享状态规则、1..10 齐全 |
+
+**两模式是故意的**：套件里只跑机制模式（默认 2 个独立进程，判**量具形状**，靶子红不算本门红）——否则 ORD-0210 会变成 commander 为 ORD-0217 说过的那种"挂在套件里的常红，污染别人的红集合读数"。验收要人显式 `CNX_ORD0210_MODE=acceptance`，且**必须正好 10**：我实测给了 `ROUNDS=3` ⇒ `SETUP 失败：验收模式必须正好 10 个独立进程（第 2 条），你给了 3`（`REPRODUCED`，第 132 行）。
+**第 10 条的抽取器我没有第二份**：从多节点容器输出里逐 run 抽目标节点判定，仍是 commander 17:5x 认领的 `live_checks/gate_streak.py`；我的门只吃它的输出，并且在拿不到时**拒绝**给目标节点定性。
+
+### ③ 交 C / ORD-0213 的那张收据（10 进程，`REPRODUCED`，全文 `D:\moodle\_qoder_f_run\o210b_acceptance10_491d8e7.txt`）
+
+```text
+SHA 491d8e7（base 50b35e0） | 形制 single-node | 命令面 = pytest <该一条 nodeid> --tb=line -rA -p no:randomly -p no:cacheprovider
+轮数 10：绿 0 / 红 10 / 未观测 0        重复解析路径 = []      缺路径的 run = []
+逐 run：app 自己打印的 resolved= 路径 10 个各不相同（cnx_pytest_3v9np7cw / 5n02b1tn / 5z28q__3 / phuv2v8f /
+        566cgywc / u4tetell / 1u_qmrlg / w00vzuyf / 18rybkj2 / 621orwfl）
+跑前 = {absent:True, path_did_not_exist_before_this_run:True}（fresh 是量出来的，不是假设）
+跑后 = table_count 55；门要的 catalog_hydration_operations 逐 run = 4 3 2 5 4 2 4 3 4 5   ← 门要 1 枚
+streak 结论 = STREAK_NOT_MET(0/10_green)      可结案 = False
+目标节点定性 = STABLE_RED(single-node) @ 491d8e7
+第 6 条 = 命令面已扫（干净）；自证文本未声明 ⇒ 最多 STREAK_GREEN，不签 CLOSED
+```
+
+⇒ **一根不剩地给 C**：每次都是干净新库、无共享、无 sleep/重试/降并发，最少的一次也造了 **2 枚** operation。这张不签 CLOSED，也不签"根因清楚"——根因判定仍在 C 的 ORD-0213（他 16:4x 说卡在仲裁那一句：新鲜度窗口内复用终态结果 vs 改写 g3 的并发定义域）。
+
+**同时给全体改一句口径（这条不是我的发明，是第 10 条的字面后果）**：账本里那句 `g3 = FLIP_WITHOUT_SHARED_STATE(single-node)` **从今天起必须带 SHA**。三把读数各自合法——HARNESS 1/10（`56d20ec`）、commander 2/14（`0a4cb23`）、我这次 **0/10（`50b35e0` 基线的 `491d8e7`）**——按第 10 条它们是三个不同的 (SHA, node, shape) 三元组，不冲突；但**不带 SHA 引用定性**，就会变成"谁拿 7/10 说它在翻、谁拿 0/10 说它恒红都没错"的那件旧事重演。
+我给的三把差异**没有成因**，这里如实说：第 10 条的范围里没有"这台机器当时还有谁在跑"这一格。所以我加了一个**只记录、不参与判定**的观测量 `foreign_temp_dirs_during_this_run`（本轮期间 `%TEMP%` 里别人新建的 `cnx_pytest_*` 目录数）：我这次 = `[0,0,0,1,0,0,0,0,0,0]`。`test_5d` 钉住"它多少都不许改 verdict / 定性"——**我不替仲裁加第十一条**，要不要升成一条由裁层定。
+
+### ④ 我自己两处错，先报（都是读数抓出来的，不是别人指出的）
+
+- **(a) 我的门第一次实测印出 `STABLE_RED(single-node)`，样本只有 2 个 run。** 名字合法（第 10 条字面），但 2 次全红说不出"恒红"——和 commander 16:1x 自纠的"把红得多当恒红"同族，这次是**我自己的门**印出来的。已改：`STABLE_*` 在 <10 run 时带一句量出来的样本警告（`样本只有 2 个 run…分不开『恒红』与『1/10 才翻一次绿』`），跑满 10 自动消失。
+- **(b) `test_5b` 把 `node_outcome` 写成了字面量 `"NOT_OBSERVED"`**，于是突变 M2（未知退出码读成绿）**杀不动**它——`KILLED_PARTIAL` 就是这么露出来的。已改成从退出码算（`9514eb7`）。这是"证据要算不要写"的老坑，我又踩了一次，写在这免得下次有人说我不犯二次。
+
+### ⑤ 突变反例：6/6 KILLED（`receipts_o210b_mutation.json`，一次性导出树上跑，`FORMAT_CHECKED`+`REPRODUCED`）
+
+| 编号 | 破坏的保护点 | 点名的应红断言 | 判定 | anchor_hits / bytes_changed |
+|---|---|---|---|---|
+| M1 | "两种结果都出现过"改成多数表决 | test_4a + test_4b | **KILLED** | 1 / true |
+| M2 | 未知退出码（含 collected=0）读成 GREEN | test_5b + test_5c | **KILLED**（第一版 PARTIAL，见 ④b） | 1 / true |
+| M3 | 取消第 9 条形制要求 | test_5 | **KILLED** | 1 / true |
+| M4a | 定性层忽略重复解析路径 | test_4d + test_1b | **KILLED** | 1 / true |
+| M4b | streak 层忽略第 7 条 | test_4d + test_1b | **KILLED**（第一版我把归属记成 test_5，读数纠正了我的点名单，不是门的洞） | 1 / true |
+| M5 | 取消小样本警告 | test_4c | **KILLED** | 1 / true |
+
+基线 14 passed / 0 failed（红基线 ⇒ 上面任何一格都不能算 KILLED，这条按 ORD-0174 走）；六条跑完目标文件还原 = `af0c3a5f76b797b5`，与提交版**逐字节相同**（脚本回验，不是"我记得还原了"）。
+
+### ⑥ ORD-0217（C 修我那条具名红）我这一侧复核：**通过**
+
+```text
+门文件逐字节等于 c8472fd 里那份          sha256[:16] = 9560f8275c1bb307（我自己那把的指纹，没被我改过）
+在 git archive 4d74b55 上跑               collected 11 / 11 passed，含 test_1c_the_implementation_must_not_answer_http_without_a_code
+git show --stat 4d74b55                   只 1 个文件 backend/app/anywhere_capability.py（+14 / -5）
+他选的修法                                ①（`answered and measured` 才说 HTTP_RESPONSE），理由写在代码注释里，符合单里"先写为什么选这条"
+在 9514eb7（=50b35e0+C+D 同树）两把门合跑  25 passed / 1 skipped
+⇒ 我签：F 的门这一格 GREEN，产品侧闭环；其余 10 条一字未动（0 放宽、0 改门）。`REPRODUCED`
+```
+
+顺带一格（是我门的预期行为，写给以后引用的人）：我一开始忘了带 `CNX_UNDER_TEST_SHA`，`test_1` 立刻红成 `RECEIPT_INCOMPLETE(第 1 条：没有 exact SHA，streak 无从锚定)`——**没有 SHA 就不报数**，这条按"无 collection 无分母"同一条规矩在跑，不是门坏。
+
+### ⑦ 一处交付完整性的隐患，就地补了（不动别人的东西）
+
+`c8472fd`（ORD-0214 门）此前**只挂在 worktree 的 detached HEAD 上**，`git branch --contains c8472fd` 是空的——账本写"F 分支未合"，但实际**无处可合**，`git gc` 就有丢的风险。我已挂名 `agent/f-ord214-20260922` 并回验：`git branch --contains c8472fd` → `agent/f-ord214-20260922`。同理这次 ORD-0210 在 **命名分支** `agent/f-ord210-20260922` 上。写文件的动作只有 `git branch <name> <sha>`，零改写、零强推。
+
+### ⑧ 状态与下一步
+
+- **ORD-0210 我签 `ACCEPTED(mechanism)`**，不签 `CLOSED`。第 4 步（10 进程连跑 + 反向突变：破坏收敛保护点必须重新出 RED 或打断 streak）等 C 的 ORD-0213 落地后开 `MODE=acceptance` 跑，量具已经在门上，不用再等我攒脚本。
+- ORD-0214 交付物不变（`c8472fd`），且它在 C 的修复上转全绿 ⇒ 合并窗口里 `c8472fd` + `4d74b55` 的顺序无要求（我已合跑验过）。
+- **F 侧无 blocker**。要仲裁一句话的是两件：① 定性引用是否强制带 SHA（我建议账本口径改成 `FLIP_WITHOUT_SHARED_STATE(<shape>) @ <sha>`）；② `host load` 要不要升成收据的必填项（现在我只记录、不判）。
+- P0：本轮 0 次碰 `_live.db` / `_preview.db`、0 次 `demo/reset`、0 次出网（靶子全程在 conftest 自钉的临时库，逐 run 有绝对路径可查）；`git worktree remove --force` 0 次；D 盘 18 GB 空闲。
+
 ## commander 坐标核准 @2026-09-22T18:40+08 —— ORD-0219 的三处行号我**在源码上逐条核过**（不是转述）；顺手撤回我自己一句"行号写错了"
 
 ### ① 我差点制造一条假更正，先撤回
@@ -10664,7 +10819,18 @@ working tip `50b35e0`（16:41，D 的 ORD-0216）；reference tip `c0d7e3d`；`P
     ④ **请确认口径**：HJ-P1 量到"住宿 900 > 总预算 450"在 50b35e0 上**仍静默通过**（`disabled=false`、无冲突文案，第 3 次）。
        你 50b35e0 的"advisory pair 双向门"指的是主页 tight 档那两个动作，还是也覆盖这一对？**回一句就行**——
        若不在范围内，我另开单；若在范围内，这就是门的漏臂。
-  status: DISPATCHED@2026-09-22T18:3x+08 by 494abfd7（①靶子＝红队 18:07；②③靶子＝HJ-P1 18:07 更正；④待你回口径）
+  status: DISPATCHED@2026-09-22T18:3x+08 by 494abfd7（①靶子＝红队 18:07；②③靶子＝HJ-P1 18:07 更正；④待你回口径）note@494abfd7@2026-09-22T18:43+08: ④ 由仲裁 `5775017441` 冻结（照录）：同 currency ＋ 同 scope 时才做这个数学判定；量纲不同先统一语义，**不能拿两个不同量纲硬比**。
+  ```text
+  if total_budget and lodging_budget are explicit, same currency, same scope
+  and lodging_budget > total_budget:
+    - must not silently pass
+    - Step 2 must expose a visible, specific conflict
+    - pressing Next must focus/scroll that conflict into the viewport
+    - Step 3 must not be reachable while the contradiction remains
+    - once corrected, the conflict disappears immediately and Next becomes usable
+  ```
+  并且**只做一次黑盒 API 探针**（同样的矛盾 payload 直接走创建/更新入口），**不许越权改后端**：
+  server 已具名拒绝 ⇒ 本单只收 UI/HUMAN 层；server 仍 2xx/落库 ⇒ 那才新开一张 backend truth 单（建议原因码 `BUDGET_COMPONENT_EXCEEDS_TOTAL`），归 backend writer，不塞给你。
 
 ## commander 派单说明 @2026-09-22T18:3x+08 —— 崩溃+重启后第一轮回收：三份真交付；**按用户 17:4x 新口径，深度审计交 GPT，我只做派单+最便宜的现场读数**
 
