@@ -6345,7 +6345,7 @@ index 0000000..3f99595
 +
 +During handling of the above exception, another exception occurred:
 +Error evaluating 'skipif' condition
-+    sk-5343f86b508e45af8532d6ce73315209
++    sk-REDACTED-ROTATED-KEY
 +           ^
 +SyntaxError: invalid syntax
 +================================== FAILURES ===================================
