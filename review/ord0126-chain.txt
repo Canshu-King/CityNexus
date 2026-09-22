@@ -1,0 +1,43 @@
+run_id=run096748 port=4606/8606 target=e2e/qoder-a-refusal-says-what-it-is.spec.ts e2e/qoder-failure-has-an-exit.spec.ts e2e/qoder-onboarding-failure.spec.ts e2e/qoder-ai-sheet-blocked.spec.ts e2e/qoder-demo-entry-addresses-dont-create.spec.ts e2e/qoder-raw-enums-never-reach-the-traveller.spec.ts e2e/qoder-wizard-hint-surface-readings.spec.ts
+
+Running 29 tests using 1 worker
+
+[qoder-real-seed] journey=d13b129b-7a62-4beb-82af-d398964a42e3 options=4 chosen=1e95b0b5-1e96-420b-b9f3-1a8254bbfffa (Haihe Riverside Hotel)
+[qoder-real-seed] trialWizard=false live-journey-current=true
+  ok  1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (4.9s)
+  ok  2 [chromium] › e2e\qoder-a-refusal-says-what-it-is.spec.ts:68:1 › ord0126d-a-403-says-permission-and-not-login — 403 不许被说成「重新登录」 (327ms)
+  ok  3 [chromium] › e2e\qoder-a-refusal-says-what-it-is.spec.ts:123:1 › ord0126d-b-401-still-says-sign-in — 两条拒绝不许塌成一句 (241ms)
+  ok  4 [chromium] › e2e\qoder-a-refusal-says-what-it-is.spec.ts:145:1 › ord0126d-c-the-screen-submits-the-journey-it-shows — 屏上那趟和提交那趟必须同一个 (698ms)
+  ok  5 [chromium] › e2e\qoder-ai-sheet-blocked.spec.ts:89:1 › ord0107-ai-sheet-names-why-it-could-not-plan — 排不出来必须说得出是哪一类 (4.5s)
+  ok  6 [chromium] › e2e\qoder-ai-sheet-blocked.spec.ts:345:1 › ord0104-ai-sheet-examples-follow-the-destination — 例子要么跟这趟走，要么没有 (1.8s)
+  ok  7 [chromium] › e2e\qoder-ai-sheet-blocked.spec.ts:512:1 › ord0134-ai-sheet-actions-stay-inside-the-visible-viewport — 键盘顶起来时最后两枚动作仍要点得到 (7.1s)
+  ok  8 [chromium] › e2e\qoder-demo-entry-addresses-dont-create.spec.ts:60:1 › ord0209-the-demo-entry-addresses-the-sealed-journey — 点 3 次入口，0 次新建，进去的是封存那趟 (3.8s)
+  ok  9 [chromium] › e2e\qoder-demo-entry-addresses-dont-create.spec.ts:145:1 › ord0209-no-sealed-journey-fails-closed-in-words — 没有封存就具名关死，不偷偷建 (1.4s)
+  ok 10 [chromium] › e2e\qoder-failure-has-an-exit.spec.ts:112:1 › ord0169-a-stale-journey-404-is-never-called-a-network-failure — 死 id 的 404 不许说成网络不可用 (411ms)
+  ok 11 [chromium] › e2e\qoder-failure-has-an-exit.spec.ts:184:1 › ord0169-the-recovered-shell-brings-the-map-back — 恢复之后地图必须回来 (1.0s)
+  ok 12 [chromium] › e2e\qoder-failure-has-an-exit.spec.ts:219:1 › ord0169-a-real-transport-failure-still-says-offline — 真断网仍须说网络不可用（反向门） (1.8s)
+  ok 13 [chromium] › e2e\qoder-failure-has-an-exit.spec.ts:316:1 › ord0169-a-server-5xx-is-not-offline — 服务器自己出错不许说成网络问题 (288ms)
+  ok 14 [chromium] › e2e\qoder-onboarding-failure.spec.ts:53:3 › ORD-0034 onboarding surfaces a failed create › a 500 on journey creation shows a visible, named failure instead of silence (2.5s)
+  ok 15 [chromium] › e2e\qoder-onboarding-failure.spec.ts:129:3 › ORD-0034 onboarding surfaces a failed create › the named backend reason reaches the onboarding screen (2.6s)
+legal-window-create-advances reached the shell in 2345ms
+  ok 16 [chromium] › e2e\qoder-onboarding-failure.spec.ts:187:3 › ORD-0034 onboarding surfaces a failed create › legal-window-create-advances — a legal trip reaches the app within 5s (2.5s)
+  ok 17 [chromium] › e2e\qoder-onboarding-failure.spec.ts:221:3 › ORD-0034 onboarding surfaces a failed create › missing-anchor-is-named-before-submit (1.5s)
+  ok 18 [chromium] › e2e\qoder-onboarding-failure.spec.ts:314:3 › ORD-0034 onboarding surfaces a failed create › review-page-says-missing-anchor-is-required (498ms)
+  ok 19 [chromium] › e2e\qoder-onboarding-failure.spec.ts:385:3 › ORD-0034 onboarding surfaces a failed create › backend-reason-lands-on-its-own-field (2.6s)
+  ok 20 [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:155:1 › ord0222-1-visual-scan-no-raw-enums-and-no-mixed-english — 旅客看得见的字里不许有内部枚举，被改的行不许中英混排 (6.6s)
+  ok 21 [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:210:1 › ord0222-2-accessible-scan-no-raw-enums — 读屏输出里也不许有内部枚举 (4.9s)
+  ok 22 [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:239:1 › ord0222-3-an-unknown-value-says-unknown-in-chinese — 新枚举进来时中文要 fail closed (376ms)
+  ok 23 [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:284:1 › ord0222-5-dark-scheme-carries-the-same-words — 同一批屏在深色下再扫一遍 (4.9s)
+  ok 24 [chromium] › e2e\qoder-raw-enums-never-reach-the-traveller.spec.ts:313:1 › ord0222-4-day-payload-versus-visible-card — Check in / Overnight 的来源先交并排收据 (660ms)
+  ok 25 [chromium] › e2e\qoder-wizard-hint-surface-readings.spec.ts:150:1 › ord0221-3-step2-the-hint-clears-in-front-of-the-traveller — 第 2 步改完当场消失的可见文本 (1.8s)
+  ok 26 [chromium] › e2e\qoder-wizard-hint-surface-readings.spec.ts:208:1 › ord0221-4-step3-visible-hint-and-live-region-read-apart — 第 3 步：看见的与听到的分开量 (2.3s)
+  ok 27 [chromium] › e2e\qoder-wizard-hint-surface-readings.spec.ts:269:1 › ord0220-2-the-announcement-retires-when-the-field-is-fixed — 听的那句也要跟现值重算 (864ms)
+  ok 28 [chromium] › e2e\qoder-wizard-hint-surface-readings.spec.ts:330:1 › ord0220-3-a-refused-press-brings-its-reason-on-screen — 按下去什么都没发生，这一格不再成立 (1.6s)
+  ok 29 [chromium] › e2e\qoder-wizard-hint-surface-readings.spec.ts:411:1 › ord0222-6-the-announcement-is-still-gone-after-the-trip-exists — 创建成功之后也不该再播那一句 (1.3s)
+
+  29 passed (1.3m)
+[citynexus e2e] suite=prod-gate authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4606 backend=:8606 db=sqlite:///D:/moodle/_qoder_integration_20260919/review/evidence/_run096748.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=run096748 frontend=:4606 -> backend=:8606 ai=disabled db=_run096748.db
+[citynexus e2e] suite=prod-gate authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4606 backend=:8606 db=sqlite:///D:/moodle/_qoder_integration_20260919/review/evidence/_run096748.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=prod-gate authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4606 backend=:8606 db=sqlite:///D:/moodle/_qoder_integration_20260919/review/evidence/_run096748.db ai=disabled reuseExistingServer=false
+exit=0 log=D:/moodle/_qoder_integration_20260919/review/run-run096748.log

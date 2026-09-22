@@ -1,0 +1,9 @@
+order           ORD-0126 补项
+source_sha      9544628471a8b963d9e0d23e8b9187fdcce0e443  (9544628)
+parent_sha      0437b5c28e40767856b94250bbe729779117f358
+subject         fix(frontend): a 403 says permission, not sign-in, and the screen's journey is the one submitted (ORD-0126 follow-ups)
+authored        2026-09-23 01:09 +0800
+lane            e345b9d6 (frontend/UI), tree D:\moodle\_qoder_integration_20260919
+interpreter     Node/Playwright for the gates; D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14 for the runner
+note            the working tip is not pushed by this lane, so a bare SHA answers 422 on GitHub;
+                these blobs are the readable coordinates for it.

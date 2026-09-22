@@ -1,0 +1,28 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0126 补项",
+  "harness": "review/ord0082_0087_kill_drivers.py",
+  "run_shape": "single node per target via --grep, one fresh process and one fresh throwaway sqlite per mutant; the product file is restored and sha256-compared after every case",
+  "cases": [
+    {
+      "case": "killAB1-403-wears-the-401-sentence:",
+      "file": "src/lib/failureAttribution.ts",
+      "anchor_hits": 1,
+      "on_disk": "True",
+      "anchor_bytes": "317",
+      "bytes_changed": "-141",
+      "red_message": " Error: e2e/qoder-a-refusal-says-what-it-is.spec.ts :: ord0126d-a-403-says-permission-and-not-login �� a 403 did not say what a 403 says: \"���� ��һ����Ҫ���µ�¼���ܶ� �������ܾ�����ζ�ȡ��HTTP 403������¼֮����һ�˻��ڡ� ���µ�¼",
+      "verdict_line": "e2e/qoder-a-refusal-says-what-it-is.spec.ts ['ord0126d-a-403-says-permission-and-not-login'] -> KILLED (rc=1)"
+    },
+    {
+      "case": "killAB2-sheet-submits-the-stored-journey:",
+      "file": "src/app/V8Experience.tsx",
+      "anchor_hits": 1,
+      "on_disk": "True",
+      "anchor_bytes": "63",
+      "bytes_changed": "63",
+      "red_message": " Error: e2e/qoder-a-refusal-says-what-it-is.spec.ts :: ord0126d-c-the-screen-submits-the-journey-it-shows �� the screen shows journey e0be4f58-d4df-45a6-a931-f231a9e4ea16 but the traveller's a",
+      "verdict_line": "e2e/qoder-a-refusal-says-what-it-is.spec.ts ['ord0126d-c-the-screen-submits-the-journey-it-shows'] -> KILLED (rc=1)"
+    }
+  ]
+}

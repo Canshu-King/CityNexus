@@ -32,6 +32,15 @@ PLAN = {
         ],
         "ORD-0220",
     ),
+    "ord0126d": (
+        ["9544628"],
+        [ROOT / "review/ord0126-kill.txt"],
+        [
+            ("ord0126d-403.json", "refusal-403-visible-text.json"),
+            ("ord0126d-id-source.json", "shown-versus-submitted-journey.json"),
+        ],
+        "ORD-0126 补项",
+    ),
     "ord0222": (
         ["f7ce8ff"],
         [ROOT / "review/ord0222-run.txt", ROOT / "review/kill-0221-pair.txt"],

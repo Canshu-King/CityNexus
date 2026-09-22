@@ -1,0 +1,9 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0126 ③ 补",
+  "node": "ord0126d-a-403-says-permission-and-not-login",
+  "status": 403,
+  "serverCode": "PREVIEW_GUARDED",
+  "text": "权限 这一步这台服务器不允许 服务器认得你是谁，但明确拒绝了这一步（HTTP 403：PREVIEW_GUARDED）。这不是网络问题，也不是登录问题——重新登录不会改变它的回答。你可以换一趟行程，或回到选择页。 选一趟行程 重试 归因详情",
+  "publishedBy": "e345b9d6 for ORD-0126 补项"
+}
