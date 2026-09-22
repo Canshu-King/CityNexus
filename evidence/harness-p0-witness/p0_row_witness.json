@@ -1,0 +1,142 @@
+{
+ "db": "D:\\moodle\\_qoder_cmdr_gate_20260921\\backend\\_live.db",
+ "mode": "ro URI, no write connection",
+ "passes": [
+  {
+   "label": "pass1",
+   "tables_in_schema": 55,
+   "timestamp_columns": {
+    "journeys": [
+     "start_at",
+     "end_at",
+     "created_at",
+     "updated_at"
+    ],
+    "travelers": [
+     "created_at",
+     "updated_at"
+    ],
+    "plan_versions": [
+     "created_at"
+    ],
+    "places": [
+     "updated_at"
+    ]
+   },
+   "tables": {
+    "journeys": {
+     "count": 3,
+     "max_rowid": 3,
+     "timestamp_column": "created_at",
+     "max_timestamp": "2026-10-01T00:00:00+00:00"
+    },
+    "travelers": {
+     "count": 3,
+     "max_rowid": 3,
+     "timestamp_column": "created_at",
+     "max_timestamp": "2026-10-01T00:00:00+00:00"
+    },
+    "plan_versions": {
+     "count": 19,
+     "max_rowid": 19,
+     "timestamp_column": "created_at",
+     "max_timestamp": "2026-09-21T12:49:37.045597+00:00"
+    },
+    "places": {
+     "count": 16,
+     "max_rowid": 16,
+     "timestamp_column": "updated_at",
+     "max_timestamp": "2026-10-01T00:00:00+00:00"
+    }
+   }
+  },
+  {
+   "label": "pass2",
+   "tables_in_schema": 55,
+   "timestamp_columns": {
+    "journeys": [
+     "start_at",
+     "end_at",
+     "created_at",
+     "updated_at"
+    ],
+    "travelers": [
+     "created_at",
+     "updated_at"
+    ],
+    "plan_versions": [
+     "created_at"
+    ],
+    "places": [
+     "updated_at"
+    ]
+   },
+   "tables": {
+    "journeys": {
+     "count": 3,
+     "max_rowid": 3,
+     "timestamp_column": "created_at",
+     "max_timestamp": "2026-10-01T00:00:00+00:00"
+    },
+    "travelers": {
+     "count": 3,
+     "max_rowid": 3,
+     "timestamp_column": "created_at",
+     "max_timestamp": "2026-10-01T00:00:00+00:00"
+    },
+    "plan_versions": {
+     "count": 19,
+     "max_rowid": 19,
+     "timestamp_column": "created_at",
+     "max_timestamp": "2026-09-21T12:49:37.045597+00:00"
+    },
+    "places": {
+     "count": 16,
+     "max_rowid": 16,
+     "timestamp_column": "updated_at",
+     "max_timestamp": "2026-10-01T00:00:00+00:00"
+    }
+   }
+  }
+ ],
+ "files": {
+  "before": {
+   "_live.db": {
+    "bytes": 3710976,
+    "mtime": "2026-09-22T13:40:32+08",
+    "mtime_epoch": 1790055632.796
+   },
+   "_live.db-wal": {
+    "bytes": 4243632,
+    "mtime": "2026-09-22T22:51:42+08",
+    "mtime_epoch": 1790088702.901
+   },
+   "_live.db-shm": {
+    "bytes": 32768,
+    "mtime": "2026-09-22T22:51:42+08",
+    "mtime_epoch": 1790088702.885
+   }
+  },
+  "after": {
+   "_live.db": {
+    "bytes": 3710976,
+    "mtime": "2026-09-22T13:40:32+08",
+    "mtime_epoch": 1790055632.796
+   },
+   "_live.db-wal": {
+    "bytes": 4243632,
+    "mtime": "2026-09-22T22:51:42+08",
+    "mtime_epoch": 1790088702.901
+   },
+   "_live.db-shm": {
+    "bytes": 32768,
+    "mtime": "2026-09-22T22:51:42+08",
+    "mtime_epoch": 1790088702.885
+   }
+  }
+ },
+ "file_drift": {},
+ "passes_agree": true,
+ "write_connection_opened": false,
+ "statement": "only sqlite3.connect('file:...?mode=ro') was used; PRAGMA query_only read back as 1; no INSERT/UPDATE/DELETE/backup/copy was performed."
+}
