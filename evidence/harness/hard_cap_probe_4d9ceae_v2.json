@@ -1,0 +1,72 @@
+{
+ "generated_at": "2026-09-23T03:51:38+08:00",
+ "head": "4d9ceae",
+ "code_under_test": "STEP_FREE_REQUIRED",
+ "precondition": {
+  "places": 16,
+  "places_with_accessibility_evidence": 3
+ },
+ "arms": {
+  "existing_plans": {
+   "status": 200,
+   "named_hint_keys": [],
+   "count_fields": {
+    "n_items": 0
+   },
+   "body_head": "[]",
+   "top_keys": "list"
+  },
+  "control_generate": {
+   "status": 201,
+   "named_hint_keys": [
+    "reason"
+   ],
+   "count_fields": {
+    "n_items": 3
+   },
+   "body_head": "[{\"id\": \"55523d40-cafe-5bd2-b30a-de057ec7a839\", \"journey_id\": \"22222222-2222-4222-8222-222222222222\", \"version_no\": 1, \"planning_mode\": \"balanced\", \"status\": \"CANDIDATE\", \"source\": \"INITIAL\", \"parent_plan_version_id\": null, \"total_cost\": {\"amount_minor\": 37000, \"currency\": \"CNY\"}, \"utility_score\": 0.9298, \"score_breakdown\": {\"commitment_preservation\": 0.98, \"stability\": 0.95, \"time_reliability\": 0.94, \"preference_fit\": 0.92, \"mobility_fit\": 0.88, \"budget_fit\": 0.9, \"robustness\": 0.9, \"opportunity_value\": 0.82, \"total\": 0.9298}, \"activities\": [{\"id\": \"3a58c470-524c-5854-aa39-6c37a350eb80\", \"sequence_no\": 1, \"title\": \"Old Town Gate\", \"activity_type\": \"visit\", \"place_id\": \"place-old-town\", \"cit",
+   "top_keys": "list"
+  },
+  "write_hard_capability": {
+   "status": 200,
+   "named_hint_keys": [
+    "conflict",
+    "conflicts"
+   ],
+   "count_fields": {},
+   "body_head": "{\"traveler_id\": \"11111111-1111-4111-8111-111111111111\", \"capabilities\": [{\"id\": \"81db094e-afc2-48f3-b0c7-5c909ae323c8\", \"traveler_id\": \"11111111-1111-4111-8111-111111111111\", \"journey_id\": null, \"code\": \"STEP_FREE_REQUIRED\", \"class\": \"HARD_ACCESSIBILITY_NEED\", \"severity\": \"HARD\", \"params\": {\"requirement\": \"step_free\"}, \"scope\": \"TRAVELER\", \"source\": \"USER_CONFIRMED\", \"provenance\": \"USER_STATED\", \"explicit\": true, \"confirmed\": true, \"active\": true, \"created_at\": \"2026-09-22T19:51:38.617458+00:00\", \"updated_at\": \"2026-09-22T19:51:38.617458+00:00\", \"confirmed_at\": \"2026-09-22T19:51:38.617458+00:00\"}], \"summary\": {\"items\": [{\"code\": \"STEP_FREE_REQUIRED\", \"class\": \"HARD_ACCESSIBILITY_NEED\", \"seve",
+   "top_keys": [
+    "capabilities",
+    "summary",
+    "traveler_id",
+    "traveler_twin"
+   ]
+  },
+  "treatment_generate": {
+   "status": 422,
+   "named_hint_keys": [
+    "constraint",
+    "reason",
+    "reason_code"
+   ],
+   "count_fields": {
+    "n_items": 0,
+    "error_reason_code": "CATALOG_INSUFFICIENT"
+   },
+   "body_head": "{\"error\": {\"code\": \"VALIDATION_ERROR\", \"message\": \"No feasible plan candidates satisfy the journey constraints\", \"message_key\": \"request.invalid\", \"trace_id\": \"b4375af3-729e-4c38-8d59-e667270b3b0b\", \"details\": {\"city_code\": \"CNX-DEMO\", \"places_in_catalog\": 8, \"city_services_in_catalog\": 5, \"day_sequences_available\": 3, \"requested_candidates\": 3}, \"reason_code\": \"CATALOG_INSUFFICIENT\"}}",
+   "top_keys": [
+    "error"
+   ]
+  }
+ },
+ "verdict": "REFUSED_WITH_NAMED_REASON",
+ "verdict_under_original_three_arm_rule": "HONEST_BLOCKER",
+ "rule_correction_reason": "original rule could not see this shape: the endpoint answers with a JSON array and the treatment arm answered 422, so `dropped` was unreachable and every uncovered case printed NO_EFFECT",
+ "counts_compared": {
+  "control": 3,
+  "treatment": 0
+ },
+ "declared_rule": "v2, declared before re-measuring: refused>=400 with a named reason => REFUSED_WITH_NAMED_REASON; count drop without a name => SILENT_CANDIDATE_LOSS; drop with a name => HONEST_BLOCKER; no count on either arm => UNMEASABLE",
+ "demo_reset_issued": 0,
+ "product_files_changed": 0
+}
