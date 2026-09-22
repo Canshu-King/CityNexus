@@ -1,0 +1,142 @@
+{
+ "gate": "tests/test_qoder_demo_accessibility_evidence.py",
+ "tree": "D:\\moodle\\_qoder_b_ord188_20260922\\backend",
+ "as_is_exit": 0,
+ "as_is_summary": "======================== 9 passed, 2 warnings in 1.36s ========================",
+ "as_is_nodes": {
+  "test_demo_producer_lands_every_claimed_fact_with_demo_provenance": "PASSED",
+  "test_demo_producer_reaches_exactly_the_places_the_fixture_claims": "PASSED",
+  "test_demo_evidence_stays_out_of_non_sealed_cities": "PASSED",
+  "test_missing_demo_evidence_is_unknown_and_never_implicit_access": "PASSED",
+  "test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture": "PASSED",
+  "test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified": "PASSED",
+  "test_hard_stroller_names_the_blocker_and_does_not_misfire": "PASSED",
+  "test_hard_luggage_names_the_blocker_and_does_not_misfire": "PASSED",
+  "test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability": "PASSED"
+ },
+ "arms": [
+  {
+   "id": "M1 fixture 翻转：tech-art stroller false->true",
+   "file": "D:\\moodle\\_qoder_b_ord188_20260922\\data\\mock\\places.json",
+   "expected_anchor_hits": 1,
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "before_sha256": "46dc1835312e45190e0b6b411e6c88982acc9a5ac90997be4ccd9b7aea60489a",
+   "mutated_sha256": "caf1c8c55f14e5da7423598b1c974f96cba7abbb0bb879b5dc4dd940ec98046c",
+   "restored_sha256_matches": true,
+   "suite_summary": "=================== 2 failed, 7 passed, 2 warnings in 1.19s ===================",
+   "red_nodes": [
+    "test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability",
+    "test_hard_stroller_names_the_blocker_and_does_not_misfire"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M2 fixture 删除：tech-art 不再声明任何无障碍事实",
+   "file": "D:\\moodle\\_qoder_b_ord188_20260922\\data\\mock\\places.json",
+   "expected_anchor_hits": 1,
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "before_sha256": "46dc1835312e45190e0b6b411e6c88982acc9a5ac90997be4ccd9b7aea60489a",
+   "mutated_sha256": "295e1dc5ad3765634d6014a84562feb29400007923dc0f1eaee6a7778c7835aa",
+   "restored_sha256_matches": true,
+   "suite_summary": "=================== 2 failed, 7 passed, 2 warnings in 1.17s ===================",
+   "red_nodes": [
+    "test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability",
+    "test_hard_stroller_names_the_blocker_and_does_not_misfire"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M3 出处被改写成 provider 事实",
+   "file": "D:\\moodle\\_qoder_b_ord188_20260922\\backend\\app\\services.py",
+   "expected_anchor_hits": 1,
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "before_sha256": "21e6c9858c9ba0e2b3683d2ae49f5fc1f1c2bf9352f23a508a35b2c2dd612f54",
+   "mutated_sha256": "420f227f767260a2ce21a45a77c683744f759e2907b77aca0f1a4b45926d5f4c",
+   "restored_sha256_matches": true,
+   "suite_summary": "=================== 2 failed, 7 passed, 2 warnings in 1.58s ===================",
+   "red_nodes": [
+    "test_demo_producer_lands_every_claimed_fact_with_demo_provenance",
+    "test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M4 生产者漏到全部地点（含非封存城市）",
+   "file": "D:\\moodle\\_qoder_b_ord188_20260922\\backend\\app\\services.py",
+   "expected_anchor_hits": 1,
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "before_sha256": "21e6c9858c9ba0e2b3683d2ae49f5fc1f1c2bf9352f23a508a35b2c2dd612f54",
+   "mutated_sha256": "f8d8fc8a9cb59d10b995c15a76798648eb51ec01021d1674aaef7ae70550fd83",
+   "restored_sha256_matches": true,
+   "suite_summary": "=================== 3 failed, 6 passed, 2 warnings in 1.39s ===================",
+   "red_nodes": [
+    "test_demo_evidence_stays_out_of_non_sealed_cities",
+    "test_demo_producer_reaches_exactly_the_places_the_fixture_claims",
+    "test_missing_demo_evidence_is_unknown_and_never_implicit_access"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M5 白名单失效：fixture 里有什么就搬什么",
+   "file": "D:\\moodle\\_qoder_b_ord188_20260922\\backend\\app\\services.py",
+   "expected_anchor_hits": 1,
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "before_sha256": "21e6c9858c9ba0e2b3683d2ae49f5fc1f1c2bf9352f23a508a35b2c2dd612f54",
+   "mutated_sha256": "e18b42a591c008ecaa7afcf03b99e58c4b568cde3add33d72a26c7a28d367fcf",
+   "restored_sha256_matches": true,
+   "suite_summary": "=================== 2 failed, 7 passed, 2 warnings in 1.44s ===================",
+   "red_nodes": [
+    "test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified",
+    "test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M6 fixture 翻转：design-library luggage false->true",
+   "file": "D:\\moodle\\_qoder_b_ord188_20260922\\data\\mock\\places.json",
+   "expected_anchor_hits": 1,
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "before_sha256": "46dc1835312e45190e0b6b411e6c88982acc9a5ac90997be4ccd9b7aea60489a",
+   "mutated_sha256": "5046a669a1975aba34a6512c9ffaba7e2c772b9a150da1750e6ecd8027750c46",
+   "restored_sha256_matches": true,
+   "suite_summary": "=================== 1 failed, 8 passed, 2 warnings in 1.27s ===================",
+   "red_nodes": [
+    "test_hard_luggage_names_the_blocker_and_does_not_misfire"
+   ],
+   "killed": true
+  },
+  {
+   "id": "M8 白名单放宽到整条记录裁决（step_free/evidence_status 也能穿过）",
+   "file": "D:\\moodle\\_qoder_b_ord188_20260922\\backend\\app\\services.py",
+   "expected_anchor_hits": 1,
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "before_sha256": "21e6c9858c9ba0e2b3683d2ae49f5fc1f1c2bf9352f23a508a35b2c2dd612f54",
+   "mutated_sha256": "e9eb97a0fe336613bc4a3b207b36a6e984f472a716f3bc29701f433e34b2ff95",
+   "restored_sha256_matches": true,
+   "suite_summary": "=================== 1 failed, 8 passed, 2 warnings in 1.10s ===================",
+   "red_nodes": [
+    "test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified"
+   ],
+   "killed": true
+  }
+ ],
+ "nodes_with_a_killing_arm": [
+  "test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified",
+  "test_demo_evidence_stays_out_of_non_sealed_cities",
+  "test_demo_producer_lands_every_claimed_fact_with_demo_provenance",
+  "test_demo_producer_reaches_exactly_the_places_the_fixture_claims",
+  "test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture",
+  "test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability",
+  "test_hard_luggage_names_the_blocker_and_does_not_misfire",
+  "test_hard_stroller_names_the_blocker_and_does_not_misfire",
+  "test_missing_demo_evidence_is_unknown_and_never_implicit_access"
+ ],
+ "nodes_without_a_killing_arm": []
+}
