@@ -1,0 +1,57 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0220",
+  "harness": "review/ord0082_0087_kill_drivers.py",
+  "run_shape": "single node per target via --grep, one fresh process and one fresh throwaway sqlite per mutant; the product file is restored and sha256-compared after every case",
+  "cases": [
+    {
+      "case": "killX1-tight-caveat-says-the-opposite:",
+      "file": "src/app/V8Experience.tsx",
+      "anchor_hits": 1,
+      "on_disk": "True",
+      "anchor_bytes": "133",
+      "bytes_changed": "-3",
+      "red_message": " Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0220-1-the-tight-caveat-cannot-contradict-itself �� the tight caveat contradicts itself -- risk [\"����\"] printed alongside [\"����\",\"����\"]: \"3 ��",
+      "verdict_line": "e2e/qoder-budget-advisory-tiers.spec.ts ['ord0220-1-the-tight-caveat-cannot-contradict-itself'] -> KILLED (rc=1)"
+    },
+    {
+      "case": "killX2-tight-caveat-says-nothing:",
+      "file": "src/app/V8Experience.tsx",
+      "anchor_hits": 1,
+      "on_disk": "True",
+      "anchor_bytes": "133",
+      "bytes_changed": "-120",
+      "red_message": " Error: e2e/qoder-budget-advisory-tiers.spec.ts :: ord0220-1-the-tight-caveat-cannot-contradict-itself �� the tight advisory carries a number but its caveat says no risk at all: \"3 �� �� 2 �� �� ÿ",
+      "verdict_line": "e2e/qoder-budget-advisory-tiers.spec.ts ['ord0220-1-the-tight-caveat-cannot-contradict-itself'] -> KILLED (rc=1)"
+    },
+    {
+      "case": "killY1-announcement-keeps-the-stale-snapshot:",
+      "file": "src/features/setup/JourneyTrialSetup.tsx",
+      "anchor_hits": 1,
+      "on_disk": "True",
+      "anchor_bytes": "55",
+      "bytes_changed": "-32",
+      "red_message": " Error: e2e/qoder-wizard-hint-surface-readings.spec.ts :: ord0220-2-the-announcement-retires-when-the-field-is-fixed �� the announcement still names ��Ԥ�� after it was fixed: it was \"����Ҫ��д����Ԥ��\"",
+      "verdict_line": "e2e/qoder-wizard-hint-surface-readings.spec.ts ['ord0220-2-the-announcement-retires-when-the-field-is-fixed'] -> KILLED (rc=1)"
+    },
+    {
+      "case": "killZ1-refused-press-never-reveals-its-reason:",
+      "file": "src/features/setup/JourneyTrialSetup.tsx",
+      "anchor_hits": 1,
+      "on_disk": "True",
+      "anchor_bytes": "108",
+      "bytes_changed": "-35",
+      "red_message": " Error: e2e/qoder-wizard-hint-surface-readings.spec.ts :: ord0220-3-a-refused-press-brings-its-reason-on-screen �� the press was refused but its reason never came on screen: before {\"top\":1224",
+      "verdict_line": "e2e/qoder-wizard-hint-surface-readings.spec.ts ['ord0220-3-a-refused-press-brings-its-reason-on-screen'] -> KILLED (rc=1)"
+    },
+    {
+      "case": "killZ1-refused-press-never-reveals-its-reason:",
+      "file": "src/features/setup/JourneyTrialSetup.tsx",
+      "anchor_hits": 1,
+      "on_disk": "True",
+      "anchor_bytes": "46",
+      "bytes_changed": "27",
+      "verdict_line": "e2e/qoder-wizard-hint-surface-readings.spec.ts ['ord0220-3-a-refused-press-brings-its-reason-on-screen'] -> KILLED (rc=1)"
+    }
+  ]
+}
