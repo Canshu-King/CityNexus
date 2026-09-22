@@ -1,0 +1,9 @@
+order           ORD-0220
+source_sha      c4a40016d25842c221c6fd7a68a86923d0e437ff  (c4a4001)
+parent_sha      a09096fd514685b800f45c261049bc060c5a2cc0
+subject         fix(frontend): reveal the blocked reason instantly, not with an animation (commander's 19:48 rule)
+authored        2026-09-22 20:40 +0800
+lane            e345b9d6 (frontend/UI), tree D:\moodle\_qoder_integration_20260919
+interpreter     Node/Playwright for the gates; D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14 for the runner
+note            the working tip is not pushed by this lane, so a bare SHA answers 422 on GitHub;
+                these blobs are the readable coordinates for it.
