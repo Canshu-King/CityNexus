@@ -21,7 +21,11 @@ import json
 from fastapi.testclient import TestClient
 from sqlalchemy import select
 
-from app.capabilities import extract_capabilities_from_text
+from app.capabilities import (
+    accessibility_state,
+    evaluate_accessibility_requirement,
+    extract_capabilities_from_text,
+)
 from app.db.models import Activity, Journey, Place
 from app.db.session import SessionLocal
 from app.integrations.mock.providers import MockCityDataProvider
@@ -227,6 +231,23 @@ def test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture(
         "source_kind": "DEMO",
         "source": "data/mock/places.json#place-synthetic",
     }, f"生产者搬运了不该搬的东西，实际 {projected}"
+
+    # C 的移植件①（仲裁 00:44）：不止"键没穿过"，还要钉"求值没被洗白"。
+    # 一条婴儿车事实绝不能把整条记录说成"无台阶已验证"。
+    class _Record:
+        metadata_json = json.dumps({"accessibility_evidence": projected})
+
+    read_back = _accessibility_metadata(_Record()) or {}
+    assert "evidence_status" not in read_back and "step_free" not in read_back, (
+        f"整条记录的无障碍裁决被单点事实改写：{read_back}"
+    )
+    for verdict in (
+        accessibility_state(read_back),
+        evaluate_accessibility_requirement("STEP_FREE_REQUIRED", read_back),
+    ):
+        assert verdict != "ACCESSIBILITY_VERIFIED", (
+            f"只有 stroller 事实却量出 ACCESSIBILITY_VERIFIED（洗白）：{read_back} -> {verdict}"
+        )
 
 
 # ------------------------------------------------------------------------------------------
