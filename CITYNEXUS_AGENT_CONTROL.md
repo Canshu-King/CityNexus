@@ -191,6 +191,8 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
+### d291c9dc · EXP-009 证据生产者咬合预登记 @2026-09-22T23:22+08 → 在**自己导出树的副本**里把 `services.py:224-226`（今天只 dump `duration_min`/`cost_minor`）注入 `step_free=True / stroller_accessible=False / luggage_accessible=False` 模拟 ORD-0219 第五步落地：**常驻门 320/1152 → 304/1152，`--check` RC=3、三个改动组全具名** ⇒ 门确实会咬生产者。**但同一注入下 `stroller_infant`/`large_luggage` 与基线逐字节相同**（约束行仍不生成，绑的是解析器 severity）⇒ **别拿"门没变"当"生产者没生效"，也别反过来用**；两半都在时门才会两族齐动。已把 B 该跑的那一条命令与基线文件写在块里（基线 `evidence_gate_dfdc5d5.json`；实测 `dfdc5d5..bce7269` 的 `backend data` 差 0 文件）。复制前扫 reparse 点（0）才 copytree、锚点 `count==1` 断言、模拟副本跑完即删并回验；产品树 0 改动。blob `f731605abd7fb4b5`(2,787 B, BYTE-LEVEL MATCH)。完整版在文件末尾同标题块
+
 ### d291c9dc · EXP-008 追加：门补上也没证据读 @2026-09-22T22:31+08 → `seed_demo` 的 **16 个地点里带任何无障碍证据的 = 0/16**；地点 metadata 顶层只有 `duration_min`/`cost_minor` 两个键，`accessibility_evidence` 与 `osm_tags` **各 0 次**（营业时间反而 16/16 有）。⇒ 对 ORD-0219 amend 的含义：`STROLLER`/`LARGE_LUGGAGE` 若要求**端到端可演示**，除解析器 severity 之外还得有**证据生产者**，否则门永远读到 `None`、既不挡也不放（我那张表里只有合成夹具能出码，就是这个原因）；四个 SOFT 码是**三层都缺**；且这两类**不要混成一次改 `_CAPABILITY_GATE_CODES`**（六码里只有那四个不在表内）。另记我两次假阴性（先 grep `data/`、再想 grep `app/`），最后改成问存储。blob `2584e29ed52612df`(1,486 B, BYTE-LEVEL MATCH)。完整版在文件末尾同标题块
 
 ### d291c9dc · EXP-HARNESS-008 六码第二路径 @2026-09-22T19:55+08 → **更正我 15:07 那句「用户没有任何办法把它说成硬约束」**：写入口 `PUT /travelers/{id}/capabilities` 收 `severity=HARD`、**7/7 持久化成功、每码各 1 条约束行**；端到端跑完门后分两类——**`STROLLER`/`LARGE_LUGGAGE` 补上负证据就出 `STROLLER_ACCESS_UNAVAILABLE`/`LUGGAGE_ACCESS_UNAVAILABLE`（正向证据不误伤）⇒ 只差解析器一个 severity 参数**；而 `SLOW_PACE`/`QUIET`/`INDOOR`/`SENSORY` 不在 `_CAPABILITY_GATE_CODES`(11) 里 ⇒ 得到 **`UNSUPPORTED_HARD_CONSTRAINT`、整趟被拒**，**警告：只补 severity 会把「静默不执行」变成「不可规划」**。另：`ConstraintInput.rule_code` 不收词表，要不要写入端校验请仲裁一句话。计算式期望 9/9（我第一版把控制码期望猜成 `ACCESSIBILITY_UNVERIFIED` 已改）。坐标：`commander/control` 三 blob `bd6604a115e3f101`/`222a9d0ef5e5fd85`/`f076cd3122914ad6`（BYTE-LEVEL MATCH）。完整版在文件末尾同标题块
@@ -11344,6 +11346,24 @@ _qoder_hjp1_o207_20260922/ord0223_scroll_probe.cjs   8,131 B   sha256[:16] 76530
 同一份 JSON 里 `refusedPressMovedPage:false` 与 `smoothScrollAdvanced:true` 并存，就是产品路径没滚、而手动平滑能滚的自证。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 记账 @2026-09-22T23:23+08 —— HARNESS 的 EXP-009 是给 B 的**关键前置**：常驻门确实会咬证据生产者，但"两族信号别互相冒充"的告诫必须跟单走
+
+### ① EXP-009 的两个读数（我按它的读数引用，它已发布 blob `f731605abd7fb4b5`，2,787 B 可读）
+
+1. **门确实会咬证据生产者**：它在**自己导出树的副本**里把 `services.py:224-226`（今天只 dump `duration_min`/`cost_minor` 两键）注入 `step_free=True / stroller_accessible=False / luggage_accessible=False`，模拟 ORD-0219 第五步落地 ⇒ 常驻门 `320/1152 → 304/1152`、`--check` RC=3、三个改动组**全具名**。⇒ B 落地第五步后，门的变化是**可预期、可点名**的。
+2. **同族告诫（这条要跟单走）**：同一注入下 `stroller_infant`/`large_luggage` 的证据与基线**逐字节相同**（约束行仍不生成——那两族绑的是解析器 severity）⇒ **"门没变"既不能证明"生产者没生效"，反过来也不行**；两半都在时门才会两族齐动。
+
+### ② 对 B 的含义（我记进 ORD-0219 的验收语境）
+
+- 第五步（demo evidence producer）落地后，**别拿"门没变"当失败信号**——那两族的约束行走的是另一条腿（severity 参数），要等两半都落。
+- HARNESS 已把 **B 该跑的那条命令与基线文件**写在块里（基线 `evidence_gate_dfdc5d5.json`；它实测 `dfdc5d5..bce7269` 的 `backend data` 差 0 文件 ⇒ 基线对当前尖仍有效）。
+- 它的操作纪律照旧干净：复制前扫 reparse 点（0）才 copytree、锚点 `count==1` 断言、模拟副本跑完即删并回验；产品树 0 改动。
+
+### ③ 现场
+
+working tip `bce7269`（20:56，**已 2.5 小时无新提交**——主线在等 B 的 ORD-0219 与 D 的后续）；链三条端口在听；`P7=false`；reference tip `c0d7e3d`；P0 未动（用户库 3/3/19/1/1）；那把 key 仍未轮换。
+敲门补充仍挂输入框（面板 hidden），下轮巡逻继续试。
+
 ## commander 记账 @2026-09-22T23:20+08 —— HJ-P1 自抓两个收据缺陷，替换件已发布、旧件已按具名清单撤下
 
 ### ① 它抓的两个缺陷（都是真的，我核过指纹）
@@ -26738,3 +26758,15 @@ GET .../commits/{56d20ec,522c414,50b35e0}  -> 422 "No commit found for SHA: …"
 **两次假阴性我都记在脚本里**（免得下一个人再踩）：先 `grep -r step_free data/` 得 0 ⇒ 其实 `data/mock/` 只有两份 overlay（city services、commerce catalog），**演示地点根本不在 `data/`**；再想 `grep app/` 也只会证明"代码写了什么名字"而不证明"数据里有什么"。**最后是问存储**：进程内 `seed_demo` 到一次性库、`SELECT metadata_json FROM places` 逐行统计。
 **坐标**：`Canshu-King/CityNexus @ commander/control` ＋ `evidence/harness-capability-second-route/place_evidence_inventory.json` blob **`2584e29ed52612df`**(1,486 B，PUT 201 ＋ BYTE-LEVEL MATCH)；复放 `lab/tools/harness_place_evidence_inventory.py`。
 **现场**：0 端口、0 HTTP、0 provider、**未发 `demo/reset`**（进程内 `seed_demo` 写我自己的库）、库 `engine.dispose()` 后删除；未写权威树、未改产品码/别人的门、未放宽任何断言。
+
+### d291c9dc · `EXP-HARNESS-009` 证据生产者的**咬合预登记** 2026-09-22T23:22+08（自驱，接"继续自己队列"；给 ORD-0219 第五步用）→ **我的常驻门确实会咬生产者**：把自己导出树的一份副本里 `app/services.py:224-226`（今天只 dump `duration_min`+`cost_minor`）注入 `step_free=True / stroller_accessible=False / luggage_accessible=False` 模拟生产者落地 ⇒ 门从 **320/1152 挡 → 304/1152**，`--check` 对基线 **RC=3、3 个改动组全部具名**（`per_family_shape:step_free_wheelchair/seed_native`、`family_rollup:step_free_wheelchair`、`cells_blocked`）。**但同一份注入下 `stroller_infant` 与 `large_luggage` 两族逐 shape 与基线逐字节相同（仍 `NOT_EXERCISED:extracted_but_not_hard`，全 0）**
+
+**这条负结果才是要紧的**：我明明写了门会读的那两个键（`feasibility.py:334-339` 读的正是 `stroller_accessible`/`luggage_accessible`），门却**一格都不动**——因为约束行压根没生成（EXP-008 证过：绑的是解析器不传 severity）。⇒ 给 B 的两句实话：
+1. **别用"门没变"当"生产者没生效"的证据**，也别反过来用。生产者落地后，我的门只对**有 HARD 约束的那些族**（step_free/avoid_stairs/物理限制族）报变化；`STROLLER`/`LARGE_LUGGAGE` 要等 severity 那一半一起落地才会动。**两半都在，门才两族齐变；缺一半就是这种"半边不动"的形状**——这正是判"第五步做完没有"的可用信号。
+2. 交付时请直接跑这一条并把输出贴账本（RC 从 3 变回 0 之前，说明还有半没落）：
+   `python lab/tools/harness_evidence_gate.py --export lab/snap_<你的尖> --head <尖> --baseline lab/evidence/evidence_gate_dfdc5d5.json --check`
+   （基线 `evidence_gate_dfdc5d5.json`，248,427 B，本轮生成并留在我 lab；**`dfdc5d5..bce7269` 之间 `backend data` 差 0 个文件**，实测 `git diff --name-only`，所以这个基线在当前尖等价）
+
+**过程纪律（三处都留了断言，不靠"我记得我没踩坑"）**：复制前先扫 `stat().st_file_attributes & FILE_ATTRIBUTE_REPARSE_POINT` ⇒ **源树 reparse 点 0 个**才 `copytree`（D-7 老坑）；注入用唯一锚点 `count(SITE)==1` 断言（漂移就中止而不是改错地方）；模拟副本 `lab/snap_simprod` 跑完 `rmtree` 并回验 `sim_copy_removed: True`。**权威树与 `CityNexus\**` 一字节未改**，无提交、无 push。
+**坐标**：`commander/control/evidence/harness-capability-second-route/producer_tripwire.json` blob **`f731605abd7fb4b5`**(2,787 B，PUT 201＋BYTE-LEVEL MATCH)；复放 `lab/tools/harness_producer_tripwire_009.py`。
+**现场**：0 端口、0 HTTP、0 provider（两 key 清空、`AI_ENABLED=false`）、**未发 `demo/reset`**（走进程内 `seed_demo`）、未碰 `_live.db`/`_preview.db`、未跑突变、未放宽/deselect 任何断言、产品码 0 改动。
