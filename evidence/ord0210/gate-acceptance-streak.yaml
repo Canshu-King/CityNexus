@@ -1,0 +1,90 @@
+# 冻结来源：仲裁 2026-09-22T15:58:48+08（总线 5773071703）八条 + 2026-09-22T16:40:22+08
+# （总线 5773588112）追加第 9/10 条。账本「commander 执行令 @16:0x」「（第四条）@17:5x」照录。
+# 本文件是**词表与判据的单一权威**；门与量具都从这里对名字，不许各起一名。
+id: GATE_ACCEPTANCE_STREAK_V1
+status: FROZEN
+applies_to: 一切"跨隔离运行翻过判定"的并发/时序门（含 ORD-0210 (F)、ORD-0213 (C)、ORD-0218 (g5)）
+frozen_at: "2026-09-22T16:40:22+08"
+
+clauses:
+  1: exact same product/test SHA;
+  2: 10 CONSECUTIVE independent processes;
+  3: each process gets a fresh app-resolved temp DB;
+  4: |
+    receipt records: run_index, exit_code, resolved_absolute_db_path,
+    initial row counts, final row counts;
+  5: all 10 runs GREEN;
+  6: |
+    no sleep/retry/backoff/concurrency reduction/test-expectation
+    relaxation used to obtain the streak;
+  7: no two runs may silently share the same temp DB path;
+  8: one isolated GREEN is observation only, never closure.
+  9: |
+    RUN_SHAPE_IS_PART_OF_THE_RECEIPT
+    Every streak receipt must name the exact run shape and command surface:
+    - single-node
+    - node-with-preceding-doors-in-one-process
+    - whole-file
+    It must also record the exact target node id(s), ordering, and command.
+  10: |
+    CLASSIFY_THE_TARGET_NODE_WITHIN_THE_SHAPE
+    Classification is scoped to: (exact SHA, target node id, run shape).
+    FLIP_WITHOUT_SHARED_STATE(<shape>) => the TARGET NODE itself has both GREEN and RED outcomes
+      across fresh independent DB/process runs.
+    STABLE_RED(<shape>)   => the TARGET NODE itself is RED in every run of that same shape.
+    STABLE_GREEN(<shape>) => the TARGET NODE itself is GREEN in every run of that same shape.
+    Whole-command/file exit is not a proxy for the target node.
+    A whole-file run that is RED because another node failed cannot classify the target node.
+
+run_shapes:
+  - single-node
+  - node-with-preceding-doors-in-one-process
+  - whole-file
+
+target_node_classifications:
+  - STABLE_GREEN
+  - STABLE_RED
+  - FLIP_WITHOUT_SHARED_STATE
+  - UNCLASSIFIED_IN_THIS_SHAPE
+
+# 仲裁 15:58 同时冻结的两则"共享状态 vs 无共享状态"分类（翻转的一半归这里，不许混进 FLIP_*）
+shared_state_rules:
+  same_resolved_db_path_and_verdict_changes: [ISOLATION_BREACH, DIRTY_DB_FALSE_GREEN, DIRTY_DB_FALSE_RED]
+  different_fresh_db_paths_and_still_flips: [FLIP_WITHOUT_SHARED_STATE]
+
+# 每一条由谁机器判、哪几条只能自证 + 复核（免得有人把"工具没判"当成"这条已过"）
+judged_by:
+  mechanical:
+    1: 收据字段 sha（门拒收 UNKNOWN）
+    2: 每 run 一个 subprocess（门的 _run_once 形状）
+    4: 门逐 run 记 run_index/exit/node_outcome/解析路径/首尾行数，缺字段即 RECEIPT_INCOMPLETE
+    5: streak_verdict -> STREAK_MET / STREAK_NOT_MET(g/n)
+    6a: clause6_command_surface(argv) -> 命令面出现 --maxfail/-x/--reruns/--timeout/--deselect/-k/-n/--collect-only
+        或非白名单 -p ⇒ HARNESS_INVALID_relaxed_command_surface（含"每次只收集"这种从空分母报绿）
+    7: streak_verdict -> STREAK_INVALID_shared_db_path；classify_target_node 对重复路径拒绝谈"无共享状态"
+    9: streak_verdict -> RECEIPT_INCOMPLETE(第 9 条)；定性结论必须带 (<shape>) 后缀
+    10: classify_target_node 只接受逐 run 的 node_outcome；NOT_OBSERVED ⇒ UNCLASSIFIED_IN_THIS_SHAPE
+  self_declared_then_reviewed:
+    3: 由 ORD-0211 的 conftest 保证（每进程新临时目录），门用"路径逐 run 互不相同 + 跑前该路径不存在"复核
+    6b: 测试体里有没有真的加 sleep —— 工具判不了；交付方必须在收据里写明达成手段，commander 按 diff 复核。
+        门侧的编码：**未声明不改绿/红数字，但 closure_allowed 恒为 False**（最多签 STREAK_GREEN）
+    8: 语义条款；门侧落成"少于 2 个 run 一律 UNCLASSIFIED + observation_only() 判词"
+
+division_of_labour:
+  extractor: live_checks/gate_streak.py（commander 17:5x 认领第 10 条的逐 run 抽取器修正）
+  resident_door: backend/tests/test_qoder_db_isolation_same_verdict.py（ORD-0210 机制）
+  shared_predicate: backend/tests/_qoder_streak_receipt.py（纯函数，门与引用方同一把尺）
+  note: 抽取器只有一份。门不解析多节点容器输出，只拒绝"拿容器 exit 当目标节点判定"。
+
+interpretation_open_to_arbiter:
+  - |
+    本模块把"只有 1 个 run"读成 UNCLASSIFIED_IN_THIS_SHAPE（按第 8 条：单次孤立观测不结案），
+    而第 10 条字面写的是"every run of that same shape"⇒ 1 绿可读成 STABLE_GREEN。
+    取了**保守那一半**并钉在 test_4c 上；若仲裁要字面读法，改这一处即可，别改其余三条判定。
+
+not_accepted:
+  - 用 sleep / 重试 / 退避 / 降并发 / 放宽断言 换来的 streak
+  - 单次绿当修复证明
+  - 整文件红了就给里面某一条节点定 STABLE_RED
+  - 两个 run 落在同一个临时库却报 FLIP_WITHOUT_SHARED_STATE
+  - 收据里没有 exact SHA / 形制 / 精确 nodeid
