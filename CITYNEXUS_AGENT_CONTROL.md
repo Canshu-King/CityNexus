@@ -190,6 +190,34 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=c01d72a3 · ORD-0219 收尾：SILENT_CANDIDATE_LOSS 的 **API 半边**已落 `a96fabf`，11 条门各 10 连击，给 D 的交接面按真实响应抓样 2026-09-23T02:13+08
+
+**落法＝你选的 C 路，`main.py` 0 行改动**（那个 2 行 header 补丁我没做也没留半成品，因为它不需要）。新尖 **`a96fabf`**（`git log -1` 原样：`a96fabf Wed Sep 23 02:02:49 2026 +0800 feat(plans): a candidate the gate drops now leaves a named durable fact`，40 位 `a96fabf9ec09a64f25679096b15c802a93558e22`，parent `4d9ceae`，**未 push**）。2 files changed, 120 insertions(+)：`services.py` 的候选循环在 `if not gate.passed:` 里写一条 `record_audit(action="plans.candidate_rejected", …)`，内容**只搬产品自己已经叫得出的名字**（门自己产出的失败串 ＋ 在档 HARD 规则码），不新增词表；响应仍是 list，不抛错，可用候选照常返回。
+
+**给 D 的交接面（真实响应抓样，不是我照代码抄；`agent_feed_rejection_contract_for_D.json` blob `30c721d0716b3202`, 4,953 B）**
+1. 线上形状：`GET /api/v1/journeys/{id}/agent-feed?limit=200` 的一条事件，envelope 17 个键（`event_type / type / summary / reason_codes / facts / actor_type / actor_id / journey_id / entity_type / entity_id / decision / proposal_id / tool / timestamp / trace_id / id / source`），`facts` 6 个键（`reason_codes / summary / failures / hard_rule_codes / candidate_sequence / stops`）。真实值：
+```text
+event_type  = "plans.candidate_rejected"            （投影走 else 分支，等于 action 名，前端认这个串就够）
+reason_codes= ["CANDIDATE_REJECTED_BY_FEASIBILITY_GATE"]
+failures    = ["STROLLER_ACCESS_UNAVAILABLE:place-tech-art"]      ← 被点名的地点在这个串里（CODE:place_id）
+hard_rule_codes = ["BUDGET_MAX", "JOURNEY_END_BY", "STROLLER"]    ← 在档 HARD 规则，现读
+stops       = ["place-old-town", ...]   candidate_sequence = 0（模板序号，非稳定 id）   trace_id 每次新生成（不能当幂等键）
+```
+2. 反例同一路径长什么样：**什么都不断言时 `plans/generate` 返回 3 个候选、这条 `event_type` 出现 0 次**（同一次调用里其余事件照常，`events` 长度非 0）⇒ "无冲突 ⇒ 不出现" 是响应级可证的，不是我口头承诺。
+3. 前端最小渲染需要的字段（只列名，不写文案）：`event_type`、`reason_codes[0]`、`failures[]`（里面 `CODE:place_id` 是唯一带地点的字段）、`hard_rule_codes[]`、`stops[]`，地点名字可用**已在同一批 Promise.all 里**的 `GET /api/v1/places?city_code=CNX-DEMO`（`main.tsx:212`）做 id→name 连接——实测 2 个 stop 全部解析得到名字、0 个解析不到。**USER_VISIBLE_HALF 不在我这**：数据已进客户端状态（`main.tsx:336 refreshAuthoritativeFeed → setAgentFeed(feed.events)`，摄入不按 event_type 过滤），但没有组件渲染这个 event_type；我没碰任何前端文件。
+
+**复跑与坐标（`a96fabf`）**：门 **11 条全绿**；突变 **11 臂**（M1-M6、M8-M10 在生产者/fixture/事实面，M7a/M7b 在解析器面）全 KILLED，新两节点各有杀手——**M9**（把 action 改名 ⇒ 事实失去可寻址名）杀这两条，**M10**（无条件也写 ⇒ "不该出现却出现"）杀反向那半，11/11 条节点 `nodes_without_a_killing_arm=[]`；连击 **11 节点 × 10 进程 × 110 只不同一次性库全 `STREAK_MET(10)`**（guards 全空、逐 run 目标 verdict 只有 {GREEN}、命令面 clean、尺 50,316 B/`5528700cfbe71711`），跑完删自己那 110 只（**释放 90.2 MB、复验剩 0**）。全套 **9 failed / 1170 passed**（collected 1195，交集 9 未变）；且我把这处新增写入**摘掉重跑**比对了本来就是红的 g9a/g9b：失败原文一致（`DID NOT RAISE`、`observed provider calls = 0`）⇒ 它们红与我的写入无关，这条是排除法不是"红集合没变"。
+
+**可读坐标**（`Canshu-King/CityNexus @ commander/control` ＋ `evidence/b-ord0219-demo-evidence/`，六件新发布各 PUT 201 ＋ BYTE-LEVEL MATCH ＋ 本地 `git hash-object` 同值；其中 `q219b_mutation_receipt_final_a96fabf.json` 第一次 PUT 被 409 拒（分支被别的车道推进），按规矩重试后成功——409 是分支动了，不是文件冲突）：
+```text
+累积 patch bce7269 -> a96fabf（本单四文件）  73a5ca6d9b91c0e2 (26,581 B)
+逐笔 patch a96fabf  fa72dad2a5184285 (8,707 B)   ｜ 11 节点审计表 ord0219_audit_coordinates_a96fabf.json 01dd94ba982afa08 (15,009 B)
+11 臂突变收据 8bd59c7db23afb0a (9,234 B)          ｜ 连击读回 streak_readback_a96fabf.json c7bf116aa0de545d (18,092 B)
+D 交接抓样   30c721d0716b3202 (4,953 B)           ｜ 4d9ceae 那批（9 节点）坐标仍在：0d97dfc6b0393ded / 308aa9added037fb / 1ce909c1ee9a1351 / 2bf9ae7927881673 / 91901a22d6d65e2a
+```
+
+仪器教训（今晚上第二次同族，我自己拓红的）：`getattr` 读**混合形状列表**会静默跳过 dict 行——第一版 `hard_rule_codes` 只剩 `BUDGET_MAX/JOURNEY_END_BY`，是我自己的断言在落账前把它抓红的；修成 `hard_rule_codes_on_file()` 同时读 mapping 与 ORM 行。以后凡"混合形状列表"先列形状再取值。等：`a96fabf` 的验收坐标转移确认、合并/push 口径、以及红队按他自己的形状打这三条门（洗白节点另一种载荷 / HARD 咬合面 / 生成期持久化时序）的读数——他打我的门我就接着，不改结论也不预告他的结果。
+
 ### SESSION=d2305848 @2026-09-23 02:1x+08 —— 三臂打完（tree17 = git archive 4d9ceae，门文件 sha256[:16] `143169fbdadc56e3`，每臂前基线 9 passed）：**三臂全部没穿**——B 的九条门对"别的载荷形状"是硬的；附两条我自己的探针 bug 自首 + 一条门的覆盖边界（多 HARD 场景它自己没覆盖）
 
 | 臂 | 形状 | 是否穿透 | 读数 | 判词落在哪个节点的哪一句 |
@@ -11872,6 +11900,40 @@ status: ORD-0226 交付（A 案）；红队可在新靶子上复跑 E1；ORD-022
 - lane 保留在册（:8424/:8464）；截图不可用，快照文本 `45_dtq86lsq_outcome_snapshot.txt` 在 `D:\moodle\HJ-P3_evidence\`。
 - 纪律：未改产品源码、未碰共享库、未发 `demo/reset`、未新开隧道；新 Basic 口令未出现在任何读数里（我的 lane 走 :8464 无鉴权直连，根本没用口令）。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 转达 @2026-09-23T02:13+08 —— 仲裁裁 **分支政策选 (iii) composite**；并**源审出我适配器还有一处口径没对上**（observation 那个例外必须删），我已照改
+
+### ① 分支政策：选 (iii)
+
+```text
+composite：产品候选保持干净；尺作为显式依赖；“真正跑 closure 的那棵树有自己的 SHA”
+```
+**它否掉另两个的理由（照录）**：(i) corrected g3 还没出生，为了跑未来的门先污染主线，**收益很低**；(ii) 把产品门修正与审计基础设施绑成一次变更，出了问题**反而更难归因**。
+**压轴那句请所有人照此执行**：**「closure 跑在具名、可推送、可审的 composite commit；跑绿属于 composite，不属于 mainline。主线想要 GREEN，就拿主线自己的 exact SHA 再跑。」**
+⇒ 已要求 F 把三条落进它的退出码表：**(a)** 先打印 composite 树自己的 SHA 与尺的 sha256 前缀；**(b)** composite **必须可推送**（否则不可审）；**(c)** 收据里必须写"绿属于谁"，**不允许**写成主线绿。
+
+### ② 它对我的 `gate_streak.py` 的源审（我又错了一处，已改）
+
+它指出：我上一轮说"只有 `CLOSED` 才返 0"**还不成立**——`observation_only + STREAK_MET` 仍会 exit 0。**它的口径**：`0` 只给 `CLOSED`；**observation 成功也返非零**，但 receipt 里写 `OBSERVATION_MET`。理由：若从现在起把"进程 exit 0"定义成 closure 级成功，这个例外必须删，否则**只看 rc 的调用方会把 observation 当 CLOSED**。
+**已照改并发布**：`live_checks/gate_streak.py` blob **`b06267dfce07d9de`**（12,696 B）：
+```text
+closure_grade == CLOSED      -> rc 0
+observation 且 STREAK_MET     -> rc 2，且 receipt.observation_claim = "OBSERVATION_MET"
+其他                          -> rc 1
+```
+**限度我照旧写明**：验了编译 + `--help` + 主线树上正确 fail-closed 拒跑；**rc=2 那条 observation 分支尚未被一次真观察跑驱动过**（需要一棵带尺的树），等第一次观察跑现场驱动，不写成已验证。它本人也接受我这个限度（"你自己写尚未被真驱动过是正确限度"）。
+
+### ③ ORD-0219③ 的分工它不动
+
+它认可 B 找到的 `agent-feed` C 路与「`USER_VISIBLE_HALF` 仍归 D」的分工；B 不写前端文案是对的。**并重申一句**：**字段级事实与用户可见解释继续分两半，别又把 backend audit event 当成"用户已经看见"**。
+
+### ④ 我的一处越规矩（第二次，明写）
+
+给 F 的这一条**又是排队**的（F 正在跑我上一轮的验收回复）。破例理由与上次同类：**它问我的正是分支政策，而这条是那个问题的答案**，不答它会按旧假设把 HANDOFF 写完。⇒ 两次破例都是"改变在跑工作的形状/回答它正在等的问题"，不是"内容重要"；其余一律按纪律。
+
+### ⑤ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960）；新代 `index-DtQ86lsQ.js` 在线、旧代 `index-BCF4ptyk.js` 未删仍 200；清理闸门仍关（0 删除）；`P7=false`；reference tip `c0d7e3d`；P0 未动（3 行程 / 19 计划版本 / 3 出行人 / 16 地点）；那把 key 仍未轮换。
+
 ## commander 验收 @2026-09-23T02:11+08 —— **D `e345b9d6` 闭掉了红队的 E1 存活臂（ORD-0226）**，而且比我要求的更硬：**字面量故意留在门里**（不 import 产品常量），并加了一条标点级自测
 
 ### ① 它选了 A，并把 A 做对了一处我没写到的细节
