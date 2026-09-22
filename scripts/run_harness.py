@@ -528,6 +528,17 @@ class Harness:
                 for row in rows
             ]
 
+    def _activity_plan_id(self, activity_id: str | None) -> str | None:
+        """Resolve the owning PlanVersion for a current-activity pointer."""
+        if not activity_id:
+            return None
+        from app.db.models import Activity
+        from app.db.session import SessionLocal
+
+        with SessionLocal() as session:
+            row = session.get(Activity, str(activity_id))
+            return str(row.plan_version_id) if row is not None else None
+
     @staticmethod
     def _stable_plan_semantics(plan: dict[str, Any]) -> dict[str, Any]:
         """Normalize PlanVersion truth for no-silent-rewrite comparisons."""
@@ -1786,6 +1797,19 @@ class Harness:
             if journey_after_select.get("status") == "PLANNED"
             else None
         )
+        current_activity_plan_id = self._activity_plan_id(
+            journey_after_select.get("current_activity_id")
+        )
+        current_activity_alignment_ok = bool(
+            (
+                journey_after_select.get("status") == "PLANNED"
+                and journey_after_select.get("current_activity_id") is None
+            )
+            or (
+                journey_after_select.get("status") == "ACTIVE"
+                and current_activity_plan_id == replacement_plan_id
+            )
+        )
         select_alignment_ok = bool(
             select_replacement_status == 200
             and journey_after_select.get("active_plan_version_id") == replacement_plan_id
@@ -1794,6 +1818,7 @@ class Harness:
             and referenced.get("status") == expected_status
             and len(authoritative_statuses) == 1
             and authoritative_statuses[0].get("id") == replacement_plan_id
+            and current_activity_alignment_ok
             and isinstance(flags_after_select, dict)
             and flags_after_select.get("recovery_required") is False
             and flags_after_select.get("needs_review") is False
@@ -1808,6 +1833,9 @@ class Harness:
                         "journey": journey_after_select,
                         "plans": plans_after_select,
                         "authoritative_statuses": authoritative_statuses,
+                        "current_activity_id": journey_after_select.get("current_activity_id"),
+                        "current_activity_plan_id": current_activity_plan_id,
+                        "current_activity_alignment_ok": current_activity_alignment_ok,
                         "experience_flags": flags_after_select,
                     }
                 ),
@@ -1857,6 +1885,8 @@ class Harness:
             "replacement_select_status": select_replacement_status,
             "post_select_journey_status": journey_after_select.get("status"),
             "post_select_authoritative_plan_count": len(authoritative_statuses),
+            "post_select_current_activity_plan_id": current_activity_plan_id,
+            "post_select_current_activity_alignment_ok": current_activity_alignment_ok,
             "post_select_authoritative_statuses": [
                 {
                     "version_no": row.get("version_no"),
