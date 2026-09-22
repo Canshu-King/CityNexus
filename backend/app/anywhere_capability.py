@@ -615,12 +615,21 @@ def _attribution_fields(resolution: "DestinationResolution") -> dict[str, Any]:
         return {}
     attempts = [item for item in (observation.get("attempts") or []) if isinstance(item, dict)]
     answered = [item for item in attempts if item.get("answered")]
-    if answered:
-        statuses = [
-            item.get("http_status") for item in answered if item.get("http_status") is not None
-        ]
+    # 修法选 ①（F 给了两条、故意没替我选，这里写清为什么选这条）：
+    # 只有当"答了"的那次尝试真的带着一枚状态码时，`evidence_kind=HTTP_RESPONSE` 才是可说出口的话；
+    # 否则它就是自相矛盾（"我收到了 HTTP 回答"＋"我没有状态码"），落回 transport 形状。
+    # 不选 ②（拒绝产出这个组合）的理由：②要么在 attribution_applicable=true 时交回空组——
+    # 那正是仲裁 15:58 判红的那格；要么新造一格"我拒绝归因"，而词表不是我一个人能扩的。
+    # 顺带把红队 15:41 那条"随便编一个 200 就完全合规"的支路关掉了：`http_status` 只从
+    # "answered 且自带状态码"的 attempt 里读，编造者得先造出一次真答复的形状。
+    measured = [
+        item.get("http_status")
+        for item in answered
+        if item.get("http_status") is not None
+    ]
+    if answered and measured:
         evidence_kind = "HTTP_RESPONSE"
-        http_status = statuses[0] if statuses else None
+        http_status = measured[0]
         source_layer = (
             "RESOURCE_STATE" if str(reason) in _world_answer_reason_names() else "RUNTIME"
         )
