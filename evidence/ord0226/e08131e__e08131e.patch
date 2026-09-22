@@ -1,0 +1,404 @@
+commit e08131e31339977516e1e7a2f3f70c906f37a2d2
+Author: 仓鼠王 <yjianbin419@gmail.com>
+Date:   Wed Sep 23 02:04:09 2026 +0800
+
+    fix(frontend): freeze the tight budget caveat as one sentence the gate compares literally (ORD-0226)
+    
+    The red team's E1 arm appended a reassurance built from words outside ALLAY_WORDS, which a
+    word-table assertion cannot see, so the screen could warn and reassure in the same breath
+    while the gate stayed green. The caveat is now a frozen constant and the assertion is string
+    equality; three arms (E1 verbatim, a self-denying rewrite, one punctuation mark) each redden
+    the node, measured through live_checks/mutation_anchor_guard.py.
+
+diff --git a/frontend/e2e/qoder-budget-advisory-tiers.spec.ts b/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
+index bf58784..5e4e39e 100644
+--- a/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
++++ b/frontend/e2e/qoder-budget-advisory-tiers.spec.ts
+@@ -226,6 +226,19 @@ test("ord0212-stripping-the-caveat-while-keeping-the-number-must-go-red — 只
+ const RISK_WORDS = ["超出", "紧张", "吃紧", "不够"];
+ const ALLAY_WORDS = ["充足", "放心", "宽裕", "富余", "没问题", "绰绰有余"];
+ 
++/**
++ * ORD-0226 (red team `d2305848` 23:4x, arm E1): a word table cannot win.  Their third arm appended
++ * 「不过别担心，肯定够用」 -- every word outside `ALLAY_WORDS` -- so `risk=["超出"]`, `allay=[]`, both
++ * assertions green, and the traveller still read a warning and a reassurance in one breath.  Chinese
++ * paraphrase is unbounded; the only stable predicate is **this sentence, character for character**.
++ * The literal lives in the gate on purpose: if the gate imported the product's own constant, the
++ * equality would be true by construction and the mutant would sail through.  The cost is real and
++ * accepted -- changing this copy now requires touching this file, which makes a copy change a
++ * deliberate, reviewed edit instead of a silent one.  The product's own copy now lives in
++ * `TIGHT_CAVEAT_ZH`; do not import it here, or this node stops measuring anything.
++ */
++const FROZEN_TIGHT_CAVEAT_ZH = "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。";
++
+ test("ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什么也要断言", async ({
+   page,
+ }) => {
+@@ -238,6 +251,16 @@ test("ord0220-1-the-tight-caveat-cannot-contradict-itself — caveat 说了什
+     node(NODE, "the tight advisory is not on screen, so there is no caveat to judge"),
+   ).toBeVisible({ timeout: 20_000 });
+   const text = (await block.innerText()).replace(/\s+/g, " ");
++  /* ① the hard one (ORD-0226): the caveat, read as its own element, must be the frozen sentence
++     exactly -- not "contains a risk word and no listed reassurance". */
++  const caveat = ((await page.getByTestId("budget-advisory-caveat").innerText()) ?? "").replace(/\s+/g, " ").trim();
++  expect(
++    caveat,
++    node(
++      NODE,
++      `the rendered caveat is not the frozen sentence, character for character. expected "${FROZEN_TIGHT_CAVEAT_ZH}" / got "${caveat}"`,
++    ),
++  ).toBe(FROZEN_TIGHT_CAVEAT_ZH);
+   const risk = RISK_WORDS.filter((word) => text.includes(word));
+   const allay = ALLAY_WORDS.filter((word) => text.includes(word));
+   expect(
+diff --git a/frontend/src/app/V8Experience.tsx b/frontend/src/app/V8Experience.tsx
+index d71f31d..d533ef2 100644
+--- a/frontend/src/app/V8Experience.tsx
++++ b/frontend/src/app/V8Experience.tsx
+@@ -1988,6 +1988,12 @@ function budgetMoney(
+   }
+ }
+ 
++/* ORD-0226 (red team arm E1): a word table cannot pin down what a caveat says, because paraphrase is
++   unbounded.  This sentence is frozen and `e2e/qoder-budget-advisory-tiers.spec.ts` asserts it
++   character for character -- so changing the copy means editing that gate in the same commit. */
++const TIGHT_CAVEAT_ZH =
++  "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。";
++
+ function budgetAdvisory(
+   reference: V8Data["trip"]["budget_reference"],
+   zh: boolean,
+@@ -2022,7 +2028,7 @@ function budgetAdvisory(
+       : `${days} days · ${people} people · about ${amount} per person per day`,
+     hint: tight
+       ? zh
+-        ? "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。"
++        ? TIGHT_CAVEAT_ZH
+         : "At this budget, lodging, transport and food are likely to exceed the plan. Adjust the budget, or continue intentionally."
+       : reference.floor_comparable
+         ? zh
+@@ -2336,7 +2342,7 @@ function Hub({
+               data-tight={advisory.tight ? "true" : "false"}
+             >
+               <strong>{advisory.text}</strong>
+-              <span>{advisory.hint}</span>
++              <span data-testid="budget-advisory-caveat">{advisory.hint}</span>
+               <div className="today-advisory-actions">
+                 <button
+                   type="button"
+diff --git a/review/build-evidence-payload.py b/review/build-evidence-payload.py
+index 2decfc0..ecca156 100644
+--- a/review/build-evidence-payload.py
++++ b/review/build-evidence-payload.py
+@@ -53,9 +53,23 @@ PLAN = {
+         ],
+         "ORD-0222",
+     ),
++    # ORD-0226 ran its arms through `live_checks/mutation_anchor_guard.py`, whose receipt *is* the
++    # machine-readable artifact -- parsing the old driver's log for it would print an empty case list.
++    "ord0226": (
++        [],
++        [ROOT / "review/ord0226-arms-console.txt"],
++        [],
++        "ORD-0226",
++        "ord0226-arms.json",
++    ),
+ }
+ 
+ 
++def _plan(value: tuple) -> tuple:
++    """Legacy entries carry four fields; a guard-driven delivery carries a fifth (its receipt file)."""
++    return value if len(value) == 5 else value + ("",)
++
++
+ def git(*args: str) -> str:
+     return subprocess.run(
+         ["git", *args], cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace", check=True
+@@ -64,7 +78,8 @@ def git(*args: str) -> str:
+ 
+ def main() -> int:
+     key = sys.argv[1]
+-    commits, kill_log_paths, extras, label = PLAN[key]
++    commits, kill_log_paths, extras, label, guard_receipt = _plan(PLAN[key])
++    commits = commits or sys.argv[2:]
+     out = ROOT / "review/evidence" / key
+     out.mkdir(parents=True, exist_ok=True)
+ 
+@@ -119,16 +134,28 @@ def main() -> int:
+         elif line.strip().startswith("red message:"):
+             if cases:
+                 cases[-1]["red_message"] = line.strip()[len("red message:") :][:400]
+-    receipt = {
+-        "generatedBy": "e345b9d6",
+-        "order": label,
+-        "harness": "review/ord0082_0087_kill_drivers.py",
+-        "run_shape": "single node per target via --grep, one fresh process and one fresh throwaway sqlite per mutant; the product file is restored and sha256-compared after every case",
+-        "cases": cases,
+-    }
++    receipt = (
++        json.loads((EVID / guard_receipt).read_text(encoding="utf-8"))
++        if guard_receipt
++        else {
++            "generatedBy": "e345b9d6",
++            "order": label,
++            "harness": "review/ord0082_0087_kill_drivers.py",
++            "run_shape": "single node per target via --grep, one fresh process and one fresh throwaway sqlite per mutant; the product file is restored and sha256-compared after every case",
++            "cases": cases,
++        }
++    )
++    if guard_receipt:
++        receipt["publishedBy"] = f"e345b9d6 for {label}"
++        receipt["guardPath"] = "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace"
+     (out / "mutation-receipts.json").write_text(
+         json.dumps(receipt, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n"
+     )
++    for path in kill_log_paths:
++        if path.exists():
++            (out / path.name).write_text(
++                path.read_text(encoding="utf-8", errors="replace"), encoding="utf-8", newline="\n"
++            )
+ 
+     for src, dst in extras:
+         source = EVID / src
+diff --git a/review/ord0226_kill_arms.py b/review/ord0226_kill_arms.py
+new file mode 100644
+index 0000000..73fd113
+--- /dev/null
++++ b/review/ord0226_kill_arms.py
+@@ -0,0 +1,183 @@
++"""ORD-0226 acceptance run: three arms through `live_checks/mutation_anchor_guard.py`.
++
++Order is fixed by the order: one green baseline, then one arm at a time, and a **fresh green
++baseline before every arm** -- a red baseline would let any mutant "kill" the node for unrelated
++reasons.  Every arm is measured on the same node, in the same whole-file-free shape (single node),
++and the product file is restored by the guard's `finally`, whose own sha check raises on mismatch;
++we re-hash after the context exits so `restored_exact` is a reading, not a promise.
++
++The arms are the red team's (`d2305848`, 23:4x): E1 appended 「不过别担心，肯定够用」 to the frozen
++caveat -- every word outside `ALLAY_WORDS`, which is why the old word-table gate stayed green.
++"""
++
++from __future__ import annotations
++
++import json
++import subprocess
++import sys
++import time
++from hashlib import sha256
++from pathlib import Path
++
++ROOT = Path("D:/moodle/_qoder_integration_20260919")
++sys.path.insert(0, str(ROOT / "live_checks"))
++from mutation_anchor_guard import temporary_guarded_replace  # noqa: E402
++
++# Redirecting this script's stdout to a file makes Python pick the console codepage (gbk here), which
++# turned the published arm console into mojibake on every Chinese line while the JSON receipt stayed
++# clean.  Same fix as review/run_spec.py.
++for _stream in (sys.stdout, sys.stderr):
++    if hasattr(_stream, "reconfigure"):
++        _stream.reconfigure(encoding="utf-8", errors="replace")
++
++PRODUCT = ROOT / "frontend/src/app/V8Experience.tsx"
++SPEC = "e2e/qoder-budget-advisory-tiers.spec.ts"
++NODE = "ord0220-1-the-tight-caveat-cannot-contradict-itself"
++RECEIPT = ROOT / "review/evidence/ui-overnight/ord0226-arms.json"
++PYTHON = "D:/moodle/CityNexus/.venv/Scripts/python.exe"
++
++FROZEN = '  "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。";\n'
++
++ARMS = [
++    (
++        "killAC1-e1-reassurance-outside-any-word-table",
++        '  "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以。不过别担心，肯定够用";\n',
++        "the red team's E1 arm verbatim: 别担心/肯定够 are not in ALLAY_WORDS, so only literal equality can catch it",
++    ),
++    (
++        "killAC2-e2-the-caveat-denies-itself",
++        '  "这个预算不会超出计划，你可以放心调整。";\n',
++        "arm E2's shape: the caveat stops warning and tells the traveller to relax",
++    ),
++    (
++        "killAC3-selftest-one-punctuation-mark",
++        '  "按这个预算，住宿、交通和吃饭很可能超出计划。可以先调整预算，或你确认继续也可以，";\n',
++        "acceptance 5: one full stop becomes one comma -- green here would mean the equality is not literal",
++    ),
++]
++
++
++def digest() -> str:
++    return sha256(PRODUCT.read_bytes()).hexdigest()
++
++
++def run(label: str, port: int) -> dict:
++    """One node, one throwaway stack.  run_spec.py prints `exit=` and its own log path."""
++    cmd = [PYTHON, str(ROOT / "review/run_spec.py"), SPEC, str(port), "--grep", NODE]
++    started = time.time()
++    proc = subprocess.run(
++        cmd,
++        cwd=str(ROOT),
++        capture_output=True,
++        text=True,
++        encoding="utf-8",
++        errors="replace",
++    )
++    out = proc.stdout + proc.stderr
++    log = next((line.split("log=", 1)[1].strip() for line in out.splitlines() if line.startswith("exit=")), "")
++    run_id = next((line.split("run_id=", 1)[1].split()[0] for line in out.splitlines() if line.startswith("run_id=")), "")
++    summary = next((line.strip() for line in reversed(out.splitlines()) if " passed" in line or " failed" in line), "")
++    owner = ""
++    block = ""
++    if proc.returncode != 0:
++        # The assertion's own message carries the node id, so a red names the assertion that reddened.
++        for line in reversed(out.splitlines()):
++            if NODE in line and ("frozen sentence" in line or "contradicts" in line or "no risk" in line):
++                owner = " ".join(line.split())
++                break
++        lines: list[str] = []
++        if log and Path(log).exists():
++            lines = Path(log).read_text(encoding="utf-8", errors="replace").splitlines()
++        for index, line in enumerate(lines):
++            if line.strip().startswith("Error:") and NODE in line:
++                block = "\n".join(item.strip()[:220] for item in lines[index : index + 4])
++                break
++    print(
++        f"[{label}] exit={proc.returncode} run_id={run_id} {round(time.time() - started)}s "
++        f"summary={summary!r}",
++        flush=True,
++    )
++    return {
++        "label": label,
++        "command": " ".join(cmd[:3]) + f" {port} --grep {NODE}",
++        "exitCode": proc.returncode,
++        "runId": run_id,
++        "log": log,
++        "summary": summary,
++        "ownerAssertion": owner[:600],
++        "errorBlock": block,
++    }
++
++
++def main() -> int:
++    with open(PRODUCT, encoding="utf-8", newline="") as fh:
++        source = fh.read()
++    if source.count(FROZEN) != 1:
++        print("ABORT: the frozen caveat line is not a single, unique occurrence in the product file")
++        return 2
++
++    tag = sys.argv[1] if len(sys.argv) > 1 else ""
++    port = int(sys.argv[2]) if len(sys.argv) > 2 else 4620
++    receipt_path = RECEIPT.with_name(f"ord0226-arms{'-' + tag if tag else ''}.json")
++    record = {
++        "generatedBy": "e345b9d6",
++        "order": "ORD-0226",
++        "runTag": tag or "first",
++        "fix": "A -- the tight caveat is a frozen literal in the product, and the gate asserts string equality",
++        "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
++        "guard": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace",
++        "node": NODE,
++        "spec": SPEC,
++        "runShape": "single node (--grep on the exact node id) against an authoritative throwaway stack",
++        "productFileBeforeSha256": digest(),
++        "arms": [],
++    }
++
++    for name, mutant, why in ARMS:
++        print(f"\n=== {name} ===", flush=True)
++        baseline = run("baseline-before-arm", port)
++        port += 1
++        before = digest()
++        with temporary_guarded_replace(PRODUCT, FROZEN.encode(), mutant.encode(), expected_hits=1) as receipt:
++            mutated = receipt.mutated_sha256
++            attempt = run("mutated-arm", port)
++            port += 1
++        after = digest()
++        record["arms"].append(
++            {
++                "name": name,
++                "why": why,
++                "anchorPath": str(PRODUCT),
++                "anchor_hits": receipt.anchor_hits,
++                "expected_anchor_hits": receipt.expected_anchor_hits,
++                "bytes_changed": receipt.bytes_changed,
++                "before_sha256": before,
++                "mutated_sha256": mutated,
++                "restored_sha256": after,
++                "restored_exact": after == record["productFileBeforeSha256"] == before,
++                "baseline": baseline,
++                "mutated": attempt,
++                "verdict": (
++                    "KILLED"
++                    if attempt["exitCode"] != 0 and baseline["exitCode"] == 0
++                    else "SURVIVED"
++                    if attempt["exitCode"] == 0
++                    else "BASELINE_RED -- arm not measured"
++                ),
++            }
++        )
++
++    record["productFileAfterSha256"] = digest()
++    record["treeUnchangedByThisRun"] = record["productFileAfterSha256"] == record["productFileBeforeSha256"]
++    record["allArmsKilled"] = all(a["verdict"] == "KILLED" for a in record["arms"])
++    receipt_path.parent.mkdir(parents=True, exist_ok=True)
++    receipt_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
++    for arm in record["arms"]:
++        print(f"{arm['verdict']:26s} {arm['name']}  anchor_hits={arm['anchor_hits']} bytes_changed={arm['bytes_changed']} restored_exact={arm['restored_exact']}")
++    print(f"allArmsKilled={record['allArmsKilled']} treeUnchanged={record['treeUnchangedByThisRun']}")
++    print(f"receipt={receipt_path}")
++    return 0 if record["allArmsKilled"] and record["treeUnchangedByThisRun"] else 1
++
++
++if __name__ == "__main__":
++    raise SystemExit(main())
+diff --git a/review/ord0226_red_messages.py b/review/ord0226_red_messages.py
+new file mode 100644
+index 0000000..c887848
+--- /dev/null
++++ b/review/ord0226_red_messages.py
+@@ -0,0 +1,47 @@
++"""ORD-0226: lift the three arms' red blocks out of the Playwright logs named in the receipt.
++
++Nothing here re-runs a gate -- it reads logs an earlier run already wrote, so the text an auditor
++sees is the text the run produced.
++"""
++
++import json
++import pathlib
++
++ROOT = pathlib.Path("D:/moodle/_qoder_integration_20260919")
++receipt = json.loads((ROOT / "review/evidence/ui-overnight/ord0226-arms.json").read_text(encoding="utf-8"))
++out = ROOT / "review/evidence/ord0226/arm-red-messages.txt"
++out.parent.mkdir(parents=True, exist_ok=True)
++
++lines = [
++    f"ORD-0226 arm red messages -- lane e345b9d6, run {receipt.get('runTag', 'constant-pass-1')} at {receipt['at']}",
++    f"node under test : {receipt['node']}",
++    f"run shape       : {receipt['runShape']}  (the 'real-seed' setup project counts as one extra pass)",
++    f"product sha256  : {receipt['productFileBeforeSha256']} (restored to this after every arm)",
++    "",
++]
++for arm in receipt["arms"]:
++    log = pathlib.Path(arm["mutated"]["log"])
++    body = log.read_text(encoding="utf-8", errors="replace").splitlines() if log.exists() else []
++    block = []
++    for index, line in enumerate(body):
++        if line.strip().startswith("Error:") and receipt["node"] in line:
++            block = [item.rstrip() for item in body[index : index + 4]]
++            break
++    lines += [
++        "=" * 100,
++        f"{arm['name']}  [{arm['verdict']}]",
++        f"  why            : {arm['why']}",
++        f"  guard          : anchor_hits={arm['anchor_hits']} bytes_changed={arm['bytes_changed']} "
++        f"restored_exact={arm['restored_exact']}",
++        f"  baseline before: exit={arm['baseline']['exitCode']} run_id={arm['baseline']['runId']} "
++        f"({arm['baseline']['summary']})",
++        f"  mutated arm    : exit={arm['mutated']['exitCode']} run_id={arm['mutated']['runId']} "
++        f"({arm['mutated']['summary']})",
++        f"  mutated sha256 : {arm['mutated_sha256']}",
++        f"  log            : {arm['mutated']['log']}",
++        "  red            :",
++        *[f"    {item[:230]}" for item in block],
++        "",
++    ]
++out.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
++print(f"wrote {out} ({out.stat().st_size} B)")
