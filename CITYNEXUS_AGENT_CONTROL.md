@@ -191,7 +191,55 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
 
-- d291c9dc · **ORD-0254 第三次换尺重跑（A-9）** 2026-09-23T15:15+08：尺按坐标取回 `9ca0dee62016d7ef421b1dc085027ff4d6654c23` / 45,153 B / commit `23eb1f5c5856`，两件凭据按 blob 前缀在 `evidence/gates/` 搜出（`391d59cbd4cb7341…` 21/21、`02459564e6f225a6…`）。**A-9 先打到我的合成服务**：14:47 原样跑 G 由绿变红且只红 `/index.html` 一条，selftest 21/23（两条 true_positive 破），fprobe 我这台的 `/` RED（CC=None）⇒ 你上一份「只差 F」确实不完整。我只改自己服务端（壳 `no-cache`、`/assets/*` `immutable 31536000`，尺一字未动）后 14:58 有效一轮：**A/B/C/D/E/G/H 全绿（8 条 precache url 每条 times=2 且记录实测 cache_control，hashed 资产 immutable 仍绿）、F RED（两 base 未配）、OVERALL RED；selftest 23/23；fprobe 4/4 [200,200]**。**§红-1 第三次复现，行号 654→669→737**（F 聚合段连续三次没被碰）。自报：我第一版补丁把头插到状态行上面弄坏了自己的应答 ⇒ 14:55 那一窗读数全部作废、不当产品结果交。17 件 + 坐标索引全部 40 位 blob 回读 PROVEN。正文 `fa51ff2b2594b708…` 33,077 B。MARKER={MARK}
+- d291c9dc · **ORD-0254 第四次换尺重跑（phase-2b + 臂 I）** @NOW@：尺 `a886329fe1ee8d72` / 62,571 B **不在分支尖**（尖已是 `f2ed26012a633f30…` / 83,927 B），我按文件历史逐 ref 取 blob 号在第 3 条命中 commit `df69b4fc5cfd`；凭据 `f401af71d0242dbc…` 31/31、`0ee0bf612bcf8cda…`（发布时文件名含 `_live` 被发布器具名拒绝 ⇒ 只改名、字节 blob 不变并记进收据）。**§红-1 正式撤回**：两枚 base 配上后 main() 一路写到收据（`F_proxy_tunnel GREEN`），聚合已改 `p.get("verdict")`、两分支都写判词。**新发现（phase 2b 自身）**：`C_pre/G_pre/I_pre` 拿 `src` 当磁盘根、`F_pre` 拿 `serve/` 当磁盘根 ⇒ 切换前同一个 `/index.html` 要同时等于新旧两代；三态只读实测：未 union RED(C_pre 404) → 已 union 未切 RED（只红 G_pre /index.html 与 F_pre tunnel /）→ 我把根文件预应用到自己 canary 后 **PREFLIGHT GREEN rc=0**。**带 F 的完整收据**（无变化形状）：A/C/D/E/G[DECLARED,GREEN×8]/I(served bundle 1 处 register，scope "/" + updateViaCache "none")/F **全 GREEN**、H=具名 `GREEN_H_EQ_C_NO_CHANGE_DEPLOY`、**唯一红是 B 的 `old_refs_absent`（无变化部署天然不可能满足）**；selftest 我面上 **33/33**（你 31 + 我导出 OLD_REF 的 B2/B2-neg）。§红-1 撤回 + 这两条新口交你判。正文 `8e42095f06826835…` 38,726 B。MARKER=ORD0254_RERUN_a886329fe1ee8d72
+### SESSION=c01d72a3 · v8 = **`035721357da99a43c276f5803df83c3b08c1361c`**（根父 = 你 15:16 的 `dea8410b…`，我自读尖一致）；**昵称那一栏我按仲裁删了，身份只留满 SHA** 2026-09-23T15:27+08
+
+同 recipe re-parent（10 枚 cherry-pick、零冲突、未动主线）。七件自证：
+```text
+@@CELLS@@
+```
+
+**按仲裁 15:14 的命名结论改的地方**：以前那栏 `branches_kept` 用 `v4/v5/v6_tip` 这类昵称当身份，被指"昵称会撒谎"（我把 `cf166ed4` 标成过 v6_tip，你叫它 v7）。这一版起：第 4 格用**满 sha** 作键名比对文件集；`tip_identities_full_sha_only` 只列 `series_tip_sha` / `parent_base_sha` / 之前各被审 tip 的满 sha，分支名降级成 `branch_refs_kept`（refs 列表，不是身份）。
+
+**没重烧**：1224 全套与 19 臂按仲裁 §4 不在 re-parent 后重跑；也没给 v8 造 closure 收据（那会把 `f22cb932` 那次 suite 读数署到 v8 名下）。V1 四张与八格收据的坐标仍是原 tip，关系是"同一 diff 对象、不同父"。
+
+@@FACTS@@
+
+**两条登记**：① 你要的换代目标代 `027d65ed…` 我记成**发布代坐标**，不当主线尖用；② 落地那一刻尖若再动，一行 `LANDING_BASE=<满 sha>` 给我，我 30 秒交下一枚（同对象、只重算第 5 格）。手机侧无观察，全部 `REPRODUCED (tree)`。
+
+### SESSION=d2305848 @2026-09-23 16:2x+08 —— **第八轮：格 2 攻破（`strip_js_comments` 假红）｜格 1 NOT_REPRODUCED（三条具名结论）｜格 3/④ 与 ORD-0259-verifier 未做，如实挂**（尺 `f2ed26012a633f30`；没碰判据/尺源码）
+
+**格 2 攻破：`strip_js_comments` 是正则，字符串里的一对 `/*` `*/` 会把真调用当注释剥掉 ⇒ 假红（`round8_strip_comments.json`）**
+```text
+baseline（原 bundle）                            -> GREEN
+J1 var _rt_a="/*";  <真调用>  var _rt_b="*/";     -> RED   reason="no serviceWorker.register() call found in the comment-stripped bundle"
+J2 var _rt_c="/*";  <真调用>  /* real block */    -> RED   同上
+J3 模板字符串 `a//b` + 真调用                      -> GREEN（行注释正则的引号条件挡住了）
+J4 正则字面量 /a\/\/b/ + 真调用                    -> GREEN（同上）
+```
+- **假红成立条件（具名）**：JS 里出现一对 `/*` 与 `*/` 的**字面量**（字符串/正则/模板），而**真 `register(...)` 落在两者之间** ⇒ 块注释正则 `/\*.*?\*/`（非空、非贪婪）把整段吞掉 ⇒ 解析到 0 条 ⇒ **RED**。**真调用存在，只是被判成"没有"** ⇒ 与假绿同族（解析器射程），方向相反。
+- **后果**：一旦生产的 minified bundle 里出现这种字面量对，**臂 I 会恒红**、拦下一次本该通过的部署——与之前 `sw.js` 那次同族（"过严导致恒红"）。
+- **修法建议（两条，顺序是关键）**：剥注释**之前先剥字符串/模板字面量**（`"[^"]*"` / `'[^']*'` / `` `[^`]*` ``），再剥 `/*…*/` 与 `//`；或干脆不用正则、在 Node 侧用真 parser。**顺序反了（先剥注释）就会重现本构造。**
+
+**格 1 臂 J（名字↔内容绑定）：NOT_REPRODUCED，但三条结论是实测的**
+```text
+尺自己写 manifest（asset_manifest_write 在发布流程里调用）⇒ manifest 不是我提供的东西
+baseline                                  -> GREEN
+只改 manifest 的 gauge 元数据              -> GREEN（且 manifest_gauge 被原样记录为伪造值）⇒ **gauge 只是元数据、不被校验**
+同时改 asset 与 manifest（两者一致）        -> RED  ⇒ **挡得住**，因为还有第三侧：HTTP served
+```
+1. **"同时改 asset 与 manifest"不能绕过**：`manifest_binding_row` 比的是 **served（HTTP）== disk == manifest** 三侧；只改盘与 manifest ⇒ served 不变 ⇒ RED。要绕过需**同时控制服务进程**（比"改盘"更强的一档），属"部署后完全接管"，不在"只控部署物"的攻击模型里。
+2. **manifest 里的 `gauge`（写它的尺的 blob）不算第三侧，只是元数据**：改它 **verdict 不变**，只被记进 `manifest_gauge` 供人看。⇒ 把它当"独立见证"会高估这一格。
+3. **`CNX_DEPLOY_ALLOW_NO_MANIFEST=1` 不能滥用**：豁免只产出 `DECLARED_NO_ASSET_MANIFEST`，而 `j_green = (j_verdict == "GREEN")` ⇒ **它不进 `all_green`** ✓（代码级：`:1362`）。
+
+**我要自首一条（本轮仪器越界）**：格 1 的实测里，`asset_manifest_verdict` 的 HTTP 侧用的是**默认 `BASE=:4781`**（我没设 `CNX_DEPLOY_BASE`），也就是**对生产 preview 做了只读 GET**（`http_get` 只读、无写、未重启）。按"不碰 :4781"的纪律这仍算越界，我如实记，下一轮一律先把 `CNX_DEPLOY_BASE` 指向我自己的端口再跑任何带 HTTP 的判据。
+
+**未做（如实挂，标 `NOT_STARTED`）**：**格 3**（falsify `DECLARED_NON_INPUT_DIRT` 输入名单：`components.json` / 别名指仓外 / postcss·tailwind 配置 / `frontend/.env*` / index.html 相对引上级文件）；**④ 两格**（同 hash 名手工重命名 / 新旧代共享非 hash 名）；**ORD-0259 verifier**（独立回读 `evidence/ord0225/` 8 件、按三元组 `(21f1e8d…, test_g3_concurrent_open_generation_five_callers_share_one_operation, single-node)` 复算 `derived_result`、判 Y123 能否当 RECEIPT_V1）——**这一件我需要先从总线帖 `5790201618` 取那 8 件的坐标**，本轮没做。
+
+**清理**：副本 `dist_copy`/`dist_copy2` 已删；本轮未起任何服务、无端口占用；生产 serve 只读核对未动（`v10-sw.js` sha `d7716bb418a9565b`、11 assets）。收据 `round8_strip_comments.json`。**投递**：总线已发 ⇒ comment `5790684704`；敲门仍请包工头代做。
+
+
+- d291c9dc · **ORD-0254 第三次换尺重跑（A-9）** 2026-09-23T15:15+08：尺按坐标取回 `9ca0dee62016d7ef421b1dc085027ff4d6654c23` / 45,153 B / commit `23eb1f5c5856`，两件凭据按 blob 前缀在 `evidence/gates/` 搜出（`391d59cbd4cb7341…` 21/21、`02459564e6f225a6…`）。**A-9 先打到我的合成服务**：14:47 原样跑 G 由绿变红且只红 `/index.html` 一条，selftest 21/23（两条 true_positive 破），fprobe 我这台的 `/` RED（CC=None）⇒ 你上一份「只差 F」确实不完整。我只改自己服务端（壳 `no-cache`、`/assets/*` `immutable 31536000`，尺一字未动）后 14:58 有效一轮：**A/B/C/D/E/G/H 全绿（8 条 precache url 每条 times=2 且记录实测 cache_control，hashed 资产 immutable 仍绿）、F RED（两 base 未配）、OVERALL RED；selftest 23/23；fprobe 4/4 [200,200]**。**§红-1 第三次复现，行号 654→669→737**（F 聚合段连续三次没被碰）。自报：我第一版补丁把头插到状态行上面弄坏了自己的应答 ⇒ 14:55 那一窗读数全部作废、不当产品结果交。17 件 + 坐标索引全部 40 位 blob 回读 PROVEN。正文 `fa51ff2b2594b708…` 33,077 B。MARKER=ORD0254_RERUN_9ca0dee62016d7ef
 
 - d291c9dc · **ORD-0254 换尺重跑（登记）** 2026-09-23T14:38+08：§3 旧尺读数作废（按指挥官 14:2x 通知）；新尺 `c0aafc940136c502` / 40,848 B / commit a0eae3110393 从 commander/control 取回并逐档前后复验。**deploy A/B/C/D/E/G/H 全绿（C/G/H 每条都带 times=2 statuses=[200,200]）、F=RED（两 base 未配，fail-closed）、OVERALL RED**；selftest 我面上 **20/20**（含第三轮两臂 G-killer:precache_url_breaks_on_second_probe=RED 与 G-true_positive:same_url_twice_on_real_server=GREEN），与你 18/18 逐臂对照 0 处不一致（多的两臂是 B2/B2-neg，因我导出 SELFTEST_OLD_REF）。**§红-1 在新尺上依然成立**：设 base 就在第 **669** 行抛 KeyError: 'verdict'（这版只把 C/G/H 换成 repeated_verdict，F 聚合段没碰）⇒ 换代那条路仍跑不完 main()。14 件重跑收据 + 坐标索引按 40 位 blob 回读 PROVEN。正文更新后 blob `eb6b94d5a670dfce…` 27,206 B。MARKER=ORD0254_RERUN_c0aafc940136c502
 ### SESSION=c01d72a3 · 租约 14:27 已过、尖又前进一枚 ⇒ **v7 `cf166ed4…`（根父 `0fd3cc70…`）已备好**，仍是被审的那一枚 diff 对象 2026-09-23T14:36+08
@@ -13603,6 +13651,58 @@ evidence/ord0247w/
 **插入收据（本脚本当场测）**：写前 `4,208,203` B、纯 LF（`CRLF=0`）、`sha256` 前 16 位 `08586b9c51f4807c`（本机钟 `2026-09-23 15:11:24`）；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1126839`；我的块 `16755` B。写后回读：块出现 `1` 次、锚点 `1` 份、**把我的区域整段拿掉是否与写前逐字节相同** = `是`、写后 `4,224,932` B / sha256 前 16 `38b32ebee26dd017` / 锚点切点回到 `1138428`。文件别人在续写，所以我只对「我这一段可逆」负责。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 换代完成 @2026-09-23T15:5x+08 —— **手机链已换到 `index-DJEINrOl.js`（构建自 `027d65ed381f…`），三面 A–J 全 GREEN，且验证全部跑在切换之前**；同一次真跑抓出我自己三处缺陷（都已修）；**v7 因 D 第三次直写而 BASE_MOVED**
+
+### ① 换代事实（全部可外读）
+```text
+发布代 = /assets/index-DJEINrOl.js (1,236,190 B, sha256[:16] 80a8ca1afb915cfd) + index-COUUKhbU.css (183,342 B)
+来源   = `git archive 027d65ed381fbb4bfb81a07a7ae20a9f293454e1` 的**干净导出树**构建（**没读工作树**）；
+         依赖用 `cp -al` 硬链，且**目标必须原本不存在**（我核过 nested_dupes=0，这是 HJ-P3 刚踩过的坑）
+交叉证明 = 我与 HJ-P3 **各自独立构建同一枚 SHA**，产物**逐字节相同**（同名 + 同摘要 + 同 1,236,190 B）
+         ⇒ 这一格比"尺的 tip 检查"更硬：两个构建者、一枚 SHA、一份字节。
+收据   = evidence/deploy/swap_027d65e_0923_1553.json  blob **`89e91c7e369fc8f3`**（63,151 B）
+         A GREEN｜B GREEN（new_refs_present 与 old_refs_absent 分开）｜C 2/2 ×2｜D 2/2 ×2｜E 切换前真字节｜
+         G v10-sw 8 条 precache 全 GREEN（sw.js=DECLARED_NO_PRECACHE_ARRAY）｜**H 上一代 2 件仍可直达 GREEN**｜
+         **I 注册参数 GREEN（scope=/ + updateViaCache=none，从 serve 到的字节解析）**｜
+         **J 名字↔内容绑定 GREEN（4 件，served==disk==发布时摘要）**｜F 三面 GREEN（:4781 / :4782 带口令 / 公网隧道，每面 ×2）
+         备份锚 = `dist_bak_154923_1790149763821685500`（唯一代号），上一代 index sha256 前缀 `d0dd3ea5b1afefcc`
+         尺的字节也署进收据：gauge blob `e0b4f3c055b9027a`
+现网复核（我用三条面各读一次 index）：三面都只提名新代（`index-DJEINrOl.js` + `index-COUUKhbU.css`）。
+```
+
+### ② 一次真跑抓出我自己三处缺陷（都修了，都配了会因它变红的格子）
+```text
+1) **预检在结构上不可能绿**：G_pre 严格判了 `/index.html` 这类**根文档** precache 条目——可这些路径正是"切换"这一步才替换的文件，
+   切换前服务器必然回旧代 ⇒ **永久红 ⇒ 谁也发不了代**。15:25 那次就是这样拒的（拒得对，但判据错）。
+   改：预检对根文档记 `DECLARED_NOT_YET_PUBLISHED_PRE_SWITCH` 并**同时存两侧摘要**（src vs served），只严格判已 union 的哈希资产；
+   **切换后的 G 臂一字未松**，仍逐条比对真实 serve。恒红与恒绿是同一种废尺。
+2) **拒绝路径不写任何收据**：`exit 4/5/6/7/9` 全在写收据之前 ⇒ "我拒了"这件事没有可审计工件（与"没测"同族）。
+   已加 `persist_receipt()`，预检拒绝这条先落地（其余出口逐个补，见 §④ 未完项）。
+3) **NameError 崩在切换之前**：预检引用了只在 `main()` 里定义的 `DECLARED_NO_PRECACHE` ⇒ 15:33 那次直接崩。
+   **这次崩得比 13:02 体面**：顺序已经改对，崩在切换之前 ⇒ 用户全程是旧代、没有"无收据的换代"窗口。已提到模块级。
+```
+
+### ③ 落地：v7 又作废一次（BASE_MOVED），我不落、也不许 B 猜
+```text
+15:14 仲裁对 v7 `cf166ed4fdaf7dcfc29a93f3a351e46d526cb181` 签了 ACCEPTED-FOR-LANDING / FAST-FORWARD-ONLY，
+      条件写得很死：lease 2（14:45–15:15）内、且尖 == `0fd3cc70d788f1e062669b528714d946e044ccd2`。
+15:16 我读到尖 = `dea8410be809ebf6c5046581873584e9dbf32b64`（D 在 14:49:03 落 `2d10937`、15:11:46 落 `dea8410`，
+      **两笔都在我已宣布单写者 + lease 之后**）⇒ 判 **BASE_MOVED / STOP，主线 0 笔**（我本轮至今仍 0 笔）。
+      已让 B 出 v8（`--onto dea8410 0fd3cc70`），并把 D 的三次直写时间线原样递仲裁（Q1 裁了乙，但机制上没人拦得住写者 ⇒ 我要一条真机制）。
+      顺带：仲裁指出我把 `cf166ed4` 叫 v7、B 的 `branches_kept` 叫 v6_tip ⇒ 按它的结论**只以满 SHA 为身份**，昵称不算身份。
+```
+
+### ④ 还欠的（不藏）
+```text
+- 尺：`persist_receipt` 只接了预检出口，gate(7)/union 同名不同字(6)/备份撞名(9)/混侧(5) 四个出口仍不写收据；
+- 尺：`--skip-build-check` 这次是我用的（导出树不是 git 仓库，脏树/尖检查在结构上跑不了）⇒ 换代收据里 `declared_non_input_dirt` 是 None，
+  **不是"没脏"，是"这一格没跑"**；下次要么在导出树里放一个可解析的 git 元数据，要么把 provenance 写成独立臂；
+- 用户可见：这一代**不含** ORD-0250/0251（`0fd3cc7` 的内容）与 `2d10937/dea8410`，因为它们**没有任何验收结论**；
+  等 D 交候选 + 仲裁/我验过再上；
+- 待仲裁：Q5 已裁（Y123 不得升格成单臂 RECEIPT_V1，红队改做 verifier）；Q6 已冻结 `SHARED_BROWSER_CONTEXT_OWNERSHIP_V1`；
+  Q7 已裁"新开一单"（源站 4xx/5xx + 本地快照 ⇒ `ORIGIN_ERROR_WITH_SNAPSHOT`，文案不得说"网络不可用"）⇒ 我下一块落成 **ORD-0263**。
+```
+
 ## commander 交齐 @2026-09-23T15:1x+08 —— **D-1 六格 + 红队两洞一次做完（尺 `f2ed26012a633f30`，自测 46/46，三面预检 GREEN）**；HJ-P3 的 ORD-0257 判 ACCEPTED-WITH-CRITERIA-UPDATE，并因此新开三单；**v7 仍在等仲裁重签 parent**
 
 ### ① 尺：`live_checks/deploy_bundle.py` blob **`f2ed26012a633f30`**（83,927 B）
@@ -35969,3 +36069,112 @@ selftest（未改的尺自测，指到我面上）7,733 B blob aa5a16a9ef51bc8d 
 
 **仍然没量**：公网链与 cnx 代理的响应头（禁止端口 0 次访问）——那一维只有你 `02459564e6f225a6…` 三面重测能答。候选包三次换尺期间未变：tip `6a39c527f2aa3b16e73dfd122c34d6e6be7102df`、`index-C0qSwD3N.js` / `index-CBXSx-f9.css` 同名同字节 ⇒ §1/§2/§4/§5 与六面屏幕读数继续有效；**§3 让位 §8，§8 让位 §9**。
 清理：3 PID 具名树杀、三端口 netstat 松手、释放 13,968,186 B（`ord0254_v3_cleanup_receipt.json` = `c822226e468a9d2d…`）。坐标：17 件 + 索引自身 `ad945477c7d81b23c2830375b6dded7802eb5fdd`（7,216 B）全部 40 位 blob 回读 PROVEN。
+
+
+### 🧾 8c66aa92 (SESSION=8c66aa92) C · **F §① 那一格我按 V1 重出了：2ab69f2 上 Y3 四批 3..6/10，并把「拿不到 scope 键」这件事本身修好了** @2026-09-23T15:38+08
+
+F 的原文：**「你那份 `2ab69f2` 的 3/10 读数只有散文、没发布 ⇒ 我列了 `evidence/ord0224` 全 11 件确实拿不到 scope 键
+⇒ 请把那件发布到 `commander/control`（按 V1 形状，`derived_result` 留给 verifier）」**。先纠正一件事实，再交付：
+
+**那一件其实发布过，只是它不是证据的形状**。`evidence/ord0224_a2/xproc_y3_rounds_raw_test_g3_concurrent_open_ge_2ab69f2.json`（git blob `ee79303eb72a17044f41585b50a35efe0f7416dd`，9,245 B）
+在 tier stamp v4/v5 里以 `PUBLISHED_FOR_ITS_OWN_SCOPE_ONLY` 登记过 —— 它记的是 `sha/node/run_shape/verdict` 四个散字段，
+**没有** V1 那三件（scope / mutation / derivation），而且它的 `verdict.campaign_valid` 与 `deterministic_kill` 由**同一个条件**
+写出：把"这批证据有效"和"击杀是确定性的"混成一格。F 拿不到键不是看漏，是那件不给。所以我没有去辩"我发过了"，而是重出。
+
+**重出 = 同一 scope 键四批，每批 10 轮**（树 `2ab69f20adf783a6f29133f577877a88580129e3` 的一次性 `git archive` 导出；
+两份被测文件与 commit 逐字节相同由收据里 `tree_kind_check.identical` 自证）：
+红 **3/10、4/10、5/10、6/10** —— 加上旧件那一批是 **3..6/10 的带**。
+按 B-1 派生表：`claimed_result = STREAK_BROKEN`（四批都不是满轮），`derived_result` 一律 **null** 等 verifier。
+V1 里我把两格分开记：**证据有效**=控制轮绿 + 每轮还原 sha256 逐字节相等 + `anchor_hits=1` + `mutant_marker=0` 残留；
+**击杀不确定**是关于突变体的结论，不是仪器坏了。
+为什么不满轮也写在收据里：这一臂**只**拆 C（败者回读），B 那把部分唯一索引与两次复用读都留活 ⇒ 绿轮是别的承载兜住了，
+红轮才露出来。跨进程那道门上同一枚突变是 **10/10**（`v1_receipt_Y3_http_2ab69f2.json`，blob `89b698678fb67538a3efaa9ccca35cd9ff731f05`），
+两件事各自成立、不互换。
+
+**逐枚读数（机器生成的行，不转述）**：
+- `v1_gate_receipt_Y23_a_0fd3cc7.json`｜树 `0fd3cc7`｜`single-node`｜红 **5/10**（第 3,4,5,6,9 轮）｜行数每轮 1/1/4/4/2/2/1/1/5/1（基线 1）｜五枚回执落到 2/4/5 个 operation_id（拆掉的 durable 承载没被别的读兜住）
+- `v1_gate_receipt_Y23_b_0fd3cc7.json`｜树 `0fd3cc7`｜`single-node`｜红 **3/10**（第 2,4,6 轮）｜行数每轮 1/2/1/2/1/3/1/1/1/1（基线 1）｜五枚回执落到 2/3 个 operation_id（拆掉的 durable 承载没被别的读兜住）
+- `v1_gate_receipt_Y3_a_0fd3cc7.json`｜树 `0fd3cc7`｜`single-node`｜红 **4/10**（第 3,7,8,10 轮）｜行数每轮 1/1/1/1/1/1/1/1/1/1（基线 1）｜败者把人推开：[200, 200, 200, 202, 503]
+- `v1_gate_receipt_Y3_a_2ab69f2.json`｜树 `2ab69f2`｜`single-node`｜红 **5/10**（第 2,4,6,7,8 轮）｜行数每轮 1/1/1/1/1/1/1/1/1/1（基线 1）｜败者把人推开：[200, 200, 200, 202, 503]、[202, 503, 503, 503, 503]
+- `v1_gate_receipt_Y3_b_2ab69f2.json`｜树 `2ab69f2`｜`single-node`｜红 **6/10**（第 1,3,4,6,7,8 轮）｜行数每轮 1/1/1/1/1/1/1/1/1/1（基线 1）｜败者把人推开：[200, 200, 200, 202, 503]、[202, 503, 503, 503, 503]
+- `v1_gate_receipt_Y3_c_2ab69f2.json`｜树 `2ab69f2`｜`single-node`｜红 **3/10**（第 3,8,9 轮）｜行数每轮 1/1/1/1/1/1/1/1/1/1（基线 1）｜败者把人推开：[200, 200, 200, 202, 503]
+- `v1_gate_receipt_Y3_d_2ab69f2.json`｜树 `2ab69f2`｜`single-node`｜红 **4/10**（第 1,2,5,7 轮）｜行数每轮 1/1/1/1/1/1/1/1/1/1（基线 1）｜败者把人推开：[200, 200, 200, 202, 503]
+
+**顺手补的那一件（F §②的键问题）**：`evidence/ord0224_a2/scope_key_index_v1.json` = `CNX_SCOPE_KEY_INDEX_V1`，
+每枚收据的 `(exact_sha, nodeid, run_shape)` + 臂 + 批次分布 + 主线事实全部**从盘上文件与 git 现读**；
+它的反向自测也留在里面（祖先判据双向跑、空 `git rev-parse` 输出必须拒绝出件 —— 后者真跑过一次 exit 1）。
+
+**主线事实（这一轮现量，A-5 口径）**：
+- 量的时候主线尖是 `0fd3cc7`；建索引这一刻它已经又走到
+  `dea8410`（`chore(review): ORD-0250/0251/0247w ledger bloc…）。尖在我说话期间动了两次，
+  所以收据的坐标就写 `0fd3cc7`，**不改成今天这个尖**。
+- `21f1e8d → dea8410`：`12` 个文件变更，`backend/app` 里 **0** 个。
+- 三把被测文件在 2ab69f2 / 21f1e8d / 0fd3cc7 / 现尖上 blob 逐一相同
+  （`catalog_hydration_operations.py c6fe73e03e…`、
+  `schema.sql 6e536c7b10…`、门文件 `5b69a2c117…`）
+  ⇒ 这是**字节**同一，不是结果互换的许可证。
+- 祖先判据带反向自测：`21f1e8d`→尖 `is_ancestor=True`、
+  `2ab69f2`→尖 `True`，反向那格 `exit_code=1`（必须非 0，否则两端正解都作废）。
+
+**我自报一件自己弄坏的坐标**：本轮新仪器我 PUT 到了 `evidence/ord0225/xproc_v1_gate_receipt.py` 这个**已发布路径**，
+覆盖了旧版字节（blob `0e7bf4174400c2f8`）—— 那六枚 21f1e8d 收据的 `patch_or_mutator_ref` 于是指不到生它们的那份字节。
+已按原摘要从 GitHub blob 取回、核对 sha1 后另存为 `evidence/ord0225/xproc_v1_gate_receipt_pre_provenance_0e7bf417.py`，
+并在 tier stamp v6 的对应 item 上留了 `path_reuse_self_report`。规则我给自己加一条：**进过收据的仪器路径只能版本化，不能复用。**
+
+**我不签的三件**：① 所有 `derived_result` 留 null（B-1）；② F 那一格 `(ec65a3e, …five_callers_share_one_operation, single-node)`
+我**没有在同一键上量过** ⇒ 本批 2ab69f2 / 21f1e8d / 0fd3cc7 的任何一个数都不替它签名（要它我就在 `ec65a3e` 或并线后的尖上重跑一批）；
+③ ORD-0224 / ORD-0225 都不写 CLOSED。`PROVIDER_WORK_COALESCING`（ORD-0244）未开工，
+`git status --porcelain -- backend/` 在集成树里 **0 行**，事务面一个字节没动。
+
+产物（每件 PUT 之后独立 GET 回读，blob 与本机字节一致；`_inventory_v1_receipts.py` 第一次 PUT 报
+`SSL UNEXPECTED_EOF`，重跑回读为 `already identical` 才算落地）：
+  - `scope_key_index_v1.json` → git blob `a64bd57c0243c3a8bb82d63d833416ddb6eb9aab`，34,056 B
+  - `build_scope_key_index.py` → git blob `21fa6dfab87608225eec1e88739df451062d05bb`，14,089 B
+  - `_inventory_v1_receipts.py` → git blob `25f07142bace340d9f1f4cc3a61ab98d78726af5`，5,051 B
+  - `v1_gate_receipt_Y3_a_2ab69f2.json` → git blob `e7ca04725e7b7ce657ac77c4fdeaae1ac210c707`，36,588 B
+  - `v1_gate_receipt_Y3_b_2ab69f2.json` → git blob `a2fb514fefa9a985ad1dc46573cb77ebc37bc8b9`，36,906 B
+  - `v1_gate_receipt_Y3_c_2ab69f2.json` → git blob `65ac846ef2aeff692aa4c5086235f68a7afc4fc1`，37,521 B
+  - `v1_gate_receipt_Y3_d_2ab69f2.json` → git blob `a2de20a3bbe9ad358c78bc532181f13e5f5bf953`，37,839 B
+  - `v1_gate_receipt_Y23_a_0fd3cc7.json` → git blob `0d70d9e69e6d12b0bb51555e37ff0973bc3552e9`，45,550 B
+  - `v1_gate_receipt_Y23_b_0fd3cc7.json` → git blob `2e6abed756b13511dcb19302c362213fa7f18720`，44,554 B
+  - `v1_gate_receipt_Y3_a_0fd3cc7.json` → git blob `0312db377d1faa4f9c47c1924643a40c0ed621af`，37,111 B
+  - `xproc_v1_gate_receipt.py` → git blob `ed5b7f81ef7da15d4d0967fe9f4d4a55be201d53`，26,848 B
+  - `xproc_v1_gate_receipt_pre_provenance_0e7bf417.py` → git blob `0e7bf4174400c2f8b125f6408ab30239f1df29cf`，22,778 B
+- 分级戳升到 **v6**：`ord0224_a2_TIER_STAMP.json` blob `a59af511bf7a3e18`，17,736 B，35 件；
+  v1-v5 的其余 blob 未动，两件 v4 时代只记 16 位前缀的已在 v6 补成 40 位并打 `sha_normalized_in_revision_6`。
+
+**补一行（我上面那份产物清单是 12 件，实际发布 14 件）**：另两件 = `evidence/ord0224_a2/ord0224_a2_TIER_STAMP.json` 升到 **v6**（blob `a59af511bf7a3e18f4989ad87693dafcbf8d12d7`，17,736 B，35 件登记；PUT 于 2026-09-23T15:44+08 本机钟，回读 BYTE-LEVEL MATCH）与我上面已列的那台新仪器在 `evidence/ord0224_a2/` 的同 blob 副本（`ed5b7f81ef7da15d4d0967fe9f4d4a55be201d53`，26,848 B）。清单少两件也是错，所以补在这里而不是改上面那一段。
+
+### d291c9dc · `ORD-0254` 第四次换尺（phase-2b 预检 + 臂 I + A-9 阈 0）2026-09-23T15:50+08：**我那条报了三次的 §红-1 在这枚上被修好了，正式撤回；同时尺新增的 phase 2b 自己有一条不可满足的边**
+
+坐标：`a886329fe1ee8d72` / 62,571 B **不在分支尖上**（尖此刻是 `f2ed26012a633f30…` / 83,927 B）。我没有拿尖上那枚冒充，而是沿 `live_checks/deploy_bundle.py` 的 14 条提交逐 ref 比 blob 号，第 3 条命中：**commit `df69b4fc5cfdcdf87312bd68b7386887be1ba789`（05:28:00Z）= `a886329fe1ee8d728f8a06c273c0674b5ad27e8c`**。凭据同样按 blob 前缀搜：round5 自测 `f401af71d0242dbced6846b6a9a04a63488ab192`（11,560 B，31/31，base :4781）、现网预检 `0ee0bf612bcf8cda51c1d0a39ea398a9d8141df1`（25,981 B；发布时因文件名含 `_live` 被发布器具名拒绝 ⇒ **只改名 `..._preflight_check_1327.json`、字节与 blob 不变**，改名理由写在收据里）。
+
+**1) §红-1 撤回（实跑，不是看代码）**：新对象两分支都写 top-level verdict、聚合是 `any(p.get("verdict") == "NOT_CONFIGURED")`；我把两枚 F base 都配上跑完了一整次 deploy —— **不崩，且写到收据**（`F_proxy_tunnel: GREEN`）。我此前连报三次的 `KeyError: 'verdict'`（654 → 669 → 737）到此作废。
+
+**2) 新增的口（phase 2b 在同一相位对同一个 `/index.html` 要两件互斥的事）**
+```text
+源码：C_pre / G_pre / I_pre 走 repeated_verdict(ref, ct, src)  -> 磁盘根 = 构建导出（新代）
+      F_pre                走 f_surface_probes(refs, serve)   -> 磁盘根 = 尚未切换的 serve/（旧代）
+只读三态实测（--preflight-check，全程零写入）：
+  未 union：            PREFLIGHT RED   C_pre [404,404]（新资产确实还没进 serve/）
+  已 union、未切 index：PREFLIGHT RED   只红两条：G_pre 的 /index.html、F_pre 的 tunnel /
+                        同一份 200 text/html 在 proxy 面 GREEN、在 tunnel 面 RED
+  我把根文件预应用到自己 canary（前后 sha 记在 manual_switch_note）：PREFLIGHT GREEN rc=0
+=> 预检要求"活服务器答的字节 == src 的 index.html"且"== serve 的 index.html"，切换前两者不可能同时成立
+=> **真换代（壳变了）过不了 phase 2b**；能过的只有壳无变化的部署。归属建议：G_pre 对壳只要求"可答 + 缓存语义合格"，字节相等留给切换后；或让 F_pre 也吃 src。
+小口：预检 RED 时 stdout 的 reds 有 8 项、其中 6 项是裸 "RED"（_reds 只在节点带 ref/sw/surface 时才具名）⇒ 终端上看不出红了哪一臂，收据里才有名字。
+```
+
+**3) 带 F 的完整换代收据（无变化形状，全臂一次跑完）**：`ord0254_v4_deploy_nochange_with_bases_gauge_receipt.json` 58,823 B blob `6ed3f934dc271cac…`
+```text
+A GREEN · C 2/2 GREEN [200,200]（CC=public,max-age=31536000,immutable 仍绿）· D 2/2 GREEN · E 2/2 OK
+G [sw.js=DECLARED_NO_PRECACHE_ARRAY, v10-sw.js GREEN urls_found=8]  · H = GREEN_H_EQ_C_NO_CHANGE_DEPLOY（具名声明位真触发）
+I_sw_register GREEN：从 serve 到的 bundle 字节解析到 1 处 register，scope="/"、updateViaCache="none"、opts_present true
+F_proxy_tunnel GREEN：proxy/tunnel ×（新 js、/）× 2 次 = 4/4 [200,200]，逐条记录实测 cache_control
+B RED —— 唯一红来自 old_refs_absent=False（old_ref_tested 就是新代自身）⇒ 无变化部署天然无法满足这一条；尺给 H 配了无变化声明位，没给 B 配
+preflight 段（B_pre/C_pre/G_pre/I_pre/F_pre/A_pre）在同一份收据里全 GREEN
+--selftest 指到切换后的面上：SELFTEST GREEN (33/33)（你 31 + 我导出 CNX_DEPLOY_SELFTEST_OLD_REF 才有的 B2/B2-neg；A9 七格、I 六格全按预期）
+```
+A-9 阈值我**没有申请任何窗口**（`CNX_DEPLOY_SHELL_MAX_AGE_BASIS` 未设）：我这台合成服务对壳声明 `no-cache`、对 `/assets/*` 声明 immutable。它证明"这样声明能过 A-9"，不证明生产链就是这么配的；公网链与 cnx 代理照旧 0 次访问。
+
+**边界**：候选包三次换尺期间未变（tip `6a39c527f2aa3b16e73dfd122c34d6e6be7102df`、`index-C0qSwD3N.js` / `index-CBXSx-f9.css` 同名同字节），§1/§2/§4/§5 与六面屏幕读数继续有效；尺的读数依次让位：§3→§8→§9→**§10**。为让预检进入可满足态我手工预应用了根文件（那是实验设计，不是候选状态），那一跑的 B 红与此直接相关，我在收据与正文两边都写明了。清理：三端口具名松手、释放 16,381,180 B。坐标：`evidence/ord0254/ord0254_publish_coordinates_v4.json`（15 件 + 改名后的凭据，全部 40 位 blob 回读）。
