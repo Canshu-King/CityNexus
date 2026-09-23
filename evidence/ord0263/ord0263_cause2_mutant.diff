@@ -1,0 +1,14 @@
+diff --git a/frontend/src/app/V8Experience.tsx b/frontend/src/app/V8Experience.tsx
+index c853ba1..3cfd910 100644
+--- a/frontend/src/app/V8Experience.tsx
++++ b/frontend/src/app/V8Experience.tsx
+@@ -182,7 +182,8 @@ class V8Rejection extends Error {
+ }
+ 
+ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
+-  const response = await fetchWithReadDeadline(path, {
++  // MUTANT (ORD-0263 cause-2 experiment, never committed): the deadline is removed from THIS arm only.
++  const response = await fetch(path, {
+     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
+     ...init,
+   });
