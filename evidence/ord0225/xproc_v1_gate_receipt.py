@@ -98,7 +98,28 @@ def _off(block: bytes, tag: bytes) -> bytes:
             + b"".join(lines[2:]))
 
 
+LOSER_BROKEN = (b"        winner = find_open_operation(session, fingerprint)\n"
+                b"        if winner is None:\n"
+                b"            raise\n"
+                b'        raise HydrationStoreBusy("MUTANT Y3: the loser stopped reporting the winner")\n')
+
 ARMS = {
+    # C alone: the arm that measured 3/10 at 2ab69f2 (pre-V1 artifact
+    # xproc_y3_rounds_raw_test_g3_concurrent_open_ge_2ab69f2.json, git blob ee79303eb72a1704),
+    # re-emitted here in CNX_REVERSE_MUTATION_RECEIPT_V1 shape because that file has no scope key
+    # a verifier can read (lane F, 14:3x: "列了 evidence/ord0224 全 11 件确实拿不到 scope 键").
+    "Y3": {
+        "mutation_id": "C-ORD0224A2-Y3-loser-readback-only",
+        "carriers_removed": ["C loser read-back"],
+        "claim_broken": (
+            "only the loser's read-back: the process that loses the race against the partial unique index "
+            "now raises instead of reporting the winner. The index (B) and both reuse reads (A1/A2) stay "
+            "live on purpose, so a green round here means some *other* carrier converged the five callers "
+            "- which is exactly why this arm is not deterministic on the in-process door (3/10 at 2ab69f2)."),
+        "edits": [
+            {"path": PRODUCT, "find": LOSER, "marker": b"MUTANT Y3", "replace": LOSER_BROKEN},
+        ],
+    },
     # the ordered arm: the two durable carriers
     "Y23": {
         "mutation_id": "C-ORD0225-Y23-index-and-loser-readback",
@@ -164,6 +185,25 @@ ARMS["Y23_OFF_A2"] = _arm_with_read_off(b"Y1b", "Y23_OFF_A2", "A2")
 if ARM not in ARMS:
     raise SystemExit(f"unknown arm {ARM}; have {sorted(ARMS)}")
 A = ARMS[ARM]
+# Where this run's artifacts go, so every self-reference in the receipt names a path a verifier can open.
+PUBLISH_PREFIX = "evidence/ord0224_a2" if EXACT_SHA.startswith("2ab69f2") else "evidence/ord0225"
+# Earlier artifacts carrying the *same scope key* (same exact sha + same nodeid + same run_shape).
+# Naming them is what turns "another batch" into a repeat instead of a fresh number to admire.
+PRIOR_MEASUREMENTS = {
+    ("Y3", "2ab69f2"): {
+        "file": "evidence/ord0224_a2/xproc_y3_rounds_raw_test_g3_concurrent_open_ge_2ab69f2.json",
+        "git_blob_sha1": "ee79303eb72a1704",
+        "bytes": 9245,
+        "shape": "pre-V1 (the reason this file exists: lane F read evidence/ord0224's 11 files at 14:3x "
+                 "and could not recover a scope key from it)",
+        "rounds": 10, "killed": 3, "control": "GREEN",
+        "same_exact_sha": True, "same_target_nodeids": True, "same_run_shape": True,
+        "field_correction": ("那份旧文件的 verdict 里 campaign_valid=false 与 deterministic_kill=false 是同一个条件写的："
+                            "旧仪器把'这批证据有效'与'击杀是确定性的'混成一格。V1 里两格分开记 - 控制轮绿 + 还原逐字节 +"
+                            "锚点 1 命中 ⇒ 证据有效；3/10 ⇒ 击杀不确定，这是**关于突变体的结论**，不是关于仪器的。"),
+    },
+}
+PRIOR = PRIOR_MEASUREMENTS.get((ARM, EXACT_SHA[:7]))
 ARGV = [str(PY), "-X", "utf8", "-m", "pytest", NODE, "-p", "no:cacheprovider", "-v", "-rA"]
 FORBIDDEN = re.compile(r"--reruns|--dist|--maxfail|^-x$|--timeout|--deselect|-k\b|--collect-only|-n\b|-n=")
 TEMP = Path(tempfile.gettempdir())
@@ -363,11 +403,13 @@ def main() -> int:
         },
         "environment": environment_block(),
         "baseline": {
-            "receipt_ref": "evidence/ord0225/ (lane F 的 ORD-0225 closure 第 1 步收据) + 本批控制轮",
-            "receipt_blob": "F-published; see ledger block ORD-0225",
-            "same_exact_sha": False,
-            "same_exact_sha_note": ("F 的第 1 步是在 composite `ec65a3e` 上量的；本收据的 baseline 用的是**同一棵被测树**"
-                                    "上的控制轮，两者不互换（A-5）。"),
+            "receipt_ref": (f"{PUBLISH_PREFIX}/ 本批控制轮（同一棵被测树、同一条 nodeid、同一个 run_shape）"
+                            + ("；同键旧件见 provenance.prior_measurement_same_scope_key" if PRIOR else "")),
+            "receipt_blob": "本文件即 baseline + 10 轮，不需要外部收据才读得懂",
+            "same_exact_sha": True,
+            "same_exact_sha_note": ("baseline = 本批在同一棵导出树上的控制轮，同 sha / 同 nodeid / 同 run_shape。"
+                                    "别人不同的 baseline（如 lane F 第 1 步在 composite `ec65a3e` 上的读数）是**另一个 scope 键**，"
+                                    "两边不互换，按仲裁 A-5。"),
             "same_target_nodeids": True, "same_run_shape": True,
             "target_outcomes": baseline["target_outcomes"],
             "this_run_exit_code": baseline["exit_code"], "this_run_collected": baseline["collected"],
@@ -384,13 +426,26 @@ def main() -> int:
             "carriers_removed": A["carriers_removed"],
             "allowed_scope": "product", "actual_scope": "product",
             "primary_target_nodeids": [NODE],
-            "patch_or_mutator_ref": "evidence/ord0224_a2/xproc_v1_gate_receipt.py",
+            "patch_or_mutator_ref": (f"{PUBLISH_PREFIX}/xproc_v1_gate_receipt.py"
+                                     "（字节由 provenance.emitter_git_blob_sha1_this_file 钉住，不是靠文件名）"),
             "no_test_file_touched": "两把（或四把）改动全在 app/ 与 db/schema.sql；门与断言 0 字节",
             "changed_files": _changed_files(runs),
             "digest_semantics": ("一条 edit 一行；同文件多条 edit 的 mutated_digest 是**累计态**（该 edit 之后文件的形状），"
                                  "不是三个独立版本。anchor_hits 每行都必须是 1，由守卫自己数。"),
         },
         "mutated_runs": {"rounds": ROUNDS, "runs": runs},
+        "provenance": {
+            "prior_measurement_same_scope_key": PRIOR or {
+                "absent": True,
+                "note": ("本 (arm, exact_sha) 组合之前没有出过同键读数；这一格显式写 absent，"
+                         "是为了让 verifier 不必去猜'没有'是漏填还是真的没有。"),
+            },
+            "publish_prefix": PUBLISH_PREFIX,
+            "emitter_git_blob_sha1_this_file": hashlib.sha1(
+                b"blob %d\x00" % Path(__file__).stat().st_size + Path(__file__).read_bytes()).hexdigest(),
+            "emitter_blob_semantics": ("出这枚收据那一刻本文件的 git blob sha1（自己按字节算，不是抄来的坐标）；"
+                                       "发布步骤要重算一次并核对，不一致就说明收据不再描述那台仪器。"),
+        },
         "derivation": {
             "claimed_result": claimed,
             "claimed_result_note": "交付方自称；closure 只认 verifier 派生的 derived_result。",
