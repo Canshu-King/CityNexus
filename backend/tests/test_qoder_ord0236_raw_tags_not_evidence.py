@@ -140,6 +140,12 @@ def test_t3_display_taxonomy_tags_never_become_accessibility_evidence():
         item["id"] for item in MockCityDataProvider().places()
         if isinstance(item.get("accessibility"), dict) and item["accessibility"]
     )
+    assert declared and carrying, (
+        "生产者一个地点都没声明 / 求值方一个地点都看不见 ⇒ 下面那条等式是空对空，"
+        f"它钉不住任何东西（declared={declared} carrying={carrying}）。"
+        "这条不是防意外：把本文件放到没有 demo 证据生产者的树上（主线 f5a6b9a 就是这个形态）跑，"
+        "两侧都是 0，等式照样成立。"
+    )
     assert carrying == declared, (
         f"求值方看得见的证据地点应等于生产者声明的集合：{carrying} vs {declared}"
     )
