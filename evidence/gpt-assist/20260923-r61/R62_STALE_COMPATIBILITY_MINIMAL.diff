@@ -1,0 +1,9 @@
+--- a/backend/app/integrations/discovery/real_city.py
++++ b/backend/app/integrations/discovery/real_city.py
+@@
+     if price_known:
+         metadata["cost_minor"] = int(amount_minor)
+     else:
+-        metadata.setdefault("cost_minor", 0)
++        metadata["cost_minor"] = 0
+     metadata["price_known"] = price_known
