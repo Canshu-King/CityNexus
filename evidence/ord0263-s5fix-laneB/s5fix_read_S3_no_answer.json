@@ -1,0 +1,69 @@
+{
+ "mode": "S3_no_answer",
+ "at": "2026-09-23T16:57:34.511Z",
+ "url": "http://127.0.0.1:4443/v8/hub",
+ "settled_after_ms": 12148,
+ "state_nodes": {
+  "failure-view": 1,
+  "today-heading": 0,
+  "trial-setup": 0
+ },
+ "rendered_text": "没有回音\n\n等了 12 秒，这台服务器一个字也没回答\n\n这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。\n\n看已保存的只读副本\n重试\n归因详情\nattribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+ "body_text_head": "没有回音 等了 12 秒，这台服务器一个字也没回答 这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。 看已保存的只读副本 重试 归因详情 attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_p",
+ "attribution_expand": {
+  "present": 1,
+  "clicked": true,
+  "line_before": "",
+  "line_after": "attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+  "open_after": true
+ },
+ "resource_timing": {
+  "all": [
+   {
+    "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "duration_ms": 12004,
+    "status": 0,
+    "kind": "fetch"
+   },
+   {
+    "url": "/api/v1/health",
+    "duration_ms": 4,
+    "status": 200,
+    "kind": "fetch"
+   }
+  ],
+  "journey": {
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "duration_ms": 12004,
+   "status": 0,
+   "kind": "fetch"
+  },
+  "health": {
+   "url": "/api/v1/health",
+   "duration_ms": 4,
+   "status": 200,
+   "kind": "fetch"
+  }
+ },
+ "snapshot": {
+  "rows": 1
+ },
+ "buttons": [
+  "看已保存的只读副本",
+  "重试"
+ ],
+ "in_memory_attribution_last": {
+  "reason": "NETWORK_UNAVAILABLE",
+  "evidence_kind": "TRANSPORT",
+  "http_status": null,
+  "source_layer": "TRANSPORT",
+  "retryable": true,
+  "recovery_action": "read-only-cached",
+  "message_key": "failure.noAnswer",
+  "telemetry": "attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+  "cached_copy_present": true,
+  "at": "2026-09-23T16:57:33.522Z",
+  "context": "shell.boot.journeyRead"
+ },
+ "service_worker": true
+}
