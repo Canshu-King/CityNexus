@@ -1,0 +1,229 @@
+{
+  "tree": "snap_2ab69f2",
+  "sha": "2ab69f20adf783a6f288580129e3",
+  "node": "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+  "mutant": "Y3",
+  "mutant_layer": "C - loser read-back",
+  "mutant_claim": "撞索引的败者不再上报 winner（HTTP 面把请求推开）",
+  "mutant_file": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+  "run_shape": "single-node",
+  "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation -p no:cacheprovider -v",
+  "environment_contract": "解释器 D:/moodle/CityNexus/.venv 3.12.14；被测树 = `git archive <sha>` 的一次性导出（本批不含 F 判据模块，突变由 mutation_anchor_guard 施加/复原）",
+  "before_sha256_of_mutated_file": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+  "control_round": {
+    "node_outcome": "GREEN",
+    "exit_code": 0,
+    "summary": "======================== 1 passed, 4 warnings in 5.19s ========================",
+    "door_print": null
+  },
+  "rounds": [
+    {
+      "run_index": 0,
+      "mutated": false,
+      "exit_code": 0,
+      "node_outcome": "GREEN",
+      "summary": "======================== 1 passed, 4 warnings in 5.19s ========================",
+      "first_reason": "",
+      "door_print": null
+    },
+    {
+      "run_index": 1,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 5.18s ========================",
+      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(53711, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "door_print": null,
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 2,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 5.47s ========================",
+      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(50116, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "door_print": null,
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 3,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.11s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(53136, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "door_print": null,
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 4,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 5.64s ========================",
+      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(61100, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "door_print": null,
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 5,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.70s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(61960, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "door_print": null,
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 6,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 4.10s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(59150, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "door_print": null,
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 7,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.46s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(50972, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "door_print": null,
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 8,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.36s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(60730, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "door_print": null,
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 9,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 6.17s ========================",
+      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(60750, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "door_print": null,
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 10,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.79s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(50863, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "door_print": null,
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    }
+  ],
+  "verdict": {
+    "rounds": 10,
+    "killed": 10,
+    "deterministic_kill": true,
+    "control_green": true,
+    "all_restores_clean": true,
+    "all_markers_restored": true,
+    "campaign_valid": true
+  }
+}
