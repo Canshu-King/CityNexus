@@ -1,0 +1,226 @@
+{
+ "at": "2026-09-23T21:34:52+08:00",
+ "subject": "RELEASE GENERATION served to the user's phone: index-D76m_cky.js / index-I45CQek8.css, built from landed tip d2665e2 (0261/0264 wizard fixes), does NOT contain ORD-0263 - B's candidate is not landed",
+ "generation_fingerprint": {
+  "disk_root_read_only": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "files": 29,
+  "bytes": 14518104,
+  "tree_sha256": "54d2da94b4aa00dc23c615e1a7f3677f1bddf742a50991e2a263bf990e287538",
+  "index_html_mtime": "2026-09-23T20:05",
+  "rebuilt": false,
+  "my_byte_identical_copy": "D:\\moodle\\_qoder_harness_ord0254\\livegen\\dist"
+ },
+ "surface": {
+  "shell": "vite preview :4414 (my port, my copy of the bundle)",
+  "origin": "my :8411",
+  "chrome_context": "one context; snapshot earned through the app's own 「使用封存的演示行程」 control before the states were swapped; snapshot_rows=1 in every reading",
+  "product_code_edited": false,
+  "gauge_edited": false,
+  "user_chain_ports_contacted": [],
+  "user_db_files_opened": [],
+  "demo_reset_issued": false
+ },
+ "label_derivation": {
+  "rule": "skeleton-present or empty text => None (no classification); otherwise HTTP status => ORIGIN_ERROR_WITH_SNAPSHOT; no-answer wording => NETWORK_UNREACHABLE_WITH_SNAPSHOT; otherwise LIVE",
+  "checked_against": [
+   {
+    "case": "skeleton text with no HTTP and no no-answer word",
+    "text": "CN | 正在准备城市周末行程… | 锚点 · 住宿 · 出行事实 · 可行性",
+    "skeleton": true,
+    "expect": null,
+    "got": null,
+    "match": true
+   },
+   {
+    "case": "answered 500 sentence",
+    "text": "服务器 | 服务器这次没能把行程读出来 | 服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。 | 重试 | 归因详情",
+    "skeleton": false,
+    "expect": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "got": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "match": true
+   },
+   {
+    "case": "healthy today screen must not become a classification",
+    "text": "菜单 | / | 今天 | 跟随系统 | EN | DE | 晚上好 | Demo之旅 | 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 | AI 帮我规划 | 试用其他城市 | 打开行程工作台 | 今天 | 还没有安排",
+    "skeleton": false,
+    "expect": "LIVE",
+    "got": "LIVE",
+    "match": true
+   },
+   {
+    "case": "B's own no-answer sentence (cross-check against the shipped fix)",
+    "text": "没有回音 | 等了 12 秒，这台服务器一个字也没回答",
+    "skeleton": false,
+    "expect": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "got": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "match": true
+   }
+  ],
+  "typed_in_by_verifier": false
+ },
+ "cells": {
+  "S1_live": {
+   "rendered_text": "菜单 | / | 今天 | 跟随系统 | EN | DE | 晚上好 | Demo之旅 | 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 | AI 帮我规划 | 试用其他城市 | 打开行程工作台 | 今天 | 还没有安排",
+   "network_words": [],
+   "service_words": [
+    "服务器"
+   ],
+   "snapshot_words": [],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": false,
+   "buttons": [
+    "今天",
+    "实时行程",
+    "地图",
+    "行程工作台",
+    "住宿选择",
+    "城市探索",
+    "旅行票夹",
+    "Copilot",
+    "恢复与执行",
+    "智能守护",
+    "旅行者画像",
+    "菜单",
+    "AI 帮我规划"
+   ],
+   "origin_answer": {
+    "status": 200,
+    "thrown": false,
+    "wire": "curl via :4414 /api/v1/health -> 200; journeys/<marker id> -> 200; the same id via :8411 direct -> 200"
+   },
+   "read_at_rel_ms": 49465,
+   "extra_note": "the release generation already carries the honest cursor sentence: 服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读 (that is 0261/0264 territory, not 0263)",
+   "classified_label": "LIVE",
+   "snapshot_present": true,
+   "doors": {
+    "retry": 0,
+    "read_only_snapshot": 0
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 49.5
+  },
+  "S2_origin_error": {
+   "rendered_text": "服务器 | 服务器这次没能把行程读出来 | 服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。 | 重试 | 归因详情",
+   "network_words": [],
+   "service_words": [
+    "服务器",
+    "报错",
+    "HTTP 500"
+   ],
+   "snapshot_words": [],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": false,
+   "buttons": [
+    "重试"
+   ],
+   "origin_answer": {
+    "status": 500,
+    "thrown": false,
+    "ct": "text/plain via my preview proxy",
+    "wire": "no listener on :8411; curl via :4414 /api/v1/health -> 500 text/plain in 0.039s, /api/v1/journeys/<id> -> 500 in 0.002s, /v8/hub -> 200 in 0.003s"
+   },
+   "read_at_rel_ms": 51285,
+   "timeline": {
+    "sample_ms": 400,
+    "samples": 109,
+    "first_sample_ms": 8077,
+    "last_sample_ms": 51285,
+    "skeleton_samples": 0,
+    "labelled_samples": 109
+   },
+   "extra_note": "half-fixed on this generation: it no longer blames the traveller's network AND it names the HTTP status, but a saved snapshot that really is in IndexedDB (1 row) is neither named nor offered - there is no 看已保存的只读副本 door",
+   "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "snapshot_present": true,
+   "doors": {
+    "retry": 1,
+    "read_only_snapshot": 0
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 51.3
+  },
+  "S3_no_answer": {
+   "rendered_text": "CN | 正在准备城市周末行程… | 锚点 · 住宿 · 出行事实 · 可行性",
+   "network_words": [],
+   "service_words": [],
+   "snapshot_words": [],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": true,
+   "buttons": [],
+   "origin_answer": {
+    "status": null,
+    "thrown": true,
+    "wire": "silent listener on :8411 accepts TCP and never answers nor closes; curl via :4414 /api/v1/health -> 000 after 8.0s, /v8/hub -> 200 in 0.003s"
+   },
+   "timeline": {
+    "sample_ms": 400,
+    "samples": 186,
+    "first_sample_ms": 10605,
+    "last_sample_ms": 84610,
+    "skeleton_samples": 186,
+    "labelled_samples": 0
+   },
+   "seconds_to_settle": null,
+   "settled_within_deadline": false,
+   "extra_note": "84.0 s of observation, every sample the same skeleton, zero buttons: the read never settles because nothing in this generation bounds it",
+   "classified_label": null,
+   "snapshot_present": true,
+   "doors": {
+    "retry": 0,
+    "read_only_snapshot": 0
+   }
+  },
+  "S4_read_silent_health_answered": {
+   "rendered_text": "服务器 | 服务器这次没能把行程读出来 | 服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。 | 重试 | 归因详情",
+   "network_words": [],
+   "service_words": [
+    "服务器",
+    "报错",
+    "HTTP 500"
+   ],
+   "snapshot_words": [],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": false,
+   "buttons": [
+    "重试"
+   ],
+   "health_answer": {
+    "status": 500,
+    "thrown": false,
+    "ct": "application/json",
+    "wire": "curl via :4414 /api/v1/health -> 500 application/json in 0.003s"
+   },
+   "read_never_answered": true,
+   "read_wire": "curl via :4414 /api/v1/journeys/<id> -> 000 after 14.0s (instrument hangs 40 s then closes the socket)",
+   "timeline": {
+    "sample_ms": 400,
+    "samples": 131,
+    "first_sample_ms": 12735,
+    "last_sample_ms": 64720,
+    "skeleton_samples": 69,
+    "labelled_samples": 62,
+    "last_skeleton_ms": 39910,
+    "first_labelled_ms": 40311
+   },
+   "seconds_to_settle": 40.3,
+   "settled_within_deadline": false,
+   "extra_note": "IMPORTANT validity limit: the sentence only appeared at 40.311 s, which is my own instrument closing the socket after HANG_SECONDS=40 - not a bound inside the product. Had the origin held the connection open, this cell would still be a skeleton, exactly like S3. So this generation does not classify the state; my instrument ended the read for it, and the classification it then produced is the same S2 sentence, which also never mentions the local snapshot",
+   "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "snapshot_present": true,
+   "doors": {
+    "retry": 1,
+    "read_only_snapshot": 0
+   }
+  }
+ },
+ "state_instrumentation": [
+  "S1: real uvicorn on :8411 over db/canary_8411.db (marker row + journey 200 both ways)",
+  "S2: no listener on :8411 -> my preview proxy answers 500",
+  "S4: tools/mixed_origin_port.py -> /api/v1/health 500 json, every other path hangs 40 s",
+  "S3: tools/silent_api_port.py -> accepts TCP, never answers, never closes"
+ ],
+ "decisive_datum": "on this generation S3 spends 84.0 s (186/186 samples) on 「正在准备城市周末行程…」 with ZERO buttons and a real saved snapshot (1 row) in IndexedDB; and S4 only leaves the skeleton because MY instrument closed the socket at 40 s"
+}
