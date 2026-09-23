@@ -29,7 +29,19 @@ import urllib.request
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-BASE = "http://127.0.0.1:4781"
+BASE_DEFAULT = "http://127.0.0.1:4781"      # the commander's live preview chain (vite static)
+BASE = os.environ.get("CNX_DEPLOY_BASE", BASE_DEFAULT).rstrip("/")
+BASE_WAS_DEFAULTED = "CNX_DEPLOY_BASE" not in os.environ
+
+
+def base_url() -> str:
+    """The HTTP side of every comparison, resolved at CALL time so `--selftest` (and any other lane)
+    can retarget it without editing this file.  Recorded in every probe as `base`."""
+    return os.environ.get("CNX_DEPLOY_BASE", BASE_DEFAULT).rstrip("/")
+# Why this is now env-declared instead of hardcoded: A-E read `--serve` from DISK but every status/MIME/
+# digest comes from HTTP against BASE.  Another lane pointing --serve at its own dist while BASE stays here
+# gets a mixed reading - its files judged against MY server's bytes - which is the A-3 wrong-side family
+# wearing a green badge.  main() now refuses that combination instead of reporting it.
 # Redteam round 3 (bus 5789163700): a single probe was only forbidden on F, so a URL that exactly one
 # arm probes (the dynamically-imported maplibre chunk - in the SW precache, not in index.html) could still
 # serve #1 fine and 404 forever after while the gauge read ALL_GREEN.  Repeat is now the default for every
@@ -55,7 +67,7 @@ def http_get(path: str, want_head: bool = False, base: str | None = None, auth_f
     TAB-separated `user<TAB>password` preview credential - it is only ever turned into a header and
     never appears in the returned dict or any print.
     """
-    url = (base or BASE) + path
+    url = (base or base_url()) + path
     req = urllib.request.Request(url, method="HEAD" if want_head else "GET")
     req.add_header("Cache-Control", "no-cache")
     req.add_header("User-Agent", "cnx-deploy-receipt")
@@ -69,7 +81,7 @@ def http_get(path: str, want_head: bool = False, base: str | None = None, auth_f
             pass
     out = {"path": path, "status": None, "content_type": None, "length": None, "cache_control": None,
            "head_bytes": None, "sha256": None, "is_html_fallback": None, "error": None,
-           "base": base or BASE, "auth_applied": bool(auth_file)}
+           "base": base or base_url(), "auth_applied": bool(auth_file)}
     try:
         with urllib.request.urlopen(req, timeout=60) as r:
             body = b"" if want_head else r.read()
@@ -292,10 +304,10 @@ def http_text(path: str, base: str | None = None, auth_file: str | None = None) 
     It records `sha256` of exactly what it read, so arm I can prove the text it parsed is the same
     bytes arm C hashed - parsing a different side would be the A-3 family again.
     """
-    out = {"path": path, "base": base or BASE, "status": None, "text": None, "sha256": None,
+    out = {"path": path, "base": base or base_url(), "status": None, "text": None, "sha256": None,
            "body_size": None, "error": None}
     try:
-        req = urllib.request.Request((base or BASE) + path)
+        req = urllib.request.Request((base or base_url()) + path)
         req.add_header("Cache-Control", "no-cache")
         req.add_header("User-Agent", "cnx-deploy-receipt")
         if auth_file:
@@ -561,6 +573,22 @@ def selftest(serve: pathlib.Path) -> int:
         iv = sw_register_verdict(i_text, "synthetic")
         arms.append({"arm": i_name, "expect": i_expect,
                      "got": {"verdict": iv["verdict"], "error": iv.get("reason")}})
+    # Base-retargeting witnesses: the HTTP side must follow CNX_DEPLOY_BASE **at call time**.  Otherwise a
+    # lane that runs this gauge against its own dist silently compares its files to MY :4781 bytes, which
+    # is the A-3 "absent/foreign second side" family wearing a green badge.
+    with _FirstOkThenFailServer() as edgeB:
+        os.environ["CNX_DEPLOY_BASE"] = "http://127.0.0.1:%d" % edgeB.port
+        try:
+            b_env = repeated_verdict("/anything.js", "javascript", live, times=2)
+        finally:
+            del os.environ["CNX_DEPLOY_BASE"]
+        b_back = repeated_verdict(killer_ref, "javascript", live, times=2)
+    arms.append({"arm": "BASE-env:cnx_deploy_base_is_honoured_at_call_time", "expect": "RED",
+                 "got": {"verdict": b_env["verdict"],
+                         "error": "probe_base=%s statuses=%s" % (b_env["probes"][0]["base"], b_env["statuses"])}})
+    arms.append({"arm": "BASE-restore:unset_again_reads_the_commander_chain", "expect": "GREEN",
+                 "got": {"verdict": b_back["verdict"],
+                         "error": "probe_base=%s statuses=%s" % (b_back["probes"][0]["base"], b_back["statuses"])}})
     dead = asset_verdict("/v10-sw.js", "javascript", live, base="http://127.0.0.1:59999")
     arms.append({"arm": "F-killer:unreachable_surface_is_red_not_absent", "expect": "RED",
                  "got": dead})
@@ -580,7 +608,7 @@ def selftest(serve: pathlib.Path) -> int:
     idx = http_get("/")
     body_html = ""
     if idx["status"] == 200:
-        req = urllib.request.Request(BASE + "/")
+        req = urllib.request.Request(base_url() + "/")
         req.add_header("Cache-Control", "no-cache")
         with urllib.request.urlopen(req, timeout=60) as r:
             body_html = r.read().decode("utf-8", "replace")
@@ -630,7 +658,7 @@ def selftest(serve: pathlib.Path) -> int:
         "what": "deploy_bundle.py asset-gauge selftest (true positives + killers, incl. A-3 disk presence, G precache, H prev-generation, F unreachable surface)",
         "why": "arbiter 5781096542 (verdict assigned twice, lax one won) + 5788111742 A-3 "
                "(a comparison against an absent side is not a comparison)",
-        "base": BASE, "serve": str(serve), "overall": "GREEN" if ok else "RED",
+        "base": base_url(), "serve": str(serve), "overall": "GREEN" if ok else "RED",
         "arms": [{"arm": a["arm"], "expect": a["expect"], "got": a["got"]["verdict"],
                   "status": a["got"].get("status"), "content_type": a["got"].get("content_type"),
                   "is_html_fallback": a["got"].get("is_html_fallback"),
@@ -789,6 +817,21 @@ def main() -> int:
 
     receipt: dict = {"sha": a.sha, "src": str(src), "serve": str(serve), "t": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
 
+    # A-3 applied to the gauge itself: disk side = --serve, HTTP side = BASE.  Silently mixing my live
+    # chain with somebody else's dist directory produced a receipt that looked load-bearing and was not.
+    CMDR_DIST = "D:/moodle/_qoder_preview_20260920"
+    declares_cmdr_live = os.environ.get("CNX_DEPLOY_BASE_IS_CMDR_LIVE", "").strip() == "1"
+    probing_foreign_dist = CMDR_DIST not in str(serve).replace("\\", "/")
+    receipt["surface_base"] = {"http_base": BASE, "declared_via_env": not BASE_WAS_DEFAULTED,
+                               "disk_serve": str(serve),
+                               "rule": "the HTTP side and the disk side must belong to the same deployment"}
+    if BASE_WAS_DEFAULTED and probing_foreign_dist and not declares_cmdr_live:
+        print("REFUSED: --serve points outside the commander's live dist while CNX_DEPLOY_BASE is unset,")
+        print(f"         so bytes would be read from {BASE} and compared against files under {serve}.")
+        print("         Fix one of two ways: CNX_DEPLOY_BASE=http://127.0.0.1:<your static port>, or")
+        print("         CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 when you really do mean to probe my chain.")
+        return 5
+
     # --- precondition 0: the tree must not have the frontend dirty in a way that flatters us
     if not a.skip_build_check:
         dirty = subprocess.run(["git", "-C", str(tree), "status", "--porcelain", "--", "frontend/"],
@@ -937,7 +980,7 @@ def main() -> int:
     b_new_refs_present = None
     b_old_refs_absent = None
     if b_body_ok:
-        req = urllib.request.Request(BASE + "/")
+        req = urllib.request.Request(base_url() + "/")
         req.add_header("Cache-Control", "no-cache")
         with urllib.request.urlopen(req, timeout=60) as r:
             served_html = r.read().decode("utf-8", "replace")
