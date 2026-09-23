@@ -1,0 +1,171 @@
+{
+ "what": "0262-NARROW v2 前置：行号逐条重取 + commander/HJ-P3 三说法逐条对表",
+ "lane": "F 8ccd71d8",
+ "scope": {
+  "repo": "D:/moodle/_qoder_integration_20260919",
+  "exact_ref": "035721357da99a43c276f5803df83c3b08c1361c",
+  "tree": "08c0423ca8b1947b7f2cc30b3bc747fba6042fa5",
+  "read_command": "git -C D:/moodle/_qoder_integration_20260919 show 035721357da99a43c276f5803df83c3b08c1361c:<path>",
+  "product_was_run": false
+ },
+ "blob_check": {
+  "backend/app/main.py": {
+   "dea8410": "b1f12abff8ea4811bf4d8d7d506be717974fc932",
+   "035721357da99a43c276f5803df83c3b08c1361c": "b1f12abff8ea4811bf4d8d7d506be717974fc932"
+  },
+  "backend/app/services.py": {
+   "dea8410": "f1d85cf59948041127c13a037043d725bc8d073c",
+   "035721357da99a43c276f5803df83c3b08c1361c": "b2ebcc1052869132884987b63b0201a242204d64"
+  },
+  "backend/app/db/session.py": {
+   "dea8410": "ca8330cdf4138b55a1c104aa1926217821a2093a",
+   "035721357da99a43c276f5803df83c3b08c1361c": "ca8330cdf4138b55a1c104aa1926217821a2093a"
+  },
+  "backend/app/agent/mission.py": {
+   "dea8410": "bedbbca495d4d27c71c51e35da32964a7eea3f9f",
+   "035721357da99a43c276f5803df83c3b08c1361c": "bedbbca495d4d27c71c51e35da32964a7eea3f9f"
+  },
+  "backend/app/agent/runtime.py": {
+   "dea8410": "2388697449ef782c44f5480890e7e2e15182e25f",
+   "035721357da99a43c276f5803df83c3b08c1361c": "2388697449ef782c44f5480890e7e2e15182e25f"
+  },
+  "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+   "dea8410": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+   "035721357da99a43c276f5803df83c3b08c1361c": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+  }
+ },
+ "create_mission_sites_main": [
+  {
+   "line": 1131,
+   "enclosing": "def run_agent_command(  @:1058"
+  },
+  {
+   "line": 1285,
+   "enclosing": "def put_guardian_mission(  @:1269"
+  },
+  {
+   "line": 10912,
+   "enclosing": "async def copilot_message(  @:10813"
+  }
+ ],
+ "create_mission_site_count": 3,
+ "except_operational_error_sites_main": [
+  5946
+ ],
+ "twin_soft_skip_region": [
+  {
+   "line": 5944,
+   "text": ")"
+  },
+  {
+   "line": 5945,
+   "text": "session.flush()"
+  },
+  {
+   "line": 5946,
+   "text": "except OperationalError as exc:"
+  },
+  {
+   "line": 5947,
+   "text": "detail = str(exc).casefold()"
+  },
+  {
+   "line": 5948,
+   "text": "if \"database is locked\" not in detail and \"database is busy\" not in detail:"
+  },
+  {
+   "line": 5949,
+   "text": "raise"
+  },
+  {
+   "line": 5950,
+   "text": "logger.warning(\"JourneyTwin cache write skipped during transient SQLite contention: %s\", exc)"
+  },
+  {
+   "line": 5951,
+   "text": "return {"
+  },
+  {
+   "line": 5952,
+   "text": "\"journey_id\": journey.id,"
+  },
+  {
+   "line": 5953,
+   "text": "\"active_plan_version_id\": active_plan_id,"
+  }
+ ],
+ "generate_plans_def_line": [
+  1467
+ ],
+ "generate_plans_flush_lines": [
+  {
+   "line": 228,
+   "text": "session.flush()"
+  },
+  {
+   "line": 280,
+   "text": "session.flush()"
+  },
+  {
+   "line": 333,
+   "text": "session.flush()"
+  },
+  {
+   "line": 1148,
+   "text": "session.flush()"
+  },
+  {
+   "line": 1704,
+   "text": "session.flush()"
+  }
+ ],
+ "session_lock_lines": [
+  {
+   "line": 55,
+   "text": "kwargs[\"connect_args\"] = {\"check_same_thread\": False, \"timeout\": 30}"
+  },
+  {
+   "line": 65,
+   "text": "cursor.execute(\"PRAGMA busy_timeout=30000\")"
+  }
+ ],
+ "frontend_fallback_chain": [
+  {
+   "line": 506,
+   "text": "(typeof body?.detail === \"string\" ? body.detail : null) ??"
+  },
+  {
+   "line": 507,
+   "text": "(typeof body?.error?.message === \"string\" ? body.error.message : null) ??"
+  },
+  {
+   "line": 508,
+   "text": "`HTTP ${response.status}`,"
+  }
+ ],
+ "does_the_envelope_reach_the_screen": {
+  "envelope_body_shape": "{\"error\": {code,message,message_key,trace_id,details,[reason_code]}}  (main.py:469-478)",
+  "reader_uses": [
+   507
+  ],
+  "verdict": "可达：回落链里有一格读 `body?.error?.message` ⇒ 发产品信封，卡上「技术详情」就是服务器那句话"
+ },
+ "existing_busy_codes": [
+  {
+   "line": 2860,
+   "text": "\"HYDRATION_STORE_BUSY\","
+  },
+  {
+   "line": 2920,
+   "text": "\"GENERATION_STORE_BUSY\","
+  },
+  {
+   "line": 3019,
+   "text": "\"GENERATION_STORE_BUSY\","
+  }
+ ],
+ "envelope_def": {
+  "line": 446,
+  "assembled_at": []
+ }
+}
