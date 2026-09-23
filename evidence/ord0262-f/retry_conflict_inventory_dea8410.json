@@ -1,0 +1,781 @@
+{
+ "what": "ORD-0262 判据前置：产品现有重试/冲突语义的**只读**清单",
+ "lane": "F 8ccd71d8",
+ "scope": {
+  "repo": "D:/moodle/_qoder_integration_20260919",
+  "exact_ref": "dea8410be809ebf6c5046581873584e9dbf32b64",
+  "resolved_sha": "dea8410be809ebf6c5046581873584e9dbf32b64",
+  "tree": "d71a5454e444e245056fd95005fecfbdfa7adecf",
+  "read_command": "git -C D:/moodle/_qoder_integration_20260919 show dea8410be809ebf6c5046581873584e9dbf32b64:<path>  (纯对象库，不碰工作树)"
+ },
+ "per_file": {
+  "backend/app/main.py": {
+   "why": "产品主体（错误信封、异常处理器、回放）",
+   "lines": 11212,
+   "bytes": 472341,
+   "probes": {
+    "error_envelope_def": {
+     "why": "信封函数本体",
+     "count": 1,
+     "sites": [
+      {
+       "line": 446,
+       "snip": "def error("
+      }
+     ]
+    },
+    "error_returns": {
+     "why": "直接 `return error(\"CODE\", …)`（跨行也算）",
+     "count": 12,
+     "sites": [
+      {
+       "line": 539,
+       "snip": "return error("
+      },
+      {
+       "line": 1927,
+       "snip": "return error("
+      },
+      {
+       "line": 1958,
+       "snip": "return error("
+      },
+      {
+       "line": 1970,
+       "snip": "return error("
+      },
+      {
+       "line": 2008,
+       "snip": "return error("
+      },
+      {
+       "line": 2020,
+       "snip": "return error("
+      },
+      {
+       "line": 2033,
+       "snip": "return error("
+      },
+      {
+       "line": 2859,
+       "snip": "return error("
+      }
+     ]
+    },
+    "httpexception_raises_named": {
+     "why": "位置参数式 raise ⇒ 走通用码映射",
+     "count": 159,
+     "sites": [
+      {
+       "line": 615,
+       "snip": "raise HTTPException(404, f\"{label} {identifier} was not found\")"
+      },
+      {
+       "line": 726,
+       "snip": "raise HTTPException(502, \"native Hermes run status is unavailable\") from exc"
+      },
+      {
+       "line": 881,
+       "snip": "raise HTTPException(502, \"native Hermes run status is unavailable\") from exc"
+      },
+      {
+       "line": 1015,
+       "snip": "raise HTTPException(502, \"native Hermes run stop is unavailable\") from exc"
+      },
+      {
+       "line": 1325,
+       "snip": "raise HTTPException(409, \"Guardian Autopilot requires an active Journey\")"
+      },
+      {
+       "line": 1334,
+       "snip": "raise HTTPException(409, \"activate a standing Guardian mission before starting Autopilot\")"
+      },
+      {
+       "line": 1514,
+       "snip": "raise HTTPException(503, str(exc)) from exc"
+      },
+      {
+       "line": 1614,
+       "snip": "raise HTTPException(503, str(exc)) from exc"
+      }
+     ]
+    },
+    "status_args": {
+     "why": "信封里显式写的 HTTP 状态",
+     "count": 16,
+     "sites": [
+      {
+       "line": 542,
+       "snip": "status=422,"
+      },
+      {
+       "line": 606,
+       "snip": "status=422,"
+      },
+      {
+       "line": 1930,
+       "snip": "status=403,"
+      },
+      {
+       "line": 1961,
+       "snip": "status=403,"
+      },
+      {
+       "line": 1973,
+       "snip": "status=409,"
+      },
+      {
+       "line": 2011,
+       "snip": "status=403,"
+      },
+      {
+       "line": 2023,
+       "snip": "status=409,"
+      },
+      {
+       "line": 2862,
+       "snip": "status=503,"
+      }
+     ]
+    },
+    "message_key_args": {
+     "why": "给了翻译键的抛出点",
+     "count": 16,
+     "sites": [
+      {
+       "line": 544,
+       "snip": "message_key=\"request.invalid\","
+      },
+      {
+       "line": 563,
+       "snip": "message_key=HTTP_MESSAGE_KEYS.get(exc.status_code, f\"error.{code.lower()}\"),"
+      },
+      {
+       "line": 608,
+       "snip": "message_key=TEMPORAL_MESSAGE_KEYS[code],"
+      },
+      {
+       "line": 1932,
+       "snip": "message_key=\"demo.reset_disabled\","
+      },
+      {
+       "line": 1963,
+       "snip": "message_key=\"demo.prepare_disabled\","
+      },
+      {
+       "line": 1975,
+       "snip": "message_key=\"demo.scenario_missing\","
+      },
+      {
+       "line": 2013,
+       "snip": "message_key=\"demo.start_disabled\","
+      },
+      {
+       "line": 2025,
+       "snip": "message_key=\"demo.scenario_missing\","
+      }
+     ]
+    },
+    "reason_code_args": {
+     "why": "给了「哪一条条件拒的」的抛出点",
+     "count": 2,
+     "sites": [
+      {
+       "line": 561,
+       "snip": "reason_code=getattr(exc, \"reason_code\", None),"
+      },
+      {
+       "line": 4464,
+       "snip": "reason_code=refusal,"
+      }
+     ]
+    },
+    "retry_after_any": {
+     "why": "任何形式的重试提示",
+     "count": 5,
+     "sites": [
+      {
+       "line": 2863,
+       "snip": "details={\"retry_after_ms\": 500},"
+      },
+      {
+       "line": 2923,
+       "snip": "details={\"retry_after_ms\": 500},"
+      },
+      {
+       "line": 2934,
+       "snip": "\"retry_after_ms\": body[\"retry_after_ms\"],"
+      },
+      {
+       "line": 2934,
+       "snip": "\"retry_after_ms\": body[\"retry_after_ms\"],"
+      },
+      {
+       "line": 3022,
+       "snip": "details={\"retry_after_ms\": 500},"
+      }
+     ]
+    },
+    "temporal_whitelist": {
+     "why": "具名拒绝白名单出现处",
+     "count": 3,
+     "sites": [
+      {
+       "line": 575,
+       "snip": "TEMPORAL_REJECTIONS = {"
+      },
+      {
+       "line": 595,
+       "snip": "if code not in TEMPORAL_REJECTIONS:"
+      },
+      {
+       "line": 605,
+       "snip": "TEMPORAL_REJECTIONS[code],"
+      }
+     ]
+    },
+    "db_lock_soft_skip": {
+     "why": "sqlite 锁的现场判据",
+     "count": 2,
+     "sites": [
+      {
+       "line": 5948,
+       "snip": "if \"database is locked\" not in detail and \"database is busy\" not in detail:"
+      },
+      {
+       "line": 5948,
+       "snip": "if \"database is locked\" not in detail and \"database is busy\" not in detail:"
+      }
+     ]
+    },
+    "conflict_wording": {
+     "why": "幂等冲突那句话（产品已有词汇）",
+     "count": 3,
+     "sites": [
+      {
+       "line": 7579,
+       "snip": "raise HTTPException(409, \"same idempotency key used for a different request\")"
+      },
+      {
+       "line": 9870,
+       "snip": "raise HTTPException(409, \"same idempotency key used for a different request\")"
+      },
+      {
+       "line": 9964,
+       "snip": "raise HTTPException(409, \"same idempotency key used for a different request\")"
+      }
+     ]
+    },
+    "journaling_lock": {
+     "why": "旅程级写锁",
+     "count": 3,
+     "sites": [
+      {
+       "line": 46,
+       "snip": "from app.concurrency_guards import journey_write_lock"
+      },
+      {
+       "line": 9849,
+       "snip": "with journey_write_lock(journey_id):"
+      },
+      {
+       "line": 11169,
+       "snip": "with journey_write_lock(str(journey_id)):"
+      }
+     ]
+    },
+    "integrity_error": {
+     "why": "唯一索引撞车后的回滚路径",
+     "count": 6,
+     "sites": [
+      {
+       "line": 22,
+       "snip": "from sqlalchemy.exc import IntegrityError, OperationalError"
+      },
+      {
+       "line": 4006,
+       "snip": "except IntegrityError as exc:"
+      },
+      {
+       "line": 4041,
+       "snip": "except IntegrityError as exc:"
+      },
+      {
+       "line": 9716,
+       "snip": "path turns the resulting IntegrityError into the same 409 as everything else"
+      },
+      {
+       "line": 9931,
+       "snip": "except IntegrityError as exc:"
+      },
+      {
+       "line": 10159,
+       "snip": "except IntegrityError as exc:"
+      }
+     ]
+    },
+    "retry_after_header_out": {
+     "why": "把 Retry-After **发出去**的地方",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_header_in": {
+     "why": "把 Retry-After **读进来**的地方",
+     "count": 0,
+     "sites": []
+    },
+    "sleep_or_backoff": {
+     "why": "产品里有没有自己重试",
+     "count": 1,
+     "sites": [
+      {
+       "line": 9880,
+       "snip": "time.sleep(0.02)"
+      }
+     ]
+    }
+   }
+  },
+  "backend/app/commerce/idempotency.py": {
+   "why": "规范化签名 + 已提交回放的词汇",
+   "lines": 45,
+   "bytes": 1598,
+   "probes": {
+    "error_envelope_def": {
+     "why": "信封函数本体",
+     "count": 0,
+     "sites": []
+    },
+    "error_returns": {
+     "why": "直接 `return error(\"CODE\", …)`（跨行也算）",
+     "count": 0,
+     "sites": []
+    },
+    "httpexception_raises_named": {
+     "why": "位置参数式 raise ⇒ 走通用码映射",
+     "count": 0,
+     "sites": []
+    },
+    "status_args": {
+     "why": "信封里显式写的 HTTP 状态",
+     "count": 0,
+     "sites": []
+    },
+    "message_key_args": {
+     "why": "给了翻译键的抛出点",
+     "count": 0,
+     "sites": []
+    },
+    "reason_code_args": {
+     "why": "给了「哪一条条件拒的」的抛出点",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_any": {
+     "why": "任何形式的重试提示",
+     "count": 0,
+     "sites": []
+    },
+    "temporal_whitelist": {
+     "why": "具名拒绝白名单出现处",
+     "count": 0,
+     "sites": []
+    },
+    "db_lock_soft_skip": {
+     "why": "sqlite 锁的现场判据",
+     "count": 0,
+     "sites": []
+    },
+    "conflict_wording": {
+     "why": "幂等冲突那句话（产品已有词汇）",
+     "count": 2,
+     "sites": [
+      {
+       "line": 37,
+       "snip": "raise IdempotencyConflict(\"same idempotency key used for a different request\")"
+      },
+      {
+       "line": 44,
+       "snip": "raise IdempotencyConflict(\"same idempotency key used for a different request\")"
+      }
+     ]
+    },
+    "journaling_lock": {
+     "why": "旅程级写锁",
+     "count": 0,
+     "sites": []
+    },
+    "integrity_error": {
+     "why": "唯一索引撞车后的回滚路径",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_header_out": {
+     "why": "把 Retry-After **发出去**的地方",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_header_in": {
+     "why": "把 Retry-After **读进来**的地方",
+     "count": 0,
+     "sites": []
+    },
+    "sleep_or_backoff": {
+     "why": "产品里有没有自己重试",
+     "count": 0,
+     "sites": []
+    }
+   }
+  },
+  "backend/app/commerce/validators.py": {
+   "why": "幂等键本身的形状判据",
+   "lines": 113,
+   "bytes": 3987,
+   "probes": {
+    "error_envelope_def": {
+     "why": "信封函数本体",
+     "count": 0,
+     "sites": []
+    },
+    "error_returns": {
+     "why": "直接 `return error(\"CODE\", …)`（跨行也算）",
+     "count": 0,
+     "sites": []
+    },
+    "httpexception_raises_named": {
+     "why": "位置参数式 raise ⇒ 走通用码映射",
+     "count": 0,
+     "sites": []
+    },
+    "status_args": {
+     "why": "信封里显式写的 HTTP 状态",
+     "count": 0,
+     "sites": []
+    },
+    "message_key_args": {
+     "why": "给了翻译键的抛出点",
+     "count": 0,
+     "sites": []
+    },
+    "reason_code_args": {
+     "why": "给了「哪一条条件拒的」的抛出点",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_any": {
+     "why": "任何形式的重试提示",
+     "count": 0,
+     "sites": []
+    },
+    "temporal_whitelist": {
+     "why": "具名拒绝白名单出现处",
+     "count": 0,
+     "sites": []
+    },
+    "db_lock_soft_skip": {
+     "why": "sqlite 锁的现场判据",
+     "count": 0,
+     "sites": []
+    },
+    "conflict_wording": {
+     "why": "幂等冲突那句话（产品已有词汇）",
+     "count": 0,
+     "sites": []
+    },
+    "journaling_lock": {
+     "why": "旅程级写锁",
+     "count": 0,
+     "sites": []
+    },
+    "integrity_error": {
+     "why": "唯一索引撞车后的回滚路径",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_header_out": {
+     "why": "把 Retry-After **发出去**的地方",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_header_in": {
+     "why": "把 Retry-After **读进来**的地方",
+     "count": 0,
+     "sites": []
+    },
+    "sleep_or_backoff": {
+     "why": "产品里有没有自己重试",
+     "count": 0,
+     "sites": []
+    }
+   }
+  },
+  "backend/app/concurrency_guards.py": {
+   "why": "旅程级写锁",
+   "lines": 85,
+   "bytes": 3537,
+   "probes": {
+    "error_envelope_def": {
+     "why": "信封函数本体",
+     "count": 0,
+     "sites": []
+    },
+    "error_returns": {
+     "why": "直接 `return error(\"CODE\", …)`（跨行也算）",
+     "count": 0,
+     "sites": []
+    },
+    "httpexception_raises_named": {
+     "why": "位置参数式 raise ⇒ 走通用码映射",
+     "count": 0,
+     "sites": []
+    },
+    "status_args": {
+     "why": "信封里显式写的 HTTP 状态",
+     "count": 0,
+     "sites": []
+    },
+    "message_key_args": {
+     "why": "给了翻译键的抛出点",
+     "count": 0,
+     "sites": []
+    },
+    "reason_code_args": {
+     "why": "给了「哪一条条件拒的」的抛出点",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_any": {
+     "why": "任何形式的重试提示",
+     "count": 0,
+     "sites": []
+    },
+    "temporal_whitelist": {
+     "why": "具名拒绝白名单出现处",
+     "count": 0,
+     "sites": []
+    },
+    "db_lock_soft_skip": {
+     "why": "sqlite 锁的现场判据",
+     "count": 0,
+     "sites": []
+    },
+    "conflict_wording": {
+     "why": "幂等冲突那句话（产品已有词汇）",
+     "count": 0,
+     "sites": []
+    },
+    "journaling_lock": {
+     "why": "旅程级写锁",
+     "count": 1,
+     "sites": [
+      {
+       "line": 70,
+       "snip": "def journey_write_lock(journey_id: str) -> Iterator[None]:"
+      }
+     ]
+    },
+    "integrity_error": {
+     "why": "唯一索引撞车后的回滚路径",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_header_out": {
+     "why": "把 Retry-After **发出去**的地方",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_header_in": {
+     "why": "把 Retry-After **读进来**的地方",
+     "count": 0,
+     "sites": []
+    },
+    "sleep_or_backoff": {
+     "why": "产品里有没有自己重试",
+     "count": 0,
+     "sites": []
+    }
+   }
+  },
+  "backend/app/db/models.py": {
+   "why": "`idempotency_keys` 表（持久化那一侧）",
+   "lines": 1211,
+   "bytes": 63211,
+   "probes": {
+    "error_envelope_def": {
+     "why": "信封函数本体",
+     "count": 0,
+     "sites": []
+    },
+    "error_returns": {
+     "why": "直接 `return error(\"CODE\", …)`（跨行也算）",
+     "count": 0,
+     "sites": []
+    },
+    "httpexception_raises_named": {
+     "why": "位置参数式 raise ⇒ 走通用码映射",
+     "count": 0,
+     "sites": []
+    },
+    "status_args": {
+     "why": "信封里显式写的 HTTP 状态",
+     "count": 0,
+     "sites": []
+    },
+    "message_key_args": {
+     "why": "给了翻译键的抛出点",
+     "count": 0,
+     "sites": []
+    },
+    "reason_code_args": {
+     "why": "给了「哪一条条件拒的」的抛出点",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_any": {
+     "why": "任何形式的重试提示",
+     "count": 0,
+     "sites": []
+    },
+    "temporal_whitelist": {
+     "why": "具名拒绝白名单出现处",
+     "count": 0,
+     "sites": []
+    },
+    "db_lock_soft_skip": {
+     "why": "sqlite 锁的现场判据",
+     "count": 0,
+     "sites": []
+    },
+    "conflict_wording": {
+     "why": "幂等冲突那句话（产品已有词汇）",
+     "count": 0,
+     "sites": []
+    },
+    "journaling_lock": {
+     "why": "旅程级写锁",
+     "count": 0,
+     "sites": []
+    },
+    "integrity_error": {
+     "why": "唯一索引撞车后的回滚路径",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_header_out": {
+     "why": "把 Retry-After **发出去**的地方",
+     "count": 0,
+     "sites": []
+    },
+    "retry_after_header_in": {
+     "why": "把 Retry-After **读进来**的地方",
+     "count": 0,
+     "sites": []
+    },
+    "sleep_or_backoff": {
+     "why": "产品里有没有自己重试",
+     "count": 0,
+     "sites": []
+    }
+   }
+  }
+ },
+ "named_error_codes_top": [
+  [
+   "DEMO_MODE_REQUIRED",
+   3
+  ],
+  [
+   "DEMO_SCENARIO_MISSING",
+   2
+  ],
+  [
+   "GENERATION_STORE_BUSY",
+   2
+  ],
+  [
+   "VALIDATION_ERROR",
+   1
+  ],
+  [
+   "DEMO_START_REFUSED",
+   1
+  ],
+  [
+   "HYDRATION_STORE_BUSY",
+   1
+  ],
+  [
+   "GENERATION_ABANDONED",
+   1
+  ],
+  [
+   "TWIN_NOW_OFFSET_REQUIRED",
+   1
+  ]
+ ],
+ "named_error_code_total_raises": 12,
+ "named_error_code_distinct": 8,
+ "status_histogram": [
+  [
+   "raise HTTPException(409",
+   69
+  ],
+  [
+   "raise HTTPException(422",
+   52
+  ],
+  [
+   "raise HTTPException(404",
+   28
+  ],
+  [
+   "信封 status=422",
+   4
+  ],
+  [
+   "raise HTTPException(502",
+   4
+  ],
+  [
+   "信封 status=403",
+   3
+  ],
+  [
+   "信封 status=409",
+   3
+  ],
+  [
+   "信封 status=503",
+   3
+  ],
+  [
+   "raise HTTPException(503",
+   3
+  ],
+  [
+   "信封 status=500",
+   1
+  ],
+  [
+   "信封 status=201",
+   1
+  ],
+  [
+   "信封 status=200",
+   1
+  ],
+  [
+   "raise HTTPException(500",
+   1
+  ],
+  [
+   "raise HTTPException(401",
+   1
+  ],
+  [
+   "raise HTTPException(403",
+   1
+  ]
+ ],
+ "status_total_call_sites": 175
+}
