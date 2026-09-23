@@ -1,0 +1,401 @@
+{
+ "at": "2026-09-23T23:19:59+08:00",
+ "order": "ORD-0263 A3 判定 + S5 第二代复现",
+ "lane": "B c01d72a3",
+ "surface": {
+  "preview_port": 4441,
+  "origin_port": 8441,
+  "served_build": "dist_ord0268 (landed tip 2b49e3ca, contains ORD-0263)",
+  "origin": "q263_html_origin.py: GET /api/* -> 200 text/html, /api/*/health -> 200 json, POST -> never answers",
+  "browser_mocks": "none",
+  "forbidden_ports_never_requested": [
+   4781,
+   4782,
+   8693,
+   4185,
+   8713
+  ]
+ },
+ "ownership_proofs": {
+  "origin_marker_seen_through_proxy": true,
+  "proxy_health_body_head": "{\"status\": \"ok\", \"version\": \"ord0263-s5\"}",
+  "direct_health": [
+   200,
+   "application/json"
+  ],
+  "served_document_equals_my_dist_index": true,
+  "served_doc_sha16": "3cb318326b13a033",
+  "my_dist_index_sha16": "3cb318326b13a033",
+  "served_len": 1200,
+  "disk_len": 1200,
+  "my_dist_assets_sample": [
+   "JourneyMap-TiEm8jyP.js",
+   "index-Cpy_jhEg.js",
+   "index-I45CQek8.css",
+   "maplibre-gl-kx9AWR05.js"
+  ]
+ },
+ "S5_second_generation": {
+  "label": "S5_second_generation",
+  "at": "2026-09-23T15:19:43.429Z",
+  "url": "http://127.0.0.1:4441/v8/hub",
+  "window_s": 25,
+  "render_shape": "persistent-context full document load, phone 390x844 zh-CN",
+  "seconds_to_settle": 0.44,
+  "skeleton_seen_during_wait": true,
+  "classification_nodes": {
+   "offline-retry": 0,
+   "backend-unreachable": 0,
+   "backend-unreachable-retry": 0,
+   "load-failed": 0,
+   "load-failed-reason": 0,
+   "journey-gone": 0,
+   "today-heading": 0,
+   "trial-setup": 0,
+   "failure-view": 1,
+   "failure-reason": 1,
+   "failure-read-cached": 1,
+   "failure-retry": 1
+  },
+  "rendered_text": "连接\n\n网络不可用\n\n这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\n\n看已保存的只读副本\n重试\n归因详情",
+  "rendered_text_head": "连接 网络不可用 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。 看已保存的只读副本 重试 归因详情",
+  "snapshot": {
+   "present": true,
+   "count": 1,
+   "store_names": [
+    "journeys"
+   ]
+  },
+  "origin_probe": {
+   "status": 200,
+   "ct": "application/json",
+   "thrown": false,
+   "ms": 4
+  },
+  "app_attribution": {
+   "present": true,
+   "last": {
+    "reason": "NETWORK_UNAVAILABLE",
+    "evidence_kind": "TRANSPORT",
+    "http_status": null,
+    "source_layer": "TRANSPORT",
+    "retryable": true,
+    "recovery_action": "read-only-cached",
+    "message_key": "failure.networkUnavailable",
+    "telemetry": "attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+    "cached_copy_present": true,
+    "at": "2026-09-23T15:19:43.109Z",
+    "context": "shell.boot.journeyRead"
+   },
+   "count": 1
+  },
+  "service_worker": {
+   "controller": true,
+   "onLine": true
+  },
+  "enter_proof": null,
+  "non_get_requests": [],
+  "profile": "D:\\moodle\\_qoder_b_ord0263_20260923\\profile_s5",
+  "playwright": "D:\\moodle\\_qoder_integration_20260919\\frontend\\node_modules\\playwright"
+ },
+ "A3": {
+  "label": "A3_write_leg_hangs",
+  "at": "2026-09-23T15:19:57.611Z",
+  "url": "http://127.0.0.1:4441/v8/hub",
+  "seconds": 35,
+  "render_shape": "persistent context, phone 390x844 zh-CN, real clicks on the production bundle",
+  "fills": [
+   {
+    "testid": "trial-city",
+    "present": true,
+    "before": "",
+    "typed": "北京",
+    "after": "北京"
+   },
+   {
+    "testid": "trial-arrival",
+    "present": true,
+    "before": "",
+    "typed": "北京南站",
+    "after": "北京南站"
+   },
+   {
+    "testid": "trial-departure",
+    "present": true,
+    "before": "",
+    "typed": "北京南站",
+    "after": "北京南站"
+   }
+  ],
+  "steps": [
+   {
+    "pressed": true,
+    "testid": "trial-next",
+    "hint_before_click": "",
+    "hint_after_click": "",
+    "live": "",
+    "step_body_present": {
+     "step1": 0,
+     "step2": 1,
+     "step3": 0
+    }
+   },
+   {
+    "pressed": true,
+    "testid": "trial-next",
+    "hint_before_click": "",
+    "hint_after_click": "",
+    "live": "",
+    "step_body_present": {
+     "step1": 0,
+     "step2": 0,
+     "step3": 1
+    }
+   }
+  ],
+  "create_button": {
+   "aria_disabled": null,
+   "disabled": false,
+   "label": "确认创建"
+  },
+  "writes_seen": [
+   {
+    "method": "POST",
+    "url": "/api/v1/travelers",
+    "at": 1790176787351
+   }
+  ],
+  "write_responses_settled": [],
+  "stop_waiting_used": {
+   "clicked_at_s": 8.2,
+   "hit_test": "NONE",
+   "after_body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n已停止等待\n已停止等待，行程还没有创建。\n\n返回\n确认创建\n使用封存的演示行程",
+   "after_wait_outcome": "已停止等待\n已停止等待，行程还没有创建。",
+   "after_live": "",
+   "after_create_error": "",
+   "after_nodes": {
+    "trial-setup": 1,
+    "failure-view": 0,
+    "today-heading": 0,
+    "load-failed": 0,
+    "offline-retry": 0,
+    "backend-unreachable": 0
+   }
+  },
+  "sentences_ever_on_screen": [
+   "用你自己的城市试用 CITYNEXUS",
+   "新建行程",
+   "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+   "EN",
+   "✓",
+   "目的地与时间",
+   "人数与偏好",
+   "3",
+   "确认创建",
+   "目的地",
+   "北京",
+   "抵达",
+   "北京南站 · 2026-09-24 10:00",
+   "离开",
+   "北京南站 · 2026-09-26 20:00",
+   "人数 / 房间",
+   "2 · 1 · 我们替你填的",
+   "总预算 / 住宿",
+   "CNY 3000 / 1000 · 我们替你填的",
+   "节奏",
+   "轻松 · 我们替你填的",
+   "兴趣",
+   "—",
+   "特殊要求",
+   "自动设置",
+   "CN · CNY · Asia/Shanghai",
+   "正在登记出行人",
+   "已等待 0 秒",
+   "第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。",
+   "停止等待",
+   "停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。",
+   "返回",
+   "正在创建…",
+   "使用封存的演示行程",
+   "已等待 1 秒",
+   "已等待 2 秒",
+   "已等待 3 秒",
+   "已等待 4 秒",
+   "已等待 5 秒",
+   "已等待 6 秒",
+   "已等待 7 秒",
+   "已等待 8 秒",
+   "已停止等待",
+   "已停止等待，行程还没有创建。"
+  ],
+  "ever_blamed_network_or_origin": false,
+  "phase_lines_seen": [],
+  "attribution_samples": [],
+  "sample_count": 10,
+  "samples": [
+   {
+    "elapsed_s": 0,
+    "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 0 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+    "live": "",
+    "wait_outcome": "",
+    "create_error": "",
+    "nodes": {
+     "trial-setup": 1,
+     "failure-view": 0,
+     "today-heading": 0,
+     "load-failed": 0,
+     "offline-retry": 0,
+     "backend-unreachable": 0
+    },
+    "stop_button": 1,
+    "attribution_last": null
+   },
+   {
+    "elapsed_s": 1,
+    "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 1 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+    "live": "",
+    "wait_outcome": "",
+    "create_error": "",
+    "nodes": {
+     "trial-setup": 1,
+     "failure-view": 0,
+     "today-heading": 0,
+     "load-failed": 0,
+     "offline-retry": 0,
+     "backend-unreachable": 0
+    },
+    "stop_button": 1,
+    "attribution_last": null
+   },
+   {
+    "elapsed_s": 2,
+    "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 2 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+    "live": "",
+    "wait_outcome": "",
+    "create_error": "",
+    "nodes": {
+     "trial-setup": 1,
+     "failure-view": 0,
+     "today-heading": 0,
+     "load-failed": 0,
+     "offline-retry": 0,
+     "backend-unreachable": 0
+    },
+    "stop_button": 1,
+    "attribution_last": null
+   },
+   {
+    "elapsed_s": 3.1,
+    "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 3 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+    "live": "",
+    "wait_outcome": "",
+    "create_error": "",
+    "nodes": {
+     "trial-setup": 1,
+     "failure-view": 0,
+     "today-heading": 0,
+     "load-failed": 0,
+     "offline-retry": 0,
+     "backend-unreachable": 0
+    },
+    "stop_button": 1,
+    "attribution_last": null
+   },
+   {
+    "elapsed_s": 4.1,
+    "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 4 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+    "live": "",
+    "wait_outcome": "",
+    "create_error": "",
+    "nodes": {
+     "trial-setup": 1,
+     "failure-view": 0,
+     "today-heading": 0,
+     "load-failed": 0,
+     "offline-retry": 0,
+     "backend-unreachable": 0
+    },
+    "stop_button": 1,
+    "attribution_last": null
+   },
+   {
+    "elapsed_s": 5.1,
+    "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 5 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+    "live": "",
+    "wait_outcome": "",
+    "create_error": "",
+    "nodes": {
+     "trial-setup": 1,
+     "failure-view": 0,
+     "today-heading": 0,
+     "load-failed": 0,
+     "offline-retry": 0,
+     "backend-unreachable": 0
+    },
+    "stop_button": 1,
+    "attribution_last": null
+   },
+   {
+    "elapsed_s": 6.1,
+    "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 6 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+    "live": "",
+    "wait_outcome": "",
+    "create_error": "",
+    "nodes": {
+     "trial-setup": 1,
+     "failure-view": 0,
+     "today-heading": 0,
+     "load-failed": 0,
+     "offline-retry": 0,
+     "backend-unreachable": 0
+    },
+    "stop_button": 1,
+    "attribution_last": null
+   },
+   {
+    "elapsed_s": 7.2,
+    "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 7 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+    "live": "",
+    "wait_outcome": "",
+    "create_error": "",
+    "nodes": {
+     "trial-setup": 1,
+     "failure-view": 0,
+     "today-heading": 0,
+     "load-failed": 0,
+     "offline-retry": 0,
+     "backend-unreachable": 0
+    },
+    "stop_button": 1,
+    "attribution_last": null
+   },
+   {
+    "elapsed_s": 8.2,
+    "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 8 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+    "live": "",
+    "wait_outcome": "",
+    "create_error": "",
+    "nodes": {
+     "trial-setup": 1,
+     "failure-view": 0,
+     "today-heading": 0,
+     "load-failed": 0,
+     "offline-retry": 0,
+     "backend-unreachable": 0
+    },
+    "stop_button": 1,
+    "attribution_last": null
+   },
+   {
+    "elapsed_s": 10.2,
+    "after_stop": true,
+    "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n已停止等待\n已停止等待，行程还没有创建。\n\n返回\n确认创建\n使用封存的演示行程"
+   }
+  ]
+ },
+ "origin_counters": {
+  "health_json": 4,
+  "html_for_api_get": 2,
+  "post_hanging": 1
+ }
+}
