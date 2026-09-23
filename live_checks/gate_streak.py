@@ -118,9 +118,22 @@ def row_counts(path: str | None) -> dict:
     except sqlite3.Error as exc:
         return {"error": f"READ_ONLY_OPEN_FAILED: {type(exc).__name__}"}
     try:
-        have = {r[0] for r in con.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")}
-        return {"absent": False, "table_count": len(have)}
+        have = sorted(r[0] for r in con.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'"))
+        # table_count alone cannot show a 0->N write: a freshly created schema already has ~55 tables
+        # with zero rows (measured by lane F on ORD-0225, which is why a closure receipt built from
+        # this field had no "rows appeared" column at all).  Per-table counts are cheap and make the
+        # durable-state claim readable instead of inferable.
+        per_table = {}
+        for t in have:
+            try:
+                per_table[t] = con.execute(f'SELECT COUNT(*) FROM "{t}"').fetchone()[0]
+            except sqlite3.Error as exc:
+                per_table[t] = f"COUNT_FAILED:{type(exc).__name__}"
+        nonempty = {k: v for k, v in per_table.items() if isinstance(v, int) and v > 0}
+        return {"absent": False, "table_count": len(have), "row_total": sum(
+                    v for v in per_table.values() if isinstance(v, int)),
+                "nonempty_table_count": len(nonempty), "nonempty_tables": nonempty}
     finally:
         con.close()
 
