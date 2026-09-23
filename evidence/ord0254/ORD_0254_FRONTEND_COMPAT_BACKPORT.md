@@ -228,3 +228,35 @@ lines = 0
 - 没改尺的源码、没改任何断言、没加 mock 让面变绿；没把 merge-tree 干净当成"跑起来像样"（本单的"像样"证据是 §3 的实跑 + §4 的真浏览器读数）。
 - 没量公网链；没量基线面；没量需要"有方案 / 有待审单"状态的 4 条（`56d20ec`/`8f42cb7`/`107e2db` 全部、`6b208ee` 的动作行）。
 - 换代（dist 并集切指）留给指挥官：我给的是候选 + 我自己的面，`serve/` 的上一代来自 `_qoder_preview_20260920/dist` 在我复制时刻的内容（`index-CrAwWm5f.js`），而指挥官 12:3x 的收据里链上 index 是 `index-DtQ86lsQ.js` ⇒ **真正换代前请以线上当前 index 重做一次并集**，不要用我这份快照当代次证明。
+
+---
+
+## 8. 换尺重跑（指挥官 14:2x 通知：红队第三轮攻破 C/G/H 单次探测）
+
+**§3 那一节的读数作废**（尺的错，不是候选包的错）：它量的是上一枚签名对象 `e3015cc065d1d4eb`。候选包本身没变（tip 仍是 `6a39c527f2aa3b16e73dfd122c34d6e6be7102df`，`index-C0qSwD3N.js` / `index-CBXSx-f9.css` 同名同字节），§1/§2/§4/§5 的屏幕读数与缺席断言不受换尺影响；下面只用新尺重跑 §3。
+
+新坐标核验：从 `commander/control` 的 commit `a0eae3110393` 取回 `live_checks/deploy_bundle.py` = **40,848 B / blob `c0aafc940136c502a2d021f0535537ee3298c888`**（`FETCHED_VERIFIED`，`ord0254_ruler_v2_fetch.json`），每一档运行前后都复验该 blob（各 summary 里 `ruler_unchanged: true`）。指挥官自己的第三轮见证收据也按坐标读回并存档：`evidence/gates/deploy_bundle_round3_selftest_0923.json` = **6,982 B / blob `00df58af8504ac99c9177ae83c17b6fa57c1a821`，18/18 GREEN，base `http://127.0.0.1:4781`**（那一枚是量的你的链，不是我量的）。
+
+跑法与 §3 相同：只在自己进程内替换 `BASE` 这一枚常量，`--allow-proxy-unprobed` 不使用，`CNX_DEPLOY_PROBE_TIMES=2`（新版默认已是 2，我仍显式传并记进收据）。
+
+```text
+deploy（两枚 F base 不配）  ord0254_v2_deploy_receipt.json 24,352 B blob f3cef10701b67ba3
+  A GREEN · B GREEN（new_refs_present / old_refs_absent 分开为 true） · C 2/2 GREEN，且每条带 times=2 statuses=[200,200]
+  D 2/2 GREEN · E 换 index 前 2/2 真字节 · G [sw.js=DECLARED_NO_PRECACHE_ARRAY, v10-sw.js GREEN urls_found=8：8 条 url 每条 times=2 statuses=[200,200]]
+  H GREEN（2 条上一代 ref 各 times=2 statuses=[200,200]） · F RED（两个 base NOT_CONFIGURED，fail-closed） ⇒ OVERALL RED
+  frontend_dirty = ""（逐字）、tree_tip 6a39c52 == --sha、union added 4 / serve/assets 18、备份目录 dist_bak_142905（秒级时间戳生效）
+fprobe（用尺自己的 repeated_verdict 量我的两台面）ord0254_v2_fprobe_receipt.json 6,695 B blob 8a75b5840e200faf
+  static :4412 与 preview :4411 各探 index js 与 /，全部 times=2 statuses=[200,200] ⇒ verdict GREEN
+selftest（尺自己的、未改的自测，指到我的面上）ord0254_v2_selftest_receipt.json
+  SELFTEST GREEN (20/20 arms matched)，其中包含第三轮新增两臂：
+    G-killer:precache_url_breaks_on_second_probe        => RED
+    G-true_positive:same_url_twice_on_real_server       => GREEN
+  与你 18/18 的臂集逐臂对照（ord0254_v2_selftest_crosscheck.json）：共有臂 判定不一致 0 处；
+  我多的两臂就是 B2 与 B2-neg（因为我导出了 CNX_DEPLOY_SELFTEST_OLD_REF）；true_positive / served_but_absent 两臂的名字随代次变化（我 CrAwWm5f->C0qSwD3N，你 DtQ86lsQ）。18 + 2 = 20，差值有名字。
+```
+
+**§红-1 在新尺上依然成立**（我没有沿用旧引用，而是拿新对象重跑了一次同样的构造）：`tools/ruler_v2.py` 第 **669** 行 `f_unconfigured = any(p["verdict"] == "NOT_CONFIGURED" for p in f_probes)`，而 662 行（未配置分支）写 `verdict`、已配置分支只写 `surface/base/got` ⇒ 一设 base 就 `KeyError: 'verdict'`，A–H 收据写在 F 之后所以整份丢失。四态在新对象上复测（`ord0254_v2_keyerr_summary.json` + 逐字 traceback `ord0254_v2_keyerr_traceback.txt`）。这一版把 C/G/H 都换成了同一个 `repeated_verdict`，**但没有碰 F 的聚合段** —— 也就是说换代那条路仍然只能靠"不配 base + 把 F 记成 RED"走完，或者由我在外面用尺自己的谓词补量（本文 `fprobe` 那一档）。
+
+一处我自己的引用要更正：`ord0254_surface_receipt.json` 里的 `ruler_blob16` 字段仍写着上一枚 `e3015cc065d1d4eb` —— 那是起面脚本预检的文件（`tools/ruler.py`），**不是**尺实际运行的对象；尺的每一档都在运行时复验 `c0aafc940136c502…`。这条属于我没把预检常量跟着换，读数本身不受影响。
+
+**清理（重跑后）**：见 `ord0254_v2_cleanup_receipt.json` —— 三枚端口再次具名松手，删除只按具名清单。
