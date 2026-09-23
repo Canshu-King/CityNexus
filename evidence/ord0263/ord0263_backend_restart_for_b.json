@@ -1,0 +1,27 @@
+{
+ "at": "2026-09-23T20:00:28+08:00",
+ "purpose": "re-earn the IndexedDB snapshot before the S3 (no-answer) read on the B candidate",
+ "db_file": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db",
+ "marker_rows_in_my_db": 1,
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "spawn_handle_pid": 9644,
+ "child_alive": true,
+ "netstat_listeners_on_port": [
+  46348
+ ],
+ "netstat_pid_eq_spawn": false,
+ "health": {
+  "status": "ok",
+  "database": "ok",
+  "ai": "disabled",
+  "e2e_run_id": "",
+  "e2e_database_id": ""
+ },
+ "journey_via_backend_direct": "22222222-2222-4222-8222-222222222222",
+ "journey_via_surface_4413": "22222222-2222-4222-8222-222222222222",
+ "surface_port": 4413,
+ "ownership_verdict": "PROVEN",
+ "demo_reset_issued": false,
+ "user_stores_opened": [],
+ "forbidden_ports_touched": []
+}
