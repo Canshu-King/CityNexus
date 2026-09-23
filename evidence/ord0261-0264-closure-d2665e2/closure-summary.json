@@ -1,0 +1,65 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0261/0264 closure on the landed tip",
+ "landed_sha": "d2665e25855aeb265329266831983de42321697d",
+ "landed_by": "commander ff-only @19:24 (bus 5793953369); deployed generation index-D76m_cky.js swap @20:08 (receipt 0aa298042d78d317)",
+ "worktree": "detached at d2665e25855aeb265329266831983de42321697d (exact landed bytes); git status --porcelain = 0 lines",
+ "triples": [
+  {
+   "exact_sha": "d2665e25855aeb265329266831983de42321697d",
+   "nodeid": "e2e/qoder-wizard-advanced-is-tappable.spec.ts :: ord0261-sticky-bar-must-not-cover-the-summary-row",
+   "run_shape": "whole owner spec file on landed bytes (3 passed = 2 nodes + real-seed setup project), port 4760, run evidence in gate1 reading: wheel 240px, centre hits summary itself, positive control green"
+  },
+  {
+   "exact_sha": "d2665e25855aeb265329266831983de42321697d",
+   "nodeid": "e2e/qoder-wizard-advanced-is-tappable.spec.ts :: ord0264-opener-is-scroll-reachable-and-tappable",
+   "run_shape": "same file same run, port 4760: wheel 480px, locality DOM-containment inside step-1 card true, centre hits the button itself, real click opens details, draft survives"
+  }
+ ],
+ "arms_on_landed_bytes": {
+  "receipt": "review/evidence/ui-overnight/ord0261-0264-arms-landed.json",
+  "arms": [
+   {
+    "name": "K261_REMOVE_STICKY_RESERVE",
+    "claimed_result": "KILLED",
+    "redSet": [
+     "ord0261"
+    ],
+    "anchor_hits": 1,
+    "bytes_changed": true,
+    "restored_exact": true,
+    "baseline": "3 passed (15.6s)",
+    "attempt": "2 passed (16.7s)"
+   },
+   {
+    "name": "K264_MOVE_OPENER_BACK_TO_PAGE_TAIL",
+    "claimed_result": "KILLED",
+    "redSet": [
+     "ord0264"
+    ],
+    "anchor_hits": 1,
+    "bytes_changed": true,
+    "restored_exact": true,
+    "baseline": "3 passed (13.9s)",
+    "attempt": "2 passed (14.2s)"
+   }
+  ],
+  "treeUnchangedByArmsRun": true,
+  "verifierNote": "claimed_result only; derived_result belongs to red team"
+ },
+ "deployed_generation_walk": {
+  "surface": "http://127.0.0.1:4781 (release)",
+  "servedBundle": "index-D76m_cky.js",
+  "reserve_padding": "212px (=76px floor + 132px sim-ball clearance, mobile media query)",
+  "sticky_bar_top": 628,
+  "summary_centre_hits_itself": true,
+  "opener_locality_and_click": true,
+  "blocked_writes": [],
+  "read_only": "only GET + local-state clicks; seeded demo journey untouched; no demo/reset",
+  "instrument_self_report": "two instrument fixes mid-run: (1) reserve assertion expected bare 76px but mobile composes 212px; (2) the wheel loop stopped at \"visible\" (bottom<=844) while the centre was still under the bar — stop condition now requires centre above the sticky bar top (628px). Both fixed in the gate, no product assertion weakened."
+ },
+ "ancestry": {
+  "dea8410 -> 035721357": "YES",
+  "035721357 -> d2665e25855aeb265329266831983de42321697d": "YES"
+ }
+}
