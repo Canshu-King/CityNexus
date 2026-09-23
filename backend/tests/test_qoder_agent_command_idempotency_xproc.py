@@ -28,6 +28,7 @@ import time
 import urllib.error
 import urllib.request
 import uuid
+from contextlib import closing
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -87,7 +88,7 @@ def _spawn(db_file: Path, port: int, run_id: str | None):
         [sys.executable, "-m", "uvicorn", "app.main:app", "--host", "127.0.0.1",
          "--port", str(port), "--log-level", "info"],
         cwd=str(BACKEND), env=env, stdout=handle, stderr=subprocess.STDOUT)
-    return proc, log
+    return proc, log, handle
 
 
 def _self_reported_pid(log: Path) -> int | None:
@@ -173,11 +174,12 @@ def pair():
     db = tmp / "xproc.db"
     run_id = f"ord0253-xproc-{uuid.uuid4().hex[:12]}"
     pa, pb = _free_port(), _free_port()
-    proc_a, log_a = _spawn(db, pa, run_id)
+    proc_a, log_a, handle_a = _spawn(db, pa, run_id)
     proc_b: subprocess.Popen | None = None
+    handle_b = None
     try:
         ha = _wait_ready(proc_a, pa, log_a)
-        proc_b, log_b = _spawn(db, pb, None)
+        proc_b, log_b, handle_b = _spawn(db, pb, None)
         hb = _wait_ready(proc_b, pb, log_b)
         yield {"db": db, "a": (pa, proc_a), "b": (pb, proc_b),
                "logs": {pa: log_a, pb: log_b},
@@ -186,7 +188,16 @@ def pair():
         if proc_b is not None:
             _stop(proc_b, pb)
         _stop(proc_a, pa)
-        shutil.rmtree(tmp, ignore_errors=True)
+        for h in (handle_a, handle_b):            # 句柄不关，Windows 上整个目录删不掉
+            if h is not None:
+                h.close()
+        for _ in range(25):
+            shutil.rmtree(tmp, ignore_errors=True)
+            if not tmp.exists():
+                break
+            time.sleep(0.2)
+        assert not tmp.exists(), (
+            f"自我清理失败：{tmp} 还在（里面的 .db/-wal/.log 会一次一次攒磁盘）")
 
 
 # ------------------------------------------------------------------ 归属：三证齐了才允许报数
@@ -250,12 +261,12 @@ def _seed_journey(port: int) -> str:
 
 
 def _count(db: Path, sql: str, args: tuple = ()) -> int:
-    with sqlite3.connect(db, timeout=30) as conn:
+    with closing(sqlite3.connect(db, timeout=30)) as conn:
         return int(conn.execute(sql, args).fetchone()[0])
 
 
 def _rows(db: Path, sql: str, args: tuple = ()) -> list[tuple]:
-    with sqlite3.connect(db, timeout=30) as conn:
+    with closing(sqlite3.connect(db, timeout=30)) as conn:
         return list(conn.execute(sql, args).fetchall())
 
 
