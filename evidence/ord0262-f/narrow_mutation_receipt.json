@@ -1,0 +1,91 @@
+{
+ "what": "ORD-0262-NARROW 门的反突变 campaign（commander (a)/(b) 口径下：只测我加的那两行的承重）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-23T20:54:15+08:00",
+ "scope": {
+  "branch": "agent/f-ord0262-narrow",
+  "head": "d2665e25855aeb265329266831983de42321697d",
+  "base": "d2665e25855aeb265329266831983de42321697d",
+  "target_file": "D:\\moodle\\_qoder_f_ord253_20260923\\backend\\app\\main.py",
+  "target_sha_before_and_after": "7f13f64ed9abe506",
+  "run_shape": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_ord0262_narrow_contention.py -q（每枚突变只跑点名的 nodeid）"
+ },
+ "control": {
+  "note": "控制轮 = 未突变时的整轮读数（4 passed / 1 failed=FINDING_OPEN 常数格），见 ord0262_narrow_receipt.json；控制轮里那一格红是**已知开放读数**，不算 campaign 失效",
+  "control_green_on_the_four_contract_cells": true
+ },
+ "mutations": {
+  "M1_whitelist_emptied": {
+   "mutation": {
+    "before_sha256_16": "7f13f64ed9abe506",
+    "after_sha256_16": "422cb1e58e73e0d4",
+    "anchors": [
+     "CONTENTION_UNIQUE_ROWS = frozenset({\"traveler_agent_policies",
+     "CONTENTION_LOCK_MARKERS = (\"database is locked\", \"database i"
+    ]
+   },
+   "target_nodeids": [
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500",
+    "test_4_a_non_lock_operational_error_is_not_called_contention"
+   ],
+   "owner_assertion": "①/②：认不出来就没人翻译 ⇒ 这两格该红；③' 那格反向该**继续绿**（名单外本来就不认）",
+   "mutated_runs": {
+    "rc": 1,
+    "failed_nodeids": [
+     "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+     "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500",
+     "test_4_a_non_lock_operational_error_is_not_called_contention"
+    ],
+    "tail": "3 failed, 2 deselected, 2 warnings in 34.76s",
+    "collection_lines": [
+     "E       (Background on this error at: https://sqlalche.me/e/20/e3q8)"
+    ]
+   },
+   "seconds": 35.6,
+   "claimed_result": "KILLED",
+   "killed_by": [
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500",
+    "test_4_a_non_lock_operational_error_is_not_called_contention"
+   ],
+   "still_green": [],
+   "derived_result": null
+  },
+  "M2_envelope_replaced_by_bare_503": {
+   "mutation": {
+    "before_sha256_16": "7f13f64ed9abe506",
+    "after_sha256_16": "118143d4ab77cf43",
+    "anchors": [
+     "        \"Another generation is writing right now; this one w"
+    ]
+   },
+   "target_nodeids": [
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500"
+   ],
+   "owner_assertion": "①/②：只把状态码改对、信封掏空 ⇒ 必须红（证明门测的是契约不是状态码）",
+   "mutated_runs": {
+    "rc": 1,
+    "failed_nodeids": [
+     "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+     "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500"
+    ],
+    "tail": "2 failed, 3 deselected, 2 warnings in 33.61s",
+    "collection_lines": []
+   },
+   "seconds": 34.5,
+   "claimed_result": "KILLED",
+   "killed_by": [
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500"
+   ],
+   "still_green": [],
+   "derived_result": null
+  }
+ },
+ "restore_verified": true,
+ "not_measured": {
+  "cross_process_same_key_face": "归 verifier（仲裁 §3）；本门是进程内形制，不借此声明跨进程已闭"
+ }
+}
