@@ -1,0 +1,59 @@
+{
+ "mode": "200_html",
+ "at": "2026-09-23T16:57:09.153Z",
+ "url": "http://127.0.0.1:4443/v8/hub",
+ "settled_after_ms": 367,
+ "state_nodes": {
+  "failure-view": 1,
+  "today-heading": 0,
+  "trial-setup": 0
+ },
+ "rendered_text": "服务器\n\n服务器答了 200，可带回来的不是这一屏能用的数据\n\n它确实回了话（HTTP 200，Content-Type: text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。\n\n看已保存的只读副本\n重试\n归因详情\nattribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=true",
+ "body_text_head": "服务器 服务器答了 200，可带回来的不是这一屏能用的数据 它确实回了话（HTTP 200，Content-Type: text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 看已保存的只读副本 重试 归因详情 attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retry",
+ "attribution_expand": {
+  "present": 1,
+  "clicked": true,
+  "line_before": "",
+  "line_after": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=true",
+  "open_after": true
+ },
+ "resource_timing": {
+  "all": [
+   {
+    "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "duration_ms": 2,
+    "status": 200,
+    "kind": "fetch"
+   }
+  ],
+  "journey": {
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "duration_ms": 2,
+   "status": 200,
+   "kind": "fetch"
+  },
+  "health": null
+ },
+ "snapshot": {
+  "rows": 1
+ },
+ "buttons": [
+  "看已保存的只读副本",
+  "重试"
+ ],
+ "in_memory_attribution_last": {
+  "reason": "ORIGIN_INVALID_RESPONSE",
+  "evidence_kind": "HTTP_RESPONSE",
+  "http_status": 200,
+  "source_layer": "RUNTIME",
+  "retryable": true,
+  "recovery_action": "read-only-cached",
+  "message_key": "failure.originInvalidResponse",
+  "content_type": "text/html; charset=utf-8",
+  "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=true",
+  "cached_copy_present": true,
+  "at": "2026-09-23T16:57:08.099Z",
+  "context": "shell.boot.journeyRead"
+ },
+ "service_worker": true
+}
