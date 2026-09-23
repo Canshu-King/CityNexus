@@ -1,0 +1,12 @@
+{
+  "generatedBy": "e345b9d6",
+  "node": "ord0251-1",
+  "serverLabel": "RECORD_ONLY",
+  "stateLine": "只记录，不发推送",
+  "explanation": "服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。",
+  "labelInPaintedText": false,
+  "labelInAnnouncedText": false,
+  "rawKeptAsAttribute": "RECORD_ONLY",
+  "visualLeaves": 36,
+  "publishedBy": "e345b9d6 for ORD-0251"
+}
