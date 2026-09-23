@@ -1,0 +1,202 @@
+{
+ "at": "2026-09-23T23:44:47+08:00",
+ "what": "ORD-0263 verifier v3 selftest - the fifth state, and proof the four old arms were not edited to make it fit",
+ "arms_total": 10,
+ "arms_matched": 10,
+ "legacy_arm_comparison": {
+  "blocks_compared": 7,
+  "all_identical": true,
+  "rows": [
+   {
+    "block": "answered",
+    "v2_chars": 140,
+    "v3_chars": 140,
+    "identical": true,
+    "digest_v2": "a27b0b157c92",
+    "digest_v3": "a27b0b157c92"
+   },
+   {
+    "block": "no_answer",
+    "v2_chars": 95,
+    "v3_chars": 95,
+    "identical": true,
+    "digest_v2": "ce09e2833d0c",
+    "digest_v3": "ce09e2833d0c"
+   },
+   {
+    "block": "judge_v1",
+    "v2_chars": 890,
+    "v3_chars": 890,
+    "identical": true,
+    "digest_v2": "7dd57947e815",
+    "digest_v3": "7dd57947e815"
+   },
+   {
+    "block": "judge_v1_vacuity",
+    "v2_chars": 672,
+    "v3_chars": 672,
+    "identical": true,
+    "digest_v2": "9c565dbd8d46",
+    "digest_v3": "9c565dbd8d46"
+   },
+   {
+    "block": "judge_v2",
+    "v2_chars": 1206,
+    "v3_chars": 1206,
+    "identical": true,
+    "digest_v2": "0ad0fca690d4",
+    "digest_v3": "0ad0fca690d4"
+   },
+   {
+    "block": "judge_v3",
+    "v2_chars": 723,
+    "v3_chars": 723,
+    "identical": true,
+    "digest_v2": "6cda30bb2618",
+    "digest_v3": "6cda30bb2618"
+   },
+   {
+    "block": "judge_v4",
+    "v2_chars": 1423,
+    "v3_chars": 1423,
+    "identical": true,
+    "digest_v2": "04149cd3acb8",
+    "digest_v3": "04149cd3acb8"
+   }
+  ]
+ },
+ "overall": "GREEN",
+ "rows": [
+  {
+   "arm": "V5-true_positive:answered_200_junk_body_keeps_the_HTTP_fact",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "match": true,
+   "detail": {
+    "shape": "200_html",
+    "answered_status": 200,
+    "content_type": "text/html",
+    "body_bytes": 1200,
+    "rendered_attribution": {
+     "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+     "evidence_kind": "HTTP_RESPONSE",
+     "http_status": "200",
+     "source_layer": "APPLICATION",
+     "cached_copy_present": "true"
+    },
+    "evidence_kind_keeps_HTTP": true,
+    "http_status_carried": true,
+    "reason_not_network": true,
+    "layer_not_transport": true,
+    "sentence_denies_the_answer": false,
+    "cached_copy_matches_measured_rows": true,
+    "measured_snapshot_rows": 1
+   }
+  },
+  {
+   "arm": "V5-killer:the_measured_landed_reading_is_red",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "evidence_kind_lost_HTTP",
+    "http_status_not_carried",
+    "reason_collapsed",
+    "layer_collapsed_to_TRANSPORT",
+    "sentence_claims_no_answer"
+   ]
+  },
+  {
+   "arm": "V5-killer:reason_still_network",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "reason_collapsed"
+   ]
+  },
+  {
+   "arm": "V5-killer:http_status_dropped",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "http_status_not_carried"
+   ]
+  },
+  {
+   "arm": "V5-killer:layer_is_transport",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "layer_collapsed_to_TRANSPORT"
+   ]
+  },
+  {
+   "arm": "V5-killer:sentence_denies_the_answer",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "sentence_claims_no_answer"
+   ]
+  },
+  {
+   "arm": "V5-killer:copy_column_ignores_measurement",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "cached_copy_column_not_measured"
+   ]
+  },
+  {
+   "arm": "V5-not_measured:origin_that_never_answered_is_not_this_state",
+   "expect": "NOT_MEASURED",
+   "got": "NOT_MEASURED",
+   "match": true,
+   "detail": null
+  },
+  {
+   "arm": "V5-aggregate:one_green_shape_cannot_carry_two_red_ones",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "shapes_total": 3,
+    "green": 1,
+    "red": 2,
+    "not_measured": 0,
+    "red_shapes": [
+     "200_html",
+     "200_html"
+    ],
+    "per_shape_conditions": {
+     "200_html": [
+      "evidence_kind_lost_HTTP",
+      "http_status_not_carried",
+      "reason_collapsed",
+      "layer_collapsed_to_TRANSPORT",
+      "sentence_claims_no_answer"
+     ]
+    }
+   }
+  },
+  {
+   "arm": "V0-legacy:four_old_arms_and_two_helpers_are_byte-identical_to_v2",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "detail": {
+    "answered": true,
+    "no_answer": true,
+    "judge_v1": true,
+    "judge_v1_vacuity": true,
+    "judge_v2": true,
+    "judge_v3": true,
+    "judge_v4": true
+   }
+  }
+ ]
+}
