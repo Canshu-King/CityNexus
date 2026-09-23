@@ -1,0 +1,39 @@
+{
+  "generatedBy": "e345b9d6",
+  "node": "ord0247w-3",
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "counted": 3,
+  "minHeights": [
+    "0px"
+  ],
+  "rows": [
+    {
+      "surface": "/v8/bookings",
+      "text": "高级：结构化数据",
+      "width": 321,
+      "height": 15,
+      "minHeight": "0px",
+      "inViewport": true
+    },
+    {
+      "surface": "/v8/me",
+      "text": "高级详情",
+      "width": 936,
+      "height": 15,
+      "minHeight": "0px",
+      "inViewport": true
+    },
+    {
+      "surface": "plan-ai-sheet",
+      "text": "技术详情",
+      "width": 460,
+      "height": 26,
+      "minHeight": "0px",
+      "inViewport": true
+    }
+  ],
+  "publishedBy": "e345b9d6 for ORD-0247 (widened: the whole <summary> class)"
+}
