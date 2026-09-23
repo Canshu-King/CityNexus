@@ -1,0 +1,105 @@
+{
+ "what": "ORD-0253 跨进程同键：commander 2026-09-23 点头要补的那一格，交**实测**而不是 NOT_MEASURED",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-23T19:59:22+08:00",
+ "scope": {
+  "repo": "D:\\moodle\\_qoder_f_ord253_20260923",
+  "branch": "agent/f-ord253-candidates",
+  "candidate_sha": "a485d0cd573138c75a1c75185638852838e14a3e",
+  "tree": "befe660694dbaac8a4c12ffb81f483ddf2d5d77c",
+  "parents": [
+   "a485d0c",
+   "a4a452c",
+   "dea8410"
+  ],
+  "pushed": false,
+  "product_code_changed": "0（这一笔只加测试文件）"
+ },
+ "instrument": {
+  "gate": "D:\\moodle\\_qoder_f_ord253_20260923\\backend\\tests\\test_qoder_agent_command_idempotency_xproc.py",
+  "bytes": 20269,
+  "git_blob_sha1": "82c62c6779ce10bda90dbbf2b4d2658e7a57ba06"
+ },
+ "run_shape": {
+  "command": "'D:\\\\moodle\\\\CityNexus\\\\.venv\\\\Scripts\\\\python.exe' -m pytest backend/tests/test_qoder_agent_command_idempotency_xproc.py -q",
+  "interpreter": "Python 3.12.14",
+  "rounds_per_batch": 5,
+  "batches": 3,
+  "faces": "我自己起的两个 uvicorn（各自端口、共享我自己临时 sqlite、跑完 taskkill + 等 netstat 消失 + rmtree）",
+  "source_log": {
+   "path": "D:\\moodle\\_qoder_f_run\\o225_receipts\\xproc_three_runs_0923.txt",
+   "bytes": 24375,
+   "sha256_12": "22cf50e52669"
+  }
+ },
+ "ownership_proof": {
+  "asserted_by": "test_0_the_two_faces_are_mine_and_offline",
+  "green_batches": 3,
+  "batches": 3,
+  "the_four_proofs": [
+   "面自报 uvicorn PID == netstat LISTENING 归属",
+   "该 PID 的父进程 == 我起的句柄（venv 启动器会 re-exec ⇒ 允许一跳）",
+   "A 面回显我的 run id 与它打开的库文件名",
+   "只存在于我临时库里的唯一 journey，能从**对面**读回来"
+  ],
+  "note": "四证任何一条缺 ⇒ test_0 红并且我不报任何数（这一格不允许变成'看起来通过'）"
+ },
+ "per_batch": [
+  {
+   "summary": "1 failed, 4 passed in 7.02s",
+   "shape_counts": {
+    "UNNAMED_500": 5
+   },
+   "red_cells": [
+    "test_1_two_processes_one_key_persist_exactly_one_mission"
+   ]
+  },
+  {
+   "summary": "1 failed, 4 passed in 6.23s",
+   "shape_counts": {
+    "GHOST_MISSION_ROW": 2,
+    "UNNAMED_500": 3
+   },
+   "red_cells": [
+    "test_1_two_processes_one_key_persist_exactly_one_mission"
+   ]
+  },
+  {
+   "summary": "1 failed, 4 passed in 6.57s",
+   "shape_counts": {
+    "UNNAMED_500": 4
+   },
+   "red_cells": [
+    "test_1_two_processes_one_key_persist_exactly_one_mission"
+   ]
+  }
+ ],
+ "derived": {
+  "rounds_total": 15,
+  "rounds_red": 14,
+  "rounds_clean": 1,
+  "shape_totals": {
+   "UNNAMED_500": 12,
+   "GHOST_MISSION_ROW": 2
+  },
+  "green_cells": [
+   "test_0_the_two_faces_are_mine_and_offline",
+   "test_2_cross_process_different_intent_fails_closed",
+   "test_3_the_loser_reads_the_winners_durable_receipt",
+   "test_4_no_key_cross_process_stays_independent"
+  ],
+  "red_cells": [
+   "test_1_two_processes_one_key_persist_exactly_one_mission"
+  ],
+  "named_unique_index_in_the_500": [
+   "traveler_agent_policies.traveler_id"
+  ]
+ },
+ "verdict": "CROSS_PROCESS_MEASURED_RED（14/15 轮红；不是 NOT_MEASURED，也不是通过）",
+ "two_causes": {
+  "UNNAMED_500": "两进程同时给同一 traveler 插 `traveler_agent_policies` 行 ⇒ 败者拿裸 500。这**不是**我幂等包装的代码：impl 里那枚 per-traveler policy 写入没有 ON CONFLICT / 先读后写，也没走产品现成的 409/503 词汇。",
+  "GHOST_MISSION_ROW": "两边都 200、都回赢家的 mission，库里却留下败者那枚 mission。这**是我的半件**：我在 impl（它自己会 commit）之后才写收据行，唯一索引撞车时回滚已经来不及。"
+ },
+ "proposed_fix_needs_a_ruling": "把我那半改成**先占键再执行**（claim → impl → 回填 response），与产品 `_replay_committed_accept` '等已落库的回执行' 同一条先例；但这会引入'占位行永不回填 ⇒ 409'的新语义，而这条语义正是 ORD-0262 第二半要裁的东西 ⇒ 我不在裁之前单方面改写入次序。",
+ "print_policy": "只印计数/形态/约束名/摘要；不印 key、不印 env 值"
+}
