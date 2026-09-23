@@ -1,0 +1,249 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0247",
+  "runTag": "first",
+  "at": "2026-09-23T12:58:50+0800",
+  "guard": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace",
+  "ownerSpec": "e2e/qoder-advanced-summary-is-tappable.spec.ts",
+  "mirrorSpec": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts",
+  "runShape": "whole owner spec file per arm (3 nodes + the real-seed setup project = 4 passes when green); the same mutant is then run against the ORD-0246 spec as the independence mirror",
+  "judgingCriterion": "elementFromPoint(盒中心) === 该 <summary> 本身，且真触摸屏点把它打开；桌面那格守住 <=30px",
+  "filesBefore": {
+    "styles.css": "49a77f0b3b1180268e7e457cd07bf41412297b8592b27e41d1ce4d82d6196420"
+  },
+  "arms": [
+    {
+      "name": "killH1-touch-floor-deleted",
+      "why": "the named defect returns: the disclosure is a 14px-tall strip again, and this arm also re-measures the before-state height",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\styles.css",
+      "ownerNode": "ord0247-1",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "e274b20731b3d0798ccc2e92a03490523e16a5a4b63552f2424ea352c2e1de9c",
+      "restored_sha256": "49a77f0b3b1180268e7e457cd07bf41412297b8592b27e41d1ce4d82d6196420",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-advanced-summary-is-tappable.spec.ts",
+        "exitCode": 0,
+        "runId": "run139530",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139530.log",
+        "summary": "4 passed (12.0s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247-1": "GREEN",
+          "ord0247-2": "GREEN",
+          "ord0247-3": "GREEN"
+        },
+        "geometryInFailureMessage": []
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-advanced-summary-is-tappable.spec.ts",
+        "exitCode": 1,
+        "runId": "run139543",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139543.log",
+        "summary": "3 passed (12.3s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247-1": "RED",
+          "ord0247-2": "GREEN",
+          "ord0247-3": "GREEN"
+        },
+        "geometryInFailureMessage": [
+          "310x15"
+        ]
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts",
+        "exitCode": 0,
+        "runId": "run139557",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139557.log",
+        "summary": "4 passed (15.9s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0246-1": "GREEN",
+          "ord0246-2": "GREEN",
+          "ord0246-3": "GREEN"
+        },
+        "geometryInFailureMessage": []
+      },
+      "redSet": [
+        "ord0247-1"
+      ],
+      "survivingNodes": [
+        "ord0247-2",
+        "ord0247-3"
+      ],
+      "exclusiveToOwner": true,
+      "verdict": "KILLED"
+    },
+    {
+      "name": "killH2-target-grown-but-not-tappable",
+      "why": "geometry passes while the finger lands on an ancestor -- exactly the false pass the order names ('命中的就是该控件本身，不是它的父容器')",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\styles.css",
+      "ownerNode": "ord0247-2",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "231824b9f646ea3aa304eccb220e059cb8bbac24c0c25cf66ea51e112517490a",
+      "restored_sha256": "49a77f0b3b1180268e7e457cd07bf41412297b8592b27e41d1ce4d82d6196420",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-advanced-summary-is-tappable.spec.ts",
+        "exitCode": 0,
+        "runId": "run139573",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139573.log",
+        "summary": "4 passed (11.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247-1": "GREEN",
+          "ord0247-2": "GREEN",
+          "ord0247-3": "GREEN"
+        },
+        "geometryInFailureMessage": []
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-advanced-summary-is-tappable.spec.ts",
+        "exitCode": 1,
+        "runId": "run139586",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139586.log",
+        "summary": "3 passed (11.7s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247-1": "GREEN",
+          "ord0247-2": "RED",
+          "ord0247-3": "GREEN"
+        },
+        "geometryInFailureMessage": []
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts",
+        "exitCode": 0,
+        "runId": "run139599",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139599.log",
+        "summary": "4 passed (15.9s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0246-1": "GREEN",
+          "ord0246-2": "GREEN",
+          "ord0246-3": "GREEN"
+        },
+        "geometryInFailureMessage": []
+      },
+      "redSet": [
+        "ord0247-2"
+      ],
+      "survivingNodes": [
+        "ord0247-1",
+        "ord0247-3"
+      ],
+      "exclusiveToOwner": true,
+      "verdict": "KILLED"
+    },
+    {
+      "name": "killH3-floor-moved-out-of-the-mobile-layer",
+      "why": "the touch floor leaks onto the pointer layout, breaking Amendment F-2's compact desktop density that this file's third node owns",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\styles.css",
+      "ownerNode": "ord0247-3",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "5fe60828828620cfc04d480abee204a50589da895915f2b81f7e802325fd9c77",
+      "restored_sha256": "49a77f0b3b1180268e7e457cd07bf41412297b8592b27e41d1ce4d82d6196420",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-advanced-summary-is-tappable.spec.ts",
+        "exitCode": 0,
+        "runId": "run139615",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139615.log",
+        "summary": "4 passed (12.2s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247-1": "GREEN",
+          "ord0247-2": "GREEN",
+          "ord0247-3": "GREEN"
+        },
+        "geometryInFailureMessage": []
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-advanced-summary-is-tappable.spec.ts",
+        "exitCode": 1,
+        "runId": "run139629",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139629.log",
+        "summary": "3 passed (11.3s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247-1": "GREEN",
+          "ord0247-2": "GREEN",
+          "ord0247-3": "RED"
+        },
+        "geometryInFailureMessage": [
+          "321x44"
+        ]
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts",
+        "exitCode": 0,
+        "runId": "run139641",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139641.log",
+        "summary": "4 passed (15.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0246-1": "GREEN",
+          "ord0246-2": "GREEN",
+          "ord0246-3": "GREEN"
+        },
+        "geometryInFailureMessage": []
+      },
+      "redSet": [
+        "ord0247-3"
+      ],
+      "survivingNodes": [
+        "ord0247-1",
+        "ord0247-2"
+      ],
+      "exclusiveToOwner": true,
+      "verdict": "KILLED"
+    }
+  ],
+  "filesAfter": {
+    "styles.css": "49a77f0b3b1180268e7e457cd07bf41412297b8592b27e41d1ce4d82d6196420"
+  },
+  "treeUnchangedByThisRun": true,
+  "allArmsKilled": true,
+  "exclusiveKiller": {
+    "ord0247-1": [
+      "killH1-touch-floor-deleted"
+    ],
+    "ord0247-2": [
+      "killH2-target-grown-but-not-tappable"
+    ],
+    "ord0247-3": [
+      "killH3-floor-moved-out-of-the-mobile-layer"
+    ]
+  },
+  "nodesWithoutAKillingArm": [],
+  "mirrorCollateral": [
+    {
+      "arm": "killH1-touch-floor-deleted",
+      "mirrorRed": []
+    },
+    {
+      "arm": "killH2-target-grown-but-not-tappable",
+      "mirrorRed": []
+    },
+    {
+      "arm": "killH3-floor-moved-out-of-the-mobile-layer",
+      "mirrorRed": []
+    }
+  ],
+  "invalidStackArms": [],
+  "publishedBy": "e345b9d6 for ORD-0247",
+  "guardPath": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace"
+}
