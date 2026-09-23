@@ -1,0 +1,84 @@
+{
+ "face": "http://127.0.0.1:8474 (PUBLISHED gen)",
+ "refs": [
+  "/assets/index-DJEINrOl.js",
+  "/assets/index-COUUKhbU.css"
+ ],
+ "assets": {
+  "index-DJEINrOl.js": {
+   "bytes": 1236190,
+   "sha256": "80a8ca1afb915cfd+"
+  },
+  "index-COUUKhbU.css": {
+   "bytes": 183342,
+   "sha256": "4a3926211fda806e+"
+  }
+ },
+ "backend": "127.0.0.1:8424 @ 53fe8e8 clean",
+ "db": "_lane_aad2d1f2_livecopy.sqlite3",
+ "counts_before": {
+  "journeys": 10,
+  "plan_versions": 115,
+  "agent_runs": 59,
+  "journey_missions": 60,
+  "bookings": 2,
+  "transport_reservations": 1,
+  "external_reservation_drafts": 1,
+  "places": 17,
+  "replan_proposals": 1,
+  "journey_twins": 10,
+  "offline_journey_snapshots": 10
+ },
+ "journeys": [
+  [
+   "94669bae-e333-4bab-87cf-8c84ef3ad5c8",
+   "CN-BEIJING",
+   "DRAFT"
+  ],
+  [
+   "6cbdbc65-904a-40c7-a778-f981690f25d0",
+   "CN-BEIJING",
+   "PLANNED"
+  ],
+  [
+   "3dadf0c1-c644-4244-9fc7-d8403eaab57b",
+   "CN-BEIJING",
+   "DRAFT"
+  ],
+  [
+   "cc5e67c4-047a-4f45-8336-c443d3acc076",
+   "CN-BEIJING",
+   "DRAFT"
+  ],
+  [
+   "51929591-5c57-42dc-9f1f-eb31d808c490",
+   "CN-BEIJING",
+   "DRAFT"
+  ],
+  [
+   "c10df843-adbb-465c-aa11-100dc712ff36",
+   "CN-HANGZHOU",
+   "DRAFT"
+  ],
+  [
+   "1e525047-3304-43c0-91fc-6a8eba3abea0",
+   "CN-BEIJING",
+   "DRAFT"
+  ],
+  [
+   "ae79fbf1-9320-426f-a5d7-68a0d6492f78",
+   "CN-BEIJING",
+   "DRAFT"
+  ],
+  [
+   "e168580c-eb06-4553-ac19-67902649ca5f",
+   "CN-BEIJING",
+   "DRAFT"
+  ],
+  [
+   "22222222-2222-4222-8222-222222222222",
+   "CNX-DEMO",
+   "ACTIVE"
+  ]
+ ]
+}
