@@ -1,0 +1,42 @@
+From 408d851ec2ec7ab02142233c6a497c5037adfda4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=BB=93=E9=BC=A0=E7=8E=8B?= <yjianbin419@gmail.com>
+Date: Wed, 23 Sep 2026 23:02:52 +0800
+Subject: [PATCH 3/3] test(ord0253): the claim-first door refuses to read green
+ while external AI or Hermes is armed
+
+Those two switches move the run outside the Phase B commit boundary, so a durable-row
+judgement taken on such a machine measures nothing. A red names that; a skip would let
+"not measured" pass as a pass.
+---
+ .../tests/test_qoder_agent_command_claim_first.py | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/backend/tests/test_qoder_agent_command_claim_first.py b/backend/tests/test_qoder_agent_command_claim_first.py
+index 85b01c7..32f5a5d 100644
+--- a/backend/tests/test_qoder_agent_command_claim_first.py
++++ b/backend/tests/test_qoder_agent_command_claim_first.py
+@@ -299,6 +299,21 @@ def _side_effect_counts(jid: str) -> dict[str, int]:
+             for table in ("journey_missions", "agent_runs", "audit_logs", "events")}
+ 
+ 
++@pytest.fixture(autouse=True)
++def _offline_precondition() -> None:
++    """本文件每一格的前提：外部 AI 与 Hermes native 都关着。开着 ⇒ **红**，不是 skip。
++
++    为什么不用 skip：机械门①②④⑤判的是"durable 行"，而外部 run 不在 Phase B 的提交边界里
++    （`HermesNativeClient` 是 httpx 客户端，本地根本没有它的行）。一台开着外部 AI 的机器上，
++    "没量到"绝不该被读成"过了"。
++    """
++    from app.integrations.hermes.native_client import native_hermes_status
++
++    assert not settings.ai_api_key, "SETUP：这台机器开着外部 AI ⇒ 本门量不到我想量的那一发"
++    assert not native_hermes_status().get("ready"), (
++        "SETUP：Hermes native 就绪 ⇒ 外部 run 落在提交边界之外，durable 读数不成立")
++
++
+ def _watch_impl(monkeypatch, probe=None) -> list[str]:
+     """把 impl 换成"记一笔自己被人叫过"再原样转发 ⇒ 允许断言"根本没叫"。
+ 
+-- 
+2.45.1.windows.1
+
