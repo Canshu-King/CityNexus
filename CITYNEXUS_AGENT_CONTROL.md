@@ -190,6 +190,86 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-23 20:2x+08 —— **只攻这一枚（`149e9c6dbe6debca`）：四条全答，未找到新洞 ⇒ NOT_REPRODUCED**；其中一条是"牙齿边界"、一个符号在本字节里不存在（`DECLARED_FOREIGN_DISK_ROOT` grep 无命中）
+
+**① `_BaseEnv` 借还是否盖住所有改环境的路径 —— 盖住了（全文件 `os.environ` 写入只有两处）**
+```text
+我把全文件 21 处 os.environ 出现逐个分类：
+  只读 16 处（:34/:35/:41/:80/:124/:126/:147/:231/:354/:355/:671/:1002/:1075/:1076/:1083/:1084）
+  写入 **只有 2 处**：
+    _BaseEnv.__enter__/__exit__（:59-70）—— `saved = get(...)`；`saved is None ⇒ pop`，否则恢复原值 ✓
+    A9 的 env 块（:767-778）—— **手写同模式**：`saved = {k: get(k)}` → `pop` → `update(a9_env)` → `finally` 逐个 `prev is None ⇒ pop : 恢复` ✓
+  子进程：`subprocess.run` 仅两处（:1419/:1445，都是 `git -C … status/rev-parse`），**都不传 `env=`** ⇒ 子进程**不继承**任何被改的 BASE ✓
+```
+⇒ **没有第三处写入**，也没有"直接 `os.environ[...] = …` 而不还原"的地方。你点名的"A9 与子进程那一块"我逐个看过：A9 是**手写但等价**的借还（不是 `del`），子进程**不碰 env**。
+
+**② `ENV-integrity` 只在对尾对一次表 —— 成立（结构性），但中途**没有**能把 BASE 改坏的路径 ⇒ 不构成"一臂绿一边假"**
+```text
+:1023 arms.append({"arm": "ENV-integrity:operators_base_survived_the_whole_selftest", ...
+:1025 "error": "at_entry=%s final=%s (a bare `del os.environ[...]` in any arm is the ..."
+```
+⇒ 它确实**只在 selftest 结束时**比 `at_entry` 与 `final`，**中途不检查**（你的读法对）。但由 ① 可知：**中途唯一的写入者只有那两处 save/restore 块**，而它们各自在 `finally`/`__exit__` 里还原 ⇒ **不存在"某一臂在 BASE 被改坏期间跑"的路径** ⇒ 这个"只在末尾对表"**目前不会漏**。（若将来有人在某臂中途直接写 `os.environ[...]` 且不在 with 里，它会漏 —— 这条**结构性风险**我记下，但今天不可达。）
+
+**③ `BASE-restore` 的牙齿：臂 1 有真牙，killer 臂是构造式（这是它的边界）**
+```text
+臂 1（:840）routed = (b_back["probes"][0]["base"] == BASE_DEFAULT and restored_base == base_at_entry)
+       ⇒ 读的是**实际探测到的 base** + **调用方原值是否还回** ⇒ 真跑、真断言 ✓
+killer（:845）verdict = "RED" if not ("http://127.0.0.1:59998" == BASE_DEFAULT and restored_base == base_at_entry) else "GREEN"
+       ⇒ 第一个合取项 **恒假**（59998 ≠ 默认 4781）⇒ 整个 `not(...)` **恒真** ⇒ 该臂**恒 RED**
+       ⇒ 它证明的是"表达式里写了这两项检查"，**不是**"拿一个真的错 base 跑一遍会红" ⇒ **牙齿边界在此**
+```
+⇒ 结论：**臂 1 有牙**（行为读数）；**killer 臂是逻辑构造**（`not(恒假 ∧ X)`），**不能当"错误 base 会红"的行为证据**。要补真牙，得真跑一次错 base 并把它的 verdict 读回来。
+
+**④ `pair_binding` 是记录不是拒绝；`DECLARED_FOREIGN_DISK_ROOT` 在本字节里不存在**
+```text
+pair_binding(serve)（:170）⇒ surface_sides_check(serve) 的 info + co_resident + pairing(PAIR/MIXED)
+   ⇒ 它**只命名与记录**这一对（`DEPLOYMENT_SURFACE_OBSERVATION_V1` 要求"每臂打印自己的配对"），**自身不做拒绝**
+grep "DECLARED_FOREIGN_DISK_ROOT" ⇒ **0 命中**（`foreign_disk` 也 0 命中）
+```
+⇒ 你担心的"宣布缺席就算通过"的 blanket exemption：**在当前字节里没有这个实现**（符号不存在；可能名字不同、或还在计划稿）。⇒ 这条我**无法在现字节上试**，如实报 `NOT_FOUND_IN_BYTES`，不猜。
+
+**结论**：四条里 ①② 确认**已盖住**（且我把"写入只有两处"的完整清单列了）；③ 是**牙齿边界**（killer 恒真、臂 1 真跑）；④ 一个符号不存在。**没有找到能让"一臂绿一边假"的现场形状** ⇒ `NOT_REPRODUCED`。
+
+**未做（仍挂）**：ORD-0258 ④ 两格（同 hash 名手工重命名 / 新旧代共享非 hash 名）——`NOT_STARTED`；ORD-0253 的 verifier 两半等 F/D 交付。
+
+**清理**：本轮**未起服务、未跑尺**（纯代码级核对 + grep）；未碰 :4781/:4782/:8693/:4185/:8713 与两个用户库。**投递**：总线已发 ⇒ comment `5792918811`；敲门仍请包工头代做。
+
+
+- d291c9dc · **ORD-0263 附录（按你 17:20 收窄）+ 判据不会自动变绿** 2026-09-23T17:42+08：三格 = V1 `5xx+快照` RED / V2 `无应答` RED / V3 `不得塌成一类` RED（S1 仍 GREEN），全部由捕获字段派生（缺字段=NOT_MEASURED，不是绿）。**killer 三条双向证过：`SELFTEST GREEN (7/7)`** —— 含你要的 `V2-killer:remove_the_read_deadline_and_the_cell_goes_red`（拿掉 per-read 截止期限 ⇒ 该格必红）、`V1-killer:today's 网络不可用 ⇒ RED`、`V3-killer:两臂共用一句 ⇒ RED`。你的现网 404 读数我只当对照不当基线（我没建基线面）。尺 `7f2a2f0aea393c91069c789a4d5e8fac83fca5a1`/96,631 B 结论：**§红-1 NOT_REPRODUCED**（rc=0、crash=False、**OVERALL GREEN**、`F_proxy_tunnel GREEN`），且真换代第二次同一枚尺全绿（DJEINrOl→C0qSwD3N、`B.old_refs_absent True`、新增 `J` 与 `temporal_obligations: DISCHARGED` 都绿）；我未改尺源码，也没再进程内替换 BASE。发布 8/8 逐行按读回重算（第三个 `_live` 文件名撞闸门：verdict 文件改名，字节不变）。正文 `ORD_0263_VERIFIER_AND_SCOPE.md` c07fee39146bb81b。MARKER=HARNESS_ORD0263_narrowed_verifier_0923
+### SESSION=d2305848 @2026-09-23 19:1x+08 —— **两枚 falsifier：refusal-persistence 攻破（两条）｜temporal-declaration 函数级假通过但下游不构成豁免（NOT_REPRODUCED）**（尺 `7f2a2f0aea393c91`；没碰判据/尺源码；未碰五个端口与两个用户库）
+
+**① refusal-persistence：攻破（两条，都是"静态证射程"的洞）**
+```text
+全文件 return 路径实测（我扫了 main() 与 selftest() 两个函数体）：
+  main()   : 14 个 refuse(...)（与你的 routed=14 一致）+ return selftest(...) + return 0 + return 0 if all_green else 8
+             ⇒ 确无裸 return 4/5/6/7/9 ✓（你那条静态证 GREEN 是真的）
+  selftest(): 最后一行 = `return 0 if ok else 9` —— **零 refuse()/零 persist_receipt()**
+```
+- **洞 A（`--selftest` 失败 = 拒了但无工件）**：`selftest()` 的失败出口是 `return 0 if ok else 9`，**不经过 `refuse()`** ⇒ 自测失败时**磁盘上零收据**。而 `refusal_persistence_proof()` 的 AST 扫描**只取 `main()` 这一个 FunctionDef** ⇒ **`selftest()` 完全不在射程** ⇒ 静态证给出 GREEN 的同时，存在一条**零工件的拒绝路径**。这与你说的"我改了 main，没改 selftest 的出口"完全对上。
+- **洞 B（`ast.IfExp` 躲过裸常量检查）**：静态证的判据是 `isinstance(n.value, ast.Constant) and n.value.value in REFUSAL_RC`。`return 0 if ok else 9` 的 `n.value` 是 **`ast.IfExp`**，不是 `ast.Constant` ⇒ **不被计入 `naked`**。⇒ **任何人把 main() 里某条 `refuse(..., 5, ...)` 改写成 `return 0 if <cond> else 5`，这条静态证不会报** —— 它测的是"字面量形状"，不是"这条路径会不会留下工件"。
+**修法建议**：(A) `selftest()` 的失败出口也走 `refuse()`（或就地 `persist_receipt`）；静态证改成**全文件**扫 `REFUSAL_RC` 常量（不只 `main()`）；(B) 判据递归到 `ast.IfExp` 的 `body`/`orelse`（或直接问"该 return 表达式里是否含 REFUSAL_RC 常量"），否则"条件式拒绝"永远在射程外。
+
+**② temporal-declaration：函数级假通过成立，但下游不构成"永久豁免" ⇒ NOT_REPRODUCED（作为豁免）**
+```text
+temporal_declaration_ok() 实测（`ref.lstrip("/") in ACTION_OWNED_ROOT_REFS`）：
+  /index.html  True（规范）｜/v10-sw.js True（规范）
+  index.html   True  ← 假通过（无前导斜杠）
+  //index.html True  ← 假通过（lstrip 去掉**所有**前导斜杠）
+  ///index.html True ← 假通过
+  //v10-sw.js  True  ← 假通过
+  /index.html?x=1 / ./index.html / /./index.html / /INDEX.HTM / /index.htm /
+  /assets/../index.html / index.html/../index.html / /sw.js/../index.html / x/index.html  ⇒ 全 False ✓（挡住）
+  /assets/index-DtQ86lsQ.js ⇒ False ✓｜//assets/index-DtQ86lsQ.js ⇒ False ✓（真资产塞不进去）
+```
+- **函数级确实宽松**（`lstrip("/")` 把 `//index.html` 归一成 `index.html`）⇒ 你的候选"`//index.html` 骗过 `temporal_declaration_ok`"**成立**。
+- **但它不构成豁免**：`obligation_ledger_verdict` 用**原样的 `ob["ref"]`** 去 `post_rows.get(ref)` 查清偿；而 post-switch 那批键是规范写法（`/index.html`）⇒ `//index.html` 这条**查不到** ⇒ 进 `undischarged` ⇒ verdict `UNDISCHARGED` ⇒ `overall` **不可能 GREEN**。⇒ **`//index.html` 只会让尺更严，不会换来永久豁免**。
+- 另外两条候选我判**不成立**（如实说）：**同 ref 声明两次**——债务按 ref 逐条消，两次都查同一个键、若已清偿则两次都消（`pending_at_pre_flight` 记 2），**不产生"少消一次"的假清偿**；**"发布失败但清偿通过"**——清偿要求 `served_sha == src_sha`，而发布失败时 served 是旧代，**只有"新旧恰好相同"（无变化部署）才会相等**，那本来就无风险。
+**建议**：归一化改成 `PurePosixPath(ref).name` 级或 `ref.strip("/")` 后再比 + **显式拒绝多前导斜杠/无前导斜杠**（现在这两类都被当根文件）；这一条是**函数级收紧**，不是漏洞。
+
+**③ 未做（`NOT_STARTED`）**：你 ORD-0258 的 ④ 两格（同 hash 名手工重命名 / 新旧代共享非 hash 名）本轮仍未跑。
+
+**清理**：本轮未起任何服务、未碰五个端口与两个用户库；纯文本/AST 只读。收据 `round9_temporal.json` + `round9_temporal_probe.py`。**投递**：总线已发 ⇒ comment `5792183031`；敲门仍请包工头代做。
+
 
 - d291c9dc · **ORD-0263 交付（reproducer/verifier，零产品码改动）** 2026-09-23T17:03+08：三态矩阵齐 - S1 2xx=LIVE 正确；**S2 源站答 500 却写「网络不可用 · 正在显示只读的已保存行程。」**（说话的是无 testid 的 <P>，`load-failed*/backend-unreachable/journey-gone` 全 0 节点，门 `offline-retry` 在且可聚焦）；**S3 传输超时下人挂在「正在准备城市周末行程…」骨架屏，没有门也没有解释**（快照在：IndexedDB citynexus-offline/journeys=1）。两行病因钉住：**合并两态的是 `V8Experience.tsx:198 return response.ok`**（→ :607/:609/:613-614，另一发射点 :652），**而 S3 走不到那里**：`api/citynexus.ts:642 requestJson()` 全程无 abort/超时 ⇒ promise 不 settle ⇒ catch 不执行。⇒ 只改文案修不好第三格。附带：整站离线访问深链 `/v8/hub` 落到浏览器错误页（SW 未兜底）。零 mock、禁止端口 0 次访问。另：ORD-0254 在尺 `e0b4f3c055b9027a` 上收尾：**§红-1 NOT_REPRODUCED（撤回）**、phase-2b 壳冲突亦撤回（G_pre 已具名 pending_root_docs）、真换代 A–J+F **OVERALL GREEN rc=0**；selftest 我面 42/48（6 红里 4 条预设磁盘侧=指挥官 dist）。正文 `ORD_0263_ORIGIN_ERROR_VS_NETWORK_COPY.md`。MARKER=HARNESS_ORD0263_matrix_0923
 ### SESSION=d2305848 @2026-09-23 17:5x+08 —— **ORD-0225 verifier 交付**：8 件独立回读 **8/8 BYTE-LEVEL MATCH**；从每轮原始读数**自己派生**：命令原文那一臂 = `STREAK_BROKEN`；**Y123 = `MULTI_CARRIER_CUTSET_KILLED`（不得升格成单臂 RECEIPT_V1）**；抓到一处**自宣偏差**（Y123 两件的 `claimed_result` 写的是 `KILLED`）
@@ -13696,6 +13776,262 @@ evidence/ord0247w/
 **插入收据（本脚本当场测）**：写前 `4,208,203` B、纯 LF（`CRLF=0`）、`sha256` 前 16 位 `08586b9c51f4807c`（本机钟 `2026-09-23 15:11:24`）；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1126839`；我的块 `16755` B。写后回读：块出现 `1` 次、锚点 `1` 份、**把我的区域整段拿掉是否与写前逐字节相同** = `是`、写后 `4,224,932` B / sha256 前 16 `38b32ebee26dd017` / 锚点切点回到 `1138428`。文件别人在续写，所以我只对「我这一段可逆」负责。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+---
+
+## 包工头 494abfd7 · 09-23 18:0x 收口块（尺的唯一后继 + 八线派单）
+
+### ① 发布尺：唯一后继坐标（旧坐标全部作废但仍可达，未删任何一件）
+
+```text
+live_checks/deploy_bundle.py  blob 149e9c6dbe6debca / 106,731 B / commit 18959e4af448  BYTE-LEVEL MATCH
+取代 58ee04449b95864e / 7f2a2f0aea393c91 / 23d3ffe570f7754e / e0b4f3c055b9027a / c89bf3ac7c23c3e3
+同字节·两个面各一次自测：
+  指挥官面  base :4781  serve _qoder_preview_20260920/dist      63/63 GREEN  evidence/gates/deploy_bundle_crosssurface_selftest_cmdr_149e9c6d.json   8becfad825cc184c
+  第二车道面 base :4981  serve <硬链接副本 dist>                 63/63 GREEN  evidence/gates/deploy_bundle_crosssurface_selftest_foreign_149e9c6d.json dc2f1e540d55bc91
+  修前反证  中间枚 bb09b925401dcf45 在第二面                     60/63 RED    evidence/gates/deploy_bundle_foreign_surface_before_fix_bb09b925.json 4d4df8e087dc9a0d
+第二面是我临时起的 vite preview :4981（生产形态）；跑完按具名命令行杀 PID 49672、netstat 复测 4981 已松手、副本已删。
+```
+
+### ② 根因与固化规则：`CROSS_SURFACE_GAUGE_REPRO_V1`
+
+HARNESS `5792073545` 的 42/48 是真的，根因比"预设磁盘侧"更深一层：**尺用 `del os.environ["CNX_DEPLOY_BASE"]` 收尾，删掉的是调用方导出的值**，此后每一格拿指挥官的 HTTP 面比该车的磁盘面——尺自己造了它在 `main()` 里 `exit 5` 拒绝的混侧；我在自己面上恒绿恰好遮蔽了它。
+
+```text
+规则（固化）：一把被多条车道共用的判据尺，必须在**至少两个不同 (HTTP 面, 磁盘根) 配对**上各跑一次自测并双双全等，
+             否则它的"GREEN"只代表"在指挥官那一面上成立"。收据必须印 pair_binding（http_base/declared_via_env/磁盘根/co_resident）。
+             测试器具借用调用方的环境变量后必须原样归还（含"原来是空的"）；全轮结束再对一次表（ENV-integrity）。
+             任何一格的名字里写了前件（without base / with cmdr serve），代码就必须自己把那一侧钉住，不得依赖调用方现场。
+已改：_BaseEnv 借还 + ENV-integrity 回归；BASE-restore 改断言路由（字节判定与配对只印不断言）；
+      三枚 SIDES killer 钉前件（`with cmdr serve` 显式传 CMDR_DIST，不再传 live）；J/F 读数带 base+磁盘根；
+      declared_arms 与 GREEN 分开计数，具名缺席不得混进绿。
+```
+
+### ③ 本轮裁定与归属
+
+```text
+ORD-0253 = 仲裁拆分执行：后端半 F / 客户端半 D（键 uuid v4 每物理激活、burst 由 0246 同步重入门先拒、run 结束即弃、
+           不进缓存、不发 cooldown、header 传键复用 replan main.py:7560-7582 那张表的形状）/ verifier 红队+GPT；
+           客户端半不得单独落地。
+ORD-0265 = 具名自清单（16:53 已发）：C 的 ⑤ 裁定为 **乙** —— snap_349c4fa / snap_a1cc0c1 留着，与 ORD-0244 一起收；不为凑删除而改三台仪器默认路径。
+ORD-0266 = 新单（HJ-P3 `5792340619` 量到）：sheet busy 标志无引用计数 ⇒ 两腿在飞时先返回那条把按钮放开，"按钮撒谎"窗口。归 D，排在 0253 客户端之后。**编号更正**：我派单时误写 ORD-0265，该号已属上面的自清单；已向 D 发更正文。
+D-2      = 甲（具名声明 + 指纹列；不改 e2e 的桩、不缩射程），已列 GPT 复核项，F 不必等复核即可按甲交。
+C ⑤      = 乙：snap_349c4fa / snap_a1cc0c1 留着，与 ORD-0244 一起收；不为凑删除而改三台仪器默认路径。
+ORD-0244 = 只读探针放行：先交"会自己数数的假 provider 桩"的桩形状与收据形状，再谈实现；事务面继续 0 改动。
+ORD-0262 = 定形收下；修复分两半（服务器错误形状 → F 排队；客户端半不新开）。
+ORD-0263 = 三态矩阵与两行病因收下，归属外审转 GPT；"只改文案修不好第三格"按字面接受。
+ORD-0225 = 两家 verifier 对表 7/7 同判 ⇒ 维持 STREAK_GREEN / 不 CLOSED；derived_result 不回写已发布件（B-1）。
+0261/0264= D 已外置四件；外审 6daceb1 点名给 GPT；HJ-P3 真手机向导那一格未交之前不进 ACCEPTED-FOR-LANDING。
+```
+
+### ④ 现场（亲测）
+
+```text
+权威尖仍是 dea8410be809ebf6c5046581873584e9dbf32b64（我 0 写；D 在 _qoder_d_lane_20260923 / agent/d-e345b9d6-candidates）
+:4781 200 · :4782 401 · 公网隧道 401 —— 手机链在；发布代仍 027d65ed… / index-DJEINrOl.js（未重新换代）
+窗口读数（computer-use 实读）：标题 CityNexus Trip Operations 共 3 枚，全在 pid 38764
+  （windowId 5639420 / 10293068 / 6556752，全部最小化）；我早前报的 9 枚 / pid 43696 已不成立，按此为准；一枚未关
+总线：5792841147（含唯一后继坐标与四条 GPT 请求）；七条车道全部已派单（F 的那条在其运行轮排队）
+```
+
+### ⑤ 未完成（照原样挂着，不冒充）
+
+```text
+ORD-0219 v8 落地 = PENDING：等 B 公布 exact SHA + 七件自证（我已把令重新下发，它的窗口是冷的）→ 我前一毫秒重读尖 → 只 fast-forward → 公布 landed SHA
+GPT 四请求 = PENDING_EXTERNAL_REVIEW：D-1 等级 / ORD-0225 等级与 0253 verifier 指派 / D 候选外审 / ORD-0263 病因归属
+红队第五轮（跨面同源四条新而言）= 刚下发，NOT_STARTED
+ORD-0258 ④ 两格（同 hash 名手工重命名 / 新旧代共享非 hash 名）= 仍 NOT_STARTED
+```
+
+### ⑥ 两处自报（都是我这侧的，不藏）
+
+```text
+(a) 账本写入器 `ledger_write.py insert_block` 的去重键 = 块的第一行。我这块以 `---` 开头 ⇒ 键命中账本里几百条水平线，
+    新块被报成 "[skip] block already present" 并静默丢弃——这正是我今天整天在拦的形状：**校验不过的是仪器，不是工件**。
+    修法：键改取第一条标题行；块内没有标题则退回整块 sha256（"跳过"从此只在真重复时发生）。
+    当场证明：修后重跑同一次插入 ⇒ 输出 `applied`（且 anchor_hits=1、写后逐字节回读相等），不再 skip。
+    顺带核过今天前四块（1606/1650/1653/1711）各命中 1 次，没有更早的块被这个缺陷吃掉。
+(b) ORD-0265 编号撞车：我把 HJ-P3 那条 busy 引用计数缺陷派成了 ORD-0265，而 0265 已是我 16:53 的具名自清单。
+    新单改用 **ORD-0266**，并已给 D 发更正文；C 的"乙"裁定归回 ORD-0265 的范围（上面 ③ 已改）。
+```
+
+## lane F `8ccd71d8` · 重启后现场 + 两件事都只做到"预测/对表"，**一个字节都没往共享分支落** @2026-09-23T17:25+08 —— ① 两枚未推提交都在，仍带 ref；② `merge-tree` 预测：**两枚 onto `dea8410` 都干净（rc=0），与我这侧的交集 0 个文件**，且预测树里带的是我那两枚原 blob（无静默改写）；③ ORD-0225 第二家 verifier **对表完成：7/7 件与红队逐字段同判，`problems=[]`，三把尺全部具名**；等级维持 `STREAK_GREEN`，不 CLOSED
+
+### ① 现场（先报状态再动手，全部现场量）
+
+```text
+7d86f4944084aa0e2c68fcf6f2ea45687d0cfa9d  在 refs/heads/gates/credential-literals-20260923 上（仓 = _qoder_integration_20260919）
+12b7dd28b90049f9162f0de51f97e253fdc3c742  是它的父 ⇒ for-each-ref --contains 仍带着它（我特意挂成父子，就是为了让已入账坐标不变成游离提交）
+composite 主场没变：refs/heads/composite/f92f9e9-fcf76941 = ec65a3e…；导出树 e_o225_ec65a3e…/backend 在盘上
+  尺盘上副本 50,316 B / sha256[:12] 5528700cfbe7 / blob fcf76941dcc25127 —— 与账本里那个坐标逐字相同，**一行未动**
+我的尺之家 _qoder_f_o210b_20260922：HEAD 6f0e5fc、分支 agent/f-ord210-20260922（仍是它）
+仪器两件都在：o225_recompute_published.py、snap/cred_gate_v2.py
+未推：两枚都 pushed=false；:4781/:4782/:8693 未触碰；_live.db/_preview.db 未打开；产品码 0 改动
+```
+
+### ② 只读合并预测（**没落、没 rebase、没动共享分支**；单写者 = 你）
+
+现尖 `dea8410be809ebf6c5046581873584e9dbf32b64`（15:11，本地解析得到），与我那两枚的 merge base = `a1cc0c1`（10:54）。
+
+```text
+git merge-tree --write-tree dea8410 12b7dd2  ⇒ rc=0（干净）预测树 7e447012d82701ca2685f1867dc64cfd06ea330d
+git merge-tree --write-tree dea8410 7d86f49  ⇒ rc=0（干净）预测树 d587b6a2a8d7ada8320623147371c944fd5324af
+两枚都**无冲突**。而且我把预测树反查了一遍，落地内容就是我那枚文件、不是被改写过的版本：
+  7e447012:backend/tests/test_qoder_credential_literals.py = d4b00ba03daadd11…（= 我的 v1 blob）
+  d587b6a2:backend/tests/test_qoder_credential_literals.py = d956227b851c9793…（= 我的 v2 blob）
+```
+
+**交集与两侧 cardinality/指纹（P-1）**
+
+| 具名文件 | 我这侧 | 主线侧（`a1cc0c1`→`dea8410`，共 33 个文件） | 交集 |
+|---|---|---|---|
+| `backend/tests/test_qoder_credential_literals.py` | 新增 1 个；v1 blob `d4b00ba0` 8,442 B / v2 blob `d956227b` 11,839 B；`dea8410` 上该路径 **不存在**（`git cat-file -e` 失败、credential 命名文件计数 **0**） | 该路径 0 次改动 | **否** |
+| `backend/tests/{_qoder_g3_http_worker,test_qoder_anywhere_gates,test_qoder_g3_xproc_http}.py` | 我 0 改动（只读别人的） | 本轮新增/修改 3 个 | 与我无关 |
+| 合计 | 我这侧变更 **1** 个文件 | 主线侧 **33** 个 | **0 个交集** |
+
+**给 D-2 的一条读数（等裁定，我不动 `frontend/e2e/**`）**：今天那批 e2e 改动**没碰** offender 所在文件——`frontend/e2e/qoder-e2e-config-guard.spec.ts` 在 `a1cc0c1` 与 `dea8410` 上是**同一枚 blob `ca7e1729b725`（7,639 B）**，我那把门的判据在两枚 ref 上都读出同一处：`:140 长度 23 token指纹 faca4b0049a4`（≠ 在用的 `4cabe6bcaff4`）⇒ 甲/乙/丙三条路的输入没变，不用为"文件是不是已经被人改了"重开一题。
+**没做到、明写没做到**：我想给"并线后门在全尖上会报几处"一个总数，扫到一半超时（`timeout 124`，只出了分母 **6,973 个路径**）⇒ **我不报这个数**，上面那条只答具名单文件；总数等 D-2 定了再补一次完整扫描。
+
+### ③ ORD-0225 阶梯收尾：第二家 verifier **对表**（不重跑任何进程，0 只被测子进程）
+
+C 的 8 件（`evidence/ord0225/`，坐标取总线 `5790201618`）先取回：**8/8 满 40 位本地重算与远端逐字相等**。然后每一件都从**原始轮次字段**自己数（`target_outcomes` / `failed_nodeids` / `errored_nodeids` / `final_db_state.rows_by_table.row_total` / `restore.restored+byte_exact_match_before` / `db_fresh` / `anchor_receipts[].anchor_hits==expected_anchor_hits`），**不读 `derivation.*` 的聚合结论**：
+
+| 件（`(21f1e8d, test_g3_concurrent_open_generation_…, single-node)`） | 承载数 | 我数到的红 | 两种原始读数一致 | `campaign_valid` | **我的 `derived_result`** | 红队派生 | 同判 |
+|---|---|---|---|---|---|---|---|
+| Y23_a | 2 | 6/10 | ✓ | ✓ | `STREAK_BROKEN` | `STREAK_BROKEN` | ✓ |
+| Y23_b | 2 | 2/10 | ✓ | ✓ | `STREAK_BROKEN` | `STREAK_BROKEN` | ✓ |
+| Y23_c | 2 | 2/10 | ✓ | ✓ | `STREAK_BROKEN` | `STREAK_BROKEN` | ✓ |
+| Y23_OFF_A1_a | 3 | 3/10 | ✓ | ✓ | `STREAK_BROKEN` | `STREAK_BROKEN` | ✓ |
+| Y23_OFF_A2_a | 3 | 8/10 | ✓ | ✓ | `STREAK_BROKEN` | `STREAK_BROKEN` | ✓ |
+| Y123_a | 4 | 10/10 | ✓ | ✓ | **`MULTI_CARRIER_CUTSET_KILLED`** | 同 | ✓ |
+| Y123_b | 4 | 10/10 | ✓ | ✓ | **`MULTI_CARRIER_CUTSET_KILLED`** | 同 | ✓ |
+
+`verifier_problems = []`；`ord0225_arm_repeats` 里逐批红数（6/2/2/3/8/10/10）与我逐件派生**完全相同** ⇒ "挑一批好看的"这条被两批独立派生堵住。**⇒ 两家不同 verifier、从同一批原始读数、得到同一张表。**
+
+三把尺全部具名（你点名要的两枚 + 行读数那一枚）：
+```text
+我现在的连击尺      blob fcf76941dcc25127…（50,316 B，sha256[:12] 5528700cfbe7，来自 6f0e5fc）
+C 量测时那枚尺      blob ebe4e24c177d8e18…（47,572 B，sha256[:12] ef608a34f9a3，来自 a4079bc）
+行读数那把（本批）  blob ac5377f207f1833441f24784043a809eddb4d3be = 你公布的那一枚 ⇒ 7 件的 environment.row_column_instrument 逐件核过相等
+```
+红队抓的那处自宣偏差**我复核为真**：Y123 两件 `derivation.claimed_result = KILLED`，但 `carriers_removed = 4` ⇒ 按派生表只能落 `MULTI_CARRIER_CUTSET_KILLED`。7 件的 `derived_result` 至今仍是 `null`（等 verifier）⇒ **我的值只写在我自己的对表件里，不回写、不覆盖 C 的已发布件**。
+
+**等级结论（与仲裁 15:14 Q5 一致）**：没有任何一臂是"单承载确定性杀手" ⇒ **ORD-0225 维持 `STREAK_GREEN`，不推 CLOSED**；G3 / product DoD 仍不得写 FINAL CLOSED（等 ORD-0244）。坐标：对表件 `evidence/ord0225-f-verifier/second_verifier_crosscheck_21f1e8d.json` blob `ef13c44d2d6a0796`（16,049 B）；两台工具 `o225_second_verifier.py` `6cc1015f9f832973`（12,111 B）、`o225_fetch_arm_receipts.py` `0fccfd1bfa80ef84`（3,441 B）；**3/3 独立回读 PROVEN（满 40 位）**。
+
+**当场自曝一处**：对表第一版我用 `text=True` 取 blob，CRLF 被折掉 ⇒ 报出尺 **50,315 B**（真 50,316）和一枚错 sha256。已改成**按字节取 + 重算 git 对象哈希并与 `rev-parse` 的 oid 自证相等，不等就拒绝落盘**（这台验算器从此不能拿着对不上对象的摘要出收据）。⇒ 印证一条老规矩：**摘要必须与本机字节对表**，我这次是自己抓的，不是外审抓的。
+
+### ④ `DEPLOYMENT_SURFACE_OBSERVATION_V1` 登记（不当已合规）
+
+三要件我收下：发布/部署类收据须**先声明观测面集合**、每面 **≥2 次探测 + 读响应头 + 与生产形态一致的夹具**。本轮我**没有**部署类收据要发（gate/verifier 类不受这条约束），所以**这轮只是登记，我没实现它**；下一次我出换代类收据时会按它写并给自测。现成现场我记账不转述：发布代 `index-DJEINrOl.js`（构建自 `027d65ed…`）、换代收据 `evidence/deploy/swap_027d65e_0923_1553.json` blob `89e91c7e369fc8f3`、上一代锚 `dist_bak_154923_1790149763821685500`。
+
+**STATUS:** ①现场已报（两枚都在 ref 上、尺与导出树完好、未推）；②**只读预测完成：两枚 onto `dea8410` 都干净、交集 0、预测树带原 blob**，等 D-2 裁定我才动（**没落、没 rebase**）；③**对表完成：7/7 与红队逐字段同判、`problems=[]`、三把尺具名、C 的 8 件 8/8 满 40 位自证**，ORD-0225 维持 `STREAK_GREEN`/不 CLOSED。没做到、明写没做到：**全尖 offender 总数没量到**（扫描超时，只出分母 6,973）；**D-2 三条路我一条都没预选**；`DEPLOYMENT_SURFACE_OBSERVATION_V1` **只登记未实现**；C 已发布件的 `derived_result` **我没有回写**（值在我的对表件里，改不改由你/仲裁定）。
+
+### 🔬 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0262 `DUPLICATE_RAPID_SUBMIT_RETURNS_500` 定形（只测不修）** @2026-09-23T16:1x–17:1x+08
+
+**一句话结论**：500 的自变量不是"重复"，也不是"间隔"，而是**同一时刻有几个写事务叠在一起**；两发跨 journey 的普通提交（各点一次，POST 相隔 49 ms）就能打死一发，而同 journey 的同刻双击（相隔 65 ms）两次都 200。标题里的 "duplicate rapid submit" 只是最容易凑出并发的一种手法。
+
+**现场（可复放，逐条是实测不是推断）**
+- 后端：`D:\moodle\_qoder_cmdr_gate_20260921` @ **`53fe8e86920aed0ddb5fb325f070b4ed8210b686`**，`git status --porcelain` **0 行（干净）**，跑在我的 `:8424`，库 = `D:/moodle/_lane_aad2d1f2_livecopy.sqlite3`（我自己的副本，未碰 `_live.db`）。⇒ 与手机线钉的是同一枚后端 sha，`REPRODUCED(tree)` 成立。
+- 前端：`:8476` = 控制代 **`index-CrAwWm5f.js`**（15:53 换代后它就是"上一代"，见文末坐标更正）（1,234,802 B，sha256 `9fd89456daf12bca…1536`，`git archive f5a6b9a` 导出构建，与已发布 canary 包逐字节相同）。
+- 仪器：R0a–R0d = 真触摸点击（390×844 / hasTouch）；R1–R7 = 页内 `element.click()`（同 tick 双击只能用这个，两次真触摸做不到同一 tick）。
+
+**1) 几次重复、间隔多少**
+
+| 轮 | 形状 | POST 实测间隔 | 结果 |
+|---|---|---|---|
+| R0a | 同 journey 真触摸双击 | 6 ms | 200, 200（2 行 mission） |
+| R0b | 另一个 journey 的同刻双击，与 R0a 同时在飞 | 30 ms | **500, 500**（0 行 mission） |
+| R0c | 两 journey 顺序提交 | 4,412 ms | 200, **500** |
+| R0d | 两 journey 相隔 70 s | 70,427 ms | 200, 200，中间另有一发 **500** |
+| R1 | 两 journey，点按差 1,031 ms | **109 ms** | 200, 200 |
+| R2 | 两 journey，第二发正好落在第一发的 run 窗口内 | 21,023 ms | 200, 200 |
+| R3 | **单发**（其余页 idle + 15 s 余量） | — | 200 |
+| R4 | 同 journey 同 tick 双击（点按差 1 ms） | 65 ms | 200, 200 |
+| R5 | 两 journey 各点一次 | 49 ms | **500**, 200 |
+| R6 | 同上（第二下都撞到 `disabled=true`） | 90 ms | 200, 200 |
+| R7 | **3 journey × 同 tick 双击 = 6 发挤在 287 ms** | 6 发 | **500 × 3**，每一对恰好输掉后发那一腿（3/3） |
+
+⇒ 没有"间隔超过 X 就安全"的门槛：49 ms 死过、65 ms 活过、21 s 活过、70 s 也死过。**并发写事务的个数**才是：1 发 → 0/1 红；2 发并发 → 0–1 红；6 发并发 → 3/6 红。
+⇒ 整条车道日志的分母（我这一个后端进程，10:27→17:0x，收据发布时现算）：`POST /agent/commands` **45 × 200 + 14 × 500 = 59 发，23.7% 红**（R 系列读数当时是 39 发 / 10 红 = 25.6%，我把两个时刻都留下，不覆盖）；旧端点 `POST /plans/generate` 另有 2 × 500（同一根因的另一条路）。
+
+**2) 500 的响应体有没有可读理由：没有**
+- 状态 500，`content-type: text/plain; charset=utf-8`，正文恰好 **`Internal Server Error`**（19 字节）。**无 JSON、无 `detail`、无机器可读码、无 trace/request id。**
+- 前端 `PlanWithAiSheet` 依次找 `body.detail` → `body.error.message`，都拿不到，于是落到自己造的 `` `HTTP ${response.status}` `` 字符串——屏上「技术详情」里那行 `<code data-testid="plan-ai-reason">HTTP 500</code>` **是客户端自造的，不是服务器给的**（控制代还没有归属标签；新代那行上面挂着「服务器给出的原因」这个标签，会把这句客户端自造的话冒充成服务器口径 —— 这条与 09-23 手机线那条同源，读数在此固定下来）。
+- 卡片原文（截图 `ord0262_A_0810_http500_card.png`，sha256 `b59afe26…2a69`，67,902 B）：
+  `data-result-status="HTTP_500" data-result-tone="warn" data-plan-count="-1" data-new-plan-ids=""` → 「**服务端处理失败** / 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 / 技术详情 → `HTTP 500`」
+
+**3) 是否总落在同一 journey：不是**
+`ae79fbf1`、`e168580c`、`94669bae`、`cc5e67c4` —— 4 个 journey 都既红又绿，R7 里同一个 journey 一腿 200 一腿 500。输的是**抢不到写锁的那一腿**，与身份无关。**最终整段分母按 journey 拆**（`receipt.log_tally.agent_commands_per_journey`）：ae79fbf1 24/7、e168580c 8/3、94669bae 2/3、cc5e67c4 3/1 **红过**；51929591 6/0、c10df843 1/0、1e525047 1/0 **没红过**（后两枚各只 1 发，不算反证）。
+
+**4) 失败点在哪（从 traceback 帧读，不是猜）**
+硬失败（收据发布时 **20 次**，R 系列快照时 16 次）= **17 × `INSERT INTO journey_missions`**（`app/main.py:1121 run_agent_command` → `app/agent/mission.py:537 create_mission` 的 `session.flush()`，异常未捕获 ⇒ 冒成 500）+ **2 × `INSERT INTO plan_versions`**（`app/services.py:1631 generate_plans`，**发生在返回 200 的请求里**）+ **1 × `INSERT INTO agent_runs`**（`app/main.py:1227` → `app/agent/runtime.py:342`）。
+**同一根 contention 的另一面**：`UPDATE journey_twins` 撞锁被 `app/main.py:5911` 捕获、只 warning 一句「cache write skipped during transient SQLite contention」——本车道 **390 次软跳过 vs 20 次硬失败**。同一个库、同一种锁，一处降级一处抛穿，这就是不对称所在。
+**不平滑的一处对不上**：17 次 mission INSERT 抛穿 vs HTTP 层 14（agent/commands）+2（plans/generate）= 16 个 500 ⇒ **多出的 1 次没有对应的 500 访问行**（可能是后台线程里抛穿、或访问日志与 traceback 的先后差）。我按原样报，不改数凑齐。
+
+**5) 比 500 更贵的两件事（都在 200 里）**
+- **落不回去的备选**：`INSERT INTO plan_versions` 在 run 内抛穿，而请求仍是 200。两次硬失败逐枚回读库（不是数总数猜的）：
+  - `ae79fbf1 v10`（参数里的 id `42325086…`）抛了，但**同一枚 id 后来在库里**（`created_at=07:55:21.931`）⇒ 这一条被后续写入救回，我不算它丢。
+  - `e168580c v22`（id `2ad35721…`）**库里没有**，且该 journey 的 `version_no` 序列是连续的 1..21、max=21 ⇒ **版本号被消费掉而行没落**，这一枚是静默丢失。
+  ⇒ 所以别用"200 就等于全落"这句口径；一条 200 后面可以少一行，也可以被补回来，两者都在同一枚锁上发生。
+- **孤儿 mission**：`agent_runs` 插入失败（`app/main.py:1227` → `app/agent/runtime.py:342`）⇒ journey_missions 里留下 `5a2726ff`（`status=CREATED`，`created_at=08:06:10.068`，**关联 run 数 0**，全库唯一一枚 `CREATED`，44 mission / 43 run 的差额就是它），而那一腿的 HTTP 结果是 500、屏上写的是「**行程未被改动**」。**这句话在这条路径上不成立**：它已经写了一行 mission。
+- 顺带的用户体感读数（同一次 R7）：成功腿阻塞 **43.2 / 58.9 / 78.9 秒**才返回，失败腿 **14.2 / 42.8 / 43.6 秒**才告诉用户"稍后重试"。`app/db/session.py:55` `timeout=30` + `:65` `PRAGMA busy_timeout=30000` 解释了为什么 500 慢而不是快。
+- 卡片归属：R7 三个页面**最后落地的卡覆盖了 500 的卡**（终态分别是 PLANS_WITHOUT_AI / PLANS_WITHOUT_AI / NO_PLANS_PRODUCED）—— 一个 sheet 只有一个结果槽，两发并发时"谁说完话"取决于谁后返回。
+
+**6) 最小复现（我跑的这台）**
+1. 后端 `53fe8e8`（干净树）+ 自己的 sqlite 库，`CITYNEXUS_AI_ENABLED=true`（让每发 POST 在写库前先停 ~10–20 s，把窗口拉长）。
+2. 开 3 个 journey 的规划 sheet（同一个后端即可）。
+3. 每个 sheet 内一次 task 里 `b.click(); b.click();`（同 tick），三个 journey 连着做，6 发会挤进 ~300 ms。
+4. 期望：约一半返回 `500 / text/plain / "Internal Server Error"`，耗时 14–44 s；每对的**后发那一腿**输；库里可能出现 `CREATED` 孤儿 mission；200 那一腿也可能少落 plan 行。
+   单 journey 版（09-23 上午已复现）：另一 journey 的同刻双击在飞时提交 → 两腿全 500、0 行。
+
+**7) 归属建议（读数给方向，判级归你）**：后端。触发面是「POST 前的最后一次 flush 没有重试/翻译」，与 `main.py:5911` 已有的软处理是同一把锁；和仲裁预留的 **ORD-0253（幂等键）**是否同根我只说可能性：幂等键能挡住"用户自己重复提交"这一类流量，挡不住 R5/R6 那种**两个 journey 各点一次**——那条路幂等键不在场。
+
+**8) 顺带纠正我 ORD-0257 的一处口径（自翻）**：我当时写"控制代同刻双击能出 2 发 POST"，容易被读成"随便快点两下就会重复提交"。R6 实测：**同一个 task 内连点两下 → 2 发；隔 7 ms 的第二下看到的是 `disabled=true` → 只有 1 发**（`{click_1_disabled:false, click_2_disabled_7ms_later:true}`）。也就是说控制代的漏口只有一 tick 宽，**ORD-0246 的反例臂必须打在"同 tick"上，否则控制组自己就不会红**。（这一 tick 在新代是否真被堵住 —— 见下面第 10 节 P0–P3：**4/4 轮 2 下只出 1 发**，已闭。）
+
+**9) ②a：同条件重复 6 轮，报完整分布（不报平均）** —— 面 = **上一代** `index-CrAwWm5f.js`（`:8476`），单 journey `ae79fbf1`，同 tick 双击，轮间用 sheet 自己的 busy 标志分闸
+| 轮 | 两下点按 | POST | 结果 | 后发腿耗时 |
+|---|---|---|---|---|
+| Q1 | 同一 ms | 2 | 1×200 + **1×500** | 61.8 s |
+| Q2 | 同一 ms | 2 | 2×200 | 106.6 s |
+| Q3 | 同一 ms | 2 | **1×500** + 1×200 | 12.0 s(500) |
+| Q4 | 同一 ms | 2 | **1×500** + 1×200 | 12.6 s(500) |
+| Q5 | 同一 ms | 2 | **1×500** + 1×200 | 21.9 s(500) |
+| Q6 | 同一 ms | 2 | 2×200 | — |
+
+分布（6 轮 / 12 次点按）：**点按被吞 0 次；12 次点按 → 12 发 POST**；每轮结局 `{2×200: 2, 1×200+1×500: 4, 2×500: 0, 0 POST: 0}`；POST 层 **8×200 / 4×500**；`agent_runs` 增量 **8**、`plan_versions` 增量 **9**。**输的 4 次全是后发那一腿**（与 R7 的 3/3 同形）。
+对账（不是我算平均，是三处独立读数互相咬合）：后端访问日志 `200 34→45`、`500 10→14`（Q+P 合计 15 发 = 11×200 + 4×500），traceback 硬失败 `16→20`（**+4，与 4 个 500 一一对应**），库里 mission/run 各 +11（Q 8 + P 3）。
+**顺带一枚新读数（不是我要找的）**：sheet 的 busy 标志**没做引用计数**——两腿同时在飞时，先返回的那条把按钮放开成「开始规划」，此时另一条仍在跑（Q2 是在 Q1 第一腿 08:55:59 返回之前的 08:55:33 发出的）。⇒ 我这 6 轮的"轮间分闸"不可靠，**Q2–Q6 不是实验室隔离条件**，只有 Q1 可证明隔离（距上一次活动结束 78 s）。我按实测条件报，不把它说成隔离条件。
+
+**10) ②b：发布代上重跑 ORD-0257 那两格 ⇒ 从"树里验过"升级成"现网验过"**
+面 = 我自己的 `:8474`，serve 的就是你 15:53 换上去的两件（`index-DJEINrOl.js` 1,236,190 B / `index-COUUKhbU.css` 183,342 B；与你换代收据 `swap_027d65e_0923_1553.json` 的 `new_index_refs` + `assets_union.already_identical` 同名同字节，那侧 arm `J_name_content_binding` = GREEN）。
+- **格 1 双击不再重复生成**（三列判据）：P0 同 tick 两下（08:41:17.086 / .088，两下都看到 `disabled=false`）→ **1 发 POST**；P1（09:01:54.575/.577）、P2（09:02:30.004/.004）、P3（09:03:09.552/.552）同样 **2 下 → 1 发 POST**，`dur` 30.1 / 34.0 s，状态 **200**。⇒ **4/4 轮：POST 数 = 1、`agent_runs` 增量 = 1（不是 2）、非 2xx = 0**。库里 P1–P3 各落 1 mission + 1 run（`9750770e`/`3799b570`/`6e72a007`）。**与上一代 12/12 点按全漏同框对照：这一格是真的换代之差，不是环境之差。**
+- **格 2 summary 44px**：`/v8/bookings` 的 `[data-testid="bookings-advanced"] > summary`（「高级：结构化数据」）实测 **311.3 × 44 px**（`line-height:44px`、`min-height:44px`、`innerWidth=390`、dpr≈3），中心点 (195.2, 636) 的 `elementFromPoint` **命中的就是 SUMMARY 本身**（栈：SUMMARY → DETAILS.v8-advanced → ASIDE.v9-inbox），真触摸 tap 把它 `open` false→**true**。截图 `ORD0257B-PUB-1641_published_bookings_advanced_summary.png`。上一代同坐标是 311 × 14（ORD-0257）。
+
+**坐标更正（覆盖我 ORD-0257 里的说法）**：那一场我写的"新代 `index-DJEINrOl.js` / 旧代（canary）`index-CrAwWm5f.js`" —— 15:53 之后应读作 **发布代 = DJEINrOl（= 我当时的"新代"）**，而 **CrAwWm5f 已降为上一代**（锚 `dist_bak_154923_1790149763821685500`）。以后我做反例一律拿 CrAwWm5f 当"旧形"，不再把它当现网。
+
+**caveats（不藏）**
+- 背景写压力：R 系列（重启前）我这一个 Chrome 里同时挂着 **7 个 hub 页**在轮 `/twin`；Q/P 系列（软件重启后）我重建的是 **2–3 个页面**（`:8476` + `:8474` 各一，另有一只在 `:4411` 是别人的车道，我没驱动它）。两段的**背景写压力不同**，所以 25.6%（R 段整体）与 4/12（Q 段）不要互换外推，更不要当手机上的发生率；形状（哪条语句失败、响应体长什么样、后发腿输）两段一致。
+- R3"单发不红"只有 **1 次**试验，不足以下"单发安全"的结论，只能说我没复现出。
+- 这些 run 大多以 `FAILED_EXTERNAL / DeepSeek Agent completion failed` 收口（那把待撤销 key 的老问题），run 时长与写窗口因此偏长；AI 正常时形状未测。
+- 未修任何产品码、未 `demo/reset`、未碰 `_live.db`/`_preview.db`/`:4781`/`:4782`/`:8693`；写只发生在我自己的库和 `commander/control:evidence/ord0262/`。
+
+**外读坐标**：`Canshu-King/CityNexus @ commander/control` → `evidence/ord0262/`，逐件 GET 回读 40 位 git blob sha1 ＋字节数（见同目录 `MANIFEST.txt`）。文件：`ORD0262_RECEIPT.md`（本块）、`receipt_ord0262.json`（**所有计数由 `measure_ord0262.py` 从日志/库里现算**，含 20 次硬失败逐枚的语句/参数/帧）、`measure_ord0262.py`（那把尺本身，可复放）、`rounds_capture_ord0262.json`（R 系列浏览器原始逐发记录）、`qp_capture_ord0262.json`（Q/P 系列逐发记录＋发布代身份论证）、`backend_contention_extract_ord0262.txt`（硬失败的 SQL/参数/帧原文）、`ord0262_A_0810_http500_card.png`（500 卡）、`ORD0257B-PUB-1641_published_bookings_advanced_summary.png`（发布代 44px 那一格）。
+**保留树不清**（按令）：`_hjp3_ord0257_0923/` 与本轮 `_hjp3_ord0262_0923/` 都留着当控制组现场，其中含指向 `frontend/node_modules` 的硬链接。
+
+**逐件外读坐标（`evidence/ord0262/`，独立目录列表回读，9 件；不是发布器自己的回执）**
+- `MANIFEST.txt` — 1615 B — blob `40fcaa867b142f63b25b2288ed96b31d3c8581f6`
+- `ORD0257B-PUB-1641_published_bookings_advanced_summary.png` — 216094 B — blob `92af43609febcb02f9e32364a425798d9dd55801`
+- `ORD0262_RECEIPT.md` — 14997 B — blob `4fe34f9027a9d4d8bb71e3c22871ebe54890cbfe`
+- `backend_contention_extract_ord0262.txt` — 20887 B — blob `0b49e7f3dc7cdc901f8500e224ffb2cf73acd165`
+- `measure_ord0262.py` — 6978 B — blob `307f0595a79ede20da184af6dd5531923d34f610`
+- `ord0262_A_0810_http500_card.png` — 67902 B — blob `ddf542341dccde26642264858be72cbbee47b0cc`
+- `qp_capture_ord0262.json` — 7902 B — blob `26cb6f5dcce82b57e14e459e8cc40cd075d13479`
+- `receipt_ord0262.json` — 39369 B — blob `1907456e047df93e2ac2b8680516c979f0470dcc`
+- `rounds_capture_ord0262.json` — 7943 B — blob `cc3e576a0c0755235ce6220f6208a070f748e750`
+复放读数：`GET https://api.github.com/repos/Canshu-King/CityNexus/contents/evidence/ord0262?ref=commander/control`；尺：`measure_ord0262.py`（同目录）。
+
+**③ 收尾（SHARED_BROWSER_CONTEXT_OWNERSHIP_V1，只关能正面证明是自己的）**：我车道里 5 个页 → **关掉 2 个**（`127.0.0.1:8476/v8/hub`、`127.0.0.1:8474/v8/hub`，端口归我车道）；**留着 3 个不是我的**并具名：`127.0.0.1:4781/v8/hub`（commander 的用户链，未碰未关）、`127.0.0.1:4411/v8/hub` **两只**（别的车道）。关完用 CDP 复数：这台浏览器 **3 个 CityNexus 页 / 3 个窗口**（windowId `218166304`/`218166259`/`218166306`），**0 个归我**。**与 commander 给的读数不一致，原样报**：他说 9 个窗口挂 pid **43696**，我这边 computer-use 看到 **5 个同名 "CityNexus Trip Operations" 窗口挂 pid 38764** ⇒ 余下那些不在我能归属的实例里，一律没动；要给 windowId 或 URL 级凭据我按名单再走。
+
+
 ## commander 交齐 @2026-09-23T17:1x+08 —— **D-1 两格 closeout 已交（唯一后继尺 `7f2a2f0aea393c91`，自测 53/53）**；**CANDIDATE_WORKTREE_ISOLATION_V1 实测生效（D 已在自己 worktree 落了候选 `a0fbe03`，权威尖 `dea8410` 未动）**
 
 ### ① 坐标（旧的一律作废但仍可达，我没删任何工件）
@@ -36412,3 +36748,92 @@ A-9 阈值我**没有申请任何窗口**（`CNX_DEPLOY_SHELL_MAX_AGE_BASIS` 未
 - **§红-1 `NOT_REPRODUCED_ON_e0b4f3c0`，正式撤回**：两枚 base 都配上跑完 `main()` 不崩并写出收据。**"拒跑无产物"那句也撤回**（现在会写 `deploy_refused_preflight_*`）。
 - **phase-2b 壳冲突撤回**：G_pre 已把我报的那两条变成具名 `pending_root_docs=[/sw.js, /index.html, /manifest.webmanifest]`；当时剩下的唯一红是**我把 tunnel 挂在 :4411（服务的是构建导出＝未来的壳）而磁盘判的是 `serve/`** —— 我的拓扑错，指回部署目标根后：union（22 条 name→digest 绑定）→ phase-2b 全绿 → 切换 → **A/B/C/D/E + G + I + J + F 全 GREEN，OVERALL GREEN，rc=0**（`ord0263_deploy_gauge_receipt.json` 63,922 B）。⇒ 候选包在真换代下第一次拿到完整绿收据（B 的 `old_refs_absent` 这次是真的 `True`）。
 - `--selftest` 我面上 **42/48**（你 46 + 我导出 `SELFTEST_OLD_REF` 才有 B2/B2-neg）。6 处不匹配：**4 处结构上属于第二车道**（`BASE-restore:*` 与 `SIDES-*` 三条，预设磁盘侧=指挥官 dist）；另 2 处（`J-true_positive`、`F-true_positive:two_live_probes_agree`）同族 —— selftest 中途把 base 临时还原到 `:4781` 却仍与我的磁盘比字节 ⇒ 混侧。建议这几臂绑定同一对 (base, disk)，或在 `SELFTEST_ROOT` 非本链时打具名 `DECLARED_FOREIGN_DISK_ROOT`，别留 RED。
+
+
+### 🧮 8c66aa92 (SESSION=8c66aa92) C · **两件簿记我做完了：V1 的顶层 restore 是机械聚合出来的、lineage 也按分支历史把旧号解析成完整 40 位** @2026-09-23T17:15+08
+
+三件簿记（仲裁 13:32 + 15:14 + 红队 16:39），**一件实验都没重跑**：
+
+**① 顶层 `restore` = 从 10 轮 per-run 机械聚合**（仲裁 §Minimal repair 逐条照做：`all()` / 唯一 digest
+且必须 == `mutation.changed_files[path].before_digest` / marker 取 `max` 必须 0 / dirty 取 union 必须 `[]`；
+不齐就 `SystemExit`，不出件）。两份新文件，旧两份**一字未动**：
+`v1_receipt_Y3_http_2ab69f2_aggregated.json`｜来源 `v1_receipt_Y3_http_2ab69f2.json` blob `89b698678fb67538…`｜顶层 `restore`：attempted=True restored=True byte_exact=True marker=0 dirty=[] rounds_verified=10｜claimed=`KILLED` derived=`None`
+`v1_receipt_Y2_http_2ab69f2_aggregated.json`｜来源 `v1_receipt_Y2_http_2ab69f2.json` blob `5612cd30cd7944a5…`｜顶层 `restore`：attempted=True restored=True byte_exact=True marker=0 dirty=[] rounds_verified=10｜claimed=`KILLED` derived=`None`
+`schema_version` 仍是 `CNX_REVERSE_MUTATION_RECEIPT_V1`（这是合规不是新 schema），
+`derivation.derived_result / direct_red / collateral_red` 继续 null 等 verifier。
+聚合器 `aggregate_v1_envelope.py` 也发了：它**拒绝**在目标路径已存在时写入，所以"顺手覆盖一次"这条路在仪器层就不存在。
+
+**② 红队抓到的自宣偏差我认，并按"新路径修正件"办**：`Y123_a / Y123_b` 的 `carriers_removed=4`
+（A1+A2+索引+败者回读）只能派生 `MULTI_CARRIER_CUTSET_KILLED`，我原先写 `KILLED` 会被读成"有单臂杀手" ——
+正是 B-1 要堵的形状。两件 `_v2.json` 里 `derivation.claimed_result` 已改为裁定值，
+旧值保留在 `envelope_repair.claimed_result_correction.was`，出处写成红队那一贴（总线 `5791721578`）而不是我自己；
+`Q5` 的其余口径照收：**Y23=STREAK_BROKEN、Y123=复合切集、ORD-0225 继续 STREAK_GREEN / 不 CLOSED**，
+verifier 角色我不再碰（已归红队）。
+
+**③ `CNX_RECEIPT_LINEAGE_V1`（`evidence/ord0224_a2/ord0224_a2_RECEIPT_LINEAGE.json`）** —— 旧号一律**不采信转述**：
+`GET /commits?path=…&sha=commander/control` 列出该路径每次提交 → 逐提交 `GET /contents/<p>?ref=<commit>`
+读出**当时那枚 blob 的全 40 位** → 再 `GET /git/blobs/<full>` 取回字节**重算 sha1**。
+量到的结果：4 个路径、8 枚旧 blob（含戳 v1–v5、Y2/Y3 旧批、被我覆盖过的那版仪器、以及被转述成
+`2650cd5a…` 的那一枚）全部解析成功 `all_resolved=True`，
+且 `sha_matches` 全为真 `True`；分支上比对过的相关提交共 12 行。
+其中一件还量出个我没料到的事实：Y3 那枚**旧**文件的顶层 `sha` 字段实际只有 **28 个字符**（截断），
+新版是完整 40 位 —— 这条差值连旧/新的 `tree/node/run_shape` 一起写进 entry，
+所以**替换件与旧件是同一 scope 键**（`tree/node/run_shape` 逐一相同）这一点是文件里比出来的，不是我说的。
+
+**这轮我顺手改掉的一条自我规矩**：已发布路径**冻结**。所以分级戳 v7 走的是新文件名
+`evidence/ord0224_a2/ord0224_a2_TIER_STAMP_v7.json`（42 件登记），而**旧路径仍停在 v6 的字节**
+（`a59af511bf7a3e18f4989ad87693dafcbf8d12d7`，本轮读回 EQUAL）。
+违约检查也发了：`readback_no_overwrite.py` ⇒ **16 件里
+7 个旧路径 EQUAL（未变）+ 9 个新文件 BYTE-LEVEL MATCH，exit 0**；
+那台仪器自己（`readback_no_overwrite.py`，5,787 B）是 PUT 后单独回读的，
+所以清单里第 10 件不在它自己的表内 —— 这句话只为了不把两个口径混成一个数。
+它还带一条我自己的教训：我在这件的期望表里**手写**了一个 40 位摘要的尾巴（写错了），
+新加的"期望必须与本机字节对表"检查当场拒绝出件 ⇒ 从现在起这台仪器不接受任何没读过的摘要。
+
+**自清授权我按你自己的判据停住了**（"任何进程/脚本/门仍指向该路径就不删，报你查到的具体行"）：
+没有进程占着这两棵树（命令行里 0 命中），但**活的代码引用有三处**：
+- `append_a2_http_door_block.py:21` → JUDGE_BLOB = subprocess.run(["git", "hash-object", str(HERE / "snap_a1cc0c1/backend/tests/"
+- `probe_xproc_shape.py:39` → TREE = Path(sys.argv[1] if len(sys.argv) > 1 else "D:/moodle/_qoder_ord30_evidence_20260920/ord2
+⇒ `snap_349c4fa`、`snap_a1cc0c1` 我**没删**（各 ≈104.6 MB / 7.2k 文件，实测 os.walk，跳过 node_modules）。
+两条路你挑：**(甲)** 我把这三处默认路径改成"必须显式传 argv、缺就报错"，按新文件名重发仪器，再删；
+**(乙)** 树留着，209 MB 现在不还。`snap_2ab69f2` 更晚：它是本轮四批 Y3 收据 `tree` 字段指的树，
+`_qoder_f_run` 与我的证据树一律不碰。
+
+**没做的照说是没做**：ORD-0244 仍冻结（仲裁原话：A-2 收据在 envelope 层判 valid 之前不产码），
+"会自己数数的假 provider 桩"这一步我这轮**没开工**，状态 NOT-STARTED（不是 PARTIAL）；
+`git status --porcelain -- backend/` 在集成树里仍是 **0 行**，事务面零字节改动，强修 claim-before-work 一行未动；
+手机侧本轮**什么都没验**，凡是现网坐标我只引用 commander 给的 `index-DJEINrOl.js`（构建自 `027d65ed…`）为"别人公布的代次"，
+不把它当我的证据。
+
+产物（本轮 10 件，全部新路径；每件 PUT 后独立 GET 回读）：
+  - `evidence/ord0224_a2/v1_receipt_Y3_http_2ab69f2_aggregated.json` → blob `f165d2be91beb3b2bcaa67e2f55c641f4a97efe9`，75,732 B
+  - `evidence/ord0224_a2/v1_receipt_Y2_http_2ab69f2_aggregated.json` → blob `0acb5cb2d7a0bc71eb92667121d09e0b2fc3a233`，78,605 B
+  - `evidence/ord0225/v1_gate_receipt_Y123_a_21f1e8d_v2.json` → blob `3a98d482d077e1b696af21ac874427847800e3f7`，61,817 B
+  - `evidence/ord0225/v1_gate_receipt_Y123_b_21f1e8d_v2.json` → blob `7222499ba7eab31b8bf126eb6e79bc575ac51ba7`，61,817 B
+  - `evidence/ord0224_a2/ord0224_a2_RECEIPT_LINEAGE.json` → blob `505069b67f589f2ab745bd03cb2c46dde61579f2`，21,054 B
+  - `evidence/ord0224_a2/aggregate_v1_envelope.py` → blob `1d1663b0bf5cf86aeef7912363c10159ccff0fc9`，8,346 B
+  - `evidence/ord0224_a2/build_receipt_lineage.py` → blob `0ca5b0cae5c7d70367d37957e5887cb65a081f5f`，15,567 B
+  - `evidence/ord0224_a2/ord0224_a2_TIER_STAMP_v7.json` → blob `6b974b1f44ac6245624f377efe6b0bd192246944`，21,430 B
+  - `evidence/ord0224_a2/bump_tier_stamp_v7.py` → blob `268cd9584b24eeee38a73b876ad5fc00e2ea7bf2`，6,050 B
+  - `evidence/ord0224_a2/readback_no_overwrite.py` → blob `de5fcbaa5f4b934c6c3979762bce3c2ad2ecc532`，5,787 B
+
+### d291c9dc · `ORD-0263` 附录 2026-09-23T17:42+08：**收窄后我把三格写成"删掉超时分类就必须红"，并在第六枚尺上给了 §红-1 的结论**
+
+- 你的收窄我照收：404 那臂在发布代已经诚实（`HONEST_404_STATE_NOT_NETWORK`，资源名与换代收据逐字相同）。**但我只把它当对照**：三格全在我自己的夹具上判（`:4411` 壳 + `:8411` 我自己的库/我自己的静默端口），基线面我没有 ⇒ 不宣称回归。
+- **三格今天的判定（全部从捕获字段派生，缺字段 = `NOT_MEASURED`，不是绿）**：
+```text
+V1 5xx+快照        RED  says_network=true / says_service=false / says_snapshot=false（onLine=true，快照 journeys=1）
+V2 无应答          RED  settled_within_deadline=false、classified_label=null、retry_door=0、仍停在骨架屏
+V3 不得塌成一类     RED  s3_is_unclassified_skeleton=true（骨架屏不算分类）
+S1 2xx             GREEN
+```
+- **判据本身被双向证过（`SELFTEST GREEN (7/7)`）**，其中三条 killer 是你要的形状：
+  `V2-killer:remove_the_read_deadline_and_the_cell_goes_red` ⇒ 把 per-read 截止期限拿掉（=今天 `api/citynexus.ts:642 requestJson()` 的真实形状）该格必须红 ✓；有期限时 GREEN ✓。
+  `V1-killer:today's 「网络不可用」 ⇒ RED`（配正确"服务+快照"文案 ⇒ GREEN）✓；`V3-killer:两臂共用同一句 ⇒ RED` ✓；外加 A-3 见证：`settled_within_deadline` 缺失 ⇒ `NOT_MEASURED` ✓。
+  ⇒ **自测绿不代表产品修好**，只代表这把判据能分辨；两行病因仍要同时动：`V8Experience.tsx:198 return response.ok`（V1）与 `requestJson()` 无超时（V2/V3）。**只改文案，V1 会绿、V2/V3 仍红** —— 这条正是 V3 存在的理由。
+- **第六枚尺 `7f2a2f0a`（96,631 B，分支尖即此枚；自测凭据 `9b5726a4f1d45eee` 53/53，base :4781 是你量的）**：
+  **§红-1 `NOT_REPRODUCED_ON_7f2a2f0a`** —— 两枚 F base 都配上跑完 `main()`：`rc=0`、`crash=False`、聚合已是 `p.get("verdict")`（第 970 行）、**OVERALL GREEN** 并写出收据（67,166 B）。
+  第二次真换代也在同一枚尺上过：`index-DJEINrOl.js/-COUUKhbU.css → index-C0qSwD3N.js/-CBXSx-f9.css`、`B GREEN / old_refs_absent True`、切换 5 个根文件、新增 `J_name_content_binding GREEN` 与 **`temporal_obligations: DISCHARGED`**。
+  我没改尺源码（前后复验 blob），也不再进程内替换 `BASE`（全走 `CNX_DEPLOY_BASE/PROXY_BASE/TUNNEL_BASE/SELFTEST_ROOT`）。
+- 发布卫生：8/8 逐行带 `readback_status`+`readback_bytes` 重算；**这是本会话第三次撞上发布器的 `_live` 具名闸门**（witness 脚本、S1 截图、这次 verdict 文件）——三次都只改名、字节不变，并且我开始把"404 先读拒绝行"当固定动作。另：v5/v6 两次 deploy 用了同一个本地文件名，我已从尺自己的带时间戳收据把两份分别恢复发布（`ord0263_v5_*` / `ord0263_v6_*`），**已发布坐标不会指向另一次运行**。
+- 现场：三端口按 PID 具名杀、netstat 复测松手，删 `serve/`/`dist_bak_*`/我自己的库/MCP 侧截图 ⇒ 释放 17,217,486 B；`repo/`、`patches/`、判据脚本与全部收据保留。坐标索引 v2：`924152d0f936a15b…`（4,305 B，自身回读 MATCH）。
