@@ -1,0 +1,207 @@
+{
+ "at": "2026-09-24T01:14:17+08:00",
+ "order": "ORD-0263 第五态 候选 · 六格自证",
+ "lane": "B c01d72a3",
+ "base": "1f4440819a9d773da6e18f12a31412f73c6d0f55",
+ "cells": {
+  "1_ancestry": {
+   "candidate_tip": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+   "parent": "1f4440819a9d773da6e18f12a31412f73c6d0f55",
+   "branch": "agent/b-c01d72a3-ord0263-s5",
+   "required_base": "1f4440819a9d773da6e18f12a31412f73c6d0f55",
+   "parent_equals_required_base": true,
+   "is_ancestor_rc": 0,
+   "authoritative_branch_moved_by_me": false,
+   "note": "the commander moves integration/frontend-apple-pass1; I only publish this candidate ref"
+  },
+  "2_diff_boundary": {
+   "files": [
+    "frontend/src/api/citynexus.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/lib/failureAttribution.ts"
+   ],
+   "diffstat": " 3 files changed, 115 insertions(+), 4 deletions(-)",
+   "removed_line_count": 4,
+   "removed_lines": [
+    "  if (text) {",
+    "  const body = await response.json().catch(() => null);",
+    "            if (attribution.reason === \"NETWORK_UNAVAILABLE\" || attribution.reason === \"SERVER_ERROR\") {",
+    "    && (attribution.reason === \"SERVER_ERROR\" || attribution.reason === \"NETWORK_UNAVAILABLE\");"
+   ],
+   "per_file_blob_before_after": {
+    "frontend/src/api/citynexus.ts": {
+     "before": "aefdab8925208174f0a9ccd43c17fc695cb91cef",
+     "after": "05787c27cfb059dba174023bd6edfc4ce6533eb6"
+    },
+    "frontend/src/app/V8Experience.tsx": {
+     "before": "c853ba128405f85cb8397eaa53a958f17122905b",
+     "after": "f9889ab88af443f8385580c23c0e5e58fa1ebf54"
+    },
+    "frontend/src/lib/failureAttribution.ts": {
+     "before": "1fcac1007d5bb85ebdae1ac16b6ddf5746afb6a9",
+     "after": "5956e880abf625591d371d369fe54b72bd2ffce8"
+    }
+   },
+   "four_earlier_branches_touched": [],
+   "headline": "no removed line carries any of the four earlier judgements (see the empty list above)"
+  },
+  "3_gates": {
+   "typecheck_rc": 0,
+   "typecheck_cmd": "npm run typecheck == npm.cmd run typecheck (tsc -p tsconfig.check.json --noEmit)",
+   "build_rc": 0,
+   "precache_line": "precache  8 entries (2436.77 KiB)",
+   "bundle_asset": "index-ChOTTCvB.js",
+   "bundle_bytes": 1245203,
+   "bundle_sha256_16": "2d56a79632efc0c6"
+  },
+  "4_ruler_five_cells_three_shapes": {
+   "ruler": {
+    "path": "D:\\moodle\\_qoder_harness_ord0254\\tools\\ord0263_verifier_v3.py",
+    "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+    "expected_published": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+    "match": true,
+    "entry_point": "live()",
+    "unchanged_after_round": true
+   },
+   "capture_subject": "CANDIDATE branch agent/b-c01d72a3-ord0263-s5, dist_s5, my :4443 -> my :8443",
+   "cells_verdicts_as_the_ruler_printed_them": {
+    "S1_live": "GREEN",
+    "V1_origin_error_5xx": "GREEN",
+    "V1_vacuity_witness": "GREEN",
+    "V2_no_answer": "GREEN",
+    "V3_distinctness": "GREEN",
+    "V4_silent_read_answered_health": "GREEN",
+    "V5_origin_invalid_response": "GREEN"
+   },
+   "ruler_derived_result_field": "ALL_GREEN",
+   "claimed_result": "three shapes judged independently, aggregate 3/3; the four earlier cells and the vacuity witness unchanged",
+   "per_shape": {
+    "200_html": {
+     "verdict": "GREEN",
+     "failed_conditions": [],
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 1200,
+      "body_head": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <m",
+      "wire": "s5fix_origin_html.log answered 200 text/html; charset=utf-8 1200 B at 2026-09-24T00:57:08"
+     },
+     "screen_head": "服务器 |  | 服务器答了 200，可带回来的不是这一屏能用的数据 |  | 它确实回了话（HTTP 200，Content-Type: text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 |  | 看已保存的只读副本 | 重试 | 归因详情 | attribution_"
+    },
+    "200_empty": {
+     "verdict": "GREEN",
+     "failed_conditions": [],
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "application/json",
+      "body_bytes": 0,
+      "body_head": "",
+      "wire": "s5fix_origin_empty.log answered 200 application/json 0 B at 2026-09-24T00:57:11"
+     },
+     "screen_head": "服务器 |  | 服务器答了 200，可带回来的不是这一屏能用的数据 |  | 它确实回了话（HTTP 200，Content-Type: application/json），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 |  | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=O"
+    },
+    "200_not_json": {
+     "verdict": "GREEN",
+     "failed_conditions": [],
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 40,
+      "body_head": "origin says: plan service is warming up\n",
+      "wire": "s5fix_origin_nonjson.log answered 200 text/plain; charset=utf-8 40 B at 2026-09-24T00:57:14"
+     },
+     "screen_head": "服务器 |  | 服务器答了 200，可带回来的不是这一屏能用的数据 |  | 它确实回了话（HTTP 200，Content-Type: text/plain; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 |  | 看已保存的只读副本 | 重试 | 归因详情 | attribution"
+    }
+   },
+   "how_measured": "real browser against my own swapped origin; snapshot earned from a real uvicorn before the swap; attribution read off the EXPANDED 归因详情 line as the ruler requires; ownership shown pairwise (browser Resource Timing vs my origin's log)"
+  },
+  "5_reverse_arms": {
+   "arms": [
+    {
+     "arm": "A_no_throw_in_v8Request",
+     "sites_hit": 1,
+     "verdict": "RED",
+     "failed_conditions": [
+      "cached_copy_column_not_measured"
+     ],
+     "columns_after_mutation": {
+      "attribution_reason": "UNKNOWN_FAILURE",
+      "evidence_kind": "HTTP_RESPONSE",
+      "http_status": "200",
+      "source_layer": "RESOURCE_STATE",
+      "retryable": "false"
+     },
+     "artifact_fingerprints": {
+      "asset": "index-C9iKFFQY.js",
+      "bytes": 1214568,
+      "count_ORIGIN_INVALID_RESPONSE": 3,
+      "count_failure_originInvalidResponse": 2,
+      "count_OriginResponseUnusable": 2,
+      "count_body_null_guard": 410
+     },
+     "restored_byte_exact": true
+    },
+    {
+     "arm": "B_unreachable_classify_branch",
+     "sites_hit": 1,
+     "verdict": "RED",
+     "failed_conditions": [
+      "evidence_kind_lost_HTTP",
+      "http_status_not_carried",
+      "reason_collapsed",
+      "layer_collapsed_to_TRANSPORT",
+      "sentence_claims_no_answer"
+     ],
+     "columns_after_mutation": {
+      "attribution_reason": "NETWORK_UNAVAILABLE",
+      "evidence_kind": "TRANSPORT",
+      "http_status": "none",
+      "source_layer": "TRANSPORT",
+      "cached_copy_present": "true",
+      "retryable": "true"
+     },
+     "artifact_fingerprints": {
+      "asset": "index-B4KmWYkB.js",
+      "bytes": 1214367,
+      "count_ORIGIN_INVALID_RESPONSE": 2,
+      "count_failure_originInvalidResponse": 1,
+      "count_OriginResponseUnusable": 1,
+      "count_body_null_guard": 411
+     },
+     "restored_byte_exact": true
+    }
+   ],
+   "restores_all_byte_exact": true,
+   "discarded_reading": {
+    "what": "an earlier single-arm run of the same classifier mutation reported GREEN",
+    "why_discarded": "that run never proved surface ownership (it started without a port preflight and a stray listener on my own port had just been killed; the bundle it served was not fingerprinted), so the reading is not attributable",
+    "action": "replaced by arm B above, which fingerprints the emitted asset before the browser runs; not deleted from my disk, and not used anywhere in this self-proof"
+   }
+  },
+  "6_hygiene": {
+   "porcelain_excluding_my_own_build_output": [],
+   "my_build_dirs_left_in_place": [
+    "?? frontend/dist_ord0268_impl/",
+    "?? frontend/dist_s5/"
+   ],
+   "ports_used_this_round": [
+    4443,
+    8443,
+    4441,
+    8441,
+    8442
+   ],
+   "ports_named_stopped": true,
+   "user_chain_ports_contacted": [],
+   "user_db_files_opened": [],
+   "demo_reset_issued": false,
+   "write_post_probes_this_round": 0,
+   "write_post_policy": "forbidden by commander 5798766898 and not needed by any cell here",
+   "provider_egress": "CITYNEXUS_AI_ENABLED=false, resolver off, Photon -> 127.0.0.1:9, empty keys",
+   "a3_status": "downgraded to a producer reading pending the arbiter's isolation ruling; see ORD_0263_A3_WITHDRAWAL.md"
+  }
+ }
+}
