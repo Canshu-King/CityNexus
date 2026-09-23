@@ -1,0 +1,12 @@
+{
+ "generatedBy": "e345b9d6",
+ "node": "ord0253-burst",
+ "posts": 1,
+ "buttonDisabled": {
+  "before": false,
+  "during": false,
+  "after": false
+ },
+ "keyOnSurvivor": "v4-uuid",
+ "rule": "重入门先拒（不领键）⇒ 服务器将来只会在真正的重复请求上看到同一键，burst 在客户端就消失了"
+}
