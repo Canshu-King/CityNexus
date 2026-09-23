@@ -1,0 +1,87 @@
+{
+ "at": "2026-09-23T14:43:08+08:00",
+ "commit": {
+  "status": 200,
+  "sha40": "23eb1f5c5856ce694f2ff2165ef245c8ebfc324f",
+  "date": "2026-09-23T04:57:46Z",
+  "subject": "commander: A-9 shell cache-semantics arm wired into the single predicate (redteam round 4: immutable shell = white screen) + declared gaps for A-with-no-old-js "
+ },
+ "ruler": {
+  "expected_blob16": "9ca0dee62016d7ef",
+  "expected_bytes": 45153,
+  "fetched_blob40": "9ca0dee62016d7ef421b1dc085027ff4d6654c23",
+  "fetched_bytes": 45153,
+  "verdict": "FETCHED_VERIFIED"
+ },
+ "shell_cache_lines": [
+  "34: # arm probes (the dynamically-imported maplibre chunk - in the SW precache, not in index.html) could still",
+  "60: req.add_header(\"Cache-Control\", \"no-cache\")",
+  "70: out = {\"path\": path, \"status\": None, \"content_type\": None, \"length\": None, \"cache_control\": None,",
+  "81: # `max-age=31536000, immutable` therefore passed the whole receipt while guaranteeing that",
+  "83: out[\"cache_control\"] = r.headers.get(\"Cache-Control\")",
+  "108: def precache_urls(sw_text: str) -> list[str]:",
+  "109: \"\"\"URLs the generated service worker promises to precache.",
+  "113: Parsed from the workbox `precacheAndRoute([...])` array.  Measured against the real generated",
+  "130: SHELL_MAX_AGE = int(os.environ.get(\"CNX_DEPLOY_SHELL_MAX_AGE\", \"600\"))",
+  "133: def cache_semantics_verdict(ref: str, probe: dict) -> dict:",
+  "134: \"\"\"A-9: the *shell* document must never be cached immutably or for a long time.",
+  "136: Hashed /assets/* keep `immutable` legitimately (content-addressed, safe forever).  The shell is the",
+  "138: `immutable`/long `max-age` on it makes the next generation unfetchable - the exact white screen",
+  "142: cc = (probe.get(\"cache_control\") or \"\").lower()",
+  "143: out = {\"ref\": ref, \"is_shell\": is_shell, \"cache_control\": probe.get(\"cache_control\"),",
+  "144: \"rule\": f\"shell must not carry immutable; max-age <= {SHELL_MAX_AGE}\"}",
+  "146: # hashed assets are allowed (and encouraged) to be immutable - but that must be a *seen* header,",
+  "150: if \"immutable\" in cc:",
+  "152: out[\"reason\"] = \"shell document served with Cache-Control: immutable\"",
+  "154: if \"no-store\" in cc or \"no-cache\" in cc or \"must-revalidate\" in cc:",
+  "157: found = re.search(r\"max-age\\s*=\\s*(\\d+)\", cc)",
+  "160: out[\"reason\"] = \"shell document carries no Cache-Control at all - revalidation policy is undefined\"",
+  "163: out[\"verdict\"] = \"GREEN\" if age <= SHELL_MAX_AGE else \"RED\"",
+  "165: out[\"reason\"] = f\"shell max-age={age} exceeds {SHELL_MAX_AGE}\"",
+  "172: The precache manifest carries `favicon.svg` and pngs too; forcing those to \"javascript\" would",
+  "216: # E is about HTML answering a **non-HTML** URL.  The precache manifest legitimately carries",
+  "224: and cache_semantics_verdict(ref, g)[\"verdict\"] != \"RED\"   # A-9 (redteam round 4)",
+  "238: \"\"\"Reproduce the production shape: a declared hand-written sw (no precache array) vs the same",
+  "242: declared = {\"sw.js\": \"hand-written service worker, no workbox precacheAndRoute array\"}",
+  "243: urls = precache_urls(text)",
+  "361: g_urls = precache_urls(swf.read_text(encoding=\"utf-8\", errors=\"replace\")) if swf.is_file() else []",
+  "362: arms.append({\"arm\": f\"G-true_positive:precache_resolves({len(g_urls)} urls)\", \"expect\": \"GREEN\",",
+  "364: arms.append({\"arm\": \"G-killer:precache_names_unreachable_asset\", \"expect\": \"RED\",",
+  "368: # Round-3 witness (redteam bus 5789163700): a dynamically-imported chunk that only the precache arm",
+  "372: arms.append({\"arm\": \"G-killer:precache_url_breaks_on_second_probe\", \"expect\": \"RED\",",
+  "377: # G-killer 2 (redteam bus 5788897591, measured on the production chain): a file with NO precache",
+  "381: arms.append({\"arm\": \"G-declared:handwritten_sw_without_precache_array\", \"expect\": \"DECLARED\",",
+  "391: # A-9 witness (round 4): a shell answered with immutable/1-year must read RED through the SAME",
+  "393: fake = {\"cache_control\": \"public, max-age=31536000, immutable\"}",
+  "394: v_imm = cache_semantics_verdict(\"/index.html\", fake)"
+ ],
+ "declared_slots": [
+  "DECLARED_NO_OLD_JS",
+  "DECLARED_NO_PRECACHE_ARRAY",
+  "GREEN_H_EQ_C_NO_CHANGE_DEPLOY"
+ ],
+ "default_shell_max_age_in_bytes": [
+  "CNX_DEPLOY_SHELL_MAX_AGE\", \"600\"))"
+ ],
+ "f_arm_aggregation_line": [
+  "410: \"got\": {\"verdict\": tp[\"verdict\"], \"error\": None, \"status\": tp[\"statuses\"]}})",
+  "587: reds = [p[\"path\"] for p in pre if p[\"verdict\"] != \"OK\"]",
+  "591: if p[\"verdict\"] != \"OK\":",
+  "717: else (\"NOT_CONFIGURED\" if not h_prev else \"RED\"))",
+  "730: f_probes.append({\"surface\": label, \"verdict\": \"NOT_CONFIGURED\", \"base\": None})",
+  "737: f_unconfigured = any(p[\"verdict\"] == \"NOT_CONFIGURED\" for p in f_probes)"
+ ],
+ "red_finding_1_recheck": "line 669-style aggregation still reads p['verdict'] unconditionally",
+ "witnesses": {
+  "selftest_21_21": {
+   "requested": "evidence/gates/deploy_bundle_shell_cache_selftest_0923.json",
+   "status": 404,
+   "candidates_on_branch": []
+  },
+  "three_surface_retest": {
+   "requested": "evidence/gates/deploy_bundle_shell_cache_three_surfaces_0923.json",
+   "status": 404,
+   "candidates_on_branch": []
+  }
+ }
+}
