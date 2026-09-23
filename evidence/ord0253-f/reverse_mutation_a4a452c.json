@@ -1,0 +1,194 @@
+{
+ "schema_version": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+ "receipt_kind": "reverse_mutation",
+ "order": "ORD-0253 后端半件（agent/commands 幂等）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-23T18:11:14+08:00",
+ "scope": {
+  "repo": "candidate worktree D:/moodle/_qoder_f_ord253_20260923",
+  "branch": "agent/f-ord253-candidates",
+  "base_authoritative_sha": "a4a452c08889eea3fb2d61bcc0068a6ff8c4366e",
+  "target_file": "D:\\moodle\\_qoder_f_ord253_20260923\\backend\\app\\main.py",
+  "gate_file": "D:\\moodle\\_qoder_f_ord253_20260923\\backend\\tests\\test_qoder_agent_command_idempotency.py",
+  "run_shape": "whole-file（该门文件一次跑满，本轮控制轮 10 passed, 2 warnings in 1.88s）",
+  "exact_command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --no-header -p no:cacheprovider tests/test_qoder_agent_command_idempotency.py -q --tb=no -rf"
+ },
+ "environment": {
+  "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+  "cwd": "D:\\moodle\\_qoder_f_ord253_20260923\\backend",
+  "offline_precondition": "ai_api_key 为空（门内每格再 assert 一次）"
+ },
+ "control_round": {
+  "exit_code": 0,
+  "red": [],
+  "green": true,
+  "summary": "10 passed, 2 warnings in 1.88s"
+ },
+ "arms": [
+  {
+   "mutation_id": "M1_regenerate_key_every_call",
+   "claim_broken": "同 key 重放回到同一枚持久 mission（验收①）",
+   "carriers_removed": [
+    "request-supplied key is actually used as the durable claim"
+   ],
+   "allowed_scope": "product",
+   "actual_scope": "product",
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "mutated_sha256": "a8d5bd378b9d2bc98eeab37303b5e753c09299248dbafc0123d452fbcce2368c",
+   "primary_target_nodeids": [
+    "tests/test_qoder_agent_command_idempotency.py::test_same_key_same_request_replays_the_one_persisted_mission",
+    "tests/test_qoder_agent_command_idempotency.py::test_two_threads_one_key_produce_one_mission"
+   ],
+   "mutated_runs": {
+    "rounds": 1,
+    "exit_code": 1,
+    "summary_line": "6 failed, 4 passed, 2 warnings in 2.07s",
+    "failed_nodeids": [
+     "tests/test_qoder_agent_command_idempotency.py::test_same_key_on_another_journey_fails_closed_not_silently_reused",
+     "tests/test_qoder_agent_command_idempotency.py::test_same_key_same_request_replays_the_one_persisted_mission",
+     "tests/test_qoder_agent_command_idempotency.py::test_same_key_with_a_different_autonomy_fails_closed_too",
+     "tests/test_qoder_agent_command_idempotency.py::test_same_key_with_a_different_command_fails_closed_never_aliases",
+     "tests/test_qoder_agent_command_idempotency.py::test_the_receipt_is_a_durable_scoped_row_not_an_in_memory_map",
+     "tests/test_qoder_agent_command_idempotency.py::test_two_threads_one_key_produce_one_mission"
+    ],
+    "control_round_red": false
+   },
+   "restore": {
+    "restored": true,
+    "byte_exact_match_before": true,
+    "no_mutant_marker_left": true
+   },
+   "derivation": {
+    "claimed_result": "KILLED",
+    "claimed_result_note": "交付方自称，仅供 verifier 参考",
+    "derived_result": null,
+    "direct_red_nodeids": null,
+    "collateral_red_nodeids": null,
+    "primary_hit_every_named_cell": true
+   }
+  },
+  {
+   "mutation_id": "M2_constant_signature_overmerges",
+   "claim_broken": "同 key 不同意图必须 fail closed，绝不静默 alias（验收②）",
+   "carriers_removed": [
+    "request signature is compared before replaying"
+   ],
+   "allowed_scope": "product",
+   "actual_scope": "product",
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "mutated_sha256": "b2f9af00dbb5928b88a70aa386ca37fda2acc909149912bbb25d06de87e7653b",
+   "primary_target_nodeids": [
+    "tests/test_qoder_agent_command_idempotency.py::test_same_key_with_a_different_command_fails_closed_never_aliases",
+    "tests/test_qoder_agent_command_idempotency.py::test_same_key_with_a_different_autonomy_fails_closed_too",
+    "tests/test_qoder_agent_command_idempotency.py::test_same_key_on_another_journey_fails_closed_not_silently_reused"
+   ],
+   "mutated_runs": {
+    "rounds": 1,
+    "exit_code": 1,
+    "summary_line": "4 failed, 6 passed, 2 warnings in 1.85s",
+    "failed_nodeids": [
+     "tests/test_qoder_agent_command_idempotency.py::test_same_key_on_another_journey_fails_closed_not_silently_reused",
+     "tests/test_qoder_agent_command_idempotency.py::test_same_key_with_a_different_autonomy_fails_closed_too",
+     "tests/test_qoder_agent_command_idempotency.py::test_same_key_with_a_different_command_fails_closed_never_aliases",
+     "tests/test_qoder_agent_command_idempotency.py::test_the_receipt_is_a_durable_scoped_row_not_an_in_memory_map"
+    ],
+    "control_round_red": false
+   },
+   "restore": {
+    "restored": true,
+    "byte_exact_match_before": true,
+    "no_mutant_marker_left": true
+   },
+   "derivation": {
+    "claimed_result": "KILLED",
+    "claimed_result_note": "交付方自称，仅供 verifier 参考",
+    "derived_result": null,
+    "direct_red_nodeids": null,
+    "collateral_red_nodeids": null,
+    "primary_hit_every_named_cell": true
+   }
+  },
+  {
+   "mutation_id": "M3_drop_operation_scope",
+   "claim_broken": "键按 operation 作用域，不与别的操作互相冒领",
+   "carriers_removed": [
+    "operation prefix on the stored key"
+   ],
+   "allowed_scope": "product",
+   "actual_scope": "product",
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "mutated_sha256": "727f4a4a96993d1dfbe5bc2de2051c653a515363ea068ea1f272c290cdf3fa50",
+   "primary_target_nodeids": [
+    "tests/test_qoder_agent_command_idempotency.py::test_the_receipt_is_a_durable_scoped_row_not_an_in_memory_map"
+   ],
+   "mutated_runs": {
+    "rounds": 1,
+    "exit_code": 1,
+    "summary_line": "1 failed, 9 passed, 2 warnings in 1.87s",
+    "failed_nodeids": [
+     "tests/test_qoder_agent_command_idempotency.py::test_the_receipt_is_a_durable_scoped_row_not_an_in_memory_map"
+    ],
+    "control_round_red": false
+   },
+   "restore": {
+    "restored": true,
+    "byte_exact_match_before": true,
+    "no_mutant_marker_left": true
+   },
+   "derivation": {
+    "claimed_result": "KILLED",
+    "claimed_result_note": "交付方自称，仅供 verifier 参考",
+    "derived_result": null,
+    "direct_red_nodeids": null,
+    "collateral_red_nodeids": null,
+    "primary_hit_every_named_cell": true
+   }
+  },
+  {
+   "mutation_id": "M4_ignore_key_validate_anything",
+   "claim_broken": "太短的键走既有 422，不新造错误也不硬塞",
+   "carriers_removed": [
+    "validate_idempotency_key guard on this route"
+   ],
+   "allowed_scope": "product",
+   "actual_scope": "product",
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "mutated_sha256": "d1ae03c4c5fa7cc27ef936fbc28c55090ace5ef7d7a96333e846968302476e3a",
+   "primary_target_nodeids": [
+    "tests/test_qoder_agent_command_idempotency.py::test_a_malformed_key_is_refused_with_the_existing_validation_message"
+   ],
+   "mutated_runs": {
+    "rounds": 1,
+    "exit_code": 1,
+    "summary_line": "1 failed, 9 passed, 2 warnings in 1.88s",
+    "failed_nodeids": [
+     "tests/test_qoder_agent_command_idempotency.py::test_a_malformed_key_is_refused_with_the_existing_validation_message"
+    ],
+    "control_round_red": false
+   },
+   "restore": {
+    "restored": true,
+    "byte_exact_match_before": true,
+    "no_mutant_marker_left": true
+   },
+   "derivation": {
+    "claimed_result": "KILLED",
+    "claimed_result_note": "交付方自称，仅供 verifier 参考",
+    "derived_result": null,
+    "direct_red_nodeids": null,
+    "collateral_red_nodeids": null,
+    "primary_hit_every_named_cell": true
+   }
+  }
+ ],
+ "file_integrity": {
+  "before_sha256": "d06cd0509b921614daf395406af819eca6aca59d404d8f095a2e44adf0e6414f",
+  "after_all_arms_sha256": "d06cd0509b921614daf395406af819eca6aca59d404d8f095a2e44adf0e6414f",
+  "byte_exact_after_campaign": true
+ },
+ "verifier_note": "derived_result / direct_red / collateral_red 全留 null，归红队/仲裁（B-1）"
+}
