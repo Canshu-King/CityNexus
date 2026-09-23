@@ -1,0 +1,211 @@
+{
+ "at": "2026-09-23T20:08:50+08:00",
+ "subject": "B candidate a380287033da6ff0bd36b8e1baa6f79c61ad03bd (parent dea8410, re-parented onto authority tip 035721357da99a43c276f5803df83c3b08c1361c) built to frontend/dist index-Ce5-8mHb.js / index-Dd5F3CW4.css, served at http://127.0.0.1:4413 with CITYNEXUS_BACKEND_PORT=8411",
+ "surface": {
+  "shell": "vite preview :4413 (my port)",
+  "origin": "my :8411",
+  "chrome_context": "one context for all four cells; snapshot_rows=1 in every reading",
+  "product_code_edited": false,
+  "gauge_edited": false,
+  "in_process_base_replacement": false
+ },
+ "label_derivation": {
+  "rule": "rendered text containing an HTTP status => ORIGIN_ERROR_WITH_SNAPSHOT; containing 一个字也没回答/没有回音/没有说话/请求超时/连不上 => NETWORK_UNREACHABLE_WITH_SNAPSHOT; otherwise LIVE",
+  "typed_in_by_verifier": false
+ },
+ "cells": {
+  "S1_live": {
+   "rendered_text": "菜单 | / | 今天 | 跟随系统 | EN | DE | 晚上好 | Demo之旅 | 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 | AI 帮我规划 | 试用其他城市 | 打开行程工作台 | 今天 | 还没有安排",
+   "network_words": [],
+   "service_words": [
+    "服务器"
+   ],
+   "snapshot_words": [],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": false,
+   "buttons": [
+    "今天",
+    "实时行程",
+    "地图",
+    "行程工作台",
+    "住宿选择",
+    "城市探索",
+    "旅行票夹",
+    "Copilot",
+    "恢复与执行",
+    "智能守护",
+    "旅行者画像",
+    "菜单",
+    "AI 帮我规划",
+    "试用其他城市",
+    "打开行程工作台"
+   ],
+   "origin_answer": {
+    "status": 200,
+    "thrown": false,
+    "wire": "curl via :4413 /api/v1/health -> 200 in 0.005s; /api/v1/journeys/22222222-... -> 200 in 0.006s"
+   },
+   "read_at_rel_ms": 59745,
+   "classified_label": "LIVE",
+   "snapshot_present": true,
+   "doors": {
+    "retry": 0,
+    "read_only_snapshot": 0
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 59.7
+  },
+  "S2_origin_error": {
+   "rendered_text": "服务器 | 服务暂时不可用 | 服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 | 看已保存的只读副本 | 重试 | 归因详情",
+   "network_words": [],
+   "service_words": [
+    "服务器",
+    "服务暂时不可用",
+    "报错",
+    "HTTP 500"
+   ],
+   "snapshot_words": [
+    "已保存",
+    "本地快照",
+    "只读副本"
+   ],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": false,
+   "buttons": [
+    "看已保存的只读副本",
+    "重试"
+   ],
+   "origin_answer": {
+    "status": 500,
+    "thrown": false,
+    "ct": "text/plain via the preview proxy",
+    "wire": "backend on :8411 stopped (no listener); curl via :4413 /api/v1/health -> 500 in 0.003s, /api/v1/journeys/... -> 500 in 0.004s, /v8/hub -> 200 in 0.003s"
+   },
+   "read_at_rel_ms": 6944,
+   "first_reading_after_nav_ms": 6944,
+   "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "snapshot_present": true,
+   "doors": {
+    "retry": 1,
+    "read_only_snapshot": 1
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 6944
+  },
+  "S3_no_answer": {
+   "rendered_text": "没有回音 | 等了 12 秒，这台服务器一个字也没回答 | 这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。 | 看已保存的只读副本 | 重试 | 归因详情",
+   "network_words": [],
+   "service_words": [
+    "服务器"
+   ],
+   "snapshot_words": [
+    "已保存",
+    "本地快照",
+    "只读副本"
+   ],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": false,
+   "buttons": [
+    "看已保存的只读副本",
+    "重试"
+   ],
+   "origin_answer": {
+    "status": null,
+    "thrown": true,
+    "wire": "silent listener on :8411 accepts TCP and never answers; curl via :4413 /api/v1/health -> 000 in 10.0s, /api/v1/journeys/... -> 000 in 10.0s, /v8/hub -> 200 in 0.004s.  thrown=true is read off the app: a fetch that got no response is the only way this cell can lose its HTTP status."
+   },
+   "timeline": {
+    "sample_ms": 400,
+    "skeleton_last_seen_ms": 16004,
+    "label_first_seen_ms": 16407,
+    "stable_through_ms": 45996
+   },
+   "seconds_to_settle": 16.4,
+   "settled_within_deadline": true,
+   "settle_note": "16.4 s measured from navigationStart; the sentence itself says the read deadline is 12 s, and the gap is shell parse + boot before the first request leaves - both numbers are kept rather than the flattering one",
+   "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+   "snapshot_present": true,
+   "doors": {
+    "retry": 1,
+    "read_only_snapshot": 1
+   }
+  },
+  "S4_read_silent_health_answered": {
+   "rendered_text": "服务器 | 服务暂时不可用 | 服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 | 看已保存的只读副本 | 重试 | 归因详情",
+   "network_words": [],
+   "service_words": [
+    "服务器",
+    "服务暂时不可用",
+    "报错",
+    "HTTP 500"
+   ],
+   "snapshot_words": [
+    "已保存",
+    "本地快照",
+    "只读副本"
+   ],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": false,
+   "buttons": [
+    "看已保存的只读副本",
+    "重试"
+   ],
+   "health_answer": {
+    "status": 500,
+    "thrown": false,
+    "ct": "application/json",
+    "wire": "curl via :4413 /api/v1/health -> 500 application/json in 0.004s"
+   },
+   "read_never_answered": true,
+   "read_wire": "curl via :4413 /api/v1/journeys/22222222-... -> 000 in 30.0s (instrument hangs 40s)",
+   "timeline": {
+    "sample_ms": 400,
+    "skeleton_last_seen_ms": 11909,
+    "label_first_seen_ms": 12307,
+    "stable_through_ms": 47097
+   },
+   "seconds_to_settle": 12.3,
+   "settled_within_deadline": true,
+   "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "snapshot_present": true,
+   "doors": {
+    "retry": 1,
+    "read_only_snapshot": 1
+   }
+  }
+ },
+ "cell_states_swapped_between_readings": [
+  "S1: real uvicorn on :8411 (db canary_8411.db, marker row harness-ord0254-canary-8411, ownership receipt ord0263_backend_restart_for_b.json: netstat 46348, ppid 9644 = my spawn)",
+  "S2: no listener on :8411 -> the preview proxy itself answers 500",
+  "S4: tools/mixed_origin_port.py -> /api/v1/health 500 json, every other path hangs 40 s",
+  "S3: tools/silent_api_port.py -> accepts TCP, never answers"
+ ],
+ "cause2_correction": {
+  "claim_tested": "the boot-blocking read is V8Experience's own v8Request, not requestJson - fixing only requestJson leaves the skeleton identical",
+  "static_measured_on_b_tree": {
+   "v8Request_occurrences_in_V8Experience_tsx": 20,
+   "requestJson_occurrences_in_V8Experience_tsx": 0,
+   "requestJson_files_in_frontend_src": [
+    "frontend/src/api/citynexus.ts",
+    "frontend/src/features/inbox/JourneyInboxWorkbench.tsx"
+   ],
+   "boot_reads_using_v8Request": [
+    ":554 experience",
+    ":573 replans",
+    ":589 policy",
+    ":592 wallet",
+    ":593 offline",
+    ":596 runtime-status",
+    ":615 offline reload"
+   ],
+   "the_arm_B_actually_wrapped": "V8Experience.tsx:184 `async function v8Request` now calls `fetchWithReadDeadline` at :185 - the deadline is on the arm the boot path uses; `requestJson` in api/citynexus.ts is not on this path at all (0 occurrences), so a requestJson-only fix cannot change what this screen shows",
+   "probeHealth_shape": "V8Experience.tsx:210 returns four facts {answered,status,ok,timed_out} instead of `response.ok`",
+   "grep": "git grep -n -e v8Request -e requestJson -- frontend/src/app/V8Experience.tsx"
+  },
+  "runtime": "measured on MY un-fixed candidate at 17:0x on this same surface: origin silent, skeleton 正在准备城市周末行程… still showing at 45 s+ with no classification (ord0263_capture_measured.json cell S3, seconds_to_settle null); on B's candidate the same cell settles at 16.4 s with its own label - the two trees differ in the arm that was wrapped, and the wrapped arm is v8Request"
+ }
+}
