@@ -16,7 +16,7 @@ for _stream in (sys.stdout, sys.stderr):
     if hasattr(_stream, "reconfigure"):
         _stream.reconfigure(encoding="utf-8", errors="replace")
 
-ROOT = "D:/moodle/_qoder_integration_20260919"
+ROOT = os.environ.get("CNX_LANE_ROOT", "D:/moodle/_qoder_integration_20260919")
 
 
 def main() -> int:
