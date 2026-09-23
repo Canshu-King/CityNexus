@@ -1,0 +1,73 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0266 (read-only reproduction, no fix shipped)",
+ "journeyId": "d93c6098-dc36-462e-bd1f-1a0d5d4cb52e",
+ "doorA_sameTickPair": {
+  "attempted": true,
+  "buttonAfterSettle": {
+   "label": "开始规划",
+   "disabled": false,
+   "phase": null
+  }
+ },
+ "doorB_pressDuringRun": {
+  "samples": [
+   {
+    "t": 0,
+    "label": "规划中…",
+    "disabled": true,
+    "phase": "baseline"
+   },
+   {
+    "t": 250,
+    "label": "规划中…",
+    "disabled": true,
+    "phase": "baseline"
+   },
+   {
+    "t": 500,
+    "label": "规划中…",
+    "disabled": true,
+    "phase": "baseline"
+   },
+   {
+    "t": 750,
+    "label": "规划中…",
+    "disabled": true,
+    "phase": "baseline"
+   },
+   {
+    "t": 1000,
+    "label": "规划中…",
+    "disabled": true,
+    "phase": "baseline"
+   },
+   {
+    "t": 1250,
+    "label": "规划中…",
+    "disabled": true,
+    "phase": "baseline"
+   },
+   {
+    "t": 1500,
+    "label": "规划中…",
+    "disabled": true,
+    "phase": "baseline"
+   },
+   {
+    "t": 1750,
+    "label": "规划中…",
+    "disabled": true,
+    "phase": "baseline"
+   }
+  ],
+  "lyingSamples": 0,
+  "afterRun": {
+   "label": "开始规划",
+   "disabled": false,
+   "phase": null
+  }
+ },
+ "verdict": "UNREACHABLE_FROM_UI: with the 0246 synchronous guard, no sampled moment showed the button re-enabled while a leg was in flight",
+ "residual": "the single boolean can still only describe one owner; if a second submit path is ever added (timeout retry, external trigger), the window reopens -- the candidate fix is a counter, but per the order this file only measures"
+}
