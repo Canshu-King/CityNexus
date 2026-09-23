@@ -1,0 +1,301 @@
+{
+ "generated_at": "2026-09-23T04:02:45+08:00",
+ "head": "4d9ceae",
+ "code_under_test": "LARGE_LUGGAGE",
+ "requirement_sent": "large_luggage",
+ "operator_note": "repeat 3 of 3 (fresh fixture DB per process)",
+ "precondition": {
+  "places": 16,
+  "places_with_accessibility_evidence": 3
+ },
+ "arms": {
+  "existing_plans": {
+   "status": 200,
+   "named_hint_keys": [],
+   "attribution_signals": [],
+   "top_level_blocker_keys": [],
+   "count_fields": {
+    "n_items": 0
+   },
+   "candidate_fingerprints": [],
+   "body_head": "[]",
+   "top_keys": "list"
+  },
+  "control_generate": {
+   "status": 201,
+   "named_hint_keys": [
+    "reason"
+   ],
+   "attribution_signals": [
+    "place-design-library"
+   ],
+   "top_level_blocker_keys": [],
+   "count_fields": {
+    "n_items": 3
+   },
+   "candidate_fingerprints": [
+    {
+     "signature": "Central Food Hall@place-food-hall+Nexus River Cruise Pier@place-river-cruise+Old Town Gate@place-old-town+Riverside Museum@place-riverside-museum+Skyline Dinner House@place-skyline-dinner+Tech Art Center@place-tech-art",
+     "plan_id": "55523d40",
+     "planning_mode": "balanced",
+     "utility_score": 0.9298,
+     "activities": [
+      {
+       "title": "Old Town Gate",
+       "place": "place-old-town"
+      },
+      {
+       "title": "Riverside Museum",
+       "place": "place-riverside-museum"
+      },
+      {
+       "title": "Central Food Hall",
+       "place": "place-food-hall"
+      },
+      {
+       "title": "Tech Art Center",
+       "place": "place-tech-art"
+      },
+      {
+       "title": "Nexus River Cruise Pier",
+       "place": "place-river-cruise"
+      },
+      {
+       "title": "Skyline Dinner House",
+       "place": "place-skyline-dinner"
+      }
+     ]
+    },
+    {
+     "signature": "Central Food Hall@place-food-hall+Nexus City Park@place-city-park+Nexus River Cruise Pier@place-river-cruise+Old Town Gate@place-old-town+Riverside Museum@place-riverside-museum+Skyline Dinner House@place-skyline-dinner",
+     "plan_id": "0a1dcd9c",
+     "planning_mode": "balanced",
+     "utility_score": 0.9356,
+     "activities": [
+      {
+       "title": "Old Town Gate",
+       "place": "place-old-town"
+      },
+      {
+       "title": "Riverside Museum",
+       "place": "place-riverside-museum"
+      },
+      {
+       "title": "Central Food Hall",
+       "place": "place-food-hall"
+      },
+      {
+       "title": "Nexus City Park",
+       "place": "place-city-park"
+      },
+      {
+       "title": "Nexus River Cruise Pier",
+       "place": "place-river-cruise"
+      },
+      {
+       "title": "Skyline Dinner House",
+       "place": "place-skyline-dinner"
+      }
+     ]
+    },
+    {
+     "signature": "Central Food Hall@place-food-hall+Design Library@place-design-library+Nexus River Cruise Pier@place-river-cruise+Old Town Gate@place-old-town+Riverside Museum@place-riverside-museum+Skyline Dinner House@place-skyline-din",
+     "plan_id": "6c07d3ca",
+     "planning_mode": "balanced",
+     "utility_score": 0.9312,
+     "activities": [
+      {
+       "title": "Old Town Gate",
+       "place": "place-old-town"
+      },
+      {
+       "title": "Riverside Museum",
+       "place": "place-riverside-museum"
+      },
+      {
+       "title": "Central Food Hall",
+       "place": "place-food-hall"
+      },
+      {
+       "title": "Design Library",
+       "place": "place-design-library"
+      },
+      {
+       "title": "Nexus River Cruise Pier",
+       "place": "place-river-cruise"
+      },
+      {
+       "title": "Skyline Dinner House",
+       "place": "place-skyline-dinner"
+      }
+     ]
+    }
+   ],
+   "body_head": "[{\"id\": \"55523d40-cafe-5bd2-b30a-de057ec7a839\", \"journey_id\": \"22222222-2222-4222-8222-222222222222\", \"version_no\": 1, \"planning_mode\": \"balanced\", \"status\": \"CANDIDATE\", \"source\": \"INITIAL\", \"parent_plan_version_id\": null, \"total_cost\": {\"amount_minor\": 37000, \"currency\": \"CNY\"}, \"utility_score\": 0.9298, \"score_breakdown\": {\"commitment_preservation\": 0.98, \"stability\": 0.95, \"time_reliability\": 0.94, \"preference_fit\": 0.92, \"mobility_fit\": 0.88, \"budget_fit\": 0.9, \"robustness\": 0.9, \"opportunity_value\": 0.82, \"total\": 0.9298}, \"activities\": [{\"id\": \"3a58c470-524c-5854-aa39-6c37a350eb80\", \"sequence_no\": 1, \"title\": \"Old Town Gate\", \"activity_type\": \"visit\", \"place_id\": \"place-old-town\", \"cit",
+   "top_keys": "list"
+  },
+  "write_hard_capability": {
+   "status": 200,
+   "named_hint_keys": [
+    "conflict",
+    "conflicts"
+   ],
+   "attribution_signals": [],
+   "top_level_blocker_keys": [],
+   "count_fields": {},
+   "candidate_fingerprints": [
+    {
+     "signature": "-",
+     "plan_id": "None",
+     "planning_mode": null,
+     "utility_score": null,
+     "activities": []
+    }
+   ],
+   "body_head": "{\"traveler_id\": \"11111111-1111-4111-8111-111111111111\", \"capabilities\": [{\"id\": \"0406a373-3ce1-4ac2-8620-bad7115a77d8\", \"traveler_id\": \"11111111-1111-4111-8111-111111111111\", \"journey_id\": null, \"code\": \"LARGE_LUGGAGE\", \"class\": \"HARD_ACCESSIBILITY_NEED\", \"severity\": \"HARD\", \"params\": {\"requirement\": \"large_luggage\"}, \"scope\": \"TRAVELER\", \"source\": \"USER_CONFIRMED\", \"provenance\": \"USER_STATED\", \"explicit\": true, \"confirmed\": true, \"active\": true, \"created_at\": \"2026-09-22T20:02:45.687332+00:00\", \"updated_at\": \"2026-09-22T20:02:45.687332+00:00\", \"confirmed_at\": \"2026-09-22T20:02:45.687332+00:00\"}], \"summary\": {\"items\": [{\"code\": \"LARGE_LUGGAGE\", \"class\": \"HARD_ACCESSIBILITY_NEED\", \"severity\":",
+   "top_keys": [
+    "capabilities",
+    "summary",
+    "traveler_id",
+    "traveler_twin"
+   ]
+  },
+  "treatment_generate": {
+   "status": 201,
+   "named_hint_keys": [
+    "reason"
+   ],
+   "attribution_signals": [
+    "place-design-library"
+   ],
+   "top_level_blocker_keys": [],
+   "count_fields": {
+    "n_items": 2
+   },
+   "candidate_fingerprints": [
+    {
+     "signature": "Central Food Hall@place-food-hall+Nexus River Cruise Pier@place-river-cruise+Old Town Gate@place-old-town+Riverside Museum@place-riverside-museum+Skyline Dinner House@place-skyline-dinner+Tech Art Center@place-tech-art",
+     "plan_id": "60cb6a2f",
+     "planning_mode": "balanced",
+     "utility_score": 0.9298,
+     "activities": [
+      {
+       "title": "Old Town Gate",
+       "place": "place-old-town"
+      },
+      {
+       "title": "Riverside Museum",
+       "place": "place-riverside-museum"
+      },
+      {
+       "title": "Central Food Hall",
+       "place": "place-food-hall"
+      },
+      {
+       "title": "Tech Art Center",
+       "place": "place-tech-art"
+      },
+      {
+       "title": "Nexus River Cruise Pier",
+       "place": "place-river-cruise"
+      },
+      {
+       "title": "Skyline Dinner House",
+       "place": "place-skyline-dinner"
+      }
+     ]
+    },
+    {
+     "signature": "Central Food Hall@place-food-hall+Nexus City Park@place-city-park+Nexus River Cruise Pier@place-river-cruise+Old Town Gate@place-old-town+Riverside Museum@place-riverside-museum+Skyline Dinner House@place-skyline-dinner",
+     "plan_id": "dbc088fa",
+     "planning_mode": "balanced",
+     "utility_score": 0.9356,
+     "activities": [
+      {
+       "title": "Old Town Gate",
+       "place": "place-old-town"
+      },
+      {
+       "title": "Riverside Museum",
+       "place": "place-riverside-museum"
+      },
+      {
+       "title": "Central Food Hall",
+       "place": "place-food-hall"
+      },
+      {
+       "title": "Nexus City Park",
+       "place": "place-city-park"
+      },
+      {
+       "title": "Nexus River Cruise Pier",
+       "place": "place-river-cruise"
+      },
+      {
+       "title": "Skyline Dinner House",
+       "place": "place-skyline-dinner"
+      }
+     ]
+    }
+   ],
+   "body_head": "[{\"id\": \"60cb6a2f-ccce-537d-86c1-a7d9a007bc2b\", \"journey_id\": \"22222222-2222-4222-8222-222222222222\", \"version_no\": 4, \"planning_mode\": \"balanced\", \"status\": \"CANDIDATE\", \"source\": \"INITIAL\", \"parent_plan_version_id\": null, \"total_cost\": {\"amount_minor\": 37000, \"currency\": \"CNY\"}, \"utility_score\": 0.9298, \"score_breakdown\": {\"commitment_preservation\": 0.98, \"stability\": 0.95, \"time_reliability\": 0.94, \"preference_fit\": 0.92, \"mobility_fit\": 0.88, \"budget_fit\": 0.9, \"robustness\": 0.9, \"opportunity_value\": 0.82, \"total\": 0.9298}, \"activities\": [{\"id\": \"a89f540d-b056-585b-a607-84e3a489698a\", \"sequence_no\": 1, \"title\": \"Old Town Gate\", \"activity_type\": \"visit\", \"place_id\": \"place-old-town\", \"cit",
+   "top_keys": "list"
+  }
+ },
+ "verdict": "SILENT_CANDIDATE_LOSS",
+ "verdict_under_original_three_arm_rule": "HONEST_BLOCKER",
+ "rule_correction_reason": "original rule could not see this shape: the endpoint answers with a JSON array and the treatment arm answered 201, so `dropped` was unreachable and every uncovered case printed NO_EFFECT",
+ "counts_compared": {
+  "control": 3,
+  "treatment": 2
+ },
+ "candidates_only_in_control": [
+  {
+   "plan_id": "6c07d3ca",
+   "planning_mode": "balanced",
+   "activities": [
+    {
+     "title": "Old Town Gate",
+     "place": "place-old-town"
+    },
+    {
+     "title": "Riverside Museum",
+     "place": "place-riverside-museum"
+    },
+    {
+     "title": "Central Food Hall",
+     "place": "place-food-hall"
+    },
+    {
+     "title": "Design Library",
+     "place": "place-design-library"
+    },
+    {
+     "title": "Nexus River Cruise Pier",
+     "place": "place-river-cruise"
+    },
+    {
+     "title": "Skyline Dinner House",
+     "place": "place-skyline-dinner"
+    }
+   ]
+  }
+ ],
+ "candidates_only_in_treatment": [],
+ "attribution": {
+  "treatment_specific_signals": [
+   "place-design-library"
+  ],
+  "control_specific_signals": [
+   "place-design-library"
+  ],
+  "differential_signals_only_in_treatment": [],
+  "differential_test_used": "a signal counts as attribution only if the treatment response carries it and the control response does not",
+  "treatment_top_level_blocker_keys": [],
+  "word_table_also_fired_on_control": true,
+  "lax_judge_rejected_because": "named_hint_keys fired identically on both arms, so it cannot distinguish an attributed drop from a silent one"
+ },
+ "declared_rule": "v2, declared before re-measuring: refused>=400 with a named reason => REFUSED_WITH_NAMED_REASON; count drop without a name => SILENT_CANDIDATE_LOSS; drop with a name => HONEST_BLOCKER; no count on either arm => UNMEASABLE",
+ "demo_reset_issued": 0,
+ "product_files_changed": 0
+}
