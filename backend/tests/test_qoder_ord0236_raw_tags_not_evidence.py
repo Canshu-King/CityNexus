@@ -24,6 +24,10 @@ from app.services import seed_demo
 # 求值方读的"规范化产物"通道（metadata_json 之内）
 NORMALIZED_KEYS = ("accessibility", "accessibility_evidence", "osm_tags", "tags")
 HARD_CODES = ("STROLLER", "LARGE_LUGGAGE", "STEP_FREE_REQUIRED")
+# T3 那条库存等式的范围声明（仲裁 B-3：只属于 sealed-demo inventory，real provider 产证据时按
+# provenance/city 分表，不许悄悄把它扩成全产品库存表）。这是"比哪一格"的声明，不是真值名单——
+# 两侧集合仍然当场从 fixture 与库里算。
+SEALED_DEMO_CITY = "CNX-DEMO"
 
 
 class _Record:
@@ -113,8 +117,11 @@ def test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker(
 # T3
 # ------------------------------------------------------------------------------------------
 def test_t3_display_taxonomy_tags_never_become_accessibility_evidence():
-    """分类/展示词（culture / indoor / quiet / bars…）不是证据：库里带这类 tag 的地点，
-    求值方可见的证据集合必须仍等于生产者声明的那批。
+    """分类/展示词（culture / indoor / quiet / bars…）不是证据。
+
+    范围（仲裁 B-3 钉死）：这条库存等式**只属于 sealed-demo inventory**。两侧都只取
+    `city_code == CNX-DEMO` 的地点；将来 real provider 也产 `accessibility_evidence` 时，
+    要按 provenance/city 另开一格，不许把这条悄悄扩成全产品库存表。
     """
 
     taxonomy_only = _Record(metadata=json.dumps({"duration_min": 30}), tags=GENERIC_TAXONOMY_TAGS)
@@ -126,19 +133,23 @@ def test_t3_display_taxonomy_tags_never_become_accessibility_evidence():
     with SessionLocal() as session:
         seed_demo(session)
         rows = session.scalars(select(Place)).all()
-        carrying = sorted(
-            row.id for row in rows
-            if _accessibility_metadata(row)
-        )
-        tagged_without_evidence = sorted(
-            row.id for row in rows
-            if any("=" in str(token) or str(token).lower() in {"quiet", "indoor", "outdoor", "bars"}
-                   for token in json.loads(row.tags_json or "[]"))
-            and row.id not in carrying
-        )
+
+    sealed = [row for row in rows if row.city_code == SEALED_DEMO_CITY]
+    outside = [row for row in rows if row.city_code != SEALED_DEMO_CITY]
+    assert outside, (
+        f"库里没有任何非 {SEALED_DEMO_CITY} 的地点 ⇒ 「按城分表」这句是空话，先查 fixture"
+    )
+    carrying = sorted(row.id for row in sealed if _accessibility_metadata(row))
+    tagged_without_evidence = sorted(
+        row.id for row in sealed
+        if any("=" in str(token) or str(token).lower() in {"quiet", "indoor", "outdoor", "bars"}
+               for token in json.loads(row.tags_json or "[]"))
+        and row.id not in carrying
+    )
     declared = sorted(
         item["id"] for item in MockCityDataProvider().places()
-        if isinstance(item.get("accessibility"), dict) and item["accessibility"]
+        if item.get("city_code") == SEALED_DEMO_CITY
+        and isinstance(item.get("accessibility"), dict) and item["accessibility"]
     )
     assert declared and carrying, (
         "生产者一个地点都没声明 / 求值方一个地点都看不见 ⇒ 下面那条等式是空对空，"
@@ -147,8 +158,8 @@ def test_t3_display_taxonomy_tags_never_become_accessibility_evidence():
         "两侧都是 0，等式照样成立。"
     )
     assert carrying == declared, (
-        f"求值方看得见的证据地点应等于生产者声明的集合：{carrying} vs {declared}"
+        f"求值方看得见的证据地点应等于生产者声明的集合（仅限 {SEALED_DEMO_CITY}）：{carrying} vs {declared}"
     )
     assert tagged_without_evidence, (
-        "库里没有一个「只带 tags、没有规范化产物」的地点 ⇒ 这条比较是空断言，先查 fixture"
+        "封存演示城里没有一个「只带 tags、没有规范化产物」的地点 ⇒ 这条比较是空断言，先查 fixture"
     )
