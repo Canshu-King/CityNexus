@@ -1,0 +1,7 @@
+1256e503a8b489c11c44a91e2adad7a4d6fdab9a  FAN_SWEEP2_RECEIPT.md  7374 B  sha256=4e34d06f4f05bbc790876bf04f6f39bc4c8fdb48f7f8327ef094e891f28769a6  readable=True
+38b2b7d991ad3ba2c6e6dab90a958f8bbb7e5bd9  fan_sweep2_facts.json  1929 B  sha256=aa052fddc2672ef55899f9f7ee6b684d98a63e25e59bf663176e3dcb30966123  readable=True
+a92523232b922ed16ec634c1fa8aefd411ced651  FAN2-2030_newgen_d76m_cky_wizard_step1_advanced.png  149553 B  sha256=83c4c6b0f860fca648fccd251b8e2b4d435fddf1fcddfc0fae2e1238c7690ea2  readable=True
+79b6f7227cca4ebb1c2c667ab01b06bfdad6cbcb  FAN2-2030_oldgen_djeinrol_wizard_step1_advanced.png  173813 B  sha256=4e50322039b08e904b49b92706d019353a53da33ec894ae49fad248a666c3399  readable=True
+1e6f29f165c9e8c833d9c2a9abb698cdfd80eed2  FAN2-2030_newgen_silent_backend.png  34727 B  sha256=e7aedad228c76981e89c93acdae8b64ebdee9df2acee2fad368cdaf86ebaeed9  readable=True
+d5f4ed65231c01767009e367747be9b58e926689  FAN2-2030_newgen_500_backend.png  126450 B  sha256=963950718e339be40598959d7eca622b25f81064009d056739a53d321f39e9ea  readable=True
+lane=HJ-P3-aad2d1f2 run_id=FAN2-2030 backend=D:/moodle/_qoder_cmdr_gate_20260921@53fe8e8(porcelain 0) db=_lane_aad2d1f2_livecopy.sqlite3 faces=:8479(published d2665e2 D76m_cky) + :8474(previous gen control) + :8483/:8484(silent/500 dummies on the published bundle) +:8474(published control DJEINrOl/COUUKhbU) purpose=10-cell real-user fan sweep on the published generation
