@@ -668,6 +668,20 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
   padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
   background: linear-gradient(to top, var(--v8-canvas) 70%, transparent);
 }
+/* ORD-0261: the bar's gradient paints over whatever scrolls beneath it, and measured at 390x844 the
+   "高级设置" summary's centre landed on the bar's 下一步 button -- a control hidden by chrome. The bar
+   keeps its job (the primary action stays reachable); the scrolling content (.trial-steps wraps all
+   step content) now ends above the bar, so at rest it overlaps only the bar's own padding.  The
+   reserve rides the same media query as the bar's own bottom clearance, and it must track the bar's
+   real height (two 44px buttons + padding ≈ 76px). */
+.cn-onboarding .trial-steps {
+  padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+}
+@media (max-width: 680px) {
+  .cn-onboarding .trial-steps {
+    padding-bottom: calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px));
+  }
+}
 .trial-sticky-cta .v8-primary-button {
   min-width: 140px;
 }
