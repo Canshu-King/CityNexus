@@ -1,0 +1,58 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0246",
+  "at": "2026-09-23T05:00:57.306Z",
+  "judgingCriterion": "同一 tick 两击 ⇒ 1 POST / 1 行（行数由服务器自己的 GET agent-feed 数出，不是我另开一个 sqlite 句柄）",
+  "missionEvent": "agent.mission.created",
+  "sabotageStatuses": [
+    "CANCELLED",
+    "CANCELLED_AFTER_SEND",
+    "NETWORK"
+  ],
+  "readings": [
+    {
+      "node": "ord0246-1",
+      "journeyId": "1b70dd6e-663b-4040-bbd1-153c9d913483",
+      "action": "same_tick_pair",
+      "posts": 1,
+      "rowsBefore": 0,
+      "rowsAfter": 1,
+      "newRowIds": [
+        "8958bdd6-4696-4748-874d-342435468033"
+      ],
+      "buttonDisabled": {
+        "before": false,
+        "during": false,
+        "after": false
+      },
+      "resultStatus": "BLOCKED:CATALOG_EMPTY",
+      "note": "before/during/after are the rendered `disabled` flag sampled around the two synchronous clicks; all false is what makes the render useless as a guard"
+    },
+    {
+      "node": "ord0246-2",
+      "journeyId": "1b70dd6e-663b-4040-bbd1-153c9d913483",
+      "action": "click, settle, click, settle, then dblclick({delay:60})",
+      "posts": 4,
+      "rows": {
+        "first": 1,
+        "between": 2,
+        "after": 3,
+        "bracket": 5
+      },
+      "runLatencyMs": 99,
+      "realDoubleTapRows": 2,
+      "residual": "RESIDUAL_FAST_RUN_DOUBLE_TAP: a 60 ms real double tap created realDoubleTapRows run(s); a re-entry guard only covers clicks that arrive while a run is in flight, so this needs a coalescing window or a per-command idempotency key, which ORD-0246 does not ask for.",
+      "secondActionStatus": "BLOCKED:CATALOG_EMPTY"
+    },
+    {
+      "node": "ord0246-3",
+      "journeyId": "1b70dd6e-663b-4040-bbd1-153c9d913483",
+      "posts": 1,
+      "rowsCreated": 1,
+      "resultStatus": "BLOCKED:CATALOG_EMPTY",
+      "resultText": "这次排不出方案：数据不够，不是你说的不对这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：CATALOG_EMPTY）技术详情服务器给出的原因GET /places?city_code=CN-TIANJIN -> 0 places换一座有数据的城市",
+      "dangerPainted": false
+    }
+  ],
+  "publishedBy": "e345b9d6 for ORD-0246"
+}
