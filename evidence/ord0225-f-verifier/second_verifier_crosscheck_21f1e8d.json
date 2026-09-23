@@ -1,0 +1,524 @@
+{
+ "order": "ORD-0225 · 第二家 verifier 对表（不重跑进程）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-23T17:17:02+08:00",
+ "children_started": 0,
+ "ruler_digests_named": {
+  "f_current_streak_ruler_6f0e5fc": {
+   "git_blob_sha1": "fcf76941dcc2512736c1d28fa362022b5f6c879a",
+   "bytes": 50316,
+   "sha256_12": "5528700cfbe7",
+   "from_commit": "6f0e5fc",
+   "object_hash_selfcheck": "OK"
+  },
+  "c_measure_time_streak_ruler_a4079bc": {
+   "git_blob_sha1": "ebe4e24c177d8e18309732c3f8b7ee16e3c9a97d",
+   "bytes": 47572,
+   "sha256_12": "ef608a34f9a3",
+   "from_commit": "a4079bc",
+   "object_hash_selfcheck": "OK"
+  },
+  "row_column_instrument_gate_streak_announced": "ac5377f207f1833441f24784043a809eddb4d3be"
+ },
+ "red_team_source_coordinate": "CITYNEXUS_AGENT_CONTROL.md 第 195 行表（SESSION=d2305848，17:5x）",
+ "receipts": [
+  {
+   "file": "v1_gate_receipt_Y23_a_21f1e8d.json",
+   "schema": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+   "scope": {
+    "repo": "Canshu-King/CityNexus",
+    "exact_sha": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+    "tree_kind": "clean_sha",
+    "dirty": false,
+    "target_nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+    "run_shape": "single-node"
+   },
+   "carriers_removed": 2,
+   "carriers_list": [
+    "B partial unique index",
+    "C loser read-back"
+   ],
+   "rounds_declared": 10,
+   "rounds_seen": 10,
+   "every_round_marked_mutated": true,
+   "reds_by_target_outcomes": 6,
+   "reds_by_failed_nodeids": 6,
+   "sequence_outcomes": "GRRGRRGRRG",
+   "sequence_failed_sets": "GRRGRRGRRG",
+   "errored_rounds": [],
+   "campaign_valid": true,
+   "control_green": true,
+   "every_round_fresh_db": true,
+   "every_round_restored_byte_exact": true,
+   "every_anchor_hit_expected": true,
+   "rows_per_round": [
+    1,
+    2,
+    5,
+    1,
+    5,
+    2,
+    1,
+    3,
+    4,
+    1
+   ],
+   "baseline_rows": 1,
+   "direct_red_nodeids": [
+    "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+   ],
+   "collateral_red_nodeids": [],
+   "lane_claimed_result": "STREAK_BROKEN",
+   "lane_derived_field_is_null": true,
+   "derived_result_BY_LANE_F_verifier": "STREAK_BROKEN",
+   "red_team_AS_REPORTED": {
+    "carriers": 2,
+    "reds": 6,
+    "claimed": "STREAK_BROKEN",
+    "derived": "STREAK_BROKEN",
+    "agree_lane": true
+   },
+   "两家同判": true,
+   "红队与车道声明一致": true,
+   "verifier_problem": "",
+   "row_column_instrument_blob_named_in_receipt": "ac5377f207f1833441f24784043a809eddb4d3be",
+   "bytes": 45208,
+   "local_blob_sha1": "e0dddec96528b306ce6422f19fbc8860f58606a2"
+  },
+  {
+   "file": "v1_gate_receipt_Y23_b_21f1e8d.json",
+   "schema": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+   "scope": {
+    "repo": "Canshu-King/CityNexus",
+    "exact_sha": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+    "tree_kind": "clean_sha",
+    "dirty": false,
+    "target_nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+    "run_shape": "single-node"
+   },
+   "carriers_removed": 2,
+   "carriers_list": [
+    "B partial unique index",
+    "C loser read-back"
+   ],
+   "rounds_declared": 10,
+   "rounds_seen": 10,
+   "every_round_marked_mutated": true,
+   "reds_by_target_outcomes": 2,
+   "reds_by_failed_nodeids": 2,
+   "sequence_outcomes": "GGGGGGGGRR",
+   "sequence_failed_sets": "GGGGGGGGRR",
+   "errored_rounds": [],
+   "campaign_valid": true,
+   "control_green": true,
+   "every_round_fresh_db": true,
+   "every_round_restored_byte_exact": true,
+   "every_anchor_hit_expected": true,
+   "rows_per_round": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    4,
+    2
+   ],
+   "baseline_rows": 1,
+   "direct_red_nodeids": [
+    "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+   ],
+   "collateral_red_nodeids": [],
+   "lane_claimed_result": "STREAK_BROKEN",
+   "lane_derived_field_is_null": true,
+   "derived_result_BY_LANE_F_verifier": "STREAK_BROKEN",
+   "red_team_AS_REPORTED": {
+    "carriers": 2,
+    "reds": 2,
+    "claimed": "STREAK_BROKEN",
+    "derived": "STREAK_BROKEN",
+    "agree_lane": true
+   },
+   "两家同判": true,
+   "红队与车道声明一致": true,
+   "verifier_problem": "",
+   "row_column_instrument_blob_named_in_receipt": "ac5377f207f1833441f24784043a809eddb4d3be",
+   "bytes": 43217,
+   "local_blob_sha1": "4152e46ecf5ba769c314d572b511a9c91c85d09f"
+  },
+  {
+   "file": "v1_gate_receipt_Y23_c_21f1e8d.json",
+   "schema": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+   "scope": {
+    "repo": "Canshu-King/CityNexus",
+    "exact_sha": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+    "tree_kind": "clean_sha",
+    "dirty": false,
+    "target_nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+    "run_shape": "single-node"
+   },
+   "carriers_removed": 2,
+   "carriers_list": [
+    "B partial unique index",
+    "C loser read-back"
+   ],
+   "rounds_declared": 10,
+   "rounds_seen": 10,
+   "every_round_marked_mutated": true,
+   "reds_by_target_outcomes": 2,
+   "reds_by_failed_nodeids": 2,
+   "sequence_outcomes": "GRGRGGGGGG",
+   "sequence_failed_sets": "GRGRGGGGGG",
+   "errored_rounds": [],
+   "campaign_valid": true,
+   "control_green": true,
+   "every_round_fresh_db": true,
+   "every_round_restored_byte_exact": true,
+   "every_anchor_hit_expected": true,
+   "rows_per_round": [
+    1,
+    2,
+    1,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+   ],
+   "baseline_rows": 1,
+   "direct_red_nodeids": [
+    "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+   ],
+   "collateral_red_nodeids": [],
+   "lane_claimed_result": "STREAK_BROKEN",
+   "lane_derived_field_is_null": true,
+   "derived_result_BY_LANE_F_verifier": "STREAK_BROKEN",
+   "red_team_AS_REPORTED": {
+    "carriers": 2,
+    "reds": 2,
+    "claimed": "STREAK_BROKEN",
+    "derived": "STREAK_BROKEN",
+    "agree_lane": true
+   },
+   "两家同判": true,
+   "红队与车道声明一致": true,
+   "verifier_problem": "",
+   "row_column_instrument_blob_named_in_receipt": "ac5377f207f1833441f24784043a809eddb4d3be",
+   "bytes": 43216,
+   "local_blob_sha1": "583db798a14d569c4fa4be6876eee49aacc5ebe6"
+  },
+  {
+   "file": "v1_gate_receipt_Y23_OFF_A1_a_21f1e8d.json",
+   "schema": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+   "scope": {
+    "repo": "Canshu-King/CityNexus",
+    "exact_sha": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+    "tree_kind": "clean_sha",
+    "dirty": false,
+    "target_nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+    "run_shape": "single-node"
+   },
+   "carriers_removed": 3,
+   "carriers_list": [
+    "A1 reuse read",
+    "B partial unique index",
+    "C loser read-back"
+   ],
+   "rounds_declared": 10,
+   "rounds_seen": 10,
+   "every_round_marked_mutated": true,
+   "reds_by_target_outcomes": 3,
+   "reds_by_failed_nodeids": 3,
+   "sequence_outcomes": "GGRRGGGGGR",
+   "sequence_failed_sets": "GGRRGGGGGR",
+   "errored_rounds": [],
+   "campaign_valid": true,
+   "control_green": true,
+   "every_round_fresh_db": true,
+   "every_round_restored_byte_exact": true,
+   "every_anchor_hit_expected": true,
+   "rows_per_round": [
+    1,
+    1,
+    2,
+    2,
+    1,
+    1,
+    1,
+    1,
+    1,
+    2
+   ],
+   "baseline_rows": 1,
+   "direct_red_nodeids": [
+    "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+   ],
+   "collateral_red_nodeids": [],
+   "lane_claimed_result": "STREAK_BROKEN",
+   "lane_derived_field_is_null": true,
+   "derived_result_BY_LANE_F_verifier": "STREAK_BROKEN",
+   "red_team_AS_REPORTED": {
+    "carriers": 3,
+    "reds": 3,
+    "claimed": "STREAK_BROKEN",
+    "derived": "STREAK_BROKEN",
+    "agree_lane": true
+   },
+   "两家同判": true,
+   "红队与车道声明一致": true,
+   "verifier_problem": "",
+   "row_column_instrument_blob_named_in_receipt": "ac5377f207f1833441f24784043a809eddb4d3be",
+   "bytes": 49656,
+   "local_blob_sha1": "f5771b270e3095ab82bfcdb72e1b8fc3117f22e5"
+  },
+  {
+   "file": "v1_gate_receipt_Y23_OFF_A2_a_21f1e8d.json",
+   "schema": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+   "scope": {
+    "repo": "Canshu-King/CityNexus",
+    "exact_sha": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+    "tree_kind": "clean_sha",
+    "dirty": false,
+    "target_nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+    "run_shape": "single-node"
+   },
+   "carriers_removed": 3,
+   "carriers_list": [
+    "A2 reuse read",
+    "B partial unique index",
+    "C loser read-back"
+   ],
+   "rounds_declared": 10,
+   "rounds_seen": 10,
+   "every_round_marked_mutated": true,
+   "reds_by_target_outcomes": 8,
+   "reds_by_failed_nodeids": 8,
+   "sequence_outcomes": "RRGRGRRRRR",
+   "sequence_failed_sets": "RRGRGRRRRR",
+   "errored_rounds": [],
+   "campaign_valid": true,
+   "control_green": true,
+   "every_round_fresh_db": true,
+   "every_round_restored_byte_exact": true,
+   "every_anchor_hit_expected": true,
+   "rows_per_round": [
+    3,
+    5,
+    1,
+    2,
+    1,
+    3,
+    2,
+    2,
+    3,
+    2
+   ],
+   "baseline_rows": 1,
+   "direct_red_nodeids": [
+    "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+   ],
+   "collateral_red_nodeids": [],
+   "lane_claimed_result": "STREAK_BROKEN",
+   "lane_derived_field_is_null": true,
+   "derived_result_BY_LANE_F_verifier": "STREAK_BROKEN",
+   "red_team_AS_REPORTED": {
+    "carriers": 3,
+    "reds": 8,
+    "claimed": "STREAK_BROKEN",
+    "derived": "STREAK_BROKEN",
+    "agree_lane": true
+   },
+   "两家同判": true,
+   "红队与车道声明一致": true,
+   "verifier_problem": "",
+   "row_column_instrument_blob_named_in_receipt": "ac5377f207f1833441f24784043a809eddb4d3be",
+   "bytes": 52146,
+   "local_blob_sha1": "fd29667d8a03d1f23cdf38bb9f7da70c16b8636f"
+  },
+  {
+   "file": "v1_gate_receipt_Y123_a_21f1e8d.json",
+   "schema": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+   "scope": {
+    "repo": "Canshu-King/CityNexus",
+    "exact_sha": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+    "tree_kind": "clean_sha",
+    "dirty": false,
+    "target_nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+    "run_shape": "single-node"
+   },
+   "carriers_removed": 4,
+   "carriers_list": [
+    "A1 pre-resolution read",
+    "A2 post-resolution read",
+    "B partial unique index",
+    "C loser read-back"
+   ],
+   "rounds_declared": 10,
+   "rounds_seen": 10,
+   "every_round_marked_mutated": true,
+   "reds_by_target_outcomes": 10,
+   "reds_by_failed_nodeids": 10,
+   "sequence_outcomes": "RRRRRRRRRR",
+   "sequence_failed_sets": "RRRRRRRRRR",
+   "errored_rounds": [],
+   "campaign_valid": true,
+   "control_green": true,
+   "every_round_fresh_db": true,
+   "every_round_restored_byte_exact": true,
+   "every_anchor_hit_expected": true,
+   "rows_per_round": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "baseline_rows": 1,
+   "direct_red_nodeids": [
+    "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+   ],
+   "collateral_red_nodeids": [],
+   "lane_claimed_result": "KILLED",
+   "lane_derived_field_is_null": true,
+   "derived_result_BY_LANE_F_verifier": "MULTI_CARRIER_CUTSET_KILLED",
+   "red_team_AS_REPORTED": {
+    "carriers": 4,
+    "reds": 10,
+    "claimed": "KILLED",
+    "derived": "MULTI_CARRIER_CUTSET_KILLED",
+    "agree_lane": false
+   },
+   "两家同判": true,
+   "红队与车道声明一致": false,
+   "verifier_problem": "",
+   "row_column_instrument_blob_named_in_receipt": "ac5377f207f1833441f24784043a809eddb4d3be",
+   "bytes": 59368,
+   "local_blob_sha1": "7fecbb9189a655e9dd448ed6ec64441cacad0200"
+  },
+  {
+   "file": "v1_gate_receipt_Y123_b_21f1e8d.json",
+   "schema": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+   "scope": {
+    "repo": "Canshu-King/CityNexus",
+    "exact_sha": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+    "tree_kind": "clean_sha",
+    "dirty": false,
+    "target_nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+    "run_shape": "single-node"
+   },
+   "carriers_removed": 4,
+   "carriers_list": [
+    "A1 pre-resolution read",
+    "A2 post-resolution read",
+    "B partial unique index",
+    "C loser read-back"
+   ],
+   "rounds_declared": 10,
+   "rounds_seen": 10,
+   "every_round_marked_mutated": true,
+   "reds_by_target_outcomes": 10,
+   "reds_by_failed_nodeids": 10,
+   "sequence_outcomes": "RRRRRRRRRR",
+   "sequence_failed_sets": "RRRRRRRRRR",
+   "errored_rounds": [],
+   "campaign_valid": true,
+   "control_green": true,
+   "every_round_fresh_db": true,
+   "every_round_restored_byte_exact": true,
+   "every_anchor_hit_expected": true,
+   "rows_per_round": [
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5,
+    5
+   ],
+   "baseline_rows": 1,
+   "direct_red_nodeids": [
+    "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+   ],
+   "collateral_red_nodeids": [],
+   "lane_claimed_result": "KILLED",
+   "lane_derived_field_is_null": true,
+   "derived_result_BY_LANE_F_verifier": "MULTI_CARRIER_CUTSET_KILLED",
+   "red_team_AS_REPORTED": {
+    "carriers": 4,
+    "reds": 10,
+    "claimed": "KILLED",
+    "derived": "MULTI_CARRIER_CUTSET_KILLED",
+    "agree_lane": false
+   },
+   "两家同判": true,
+   "红队与车道声明一致": false,
+   "verifier_problem": "",
+   "row_column_instrument_blob_named_in_receipt": "ac5377f207f1833441f24784043a809eddb4d3be",
+   "bytes": 59368,
+   "local_blob_sha1": "048d82c166aa61f6f44473dc225fa7d4f36b5511"
+  }
+ ],
+ "arm_repeats": {
+  "file": "ord0225_arm_repeats_21f1e8d.json",
+  "top_keys": [
+   "kind",
+   "written_by",
+   "at",
+   "answers",
+   "exact_sha",
+   "tree",
+   "target_nodeid",
+   "run_shape"
+  ],
+  "my_per_batch_reds": {
+   "Y23_a": 6,
+   "Y23_b": 2,
+   "Y23_c": 2,
+   "Y23_OFF_A1_a": 3,
+   "Y23_OFF_A2_a": 8,
+   "Y123_a": 10,
+   "Y123_b": 10
+  },
+  "raw": {
+   "kind": "CNX_ORD0225_ARM_REPEAT_SUMMARY_V1",
+   "written_by": "8c66aa92 (C)",
+   "at": "2026-09-23T14:0x+08",
+   "answers": "commander 新单：corrected g3 的产品侧反向突变（破坏部分唯一索引 + 败者回读）≥10 轮，收据按 CNX_REVERSE_MUTATION_RECEIPT_V1。",
+   "exact_sha": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+   "tree": "snap_21f1e8d = `git archive <exact_sha>` 的一次性只读导出；两份被测文件与 commit 逐字节相同（收据 tree_kind_check.identical=true）",
+   "target_nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+   "run_shape": "single-node",
+   "collected_per_round": 1,
+   "not_signed": "每份 claimed_result 都是交付方自称；derived_result / direct_red / collateral_red 全留 null 等 verifier。我不替 ORD-0225 判 CLOSED，也不把 Y123 当命令里那一臂的替身——两臂拆的东西不同。"
+  }
+ },
+ "verifier_problems": [],
+ "summary": {
+  "Y23_三批": [
+   "6/10",
+   "2/10",
+   "2/10"
+  ],
+  "Y23_OFF_A1_A2": {
+   "C loser read-back": 8
+  },
+  "Y123_两批": [
+   "10/10",
+   "10/10"
+  ],
+  "单臂杀手有没有": false,
+  "ORD_0225_等级": "STREAK_GREEN（无单臂 KILLED ⇒ 推不到 CLOSED；与仲裁 15:14 Q5 一致）"
+ }
+}
