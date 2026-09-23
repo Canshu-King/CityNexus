@@ -1,0 +1,5 @@
+A	frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts
+A	frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts
+M	frontend/src/features/setup/JourneyTrialSetup.tsx
+M	frontend/src/styles.css
+M	review/run_spec.py
