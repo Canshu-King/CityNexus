@@ -1,0 +1,25 @@
+commit 2d10937776597428616597f5d143d0dfcf443f46
+Author: 仓鼠王 <yjianbin419@gmail.com>
+Date:   Wed Sep 23 14:49:03 2026 +0800
+
+    test(e2e): look at what the traveller sees, and give ORD-0251-1 a mutant of its own
+    
+    Two screenshots (run-id named) plus the arm the v1 matrix showed was missing: echoing the raw label
+    reddens nodes 1 and 2 together, so node 1 needed a regression only it observes.
+
+diff --git a/frontend/e2e/qoder-empty-request-says-what-is-missing.spec.ts b/frontend/e2e/qoder-empty-request-says-what-is-missing.spec.ts
+index 4ed0e34..80c2162 100644
+--- a/frontend/e2e/qoder-empty-request-says-what-is-missing.spec.ts
++++ b/frontend/e2e/qoder-empty-request-says-what-is-missing.spec.ts
+@@ -114,6 +114,11 @@ test("ord0250-1-a-refused-press-leaves-a-reason-on-the-screen — 点了不说
+   expect(onScreen.insideSrOnly, node("ord0250-1", "the reason is screen-reader-only, so nobody sees why")).toBe(false);
+ 
+   expect(counter.posts(), node("ord0250-1", "a refused press issued a request after all")).toBe(0);
++  /* Looked-at evidence, not just asserted evidence: the run id is in the name because a second pass
++     must not overwrite the picture this reading belongs to. */
++  await page.screenshot({
++    path: evidencePath(`ui-overnight/ord0250-hint-${process.env.CITYNEXUS_E2E_RUN_ID ?? "dev"}.png`),
++  });
+   expect(
+     (await input(page).inputValue()) === "",
+     node("ord0250-1", "the field was filled in for the traveller to make this assertion pass"),
