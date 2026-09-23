@@ -1,0 +1,84 @@
+{
+ "question": "commander 0269 §①(i): \"mission=COMPLETED + run=COMPLETED + plans=0 本来就能被读回（agent-feed/missions 那条路）\" - true?",
+ "journey": "e5a507bd-9bca-411d-9a5d-ea4521b3eba9",
+ "journey_scoped_get_routes": 39,
+ "routes_total_in_openapi": 139,
+ "paths_containing_mission_and_their_methods": {
+  "/api/v1/journeys/{journey_id}/guardian/mission": [
+   "put"
+  ]
+ },
+ "no_GET_route_listing_missions": true,
+ "per_round": [
+  {
+   "mission": "13cd91f3",
+   "mission_status_in_db": "COMPLETED",
+   "run_id_in_db": "34df84c4",
+   "run_status_in_db": "COMPLETED",
+   "run_completed_event_at": "2026-09-23T13:12:17.715537+00:00",
+   "plans_generated_event_at_same_second": [],
+   "plans_rows_written_for_this_round": 0,
+   "event_carries_FAILED_EXTERNAL": false,
+   "plans_generated_event_names_the_mission": false
+  },
+  {
+   "mission": "729f091c",
+   "mission_status_in_db": "COMPLETED",
+   "run_id_in_db": "1bcfa166",
+   "run_status_in_db": "COMPLETED",
+   "run_completed_event_at": "2026-09-23T13:14:51.191760+00:00",
+   "plans_generated_event_at_same_second": [
+    "2026-09-23T13:14:51.243585+00:00"
+   ],
+   "plans_rows_written_for_this_round": 3,
+   "event_carries_FAILED_EXTERNAL": false,
+   "plans_generated_event_names_the_mission": false
+  },
+  {
+   "mission": "da00253b",
+   "mission_status_in_db": "COMPLETED",
+   "run_id_in_db": "ddb44de2",
+   "run_status_in_db": "COMPLETED",
+   "run_completed_event_at": "2026-09-23T13:22:01.421342+00:00",
+   "plans_generated_event_at_same_second": [
+    "2026-09-23T13:22:01.510988+00:00"
+   ],
+   "plans_rows_written_for_this_round": 3,
+   "event_carries_FAILED_EXTERNAL": false,
+   "plans_generated_event_names_the_mission": false
+  },
+  {
+   "mission": "17aec167",
+   "mission_status_in_db": "DEGRADED",
+   "run_id_in_db": "3244d2a3",
+   "run_status_in_db": "FAILED_EXTERNAL",
+   "run_completed_event_at": "2026-09-23T14:28:18.886360+00:00",
+   "plans_generated_event_at_same_second": [],
+   "plans_rows_written_for_this_round": 0,
+   "event_carries_FAILED_EXTERNAL": true,
+   "plans_generated_event_names_the_mission": false
+  }
+ ],
+ "feed_pages": {
+  "with_limit_200_events": 187,
+  "default_no_limit_events": 100,
+  "default_page_omits_newest_aborted_round": true
+ },
+ "routes_that_name_the_aborted_missions": [
+  "~/agent-feed",
+  "~/history",
+  "~/observability/traces",
+  "~/reflect"
+ ],
+ "routes_exposing_DEGRADED": [],
+ "routes_exposing_FAILED_EXTERNAL": [
+  "~/history",
+  "~/reflect"
+ ],
+ "verdict": {
+  "partly_true": true,
+  "terminal_mission_status_readable": false,
+  "plans_link_to_mission_readable": false,
+  "zero_plan_round_distinguishable_only_by_timestamp": true
+ }
+}
