@@ -1,0 +1,211 @@
+=== RUN 1 ===
+.F...                                                                    [100%]
+================================== FAILURES ===================================
+__________ test_1_two_processes_one_key_persist_exactly_one_mission ___________
+
+pair = {'a': (56970, <Popen: returncode: None args: ['D:\\moodle\\CityNexus\\.venv\\Scripts\\pyth...>), 'b': (56971, <Popen: ...c-09ba51b7d8b1', ...}, 56971: {'ai': 'disabled', 'database': 'ok', 'e2e_database_id': '', 'e2e_run_id': '', ...}}, ...}
+
+    def test_1_two_processes_one_key_persist_exactly_one_mission(pair) -> None:
+        """owner=跨进程同键：两发排在同一时刻、打在**不同进程**上 ⇒ 同一枚 mission、库里 1 行。"""
+        db = pair["db"]
+        pa, pb = pair["a"][0], pair["b"][0]
+        failures: list[str] = []
+        tally: dict[str, int] = {}
+        for rnd in range(1, ROUNDS + 1):
+            first_port, second_port = (pa, pb) if rnd % 2 else (pb, pa)   # 输赢轮流 ⇒ 两面都得读别人的行
+            jid = _seed_journey(first_port)
+            key = f"ord0253-xproc-{rnd}-{uuid.uuid4().hex[:8]}"
+            barrier = threading.Barrier(2)
+            out: list[dict] = []
+            lock = threading.Lock()
+    
+            def click(port: int) -> None:
+                barrier.wait(timeout=30)                    # 排一次 race，不赌时间窗
+                status, body = _post(f"/api/v1/journeys/{jid}/agent/commands", port,
+                                     {"command": CMD_A, "requested_autonomy": "PLAN_ONLY"}, key)
+                with lock:
+                    out.append({"port": port, "status": status,
+                                "mission": (body.get("mission") or {}).get("id"),
+                                "body": str(body)[:160]})
+    
+            threads = [threading.Thread(target=click, args=(p,)) for p in (first_port, second_port)]
+            for t in threads:
+                t.start()
+            for t in threads:
+                t.join(timeout=60)
+            if len(out) != 2:
+                failures.append(f"第 {rnd} 轮：只回来 {len(out)}/2 发 {out}")
+                continue
+            missions = {r["mission"] for r in out}
+            rows = _count(db, "SELECT count(*) FROM journey_missions WHERE journey_id=?", (jid,))
+            keys = _count(db, "SELECT count(*) FROM idempotency_keys WHERE key=?",
+                          (f"agent.command:{key}",))
+            bad = [r for r in out if r["status"] != 200]
+            if bad or len(missions) != 1 or None in missions or rows != 1 or keys != 1:
+                detail = _rows(db, "SELECT id, status, created_at FROM journey_missions "
+                                   "WHERE journey_id=? ORDER BY created_at", (jid,))
+                tails = {p: _log_tail(pair["logs"][p]) for p in (pa, pb)}
+                shape = ("GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)"
+                         if not bad and rows > 1 else
+                         "UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)"
+                         if bad else "SHAPE_UNCLASSIFIED")
+                tally[shape] = tally.get(shape, 0) + 1
+                failures.append(
+                    f"第 {rnd} 轮（首打 {first_port}）【{shape}】："
+                    f"两边={[(r['port'], r['status'], str(r['mission'])[:8]) for r in out]} "
+                    f"收据行={keys} 库内作业={[(str(i)[:8], s) for i, s, _c in detail]}；"
+                    f"面日志 A={tails[pa][:200]} ｜ B={tails[pb][:200]}")
+>       assert not failures, (
+            f"跨进程同键必须每一轮都只持久 1 行、两边回同一枚 mission；{ROUNDS} 轮的红按形态计数 = "
+            f"{tally} ⇒ 细节：\n" + "\n".join(failures))
+E       AssertionError: 跨进程同键必须每一轮都只持久 1 行、两边回同一枚 mission；5 轮的红按形态计数 = {'GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)': 1, 'UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)': 4} ⇒ 细节：
+E         第 1 轮（首打 56970）【GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)】：两边=[(56970, 200, 'f74443e1'), (56971, 200, 'f74443e1')] 收据行=1 库内作业=[('f74443e1', 'SKIPPED_EXTERNAL_DEPENDENCY'), ('adafd3c4', 'SKIPPED_EXTERNAL_DEPENDENCY')]；面日志 A=── 末行 ── ⏎ INFO:     127.0.0.1:57171 - "POST /api/v1/journeys HTTP/1.1" 201 Created ⏎ INFO:     127.0.0.1:57172 - "POST /api/v1/journeys/24d3359d-a91b-4628-8d6e-eebef5299dcf/agent/commands HTTP/1.1" 2 ｜ B=── 末行 ── ⏎ INFO:     127.0.0.1:57169 - "GET /api/v1/journeys/b7dddf05-ee3d-4675-b559-50f2fe99179e HTTP/1.1" 200 OK ⏎ INFO:     127.0.0.1:57173 - "POST /api/v1/journeys/24d3359d-a91b-4628-8d6e-eebef529
+E         第 2 轮（首打 56971）【UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)】：两边=[(56970, 200, '120cfefa'), (56971, 500, 'None')] 收据行=1 库内作业=[('120cfefa', 'SKIPPED_EXTERNAL_DEPENDENCY')]；面日志 A=── 末行 ── ⏎ INFO:     127.0.0.1:57172 - "POST /api/v1/journeys/24d3359d-a91b-4628-8d6e-eebef5299dcf/agent/commands HTTP/1.1" 200 OK ⏎ INFO:     127.0.0.1:57176 - "POST /api/v1/journeys/7c7f6d95-4668-44 ｜ B=ERROR:    Exception in ASGI application ⏎ sqlite3.IntegrityError: UNIQUE constraint failed: traveler_agent_policies.traveler_id ⏎ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constra
+E         第 3 轮（首打 56970）【UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)】：两边=[(56970, 200, '1c39eb81'), (56971, 500, 'None')] 收据行=1 库内作业=[('1c39eb81', 'SKIPPED_EXTERNAL_DEPENDENCY')]；面日志 A=── 末行 ── ⏎ INFO:     127.0.0.1:57179 - "POST /api/v1/journeys HTTP/1.1" 201 Created ⏎ INFO:     127.0.0.1:57180 - "POST /api/v1/journeys/804c5a11-ee48-46a2-bdda-44a49d9705ca/agent/commands HTTP/1.1" 2 ｜ B=ERROR:    Exception in ASGI application ⏎ sqlite3.IntegrityError: UNIQUE constraint failed: traveler_agent_policies.traveler_id ⏎ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constra
+E         第 4 轮（首打 56971）【UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)】：两边=[(56970, 200, '1751d843'), (56971, 500, 'None')] 收据行=1 库内作业=[('1751d843', 'SKIPPED_EXTERNAL_DEPENDENCY')]；面日志 A=── 末行 ── ⏎ INFO:     127.0.0.1:57180 - "POST /api/v1/journeys/804c5a11-ee48-46a2-bdda-44a49d9705ca/agent/commands HTTP/1.1" 200 OK ⏎ INFO:     127.0.0.1:57184 - "POST /api/v1/journeys/a8e8e46e-ba01-45 ｜ B=ERROR:    Exception in ASGI application ⏎ sqlite3.IntegrityError: UNIQUE constraint failed: traveler_agent_policies.traveler_id ⏎ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constra
+E         第 5 轮（首打 56970）【UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)】：两边=[(56970, 200, '60610d31'), (56971, 500, 'None')] 收据行=1 库内作业=[('60610d31', 'SKIPPED_EXTERNAL_DEPENDENCY')]；面日志 A=── 末行 ── ⏎ INFO:     127.0.0.1:57187 - "POST /api/v1/journeys HTTP/1.1" 201 Created ⏎ INFO:     127.0.0.1:57189 - "POST /api/v1/journeys/86e4d6c8-bf76-43e2-a0ce-890566aaf95c/agent/commands HTTP/1.1" 2 ｜ B=ERROR:    Exception in ASGI application ⏎ sqlite3.IntegrityError: UNIQUE constraint failed: traveler_agent_policies.traveler_id ⏎ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constra
+E       assert not ['第 1 轮（首打 56970）【GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)】：两边=[(56970, 200, \'f74443e1\'), (56971, 200, \'f... failed: traveler_agent_policies.traveler_id ⏎ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constra"]
+
+tests\test_qoder_agent_command_idempotency_xproc.py:341: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_agent_command_idempotency_xproc.py::test_1_two_processes_one_key_persist_exactly_one_mission
+1 failed, 4 passed in 6.71s
+=== RUN 2 ===
+.F...                                                                    [100%]
+================================== FAILURES ===================================
+__________ test_1_two_processes_one_key_persist_exactly_one_mission ___________
+
+pair = {'a': (58602, <Popen: returncode: None args: ['D:\\moodle\\CityNexus\\.venv\\Scripts\\pyth...>), 'b': (58603, <Popen: ...c-188e73d3ee7e', ...}, 58603: {'ai': 'disabled', 'database': 'ok', 'e2e_database_id': '', 'e2e_run_id': '', ...}}, ...}
+
+    def test_1_two_processes_one_key_persist_exactly_one_mission(pair) -> None:
+        """owner=跨进程同键：两发排在同一时刻、打在**不同进程**上 ⇒ 同一枚 mission、库里 1 行。"""
+        db = pair["db"]
+        pa, pb = pair["a"][0], pair["b"][0]
+        failures: list[str] = []
+        tally: dict[str, int] = {}
+        for rnd in range(1, ROUNDS + 1):
+            first_port, second_port = (pa, pb) if rnd % 2 else (pb, pa)   # 输赢轮流 ⇒ 两面都得读别人的行
+            jid = _seed_journey(first_port)
+            key = f"ord0253-xproc-{rnd}-{uuid.uuid4().hex[:8]}"
+            barrier = threading.Barrier(2)
+            out: list[dict] = []
+            lock = threading.Lock()
+    
+            def click(port: int) -> None:
+                barrier.wait(timeout=30)                    # 排一次 race，不赌时间窗
+                status, body = _post(f"/api/v1/journeys/{jid}/agent/commands", port,
+                                     {"command": CMD_A, "requested_autonomy": "PLAN_ONLY"}, key)
+                with lock:
+                    out.append({"port": port, "status": status,
+                                "mission": (body.get("mission") or {}).get("id"),
+                                "body": str(body)[:160]})
+    
+            threads = [threading.Thread(target=click, args=(p,)) for p in (first_port, second_port)]
+            for t in threads:
+                t.start()
+            for t in threads:
+                t.join(timeout=60)
+            if len(out) != 2:
+                failures.append(f"第 {rnd} 轮：只回来 {len(out)}/2 发 {out}")
+                continue
+            missions = {r["mission"] for r in out}
+            rows = _count(db, "SELECT count(*) FROM journey_missions WHERE journey_id=?", (jid,))
+            keys = _count(db, "SELECT count(*) FROM idempotency_keys WHERE key=?",
+                          (f"agent.command:{key}",))
+            bad = [r for r in out if r["status"] != 200]
+            if bad or len(missions) != 1 or None in missions or rows != 1 or keys != 1:
+                detail = _rows(db, "SELECT id, status, created_at FROM journey_missions "
+                                   "WHERE journey_id=? ORDER BY created_at", (jid,))
+                tails = {p: _log_tail(pair["logs"][p]) for p in (pa, pb)}
+                shape = ("GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)"
+                         if not bad and rows > 1 else
+                         "UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)"
+                         if bad else "SHAPE_UNCLASSIFIED")
+                tally[shape] = tally.get(shape, 0) + 1
+                failures.append(
+                    f"第 {rnd} 轮（首打 {first_port}）【{shape}】："
+                    f"两边={[(r['port'], r['status'], str(r['mission'])[:8]) for r in out]} "
+                    f"收据行={keys} 库内作业={[(str(i)[:8], s) for i, s, _c in detail]}；"
+                    f"面日志 A={tails[pa][:200]} ｜ B={tails[pb][:200]}")
+>       assert not failures, (
+            f"跨进程同键必须每一轮都只持久 1 行、两边回同一枚 mission；{ROUNDS} 轮的红按形态计数 = "
+            f"{tally} ⇒ 细节：\n" + "\n".join(failures))
+E       AssertionError: 跨进程同键必须每一轮都只持久 1 行、两边回同一枚 mission；5 轮的红按形态计数 = {'GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)': 1, 'UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)': 1} ⇒ 细节：
+E         第 1 轮（首打 58602）【GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)】：两边=[(58603, 200, 'b4a6848f'), (58602, 200, 'b4a6848f')] 收据行=1 库内作业=[('b4a6848f', 'SKIPPED_EXTERNAL_DEPENDENCY'), ('54d5e913', 'SKIPPED_EXTERNAL_DEPENDENCY')]；面日志 A=── 末行 ── ⏎ INFO:     127.0.0.1:58619 - "POST /api/v1/journeys HTTP/1.1" 201 Created ⏎ INFO:     127.0.0.1:58621 - "POST /api/v1/journeys/18c48cb0-9ea9-4975-956b-5a740408c32b/agent/commands HTTP/1.1" 2 ｜ B=── 末行 ── ⏎ INFO:     127.0.0.1:58617 - "GET /api/v1/journeys/d5aa06ae-ad4d-46a0-aff9-5861f8574440 HTTP/1.1" 200 OK ⏎ INFO:     127.0.0.1:58620 - "POST /api/v1/journeys/18c48cb0-9ea9-4975-956b-5a740408
+E         第 5 轮（首打 58602）【UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)】：两边=[(58603, 500, 'None'), (58602, 200, 'c91bec66')] 收据行=1 库内作业=[('c91bec66', 'SKIPPED_EXTERNAL_DEPENDENCY')]；面日志 A=── 末行 ── ⏎ INFO:     127.0.0.1:58636 - "POST /api/v1/journeys HTTP/1.1" 201 Created ⏎ INFO:     127.0.0.1:58637 - "POST /api/v1/journeys/87981a82-19cd-4ac1-a355-d33ccff5e794/agent/commands HTTP/1.1" 2 ｜ B=ERROR:    Exception in ASGI application ⏎ sqlite3.IntegrityError: UNIQUE constraint failed: traveler_agent_policies.traveler_id ⏎ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constra
+E       assert not ['第 1 轮（首打 58602）【GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)】：两边=[(58603, 200, \'b4a6848f\'), (58602, 200, \'b... failed: traveler_agent_policies.traveler_id ⏎ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constra"]
+
+tests\test_qoder_agent_command_idempotency_xproc.py:341: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_agent_command_idempotency_xproc.py::test_1_two_processes_one_key_persist_exactly_one_mission
+1 failed, 4 passed in 5.71s
+=== RUN 3 ===
+.F...                                                                    [100%]
+================================== FAILURES ===================================
+__________ test_1_two_processes_one_key_persist_exactly_one_mission ___________
+
+pair = {'a': (58659, <Popen: returncode: None args: ['D:\\moodle\\CityNexus\\.venv\\Scripts\\pyth...>), 'b': (58660, <Popen: ...c-2f501cb9eba3', ...}, 58660: {'ai': 'disabled', 'database': 'ok', 'e2e_database_id': '', 'e2e_run_id': '', ...}}, ...}
+
+    def test_1_two_processes_one_key_persist_exactly_one_mission(pair) -> None:
+        """owner=跨进程同键：两发排在同一时刻、打在**不同进程**上 ⇒ 同一枚 mission、库里 1 行。"""
+        db = pair["db"]
+        pa, pb = pair["a"][0], pair["b"][0]
+        failures: list[str] = []
+        tally: dict[str, int] = {}
+        for rnd in range(1, ROUNDS + 1):
+            first_port, second_port = (pa, pb) if rnd % 2 else (pb, pa)   # 输赢轮流 ⇒ 两面都得读别人的行
+            jid = _seed_journey(first_port)
+            key = f"ord0253-xproc-{rnd}-{uuid.uuid4().hex[:8]}"
+            barrier = threading.Barrier(2)
+            out: list[dict] = []
+            lock = threading.Lock()
+    
+            def click(port: int) -> None:
+                barrier.wait(timeout=30)                    # 排一次 race，不赌时间窗
+                status, body = _post(f"/api/v1/journeys/{jid}/agent/commands", port,
+                                     {"command": CMD_A, "requested_autonomy": "PLAN_ONLY"}, key)
+                with lock:
+                    out.append({"port": port, "status": status,
+                                "mission": (body.get("mission") or {}).get("id"),
+                                "body": str(body)[:160]})
+    
+            threads = [threading.Thread(target=click, args=(p,)) for p in (first_port, second_port)]
+            for t in threads:
+                t.start()
+            for t in threads:
+                t.join(timeout=60)
+            if len(out) != 2:
+                failures.append(f"第 {rnd} 轮：只回来 {len(out)}/2 发 {out}")
+                continue
+            missions = {r["mission"] for r in out}
+            rows = _count(db, "SELECT count(*) FROM journey_missions WHERE journey_id=?", (jid,))
+            keys = _count(db, "SELECT count(*) FROM idempotency_keys WHERE key=?",
+                          (f"agent.command:{key}",))
+            bad = [r for r in out if r["status"] != 200]
+            if bad or len(missions) != 1 or None in missions or rows != 1 or keys != 1:
+                detail = _rows(db, "SELECT id, status, created_at FROM journey_missions "
+                                   "WHERE journey_id=? ORDER BY created_at", (jid,))
+                tails = {p: _log_tail(pair["logs"][p]) for p in (pa, pb)}
+                shape = ("GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)"
+                         if not bad and rows > 1 else
+                         "UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)"
+                         if bad else "SHAPE_UNCLASSIFIED")
+                tally[shape] = tally.get(shape, 0) + 1
+                failures.append(
+                    f"第 {rnd} 轮（首打 {first_port}）【{shape}】："
+                    f"两边={[(r['port'], r['status'], str(r['mission'])[:8]) for r in out]} "
+                    f"收据行={keys} 库内作业={[(str(i)[:8], s) for i, s, _c in detail]}；"
+                    f"面日志 A={tails[pa][:200]} ｜ B={tails[pb][:200]}")
+>       assert not failures, (
+            f"跨进程同键必须每一轮都只持久 1 行、两边回同一枚 mission；{ROUNDS} 轮的红按形态计数 = "
+            f"{tally} ⇒ 细节：\n" + "\n".join(failures))
+E       AssertionError: 跨进程同键必须每一轮都只持久 1 行、两边回同一枚 mission；5 轮的红按形态计数 = {'GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)': 1, 'UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)': 2} ⇒ 细节：
+E         第 1 轮（首打 58659）【GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)】：两边=[(58660, 200, '13aa1312'), (58659, 200, '13aa1312')] 收据行=1 库内作业=[('13aa1312', 'SKIPPED_EXTERNAL_DEPENDENCY'), ('a7b6a54a', 'SKIPPED_EXTERNAL_DEPENDENCY')]；面日志 A=── 末行 ── ⏎ INFO:     127.0.0.1:52924 - "POST /api/v1/journeys HTTP/1.1" 201 Created ⏎ INFO:     127.0.0.1:52926 - "POST /api/v1/journeys/bfda26d7-ff16-458c-8cbb-aa95cdb803a9/agent/commands HTTP/1.1" 2 ｜ B=── 末行 ── ⏎ INFO:     127.0.0.1:52922 - "GET /api/v1/journeys/eb672a2e-87ad-4652-90c1-137172669007 HTTP/1.1" 200 OK ⏎ INFO:     127.0.0.1:52925 - "POST /api/v1/journeys/bfda26d7-ff16-458c-8cbb-aa95cdb8
+E         第 2 轮（首打 58660）【UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)】：两边=[(58660, 200, 'a858c14d'), (58659, 500, 'None')] 收据行=1 库内作业=[('a858c14d', 'SKIPPED_EXTERNAL_DEPENDENCY')]；面日志 A=ERROR:    Exception in ASGI application ⏎ sqlite3.IntegrityError: UNIQUE constraint failed: traveler_agent_policies.traveler_id ⏎ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constra ｜ B=── 末行 ── ⏎ INFO:     127.0.0.1:52928 - "POST /api/v1/journeys HTTP/1.1" 201 Created ⏎ INFO:     127.0.0.1:52929 - "POST /api/v1/journeys/9f8850e6-f598-478e-8e06-afea5063d1a9/agent/commands HTTP/1.1" 2
+E         第 5 轮（首打 58659）【UNNAMED_500(库层唯一索引撞车被洗成裸 500，没走产品现成的 409/503 词汇)】：两边=[(58659, 200, '44f0d44c'), (58660, 500, 'None')] 收据行=1 库内作业=[('44f0d44c', 'SKIPPED_EXTERNAL_DEPENDENCY')]；面日志 A=ERROR:    Exception in ASGI application ⏎ sqlite3.IntegrityError: UNIQUE constraint failed: traveler_agent_policies.traveler_id ⏎ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constra ｜ B=ERROR:    Exception in ASGI application ⏎ sqlite3.IntegrityError: UNIQUE constraint failed: traveler_agent_policies.traveler_id ⏎ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constra
+E       assert not ['第 1 轮（首打 58659）【GHOST_MISSION_ROW(两边都 200 且回同一枚 mission，库里却留了败者那枚)】：两边=[(58660, 200, \'13aa1312\'), (58659, 200, \'1... failed: traveler_agent_policies.traveler_id ⏎ sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constra"]
+
+tests\test_qoder_agent_command_idempotency_xproc.py:341: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_agent_command_idempotency_xproc.py::test_1_two_processes_one_key_persist_exactly_one_mission
+1 failed, 4 passed in 5.59s
