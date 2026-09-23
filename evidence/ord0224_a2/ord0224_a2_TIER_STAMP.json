@@ -1,0 +1,81 @@
+{
+  "kind": "CNX_EVIDENCE_TIER_STAMP_V1",
+  "session": "8c66aa92",
+  "issued_at": "2026-09-23T12:4x+08",
+  "ruling": "arbiter A-2, bus 5788111742, 由 commander 落地块 @2026-09-23T10:5x §② 转成指令",
+  "closure_door_nodeid": "backend/tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+  "source_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+  "not_signed": "FINAL CLOSED / composite DoD：PROVIDER_WORK_COALESCING（真实并发 calls=5）仍是第二个未收口子，在此之前任何 G3/DoD 不得写 FINAL CLOSED；强修 claim-before-work 一行未动。",
+  "items": [
+    {
+      "file": "xproc_shape_probe_result.json",
+      "bytes": 12629,
+      "git_blob_sha1": "961170548555e605aa0ffcbc589fd937ce432fc1",
+      "grade": "ACCEPTED_STORE_LEVEL_SUPPORTING_EVIDENCE",
+      "why": "仲裁 A-2（总线 5788111742，commander 落地块 §②）原判：探针绕过 HTTP/app-process 边界，且 product_blind 用仪器强制前两查 None；raw_conflict 两读数 p0 open_rows_seen=0 / p1=1 ⇒ 未实测『两个真 caller 都看不见对方时作出相同决定』。"
+    },
+    {
+      "file": "streak_xproc_a1cc0c1.json",
+      "bytes": 57143,
+      "git_blob_sha1": "c4042085be00d7a62b58c1e26971ee3d216202d2",
+      "grade": "ACCEPTED_STORE_LEVEL_SUPPORTING_EVIDENCE",
+      "why": "同一形状的 10 连（存储层、5 个直连子进程）。它证明 durable 索引 + 败者回读跨 OS 进程收敛，且 Y3 能杀机制；它不是 closure 门本体。"
+    },
+    {
+      "file": "xproc_y3_rounds_a1cc0c1.json",
+      "bytes": 10904,
+      "git_blob_sha1": "624679e4bf7bbb8e353eea4fc358391b4302e090",
+      "grade": "ACCEPTED_STORE_LEVEL_SUPPORTING_EVIDENCE",
+      "why": "上面那把存储层门的 Y3 十轮；scope = (a1cc0c1, test_g3_xproc_loser_readback_five_processes_one_operation, single-node)。"
+    },
+    {
+      "file": "xproc_http_probe_natural.json",
+      "bytes": 9507,
+      "git_blob_sha1": "11d024cb5bf686fc4d1c5f5212afd0c7ef2df742",
+      "grade": "CLOSURE_SHAPE_PREMEASUREMENT",
+      "why": "闭包形状写门前的探针（自然并发 3 轮）：证明两真 uvicorn + HTTP 可行、三联归属可证；判据在门里，不在这里。"
+    },
+    {
+      "file": "xproc_http_probe_lock.json",
+      "bytes": 6349,
+      "git_blob_sha1": "e6698b57d2c3fbdd014b8cfa3ab53429d283a119",
+      "grade": "CLOSURE_SHAPE_PREMEASUREMENT",
+      "why": "同上（持写锁排竞态 2 轮）：两发各自被挡 >2 s ⇒ 『谁也看不见谁』由存储层状态证明，不靠把某次读改成 None。"
+    },
+    {
+      "file": "streak_xproc_http_2ab69f2.json",
+      "bytes": 103825,
+      "git_blob_sha1": "02a42d1bb21546038bd347a8169eb136dabef978",
+      "grade": "CLOSURE_GRADE_MEASUREMENT_NOT_SIGNED",
+      "why": "closure 门本体的 10 连：STREAK_MET(10)/STREAK_GREEN，closure_allowed=False（量测步不吃闭包号）。"
+    },
+    {
+      "file": "mutant_rounds_Y3_http_2ab69f2.json",
+      "bytes": 12145,
+      "git_blob_sha1": "2650cd5a17c85f7bf0546037c522cc72edcc0362",
+      "grade": "CLOSURE_GRADE_MEASUREMENT_NOT_SIGNED",
+      "why": "A-2 要求的两枚反例之一（layer C 败者回读）：control GREEN、RED 10/10、campaign_valid=True。"
+    },
+    {
+      "file": "mutant_rounds_Y2_http_2ab69f2.json",
+      "bytes": 11162,
+      "git_blob_sha1": "bf72437f4d6f3eba83a2db948b75811227b036a5",
+      "grade": "CLOSURE_GRADE_MEASUREMENT_NOT_SIGNED",
+      "why": "A-2 要求的两枚反例之二（layer B 部分唯一索引谓词永不命中）：control GREEN、RED 10/10、campaign_valid=True。"
+    },
+    {
+      "file": "c_to_b_ord0219_unique_assertions.md",
+      "bytes": 12075,
+      "git_blob_sha1": "882159fb0adeb32303cf7d91fae34821f6f9e11f",
+      "grade": "HANDOFF_TO_B_NOT_CLOSURE_EVIDENCE",
+      "why": "A-1：B 做 composite landing candidate；本件只交独有断言语义 + 原文 + P4 杀手语义（锚点须搬到 B 的 producer）。不构成任何闭包证据。"
+    },
+    {
+      "file": "c_ord0219_test_only_extract.patch",
+      "bytes": 12884,
+      "git_blob_sha1": "90b8e0d9e4fa9cd76c63d14e2710a1fc5699b8a5",
+      "grade": "HANDOFF_TO_B_NOT_CLOSURE_EVIDENCE",
+      "why": "只含测试文件的 diff（不含 app/services.py 那 45 行 producer），供 B `git apply --check` 后摘取断言原文。"
+    }
+  ]
+}
