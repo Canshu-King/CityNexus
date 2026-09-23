@@ -1,0 +1,159 @@
+{
+ "at": "2026-09-23T11:11:26.571Z",
+ "base": "http://127.0.0.1:4431",
+ "viewport": "390x844 phone zh-CN",
+ "faces": {
+  "today": {
+   "tapped": {
+    "label": "今天",
+    "hit_test": "今天"
+   },
+   "url_before": "http://127.0.0.1:4431/v8/hub",
+   "url_after": "http://127.0.0.1:4431/v8/hub",
+   "expected_route": "/v8/hub",
+   "markers": [
+    "还没有安排",
+    "取自服务器场景"
+   ],
+   "markers_hit": [
+    "还没有安排",
+    "取自服务器场景"
+   ],
+   "reached": true,
+   "text_changed": false,
+   "operable": false,
+   "body_chars_before": 390,
+   "body_chars_after": 390,
+   "body_head": "菜单 / 今天 跟随系统 EN DE 晚上好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 今天 还没有安排 “现在”取自服务器场景（行程起点。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 09:00 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00",
+   "shot": "D:\\moodle\\_qoder_b_ord0263_20260923\\shots_sixface_post/sixface_today.png"
+  },
+  "journey": {
+   "tapped": {
+    "label": "打开行程工作台",
+    "hit_test": "打开行程工作台"
+   },
+   "url_before": "http://127.0.0.1:4431/v8/hub",
+   "url_after": "http://127.0.0.1:4431/v8/studio",
+   "expected_route": "/v8/studio",
+   "markers": [
+    "行程工作台",
+    "方案健康度"
+   ],
+   "markers_hit": [
+    "行程工作台",
+    "方案健康度"
+   ],
+   "reached": true,
+   "text_changed": true,
+   "operable": true,
+   "body_chars_before": 390,
+   "body_chars_after": 246,
+   "body_head": "菜单 / 行程工作台 跟随系统 EN DE 行程工作台 · 多日方案 围绕重要的事塑造行程。 更换酒店或路段出行方式，CityNexus 会在相同的硬约束下重新计算出行影响。 报告降雨中断 尚未选择住宿 选择住宿 住宿总计 尚未选择 日均出行 尚未选择 步行暴露 尚未选择 方案健康度 尚未选择 尚未核对 你还没有选定方案，因此没有可核对的内容。先选定方案——CityNexus 不会宣称没有做过的检查。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+   "shot": "D:\\moodle\\_qoder_b_ord0263_20260923\\shots_sixface_post/sixface_journey.png"
+  },
+  "map": {
+   "tapped": {
+    "label": "地图",
+    "hit_test": "地图"
+   },
+   "url_before": "http://127.0.0.1:4431/v8/studio",
+   "url_after": "http://127.0.0.1:4431/v8/map",
+   "expected_route": "/v8/map",
+   "markers": [
+    "地图 · 一目了然",
+    "尚未获取地图位置"
+   ],
+   "markers_hit": [
+    "地图 · 一目了然",
+    "尚未获取地图位置"
+   ],
+   "reached": true,
+   "text_changed": true,
+   "operable": true,
+   "body_chars_before": 246,
+   "body_chars_after": 188,
+   "body_head": "菜单 / 地图 跟随系统 EN DE 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 下一段路程 等待方案 未知费用保持未知。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+   "shot": "D:\\moodle\\_qoder_b_ord0263_20260923\\shots_sixface_post/sixface_map.png"
+  },
+  "ai": {
+   "tapped": {
+    "label": "✦ CityNexus Copilot",
+    "hit_test": "✦ CityNexus Copilot"
+   },
+   "url_before": "http://127.0.0.1:4431/v8/map",
+   "url_after": "http://127.0.0.1:4431/v8/map",
+   "expected_route": null,
+   "markers": [
+    "已核验的行程事实"
+   ],
+   "markers_hit": [
+    "已核验的行程事实"
+   ],
+   "reached": true,
+   "text_changed": true,
+   "operable": true,
+   "body_chars_before": 188,
+   "body_chars_after": 254,
+   "body_head": "菜单 / 地图 跟随系统 EN DE 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 下一段路程 等待方案 未知费用保持未知。 CityNexus Copilot 回答只依据已核验的行程事实，不会自己改动你的安排。 × 问我为什么这样安排、试算变化，或报告已经确认的中断。 询问 Copilot 今天 行程 地图 Copilot 我的",
+   "shot": "D:\\moodle\\_qoder_b_ord0263_20260923\\shots_sixface_post/sixface_ai.png"
+  },
+  "wallet": {
+   "tapped": {
+    "label": "我的",
+    "hit_test": "我的"
+   },
+   "url_before": "http://127.0.0.1:4431/v8/map",
+   "url_after": "http://127.0.0.1:4431/v8/me",
+   "expected_route": "/v8/me",
+   "markers": [
+    "我的行程与偏好",
+    "已确认的预订"
+   ],
+   "markers_hit": [
+    "我的行程与偏好",
+    "已确认的预订"
+   ],
+   "reached": true,
+   "text_changed": true,
+   "operable": true,
+   "body_chars_before": 254,
+   "body_chars_after": 375,
+   "body_head": "菜单 / 我的 跟随系统 EN DE 我的 我的行程与偏好 这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。 这趟行程 DEMO 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 仅提供建议 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push 高级详情 City",
+   "shot": "D:\\moodle\\_qoder_b_ord0263_20260923\\shots_sixface_post/sixface_wallet.png"
+  },
+  "simulation": {
+   "tapped": null,
+   "url_before": "http://127.0.0.1:4431/v8/me",
+   "url_after": "http://127.0.0.1:4431/v8/me",
+   "expected_route": "/v8/simulation",
+   "markers": [
+    "模拟",
+    "Simulation"
+   ],
+   "markers_hit": [],
+   "reached": false,
+   "text_changed": true,
+   "operable": false,
+   "body_chars_before": 375,
+   "body_chars_after": 405,
+   "body_head": "菜单 / 我的 跟随系统 EN DE 我的 我的行程与偏好 这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。 这趟行程 DEMO 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 仅提供建议 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 只记录，不发推送 服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。 启用 Web Push 高级详情 ✦ Ci",
+   "shot": "D:\\moodle\\_qoder_b_ord0263_20260923\\shots_sixface_post/sixface_simulation.png"
+  }
+ },
+ "nav_inventory": [
+  "EN",
+  "目的地",
+  "抵达地点",
+  "离开地点",
+  "下一步",
+  "使用封存的演示行程",
+  "高级设置"
+ ],
+ "posts": [],
+ "notes": [
+  "entered the journey through the sealed-demo control",
+  "simulation: no hit-tested control matched words [\"模拟\",\"Simulation\"]; labels seen: [\"菜单\",\"跟随系统\",\"EN\",\"DE\",\"启用 Web Push\",\"×\",\"询问 Copilot\",\"今天\",\"行程\",\"地图\",\"Copilot\",\"我的\"]",
+  "simulation: no hit-tested control matched words [\"模拟\",\"Simulation\"]; labels seen: [\"菜单\",\"跟随系统\",\"EN\",\"DE\",\"启用 Web Push\",\"✦ CityNexus Copilot\",\"今天\",\"行程\",\"地图\",\"Copilot\",\"我的\",\"关闭\",\"今天\",\"实时行程\",\"地图\",\"行程工作台\",\"住宿选择\",\"城市探索\",\"旅行票夹\",\"Copilot\",\"恢复与执行\",\"智能守护\",\"旅行者画像\",\"行程\",\"我的\"]",
+  "simulation: opened the 菜单 drawer and looked again"
+ ]
+}
