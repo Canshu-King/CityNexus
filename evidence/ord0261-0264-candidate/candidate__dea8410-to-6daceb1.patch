@@ -1,0 +1,384 @@
+diff --git a/frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts b/frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts
+new file mode 100644
+index 0000000..94c1ea0
+--- /dev/null
++++ b/frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts
+@@ -0,0 +1,112 @@
++/**
++ * ORD-0261 (read-only reproduction first): HJ-P3 measured that `0fd3cc7` fixed the *sizes* on the
++ * wizard screen — 「看支持的目的地」91×30⇒91×44 and 「高级设置」349×16⇒349×44 — but the centre of the
++ * 「高级设置」 SUMMARY lands on a different control with the same label (the `trial-show-advanced`
++ * BUTTON that sits beside the details and force-opens it).  Size is not tappability.
++ *
++ * This file measures and reports only: it enumerates every rendered control by label on the wizard
++ * screen at 390×844 and records, for each, what `elementFromPoint(centre)` actually hits.  The
++ * red/green acceptance and its killer get written only after the commander rules on the reproduction;
++ * per the single-writer protocol this candidate ships as a measurement, not a fix.
++ */
++import { expect, test, type Page } from "@playwright/test";
++import { writeFileSync } from "node:fs";
++import { evidencePath } from "./_qoderEvidence";
++
++const FILE = "e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts";
++const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
++const VIEWPORT = { width: 390, height: 844 };
++test.use({ viewport: VIEWPORT, hasTouch: true });
++
++const LABELS = ["高级设置", "看支持的目的地"];
++
++type Hit = {
++  label: string;
++  role: string;
++  box: [number, number];
++  centre: [number, number];
++  hitTag: string;
++  hitRole: string;
++  hitText: string;
++  hitsItself: boolean;
++};
++
++async function openWizard(page: Page) {
++  const seeded = (await (await page.request.get("/api/v1/demo/scene")).json()) as {
++    journey_id?: string;
++  };
++  const journeyId = String(seeded.journey_id ?? "");
++  expect(journeyId.length, node("seed", "/api/v1/demo/scene returned no journey_id")).toBeGreaterThan(8);
++  await page.addInitScript((id) => {
++    localStorage.clear();
++    localStorage.setItem("citynexus.locale", "zh-CN");
++    // A stored journey id would drop the wizard straight to the hub; this screen needs the wizard.
++    localStorage.removeItem("citynexus.v8.journey_id");
++  }, journeyId);
++  await page.goto("/v8", { waitUntil: "load" });
++  await page.waitForTimeout(1_000);
++}
++
++/** Every rendered control whose text matches one of the labels, with the true centre hit. */
++async function inventory(page: Page): Promise<Hit[]> {
++  return await page.evaluate((labels: string[]) => {
++    const out: unknown[] = [];
++    for (const el of Array.from(document.querySelectorAll("button, summary, a"))) {
++      const text = (el.textContent ?? "").replace(/\s+/g, " ").trim();
++      if (!labels.some((label) => text.includes(label))) continue;
++      const box = el.getBoundingClientRect();
++      if (box.width <= 0 || box.height <= 0) continue;
++      const cx = box.left + box.width / 2;
++      const cy = box.top + box.height / 2;
++      const hit = document.elementFromPoint(cx, cy);
++      const hitText = hit ? (hit.textContent ?? "").replace(/\s+/g, " ").trim() : "";
++      const role = el.tagName === "SUMMARY" ? "summary" : el.tagName.toLowerCase();
++      const hitRole = hit ? (hit.tagName === "SUMMARY" ? "summary" : hit.tagName.toLowerCase()) : "";
++      out.push({
++        label: text.slice(0, 20),
++        role,
++        box: [Math.round(box.width), Math.round(box.height)],
++        centre: [Math.round(cx), Math.round(cy)],
++        hitTag: hit ? hit.tagName : "",
++        hitRole,
++        hitText: hitText.slice(0, 20),
++        // "命中它自己（或它内部的 label）" — a control counts when the browser's own hit test lands
++        // on it or on a descendant of it, not on a sibling that happens to share the words.
++        hitsItself: hit === el || (!!hit && el.contains(hit)),
++      });
++    }
++    return out;
++  }, LABELS);
++}
++
++test("ord0261-readonly-1-the-reproduction-at-current-head — 复现：中心到底命中谁", async ({ page }) => {
++  test.setTimeout(180_000);
++  await openWizard(page);
++  const rows = await inventory(page);
++
++  // The sweep must have actually found both reported controls; an empty inventory measures nothing.
++  for (const label of LABELS) {
++    expect(
++      rows.some((row) => row.label.includes(label)),
++      node("ord0261-readonly-1", `"${label}" was not found on the wizard screen at all`),
++    ).toBe(true);
++  }
++
++  const overlapping = rows.filter((row) => !row.hitsItself);
++  const summary = {
++    generatedBy: "e345b9d6",
++    order: "ORD-0261 read-only reproduction (no fix shipped, per the single-writer protocol)",
++    at: new Date().toISOString(),
++    tree: "agent/d-e345b9d6-candidates @ dea8410 (the authoritative tree, read-only)",
++    viewport: VIEWPORT,
++    labelsSwept: LABELS,
++    controls: rows,
++    centreMisses: overlapping,
++    verdict:
++      overlapping.length === 0
++        ? "NOT_REPRODUCED_AT_THIS_HEAD — every labelled control's centre hits itself"
++        : `REPRODUCED: ${overlapping.map((row) => `${row.label}(${row.role}) ${row.box.join("x")} centre hits <${row.hitTag}> "${row.hitText}"`).join(" | ")}`,
++  };
++  writeFileSync(evidencePath("ord0261-overlap-readonly.json"), JSON.stringify(summary, null, 1));
++  console.log("ORD0261_VERDICT:", summary.verdict);
++});
+diff --git a/frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts b/frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts
+new file mode 100644
+index 0000000..e4736d7
+--- /dev/null
++++ b/frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts
+@@ -0,0 +1,172 @@
++/**
++ * ORD-0261 + ORD-0264 -- the wizard's "高级设置" had two tappability defects with different mechanics,
++ * split by the commander after the read-only reproduction:
++ *
++ *   0261  the sticky action bar's gradient paints over the 「高级设置」 summary row, so its centre hit
++ *         the bar's 「下一步」 button instead of the summary (fix: the scrolling content reserves the
++ *         bar's height, so at rest the bar overlaps only its own padding);
++ *   0264  the same-label opener button rendered at the page bottom, its centre at y=1208 in an 844px
++ *         viewport -- permanently below the fold (fix: it renders directly under the details now).
++ *
++ * Judging shape per the order: enumerate every rendered control whose label matches, and for each
++ * require `elementFromPoint(centre)` to hit that control itself (or a node inside it).  A control
++ * below the fold cannot pass this either, because its centre is outside the viewport and hits nothing.
++ * Computed min-height is deliberately NOT treated as size -- the box that is hit is what counts.
++ */
++import { expect, test, type Page } from "@playwright/test";
++import { writeFileSync } from "node:fs";
++import { evidencePath } from "./_qoderEvidence";
++
++const FILE = "e2e/qoder-wizard-advanced-is-tappable.spec.ts";
++const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
++const VIEWPORT = { width: 390, height: 844 };
++test.use({ viewport: VIEWPORT, hasTouch: true });
++
++const LABELS = ["高级设置", "看支持的目的地"];
++
++type Hit = {
++  label: string;
++  role: string;
++  box: [number, number];
++  centre: [number, number];
++  hitTag: string;
++  hitText: string;
++  hitsItself: boolean;
++  inViewport: boolean;
++};
++
++async function openWizard(page: Page) {
++  const seeded = (await (await page.request.get("/api/v1/demo/scene")).json()) as {
++    journey_id?: string;
++  };
++  const journeyId = String(seeded.journey_id ?? "");
++  expect(journeyId.length, node("seed", "/api/v1/demo/scene returned no journey_id")).toBeGreaterThan(8);
++  await page.addInitScript((id) => {
++    localStorage.clear();
++    localStorage.setItem("citynexus.locale", "zh-CN");
++    localStorage.removeItem("citynexus.v8.journey_id");
++  }, journeyId);
++  await page.goto("/v8", { waitUntil: "load" });
++  await page.waitForTimeout(1_000);
++}
++
++/** A traveller reaches a control by scrolling it into view; measuring at scroll-top would grade the
++ *  scroll position, not the control (at scroll-top the summary sits at y≈885 in an 844px viewport and
++ *  a centre hit is trivially empty). Scroll each into view (reduced-motion makes it instant), let the
++ *  sticky bar settle, then hit-test the centre of where the control actually rests. */
++async function inventory(page: Page): Promise<Hit[]> {
++  const rows: Hit[] = [];
++  for (const label of LABELS) {
++    for (const role of ["summary", "button"] as const) {
++      const probe = await page.evaluate(
++        ({ label, role }) => {
++          for (const el of Array.from(document.querySelectorAll("button, summary, a"))) {
++            const text = (el.textContent ?? "").replace(/\s+/g, " ").trim();
++            const isRole = el.tagName === "SUMMARY" ? role === "summary" : el.tagName.toLowerCase() === role;
++            if (!isRole || !text.includes(label)) continue;
++            const before = el.getBoundingClientRect();
++            if (before.width <= 0 || before.height <= 0) continue;
++            el.scrollIntoView({ block: "center" });
++            return { found: true };
++          }
++          return { found: false };
++        },
++        { label, role },
++      );
++      if (!probe.found) continue;
++      await page.waitForTimeout(300);
++      const hit = await page.evaluate(
++        ({ label, role }) => {
++          for (const el of Array.from(document.querySelectorAll("button, summary, a"))) {
++            const text = (el.textContent ?? "").replace(/\s+/g, " ").trim();
++            const isRole = el.tagName === "SUMMARY" ? role === "summary" : el.tagName.toLowerCase() === role;
++            if (!isRole || !text.includes(label)) continue;
++            const box = el.getBoundingClientRect();
++            if (box.width <= 0 || box.height <= 0) continue;
++            const cx = box.left + box.width / 2;
++            const cy = box.top + box.height / 2;
++            const landed = document.elementFromPoint(cx, cy);
++            return {
++              label: text.slice(0, 20),
++              role,
++              box: [Math.round(box.width), Math.round(box.height)],
++              centre: [Math.round(cx), Math.round(cy)],
++              hitTag: landed ? landed.tagName : "",
++              hitText: landed ? (landed.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 20) : "",
++              hitsItself: landed === el || (!!landed && el.contains(landed)),
++              inViewport: cy >= 0 && cy <= window.innerHeight,
++              scrollY: Math.round(window.scrollY),
++            };
++          }
++          return null;
++        },
++        { label, role },
++      );
++      if (hit) rows.push(hit as Hit);
++    }
++  }
++  return rows;
++}
++
++test("ord0261-every-labelled-control-is-what-its-centre-hits — sticky 条不许压住 summary 行", async ({
++  page,
++}) => {
++  test.setTimeout(180_000);
++  await openWizard(page);
++  const rows = await inventory(page);
++
++  for (const label of LABELS) {
++    expect(
++      rows.some((row) => row.label.includes(label)),
++      node("ord0261", `"${label}" was not on the wizard screen at all`),
++    ).toBe(true);
++  }
++  const summaryRow = rows.find((row) => row.label.includes("高级设置") && row.role === "summary");
++  expect(summaryRow, node("ord0261", "the 高级设置 summary never rendered")).toBeTruthy();
++  expect(
++    summaryRow!.hitsItself,
++    node(
++      "ord0261",
++      `the summary's centre (${summaryRow!.centre.join(",")}) hit <${summaryRow!.hitTag}> "${summaryRow!.hitText}" instead of the summary itself -- chrome covering a control`,
++    ),
++  ).toBe(true);
++  // Positive control on the instrument: a control that is genuinely free must still pass.
++  const supported = rows.find((row) => row.label.includes("看支持的目的地"));
++  expect(supported?.hitsItself, node("ord0261", "the positive control no longer hits itself")).toBe(true);
++
++  await page.screenshot({ path: evidencePath(`ui-overnight/ord0261-fixed-${process.env.CITYNEXUS_E2E_RUN_ID ?? "dev"}.png`) });
++  writeFileSync(
++    evidencePath("ord0261-tappability-reading.json"),
++    JSON.stringify({ generatedBy: "e345b9d6", order: "ORD-0261", viewport: VIEWPORT, controls: rows }, null, 1),
++  );
++});
++
++test("ord0264-the-opener-button-is-inside-the-viewport-and-tappable — 折叠之下的按钮要回得来", async ({
++  page,
++}) => {
++  test.setTimeout(180_000);
++  await openWizard(page);
++  const rows = await inventory(page);
++
++  const opener = rows.filter((row) => row.label.includes("高级设置") && row.role === "button");
++  expect(
++    opener.length,
++    node("ord0264", `expected exactly one opener button, found ${opener.length}`),
++  ).toBe(1);
++  const button = opener[0];
++  expect(
++    button.inViewport,
++    node(
++      "ord0264",
++      `the opener's centre is at y=${button.centre[1]} in a ${VIEWPORT.height}px viewport -- still below the fold`,
++    ),
++  ).toBe(true);
++  expect(
++    button.hitsItself,
++    node("ord0264", `the opener's centre hit <${button.hitTag}> "${button.hitText}" instead of the button`),
++  ).toBe(true);
++
++  // The move must not have broken what the button is for: it opens the advanced block.
++  await page.getByTestId("trial-show-advanced").click();
++  await expect(page.locator(".trial-advanced")).toHaveAttribute("open", "");
++});
+diff --git a/frontend/src/features/setup/JourneyTrialSetup.tsx b/frontend/src/features/setup/JourneyTrialSetup.tsx
+index 9ccbffe..cb0a785 100644
+--- a/frontend/src/features/setup/JourneyTrialSetup.tsx
++++ b/frontend/src/features/setup/JourneyTrialSetup.tsx
+@@ -800,6 +800,24 @@ export function JourneyTrialSetup({
+               </label>
+             </div>
+           </details>
++          {/* ORD-0264: this opener used to render in the page-bottom secondary row, where its centre
++              measured y=1208 in an 844px viewport -- on a phone it was permanently below the fold and
++              untappable. It now sits directly under the details it opens. The width (350×44) and the
++              min-height the class-level floor gives it are unchanged; only its position moved. */}
++          {step === 1 && (
++            <button
++              type="button"
++              className="trial-back-link"
++              data-testid="trial-show-advanced"
++              onClick={() => {
++                setAdvanced(true);
++                const node = document.querySelector(".trial-advanced") as HTMLDetailsElement | null;
++                if (node) node.open = true;
++              }}
++            >
++              {zh ? "高级设置" : "Advanced settings"}
++            </button>
++          )}
+         </div>
+       )}
+ 
+@@ -1239,20 +1257,6 @@ export function JourneyTrialSetup({
+         >
+           {t("trial.tianjinDemo")}
+         </button>
+-        {step === 1 && (
+-          <button
+-            type="button"
+-            className="trial-back-link"
+-            data-testid="trial-show-advanced"
+-            onClick={() => {
+-              setAdvanced(true);
+-              const node = document.querySelector(".trial-advanced") as HTMLDetailsElement | null;
+-              if (node) node.open = true;
+-            }}
+-          >
+-            {zh ? "高级设置" : "Advanced settings"}
+-          </button>
+-        )}
+       </div>
+     </section>
+   );
+diff --git a/frontend/src/styles.css b/frontend/src/styles.css
+index 893796d..b942bf6 100644
+--- a/frontend/src/styles.css
++++ b/frontend/src/styles.css
+@@ -668,6 +668,20 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
+   padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+   background: linear-gradient(to top, var(--v8-canvas) 70%, transparent);
+ }
++/* ORD-0261: the bar's gradient paints over whatever scrolls beneath it, and measured at 390x844 the
++   "高级设置" summary's centre landed on the bar's 下一步 button -- a control hidden by chrome. The bar
++   keeps its job (the primary action stays reachable); the scrolling content (.trial-steps wraps all
++   step content) now ends above the bar, so at rest it overlaps only the bar's own padding.  The
++   reserve rides the same media query as the bar's own bottom clearance, and it must track the bar's
++   real height (two 44px buttons + padding ≈ 76px). */
++.cn-onboarding .trial-steps {
++  padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
++}
++@media (max-width: 680px) {
++  .cn-onboarding .trial-steps {
++    padding-bottom: calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px));
++  }
++}
+ .trial-sticky-cta .v8-primary-button {
+   min-width: 140px;
+ }
+diff --git a/review/run_spec.py b/review/run_spec.py
+index 2ecd634..c572b6b 100644
+--- a/review/run_spec.py
++++ b/review/run_spec.py
+@@ -16,7 +16,7 @@ for _stream in (sys.stdout, sys.stderr):
+     if hasattr(_stream, "reconfigure"):
+         _stream.reconfigure(encoding="utf-8", errors="replace")
+ 
+-ROOT = "D:/moodle/_qoder_integration_20260919"
++ROOT = os.environ.get("CNX_LANE_ROOT", "D:/moodle/_qoder_integration_20260919")
+ 
+ 
+ def main() -> int:
