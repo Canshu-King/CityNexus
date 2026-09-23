@@ -1,0 +1,10 @@
+commit dc690d7465171c08fad75c15e0aadabfa8983506
+parent f24628f566637713d38784f0b2a9e2794f826346
+
+
+A	frontend/e2e/qoder-advanced-summary-is-tappable.spec.ts
+A	frontend/e2e/qoder-same-tick-double-tap-plans-once.spec.ts
+M	frontend/src/features/planning/PlanWithAiSheet.tsx
+M	frontend/src/styles.css
+A	review/ord0246_kill_arms.py
+A	review/ord0247_kill_arms.py
