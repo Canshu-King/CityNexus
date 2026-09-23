@@ -1,0 +1,159 @@
+{
+ "at": "2026-09-23T22:37:44+08:00",
+ "what": "ORD-0263 measured on the LANDED generation (tip 2b49e3ca) - coordinates index",
+ "lane": "HARNESS d291c9dc",
+ "subject": "landed generation index-Cpy_jhEg.js / index-I45CQek8.css (tip 2b49e3ca, ORD-0263 shipped) measured on my own face :4415 with my backend :8411",
+ "authority_tip": "2b49e3ca",
+ "new_path_only": {
+  "repo_dir": "evidence/ord0263-landedgen",
+  "old_paths_touched": [],
+  "note": "the earlier evidence/ord0263/ and evidence/ord0254/ blobs are left exactly as published"
+ },
+ "name_guard": {
+  "naming_this_round": "landedgen is deliberate. The publisher guard also scans the LOCAL filename and it once refused a whole batch of mine over the fragment _live hidden inside a different name (rc=5), after which every read-back came back 404 and looked exactly like propagation noise. Names here avoid that fragment; if a row still comes back PUBLISHED_UNPROVEN, the publisher line gets re-read before any theory about GitHub.",
+  "what_i_did_not_do": "the fragment list was not weakened and no content was stripped to pass it"
+ },
+ "generation_fingerprint": {
+  "files": 32,
+  "bytes": 16818701,
+  "tree_sha256": "074267d90c499b7102d19b4c9c618e4e3f3c5f9e83441f9c2d860076cda312d1",
+  "named_asset": "assets/index-Cpy_jhEg.js",
+  "named_asset_sha256": "5d674a444291f10b45fa50dc53f57845c888013bc3d941f6fc6d0f9f5ad7b2d7",
+  "matches_the_number_the_commander_gave": true,
+  "read_only_source": true,
+  "rebuilt": false
+ },
+ "result": {
+  "arms": "S1 GREEN; V1_origin_error_5xx RED; V1_vacuity GREEN; V2_no_answer RED; V3_distinctness RED; V4_silent_read_answered_health RED",
+  "derived_result": "RED_CELLS: V1_origin_error_5xx,V2_no_answer,V3_distinctness,V4_silent_read_answered_health",
+  "red_cell_count": 4,
+  "one_line_for_the_generation_decision": "现网这一代上 0263 四臂 4 红（只有 S1 正常）：不再冤枉网络，但没有一格把设备上真实存在的已保存行程交给用户，源站沉默时用户 84 s 全程卡在骨架屏且 0 个按钮"
+ },
+ "external_readability": "these blobs only; the release tip and B's branch are NOT claimed readable from here (B's branch prints no ls-remote line at all)",
+ "files_requested": 11,
+ "proven_by_40char_readback": 11,
+ "not_proven": [],
+ "rows": [
+  {
+   "local_file": "ORD_0263_LANDEDGEN.md",
+   "repo_path": "evidence/ord0263-landedgen/ORD_0263_LANDEDGEN.md",
+   "bytes": 6926,
+   "blob40": "d66f21f5e607932b41be36106e782c8da337acee",
+   "readback_status": 200,
+   "readback_bytes": 6926,
+   "readback_blob40": "d66f21f5e607932b41be36106e782c8da337acee",
+   "verdict": "PROVEN",
+   "publisher_tail": "local bytes 6926 | remote size 6926 | sha1 d66f21f5e607932b"
+  },
+  {
+   "local_file": "ord0263_capture_landedgen.json",
+   "repo_path": "evidence/ord0263-landedgen/ord0263_capture_landedgen.json",
+   "bytes": 11413,
+   "blob40": "02179ad4876ca7e06e255aecbd8395328909e29c",
+   "readback_status": 200,
+   "readback_bytes": 11413,
+   "readback_blob40": "02179ad4876ca7e06e255aecbd8395328909e29c",
+   "verdict": "PROVEN",
+   "publisher_tail": "local bytes 11413 | remote size 11413 | sha1 02179ad4876ca7e0"
+  },
+  {
+   "local_file": "ord0263_verdict_ord0263_capture_landedgen.json",
+   "repo_path": "evidence/ord0263-landedgen/ord0263_verdict_ord0263_capture_landedgen.json",
+   "bytes": 2421,
+   "blob40": "81153dab7156890df77f1909a496732500f475bf",
+   "readback_status": 200,
+   "readback_bytes": 2421,
+   "readback_blob40": "81153dab7156890df77f1909a496732500f475bf",
+   "verdict": "PROVEN",
+   "publisher_tail": "local bytes 2421 | remote size 2421 | sha1 81153dab7156890d"
+  },
+  {
+   "local_file": "ord0263_landedgen_surface_receipt.json",
+   "repo_path": "evidence/ord0263-landedgen/ord0263_landedgen_surface_receipt.json",
+   "bytes": 1690,
+   "blob40": "f73ad295ab4212519b84f37eefe6fb933ac460d1",
+   "readback_status": 200,
+   "readback_bytes": 1690,
+   "readback_blob40": "f73ad295ab4212519b84f37eefe6fb933ac460d1",
+   "verdict": "PROVEN",
+   "publisher_tail": "local bytes 1690 | remote size 1690 | sha1 f73ad295ab421251"
+  },
+  {
+   "local_file": "ord0263_landedgen_teardown_receipt.json",
+   "repo_path": "evidence/ord0263-landedgen/ord0263_landedgen_teardown_receipt.json",
+   "bytes": 2284,
+   "blob40": "346e3663e4bb6f0923f347516e8c3eaa87abb5a0",
+   "readback_status": 200,
+   "readback_bytes": 2284,
+   "readback_blob40": "346e3663e4bb6f0923f347516e8c3eaa87abb5a0",
+   "verdict": "PROVEN",
+   "publisher_tail": "local bytes 2284 | remote size 2284 | sha1 346e3663e4bb6f09"
+  },
+  {
+   "local_file": "ord0263_origin_state_answered_health.log",
+   "repo_path": "evidence/ord0263-landedgen/ord0263_origin_state_answered_health.log",
+   "bytes": 7166,
+   "blob40": "cdc8b21bafb09f0e5374b0a66a30b27770ba5eee",
+   "readback_status": 200,
+   "readback_bytes": 7166,
+   "readback_blob40": "cdc8b21bafb09f0e5374b0a66a30b27770ba5eee",
+   "verdict": "PROVEN",
+   "publisher_tail": "local bytes 7166 | remote size 7166 | sha1 cdc8b21bafb09f0e"
+  },
+  {
+   "local_file": "ord0263_origin_state_fully_silent.log",
+   "repo_path": "evidence/ord0263-landedgen/ord0263_origin_state_fully_silent.log",
+   "bytes": 12564,
+   "blob40": "ff65d5c32f6c16a66d18ddbd15285b4d2264fbe3",
+   "readback_status": 200,
+   "readback_bytes": 12564,
+   "readback_blob40": "ff65d5c32f6c16a66d18ddbd15285b4d2264fbe3",
+   "verdict": "PROVEN",
+   "publisher_tail": "local bytes 12564 | remote size 12564 | sha1 ff65d5c32f6c16a6"
+  },
+  {
+   "local_file": "tools/origin_hang_no_close.py",
+   "repo_path": "evidence/ord0263-landedgen/origin_hang_no_close.py",
+   "bytes": 5839,
+   "blob40": "e4cccffca7ab26a7d76c12300d9d403a5d98c36c",
+   "readback_status": 200,
+   "readback_bytes": 5839,
+   "readback_blob40": "e4cccffca7ab26a7d76c12300d9d403a5d98c36c",
+   "verdict": "PROVEN",
+   "publisher_tail": "local bytes 5839 | remote size 5839 | sha1 e4cccffca7ab26a7"
+  },
+  {
+   "local_file": "tools/build_landedgen_capture.py",
+   "repo_path": "evidence/ord0263-landedgen/build_landedgen_capture.py",
+   "bytes": 15643,
+   "blob40": "4f2f63b75ef624e7e67e003fcb37eb135dc7a27c",
+   "readback_status": 200,
+   "readback_bytes": 15643,
+   "readback_blob40": "4f2f63b75ef624e7e67e003fcb37eb135dc7a27c",
+   "verdict": "PROVEN",
+   "publisher_tail": "local bytes 15643 | remote size 15643 | sha1 4f2f63b75ef624e7"
+  },
+  {
+   "local_file": "tools/start_landedgen_surface.py",
+   "repo_path": "evidence/ord0263-landedgen/start_landedgen_surface.py",
+   "bytes": 8304,
+   "blob40": "b2dec5275746abad2bb26065199827168bb395f1",
+   "readback_status": 200,
+   "readback_bytes": 8304,
+   "readback_blob40": "b2dec5275746abad2bb26065199827168bb395f1",
+   "verdict": "PROVEN",
+   "publisher_tail": "local bytes 8304 | remote size 8304 | sha1 b2dec5275746abad"
+  },
+  {
+   "local_file": "tools/teardown_landedgen.py",
+   "repo_path": "evidence/ord0263-landedgen/teardown_landedgen.py",
+   "bytes": 6055,
+   "blob40": "6a5ea721c69a50f5bfed2c9af9e597a9c6649f40",
+   "readback_status": 200,
+   "readback_bytes": 6055,
+   "readback_blob40": "6a5ea721c69a50f5bfed2c9af9e597a9c6649f40",
+   "verdict": "PROVEN",
+   "publisher_tail": "local bytes 6055 | remote size 6055 | sha1 6a5ea721c69a50f5"
+  }
+ ]
+}
