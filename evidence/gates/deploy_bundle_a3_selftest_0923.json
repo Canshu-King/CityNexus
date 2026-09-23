@@ -1,0 +1,81 @@
+{
+ "what": "deploy_bundle.py asset-gauge selftest (true positives + the two killers)",
+ "why": "arbiter 5781096542 (verdict assigned twice, lax one won) + 5788111742 A-3 (a comparison against an absent side is not a comparison)",
+ "base": "http://127.0.0.1:4781",
+ "serve": "D:\\moodle\\_qoder_preview_20260920\\dist",
+ "overall": "GREEN",
+ "arms": [
+  {
+   "arm": "true_positive:/assets/index-DtQ86lsQ.js",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "status": 200,
+   "content_type": "text/javascript",
+   "is_html_fallback": false,
+   "body_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+   "disk_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+   "body_size": 1231985,
+   "disk_bytes": 1231985
+  },
+  {
+   "arm": "true_positive:/assets/index-cWMF3pBW.css",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "status": 200,
+   "content_type": "text/css",
+   "is_html_fallback": false,
+   "body_sha256": "681c4b5fae6c423ba82553bee732f7d5794af6c7934f0ecb10623e4a44731d31",
+   "disk_sha256": "681c4b5fae6c423ba82553bee732f7d5794af6c7934f0ecb10623e4a44731d31",
+   "body_size": 183233,
+   "disk_bytes": 183233
+  },
+  {
+   "arm": "killer:wrong_mime_non_html(/manifest.webmanifest as js)",
+   "expect": "RED",
+   "got": "RED",
+   "status": 200,
+   "content_type": "application/manifest+json",
+   "is_html_fallback": false,
+   "body_sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0",
+   "disk_sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0",
+   "body_size": 314,
+   "disk_bytes": 314
+  },
+  {
+   "arm": "killer:missing_asset_spa_html_fallback",
+   "expect": "RED",
+   "got": "RED",
+   "status": 200,
+   "content_type": "text/html",
+   "is_html_fallback": true,
+   "body_sha256": "8c6405e97932642ddd8c41aef2814bc383f240f4b5a8b6051fa74da6394f951e",
+   "disk_sha256": null,
+   "body_size": 1200,
+   "disk_bytes": null
+  },
+  {
+   "arm": "killer:served_but_absent_on_disk(/assets/index-DtQ86lsQ.js)",
+   "expect": "RED",
+   "got": "RED",
+   "status": 200,
+   "content_type": "text/javascript",
+   "is_html_fallback": false,
+   "body_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+   "disk_sha256": null,
+   "body_size": 1231985,
+   "disk_bytes": null
+  },
+  {
+   "arm": "B1:live_index_refs_all_resolve",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "status": 200,
+   "content_type": "text/html",
+   "is_html_fallback": true,
+   "body_sha256": "8c6405e97932642ddd8c41aef2814bc383f240f4b5a8b6051fa74da6394f951e",
+   "disk_sha256": null,
+   "body_size": 1200,
+   "disk_bytes": null
+  }
+ ]
+}
