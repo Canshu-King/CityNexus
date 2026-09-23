@@ -1,0 +1,103 @@
+{
+ "at": "2026-09-23T17:38:56+08:00",
+ "order": "ORD-0263 (narrowed scope + verifier)",
+ "lane": "HARNESS d291c9dc",
+ "dir": "evidence/ord0263",
+ "ruler": "7f2a2f0aea393c91069c789a4d5e8fac83fca5a1 (96,631 B, branch tip)",
+ "red_finding_1_verdict": "NOT_REPRODUCED_ON_7f2a2f0a (rc=0, crash=False, OVERALL GREEN, F_proxy_tunnel=GREEN)",
+ "verdicts_computed": {
+  "V1_origin_error_5xx": "RED",
+  "V2_no_answer": "RED",
+  "V3_distinctness": "RED",
+  "S1_live": "GREEN",
+  "verifier_selftest": "7/7 GREEN (3 killers + A-3 NOT_MEASURED witness)"
+ },
+ "files": 8,
+ "proven_by_40char_readback": 7,
+ "not_proven": [
+  "ord0263_verdict_on_live_capture.json"
+ ],
+ "rows": [
+  {
+   "file": "ORD_0263_VERIFIER_AND_SCOPE.md",
+   "repo_path": "evidence/ord0263/ORD_0263_VERIFIER_AND_SCOPE.md",
+   "bytes": 5396,
+   "blob40": "c07fee39146bb81b67e9253e1d2b52b5bfcdd728",
+   "readback_status": "200",
+   "readback_bytes": 5396,
+   "verdict": "PROVEN",
+   "tail": "local bytes 5396 | remote size 5396 | sha1 c07fee39146bb81b"
+  },
+  {
+   "file": "ord0263_verifier.py",
+   "repo_path": "evidence/ord0263/ord0263_verifier.py",
+   "bytes": 12642,
+   "blob40": "ed8a61dc79d87cc2acf18ef93ecca7caf89b4b83",
+   "readback_status": "200",
+   "readback_bytes": 12642,
+   "verdict": "PROVEN",
+   "tail": "local bytes 12642 | remote size 12642 | sha1 ed8a61dc79d87cc2"
+  },
+  {
+   "file": "ord0263_verifier_selftest.json",
+   "repo_path": "evidence/ord0263/ord0263_verifier_selftest.json",
+   "bytes": 2677,
+   "blob40": "d8a6f27daacde4e7ab989559f40fe7d6b4819859",
+   "readback_status": "200",
+   "readback_bytes": 2677,
+   "verdict": "PROVEN",
+   "tail": "local bytes 2677 | remote size 2677 | sha1 d8a6f27daacde4e7"
+  },
+  {
+   "file": "ord0263_verdict_on_live_capture.json",
+   "repo_path": "evidence/ord0263/ord0263_verdict_on_live_capture.json",
+   "bytes": 1553,
+   "blob40": "e2070caecfebfaed958930095c7b7fc507b1a273",
+   "readback_status": "404",
+   "readback_bytes": 0,
+   "verdict": "NOT_PROVEN",
+   "tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\ord0263_verdict_on_live_capture.json  repo_path=evidence/ord0263/ord0263_verdict_on_live_capture.json  bytes="
+  },
+  {
+   "file": "ord0263_capture_measured.json",
+   "repo_path": "evidence/ord0263/ord0263_capture_measured.json",
+   "bytes": 1527,
+   "blob40": "1f0259cec9c179f29a752d9516424f6adbef6943",
+   "readback_status": "200",
+   "readback_bytes": 1527,
+   "verdict": "PROVEN",
+   "tail": "local bytes 1527 | remote size 1527 | sha1 1f0259cec9c179f2"
+  },
+  {
+   "file": "ord0263_v6_deploy_gauge_receipt.json",
+   "repo_path": "evidence/ord0263/ord0263_v6_deploy_gauge_receipt.json",
+   "bytes": 67166,
+   "blob40": "54b18b6efe337bead44714243ccb9b7635ba5a1a",
+   "readback_status": "200",
+   "readback_bytes": 67166,
+   "verdict": "PROVEN",
+   "tail": "local bytes 67166 | remote size 67166 | sha1 54b18b6efe337bea"
+  },
+  {
+   "file": "ord0263_witness_r_release_walk_0923_1723.json",
+   "repo_path": "evidence/ord0263/ord0263_witness_r_release_walk_0923_1723.json",
+   "bytes": 2390,
+   "blob40": "34c6aaab1584132ec3a4bab22bf771119177b2e8",
+   "readback_status": "200",
+   "readback_bytes": 2390,
+   "verdict": "PROVEN",
+   "tail": "local bytes 2390 | remote size 2390 | sha1 34c6aaab1584132e"
+  },
+  {
+   "file": "ord0263_witness_e_closeout_selftest_0923.json",
+   "repo_path": "evidence/ord0263/ord0263_witness_e_closeout_selftest_0923.json",
+   "bytes": 21085,
+   "blob40": "9b5726a4f1d45eeef82c412550ccadab9283365d",
+   "readback_status": "200",
+   "readback_bytes": 21085,
+   "verdict": "PROVEN",
+   "tail": "local bytes 21085 | remote size 21085 | sha1 9b5726a4f1d45eee"
+  }
+ ],
+ "name_reuse_note": "the v5 and v6 deploy runs shared one local filename; both are published separately (ord0263_v5_*/ord0263_v6_*) recovered from the gauge's timestamped receipts, so no published coordinate ever points at a different run than the one its index row described"
+}
