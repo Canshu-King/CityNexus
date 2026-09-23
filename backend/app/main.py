@@ -10,6 +10,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from threading import RLock
+from types import SimpleNamespace
 from typing import Any
 from uuid import NAMESPACE_URL, UUID, uuid4, uuid5
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -386,12 +387,14 @@ from app.planning.authoritative_v12 import compose_authoritative_multiday
 from app.stay_generation_operations import (
     ABANDONED,
     FAILED,
+    QUEUED,
     GenerationStoreBusy,
     abandon_operation,
     operation_payload,
     operations_for_journey,
     read_operation,
     reconcile_interrupted_operations,
+    retry_after_ms as generation_retry_after_ms,
     submit_operation,
     wait_for_operation,
 )
@@ -607,6 +610,70 @@ async def temporal_rejection(_: Request, exc: ValueError) -> JSONResponse:
         details=details,
         message_key=TEMPORAL_MESSAGE_KEYS[code],
     )
+
+
+# ORD-0262-NARROW: a write contention this code can *name* has to answer inside the envelope
+# the product already owns.  A bare 500 with `Internal Server Error` tells the traveller
+# nothing and the screen then invents a cause of its own.  Anything not on this list is
+# re-raised on purpose: an unclassified failure keeps its 500, or the contract becomes a
+# laundering machine - the same rule TEMPORAL_REJECTIONS above sets for ValueError.
+CONTENTION_UNIQUE_ROWS = frozenset({"traveler_agent_policies.traveler_id"})
+CONTENTION_LOCK_MARKERS = ("database is locked", "database is busy")
+
+
+def _contention_of(exc: Exception) -> str | None:
+    """Which recognised, reproducible controlled cause is this?  None ⇒ not ours to name."""
+
+    if isinstance(exc, IntegrityError):
+        claimed = str(getattr(exc, "orig", exc)).rpartition("UNIQUE constraint failed:")[2]
+        claimed = claimed.splitlines()[0].strip() if claimed else ""
+        if claimed in CONTENTION_UNIQUE_ROWS:
+            return f"unique_row_already_claimed:{claimed}"
+        return None
+    if isinstance(exc, OperationalError) and any(
+        marker in str(exc).casefold() for marker in CONTENTION_LOCK_MARKERS
+    ):
+        return "sqlite_write_lock_busy"
+    return None
+
+
+def _contention_retry_after_ms() -> int:
+    """Ask the generation ladder what it would tell a poller *now*, instead of copying a number.
+
+    `retry_after_ms` reads exactly `status` and `queued_at`, and the case here is "a write is
+    busy at this instant" - a non-terminal job that just started.  Deriving the hint keeps
+    this from becoming a fourth copy of the 500 literal the three raise sites already carry.
+    """
+    return generation_retry_after_ms(
+        SimpleNamespace(status=QUEUED, queued_at=datetime.now(timezone.utc).isoformat())
+    )
+
+
+def _contention_response(reason: str) -> JSONResponse:
+    return error(
+        "GENERATION_STORE_BUSY",
+        "Another generation is writing right now; this one was not recorded. Try again.",
+        status=503,
+        details={"retry_after_ms": _contention_retry_after_ms(), "contention": reason},
+        message_key="generation.store_busy",
+        reason_code=reason,
+    )
+
+
+@app.exception_handler(IntegrityError)
+async def claimed_unique_row(_: Request, exc: IntegrityError) -> JSONResponse:
+    reason = _contention_of(exc)
+    if reason is None:
+        raise exc
+    return _contention_response(reason)
+
+
+@app.exception_handler(OperationalError)
+async def busy_write_lock(_: Request, exc: OperationalError) -> JSONResponse:
+    reason = _contention_of(exc)
+    if reason is None:
+        raise exc
+    return _contention_response(reason)
 
 
 def require(session: Session, model: type, identifier: str, label: str):
