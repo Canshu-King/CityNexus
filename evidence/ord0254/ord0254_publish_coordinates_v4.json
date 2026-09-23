@@ -10,8 +10,8 @@
   "live_preflight": "0ee0bf612bcf8cda51c1d0a39ea398a9d8141df1"
  },
  "candidate_tip": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df",
- "files_requested": 15,
- "proven_by_40char_readback": 14,
+ "files_requested": 19,
+ "proven_by_40char_readback": 18,
  "not_proven": [
   "ord0254_witness_preflight_live.json"
  ],
@@ -178,6 +178,41 @@
    "readback_blob40": "7e795eb04c0d14d1b780bda55f39ea652926b763",
    "verdict": "PROVEN",
    "publisher_commit": "a9c5ac7cb771"
+  },
+  {
+   "file": "ord0254_witness_preflight_check_1327.json",
+   "repo_path": "evidence/ord0254/ord0254_witness_preflight_check_1327.json",
+   "local_bytes": 25981,
+   "local_blob40": "0ee0bf612bcf8cda51c1d0a39ea398a9d8141df1",
+   "verdict": "PROVEN",
+   "already_on_branch": true
+  },
+  {
+   "file": "ord0254_v4_bus_receipt.json",
+   "repo_path": "evidence/ord0254/ord0254_v4_bus_receipt.json",
+   "local_bytes": 282,
+   "local_blob40": "121c53b001e9207feec261296237656d7dc9d411",
+   "verdict": "PROVEN",
+   "already_on_branch": false
+  },
+  {
+   "file": "ord0254_v4_preflight_summary.json",
+   "repo_path": "evidence/ord0254/ord0254_v4_preflight_summary.json",
+   "local_bytes": 866,
+   "local_blob40": "6d584bb508121f3749b0eda4ef80be3ba955a592",
+   "verdict": "PROVEN",
+   "already_on_branch": false
+  },
+  {
+   "file": "ord0254_publish_coordinates_v4.json",
+   "repo_path": "evidence/ord0254/ord0254_publish_coordinates_v4.json",
+   "local_bytes": 6892,
+   "local_blob40": "dd2b9b2c1560a58d09e22749641db77d454169a7",
+   "verdict": "PROVEN",
+   "already_on_branch": true
   }
- ]
+ ],
+ "updated_at": "2026-09-23T15:52:47+08:00",
+ "note_renamed_witness": "ord0254_witness_preflight_live.json was refused by the publisher's name guard (_live); it is published as ..._preflight_check_1327.json with identical bytes (blob 0ee0bf612bcf8cda51c1d0a39ea398a9d8141df1), so nothing on the branch is a different artifact from the one the commander signed",
+ "withdrawn_finding": "red-finding-1 (KeyError 'verdict' at lines 654/669/737) is WITHDRAWN for ruler a886329fe1ee8d72: both F branches now store a top-level verdict and main() completed a deploy with both bases configured (F=GREEN, receipt 6ed3f934dc271cac)"
 }
