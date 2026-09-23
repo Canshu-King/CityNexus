@@ -1,0 +1,338 @@
+{
+  "order": "ORD-0242",
+  "group": "B2",
+  "surface": "canary @4185/8713",
+  "run_label": "smkB3",
+  "pid": 26088,
+  "started_at": "2026-09-23T11:18:08.545Z",
+  "menuTap": {
+    "found": true,
+    "label": "菜单",
+    "rect": [
+      17,
+      19,
+      46,
+      27
+    ],
+    "point": [
+      40,
+      33
+    ],
+    "inViewport": true,
+    "hitTag": "BUTTON",
+    "hitCls": "v8-mobile-menu",
+    "pointHitsThisButton": true,
+    "tappedByTouch": true
+  },
+  "drawerGeometry": {
+    "present": true,
+    "count": 14,
+    "sample": [
+      {
+        "t": "关闭",
+        "x": 241,
+        "y": 18,
+        "w": 32,
+        "h": 44,
+        "inViewport": true,
+        "hitSelf": true
+      },
+      {
+        "t": "今天",
+        "x": 14,
+        "y": 114,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": true
+      },
+      {
+        "t": "实时行程",
+        "x": 14,
+        "y": 422,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": true
+      },
+      {
+        "t": "地图",
+        "x": 14,
+        "y": 730,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": false
+      },
+      {
+        "t": "行程工作台",
+        "x": 14,
+        "y": 1064,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": false
+      },
+      {
+        "t": "住宿选择",
+        "x": 14,
+        "y": 1372,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": false
+      },
+      {
+        "t": "城市探索",
+        "x": 14,
+        "y": 1680,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": false
+      },
+      {
+        "t": "旅行票夹",
+        "x": 14,
+        "y": 2014,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": false
+      },
+      {
+        "t": "Copilot",
+        "x": 14,
+        "y": 2322,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": false
+      },
+      {
+        "t": "恢复与执行",
+        "x": 14,
+        "y": 2656,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": false
+      },
+      {
+        "t": "智能守护",
+        "x": 14,
+        "y": 2964,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": false
+      },
+      {
+        "t": "旅行者画像",
+        "x": 14,
+        "y": 3272,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": false
+      },
+      {
+        "t": "行程",
+        "x": 14,
+        "y": 3580,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": false
+      },
+      {
+        "t": "我的",
+        "x": 14,
+        "y": 3888,
+        "w": 271,
+        "h": 292,
+        "inViewport": true,
+        "hitSelf": false
+      }
+    ],
+    "drawerRect": [
+      0,
+      0,
+      300,
+      844
+    ],
+    "drawerPosition": "fixed"
+  },
+  "simTap": {
+    "found": true,
+    "label": "恢复与执行",
+    "rect": [
+      14,
+      276,
+      271,
+      292
+    ],
+    "point": [
+      150,
+      422
+    ],
+    "inViewport": true,
+    "hitTag": "svg",
+    "hitCls": "[object",
+    "pointHitsThisButton": true,
+    "tappedByTouch": true
+  },
+  "simRead": {
+    "url": "/v8/authoritative",
+    "h1": "权威行程执行。",
+    "body": "菜单 / 恢复与执行 跟随系统 EN DE V12 · 方案、移动端、EDGE 与画像 权威行程执行。 你选定的方案是今天、地图、离线使用和所有建议变更的唯一事实来源。 刷新真相 权威行程 从方案到边缘的单一真相 冻结证据 现在 Riverside Museum 已到达 下一步 Central Food Hall PLANNED 12:15 Old Town Gate 已完成 2 Riverside Museum 已到达 3 Central Food Hall PLANNED 4 Tech Art Center PLANNED 5 Nexus River Cruise Pier PLANNED 6 Skyline Dinner House PLANNED 服务端执行真相 · 可审计 标记 进行中 行程工作台 · 起草后接受 调整权威行程 在相同的冻结出行矩阵上重排普通活动。受保护锚点保持不动。 相同证据 6 个活动 1 个受保护锚点 无草稿变更 • Old Town Gate ○ Riverside Museum ○ Central Food Hall ○ Tech Art Center ○ Nexus River Cruise Pier ○ Skyline Dinner House 锁定/受保护位置为确定性 预览无状态；接受将重新检查活跃方案和证据 PlanVersion 7 · REPLAN 预览影响 接受编辑 V14 · REALITY CHANGED Grounded adaptive recovery Refresh recovery CHANGED Current activity → recovered activity PROTECTED C4 commitments preserved No cost change · 0 min route delta Baseline evidence 71e7a07b-7b95-4cff-a723-79aa621f5d6b Incident evidence mock-mobility · RUNTIME_CAPTURE Deterministic gate PASSED · provider facts frozen Delegation policy ADVISORY · confirmation required The event contains a server-validated Activity reference. ACCEPTED CHILD PLANVERSION · CCAF82B0-33D4-4FEE-8308-A56148DA9B47 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+    "buttons": [
+      "菜单",
+      "跟随系统",
+      "EN",
+      "DE",
+      "刷新真相",
+      "✦ CityNexus Copilot",
+      "今天",
+      "行程",
+      "地图",
+      "Copilot",
+      "我的"
+    ]
+  },
+  "simReached": true,
+  "simPanel": {
+    "actionCount": 15,
+    "actions": [
+      "菜单",
+      "跟随系统",
+      "EN",
+      "DE",
+      "刷新真相",
+      "标记 进行中",
+      "预览影响",
+      "接受编辑",
+      "Refresh recovery",
+      "✦ CityNexus Copilot",
+      "今天",
+      "行程",
+      "地图",
+      "Copilot",
+      "我的"
+    ]
+  },
+  "closeTap": {
+    "found": false,
+    "test": "hasBox",
+    "candidates": []
+  },
+  "backToToday": {
+    "found": true,
+    "label": "今天",
+    "rect": [
+      5,
+      789,
+      76,
+      48
+    ],
+    "point": [
+      43,
+      813
+    ],
+    "inViewport": true,
+    "hitTag": "BUTTON",
+    "hitCls": "",
+    "pointHitsThisButton": true,
+    "tappedByTouch": true
+  },
+  "todayAgain": {
+    "url": "/v8/hub",
+    "h1": "Demo之旅",
+    "body": "菜单 / 今天 跟随系统 EN DE 晚上好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Riverside Museum 接下来 12:15 Central Food Hall 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 需要关注 已处理 刚才的变化已经处理好。 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+    "buttons": [
+      "菜单",
+      "跟随系统",
+      "EN",
+      "DE",
+      "AI 帮我规划",
+      "试用其他城市",
+      "打开行程工作台",
+      "查看实时行程",
+      "✦ CityNexus Copilot",
+      "今天",
+      "行程",
+      "地图",
+      "Copilot",
+      "我的"
+    ]
+  },
+  "onToday": true,
+  "behindDrawer": {
+    "present": true,
+    "point": [
+      51,
+      222
+    ],
+    "hitTag": "BUTTON",
+    "hitCls": "v8-quiet-button",
+    "drawerStillUp": false
+  },
+  "aiTap": {
+    "found": true,
+    "label": "AI 帮我规划",
+    "rect": [
+      17,
+      200,
+      68,
+      44
+    ],
+    "point": [
+      51,
+      222
+    ],
+    "inViewport": true,
+    "hitTag": "BUTTON",
+    "hitCls": "v8-quiet-button",
+    "pointHitsThisButton": true,
+    "tappedByTouch": true
+  },
+  "aiSheet": {
+    "url": "/v8/hub",
+    "h1": "Demo之旅",
+    "body": "菜单 / 今天 跟随系统 EN DE 晚上好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Riverside Museum 接下来 12:15 Central Food Hall 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 需要关注 已处理 刚才的变化已经处理好。 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 ✦ CityNexus Copilot AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划 今天 行程 地图 Copilot 我的",
+    "buttons": [
+      "菜单",
+      "跟随系统",
+      "EN",
+      "DE",
+      "AI 帮我规划",
+      "试用其他城市",
+      "打开行程工作台",
+      "查看实时行程",
+      "✦ CityNexus Copilot",
+      "×",
+      "我想去Central Food Ha…",
+      "Central Food Hall排…",
+      "稍后",
+      "开始规划",
+      "今天",
+      "行程",
+      "地图",
+      "Copilot",
+      "我的"
+    ]
+  },
+  "aiSheetReached": false,
+  "reached": {
+    "Today": true
+  },
+  "net": [],
+  "verdicts": {
+    "Simulation": "COMPATIBLE",
+    "AI": "NOT_REACHED"
+  },
+  "httpNamed_4xx": [],
+  "ended_at": "2026-09-23T11:18:41.585Z",
+  "console": [],
+  "pageErrors": []
+}
