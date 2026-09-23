@@ -1,0 +1,2 @@
+6daceb19d36691000f19189f8ebd51067e225643 a0fbe030494a027de85c92f462e1e1d4ea6c2a42 2026-09-23 17:10:54 +0800 fix(frontend): reserve the sticky bar's height and bring the advanced opener into reach (ORD-0261, ORD-0264)
+a0fbe030494a027de85c92f462e1e1d4ea6c2a42 dea8410be809ebf6c5046581873584e9dbf32b64 2026-09-23 16:52:37 +0800 test(e2e): ORD-0261 read-only reproduction - enumerate labelled controls and record true centre hits
