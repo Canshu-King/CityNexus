@@ -114,6 +114,11 @@ test("ord0250-1-a-refused-press-leaves-a-reason-on-the-screen — 点了不说�
   expect(onScreen.insideSrOnly, node("ord0250-1", "the reason is screen-reader-only, so nobody sees why")).toBe(false);
 
   expect(counter.posts(), node("ord0250-1", "a refused press issued a request after all")).toBe(0);
+  /* Looked-at evidence, not just asserted evidence: the run id is in the name because a second pass
+     must not overwrite the picture this reading belongs to. */
+  await page.screenshot({
+    path: evidencePath(`ui-overnight/ord0250-hint-${process.env.CITYNEXUS_E2E_RUN_ID ?? "dev"}.png`),
+  });
   expect(
     (await input(page).inputValue()) === "",
     node("ord0250-1", "the field was filled in for the traveller to make this assertion pass"),

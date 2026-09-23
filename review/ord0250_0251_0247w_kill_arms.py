@@ -96,6 +96,18 @@ ARMS = [
         "ord0251-1",
     ),
     (
+        "killK1b-state-stops-saying-what-it-means",
+        "ORD-0251",
+        B,
+        A,
+        CARD,
+        '      <p>{message ?? t(keys ? keys.help : "push.checking")}</p>\n',
+        '      <p>{message ?? t("push.checking")}</p>\n',
+        "added after the v1 pass: K1 reddens nodes 1 AND 2 (an echo breaks both readings), so node 1 needed "
+        "a mutant of its own -- a status line that names a state but never says what it means for the traveller",
+        "ord0251-1",
+    ),
+    (
         "killK2-unknown-label-wears-a-known-sentence",
         "ORD-0251",
         B,

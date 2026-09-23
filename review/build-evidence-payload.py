@@ -102,6 +102,39 @@ PLAN = {
         "ORD-0247",
         "ord0247-arms-v2.json",
     ),
+    # ORD-0250 / ORD-0251 / ORD-0247-widened shipped as one batch (0fd3cc7) and their nine arms ran in
+    # a single pass, so all three entries carry the SAME shared receipt file -- it is not three runs.
+    "ord0250": (
+        ["0fd3cc7"],
+        [],
+        [
+            ("../ord0250-refused-press-reading.json", "gate-refused-press.json"),
+            ("../ord0250-length-boundary.json", "gate-length-boundary.json"),
+        ],
+        "ORD-0250",
+        "ord0250-0251-0247w-arms-v2.json",
+    ),
+    "ord0251": (
+        ["0fd3cc7"],
+        [],
+        [
+            ("../ord0251-push-card-reading.json", "gate-push-card-reading.json"),
+            ("../ord0251-unknown-label-reading.json", "gate-unknown-label-reading.json"),
+            ("../ord0251-plan-count-attribute.json", "gate-plan-count-attribute.json"),
+        ],
+        "ORD-0251",
+        "ord0250-0251-0247w-arms-v2.json",
+    ),
+    "ord0247w": (
+        ["0fd3cc7"],
+        [],
+        [
+            ("../ord0247w-mobile-summary-inventory.json", "gate-mobile-summary-inventory.json"),
+            ("../ord0247w-desktop-summary-inventory.json", "gate-desktop-summary-inventory.json"),
+        ],
+        "ORD-0247 (widened: the whole <summary> class)",
+        "ord0250-0251-0247w-arms-v2.json",
+    ),
 }
 
 

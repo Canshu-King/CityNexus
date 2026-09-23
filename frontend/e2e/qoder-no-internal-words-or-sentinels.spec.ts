@@ -100,6 +100,9 @@ test("ord0251-1-the-push-card-says-the-state-in-plain-words — 状态句不得�
     ).toBe(false);
   }
   expect(await card.getAttribute("data-capability")).toBe("RECORD_ONLY");
+  await card.screenshot({
+    path: evidencePath(`ui-overnight/ord0251-push-card-${process.env.CITYNEXUS_E2E_RUN_ID ?? "dev"}.png`),
+  });
 
   writeFileSync(
     evidencePath("ord0251-push-card-reading.json"),
