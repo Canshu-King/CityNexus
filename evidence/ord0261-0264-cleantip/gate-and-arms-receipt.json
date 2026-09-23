@@ -1,0 +1,51 @@
+{
+ "generatedBy": "e345b9d6",
+ "clean_tip": "171c0fb41b36a79782e80ca5033a93e527b73e27",
+ "base": "dea8410",
+ "branch": "review/ord0261-0264-gate-v2clean (local, ready to push)",
+ "file_set": "exactly 6 files - the two product changes, two gate specs, arms driver, run_spec lane-root override",
+ "excluded_vs_e3b0b47": "7 review/_bus_*.md bodies + 3 chore commits (bus text lives on the bus, not the repo)",
+ "product_bytes": [
+  {
+   "file": "frontend/src/styles.css",
+   "blob_6daceb1": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+   "blob_171c0fb": "b942bf640365c013fa02897f19e8a34b5c9d9c46"
+  },
+  {
+   "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "blob_6daceb1": "cb0a785d7264d98288eef3f463b872aa672fedd3",
+   "blob_171c0fb": "cb0a785d7264d98288eef3f463b872aa672fedd3"
+  }
+ ],
+ "product_bytes_identical": true,
+ "gates_on_clean_tip": {
+  "owner_spec": "3 passed (14.3s) (port 4720)",
+  "arms": [
+   {
+    "name": "K261_REMOVE_STICKY_RESERVE",
+    "claimed_result": "KILLED",
+    "redSet": [
+     "ord0261"
+    ],
+    "anchor_hits": 1,
+    "bytes_changed": true,
+    "restored_exact": true,
+    "baseline": "3 passed (14.9s)",
+    "attempt": "2 passed (13.7s)"
+   },
+   {
+    "name": "K264_MOVE_OPENER_BACK_TO_PAGE_TAIL",
+    "claimed_result": "KILLED",
+    "redSet": [
+     "ord0264"
+    ],
+    "anchor_hits": 1,
+    "bytes_changed": true,
+    "restored_exact": true,
+    "baseline": "3 passed (13.2s)",
+    "attempt": "2 passed (12.7s)"
+   }
+  ],
+  "treeUnchangedByArmsRun": true
+ }
+}
