@@ -1,0 +1,20 @@
+# credential gate v4 (blob a820679f03b3deb9a534a58c8485658672a9ef5a) run log @2026-09-23 19:2x +08
+# interpreter: Python 3.12.14 | tree: e_cred_a1cc0c1 snapshot (backend/tests/test_qoder_credential_literals.py == that blob)
+## shape A: pytest -q  (captured stdout)
+
+7 tests collected in 0.03s
+collect_rc=0
+.......                                                                  [100%]
+7 passed in 5.38s
+plain_rc=0
+## shape B: pytest -q -s  (ç›´å†™æ§åˆ¶å°ï¼›v3 åœ¨è¿™ä¸€å½¢çŠ¶ä¸‹å›  cp936 æ‰“ä¸å‡º U21D2 è€Œçº¢)
+
+[credential-literals ¶ÁÊı±í]
+É¨Ãè²à cardinality£ºÊÜ°æ±¾¿ØÖÆÂ·¾¶ 6898 ¸ö \u21d2 ĞÎ×´ÃüÖĞ 1 ´¦
+ÏÖÒÛ²à cardinality£ºenv Àï¿É±ÈµÄÏÖÒÛÆ¾¾İ 0 °Ñ £¨0 °Ñ \u21d2 ÏàµÈĞÔ NOT_MEASURED£¬²»Ğ´³É²»µÈ£©
+    frontend/e2e/qoder-e2e-config-guard.spec.ts:140 ĞÎ×´=sk-[A-Za-z0-¡­ ³¤¶È=23 Î»ÖÃÖ¸ÎÆ=ed02cc15b114 tokenÖ¸ÎÆ=faca4b0049a4
+      ÅĞ¼¶=DECLARED_NON_LIVE_SAMPLE ÓëÏÖÒÛÆ¾¾İÏàµÈ=NOT_MEASURED
+      ÉùÃ÷=e2e ÅäÖÃÊØÎÀ×Ô¼ºÈû½ø×Ó½ø³Ì»·¾³µÄ**¼Ù** DEEPSEEK_API_KEY£¨ĞÎ×´Õæ¡¢Öµ¼Ù£© £ü ÉùÃ÷Ö¸ÎÆ=faca4b0049a4 £ü ÒÀ¾İ=Í¬ÎÄ¼ş :144 ¶ÏÑÔ `run.status != 0`; Í¬ÎÄ¼ş :145 ¶ÏÑÔ stderr º¬ 'external AI must be off' £ü ÓÉ=commander 494abfd7 ²Ã¶¨ D-2=¼×£»lane F 8ccd71d8 Â¼Èë @2026-09-23
+.......
+7 passed in 4.70s
+dash_s_rc=0
