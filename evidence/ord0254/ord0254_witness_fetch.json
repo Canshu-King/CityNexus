@@ -1,0 +1,64 @@
+{
+ "at": "2026-09-23T14:45:08+08:00",
+ "listed": [],
+ "hits": {
+  "selftest_21_21": {
+   "file": "deploy_bundle_a9_selftest_0923.json",
+   "bytes": 7980,
+   "blob40": "391d59cbd4cb7341f6cdf9fd731fd2dfbd24da13",
+   "overall": "GREEN",
+   "base": "http://127.0.0.1:4781",
+   "arms_total": 21,
+   "arms_matched": 21,
+   "cache_arms": [
+    {
+     "arm": "G-true_positive:precache_resolves(8 urls)",
+     "got": "GREEN",
+     "status": null
+    },
+    {
+     "arm": "G-killer:precache_names_unreachable_asset",
+     "got": "RED",
+     "status": null
+    },
+    {
+     "arm": "G-killer:precache_url_breaks_on_second_probe",
+     "got": "RED",
+     "status": null
+    },
+    {
+     "arm": "G-declared:handwritten_sw_without_precache_array",
+     "got": "DECLARED",
+     "status": null
+    },
+    {
+     "arm": "A9-killer:shell_immutable_is_red",
+     "got": "RED",
+     "status": null
+    },
+    {
+     "arm": "A9-true_positive:real_shell_revalidable",
+     "got": "GREEN",
+     "status": null
+    },
+    {
+     "arm": "A9-scope:hashed_asset_may_stay_immutable",
+     "got": "NOT_SHELL_RECORDED",
+     "status": null
+    }
+   ],
+   "saved": "ord0254_witness_selftest_21_21.json"
+  },
+  "three_surface_retest": {
+   "file": "deploy_bundle_f_surface_probe_round4_0923.json",
+   "bytes": 1190,
+   "blob40": "02459564e6f225a62d75660f1baddb0df12e1c0c",
+   "overall": null,
+   "base": null,
+   "arms_total": 0,
+   "arms_matched": 0,
+   "cache_arms": [],
+   "saved": "ord0254_witness_three_surface_retest.json"
+  }
+ }
+}
