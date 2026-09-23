@@ -1,0 +1,17 @@
+{
+ "generatedBy": "e345b9d6",
+ "node": "ord0253",
+ "posts": [
+  {
+   "index": 1,
+   "keyShape": "v4-uuid"
+  },
+  {
+   "index": 2,
+   "keyShape": "v4-uuid"
+  }
+ ],
+ "keysDistinct": true,
+ "transport": "Idempotency-Key header (replan precedent shape)",
+ "serverReading": "the handler ignores the header today -- semantics (replay/409) are F's half, out of scope here"
+}
