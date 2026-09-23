@@ -1,0 +1,73 @@
+{
+  "lane": "HJ-P3 aad2d1f2",
+  "run_id": "ORD0261-P3-1815",
+  "ordered_by": "commander 2026-09-23, arbiter 5792243086 §2 last paragraph",
+  "contract": "SCROLL_REACHABLE_AND_TAPPABLE (arbiter 5792243086 §1)",
+  "provenance": {
+    "candidate_dir": "commander/control:evidence/ord0261-0264-candidate/",
+    "blobs_read_back_equal_to_commander_ids": {
+      "candidate__dea8410-to-6daceb1.patch": "0de748338e103bb70da3c0a5f4f3fcb664c9a499",
+      "candidate__changed-files.txt": "3cdfe4023befa9245872ae751332836d5aceeed3",
+      "candidate__lineage.txt": "443262303f1a7780083818303b631b92ab62d6db",
+      "gate-receipts.json": "e41c68b740d50cbe37fddfdf39eab841a4dc1651"
+    },
+    "patch_equals_local_git_diff": {"cmd": "git diff dea8410 6daceb1", "trees": ["_qoder_integration_20260919", "_qoder_cmdr_gate_20260921"], "bytes": 17285, "result": "byte EQUAL in both"},
+    "patched_export_vs_archive_6daceb1": {"files": 5, "byte_equal_raw": 0, "equal_after_newline_normalization": 5, "cause": "git apply wrote CRLF under global core.autocrlf; the built tree used is `git archive 6daceb1`"},
+    "lineage": [
+      "6daceb19d36691000f19189f8ebd51067e225643 <- a0fbe030494a027de85c92f462e1e1d4ea6c2a42 2026-09-23 17:10:54 +0800 fix(frontend): reserve the sticky bar's height and bring the advanced opener into reach (ORD-0261, ORD-0264)",
+      "a0fbe030494a027de85c92f462e1e1d4ea6c2a42 <- dea8410be809ebf6c5046581873584e9dbf32b64 2026-09-23 16:52:37 +0800 test(e2e): ORD-0261 read-only reproduction"
+    ],
+    "build": {"cmd": "npm run build in snap_6daceb1/frontend", "exit": "0", "js": {"name": "index-D76m_cky.js", "bytes": 1238834, "sha256": "270377c83471a5a1e44a756296e15ea42c47c626760723e47b6b4a6759e43274"}, "css": {"name": "index-I45CQek8.css", "bytes": 183897, "sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f"}, "served_equals_disk": true},
+    "faces": {"candidate": "http://127.0.0.1:8478 (vite preview of the 6daceb1 build; index refs = /assets/index-D76m_cky.js + /assets/index-I45CQek8.css)", "published_control": "http://127.0.0.1:8474 (index refs = /assets/index-DJEINrOl.js + /assets/index-COUUKhbU.css) - candidate never entered it"},
+    "backend": {"url": "127.0.0.1:8424", "tree": "D:/moodle/_qoder_cmdr_gate_20260921", "head": "53fe8e86920aed0ddb5fb325f070b4ed8210b686", "porcelain_lines": 0, "db": "D:/moodle/_lane_aad2d1f2_livecopy.sqlite3", "ownership_proof": {"mine_only_in_copy_db": "200", "foreign_uuid": "404"}},
+    "instrument_gotcha": "vite preview's /api proxy port comes from CITYNEXUS_BACKEND_PORT (default 8000). The first :8478 launch had no such var and answered /api/v1/health with 500 from a foreign backend; it was killed and relaunched with 8424 before any reading below was taken."
+  },
+  "device": {"viewport": "390x844", "hasTouch": true, "isMobile": true, "deviceScaleFactor": 3, "locale": "zh-CN", "context": "fresh, no journey in localStorage => wizard step 1"},
+  "candidate_step1_initial": {
+    "onboarding": true,
+    "bundle": "index-D76m_cky.js",
+    "docScroll": {"scrollHeight": 1467, "clientHeight": 844, "scrollTop": 0},
+    "nested_scrollers": [],
+    "opener": {"x": 20.5, "y": 929, "w": 349.3, "h": 44, "minHeight": "44px", "text": "高级设置"},
+    "sticky_bar": {"y": 628, "h": 80, "text": "下一步"},
+    "trial_steps_paddingBottom": "212px",
+    "cn_sim_float_clearance_resolved": "calc(136px + 0px)",
+    "details_open": {"trial-supported": false, "trial-advanced": false}
+  },
+  "human_path": {
+    "note": "synthetic TouchEvents dispatched from JS do NOT scroll (isTrusted=false, scrollTop stayed 0 through 8 attempts); every scroll below is CDP Input.dispatchTouchEvent, i.e. browser-generated",
+    "swipe_geometry": {"x": 195, "start_y": 620, "moves": [560, 500, 440, 380, 330, 300]},
+    "sequence": [
+      {"event": "before", "scrollTop": 0, "openerY": 957},
+      {"event": "swipe1", "scrollTop": 583.09, "openerY": 374}
+    ],
+    "draft_typed_before_scroll": "北京",
+    "draft_after_real_scroll": "北京",
+    "hit_test_at_rest_after_scroll": {"center": [195, 534], "top_element": "BUTTON.trial-back-link", "is_opener_or_child": true, "bar_band": [628, 708], "center_inside_bar": false, "stack": ["BUTTON.trial-back-link|高级设置", "DIV.v8-card trial-card|目的地已自动设置：中", "SECTION.v8-page cn-onboarding|用你自己的城市试用", "DIV.|用你自己的城市试用"]},
+    "activation": {"method": "p.touchscreen.tap(195, 534)", "trial_advanced_open_before": false, "trial_advanced_open_after": true, "trial_supported_open_after": false, "step_text_before": "1目的地与时间2人数", "step_text_after": "1目的地与时间2人数", "draft_after_tap": "北京"}
+  },
+  "sweep_center_vs_bar": {
+    "candidate": [{"scrollTop": 400, "center_y": 717, "inside_bar": false, "hit": "BUTTON.trial-back-link|高级设置", "hit_is_sticky_cta": false}, {"scrollTop": 500, "center_y": 617, "inside_bar": false, "hit": "BUTTON.trial-back-link|高级设置", "hit_is_sticky_cta": false}, {"scrollTop": 560, "center_y": 557, "inside_bar": false, "hit": "BUTTON.trial-back-link|高级设置", "hit_is_sticky_cta": false}, {"scrollTop": 620, "center_y": 497, "inside_bar": false, "hit": "BUTTON.trial-back-link|高级设置", "hit_is_sticky_cta": false}, {"scrollTop": 700, "center_y": 417, "inside_bar": false, "hit": "BUTTON.trial-back-link|高级设置", "hit_is_sticky_cta": false}, {"scrollTop": 721, "center_y": 396, "inside_bar": false, "hit": "BUTTON.trial-back-link|高级设置", "hit_is_sticky_cta": false}],
+    "published_control": [{"scrollTop": 200, "center_y": 963, "hit": null, "reason": "centre outside viewport"}, {"scrollTop": 260, "center_y": 904, "hit": null}, {"scrollTop": 300, "center_y": 863, "hit": null}, {"scrollTop": 340, "center_y": 824, "hit": "BUTTON.trial-back-link|高级设置", "hit_is_sticky_cta": false}, {"scrollTop": 373, "center_y": 790, "hit": "BUTTON.trial-back-link|高级设置", "hit_is_sticky_cta": false}]
+  },
+  "max_scroll_state": {
+    "candidate": {"scrollTop": 721, "scrollHeight": 1565, "clientHeight": 844, "bar_band": [628, 708], "lowest_control": {"label": "使用封存的演示行程", "bottom": 812}, "gap_below_lowest_px": 32, "interactive_controls_scanned": 16, "occluded_count": 0, "sim_float_present": {"sim-float": "fixed 48x60 @330,556", "sim-ball": "48x48", "sim-ball-dot": "12x12"}, "padding_bottom": "212px"},
+    "published_control": {"scrollTop": 374, "scrollHeight": 1217, "max": 373, "bar_band_top_at_max": 592, "lowest_control": {"label": "高级设置", "bottom": 812}, "gap_below_lowest_px": 32, "opener_center_at_max": 790, "padding_bottom": "0px"},
+    "reversibility": {"one_downward_swipe_scrollTop_after": 0}
+  },
+  "verdicts": {
+    "stay_in_step1": "PASS",
+    "ordinary_scroll_brings_it_in": "PASS (1 real swipe)",
+    "centre_not_occluded_once_visible": "PASS (6 offsets, never inside the bar band)",
+    "elementFromPoint_resolves_to_opener": "PASS",
+    "real_activation_opens_details": "PASS (.trial-advanced false->true)",
+    "draft_preserved": "PASS (read 3x)",
+    "no_new_scroll_or_navigation_trap_from_the_reserve": "PASS (0 occluded of 16, reversible, tail 32px == control's tail)",
+    "did_not_reproduce": "the 'centre stolen by the sticky 下一步 button' variant - false at all 5 published-generation scroll offsets in my content state"
+  },
+  "screenshots": {
+    "ORD0261-P3-1815_candidate_advanced_open.png": {"bytes": 137089, "sha256": "4b4b383e78b278a52286c7929cf5e54e18ac0e66a4c907d5700cb2bb396e50be"},
+    "ORD0261-P3-1815_published_control_wizard_bottom.png": {"bytes": 124323, "sha256": "f4604937a94ac82491f3ca270a22de861ca235d0f1aa22702a3fd3965fe1d8c6"}
+  },
+  "not_done": ["no product/style code changed", "never pressed 下一步 (no journey created, no product write)", "published dist / tunnel / :4781 / :4782 / :8693 / _live.db / _preview.db untouched", "no demo/reset", "no window closed (per the new order); my faces left in place and named"]
+}
