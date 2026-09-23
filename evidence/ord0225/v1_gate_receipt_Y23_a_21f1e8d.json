@@ -1,0 +1,1079 @@
+{
+  "schema_version": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+  "receipt_kind": "reverse_mutation",
+  "scope": {
+    "repo": "Canshu-King/CityNexus",
+    "exact_sha": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+    "tree_kind": "clean_sha",
+    "composite_recipe": [],
+    "dirty": false,
+    "dirty_paths": [],
+    "target_nodeids": [
+      "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+    ],
+    "run_shape": "single-node",
+    "command_argv": [
+      "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+      "-p",
+      "no:cacheprovider",
+      "-v",
+      "-rA"
+    ],
+    "tree_kind_check": {
+      "backend/db/schema.sql": {
+        "export_tree_digest": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+        "committed_at_exact_sha_digest": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+        "identical": true
+      },
+      "backend/app/catalog_hydration_operations.py": {
+        "export_tree_digest": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "committed_at_exact_sha_digest": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "identical": true
+      }
+    },
+    "note": "被测树 = `git archive <exact_sha>` 的一次性只读导出；两把文件的 export 摘要与 `git show <exact_sha>:<path>` 摘要逐一对齐才算 clean_sha"
+  },
+  "environment": {
+    "cwd": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend",
+    "python_executable": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+    "python_version": "Python 3.12.14",
+    "pytest_version": "pytest 8.4.2",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pythonpath": [
+      "(unset for the pytest process; this door runs in-process, no child interpreter)"
+    ],
+    "required_local_modules": [
+      {
+        "name": "app",
+        "import_origin": "NOT_FOUND"
+      },
+      {
+        "name": "app.main",
+        "import_origin": "NOT_FOUND"
+      },
+      {
+        "name": "fastapi",
+        "import_origin": "D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\__init__.py"
+      },
+      {
+        "name": "sqlalchemy",
+        "import_origin": "D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\sqlalchemy\\__init__.py"
+      },
+      {
+        "name": "pytest",
+        "import_origin": "D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\pytest\\__init__.py"
+      }
+    ],
+    "forbidden_command_surface_hits": [],
+    "row_column_instrument": {
+      "module": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\gate_streak.py",
+      "git_blob_sha1": "ac5377f207f1833441f24784043a809eddb4d3be",
+      "commander_announced_prefix": "ac5377f207f18334",
+      "function": "row_counts (the version reporting row_total + per-table counts)",
+      "note": "行读数出自判级那把尺本身，不是我另写一份 SQL；两个摘要对得上才是同一把尺"
+    }
+  },
+  "baseline": {
+    "receipt_ref": "evidence/ord0225/ (lane F 的 ORD-0225 closure 第 1 步收据) + 本批控制轮",
+    "receipt_blob": "F-published; see ledger block ORD-0225",
+    "same_exact_sha": false,
+    "same_exact_sha_note": "F 的第 1 步是在 composite `ec65a3e` 上量的；本收据的 baseline 用的是**同一棵被测树**上的控制轮，两者不互换（A-5）。",
+    "same_target_nodeids": true,
+    "same_run_shape": true,
+    "target_outcomes": {
+      "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "GREEN"
+    },
+    "this_run_exit_code": 0,
+    "this_run_collected": 1,
+    "this_run_pytest_counts": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "failed_nodeids": [],
+    "errored_nodeids": [],
+    "collection_or_setup_errors": [],
+    "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_fhc2t4z2\\suite.db",
+    "path_source": "app_printed_receipt_line",
+    "initial_db_state": {
+      "path_did_not_exist_before_this_run": true,
+      "temp_dirs_present_before_round": 444
+    },
+    "final_db_state": {
+      "rows_by_table": {
+        "absent": false,
+        "table_count": 55,
+        "row_total": 1,
+        "nonempty_table_count": 1,
+        "nonempty_tables": {
+          "catalog_hydration_operations": 1
+        }
+      },
+      "store_role": "this door runs in-process, so the claim's store IS the suite DB",
+      "catalog_rows": 1
+    },
+    "db_fresh": true,
+    "summary_line": "======================== 1 passed, 2 warnings in 1.11s ========================"
+  },
+  "mutation": {
+    "mutation_id": "C-ORD0225-Y23-index-and-loser-readback",
+    "claim_broken": "the durable half of 'one open generation, one job': the partial unique index cannot reject a second open row (its predicate names a status no row can hold) and the process that would have lost the race no longer reports the winner. A1/A2 reads stay live on purpose, so this is exactly '破坏部分唯一索引 + 败者回读' and not a wider change.",
+    "carriers_removed": [
+      "B partial unique index",
+      "C loser read-back"
+    ],
+    "allowed_scope": "product",
+    "actual_scope": "product",
+    "primary_target_nodeids": [
+      "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+    ],
+    "patch_or_mutator_ref": "evidence/ord0224_a2/xproc_v1_gate_receipt.py",
+    "no_test_file_touched": "两把（或四把）改动全在 app/ 与 db/schema.sql；门与断言 0 字节",
+    "changed_files": [
+      {
+        "path": "backend/db/schema.sql",
+        "before_blob": "6e536c7b1090f6a46e115ee9788bed5b052bf35f",
+        "before_digest": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+        "mutated_digest": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+        "expected_anchor_hits": 1,
+        "anchor_hits": 1,
+        "bytes_changed": true
+      },
+      {
+        "path": "backend/app/catalog_hydration_operations.py",
+        "before_blob": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+        "before_digest": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "expected_anchor_hits": 1,
+        "anchor_hits": 1,
+        "bytes_changed": true
+      }
+    ],
+    "digest_semantics": "一条 edit 一行；同文件多条 edit 的 mutated_digest 是**累计态**（该 edit 之后文件的形状），不是三个独立版本。anchor_hits 每行都必须是 1，由守卫自己数。"
+  },
+  "mutated_runs": {
+    "rounds": 10,
+    "runs": [
+      {
+        "run_index": 1,
+        "mutated": true,
+        "anchor_receipts": [
+          {
+            "edit_index": 0,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\db\\schema.sql",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "mutated_sha256": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+            "bytes_changed": true
+          },
+          {
+            "edit_index": 1,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\app\\catalog_hydration_operations.py",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+            "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+            "bytes_changed": true
+          }
+        ],
+        "mutated_digest_by_file": {
+          "0": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+          "1": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695"
+        },
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 1,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "GREEN"
+        },
+        "failed_nodeids": [],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_jzwuvp6m\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "",
+        "summary_line": "======================== 1 passed, 2 warnings in 0.99s ========================",
+        "exit_code": 0,
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 444
+        },
+        "final_db_state": {
+          "rows_by_table": {
+            "absent": false,
+            "table_count": 55,
+            "row_total": 1,
+            "nonempty_table_count": 1,
+            "nonempty_tables": {
+              "catalog_hydration_operations": 1
+            }
+          },
+          "store_role": "this door runs in-process, so the claim's store IS the suite DB",
+          "catalog_rows": 1
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/db/schema.sql": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        }
+      },
+      {
+        "run_index": 2,
+        "mutated": true,
+        "anchor_receipts": [
+          {
+            "edit_index": 0,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\db\\schema.sql",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "mutated_sha256": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+            "bytes_changed": true
+          },
+          {
+            "edit_index": 1,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\app\\catalog_hydration_operations.py",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+            "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+            "bytes_changed": true
+          }
+        ],
+        "mutated_digest_by_file": {
+          "0": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+          "1": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695"
+        },
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_373n68mu\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 2 个：逐请求=[(0, '47815a61-bb61-4e14-9bfe-ef9e21b6ed51', False), (1, 'a7e896b7-22e9-40ba-b36d-e70ab274c2eb', True), (2, 'a7e896b7-22e9-40ba-b36d-e70ab274c2eb', True), (3, 'a7e896b7-22e9-40ba-b36d-e70ab274c2eb', True), (4, 'a7e896",
+        "summary_line": "======================== 1 failed, 2 warnings in 1.19s ========================",
+        "exit_code": 1,
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 444
+        },
+        "final_db_state": {
+          "rows_by_table": {
+            "absent": false,
+            "table_count": 55,
+            "row_total": 2,
+            "nonempty_table_count": 1,
+            "nonempty_tables": {
+              "catalog_hydration_operations": 2
+            }
+          },
+          "store_role": "this door runs in-process, so the claim's store IS the suite DB",
+          "catalog_rows": 2
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/db/schema.sql": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        }
+      },
+      {
+        "run_index": 3,
+        "mutated": true,
+        "anchor_receipts": [
+          {
+            "edit_index": 0,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\db\\schema.sql",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "mutated_sha256": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+            "bytes_changed": true
+          },
+          {
+            "edit_index": 1,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\app\\catalog_hydration_operations.py",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+            "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+            "bytes_changed": true
+          }
+        ],
+        "mutated_digest_by_file": {
+          "0": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+          "1": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695"
+        },
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_mz2a5alq\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 5 个：逐请求=[(0, '439c5260-7917-47c7-9df7-171ec1aff807', False), (1, '11c71b2b-aff3-4ac0-bc55-12362b260e8c', False), (2, '71338cf5-9e56-44a3-ac45-6100c192e046', False), (3, 'bcdb5747-a71d-4142-b3e2-95b5ad446a51', False), (4, '99b",
+        "summary_line": "======================== 1 failed, 2 warnings in 1.56s ========================",
+        "exit_code": 1,
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 444
+        },
+        "final_db_state": {
+          "rows_by_table": {
+            "absent": false,
+            "table_count": 55,
+            "row_total": 5,
+            "nonempty_table_count": 1,
+            "nonempty_tables": {
+              "catalog_hydration_operations": 5
+            }
+          },
+          "store_role": "this door runs in-process, so the claim's store IS the suite DB",
+          "catalog_rows": 5
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/db/schema.sql": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        }
+      },
+      {
+        "run_index": 4,
+        "mutated": true,
+        "anchor_receipts": [
+          {
+            "edit_index": 0,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\db\\schema.sql",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "mutated_sha256": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+            "bytes_changed": true
+          },
+          {
+            "edit_index": 1,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\app\\catalog_hydration_operations.py",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+            "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+            "bytes_changed": true
+          }
+        ],
+        "mutated_digest_by_file": {
+          "0": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+          "1": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695"
+        },
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 1,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "GREEN"
+        },
+        "failed_nodeids": [],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_5sfuh5za\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "",
+        "summary_line": "======================== 1 passed, 2 warnings in 1.01s ========================",
+        "exit_code": 0,
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 444
+        },
+        "final_db_state": {
+          "rows_by_table": {
+            "absent": false,
+            "table_count": 55,
+            "row_total": 1,
+            "nonempty_table_count": 1,
+            "nonempty_tables": {
+              "catalog_hydration_operations": 1
+            }
+          },
+          "store_role": "this door runs in-process, so the claim's store IS the suite DB",
+          "catalog_rows": 1
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/db/schema.sql": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        }
+      },
+      {
+        "run_index": 5,
+        "mutated": true,
+        "anchor_receipts": [
+          {
+            "edit_index": 0,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\db\\schema.sql",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "mutated_sha256": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+            "bytes_changed": true
+          },
+          {
+            "edit_index": 1,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\app\\catalog_hydration_operations.py",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+            "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+            "bytes_changed": true
+          }
+        ],
+        "mutated_digest_by_file": {
+          "0": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+          "1": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695"
+        },
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_3u6bcusv\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 5 个：逐请求=[(0, '135b661a-25d6-4f5c-ac83-1392aa50351f', False), (1, '79b9abe1-6761-43a6-8976-1628b8afcbea', False), (2, 'e9ae801c-eb3f-4261-9b94-3699eafd53c3', False), (3, 'd8a65eb7-121d-46fd-b28f-060aa9b4b82d', False), (4, 'e1b",
+        "summary_line": "======================== 1 failed, 2 warnings in 1.22s ========================",
+        "exit_code": 1,
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 444
+        },
+        "final_db_state": {
+          "rows_by_table": {
+            "absent": false,
+            "table_count": 55,
+            "row_total": 5,
+            "nonempty_table_count": 1,
+            "nonempty_tables": {
+              "catalog_hydration_operations": 5
+            }
+          },
+          "store_role": "this door runs in-process, so the claim's store IS the suite DB",
+          "catalog_rows": 5
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/db/schema.sql": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        }
+      },
+      {
+        "run_index": 6,
+        "mutated": true,
+        "anchor_receipts": [
+          {
+            "edit_index": 0,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\db\\schema.sql",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "mutated_sha256": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+            "bytes_changed": true
+          },
+          {
+            "edit_index": 1,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\app\\catalog_hydration_operations.py",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+            "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+            "bytes_changed": true
+          }
+        ],
+        "mutated_digest_by_file": {
+          "0": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+          "1": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695"
+        },
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_wlcsihit\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 2 个：逐请求=[(0, 'bf6c7546-99f5-43ed-a464-af43bff149ac', False), (1, 'bf6c7546-99f5-43ed-a464-af43bff149ac', True), (2, 'bf6c7546-99f5-43ed-a464-af43bff149ac', True), (3, '536307c1-ae60-466b-8dfd-671bca0d85a4', False), (4, '53630",
+        "summary_line": "======================== 1 failed, 2 warnings in 1.18s ========================",
+        "exit_code": 1,
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 444
+        },
+        "final_db_state": {
+          "rows_by_table": {
+            "absent": false,
+            "table_count": 55,
+            "row_total": 2,
+            "nonempty_table_count": 1,
+            "nonempty_tables": {
+              "catalog_hydration_operations": 2
+            }
+          },
+          "store_role": "this door runs in-process, so the claim's store IS the suite DB",
+          "catalog_rows": 2
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/db/schema.sql": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        }
+      },
+      {
+        "run_index": 7,
+        "mutated": true,
+        "anchor_receipts": [
+          {
+            "edit_index": 0,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\db\\schema.sql",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "mutated_sha256": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+            "bytes_changed": true
+          },
+          {
+            "edit_index": 1,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\app\\catalog_hydration_operations.py",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+            "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+            "bytes_changed": true
+          }
+        ],
+        "mutated_digest_by_file": {
+          "0": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+          "1": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695"
+        },
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 1,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "GREEN"
+        },
+        "failed_nodeids": [],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_eqkfkxwv\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "",
+        "summary_line": "======================== 1 passed, 2 warnings in 0.99s ========================",
+        "exit_code": 0,
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 444
+        },
+        "final_db_state": {
+          "rows_by_table": {
+            "absent": false,
+            "table_count": 55,
+            "row_total": 1,
+            "nonempty_table_count": 1,
+            "nonempty_tables": {
+              "catalog_hydration_operations": 1
+            }
+          },
+          "store_role": "this door runs in-process, so the claim's store IS the suite DB",
+          "catalog_rows": 1
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/db/schema.sql": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        }
+      },
+      {
+        "run_index": 8,
+        "mutated": true,
+        "anchor_receipts": [
+          {
+            "edit_index": 0,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\db\\schema.sql",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "mutated_sha256": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+            "bytes_changed": true
+          },
+          {
+            "edit_index": 1,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\app\\catalog_hydration_operations.py",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+            "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+            "bytes_changed": true
+          }
+        ],
+        "mutated_digest_by_file": {
+          "0": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+          "1": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695"
+        },
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_y_itiqvz\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 3 个：逐请求=[(0, 'd6cca88b-7fc4-4a22-ae8d-bc289407feca', False), (1, '87f0a44e-5b97-4120-9944-e63057eee7ed', False), (2, '2a9b1625-8636-4bc3-8862-2abdd734aa78', False), (3, '87f0a44e-5b97-4120-9944-e63057eee7ed', True), (4, '87f0",
+        "summary_line": "======================== 1 failed, 2 warnings in 1.34s ========================",
+        "exit_code": 1,
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 444
+        },
+        "final_db_state": {
+          "rows_by_table": {
+            "absent": false,
+            "table_count": 55,
+            "row_total": 3,
+            "nonempty_table_count": 1,
+            "nonempty_tables": {
+              "catalog_hydration_operations": 3
+            }
+          },
+          "store_role": "this door runs in-process, so the claim's store IS the suite DB",
+          "catalog_rows": 3
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/db/schema.sql": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        }
+      },
+      {
+        "run_index": 9,
+        "mutated": true,
+        "anchor_receipts": [
+          {
+            "edit_index": 0,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\db\\schema.sql",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "mutated_sha256": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+            "bytes_changed": true
+          },
+          {
+            "edit_index": 1,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\app\\catalog_hydration_operations.py",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+            "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+            "bytes_changed": true
+          }
+        ],
+        "mutated_digest_by_file": {
+          "0": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+          "1": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695"
+        },
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_xyg1z7su\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 4 个：逐请求=[(0, '73e52d7a-01c5-43c9-a4c3-a0c9b3bd326e', False), (1, 'd8adaeb3-d06a-4cf5-81ff-085971f69371', False), (2, '84f5b399-3d11-4e58-986a-eb530a98cc4e', False), (3, '73e52d7a-01c5-43c9-a4c3-a0c9b3bd326e', True), (4, 'aaae",
+        "summary_line": "======================== 1 failed, 2 warnings in 1.70s ========================",
+        "exit_code": 1,
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 444
+        },
+        "final_db_state": {
+          "rows_by_table": {
+            "absent": false,
+            "table_count": 55,
+            "row_total": 4,
+            "nonempty_table_count": 1,
+            "nonempty_tables": {
+              "catalog_hydration_operations": 4
+            }
+          },
+          "store_role": "this door runs in-process, so the claim's store IS the suite DB",
+          "catalog_rows": 4
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/db/schema.sql": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        }
+      },
+      {
+        "run_index": 10,
+        "mutated": true,
+        "anchor_receipts": [
+          {
+            "edit_index": 0,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\db\\schema.sql",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "mutated_sha256": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+            "bytes_changed": true
+          },
+          {
+            "edit_index": 1,
+            "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_21f1e8d\\backend\\app\\catalog_hydration_operations.py",
+            "anchor_hits": 1,
+            "expected_anchor_hits": 1,
+            "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+            "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+            "bytes_changed": true
+          }
+        ],
+        "mutated_digest_by_file": {
+          "0": "4ecc1c1092e83fa45615d919c294fffb711d347e6436cfa1ff418bcaafdd6e40",
+          "1": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695"
+        },
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 1,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation": "GREEN"
+        },
+        "failed_nodeids": [],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_mn74_qmj\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "",
+        "summary_line": "======================== 1 passed, 2 warnings in 1.39s ========================",
+        "exit_code": 0,
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 444
+        },
+        "final_db_state": {
+          "rows_by_table": {
+            "absent": false,
+            "table_count": 55,
+            "row_total": 1,
+            "nonempty_table_count": 1,
+            "nonempty_tables": {
+              "catalog_hydration_operations": 1
+            }
+          },
+          "store_role": "this door runs in-process, so the claim's store IS the suite DB",
+          "catalog_rows": 1
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/db/schema.sql": "1de29df73819f9e3637d88836c78b0a783fa5e90d034fc59cb3cffff3b5ffe4e",
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        }
+      }
+    ]
+  },
+  "derivation": {
+    "claimed_result": "STREAK_BROKEN",
+    "claimed_result_note": "交付方自称；closure 只认 verifier 派生的 derived_result。",
+    "derived_result": null,
+    "direct_red_nodeids": null,
+    "collateral_red_nodeids": null,
+    "verifier_problems": [],
+    "batch_tag": "a",
+    "primary_red_rounds": [
+      2,
+      3,
+      5,
+      6,
+      8,
+      9
+    ],
+    "every_round_named_a_fresh_db": true,
+    "every_round_restored_byte_exact": true,
+    "baseline_catalog_rows": 1,
+    "mutated_catalog_rows": [
+      1,
+      2,
+      5,
+      1,
+      5,
+      2,
+      1,
+      3,
+      4,
+      1
+    ]
+  }
+}
