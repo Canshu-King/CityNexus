@@ -1,0 +1,99 @@
+{
+ "fresh_db": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\q219landing_5gv9vx97\\landing.db",
+ "carrying": [
+  "place-city-park",
+  "place-design-library",
+  "place-tech-art"
+ ],
+ "declared": [
+  "place-city-park",
+  "place-design-library",
+  "place-tech-art"
+ ],
+ "facts_agree": true,
+ "provenance": {
+  "place-tech-art": "DEMO",
+  "place-city-park": "DEMO",
+  "place-design-library": "DEMO"
+ },
+ "no_live_string": true,
+ "codes": {
+  "STROLLER": {
+   "capability_confirmed": [
+    {
+     "code": "STROLLER",
+     "class": "TRIP_CONTEXT",
+     "severity": "HARD",
+     "params": {
+      "present": true
+     },
+     "scope": "TRAVELER",
+     "source": "SEMANTIC",
+     "provenance": "USER_STATED",
+     "explicit": true,
+     "active": true,
+     "confirmed": true
+    }
+   ],
+   "candidates": 3,
+   "table": {
+    "55523d40": {
+     "conflicting_stops": [
+      "place-tech-art"
+     ],
+     "outcome": "BLOCK(named)"
+    },
+    "0a1dcd9c": {
+     "conflicting_stops": [],
+     "outcome": "PASS"
+    },
+    "6c07d3ca": {
+     "conflicting_stops": [],
+     "outcome": "PASS"
+    }
+   },
+   "pass_count": 2,
+   "named_block_count": 1,
+   "satisfied_both_directions": true
+  },
+  "LARGE_LUGGAGE": {
+   "capability_confirmed": [
+    {
+     "code": "LARGE_LUGGAGE",
+     "class": "TRIP_CONTEXT",
+     "severity": "HARD",
+     "params": {
+      "present": true
+     },
+     "scope": "TRAVELER",
+     "source": "SEMANTIC",
+     "provenance": "USER_STATED",
+     "explicit": true,
+     "active": true,
+     "confirmed": true
+    }
+   ],
+   "candidates": 3,
+   "table": {
+    "55523d40": {
+     "conflicting_stops": [],
+     "outcome": "PASS"
+    },
+    "0a1dcd9c": {
+     "conflicting_stops": [],
+     "outcome": "PASS"
+    },
+    "6c07d3ca": {
+     "conflicting_stops": [
+      "place-design-library"
+     ],
+     "outcome": "BLOCK(named)"
+    }
+   },
+   "pass_count": 2,
+   "named_block_count": 1,
+   "satisfied_both_directions": true
+  }
+ },
+ "items_3_4_satisfied": true
+}
