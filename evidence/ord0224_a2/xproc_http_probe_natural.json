@@ -1,0 +1,236 @@
+[
+  {
+    "round": 0,
+    "hold_lock": false,
+    "schema_ready": true,
+    "fingerprint": "ebfab98d2994",
+    "spawn": [
+      {
+        "port": 55027,
+        "pid": 26564,
+        "ready": true,
+        "wait_ms": 1599.0,
+        "netstat_pid": 13668,
+        "health": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}"
+      },
+      {
+        "port": 55028,
+        "pid": 50432,
+        "ready": true,
+        "wait_ms": 26.1,
+        "netstat_pid": 3976,
+        "health": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}"
+      }
+    ],
+    "post_wall_ms": 26.1,
+    "posts": [
+      {
+        "port": 55028,
+        "status": 202,
+        "ms": 17.0,
+        "operation_id": "60e179a0-7664-4be0-b246-3539187ee673",
+        "reused": false,
+        "code": null,
+        "detail": "{'operation_id': '60e179a0-7664-4be0-b246-3539187ee673', 'fingerprint': 'ebfab98d29942d47c334e60349f9e6ab', 'reused': False, 'status': 'QUEUED', 'recorded_status': 'QUEUED', 'phase': 'QUEUED', 'outcome': None, 'terminal'"
+      },
+      {
+        "port": 55027,
+        "status": 200,
+        "ms": 24.7,
+        "operation_id": "60e179a0-7664-4be0-b246-3539187ee673",
+        "reused": true,
+        "code": null,
+        "detail": "{'operation_id': '60e179a0-7664-4be0-b246-3539187ee673', 'fingerprint': 'ebfab98d29942d47c334e60349f9e6ab', 'reused': True, 'status': 'QUEUED', 'recorded_status': 'QUEUED', 'phase': 'QUEUED', 'outcome': None, 'terminal':"
+      }
+    ],
+    "store_rows": [
+      {
+        "id": "60e179a0-7664-4be0-b246-3539187ee673",
+        "status": "QUEUED",
+        "fp": "ebfab98d2994",
+        "text": "{\"query\": \"贡山独龙族怒族自治县·HTTP·r0·744acc\", \"requested_categories\": []}"
+      }
+    ],
+    "store_read_note": "text column=request_json; total rows in file=1, rows for this question=1; request-text column list=['id', 'fingerprint', 'canonical_destination_id', 'pending_destination_label', 'resolver_query_normalized', 'destination_pending_key', 'pending_label_fidelity', 'legacy_fingerprint', 'catalog_schema_version', 'readiness_policy_version', 'provider_policy_version', 'journey_id', 'status', 'phase']",
+    "child_events": [
+      {
+        "kind": "serving",
+        "pid": 13668,
+        "ppid": 26564,
+        "port": 55027,
+        "database": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_0_73935c/workers.db",
+        "resolved_db_file": "C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_0_73935c/workers.db"
+      },
+      {
+        "kind": "serving",
+        "pid": 3976,
+        "ppid": 50432,
+        "port": 55028,
+        "database": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_0_73935c/workers.db",
+        "resolved_db_file": "C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_0_73935c/workers.db"
+      },
+      {
+        "kind": "dispatch_suppressed",
+        "pid": 3976,
+        "port": 55028,
+        "operation_id": "60e179a0-7664-4be0-b246-3539187ee673"
+      }
+    ]
+  },
+  {
+    "round": 1,
+    "hold_lock": false,
+    "schema_ready": true,
+    "fingerprint": "ee279d05c4b7",
+    "spawn": [
+      {
+        "port": 55053,
+        "pid": 52632,
+        "ready": true,
+        "wait_ms": 1537.0,
+        "netstat_pid": 50028,
+        "health": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}"
+      },
+      {
+        "port": 55054,
+        "pid": 26876,
+        "ready": true,
+        "wait_ms": 41.7,
+        "netstat_pid": 45832,
+        "health": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}"
+      }
+    ],
+    "post_wall_ms": 33.5,
+    "posts": [
+      {
+        "port": 55053,
+        "status": 202,
+        "ms": 14.2,
+        "operation_id": "987a85cd-12bb-4527-868d-3645a2d4d592",
+        "reused": false,
+        "code": null,
+        "detail": "{'operation_id': '987a85cd-12bb-4527-868d-3645a2d4d592', 'fingerprint': 'ee279d05c4b718da5dec63b6982304a9', 'reused': False, 'status': 'QUEUED', 'recorded_status': 'QUEUED', 'phase': 'QUEUED', 'outcome': None, 'terminal'"
+      },
+      {
+        "port": 55054,
+        "status": 200,
+        "ms": 32.4,
+        "operation_id": "987a85cd-12bb-4527-868d-3645a2d4d592",
+        "reused": true,
+        "code": null,
+        "detail": "{'operation_id': '987a85cd-12bb-4527-868d-3645a2d4d592', 'fingerprint': 'ee279d05c4b718da5dec63b6982304a9', 'reused': True, 'status': 'QUEUED', 'recorded_status': 'QUEUED', 'phase': 'QUEUED', 'outcome': None, 'terminal':"
+      }
+    ],
+    "store_rows": [
+      {
+        "id": "987a85cd-12bb-4527-868d-3645a2d4d592",
+        "status": "QUEUED",
+        "fp": "ee279d05c4b7",
+        "text": "{\"query\": \"贡山独龙族怒族自治县·HTTP·r1·7b4029\", \"requested_categories\": []}"
+      }
+    ],
+    "store_read_note": "text column=request_json; total rows in file=1, rows for this question=1; request-text column list=['id', 'fingerprint', 'canonical_destination_id', 'pending_destination_label', 'resolver_query_normalized', 'destination_pending_key', 'pending_label_fidelity', 'legacy_fingerprint', 'catalog_schema_version', 'readiness_policy_version', 'provider_policy_version', 'journey_id', 'status', 'phase']",
+    "child_events": [
+      {
+        "kind": "serving",
+        "pid": 50028,
+        "ppid": 52632,
+        "port": 55053,
+        "database": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_1_4ae297/workers.db",
+        "resolved_db_file": "C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_1_4ae297/workers.db"
+      },
+      {
+        "kind": "dispatch_suppressed",
+        "pid": 50028,
+        "port": 55053,
+        "operation_id": "987a85cd-12bb-4527-868d-3645a2d4d592"
+      },
+      {
+        "kind": "serving",
+        "pid": 45832,
+        "ppid": 26876,
+        "port": 55054,
+        "database": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_1_4ae297/workers.db",
+        "resolved_db_file": "C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_1_4ae297/workers.db"
+      }
+    ]
+  },
+  {
+    "round": 2,
+    "hold_lock": false,
+    "schema_ready": true,
+    "fingerprint": "baa7ee353602",
+    "spawn": [
+      {
+        "port": 53188,
+        "pid": 22864,
+        "ready": true,
+        "wait_ms": 2050.3,
+        "netstat_pid": 13588,
+        "health": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}"
+      },
+      {
+        "port": 53189,
+        "pid": 39968,
+        "ready": true,
+        "wait_ms": 22.9,
+        "netstat_pid": 28972,
+        "health": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}"
+      }
+    ],
+    "post_wall_ms": 16.0,
+    "posts": [
+      {
+        "port": 53189,
+        "status": 202,
+        "ms": 14.6,
+        "operation_id": "4e876051-1a74-458d-a220-6e58e1c917a6",
+        "reused": false,
+        "code": null,
+        "detail": "{'operation_id': '4e876051-1a74-458d-a220-6e58e1c917a6', 'fingerprint': 'baa7ee353602a5dab6ce366775c39794', 'reused': False, 'status': 'QUEUED', 'recorded_status': 'QUEUED', 'phase': 'QUEUED', 'outcome': None, 'terminal'"
+      },
+      {
+        "port": 53188,
+        "status": 200,
+        "ms": 15.0,
+        "operation_id": "4e876051-1a74-458d-a220-6e58e1c917a6",
+        "reused": true,
+        "code": null,
+        "detail": "{'operation_id': '4e876051-1a74-458d-a220-6e58e1c917a6', 'fingerprint': 'baa7ee353602a5dab6ce366775c39794', 'reused': True, 'status': 'QUEUED', 'recorded_status': 'QUEUED', 'phase': 'QUEUED', 'outcome': None, 'terminal':"
+      }
+    ],
+    "store_rows": [
+      {
+        "id": "4e876051-1a74-458d-a220-6e58e1c917a6",
+        "status": "QUEUED",
+        "fp": "baa7ee353602",
+        "text": "{\"query\": \"贡山独龙族怒族自治县·HTTP·r2·f778d3\", \"requested_categories\": []}"
+      }
+    ],
+    "store_read_note": "text column=request_json; total rows in file=1, rows for this question=1; request-text column list=['id', 'fingerprint', 'canonical_destination_id', 'pending_destination_label', 'resolver_query_normalized', 'destination_pending_key', 'pending_label_fidelity', 'legacy_fingerprint', 'catalog_schema_version', 'readiness_policy_version', 'provider_policy_version', 'journey_id', 'status', 'phase']",
+    "child_events": [
+      {
+        "kind": "serving",
+        "pid": 13588,
+        "ppid": 22864,
+        "port": 53188,
+        "database": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_2_071210/workers.db",
+        "resolved_db_file": "C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_2_071210/workers.db"
+      },
+      {
+        "kind": "serving",
+        "pid": 28972,
+        "ppid": 39968,
+        "port": 53189,
+        "database": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_2_071210/workers.db",
+        "resolved_db_file": "C:/Users/仓鼠王/AppData/Local/Temp/cnx_g3probe_2_071210/workers.db"
+      },
+      {
+        "kind": "dispatch_suppressed",
+        "pid": 28972,
+        "port": 53189,
+        "operation_id": "4e876051-1a74-458d-a220-6e58e1c917a6"
+      }
+    ]
+  }
+]
