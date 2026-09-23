@@ -90,8 +90,9 @@ def asset_verdict(ref: str, expect_ct: str, serve: pathlib.Path) -> dict:
     """
     g = http_get(ref)
     on_disk = serve / ref.lstrip("/")
-    g["disk_bytes"] = on_disk.stat().st_size if on_disk.is_file() else None
-    g["disk_sha256"] = sha256(on_disk) if on_disk.is_file() else None
+    g["disk_present"] = on_disk.is_file()
+    g["disk_bytes"] = on_disk.stat().st_size if g["disk_present"] else None
+    g["disk_sha256"] = sha256(on_disk) if g["disk_present"] else None
     g["expect_content_type_substring"] = expect_ct
     g["verdict"] = "GREEN" if (
         g["status"] == 200
@@ -99,8 +100,14 @@ def asset_verdict(ref: str, expect_ct: str, serve: pathlib.Path) -> dict:
         and isinstance(g["content_type"], str)
         and expect_ct in g["content_type"].lower()                # MIME must match the extension
         and g["sha256"] is not None
-        and (g["disk_sha256"] is None or g["sha256"] == g["disk_sha256"])   # body == disk bytes
-        and (g["disk_bytes"] is None or g.get("body_size") == g["disk_bytes"])
+        # A-3 (arbiter 5788111742, 2026-09-23): a comparison against an absent side is NOT a
+        # comparison.  The previous form was `disk_sha256 is None or ==`, which let an asset that
+        # answers 200 with the right MIME but has no counterpart under `serve` pass with zero
+        # bytes compared.  Presence is now a required conjunct; the killer arm in selftest feeds
+        # this exact shape and must read RED.
+        and g["disk_present"]
+        and g["sha256"] == g["disk_sha256"]                       # body == disk bytes
+        and g.get("body_size") == g["disk_bytes"]
     ) else "RED"
     return g
 
@@ -123,6 +130,15 @@ def selftest(serve: pathlib.Path) -> int:
                  "got": asset_verdict("/manifest.webmanifest", "javascript", live)})
     arms.append({"arm": "killer:missing_asset_spa_html_fallback", "expect": "RED",
                  "got": asset_verdict("/assets/__cnx_no_such_asset__.js", "javascript", live)})
+    # A-3 killer (arbiter 5788111742): take a ref the live index really names — so it answers 200
+    # with the correct MIME — but judge it against a root that does not contain it.  Before the
+    # fix this arm read GREEN with ZERO bytes compared (`disk_sha256 is None or ==`), which is the
+    # "absent side masquerading as a passed comparison" family the rule exists to kill.
+    ghost_root = live / "__cnx_no_such_root__"
+    killer_ref = refs[0] if refs else "/assets/index.js"
+    arms.append({"arm": f"killer:served_but_absent_on_disk({killer_ref})", "expect": "RED",
+                 "got": asset_verdict(killer_ref, "css" if killer_ref.endswith(".css") else "javascript",
+                                       ghost_root)})
     # B-arm (redteam 2026-09-23): the live index must name refs that actually resolve, and the
     # previous generation's entry must be absent.  Both halves are asserted as separate fields so
     # "the old name is gone" is a claim rather than something derived from a before/after diff.
@@ -174,7 +190,8 @@ def selftest(serve: pathlib.Path) -> int:
     dest = out / f"gauge_selftest_{time.strftime('%m%d_%H%M%S')}.json"
     dest.write_text(json.dumps({
         "what": "deploy_bundle.py asset-gauge selftest (true positives + the two killers)",
-        "why": "arbiter 5781096542 found the C verdict assigned twice, the second (lax) one winning",
+        "why": "arbiter 5781096542 (verdict assigned twice, lax one won) + 5788111742 A-3 "
+               "(a comparison against an absent side is not a comparison)",
         "base": BASE, "serve": str(serve), "overall": "GREEN" if ok else "RED",
         "arms": [{"arm": a["arm"], "expect": a["expect"], "got": a["got"]["verdict"],
                   "status": a["got"]["status"], "content_type": a["got"]["content_type"],
