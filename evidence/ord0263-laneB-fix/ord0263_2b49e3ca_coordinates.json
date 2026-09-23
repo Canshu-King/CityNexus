@@ -1,0 +1,92 @@
+{
+ "at": "2026-09-23T20:48:27+08:00",
+ "order": "ORD-0263 re-parent",
+ "lane": "B c01d72a3",
+ "new_tip": "2b49e3cab1fcdbc55219065520ced8dea4fdfe73",
+ "new_parent": "d2665e25855aeb265329266831983de42321697d",
+ "old_tip_kept": "a380287033da6ff0bd36b8e1baa6f79c61ad03bd",
+ "authoritative_tip": "d2665e25855aeb265329266831983de42321697d",
+ "v1_parent": "dea8410be809ebf6c5046581873584e9dbf32b64",
+ "branch": "agent/b-c01d72a3-ord0263",
+ "authoritative_branch_moved_by_me": false,
+ "files": 3,
+ "proven_by_40char_readback": 3,
+ "not_proven": [],
+ "rows": [
+  {
+   "local": "ord0263_2b49e3ca_fix.patch",
+   "repo_path": "evidence/ord0263-laneB-fix/ord0263_2b49e3ca_fix.patch",
+   "local_blob40": "f19bcc38d0fbfa8c0afd4293ff0529c5bcbaa5a1",
+   "bytes": 22670,
+   "readback_blob40": "f19bcc38d0fbfa8c0afd4293ff0529c5bcbaa5a1",
+   "verdict": "PROVEN",
+   "publisher_tail": [
+    "already identical - nothing to push"
+   ]
+  },
+  {
+   "local": "ord0263_2b49e3ca_selfproof.json",
+   "repo_path": "evidence/ord0263-laneB-fix/ord0263_2b49e3ca_selfproof.json",
+   "local_blob40": "1086fb22bf1c34d5dd4439c0452d821a89cdd9e2",
+   "bytes": 7073,
+   "readback_blob40": "1086fb22bf1c34d5dd4439c0452d821a89cdd9e2",
+   "verdict": "PROVEN",
+   "publisher_tail": [
+    "already identical - nothing to push"
+   ]
+  },
+  {
+   "local": "ord0263_2b49e3ca_worktree_list.txt",
+   "repo_path": "evidence/ord0263-laneB-fix/ord0263_2b49e3ca_worktree_list.txt",
+   "local_blob40": "845c048abe84c528f6c8aeaeb7b70767281743be",
+   "bytes": 2776,
+   "readback_blob40": "845c048abe84c528f6c8aeaeb7b70767281743be",
+   "verdict": "PROVEN",
+   "publisher_tail": [
+    "already identical - nothing to push"
+   ]
+  }
+ ],
+ "v1_paths_re_read_untouched": [
+  {
+   "path": "ORD_0263_B_FIX.md",
+   "blob40": "3d4346d24555c7b34ed23ec7afce4be639a7d169",
+   "bytes": 16608
+  },
+  {
+   "path": "ord0263_b_fix.patch",
+   "blob40": "e96c60fe1675de6f93e65de7dbf2c39dea8a4cd7",
+   "bytes": 22670
+  },
+  {
+   "path": "capture_pre.json",
+   "blob40": "ef46e4d0dd18bd0778f67f8f64ac85854519c5e3",
+   "bytes": 11922
+  },
+  {
+   "path": "capture_post.json",
+   "blob40": "54199b966f89b60b42005727285d90c2f07e7da4",
+   "bytes": 13837
+  },
+  {
+   "path": "verdict_pre.json",
+   "blob40": "5ca63d6f823c68aa3ee7396e1b17112459079091",
+   "bytes": 2527
+  },
+  {
+   "path": "verdict_post.json",
+   "blob40": "7b5faad7698d5971b8658cacdedfd197dfcb9881",
+   "bytes": 2620
+  },
+  {
+   "path": "q263_reverse_mutation_receipt.json",
+   "blob40": "b73e5d4e414503ca099463ea1a8ec199135b578b",
+   "bytes": 7187
+  },
+  {
+   "path": "ord0263_publish_coordinates.json",
+   "blob40": "7f04f8e4e70ef3a943335a2fd324938b7b06ef61",
+   "bytes": 5397
+  }
+ ]
+}
