@@ -1,0 +1,48 @@
+{
+  "artifact": "ORD-0242 HJ-P1 compatibility smoke summary (new frontend x pinned 53fe8e8)",
+  "lane": "1a986a24 HJ-P1 budget backpacker",
+  "dispatch_note": "This order was written in the ledger as owner HJ-P2 d4b04a0f; the commander moved it to me in-session at ~10:5x because HJ-P2's last round failed and it had earlier reported its browser channel unavailable. My own Chromium channel was proven working before starting: three receipts in this session (ord0225_live_live1/live3, ord0225_once_once1) each launched headless Chromium, navigated, clicked and produced a JSON receipt.",
+  "surface": {
+    "frontend": "http://127.0.0.1:4185 (vite preview, pid 47124, outDir candidate_0923_f5a6b9a)",
+    "backend": ":8713 uvicorn pid 52820, product code _qoder_cmdr_gate_20260921 @53fe8e8, CPython 3.12.14",
+    "db": "D:/moodle/_qoder_cmdr_canary_0923/_compat.db (Connection.backup from _live.db; journeys 3 / travelers 3 / plan_versions 19 / places 16 / city_services 10)",
+    "not_touched": ":4781, :4782, :8693 and _live.db were not used or modified by this lane",
+    "every_green_in_this_receipt_means": "canary @4185/8713 - it is NOT visible on the user's phone"
+  },
+  "G1_build_source": "cited from the commander's ORD-0241 receipt: _qoder_integration_20260919 @f5a6b9a with `git status --porcelain -- frontend` = 0 lines. Measured here: served entry index-CrAwWm5f.js, 1,234,802 B, sha256 9fd89456daf12bcab4bb775c8a8522d506a0acb2d3ac6d888209f86d04131536, content-type text/javascript, matches_expected true.",
+  "G2_faces": {
+    "Today": { "verdict": "COMPATIBLE", "rendered": "h1「Demo之旅」; 「晚上好 / 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天」; 「现在 Riverside Museum / 接下来 12:15 Central Food Hall / 今天还有 6 项安排」; 「\"现在\"取自服务器场景（执行游标）：10月10日 10:45」", "control_pressed": "查看实时行程 at (107,468), elementFromPoint hit BUTTON itself", "contract_boundary": "no", "writes": "GET-only from the UI; GET /experience writes on read, into _compat.db" },
+    "Journey": { "verdict": "COMPATIBLE_WITH_DECLARED_DEGRADATION", "rendered": "行程面 h1「1 天行程」with tabs 行程/住宿/预订/花费; plans/generate produced 3 plans (see AI face)", "contract_boundary": "no", "declared_gap": "the wizard leg 新建→确认创建 was NOT walked: on this build a fresh profile with an ACTIVE scene boots straight into the shell (heading「Demo之旅」, no wizard), and clearing citynexus.v8.journey_id did not bring the wizard back either; the reachable create path is 试用其他城市, which I did not complete. So '新建' is NOT-TESTED-BY-ME, while '生成→方案列表' is proven through the AI face.", "writes": "POST /plans/generate into _compat.db" },
+    "Map": { "verdict": "COMPATIBLE", "rendered": "h1「整座城市，行程叠加其上。」; panel class「v8-map-panel v8-map-empty」i.e. the honest empty branch:「尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。」", "control_pressed": "对比出行方式 at (82,269) hit BUTTON itself", "contract_boundary": "no", "note": "gesture hint is correctly absent on the empty branch here; the demo journey has no coordinates, so no map is created and none is promised", "writes": "GET-only" },
+    "AI": { "verdict": "COMPATIBLE", "rendered": "sheet「AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。」; then「这台服务已接入 AI 模型。发出请求…」at t=16s; then「已生成 3 个…」at t=60s and t=120s", "control_pressed": "AI 帮我规划 at (51,222) hit button.v8-quiet-button; 开始规划 at (228,806)", "gating_proven": "开始规划 is disabled while the textarea is empty (press1 disabled:true, valueLen:0), enabled after typing 24 chars (press2 disabled:false) - a correct precondition gate, not an inert button", "requests": ["POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/agent/commands", "POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/generate"], "http_4xx5xx": [], "cost_note": "one real model call was spent, on the commander's instruction to walk this face; canary runs ai=enabled", "contract_boundary": "no", "writes": "two POSTs into _compat.db" },
+    "Wallet": { "verdict": "COMPATIBLE", "rendered": "预订面 buttons: 预订 / 粘贴确认信息 / 手动填写 / 提取文本草稿 / 提取图片草稿", "reachability": "the 预订 tab lives in .trips-tabs whose scrollWidth is 1442 against clientWidth 356; at scrollLeft 0 its rect is [741,105,356,40] i.e. outside the 390px viewport. After scrolling the strip it lands at [17,105,...] and the point (195,125) hits the BUTTON itself.", "contract_boundary": "no", "writes": "none observed" },
+    "Simulation": { "verdict": "COMPATIBLE", "entry": "菜单 (button.v8-mobile-menu at (40,33), touch tap) opens #v8-nav-drawer listing 14 items including 恢复与执行; that row was scrolled into view and its centre hit-tested to its own svg child, then tapped by touch", "rendered": "h1「权威行程执行。」; actions 刷新真相 / 标记 进行中 / 预览影响 / 接受编辑 / Refresh recovery", "polish_observation": "「Refresh recovery」renders in English inside a Chinese-labelled action row - same family as D's ORD-0240 rule that a Chinese UI must not show untranslated strings; reported as an observation, not as a compatibility red", "contract_boundary": "no", "writes": "panel opened, no action triggered, 0 requests" }
+  },
+  "G3_new_endpoints": "No 404/405/422 anywhere across six runs. Named request inventory: GET /api/v1/demo/scene, /experience, /replans, /plans, /twin, /agent-feed, /wallet, /offline-snapshot, /api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy, /api/v1/agent/runtime-status; POST /agent/commands and POST /plans/generate. All answered below 400. => no FRONTEND_EXCEEDS_PINNED_BACKEND observed.",
+  "G4_console": "0 console messages and 0 page errors across every canary run (recon1, smkA1, smkA2b, smkB1, smkB2, smkB3, smkB4, smkB5, smkB6). Baseline for comparison is the deployed bundle index-DtQ86lsQ.js measured by this same lane on the same 53fe8e8 backend tonight (ord0225_live_live3.json): also 0 console / 0 pageErrors. So no regression, judged as a comparison and not as an absolute count.",
+  "G5_no_swaps": "I did not touch dist, index.html or the SW precache, and did not restart or kill any canary process.",
+  "NOT_TESTED_BY_ME": {
+    "POST_demo_reset_still_403": "deliberately not attempted. My standing lane rule forbids pressing demo/reset because it wipes 52 tables, and the only reason to believe it is guarded here is the commander's own 10:3x reading (403 PREVIEW_GUARDED). Firing it at a shared canary copy to satisfy a checkbox is not worth destroying another lane's asset. Recorded as NOT-TESTED, not as green.",
+    "wizard_create_path": "see the Journey face's declared_gap"
+  },
+  "retracted_by_me_in_this_order": [
+    { "claim": "group A first filed all six faces INCOMPATIBLE_BACKEND_CONTRACT", "mechanism": "my errorCopy matcher included 没有/不可用/未加载, and the honest empty state is literally 「这个行程还没有可信的坐标」. Words are not evidence; reds were narrowed to named 4xx/5xx, page errors and unreachable controls." },
+    { "claim": "菜单 is covered by another element and Simulation is only reachable from the desktop sidebar", "mechanism": "group A pressed the menu while standing on the 行程 surface and then clicked a sidebar row whose rect was [0,0,0,0]. From Today a real touch tap on button.v8-mobile-menu opens the drawer, and 恢复与执行 is one of its 14 rows. Both degradations were mine." },
+    { "claim": "B3: AI face NOT_REACHED", "mechanism": "arrival was tested with 需要改变什么/询问 Copilot, which belong to the /v8/agent page, not to this sheet. The sheet's own affordances (× / 稍后 / 开始规划 / two suggestion chips) appeared after the tap and were absent before." },
+    { "claim": "B4: no answer sample", "mechanism": "my 'still working' regex included the ellipsis character, and truncated labels are full of it, so the loop never settled. Replaced by fixed-time sampling at 10/40/90/150 s." },
+    { "claim": "B5: 开始规划 does nothing and sends no request", "mechanism": "the button is disabled while the textarea is empty (disabled:true, valueLen:0). Typing 24 characters enabled it and the very next tap produced two POSTs. A correct precondition gate read as an inert control because I never checked disabled." }
+  ],
+  "instrument_hygiene": "run tag smkA1 was written twice: the first group-A run (wrong verdict rule) was overwritten by the corrected one because I forgot to pass CNX_RUN the second time. The overwritten content was already retracted above, but the collision is recorded rather than hidden. Later runs each carry their own tag.",
+  "receipts": {
+    "recon": "ord0242_recon1.json",
+    "groupA": "ord0242_groupA_smkA1.json (corrected rule; overwrote an earlier smkA1)",
+    "groupA2": "ord0242_groupA2_smkA2b.json",
+    "groupB1": "ord0242_groupB1_smkB1.json (superseded verdicts)",
+    "groupB2": "ord0242_groupB2_smkB2.json and ord0242_groupB2_smkB3.json",
+    "groupB4": "ord0242_groupB4_smkB4.json",
+    "groupB5": "ord0242_groupB5_smkB5.json",
+    "groupB6": "ord0242_groupB6_smkB6.json (authoritative for the AI face)",
+    "scripts": ["ord0242_recon.cjs", "ord0242_smoke_A.cjs", "ord0242_smoke_A2.cjs", "ord0242_smoke_B1.cjs", "ord0242_smoke_B2.cjs", "ord0242_smoke_B4.cjs", "ord0242_smoke_B5.cjs", "ord0242_smoke_B6.cjs"]
+  },
+  "package_verdict": "6 faces: 5 COMPATIBLE + 1 COMPATIBLE_WITH_DECLARED_DEGRADATION (Journey, because the wizard create leg was not walked). Zero named 4xx/5xx, zero new-endpoint failures, zero console regressions, and the two POSTs the new bundle makes both exist on 53fe8e8. => no face is a contract boundary, so nothing in this evidence forces HOLD on the contract question. The unproven leg is mine to close, not the backend's."
+}
