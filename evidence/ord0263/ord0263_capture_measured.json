@@ -1,0 +1,43 @@
+{
+ "source": "measured on my canary 16:4x-17:0x (no mocks; my own processes)",
+ "cells": {
+  "S1_live": {
+   "classified_label": "LIVE",
+   "rendered_text": "下午好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 … 今天 还没有安排 “现在”取自服务器场景（行程起点，游标状态 ABSENT_FALLBACK）：2026-10-10T09:00:00+08:00",
+   "origin_answer": {
+    "status": 200,
+    "thrown": false
+   },
+   "snapshot_present": true
+  },
+  "S2_origin_error": {
+   "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT (claimed as network by the build)",
+   "origin_answer": {
+    "status": 500,
+    "ct": "text/plain",
+    "thrown": false
+   },
+   "navigator_onLine": true,
+   "snapshot_present": true,
+   "rendered_text": "CN | 离线 · 只读 | 你未来 24 小时已保存。 | 网络不可用 · 正在显示只读的已保存行程。 | 重试 | 现在 · COMPLETE | 行程完成 | 下一步 · — | 无下一步 | 供应商数据最后刷新于 此快照之前。离线状态下财务操作已禁用。",
+   "doors": {
+    "retry": 1
+   }
+  },
+  "S3_no_answer": {
+   "classified_label": null,
+   "origin_answer": {
+    "status": null,
+    "thrown": true
+   },
+   "settled_within_deadline": false,
+   "seconds_to_settle": null,
+   "navigator_onLine": true,
+   "snapshot_present": true,
+   "rendered_text": "CN | 正在准备城市周末行程… | 锚点 · 住宿 · 出行事实 · 可行性",
+   "doors": {
+    "retry": 0
+   }
+  }
+ }
+}
