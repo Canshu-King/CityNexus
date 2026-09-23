@@ -1,0 +1,15 @@
+{
+ "at": "2026-09-23T23:54:56+08:00",
+ "what": "addendum to ord0263_fifthstate_publish_coordinates.json: the bus delivery proof row",
+ "bus_comment": 5798086892,
+ "file": "ord0263_fifthstate_bus_receipt.json",
+ "repo_path": "evidence/ord0263-fifthstate/ord0263_fifthstate_bus_receipt.json",
+ "bytes": 299,
+ "blob40": "15ed13a4ac29dd269302494ead7c5440dc41288e",
+ "readback_status": 200,
+ "readback_bytes": 299,
+ "readback_blob40": "15ed13a4ac29dd269302494ead7c5440dc41288e",
+ "verdict": "PROVEN",
+ "original_index_left_published_and_untouched": true,
+ "shipped_total_now": 12
+}
