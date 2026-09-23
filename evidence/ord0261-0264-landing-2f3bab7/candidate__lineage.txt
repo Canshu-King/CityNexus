@@ -1,0 +1,3 @@
+2f3bab7fa4a412725f09c87ab7314781d7cdd8eb 6ddc5dc76fe6a82764506d38109fd8ec20fa66e9 2026-09-23 18:27:12 +0800 test(e2e): rewrite the wizard gate to SCROLL_REACHABLE_AND_TAPPABLE and run the two ruling arms (ORD-0261/0264)
+6ddc5dc76fe6a82764506d38109fd8ec20fa66e9 8fca3a269515458c1fb7a2695855e5a2654fdd05 2026-09-23 17:10:54 +0800 fix(frontend): reserve the sticky bar's height and bring the advanced opener into reach (ORD-0261, ORD-0264)
+8fca3a269515458c1fb7a2695855e5a2654fdd05 035721357da99a43c276f5803df83c3b08c1361c 2026-09-23 16:52:37 +0800 test(e2e): ORD-0261 read-only reproduction - enumerate labelled controls and record true centre hits
