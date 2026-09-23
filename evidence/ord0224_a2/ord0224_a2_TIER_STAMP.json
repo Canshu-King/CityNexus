@@ -51,17 +51,17 @@
     },
     {
       "file": "mutant_rounds_Y3_http_2ab69f2.json",
-      "bytes": 12145,
-      "git_blob_sha1": "2650cd5a17c85f7bf0546037c522cc72edcc0362",
+      "bytes": 13789,
+      "git_blob_sha1": "091b692280f59944",
       "grade": "CLOSURE_GRADE_MEASUREMENT_NOT_SIGNED",
-      "why": "A-2 要求的两枚反例之一（layer C 败者回读）：control GREEN、RED 10/10、campaign_valid=True。"
+      "why": "A-2 两枚反例之一（layer C 败者回读，改 app/catalog_hydration_operations.py）：控制轮 GREEN、RED 10/10、campaign_valid=True。这一版每轮都记了自己用的绝对临时库路径并在批尾自删（removed 11 / left 0）；它替掉的 v1（blob 2650cd5a17c85f7b）同一棵树、同一判据同样 10/10，只是拿不出具名清理依据。"
     },
     {
       "file": "mutant_rounds_Y2_http_2ab69f2.json",
-      "bytes": 11162,
-      "git_blob_sha1": "bf72437f4d6f3eba83a2db948b75811227b036a5",
+      "bytes": 12794,
+      "git_blob_sha1": "49eec1e31a18b375",
       "grade": "CLOSURE_GRADE_MEASUREMENT_NOT_SIGNED",
-      "why": "A-2 要求的两枚反例之二（layer B 部分唯一索引谓词永不命中）：control GREEN、RED 10/10、campaign_valid=True。"
+      "why": "A-2 两枚反例之二（layer B 部分唯一索引谓词永不命中，改 db/schema.sql）：控制轮 GREEN、RED 10/10、campaign_valid=True；十轮全部红在臂一（两发拿到 2 枚不同 operation_id、都 202 且 reused=False）。同样带具名自清（removed 11 / left 0）；被替掉的 v1 blob bf72437f4d6f3eba。"
     },
     {
       "file": "c_to_b_ord0219_unique_assertions.md",
@@ -85,6 +85,6 @@
       "why": "Y3 对**进程内**那枚 g3 门的批量反例：run_shape=single-node、控制轮 GREEN、RED 3/10（campaign_valid=False 按“必须全红”的定义）。它只回答“Y3 能不能杀掉那一枚单进程门”，不能替跨进程闭包门签字，也不能反过来 拿闭包门的 10/10 给它充数；两批的 scope 各自是 (SHA, nodeid, run_shape) 三元组。另：更早那批 probe_y3_determinism_349c4fa.json 的 run_shape 是“一轮跑 5 个声明 nodeid 的单进程”，它的 red:10 与本件不可互换。"
     }
   ],
-  "revision": 2,
-  "revision_note": "v2（12:5x）：补进 F 那一臂的 3/10 收据并限它自己的 scope；v1 只列 10 件，已发布的 v1 blob 仍可达，本件的 v1 sha 见账本 12:4x 那块。"
+  "revision": 3,
+  "revision_note": "v3（12:5x）：Y3/Y2 两件升到「带每轮具名临时库 + 批尾自删」的版本；判据、树、SHA、轮数都没变，两批复跑仍是 control GREEN + 10/10。版本换是披露不是掩盖：旧 v1 两件（2650cd5a17c85f7b / bf72437f4d6f3eba）与 v1 戳（5ca7356ccaacc97b）、v2 戳都在历史上可达，谁引用过就照旧引用，新坐标一并列在这。 另：三批 Y3 合计 30 轮全红（21 轮自然臂 / 9 轮锁臂），0 轮逃出 —— 这就是两臂并存的实测价值。"
 }
