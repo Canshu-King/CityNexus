@@ -1,0 +1,229 @@
+{
+ "discipline_header": {
+  "at": "2026-09-23T11:47:53+08:00",
+  "per_tree_receipts": [
+   "ord0245_payload_phone_baseline.json",
+   "ord0245_payload_live_line.json"
+  ],
+  "run_shape": "one process per tree, own disposable seeded store, in-process TestClient, resolver=off + port-9 tripwire, no port bound, no user chain, no live/preview db opened",
+  "commands": [
+   "python lab/tools/harness_ord0245_payload_diff.py"
+  ],
+  "collected": "12 endpoints x 2 trees",
+  "environment_contract": {
+   "CITYNEXUS_ENV": "test",
+   "CITYNEXUS_AI_ENABLED": "false",
+   "CITYNEXUS_DEMO_MODE": "false",
+   "CITYNEXUS_GUARDIAN_AUTORUN": "false",
+   "DEEPSEEK_API_KEY": "",
+   "CITYNEXUS_AI_API_KEY": "",
+   "CITYNEXUS_ANYWHERE_RESOLVER": "off",
+   "CITYNEXUS_PHOTON_BASE_URL": "http://127.0.0.1:9",
+   "PYTHONDONTWRITEBYTECODE": "1"
+  },
+  "cross_shape_rule": "a difference measured under another run shape is NOT_COMPARABLE_AS_REGRESSION_DELTA"
+ },
+ "trees": {
+  "baseline": {
+   "label": "phone_baseline",
+   "repo": "D:\\moodle\\_qoder_cmdr_gate_20260921",
+   "head": "53fe8e8",
+   "backend_dirty": "",
+   "anywhere_capability_sha256_16": "0231d36670b8b543",
+   "fixture_bytes_freed": 839680,
+   "fixture_left_open": [],
+   "cleanup_note": "fixture removed by this run"
+  },
+  "head": {
+   "label": "live_line",
+   "repo": "D:\\moodle\\_qoder_integration_20260919",
+   "head": "a1cc0c1",
+   "backend_dirty": "M backend/tests/test_qoder_anywhere_gates.py\n?? backend/tests/_qoder_g3_http_worker.py\n?? backend/tests/test_qoder_g3_xproc_http.py",
+   "anywhere_capability_sha256_16": "cb0e24c14fa7ad73",
+   "fixture_bytes_freed": 839680,
+   "fixture_left_open": [],
+   "cleanup_note": "fixture removed by this run"
+  }
+ },
+ "endpoints": {
+  "GET /api/v1/demo/scene": {
+   "baseline_http": 200,
+   "head_http": 200,
+   "baseline_key_count": 15,
+   "head_key_count": 15,
+   "only_at_head": [],
+   "only_at_baseline": []
+  },
+  "GET /api/v1/destinations/capability": {
+   "baseline_http": 200,
+   "head_http": 200,
+   "baseline_key_count": 68,
+   "head_key_count": 88,
+   "only_at_head": [
+    "candidates",
+    "coverage_detail.mobility.hard_eligible",
+    "coverage_detail.mobility.source_classes",
+    "destination_pending_key",
+    "destination_state",
+    "hard_gaps",
+    "malformed_candidates",
+    "pending_destination_label",
+    "pending_label_fidelity",
+    "places",
+    "places[].category",
+    "places[].id",
+    "places[].latitude",
+    "places[].longitude",
+    "places[].name",
+    "places[].osm_type",
+    "places[].source_identity",
+    "places[].source_provider",
+    "resolver_query_normalized",
+    "retryable"
+   ],
+   "only_at_baseline": []
+  },
+  "GET /api/v1/health": {
+   "baseline_http": 200,
+   "head_http": 200,
+   "baseline_key_count": 5,
+   "head_key_count": 5,
+   "only_at_head": [],
+   "only_at_baseline": []
+  },
+  "GET /api/v1/journeys/{journey_id}": {
+   "baseline_http": 200,
+   "head_http": 200,
+   "baseline_key_count": 14,
+   "head_key_count": 14,
+   "only_at_head": [],
+   "only_at_baseline": []
+  },
+  "GET /api/v1/journeys/{journey_id}/agent-feed": {
+   "baseline_http": 200,
+   "head_http": 200,
+   "baseline_key_count": 3,
+   "head_key_count": 3,
+   "only_at_head": [],
+   "only_at_baseline": []
+  },
+  "GET /api/v1/journeys/{journey_id}/constraints": {
+   "baseline_http": 200,
+   "head_http": 200,
+   "baseline_key_count": 11,
+   "head_key_count": 11,
+   "only_at_head": [],
+   "only_at_baseline": []
+  },
+  "GET /api/v1/journeys/{journey_id}/experience": {
+   "baseline_http": 200,
+   "head_http": 200,
+   "baseline_key_count": 99,
+   "head_key_count": 99,
+   "only_at_head": [],
+   "only_at_baseline": []
+  },
+  "GET /api/v1/journeys/{journey_id}/plans": {
+   "baseline_http": 200,
+   "head_http": 200,
+   "baseline_key_count": 0,
+   "head_key_count": 0,
+   "only_at_head": [],
+   "only_at_baseline": []
+  },
+  "GET /api/v1/places": {
+   "baseline_http": 200,
+   "head_http": 200,
+   "baseline_key_count": 8,
+   "head_key_count": 8,
+   "only_at_head": [],
+   "only_at_baseline": []
+  },
+  "GET /api/v1/travelers/{traveler_id}/capabilities": {
+   "baseline_http": 200,
+   "head_http": 200,
+   "baseline_key_count": 8,
+   "head_key_count": 8,
+   "only_at_head": [],
+   "only_at_baseline": []
+  },
+  "POST /api/v1/catalog-hydrations": {
+   "baseline_http": 202,
+   "head_http": 202,
+   "baseline_key_count": 28,
+   "head_key_count": 34,
+   "only_at_head": [
+    "destination_pending_key",
+    "destination_state",
+    "pending_destination_label",
+    "pending_label_fidelity",
+    "resolver_query_normalized",
+    "retryable"
+   ],
+   "only_at_baseline": []
+  },
+  "POST /api/v1/journeys/{journey_id}/plans/generate": {
+   "baseline_http": 201,
+   "head_http": 201,
+   "baseline_key_count": 76,
+   "head_key_count": 76,
+   "only_at_head": [],
+   "only_at_baseline": []
+  }
+ },
+ "new_fields_by_endpoint": {
+  "GET /api/v1/destinations/capability": [
+   "candidates",
+   "coverage_detail.mobility.hard_eligible",
+   "coverage_detail.mobility.source_classes",
+   "destination_pending_key",
+   "destination_state",
+   "hard_gaps",
+   "malformed_candidates",
+   "pending_destination_label",
+   "pending_label_fidelity",
+   "places",
+   "places[].category",
+   "places[].id",
+   "places[].latitude",
+   "places[].longitude",
+   "places[].name",
+   "places[].osm_type",
+   "places[].source_identity",
+   "places[].source_provider",
+   "resolver_query_normalized",
+   "retryable"
+  ],
+  "POST /api/v1/catalog-hydrations": [
+   "destination_pending_key",
+   "destination_state",
+   "pending_destination_label",
+   "pending_label_fidelity",
+   "resolver_query_normalized",
+   "retryable"
+  ]
+ },
+ "new_field_token_union": [
+  "candidates",
+  "category",
+  "destination_pending_key",
+  "destination_state",
+  "hard_eligible",
+  "hard_gaps",
+  "id",
+  "latitude",
+  "longitude",
+  "malformed_candidates",
+  "name",
+  "osm_type",
+  "pending_destination_label",
+  "pending_label_fidelity",
+  "places",
+  "resolver_query_normalized",
+  "retryable",
+  "source_classes",
+  "source_identity",
+  "source_provider"
+ ],
+ "route_table_note": "endpoints are identical across the two trees (measured separately): the contract gap is field-level only"
+}
