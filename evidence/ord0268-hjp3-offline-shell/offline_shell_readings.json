@@ -1,0 +1,61 @@
+{
+ "lane": "HJ-P3-aad2d1f2",
+ "run_id": "HJP3-OFF-0058",
+ "taken_at_local": "2026-09-24 00:58 -> 01:0x +08",
+ "question": "ORD-0268 killer item (3): with the ORIGIN fully down (not just a face), what does a returning client get at /v8/hub - the SW-served shell or chrome-error? Plus CacheStorage presence and the asset names the document references.",
+ "assigned_by": "commander block @2026-09-23T23:2x+08 (still mine as an independent reading; the runtime cell was re-assigned to HJ-P1 1a986a24 at 00:5x by arbiter 5798888472 - this does NOT overwrite that, it is a second reading)",
+ "gen_under_test": {
+   "landed_tip": "1f4440819a9d773da6e18f12a31412f73c6d0f55",
+   "dist_source": "D:/moodle/_qoder_cmdr_deploy_1f44408_0923/repo/frontend/dist (hardlink-copied to _hjp3_fan_sweep_0923/snap_1f44408_dist, nobody's tree touched)",
+   "v10_sw_js_bytes": 2055,
+   "v10_sw_js_sha256": "e63d7421eda340937df28bd0cae35624ab413607f9819e69b519b7d7ede69dbd",
+   "v10_sw_js_sha256_prefix_16_quoted_by_commander": "e63d7421eda34093",
+   "sha256_computed_on": ["_hjp3_fan_sweep_0923/snap_1f44408_dist/v10-sw.js", "_qoder_preview_20260920/dist/v10-sw.js (the user chain's live dist)"],
+   "sha256_two_copies_agree": true,
+   "marker_note": "asset bytes are identical to the previous generation, so the sw sha (not the bundle name) is the generation marker - as the commander warned",
+   "duplicate_shell_entry_removed": {
+     "grep_v10_shell_in_sw": 0,
+     "grep_url_slash_index_html_in_sw": 0,
+     "precache_entries_in_sw": ["sw.js@1eebbb6e...", "index.html@213aa276...", "assets/maplibre-gl-kx9AWR05.js", "assets/JourneyMap-TiEm8jyP.js", "assets/index-I45CQek8.css", "assets/index-Cpy_jhEg.js", "favicon.svg@339a4892...", "manifest.webmanifest"]
+   }
+ },
+ "face": {"url": "http://127.0.0.1:8488", "pid": 19428, "cmdline_proven": "node node_modules/vite/bin/vite.js preview --outDir D:/moodle/_hjp3_fan_sweep_0923/snap_1f44408_dist --port 8488 --host 127.0.0.1 --strictPort", "backend_proxy": "CITYNEXUS_BACKEND_PORT=8424 (mine)", "viewport": "390x844"},
+ "step_1_online_first_visit": {
+   "service_worker": {"controlled": true, "active_script": "http://127.0.0.1:8488/v10-sw.js", "scope": "http://127.0.0.1:8488/"},
+   "cachestorage_keys": ["workbox-precache-v2-http://127.0.0.1:8488/"],
+   "precache_entries_total": 8,
+   "html_like_entries": ["http://127.0.0.1:8488/index.html?__WB_REVISION__=213aa276841d50a8a61cf75dd7408a7f"],
+   "note": "exactly ONE html entry, carrying the content-derived revision - the second entry with the hand-written constant no longer exists on the wire or in the cache"
+ },
+ "step_2_origin_taken_down": {"how": "Stop-Process on my own listener pid 19428 after reading its Win32_Process.CommandLine; netstat afterwards = 0 listeners on 127.0.0.1:8488", "backend_8424": "left running (not part of this cell)"},
+ "step_3_returning_client_navigation": {
+   "url_requested": "http://127.0.0.1:8488/v8/hub",
+   "goto_error": null,
+   "final_url": "http://127.0.0.1:8488/v8/hub",
+   "document_title": "CityNexus Trip Operations",
+   "rendered_text_head": "用你自己的城市试用 CITYNEXUS / 新建行程 / 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 / 1 目的地与时间 2 人数与偏好 3 确认创建 ... 还需要填写：目的地、抵达地点、离开地点 / 下一步 / 使用封存的演示行程",
+   "body_chars": 168,
+   "document_scripts": ["/assets/index-Cpy_jhEg.js"],
+   "service_worker_controlled": true,
+   "page_errors": 0,
+   "chrome_error_page": false,
+   "verdict": "SW answered the shell - the app renders with the origin dead"
+ },
+ "step_4_negative_control": {
+   "why": "to prove the shell came from the SW + workbox precache and not from the browser HTTP cache",
+   "teardown_on_my_own_origin": {"service_workers_unregistered": 1, "caches_deleted": 1, "caches_remaining": []},
+   "url_requested": "http://127.0.0.1:8488/v8/hub?t=negative-control",
+   "goto_error": "net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8488/v8/hub?t=negative-control",
+   "final_url": "chrome-error://chromewebdata/",
+   "rendered_text": "无法访问此网站 / 127.0.0.1 拒绝了我们的连接请求。 / 请试试以下办法： / 检查网络连接 / 检查代理服务器和防火墙 / ERR_CONNECTION_REFUSED / 重新加载 / 详情",
+   "service_worker_controlled": false,
+   "verdict": "without the SW+precache the same dead origin gives a CHROME page, not the product - so step 3 was the SW answering"
+ },
+ "relation_to_0263": "the chrome-error text in step 4 is Chrome's own page; that is exactly the surface that produced the old 「网络不可用」 mis-attribution family (ORD-0263 first state). With the cache populated the user never sees it.",
+ "discipline": {"demo_reset": 0, "product_bytes_modified": 0, "user_stores_touched": 0, "tunnel_touched": 0, "pages_closed": "0 (I only used my own tab); faces: I started :8488 for this cell and stopped it myself, so my listener list is back to :8424 :8479 :8483 :8484 :8485 :8486 :8487 :8598 :8599", "secrets_printed": 0},
+ "not_claimed": [
+   "no screenshot of the offline shell was kept (the state was torn down by the negative control); the load-bearing evidence here is the two-way pair, quoted verbatim",
+   "this is a real-browser reading on MY face/origin, not on the user's phone and not on the tunnel address",
+   "I did not re-run the 换代尺 and do not touch its RED/DEBT-4 judgement"
+ ]
+}
