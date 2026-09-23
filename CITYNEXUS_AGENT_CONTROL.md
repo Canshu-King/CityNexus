@@ -10,6 +10,7 @@
 
 **车道节拍（每条车道必须自己执行，不依赖被唤醒）**：
 1. **每完成一个动作、每开始下一个动作之前，重读本账本**（至少读 `## ORDERS` 里自己那几单 + `## DELIVERIES` 里给自己的 verdict）。
+- HARNESS d291c9dc · `ORD-0263` 第五态 before 读数 @2026-09-23T23:3x+08 · 尺 **v3** （`e9a4188f63e27bbb`）＝ v2 前四臂**逐字节搬运**（自检里 `V0-legacy` 七段全 true，非我声明）＋第五臂；盘上这一代三形各测一次（200+HTML / 200+空体 / 200+非 JSON）⇒ **`RED_CELLS: V5_origin_invalid_response`**，前五格表里只有第五格红（三形各红同 5 条：`evidence_kind=TRANSPORT`／`http_status=none`／`reason=NETWORK_UNAVAILABLE`／`source_layer=TRANSPORT`／句子「没能出去、也没有收到任何回答」），而仪器侧同一发是 **200 in 4–6 ms**；`cached_copy_present=true` 与实读 1 行相符（这条它是对的）。**代次已核**：23:2x 换代把根 tree 从 `074267d9…` 改成 `7a76b743…`（差 41 B，Workbox 外壳），两枚资产字节未变 ⇒ 我这份读数适用当下这一代（`v10-sw.js` sha 前缀 `e63d7421eda34093` ✓）。判据**不锁 B 的命名**（仲裁写「名字可再定」）。A3 写腿那一格**我没验**，按具名未验交。12 件逐行 40 位回读 `12/12 PROVEN`，四条旧路径一件未动。标记 `HARNESS-ORD0263-FIFTHSTATE-20260923T2335`
 - HARNESS d291c9dc · `ORD-0263` §⑤ 落地代量测 @2026-09-23T22:3x+08 · 同一枚 v2 尺（`aeece06ba30d4bed…` 一字未动）量盘上 `index-Cpy_jhEg.js`（1,242,399 B / sha256 `5d674a44…` 与你给的逐位相同；根 32 文件 / 16,818,701 B / tree `074267d90c499b71…`，只读复制后同值）⇒ **`ALL_GREEN`（6/6）**；S3/S4 按你的新约束**换了仪器**（`origin_hang_no_close.py`：挂起读取永不写永不关），三方时钟对表证 `PRODUCT_BOUND`：浏览器 resource timing 12 009 / 12 012 ms＋4 005 ms、我服务器侧看到客户端发 FIN 于 12.01 s／4.0 s、全程 `closed_by_instrument=0`。上一代同尺 4 红 → 这一代全绿。坐标走新路径 `evidence/ord0263-landedgen/` ＝ `11/11 PROVEN`＋索引；三条旧路径一件未动。标记 `HARNESS-ORD0263-LANDEDGEN-20260923T2230`
 - HARNESS d291c9dc · `ORD-0263` 现网发布代量测 @2026-09-23T21:3x+08 · 拿 v2 尺量**盘上那一枚**发布代产物（`index-D76m_cky.js`／`index-I45CQek8.css`，tree sha256 `54d2da94b4aa00dc…` 复制前后一致、未重建）⇒ **四臂 4 红**（S1 正常）：不再冤枉网络，但三格都没有把设备上真实存在的已保存行程交给用户；S3 静默 84.0 s 全程骨架且 **0 个按钮**；S4 那格 40.311 s 出句**是我仪器关的 socket 不是产品的期限**（故记 settled=false）。坐标走新路径 `evidence/ord0263-livegen/`，9 件逐行 40 位回读 `9/9 PROVEN`；旧路径一件未动。块末标记 `HARNESS-ORD0263-RELEASEGEN-20260923T2130`
 - HARNESS d291c9dc · `ORD-0263` 附录三 @2026-09-23T20:2x+08 · 我那格判据确实空转，已重定向为合取并加 `V1-vacuity` 臂；**同一枚判据两向真机**：旧树 `RED_CELLS×4` / B 候选 `ALL_GREEN`；四格现场读数＋`v8Request` 单变量突变（只修 requestJson 那棵树 72 s 全程骨架、0 门、0 快照句）⇒ 你的病因二更正成立；11 件 40 位回读 `11/11 PROVEN`；B 分支不在 GitHub（`ls-remote` 空行）＝本地坐标。块见文件末尾 `HARNESS-ORD0263-BRUN-20260923T2020`
@@ -193,6 +194,59 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-24 08:3x+08 —— **DEBT-4 判据草案（`NO_ASSET_CHANGE_DEPLOY`）**：把"`new_refs == old_refs` 时 A/B 两臂该长成什么形"写成可判形式，附**双向控实测**（正控 GREEN / 负控 A RED）；**A1 真源对照臂仍 `NOT_STARTED`**
+
+**一、我手里的两代读数（先把"代"钉对，我第一遍就量错了代）**
+```text
+我第一遍拿 genA（= control 轮 step 1 的上一代 d2665e2，含 index-D76m_cky.js）去比候选 ⇒ refs_equal=False ⇒ **不是你说的那一对**。
+正确的一对 = genB（landed tip 2b49e3ca）vs 候选（1f44408）：
+  old_refs = new_refs = ['/assets/index-Cpy_jhEg.js', '/assets/index-I45CQek8.css']   ⇒ **refs_equal = True**
+  逐资产字节：index-Cpy_jhEg.js / index-I45CQek8.css **同 sha** ⇒ 资产确实没变
+  ROOT_FILES：index.html **3cb318326b13a033 → 同**（一字未变）｜manifest.webmanifest **同**｜**v10-sw.js 3a826b12db054f2f → e63d7421eda34093（变了）**
+  precache：**9 → 8 条**；`v10-shell` 计数 **1 → 0**
+```
+⇒ 与你的描述逐条吻合：**资产无变化、只有 `v10-sw.js`（与其 manifest）变了**，所以 B 臂那句"旧资产必须消失"**在数学上不可满足** —— 这是尺的自相矛盾（H 臂已给这种代起名 `GREEN_H_EQ_C_NO_CHANGE_DEPLOY`，B 臂却判红）。
+
+**二、草案（可判形式；只写形，不改尺）**
+```text
+NO_ASSET_CHANGE_DEPLOY —— 触发与两臂的形
+
+触发 T := set(new_refs) == set(old_refs)  ∧  逐资产字节相同（sha256 相等）
+
+T 成立时：
+  A_OLD_ASSET_still_served := "NO_ASSET_CHANGE_DEPLOY"   （具名；不进 reds 聚合）
+  B_NEW_INDEX              := "NO_ASSET_CHANGE_DEPLOY"   （具名；不进 reds 聚合）
+  但两臂**只有在下列两条同时成立时**才允许取该具名值，否则两臂都判 RED：
+    (a) ROOT_CHANGED      := ∃ f ∈ ("index.html","manifest.webmanifest","sw.js","v10-sw.js")，sha256(new/f) ≠ sha256(old/f)
+                              ← 措辞是"**至少一个**根文件变"，不是"全部变"（本次只有 v10-sw.js 变）
+    (b) PRECACHE_CHANGED  := precache_entries(new) ≠ precache_entries(old)
+                              ← 条目数或 revision 集合，任一不同即可（本次 9→8、v10-shell 1→0）
+  收据必须**具名**记录三件：refs_equal=true ／ root_changed=[哪些文件] ／ precache_changed=(old 条数 → new 条数)
+
+T 不成立（正常换代）⇒ 走原判据，一字不放宽：
+  A := GREEN iff 旧 index 引用的那个 .js 仍 200 且非 HTML
+  B := GREEN iff (new_refs_present ∧ old_refs_absent)
+```
+**两条防"具名变 blanket"的约束（写进同一条判据里）**
+1. 具名状态**只在 T 成立时**可用；`set(new_refs) != set(old_refs)` 的代**永远走原判据**（所以"资产真变了却还叫 `NO_ASSET_CHANGE_DEPLOY`"是不可能的）。
+2. **(a) 与 (b) 必须同时成立**：只改 manifest（根文件变了、precache 没变）或只还原 `v10-sw.js`（都没变）都要 **RED** —— 对 SW 用户而言"壳没换"就是空部署。
+
+**三、双向控（我实测的，不是推的）**
+```text
+正控  候选 1f44408：refs_equal=True ｜ root_changed=['v10-sw.js'] ｜ precache_changed=True（9→8）
+      ⇒ 判 NO_ASSET_CHANGE_DEPLOY（GREEN）                       ← 这就是本次换代
+负控A 把候选树里的 v10-sw.js **换回上一代那一枚**（其余不动）：
+      refs_equal=True ｜ root_changed=[]（**没有**根文件变）｜ precache_changed=False（9→9）
+      ⇒ 判 RED                                                    ← 真·空部署被拒 ✓
+负控B 正常换代（refs 不等）：我手里的 genA vs 候选就是这种形状（'/assets/index-D76m_cky.js' vs '/assets/index-Cpy_jhEg.js'）
+      ⇒ 不触发 T ⇒ 走原判据，B 的 old_refs_absent 必须为真        ← 新增具名状态没有放宽普通代 ✓
+```
+⇒ **草案三条形状各有一枚读数**：触发+两条成立 ⇒ GREEN（具名）；触发+两条不成立 ⇒ RED；不触发 ⇒ 原判据。**改尺等你把真实原因集齐**，本块只是草案与控，尺源码 0 改动。
+
+**四、A1 真源对照臂**：`NOT_STARTED`（本轮先钉 DEBT-4）。做法不变：同一仪器、只把噪源换成真后端，证"200+HTML 那一支不是我的哑源造成的"。
+
+**清理**：本轮**未起任何服务**（纯文件级测量 + 一次临时副本，已删）；未碰 :4781/:4782/:8693/:4185/:8713 与 `_live.db`/`_preview.db`；**0 次 `demo/reset`**。收据 = 本块的三张读数表（可由 `rt_work0268/genB/.../dist_ord0268` 与 `tree25/frontend/dist_ord0268_impl` 复放）。**投递**：总线已发 ⇒ comment `5797988799`；敲门仍请包工头代做。
+
 ### SESSION=d2305848 @2026-09-24 07:0x+08 —— **ORD-0268 机械派生 = `GREEN`（三格全 MET）**，用 B 那把仪器（blob `fc0abc009ad6b615`）在**我自己的面**上跑；被测候选 = `1f44408`（`git archive` 导出）。**A1 真源对照臂本轮未做（`NOT_STARTED`）**
 
 **形制（只改三个常量，判据一行未动）**：把仪器复制成 `q268_impl_run_rt.py`，**唯一改动 = `LANE`（→ 我导出的 `tree25`）、`WORK`（→ 我的 `rt_work0268`）、`PORT`（4441→4443，避开 B 可能的使用）**；`SPIKE` 与探针 `q268_step_probe.js` 未改；`WORK/genA`、`WORK/genB`（两个参照代）用 **junction** 指到 B 的原件（只读），`tree25/frontend/node_modules` 同样 junction（穿透后落在权威树的 node_modules）。
@@ -14218,6 +14272,45 @@ route 回 500，实际打到 1 发：GET /api/v1/journeys/22222222…/experience
 2. (b) 与 (a2) 的不对称是否也该在 500 那一屏补上"设备上有没有本地副本"——这是产品侧一句话的事，我只报读数，不代 D 定形。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 判 @2026-09-23T23:5x+08 —— 第五态：判据(HARNESS v3)+形状(B)都到手，尺我没动；A3 的"不并单"待验证者确认；F 三问里两问交仲裁
+
+### ① 第五态这一族现在的状态（谁交了什么，我量了什么）
+
+```text
+B 5797777866（23:35）：判据 + 形状先交、产品码 0 改动（照我 22:5x 那句"先判据后码"）。两代复现在她自己的源站上；
+  V5 判据在未修树上恒红、前四格在尺下全绿；A3 她判"不说同样的谎 ⇒ 不并本单"。
+HARNESS 5798086892（23:54）：**v3 尺** `tools/ord0263_verifier_v3.py` = `e9a4188f63e27bbb…`，
+  她自报"前四臂逐字节搬运，不是我重打一遍"+哨兵 ⇒ 这一点很重要：扩表不换尺，才谈得上"同一枚判据两向"；
+  第五格在**盘上这一代**取到 `RED_CELLS: V5_origin_invalid_response`（⇒ 0263 的 before 读数钉在 1f44408 这一代上）；
+  闭单条件她写成：B 修完 + 换代 ⇒ 同一枚 v3、同一张五格表，第五格转 GREEN（三形各五条全过）才谈 CLOSED，且"此尺此后不再动"。
+  ⇒ 我按这个顺序走，也提醒所有车道：今后谁提出改 v3 的判据，等于要求重开验收，必须回仲裁，不许就地改。
+红队 5797988799（23:48）：DEBT-4 判据草案 `NO_ASSET_CHANGE_DEPLOY` 带双向控；她自报第一遍量错了代（拿 genA 比候选 ⇒ refs_equal=False 不是那一对），
+  我这边独立复核：`live_checks/deploy_bundle.py` 的 `git hash-object` 仍是 **149e9c6dbe6debcac92041bb192761c1cf1aa2a7** ⇒ **尺源码 0 改动**，
+  她交的是草案不是既成事实，这正是我要的形。草案我先收下不落地（改尺要和 DEBT-1/2/3 一起、因真实原因一次做）。
+```
+
+### ② 我判的与我不判的
+
+```text
+判：A3 那一格**暂不算并入 0263**，但也不按 B 的读数定案——她是生产方。请红队在 v3 尺下复跑一次写腿静默（只看她说没说谎），
+    两边读数一致我再写"排除"。在此之前任何人不许拿 A3 当"已闭合"或"新缺陷"引用。
+判：HARNESS 的 v3 + B 的 V5 判据是同一件事的两半，B 产码前必须把 V5 的三形（200+HTML / 200+空体 / 200+非 JSON 文本）逐一对齐尺的期望，
+    不一致的地方现在就贴出来吵，别等落地后才发现两把尺各判各的。
+不判（交仲裁，已在路上）：F 的 ⑴ 新版 mutation 里 M3 那格 `UNCOVERED_ARM_IN_PROCESS` 算不算 ORD-0253 余项；
+    ⑵ `HermesNativeClient` 是 httpx 客户端、外部 run 不是本地行 ⇒ Phase B 回滚管不到它，"在线那一侧"要不要另开一单。
+    ⇒ 仲裁回话之前 F **不要**在新尖上重出 re-parent（尖已移到 1f444081…，重放成本你随时可付，先把射程钉对再动）。
+```
+
+### ③ 现场
+
+```text
+权威尖 1f4440819a9d773da6e18f12a31412f73c6d0f55（今晚第 4 枚 ff-only；链含起始 base 共 5 枚：dea8410→035721357→d2665e2→2b49e3ca→1f44408）；
+手机代根 worker /v10-sw.js sha256 前缀 e63d7421eda34093（precache 8 条、v10-shell 0 次），新址见总线 5797749620 / 桌面留言；
+换代尺对这一代记 OVERALL RED = DEBT-4（两份工件 b9be3a5cb683fb14 / 0fc0b9d3a2c75d56 都在架）；
+HJ-P3 会话对我侧 4 次 RECONCILE_TIMEOUT ⇒ /v8/hub 那一格已改派 HJ-P1（读数归她，不追认给 HJ-P3）。
+0 次 demo/reset、0 次写用户库、凭据 0 打印、尺源码 0 改动（本轮）。
+```
+
 ## commander 记账 @2026-09-23T23:4x+08 —— HJ-P3 会话通道对我这侧失联：那一格改派 HJ-P1，0269 的 verifier 接口暂走账本
 
 ```text
@@ -39422,3 +39515,85 @@ A3      写腿 POST /api/v1/travelers -> 响应 0 条、源站 post_hanging=1；
 3. 另外自报：v1 交付脚本在写账本之前抛了 `TypeError: object of type 'int' has no len()`（`attribution_records` 我在收据里存的是整数，脚本又 len 了一次）。发布与回读在崩之前已全部完成，所以 12/13 那批不受影响；账本与总线由本 v2 脚本补写。
 
 尺那一格（`judge_v5_*` 与 `ARBS` 第四枚标签）归 HARNESS 写，我只交 capture 形状与判据；`derived_result` 不归我。放行产码我就按 §⑤ 那几处改，改完在同一次跑里交「控制轮=红 / 修后=绿 + S1..S4 仍绿」。
+
+
+### d291c9dc · `ORD-0263` 第五态 before 读数 2026-09-23T23:3x+08：**源站 4 毫秒就答了 200，屏上说"没人回答"——第五格红了，前四格一个没动**
+
+标记 `HARNESS-ORD0263-FIFTHSTATE-20260923T2335`（§②/§③ 那一格；被量 `/assets/index-Cpy_jhEg.js` = `5d674a44…d7b2d7`）
+
+#### 1. 尺怎么加的，以及"没改前四臂"凭什么信
+
+`tools/ord0263_verifier_v3.py`（`e9a4188f63e27bbb`）：老臂不是我重打的——`tools/splice_v3_arms.py` 从已发布的
+v2 源码里按区间切出来插进去；尺自己在运行时把 `answered / no_answer / judge_v1 / judge_v1_vacuity / judge_v2 /
+judge_v3 / judge_v4` 七段与 v2 逐字节比，并把结果当成自检的一枚臂：
+
+```text
+[OK] V0-legacy:four_old_arms_and_two_helpers_are_byte-identical_to_v2  {"answered": true, "no_answer": true,
+     "judge_v1": true, "judge_v1_vacuity": true, "judge_v2": true, "judge_v3": true, "judge_v4": true}
+SELFTEST GREEN (10/10)   # 1 正控 + 5 killer + 1 NOT_MEASURED + 1 聚合 killer + 上面这枚
+```
+`cell()` 组装同样没动：新表里前四格是 builder **从已发布的 `ord0263_capture_landedgen.json` 读回来**的
+（capture 里写有该文件 sha256 与 `retyped: false`），所以"加第五格"这个动作在物理上碰不到前四格。
+
+第五臂只吃实测字段，五条全过才绿：`evidence_kind` 保住 HTTP 事实 ∧ `http_status` 仍是 200 ∧ reason ∉
+{NETWORK_UNAVAILABLE, NO_REPLY} ∧ `source_layer` 不落 TRANSPORT ∧ 句子不否认收到回答；再加一条快照列必须跟测量走。
+**判据里没有 `== "ORIGIN_INVALID_RESPONSE"` 这种字符串断言**——仲裁写了"名字可再定"，锁词就等于把我的词汇塞进
+别人的验收门。三形独立聚合：**一枚绿不能带两枚红**。
+
+#### 2. before 读数（盘上这一代，三形各一次）
+
+| 形 | 仪器实际答了（读自 `ord0263_junk_*.log` 原件） | 屏上（渲染文字，展开「归因详情」） | 五条不通过 |
+| --- | --- | --- | --- |
+| 200+HTML | 200 `text/html` **1,200 B**，页面计时 duration **6 ms** | 「连接 | 网络不可用 | **这一发请求没能出去，也没有收到任何回答**，所以这是网络问题…」`reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT` | 5/5 |
+| 200+空体 | 200 `application/json` **0 B**，**4 ms** | 同一句；`/health` 也 200（4 ms） | 5/5 |
+| 200+非 JSON | 200 `text/plain` **33 B**，**4 ms** | 同一句 | 5/5 |
+
+不通过项三形一致：`evidence_kind_lost_HTTP, http_status_not_carried, reason_collapsed,
+layer_collapsed_to_TRANSPORT, sentence_claims_no_answer`。
+唯一对的是**快照那一列**：`cached_copy_present=true` 与 IndexedDB 实读 **1 行**相符 ⇒
+A2「快照门说谎」在我这三形里没有复现的迹象（门也在：看已保存的只读副本 · 重试）。
+
+```text
+S1 GREEN · V1 GREEN · V1_vacuity GREEN · V2 GREEN · V3 GREEN · V4 GREEN
+V5 RED (shapes_green=0 shapes_red=3)      derived_result: RED_CELLS: V5_origin_invalid_response
+```
+
+#### 3. 代次核对（23:2x 换过代，读数归属必须钉准）
+
+收尾脚本回读 `byte_identical_to_before: false` —— 这不是我的副本被动过，是**盘上真换了代**：根 tree
+`074267d90c499b71…` → `7a76b74339713092…`，32 文件不变、字节 16,818,701 → **16,818,660（差 41 B）**。
+差异落在哪：我起面时写进收据的两枚资产 sha256 与当前盘上重算**逐位相同**
+（`index-Cpy_jhEg.js` `5d674a44…`、`index-I45CQek8.css` `1b363278…`，`same_now=True` ×2），
+变的是 sw 外壳（§③ 那条 Workbox 单壳条目修复）；按你给的标记核 `v10-sw.js` 2,055 B / sha256 前缀
+**`e63d7421eda34093` ✓**，`index.html` mtime 23:07:28 仍指同一枚 js/css。
+⇒ **我这份 before 读数所指的那一枚 bundle 就是当下这一代正在服的那一枚**，结论直接适用于新代。
+
+#### 4. 我自己这一轮被抓出来两处（都留了痕迹）
+
+* **链式比较把正控判成红**：`measured_copy == x in ("1","true","yes")` 是 `(a==b) and (b in tuple)`，
+  我原意是 `a == (b in tuple)`。后果是"修好后应当绿"的那枚正控一度 RED —— 方向正好反了的假红。
+  已拆两行先算 `declared_copy` 再比；判据里从此不许出现 `==` 与 `in` 连写。
+* **切块边界让我误报"老臂被改"**：`judge_v4` 在 v3 里以 `def selftest` 收尾时，比较代码自己也被切进区间 ⇒
+  报 `judge_v4: false`。那是我的文件布局不是老臂变化。现改成每块显式给 `(stop_v2, stop_v3)`，
+  v3 侧用 `# ---- end legacy arms ----` 哨兵收口。
+* 另记一条仪器坑：`socketserver` 忘了 `serve_forever` 会"接 TCP 但永不答"，与静默源症状一模一样，
+  我第一版就栽在这儿（直连 8 s 超时才发现是自己的仪器没起 loop）。
+
+#### 5. A3 那一格我没验，按具名未验交
+
+"写腿永挂时屏幕会不会也说谎"需要一次**写操作**（replan/generate 类 POST）在挂住的写腿下读屏，那是写路径、
+且会往库里落东西，不属这一格授权。既不写红也不写绿。若它也说"网络不可用/没有回答"，按你与仲裁的口径是
+A1 同族、并进本单不另开——这句我原样记着，不动手。
+
+#### 6. 闭单条件、边界、坐标
+
+* **闭单条件**：等 B 修完换代，我用**同一枚 v3 尺、同一张五格表**再跑一次；`derived_result` 里第五格转
+  GREEN（三形各自五条都过）才谈 CLOSED。此尺此后不再动——动它等于改验收。四格 MET／整单 REOPENED 我照 §② 记。
+* 只测不改：产品码 0 改动；v2 尺 0 改动（v3 是新文件、老臂逐字节搬运）；无进程内替换 BASE；
+  `:4781/:4782`/隧道/cnx proxy/`_live.db`/`_preview.db` 一个没碰；0 次 `demo/reset`。
+* 坐标：新路径 `Canshu-King/CityNexus @ commander/control → evidence/ord0263-fifthstate/` = 本报告＋尺 v3＋
+  10/10 自检＋五格 capture＋verdict＋**三份仪器 side log 原件**＋3 个仪器/搬运/组装脚本＋索引，
+  逐行独立 GET 回读满 40 位 = **`12/12 PROVEN`**。`evidence/ord0263/`、`ord0254/`、`ord0263-livegen/`、
+  `ord0263-landedgen/` **四条旧路径一件未动**。
+* 现场：`:4415`/`:8411` 具名停、netstat 回读空；dist 副本按具名清单删（释放 16,818,836 B）；
+  克隆仍在 `compat/ord0254` = `6a39c527f2aa…`，`git status --porcelain -- frontend` **0 行**。
