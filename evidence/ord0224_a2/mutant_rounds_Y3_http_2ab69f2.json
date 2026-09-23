@@ -1,6 +1,6 @@
 {
   "tree": "snap_2ab69f2",
-  "sha": "2ab69f20adf783a6f288580129e3",
+  "sha": "2ab69f20adf783a6f29133f577877a88580129e3",
   "node": "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
   "mutant": "Y3",
   "mutant_layer": "C - loser read-back",
@@ -13,7 +13,7 @@
   "control_round": {
     "node_outcome": "GREEN",
     "exit_code": 0,
-    "summary": "======================== 1 passed, 4 warnings in 5.19s ========================",
+    "summary": "======================== 1 passed, 4 warnings in 5.21s ========================",
     "door_print": null
   },
   "rounds": [
@@ -22,8 +22,9 @@
       "mutated": false,
       "exit_code": 0,
       "node_outcome": "GREEN",
-      "summary": "======================== 1 passed, 4 warnings in 5.19s ========================",
+      "summary": "======================== 1 passed, 4 warnings in 5.21s ========================",
       "first_reason": "",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_omj4s5b_\\suite.db",
       "door_print": null
     },
     {
@@ -39,8 +40,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 5.18s ========================",
-      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(53711, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "summary": "======================== 1 failed, 4 warnings in 3.03s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(56641, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_9ujxmfhm\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -58,8 +60,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 5.47s ========================",
-      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(50116, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "summary": "======================== 1 failed, 4 warnings in 3.12s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(63753, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_x3n4z1er\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -77,8 +80,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 3.11s ========================",
-      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(53136, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "summary": "======================== 1 failed, 4 warnings in 3.22s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(59881, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_vrvlr40x\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -96,8 +100,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 5.64s ========================",
-      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(61100, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "summary": "======================== 1 failed, 4 warnings in 3.33s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(62986, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_pcfvwk_v\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -115,8 +120,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 3.70s ========================",
-      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(61960, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "summary": "======================== 1 failed, 4 warnings in 3.12s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(58688, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_jmjv7wmr\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -134,8 +140,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 4.10s ========================",
-      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(59150, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "summary": "======================== 1 failed, 4 warnings in 5.61s ========================",
+      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(57338, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest__ifpp7gn\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -153,8 +160,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 3.46s ========================",
-      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(50972, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "summary": "======================== 1 failed, 4 warnings in 3.45s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(62395, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_9kypsf9l\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -172,8 +180,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 3.36s ========================",
-      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(60730, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "summary": "======================== 1 failed, 4 warnings in 5.59s ========================",
+      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(56078, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_02gxweie\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -191,8 +200,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 6.17s ========================",
-      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(60750, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "summary": "======================== 1 failed, 4 warnings in 5.40s ========================",
+      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(60315, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_mfku94hr\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -210,8 +220,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 3.79s ========================",
-      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(50863, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "summary": "======================== 1 failed, 4 warnings in 5.39s ========================",
+      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(61941, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_isd4jpm3\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -225,5 +236,21 @@
     "all_restores_clean": true,
     "all_markers_restored": true,
     "campaign_valid": true
+  },
+  "self_clean": {
+    "removed_named_dirs": [
+      "cnx_pytest_omj4s5b_",
+      "cnx_pytest_9ujxmfhm",
+      "cnx_pytest_x3n4z1er",
+      "cnx_pytest_vrvlr40x",
+      "cnx_pytest_pcfvwk_v",
+      "cnx_pytest_jmjv7wmr",
+      "cnx_pytest__ifpp7gn",
+      "cnx_pytest_9kypsf9l",
+      "cnx_pytest_02gxweie",
+      "cnx_pytest_mfku94hr",
+      "cnx_pytest_isd4jpm3"
+    ],
+    "left_in_place": []
   }
 }
