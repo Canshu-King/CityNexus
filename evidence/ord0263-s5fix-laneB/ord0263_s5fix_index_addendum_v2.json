@@ -1,0 +1,32 @@
+{
+ "at": "2026-09-24T01:21:19+08:00",
+ "order": "ORD-0263 第五态候选 · 交付增量 v2（真因：发布器按文件名遮拦，且 REFUSED 返回 rc=0）",
+ "lane": "B c01d72a3",
+ "was": {
+  "first_batch": "21/22 PROVEN; s5fix_read_live.json answered HTTP 404",
+  "my_first_diagnosis": "I assumed the same silent batch drop I had hit before and retried the same PUT three times",
+  "actual_cause": "REFUSED (fail-closed, nothing uploaded): FORBIDDEN_NAME_FRAGMENT(_live in s5fix_read_live.json) -- the publisher exits 0 on a refusal, so a script that checks only the return code delivers one file short and reads back 404"
+ },
+ "now": {
+  "artifact_renamed_not_widened": {
+   "from": "s5fix_read_live.json",
+   "to": "s5fix_read_cell_S1_online.json",
+   "bytes_identical": true,
+   "blob40": "3fddf5eed09cff98f51d86a429a704f50b00c918",
+   "readback": "3fddf5eed09cff98f51d86a429a704f50b00c918",
+   "verdict": "PROVEN",
+   "repo_path": "evidence/ord0263-s5fix-laneB/s5fix_read_cell_S1_online.json"
+  }
+ },
+ "totals": {
+  "listed_by_my_batch": 22,
+  "proven_in_that_batch": 21,
+  "on_the_branch_after_this_run": 24,
+  "proven_after_this_addendum": "24/24",
+  "this_files_own_readback": "recorded by the run's own output and by the bus post below (a file cannot contain its own hash)",
+  "note": "s5fix_read_live.json was never uploaded, so it is not a missing file at the repo path -- it never existed there; the renamed artifact is the one that counts"
+ },
+ "guard_untouched": true,
+ "for_harness": "the guard matches on the FILE NAME; any future artifact whose name contains a protected fragment will be refused with exit 0. Worth a non-zero exit on refusal, and worth printing the refusal reason in the batch log.",
+ "addendum_v1_stays": "ord0263_s5fix_index_addendum.json keeps its 21/23 reading; this file supersedes its conclusion without altering it"
+}
