@@ -1,0 +1,339 @@
+{
+ "what": "claim-first 原子版门体的反突变 campaign（4 枚产品码突变 + 控制轮）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-23T23:02:56+08:00",
+ "gate_file": "tests/test_qoder_agent_command_claim_first.py",
+ "target_file": "D:\\moodle\\_qoder_f_ord253_20260923\\backend\\app\\main.py",
+ "target_sha256_16_before_and_after": "f1b0eedd6e17217b",
+ "run_shape": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_agent_command_claim_first.py -q --tb=line（每枚跑整份 9 格，不挑着跑）",
+ "b_rule": "claimed_result 由 red_nodeids 机械派生；derived_result 恒 null 交 verifier",
+ "mutations": {
+  "M1_claim_never_committed": {
+   "mutation": {
+    "base_sha256_16": "f1b0eedd6e17217b",
+    "mutant_sha256_16": "4a2892a8c0bf9aed",
+    "anchors_changed": [
+     "            claim_tx.commit()          # 早于任何 mission / run / audit / "
+    ]
+   },
+   "owner_assertion": "机械门①/③：占位不先提交 ⇒ 跨进程没有所有权点。② 自带预置占位，不该被这枚碰到（碰到就说明 ② 其实在测同一条早先回放路径，而不是测败者不进 impl）",
+   "reading": {
+    "rc": 1,
+    "summary": "8 failed, 6 passed, 2 warnings in 4.45s",
+    "seconds": 5.6,
+    "executed_from_summary": 14,
+    "passed": 6,
+    "denominator_note": "`pytest -q` 不打 collected 行 ⇒ 分母从摘要行的 passed+failed+error 派生，不靠肉眼数",
+    "collection_broke": false,
+    "red_nodeids": [
+     "test_10_a_competing_connection_sees_the_committed_null_claim_before_impl_starts",
+     "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work",
+     "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+     "test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+     "test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim",
+     "test_5_two_threads_one_key_in_one_process_stay_at_one_row",
+     "test_8_a_committed_run_never_leaves_an_unfilled_claim",
+     "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+    ],
+    "stdout_tail": [
+     "  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.",
+     "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+     "",
+     "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+     "=========================== short test summary info ===========================",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_5_two_threads_one_key_in_one_process_stay_at_one_row",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_8_a_committed_run_never_leaves_an_unfilled_claim",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_9_completed_receipts_keep_the_existing_seven_day_semantics",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_10_a_competing_connection_sees_the_committed_null_claim_before_impl_starts",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+     "8 failed, 6 passed, 2 warnings in 4.45s"
+    ]
+   },
+   "control_was_already_red": [],
+   "red_beyond_control": [
+    "test_10_a_competing_connection_sees_the_committed_null_claim_before_impl_starts",
+    "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work",
+    "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+    "test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+    "test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim",
+    "test_5_two_threads_one_key_in_one_process_stay_at_one_row",
+    "test_8_a_committed_run_never_leaves_an_unfilled_claim",
+    "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+   ],
+   "named_targets_red": [
+    "test_10_a_competing_connection_sees_the_committed_null_claim_before_impl_starts",
+    "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work"
+   ],
+   "named_targets_green": [],
+   "all_named_targets_red": true,
+   "expected_green_arm_held": [
+    "test_11_the_loser_is_stopped_before_impl_and_persists_nothing"
+   ],
+   "expected_green_arm_broke": [],
+   "claimed_result": "KILLED",
+   "derived_result": null
+  },
+  "M2_savepoint_join_restored": {
+   "mutation": {
+    "base_sha256_16": "f1b0eedd6e17217b",
+    "mutant_sha256_16": "577fa0a100aaec39",
+    "anchors_changed": [
+     "        work_session = Session(bind=work_conn, expire_on_commit=False)"
+    ]
+   },
+   "owner_assertion": "机械门④/③：把 1f86a8f 那套 create_savepoint 装回来 ⇒ pysqlite 下最外层 RELEASE 即提交，注入点之前的东西就该 durable。这一枚是**上一版被判不得并线的那条机制**，它必须被这一格抓住；抓不住就说明 ④ 是空的",
+   "reading": {
+    "rc": 1,
+    "summary": "5 failed, 9 passed, 2 warnings in 5.93s",
+    "seconds": 7.1,
+    "executed_from_summary": 14,
+    "passed": 9,
+    "denominator_note": "`pytest -q` 不打 collected 行 ⇒ 分母从摘要行的 passed+failed+error 派生，不靠肉眼数",
+    "collection_broke": false,
+    "red_nodeids": [
+     "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work",
+     "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+     "test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim",
+     "test_5_two_threads_one_key_in_one_process_stay_at_one_row",
+     "test_8_a_committed_run_never_leaves_an_unfilled_claim"
+    ],
+    "stdout_tail": [
+     "    from starlette.testclient import TestClient as TestClient  # noqa",
+     "",
+     "..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53",
+     "  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.",
+     "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+     "",
+     "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+     "=========================== short test summary info ===========================",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_5_two_threads_one_key_in_one_process_stay_at_one_row",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_8_a_committed_run_never_leaves_an_unfilled_claim",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+     "5 failed, 9 passed, 2 warnings in 5.93s"
+    ]
+   },
+   "control_was_already_red": [],
+   "red_beyond_control": [
+    "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work",
+    "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+    "test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim",
+    "test_5_two_threads_one_key_in_one_process_stay_at_one_row",
+    "test_8_a_committed_run_never_leaves_an_unfilled_claim"
+   ],
+   "named_targets_red": [
+    "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+    "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work"
+   ],
+   "named_targets_green": [],
+   "all_named_targets_red": true,
+   "expected_green_arm_held": [
+    "test_11_the_loser_is_stopped_before_impl_and_persists_nothing"
+   ],
+   "expected_green_arm_broke": [],
+   "claimed_result": "KILLED",
+   "derived_result": null
+  },
+  "M3_fill_guard_removed": {
+   "mutation": {
+    "base_sha256_16": "f1b0eedd6e17217b",
+    "mutant_sha256_16": "3aa82c3d700f4c40",
+    "anchors_changed": [
+     "                .where(IdempotencyKey.key == scoped_key,\n             "
+    ]
+   },
+   "owner_assertion": "「只允许 NULL → 完成」这一道守卫：预期**存活** —— 进程内没有任何一格会把已填好的回执推进到回填那一步（早先的回放在前面就返回了）。存活就登记成『本门不测这一问』，不许写成 KILLED",
+   "reading": {
+    "rc": 0,
+    "summary": "14 passed, 2 warnings in 5.25s",
+    "seconds": 6.4,
+    "executed_from_summary": 14,
+    "passed": 14,
+    "denominator_note": "`pytest -q` 不打 collected 行 ⇒ 分母从摘要行的 passed+failed+error 派生，不靠肉眼数",
+    "collection_broke": false,
+    "red_nodeids": [],
+    "stdout_tail": [
+     "..............                                                           [100%]",
+     "============================== warnings summary ===============================",
+     "..\\..\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1",
+     "  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.",
+     "    from starlette.testclient import TestClient as TestClient  # noqa",
+     "",
+     "..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53",
+     "  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.",
+     "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+     "",
+     "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+     "14 passed, 2 warnings in 5.25s"
+    ]
+   },
+   "control_was_already_red": [],
+   "red_beyond_control": [],
+   "named_targets_red": [],
+   "named_targets_green": [],
+   "all_named_targets_red": false,
+   "expected_green_arm_held": [
+    "test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+    "test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim"
+   ],
+   "expected_green_arm_broke": [],
+   "claimed_result": "SURVIVED",
+   "derived_result": null
+  },
+  "M4_claim_ttl_shortened": {
+   "mutation": {
+    "base_sha256_16": "f1b0eedd6e17217b",
+    "mutant_sha256_16": "9feb08bcb7dac1b2",
+    "anchors_changed": [
+     "                    expires_at=(now + timedelta(days=7)).isoformat(),"
+    ]
+   },
+   "owner_assertion": "completed 回执沿用现成 +7d：把占位 TTL 改短就是给『到点回收』开第一道门（仲裁禁止）",
+   "reading": {
+    "rc": 1,
+    "summary": "1 failed, 13 passed, 2 warnings in 4.70s",
+    "seconds": 5.7,
+    "executed_from_summary": 14,
+    "passed": 13,
+    "denominator_note": "`pytest -q` 不打 collected 行 ⇒ 分母从摘要行的 passed+failed+error 派生，不靠肉眼数",
+    "collection_broke": false,
+    "red_nodeids": [
+     "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+    ],
+    "stdout_tail": [
+     "D:\\\\moodle\\\\_qoder_f_ord253_20260923\\\\backend\\\\tests\\\\test_qoder_agent_command_claim_first.py:275: AssertionError: \\u2468\\uff1a\\u6709\\u6548\\u671f\\u53d8\\u6210 0:05:00 \\u21d2 \\u6709\\u4eba\\u628a\\u5b83\\u5f53\\u56de\\u6536\\u94a9\\u5b50\\u7528\\u4e86\\uff08\\u5e94\\u4e3a\\u73b0\\u6210\\u7684 +7d\\uff09",
+     "============================== warnings summary ===============================",
+     "..\\..\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1",
+     "  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.",
+     "    from starlette.testclient import TestClient as TestClient  # noqa",
+     "",
+     "..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53",
+     "  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.",
+     "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+     "",
+     "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+     "=========================== short test summary info ===========================",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_9_completed_receipts_keep_the_existing_seven_day_semantics",
+     "1 failed, 13 passed, 2 warnings in 4.70s"
+    ]
+   },
+   "control_was_already_red": [],
+   "red_beyond_control": [
+    "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+   ],
+   "named_targets_red": [
+    "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+   ],
+   "named_targets_green": [],
+   "all_named_targets_red": true,
+   "expected_green_arm_held": [
+    "test_8_a_committed_run_never_leaves_an_unfilled_claim"
+   ],
+   "expected_green_arm_broke": [],
+   "claimed_result": "KILLED",
+   "derived_result": null
+  },
+  "M5_conflict_does_not_block_the_work": {
+   "mutation": {
+    "base_sha256_16": "f1b0eedd6e17217b",
+    "mutant_sha256_16": "0852d82dea4c30b7",
+    "anchors_changed": [
+     "        except IntegrityError as exc:\n            claim_tx.rollback()\n"
+    ]
+   },
+   "owner_assertion": "机械门②：唯一索引说\"不是你的\"之后还放行 impl ⇒ 所有权点不存在。这一枚是上一轮 campaign 暴露出来的**空缺**（② 当时没有任何杀手），补上才算数",
+   "reading": {
+    "rc": 1,
+    "summary": "3 failed, 11 passed, 2 warnings in 2.01s",
+    "seconds": 2.9,
+    "executed_from_summary": 14,
+    "passed": 11,
+    "denominator_note": "`pytest -q` 不打 collected 行 ⇒ 分母从摘要行的 passed+failed+error 派生，不靠肉眼数",
+    "collection_broke": false,
+    "red_nodeids": [
+     "test_11_the_loser_is_stopped_before_impl_and_persists_nothing",
+     "test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+     "test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409"
+    ],
+    "stdout_tail": [
+     "..\\..\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1",
+     "  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.",
+     "    from starlette.testclient import TestClient as TestClient  # noqa",
+     "",
+     "..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53",
+     "  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.",
+     "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+     "",
+     "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+     "=========================== short test summary info ===========================",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_11_the_loser_is_stopped_before_impl_and_persists_nothing",
+     "FAILED tests/test_qoder_agent_command_claim_first.py::test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+     "3 failed, 11 passed, 2 warnings in 2.01s"
+    ]
+   },
+   "control_was_already_red": [],
+   "red_beyond_control": [
+    "test_11_the_loser_is_stopped_before_impl_and_persists_nothing",
+    "test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+    "test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409"
+   ],
+   "named_targets_red": [
+    "test_11_the_loser_is_stopped_before_impl_and_persists_nothing",
+    "test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409"
+   ],
+   "named_targets_green": [],
+   "all_named_targets_red": true,
+   "expected_green_arm_held": [],
+   "expected_green_arm_broke": [],
+   "claimed_result": "KILLED",
+   "derived_result": null
+  }
+ },
+ "restore_verified": true,
+ "anchor_preflight": {
+  "counts": {
+   "M1_claim_never_committed::            claim_tx.commit()          # 早于任何 mi": 1,
+   "M2_savepoint_join_restored::        work_session = Session(bind=work_conn, e": 1,
+   "M3_fill_guard_removed::                .where(IdempotencyKey.key == sco": 1,
+   "M4_claim_ttl_shortened::                    expires_at=(now + timedelta(": 1,
+   "M5_conflict_does_not_block_the_work::        except IntegrityError as exc:\n          ": 1
+  },
+  "non_unique": {}
+ },
+ "control": {
+  "rc": 0,
+  "summary": "14 passed, 2 warnings in 5.06s",
+  "seconds": 6.2,
+  "executed_from_summary": 14,
+  "passed": 14,
+  "denominator_note": "`pytest -q` 不打 collected 行 ⇒ 分母从摘要行的 passed+failed+error 派生，不靠肉眼数",
+  "collection_broke": false,
+  "red_nodeids": [],
+  "stdout_tail": [
+   "..............                                                           [100%]",
+   "============================== warnings summary ===============================",
+   "..\\..\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1",
+   "  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.",
+   "    from starlette.testclient import TestClient as TestClient  # noqa",
+   "",
+   "..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53",
+   "  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.",
+   "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "14 passed, 2 warnings in 5.06s"
+  ]
+ },
+ "campaign_valid": true,
+ "scope": {
+  "branch": "agent/f-ord253-candidates",
+  "head": "408d851ec2ec7ab02142233c6a497c5037adfda4",
+  "superseded_and_not_mergeable": "1f86a8f（仲裁：(i) NOT MET AS CLAIM-FIRST，不得并线）",
+  "cells_executed_in_control": 14
+ }
+}
