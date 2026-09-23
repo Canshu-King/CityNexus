@@ -1089,6 +1089,15 @@ def main() -> int:
             print("REFUSED (preflight):", pf_sides["info"].get("refuse_reason"))
             print("         Set CNX_DEPLOY_BASE=<your static server>, or CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 to say you")
             print("         really mean my chain.  A read-only pre-flight is still a claim about a surface.")
+            _out = pathlib.Path(__file__).with_name("receipts")
+            _out.mkdir(exist_ok=True)
+            _dest = _out / f"preflight_refused_{time.strftime('%m%d_%H%M%S')}.json"
+            _dest.write_text(json.dumps({"what": "PREFLIGHT REFUSED before any judgement (mixed sides)",
+                                         "src": str(s), "serve": str(sv),
+                                         "t": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                                         "surface_base": pf_sides["info"], "gauge": gauge_self_binding()},
+                                        indent=1, ensure_ascii=False), encoding="utf-8", newline="\n")
+            print(f"[receipt] {_dest}")
             return 5
         srefs = asset_refs((s / "index.html").read_text(encoding="utf-8", errors="replace"))
         oidx = sv / "index.html"
@@ -1122,6 +1131,7 @@ def main() -> int:
         print("REFUSED:", sides["info"].get("refuse_reason"))
         print("         Fix one of two ways: CNX_DEPLOY_BASE=http://127.0.0.1:<your static port>, or")
         print("         CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 when you really do mean to probe my chain.")
+        persist_receipt(receipt, "refused_mixed_sides")
         return 5
 
     # --- precondition 0: the tree must not have the **build inputs** dirty in a way that flatters us
@@ -1203,6 +1213,7 @@ def main() -> int:
                 continue
             print(f"REFUSED: {dst.name} exists with DIFFERENT bytes - a name collision would silently")
             print("         swap content under an already-published URL. Resolve by hand.")
+            persist_receipt(receipt, "refused_union_name_collision")
             return 6
         shutil.copy2(p, dst)
         added.append(p.name)
@@ -1231,6 +1242,7 @@ def main() -> int:
                     print(f"  {r['path']} status={r['status']} ct={r['content_type']} head={r['head_bytes']!r} "
                           f"body_sha={str(r['sha256'])[:12]} disk_sha={str(r['disk_sha256'])[:12]} "
                           f"disk_present={r['disk_present']}")
+        persist_receipt(receipt, "refused_pre_switch_gate")
         return 7
     print(f"[gate] {len(pre)} new asset(s) reachable x{PROBE_TIMES}, real bytes vs the build export, no HTML fallback")
 
@@ -1256,6 +1268,7 @@ def main() -> int:
         bak.mkdir(parents=True, exist_ok=False)
     except FileExistsError:
         print(f"REFUSED: backup dir {bak} already exists - refusing to mix two generations into one anchor")
+        persist_receipt(receipt, "refused_backup_collision")
         return 9
     receipt["backup_generation_id"] = gen_id
     receipt["previous_index_sha256"] = sha256(old_index) if old_index.is_file() else None
