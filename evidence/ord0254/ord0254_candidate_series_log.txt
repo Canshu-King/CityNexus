@@ -1,0 +1,44 @@
+candidate tip: 6a39c527f2aa3b16e73dfd122c34d6e6be7102df
+base: 53fe8e8
+commits: 11
+patch bytes: 240531
+
+=== diff --stat ===
+ frontend/e2e/_qoderTextScan.ts                     |  79 +++
+ frontend/e2e/qoder-ai-sheet-blocked.spec.ts        | 311 +++++++++++
+ frontend/e2e/qoder-budget-advisory-tiers.spec.ts   | 210 ++++++++
+ .../qoder-demo-entry-addresses-dont-create.spec.ts | 217 ++++++++
+ .../e2e/qoder-dropped-candidates-say-why.spec.ts   | 283 ++++++++++
+ frontend/e2e/qoder-failure-has-an-exit.spec.ts     | 292 +++++++++++
+ frontend/e2e/qoder-inbox-review-queue.spec.ts      | 470 +++++++++++++++++
+ frontend/e2e/qoder-map-gesture-ownership.spec.ts   | 579 ++++++++++++---------
+ frontend/e2e/qoder-replan-review-actions.spec.ts   | 268 ++++++++++
+ frontend/e2e/qoder-today-follows-the-stage.spec.ts | 121 ++++-
+ frontend/e2e/qoder-trip-shape-and-budget.spec.ts   |  65 ++-
+ ...wizard-speaks-human-and-survives-reload.spec.ts | 199 +++++++
+ frontend/src/api/candidateRejections.ts            | 112 ++++
+ frontend/src/app/V8Experience.tsx                  | 432 +++++++++++----
+ frontend/src/components/v8/MapPanel.tsx            |  22 +-
+ .../src/features/inbox/JourneyInboxWorkbench.tsx   | 170 +++++-
+ frontend/src/features/planning/PlanWithAiSheet.tsx |  15 +-
+ frontend/src/features/setup/JourneyTrialSetup.tsx  |  91 +++-
+ .../src/features/simulation/SimulationPanel.css    |  12 +-
+ .../src/features/simulation/SimulationPanel.tsx    |   9 +
+ frontend/src/i18n/LocaleContext.tsx                |  39 +-
+ frontend/src/lib/visualViewport.ts                 |  57 ++
+ frontend/src/styles.css                            |  49 +-
+ frontend/src/v10.css                               |  12 +
+ 24 files changed, 3703 insertions(+), 411 deletions(-)
+
+=== %H %s ===
+6a39c527f2aa3b16e73dfd122c34d6e6be7102df backport(ord0254): 8f42cb7 feat(frontend): the hub names the stop a hard rule dropped, in words and not in ids (ORD-0232)
+281135d9114f94c378ecea8c21c0258456a22b96 backport(ord0254): 56d20ec fix(frontend): the Today hub keeps only the tight budget verdict (ORD-0212, user's direct instruction)
+b91940a199e2fe8b39b4e0252c6e5c9924070a9d backport(ord0254): 952ec40 fix(frontend): the demo entry addresses the sealed journey instead of creating one (ORD-0209)
+508595b233f225d9f2f2df2126c15b8ad6e1b19b backport(ord0254): 107e2db feat(frontend): the review actions carry their idempotency key, and the bridge is marked (ORD-0180/0183)
+2ea7b53c56d537372e24a5cb79f19e580f83d614 backport(ord0254): 82f136f fix(frontend): the wizard stops speaking its own vocabulary and offers a route to what is missing (ORD-0135)
+4b09136f62eb735334850119658fb6b47747949a backport(ord0254): 7580206 fix(frontend): a failed read now says which kind of failure it is, and leaves a door (ORD-0126)
+63d5c3387a4373c4018232f10e35fc8809032d9e backport(ord0254): 6b208ee fix(frontend): what the screen asks to review now has somewhere to be reviewed (ORD-0146)
+b62591179e579b414be5c79adf961733aeb501da backport(ord0254): 4176e7b fix(frontend): a finger on the map moves the map, a finger on the page moves the page
+07ef3af4cbd32a06e294c3a2344c77a332ff0bc9 backport(ord0254): 2d3b3fb fix(frontend): the AI sheet is sized by what the traveller can see, and its footer never scrolls
+f4faa3ee868e052013212f638c8ba69b4365d921 backport(ord0254): e9efec6 refactor(frontend): the example places are ordered by name, not by the read's order
+b8ed55e2cd037c5de2fe7e7a7bfb37bd53ee0dcd backport(ord0254): d76992a fix(frontend): the panel itself scrolls, so the node a probe names is the node that answers
