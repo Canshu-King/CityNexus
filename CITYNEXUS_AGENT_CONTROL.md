@@ -13203,6 +13203,125 @@ G2 六面**全有真文字、全部可点**；G3 零 4xx；G4 同 shape 零新�
 
 **插入收据（本脚本当场测，写前部分）**：写前 `4062687` B、纯 LF、`sha256[:16] 02437b3ee0b970cc`（本机钟 `2026-09-23 12:48:54`）；锚点唯一（`count=1`）、切点 `1763099`；我的块 `10204` B。**写后的三件回读（块出现次数 / 拿掉我的区域是否与写前逐字节相同 / 锚点回到哪个切点）由本脚本打印在收据下方那份输出里，行号会随别人续写漂移，定位请用标题句串`ORD-0242 剩下三格`。**
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 自纠 #4 + 换尺通知 @2026-09-23T12:5x+08 —— **红队第四轮换面又攻破（她一次没碰判据、没改尺源码）：我的六个合取式全是 status/MIME/首字节/摘要，**没有一条读响应头** ⇒ 壳文档被 `immutable, max-age=31536000` 服务时收据全绿，而换代后浏览器不再重取 index ⇒ 白屏。已加 A-9 并把她指出的两个"静默跳过"改成具名声明位；自测 **21/21** 全绿**
+
+```text
+她的读数（新尺 c0aafc940136c502 上）：A/B/C/D 全 GREEN、G 的 8 条 repeated ×2 都 [200,200]、F [200,200] ⇒ ALL_GREEN
+  同时 cache_control_served = "public, max-age=31536000, immutable"（对 / 与 /index.html）
+根因（具名）：`http_get` 只在**请求**里加 no-cache（探测绕过缓存），**从不看响应头** ⇒ **部署的缓存语义完全在射程外**。
+她的修法我原样采纳："不改现有判据"，只对**壳文档**（`/`、`*.html`、`text/html`）断言
+  **不含 `immutable` 且 max-age 有上限**；**带 hash 的 /assets/* 仍允许 immutable**（那是正确用法）。
+我加的东西（都在同一个 `asset_verdict` 谓词里，不造第二把尺）：
+  cache_semantics_verdict()：壳文档 immutable ⇒ RED；无 Cache-Control ⇒ RED（策略未定义不许当通过）；
+    no-store/no-cache/must-revalidate ⇒ GREEN；否则 max-age ≤ CNX_DEPLOY_SHELL_MAX_AGE（默认 600）才 GREEN；
+    非壳 ⇒ NOT_SHELL_RECORDED（照旧记录 served 头，不放假通过）
+两向见证：A9-killer:shell_immutable_is_red = RED；A9-true_positive:real_shell_revalidable = GREEN；
+          A9-scope:hashed_asset_may_stay_immutable = NOT_SHELL_RECORDED
+她顺手点的两个"诚实边界"我也改成具名声明（不再静默）：
+  (i) 旧 index 不引用 .js ⇒ A 条以前直接消失 ⇒ 现在记 `DECLARED_NO_OLD_JS`（声明位，不是通过）
+  (ii) 无变化部署时 bak/index.html == 当前 index ⇒ H 其实只是 C ⇒ 判词改成 `GREEN_H_EQ_C_NO_CHANGE_DEPLOY`
+**真链复测（三个用户可达表面，repeat ×2 + A-9）**：local_4781 / proxy_4782 / public_tunnel 全 GREEN，
+  served `Cache-Control: no-cache` ⇒ 现在这台不犯她那个毛病（这是实测，不是"应该没问题"）。
+发布件：尺 `live_checks/deploy_bundle.py` blob **`9ca0dee62016d7ef`**（45,153 B，commit 23eb1f5c5856）
+  自测 `evidence/gates/deploy_bundle_a9_selftest_0923.json` blob **`391d59cbd4cb7341`**（7,980 B，21/21）
+  表面 `evidence/gates/deploy_bundle_f_surface_probe_round4_0923.json` blob **`02459564e6f225a6`**（1,190 B）
+```
+**四轮下来的族谱（我自己总结，准备提给仲裁做一条常态规则）**：这把尺在一天里被同一家族的四个方向各打穿一次——
+① 没有第二侧（A-3 缺席侧冒充比较）② 夹具不是生产形态（A-6 手写 `sw.js`）③ 没有第二次（A-7 单次探测看不见"第 N 次起坏"）
+④ **不读响应头**（A-9 缓存语义在射程外）。⇒ 规则草案：**任何"发布/部署收据"必须声明它的观测面集合，
+   并对每个面同时具备【两次】、【响应头】、【生产形态夹具】三样；缺一样就必须具名写 `NOT_OBSERVED`，
+   不许由"没测"冒充"通过"。**
+### 换尺通知（第二次，重要）
+```text
+HARNESS：ORD-0254 请改用 **`9ca0dee62016d7ef`**（21/21）。你上一版拿的 `c0aafc940136c502` 已不覆盖 A-9，
+  用它出的"全绿"现在**不完整**——若已跑，重跑一次，这不是车道失误，是我一天里改了两次尺。
+红队：第四轮收下。第五轮请从 A-9 留下的两条入手：① `SHELL_MAX_AGE=600` 这个上限是**我定的数**，
+  有没有一个既有理由、又能把用户挡在旧壳外的中间值（例如 `max-age=86400` 无 immutable 时我的判法会不会放过）？
+  ② `SW` 的注册参数（`updateViaCache:"none"`、scope）在不在一把"发布收据"的射程里？
+  如果你判断"攻不出"，就交**攻不出的结论 + 你排除的形状清单**——那也是有用的证据。
+```
+### 现场
+账本远端上一枚 `bac3b1a186cbd6ac` / 4,096,978 B（本块写完后重镜）；用户链四点两遍一致 + 三表面 repeat×2 + A-9 全 GREEN；
+主线我**一笔都没落**（`eea3c5b` 仍 STOP，等 v4 复审或仲裁选乙）；用户库只读 3/3/19/16；清理闸门关（0 删除）；
+`AI_CREDENTIAL_EPOCH = COMPROMISED_UNROTATED`。
+
+## lane F `8ccd71d8` · ORD-0225 owner 判定 @2026-09-23T12:58+08 —— **复算做完了：C 的三件 published 原始轮次我用自己那把尺逐字段派生，全部与他声明一致；两把不同世代的尺对同一份 10 轮同判。判定是「ORD-0225 不能从 `STREAK_GREEN` 往上走」，缺的只有一件，我把它点名到 scope 三元组级别。另：复算过程里我自己抓出并修了三处量具缺陷（其中一处是"抄来的前缀会被读成没发布"，另一处是我自己的验算器差点冤枉了 C）**
+
+### ① 复算输入：全部走已发布件（不采信散文，不重跑别人的进程）
+
+```text
+独立回读 evidence/ord0224_a2/ 共 10 件 ⇒ **10/10 PROVEN（满 40 位 blob sha1 逐字相等）**
+  （C 自报"7 件"，现在 10 件：多出 mutant_rounds_Y2_http / mutant_rounds_Y3_http / TIER_STAMP 三份，都是新推的）
+本次吃的三份原始件（各记 bytes / sha256[:12] / git blob）：
+  streak_xproc_http_2ab69f2.json                        103,825 B sha256 436947dcaf79 blob 02a42d1bb2154603
+  xproc_y3_rounds_http_2ab69f2.json                       11,232 B sha256 15b2ea1b5919 blob 637c716e659b146e
+  xproc_y3_rounds_raw_…concurrent_open_ge_2ab69f2.json     9,245 B sha256 7b41241036ea blob ee79303eb72a1704
+  （第二份 Y2 的 `mutant_rounds_Y2_http_2ab69f2.json` 另计，blob bf72437f4d6f…，PROVEN）
+验算器：/d/moodle/_qoder_f_run/o225_recompute_published.py（12,023 B，blob e37f79b2af45665f，已发布）
+收据：  /d/moodle/_qoder_f_run/o225_receipts/o225_recompute_published_a2.json（8,884 B，blob f43222e6250ca0e6，已发布）
+禁制：**0 个子进程**——不跑产品、不跑门、不碰 :4781/:4782/:8693、不动 C 的任何文件（只 GET）
+```
+
+### ② 派生结果（`derived_result` 由 verifier 填，约束 ③ 的形状已落成 `CNX_REVERSE_MUTATION_RECEIPT_V1`）
+
+| scope（三把键全列） | 控制轮 | killed | 序列 | `deterministic_kill` | `campaign_valid` | **我派生的 `derived_result`** | 与 C 声明 |
+|---|---|---|---|---|---|---|---|
+| `2ab69f2` / `test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation` / `single-node` | GREEN | **10/10** | `RRRRRRRRRR` | True | True | **KILLED** | 6/6 字段一致 |
+| 同上 nodeid，**Y2**（破坏部分唯一索引） | GREEN | **10/10** | `RRRRRRRRRR` | True | True | **KILLED** | 一致（另含 `all_markers_restored`） |
+| `2ab69f2` / `test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation` / `single-node` | GREEN | **3/10** | `RRGRGGGGGG` | False | **False** | **NOT_KILLED** | 6/6 字段一致 |
+
+⇒ **C 的三条声明我一条都没推翻**（含他自报的那句"我不给 F 写 KILLED"）；跨 shape 的两行 killed 计数**不做差、不互借**，按约束 ① 署 `NOT_COMPARABLE_AS_REGRESSION_DELTA`。
+
+### ③ 连击复算：两把不同世代的尺同判（这正是我守卫 19 要抓的东西）
+
+```text
+C 量测时用的尺 = blob ebe4e24c177d8e18（47,572 B，`a4079bc` 那一代）
+我现在 composite 里带的尺 = blob fcf76941dcc25127（50,316 B，`6f0e5fc` 那一代）
+同一份 runs 两枚尺分别再判：都是 STREAK_MET(10) / green 10 / red 0 / every_run_fresh True / problems 0
+⇒ 结论不随尺世代漂移；且两枚尺都显示：**把 KILLED 递进第 2 步 ⇒ closure_grade = CLOSED**（阶梯是好的，缺的是证据那一格）
+```
+
+### ④ 判定：**ORD-0225 停在 `STREAK_GREEN`，不推**。缺的是一件具名物，不是"再等等"
+
+```text
+缺件（唯一能推动它的那一件）：
+  一份 CNX_REVERSE_MUTATION_RECEIPT_V1，其
+    scope.exact_sha     ∈ { ec65a3eb738c9998…（我的 composite）或并线后的主线尖 }
+    scope.target_nodeids = tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation
+    scope.run_shape      = single-node
+    control_round GREEN、mutated rounds 全 RED（killed == rounds）、逐轮 restored_sha_matches + no_mutant_marker_left 齐
+    derived_result 由 verifier 派生（我这台验算器 o225_recompute_published.py 已能直接吃它，rc 0 = 一致 / rc 1 = 报不一致）
+  ⇒ 拿到之后一条命令：CNX_REVERSE_MUTATION=KILLED + 那份收据递进第 2 步 ⇒ CLOSED（我已用两把尺验证阶梯会放行）
+三道并列的门槛（谁签字都绕不过，我不替仲裁改判）：
+  (a) **scope 不匹配**：现在最接近的两件证据都不带我这把三元组——C 对我这 nodeid 的 Y3 = **3/10、campaign_valid=False、NOT_KILLED**；
+      他对 HTTP nodeid 的 10/10 是**另一枚 nodeid**（约束 ①）⇒ 我不能拿它签我这格。
+  (b) **C 自己的 tier stamp 已经封了 FINAL CLOSED**：`ord0224_a2_TIER_STAMP.json` 写明
+      "composite DoD：`PROVIDER_WORK_COALESCING`（真实并发 calls=5）仍是第二个未收口子，**在此之前任何 G3/DoD 不得写 FINAL CLOSED**"
+      ⇒ 就算 (a) 靠"改署 scope"解决，这一道还得先清；它归 commander/仲裁排序，不归我判。
+  (c) 若 scope 改署到 HTTP 那枚，还有一个坐标问题必须一起定：`2ab69f2` 树里**没有尺**（我那把只在我的分支上），
+      那批 10 轮是"借尺"跑的 ⇒ 按决定一必须署成 composite 口径（或先把尺并线），否则收据"哪棵树带尺"那一栏写不出来。
+我的建议（不改单、不越权，只把选择摆明）：要么 ORD-0225 的闭包靶子继续钉在"corrected g3 的进程内连击"，
+  那 (a) 就是唯一缺口，请 C 或红队按上面那把三元组补一臂；要么把这单拆成 G3-INPROC 与 G3-XPROC-HTTP 两格分别签，
+  后者证据已基本齐（只差 (b)(c)）。**拆不拆归你与仲裁定，我不在别人的门上自签。**
+```
+
+### ⑤ 复算途中我自己被抓/自曝的三处量具缺陷（都已修，都带回归格）
+
+1. **抄来的 16 位前缀会被判成"没发布"**（`do_verify` 只按满串相等比）。这就是今天"我误说 C 未发布"的机器版根因。
+   改成三档：`PROVEN`（满 40 位相等，唯一可当权威）/ `PROVEN_PREFIX`（前缀相等，明写"弱一档、不许喂守卫 22"）/ `NOT_PROVEN`。
+   并立刻堵掉它带来的新洞：**`assert-authority` 现在拒绝任何非 40 位 claim（rc 54）**，`checks_proven` 只数严格满串相等——否则我刚把"前缀"放进来就等于给守卫 22 放水。
+   守卫矩阵加了第 **21** 格 `published_prefix_claim_rejected`（前缀 ⇒ 22），复跑 **21/21 全过、新增收据 0 份**。
+2. **claim 摘要用 `git hash-object` 算，会带上工作树过滤器**：实测同一份 JSON `hash-object` = `af6b5fd4…` 而 raw-bytes blob = `f43222e6…`（CRLF 规范化），发布器发的是后者 ⇒ 一个正确的文件会被读成"没发布"。已全部改 `--no-filters`（发布器/构造器/记录三处）。
+3. **我的验算器差点冤枉 C**：第一版把控制轮折进 `all_restores_clean` 的检查里（控制轮没有复原这一步，不带那两个字段），于是 `all()` 恒 False ⇒ 报"C 声明 True 而我派生 False"。
+   修成只在突变轮上派生 + 缺读数记 `NOT_MEASURED`（不当 False 也不当 True）+ 带分母。修完 **6/6 字段与 C 一致**。
+   ⇒ 这条我按老规矩写死进常态：**"验没发生"必须对时间窗/对分母，不能对目录现状、不能对含空字段的合集做 all()。**
+
+### ⑥ 你转给我的孤儿端口那条
+
+我那两批（11:55 与 12:26 前后）跑的都是**进程内** g3 门 + 应用自己解析的临时库，**不监听任何端口**，也不做进程清点 ⇒ `:56806/:56807` 那两个孤儿与我这两批无交集，我没有需要重算的读数；两批各自 10 条互不相同的 DB、`every_run_fresh=True`、`problems=[]`。数进程按"可执行名 + 端口归属"而不是命令行子串这条我收下——我今天的清点只有 `git`/`pytest` 的退出码与 blob 回读，没用过命令行匹配。
+
+**STATUS:** 复算完成并已发布外部坐标（收据 `f43222e6250ca0e6` / 验算器 `e37f79b2af45665f`，两件 BYTE-LEVEL MATCH；另独立回读 C 的 `evidence/ord0224_a2/` **10/10 PROVEN**）。**ORD-0225 判定：维持 `STREAK_GREEN`，不推 CLOSED**，缺口点名到 (exact_sha, nodeid, run_shape) 三元组，并列出三道门槛（scope 不匹配 / C 自己的 `PROVIDER_WORK_COALESCING` 未收 ⇒ 他已声明任何 G3 不得写 FINAL CLOSED / `2ab69f2` 无尺需按 composite 口径署）。没做到、明写没做到：**我这格没有匹配 scope 的反向突变证据**（不是我少跑了一次，是已发布证据里确实不存在）；**FINAL CLOSED 的另一道 `PROVIDER_WORK_COALESCING` 门槛我没碰**（不归我）；**scope 拆不拆我没自决**（等你与仲裁一句话）。
+
 ## commander 落地 @2026-09-23T12:5x+08 —— **仲裁签完 A-2 delta：`ORD-0224 identity-only xproc closure = CLOSED`（Y3 与 Y2 各 10/10 必红）；`ORD-0244` 我现在正式激活给 C；一件 machine-stamp 簿记要补；F 那一格"别再追了"**
 
 ### ① 已签的（它重读了 published 件，没继承 C 的散文）
