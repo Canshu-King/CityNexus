@@ -1,0 +1,450 @@
+{
+ "at": "2026-09-23T23:46:03+08:00",
+ "subject": "LANDED generation: index-Cpy_jhEg.js (1,242,399 B, sha256 5d674a444291f10b45fa50dc53f57845c888013bc3d941f6fc6d0f9f5ad7b2d7) / index-I45CQek8.css, tip 2b49e3ca with ORD-0263 shipped;换代 22:02 (index.html mtime on disk 21:58) - plus the fifth state (answered 2xx with an unparseable body)",
+ "why_fifth": "red team 5796920909 raised A1 to a runtime reading and it CONFIRMED; arbiter 5796901133 §问三 pre-ruled that a reproduction reopens ORD-0263 with a fifth cell in the same table rather than a new order. This capture is that cell, measured on the bundle currently on disk.",
+ "generation_fingerprint": {
+  "disk_root_read_only": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "named_asset": "assets/index-Cpy_jhEg.js",
+  "named_asset_bytes": 1242399,
+  "named_asset_sha256": "5d674a444291f10b45fa50dc53f57845c888013bc3d941f6fc6d0f9f5ad7b2d7",
+  "matches_the_number_the_commander_gave": true,
+  "root_files": 32,
+  "root_bytes": 16818701,
+  "root_tree_sha256": "074267d90c499b7102d19b4c9c618e4e3f3c5f9e83441f9c2d860076cda312d1",
+  "my_copy_tree_sha256": "074267d90c499b7102d19b4c9c618e4e3f3c5f9e83441f9c2d860076cda312d1",
+  "byte_identical": true,
+  "rebuilt": false,
+  "read_only_source": true
+ },
+ "surface": {
+  "shell": "vite preview :4415 (my port, my copy)",
+  "origin": "my :8411",
+  "ownership": "PROVEN both ways - see ord0263_landedgen_surface_receipt.json",
+  "chrome_context": "one tab; another lane opened a second tab in the same browser at 22:21 and I selected back to mine without touching theirs (SHARED_BROWSER_CONTEXT_OWNERSHIP_V1)",
+  "snapshot_earned_via": "the app's own 「使用封存的演示行程」 control, origin answering; snapshot_rows=1 in all four cells",
+  "product_code_edited": false,
+  "gauge_edited": false,
+  "in_process_base_replacement": false,
+  "user_chain_ports_contacted": [],
+  "user_db_files_opened": [],
+  "demo_reset_issued": false
+ },
+ "four_old_cells_provenance": {
+  "read_from": "ord0263_capture_landedgen.json",
+  "retyped": false,
+  "file_sha256": "396f565884280ee3dc8e581d51ab9bfce68b128338b8a7dd2cc9c54c22914f99",
+  "cells_carried": [
+   "S1_live",
+   "S2_origin_error",
+   "S3_no_answer",
+   "S4_read_silent_health_answered"
+  ]
+ },
+ "fifth_state_acceptance_used": "the arbiter's minimum, not my vocabulary: keep the HTTP-response fact in evidence_kind, keep http_status=200, do not land on NETWORK_UNAVAILABLE/NO_REPLY, and let the cached-copy column follow the measurement. The label string itself is NOT pinned (arbiter wrote 名字可再定).",
+ "cells": {
+  "S1_live": {
+   "rendered_text": "菜单 | / | 今天 | 跟随系统 | EN | DE | 晚上好 | Demo之旅 | 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 | AI 帮我规划 | 试用其他城市 | 打开行程工作台 | 今天 | 还没有安排",
+   "network_words": [],
+   "service_words": [
+    "服务器"
+   ],
+   "snapshot_words": [],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": false,
+   "buttons": [
+    "今天",
+    "实时行程",
+    "地图",
+    "行程工作台",
+    "住宿选择",
+    "城市探索",
+    "旅行票夹",
+    "Copilot",
+    "恢复与执行",
+    "智能守护",
+    "旅行者画像",
+    "菜单"
+   ],
+   "origin_answer": {
+    "status": 200,
+    "thrown": false,
+    "wire": "ord0263_landedgen_surface_receipt.json: marker journey via :4415 -> 200 and the same id via :8411 direct -> 200, while an id absent from my own sqlite returns 404 through the same proxy"
+   },
+   "read_at_rel_ms": 103394,
+   "classified_label": "LIVE",
+   "snapshot_present": true,
+   "doors": {
+    "retry": 0,
+    "read_only_snapshot": 0
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 0.0
+  },
+  "S2_origin_error": {
+   "rendered_text": "服务器 | 服务暂时不可用 | 服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 | 看已保存的只读副本 | 重试 | 归因详情",
+   "network_words": [],
+   "service_words": [
+    "服务器",
+    "服务暂时不可用",
+    "报错",
+    "HTTP 500"
+   ],
+   "snapshot_words": [
+    "已保存",
+    "本地快照",
+    "只读副本"
+   ],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": false,
+   "buttons": [
+    "看已保存的只读副本",
+    "重试"
+   ],
+   "origin_answer": {
+    "status": 500,
+    "thrown": false,
+    "ct": "text/plain via my preview proxy",
+    "wire": "no listener on :8411 (pid 46244 stopped, netstat shows released); curl via :4415 /api/v1/health -> 500 text/plain in 0.003s, journey -> 500 in 0.004s, /v8/hub -> 200 in 0.003s"
+   },
+   "timeline": {
+    "sample_ms": 400,
+    "samples": 201,
+    "first_sample_ms": 17669,
+    "last_sample_ms": 97650,
+    "skeleton_samples": 0,
+    "labelled_samples": 201,
+    "note": "the band was already up when the sampler attached at 17.7 s and never changed across 201 samples; median gap 400 ms / max 414 ms proves the tab switch (another lane opened a tab at 22:21) did not freeze my sampler"
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 0.0,
+   "settle_note": "answered immediately - no deadline was needed, so this cell does not depend on the bound question",
+   "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "snapshot_present": true,
+   "doors": {
+    "retry": 1,
+    "read_only_snapshot": 1
+   }
+  },
+  "S3_no_answer": {
+   "rendered_text": "没有回音 | 等了 12 秒，这台服务器一个字也没回答 | 这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。 | 看已保存的只读副本 | 重试 | 归因详情",
+   "network_words": [],
+   "service_words": [
+    "服务器"
+   ],
+   "snapshot_words": [
+    "已保存",
+    "本地快照",
+    "只读副本"
+   ],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": false,
+   "buttons": [
+    "看已保存的只读副本",
+    "重试"
+   ],
+   "origin_answer": {
+    "status": null,
+    "thrown": true,
+    "wire": "tools/origin_hang_no_close.py fully-silent: accepts, never answers, never closes; curl /api/v1/health -> 000 after my own 10 s, /v8/hub -> 200 in 0.003s"
+   },
+   "product_bound_evidence": {
+    "browser_resource_timing": [
+     {
+      "path": "/api/v1/journeys/.../experience",
+      "rel_start_ms": 97,
+      "rel_end_ms": 12105,
+      "duration_ms": 12009,
+      "responseStatus": 0
+     },
+     {
+      "path": "/api/v1/health",
+      "rel_start_ms": 12105,
+      "rel_end_ms": 16109,
+      "duration_ms": 4005,
+      "responseStatus": 0
+     }
+    ],
+    "instrument_side_log": [
+     {
+      "t_s": 24.69,
+      "kind": "read_opened_hanging",
+      "path": ".../experience"
+     },
+     {
+      "t_s": 36.7,
+      "kind": "read_ended",
+      "age_s": 12.01,
+      "outcome": "abandoned_by_client",
+      "closed_by_instrument": false
+     },
+     {
+      "t_s": 36.7,
+      "kind": "read_opened_hanging",
+      "path": "/api/v1/health"
+     },
+     {
+      "t_s": 40.7,
+      "kind": "read_ended",
+      "age_s": 4.0,
+      "outcome": "abandoned_by_client",
+      "closed_by_instrument": false
+     }
+    ],
+    "instrument_final_state": {
+     "opened": 3,
+     "answered_health": 0,
+     "hung_now": 0,
+     "closed_by_instrument": 0,
+     "abandoned_by_client": 3,
+     "still_open": 0
+    },
+    "product_constants": "READ_DEADLINE_MS = 12_000 (lib/readDeadline.ts); probeHealth's own 4_000 ms AbortController (V8Experience.tsx:210)",
+    "verdict": "PRODUCT_BOUND - the read ended at 12.009 s (browser) / 12.01 s (my server saw the client send FIN) while closed_by_instrument stayed 0; the health probe then bounded itself at 4.005 s / 4.0 s. Three independent clocks, none of them mine closing the socket."
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 12.1,
+   "timeline": {
+    "sampler_note": "the page sampler attached late again (~15 s round trip), so the timing for this cell comes from Resource Timing + the instrument log rather than from the sample transition; both are recorded above"
+   },
+   "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+   "snapshot_present": true,
+   "doors": {
+    "retry": 1,
+    "read_only_snapshot": 1
+   }
+  },
+  "S4_read_silent_health_answered": {
+   "rendered_text": "服务器 | 服务暂时不可用 | 服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 | 看已保存的只读副本 | 重试 | 归因详情",
+   "network_words": [],
+   "service_words": [
+    "服务器",
+    "服务暂时不可用",
+    "报错",
+    "HTTP 500"
+   ],
+   "snapshot_words": [
+    "已保存",
+    "本地快照",
+    "只读副本"
+   ],
+   "navigator_onLine": true,
+   "snapshot_rows": 1,
+   "skeleton_sentence_present": false,
+   "buttons": [
+    "看已保存的只读副本",
+    "重试"
+   ],
+   "health_answer": {
+    "status": 500,
+    "thrown": false,
+    "ct": "application/json",
+    "wire": "curl via :4415 /api/v1/health -> 500 application/json in 0.004s, twice (instrument answered_health mode)"
+   },
+   "read_never_answered": true,
+   "product_bound_evidence": {
+    "browser_resource_timing": [
+     {
+      "path": "/api/v1/journeys/.../experience",
+      "rel_start_ms": 147,
+      "rel_end_ms": 12159,
+      "duration_ms": 12012,
+      "responseStatus": 0
+     },
+     {
+      "path": "/api/v1/health",
+      "rel_start_ms": 12159,
+      "rel_end_ms": 12162,
+      "duration_ms": 3,
+      "responseStatus": 500
+     }
+    ],
+    "instrument_side_log": [
+     {
+      "t_s": 43.49,
+      "kind": "read_opened_hanging",
+      "path": ".../experience"
+     },
+     {
+      "t_s": 55.5,
+      "kind": "read_ended",
+      "age_s": 12.01,
+      "outcome": "abandoned_by_client",
+      "closed_by_instrument": false
+     }
+    ],
+    "instrument_final_state": {
+     "opened": 2,
+     "answered_health": 2,
+     "hung_now": 0,
+     "closed_by_instrument": 0,
+     "abandoned_by_client": 2,
+     "still_open": 0
+    },
+    "verdict": "PRODUCT_BOUND - read hung 12.012 s (browser) / 12.01 s (server saw FIN) with closed_by_instrument=0, then the health probe got its 500 in 3 ms and attribution went to ORIGIN_ERROR, not to the no-answer arm"
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 12.2,
+   "timeline": {
+    "sample_ms": 300,
+    "samples": 169,
+    "first_sample_ms": 15085,
+    "last_sample_ms": 65483,
+    "skeleton_samples": 0,
+    "labelled_samples": 169,
+    "median_gap_ms": 296,
+    "max_gap_ms": 313,
+    "note": "band stable from the first sample (15.1 s) to 65.5 s; the settle instant itself is taken from Resource Timing + instrument log above, not from the sample transition"
+   },
+   "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "snapshot_present": true,
+   "doors": {
+    "retry": 1,
+    "read_only_snapshot": 1
+   }
+  },
+  "S5_invalid_response": {
+   "shapes": [
+    {
+     "shape": "200_html",
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 1200,
+      "body_head": "<!doctype html>\n<html lang=\"en\">\n  <",
+      "wire": "ord0263_junk_html.log: the instrument answered 200 text/html; charset=utf-8 with 1200 B at 22:59:30 - the served index.html, i.e. exactly what an SPA fallback hands back"
+     },
+     "rendered_text": "连接 | 网络不可用 | 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。 | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+     "screen_declared": {
+      "attribution_reason": "NETWORK_UNAVAILABLE",
+      "evidence_kind": "TRANSPORT",
+      "http_status": "none",
+      "source_layer": "TRANSPORT",
+      "retryable": "true",
+      "recovery_action": "read-only-cached",
+      "cached_copy_present": "true"
+     },
+     "page_resource_timing": {
+      "journey_read": {
+       "name": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+       "rel_start_ms": 414,
+       "rel_end_ms": 420,
+       "duration_ms": 6,
+       "status": 200
+      },
+      "health_read": null
+     },
+     "snapshot_rows": 1,
+     "buttons": [
+      "看已保存的只读副本",
+      "重试"
+     ],
+     "settled_within_deadline": true,
+     "seconds_to_settle": 0.0,
+     "note": "no deadline was needed - the origin replied in single-digit milliseconds"
+    },
+    {
+     "shape": "200_empty",
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "application/json",
+      "body_bytes": 0,
+      "body_head": "",
+      "wire": "ord0263_junk_empty.log: the instrument answered 200 application/json with 0 B at 23:02:27 - 200 with Content-Length: 0"
+     },
+     "rendered_text": "连接 | 网络不可用 | 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。 | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+     "screen_declared": {
+      "attribution_reason": "NETWORK_UNAVAILABLE",
+      "evidence_kind": "TRANSPORT",
+      "http_status": "none",
+      "source_layer": "TRANSPORT",
+      "retryable": "true",
+      "recovery_action": "read-only-cached",
+      "cached_copy_present": "true"
+     },
+     "page_resource_timing": {
+      "journey_read": {
+       "name": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+       "rel_start_ms": 263,
+       "rel_end_ms": 267,
+       "duration_ms": 4,
+       "status": 200
+      },
+      "health_read": {
+       "name": "/api/v1/health",
+       "rel_start_ms": 269,
+       "rel_end_ms": 273,
+       "duration_ms": 4,
+       "status": 200
+      }
+     },
+     "snapshot_rows": 1,
+     "buttons": [
+      "看已保存的只读副本",
+      "重试"
+     ],
+     "settled_within_deadline": true,
+     "seconds_to_settle": 0.0,
+     "note": "no deadline was needed - the origin replied in single-digit milliseconds"
+    },
+    {
+     "shape": "200_not_json",
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 33,
+      "body_head": "this sentence is not JSON at all\n",
+      "wire": "ord0263_junk_nonjson.log: the instrument answered 200 text/plain; charset=utf-8 with 33 B at 23:03:34 - 200 text/plain, a sentence that is not JSON"
+     },
+     "rendered_text": "连接 | 网络不可用 | 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。 | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+     "screen_declared": {
+      "attribution_reason": "NETWORK_UNAVAILABLE",
+      "evidence_kind": "TRANSPORT",
+      "http_status": "none",
+      "source_layer": "TRANSPORT",
+      "retryable": "true",
+      "recovery_action": "read-only-cached",
+      "cached_copy_present": "true"
+     },
+     "page_resource_timing": {
+      "journey_read": {
+       "name": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+       "rel_start_ms": 132,
+       "rel_end_ms": 137,
+       "duration_ms": 4,
+       "status": 200
+      },
+      "health_read": null
+     },
+     "snapshot_rows": 1,
+     "buttons": [
+      "看已保存的只读副本",
+      "重试"
+     ],
+     "settled_within_deadline": true,
+     "seconds_to_settle": 0.0,
+     "note": "no deadline was needed - the origin replied in single-digit milliseconds"
+    }
+   ]
+  }
+ },
+ "headline_reading": {
+  "what_the_origin_did": "answered 200 in 4-6 ms, three shapes: HTML / empty / not-JSON",
+  "what_the_screen_said": "「这一发请求没能出去，也没有收到任何回答，所以这是网络问题」",
+  "what_the_products_own_attribution_column_says": {
+   "attribution_reason": "NETWORK_UNAVAILABLE",
+   "evidence_kind": "TRANSPORT",
+   "http_status": "none",
+   "source_layer": "TRANSPORT",
+   "retryable": "true",
+   "recovery_action": "read-only-cached",
+   "cached_copy_present": "true"
+  },
+  "contradiction": "a 200 is an answer; the client reports the transport never carried one (http_status=none, evidence_kind=TRANSPORT) while the page really did receive 1200 / 0 / 33 bytes"
+ }
+}
