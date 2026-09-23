@@ -1,0 +1,46 @@
+{
+ "what": "commander's OWN read-only pass over the RELEASED generation, through the user's chain",
+ "how": "playwright MCP, viewport 390x844, http://127.0.0.1:4781/v8/hub (no clicks that POST, no DB writes)",
+ "t": "2026-09-23T17:26:07+0800",
+ "served_generation": {
+  "loaded_from_resource_timing": [
+   "index-DJEINrOl.js",
+   "index-COUUKhbU.css"
+  ],
+  "expected_from_swap_receipt": [
+   "index-DJEINrOl.js",
+   "index-COUUKhbU.css"
+  ],
+  "verdict": "PROVEN_MATCHES_RELEASE",
+  "swap_receipt_blob16": "89e91c7e369fc8f3"
+ },
+ "hit_box_pass": {
+  "viewport": [
+   390,
+   844
+  ],
+  "controls_measured": 3,
+  "hit_failures": [],
+  "note": "the hub screen of this build exposes only 3 controls in this state; the bookings-screen summary that ORD-0247 fixed is HJ-P3's cell to re-measure on the release (ORD-0257 follow-up)",
+  "verdict": "NOT_OBSERVED_BEYOND_WHAT_WAS_MEASURED"
+ },
+ "console_errors": [
+  {
+   "text": "Failed to load resource: 404 (Not Found) @ /api/v1/journeys/bfc3b4ee-cfbc-4c75-963c-d0e224b9568d/experience",
+   "rendered_copy_read_from_dom": "连接正常 / 这台服务器上没有这一趟行程了 / 这台设备还记得行程 bfc3b4ee…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。 / [选一趟行程] [重试] [归因详情]",
+   "verdict": "HONEST_404_STATE_NOT_NETWORK",
+   "why_this_matters": "this is the exact state class ORD-0263 is about, and the released build already separates 'origin answered 404' from 'network down' in the user's words"
+  }
+ ],
+ "ord0263_scope_narrowed_to": [
+  "HTTP 4xx/5xx + local snapshot -> ORIGIN_ERROR_WITH_SNAPSHOT (404 arm already correct on the release)",
+  "HTTP 5xx + local snapshot -> must NOT say 网络不可用 (this is the arm HARNESS measured red)",
+  "timeout / DNS / connect failure -> NETWORK_UNREACHABLE_WITH_SNAPSHOT (unreachable today: requestJson() has no timeout, so the third state never classifies)"
+ ],
+ "lane_hygiene_note": "I navigated the shared Playwright page to my URL and closed NOTHING; per SHARED_BROWSER_CONTEXT_OWNERSHIP_V1 I only touched the page I own by having used it.",
+ "screenshot": {
+  "path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\notes\\cmdr_release_404_state_0923_1718.png",
+  "bytes": 25421,
+  "sha256": "a71801a45de68c7344d6f17096d83ad10f4f25e35464549ff73cc2892202173d"
+ }
+}
