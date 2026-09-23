@@ -1,0 +1,10 @@
+ORD-0238 + ORD-0240 evidence surface, lane e345b9d6, commits b4ee4f8
+
+   48136 B  sha256 c7df9d4708882a11afd0908c55cdf42b6ec69882807b2ec452b2112f3d55e93c  b4ee4f8__b4ee4f8.patch
+     468 B  sha256 450842389d69f90f421fcc6fab1236c1d4a932e828a81a6d79d945118d34c254  b4ee4f8__changed-files.txt
+     694 B  sha256 eadcc0c57832deb8cfeb6e90218bedf67e98fe0e8e49349bc60dc47206c92343  b4ee4f8__source-and-parent.txt
+     882 B  sha256 4344a1a4e2fc541dec68679173a1ed2de32edfcbaa731c1b820b771d10a088c3  layer2-stored-preference-rows.json
+     877 B  sha256 e899783238bbca86e3052f0778b38f6861ba5a910ae6579c5a8850f3f52880b2  layer3-planner-input-probe.json
+     492 B  sha256 94e2bb634da12bb8af274ec61183ea64c4fadf7ada1e5a1b7dcdd3268e6d1f3e  model-output-labelled-reading.json
+   14790 B  sha256 c883a8e4063be4909a03f070a22bae28cf78ee3c55a151c78cbe706e480938e9  mutation-receipts.json
+    4365 B  sha256 d0ce65f921ab47138ae0157e6a78cf861e256df0686f828466ae239b5f7bb158  preview-chain-recheck-after-rebuild.json
