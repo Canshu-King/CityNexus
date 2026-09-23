@@ -1,0 +1,98 @@
+{
+ "at": "2026-09-23T17:34:05+08:00",
+ "what": "ORD-0263 verifier selftest - can every cell say RED, and is V2 sensitive to the deadline mechanism",
+ "rule": "a judge that has never been seen to fail is not a judge; these arms assert nothing about the product",
+ "scope_from_commander": "404 arm already correct on the release (reference, not baseline); the two arms under test are 5xx+snapshot and no-answer",
+ "arms_total": 7,
+ "arms_matched": 7,
+ "overall": "GREEN",
+ "rows": [
+  {
+   "arm": "V1-true_positive:correct_service_and_snapshot_words",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "match": true,
+   "detail": {
+    "http_status": 500,
+    "says_network_words": false,
+    "says_service_words": true,
+    "says_snapshot_words": true,
+    "navigator_onLine": true
+   }
+  },
+  {
+   "arm": "V1-killer:today_s_network_words_must_be_red",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "http_status": 500,
+    "says_network_words": true,
+    "says_service_words": false,
+    "says_snapshot_words": false,
+    "navigator_onLine": true
+   }
+  },
+  {
+   "arm": "V2-true_positive:no_answer_with_a_real_deadline",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "match": true,
+   "detail": {
+    "fetch_thrown": true,
+    "settled_within_deadline": true,
+    "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "retry_door_present": true,
+    "still_on_loading_skeleton": false,
+    "snapshot_present": true,
+    "seconds_to_settle": 4.0
+   }
+  },
+  {
+   "arm": "V2-killer:remove_the_read_deadline_and_the_cell_goes_red",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "fetch_thrown": true,
+    "settled_within_deadline": false,
+    "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "retry_door_present": false,
+    "still_on_loading_skeleton": true,
+    "snapshot_present": true,
+    "seconds_to_settle": null
+   }
+  },
+  {
+   "arm": "V3-true_positive:two_distinct_classified_arms",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "match": true,
+   "detail": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "s3_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "same_sentence": false,
+    "s3_is_unclassified_skeleton": false
+   }
+  },
+  {
+   "arm": "V3-killer:one_sentence_for_both_arms_is_red",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "s3_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "same_sentence": true,
+    "s3_is_unclassified_skeleton": false
+   }
+  },
+  {
+   "arm": "V2-killer:missing_deadline_field_is_not_measured_not_green",
+   "expect": "NOT_MEASURED",
+   "got": "NOT_MEASURED",
+   "match": true,
+   "detail": null
+  }
+ ]
+}
