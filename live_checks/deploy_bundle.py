@@ -185,6 +185,18 @@ def asset_verdict(ref: str, expect_ct: str, serve: pathlib.Path, base: str | Non
     return g
 
 
+def g_prod_shape_verdict(root: pathlib.Path) -> dict:
+    """Reproduce the production shape: a declared hand-written sw (no precache array) vs the same
+    bytes under an UNdeclared name.  Returns the two verdicts the selftest asserts both ways."""
+    src = root / "sw.js"
+    text = src.read_text(encoding="utf-8", errors="replace") if src.is_file() else ""
+    declared = {"sw.js": "hand-written service worker, no workbox precacheAndRoute array"}
+    urls = precache_urls(text)
+    dec = ("DECLARED" if (not urls and "sw.js" in declared) else "NOT_APPLICABLE")
+    und = "RED" if not urls else "GREEN"
+    return {"declared": dec, "undeclared": und, "urls_found": len(urls)}
+
+
 def selftest(serve: pathlib.Path) -> int:
     """Prove the asset gauge BOTH ways against the live server, without touching the deploy.
 
@@ -240,6 +252,14 @@ def selftest(serve: pathlib.Path) -> int:
                  "got": g_detail(g_urls + ["/assets/__cnx_not_in_manifest__.js"])})
     arms.append({"arm": "G-killer:empty_manifest_is_not_a_pass", "expect": "RED",
                  "got": {"verdict": g_verdict([])}})
+    # G-killer 2 (redteam bus 5788897591, measured on the production chain): a file with NO precache
+    # array must not turn the gauge permanently RED if it is declared, and MUST be RED if it is not.
+    # Both directions are asserted so "declared" cannot become a blanket exemption.
+    prod_like = g_prod_shape_verdict(live)
+    arms.append({"arm": "G-declared:handwritten_sw_without_precache_array", "expect": "DECLARED",
+                 "got": {"verdict": prod_like["declared"]}})
+    arms.append({"arm": "G-killer:undeclared_empty_manifest_still_red", "expect": "RED",
+                 "got": {"verdict": prod_like["undeclared"]}})
     prev_ok = "\n".join(f'<script src="{r}"></script>' for r in refs)
     prev_bad = prev_ok + '\n<script src="/assets/__cnx_old_generation_gone.js"></script>'
     arms.append({"arm": f"H-true_positive:previous_generation_resolves({len(refs)} refs)", "expect": "GREEN",
@@ -505,6 +525,12 @@ def main() -> int:
 
     # G: precache integrity - every url the registered service workers promise must resolve as real
     # bytes, through the same asset_verdict predicate (no second, laxer judge).
+    # Declared no-precache-array files (redteam bus 5788897591): the production chain still ships a
+    # HAND-WRITTEN `sw.js` (measured 7,178 B) that carries no workbox `precacheAndRoute` array, so
+    # parsing it yields 0 urls.  Judging that RED would make the whole gauge permanently unable to go
+    # green - which is not "strict", it is broken.  A-3 is honoured the same way as F's escape hatch:
+    # the gap is NAMED, carries its measured witness, and is excluded from all_green by name only.
+    DECLARED_NO_PRECACHE = {"sw.js": "hand-written service worker, no workbox precacheAndRoute array"}
     g_precache = []
     for name in ("sw.js", "v10-sw.js"):
         swf = serve / name
@@ -512,6 +538,13 @@ def main() -> int:
             continue
         urls = precache_urls(swf.read_text(encoding="utf-8", errors="replace"))
         entry = {"sw": name, "urls_found": len(urls), "probes": []}
+        if not urls and name in DECLARED_NO_PRECACHE:
+            entry["declared_no_precache_array"] = DECLARED_NO_PRECACHE[name]
+            entry["measured_bytes"] = swf.stat().st_size
+            entry["measured_sha256"] = sha256(swf)
+            entry["verdict"] = "DECLARED_NO_PRECACHE_ARRAY"
+            g_precache.append(entry)
+            continue
         for u in urls:
             ref = u if u.startswith("/") else "/" + u
             entry["probes"].append({"ref": ref, "got": asset_verdict(ref, expect_ct_for(ref), serve)})
@@ -559,7 +592,11 @@ def main() -> int:
                                "why": "BASE is 127.0.0.1:4781 (no auth proxy); the proxy and the tunnel "
                                       "were never probed by A-E - redteam bus 5788606895"},
     }
-    g_green = bool(g_precache) and all(e["verdict"] == "GREEN" for e in g_precache)
+    # A declared entry is not a pass either: at least one sw must actually be checked (GREEN), and no
+    # entry may be RED.  Two-way killer in --selftest: an UNDECLARED empty manifest must read RED.
+    g_green = (bool(g_precache)
+               and any(e["verdict"] == "GREEN" for e in g_precache)
+               and not any(e["verdict"] == "RED" for e in g_precache))
     receipt["arms"] = {"A": (a_old or {}).get("verdict"), "B": "see receipt_ABCDE",
                        "G_precache": [e["verdict"] for e in g_precache],
                        "H_prevgen": h_prev_verdict, "F_proxy_tunnel": f_verdict,
