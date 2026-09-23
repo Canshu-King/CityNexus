@@ -1,0 +1,211 @@
+{
+ "at": "2026-09-23T19:40:38+08:00",
+ "mode": "read-only",
+ "authoritative_tip_now": "035721357da99a43c276f5803df83c3b08c1361c",
+ "v8_tip": "035721357da99a43c276f5803df83c3b08c1361c",
+ "leased_tip_from_the_order": "dea8410be809ebf6c5046581873584e9dbf32b64",
+ "1_parent_of_earliest_new_commit_equals_leased_tip": {
+  "commits_in_leased_to_v8": 10,
+  "earliest_commit": "a7fba2ff905e14872b0f055523ccb45ae95f8750",
+  "parent_of_earliest": "dea8410be809ebf6c5046581873584e9dbf32b64",
+  "equals_leased_tip": true
+ },
+ "2_landed_tip_equals_v8_and_descends": {
+  "auth_equals_v8": true,
+  "leased_is_ancestor_of_v8": true,
+  "v8_is_ancestor_of_auth": true
+ },
+ "3_cherry_picks": {
+  "count": 10,
+  "full40": [
+   "035721357da99a43c276f5803df83c3b08c1361c",
+   "03aa82b728e7a84b99ec7633babf554aae3b453e",
+   "e3f2ae0ca77bb86dd4d86aeca9b15f862d051798",
+   "7339855a15b69797ae9fdbedb73edefbc0490596",
+   "1d356660a3c5abf91c400263c6298cff2cd52607",
+   "00bbf4c6c377c9446a1774716f8f225e1a4e1c9e",
+   "af3956131ac1a7a1ff6022cb984608a7bfcbc17c",
+   "24685e5a52855cca4433a75d1f0dcba5446adec4",
+   "36ed2c21208452255f6a0f9f234e8977799a499a",
+   "a7fba2ff905e14872b0f055523ccb45ae95f8750"
+  ],
+  "with_upstream": 10,
+  "upstream_all_resolve": true,
+  "upstream_all_off_the_leased_line": true,
+  "pairs": [
+   [
+    "035721357da99a43c276f5803df83c3b08c1361c",
+    "dfecf284bf6b872922a9b43528cba90009018d6d"
+   ],
+   [
+    "03aa82b728e7a84b99ec7633babf554aae3b453e",
+    "06b975b625f250b063ed412a97e5dc559b333a84"
+   ],
+   [
+    "e3f2ae0ca77bb86dd4d86aeca9b15f862d051798",
+    "f42f9f1235cf22e806e45172c818ef9798f5bd3e"
+   ],
+   [
+    "7339855a15b69797ae9fdbedb73edefbc0490596",
+    "75bc8ca192db547a6169540ce28ce2f6f2d9fe4d"
+   ],
+   [
+    "1d356660a3c5abf91c400263c6298cff2cd52607",
+    "318a0348ee307048c5ca0ef0e055793efcb4e22e"
+   ],
+   [
+    "00bbf4c6c377c9446a1774716f8f225e1a4e1c9e",
+    "dea1251d7bc493c80751bcba8a27808cf3adaba8"
+   ],
+   [
+    "af3956131ac1a7a1ff6022cb984608a7bfcbc17c",
+    "a96fabf9ec09a64f25679096b15c802a93558e22"
+   ],
+   [
+    "24685e5a52855cca4433a75d1f0dcba5446adec4",
+    "4d9ceaee785e78fd25482f91d80e3f832aa3f684"
+   ],
+   [
+    "36ed2c21208452255f6a0f9f234e8977799a499a",
+    "84017af12cd9e3db8ee3bf082fc6ef3e04244b20"
+   ],
+   [
+    "a7fba2ff905e14872b0f055523ccb45ae95f8750",
+    "21309b996ecb474d9122f88b81fba2216a006833"
+   ]
+  ],
+  "attribute_source": "commit body, not subject: %s was my extraction bug",
+  "rows": [
+   {
+    "sha40": "035721357da99a43c276f5803df83c3b08c1361c",
+    "subject": "test(demo): the demo producer may only be reached from the demo seed",
+    "upstream_40": "dfecf284bf6b872922a9b43528cba90009018d6d",
+    "upstream_resolves": true,
+    "upstream_not_on_leased_line": true
+   },
+   {
+    "sha40": "03aa82b728e7a84b99ec7633babf554aae3b453e",
+    "subject": "test(feasibility): the inventory equality is a sealed-demo inventory, not a wh",
+    "upstream_40": "06b975b625f250b063ed412a97e5dc559b333a84",
+    "upstream_resolves": true,
+    "upstream_not_on_leased_line": true
+   },
+   {
+    "sha40": "e3f2ae0ca77bb86dd4d86aeca9b15f862d051798",
+    "subject": "test(feasibility): the evidence-inventory equality refuses to hold over two em",
+    "upstream_40": "f42f9f1235cf22e806e45172c818ef9798f5bd3e",
+    "upstream_resolves": true,
+    "upstream_not_on_leased_line": true
+   },
+   {
+    "sha40": "7339855a15b69797ae9fdbedb73edefbc0490596",
+    "subject": "test(feasibility): raw place tags are never an accessibility truth source",
+    "upstream_40": "75bc8ca192db547a6169540ce28ce2f6f2d9fe4d",
+    "upstream_resolves": true,
+    "upstream_not_on_leased_line": true
+   },
+   {
+    "sha40": "1d356660a3c5abf91c400263c6298cff2cd52607",
+    "subject": "feat(plans): a no-candidate refusal names which rules broke which candidate",
+    "upstream_40": "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+    "upstream_resolves": true,
+    "upstream_not_on_leased_line": true
+   },
+   {
+    "sha40": "00bbf4c6c377c9446a1774716f8f225e1a4e1c9e",
+    "subject": "test(demo): two hard constraints on file each name only their own blocker",
+    "upstream_40": "dea1251d7bc493c80751bcba8a27808cf3adaba8",
+    "upstream_resolves": true,
+    "upstream_not_on_leased_line": true
+   },
+   {
+    "sha40": "af3956131ac1a7a1ff6022cb984608a7bfcbc17c",
+    "subject": "feat(plans): a candidate the gate drops now leaves a named durable fact",
+    "upstream_40": "a96fabf9ec09a64f25679096b15c802a93558e22",
+    "upstream_resolves": true,
+    "upstream_not_on_leased_line": true
+   },
+   {
+    "sha40": "24685e5a52855cca4433a75d1f0dcba5446adec4",
+    "subject": "test(demo): give the laundering tripwire its own owner assertion and positive ",
+    "upstream_40": "4d9ceaee785e78fd25482f91d80e3f832aa3f684",
+    "upstream_resolves": true,
+    "upstream_not_on_leased_line": true
+   },
+   {
+    "sha40": "36ed2c21208452255f6a0f9f234e8977799a499a",
+    "subject": "test(demo): the producer gate pins the evaluated verdict, not just the filtere",
+    "upstream_40": "84017af12cd9e3db8ee3bf082fc6ef3e04244b20",
+    "upstream_resolves": true,
+    "upstream_not_on_leased_line": true
+   },
+   {
+    "sha40": "a7fba2ff905e14872b0f055523ccb45ae95f8750",
+    "subject": "feat(demo): the sealed demo produces accessibility evidence the stroller and l",
+    "upstream_40": "21309b996ecb474d9122f88b81fba2216a006833",
+    "upstream_resolves": true,
+    "upstream_not_on_leased_line": true
+   }
+  ]
+ },
+ "4_candidate_file_set": {
+  "files": [
+   "backend/app/services.py",
+   "backend/tests/test_qoder_demo_accessibility_evidence.py",
+   "backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+   "data/mock/places.json"
+  ],
+  "count": 4,
+  "derived_from": "the diff object itself, not a remembered list",
+  "hand_written_list_retired": [
+   "backend/app/services.py",
+   "backend/tests/test_qoder_demo_accessibility_evidence.py",
+   "backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+   "backend/tests/test_qoder_sealed_demo_entry_creates_nothing.py"
+  ],
+  "hand_list_matches_derived": false,
+  "diff_object": "beb89f0b3471330cfb660c1aa5b8d453d8159091",
+  "bytes": 46594,
+  "plus": 888,
+  "minus": 6,
+  "reviewed_object_was": "beb89f0b3471330cfb660c1aa5b8d453d8159091 / 46,594 B",
+  "identical_to_reviewed": true
+ },
+ "5_no_third_party_overlap": {
+  "increment_base": "035721357da99a43c276f5803df83c3b08c1361c",
+  "increment_tip": "035721357da99a43c276f5803df83c3b08c1361c",
+  "why_empty": "the authoritative tip IS my v8 tip, so there is no other lane's increment to test against; this cell's proof belongs to the pre-landing self-proof (blob dbac468fafa51ea5196aeb959c9ffb5b036a48bd, base 027d65e->dea8410)",
+  "left_commits": 0,
+  "left_files_cardinality": 0,
+  "left_fingerprint16": "e3b0c44298fc1c14",
+  "right_files_cardinality": 4,
+  "right_files": [
+   "backend/app/services.py",
+   "backend/tests/test_qoder_demo_accessibility_evidence.py",
+   "backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+   "data/mock/places.json"
+  ],
+  "right_fingerprint16": "f42210e250537708",
+  "intersection": [],
+  "intersection_cardinality": 0,
+  "verdict": "EMPTY_BY_CONSTRUCTION - NOT A PROOF"
+ },
+ "6_status_porcelain_verbatim": {
+  "authoritative_worktree": " M reports/e2e-provenance/authoritative.json\n M tools/verification/mutation_campaign.py\n?? raw/\n?? reports/ui-overnight/\n?? review/JourneyTrialSetup.tsx.ord66-72-pristine\n?? review/ORD-0066-0072-frontend.diff\n?? review/ORD-0066-0072-handoff.md\n?? review/ORD-0082-14-handoff-for-C.diff\n?? review/ORD-0082-work-in-progress.diff\n?? review/ORD-0124-porting-list.md\n?? review/SimulationPanel.formatted.bak\n?? review/V8Experience.formatted.bak\n?? review/V8Experience.semantic.diff\n?? review/_bus_e345b9d6_ord0246_0247.md\n?? review/_bus_e345b9d6_ord0250_0251_0247w.md\n?? review/_bus_e345b9d6_reply_singlewriter.md\n?? review/_bus_e345b9d6_wake_reply.md\n?? review/ai-sheet-1.txt\n?? review/ai-sheet-2.txt\n?? review/ai-sheet-3.txt\n?? review/ai-sheet-4.txt\n?? review/ai-sheet-5.txt\n?? review/ai-sheet-6.txt\n?? review/ai-sheet-7.txt\n?? review/ai-sheet-8.txt\n?? review/ai-sheet-r5200.txt\n?? review/ai-sheet-r5210.txt\n?? review/amend_ledger_block_e345b9d6.py\n?? review/anchor-0220.txt\n?? review/aria_disabled_probe.cjs\n?? review/attention-isolated.txt\n?? review/bookable-target-shape.json\n?? review/booking-isolated.txt\n?? review/booking-node.txt\n?? review/booking-slots-probe.txt\n?? review/booking-slots-shape.json\n?? review/booking-when-active.json\n?? review/booking-when-active.txt\n?? review/bookings-book43475.json\n?? review/build-0100.txt\n?? review/build-0104.txt\n?? review/build-0104b.txt\n?? review/build-0107.txt\n?? review/build-0134.txt\n?? review/build-0134b.txt\n?? review/build-ord0090.txt\n?? review/build-scroll.txt\n?? review/chain-0203-attempt.txt\n?? review/chain-0203-default.txt\n?? review/chain-0216d-second.txt\n?? review/city-catalog-probe.txt\n?? review/city-catalog-probe2.txt\n?? review/city-services-shape.json\n?? review/close_orders_e345b9d6.py\n?? review/commit-message-round4.txt\n?? review/commit-message-round5.txt\n?? review/commit-message-round6.txt\n?? review/commit-message-round7.txt\n?? review/commit-message-round8.txt\n?? review/dev-0100.txt\n?? review/dev-ord0090.txt\n?? review/dev-scene-round.txt\n?? review/enumerate_ids.py\n?? review/examples-1.txt\n?? review/float-atrest.txt\n?? review/float-dev-round.txt\n?? review/float-dev-round2.txt\n?? review/float-dev-round3.txt\n?? review/float-dev-round4.txt\n?? review/float-dev-round5.txt\n?? review/float-round1.txt\n?? review/float-round10.txt\n?? review/float-round2.txt\n?? review/float-round3.txt\n?? review/float-round4.txt\n?? review/float-round5.txt\n?? review/float-round6.txt\n?? review/float-round7.txt\n?? review/float-round8.txt\n?? review/float-round9.txt\n?? review/float-touch.txt\n?? review/float-touch2.txt\n?? review/float-touch3.txt\n?? review/float-touch4.txt\n?? review/formatscan/\n?? review/full-round.txt\n?? review/full-round2.txt\n?? review/full-round3.txt\n?? review/full-round6.txt\n?? review/full-round7.txt\n?? review/full-round8.txt\n?? review/full-round9.txt\n?? review/full-suite-2.txt\n?? review/full-suite-run.txt\n?? review/gate_146731d_nokey.txt\n?? review/hero-spec-round2.txt\n?? review/kill-0221-pair.txt\n?? review/kill-round.txt\n?? review/kill-round2.txt\n?? review/kill-run-ord0066-0072-second.txt\n?? review/kill-run-ord0066-0072.txt\n?? review/killA6-round.txt\n?? review/killA78-round.txt\n?? review/killA9-round.txt\n?? review/killD-round.txt\n?? review/killD-round2.txt\n?? review/killD-round3.txt\n?? review/killD-round4.txt\n?? review/killD-round5.txt\n?? review/killD6-red.txt\n?? review/killD6-rerun.txt\n?? review/killD9.txt\n?? review/killE-round1.txt\n?? review/killE-round2.txt\n?? review/killF-round1.txt\n?? review/killF-round2.txt\n?? review/killF-round3.txt\n?? review/killF-round4.txt\n?? review/killG-series-run2.txt\n?? review/killH-series.txt\n?? review/killJ-series.txt\n?? review/killK-series.txt\n?? review/killL-series.txt\n?? review/ledger-block-0100.md\n?? review/ledger-block-0104.md\n?? review/ledger-block-0107.md\n?? review/ledger-block-0126.md\n?? review/ledger-block-0134-1.md\n?? review/ledger-block-0134-2.md\n?? review/ledger-block-0135-step3.md\n?? review/ledger-block-0135.md\n?? review/ledger-block-0146.md\n?? review/ledger-block-0164.md\n?? review/ledger-block-0169.md\n?? review/ledger-block-0178-0183.md\n?? review/ledger-block-0193.md\n?? review/ledger-block-0203.md\n?? review/ledger-block-0208.md\n?? review/ledger-block-0209.md\n?? review/ledger-block-0212.md\n?? review/ledger-block-0216.md\n?? review/ledger-block-063x.md\n?? review/ledger-block-delivery.md\n?? review/ledger-block-finger.md\n?? review/ledger-block-float.md\n?? review/ledger-block-r78.md\n?? review/ledger-block-red.md\n?? review/ledger-block-residuals.md\n?? review/ledger-block-scroll.md\n?? review/ledger_backup_before_notice_0fd3cc7.md\n?? review/ledger_backup_before_ord0238.md\n?? review/ledger_backup_before_ord0246.md\n?? review/ledger_backup_before_ord0250.md\n?? review/map-gesture-1.txt\n?? review/map-gesture-10.txt\n?? review/map-gesture-11.txt\n?? review/map-gesture-12.txt\n?? review/map-gesture-2.txt\n?? review/map-gesture-3.txt\n?? review/map-gesture-4.txt\n?? review/map-gesture-5.txt\n?? review/map-gesture-6.txt\n?? review/map-gesture-7.txt\n?? review/map-gesture-8.txt\n?? review/map-gesture-9.txt\n?? review/mobile-ui-round.txt\n?? review/mutate_ord108.py\n?? review/ord0066_0072_kill_drivers.py\n?? review/ord0085-node.txt\n?? review/ord0126-kill.txt\n?? review/ord0126-text.txt\n?? review/ord0134-green.txt\n?? review/ord0134-green2.txt\n?? review/ord0134-green3.txt\n?? review/ord0134-green4.txt\n?? review/ord0134-red.txt\n?? review/ord0134-red2.txt\n?? review/ord0134-red3.txt\n?? review/ord0134-red4.txt\n?? review/ord0164-route-probe.json\n?? review/ord0193-prep-probe.json\n?? review/ord0203-not-answered-probe.json\n?? review/ord0220-1-arm.txt\n?? review/ord0220-2-run.txt\n?? review/ord0220-3-run.txt\n?? review/ord0220-3b-run.txt\n?? review/ord0221-readings.txt\n?? review/ord0222-days-receipt.txt\n?? review/ord0222-days-summary.txt\n?? review/ord0222-scan-summary.txt\n?? review/ord0226-arms-console.DO-NOT-READ_gbk-mojibake.txt\n?? review/ord0226-arms-console.txt\n?? review/ord0226-arms-final-console.txt\n?? review/ord0226-arms-six-console.txt\n?? review/ord0226-followup-ledger-block.txt\n?? review/ord0226-ledger-block.txt\n?? review/ord0226-wholefile.txt\n?? review/ord0232-arms-console.txt\n?? review/ord0232-ledger-block.txt\n?? review/ord0235-ledger-block.txt\n?? review/ord0238-0240-arms-console.txt\n?? review/patch_e_round2.py\n?? review/patch_e_round2b.py\n?? review/patch_meta_gate.py\n?? review/patch_panel_rows.py\n?? review/patch_prop_type.py\n?? review/patch_stage_refresh.py\n?? review/patch_today_clock_gates.py\n?? review/patch_today_clock_spec.py\n?? review/phone-ord0081.cjs\n?? review/predictive-isolated.txt\n?? review/predictive-isolated2.txt\n?? review/predictive-round-b.txt\n?? review/predictive-round-c.txt\n?? review/preventive-isolated.txt\n?? review/probe-0220-out.json\n?? review/probe-0220-summary.txt\n?? review/probe-city-catalog.py\n?? review/probe-scene-envelope.py\n?? review/probe-stage-walk.py\n?? review/prod-lane-0100.txt\n?? review/prod-lane-0100b.txt\n?? review/prod-lane-0104.txt\n?? review/prod-lane-0104b.txt\n?? review/prod-lane-0107.txt\n?? review/prod-lane-ord0090.txt\n?? review/prod-lane-scroll.txt\n?? review/prod-lane-scroll2.txt\n?? review/prod-lane-touch.txt\n?? review/prod-ord0090.txt\n?? review/prod-ord0090b.txt\n?? review/prod-round.txt\n?? review/prod-round2.txt\n?? review/prod-round3.txt\n?? review/prod-round4.txt\n?? review/prod-round5.txt\n?? review/prod-round6.txt\n?? review/prod-round7.txt\n?? review/prod-round8.txt\n?? review/prod-round9.txt\n?? review/qoder-ai-sheet-blocked.spec.ts.txt\n?? review/qoder-map-gesture-ownership.spec.ts.txt\n?? review/readback-0221-rerun.txt\n?? review/red-reading-overflow.txt\n?? review/redteam-arms.txt\n?? review/scene-envelope-scene26557.json\n?? review/scene-envelope-scene28992.json\n?? review/scene-envelope-scene29076.json\n?? review/scroll-panel-1.txt\n?? review/scroll-panel-2.txt\n?? review/sim-booking-node.ts.txt\n?? review/sim-booking-target-node.ts.txt\n?? review/sim-replan-id-node.ts.txt\n?? review/sim-touch-node.ts.txt\n?? review/tc-round4.txt\n?? review/tc-round4b.txt\n?? review/tc-round5.txt\n?? review/tsc-0100.txt\n?? review/tsc-0100b.txt\n?? review/tsc-0100c.txt\n?? review/tsc-0100d.txt\n?? review/tsc-0104.txt\n?? review/tsc-0104b.txt\n?? review/tsc-0104c.txt\n?? review/tsc-0104d.txt\n?? review/tsc-0104e.txt\n?? review/tsc-0104f.txt\n?? review/tsc-0107.txt\n?? review/tsc-0107b.txt\n?? review/tsc-0107c.txt\n?? review/tsc-0126.txt\n?? review/tsc-0126a.txt\n?? review/tsc-0126b.txt\n?? review/tsc-0126c.txt\n?? review/tsc-0134.txt\n?? review/tsc-0134b.txt\n?? review/tsc-0134c.txt\n?? review/tsc-0134d.txt\n?? review/tsc-0134e.txt\n?? review/tsc-0134f.txt\n?? review/tsc-0134g.txt\n?? review/tsc-0135.txt\n?? review/tsc-0135b.txt\n?? review/tsc-0135c.txt\n?? review/tsc-0135f.txt\n?? review/tsc-0135g.txt\n?? review/tsc-0135h.txt\n?? review/tsc-0146.txt\n?? review/tsc-0146b.txt\n?? review/tsc-0146c.txt\n?? review/tsc-0164.txt\n?? review/tsc-0169.txt\n?? review/tsc-0169b.txt\n?? review/tsc-0169c.txt\n?? review/tsc-0169d.txt\n?? review/tsc-0169e.txt\n?? review/tsc-0169f.txt\n?? review/tsc-0178.txt\n?? review/tsc-0178b.txt\n?? review/tsc-0178c.txt\n?? review/tsc-0180.txt\n?? review/tsc-0180b.txt\n?? review/tsc-0180c.txt\n?? review/tsc-0180e.txt\n?? review/tsc-0193.txt\n?? review/tsc-0193b.txt\n?? review/tsc-0193c.txt\n?? review/tsc-0193d.txt\n?? review/tsc-0193e.txt\n?? review/tsc-0203.txt\n?? review/tsc-0203b.txt\n?? review/tsc-0203d.txt\n?? review/tsc-0203e.txt\n?? review/tsc-0203f.txt\n?? review/tsc-0208.txt\n?? review/tsc-0208b.txt\n?? review/tsc-0208c.txt\n?? review/tsc-0208d.txt\n?? review/tsc-0208e.txt\n?? review/tsc-0208f.txt\n?? review/tsc-0208g.txt\n?? review/tsc-0208h.txt\n?? review/tsc-0209.txt\n?? review/tsc-0209b.txt\n?? review/tsc-0209c.txt\n?? review/tsc-0212.txt\n?? review/tsc-0212c.txt\n?? review/tsc-0212d.txt\n?? review/tsc-0216.txt\n?? review/tsc-0216b.txt\n?? review/tsc-0216c.txt\n?? review/tsc-0216d.txt\n?? review/tsc-0216d2.txt\n?? review/tsc-0216e.txt\n?? review/tsc-0220a.txt\n?? review/tsc-0220b.txt\n?? review/tsc-0220c.txt\n?? review/tsc-0220d.txt\n?? review/tsc-0220e.txt\n?? review/tsc-0220f.txt\n?? review/tsc-0221.txt\n?? review/tsc-0221b.txt\n?? review/tsc-0222a.txt\n?? review/tsc-0222b.txt\n?? review/tsc-0222c.txt\n?? review/tsc-0222d.txt\n?? review/tsc-0222e.txt\n?? review/tsc-atrest.txt\n?? review/tsc-check-ord0090.txt\n?? review/tsc-final.txt\n?? review/tsc-final2.txt\n?? review/tsc-ord0090.txt\n?? review/tsc-ord0090b.txt\n?? review/tsc-r7.txt\n?? review/tsc-scroll.txt\n?? review/tsc-touch.txt\n?? review/tsc-touch2.txt\n?? review/tsc-walk.txt\n?? review/walk-0100.txt\n?? review/wallet-walk-round.txt\n?? review/wallet-walk-round2.txt\n?? review/wiz-0220-diff.txt\n",
+  "landing_worktree": "",
+  "lane_worktree_branch": "landing/ord0219-composite-v8",
+  "lane_worktree_note": "0263 的构建/浏览器残件在这里，见 7 号键"
+ },
+ "7_branch_refs": {
+  "agent/b-c01d72a3-candidates": "035721357da99a43c276f5803df83c3b08c1361c",
+  "landing/ord0219-composite-v8": "035721357da99a43c276f5803df83c3b08c1361c",
+  "agent/b-c01d72a3-ord0263": "a380287033da6ff0bd36b8e1baa6f79c61ad03bd"
+ },
+ "8_ord0263_patch_applies_on_landed_tip": {
+  "patch_blob": "e96c60fe1675de6f93e65de7dbf2c39dea8a4cd7",
+  "worktree_head": "035721357da99a43c276f5803df83c3b08c1361c",
+  "git_apply_check_rc": 0,
+  "stderr": "",
+  "meaning": "0 = the next writer can apply it on the landed tip as-is; non-zero = it needs a re-parent"
+ }
+}
