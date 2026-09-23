@@ -1,0 +1,111 @@
+{
+ "at": "2026-09-23T15:42:33+08:00",
+ "why": "teardown of the phase-2b/arm-I canary run under ruler a886329fe1ee8d72 (62,571 B, commit df69b4fc5cfd)",
+ "listeners_before": {
+  "4411": [
+   58192
+  ],
+  "4412": [
+   61092
+  ],
+  "8411": [
+   16152
+  ]
+ },
+ "forbidden_ports_observed_only": {
+  "4781": [
+   47376
+  ],
+  "4782": [
+   33880
+  ],
+  "8693": [
+   33104
+  ],
+  "4185": [
+   47124
+  ],
+  "8713": [
+   52820
+  ]
+ },
+ "killed": [
+  {
+   "pid": 16152,
+   "rc": 0,
+   "out": "�ɹ�: ����ֹ PID 16152 (���� PID 52148 �ӽ���)�Ľ��̡�"
+  },
+  {
+   "pid": 58192,
+   "rc": 0,
+   "out": "�ɹ�: ����ֹ PID 36204 (���� PID 58192 �ӽ���)�Ľ��̡�\n�ɹ�: ����ֹ PID 58192 (���� PID 61092 �ӽ���)�Ľ��̡�"
+  },
+  {
+   "pid": 61092,
+   "rc": 0,
+   "out": "�ɹ�: ����ֹ PID 61092 (���� PID 60592 �ӽ���)�Ľ��̡�"
+  }
+ ],
+ "killed_command_lines": {
+  "4411:58192": "node node_modules/vite/bin/vite.js preview --outDir dist --port 4411 --strictPort --host 127.0.0.1",
+  "4412:61092": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 tools/run_surface.py",
+  "8411:16152": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8411"
+ },
+ "ports_released": {
+  "4411": true,
+  "4412": true,
+  "8411": true
+ },
+ "delete_list_expanded_from": "serve/, every dist_bak_*, db/canary_8411.db*, MCP-side cnxshots",
+ "deleted": [
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\serve",
+   "bytes": 14489536,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\dist_bak_154023",
+   "bytes": 33708,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db",
+   "bytes": 4096,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db-shm",
+   "bytes": 32768,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db-wal",
+   "bytes": 1821072,
+   "gone": true
+  }
+ ],
+ "bytes_freed_total": 16381180,
+ "listeners_after": {
+  "4411": [],
+  "4412": [],
+  "8411": []
+ },
+ "http_probe_after": {
+  "4411": "refused (URLError)",
+  "4412": "refused (URLError)",
+  "8411": "refused (URLError)"
+ },
+ "kept": {
+  "D:\\moodle\\_qoder_harness_ord0254\\repo": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\patches": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\tools": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\shots": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\ORD_0254_FRONTEND_COMPAT_BACKPORT.md": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\repo\\frontend\\dist": true
+ },
+ "kept_note": "candidate bundle repo/frontend/dist stays (per-file sha256 in the build manifest)",
+ "user_stores_touched": [],
+ "demo_reset_issued": false,
+ "verdict": "CLEAN",
+ "renamed_because": "tools/stop_surface.py writes this name for every teardown; this file describes the FOURTH-swap (a886329fe1ee8d72) run"
+}
