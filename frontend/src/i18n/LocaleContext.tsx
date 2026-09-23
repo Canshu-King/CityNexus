@@ -241,6 +241,7 @@ const en: Dict = {
 
   // ── Offline Journey View ──
   "offline.readOnly": "OFFLINE · READ ONLY",
+  "offline.readOnlySnapshot": "LOCAL SNAPSHOT · READ ONLY",
   "offline.saved24h": "Your next 24 hours are saved.",
   "offline.retry": "Try again",
   "offline.journeyComplete": "Journey complete",
@@ -922,6 +923,7 @@ const zhCN: Dict = {
 
   // ── Offline Journey View ──
   "offline.readOnly": "离线 · 只读",
+  "offline.readOnlySnapshot": "本地快照 · 只读",
   "offline.saved24h": "你未来 24 小时已保存。",
   "offline.retry": "重试",
   "offline.journeyComplete": "行程完成",

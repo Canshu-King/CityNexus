@@ -21,6 +21,8 @@
  * while a backend is dead, so it cannot distinguish anything this module is asked to distinguish.
  */
 
+import { isReadDeadlineMissed, READ_DEADLINE_SECONDS } from "./readDeadline";
+
 export type AttributionReason =
   | "JOURNEY_NOT_FOUND"
   | "NETWORK_UNAVAILABLE"
@@ -56,6 +58,8 @@ export type Attribution = {
   message_key: string;
   /** The server's own code, when it gave one.  A refusal must be quotable, not paraphrased. */
   server_code?: string | null;
+  /** Measured, not assumed: did this device actually hold a copy this read could fall back to? */
+  cached_copy_present?: boolean;
   /** Short, greppable line for production logs.  Shape follows R14 §8. */
   telemetry: string;
 };
@@ -134,7 +138,16 @@ export function classifyReadFailure(error: unknown, server?: ServerErrorShape | 
     return make("UNKNOWN_FAILURE", "HTTP_RESPONSE", status, "RESOURCE_STATE", false, "retry", "failure.unknown");
   }
 
-  /* 3: no response at all -- the request itself failed to travel.  This is the *only* branch that
+  /* 3a: our own per-read deadline expired (ORD-0263).  Same *fact class* as a transport failure --
+     nothing ever came back -- but not the same sentence: a request that was abandoned at a deadline
+     may well have travelled and been swallowed, so the copy says "no answer arrived", which is what
+     was actually measured, and leaves "the network is down", which was not. */
+  if (isReadDeadlineMissed(error)) {
+    return make("NETWORK_UNAVAILABLE", "TRANSPORT", null, "TRANSPORT", true, "read-only-cached",
+      "failure.noAnswer");
+  }
+
+  /* 3b: no response at all -- the request itself failed to travel.  This is the *only* branch that
      may say the network is unavailable, which is what keeps the reverse direction honest. */
   if (error instanceof TypeError) {
     return make("NETWORK_UNAVAILABLE", "TRANSPORT", null, "TRANSPORT", true, "read-only-cached", "failure.networkUnavailable");
@@ -145,14 +158,51 @@ export function classifyReadFailure(error: unknown, server?: ServerErrorShape | 
 }
 
 /**
+ * What a same-origin probe actually observed.  Four separate facts, because the old shape -- a boolean
+ * that meant "was it a 2xx?" -- collapsed "the origin answered 500" with "the origin never answered",
+ * and one sentence then covered both states (ORD-0263's V1/V3).
+ */
+export type OriginProbeFact = {
+  answered: boolean;
+  status: number | null;
+  ok: boolean;
+  timed_out: boolean;
+};
+
+/**
  * The health probe's verdict folded into the same vocabulary, for the case where the journey read
  * failed and the question is whether the origin answers at all.  A 2xx probe means the network is
  * fine and the failure was something else -- the reading that proves a 网络不可用 banner is over-broad.
+ * An answer of any status still means *something answered*, so it may never be called a network
+ * failure either: that is the merge this replaces.
  */
-export function classifyHealthProbe(healthy: boolean): Attribution {
-  return healthy
-    ? make("UNKNOWN_FAILURE", "HEALTH_PROBE", null, "TRANSPORT", true, "retry", "failure.unknown")
-    : make("NETWORK_UNAVAILABLE", "HEALTH_PROBE", null, "TRANSPORT", true, "read-only-cached", "failure.networkUnavailable");
+export function classifyHealthProbe(fact: OriginProbeFact): Attribution {
+  if (fact.ok) {
+    return make("UNKNOWN_FAILURE", "HEALTH_PROBE", fact.status, "TRANSPORT", true, "retry",
+      "failure.unknown");
+  }
+  if (fact.answered) {
+    return make("SERVER_ERROR", "HEALTH_PROBE", fact.status, "RUNTIME", true, "retry",
+      "failure.serverError");
+  }
+  return make("NETWORK_UNAVAILABLE", "HEALTH_PROBE", null, "TRANSPORT", true, "read-only-cached",
+    fact.timed_out ? "failure.noAnswer" : "failure.networkUnavailable");
+}
+
+/**
+ * Fold in the one fact the read itself cannot know: whether this device actually holds a copy.  It is
+ * still the same classification object -- nothing downstream picks its own cause -- and it only ever
+ * changes the *offer*, for the two classes where a local copy is a legitimate answer.
+ */
+export function withCachedCopyFact(attribution: Attribution, hasCachedCopy: boolean): Attribution {
+  const mayOffer = hasCachedCopy
+    && (attribution.reason === "SERVER_ERROR" || attribution.reason === "NETWORK_UNAVAILABLE");
+  return {
+    ...attribution,
+    recovery_action: mayOffer ? "read-only-cached" : attribution.recovery_action,
+    cached_copy_present: hasCachedCopy,
+    telemetry: `${attribution.telemetry} cached_copy_present=${hasCachedCopy}`,
+  };
 }
 
 /**
@@ -252,13 +302,40 @@ export function copyFor(
             : "This request could not travel and nothing came back, so this is a network problem. This device holds no offline copy to show you, so there is nothing to display right now. Check your connection and try again.",
       };
     case "failure.serverError":
-      return {
-        kicker: zh ? "服务器" : "Server",
-        title: zh ? "服务器这次没能把行程读出来" : "The server could not read your trip",
-        body: zh
-          ? `服务器自己报错了（HTTP ${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
-          : `The server reported an error of its own (HTTP ${attribution.http_status}). That is on its side, not something you typed. Retry; if it persists, come back later.`,
-      };
+      return detail.hasCachedCopy
+        ? {
+            kicker: zh ? "服务器" : "Server",
+            title: zh ? "服务暂时不可用" : "The service is temporarily unavailable",
+            body: zh
+              ? `服务器刚才答了你，但它自己报错了（HTTP ${attribution.http_status}）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
+              : `The server did answer, and answered with an error of its own (HTTP ${attribution.http_status}). The service is unavailable for now — nothing you typed caused it. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.`,
+          }
+        : {
+            kicker: zh ? "服务器" : "Server",
+            title: zh ? "服务器这次没能把行程读出来" : "The server could not read your trip",
+            body: zh
+              ? `服务器自己报错了（HTTP ${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
+              : `The server reported an error of its own (HTTP ${attribution.http_status}). That is on its side, not something you typed. Retry; if it persists, come back later.`,
+          };
+    /* ORD-0263 V2: a read that hit its own deadline.  The measured fact is "no answer arrived";
+       whether the request travelled is not something this screen knows, so the sentence does not
+       claim it.  The deadline's own value comes from the mechanism, not from a second number. */
+    case "failure.noAnswer":
+      return detail.hasCachedCopy
+        ? {
+            kicker: zh ? "没有回音" : "No reply",
+            title: zh ? `等了 ${READ_DEADLINE_SECONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,
+            body: zh
+              ? `这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。`
+              : `This read reached its deadline with no answer at all: the server neither refused nor agreed, it simply said nothing. Your trip has not been lost — this device holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
+          }
+        : {
+            kicker: zh ? "没有回音" : "No reply",
+            title: zh ? `等了 ${READ_DEADLINE_SECONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,
+            body: zh
+              ? `这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应。这台设备上也没有可只读查看的本地副本，所以现在没有内容可显示。可以再试一次。`
+              : `This read reached its deadline with no answer at all: the server neither refused nor agreed. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
+          };
     case "failure.unauthorized":
       return {
         kicker: zh ? "身份" : "Identity",

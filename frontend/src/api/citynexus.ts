@@ -1,5 +1,6 @@
 import type { JourneyTwin } from "../contracts/journeyTwin";
 import type { ReplanProposal } from "../contracts/replan";
+import { fetchWithReadDeadline } from "../lib/readDeadline";
 
 export interface Money {
   amount_minor: number;
@@ -640,7 +641,7 @@ export class CityNexusApiError extends Error {
 }
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch("/api/v1" + path, {
+  const response = await fetchWithReadDeadline("/api/v1" + path, {
     ...init,
     headers: {
       Accept: "application/json",

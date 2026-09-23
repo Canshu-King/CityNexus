@@ -17,8 +17,11 @@ import {
   clearJourneyReferences,
   copyFor,
   recordAttribution,
+  withCachedCopyFact,
   type Attribution,
+  type OriginProbeFact,
 } from "../lib/failureAttribution";
+import { fetchWithReadDeadline } from "../lib/readDeadline";
 import { useElapsedSeconds } from "../lib/waitClock";
 import { readChoice, setThemeChoice, type ThemeChoice } from "../theme";
 import { MobilitySheet } from "../features/mobility/MobilitySheet";
@@ -179,7 +182,7 @@ class V8Rejection extends Error {
 }
 
 async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(path, {
+  const response = await fetchWithReadDeadline(path, {
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
   });
@@ -195,19 +198,27 @@ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 /**
- * "Is the network up?" answered by the thing the screen is about to claim, not by `navigator.onLine`
- * (which stays true when a captive portal or a dead backend is the actual problem) and not by the
- * failed request itself.  Only a 2xx counts: ORD-0126 (a) is precisely "no 网络不可用 sentence may
- * stand while a same-page probe of this origin is healthy".
+ * "Did the origin answer, and how?" as four separate facts -- not a boolean.
+ *
+ * `navigator.onLine` stays out of this (it is true on a captive portal and true while a backend is
+ * dead), and so does "was it a 2xx?" alone: ORD-0126 needed "no 网络不可用 sentence may stand while a
+ * same-page probe is healthy", which is a *positive* reading.  ORD-0263 needed the other half -- an
+ * origin that answered HTTP 500 and an origin that never answered are different states, and a single
+ * `response.ok` could not tell them apart, so one sentence covered both.  `timed_out` says which kind
+ * of silence this was: our own deadline expired, as opposed to a connection that was refused outright.
  */
-async function probeHealth(): Promise<boolean> {
+async function probeHealth(): Promise<OriginProbeFact> {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 4_000);
+  let deadlineFired = false;
+  const timer = setTimeout(() => {
+    deadlineFired = true;
+    controller.abort();
+  }, 4_000);
   try {
     const response = await fetch("/api/v1/health", { signal: controller.signal });
-    return response.ok;
+    return { answered: true, status: response.status, ok: response.ok, timed_out: false };
   } catch {
-    return false;
+    return { answered: false, status: null, ok: false, timed_out: deadlineFired };
   } finally {
     clearTimeout(timer);
   }
@@ -625,9 +636,20 @@ export function V8Experience() {
                without a response, not to overwrite a response that already arrived. */
             let attribution = classifyReadFailure(error);
             if (attribution.evidence_kind === "TRANSPORT") {
-              const healthy = await probeHealth();
+              const fact = await probeHealth();
               if (cancelled) return;
-              if (!healthy) attribution = classifyHealthProbe(false);
+              if (!fact.ok) attribution = classifyHealthProbe(fact);
+            }
+            /* ORD-0263: the origin answering badly and the origin never answering both have the same
+               legitimate second answer -- the copy this device holds.  Whether it holds one is a
+               measurement, so it is folded into the one classification object here rather than guessed
+               by the copy table or by a branch that writes its own sentence (R14-P). */
+            if (attribution.reason === "NETWORK_UNAVAILABLE" || attribution.reason === "SERVER_ERROR") {
+              const saved = await readOfflineJourney(journeyId);
+              if (cancelled) return;
+              setOffline(saved);
+              setCachedCopySaved(Boolean(saved));
+              attribution = withCachedCopyFact(attribution, Boolean(saved));
             }
             recordAttribution(attribution, "shell.boot.journeyRead");
             if (cancelled) return;
@@ -638,14 +660,6 @@ export function V8Experience() {
               const cleared = clearJourneyReferences();
               recordAttribution(attribution, `shell.boot.cleared:${cleared.join("|") || "none"}`);
               setOffline(null);
-            } else if (attribution.reason === "NETWORK_UNAVAILABLE") {
-              /* The one branch allowed to show the cached trip, and it keeps its retry (R3-4).  What
-                 it may claim is set from the read-back: no row, no "saved" sentence, no read-only
-                 button (ORD-0178 ④ 甲乙). */
-              const saved = await readOfflineJourney(journeyId);
-              if (cancelled) return;
-              setOffline(saved);
-              setCachedCopySaved(Boolean(saved));
             }
             if (!cancelled) {
               setFailure({ attribution, journeyId });
@@ -1155,7 +1169,7 @@ export function V8Experience() {
      boundary.  The kicker, the headline, the body, the announcement and the recovery button are all
      read off `failure.attribution`, so a 404 can no longer be shown as a network failure by a branch
      that wrote its own sentence, and the map is not hidden unless the classified state says so. */
-  if (failure && !data) {
+  if (failure && !data && !showCachedCopy) {
     const copy = copyFor(failure.attribution, locale.startsWith("zh"), {
       journeyId: failure.journeyId ?? undefined,
       hasCachedCopy: cachedCopySaved,
@@ -1301,7 +1315,21 @@ export function V8Experience() {
       </div>
     );
   if (!data && offline && showCachedCopy && cachedCopySaved)
-    return <OfflineJourneyView value={offline} message={message} />;
+    return (
+      <OfflineJourneyView
+        value={offline}
+        originAnswered={failure?.attribution.evidence_kind === "HTTP_RESPONSE"}
+        message={
+          message
+          ?? (failure
+            ? copyFor(failure.attribution, locale.startsWith("zh"), {
+                journeyId: failure.journeyId ?? undefined,
+                hasCachedCopy: cachedCopySaved,
+              }).body
+            : null)
+        }
+      />
+    );
   if (!data)
     return (
       <div className="v8-loading">
@@ -3713,9 +3741,12 @@ function Bookings({
 function OfflineJourneyView({
   value,
   message,
+  originAnswered = false,
 }: {
   value: OfflineJourney;
   message: string | null;
+  /** Was this copy reached because the origin answered badly (HTTP_RESPONSE), or never answered? */
+  originAnswered?: boolean;
 }) {
   const t = useT();
   const { locale } = useLocale();
@@ -3733,7 +3764,7 @@ function OfflineJourneyView({
   return (
     <main className="v9-offline">
       <div className="v8-brand-mark">CN</div>
-      <span className="v8-status-pill">{t("offline.readOnly")}</span>
+      <span className="v8-status-pill">{t(originAnswered ? "offline.readOnlySnapshot" : "offline.readOnly")}</span>
       <h1>{t("offline.saved24h")}</h1>
       <p>{message}</p>
       {/* R3-4: this screen was measured with zero visible buttons and it never healed on its own.
