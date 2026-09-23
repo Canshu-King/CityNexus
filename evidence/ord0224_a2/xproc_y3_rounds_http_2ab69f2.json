@@ -1,0 +1,212 @@
+{
+  "tree": "snap_2ab69f2",
+  "sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+  "node": "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+  "mutant": "Y3 (loser stops reporting the winner)",
+  "run_shape": "single-node",
+  "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation -p no:cacheprovider -v",
+  "environment_contract": "D:/moodle/CityNexus/.venv 3.12.14; export tree via `git archive <sha>` + F 的共享判据模块一份（不涉及本批）",
+  "control_round": {
+    "node_outcome": "GREEN",
+    "exit_code": 0,
+    "summary": "======================== 1 passed, 4 warnings in 5.93s ========================"
+  },
+  "rounds": [
+    {
+      "run_index": 0,
+      "mutated": false,
+      "exit_code": 0,
+      "node_outcome": "GREEN",
+      "summary": "======================== 1 passed, 4 warnings in 5.93s ========================",
+      "first_reason": ""
+    },
+    {
+      "run_index": 1,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.42s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(51188, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request w",
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 2,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.99s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(58128, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request w",
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 3,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.55s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(51055, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request w",
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 4,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.42s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(51078, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request w",
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 5,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.55s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(51134, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request w",
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 6,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.60s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(49850, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request w",
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 7,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.51s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(58933, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request w",
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 8,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 5.46s ========================",
+      "first_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(58960, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request",
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 9,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.85s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(58987, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request w",
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    },
+    {
+      "run_index": 10,
+      "mutated": true,
+      "anchor": {
+        "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+        "anchor_hits": 1,
+        "expected_anchor_hits": 1,
+        "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "bytes_changed": true
+      },
+      "exit_code": 1,
+      "node_outcome": "RED",
+      "summary": "======================== 1 failed, 4 warnings in 3.90s ========================",
+      "first_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(60413, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request w",
+      "restored_sha_matches": true,
+      "no_mutant_marker_left": true
+    }
+  ],
+  "verdict": {
+    "rounds": 10,
+    "killed": 10,
+    "deterministic_kill": true,
+    "control_green": true,
+    "all_restores_clean": true,
+    "campaign_valid": true
+  }
+}
