@@ -1,0 +1,379 @@
+{
+ "db": "D:\\moodle\\_lane_aad2d1f2_livecopy.sqlite3",
+ "log": "D:\\moodle\\_hjp3_lane_backend.log",
+ "journey": "e5a507bd-9bca-411d-9a5d-ea4521b3eba9",
+ "log_total_lines": 11095,
+ "write_requests_for_journey": [
+  {
+   "line": 50,
+   "method": "POST",
+   "path": "~/journeys",
+   "status": 201
+  },
+  {
+   "line": 735,
+   "method": "POST",
+   "path": "~/journeys",
+   "status": 201
+  },
+  {
+   "line": 811,
+   "method": "POST",
+   "path": "~/journeys",
+   "status": 201
+  },
+  {
+   "line": 2177,
+   "method": "POST",
+   "path": "~/journeys",
+   "status": 201
+  },
+  {
+   "line": 2282,
+   "method": "POST",
+   "path": "~/journeys",
+   "status": 201
+  },
+  {
+   "line": 10597,
+   "method": "POST",
+   "path": "~/journeys",
+   "status": 201
+  },
+  {
+   "line": 10601,
+   "method": "POST",
+   "path": "~/journeys/{{J}}/stay-options/generate",
+   "status": 200
+  },
+  {
+   "line": 10675,
+   "method": "POST",
+   "path": "~/journeys/{{J}}/agent/commands",
+   "status": 200
+  },
+  {
+   "line": 10678,
+   "method": "POST",
+   "path": "~/journeys/{{J}}/plans/generate",
+   "status": 201
+  },
+  {
+   "line": 10760,
+   "method": "POST",
+   "path": "~/journeys/{{J}}/agent/commands",
+   "status": 200
+  },
+  {
+   "line": 10763,
+   "method": "POST",
+   "path": "~/journeys/{{J}}/plans/generate",
+   "status": 201
+  }
+ ],
+ "twin_poll_counts": {
+  "whole_file_mine_e5a507bd": 66,
+  "whole_file_foreign_cc5e67c4": 1178,
+  "window_from_line_10596_mine": 66,
+  "window_from_line_10596_foreign": 311
+ },
+ "logged_agent_commands_post_count": 2,
+ "logged_plans_generate_post_count": 2,
+ "logged_agent_commands_post_lines": [
+  10675,
+  10760
+ ],
+ "plan_versions_columns": [
+  "id",
+  "journey_id",
+  "version_no",
+  "planning_mode",
+  "status",
+  "source",
+  "parent_plan_version_id",
+  "total_cost_minor",
+  "currency",
+  "estimated_duration_min",
+  "utility_score",
+  "score_breakdown_json",
+  "explanation_json",
+  "mobility_snapshot_id",
+  "mobility_evidence_json",
+  "created_at"
+ ],
+ "missions": [
+  {
+   "id": "13cd91f3-22f2-4d0f-bc07-f3d8b95c685e",
+   "status": "COMPLETED",
+   "created_at": "2026-09-23T13:12:00.090128+00:00",
+   "started_at": "2026-09-23T13:12:00.138773+00:00",
+   "completed_at": "2026-09-23T13:12:17.715537+00:00",
+   "user_text": "后海酒吧街和护国寺小吃，节奏轻松，多安排当地吃的。"
+  },
+  {
+   "id": "729f091c-9aeb-4e88-aeed-da4cd89f81e8",
+   "status": "COMPLETED",
+   "created_at": "2026-09-23T13:14:40.059784+00:00",
+   "started_at": "2026-09-23T13:14:40.107596+00:00",
+   "completed_at": "2026-09-23T13:14:51.190747+00:00",
+   "user_text": "后海酒吧街和护国寺小吃，节奏轻松，多安排当地吃的。"
+  },
+  {
+   "id": "da00253b-ea59-4c66-8306-6e3e717f210e",
+   "status": "COMPLETED",
+   "created_at": "2026-09-23T13:21:42.186634+00:00",
+   "started_at": "2026-09-23T13:21:42.251222+00:00",
+   "completed_at": "2026-09-23T13:22:01.420076+00:00",
+   "user_text": "再加一场傍晚的相声演出，别加钱。"
+  },
+  {
+   "id": "17aec167-8e4d-4f2d-8772-085a511d3753",
+   "status": "DEGRADED",
+   "created_at": "2026-09-23T14:28:02.574176+00:00",
+   "started_at": "2026-09-23T14:28:02.639957+00:00",
+   "completed_at": "2026-09-23T14:28:18.886360+00:00",
+   "user_text": "加一场傍晚的相声，别加钱。"
+  }
+ ],
+ "runs": [
+  {
+   "id": "34df84c4-e96d-4c2b-93ff-63cc1e381072",
+   "mission_id": "13cd91f3-22f2-4d0f-bc07-f3d8b95c685e",
+   "status": "COMPLETED",
+   "created_at": "2026-09-23T13:12:00.138773+00:00",
+   "completed_at": "2026-09-23T13:12:17.715537+00:00"
+  },
+  {
+   "id": "1bcfa166-86e9-4504-a646-fb00c1f081e6",
+   "mission_id": "729f091c-9aeb-4e88-aeed-da4cd89f81e8",
+   "status": "COMPLETED",
+   "created_at": "2026-09-23T13:14:40.107596+00:00",
+   "completed_at": "2026-09-23T13:14:51.190747+00:00"
+  },
+  {
+   "id": "ddb44de2-75fe-4fb2-930e-c6b8e9cff7cb",
+   "mission_id": "da00253b-ea59-4c66-8306-6e3e717f210e",
+   "status": "COMPLETED",
+   "created_at": "2026-09-23T13:21:42.251222+00:00",
+   "completed_at": "2026-09-23T13:22:01.420076+00:00"
+  },
+  {
+   "id": "3244d2a3-7c97-4e0e-a341-8090e46b42fc",
+   "mission_id": "17aec167-8e4d-4f2d-8772-085a511d3753",
+   "status": "FAILED_EXTERNAL",
+   "created_at": "2026-09-23T14:28:02.639957+00:00",
+   "completed_at": "2026-09-23T14:28:18.886360+00:00"
+  }
+ ],
+ "plan_versions": [
+  {
+   "id": "bb6889dd-a058-50c0-a9e0-7999ef0784d2",
+   "status": "CANDIDATE",
+   "created_at": "2026-09-23T13:14:51.227409+00:00"
+  },
+  {
+   "id": "a9cfb884-61cd-59cc-9d86-fa0fa5ae7c72",
+   "status": "CANDIDATE",
+   "created_at": "2026-09-23T13:14:51.227409+00:00"
+  },
+  {
+   "id": "1030f736-6f1f-5443-a0c3-077cb202ab27",
+   "status": "CANDIDATE",
+   "created_at": "2026-09-23T13:14:51.227409+00:00"
+  },
+  {
+   "id": "37c37c0f-59bf-593a-8175-469ebf94fb5c",
+   "status": "CANDIDATE",
+   "created_at": "2026-09-23T13:22:01.486680+00:00"
+  },
+  {
+   "id": "3a9b9693-3794-5a3c-8893-53f680048ed4",
+   "status": "CANDIDATE",
+   "created_at": "2026-09-23T13:22:01.486680+00:00"
+  },
+  {
+   "id": "9b2df368-000f-5278-a1c7-e7b9f49145c2",
+   "status": "CANDIDATE",
+   "created_at": "2026-09-23T13:22:01.486680+00:00"
+  }
+ ],
+ "journey_active_plan_version_id": [
+  null
+ ],
+ "per_mission": [
+  {
+   "mission": "13cd91f3",
+   "mission_status": "COMPLETED",
+   "mission_created_at": "2026-09-23T13:12:00.090128+00:00",
+   "mission_completed_at": "2026-09-23T13:12:17.715537+00:00",
+   "runs": 1,
+   "run_statuses": [
+    "COMPLETED"
+   ],
+   "plans_by_mission_id": null,
+   "user_text_head": "后海酒吧街和护国寺小吃，",
+   "plans_after_this_mission_started": 0
+  },
+  {
+   "mission": "729f091c",
+   "mission_status": "COMPLETED",
+   "mission_created_at": "2026-09-23T13:14:40.059784+00:00",
+   "mission_completed_at": "2026-09-23T13:14:51.190747+00:00",
+   "runs": 1,
+   "run_statuses": [
+    "COMPLETED"
+   ],
+   "plans_by_mission_id": null,
+   "user_text_head": "后海酒吧街和护国寺小吃，",
+   "plans_after_this_mission_started": 3
+  },
+  {
+   "mission": "da00253b",
+   "mission_status": "COMPLETED",
+   "mission_created_at": "2026-09-23T13:21:42.186634+00:00",
+   "mission_completed_at": "2026-09-23T13:22:01.420076+00:00",
+   "runs": 1,
+   "run_statuses": [
+    "COMPLETED"
+   ],
+   "plans_by_mission_id": null,
+   "user_text_head": "再加一场傍晚的相声演出，",
+   "plans_after_this_mission_started": 3
+  },
+  {
+   "mission": "17aec167",
+   "mission_status": "DEGRADED",
+   "mission_created_at": "2026-09-23T14:28:02.574176+00:00",
+   "mission_completed_at": "2026-09-23T14:28:18.886360+00:00",
+   "runs": 1,
+   "run_statuses": [
+    "FAILED_EXTERNAL"
+   ],
+   "plans_by_mission_id": null,
+   "user_text_head": "加一场傍晚的相声，别加钱",
+   "plans_after_this_mission_started": 0
+  }
+ ],
+ "plans_total_for_journey": 6,
+ "plan_attribution_method": "created_at window between consecutive missions (no mission_id column)",
+ "rounds": [
+  {
+   "round": "A",
+   "mission": "13cd91f3",
+   "mission_status": "COMPLETED",
+   "mission_created_at": "2026-09-23T13:12:00.090128+00:00",
+   "mission_completed_at": "2026-09-23T13:12:17.715537+00:00",
+   "run_statuses": [
+    "COMPLETED"
+   ],
+   "plans_written_in_window": 0,
+   "plan_statuses": [],
+   "user_text": "后海酒吧街和护国寺小吃，节奏轻松，多安排当地吃的。"
+  },
+  {
+   "round": "B",
+   "mission": "729f091c",
+   "mission_status": "COMPLETED",
+   "mission_created_at": "2026-09-23T13:14:40.059784+00:00",
+   "mission_completed_at": "2026-09-23T13:14:51.190747+00:00",
+   "run_statuses": [
+    "COMPLETED"
+   ],
+   "plans_written_in_window": 3,
+   "plan_statuses": [
+    "CANDIDATE"
+   ],
+   "user_text": "后海酒吧街和护国寺小吃，节奏轻松，多安排当地吃的。"
+  },
+  {
+   "round": "C",
+   "mission": "da00253b",
+   "mission_status": "COMPLETED",
+   "mission_created_at": "2026-09-23T13:21:42.186634+00:00",
+   "mission_completed_at": "2026-09-23T13:22:01.420076+00:00",
+   "run_statuses": [
+    "COMPLETED"
+   ],
+   "plans_written_in_window": 3,
+   "plan_statuses": [
+    "CANDIDATE"
+   ],
+   "user_text": "再加一场傍晚的相声演出，别加钱。"
+  },
+  {
+   "round": "3",
+   "mission": "17aec167",
+   "mission_status": "DEGRADED",
+   "mission_created_at": "2026-09-23T14:28:02.574176+00:00",
+   "mission_completed_at": "2026-09-23T14:28:18.886360+00:00",
+   "run_statuses": [
+    "FAILED_EXTERNAL"
+   ],
+   "plans_written_in_window": 0,
+   "plan_statuses": [],
+   "user_text": "加一场傍晚的相声，别加钱。"
+  }
+ ],
+ "rounds_summary": {
+  "missions_in_db": 4,
+  "agent_commands_post_lines_for_this_journey": 2,
+  "missions_with_no_access_log_line": 2
+ },
+ "derived": {
+  "missions_recorded": 4,
+  "logged_agent_commands_for_this_journey": 2,
+  "a_mission_completed_while_its_post_has_no_log_line": true,
+  "every_mission_completed": false,
+  "rounds_that_left_zero_plans": [
+   "A",
+   "3"
+  ],
+  "rounds_that_left_three_plans": [
+   "B",
+   "C"
+  ]
+ },
+ "aborted_round_identification": {
+  "method": "the mission created before the first logged agent/commands line for this journey",
+  "first_logged_post_line_number": 10675,
+  "aborted_round": "A"
+ },
+ "ui_transcriptions": {
+  "provenance": "transcribed verbatim from page innerText during the run; not derived values",
+  "in_flight_sheet_every_round": "发出请求，等待模型返回 · 已等待 N 秒 | 后端不会中途汇报进度，所以这里只有真实等待时间，没有百分比，也没有猜。 | ✓读取已有方案作为基线 ●发出请求，等待模型返回 ○核对本次是否真的产出了新方案 | 取消 / 取消并关闭 / 规划中…",
+  "after_reentry_today": "今天 / 还没有安排 … 方案概览 … 以下只是其中一个候选方案的预览，你还没有采用它。",
+  "settled_sheet_B": "已生成 3 个可选方案 | 去“今天”对比这几个方案，选一个再继续。",
+  "trips_screen_after_B": "行程 / 还没有可看的行程 / 这个行程还没有选定的方案。先让 AI 帮你规划，选定方案后这里会显示逐日安排。",
+  "copilot_screen_after_B": "随时问关于这趟行程的任何事 … 消息 …（无这几趟任务的任何条目）",
+  "landing_screen_doors_with_no_journey_id": [
+   "新建行程(三步向导)",
+   "使用封存的演示行程",
+   "EN",
+   "sim-ball"
+  ],
+  "hub_visible_buttons_after_B": [
+   "AI 帮我规划",
+   "试用其他城市",
+   "打开行程工作台",
+   "对比住宿 →",
+   "第 1 天",
+   "第 2 天",
+   "第 3 天",
+   "nav-hub/trips/map/agent/me"
+  ],
+  "client_chain_round_C_observed_via_fetch_patch": [
+   "POST ~/journeys/JID/agent/commands  (issued immediately on 开始规划)",
+   "GET  ~/journeys/JID/twin x3          (still waiting; ~15 s cadence)",
+   "GET  ~/journeys/JID/plans            (baseline read-back)",
+   "POST ~/journeys/JID/plans/generate   (SECOND LEG — sent by the browser after leg 1 resolves)",
+   "GET  experience/replans/wallet/offline-snapshot/agent-policy + tiles"
+  ],
+  "chain_consequence": "the handshake is client-driven: leaving the page between the two legs means nobody ever sends plans/generate, so the mission/run can still complete server-side while 0 plans are written"
+ },
+ "db_totals": {
+  "journeys": 11,
+  "journey_missions": 71,
+  "agent_runs": 70,
+  "plan_versions": 139
+ }
+}
