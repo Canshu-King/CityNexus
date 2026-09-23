@@ -1,0 +1,236 @@
+{
+ "order": "ORD-0225 · 对 published 件复算",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-23T12:46:01+08:00",
+ "no_children_started": true,
+ "print_policy": "只印坐标/计数/布尔；不印任何凭据",
+ "y3_recomputed": {
+  "HTTP 门（A-2 形状，两真 uvicorn + HTTP）": {
+   "file": "xproc_y3_rounds_http_2ab69f2.json",
+   "bytes": 11232,
+   "sha256_12": "15b2ea1b5919",
+   "blob_git": "637c716e659b146e1860592891e55675382f44b5",
+   "derived": {
+    "scope": {
+     "exact_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+     "target_nodeid": "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+     "run_shape": "single-node",
+     "mutant": "Y3 (loser stops reporting the winner)",
+     "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation -p no:cacheprovider -v"
+    },
+    "rounds": 10,
+    "killed": 10,
+    "green_under_mutant": 0,
+    "sequence": "RRRRRRRRRR",
+    "control_green": true,
+    "deterministic_kill": true,
+    "all_restores_clean": true,
+    "restore_fields": {
+     "restored_sha_matches": true,
+     "no_mutant_marker_left": true,
+     "mutated_rounds_carrying_them": 10
+    },
+    "anchor_hits_distinct_values": [
+     "{'path': 'D:\\\\moodle\\\\_qoder_ord30_evidence_20260920\\\\ord213\\\\snap_2ab69f2\\\\backend\\\\app\\\\catalog_hydration_operations.py', 'anchor_hits': 1, 'expected_anchor_hits': 1, 'before_sha256': '7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5', 'mutated_sha256': '583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695', 'bytes_changed': True}"
+    ],
+    "campaign_valid": true,
+    "derived_result": "KILLED"
+   },
+   "compare_with_declared": {
+    "rounds": {
+     "derived_by_verifier": 10,
+     "declared_by_lane": 10,
+     "agree": true
+    },
+    "killed": {
+     "derived_by_verifier": 10,
+     "declared_by_lane": 10,
+     "agree": true
+    },
+    "deterministic_kill": {
+     "derived_by_verifier": true,
+     "declared_by_lane": true,
+     "agree": true
+    },
+    "control_green": {
+     "derived_by_verifier": true,
+     "declared_by_lane": true,
+     "agree": true
+    },
+    "all_restores_clean": {
+     "derived_by_verifier": true,
+     "declared_by_lane": true,
+     "agree": true
+    },
+    "campaign_valid": {
+     "derived_by_verifier": true,
+     "declared_by_lane": true,
+     "agree": true
+    }
+   }
+  },
+  "进程内 g3 门（ORD-0225 现 scope 那一枚）": {
+   "file": "xproc_y3_rounds_raw_test_g3_concurrent_open_ge_2ab69f2.json",
+   "bytes": 9245,
+   "sha256_12": "7b41241036ea",
+   "blob_git": "ee79303eb72a17044f41585b50a35efe0f7416dd",
+   "derived": {
+    "scope": {
+     "exact_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+     "target_nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+     "run_shape": "single-node",
+     "mutant": "Y3 (loser stops reporting the winner)",
+     "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation -p no:cacheprovider -v"
+    },
+    "rounds": 10,
+    "killed": 3,
+    "green_under_mutant": 7,
+    "sequence": "RRGRGGGGGG",
+    "control_green": true,
+    "deterministic_kill": false,
+    "all_restores_clean": true,
+    "restore_fields": {
+     "restored_sha_matches": true,
+     "no_mutant_marker_left": true,
+     "mutated_rounds_carrying_them": 10
+    },
+    "anchor_hits_distinct_values": [
+     "{'path': 'D:\\\\moodle\\\\_qoder_ord30_evidence_20260920\\\\ord213\\\\snap_2ab69f2\\\\backend\\\\app\\\\catalog_hydration_operations.py', 'anchor_hits': 1, 'expected_anchor_hits': 1, 'before_sha256': '7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5', 'mutated_sha256': '583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695', 'bytes_changed': True}"
+    ],
+    "campaign_valid": false,
+    "derived_result": "NOT_KILLED"
+   },
+   "compare_with_declared": {
+    "rounds": {
+     "derived_by_verifier": 10,
+     "declared_by_lane": 10,
+     "agree": true
+    },
+    "killed": {
+     "derived_by_verifier": 3,
+     "declared_by_lane": 3,
+     "agree": true
+    },
+    "deterministic_kill": {
+     "derived_by_verifier": false,
+     "declared_by_lane": false,
+     "agree": true
+    },
+    "control_green": {
+     "derived_by_verifier": true,
+     "declared_by_lane": true,
+     "agree": true
+    },
+    "all_restores_clean": {
+     "derived_by_verifier": true,
+     "declared_by_lane": true,
+     "agree": true
+    },
+    "campaign_valid": {
+     "derived_by_verifier": false,
+     "declared_by_lane": false,
+     "agree": true
+    }
+   }
+  }
+ },
+ "streak_cross_recompute": {
+  "file": "streak_xproc_http_2ab69f2.json",
+  "bytes": 103825,
+  "sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+  "target_nodeid": "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+  "run_shape": "single-node",
+  "rounds": 10,
+  "stored_verdict_from_lane": "STREAK_MET(10)",
+  "stored_grade": "STREAK_GREEN",
+  "shared_module_recorded_in_receipt": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\tests\\_qoder_streak_receipt.py",
+  "per_ruler": {
+   "measure_time_c_blob_ebe4e24c177d8e18": {
+    "ruler_bytes": 47572,
+    "ruler_sha256_12": "ef608a34f9a3",
+    "ruler_blob": "ebe4e24c177d8e18",
+    "verdict": "STREAK_MET(10)",
+    "closure_grade": "STREAK_GREEN",
+    "green": 10,
+    "red": 0,
+    "not_observed": 0,
+    "duplicate_db_paths": [],
+    "runs_missing_fields": [],
+    "every_run_fresh": true,
+    "problems": null,
+    "若把 derived_result=KILLED 递进来则等级": "CLOSED"
+   },
+   "current_f_blob_fcf76941dcc25127": {
+    "ruler_bytes": 50316,
+    "ruler_sha256_12": "5528700cfbe7",
+    "ruler_blob": "fcf76941dcc25127",
+    "verdict": "STREAK_MET(10)",
+    "closure_grade": "STREAK_GREEN",
+    "green": 10,
+    "red": 0,
+    "not_observed": 0,
+    "duplicate_db_paths": [],
+    "runs_missing_fields": [],
+    "every_run_fresh": true,
+    "problems": null,
+    "若把 derived_result=KILLED 递进来则等级": "CLOSED"
+   }
+  },
+  "两把尺同判": true
+ },
+ "reverse_mutation_receipt_V1": {
+  "schema": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+  "verifier": "lane F 8ccd71d8（本脚本，从已发布原始轮次派生；未起任何子进程）",
+  "claims": [
+   {
+    "scope": {
+     "exact_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+     "target_nodeid": "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+     "run_shape": "single-node",
+     "mutant": "Y3 (loser stops reporting the winner)",
+     "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation -p no:cacheprovider -v"
+    },
+    "derived_result": "KILLED",
+    "direct_red_nodeids": [
+     "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+    ],
+    "collateral_red_nodeids": [],
+    "basis": {
+     "rounds": 10,
+     "killed": 10,
+     "control_green": true,
+     "deterministic_kill": true,
+     "all_restores_clean": true,
+     "campaign_valid": true,
+     "sequence": "RRRRRRRRRR"
+    }
+   },
+   {
+    "scope": {
+     "exact_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+     "target_nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+     "run_shape": "single-node",
+     "mutant": "Y3 (loser stops reporting the winner)",
+     "command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation -p no:cacheprovider -v"
+    },
+    "derived_result": "NOT_KILLED",
+    "direct_red_nodeids": [],
+    "collateral_red_nodeids": [],
+    "basis": {
+     "rounds": 10,
+     "killed": 3,
+     "green_under_mutant": 7,
+     "control_green": true,
+     "deterministic_kill": false,
+     "all_restores_clean": true,
+     "campaign_valid": false,
+     "sequence": "RRGRGGGGGG"
+    }
+   }
+  ],
+  "not_comparable_note": "两条 claim 的 exact_sha 相同（2ab69f2）而 nodeid+run_shape 不同 ⇒ killed 计数不得相减/不得互借；跨 shape 写 NOT_COMPARABLE_AS_REGRESSION_DELTA",
+  "control_green_required_first": true
+ },
+ "problems": [],
+ "verdict_of_this_recompute": "OK：派生与声明逐字段一致，两把尺同判"
+}
