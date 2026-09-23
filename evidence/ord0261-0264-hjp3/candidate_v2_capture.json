@@ -1,0 +1,64 @@
+{
+  "lane": "HJ-P3 aad2d1f2",
+  "run_id": "ORD0261-P3-V2-1841",
+  "supersedes": "the previous block's coordinates for the gate (443262303f1a7780 was lineage, e41c68b740d50cbe was the v1 gate receipt) — this pass is against the gate-v2 coordinates the commander named",
+  "candidate_tip": "e3b0b47 (agent/d-e345b9d6-candidates, worktree D:/moodle/_qoder_d_lane_20260923)",
+  "arbiter_cell": "5793191632 §3 item 8 = one mobile wizard pass",
+  "gate_v2_readback": {
+    "dir": "commander/control:evidence/ord0261-0264-gate-v2/",
+    "gate-and-arms-receipt.json": "e088e7ca37d1da1c8dbd2391cf155d2ef8c97f05 (2538 B) — matches the commander's prefix e088e7ca37d1da1c",
+    "gate__qoder-wizard-advanced-is-tappable.spec.ts": "feb0b3bd0929ee78878f0b75addbeb4fd73ab5f5 (9945 B) — matches feb0b3bd0929ee78",
+    "gate_self_reported": { "run": "run158836-epoch (4620 batch)", "summary": "3 passed (18.9s)", "0261_wheel_px": 240, "0264_wheel_px": 480 },
+    "arms_claimed_by_D": ["K261_REMOVE_STICKY_RESERVE claimed KILLED (redSet ord0261, survivor ord0264)", "K264_MOVE_OPENER_BACK_TO_PAGE_TAIL claimed KILLED (redSet ord0264, survivor ord0261)"],
+    "note": "claimed_result belongs to D; closure is the verifier's. My pass is the human-path witness, not a re-grade of the arms."
+  },
+  "product_bytes_identity_proof": {
+    "claim_tested": "commander: 'e3b0b47 与 6daceb1 产品字节完全一致（这轮只动门与驱动）'",
+    "ancestor": "git merge-base --is-ancestor 6daceb1 e3b0b47 -> true; 3 commits between (test/chore only)",
+    "changed_paths_6daceb1_to_e3b0b47": ["M frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts", "A review/_bus_e345b9d6_externalized.md", "A review/_bus_e345b9d6_ord0246_0247.md", "A review/_bus_e345b9d6_ord0250_0251_0247w.md", "A review/_bus_e345b9d6_ord0261_0264_candidate.md", "A review/_bus_e345b9d6_ord0261_0264_package.md", "A review/_bus_e345b9d6_reply_singlewriter.md", "A review/_bus_e345b9d6_wake_reply.md", "A review/ord0261_0264_kill_arms.py"],
+    "bundled_input_changes": 0,
+    "frontend_src_tree_hash": { "6daceb1": "389c1bd6b4fe25e13a179484ae2207ab32522e5b", "e3b0b47": "389c1bd6b4fe25e13a179484ae2207ab32522e5b", "equal": true },
+    "rebuilt_artifact_sha256": {
+      "index-D76m_cky.js": { "bytes": 1238834, "sha256_6daceb1_build": "270377c83471a5a1e44a756296e15ea42c47c626760723e47b6b4a6759e43274", "sha256_e3b0b47_build": "270377c83471a5a1e44a756296e15ea42c47c626760723e47b6b4a6759e43274", "equal": true },
+      "index-I45CQek8.css": { "bytes": 183897, "sha256_both": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f", "equal": true },
+      "JourneyMap-VYnqykgh.js": "9ad3967c6022b8c2... identical", "maplibre-gl-BWQWEO0M.js": "219e27df88e0cdf1... identical",
+      "build_exit": "0"
+    },
+    "conclusion": "claim holds at source (tree hash) AND at artifact (all four built assets byte-identical) — so the layout I measured on 6daceb1 is the same layout on e3b0b47; the pass below was nevertheless run fresh against :8479 = the e3b0b47 build"
+  },
+  "face": {
+    "url": "http://127.0.0.1:8479/v8/hub",
+    "served_bundle": "index-D76m_cky.js",
+    "backend": "127.0.0.1:8424 (my lane; _qoder_cmdr_gate_20260921 @ 53fe8e8, porcelain 0; DB _lane_aad2d1f2_livecopy.sqlite3)",
+    "ownership_proof_in_page": { "my_copy_db_only_journey": 200, "foreign_uuid": 404 },
+    "proxy_note": "started with CITYNEXUS_BACKEND_PORT=8424 (vite preview defaults its /api proxy to 8000 — see the earlier block's instrument gotcha)"
+  },
+  "device": { "viewport": "390x844", "hasTouch": true, "isMobile": true, "deviceScaleFactor": 3, "locale": "zh-CN", "context": "fresh each pass, no journey in localStorage -> wizard step 1", "scroll_instrument": "CDP Input.dispatchTouchEvent swipe (touchStart 620 -> moves 560/500/440/380/330/300 -> touchEnd); activation = page.touchscreen.tap. D's gate uses mouse.wheel; this pass is the touch half" },
+  "pass1_draft_typed_first": {
+    "initial": { "scrollTop": 0, "openerY": 929, "openerH": 44, "inViewportAtRest": false, "barBand": [628, 708], "scrollHeight": 1467, "maxScroll": 623, "trial_steps_paddingBottom": "212px", "details": { "trial-advanced": false, "trial-supported": false } },
+    "draft_typed": "天津卫",
+    "effect_of_typing": "content grew, opener pushed DOWN to y=1080 (centre 1102) at scrollTop 0 -> elementFromPoint null, i.e. the draft itself moves the entry further out of reach before any scrolling",
+    "swipe1": { "scrollTop": 706, "openerY": 374, "centre": 396, "barTop": 628, "centreAboveBar": true, "hit": "BUTTON.trial-back-link|高级设置", "hitsItself": true },
+    "swipes_needed": 1,
+    "tap": { "at": [195, 396], "trial_advanced_open_after": true, "trial_supported_open_after": false, "draft_after_tap": "天津卫", "step_text_after": "1目的地与时间2人数", "scrollHeight_after_expand": 1687 }
+  },
+  "pass2_untouched_initial_state": {
+    "initial": { "scrollTop": 0, "openerY": 929, "maxScroll": 623 },
+    "swipe1": { "scrollTop": 623, "reachedMaximum": true, "openerY": 306, "centre": 328, "barBand": [628, 708], "centreInsideBar": false, "hit": "BUTTON.trial-back-link", "hitsItself": true, "stack": ["BUTTON.trial-back-link", "DIV.v8-card trial-ca", "SECTION.v8-page cn-onboa"] },
+    "tap": { "trial_advanced_open_after": true },
+    "inside_expanded_details": { "text_inputs_found": 3 },
+    "draft_inside_details": { "typed": "测试串", "after_scrolling_BACK_up_to_top_0": "测试串", "after_collapse_then_reopen": "测试串" },
+    "reversibility": "one opposite-direction swipe returned scrollTop 623 -> 0"
+  },
+  "verdicts_4_points": {
+    "1_naturally_scrollable_to_it": "PASS — 1 ordinary touch swipe in both passes (to mid-range with a draft, to max 623 without); no nested scroller, no stuck position, reverse scroll works",
+    "2_centre_not_covered_at_that_spot": "PASS — centre 396 / 328 vs sticky band 628-708: centreInsideBar false, elementFromPoint resolves to the opener BUTTON itself, stack has no chrome above it",
+    "3_really_openable": "PASS — real touchscreen tap opened .trial-advanced false->true in both passes; .trial-supported stayed closed",
+    "4_filled_content_survives_scroll_and_expand": "PASS — 天津卫 survived type->swipe->tap; 测试串 typed INSIDE the expanded details survived a reverse scroll to top=0 and a collapse/reopen cycle"
+  },
+  "extra_readings_for_other_orders": {
+    "ORD-0266_sheet_busy_no_refcount": "no new distribution measured here: the wizard face never opens the AI sheet, so the busy flag was not in play. The seed reading stays in the ORD-0262 set (Q-series: Q2 was fired at 08:55:33 while Q1's first leg had not returned until 08:55:59) — evidence/ord0262/qp_capture_ord0262.json + ORD0262_RECEIPT.md §9.",
+    "reaches_the_opener_later_when_a_draft_exists": "typing a destination pushes the entry from y=929 to y=1080 (centre 1102, off-screen) at rest — worth one line to ORD-0264's wording: reachability is state-dependent, and a gate that only measures the pristine state understates the distance."
+  },
+  "not_done": ["no product byte changed anywhere (I only read D's worktree and built my own export)", "no 下一步 pressed -> zero product writes", "published dist / tunnel / :4781 / :4782 / :8693 / _live.db / _preview.db untouched", "no demo/reset", "no window or page closed (SHARED_BROWSER_CONTEXT_OWNERSHIP_V1); faces named: :8478 x1 (6daceb1 build), :8479 x2 (e3b0b47 build), :8474 x2 (published control)"]
+}
