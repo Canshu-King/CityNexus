@@ -1,0 +1,142 @@
+{
+ "order": "ORD-0262-NARROW（writer=F 8ccd71d8 / verifier=HJ-P3；仲裁 5794645575 §③ 已批四条判据并写死边界）",
+ "generated_at": "2026-09-23T21:53:09+08:00",
+ "scope": {
+  "resolved_from": "D:\\moodle\\_qoder_integration_20260919",
+  "candidate_sha": "7762fdfde9a861a561d12111b8ae039582d4a230",
+  "tree": "7dd13dc25e27031e08114ddd9a52f03d0bd2986a",
+  "branch_at_measure_time": "",
+  "export_tree_blobs_match_commit": true,
+  "per_file": {
+   "backend/app/main.py": {
+    "exported_blob": "aa058646b8a0c5542e7d8d6e394f8da82357ff00",
+    "commit_blob": "aa058646b8a0c5542e7d8d6e394f8da82357ff00"
+   },
+   "backend/tests/test_qoder_ord0262_narrow_contention.py": {
+    "exported_blob": "4bf155601f4f068ddaf95cb99621c242ecc00611",
+    "commit_blob": "4bf155601f4f068ddaf95cb99621c242ecc00611"
+   }
+  },
+  "base": "d2665e25855aeb265329266831983de42321697d",
+  "pushed": false,
+  "self_signed": false,
+  "files": {
+   "backend/app/main.py": "-",
+   "backend/tests/test_qoder_ord0262_narrow_contention.py": "-"
+  }
+ },
+ "shape_delivered": {
+  "code_reused": [
+   "GENERATION_STORE_BUSY"
+  ],
+  "new_codes_invented": [],
+  "statuses": [
+   503
+  ],
+  "fields_required": [
+   "code",
+   "message",
+   "message_key(由 code 派生)",
+   "trace_id",
+   "details.retry_after_ms",
+   "reason_code(点名是哪一条冲突)"
+  ],
+  "retry_after_ms_source": "generation 阶梯自己的下限（SimpleNamespace(QUEUED, now) 调用产品函数），不在 raise 点抄第四份字面量",
+  "unlisted_behaviour": "原样再抛 ⇒ 保留 500（与 TEMPORAL_REJECTIONS 同一条不洗白规则）"
+ },
+ "before_and_after": {
+  "tree": "D:/moodle/_qoder_f_run/e_ord0262_d2665e2 (git archive d2665e2…，逐字节等值已验)",
+  "status": "500",
+  "waited_seconds": 32.4,
+  "body_bytes": 21,
+  "content_type": "text/plain;",
+  "envelope_present": true,
+  "same_cell_after_change": "503 + GENERATION_STORE_BUSY + reason_code=sqlite_write_lock_busy + 库内 0 行（见 control_reading）",
+  "probe_source": "evidence/ord0262-f/… 与 _qoder_f_run/o262_before_probe.py"
+ },
+ "control_reading": {
+  "command": "python -m pytest tests/test_qoder_ord0262_narrow_contention.py -q",
+  "interpreter": "Python 3.12.14 (D:/moodle/CityNexus/.venv)",
+  "collected": [
+   "6 tests collected in 1.02s"
+  ],
+  "summary_line": "1 failed, 5 passed, 2 warnings in 33.58s",
+  "red_cells": [
+   "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal"
+  ],
+  "gate_file_sha256_16": "04295ae57aa7e505",
+  "main_py_sha256_16": "7f13f64ed9abe506"
+ },
+ "mutation_campaign": {
+  "receipt": "D:\\moodle\\_qoder_f_run\\o225_receipts\\ord0262_narrow_mutation_receipt.json",
+  "receipt_sha256_16": "88bfca4dbdba6a9f",
+  "claimed_results": {
+   "M1_whitelist_emptied": "KILLED",
+   "M2_envelope_replaced_by_bare_503": "KILLED"
+  },
+  "killed_by": {
+   "M1_whitelist_emptied": [
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500",
+    "test_4_a_non_lock_operational_error_is_not_called_contention"
+   ],
+   "M2_envelope_replaced_by_bare_503": [
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500"
+   ]
+  },
+  "still_green": {
+   "M1_whitelist_emptied": [],
+   "M2_envelope_replaced_by_bare_503": []
+  },
+  "restore_verified": true,
+  "derived_result": null,
+  "control_note": "控制轮 = 未突变时的整轮读数（4 passed / 1 failed=FINDING_OPEN 常数格），见 ord0262_narrow_receipt.json；控制轮里那一格红是**已知开放读数**，不算 campaign 失效"
+ },
+ "full_suite_delta": {
+  "candidate_tag": "candidate_7762fdf",
+  "baseline_tag": "base_d2665e2",
+  "only_in_candidate": [
+   "tests/test_qoder_ord0262_narrow_contention.py::test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal"
+  ],
+  "only_in_baseline": [
+   "tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned",
+   "tests/test_qoder_ord197_four_class_receipt.py::test_r4_a_failed_source_is_named_retryable_and_never_becomes_no_match"
+  ],
+  "candidate_rounds": [
+   9,
+   9,
+   9
+  ],
+  "baseline_rounds": [
+   9,
+   9,
+   8
+  ],
+  "always_red_in_candidate": [
+   "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+   "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+   "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+   "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+   "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+   "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+   "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+   "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+   "tests/test_qoder_ord0262_narrow_contention.py::test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal"
+  ]
+ },
+ "FINDING_OPEN_pinned_not_changed": {
+  "what": "三处 busy raise 点写 retry_after_ms=500，而操作自己的阶梯下限是 1000 ⇒ 同一件「忙」给用户两套等待",
+  "evidence_cell": "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal",
+  "action_taken": "只钉不改（commander (b) 明令）；收口动作等裁：改三处 raise 点还是改两枚 retry_after_ms(row) 的默认"
+ },
+ "not_in_scope_open": [
+  "孤儿 CREATED mission（5a2726ff，关联 agent_runs=0）",
+  "未落库的 plan_version（e168580c v22，id 2ad35721…；同批 ae79fbf1 v10 却被同 id 补回）"
+ ],
+ "declaration_limit": "本单只声明：已识别可复现的受控写冲突给出机器可读理由（进程内形制）。不声明 ORD-0262 的原子性或完整性已闭；漂亮 JSON ≠ 已闭。",
+ "not_measured": {
+  "cross_process_same_key_and_collision": "归 verifier（仲裁 §3）：同步路由被同一事件循环串行化 ⇒ 进程内撞不出 get-or-create 窗口，我不伪造那一格；细胞②改用**真的**占住 SQLite 写锁 + 钉住等满 busy_timeout",
+  "traveler_agent_policies_end_to_end_503": "同上：该碰撞只在跨进程形制里出现（今天 r1/r2 诊断已记录）"
+ }
+}
