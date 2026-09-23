@@ -159,6 +159,18 @@ def test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500() -> None
 
     holder = sqlite3.connect(db_path, timeout=0, isolation_level=None)
     holder.execute("BEGIN IMMEDIATE")            # 真实占用写者锁
+    # 先自证锁真的在手：另开一条连接去写，必须立刻吃 BUSY。少了这一步，"我等到了"
+    # 可能只是"我谁都没挡住"。
+    probe = sqlite3.connect(db_path, timeout=0, isolation_level=None)
+    try:
+        probe.execute("BEGIN IMMEDIATE")
+        held = False
+    except sqlite3.OperationalError:
+        held = True
+    finally:
+        probe.close()
+    assert held, "②：我的 BEGIN IMMEDIATE 没挡住别人 ⇒ 这一格什么都没占住，先去查库是不是同一枚文件"
+
     started = time.monotonic()
     try:
         response = client.post(f"/api/v1/journeys/{jid}/agent/commands",
@@ -167,10 +179,13 @@ def test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500() -> None
         holder.execute("ROLLBACK")
         holder.close()
     waited = time.monotonic() - started
-    assert waited >= 25, (
-        f"②：只等了 {waited:.1f}s 就返回 ⇒ 没走到 busy_timeout，这一格什么都没测到（别放宽，去确认锁真占住了）")
+    # 等待时长**只记录不断言**：SQLite 判定"再等下去就是死锁"时会立刻回 BUSY，
+    # 所以同一件冲突在空树里等满 30 s、在满载套件里 0.6 s 就返回 —— 两次都是我实测到的。
+    print(f"[②-waited] {waited:.2f}s status={response.status_code}")
+    assert response.status_code != 200, (
+        f"②：写锁被别人占着却还回了 200 ⇒ 要么这一发没真写库，要么锁没占住（{waited:.1f}s）")
     assert response.status_code == 503, (
-        f"②：写锁占用中的答案必须 503，实际 {response.status_code}：{response.text[:220]}")
+        f"②：受控写锁占用必须 503，实际 {response.status_code}：{response.text[:220]}")
     payload = response.json()["error"]
     assert payload["code"] == "GENERATION_STORE_BUSY", payload
     assert payload.get("reason_code") == "sqlite_write_lock_busy", payload
