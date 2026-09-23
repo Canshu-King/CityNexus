@@ -1,0 +1,89 @@
+{
+ "at": "2026-09-23T13:15:11+08:00",
+ "ruler_blob16": "e3015cc065d1d4eb",
+ "ports": {
+  "static": 4412,
+  "preview": 4411,
+  "backend": 8411
+ },
+ "surface_pid": 42528,
+ "preview_pid": 47644,
+ "backend_pids": [
+  24588
+ ],
+ "listeners": {
+  "4412": [
+   42528
+  ],
+  "4411": [
+   47644
+  ],
+  "8411": [
+   24588
+  ]
+ },
+ "static_answer": {
+  "status": 200,
+  "content_type": "text/html",
+  "bytes": 1200
+ },
+ "static_mime": {
+  "manifest.webmanifest": {
+   "status": 200,
+   "content_type": "application/manifest+json",
+   "length": "314"
+  },
+  "v10-sw.js": {
+   "status": 200,
+   "content_type": "text/javascript",
+   "length": "2096"
+  },
+  "sw.js": {
+   "status": 200,
+   "content_type": "text/javascript",
+   "length": "7178"
+  },
+  "index.html": {
+   "status": 200,
+   "content_type": "text/html",
+   "length": "1200"
+  }
+ },
+ "preview_answer": {
+  "status": 200,
+  "content_type": "text/html",
+  "bytes": 1200
+ },
+ "seeded": {
+  "files_copied": 20,
+  "source_read_only": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "served_index_asset_refs": [
+   "/assets/index-CrAwWm5f.js",
+   "/assets/index-cWMF3pBW.css"
+  ],
+  "write_targets": [
+   "D:\\moodle\\_qoder_harness_ord0254\\serve"
+  ],
+  "user_chain_contacted": false
+ },
+ "marker_journey_via_preview": "22222222-2222-4222-8222-222222222222",
+ "preview_reaches_my_backend": true,
+ "forbidden_ports_state_at_start": {
+  "4781": [
+   47376
+  ],
+  "4782": [
+   33880
+  ],
+  "8693": [
+   33104
+  ],
+  "4185": [
+   47124
+  ],
+  "8713": [
+   52820
+  ]
+ },
+ "forbidden_ports_requested_by_this_process": []
+}
