@@ -1,0 +1,68 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0261/0264 landing re-parent — CLEAN candidate (option A) onto the new authoritative tip",
+ "clean_tip_171c0fb": "171c0fb41b36a79782e80ca5033a93e527b73e27",
+ "rebased_tip": "d2665e25855aeb265329266831983de42321697d",
+ "new_base": "035721357da99a43c276f5803df83c3b08c1361c",
+ "branch": "review/ord0261-0264-landing-clean-rebased (local; push on commander request)",
+ "cell1_root_parent": {
+  "measured_parent": "035721357da99a43c276f5803df83c3b08c1361c",
+  "expected": "035721357da99a43c276f5803df83c3b08c1361c",
+  "met": true
+ },
+ "cell2_descendant": {
+  "is_descendant": true,
+  "commits_in_range": 1
+ },
+ "cell3_lineage_40hex": [
+  "d2665e25855aeb265329266831983de42321697d 035721357da99a43c276f5803df83c3b08c1361c 2026-09-23 19:07:54 +0800 fix(frontend): reserve the sticky bar's height and bring the advanced opener into reach (ORD-0261, ORD-0264)"
+ ],
+ "cell4_file_set": {
+  "count": 6,
+  "files": [
+   "frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts",
+   "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+   "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "frontend/src/styles.css",
+   "review/ord0261_0264_kill_arms.py",
+   "review/run_spec.py"
+  ],
+  "matches_reviewed_clean_set": true,
+  "note": "the commander option-A six; the 7 review/_bus_*.md of the signed e3b0b47 are excluded by that same ruling (5793560215)"
+ },
+ "cell5_base_increment_disjoint": {
+  "base_increment_files": [
+   "backend/app/services.py",
+   "backend/tests/test_qoder_demo_accessibility_evidence.py",
+   "backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+   "data/mock/places.json"
+  ],
+  "base_increment_cardinality": 4,
+  "base_increment_fingerprint": "2e980428d74724c065a155bf81ec7912970ee437",
+  "candidate_cardinality": 6,
+  "candidate_fingerprint": "beb52fda62dc4b390b30e4b9dd34439d171b7b3a",
+  "intersection_cardinality": 0
+ },
+ "cell6_porcelain": "empty (git status --porcelain over the whole worktree: zero lines)",
+ "content_preservation": {
+  "product_blobs_equal_6daceb1": {
+   "frontend/src/styles.css": true,
+   "frontend/src/features/setup/JourneyTrialSetup.tsx": true
+  },
+  "all_six_blobs_equal_171c0fb": {
+   "frontend/src/styles.css": true,
+   "frontend/src/features/setup/JourneyTrialSetup.tsx": true,
+   "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts": true,
+   "frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts": true,
+   "review/ord0261_0264_kill_arms.py": true,
+   "review/run_spec.py": true
+  },
+  "all_equal": true
+ },
+ "spot_gate": {
+  "spec": "e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+  "summary": "3 passed (port 4750 run)",
+  "note": "spot check only; functional acceptance stands as signed"
+ },
+ "verifierNote": "mechanical cells only; functional acceptance stands as signed on e3b0b47 / 171c0fb"
+}
