@@ -1,0 +1,295 @@
+{
+ "label": "A3_write_leg_hangs",
+ "at": "2026-09-23T15:19:57.611Z",
+ "url": "http://127.0.0.1:4441/v8/hub",
+ "seconds": 35,
+ "render_shape": "persistent context, phone 390x844 zh-CN, real clicks on the production bundle",
+ "fills": [
+  {
+   "testid": "trial-city",
+   "present": true,
+   "before": "",
+   "typed": "北京",
+   "after": "北京"
+  },
+  {
+   "testid": "trial-arrival",
+   "present": true,
+   "before": "",
+   "typed": "北京南站",
+   "after": "北京南站"
+  },
+  {
+   "testid": "trial-departure",
+   "present": true,
+   "before": "",
+   "typed": "北京南站",
+   "after": "北京南站"
+  }
+ ],
+ "steps": [
+  {
+   "pressed": true,
+   "testid": "trial-next",
+   "hint_before_click": "",
+   "hint_after_click": "",
+   "live": "",
+   "step_body_present": {
+    "step1": 0,
+    "step2": 1,
+    "step3": 0
+   }
+  },
+  {
+   "pressed": true,
+   "testid": "trial-next",
+   "hint_before_click": "",
+   "hint_after_click": "",
+   "live": "",
+   "step_body_present": {
+    "step1": 0,
+    "step2": 0,
+    "step3": 1
+   }
+  }
+ ],
+ "create_button": {
+  "aria_disabled": null,
+  "disabled": false,
+  "label": "确认创建"
+ },
+ "writes_seen": [
+  {
+   "method": "POST",
+   "url": "/api/v1/travelers",
+   "at": 1790176787351
+  }
+ ],
+ "write_responses_settled": [],
+ "stop_waiting_used": {
+  "clicked_at_s": 8.2,
+  "hit_test": "NONE",
+  "after_body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n已停止等待\n已停止等待，行程还没有创建。\n\n返回\n确认创建\n使用封存的演示行程",
+  "after_wait_outcome": "已停止等待\n已停止等待，行程还没有创建。",
+  "after_live": "",
+  "after_create_error": "",
+  "after_nodes": {
+   "trial-setup": 1,
+   "failure-view": 0,
+   "today-heading": 0,
+   "load-failed": 0,
+   "offline-retry": 0,
+   "backend-unreachable": 0
+  }
+ },
+ "sentences_ever_on_screen": [
+  "用你自己的城市试用 CITYNEXUS",
+  "新建行程",
+  "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+  "EN",
+  "✓",
+  "目的地与时间",
+  "人数与偏好",
+  "3",
+  "确认创建",
+  "目的地",
+  "北京",
+  "抵达",
+  "北京南站 · 2026-09-24 10:00",
+  "离开",
+  "北京南站 · 2026-09-26 20:00",
+  "人数 / 房间",
+  "2 · 1 · 我们替你填的",
+  "总预算 / 住宿",
+  "CNY 3000 / 1000 · 我们替你填的",
+  "节奏",
+  "轻松 · 我们替你填的",
+  "兴趣",
+  "—",
+  "特殊要求",
+  "自动设置",
+  "CN · CNY · Asia/Shanghai",
+  "正在登记出行人",
+  "已等待 0 秒",
+  "第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。",
+  "停止等待",
+  "停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。",
+  "返回",
+  "正在创建…",
+  "使用封存的演示行程",
+  "已等待 1 秒",
+  "已等待 2 秒",
+  "已等待 3 秒",
+  "已等待 4 秒",
+  "已等待 5 秒",
+  "已等待 6 秒",
+  "已等待 7 秒",
+  "已等待 8 秒",
+  "已停止等待",
+  "已停止等待，行程还没有创建。"
+ ],
+ "ever_blamed_network_or_origin": false,
+ "phase_lines_seen": [],
+ "attribution_samples": [],
+ "sample_count": 10,
+ "samples": [
+  {
+   "elapsed_s": 0,
+   "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 0 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+   "live": "",
+   "wait_outcome": "",
+   "create_error": "",
+   "nodes": {
+    "trial-setup": 1,
+    "failure-view": 0,
+    "today-heading": 0,
+    "load-failed": 0,
+    "offline-retry": 0,
+    "backend-unreachable": 0
+   },
+   "stop_button": 1,
+   "attribution_last": null
+  },
+  {
+   "elapsed_s": 1,
+   "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 1 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+   "live": "",
+   "wait_outcome": "",
+   "create_error": "",
+   "nodes": {
+    "trial-setup": 1,
+    "failure-view": 0,
+    "today-heading": 0,
+    "load-failed": 0,
+    "offline-retry": 0,
+    "backend-unreachable": 0
+   },
+   "stop_button": 1,
+   "attribution_last": null
+  },
+  {
+   "elapsed_s": 2,
+   "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 2 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+   "live": "",
+   "wait_outcome": "",
+   "create_error": "",
+   "nodes": {
+    "trial-setup": 1,
+    "failure-view": 0,
+    "today-heading": 0,
+    "load-failed": 0,
+    "offline-retry": 0,
+    "backend-unreachable": 0
+   },
+   "stop_button": 1,
+   "attribution_last": null
+  },
+  {
+   "elapsed_s": 3.1,
+   "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 3 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+   "live": "",
+   "wait_outcome": "",
+   "create_error": "",
+   "nodes": {
+    "trial-setup": 1,
+    "failure-view": 0,
+    "today-heading": 0,
+    "load-failed": 0,
+    "offline-retry": 0,
+    "backend-unreachable": 0
+   },
+   "stop_button": 1,
+   "attribution_last": null
+  },
+  {
+   "elapsed_s": 4.1,
+   "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 4 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+   "live": "",
+   "wait_outcome": "",
+   "create_error": "",
+   "nodes": {
+    "trial-setup": 1,
+    "failure-view": 0,
+    "today-heading": 0,
+    "load-failed": 0,
+    "offline-retry": 0,
+    "backend-unreachable": 0
+   },
+   "stop_button": 1,
+   "attribution_last": null
+  },
+  {
+   "elapsed_s": 5.1,
+   "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 5 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+   "live": "",
+   "wait_outcome": "",
+   "create_error": "",
+   "nodes": {
+    "trial-setup": 1,
+    "failure-view": 0,
+    "today-heading": 0,
+    "load-failed": 0,
+    "offline-retry": 0,
+    "backend-unreachable": 0
+   },
+   "stop_button": 1,
+   "attribution_last": null
+  },
+  {
+   "elapsed_s": 6.1,
+   "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 6 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+   "live": "",
+   "wait_outcome": "",
+   "create_error": "",
+   "nodes": {
+    "trial-setup": 1,
+    "failure-view": 0,
+    "today-heading": 0,
+    "load-failed": 0,
+    "offline-retry": 0,
+    "backend-unreachable": 0
+   },
+   "stop_button": 1,
+   "attribution_last": null
+  },
+  {
+   "elapsed_s": 7.2,
+   "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 7 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+   "live": "",
+   "wait_outcome": "",
+   "create_error": "",
+   "nodes": {
+    "trial-setup": 1,
+    "failure-view": 0,
+    "today-heading": 0,
+    "load-failed": 0,
+    "offline-retry": 0,
+    "backend-unreachable": 0
+   },
+   "stop_button": 1,
+   "attribution_last": null
+  },
+  {
+   "elapsed_s": 8.2,
+   "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n\n正在登记出行人\n已等待 8 秒\n\n第一次搜索一座城市实测要两分钟左右。服务器不会中途汇报进度，所以这里只有真实秒数，没有编出来的数字。\n\n停止等待\n\n停止等待只是离开这块屏幕：服务器不会因此停下，行程数据也不会丢失。\n\n返回\n正在创建…\n使用封存的演示行程",
+   "live": "",
+   "wait_outcome": "",
+   "create_error": "",
+   "nodes": {
+    "trial-setup": 1,
+    "failure-view": 0,
+    "today-heading": 0,
+    "load-failed": 0,
+    "offline-retry": 0,
+    "backend-unreachable": 0
+   },
+   "stop_button": 1,
+   "attribution_last": null
+  },
+  {
+   "elapsed_s": 10.2,
+   "after_stop": true,
+   "body": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n✓\n目的地与时间\n✓\n人数与偏好\n3\n确认创建\n目的地\n北京\n抵达\n北京南站 · 2026-09-24 10:00\n离开\n北京南站 · 2026-09-26 20:00\n人数 / 房间\n2 · 1 · 我们替你填的\n总预算 / 住宿\nCNY 3000 / 1000 · 我们替你填的\n节奏\n轻松 · 我们替你填的\n兴趣\n—\n特殊要求\n—\n自动设置\nCN · CNY · Asia/Shanghai\n已停止等待\n已停止等待，行程还没有创建。\n\n返回\n确认创建\n使用封存的演示行程"
+  }
+ ]
+}
