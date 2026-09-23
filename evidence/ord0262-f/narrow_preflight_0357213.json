@@ -1,0 +1,244 @@
+{
+ "what": "ORD-0262-NARROW 前置：写锁冲突今天的真实形状，逐文件具名（只读，未跑产品）",
+ "lane": "F 8ccd71d8",
+ "scope": {
+  "repo": "D:/moodle/_qoder_integration_20260919",
+  "exact_ref": "035721357da99a43c276f5803df83c3b08c1361c",
+  "tree": "08c0423ca8b1947b7f2cc30b3bc747fba6042fa5",
+  "read_command": "git -C D:/moodle/_qoder_integration_20260919 show 035721357da99a43c276f5803df83c3b08c1361c:<path>",
+  "product_was_run": false,
+  "main_py_changed_since_dea8410": "no（0219 只动 services.py / 2 枚测试 / places.json）"
+ },
+ "per_file": {
+  "backend/app/main.py": {
+   "lines": 11212,
+   "probes": {
+    "error_envelope_def": {
+     "why": "产品唯一的错误信封本体",
+     "count": 1,
+     "lines": [
+      446
+     ]
+    },
+    "jsonresponse_returned": {
+     "why": "信封返回的类型",
+     "count": 4,
+     "lines": [
+      454,
+      526,
+      549,
+      593
+     ]
+    },
+    "exception_handlers": {
+     "why": "注册了哪些异常类型",
+     "count": 3,
+     "lines": [
+      525,
+      548,
+      592
+     ]
+    },
+    "unhandled_500_source": {
+     "why": "那 19 B 那句话（若产品里有，就是产品自己在印）",
+     "count": 1,
+     "lines": [
+      2917
+     ]
+    },
+    "operational_error_mentions": {
+     "why": "sqlite 锁/忙异常出现的文件",
+     "count": 2,
+     "lines": [
+      22,
+      5946
+     ]
+    },
+    "lock_detail_test": {
+     "why": "现场判据：靠 detail 字符串认锁",
+     "count": 2,
+     "lines": [
+      5948,
+      5948
+     ]
+    },
+    "named_busy_codes": {
+     "why": "产品**已有**的具名繁忙码",
+     "count": 3,
+     "lines": [
+      2860,
+      2920,
+      3019
+     ]
+    },
+    "retry_after_ms_emitted": {
+     "why": "机器可读的重试预算",
+     "count": 5,
+     "lines": [
+      2863,
+      2923,
+      2934,
+      2934,
+      3022
+     ]
+    },
+    "journey_write_lock": {
+     "why": "进程内写锁（跨进程不保护）",
+     "count": 3,
+     "lines": [
+      46,
+      9849,
+      11169
+     ]
+    },
+    "raise_500": {
+     "why": "显式 500",
+     "count": 1,
+     "lines": [
+      3027
+     ]
+    },
+    "message_key_derived": {
+     "why": "屏上那句的翻译键来源",
+     "count": 16,
+     "lines": [
+      544,
+      563,
+      608,
+      1932,
+      1963,
+      1975,
+      2013,
+      2025
+     ]
+    },
+    "reason_code_emitted": {
+     "why": "具名'哪一条条件拒的'",
+     "count": 2,
+     "lines": [
+      561,
+      4464
+     ]
+    }
+   }
+  },
+  "backend/app/services.py": {
+   "lines": 1770,
+   "probes": {
+    "reason_code_emitted": {
+     "why": "具名'哪一条条件拒的'",
+     "count": 5,
+     "lines": [
+      916,
+      985,
+      1025,
+      1264,
+      1749
+     ]
+    }
+   }
+  },
+  "backend/app/concurrency_guards.py": {
+   "lines": 85,
+   "probes": {
+    "journey_write_lock": {
+     "why": "进程内写锁（跨进程不保护）",
+     "count": 1,
+     "lines": [
+      70
+     ]
+    }
+   }
+  },
+  "backend/app/commerce/idempotency.py": {
+   "lines": 45,
+   "probes": {}
+  },
+  "backend/app/catalog_hydration_operations.py": {
+   "lines": 973,
+   "probes": {
+    "retry_after_ms_emitted": {
+     "why": "机器可读的重试预算",
+     "count": 3,
+     "lines": [
+      151,
+      210,
+      210
+     ]
+    },
+    "reason_code_emitted": {
+     "why": "具名'哪一条条件拒的'",
+     "count": 5,
+     "lines": [
+      724,
+      745,
+      767,
+      872,
+      906
+     ]
+    }
+   }
+  },
+  "backend/app/stay_generation_operations.py": {
+   "lines": 844,
+   "probes": {
+    "operational_error_mentions": {
+     "why": "sqlite 锁/忙异常出现的文件",
+     "count": 3,
+     "lines": [
+      245,
+      271,
+      277
+     ]
+    },
+    "lock_detail_test": {
+     "why": "现场判据：靠 detail 字符串认锁",
+     "count": 1,
+     "lines": [
+      426
+     ]
+    },
+    "retry_after_ms_emitted": {
+     "why": "机器可读的重试预算",
+     "count": 4,
+     "lines": [
+      172,
+      214,
+      214,
+      244
+     ]
+    }
+   }
+  }
+ },
+ "named_busy_codes_present": [
+  [
+   "GENERATION_STORE_BUSY",
+   2
+  ],
+  [
+   "HYDRATION_STORE_BUSY",
+   1
+  ]
+ ],
+ "exception_handlers_registered": [
+  [
+   "RequestValidationError",
+   1
+  ],
+  [
+   "HTTPException",
+   1
+  ],
+  [
+   "ValueError",
+   1
+  ]
+ ],
+ "default_500_source": "未定位（说明 19 B 不是从这一路来的，别下结论）",
+ "the_19b_claim": {
+  "commander_reading": "14/59 次 500 正文只有 19 B `text/plain`、无 detail/无码/无 trace-id",
+  "in_this_tree": "产品自己**没有**任何 `Internal Server Error` 字面量 ⇒ 那 19 B 来自框架默认异常面（见 default_500_source）",
+  "consequence": "凡是没被 `@app.exception_handler` 接住的异常，客户端拿到的就是这个，与'产品有错误信封'并不矛盾——信封只在有人主动装填时才有内容"
+ }
+}
