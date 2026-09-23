@@ -1,6 +1,7 @@
 import type { JourneyTwin } from "../contracts/journeyTwin";
 import type { ReplanProposal } from "../contracts/replan";
 import { fetchWithReadDeadline } from "../lib/readDeadline";
+import { OriginResponseUnusableError } from "../lib/failureAttribution";
 
 export interface Money {
   amount_minor: number;
@@ -650,12 +651,19 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
     },
   });
   const text = await response.text();
+  /* ORD-0263: this channel used to hand the undecodable answer straight back as data (`body = text`),
+     so nothing threw, nothing was classified and the screen simply said nothing.  Only a *failed*
+     parse or a 2xx with no bytes at all counts -- a legitimate bare JSON string or a 204 stays as it
+     was, because neither of those is this defect. */
+  const emptyAnswer = text.trim() === "";
   let body: unknown = null;
-  if (text) {
+  let parseFailed = false;
+  if (!emptyAnswer) {
     try {
       body = JSON.parse(text);
     } catch {
       body = text;
+      parseFailed = true;
     }
   }
   if (!response.ok) {
@@ -663,6 +671,14 @@ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
       response.status,
       body,
       "CityNexus API " + response.status + ": " + path,
+    );
+  }
+  if (parseFailed || (emptyAnswer && response.status !== 204)) {
+    const contentType = response.headers.get("content-type");
+    throw new OriginResponseUnusableError(
+      response.status,
+      contentType,
+      emptyAnswer ? "empty" : (contentType ?? "").includes("html") ? "html" : "not_json",
     );
   }
   return body as T;

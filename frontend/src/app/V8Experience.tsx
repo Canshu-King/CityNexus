@@ -14,6 +14,7 @@ import { installVisualViewportVars } from "../lib/visualViewport";
 import {
   classifyHealthProbe,
   classifyReadFailure,
+  OriginResponseUnusableError,
   clearJourneyReferences,
   copyFor,
   recordAttribution,
@@ -186,12 +187,35 @@ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,
   });
-  const body = await response.json().catch(() => null);
+  /* Parsed by hand rather than `response.json().catch(() => null)`: that one line turned three
+     different answers -- zero bytes, an HTML document, a plain sentence -- into the same `null`, and
+     the caller then threw a TypeError on it, which the classifier filed under "nothing came back".
+     The status branch below is unchanged. */
+  const raw = await response.text();
+  const emptyBody = raw.trim() === "";
+  let body: any = null;
+  if (!emptyBody) {
+    try {
+      body = JSON.parse(raw);
+    } catch {
+      body = null;
+    }
+  }
+  const contentType = response.headers.get("content-type");
   if (!response.ok) {
     throw new V8Rejection(
       rejectionReason(body, response.status),
       response.status,
       typeof body?.error?.code === "string" ? body.error.code : null,
+    );
+  }
+  /* ORD-0263 fifth state: a 2xx that reached us and still gives this screen nothing is an answered
+     request, and it has to be classified as one. */
+  if (body === null) {
+    throw new OriginResponseUnusableError(
+      response.status,
+      contentType,
+      (contentType ?? "").includes("html") ? "html" : emptyBody ? "empty" : "not_json",
     );
   }
   return body as T;
@@ -644,7 +668,8 @@ export function V8Experience() {
                legitimate second answer -- the copy this device holds.  Whether it holds one is a
                measurement, so it is folded into the one classification object here rather than guessed
                by the copy table or by a branch that writes its own sentence (R14-P). */
-            if (attribution.reason === "NETWORK_UNAVAILABLE" || attribution.reason === "SERVER_ERROR") {
+            if (attribution.reason === "NETWORK_UNAVAILABLE" || attribution.reason === "SERVER_ERROR"
+                || attribution.reason === "ORIGIN_INVALID_RESPONSE") {
               const saved = await readOfflineJourney(journeyId);
               if (cancelled) return;
               setOffline(saved);

@@ -33,6 +33,10 @@ export type AttributionReason =
      is the same "rewrite a named HTTP answer into a different cause" defect this module exists to
      stop. */
   | "FORBIDDEN"
+  /* ORD-0263 fifth state: the origin answered 2xx and what came back was not this screen's data --
+   * an HTML document, a plain sentence, zero bytes.  Neither "the network is down" nor "nobody
+   * answered" describes it, because an answer arrived and was discarded. */
+  | "ORIGIN_INVALID_RESPONSE"
   | "UNKNOWN_FAILURE";
 
 export type EvidenceKind = "HTTP_RESPONSE" | "TRANSPORT" | "HEALTH_PROBE";
@@ -60,6 +64,8 @@ export type Attribution = {
   server_code?: string | null;
   /** Measured, not assumed: did this device actually hold a copy this read could fall back to? */
   cached_copy_present?: boolean;
+  /** What the origin actually sent, for the state where the answer's media type is the whole story. */
+  content_type?: string | null;
   /** Short, greppable line for production logs.  Shape follows R14 §8. */
   telemetry: string;
 };
@@ -70,6 +76,33 @@ export type ServerErrorShape = {
   code?: string | null;
   message?: string | null;
 };
+
+/**
+ * ORD-0263 fifth state: the response arrived and was 2xx, but its body is not this screen's data.
+ *
+ * Before this existed, both request channels swallowed that fact in different ways -- `v8Request`
+ * returned `null` (so a later property read threw a TypeError and the failure was filed under
+ * "nothing came back"), `requestJson` returned the document as a string (so nothing threw at all) --
+ * and the one discriminating fact, `the origin answered HTTP 200`, was lost either way.  This error
+ * carries it, so no branch downstream may rename it a transport failure.
+ */
+export class OriginResponseUnusableError extends Error {
+  readonly status: number;
+  readonly content_type: string | null;
+  readonly body_kind: "html" | "not_json" | "empty";
+  constructor(status: number, contentType: string | null, bodyKind: "html" | "not_json" | "empty") {
+    super(`origin answered ${status} with an unusable body (${contentType ?? "content-type unknown"})`);
+    this.name = "OriginResponseUnusableError";
+    this.status = status;
+    this.content_type = contentType;
+    this.body_kind = bodyKind;
+  }
+}
+
+/** Matched by name, the same way the read deadline is, so a bundling pass cannot break the fact. */
+export function isOriginResponseUnusable(error: unknown): error is OriginResponseUnusableError {
+  return error instanceof Error && error.name === "OriginResponseUnusableError";
+}
 
 const NOT_FOUND_CODES = ["NOT_FOUND", "RESOURCE_NOT_FOUND", "JOURNEY_NOT_FOUND"];
 
@@ -82,6 +115,7 @@ function make(
   recovery_action: RecoveryAction,
   message_key: string,
   server_code?: string | null,
+  content_type?: string | null,
 ): Attribution {
   return {
     reason,
@@ -92,6 +126,7 @@ function make(
     recovery_action,
     message_key,
     ...(server_code ? { server_code } : {}),
+    ...(content_type ? { content_type } : {}),
     telemetry: [
       `attribution_reason=${reason}`,
       `evidence_kind=${evidence_kind}`,
@@ -100,6 +135,9 @@ function make(
       `retryable=${retryable ? "true" : "false"}`,
       `recovery_action=${recovery_action}`,
       ...(server_code ? [`server_code=${server_code}`] : []),
+      /* Emitted last on purpose: every existing column keeps its position in the line, and a reader
+         that regexes for `key=` cannot be disturbed by a value that legitimately contains a space. */
+      ...(content_type ? [`content_type=${content_type}`] : []),
     ].join(" "),
   };
 }
@@ -112,6 +150,15 @@ function make(
 export function classifyReadFailure(error: unknown, server?: ServerErrorShape | null): Attribution {
   const status = server?.status ?? (error instanceof Error && "status" in error ? Number((error as { status?: number }).status) : null);
   const code = (server?.code ?? (error instanceof Error && "code" in error ? (error as { code?: string | null }).code : null)) ?? null;
+
+  /* ORD-0263 fifth state, decided *first*: this error carries a 2xx status on purpose, and letting the
+     status branch below see it would file "answered, body unusable" as an unnamed 200 failure.  It also
+     has to precede the TypeError branch, because that is what a discarded 200 body turns into two
+     frames later -- and `error instanceof TypeError` is the one place allowed to say 网络不可用. */
+  if (isOriginResponseUnusable(error)) {
+    return make("ORIGIN_INVALID_RESPONSE", "HTTP_RESPONSE", error.status, "RUNTIME", true,
+      "retry", "failure.originInvalidResponse", null, error.content_type ?? `empty ${error.body_kind} body`);
+  }
 
   /* 1 + 2: the server answered, so this is a resource/state fact, never a transport one. */
   if (typeof status === "number" && status > 0) {
@@ -196,7 +243,8 @@ export function classifyHealthProbe(fact: OriginProbeFact): Attribution {
  */
 export function withCachedCopyFact(attribution: Attribution, hasCachedCopy: boolean): Attribution {
   const mayOffer = hasCachedCopy
-    && (attribution.reason === "SERVER_ERROR" || attribution.reason === "NETWORK_UNAVAILABLE");
+    && (attribution.reason === "SERVER_ERROR" || attribution.reason === "NETWORK_UNAVAILABLE"
+        || attribution.reason === "ORIGIN_INVALID_RESPONSE");
   return {
     ...attribution,
     recovery_action: mayOffer ? "read-only-cached" : attribution.recovery_action,
@@ -316,6 +364,28 @@ export function copyFor(
             body: zh
               ? `服务器自己报错了（HTTP ${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
               : `The server reported an error of its own (HTTP ${attribution.http_status}). That is on its side, not something you typed. Retry; if it persists, come back later.`,
+          };
+    /* ORD-0263 fifth state: an answer arrived, so the sentence may not claim one did not.  The status
+       and media type quoted here are the ones this response actually carried. */
+    case "failure.originInvalidResponse":
+      return detail.hasCachedCopy
+        ? {
+            kicker: zh ? "服务器" : "The origin",
+            title: zh
+              ? `服务器答了 ${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
+              : `The origin answered ${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
+            body: zh
+              ? `它确实回了话（HTTP ${attribution.http_status ?? "2xx"}，Content-Type: ${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
+              : `It did reply (HTTP ${attribution.http_status ?? "2xx"}, Content-Type: ${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device still holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
+          }
+        : {
+            kicker: zh ? "服务器" : "The origin",
+            title: zh
+              ? `服务器答了 ${attribution.http_status ?? "2xx"}，可带回来的不是这一屏能用的数据`
+              : `The origin answered ${attribution.http_status ?? "2xx"}, but not with data this screen can use`,
+            body: zh
+              ? `它确实回了话（HTTP ${attribution.http_status ?? "2xx"}，Content-Type: ${attribution.content_type ?? "未知"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。`
+              : `It did reply (HTTP ${attribution.http_status ?? "2xx"}, Content-Type: ${attribution.content_type ?? "unknown"}) — the answer simply was not a journey response that could be parsed. The service is unavailable for now; nothing you typed caused it. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
           };
     /* ORD-0263 V2: a read that hit its own deadline.  The measured fact is "no answer arrived";
        whether the request travelled is not something this screen knows, so the sentence does not
