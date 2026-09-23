@@ -12546,6 +12546,76 @@ sha1sum /tmp/x.json   # 期望 c39349098b847bf8bf31e0b0208ae6536bda910d
 status: ORD-0232 的"上屏那一半"已交（含四格四把独占杀手）；端到端那一半等 `a96fabf` 合流，命令已备好并实测会自己拒跑。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 现场 @2026-09-23T10:0x+08 —— **机器重启后控制面已恢复**：手机预览链四件全绿（新公网地址）、账本已重镜（byte-level match）、车道按三批唤醒
+
+### ① 重启把什么打掉了（先说事实，不说"应该没事"）
+
+```text
+重启前最后一条隧道日志：09-23 04:13(+08) 连续 `failed to dial to edge with quic: timeout`
+  ⇒ 隧道在重启之前就已经断了，不是我先弄坏的
+重启后端口盘点：:4781 / :4782 / :8693 全部 NONE LISTENING
+```
+
+### ② 重建后的链（按老顺序，逐段量过）
+
+```text
+:8693 uvicorn  pid 33104  树=_qoder_cmdr_gate_20260921 @53fe8e8（后端仍钉在 09-21 18:02）
+      CITYNEXUS_DATABASE_URL=sqlite:///./_live.db  DEMO_MODE=true  AI_ENABLED=true
+:4781 vite preview pid 47376  cwd=_qoder_integration_20260919/frontend
+      --outDir D:/moodle/_qoder_preview_20260920/dist  CITYNEXUS_BACKEND_PORT=8693  --strictPort
+:4782 preview_auth_proxy.py pid 33880（cnx Basic + 派生 cookie）
+公网  https://sciences-computed-cole-that.trycloudflare.com   ← 旧地址已进 tunnel_url.txt.dead_0923_0951
+```
+**公网两点复采一致才写这条**（隧道年龄 > 30 s，且 000/截断一律重采）：
+`GET /api/v1/health` **200** `{"status":"ok","database":"ok","ai":"enabled"}`；
+`GET /api/v1/demo/scene` **200** `demo_mode=true`；匿名 scene **401**（护栏断言，与链健康分开算）；
+`POST /api/v1/demo/reset` **403 PREVIEW_GUARDED**（R13 仍在装）；`GET /` 的 index 指向 `index-DtQ86lsQ.js`。
+**保留闸门 A–E**：三代包在公网同挂且都是真 JS——`index-CnfHH2K_.js` 1,228,395 B / `index-BCF4ptyk.js` 1,230,082 B / `index-DtQ86lsQ.js` 1,231,985 B，`content_type=text/javascript`，**无一例 HTML 回退**（重采第 3 次全部拿到完整字节；前两次的 `000`/短 body 是隧道传输截断，**不归因为产品红**）。
+**用户数据没丢**（`mode=ro` + `PRAGMA query_only=1` 数过）：journeys **3** / travelers **3** / plan_versions **19** / places **16**；`22222222 CNX-DEMO ACTIVE`、`6cbdbc65 CN-BEIJING PLANNED`、`94669bae CN-BEIJING DRAFT`。
+**清理闸门仍关**：0 删除（真机闸门只由用户自己刷一次开）。
+
+### ③ 账本完好性（我先前那条"8 次命中"的怀疑，撤）
+
+```text
+三个精确读数（同一个文件，三种不同模式串）：
+  grep -c '^## ORDERS（收件箱'  = 1   ← 插入锚点唯一，ledger_write 安全
+  grep -c '^## ORDERS'          = 1
+  grep -c '## ORDERS'           = 29 行 ← 其余 28 行全是正文里引用这句话的说明/事故记录
+⇒ 我昨晚那条"锚点命中 8 次"的怀疑【撤】：它来自一个我自己写松了的模式串，不是账本被改坏。
+   按老规矩当场自曝并写下来：**负断言/计数断言必须先打印实际读到的行**，
+   不能拿一条宽松 grep 的输出当事实（这条和"谁改共享标题行谁负责"是同一族事故）。
+```
+镜像：`mirror_reconcile.py --fetch-remote` 判 **LOCAL_AHEAD**（只差我 04:05 那块 ORD-0224 验收，headings 170 vs 169，远端独有 0）⇒ 推 → commit `06b947d87fc0`，读回 **byte-level match**：local 3,783,649 B == remote，blob `dadcd45426e485f9`。
+
+### ④ 车道唤醒：分三批（重启后一次全开会把机器 IO/带宽打满，也会让我同一分钟收到六份自报）
+
+**每批只做一件事：重读账本 `## ORDERS（收件箱` 顶部 + 自己名下那单的 verdict，然后按原授权继续。**
+我不重发已经交付过的单，不把订单内容塞进窗口消息（账本是唯一订单通道）。
+
+```text
+批 1（工程主线，先开，最贵）：C 8c66aa92 / B c01d72a3 / F 8ccd71d8
+  C：ORD-0224 外读面已签收（15/15 PROVEN），继续跨进程那格——先做探针再写门，
+     探针证不出形状就回来找我改验收形状；snap_349c4fa 留到那一步跑完再删。
+  B：ORD-0219 第②步选型已裁（留你 21309b9，C 把两样独有件移植过来）；
+     你名下的写域仍是 backend/；合流那格等 C 移植件到位。
+  F：ORD-0235 / 凭据字面量常驻门那件在你名下；另 `_qoder_f_run` 4.1 GB 按具名清单自清（不代删）。
+批 2（读数与人视角）：D e345b9d6 / HARNESS d291c9dc
+  D：ORD-0238 + ORD-0240（同一批做，低优先级那条是"中文界面不得直接渲染未翻译模型原文"）。
+  HARNESS：P0 第二把尺保持只读，`_live.db`/`_preview.db` 一律 mode=ro。
+批 3（真机/红队）：1a986a24（穷游背包客）/ aad2d1f2（ impatient 移动用户）/ d2305848（红队）/ d4b04a0f（HJ-P2）
+  这些人视角的活现在**要先等新链上的复采**——地址换了，旧截图/旧读数一律标 STALE_SURFACE。
+```
+**给所有人的一条**：现在手机看到的是 **01:24 那一代前端 + 09-21 18:02 的后端**。任何"树里已修、手机上还在"的观察，
+照 R 的口径写两个格子：`REPRODUCED (tree)` / `NOT-DEPLOYED (phone)`；不得拿门禁绿替手机屏幕说话。
+
+### ⑤ 我要向仲裁求的一句话（今早唯一需要它拍的）
+
+**是否现在把手机这台从 `53fe8e8` 升到主线（`f5a6b9a` 一代）**：
+- 代价：后端换代要重启 :8693 ⇒ 实测过一次 **~28 s 停机**，且必须提前在桌面留言里写明"几点几分会短暂打不开"；
+- 前置：`vite build` 读工作树 ⇒ 合流树必须 `frontend/src` 干净才能出发布包（已有规则）；
+- 收益：这两天在树上落的（无障碍证据、地点身份、能力硬门、AI 卡片、目录填充…）**目前对用户全部不可见**。
+我倾向"**先只换前端（0 停机）+ 后端等一次具名候选 SHA 再整代换**"，等它裁。
+
 ## commander 验收 @2026-09-23T04:05+08 —— C `8c66aa92` **补齐 ORD-0224 的外读面（15 件全 PROVEN）**，并给出精确 source/test SHA 链与 `patches/`；它对跨进程那格的做法我认可；自清 4 个导出（~440 MB）
 
 ### ① 外读面（`Canshu-King/CityNexus @ commander/control` → `evidence/ord0224/`，含 `patches/`）
