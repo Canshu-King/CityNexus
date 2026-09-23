@@ -1,0 +1,849 @@
+{
+  "kind": "CNX_SCOPE_KEY_INDEX_V1",
+  "issued_for": "lane F 实读 §①（总线转述 @14:3x：evidence/ord0224 全 11 件里没有可读的 scope 键）",
+  "session": "8c66aa92",
+  "answers": {
+    "what_was_asked": "把 2ab69f2 上 Y3=3/10 那格读数按 CNX_REVERSE_MUTATION_RECEIPT_V1 形状发布",
+    "what_the_old_file_said": {
+      "file": "evidence/ord0224_a2/xproc_y3_rounds_raw_test_g3_concurrent_open_ge_2ab69f2.json",
+      "git_blob_sha1": "ee79303eb72a17044f41585b50a35efe0f7416dd",
+      "bytes": 9245,
+      "sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+      "node": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+      "run_shape": "single-node",
+      "killed": 3,
+      "rounds": 10,
+      "control": "GREEN",
+      "field_correction": "旧件的 verdict.campaign_valid 与 deterministic_kill 由同一个条件写出：它把『这批证据有效』和『击杀是确定性的』混成一格。V1 收据里两者分开记：控制轮绿 + 每轮还原逐字节 + 锚点 1 命中 ⇒ 证据有效；3/10 ⇒ 击杀不确定，那是**关于突变体**的结论。"
+    },
+    "v1_receipts_published": [
+      {
+        "file": "evidence/ord0225/v1_gate_receipt_Y23_a_0fd3cc7.json",
+        "bytes": 45550,
+        "git_blob_sha1": "0d70d9e69e6d12b0bb51555e37ff0973bc3552e9",
+        "scope_key": {
+          "repo": "Canshu-King/CityNexus",
+          "exact_sha": "0fd3cc70d788f1e062669b528714d946e044ccd2",
+          "target_nodeids": [
+            "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+          ],
+          "run_shape": "single-node",
+          "tree_kind": "clean_sha"
+        },
+        "command_argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "mutation_id": "C-ORD0225-Y23-index-and-loser-readback",
+        "mutation_plain": "Y23 = 破坏部分唯一索引 + 败者回读（命令那一臂）",
+        "carriers_removed": [
+          "B partial unique index",
+          "C loser read-back"
+        ],
+        "carriers_left_live": [
+          "A1 pre-resolution read",
+          "A2 post-resolution read"
+        ],
+        "carriers_unparsed_from_receipt": [],
+        "changed_files": [
+          {
+            "path": "backend/db/schema.sql",
+            "before_blob": "6e536c7b1090f6a46e115ee9788bed5b052bf35f",
+            "anchor_hits": 1,
+            "bytes_changed": true
+          },
+          {
+            "path": "backend/app/catalog_hydration_operations.py",
+            "before_blob": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+            "anchor_hits": 1,
+            "bytes_changed": true
+          }
+        ],
+        "collected": [
+          1
+        ],
+        "baseline_outcome": [
+          "GREEN"
+        ],
+        "rounds": 10,
+        "primary_red_rounds": [
+          3,
+          4,
+          5,
+          6,
+          9
+        ],
+        "observed_red_reasons": [
+          "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 2 个：逐请求=[(0, '827130fc-a732-4973-814c-d18a20fb6b32', True), (1, '827130fc-a732-4973-814c-d18a20fb6b32', True), (2, '827130fc-a732-4973-814c-d18a2",
+          "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 2 个：逐请求=[(0, 'e14963b0-cea4-4be3-adda-a1eb3da89c37', False), (1, 'f8fcd0b9-7198-4cee-9cbf-3ad7962d0f02', False), (2, 'f8fcd0b9-7198-4cee-9cbf-3ad",
+          "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 4 个：逐请求=[(0, '5d1c95c0-71b6-4812-8880-667bd11e4cee', False), (1, '5d1c95c0-71b6-4812-8880-667bd11e4cee', True), (2, 'e650edb7-b1c5-47d3-9978-30bb",
+          "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 4 个：逐请求=[(0, 'c433bd10-95b9-432a-812a-f15f986de114', False), (1, '66be71f2-9d1f-481c-84d7-5683ff977d67', True), (2, '5b9da3ce-e84b-4082-ad57-93f4",
+          "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 5 个：逐请求=[(0, 'e96c07a3-3451-4c04-85cf-8844a2d58abe', False), (1, 'd7d4d8fe-879f-4824-be69-8b0e1358ee9e', False), (2, 'b93fa3ba-d1c2-4296-a79a-e0d"
+        ],
+        "kill_rate": "5/10",
+        "claimed_result": "STREAK_BROKEN",
+        "derived_result": null,
+        "hygiene": {
+          "every_round_named_a_fresh_db": true,
+          "every_round_restored_byte_exact": true,
+          "marker_residue_after_restore": 0,
+          "tree_identical_to_exact_sha": true
+        },
+        "rows": {
+          "baseline": 1,
+          "mutated": [
+            1,
+            1,
+            4,
+            4,
+            2,
+            2,
+            1,
+            1,
+            5,
+            1
+          ]
+        },
+        "row_column_reading": "行数出自 commander 自己那把尺 gate_streak.row_counts；这一臂会出现 2..5 行开放作业，所以 0->N 那一列在这里是**能区分**的。",
+        "emitter_blob": "ed5b7f81ef7da15d4d0967fe9f4d4a55be201d53"
+      },
+      {
+        "file": "evidence/ord0225/v1_gate_receipt_Y23_b_0fd3cc7.json",
+        "bytes": 44554,
+        "git_blob_sha1": "2e6abed756b13511dcb19302c362213fa7f18720",
+        "scope_key": {
+          "repo": "Canshu-King/CityNexus",
+          "exact_sha": "0fd3cc70d788f1e062669b528714d946e044ccd2",
+          "target_nodeids": [
+            "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+          ],
+          "run_shape": "single-node",
+          "tree_kind": "clean_sha"
+        },
+        "command_argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "mutation_id": "C-ORD0225-Y23-index-and-loser-readback",
+        "mutation_plain": "Y23 = 破坏部分唯一索引 + 败者回读（命令那一臂）",
+        "carriers_removed": [
+          "B partial unique index",
+          "C loser read-back"
+        ],
+        "carriers_left_live": [
+          "A1 pre-resolution read",
+          "A2 post-resolution read"
+        ],
+        "carriers_unparsed_from_receipt": [],
+        "changed_files": [
+          {
+            "path": "backend/db/schema.sql",
+            "before_blob": "6e536c7b1090f6a46e115ee9788bed5b052bf35f",
+            "anchor_hits": 1,
+            "bytes_changed": true
+          },
+          {
+            "path": "backend/app/catalog_hydration_operations.py",
+            "before_blob": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+            "anchor_hits": 1,
+            "bytes_changed": true
+          }
+        ],
+        "collected": [
+          1
+        ],
+        "baseline_outcome": [
+          "GREEN"
+        ],
+        "rounds": 10,
+        "primary_red_rounds": [
+          2,
+          4,
+          6
+        ],
+        "observed_red_reasons": [
+          "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 2 个：逐请求=[(0, '2bf0db7d-0bf5-4a6a-b6cb-e1711b1fa00f', False), (1, 'ef7eed9e-3d72-41da-82e5-e10555abf0da', True), (2, 'ef7eed9e-3d72-41da-82e5-e105",
+          "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 2 个：逐请求=[(0, '9b669702-7565-4e54-8f8d-4f08bfcdb5fa', True), (1, '9b669702-7565-4e54-8f8d-4f08bfcdb5fa', False), (2, '9b669702-7565-4e54-8f8d-4f08",
+          "E           AssertionError: 期望：五枚回执是**同一个** operation_id（一个开放代次=一枚持久作业）；实际 3 个：逐请求=[(0, '5cf15c2c-712c-4981-9d19-ac93c46fc9b0', True), (1, '5826a423-3e40-4fce-826a-bf15c777c150', True), (2, '5826a423-3e40-4fce-826a-bf15c"
+        ],
+        "kill_rate": "3/10",
+        "claimed_result": "STREAK_BROKEN",
+        "derived_result": null,
+        "hygiene": {
+          "every_round_named_a_fresh_db": true,
+          "every_round_restored_byte_exact": true,
+          "marker_residue_after_restore": 0,
+          "tree_identical_to_exact_sha": true
+        },
+        "rows": {
+          "baseline": 1,
+          "mutated": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            3,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "row_column_reading": "行数出自 commander 自己那把尺 gate_streak.row_counts；这一臂会出现 2..5 行开放作业，所以 0->N 那一列在这里是**能区分**的。",
+        "emitter_blob": "ed5b7f81ef7da15d4d0967fe9f4d4a55be201d53"
+      },
+      {
+        "file": "evidence/ord0225/v1_gate_receipt_Y3_a_0fd3cc7.json",
+        "bytes": 37111,
+        "git_blob_sha1": "0312db377d1faa4f9c47c1924643a40c0ed621af",
+        "scope_key": {
+          "repo": "Canshu-King/CityNexus",
+          "exact_sha": "0fd3cc70d788f1e062669b528714d946e044ccd2",
+          "target_nodeids": [
+            "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+          ],
+          "run_shape": "single-node",
+          "tree_kind": "clean_sha"
+        },
+        "command_argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "mutation_id": "C-ORD0224A2-Y3-loser-readback-only",
+        "mutation_plain": "Y3 = 只坏败者回读（C 一格，索引与两次 reuse 读都留活）",
+        "carriers_removed": [
+          "C loser read-back"
+        ],
+        "carriers_left_live": [
+          "A1 pre-resolution read",
+          "A2 post-resolution read",
+          "B partial unique index"
+        ],
+        "carriers_unparsed_from_receipt": [],
+        "changed_files": [
+          {
+            "path": "backend/app/catalog_hydration_operations.py",
+            "before_blob": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+            "anchor_hits": 1,
+            "bytes_changed": true
+          }
+        ],
+        "collected": [
+          1
+        ],
+        "baseline_outcome": [
+          "GREEN"
+        ],
+        "rounds": 10,
+        "primary_red_rounds": [
+          3,
+          7,
+          8,
+          10
+        ],
+        "observed_red_reasons": [
+          "E           AssertionError: 期望：同键并发一律被受理（[200, 202]，**没有 409**——撞指纹要复用而不是把人推开）；实际状态码 [200, 200, 200, 202, 503]"
+        ],
+        "kill_rate": "4/10",
+        "claimed_result": "STREAK_BROKEN",
+        "derived_result": null,
+        "hygiene": {
+          "every_round_named_a_fresh_db": true,
+          "every_round_restored_byte_exact": true,
+          "marker_residue_after_restore": 0,
+          "tree_identical_to_exact_sha": true
+        },
+        "rows": {
+          "baseline": 1,
+          "mutated": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "row_column_reading": "行数出自 commander 自己那把尺 gate_streak.row_counts（blob ac5377f207f18334…）；Y3 那一臂的行数恒为 1 是真读数不是坏表：红的形状是败者抛 HYDRATION_STORE_BUSY，库里没多出第二行开放作业，所以**这一臂的判据是节点红、行数是见证**。",
+        "emitter_blob": "ed5b7f81ef7da15d4d0967fe9f4d4a55be201d53"
+      },
+      {
+        "file": "evidence/ord0224_a2/v1_gate_receipt_Y3_a_2ab69f2.json",
+        "bytes": 36588,
+        "git_blob_sha1": "e7ca04725e7b7ce657ac77c4fdeaae1ac210c707",
+        "scope_key": {
+          "repo": "Canshu-King/CityNexus",
+          "exact_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+          "target_nodeids": [
+            "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+          ],
+          "run_shape": "single-node",
+          "tree_kind": "clean_sha"
+        },
+        "command_argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "mutation_id": "C-ORD0224A2-Y3-loser-readback-only",
+        "mutation_plain": "Y3 = 只坏败者回读（C 一格，索引与两次 reuse 读都留活）",
+        "carriers_removed": [
+          "C loser read-back"
+        ],
+        "carriers_left_live": [
+          "A1 pre-resolution read",
+          "A2 post-resolution read",
+          "B partial unique index"
+        ],
+        "carriers_unparsed_from_receipt": [],
+        "changed_files": [
+          {
+            "path": "backend/app/catalog_hydration_operations.py",
+            "before_blob": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+            "anchor_hits": 1,
+            "bytes_changed": true
+          }
+        ],
+        "collected": [
+          1
+        ],
+        "baseline_outcome": [
+          "GREEN"
+        ],
+        "rounds": 10,
+        "primary_red_rounds": [
+          2,
+          4,
+          6,
+          7,
+          8
+        ],
+        "observed_red_reasons": [
+          "E           AssertionError: 期望：同键并发一律被受理（[200, 202]，**没有 409**——撞指纹要复用而不是把人推开）；实际状态码 [200, 200, 200, 202, 503]",
+          "E           AssertionError: 期望：同键并发一律被受理（[200, 202]，**没有 409**——撞指纹要复用而不是把人推开）；实际状态码 [202, 503, 503, 503, 503]"
+        ],
+        "kill_rate": "5/10",
+        "claimed_result": "STREAK_BROKEN",
+        "derived_result": null,
+        "hygiene": {
+          "every_round_named_a_fresh_db": true,
+          "every_round_restored_byte_exact": true,
+          "marker_residue_after_restore": 0,
+          "tree_identical_to_exact_sha": true
+        },
+        "rows": {
+          "baseline": 1,
+          "mutated": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "row_column_reading": "行数出自 commander 自己那把尺 gate_streak.row_counts（blob ac5377f207f18334…）；Y3 那一臂的行数恒为 1 是真读数不是坏表：红的形状是败者抛 HYDRATION_STORE_BUSY，库里没多出第二行开放作业，所以**这一臂的判据是节点红、行数是见证**。",
+        "emitter_blob": null
+      },
+      {
+        "file": "evidence/ord0224_a2/v1_gate_receipt_Y3_b_2ab69f2.json",
+        "bytes": 36906,
+        "git_blob_sha1": "a2fb514fefa9a985ad1dc46573cb77ebc37bc8b9",
+        "scope_key": {
+          "repo": "Canshu-King/CityNexus",
+          "exact_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+          "target_nodeids": [
+            "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+          ],
+          "run_shape": "single-node",
+          "tree_kind": "clean_sha"
+        },
+        "command_argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "mutation_id": "C-ORD0224A2-Y3-loser-readback-only",
+        "mutation_plain": "Y3 = 只坏败者回读（C 一格，索引与两次 reuse 读都留活）",
+        "carriers_removed": [
+          "C loser read-back"
+        ],
+        "carriers_left_live": [
+          "A1 pre-resolution read",
+          "A2 post-resolution read",
+          "B partial unique index"
+        ],
+        "carriers_unparsed_from_receipt": [],
+        "changed_files": [
+          {
+            "path": "backend/app/catalog_hydration_operations.py",
+            "before_blob": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+            "anchor_hits": 1,
+            "bytes_changed": true
+          }
+        ],
+        "collected": [
+          1
+        ],
+        "baseline_outcome": [
+          "GREEN"
+        ],
+        "rounds": 10,
+        "primary_red_rounds": [
+          1,
+          3,
+          4,
+          6,
+          7,
+          8
+        ],
+        "observed_red_reasons": [
+          "E           AssertionError: 期望：同键并发一律被受理（[200, 202]，**没有 409**——撞指纹要复用而不是把人推开）；实际状态码 [200, 200, 200, 202, 503]",
+          "E           AssertionError: 期望：同键并发一律被受理（[200, 202]，**没有 409**——撞指纹要复用而不是把人推开）；实际状态码 [202, 503, 503, 503, 503]"
+        ],
+        "kill_rate": "6/10",
+        "claimed_result": "STREAK_BROKEN",
+        "derived_result": null,
+        "hygiene": {
+          "every_round_named_a_fresh_db": true,
+          "every_round_restored_byte_exact": true,
+          "marker_residue_after_restore": 0,
+          "tree_identical_to_exact_sha": true
+        },
+        "rows": {
+          "baseline": 1,
+          "mutated": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "row_column_reading": "行数出自 commander 自己那把尺 gate_streak.row_counts（blob ac5377f207f18334…）；Y3 那一臂的行数恒为 1 是真读数不是坏表：红的形状是败者抛 HYDRATION_STORE_BUSY，库里没多出第二行开放作业，所以**这一臂的判据是节点红、行数是见证**。",
+        "emitter_blob": null
+      },
+      {
+        "file": "evidence/ord0224_a2/v1_gate_receipt_Y3_c_2ab69f2.json",
+        "bytes": 37521,
+        "git_blob_sha1": "65ac846ef2aeff692aa4c5086235f68a7afc4fc1",
+        "scope_key": {
+          "repo": "Canshu-King/CityNexus",
+          "exact_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+          "target_nodeids": [
+            "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+          ],
+          "run_shape": "single-node",
+          "tree_kind": "clean_sha"
+        },
+        "command_argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "mutation_id": "C-ORD0224A2-Y3-loser-readback-only",
+        "mutation_plain": "Y3 = 只坏败者回读（C 一格，索引与两次 reuse 读都留活）",
+        "carriers_removed": [
+          "C loser read-back"
+        ],
+        "carriers_left_live": [
+          "A1 pre-resolution read",
+          "A2 post-resolution read",
+          "B partial unique index"
+        ],
+        "carriers_unparsed_from_receipt": [],
+        "changed_files": [
+          {
+            "path": "backend/app/catalog_hydration_operations.py",
+            "before_blob": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+            "anchor_hits": 1,
+            "bytes_changed": true
+          }
+        ],
+        "collected": [
+          1
+        ],
+        "baseline_outcome": [
+          "GREEN"
+        ],
+        "rounds": 10,
+        "primary_red_rounds": [
+          3,
+          8,
+          9
+        ],
+        "observed_red_reasons": [
+          "E           AssertionError: 期望：同键并发一律被受理（[200, 202]，**没有 409**——撞指纹要复用而不是把人推开）；实际状态码 [200, 200, 200, 202, 503]"
+        ],
+        "kill_rate": "3/10",
+        "claimed_result": "STREAK_BROKEN",
+        "derived_result": null,
+        "hygiene": {
+          "every_round_named_a_fresh_db": true,
+          "every_round_restored_byte_exact": true,
+          "marker_residue_after_restore": 0,
+          "tree_identical_to_exact_sha": true
+        },
+        "rows": {
+          "baseline": 1,
+          "mutated": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "row_column_reading": "行数出自 commander 自己那把尺 gate_streak.row_counts（blob ac5377f207f18334…）；Y3 那一臂的行数恒为 1 是真读数不是坏表：红的形状是败者抛 HYDRATION_STORE_BUSY，库里没多出第二行开放作业，所以**这一臂的判据是节点红、行数是见证**。",
+        "emitter_blob": "ed5b7f81ef7da15d4d0967fe9f4d4a55be201d53"
+      },
+      {
+        "file": "evidence/ord0224_a2/v1_gate_receipt_Y3_d_2ab69f2.json",
+        "bytes": 37839,
+        "git_blob_sha1": "a2de20a3bbe9ad358c78bc532181f13e5f5bf953",
+        "scope_key": {
+          "repo": "Canshu-King/CityNexus",
+          "exact_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+          "target_nodeids": [
+            "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation"
+          ],
+          "run_shape": "single-node",
+          "tree_kind": "clean_sha"
+        },
+        "command_argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "mutation_id": "C-ORD0224A2-Y3-loser-readback-only",
+        "mutation_plain": "Y3 = 只坏败者回读（C 一格，索引与两次 reuse 读都留活）",
+        "carriers_removed": [
+          "C loser read-back"
+        ],
+        "carriers_left_live": [
+          "A1 pre-resolution read",
+          "A2 post-resolution read",
+          "B partial unique index"
+        ],
+        "carriers_unparsed_from_receipt": [],
+        "changed_files": [
+          {
+            "path": "backend/app/catalog_hydration_operations.py",
+            "before_blob": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+            "anchor_hits": 1,
+            "bytes_changed": true
+          }
+        ],
+        "collected": [
+          1
+        ],
+        "baseline_outcome": [
+          "GREEN"
+        ],
+        "rounds": 10,
+        "primary_red_rounds": [
+          1,
+          2,
+          5,
+          7
+        ],
+        "observed_red_reasons": [
+          "E           AssertionError: 期望：同键并发一律被受理（[200, 202]，**没有 409**——撞指纹要复用而不是把人推开）；实际状态码 [200, 200, 200, 202, 503]"
+        ],
+        "kill_rate": "4/10",
+        "claimed_result": "STREAK_BROKEN",
+        "derived_result": null,
+        "hygiene": {
+          "every_round_named_a_fresh_db": true,
+          "every_round_restored_byte_exact": true,
+          "marker_residue_after_restore": 0,
+          "tree_identical_to_exact_sha": true
+        },
+        "rows": {
+          "baseline": 1,
+          "mutated": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        },
+        "row_column_reading": "行数出自 commander 自己那把尺 gate_streak.row_counts（blob ac5377f207f18334…）；Y3 那一臂的行数恒为 1 是真读数不是坏表：红的形状是败者抛 HYDRATION_STORE_BUSY，库里没多出第二行开放作业，所以**这一臂的判据是节点红、行数是见证**。",
+        "emitter_blob": "ed5b7f81ef7da15d4d0967fe9f4d4a55be201d53"
+      }
+    ],
+    "batches_per_scope_key": [
+      {
+        "scope_key": {
+          "exact_sha": "0fd3cc70d788f1e062669b528714d946e044ccd2",
+          "run_shape": "single-node",
+          "nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "mutation_id": "C-ORD0224A2-Y3-loser-readback-only"
+        },
+        "batches": [
+          {
+            "file": "v1_gate_receipt_Y3_a_0fd3cc7.json",
+            "kill_rate": "4/10",
+            "git_blob_sha1": "0312db377d1faa4f"
+          }
+        ],
+        "kills": [
+          4
+        ],
+        "min": 4,
+        "max": 4,
+        "all_rounds_red_in_every_batch": false,
+        "deterministic_in_any_batch": false,
+        "note": "同一 scope 键的批次差就是结论本身：恒不满轮 ⇒ 该突变体在这道门上不是确定性杀手；挑一批好看的等于说谎，所以全部批次都发。"
+      },
+      {
+        "scope_key": {
+          "exact_sha": "0fd3cc70d788f1e062669b528714d946e044ccd2",
+          "run_shape": "single-node",
+          "nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "mutation_id": "C-ORD0225-Y23-index-and-loser-readback"
+        },
+        "batches": [
+          {
+            "file": "v1_gate_receipt_Y23_a_0fd3cc7.json",
+            "kill_rate": "5/10",
+            "git_blob_sha1": "0d70d9e69e6d12b0"
+          },
+          {
+            "file": "v1_gate_receipt_Y23_b_0fd3cc7.json",
+            "kill_rate": "3/10",
+            "git_blob_sha1": "2e6abed756b13511"
+          }
+        ],
+        "kills": [
+          5,
+          3
+        ],
+        "min": 3,
+        "max": 5,
+        "all_rounds_red_in_every_batch": false,
+        "deterministic_in_any_batch": false,
+        "note": "同一 scope 键的批次差就是结论本身：恒不满轮 ⇒ 该突变体在这道门上不是确定性杀手；挑一批好看的等于说谎，所以全部批次都发。"
+      },
+      {
+        "scope_key": {
+          "exact_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+          "run_shape": "single-node",
+          "nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+          "mutation_id": "C-ORD0224A2-Y3-loser-readback-only"
+        },
+        "batches": [
+          {
+            "file": "v1_gate_receipt_Y3_a_2ab69f2.json",
+            "kill_rate": "5/10",
+            "git_blob_sha1": "e7ca04725e7b7ce6"
+          },
+          {
+            "file": "v1_gate_receipt_Y3_b_2ab69f2.json",
+            "kill_rate": "6/10",
+            "git_blob_sha1": "a2fb514fefa9a985"
+          },
+          {
+            "file": "v1_gate_receipt_Y3_c_2ab69f2.json",
+            "kill_rate": "3/10",
+            "git_blob_sha1": "65ac846ef2aeff69"
+          },
+          {
+            "file": "v1_gate_receipt_Y3_d_2ab69f2.json",
+            "kill_rate": "4/10",
+            "git_blob_sha1": "a2de20a3bbe9ad35"
+          }
+        ],
+        "kills": [
+          5,
+          6,
+          3,
+          4
+        ],
+        "min": 3,
+        "max": 6,
+        "all_rounds_red_in_every_batch": false,
+        "deterministic_in_any_batch": false,
+        "note": "同一 scope 键的批次差就是结论本身：恒不满轮 ⇒ 该突变体在这道门上不是确定性杀手；挑一批好看的等于说谎，所以全部批次都发。"
+      }
+    ]
+  },
+  "mainline_facts_measured_in_this_run": {
+    "tip_now": {
+      "sha": "dea8410be809ebf6c5046581873584e9dbf32b64",
+      "short": "dea8410",
+      "as_announced_to_me": "f24628f",
+      "tip_moved_again": true,
+      "log": "dea8410 2026-09-23 15:11:46 +0800 chore(review): ORD-0250/0251/0247w ledger block, the receipt-rendered arm table, and the base-change notice"
+    },
+    "tip_under_the_newest_batches": {
+      "measurement_tip": "0fd3cc7",
+      "index_build_tip": "dea8410",
+      "moved_underneath": true,
+      "files_between": [
+        "frontend/e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "frontend/e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "review/build-evidence-payload.py",
+        "review/ledger-block-notice-0fd3cc7.md",
+        "review/ledger-block-ord0250-0251-0247w.md",
+        "review/ord0250_0251_0247w_kill_arms.py",
+        "review/render_arms_section.py"
+      ],
+      "backend_app_between": [],
+      "0fd3cc7_is_ancestor_of_now": {
+        "a": "0fd3cc70d788f1e062669b528714d946e044ccd2",
+        "b": "dea8410be809ebf6c5046581873584e9dbf32b64",
+        "exit_code": 0,
+        "stdout": "",
+        "is_ancestor": true,
+        "method": "git merge-base --is-ancestor <a> <b>; 判 exit code，不判输出（它两种答案都不说话）"
+      },
+      "plain": "0fd3cc7 之后主线又动了：动的文件全在 frontend/e2e/review，backend/app 0 个。本件不把两件事混着说：那三枚 0fd3cc7 收据的坐标就是 0fd3cc7，不改成今天这个尖。"
+    },
+    "ancestry": {
+      "21f1e8d_is_ancestor_of_tip": {
+        "a": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+        "b": "dea8410be809ebf6c5046581873584e9dbf32b64",
+        "exit_code": 0,
+        "stdout": "",
+        "is_ancestor": true,
+        "method": "git merge-base --is-ancestor <a> <b>; 判 exit code，不判输出（它两种答案都不说话）"
+      },
+      "2ab69f2_is_ancestor_of_tip": {
+        "a": "2ab69f20adf783a6f29133f577877a88580129e3",
+        "b": "dea8410be809ebf6c5046581873584e9dbf32b64",
+        "exit_code": 0,
+        "stdout": "",
+        "is_ancestor": true,
+        "method": "git merge-base --is-ancestor <a> <b>; 判 exit code，不判输出（它两种答案都不说话）"
+      },
+      "reverse_self_test_tip_is_ancestor_of_21f1e8d": {
+        "a": "dea8410be809ebf6c5046581873584e9dbf32b64",
+        "b": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+        "exit_code": 1,
+        "stdout": "",
+        "is_ancestor": false,
+        "method": "git merge-base --is-ancestor <a> <b>; 判 exit code，不判输出（它两种答案都不说话）"
+      },
+      "self_test_meaning": "反向那一格必须 is_ancestor=false 且 exit_code!=0。若它也报 true，那就是这台仪器读不出差别（例如 git 直接失败），上面两条一起作废。"
+    },
+    "files_changed_21f1e8d_to_tip_dea8410": {
+      "measured_against_tip": "dea8410be809ebf6c5046581873584e9dbf32b64",
+      "count": 12,
+      "paths": [
+        "frontend/e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "frontend/e2e/qoder-every-summary-is-tappable.spec.ts",
+        "frontend/e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "frontend/src/features/notifications/PushCapabilityCard.tsx",
+        "frontend/src/features/planning/PlanWithAiSheet.tsx",
+        "frontend/src/i18n/LocaleContext.tsx",
+        "frontend/src/styles.css",
+        "review/build-evidence-payload.py",
+        "review/ledger-block-notice-0fd3cc7.md",
+        "review/ledger-block-ord0250-0251-0247w.md",
+        "review/ord0250_0251_0247w_kill_arms.py",
+        "review/render_arms_section.py"
+      ],
+      "any_in_backend_app": []
+    },
+    "blob_identity_of_the_three_files_under_mutation": {
+      "backend/app/catalog_hydration_operations.py": {
+        "2ab69f2": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+        "21f1e8d": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+        "0fd3cc7": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+        "live_tip_at_build": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3"
+      },
+      "backend/db/schema.sql": {
+        "2ab69f2": "6e536c7b1090f6a46e115ee9788bed5b052bf35f",
+        "21f1e8d": "6e536c7b1090f6a46e115ee9788bed5b052bf35f",
+        "0fd3cc7": "6e536c7b1090f6a46e115ee9788bed5b052bf35f",
+        "live_tip_at_build": "6e536c7b1090f6a46e115ee9788bed5b052bf35f"
+      },
+      "backend/tests/test_qoder_anywhere_gates.py": {
+        "2ab69f2": "5b69a2c11779ce791574f811704fce82f977befa",
+        "21f1e8d": "5b69a2c11779ce791574f811704fce82f977befa",
+        "0fd3cc7": "5b69a2c11779ce791574f811704fce82f977befa",
+        "live_tip_at_build": "5b69a2c11779ce791574f811704fce82f977befa"
+      }
+    },
+    "consequence": "三把被测文件（被突变的产品文件、schema、那道门）在 2ab69f2 / 21f1e8d / 0fd3cc7 与本次建索引时读到的主线尖上 blob 摘要逐一相同 ⇒ 在 21f1e8d 上量的 Y23/Y123 读数描述的字节与今天主线一致；但这只是**字节**同一，不是结果互换的许可证：每枚读数的坐标仍是它自己那棵树，要主线尖上的数就看本件里 0fd3cc7 那三枚。跨 shape / 跨键的互换一律按仲裁 A-5 拒绝，本件不做任何跨键推断。"
+  },
+  "not_signed": "derived_result 全部留 null：交付方不得给自己派生 verdict（B-1）。ORD-0224 / ORD-0225 两边都不写 CLOSED；PROVIDER_WORK_COALESCING(ORD-0244) 未开工，composite DoD 在此之前不得写 FINAL CLOSED；强修 claim-before-work 一行未动。"
+}
