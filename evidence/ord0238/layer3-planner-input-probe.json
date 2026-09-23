@@ -1,0 +1,22 @@
+{
+  "generatedBy": "e345b9d6",
+  "node": "ord0238-3-the-plan-headline-claims-only-inputs-the-planner-takes",
+  "head": "c40097c2fe2b40979e3b1289d234b14ff4b59ada",
+  "headline": "我们按这座城可核验的地点和你的预算，生成了 2 个可选方案。",
+  "measured_inputs": "generate_plans(session, journey, planning_mode, candidate_count, place_ids)",
+  "probe": {
+    "verdict": "INCONCLUSIVE(refused=VALIDATION_ERROR/VALIDATION_ERROR)",
+    "with_interest_row": {
+      "status": 422,
+      "code": "VALIDATION_ERROR",
+      "plans": ""
+    },
+    "without_any_preference_row": {
+      "status": 422,
+      "code": "VALIDATION_ERROR",
+      "plans": ""
+    }
+  },
+  "rule": "第三层读规划器的输入与产出；只有两边都 201 且方案不同才说\"被用了\"，两边同错只记 INCONCLUSIVE",
+  "publishedBy": "e345b9d6 for ORD-0238 + ORD-0240"
+}
