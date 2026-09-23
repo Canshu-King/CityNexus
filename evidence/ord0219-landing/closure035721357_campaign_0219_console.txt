@@ -1,0 +1,108 @@
+AS-IS baseline: exit=0 | ======================= 14 passed, 2 warnings in 5.07s ========================
+  nodes: 14 | non-green: []
+
+M1 fixture 翻转：tech-art stroller false->true
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: =================== 6 failed, 8 passed, 2 warnings in 2.57s =================== | killed=True
+     RED -> test_a_dropped_candidate_leaves_a_named_fact_on_a_route_the_frontend_already_calls
+     RED -> test_a_refusal_with_no_surviving_candidate_names_which_rules_broke_them
+     RED -> test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability
+     RED -> test_hard_stroller_names_the_blocker_and_does_not_misfire
+     RED -> test_the_named_reason_points_at_the_stop_whose_demo_evidence_conflicted
+     RED -> test_two_hard_constraints_each_name_their_own_blocker
+
+M2 fixture 删除：tech-art 不再声明任何无障碍事实
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: =================== 6 failed, 8 passed, 2 warnings in 2.83s =================== | killed=True
+     RED -> test_a_dropped_candidate_leaves_a_named_fact_on_a_route_the_frontend_already_calls
+     RED -> test_a_refusal_with_no_surviving_candidate_names_which_rules_broke_them
+     RED -> test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability
+     RED -> test_hard_stroller_names_the_blocker_and_does_not_misfire
+     RED -> test_the_named_reason_points_at_the_stop_whose_demo_evidence_conflicted
+     RED -> test_two_hard_constraints_each_name_their_own_blocker
+
+M3 出处被改写成 provider 事实
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 2 failed, 12 passed, 2 warnings in 2.83s =================== | killed=True
+     RED -> test_demo_producer_lands_every_claimed_fact_with_demo_provenance
+     RED -> test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture
+
+M4 生产者漏到全部地点（含非封存城市）
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 3 failed, 11 passed, 2 warnings in 2.63s =================== | killed=True
+     RED -> test_demo_evidence_stays_out_of_non_sealed_cities
+     RED -> test_demo_producer_reaches_exactly_the_places_the_fixture_claims
+     RED -> test_missing_demo_evidence_is_unknown_and_never_implicit_access
+
+M5 白名单失效：fixture 里有什么就搬什么
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 2 failed, 12 passed, 2 warnings in 4.65s =================== | killed=True
+     RED -> test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified
+     RED -> test_demo_producer_refuses_non_boolean_and_provenance_keys_from_the_fixture
+
+M6 fixture 翻转：design-library luggage false->true
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 3 failed, 11 passed, 2 warnings in 3.16s =================== | killed=True
+     RED -> test_a_refusal_with_no_surviving_candidate_names_which_rules_broke_them
+     RED -> test_hard_luggage_names_the_blocker_and_does_not_misfire
+     RED -> test_two_hard_constraints_each_name_their_own_blocker
+
+M8 白名单放宽到整条记录裁决（step_free/evidence_status 也能穿过）
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 1 failed, 13 passed, 2 warnings in 3.00s =================== | killed=True
+     RED -> test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified
+
+M9 具名事实丢掉可寻址的 action 名
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 2 failed, 12 passed, 2 warnings in 3.55s =================== | killed=True
+     RED -> test_a_dropped_candidate_leaves_a_named_fact_on_a_route_the_frontend_already_calls
+     RED -> test_the_named_reason_points_at_the_stop_whose_demo_evidence_conflicted
+
+M10 具名事实不再区分是否真被拒（无条件写）
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: =================== 6 failed, 8 passed, 2 warnings in 2.60s =================== | killed=True
+     RED -> test_a_dropped_candidate_leaves_a_named_fact_on_a_route_the_frontend_already_calls
+     RED -> test_generation_never_persists_a_candidate_that_conflicts_with_a_hard_capability
+     RED -> test_hard_luggage_names_the_blocker_and_does_not_misfire
+     RED -> test_hard_stroller_names_the_blocker_and_does_not_misfire
+     RED -> test_the_named_reason_points_at_the_stop_whose_demo_evidence_conflicted
+     RED -> test_two_hard_constraints_each_name_their_own_blocker
+
+M11 阻塞名串台（婴儿车冲突也把行李名字报出来）
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 1 failed, 13 passed, 2 warnings in 2.85s =================== | killed=True
+     RED -> test_two_hard_constraints_each_name_their_own_blocker
+
+M12 反方向串台（行李冲突也把婴儿车名字报出来）
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 1 failed, 13 passed, 2 warnings in 2.21s =================== | killed=True
+     RED -> test_two_hard_constraints_each_name_their_own_blocker
+
+M13 同地点两把冲突时漏报行李（只报一把）
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 1 failed, 13 passed, 2 warnings in 2.06s =================== | killed=True
+     RED -> test_two_hard_constraints_each_name_their_own_blocker
+
+M14 同地点两把冲突时漏报婴儿车（只报一把）
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 1 failed, 13 passed, 2 warnings in 1.97s =================== | killed=True
+     RED -> test_two_hard_constraints_each_name_their_own_blocker
+
+M15 拒答的 details 不再带具名逐候选事实
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 1 failed, 13 passed, 2 warnings in 2.23s =================== | killed=True
+     RED -> test_a_refusal_with_no_surviving_candidate_names_which_rules_broke_them
+
+M16 拒答带了这个键但永远是空表
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 1 failed, 13 passed, 2 warnings in 2.00s =================== | killed=True
+     RED -> test_a_refusal_with_no_surviving_candidate_names_which_rules_broke_them
+
+M17 静态独占被破：非 services 的产品模块 import 了 DEMO producer（仲裁 5788528772 要的那一臂；只应让静态门红）
+   anchor_hits=1 bytes_changed=True restored_sha256=True
+   suite: ================== 1 failed, 13 passed, 2 warnings in 2.54s =================== | killed=True
+     RED -> test_the_demo_producer_stays_reachable_only_from_the_demo_seed
+
+覆盖：每条节点至少一臂杀死它？ True
+  无归属断言的节点： []
+  receipt: D:\moodle\_qoder_spike_20260921\q219b_mutation_receipt.json
