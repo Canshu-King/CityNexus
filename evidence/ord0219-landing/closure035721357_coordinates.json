@@ -1,0 +1,137 @@
+{
+ "at": "2026-09-23T20:05:02+08:00",
+ "order": "ORD-0219 landed-tip closure",
+ "lane": "B c01d72a3",
+ "landed_sha": "035721357da99a43c276f5803df83c3b08c1361c",
+ "tree_clean_after_campaigns": true,
+ "prefix": "evidence/ord0219-landing/closure035721357_",
+ "files": 8,
+ "proven_by_40char_readback": 8,
+ "not_proven": [],
+ "b1_posture": {
+  "claimed_result": "mine, from the campaign's own anchor/restore measurement",
+  "derived_result": "WRITTEN_BY_VERIFIER -- I do not sign my own KILLED"
+ },
+ "frozen_paths_re_read_untouched": [
+  {
+   "path": "landing_0357213_selfproof.json",
+   "blob40": "dbac468fafa51ea5196aeb959c9ffb5b036a48bd",
+   "bytes": 5114
+  },
+  {
+   "path": "landing_0357213_selfproof_on_landed_tip.json",
+   "blob40": "2cb8df535b579927da856d458df8cff5f2f558de",
+   "bytes": 18812
+  },
+  {
+   "path": "landing_22dfef2_closure_receipt.json",
+   "blob40": "866fa080d4254e01e373e104e1ecfc2a08c90cf4",
+   "bytes": 5999
+  },
+  {
+   "path": "landing_a34f67c_closure_receipt.json",
+   "blob40": "334ee81e028453d68449ae2963be83637ba129e9",
+   "bytes": 4304
+  },
+  {
+   "path": "landing_0357213_commits.txt",
+   "blob40": "f4ad43646919ce3026e7256217b2e6b217b6214a",
+   "bytes": 6347
+  },
+  {
+   "path": "reverse_mutation_V1_index_0219_22dfef2.json",
+   "blob40": "e175834cf6446c1bb1a3e6cd05cf417c92c9f832",
+   "bytes": 1016
+  }
+ ],
+ "rows": [
+  {
+   "local": "land_16arms.log",
+   "repo_path": "evidence/ord0219-landing/closure035721357_campaign_0219_console.txt",
+   "local_blob40": "26fd5dfae09b19a10c8b5b6e046b679ecaaec604",
+   "bytes": 7007,
+   "readback_blob40": "26fd5dfae09b19a10c8b5b6e046b679ecaaec604",
+   "verdict": "PROVEN",
+   "publisher_tail": [
+    "already identical - nothing to push"
+   ]
+  },
+  {
+   "local": "land_3arms.log",
+   "repo_path": "evidence/ord0219-landing/closure035721357_campaign_0236_console.txt",
+   "local_blob40": "46f8e6e6cdc3df37d479d91072fac344d1a2e384",
+   "bytes": 1614,
+   "readback_blob40": "46f8e6e6cdc3df37d479d91072fac344d1a2e384",
+   "verdict": "PROVEN",
+   "publisher_tail": [
+    "already identical - nothing to push"
+   ]
+  },
+  {
+   "local": "land_readings.log",
+   "repo_path": "evidence/ord0219-landing/closure035721357_fresh_db_readings_console.txt",
+   "local_blob40": "de5f0e30e43c0db3b95b710f8f2b6d4d935618c9",
+   "bytes": 1723,
+   "readback_blob40": "de5f0e30e43c0db3b95b710f8f2b6d4d935618c9",
+   "verdict": "PROVEN",
+   "publisher_tail": [
+    "already identical - nothing to push"
+   ]
+  },
+  {
+   "local": "land_suite2.txt",
+   "repo_path": "evidence/ord0219-landing/closure035721357_full_suite_landed_tip.txt",
+   "local_blob40": "de207ff666d00d97a9f4741787b83c80a1bac3b7",
+   "bytes": 20478,
+   "readback_blob40": "de207ff666d00d97a9f4741787b83c80a1bac3b7",
+   "verdict": "PROVEN",
+   "publisher_tail": [
+    "local bytes 20478 | remote size 20478 | sha1 de207ff666d00d97"
+   ]
+  },
+  {
+   "local": "landing_0357213_closure_receipt.json",
+   "repo_path": "evidence/ord0219-landing/closure035721357_six_cell_receipt.json",
+   "local_blob40": "213889965994d0d14708c570c305c0b5af8c7dad",
+   "bytes": 7988,
+   "readback_blob40": "213889965994d0d14708c570c305c0b5af8c7dad",
+   "verdict": "PROVEN",
+   "publisher_tail": [
+    "local bytes 7988 | remote size 7988 | sha1 213889965994d0d1"
+   ]
+  },
+  {
+   "local": "q219_landing_readings__qoder_b_landing_20260923.json",
+   "repo_path": "evidence/ord0219-landing/closure035721357_fresh_db_readings.json",
+   "local_blob40": "bae71dd8624e66469f090be74cb65d612aeea973",
+   "bytes": 2068,
+   "readback_blob40": "bae71dd8624e66469f090be74cb65d612aeea973",
+   "verdict": "PROVEN",
+   "publisher_tail": [
+    "local bytes 2068 | remote size 2068 | sha1 bae71dd8624e6646"
+   ]
+  },
+  {
+   "local": "q219b_mutation_receipt__qoder_b_landing_20260923.json",
+   "repo_path": "evidence/ord0219-landing/closure035721357_campaign_0219_16arms.json",
+   "local_blob40": "dbcd806b9507d89cb013399854daadb366df5f23",
+   "bytes": 14917,
+   "readback_blob40": "dbcd806b9507d89cb013399854daadb366df5f23",
+   "verdict": "PROVEN",
+   "publisher_tail": [
+    "local bytes 14917 | remote size 14917 | sha1 dbcd806b9507d89c"
+   ]
+  },
+  {
+   "local": "q236_mutation_receipt__qoder_b_landing_20260923.json",
+   "repo_path": "evidence/ord0219-landing/closure035721357_campaign_0236_3arms.json",
+   "local_blob40": "ef7a263064a8bc77bec51281ac12fe8314f8e4c5",
+   "bytes": 3607,
+   "readback_blob40": "ef7a263064a8bc77bec51281ac12fe8314f8e4c5",
+   "verdict": "PROVEN",
+   "publisher_tail": [
+    "local bytes 3607 | remote size 3607 | sha1 ef7a263064a8bc77"
+   ]
+  }
+ ]
+}
