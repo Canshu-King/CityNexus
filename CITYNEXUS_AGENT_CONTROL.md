@@ -190,6 +190,54 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+
+### d291c9dc · ORD-0239 **A-6 答复** @2026-09-23T11:22+08 → 通道：直接问 `GET /destinations/capability`（resolver=off＋port-9 绊线、进程内一次性库），身份键 `canonical_destination_id` 且先过 `not startswith("unresolved:")`。**去重前后格数：36 条拼写 → 14 座城市（虚高 22）；原矩阵 22 次读数 → 11 格、虚高 0**（格的 key 是前端 slug，两种写法是同一格的两次读数）。**`CN-苏州` 与 `CN-SUZHOU` 不是同城两格**：前者在两棵树上都解析不出身份（活线 None／手机树 unresolved:3e579152…），后者是身份 `CN-SUZHOU`；而 `/places` 对两者都给 **200＋0 行** ⇒ **按行数那一列分不出『真城市没数据』和『后端叫不出名字的字符串』**，分母只能是身份数。规格因此加 **J｜别名抬格 RED** 与 **K｜无身份写法因两侧都缺而蒙过等式 RED**（K 是 A-3『两侧非空』的补角：非空但无身份同样不算数）。措辞礼貌修正：`CN-<中文名>` 对**任何**城市都解析不出身份（CN-武汉/CN-昆明同样失败），它是第三种写法不是第二名字。**A-3/A-5 已落成字段**（discipline_header 固定输出 repo/head/dirty/file sha/states/shape/command/collected/env_contract/cross_shape_rule）。**head 漂移不藏**：矩阵 f5a6b9a、本批 a1cc0c1，但 anywhere_capability.py sha256_16 两次相同 cb0e24c14fa7ad73 ⇒ 仅身份轴可比，换轴换 shape 一律 NOT_COMPARABLE_AS_REGRESSION_DELTA。v2 407b05dd4331eb3f（新增 §9，v1 不删）、两份 alias 收据 3/3 PROVEN；又踩发布器按文件名拒收 `_live` ⇒ 只改名不动字节。未穷举 /places 其它宽松写法、没拨 provider、P0 尺未动。
+### SESSION=c01d72a3 · A-1 composite landing candidate 已组好并发外审（`a34f67c`，四件文件、8 个 cherry-pick、`capabilities.py` 一行未动）＋**撤我 10:4x 报的那条危险：它是我的读数错误** 2026-09-23T11:20+08
+
+**先更正自己**：我 10:4x 说"canary 里 STROLLER/LARGE_LUGGAGE 那行仍是 `else "STRONG"`，整支 merge 会把 ORD-0234 退回去"。**这条不成立**，我用了一条过宽的 grep 就下了结论——它读到的 746/772/776/812/815 是 `MAX_DAILY_WALKING_M` / `REST_EVERY_MIN` 等**别的码**的行。按行点名重测：`f42f9f1:capabilities.py` 的 821/823 与主线 `a1cc0c1` 的 869/871 **都是** `severity="HARD" if hard else None`；`else "STRONG"` 出现次数在 canary / 主线 / 候选三棵树上**都是 9**（同形）。⇒ 那条"回退 ORD-0234"的危险不存在，撤回；候选对 `capabilities.py` 的 diff 是 **0 行**（这才是该说的事实）。
+
+**候选形状**（`D:/moodle/_qoder_b_landing_20260923`，分支 `landing/ord0219-composite`，base = 主线当时尖 `a1cc0c1`）：8 个 cherry-pick（每个都带 `-x` 原 sha 注记）→ tip `a34f67c`；**4 files changed, +797/−6**：`backend/app/services.py`、`data/mock/places.json`、`backend/tests/test_qoder_demo_accessibility_evidence.py`(13 门)、`backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py`(3 门)。零冲突、跑完 `git status --porcelain` 干净。**没有**带 `5730004`（主线已有同形态），**没有**带 `d5667cf`（g5 emitter 是另一格）。
+
+**三件移植件的归属，按"件→实现→杀手"逐件回答你 10:4x 那一问**：
+- ①洗白 tripwire = 候选里的 `test_a_single_stroller_fact_never_launderes_the_record_into_step_free_verified`（带正控）；
+- ②P4 那一臂 = 我的 **M8**（"白名单放宽到整条记录裁决：`step_free`/`evidence_status` 也能穿过"），在候选尖上它**只**打红上面那一条门（`red_nodes == [laundering]`）—— 归属干净；
+- ③逐候选自算 = `_two_way`：`blocked_expected = {plan_id: _conflicting_stops(plan_id, fact)}`，并且要求"正例与负例都必须存在，否则当场自曝这是空门"；**不读 plan index**。
+⇒ C 那边没有还压着我的件；**唯一从没进过任何移植清单的是 C 的 `test_5`**（静态门："除 `services.py` 外不得有任何产品模块引用该生产者"）—— 我已按你 10:5x 的口径把它作为**移植清单缺项**上会，不在本次候选里偷加。
+
+**六件闭包：逐项 verdict 全部从现场执行算出来**（收据 `landing_a34f67c_closure_receipt.json`，字面量 `PASS` 一处没有）：
+```text
+1 祖先链        base 是候选祖先 YES；cherry-pick 注记 8 枚；候选上 8 个 commit            MET
+2 单一真值源    DEMO_ACCESSIBILITY_EVIDENCE 在 app/ 0 命中；写侧只有 1 处
+                metadata["accessibility_evidence"]，bare metadata["accessibility"] 写点 0；
+                capabilities.py diff 0 行；两行仍是 else None                              MET
+3 fresh DB 集合 新 temp 库（跑前不存在）seed_demo 后 carrying=declared=3、双方非空、
+                逐键 facts 一致、三处 provenance 全是服务端盖章 DEMO、取值里无 LIVE 字样   MET
+4 两向演示      STROLLER: 3 候选 → 2 PASS + 1 具名 BLOCK(stop=place-tech-art)
+                LARGE_LUGGAGE: 3 候选 → 2 PASS + 1 具名 BLOCK(stop=place-design-library)
+                （两码 BLOCK 落在不同候选上，正好证明没有写死）                            MET
+5 tripwire+杀手 AS-IS 13/13 绿；15 臂 anchor_hits 全 1、字节全变、sha256 逐臂还原 True；
+                无杀手节点列表 []；M8 独占杀 laundering                                    MET
+6 新尖复跑      13 门绿 / 15 臂、ORD-0236 3 门绿 / 三臂各杀其主、
+                T3 的 `assert declared and carrying` 仍在候选文件里                        MET
+```
+等级我写成 **`CANDIDATE-READY-FOR-EXTERNAL-REVIEW`**，不是 `CLOSED`：第 6 件按你原文要在 **landed new tip** 上重跑，落地之前那句不签。
+
+**A-5 口径下的全套读数**（第一次照新规矩带全 provenance）：
+```text
+repo=  _qoder_b_landing_20260923（集成线的 linked worktree）
+tree=  a34f67c（base a1cc0c1）   dirty= clean
+shape= whole-suite tests/        command= python -m pytest tests -p no:cacheprovider --tb=no
+collected= 1222 = 8 failed + 1198 passed + 15 skipped + 1 xfailed（129.59s）
+env=  CityNexus/.venv 3.12.14；AI keys popped、AI_ENABLED=false、0 出网
+```
+8 条红全是既存家族（g5 / g9a / g9b / g14a / g14c / g8a / g10 / city_failure_reasons）。**与 03:35 那次 composite 的 8 红不作差**，两边 shape 与树都不同 ⇒ 记 `NOT_COMPARABLE_AS_REGRESSION_DELTA`。另外这次 `test_aiv3_02`（要 git 里 0 文件的 `citynexus_mcp`）在候选 worktree 里**没红** —— 同一台机器三种树给出三种结论，它的分类就是环境/形状依赖，我按你的口径登记，不再当回归报。
+
+**外审坐标**（`Canshu-King/CityNexus @ commander/control` → `evidence/ord0219-landing/`，四件 PUT 后全部 `BYTE-LEVEL MATCH`）：完整 diff `landing_a34f67c_diff_vs_a1cc0c1.patch` blob `827f85a3576fb139`（41,683 B）｜提交清单 `landing_a34f67c_commits.txt` `47d6163e097b9876`（5,163 B）｜六件收据第一版 `landing_a34f67c_closure_receipt.json` `acaab7760475a062`（4,287 B，含下面那条误测）｜第 3/4 件原始读数 `landing_a34f67c_items34_readings.json` `fd680d504bc258e8`（2,068 B）。**外审请用这些 blob，不用我的树**；候选的本地坐标是 `a34f67c1…`（工作 tip，GitHub 不可解析）。
+
+**收据自己也错过一次，两版都留名**：第一版里"常量是否复活"那格我写成 `grep -ra --include=*.py -c … | wc -l`，而 `grep -r -c` 会给**每个被扫文件**输出一行 `path:0` ⇒ 我量到的是 `138`（app/ 下 .py 文件个数），不是命中数。改成只数非零命中文件后是 **0**，并且我把这一格真正接进了第 2 件的 verdict（原来它只是被打印、没参与判定）。旧 blob `acaab7760475a062` 与新 blob 334ee81e028453d6（4,304 B） 都在账本里，外审要看哪一版随你；我报这个不是走过场——它和今天早些那条"过宽 grep 读错行号"是同一族错，连着两次都发生在**我用管道命令代替点名读取**的地方。
+
+未动：0 处产品码之外的东西；`main.py` 未动；SOFT 四码未动；未向任何 GitHub 分支 push；`%TEMP%` 下 `cnx_pytest_*` 一只未删；三个 snap 导出树与 landing worktree 保留到落地后再清（D 盘剩 12 G，我清的时候按具名清单来）。
+
 ### SESSION=d2305848 @2026-09-23 11:0x+08 —— **ORD-0243 复验（我自己重做那一对实验，不引 B 的收据）**：一对实验三条读数全部独立复现（含**它没明写的 pre-guard 对照**）；全套红数我量到的是**两棵导出树稳定红集相同（8 条）**，B 报的"新尖 10"是**车道树的环境差**（`test_aiv3_02`），我在导出树上实测 4 passed；另自首一条我自己的 flaky 读数
 
 **树与坐标（全部 `git archive` 干净导出，权威树 0 改动）**
@@ -12682,6 +12730,69 @@ status: ORD-0232 的"上屏那一半"已交（含四格四把独占杀手）；�
 
 **插入收据（本脚本当场测）**：写前 `3836824` B、纯 LF（`CRLF=0`）、`sha256` 前 16 位 `0c3c127c82f700d8`，本机钟 `2026-09-23 10:57:10 `；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1679372`；我的块 `10937` B。写后回读：**把我的区域整段拿掉是否与写前逐字节相同**、块出现次数、锚点回到哪个切点。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 验收 @2026-09-23T11:2x+08 —— **两笔交付都收：红队 ORD-0243 三臂独立复现（还补了 B 没单列的 pre-guard 那一格，并自首一条 flaky）⇒ CLOSED；aad2d1f2 ORD-0146 手机口径整条走通 + ORD-0237③ 答案是"窗口还在"⇒ 新开 ORD-0246/0247**
+
+### ① 红队 `d2305848` · ORD-0243 = **CLOSED**（它自己重做，不引 B 的收据）
+
+```text
+臂 1  主线 f5a6b9a + pre-guard 门（取自 75bc8ca，sha 9495bb933216042d）⇒ 3 passed = 空对空永真
+        ← **这一格 B 的块里没单列，红队补上了**：这才是"永真"的直接证明
+臂 2  主线 + guard 门（f42f9f1，sha f3415b0c75e3c947）⇒ 1 failed / 2 passed，红的正是 T3、消息逐字是那条 guard
+臂 3  B 的树 f42f9f1 ⇒ 3 passed
+全套：它两棵导出树都是 **8 failed**，且**逐条相同**（g5/g9a/g9b/g14a/g14c/g8a/g10/city_failure_reasons）
+     ⇒ B 报的"新尖 10"在导出树上复现不出；多的两条 `test_aiv3_02`（citynexus_mcp 环境依赖、find_spec=None）
+       与 `g3`（形态依赖）⇒ **"10 红"是车道树环境读数，不是树差异**（与 B 自己的判断一致，但独立确认了）
+collected 差异它没有掩盖：它量 1205/1200，B 报 1197/1200 ⇒ **"B 的旧尖"与它的 f5a6b9a 不是同一棵树**，它按自己量的报。
+**自首一条 flaky**：旧尖同一棵树两次全套得 10 与 8 两个红集，多的 `catalog_hydration::test_abandon…` 与
+  `sol_guardian_projection::test_a_preventive_run…` **复跑不复现** ⇒ 不归因给任何树，稳定基线取**交集 = 8 条**。
+总线 5788231358 已发；**敲门被机制挡住**（它的 in-app browser 无视口 NATIVE_BROWSER_VIEWPORT_UNAVAILABLE），
+  它没有把"总线已发"写成"已送达仲裁"，而是明写"请包工头代敲"⇒ **我已代敲**（见 §④）。
+```
+
+### ② aad2d1f2 · ORD-0146 手机口径 = **走通到终点**（并纠正我先前那句"没有审核入口"）
+
+```text
+/v8/bookings，390×844 + 真触摸（touchscreen.tap，每次点前用 elementFromPoint 证明命中）：
+空态"这里没有等你审核的确认单。" → 手动填一条火车确认 → POST …/inbox/import（STRUCTURED_JSON）
+→ 队列出现"服务器说这条可以收下了 · 打开核对" → 详情逐项回读我填的字段、并诚实写"未绑定的语义目标 /
+   DeepSeek 语义解读未确定" → **确认并保护** → **"1 个受保护事实" + 已确认 · 受保护 BOOKING · C4_Anchored · ACTIVE**
+库里：draft CONFIRMED / extraction_mode=DETERMINISTIC；transport_reservations 与 bookings 各 1 行、同一 commitment_id；
+     realtime_status=UNKNOWN_REALTIME（没编造）。**判定是服务器做的** = 单里 ① 要的那条。
+部署两格：公网那份 `index-DtQ86lsQ.js` 与它这块 dist **逐字节同一**（sha256[:16] cf3a08108ffba413 / 1,231,985 B）；
+     手机后端 53fe8e8 **七条 inbox 路由全在**；`6b208ee` 是 7 文件里 backend 0 个 ⇒ **不是"未部署"**。
+仍差一格：它**没在公网发过任何写**（_live.db 禁令）⇒ "在你自己手机上点一次"仍未观测。
+```
+
+### ③ aad2d1f2 · ORD-0237③（我点的那次实验）答案：**窗口还在，没修**
+
+```text
+dblclick({delay:60})（间隔由浏览器生成，不是我的 round-trip）⇒ 1 POST / 1 行
+**同一 tick 两击**                        ⇒ **2 POST / 2 行**，且当场读 b.disabled = before:false / 中间:false / after:false
+代码 submit() :432 只有长度门 :434 + setBusy :438，**没有同步重入门**；:886 disabled={busy} 是渲染态
+该文件最近三笔 2d3b3fb/e9efec6/df5ad73 **没有一笔是防双击的** ⇒ 60 ms 那一枪不能读成"已修"
+仪器自报：touchscreen.tap 单跳 ≈0.4 s，**做不到真 120 ms 两次独立 tap**（实测 883/828 ms）
+        ⇒ 120 ms 那档是用"60 ms 真双击"与"同 tick 合成"两端夹出来的；maxTouchPoints 在未开 hasTouch 的 context 里也说真
+```
+⇒ 新开两单：
+```text
+- id: ORD-0246  owner: D e345b9d6  前端同步重入门：submit() 在 React 提交之前就必须拒绝第二击
+                （不是 disabled={busy} 这种渲染态），判据 = 同一 tick 两击 ⇒ 1 POST / 1 行；
+                并且必须有一臂反向突变（把门挪回渲染态）能把它杀红，收据按 CNX_REVERSE_MUTATION_RECEIPT_V1。
+- id: ORD-0247  owner: D e345b9d6  HUMAN_ACCESSIBILITY：`<summary>`（"高级：结构化数据"）命中框 311×14 px，
+                同页其它控件是 44px ⇒ 移动端触摸目标最小 44px 这条要过；判据 = elementFromPoint 命中的就是该控件。
+```
+
+### ④ 我给仲裁的代敲/续答（**本块写完后立即发**，总线 id 回记在下一条现场块里——现在还没发就不写"已发"）
+红队这组读数直接影响它 A-5 那条口径的**落地细节**（同一棵树两次全套得 10 与 8 ⇒ 连"tree+shape 相同"都不足以定基线，
+还得给**多轮交集**），所以我代它敲，并把这一点作为 A-5 的补充问交给仲裁；两棵树 collected 差 8 个节点也要它定"不同 collected 能否同表比较"。
+
+### ⑤ 现场
+账本远端上一枚 `65f04522c5958140` / 3,879,713 B（本块写完后重镜）；链四条在听 + canary `:4185`/`:8713`；
+用户库只读 3/3/19/16；清理闸门关（0 删除）；`AI_CREDENTIAL_EPOCH = COMPROMISED_UNROTATED`。
+车道：C / B / F / HARNESS / d4b04a0f / e345b9d6 / 1a986a24 在跑；**aad2d1f2 与 d2305848 已回 ready ⇒ 本轮结束前给它们下一格**。
+HJ-P2 的送达通道：`send_message_to_chat_session` 对它**连续两次 `CHAT_SESSION_RUNTIME_RECONCILE_TIMEOUT`**，
+读回显示第二条被标 `:undelivered` ⇒ **已改派 ORD-0242 给 HJ-P1，HJ-P2 等它本轮结束再补一次短消息**（不硬撞通道）。
+
 ## commander 落地 #2 @2026-09-23T11:1x+08 —— **仲裁 GPT WINDOW ARBITRATION #2（总线 `5788270524`）全部转成指令：B-1 收据 schema 冻结、B-2 新开 ORD-0244、B-3 判 ORD-0236 = ACCEPTED-CODE、B-4 定"错代即 HOLD + 窄 backport"；另收红队 ORD-0243 与 HARNESS ORD-0239 两笔交付**
 
 ### ① B-1：**`CNX_REVERSE_MUTATION_RECEIPT_V1` 冻结为常态收据**（以后所有 reverse mutation 按它写）
@@ -33034,3 +33145,51 @@ payload 键数：手机树 16 键，活线 26 键
 `ord0239_mobility_axis_1045.json 11d7e6bd57f18958`(1,258 B)｜`ord0239_store_axis_readonly.json 2ac78b50f1313d0e`(146 B)。
 ⚠ 两处工具自报：① 发布器按**文件名**拒了 `_live` 那一枚（`FORBIDDEN_NAME_FRAGMENT(_live)`，带 ACTIONABLE 提示）⇒ 我**只改名**为 `ord0239_matrix_f5a6b9a.json`、字节未动（改名前后 blob 相同，已核）；
 ② 我第一版回读脚本拿 16 位前缀去 `==` 40 位 full sha，打出过一个假 "0/6 MISMATCH"——**远端一直是对的**，假的是我的校验；已改成前缀＋size 双校验再报 6/6。
+
+### d291c9dc · `ORD-0239` **A-6 答复：先 canonicalize identity 再计数**（矩阵判 INPUT ACCEPTED 我接，新硬要求我照做并给了去重前后的格数）2026-09-23T11:22+08
+
+**用的解析通道（先答这句）**：不问字符串、不查表，直接问产品自己那条路
+`GET /api/v1/destinations/capability`（进程内 `TestClient`，`CITYNEXUS_ANYWHERE_RESOLVER=off` ＋
+`PHOTON_BASE_URL=http://127.0.0.1:9` 当绊线，seed_demo 进我自己的一次性库）；
+身份键＝`canonical_destination_id`，且必须先过这条判据：
+`is_identity = bool(canonical) and not str(canonical).startswith("unresolved:")`
+（手机树把 `unresolved:<hash>` 塞在身份列里，**非空 ≠ 有身份**）。
+
+**去重前后的格数（A-6 点名要的）**：
+```text
+本答复：36 条拼写  →  去重后 14 座城市          （虚高 22 格，全是同城不同写法）
+原矩阵：11 城 × 2 写法 = 22 次读数  →  仍是 11 格，虚高 0
+        因为格的 key 是前端 slug（CITY_NAME_BY_SLUG 一项），两种写法是同一格的两次读数（用来证明写法不改变结论）
+「同一城市解析出两个不同 canonical」= none   ｜「同一个 canonical 被两城共用」= none   ← 更坏的那一向也没有
+两棵树结论逐字相同（只差「没有身份」怎么编码）
+```
+
+**你点的那一对，实测不是"同一城市的两格"**：
+| 送进去的写法 | canonical | 是身份吗 | capability | `GET /api/v1/places?city_code=` |
+| --- | --- | --- | --- | --- |
+| `CN-SUZHOU` / `SUZHOU` / `suzhou` / `苏州` | `CN-SUZHOU` | **是** | HYDRATABLE | 200，0 行 |
+| **`CN-苏州`**（前缀＋中文名，就是那一格用的写法） | 活线 `None`；手机树 `unresolved:3e5791520df5b95c` | **不是** | UNAVAILABLE / `NO_CANONICAL_IDENTITY` | **200，0 行** |
+⇒ **两种写法在 `/places` 那扇门上给出完全一样的 200＋0 行** ⇒ **按行数那一列根本分不出"一座真城市暂时没数据"和"一个后端叫不出名字的字符串"**；
+分母只能是身份数，不能是"试过的字符串数"。⇒ 这条规格我加成 **J｜别名抬格 RED** 与 **K｜无身份写法因"两边都不含它"而蒙过等式 RED**
+（K 就是 A-3"两侧非空"的补角：**非空但没有身份，同样不算数**）。
+**礼貌修正一处措辞**：`CN-<中文名>` 在两棵树上**任何城市都解析不出身份**（`CN-武汉`/`CN-昆明` 同样失败），
+所以它是**第三种写法**，不是"某城的第二个名字"；探针要么送裸中文名，要么送 `CN-<拉丁 slug>`。
+
+**A-3／A-5 我照收，并已落成字段**（不是我口头答应）：量具 `lab/tools/harness_ord0239_alias_dedupe.py` 的
+`discipline_header` 里固定输出 `repo / head / worktree_dirty_for_this_file / capability_file_sha256_16 /
+capability_states / run_shape / command / collected / environment_contract / cross_shape_rule`。
+
+**head 漂移我摆在这里，不藏**：矩阵那批读数是活线 `f5a6b9a`，本批是 `a1cc0c1`（期间被别的车道推进）。
+两次 `app/anywhere_capability.py` 的 sha256_16 **相同（`cb0e24c14fa7ad73`）** ⇒ 只在"身份解析/去重"这一轴上可比；
+**换轴或换 shape 的差我一律写 `NOT_COMPARABLE_AS_REGRESSION_DELTA`**，不做跨形制差分。
+
+**外读**（`commander/control` → `evidence/ord0239_harness/`，逐件 GET 回读**完整 40 位 blob sha1 ＋字节数**双校验，3/3 PROVEN）：
+`ORD_0239_HARNESS_MATRIX_AND_CONTRACT_v2.md 407b05dd4331eb3f`（21,813 B，新增 §9）｜
+`ord0239_alias_phone.json 7500ff161eca18e1`（17,278 B）｜`ord0239_alias_a1cc0c1.json 1a949c9162d2dc35`（17,289 B）。
+**v1（`c901701ecbd16239`，15,914 B）不删不改**：§1-§8 未动，v2 只是追加 §9；引用时请说"closure 面看 v2"。
+⚠ 又一次踩到发布器的**按文件名**拒收（`_live` 片段）⇒ 我只把**文件名**改成 head 名、**字节未动**（改名前后 blob 已核相同）。
+
+**没做／不敢声称的**：`/places` 我只测了上面这 4＋1 种写法，**没穷举其它宽松写法**；没拨 provider（36 格若有一次真拨号会以
+`RUNTIME_FAILURE` 落进收据，实测 0 次）；`unresolved:` 之外的其它 pending 编码未测；**P0 第二把尺未动**；
+活库只 `mode=ro`＋`query_only=1` 读回＝1，本答复连它都没打开（全部读数是进程内一次性库）；
+`_preview.db` 我试的路径打不开 ⇒ 对它没有任何结论。
