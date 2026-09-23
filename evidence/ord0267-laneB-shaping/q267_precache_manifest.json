@@ -1,0 +1,42 @@
+{
+ "extracted_from": "the built v10-sw.js inside the exported tree at tip d2665e2",
+ "count": 9,
+ "entries": [
+  {
+   "url": "sw.js",
+   "revision": "\"1eebbb6edab96b95a31dc1f94d1a6cda\""
+  },
+  {
+   "url": "index.html",
+   "revision": "\"628fd49519473fd61645cad59085be7e\""
+  },
+  {
+   "url": "assets/maplibre-gl-BWQWEO0M.js",
+   "revision": "null"
+  },
+  {
+   "url": "assets/JourneyMap-VYnqykgh.js",
+   "revision": "null"
+  },
+  {
+   "url": "assets/index-I45CQek8.css",
+   "revision": "null"
+  },
+  {
+   "url": "assets/index-D76m_cky.js",
+   "revision": "null"
+  },
+  {
+   "url": "/index.html",
+   "revision": "\"v10-shell\""
+  },
+  {
+   "url": "favicon.svg",
+   "revision": "\"339a4892318ff75bf4dccf7d426c193c\""
+  },
+  {
+   "url": "manifest.webmanifest",
+   "revision": "\"d726b6647c68d06bafae8784f74043e3\""
+  }
+ ]
+}
