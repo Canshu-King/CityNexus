@@ -16,7 +16,9 @@
 不写死数字，也不写死 "PASS"。
 """
 
+import ast
 import json
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 from sqlalchemy import select
@@ -31,6 +33,7 @@ from app.db.session import SessionLocal
 from app.integrations.mock.providers import MockCityDataProvider
 from app.main import app
 from app.replanning.feasibility import _accessibility_metadata
+import app.services as services_module
 from app.services import _demo_accessibility_evidence, _templates, seed_demo
 
 client = TestClient(app)
@@ -556,3 +559,80 @@ def test_the_named_reason_points_at_the_stop_whose_demo_evidence_conflicted():
             assert named, (
                 f"事实点名的冲突地点与实际证据不符：期望提到 {blocking} 之一，实际 {facts.get('failures')}"
             )
+
+
+# ------------------------------------------------------------------------------------------
+# 静态独占守卫（仲裁 5788528772 补的那一格）
+# ------------------------------------------------------------------------------------------
+PRODUCER_SYMBOL = "_demo_accessibility_evidence"
+
+
+def _producer_references(root, excluded_names=()):
+    """每一条"root 下的产品码引用了 DEMO producer"的证据，按 AST 节点类型命名。
+
+    只认 import / 名字使用 / 属性使用三种真实引用：注释不进 AST，docstring 是 Constant 节点，
+    所以这条扫描对"文里提到这个名字"天然免疫——两个方向都有见证，见下面那条门。
+    """
+
+    hits = []
+    for path in sorted(root.rglob("*.py")):
+        if "__pycache__" in path.parts or path.name in excluded_names:
+            continue
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom) and any(a.name == PRODUCER_SYMBOL for a in node.names):
+                kind = "import_from"
+            elif isinstance(node, ast.Name) and node.id == PRODUCER_SYMBOL:
+                kind = "name"
+            elif isinstance(node, ast.Attribute) and node.attr == PRODUCER_SYMBOL:
+                kind = "attribute"
+            else:
+                continue
+            hits.append({"file": str(path.relative_to(root)), "line": node.lineno, "kind": kind})
+    return hits
+
+
+def test_the_demo_producer_stays_reachable_only_from_the_demo_seed(tmp_path):
+    """`backend/app/**` 里除 `services.py` 外，任何产品模块都不许引用 `_demo_accessibility_evidence`。
+
+    运行时那几条门证的是"今天种下的数据不外泄"；这条钉的是"DEMO producer 只能 seed-only，
+    不许日后变成 provider/catalog 的真相助手"。0 处产品码改动，也不逐字搬 C 的测试
+    （它的符号是 demo_accessibility_evidence，这里活着的是带下划线的那个）。
+    """
+
+    app_root = Path(services_module.__file__).resolve().parent
+    assert (app_root / "services.py").is_file(), (
+        f"定位不到产品包目录，这条门会扫到零个文件却报绿：{app_root}"
+    )
+    scanned = [p.relative_to(app_root) for p in app_root.rglob("*.py") if "__pycache__" not in p.parts]
+    assert len(scanned) > 5, f"只扫到 {len(scanned)} 个产品模块，扫描面本身可疑"
+
+    hits = _producer_references(app_root, excluded_names=("services.py",))
+    assert not hits, (
+        f"DEMO producer 被 services.py 之外的产品码用掉了，它会变成 provider/catalog 的真相助手：{hits}"
+    )
+
+    # 正控 A：名字只出现在模块文档串与注释里——裸 substring 会误伤，AST 不伤。
+    prose = tmp_path / "mentions_it_in_prose.py"
+    prose.write_text(
+        "'A module that only says _demo_accessibility_evidence in its prose.'\n"
+        "# and again in a comment: _demo_accessibility_evidence\n"
+        "VALUE = 1\n",
+        encoding="utf-8",
+    )
+    assert prose.read_text(encoding="utf-8").count(PRODUCER_SYMBOL) == 2, "正控前提：文里确实两处提到这个名字"
+    assert _producer_references(tmp_path) == [], (
+        "文档串或注释里的名字被当成了引用，这条守卫会误伤纯文案改动"
+    )
+
+    # 正控 B：真实 import 必须被抓到，否则"扫不到"与"没有引用"是同一种读法。
+    prose.unlink()
+    reach = tmp_path / "reaches_for_it.py"
+    reach.write_text(
+        "from app.services import _demo_accessibility_evidence\n\nFOO = _demo_accessibility_evidence\n",
+        encoding="utf-8",
+    )
+    caught = _producer_references(tmp_path)
+    assert len(caught) == 2 and {c["kind"] for c in caught} == {"import_from", "name"}, (
+        f"扫描器抓不到真实引用，那它的绿色就不算证据：{caught}"
+    )
