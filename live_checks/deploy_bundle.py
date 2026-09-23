@@ -67,7 +67,7 @@ def http_get(path: str, want_head: bool = False, base: str | None = None, auth_f
                 req.add_header("Authorization", "Basic " + _b64.b64encode(f"{raw[0]}:{raw[1]}".encode()).decode())
         except OSError:
             pass
-    out = {"path": path, "status": None, "content_type": None, "length": None,
+    out = {"path": path, "status": None, "content_type": None, "length": None, "cache_control": None,
            "head_bytes": None, "sha256": None, "is_html_fallback": None, "error": None,
            "base": base or BASE, "auth_applied": bool(auth_file)}
     try:
@@ -76,6 +76,11 @@ def http_get(path: str, want_head: bool = False, base: str | None = None, auth_f
             out["status"] = r.status
             out["content_type"] = r.headers.get("Content-Type")
             out["length"] = r.headers.get("Content-Length")
+            # round 4 (redteam bus 5789252266): every previous conjunct looked at status, MIME, first
+            # bytes and digests - **never at response headers**.  A shell document served with
+            # `max-age=31536000, immutable` therefore passed the whole receipt while guaranteeing that
+            # the next generation is never fetched (white screen once old assets are pruned).
+            out["cache_control"] = r.headers.get("Cache-Control")
             if body:
                 out["head_bytes"] = body[:24].decode("utf-8", "replace")
                 out["sha256"] = hashlib.sha256(body).hexdigest()
@@ -120,6 +125,45 @@ def precache_urls(sw_text: str) -> list[str]:
             seen.add(u)
             ordered.append(u)
     return ordered
+
+
+SHELL_MAX_AGE = int(os.environ.get("CNX_DEPLOY_SHELL_MAX_AGE", "600"))
+
+
+def cache_semantics_verdict(ref: str, probe: dict) -> dict:
+    """A-9: the *shell* document must never be cached immutably or for a long time.
+
+    Hashed /assets/* keep `immutable` legitimately (content-addressed, safe forever).  The shell is the
+    opposite: it is the only thing that tells the browser which bundle exists next, so an
+    `immutable`/long `max-age` on it makes the next generation unfetchable - the exact white screen
+    DEPLOY_BUNDLE_RETENTION exists to prevent, produced by headers rather than by deleting files.
+    """
+    is_shell = ref.endswith((".html", ".htm")) or ref.endswith("/") or ref == ""
+    cc = (probe.get("cache_control") or "").lower()
+    out = {"ref": ref, "is_shell": is_shell, "cache_control": probe.get("cache_control"),
+           "rule": f"shell must not carry immutable; max-age <= {SHELL_MAX_AGE}"}
+    if not is_shell:
+        # hashed assets are allowed (and encouraged) to be immutable - but that must be a *seen* header,
+        # not an absence of evidence, so we still record what was served.
+        out["verdict"] = "NOT_SHELL_RECORDED"
+        return out
+    if "immutable" in cc:
+        out["verdict"] = "RED"
+        out["reason"] = "shell document served with Cache-Control: immutable"
+        return out
+    if "no-store" in cc or "no-cache" in cc or "must-revalidate" in cc:
+        out["verdict"] = "GREEN"
+        return out
+    found = re.search(r"max-age\s*=\s*(\d+)", cc)
+    if found is None:
+        out["verdict"] = "RED"
+        out["reason"] = "shell document carries no Cache-Control at all - revalidation policy is undefined"
+        return out
+    age = int(found.group(1))
+    out["verdict"] = "GREEN" if age <= SHELL_MAX_AGE else "RED"
+    if out["verdict"] == "RED":
+        out["reason"] = f"shell max-age={age} exceeds {SHELL_MAX_AGE}"
+    return out
 
 
 def expect_ct_for(ref: str) -> str:
@@ -177,6 +221,7 @@ def asset_verdict(ref: str, expect_ct: str, serve: pathlib.Path, base: str | Non
         and isinstance(g["content_type"], str)
         and expect_ct in g["content_type"].lower()                # MIME must match the extension
         and g["sha256"] is not None
+        and cache_semantics_verdict(ref, g)["verdict"] != "RED"   # A-9 (redteam round 4)
         # A-3 (arbiter 5788111742, 2026-09-23): a comparison against an absent side is NOT a
         # comparison.  The previous form was `disk_sha256 is None or ==`, which let an asset that
         # answers 200 with the right MIME but has no counterpart under `serve` pass with zero
@@ -343,6 +388,18 @@ def selftest(serve: pathlib.Path) -> int:
                  "got": {"verdict": g_verdict(asset_refs(prev_ok))}})
     arms.append({"arm": "H-killer:previous_generation_asset_missing", "expect": "RED",
                  "got": {"verdict": g_verdict(asset_refs(prev_bad))}})
+    # A-9 witness (round 4): a shell answered with immutable/1-year must read RED through the SAME
+    # predicate, while the real preview shell (no such header) must read GREEN-or-declared, never RED.
+    fake = {"cache_control": "public, max-age=31536000, immutable"}
+    v_imm = cache_semantics_verdict("/index.html", fake)
+    v_real = cache_semantics_verdict("/", http_get("/"))
+    v_asset = cache_semantics_verdict("/assets/index-DtQ86lsQ.js", fake)
+    arms.append({"arm": "A9-killer:shell_immutable_is_red", "expect": "RED",
+                 "got": {"verdict": v_imm["verdict"], "error": v_imm.get("reason")}})
+    arms.append({"arm": "A9-true_positive:real_shell_revalidable", "expect": "GREEN",
+                 "got": {"verdict": v_real["verdict"], "error": v_real.get("reason")}})
+    arms.append({"arm": "A9-scope:hashed_asset_may_stay_immutable", "expect": "NOT_SHELL_RECORDED",
+                 "got": {"verdict": v_asset["verdict"], "error": None}})
     dead = asset_verdict("/v10-sw.js", "javascript", live, base="http://127.0.0.1:59999")
     arms.append({"arm": "F-killer:unreachable_surface_is_red_not_absent", "expect": "RED",
                  "got": dead})
@@ -567,6 +624,11 @@ def main() -> int:
 
     # --- phase 4: A-E receipt
     a_old = None
+    if not old_js:
+        # boundary (i) named by the redteam: previously this arm just vanished with no explanation.
+        a_old = {"ref": None, "verdict": "DECLARED_NO_OLD_JS",
+                 "reason": "previous index.html named no .js asset - A cannot compare anything; "
+                           "this is a declared gap, not a pass"}
     if old_js:
         probe = http_get(old_js)
         disk = serve / old_js.lstrip("/")
@@ -649,8 +711,14 @@ def main() -> int:
     if prev_index is not None and prev_index.is_file():
         for r in asset_refs(prev_index.read_text(encoding="utf-8", errors="replace")):
             h_prev.append({"ref": r, "got": repeated_verdict(r, expect_ct_for(r), serve, times=PROBE_TIMES)})
+    h_same_as_current = bool(prev_index and prev_index.is_file() and sha256(prev_index) == sha256(serve / "index.html")
+                             if (serve / "index.html").is_file() else False)
     h_prev_verdict = ("GREEN" if h_prev and all(x["got"]["verdict"] == "GREEN" for x in h_prev)
                       else ("NOT_CONFIGURED" if not h_prev else "RED"))
+    if h_prev_verdict == "GREEN" and h_same_as_current:
+        # boundary (ii) named by the redteam: with an unchanged index, "previous generation" IS this
+        # generation, so H proves nothing beyond C.  Say so instead of reporting a stronger claim.
+        h_prev_verdict = "GREEN_H_EQ_C_NO_CHANGE_DEPLOY"
 
     # F: the surface the user actually reaches - auth proxy and public tunnel - probed for the NEW
     # bundle, not just for `/`.  Bases come from the environment; unset means UNPROBED, which is
