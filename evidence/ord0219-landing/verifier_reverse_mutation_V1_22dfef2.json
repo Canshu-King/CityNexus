@@ -1,0 +1,154 @@
+{
+  "schema_version": "CNX_REVERSE_MUTATION_VERIFIER_V1",
+  "candidate_exact_sha": "22dfef23ae3e8028326dd82a291ea99cbace0f81",
+  "reviewed_base_exact_sha": "f24628f566637713d38784f0b2a9e2794f826346",
+  "reviewed_bus_comment": 5789281005,
+  "verifier": "GPT external reviewer",
+  "derivation_policy_source": "GitHub issue #1 comment 5788270524",
+  "reviewed_diff": {
+    "path": "evidence/ord0219-landing/landing_22dfef2_diff_vs_f24628f.patch",
+    "blob": "beb89f0b3471330cfb660c1aa5b8d453d8159091",
+    "size_bytes": 46594,
+    "file_count": 4,
+    "insertions": 888,
+    "deletions": 6,
+    "byte_identical_to_v3_diff": true,
+    "v3_path": "evidence/ord0219-landing/landing_eea3c5b_diff_vs_a1cc0c1.patch",
+    "v3_blob": "beb89f0b3471330cfb660c1aa5b8d453d8159091"
+  },
+  "candidate_evidence": {
+    "closure_receipt": {
+      "path": "evidence/ord0219-landing/landing_22dfef2_closure_receipt.json",
+      "blob": "866fa080d4254e01e373e104e1ecfc2a08c90cf4"
+    },
+    "items34": {
+      "path": "evidence/ord0219-landing/landing_22dfef2_items34_readings.json",
+      "blob": "ec6c7616bab705f3f1636c9eebac1ee3f63e28a4"
+    },
+    "commits": {
+      "path": "evidence/ord0219-landing/landing_22dfef2_commits.txt",
+      "blob": "d0f915f5e0ff36f7f42b848b8593df6a43553ae9",
+      "commit_headers": 10,
+      "full_cherry_pick_attributions": 10
+    }
+  },
+  "baseline_authorities": {
+    "ord0236_same_sha_index": {
+      "path": "evidence/ord0219-landing/reverse_mutation_V1_index_0236_22dfef2.json",
+      "blob": "66b25591e8a38e70e57c3a19a5e3ca8158a798bd",
+      "exact_sha": "22dfef23ae3e8028326dd82a291ea99cbace0f81",
+      "baseline": "3 passed / 0 failed"
+    },
+    "ord0219_same_sha_index": {
+      "path": "evidence/ord0219-landing/reverse_mutation_V1_index_0219_22dfef2.json",
+      "blob": "e175834cf6446c1bb1a3e6cd05cf417c92c9f832",
+      "exact_sha": "22dfef23ae3e8028326dd82a291ea99cbace0f81",
+      "baseline": "14 passed / 0 failed"
+    }
+  },
+  "reverse_mutation_results": [
+    {
+      "receipt": "reverse_mutation_V1_K1_raw_tags_column_becomes_an_input_22dfef2.json",
+      "receipt_blob": "d51d9622192ddbcfc27ddb8c1a8dfb3932dc2834",
+      "mutation_id": "K1_raw_tags_column_becomes_an_input",
+      "derived_result": "KILLED",
+      "direct_red_nodeids": [
+        "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t1_raw_tags_column_alone_never_causes_a_hard_verdict"
+      ],
+      "collateral_red_nodeids": [],
+      "verifier_problems": []
+    },
+    {
+      "receipt": "reverse_mutation_V1_K2_skip_the_normalized_producer_22dfef2.json",
+      "receipt_blob": "7d9655a01f7b551cbe7df7aeb325fc1885fa9e1b",
+      "mutation_id": "K2_skip_the_normalized_producer",
+      "derived_result": "KILLED",
+      "direct_red_nodeids": [
+        "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker"
+      ],
+      "collateral_red_nodeids": [
+        "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t1_raw_tags_column_alone_never_causes_a_hard_verdict",
+        "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+      ],
+      "verifier_problems": []
+    },
+    {
+      "receipt": "reverse_mutation_V1_K3_taxonomy_word_becomes_a_fact_22dfef2.json",
+      "receipt_blob": "a0a97333d8f72edde4a716338e034ddeedeed593",
+      "mutation_id": "K3_taxonomy_token_becomes_a_fact",
+      "derived_result": "KILLED",
+      "direct_red_nodeids": [
+        "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+      ],
+      "collateral_red_nodeids": [],
+      "verifier_problems": []
+    },
+    {
+      "receipt": "reverse_mutation_V1_K4_static_exclusivity_broken_22dfef2.json",
+      "receipt_blob": "34567026f143824c5dab36df874c0a0967326516",
+      "mutation_id": "K4_static_exclusivity_broken",
+      "derived_result": "KILLED",
+      "direct_red_nodeids": [
+        "tests/test_qoder_demo_accessibility_evidence.py::test_the_demo_producer_stays_reachable_only_from_the_demo_seed"
+      ],
+      "collateral_red_nodeids": [],
+      "verifier_problems": []
+    }
+  ],
+  "validity_checks": {
+    "all_scope_exact_sha_same": true,
+    "all_dirty_false": true,
+    "all_run_shape_whole_file": true,
+    "all_anchor_hits_match_expected": true,
+    "all_bytes_changed_true": true,
+    "all_primary_targets_observed": true,
+    "all_primary_targets_red": true,
+    "all_collection_or_setup_errors_empty": true,
+    "all_db_fresh_true": true,
+    "all_actual_scope_matches_allowed_scope": true,
+    "all_restore_byte_exact": true,
+    "all_post_restore_dirty_paths_empty": true,
+    "all_forbidden_command_surface_hits_empty": true,
+    "all_claimed_result_matches_derived_result": true
+  },
+  "code_review": {
+    "static_producer_exclusivity_node_present": true,
+    "static_detector": "AST-based import/name/attribute scan over backend/app/**/*.py excluding services.py",
+    "static_positive_controls": [
+      "prose/comment mentions do not count",
+      "real import/name use is detected"
+    ],
+    "sealed_demo_inventory_scope_pinned": true,
+    "alternate_C_product_truth_resurrected": false
+  },
+  "closure_receipt_state": {
+    "candidate_ancestry": "MET",
+    "landed_ancestry": "PENDING",
+    "single_truth": "MET",
+    "carrying_vs_declared": "MET",
+    "both_directions": "MET",
+    "tripwire_and_killer": "MET",
+    "candidate_tip_rerun": "MET",
+    "landed_tip_rerun": "PENDING",
+    "closure_decision": "NOT_SIGNED_BY_DELIVERING_LANE"
+  },
+  "remote_resolution": {
+    "reviewed_base_resolvable_via_GitHub_API": false,
+    "candidate_resolvable_via_GitHub_API": false,
+    "consequence": "External acceptance relies on published byte-level evidence; Commander must re-check the authoritative local mainline tip and fast-forward ancestry immediately before landing."
+  },
+  "landing_decision": {
+    "verdict": "ACCEPTED-FOR-LANDING",
+    "condition": "Authoritative mainline tip must still equal f24628f566637713d38784f0b2a9e2794f826346 and candidate 22dfef23ae3e8028326dd82a291ea99cbace0f81 must be its descendant.",
+    "integration_semantics": "fast-forward-only",
+    "if_base_moved": "STOP; rebuild the same composite on the new tip, republish evidence, and re-review.",
+    "landing_owner": "Commander 494abfd7",
+    "delivering_lane_must_not_self_land": true,
+    "post_landing_required": "Publish landed SHA, then rerun landed ancestry + ORD-0219 14/16 + ORD-0236 3/3 + fresh DB carrying/declared + both-direction behavior before CLOSED."
+  },
+  "advisories": [
+    "The K4 historical baseline receipt_ref was not itself produced on 22dfef2; verifier therefore used the published same-SHA ORD-0219 V1 index as the baseline authority.",
+    "K2 collateral reds remain informational collateral; K2 is one direct reverse-mutation evidence item owned by T2.",
+    "The exact reviewed diff blob is byte-identical to v3, so the rebase changed the parent/base context, not the reviewed patch bytes."
+  ]
+}
