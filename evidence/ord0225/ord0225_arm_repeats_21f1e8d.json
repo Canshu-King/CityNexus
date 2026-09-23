@@ -1,0 +1,423 @@
+{
+  "kind": "CNX_ORD0225_ARM_REPEAT_SUMMARY_V1",
+  "written_by": "8c66aa92 (C)",
+  "at": "2026-09-23T14:0x+08",
+  "answers": "commander 新单：corrected g3 的产品侧反向突变（破坏部分唯一索引 + 败者回读）≥10 轮，收据按 CNX_REVERSE_MUTATION_RECEIPT_V1。",
+  "exact_sha": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+  "tree": "snap_21f1e8d = `git archive <exact_sha>` 的一次性只读导出；两份被测文件与 commit 逐字节相同（收据 tree_kind_check.identical=true）",
+  "target_nodeid": "tests/test_qoder_anywhere_gates.py::test_g3_concurrent_open_generation_five_callers_share_one_operation",
+  "run_shape": "single-node",
+  "collected_per_round": 1,
+  "row_column_instrument": {
+    "file": "live_checks/gate_streak.py",
+    "git_blob_sha1_prefix": "ac5377f207f18334",
+    "matches_what_commander_announced": true
+  },
+  "arms": {
+    "C-ORD0225-Y123-all-four-carriers": {
+      "carriers_removed": [
+        "A1 pre-resolution read",
+        "A2 post-resolution read",
+        "B partial unique index",
+        "C loser read-back"
+      ],
+      "batches": [
+        {
+          "batch": "a",
+          "red_rounds": 10,
+          "claimed": "KILLED",
+          "rows_per_round": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        },
+        {
+          "batch": "b",
+          "red_rounds": 10,
+          "claimed": "KILLED",
+          "rows_per_round": [
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5,
+            5
+          ]
+        }
+      ]
+    },
+    "C-ORD0225-Y23-index-and-loser-readback": {
+      "carriers_removed": [
+        "B partial unique index",
+        "C loser read-back"
+      ],
+      "batches": [
+        {
+          "batch": "a",
+          "red_rounds": 6,
+          "claimed": "STREAK_BROKEN",
+          "rows_per_round": [
+            1,
+            2,
+            5,
+            1,
+            5,
+            2,
+            1,
+            3,
+            4,
+            1
+          ]
+        },
+        {
+          "batch": "b",
+          "red_rounds": 2,
+          "claimed": "STREAK_BROKEN",
+          "rows_per_round": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            4,
+            2
+          ]
+        },
+        {
+          "batch": "c",
+          "red_rounds": 2,
+          "claimed": "STREAK_BROKEN",
+          "rows_per_round": [
+            1,
+            2,
+            1,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      ]
+    },
+    "C-ORD0225-Y23-A1-off": {
+      "carriers_removed": [
+        "A1 reuse read",
+        "B partial unique index",
+        "C loser read-back"
+      ],
+      "batches": [
+        {
+          "batch": "a",
+          "red_rounds": 3,
+          "claimed": "STREAK_BROKEN",
+          "rows_per_round": [
+            1,
+            1,
+            2,
+            2,
+            1,
+            1,
+            1,
+            1,
+            1,
+            2
+          ]
+        }
+      ]
+    },
+    "C-ORD0225-Y23-A2-off": {
+      "carriers_removed": [
+        "A2 reuse read",
+        "B partial unique index",
+        "C loser read-back"
+      ],
+      "batches": [
+        {
+          "batch": "a",
+          "red_rounds": 8,
+          "claimed": "STREAK_BROKEN",
+          "rows_per_round": [
+            3,
+            5,
+            1,
+            2,
+            1,
+            3,
+            2,
+            2,
+            3,
+            2
+          ]
+        }
+      ]
+    }
+  },
+  "headline": {
+    "ordered_arm_Y23_is_not_deterministic": {
+      "red_rounds_across_3_batches": [
+        6,
+        2,
+        2
+      ],
+      "per_batch_claimed": [
+        "STREAK_BROKEN",
+        "STREAK_BROKEN",
+        "STREAK_BROKEN"
+      ]
+    },
+    "removing_all_four_carriers": {
+      "red_rounds_across_2_batches": [
+        10,
+        10
+      ],
+      "rows_every_round": 5,
+      "per_batch_claimed": [
+        "KILLED",
+        "KILLED"
+      ]
+    },
+    "attribution_of_the_surviving_carrier": {
+      "with_A2_gone_A1_kept": "8/10 红",
+      "with_A1_gone_A2_kept": "3/10 红",
+      "reading": "把 durable 两件拆掉后，还留着的那次**解析后复用读（A2）**才是在进程内把五发收敛住的东西；留着 A1（预检读）而拆掉 A2 时更容易红。",
+      "consequence_for_the_Y1b_disposition": "我此前记的『Y1b 那次读冗余、没有门依赖它』在这一格被限定：它在**正常树**上确实没有门依赖，但在 durable 承载被拆掉的反事实里，它是进程内这枚门的承载者。删除权仍在强修那一单，只是那条删除现在多了一条代价，该写进去。"
+    }
+  },
+  "not_signed": "每份 claimed_result 都是交付方自称；derived_result / direct_red / collateral_red 全留 null 等 verifier。我不替 ORD-0225 判 CLOSED，也不把 Y123 当命令里那一臂的替身——两臂拆的东西不同。",
+  "receipts": [
+    {
+      "file": "v1_gate_receipt_Y123_a_21f1e8d.json",
+      "mutation_id": "C-ORD0225-Y123-all-four-carriers",
+      "carriers_removed": [
+        "A1 pre-resolution read",
+        "A2 post-resolution read",
+        "B partial unique index",
+        "C loser read-back"
+      ],
+      "batch": "a",
+      "claimed_result": "KILLED",
+      "red_rounds": 10,
+      "catalog_hydration_rows_per_round": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "baseline_rows": 1,
+      "all_rounds_fresh": true,
+      "all_restores_byte_exact": true,
+      "no_marker_residue": true,
+      "only_target_red": true,
+      "git_blob_sha1": "7fecbb9189a655e9dd448ed6ec64441cacad0200",
+      "bytes": 59368
+    },
+    {
+      "file": "v1_gate_receipt_Y123_b_21f1e8d.json",
+      "mutation_id": "C-ORD0225-Y123-all-four-carriers",
+      "carriers_removed": [
+        "A1 pre-resolution read",
+        "A2 post-resolution read",
+        "B partial unique index",
+        "C loser read-back"
+      ],
+      "batch": "b",
+      "claimed_result": "KILLED",
+      "red_rounds": 10,
+      "catalog_hydration_rows_per_round": [
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5,
+        5
+      ],
+      "baseline_rows": 1,
+      "all_rounds_fresh": true,
+      "all_restores_byte_exact": true,
+      "no_marker_residue": true,
+      "only_target_red": true,
+      "git_blob_sha1": "048d82c166aa61f6f44473dc225fa7d4f36b5511",
+      "bytes": 59368
+    },
+    {
+      "file": "v1_gate_receipt_Y23_a_21f1e8d.json",
+      "mutation_id": "C-ORD0225-Y23-index-and-loser-readback",
+      "carriers_removed": [
+        "B partial unique index",
+        "C loser read-back"
+      ],
+      "batch": "a",
+      "claimed_result": "STREAK_BROKEN",
+      "red_rounds": 6,
+      "catalog_hydration_rows_per_round": [
+        1,
+        2,
+        5,
+        1,
+        5,
+        2,
+        1,
+        3,
+        4,
+        1
+      ],
+      "baseline_rows": 1,
+      "all_rounds_fresh": true,
+      "all_restores_byte_exact": true,
+      "no_marker_residue": true,
+      "only_target_red": true,
+      "git_blob_sha1": "e0dddec96528b306ce6422f19fbc8860f58606a2",
+      "bytes": 45208
+    },
+    {
+      "file": "v1_gate_receipt_Y23_b_21f1e8d.json",
+      "mutation_id": "C-ORD0225-Y23-index-and-loser-readback",
+      "carriers_removed": [
+        "B partial unique index",
+        "C loser read-back"
+      ],
+      "batch": "b",
+      "claimed_result": "STREAK_BROKEN",
+      "red_rounds": 2,
+      "catalog_hydration_rows_per_round": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        4,
+        2
+      ],
+      "baseline_rows": 1,
+      "all_rounds_fresh": true,
+      "all_restores_byte_exact": true,
+      "no_marker_residue": true,
+      "only_target_red": true,
+      "git_blob_sha1": "4152e46ecf5ba769c314d572b511a9c91c85d09f",
+      "bytes": 43217
+    },
+    {
+      "file": "v1_gate_receipt_Y23_c_21f1e8d.json",
+      "mutation_id": "C-ORD0225-Y23-index-and-loser-readback",
+      "carriers_removed": [
+        "B partial unique index",
+        "C loser read-back"
+      ],
+      "batch": "c",
+      "claimed_result": "STREAK_BROKEN",
+      "red_rounds": 2,
+      "catalog_hydration_rows_per_round": [
+        1,
+        2,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "baseline_rows": 1,
+      "all_rounds_fresh": true,
+      "all_restores_byte_exact": true,
+      "no_marker_residue": true,
+      "only_target_red": true,
+      "git_blob_sha1": "583db798a14d569c4fa4be6876eee49aacc5ebe6",
+      "bytes": 43216
+    },
+    {
+      "file": "v1_gate_receipt_Y23_OFF_A1_a_21f1e8d.json",
+      "mutation_id": "C-ORD0225-Y23-A1-off",
+      "carriers_removed": [
+        "A1 reuse read",
+        "B partial unique index",
+        "C loser read-back"
+      ],
+      "batch": "a",
+      "claimed_result": "STREAK_BROKEN",
+      "red_rounds": 3,
+      "catalog_hydration_rows_per_round": [
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2
+      ],
+      "baseline_rows": 1,
+      "all_rounds_fresh": true,
+      "all_restores_byte_exact": true,
+      "no_marker_residue": true,
+      "only_target_red": true,
+      "git_blob_sha1": "f5771b270e3095ab82bfcdb72e1b8fc3117f22e5",
+      "bytes": 49656
+    },
+    {
+      "file": "v1_gate_receipt_Y23_OFF_A2_a_21f1e8d.json",
+      "mutation_id": "C-ORD0225-Y23-A2-off",
+      "carriers_removed": [
+        "A2 reuse read",
+        "B partial unique index",
+        "C loser read-back"
+      ],
+      "batch": "a",
+      "claimed_result": "STREAK_BROKEN",
+      "red_rounds": 8,
+      "catalog_hydration_rows_per_round": [
+        3,
+        5,
+        1,
+        2,
+        1,
+        3,
+        2,
+        2,
+        3,
+        2
+      ],
+      "baseline_rows": 1,
+      "all_rounds_fresh": true,
+      "all_restores_byte_exact": true,
+      "no_marker_residue": true,
+      "only_target_red": true,
+      "git_blob_sha1": "fd29667d8a03d1f23cdf38bb9f7da70c16b8636f",
+      "bytes": 52146
+    }
+  ]
+}
