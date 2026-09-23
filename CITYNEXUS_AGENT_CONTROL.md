@@ -14538,6 +14538,81 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 底座读数 @2026-09-24T02:2x+08 —— ORD-0271 的两枚不可变样本我已经外读钉死（**fixture 的那一枚红只在 B 臂；H 臂早就认了合法分支**），改尺不用再猜形状
+
+### ① 样本 A = 真实"只换 worker、资产字节不变"的那次发布（DEBT-4 的原始致病样本）
+
+```text
+坐标：Canshu-King/CityNexus @ commander/control 的 git blob b9be3a5cb683fb14dce44477e8ed8ae07e1f0658
+      （我 02:22 从 GitHub 直接取件：HTTP 200、declared size 66,553 B、实读 66,553 B、重算 blob sha1 == 该 40 位）
+被测尖 sha = 1f4440819a9d773da6e18f12a31412f73c6d0f55，tree_tip = 1f44408，尺 blob = 149e9c6dbe6debca…（与我 02:04 那次的尺同一枚）
+  old_index_refs = ["/assets/index-Cpy_jhEg.js", "/assets/index-I45CQek8.css"]
+  new_index_refs = ["/assets/index-Cpy_jhEg.js", "/assets/index-I45CQek8.css"]   ⇒ ordered equal = True（这就是 old_ref == new_ref）
+  assets_union.added = []            assets_union.already_identical = 4 枚（Cpy_jhEg / I45CQek8 / JourneyMap-TiEm8jyP / maplibre-gl-kx9AWR05）
+overall = RED，但逐臂看只有一臂红：
+  A GREEN ｜ G_precache [DECLARED_NO_PRECACHE_ARRAY, GREEN] ｜ H_prevgen **GREEN_H_EQ_C_NO_CHANGE_DEPLOY** ｜ I_sw_register GREEN
+  J_name_content_binding GREEN ｜ F_proxy_tunnel GREEN ｜ temporal_obligations DISCHARGED
+  B → receipt_ABCDE/B_NEW_INDEX = {new_refs_present: true, **old_refs_absent: false**, old_ref_tested: "/assets/index-Cpy_jhEg.js"}
+⇒ 形状结论（给改尺用，不是给产品用）：同一枚 index 里那串 ref 既是"新"也是"旧"时，`old_refs_absent` 是**数学上不可满足**的要求；
+   而这枚样本里唯一合法的换代事实（worker 变了）已经由 H 臂用具名分支认了。所以 0271 的修法不是"资产没变就放行"，
+   而是：`old == new` 时禁止向 B 臂要 old_refs_absent，改由 worker/manifest 代际 + precache/cacheURL 一致性承重（H 臂已在做，B 臂要跟它对齐而不是互相打脸）。
+```
+
+### ② 样本 B = 我 02:04 那次真换资产（同代不同形制的对照，白送的第二向）
+
+```text
+live_checks/receipts/deploy_c79e2b4f…_0924_020432.json（blob dccc1ee1359154dc54de79e5571a30c8d4cc818a，66,509 B）
+  old_index_refs = [Cpy_jhEg, I45CQek8] ≠ new_index_refs = [**ChOTTCvB**, I45CQek8]
+  assets_union.added = 3 ｜ already_identical = 1 ｜ B_NEW_INDEX {new_refs_present: true, old_refs_absent: **true**}
+  8 臂全绿、OVERALL GREEN、rc=0
+⇒ 新尺必须**两枚都不误判**：样本 A 判成具名合法绿分支（不得再出 old_refs_absent 假 RED），样本 B 继续判绿且仍要 old_refs_absent。
+   配一枚反控（红队已在表里）：保持 old_ref == new_ref，但故意让 worker/manifest 代际或 precache/cacheURL 对不上 ⇒ 必须 RED。
+   这样修的是"DEBT-4 的错误前提"，不是把门放宽成"资产没变就放行"。
+```
+
+### ③ 现场
+
+```text
+尖 c79e2b4f4efe414dba22a071a7136ae10b5c84aa（第五态已落地并换代）；HARNESS 同代复验 = 唯一闭单阻塞项；
+D 在实现 0269 格1/格3（我已回她三枚读数，见 @02:2x 收货块）；F 已接 0272；HJ-P1 三件；HJ-P3 的 N1–N4 等 F 的 ref 坐标。
+0 demo/reset、0 用户库写、凭据 0 打印、已发布证据路径 0 覆盖、尺与发布器 0 改动、产品码我 0 写。
+```
+
+## lane F `8ccd71d8` 交付 · 欠账②：ORD-0262-NARROW 候选的具名坐标已可外读 @2026-09-24T02:23+08
+
+```text
+包工头 02:1x 点的那枚小欠账（HJ-P3 `aad2d1f2` 的 N1–N4 基线卡在我候选读不到这一步）已交，顺序是先推 ref、
+再逐件外读、最后才写"可读"——本地 sha 不当坐标用。
+
+  ref：review/ord0262-narrow-f ＝ 分支 agent/f-ord0262-narrow 的 tip（**新增 ref、0 force**）
+  ls-remote 原样回读行：3093eea773c79fa00744fe72d1f2c43b4d0bd75e	refs/heads/review/ord0262-narrow-f
+  exact_sha 3093eea773c79fa00744fe72d1f2c43b4d0bd75e｜tree 5ae9f8959b059d04e5a41c53f0b6fa11470b19d0
+  contents API 按同一 40 位逐件回读（blob 摘要 + size 两件都对上才算等值）：**6/6 件全 OK**
+    backend/app/main.py                                        347bdc68bbe5a910  475541 B 等值
+    backend/tests/test_qoder_ord0262_narrow_contention.py      ceffcc9d20d44f24   17581 B 等值
+    backend/app/stay_generation_operations.py                  2878d2bc3d7eabf2   33195 B 等值
+    backend/app/catalog_hydration_operations.py                c6fe73e03e911eef   40451 B 等值
+    contracts/openapi.yaml                                     4bc58e2e95a09ae4  105641 B 等值
+    backend/tests/test_qoder_stay_generation_operations.py     1a08f0482990ea55   39183 B 等值
+  直取 URL 形如 https://raw.githubusercontent.com/Canshu-King/CityNexus/3093eea773c79fa00744fe72d1f2c43b4d0bd75e/<path>
+  外读收据（新路径 evidence/ord0262-narrow-ref/，未覆盖任何旧路径）：
+    evidence/ord0262-narrow-ref/coordinates.json                   2891 B blob 48f26f3d2b08fa82 proven=True
+    evidence/ord0262-narrow-ref/instrument_ref_coordinates.py      4041 B blob c6f6b3702d23a837 proven=True
+  总线：见同批我那一条 @HJ-P3 的坐标帖（先贴后写这块，编号在她那侧可查）。
+
+NARROW 本体现在的形状（就是她要对表的那六格）：①/② 具名写锁冲突落进产品自己的信封；③ 名单外仍 500（不洗白）；
+④ busy 的 retry_after_ms 由两枚 retry_after_ms(row) 阶梯给出（这一枚是 01:1x §③ 刚派的，正控抄回裸数字就红）；
+⑤/⑥ 前端回落链与服务器 message 的两侧耦合。门文件 backend/tests/test_qoder_ord0262_narrow_contention.py（17581 B，blob ceffcc9d20d44f24）。
+
+边界照旧写死，不替谁宣布闭单：0262-NARROW 只声明"写锁冲突给机器可读理由"这一格；
+HJ-P3 那一格**没被 NARROW 吸收、仍挂她名下**（你的原话），我只交坐标；
+0262 的原子性/完整性（孤儿 `CREATED`、未落库的 `plan_version`）仍是各留各门的独立义务。
+
+现场：0 demo/reset、0 写用户库、0 打印凭据（token 只在内存，只印长度与 sha256[:12]）；
+分支 tip 未再前进（`3093eea` 就是这一枚），权威线 c79e2b4 我没碰。
+标记 F-ORD0262-NARROW-REF-@2026-09-24T02:23+08
+```
+
 ## commander 收货 D @2026-09-24T02:2x+08 —— 开工预告收货；三枚现场读数回给 D（其中一枚决定格1 的门亮不亮）；**0266 改判 DELIVERED / NOT-LANDED**
 
 ```text
