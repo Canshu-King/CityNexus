@@ -1,0 +1,979 @@
+{
+ "order": "ORD-0262 DUPLICATE_RAPID_SUBMIT_RETURNS_500",
+ "lane": "HJ-P3 aad2d1f2",
+ "measured_at_local": "2026-09-23T16:0x+08:00 (UTC 07:49-08:07 sweep)",
+ "backend": {
+  "tree": "D:\\moodle\\_qoder_cmdr_gate_20260921",
+  "head": "53fe8e86920aed0ddb5fb325f070b4ed8210b686",
+  "porcelain_lines": 0,
+  "served_on": "127.0.0.1:8424",
+  "database": "D:\\moodle\\_lane_aad2d1f2_livecopy.sqlite3",
+  "busy_timeout_lines_found": [
+   "app/db/session.py:55",
+   "app/db/session.py:65"
+  ]
+ },
+ "frontend_under_test": {
+  "url": "http://127.0.0.1:8476/v8/hub",
+  "bundle": "index-CrAwWm5f.js",
+  "bytes": 1234802,
+  "sha256": "9fd89456daf12bcab4bb775c8a8522d506a0acb2d3ac6d888209f86d04131536",
+  "provenance": "vite build of `git archive f5a6b9a` export; byte-identical to the published canary bundle (ORD-0257)"
+ },
+ "log_tally": {
+  "endpoint_status_histogram": {
+   "GET /api/v1/health": {
+    "200": 2
+   },
+   "GET /api/v1/journeys/{id}": {
+    "200": 3,
+    "404": 2
+   },
+   "GET /api/v1/demo/scene": {
+    "200": 57
+   },
+   "GET /api/v1/journeys/{id}/experience": {
+    "200": 51
+   },
+   "GET /api/v1/journeys/{id}/replans": {
+    "200": 51
+   },
+   "GET /api/v1/journeys/{id}/offline-snapshot": {
+    "200": 51
+   },
+   "GET /api/v1/travelers/{id}/agent-policy": {
+    "200": 51
+   },
+   "GET /api/v1/journeys/{id}/wallet": {
+    "200": 51
+   },
+   "GET /api/v1/journeys/{id}/twin": {
+    "200": 4507
+   },
+   "GET /api/v1/journeys/{id}/plans": {
+    "200": 154
+   },
+   "GET /api/v1/agent/runtime-status": {
+    "200": 74
+   },
+   "POST /api/v1/travelers": {
+    "201": 5
+   },
+   "POST /api/v1/journeys": {
+    "201": 5
+   },
+   "POST /api/v1/journeys/{id}/stay-options/generate": {
+    "200": 5
+   },
+   "GET /api/v1/places?city_code=CN-BEIJING": {
+    "200": 58
+   },
+   "GET /api/v1/journeys/{id}/inbox": {
+    "200": 11
+   },
+   "GET /api/v1/journeys/{id}/memory": {
+    "200": 10
+   },
+   "GET /api/v1/travelers/{id}/push-config": {
+    "200": 2
+   },
+   "POST /api/v1/journeys/{id}/inbox/text-extract": {
+    "201": 1
+   },
+   "POST /api/v1/journeys/{id}/inbox/import": {
+    "201": 1
+   },
+   "POST /api/v1/journeys/{id}/inbox/{id}/confirm": {
+    "200": 1
+   },
+   "POST /api/v1/journeys/{id}/agent/commands": {
+    "200": 45,
+    "500": 14
+   },
+   "POST /api/v1/journeys/{id}/plans/generate": {
+    "422": 6,
+    "201": 28,
+    "500": 2
+   },
+   "GET /api/v1/places?city_code=CN-HANGZHOU": {
+    "200": 2
+   },
+   "GET /api/v1/travelers/{id}/preferences": {
+    "200": 2
+   },
+   "PUT /api/v1/travelers/{id}/preferences": {
+    "200": 1
+   },
+   "GET /api/v1/journeys/{id}/agent-feed?limit=200": {
+    "200": 21
+   }
+  },
+  "agent_commands_per_journey": {
+   "51929591": {
+    "200": 6,
+    "500": 0
+   },
+   "c10df843": {
+    "200": 1,
+    "500": 0
+   },
+   "1e525047": {
+    "200": 1,
+    "500": 0
+   },
+   "ae79fbf1": {
+    "200": 24,
+    "500": 7
+   },
+   "e168580c": {
+    "200": 8,
+    "500": 3
+   },
+   "94669bae": {
+    "200": 2,
+    "500": 3
+   },
+   "cc5e67c4": {
+    "200": 3,
+    "500": 1
+   }
+  },
+  "hard_fail_events": 20,
+  "hard_fails_by_statement": {
+   "INSERT journey_missions": 17,
+   "INSERT plan_versions": 2,
+   "INSERT agent_runs": 1
+  },
+  "soft_skipped_twin_writes": 390,
+  "soft_skip_site": [
+   "app/main.py:5911"
+  ]
+ },
+ "db_tally": {
+  "totals": {
+   "journey_missions": 60,
+   "agent_runs": 59,
+   "plan_versions": 115
+  },
+  "missions_by_status": {
+   "COMPLETED": 18,
+   "CREATED": 1,
+   "DEGRADED": 41
+  },
+  "orphan_CREATED_missions_no_run": [
+   {
+    "id": "5a2726ff-51b6-4f50-8e18-e4a99d3de404",
+    "journey_id": "ae79fbf1-9320-426f-a5d7-68a0d6492f78",
+    "status": "CREATED",
+    "created_at": "2026-09-23T08:06:10.068848+00:00",
+    "runs": 0
+   }
+  ]
+ },
+ "events": [
+  {
+   "n": 1,
+   "line": 2426,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('d36becb3-59fb-4ade-bc80-246a68c72f8e', 'e168580c-eb06-4553-ac19-67902649ca5f', '346af031-712f-4e66-8c1a-8a963086bd0a'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 2,
+   "line": 2591,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('8984641f-caf7-4a07-b420-9e5e3a5ed28c', 'e168580c-eb06-4553-ac19-67902649ca5f', '346af031-712f-4e66-8c1a-8a963086bd0a'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 3,
+   "line": 2949,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('c9e57ecb-0167-4ccb-b10f-d257cb505680', 'ae79fbf1-9320-426f-a5d7-68a0d6492f78', '538d0a72-5206-48b5-93d9-47902d81935c'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 4,
+   "line": 3179,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('3e3b13af-eb30-4f16-9037-2595267c3268', 'cc5e67c4-047a-4f45-8336-c443d3acc076', '9896dfa4-0430-4eb8-adde-4007007677d9'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 5,
+   "line": 3344,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('2aca7265-2570-48c9-8494-28d27381fd93', '94669bae-e333-4bab-87cf-8c84ef3ad5c8', 'ae2c90e2-70c1-40d8-909f-622ec234663e'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 6,
+   "line": 4030,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('590c1dc1-7d8a-416f-a1ec-23d8d51260d6', '94669bae-e333-4bab-87cf-8c84ef3ad5c8', 'ae2c90e2-70c1-40d8-909f-622ec234663e'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 7,
+   "line": 4476,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('4f76aab8-9bdf-4e14-800a-d90b64833b17', '94669bae-e333-4bab-87cf-8c84ef3ad5c8', 'ae2c90e2-70c1-40d8-909f-622ec234663e'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 8,
+   "line": 4592,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('e8b487da-d90d-43c0-91be-4868dfe6ea5e', '94669bae-e333-4bab-87cf-8c84ef3ad5c8', 'ae2c90e2-70c1-40d8-909f-622ec234663e'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 9,
+   "line": 4811,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('4d1ff4e5-39cd-4177-a3ea-1002cc7dd762', 'cc5e67c4-047a-4f45-8336-c443d3acc076', '9896dfa4-0430-4eb8-adde-4007007677d9'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 10,
+   "line": 5148,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('0512b89c-1138-4df4-a8eb-7b8963718270', 'ae79fbf1-9320-426f-a5d7-68a0d6492f78', '538d0a72-5206-48b5-93d9-47902d81935c'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 11,
+   "line": 6193,
+   "statement": "INSERT INTO plan_versions (id, journey_id, version_no, planning_mode, status, source, parent_plan_version_id, total_cost_minor, currency, estimated_duration_min, utility_score, score_breakdown_json, explanation_json, mobility_snapshot_id, mobility_evidence_json, created_at)",
+   "table": "plan_versions",
+   "parameters_head": " ('42325086-2584-5c70-8724-fe702dbb0993', 'ae79fbf1-9320-426f-a5d7-68a0d6492f78', 10, 'balanced', 'CANDIDATE', 'INITIAL'",
+   "app_frames": [
+    "app/main.py:4558 in generate_journey_plans",
+    "app/services.py:1631 in generate_plans"
+   ]
+  },
+  {
+   "n": 12,
+   "line": 6737,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('7a4fb369-7240-48fe-990a-1c7c55c46eeb', 'ae79fbf1-9320-426f-a5d7-68a0d6492f78', '538d0a72-5206-48b5-93d9-47902d81935c'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 13,
+   "line": 7122,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('124935fb-a485-4673-be45-a809afe8a117', 'e168580c-eb06-4553-ac19-67902649ca5f', '346af031-712f-4e66-8c1a-8a963086bd0a'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 14,
+   "line": 7308,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('bd9af6f4-9342-484b-b6a4-bf1cc0bc9091', '94669bae-e333-4bab-87cf-8c84ef3ad5c8', 'ae2c90e2-70c1-40d8-909f-622ec234663e'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 15,
+   "line": 7427,
+   "statement": "INSERT INTO agent_runs (id, mission_id, journey_id, provider_key, model_key, status, outcome, failure_reason, created_at, started_at, completed_at)",
+   "table": "agent_runs",
+   "parameters_head": " ('79698de4-1693-4157-8a5d-5f6ea9aa88a0', '5a2726ff-51b6-4f50-8e18-e4a99d3de404', 'ae79fbf1-9320-426f-a5d7-68a0d6492f78'",
+   "app_frames": [
+    "app/main.py:1227 in run_agent_command",
+    "app/agent/runtime.py:342 in run"
+   ]
+  },
+  {
+   "n": 16,
+   "line": 7627,
+   "statement": "INSERT INTO plan_versions (id, journey_id, version_no, planning_mode, status, source, parent_plan_version_id, total_cost_minor, currency, estimated_duration_min, utility_score, score_breakdown_json, explanation_json, mobility_snapshot_id, mobility_evidence_json, created_at)",
+   "table": "plan_versions",
+   "parameters_head": " ('2ad35721-a033-5903-9219-9e9e04210193', 'e168580c-eb06-4553-ac19-67902649ca5f', 22, 'balanced', 'CANDIDATE', 'INITIAL'",
+   "app_frames": [
+    "app/main.py:4558 in generate_journey_plans",
+    "app/services.py:1631 in generate_plans"
+   ]
+  },
+  {
+   "n": 17,
+   "line": 8548,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('e100cd5d-cd0b-4b4c-9130-89bc0a67ae45', 'ae79fbf1-9320-426f-a5d7-68a0d6492f78', '538d0a72-5206-48b5-93d9-47902d81935c'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 18,
+   "line": 8687,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('7cae9501-ed3a-4a56-a307-22fc0b06601f', 'ae79fbf1-9320-426f-a5d7-68a0d6492f78', '538d0a72-5206-48b5-93d9-47902d81935c'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 19,
+   "line": 8831,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('19e12b44-bcbb-48ea-9f6b-d71129967896', 'ae79fbf1-9320-426f-a5d7-68a0d6492f78', '538d0a72-5206-48b5-93d9-47902d81935c'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  },
+  {
+   "n": 20,
+   "line": 8965,
+   "statement": "INSERT INTO journey_missions (id, journey_id, traveler_id, trigger_event_id, user_text, objective_codes_json, protected_activity_ids_json, mutable_activity_ids_json, intent_json, resolved_intent_json, allowed_action_classes_json, unresolved_references_json, compiler_provider_key, compiler_model_key, compiler_confidence, reasoning_summary, is_standing, parent_mission_id, max_cost_delta_minor, max_loss_minor, max_schedule_drift_min, preferences_json, requested_autonomy, status, created_at, started_at, completed_at, failure_reason)",
+   "table": "journey_missions",
+   "parameters_head": " ('85a9cb3f-1b05-410f-9e82-b8c10a1a0595', 'ae79fbf1-9320-426f-a5d7-68a0d6492f78', '538d0a72-5206-48b5-93d9-47902d81935c'",
+   "app_frames": [
+    "app/main.py:1121 in run_agent_command",
+    "app/agent/mission.py:537 in create_mission"
+   ]
+  }
+ ],
+ "rounds": {
+  "note": "Raw browser-side captures. `sent`/`recv` are page clocks (UTC ISO, ms). All POSTs are to /api/v1/journeys/{id}/agent/commands on lane backend :8424, frontend :8476 (control generation index-CrAwWm5f.js), DB _lane_aad2d1f2_livecopy.sqlite3. Instrument: R0a/R0b/R0c/R0d = real touch taps (390x844, hasTouch); R1-R7 = element.click() from page JS (a same-tick double cannot be produced by two touch taps).",
+  "rounds": [
+   {
+    "id": "R0a (ORD-0257 trial)",
+    "shape": "same-tick double, touch taps, 1 journey",
+    "interval_ms": 6,
+    "posts": [
+     {
+      "journey": "cc5e67c4",
+      "sent": "07:16:27.648",
+      "status": 200,
+      "mission": "dacadcd5",
+      "run": "70fc17d0",
+      "run_window": "07:16:37.898->07:17:01.768",
+      "run_status": "FAILED_EXTERNAL"
+     },
+     {
+      "journey": "cc5e67c4",
+      "sent": "07:16:27.649",
+      "status": 200,
+      "mission": "0cc35669",
+      "run": "9485a0c1",
+      "run_window": "07:17:01.905->07:17:12.628",
+      "run_status": "COMPLETED"
+     }
+    ],
+    "fifty_hundreds": 0,
+    "mission_rows_written": 2,
+    "plan_version_rows_written": 3
+   },
+   {
+    "id": "R0b (ORD-0257 trial)",
+    "shape": "same-tick double on a 2nd journey, running concurrently with R0a",
+    "interval_ms": 30,
+    "posts": [
+     {
+      "journey": "94669bae",
+      "sent": "07:16:27.698",
+      "status": 500,
+      "body": "Internal Server Error"
+     },
+     {
+      "journey": "94669bae",
+      "sent": "07:16:27.728",
+      "status": 500,
+      "body": "Internal Server Error"
+     }
+    ],
+    "fifty_hundreds": 2,
+    "mission_rows_written": 0,
+    "plan_version_rows_written": 0
+   },
+   {
+    "id": "R0c (ORD-0257 trial)",
+    "shape": "sequential pair, different journeys",
+    "interval_ms": 4412,
+    "posts": [
+     {
+      "journey": "94669bae",
+      "sent": "07:20:53.294",
+      "status": 200,
+      "mission": "e0d4c5bf",
+      "run": "34fe86fa",
+      "run_window": "07:21:03.302->07:21:25.037"
+     },
+     {
+      "journey": "cc5e67c4",
+      "sent": "07:20:57.706",
+      "status": 500,
+      "body": "Internal Server Error"
+     }
+    ],
+    "fifty_hundreds": 1,
+    "mission_rows_written": 1,
+    "plan_version_rows_written": 3
+   },
+   {
+    "id": "R0d (ORD-0257 PAIR2)",
+    "shape": "two journeys ~70 s apart, 3rd leg in the middle",
+    "interval_ms": 70427,
+    "posts": [
+     {
+      "journey": "ae79fbf1",
+      "sent": "07:27:06.611",
+      "status": 200,
+      "mission": "79f797c2",
+      "run": "28b99137",
+      "run_window": "07:27:25.977->07:27:46.806"
+     },
+     {
+      "journey": "ae79fbf1",
+      "sent": "07:28:17.038",
+      "status": 500,
+      "body": "Internal Server Error",
+      "attribution": "per backend access log, not per page capture"
+     },
+     {
+      "journey": "e168580c",
+      "sent": "07:28:30.946",
+      "status": 200,
+      "mission": "9cc996ce",
+      "run": "1389aa26",
+      "run_window": "07:28:43.330->07:29:05.758"
+     }
+    ],
+    "fifty_hundreds": 1
+   },
+   {
+    "id": "R1",
+    "shape": "two journeys, clicks 1031 ms apart",
+    "click_interval_ms": 1031,
+    "post_interval_ms": 109,
+    "posts": [
+     {
+      "journey": "ae79fbf1",
+      "sent": "07:49:58.492",
+      "status": 200,
+      "mission": "ec9c4f3e"
+     },
+     {
+      "journey": "e168580c",
+      "sent": "07:49:58.601",
+      "status": 200,
+      "mission": "4e263156"
+     }
+    ],
+    "fifty_hundreds": 0
+   },
+   {
+    "id": "R2",
+    "shape": "two journeys, POSTs 21.02 s apart (inside the other's run window)",
+    "post_interval_ms": 21023,
+    "posts": [
+     {
+      "journey": "ae79fbf1",
+      "sent": "07:52:51.907",
+      "status": 200,
+      "mission": "bfb1ef51",
+      "run_window": "07:53:01.888->07:53:39.165"
+     },
+     {
+      "journey": "e168580c",
+      "sent": "07:53:12.930",
+      "status": 200,
+      "mission": "2ee380d0",
+      "run_window": "07:53:39.260->07:53:55.462"
+     }
+    ],
+    "fifty_hundreds": 0
+   },
+   {
+    "id": "R3",
+    "shape": "SOLO submit: both other pages idle (button label 开始规划, disabled=false) + 15 s margin",
+    "post_interval_ms": null,
+    "posts": [
+     {
+      "journey": "ae79fbf1",
+      "sent": "07:54:39.779",
+      "status": 200,
+      "mission": "351d10b6",
+      "run_window": "07:55:01.097->07:55:21.848"
+     }
+    ],
+    "fifty_hundreds": 0,
+    "note": "1 trial only - thin denominator, see caveats"
+   },
+   {
+    "id": "R4",
+    "shape": "same-tick double (b.click();b.click(); one task), 1 journey",
+    "click_interval_ms": 1,
+    "post_interval_ms": 65,
+    "posts": [
+     {
+      "journey": "ae79fbf1",
+      "sent": "07:56:25.020",
+      "status": 200,
+      "mission_ins": "07:56:34.597 COMPLETED"
+     },
+     {
+      "journey": "ae79fbf1",
+      "sent": "07:56:25.085",
+      "status": 200,
+      "mission_ins": "07:56:37.195 DEGRADED"
+     }
+    ],
+    "fifty_hundreds": 0
+   },
+   {
+    "id": "R5",
+    "shape": "two journeys, first click each, POSTs 49 ms apart",
+    "post_interval_ms": 49,
+    "posts": [
+     {
+      "journey": "ae79fbf1",
+      "sent": "08:01:03.040",
+      "status": 500,
+      "body": "Internal Server Error"
+     },
+     {
+      "journey": "e168580c",
+      "sent": "08:01:03.089",
+      "status": 200
+     }
+    ],
+    "fifty_hundreds": 1
+   },
+   {
+    "id": "R6",
+    "shape": "two journeys x 2 clicks; the 2nd click on each page saw disabled=true 7 ms after the 1st, so only 2 POSTs left",
+    "post_interval_ms": 90,
+    "posts": [
+     {
+      "journey": "ae79fbf1",
+      "sent": "08:03:49.265",
+      "recv": "08:04:29.977",
+      "dur_ms": 40712,
+      "status": 200,
+      "content_type": "application/json",
+      "mission": "936a7c5a"
+     },
+     {
+      "journey": "e168580c",
+      "sent": "08:03:49.355",
+      "recv": "08:04:15.157",
+      "dur_ms": 25802,
+      "status": 200,
+      "content_type": "application/json",
+      "mission": "d000b935"
+     }
+    ],
+    "fifty_hundreds": 0,
+    "guard_reading": {
+     "click_1_disabled": false,
+     "click_2_disabled_7ms_later": true,
+     "same_task_double_click_posts": 2,
+     "cross_task_double_click_posts": 1
+    }
+   },
+   {
+    "id": "R7",
+    "shape": "3 journeys x same-tick double click = 6 POSTs inside 287 ms",
+    "post_span_ms": 287,
+    "posts": [
+     {
+      "journey": "ae79fbf1",
+      "sent": "08:05:44.729",
+      "recv": "08:06:43.629",
+      "dur_ms": 58900,
+      "status": 200,
+      "content_type": "application/json",
+      "mission": "47668160"
+     },
+     {
+      "journey": "ae79fbf1",
+      "sent": "08:05:44.937",
+      "recv": "08:06:28.541",
+      "dur_ms": 43604,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "side_effect": "mission 5a2726ff CREATED at 08:06:10.068 then INSERT INTO agent_runs failed -> orphan row, 0 runs"
+     },
+     {
+      "journey": "e168580c",
+      "sent": "08:05:44.879",
+      "recv": "08:06:28.117",
+      "dur_ms": 43238,
+      "status": 200,
+      "content_type": "application/json",
+      "mission": "eaa13ae2"
+     },
+     {
+      "journey": "e168580c",
+      "sent": "08:05:45.016",
+      "recv": "08:05:59.249",
+      "dur_ms": 14233,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error"
+     },
+     {
+      "journey": "94669bae",
+      "sent": "08:05:44.740",
+      "recv": "08:07:03.661",
+      "dur_ms": 78921,
+      "status": 200,
+      "content_type": "application/json",
+      "mission": "c6b1b47a"
+     },
+     {
+      "journey": "94669bae",
+      "sent": "08:05:44.790",
+      "recv": "08:06:27.588",
+      "dur_ms": 42798,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error"
+     }
+    ],
+    "fifty_hundreds": 3,
+    "pattern": "each of the 3 doubles lost exactly its later leg, 3/3",
+    "card_reading": "the surviving leg's card overwrote the 500 card on all 3 pages: final data-result-status seen were PLANS_WITHOUT_AI (ae79fbf1), PLANS_WITHOUT_AI (94669bae), NO_PLANS_PRODUCED (e168580c) - i.e. the traveller's end state shows one of the two outcomes, whichever finished last"
+   }
+  ],
+  "http500_card_verbatim": {
+   "outer_attributes": {
+    "class": "plan-ai-result warn",
+    "data-result-status": "HTTP_500",
+    "data-result-tone": "warn",
+    "data-plan-count": "-1",
+    "data-new-plan-ids": "",
+    "role": "status"
+   },
+   "title": "服务端处理失败",
+   "body": "这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。",
+   "detail_html": "<details class=\"plan-ai-detail\"><summary data-testid=\"plan-ai-detail-toggle\">技术详情</summary><code data-testid=\"plan-ai-reason\">HTTP 500</code></details>",
+   "screenshot": "ord0262_A_0810_http500_card.png",
+   "screenshot_sha256": "b59afe26dc4738d471749beb9c2eee4499c55be14c6bd224c3d764738dc2aa69",
+   "screenshot_bytes": 67902
+  }
+ },
+ "q_and_p_series": {
+  "lane": "HJ-P3 aad2d1f2",
+  "run_id": "ORD0262-QP-1652",
+  "purpose": "2(a) same-condition repetition distribution on the PREVIOUS generation + 2(b) the two ORD-0257 cells re-run on the now-PUBLISHED generation",
+  "generation_note": "Publish line moved at 15:53 by the commander: PUBLISHED = index-DJEINrOl.js + index-COUUKhbU.css built from 027d65ed381fbb4bfb81a07a7ae20a9f293454e1 (his swap receipt evidence/deploy/swap_027d65e_0923_1553.json, blob 89e91c7e369fc8f3: new_index_refs = those two, assets_union.already_identical lists both, arm J_name_content_binding = GREEN, overall GREEN). The generation I called 'new' in ORD-0257 is therefore now the published one, and CrAwWm5f is the PREVIOUS generation (backup anchor dist_bak_154923_1790149763821685500).",
+  "my_faces": {
+   "published": {
+    "url": "http://127.0.0.1:8474/v8/hub",
+    "served_index_refs": [
+     "/assets/index-DJEINrOl.js",
+     "/assets/index-COUUKhbU.css"
+    ],
+    "bytes_served": {
+     "index-DJEINrOl.js": 1236190,
+     "index-COUUKhbU.css": 183342
+    },
+    "sha256_served": {
+     "index-DJEINrOl.js": "80a8ca1afb915cfd",
+     "index-COUUKhbU.css": "4a3926211fda806e"
+    },
+    "identity_argument": "same content-hashed basenames the commander's swap receipt names as deployed + same byte lengths; Vite basenames are content hashes, so name equality is the byte-identity claim, and arm J on his side checked name/content binding",
+    "my_build_provenance": "vite build of my own `git archive 027d65ed381fbb4bfb81a07a7ae20a9f293454e1` export (ORD-0257)"
+   },
+   "previous": {
+    "url": "http://127.0.0.1:8476/v8/hub",
+    "served_index_refs": [
+     "/assets/index-CrAwWm5f.js",
+     "/assets/index-cWMF3pBW.css"
+    ],
+    "sha256_index-CrAwWm5f.js": "9fd89456daf12bcab4bb775c8a8522d50628a... see receipt (matches the sha256 in the commander's swap receipt for generation_OLD exactly)",
+    "identity_argument": "his swap receipt records generation_OLD probe sha256 9fd89456daf12bca... and disk_bytes 1234802; my served file is 1234802 B with the same sha256 => byte-identical to the generation the user was on until 15:53"
+   }
+  },
+  "instrument": "390x844, hasTouch, isMobile, deviceScaleFactor 3, locale zh-CN; double press = two element.click() inside ONE task (t0/t1 identical ms) because two real touch taps cannot be same-tick; sheet opened by a real tap on [data-testid=hub-plan-with-ai]; request text 31 chars typed via the textarea",
+  "Q_series_previous_generation": {
+   "condition": "one journey (ae79fbf1), same-tick double press, repeated; gate between rounds = the sheet's own busy flag (button label 开始规划 and not disabled) + 4-6 s margin",
+   "rounds": [
+    {
+     "round": "Q1",
+     "clicks_same_tick_ms": [
+      0,
+      0
+     ],
+     "posts": [
+      {
+       "sent": "08:54:24.453",
+       "dur_ms": 95438,
+       "status": 200,
+       "mission": "a26792ce"
+      },
+      {
+       "sent": "08:54:24.696",
+       "dur_ms": 61848,
+       "status": 500,
+       "ct": "text/plain; charset=utf-8",
+       "body": "Internal Server Error"
+      }
+     ],
+     "outcome": "1x200 + 1x500"
+    },
+    {
+     "round": "Q2",
+     "posts": [
+      {
+       "sent": "08:55:33.446",
+       "dur_ms": 56990,
+       "status": 200,
+       "mission": "fff0f243"
+      },
+      {
+       "sent": "08:55:33.800",
+       "dur_ms": 106601,
+       "status": 200,
+       "mission": "571e961c"
+      }
+     ],
+     "outcome": "2x200"
+    },
+    {
+     "round": "Q3",
+     "posts": [
+      {
+       "sent": "08:56:06.971",
+       "dur_ms": 11963,
+       "status": 500
+      },
+      {
+       "sent": "08:56:07.322",
+       "dur_ms": 47229,
+       "status": 200,
+       "mission": "9eba26d7"
+      }
+     ],
+     "outcome": "1x200 + 1x500"
+    },
+    {
+     "round": "Q4",
+     "posts": [
+      {
+       "sent": "08:56:57.251",
+       "dur_ms": 12615,
+       "status": 500
+      },
+      {
+       "sent": "08:56:57.593",
+       "dur_ms": 35357,
+       "status": 200,
+       "mission": "722e3a88"
+      }
+     ],
+     "outcome": "1x200 + 1x500"
+    },
+    {
+     "round": "Q5",
+     "posts": [
+      {
+       "sent": "08:57:26.656",
+       "dur_ms": 21927,
+       "status": 500
+      },
+      {
+       "sent": "08:57:27.012",
+       "dur_ms": 33327,
+       "status": 200,
+       "mission": "a6eebb9d"
+      }
+     ],
+     "outcome": "1x200 + 1x500"
+    },
+    {
+     "round": "Q6",
+     "posts": [
+      {
+       "sent": "08:57:57.021",
+       "status": 200,
+       "mission": "07d89eb4"
+      },
+      {
+       "sent": "08:57:57.370",
+       "status": 200,
+       "mission": "0140e283"
+      }
+     ],
+     "outcome": "2x200",
+     "note": "statuses from the DB/endpoint-histogram delta, page had navigated away before my read"
+    }
+   ],
+   "distribution": {
+    "rounds": 6,
+    "clicks_total": 12,
+    "posts_total": 12,
+    "clicks_swallowed": 0,
+    "per_round_outcome_counts": {
+     "2x200": 2,
+     "1x200+1x500": 4,
+     "2x500": 0,
+     "0 posts": 0
+    },
+    "post_level": {
+     "200": 8,
+     "500": 4
+    },
+    "which_leg_loses": "4/4 of the losses were the LATER leg of the pair (same as R7's 3/3)",
+    "agent_runs_delta_in_window": 8,
+    "plan_versions_delta_in_window": 9
+   },
+   "reconciliation": "backend access log 200 34 -> 45 and 500 10 -> 14 across Q+P = +11 x 200 +4 x 500 = 15 posts, and hard-fail tracebacks 16 -> 20 = +4, i.e. exactly one unhandled OperationalError per 500",
+   "extra_reading": "the sheet's busy flag is NOT ref-counted: with both legs of a pair in flight, the leg that returns first flips the button back to 开始规划 while the other is still running (observed at the Q2 fire: Q1 leg1 resolved at 08:55:59, i.e. after Q2 was fired at 08:55:33)"
+  },
+  "P_series_published_generation": {
+   "condition": "same as Q series (one journey ae79fbf1, same-tick double press, 3 rounds) + the earlier arm on journey cc5e67c4 (P0)",
+   "rounds": [
+    {
+     "round": "P0",
+     "clicks": [
+      "08:41:17.086",
+      "08:41:17.088"
+     ],
+     "both_saw_disabled": false,
+     "posts": 1,
+     "status": 200,
+     "mission": "08:41:32.224 row",
+     "agent_runs_delta": 1,
+     "plan_versions_delta": 3,
+     "non_2xx": 0
+    },
+    {
+     "round": "P1",
+     "clicks": [
+      "09:01:54.575",
+      "09:01:54.577"
+     ],
+     "posts": 1,
+     "sent": "09:01:54.936",
+     "dur_ms": 30108,
+     "status": 200,
+     "mission": "9750770e"
+    },
+    {
+     "round": "P2",
+     "clicks": [
+      "09:02:30.004",
+      "09:02:30.004"
+     ],
+     "posts": 1,
+     "sent": "09:02:30.330",
+     "dur_ms": 34040,
+     "status": 200,
+     "mission": "3799b570"
+    },
+    {
+     "round": "P3",
+     "clicks": [
+      "09:03:09.552",
+      "09:03:09.552"
+     ],
+     "posts": 1,
+     "sent": "09:03:09.894",
+     "status": 200,
+     "mission": "6e72a007"
+    }
+   ],
+   "verdict_three_columns": {
+    "POST_count": "1 in 4/4 rounds (2 presses -> 1 request)",
+    "agent_runs_delta": "+1 per round, never +2",
+    "non_2xx_count": 0
+   },
+   "cell_summary_hitbox": {
+    "url": "http://127.0.0.1:8474/v8/bookings",
+    "selector": "[data-testid=bookings-advanced] > summary",
+    "text": "高级：结构化数据",
+    "rect_px": {
+     "x": 39.5,
+     "y": 614,
+     "w": 311.3,
+     "h": 44
+    },
+    "computed": {
+     "line-height": "44px",
+     "min-height": "44px",
+     "padding": "0px",
+     "font-size": "11px"
+    },
+    "innerWidth": 390,
+    "devicePixelRatio": 3,
+    "elementFromPoint_at_center_195.2_636": "SUMMARY itself (stack: SUMMARY > DETAILS.v8-advanced > ASIDE.v9-inbox)",
+    "real_touch_tap": {
+     "open_before": false,
+     "open_after": true
+    },
+    "screenshot": "ORD0257B-PUB-1641_published_bookings_advanced_summary.png",
+    "comparison": "previous generation measured 311 x 14 in ORD-0257; published generation measures 311.3 x 44 => ORD-0247 is now 现网验过, not just 树里验过"
+   }
+  },
+  "caveats": [
+   "Q-series rounds were spaced by the sheet's busy flag, which the extra_reading above shows is not reliable while both legs are in flight; so Q2..Q6 are NOT lab-isolated - another POST may have been in flight. I report the condition as measured rather than claiming isolation; Q1 is the one round that was demonstrably isolated (78 s after the previous activity ended).",
+   "Q6's statuses come from the endpoint-histogram + DB rows, not from the page (the page had moved on); labelled as such.",
+   "The lane still has several hub pages polling /twin, so background write pressure is higher than a real single phone; the 25.6%/4-in-12 rates are lane rates, not user rates.",
+   "Runs mostly end FAILED_EXTERNAL (the pending-revocation DeepSeek key), which lengthens write windows; shape with a healthy AI is untested.",
+   "No product code changed, no demo/reset, no writes to _live.db/_preview.db/:4781/:4782/:8693 or the tunnel."
+  ]
+ }
+}
