@@ -1,0 +1,7 @@
+53b161b284a4e1c387876165174bb45c2b87aa50  OFFLINE_SHELL_RECEIPT.md  5179 B  sha256=391baa17959acfbed1ea6dc39d6304c6be1b93f6ab3c185020484844a2312c66  readable=True
+2fb5ff96c1c86f35dbc967b86fbdc9db7216fc3f  offline_shell_readings.json  5438 B  sha256=34b1b1668cf7c1fb61679689536cba636f6fc77ee64b5a13e98ad17f6d4c5fc7  readable=True
+lane=HJ-P3-aad2d1f2 run_id=HJP3-OFF-0058 gen=landed 1f44408 marker=v10-sw.js sha256:e63d7421eda34093 (2055 B) dist=_qoder_cmdr_deploy_1f44408_0923/repo/frontend/dist -> hardlink copy _hjp3_fan_sweep_0923/snap_1f44408_dist face=:8488 (started+stopped by me, pid 19428 proven by CommandLine) viewport=390x844 demo_reset=0 product_bytes_modified=0 user_stores_touched=0
+precache_entries=8 cachestorage=['workbox-precache-v2-http://127.0.0.1:8488/']
+duplicate_shell_entry_removed: grep_v10_shell=0 grep_url_slash_index_html=0
+POSITIVE: SW answered the shell - the app renders with the origin dead
+NEGATIVE: without the SW+precache the same dead origin gives a CHROME page, not the product - so step 3 was the SW answering
