@@ -1,0 +1,73 @@
+{
+ "at": "2026-09-23T13:42:32.840Z",
+ "base": "http://127.0.0.1:4441",
+ "profile": "brand-new context, nothing persisted",
+ "observer": "addInitScript(function) at document start",
+ "sample_interval_ms": 25,
+ "first_navigation": {
+  "ok": true,
+  "status": 200,
+  "from_service_worker": false
+ },
+ "reload_navigation": {
+  "ok": true,
+  "status": 200,
+  "from_service_worker": false
+ },
+ "state_after_reload": {
+  "cache_names": [],
+  "controller": "http://127.0.0.1:4441/v10-sw.js",
+  "active_states": [
+   "activated"
+  ]
+ },
+ "instrument_page_errors": [],
+ "events_total": 725,
+ "polls": 721,
+ "non_poll_events": [
+  {
+   "t_ms": 11,
+   "label": "document-start",
+   "cache_names": [],
+   "entries": {},
+   "registrations": []
+  },
+  {
+   "t_ms": 11,
+   "label": "registration-lookup",
+   "cache_names": [],
+   "entries": {},
+   "registrations": [],
+   "had_any": false
+  },
+  {
+   "t_ms": 11,
+   "label": "registrations-observed",
+   "cache_names": [],
+   "entries": {},
+   "registrations": [],
+   "count": 0
+  },
+  {
+   "t_ms": 153,
+   "label": "controllerchange",
+   "cache_names": [],
+   "entries": {},
+   "registrations": [
+    {
+     "active": "/v10-sw.js",
+     "active_state": "activated",
+     "installing": null,
+     "waiting": null
+    }
+   ],
+   "controller": "/v10-sw.js"
+  }
+ ],
+ "cache_names_ever_seen": [],
+ "first_poll_with_any_cache": null,
+ "first_nonpoll_event_with_any_cache": null,
+ "registration_states_first_seen": {
+  "[\"/v10-sw.js\",\"activated\",null,null]": 148
+ }
+}
