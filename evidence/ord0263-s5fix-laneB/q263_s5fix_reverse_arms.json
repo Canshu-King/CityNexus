@@ -1,0 +1,104 @@
+{
+ "at": "2026-09-24T01:04:49+08:00",
+ "order": "ORD-0263 第五态 · 反向臂（产物层先验，再跑屏）",
+ "lane": "B c01d72a3",
+ "shape_under_test": "200_html",
+ "ruler": {
+  "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "entry": "judge_v5"
+ },
+ "arms": [
+  {
+   "arm": "A_no_throw_in_v8Request",
+   "file": "V8Experience.tsx",
+   "sites_hit": 1,
+   "before_sha256": "0f6952841a488789a9ffbc44a85eb4a9c57ddfd2139baadafb6dd9c04cd94337",
+   "expect": "RED",
+   "mutated_sha256": "75b3dae096e6925104ea2a5042dce1bf7c3ac9bb29c74943c6a4799745c04583",
+   "build_rc": 0,
+   "artifact_fingerprints": {
+    "asset": "index-C9iKFFQY.js",
+    "bytes": 1214568,
+    "count_ORIGIN_INVALID_RESPONSE": 3,
+    "count_failure_originInvalidResponse": 2,
+    "count_OriginResponseUnusable": 2,
+    "count_body_null_guard": 410
+   },
+   "reader": {
+    "nodes": {
+     "failure-view": 1,
+     "today-heading": 0,
+     "trial-setup": 0
+    },
+    "settled_after_ms": 433,
+    "origin_answered_rows": 1,
+    "text_head": "读取 |  | 这一次没读到 |  | 服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。 |  | 重试 | 归因详情 | attribution_reason=UNKNOWN_FAILURE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RESOURCE_STATE retryable=false recovery_"
+   },
+   "judge_v5": {
+    "verdict": "RED",
+    "failed_conditions": [
+     "cached_copy_column_not_measured"
+    ],
+    "measured_columns": {
+     "attribution_reason": "UNKNOWN_FAILURE",
+     "evidence_kind": "HTTP_RESPONSE",
+     "http_status": "200",
+     "source_layer": "RESOURCE_STATE",
+     "retryable": "false"
+    }
+   },
+   "flipped_as_expected": true,
+   "after_restore_sha256": "0f6952841a488789a9ffbc44a85eb4a9c57ddfd2139baadafb6dd9c04cd94337",
+   "restored_byte_exact": true
+  },
+  {
+   "arm": "B_unreachable_classify_branch",
+   "file": "failureAttribution.ts",
+   "sites_hit": 1,
+   "before_sha256": "3472430ee46810bdef0f5b3e53cca88cbfeb9a4a5385760c165032a9974d5c5d",
+   "expect": "unknown-or-red",
+   "mutated_sha256": "37204da99f36d6b53e39b2cc9f107047c1b7d264539b79c3e81c67142c91911c",
+   "build_rc": 0,
+   "artifact_fingerprints": {
+    "asset": "index-B4KmWYkB.js",
+    "bytes": 1214367,
+    "count_ORIGIN_INVALID_RESPONSE": 2,
+    "count_failure_originInvalidResponse": 1,
+    "count_OriginResponseUnusable": 1,
+    "count_body_null_guard": 411
+   },
+   "reader": {
+    "nodes": {
+     "failure-view": 1,
+     "today-heading": 0,
+     "trial-setup": 0
+    },
+    "settled_after_ms": 394,
+    "origin_answered_rows": 1,
+    "text_head": "连接 |  | 网络不可用 |  | 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。 |  | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_lay"
+   },
+   "judge_v5": {
+    "verdict": "RED",
+    "failed_conditions": [
+     "evidence_kind_lost_HTTP",
+     "http_status_not_carried",
+     "reason_collapsed",
+     "layer_collapsed_to_TRANSPORT",
+     "sentence_claims_no_answer"
+    ],
+    "measured_columns": {
+     "attribution_reason": "NETWORK_UNAVAILABLE",
+     "evidence_kind": "TRANSPORT",
+     "http_status": "none",
+     "source_layer": "TRANSPORT",
+     "cached_copy_present": "true",
+     "retryable": "true"
+    }
+   },
+   "flipped_as_expected": true,
+   "after_restore_sha256": "3472430ee46810bdef0f5b3e53cca88cbfeb9a4a5385760c165032a9974d5c5d",
+   "restored_byte_exact": true
+  }
+ ],
+ "restores_all_byte_exact": true
+}
