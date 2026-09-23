@@ -273,6 +273,11 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
 @media (max-width: 680px) { .v12-offline-now-next { grid-template-columns: 1fr; } }
 @media (max-width: 680px) { .v9-live-actions { align-items: stretch; flex-direction: column; }.v9-live-actions button { margin-top: 8px !important; }.v9-wallet-layout { grid-template-columns: 1fr; }.v9-offline { margin-top: 20px; padding: 22px; } }
 @media (max-width: 680px) { .v8-mobile-nav button { min-height: var(--cn-nav-item-h); }.v8-mobile-nav button span { font-size: var(--cn-fs-caption); }.v8-mode-chips button, .v8-compare-button { min-height: var(--cn-touch-min); }/* The 44px floor had holes: every one of these is a deliberate tap, and .v8-quiet-button carried no min-height at all, so Today's three secondary actions measured 30px. */.v8-quiet-button, .v8-primary, .v8-outline-button, .v8-rain-button, .v8-page-intro button, .trial-chips button, .trial-sticky-cta button { min-height: var(--cn-touch-min); } }
+/* ORD-0247: the >=44px floor above enumerates controls and never covered <summary>, so the
+   "高级：结构化数据" disclosure measured 311x14 next to 44px buttons.  line-height grows the box instead of
+   switching to flex, which would drop the native disclosure marker; it stays inside the media query so
+   the desktop compact density (Amendment F-2) is untouched. */
+@media (max-width: 680px) { .v8-advanced > summary { min-height: var(--cn-touch-min); line-height: var(--cn-touch-min); } }
 
 /* Progressive disclosure, mobile comparison, and accessible focus states. */
 .v8-product-shell button:focus-visible, .v8-product-shell [role="button"]:focus-visible, .v8-product-shell textarea:focus-visible { outline: 3px solid #9aa8ff; outline-offset: 3px; }

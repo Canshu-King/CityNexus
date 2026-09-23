@@ -330,6 +330,9 @@ export function PlanWithAiSheet({
     newPlanIds?: string[];
   }>(null);
   const abortRef = useRef<AbortController | null>(null);
+  /* ORD-0246: `disabled={busy}` is a *rendered* fact, and two clicks inside one tick both arrive
+     before React re-renders, so the render cannot be the re-entry guard. This ref can. */
+  const runningRef = useRef(false);
   const startedAt = useRef(0);
 
   /* The only number this sheet is allowed to animate is one it can prove: seconds
@@ -432,6 +435,12 @@ export function PlanWithAiSheet({
   const submit = async () => {
     const command = text.trim();
     if (command.length < 8) return;
+    /* Synchronous, ahead of every await and every setState below: the second click of a same-tick
+       double tap reaches this function while the button is still rendered as enabled, so refusing
+       it here is the only place it can be refused.  Silence is deliberate -- the first request is
+       running and the screen already says so. */
+    if (runningRef.current) return;
+    runningRef.current = true;
     const controller = new AbortController();
     abortRef.current = controller;
     const signal = controller.signal;
@@ -648,6 +657,7 @@ export function PlanWithAiSheet({
       }
     } finally {
       abortRef.current = null;
+      runningRef.current = false;
       setBusy(false);
       setPhase(null);
     }
