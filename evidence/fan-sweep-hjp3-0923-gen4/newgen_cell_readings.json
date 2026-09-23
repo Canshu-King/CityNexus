@@ -1,0 +1,74 @@
+{
+ "provenance": "transcriptions taken verbatim from page innerText / performance entries on my own faces; the DB+log side is computed separately in cell9_facts_r2.json",
+ "lane": "HJ-P3-aad2d1f2",
+ "run_id": "FAN4-2240",
+ "gen": {
+   "bundle": "index-Cpy_jhEg.js",
+   "bytes": 1242399,
+   "sha256": "5d674a444291f10b45fa50dc53f57845c888013bc3d941f6fc6d0f9f5ad7b2d7",
+   "copies_summed_locally": [
+     "_qoder_cmdr_deploy_2b49e3c_0923/repo/frontend/dist/assets/index-Cpy_jhEg.js",
+     "_qoder_harness_ord0254/landedgen/dist/assets/index-Cpy_jhEg.js",
+     "_qoder_preview_20260920/dist/assets/index-Cpy_jhEg.js  (the user chain)"
+   ],
+   "css": "index-I45CQek8.css",
+   "landed_tip": "2b49e3cab1fcdbc55219065520ced8dea4fdfe73"
+ },
+ "faces": {
+   "8485": {"pid": 50184, "proxy_to": 8424, "ownership_proof": "200 on my-only journey + 404 on a nonexistent uuid", "bundle_http": "200 / 1242399 B"},
+   "8486": {"pid": 59384, "proxy_to": 8599, "observed": "no HTTP answer at all (silent dummy)"},
+   "8487": {"pid": 53048, "proxy_to": 8598, "observed": "500 / 21 B / text/plain / 'Internal Server Error'"}
+ },
+ "S2a_real_500_no_local_snapshot": {
+   "face": "8487",
+   "screen": ["服务器", "服务器这次没能把行程读出来", "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。"],
+   "doors": ["重试", "归因详情"],
+   "snapshot_door_present": false,
+   "fact": "dummy answers HTTP/1.1 500 text/plain 21 B; this origin has no citynexus-offline IndexedDB",
+   "verdict": "consistent; the NOT-YET-DEPLOYED wording from the previous generation is replaced"
+ },
+ "S2b_same_origin_500_with_local_snapshot": {
+   "face": "8485",
+   "injection": "browser-side page.route('**/api/**') -> fulfill 500 (NOT a real outage; keeps one origin + a device-cached snapshot)",
+   "screen": ["服务器", "服务暂时不可用", "服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。"],
+   "doors_testids": ["failure-read-cached", "failure-retry", "details>summary"],
+   "attribution_detail_expanded": "attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+   "after_clicking_read_cached": ["CN", "离线 · 只读", "你未来 24 小时已保存。", "现在 · COMPLETE", "行程完成", "下一步 · —", "无下一步", "供应商数据最后刷新于 此快照之前。离线状态下财务操作已禁用。这台设备保存这份副本的时间：9月23日 21:10。"],
+   "local_snapshot_store": "IndexedDB database name citynexus-offline (present)",
+   "verdict": "consistent; the door exists, names itself, and really returns a read-only copy with financial ops disabled",
+   "open_question_not_promoted": "the same screen says 你未来 24 小时已保存 while its own facts read 无下一步 / 行程完成 - one generic sentence, no second shape to judge it by"
+ },
+ "S3_same_origin_silent": {
+   "face": "8485",
+   "injection": "page.route('**/api/**') -> never fulfils",
+   "screen": ["没有回音", "等了 12 秒，这台服务器一个字也没回答", "这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。"],
+   "performance_entries_attempt_1": [
+     {"name": "~/journeys/e5a507bd.../experience", "start_ms": 56, "duration_ms": 12001},
+     {"name": "/api/v1/health", "start_ms": 12057, "duration_ms": 4004}
+   ],
+   "failure_sentence_appeared_at_ms": 16573,
+   "arithmetic": "12001 (read deadline) + 4004 (health probe) + ~500 (boot) = 16573 -> the screen's 12 秒 is true about the read; the extra 4.6 s is the probe",
+   "attribution_detail_expanded": "attribution_reason=NETWORK_UNAVAILABLE evidence_kind=HEALTH_PROBE http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+   "retry_door_behaviour": "failure-retry re-runs the same bounded sequence (entries reset to start 69 / dur 12015 + start 12084 / dur 4004) and lands on the same named state; no hang, no blank screen",
+   "repeats": "2 of 2 attempts produced the same state (second attempt screenshotted at 18.5 s)",
+   "user_wait_cost_per_attempt_ms": 16573,
+   "verdict": "consistent"
+ },
+ "9b_new_generation_exit_mid_flight": {
+   "submit_epoch_ms": 1790173672034,
+   "exited_after_ms": 9541,
+   "in_flight_screen": "发出请求，等待模型返回 · 已等待 3 秒 / 后端不会中途汇报进度，所以这里只有真实等待时间，没有百分比，也没有猜。/ ✓读取已有方案作为基线 ●发出请求，等待模型返回 ○核对本次是否真的产出了新方案",
+   "reentry_screen_first": "选择你的方案 / 我们按这座城可核验的地点和你的预算，生成了 6 个可选方案。 + 方案 A..F 六张卡，每张带「采用这个方案」",
+   "reentry_screen_after_second_reload": "生成了 6 个可选方案; 6 cards; regex /刚才|上一次|有一项|未产出|失败/ -> no match",
+   "db_fact": "mission 17aec167 created 2026-09-23T14:28:02.574Z (~1 s AFTER my abort), completed 14:28:18.886Z, status DEGRADED; run FAILED_EXTERNAL; plan_versions in that window = 0; totals missions 70->71, runs 69->70, plan_versions 139 unchanged",
+   "log_fact": "no access-log line for this POST either (journey lines remain 10675/10678/10760/10763) - second instance of the same shape",
+   "verdict": "inconsistent - defect persists on the new generation; ORD-0263 does not cover the client-driven second leg",
+   "not_attributed": "old gen round A ended COMPLETED, new gen round 3 ended FAILED_EXTERNAL/DEGRADED for the same exit shape; I have no second evidence to say whether 0263 caused it"
+ },
+ "closed_from_previous_round": "hub candidate question: the boot screen of the same origin renders 方案 A-F with 采用这个方案 each, and 屏上 6 = 库里 6 CANDIDATE rows -> consistent, my previous 'not verified' item is now verified",
+ "instrument_disclosures": [
+   "S2b/S3 failures are browser-side route injections, not real outages; the real-dummy shape is listed separately as S2a",
+   "on the :8487 page my fetch wrapper re-issued the request (await then return of.apply) -> request counts from that page are not used",
+   "the MCP page pointer was moved once to another lane's tab (:4415); that reading was not used as mine, and every later call selects my page by URL from context().pages()"
+ ]
+}
