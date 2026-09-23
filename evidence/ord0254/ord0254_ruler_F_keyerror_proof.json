@@ -1,0 +1,118 @@
+{
+ "at": "2026-09-23T13:21:25+08:00",
+ "ruler": "D:\\moodle\\_qoder_harness_ord0254\\tools\\ruler.py",
+ "ruler_blob": "e3015cc065d1d4ebca2c0ba28fe3b95f85b64a73",
+ "ruler_bytes": 39302,
+ "signed_match": true,
+ "line_647_keys": [
+  "base",
+  "surface",
+  "verdict"
+ ],
+ "line_650_keys": [
+  "base",
+  "got",
+  "surface"
+ ],
+ "verdict_key_in_configured_branch": false,
+ "line_654_replay_per_operator_state": {
+  "both_bases_unset": {
+   "raised": false,
+   "f_unconfigured": true,
+   "entry_keys": [
+    [
+     "base",
+     "surface",
+     "verdict"
+    ],
+    [
+     "base",
+     "surface",
+     "verdict"
+    ]
+   ],
+   "matches_prediction": true
+  },
+  "proxy_set_tunnel_unset": {
+   "raised": true,
+   "error": "KeyError: 'verdict'",
+   "entry_keys": [
+    [
+     "base",
+     "got",
+     "surface"
+    ],
+    [
+     "base",
+     "surface",
+     "verdict"
+    ]
+   ],
+   "matches_prediction": true
+  },
+  "proxy_unset_tunnel_set": {
+   "raised": false,
+   "f_unconfigured": true,
+   "entry_keys": [
+    [
+     "base",
+     "surface",
+     "verdict"
+    ],
+    [
+     "base",
+     "got",
+     "surface"
+    ]
+   ],
+   "matches_prediction": true
+  },
+  "both_bases_set": {
+   "raised": true,
+   "error": "KeyError: 'verdict'",
+   "entry_keys": [
+    [
+     "base",
+     "got",
+     "surface"
+    ],
+    [
+     "base",
+     "got",
+     "surface"
+    ]
+   ],
+   "matches_prediction": true
+  }
+ },
+ "measured_rule": "main() raises as soon as the FIRST probed entry is a configured base; an earlier NOT_CONFIGURED entry hides it via any()'s short-circuit",
+ "matrix_matches_prediction": true,
+ "lines_644_661_verbatim": {
+  "644": "    for label, base in ((\"proxy_4782\", os.environ.get(\"CNX_DEPLOY_PROXY_BASE\")),",
+  "645": "                        (\"tunnel\", os.environ.get(\"CNX_DEPLOY_TUNNEL_BASE\"))):",
+  "646": "        if not base:",
+  "647": "            f_probes.append({\"surface\": label, \"verdict\": \"NOT_CONFIGURED\", \"base\": None})",
+  "648": "            continue",
+  "649": "        for ref in [r for r in new_refs if r.endswith(\".js\")] + [\"/\"]:",
+  "650": "            f_probes.append({\"surface\": label, \"base\": base,",
+  "651": "                             \"got\": repeated_verdict(ref, expect_ct_for(ref), serve, base=base,",
+  "652": "                                                      auth_file=os.environ.get(\"CNX_DEPLOY_AUTH_FILE\"),",
+  "653": "                                                      times=int(os.environ.get(\"CNX_DEPLOY_PROBE_TIMES\", \"2\")))})",
+  "654": "    f_unconfigured = any(p[\"verdict\"] == \"NOT_CONFIGURED\" for p in f_probes)",
+  "655": "    f_green = (not f_unconfigured) and all(p.get(\"got\", {}).get(\"verdict\") == \"GREEN\" for p in f_probes)",
+  "656": "    if f_unconfigured and getattr(a, \"allow_proxy_unprobed\", False):",
+  "657": "        f_verdict = \"F_UNPROBED_DECLARED\"          # declared gap, kept OUT of all_green by name",
+  "658": "    elif f_unconfigured:",
+  "659": "        f_verdict = \"RED\"                          # fail closed: absent comparison != passed comparison",
+  "660": "    else:",
+  "661": "        f_verdict = \"GREEN\" if f_green else \"RED\""
+ },
+ "consequences": [
+  "both bases set (the only way F can be GREEN) => KeyError at line 654, and the A-H receipt is written after F, so the entire deploy receipt is lost",
+  "only CNX_DEPLOY_TUNNEL_BASE set => no crash, F=RED, and the probe that actually ran is still in receipt_FGH_blindspot_arms.probes - a reader can tell it apart, the verdict cannot",
+  "only CNX_DEPLOY_PROXY_BASE set => crash, same loss as both set",
+  "neither set => F=RED fail-closed as designed (this is the path every run so far took)"
+ ],
+ "what_i_did_instead": "run_ruler.py mode=deploy runs the ruler's own main() with both F bases UNSET (honest F=RED) and mode=fprobe re-drives the ruler's own repeated_verdict/asset_verdict over my two surfaces under lines 654-661's rule; the ruler source was not edited, blob verified before and after",
+ "primary_witness": "ord0254_ruler_deploy_KEYERROR.txt (real run, real traceback, wrapper rc=1)"
+}
