@@ -127,7 +127,18 @@ def precache_urls(sw_text: str) -> list[str]:
     return ordered
 
 
-SHELL_MAX_AGE = int(os.environ.get("CNX_DEPLOY_SHELL_MAX_AGE", "600"))
+def shell_cache_policy() -> tuple[int, str]:
+    """(allowed max-age, declared basis).  Read live so --selftest can drive BOTH directions.
+
+    Round-5 finding (redteam `5789355832` ①): the old default of 600 was a *widening*, not a tightening.
+    The length a client can be locked to a stale shell equals the shell's own max-age - `updateViaCache`
+    only covers the SW **script**, and an SW update never replaces the shell document - so any window is
+    a real white-screen window.  The production chain already serves `no-cache` (measured), so 0 is the
+    value that matches reality.  A non-zero window is still allowed, but only with a written basis.
+    """
+    raw = os.environ.get("CNX_DEPLOY_SHELL_MAX_AGE")
+    basis = os.environ.get("CNX_DEPLOY_SHELL_MAX_AGE_BASIS", "").strip()
+    return (0 if raw is None or not raw.strip() else int(raw)), basis
 
 
 def cache_semantics_verdict(ref: str, probe: dict) -> dict:
@@ -139,9 +150,12 @@ def cache_semantics_verdict(ref: str, probe: dict) -> dict:
     DEPLOY_BUNDLE_RETENTION exists to prevent, produced by headers rather than by deleting files.
     """
     is_shell = ref.endswith((".html", ".htm")) or ref.endswith("/") or ref == ""
+    limit, basis = shell_cache_policy()
     cc = (probe.get("cache_control") or "").lower()
     out = {"ref": ref, "is_shell": is_shell, "cache_control": probe.get("cache_control"),
-           "rule": f"shell must not carry immutable; max-age <= {SHELL_MAX_AGE}"}
+           "allowed_max_age": limit, "declared_basis": basis or None,
+           "rule": (f"shell must not carry immutable; max-age <= {limit}"
+                    + ("" if limit == 0 else f" (declared basis: {basis})"))}
     if not is_shell:
         # hashed assets are allowed (and encouraged) to be immutable - but that must be a *seen* header,
         # not an absence of evidence, so we still record what was served.
@@ -160,9 +174,19 @@ def cache_semantics_verdict(ref: str, probe: dict) -> dict:
         out["reason"] = "shell document carries no Cache-Control at all - revalidation policy is undefined"
         return out
     age = int(found.group(1))
-    out["verdict"] = "GREEN" if age <= SHELL_MAX_AGE else "RED"
-    if out["verdict"] == "RED":
-        out["reason"] = f"shell max-age={age} exceeds {SHELL_MAX_AGE}"
+    out["measured_max_age"] = age
+    if age > limit:
+        out["verdict"] = "RED"
+        out["reason"] = f"shell max-age={age} exceeds {limit}"
+        return out
+    if limit > 0 and not basis:
+        # A window without a written reason is the same family as a check that never ran: the number
+        # looks configured, but nobody has to defend it.  Refuse the widening, do not inherit it.
+        out["verdict"] = "RED"
+        out["reason"] = (f"UNDECLARED_CACHE_WINDOW: max-age={age} allowed only because "
+                         f"CNX_DEPLOY_SHELL_MAX_AGE={limit} was set without CNX_DEPLOY_SHELL_MAX_AGE_BASIS")
+        return out
+    out["verdict"] = "GREEN"
     return out
 
 
@@ -260,6 +284,90 @@ def repeated_verdict(ref: str, expect_ct: str, serve: pathlib.Path, base: str | 
     return {"verdict": "GREEN" if ok else "RED", "times": len(rows),
             "statuses": [r["status"] for r in rows], "probes": rows,
             "red_refs": [f"{r['status']}/{r['content_type']}" for r in rows if r["verdict"] != "GREEN"]}
+
+
+def http_text(path: str, base: str | None = None, auth_file: str | None = None) -> dict:
+    """Fetch one URL and keep the BODY, for predicates that must read bytes rather than headers.
+
+    It records `sha256` of exactly what it read, so arm I can prove the text it parsed is the same
+    bytes arm C hashed - parsing a different side would be the A-3 family again.
+    """
+    out = {"path": path, "base": base or BASE, "status": None, "text": None, "sha256": None,
+           "body_size": None, "error": None}
+    try:
+        req = urllib.request.Request((base or BASE) + path)
+        req.add_header("Cache-Control", "no-cache")
+        req.add_header("User-Agent", "cnx-deploy-receipt")
+        if auth_file:
+            try:
+                raw = open(auth_file, encoding="utf-8").read().strip().split("\t")
+                if len(raw) == 2:
+                    import base64 as _b64
+                    req.add_header("Authorization", "Basic " + _b64.b64encode(f"{raw[0]}:{raw[1]}".encode()).decode())
+            except OSError:
+                pass
+        with urllib.request.urlopen(req, timeout=60) as r:
+            body = r.read()
+            out["status"] = r.status
+            out["sha256"] = hashlib.sha256(body).hexdigest()
+            out["body_size"] = len(body)
+            out["text"] = body.decode("utf-8", "replace")
+    except Exception as exc:  # noqa: BLE001
+        out["error"] = f"{type(exc).__name__}: {exc}"
+    return out
+
+
+SW_REGISTER_RULE = ('every navigator.serviceWorker.register() in the SERVED bundle must declare '
+                    'scope "/" and updateViaCache "none"')
+
+
+def sw_register_verdict(text: str | None, source: str) -> dict:
+    """Arm I (redteam `5789355832` ②): the registration parameters live only inside the bundle bytes.
+
+    Their construction: change `updateViaCache:"none"` to `"all"` in the built bundle and all six arms
+    stayed GREEN, while "all" lets the HTTP cache hold the old SW script - so the user can keep running
+    the previous generation's precache forever.  `scope` decides which pages the SW controls at all.
+    Absence of a parseable call is RED, not "nothing to check".
+    """
+    out = {"source": source, "rule": SW_REGISTER_RULE, "calls": [], "verdict": None}
+    if text is None:
+        out["verdict"] = "RED"
+        out["reason"] = f"bundle bytes could not be read from {source}: nothing was parsed"
+        return out
+    for m in re.finditer(r"serviceWorker\.register\(\s*(?P<url>[\"'`][^\"'`]*[\"'`])\s*(?:,\s*(?P<opts>\{[^{}]*\}))?\s*\)",
+                         text):
+        url = m.group("url").strip("\"'`")
+        opts = m.group("opts") or ""
+        scope = re.search(r"scope\s*:\s*[\"'`]([^\"'`]*)[\"'`]", opts)
+        uvc = re.search(r"updateViaCache\s*:\s*[\"'`]([^\"'`]*)[\"'`]", opts)
+        entry = {"sw_url": url,
+                 "scope": scope.group(1) if scope else None,
+                 "updateViaCache": uvc.group(1) if uvc else None,
+                 "opts_present": bool(opts)}
+        # An SW's default scope is the DIRECTORY of its script URL, so "/v10-sw.js" is implicitly root
+        # scope; "/sub/v10-sw.js" would not be, and anything we cannot resolve as a root-relative
+        # filename must carry an explicit scope="/".
+        if entry["scope"] is not None:
+            entry["scope_ok"] = entry["scope"] == "/"
+        else:
+            entry["scope_ok"] = url.startswith("/") and "/" not in url.lstrip("/")
+        entry["update_via_cache_ok"] = entry["updateViaCache"] == "none"
+        out["calls"].append(entry)
+    out["register_calls_found"] = len(out["calls"])
+    if not out["calls"]:
+        out["verdict"] = "RED"
+        out["reason"] = ("no serviceWorker.register() call found in the served bundle - either the SW is "
+                         "never installed or the minified shape moved out of this parser's range; neither "
+                         "may be read as a pass (A-3)")
+        return out
+    bad = [c for c in out["calls"] if not (c["scope_ok"] and c["update_via_cache_ok"])]
+    if bad:
+        out["verdict"] = "RED"
+        out["reason"] = "; ".join(
+            f"{c['sw_url']} scope={c['scope']!r} updateViaCache={c['updateViaCache']!r}" for c in bad)[:300]
+    else:
+        out["verdict"] = "GREEN"
+    return out
 
 
 class _FirstOkThenFailServer:
@@ -400,6 +508,59 @@ def selftest(serve: pathlib.Path) -> int:
                  "got": {"verdict": v_real["verdict"], "error": v_real.get("reason")}})
     arms.append({"arm": "A9-scope:hashed_asset_may_stay_immutable", "expect": "NOT_SHELL_RECORDED",
                  "got": {"verdict": v_asset["verdict"], "error": None}})
+    # Round-5 witnesses (redteam `5789355832` ①): the old 600 default was a WIDENING, so the granted
+    # window is now 0 unless it is asked for AND justified.  All four directions are asserted so
+    # "declared" cannot become a blanket exemption and "0" cannot become a permanent red.
+    A9_ENV = ("CNX_DEPLOY_SHELL_MAX_AGE", "CNX_DEPLOY_SHELL_MAX_AGE_BASIS")
+    for a9_name, a9_cc, a9_expect, a9_env in (
+        ("A9-killer:undeclared_max_age_300_is_red", "public, max-age=300", "RED", {}),
+        ("A9-threshold_zero:max_age_0_revalidates", "max-age=0", "GREEN", {}),
+        ("A9-killer:granted_window_without_basis_is_red", "public, max-age=600", "RED",
+         {"CNX_DEPLOY_SHELL_MAX_AGE": "600"}),
+        ("A9-declared:granted_window_with_basis_is_green", "public, max-age=600", "GREEN",
+         {"CNX_DEPLOY_SHELL_MAX_AGE": "600",
+          "CNX_DEPLOY_SHELL_MAX_AGE_BASIS": "selftest witness, not a production grant"}),
+    ):
+        saved = {k: os.environ.get(k) for k in A9_ENV}
+        for k in A9_ENV:
+            os.environ.pop(k, None)
+        os.environ.update(a9_env)
+        try:
+            a9v = cache_semantics_verdict("/index.html", {"cache_control": a9_cc})
+        finally:
+            for k, prev in saved.items():
+                if prev is None:
+                    os.environ.pop(k, None)
+                else:
+                    os.environ[k] = prev
+        arms.append({"arm": a9_name, "expect": a9_expect,
+                     "got": {"verdict": a9v["verdict"], "error": a9v.get("reason"),
+                             "allowed_max_age": a9v.get("allowed_max_age"),
+                             "declared_basis": a9v.get("declared_basis")}})
+    # Arm I witnesses (redteam `5789355832` ②): the real bundle must actually parse and pass - a killer
+    # that only fires on synthetic text proves nothing if the production text never reaches the judge.
+    entry_js = next((r for r in refs if r.endswith(".js")), None)
+    i_fetch = http_text(entry_js) if entry_js else {"text": None, "sha256": None, "error": "no entry .js"}
+    i_real = sw_register_verdict(i_fetch["text"], f"served {entry_js}")
+    arms.append({"arm": "I-true_positive:served_bundle_registers({} calls)".format(
+                     i_real.get("register_calls_found")),
+                 "expect": "GREEN",
+                 "got": {"verdict": i_real["verdict"], "error": i_real.get("reason"),
+                         "served_sha256": str(i_fetch.get("sha256"))[:16],
+                         "calls": i_real.get("calls")}})
+    for i_name, i_text, i_expect in (
+        ("I-killer:updateViaCache_all_is_red",
+         'navigator.serviceWorker.register("/v10-sw.js",{scope:"/",updateViaCache:"all"})', "RED"),
+        ("I-killer:non_root_scope_is_red",
+         'navigator.serviceWorker.register("/v10-sw.js",{scope:"/app/",updateViaCache:"none"})', "RED"),
+        ("I-killer:no_register_call_is_not_a_pass", "const a=1;export default a;", "RED"),
+        ("I-killer:unreadable_bundle_bytes_are_red", None, "RED"),
+        ("I-true_positive:synthetic_correct_call",
+         'navigator.serviceWorker.register("/v10-sw.js",{scope:"/",updateViaCache:"none"})', "GREEN"),
+    ):
+        iv = sw_register_verdict(i_text, "synthetic")
+        arms.append({"arm": i_name, "expect": i_expect,
+                     "got": {"verdict": iv["verdict"], "error": iv.get("reason")}})
     dead = asset_verdict("/v10-sw.js", "javascript", live, base="http://127.0.0.1:59999")
     arms.append({"arm": "F-killer:unreachable_surface_is_red_not_absent", "expect": "RED",
                  "got": dead})
@@ -745,9 +906,27 @@ def main() -> int:
     else:
         f_verdict = "GREEN" if f_green else "RED"
 
+    # I: the registration parameters are not in any header or filename - they exist only inside the
+    # bundle bytes, which is exactly why A-H could all stay GREEN while `updateViaCache` was broken
+    # (redteam `5789355832` ②).  Parsed from the SERVED body, and the served digest is recorded so the
+    # text parsed is provably the bytes arm C compared.
+    i_arms = []
+    for ref in [r for r in new_refs if r.endswith(".js")]:
+        t = http_text(ref)
+        v = sw_register_verdict(t["text"], f"served {ref}")
+        v["served_sha256"] = t["sha256"]
+        v["served_body_size"] = t["body_size"]
+        v["fetch_status"] = t["status"]
+        if t["error"]:
+            v["fetch_error"] = t["error"]
+        i_arms.append(v)
+    i_green = bool(i_arms) and all(x["verdict"] == "GREEN" for x in i_arms)
+
     receipt["receipt_FGH_blindspot_arms"] = {
         "G_PRECACHE_INTEGRITY": g_precache,
         "H_PREVIOUS_GENERATION": {"refs_probed": len(h_prev), "probes": h_prev, "verdict": h_prev_verdict},
+        "I_SW_REGISTER_PARAMS": {"arms": i_arms,
+                                 "verdict": "GREEN" if i_green else ("NOT_CONFIGURED" if not i_arms else "RED")},
         "F_PROXY_AND_TUNNEL": {"probes": f_probes, "verdict": f_verdict,
                                "why": "BASE is 127.0.0.1:4781 (no auth proxy); the proxy and the tunnel "
                                       "were never probed by A-E - redteam bus 5788606895"},
@@ -759,8 +938,9 @@ def main() -> int:
                and not any(e["verdict"] == "RED" for e in g_precache))
     receipt["arms"] = {"A": (a_old or {}).get("verdict"), "B": "see receipt_ABCDE",
                        "G_precache": [e["verdict"] for e in g_precache],
-                       "H_prevgen": h_prev_verdict, "F_proxy_tunnel": f_verdict,
-                       "all_green_requires": "A,B,C,D,E + G + F (H reported; RED if it names an unreachable asset)"}
+                       "H_prevgen": h_prev_verdict, "I_sw_register": "GREEN" if i_green else "RED",
+                       "F_proxy_tunnel": f_verdict,
+                       "all_green_requires": "A,B,C,D,E + G + I + F (H reported; RED if it names an unreachable asset)"}
     receipt["receipt_ABCDE"] = {
         "A_OLD_ASSET_still_served": a_old,
         "B_NEW_INDEX": {"status": b_new["status"], "refs_match_new": b_refs_ok,
@@ -777,7 +957,7 @@ def main() -> int:
                  and all(x["verdict"] == "GREEN" for x in d_sw)
                  and receipt["receipt_ABCDE"]["B_NEW_INDEX"]["verdict"] == "GREEN"
                  and (a_old is None or a_old["verdict"] == "GREEN")
-                 and g_green and f_verdict == "GREEN")
+                 and g_green and i_green and f_verdict == "GREEN")
     receipt["overall"] = "GREEN" if all_green else "RED"
 
     out = pathlib.Path(__file__).with_name("receipts")
