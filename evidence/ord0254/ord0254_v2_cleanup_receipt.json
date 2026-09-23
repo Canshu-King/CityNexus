@@ -1,0 +1,115 @@
+{
+ "at": "2026-09-23T14:32:40+08:00",
+ "why": "re-run of ORD-0254 under the swapped ruler (blob c0aafc940136c502); this teardown ends that run",
+ "listeners_before": {
+  "4411": [
+   59912
+  ],
+  "4412": [
+   61316
+  ],
+  "8411": [
+   54840
+  ]
+ },
+ "forbidden_ports_observed_only": {
+  "4781": [
+   47376
+  ],
+  "4782": [
+   33880
+  ],
+  "8693": [
+   33104
+  ],
+  "4185": [
+   47124
+  ],
+  "8713": [
+   52820
+  ]
+ },
+ "killed": [
+  {
+   "pid": 54840,
+   "rc": 0,
+   "out": "�ɹ�: ����ֹ PID 54840 (���� PID 51972 �ӽ���)�Ľ��̡�"
+  },
+  {
+   "pid": 59912,
+   "rc": 0,
+   "out": "�ɹ�: ����ֹ PID 55080 (���� PID 59912 �ӽ���)�Ľ��̡�\n�ɹ�: ����ֹ PID 59912 (���� PID 61316 �ӽ���)�Ľ��̡�"
+  },
+  {
+   "pid": 61316,
+   "rc": 0,
+   "out": "�ɹ�: ����ֹ PID 61316 (���� PID 41600 �ӽ���)�Ľ��̡�"
+  }
+ ],
+ "killed_command_lines": {
+  "4411:59912": "node node_modules/vite/bin/vite.js preview --outDir dist --port 4411 --strictPort --host 127.0.0.1",
+  "4412:61316": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 tools/run_surface.py",
+  "8411:54840": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8411"
+ },
+ "ports_released": {
+  "4411": true,
+  "4412": true,
+  "8411": true
+ },
+ "delete_list_expanded_from": "serve/, every dist_bak_*, db/canary_8411.db*, MCP-side cnxshots",
+ "deleted": [
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\serve",
+   "bytes": 12009126,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\dist_bak_142903",
+   "bytes": 33708,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\dist_bak_142905",
+   "bytes": 33708,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db",
+   "bytes": 4096,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db-shm",
+   "bytes": 32768,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db-wal",
+   "bytes": 1821072,
+   "gone": true
+  }
+ ],
+ "bytes_freed_total": 13934478,
+ "listeners_after": {
+  "4411": [],
+  "4412": [],
+  "8411": []
+ },
+ "http_probe_after": {
+  "4411": "refused (URLError)",
+  "4412": "refused (URLError)",
+  "8411": "refused (URLError)"
+ },
+ "kept": {
+  "D:\\moodle\\_qoder_harness_ord0254\\repo": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\patches": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\tools": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\shots": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\ORD_0254_FRONTEND_COMPAT_BACKPORT.md": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\repo\\frontend\\dist": true
+ },
+ "kept_note": "candidate bundle repo/frontend/dist stays (per-file sha256 in the build manifest)",
+ "user_stores_touched": [],
+ "demo_reset_issued": false,
+ "verdict": "CLEAN"
+}
