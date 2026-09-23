@@ -1,0 +1,15 @@
+ruler blob40 9ca0dee62016d7ef421b1dc085027ff4d6654c23 (45153 B)  at 2026-09-23T14:47:52+08:00
+argv: deploy_bundle.py --src D:\moodle\_qoder_harness_ord0254\repo\frontend\dist --serve D:\moodle\_qoder_harness_ord0254\serve --live-tree D:\moodle\_qoder_harness_ord0254\repo --sha 6a39c527f2aa3b16e73dfd122c34d6e6be7102df
+CNX_DEPLOY_PROXY_BASE=http://127.0.0.1:4412  CNX_DEPLOY_TUNNEL_BASE=http://127.0.0.1:4411  CNX_DEPLOY_PROBE_TIMES=2
+
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_harness_ord0254\tools\run_ruler_v3.py", line 143, in run_deploy
+    rc = mod.main()
+         ^^^^^^^^^^
+  File "D:\moodle\_qoder_harness_ord0254\tools\ruler_v3.py", line 737, in main
+    f_unconfigured = any(p["verdict"] == "NOT_CONFIGURED" for p in f_probes)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\moodle\_qoder_harness_ord0254\tools\ruler_v3.py", line 737, in <genexpr>
+    f_unconfigured = any(p["verdict"] == "NOT_CONFIGURED" for p in f_probes)
+                         ~^^^^^^^^^^^
+KeyError: 'verdict'
