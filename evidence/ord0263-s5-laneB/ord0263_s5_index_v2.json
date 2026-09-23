@@ -1,0 +1,81 @@
+{
+ "at": "2026-09-23T23:34:22+08:00",
+ "order": "ORD-0263 第五态 判据 + 形状 —— v2 增量（勘误文档 + 一件重发）",
+ "lane": "B c01d72a3",
+ "tree_under_test": "landed tip 2b49e3ca (含 0263)，preview :4441 -> origin :8441",
+ "unchanged_from_v1": [
+  {
+   "name": "q263_s5_criteria_control.json",
+   "blob40": "4309824322e9d7d6a92f068cc6c7a2811eb703f0",
+   "bytes": 8669
+  },
+  {
+   "name": "q263_s5_reproduction.json",
+   "blob40": "af8af6d533d1d754d1781174bbf88c8d71c74469",
+   "bytes": 5760
+  },
+  {
+   "name": "q263_a3_reproduction.json",
+   "blob40": "37f58c233f0cbb949c83908e3a5750166d73d64b",
+   "bytes": 19163
+  },
+  {
+   "name": "s5_state.json",
+   "blob40": "2af97156aa52e08c08d1ebf3bb8d8e6576f5c7b6",
+   "bytes": 2231
+  },
+  {
+   "name": "s5_second.json",
+   "blob40": "672d9a81ef994f1b21a9982bc0eaa5e7c6f12f6c",
+   "bytes": 2228
+  },
+  {
+   "name": "a3_leg.json",
+   "blob40": "5b21a8d55251fa7e756c1102b903aa87241b56d0",
+   "bytes": 15445
+  },
+  {
+   "name": "q263_html_origin.py",
+   "blob40": "0553ae3f5689fca5883679406ffca88aff5a4aeb",
+   "bytes": 2380
+  },
+  {
+   "name": "q263_s5_run.py",
+   "blob40": "df3eca3f5e0a85ecfe04e2eaf97956e8f8243aab",
+   "bytes": 8760
+  },
+  {
+   "name": "q263_a3_run.py",
+   "blob40": "c27380348a4dd35c7a1b4b0e177b80fd8f6a8e54",
+   "bytes": 8540
+  },
+  {
+   "name": "q263_a3_leg.js",
+   "blob40": "fe7c8a9b29b6e13e2fb7d9c78448319be6f4c8d9",
+   "bytes": 9200
+  },
+  {
+   "name": "q263_s5_criteria_run.py",
+   "blob40": "abeed8ef04b3fe9ecc722fc6030f032bd2df2dde",
+   "bytes": 10683
+  }
+ ],
+ "supersedes": {
+  "ORD_0263_S5_CRITERIA_AND_SHAPE.md": {
+   "blob40": "05e4147eb8c44f0d53f391b3ea2dcd27811e4318",
+   "bytes": 14284,
+   "status": "left as published; not overwritten"
+  },
+  "ORD_0263_S5_CRITERIA_AND_SHAPE_v2.md": {
+   "blob40": "658df1dbe86b31331555627252ae0d375b688ae0",
+   "bytes": 15038
+  }
+ },
+ "republished_after_404": [
+  {
+   "name": "q263_html_origin.py",
+   "blob40": "0553ae3f5689fca5883679406ffca88aff5a4aeb"
+  }
+ ],
+ "this_index_lists": 14
+}
