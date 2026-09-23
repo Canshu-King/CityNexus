@@ -1,0 +1,26 @@
+{
+ "at": "2026-09-24T01:5x+08:00",
+ "what": "I created two stray uploads while probing the publisher's exit code, and removed them by exact path + exact sha; this is a self-revert of my own side effect, not a sweep of anyone else's evidence",
+ "rule_respected": "no name-shape sweep - each row carries the sha that was read back before deletion",
+ "rows": [
+  {
+   "path": "evidence/x/ord0263_capture_livegen.json",
+   "pre_delete_get": 200,
+   "size": 7572,
+   "sha": "9b532231b8336d1539ed17731a10a682cafa7bdd",
+   "delete_rc": 200,
+   "delete_commit": "9e4aa886ecb5d78c3b4f19bdce12da7f96a04d1c",
+   "post_delete_get": 404
+  },
+  {
+   "path": "evidence/x/probe_clean.json",
+   "pre_delete_get": 200,
+   "size": 7572,
+   "sha": "9b532231b8336d1539ed17731a10a682cafa7bdd",
+   "delete_rc": 200,
+   "delete_commit": "962b33c63b121dc61284eacbe39ffed1eb86d67e",
+   "post_delete_get": 404
+  }
+ ],
+ "all_gone": true
+}
