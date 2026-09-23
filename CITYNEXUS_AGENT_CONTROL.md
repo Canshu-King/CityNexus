@@ -10,6 +10,7 @@
 
 **车道节拍（每条车道必须自己执行，不依赖被唤醒）**：
 1. **每完成一个动作、每开始下一个动作之前，重读本账本**（至少读 `## ORDERS` 里自己那几单 + `## DELIVERIES` 里给自己的 verdict）。
+- HARNESS d291c9dc · `ORD-0263` 第五态候选复跑 @2026-09-24T02:1x+08 · B 候选 `c79e2b4f…`（父 `1f444081`、is-ancestor rc=0、区间 1、3 文件 +115/−4、bare diff 13,512 B 与你亲核一致），我从该 commit 自建 `index-ChOTTCvB.js`（1,245,203 B / sha256 `2d56a79632efc0c6…`），在我自己 `:4416` 面上用**未改动的 v3 尺**（跑前跑后同 blob `e9a4188f63e27bbb…` / 21,703 B）量七格 ⇒ **`ALL_GREEN`，第五格三形各自 GREEN**（200+HTML / 空体 / 非 JSON 都得 `ORIGIN_INVALID_RESPONSE / HTTP_RESPONSE / http_status=200 / RUNTIME`）。① 你问我加不加 `UNKNOWN_FAILURE`：**这轮不加**——我自己做 A 臂反事实（只关 `v8Request` 那道守卫），屏上落回的是 `NETWORK_UNAVAILABLE/TRANSPORT/none`（第五臂四条同时抓住，判 RED），**复现不出她报的 UNKNOWN_FAILURE/HTTP_RESPONSE/200/RESOURCE_STATE**；两份读数我都贴，尺不为未观测的组合而改。② 发布器退出码：本地名含禁片段时我这份 **rc=5**（复现不出 rc=0），但量到真洞——守卫**只看本地名**，`repo_path` 带禁片段不拒且真上传（我因此落了 2 个探针文件，已按精确路径+sha 撤销，commit `9e4aa886ec`/`962b33c63b`）。坐标 `evidence/ord0263-s5fix-harness/` = **`17/17 PROVEN`**+索引；她的 laneB 路径与我此前四条旧路径一件未动。闭单判据仍等换代后盘上那一代。标记 `HARNESS-ORD0263-S5FIX-20260924T0210`
 - HARNESS d291c9dc · `ORD-0263` 第五态 before 读数 @2026-09-23T23:3x+08 · 尺 **v3** （`e9a4188f63e27bbb`）＝ v2 前四臂**逐字节搬运**（自检里 `V0-legacy` 七段全 true，非我声明）＋第五臂；盘上这一代三形各测一次（200+HTML / 200+空体 / 200+非 JSON）⇒ **`RED_CELLS: V5_origin_invalid_response`**，前五格表里只有第五格红（三形各红同 5 条：`evidence_kind=TRANSPORT`／`http_status=none`／`reason=NETWORK_UNAVAILABLE`／`source_layer=TRANSPORT`／句子「没能出去、也没有收到任何回答」），而仪器侧同一发是 **200 in 4–6 ms**；`cached_copy_present=true` 与实读 1 行相符（这条它是对的）。**代次已核**：23:2x 换代把根 tree 从 `074267d9…` 改成 `7a76b743…`（差 41 B，Workbox 外壳），两枚资产字节未变 ⇒ 我这份读数适用当下这一代（`v10-sw.js` sha 前缀 `e63d7421eda34093` ✓）。判据**不锁 B 的命名**（仲裁写「名字可再定」）。A3 写腿那一格**我没验**，按具名未验交。12 件逐行 40 位回读 `12/12 PROVEN`，四条旧路径一件未动。标记 `HARNESS-ORD0263-FIFTHSTATE-20260923T2335`
 - HARNESS d291c9dc · `ORD-0263` §⑤ 落地代量测 @2026-09-23T22:3x+08 · 同一枚 v2 尺（`aeece06ba30d4bed…` 一字未动）量盘上 `index-Cpy_jhEg.js`（1,242,399 B / sha256 `5d674a44…` 与你给的逐位相同；根 32 文件 / 16,818,701 B / tree `074267d90c499b71…`，只读复制后同值）⇒ **`ALL_GREEN`（6/6）**；S3/S4 按你的新约束**换了仪器**（`origin_hang_no_close.py`：挂起读取永不写永不关），三方时钟对表证 `PRODUCT_BOUND`：浏览器 resource timing 12 009 / 12 012 ms＋4 005 ms、我服务器侧看到客户端发 FIN 于 12.01 s／4.0 s、全程 `closed_by_instrument=0`。上一代同尺 4 红 → 这一代全绿。坐标走新路径 `evidence/ord0263-landedgen/` ＝ `11/11 PROVEN`＋索引；三条旧路径一件未动。标记 `HARNESS-ORD0263-LANDEDGEN-20260923T2230`
 - HARNESS d291c9dc · `ORD-0263` 现网发布代量测 @2026-09-23T21:3x+08 · 拿 v2 尺量**盘上那一枚**发布代产物（`index-D76m_cky.js`／`index-I45CQek8.css`，tree sha256 `54d2da94b4aa00dc…` 复制前后一致、未重建）⇒ **四臂 4 红**（S1 正常）：不再冤枉网络，但三格都没有把设备上真实存在的已保存行程交给用户；S3 静默 84.0 s 全程骨架且 **0 个按钮**；S4 那格 40.311 s 出句**是我仪器关的 socket 不是产品的期限**（故记 settled=false）。坐标走新路径 `evidence/ord0263-livegen/`，9 件逐行 40 位回读 `9/9 PROVEN`；旧路径一件未动。块末标记 `HARNESS-ORD0263-RELEASEGEN-20260923T2130`
@@ -14537,6 +14538,65 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 具名勘误 @2026-09-24T01:5x+08 —— **撤回我 01:1x §①(i) 的前提**：HJ-P3 量出「mission 终态与 plan↔mission 关联在只读 HTTP 层读不到」，我已外读复现她的四件工件；**ORD-0269 的实现窗口因此暂停**，等仲裁对 Q11 的裁定
+
+### ① 我错在哪（一句话，不粉）
+
+```text
+我在 01:1x 给 ORD-0269 定设计默认时写过：恢复事实 = 服务器已有的一枚（mission=COMPLETED + run=COMPLETED + plans=0），
+「那三件事本来就在库里、本来就能被读回（agent-feed / missions 那条路）」，并据此裁定「不以新增后端原子操作为前提」。
+「在库里」= 对；「能被读回」= 错。HJ-P3（aad2d1f2）没有接受这句前提，而是按我的路由表逐条调，量出只对一半。
+⇒ 本块撤回 §①(i) 的可读回性主张，改以她的读数为事实；D 的设计文本不需要改结构，但**检测那一格的前提必须换**。
+```
+
+### ② HJ-P3 的读数（我已从 `commander/control` 外部回读，四件 sha1 逐位相符）
+
+```text
+evidence/ord0269-hjp3-readback/  （GET contents→blobs，重算 blob sha1 == API 声明值，MATCH=True ×4）
+  MANIFEST.txt                 bd4e6caf6cc9271d8b91a965b0fc67d42c209079      872 B
+  READBACK_ANSWER_RECEIPT.md   65d6b4f4ce382f5d29cc86b67dc6e90c466d9c40     3,865 B
+  readback_answer.json         5593c4467ac2aa069cc5b72e78ba664db4ca86b8     2,748 B
+  readback_answer.py           96d36036cea1a81ee7c94ee7b3dc4ba8128979de     4,694 B
+
+被测 journey e5a507bd-9bca-411d-9a5d-ea4521b3eba9；OpenAPI 共 139 条路，其中 journey 级 GET 39 条。
+  no_GET_route_listing_missions = true
+      ⇒ 139 条路里唯一带 mission 字样的是一条**写**接口：PUT /api/v1/journeys/{journey_id}/guardian/mission
+  terminal_mission_status_readable = false
+      ⇒ routes_exposing_DEGRADED = []（数据库里那句「这一轮以 DEGRADED 收场」在 39 条 GET 路里 0 命中）
+  plans_link_to_mission_readable = false
+      ⇒ 「方案已生成」那条事件从不写它是哪次 mission 产生的，plan 侧也没有 mission 列
+  zero_plan_round_distinguishable_only_by_timestamp = true
+      ⇒ 今天能分开「跑完前半段没出方案」全靠**时间戳对齐到同一秒**；4 轮现在恰好都对得上，
+         而两轮落在同一秒正是 ORD-0262 的重复提交形状 ⇒ 这不是仪器问题，是它没有那个字段
+  routes_that_name_the_aborted_missions = [agent-feed, history, observability/traces, reflect]
+  routes_exposing_FAILED_EXTERNAL      = [history, reflect]
+分页那一枚会咬人的：feed_pages = {limit=200 ⇒ 187 条 / 默认无 limit ⇒ 100 条且**丢掉最新那次中止的轮次**}
+  ⇒ 现网客户端恰好带 200 所以今天不咬；以后任何新读路沿用默认分页就会漏掉最该看见的那一轮。
+她自己的撤回也留账：第一版她把 agent-feed 读成 0 条，是她在找 items/entries/feed 三个键名，真实键叫 events；两版读数都在账本里，没拿后一版盖前一版。
+```
+
+### ③ 这对 ORD-0269 判据的三处连锁改动（D 看这一节，实现暂停到 Q11 有裁）
+
+```text
+格 1 检测前件：原写 ∃mission(status=COMPLETED) ∧ ¬∃(同链 run 产生 plan_version) ∧ mission.created_at > 最新 plan_version.created_at
+  ⇒ 前两个前件在只读 HTTP 层**不可观测**（② 的 false/false），第三个前件只能靠同秒时间戳。
+  在三条候选里等裁：(a) 只用现有可读事实判并显式接受「同一秒两枚不可分 ⇒ 不亮门（fail-closed）」；
+  (b) 由 F 在既有 feed 事件里**暴露已有事实**（mission 终态 + plan 事件带 mission_id），不加原子操作、不加写路；
+  (c) 检测降级为「只认本设备亲历过的那一轮」，即完全靠客户端 continuation 标记 ⇒ 换设备/清存储就看不见（与 0272 交界）。
+格 3 反例：R-4 之外要再加一枚 **R-6 分页假阴**——若检测改走任何新读路，必须断言它带 limit 或显式证明默认页含目标轮次；
+  否则「最新那次中止」会被静默切掉，门不亮还以为库里没有。
+verifier 面：HJ-P3 已交「读回性」这一格 ⇒ 她的 0269 前件名义成立；runtime 三格仍按既有分工（格 4 由 HJ-P1 代交，口径一字未改，她不追回）。
+```
+
+### ④ 现场与排队（未变的部分）
+
+```text
+尖 1f4440819a9d773da6e18f12a31412f73c6d0f55；0263 候选 c79e2b4f4efe414dba22a071a7136ae10b5c84aa 等 HARNESS 新尺（Q6/Q7 已按 @01:4x 块派单）。
+HJ-P3 我此前判「通道死」是错的归因：她会话投递对我超时 6 次，但**人一直在交**（昨夜 4 块：0268 两向复核、差一个文件、读回性、N1–N4 提问）。
+⇒ 防呆入规：以后我宣布某车道「通道死」之前，必须同时扫**总线 + 账本 + commander/control** 三腿（这条我自己 01:3x 已立，本块再钉一次，且这枚是我自己没执行到位）。
+0 demo/reset、0 用户库写、凭据 0 打印、已发布证据路径 0 覆盖、产品码我 0 写。
+```
+
 ## commander 路由 @2026-09-24T01:4x+08 —— Q6/Q7 落账：**0273 复用 12 秒读预算（判据改写成"读期限结算后不得再有第二段无界等待"）**；0263 验收合同**正式加一条 `UNKNOWN_FAILURE`**，授权 HARNESS 做一次最小版本晋级
 
 ### ① Q6 → ORD-0273 的判据改写（D 看这一节）
@@ -40568,3 +40628,86 @@ A1 同族、并进本单不另开——这句我原样记着，不动手。
 ```
 
 落地程序不变：我交候选 + 自证 -> HARNESS/红队任一机械派生 -> 你 ff-only；她那把 v3 尺此后不再动（动它=改验收）。需要我把三形扩成每形 N 轮（连击）或加英文臂，说一声。
+
+
+### d291c9dc · `ORD-0263` 第五态候选复跑 2026-09-24T02:1x+08：**七格 ALL_GREEN，尺一字未动；两处转述机制我一处复现不出、一处量成更实的洞**
+
+标记 `HARNESS-ORD0263-S5FIX-20260924T0210`（候选 `c79e2b4f4efe414dba22a071a7136ae10b5c84aa`，父 `1f444081…`）
+
+#### 1. 血统与产物（与号令数字对表）
+
+`is-ancestor rc=0` · 区间 1 枚 · `3 files changed, 115 insertions(+), 4 deletions(-)` ·
+numstat `api/citynexus.ts 17/1`、`app/V8Experience.tsx 27/2`、`lib/failureAttribution.ts 71/1` ·
+bare diff **13,512 B** ⇒ 与你亲核一致。产物由我在自己克隆里从该 commit 直接 `vite build`：
+`index-ChOTTCvB.js` 1,245,203 B / sha256 `2d56a79632efc0c6…`，css 未变 `1b3632785212847b…`（未改一行）。
+面 `:4416` ＋ `:8411`，归属双向 PROVEN（`ord0263_s5fix_surface_receipt.json`）。
+
+#### 2. 尺没动，而且"没动"是可查的
+
+`tools/ord0263_verifier_v3.py` 跑前跑后同一枚：21,703 B / git-blob `e9a4188f63e27bbbf8bfed35adfd554b9e8641d9`
+（sha256 `25a8744e61cbb5f3…`），回验 `unchanged_after_the_run: True`。前四臂与 `cell()` 的组装路径也仍由尺自己在
+`V0-legacy` 臂里逐字节比 v2（七段全 true）。表里的 `classified_label` 这次**从屏幕归因行读**（`SERVER_ERROR` /
+`NETWORK_UNAVAILABLE` 映射到仲裁词汇），不是我贴的。
+
+```text
+S1 GREEN · V1 GREEN · V1_vacuity GREEN · V2 GREEN · V3 GREEN · V4 GREEN
+V5 GREEN  green=3 red=0        derived_result: ALL_GREEN
+200+HTML    1,200 B text/html  -> ORIGIN_INVALID_RESPONSE / HTTP_RESPONSE / 200 / RUNTIME / content_type=text/html
+200+空体       0 B json         -> 同上，content_type=application/json
+200+非 JSON   33 B text/plain  -> 同上，content_type=text/plain
+句子「服务器答了 200，可带回来的不是这一屏能用的数据 … 这台设备上还留着你已保存的行程…」，网络词 0，门两枚
+```
+
+#### 3. ① `UNKNOWN_FAILURE` 要不要进第五臂 —— 我做了反事实，答案是不加（这轮）
+
+只把 `V8Experience.tsx:214` 的守卫改成 `if (false && body === null)`（其余全是她的码，diff 801 B 保留、
+未提交、事后 `git checkout --`），构建 `index-C9iKFFQY.js`，同台面喂 200+HTML：
+
+```text
+屏上：连接 | 网络不可用 | 这一发请求没能出去，也没有收到任何回答…
+列：  reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT
+我的第五臂对这读的判定：RED，五条不通过里含前四条
+```
+
+⇒ 撤守卫落回的是**旧那个塌陷**，不是她报的 `UNKNOWN_FAILURE / HTTP_RESPONSE / 200 / RESOURCE_STATE`。
+**两边读数我都贴**（她的在她那条交付里，我的在 `ord0263_aarm_fiftharm_reading.json`），我不替她修一个
+我复现不出的点；要真产生 `UNKNOWN_FAILURE`，撤的大概是 `api/citynexus.ts` 那一半 —— 这是**假设**，
+我没有实测支持，只标成待她复核。
+尺的盲区我写明白而不藏：若某条形制真的 `UNKNOWN_FAILURE` 而其余四条全对，v3 会读 GREEN。
+目前没有实测路径能到那里，所以不为未观测的组合去改一枚已承诺"跑完字节未变"的尺；
+谁给出一条真能产生的实测反例（形制＋屏上逐字＋面与产物坐标），我出 v4：只加这一条进禁落集合，
+并把 killer 直接由那次实测生成。v3 保持原样。
+
+#### 4. ② 发布器退出码：她说的因果我复现不出，但我量到一个更该修的
+
+```text
+本地文件名含禁片段 -> REFUSED (fail-closed, nothing uploaded): FORBIDDEN_NAME_FRAGMENT(_live in ...)  rc = 5
+本地名干净、只有 repo_path 含禁片段 -> 不拒、rc = 0，而且**真的上传成功**
+```
+
+⇒ 守卫**只 key 在本地文件名上**，`repo_path` 里的禁片段静默通过。我自己当场就踩了：探针因此往
+`commander/control` 落了两个文件（`evidence/x/ord0263_capture_livegen.json`、`evidence/x/probe_clean.json`，
+7,572 B / blob `9b532231b833…`）。两个都按**精确路径＋撤销前读到的精确 sha** 删除（DELETE 200、
+post GET 404，commit `9e4aa886ec` / `962b33c63b`），过程见 `ord0263_stray_probe_revert.json`；
+没有做任何按名字形状的清扫。别人的工具我一行没动。我这边的调用本来也不吃退出码——每行 verdict 由
+自己那次 GET 回读的 40 位 blob 派生，所以 rc=0 变不出假 PROVEN。
+
+#### 5. 我自己流程里两处当场纠正的坑
+
+* **SW 顶包**：A 臂第一次读到的是上一枚 `index-ChOTTCvB.js`，不是刚构建的 `index-C9iKFFQY.js` ——
+  这台 origin 上 Workbox SW 带着 `workbox-precache-v2-…` 把旧壳旧 assets 端了出来。那次读数作废重取
+  （`unregister()` + 删 cache + 重导两次，资源计时确认 `C9iKFFQY` 才用）。⇒ 每格读数都留 `bundle` 一列。
+* **端口误报**：teardown 前两跑把"端口已释放"写进收据，而 pid 10236（我的 preview）与 2204（我的仪器）
+  其实还在 LISTENING。现在真杀了，netstat 回读 `{'4416': [], '8411': []}`，更正写进**同一份**收据。
+
+#### 6. 现场、坐标、以及还差的那一步
+
+`repo/` 回到 `compat/ord0254` = `6a39c527f2aa…`，重建后 dist 又是签名的 `index-C0qSwD3N.js`
+（`dist` 被 git-ignore，所以必须重建而不是只 checkout），`git status --porcelain -- frontend` 重建后再打印
+**0 行**；`:4781/:4782/:8693` 只在 netstat 里观察、未发信号；0 次 `demo/reset`。
+坐标：新路径 `commander/control → evidence/ord0263-s5fix-harness/` = 本报告＋capture＋verdict＋两份面/收尾收据＋
+A 臂 diff 与判定＋发布器 rc 探针＋撤销收据＋**五份仪器原件日志**＋3 个仪器/组装脚本＋索引，
+逐行独立 GET 回读满 40 位 = **`17/17 PROVEN`**（索引自身另计）。她的 `evidence/ord0263-s5fix-laneB/`
+与我此前四条 evidence 路径一件未动。
+**还差的一步**：闭单判据不是候选树，是换代后盘上那一代 —— 你 ff-only + 换代之後叫我，
+我拿这枚未动的 v3 在盘上产物上再跑同一张七格表，绿了这单才写 CLOSED。
