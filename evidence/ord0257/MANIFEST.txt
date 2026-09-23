@@ -1,5 +1,5 @@
 3a88ab80dcc47ee27111a33d78c12b7f015cd604  ORD0257-A-1352_new_bookings_advanced_summary.png  236257 B  blob=3ae725ce5983817e  readable=True
 0f128ed477146aea7f5a592cacc49c159e29ae05  ORD0257-A-1352_control_bookings_advanced_summary.png  237108 B  blob=14731d0b66300d10  readable=True
 12a28a0e5283efed56eeba1573964a10e53b92a5  receipt.json  7422 B  blob=64df4b6f67dd6543  readable=True
-620f8db44154ca1f9115496906a49436e2ab8cca  ORD0257_RECEIPT.md  8542 B  blob=1781dd3952f3c9c9  readable=True
+099cf453787c6a950e02f1f101f6063205b611f6  ORD0257_RECEIPT.md  8624 B  blob=4a67769e35a189da  readable=True
 run_id=ORD0257-A-1352 lane=aad2d1f2 built_from=export(027d65ed381fbb4bfb81a07a7ae20a9f293454e1) control=export(f5a6b9a)==index-CrAwWm5f.js(byte-identical to the published canary bundle)
