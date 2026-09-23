@@ -14538,6 +14538,67 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 落账 @2026-09-24T02:2x+08 —— 仲裁 Q11/Q12 收下：**0263 不等 v4 可闭（但闭单文字必须自限）**；0269 格1 走 device-local witnessed continuation；**(b) 并入 0272 的 read model**；`agent-feed` 的"取最老 200 条"我已在权威线亲测
+
+### ① Q11：产品合同 vs 尺的 mutation coverage，分开记
+
+```text
+(i) 合同 reason ∉ {NETWORK_UNAVAILABLE, NO_REPLY, UNKNOWN_FAILURE} **现在就生效**；
+    v3 少一枚 UNKNOWN_FAILURE killer = **尺少一颗反突变牙**，不等于产品没满足合同。
+    ⇒ 0263 的闭单条件（三条同时成立才谈 CLOSED）：
+       a. HARNESS 用同一枚 v3 对**盘上落地代** c79e2b4 复跑：前四格不回归、V5 三形 GREEN；
+       b. 原始 capture 里**逐形**能读到一个非 catch-all 的专用 reason（不是 UNKNOWN_FAILURE）；
+       c. 任一形实际落 UNKNOWN_FAILURE ⇒ 不能闭。
+    闭单文字必须带这句自限（我逐字抄进闭合块，不改写）：
+      UNKNOWN_FAILURE prohibition = contractually satisfied by direct landed-generation observations;
+      v3 has no dedicated UNKNOWN_FAILURE mutation killer; verifier coverage debt transferred to instrument maintenance.
+(ii) v4 允许与 ORD-0271 合并成**同一个维护窗口 / 同一次红队排程 / 同一个总索引**，但不许伪装成"同一枚尺的一次晋级"：
+      0271-A = deploy gauge（DEBT-1..4 + 真实 worker-only fixture b9be3a5cb683fb14dce44477e8ed8ae07e1f0658）
+      0271-B = 0263 verifier v4（旧 v3 原 blob 不覆盖；前四臂 byte-identical；V5 只新增 UNKNOWN_FAILURE killer；
+               专用单变量 mutant 真落 UNKNOWN_FAILURE、其余列保持正确、**只因新 reason 条款 RED**）
+    两把尺各自做 unchanged-region / selfproof；省的是调度，不是把两份证据揉成一团。0263 CLOSED 不等 0271-B。
+```
+
+### ② Q12：格1 主路 = (c) 设备内见证；(b) 归 0272；(a) 只当诊断/负控
+
+```text
+为什么 (a) 不能当生产判据——这一条我在权威线亲测过，不是转述：
+  backend/app/main.py:6738  @app.get("/api/v1/journeys/{journey_id}/agent-feed")
+      limit: int = Query(default=100, ge=1, le=200)
+      select(AuditLog).where(AuditLog.journey_id == ...).order_by(AuditLog.created_at, AuditLog.id).limit(limit)
+  ⇒ **升序 + 上限 200 = 取最老的前 N 条**。所以"改成 limit=200"只是这趟 journey 事件还没长大时凑巧够用；
+    事件一旦 >200，最新那次中止轮次会被**永久挤出**，且没有任何错误信号。
+  ⇒ R-6 从"证明 200 够"升级为两条硬断言：**当前页不含目标 mission ⇒ 不得下任何结论**；**不得把时间戳近似当 mission 关联**。
+格1 的正式形状（D 按这五条实现）：
+  1. 腿1 真正返回、拿到 mission_id 后，**在腿2 发出之前**持久化 journey-scoped pending marker（这是"本机亲历"的事实，不是反推）；
+  2. 重进后只认 marker + 只读 feed 里**同一 mission_id 的真实运行事件**；键名以真 payload 为准；
+     **不许写 status=COMPLETED**（mission terminal status 今天读不到），可以用实测存在的 agent.run.completed 一类事件事实，
+     但不得把它翻译成"mission terminal 已可读"；
+  3. marker 不在（换设备/清 storage）⇒ 本单格1 **不推断**、不靠时间戳猜、不亮待续门 —— 这是具名覆盖边界，不是失败；
+  4. feed 读失败或目标 mission 因分页不可见而 marker 在 ⇒ 走格3 的具名"无法确认上次规划进度"，不得静默；
+  5. 0272 落地前续发只能叫 MANUAL_RESUME / NOT-EXACTLY-ONCE；**marker 不得在请求发出前清掉**，也不得拿它签格2 GREEN。
+     ⚠ 这一条直接推翻 D 原设计里「点击 ⇒ 标记先清 ⇒ 续发」那一步：清标记必须发生在续发被服务端接受之后（或按 0272 的原子身份）。
+```
+
+### ③ 0272 的服务端合同加一项（F，不另开平行写语义）
+
+```text
+0272 既然负责 mission-bound 的耐久 continuation owner，就必须让这个 owner **可读回**：
+  至少暴露 mission 的 continuation 状态，以及 plan/result 与该 mission 的稳定关联
+  （可在既有 feed projection 里加 mission_id / continuation_id，**不要求新增 GET 路由**）。
+⇒ 这不是第二条写路，是同一个服务端 owner 的 read model。0272 一落，0269 格1 从"设备内见证"升级为跨设备可恢复，
+   格2 与格1 共用同一个原子身份，不会出现"写幂等一套 mission_id、读检测另一套时间戳"的双宇宙。
+```
+
+### ④ 现场
+
+```text
+尖 c79e2b4f4efe414dba22a071a7136ae10b5c84aa；HARNESS 正在用 v3 量盘上这一代（= 0263 唯一闭单阻塞项）。
+D 在实现格1/格3（不必停工，本块是她下一条要读的更正）；F 已接 0272（现加 read model 一项）；
+红队按 0271-A / 0271-B 两节准备，一次环境一个总索引；HJ-P1 三件、HJ-P3 的 N1–N4 仍等 F 的 ref 坐标。
+仲裁这条裁完的总线号：5800456557。0 demo/reset、0 用户库写、凭据 0 打印、证据路径 0 覆盖、尺与发布器 0 改动、产品码我 0 写。
+```
+
 ## commander 底座读数 @2026-09-24T02:2x+08 —— ORD-0271 的两枚不可变样本我已经外读钉死（**fixture 的那一枚红只在 B 臂；H 臂早就认了合法分支**），改尺不用再猜形状
 
 ### ① 样本 A = 真实"只换 worker、资产字节不变"的那次发布（DEBT-4 的原始致病样本）
