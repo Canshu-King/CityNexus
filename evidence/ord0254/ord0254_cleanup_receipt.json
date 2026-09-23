@@ -1,0 +1,116 @@
+{
+ "at": "2026-09-23T14:12:07+08:00",
+ "listeners_before": {
+  "4411": [
+   47644
+  ],
+  "4412": [
+   42528
+  ],
+  "8411": [
+   13400
+  ]
+ },
+ "forbidden_ports_observed_only": {
+  "4781": [
+   47376
+  ],
+  "4782": [
+   33880
+  ],
+  "8693": [
+   33104
+  ],
+  "4185": [
+   47124
+  ],
+  "8713": [
+   52820
+  ]
+ },
+ "killed": [
+  {
+   "pid": 13400,
+   "rc": 0,
+   "out": "�ɹ�: ����ֹ PID 13400 (���� PID 52296 �ӽ���)�Ľ��̡�"
+  },
+  {
+   "pid": 42528,
+   "rc": 0,
+   "out": "�ɹ�: ����ֹ PID 53740 (���� PID 47644 �ӽ���)�Ľ��̡�\n�ɹ�: ����ֹ PID 47644 (���� PID 42528 �ӽ���)�Ľ��̡�\n�ɹ�: ����ֹ PID 42528"
+  },
+  {
+   "pid": 47644,
+   "rc": 128,
+   "out": "����: û���ҵ����� \"47644\"��"
+  }
+ ],
+ "killed_command_lines": {
+  "4411:47644": "node node_modules/vite/bin/vite.js preview --outDir dist --port 4411 --strictPort --host 127.0.0.1",
+  "4412:42528": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 tools/run_surface.py",
+  "8411:13400": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8411"
+ },
+ "ports_released": {
+  "4411": true,
+  "4412": true,
+  "8411": true
+ },
+ "deleted": [
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\serve",
+   "bytes": 12009126,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\dist_bak_1316",
+   "bytes": 33708,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\dist_bak_1321",
+   "bytes": 33708,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db",
+   "bytes": 4096,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db-wal",
+   "bytes": 2051792,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db-shm",
+   "bytes": 32768,
+   "gone": true
+  },
+  {
+   "path": "C:\\Users\\仓鼠王\\cnxshots",
+   "bytes": 1109185,
+   "gone": true
+  }
+ ],
+ "bytes_freed_total": 15274383,
+ "listeners_after": {
+  "4411": [],
+  "4412": [],
+  "8411": []
+ },
+ "http_probe_after": {
+  "4411": "refused (URLError)",
+  "4412": "refused (URLError)",
+  "8411": "refused (URLError)"
+ },
+ "kept_and_why": {
+  "D:\\moodle\\_qoder_harness_ord0254\\repo": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\patches": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\tools": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\shots": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\ORD_0254_FRONTEND_COMPAT_BACKPORT.md": true,
+  "candidate_bundle": "True - deliverable, per-file sha256 in ord0254_build_manifest_v2.json"
+ },
+ "user_stores_touched": [],
+ "demo_reset_issued": false
+}
