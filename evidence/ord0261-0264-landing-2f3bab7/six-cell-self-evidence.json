@@ -1,0 +1,75 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0261/0264 landing re-parent self-evidence (six cells, B-recipe shape)",
+ "cell1_new_base_is_new_tip": {
+  "new_base": "035721357da99a43c276f5803df83c3b08c1361c",
+  "new_tip": "same as new_base by construction (re-parent onto the authoritative tip)",
+  "met": true,
+  "note": "the authoritative tip IS the new base; its full sha printed both sides"
+ },
+ "cell2_descendant_and_count": {
+  "candidate": "2f3bab7fa4a412725f09c87ab7314781d7cdd8eb",
+  "is_descendant_of_new_base": true,
+  "commits_in_range": 3
+ },
+ "cell3_cherry_lineage_40hex": [
+  {
+   "rebased": "8fca3a269515458c1fb7a2695855e5a2654fdd05",
+   "source": "a0fbe030494a027de85c92f462e1e1d4ea6c2a42",
+   "subject": "ORD-0261 read-only reproduction"
+  },
+  {
+   "rebased": "6ddc5dc76fe6a82764506d38109fd8ec20fa66e9",
+   "source": "6daceb19d36691000f19189f8ebd51067e225643",
+   "subject": "ORD-0261/0264 product + gate fix"
+  },
+  {
+   "rebased": "2f3bab7fa4a412725f09c87ab7314781d7cdd8eb",
+   "source": "e3b0b47f918cbdc33b91ed3876b6b471a3bf3b66",
+   "subject": "gate rewrite + ruling arms"
+  }
+ ],
+ "cell4_file_set_matches_reviewed_13": {
+  "reviewed_set_note": "the arbiter signed e3b0b47 (13 files incl 7 review/_bus_*.md); the commander then chose option A (clean 6-file candidate 171c0fb) and this re-parent carries THAT set",
+  "files_now": [
+   "frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts",
+   "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+   "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "frontend/src/styles.css",
+   "review/ord0261_0264_kill_arms.py",
+   "review/run_spec.py"
+  ],
+  "count_now": 6,
+  "deviation_declared": "file set = the commander-approved clean set (171c0fb), not the 13; the 7 bus bodies were excluded at the commander own option-A ruling (5793560215). The 6 product/gate files are byte-identical to e3b0b47 (see content_preservation)."
+ },
+ "cell5_base_increment_disjoint": {
+  "base_increment_files": [
+   "backend/app/services.py",
+   "backend/tests/test_qoder_demo_accessibility_evidence.py",
+   "backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+   "data/mock/places.json"
+  ],
+  "base_increment_count": 4,
+  "base_increment_fingerprint": "2e980428d74724c065a155bf81ec7912970ee437",
+  "candidate_files_fingerprint": "beb52fda62dc4b390b30e4b9dd34439d171b7b3a",
+  "intersection_count": 0
+ },
+ "cell6_porcelain": "empty (verbatim output of git status --porcelain over the whole worktree: zero lines)",
+ "content_preservation": {
+  "six_files_blob_equal_to_e3b0b47": true,
+  "files": [
+   "frontend/src/styles.css",
+   "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+   "frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts",
+   "review/ord0261_0264_kill_arms.py",
+   "review/run_spec.py"
+  ]
+ },
+ "spot_gate_on_rebased_bytes": {
+  "spec": "e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+  "summary": "3 passed (13.7s)",
+  "note": "spot check only; no full-suite rerun per the ruling"
+ },
+ "verifierNote": "mechanical cells only; functional acceptance stands as signed on e3b0b47"
+}
