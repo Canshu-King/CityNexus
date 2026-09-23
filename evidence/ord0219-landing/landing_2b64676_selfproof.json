@@ -1,0 +1,108 @@
+{
+ "candidate_tip_full_sha": "2b6467607cc68ffc50a63e59d90e7859e5a4bbcd",
+ "1_parent_equals_leased_tip": {
+  "leased_tip": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+  "root_parent_of_candidate_series": "21f1e8db76b33f0be863ebe10b8b992afab13163",
+  "first_cherry_picked_commit": "07c65679620a5264c5fd093c7d462072cde6a48e",
+  "direct_parent_of_tip": "32f28b0e401a9bfbd62e2ebda02711f20a021681",
+  "note": "HEAD's own parent is the 9th pick; the base a fast-forward needs is the root parent",
+  "verdict": "MET"
+ },
+ "2_candidate_descends_from_leased_tip": {
+  "is_ancestor_rc": 0,
+  "commits_between": 10,
+  "verdict": "MET"
+ },
+ "3_cherry_pick_attributions": {
+  "count": 10,
+  "all_40_hex": true,
+  "list": [
+   "dfecf284bf6b872922a9b43528cba90009018d6d",
+   "06b975b625f250b063ed412a97e5dc559b333a84",
+   "f42f9f1235cf22e806e45172c818ef9798f5bd3e",
+   "75bc8ca192db547a6169540ce28ce2f6f2d9fe4d",
+   "318a0348ee307048c5ca0ef0e055793efcb4e22e",
+   "dea1251d7bc493c80751bcba8a27808cf3adaba8",
+   "a96fabf9ec09a64f25679096b15c802a93558e22",
+   "4d9ceaee785e78fd25482f91d80e3f832aa3f684",
+   "84017af12cd9e3db8ee3bf082fc6ef3e04244b20",
+   "21309b996ecb474d9122f88b81fba2216a006833"
+  ],
+  "verdict": "MET"
+ },
+ "4_candidate_file_set_unchanged": {
+  "v6_files": [
+   "backend/app/services.py",
+   "backend/tests/test_qoder_demo_accessibility_evidence.py",
+   "backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+   "data/mock/places.json"
+  ],
+  "v5_files": [
+   "backend/app/services.py",
+   "backend/tests/test_qoder_demo_accessibility_evidence.py",
+   "backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+   "data/mock/places.json"
+  ],
+  "v4_files": [
+   "backend/app/services.py",
+   "backend/tests/test_qoder_demo_accessibility_evidence.py",
+   "backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+   "data/mock/places.json"
+  ],
+  "v4_v5_v6_identical": true,
+  "verdict": "MET"
+ },
+ "5_no_overlap_both_sides_measured_here": {
+  "new_base_increment_range": "027d65e..21f1e8d",
+  "left_side_files": [
+   "review/build-evidence-payload.py",
+   "review/ledger-block-ord0246-0247.md",
+   "review/ledger_insert_block.py"
+  ],
+  "left_side_cardinality": 3,
+  "left_side_fingerprint_sha256": "31c920d0a8dc080e70d88d3eeb0b25abf744cd7d4b1d32e74a4ec24cc1f1cc28",
+  "right_side_files": [
+   "backend/app/services.py",
+   "backend/tests/test_qoder_demo_accessibility_evidence.py",
+   "backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+   "data/mock/places.json"
+  ],
+  "right_side_cardinality": 4,
+  "right_side_fingerprint_sha256": "f42210e250537708e74f7f39ada380c8fae610dd578d075a8aa48af095071d3b",
+  "intersection": [],
+  "intersection_cardinality": 0,
+  "verdict": "MEASURED - NO OVERLAP"
+ },
+ "6_diff_is_the_same_git_object": {
+  "v6_diff_blob_sha1": "beb89f0b3471330cfb660c1aa5b8d453d8159091",
+  "v6_diff_bytes": 46594,
+  "expected_from_reviewed_v4": "beb89f0b3471330cfb660c1aa5b8d453d8159091",
+  "expected_bytes": 46594,
+  "verdict": "MET - same object id, not merely equal text"
+ },
+ "7_working_tree_state_verbatim": {
+  "git_status_porcelain_output": "",
+  "verdict": "MET (clean)"
+ },
+ "not_rerun_by_arbitration_4": {
+  "full_suite_1224": "not re-run on v6; lands on the exact landed sha instead",
+  "nineteen_arms": "not re-run on v6; V1 receipts quoted from f22cb93/22dfef2, whose diff object is this one"
+ },
+ "branches_kept": {
+  "v1": "eea3c5b3e51656fee0d5f65497003e1da3378ac0",
+  "v2_406bd6f": "kept",
+  "v3_eea3c5b": "kept",
+  "v4_tip": "22dfef23ae3e8028326dd82a291ea99cbace0f81",
+  "v5_tip": "f22cb932bc094ea22463873814e11adcd93a8c75",
+  "v6_tip": "2b6467607cc68ffc50a63e59d90e7859e5a4bbcd"
+ },
+ "all_seven": {
+  "1_parent_equals_leased_tip": "MET",
+  "2_candidate_descends_from_leased_tip": "MET",
+  "3_cherry_pick_attributions": "MET",
+  "4_candidate_file_set_unchanged": "MET",
+  "5_no_overlap_both_sides_measured_here": "MEASURED - NO OVERLAP",
+  "6_diff_is_the_same_git_object": "MET - same object id, not merely equal text",
+  "7_working_tree_state_verbatim": "MET (clean)"
+ }
+}
