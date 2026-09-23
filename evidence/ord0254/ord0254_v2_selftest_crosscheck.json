@@ -1,0 +1,29 @@
+{
+ "theirs_arms": 18,
+ "theirs_matched": 18,
+ "theirs_overall": "GREEN",
+ "theirs_base": "http://127.0.0.1:4781",
+ "mine_arms": 20,
+ "mine_matched": 20,
+ "mine_overall": "GREEN",
+ "shared_arm_keys": 15,
+ "only_theirs": [
+  "killer:served_but_absent_on_disk(index-DtQ86lsQ.js)",
+  "true_positive:/assets/index-DtQ86lsQ.js",
+  "true_positive:/assets/index-cWMF3pBW.css"
+ ],
+ "only_mine": [
+  "B2-neg:absent-check-can-fail(index-C0qSwD3N.js)",
+  "B2:previous_generation_absent(index-CrAwWm5f.js)",
+  "killer:served_but_absent_on_disk(index-C0qSwD3N.js)",
+  "true_positive:/assets/index-C0qSwD3N.js",
+  "true_positive:/assets/index-CBXSx-f9.css"
+ ],
+ "verdict_mismatches_on_shared_arms": [],
+ "ruler_blob40": "c0aafc940136c502a2d021f0535537ee3298c888",
+ "delta_explanation": "mine exports CNX_DEPLOY_SELFTEST_OLD_REF so arms B2 and B2-neg exist; 18+2=20",
+ "round3_arms_in_both": [
+  "G-killer:precache_url_breaks_on_second_probe",
+  "G-true_positive:same_url_twice_on_real_server"
+ ]
+}
