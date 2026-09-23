@@ -1,0 +1,39 @@
+{
+ "generatedBy": "e345b9d6",
+ "claim": "产品字节在 6daceb1 与 e3b0b47 之间完全一致（门/驱动/总线正文之外 0 改动）",
+ "product_tree_diff_stat": "(empty)",
+ "per_file_blobs": [
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "blob_6daceb1": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+   "blob_e3b0b47": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+   "identical": true
+  },
+  {
+   "file": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "blob_6daceb1": "cb0a785d7264d98288eef3f463b872aa672fedd3",
+   "blob_e3b0b47": "cb0a785d7264d98288eef3f463b872aa672fedd3",
+   "identical": true
+  },
+  {
+   "file": "frontend/src/styles.css",
+   "blob_6daceb1": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+   "blob_e3b0b47": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+   "identical": true
+  },
+  {
+   "file": "frontend/src/i18n/LocaleContext.tsx",
+   "blob_6daceb1": "bf15fc919fdcb0cad277ece66acae6dbc99b7de7",
+   "blob_e3b0b47": "bf15fc919fdcb0cad277ece66acae6dbc99b7de7",
+   "identical": true
+  },
+  {
+   "file": "frontend/src/features/notifications/PushCapabilityCard.tsx",
+   "blob_6daceb1": "1077e5bb1071dcf16a156c705562c46f752e090b",
+   "blob_e3b0b47": "1077e5bb1071dcf16a156c705562c46f752e090b",
+   "identical": true
+  }
+ ],
+ "all_identical": true,
+ "note": "gate file frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts is the ONLY frontend file that changed between the two tips"
+}
