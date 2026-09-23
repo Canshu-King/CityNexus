@@ -7,8 +7,10 @@
 本门要抓的正是那次漏掉的形状：**补丁里套补丁**（`.patch` 文件里 `+` 开头的行携带字面量）。
 判据是形状扫描（前缀 + 长度区间 + 高熵体），并排除明显占位串。
 
-**读法**：只报**位置与形状**（文件:行、长度、字符类别），**绝不打印原文或前缀**
-（账本既有禁令；指认用 `sha256[:12]`）。
+**读法**：只报**位置与形状**（文件:行、长度、字符类别），**绝不打印原文或前缀**（账本既有禁令）。
+两处摘要各有分工：`位置指纹=sha256("路径:行号")` 用来**引用是哪一处**；
+`token指纹=sha256(命中的那颗串)` 用来判断**两处是不是同一把凭据**——位置摘要答不了这件事，
+别拿它指认同一个凭据（2026-09-22 我就在这里读歪过一次）。两者都是摘要，不是原文，也不是前缀。
 """
 
 from __future__ import annotations
@@ -65,10 +67,20 @@ def looks_like_placeholder(token: str) -> bool:
     return False
 
 
-def find_credential_shapes(text: str) -> list[tuple[int, str, int]]:
-    """返回 (行号, 命中的模式名, token 长度)。**不返回 token 本身。**"""
+def token_fingerprint(token: str) -> str:
+    """token 自己的指纹 —— **只在函数内部见到原文**，外面永远只拿到摘要。
 
-    hits: list[tuple[int, str, int]] = []
+    为什么要这一列：`scan_paths` 里的 `指纹=` 是 `sha256("路径:行号")`，它是**位置**摘要，
+    回答不了"这颗和另一颗是不是同一把"。指认同一把 key 要看 `token指纹=`。
+    """
+
+    return hashlib.sha256(token.encode("utf-8", errors="replace")).hexdigest()[:12]
+
+
+def find_credential_shapes(text: str) -> list[tuple[int, str, int, str]]:
+    """返回 (行号, 命中的模式名, token 长度, token 指纹)。**不返回 token 本身。**"""
+
+    hits: list[tuple[int, str, int, str]] = []
     for number, line in enumerate(text.splitlines(), start=1):
         for pattern in CREDENTIAL_PATTERNS:
             for match in pattern.finditer(line):
@@ -77,7 +89,7 @@ def find_credential_shapes(text: str) -> list[tuple[int, str, int]]:
                     continue
                 if shannon_entropy(token) < MIN_ENTROPY_BITS_PER_CHAR:
                     continue
-                hits.append((number, pattern.pattern[:12], len(token)))
+                hits.append((number, pattern.pattern[:12], len(token), token_fingerprint(token)))
     return hits
 
 
@@ -104,10 +116,13 @@ def scan_paths(paths: Iterable[str]) -> list[str]:
             text = path.read_text(encoding="utf-8", errors="replace")
         except OSError:
             continue
-        for number, pattern_name, length in find_credential_shapes(text):
-            # 只报位置与形状；指认用 sha256[:12] 指纹，不印原文
+        for number, pattern_name, length, token_fp in find_credential_shapes(text):
+            # 只报位置与形状；两个都是摘要，**任何情况下都不印原文或前缀**
             digest = hashlib.sha256(f"{rel}:{number}".encode("utf-8")).hexdigest()[:12]
-            offenders.append(f"{rel}:{number} 形状={pattern_name}… 长度={length} 指纹={digest}")
+            offenders.append(
+                f"{rel}:{number} 形状={pattern_name}… 长度={length} "
+                f"位置指纹={digest} token指纹={token_fp}"
+            )
     return offenders
 
 
@@ -174,6 +189,31 @@ def test_2b_a_patch_carrying_a_literal_is_caught_like_any_other_file():
     )
 
 
+def test_2c_the_token_fingerprint_identifies_the_secret_not_its_location():
+    """新那一列的**双向**证明（不是"我加了一列"就算数）。"""
+
+    key_a = "sk-" + "aB3dE7gH1jK4mN8pQ2sT5vW9yZ6c"
+    key_b = "sk-" + "zZ9yY8xX7wW6vV5uU4tT3sS2rR1qQpP"
+    assert not looks_like_placeholder(key_b), "SETUP：反例样本被判成占位（测不出东西）"
+
+    # 正向 1：同一把 key 出现在两行 ⇒ token指纹**相同**
+    same = find_credential_shapes(f'K1 = "{key_a}"\nK2 = "{key_a}"\n')
+    assert len(same) == 2, f"期望两行各抓 1 处；实际 {len(same)}"
+    assert same[0][3] == same[1][3], "同一把 key 的 token指纹必须相等，否则这一列没意义"
+    # 正向 2：而**位置**指纹必须不同 ⇒ 证明两者量的不是同一件事（别拿位置摘要指认同一个凭据）
+    loc = [hashlib.sha256(f"p:{n}".encode()).hexdigest()[:12] for n in (same[0][0], same[1][0])]
+    assert loc[0] != loc[1], "SETUP：位置指纹样例造错了两行相同"
+
+    # 反向：换一把 key ⇒ token指纹必须变（常数桩能骗过"我看得到摘要"，骗不过这条）
+    other = find_credential_shapes(f'K = "{key_b}"\n')
+    assert other and other[0][3] != same[0][3], "两把不同的 key 给出了同一个 token指纹 ⇒ 这一列是假的"
+
+    # 红线：任何返回字段都不得等于原文（门不许把字面量带出去）
+    for hit in same + other:
+        for field in hit:
+            assert str(field) not in (key_a, key_b), f"泄漏：返回字段里出现了原文（{hit[0]}）"
+
+
 # ======================================================================================
 # 3 · 判据承重（可被突变杀掉）
 # ======================================================================================
@@ -187,6 +227,21 @@ def test_3_the_scan_is_load_bearing():
         globals()["looks_like_placeholder"] = original  # type: ignore[assignment]
     synthetic_real = "sk-" + "aB3dE7gH1jK4mN8pQ2sT5vW9yZ6c"
     assert find_credential_shapes(f'K="{synthetic_real}"\n'), "恢复后必须重新咬住"
+
+    # 第二处承重：token指纹那一列。换成常数桩 ⇒ 两把不同 key 会塌成同一个摘要（test_2c 就是抓这个）
+    real_fp = globals()["token_fingerprint"]
+    key_a = "sk-" + "aB3dE7gH1jK4mN8pQ2sT5vW9yZ6c"
+    key_b = "sk-" + "zZ9yY8xX7wW6vV5uU4tT3sS2rR1qQpP"
+    try:
+        globals()["token_fingerprint"] = lambda token: "0" * 12
+        mut_a = find_credential_shapes(f'K="{key_a}"\n')[0][3]
+        mut_b = find_credential_shapes(f'K="{key_b}"\n')[0][3]
+        assert mut_a == mut_b, "常数桩居然还分得开两把 key ⇒ test_2c 的反向断言是空的"
+    finally:
+        globals()["token_fingerprint"] = real_fp  # type: ignore[assignment]
+    a = find_credential_shapes(f'K="{key_a}"\n')[0][3]
+    b = find_credential_shapes(f'K="{key_b}"\n')[0][3]
+    assert a != b and len(a) == 12, "恢复后两把 key 必须给出不同指纹"
 
 
 if __name__ == "__main__":  # pragma: no cover
