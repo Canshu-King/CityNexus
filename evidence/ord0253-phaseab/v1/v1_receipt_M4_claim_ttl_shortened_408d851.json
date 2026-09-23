@@ -1,0 +1,243 @@
+{
+ "schema_version": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+ "receipt_kind": "reverse_mutation",
+ "generated_at": "2026-09-24T00:35:28+08:00",
+ "scope": {
+  "repo": "Canshu-King/CityNexus",
+  "exact_sha": "408d851ec2ec7ab02142233c6a497c5037adfda4",
+  "tree_kind": "clean_sha",
+  "composite_recipe": [],
+  "dirty": false,
+  "dirty_paths": [],
+  "target_nodeids": [
+   "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+  ],
+  "run_shape": "whole-door（14 格一起跑，不挑着跑）",
+  "command_argv": [
+   "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+   "-m",
+   "pytest",
+   "tests/test_qoder_agent_command_claim_first.py",
+   "-q",
+   "--no-header",
+   "-p",
+   "no:cacheprovider",
+   "-rf",
+   "--tb=no"
+  ],
+  "tree_kind_check": {
+   "backend/app/main.py": {
+    "commit_blob_sha1": "0045ab5208e21f0e49cd9a39cb45efe18b78f72a",
+    "export_blob_sha1": "0045ab5208e21f0e49cd9a39cb45efe18b78f72a",
+    "equal": true
+   },
+   "backend/tests/test_qoder_agent_command_claim_first.py": {
+    "commit_blob_sha1": "32f5a5df07bb951cef9e82252e9274132552651e",
+    "export_blob_sha1": "32f5a5df07bb951cef9e82252e9274132552651e",
+    "equal": true
+   },
+   "backend/tests/test_qoder_agent_command_idempotency.py": {
+    "commit_blob_sha1": "03bdd3af48a9caacc46d5c652c5d0d9c3282f198",
+    "export_blob_sha1": "03bdd3af48a9caacc46d5c652c5d0d9c3282f198",
+    "equal": true
+   },
+   "backend/tests/test_qoder_agent_command_idempotency_xproc.py": {
+    "commit_blob_sha1": "3176da2cffd9533be9bea93daa095e5df89a4c0c",
+    "export_blob_sha1": "3176da2cffd9533be9bea93daa095e5df89a4c0c",
+    "equal": true
+   }
+  },
+  "note": "被测树 = git archive 的一次性只读导出；产品码只在导出里被改，导出外用 sha 回验还原"
+ },
+ "environment": {
+  "cwd": "D:\\moodle\\_qoder_f_run\\e_v1_408d851\\backend",
+  "python_executable": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+  "python_version": "Python 3.12.14",
+  "pytest_version": "pytest 8.4.2",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "pythonpath": [
+   "（未设：靠 cwd=导出的 backend/）"
+  ],
+  "required_local_modules": [
+   "backend/app/main.py",
+   "backend/tests/test_qoder_agent_command_claim_first.py",
+   "backend/tests/test_qoder_agent_command_idempotency.py",
+   "backend/tests/test_qoder_agent_command_idempotency_xproc.py"
+  ],
+  "forbidden_command_surface_hits": [],
+  "row_column_instrument": {
+   "module": "门内 tests/test_qoder_agent_command_claim_first.py::_durable（sqlite3 直连）",
+   "git_blob_sha1": "32f5a5df07bb951cef9e82252e9274132552651e",
+   "note": "判级用的行读数出自门本身；本收据另在门外用第二条连接复量（见 runs[].second_connection）"
+  }
+ },
+ "baseline": {
+  "receipt_ref": "本批控制轮（同一次导出、同一只库、未突变）",
+  "same_exact_sha": true,
+  "same_target_nodeids": true,
+  "same_run_shape": true,
+  "control_rounds": 3,
+  "target_outcomes": {
+   "test_9_completed_receipts_keep_the_existing_seven_day_semantics": "GREEN",
+   "test_8_a_committed_run_never_leaves_an_unfilled_claim": "GREEN"
+  },
+  "this_run_exit_code": 0,
+  "this_run_executed": 14,
+  "this_run_pytest_counts": {
+   "passed": 14,
+   "failed": 0,
+   "errors": 0,
+   "skipped": 0
+  },
+  "failed_nodeids": [],
+  "second_connection": {
+   "agent_command_claim_rows": 39,
+   "agent_command_unfilled_rows": 12,
+   "journey_missions_total": 21,
+   "db_file": "v1.db"
+  }
+ },
+ "mutation": {
+  "mutation_id": "M4_claim_ttl_shortened",
+  "claim_broken": "completed 回执沿用现成 +7d 语义",
+  "carriers_removed": [
+   "+timedelta(days=7)（换成 5 分钟＝给到点回收开门）"
+  ],
+  "allowed_scope": "只改 backend/app/main.py（keyed run_agent_command 的 Phase A/B）",
+  "actual_scope": [
+   "backend/app/main.py"
+  ],
+  "primary_target_nodeids": [
+   "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+  ],
+  "expected_green_arm": [
+   "test_8_a_committed_run_never_leaves_an_unfilled_claim"
+  ],
+  "patch_or_mutator_ref": "D:\\moodle\\_qoder_f_run\\o253_claimfirst_mutations_v1.py",
+  "no_test_file_touched": true,
+  "changed_files": [
+   "backend/app/main.py"
+  ],
+  "digest_semantics": {
+   "base_sha256_16": "f1b0eedd6e17217b",
+   "mutant_sha256_16": "9feb08bcb7dac1b2",
+   "restored_sha256_16": "f1b0eedd6e17217b",
+   "anchors": [
+    "                    expires_at=(now + timedelta(days=7)).isoformat(),"
+   ]
+  }
+ },
+ "mutated_runs": {
+  "rounds": 3,
+  "runs": [
+   {
+    "exit_code": 1,
+    "summary": "1 failed, 13 passed, 2 warnings in 3.79s",
+    "seconds": 4.4,
+    "executed": 14,
+    "pytest_counts": {
+     "passed": 13,
+     "failed": 1,
+     "errors": 0,
+     "skipped": 0
+    },
+    "red_nodeids": [
+     "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+    ],
+    "stderr_tail": "",
+    "round": 1,
+    "second_connection": {
+     "agent_command_claim_rows": 142,
+     "agent_command_unfilled_rows": 67,
+     "journey_missions_total": 76,
+     "db_file": "v1.db"
+    }
+   },
+   {
+    "exit_code": 1,
+    "summary": "1 failed, 13 passed, 2 warnings in 3.61s",
+    "seconds": 4.5,
+    "executed": 14,
+    "pytest_counts": {
+     "passed": 13,
+     "failed": 1,
+     "errors": 0,
+     "skipped": 0
+    },
+    "red_nodeids": [
+     "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+    ],
+    "stderr_tail": "",
+    "round": 2,
+    "second_connection": {
+     "agent_command_claim_rows": 155,
+     "agent_command_unfilled_rows": 71,
+     "journey_missions_total": 83,
+     "db_file": "v1.db"
+    }
+   },
+   {
+    "exit_code": 1,
+    "summary": "1 failed, 13 passed, 2 warnings in 3.68s",
+    "seconds": 4.5,
+    "executed": 14,
+    "pytest_counts": {
+     "passed": 13,
+     "failed": 1,
+     "errors": 0,
+     "skipped": 0
+    },
+    "red_nodeids": [
+     "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+    ],
+    "stderr_tail": "",
+    "round": 3,
+    "second_connection": {
+     "agent_command_claim_rows": 168,
+     "agent_command_unfilled_rows": 75,
+     "journey_missions_total": 90,
+     "db_file": "v1.db"
+    }
+   }
+  ],
+  "red_union": [
+   "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+  ],
+  "red_beyond_control": [
+   "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+  ]
+ },
+ "derivation": {
+  "claimed_result": "KILLED",
+  "claimed_result_note": "点名的每一格在 3 轮里都红 ⇒ 承重（仍待 verifier derived）",
+  "derived_result": null,
+  "direct_red_nodeids": [
+   "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+  ],
+  "collateral_red_nodeids": [],
+  "expected_green_arm_held": [
+   "test_8_a_committed_run_never_leaves_an_unfilled_claim"
+  ],
+  "expected_green_arm_broke": [],
+  "verifier_problems": [
+   "claimed_result 由 mutated_runs 派生，不是自宣；derived_result 留给 verifier",
+   "M3 之外若有人把『回填守卫』写成已证明承重 ⇒ 与本收据冲突，以本收据为准"
+  ],
+  "batch_tag": "o253-claimfirst-408d851",
+  "primary_red_rounds": {
+   "test_9_completed_receipts_keep_the_existing_seven_day_semantics": 3
+  },
+  "every_round_restored_byte_exact": true,
+  "baseline_claim_rows": 39,
+  "mutated_claim_rows": [
+   142,
+   155,
+   168
+  ],
+  "mutated_unfilled_rows": [
+   67,
+   71,
+   75
+  ]
+ }
+}
