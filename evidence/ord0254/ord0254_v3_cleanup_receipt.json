@@ -1,0 +1,122 @@
+{
+ "at": "2026-09-23T14:59:37+08:00",
+ "why": "teardown of the A-9 (third-swap) canary run: deploy/fprobe/selftest under ruler 9ca0dee62016d7ef at 14:58",
+ "listeners_before": {
+  "4411": [
+   54584
+  ],
+  "4412": [
+   32836
+  ],
+  "8411": [
+   24580
+  ]
+ },
+ "forbidden_ports_observed_only": {
+  "4781": [
+   47376
+  ],
+  "4782": [
+   33880
+  ],
+  "8693": [
+   33104
+  ],
+  "4185": [
+   47124
+  ],
+  "8713": [
+   52820
+  ]
+ },
+ "killed": [
+  {
+   "pid": 24580,
+   "rc": 0,
+   "out": "�ɹ�: ����ֹ PID 24580 (���� PID 50564 �ӽ���)�Ľ��̡�"
+  },
+  {
+   "pid": 32836,
+   "rc": 0,
+   "out": "�ɹ�: ����ֹ PID 58084 (���� PID 54584 �ӽ���)�Ľ��̡�\n�ɹ�: ����ֹ PID 54584 (���� PID 32836 �ӽ���)�Ľ��̡�\n�ɹ�: ����ֹ PID 32836"
+  },
+  {
+   "pid": 54584,
+   "rc": 128,
+   "out": "����: û���ҵ����� \"54584\"��"
+  }
+ ],
+ "killed_command_lines": {
+  "4411:54584": "node node_modules/vite/bin/vite.js preview --outDir dist --port 4411 --strictPort --host 127.0.0.1",
+  "4412:32836": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -X utf8 tools/run_surface.py",
+  "8411:24580": "\"C:\\Users\\������\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:app --host 127.0.0.1 --port 8411"
+ },
+ "ports_released": {
+  "4411": true,
+  "4412": true,
+  "8411": true
+ },
+ "delete_list_expanded_from": "serve/, every dist_bak_*, db/canary_8411.db*, MCP-side cnxshots",
+ "deleted": [
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\serve",
+   "bytes": 12009126,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\dist_bak_144750",
+   "bytes": 33708,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\dist_bak_144752",
+   "bytes": 33708,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\dist_bak_145829",
+   "bytes": 33708,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db",
+   "bytes": 4096,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db-shm",
+   "bytes": 32768,
+   "gone": true
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db-wal",
+   "bytes": 1821072,
+   "gone": true
+  }
+ ],
+ "bytes_freed_total": 13968186,
+ "listeners_after": {
+  "4411": [],
+  "4412": [],
+  "8411": []
+ },
+ "http_probe_after": {
+  "4411": "refused (URLError)",
+  "4412": "refused (URLError)",
+  "8411": "refused (URLError)"
+ },
+ "kept": {
+  "D:\\moodle\\_qoder_harness_ord0254\\repo": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\patches": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\tools": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\shots": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\ORD_0254_FRONTEND_COMPAT_BACKPORT.md": true,
+  "D:\\moodle\\_qoder_harness_ord0254\\repo\\frontend\\dist": true
+ },
+ "kept_note": "candidate bundle repo/frontend/dist stays (per-file sha256 in the build manifest)",
+ "user_stores_touched": [],
+ "demo_reset_issued": false,
+ "verdict": "CLEAN",
+ "filename_note": "written by tools/stop_surface.py which still uses the v2 file name; renamed to ord0254_v3_cleanup_receipt.json so the coordinate matches the run it describes. Measured fields (PIDs, ports, byte counts) are unchanged from that run.",
+ "discarded_window": "the 14:55 attempts are NOT part of this teardown or of any delivered reading: my own header patch put Cache-Control above the status line and broke my responses, so that window is instrument failure (see report section 9)"
+}
