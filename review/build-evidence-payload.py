@@ -112,7 +112,7 @@ PLAN = {
             ("../ord0250-length-boundary.json", "gate-length-boundary.json"),
         ],
         "ORD-0250",
-        "ord0250-0251-0247w-arms-v2.json",
+        "ord0250-0251-0247w-arms-v3.json",
     ),
     "ord0251": (
         ["0fd3cc7"],
@@ -123,7 +123,7 @@ PLAN = {
             ("../ord0251-plan-count-attribute.json", "gate-plan-count-attribute.json"),
         ],
         "ORD-0251",
-        "ord0250-0251-0247w-arms-v2.json",
+        "ord0250-0251-0247w-arms-v3.json",
     ),
     "ord0247w": (
         ["0fd3cc7"],
@@ -133,7 +133,7 @@ PLAN = {
             ("../ord0247w-desktop-summary-inventory.json", "gate-desktop-summary-inventory.json"),
         ],
         "ORD-0247 (widened: the whole <summary> class)",
-        "ord0250-0251-0247w-arms-v2.json",
+        "ord0250-0251-0247w-arms-v3.json",
     ),
 }
 
