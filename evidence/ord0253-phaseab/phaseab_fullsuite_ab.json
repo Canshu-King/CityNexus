@@ -1,0 +1,305 @@
+{
+ "generated_at": "2026-09-23T23:04:33+08:00",
+ "command": "python -m pytest --no-header -p no:cacheprovider -q --tb=no -rf",
+ "cwd_shape": "<export>/backend  ← 与已验收的 0262 3×3 同形制，不另起一种跑法",
+ "interpreter": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+ "shape": "whole-suite from a fresh git archive export",
+ "rounds_per_tree": 3,
+ "baseline_choice": "候选自己的父 aabd47e（不是当前尖 d2665e2）；尖由 commander 移动，我不追",
+ "counter_note": "红数 = ^FAILED 去重 + `[0-9]+ failed` 摘要双向核；xfailed 不算红",
+ "trees": {
+  "candidate_408d851": {
+   "rev_arg": "408d851",
+   "full_sha": "408d851ec2ec7ab02142233c6a497c5037adfda4",
+   "tree": "1791ac84b7fbb9f3c791c337d630b1bb6fc60f71",
+   "export_root": "D:\\moodle\\_qoder_f_run\\e_ab_candidate_408d851",
+   "blob_equality": {
+    "backend/app/main.py": {
+     "in_commit": true,
+     "bytes": 478535,
+     "commit_sha1": "0045ab5208e21f0e49cd9a39cb45efe18b78f72a",
+     "export_sha1": "0045ab5208e21f0e49cd9a39cb45efe18b78f72a",
+     "equal": true
+    },
+    "backend/app/db/session.py": {
+     "in_commit": true,
+     "bytes": 40776,
+     "commit_sha1": "ca8330cdf4138b55a1c104aa1926217821a2093a",
+     "export_sha1": "ca8330cdf4138b55a1c104aa1926217821a2093a",
+     "equal": true
+    },
+    "backend/tests/test_qoder_agent_command_idempotency.py": {
+     "in_commit": true,
+     "bytes": 12843,
+     "commit_sha1": "03bdd3af48a9caacc46d5c652c5d0d9c3282f198",
+     "export_sha1": "03bdd3af48a9caacc46d5c652c5d0d9c3282f198",
+     "equal": true
+    },
+    "backend/tests/test_qoder_agent_command_claim_first.py": {
+     "in_commit": true,
+     "bytes": 28343,
+     "commit_sha1": "32f5a5df07bb951cef9e82252e9274132552651e",
+     "export_sha1": "32f5a5df07bb951cef9e82252e9274132552651e",
+     "equal": true
+    },
+    "backend/tests/test_qoder_agent_command_idempotency_xproc.py": {
+     "in_commit": true,
+     "bytes": 20776,
+     "commit_sha1": "3176da2cffd9533be9bea93daa095e5df89a4c0c",
+     "export_sha1": "3176da2cffd9533be9bea93daa095e5df89a4c0c",
+     "equal": true
+    },
+    "contracts/openapi.yaml": {
+     "in_commit": true,
+     "bytes": 106123,
+     "commit_sha1": "f895371e3293e72ba63563ad0470268308e178f6",
+     "export_sha1": "f895371e3293e72ba63563ad0470268308e178f6",
+     "equal": true
+    }
+   },
+   "suite_cwd": "D:\\moodle\\_qoder_f_run\\e_ab_candidate_408d851\\backend",
+   "collect": {
+    "exit_code": 0,
+    "collected": 1236,
+    "error_lines": 0
+   },
+   "rounds": [
+    {
+     "exit_code": 1,
+     "summary_line": "8 failed, 1212 passed, 15 skipped, 1 xfailed, 2 warnings in 146.05s (0:02:26)",
+     "wall_clock_s": 147.9,
+     "failed_count_from_regex": 8,
+     "named_red_nodeids": [
+      "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+      "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+      "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at"
+     ],
+     "stderr_tail": "",
+     "round": 1
+    },
+    {
+     "exit_code": 1,
+     "summary_line": "8 failed, 1212 passed, 15 skipped, 1 xfailed, 2 warnings in 133.33s (0:02:13)",
+     "wall_clock_s": 135.5,
+     "failed_count_from_regex": 8,
+     "named_red_nodeids": [
+      "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+      "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+      "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at"
+     ],
+     "stderr_tail": "",
+     "round": 2
+    },
+    {
+     "exit_code": 1,
+     "summary_line": "8 failed, 1212 passed, 15 skipped, 1 xfailed, 2 warnings in 122.55s (0:02:02)",
+     "wall_clock_s": 124.3,
+     "failed_count_from_regex": 8,
+     "named_red_nodeids": [
+      "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+      "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+      "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at"
+     ],
+     "stderr_tail": "",
+     "round": 3
+    }
+   ],
+   "union_of_red_names": [
+    "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+    "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+    "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+    "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at"
+   ],
+   "per_round_red_counts": [
+    8,
+    8,
+    8
+   ],
+   "always_red_all_rounds": [
+    "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+    "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+    "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+    "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at"
+   ]
+  },
+  "base_aabd47e": {
+   "rev_arg": "aabd47e",
+   "full_sha": "aabd47e69c6615883022c6e9fa027b434e844b91",
+   "tree": "64a60ed5a46c83439058d3fddd18f2d0748c17ab",
+   "export_root": "D:\\moodle\\_qoder_f_run\\e_ab_base_aabd47e",
+   "blob_equality": {
+    "backend/app/main.py": {
+     "in_commit": true,
+     "bytes": 474980,
+     "commit_sha1": "b67a8fcdb24e2ff94331a102d279a3957cd0dd79",
+     "export_sha1": "b67a8fcdb24e2ff94331a102d279a3957cd0dd79",
+     "equal": true
+    },
+    "backend/app/db/session.py": {
+     "in_commit": true,
+     "bytes": 40776,
+     "commit_sha1": "ca8330cdf4138b55a1c104aa1926217821a2093a",
+     "export_sha1": "ca8330cdf4138b55a1c104aa1926217821a2093a",
+     "equal": true
+    },
+    "backend/tests/test_qoder_agent_command_idempotency.py": {
+     "in_commit": true,
+     "bytes": 12843,
+     "commit_sha1": "03bdd3af48a9caacc46d5c652c5d0d9c3282f198",
+     "export_sha1": "03bdd3af48a9caacc46d5c652c5d0d9c3282f198",
+     "equal": true
+    },
+    "backend/tests/test_qoder_agent_command_claim_first.py": {
+     "in_commit": false,
+     "in_export": false
+    },
+    "backend/tests/test_qoder_agent_command_idempotency_xproc.py": {
+     "in_commit": true,
+     "bytes": 20776,
+     "commit_sha1": "3176da2cffd9533be9bea93daa095e5df89a4c0c",
+     "export_sha1": "3176da2cffd9533be9bea93daa095e5df89a4c0c",
+     "equal": true
+    },
+    "contracts/openapi.yaml": {
+     "in_commit": true,
+     "bytes": 106123,
+     "commit_sha1": "f895371e3293e72ba63563ad0470268308e178f6",
+     "export_sha1": "f895371e3293e72ba63563ad0470268308e178f6",
+     "equal": true
+    }
+   },
+   "suite_cwd": "D:\\moodle\\_qoder_f_run\\e_ab_base_aabd47e\\backend",
+   "collect": {
+    "exit_code": 0,
+    "collected": 1222,
+    "error_lines": 0
+   },
+   "rounds": [
+    {
+     "exit_code": 1,
+     "summary_line": "10 failed, 1196 passed, 15 skipped, 1 xfailed, 2 warnings in 239.56s (0:03:59)",
+     "wall_clock_s": 241.7,
+     "failed_count_from_regex": 10,
+     "named_red_nodeids": [
+      "tests/test_qoder_agent_command_idempotency_xproc.py::test_1_two_processes_one_key_persist_exactly_one_mission",
+      "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+      "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+      "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+      "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+     ],
+     "stderr_tail": "",
+     "round": 1
+    },
+    {
+     "exit_code": 1,
+     "summary_line": "9 failed, 1197 passed, 15 skipped, 1 xfailed, 2 warnings in 151.61s (0:02:31)",
+     "wall_clock_s": 153.8,
+     "failed_count_from_regex": 9,
+     "named_red_nodeids": [
+      "tests/test_qoder_agent_command_idempotency_xproc.py::test_1_two_processes_one_key_persist_exactly_one_mission",
+      "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+      "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+      "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at"
+     ],
+     "stderr_tail": "",
+     "round": 2
+    },
+    {
+     "exit_code": 1,
+     "summary_line": "9 failed, 1197 passed, 15 skipped, 1 xfailed, 2 warnings in 112.79s (0:01:52)",
+     "wall_clock_s": 114.4,
+     "failed_count_from_regex": 9,
+     "named_red_nodeids": [
+      "tests/test_qoder_agent_command_idempotency_xproc.py::test_1_two_processes_one_key_persist_exactly_one_mission",
+      "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+      "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+      "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+      "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at"
+     ],
+     "stderr_tail": "",
+     "round": 3
+    }
+   ],
+   "union_of_red_names": [
+    "tests/test_qoder_agent_command_idempotency_xproc.py::test_1_two_processes_one_key_persist_exactly_one_mission",
+    "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+    "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+    "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+    "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+    "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+   ],
+   "per_round_red_counts": [
+    10,
+    9,
+    9
+   ],
+   "always_red_all_rounds": [
+    "tests/test_qoder_agent_command_idempotency_xproc.py::test_1_two_processes_one_key_persist_exactly_one_mission",
+    "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+    "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+    "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+    "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at"
+   ]
+  }
+ },
+ "comparison": {
+  "candidate_tag": "candidate_408d851",
+  "baseline_tag": "base_aabd47e",
+  "only_in_candidate": [],
+  "only_in_baseline": [
+   "tests/test_qoder_agent_command_idempotency_xproc.py::test_1_two_processes_one_key_persist_exactly_one_mission",
+   "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+  ],
+  "in_both_unions": 8,
+  "collect_denominators": {
+   "candidate_408d851": 1236,
+   "base_aabd47e": 1222
+  },
+  "reading": "候选并集 − 基线并集 为空 ⇒ 3 轮里候选没出现基线之外的名字；若非空则不能写'0 新红'，只能逐条归因"
+ }
+}
