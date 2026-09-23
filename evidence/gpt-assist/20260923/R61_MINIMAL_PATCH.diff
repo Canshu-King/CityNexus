@@ -1,0 +1,32 @@
+--- a/backend/app/services.py
++++ b/backend/app/services.py
+@@
+ PLACES_NOT_IN_CATALOG = "PLACES_NOT_IN_CATALOG"
+ PLACE_COST_UNVERIFIED = "PLACE_COST_UNVERIFIED"
+ PLACE_OUTSIDE_JOURNEY_WINDOW = "PLACE_OUTSIDE_JOURNEY_WINDOW"
++PLACE_ROLE_NOT_VISIT_ELIGIBLE = "PLACE_ROLE_NOT_VISIT_ELIGIBLE"
+@@
+     for place_id in ordered_ids:
+         place = places[place_id]
++        if not _catalogue_visit_eligible(place):
++            raise CompositionRefusal(
++                f"GENERIC_COMPOSE_ROLE_NOT_VISIT_ELIGIBLE:{place_id}:{place.category}",
++                reason_code=PLACE_ROLE_NOT_VISIT_ELIGIBLE,
++                details={
++                    "city_code": journey.city_code,
++                    "place_ids": [place_id],
++                    "category": place.category,
++                },
++            )
+         metadata = json.loads(place.metadata_json or "{}")
+@@
+     session.add(plan)
+     session.flush()
+     for sequence, (place, start_at, end_at, travel_min, cost_minor) in enumerate(rows, start=1):
++        place_metadata = json.loads(place.metadata_json or "{}")
+         session.add(
+             Activity(
+@@
+-                        "cost_evidence": metadata.get("cost_evidence"),
++                        "cost_evidence": place_metadata.get("cost_evidence"),
+                         "price_known": True,
