@@ -1,0 +1,170 @@
+{
+ "schema_version": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+ "receipt_kind": "reverse_mutation",
+ "scope": {
+  "repo": "Canshu-King/CityNexus",
+  "working_line": "D:/moodle/_qoder_b_landing_20260923",
+  "exact_sha": "f22cb932bc094ea22463873814e11adcd93a8c75",
+  "tree_kind": "clean_sha",
+  "composite_recipe": [],
+  "dirty": false,
+  "dirty_paths": [],
+  "target_nodeids": [
+   "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+  ],
+  "run_shape": "whole-file",
+  "command_argv": [
+   "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+   "-m",
+   "pytest",
+   "tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+   "-v",
+   "--tb=line",
+   "-p",
+   "no:cacheprovider"
+  ]
+ },
+ "environment": {
+  "cwd": "D:/moodle/_qoder_b_landing_20260923/backend",
+  "python_executable": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+  "python_version": "Python 3.12.14",
+  "pytest_version": "pytest 8.4.2 (from the run header)",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "pythonpath": "",
+  "required_local_modules": [
+   {
+    "name": "citynexus_mcp",
+    "import_origin": "NOT_FOUND"
+   },
+   {
+    "name": "ortools",
+    "import_origin": "D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\ortools\\__init__.py"
+   }
+  ],
+  "forbidden_command_surface_hits": []
+ },
+ "baseline": {
+  "receipt_ref": "evidence/ord0236/75bc8ca_mutation_receipt.json",
+  "receipt_blob": "af16fc122ae0ce53ecf2e5f2a583254ea224f3c6",
+  "external_receipt_produced_on_this_sha": true,
+  "same_exact_sha": true,
+  "same_target_nodeids": true,
+  "same_run_shape": true,
+  "target_outcomes": {
+   "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t3_display_taxonomy_tags_never_become_accessibility_evidence": "GREEN"
+  },
+  "failed_nodeids": [],
+  "errored_nodeids": [],
+  "collection_or_setup_errors": [],
+  "run": {
+   "collected": 3,
+   "pytest_counts": {
+    "passed": 3,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+   },
+   "summary_line": "============================== 3 passed in 0.56s ==============================",
+   "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_f54j396w\\suite.db",
+   "db_fresh": true
+  }
+ },
+ "mutation": {
+  "mutation_id": "K3_taxonomy_token_becomes_a_fact",
+  "claim_broken": "a bare display taxonomy token becomes a hard accessibility fact",
+  "allowed_scope": "product",
+  "actual_scope": "product",
+  "primary_target_nodeids": [
+   "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+  ],
+  "patch_or_mutator_ref": "evidence/ord0219-landing/ (arm definitions live in this driver, quoted in the ledger)",
+  "changed_files": [
+   {
+    "path": "backend/app/replanning/feasibility.py",
+    "before_blob": "5b60f975cf3f2f20e358f72f3d272c02257b5b86",
+    "before_digest": "d2eae2b11ff05f6930d33c847a7a05f57e00fdde29fbaf5691a1d51c839ec874",
+    "mutated_digest": "4856a8148697f8710af7f9a73e3abcd5d04298b8b8b0b1207653b5b8568ba067",
+    "expected_anchor_hits": 1,
+    "anchor_hits": 1,
+    "bytes_changed": true
+   }
+  ]
+ },
+ "mutated_runs": {
+  "rounds": 1,
+  "runs": [
+   {
+    "argv": [
+     "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+     "-m",
+     "pytest",
+     "tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+     "-v",
+     "--tb=line",
+     "-p",
+     "no:cacheprovider"
+    ],
+    "exit_code": 1,
+    "collected": 3,
+    "pytest_counts": {
+     "passed": 2,
+     "failed": 1,
+     "errors": 0,
+     "skipped": 0
+    },
+    "target_outcomes": {
+     "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t1_raw_tags_column_alone_never_causes_a_hard_verdict": "GREEN",
+     "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker": "GREEN",
+     "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t3_display_taxonomy_tags_never_become_accessibility_evidence": "RED"
+    },
+    "failed_nodeids": [
+     "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+    ],
+    "errored_nodeids": [],
+    "collection_or_setup_errors": [],
+    "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_p_4mphjg\\suite.db",
+    "path_source": "pytest report header 'ORD-0211 test database: resolved=' printed by backend/tests/conftest.py",
+    "initial_db_state": {
+     "path_did_not_exist_before_this_run": true
+    },
+    "resolved_parent": "cnx_pytest_p_4mphjg",
+    "new_temp_dirs_during_this_run": [
+     "cnx_pytest_p_4mphjg"
+    ],
+    "final_db_state": {
+     "db_file_exists_after_run": false
+    },
+    "db_fresh": true,
+    "summary_line": "========================= 1 failed, 2 passed in 0.46s =========================",
+    "run_index": 1
+   }
+  ]
+ },
+ "restore": {
+  "attempted": true,
+  "restored": true,
+  "restored_digest_by_file": {
+   "backend/app/replanning/feasibility.py": "d2eae2b11ff05f6930d33c847a7a05f57e00fdde29fbaf5691a1d51c839ec874"
+  },
+  "byte_exact_match_before": true,
+  "mutant_marker_used": "    if \"indoor\" in [str(t) for t in (_parse_json(_field(record, \"tags_json\", \"[]\"), []) or [])]:",
+  "mutant_marker_hits_after_restore": 0,
+  "mutant_marker_substring_hits_after_restore": 0,
+  "post_restore_dirty_paths": []
+ },
+ "derivation": {
+  "claimed_result": "KILLED",
+  "derived_result": "WRITTEN_BY_VERIFIER",
+  "direct_red_nodeids": "WRITTEN_BY_VERIFIER",
+  "collateral_red_nodeids": "WRITTEN_BY_VERIFIER",
+  "verifier_problems": []
+ },
+ "informational_for_verifier": {
+  "mutated_failed_nodeids": [
+   "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+  ],
+  "mutated_summary": "========================= 1 failed, 2 passed in 0.46s =========================",
+  "primary_target_reddened": true,
+  "note": "claimed_result is mine and informational only; the verdict is yours to derive"
+ }
+}
