@@ -1,0 +1,130 @@
+{
+ "at": "2026-09-24T01:18:41+08:00",
+ "order": "ORD-0263 第五态候选 · 交付增量（补发一件）",
+ "lane": "B c01d72a3",
+ "candidate_tip": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "was": {
+  "proven": "21/22",
+  "detail": "s5fix_read_live.json answered HTTP 404 on its independent read-back although the publisher reported success"
+ },
+ "now": {
+  "proven": "21/22",
+  "republished": [
+   {
+    "name": "s5fix_read_live.json",
+    "blob40": "3fddf5eed09cff98f51d86a429a704f50b00c918",
+    "readback": "HTTP 404",
+    "attempts": 3,
+    "repo_path": "evidence/ord0263-s5fix-laneB/s5fix_read_live.json"
+   }
+  ]
+ },
+ "rule_followed": "no published file is overwritten or deleted; the ledger block keeps the number it honestly measured at the time; this addendum is the correction",
+ "index_unchanged": [
+  {
+   "name": "ord0263_s5fix_selfproof.json",
+   "blob40": "c8695138d7cb09f0701b7f4b22d0965cf92edbcc",
+   "bytes": 9066
+  },
+  {
+   "name": "ord0263_s5fix_c79e2b4.patch",
+   "blob40": "bae27f1b79f6645fe6760bd181a5f846e43309d7",
+   "bytes": 14595
+  },
+  {
+   "name": "ord0263_verdict_ord0263_capture_candidate_s5fix.json",
+   "blob40": "f3a39954ebe9ce8604234a4f18ffb53d66988aaa",
+   "bytes": 5468
+  },
+  {
+   "name": "ord0263_capture_candidate_s5fix.json",
+   "blob40": "f5e13e69747fd0dc7feed9eb5f93ed672b699077",
+   "bytes": 8923
+  },
+  {
+   "name": "ord0263_s5fix_origin_logs.json",
+   "blob40": "2d5890567fe1b8143da6c3cddf570650aaffeee9",
+   "bytes": 4293
+  },
+  {
+   "name": "q263_s5fix_selfproof.json",
+   "blob40": "f3fe52e6da6693422d0736c2c1dd25e97bb9d790",
+   "bytes": 18851
+  },
+  {
+   "name": "q263_s5fix_reverse_arms.json",
+   "blob40": "445836bc04d2945b84ef2e589009886dca3af0e3",
+   "bytes": 3621
+  },
+  {
+   "name": "ORD_0263_A3_WITHDRAWAL.md",
+   "blob40": "5ec29392e2c3960bb648b7929e705335af2b5907",
+   "bytes": 3141
+  },
+  {
+   "name": "s5fix_read_enter.json",
+   "blob40": "291e7d5820e973cca6edb7ed00ed02915a4fd626",
+   "bytes": 3405
+  },
+  {
+   "name": "s5fix_read_live.json",
+   "blob40": "3fddf5eed09cff98f51d86a429a704f50b00c918",
+   "bytes": 2838
+  },
+  {
+   "name": "s5fix_read_200_html.json",
+   "blob40": "76729a1942ddba6c16e630aec0cbb110928ea634",
+   "bytes": 2951
+  },
+  {
+   "name": "s5fix_read_200_empty.json",
+   "blob40": "111cfb25d3d3990e86f6b966434f6fe847fce978",
+   "bytes": 2912
+  },
+  {
+   "name": "s5fix_read_200_not_json.json",
+   "blob40": "14edbe5991bdec214b9a5c6f0d9b400f55c6088e",
+   "bytes": 2960
+  },
+  {
+   "name": "s5fix_read_S2_origin_error.json",
+   "blob40": "01b3a420ae121a7b2933b929d4aeede5b93531c3",
+   "bytes": 2555
+  },
+  {
+   "name": "s5fix_read_S3_no_answer.json",
+   "blob40": "b56ba222205a7a9bf40f7c9337c1b16b76c44bc8",
+   "bytes": 2918
+  },
+  {
+   "name": "s5fix_read_S4_read_silent_health_answered.json",
+   "blob40": "0f82ee3f7e1a8c27d77e60658c45ff107f6561d0",
+   "bytes": 2759
+  },
+  {
+   "name": "q263_s5fix_run.py",
+   "blob40": "1cfa8b7f832ab7109d8d6504da533bb3bcded824",
+   "bytes": 14574
+  },
+  {
+   "name": "q263_s5fix_rejudge.py",
+   "blob40": "c6d00c7e72f76925c00d33249329af4e6f753b6c",
+   "bytes": 10672
+  },
+  {
+   "name": "q263_s5fix_arms.py",
+   "blob40": "176616a977bae3923f9cc00c00bd0b855a7da505",
+   "bytes": 10554
+  },
+  {
+   "name": "q263_s5fix_origin.py",
+   "blob40": "df99b285bedc5c3da070c28c9e2ff74449aa6477",
+   "bytes": 4477
+  },
+  {
+   "name": "q263_s5_expand_read.js",
+   "blob40": "5338719590e1968e25d481426aa579a453455743",
+   "bytes": 6609
+  }
+ ]
+}
