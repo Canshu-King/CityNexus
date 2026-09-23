@@ -1,0 +1,9 @@
+order           ORD-0238 + ORD-0240
+source_sha      b4ee4f85a5c598c8690588c0ea396e9a6598c720  (b4ee4f8)
+parent_sha      2ab69f20adf783a6f29133f577877a88580129e3
+subject         feat(frontend): store what she picked, say only what the planner took, label the model's words (ORD-0238, ORD-0240)
+authored        2026-09-23 12:05 +0800
+lane            e345b9d6 (frontend/UI), tree D:\moodle\_qoder_integration_20260919
+interpreter     Node/Playwright for the gates; D:/moodle/CityNexus/.venv/Scripts/python.exe = 3.12.14 for the runner
+note            the working tip is not pushed by this lane, so a bare SHA answers 422 on GitHub;
+                these blobs are the readable coordinates for it.
