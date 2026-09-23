@@ -299,6 +299,21 @@ def _side_effect_counts(jid: str) -> dict[str, int]:
             for table in ("journey_missions", "agent_runs", "audit_logs", "events")}
 
 
+@pytest.fixture(autouse=True)
+def _offline_precondition() -> None:
+    """本文件每一格的前提：外部 AI 与 Hermes native 都关着。开着 ⇒ **红**，不是 skip。
+
+    为什么不用 skip：机械门①②④⑤判的是"durable 行"，而外部 run 不在 Phase B 的提交边界里
+    （`HermesNativeClient` 是 httpx 客户端，本地根本没有它的行）。一台开着外部 AI 的机器上，
+    "没量到"绝不该被读成"过了"。
+    """
+    from app.integrations.hermes.native_client import native_hermes_status
+
+    assert not settings.ai_api_key, "SETUP：这台机器开着外部 AI ⇒ 本门量不到我想量的那一发"
+    assert not native_hermes_status().get("ready"), (
+        "SETUP：Hermes native 就绪 ⇒ 外部 run 落在提交边界之外，durable 读数不成立")
+
+
 def _watch_impl(monkeypatch, probe=None) -> list[str]:
     """把 impl 换成"记一笔自己被人叫过"再原样转发 ⇒ 允许断言"根本没叫"。
 
