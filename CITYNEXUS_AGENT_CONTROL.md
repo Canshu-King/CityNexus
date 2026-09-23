@@ -14506,6 +14506,109 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 判 + 自报仪器事故 @2026-09-24T01:3x+08 —— 我的总线巡检器**漏过 8 条**（含两枚裁定），已修；三张新单落榜；HJ-P3 那一问现在回答
+
+### ① 先自报：我自己的收件箱是漏的（这条最要紧，先说）
+
+```text
+症状：01:24 那次 `bus_new.py 5799147746` 报 `above_<wm>=5`，而 01:35 修完之后同一水位报 **13** ⇒ 有 **8 条**我没看见，
+      其中两枚是外部裁定（5799294096 Q4/Q5、5799295992 红队 0253 派生）与两枚车道交付（5799225756、5799268159 都是 HJ-P3）。
+成因（读代码确认，不是猜）：`since=` 是**按时间过滤后再分页**，而评论 id 与 created_at **不同序**；
+      旧实现把水位写成"我见过的最大 id 的 created_at" ⇒ 凡是 created_at 早于那一戳、却在我上次读之后才可达的评论，被 since 直接滤掉。
+修法：走带 **90 分钟重叠窗**（可用 CNX_BUS_OVERLAP_MIN 调）+ 按 id 去重 + 仍用数字水位界定输出；改前留 `bus_new.py.bak_0924_0134`。
+验证（同一水位前后对比）：修后 13 条全列出，三枚此前漏掉的 id 逐条 FOUND（5799268159 / 5799294096 / 5799295992）。
+后果与更正：我 00:2x 说"HJ-P3 会话失联"仍成立（她的会话对我 7 次超时），**但她人在总线活着**（01:06、01:08 两帖），
+      所以我那句"那一侧不响应"不该被读成"她停工"；今后对她的下达走总线+账本，不再靠会话消息。
+给所有车道：如果你曾按我的"above_N="数字判断"没人回我"，那个数字在 01:35 之前不可信；请重扫一次自己名下的帖。
+```
+
+### ② 三张新单正式落榜（仲裁 Q4/Q5 + 我 01:3x 的补号）
+
+```text
+ORD-0272 = CROSS_DEVICE_CONTINUATION_MARKER（D 在设计稿里点了名却没落账的那支）：写者 F，verifier HJ-P3，我落地；NOT-STARTED；不作 0269 前件。
+ORD-0273 = OFFLINE_SNAPSHOT_ACTION_TERMINATION（仲裁 Q4 建议的名义，编号由我落）：**不重开 0263**，新单。写者 D，runtime verifier HJ-P1；
+  仲裁原话三格：① 点「使用封存的演示行程」后必须在**具名期限**内进入 成功/明确失败/明确等待 之一，不许 90 s 无终态；
+  ② 若本地副本存在，UI 必须明说正在/已经用哪一份本地事实，不许让人以为还在等网络；
+  ③ 若动作最终需要网络，离线态必须及时 fail-closed 并给可执行下一步。
+  仲裁附的边界我照抄：只有在隔离后证明根因真在 SW 层，那一小段写权才转 B；若日后仪器证明"其实收到了 HTTP 回答却被说成没回答"，
+  把读数**交叉引用**到 0263 的分类合同，但不回滚 0263 的 CLOSED/当前修复线。
+ORD-0274 = GENERATION_TRANSITION_CONTRACT（仲裁 Q5）：**先开"覆盖/过渡合同单"，不先当产品 bug**。HJ-P1 = runtime verifier + 仪器 owner（双代面）；B 暂无产品写权。
+  A never-reconnected 臂：旧 worker + 旧 cache 在完全离线时服务"最后一次成功安装的旧代"，必须**代内自洽**、可导航、不混半套新代 ⇒ 这是合法 GREEN，不要求升级；
+  B reconnected-transition 臂：至少联网一次并完成可观测 update/install/activate（合同要 reload/close-reopen 就逐字写清），此后离线必须由新代自洽服务，
+    不许旧 worker + 新 shell 混代，也不许长期卡 waiting/unknown。只有 A 或 B 实测 RED，B 才取得对应 SW 修复写权。
+```
+
+### ③ 回答 HJ-P3 那一问（也写给红队/F，别重复跑）
+
+```text
+你问：`ACCEPTED-MECHANICS` 是否吸收了 19:1x 那份四问验收基线？—— **没有吸收，这一格仍挂在你名下，请按基线跑。**
+我当时的判级只覆盖到"形状对不对"（503 + 具名 GENERATION_STORE_BUSY/HYDRATION_STORE_BUSY + reason_code 指名 + retry_after_ms 由操作自己的预算派生），
+四问里 N1/N2/N3/N4 是**服务端字段与屏幕文字两侧是否同判**，那是另一件事：
+  N1 具名码必须真的走 `error()` 信封（不是裸文本）；N2 三处 `create_mission(` + 两处 flush 按**分布**判、不是一处修了就算；
+  N3 `[data-testid="plan-ai-reason"].textContent` 必须等于服务器 `message`，**屏上不许出现客户端自造的 `HTTP 500`**；
+  N4 库里确有 mission 行时，文案不得说"没记录"。
+⇒ 状态改写：ORD-0262-NARROW = `ACCEPTED-MECHANICS / NOT-CLOSED`，余项 = N1–N4（HJ-P3 跑，读数走总线+账本）。
+  与 F 不冲突：他那两格（retry_after_ms 收口、0253 补 M5 空位）各发各的收据；四问不用他重跑。
+```
+
+### ④ 0253 / 0263 现状（把车道刚交的东西对上）
+
+```text
+0253：F 已按我转的空位补齐 M5 —— 两枚**根本不进冲突分支**的正控（test_4 无人占键成功路径、test_2 已填键被早先回放拦在前面），
+  重跑 claimed=KILLED、点名格 3/3、expected_green 两格 3 轮全绿、`broke=[]`；三件 r2 新路径发布并 blob 回读 PROVEN
+  （`v1_receipt_M5_..._r2.json 77a3e9048647586d`、`v1_index_r2 bc8da16ad3e70226`、`instrument..._r2 e9f57d982470797c`），
+  且他自证 M1–M4 四枚 blob **逐枚未变** ⇒ 我已请红队**只对 M5_r2 重签**，其余沿用。M3 继续 UNPROVEN。本单仍 NOT-CLOSED。
+0263 第五态：候选 c79e2b4 我亲核（父=尖、区间 1、3 文件 115/4、bare diff 13,512 B）；HARNESS 同尺复跑中；
+  HJ-P3 那枚 0268 两向复核（正=断源后 /v8/hub 由壳答、pageerror 0；反=注销 SW+删 cache ⇒ chrome-error）是**闭单后的后到独立复核**，
+  与 HJ-P1 那两列并排存证，不互相覆盖；她的代标用的正是我给的 worker 指纹 `e63d7421eda34093…`，与我 01:2x 自己读到的一致（第三来源）。
+现场：尖 1f4440819a9d773da6e18f12a31412f73c6d0f55；0 demo/reset、0 用户库写、凭据 0 打印、尺与发布器 0 改动。
+```
+
+## lane F `8ccd71d8` 交付 · ORD-0253 补一枚空位（红队 5799395894 报的 M5 无 expected_green）@2026-09-24T01:35+08
+
+```text
+红队如实报的那一格我认：**M5 的 expected_green 是空数组** ⇒ 那枚突变只证了"点名的格会红"，没证"它只打这一件事"。
+按她给的二选一，我选**补格**而不是具名"独立性不证"——因为确实存在两格**根本不进冲突分支**的，我没挑进来是我的漏。
+
+补进去的两格（都在同一份门文件里、都不经过 IntegrityError 那一支）：
+  · test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim   ← 没人占键的常规成功
+  · test_2_a_filled_claim_is_replayed_without_building_a_second_mission           ← 已填键被**早先回放**拦在前面
+选它们的理由（写死，免得下一位换一对好看的）：M5 的主张是"唯一索引在 impl 之前挡住败者"。
+若这枚突变把这两格也打断，那它拆的就不是所有权门，而是整条 keyed 路由 ⇒ 那条主张就没被隔离出来。
+
+读数（同形制重跑：`git archive 408d851` 一次性只读导出、tree_kind=clean_sha、
+每枚 3 轮、控制轮 14 格 0 红）：
+  claimed_result = KILLED｜点名格逐轮命中 {"test_11_the_loser_is_stopped_before_impl_and_persists_nothing": 3, "test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409": 3}（满轮）
+  直接红（点名的那两格）：
+        · test_11_the_loser_is_stopped_before_impl_and_persists_nothing
+        · test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409
+  附带红（collateral，一格）：
+        · test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing
+  **该继续绿的两格：3 轮里都绿，broke = []**
+        · test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim
+        · test_2_a_filled_claim_is_replayed_without_building_a_second_mission
+  门外第二条 sqlite3 直连逐轮 durable 读数：claim 行 [51, 63, 75] ·
+  未回填行 [13, 14, 15]；还原 sha 回验 True
+
+不动她已经签认的那四枚：M1..M4 的收据**一个字节都没重写**（下面按 blob 现场对表，不是我说）。
+  v1_receipt_M1_claim_never_committed_408d851.json     记录 de2e948e53ea65c3 现在 de2e948e53ea65c3 未变=True
+  v1_receipt_M2_savepoint_join_restored_408d851.json   记录 29b404844ba583f2 现在 29b404844ba583f2 未变=True
+  v1_receipt_M3_fill_guard_removed_408d851.json        记录 9ea759fde4292dc4 现在 9ea759fde4292dc4 未变=True
+  v1_receipt_M4_claim_ttl_shortened_408d851.json       记录 592d18339b842d4f 现在 592d18339b842d4f 未变=True
+
+坐标（新文件名，旧路径未覆盖）：
+  v1_receipt_M5_conflict_does_not_block_the_work_408d851_r2.json  8913 B  blob 77a3e9048647586d  proven=True
+  v1_index_r2.json  2212 B  blob bc8da16ad3e70226  proven=True
+  instrument_claimfirst_mutations_v1_r2.py  20204 B  blob e9f57d982470797c  proven=True
+  ⇒ 3/3 件 PUT 后按 blob sha1 回读等值 PROVEN；路径 evidence/ord0253-phaseab/v1/
+  仪器改了两处（M5 的两格名单 + 只重出一枚的 CLI 过滤/后缀），另存 `_r2` 一份，进过收据的那份原样留着。
+
+仍按已裁的走：M3 = SURVIVED / UNPROVEN（不吹成已证明，也不说无效）；test_13 在 M1/M2 里记 collateral；
+claim-first 不再追加轮次；ORD-0270 NOT-STARTED。派生这一格请红队按 `_r2` 那枚重签 M5（其余四枚她已签）。
+现场：0 demo/reset、0 写用户库、0 打印凭据；导出目录跑完按具名清单删。
+标记 F-ORD0253-M5-EXPECTED-GREEN-@2026-09-24T01:35+08
+```
+
 ## commander 判 @2026-09-24T01:3x+08 —— 0263 第五态候选到齐（我亲核六格）；0253 红队已派生（只欠 M5 的 expected_green 空位）；0269 设计采纳并补号 ORD-0272
 
 ### ① ORD-0263 第五态候选：我自己量的那几格（不抄 B 的收据）
