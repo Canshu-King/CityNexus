@@ -1,0 +1,169 @@
+{
+ "note": "the origin's own per-request log lines, verbatim, one key per mode",
+ "empty": [
+  {
+   "kind": "health_answered_200",
+   "mode": "empty",
+   "path": "/api/v1/health",
+   "method": "GET",
+   "status": 200,
+   "content_type": "application/json",
+   "body_bytes": 49,
+   "body_head": "{\"status\": \"ok\", \"version\": \"ord0263-s5fix-mine\"",
+   "at": "2026-09-24T00:57:10"
+  },
+  {
+   "kind": "health_answered_200",
+   "mode": "empty",
+   "path": "/api/v1/health",
+   "method": "GET",
+   "status": 200,
+   "content_type": "application/json",
+   "body_bytes": 49,
+   "body_head": "{\"status\": \"ok\", \"version\": \"ord0263-s5fix-mine\"",
+   "at": "2026-09-24T00:57:10"
+  },
+  {
+   "kind": "answered",
+   "mode": "empty",
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "method": "GET",
+   "status": 200,
+   "content_type": "application/json",
+   "body_bytes": 0,
+   "body_head": "",
+   "at": "2026-09-24T00:57:11"
+  }
+ ],
+ "five_hundred": [
+  {
+   "kind": "answered_500",
+   "mode": "five_hundred",
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "method": "GET",
+   "status": 500,
+   "content_type": "text/plain",
+   "body_bytes": 21,
+   "body_head": "Internal Server Error",
+   "at": "2026-09-24T00:57:18"
+  }
+ ],
+ "html": [
+  {
+   "kind": "health_answered_200",
+   "mode": "html",
+   "path": "/api/v1/health",
+   "method": "GET",
+   "status": 200,
+   "content_type": "application/json",
+   "body_bytes": 49,
+   "body_head": "{\"status\": \"ok\", \"version\": \"ord0263-s5fix-mine\"",
+   "at": "2026-09-24T00:57:07"
+  },
+  {
+   "kind": "health_answered_200",
+   "mode": "html",
+   "path": "/api/v1/health",
+   "method": "GET",
+   "status": 200,
+   "content_type": "application/json",
+   "body_bytes": 49,
+   "body_head": "{\"status\": \"ok\", \"version\": \"ord0263-s5fix-mine\"",
+   "at": "2026-09-24T00:57:07"
+  },
+  {
+   "kind": "answered",
+   "mode": "html",
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "method": "GET",
+   "status": 200,
+   "content_type": "text/html; charset=utf-8",
+   "body_bytes": 1200,
+   "body_head": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <m",
+   "at": "2026-09-24T00:57:08"
+  }
+ ],
+ "mixed": [
+  {
+   "kind": "hung",
+   "mode": "mixed",
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "method": "GET",
+   "status": null,
+   "content_type": null,
+   "body_bytes": 0,
+   "body_head": "",
+   "at": "2026-09-24T00:57:37"
+  },
+  {
+   "kind": "health_500",
+   "mode": "mixed",
+   "path": "/api/v1/health",
+   "method": "GET",
+   "status": 500,
+   "content_type": "text/plain",
+   "body_bytes": 21,
+   "body_head": "Internal Server Error",
+   "at": "2026-09-24T00:57:49"
+  }
+ ],
+ "nonjson": [
+  {
+   "kind": "health_answered_200",
+   "mode": "nonjson",
+   "path": "/api/v1/health",
+   "method": "GET",
+   "status": 200,
+   "content_type": "application/json",
+   "body_bytes": 49,
+   "body_head": "{\"status\": \"ok\", \"version\": \"ord0263-s5fix-mine\"",
+   "at": "2026-09-24T00:57:14"
+  },
+  {
+   "kind": "health_answered_200",
+   "mode": "nonjson",
+   "path": "/api/v1/health",
+   "method": "GET",
+   "status": 200,
+   "content_type": "application/json",
+   "body_bytes": 49,
+   "body_head": "{\"status\": \"ok\", \"version\": \"ord0263-s5fix-mine\"",
+   "at": "2026-09-24T00:57:14"
+  },
+  {
+   "kind": "answered",
+   "mode": "nonjson",
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "method": "GET",
+   "status": 200,
+   "content_type": "text/plain; charset=utf-8",
+   "body_bytes": 40,
+   "body_head": "origin says: plan service is warming up\n",
+   "at": "2026-09-24T00:57:14"
+  }
+ ],
+ "silent": [
+  {
+   "kind": "hung",
+   "mode": "silent",
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "method": "GET",
+   "status": null,
+   "content_type": null,
+   "body_bytes": 0,
+   "body_head": "",
+   "at": "2026-09-24T00:57:21"
+  },
+  {
+   "kind": "health_answered_200",
+   "mode": "silent",
+   "path": "/api/v1/health",
+   "method": "GET",
+   "status": 200,
+   "content_type": "application/json",
+   "body_bytes": 49,
+   "body_head": "{\"status\": \"ok\", \"version\": \"ord0263-s5fix-mine\"",
+   "at": "2026-09-24T00:57:33"
+  }
+ ]
+}
