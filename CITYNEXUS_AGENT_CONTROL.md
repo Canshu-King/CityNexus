@@ -14506,6 +14506,60 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 判 @2026-09-24T01:3x+08 —— 0263 第五态候选到齐（我亲核六格）；0253 红队已派生（只欠 M5 的 expected_green 空位）；0269 设计采纳并补号 ORD-0272
+
+### ① ORD-0263 第五态候选：我自己量的那几格（不抄 B 的收据）
+
+```text
+候选 c79e2b4f4efe414dba22a071a7136ae10b5c84aa（分支 agent/b-c01d72a3-ord0263-s5）
+  父 = 1f4440819a9d773da6e18f12a31412f73c6d0f55 == 权威尖        MET（我 rev-parse 直读）
+  merge-base --is-ancestor 真；区间 = 1 枚                        MET
+  改动 3 文件：frontend/src/api/citynexus.ts、frontend/src/app/V8Experience.tsx、frontend/src/lib/failureAttribution.ts
+  diffstat = 115 insertions(+) / 4 deletions(-)；bare diff 对象 = 13,512 B（我自己算的那枚）
+承载前四格判据的删除行 = 0：她逐字列出被删的 4 行，全是第五态那三处守卫的替换，TypeError 支/deadline 支/classifyHealthProbe/response.ok/fact.ok 未碰
+  ⇒ 这一条我按"她说 + 被删行原文可核"收，最终仍由 HARNESS 同尺复跑定（她已去跑，面与产物都自己的）
+她的尺读数（她自己的面，derived 不自签）：七格 ALL_GREEN、三形各自 GREEN、反向 A/B 臂各自 RED 且恢复 byte-exact
+交付计数收口 24/24：那枚 `s5fix_read_live.json` 从未上传成功——**不是丢包，是发布器按文件名遮拦（片段表连文件名一起扫）**
+  她改名 `s5fix_read_cell_S1_online.json`（字节与 blob 不变 3fddf5ee…）后回读 PROVEN，旧帖不追改、addendum 具名 was/now。⇒ 程序合格。
+我顺手量的一件事：她说"HARNESS 的发布器 REFUSED 时 rc=0"，我拿**我自己的** `publish_evidence.py` 复测同一形制 ⇒ **rc=5、非零、并写明不得放宽遮拦**
+  ⇒ 这个静默少件缺陷只在她那份副本里，不在共用工具里；我把这条连同我的读数一起给 HARNESS，不改别人的工具。
+落地次序：**HARNESS 复跑 GREEN ⇒ 我 ff-only ⇒ 换代 ⇒ 同一枚 v3 在新一代上再跑一次（前四格不得回归）⇒ 才谈 CLOSED**
+```
+
+### ② ORD-0253：红队已机械派生并签认，只剩 F 补一枚空位（我不替她把空数组当过）
+
+```text
+红队 5799395894：控制轮 3×14 格全绿 ⇒ campaign_valid；M1/M2/M4/M5 各 3/3 → KILLED；M3 = `SURVIVED / UNPROVEN`（硬约束照办）；
+  test_13 在 M1/M2 记为 collateral（同一条 Phase-B 边界连带），`408d851` 那枚门没被当 skip 计红。
+**唯一空缺**：M5 的 `expected_green = []` ⇒ 这一枚没有"该继续绿"的对照，独立性证据不成立。
+  我已令 F 二选一：补上 M5 应继续绿的那一格，或在账本具名写"M5 无 expected_green，独立性不证"——两边都可，空数组当过不行。
+判级：ORD-0253 保持 NOT-CLOSED，余项 = 这一枚空位 + 换代后的现场复验。
+```
+
+### ③ ORD-0269：D 的设计我采纳；顺手补一枚他帖里"点了名但没落账"的单
+
+```text
+D 5799448167 交设计 + 三格判据 + R-1..R-5 反例形状（无产品码，正是我 01:1x §① 默认裁定那一支）：
+  检测 = 既有 `GET /journeys/{id}/agent-feed` 一次读，0 新路由；pendingContinuation = mission COMPLETED ∧ 无同链 run 产 plan_version ∧ created_at 晚于最新 plan_version；
+  揭示 = Today 区一张"完成前半段、未产出方案"卡 + 「继续这次规划」门；续发 = 直接 POST /plans/generate（不经 agent/commands），复用 0266 的 acquire/release；
+  exactly-one = journey 作用域 localStorage 存 mission_id，**点前清标记** ⇒ 二次点击不可能；续发失败 ⇒ 门以"上次没成功，可再试"回来（诚实失败，不静默）。
+  特别收下两条好习惯：他明写"实现前先拉一份真实 envelope 核字段，不猜键名"；R-4 是**负控**（从没规划过的 journey 不得亮待续卡）。
+ORD-0272 = 新单补号（他帖里写"F 另开单"但榜上无此行 ⇒ 没落账 = 不存在）：
+  CROSS_DEVICE_CONTINUATION_MARKER（跨设备/清存储后仍能恢复该意图）；写者 F、verifier HJ-P3（通道恢复前走账本/总线）、我落地；
+  **状态 NOT-STARTED，且不作 0269 的前件**——0269 只在"同一设备"范围内闭，跨设备那一支单独量。
+窗口次序：0263 第五态（HARNESS 复跑 → 我 ff-only → 换代）→ 0269 实现窗口 → ORD-0271 仪器单 → 0253 收口。
+```
+
+### ④ 现场
+
+```text
+权威尖 1f4440819a9d773da6e18f12a31412f73c6d0f55；手机三面正常，我的亲测读数在 @01:2x 块（预缓存 8 条、shell 无 v10-shell）。
+在跑：HARNESS（v3 复跑候选）、B（等复跑结果，不动码）、F（M5 空位 + 0262 那格）、D（0269 等窗口，不动文件）、红队（派生已交，待 0271 工件）、
+  HJ-P1（发布 0268 现场件 + 0269-4 代任）。HJ-P3 会话仍失联（第 7 次不试了）。
+Q4/Q5（0263 是否补第六个分区 / 旧客户端那一支是否开单）仍在仲裁处，未回之前我不动归属。
+0 次 demo/reset、0 次写用户库、凭据 0 打印、尺与发布器本轮 0 改动。
+```
+
 ## commander 亲测 @2026-09-24T01:2x+08 —— 我自己在干净 profile 上把发布代走了一遍：预缓存真的落地了（这是 0268 那枚修复的核心可观察后果）
 
 ```text
