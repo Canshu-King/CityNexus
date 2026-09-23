@@ -1,0 +1,130 @@
+{
+ "at": "2026-09-23T13:47:17+08:00",
+ "candidate_tip": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df",
+ "dist": "D:\\moodle\\_qoder_harness_ord0254\\repo\\frontend\\dist",
+ "js_files_scanned": 6,
+ "bytes_scanned": 2303182,
+ "files": [
+  {
+   "file": "index-C0qSwD3N.js",
+   "bytes": 1213215,
+   "chars": 1187153,
+   "endpoints": {
+    "destinations/capability": 0,
+    "catalog-hydrations": 0
+   },
+   "fields": {
+    "pending_destination_label": 0,
+    "retryable": 0
+   },
+   "loose": {
+    "candidates": 9,
+    "capability": 11
+   }
+  },
+  {
+   "file": "JourneyMap-ClyBl6Yh.js",
+   "bytes": 4392,
+   "chars": 4392,
+   "endpoints": {
+    "destinations/capability": 0,
+    "catalog-hydrations": 0
+   },
+   "fields": {
+    "pending_destination_label": 0,
+    "retryable": 0
+   },
+   "loose": {
+    "candidates": 0,
+    "capability": 0
+   }
+  },
+  {
+   "file": "maplibre-gl-BGf_2f8F.js",
+   "bytes": 1053381,
+   "chars": 1053107,
+   "endpoints": {
+    "destinations/capability": 0,
+    "catalog-hydrations": 0
+   },
+   "fields": {
+    "pending_destination_label": 0,
+    "retryable": 0
+   },
+   "loose": {
+    "candidates": 0,
+    "capability": 0
+   }
+  },
+  {
+   "file": "sw.js",
+   "bytes": 7178,
+   "chars": 7178,
+   "endpoints": {
+    "destinations/capability": 0,
+    "catalog-hydrations": 0
+   },
+   "fields": {
+    "pending_destination_label": 0,
+    "retryable": 0
+   },
+   "loose": {
+    "candidates": 0,
+    "capability": 0
+   }
+  },
+  {
+   "file": "v10-sw.js",
+   "bytes": 2096,
+   "chars": 2094,
+   "endpoints": {
+    "destinations/capability": 0,
+    "catalog-hydrations": 0
+   },
+   "fields": {
+    "pending_destination_label": 0,
+    "retryable": 0
+   },
+   "loose": {
+    "candidates": 0,
+    "capability": 0
+   }
+  },
+  {
+   "file": "workbox-6923124b.js",
+   "bytes": 22920,
+   "chars": 22920,
+   "endpoints": {
+    "destinations/capability": 0,
+    "catalog-hydrations": 0
+   },
+   "fields": {
+    "pending_destination_label": 0,
+    "retryable": 0
+   },
+   "loose": {
+    "candidates": 0,
+    "capability": 0
+   }
+  }
+ ],
+ "endpoint_fragment_hits": 0,
+ "new_field_name_hits": 0,
+ "loose_word_note": "'candidates'/'capability' appear in minified application code for unrelated reasons (dropped-candidate lists, the capability word in other endpoints); they are reported raw and NOT used as the predicate",
+ "positive_control_can_say_yes": {
+  "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\api\\citynexus.ts",
+  "bytes": 34285,
+  "endpoints": {
+   "destinations/capability": 3,
+   "catalog-hydrations": 4
+  },
+  "fields": {
+   "pending_destination_label": 2,
+   "retryable": 2
+  }
+ },
+ "positive_control_nonzero": true,
+ "predicate": "computed: no endpoint fragment and no new field name in any scanned .js, the control file answers > 0, and at least one file was opened",
+ "verdict_computed": "PASS",
+ "source_level_half": "ord0254_absence_assertion_v2.json (baseline 0 / candidate 0 / live HEAD 7 dependency reads, file-connected predicate, two-sided killer)"
+}
