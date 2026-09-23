@@ -1,0 +1,55 @@
+{
+ "generated_at": "2026-09-23T03:50:10+08:00",
+ "head": "4d9ceae",
+ "code_under_test": "STEP_FREE_REQUIRED",
+ "precondition": {
+  "places": 16,
+  "places_with_accessibility_evidence": 3
+ },
+ "arms": {
+  "existing_plans": {
+   "status": 200,
+   "named_hint_keys": [],
+   "count_fields": {},
+   "top_keys": "list"
+  },
+  "control_generate": {
+   "status": 201,
+   "named_hint_keys": [
+    "reason"
+   ],
+   "count_fields": {},
+   "top_keys": "list"
+  },
+  "write_hard_capability": {
+   "status": 200,
+   "named_hint_keys": [
+    "conflict",
+    "conflicts"
+   ],
+   "count_fields": {},
+   "top_keys": [
+    "capabilities",
+    "summary",
+    "traveler_id",
+    "traveler_twin"
+   ]
+  },
+  "treatment_generate": {
+   "status": 422,
+   "named_hint_keys": [
+    "constraint",
+    "reason",
+    "reason_code"
+   ],
+   "count_fields": {},
+   "top_keys": [
+    "error"
+   ]
+  }
+ },
+ "verdict": "NO_EFFECT",
+ "declared_rule": "drop without named blocker => SILENT_CANDIDATE_LOSS",
+ "demo_reset_issued": 0,
+ "product_files_changed": 0
+}
