@@ -1,0 +1,31 @@
+{
+  "what": "ORD-0242 partial compat smoke of the NEW frontend bundle against the PINNED 53fe8e8 backend",
+  "who": "commander 494abfd7 (self-run, because two browser lanes failed to take this order)",
+  "instrument": "Playwright MCP Chrome, viewport 390x844 (mobile), zh UI",
+  "shape": "canary: static :4185 serving candidate_0923_f5a6b9a (bundle assets/index-CrAwWm5f.js) -> backend :8713 (uvicorn pid 52820, code 53fe8e8, DB D:/moodle/_qoder_cmdr_canary_0923/_compat.db = Connection.backup() copy of _live.db)",
+  "surface_readings": {
+    "Today": {"verdict": "GREEN", "rendered_text_proof": "下午好 / Demo之旅 / 现在 Riverside Museum / 接下来 12:15 Central Food Hall / “现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 / 尚未获取地图位置 / 需要关注 已处理", "main_innerText_len": 382},
+    "Journey_workbench": {"verdict": "GREEN", "path": "/v8/studio", "head": "行程工作台 · 多日方案 / 受保护 · 0 分钟余量 / 行程约束检查通过，费用证据不完整 / 预算未验证：还有 1 项缺少已验证的供应商价格，因此不给"},
+    "Map": {"verdict": "GREEN", "path": "/v8/map", "head": "地图 · 一目了然 / 对比出行方式 / 尚未获取地图位置 / 未知费用保持未知。"},
+    "Copilot": {"verdict": "GREEN", "path": "/v8/agent", "head": "随时问关于这趟行程的任何事 / 画像上下文就绪 CN / AI / 任何花钱或改动已确认预订的操作都会先等你确认"},
+    "Me_wallet": {"verdict": "GREEN", "path": "/v8/me", "head": "我的行程与偏好 / 这趟行程 DEMO / 1 位旅行者 · ¥500.00 / 已确认的预订 还没有", "FINDING": "raw enum `RECORD_ONLY` rendered in the notification row (same family as the `relaxed` leak and ORD-0240)"},
+    "AI_generate_write_path": {"verdict": "GREEN_CONTRACT_COMPATIBLE", "requests": ["POST /api/v1/journeys/{id}/agent/commands -> 200", "POST /api/v1/journeys/{id}/plans/generate -> 201 Created"], "durable_proof": "plan_versions 19 -> 22 (three new rows, same created_at 04:28:40), agent_runs 2 -> 3, journeys unchanged at 3", "rendered_copy": "AI 没有参与这次规划（生成了 3 个备选）/ 这些方案是按已经找到的城市地点重新排的，不代表系统理解了你刚才那段话。想按你的要求排，请重试；原因在“技术详情”里。", "honesty_check": "the AI leg really failed (credential epoch COMPROMISED_UNROTATED) and the UI says so instead of claiming success - PASS"},
+    "waiting_copy": "发出请求，等待模型返回 · 已等待 2 秒 / 后端不会中途汇报进度，所以这里只有真实等待时间，没有百分比，也没有猜",
+    "Simulation_panel": {"verdict": "NOT_OBSERVED", "detail": "the 模拟舞台 floating button existed on first mount of '/' (snapshot ref f3e87) but was absent from the DOM on every later route and on a fresh re-navigation; I did not fabricate a reading", "consequence": "OPEN_COVERAGE_GAP - G2 incomplete, so the order cannot be signed COMPATIBLE yet"}
+  },
+  "contract_boundary_scan": {"verdict": "NO_BOUNDARY_HIT_ON_PATHS_WALKED", "api_calls": 17, "non_2xx": 0, "detail": "every request in the walk answered 200/201 (experience, replans, scene, agent-feed, plans, twin x7, agent-policy, wallet, offline-snapshot, runtime-status, push-config, places, agent/commands, plans/generate) - so no missing endpoint and no 422 for a new required field was observed"},
+  "gates": {
+    "G1_build_source": {"verdict": "MET", "evidence": "_qoder_integration_20260919 @f5a6b9a with `git status --porcelain -- frontend` = 0 lines at build time; log run/build_candidate_0923.log; NOTE the same tree is now dirty at tip a1cc0c1 (M PlanWithAiSheet.tsx, M PlanComparison.tsx, M V8Experience.tsx, ?? travelerPreferences.ts) so no NEW release build may come from it"},
+    "G2_six_surfaces": {"verdict": "PARTIAL", "missing": ["Simulation panel", "Wallet write path (import -> review -> commitment) on the new bundle", "journey creation wizard"]},
+    "G3_no_new_endpoint": {"verdict": "MET_ON_PATHS_WALKED"},
+    "G4_console": {"verdict": "NOT_SIGNED", "observed": "1 error: 'Transition was skipped. New ViewTransition started' (React ViewTransition, benign class)", "missing": "no baseline walk of the currently deployed bundle, so 'no NEW errors' is not established"},
+    "G5_retention": {"verdict": "NOT_EXERCISED", "note": "no dist swap performed; deploy_bundle.py now requires F+G, and F needs CNX_DEPLOY_PROXY_BASE/CNX_DEPLOY_TUNNEL_BASE/CNX_DEPLOY_AUTH_FILE set, else fail-closed RED"}
+  },
+  "defects_found": [
+    {"id": "candidate-1", "what": "AI sheet: with an empty 旅行需求 the 开始规划 button is enabled, clicking it produces NO request and NO explanation (backend log has no POST for that attempt; the next attempt with typed text produced agent/commands + plans/generate)", "class": "SILENT_NOOP / same family as the 09-21 silent-wizard defect", "contract_boundary": false},
+    {"id": "candidate-2", "what": "AI sheet '技术详情' is a <summary> of 316x25 px - below the 44px mobile touch minimum. Second page affected (first was the booking review page, 311x14)", "class": "HUMAN_ACCESSIBILITY", "contract_boundary": false, "note": "strengthens ORD-0247: the defect is not page-specific"},
+    {"id": "candidate-3", "what": "'/v8/me' renders the raw enum RECORD_ONLY in the notifications row", "class": "RAW_ENUM_LEAK / ORD-0240 family", "contract_boundary": false}
+  ],
+  "overall": "HOLD_FOR_COVERAGE - no contract-boundary red was found, so this is NOT the B-4 HOLD_FOR_PAIRED_BACKEND case; it is an open coverage gap (G2 + G4 baseline). I do not sign COMPATIBLE and I do not swap dist on this evidence.",
+  "user_db_untouched": "true - all writes landed on _compat.db; the phone chain (:8693/:4781/:4782) received no write from this session"
+}
