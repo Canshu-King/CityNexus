@@ -1,0 +1,19 @@
+{
+ "at": "2026-09-23T14:29:11+08:00",
+ "rc": 0,
+ "ruler_blob40": "c0aafc940136c502a2d021f0535537ee3298c888",
+ "ruler_blob_after": "c0aafc940136c502a2d021f0535537ee3298c888",
+ "ruler_unchanged": true,
+ "arms_total": 20,
+ "arms_matched": 20,
+ "overall": "GREEN",
+ "base_used": "http://127.0.0.1:4412",
+ "receipt_copy": "D:\\moodle\\_qoder_harness_ord0254\\ord0254_v2_selftest_receipt.json",
+ "receipt_bytes": 7733,
+ "receipt_blob40": "aa5a16a9ef51bc8d92c05c1dae37b2c9bf6de2dc",
+ "commander_round3_reference": "evidence/gates/deploy_bundle_round3_selftest_0923.json blob 00df58af8504ac99c9177ae83c17b6fa57c1a821 (6,982 B, 18/18, base :4781)",
+ "round3_arms_present_in_my_run": [
+  "G-killer:precache_url_breaks_on_second_probe",
+  "G-true_positive:same_url_twice_on_real_server"
+ ]
+}
