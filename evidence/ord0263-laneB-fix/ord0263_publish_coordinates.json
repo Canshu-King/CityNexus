@@ -1,0 +1,158 @@
+{
+ "at": "2026-09-23T19:31:32+08:00",
+ "order": "ORD-0263 产品修复",
+ "lane": "B c01d72a3",
+ "authoritative_branch_moved_by_me": false,
+ "candidate": {
+  "repo_tree": "D:\\moodle\\_qoder_b_lane_20260923",
+  "branch": "agent/b-c01d72a3-ord0263",
+  "commit": "a380287033da6ff0bd36b8e1baa6f79c61ad03bd",
+  "parent": "dea8410be809ebf6c5046581873584e9dbf32b64"
+ },
+ "dir": "evidence/ord0263-laneB-fix",
+ "files": 10,
+ "proven_by_40char_readback": 10,
+ "not_proven": [],
+ "rows": [
+  {
+   "file": "ORD_0263_B_FIX.md",
+   "repo_path": "evidence/ord0263-laneB-fix/ORD_0263_B_FIX.md",
+   "local_blob40": "3d4346d24555c7b34ed23ec7afce4be639a7d169",
+   "bytes": 16608,
+   "publisher": [
+    "PUT -> 201 commit=36604eab9d79",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 16608 | remote size 16608 | sha1 3d4346d24555c7b3"
+   ],
+   "readback_blob40": "3d4346d24555c7b34ed23ec7afce4be639a7d169",
+   "readback_bytes": 16608,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "ord0263_b_fix.patch",
+   "repo_path": "evidence/ord0263-laneB-fix/ord0263_b_fix.patch",
+   "local_blob40": "e96c60fe1675de6f93e65de7dbf2c39dea8a4cd7",
+   "bytes": 22670,
+   "publisher": [
+    "PUT -> 201 commit=e01b06f60fd2",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 22670 | remote size 22670 | sha1 e96c60fe1675de6f"
+   ],
+   "readback_blob40": "e96c60fe1675de6f93e65de7dbf2c39dea8a4cd7",
+   "readback_bytes": 22670,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "capture_pre.json",
+   "repo_path": "evidence/ord0263-laneB-fix/capture_pre.json",
+   "local_blob40": "ef46e4d0dd18bd0778f67f8f64ac85854519c5e3",
+   "bytes": 11922,
+   "publisher": [
+    "PUT -> 201 commit=5f7eba21a7a5",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 11922 | remote size 11922 | sha1 ef46e4d0dd18bd07"
+   ],
+   "readback_blob40": "ef46e4d0dd18bd0778f67f8f64ac85854519c5e3",
+   "readback_bytes": 11922,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "capture_post.json",
+   "repo_path": "evidence/ord0263-laneB-fix/capture_post.json",
+   "local_blob40": "54199b966f89b60b42005727285d90c2f07e7da4",
+   "bytes": 13837,
+   "publisher": [
+    "PUT -> 201 commit=71437468439d",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 13837 | remote size 13837 | sha1 54199b966f89b60b"
+   ],
+   "readback_blob40": "54199b966f89b60b42005727285d90c2f07e7da4",
+   "readback_bytes": 13837,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "verdict_pre.json",
+   "repo_path": "evidence/ord0263-laneB-fix/verdict_pre.json",
+   "local_blob40": "5ca63d6f823c68aa3ee7396e1b17112459079091",
+   "bytes": 2527,
+   "publisher": [
+    "PUT -> 201 commit=8d7ae0d095fc",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 2527 | remote size 2527 | sha1 5ca63d6f823c68aa"
+   ],
+   "readback_blob40": "5ca63d6f823c68aa3ee7396e1b17112459079091",
+   "readback_bytes": 2527,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "verdict_post.json",
+   "repo_path": "evidence/ord0263-laneB-fix/verdict_post.json",
+   "local_blob40": "7b5faad7698d5971b8658cacdedfd197dfcb9881",
+   "bytes": 2620,
+   "publisher": [
+    "PUT -> 201 commit=d62d2f594310",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 2620 | remote size 2620 | sha1 7b5faad7698d5971"
+   ],
+   "readback_blob40": "7b5faad7698d5971b8658cacdedfd197dfcb9881",
+   "readback_bytes": 2620,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "q263_reverse_mutation_receipt.json",
+   "repo_path": "evidence/ord0263-laneB-fix/q263_reverse_mutation_receipt.json",
+   "local_blob40": "b73e5d4e414503ca099463ea1a8ec199135b578b",
+   "bytes": 7187,
+   "publisher": [
+    "PUT -> 201 commit=387442c380a5",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 7187 | remote size 7187 | sha1 b73e5d4e414503ca"
+   ],
+   "readback_blob40": "b73e5d4e414503ca099463ea1a8ec199135b578b",
+   "readback_bytes": 7187,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "sixface_pre.json",
+   "repo_path": "evidence/ord0263-laneB-fix/sixface_pre.json",
+   "local_blob40": "175edc7fbb4abb9649602bf0af5e0844c1c31293",
+   "bytes": 8144,
+   "publisher": [
+    "PUT -> 201 commit=952234b60870",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 8144 | remote size 8144 | sha1 175edc7fbb4abb96"
+   ],
+   "readback_blob40": "175edc7fbb4abb9649602bf0af5e0844c1c31293",
+   "readback_bytes": 8144,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "sixface_post.json",
+   "repo_path": "evidence/ord0263-laneB-fix/sixface_post.json",
+   "local_blob40": "b941205dbf8728b155f55c1d1744b3e2babff72a",
+   "bytes": 8150,
+   "publisher": [
+    "PUT -> 201 commit=9ba171d7c41f",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 8150 | remote size 8150 | sha1 b941205dbf8728b1"
+   ],
+   "readback_blob40": "b941205dbf8728b155f55c1d1744b3e2babff72a",
+   "readback_bytes": 8150,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "surface_receipt.json",
+   "repo_path": "evidence/ord0263-laneB-fix/surface_receipt.json",
+   "local_blob40": "64bff8725c40fb8e258dbc8fc6e5ab416d81d6ef",
+   "bytes": 1774,
+   "publisher": [
+    "PUT -> 201 commit=d6729af67996",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 1774 | remote size 1774 | sha1 64bff8725c40fb8e"
+   ],
+   "readback_blob40": "64bff8725c40fb8e258dbc8fc6e5ab416d81d6ef",
+   "readback_bytes": 1774,
+   "verdict": "PROVEN"
+  }
+ ]
+}
