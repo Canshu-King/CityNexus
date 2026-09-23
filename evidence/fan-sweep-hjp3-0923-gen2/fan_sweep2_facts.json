@@ -1,0 +1,53 @@
+{
+ "deployed_generation": {
+  "receipt_blob_40": "0aa298042d78d317828e2d33a6a55eeabefe7bff",
+  "matches_commander_prefix": true,
+  "sha": "d2665e25855aeb265329266831983de42321697d",
+  "new_index_refs": [
+   "/assets/index-D76m_cky.js",
+   "/assets/index-I45CQek8.css"
+  ],
+  "old_index_refs": [
+   "/assets/index-DJEINrOl.js",
+   "/assets/index-COUUKhbU.css"
+  ],
+  "overall": "GREEN",
+  "backup_generation_id": "200827_1790165307113433500"
+ },
+ "my_face_equals_deployed_bytes": {
+  "index-D76m_cky.js": {
+   "bytes": 1238834,
+   "sha256": "270377c83471a5a1e44a756296e15ea42c47c626760723e47b6b4a6759e43274",
+   "served_equals_disk": true
+  },
+  "index-I45CQek8.css": {
+   "bytes": 183897,
+   "sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+   "served_equals_disk": true
+  }
+ },
+ "source_tree_identity": {
+  "d2665e2:frontend/src": "389c1bd6b4fe25e13a179484ae2207ab32522e5b",
+  "e3b0b47:frontend/src": "389c1bd6b4fe25e13a179484ae2207ab32522e5b",
+  "6daceb1:frontend/src": "389c1bd6b4fe25e13a179484ae2207ab32522e5b"
+ },
+ "landed_range_commits": [
+  "d2665e2 fix(frontend): reserve the sticky bar's height and bring the advanced opener into reach (ORD-0261, ORD-0264)",
+  "0fd3cc7 fix(frontend): say what a refused press is missing, stop echoing server vocabulary, widen the touch floor to the class (ORD-0250, ORD-0251, ORD-0247)"
+ ],
+ "landed_changed_files": [
+  "frontend/src/features/notifications/PushCapabilityCard.tsx",
+  "frontend/src/features/planning/PlanWithAiSheet.tsx",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx",
+  "frontend/src/i18n/LocaleContext.tsx",
+  "frontend/src/styles.css"
+ ],
+ "planComparison_label_line_untouched": true,
+ "onPlanned_gate_untouched": true,
+ "empty_request_hint_present_at_tip": true,
+ "db_rows_now": {
+  "cc5e67c4_plan_versions": 12,
+  "cc5e67c4_commitments": 0,
+  "ae79fbf1_plan_versions": 48
+ }
+}
