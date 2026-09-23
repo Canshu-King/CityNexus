@@ -413,6 +413,9 @@ from app.catalog_hydration_operations import (
 from app.catalog_hydration_operations import (
     reconcile_interrupted_operations as reconcile_hydrations,
 )
+from app.catalog_hydration_operations import (
+    retry_after_ms as hydration_retry_after_ms,
+)
 from app.anywhere_capability import (
     GAP_MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE,
     evaluate_capability,
@@ -637,16 +640,26 @@ def _contention_of(exc: Exception) -> str | None:
     return None
 
 
-def _contention_retry_after_ms() -> int:
-    """Ask the generation ladder what it would tell a poller *now*, instead of copying a number.
+def _busy_retry_after_ms(ladder) -> int:
+    """Ask the operation's **own** ladder what it would tell a poller right now.
 
-    `retry_after_ms` reads exactly `status` and `queued_at`, and the case here is "a write is
-    busy at this instant" - a non-terminal job that just started.  Deriving the hint keeps
-    this from becoming a fourth copy of the 500 literal the three raise sites already carry.
+    `retry_after_ms(row)` reads exactly `status` and `queued_at`; the case here is "a write is
+    busy at this instant" - a non-terminal job that just started.  Deriving the hint is what keeps
+    one condition from promising two different waits: the three busy raise sites used to carry
+    their own `500`, which is below the floor both ladders give a fresh job.
     """
-    return generation_retry_after_ms(
+
+    return ladder(
         SimpleNamespace(status=QUEUED, queued_at=datetime.now(timezone.utc).isoformat())
     )
+
+
+def _contention_retry_after_ms() -> int:
+    return _busy_retry_after_ms(generation_retry_after_ms)
+
+
+def _hydration_busy_retry_after_ms() -> int:
+    return _busy_retry_after_ms(hydration_retry_after_ms)
 
 
 def _contention_response(reason: str) -> JSONResponse:
@@ -2927,7 +2940,7 @@ def create_or_reuse_catalog_hydration(
             "HYDRATION_STORE_BUSY",
             "Another catalog write is in flight; this request was not recorded. Try again.",
             status=503,
-            details={"retry_after_ms": 500},
+            details={"retry_after_ms": _hydration_busy_retry_after_ms()},
             message_key="hydration.store_busy",
         )
     body = dict(job.payload)
@@ -2987,7 +3000,7 @@ def submit_stay_generation(
             "GENERATION_STORE_BUSY",
             "Another generation is writing right now; this one was not recorded. Try again.",
             status=503,
-            details={"retry_after_ms": 500},
+            details={"retry_after_ms": _contention_retry_after_ms()},
             message_key="generation.store_busy",
         )
     body = operation_payload(row)
@@ -3086,7 +3099,7 @@ def generate_stay_journey_options(
             "GENERATION_STORE_BUSY",
             "Another generation is writing right now; this one was not recorded. Try again.",
             status=503,
-            details={"retry_after_ms": 500},
+            details={"retry_after_ms": _contention_retry_after_ms()},
             message_key="generation.store_busy",
         )
     finished = wait_for_operation(row.id)

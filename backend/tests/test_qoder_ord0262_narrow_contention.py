@@ -6,7 +6,8 @@
   ② 端到端：真排一次 race，不许出现裸 500；**判在行上**（拿 503 的那发不能留下 mission）
   ③ **名单外**的失败必须仍然是 500 —— 用另一张表的唯一冲突当正控，绝不拿 ① 那一枚冒充
   ④ `retry_after_ms` 只能由操作自己的阶梯给出，不再抄第四份字面量；
-     同时钉住"现有 3 处 raise 点的常数 == 阶梯下限"——**不一致就红，这一格今晚就是红的**（commander 明令只钉不改）
+     同时钉"三处 raise 点的等值 == 各自操作阶梯的下限"——01:1x §③ 裁定后常数已收口进阶梯，
+     这一格由红转绿；判据换向：**再出现任何数字字面量就红**（把阶梯调用改回写死的 500 是它的正控，见反突变 M5）
 
 护栏（commander 点名、仲裁 §3 同句）：本门**只声明这一格**。它不把 19 B/21 B 变成漂亮 JSON 就
 宣称 ORD-0262 的原子性或完整性已闭 —— 孤儿 `CREATED` mission 与未落库的 `plan_version` 是各留各门的独立义务。
@@ -35,6 +36,7 @@ from app.main import (
     _contention_of,
     _contention_response,
     _contention_retry_after_ms,
+    _hydration_busy_retry_after_ms,
     app,
 )
 from app.stay_generation_operations import QUEUED
@@ -234,18 +236,36 @@ def test_4_a_non_lock_operational_error_is_not_called_contention() -> None:
 # ------------------------------------------------- ④ retry 提示归阶梯；三处旧常数只钉不改
 
 def test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal() -> None:
-    """owner=④：新契约的数值必须 == 阶梯对「刚排队的非终态作业」给的下限；并钉住现有 3 处常数。"""
+    """owner=④：三处 busy raise 点的等值必须来自**各自操作的阶梯**，一处数字字面量都不许留。
+
+    01:1x §③ 裁定收口在两枚 `retry_after_ms(row)` 的默认。这一格由红转绿，判据换向：
+    从前是"三处 500 与阶梯下限 1000 不一致 ⇒ FINDING_OPEN 红"，现在是"再出现任何数字字面量 ⇒ 红"。
+    阶梯下限在门内留**自带副本**（不 import 产品常量）——否则它永远和自己相等，测不到漂移。
+    """
     floor = generation_retry_after_ms(
         SimpleNamespace(status=QUEUED, queued_at=datetime.now(timezone.utc).isoformat()))
+    assert floor == 1000, f"SETUP：阶梯对「刚排队的非终态作业」的下限不再是 1000（实测 {floor}）⇒ 重新判这一格"
     assert _contention_retry_after_ms() == floor, (
-        f"④：契约给的等值 ≠ 阶梯下限（{floor}）⇒ 有人在 raise 点又抄了一份数")
-    literals = [int(m) for m in re.findall(
-        r"details=\{[^{}]*\"retry_after_ms\":\s*([0-9]+)\}", MAIN_PY.read_text(encoding="utf-8"))]
-    assert len(literals) >= 3, f"④：没找到那 3 处常数，实际 {literals}"
-    assert set(literals) == {floor}, (
-        f"FINDING_OPEN：三处 raise 点写的是 {sorted(set(literals))}ms，而操作自己的阶梯下限是 "
-        f"{floor}ms ⇒ 同一件「忙」对用户承诺了两套等待。commander 明令今晚只钉不改，"
-        f"要改的是把常数收口进阶梯（两枚 retry_after_ms(row) 之一），不是把断言放宽")
+        f"④：generation 具名答案给的等值 ≠ 阶梯下限（{floor}）⇒ 有人在 raise 点又抄了一份数")
+    assert _hydration_busy_retry_after_ms() == floor, (
+        f"④：hydration 具名答案给的等值 ≠ 它自己阶梯的下限（{floor}）⇒ 两套等待又回来了")
+
+    text = MAIN_PY.read_text(encoding="utf-8")
+    emissions = [v.strip() for v in re.findall(r"\"retry_after_ms\":\s*([^,}\n]+)", text)]
+    assert emissions, "SETUP：一处 `retry_after_ms` 的等值都没发出 ⇒ 这一格什么都没量到，不许当通过"
+    bare = [v for v in emissions if re.fullmatch(r"\d+", v)]
+    assert bare == [], (
+        f"④ **回归**：busy 的等值里有写死的数字 {bare} ⇒ 同一件「忙」对用户承诺两套等待"
+        "（01:1x §③ 已裁：收口在两枚 retry_after_ms(row) 的默认，不在调用点各写常数）")
+    ladder_calls = [v for v in emissions if v in {
+        "_contention_retry_after_ms()", "_hydration_busy_retry_after_ms()"}]
+    passthrough = [v for v in emissions if v.startswith("body[")]
+    assert len(ladder_calls) + len(passthrough) == len(emissions), (
+        f"④：有等值既不是阶梯调用也不是操作正文透传，来源不明：{emissions}")
+    assert text.count('"retry_after_ms": _hydration_busy_retry_after_ms()') >= 1, (
+        "④：hydration 那条具名答案不再走**它自己**的阶梯 ⇒ 两套等待会以另一种形式回来")
+    assert text.count('"retry_after_ms": _contention_retry_after_ms()') >= 2, (
+        "④：generation 的两处 busy raise 站点必须各自走到阶梯（共享信封那处一并算，不假装它是调用点）")
 
 
 SHEET = Path(__file__).resolve().parents[2] / "frontend/src/features/planning/PlanWithAiSheet.tsx"
