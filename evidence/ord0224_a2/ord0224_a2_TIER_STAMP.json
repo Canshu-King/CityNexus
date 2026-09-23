@@ -104,8 +104,80 @@
       "git_blob_sha1": "54aad900d99f36abb01a3247f040f8bc35af2edd",
       "grade": "EMITTER_INSTRUMENT",
       "why": "出上面两张收据的仪器（含中途窥视门自己那份临时库的 watcher）。引用它不是为了自证，而是让 verifier 能复放同一批字段。"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y123_a_21f1e8d.json",
+      "bytes": 59368,
+      "git_blob_sha1": "7fecbb9189a655e9dd448ed6ec64441cacad0200",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y123），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y123_b_21f1e8d.json",
+      "bytes": 59368,
+      "git_blob_sha1": "048d82c166aa61f6f44473dc225fa7d4f36b5511",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y123），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_OFF_A1_a_21f1e8d.json",
+      "bytes": 49656,
+      "git_blob_sha1": "f5771b270e3095ab82bfcdb72e1b8fc3117f22e5",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y23 attribution），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_OFF_A2_a_21f1e8d.json",
+      "bytes": 52146,
+      "git_blob_sha1": "fd29667d8a03d1f23cdf38bb9f7da70c16b8636f",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y23 attribution），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_a_21f1e8d.json",
+      "bytes": 45208,
+      "git_blob_sha1": "e0dddec96528b306ce6422f19fbc8860f58606a2",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y23 命令那一臂），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_b_21f1e8d.json",
+      "bytes": 43217,
+      "git_blob_sha1": "4152e46ecf5ba769c314d572b511a9c91c85d09f",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y23 命令那一臂），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_c_21f1e8d.json",
+      "bytes": 43216,
+      "git_blob_sha1": "583db798a14d569c4fa4be6876eee49aacc5ebe6",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y23 命令那一臂），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/xproc_v1_gate_receipt.py",
+      "bytes": 22778,
+      "git_blob_sha1": "0e7bf4174400c2f8b125f6408ab30239f1df29cf",
+      "grade": "EMITTER_INSTRUMENT",
+      "why": "出 ORD-0225 那批 V1 收据的仪器（行读数引用 commander 自己那把尺 gate_streak.row_counts，blob ac5377f207f18334 记在收据里）。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/ord0225_arm_repeats_21f1e8d.json",
+      "bytes": 10418,
+      "git_blob_sha1": "9a951605f09bece697bdae17bf1ad575e0b7565d",
+      "grade": "REPEAT_SUMMARY_NOT_A_CLOSURE_CLAIM",
+      "why": "四臂 × 多批的并排读数（含 Y23 三批 6/2/2 与 Y123 两批 10/10）；它替交付方把'挑一批好看的结果'这条路堵掉。",
+      "prefix": "evidence/ord0225/"
     }
   ],
-  "revision": 4,
-  "revision_note": "v4（13:2x）：B-1 冻结 CNX_REVERSE_MUTATION_RECEIPT_V1 之后重出两张正式收据（Y3 / Y2 各 10 轮，逐轮字段齐 + 门外第二连接的独立 durable 读数），并把先前两批自封 deterministic_kill 的 JSON 降级为 SUPERSEDED_BY_V1_CLAIM_ONLY。v1/v2/v3 全部仍可达；本轮新增 3 件。"
+  "revision": 5,
+  "revision_note": "v5（14:2x）：并入 ORD-0225 那一单的四臂 V1 收据（命令原臂 Y23 三批 6/2/2=STREAK_BROKEN、Y123 两批 10/10、归因两批 A2-off 8/10 / A1-off 3/10）与重复批次数额表。v1-v4 的 blob 全部仍可达、未删。"
 }
