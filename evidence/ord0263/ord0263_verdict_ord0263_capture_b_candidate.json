@@ -1,0 +1,69 @@
+{
+ "at": "2026-09-23T20:08:56+08:00",
+ "capture": "ord0263_capture_b_candidate.json",
+ "capture_subject": "B candidate a380287033da6ff0bd36b8e1baa6f79c61ad03bd (parent dea8410, re-parented onto authority tip 035721357da99a43c276f5803df83c3b08c1361c) built to frontend/dist index-Ce5-8mHb.js / index-Dd5F3CW4.css, served at http://127.0.0.1:4413 with CITYNEXUS_BACKEND_PORT=8411",
+ "verdicts_computed_from_measured_fields": {
+  "S1_live": {
+   "verdict": "GREEN"
+  },
+  "V1_origin_error_5xx": {
+   "verdict": "GREEN",
+   "measured": {
+    "http_status": 500,
+    "network_words": false,
+    "names_service": true,
+    "hands_over_snapshot": true,
+    "navigator_onLine": true,
+    "retry_door_in_text": true
+   },
+   "rule": "answered non-2xx + snapshot: must NAME the service AND HAND OVER the snapshot AND carry no network word"
+  },
+  "V1_vacuity_witness": {
+   "verdict": "GREEN",
+   "measured": {
+    "network_words": false,
+    "names_service": true,
+    "hands_over_snapshot": true,
+    "note": ""
+   },
+   "rule": "an absent sentence is not a classification; only 网络词=0 且 服务词=1 且 快照词=1 counts"
+  },
+  "V2_no_answer": {
+   "verdict": "GREEN",
+   "measured": {
+    "fetch_thrown": true,
+    "settled_within_deadline": true,
+    "seconds_to_settle": 16.4,
+    "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "retry_door": true,
+    "still_on_loading_skeleton": false,
+    "hands_over_snapshot": true
+   },
+   "rule": "no answer at all: bounded read + its own label + snapshot handed over + a door"
+  },
+  "V3_distinctness": {
+   "verdict": "GREEN",
+   "measured": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "s3_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "same_sentence": false,
+    "s3_unclassified_skeleton": false
+   },
+   "rule": "the two arms must not collapse into one outcome; a skeleton is not a classification"
+  },
+  "V4_silent_read_answered_health": {
+   "verdict": "GREEN",
+   "measured": {
+    "read_never_answered": true,
+    "health_status": 500,
+    "settled_within_deadline": true,
+    "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "network_words": false,
+    "seconds_to_settle": 12.3
+   },
+   "rule": "read silent + health answered => ORIGIN_ERROR_WITH_SNAPSHOT, bounded, never called a network failure"
+  }
+ },
+ "derived_result": "ALL_GREEN",
+ "note": "I am the verifier for this order, so a derived_result is mine to write - it is derived from the fields printed above, not asserted"
+}
