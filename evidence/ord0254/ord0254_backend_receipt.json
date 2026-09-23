@@ -1,0 +1,47 @@
+{
+ "started_at": "2026-09-23T12:59:32+08:00",
+ "port": 8411,
+ "netstat_listeners": [
+  24588
+ ],
+ "spawned_pid_file": "NONE",
+ "backend_tree": "D:\\moodle\\_qoder_harness_ord0254\\backend53\\backend",
+ "backend_head": "53fe8e8",
+ "db_file": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db",
+ "db_is_new_file_not_a_copy": true,
+ "seeded_via": "app.services.seed_demo in-process (own file; no user-db copy or backup)",
+ "demo_reset_issued": false,
+ "environment_contract": {
+  "CITYNEXUS_DATABASE_URL": "sqlite:///D:/moodle/_qoder_harness_ord0254/db/canary_8411.db",
+  "CITYNEXUS_ENV": "dev",
+  "CITYNEXUS_DEMO_MODE": "true",
+  "CITYNEXUS_AI_ENABLED": "false",
+  "CITYNEXUS_GUARDIAN_AUTORUN": "false",
+  "DEEPSEEK_API_KEY": "",
+  "CITYNEXUS_AI_API_KEY": "",
+  "CITYNEXUS_ANYWHERE_RESOLVER": "off",
+  "CITYNEXUS_PHOTON_BASE_URL": "http://127.0.0.1:9",
+  "PYTHONIOENCODING": "utf-8",
+  "PYTHONDONTWRITEBYTECODE": "1"
+ },
+ "health": {
+  "status": "ok",
+  "database": "ok",
+  "ai": "disabled",
+  "e2e_run_id": "",
+  "e2e_database_id": ""
+ },
+ "marker_id": "harness-ord0254-canary-8411",
+ "marker_rows_in_my_db": 1,
+ "journey_id_answered": "22222222-2222-4222-8222-222222222222",
+ "sqlite_row_counts": {
+  "journeys": 1,
+  "places": 16,
+  "audit_logs": 1,
+  "plan_versions": 0,
+  "travelers": 1,
+  "audit_marker_rows": 1
+ },
+ "ownership_verdict": "PROVEN",
+ "attached": true
+}
