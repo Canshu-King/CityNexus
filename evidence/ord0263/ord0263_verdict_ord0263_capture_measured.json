@@ -1,0 +1,61 @@
+{
+ "at": "2026-09-23T20:09:07+08:00",
+ "capture": "ord0263_capture_measured.json",
+ "capture_subject": null,
+ "verdicts_computed_from_measured_fields": {
+  "S1_live": {
+   "verdict": "GREEN"
+  },
+  "V1_origin_error_5xx": {
+   "verdict": "RED",
+   "measured": {
+    "http_status": 500,
+    "network_words": true,
+    "names_service": false,
+    "hands_over_snapshot": true,
+    "navigator_onLine": true,
+    "retry_door_in_text": true
+   },
+   "rule": "answered non-2xx + snapshot: must NAME the service AND HAND OVER the snapshot AND carry no network word"
+  },
+  "V1_vacuity_witness": {
+   "verdict": "GREEN",
+   "measured": {
+    "network_words": true,
+    "names_service": false,
+    "hands_over_snapshot": true,
+    "note": ""
+   },
+   "rule": "an absent sentence is not a classification; only 网络词=0 且 服务词=1 且 快照词=1 counts"
+  },
+  "V2_no_answer": {
+   "verdict": "RED",
+   "measured": {
+    "fetch_thrown": true,
+    "settled_within_deadline": false,
+    "seconds_to_settle": null,
+    "classified_label": null,
+    "retry_door": false,
+    "still_on_loading_skeleton": true,
+    "hands_over_snapshot": false
+   },
+   "rule": "no answer at all: bounded read + its own label + snapshot handed over + a door"
+  },
+  "V3_distinctness": {
+   "verdict": "RED",
+   "measured": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT (claimed as network by the build)",
+    "s3_label": null,
+    "same_sentence": false,
+    "s3_unclassified_skeleton": true
+   },
+   "rule": "the two arms must not collapse into one outcome; a skeleton is not a classification"
+  },
+  "V4_silent_read_answered_health": {
+   "verdict": "NOT_MEASURED",
+   "why": "needs a hung read plus whether the read settled"
+  }
+ },
+ "derived_result": "RED_CELLS: V1_origin_error_5xx,V2_no_answer,V3_distinctness,V4_silent_read_answered_health",
+ "note": "I am the verifier for this order, so a derived_result is mine to write - it is derived from the fields printed above, not asserted"
+}
