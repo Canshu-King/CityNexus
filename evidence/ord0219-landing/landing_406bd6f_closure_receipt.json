@@ -1,0 +1,131 @@
+{
+ "candidate_tip": "406bd6f",
+ "base": "a1cc0c1",
+ "items": {
+  "1_ancestry": {
+   "base_is_ancestor_of_candidate": true,
+   "cherry_pick_attributions_present": 9,
+   "commits_on_candidate": 9,
+   "verdict": "NOT_MET"
+  },
+  "2_single_truth": {
+   "DEMO_ACCESSIBILITY_EVIDENCE_files_with_nonzero_hits_in_app": "0",
+   "write_sites_of_accessibility_evidence": 1,
+   "write_sites_of_bare_accessibility_key": 0,
+   "capabilities_py_diff_lines": 0,
+   "ruled_severity_lines_on_candidate": [
+    "        add(\"STROLLER\", {\"present\": True}, severity=\"HARD\" if hard else None)",
+    "        add(\"LARGE_LUGGAGE\", {\"present\": True}, severity=\"HARD\" if hard else None)"
+   ],
+   "verdict": "MET"
+  },
+  "3_carrying_vs_declared": {
+   "carrying": [
+    "place-city-park",
+    "place-design-library",
+    "place-tech-art"
+   ],
+   "declared": [
+    "place-city-park",
+    "place-design-library",
+    "place-tech-art"
+   ],
+   "both_non_empty": true,
+   "sets_agree": true,
+   "facts_agree": true,
+   "server_stamped_provenance": {
+    "place-tech-art": "DEMO",
+    "place-city-park": "DEMO",
+    "place-design-library": "DEMO"
+   },
+   "no_value_says_LIVE": true,
+   "fresh_db_existed_before": false,
+   "verdict": "MET"
+  },
+  "4_both_directions": {
+   "STROLLER": {
+    "candidates": 3,
+    "pass": 2,
+    "named_block": 1,
+    "per_candidate": {
+     "0a1dcd9c": "PASS",
+     "55523d40": "BLOCK(named)",
+     "6c07d3ca": "PASS"
+    },
+    "conflicting_stops": {
+     "0a1dcd9c": [],
+     "55523d40": [
+      "place-tech-art"
+     ],
+     "6c07d3ca": []
+    },
+    "verdict": "MET"
+   },
+   "LARGE_LUGGAGE": {
+    "candidates": 3,
+    "pass": 2,
+    "named_block": 1,
+    "per_candidate": {
+     "0a1dcd9c": "PASS",
+     "55523d40": "PASS",
+     "6c07d3ca": "BLOCK(named)"
+    },
+    "conflicting_stops": {
+     "0a1dcd9c": [],
+     "55523d40": [],
+     "6c07d3ca": [
+      "place-design-library"
+     ]
+    },
+    "verdict": "MET"
+   },
+   "verdict": "MET"
+  },
+  "5_tripwire_and_killer": {
+   "as_is": "======================= 13 passed, 2 warnings in 1.46s ========================",
+   "tripwire_green_as_is": true,
+   "arms_that_redden_only_the_tripwire": [
+    "M8 白名单放宽到整条记录裁决（step_free/evidence_status 也能穿过）"
+   ],
+   "all_arms_anchor_hit_1_and_byte_restored": true,
+   "nodes_without_a_killer": [],
+   "verdict": "MET"
+  },
+  "6_rerun_on_the_new_tip": {
+   "ord0219_doors": 13,
+   "ord0219_arms": 15,
+   "ord0236_as_is": "============================== 3 passed in 0.65s ==============================",
+   "ord0236_doors": 3,
+   "ord0236_arms_all_killed_their_owner": true,
+   "ord0236_every_door_has_a_killer": true,
+   "t3_non_empty_guard_still_present": true,
+   "full_suite_line": "= 8 failed, 1198 passed, 15 skipped, 1 xfailed, 2 warnings in 129.59s (0:02:09) =",
+   "collected_denominator": "collected 1222 items",
+   "verdict": "MET"
+  }
+ },
+ "reporting_provenance_A5": {
+  "repo": "D:/moodle/_qoder_b_landing_20260923 (linked worktree of the integration line)",
+  "tree": "candidate 406bd6f27a85878373c30eb178230119172d46a2",
+  "base": "a1cc0c1 = a1cc0c1d19148c97e7a7c9a27c292f07600a2835",
+  "dirty": "clean",
+  "shape": "whole-suite (tests/) plus two per-file door runs plus 18 mutation arms (single-file, per-node verdicts)",
+  "command": "python -m pytest tests -p no:cacheprovider --tb=no",
+  "collected_denominator": "collected 1222 items",
+  "environment_contract": {
+   "interpreter": "D:/moodle/CityNexus/.venv 3.12.14",
+   "local_packages_required": "citynexus_mcp is NOT tracked by git (0 files) => test_gpt_agent_authority_v3::test_aiv3_02 is environment dependent, recorded as such, not counted as a regression",
+   "provider_egress": "AI keys popped before import; AI_ENABLED=false; 0 provider calls"
+  },
+  "cross_run_comparison_allowed": "only against a run naming the same tree+shape+environment; the 03:35 composite-export run is NOT_COMPARABLE_AS_REGRESSION_DELTA against this one"
+ },
+ "all_six_verdicts": {
+  "1_ancestry": "NOT_MET",
+  "2_single_truth": "MET",
+  "3_carrying_vs_declared": "MET",
+  "4_both_directions": "MET",
+  "5_tripwire_and_killer": "MET",
+  "6_rerun_on_the_new_tip": "MET"
+ },
+ "closure_grade_now": "CANDIDATE-READY-FOR-EXTERNAL-REVIEW (not CLOSED: closure item 6 must be re-run on the *landed* mainline tip)"
+}
