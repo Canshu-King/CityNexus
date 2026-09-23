@@ -1,0 +1,97 @@
+{
+ "at": "2026-09-23T18:14:06+08:00",
+ "mode": "deploy",
+ "rc": 0,
+ "seconds": 2.5,
+ "ruler_blob40": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+ "ruler_unchanged": true,
+ "keyerror_or_traceback": false,
+ "receipt_written_by_gauge": true,
+ "gauge_receipt": "ord0263_deploy_gauge_receipt.json",
+ "bytes": 67169,
+ "blob40": "4d401db03f26c2e43d902c37f14e5e94e47b94b7",
+ "overall": "GREEN",
+ "arms": {
+  "A": "GREEN",
+  "B": "see receipt_ABCDE",
+  "G_precache": [
+   "DECLARED_NO_PRECACHE_ARRAY",
+   "GREEN"
+  ],
+  "H_prevgen": "GREEN",
+  "I_sw_register": "GREEN",
+  "J_name_content_binding": "GREEN",
+  "temporal_obligations": "DISCHARGED",
+  "F_proxy_tunnel": "GREEN",
+  "all_green_requires": "A,B,C,D,E + G + I + J + F + discharged temporal obligations"
+ },
+ "pairing": {},
+ "F_verdict": "GREEN",
+ "F_detail": [
+  [
+   "proxy_4782",
+   "GREEN",
+   [
+    200,
+    200
+   ]
+  ],
+  [
+   "proxy_4782",
+   "GREEN",
+   [
+    200,
+    200
+   ]
+  ],
+  [
+   "tunnel",
+   "GREEN",
+   [
+    200,
+    200
+   ]
+  ],
+  [
+   "tunnel",
+   "GREEN",
+   [
+    200,
+    200
+   ]
+  ]
+ ],
+ "I_verdict": null,
+ "preflight": {
+  "B_pre_index_names_new_refs": "GREEN",
+  "C_pre_new_assets_reach_the_live_server": [
+   "GREEN",
+   "GREEN"
+  ],
+  "G_pre_precache_of_the_new_sw_resolves": [
+   "DECLARED_NO_PRECACHE_ARRAY",
+   "GREEN"
+  ],
+  "I_pre_sw_register_params_of_new_bundle": [
+   "GREEN"
+  ],
+  "F_pre_user_surfaces": "GREEN",
+  "A_pre_current_generation_still_served": null,
+  "verdict": [],
+  "reds": []
+ },
+ "how_base_was_set": "environment CNX_DEPLOY_BASE (call-time resolution) - NOT an in-process replacement of the module global",
+ "argv": [
+  "-X",
+  "utf8",
+  "D:\\moodle\\_qoder_harness_ord0254\\tools\\ruler_v7.py",
+  "--src",
+  "D:\\moodle\\_qoder_harness_ord0254\\repo\\frontend\\dist",
+  "--serve",
+  "D:\\moodle\\_qoder_harness_ord0254\\serve",
+  "--live-tree",
+  "D:\\moodle\\_qoder_harness_ord0254\\repo",
+  "--sha",
+  "6a39c527f2aa3b16e73dfd122c34d6e6be7102df"
+ ]
+}
