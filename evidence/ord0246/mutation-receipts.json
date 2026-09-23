@@ -1,0 +1,223 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0246",
+  "runTag": "v2",
+  "at": "2026-09-23T12:49:51+0800",
+  "guard": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace",
+  "ownerSpec": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts",
+  "mirrorSpec": "e2e/qoder-model-words-are-labelled.spec.ts",
+  "runShape": "whole owner spec file per arm (3 nodes + the real-seed setup project = 4 passes when green); the same mutant is then run against the ORD-0240 sheet spec as the mirror/independence run",
+  "judgingCriterion": "同一 tick 两击 => 1 POST / 1 journey_missions 行，行数由服务器自己的 GET agent-feed 数出",
+  "reverseMutationNamedByOrder": "killG1-refusal-moved-back-to-rendered-state",
+  "filesBefore": {
+    "PlanWithAiSheet.tsx": "9913479ca5a5237be8355e1d2c210de4ed14e66616a4964689b76f8cb34557af"
+  },
+  "arms": [
+    {
+      "name": "killG1-refusal-moved-back-to-rendered-state",
+      "why": "the named reverse mutation: without the synchronous refusal only `disabled={busy}` is left, and a same-tick pair lands two commands and two mission rows",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "ownerNode": "ord0246-1",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "fc90f2055e5e9afbe8b14e8ac650dd7e49ef6d0c4f126483de9449c0445d65b9",
+      "restored_sha256": "9913479ca5a5237be8355e1d2c210de4ed14e66616a4964689b76f8cb34557af",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts",
+        "exitCode": 0,
+        "runId": "run138991",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run138991.log",
+        "summary": "4 passed (17.2s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0246-1": "GREEN",
+          "ord0246-2": "GREEN",
+          "ord0246-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts",
+        "exitCode": 1,
+        "runId": "run139009",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139009.log",
+        "summary": "3 passed (16.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0246-1": "RED",
+          "ord0246-2": "GREEN",
+          "ord0246-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 0,
+        "runId": "run139027",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139027.log",
+        "summary": "4 passed (13.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "GREEN",
+          "ord0240-2": "GREEN",
+          "ord0240-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0246-1"
+      ],
+      "survivingNodes": [
+        "ord0246-2",
+        "ord0246-3"
+      ],
+      "exclusiveToOwner": true,
+      "verdict": "KILLED"
+    },
+    {
+      "name": "killG2-guard-never-releases",
+      "why": "the guard becomes sticky: the traveller's next request after a finished run is silently swallowed and the button is a dead control",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "ownerNode": "ord0246-2",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "d8ee13cb5a214015ed9e1261dc18bcb9423fe1ac9def990490091e299a0d789b",
+      "restored_sha256": "9913479ca5a5237be8355e1d2c210de4ed14e66616a4964689b76f8cb34557af",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts",
+        "exitCode": 0,
+        "runId": "run139041",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139041.log",
+        "summary": "4 passed (15.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0246-1": "GREEN",
+          "ord0246-2": "GREEN",
+          "ord0246-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts",
+        "exitCode": 1,
+        "runId": "run139058",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139058.log",
+        "summary": "3 passed (15.6s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0246-1": "GREEN",
+          "ord0246-2": "RED",
+          "ord0246-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 0,
+        "runId": "run139075",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139075.log",
+        "summary": "4 passed (13.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "GREEN",
+          "ord0240-2": "GREEN",
+          "ord0240-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0246-2"
+      ],
+      "survivingNodes": [
+        "ord0246-1",
+        "ord0246-3"
+      ],
+      "exclusiveToOwner": true,
+      "verdict": "KILLED"
+    },
+    {
+      "name": "killG3-refused-click-aborts-the-running-request",
+      "why": "refusing the second click also cancels the run that survived, which is the sabotage the order does not ask for and the traveller would not accept",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "ownerNode": "ord0246-3",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "77fc98e1cb62d88d06b30287ee0e6bca8245589fe437756e9b78ddb549b44d3e",
+      "restored_sha256": "9913479ca5a5237be8355e1d2c210de4ed14e66616a4964689b76f8cb34557af",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts",
+        "exitCode": 0,
+        "runId": "run139090",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139090.log",
+        "summary": "4 passed (15.6s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0246-1": "GREEN",
+          "ord0246-2": "GREEN",
+          "ord0246-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts",
+        "exitCode": 1,
+        "runId": "run139106",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139106.log",
+        "summary": "2 passed (15.9s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0246-1": "RED",
+          "ord0246-2": "GREEN",
+          "ord0246-3": "RED"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 0,
+        "runId": "run139123",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run139123.log",
+        "summary": "4 passed (13.4s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "GREEN",
+          "ord0240-2": "GREEN",
+          "ord0240-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0246-1",
+        "ord0246-3"
+      ],
+      "survivingNodes": [
+        "ord0246-2"
+      ],
+      "exclusiveToOwner": false,
+      "verdict": "KILLED"
+    }
+  ],
+  "filesAfter": {
+    "PlanWithAiSheet.tsx": "9913479ca5a5237be8355e1d2c210de4ed14e66616a4964689b76f8cb34557af"
+  },
+  "treeUnchangedByThisRun": true,
+  "allArmsKilled": true,
+  "exclusiveKiller": {
+    "ord0246-1": [
+      "killG1-refusal-moved-back-to-rendered-state"
+    ],
+    "ord0246-2": [
+      "killG2-guard-never-releases"
+    ],
+    "ord0246-3": []
+  },
+  "nodesWithoutAKillingArm": [
+    "ord0246-3"
+  ],
+  "invalidStackArms": [],
+  "publishedBy": "e345b9d6 for ORD-0246",
+  "guardPath": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace"
+}
