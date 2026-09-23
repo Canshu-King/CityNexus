@@ -1,0 +1,495 @@
+{
+  "order": "ORD-0242",
+  "group": "B5",
+  "surface": "canary @4185/8713",
+  "run_label": "smkB5",
+  "pid": 45200,
+  "started_at": "2026-09-23T11:26:17.523Z",
+  "samples": [
+    {
+      "atMs": 10043,
+      "netCount": 26,
+      "url": "/v8/hub",
+      "h1": "Demo之旅",
+      "sheetPresent": true,
+      "sheetText": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划",
+      "sheetButtons": [
+        "×",
+        "我想去Central Food Ha…",
+        "Central Food Hall排…",
+        "稍后",
+        "开始规划"
+      ],
+      "body": "菜单 / 今天 跟随系统 EN DE 晚上好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Riverside Museum 接下来 12:15 Central Food Hall 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 需要关注 已处理 刚才的变化已经处理好。 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 ✦ CityNexus Copilot AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划 今天 行程 地图 Copilot 我的",
+      "buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "AI 帮我规划",
+        "试用其他城市",
+        "打开行程工作台",
+        "查看实时行程",
+        "✦ CityNexus Copilot",
+        "×",
+        "我想去Central Food Ha…",
+        "Central Food Hall排…",
+        "稍后",
+        "开始规划",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ]
+    },
+    {
+      "atMs": 40432,
+      "netCount": 30,
+      "url": "/v8/hub",
+      "h1": "Demo之旅",
+      "sheetPresent": true,
+      "sheetText": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划",
+      "sheetButtons": [
+        "×",
+        "我想去Central Food Ha…",
+        "Central Food Hall排…",
+        "稍后",
+        "开始规划"
+      ],
+      "body": "菜单 / 今天 跟随系统 EN DE 晚上好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Riverside Museum 接下来 12:15 Central Food Hall 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 需要关注 已处理 刚才的变化已经处理好。 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 ✦ CityNexus Copilot AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划 今天 行程 地图 Copilot 我的",
+      "buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "AI 帮我规划",
+        "试用其他城市",
+        "打开行程工作台",
+        "查看实时行程",
+        "✦ CityNexus Copilot",
+        "×",
+        "我想去Central Food Ha…",
+        "Central Food Hall排…",
+        "稍后",
+        "开始规划",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ]
+    },
+    {
+      "atMs": 90864,
+      "netCount": 36,
+      "url": "/v8/hub",
+      "h1": "Demo之旅",
+      "sheetPresent": true,
+      "sheetText": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划",
+      "sheetButtons": [
+        "×",
+        "我想去Central Food Ha…",
+        "Central Food Hall排…",
+        "稍后",
+        "开始规划"
+      ],
+      "body": "菜单 / 今天 跟随系统 EN DE 晚上好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Riverside Museum 接下来 12:15 Central Food Hall 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 需要关注 已处理 刚才的变化已经处理好。 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 ✦ CityNexus Copilot AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划 今天 行程 地图 Copilot 我的",
+      "buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "AI 帮我规划",
+        "试用其他城市",
+        "打开行程工作台",
+        "查看实时行程",
+        "✦ CityNexus Copilot",
+        "×",
+        "我想去Central Food Ha…",
+        "Central Food Hall排…",
+        "稍后",
+        "开始规划",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ]
+    },
+    {
+      "atMs": 151321,
+      "netCount": 44,
+      "url": "/v8/hub",
+      "h1": "Demo之旅",
+      "sheetPresent": true,
+      "sheetText": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划",
+      "sheetButtons": [
+        "×",
+        "我想去Central Food Ha…",
+        "Central Food Hall排…",
+        "稍后",
+        "开始规划"
+      ],
+      "body": "菜单 / 今天 跟随系统 EN DE 晚上好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Riverside Museum 接下来 12:15 Central Food Hall 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 需要关注 已处理 刚才的变化已经处理好。 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 ✦ CityNexus Copilot AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划 今天 行程 地图 Copilot 我的",
+      "buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "AI 帮我规划",
+        "试用其他城市",
+        "打开行程工作台",
+        "查看实时行程",
+        "✦ CityNexus Copilot",
+        "×",
+        "我想去Central Food Ha…",
+        "Central Food Hall排…",
+        "稍后",
+        "开始规划",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ]
+    }
+  ],
+  "openTap": {
+    "found": true,
+    "label": "AI 帮我规划",
+    "point": [
+      51,
+      222
+    ],
+    "hitTag": "BUTTON",
+    "pointHitsThisButton": true,
+    "tappedByTouch": true
+  },
+  "sheetAtOpen": {
+    "url": "/v8/hub",
+    "h1": "Demo之旅",
+    "sheetPresent": true,
+    "sheetText": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划",
+    "sheetButtons": [
+      "×",
+      "我想去Central Food Ha…",
+      "Central Food Hall排…",
+      "稍后",
+      "开始规划"
+    ],
+    "body": "菜单 / 今天 跟随系统 EN DE 晚上好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Riverside Museum 接下来 12:15 Central Food Hall 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 需要关注 已处理 刚才的变化已经处理好。 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 ✦ CityNexus Copilot AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划 今天 行程 地图 Copilot 我的",
+    "buttons": [
+      "菜单",
+      "跟随系统",
+      "EN",
+      "DE",
+      "AI 帮我规划",
+      "试用其他城市",
+      "打开行程工作台",
+      "查看实时行程",
+      "✦ CityNexus Copilot",
+      "×",
+      "我想去Central Food Ha…",
+      "Central Food Hall排…",
+      "稍后",
+      "开始规划",
+      "今天",
+      "行程",
+      "地图",
+      "Copilot",
+      "我的"
+    ]
+  },
+  "startTap": {
+    "found": true,
+    "label": "开始规划",
+    "point": [
+      228,
+      806
+    ],
+    "hitTag": "BUTTON",
+    "pointHitsThisButton": true,
+    "tappedByTouch": true
+  },
+  "requestSummary": {
+    "total": 44,
+    "nonGet": [],
+    "named4xx5xx": [],
+    "distinctPaths": [
+      "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "GET /api/v1/demo/scene",
+      "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed",
+      "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+      "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "GET /api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+      "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+      "GET /api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+      "GET /api/v1/agent/runtime-status",
+      "GET /api/v1/places"
+    ]
+  },
+  "verdict": "COMPATIBLE_WITH_DECLARED_DEGRADATION",
+  "contract_boundary": "不是契约边界：没有任何后端调用可失败 —— 面板打开了、按钮点得动，但「开始规划」一次请求都没发出去",
+  "whatTheScreenSaid": {
+    "atMs": 151321,
+    "sheetPresent": true,
+    "sheetText": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划",
+    "sheetButtons": [
+      "×",
+      "我想去Central Food Ha…",
+      "Central Food Hall排…",
+      "稍后",
+      "开始规划"
+    ],
+    "h1": "Demo之旅"
+  },
+  "ended_at": "2026-09-23T11:29:02.338Z",
+  "net": [
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/demo/scene"
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed"
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans"
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin"
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy"
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet"
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot"
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/agent/runtime-status"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+      "s": 200
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/demo/scene",
+      "s": 200
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+      "s": 200
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "s": 200
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+      "s": 200
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed",
+      "s": 200
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+      "s": 200
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/agent/runtime-status",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/places"
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/agent/runtime-status"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/places",
+      "s": 200
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/agent/runtime-status",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "s": 200
+    },
+    {
+      "t": "req",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin"
+    },
+    {
+      "t": "res",
+      "m": "GET",
+      "u": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "s": 200
+    }
+  ],
+  "console": [],
+  "pageErrors": []
+}
