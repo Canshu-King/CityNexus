@@ -1,0 +1,65 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0261 + ORD-0264 gate rewrite + ruling arms",
+ "candidate_tip": "e3b0b47 (product bytes identical to 6daceb1; only the gate file and the arms driver changed after 6daceb1)",
+ "product_diff_vs_6daceb1": "NONE - frontend/src untouched since 6daceb1",
+ "contract": "SCROLL_REACHABLE_AND_TAPPABLE (arbiter 17:19)",
+ "cells": {
+  "locality": "opener inside the rendered step-1 card by DOM containment (trial-step1-body.contains), adjacency to its details; class names not used",
+  "human_path": "mouse.wheel rolls with recorded scrollY delta (480px measured); scrollIntoView not used in the acceptance path",
+  "semantics": "centre hit-test to itself; real click opens the details; typed draft survives scrolling AND expanding",
+  "arms": "K261_REMOVE_STICKY_RESERVE, K264_MOVE_OPENER_BACK_TO_PAGE_TAIL; overlap reds under K264 are collateral by construction (locality reddens first)",
+  "control": "看支持的目的地 summary kept as positive control"
+ },
+ "gate_green": {
+  "run": "run158836-epoch (4620 batch)",
+  "summary": "3 passed (18.9s)",
+  "readings": {
+   "0261_wheel_px": 240,
+   "0261_summary_self": true,
+   "0261_control_self": true,
+   "0264_wheel_px": 480,
+   "0264_locality": true,
+   "0264_centre_hits_self": true
+  }
+ },
+ "arms": [
+  {
+   "name": "K261_REMOVE_STICKY_RESERVE",
+   "owner": "ord0261",
+   "claimed_result": "KILLED",
+   "redSet": [
+    "ord0261"
+   ],
+   "survivors": [
+    "ord0264"
+   ],
+   "mirror_red": [],
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "restored_exact": true,
+   "baseline": "3 passed (15.9s)",
+   "attempt": "2 passed (16.4s)"
+  },
+  {
+   "name": "K264_MOVE_OPENER_BACK_TO_PAGE_TAIL",
+   "owner": "ord0264",
+   "claimed_result": "KILLED",
+   "redSet": [
+    "ord0264"
+   ],
+   "survivors": [
+    "ord0261"
+   ],
+   "mirror_red": [],
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "restored_exact": true,
+   "baseline": "3 passed (15.2s)",
+   "attempt": "2 passed (14.2s)"
+  }
+ ],
+ "treeUnchangedByArmsRun": true,
+ "instrumentSelfReport": "arms driver v1 graded BASELINE_RED although the runs were valid - its node parser did not match Playwright's file›title line shape. Parser rewritten to key by owner prefix and verified OFFLINE against all four v1 logs (4/4 match) before the v3 pass. The v1 runs themselves stand as measurements; the v1 verdicts do not.",
+ "verifierNote": "claimed_result only; derived_result/direct_red/collateral_red are WRITTEN_BY_VERIFIER"
+}
