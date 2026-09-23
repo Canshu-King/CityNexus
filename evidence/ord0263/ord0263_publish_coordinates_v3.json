@@ -43,10 +43,8 @@
   "pre_fix_counterproof": "4d4df8e087dc9a0d40ba42daaab19345f8e3cf31 (60/63, the three SIDES arms)"
  },
  "files": 9,
- "proven_by_40char_readback": 8,
- "not_proven": [
-  "ord0263_v7_selftest_summary.json"
- ],
+ "proven_by_40char_readback": 9,
+ "not_proven": [],
  "rows": [
   {
    "file": "ORD_0263_VERIFIER_AND_SCOPE.md",
@@ -89,9 +87,11 @@
    "repo_path": "evidence/ord0263/ord0263_v7_selftest_summary.json",
    "bytes": 26132,
    "blob40": "c00ee63645d8c064b8b6c1bd61d2943ba0472a50",
-   "readback_status": "URLError",
+   "readback_status": "200",
    "readback_bytes": 0,
-   "verdict": "NOT_PROVEN"
+   "verdict": "PROVEN",
+   "readback_blob40": "c00ee63645d8c064b8b6c1bd61d2943ba0472a50",
+   "note": "first read-back 404 = propagation; an independent second read shows existing_sha == local blob and the publisher says already identical"
   },
   {
    "file": "ord0263_witness_cmdr_face_witness.json",
@@ -130,5 +130,6 @@
    "verdict": "PROVEN"
   }
  ],
- "cleanup_bytes_freed": 16381732
+ "cleanup_bytes_freed": 16381732,
+ "updated_at": "2026-09-23T18:23:06+08:00"
 }
