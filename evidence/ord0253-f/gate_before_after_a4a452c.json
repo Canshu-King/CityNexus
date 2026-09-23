@@ -1,0 +1,57 @@
+{
+ "generated_at": "2026-09-23T18:37:27+08:00",
+ "gate_file_blob_in_candidate": "03bdd3af48a9caacc46d5c652c5d0d9c3282f198",
+ "gate_file_sha256_12": "6e9d25031362",
+ "published_patch_replay": {
+  "method": "read-tree(base) → git apply --cached <已发布 patch> → write-tree（临时 index，0 次 checkout）",
+  "apply_rc": 0,
+  "apply_stderr": "",
+  "patch_blob_sha1": "92ad7956516164583082a05883e767af09913ab8",
+  "replayed_tree": "e697367074461edbf843bfb5fe151b7c64400331",
+  "candidate_tree": "e697367074461edbf843bfb5fe151b7c64400331",
+  "base_tree": "d71a5454e444e245056fd95005fecfbdfa7adecf",
+  "reproduces_candidate": true,
+  "temp_index_left_behind": "无"
+ },
+ "gate_before_fix": {
+  "tree": "git archive dea8410 导出（**没有**我的补丁）+ 同一份门文件",
+  "collected": 10,
+  "summary": "8 failed, 2 passed, 2 warnings in 1.69s",
+  "exit_code": 1,
+  "failed": [
+   "tests/test_qoder_agent_command_idempotency.py::test_a_malformed_key_is_refused_with_the_existing_validation_message",
+   "tests/test_qoder_agent_command_idempotency.py::test_same_key_on_another_journey_fails_closed_not_silently_reused",
+   "tests/test_qoder_agent_command_idempotency.py::test_same_key_same_request_replays_the_one_persisted_mission",
+   "tests/test_qoder_agent_command_idempotency.py::test_same_key_with_a_different_autonomy_fails_closed_too",
+   "tests/test_qoder_agent_command_idempotency.py::test_same_key_with_a_different_command_fails_closed_never_aliases",
+   "tests/test_qoder_agent_command_idempotency.py::test_the_contract_and_the_route_declare_the_same_header",
+   "tests/test_qoder_agent_command_idempotency.py::test_the_receipt_is_a_durable_scoped_row_not_an_in_memory_map",
+   "tests/test_qoder_agent_command_idempotency.py::test_two_threads_one_key_produce_one_mission"
+  ],
+  "failed_count": 8
+ },
+ "gate_after_fix": {
+  "tree": "候选 worktree @ a4a452c（分支 agent/f-ord253-candidates）",
+  "collected": 10,
+  "summary": "10 passed, 2 warnings in 2.22s",
+  "exit_code": 0,
+  "failed": [],
+  "failed_count": 0
+ },
+ "reading": {
+  "由红转绿": [
+   "tests/test_qoder_agent_command_idempotency.py::test_a_malformed_key_is_refused_with_the_existing_validation_message",
+   "tests/test_qoder_agent_command_idempotency.py::test_same_key_on_another_journey_fails_closed_not_silently_reused",
+   "tests/test_qoder_agent_command_idempotency.py::test_same_key_same_request_replays_the_one_persisted_mission",
+   "tests/test_qoder_agent_command_idempotency.py::test_same_key_with_a_different_autonomy_fails_closed_too",
+   "tests/test_qoder_agent_command_idempotency.py::test_same_key_with_a_different_command_fails_closed_never_aliases",
+   "tests/test_qoder_agent_command_idempotency.py::test_the_contract_and_the_route_declare_the_same_header",
+   "tests/test_qoder_agent_command_idempotency.py::test_the_receipt_is_a_durable_scoped_row_not_an_in_memory_map",
+   "tests/test_qoder_agent_command_idempotency.py::test_two_threads_one_key_produce_one_mission"
+  ],
+  "由红转绿数量": 8,
+  "改动后仍红": [],
+  "结论": "验收形状在改动前必然红、改动后全绿 ⇒ 这 10 格量的就是本单要的东西；若某格改前改后都绿，那一格就不该被算作本单的证明",
+  "两向都有": true
+ }
+}
