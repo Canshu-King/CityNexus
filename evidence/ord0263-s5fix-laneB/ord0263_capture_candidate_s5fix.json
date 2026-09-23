@@ -1,0 +1,186 @@
+{
+ "at": "2026-09-24T01:00:12+08:00",
+ "subject": "CANDIDATE branch agent/b-c01d72a3-ord0263-s5, dist_s5, my :4443 -> my :8443",
+ "cells": {
+  "S2_origin_error": {
+   "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "rendered_text": "服务器\n\n服务暂时不可用\n\n服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。\n\n看已保存的只读副本\n重试\n归因详情\nattribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+   "origin_answer": {
+    "status": 500,
+    "thrown": false,
+    "ct": "text/plain",
+    "body_bytes": 21
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 0.37,
+   "snapshot_present": true,
+   "snapshot_rows": 1,
+   "navigator_onLine": true,
+   "doors": {
+    "retry": 1,
+    "read_only_snapshot": 1
+   },
+   "read_never_answered": false,
+   "health_answer": {
+    "status": null,
+    "thrown": true
+   },
+   "instrument_last_row": {
+    "kind": "answered_500",
+    "mode": "five_hundred",
+    "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "method": "GET",
+    "status": 500,
+    "content_type": "text/plain",
+    "body_bytes": 21,
+    "body_head": "Internal Server Error",
+    "at": "2026-09-24T00:57:18"
+   }
+  },
+  "S3_no_answer": {
+   "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+   "rendered_text": "没有回音\n\n等了 12 秒，这台服务器一个字也没回答\n\n这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。\n\n看已保存的只读副本\n重试\n归因详情\nattribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+   "origin_answer": {
+    "status": null,
+    "thrown": true,
+    "ct": null,
+    "body_bytes": 0
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 12.15,
+   "snapshot_present": true,
+   "snapshot_rows": 1,
+   "navigator_onLine": true,
+   "doors": {
+    "retry": 1,
+    "read_only_snapshot": 1
+   },
+   "read_never_answered": true,
+   "health_answer": {
+    "status": 200,
+    "thrown": false,
+    "ct": "application/json"
+   },
+   "instrument_last_row": {
+    "kind": "hung",
+    "mode": "silent",
+    "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "method": "GET",
+    "status": null,
+    "content_type": null,
+    "body_bytes": 0,
+    "body_head": "",
+    "at": "2026-09-24T00:57:21"
+   }
+  },
+  "S4_read_silent_health_answered": {
+   "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "rendered_text": "服务器\n\n服务暂时不可用\n\n服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。\n\n看已保存的只读副本\n重试\n归因详情\nattribution_reason=SERVER_ERROR evidence_kind=HEALTH_PROBE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+   "origin_answer": {
+    "status": null,
+    "thrown": true,
+    "ct": null,
+    "body_bytes": 0
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 12.15,
+   "snapshot_present": true,
+   "snapshot_rows": 1,
+   "navigator_onLine": true,
+   "doors": {
+    "retry": 1,
+    "read_only_snapshot": 1
+   },
+   "read_never_answered": true,
+   "health_answer": {
+    "status": 500,
+    "thrown": false,
+    "ct": "text/plain"
+   },
+   "instrument_last_row": {
+    "kind": "hung",
+    "mode": "mixed",
+    "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "method": "GET",
+    "status": null,
+    "content_type": null,
+    "body_bytes": 0,
+    "body_head": "",
+    "at": "2026-09-24T00:57:37"
+   }
+  },
+  "S1_live": {
+   "classified_label": "LIVE",
+   "rendered_text": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n还没休息\n\nDemo之旅\n\n10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（行程起点）：10月10日 09:00 · 服务器的执行投影还没到，这一屏没有按游标定位\n路线上下文\n0 段路程\n供应商支持的路线 · WGS84\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00\n这个行程还没有可信的坐标\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。",
+   "origin_answer": {
+    "status": 200,
+    "thrown": false,
+    "ct": "application/json"
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 0.0,
+   "snapshot_present": true,
+   "snapshot_rows": 1,
+   "navigator_onLine": true,
+   "doors": {
+    "retry": 0,
+    "read_only_snapshot": 0
+   }
+  },
+  "S5_invalid_response": {
+   "shapes": [
+    {
+     "shape": "200_html",
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 1200,
+      "body_head": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <m",
+      "wire": "s5fix_origin_html.log answered 200 text/html; charset=utf-8 1200 B at 2026-09-24T00:57:08"
+     },
+     "rendered_text": "服务器\n\n服务器答了 200，可带回来的不是这一屏能用的数据\n\n它确实回了话（HTTP 200，Content-Type: text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。\n\n看已保存的只读副本\n重试\n归因详情\nattribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=true",
+     "snapshot_rows": 1,
+     "buttons": [
+      "看已保存的只读副本",
+      "重试"
+     ]
+    },
+    {
+     "shape": "200_empty",
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "application/json",
+      "body_bytes": 0,
+      "body_head": "",
+      "wire": "s5fix_origin_empty.log answered 200 application/json 0 B at 2026-09-24T00:57:11"
+     },
+     "rendered_text": "服务器\n\n服务器答了 200，可带回来的不是这一屏能用的数据\n\n它确实回了话（HTTP 200，Content-Type: application/json），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。\n\n看已保存的只读副本\n重试\n归因详情\nattribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=true",
+     "snapshot_rows": 1,
+     "buttons": [
+      "看已保存的只读副本",
+      "重试"
+     ]
+    },
+    {
+     "shape": "200_not_json",
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 40,
+      "body_head": "origin says: plan service is warming up\n",
+      "wire": "s5fix_origin_nonjson.log answered 200 text/plain; charset=utf-8 40 B at 2026-09-24T00:57:14"
+     },
+     "rendered_text": "服务器\n\n服务器答了 200，可带回来的不是这一屏能用的数据\n\n它确实回了话（HTTP 200，Content-Type: text/plain; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。\n\n看已保存的只读副本\n重试\n归因详情\nattribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/plain; charset=utf-8 cached_copy_present=true",
+     "snapshot_rows": 1,
+     "buttons": [
+      "看已保存的只读副本",
+      "重试"
+     ]
+    }
+   ]
+  }
+ }
+}
