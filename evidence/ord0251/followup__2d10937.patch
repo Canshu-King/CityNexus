@@ -1,0 +1,23 @@
+commit 2d10937776597428616597f5d143d0dfcf443f46
+Author: 仓鼠王 <yjianbin419@gmail.com>
+Date:   Wed Sep 23 14:49:03 2026 +0800
+
+    test(e2e): look at what the traveller sees, and give ORD-0251-1 a mutant of its own
+    
+    Two screenshots (run-id named) plus the arm the v1 matrix showed was missing: echoing the raw label
+    reddens nodes 1 and 2 together, so node 1 needed a regression only it observes.
+
+diff --git a/frontend/e2e/qoder-no-internal-words-or-sentinels.spec.ts b/frontend/e2e/qoder-no-internal-words-or-sentinels.spec.ts
+index 1b5abd1..1c2264c 100644
+--- a/frontend/e2e/qoder-no-internal-words-or-sentinels.spec.ts
++++ b/frontend/e2e/qoder-no-internal-words-or-sentinels.spec.ts
+@@ -100,6 +100,9 @@ test("ord0251-1-the-push-card-says-the-state-in-plain-words — 状态句不得
+     ).toBe(false);
+   }
+   expect(await card.getAttribute("data-capability")).toBe("RECORD_ONLY");
++  await card.screenshot({
++    path: evidencePath(`ui-overnight/ord0251-push-card-${process.env.CITYNEXUS_E2E_RUN_ID ?? "dev"}.png`),
++  });
+ 
+   writeFileSync(
+     evidencePath("ord0251-push-card-reading.json"),
