@@ -1,0 +1,129 @@
+{
+ "order": "ORD-0267 OFFLINE_COLD_DEEP_LINK_BOOTSTRAP",
+ "lane": "B c01d72a3",
+ "at": "2026-09-23T21:01:04+08:00",
+ "mode": "READ-ONLY shaping; no product byte changed; nothing implemented; not part of ORD-0263",
+ "surface": {
+  "tree_exported_from": "d2665e25855aeb265329266831983de42321697d",
+  "how": "git archive <tip> | tar -x  (not a checkout, not git apply)",
+  "export_file_count_frontend_src": 101,
+  "preview_port": 4441,
+  "backend_port": 8441,
+  "backend_seeded_with": "app seed_demo, own new db file",
+  "dist": "dist_ord0267",
+  "forbidden_ports_requested": [
+   4781,
+   4782,
+   8693,
+   4185,
+   8713,
+   4411,
+   4412,
+   8411,
+   4431,
+   8431
+  ],
+  "released_after_run": true,
+  "caveat": "loopback vite preview, not the auth proxy nor the public tunnel; the shell bytes come from this tip's own build"
+ },
+ "baseline_readings_measured": {
+  "A_client_that_installed_while_up": {
+   "navigation_status": 200,
+   "controlled": true,
+   "controller_script": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "update_via_cache": "none",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ],
+   "cache_names": [],
+   "cache_count": 0,
+   "app_mounted": true
+  },
+  "A2_second_navigation_while_up": {
+   "controlled": true,
+   "controller_script": "/v10-sw.js",
+   "cache_count": 0
+  },
+  "B_returning_client_site_totally_down": {
+   "/v8/hub": {
+    "navigation": {
+     "ok": false,
+     "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub"
+    },
+    "url_after": "chrome-error://chromewebdata/",
+    "controlled": false
+   },
+   "/": {
+    "navigation": {
+     "ok": false,
+     "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/"
+    },
+    "url_after": "chrome-error://chromewebdata/"
+   },
+   "/v8/discover": {
+    "navigation": {
+     "ok": false,
+     "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/discover"
+    },
+    "url_after": "chrome-error://chromewebdata/"
+   }
+  },
+  "C_device_that_never_visited": {
+   "/v8/hub": {
+    "navigation": {
+     "ok": false,
+     "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub"
+    },
+    "url_after": "chrome-error://chromewebdata/",
+    "controlled": false
+   }
+  }
+ },
+ "what_the_readings_rule_out": [
+  "the worker is NOT absent for a returning client: A/A2 show one registration on scope \"/\" with active+controller = /v10-sw.js, and the page is controlled (True)",
+  "the offline failure is NOT 'the app rendered then broke': B got page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub -- the browser itself answered, so no worker served that navigation at all",
+  "the precache is NOT merely missing an entry: CacheStorage for the origin is EMPTY ([]), while the built worker does carry the workbox calls (v10-sw.js: precacheAndRoute=1, NavigationRoute=1, createHandlerBoundToURL=1, index.html=3)"
+ ],
+ "layers_as_declared_in_source_read_not_guessed": {
+  "generated_worker_config": {
+   "navigateFallback": "navigateFallback: \"/index.html\"",
+   "navigateFallbackAllowlist": "navigateFallbackAllowlist: [/^\\/(?:v8|index)/]",
+   "navigateFallbackDenylist_present": true,
+   "additionalManifestEntries": "additionalManifestEntries: [{ url: \"/index.html\", revision: \"v10-shell\" }]",
+   "document_network_first_for_v8": true,
+   "root_slash_in_allowlist": false,
+   "note": "the allowlist pattern names /v8 and /index -- the bare root \"/\" is NOT listed, which is a separate reading from the deep-link case and is recorded here rather than inferred"
+  },
+  "which_worker_the_shipped_app_registers": {
+   "production_registers_v10_at_line": 1733,
+   "sw_js_register_at_line": 1749,
+   "dev_guard_at_line": 1744,
+   "sw_js_registration_is_inside_the_dev_branch": true,
+   "hand_written_recovery_worker_fallback": "const NAVIGATION_FALLBACK = \"/v8/live\"",
+   "hand_written_recovery_worker_cache_prefix": "const CACHE_PREFIX = \"citynexus-recovery-\"",
+   "consequence": "the only shipped worker is the generated one; the worker that actually owns a cache and a /v8/live fallback is registered in DEV only, so a production client cannot use it"
+  }
+ },
+ "which_layer_owns_what_still_unresolved": {
+  "B_returning_client": "owned by the generated worker's install: its precache never materialises (0 caches). Whether that is an install-time throw, a manifest/URL mismatch, or the legacy-cache cleanup deleting what workbox just wrote is the FIRST thing an implementation order must answer -- and answering it needs the worker's own console/install outcome, which this read-only pass did not capture",
+  "root_navigation": "a ruling, not a bug: the fallback allowlist does not name \"/\", so even a healthy precache may still leave the bare root unanswered. Needs the commander/arbiter to say which document the root should serve",
+  "C_never_visited": "no app layer can fix this: with nothing installed there is nothing to intercept. The only candidates are distribution-layer (a static page served before the app exists, or the deploy root) or product-scope (accept that a first visit must be online). Do not fold this into B's fix, and do not count it as an ORD-0263 sibling"
+ },
+ "not_claimed": [
+  "no fix, no product byte changed (this ran against a read-only export)",
+  "no re-verification of ORD-0263's four states on this tip (that is HARNESS's v2 ruler, on order)",
+  "no measurement of the public tunnel or the auth proxy (forbidden ports, 0 requests) -- the loopback shell may behave differently from the tunnelled one, so a 'works offline' claim from this surface would be mine, not the product's"
+ ],
+ "sources": {
+  "vite_config_blob40": "726df379ca4afe8bfe0ffbdd60d0c8a3eed3f644",
+  "main_tsx_blob40": "6aecf3e9a0af3ee842a625b5e520299ac7ef36bd",
+  "v10_sw_blob40": "05a1d27d0bf77692b4a323339e0515cb4a686d50",
+  "sw_js_blob40": "c612b102c2e7bc883fed1ba5aaeba6dbd419ba26",
+  "authority": "these four are the export's own copies; the tip they came from is named above"
+ }
+}
