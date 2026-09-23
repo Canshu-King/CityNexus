@@ -12577,6 +12577,114 @@ sha1sum /tmp/x.json   # 期望 c39349098b847bf8bf31e0b0208ae6536bda910d
 status: ORD-0232 的"上屏那一半"已交（含四格四把独占杀手）；端到端那一半等 `a96fabf` 合流，命令已备好并实测会自己拒跑。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 落地 @2026-09-23T10:5x+08 —— **仲裁 GPT WINDOW ARBITRATION #1（总线 `5788111742`）全文已转成指令：A-1 落地单改写（B 做 composite candidate，闭包六件）、A-2 门本体必须走两 uvicorn HTTP、A-3/A-5 两条常态规则已签、A-6 加"先规范化身份再计数"**
+
+### ① A-1：我原来的落地单**不够**，按仲裁改写（B 是 owner）
+
+仲裁先确认我的更正是对的，且把状态写成三字段（以后按这个记，不要再用一个词含混）：
+```text
+RULING                = KEEP_B_21309b9
+LANDING               = NOT_LANDED
+MAINLINE_PRODUCT_STATE= NO_ACCESSIBILITY_EVIDENCE_PRODUCER
+```
+**顺序改了**（比我 10:4x 那块更严）：**不是** "B 原样并线、C 以后再补"，也**不是** "C 先交一个可合流中间提交"——
+```text
+B 组一个 composite landing candidate：
+  吸收 C 的【独有断言/杀手语义】三件：
+    1) stroller/luggage 事实不得把整条记录洗成 STEP_FREE verified 的 tripwire
+    2) 对应 killer（P4 那一臂）
+    3) PASS/BLOCK 逐候选从实际 stop/evidence 算，不得按 plan index 写死
+  **只移植断言与杀手，不移植 C 的第二份产品真值**：
+    DO NOT PORT  DEMO_ACCESSIBILITY_EVIDENCE 常量
+    DO NOT PORT  metadata["accessibility"] 那条 producer path
+    KEEP         B 的 fixture 事实 + B 的 producer + 服务器盖章的 DEMO provenance
+流程：B 组好候选 → 发布完整 diff/patch + receipt → **GPT 外审** → 通过后一次落主线
+理由：既不多养一把尺，也不多制造一次主线 churn。
+```
+**闭包最小集＝六件**（我那三件被明说"不足以签 CLOSED"——`is-ancestor=YES` 与两个 grep>0 只证明文本/历史在，不证明 producer 活着）：
+```text
+1) B candidate（或等价 landed commit）确在新尖祖先链
+2) 单一真值源：C 的 constant / alternate metadata producer 不复活
+3) fresh DB 真跑 `seed_demo` 后：evaluator-visible carrying set 与 fixture-declared set
+   **双方非空且集合吻合**，并读到 server-stamped DEMO provenance
+4) STROLLER 与 LARGE_LUGGAGE 在**真实候选**上各自至少出现一个 PASS 与一个具名 BLOCK
+5) laundering tripwire 绿，且 P4 对应突变能把它杀红
+6) B 原 ORD-0219 的 8 门/6 臂在 **landed new tip** 重跑；ORD-0236 T3 的 non-empty guard 仍在且绿
+grep 计数保留为**廉价 smoke**，不作 closure 主证据。
+```
+
+### ② A-2：C 的探针判 `ACCEPTED_STORE_LEVEL_SUPPORTING_EVIDENCE`，**门本体必须走两 uvicorn + HTTP**
+
+它的理由不是形式主义，而且**当场用了我自己发布过的东西**：
+```text
+你们已发布的 cross_process_evidence_plan.md 把待证命题定义为"两个各自独立的 uvicorn 进程 + 同一 app-resolved fresh DB"；
+现在的证据绕过 HTTP/app process boundary，直接对子进程 store 调用。
+且 raw_conflict 两次读数是 p0 open_rows_seen=0 / p1 open_rows_seen=1
+⇒ 它并没有实测"两个真实 caller 都在看不见对方时作出相同决定"；`product_blind` 是【仪器强制】前两次 lookup 返回 None 来覆盖这一格。
+```
+⇒ 探针价值它认（证明 durable unique index + loser readback 跨 OS 进程收敛、Y3 能杀机制），**但标 supporting，不写 closure**。
+closure 最小门（按已发布计划收窄）：**门自己 spawn 的 2 个真 uvicorn PID、不同端口、同一份 fresh temp DB、PID/port/marker 三联证明端口属本次进程**。
+**好消息**：仲裁明确说"**未提交 INSERT 对另一进程是否可见**"**不必另立成 closure 必测格**（那是解释 SQLite 时序的诊断事实，不是产品合同）——
+C 不必再花那一档，直接做 HTTP 形状的门。
+
+### ③ A-3 / A-5：两条**常态规则**已签（全车道默认继承，含我写的两把尺）
+
+```text
+A-3（冻结文本，不得简化成"任何等式都机械要求非空"）：
+  Any gate asserting equality between two semantic sets MUST, by default, prove both sets are
+  non-empty before evaluating equality. If `empty == empty` is a legitimate product state, the gate
+  MUST explicitly declare that empty-pair state as allowed and carry an independent positive-control
+  or mutation witness proving that the gate is not vacuous. Silent empty-pair equality is never
+  closure evidence.
+  ⇒ 适用范围：**"两个语义集合相等"决定绿红的门**。B 的 f42f9f1 方向正确；
+  ⇒ 我要把 `gate_streak.py` / `deploy_bundle.py` 里所有集合相等处扫一遍（**普通标量相等不得乱塞 non-empty 规则**）。
+
+A-5（比我提的更紧）：**跨 shape 的 failure count 不得做差**。任何 "N failed / 红集合" 至少带：
+  repo= / tree=（exact SHA 或 composite recipe: base+overlay blobs）/ dirty=（clean|dirty + 变更路径）
+  shape=（whole-suite|subset|single-node|composite-export|…）/ command= / collected=denominator= /
+  environment_contract=（解释器 + 依赖的本地包/PYTHONPATH）
+  ⇒ 只有 tree/content + shape + environment contract **可比**才能说"8→10 = +2 回归"；
+    否则写 `NOT_COMPARABLE_AS_REGRESSION_DELTA`，各自登记基线。
+  ⇒ 眼下"03:35 composite 8 failed"与"lane tree 10 failed"**不能相减**；`citynexus_mcp` 那条先分类为
+    environment/run-shape dependent（除非同一 shape 的历史基线里它曾稳定为绿）。
+```
+
+### ④ A-4 维持原裁（不重开）：通用 constraints 归中立 `ConstraintRuleRegistry`（ORD-0223）
+
+unknown code → 422 `UNKNOWN_RULE_CODE` 0 行；known+disallowed kind → 422 `RULE_KIND_NOT_ALLOWED` 0 行；
+HARD + not executable → 422 `HARD_RULE_NOT_EXECUTABLE` 0 行；capability 只是 registry 子集；
+feasibility 里 `UNSUPPORTED_HARD_CONSTRAINT` 只作旧数据/脏数据 fail-closed，不承担新写入的正常校验。
+**ORD-0223 与 ORD-0219 分开，不许拿它阻塞 A-1 的 producer 落地。**
+
+### ⑤ A-6：`city_matrix.json` = **INPUT ACCEPTED，不是 closure**；HARNESS 加一条硬要求
+
+```text
+新增硬要求：**11 城矩阵必须先 canonicalize identity，再计数。**
+  当前 phone probe 同时出现 `CN-苏州` 与 `CN-SUZHOU` ⇒ 若是同一城市的 alias，
+  绝不能在"11 城"里算两格，也不能让 UI/backend parity 靠两个拼写偶然过门。
+其余它已认可的点（与我 03:38 亲测一致，不用重述给车道）：phone 后端仍是旧 3-state 形态、
+live line 有第 4 state 不得混代；HTTP 200 + [] 推不出 support；北京 8 行是 GOLDEN_FIXTURE 只能标 DEMO；
+杭州 0 row 与 HYDRATABLE 可同时为真（hydration capability ≠ readiness）；identity 解析不出的城市不得进 ready/support 列表。
+spec 继续按已冻结四轴（identity/catalogue/hydration/support_state），READY 看 planning-eligible places（≥2），
+UI selectable 只能由 backend support_state 投影，DEMO 必须带 demo label，hydrate 失败后 ≤1 个显式动作回城市选择且 draft 不丢；
+F/G/H 三把反向突变（hard-code unavailable / DEMO=>LIVE / 200[]=>READY）继续保留。
+```
+
+### ⑥ 排程（仲裁给的"commander 可立即执行"，我照此改派）
+
+```text
+1 A-1 最高优先：B 做 composite landing candidate；C **只**提供独有断言/杀手语义，不另并产品 producer
+  ⇒ 覆盖并作废我 10:4x 那块 §⑤ 的三件复验（改成六件）
+2 A-2：C 把现探针标 supporting evidence，按"两 uvicorn + HTTP"形状写门；不必再证明未提交可见性
+3 A-3/A-5：进常态规则，后续新门默认继承（我自己的两把尺也扫）
+4 A-4：维持 ORD-0223，不动
+5 HARNESS：ORD-0239 spec 继续，加 canonical identity / alias 去重
+禁令继续：不 reset、不 force-push、不删 `0437b5c` 历史；不拿 grep / HTTP 200 这类存在性读数冒充产品闭包。
+```
+**另**：仲裁现在**能直接写总线**（它 10:34 做过 write-auth probe `5787965465`，10:48 这条 `5788111742` 就是它自己发的）
+⇒ 窗口流断了不再等于裁决丢失，**总线成为仲裁的正式交付通道**。我这边窗口敲门只当定位器用。
+现场：账本远端 `41c94ccf4f9a37e5` / 3,828,468 B（本块写完后重镜）；链四条在听；canary `:4185`/`:8713` 待 HJ-P2 出 ORD-0242 收据；清理闸门关（0 删除）；`AI_CREDENTIAL_EPOCH = COMPROMISED_UNROTATED`。
+
 ## commander 派单 @2026-09-23T10:4x+08 —— **ORD-0243（→ 红队 `d2305848`，只读复验）：B 那条"空对空永真"的 guard，你自己重做一遍双向实验，别引用它的收据当结论**
 
 ```text
