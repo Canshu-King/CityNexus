@@ -1,0 +1,78 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0247",
+  "at": "2026-09-23T05:00:40.649Z",
+  "target": "details.v8-advanced > summary (「高级：结构化数据」, bookings screen)",
+  "judgedBy": "elementFromPoint(盒中心) === 该 summary 本身 ＋ 真触摸屏点把它打开；桌面另一格守住 44px 只在移动层",
+  "mobileFloorToken": "--cn-touch-min = 44px",
+  "desktopMaxHeight": 30,
+  "readings": [
+    {
+      "node": "ord0247-1",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "width": 310,
+      "height": 44,
+      "centre": [
+        195,
+        654
+      ],
+      "hitTag": "SUMMARY",
+      "hitIsSummaryItself": true,
+      "hitTestId": "",
+      "hitClass": "",
+      "text": "高级：结构化数据",
+      "insideSrOnly": false,
+      "display": "list-item",
+      "markerListStyle": "disclosure-closed",
+      "open": false,
+      "touchToken": "44px"
+    },
+    {
+      "node": "ord0247-2",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "before": {
+        "width": 310,
+        "height": 44,
+        "centre": [
+          195,
+          657
+        ],
+        "hitTag": "SUMMARY",
+        "hitIsSummaryItself": true,
+        "hitTestId": "",
+        "hitClass": "",
+        "text": "高级：结构化数据",
+        "insideSrOnly": false,
+        "display": "list-item",
+        "markerListStyle": "disclosure-closed",
+        "open": false,
+        "touchToken": "44px"
+      },
+      "after": {
+        "width": 310,
+        "height": 44,
+        "centre": [
+          195,
+          654
+        ],
+        "hitTag": "SUMMARY",
+        "hitIsSummaryItself": true,
+        "hitTestId": "",
+        "hitClass": "",
+        "text": "高级：结构化数据",
+        "insideSrOnly": false,
+        "display": "list-item",
+        "markerListStyle": "disclosure-open",
+        "open": true,
+        "touchToken": "44px"
+      }
+    }
+  ],
+  "publishedBy": "e345b9d6 for ORD-0247"
+}
