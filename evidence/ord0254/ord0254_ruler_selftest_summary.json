@@ -1,0 +1,15 @@
+{
+ "at": "2026-09-23T13:21:58+08:00",
+ "mode": "selftest",
+ "rc": 0,
+ "ruler_blob_before": "e3015cc065d1d4ebca2c0ba28fe3b95f85b64a73",
+ "ruler_blob_after": "e3015cc065d1d4ebca2c0ba28fe3b95f85b64a73",
+ "arms_total": 18,
+ "arms_matched": 18,
+ "overall": "GREEN",
+ "base_used": "http://127.0.0.1:4412",
+ "receipt_copy": "D:\\moodle\\_qoder_harness_ord0254\\ord0254_ruler_selftest_receipt.json",
+ "receipt_bytes": 7022,
+ "receipt_blob": "64e336c3941a10dbe2a3611e02a4a4d39da0da53",
+ "commander_own_16_16_reference": "evidence/gates/deploy_bundle_repeat_probe_selftest_0923.json blob 8e93adb4e01cd002 (measured against :4781 by the commander)"
+}
