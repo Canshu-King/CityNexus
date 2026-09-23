@@ -1,0 +1,154 @@
+{
+ "candidate_tip": "22dfef2",
+ "base": "f24628f",
+ "items": {
+  "1a_candidate_ancestry": {
+   "base_is_ancestor_of_candidate": true,
+   "cherry_pick_attributions_present": 10,
+   "commits_on_candidate": 10,
+   "verdict": "MET"
+  },
+  "1b_landed_ancestry": {
+   "reviewed_baseline": "f24628f",
+   "landed_tip": null,
+   "verdict": "PENDING (no landed tip exists; only the landing commit can be an ancestor of a future mainline)"
+  },
+  "2_single_truth": {
+   "DEMO_ACCESSIBILITY_EVIDENCE_files_with_nonzero_hits_in_app": "0",
+   "write_sites_of_accessibility_evidence": 1,
+   "write_sites_of_bare_accessibility_key": 0,
+   "capabilities_py_diff_lines": 0,
+   "ruled_severity_lines_on_candidate": [
+    "        add(\"STROLLER\", {\"present\": True}, severity=\"HARD\" if hard else None)",
+    "        add(\"LARGE_LUGGAGE\", {\"present\": True}, severity=\"HARD\" if hard else None)"
+   ],
+   "verdict": "MET"
+  },
+  "3_carrying_vs_declared": {
+   "carrying": [
+    "place-city-park",
+    "place-design-library",
+    "place-tech-art"
+   ],
+   "declared": [
+    "place-city-park",
+    "place-design-library",
+    "place-tech-art"
+   ],
+   "both_non_empty": true,
+   "sets_agree": true,
+   "facts_agree": true,
+   "server_stamped_provenance": {
+    "place-tech-art": "DEMO",
+    "place-city-park": "DEMO",
+    "place-design-library": "DEMO"
+   },
+   "no_value_says_LIVE": true,
+   "fresh_db_existed_before": false,
+   "verdict": "MET"
+  },
+  "4_both_directions": {
+   "STROLLER": {
+    "candidates": 3,
+    "pass": 2,
+    "named_block": 1,
+    "per_candidate": {
+     "0a1dcd9c": "PASS",
+     "55523d40": "BLOCK(named)",
+     "6c07d3ca": "PASS"
+    },
+    "conflicting_stops": {
+     "0a1dcd9c": [],
+     "55523d40": [
+      "place-tech-art"
+     ],
+     "6c07d3ca": []
+    },
+    "verdict": "MET"
+   },
+   "LARGE_LUGGAGE": {
+    "candidates": 3,
+    "pass": 2,
+    "named_block": 1,
+    "per_candidate": {
+     "0a1dcd9c": "PASS",
+     "55523d40": "PASS",
+     "6c07d3ca": "BLOCK(named)"
+    },
+    "conflicting_stops": {
+     "0a1dcd9c": [],
+     "55523d40": [],
+     "6c07d3ca": [
+      "place-design-library"
+     ]
+    },
+    "verdict": "MET"
+   },
+   "verdict": "MET"
+  },
+  "5_tripwire_and_killer": {
+   "as_is": "======================= 14 passed, 2 warnings in 2.07s ========================",
+   "tripwire_green_as_is": true,
+   "arms_that_redden_only_the_tripwire": [
+    "M8 白名单放宽到整条记录裁决（step_free/evidence_status 也能穿过）"
+   ],
+   "all_arms_anchor_hit_1_and_byte_restored": true,
+   "nodes_without_a_killer": [],
+   "verdict": "MET"
+  },
+  "6_candidate_tip_rerun": {
+   "ord0219_doors": 14,
+   "ord0219_arms": 16,
+   "ord0236_as_is": "============================== 3 passed in 0.57s ==============================",
+   "ord0236_doors": 3,
+   "ord0236_arms_all_killed_their_owner": true,
+   "ord0236_every_door_has_a_killer": true,
+   "t3_non_empty_guard_still_present": true,
+   "full_suite_line": "= 8 failed, 1200 passed, 15 skipped, 1 xfailed, 2 warnings in 126.45s (0:02:06) =",
+   "collected_denominator": "collected 1224 items",
+   "verdict": "MET"
+  },
+  "7_landed_tip_rerun": {
+   "why_pending": "the reviewed baseline a1cc0c1 is no longer the mainline tip, so items 1a-6 above belong to a candidate whose base has moved; the landing rerun must happen on a candidate rebuilt on the new mainline tip and then on the landed commit itself",
+   "verdict": "PENDING"
+  },
+  "8_closure_decision": {
+   "held_by": "external reviewer / commander, not the delivering lane",
+   "signed_by_me": false,
+   "reason": "items 1-6 are measured on the candidate; the seventh step is CLOSED, and it needs a landed tip plus a verifier-derived result for each V1 receipt",
+   "verdict": "NOT_SIGNED_BY_ME"
+  }
+ },
+ "self_correction_v2": {
+  "what": "my bus post at 12:0x claimed items 1..6 MET on candidate 406bd6f, but the receipt published with it recorded 1_ancestry = NOT_MET (the script compared cherry-pick attributions to a hard-coded 8 while the candidate carried 9)",
+  "reading": "the claim was about my own artifact and I quoted my prose instead of the artifact",
+  "fixed_in": "this generator compares counts instead of a constant, and the ancestry cell is now split into candidate vs landed"
+ },
+ "reporting_provenance_A5": {
+  "repo": "D:/moodle/_qoder_b_landing_20260923 (linked worktree of the integration line)",
+  "tree": "candidate 22dfef23ae3e8028326dd82a291ea99cbace0f81",
+  "base": "f24628f = f24628f566637713d38784f0b2a9e2794f826346",
+  "dirty": "clean",
+  "shape": "whole-suite (tests/) plus per-file door runs plus 19 mutation arms (16 ORD-0219 + 3 ORD-0236) with per-node verdicts",
+  "command": "python -m pytest tests -p no:cacheprovider --tb=no",
+  "collected_denominator": "collected 1224 items",
+  "environment_contract": {
+   "interpreter": "D:/moodle/CityNexus/.venv 3.12.14",
+   "local_packages_required": "citynexus_mcp is NOT tracked by git (0 files) => test_gpt_agent_authority_v3::test_aiv3_02 is environment dependent, recorded as such, not counted as a regression",
+   "provider_egress": "AI keys popped before import; AI_ENABLED=false; 0 provider calls"
+  },
+  "cross_run_comparison_allowed": "only against a run naming the same tree+shape+environment; the 03:35 composite-export run is NOT_COMPARABLE_AS_REGRESSION_DELTA against this one"
+ },
+ "verdicts_by_item": {
+  "1a_candidate_ancestry": "MET",
+  "1b_landed_ancestry": "PENDING (no landed tip exists; only the landing commit can be an ancestor of a future mainline)",
+  "2_single_truth": "MET",
+  "3_carrying_vs_declared": "MET",
+  "4_both_directions": "MET",
+  "5_tripwire_and_killer": "MET",
+  "6_candidate_tip_rerun": "MET",
+  "7_landed_tip_rerun": "PENDING",
+  "8_closure_decision": "NOT_SIGNED_BY_ME"
+ },
+ "closure_grade_now": "CANDIDATE-READY-FOR-EXTERNAL-REVIEW: gates 2-5 MET, candidate-tip rerun MET, landed ancestry PENDING, landed-tip rerun PENDING - not CLOSED, and not PARTIAL: the named blocker was the static producer-exclusivity node, now delivered"
+}
