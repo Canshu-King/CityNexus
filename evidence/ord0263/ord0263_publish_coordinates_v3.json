@@ -1,0 +1,134 @@
+{
+ "at": "2026-09-23T18:18:30+08:00",
+ "order": "ORD-0263 附录 / ORD-0254 第七枚尺收尾",
+ "lane": "HARNESS d291c9dc",
+ "ruler": {
+  "blob40": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+  "bytes": 106731,
+  "commit": "18959e4af448",
+  "where_found": "branch tip of commander/control (verified, not assumed)"
+ },
+ "selftest_on_my_face": {
+  "arms_total": 65,
+  "arms_matched": 65,
+  "overall": "GREEN",
+  "composition": "their 63 + my B2/B2-neg (CNX_DEPLOY_SELFTEST_OLD_REF exported)",
+  "declared_arms_counted_separately": [
+   "G-declared:handwritten_sw_without_precache_array",
+   "PAIR-killer:defaulted_base_over_a_foreign_root_is_not_a_pair"
+  ],
+  "sides_killers_under_my_pairing": "all three REFUSED as expected - they no longer turn red on a second lane",
+  "env_integrity": "GREEN; base_at_entry == final_base == http://127.0.0.1:4412"
+ },
+ "deploy_real_switch": {
+  "overall": "GREEN",
+  "rc": 0,
+  "crash": false,
+  "old_refs": [
+   "/assets/index-DJEINrOl.js",
+   "/assets/index-COUUKhbU.css"
+  ],
+  "new_refs": [
+   "/assets/index-C0qSwD3N.js",
+   "/assets/index-CBXSx-f9.css"
+  ],
+  "arms": "A/B/C/D/E + G[DECLARED,GREENx8] + I + J + F GREEN, temporal DISCHARGED",
+  "receipt_blob40": "4d401db03f26c2e43d902c37f14e5e94e47b94b7",
+  "receipt_bytes": 67169
+ },
+ "red_finding_1": "NOT_REPRODUCED_ON_149e9c6d (second consecutive object; the borrowed-env root cause is fixed and ENV-integrity now watches it)",
+ "witnesses_read_back": {
+  "cmdr_face": "8becfad825cc184cbf8bb7383549f4d54b28b8df",
+  "second_face": "dc2f1e540d55bc91347e20fb19a968db9f641d78",
+  "pre_fix_counterproof": "4d4df8e087dc9a0d40ba42daaab19345f8e3cf31 (60/63, the three SIDES arms)"
+ },
+ "files": 9,
+ "proven_by_40char_readback": 8,
+ "not_proven": [
+  "ord0263_v7_selftest_summary.json"
+ ],
+ "rows": [
+  {
+   "file": "ORD_0263_VERIFIER_AND_SCOPE.md",
+   "repo_path": "evidence/ord0263/ORD_0263_VERIFIER_AND_SCOPE.md",
+   "bytes": 8354,
+   "blob40": "933a76059e32308a164f8ae57467b1e167064b3d",
+   "readback_status": "200",
+   "readback_bytes": 8354,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "ord0263_v7_deploy_gauge_receipt.json",
+   "repo_path": "evidence/ord0263/ord0263_v7_deploy_gauge_receipt.json",
+   "bytes": 67169,
+   "blob40": "4d401db03f26c2e43d902c37f14e5e94e47b94b7",
+   "readback_status": "200",
+   "readback_bytes": 67169,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "ord0263_v7_deploy_summary.json",
+   "repo_path": "evidence/ord0263/ord0263_v7_deploy_summary.json",
+   "bytes": 1963,
+   "blob40": "2dd2ba5709d3d4caff80dcff830fdfaf63684f6a",
+   "readback_status": "200",
+   "readback_bytes": 1963,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "ord0263_v7_selftest_gauge_receipt.json",
+   "repo_path": "evidence/ord0263/ord0263_v7_selftest_gauge_receipt.json",
+   "bytes": 27061,
+   "blob40": "a405c20edba15ab05d9f7697ea756b30c8fc8634",
+   "readback_status": "200",
+   "readback_bytes": 27061,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "ord0263_v7_selftest_summary.json",
+   "repo_path": "evidence/ord0263/ord0263_v7_selftest_summary.json",
+   "bytes": 26132,
+   "blob40": "c00ee63645d8c064b8b6c1bd61d2943ba0472a50",
+   "readback_status": "URLError",
+   "readback_bytes": 0,
+   "verdict": "NOT_PROVEN"
+  },
+  {
+   "file": "ord0263_witness_cmdr_face_witness.json",
+   "repo_path": "evidence/ord0263/ord0263_witness_cmdr_face_witness.json",
+   "bytes": 26322,
+   "blob40": "8becfad825cc184cbf8bb7383549f4d54b28b8df",
+   "readback_status": "200",
+   "readback_bytes": 26322,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "ord0263_witness_second_face_witness.json",
+   "repo_path": "evidence/ord0263/ord0263_witness_second_face_witness.json",
+   "bytes": 26449,
+   "blob40": "dc2f1e540d55bc91347e20fb19a968db9f641d78",
+   "readback_status": "200",
+   "readback_bytes": 26449,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "ord0263_witness_pre_fix_counterproof.json",
+   "repo_path": "evidence/ord0263/ord0263_witness_pre_fix_counterproof.json",
+   "bytes": 25876,
+   "blob40": "4d4df8e087dc9a0d40ba42daaab19345f8e3cf31",
+   "readback_status": "200",
+   "readback_bytes": 25876,
+   "verdict": "PROVEN"
+  },
+  {
+   "file": "ord0263_v7_cleanup_receipt.json",
+   "repo_path": "evidence/ord0263/ord0263_v7_cleanup_receipt.json",
+   "bytes": 3164,
+   "blob40": "b9cede215f55eba1432a7768cc343ed7ef139175",
+   "readback_status": "200",
+   "readback_bytes": 3164,
+   "verdict": "PROVEN"
+  }
+ ],
+ "cleanup_bytes_freed": 16381732
+}
