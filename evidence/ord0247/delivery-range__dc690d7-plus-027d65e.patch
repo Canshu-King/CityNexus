@@ -1,0 +1,448 @@
+diff --git a/frontend/e2e/qoder-advanced-summary-is-tappable.spec.ts b/frontend/e2e/qoder-advanced-summary-is-tappable.spec.ts
+new file mode 100644
+index 0000000..ac8abc2
+--- /dev/null
++++ b/frontend/e2e/qoder-advanced-summary-is-tappable.spec.ts
+@@ -0,0 +1,176 @@
++/**
++ * ORD-0247 -- `HUMAN_ACCESSIBILITY`: the "高级：结构化数据" disclosure on the bookings screen is the only
++ * entry point to structured import, and it measured 311x14 px while every control beside it takes the
++ * >=44px mobile floor.  The floor enumerated controls and never covered `<summary>`.
++ *
++ * Three claims, each with its own killer (see review/ord0247_kill_arms.py):
++ *   1. the box is at least as tall as the product's own touch token          -- rule deleted
++ *   2. a tap at the box centre hits THAT element and opens it                -- pointer-events taken away
++ *   3. the 44px floor stays mobile-only; desktop keeps compact density       -- rule moved out of the media query
++ *
++ * Claim 2 is the one the order actually names ("elementFromPoint 命中的就是该控件本身，不是它的父容器"):
++ * a tall parent would satisfy a naive geometry check while the finger still lands on the wrong node.
++ */
++import { expect, test, type Locator, type Page } from "@playwright/test";
++import { writeFileSync } from "node:fs";
++import { evidencePath } from "./_qoderEvidence";
++
++const FILE = "e2e/qoder-advanced-summary-is-tappable.spec.ts";
++const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
++const MOBILE = { width: 390, height: 844 };
++const DESKTOP = { width: 1280, height: 900 };
++/** Amendment F-2: the 44px floor is a touch rule; desktop keeps the compact density. */
++const DESKTOP_MAX_HEIGHT = 30;
++const ADVANCED = '[data-testid="bookings-advanced"]';
++type Reading = Record<string, unknown>;
++const readings: Reading[] = [];
++
++test.use({ viewport: MOBILE, hasTouch: true });
++
++async function openBookings(page: Page): Promise<Locator> {
++  const seeded = (await (await page.request.get("/api/v1/demo/scene")).json()) as {
++    journey_id?: string;
++  };
++  const journeyId = String(seeded.journey_id ?? "");
++  expect(journeyId.length, node("seed", "/api/v1/demo/scene returned no journey_id")).toBeGreaterThan(8);
++  await page.addInitScript((id) => {
++    localStorage.clear();
++    localStorage.setItem("citynexus.v8.journey_id", id as string);
++    localStorage.setItem("citynexus.locale", "zh-CN");
++  }, journeyId);
++  await page.goto("/v8/bookings", { waitUntil: "load" });
++  await expect(page.getByTestId("v8-bookings")).toBeVisible({ timeout: 30_000 });
++  const summary = page.locator(`${ADVANCED} > summary`);
++  await expect(summary, node("seed", "the 高级：结构化数据 disclosure never rendered")).toBeVisible({
++    timeout: 15_000,
++  });
++  return summary;
++}
++
++/** Box, the element the browser itself says is at the centre, and the rendered words. */
++async function probe(page: Page, summary: Locator) {
++  return await summary.evaluate((el) => {
++    const box = el.getBoundingClientRect();
++    const cx = box.left + box.width / 2;
++    const cy = box.top + box.height / 2;
++    const hit = document.elementFromPoint(cx, cy);
++    const details = el.closest("details");
++    return {
++      width: Math.round(box.width),
++      height: Math.round(box.height),
++      centre: [Math.round(cx), Math.round(cy)],
++      hitTag: hit ? hit.tagName : "",
++      hitIsSummaryItself: hit === el,
++      hitTestId: hit ? hit.getAttribute("data-testid") ?? "" : "",
++      hitClass: hit ? String(hit.className) : "",
++      text: (el.textContent ?? "").trim(),
++      insideSrOnly: Boolean(el.closest(".v8-sr-only")),
++      display: getComputedStyle(el).display,
++      markerListStyle: getComputedStyle(el).listStyleType,
++      open: details ? details.hasAttribute("open") : null,
++      touchFloor: getComputedStyle(document.documentElement).getPropertyValue("--cn-touch-min").trim(),
++    };
++  });
++}
++
++test("ord0247-1-the-disclosure-box-is-at-least-the-products-touch-floor — 命中框够 44px", async ({
++  page,
++}) => {
++  test.setTimeout(180_000);
++  const summary = await openBookings(page);
++  const measured = await probe(page, summary);
++
++  // The number comes from the product's own token, so the gate cannot drift from the design system.
++  expect(measured.touchFloor, node("ord0247-1", "--cn-touch-min is not the frozen 44px")).toBe("44px");
++  expect(
++    measured.height,
++    node(
++      "ord0247-1",
++      `"${measured.text}" measures ${measured.width}x${measured.height} at ${MOBILE.width}x${MOBILE.height}; the mobile floor is ${measured.touchFloor}`,
++    ),
++  ).toBeGreaterThanOrEqual(44);
++
++  readings.push({ node: "ord0247-1", viewport: MOBILE, ...measured });
++});
++
++test("ord0247-2-a-tap-at-the-centre-belongs-to-that-summary-and-opens-it — 命中的就是它自己", async ({
++  page,
++}) => {
++  test.setTimeout(180_000);
++  const summary = await openBookings(page);
++  const before = await probe(page, summary);
++
++  expect(
++    before.hitIsSummaryItself,
++    node(
++      "ord0247-2",
++      `elementFromPoint(${before.centre.join(",")}) returned <${before.hitTag}> class="${before.hitClass}" testid="${before.hitTestId}", not the summary itself — a tall ancestor would pass geometry while the finger lands elsewhere`,
++    ),
++  ).toBe(true);
++  expect(before.open, node("ord0247-2", "the disclosure started open, so the tap proves nothing")).toBe(
++    false,
++  );
++
++  // A real touch event at the measured centre, not a click() on the locator.
++  await page.touchscreen.tap(before.centre[0], before.centre[1]);
++  const after = await probe(page, summary);
++  expect(
++    after.open,
++    node(
++      "ord0247-2",
++      `tapping the centre left it closed; the hit test answered <${after.hitTag}> class="${after.hitClass}"`,
++    ),
++  ).toBe(true);
++
++  readings.push({ node: "ord0247-2", viewport: MOBILE, before, after });
++});
++
++test("ord0247-3-the-44px-floor-is-mobile-only-desktop-stays-compact — 桌面仍按紧凑密度", async ({
++  page,
++}) => {
++  test.setTimeout(180_000);
++  await page.setViewportSize(DESKTOP);
++  const summary = await openBookings(page);
++  const measured = await probe(page, summary);
++
++  expect(
++    measured.height,
++    node(
++      "ord0247-3",
++      `the disclosure measures ${measured.width}x${measured.height} at ${DESKTOP.width}x${DESKTOP.height} — the touch floor leaked onto the pointer layout (Amendment F-2 keeps desktop at <=${DESKTOP_MAX_HEIGHT}px)`,
++    ),
++  ).toBeLessThanOrEqual(DESKTOP_MAX_HEIGHT);
++  expect(
++    measured.hitIsSummaryItself,
++    node("ord0247-3", `desktop centre hit returned <${measured.hitTag}> instead of the summary`),
++  ).toBe(true);
++  // The native marker is still there: growing the box with line-height must not have traded the
++  // affordance for the hit target.
++  expect(
++    measured.display,
++    node("ord0247-3", `display became "${measured.display}", which drops the disclosure marker`),
++  ).toBe("list-item");
++
++  readings.push({ node: "ord0247-3", viewport: DESKTOP, ...measured });
++});
++
++test.afterAll(async () => {
++  writeFileSync(
++    evidencePath("ord0247-advanced-summary-tap-target.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        order: "ORD-0247",
++        at: new Date().toISOString(),
++        target: "details.v8-advanced > summary (「高级：结构化数据」, bookings screen)",
++        judgedBy:
++          "elementFromPoint(盒中心) === 该 summary 本身 ＋ 真触摸屏点把它打开；桌面另一格守住 44px 只在移动层",
++        mobileTouchFloor: "--cn-touch-min = 44px",
++        desktopMaxHeight: DESKTOP_MAX_HEIGHT,
++        readings,
++      },
++      null,
++      1,
++    ),
++  );
++});
+diff --git a/frontend/src/styles.css b/frontend/src/styles.css
+index e45adba..fc21a1c 100644
+--- a/frontend/src/styles.css
++++ b/frontend/src/styles.css
+@@ -273,6 +273,11 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
+ @media (max-width: 680px) { .v12-offline-now-next { grid-template-columns: 1fr; } }
+ @media (max-width: 680px) { .v9-live-actions { align-items: stretch; flex-direction: column; }.v9-live-actions button { margin-top: 8px !important; }.v9-wallet-layout { grid-template-columns: 1fr; }.v9-offline { margin-top: 20px; padding: 22px; } }
+ @media (max-width: 680px) { .v8-mobile-nav button { min-height: var(--cn-nav-item-h); }.v8-mobile-nav button span { font-size: var(--cn-fs-caption); }.v8-mode-chips button, .v8-compare-button { min-height: var(--cn-touch-min); }/* The 44px floor had holes: every one of these is a deliberate tap, and .v8-quiet-button carried no min-height at all, so Today's three secondary actions measured 30px. */.v8-quiet-button, .v8-primary, .v8-outline-button, .v8-rain-button, .v8-page-intro button, .trial-chips button, .trial-sticky-cta button { min-height: var(--cn-touch-min); } }
++/* ORD-0247: the >=44px floor above enumerates controls and never covered <summary>, so the
++   "高级：结构化数据" disclosure measured 311x14 next to 44px buttons.  line-height grows the box instead of
++   switching to flex, which would drop the native disclosure marker; it stays inside the media query so
++   the desktop compact density (Amendment F-2) is untouched. */
++@media (max-width: 680px) { .v8-advanced > summary { min-height: var(--cn-touch-min); line-height: var(--cn-touch-min); } }
+ 
+ /* Progressive disclosure, mobile comparison, and accessible focus states. */
+ .v8-product-shell button:focus-visible, .v8-product-shell [role="button"]:focus-visible, .v8-product-shell textarea:focus-visible { outline: 3px solid #9aa8ff; outline-offset: 3px; }
+diff --git a/review/ord0247_kill_arms.py b/review/ord0247_kill_arms.py
+new file mode 100644
+index 0000000..a50895a
+--- /dev/null
++++ b/review/ord0247_kill_arms.py
+@@ -0,0 +1,244 @@
++"""ORD-0247 acceptance: three sabotage shapes on the touch-target rule, each owning one node.
++
++Same rules as the ORD-0246 run: green baseline of the owner file before every arm, mutations through
++`live_checks/mutation_anchor_guard.py` (sha-verified restore), a run with no per-test summary is
++`INVALID_STACK`, ports pre-flighted, and the tree must come back byte-identical.  Each arm is also
++played against the sibling ORD-0246 spec so a CSS change cannot claim independence it has not shown.
++
++H1 doubles as the before-state measurement: with the rule deleted, the failure message carries the
++height the order reported (311x14), so the defect is re-confirmed by this instrument and not quoted.
++"""
++
++from __future__ import annotations
++
++import json
++import re
++import subprocess
++import sys
++import time
++from hashlib import sha256
++from pathlib import Path
++
++ROOT = Path("D:/moodle/_qoder_integration_20260919")
++sys.path.insert(0, str(ROOT / "live_checks"))
++from mutation_anchor_guard import temporary_guarded_replace  # noqa: E402
++
++for _stream in (sys.stdout, sys.stderr):
++    if hasattr(_stream, "reconfigure"):
++        _stream.reconfigure(encoding="utf-8", errors="replace")
++
++OWNER_SPEC = "e2e/qoder-advanced-summary-is-tappable.spec.ts"
++MIRROR_SPEC = "e2e/qoder-same-tick-double-tap-plans-once.spec.ts"
++CSS = ROOT / "frontend/src/styles.css"
++PYTHON = "D:/moodle/CityNexus/.venv/Scripts/python.exe"
++RECEIPT = ROOT / "review/evidence/ui-overnight/ord0247-arms.json"
++
++FILES = [CSS]
++
++RULE = (
++    "@media (max-width: 680px) { .v8-advanced > summary "
++    "{ min-height: var(--cn-touch-min); line-height: var(--cn-touch-min); } }"
++)
++
++# name, file, anchor, mutant, why, owner node
++ARMS = [
++    (
++        "killH1-touch-floor-deleted",
++        CSS,
++        RULE,
++        "",
++        "the named defect returns: the disclosure is a 14px-tall strip again, and this arm also "
++        "re-measures the before-state height",
++        "ord0247-1",
++    ),
++    (
++        "killH2-target-grown-but-not-tappable",
++        CSS,
++        RULE,
++        RULE.replace("line-height: var(--cn-touch-min); }",
++                    "line-height: var(--cn-touch-min); pointer-events: none; }"),
++        "geometry passes while the finger lands on an ancestor -- exactly the false pass the order "
++        "names ('命中的就是该控件本身，不是它的父容器')",
++        "ord0247-2",
++    ),
++    (
++        "killH3-floor-moved-out-of-the-mobile-layer",
++        CSS,
++        RULE,
++        RULE.replace("@media (max-width: 680px)", "@media (min-width: 0px)"),
++        "the touch floor leaks onto the pointer layout, breaking Amendment F-2's compact desktop "
++        "density that this file's third node owns",
++        "ord0247-3",
++    ),
++]
++
++
++def digests() -> dict[str, str]:
++    return {path.name: sha256(path.read_bytes()).hexdigest() for path in FILES}
++
++
++def port_busy(port: int) -> bool:
++    out = subprocess.run(
++        "netstat -ano -p tcp",
++        capture_output=True,
++        text=True,
++        encoding="utf-8",
++        errors="replace",
++        shell=True,
++    ).stdout
++    return any(f":{port} " in line and "LISTENING" in line for line in out.splitlines())
++
++
++def run(label: str, port: int, spec: str) -> dict:
++    cmd = [PYTHON, str(ROOT / "review/run_spec.py"), spec, str(port)]
++    started = time.time()
++    proc = subprocess.run(
++        cmd, cwd=str(ROOT), capture_output=True, text=True, encoding="utf-8", errors="replace"
++    )
++    out = proc.stdout + proc.stderr
++    log = next((line.split("log=", 1)[1].strip() for line in out.splitlines() if line.startswith("exit=")), "")
++    run_id = next(
++        (line.split("run_id=", 1)[1].split()[0] for line in out.splitlines() if line.startswith("run_id=")), ""
++    )
++    summary = next(
++        (line.strip() for line in reversed(out.splitlines()) if " passed" in line or " failed" in line), ""
++    )
++    nodes: dict[str, str] = {}
++    for line in out.splitlines():
++        match = re.match(r"^\s*(ok|x|✘)\s+\d+\s+\[[a-z-]+\].*›\s*([a-z0-9]+-[a-z0-9]+)", line)
++        if match:
++            nodes[match.group(2)] = "GREEN" if match.group(1) == "ok" else "RED"
++    geometry = re.findall(r"measures (\d+)x(\d+)", out)
++    print(
++        f"[{label}] exit={proc.returncode} run_id={run_id} {round(time.time() - started)}s {summary!r} "
++        + " ".join(f"{k}:{v}" for k, v in sorted(nodes.items()))
++        + (f" measured={geometry}" if geometry else ""),
++        flush=True,
++    )
++    return {
++        "label": label,
++        "spec": spec,
++        "exitCode": proc.returncode,
++        "runId": run_id,
++        "log": log,
++        "summary": summary,
++        "stackStarted": bool(summary),
++        "nodes": nodes,
++        "geometryInFailureMessage": [f"{w}x{h}" for w, h in geometry],
++    }
++
++
++def main() -> int:
++    tag = sys.argv[1] if len(sys.argv) > 1 else ""
++    port = int(sys.argv[2]) if len(sys.argv) > 2 else 5200
++    span = list(range(port, port + 3 * len(ARMS)))
++    busy = sorted({p for p in span + [p + 4000 for p in span] if port_busy(p)})
++    if busy:
++        print(f"ABORT: these ports are already listening: {busy} -- another chain owns them")
++        return 6
++    originals = digests()
++    for name, path, anchor, _mutant, _why, _owner in ARMS:
++        hits = open(path, encoding="utf-8", newline="").read().count(anchor)
++        if hits != 1:
++            print(f"ABORT: {name} anchor hits={hits} in {path.name}, expected exactly 1")
++            return 2
++
++    record = {
++        "generatedBy": "e345b9d6",
++        "order": "ORD-0247",
++        "runTag": tag or "first",
++        "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
++        "guard": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace",
++        "ownerSpec": OWNER_SPEC,
++        "mirrorSpec": MIRROR_SPEC,
++        "runShape": (
++            "whole owner spec file per arm (3 nodes + the real-seed setup project = 4 passes when green); "
++            "the same mutant is then run against the ORD-0246 spec as the independence mirror"
++        ),
++        "judgingCriterion": "elementFromPoint(盒中心) === 该 <summary> 本身，且真触摸屏点把它打开；桌面那格守住 <=30px",
++        "filesBefore": originals,
++        "arms": [],
++    }
++    for name, path, anchor, mutant, why, owner in ARMS:
++        print(f"\n=== {name} (owner {owner}) ===", flush=True)
++        baseline = run("baseline-owner-spec", port, OWNER_SPEC)
++        port += 1
++        before = digests()[path.name]
++        with temporary_guarded_replace(path, anchor.encode(), mutant.encode(), expected_hits=1) as guard:
++            attempt = run("mutated-owner-spec", port, OWNER_SPEC)
++            port += 1
++            mirror = run("same-mutant-mirror-spec", port, MIRROR_SPEC)
++            port += 1
++        after = digests()[path.name]
++        red = sorted(k for k, v in attempt["nodes"].items() if v == "RED")
++        green = sorted(k for k, v in attempt["nodes"].items() if v == "GREEN")
++        record["arms"].append(
++            {
++                "name": name,
++                "why": why,
++                "file": str(path),
++                "ownerNode": owner,
++                "anchor_hits": guard.anchor_hits,
++                "bytes_changed": guard.bytes_changed,
++                "mutated_sha256": guard.mutated_sha256,
++                "restored_sha256": after,
++                "restored_exact": after == before == originals[path.name],
++                "baseline": baseline,
++                "attempt": attempt,
++                "mirror": mirror,
++                "redSet": red,
++                "survivingNodes": green,
++                "exclusiveToOwner": red == [owner],
++                "verdict": (
++                    "INVALID_STACK"
++                    if not (baseline["stackStarted"] and attempt["stackStarted"])
++                    else "KILLED"
++                    if attempt["nodes"].get(owner) == "RED" and baseline["nodes"].get(owner) == "GREEN"
++                    else "SURVIVED"
++                    if attempt["nodes"].get(owner) == "GREEN"
++                    else "BASELINE_RED -- arm not measured"
++                ),
++            }
++        )
++
++    record["filesAfter"] = digests()
++    record["treeUnchangedByThisRun"] = record["filesAfter"] == originals
++    record["allArmsKilled"] = all(a["verdict"] == "KILLED" for a in record["arms"])
++    record["exclusiveKiller"] = {
++        owner: [a["name"] for a in record["arms"] if a["exclusiveToOwner"] and a["ownerNode"] == owner]
++        for owner in (a["ownerNode"] for a in record["arms"])
++    }
++    record["nodesWithoutAKillingArm"] = [
++        owner
++        for owner in (a["ownerNode"] for a in record["arms"])
++        if not record["exclusiveKiller"].get(owner)
++    ]
++    record["mirrorCollateral"] = [
++        {
++            "arm": a["name"],
++            "mirrorRed": sorted(k for k, v in a["mirror"]["nodes"].items() if v == "RED"),
++        }
++        for a in record["arms"]
++    ]
++    record["invalidStackArms"] = [a["name"] for a in record["arms"] if a["verdict"] == "INVALID_STACK"]
++    out_path = RECEIPT.with_name(f"ord0247-arms{'-' + tag if tag else ''}.json")
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
++    for arm in record["arms"]:
++        print(
++            f"{arm['verdict']:16s} exclusive={str(arm['exclusiveToOwner']):5s} owner={arm['ownerNode']} "
++            f"red={','.join(arm['redSet']) or '-'} survivors={','.join(arm['survivingNodes']) or '-'} "
++            f"measured={arm['attempt']['geometryInFailureMessage'] or '-'} "
++            f"anchor_hits={arm['anchor_hits']} bytes_changed={arm['bytes_changed']} "
++            f"restored_exact={arm['restored_exact']}  {arm['name']}"
++        )
++    print(f"exclusive killers: {json.dumps(record['exclusiveKiller'], ensure_ascii=False)}")
++    print(f"nodes without a killing arm: {record['nodesWithoutAKillingArm']}")
++    print(f"mirror collateral: {json.dumps(record['mirrorCollateral'], ensure_ascii=False)}")
++    print(f"allArmsKilled={record['allArmsKilled']} treeUnchanged={record['treeUnchangedByThisRun']}")
++    print(f"receipt={out_path}")
++    return 0 if record["treeUnchangedByThisRun"] and record["allArmsKilled"] else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
