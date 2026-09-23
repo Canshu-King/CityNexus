@@ -1,0 +1,12 @@
+commit b4ee4f85a5c598c8690588c0ea396e9a6598c720
+parent 2ab69f20adf783a6f29133f577877a88580129e3
+
+
+M	frontend/e2e/_qoderTextScan.ts
+A	frontend/e2e/qoder-model-words-are-labelled.spec.ts
+A	frontend/e2e/qoder-stated-versus-stored-versus-planned.spec.ts
+A	frontend/src/api/travelerPreferences.ts
+M	frontend/src/app/V8Experience.tsx
+M	frontend/src/features/planning/PlanComparison.tsx
+M	frontend/src/features/planning/PlanWithAiSheet.tsx
+A	review/ord0238_0240_kill_arms.py
