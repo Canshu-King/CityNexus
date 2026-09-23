@@ -1,0 +1,183 @@
+{
+ "schema": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+ "order": "ORD-0263",
+ "lane": "B c01d72a3",
+ "at": "2026-09-23T19:27:43+08:00",
+ "scope": {
+  "tree": "D:\\moodle\\_qoder_b_lane_20260923",
+  "branch": "agent/b-c01d72a3-ord0263",
+  "base_tip": "dea8410be809ebf6c5046581873584e9dbf32b64",
+  "changed_files_under_test": [
+   "lib/readDeadline.ts",
+   "lib/failureAttribution.ts",
+   "app/V8Experience.tsx",
+   "app/V8Experience.tsx"
+  ]
+ },
+ "environment": {
+  "surface": "my own canary: vite preview :4431 -> origin :8431, own db file, no browser mocks, zero provider egress (AI off, resolver off, Photon to 127.0.0.1:9 as a tripwire), no demo/reset, forbidden ports 0 requests",
+  "interpreter_for_the_judge": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe"
+ },
+ "ruler": {
+  "path": "D:\\moodle\\_qoder_harness_ord0254\\tools\\ord0263_verifier.py",
+  "blob40": "ed8a61dc79d87cc2acf18ef93ecca7caf89b4b83",
+  "bytes": 12642,
+  "published_blob40_expected": "ed8a61dc79d87cc2acf18ef93ecca7caf89b4b83",
+  "ruler_unchanged_after": true,
+  "retargeted_in_my_process_only": "mod.BASE -> my order dir"
+ },
+ "baseline": {
+  "unmutated_capture": "capture_post.json",
+  "cells_green": "4/4 (see verdict_post.json)",
+  "pre_fix_capture": "capture_pre.json",
+  "pre_fix_cells_green": "1/4 (see verdict_pre.json)"
+ },
+ "arms": [
+  {
+   "arm": "M1_remove_the_per_read_deadline",
+   "file": "lib/readDeadline.ts",
+   "anchor_hits_before": 1,
+   "before_sha256": "684b6a4454c0caf8934e6d3306fdc1de6398695a9b38a5345562e9b7fc38d210",
+   "claims": "without a deadline a silent origin never becomes an event: the read does not settle, so nothing classifies and the traveller stays on the skeleton",
+   "killed_cell_expected_red": "V2_no_answer",
+   "cells_expected_green": [
+    "V1_origin_error_5xx",
+    "V3_distinctness",
+    "S1_live"
+   ],
+   "mutated_sha256": "d4355758159f5a11552cbc0f0f177a083776752684b82521beb2e9a97eb52f15",
+   "build_rc": 0,
+   "capture_rc": 0,
+   "measured_verdicts": {
+    "V2_no_answer": "RED",
+    "V1_origin_error_5xx": "GREEN",
+    "V3_distinctness": "RED",
+    "S1_live": "GREEN"
+   },
+   "measured_labels": {
+    "S1_live": "LIVE",
+    "S2_origin_error": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "S3_no_answer": null
+   },
+   "s4_label": null,
+   "s4_seconds_to_settle": null,
+   "status": "MEASURED",
+   "restored_byte_exact": true,
+   "after_restore_sha256": "684b6a4454c0caf8934e6d3306fdc1de6398695a9b38a5345562e9b7fc38d210"
+  },
+  {
+   "arm": "M2_force_the_cached_copy_fact_false",
+   "file": "lib/failureAttribution.ts",
+   "anchor_hits_before": 1,
+   "before_sha256": "9c76d8242eb9c231398c54162688e8466419cacc00835620d28115fe400c710d",
+   "claims": "the sentence that names the local snapshot is carried by the measured copy fact, not by the wording: remove the measurement and V1 goes red while V2/V3 stay green",
+   "killed_cell_expected_red": "V1_origin_error_5xx",
+   "cells_expected_green": [
+    "V2_no_answer",
+    "V3_distinctness",
+    "S1_live"
+   ],
+   "mutated_sha256": "b181d8d1df1ec633b9132f8b1d0bb8611fd5a4fd4b39588aeeeade82074a420b",
+   "build_rc": 0,
+   "capture_rc": 0,
+   "measured_verdicts": {
+    "V1_origin_error_5xx": "GREEN",
+    "V2_no_answer": "GREEN",
+    "V3_distinctness": "GREEN",
+    "S1_live": "GREEN"
+   },
+   "measured_labels": {
+    "S1_live": "LIVE",
+    "S2_origin_error": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "S3_no_answer": "NETWORK_UNREACHABLE_WITH_SNAPSHOT"
+   },
+   "s4_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "s4_seconds_to_settle": 12.24,
+   "status": "MEASURED",
+   "restored_byte_exact": true,
+   "after_restore_sha256": "9c76d8242eb9c231398c54162688e8466419cacc00835620d28115fe400c710d"
+  },
+  {
+   "arm": "M2b_discard_the_copy_read_back",
+   "file": "app/V8Experience.tsx",
+   "anchor_hits_before": 1,
+   "before_sha256": "0ead93d4218b88b9233282581a11928b98de3e5e44ceeb2152a819eb242e48fb",
+   "claims": "M2 (mayOffer=false) survived, which located the real carrier: the snapshot sentence is held by the boot read-back that sets cachedCopySaved. Discarding that measurement, not the offer flag, is what must take V1 red",
+   "killed_cell_expected_red": "V1_origin_error_5xx",
+   "cells_expected_green": [
+    "V2_no_answer",
+    "S1_live"
+   ],
+   "mutated_sha256": "7500fc4362e54c11c30f876acad7bf1b31686611b842afb7329f3b434a3ded3f",
+   "build_rc": 0,
+   "capture_rc": 0,
+   "measured_verdicts": {
+    "V1_origin_error_5xx": "RED",
+    "V2_no_answer": "GREEN",
+    "S1_live": "GREEN"
+   },
+   "measured_labels": {
+    "S1_live": "LIVE",
+    "S2_origin_error": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "S3_no_answer": "NETWORK_UNREACHABLE_WITH_SNAPSHOT"
+   },
+   "s4_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "s4_seconds_to_settle": 12.41,
+   "status": "MEASURED",
+   "restored_byte_exact": true,
+   "after_restore_sha256": "0ead93d4218b88b9233282581a11928b98de3e5e44ceeb2152a819eb242e48fb"
+  },
+  {
+   "arm": "M3_collapse_the_probe_back_to_silence",
+   "file": "app/V8Experience.tsx",
+   "anchor_hits_before": 1,
+   "before_sha256": "0ead93d4218b88b9233282581a11928b98de3e5e44ceeb2152a819eb242e48fb",
+   "claims": "an origin that answered must not be reported as one that never answered; this is the merged `response.ok` the order names as cause 1, read where it still has a decision",
+   "killed_cell_expected_red": "S4_probe_speaks",
+   "cells_expected_green": [
+    "V1_origin_error_5xx",
+    "V2_no_answer",
+    "V3_distinctness",
+    "S1_live"
+   ],
+   "mutated_sha256": "d8f3600eb4d2c60543683293e6252f8bc58a79d9b5a16e01a467e4c24588840c",
+   "build_rc": 0,
+   "capture_rc": 0,
+   "measured_verdicts": {
+    "S4_probe_speaks": "RED",
+    "V1_origin_error_5xx": "GREEN",
+    "V2_no_answer": "GREEN",
+    "V3_distinctness": "GREEN",
+    "S1_live": "GREEN"
+   },
+   "measured_labels": {
+    "S1_live": "LIVE",
+    "S2_origin_error": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "S3_no_answer": "NETWORK_UNREACHABLE_WITH_SNAPSHOT"
+   },
+   "s4_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+   "s4_seconds_to_settle": 12.36,
+   "status": "MEASURED",
+   "restored_byte_exact": true,
+   "after_restore_sha256": "0ead93d4218b88b9233282581a11928b98de3e5e44ceeb2152a819eb242e48fb"
+  }
+ ],
+ "restore": {
+  "arms_total": 4,
+  "arms_with_restore_proven": 4,
+  "arms_missing_restore_proof": [],
+  "all_byte_exact": true,
+  "before_equals_after_per_arm": {
+   "M1_remove_the_per_read_deadline": true,
+   "M2_force_the_cached_copy_fact_false": true,
+   "M2b_discard_the_copy_read_back": true,
+   "M3_collapse_the_probe_back_to_silence": true
+  },
+  "tree_after": " M frontend/src/api/citynexus.ts\n M frontend/src/app/V8Experience.tsx\n M frontend/src/i18n/LocaleContext.tsx\n M frontend/src/lib/failureAttribution.ts\n?? frontend/dist_mut_M1_deadline/\n?? frontend/dist_mut_M2_copyfact/\n?? frontend/dist_mut_M2b_copyreadback/\n?? frontend/dist_mut_M3_probe/\n?? frontend/dist_ord0263_post/\n?? frontend/dist_ord0263_pre/\n?? frontend/src/lib/readDeadline.ts\n"
+ },
+ "derivation": {
+  "claimed_result": "each arm claims the cell named in killed_cell_expected_red",
+  "derived_result": "WRITTEN_BY_VERIFIER",
+  "meaning": "collateral greens are as load-bearing as the red: an arm that redden everything would not show the mechanism is separately carried"
+ }
+}
