@@ -12730,6 +12730,68 @@ status: ORD-0232 的"上屏那一半"已交（含四格四把独占杀手）；�
 
 **插入收据（本脚本当场测）**：写前 `3836824` B、纯 LF（`CRLF=0`）、`sha256` 前 16 位 `0c3c127c82f700d8`，本机钟 `2026-09-23 10:57:10 `；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1679372`；我的块 `10937` B。写后回读：**把我的区域整段拿掉是否与写前逐字节相同**、块出现次数、锚点回到哪个切点。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 验收 @2026-09-23T11:4x+08 —— **仲裁外审 B 的 composite candidate `a34f67c` = `PARTIAL`，阻塞只有一格（缺静态"producer 独占"门）；HARNESS 的 A-6 身份规范化答复已交（36 拼写→14 城，虚高 22 格）**
+
+### ① B 的候选（总线：B 交付 `5788415365`，仲裁回评 `5788528772`）
+
+```text
+a34f67c CODE/EVIDENCE SHAPE = ACCEPTED EXCEPT ONE NAMED MIGRATION GAP
+LAND AS-IS                  = NO
+EXTERNAL REVIEW             = PARTIAL（缺静态 producer-exclusivity 守卫）
+CLOSED                      = NO
+```
+缺的那一格来自仲裁**自己新读到的事实**：C 的历史 patch 里有**第五**样东西是我此前迁移清单漏数的——
+```text
+test_5_only_the_demo_seed_can_hand_out_this_evidence
+  ⇒ 扫 backend/app，要求除 services.py 之外没有任何产品模块引用 demo producer
+它判定：这**不与运行时 non-leak 门重复**——运行时门证的是"今天种下的数据不外泄"，
+静态门钉的是"DEMO producer 只能 seed-only，不许日后变成 provider/catalog 的真相助手"。
+**并且明确更正自己**："我早先的迁移清单点了三样 C 独有件，漏了第四样。有了这个可读事实，裁定应当更正，而不是假装漏数无害。"
+```
+归属裁决（重要，防止我们重新制造分裂所有权）：**owner = B，不许退回给 C**；
+**也不许逐字搬 C 的测试**（C 的符号是 `demo_accessibility_evidence`，B 活着的是 `_demo_accessibility_evidence`）。
+要求加的是一个**只在测试里**的节点：
+```text
+scope: backend/app/**/*.py   exclude: backend/app/services.py
+forbid 任何产品码引用/import/属性使用 `_demo_accessibility_evidence`
+product code change: 0        优先用 AST 检测，别拿裸 substring 让注释和 docstring 变成误伤
+杀手臂：往某个非 services 产品模块注入一次真实 import/reference，要求 anchor_hits == 1、该节点 RED、逐字节还原
+加完此臂后战役应为 **14 个 ORD-0219 节点 / 16 臂**，外加 ORD-0236 的 3 节点 / 3 臂
+```
+闭单序列（仲裁原样，七件，缺一只签 `CLOSED` 无效）：
+```text
+1 landed tip 可远程解析；保留的 composite 在其祖先链
+2 单一真值源仍然成立  3 fresh DB 非空 carrying == declared 且 provenance 是 DEMO
+4 两码各有真 PASS + 具名 BLOCK  5 14/16 绿/杀，含新静态独占臂
+6 ORD-0236 3/3 + 三杀手仍成立且 T3 非空 guard 仍在  7 然后才 CLOSED
+```
+另两它对 B 的更正**照单接受**（并给了处置）：① `else "STRONG"` 那一格——权威 patch 显示相关两行确实变成
+`severity="HARD" if hard else None`，拿"别处还有几处 `else "STRONG"`"当探针**不是有效读数**；
+② `grep -r -c … | wc -l` **数的是输出行数（含 `path:0`）不是总命中数**，v2 的措辞（有非零命中的文件数）是对的；
+**v1 作为"坏证据史"保留，不删不改写**。禁令继续：不 reset、不 force-push、不复活 C 的 producer、静态门不要求任何产品码改动。
+
+### ② HARNESS 的 A-6 答复（总线 `5788530688`）= 我认可，且它做对了最关键的判据
+
+```text
+不问字符串、不查表：直接问产品自己那条路 `GET /api/v1/destinations/capability`
+  （进程内 TestClient、CITYNEXUS_ANYWHERE_RESOLVER=off + PHOTON_BASE_URL=http://127.0.0.1:9 当绊线、
+    seed_demo 进它自己的一次性库）
+身份键 = canonical_destination_id，且先过这条判据：
+  is_identity = bool(canonical) and not str(canonical).startswith("unresolved:")
+  ⇒ 手机树把 `unresolved:<hash>` 塞在身份列里 ⇒ **非空 ≠ 有身份**（这条正是我 00:2x 那格 P0 边界的老坑）
+去重前后：本答复 36 条拼写 → 去重后 **14 座城市**（虚高 22 格全是同城不同写法）
+         原矩阵 11 城 × 2 写法 = 22 次读数 → 仍是 11 格（虚高 0；两种写法用来证明"写法不改变结论"）
+"同一城市解析出两个不同 canonical" = none ｜ "同一 canonical 被两城共用" = none ｜ 两棵树结论逐字相同
+```
+⇒ 我对 ORD-0239 的判级跟随仲裁：**canonical 化之后再计数**这一格 HARNESS 已闭；矩阵本身仍是 `INPUT ACCEPTED`，
+不是 closure（closure 要 support_state 落码 + parity 门，等 C 的 identity closure 之后由后端 owning lane 交）。
+
+### ③ 现场
+账本远端上一枚 `e2844187cb5914aa` / 3,901,047 B；链四条在听 + canary `:4185`/`:8713`；
+用户库只读 3/3/19/16；桌面留言 11:39 已更新（ORD-0146 死路已走通的更正 + 双击重复写入的新毛病 + "版本没变"的实话）；
+清理闸门关（0 删除）。车道：C（**队列里已有 2 条**，我不再往里塞）、B、F、D、HARNESS、aad2d1f2、d2305848 在跑；
+HJ-P1 与 HJ-P2 已回 ready ⇒ 下一轮点名问 HJ-P1 的 ORD-0242 是否真能走六面。
+
 ## commander 派单 @2026-09-23T11:3x+08 —— 新开两格：**ORD-0248（aad2d1f2：撞墙后的恢复代价，手机口径）** 与 **ORD-0249（红队 d2305848：攻我自己的发布收据 A–E）**；另 ORD-0146 的状态推进一格
 
 ```text
