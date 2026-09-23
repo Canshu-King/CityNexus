@@ -1,0 +1,29 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0261/0264 closure cell 4 (deployed generation)",
+ "releaseBase": "http://127.0.0.1:4781",
+ "servedBundle": "index-D76m_cky.js",
+ "stickyBarTop": 628,
+ "reservePadding": "212px",
+ "summaryProbe": {
+  "box": [
+   348,
+   44
+  ],
+  "centre": [
+   195,
+   405
+  ],
+  "hitTag": "SUMMARY",
+  "hitText": "高级设置",
+  "hitsItself": true
+ },
+ "locality": {
+  "present": true,
+  "insideStep1Card": true,
+  "adjacent": true
+ },
+ "advancedOpened": true,
+ "blockedWrites": [],
+ "read_only_guarantee": "only GET + local-state clicks; no journey creation, no demo/reset"
+}
