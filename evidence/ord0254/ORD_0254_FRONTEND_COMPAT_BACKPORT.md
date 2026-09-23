@@ -260,3 +260,48 @@ selftest（尺自己的、未改的自测，指到我的面上）ord0254_v2_self
 一处我自己的引用要更正：`ord0254_surface_receipt.json` 里的 `ruler_blob16` 字段仍写着上一枚 `e3015cc065d1d4eb` —— 那是起面脚本预检的文件（`tools/ruler.py`），**不是**尺实际运行的对象；尺的每一档都在运行时复验 `c0aafc940136c502…`。这条属于我没把预检常量跟着换，读数本身不受影响。
 
 **清理（重跑后）**：见 `ord0254_v2_cleanup_receipt.json` —— 三枚端口再次具名松手，删除只按具名清单。
+
+
+---
+
+## 9. 第二次换尺重跑（A-9 壳文档缓存语义；指挥官 14:5x 通知）
+
+新坐标核验：从 commit `23eb1f5c5856`（subject 具名 "A-9 shell cache-semantics arm wired into the single predicate (redteam round 4: immutable shell = white screen) + declared gaps for A-with-no-old-js"）取回 `live_checks/deploy_bundle.py` = **45,153 B / blob `9ca0dee62016d7ef421b1dc085027ff4d6654c23`**，逐档运行前后复验（各 summary `ruler_unchanged: true`）。两件凭据按 **blob 前缀**在 `evidence/gates/` 目录里搜出来（文件名与你消息里的猜测不同，所以我没有按名字赌）：`deploy_bundle_a9_selftest_0923.json` = `391d59cbd4cb7341f6cdf9fd731fd2dfbd24da13`（7,980 B，**21/21 GREEN**，base `:4781`）与 `deploy_bundle_f_surface_probe_round4_0923.json` = `02459564e6f225a62d75660f1baddb0df12e1c0c`（1,190 B）。**A-9 的判据我是从尺的字节里读的**（`SHELL_MAX_AGE` 默认 600，第 130 行；第 133-150 行的 `cache_semantics_verdict`；第 83 行开始记录响应头 `cache_control`），没有转述。
+
+**A-9 第一时间就打到我的合成服务上，而且你说的话被量出来了**：
+
+```text
+14:47 原样跑（我的 :4412 是裸 Python 静态服务，从来没发过 Cache-Control）
+  G 从 GREEN 变 RED，且只红一条：/index.html（8 条 url 里唯一被 A-9 当壳文档的那条），其余 7 条仍 [200,200] GREEN
+  selftest 21/23：两条 true_positive 被我自己面上打破 —— G-true_positive:precache_resolves、A9-true_positive:real_shell_revalidable
+  fprobe：static :4412 的 / = RED（statuses [200,200] 但 CC=None），preview :4411 的 / = GREEN（CC=no-cache）
+  ⇒ 上一枚尺出的「A–E/G/H 全绿、只差 F」确实【不完整】，缺的正是壳缓存语义这一维
+```
+
+我随后**只改我这台服务端**（不动尺的任何判据/阈值/MIME 表）：壳与根文件声明 `no-cache`，`/assets/*` 声明 `public, max-age=31536000, immutable`（内容散列件永存、壳必须可校验 —— 正是 A-9 允许的形状）。**这里我自己又犯了一次并自报**：第一版补丁把响应头插在 `_headers_buffer` 的 **索引 0**，等于插在状态行上面，把我自己的 HTTP 应答弄坏了（客户端连接被拒/坏帧），那一段时间窗（14:55 的 deploy/fprobe/selftest）的读数是**仪器故障，一律作废、不当产品结果交**；改成索引 1 后 14:58 才是有效的一轮。
+
+```text
+14:58 有效一轮（收据是清空 tools/receipts 后重写的，避免把上一轮的旧文件当本轮）
+  deploy  ord0254_v3_deploy_receipt.json 25,923 B blob cd7cbf0fa7692124
+    A GREEN · B GREEN(new_refs_present/old_refs_absent 分开 true) · C 2/2 GREEN [200,200] 且 CC=immutable 仍绿
+    D 2/2 GREEN · E 换 index 前 2/2 真字节 · H GREEN 2/2 [200,200]
+    G [sw.js=DECLARED_NO_PRECACHE_ARRAY, v10-sw.js GREEN urls_found=8]：/index.html 与 /sw.js no-cache、
+      /assets/* 四条 public,max-age=31536000,immutable —— **每条都带 times=2 与实测 cache_control**，
+      也就是「带 hash 的资产可以 immutable」这条范围声明在我的面上被真的走过一遍，不只是自测里
+    F RED（两枚 base 未配，fail-closed）⇒ OVERALL RED（照字面交）
+    frontend_dirty = ""（逐字）· tree_tip 6a39c52 == --sha · 备份目录秒级 dist_bak_145829
+  selftest ord0254_v3_selftest_receipt.json ⇒ SELFTEST GREEN (23/23 arms matched)
+    其中 A9-killer:shell_immutable_is_red=RED、A9-true_positive:real_shell_revalidable=GREEN、
+         A9-scope:hashed_asset_may_stay_immutable=NOT_SHELL_RECORDED、G-declared=DECLARED
+    与你 21/21 的差 = 我又导出 SELFTEST_OLD_REF 生成的 B2 与 B2-neg 两臂 ⇒ 21 + 2 = 23，有名字
+  fprobe  ord0254_v3_fprobe_receipt.json ⇒ 我两台面 ×（新 js、/）× 2 次 = 4/4 [200,200] GREEN
+  新声明位在我这条路径上的使用情况：DECLARED_NO_PRECACHE_ARRAY 触发（手写法 sw.js 7,178 B）；
+    DECLARED_NO_OLD_JS 与 GREEN_H_EQ_C_NO_CHANGE_DEPLOY **未触发**（我这里确实有上一代、也确实发生了切换），
+    所以我只证明了它们在这条路上不误触发，没有证明它们各自该触发的情形 —— 那是 A/H 无变化的部署形状，本单没有那种现场。
+```
+
+**§红-1 在第三枚尺上仍然存在**，行号从 654 → 669 → **737**：第 730 行（未配置分支）写 `verdict`、已配置分支只写 `surface/base/got`，而第 737 行无条件读 `p["verdict"]` ⇒ 一设 `CNX_DEPLOY_PROXY_BASE` 就 `KeyError: 'verdict'`，A–H 收据写在后面所以整份丢失。逐字 traceback `ord0254_v2_keyerr_traceback.txt`（第二轮）与 `ord0254_v3_keyerr_summary.json`/同名 traceback（本轮）。**连续三次换尺都改在探测维度上，F 的聚合段一直没被碰** —— 换代真正走的那条路目前仍然只能"不配 base + F 记 RED"，或者由车道在外面用尺自己的谓词补量（本文 `fprobe`）。这条我继续交给你与红队并案，不自己修尺。
+
+**仍然没有量的**：公网链与 cnx 代理的响应头（禁止端口，我没访问过）——那一维只有你 `02459564e6f225a6…` 那份 local/proxy/公网三面重测能回答（它给出 [200,200] + `no-cache`）。候选包本身三次换尺期间没动过：tip `6a39c527f2aa3b16e73dfd122c34d6e6be7102df`、`index-C0qSwD3N.js` / `index-CBXSx-f9.css` 同名同字节，所以 §1/§2/§4/§5 与六面屏幕读数继续有效；§3 以 §8 为准、§8 的读数自本节起以 **§9（A-9 尺）** 为准。
+
+**清理（本轮后）**：`ord0254_v3_cleanup_receipt.json` —— 三枚 PID 具名树杀，`:4411/:4412/:8411` netstat 复测松手，按具名清单删 `serve/`、三份 `dist_bak_*`、`canary_8411.db*` ⇒ 释放 13,968,186 B；保留 `repo/`（含候选 `dist` 产物）。
