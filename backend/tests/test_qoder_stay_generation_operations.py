@@ -682,12 +682,22 @@ def test_a_busy_store_answers_a_named_retry_on_both_doors(monkeypatch) -> None:
     """
 
     from app import main as main_module
+    from datetime import datetime, timezone
+    from types import SimpleNamespace
+
+    from app.stay_generation_operations import QUEUED
+    from app.stay_generation_operations import retry_after_ms as ladder_floor
 
     def _busy(*_args, **_kwargs):
         raise main_module.GenerationStoreBusy("the store is busy")
 
     monkeypatch.setattr(main_module, "submit_operation", _busy)
     journey_id = _journey()
+    # 阶梯对「刚排队的非终态作业」给的下限：门里留自带副本的调用，不写死数字——
+    # 这一枚断言从前钉的是 `== 500`，那正是"同一件忙承诺两套等待"的旧形制（01:1x §③ 已裁收口进阶梯）。
+    floor = ladder_floor(
+        SimpleNamespace(status=QUEUED, queued_at=datetime.now(timezone.utc).isoformat()))
+    seen: dict[str, object] = {}
     for url in (
         f"/api/v1/journeys/{journey_id}/stay-generations",
         f"/api/v1/journeys/{journey_id}/stay-options/generate",
@@ -697,7 +707,9 @@ def test_a_busy_store_answers_a_named_retry_on_both_doors(monkeypatch) -> None:
         body = response.json()["error"]
         assert body["code"] == "GENERATION_STORE_BUSY", body
         assert body["message_key"] == "generation.store_busy", body
-        assert body["details"]["retry_after_ms"] == 500, body
+        assert body["details"]["retry_after_ms"] == floor, (url, floor, body["details"])
+        seen[url] = body["details"]["retry_after_ms"]
+    assert len(set(seen.values())) == 1, f"两个门给出的等值必须一致，实际 {seen}"
 
 
 def test_the_acceptance_retry_is_bounded_and_then_names_the_condition() -> None:
