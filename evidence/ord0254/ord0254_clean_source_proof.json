@@ -1,0 +1,9 @@
+{
+ "at": "2026-09-23T13:52:55+08:00",
+ "command": "git -C <export tree> status --porcelain -- frontend",
+ "stdout_verbatim": "",
+ "line_count": 0,
+ "tree_tip": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df",
+ "base": "53fe8e8",
+ "note": "0 lines is the acceptance-4 reading; it is printed verbatim rather than narrated. The same predicate is also enforced by the ruler itself (receipt field frontend_dirty)"
+}
