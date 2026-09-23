@@ -594,6 +594,128 @@ def test_g3e_admission_race_no_caller_may_see_another_before_commit(monkeypatch)
     assert rows[0][1] == "QUEUED", f"期望：那一行仍是开放代次；实际 {rows[0][1]}"
 
 
+def test_g3_xproc_loser_readback_five_processes_one_operation() -> None:
+    """G3_XPROC_LOSER_READBACK: five separate OS processes must be handed one operation.
+
+    Why this door exists as its own process-level shape: every other g3 door runs its callers inside
+    one interpreter, where a SQLAlchemy session, an identity map and the module-level dispatch set are
+    all shared - so "two uvicorn workers do not share a lock" is asserted there but not measured. This
+    door spawns five real children (`tests/_qoder_xproc_caller.py`), each pointed at the same
+    app-resolved test database through `CITYNEXUS_DATABASE_URL`, and synchronises them on a listening
+    socket: every child announces `ready`, the parent accepts all five, then releases them together.
+    No sleep is used as a synchroniser; the only timers here are bounded waits that fail loudly.
+
+    Each child has its first two open-operation lookups answered "nothing is open" - the earliest
+    interleaving from a caller's point of view - so the only thing left that can deliver
+    "one operation, five callers" is the partial unique index plus the loser's read-back of the
+    winner's id. That is the claim, and the probe that validated the shape measured it red under
+    mutant Y3 (`ord213/xproc_shape_probe_result.json`).
+
+    It asserts the number of distinct pids first: if the children ever collapse into one process the
+    door stops measuring anything, and that must be a red rather than a quiet green.
+    """
+
+    import json
+    import os
+    import socket
+    import subprocess
+    import sys
+
+    from app.db.session import engine
+
+    CALLERS = 5
+    question = _own_question("跨进程")
+    fingerprint = _pending_fingerprint(question)
+    _clear_operations_for(fingerprint)
+
+    backend = Path(__file__).resolve().parents[1]
+    caller = Path(__file__).resolve().parent / "_qoder_xproc_caller.py"
+    assert caller.exists(), f"期望：跨进程子体 {caller.name} 存在；实际不在树上"
+    env = dict(os.environ)
+    env["CITYNEXUS_DATABASE_URL"] = str(engine.url)
+    env["PYTHONIOENCODING"] = "utf-8"
+    # a script's sys.path[0] is its own directory, so `import app...` needs the backend on the path
+    env["PYTHONPATH"] = os.pathsep.join(p for p in [str(backend), env.get("PYTHONPATH", "")] if p)
+
+    server = socket.socket()
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server.bind(("127.0.0.1", 0))
+    port = server.getsockname()[1]
+    server.listen(CALLERS)
+    server.settimeout(60)
+    kids = [
+        subprocess.Popen([sys.executable, "-X", "utf8", str(caller), "blind", str(engine.url),
+                          str(port), f"x{i}", question], cwd=str(backend), stdout=subprocess.PIPE,
+                         stderr=subprocess.PIPE, text=True, encoding="utf-8", env=env)
+        for i in range(CALLERS)
+    ]
+    conns = []
+    try:
+        for _ in range(CALLERS):
+            conn, _addr = server.accept()
+            conns.append(conn)
+        for conn in conns:
+            conn.sendall(b"go")
+    finally:
+        server.close()
+
+    rows: list[dict] = []
+    for index, kid in enumerate(kids):
+        try:
+            stdout, stderr = kid.communicate(timeout=120)
+        except subprocess.TimeoutExpired:
+            kid.kill()
+            stdout, stderr = kid.communicate()
+            raise AssertionError(
+                f"期望：五发子进程都在 120 s 内返回；实际 x{index} 未归（仪器故障，不是产品结论）；"
+                f"stderr 尾={(stderr or '')[-200:]!r}"
+            )
+        payload = None
+        for line in (stdout or "").splitlines():
+            if line.startswith("{"):
+                payload = json.loads(line)
+        assert payload is not None, (
+            f"期望：x{index} 交回一行 JSON 读数；实际没有，stderr 尾={(stderr or '')[-300:]!r}"
+        )
+        rows.append(payload)
+
+    failed = [r for r in rows if r.get("error")]
+    assert not failed, (
+        f"期望：五发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际报错 {len(failed)} 发："
+        f"{[(r['label'], r['error']) for r in failed]}"
+    )
+    pids = {r["pid"] for r in rows}
+    assert len(pids) == CALLERS, (
+        f"期望：五发是 {CALLERS} 个不同 OS 进程（同一进程里的多线程不算这条门，共享会话/身份映射/"
+        f"派发集合都会替产品撒谎）；实际 pid={sorted(pids)}"
+    )
+    ids = {str(r["operation_id"]) for r in rows}
+    assert len(ids) == 1, (
+        f"期望：跨进程、且每发都看不见别人时，五发仍是同一枚作业（只有部分唯一索引 + 败者回读做得到）；"
+        f"实际 {len(ids)} 枚：逐发={[(r['label'], str(r['operation_id'])[:8], r['reused']) for r in rows]}"
+    )
+    winners = [r for r in rows if r["reused"] is False]
+    joiners = [r for r in rows if r["reused"] is True]
+    assert len(winners) == 1 and len(joiners) == CALLERS - 1, (
+        f"期望：恰好 1 winner + 4 reuse，而且**跨进程**那四个 reuse 必须来自败者回读；实际 "
+        f"reused=False {len(winners)} / reused=True {len(joiners)}，逐发 reused="
+        f"{[r['reused'] for r in rows]}"
+    )
+    rows_in_store = _rows_for(fingerprint)
+    assert len(rows_in_store) == 1, (
+        f"期望：库里这一代只有 1 行（跨进程也不许多落一行——这是 durable 层，不是内存握手）；"
+        f"实际 {rows_in_store}"
+    )
+    assert rows_in_store[0][1] == "QUEUED", (
+        f"期望：那一行仍是开放代次；实际 {rows_in_store[0][1]}"
+    )
+    print(
+        "\n[G3_XPROC_LOSER_READBACK] 5 个 OS 进程 → 1 枚作业 "
+        f"id={sorted(ids)[0][:8]}，1 winner + 4 reuse，pids={sorted(pids)}，"
+        f"等待闩 ms={[r['waited_for_release_ms'] for r in rows]}，提交 ms={[r['submit_ms'] for r in rows]}"
+    )
+
+
 def test_g3d_durable_layer_still_holds_the_partial_unique_index() -> None:
     """The persistence witness the retired node carried, kept as its own door.
 
