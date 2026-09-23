@@ -1,0 +1,69 @@
+{
+ "mode": "S4_read_silent_health_answered",
+ "at": "2026-09-23T16:57:50.138Z",
+ "url": "http://127.0.0.1:4443/v8/hub",
+ "settled_after_ms": 12153,
+ "state_nodes": {
+  "failure-view": 1,
+  "today-heading": 0,
+  "trial-setup": 0
+ },
+ "rendered_text": "服务器\n\n服务暂时不可用\n\n服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。\n\n看已保存的只读副本\n重试\n归因详情\nattribution_reason=SERVER_ERROR evidence_kind=HEALTH_PROBE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+ "body_text_head": "服务器 服务暂时不可用 服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 看已保存的只读副本 重试 归因详情 attribution_reason=SERVER_ERROR evidence_kind=HEALTH_PROBE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+ "attribution_expand": {
+  "present": 1,
+  "clicked": true,
+  "line_before": "",
+  "line_after": "attribution_reason=SERVER_ERROR evidence_kind=HEALTH_PROBE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+  "open_after": true
+ },
+ "resource_timing": {
+  "all": [
+   {
+    "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "duration_ms": 12013,
+    "status": 0,
+    "kind": "fetch"
+   },
+   {
+    "url": "/api/v1/health",
+    "duration_ms": 5,
+    "status": 500,
+    "kind": "fetch"
+   }
+  ],
+  "journey": {
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "duration_ms": 12013,
+   "status": 0,
+   "kind": "fetch"
+  },
+  "health": {
+   "url": "/api/v1/health",
+   "duration_ms": 5,
+   "status": 500,
+   "kind": "fetch"
+  }
+ },
+ "snapshot": {
+  "rows": 1
+ },
+ "buttons": [
+  "看已保存的只读副本",
+  "重试"
+ ],
+ "in_memory_attribution_last": {
+  "reason": "SERVER_ERROR",
+  "evidence_kind": "HEALTH_PROBE",
+  "http_status": 500,
+  "source_layer": "RUNTIME",
+  "retryable": true,
+  "recovery_action": "read-only-cached",
+  "message_key": "failure.serverError",
+  "telemetry": "attribution_reason=SERVER_ERROR evidence_kind=HEALTH_PROBE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+  "cached_copy_present": true,
+  "at": "2026-09-23T16:57:49.168Z",
+  "context": "shell.boot.journeyRead"
+ },
+ "service_worker": true
+}
