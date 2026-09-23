@@ -1,0 +1,191 @@
+{
+ "at": "2026-09-23T20:08:56+08:00",
+ "what": "ORD-0263 verifier v2 selftest - can each cell say RED, and is every cell sensitive to the mechanism it names",
+ "why": "B found v1's S2 arm asserted the presence of a sentence that the current tree can no longer emit, i.e. vacuously false; v2 asserts the conjunction the arbiter vocabulary actually requires",
+ "arms_total": 14,
+ "arms_matched": 14,
+ "overall": "GREEN",
+ "rows": [
+  {
+   "arm": "V1-true_positive:names_service_and_hands_over_snapshot",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "match": true,
+   "detail": {
+    "http_status": 500,
+    "network_words": false,
+    "names_service": true,
+    "hands_over_snapshot": true,
+    "navigator_onLine": true,
+    "retry_door_in_text": true
+   }
+  },
+  {
+   "arm": "V1-killer:the_measured_old_sentence_still_reads_red",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "http_status": 500,
+    "network_words": true,
+    "names_service": false,
+    "hands_over_snapshot": true,
+    "navigator_onLine": true,
+    "retry_door_in_text": true
+   }
+  },
+  {
+   "arm": "V1-vacuity:sentence_just_disappearing_is_not_a_pass",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "http_status": 500,
+    "network_words": false,
+    "names_service": false,
+    "hands_over_snapshot": false,
+    "navigator_onLine": true,
+    "retry_door_in_text": false
+   }
+  },
+  {
+   "arm": "V1-vacuity-witness:the_same_capture_is_red_for_the_right_reason",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "network_words": false,
+    "names_service": false,
+    "hands_over_snapshot": false,
+    "note": "the old wrong sentence is simply gone; nothing names the cause"
+   }
+  },
+  {
+   "arm": "V1-vacuity-witness:green_when_the_three_parts_are_present",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "match": true,
+   "detail": {
+    "network_words": false,
+    "names_service": true,
+    "hands_over_snapshot": true,
+    "note": ""
+   }
+  },
+  {
+   "arm": "V2-true_positive:no_answer_gets_its_own_class",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "match": true,
+   "detail": {
+    "fetch_thrown": true,
+    "settled_within_deadline": true,
+    "seconds_to_settle": 4.0,
+    "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "retry_door": true,
+    "still_on_loading_skeleton": false,
+    "hands_over_snapshot": true
+   }
+  },
+  {
+   "arm": "V2-killer:remove_the_read_deadline_and_the_cell_goes_red",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "fetch_thrown": true,
+    "settled_within_deadline": false,
+    "seconds_to_settle": null,
+    "classified_label": null,
+    "retry_door": false,
+    "still_on_loading_skeleton": true,
+    "hands_over_snapshot": false
+   }
+  },
+  {
+   "arm": "V2-killer:missing_deadline_field_is_not_measured_not_green",
+   "expect": "NOT_MEASURED",
+   "got": "NOT_MEASURED",
+   "match": true,
+   "detail": null
+  },
+  {
+   "arm": "V4-true_positive:silent_read_answered_health_is_origin_error",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "match": true,
+   "detail": {
+    "read_never_answered": true,
+    "health_status": 500,
+    "settled_within_deadline": true,
+    "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "network_words": false,
+    "seconds_to_settle": 4.0
+   }
+  },
+  {
+   "arm": "V4-killer:collapsing_it_into_the_network_arm_is_red",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "read_never_answered": true,
+    "health_status": 500,
+    "settled_within_deadline": true,
+    "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "network_words": true,
+    "seconds_to_settle": 4.0
+   }
+  },
+  {
+   "arm": "V4-killer:an_unbounded_read_never_reaches_the_attribution",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "read_never_answered": true,
+    "health_status": 500,
+    "settled_within_deadline": false,
+    "classified_label": null,
+    "network_words": false,
+    "seconds_to_settle": 4.0
+   }
+  },
+  {
+   "arm": "V3-true_positive:two_distinct_classified_arms",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "match": true,
+   "detail": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "s3_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "same_sentence": false,
+    "s3_unclassified_skeleton": false
+   }
+  },
+  {
+   "arm": "V3-killer:one_sentence_for_both_arms_is_red",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "s3_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "same_sentence": true,
+    "s3_unclassified_skeleton": false
+   }
+  },
+  {
+   "arm": "V3-killer:skeleton_instead_of_a_classification_is_red",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "s3_label": null,
+    "same_sentence": false,
+    "s3_unclassified_skeleton": true
+   }
+  }
+ ]
+}
