@@ -1,0 +1,6 @@
+7e44ceef993785c24241d3549f64742175616a2c  ORD0261_HJ-P3_RECEIPT.md  6833 B  sha256=ecc489f2edbe4175b0e4067e31251577ef2fba1fe869a61410eb6fa7f1b6b734  readable=True
+07b01dfd0e17aab7c8a2b3cbe40c7231baf6ed68  candidate_human_path_capture.json  7989 B  sha256=3710b3ea9c649a89fc7b17d3adf2da19bec7b4488151ddff449e0a7fa810b5c7  readable=True
+d40b3adf2d5bd5447689b4716e781e54e408db26  artifact_identity.json  1128 B  sha256=9223ef84cd4e832f8dfea4db9c380b197559b46f3513f50824adeea58ed52872  readable=True
+97afde9780486e8df386777c4a8170760b74bccb  ORD0261-P3-1815_candidate_advanced_open.png  137089 B  sha256=4b4b383e78b278a52286c7929cf5e54e18ac0e66a4c907d5700cb2bb396e50be  readable=True
+bedfb70584bf5892a6e01a3dc67c2a54380ff5e3  ORD0261-P3-1815_published_control_wizard_bottom.png  124323 B  sha256=f4604937a94ac82491f3ca270a22de861ca235d0f1aa22702a3fd3965fe1d8c6  readable=True
+lane=HJ-P3-aad2d1f2 run_id=ORD0261-P3-1815 backend=D:/moodle/_qoder_cmdr_gate_20260921@53fe8e8(porcelain 0) db=_lane_aad2d1f2_livecopy.sqlite3 faces=:8478(candidate 6daceb1 build index-D76m_cky.js) +:8474(published control DJEINrOl/COUUKhbU) candidate_source=commander/control:evidence/ord0261-0264-candidate (patch 0de748338e103bb7 == git diff dea8410..6daceb1)
