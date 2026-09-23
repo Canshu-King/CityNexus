@@ -1,0 +1,210 @@
+From 1f86a8f69007b04157e71aec4ba0e783dd3de67e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=BB=93=E9=BC=A0=E7=8E=8B?= <yjianbin419@gmail.com>
+Date: Wed, 23 Sep 2026 21:52:07 +0800
+Subject: [PATCH] =?UTF-8?q?wip(ord0253):=20atomic=20claim-first=20?=
+ =?UTF-8?q?=E2=80=94=20blocker=20(iii)=20met,=20(i)=20measured,=20(ii)=20N?=
+ =?UTF-8?q?OT=20met=20yet=20(1=20row=20still=20survives)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+按仲裁 5795653645 与红队 5795662769 的要求改：占位行与答案同一条 INSERT，且与 impl 写的 mission
+在同一个外层事务里（Session(bind=conn, join_transaction_mode="create_savepoint")，impl 内那三次
+session.commit() 只 RELEASE SAVEPOINT）；恢复规则只有 fail-closed 一种，全仓无任何删除幂等行的路径。
+
+三格读数（不粉饰）：
+  (iii) 达成：本发之后库里没有 response_json 为空的行；无任何 delete/truncate 路径；completed 仍 +7d。
+  (i)   部分：占位由**已提交行 + 唯一索引**决定（预置别人已占 ⇒ 这一发不回放就是 409），不再靠进程内锁。
+  (ii)  **未达成**：G1 实测 mission 仍有 1 行存活 ⇒ 外层回滚没带走它。
+        另用独立微探针证明机制本身可用（内层 commit 对外连接不可见、外层 rollback 后 0 行，
+        临时目录残留 0）⇒ 残留来自 impl 内部那条多次自提交的路径，不是 savepoint 语义。
+18 passed / 1 failed；既有 10 格无回归。这一笔是 WIP：(ii) 需要决定改不改 impl 的提交结构，我不擅自动。
+---
+ backend/app/main.py                           | 78 +++++++++++--------
+ .../test_qoder_agent_command_claim_first.py   | 59 +++++++++++++-
+ 2 files changed, 102 insertions(+), 35 deletions(-)
+
+diff --git a/backend/app/main.py b/backend/app/main.py
+index 627efb5..01ba0a2 100644
+--- a/backend/app/main.py
++++ b/backend/app/main.py
+@@ -160,7 +160,7 @@ from app.db.models import (
+ from app.db.models import (
+     ReplanProposal as ReplanProposalModel,
+ )
+-from app.db.session import SessionLocal, ensure_schema, get_session
++from app.db.session import SessionLocal, engine, ensure_schema, get_session
+ from app.execution.clock import execution_clock
+ from app.execution.traveler_twin import (
+     clear_learned,
+@@ -1085,42 +1085,52 @@ def run_agent_command(
+         }
+     )
+     scoped_key = f"agent.command:{header_key}"
++    scoped_key = f"agent.command:{header_key}"
+     with journey_write_lock(str(journey_id)):
+-        # claim-first: 先把这把键**占住并提交**，才有资格写 mission。
++        # 进程内这把锁只是优化；**互斥点是唯一索引在提交时说的那句话**。
+         #
+-        # 旧写法是"先跑 impl、再写收据"。`_run_agent_command_impl` 自己在函数里就
+-        # `session.commit()`，所以两个写者同时进来时，败者的 mission 早已落库——之后
+-        # 收据那一插撞唯一索引、回滚，也收不回已经提交的那一行：两边各拿同一枚 mission
+-        # 的正文，库里却留了两行（实测形态名 GHOST_MISSION_ROW）。
+-        # 现在所有权由"唯一索引 + 已提交的占位行"决定：抢不到键的人**根本不进 impl**，
+-        # 因此根本不建行。进程内那把锁仍是优化，不是契约。
++        # 为什么不在这里"先提交占位、再跑 impl"：`_run_agent_command_impl` 自己在函数里
++        # `session.commit()`，那只会把"两枚 mission"换成"一枚 mission + 一次失败运行"，
++        # 库里仍然留痕（红队 5795662769 的硬要求，我照做）。现在占位行、impl 写的 mission、
++        # 这一发的答案在**同一个外层事务**里：impl 的 commit 在 create_savepoint 模式下只
++        # RELEASE SAVEPOINT，不落库，所以抢不到键的那一方在最外层 commit 撞主键、整个事务
++        # 回滚 —— mission 与占位一起消失，不是"回滚收不回已提交的那一行"。
++        replayed = _replay_committed_accept(session, scoped_key, signature)
++        if replayed is not None:
++            return replayed
+         now = datetime.now(timezone.utc)
+-        session.add(
+-            IdempotencyKey(
+-                key=scoped_key,
+-                operation="agent.command",
+-                request_hash=signature,
+-                response_status=None,
+-                response_json=None,
+-                created_at=now.isoformat(),
+-                expires_at=(now + timedelta(days=7)).isoformat(),
+-            )
+-        )
+-        try:
+-            session.commit()
+-        except IntegrityError as exc:
+-            session.rollback()
+-            raced = _replay_committed_accept(session, scoped_key, signature, wait=True)
+-            if raced is not None:
+-                return raced
+-            # 现成那句，不新造词：占了键却永远没回填，就是"回执不完整"（agent/gateway.py:66 同句）。
+-            # 不写成 503——这不是锁忙，是一次没走完的 claim；也不许被顺手洗成 200。
+-            raise HTTPException(409, "agent idempotency record is incomplete") from exc
+-        response = _run_agent_command_impl(journey_id, payload, session)
+-        receipt = session.get(IdempotencyKey, scoped_key)
+-        receipt.response_status = getattr(response, "status_code", 200)
+-        receipt.response_json = json.dumps(response, sort_keys=True)
+-        session.commit()
++        with engine.connect() as claim_conn:
++            claim_tx = claim_conn.begin()
++            claim_session = Session(bind=claim_conn,
++                                    join_transaction_mode="create_savepoint",
++                                    expire_on_commit=False)
++            try:
++                response = _run_agent_command_impl(journey_id, payload, claim_session)
++                claim_session.add(
++                    IdempotencyKey(
++                        key=scoped_key,
++                        operation="agent.command",
++                        request_hash=signature,
++                        response_status=getattr(response, "status_code", 200),
++                        response_json=json.dumps(response, sort_keys=True),
++                        created_at=now.isoformat(),
++                        expires_at=(now + timedelta(days=7)).isoformat(),
++                    )
++                )
++                claim_session.flush()        # 关键：外层连接 commit 不会替 ORM 落待写对象
++                claim_tx.commit()          # 同一时刻：mission 可见 + 回执完整
++            except IntegrityError as exc:
++                # 唯一索引判定别人先落地了。回滚之后只能**读**赢家的答案；
++                # 绝不删行、绝不重跑 impl —— 那正是"重复既有副作用"的入口。
++                claim_tx.rollback()
++                raced = _replay_committed_accept(session, scoped_key, signature, wait=True)
++                if raced is not None:
++                    return raced
++                raise HTTPException(
++                    409, "agent idempotency record is incomplete"
++                ) from exc
++            finally:
++                claim_session.close()
+     return response
+ 
+ 
+diff --git a/backend/tests/test_qoder_agent_command_claim_first.py b/backend/tests/test_qoder_agent_command_claim_first.py
+index f71efe4..cfe5079 100644
+--- a/backend/tests/test_qoder_agent_command_claim_first.py
++++ b/backend/tests/test_qoder_agent_command_claim_first.py
+@@ -14,8 +14,8 @@ import json
+ import threading
+ import uuid
+ from datetime import datetime, timedelta, timezone
++from pathlib import Path
+ 
+-import pytest
+ from fastapi.testclient import TestClient
+ from sqlalchemy import select
+ 
+@@ -25,6 +25,7 @@ from app.db.session import SessionLocal
+ from app.main import app
+ 
+ client = TestClient(app)
++BACKEND = Path(__file__).resolve().parents[1] / "app"      # 被扫的产品代码根（⑦ 那格用）
+ TZ = timezone(timedelta(hours=8))
+ CMD_A = "我护照丢了，请告诉我怎么办。"
+ CMD_B = "帮我把今晚的安排换成室内活动，节奏慢一点。"
+@@ -213,3 +214,59 @@ def test_6_the_two_sentences_are_compared_literally_and_the_door_would_notice_dr
+     # 反面对照：完全相同的那句必须认。少了它，上面那一串"全都不认"可能只是比较坏了。
+     assert _message_equals(_Resp(SENT_INCOMPLETE_RECEIPT), SENT_INCOMPLETE_RECEIPT), (
+         "G4：连等值都不认 ⇒ 这一手是坏的，不是严的")
++
++
++# ------------------------------------------- 仲裁 blocker：未回填占位不得成为"永久毒键"，
++# ------------------------------------------- 但恢复规则只许 fail-closed，禁止"删行重跑"（会重复副作用）
++
++def test_7_no_code_path_deletes_or_expires_away_an_idempotency_row() -> None:
++    """owner=⑦：把被禁的那条路钉死——**全仓没有任何一处**删 idempotency_keys 的行。
++
++    "按 expires_at 到点删掉占位再重跑 impl" 会在"赢家已落 mission、只来不及填回执"时重新
++    制造重复副作用；仲裁禁止它。这里不靠我记得，靠扫：形制变了就红。
++    """
++    offenders = []
++    for path in sorted(BACKEND.rglob("*.py")):
++        text = path.read_text(encoding="utf-8", errors="replace")
++        for number, line in enumerate(text.splitlines(), start=1):
++            low = line.lower()
++            if "idempotency_keys" in low and ("delete from" in low or "truncate" in low):
++                offenders.append(f"{path.relative_to(BACKEND)}:{number}")
++            elif "idempotencykey" in low and (".delete()" in low or "delete(" in low):
++                offenders.append(f"{path.relative_to(BACKEND)}:{number}")
++    assert offenders == [], (
++        f"⑦：出现删除/清空幂等行的路径 ⇒ 恢复规则被写成'删了重跑'（仲裁禁止）：{offenders}")
++
++
++def test_8_a_committed_run_never_leaves_an_unfilled_claim() -> None:
++    """owner=⑧：同事务落库 ⇒ 成功那发之后，库里**不该存在** response_json 为空的行。
++
++    这不是"顺手查一下"：它正是"未回填占位=永久毒键"这一担忧的反证——形状根本不出来，
++    就不需要谁去回收它。
++    """
++    jid = _setup_journey()
++    key = f"cf-noshell-{uuid.uuid4().hex[:8]}"
++    response = _post_key(jid, key)
++    assert response.status_code == 200, response.text
++    # 只查**这一发**留下的行：前面几格是故意预置"未回填占位"当输入的，把它们算进来
++    # 就等于我的仪器在测我自己的夹具，而不是测产品（这个错我自己刚踩过一次）。
++    with SessionLocal() as session:
++        shells = list(session.scalars(select(IdempotencyKey).where(
++            IdempotencyKey.key == f"agent.command:{key}",
++            (IdempotencyKey.response_json.is_(None)) | (IdempotencyKey.response_status.is_(None)))))
++    assert shells == [], (
++        f"⑧：留下 {len(shells)} 行未回填占位 ⇒ 这一把键会永久废掉（仲裁 blocker），"
++        "且说明占位与答案没在同一次提交里")
++
++
++def test_9_completed_receipts_keep_the_existing_seven_day_semantics() -> None:
++    """owner=⑨：completed 回执的有效期**沿用 +7d**，不许为了"回收占位"偷偷改成短 TTL。"""
++    jid = _setup_journey()
++    key = f"cf-ttl-{uuid.uuid4().hex[:8]}"
++    assert _post_key(jid, key).status_code == 200
++    rows = _receipt_rows(f"agent.command:{key}")
++    assert len(rows) == 1, f"⑨：应 1 行，实际 {len(rows)}"
++    created = datetime.fromisoformat(rows[0].created_at)
++    expires = datetime.fromisoformat(rows[0].expires_at)
++    assert (expires - created) == timedelta(days=7), (
++        f"⑨：有效期变成 {expires - created} ⇒ 有人把它当回收钩子用了（应为现成的 +7d）")
+-- 
+2.45.1.windows.1
+
