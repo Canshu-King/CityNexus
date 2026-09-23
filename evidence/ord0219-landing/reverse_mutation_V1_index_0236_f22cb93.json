@@ -1,0 +1,80 @@
+{
+ "set": "0236",
+ "exact_sha": "f22cb932bc094ea22463873814e11adcd93a8c75",
+ "tree": "D:/moodle/_qoder_b_landing_20260923",
+ "baseline": {
+  "collected": 3,
+  "pytest_counts": {
+   "passed": 3,
+   "failed": 0,
+   "errors": 0,
+   "skipped": 0
+  },
+  "summary_line": "============================== 3 passed in 0.56s ==============================",
+  "failed_nodeids": [],
+  "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_f54j396w\\suite.db",
+  "db_fresh": true
+ },
+ "receipts": [
+  {
+   "file": "reverse_mutation_V1_K1_raw_tags_column_becomes_an_input_f22cb93.json",
+   "mutation_id": "K1_raw_tags_column_becomes_an_input",
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "byte_exact_restore": true,
+   "marker_hits_after_restore": 0,
+   "post_restore_dirty": [],
+   "collected": 3,
+   "pytest_counts": {
+    "passed": 2,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0
+   },
+   "db_fresh": true,
+   "primary_reddened": true,
+   "forbidden_hits": [],
+   "claimed": "KILLED"
+  },
+  {
+   "file": "reverse_mutation_V1_K2_skip_the_normalized_producer_f22cb93.json",
+   "mutation_id": "K2_skip_the_normalized_producer",
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "byte_exact_restore": true,
+   "marker_hits_after_restore": 0,
+   "post_restore_dirty": [],
+   "collected": 3,
+   "pytest_counts": {
+    "passed": 0,
+    "failed": 3,
+    "errors": 0,
+    "skipped": 0
+   },
+   "db_fresh": true,
+   "primary_reddened": true,
+   "forbidden_hits": [],
+   "claimed": "KILLED"
+  },
+  {
+   "file": "reverse_mutation_V1_K3_taxonomy_token_becomes_a_fact_f22cb93.json",
+   "mutation_id": "K3_taxonomy_token_becomes_a_fact",
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "byte_exact_restore": true,
+   "marker_hits_after_restore": 0,
+   "post_restore_dirty": [],
+   "collected": 3,
+   "pytest_counts": {
+    "passed": 2,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0
+   },
+   "db_fresh": true,
+   "primary_reddened": true,
+   "forbidden_hits": [],
+   "claimed": "KILLED"
+  }
+ ]
+}
