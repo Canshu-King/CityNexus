@@ -1,0 +1,43 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0261",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "wheel": {
+  "before": 0,
+  "after": 240,
+  "scrolled": 240
+ },
+ "summaryProbe": {
+  "box": [
+   348,
+   44
+  ],
+  "centre": [
+   195,
+   795
+  ],
+  "hitTag": "SUMMARY",
+  "hitText": "高级设置",
+  "hitsItself": true,
+  "inViewport": true,
+  "scrollY": 240
+ },
+ "controlProbe": {
+  "box": [
+   91,
+   44
+  ],
+  "centre": [
+   67,
+   499
+  ],
+  "hitTag": "SUMMARY",
+  "hitText": "看支持的目的地",
+  "hitsItself": true,
+  "inViewport": true,
+  "scrollY": 240
+ }
+}
