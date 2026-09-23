@@ -1,0 +1,207 @@
+{
+ "at": "2026-09-23T22:21:49+08:00",
+ "order": "ORD-0268 cells 2 + 3",
+ "lane": "B c01d72a3",
+ "scratch_only": "all builds are git-archive exports; no tracked tree edited",
+ "cell2_inputs": {
+  "genA_dist_scripts": [
+   "assets/index-D76m_cky.js"
+  ],
+  "genB_dist_scripts": [
+   "assets/index-Cpy_jhEg.js"
+  ],
+  "manifest_entries_normal_build": 9,
+  "manifest_entries_killer_build": 8,
+  "duplicate_urls_normal": [
+   "/index.html",
+   "assets/JourneyMap-TiEm8jyP.js",
+   "assets/index-Cpy_jhEg.js",
+   "assets/index-I45CQek8.css",
+   "assets/maplibre-gl-kx9AWR05.js",
+   "favicon.svg",
+   "index.html",
+   "manifest.webmanifest",
+   "sw.js"
+  ],
+  "duplicate_urls_killer": [
+   "assets/JourneyMap-TiEm8jyP.js",
+   "assets/index-Cpy_jhEg.js",
+   "assets/index-I45CQek8.css",
+   "assets/maplibre-gl-kx9AWR05.js",
+   "favicon.svg",
+   "index.html",
+   "manifest.webmanifest",
+   "sw.js"
+  ],
+  "killer_removed_line": "additionalManifestEntries: [{ url: \"/index.html\", revision: \"v10-shell\" }],"
+ },
+ "sequence_normal": {
+  "1_online_genA": {
+   "at": "2026-09-23T14:21:56.211Z",
+   "step": "online_a",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": true,
+    "status": 200,
+    "from_service_worker": false
+   },
+   "document_read": {
+    "url": "http://127.0.0.1:4441/v8/hub",
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "onLine": true,
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "script_srcs": [
+     "/assets/index-D76m_cky.js"
+    ],
+    "style_hrefs": [
+     "/assets/index-I45CQek8.css"
+    ],
+    "cache_names": []
+   },
+   "page_errors": []
+  },
+  "2_online_genB_swap": {
+   "at": "2026-09-23T14:22:01.523Z",
+   "step": "online_b",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": true,
+    "status": 200,
+    "from_service_worker": false
+   },
+   "document_read": {
+    "url": "http://127.0.0.1:4441/v8/hub",
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "onLine": true,
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "script_srcs": [
+     "/assets/index-Cpy_jhEg.js"
+    ],
+    "style_hrefs": [
+     "/assets/index-I45CQek8.css"
+    ],
+    "cache_names": []
+   },
+   "page_errors": []
+  },
+  "3_offline_after_swap": {
+   "at": "2026-09-23T14:22:06.140Z",
+   "step": "offline",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": false,
+    "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub"
+   },
+   "document_read": {
+    "url": "chrome-error://chromewebdata/",
+    "controlled": false,
+    "controller": null,
+    "onLine": true,
+    "body_head": "",
+    "script_srcs": [],
+    "style_hrefs": [],
+    "cache_names": [
+     "read threw"
+    ]
+   },
+   "page_errors": []
+  }
+ },
+ "sequence_killer": {
+  "1_online_genA": {
+   "at": "2026-09-23T14:22:13.558Z",
+   "step": "online_a",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": true,
+    "status": 200,
+    "from_service_worker": false
+   },
+   "document_read": {
+    "url": "http://127.0.0.1:4441/v8/hub",
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "onLine": true,
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "script_srcs": [
+     "/assets/index-D76m_cky.js"
+    ],
+    "style_hrefs": [
+     "/assets/index-I45CQek8.css"
+    ],
+    "cache_names": []
+   },
+   "page_errors": []
+  },
+  "2_online_genB_swap": {
+   "at": "2026-09-23T14:22:18.813Z",
+   "step": "online_b",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": true,
+    "status": 200,
+    "from_service_worker": false
+   },
+   "document_read": {
+    "url": "http://127.0.0.1:4441/v8/hub",
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "onLine": true,
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "script_srcs": [
+     "/assets/index-Cpy_jhEg.js"
+    ],
+    "style_hrefs": [
+     "/assets/index-I45CQek8.css"
+    ],
+    "cache_names": [
+     "workbox-precache-v2-http://127.0.0.1:4441/"
+    ]
+   },
+   "page_errors": []
+  },
+  "3_offline_after_swap": {
+   "at": "2026-09-23T14:22:23.567Z",
+   "step": "offline",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": true,
+    "status": 200,
+    "from_service_worker": true
+   },
+   "document_read": {
+    "url": "http://127.0.0.1:4441/v8/hub",
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "onLine": true,
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "script_srcs": [
+     "/assets/index-Cpy_jhEg.js"
+    ],
+    "style_hrefs": [
+     "/assets/index-I45CQek8.css"
+    ],
+    "cache_names": [
+     "workbox-precache-v2-http://127.0.0.1:4441/"
+    ]
+   },
+   "page_errors": []
+  }
+ },
+ "cell3_killer_verdict": {
+  "rule": "the killer must flip cell 2's conclusion; if it does not, cell 2 proves nothing about the double entry",
+  "normal_offline_navigation": {
+   "ok": false,
+   "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub"
+  },
+  "killer_offline_navigation": {
+   "ok": true,
+   "status": 200,
+   "from_service_worker": true
+  },
+  "conclusion_identical": false,
+  "verdict": "KILLER FLIPPED IT -> the double entry is operative"
+ }
+}
