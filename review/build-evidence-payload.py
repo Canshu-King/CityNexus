@@ -86,6 +86,22 @@ PLAN = {
         "ORD-0238 + ORD-0240",
         "ord0238-0240-arms-six-arms-v2.json",
     ),
+    # The two gate JSONs below are written by the specs themselves into review/evidence (the
+    # evidence dir the runner hands them), not into the ui-overnight subfolder.
+    "ord0246": (
+        ["dc690d7"],
+        [],
+        [("../ord0246-same-tick-double-tap.json", "gate-readings.json")],
+        "ORD-0246",
+        "ord0246-arms-v2.json",
+    ),
+    "ord0247": (
+        ["dc690d7"],
+        [],
+        [("../ord0247-advanced-summary-tap-target.json", "gate-readings.json")],
+        "ORD-0247",
+        "ord0247-arms-v2.json",
+    ),
 }
 
 
