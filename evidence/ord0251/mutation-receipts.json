@@ -1,0 +1,747 @@
+{
+  "generatedBy": "e345b9d6",
+  "orders": [
+    "ORD-0250",
+    "ORD-0251",
+    "ORD-0247 (widened)"
+  ],
+  "runTag": "v2",
+  "at": "2026-09-23T14:25:03+0800",
+  "guard": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace",
+  "specs": {
+    "ORD-0250": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+    "ORD-0251": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+    "ORD-0247": "e2e/qoder-every-summary-is-tappable.spec.ts"
+  },
+  "runShape": "whole owner spec file per arm (3 nodes + the real-seed setup project = 4 passes when green); the same mutant is then played against another lane-critical spec as the collateral mirror",
+  "verifierNote": "claimed_result lives here; derived_result / direct_red / collateral_red are WRITTEN_BY_VERIFIER per the frozen receipt schema -- this lane does not grade its own kills",
+  "filesBefore": {
+    "PlanWithAiSheet.tsx": "6d66978e798dc70065d2a1f31923c6b4dc2e15d9944049471ed42083faab3504",
+    "PushCapabilityCard.tsx": "31543da5c4c799511effe76b5f49d333c27776eb50480c144c2207f082cca909",
+    "styles.css": "a7b0d981b83a518ca637d42c8d079937541ae69e7ad600ff4bd12716da884d40"
+  },
+  "arms": [
+    {
+      "name": "killM1-refusal-goes-silent-again",
+      "order": "ORD-0250",
+      "why": "the exact defect ORD-0250 was filed for: a press that is refused and says nothing",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "ownerNode": "ord0250-1",
+      "ownerSpec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "c5147f4f0a59bc2cfb0989d4f186936be8643751c48c032fca51bd524aed3fdf",
+      "restored_sha256": "6d66978e798dc70065d2a1f31923c6b4dc2e15d9944049471ed42083faab3504",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "exitCode": 0,
+        "runId": "run144703",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144703.log",
+        "summary": "4 passed (16.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0250-1": "GREEN",
+          "ord0250-2": "GREEN",
+          "ord0250-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "exitCode": 1,
+        "runId": "run144720",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144720.log",
+        "summary": "3 passed (25.3s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0250-1": "RED",
+          "ord0250-2": "GREEN",
+          "ord0250-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 0,
+        "runId": "run144747",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144747.log",
+        "summary": "4 passed (12.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0250-1"
+      ],
+      "survivingNodes": [
+        "ord0250-2",
+        "ord0250-3"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "killM2-length-floor-lowered-to-one",
+      "order": "ORD-0250",
+      "why": "the boundary stops being the boundary: seven characters is planned from",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "ownerNode": "ord0250-2",
+      "ownerSpec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "20fa1488700d6ec79933a6eedb92b44512a8876a9afeababe27b2cfca12bea29",
+      "restored_sha256": "6d66978e798dc70065d2a1f31923c6b4dc2e15d9944049471ed42083faab3504",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "exitCode": 0,
+        "runId": "run144760",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144760.log",
+        "summary": "4 passed (14.4s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0250-1": "GREEN",
+          "ord0250-2": "GREEN",
+          "ord0250-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "exitCode": 1,
+        "runId": "run144775",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144775.log",
+        "summary": "3 passed (14.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0250-1": "GREEN",
+          "ord0250-2": "RED",
+          "ord0250-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 0,
+        "runId": "run144791",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144791.log",
+        "summary": "4 passed (12.0s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0250-2"
+      ],
+      "survivingNodes": [
+        "ord0250-1",
+        "ord0250-3"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "killM3-control-stops-saying-it-cannot-advance",
+      "order": "ORD-0250",
+      "why": "an unusable press presented as an ordinary button, and dropped out of the keyboard path",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "ownerNode": "ord0250-3",
+      "ownerSpec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "d838a39b51623a9943b2ee90ff2c6403f2a9029d4e2521d945d2fd20b047e0c1",
+      "restored_sha256": "6d66978e798dc70065d2a1f31923c6b4dc2e15d9944049471ed42083faab3504",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "exitCode": 0,
+        "runId": "run144804",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144804.log",
+        "summary": "4 passed (14.2s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0250-1": "GREEN",
+          "ord0250-2": "GREEN",
+          "ord0250-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "exitCode": 1,
+        "runId": "run144819",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144819.log",
+        "summary": "3 passed (14.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0250-1": "GREEN",
+          "ord0250-2": "GREEN",
+          "ord0250-3": "RED"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 0,
+        "runId": "run144835",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144835.log",
+        "summary": "4 passed (12.6s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0250-3"
+      ],
+      "survivingNodes": [
+        "ord0250-1",
+        "ord0250-2"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "killK1-server-label-echoed-again",
+      "order": "ORD-0251",
+      "why": "the pre-fix line from /v8/me: the server's own enum as the traveller's status",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\notifications\\PushCapabilityCard.tsx",
+      "ownerNode": "ord0251-1",
+      "ownerSpec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "0f41771919cba2be9dcb5c9f3cfbf2347fee7623e2b91f5f36ea0a7da711cca3",
+      "restored_sha256": "31543da5c4c799511effe76b5f49d333c27776eb50480c144c2207f082cca909",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 0,
+        "runId": "run144848",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144848.log",
+        "summary": "4 passed (12.0s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 1,
+        "runId": "run144861",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144861.log",
+        "summary": "2 passed (13.2s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "RED",
+          "ord0251-2": "RED",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "exitCode": 0,
+        "runId": "run144875",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144875.log",
+        "summary": "4 passed (14.4s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0250-1": "GREEN",
+          "ord0250-2": "GREEN",
+          "ord0250-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0251-1",
+        "ord0251-2"
+      ],
+      "survivingNodes": [
+        "ord0251-3"
+      ],
+      "exclusiveToOwner": false,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "killK1b-state-stops-saying-what-it-means",
+      "order": "ORD-0251",
+      "why": "added after the v1 pass: K1 reddens nodes 1 AND 2 (an echo breaks both readings), so node 1 needed a mutant of its own -- a status line that names a state but never says what it means for the traveller",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\notifications\\PushCapabilityCard.tsx",
+      "ownerNode": "ord0251-1",
+      "ownerSpec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "18f4fe3afcae421b12d4ce5c698460d2dfb0ee87d07c229c318f0db88c16a8fe",
+      "restored_sha256": "31543da5c4c799511effe76b5f49d333c27776eb50480c144c2207f082cca909",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 0,
+        "runId": "run144891",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144891.log",
+        "summary": "4 passed (12.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 1,
+        "runId": "run144904",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144904.log",
+        "summary": "3 passed (12.6s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "RED",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "exitCode": 0,
+        "runId": "run144917",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144917.log",
+        "summary": "4 passed (14.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0250-1": "GREEN",
+          "ord0250-2": "GREEN",
+          "ord0250-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0251-1"
+      ],
+      "survivingNodes": [
+        "ord0251-2",
+        "ord0251-3"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "killK2-unknown-label-wears-a-known-sentence",
+      "order": "ORD-0251",
+      "why": "fail closed quietly becomes fail comfortable: a status we do not know is reported as one we do",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\notifications\\PushCapabilityCard.tsx",
+      "ownerNode": "ord0251-2",
+      "ownerSpec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "76fb30cd8a77f4418ee3d2900694d43a7386bb0ee36b1ed31177bfaecef8b00d",
+      "restored_sha256": "31543da5c4c799511effe76b5f49d333c27776eb50480c144c2207f082cca909",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 0,
+        "runId": "run144933",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144933.log",
+        "summary": "4 passed (12.3s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 1,
+        "runId": "run144946",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144946.log",
+        "summary": "3 passed (13.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "RED",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "exitCode": 0,
+        "runId": "run144960",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144960.log",
+        "summary": "4 passed (15.0s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0250-1": "GREEN",
+          "ord0250-2": "GREEN",
+          "ord0250-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0251-2"
+      ],
+      "survivingNodes": [
+        "ord0251-1",
+        "ord0251-3"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "killK3-not-knowable-sentinel-back-on-data",
+      "order": "ORD-0251",
+      "why": "the internal -1 published again on an attribute a gate parses as a count",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "ownerNode": "ord0251-3",
+      "ownerSpec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "268425d93628a60f496ccb4e59b2e82dc96859089c30c711e77a825f5f0188c4",
+      "restored_sha256": "6d66978e798dc70065d2a1f31923c6b4dc2e15d9944049471ed42083faab3504",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 0,
+        "runId": "run144976",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144976.log",
+        "summary": "4 passed (12.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 1,
+        "runId": "run144989",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run144989.log",
+        "summary": "3 passed (12.2s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "RED"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-empty-request-says-what-is-missing.spec.ts",
+        "exitCode": 0,
+        "runId": "run145003",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run145003.log",
+        "summary": "4 passed (14.7s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0250-1": "GREEN",
+          "ord0250-2": "GREEN",
+          "ord0250-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0251-3"
+      ],
+      "survivingNodes": [
+        "ord0251-1",
+        "ord0251-2"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "killW2-touch-floor-re-narrowed-to-one-class",
+      "order": "ORD-0247",
+      "why": "the single-page fix the widened acceptance exists to refuse: bookings passes, the AI sheet's 「技术详情」 goes back to 25px",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\styles.css",
+      "ownerNode": "ord0247w-1",
+      "ownerSpec": "e2e/qoder-every-summary-is-tappable.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "c05e9b33ac144dde9cadfaad56a2a1eba841083a21f69c91cc5d8e5dbaaa94d6",
+      "restored_sha256": "a7b0d981b83a518ca637d42c8d079937541ae69e7ad600ff4bd12716da884d40",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-every-summary-is-tappable.spec.ts",
+        "exitCode": 0,
+        "runId": "run145018",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run145018.log",
+        "summary": "4 passed (26.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247w-1": "GREEN",
+          "ord0247w-2": "GREEN",
+          "ord0247w-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-every-summary-is-tappable.spec.ts",
+        "exitCode": 1,
+        "runId": "run145046",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run145046.log",
+        "summary": "3 passed (27.0s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247w-1": "RED",
+          "ord0247w-2": "GREEN",
+          "ord0247w-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 0,
+        "runId": "run145074",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run145074.log",
+        "summary": "4 passed (12.3s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0247w-1"
+      ],
+      "survivingNodes": [
+        "ord0247w-2",
+        "ord0247w-3"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "killW3-reported-disclosure-leaves-the-sweep",
+      "order": "ORD-0247",
+      "why": "a sweep over nothing would still read green, so the inventory has to keep containing the controls that were reported",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "ownerNode": "ord0247w-2",
+      "ownerSpec": "e2e/qoder-every-summary-is-tappable.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "002291515ecda16daed71bae638ce43493e8ad0ce1a06f252764d90ca9aa5cb7",
+      "restored_sha256": "6d66978e798dc70065d2a1f31923c6b4dc2e15d9944049471ed42083faab3504",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-every-summary-is-tappable.spec.ts",
+        "exitCode": 0,
+        "runId": "run145087",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run145087.log",
+        "summary": "4 passed (25.9s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247w-1": "GREEN",
+          "ord0247w-2": "GREEN",
+          "ord0247w-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-every-summary-is-tappable.spec.ts",
+        "exitCode": 1,
+        "runId": "run145114",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run145114.log",
+        "summary": "3 passed (28.6s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247w-1": "GREEN",
+          "ord0247w-2": "RED",
+          "ord0247w-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 0,
+        "runId": "run145144",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run145144.log",
+        "summary": "4 passed (14.2s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0247w-2"
+      ],
+      "survivingNodes": [
+        "ord0247w-1",
+        "ord0247w-3"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "killW4-touch-floor-moved-out-of-the-mobile-layer",
+      "order": "ORD-0247",
+      "why": "the touch floor leaking onto the pointer layout, which Amendment F-2 owns",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\styles.css",
+      "ownerNode": "ord0247w-3",
+      "ownerSpec": "e2e/qoder-every-summary-is-tappable.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "91f7a90e4e8b58d4299a9085ff9587d2ba6123bf06bb46b26ec95298109830dd",
+      "restored_sha256": "a7b0d981b83a518ca637d42c8d079937541ae69e7ad600ff4bd12716da884d40",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-every-summary-is-tappable.spec.ts",
+        "exitCode": 0,
+        "runId": "run145160",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run145160.log",
+        "summary": "4 passed (28.6s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247w-1": "GREEN",
+          "ord0247w-2": "GREEN",
+          "ord0247w-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-every-summary-is-tappable.spec.ts",
+        "exitCode": 1,
+        "runId": "run145189",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run145189.log",
+        "summary": "3 passed (28.3s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0247w-1": "GREEN",
+          "ord0247w-2": "GREEN",
+          "ord0247w-3": "RED"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-mirror-spec",
+        "spec": "e2e/qoder-no-internal-words-or-sentinels.spec.ts",
+        "exitCode": 0,
+        "runId": "run145219",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run145219.log",
+        "summary": "4 passed (12.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0251-1": "GREEN",
+          "ord0251-2": "GREEN",
+          "ord0251-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0247w-3"
+      ],
+      "survivingNodes": [
+        "ord0247w-1",
+        "ord0247w-2"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    }
+  ],
+  "filesAfter": {
+    "PlanWithAiSheet.tsx": "6d66978e798dc70065d2a1f31923c6b4dc2e15d9944049471ed42083faab3504",
+    "PushCapabilityCard.tsx": "31543da5c4c799511effe76b5f49d333c27776eb50480c144c2207f082cca909",
+    "styles.css": "a7b0d981b83a518ca637d42c8d079937541ae69e7ad600ff4bd12716da884d40"
+  },
+  "treeUnchangedByThisRun": true,
+  "allArmsKilled": true,
+  "exclusiveKiller": {
+    "ord0250-1": [
+      "killM1-refusal-goes-silent-again"
+    ],
+    "ord0250-2": [
+      "killM2-length-floor-lowered-to-one"
+    ],
+    "ord0250-3": [
+      "killM3-control-stops-saying-it-cannot-advance"
+    ],
+    "ord0251-1": [
+      "killK1b-state-stops-saying-what-it-means"
+    ],
+    "ord0251-2": [
+      "killK2-unknown-label-wears-a-known-sentence"
+    ],
+    "ord0251-3": [
+      "killK3-not-knowable-sentinel-back-on-data"
+    ],
+    "ord0247w-1": [
+      "killW2-touch-floor-re-narrowed-to-one-class"
+    ],
+    "ord0247w-2": [
+      "killW3-reported-disclosure-leaves-the-sweep"
+    ],
+    "ord0247w-3": [
+      "killW4-touch-floor-moved-out-of-the-mobile-layer"
+    ]
+  },
+  "nodesWithoutAKillingArm": [],
+  "mirrorCollateral": [
+    {
+      "arm": "killM1-refusal-goes-silent-again",
+      "mirrorRed": []
+    },
+    {
+      "arm": "killM2-length-floor-lowered-to-one",
+      "mirrorRed": []
+    },
+    {
+      "arm": "killM3-control-stops-saying-it-cannot-advance",
+      "mirrorRed": []
+    },
+    {
+      "arm": "killK1-server-label-echoed-again",
+      "mirrorRed": []
+    },
+    {
+      "arm": "killK1b-state-stops-saying-what-it-means",
+      "mirrorRed": []
+    },
+    {
+      "arm": "killK2-unknown-label-wears-a-known-sentence",
+      "mirrorRed": []
+    },
+    {
+      "arm": "killK3-not-knowable-sentinel-back-on-data",
+      "mirrorRed": []
+    },
+    {
+      "arm": "killW2-touch-floor-re-narrowed-to-one-class",
+      "mirrorRed": []
+    },
+    {
+      "arm": "killW3-reported-disclosure-leaves-the-sweep",
+      "mirrorRed": []
+    },
+    {
+      "arm": "killW4-touch-floor-moved-out-of-the-mobile-layer",
+      "mirrorRed": []
+    }
+  ],
+  "invalidStackArms": [],
+  "publishedBy": "e345b9d6 for ORD-0251",
+  "guardPath": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace"
+}
