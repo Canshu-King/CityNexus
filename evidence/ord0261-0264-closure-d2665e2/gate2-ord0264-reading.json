@@ -1,0 +1,34 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0264",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "locality": {
+  "openerPresent": true,
+  "insideStep1Card": true,
+  "adjacentToItsDetails": true
+ },
+ "wheel": {
+  "before": 0,
+  "after": 480,
+  "scrolled": 480
+ },
+ "probe": {
+  "box": [
+   348,
+   44
+  ],
+  "centre": [
+   195,
+   623
+  ],
+  "hitTag": "BUTTON",
+  "hitText": "高级设置",
+  "hitsItself": true,
+  "inViewport": true,
+  "scrollY": 480
+ },
+ "draftWord": "外滩"
+}
