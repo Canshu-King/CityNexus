@@ -1,0 +1,173 @@
+{
+ "order": "ORD-0268 PRECACHE_SHELL_DOUBLE_ENTRY · 读数令（三格，第③格为 killer）",
+ "lane": "B c01d72a3",
+ "at": "2026-09-23T22:24:44+08:00",
+ "verifier_named_by_commander": "HJ-P3 或 HARNESS 任一持尺者；落地归 commander",
+ "scope_kept": "只回答'同一 shell 的两条 precache 条目谁赢、换代后缓存里的 shell 会不会永远旧'；不改文案、不动 0267 那三层、不碰产品 fetch 逻辑",
+ "how": "两枚真实相邻代（d2665e25 与 landed 尖 2b49e3ca）各自 git archive 导出 + 仓库自带 vite build；killer 是导出树副本里删掉一行 additionalManifestEntries —— 没有在任何一个被跟踪的树上改过东西",
+ "cell_1_two_entries_in_one_manifest": {
+  "verdict": "MEASURED",
+  "manifest_entry_count": 9,
+  "entries_verbatim": [
+   {
+    "url": "sw.js",
+    "revision": "1eebbb6edab96b95a31dc1f94d1a6cda"
+   },
+   {
+    "url": "index.html",
+    "revision": "213aa276841d50a8a61cf75dd7408a7f"
+   },
+   {
+    "url": "assets/maplibre-gl-kx9AWR05.js",
+    "revision": "null"
+   },
+   {
+    "url": "assets/JourneyMap-TiEm8jyP.js",
+    "revision": "null"
+   },
+   {
+    "url": "assets/index-I45CQek8.css",
+    "revision": "null"
+   },
+   {
+    "url": "assets/index-Cpy_jhEg.js",
+    "revision": "null"
+   },
+   {
+    "url": "/index.html",
+    "revision": "v10-shell"
+   },
+   {
+    "url": "favicon.svg",
+    "revision": "339a4892318ff75bf4dccf7d426c193c"
+   },
+   {
+    "url": "manifest.webmanifest",
+    "revision": "d726b6647c68d06bafae8784f74043e3"
+   }
+  ],
+  "duplicate_groups_by_resolved_url": {
+   "/index.html": [
+    {
+     "url": "index.html",
+     "revision": "213aa276841d50a8a61cf75dd7408a7f"
+    },
+    {
+     "url": "/index.html",
+     "revision": "v10-shell"
+    }
+   ]
+  },
+  "shell_content_differs_across_generations": {
+   "genA_index_html_blob40": "22c06833b56c72679b60085fea5bcb435db1d027",
+   "genB_index_html_blob40": "cf230773437c3dd6bc44173674781be95e9a3cde",
+   "content_derived_entry_changed_revision": true,
+   "hand_written_entry_kept_revision": true,
+   "the_two_revisions": {
+    "content_derived": [
+     "213aa276841d50a8a61cf75dd7408a7f"
+    ],
+    "hand_written_constant": [
+     "v10-shell"
+    ]
+   }
+  },
+  "cross_check": "我构建出的 B 代资产名 index-Cpy_jhEg.js 与指挥官账本 22:0x §② 那枚发布代同名，说明这两枚代就是线上那两枚"
+ },
+ "cell_2_offline_after_a_real_swap": {
+  "verdict": "MEASURED",
+  "sequence": {
+   "1_online_genA": {
+    "navigation": {
+     "ok": true,
+     "status": 200,
+     "from_service_worker": false
+    },
+    "controlled_by": "/v10-sw.js",
+    "caches": [],
+    "shell_asset_in_served_document": "/assets/index-D76m_cky.js"
+   },
+   "2_online_genB_swap": {
+    "navigation": {
+     "ok": true,
+     "status": 200,
+     "from_service_worker": false
+    },
+    "controlled_by": "/v10-sw.js",
+    "caches": [],
+    "shell_asset_in_served_document": "/assets/index-Cpy_jhEg.js"
+   },
+   "3_offline_after_swap": {
+    "navigation": {
+     "ok": false,
+     "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub"
+    },
+    "controlled_by": null,
+    "caches": [
+     "read threw"
+    ],
+    "shell_asset_in_served_document": null
+   }
+  },
+  "what_the_traveller_gets": "既不是新一代也不是旧 shell —— 第 3 步是浏览器自己的 ERR_CONNECTION_REFUSED，产品那句话根本没机会出现",
+  "why": "整条序列里 CacheStorage 始终是 []：precache 从未落地，所以离线时没有任何壳可返回",
+  "answers_the_ordered_question_literally": "被问的'缓存里的 shell 会不会永远旧'在这枚构建上的真答案是**根本没有这份缓存**；不是'有但永远旧'"
+ },
+ "cell_3_killer": {
+  "the_edit": "additionalManifestEntries: [{ url: \"/index.html\", revision: \"v10-shell\" }],  → 删除",
+  "manifest_entry_count_after": 8,
+  "duplicate_groups_after_kill": {},
+  "sequence": {
+   "1_online_genA": {
+    "navigation": {
+     "ok": true,
+     "status": 200,
+     "from_service_worker": false
+    },
+    "caches": [],
+    "shell_asset_in_served_document": "/assets/index-D76m_cky.js"
+   },
+   "2_online_genB_swap": {
+    "navigation": {
+     "ok": true,
+     "status": 200,
+     "from_service_worker": false
+    },
+    "caches": [
+     "workbox-precache-v2-http://127.0.0.1:4441/"
+    ],
+    "shell_asset_in_served_document": "/assets/index-Cpy_jhEg.js"
+   },
+   "3_offline_after_swap": {
+    "navigation": {
+     "ok": true,
+     "status": 200,
+     "from_service_worker": true
+    },
+    "caches": [
+     "workbox-precache-v2-http://127.0.0.1:4441/"
+    ],
+    "shell_asset_in_served_document": "/assets/index-Cpy_jhEg.js"
+   }
+  },
+  "offline_result_normal": {
+   "ok": false,
+   "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub"
+  },
+  "offline_result_killer": {
+   "ok": true,
+   "status": 200,
+   "from_service_worker": true
+  },
+  "flipped": true,
+  "verdict": "KILLER FLIPPED IT ⇒ 双条目是 operative cause（不是并列嫌疑）",
+  "what_the_killer_serves": "killer 序列第 3 步：status 200 / from_service_worker=true / 缓存名 workbox-precache-v2-http://127.0.0.1:4441/ / 文档引用的是**新一代**资产 index-Cpy_jhEg.js ⇒ 去掉重复条目后，换代 shell 会更新，离线也有壳可答"
+ },
+ "boundaries_of_this_reading": [
+  "一次换代、一个 loopback origin、一个 profile；结论是'这枚构建上双条目让 precache 落不了地'，不是对所有代次/所有部署形状的断言",
+  "killer 序列里 precache 是在**第 2 步（换到 B 代）**才出现，不在第 1 步；这与'worker 脚本变化触发重新 install'一致，但我只量到时序，没量到 install 抛点 —— Workbox 里两条同 URL 谁赢（first-wins 还是 last-wins）我**没**从产品代码或库源码钉死，留给持尺者或下一步只读",
+  "'永远旧'这一支未被证实也未被排除：常数 revision 确实跨代不变，但这一轮它没机会单独致害（缓存压根没建）",
+  "第 1 格与第 2 格之间没有循环论证：第 1 格纯静态、第 2 格纯行为、第 3 格是第 2 格的反向"
+ ],
+ "for_0267": "0267 那格'生产 SW 没接管导航、也没有缓存壳'与本单第 2 格是同一件事的两个读数；层位仍在 /v10-sw.js 的 lifecycle/cache/navigation，而本单把它的**成因候选**收窄到一行清单"
+}
