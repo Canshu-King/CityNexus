@@ -1,0 +1,102 @@
+{
+ "note": "canary screenshots taken in the playwright lane; copied out of the MCP server dir into this order dir. sha256[:16] is recorded so identical frames cannot be passed off as different readings.",
+ "count": 19,
+ "distinct_hashes": 13,
+ "rows": [
+  {
+   "file": "ord0254_agent.png",
+   "bytes": 61718,
+   "sha256_16": "f876d5044723e9b5"
+  },
+  {
+   "file": "ord0254_ai_sheet.png",
+   "bytes": 40899,
+   "sha256_16": "687dbd9912470c0f"
+  },
+  {
+   "file": "ord0254_bookings.png",
+   "bytes": 61774,
+   "sha256_16": "16dd726796699945"
+  },
+  {
+   "file": "ord0254_failed_read.png",
+   "bytes": 25714,
+   "sha256_16": "619d820d24b947eb"
+  },
+  {
+   "file": "ord0254_failed_read2.png",
+   "bytes": 25714,
+   "sha256_16": "619d820d24b947eb"
+  },
+  {
+   "file": "ord0254_hub.png",
+   "bytes": 188853,
+   "sha256_16": "e90329662447c7a6"
+  },
+  {
+   "file": "ord0254_map.png",
+   "bytes": 61718,
+   "sha256_16": "f876d5044723e9b5"
+  },
+  {
+   "file": "ord0254_map2.png",
+   "bytes": 61718,
+   "sha256_16": "f876d5044723e9b5"
+  },
+  {
+   "file": "ord0254_map3.png",
+   "bytes": 45536,
+   "sha256_16": "a4f0d74ebbcb362f"
+  },
+  {
+   "file": "ord0254_sim.png",
+   "bytes": 62448,
+   "sha256_16": "c30dc227d3d5e5ce"
+  },
+  {
+   "file": "ord0254_today_after_demo.png",
+   "bytes": 60560,
+   "sha256_16": "8628708cbc13a093"
+  },
+  {
+   "file": "ord0254_trips.png",
+   "bytes": 61718,
+   "sha256_16": "f876d5044723e9b5"
+  },
+  {
+   "file": "ord0254_v8_v8agent.png",
+   "bytes": 57597,
+   "sha256_16": "6f9f4403f3eb4057"
+  },
+  {
+   "file": "ord0254_v8_v8bookings.png",
+   "bytes": 50237,
+   "sha256_16": "fbab4ccb930ad661"
+  },
+  {
+   "file": "ord0254_v8_v8hub.png",
+   "bytes": 61774,
+   "sha256_16": "16dd726796699945"
+  },
+  {
+   "file": "ord0254_v8_v8live.png",
+   "bytes": 52457,
+   "sha256_16": "9afede78d2ef0076"
+  },
+  {
+   "file": "ord0254_v8_v8map.png",
+   "bytes": 45536,
+   "sha256_16": "a4f0d74ebbcb362f"
+  },
+  {
+   "file": "ord0254_v8_v8me.png",
+   "bytes": 44145,
+   "sha256_16": "b0e4b2958bb054b0"
+  },
+  {
+   "file": "ord0254_wizard_step2.png",
+   "bytes": 39069,
+   "sha256_16": "adbe6d1757bcf7e9"
+  }
+ ]
+}
