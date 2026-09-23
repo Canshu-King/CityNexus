@@ -14,8 +14,8 @@ import json
 import threading
 import uuid
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
-import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import select
 
@@ -25,6 +25,7 @@ from app.db.session import SessionLocal
 from app.main import app
 
 client = TestClient(app)
+BACKEND = Path(__file__).resolve().parents[1] / "app"      # 被扫的产品代码根（⑦ 那格用）
 TZ = timezone(timedelta(hours=8))
 CMD_A = "我护照丢了，请告诉我怎么办。"
 CMD_B = "帮我把今晚的安排换成室内活动，节奏慢一点。"
@@ -213,3 +214,59 @@ def test_6_the_two_sentences_are_compared_literally_and_the_door_would_notice_dr
     # 反面对照：完全相同的那句必须认。少了它，上面那一串"全都不认"可能只是比较坏了。
     assert _message_equals(_Resp(SENT_INCOMPLETE_RECEIPT), SENT_INCOMPLETE_RECEIPT), (
         "G4：连等值都不认 ⇒ 这一手是坏的，不是严的")
+
+
+# ------------------------------------------- 仲裁 blocker：未回填占位不得成为"永久毒键"，
+# ------------------------------------------- 但恢复规则只许 fail-closed，禁止"删行重跑"（会重复副作用）
+
+def test_7_no_code_path_deletes_or_expires_away_an_idempotency_row() -> None:
+    """owner=⑦：把被禁的那条路钉死——**全仓没有任何一处**删 idempotency_keys 的行。
+
+    "按 expires_at 到点删掉占位再重跑 impl" 会在"赢家已落 mission、只来不及填回执"时重新
+    制造重复副作用；仲裁禁止它。这里不靠我记得，靠扫：形制变了就红。
+    """
+    offenders = []
+    for path in sorted(BACKEND.rglob("*.py")):
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for number, line in enumerate(text.splitlines(), start=1):
+            low = line.lower()
+            if "idempotency_keys" in low and ("delete from" in low or "truncate" in low):
+                offenders.append(f"{path.relative_to(BACKEND)}:{number}")
+            elif "idempotencykey" in low and (".delete()" in low or "delete(" in low):
+                offenders.append(f"{path.relative_to(BACKEND)}:{number}")
+    assert offenders == [], (
+        f"⑦：出现删除/清空幂等行的路径 ⇒ 恢复规则被写成'删了重跑'（仲裁禁止）：{offenders}")
+
+
+def test_8_a_committed_run_never_leaves_an_unfilled_claim() -> None:
+    """owner=⑧：同事务落库 ⇒ 成功那发之后，库里**不该存在** response_json 为空的行。
+
+    这不是"顺手查一下"：它正是"未回填占位=永久毒键"这一担忧的反证——形状根本不出来，
+    就不需要谁去回收它。
+    """
+    jid = _setup_journey()
+    key = f"cf-noshell-{uuid.uuid4().hex[:8]}"
+    response = _post_key(jid, key)
+    assert response.status_code == 200, response.text
+    # 只查**这一发**留下的行：前面几格是故意预置"未回填占位"当输入的，把它们算进来
+    # 就等于我的仪器在测我自己的夹具，而不是测产品（这个错我自己刚踩过一次）。
+    with SessionLocal() as session:
+        shells = list(session.scalars(select(IdempotencyKey).where(
+            IdempotencyKey.key == f"agent.command:{key}",
+            (IdempotencyKey.response_json.is_(None)) | (IdempotencyKey.response_status.is_(None)))))
+    assert shells == [], (
+        f"⑧：留下 {len(shells)} 行未回填占位 ⇒ 这一把键会永久废掉（仲裁 blocker），"
+        "且说明占位与答案没在同一次提交里")
+
+
+def test_9_completed_receipts_keep_the_existing_seven_day_semantics() -> None:
+    """owner=⑨：completed 回执的有效期**沿用 +7d**，不许为了"回收占位"偷偷改成短 TTL。"""
+    jid = _setup_journey()
+    key = f"cf-ttl-{uuid.uuid4().hex[:8]}"
+    assert _post_key(jid, key).status_code == 200
+    rows = _receipt_rows(f"agent.command:{key}")
+    assert len(rows) == 1, f"⑨：应 1 行，实际 {len(rows)}"
+    created = datetime.fromisoformat(rows[0].created_at)
+    expires = datetime.fromisoformat(rows[0].expires_at)
+    assert (expires - created) == timedelta(days=7), (
+        f"⑨：有效期变成 {expires - created} ⇒ 有人把它当回收钩子用了（应为现成的 +7d）")

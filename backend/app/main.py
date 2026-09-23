@@ -160,7 +160,7 @@ from app.db.models import (
 from app.db.models import (
     ReplanProposal as ReplanProposalModel,
 )
-from app.db.session import SessionLocal, ensure_schema, get_session
+from app.db.session import SessionLocal, engine, ensure_schema, get_session
 from app.execution.clock import execution_clock
 from app.execution.traveler_twin import (
     clear_learned,
@@ -1085,42 +1085,52 @@ def run_agent_command(
         }
     )
     scoped_key = f"agent.command:{header_key}"
+    scoped_key = f"agent.command:{header_key}"
     with journey_write_lock(str(journey_id)):
-        # claim-first: 先把这把键**占住并提交**，才有资格写 mission。
+        # 进程内这把锁只是优化；**互斥点是唯一索引在提交时说的那句话**。
         #
-        # 旧写法是"先跑 impl、再写收据"。`_run_agent_command_impl` 自己在函数里就
-        # `session.commit()`，所以两个写者同时进来时，败者的 mission 早已落库——之后
-        # 收据那一插撞唯一索引、回滚，也收不回已经提交的那一行：两边各拿同一枚 mission
-        # 的正文，库里却留了两行（实测形态名 GHOST_MISSION_ROW）。
-        # 现在所有权由"唯一索引 + 已提交的占位行"决定：抢不到键的人**根本不进 impl**，
-        # 因此根本不建行。进程内那把锁仍是优化，不是契约。
+        # 为什么不在这里"先提交占位、再跑 impl"：`_run_agent_command_impl` 自己在函数里
+        # `session.commit()`，那只会把"两枚 mission"换成"一枚 mission + 一次失败运行"，
+        # 库里仍然留痕（红队 5795662769 的硬要求，我照做）。现在占位行、impl 写的 mission、
+        # 这一发的答案在**同一个外层事务**里：impl 的 commit 在 create_savepoint 模式下只
+        # RELEASE SAVEPOINT，不落库，所以抢不到键的那一方在最外层 commit 撞主键、整个事务
+        # 回滚 —— mission 与占位一起消失，不是"回滚收不回已提交的那一行"。
+        replayed = _replay_committed_accept(session, scoped_key, signature)
+        if replayed is not None:
+            return replayed
         now = datetime.now(timezone.utc)
-        session.add(
-            IdempotencyKey(
-                key=scoped_key,
-                operation="agent.command",
-                request_hash=signature,
-                response_status=None,
-                response_json=None,
-                created_at=now.isoformat(),
-                expires_at=(now + timedelta(days=7)).isoformat(),
-            )
-        )
-        try:
-            session.commit()
-        except IntegrityError as exc:
-            session.rollback()
-            raced = _replay_committed_accept(session, scoped_key, signature, wait=True)
-            if raced is not None:
-                return raced
-            # 现成那句，不新造词：占了键却永远没回填，就是"回执不完整"（agent/gateway.py:66 同句）。
-            # 不写成 503——这不是锁忙，是一次没走完的 claim；也不许被顺手洗成 200。
-            raise HTTPException(409, "agent idempotency record is incomplete") from exc
-        response = _run_agent_command_impl(journey_id, payload, session)
-        receipt = session.get(IdempotencyKey, scoped_key)
-        receipt.response_status = getattr(response, "status_code", 200)
-        receipt.response_json = json.dumps(response, sort_keys=True)
-        session.commit()
+        with engine.connect() as claim_conn:
+            claim_tx = claim_conn.begin()
+            claim_session = Session(bind=claim_conn,
+                                    join_transaction_mode="create_savepoint",
+                                    expire_on_commit=False)
+            try:
+                response = _run_agent_command_impl(journey_id, payload, claim_session)
+                claim_session.add(
+                    IdempotencyKey(
+                        key=scoped_key,
+                        operation="agent.command",
+                        request_hash=signature,
+                        response_status=getattr(response, "status_code", 200),
+                        response_json=json.dumps(response, sort_keys=True),
+                        created_at=now.isoformat(),
+                        expires_at=(now + timedelta(days=7)).isoformat(),
+                    )
+                )
+                claim_session.flush()        # 关键：外层连接 commit 不会替 ORM 落待写对象
+                claim_tx.commit()          # 同一时刻：mission 可见 + 回执完整
+            except IntegrityError as exc:
+                # 唯一索引判定别人先落地了。回滚之后只能**读**赢家的答案；
+                # 绝不删行、绝不重跑 impl —— 那正是"重复既有副作用"的入口。
+                claim_tx.rollback()
+                raced = _replay_committed_accept(session, scoped_key, signature, wait=True)
+                if raced is not None:
+                    return raced
+                raise HTTPException(
+                    409, "agent idempotency record is incomplete"
+                ) from exc
+            finally:
+                claim_session.close()
     return response
 
 
