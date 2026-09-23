@@ -1,0 +1,270 @@
+{
+ "what": "ORD-0253 · Phase A/B claim-first（仲裁 5796421307 §② 的形状）三格读数 + 五格机械门归属",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-23T23:21:26+08:00",
+ "coordinates": {
+  "head": "408d851ec2ec7ab02142233c6a497c5037adfda4",
+  "tree": "1791ac84b7fbb9f3c791c337d630b1bb6fc60f71",
+  "chain": [
+   "408d851",
+   "e8b994c",
+   "319ea24",
+   "1f86a8f",
+   "5796c16"
+  ],
+  "chain_with_subjects": [
+   "408d851 test(ord0253): the claim-first door refuses to read green while external AI or Hermes is armed",
+   "e8b994c refactor(ord0253): drop the deferred-commit adapter the mutation campaign proved redundant",
+   "319ea24 feat(ord0253): claim the key in its own committed transaction before any side effect runs",
+   "1f86a8f wip(ord0253): atomic claim-first — blocker (iii) met, (i) measured, (ii) NOT met yet (1 row still survives)",
+   "5796c16 feat(ord0253): claim the key before the work runs, so the loser cannot leave a second mission"
+  ],
+  "not_mergeable_superseded": "1f86a8f 1f86a8f69007b04157e71aec4ba0e783dd3de67e",
+  "base_before_this_order": "aabd47e aabd47e69c6615883022c6e9fa027b434e844b91",
+  "blobs": {
+   "backend/app/main.py": "0045ab5208e21f0e49cd9a39cb45efe18b78f72a",
+   "backend/tests/test_qoder_agent_command_claim_first.py": "32f5a5df07bb951cef9e82252e9274132552651e",
+   "backend/tests/test_qoder_agent_command_idempotency.py": "03bdd3af48a9caacc46d5c652c5d0d9c3282f198",
+   "backend/tests/test_qoder_agent_command_idempotency_xproc.py": "3176da2cffd9533be9bea93daa095e5df89a4c0c"
+  },
+  "pushed": false,
+  "replay_proof": {
+   "replayed_tree": "1791ac84b7fbb9f3c791c337d630b1bb6fc60f71",
+   "head_tree": "1791ac84b7fbb9f3c791c337d630b1bb6fc60f71",
+   "byte_equal": true,
+   "base_tree_rev": "1f86a8f",
+   "patches": [
+    {
+     "name": "0001-feat-ord0253-claim-the-key-in-its-own-committed-tran.patch",
+     "bytes": 24672,
+     "sha256_12": "2e0ca8f4b441"
+    },
+    {
+     "name": "0002-refactor-ord0253-drop-the-deferred-commit-adapter-th.patch",
+     "bytes": 3744,
+     "sha256_12": "4b06e1218908"
+    },
+    {
+     "name": "0003-test-ord0253-the-claim-first-door-refuses-to-read-gr.patch",
+     "bytes": 2075,
+     "sha256_12": "18be99397a96"
+    }
+   ]
+  }
+ },
+ "three_readings": {
+  "(i) 占位=跨进程互斥点（且是 claim-first）": "CROSS_PROCESS_MEASURED_GREEN（跨进程门 3 批，红格 0） + MEASURED_GREEN_WITH_NAMED_KILLER",
+  "(ii) mission 与占位同生同死（Phase B 回滚收得回）": "MEASURED_GREEN_WITH_NAMED_KILLER",
+  "(iii) stale-claim recovery 区分 IN_FLIGHT/COMPLETED 且不重复副作用": "MEASURED_GREEN_WITH_NAMED_KILLER"
+ },
+ "cross_process": {
+  "batches": 3,
+  "per_batch": [
+   {
+    "summary": "5 passed in 7.42s",
+    "red_cells": [],
+    "shape_tallies": []
+   },
+   {
+    "summary": "5 passed in 7.72s",
+    "red_cells": [],
+    "shape_tallies": []
+   },
+   {
+    "summary": "5 passed in 7.45s",
+    "red_cells": [],
+    "shape_tallies": []
+   }
+  ],
+  "red_cells_total": 0,
+  "reading": "全部批次 0 红 ⇒ 跨进程那一问在这一版上有实测读数；任何一批有红 ⇒ 记 RED 并附具名格与形态计数",
+  "verdict": "CROSS_PROCESS_MEASURED_GREEN"
+ },
+ "gate_and_mutations": {
+  "campaign_valid": true,
+  "control": {
+   "summary": "14 passed, 2 warnings in 5.06s",
+   "executed": 14,
+   "red_nodeids": []
+  },
+  "restore_verified": true,
+  "target_sha256_16_before_and_after": "f1b0eedd6e17217b",
+  "anchor_preflight": {
+   "counts": {
+    "M1_claim_never_committed::            claim_tx.commit()          # 早于任何 mi": 1,
+    "M2_savepoint_join_restored::        work_session = Session(bind=work_conn, e": 1,
+    "M3_fill_guard_removed::                .where(IdempotencyKey.key == sco": 1,
+    "M4_claim_ttl_shortened::                    expires_at=(now + timedelta(": 1,
+    "M5_conflict_does_not_block_the_work::        except IntegrityError as exc:\n          ": 1
+   },
+   "non_unique": {}
+  },
+  "five_gates": {
+   "① 竞争连接在 impl 之前看到已提交的 NULL claim": {
+    "nodeid": "test_10_a_competing_connection_sees_the_committed_null_claim_before_impl_starts",
+    "green_in_control": true,
+    "killed_by": [
+     "M1_claim_never_committed"
+    ],
+    "has_a_killer": true
+   },
+   "② 败者不进 impl，mission/run 行数不长": {
+    "nodeid": "test_11_the_loser_is_stopped_before_impl_and_persists_nothing",
+    "green_in_control": true,
+    "killed_by": [
+     "M5_conflict_does_not_block_the_work"
+    ],
+    "has_a_killer": true
+   },
+   "③ 赢家副作用与 completed 回执同一次提交可见": {
+    "nodeid": "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work",
+    "green_in_control": true,
+    "killed_by": [
+     "M1_claim_never_committed",
+     "M2_savepoint_join_restored"
+    ],
+    "has_a_killer": true
+   },
+   "④ 故障注入后 Phase B 无 durable 行而 NULL claim 仍在": {
+    "nodeid": "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+    "green_in_control": true,
+    "killed_by": [
+     "M1_claim_never_committed",
+     "M2_savepoint_join_restored"
+    ],
+    "has_a_killer": true
+   },
+   "⑤ stale claim 恢复不删不过期重跑且不重复副作用": {
+    "nodeid": "test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+    "green_in_control": true,
+    "killed_by": [
+     "M1_claim_never_committed",
+     "M5_conflict_does_not_block_the_work"
+    ],
+    "has_a_killer": true
+   }
+  },
+  "mutations": {
+   "M1_claim_never_committed": {
+    "claimed_result": "KILLED",
+    "derived_result": null,
+    "red_beyond_control": [
+     "test_10_a_competing_connection_sees_the_committed_null_claim_before_impl_starts",
+     "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work",
+     "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+     "test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+     "test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim",
+     "test_5_two_threads_one_key_in_one_process_stay_at_one_row",
+     "test_8_a_committed_run_never_leaves_an_unfilled_claim",
+     "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+    ],
+    "named_targets_red": [
+     "test_10_a_competing_connection_sees_the_committed_null_claim_before_impl_starts",
+     "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work"
+    ],
+    "expected_green_arm_broke": [],
+    "owner": "机械门①/③：占位不先提交 ⇒ 跨进程没有所有权点。② 自带预置占位，不该被这枚碰到（碰到就说明 ② 其实在测同一条早先回放路径，而不是测败者不进 impl）"
+   },
+   "M2_savepoint_join_restored": {
+    "claimed_result": "KILLED",
+    "derived_result": null,
+    "red_beyond_control": [
+     "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work",
+     "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+     "test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim",
+     "test_5_two_threads_one_key_in_one_process_stay_at_one_row",
+     "test_8_a_committed_run_never_leaves_an_unfilled_claim"
+    ],
+    "named_targets_red": [
+     "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+     "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work"
+    ],
+    "expected_green_arm_broke": [],
+    "owner": "机械门④/③：把 1f86a8f 那套 create_savepoint 装回来 ⇒ pysqlite 下最外层 RELEASE 即提交，注入点之前的东西就该 durable。这一枚是**上一版被判不得并线的那条机制**，它必须被这一格抓住；抓不住就说明 ④ 是空的"
+   },
+   "M3_fill_guard_removed": {
+    "claimed_result": "SURVIVED",
+    "derived_result": null,
+    "red_beyond_control": [],
+    "named_targets_red": [],
+    "expected_green_arm_broke": [],
+    "owner": "「只允许 NULL → 完成」这一道守卫：预期**存活** —— 进程内没有任何一格会把已填好的回执推进到回填那一步（早先的回放在前面就返回了）。存活就登记成『本门不测这一问』，不许写成 KILLED"
+   },
+   "M4_claim_ttl_shortened": {
+    "claimed_result": "KILLED",
+    "derived_result": null,
+    "red_beyond_control": [
+     "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+    ],
+    "named_targets_red": [
+     "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+    ],
+    "expected_green_arm_broke": [],
+    "owner": "completed 回执沿用现成 +7d：把占位 TTL 改短就是给『到点回收』开第一道门（仲裁禁止）"
+   },
+   "M5_conflict_does_not_block_the_work": {
+    "claimed_result": "KILLED",
+    "derived_result": null,
+    "red_beyond_control": [
+     "test_11_the_loser_is_stopped_before_impl_and_persists_nothing",
+     "test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+     "test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409"
+    ],
+    "named_targets_red": [
+     "test_11_the_loser_is_stopped_before_impl_and_persists_nothing",
+     "test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409"
+    ],
+    "expected_green_arm_broke": [],
+    "owner": "机械门②：唯一索引说\"不是你的\"之后还放行 impl ⇒ 所有权点不存在。这一枚是上一轮 campaign 暴露出来的**空缺**（② 当时没有任何杀手），补上才算数"
+   }
+  }
+ },
+ "regression_ab": {
+  "status": "MEASURED",
+  "comparison": {
+   "candidate_tag": "candidate_408d851",
+   "baseline_tag": "base_aabd47e",
+   "only_in_candidate": [],
+   "only_in_baseline": [
+    "tests/test_qoder_agent_command_idempotency_xproc.py::test_1_two_processes_one_key_persist_exactly_one_mission",
+    "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+   ],
+   "in_both_unions": 8,
+   "collect_denominators": {
+    "candidate_408d851": 1236,
+    "base_aabd47e": 1222
+   },
+   "reading": "候选并集 − 基线并集 为空 ⇒ 3 轮里候选没出现基线之外的名字；若非空则不能写'0 新红'，只能逐条归因"
+  },
+  "per_round_counts": {
+   "candidate_408d851": [
+    8,
+    8,
+    8
+   ],
+   "base_aabd47e": [
+    10,
+    9,
+    9
+   ]
+  },
+  "collect_denominators": {
+   "candidate_408d851": 1236,
+   "base_aabd47e": 1222
+  },
+  "blob_equality": {
+   "candidate_408d851": true,
+   "base_aabd47e": true
+  },
+  "full_sha": {
+   "candidate_408d851": "408d851ec2ec7ab02142233c6a497c5037adfda4",
+   "base_aabd47e": "aabd47e69c6615883022c6e9fa027b434e844b91"
+  }
+ },
+ "instrument_notes": [
+  "分母：`pytest -q` 不打印 collected 行 ⇒ 门体格数从摘要行 passed+failed+error 派生",
+  "M3（回填守卫拆开）SURVIVED 是**读数**：进程内没有任何一格会把已填好的回执推进到回填那一步；这一格登记为『本门不测这一问』，不当 KILLED 卖",
+  "上一版依赖的 join_transaction_mode=create_savepoint 在 pysqlite 下最外层 RELEASE 即提交（探针 o253_ghost_writer_probe 的语句序列）⇒ 已由 M2 反突变钉住：装回来 ④ 就红"
+ ],
+ "print_policy": "只印 sha/计数/语句名/约束名；0 key、0 env 值、0 用户库路径"
+}
