@@ -1,0 +1,27 @@
+{
+  "generatedBy": "e345b9d6",
+  "node": "ord0238-2-the-server-holds-what-she-said-after-the-trip-exists",
+  "head": "c40097c2fe2b40979e3b1289d234b14ff4b59ada",
+  "journeyId": "57c63ccb-ad39-4026-9a5b-2e8a022f6413",
+  "travelerId": "f984e04b-baa7-4303-9636-faaace6ebd57",
+  "rows": [
+    {
+      "category": "interest",
+      "key": "family",
+      "value": true,
+      "weight": 0.5,
+      "id": "41628610-8e42-420d-82cd-b0755e8f6ede",
+      "traveler_id": "f984e04b-baa7-4303-9636-faaace6ebd57"
+    },
+    {
+      "category": "interest",
+      "key": "food",
+      "value": true,
+      "weight": 0.5,
+      "id": "54b0711c-a2aa-49aa-9955-036af4bda3c0",
+      "traveler_id": "f984e04b-baa7-4303-9636-faaace6ebd57"
+    }
+  ],
+  "rule": "第二层只问服务器存了什么行；权重是产品自述的\"说过但未排序\"",
+  "publishedBy": "e345b9d6 for ORD-0238 + ORD-0240"
+}
