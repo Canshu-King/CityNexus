@@ -1,0 +1,206 @@
+{
+ "at": "2026-09-23T22:38:18+08:00",
+ "order": "ORD-0268-IMPL self-proof",
+ "lane": "B c01d72a3",
+ "branch": "agent/b-c01d72a3-ord0268",
+ "tip": "2b49e3cab1fcdbc55219065520ced8dea4fdfe73",
+ "parent": "2b49e3cab1fcdbc55219065520ced8dea4fdfe73",
+ "authoritative_tip": "2b49e3cab1fcdbc55219065520ced8dea4fdfe73",
+ "working_tree_at_run": [
+  " M frontend/vite.config.ts",
+  "?? frontend/dist_ord0268_impl/"
+ ],
+ "typecheck_rc": 0,
+ "build_rc": 0,
+ "same_instrument_as_the_readings": "q268_step_probe.js, unchanged; both rounds in one invocation",
+ "cells": {
+  "cell1_static": {
+   "control_manifest_entries": 9,
+   "fixed_manifest_entries": 8,
+   "control_duplicate_groups": {
+    "/index.html": [
+     "index.html=213aa276841d50a8a61cf75dd7408a7f",
+     "/index.html=v10-shell"
+    ]
+   },
+   "fixed_duplicate_groups": {},
+   "fixed_manifest_verbatim": [
+    {
+     "url": "sw.js",
+     "revision": "1eebbb6edab96b95a31dc1f94d1a6cda"
+    },
+    {
+     "url": "index.html",
+     "revision": "213aa276841d50a8a61cf75dd7408a7f"
+    },
+    {
+     "url": "assets/maplibre-gl-kx9AWR05.js",
+     "revision": "null"
+    },
+    {
+     "url": "assets/JourneyMap-TiEm8jyP.js",
+     "revision": "null"
+    },
+    {
+     "url": "assets/index-I45CQek8.css",
+     "revision": "null"
+    },
+    {
+     "url": "assets/index-Cpy_jhEg.js",
+     "revision": "null"
+    },
+    {
+     "url": "favicon.svg",
+     "revision": "339a4892318ff75bf4dccf7d426c193c"
+    },
+    {
+     "url": "manifest.webmanifest",
+     "revision": "d726b6647c68d06bafae8784f74043e3"
+    }
+   ],
+   "v10_shell_still_in_vite_config": false,
+   "verdict": "MET"
+  },
+  "cell2_behaviour": {
+   "control": {
+    "1_online_previous_generation": {
+     "navigation": {
+      "ok": true,
+      "status": 200,
+      "from_service_worker": false
+     },
+     "caches": [],
+     "shell_asset_served": "/assets/index-D76m_cky.js",
+     "screen_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
+    },
+    "2_online_after_swap": {
+     "navigation": {
+      "ok": true,
+      "status": 200,
+      "from_service_worker": false
+     },
+     "caches": [],
+     "shell_asset_served": "/assets/index-Cpy_jhEg.js",
+     "screen_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
+    },
+    "3_offline_after_swap": {
+     "navigation": {
+      "ok": false,
+      "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub"
+     },
+     "caches": [
+      "read threw"
+     ],
+     "shell_asset_served": null,
+     "screen_head": ""
+    }
+   },
+   "fixed": {
+    "1_online_previous_generation": {
+     "navigation": {
+      "ok": true,
+      "status": 200,
+      "from_service_worker": false
+     },
+     "caches": [],
+     "shell_asset_served": "/assets/index-D76m_cky.js",
+     "screen_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
+    },
+    "2_online_after_swap": {
+     "navigation": {
+      "ok": true,
+      "status": 200,
+      "from_service_worker": false
+     },
+     "caches": [
+      "workbox-precache-v2-http://127.0.0.1:4441/"
+     ],
+     "shell_asset_served": "/assets/index-Cpy_jhEg.js",
+     "screen_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
+    },
+    "3_offline_after_swap": {
+     "navigation": {
+      "ok": true,
+      "status": 200,
+      "from_service_worker": true
+     },
+     "caches": [
+      "workbox-precache-v2-http://127.0.0.1:4441/"
+     ],
+     "shell_asset_served": "/assets/index-Cpy_jhEg.js",
+     "screen_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
+    }
+   },
+   "precache_cache_appears_control": false,
+   "precache_cache_appears_fixed": true,
+   "offline_answered_by_worker_control": false,
+   "offline_answered_by_worker_fixed": true,
+   "verdict": "MET"
+  },
+  "cell3_positive_control": {
+   "rule_written_as_ordered": "控制轮=红 / 删后=绿",
+   "control_row": {
+    "round": "landed tip as-is (duplicate present)",
+    "offline": {
+     "ok": false,
+     "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub"
+    },
+    "caches_at_any_step": [
+     [],
+     [],
+     [
+      "read threw"
+     ]
+    ],
+    "state": "RED"
+   },
+   "fixed_row": {
+    "round": "the one line removed",
+    "offline": {
+     "ok": true,
+     "status": 200,
+     "from_service_worker": true
+    },
+    "shell_asset_served": "/assets/index-Cpy_jhEg.js",
+    "caches_at_any_step": [
+     [],
+     [
+      "workbox-precache-v2-http://127.0.0.1:4441/"
+     ],
+     [
+      "workbox-precache-v2-http://127.0.0.1:4441/"
+     ]
+    ],
+    "state": "GREEN"
+   },
+   "flipped": true,
+   "verdict": "MET (控制轮=红 / 删后=绿，两行同一次调用同一仪器)",
+   "control_row_state": "RED",
+   "fixed_row_state": "GREEN"
+  }
+ },
+ "limits_kept": [
+  "Workbox 内同一 URL 两条谁赢（first/last）仍未从库源码钉死",
+  "install 抛点仍未钉：precache 在控制轮任何一步都没出现，只能证'没落地'不能指到某一行",
+  "'换代后缓存永远旧'这一支既未证实也未排除：本轮没有制造过'有缓存但旧'的状态",
+  "一次换代、一个 loopback origin、一个 profile；未碰鉴权代理与公网链（禁止端口 0 次请求）"
+ ],
+ "candidate_tip": "1f4440819a9d773da6e18f12a31412f73c6d0f55",
+ "parent_equals_authoritative_tip": true,
+ "ancestor_proof_rc": true,
+ "working_tree_after_commit": "?? frontend/dist_ord0268_impl/\n",
+ "working_tree_excluding_my_build_output": [],
+ "changed_files": [
+  "frontend/vite.config.ts"
+ ],
+ "diffstat": " 1 file changed, 5 insertions(+), 1 deletion(-)",
+ "config_file_blob_before": "726df379ca4afe8bfe0ffbdd60d0c8a3eed3f644",
+ "config_file_blob_after": "f40aff0ad7ec9a840edf93f265603ad8c2503b92",
+ "v10_shell_occurrences_after": 0,
+ "devoptions_untouched": true,
+ "candidate_cells_verdicts": {
+  "cell1_static": "MET",
+  "cell2_behaviour": "MET",
+  "cell3_positive_control": "MET (控制轮=红 / 删后=绿，两行同一次调用同一仪器)"
+ }
+}
