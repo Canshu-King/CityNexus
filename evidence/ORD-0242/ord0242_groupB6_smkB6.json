@@ -1,0 +1,177 @@
+{
+  "order": "ORD-0242",
+  "group": "B6",
+  "surface": "canary @4185/8713",
+  "run_label": "smkB6",
+  "pid": 59716,
+  "started_at": "2026-09-23T11:30:28.109Z",
+  "stateAtOpen": {
+    "sheetPresent": true,
+    "inputs": [
+      {
+        "tag": "textarea",
+        "type": "textarea",
+        "placeholder": "我想去Central Food Hall和Design Library，节奏轻松一点，再找点当地吃的。",
+        "valueLen": 0,
+        "valueHead": "",
+        "readOnly": false,
+        "disabled": false
+      }
+    ],
+    "btnState": {
+      "text": "开始规划",
+      "disabled": true,
+      "ariaDisabled": null,
+      "cursor": "not-allowed",
+      "opacity": "0.45",
+      "pointerEvents": "auto",
+      "rect": [
+        82,
+        784,
+        292,
+        44
+      ],
+      "point": [
+        228,
+        806
+      ],
+      "hitIsSelf": true,
+      "hitTag": "BUTTON"
+    },
+    "sheetText": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划"
+  },
+  "press1": {
+    "found": true,
+    "point": [
+      228,
+      806
+    ],
+    "disabled": true,
+    "ariaDisabled": null,
+    "tapped": true
+  },
+  "stateAfterPress1": {
+    "sheetPresent": true,
+    "inputs": [
+      {
+        "tag": "textarea",
+        "type": "textarea",
+        "placeholder": "我想去Central Food Hall和Design Library，节奏轻松一点，再找点当地吃的。",
+        "valueLen": 0,
+        "valueHead": "",
+        "readOnly": false,
+        "disabled": false
+      }
+    ],
+    "btnState": {
+      "text": "开始规划",
+      "disabled": true,
+      "ariaDisabled": null,
+      "cursor": "not-allowed",
+      "opacity": "0.45",
+      "pointerEvents": "auto",
+      "rect": [
+        82,
+        784,
+        292,
+        44
+      ],
+      "point": [
+        228,
+        806
+      ],
+      "hitIsSelf": true,
+      "hitTag": "BUTTON"
+    },
+    "sheetText": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划"
+  },
+  "changedAfterPress1": false,
+  "filled": {
+    "field": true,
+    "tag": "textarea",
+    "focused": true
+  },
+  "stateAfterTyping": {
+    "sheetPresent": true,
+    "inputs": [
+      {
+        "tag": "textarea",
+        "type": "textarea",
+        "placeholder": "我想去Central Food Hall和Design Library，节奏轻松一点，再找点当地吃的。",
+        "valueLen": 24,
+        "valueHead": "我想在老城区吃本地小吃，预算每天 200 元以内",
+        "readOnly": false,
+        "disabled": false
+      }
+    ],
+    "btnState": {
+      "text": "开始规划",
+      "disabled": false,
+      "ariaDisabled": null,
+      "cursor": "pointer",
+      "opacity": "1",
+      "pointerEvents": "auto",
+      "rect": [
+        82,
+        784,
+        292,
+        44
+      ],
+      "point": [
+        228,
+        806
+      ],
+      "hitIsSelf": true,
+      "hitTag": "BUTTON"
+    },
+    "sheetText": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 稍后 开始规划"
+  },
+  "press2": {
+    "found": true,
+    "point": [
+      228,
+      806
+    ],
+    "disabled": false,
+    "ariaDisabled": null,
+    "tapped": true
+  },
+  "samplesAfterPress2": [
+    {
+      "atMs": 16060,
+      "netCount": 1,
+      "sheetPresent": true,
+      "btn": null,
+      "sheetTextHead": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 发出请求，等待模型返回 · 已等待 16 秒 后端不会中途汇报进度，所以这里只有真实等待时间，没有百分比，也没有猜。 ✓ 读取已有方案作为基线 ● 发出请求，等待模型返回 ○ 核对本次是否真的产出了新方案 取消 取消并关闭 规划中…"
+    },
+    {
+      "atMs": 60219,
+      "netCount": 2,
+      "sheetPresent": true,
+      "btn": {
+        "disabled": false,
+        "text": "开始规划"
+      },
+      "sheetTextHead": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 已生成 3 个可选方案 去“今天”对比这几个方案，选一个再继续。 User wants local snacks in the old town with a daily max budget of 200 CNY (20000 minor units). The old-town local-snack experience is pr"
+    },
+    {
+      "atMs": 120461,
+      "netCount": 2,
+      "sheetPresent": true,
+      "btn": {
+        "disabled": false,
+        "text": "开始规划"
+      },
+      "sheetTextHead": "AI 帮我规划 用你自己的话描述这趟旅行，越具体越好。 × 旅行需求 我想去Central Food Ha… Central Food Hall排… 这台服务已接入 AI 模型。 已生成 3 个可选方案 去“今天”对比这几个方案，选一个再继续。 User wants local snacks in the old town with a daily max budget of 200 CNY (20000 minor units). The old-town local-snack experience is pr"
+    }
+  ],
+  "net": [
+    "REQ POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/agent/commands",
+    "REQ POST /api/v1/journeys/22222222-2222-4222-8222-222222222222/plans/generate"
+  ],
+  "verdict": "COMPATIBLE",
+  "contract_boundary": "无 4xx/5xx；有真实写请求",
+  "ended_at": "2026-09-23T11:32:57.164Z",
+  "console": [],
+  "pageErrors": []
+}
