@@ -1,0 +1,141 @@
+{
+ "what": "全尖凭据字面量**总数**（对象库直读，非工作树、非快照导出）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-23T19:42:30+08:00",
+ "interpreter": "3.10.11",
+ "gate_file": {
+  "path": "D:\\moodle\\_qoder_f_run\\snap\\cred_gate_v4.py",
+  "bytes": 23763,
+  "git_blob_sha1": "a820679f03b3deb9a534a58c8485658672a9ef5a"
+ },
+ "scope": {
+  "repo": "D:/moodle/_qoder_integration_20260919",
+  "exact_ref": "dea8410be809ebf6c5046581873584e9dbf32b64",
+  "resolved_sha": "dea8410be809ebf6c5046581873584e9dbf32b64",
+  "tree": "d71a5454e444e245056fd95005fecfbdfa7adecf",
+  "listing_command": "git -C D:/moodle/_qoder_integration_20260919 ls-tree -r --name-only -z dea8410be809ebf6c5046581873584e9dbf32b64",
+  "pathspec_patterns": [
+   "*.py",
+   "*.patch",
+   "*.diff",
+   "*.ts",
+   "*.tsx",
+   "*.js",
+   "*.mjs",
+   "*.json",
+   "*.yaml",
+   "*.yml",
+   "*.toml",
+   "*.sh",
+   "*.ps1",
+   "*.md",
+   "*.txt",
+   "*.csv",
+   "*.sql",
+   "*.html",
+   "*.css"
+  ],
+  "truncated_limit": null,
+  "paths_listed_vs_scanned": [
+   6973,
+   5719
+  ],
+  "full_tip_reading": false,
+  "residual_not_read": {
+   "paths": 1254,
+   "by_extension": {
+    "": 6,
+    ".bak": 2,
+    ".err": 950,
+    ".example": 17,
+    ".lock": 1,
+    ".pdf": 1,
+    ".png": 130,
+    ".svg": 91,
+    ".theme-pristine": 1,
+    ".vsdx": 54,
+    ".webmanifest": 1
+   },
+   "meaning": "限定射程那一趟**必然**有残差：这里是没被读到的路径数与它们的扩展名，不并进命中数也不当作 0"
+  },
+  "read_command": "git -C D:/moodle/_qoder_integration_20260919 cat-file --batch  (specs = 'dea8410be809ebf6c5046581873584e9dbf32b64:<path>', chunks of 200, communicate())"
+ },
+ "denominator": {
+  "paths_in_listing": 5719,
+  "blobs_read": 5719,
+  "blobs_unreadable": 0,
+  "unreadable_list": [],
+  "bytes_read": 48670023,
+  "non_utf8_blobs": 2,
+  "extensions_covered": {
+   ".py": 2648,
+   ".json": 1471,
+   ".md": 821,
+   ".ts": 238,
+   ".yaml": 162,
+   ".txt": 125,
+   ".ps1": 63,
+   ".tsx": 52,
+   ".csv": 39,
+   ".toml": 21,
+   ".patch": 20,
+   ".sql": 17,
+   ".css": 17,
+   ".html": 14,
+   ".mjs": 8,
+   ".js": 2,
+   ".diff": 1
+  },
+  "meaning": "**限定射程**：pathspec=['*.py', '*.patch', '*.diff', '*.ts', '*.tsx', '*.js', '*.mjs', '*.json', '*.yaml', '*.yml', '*.toml', '*.sh', '*.ps1', '*.md', '*.txt', '*.csv', '*.sql', '*.html', '*.css'] 命中 5719/6973 个路径 ⇒ 这一趟的 shape_hits 只代表**被读到的那部分**，残差见 scope.residual_not_read"
+ },
+ "live_side": {
+  "credentials_found": 1,
+  "detail": [
+   {
+    "env": "DEEPSEEK_API_KEY",
+    "len": 35,
+    "fp": "4cabe6bcaff4"
+   }
+  ]
+ },
+ "shape_hits": 1,
+ "classification": [
+  {
+   "at": "frontend/e2e/qoder-e2e-config-guard.spec.ts:140",
+   "shape": "sk-[A-Za-z0-",
+   "len": 23,
+   "token_fp": "faca4b0049a4",
+   "loc_fp": "ed02cc15b114",
+   "utf8_clean": true,
+   "verdict": "DECLARED_NON_LIVE_SAMPLE",
+   "equals_live_credential": false,
+   "declaration": {
+    "at": "frontend/e2e/qoder-e2e-config-guard.spec.ts:140",
+    "token_fp": "faca4b0049a4",
+    "what": "e2e 配置守卫自己塞进子进程环境的**假** DEEPSEEK_API_KEY（形状真、值假）",
+    "evidence": [
+     "同文件 :144 断言 `run.status != 0`",
+     "同文件 :145 断言 stderr 含 'external AI must be off'"
+    ],
+    "declared_by": "commander 494abfd7 裁定 D-2=甲；lane F 8ccd71d8 录入 @2026-09-23"
+   },
+   "scanned_paths": 5719,
+   "offender_total": 1,
+   "live_side_count": 1,
+   "live_side_fps": [
+    "4cabe6bcaff4"
+   ],
+   "live_side_declaration": true
+  }
+ ],
+ "by_verdict": {
+  "DECLARED_NON_LIVE_SAMPLE": 1
+ },
+ "print_policy": "只印位置/长度/摘要/布尔/计数；原文、前缀、env 值一律不印",
+ "leak_guard": {
+  "values_tested": 1,
+  "matches_found": [],
+  "credential_shaped_tokens_in_this_receipt": 0,
+  "note": "只测非空值（空串 `in` 任何字节流恒真 = 假命中）；再用门自己的形状判据反扫这份收据"
+ }
+}
