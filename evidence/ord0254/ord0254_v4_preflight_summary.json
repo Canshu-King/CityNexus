@@ -1,0 +1,21 @@
+{
+ "at": "2026-09-23T15:38:49+08:00",
+ "mode": "preflight",
+ "seconds": 0.4,
+ "ruler_blob40": "a886329fe1ee8d728f8a06c273c0674b5ad27e8c",
+ "ruler_bytes": 62571,
+ "ruler_unchanged": true,
+ "gauge_own_receipt_path": "D:\\moodle\\_qoder_harness_ord0254\\tools\\receipts\\preflight_0923_153849.json",
+ "copy": "D:\\moodle\\_qoder_harness_ord0254\\ord0254_v4_preflight_gauge_receipt.json",
+ "copy_bytes": 26193,
+ "copy_blob40": "7d8db2f7644eeca1b7c3465070e103c74d6c8342",
+ "base_original": "http://127.0.0.1:4781",
+ "base_used": "http://127.0.0.1:4412",
+ "allow_proxy_unprobed_used": false,
+ "probe_times_env": "2",
+ "shell_max_age_basis_env": "(unset)",
+ "rc": 0,
+ "side_effect": "none by mode - the gauge itself refuses to write",
+ "meaning": "this is the pre-switch view the phase-2b gate would see, taken before I let anything switch",
+ "receipt_freshness": "FRESH"
+}
