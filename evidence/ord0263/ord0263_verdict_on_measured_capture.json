@@ -1,0 +1,45 @@
+{
+ "at": "2026-09-23T17:34:05+08:00",
+ "capture": "ord0263_capture_measured.json",
+ "verdicts_computed_from_measured_fields": {
+  "S1_live": {
+   "verdict": "GREEN"
+  },
+  "V1_origin_error_5xx": {
+   "verdict": "RED",
+   "measured": {
+    "http_status": 500,
+    "says_network_words": true,
+    "says_service_words": false,
+    "says_snapshot_words": false,
+    "navigator_onLine": true
+   },
+   "rule": "answered non-2xx + snapshot: must name the service and the snapshot, and must not claim the network"
+  },
+  "V2_no_answer": {
+   "verdict": "RED",
+   "measured": {
+    "fetch_thrown": true,
+    "settled_within_deadline": false,
+    "classified_label": null,
+    "retry_door_present": false,
+    "still_on_loading_skeleton": true,
+    "snapshot_present": true,
+    "seconds_to_settle": null
+   },
+   "rule": "no answer at all: the read must settle inside a deadline, be labelled as its own class, show the snapshot and leave a door"
+  },
+  "V3_distinctness": {
+   "verdict": "RED",
+   "measured": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT (claimed as network by the build)",
+    "s3_label": null,
+    "same_sentence": false,
+    "s3_is_unclassified_skeleton": true
+   },
+   "rule": "the two arms must not collapse into one classified outcome; a skeleton is not a classification"
+  }
+ },
+ "commander_release_reference": "evidence/release/commander_release_walk_0923_1723.json blob 34c6aaab1584132e (404 arm honest on the release; it is the release, not my fixture)",
+ "meaning": "RED here is the defect standing; GREEN would be the fix landing"
+}
