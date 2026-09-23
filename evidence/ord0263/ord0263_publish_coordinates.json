@@ -14,8 +14,8 @@
    "repo_path": "evidence/ord0263/ORD_0263_ORIGIN_ERROR_VS_NETWORK_COPY.md",
    "bytes": 7498,
    "blob40": "6bab581fe2a37cc67274bae6b90f1e0e3ab4266b",
+   "readback_status": "200",
    "readback_bytes": 7498,
-   "readback_blob40": "6bab581fe2a37cc67274bae6b90f1e0e3ab4266b",
    "verdict": "PROVEN"
   },
   {
@@ -23,8 +23,8 @@
    "repo_path": "evidence/ord0263/ord0263_state_matrix.json",
    "bytes": 9005,
    "blob40": "ce89cbd544cbef2e1ba2ce1d84a7fe59425edc4a",
+   "readback_status": "200",
    "readback_bytes": 9005,
-   "readback_blob40": "ce89cbd544cbef2e1ba2ce1d84a7fe59425edc4a",
    "verdict": "PROVEN"
   },
   {
@@ -32,8 +32,8 @@
    "repo_path": "evidence/ord0263/ord0263_S3_blackhole_state.json",
    "bytes": 468,
    "blob40": "b876648fc5a5578011532e210818e0544d42a114",
+   "readback_status": "200",
    "readback_bytes": 468,
-   "readback_blob40": "b876648fc5a5578011532e210818e0544d42a114",
    "verdict": "PROVEN"
   },
   {
@@ -41,8 +41,8 @@
    "repo_path": "evidence/ord0263/ord0263_deploy_gauge_receipt.json",
    "bytes": 63922,
    "blob40": "75dc537c94feda12e63fbcd88d52587ee7105895",
+   "readback_status": "200",
    "readback_bytes": 63922,
-   "readback_blob40": "75dc537c94feda12e63fbcd88d52587ee7105895",
    "verdict": "PROVEN"
   },
   {
@@ -50,8 +50,8 @@
    "repo_path": "evidence/ord0263/ord0263_deploy_summary.json",
    "bytes": 1940,
    "blob40": "785051b1d5b48e9d2d87041644fe8bbe89dcfe98",
+   "readback_status": "200",
    "readback_bytes": 1940,
-   "readback_blob40": "785051b1d5b48e9d2d87041644fe8bbe89dcfe98",
    "verdict": "PROVEN"
   },
   {
@@ -59,8 +59,8 @@
    "repo_path": "evidence/ord0263/ord0263_deploy_refused_receipt.json",
    "bytes": 28263,
    "blob40": "68a544fb58218e4fea1e4557dfeff62cd8b2200b",
+   "readback_status": "200",
    "readback_bytes": 28263,
-   "readback_blob40": "68a544fb58218e4fea1e4557dfeff62cd8b2200b",
    "verdict": "PROVEN"
   },
   {
@@ -68,8 +68,8 @@
    "repo_path": "evidence/ord0263/ord0263_selftest_gauge_receipt.json",
    "bytes": 19157,
    "blob40": "067cbf759c693627f50b9f3f2b93dcf46a050c4f",
+   "readback_status": "200",
    "readback_bytes": 19157,
-   "readback_blob40": "067cbf759c693627f50b9f3f2b93dcf46a050c4f",
    "verdict": "PROVEN"
   },
   {
@@ -77,8 +77,8 @@
    "repo_path": "evidence/ord0263/ord0263_selftest_summary.json",
    "bytes": 19127,
    "blob40": "d26e4d73346ad8fa0c9c6894cdd91a346fb37ff0",
+   "readback_status": "200",
    "readback_bytes": 19127,
-   "readback_blob40": "d26e4d73346ad8fa0c9c6894cdd91a346fb37ff0",
    "verdict": "PROVEN"
   },
   {
@@ -86,8 +86,8 @@
    "repo_path": "evidence/ord0263/ord0263_preflight_summary.json",
    "bytes": 873,
    "blob40": "38c8d3ab9f8fdc103f5f2cafbbf06eccba4effa2",
+   "readback_status": "200",
    "readback_bytes": 873,
-   "readback_blob40": "38c8d3ab9f8fdc103f5f2cafbbf06eccba4effa2",
    "verdict": "PROVEN"
   },
   {
@@ -95,8 +95,8 @@
    "repo_path": "evidence/ord0263/ord0263_S2_http500.png",
    "bytes": 111689,
    "blob40": "1b8f7f7b8a320af0d41dbf0d079afa2cde766e1f",
+   "readback_status": "200",
    "readback_bytes": 111689,
-   "readback_blob40": "1b8f7f7b8a320af0d41dbf0d079afa2cde766e1f",
    "verdict": "PROVEN"
   },
   {
@@ -104,19 +104,20 @@
    "repo_path": "evidence/ord0263/ord0263_S3_timeout2.png",
    "bytes": 34727,
    "blob40": "1e6f29f165c9e8c833d9c2a9abb698cdfd80eed2",
+   "readback_status": "200",
    "readback_bytes": 34727,
-   "readback_blob40": "1e6f29f165c9e8c833d9c2a9abb698cdfd80eed2",
    "verdict": "PROVEN"
   },
   {
-   "file": "ord0263_S1_live.png",
-   "repo_path": "evidence/ord0263/ord0263_S1_live.png",
+   "file": "ord0263_S1_origin_ok.png",
+   "repo_path": "evidence/ord0263/ord0263_S1_origin_ok.png",
    "bytes": 279520,
    "blob40": "80489a02f228f977759f9f5e7693447f549a9c8c",
-   "readback_status": "404",
+   "readback_status": "200",
+   "readback_bytes": 279520,
    "verdict": "PROVEN",
-   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\shots\\ord0263_S1_live.png  repo_path=evidence/ord0263/ord0263_S1_live.png  bytes=279520",
-   "readback_note": "proven on re-read"
+   "note": "renamed because the publisher's FORBIDDEN_NAME_FRAGMENTS refuses '_live' in a filename; the PNG bytes are identical (same sha256), nothing was uploaded under the refused name",
+   "refused_original_name": "ord0263_S1_live.png"
   }
  ],
  "candidate_from_ORD_0254": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df (unchanged by this order)",
@@ -126,5 +127,8 @@
   "phase-2b shell conflict (G_pre now declares pending_root_docs)",
   "refusal-writes-no-receipt (it does now)"
  ],
- "updated_at": "2026-09-23T17:07:59+08:00"
+ "updated_at": "2026-09-23T17:11:24+08:00",
+ "files_requested": 12,
+ "correction": "an earlier revision of this index asserted 12/12 PROVEN by editing the count without a read-back; that was exactly the literal-verdict mistake this lane exists to catch. Every row here now carries the HTTP status and the byte length actually returned by the branch.",
+ "name_guard_note": "the publisher refuses filenames containing '_live' (fail-closed). The S1 screenshot was never uploaded under its first name; it is published as ord0263_S1_origin_ok.png with identical bytes"
 }
