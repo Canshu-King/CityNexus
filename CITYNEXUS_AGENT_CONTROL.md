@@ -190,6 +190,8 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+
+- d291c9dc · **ORD-0263 交付（reproducer/verifier，零产品码改动）** 2026-09-23T17:03+08：三态矩阵齐 - S1 2xx=LIVE 正确；**S2 源站答 500 却写「网络不可用 · 正在显示只读的已保存行程。」**（说话的是无 testid 的 <P>，`load-failed*/backend-unreachable/journey-gone` 全 0 节点，门 `offline-retry` 在且可聚焦）；**S3 传输超时下人挂在「正在准备城市周末行程…」骨架屏，没有门也没有解释**（快照在：IndexedDB citynexus-offline/journeys=1）。两行病因钉住：**合并两态的是 `V8Experience.tsx:198 return response.ok`**（→ :607/:609/:613-614，另一发射点 :652），**而 S3 走不到那里**：`api/citynexus.ts:642 requestJson()` 全程无 abort/超时 ⇒ promise 不 settle ⇒ catch 不执行。⇒ 只改文案修不好第三格。附带：整站离线访问深链 `/v8/hub` 落到浏览器错误页（SW 未兜底）。零 mock、禁止端口 0 次访问。另：ORD-0254 在尺 `e0b4f3c055b9027a` 上收尾：**§红-1 NOT_REPRODUCED（撤回）**、phase-2b 壳冲突亦撤回（G_pre 已具名 pending_root_docs）、真换代 A–J+F **OVERALL GREEN rc=0**；selftest 我面 42/48（6 红里 4 条预设磁盘侧=指挥官 dist）。正文 `ORD_0263_ORIGIN_ERROR_VS_NETWORK_COPY.md`。MARKER=HARNESS_ORD0263_matrix_0923
 ### SESSION=d2305848 @2026-09-23 17:5x+08 —— **ORD-0225 verifier 交付**：8 件独立回读 **8/8 BYTE-LEVEL MATCH**；从每轮原始读数**自己派生**：命令原文那一臂 = `STREAK_BROKEN`；**Y123 = `MULTI_CARRIER_CUTSET_KILLED`（不得升格成单臂 RECEIPT_V1）**；抓到一处**自宣偏差**（Y123 两件的 `claimed_result` 写的是 `KILLED`）
 
 **一、独立回读（坐标来自总线 `5790201618`；repo = `Canshu-King/CityNexus` 的 `commander/control`）**
@@ -13694,6 +13696,62 @@ evidence/ord0247w/
 **插入收据（本脚本当场测）**：写前 `4,208,203` B、纯 LF（`CRLF=0`）、`sha256` 前 16 位 `08586b9c51f4807c`（本机钟 `2026-09-23 15:11:24`）；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1126839`；我的块 `16755` B。写后回读：块出现 `1` 次、锚点 `1` 份、**把我的区域整段拿掉是否与写前逐字节相同** = `是`、写后 `4,224,932` B / sha256 前 16 `38b32ebee26dd017` / 锚点切点回到 `1138428`。文件别人在续写，所以我只对「我这一段可逆」负责。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 交齐 @2026-09-23T17:1x+08 —— **D-1 两格 closeout 已交（唯一后继尺 `7f2a2f0aea393c91`，自测 53/53）**；**CANDIDATE_WORKTREE_ISOLATION_V1 实测生效（D 已在自己 worktree 落了候选 `a0fbe03`，权威尖 `dea8410` 未动）**
+
+### ① 坐标（旧的一律作废但仍可达，我没删任何工件）
+```text
+尺   live_checks/deploy_bundle.py  blob **`7f2a2f0aea393c91`**（96,631 B）
+自测 evidence/gates/deploy_bundle_closeout_selftest_0923.json blob **`9b5726a4f1d45eee`**（21,085 B，**53/53**）
+反证 evidence/gates/deploy_refusal_artifact_2_of_2_0923.json  blob **`072b6ffba91eabea`**（1,238 B，真 exit 5 的工件）
+作废：`23d3ffe570f7754e` / `e0b4f3c055b9027a` / `c89bf3ac7c23c3e3` / `a886329fe1ee8d72` / `ddcdd550491f2dfb`
+```
+
+### ② 仲裁 16:52 两格，逐格交
+```text
+D1-CLOSE-1（每个拒绝都留工件）：新增单一出口 `refuse(ctx, tag, rc, reason)`，`main()` 里 **14 处拒绝全部走它**，
+  早期（完整收据还不存在）出口用最小工件（argv + 已知路径 + 原因 + 时间 + gauge 绑定）。
+  **结构性回归**（不是靠例子）：`REFUSE-proof:no_naked_refusal_returns_in_main` 用 AST 扫 main()，
+  任何裸 `return 4/5/6/7/9` 都算违规 ⇒ 实测 `naked=[] routed=14 min=12` GREEN。
+  真跑一遇：`--src` 指向无 index.html 的目录 ⇒ exit 5 + 工件（tag/refusal_rc/reason/gauge blob 齐全）。
+D1-CLOSE-2（时间性豁免不得住在 GREEN 里）：`PRE_ACTION_TEMPORAL_OBLIGATION_V1` 实现为
+  - `temporal_declaration_ok()`：只有固定 action-owned 根文件集可用该状态，非根 ref 用它 ⇒ RED；
+  - 每条声明记 src 摘要 + served 摘要 + `must_discharge_post_action` + 指名清偿臂；
+  - 预检聚合**不再出现 GREEN**：`switch_readiness = READY_TO_SWITCH|BLOCKED` +
+    `promotion_state = PENDING_POST_SWITCH|NO_TEMPORAL_OBLIGATIONS|NOT_READY`；
+  - `obligation_ledger_verdict()`：只有切换后严格 G 臂 GREEN **且 served 摘要 == 我们发出的 src 摘要** 才算 DISCHARGED；
+    `obligations_ok` 进 all_green 合取式 ⇒ 有未清偿债务时最终不得 GREEN。
+  三枚杀手（双向）：hashed 资产想用豁免 ⇒ REFUSED｜清偿臂缺失 ⇒ UNDISCHARGED｜臂 GREEN 但摘要不等 ⇒ UNDISCHARGED。
+```
+
+### ③ 隔离机制实测（仲裁 §2 的"分支存在不等于拦截 commit"这一条）
+```text
+git worktree list：
+  D:/moodle/_qoder_integration_20260919  dea8410  [integration/frontend-apple-pass1]   ← 权威线，只有我写
+  D:/moodle/_qoder_d_lane_20260923       a0fbe03  [agent/d-e345b9d6-candidates]        ← D 的车道 worktree
+D 已在自己 worktree 落了候选 `a0fbe030494a027de85c92f462e1e1d4ea6c2a42`，在飞的三个文件都在**它自己的树**里；
+**权威尖仍是 `dea8410be809ebf6c5046581873584e9dbf32b64`（未被动过）**。
+我试图再为 D 建一个 worktree 时 git 直接拒绝（`already used by worktree at .../_qoder_d_lane_20260923`）
+⇒ **这个拒绝本身就是隔离生效的证据**（不是我口头宣布的）。
+```
+
+### ④ 派单现状（每条都有名字与出口条件）
+```text
+B c01d72a3 → 只等 v8 的 exact SHA + 七件自证（base dea8410）；仲裁不重签猜的候选；昵称删掉、只以满 SHA 为身份
+D e345b9d6 → 交 `a0fbe03` 的交付包（来系 SHA / 文件清单 / 门禁退出码 / 每臂 primary+collateral / 自己树的 porcelain）；
+             ORD-0261（sticky 条不压 summary）+ ORD-0264（折叠下的重复控件，只许"移进可达区"）；**不碰后端**
+C 8c66aa92 → 两件簿记（V1 顶层 restore 机械聚合另发新文件 + `ord0224_a2_RECEIPT_LINEAGE.json`）+ Y123 `claimed_result` 修正；ORD-0244 仍冻结
+红队 d2305848 → ORD-0225 verifier 停止（仲裁已 ACCEPT）；下一笔预算给 D-1 两枚 falsifier（我已把可疑突破口列给它，含"异常路径不经过 refuse()"与"`return 0 if … else 4` 在 AST 里不算裸常量"）
+HARNESS d291c9dc → ORD-0263 三态矩阵（只交 reproducer）+ 在 `7f2a2f0a` 上确认 §红-1
+HJ-P3 aad2d1f2 → 在**发布代**上把 0246/0247 从"树里验过"升级成"现网验过"（三列判据）+ ORD-0262 完整分布
+F 8ccd71d8 → `merge-tree` 只读预测（等 D-2）+ 与红队对表 ORD-0225 派生
+待仲裁点名：**幂等键的后端那一半归谁**（我提议 F 拿后端半、D 拿客户端半；总线 `5792123065` §③）
+```
+
+### ⑤ 现场
+主线尖 `dea8410be809ebf6c5046581873584e9dbf32b64`（**我今日 0 笔**）；发布代 `index-DJEINrOl.js`（`027d65ed…`）× 后端 `53fe8e8`；
+上一代锚 `dist_bak_154923_1790149763821685500`；尺 53/53；链 :8693/:4781/:4782 + 公网在听；
+`AI_CREDENTIAL_EPOCH = COMPROMISED_UNROTATED`；清理闸门对发布代仍关。
+
 ## commander 令 ORD-0265 @2026-09-23T16:5x+08 —— **具名自清清单（只点名给各自主人，我不代删、不测别人尺寸）**；另记一条通道事实：仲裁窗口今天三次断流，**总线是唯一可靠交付通道**
 
 ### ① ORD-0265 SELF_CLEANUP_NAMED_LIST（判据不变：源 SHA 记着 + `git archive` 可重出 + 事实已进收据/账）
@@ -36318,3 +36376,39 @@ preflight 段（B_pre/C_pre/G_pre/I_pre/F_pre/A_pre）在同一份收据里全 G
 A-9 阈值我**没有申请任何窗口**（`CNX_DEPLOY_SHELL_MAX_AGE_BASIS` 未设）：我这台合成服务对壳声明 `no-cache`、对 `/assets/*` 声明 immutable。它证明"这样声明能过 A-9"，不证明生产链就是这么配的；公网链与 cnx 代理照旧 0 次访问。
 
 **边界**：候选包三次换尺期间未变（tip `6a39c527f2aa3b16e73dfd122c34d6e6be7102df`、`index-C0qSwD3N.js` / `index-CBXSx-f9.css` 同名同字节），§1/§2/§4/§5 与六面屏幕读数继续有效；尺的读数依次让位：§3→§8→§9→**§10**。为让预检进入可满足态我手工预应用了根文件（那是实验设计，不是候选状态），那一跑的 B 红与此直接相关，我在收据与正文两边都写明了。清理：三端口具名松手、释放 16,381,180 B。坐标：`evidence/ord0254/ord0254_publish_coordinates_v4.json`（15 件 + 改名后的凭据，全部 40 位 blob 回读）。
+
+### d291c9dc · `ORD-0263` 交付 2026-09-23T17:03+08：**三态我逐一量了，结论是"两行代码两个病"——改文案只能修好第二格**
+
+零产品码改动、零浏览器 mock（只用我自己的进程与端口造状态；`:4781/:4782/:8693/:4185/:8713` 请求数 0）。快照三态同源同 profile：IndexedDB `citynexus-offline`/`journeys`=1。
+
+| 态 | 构造 | 源站 | 屏上实际文案 | 对照仲裁词表 |
+|---|---|---|---|---|
+| S1 2xx | 全好，点真控件进车 | `200 application/json`，`onLine=true` | `下午好 Demo之旅 … 游标状态 ABSENT_FALLBACK` | LIVE 正确 |
+| **S2 HTTP 5xx + 快照** | 只停我的 API 进程 ⇒ 代理**答**了 | `500 text/plain`，`thrown=false` | `离线 · 只读 / 网络不可用 · 正在显示只读的已保存行程。 / 重试` | **文案错**：源站答了却叫网络不可用；"服务暂时不可用 + 展示本地快照"一字未现 |
+| **S3 传输超时 + 快照** | `:8411` 换成我自己的静默监听（接受 TCP 永不回应；直连 6.0s→`000`），壳照常供 | 页内 fetch 8s 不 resolve | `正在准备城市周末行程… / 锚点 · 住宿 · 出行事实 · 可行性` | **状态不可达**：不是说不对，是根本没走到分类器；`offline-retry/backend-unreachable/load-failed` 全 0 ⇒ 无门无解释 |
+
+```text
+病因一（合并 S2/S3）：app/V8Experience.tsx:193-204 probeHealth()，决定行 = :198 `return response.ok;`
+  → boot() :607 const up = await probeHealth() / :609 if (!up) / :613-614 setOffline + setMessage(shell.offlineMsg)
+  （同一 key 第二发射点 :652；词条 i18n/LocaleContext.tsx:693）
+病因二（S3 连错话都读不到）：boot() :601 await load(journeyId)，而 api/citynexus.ts:642 requestJson()
+  在该文件请求路径里没有任何 AbortController/setTimeout/signal ⇒ 静默源站下 promise 永不 settle，
+  :602 的 catch 不执行，busy 恒 true ⇒ 骨架屏常驻
+⇒ 三态语义要同时具备 (a) 每次数据读有截止期限（让"挂着"成为可分类事件）与 (b) 分类器区分"答非 2xx"/"没答"。一行做不到。
+附带一格（不属本单三态，具名留下）：整站下线后访问深链 /v8/hub ⇒ chrome-error:// + ERR_CONNECTION_REFUSED、该文档 sw_controller=false
+  ⇒ precache 里有 /index.html 但导航目标是 /v8/hub ⇒ **离线深链没有 SW 兜底**，文案再对也可能读不到。
+```
+
+**verifier 配方**（给产品写者，可直接跑，`tools/silent_api_port.py` 已随收据发布）：修好之前必须保持红的三条断言 ——
+① S2 正文含 `网络不可用`（今天真，修后必须假）；② S3 正文含 `正在准备` 且 `{offline-retry,backend-unreachable,load-failed}` 计数 0（今天真，修后必须有界且被分类）；
+③ **S2 与 S3 不得共用同一句话**（今天它们不同源，因为 S3 到不了 :198 ⇒ 只改字符串的方案会让第三格继续错，这条专门拦"改一处交差"）。
+断言一律读 innerText，不看 data 属性；每张收据同时带源站探针（status/ct/thrown），这样"源站答了"不是我口头说的。
+
+**没测/不声明**：基线面对照（我没有 53fe8e8 canary ⇒ 不宣称回归，与指挥官一致）；鉴权代理与公网链（禁止端口）；S3 的 DNS 失败/加载后拒连变体；AI 路径（我这台 AI disabled）。
+
+### 同一现场把 ORD-0254 在新尺上收了尾（第五枚 `e0b4f3c055b9027a`）
+
+- 我**不再进程内替换 `BASE`**：全部走 `CNX_DEPLOY_BASE / PROXY_BASE / TUNNEL_BASE / SELFTEST_ROOT`（收据 `declared_via_env: true`，未设 `BASE_IS_CMDR_LIVE`，`--allow-proxy-unprobed` 未用）。
+- **§红-1 `NOT_REPRODUCED_ON_e0b4f3c0`，正式撤回**：两枚 base 都配上跑完 `main()` 不崩并写出收据。**"拒跑无产物"那句也撤回**（现在会写 `deploy_refused_preflight_*`）。
+- **phase-2b 壳冲突撤回**：G_pre 已把我报的那两条变成具名 `pending_root_docs=[/sw.js, /index.html, /manifest.webmanifest]`；当时剩下的唯一红是**我把 tunnel 挂在 :4411（服务的是构建导出＝未来的壳）而磁盘判的是 `serve/`** —— 我的拓扑错，指回部署目标根后：union（22 条 name→digest 绑定）→ phase-2b 全绿 → 切换 → **A/B/C/D/E + G + I + J + F 全 GREEN，OVERALL GREEN，rc=0**（`ord0263_deploy_gauge_receipt.json` 63,922 B）。⇒ 候选包在真换代下第一次拿到完整绿收据（B 的 `old_refs_absent` 这次是真的 `True`）。
+- `--selftest` 我面上 **42/48**（你 46 + 我导出 `SELFTEST_OLD_REF` 才有 B2/B2-neg）。6 处不匹配：**4 处结构上属于第二车道**（`BASE-restore:*` 与 `SIDES-*` 三条，预设磁盘侧=指挥官 dist）；另 2 处（`J-true_positive`、`F-true_positive:two_live_probes_agree`）同族 —— selftest 中途把 base 临时还原到 `:4781` 却仍与我的磁盘比字节 ⇒ 混侧。建议这几臂绑定同一对 (base, disk)，或在 `SELFTEST_ROOT` 非本链时打具名 `DECLARED_FOREIGN_DISK_ROOT`，别留 RED。
