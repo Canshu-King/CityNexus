@@ -1,0 +1,624 @@
+{
+ "what": "POST-SWITCH A-E + G + F + A-9 for the 13:0x dist swap to index-CrAwWm5f.js",
+ "why": "deploy_bundle.py crashed after installing index.html (KeyError in my own F arm), so the switch had no receipt; recomputed here with the gauge's own predicates",
+ "previous_generation_anchor": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_130203",
+ "t": "2026-09-23T13:07:13+0800",
+ "served_refs": [
+  "/assets/index-CrAwWm5f.js",
+  "/assets/index-cWMF3pBW.css"
+ ],
+ "previous_generation_refs": [
+  "/assets/index-DtQ86lsQ.js",
+  "/assets/index-cWMF3pBW.css"
+ ],
+ "A_previous_generation": [
+  {
+   "ref": "/assets/index-DtQ86lsQ.js",
+   "verdict": "GREEN",
+   "statuses": [
+    200,
+    200
+   ],
+   "ct": [
+    "text/javascript",
+    "text/javascript"
+   ],
+   "cc": [
+    "no-cache",
+    "no-cache"
+   ],
+   "bytes": [
+    1231985,
+    1231985
+   ],
+   "disk": [
+    1231985,
+    1231985
+   ],
+   "sha_eq_disk": [
+    true,
+    true
+   ],
+   "error": [
+    null,
+    null
+   ]
+  },
+  {
+   "ref": "/assets/index-cWMF3pBW.css",
+   "verdict": "GREEN",
+   "statuses": [
+    200,
+    200
+   ],
+   "ct": [
+    "text/css",
+    "text/css"
+   ],
+   "cc": [
+    "no-cache",
+    "no-cache"
+   ],
+   "bytes": [
+    183233,
+    183233
+   ],
+   "disk": [
+    183233,
+    183233
+   ],
+   "sha_eq_disk": [
+    true,
+    true
+   ],
+   "error": [
+    null,
+    null
+   ]
+  }
+ ],
+ "B_index_claims_only_new": {
+  "new_all_present": true,
+  "old_js_still_named": []
+ },
+ "C_new_assets": [
+  {
+   "ref": "/assets/index-CrAwWm5f.js",
+   "verdict": "GREEN",
+   "statuses": [
+    200,
+    200
+   ],
+   "ct": [
+    "text/javascript",
+    "text/javascript"
+   ],
+   "cc": [
+    "no-cache",
+    "no-cache"
+   ],
+   "bytes": [
+    1234802,
+    1234802
+   ],
+   "disk": [
+    1234802,
+    1234802
+   ],
+   "sha_eq_disk": [
+    true,
+    true
+   ],
+   "error": [
+    null,
+    null
+   ]
+  },
+  {
+   "ref": "/assets/index-cWMF3pBW.css",
+   "verdict": "GREEN",
+   "statuses": [
+    200,
+    200
+   ],
+   "ct": [
+    "text/css",
+    "text/css"
+   ],
+   "cc": [
+    "no-cache",
+    "no-cache"
+   ],
+   "bytes": [
+    183233,
+    183233
+   ],
+   "disk": [
+    183233,
+    183233
+   ],
+   "sha_eq_disk": [
+    true,
+    true
+   ],
+   "error": [
+    null,
+    null
+   ]
+  }
+ ],
+ "D_service_workers": [
+  {
+   "verdict": "GREEN",
+   "statuses": [
+    200,
+    200
+   ],
+   "ct": [
+    "text/javascript",
+    "text/javascript"
+   ],
+   "cc": [
+    "no-cache",
+    "no-cache"
+   ],
+   "bytes": [
+    7178,
+    7178
+   ],
+   "disk": [
+    7178,
+    7178
+   ],
+   "sha_eq_disk": [
+    true,
+    true
+   ],
+   "error": [
+    null,
+    null
+   ],
+   "name": "sw.js",
+   "disk_matches": [
+    true,
+    true
+   ]
+  },
+  {
+   "verdict": "GREEN",
+   "statuses": [
+    200,
+    200
+   ],
+   "ct": [
+    "text/javascript",
+    "text/javascript"
+   ],
+   "cc": [
+    "no-cache",
+    "no-cache"
+   ],
+   "bytes": [
+    2096,
+    2096
+   ],
+   "disk": [
+    2096,
+    2096
+   ],
+   "sha_eq_disk": [
+    true,
+    true
+   ],
+   "error": [
+    null,
+    null
+   ],
+   "name": "v10-sw.js",
+   "disk_matches": [
+    true,
+    true
+   ]
+  }
+ ],
+ "G_precache": [
+  {
+   "sw": "sw.js",
+   "urls_found": 0,
+   "declared_no_precache_array": "hand-written service worker, no workbox precacheAndRoute array",
+   "verdict": "DECLARED_NO_PRECACHE_ARRAY",
+   "reds": []
+  },
+  {
+   "sw": "v10-sw.js",
+   "urls_found": 8,
+   "declared_no_precache_array": null,
+   "verdict": "GREEN",
+   "reds": []
+  }
+ ],
+ "H_previous_generation_full": [
+  {
+   "ref": "/assets/index-DtQ86lsQ.js",
+   "verdict": "GREEN",
+   "statuses": [
+    200,
+    200
+   ],
+   "ct": [
+    "text/javascript",
+    "text/javascript"
+   ],
+   "cc": [
+    "no-cache",
+    "no-cache"
+   ],
+   "bytes": [
+    1231985,
+    1231985
+   ],
+   "disk": [
+    1231985,
+    1231985
+   ],
+   "sha_eq_disk": [
+    true,
+    true
+   ],
+   "error": [
+    null,
+    null
+   ]
+  },
+  {
+   "ref": "/assets/index-cWMF3pBW.css",
+   "verdict": "GREEN",
+   "statuses": [
+    200,
+    200
+   ],
+   "ct": [
+    "text/css",
+    "text/css"
+   ],
+   "cc": [
+    "no-cache",
+    "no-cache"
+   ],
+   "bytes": [
+    183233,
+    183233
+   ],
+   "disk": [
+    183233,
+    183233
+   ],
+   "sha_eq_disk": [
+    true,
+    true
+   ],
+   "error": [
+    null,
+    null
+   ]
+  }
+ ],
+ "F_surfaces": {
+  "local_4781": {
+   "all_green": true,
+   "reds": [],
+   "rows": [
+    {
+     "ref": "/assets/index-CrAwWm5f.js",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "ct": [
+      "text/javascript",
+      "text/javascript"
+     ],
+     "cc": [
+      "no-cache",
+      "no-cache"
+     ],
+     "bytes": [
+      1234802,
+      1234802
+     ],
+     "disk": [
+      1234802,
+      1234802
+     ],
+     "sha_eq_disk": [
+      true,
+      true
+     ],
+     "error": [
+      null,
+      null
+     ]
+    },
+    {
+     "ref": "/assets/index-cWMF3pBW.css",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "ct": [
+      "text/css",
+      "text/css"
+     ],
+     "cc": [
+      "no-cache",
+      "no-cache"
+     ],
+     "bytes": [
+      183233,
+      183233
+     ],
+     "disk": [
+      183233,
+      183233
+     ],
+     "sha_eq_disk": [
+      true,
+      true
+     ],
+     "error": [
+      null,
+      null
+     ]
+    },
+    {
+     "ref": "/",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "ct": [
+      "text/html",
+      "text/html"
+     ],
+     "cc": [
+      "no-cache",
+      "no-cache"
+     ],
+     "bytes": [
+      1200,
+      1200
+     ],
+     "disk": [
+      1200,
+      1200
+     ],
+     "sha_eq_disk": [
+      true,
+      true
+     ],
+     "error": [
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  "proxy_4782": {
+   "all_green": true,
+   "reds": [],
+   "rows": [
+    {
+     "ref": "/assets/index-CrAwWm5f.js",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "ct": [
+      "text/javascript",
+      "text/javascript"
+     ],
+     "cc": [
+      "no-cache",
+      "no-cache"
+     ],
+     "bytes": [
+      1234802,
+      1234802
+     ],
+     "disk": [
+      1234802,
+      1234802
+     ],
+     "sha_eq_disk": [
+      true,
+      true
+     ],
+     "error": [
+      null,
+      null
+     ]
+    },
+    {
+     "ref": "/assets/index-cWMF3pBW.css",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "ct": [
+      "text/css",
+      "text/css"
+     ],
+     "cc": [
+      "no-cache",
+      "no-cache"
+     ],
+     "bytes": [
+      183233,
+      183233
+     ],
+     "disk": [
+      183233,
+      183233
+     ],
+     "sha_eq_disk": [
+      true,
+      true
+     ],
+     "error": [
+      null,
+      null
+     ]
+    },
+    {
+     "ref": "/",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "ct": [
+      "text/html",
+      "text/html"
+     ],
+     "cc": [
+      "no-cache",
+      "no-cache"
+     ],
+     "bytes": [
+      1200,
+      1200
+     ],
+     "disk": [
+      1200,
+      1200
+     ],
+     "sha_eq_disk": [
+      true,
+      true
+     ],
+     "error": [
+      null,
+      null
+     ]
+    }
+   ]
+  },
+  "public_tunnel": {
+   "all_green": true,
+   "reds": [],
+   "rows": [
+    {
+     "ref": "/assets/index-CrAwWm5f.js",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "ct": [
+      "text/javascript",
+      "text/javascript"
+     ],
+     "cc": [
+      "no-cache",
+      "no-cache"
+     ],
+     "bytes": [
+      1234802,
+      1234802
+     ],
+     "disk": [
+      1234802,
+      1234802
+     ],
+     "sha_eq_disk": [
+      true,
+      true
+     ],
+     "error": [
+      null,
+      null
+     ]
+    },
+    {
+     "ref": "/assets/index-cWMF3pBW.css",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "ct": [
+      "text/css",
+      "text/css"
+     ],
+     "cc": [
+      "no-cache",
+      "no-cache"
+     ],
+     "bytes": [
+      183233,
+      183233
+     ],
+     "disk": [
+      183233,
+      183233
+     ],
+     "sha_eq_disk": [
+      true,
+      true
+     ],
+     "error": [
+      null,
+      null
+     ]
+    },
+    {
+     "ref": "/",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "ct": [
+      "text/html",
+      "text/html"
+     ],
+     "cc": [
+      "no-cache",
+      "no-cache"
+     ],
+     "bytes": [
+      1200,
+      1200
+     ],
+     "disk": [
+      1200,
+      1200
+     ],
+     "sha_eq_disk": [
+      true,
+      true
+     ],
+     "error": [
+      null,
+      null
+     ]
+    }
+   ]
+  }
+ },
+ "arm_summary": {
+  "A": true,
+  "B": true,
+  "C": true,
+  "D": true,
+  "G": true,
+  "H": true,
+  "F": true
+ },
+ "overall": "GREEN"
+}
