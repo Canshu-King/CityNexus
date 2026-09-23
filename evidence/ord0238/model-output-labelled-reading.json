@@ -1,0 +1,9 @@
+{
+  "generatedBy": "e345b9d6",
+  "node": "ord0240-2-the-disclosure-says-whose-words-they-are",
+  "head": "c40097c2fe2b40979e3b1289d234b14ff4b59ada",
+  "label": "模型原始输出（未翻译，不代表本界面的结论）",
+  "rawModelText": "Detected hard constraints: sleep in/no pre-10 plans, West Lake night view is a hard requirement.",
+  "rule": "原文照引且标明\"模型原始输出（未翻译）\"；不进任何字典",
+  "publishedBy": "e345b9d6 for ORD-0238 + ORD-0240"
+}
