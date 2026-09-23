@@ -1,0 +1,659 @@
+{
+  "order": "ORD-0242",
+  "part": "journey-wizard-2",
+  "surface": "canary @4185/8713",
+  "run_label": "wiz4",
+  "pid": 57264,
+  "city_choice_reason": "北京 chosen because this order tests the create→generate→plan-list chain against pinned 53fe8e8; catalog coverage per city is ORD-0239",
+  "started_at": "2026-09-23T13:15:17.408Z",
+  "steps": [
+    {
+      "name": "step1",
+      "dump": {
+        "url": "/v8/hub",
+        "h1": [
+          "新建行程"
+        ],
+        "stepPills": [
+          "1 目的地与时间",
+          "2 人数与偏好",
+          "3 确认创建"
+        ],
+        "labels": [
+          "目的地",
+          "抵达地点",
+          "离开地点",
+          "抵达时间",
+          "离开时间"
+        ],
+        "inputs": [
+          {
+            "type": "text",
+            "ph": "例如：天津、东京、新加坡",
+            "valueLen": 0,
+            "valueHead": "",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": "例如：某地站 / 机场",
+            "valueLen": 0,
+            "valueHead": "",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": "例如：某地站 / 机场",
+            "valueLen": 0,
+            "valueHead": "",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "datetime-local",
+            "ph": null,
+            "valueLen": 16,
+            "valueHead": "2026-09-24T10:00",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "datetime-local",
+            "ph": null,
+            "valueLen": 16,
+            "valueHead": "2026-09-26T20:00",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": null,
+            "valueLen": 2,
+            "valueHead": "CN",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": null,
+            "valueLen": 13,
+            "valueHead": "Asia/Shanghai",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": null,
+            "valueLen": 3,
+            "valueHead": "CNY",
+            "required": false,
+            "disabled": false
+          }
+        ],
+        "buttons": [
+          {
+            "t": "EN",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "t": "目的地",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "t": "抵达地点",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "t": "下一步",
+            "disabled": false,
+            "aria": "true"
+          }
+        ],
+        "body": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程 高级设置"
+      }
+    },
+    {
+      "name": "step2",
+      "dump": {
+        "url": "/v8/hub",
+        "h1": [],
+        "stepPills": [],
+        "labels": [
+          "目的地",
+          "抵达北京",
+          "离开北京",
+          "抵达时间",
+          "离开时间"
+        ],
+        "inputs": [
+          {
+            "type": "text",
+            "ph": "例如：天津、东京、新加坡",
+            "valueLen": 2,
+            "valueHead": "北京",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": "例如：北京站 / 机场",
+            "valueLen": 0,
+            "valueHead": "",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": "例如：北京站 / 机场",
+            "valueLen": 0,
+            "valueHead": "",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "datetime-local",
+            "ph": null,
+            "valueLen": 16,
+            "valueHead": "2026-09-24T10:00",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "datetime-local",
+            "ph": null,
+            "valueLen": 16,
+            "valueHead": "2026-09-26T20:00",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": null,
+            "valueLen": 2,
+            "valueHead": "CN",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": null,
+            "valueLen": 13,
+            "valueHead": "Asia/Shanghai",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": null,
+            "valueLen": 3,
+            "valueHead": "CNY",
+            "required": false,
+            "disabled": false
+          }
+        ],
+        "buttons": [
+          {
+            "t": "抵达地点",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "t": "离开地点",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "t": "下一步",
+            "disabled": false,
+            "aria": "true"
+          },
+          {
+            "t": "使用封存的演示行程",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "t": "高级设置",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "body": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 已自动设置：中国 · 人民币 · 中国标准时间 看支持的目的地 抵达北京 离开北京 抵达时间 离开时间 高级设置 还需要填写：抵达地点、离开地点 还需要填写：抵达地点、离开地点 下一步 使用封存的演示行程 高级设置"
+      }
+    },
+    {
+      "name": "step3",
+      "dump": {
+        "url": "/v8/hub",
+        "h1": [],
+        "stepPills": [],
+        "labels": [
+          "目的地",
+          "抵达北京",
+          "离开北京",
+          "抵达时间",
+          "离开时间"
+        ],
+        "inputs": [
+          {
+            "type": "text",
+            "ph": "例如：天津、东京、新加坡",
+            "valueLen": 2,
+            "valueHead": "北京",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": "例如：北京站 / 机场",
+            "valueLen": 0,
+            "valueHead": "",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": "例如：北京站 / 机场",
+            "valueLen": 0,
+            "valueHead": "",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "datetime-local",
+            "ph": null,
+            "valueLen": 16,
+            "valueHead": "2026-09-24T10:00",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "datetime-local",
+            "ph": null,
+            "valueLen": 16,
+            "valueHead": "2026-09-26T20:00",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": null,
+            "valueLen": 2,
+            "valueHead": "CN",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": null,
+            "valueLen": 13,
+            "valueHead": "Asia/Shanghai",
+            "required": false,
+            "disabled": false
+          },
+          {
+            "type": "text",
+            "ph": null,
+            "valueLen": 3,
+            "valueHead": "CNY",
+            "required": false,
+            "disabled": false
+          }
+        ],
+        "buttons": [
+          {
+            "t": "抵达地点",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "t": "离开地点",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "t": "下一步",
+            "disabled": false,
+            "aria": "true"
+          },
+          {
+            "t": "使用封存的演示行程",
+            "disabled": false,
+            "aria": null
+          },
+          {
+            "t": "高级设置",
+            "disabled": false,
+            "aria": null
+          }
+        ],
+        "body": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 已自动设置：中国 · 人民币 · 中国标准时间 看支持的目的地 抵达北京 离开北京 抵达时间 离开时间 高级设置 还需要填写：抵达地点、离开地点 还需要填写：抵达地点、离开地点 下一步 使用封存的演示行程 高级设置"
+      }
+    }
+  ],
+  "entry": {
+    "found": true,
+    "label": "试用其他城市",
+    "disabled": false,
+    "point": [
+      154,
+      222
+    ],
+    "hitTag": "BUTTON",
+    "pointHitsThisButton": true,
+    "tappedByTouch": true
+  },
+  "fills": [
+    {
+      "ph": "例如：天津、东京、新加坡",
+      "beforeLen": 0,
+      "after": {
+        "len": 2,
+        "head": "北京"
+      }
+    }
+  ],
+  "textFieldsAfterDestination": [
+    {
+      "n": 0,
+      "ph": "例如：天津、东京、新加坡",
+      "req": false,
+      "len": 2
+    },
+    {
+      "n": 1,
+      "ph": "例如：北京站 / 机场",
+      "req": false,
+      "len": 0
+    },
+    {
+      "n": 2,
+      "ph": "例如：北京站 / 机场",
+      "req": false,
+      "len": 0
+    },
+    {
+      "n": 3,
+      "ph": null,
+      "req": false,
+      "len": 2
+    },
+    {
+      "n": 4,
+      "ph": null,
+      "req": false,
+      "len": 13
+    },
+    {
+      "n": 5,
+      "ph": null,
+      "req": false,
+      "len": 3
+    }
+  ],
+  "textFieldsSelectorUsed": "input:not([type])",
+  "stationFieldCount": 0,
+  "step1Filled": {
+    "url": "/v8/hub",
+    "h1": [
+      "新建行程"
+    ],
+    "stepPills": [
+      "1 目的地与时间",
+      "2 人数与偏好",
+      "3 确认创建"
+    ],
+    "labels": [
+      "目的地",
+      "抵达北京",
+      "离开北京",
+      "抵达时间",
+      "离开时间"
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "ph": "例如：天津、东京、新加坡",
+        "valueLen": 2,
+        "valueHead": "北京",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "text",
+        "ph": "例如：北京站 / 机场",
+        "valueLen": 0,
+        "valueHead": "",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "text",
+        "ph": "例如：北京站 / 机场",
+        "valueLen": 0,
+        "valueHead": "",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "datetime-local",
+        "ph": null,
+        "valueLen": 16,
+        "valueHead": "2026-09-24T10:00",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "datetime-local",
+        "ph": null,
+        "valueLen": 16,
+        "valueHead": "2026-09-26T20:00",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "text",
+        "ph": null,
+        "valueLen": 2,
+        "valueHead": "CN",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "text",
+        "ph": null,
+        "valueLen": 13,
+        "valueHead": "Asia/Shanghai",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "text",
+        "ph": null,
+        "valueLen": 3,
+        "valueHead": "CNY",
+        "required": false,
+        "disabled": false
+      }
+    ],
+    "buttons": [
+      {
+        "t": "EN",
+        "disabled": false,
+        "aria": null
+      },
+      {
+        "t": "抵达地点",
+        "disabled": false,
+        "aria": null
+      },
+      {
+        "t": "下一步",
+        "disabled": false,
+        "aria": "true"
+      }
+    ],
+    "body": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 已自动设置：中国 · 人民币 · 中国标准时间 看支持的目的地 抵达北京 离开北京 抵达时间 离开时间 高级设置 还需要填写：抵达地点、离开地点 下一步 使用封存的演示行程 高级设置"
+  },
+  "next1": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      195,
+      674
+    ],
+    "hitTag": "BUTTON",
+    "pointHitsThisButton": true,
+    "tappedByTouch": true
+  },
+  "next2": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      195,
+      638
+    ],
+    "hitTag": "BUTTON",
+    "pointHitsThisButton": true,
+    "tappedByTouch": true
+  },
+  "confirm": {
+    "found": false,
+    "candidates": [
+      "抵达地点",
+      "离开地点",
+      "下一步",
+      "使用封存的演示行程",
+      "高级设置"
+    ]
+  },
+  "afterConfirm": {
+    "url": "/v8/hub",
+    "h1": [],
+    "stepPills": [],
+    "labels": [
+      "目的地",
+      "抵达北京",
+      "离开北京",
+      "抵达时间",
+      "离开时间"
+    ],
+    "inputs": [
+      {
+        "type": "text",
+        "ph": "例如：天津、东京、新加坡",
+        "valueLen": 2,
+        "valueHead": "北京",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "text",
+        "ph": "例如：北京站 / 机场",
+        "valueLen": 0,
+        "valueHead": "",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "text",
+        "ph": "例如：北京站 / 机场",
+        "valueLen": 0,
+        "valueHead": "",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "datetime-local",
+        "ph": null,
+        "valueLen": 16,
+        "valueHead": "2026-09-24T10:00",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "datetime-local",
+        "ph": null,
+        "valueLen": 16,
+        "valueHead": "2026-09-26T20:00",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "text",
+        "ph": null,
+        "valueLen": 2,
+        "valueHead": "CN",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "text",
+        "ph": null,
+        "valueLen": 13,
+        "valueHead": "Asia/Shanghai",
+        "required": false,
+        "disabled": false
+      },
+      {
+        "type": "text",
+        "ph": null,
+        "valueLen": 3,
+        "valueHead": "CNY",
+        "required": false,
+        "disabled": false
+      }
+    ],
+    "buttons": [
+      {
+        "t": "抵达地点",
+        "disabled": false,
+        "aria": null
+      },
+      {
+        "t": "离开地点",
+        "disabled": false,
+        "aria": null
+      },
+      {
+        "t": "下一步",
+        "disabled": false,
+        "aria": "true"
+      },
+      {
+        "t": "使用封存的演示行程",
+        "disabled": false,
+        "aria": null
+      },
+      {
+        "t": "高级设置",
+        "disabled": false,
+        "aria": null
+      }
+    ],
+    "body": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 已自动设置：中国 · 人民币 · 中国标准时间 看支持的目的地 抵达北京 离开北京 抵达时间 离开时间 高级设置 还需要填写：抵达地点、离开地点 还需要填写：抵达地点、离开地点 下一步 使用封存的演示行程 高级设置"
+  },
+  "gen": {
+    "found": false,
+    "candidates": [
+      "抵达地点",
+      "离开地点",
+      "下一步",
+      "使用封存的演示行程",
+      "高级设置"
+    ]
+  },
+  "httpNamed_4xx5xx": [],
+  "writesNamed": [],
+  "ended_at": "2026-09-23T13:15:58.992Z",
+  "netEvents": [],
+  "console": [],
+  "pageErrors": []
+}
