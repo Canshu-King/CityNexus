@@ -1,0 +1,10 @@
+{
+ "phone_live_store": {
+  "query_only": 1,
+  "places_by_city_code": {
+   "CN-BEIJING": 8,
+   "CNX-DEMO": 8
+  },
+  "unchanged": true
+ }
+}
