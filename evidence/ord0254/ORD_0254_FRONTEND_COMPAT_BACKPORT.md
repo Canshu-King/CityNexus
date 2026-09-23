@@ -305,3 +305,56 @@ selftest（尺自己的、未改的自测，指到我的面上）ord0254_v2_self
 **仍然没有量的**：公网链与 cnx 代理的响应头（禁止端口，我没访问过）——那一维只有你 `02459564e6f225a6…` 那份 local/proxy/公网三面重测能回答（它给出 [200,200] + `no-cache`）。候选包本身三次换尺期间没动过：tip `6a39c527f2aa3b16e73dfd122c34d6e6be7102df`、`index-C0qSwD3N.js` / `index-CBXSx-f9.css` 同名同字节，所以 §1/§2/§4/§5 与六面屏幕读数继续有效；§3 以 §8 为准、§8 的读数自本节起以 **§9（A-9 尺）** 为准。
 
 **清理（本轮后）**：`ord0254_v3_cleanup_receipt.json` —— 三枚 PID 具名树杀，`:4411/:4412/:8411` netstat 复测松手，按具名清单删 `serve/`、三份 `dist_bak_*`、`canary_8411.db*` ⇒ 释放 13,968,186 B；保留 `repo/`（含候选 `dist` 产物）。
+
+
+---
+
+## 10. 第三次换尺重跑（phase-2b 预检 + 臂 I + A-9 阈 0；指挥官 15:2x 通知）
+
+**坐标**：`a886329fe1ee8d72` / 62,571 B **不在分支尖上**（尖此刻已是 `f2ed26012a633f30…` / 83,927 B），所以我按"文件历史 → 逐 ref 取 blob 号"在 `live_checks/deploy_bundle.py` 的 14 条提交里走到第 3 条命中：**commit `df69b4fc5cfdcdf87312bd68b7386887be1ba789`（05:28:00Z）= blob `a886329fe1ee8d728f8a06c273c0674b5ad27e8c` / 62,571 B**（`ord0254_ruler_v4_hunt.json`）。两件凭据同样按 blob 前缀搜到：`deploy_bundle_round5_selftest_0923.json` = `f401af71d0242dbced6846b6a9a04a63488ab192`（11,560 B，**31/31 GREEN**，base :4781）与 `evidence/deploy/preflight_check_0923_1327.json` = `0ee0bf612bcf8cda51c1d0a39ea398a9d8141df1`（25,981 B）。
+
+### §红-1 撤回：**这次不崩了**
+我在字节里核对，再用实跑证明：新对象的两个分支都写 top-level `verdict`，聚合改成 `any(p.get("verdict") == "NOT_CONFIGURED")`；把两枚 F base 都配上之后，main() 一路跑到写收据（`F_proxy_tunnel: GREEN`，收据 58,823 B）。**我此前连报三次的 `KeyError: 'verdict'`（654 → 669 → 737）在 `a886329fe1ee8d72` 上不再成立，正式撤回。**
+
+### 新发现：phase 2b 在同一相位里对同一个 `/index.html` 要求两件互相排斥的事
+
+```text
+源码（preflight_before_switch）：
+  C_pre / G_pre / I_pre  用 repeated_verdict(ref, ct, src)   -> 磁盘根 = 构建导出（新代）
+  F_pre                  用 f_surface_probes(refs, serve)    -> 磁盘根 = serve/（尚未切换的旧代）
+实测三态（全部 --preflight-check，只读，无任何写入）：
+  态1 未 union：            PREFLIGHT RED  C_pre [404,404]（新资产还没进 serve/）        收据 24,360 B
+  态2 已 union、未切 index：PREFLIGHT RED  只红两条：G_pre 的 /index.html 与 F_pre 的 tunnel /
+                                       同一份 / 回答 200 text/html，在 proxy 面 GREEN、在 tunnel 面 RED
+  态3 我把根文件预应用到 serve/（自己 canary 内，见 manual_switch_note）：PREFLIGHT GREEN rc=0
+=> 判据要"活服务器答的字节 == src 的 index.html"且"== serve 的 index.html"，而切换前这两者不可能同时成立。
+   也就是说：**真换代（壳内容变了）在预检相位无法满足 phase 2b**；能过的只有"壳无变化"这一形状。
+   归属建议（不代你决定）：G_pre 对壳文件应当只要求"可答 + 缓存语义合格"，把字节相等留给切换后；或让 F_pre 也吃 src 根。
+另一个小口：预检 RED 时 stdout 的 reds 列表 8 项里有 6 项是裸字符串 "RED"（`_reds` 只在有 ref/sw/surface 键时才带上名字），
+   操作员在终端上看不出红了哪一臂；收据里是有名字的（我就是从收据定位到那两条）。
+```
+
+### 带 F 的完整换代收据（"壳无变化"形状，A–I 全臂）
+
+`--preflight-check` 全绿之后跑 `deploy`，两枚 F base 都配（:4412 与 :4411），`CNX_DEPLOY_PROBE_TIMES=2`，`--allow-proxy-unprobed` 未用，**`CNX_DEPLOY_SHELL_MAX_AGE_BASIS` 未设**（我没要求任何缓存窗口：壳声明 `no-cache`，本就在可校验清单里）：
+
+```text
+A GREEN · B **RED** · C 2/2 GREEN [200,200]（CC=public,max-age=31536000,immutable 仍绿）· D 2/2 GREEN · E 2/2 OK
+G [sw.js DECLARED_NO_PRECACHE_ARRAY, v10-sw.js GREEN urls_found=8]  · H = GREEN_H_EQ_C_NO_CHANGE_DEPLOY（具名声明位，真触发了）
+I_sw_register GREEN：从 **serve 到的 bundle 字节**解析到 1 处 register，scope="/"、updateViaCache="none"、opts_present true
+F_proxy_tunnel **GREEN**：proxy/tunnel ×（新 js、/）× 2 次 = 4/4 [200,200]，并逐条记录实测 cache_control
+OVERALL RED，唯一红来自 B：`old_refs_absent=False`（old_ref_tested 就是新代自身）
+  => 无变化部署里"上一代的 ref 应当从 index 消失"这条断言天然不可能成立；尺给 H 配了无变化声明位，却没给 B 配
+  => 这条不是候选包的缺陷：候选在真换代下 B 会绿（态2/态3 里 new_refs_present 一直为 true）
+preflight 段一并进同一收据：B_pre/C_pre/G_pre/I_pre/F_pre/A_pre 全 GREEN
+```
+
+`--selftest`（未改的尺自测，指到我切换后的面上）：**SELFTEST GREEN (33/33 arms matched)** = 你的 31 + 我导出 `CNX_DEPLOY_SELFTEST_OLD_REF` 才有的 B2 / B2-neg；A9 七格（含 `granted_window_without_basis=RED` 与 `granted_window_with_basis=GREEN`）与 I 六格全部按预期命中，`I-true_positive:served_bundle_registers(1 calls)=GREEN`。
+
+### 边界与未量
+
+- 公网链与 cnx 代理**仍未量**（禁止端口 0 次访问）——壳缓存那一维只有你 `0ee0bf612bcf8cda…` 现网预检与 `f401af71d0242dbc…` 能回答。
+- 我这台合成服务的 `Cache-Control` 是我自己声明的（壳 `no-cache`、`/assets/*` immutable）；它证明"这样声明能过 A-9"，不证明生产链就是这么配的。
+- 为让预检进入可满足态，我把根文件**手工预应用**到自己的 `serve/`（`ord0254_v4_manual_switch_note.json` 记录前后 sha），所以那一跑的 H 是无变化形状、B 才红；这是实验设计，不是候选包状态。
+- 候选包第三次换尺期间未变：tip `6a39c527f2aa3b16e73dfd122c34d6e6be7102df`、`index-C0qSwD3N.js` / `index-CBXSx-f9.css` 同名同字节；权威线 `frontend/src/styles.css` 脏 ⇒ 我全程只从 `git archive` 导出树构建（批准件原条款，你已再确认）。
+- 清理：三端口具名松手、释放 16,381,180 B（`ord0254_v4_cleanup_receipt.json`）。§3→§8→§9→**§10** 依次让位。
