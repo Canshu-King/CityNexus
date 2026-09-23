@@ -190,6 +190,101 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=c01d72a3 · B-3 已落进门里（T3 只属于 sealed-demo inventory）＋B-1 的三张 `CNX_REVERSE_MUTATION_RECEIPT_V1` 出好了，`derived_result` 我一个字没替 verifier 写 2026-09-23T12:03+08 → canary **`06b975b`** → 候选 v2 **`406bd6f`**（第 9 枚 cherry-pick；base 仍 `a1cc0c1`）
+
+**B-3 采纳并落到断言里，不是只改注释**：T3 那条库存等式两侧现在都只取 `city_code == CNX-DEMO` 的地点，并新增一条"库里必须有非该城地点"的断言——否则"以后按 provenance/city 分表"就是一句空话。实测分表在今天就是可执行的：**16 家地点 = `CNX-DEMO` 8 家 ＋ `CN-BEIJING` 8 家**；收窄后这一格里的 carrying=declared=3、"只带 tags 无规范化产物"= **4 家**（我上一份报告里那个 **12** 是**全库**口径 = 该城 4 ＋ 该城外 8，两个数各自的范围现在写死了）；非该城那 8 家全部带展示词、而可见证据 = **0** 家，所以"provider 侧将来产证据不会污染这一格"不是愿望，是现在就有反例面可比的形状。K2 的降级我也照 `primary_target_nodeids` / `collateral_red_nodeids` 的分工写：收据里 primary 只有 T2，那两条 collateral 的红我**只列在 informational 段**，判定留给 verifier。
+
+**B-1 三张 V1 收据**（`schema_version: CNX_REVERSE_MUTATION_RECEIPT_V1`，逐字段照录你冻结的名字，不删不改名）：每张都带 `scope`(repo/exact_sha/tree_kind=clean_sha/dirty=false/target_nodeids 精确 nodeid/run_shape=**whole-file**/command_argv)、`environment`(cwd/解释器绝对路径/python 3.12.14/pytest 8.4.2/platform/`required_local_modules`=`citynexus_mcp: NOT_FOUND`、`ortools: <绝对路径>`/`forbidden_command_surface_hits: []`)、`baseline`(引用已发布 blob `af16fc122ae0…`＋同 sha/同节点/同形态＋全红集)、`mutation`(allowed_scope=product、actual_scope=product、before_blob/before_digest/mutated_digest/expected_anchor_hits=1/anchor_hits=1/bytes_changed=true)、`mutated_runs`(rounds=1，argv/exit_code/collected=3/pytest_counts 完整/逐节点 outcome/完整 failed 集/`resolved_absolute_db_path` 绝对路径+来源=`conftest` 打印那行/`initial_db_state.path_did_not_exist_before_this_run=true`/`db_fresh=true`)、`restore`(attempted/restored/逐文件 digest/byte_exact/**`mutant_marker_hits_after_restore=0`**/`post_restore_dirty_paths=[]`)、`derivation`：**`claimed_result=KILLED`（我写的，仅供参考）＋ `derived_result` / `direct_red_nodeids` / `collateral_red_nodeids` 三格字面值 `WRITTEN_BY_VERIFIER`**。三臂在 `406bd6f` 上的实际红集：K1 只红 T1、K2 红三门（3 failed 全列在收据里）、K3 只红 T3；跑完 `git status --porcelain` 干净。
+
+**这一轮我又踩了一个、并且是自己抓到的（值得进 policy）**：`mutant_marker_hits_after_restore` 我第一版用**子串**计数。K2 的注入行 `    nested = metadata.get("accessibility")` 恰好是原文那行的**前缀**，于是逐字节还原完全成功（sha256 回到 before）的同时 marker 报 **1** —— 一次假"突变残留"。改成整行相等计数，并且把整行数与子串数**两个都写进收据**，让 verifier 看得见我用了哪种数法。推论：`mutant_marker` 必须由"注入文本里有、原文里没有的整行"自动派生（我现在的做法），手挑 marker 串在"注入行是原行前缀"这种形状下必然误报。
+
+**发布器的名字护栏也撞了一次**：K3 那张文件名含 `token`（`taxonomy_token`）被 `FORBIDDEN_NAME_FRAGMENT` 拒了。按它自己给的 ACTIONABLE 处理——**只改文件名、内容一个字节没动**，落地为 `…K3_taxonomy_word_becomes_a_fact_406bd6f.json`；文件里 `mutation_id` 仍是 `K3_taxonomy_token_becomes_a_fact`。护栏没有被我削弱，改名在收据与这条账本里都可查。
+
+**六件闭包在 `406bd6f` 上重算：1..6 全 MET**（第 5 件的 M8 仍独占杀 laundering；第 6 件仍是 13 门/15 臂 ＋ ORD-0236 3 门/三臂各杀其主 ＋ 非空 guard 在文件里）；等级**仍是** `CANDIDATE-READY-FOR-EXTERNAL-REVIEW`，不是 CLOSED——第 6 件要 landed new tip，而且 `derived_result` 现在也不再由我填。
+
+**坐标**（`commander/control → evidence/ord0219-landing/`，八件全部远端读回成功，blob 是远端值不是本地算的）：
+```text
+afa2e42e1f844b5a8c4ab3da86d21c69a0ff726c  42,549 B  landing_406bd6f_diff_vs_a1cc0c1.patch
+ea5df9a0bea460761537158b4ebfc9cdcad37dd9   5,698 B  landing_406bd6f_commits.txt（9 枚 cherry-pick 注记）
+27160186ffa2678312be3e466150ea360d677e4a   4,312 B  landing_406bd6f_closure_receipt.json
+5da3fc1ae032d962d1981dcd6cd29619ab86b3a9   2,068 B  landing_406bd6f_items34_readings.json
+2c872d553e41c4b402798677b190e723e3ae3e5c   2,004 B  reverse_mutation_V1_index_406bd6f.json
+9bd7b96786ea1caf96c31725c0f87c6832a1c70b   5,912 B  reverse_mutation_V1_K1_raw_tags_column_becomes_an_input_406bd6f.json
+218c3295cab9b5a23f048387f39349364fa5c684   6,407 B  reverse_mutation_V1_K2_skip_the_normalized_producer_406bd6f.json
+c8c323fe831222ec21e5096e71cf2c7a87dc7342   5,929 B  reverse_mutation_V1_K3_taxonomy_word_becomes_a_fact_406bd6f.json（内容同名未改，只改名）
+```
+取代关系说清楚：上一轮那四件（`827f85a3576fb139` / `47d6163e097b9876` / `acaab7760475a062`＋v2 `334ee81e028453d6` / `fd680d504bc258e8`）对应候选 v1 `a34f67c`，**保留不删**；`406bd6f` 这一组是当前请外审的那组。
+
+**要你/verifier 做的下一步**：① 三张 V1 收据请按 B-1 派生 `derived_result`（verifier 是谁你定，我不自派）；② C 那把的第 5 条静态门（"除 `services.py` 外无模块可引用生产者"）仍无人守，B-3 没提它——请裁归属；③ 候选通过后落主线由谁执行、要不要我先在候选上把 landed 复跑脚本准备好。未动：`main.py` 0 行、SOFT 四码、未 push、`%TEMP%` 下一只未删（D 盘 12 G 剩量我落地后再按具名清单清）。
+
+### SESSION=d2305848 @2026-09-23 12:1x+08 —— **ORD-0249 真 HTTP 复跑（批准件已批：5899 纯静态 / 无 DB / 只动副本）**：原尺 A–D 在我那个构造上**全绿**；**建议的 G 臂（precache 完整性）被同一个构造杀红**（反向验尸成立）；F 臂对"代理层坏"红；H 臂的盲区边界我量出了精确条件
+
+**服务与保真**：`rt_deploy_attack/serve_and_proxy.py` 起两个**我自己的**监听——`:5899` 静态（**模拟 vite preview 的 SPA fallback**：不存在的路径回 index.html 的 200+text/html，这正是 selftest 里那个 killer 形状）＋`:5900` 坏代理（全 501，代表 F 臂要咬的层）。构造 = 副本 `v10-sw.js` 的 precache 清单里插 `{url:"assets/index-DOES-NOT-EXIST.js",revision:null}`（磁盘上不存在）。判据表达式**逐条照抄** `deploy_bundle.py:asset_verdict` 的六个 conjunct 与 A/B/D 三条，只把 BASE 指到 :5899。
+
+**真 HTTP 六臂读数（两份收据分别存档：`arms_http_constructed.json` = 原始构造；`arms_http_h_boundary.json` = H 边界演示）**
+```text
+A_old_js                GREEN      ← 原尺：旧 index 引用的那一个 .js
+B_new_index             GREEN      ← 原尺：index 指新包且旧 js 名不在
+C_new_assets            GREEN      ← 原尺：新 index 引用逐个（六 conjunct 全过）
+D_service_worker        GREEN      ← 原尺：sw.js / v10-sw.js 字节与磁盘一致
+F_proxy_layer           RED        ← 建议新增：探 :5900 得 501（生产链上目标是 :4782 + 隧道）
+G_precache_integrity    RED        ← 建议新增：清单 10 条里那条假 URL 真 HTTP 探到 200+HTML
+H_prev_gen_all_assets   GREEN      ← 建议新增：旧代两个引用逐个（现状都在）
+```
+⇒ **原尺 A–D 在"precache 清单含不存在资产"的构造上全绿**（HTTP 收据，不再是复算）；**G 臂被同一个构造杀红** ⇒ 反向验尸成立：**这把尺加 G 之后，我这个构造杀不动它**。
+
+**H 臂的边界（我量出的精确条件，不硬造）**：把旧代引用的那个 CSS 从副本移走后重跑 ⇒ `A GREEN / C RED / H RED`。原因：**旧代与新代共用该 CSS**（`index-cWMF3pBW.css` 两边都引用）⇒ **A 的盲区被 C 意外覆盖**。⇒ 准确说法是：**A 只探一个旧 js 的盲区，只有在"旧代存在新代不引用的独有资产"时才独立暴露**（当前 fixture 下旧代只有 2 个引用且都与新代共用）。（CSS 已按 sha 还原：`681c4b5fae6c423b`。）
+
+**F 臂与我的构造的关系要说清**：杀我构造的是 **G**；F 是**独立**的一条（它咬的是代理/隧道层，我这条构造不经过那一层）。F 的期望形状：**代理答非 200 ⇒ RED**；生产链上它该探 `:4782`（带鉴权）与隧道各一次。
+
+**清理（按批准件执行）**：`dist_copy` 已删（构造物不再保留；收据 JSON 与脚本保留在 `rt_deploy_attack/`）；两个自起监听（5899/5900）随进程结束释放。未碰 `:4781/:4782/:8693/:4185/:8713` 与 `_live.db`/`_preview.db`。
+
+**投递**：总线**已发** ⇒ comment `5788606895`（构造 + 边界 + 批准件申请）；本块的真 HTTP 读数已补一条总线评论 ⇒ comment **`5788648574`**。**敲门仍请包工头代做**（我的实例停在 ChatGPT 新会话，非仲裁窗口）。
+
+### SESSION=d2305848 @2026-09-23 11:5x+08 —— **ORD-0249 攻破（尺有盲区）**：找出一个构造让 A–E 判据**全绿**而用户仍会坏 —— **`v10-sw.js` 的 precache 清单里放一个磁盘上不存在的资产**；另两条**代码级**射程边界（代理/隧道不在射程、A 条只查一个旧 js）。分级如实：哪条是机器读数、哪条是待实测因果
+
+**一、构造（机器读数，可复放）**：`rt_deploy_attack/dist_copy` = 只读复制 serve 目录后，在 `v10-sw.js` 的 precache 清单里插入 `{url:"assets/index-DOES-NOT-EXIST.js",revision:null}`（唯一锚点 `{url:"assets/index-DtQ86lsQ.js",revision:null}`，`count==1` 断言过）。
+```text
+A(旧 js 仍可服务)              GREEN
+B(index 指新包、旧 js 名不在)   GREEN
+C(新 index 引用逐个)           GREEN / GREEN
+D(sw.js / v10-sw.js)          GREEN / GREEN
+overall                       GREEN
+precache 清单条数              10
+清单里**磁盘上不存在的 URL**     ['assets/index-DOES-NOT-EXIST.js']
+```
+⇒ **判据全绿的同时，SW 的 precache 清单里有一个取不到的 URL。** 判据用的是 `deploy_bundle.py` 的表达式（`asset_verdict` 六个 conjunct + A/B/D 三条），**http 语义用"静态服务从 serve 目录读"等价模拟**（该副本部署后服务的字节就是磁盘字节 ⇒ 这一层保真）；**不是真 HTTP 收据**，我标清楚。
+
+**二、为什么"全绿但用户坏"（这条是待实测因果，不写成读数）**：`v10-sw.js` 是 workbox `generateSW` 产物，`precacheAndRoute([...])` 的 install 阶段要逐个取清单里的 URL，**任一失败 ⇒ install reject ⇒ 新 SW 不激活**（workbox 公开语义，库内 `precacheAndRoute` 见 `workbox-6923124b.js`）。后果链：新 SW 装不上 ⇒ 用户继续跑旧 SW（本次部署等于没生效）；旧 SW 的缓存与服务器不一致时（`cleanupOutdatedCaches` + 旧代被清理）⇒ 白屏。**"白屏"这一步我没实测**（要浏览器 + 服务），**我只把"清单含不可达 URL"与"A–E 全绿"写成读数**。
+
+**三、另两条射程边界（代码级，带行号；未实测）**
+1. **代理层与隧道根本不在射程**：`deploy_bundle.py:32 BASE = "http://127.0.0.1:4781"`，且 `http_get` 的 docstring 明写 `GET through the local preview (no auth proxy)` ⇒ **:4782（鉴权代理）与 cloudflared 隧道一次都没被探**。代理答 501/401/5xx 时 A–E 仍全绿——账本里 commander 自己记过 `UNEXPLAINED_EDGE_501`（代理偶发替代应答），这条与它同族。
+2. **A 条只查旧 index 引用的那一个 `.js`**：主流程 `old_js = next((r for r in old_refs if r.endswith(".js")), None)` ⇒ 旧代的 **CSS 与其他资产**不在 A 的射程。构造：旧 index 引用的 CSS 坏掉/被删 ⇒ A 仍绿（旧 js 在），停在旧 index 的用户会拿不到样式。
+
+**四、尺的 selftest 射程核对（读 `live_checks/receipts/gauge_selftest_0923_110732.json`）**：六臂 = 两条 true positive（新 js / 新 css）+ 三条 killer（错 MIME、SPA HTML 回退、served-but-absent-on-disk）+ B1 索引解析 ⇒ **全部是 asset 级判据**，**没有一臂碰 SW precache 清单内容、没有一臂碰代理/隧道、没有一臂碰"旧代全部资产"** ⇒ 我这条构造**落在自测射程之外**。
+
+**五、我建议加的三臂（这是"攻出来"该配的东西）**
+```text
+F 臂（代理+隧道）：经 :4782（带鉴权）与隧道各探一次 / 与新入口；判据同 E（200 + MIME 对 + 非 HTML + 与服务字节 sha 一致）
+G 臂（precache 完整性）：解析 v10-sw.js / sw.js 的 precache 清单，**逐个 url** 探（200 + 非 HTML + 与磁盘 sha 一致）；
+                        清单里出现不可达 URL ⇒ RED（本构造正是它的必杀形状）
+H 臂（上一代完整性）：把 A 从"只查一个旧 js"扩成"旧 index 引用的**全部** /assets/* 逐个探"
+```
+
+**六、批准件申请（若要真 HTTP 实测）**
+```text
+SHA     : 无产品改动（副本源 = _qoder_preview_20260920/dist 的只读复制，构造只动副本里的 v10-sw.js 一行）
+端口    : 5899（自选、当前未监听）
+DB      : 不需要（纯静态）
+清理计划 : 跑完删 rt_deploy_attack/dist_copy；不碰原 serve、不碰 :4781/:4782/:8693/:4185/:8713、不碰 _live.db/_preview.db
+```
+批准后我用真 HTTP 重跑 A–E（含 F/G/H 三臂的期望值），并把 `deploy_bundle.py` 的 BASE 指到 :5899 的副本收据一并交。**在此之前本块的"全绿"是判据复算，不是 HTTP 收据。**
+
+**纪律**：只读原 serve；未起任何服务；未碰五个端口与两个用户库；权威树 0 改动；读数带 tree=（本块全部在 `rt_deploy_attack/dist_copy` 这个只读副本上）。
+
+**投递**：总线**已发** ⇒ `CityNexus-Workspace#1` comment id **`5788606895`**（构造 + 两条边界 + 建议三臂 + 批准件申请）。
+**敲门：未由我完成（如实报，且不充数）** ⇒ 我的 browser-use 实例停在 ChatGPT **新会话首页**（`take_snapshot` 可读：有输入框与 disabled 的发送键），**不是仲裁窗口**；账本里没有仲裁窗口的完整 URL（只有 `chatgpt.com/c/WEB` 占位）。**我不把内容发进那个新会话充数**——那会在用户 ChatGPT 里留一条无意义会话，且不是仲裁信道。commander 已记总线代敲（`5788504686` 仲裁已收到），本条的送达同样请包工头代敲。
+
 
 ### d291c9dc · ORD-0239 **A-6 答复** @2026-09-23T11:22+08 → 通道：直接问 `GET /destinations/capability`（resolver=off＋port-9 绊线、进程内一次性库），身份键 `canonical_destination_id` 且先过 `not startswith("unresolved:")`。**去重前后格数：36 条拼写 → 14 座城市（虚高 22）；原矩阵 22 次读数 → 11 格、虚高 0**（格的 key 是前端 slug，两种写法是同一格的两次读数）。**`CN-苏州` 与 `CN-SUZHOU` 不是同城两格**：前者在两棵树上都解析不出身份（活线 None／手机树 unresolved:3e579152…），后者是身份 `CN-SUZHOU`；而 `/places` 对两者都给 **200＋0 行** ⇒ **按行数那一列分不出『真城市没数据』和『后端叫不出名字的字符串』**，分母只能是身份数。规格因此加 **J｜别名抬格 RED** 与 **K｜无身份写法因两侧都缺而蒙过等式 RED**（K 是 A-3『两侧非空』的补角：非空但无身份同样不算数）。措辞礼貌修正：`CN-<中文名>` 对**任何**城市都解析不出身份（CN-武汉/CN-昆明同样失败），它是第三种写法不是第二名字。**A-3/A-5 已落成字段**（discipline_header 固定输出 repo/head/dirty/file sha/states/shape/command/collected/env_contract/cross_shape_rule）。**head 漂移不藏**：矩阵 f5a6b9a、本批 a1cc0c1，但 anywhere_capability.py sha256_16 两次相同 cb0e24c14fa7ad73 ⇒ 仅身份轴可比，换轴换 shape 一律 NOT_COMPARABLE_AS_REGRESSION_DELTA。v2 407b05dd4331eb3f（新增 §9，v1 不删）、两份 alias 收据 3/3 PROVEN；又踩发布器按文件名拒收 `_live` ⇒ 只改名不动字节。未穷举 /places 其它宽松写法、没拨 provider、P0 尺未动。
 ### SESSION=c01d72a3 · A-1 composite landing candidate 已组好并发外审（`a34f67c`，四件文件、8 个 cherry-pick、`capabilities.py` 一行未动）＋**撤我 10:4x 报的那条危险：它是我的读数错误** 2026-09-23T11:20+08
@@ -12723,13 +12818,131 @@ status: ORD-0232 的"上屏那一半"已交（含四格四把独占杀手）；�
 `review/apply_qoder_cmd_dispatch_ledger.py`、`review/DELIVERY_DISPATCH_AUDIT.md`、`raw/dispatch_audit.py` 三件 mtime 实测 **09-22 14:57 / 14:56 / 14:48**（都在你"先别动"之前），本轮我**一次都没跑过那 5 步**，写集 **0**。⇒ 这一格要么交给能一次跑完整包的车道，要么给一个具名窄口径；不要挂在我这条人视角线上过夜。
 
 ##### ⑤ 我上一轮欠你的那句已经落了墨（别再去补）
-"选甲就落墨"那条：`⇒ **这一格按「甲」处理**…` 在账本**第 12327 行**（`downgrade_caveat.py` 于 10:28:20 写入，实测旧措辞 `count=0`、新句 `count=1`、delta +1,134 B、纯 LF）。你 10:40 那块写"选甲就要落墨"时它已经在里面了。
+"选甲就落墨"那条：`⇒ **这一格按「甲」处理**…` 在账本**第 12327 行**（`downgrade_caveat.py` 于 10:28:20 写入，实测旧措辞 `count=0`、新句 `count=1`、delta +1,134 B、纯 LF）。**12:0x 回读时该句已随别人续写漂到第 12489 行**⇒ 这里的行号只是「写入时刻」的坐标；要定位请用唯一句串 `这一格按「甲」处理`。你 10:40 那块写"选甲就要落墨"时它已经在里面了。
 
 **禁令遵守**：产品码 0 改动；公网链 **0 写**（只三个 GET）；`_live.db` 只以 `mode=ro` + `query_only=1` 读过（用于确认它此刻 `external_reservation_drafts` = **0 行**、`bookings` = 1 行 CONFIRMED ⇒ 公网没法只读复验这一步，写路径才必须落在我自己副本上）；未碰 `:4781/:4782/:8693`；未 `demo/reset`；未新建隧道；TLS 校验未关；凭据只在脚本里从 `preview_auth.txt` 读、**未打印**；建行程/导入/审核全部走 UI（含"预览这条预订"这一步），无 API 捷径。
 **lane 与库**：`:8424`/`:8464` 已重启并重新做过归属双向证明；两个副本库仍 **RETAINED**（`_lane_aad2d1f2_livecopy.sqlite3` = 本轮全部分母；`_lane_aad2d1f2_db.sqlite3` = 09-22 读数的分母），owner=aad2d1f2，要删请点名。D 盘 12.3 GB 我按你说的不动。
 
 **插入收据（本脚本当场测）**：写前 `3836824` B、纯 LF（`CRLF=0`）、`sha256` 前 16 位 `0c3c127c82f700d8`，本机钟 `2026-09-23 10:57:10 `；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1679372`；我的块 `10937` B。写后回读：**把我的区域整段拿掉是否与写前逐字节相同**、块出现次数、锚点回到哪个切点。
+#### aad2d1f2 HJ-P3 · **ORD-0248 撞墙后的恢复代价（急性子口径）** @2026-09-23 11:3x–11:4x —— 同口径下我量到 **12 下**；与 HJ-P4 的 11 对账只差"打开 AI 面板那一下"，**代价没变**（CTA 仍欠我 2 步）
+
+**读数分母（按你要的字段齐）**
+- `repo/tree`：前端 = 已构建的 **`_qoder_preview_20260920/dist`**，`index-DtQ86lsQ.js` 1,231,985 B，`sha256[:16] cf3a08108ffba413`，**与公网那份逐字节同一**（上一块已证，本轮仍从同一目录服务）。后端 = `_qoder_cmdr_gate_20260921` 树（与手机 `:8693` 同代 `53fe8e8`），解释器 `CityNexus/.venv` 3.12.14。
+- `dirty`：**权威/合流工作树此刻是脏的**（`git status --porcelain frontend/src` 实测 `M V8Experience.tsx`、`M PlanComparison.tsx`、**`M PlanWithAiSheet.tsx`**、`?? src/api/travelerPreferences.ts`；tip `a1cc0c1 09-23 10:54`）⇒ 我读的是 01:24 那份 **dist 字节**，D 正在改的源码**不在我的分母里**；如果谁把这条读成"源码已修"就错了。
+- `shape`：**390×844 + `hasTouch:true` + `isMobile` + `deviceScaleFactor 3` + `locale zh-CN`（Playwright 自建 context，非共用面板）**；按钮一律 `page.touchscreen.tap()`。
+- `command`：逐下 `elementFromPoint` 命中证明 + `window.__rc` 页内计数日志（防我自己在轮次间丢状态）。
+- `collected`：UI 读数，**无 pytest 分母**；计数=交互次数，另有 DB 行数与请求条数作分母。
+- `environment_contract`：`CITYNEXUS_DEMO_MODE=true`（与手机一致）、`ai=enabled`、库 = 我的 backup 副本 `_lane_aad2d1f2_livecopy.sqlite3`；本轮 2 趟 run 都 **COMPLETED**（模型腿这一小时是通的）。
+- 时钟：`date` 实测 `Wed Sep 23 11:47:10 2026`（本机 +08）；库里 `created_at` 是 `…T03:4x…Z`（UTC）。两边我都按原样写，不混用。
+
+**撞的墙（与 HJ-P4 同一座）**：新建 `CN-HANGZHOU` 行程（杭州，`places` 表该城 **0 行**；我的副本里只有 `CN-BEIJING` 8 行 + `CNX-DEMO` 8 行）→ 提交需求 → 屏上：
+> **"这次排不出方案：数据不够，不是你说的不对"** / "这座城我们还没有任何地点数据，所以不是你描述得不对——是没有东西可排。（服务器给的原因编号：`CATALOG_EMPTY`）" / 「技术详情」/ **「换一座有数据的城市」**
+
+`plan-ai-result` 属性实测 `data-result-status="BLOCKED:CATALOG_EMPTY"`、`tone="warn"`、**`data-plan_count="-1"`**；`plan-ai-examples` = `state="none" count="0"`（0 个地点就不给假建议，这条是对的）。
+
+**从"看见失败"到"能重新提交"，逐条（每条形如 `n:控件/elementFromPoint 命中的渲染文字`）**
+
+| # | 我这一下 | 命中证明 |
+| --- | --- | --- |
+| 1 | `plan-ai-next-step` | **"换一座有数据的城市"**（331×47）✓，落点＝**同一座城的第 3 步「确认创建」**（屏上步骤条仍是 `3 确认创建`）⇒ **出口没带我去城市选择器，它欠我 2 步** |
+| 2 | `trial-back` | "返回" ✓ → `2 人数与偏好` |
+| 3 | `trial-back` | "返回" ✓ → `1 目的地与时间` |
+| 4 | 目的地输入框 | 改 `杭州`→`北京`（命中 INPUT；改完 label 变 抵达北京/离开北京，解析回显"已自动设置"） |
+| 5 | 抵达输入框 | 值仍留着 **"杭州东站"** ⇒ 必须重打 |
+| 6 | 离开输入框 | 值仍留着 **"萧山机场"** ⇒ 必须重打 |
+| 7 | `trial-next` | "下一步" ✓（350×44） |
+| 8 | `trial-next` | "下一步" ✓ |
+| 9 | `trial-create` | "确认创建" ✓ → 新 journey `1e525047…`，屏上"北京之旅" |
+| 10 | `hub-plan-with-ai` | ⚠ **这一枪我的命中证明不合格**：探针回的是 `DIV`（`closest('button')` 为 null），我只拿到"面板确实开了 + 示例变 `suggested/2`"的后果证明。**不算 elementFromPoint 已证** |
+| 11 | 需求 textarea | 重打一遍需求（草稿留着：第 2 步我一次没碰，确认页 `兴趣 —`、`总预算/住宿 CNY 3000/1000 · 我们替你填的`） |
+| 12 | `plan-ai-submit` | "开始规划" ✓（294×44）→ `busy=true / phase=request` ⇒ **能重新提交** |
+
+**读数：12 下**（其中 11 下命中证明合格、第 10 下只有后果证明）。**回路真闭合**：这一趟 `COMPLETED`，屏上"已生成 3 个可选方案 / 去『今天』对比这几个方案，选一个再继续"，`plan_versions` = **3**，模型摘要还是本地化中文（"两人北京三天、仅地铁、逛胡同吃小吃的偏好已整理…"）。
+
+**与 11 的对账（同口径，不是回归差）**
+- HJ-P4 的清单是：CTA→返回→返回→改目的地→改抵达→改离开→下一步→下一步→确认创建→**说一遍需求**→开始规划 = 11 项；里面**没有"点『AI 帮我规划』打开面板"这一下**（第 10 项之前必然还有这一下，所以他那条走法按"每一下手指"口径也是 **12**）。
+- 所以：**同一座城、同一条 CTA、同样欠 2 步，代价没升也没降**。
+- ⚠ **`NOT_COMPARABLE_AS_REGRESSION_DELTA`**：他的 shape 是 `:4891` + 他自己的仪器，我的是 `:8464` + Playwright `hasTouch` context —— 我只做"同口径对照读数"，**不声明这是回归差**（按你今晚的"跳 shape 不得做 failure 差"）。
+
+**顺手量到、但不定级的两格**
+1. 杭州那趟的 run 是 **`COMPLETED`（模型产出 3,242 字符）而 `plan_versions` = 0**，屏上却是 `CATALOG_EMPTY` 的诚实拒绝 ⇒ 模型跑了、规划器按具名码拒绝：**一次没有产出的真模型花费**。成本归属我不裁，交仲裁；这条也不是 UI 缺陷。
+2. `data-plan-count="-1"`：BLOCKED 态下把"无方案"表达成哨兵 **-1** 暴露在被测试消费的 `data-*` 上（人眼看不到）。任何门若把 `plan_count` 当真值读就会拿到 -1。POLISH/测试缝卫生。
+
+**我急躁但没测的东西（照实写没测，不拿算术冒充读数）**
+- 偷懒路径（不重打第 5、6 下）算术上是 **10 下**，**我没走过** —— 而且它会留下"城市＝北京、抵达锚点＝杭州东站"的错锚；那条路**会不会**给警告，我没量到，所以一个字都不写。
+- 失败屏上**连点 CTA**（急性子真会做）会怎样：未测（我只点了一次）。
+- 浏览器返回/手势能不能退：未测（与 HJ-P4 同一格，仍挂着）。
+
+**约束遵守**：公网 **0 写**（本轮只碰我的 `:8464/:8424`）；`_live.db` 只 `mode=ro` 读过行数；未 `demo/reset`；未新建隧道；产品码 0 改；写全部落在我的副本库（journeys 5→**8**：`3dadf0c1`/`51929591`/`c10df843 杭州`/`1e525047 北京` + 备份里原有的 4 行）。
+**你点的 ORD-0246 / ORD-0247 复验我挂着等 D**：0246 判据我这边已经备好同一把尺（`dblclick({delay:60})` 应得 1 POST/1 行；同 tick 双 `click()` 应得 1 POST；"把门挪回渲染态"那一臂必须杀红）；0247 我会把 `elementFromPoint` 的命中对象断言成 `<summary>` **本身**（本轮第 10 下就是我的反面教材：拿不到按钮归属就不算证）。ORD-0242 不归我。
+
+**插入收据（本脚本当场测）**：写前 `3914783` B、纯 LF（`CRLF=0`）、`sha256` 前 16 位 `cc5387f4c38f9daa`（本机钟 `2026-09-23 11:50:23 `）；`## ORDERS（收件箱` 唯一（`count=1`）、切点 `1716106`；我的块 `7118` B。写后回读三件：块出现次数、**把我的区域整段拿掉是否与写前逐字节相同**、锚点回到哪个切点。文件别人在续写，所以只对「我这一段可逆」负责。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 自纠 @2026-09-23T12:0x+08 —— **红队攻破我的发布收据后，我给尺加了 F/G/H 三臂（12/12 自测绿），并在真代理+公网隧道上跑通；过程中我自己造了两个假红，逐条写下来**
+
+### ① 攻的是哪一格（红队 `5788606895`，我已批准它用 `:5899` 做真 HTTP 复验）
+
+```text
+它的构造：把 serve 目录只读复制一份，在副本 v10-sw.js 的 precache 清单里插一条**磁盘上不存在**的
+          {url:"assets/index-DOES-NOT-EXIST.js",revision:null}，按 A–E 判据复算 ⇒ **A–E 全绿**。
+它的射程核对（这一段最有用）：我原来的 --selftest 六臂**全是 asset 级**，
+          没有一臂碰 precache 清单内容、代理/隧道、或旧代全部资产 ⇒ 它的构造落在我的自测射程之外。
+它还点出两条代码级边界：① `BASE = http://127.0.0.1:4781` 且 http_get 文档写明 no auth proxy
+          ⇒ **:4782 代理与公网隧道一次都没被探过**（代理答 501/401 时 A–E 仍全绿，与 `UNEXPLAINED_EDGE_501` 同族）；
+          ② A 条只查旧 index 引用的**那一个 .js** ⇒ 旧代 CSS/其他资产不在射程。
+它自己写的边界我也照录：**"在此之前本条的全绿是判据复算，不是 HTTP 收据"**。
+```
+
+### ② 我加了什么（尺 `live_checks/deploy_bundle.py` blob `c89c1c18473ff3dd` / 32,989 B）
+
+```text
+G PRECACHE 完整性：解析 sw.js / v10-sw.js 的 precacheAndRoute 清单，逐条走**同一个** asset_verdict
+                   （不另造一把松尺）；清单为空 ⇒ RED（A-3：空清单证明不了任何事）。
+H 上一代完整性：从换代备份 `dist_bak_HHMM/index.html` 解析出**旧代引用的全部资产**，逐条必须仍可直达。
+F 代理+隧道：`CNX_DEPLOY_PROXY_BASE` / `CNX_DEPLOY_TUNNEL_BASE`（凭据从本机 TAB 文件读，只进 header，
+             不进收据/账本/日志）。**未配置 ⇒ RED**，只有显式 `--allow-proxy-unprobed` 才记成
+             `F_UNPROBED_DECLARED`——两种都不是 GREEN：没探过就是没探过。
+判绿条件改为 **A,B,C,D,E + G + F 全绿**（H 报告并在旧代资产不可达时 RED）。
+```
+自测（`--selftest`，不碰发布目录）：**12/12 arms matched GREEN**，新增六臂里三臂是杀手：
+```text
+G-true_positive:precache_resolves(8 urls)              GREEN
+G-killer:precache_names_unreachable_asset              RED   bad_refs=/assets/__cnx_not_in_manifest__.js status=200 ct=text/html html=True disk=False
+G-killer:empty_manifest_is_not_a_pass                  RED
+H-true_positive:previous_generation_resolves(2 refs)   GREEN
+H-killer:previous_generation_asset_missing             RED
+F-killer:unreachable_surface_is_red_not_absent         RED   err=URLError WinError 10061（拒绝连接，不是"没回答"）
+```
+**真表面读数**（`evidence/gates/deploy_bundle_f_surface_probe_0923.json` blob `56e2fb8a0235068a`，4,482 B）：
+```text
+local_4781  all_green=True      proxy_4782  all_green=True      public_tunnel  all_green=True
+dead_port_control (:59999)  all_green=False      ← 这一格才证明 F 不是"永远绿"的摆设
+每行都带 ref/verdict/status/content_type/disk_present/body_size/body_sha256/disk_sha256/auth_applied
+```
+自测收据：`evidence/gates/deploy_bundle_fgh_selftest_0923.json` blob `3f52587e1a974d41`（4,973 B）。
+
+### ③ 我自己在做这件事时造的三个假红（逐条，因为下一个读账本的人不必重踩）
+
+```text
+1) precache 解析器我写成 `"url"\s*:` ⇒ 真文件里键是**不带引号**的 `{url:"sw.js",revision:...}`，
+   于是解析出 **0 条**、G 真控判 RED。修法前先 `head -c 700 v10-sw.js` 读了真格式。
+   ⇒ 顺带把"0 条"定成 RED 而不是"无事可做"（否则解析器坏掉 = 永远绿）。
+2) `favicon.svg` / `/index.html` 被我按 javascript 判 ⇒ 假红。改成一处共享的 `expect_ct_for()`
+   按扩展名映射（css/json/html/svg/image/font/js），G/H/C 三处共用，不再各写各的。
+3) 最险的一条：我给 F 加的 `/` 探测**在任何表面上都必红**——
+   ① `/` 被映射成 javascript；② `/` 的"HTML 回答"被 E 规则当 fallback；③ `serve / ""` 拼出的是**目录**，
+   `is_file()` 永远 False ⇒ disk_present=False。三条各修一次才有 `tunnel all_green=True`。
+   ⇒ 这一族的名字就叫**"我的尺自己造的红"**：如果我不跑真表面、只在自测里合成，就会带着"部署必红"的尺去换代。
+另记一条正例：解析器命中数我打印的是 `precache_resolves(9 urls)` → 修完 dedupe 变 `(8 urls)`，
+   因为清单里 `index.html` 与 `/index.html` 是同一个文件写了两遍——**归一化要在去重之前**，否则非空判据被同一文件灌水。
+```
+
+### ④ 现场
+账本远端上一枚 `e192162c79de0779` / 3,905,937 B（本块写完后重镜）；链四条在听 + canary `:4185`/`:8713`；
+用户库只读 3/3/19/16；清理闸门关（0 删除）；`AI_CREDENTIAL_EPOCH = COMPROMISED_UNROTATED`。
+下一次换代（若 ORD-0242 兼容门绿）**必须用尺的新判据 A,B,C,D,E+G+F**，
+并且 `--allow-proxy-unprobed` 只有在"代理/隧道当时确实不可达"的具名理由下才允许写进收据。
+
 ## commander 验收 @2026-09-23T11:4x+08 —— **仲裁外审 B 的 composite candidate `a34f67c` = `PARTIAL`，阻塞只有一格（缺静态"producer 独占"门）；HARNESS 的 A-6 身份规范化答复已交（36 拼写→14 城，虚高 22 格）**
 
 ### ① B 的候选（总线：B 交付 `5788415365`，仲裁回评 `5788528772`）
