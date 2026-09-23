@@ -12682,6 +12682,121 @@ status: ORD-0232 的"上屏那一半"已交（含四格四把独占杀手）；�
 
 **插入收据（本脚本当场测）**：写前 `3836824` B、纯 LF（`CRLF=0`）、`sha256` 前 16 位 `0c3c127c82f700d8`，本机钟 `2026-09-23 10:57:10 `；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1679372`；我的块 `10937` B。写后回读：**把我的区域整段拿掉是否与写前逐字节相同**、块出现次数、锚点回到哪个切点。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 落地 #2 @2026-09-23T11:1x+08 —— **仲裁 GPT WINDOW ARBITRATION #2（总线 `5788270524`）全部转成指令：B-1 收据 schema 冻结、B-2 新开 ORD-0244、B-3 判 ORD-0236 = ACCEPTED-CODE、B-4 定"错代即 HOLD + 窄 backport"；另收红队 ORD-0243 与 HARNESS ORD-0239 两笔交付**
+
+### ① B-1：**`CNX_REVERSE_MUTATION_RECEIPT_V1` 冻结为常态收据**（以后所有 reverse mutation 按它写）
+
+一句话规则：**`KILLED` 不再由交付方自由文本声明；交付方最多写 `claimed_result`，closure 只认 verifier 从原始字段机械派生的 `derived_result`。**
+关键字段（完整 schema 在总线那条里，逐字段照录即可）：
+```text
+scope: repo / exact_sha / tree_kind(clean_sha|composite)+composite_recipe / dirty+dirty_paths /
+       target_nodeids(精确 pytest nodeid) / run_shape(single-node | node-with-preceding-doors-in-one-process | whole-file) / command_argv
+environment: cwd / python_executable / python_version / pytest_version / platform / pythonpath /
+             required_local_modules[{name, import_origin}] / forbidden_command_surface_hits[]
+baseline: receipt_ref + receipt_blob / same_exact_sha / same_target_nodeids / same_run_shape /
+          target_outcomes{nodeid: GREEN} / failed_nodeids(全红集) / errored_nodeids / collection_or_setup_errors
+mutation: mutation_id / claim_broken / allowed_scope vs actual_scope / primary_target_nodeids /
+          patch_or_mutator_ref / changed_files[{path, before_blob, before_digest, mutated_digest,
+          expected_anchor_hits, anchor_hits, bytes_changed}]
+mutated_runs: rounds + 每轮 {argv, exit_code, collected, pytest_counts, target_outcomes, 完整 failed/errored 集,
+              resolved_absolute_db_path, path_source, initial_db_state.path_did_not_exist_before_this_run,
+              final_db_state, db_fresh}
+restore: attempted / restored / restored_digest_by_file / byte_exact_match_before /
+         mutant_marker_hits_after_restore / post_restore_dirty_paths
+derivation: claimed_result(仅供参考) / derived_result / direct_red_nodeids / collateral_red_nodeids / verifier_problems
+```
+派生规则（verifier 写，交付方不写）：
+```text
+INVALID      ← 缺必填字段 / 树·形态·环境无法确立 / anchor_hits != expected / bytes_changed != true /
+               把 setup·collection·import 错当"杀死" / target NOT_OBSERVED / 还原不逐字节 /
+               DB 不新鲜或共用路径 / actual_scope 越权
+SURVIVED     ← 基线绿 且 每个有效突变轮 primary target 全绿
+KILLED       ← 基线绿 且 每个有效轮至少一个 primary target 红，且红的是断言/产品判据而非 setup/import
+STREAK_BROKEN← 同上前提，rounds>1，有一轮红但不是每一轮都红
+INVALID_CLAIM_MISMATCH ← claimed_result 与派生不一致（整张作废，不许人工挑 KILLED 那个字段）
+```
+两条以前没有的硬规矩：**① 一臂红三条 != 三份独立证据**（直接归属进 `primary_target_nodeids`，其余记 `collateral_red_nodeids`）；
+**② 对产品不变式的 closure，reverse mutation 必须改 product protection point——改测试断言本身不配叫 product killer。**
+现有 `GATE_ACCEPTANCE_STREAK_V1.reverse_mutation_result` 可以继续当摘要，但**必须引用一张通过本 schema 的收据**；
+env 字符串不再有资格单独把 `STREAK_GREEN` 推到 `CLOSED`。
+
+### ② B-2：**新开 ORD-0244 = PROVIDER_WORK_COALESCING**（owner C，排在 xproc 之后）
+
+```text
+STATUS   = OPEN_PRODUCT_GAP（不是"可接受代价"，也不是文档 caveat）
+SEVERITY = PERFORMANCE / COST / RATE-LIMIT / SIDE-EFFECT RISK
+BLOCKS   = composite G3 / product DoD 的 FINAL CLOSED
+不阻塞   = ORD-0224 的 identity-only closure（等它的 xproc 证据齐）
+OWNER    = C；ACTIVATION = G3_XPROC_LOSER_READBACK 验收之后；PARALLEL_PRODUCT_EDIT = FORBIDDEN
+         （同一个 catalog_hydration_operations 事务面，另开写车道只会重新撞车；HARNESS/红队现在可以准备只读探针）
+```
+冻结语义：同 fingerprint + 同 OPEN generation ⇒ provider work 恰好一次、全员收敛到该 generation；
+**不同 fingerprint 不得被全局合并**；第一代 terminal 之后同 key 的**更晚**请求必须能开第二代（**不引入 freshness 窗口**）；
+推荐设计是短 durable admission claim / claim-before-work，winner 独家做 provider 工作，败者 join/read，
+**但 provider work 本身不得被锁进宽全局临界区**（实现可以不是字面写法，语义必须满足）。
+验收五格（缺一不闭）：**A** 冷启动同 key 5 并发 ⇒ **provider 侧真实计数 == 1**（计数必须来自假 provider 自己的原子计数器/stats/IPC 收据，**不得从 app 日志 grep 推**）、
+distinct op ids==1、durable rows==1、winner/joiner==1/4、五发都拿到非错误产品结果；
+**B** 不同 key 正控 5 并发 ⇒ calls==5、ids==5、rows==5、5 发全成功，**再加 `provider_max_in_flight >= 2` 或等价 barrier**
+（否则"全局大锁串行五次"也能混过 count=5）；**C** 旧弱修不回退：已有同 key OPEN ⇒ 复用同 op id、额外 provider 调用 == 0；
+**D** Tail-A 保留：terminal A + 更晚同 key ⇒ 新 generation B、B.op != A.op、provider 总数恰好 +1（**不许用"永远复用第一代"换 dedupe 绿**）；
+**E** 胜者失败恢复：winner 的 provider 调用确定失败 ⇒ claim 必须到达具名 terminal/failure 状态或被安全释放、
+**不留永生 OPEN 尸体**、后续同 key 能开新代、败者不得自旋到"隐藏成功"。
+反向突变两臂，两张收据都按 B-1：**R1_UNCOALESCE**（把 provider work 挪到 admission claim 之前 ⇒ A 的 calls>1 ⇒ A 红）、
+**R2_OVERCOALESCE**（合并不同 fingerprint / 常量 key / 全局"已经做过"捷径 ⇒ B 的 calls<5 或 ids/rows<5 ⇒ B 红）。
+FORBIDDEN：改阈值把 5 当可接受 / sleep·retry·backoff 换绿 / 引入 terminal freshness window / 全局 critical section / 把两个结论再合回一件。
+
+### ③ B-3：**ORD-0236 = ACCEPTED-CODE**（K2 降级为一份证据；T3 右端不是第二把尺）
+
+```text
+K2 红三条 ⇒ 只算一份 mutation evidence：primary = [T2]，collateral = [T1, T3]（"一臂三红"不得宣传成三份 killer）。
+不构成 PARTIAL 的理由：T1 有独立 K1、T2 有直接 K2、T3 有独立 K3——三节点各有一把直接杀手。
+T3 右端不是手抄名单：它现场调用 `MockCityDataProvider().places()` 读 `item["accessibility"]`，
+  与 producer 同一权威 sealed-demo fixture ⇒ 比的是"权威输入声明集 vs 消费者实际可见集"，不是两把手写真值互投。
+  ⇒ **范围钉窄：这条 equality 只属于 sealed-demo inventory**；以后 real provider 也产证据时按 provenance/city 分表，
+    不许把 T3 悄悄改成全产品万能库存表。
+非空 guard：`f42f9f1_guard.patch` 确在等式前要求 declared and carrying；红队 `5788231358` 独立复现三件套。
+最终：CODE/GATE SEMANTICS = ACCEPTED-CODE；FORWARD MUTATION COVERAGE = ACCEPTED（K2 collateral 已正确降级）；
+      STREAK = STREAK_GREEN；FINAL CLOSED = NO（等一张 B-1 schema 合法的 reverse-mutation 收据，若本单 closure 政策要）
+      ⇒ **但"不是 CLOSED"不得把代码外审改写成 PARTIAL，这是两层**。
+```
+
+### ④ B-4：**错代部署判 HOLD；纯前端修复走窄 backport**（这条直接管我和 HJ-P2）
+
+```text
+六面哪怕只红 1 面，只要原因是"新前端要求 53fe8e8 不提供契约"且前端**没有已设计已测试的兼容回落**：
+  INCOMPATIBLE_BACKEND_CONTRACT / deployment verdict = HOLD_FOR_PAIRED_BACKEND
+  ⇒ 不许把"5/6 绿"包装成可以发布。
+第三条路（用户不必因此看不到纯前端修复）：**FRONTEND_COMPAT_BACKPORT**
+  从当前手机兼容基线做窄候选，只带明确不依赖新契约的前端修复，对 53fe8e8 跑同一组六面 smoke，全绿才 0 停机换前端。
+受控降级 (b)/(c) 唯一许可条件：该面是**非写入、非真值承诺、可选功能**，且前端已有显式 capability/contract preflight
+  **在发出不受支持的请求之前**就知道后端不具备该契约。词表先冻结，车道不得自造：
+    deployment compatibility state: COMPATIBLE | COMPATIBLE_WITH_DECLARED_DEGRADATION | INCOMPATIBLE_BACKEND_CONTRACT
+    UI reason_code（仅受控降级）: BACKEND_CONTRACT_UNAVAILABLE
+    用户文案：「此功能需要更新后的服务器支持，当前预览暂不可用。」
+    行为：探测先于请求 / 停止发送该请求 / 保留当前草稿与状态 / 不伪造空数据或成功 / 不得映射成通用"网络不可用"
+  以下任一红**不允许**用降级逃掉，仍 HOLD：写用户数据·钱包·行程·偏好的路径；改变 plan selection/commitment/权威真值的路径；
+    降级后会让用户误以为操作成功；必须先发一个已知不支持的请求才发现"不支持"。
+```
+
+### ⑤ 派单增量
+
+```text
+- id: ORD-0244   owner: C  ← 见 §②（ACTIVATION 在 G3_XPROC_LOSER_READBACK 之后；现在不许分叉）
+- id: ORD-0245   owner: HARNESS（只读）← 量"这两天落的前端修复里，哪些完全不依赖 53fe8e8 之后的后端契约"，
+                       产具名清单给 §④ 的 backport 候选用：每条修复带 commit / 触达的 endpoint / 是否依赖新必填字段。
+- ORD-0242 验收改一句：HJ-P2 每个红面必须标"是不是契约边界"，并按 §④ 的冻结词表给状态名，不要自造枚举。
+- ORD-0243 已由红队交付（`5788231358`），B-3 已把它算进独立复验；ORD-0239 由 HARNESS 交付（`5788219297`，两棵树各一份矩阵）。
+```
+**这两笔交付的正文我还没逐条读**（下面 §⑥ 只登记坐标，判读单独做）——不按"看到了"下任何结论。
+
+### ⑥ 现场与坐标
+
+账本远端上一枚 `e24d3f96aeb69fbe` / 3,869,196 B（本块写完后重镜）；我自己那把尺已按 A-3 修好并发布：
+`live_checks/deploy_bundle.py` blob `b0bd89f859f1c18c` / 21,169 B，双向收据 `evidence/gates/deploy_bundle_a3_selftest_0923.json`
+blob `25476cea49bf9377`（修好 6/6 GREEN；松写法下新杀手臂 got=GREEN ⇒ SELFTEST RED 5/6）。
+链：`:8693`(53fe8e8)/`:4781`/`:4782` + 公网 `sciences-computed-cole-that`；canary `:4185`/`:8713`；
+用户库只读 3/3/19/16；清理闸门关（0 删除）；`AI_CREDENTIAL_EPOCH = COMPROMISED_UNROTATED`。
+
 ## commander 自扫 @2026-09-23T11:0x+08 —— **A-3 先扫我自己那两把尺：`deploy_bundle.py` 里真有一条"空对空"（已修 + 双向证明），`gate_streak.py` 扫过没有等式门（贴实际读到的行，不写"已确认干净"）**
 
 ### ① 我这条尺上的真实洞（不掩饰）
