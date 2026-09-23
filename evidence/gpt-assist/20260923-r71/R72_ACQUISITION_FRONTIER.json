@@ -1,0 +1,26 @@
+{
+  "classification": "R72_ACQUISITION_FRONTIER",
+  "held_external_ids": [
+    "overpass:node/13030932280",
+    "overpass:node/13030932481",
+    "overpass:node/13030932589",
+    "overpass:node/1705323151",
+    "overpass:node/264562870",
+    "overpass:node/264562873",
+    "overpass:way/1417995995"
+  ],
+  "frontier": [
+    {
+      "category": "park",
+      "external_id": "overpass:way/1417996052",
+      "already_held": false,
+      "preferred_for_mission_a": true
+    },
+    {
+      "category": "restaurant",
+      "external_id": "overpass:node/13030932384",
+      "already_held": false,
+      "preferred_for_mission_a": false
+    }
+  ]
+}
