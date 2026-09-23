@@ -95,14 +95,51 @@ def _http(method: str, port: int, path: str, body: dict | None = None,
     return code, parsed, round(elapsed_ms, 1)
 
 
+def _netstat_rows() -> list[tuple[int, str, str]]:
+    """(local port, state, owning pid) for every TCP line the kernel reports.
+
+    Decoded with ``errors="replace"`` on purpose: under ``python -X utf8`` - which is how the
+    mutation campaign and any UTF-8-mode runner starts pytest - asking for text mode makes netstat's
+    GBK banner raise inside the reader thread, ``stdout`` comes back ``None`` and this door would
+    crash on an AttributeError.  A gate whose verdict depends on the runner's ambient encoding is
+    not a gate, so the bytes are decoded here and the only thing lost is the banner's glyphs.
+    """
+
+    proc = subprocess.run(["netstat", "-ano", "-p", "tcp"], capture_output=True)
+    if proc.returncode != 0:
+        raise AssertionError(
+            f"期望：netstat 能列出 TCP 表（端口归属三联证明靠它，不是靠 200）；实际 "
+            f"exit={proc.returncode}，stderr="
+            f"{(proc.stderr or b'').decode('utf-8', errors='replace')[:200]!r}"
+        )
+    rows: list[tuple[int, str, str]] = []
+    for line in (proc.stdout or b"").decode("utf-8", errors="replace").splitlines():
+        parts = line.split()
+        # `  TCP  127.0.0.1:52780  0.0.0.0:0  LISTENING  33688` - protocol, LOCAL address, remote
+        # address, state, pid.  Count the tail from the end and take the local address by name, or the
+        # state column silently becomes the remote address and no listener is ever found (measured).
+        if len(parts) < 5 or parts[0].upper() != "TCP":
+            continue
+        pid, state, local = parts[-1], parts[-2], parts[1]
+        if ":" not in local:
+            continue
+        try:
+            port = int(local.rsplit(":", 1)[1])
+        except ValueError:
+            continue
+        rows.append((port, state, pid))
+    return rows
+
+
+LISTENING_STATES = {"LISTENING", "LISTEN", "侦听", "侦听中"}
+
+
 def _listening_pid(port: int) -> int | None:
     """Who owns ``port`` right now, straight from the kernel's table - not from a 200."""
 
-    out = subprocess.run(["netstat", "-ano", "-p", "tcp"], capture_output=True, text=True).stdout
-    for line in out.splitlines():
-        if f":{port}" in line and "LISTENING" in line:
-            tail = line.split()[-1]
-            return int(tail) if tail.isdigit() else None
+    for row_port, state, pid in _netstat_rows():
+        if row_port == port and state.upper() in LISTENING_STATES:
+            return int(pid) if pid.isdigit() else None
     return None
 
 
