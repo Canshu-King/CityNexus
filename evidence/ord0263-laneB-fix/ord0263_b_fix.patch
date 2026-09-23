@@ -1,0 +1,433 @@
+commit a380287033da6ff0bd36b8e1baa6f79c61ad03bd
+Author:     仓鼠王 <yjianbin419@gmail.com>
+AuthorDate: Wed Sep 23 19:29:44 2026 +0800
+Commit:     仓鼠王 <yjianbin419@gmail.com>
+CommitDate: Wed Sep 23 19:29:44 2026 +0800
+
+    fix(frontend): give every read a deadline, and let an answered origin speak for itself (ORD-0263)
+    
+    A silent origin used to be unclassifiable because it was never an event: `v8Request` and
+    `requestJson` had no deadline, so the boot `await` never settled, its catch never ran, and the
+    traveller stayed on 「正在准备城市周末行程…」 while a local snapshot sat unread in IndexedDB.
+    `probeHealth()` then folded "answered 500" and "never answered" into one boolean, so the two
+    remaining states could not be told apart either.
+    
+    - lib/readDeadline.ts: per-deadline GET/HEAD reads only, with `ReadDeadlineMissed` distinguishable
+      from both a caller abort and a transport error; writes are untouched on purpose.
+    - classifyHealthProbe takes four measured bits (answered/status/ok/timed_out) instead of one bool.
+    - withCachedCopyFact folds the read-back of a local copy into the same classification object, so the
+      snapshot sentence and the recovery door are carried by a measurement, not by a guess.
+    - New failure.noAnswer copy quotes the deadline constant; the cached-copy screen's chip now follows
+      the classification too (本地快照 · 只读 when the origin answered).
+
+diff --git a/frontend/src/api/citynexus.ts b/frontend/src/api/citynexus.ts
+index 21228ad..aefdab8 100644
+--- a/frontend/src/api/citynexus.ts
++++ b/frontend/src/api/citynexus.ts
+@@ -1,5 +1,6 @@
+ import type { JourneyTwin } from "../contracts/journeyTwin";
+ import type { ReplanProposal } from "../contracts/replan";
++import { fetchWithReadDeadline } from "../lib/readDeadline";
+ 
+ export interface Money {
+   amount_minor: number;
+@@ -640,7 +641,7 @@ export class CityNexusApiError extends Error {
+ }
+ 
+ async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
+-  const response = await fetch("/api/v1" + path, {
++  const response = await fetchWithReadDeadline("/api/v1" + path, {
+     ...init,
+     headers: {
+       Accept: "application/json",
+diff --git a/frontend/src/app/V8Experience.tsx b/frontend/src/app/V8Experience.tsx
+index 054feb5..c853ba1 100644
+--- a/frontend/src/app/V8Experience.tsx
++++ b/frontend/src/app/V8Experience.tsx
+@@ -17,8 +17,11 @@ import {
+   clearJourneyReferences,
+   copyFor,
+   recordAttribution,
++  withCachedCopyFact,
+   type Attribution,
++  type OriginProbeFact,
+ } from "../lib/failureAttribution";
++import { fetchWithReadDeadline } from "../lib/readDeadline";
+ import { useElapsedSeconds } from "../lib/waitClock";
+ import { readChoice, setThemeChoice, type ThemeChoice } from "../theme";
+ import { MobilitySheet } from "../features/mobility/MobilitySheet";
+@@ -179,7 +182,7 @@ class V8Rejection extends Error {
+ }
+ 
+ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
+-  const response = await fetch(path, {
++  const response = await fetchWithReadDeadline(path, {
+     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
+     ...init,
+   });
+@@ -195,19 +198,27 @@ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
+ }
+ 
+ /**
+- * "Is the network up?" answered by the thing the screen is about to claim, not by `navigator.onLine`
+- * (which stays true when a captive portal or a dead backend is the actual problem) and not by the
+- * failed request itself.  Only a 2xx counts: ORD-0126 (a) is precisely "no 网络不可用 sentence may
+- * stand while a same-page probe of this origin is healthy".
++ * "Did the origin answer, and how?" as four separate facts -- not a boolean.
++ *
++ * `navigator.onLine` stays out of this (it is true on a captive portal and true while a backend is
++ * dead), and so does "was it a 2xx?" alone: ORD-0126 needed "no 网络不可用 sentence may stand while a
++ * same-page probe is healthy", which is a *positive* reading.  ORD-0263 needed the other half -- an
++ * origin that answered HTTP 500 and an origin that never answered are different states, and a single
++ * `response.ok` could not tell them apart, so one sentence covered both.  `timed_out` says which kind
++ * of silence this was: our own deadline expired, as opposed to a connection that was refused outright.
+  */
+-async function probeHealth(): Promise<boolean> {
++async function probeHealth(): Promise<OriginProbeFact> {
+   const controller = new AbortController();
+-  const timer = setTimeout(() => controller.abort(), 4_000);
++  let deadlineFired = false;
++  const timer = setTimeout(() => {
++    deadlineFired = true;
++    controller.abort();
++  }, 4_000);
+   try {
+     const response = await fetch("/api/v1/health", { signal: controller.signal });
+-    return response.ok;
++    return { answered: true, status: response.status, ok: response.ok, timed_out: false };
+   } catch {
+-    return false;
++    return { answered: false, status: null, ok: false, timed_out: deadlineFired };
+   } finally {
+     clearTimeout(timer);
+   }
+@@ -625,9 +636,20 @@ export function V8Experience() {
+                without a response, not to overwrite a response that already arrived. */
+             let attribution = classifyReadFailure(error);
+             if (attribution.evidence_kind === "TRANSPORT") {
+-              const healthy = await probeHealth();
++              const fact = await probeHealth();
+               if (cancelled) return;
+-              if (!healthy) attribution = classifyHealthProbe(false);
++              if (!fact.ok) attribution = classifyHealthProbe(fact);
++            }
++            /* ORD-0263: the origin answering badly and the origin never answering both have the same
++               legitimate second answer -- the copy this device holds.  Whether it holds one is a
++               measurement, so it is folded into the one classification object here rather than guessed
++               by the copy table or by a branch that writes its own sentence (R14-P). */
++            if (attribution.reason === "NETWORK_UNAVAILABLE" || attribution.reason === "SERVER_ERROR") {
++              const saved = await readOfflineJourney(journeyId);
++              if (cancelled) return;
++              setOffline(saved);
++              setCachedCopySaved(Boolean(saved));
++              attribution = withCachedCopyFact(attribution, Boolean(saved));
+             }
+             recordAttribution(attribution, "shell.boot.journeyRead");
+             if (cancelled) return;
+@@ -638,14 +660,6 @@ export function V8Experience() {
+               const cleared = clearJourneyReferences();
+               recordAttribution(attribution, `shell.boot.cleared:${cleared.join("|") || "none"}`);
+               setOffline(null);
+-            } else if (attribution.reason === "NETWORK_UNAVAILABLE") {
+-              /* The one branch allowed to show the cached trip, and it keeps its retry (R3-4).  What
+-                 it may claim is set from the read-back: no row, no "saved" sentence, no read-only
+-                 button (ORD-0178 ④ 甲乙). */
+-              const saved = await readOfflineJourney(journeyId);
+-              if (cancelled) return;
+-              setOffline(saved);
+-              setCachedCopySaved(Boolean(saved));
+             }
+             if (!cancelled) {
+               setFailure({ attribution, journeyId });
+@@ -1155,7 +1169,7 @@ export function V8Experience() {
+      boundary.  The kicker, the headline, the body, the announcement and the recovery button are all
+      read off `failure.attribution`, so a 404 can no longer be shown as a network failure by a branch
+      that wrote its own sentence, and the map is not hidden unless the classified state says so. */
+-  if (failure && !data) {
++  if (failure && !data && !showCachedCopy) {
+     const copy = copyFor(failure.attribution, locale.startsWith("zh"), {
+       journeyId: failure.journeyId ?? undefined,
+       hasCachedCopy: cachedCopySaved,
+@@ -1301,7 +1315,21 @@ export function V8Experience() {
+       </div>
+     );
+   if (!data && offline && showCachedCopy && cachedCopySaved)
+-    return <OfflineJourneyView value={offline} message={message} />;
++    return (
++      <OfflineJourneyView
++        value={offline}
++        originAnswered={failure?.attribution.evidence_kind === "HTTP_RESPONSE"}
++        message={
++          message
++          ?? (failure
++            ? copyFor(failure.attribution, locale.startsWith("zh"), {
++                journeyId: failure.journeyId ?? undefined,
++                hasCachedCopy: cachedCopySaved,
++              }).body
++            : null)
++        }
++      />
++    );
+   if (!data)
+     return (
+       <div className="v8-loading">
+@@ -3713,9 +3741,12 @@ function Bookings({
+ function OfflineJourneyView({
+   value,
+   message,
++  originAnswered = false,
+ }: {
+   value: OfflineJourney;
+   message: string | null;
++  /** Was this copy reached because the origin answered badly (HTTP_RESPONSE), or never answered? */
++  originAnswered?: boolean;
+ }) {
+   const t = useT();
+   const { locale } = useLocale();
+@@ -3733,7 +3764,7 @@ function OfflineJourneyView({
+   return (
+     <main className="v9-offline">
+       <div className="v8-brand-mark">CN</div>
+-      <span className="v8-status-pill">{t("offline.readOnly")}</span>
++      <span className="v8-status-pill">{t(originAnswered ? "offline.readOnlySnapshot" : "offline.readOnly")}</span>
+       <h1>{t("offline.saved24h")}</h1>
+       <p>{message}</p>
+       {/* R3-4: this screen was measured with zero visible buttons and it never healed on its own.
+diff --git a/frontend/src/i18n/LocaleContext.tsx b/frontend/src/i18n/LocaleContext.tsx
+index bf15fc9..ec50b07 100644
+--- a/frontend/src/i18n/LocaleContext.tsx
++++ b/frontend/src/i18n/LocaleContext.tsx
+@@ -241,6 +241,7 @@ const en: Dict = {
+ 
+   // ── Offline Journey View ──
+   "offline.readOnly": "OFFLINE · READ ONLY",
++  "offline.readOnlySnapshot": "LOCAL SNAPSHOT · READ ONLY",
+   "offline.saved24h": "Your next 24 hours are saved.",
+   "offline.retry": "Try again",
+   "offline.journeyComplete": "Journey complete",
+@@ -922,6 +923,7 @@ const zhCN: Dict = {
+ 
+   // ── Offline Journey View ──
+   "offline.readOnly": "离线 · 只读",
++  "offline.readOnlySnapshot": "本地快照 · 只读",
+   "offline.saved24h": "你未来 24 小时已保存。",
+   "offline.retry": "重试",
+   "offline.journeyComplete": "行程完成",
+diff --git a/frontend/src/lib/failureAttribution.ts b/frontend/src/lib/failureAttribution.ts
+index 2524d7e..1fcac10 100644
+--- a/frontend/src/lib/failureAttribution.ts
++++ b/frontend/src/lib/failureAttribution.ts
+@@ -21,6 +21,8 @@
+  * while a backend is dead, so it cannot distinguish anything this module is asked to distinguish.
+  */
+ 
++import { isReadDeadlineMissed, READ_DEADLINE_SECONDS } from "./readDeadline";
++
+ export type AttributionReason =
+   | "JOURNEY_NOT_FOUND"
+   | "NETWORK_UNAVAILABLE"
+@@ -56,6 +58,8 @@ export type Attribution = {
+   message_key: string;
+   /** The server's own code, when it gave one.  A refusal must be quotable, not paraphrased. */
+   server_code?: string | null;
++  /** Measured, not assumed: did this device actually hold a copy this read could fall back to? */
++  cached_copy_present?: boolean;
+   /** Short, greppable line for production logs.  Shape follows R14 §8. */
+   telemetry: string;
+ };
+@@ -134,7 +138,16 @@ export function classifyReadFailure(error: unknown, server?: ServerErrorShape |
+     return make("UNKNOWN_FAILURE", "HTTP_RESPONSE", status, "RESOURCE_STATE", false, "retry", "failure.unknown");
+   }
+ 
+-  /* 3: no response at all -- the request itself failed to travel.  This is the *only* branch that
++  /* 3a: our own per-read deadline expired (ORD-0263).  Same *fact class* as a transport failure --
++     nothing ever came back -- but not the same sentence: a request that was abandoned at a deadline
++     may well have travelled and been swallowed, so the copy says "no answer arrived", which is what
++     was actually measured, and leaves "the network is down", which was not. */
++  if (isReadDeadlineMissed(error)) {
++    return make("NETWORK_UNAVAILABLE", "TRANSPORT", null, "TRANSPORT", true, "read-only-cached",
++      "failure.noAnswer");
++  }
++
++  /* 3b: no response at all -- the request itself failed to travel.  This is the *only* branch that
+      may say the network is unavailable, which is what keeps the reverse direction honest. */
+   if (error instanceof TypeError) {
+     return make("NETWORK_UNAVAILABLE", "TRANSPORT", null, "TRANSPORT", true, "read-only-cached", "failure.networkUnavailable");
+@@ -144,15 +157,52 @@ export function classifyReadFailure(error: unknown, server?: ServerErrorShape |
+   return make("UNKNOWN_FAILURE", "TRANSPORT", null, "TRANSPORT", true, "retry", "failure.unknown");
+ }
+ 
++/**
++ * What a same-origin probe actually observed.  Four separate facts, because the old shape -- a boolean
++ * that meant "was it a 2xx?" -- collapsed "the origin answered 500" with "the origin never answered",
++ * and one sentence then covered both states (ORD-0263's V1/V3).
++ */
++export type OriginProbeFact = {
++  answered: boolean;
++  status: number | null;
++  ok: boolean;
++  timed_out: boolean;
++};
++
+ /**
+  * The health probe's verdict folded into the same vocabulary, for the case where the journey read
+  * failed and the question is whether the origin answers at all.  A 2xx probe means the network is
+  * fine and the failure was something else -- the reading that proves a 网络不可用 banner is over-broad.
++ * An answer of any status still means *something answered*, so it may never be called a network
++ * failure either: that is the merge this replaces.
++ */
++export function classifyHealthProbe(fact: OriginProbeFact): Attribution {
++  if (fact.ok) {
++    return make("UNKNOWN_FAILURE", "HEALTH_PROBE", fact.status, "TRANSPORT", true, "retry",
++      "failure.unknown");
++  }
++  if (fact.answered) {
++    return make("SERVER_ERROR", "HEALTH_PROBE", fact.status, "RUNTIME", true, "retry",
++      "failure.serverError");
++  }
++  return make("NETWORK_UNAVAILABLE", "HEALTH_PROBE", null, "TRANSPORT", true, "read-only-cached",
++    fact.timed_out ? "failure.noAnswer" : "failure.networkUnavailable");
++}
++
++/**
++ * Fold in the one fact the read itself cannot know: whether this device actually holds a copy.  It is
++ * still the same classification object -- nothing downstream picks its own cause -- and it only ever
++ * changes the *offer*, for the two classes where a local copy is a legitimate answer.
+  */
+-export function classifyHealthProbe(healthy: boolean): Attribution {
+-  return healthy
+-    ? make("UNKNOWN_FAILURE", "HEALTH_PROBE", null, "TRANSPORT", true, "retry", "failure.unknown")
+-    : make("NETWORK_UNAVAILABLE", "HEALTH_PROBE", null, "TRANSPORT", true, "read-only-cached", "failure.networkUnavailable");
++export function withCachedCopyFact(attribution: Attribution, hasCachedCopy: boolean): Attribution {
++  const mayOffer = hasCachedCopy
++    && (attribution.reason === "SERVER_ERROR" || attribution.reason === "NETWORK_UNAVAILABLE");
++  return {
++    ...attribution,
++    recovery_action: mayOffer ? "read-only-cached" : attribution.recovery_action,
++    cached_copy_present: hasCachedCopy,
++    telemetry: `${attribution.telemetry} cached_copy_present=${hasCachedCopy}`,
++  };
+ }
+ 
+ /**
+@@ -252,13 +302,40 @@ export function copyFor(
+             : "This request could not travel and nothing came back, so this is a network problem. This device holds no offline copy to show you, so there is nothing to display right now. Check your connection and try again.",
+       };
+     case "failure.serverError":
+-      return {
+-        kicker: zh ? "服务器" : "Server",
+-        title: zh ? "服务器这次没能把行程读出来" : "The server could not read your trip",
+-        body: zh
+-          ? `服务器自己报错了（HTTP ${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
+-          : `The server reported an error of its own (HTTP ${attribution.http_status}). That is on its side, not something you typed. Retry; if it persists, come back later.`,
+-      };
++      return detail.hasCachedCopy
++        ? {
++            kicker: zh ? "服务器" : "Server",
++            title: zh ? "服务暂时不可用" : "The service is temporarily unavailable",
++            body: zh
++              ? `服务器刚才答了你，但它自己报错了（HTTP ${attribution.http_status}）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`
++              : `The server did answer, and answered with an error of its own (HTTP ${attribution.http_status}). The service is unavailable for now — nothing you typed caused it. This device still holds your saved trip; the button below opens that read-only snapshot. Retrying is safe.`,
++          }
++        : {
++            kicker: zh ? "服务器" : "Server",
++            title: zh ? "服务器这次没能把行程读出来" : "The server could not read your trip",
++            body: zh
++              ? `服务器自己报错了（HTTP ${attribution.http_status}）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。`
++              : `The server reported an error of its own (HTTP ${attribution.http_status}). That is on its side, not something you typed. Retry; if it persists, come back later.`,
++          };
++    /* ORD-0263 V2: a read that hit its own deadline.  The measured fact is "no answer arrived";
++       whether the request travelled is not something this screen knows, so the sentence does not
++       claim it.  The deadline's own value comes from the mechanism, not from a second number. */
++    case "failure.noAnswer":
++      return detail.hasCachedCopy
++        ? {
++            kicker: zh ? "没有回音" : "No reply",
++            title: zh ? `等了 ${READ_DEADLINE_SECONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,
++            body: zh
++              ? `这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。`
++              : `This read reached its deadline with no answer at all: the server neither refused nor agreed, it simply said nothing. Your trip has not been lost — this device holds your saved trip, and the button below opens that read-only snapshot. Retrying is safe.`,
++          }
++        : {
++            kicker: zh ? "没有回音" : "No reply",
++            title: zh ? `等了 ${READ_DEADLINE_SECONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,
++            body: zh
++              ? `这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应。这台设备上也没有可只读查看的本地副本，所以现在没有内容可显示。可以再试一次。`
++              : `This read reached its deadline with no answer at all: the server neither refused nor agreed. This device holds no local copy to show either, so there is nothing to display right now. Retrying is safe.`,
++          };
+     case "failure.unauthorized":
+       return {
+         kicker: zh ? "身份" : "Identity",
+diff --git a/frontend/src/lib/readDeadline.ts b/frontend/src/lib/readDeadline.ts
+new file mode 100644
+index 0000000..709222b
+--- /dev/null
++++ b/frontend/src/lib/readDeadline.ts
+@@ -0,0 +1,67 @@
++/**
++ * ORD-0263 -- every data *read* carries a deadline, so "the origin never answered" becomes an event
++ * the app can classify instead of a traveller left standing on a loading skeleton.
++ *
++ * Before this, `api/citynexus.ts` had no `AbortController` and no timeout anywhere in its request
++ * path (measured, not guessed): against an origin that accepts the TCP connection and writes nothing
++ * back, the `await` never settled, the `catch` never ran, `busy` stayed true, and the three states
++ * the screen is supposed to tell apart were down to two -- because the third one never happened.
++ *
++ * Reads only, deliberately.  Aborting a *write* at a deadline tells the client the request is over
++ * while the server may still be finishing it, which is an idempotency question this order does not
++ * ask and this module does not get to answer by silence.
++ */
++
++export const READ_DEADLINE_MS = 12_000;
++export const READ_DEADLINE_SECONDS = READ_DEADLINE_MS / 1000;
++
++/** Thrown when our own deadline fired -- distinct from a transport error and from an HTTP answer. */
++export class ReadDeadlineMissed extends Error {
++  readonly deadlineMs: number;
++  constructor(deadlineMs: number) {
++    super(`no answer within ${deadlineMs} ms`);
++    this.name = "ReadDeadlineMissed";
++    this.deadlineMs = deadlineMs;
++  }
++}
++
++export function isReadDeadlineMissed(error: unknown): boolean {
++  return error instanceof Error && error.name === "ReadDeadlineMissed";
++}
++
++/**
++ * `fetch` with a per-read deadline.  A caller-supplied `signal` is honoured, not overwritten: an
++ * abort that came from the traveller ("stop waiting") must stay a different fact from an abort that
++ * came from this timer, or the deadline would impersonate the user.
++ */
++export async function fetchWithReadDeadline(
++  input: string,
++  init: RequestInit = {},
++  deadlineMs: number = READ_DEADLINE_MS,
++): Promise<Response> {
++  const method = (init.method ?? "GET").toUpperCase();
++  if (method !== "GET" && method !== "HEAD") {
++    return fetch(input, init);
++  }
++  const controller = new AbortController();
++  let firedHere = false;
++  const timer = setTimeout(() => {
++    firedHere = true;
++    controller.abort();
++  }, deadlineMs);
++  const upstream = init.signal ?? null;
++  const onUpstreamAbort = () => controller.abort();
++  if (upstream) {
++    if (upstream.aborted) controller.abort();
++    else upstream.addEventListener("abort", onUpstreamAbort, { once: true });
++  }
++  try {
++    return await fetch(input, { ...init, signal: controller.signal });
++  } catch (error) {
++    if (firedHere) throw new ReadDeadlineMissed(deadlineMs);
++    throw error;
++  } finally {
++    clearTimeout(timer);
++    if (upstream) upstream.removeEventListener("abort", onUpstreamAbort);
++  }
++}
