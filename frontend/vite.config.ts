@@ -49,7 +49,11 @@ export default defineConfig({
           /\/assets\//,
           /\.(?:js|mjs|css|map|json|wasm|ico|svg|png|jpe?g|gif|webp|avif|woff2?|ttf|otf|webmanifest)$/i,
         ],
-        additionalManifestEntries: [{ url: "/index.html", revision: "v10-shell" }],
+        /* ORD-0268: no entry here. The generated manifest already carries the shell as `index.html`
+           with a content-derived revision; naming it a second time as `/index.html` with a constant
+           revision is what stopped Workbox's precache from ever materialising (measured: 9 -> 8 entries,
+           the `workbox-precache-<origin>` cache appears, and an offline navigation after a real
+           generation swap is then served by the worker instead of dying in the browser). */
         cleanupOutdatedCaches: true,
         /* An upgrade has to reach the traveller without them clearing storage: the new
            worker takes over waiting clients and claims them once, and main.tsx reloads a
