@@ -14,6 +14,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import io
 import json
@@ -837,6 +838,33 @@ def selftest(serve: pathlib.Path) -> int:
     arms.append({"arm": "SIDES-true_positive:same_pair_after_unset_passes", "expect": "OK",
                  "got": {"verdict": "OK" if sides_reversed_ok["ok"] else "REFUSED",
                          "error": "base=%s" % sides_reversed_ok["info"].get("http_base")}})
+    # ---- D1-CLOSE-1: persistence of refusals is proved STRUCTURALLY, not by one happy artifact.
+    rp = refusal_persistence_proof()
+    arms.append({"arm": "REFUSE-proof:no_naked_refusal_returns_in_main", "expect": "GREEN",
+                 "got": {"verdict": rp["verdict"],
+                         "error": "naked=%s routed=%s min=%s" % (rp["naked_refusal_returns_in_main"],
+                                                                  rp["routed_refusals_in_main"],
+                                                                  rp["min_routed_required"])}})
+    # ---- D1-CLOSE-2 (PRE_ACTION_TEMPORAL_OBLIGATION_V1), both directions each.
+    arms.append({"arm": "TEMPORAL-true_positive:root_ref_may_be_declared", "expect": "OK",
+                 "got": {"verdict": "OK" if temporal_declaration_ok("/index.html") else "REFUSED",
+                         "error": None}})
+    arms.append({"arm": "TEMPORAL-killer:hashed_asset_may_not_be_waived", "expect": "REFUSED",
+                 "got": {"verdict": "OK" if temporal_declaration_ok("/assets/index-CrAwWm5f.js") else "REFUSED",
+                         "error": None}})
+    ob = [{"ref": "/index.html", "src_sha256": "AA", "discharged_by": "G arm"}]
+    led_ok = obligation_ledger_verdict(ob, {"/index.html": {"verdict": "GREEN", "probes": [{"sha256": "AA"}]}})
+    led_gone = obligation_ledger_verdict(ob, {})          # the post-switch witness removed/broken
+    led_wrong = obligation_ledger_verdict(ob, {"/index.html": {"verdict": "GREEN", "probes": [{"sha256": "BB"}]}})
+    led_none = obligation_ledger_verdict([], {})
+    for t_name, t_led, t_expect in (
+        ("TEMPORAL-true_positive:digest_match_discharges", led_ok, "DISCHARGED"),
+        ("TEMPORAL-killer:missing_post_witness_blocks_final_green", led_gone, "UNDISCHARGED"),
+        ("TEMPORAL-killer:digest_mismatch_is_not_discharge", led_wrong, "UNDISCHARGED"),
+        ("TEMPORAL-true_positive:no_obligations_is_none_pending", led_none, "NONE_PENDING"),
+    ):
+        arms.append({"arm": t_name, "expect": t_expect,
+                     "got": {"verdict": t_led["verdict"], "error": str(t_led["undischarged"])[:160]}})
     dead = asset_verdict("/v10-sw.js", "javascript", live, base="http://127.0.0.1:59999")
     arms.append({"arm": "F-killer:unreachable_surface_is_red_not_absent", "expect": "RED",
                  "got": dead})
@@ -959,6 +987,83 @@ def persist_receipt(receipt: dict, tag: str) -> pathlib.Path:
     return dest
 
 
+REFUSAL_RC = (4, 5, 6, 7, 9)          # every non-success early exit main() can take
+MIN_ROUTED_REFUSALS = 12              # main() had 13 refusal sites before this change; keep it honest
+
+
+def refuse(ctx: dict, tag: str, rc: int, reason: str, quiet: bool = False) -> int:
+    """ONE way out of main() when we say no (arbiter D1-CLOSE-1, bus `5791893215`).
+
+    A refusal that leaves no artifact is the same family as not measuring: "I refused" is exactly the
+    claim a later reader cannot check.  `ctx` may be a partial receipt - a minimal one (argv + known
+    paths + reason + timestamp + gauge binding) is still auditable.
+    """
+    rec = dict(ctx) if isinstance(ctx, dict) else {}
+    rec.setdefault("gauge", gauge_self_binding())
+    rec.setdefault("t", time.strftime("%Y-%m-%dT%H:%M:%S%z"))
+    rec["refusal_tag"] = tag
+    rec["refusal_rc"] = rc
+    rec["reason"] = reason
+    if not quiet:
+        print("REFUSED:", reason)
+    persist_receipt(rec, tag)
+    return rc
+
+
+def refusal_persistence_proof() -> dict:
+    """Structural regression: one real refusal artifact proves ONE path, not universal persistence."""
+    src = pathlib.Path(__file__).read_text(encoding="utf-8")
+    tree = ast.parse(src)
+    fn = next((n for n in ast.walk(tree)
+               if isinstance(n, ast.FunctionDef) and n.name == "main"), None)
+    naked, routed = [], 0
+    if fn is not None:
+        for n in ast.walk(fn):
+            if isinstance(n, ast.Return) and isinstance(n.value, ast.Constant) and n.value.value in REFUSAL_RC:
+                naked.append(n.lineno)
+            if (isinstance(n, ast.Call)
+                    and getattr(n.func, "id", getattr(n.func, "attr", "")) == "refuse"):
+                routed += 1
+    ok = fn is not None and not naked and routed >= MIN_ROUTED_REFUSALS
+    return {"verdict": "GREEN" if ok else "RED",
+            "naked_refusal_returns_in_main": naked,
+            "routed_refusals_in_main": routed,
+            "min_routed_required": MIN_ROUTED_REFUSALS,
+            "main_found": fn is not None,
+            "rule": "no naked `return 4/5/6/7/9` inside main(); every refusal must go through refuse()"}
+
+
+ACTION_OWNED_ROOT_REFS = ("index.html", "manifest.webmanifest", "sw.js", "v10-sw.js")
+
+
+def temporal_declaration_ok(ref: str, owned: tuple = ACTION_OWNED_ROOT_REFS) -> bool:
+    """PRE_ACTION_TEMPORAL_OBLIGATION_V1, half 1: only a ref the action itself replaces may be declared
+    'not yet published'.  Anything else using that state is hiding a real gap behind a waiver."""
+    return ref.lstrip("/") in owned
+
+
+def obligation_ledger_verdict(obligations: list[dict], post_rows: dict) -> dict:
+    """PRE_ACTION_TEMPORAL_OBLIGATION_V1, half 2: a temporal declaration is a DEBT, and it is discharged
+    only by the named strict post-action arm proving the shipped bytes are what is now served."""
+    discharged, undischarged = [], []
+    for ob in obligations:
+        got = post_rows.get(ob["ref"], {}) or {}
+        served_sha = (got.get("probes") or [{}])[0].get("sha256")
+        if got.get("verdict") == "GREEN" and served_sha and served_sha == ob.get("src_sha256"):
+            discharged.append({"ref": ob["ref"], "served_sha256": served_sha, "matches_src": True,
+                               "discharged_by": ob.get("discharged_by")})
+        else:
+            undischarged.append({"ref": ob["ref"], "post_switch_verdict": got.get("verdict"),
+                                 "served_sha256": served_sha, "expected_src_sha256": ob.get("src_sha256"),
+                                 "why": "post-switch strict arm did not prove this ref equals the shipped bytes"})
+    verdict = ("NONE_PENDING" if not obligations
+               else ("DISCHARGED" if not undischarged else "UNDISCHARGED"))
+    return {"rule": "PRE_ACTION_TEMPORAL_OBLIGATION_V1 - DECLARED_NOT_YET_PUBLISHED_PRE_<ACTION> is a debt; "
+                    "final overall may not go GREEN while anything is UNDISCHARGED",
+            "pending_at_pre_flight": len(obligations), "discharged": discharged,
+            "undischarged": undischarged, "verdict": verdict}
+
+
 def preflight_before_switch(src: pathlib.Path, serve: pathlib.Path, new_refs: list[str],
                             old_js: str | None, allow_unprobed: bool) -> dict:
     """The rule this tool owed since 13:02: **every read-only judgement runs BEFORE the switch**.
@@ -987,6 +1092,7 @@ def preflight_before_switch(src: pathlib.Path, serve: pathlib.Path, new_refs: li
     # refs is a permanent red, which is as useless as a permanent green.  Root docs are therefore NAMED
     # gaps pre-switch, with both digests recorded; the post-switch G arm keeps full strictness.
     ROOT_DOC_REFS = ("index.html", "manifest.webmanifest", "sw.js", "v10-sw.js")
+    obligations = []
     g_pre = []
     for name in ("sw.js", "v10-sw.js"):
         swf = src / name
@@ -997,25 +1103,40 @@ def preflight_before_switch(src: pathlib.Path, serve: pathlib.Path, new_refs: li
         asset_rows, declared_rows = [], []
         for u in urls:
             ref = u if u.startswith("/") else "/" + u
-            if ref.lstrip("/") in ROOT_DOC_REFS:
+            if temporal_declaration_ok(ref):
                 served = http_get(ref)
-                entry["probes"].append({"declared_gap": "DECLARED_NOT_YET_PUBLISHED_PRE_SWITCH", "ref": ref,
-                                        "src_sha256": sha256(src / ref.lstrip("/")) if (src / ref.lstrip("/")).is_file() else None,
-                                        "served_status": served["status"], "served_sha256": served["sha256"],
-                                        "why": "this path is replaced BY the switch, so the pre-flight cannot "
-                                               "judge it; the post-switch G arm checks it for real"})
+                srcp = src / ref.lstrip("/")
+                ob = {"ref": ref,
+                      "verdict": "DECLARED_NOT_YET_PUBLISHED_PRE_SWITCH",
+                      "src_sha256": sha256(srcp) if srcp.is_file() else None,
+                      "src_present": srcp.is_file(),
+                      "served_status": served["status"], "served_sha256": served["sha256"],
+                      "must_discharge_post_action": True,
+                      "discharged_by": "post-switch arms G_PRECACHE_INTEGRITY + D_SERVICE_WORKER "
+                                       "(strict, same predicate, after the root file is replaced)"}
+                entry["probes"].append(ob)
                 declared_rows.append(ref)
+                obligations.append(ob)
                 continue
             v = repeated_verdict(ref, expect_ct_for(ref), src, times=PROBE_TIMES)
             asset_rows.append(v)
             entry["probes"].append({"ref": ref, "got": v})
+        # PRE_ACTION_TEMPORAL_OBLIGATION_V1: the declaration is only legal for the fixed action-owned set.
+        illegal = [o for o in declared_rows if o.lstrip("/") not in ROOT_DOC_REFS]
         assets_ok = bool(asset_rows) and all(v["verdict"] == "GREEN" for v in asset_rows)
         entry["hashed_assets_checked"] = len(asset_rows)
         entry["root_docs_declared_pending"] = declared_rows
-        entry["verdict"] = ("GREEN" if assets_ok else "RED") if asset_rows else (
-            "DECLARED_NO_PRECACHE_ARRAY" if name in DECLARED_NO_PRECACHE else "RED")
-        if not assets_ok and asset_rows:
+        entry["illegal_temporal_declarations"] = illegal
+        if illegal:
+            entry["verdict"] = "RED"
+            entry["reason"] = f"non-root ref(s) used a temporal declaration: {illegal}"
+        elif not assets_ok and asset_rows:
+            entry["verdict"] = "RED"
             entry["reason"] = "; ".join(str(v.get("red_refs")) for v in asset_rows if v["verdict"] != "GREEN")[:300]
+        elif asset_rows:
+            entry["verdict"] = "GREEN"
+        else:
+            entry["verdict"] = ("DECLARED_NO_PRECACHE_ARRAY" if name in DECLARED_NO_PRECACHE else "RED")
         g_pre.append(entry)
     out["G_pre_precache_of_the_new_sw_resolves"] = g_pre
     # I_pre: the registration parameters of the bundle about to go live, read from the build export.
@@ -1051,10 +1172,20 @@ def preflight_before_switch(src: pathlib.Path, serve: pathlib.Path, new_refs: li
     reds = _reds(out)
     # F_UNPROBED_DECLARED is a named gap, not a red: it stays out of all_green by name (A-3), exactly as
     # in the post-switch receipt, so the pre-flight cannot be greener than the thing it gates.
-    out["verdict"] = "GREEN" if not reds else "RED"
+    #
+    # D1-CLOSE-2 (arbiter `5791893215`): a temporal DECLARED_* obligation may NOT live inside an aggregate
+    # called GREEN - that is one refactor away from a permanent waiver.  The pre-flight therefore reports
+    # two separate states and never uses the word GREEN while something is still owed to the post-switch arms.
+    out["temporal_obligations"] = obligations
+    out["switch_readiness"] = "BLOCKED" if reds else "READY_TO_SWITCH"
+    out["promotion_state"] = ("PENDING_POST_SWITCH" if obligations
+                              else ("NOT_READY" if reds else "NO_TEMPORAL_OBLIGATIONS"))
+    out["verdict"] = out["switch_readiness"] if not reds else "RED"
     out["reds"] = reds[:12]
     out["rule"] = ("read-only arms judged against the live server + build export BEFORE index.html moves; "
-                   "a RED here means the old generation is still being served and nothing was switched")
+                   "BLOCKED means the old generation stays served and nothing is written; "
+                   "PENDING_POST_SWITCH means final overall may not go GREEN until every obligation is "
+                   "discharged by the named strict post-switch arm")
     return out
 
 
@@ -1079,26 +1210,18 @@ def main() -> int:
         return selftest(pathlib.Path(a.serve))
     if a.preflight_check:
         if not a.src:
-            print("REFUSED: --preflight-check needs --src (a build export, or the live dist to self-check)")
-            return 5
+            return refuse({"argv": sys.argv[1:], "serve": a.serve}, "refused_preflight_no_src", 5,
+                          "--preflight-check needs --src (a build export, or the live dist to self-check)")
         s, sv = pathlib.Path(a.src), pathlib.Path(a.serve)
         # Redteam `5790009042` hole 1: this read-only branch used to return BEFORE the mixed-sides check, so it
         # printed PREFLIGHT GREEN while HTTP came from one deployment and files from another.  Same judge now.
         pf_sides = surface_sides_check(sv)
         if not pf_sides["ok"]:
-            print("REFUSED (preflight):", pf_sides["info"].get("refuse_reason"))
-            print("         Set CNX_DEPLOY_BASE=<your static server>, or CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 to say you")
-            print("         really mean my chain.  A read-only pre-flight is still a claim about a surface.")
-            _out = pathlib.Path(__file__).with_name("receipts")
-            _out.mkdir(exist_ok=True)
-            _dest = _out / f"preflight_refused_{time.strftime('%m%d_%H%M%S')}.json"
-            _dest.write_text(json.dumps({"what": "PREFLIGHT REFUSED before any judgement (mixed sides)",
-                                         "src": str(s), "serve": str(sv),
-                                         "t": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
-                                         "surface_base": pf_sides["info"], "gauge": gauge_self_binding()},
-                                        indent=1, ensure_ascii=False), encoding="utf-8", newline="\n")
-            print(f"[receipt] {_dest}")
-            return 5
+            return refuse({"what": "PREFLIGHT REFUSED before any judgement (mixed sides)",
+                           "src": str(s), "serve": str(sv), "surface_base": pf_sides["info"],
+                           "hint": "set CNX_DEPLOY_BASE=<your static server>, or "
+                                   "CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 to say you really mean my chain"},
+                          "refused_preflight_mixed_sides", 5, pf_sides["info"].get("refuse_reason") or "")
         srefs = asset_refs((s / "index.html").read_text(encoding="utf-8", errors="replace"))
         oidx = sv / "index.html"
         orefs = asset_refs(oidx.read_text(encoding="utf-8", errors="replace")) if oidx.is_file() else []
@@ -1113,11 +1236,17 @@ def main() -> int:
                                     "surface_base": pf_sides["info"], "gauge": gauge_self_binding(),
                                     "src_index_refs": srefs, "served_index_refs": orefs, "preflight": pf},
                                    indent=1, ensure_ascii=False), encoding="utf-8", newline="\n")
-        print(f"[receipt] {dest}\nPREFLIGHT {pf['verdict']}")
-        return 0 if pf["verdict"] == "GREEN" else 4
+        print(f"[receipt] {dest}\nPREFLIGHT {pf['switch_readiness']} promotion={pf['promotion_state']}")
+        if pf["switch_readiness"] != "READY_TO_SWITCH":
+            return refuse({"what": "PREFLIGHT BLOCKED", "src": str(s), "serve": str(sv),
+                           "preflight": pf, "surface_base": pf_sides["info"]},
+                          "refused_preflight_blocked", 4,
+                          "read-only pre-flight is BLOCKED: " + "; ".join(str(x)[:120] for x in pf["reds"][:4]),
+                          quiet=True)
+        return 0
     if not a.src or not a.live_tree or not a.sha:
-        print("REFUSED: --src, --live-tree and --sha are required unless --selftest is given")
-        return 5
+        return refuse({"argv": sys.argv[1:], "serve": a.serve}, "refused_missing_arguments", 5,
+                      "--src, --live-tree and --sha are required unless --selftest is given")
     src, serve, tree = pathlib.Path(a.src), pathlib.Path(a.serve), pathlib.Path(a.live_tree)
 
     receipt: dict = {"sha": a.sha, "src": str(src), "serve": str(serve), "t": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
@@ -1128,11 +1257,10 @@ def main() -> int:
     sides = surface_sides_check(serve)
     receipt["surface_base"] = sides["info"]
     if not sides["ok"]:
-        print("REFUSED:", sides["info"].get("refuse_reason"))
-        print("         Fix one of two ways: CNX_DEPLOY_BASE=http://127.0.0.1:<your static port>, or")
-        print("         CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 when you really do mean to probe my chain.")
-        persist_receipt(receipt, "refused_mixed_sides")
-        return 5
+        return refuse(receipt, "refused_mixed_sides", 5,
+                      (sides["info"].get("refuse_reason") or "") +
+                      " | fix: CNX_DEPLOY_BASE=http://127.0.0.1:<your static port>, or "
+                      "CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 when you really do mean to probe my chain")
 
     # --- precondition 0: the tree must not have the **build inputs** dirty in a way that flatters us
     if not a.skip_build_check:
@@ -1148,9 +1276,10 @@ def main() -> int:
         non_input = [l for l in dirty.splitlines() if l not in input_lines]
         receipt["build_input_dirty"] = input_lines
         if input_lines:
-            print("REFUSED: frontend/ **build inputs** are dirty, refusing to deploy a half-built tree")
-            print("\n".join(input_lines)[:600])
-            return 5
+            receipt["refused_because"] = input_lines
+            return refuse(receipt, "refused_dirty_build_inputs", 5,
+                          "frontend/ build inputs are dirty, refusing to deploy a half-built tree: "
+                          + " | ".join(l[:120] for l in input_lines[:6]))
         if non_input:
             receipt["declared_non_input_dirt"] = {
                 "verdict": "DECLARED_NON_INPUT_DIRT",
@@ -1165,23 +1294,22 @@ def main() -> int:
                              capture_output=True, text=True).stdout.strip()
         receipt["tree_tip"] = tip
         if tip != a.sha[:len(tip)] and not a.sha.startswith(tip):
-            print(f"REFUSED: --sha {a.sha} does not match tree tip {tip}")
-            return 5
+            return refuse(receipt, "refused_sha_not_tree_tip", 5,
+                          f"--sha {a.sha} does not match tree tip {tip}")
 
     new_index = src / "index.html"
     if not new_index.is_file():
-        print(f"REFUSED: {new_index} missing - nothing was built")
-        return 5
+        return refuse(receipt, "refused_no_built_index", 5, f"{new_index} missing - nothing was built")
     new_html = new_index.read_text(encoding="utf-8")
     new_refs = asset_refs(new_html)
     receipt["new_index_refs"] = new_refs
     if not new_refs:
-        print("REFUSED: the built index.html references no /assets/ file")
-        return 5
+        return refuse(receipt, "refused_index_names_nothing", 5,
+                      "the built index.html references no /assets/ file")
     for ref in new_refs:
         if not (src / ref.lstrip("/")).is_file():
-            print(f"REFUSED: built index.html references {ref} but the build did not produce it")
-            return 5
+            return refuse(receipt, "refused_unproduced_asset", 5,
+                          f"built index.html references {ref} but the build did not produce it")
 
     # --- read the CURRENT generation before touching anything
     old_index = serve / "index.html"
@@ -1211,10 +1339,9 @@ def main() -> int:
             if dst.stat().st_size == p.stat().st_size and sha256(dst) == sha256(p):
                 copied.append(p.name)
                 continue
-            print(f"REFUSED: {dst.name} exists with DIFFERENT bytes - a name collision would silently")
-            print("         swap content under an already-published URL. Resolve by hand.")
-            persist_receipt(receipt, "refused_union_name_collision")
-            return 6
+            return refuse(receipt, "refused_union_name_collision", 6,
+                          f"{dst.name} exists with DIFFERENT bytes - a name collision would silently swap "
+                          "content under an already-published URL; resolve by hand")
         shutil.copy2(p, dst)
         added.append(p.name)
         copied.append(p.name)
@@ -1235,28 +1362,29 @@ def main() -> int:
     receipt["pre_switch_asset_probes"] = pre
     reds = [v for v in pre if v["verdict"] != "GREEN"]
     if reds:
-        print("REFUSED before switching index (E: 200 alone is never sufficient; every attempt is recorded):")
         for v in reds:
             for r in v["probes"]:
                 if r["verdict"] != "GREEN":
                     print(f"  {r['path']} status={r['status']} ct={r['content_type']} head={r['head_bytes']!r} "
                           f"body_sha={str(r['sha256'])[:12]} disk_sha={str(r['disk_sha256'])[:12]} "
                           f"disk_present={r['disk_present']}")
-        persist_receipt(receipt, "refused_pre_switch_gate")
-        return 7
+        return refuse(receipt, "refused_pre_switch_gate", 7,
+                      "E: 200 alone is never sufficient - " +
+                      ", ".join(str(v.get("red_refs"))[:120] for v in reds[:4]))
     print(f"[gate] {len(pre)} new asset(s) reachable x{PROBE_TIMES}, real bytes vs the build export, no HTML fallback")
 
     # --- phase 2b: PRE-FLIGHT (the 13:02 lesson).  Every read-only arm is judged here, so a red stops
     # the deploy while the CURRENT generation is still what the user gets - never "switch, then find out".
     pf = preflight_before_switch(src, serve, new_refs, old_js, bool(getattr(a, "allow_proxy_unprobed", False)))
     receipt["preflight_before_switch"] = pf
-    print(f"[preflight] {pf['verdict']}  (B_pre/C_pre/G_pre/I_pre/F_pre/A_pre; reds={len(pf['reds'])})")
+    print(f"[preflight] {pf['switch_readiness']} / promotion={pf['promotion_state']}  "
+          f"(B_pre/C_pre/G_pre/I_pre/F_pre/A_pre; reds={len(pf['reds'])})")
     for line in pf["reds"]:
         print("  RED:", str(line)[:180])
-    if pf["verdict"] != "GREEN":
-        print("REFUSED before switching index.html: the pre-flight is RED, so the old generation stays live.")
-        persist_receipt(receipt, "refused_preflight")
-        return 4
+    if pf["switch_readiness"] != "READY_TO_SWITCH":
+        return refuse(receipt, "refused_preflight", 4,
+                      "pre-flight is BLOCKED, so the old generation stays live and nothing is switched: "
+                      + "; ".join(str(x)[:120] for x in pf["reds"][:4]))
 
     # --- phase 3: BACKUP then SWITCH the unhashed root files
     stamp = time.strftime("%H%M%S")
@@ -1267,9 +1395,8 @@ def main() -> int:
     try:
         bak.mkdir(parents=True, exist_ok=False)
     except FileExistsError:
-        print(f"REFUSED: backup dir {bak} already exists - refusing to mix two generations into one anchor")
-        persist_receipt(receipt, "refused_backup_collision")
-        return 9
+        return refuse(receipt, "refused_backup_collision", 9,
+                      f"backup dir {bak} already exists - refusing to mix two generations into one anchor")
     receipt["backup_generation_id"] = gen_id
     receipt["previous_index_sha256"] = sha256(old_index) if old_index.is_file() else None
     backed = []
@@ -1432,12 +1559,25 @@ def main() -> int:
     g_green = (bool(g_precache)
                and any(e["verdict"] == "GREEN" for e in g_precache)
                and not any(e["verdict"] == "RED" for e in g_precache))
+
+    # D1-CLOSE-2: the pre-flight's temporal declarations are DEBTS, not passes.  Each one is discharged
+    # only by the strict post-switch arm measuring the same ref against the same digest we shipped.
+    post_rows = {}
+    for e in g_precache:
+        for p in e.get("probes", []):
+            if p.get("ref"):
+                post_rows[p["ref"]] = p.get("got") or {}
+    obligations = (receipt.get("preflight_before_switch") or {}).get("temporal_obligations") or []
+    ledger = obligation_ledger_verdict(obligations, post_rows)
+    receipt["temporal_obligation_ledger"] = ledger
+    obligations_ok = ledger["verdict"] != "UNDISCHARGED"
     receipt["arms"] = {"A": (a_old or {}).get("verdict"), "B": "see receipt_ABCDE",
                        "G_precache": [e["verdict"] for e in g_precache],
                        "H_prevgen": h_prev_verdict, "I_sw_register": "GREEN" if i_green else "RED",
                        "J_name_content_binding": j_verdict["verdict"],
+                       "temporal_obligations": receipt["temporal_obligation_ledger"]["verdict"],
                        "F_proxy_tunnel": f_verdict,
-                       "all_green_requires": "A,B,C,D,E + G + I + J + F (H reported; RED if it names an unreachable asset)"}
+                       "all_green_requires": "A,B,C,D,E + G + I + J + F + discharged temporal obligations"}
     receipt["receipt_ABCDE"] = {
         "A_OLD_ASSET_still_served": a_old,
         "B_NEW_INDEX": {"status": b_new["status"], "refs_match_new": b_refs_ok,
@@ -1454,7 +1594,7 @@ def main() -> int:
                  and all(x["verdict"] == "GREEN" for x in d_sw)
                  and receipt["receipt_ABCDE"]["B_NEW_INDEX"]["verdict"] == "GREEN"
                  and (a_old is None or a_old["verdict"] == "GREEN")
-                 and g_green and i_green and j_green and f_verdict == "GREEN")
+                 and g_green and i_green and j_green and obligations_ok and f_verdict == "GREEN")
     receipt["overall"] = "GREEN" if all_green else "RED"
 
     out = pathlib.Path(__file__).with_name("receipts")
