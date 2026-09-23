@@ -1,0 +1,37 @@
+{
+ "at": "2026-09-24T01:5x+08:00",
+ "publisher_copy_under_test": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\publish_evidence.py",
+ "rows": [
+  {
+   "case": "local name carries _live, repo path clean",
+   "skipped": "local file absent"
+  },
+  {
+   "case": "local name clean, repo path carries _live",
+   "local": "ORD_0263_FIFTHSTATE.md",
+   "repo_path": "evidence/x/ord0263_capture_livegen.json",
+   "rc": 0,
+   "first_line": "GET evidence/x/ord0263_capture_livegen.json: 404 existing_sha=None"
+  },
+  {
+   "case": "both clean (should pass the guard, may hit network)",
+   "local": "ORD_0263_FIFTHSTATE.md",
+   "repo_path": "evidence/x/probe_clean.json",
+   "rc": 0,
+   "first_line": "GET evidence/x/probe_clean.json: 404 existing_sha=None"
+  }
+ ],
+ "why": "the commander reported rc=5 on their copy while B reported my copy returns rc=0 on a refusal; I measured both trigger paths instead of adjudicating from memory",
+ "what_i_do_with_it": "my publishers never trust the exit code - every row's verdict comes from its own GET read-back, so a 0 on a refusal cannot become a false PROVEN in my receipts",
+ "case1_local_name_carries_live": {
+  "case": "local filename carries _live, repo path clean",
+  "publisher_copy": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\publish_evidence.py",
+  "rc": 5,
+  "refused": true,
+  "first_lines": [
+   "REFUSED (fail-closed, nothing uploaded): FORBIDDEN_NAME_FRAGMENT(_live in probe_local_name_with_live.json) -- ACTIONABLE: this is a NAME-shaped guard (a second belt on top of the SQLite-magic content scan). If the artifact is a read-only INSTRUMENT that merely documents such a path, rename the FILE and keep the content untouched; the rename shows up in the receipt, so it stays auditable. Do NOT weaken the fragment list and do NOT strip content to get past it (HARNESS 2026-09-23 hit this with a _live-named witness script)",
+   "  local=probe_local_name_with_live.json  repo_path=evidence/x/probe_local_name.json  bytes=73"
+  ]
+ },
+ "finding": "the guard keys on the LOCAL filename: a repo_path carrying _live with a clean local name is NOT refused and really uploads - that is how my two stray evidence/x/ rows appeared, both now reverted by exact path+sha (ord0263_stray_probe_revert.json). Exit code on a refusal from my copy of the publisher: see case1.rc"
+}
