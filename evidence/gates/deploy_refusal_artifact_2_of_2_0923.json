@@ -1,0 +1,29 @@
+{
+ "sha": "dea8410",
+ "src": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\fakesrc",
+ "serve": "D:\\moodle\\_qoder_preview_20260920\\dist",
+ "t": "2026-09-23T17:06:18+0800",
+ "gauge": {
+  "gauge_path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\deploy_bundle.py",
+  "gauge_bytes": 96631,
+  "gauge_content_digest_sha256": "f002c17be0169287d68bf4f153fc9138ac7970b0742baa3389d6ad0c14b36985",
+  "gauge_git_blob_sha1": "7f2a2f0aea393c91069c789a4d5e8fac83fca5a1",
+  "gauge_git_blob_len": 40,
+  "rule": "a receipt may only endorse the exact gauge bytes it names (arbiter D1-5)"
+ },
+ "surface_base": {
+  "http_base": "http://127.0.0.1:4781",
+  "declared_via_env": false,
+  "disk_serve": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "rule": "the HTTP side and the disk side must belong to the same deployment",
+  "declares_cmdr_live_explicitly": false,
+  "resolved_serve": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "resolved_cmdr_dist": "D:\\moodle\\_qoder_preview_20260920",
+  "inside_cmdr_dist_resolved": true,
+  "base_port": 4781,
+  "base_is_cmdr_like": true
+ },
+ "refusal_tag": "refused_no_built_index",
+ "refusal_rc": 5,
+ "reason": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\fakesrc\\index.html missing - nothing was built"
+}
