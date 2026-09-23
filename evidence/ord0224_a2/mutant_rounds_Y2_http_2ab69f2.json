@@ -13,7 +13,7 @@
   "control_round": {
     "node_outcome": "GREEN",
     "exit_code": 0,
-    "summary": "======================== 1 passed, 4 warnings in 5.85s ========================",
+    "summary": "======================== 1 passed, 4 warnings in 6.04s ========================",
     "door_print": null
   },
   "rounds": [
@@ -22,8 +22,9 @@
       "mutated": false,
       "exit_code": 0,
       "node_outcome": "GREEN",
-      "summary": "======================== 1 passed, 4 warnings in 5.85s ========================",
+      "summary": "======================== 1 passed, 4 warnings in 6.04s ========================",
       "first_reason": "",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_ym4ug7c_\\suite.db",
       "door_print": null
     },
     {
@@ -39,8 +40,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 3.17s ========================",
-      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(56560, 202, 'f5de6964', False), (56561, 202, '36a1fa22', False)]",
+      "summary": "======================== 1 failed, 4 warnings in 3.28s ========================",
+      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(65239, 202, '8a393a41', False), (65240, 202, 'bd91d19c', False)]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_6ollzjd0\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -58,8 +60,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 5.35s ========================",
-      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(63464, 202, 'cf93f0fe', False), (63465, 202, '7d1c1f98', False)]",
+      "summary": "======================== 1 failed, 4 warnings in 3.51s ========================",
+      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(57395, 202, '3f943d56', False), (57396, 202, 'e80258be', False)]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_vffdlduk\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -77,8 +80,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 5.39s ========================",
-      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(50610, 202, 'fef71bf3', False), (50611, 202, '6e5f71ee', False)]",
+      "summary": "======================== 1 failed, 4 warnings in 3.31s ========================",
+      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(54014, 202, '824f93a2', False), (54015, 202, '23165bab', False)]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_yjixtk74\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -96,8 +100,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 3.13s ========================",
-      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(56805, 202, 'b239eee7', False), (56806, 202, '4349a50f', False)]",
+      "summary": "======================== 1 failed, 4 warnings in 4.27s ========================",
+      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(60424, 202, 'e03cc2b5', False), (60425, 202, 'e7b87cf5', False)]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_1c508bft\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -115,8 +120,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 5.95s ========================",
-      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(56832, 202, 'a2d1fb54', False), (56833, 202, '658550da', False)]",
+      "summary": "======================== 1 failed, 4 warnings in 6.19s ========================",
+      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(58261, 202, 'b72131c3', False), (58262, 202, 'f532abc9', False)]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_h_6lktfd\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -134,8 +140,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 3.85s ========================",
-      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(64411, 202, '0c661481', False), (64412, 202, 'd8ae91b5', False)]",
+      "summary": "======================== 1 failed, 4 warnings in 5.41s ========================",
+      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(55962, 202, '079f2843', False), (55963, 202, '8a106a91', False)]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_4_kex2sn\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -153,8 +160,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 3.80s ========================",
-      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(56812, 202, 'b3e221bd', False), (56813, 202, 'cfd94d72', False)]",
+      "summary": "======================== 1 failed, 4 warnings in 3.23s ========================",
+      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(55797, 202, 'b070e779', False), (55798, 202, 'dc41c6a8', False)]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest__jxihjg6\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -172,8 +180,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 3.87s ========================",
-      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(57792, 202, 'e38bd4d2', False), (57793, 202, '5927a256', False)]",
+      "summary": "======================== 1 failed, 4 warnings in 3.30s ========================",
+      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(60388, 202, '6a21d33c', False), (60389, 202, '7feafc4f', False)]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_86nbnavg\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -191,8 +200,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 3.32s ========================",
-      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(60501, 202, '64e0c599', False), (60502, 202, '447eb321', False)]",
+      "summary": "======================== 1 failed, 4 warnings in 3.40s ========================",
+      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(56689, 202, '1948f4a1', False), (56690, 202, '8cae60d8', False)]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_amhlmffj\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -210,8 +220,9 @@
       },
       "exit_code": 1,
       "node_outcome": "RED",
-      "summary": "======================== 1 failed, 4 warnings in 5.75s ========================",
-      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(50784, 202, 'b3e30921', False), (50785, 202, 'c76820d4', False)]",
+      "summary": "======================== 1 failed, 4 warnings in 3.45s ========================",
+      "first_reason": "E       AssertionError: 期望：两个真 uvicorn 进程、同一份库、两发同一个问题 ⇒ 同一枚作业；实际 2 枚：[(63591, 202, '1f0f2185', False), (63592, 202, 'a7fdc6ca', False)]",
+      "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_qwgu904e\\suite.db",
       "door_print": null,
       "restored_sha_matches": true,
       "no_mutant_marker_left": true
@@ -225,5 +236,21 @@
     "all_restores_clean": true,
     "all_markers_restored": true,
     "campaign_valid": true
+  },
+  "self_clean": {
+    "removed_named_dirs": [
+      "cnx_pytest_ym4ug7c_",
+      "cnx_pytest_6ollzjd0",
+      "cnx_pytest_vffdlduk",
+      "cnx_pytest_yjixtk74",
+      "cnx_pytest_1c508bft",
+      "cnx_pytest_h_6lktfd",
+      "cnx_pytest_4_kex2sn",
+      "cnx_pytest__jxihjg6",
+      "cnx_pytest_86nbnavg",
+      "cnx_pytest_amhlmffj",
+      "cnx_pytest_qwgu904e"
+    ],
+    "left_in_place": []
   }
 }
