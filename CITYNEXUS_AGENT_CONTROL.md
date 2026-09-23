@@ -14271,7 +14271,99 @@ route 回 500，实际打到 1 发：GET /api/v1/journeys/22222222…/experience
 1. (c) 的后半：把"离开→重进"做成真正通过命中判据的两次触摸（先量清底部导航的命中区），再判"重进后有没有提及"；
 2. (b) 与 (a2) 的不对称是否也该在 500 那一屏补上"设备上有没有本地副本"——这是产品侧一句话的事，我只报读数，不代 D 定形。
 
+### 1a986a24 HJ-P1 代交 · ORD-0268 killer 第 (3) 件：**源站下线后 returning client 拿到的是 SW 答的壳，不是 chrome-error://**；但前提是我先撤销自己一次假读数 @2026-09-24T00:10+08
+
+> 读数归属照实写：**这一格由 HJ-P1 代交**（HJ-P3 会话通道对 commander 侧连续 4 次 `CHAT_SESSION_RUNTIME_RECONCILE_TIMEOUT`），不记在 aad2d1f2 名下。
+> 换代标记按你说的用 `/v10-sw.js`，不用 bundle 名：我量到 **200 / 2,055 B / sha256 前缀 `e63d7421eda34093` / precache 清单 `url:"` 计数 8 / `v10-shell` 计数 0** —— 与你 23:2x §② 三项全等。另量到 `/` 的 sha256 前缀 `3cb318326b13a033`（= 你收据里的 `previous_index_sha256`）⇒ index.html 一字未变，DEBT-4 那句"资产同字节"我这边独立复现。
+> 链：`https://planning-tracks-singer-bedford.trycloudflare.com`（Basic 口令只从 `run/preview_auth.txt` 读，0 打印）。故障全部**客户端侧**注入（`setOffline`），**:4781/:4782/:8693、隧道、任何 .db 我都没碰**；profile 是我车道目录下的 `profile_sw_sw2`。
+
+#### 先撤我自己的：v1 那句"chrome-error://"是采样太早造的假读数
+
+```text
+v1（ord0268_swcell_sw1.json）：warm 之后只等了 6 s 就采样 ⇒ controller=false、registration.active=[null]、
+   缓存 7 条（还在 installing）。这时断网，人确实拿到 chrome-error://chromewebdata/。
+   但那测的是"装到一半就断网"，不是 returning client。
+v2（ord0268_swcell_sw2.json）：同一 persistent profile，给它第二次导航的机会——
+   visit1 载入 + 等 20 s → controller=false / installing / 缓存 7 条
+   visit2 reload + 等 12 s → **controller=true / active:activated / 缓存 8 条**
+   关 profile 再开（= 用户下次打开 app）→ controller 仍 true、8 条仍在
+   然后 setOffline(true)，直访 /v8/hub：
+     href = https://…trycloudflare.com/v8/hub（**不是 chrome-error**）
+     文档引用资产 = assets/index-Cpy_jhEg.js，77 个元素，屏上渲染出向导原文，navError=null，6,046 ms
+⇒ **killer (3) 的答案：SW 答的是壳。** v1 的 chrome-error:// 结论作废，我把它连同废因一起留在收据里，不删。
+   顺带一条给下一位量这格的人：**这一代的 SW 必须走两次导航才接管**，只等 6 s 就断网必然读到 chrome-error，那是仪器不是产品。
+```
+
+#### CacheStorage 那一问：有，而且 8 条齐全、重复 shell 条目确实没了
+
+```text
+key: workbox-precache-v2-https://planning-tracks-singer-bedford.trycloudflare.com/
+8 条逐字（pathname 排序）：
+  /assets/JourneyMap-TiEm8jyP.js   /assets/index-Cpy_jhEg.js   /assets/index-I45CQek8.css
+  /assets/maplibre-gl-kx9AWR05.js  /favicon.svg  /index.html  /manifest.webmanifest  /sw.js
+⇒ 有 workbox-precache-v2-<origin>；/index.html 只有一条（v10-shell 那枚手写常数条目在盘上这代已不存在，
+   与 0268 落地后的清单形状一致）。离线时正是这份壳被交出来（见上）。
+```
+
+#### 但同一屏暴露了一条新的、人视角的缺陷：**离线点门，90 秒零解释**
+
+```text
+离线拿到壳之后，屏上是向导原文，含「还需要填写：目的地、抵达地点、离开地点」和门「使用封存的演示行程」。
+  离线那一屏含「离线/网络/没有回音/不可用/连接」的叶子元素：**0 个** ⇒ 没有任何一句告诉用户现在没网。
+真实触摸那道门：触点 (195,…) elementFromPoint 命中按钮自身、disabled=false、tap 成功。
+之后 90,328 ms 内：
+  前端发了 3 次 GET /api/v1/demo/scene（重试是有的）
+  屏上叶子元素最后仍是「用你自己的城市试用 CityNexus / 新建行程 / 三步完成…」
+  含「没有回音|没有响应|超时|期限|网络|不可用|失败|重试|读不到」的叶子元素：**0 个**
+⇒ 判级 **HUMAN_MISLEADING**：用户点了门，屏幕纹丝不动 90 秒，没有任何一句解释。
+⇒ 与我自己早上那格 (a2) 不矛盾、而是补上它的边界：0263 的期限句我确实在 **shell 读 /experience** 那条路上量到了
+   （18.2 s 出「没有回音」+ 全文 + 「重试」门真的重发）；但 **wizard 上这道读 /demo/scene 的门没有被同一套期限句覆盖**。
+   所以"读取有期限"目前是**按路径成立**，不是全局成立——这句话请 D/B 在收 0263 时按具名路径写，别写成"已全量覆盖"。
+⇒ 不是契约边界、不是后端问题：请求发出去了 3 次，是离线没有回音，而产品在该说话的那一屏没说话。
+```
+
+#### 汇总（判定词汇沿用既有那套）
+
+| 问 | 读数 | 判定 |
+| --- | --- | --- |
+| 源站下线后直访 /v8/hub，SW 答壳还是 chrome-error:// | **SW 答壳**（controller=true、文档引用 index-Cpy_jhEg.js、77 元素、6.0 s、无导航错误）；chrome-error:// 只在"未给第二次导航"时出现 | killer (3) **MET**（0268 现场侧） |
+| CacheStorage 有无 workbox-precache-v2-<origin> | **有**，8 条齐全，/index.html 单条 | MET，且与 0268 落地形状一致 |
+| 文档引用的资产名 | `assets/index-Cpy_jhEg.js`（离线时同样引用它） | 记录；按你的提醒**不拿它当代换证据**，代换证据是 v10-sw.js 的 sha256 |
+| 离线时人有没有被告知 | **没有**（0 个含离线/网络字样的叶子），且点门后 90 s 零解释 | **HUMAN_MISLEADING**（新格，非 0268 射程，交 D/0263 侧） |
+
+#### 工件（本地，未发布——等 commander 判要不要进 evidence/）
+
+```text
+ord0268_swcell_sw1.json   v1：chrome-error 假读数 + 它自己的废因（installing 中采样）
+ord0268_swcell_sw2.json   v2：权威件（两次导航 → controller=true → 离线答壳 → 8 条缓存逐字）
+ord0268_swcell_sw3.json   离线点门 90 s 零解释（3 次 /demo/scene）
+ord0268_sw_cell.cjs / ord0268_sw_cell_v2.cjs / ord0268_sw_cell_v3.cjs
+shots/ord0268_sw2_visit2.png ｜ ord0268_sw2_offline.png ｜ ord0268_sw3_door.png
+```
+
+#### 我欠的下一步
+
+1. 把"离线 90 s 零解释"这一格与早上 (b) 的「500 那一屏不交代本地副本」并成一张**"该说话而没说话"清单**交 D（两条都是产品侧一句话的事，不是契约边界）；
+2. 新代人视角三格里 (c) 的后半（离开→重进）我仍没做成——两次 press 的 hitIsSelf=false，需要先量清底部导航的命中区；
+3. 若 commander 要这三份 swcell 工件进 `evidence/`，说一声我就发（现在只在本地，不占共享分支）。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 路由 @2026-09-24T00:0x+08 —— 仲裁 5797821782 三条落账；A3 的归属它已直接裁定，我上一条"待验证者确认"改为"已裁"
+
+```text
+仲裁 §③ 末句我此前没读到："A3 写腿静默则另归写请求期限/continuation 家族，不并入第五态。"
+⇒ 我 23:5x 块 §② 那句"A3 暂不算并入，但待红队在 v3 下复跑确认"就地更正为：**A3 不并入 0263 已成裁定（外部裁决，不是我的判断、也不是 B 的读数）**；
+  A3 那一格改挂 **ORD-0269**（写请求期限 / continuation owner 家族，写者 D、verifier HJ-P3，接口暂走账本）；
+  红队手里那一跑降级为**佐证**（可交可不交，不 gate 任何单），她要是有读数我照收，没有也不算欠。
+⇒ 对 0263 第五态的影响：范围就是三形 200+HTML / 200+空体 / 200+非 JSON 文本，态名 `ORIGIN_INVALID_RESPONSE[_WITH_SNAPSHOT]`（可由尺统一），
+  evidence_kind 必须体现 HTTP_RESPONSE/ORIGIN_RESPONSE、不得写 TRANSPORT；前四态与前四臂原样；
+  闭单仍 = B 产码 + 换代 + HARNESS 同一枚 v3 五格表全绿。
+仲裁 §①（0268）与 §②（C 不越界）我已照做/照派，无需再动；§① 里"实现令就是只删那一条"与已落地的 1f44408 完全一致。
+仍欠我自己一个读数：0268 的**现场那一格**（源站下线后 /v8/hub 由谁答）在 HJ-P1 手上；仲裁对我 23:35 那一问
+ （换代尺 DEBT-4 的 RED 是否 gate 0268 闭单）尚未回，未回之前 0268 状态写 `LANDED / 现场复验进行中 / 尺 RED=DEBT-4`，不写 CLOSED。
+现场：尖 1f4440819a9d773da6e18f12a31412f73c6d0f55；尺 149e9c6dbe6debcac92041bb192761c1cf1aa2a7（0 改动）；0 demo/reset、0 写用户库、凭据 0 打印。
+```
+
 ## commander 判 @2026-09-23T23:5x+08 —— 第五态：判据(HARNESS v3)+形状(B)都到手，尺我没动；A3 的"不并单"待验证者确认；F 三问里两问交仲裁
 
 ### ① 第五态这一族现在的状态（谁交了什么，我量了什么）
