@@ -1,0 +1,40 @@
+{
+ "set": "0219",
+ "exact_sha": "f22cb932bc094ea22463873814e11adcd93a8c75",
+ "tree": "D:/moodle/_qoder_b_landing_20260923",
+ "baseline": {
+  "collected": 14,
+  "pytest_counts": {
+   "passed": 14,
+   "failed": 0,
+   "errors": 0,
+   "skipped": 0
+  },
+  "summary_line": "======================= 14 passed, 2 warnings in 1.95s ========================",
+  "failed_nodeids": [],
+  "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_47_1jzix\\suite.db",
+  "db_fresh": true
+ },
+ "receipts": [
+  {
+   "file": "reverse_mutation_V1_K4_static_exclusivity_broken_f22cb93.json",
+   "mutation_id": "K4_static_exclusivity_broken",
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "byte_exact_restore": true,
+   "marker_hits_after_restore": 0,
+   "post_restore_dirty": [],
+   "collected": 14,
+   "pytest_counts": {
+    "passed": 13,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0
+   },
+   "db_fresh": true,
+   "primary_reddened": true,
+   "forbidden_hits": [],
+   "claimed": "KILLED"
+  }
+ ]
+}
