@@ -1,0 +1,40 @@
+{
+ "at": "2026-09-23T15:42:24+08:00",
+ "mode": "selftest",
+ "seconds": 3.7,
+ "ruler_blob40": "a886329fe1ee8d728f8a06c273c0674b5ad27e8c",
+ "ruler_bytes": 62571,
+ "ruler_unchanged": true,
+ "gauge_own_receipt_path": "D:\\moodle\\_qoder_harness_ord0254\\tools\\receipts\\gauge_selftest_0923_154224.json",
+ "copy": "D:\\moodle\\_qoder_harness_ord0254\\ord0254_v4_selftest_gauge_receipt.json",
+ "copy_bytes": 12311,
+ "copy_blob40": "09533c34afa67a9ac2e1cfa864771b33a59ebd57",
+ "base_original": "http://127.0.0.1:4781",
+ "base_used": "http://127.0.0.1:4412",
+ "allow_proxy_unprobed_used": false,
+ "probe_times_env": "2",
+ "shell_max_age_basis_env": "(unset)",
+ "rc": 0,
+ "arms_total": 33,
+ "arms_matched": 33,
+ "overall": "GREEN",
+ "I_arms": [
+  "I-true_positive:served_bundle_registers(1 calls) => GREEN",
+  "I-killer:updateViaCache_all_is_red => RED",
+  "I-killer:non_root_scope_is_red => RED",
+  "I-killer:no_register_call_is_not_a_pass => RED",
+  "I-killer:unreadable_bundle_bytes_are_red => RED",
+  "I-true_positive:synthetic_correct_call => GREEN"
+ ],
+ "A9_arms": [
+  "A9-killer:shell_immutable_is_red => RED",
+  "A9-true_positive:real_shell_revalidable => GREEN",
+  "A9-scope:hashed_asset_may_stay_immutable => NOT_SHELL_RECORDED",
+  "A9-killer:undeclared_max_age_300_is_red => RED",
+  "A9-threshold_zero:max_age_0_revalidates => GREEN",
+  "A9-killer:granted_window_without_basis_is_red => RED",
+  "A9-declared:granted_window_with_basis_is_green => GREEN"
+ ],
+ "mismatched_arms": [],
+ "receipt_freshness": "FRESH"
+}
