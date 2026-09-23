@@ -1,0 +1,50 @@
+{
+ "at": "2026-09-23T13:22:54+08:00",
+ "theirs": {
+  "path": "evidence/gates/deploy_bundle_repeat_probe_selftest_0923.json",
+  "blob": "8e93adb4e01cd00211bbe03daaf481669c74e742",
+  "bytes": 6271,
+  "overall": "GREEN",
+  "base": "http://127.0.0.1:4781",
+  "serve": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "arms_total": 16,
+  "arms_matched": 16
+ },
+ "mine": {
+  "receipt": "ord0254_ruler_selftest_receipt.json",
+  "overall": "GREEN",
+  "base": "http://127.0.0.1:4412",
+  "serve": "D:\\moodle\\_qoder_harness_ord0254\\serve",
+  "arms_total": 18,
+  "arms_matched": 18
+ },
+ "arms_in_both": 13,
+ "only_in_theirs": [
+  "killer:served_but_absent_on_disk(/assets/index-DtQ86lsQ.js)",
+  "true_positive:/assets/index-DtQ86lsQ.js",
+  "true_positive:/assets/index-cWMF3pBW.css"
+ ],
+ "only_in_mine": [
+  "B2-neg:absent-check-can-fail(names the CURRENT ref /assets/index-C0qSwD3N.js)",
+  "B2:previous_generation_absent(/assets/index-CrAwWm5f.js)",
+  "killer:served_but_absent_on_disk(/assets/index-C0qSwD3N.js)",
+  "true_positive:/assets/index-C0qSwD3N.js",
+  "true_positive:/assets/index-CBXSx-f9.css"
+ ],
+ "shared_arm_verdict_mismatches": [],
+ "why_counts_differ": {
+  "true_positive_arms_track_the_served_index": {
+   "theirs": [
+    "true_positive:/assets/index-DtQ86lsQ.js",
+    "true_positive:/assets/index-cWMF3pBW.css"
+   ],
+   "mine": [
+    "true_positive:/assets/index-C0qSwD3N.js",
+    "true_positive:/assets/index-CBXSx-f9.css"
+   ]
+  },
+  "note": "one true_positive arm per /assets/ ref in the index that serve/ was holding; B2/B2-neg only exist when CNX_DEPLOY_SELFTEST_OLD_REF is exported"
+ },
+ "signed_ruler_blob": "e3015cc065d1d4ebca2c0ba28fe3b95f85b64a73",
+ "copy_saved": "D:\\moodle\\_qoder_harness_ord0254\\ord0254_commander_selftest_16_16.json"
+}
