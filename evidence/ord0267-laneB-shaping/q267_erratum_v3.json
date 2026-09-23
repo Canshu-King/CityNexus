@@ -1,0 +1,106 @@
+{
+ "at": "2026-09-23T21:44:12+08:00",
+ "lane": "B c01d72a3",
+ "order": "ORD-0267 勘误与链读数（仲裁 5795653645 三格逐条回）",
+ "rules_followed": "新增文件，不覆盖不删除；旧评论不改",
+ "0267_1_wording_correction": {
+  "what_i_wrote": "「install 从未建出缓存」",
+  "retracted": true,
+  "correct_sentence": "在观测期间（文档开始 t=11 ms 起、至 18 s），该 origin 的 CacheStorage 始终为空，因此已声明的离线 fallback 在观测时刻没有任何缓存壳可返回。",
+  "why_mine_was_too_strong": "上一轮没有采 worker 自己的 install/activate 事件与文本，且 `q267_shape.py` 开跑前不删 profile_install，因果未钉死；两点都成立，接受。"
+ },
+ "0267_1_new_chain_reading": {
+  "instrument": "q267_chain_probe_v2.js：observer 经 addInitScript 在文档最开头装好（早于产品自己的 register），每 25 ms 采一次 CacheStorage + 注册表状态；全新 context、无持久化、零 mock",
+  "events_total": 725,
+  "polls": 721,
+  "instrument_page_errors": [],
+  "cache_names_ever_seen": [],
+  "first_poll_with_any_cache": null,
+  "timeline_non_poll_events": [
+   {
+    "t_ms": 11,
+    "label": "document-start",
+    "state": null,
+    "controller": null,
+    "cache_names": [],
+    "registrations": []
+   },
+   {
+    "t_ms": 11,
+    "label": "registration-lookup",
+    "state": null,
+    "controller": null,
+    "cache_names": [],
+    "registrations": []
+   },
+   {
+    "t_ms": 11,
+    "label": "registrations-observed",
+    "state": null,
+    "controller": null,
+    "cache_names": [],
+    "registrations": []
+   },
+   {
+    "t_ms": 153,
+    "label": "controllerchange",
+    "state": null,
+    "controller": "/v10-sw.js",
+    "cache_names": [],
+    "registrations": [
+     {
+      "active": "/v10-sw.js",
+      "active_state": "activated",
+      "installing": null,
+      "waiting": null
+     }
+    ]
+   }
+  ],
+  "registration_states_first_seen": {
+   "[\"/v10-sw.js\",\"activated\",null,null]": 148
+  },
+  "from_service_worker_first_navigation": false,
+  "from_service_worker_after_reload": false,
+  "state_after_reload": {
+   "cache_names": [],
+   "controller": "http://127.0.0.1:4441/v10-sw.js",
+   "active_states": [
+    "activated"
+   ]
+  },
+  "what_this_adds": "重载发生在 controller 已是 /v10-sw.js(active_state=activated) 之后，而那次导航仍然 fromServiceWorker=false ⇒ 没有任何 fetch 处理器接管导航，所以壳层兜底在'该由它答'的那一刻也没有被调用过；同时 25 ms 粒度下从未见过任何缓存名出现 ⇒ 支持'没写'而非'写了又被删'。",
+  "still_not_measured": "worker 自己的 install/activate 控制台文本（CDP Log.enable 在 browser 级 session 不可用；--enable-logging=stderr 无 [service_worker] 行）⇒ 回调里*为什么*没生效仍未命名；25 ms 采样对短于一个采样的创建/删除仍可能有盲窗，这条我按边界写，不外推。"
+ },
+ "0267_3_retraction_of_the_allowlist_attribution": {
+  "claim_retracted": "「生产 allowlist 把根 / 排除在外」——不成立，我读错了归属",
+  "what_the_file_actually_says": [
+   "119:       devOptions: {",
+   "120:         enabled: false,",
+   "121:         navigateFallbackAllowlist: [/^\\/(?:v8|index)/],"
+  ],
+  "production_block": [
+   "38:       workbox: {",
+   "39:         // The product shell now includes the real mission timeline and MCP",
+   "40:         // disclosure UI. Keep the single application chunk precacheable while",
+   "41:         // retaining Workbox's safety ceiling.",
+   "42:         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,",
+   "43:         navigateFallback: \"/index.html\",",
+   "44:         /* A navigation fallback is only for documents.  The earlier",
+   "45:            `/\\.[a-zA-Z0-9]+$/` denied every dotted path, which silently took the fallback",
+   "46:            away from real SPA routes; this list names what is actually not a document. */",
+   "47:         navigateFallbackDenylist: [",
+   "48:           /^\\/api\\//,",
+   "49:           /\\/assets\\//,",
+   "50:           /\\.(?:js|mjs|css|map|json|wasm|ico|svg|png|jpe?g|gif|webp|avif|woff2?|ttf|otf|webmanifest)$/i,",
+   "51:         ],",
+   "52:         additionalManifestEntries: [{ url: \"/index.html\", revision: \"v10-shell\" }],"
+  ],
+  "built_artifact_check": {
+   "allowlist_occurrences_in_v10_sw": 0,
+   "denylist_present_in_v10_sw": true
+  },
+  "consequence": "根路径的离线失败与 B（回访深链）同因可查：生产 workbox 只有 denylist，其中不排除 /；当前应与'worker 没有可用缓存响应'一起查，不先归因 allowlist。"
+ },
+ "0267_2_layer_attribution_agreed_and_supported": "同意并补一条正向读数：修复归生产 /v10-sw.js 的 lifecycle/cache/navigation 层——activated 之后导航仍不经 SW，说明该层根本没建立可响应的路由；壳层 redirect 在 document 未启动时无机会，部署根只覆盖冷设备。"
+}
