@@ -1,0 +1,54 @@
+{
+ "at": "2026-09-23T13:21:27+08:00",
+ "mode": "deploy",
+ "rc": 8,
+ "seconds": 1.3,
+ "ruler_blob_before": "e3015cc065d1d4ebca2c0ba28fe3b95f85b64a73",
+ "ruler_blob_after": "e3015cc065d1d4ebca2c0ba28fe3b95f85b64a73",
+ "ruler_unchanged": true,
+ "base_original": "http://127.0.0.1:4781",
+ "base_used": "http://127.0.0.1:4412",
+ "allow_proxy_unprobed_used": false,
+ "probe_times_env": "2",
+ "f_bases_configured": false,
+ "serve_reset_before_run": {
+  "restored_root_files_from": "D:\\moodle\\_qoder_harness_ord0254\\dist_bak_1316",
+  "restored": [
+   "index.html",
+   "manifest.webmanifest",
+   "sw.js",
+   "v10-sw.js",
+   "workbox-6923124b.js"
+  ],
+  "removed_unioned_assets": [
+   "index-C0qSwD3N.js",
+   "index-CBXSx-f9.css",
+   "JourneyMap-ClyBl6Yh.js",
+   "maplibre-gl-BGf_2f8F.js"
+  ],
+  "serve_index_refs_now": [
+   "/assets/index-CrAwWm5f.js",
+   "/assets/index-cWMF3pBW.css"
+  ],
+  "old_generation_material_kept": []
+ },
+ "receipt_copy": "D:\\moodle\\_qoder_harness_ord0254\\ord0254_ruler_deploy_receipt.json",
+ "receipt_bytes": 13787,
+ "receipt_sha256": "755fcb15047f1292ee9add653a999a8aec7b76384c840f1ce5c8e25e19442253",
+ "receipt_blob": "c227ad9181de6623b3bdeae4b841c471cbae12fa",
+ "arms_measured": {
+  "A": "GREEN",
+  "B": "see receipt_ABCDE",
+  "G_precache": [
+   "DECLARED_NO_PRECACHE_ARRAY",
+   "GREEN"
+  ],
+  "H_prevgen": "GREEN",
+  "F_proxy_tunnel": "RED",
+  "all_green_requires": "A,B,C,D,E + G + F (H reported; RED if it names an unreachable asset)"
+ },
+ "overall": "RED",
+ "frontend_dirty_verbatim": "",
+ "tree_tip": "6a39c52",
+ "finding": "ruler line 654 KeyError 'verdict' when an F base is configured (measured in the run before this one; traceback kept in ord0254_ruler_deploy_KEYERROR.txt)"
+}
