@@ -1,0 +1,109 @@
+{
+ "at": "2026-09-23T14:47:15+08:00",
+ "phase": "before any cache-policy on my own servers",
+ "probe": [
+  {
+   "url": "http://127.0.0.1:4412/",
+   "status": 200,
+   "content_type": "text/html",
+   "cache_control": null,
+   "etag": null,
+   "last_modified": "Wed, 23 Sep 2026 02:27:12 GMT",
+   "pragma": null,
+   "expires": null,
+   "age": null
+  },
+  {
+   "url": "http://127.0.0.1:4412/index.html",
+   "status": 200,
+   "content_type": "text/html",
+   "cache_control": null,
+   "etag": null,
+   "last_modified": "Wed, 23 Sep 2026 02:27:12 GMT",
+   "pragma": null,
+   "expires": null,
+   "age": null
+  },
+  {
+   "url": "http://127.0.0.1:4412/manifest.webmanifest",
+   "status": 200,
+   "content_type": "application/manifest+json",
+   "cache_control": null,
+   "etag": null,
+   "last_modified": "Wed, 23 Sep 2026 02:27:12 GMT",
+   "pragma": null,
+   "expires": null,
+   "age": null
+  },
+  {
+   "url": "http://127.0.0.1:4412/v10-sw.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "cache_control": null,
+   "etag": null,
+   "last_modified": "Wed, 23 Sep 2026 02:27:19 GMT",
+   "pragma": null,
+   "expires": null,
+   "age": null
+  },
+  {
+   "url": "http://127.0.0.1:4412/assets/index-C0qSwD3N.js",
+   "error": "HTTPError: HTTP Error 404: File not found"
+  },
+  {
+   "url": "http://127.0.0.1:4411/",
+   "status": 200,
+   "content_type": "text/html",
+   "cache_control": "no-cache",
+   "etag": "W/\"4b0-qlVK/70M21LgjXUtKlunmwTRPvY\"",
+   "last_modified": null,
+   "pragma": null,
+   "expires": null,
+   "age": null
+  },
+  {
+   "url": "http://127.0.0.1:4411/index.html",
+   "status": 200,
+   "content_type": "text/html;charset=utf-8",
+   "cache_control": "no-cache",
+   "etag": "W/\"1200-1790140359923\"",
+   "last_modified": "Wed, 23 Sep 2026 05:12:39 GMT",
+   "pragma": null,
+   "expires": null,
+   "age": null
+  },
+  {
+   "url": "http://127.0.0.1:4411/manifest.webmanifest",
+   "status": 200,
+   "content_type": "application/manifest+json",
+   "cache_control": "no-cache",
+   "etag": "W/\"314-1790140359923\"",
+   "last_modified": "Wed, 23 Sep 2026 05:12:39 GMT",
+   "pragma": null,
+   "expires": null,
+   "age": null
+  },
+  {
+   "url": "http://127.0.0.1:4411/v10-sw.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "cache_control": "no-cache",
+   "etag": "W/\"2096-1790140363029\"",
+   "last_modified": "Wed, 23 Sep 2026 05:12:43 GMT",
+   "pragma": null,
+   "expires": null,
+   "age": null
+  },
+  {
+   "url": "http://127.0.0.1:4411/assets/index-C0qSwD3N.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "cache_control": "no-cache",
+   "etag": "W/\"1213215-1790140359924\"",
+   "last_modified": "Wed, 23 Sep 2026 05:12:39 GMT",
+   "pragma": null,
+   "expires": null,
+   "age": null
+  }
+ ]
+}
