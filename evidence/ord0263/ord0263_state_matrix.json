@@ -1,0 +1,88 @@
+{
+ "order": "ORD-0263 ORIGIN_ERROR_VS_NETWORK_UNREACHABLE_COPY",
+ "lane": "HARNESS d291c9dc",
+ "role": "reproducer + verifier only; no product code was changed by me",
+ "at": "2026-09-23T17:05+08:00",
+ "surface": {
+   "app": "http://127.0.0.1:4411 (vite preview over the ORD-0254 candidate bundle, /api -> 127.0.0.1:8411)",
+   "origin_for_S2": "my own uvicorn on :8411 stopped => the vite proxy answers HTTP 500 text/plain (a real answer)",
+   "origin_for_S3": "my own silent listener on :8411 (tools/silent_api_port.py): TCP accepts, nothing is ever written; direct probe = 000 after 6.0 s. Shell still served on :4411 so the same-origin snapshot applies",
+   "viewport": "390x844 isMobile hasTouch zh-CN",
+   "browser_mocks_used": "none (no route interception, no stubbed response); the only levers were my own processes",
+   "forbidden_ports_requested": []
+ },
+ "arbiter_vocabulary_being_tested": {
+   "LIVE": "2xx origin",
+   "ORIGIN_ERROR_WITH_SNAPSHOT": "HTTP 4xx/5xx + local snapshot; words must say the service is temporarily unavailable + a local snapshot is shown, and must NOT say 网络不可用",
+   "NETWORK_UNREACHABLE_WITH_SNAPSHOT": "timeout / DNS / connect failure + snapshot"
+ },
+ "matrix": {
+   "S1_2xx_origin": {
+     "construction": "everything up; enter the sealed demo through its own control",
+     "origin_probe": {"GET /api/v1/health": "200 application/json"},
+     "navigator_onLine": true,
+     "snapshot": {"indexedDB": "citynexus-offline", "stores": ["journeys"], "count": 1},
+     "rendered_text_head": "下午好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 … 今天 还没有安排 “现在”取自服务器场景（行程起点，游标状态 ABSENT_FALLBACK）：2026-10-10T09:00:00+08:00",
+     "says_network_unavailable": false,
+     "classification_nodes": {"offline-retry": 0, "backend-unreachable": 0, "load-failed": 0, "today-heading": 1},
+     "verdict_vs_arbiter": "OK - this is LIVE"
+   },
+   "S2_http_5xx_plus_snapshot": {
+     "construction": "stop my backend only; the origin still answers, with HTTP 500 text/plain through the proxy; reload the same URL",
+     "origin_probe": {"GET /api/v1/health": "status 500, content-type text/plain, thrown=false"},
+     "navigator_onLine": true,
+     "snapshot": {"indexedDB": "citynexus-offline", "stores": ["journeys"], "count": 1, "journey_id_in_localStorage": "22222222-2222-4222-8222-222222222222"},
+     "rendered_text_verbatim": "CN | 离线 · 只读 | 你未来 24 小时已保存。 | 网络不可用 · 正在显示只读的已保存行程。 | 重试 | 现在 · COMPLETE | 行程完成 | 下一步 · — | 无下一步 | 供应商数据最后刷新于 此快照之前。离线状态下财务操作已禁用。",
+     "says_network_unavailable": true,
+     "says_service_unavailable_or_server": false,
+     "sentence_owner": "a <P> inside <MAIN> with no data-testid (LocaleContext key shell.offlineMsg, line 693), rendered from V8Experience.tsx:614; the second emitter of the same key is :652",
+     "classification_nodes": {"offline-retry": 1, "backend-unreachable": 0, "load-failed": 0, "load-failed-reason": 0, "journey-gone": 0, "today-heading": 0},
+     "door": "offline-retry exists, BUTTON, not disabled, hit-tests to itself, takes focus (measured in the previous session, same build)",
+     "verdict_vs_arbiter": "WRONG WORDS - the origin answered (500) yet the traveller is told 网络不可用; the arbiter's ORIGIN_ERROR_WITH_SNAPSHOT sentence (服务暂时不可用 + 正在展示本地快照) is absent"
+   },
+   "S3_transport_timeout_plus_snapshot": {
+     "construction": "silent listener on the API port (accepts, never answers); shell still served; reload the same URL; wait 16 s",
+     "origin_probe": {"direct :8411": "000 after 6.0 s", "in-page fetch /api/v1/health": "rejected at 8.0 s (client race), never resolved"},
+     "navigator_onLine": true,
+     "sw_controller": true,
+     "snapshot": {"indexedDB": "citynexus-offline", "stores": ["journeys"], "count": 1, "journey_id_in_localStorage": "22222222-2222-4222-8222-222222222222"},
+     "rendered_text_verbatim": "CN | 正在准备城市周末行程… | 锚点 · 住宿 · 出行事实 · 可行性",
+     "says_network_unavailable": false,
+     "says_service_unavailable_or_server": false,
+     "classification_nodes": {"offline-retry": 0, "backend-unreachable": 0, "backend-unreachable-retry": 0, "load-failed": 0, "today-heading": 0, "trial-setup": 0},
+     "verdict_vs_arbiter": "NOT REACHED - the traveller is left on the loading skeleton with a snapshot present and no door at all. NETWORK_UNREACHABLE_WITH_SNAPSHOT cannot be produced by this build in this state, because the classification never runs"
+   }
+ },
+ "cause_lines_read_not_guessed": {
+   "merge_of_S2_and_S3_by_design": "app/V8Experience.tsx:193-204 probeHealth(); the deciding line is :198 `return response.ok;` - an HTTP answer of 4xx/5xx and the absence of any answer both collapse into `false`, and boot() (:607 `const up = await probeHealth();` -> :609 `if (!up)` -> :613-614 `setOffline(saved); setMessage(t(\"shell.offlineMsg\"))`) prints one sentence for both",
+   "why_S3_never_even_reaches_that_line": "boot() awaits `load(journeyId)` at :601, and the data path `api/citynexus.ts:642 async function requestJson<T>(...)` has no AbortController and no timeout anywhere in the file's request path (measured by grep: no setTimeout/signal/abort lines). With a silent origin the promise never settles, so the catch at :602 never runs, `busy` stays true and the skeleton stays on screen",
+   "consequence": "fixing only the copy (as Q7 asks) still leaves state S3 unreachable: the three states need (a) a per-read deadline so a hanging origin becomes an event, and (b) a classifier that distinguishes 'answered non-2xx' from 'did not answer'. One line cannot do both"
+ },
+ "second_observation_offline_deep_link": {
+   "construction": "whole origin down (both :4411 and :8411 stopped), then navigate to /v8/hub",
+   "reading": "browser error page, not the app: url chrome-error://chromewebdata/, `net::ERR_CONNECTION_REFUSED`, rendered text 无法访问此网站 / 127.0.0.1 拒绝了我们的连接请求, sw_controller=false on that document",
+   "note": "the precache carries /index.html but the navigation was to /v8/hub, so no offline shell was served for a deep link. Out of scope for ORD-0263's three states, named here because it is the shape a traveller on a phone actually hits, and it means the offline copy can be unreachable by definition"
+ },
+ "not_measured": [
+   "the same matrix on the 53fe8e8 baseline surface (no baseline canary exists, so nothing here is claimed as a regression)",
+   "the production chain behind the auth proxy and the public tunnel (forbidden ports; 0 requests)",
+   "any AI/provider path (disabled in my backend env)",
+   "DNS-failure and connect-refusal variants of S3 (I built the timeout variant only; refusal-while-loaded would still hang the same way because there is no per-read deadline)"
+ ],
+ "verifier_recipe_for_the_product_fixer": {
+   "steps": [
+     "bring up any front end over a working origin; enter a journey so IndexedDB citynexus-offline has >= 1 row",
+     "S2: stop the API process only, reload, and assert the sentence names the service, not the network",
+     "S3: bind the API port with tools/silent_api_port.py (accepts, never answers), reload, and assert the traveller is told the origin did not answer AND is offered the snapshot, within a bounded time",
+     "S1: restore the origin and assert no offline wording appears at all"
+   ],
+   "assertions_that_must_stay_red_until_fixed": [
+     "S2 body matches /网络不可用/ (today) - the fix must turn this off and name 服务/暂时不可用 instead",
+     "S3 body still contains 正在准备 and zero of {offline-retry, backend-unreachable, load-failed} (today) - the fix must produce a bounded, classified answer",
+     "S2 and S3 render identical text while both go through :198 (today they do not, because S3 never gets there - a fix that only edits the string keeps S3 wrong)"
+   ],
+   "evidence_shape": "read innerText of the rendered nodes, never data attributes; keep the origin probe (status/ct/thrown) in the same receipt as the sentence, so a claim about 'the origin answered' is not inferred"
+ },
+ "artifacts": ["ord0263_preflight_summary.json (retargeting note)", "ord0263_deploy_summary.json + ord0263_deploy_gauge_receipt.json (real switch, OVERALL GREEN)", "ord0263_selftest_summary.json (42/48 with the 6 named mismatches)", "shots/ord0263_S1_live.png", "shots/ord0263_S2_http500.png", "shots/ord0263_S3_timeout2.png", "shots/ord0263_S3_transport.png (browser error page)", "tools/silent_api_port.py", "ord0263_S3_blackhole_state.json"],
+ "cleanup": "my three ports killed by named PID and confirmed free by netstat (8411 30920, 4411 56656, plus the earlier static 45796); screenshots moved out of the shared browser directory into my order dir; candidate repo/ and patches/ kept"
+}
