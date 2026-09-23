@@ -1,0 +1,6 @@
+{"kind": "instrument_start", "mode": "html", "port": 8411, "every_api_path_answers": 200}
+{"kind": "instrument_start", "mode": "html", "port": 8411, "every_api_path_answers": 200}
+{"at": "22:59:00", "kind": "answered", "path": "/api/v1/health", "status": 200, "content_type": "text/html; charset=utf-8", "body_bytes": 1200, "body_head": "<!doctype html>\n<html lang=\"en\">\n  <"}
+{"at": "22:59:00", "kind": "answered", "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience", "status": 200, "content_type": "text/html; charset=utf-8", "body_bytes": 1200, "body_head": "<!doctype html>\n<html lang=\"en\">\n  <"}
+{"at": "22:59:30", "kind": "answered", "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience", "status": 200, "content_type": "text/html; charset=utf-8", "body_bytes": 1200, "body_head": "<!doctype html>\n<html lang=\"en\">\n  <"}
+{"at": "22:59:30", "kind": "answered", "path": "/api/v1/health", "status": 200, "content_type": "text/html; charset=utf-8", "body_bytes": 1200, "body_head": "<!doctype html>\n<html lang=\"en\">\n  <"}
