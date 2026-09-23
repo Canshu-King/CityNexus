@@ -1,0 +1,80 @@
+{
+ "gate": "tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+ "tree": "D:/moodle/_qoder_b_landing_20260923/backend",
+ "head_commit_file": "D:/moodle/_qoder_b_landing_20260923\\.git",
+ "as_is_exit": 0,
+ "as_is_summary": "============================== 3 passed in 0.68s ==============================",
+ "as_is_nodes": {
+  "test_t1_raw_tags_column_alone_never_causes_a_hard_verdict": "PASSED",
+  "test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker": "PASSED",
+  "test_t3_display_taxonomy_tags_never_become_accessibility_evidence": "PASSED"
+ },
+ "owner_of_each_arm": {
+  "K1_raw_tags_column_becomes_an_input": "test_t1_raw_tags_column_alone_never_causes_a_hard_verdict",
+  "K2_skip_the_normalized_producer": "test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker",
+  "K3_taxonomy_token_becomes_a_fact": "test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+ },
+ "arms": [
+  {
+   "id": "K1_raw_tags_column_becomes_an_input",
+   "file": "app/replanning/feasibility.py",
+   "declared_owner": "test_t1_raw_tags_column_alone_never_causes_a_hard_verdict",
+   "expected_anchor_hits": 1,
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "before_sha256": "d2eae2b11ff05f6930d33c847a7a05f57e00fdde29fbaf5691a1d51c839ec874",
+   "mutated_sha256": "df7adddf27e0ada00d491ffaeb6cd33ab081b0a46906353f516254252608b252",
+   "restored_byte_exactly": true,
+   "suite_summary": "========================= 1 failed, 2 passed in 0.56s =========================",
+   "red_nodes": [
+    "test_t1_raw_tags_column_alone_never_causes_a_hard_verdict"
+   ],
+   "owner_reddened": true,
+   "killed": true
+  },
+  {
+   "id": "K2_skip_the_normalized_producer",
+   "file": "app/replanning/feasibility.py",
+   "declared_owner": "test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker",
+   "expected_anchor_hits": 1,
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "before_sha256": "d2eae2b11ff05f6930d33c847a7a05f57e00fdde29fbaf5691a1d51c839ec874",
+   "mutated_sha256": "ae7561f3f766f096ae0ca8906c6ebd6081e642dbd548b75cb5404b856ac7e3a2",
+   "restored_byte_exactly": true,
+   "suite_summary": "============================== 3 failed in 0.61s ==============================",
+   "red_nodes": [
+    "test_t1_raw_tags_column_alone_never_causes_a_hard_verdict",
+    "test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker",
+    "test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+   ],
+   "owner_reddened": true,
+   "killed": true
+  },
+  {
+   "id": "K3_taxonomy_token_becomes_a_fact",
+   "file": "app/replanning/feasibility.py",
+   "declared_owner": "test_t3_display_taxonomy_tags_never_become_accessibility_evidence",
+   "expected_anchor_hits": 1,
+   "anchor_hits": 1,
+   "bytes_changed": true,
+   "before_sha256": "d2eae2b11ff05f6930d33c847a7a05f57e00fdde29fbaf5691a1d51c839ec874",
+   "mutated_sha256": "4856a8148697f8710af7f9a73e3abcd5d04298b8b8b0b1207653b5b8568ba067",
+   "restored_byte_exactly": true,
+   "suite_summary": "========================= 1 failed, 2 passed in 0.47s =========================",
+   "red_nodes": [
+    "test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+   ],
+   "owner_reddened": true,
+   "killed": true
+  }
+ ],
+ "nodes_with_a_killing_arm": [
+  "test_t1_raw_tags_column_alone_never_causes_a_hard_verdict",
+  "test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker",
+  "test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+ ],
+ "nodes_without_a_killing_arm": [],
+ "every_node_has_a_killer": true,
+ "every_arm_reddens_its_declared_owner": true
+}
