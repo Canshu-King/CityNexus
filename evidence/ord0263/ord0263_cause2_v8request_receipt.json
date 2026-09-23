@@ -1,0 +1,68 @@
+{
+ "at": "2026-09-23T20:12:58+08:00",
+ "order": "ORD-0263",
+ "arm": "cause-2 attribution (v8Request, not requestJson)",
+ "question": "fixing only requestJson while leaving v8Request unbounded - is the skeleton identical?",
+ "answer_derived": "YES - identical skeleton, and it never settles",
+ "derivation": {
+  "rule": "YES only if the mutant spent the whole observation window on the skeleton (skeleton_fraction==1.0), never produced a labelled band, never offered the retry door, never handed over the snapshot - while B's shipped build left the skeleton and settled inside the same window",
+  "mutant_skeleton_fraction_of_window": 1.0,
+  "mutant_window_ms_observed": 71999,
+  "mutant_labelled_band_samples": 0,
+  "b_skeleton_last_seen_ms": 16004,
+  "b_label_first_seen_ms": 16407,
+  "b_seconds_to_settle": 16.4,
+  "typed_in_by_verifier": false
+ },
+ "same_conditions_both_runs": {
+  "origin_state": "silent listener on :8411 accepting TCP and never answering",
+  "chrome_context": "one context; IndexedDB citynexus-offline/journeys count == 1 in both",
+  "surface": "http://127.0.0.1:4413/v8/hub",
+  "instrument": "page-side sampler, 400 ms period, same evaluate body",
+  "product_files_edited": [
+   "frontend/src/app/V8Experience.tsx (working tree only, reverted)"
+  ]
+ },
+ "mutant_reading": {
+  "bundle": "index-B8w70bTP.js",
+  "samples": 181,
+  "skeleton_samples": 181,
+  "first_sample_ms": 7987,
+  "last_sample_ms": 79986,
+  "labelled_band_ever_appeared": 0,
+  "retry_door_present": 0,
+  "snapshot_rows": 1,
+  "snapshot_word_present": false,
+  "rendered_text": "CN | 正在准备城市周末行程… | 锚点 · 住宿 · 出行事实 · 可行性",
+  "origin_state": "silent listener :8411; health 000 after 6.0 s; shell 200"
+ },
+ "b_shipped_reading": {
+  "rendered_text": "没有回音 | 等了 12 秒，这台服务器一个字也没回答 | 这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。 | 看已保存的只读副本 | 重试 | 归因详情",
+  "seconds_to_settle": 16.4,
+  "settled_within_deadline": true,
+  "snapshot_rows": 1,
+  "timeline": {
+   "sample_ms": 400,
+   "skeleton_last_seen_ms": 16004,
+   "label_first_seen_ms": 16407,
+   "stable_through_ms": 45996
+  },
+  "origin_answer": {
+   "status": null,
+   "thrown": true,
+   "wire": "silent listener on :8411 accepts TCP and never answers; curl via :4413 /api/v1/health -> 000 in 10.0s, /api/v1/journeys/... -> 000 in 10.0s, /v8/hub -> 200 in 0.004s.  thrown=true is read off the app: a fetch that got no response is the only way this cell can lose its HTTP status."
+  }
+ },
+ "single_variable_witness": {
+  "requestJson_arm_untouched": "api/citynexus.ts:644 still `await fetchWithReadDeadline(...)` in the mutant build",
+  "v8Request_arm_reverted": "V8Experience.tsx:185 `await fetch(path, ...)` in the mutant build",
+  "v8Request_is_what_boot_uses": "requestJson occurrences in V8Experience.tsx = 0; v8Request occurrences = 20; boot reads at :554 :573 :589 :592 :593 :596 :615",
+  "diff_saved": "ord0263_cause2_mutant.diff"
+ },
+ "tree_state_after_experiment": {
+  "committed_mutant": false,
+  "porcelain_after_checkout": "0 lines",
+  "rebuilt_bundle_hash": "index-Ce5-8mHb.js"
+ },
+ "verdict_for_the_foreman": "his correction is right and it is now a measured fact: the requestJson-only tree shows the same 正在准备城市周末行程… skeleton for the full 72 s with a snapshot present and no door at all, while B's candidate hands over 没有回音 at 16.4 s"
+}
