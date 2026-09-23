@@ -807,15 +807,34 @@ export function PlanWithAiSheet({
           >
             <b>{copy.title}</b>
             <p>{copy.body}</p>
-            {result?.failureReason && (
+            {(result?.failureReason || result?.summary) && (
               <details className="plan-ai-detail">
                 <summary data-testid="plan-ai-detail-toggle">
                   {zh ? "技术详情" : "Technical detail"}
                 </summary>
-                <code data-testid="plan-ai-reason">{result.failureReason}</code>
+                {result?.failureReason && (
+                  <>
+                    <span className="plan-ai-detail-label" data-testid="plan-ai-detail-kind">
+                      {zh ? "服务器给出的原因" : "Reason the server gave"}
+                    </span>
+                    <code data-testid="plan-ai-reason">{result.failureReason}</code>
+                  </>
+                )}
+                {result?.summary && (
+                  <>
+                    {/* ORD-0240: this is the model's own sentence, not this screen's wording.  It is
+                        neither translated nor added to a dictionary -- dynamic prose put through a
+                        static table would be claimed as "already translated", which is the hole this
+                        order closes.  Unlabelled in the main flow, a Chinese traveller read it as our
+                        promise. */}
+                    <span className="plan-ai-detail-label" data-testid="plan-ai-model-label">
+                      {zh ? "模型原始输出（未翻译，不代表本界面的结论）" : "Model's own words (not translated, not this screen's conclusion)"}
+                    </span>
+                    <code data-testid="plan-ai-model-output">{result.summary}</code>
+                  </>
+                )}
               </details>
             )}
-            {result?.summary && !result.failureReason && <p className="plan-ai-summary">{result.summary}</p>}
             {/* A refusal the traveller cannot act on is a dead end, so the reason carries exactly one
                 next step -- and it is the step the server's own code earns, not a generic "try again". */}
             {copy?.action === "another-city" && onChooseAnotherCity && (

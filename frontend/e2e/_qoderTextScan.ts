@@ -25,6 +25,14 @@ export async function scanScreenText(page: Page): Promise<TextScan> {
       const style = getComputedStyle(el);
       if (el.closest('[aria-hidden="true"]')) return false;
       if (style.display === "none" || style.visibility === "hidden") return false;
+      /* Measured on this Chromium (Playwright 1.63): a child of a **closed** `<details>` still
+         computes `display:block`, `visibility:visible`, `content-visibility:visible` and a real
+         330x77 box, so no style read sees the collapse.  The engine-independent signal is the DOM
+         state itself -- the traveller has to open it. */
+      const host = el.closest("details");
+      if (host && !host.open && !el.closest("summary")) return false;
+      /* Engines that do implement it hide the content this way; kept because it is free and correct. */
+      if (style.contentVisibility === "hidden") return false;
       if (Number(style.opacity) === 0) return false;
       return box.width > 0 && box.height > 0;
     };

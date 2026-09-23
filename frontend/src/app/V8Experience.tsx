@@ -53,6 +53,7 @@ import {
   type PlanVersion,
 } from "../api/v12Authoritative";
 import { useCandidateRejections } from "../api/candidateRejections";
+import { syncStatedInterests } from "../api/travelerPreferences";
 import { desktopRoutes, mobileRoutes } from "../routes/v8Routes";
 import {
   readOfflineJourney,
@@ -919,6 +920,15 @@ export function V8Experience() {
       tripWritten = true;
       setJourneyCreated(true);
       localStorage.setItem("citynexus.v8.journey_id", journey.id);
+      /* ORD-0238: her words get stored in the contract that already exists.  A failure here is not
+         announced, and that is not a cover-up: no sentence on this screen claims the plan was built
+         from her interests, so there is nothing to unsay -- what the server actually holds is what
+         the gate reads back.  It must not block creating the trip either: the journey is real. */
+      try {
+        await syncStatedInterests(traveler.id, draft.interests ?? []);
+      } catch {
+        /* left un-stated on purpose; see the gate `ord0238-2-…` */
+      }
       const stayCount = await searchStayOptions(
         journey.id,
         `${cityName} stay-aware journey`,
