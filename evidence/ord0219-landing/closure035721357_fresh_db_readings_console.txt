@@ -1,0 +1,27 @@
+D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+  from starlette.testclient import TestClient as TestClient  # noqa
+fresh DB: C:\Users\仓鼠王\AppData\Local\Temp\q219landing_vrbcysxr\landing.db | existed before this run: False
+tree: D:/moodle/_qoder_b_landing_20260923/backend
+door module: D:\moodle/_qoder_b_landing_20260923/backend\tests\test_qoder_demo_accessibility_evidence.py
+
+[item 3] carrying set   : 3 ['place-city-park', 'place-design-library', 'place-tech-art']
+[item 3] declared set   : 3 ['place-city-park', 'place-design-library', 'place-tech-art']
+[item 3] both non-empty : True
+[item 3] sets agree     : True
+[item 3] facts agree    : True
+[item 3] server-stamped provenance: {'place-tech-art': 'DEMO', 'place-city-park': 'DEMO', 'place-design-library': 'DEMO'}
+[item 3] no value carries the string LIVE: True
+[item 3] provenance keys the fixture could not have set: {'place-tech-art': ['source', 'source_kind'], 'place-city-park': ['source', 'source_kind'], 'place-design-library': ['source', 'source_kind']}
+
+[item 4] per-code, per-candidate outcomes on real generated plans
+  STROLLER: candidates=3 PASS=2 BLOCK(named)=1 both=True
+      0a1dcd9c PASS stops: []
+      55523d40 BLOCK(named) stops: ['place-tech-art']
+      6c07d3ca PASS stops: []
+  LARGE_LUGGAGE: candidates=3 PASS=2 BLOCK(named)=1 both=True
+      0a1dcd9c PASS stops: []
+      55523d40 PASS stops: []
+      6c07d3ca BLOCK(named) stops: ['place-design-library']
+
+ITEMS 3+4 SATISFIED: True
+-> D:\moodle\_qoder_spike_20260921\q219_landing_readings__qoder_b_landing_20260923.json
