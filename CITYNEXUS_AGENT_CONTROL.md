@@ -14506,6 +14506,32 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 亲测 @2026-09-24T01:2x+08 —— 我自己在干净 profile 上把发布代走了一遍：预缓存真的落地了（这是 0268 那枚修复的核心可观察后果）
+
+```text
+我自己当用户走一遍（之前几件都是车道读数，我这次不看报告、自己开）：
+  工具：Playwright 自带 Chromium（**全新 profile**，不共享任何车道的浏览器上下文/登录态/旧 SW）；
+  面：`http://127.0.0.1:4781/v8/live`（无鉴权本地面；隧道与 :4782 不在这次读数的断言里）；
+  形状：进入 → 等 12 s → 第二次进入（因为这一代 SW 要第二次导航才接管，HJ-P1 已把这条写成防呆）→ 只读地查 CacheStorage / controller / 已加载脚本 / 屏上首屏文字。
+读到的（全部现算，没有一条是抄来的）：
+  caches = ["workbox-precache-v2-http://127.0.0.1:4781/"]            ← **修好了才会有的那一枚**（修前三方独立读数都是 []）
+  该缓存内 8 条具名请求：
+    /sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda
+    /index.html?__WB_REVISION__=213aa276841d50a8a61cf75dd7408a7f     ← 内容派生那枚；没有 /index.html + v10-shell 的重复条目
+    /assets/maplibre-gl-kx9AWR05.js  /assets/JourneyMap-TiEm8jyP.js
+    /assets/index-I45CQek8.css       /assets/index-Cpy_jhEg.js       （revision:null 的资产，与清单一致）
+    /favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c
+    /manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3
+  controller = http://127.0.0.1:4781/v10-sw.js，state = activated；页面实际加载 /assets/index-Cpy_jhEg.js
+  首屏文字（读渲染文字，不读 data 属性）：「用你自己的城市试用 CITYNEXUS」「新建行程」「三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。」
+  与已闭单的关系：这是 ORD-0268 那枚"删掉重复 shell 条目"的**独立第三来源**（红队 derived GREEN、HJ-P1 两列 MET 之外），
+  我这一枚不替代它们、也不写进闭单结论里冒充第四票——只作为"包工头自己看过"的旁证。
+边界（我不夸）：这次只证明"新 profile 上预缓存会落地 + SW 接管 + 首屏正常"；
+  没有证明离线导航（那一件 HJ-P1 已量：离线直访 /v8/hub 由 SW 答且命中当代壳）；
+  没有证明换代前就装着旧 worker 的客户端（那仍是交给仲裁的 Q5，未覆盖、不开工）。
+现场：我只开自己的 tab 并自己关掉，两个别的车道的页面（:8485 与一枚 chrome-error）一个字没动；0 次 demo/reset、0 次写任何 .db。
+```
+
 ## commander 判 @2026-09-24T01:1x+08 —— 0269 设计两问我先按事实定默认（不让 D 等一夜）；HJ-P3 会话判死（6 次实测）；两格派单出去
 
 ### ① ORD-0269 设计两问：我的默认裁定（仲裁若有异议，在下一裁改我）
@@ -40225,3 +40251,25 @@ A1 同族、并进本单不另开——这句我原样记着，不动手。
   `ord0263-landedgen/` **四条旧路径一件未动**。
 * 现场：`:4415`/`:8411` 具名停、netstat 回读空；dist 副本按具名清单删（释放 16,818,836 B）；
   克隆仍在 `compat/ord0254` = `6a39c527f2aa…`，`git status --porcelain -- frontend` **0 行**。
+
+### B c01d72a3 · ORD-0263 第五态 候选（照尺的五行产码，三形各自 + 前四格不动） @01:17+08 —— **照她尺上的五行产码；三形各自 GREEN、前四格一格没动、反向两臂各自回红。`derived_result` 我不自签。**
+
+```text
+候选     c79e2b4f4efe414dba22a071a7136ae10b5c84aa（分支 agent/b-c01d72a3-ord0263-s5）父 1f4440819a9d773da6e18f12a31412f73c6d0f55 == 你指的尖 1f4440819a9d… -> True；is-ancestor rc=0；权威线我 0 次移动
+改动     3 文件 3 files changed, 115 insertions(+), 4 deletions(-)；被删的行只有 4 行，逐字列出：if (text) { / const body = await response.json().catch(() => / if (attribution.reason === "NETWORK_UNAVAILABL / && (attribution.reason === "SERVER_ERROR" || a
+        承载前四格判据的删除行 = 0 条（TypeError 支、deadline 支、classifyHealthProbe、response.ok、fact.ok 都没被碰）
+门禁     typecheck rc=0（提交态复跑）｜build rc=0｜precache  8 entries (2436.77 KiB)｜bundle index-ChOTTCvB.js 1,245,203 B sha256/16 2d56a79632efc0c6
+尺       e9a4188f63e2… == 在架 e9a4188f63e2… -> True；入口 live()；跑后尺字节未变 True
+七项     S1_live=GREEN V1_origin_error_5xx=GREEN V1_vacuity_witness=GREEN V2_no_answer=GREEN V3_distinctness=GREEN V4_silent_read_answered_health=GREEN V5_origin_invalid_response=GREEN
+        尺自己写的字段 `derived_result` = 「ALL_GREEN」（不是我填的；闭单仍以 HARNESS/红队复跑为准）
+三形     200_html=GREEN 200_empty=GREEN 200_not_json=GREEN｜各自 failed_conditions = []｜仪器：200+text/html 1200 B ／ 200+0 B application/json ／ 200+text/plain 33 B；快照行数三形都 1
+屏上     「服务器 |  | 服务器答了 200，可带回来的不是这一屏能用的数据 |  | 它确实回了话（HTTP 200，Content-Type: text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程…」（三形各自念出自己那一发的 content_type）
+反向臂   A=RED/1条件红; B=RED/5条件红｜恢复全部 byte-exact=True
+        A 臂暴露一处对尺的读数（不是对我的批评）：撤掉 v8Request 的守卫后，错误仍带 status=200，于是前四条走 UNKNOWN_FAILURE/HTTP_RESPONSE/200/RESOURCE_STATE 全过，只被第 6 条 cached_copy 那一列拦下 -> 该列确实是牙齿；但「态名与句子」不设防这点由她自己文档 §2 已声明，我照此把句子也钉进自证
+作废一枚 我早先同种变异跑出过 GREEN，那一次没做端口预检、产物也没指纹 -> 归属不成立，弃用不引用；本轮以带产物指纹（ORIGIN_INVALID_RESPONSE 字面量 3->2）的 B 臂为准
+边界     本轮 0 次写 POST（你 5798766898 的禁令）；A3 那句已按禁令降级为生产方读数，另附 ORD_0263_A3_WITHDRAWAL.md 具名撤回，已发布件一件不覆盖不删
+卫生     porcelain（除我自己的 dist）= 逐字空；只起在 :4443/:8443（并按端口具名停）；:4781/:4782/:8693/隧道/cnx proxy/_live.db/_preview.db 未碰；无 demo/reset；AI off、resolver off、Photon->127.0.0.1:9
+交付     evidence/ord0263-s5fix-laneB/ 21/22 件 40 位回读 PROVEN；index blob fe5a11ea3fb4…
+```
+
+落地程序不变：我交候选 + 自证 -> HARNESS/红队任一机械派生 -> 你 ff-only；她那把 v3 尺此后不再动（动它=改验收）。需要我把三形扩成每形 N 轮（连击）或加英文臂，说一声。
