@@ -1,0 +1,49 @@
+ORD-0254 primary witness: the signed ruler's own F arm crashes when a base is configured.
+
+Run (this session, before any re-run): the wrapper had just set
+CNX_DEPLOY_PROXY_BASE=http://127.0.0.1:4412 and CNX_DEPLOY_TUNNEL_BASE=http://127.0.0.1:4411,
+CNX_DEPLOY_PROBE_TIMES=2, and was calling the unmodified ruler object
+e3015cc065d1d4ebca2c0ba28fe3b95f85b64a73 (39,302 B, commit 7914beb1baf1 on commander/control).
+Console output, verbatim:
+
+    ruler: D:\moodle\_qoder_harness_ord0254\tools\ruler.py
+      blob before = e3015cc065d1d4ebca2c0ba28fe3b95f85b64a73 (39302 B)  signed = e3015cc065d1d4ebca2c0ba28fe3b95f85b64a73 (39302 B)
+      BASE override: 'http://127.0.0.1:4781' -> 'http://127.0.0.1:4412'  (one constant, in-process; no arm, threshold or predicate touched)
+      env: PROXY_BASE=http://127.0.0.1:4412 TUNNEL_BASE=http://127.0.0.1:4411 PROBE_TIMES=2 SELFTEST_ROOT=D:\moodle\_qoder_harness_ord0254\serve SELFTEST_OLD_REF=/assets/index-CrAwWm5f.js AUTH_FILE=unset
+      command: deploy_bundle.py --src D:\moodle\_qoder_harness_ord0254\repo\frontend\dist --serve D:\moodle\_qoder_harness_ord0254\serve --live-tree D:\moodle\_qoder_harness_ord0254\repo --sha 6a39c527f2aa3b16e73dfd122c34d6e6be7102df
+      --allow-proxy-unprobed passed? False
+    [pre] served index.html references: ['/assets/index-CrAwWm5f.js', '/assets/index-cWMF3pBW.css']
+    [pre] build references          : ['/assets/index-C0qSwD3N.js', '/assets/index-CBXSx-f9.css']
+    [union] added 4 new asset(s); 0 already byte-identical
+    [gate] 2 new asset(s) reachable, real bytes, no HTML fallback
+    [switch] backed up 5 root file(s) -> D:\moodle\_qoder_harness_ord0254\dist_bak_1316
+    [switch] installed ['index.html', 'manifest.webmanifest', 'sw.js', 'v10-sw.js', 'workbox-6923124b.js']
+    Traceback (most recent call last):
+      File "D:\moodle\_qoder_harness_ord0254\tools\run_ruler.py", line 121, in <module>
+        raise SystemExit(main())
+      File "D:\moodle\_qoder_harness_ord0254\tools\run_ruler.py", line 92, in main
+        rc = mod.main()
+      File "D:\moodle\_qoder_harness_ord0254\tools\ruler.py", line 654, in main
+        f_unconfigured = any(p["verdict"] == "NOT_CONFIGURED" for p in f_probes)
+      File "D:\moodle\_qoder_harness_ord0254\tools\ruler.py", line 654, in <genexpr>
+        f_unconfigured = any(p["verdict"] == "NOT_CONFIGURED" for p in f_probes)
+    KeyError: 'verdict'
+    RC=1
+
+Reading of it:
+- Everything up to and including phase 3 (union, gate E pre-switch, backup, switch) ran and printed.
+- The crash is inside the ruler, at its own line 654, not in my surface and not in my wrapper: the
+  loop at lines 649-653 appends `{"surface","base","got"}` when a base IS configured, while the
+  "not configured" branch at 647 appends `{"surface","verdict","base"}`.  Line 654 then reads
+  `p["verdict"]` unconditionally.
+- Consequence: the F-GREEN path of this shipped object cannot reach the end of main(), so the whole
+  A-H receipt (which is written after F) is never produced when the operator does the thing the help
+  text asks for - setting CNX_DEPLOY_PROXY_BASE / CNX_DEPLOY_TUNNEL_BASE.  With both unset the run
+  completes and F is RED by fail-closed design.
+- What that means for the commander's 16/16: unaffected, because the selftest's F arms call
+  `repeated_verdict()` directly (lines 333-345) and never go through the aggregation in main().  The
+  blind spot is in the deploy path, i.e. exactly the path a换代 uses.
+- Family: this is the same shape as A-7's "a gauge that reads one observation cannot see the second
+  one" - here an arm whose pass path has never been executed.  Fix suggestion left to the owner: make
+  the configured branch store its own top-level verdict (or read `p.get("verdict")`/`p["got"]["verdict"]`
+  by branch), and add a selftest arm that drives main()'s F aggregation with a live configured base.
