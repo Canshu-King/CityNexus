@@ -1,0 +1,84 @@
+{
+ "label": "enter",
+ "at": "2026-09-23T16:57:05.517Z",
+ "url": "http://127.0.0.1:4443/v8/hub",
+ "window_s": 30,
+ "render_shape": "persistent-context full document load, phone 390x844 zh-CN",
+ "seconds_to_settle": 3.25,
+ "skeleton_seen_during_wait": false,
+ "classification_nodes": {
+  "offline-retry": 0,
+  "backend-unreachable": 0,
+  "backend-unreachable-retry": 0,
+  "load-failed": 0,
+  "load-failed-reason": 0,
+  "journey-gone": 0,
+  "today-heading": 1,
+  "trial-setup": 0,
+  "failure-view": 0,
+  "failure-reason": 0,
+  "failure-read-cached": 0,
+  "failure-retry": 0
+ },
+ "rendered_text": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n还没休息\n\nDemo之旅\n\n10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（行程起点。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 09:00 · 现在/接下来由服务器的执行投影给出\n尚未获取地图位置\n\n这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。\n\n住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00\n这个行程还没有可信的坐标\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。",
+ "rendered_text_head": "菜单 / 今天 跟随系统 EN DE 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 今天 还没有安排 “现在”取自服务器场景（行程起点。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 09:00 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 这个行程还没有可信的坐标 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+ "snapshot": {
+  "present": true,
+  "count": 1,
+  "store_names": [
+   "journeys"
+  ]
+ },
+ "origin_probe": {
+  "status": 200,
+  "ct": "application/json",
+  "thrown": false,
+  "ms": 4
+ },
+ "app_attribution": {
+  "present": false,
+  "rows": null
+ },
+ "service_worker": {
+  "controller": true,
+  "onLine": true
+ },
+ "enter_proof": {
+  "clicked": "使用封存的演示行程",
+  "hit_test": null,
+  "hit_test_matches": false,
+  "candidates": [
+   {
+    "label": "EN",
+    "visible": true
+   },
+   {
+    "label": "高级设置",
+    "visible": true
+   },
+   {
+    "label": "目的地",
+    "visible": true
+   },
+   {
+    "label": "抵达地点",
+    "visible": true
+   },
+   {
+    "label": "离开地点",
+    "visible": true
+   },
+   {
+    "label": "下一步",
+    "visible": true
+   },
+   {
+    "label": "使用封存的演示行程",
+    "visible": true
+   }
+  ]
+ },
+ "non_get_requests": [],
+ "profile": "D:\\moodle\\_qoder_b_ord0263_20260923\\profile_s5fix",
+ "playwright": "D:\\moodle\\_qoder_integration_20260919\\frontend\\node_modules\\playwright"
+}
