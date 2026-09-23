@@ -1,0 +1,62 @@
+{
+ "at": "2026-09-23T14:58:31+08:00",
+ "rc": 8,
+ "seconds": 1.5,
+ "ruler_blob40": "9ca0dee62016d7ef421b1dc085027ff4d6654c23",
+ "ruler_blob_after": "9ca0dee62016d7ef421b1dc085027ff4d6654c23",
+ "ruler_unchanged": true,
+ "base_original": "http://127.0.0.1:4781",
+ "base_used": "http://127.0.0.1:4412",
+ "allow_proxy_unprobed_used": false,
+ "f_bases_configured": false,
+ "probe_times_env": "2",
+ "serve_reset_before_run": {
+  "restored_root_files_from": "D:\\moodle\\_qoder_harness_ord0254\\dist_bak_144752",
+  "restored": [
+   "index.html",
+   "manifest.webmanifest",
+   "sw.js",
+   "v10-sw.js",
+   "workbox-6923124b.js"
+  ],
+  "removed_unioned_assets": [
+   "index-C0qSwD3N.js",
+   "index-CBXSx-f9.css",
+   "JourneyMap-ClyBl6Yh.js",
+   "maplibre-gl-BGf_2f8F.js"
+  ],
+  "serve_index_refs_now": [
+   "/assets/index-CrAwWm5f.js",
+   "/assets/index-cWMF3pBW.css"
+  ]
+ },
+ "receipt_copy": "D:\\moodle\\_qoder_harness_ord0254\\ord0254_v3_deploy_receipt.json",
+ "receipt_bytes": 25923,
+ "receipt_blob40": "cd7cbf0fa7692124f1fd16ee30169f52cc9fced1",
+ "arms_measured": {
+  "A": "GREEN",
+  "B": "see receipt_ABCDE",
+  "G_precache": [
+   "DECLARED_NO_PRECACHE_ARRAY",
+   "GREEN"
+  ],
+  "H_prevgen": "GREEN",
+  "F_proxy_tunnel": "RED",
+  "all_green_requires": "A,B,C,D,E + G + F (H reported; RED if it names an unreachable asset)"
+ },
+ "overall": "RED",
+ "frontend_dirty_verbatim": "",
+ "tree_tip": "6a39c52",
+ "backup_dir": "D:\\moodle\\_qoder_harness_ord0254\\dist_bak_145829",
+ "assets_union": {
+  "added": [
+   "index-C0qSwD3N.js",
+   "index-CBXSx-f9.css",
+   "JourneyMap-ClyBl6Yh.js",
+   "maplibre-gl-BGf_2f8F.js"
+  ],
+  "already_identical": [],
+  "total_in_serve_assets": 18
+ },
+ "command": "deploy_bundle.py --src D:\\moodle\\_qoder_harness_ord0254\\repo\\frontend\\dist --serve D:\\moodle\\_qoder_harness_ord0254\\serve --live-tree D:\\moodle\\_qoder_harness_ord0254\\repo --sha 6a39c527f2aa3b16e73dfd122c34d6e6be7102df"
+}
