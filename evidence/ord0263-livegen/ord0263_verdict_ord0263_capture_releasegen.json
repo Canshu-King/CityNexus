@@ -1,0 +1,69 @@
+{
+ "at": "2026-09-23T21:41:44+08:00",
+ "capture": "ord0263_capture_releasegen.json",
+ "capture_subject": "RELEASE GENERATION served to the user's phone: index-D76m_cky.js / index-I45CQek8.css, built from landed tip d2665e2 (0261/0264 wizard fixes), does NOT contain ORD-0263 - B's candidate is not landed",
+ "verdicts_computed_from_measured_fields": {
+  "S1_live": {
+   "verdict": "GREEN"
+  },
+  "V1_origin_error_5xx": {
+   "verdict": "RED",
+   "measured": {
+    "http_status": 500,
+    "network_words": false,
+    "names_service": true,
+    "hands_over_snapshot": false,
+    "navigator_onLine": true,
+    "retry_door_in_text": true
+   },
+   "rule": "answered non-2xx + snapshot: must NAME the service AND HAND OVER the snapshot AND carry no network word"
+  },
+  "V1_vacuity_witness": {
+   "verdict": "GREEN",
+   "measured": {
+    "network_words": false,
+    "names_service": true,
+    "hands_over_snapshot": false,
+    "note": ""
+   },
+   "rule": "an absent sentence is not a classification; only 网络词=0 且 服务词=1 且 快照词=1 counts"
+  },
+  "V2_no_answer": {
+   "verdict": "RED",
+   "measured": {
+    "fetch_thrown": true,
+    "settled_within_deadline": false,
+    "seconds_to_settle": null,
+    "classified_label": null,
+    "retry_door": false,
+    "still_on_loading_skeleton": true,
+    "hands_over_snapshot": false
+   },
+   "rule": "no answer at all: bounded read + its own label + snapshot handed over + a door"
+  },
+  "V3_distinctness": {
+   "verdict": "RED",
+   "measured": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "s3_label": null,
+    "same_sentence": false,
+    "s3_unclassified_skeleton": true
+   },
+   "rule": "the two arms must not collapse into one outcome; a skeleton is not a classification"
+  },
+  "V4_silent_read_answered_health": {
+   "verdict": "RED",
+   "measured": {
+    "read_never_answered": true,
+    "health_status": 500,
+    "settled_within_deadline": false,
+    "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "network_words": false,
+    "seconds_to_settle": 40.3
+   },
+   "rule": "read silent + health answered => ORIGIN_ERROR_WITH_SNAPSHOT, bounded, never called a network failure"
+  }
+ },
+ "derived_result": "RED_CELLS: V1_origin_error_5xx,V2_no_answer,V3_distinctness,V4_silent_read_answered_health",
+ "note": "I am the verifier for this order, so a derived_result is mine to write - it is derived from the fields printed above, not asserted"
+}
