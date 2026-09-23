@@ -74,6 +74,18 @@ PLAN = {
         "ORD-0232",
         "ord0232-arms-six-arms.json",
     ),
+    "ord0238": (
+        [],
+        [],
+        [
+            ("ord0238-2-stored-rows.json", "layer2-stored-preference-rows.json"),
+            ("ord0238-3-planner-input-probe.json", "layer3-planner-input-probe.json"),
+            ("ord0240-2-labelled-output.json", "model-output-labelled-reading.json"),
+            ("phone-bundle-readings.json", "preview-chain-recheck-after-rebuild.json"),
+        ],
+        "ORD-0238 + ORD-0240",
+        "ord0238-0240-arms-six-arms-v2.json",
+    ),
 }
 
 
