@@ -1,0 +1,35 @@
+{
+ "at": "2026-09-23T15:38:49+08:00",
+ "what": "I pre-applied the root-file switch on my OWN canary, so that the pre-switch arms have a satisfiable state to judge",
+ "why_needed": "G_pre compares the live answer to src/index.html while F_pre compares it to serve/index.html; before any switch those two disks cannot both equal what the server hands out, so a real generation change cannot pass phase 2b pre-switch (see the two disk roots in preflight_before_switch)",
+ "before": {
+  "serve/index.html": "d0dd3ea5b1afefcc",
+  "src/index.html": "c045b5ef5dacbc99",
+  "live_serves": "(see preflight receipt)"
+ },
+ "after": {
+  "index.html": {
+   "serve": "c045b5ef5dacbc99",
+   "src": "c045b5ef5dacbc99"
+  },
+  "manifest.webmanifest": {
+   "serve": "643f91ecc6d80155",
+   "src": "643f91ecc6d80155"
+  },
+  "sw.js": {
+   "serve": "1fc94905be2dbf92",
+   "src": "1fc94905be2dbf92"
+  },
+  "v10-sw.js": {
+   "serve": "e92af6edece9071e",
+   "src": "e92af6edece9071e"
+  },
+  "workbox-6923124b.js": {
+   "serve": "e3f4163ae57222c2",
+   "src": "e3f4163ae57222c2"
+  }
+ },
+ "this_touched": "serve",
+ "user_stores": [],
+ "demo_reset_issued": false
+}
