@@ -772,6 +772,8 @@ paths:
       - {$ref: '#/components/parameters/JourneyId'}
     post:
       operationId: runAgentCommand
+      parameters:
+        - {$ref: '#/components/parameters/IdempotencyKeyOptional'}
       description: Compile a natural-language one-run Journey Mission and execute it through the server-owned Agent Gateway.
       requestBody:
         required: true
@@ -1750,6 +1752,13 @@ components:
       name: Idempotency-Key
       in: header
       required: true
+      schema: {type: string, minLength: 8, maxLength: 128}
+    # 同一个头、同一个 schema，只有 requiredness 不同：replan accept / transactions 没带键就拒收，
+    # agent commands 是"带了就生效、没带保持旧行为"，所以这里可选——不发明第二种键语法。
+    IdempotencyKeyOptional:
+      name: Idempotency-Key
+      in: header
+      required: false
       schema: {type: string, minLength: 8, maxLength: 128}
   responses:
     NotFound:

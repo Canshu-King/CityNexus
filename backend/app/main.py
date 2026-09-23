@@ -1058,7 +1058,70 @@ def call_agent_tool(
 def run_agent_command(
     journey_id: UUID,
     payload: AgentCommandRequest,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
+):
+    """`Idempotency-Key` for agent activation, reusing the replan/accept vocabulary.
+
+    The header was accepted by the transport and then dropped on the floor, so two
+    clicks with one key activated two missions. Here the key is scoped per operation
+    and compared against a canonical signature of the semantic request: a replay
+    returns the one persisted mission, and the same key on a different command,
+    autonomy or journey fails closed with the canonical 409 - never a silent alias.
+    Without the header this route behaves exactly as before.
+    """
+
+    if idempotency_key is None:
+        return _run_agent_command_impl(journey_id, payload, session)
+    try:
+        header_key = validate_idempotency_key(idempotency_key)
+    except CommerceValidationError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    signature = canonical_request_signature(
+        {
+            "journey_id": str(journey_id),
+            "command": payload.command,
+            "requested_autonomy": payload.requested_autonomy,
+        }
+    )
+    scoped_key = f"agent.command:{header_key}"
+    with journey_write_lock(str(journey_id)):
+        replayed = _replay_committed_accept(session, scoped_key, signature)
+        if replayed is not None:
+            return replayed
+        response = _run_agent_command_impl(journey_id, payload, session)
+        now = datetime.now(timezone.utc)
+        session.add(
+            IdempotencyKey(
+                key=scoped_key,
+                operation="agent.command",
+                request_hash=signature,
+                response_status=200,
+                response_json=json.dumps(response, sort_keys=True),
+                created_at=now.isoformat(),
+                expires_at=(now + timedelta(days=7)).isoformat(),
+            )
+        )
+        try:
+            session.commit()
+        except IntegrityError as exc:
+            # The durable unique index decided that another claim of this key won.
+            # Nothing of this request's work may survive to look like a second
+            # activation, and the answer comes from the receipt that committed.
+            session.rollback()
+            raced = _replay_committed_accept(session, scoped_key, signature)
+            if raced is None:
+                raise HTTPException(
+                    409, "agent command idempotency key is already claimed"
+                ) from exc
+            return raced
+    return response
+
+
+def _run_agent_command_impl(
+    journey_id: UUID,
+    payload: AgentCommandRequest,
+    session: Session,
 ):
     journey = require(session, Journey, str(journey_id), "Journey")
     now_dt = datetime.now(timezone.utc)
