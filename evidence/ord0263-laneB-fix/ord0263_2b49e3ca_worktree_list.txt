@@ -1,0 +1,34 @@
+D:/moodle/_qoder_integration_20260919            d2665e2 [integration/frontend-apple-pass1]
+D:/moodle/_codex/_visible_product_20260920       b9d1ae5 [agent/codex-visible-product-20260920]
+D:/moodle/_qoder_b_landing_20260923              0357213 [landing/ord0219-composite-v8]
+D:/moodle/_qoder_b_lane_20260923                 2b49e3c [agent/b-c01d72a3-ord0263]
+D:/moodle/_qoder_b_ord188_20260922               dfecf28 [agent/canary-ord198-20260922]
+D:/moodle/_qoder_cmdr_base_20260921              f8d9dc2 (detached HEAD)
+D:/moodle/_qoder_cmdr_gate_20260921              53fe8e8 (detached HEAD)
+D:/moodle/_qoder_cmdr_ref_20260921               e9efec6 (detached HEAD)
+D:/moodle/_qoder_d_lane_20260923                 18c4011 (detached HEAD)
+D:/moodle/_qoder_f_fix3_20260922                 2dc3fa2 (detached HEAD)
+D:/moodle/_qoder_f_o156_20260921                 5afda60 [agent/f-ord189-20260922]
+D:/moodle/_qoder_f_o200_20260922                 adf0a3a [agent/f-ord200-20260922]
+D:/moodle/_qoder_f_o210b_20260922                6f0e5fc [agent/f-ord210-20260922]
+D:/moodle/_qoder_f_o214_20260922                 c8472fd (detached HEAD)
+D:/moodle/_qoder_f_ord253_20260923               d2665e2 [agent/f-ord0262-narrow]
+D:/moodle/_qoder_ord108_wt                       5e14f90 (detached HEAD)
+D:/moodle/_qoder_ord125_wt                       db4a91c (detached HEAD)
+D:/moodle/_qoder_ord167_pre_wt                   f1bdbbe (detached HEAD)
+D:/moodle/_qoder_ord97_wt                        aee6c7a (detached HEAD)
+D:/moodle/_qoder_ord98_wt                        924461e (detached HEAD)
+D:/moodle/_qoder_recovery_20260919/verify/wt_c2  5a33eaf (detached HEAD)
+D:/moodle/_qoder_sim_component_20260921          dff9744 [agent/sim-component-20260921]
+D:/moodle/_qoder_ui_overnight_20260920           39cccfd [agent/ui-overnight-20260920]
+D:/moodle/CityNexus-RevolutionLab                d126e44 [experiment/lab-rebased-56d20ec]
+D:/moodle/CityNexus-RevolutionLab-R3             99ebe77 [experiment/revolution-lab-r3]
+D:/moodle/CityNexus-RevolutionLab-R4             1b58793 [experiment/revolution-lab-r4]
+D:/moodle/CityNexus-RevolutionLab-R5             e188c5b [experiment/revolution-lab-r5]
+D:/moodle/CityNexus-RevolutionLab-R6             474e347 [experiment/revolution-lab-r6]
+D:/moodle/CityNexus-RevolutionLab-R6-1           39e028f [experiment/revolution-lab-r6-1]
+D:/moodle/CityNexus-RevolutionLab-R6-1-baseline  8058771 (detached HEAD)
+D:/moodle/CityNexus-RevolutionLab-R6-2           fe3369f [experiment/revolution-lab-r6-2]
+D:/moodle/CityNexus-RevolutionLab-R6-2-RED       5dd1fdf (detached HEAD)
+D:/moodle/CityNexus-RevolutionLab-R6-3           74005fa [experiment/revolution-lab-r6-3]
+D:/moodle/CityNexus-RevolutionLab-R7             705c41b [experiment/revolution-lab-r7]
