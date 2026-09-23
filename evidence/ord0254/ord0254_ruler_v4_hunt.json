@@ -1,0 +1,67 @@
+{
+ "at": "2026-09-23T15:25:04+08:00",
+ "wanted": {
+  "blob16": "a886329fe1ee8d72",
+  "bytes": 62571
+ },
+ "walked": [
+  {
+   "commit": "ffa3cfbf51ae",
+   "date": "2026-09-23T07:04:41Z",
+   "blob16": "f2ed26012a633f30",
+   "size": 83927,
+   "subject": "commander gauge round-7: D1-3 asset name/content binding (arm J + manifest at pu"
+  },
+  {
+   "commit": "050c477c2972",
+   "date": "2026-09-23T05:48:56Z",
+   "blob16": "c89bf3ac7c23c3e3",
+   "size": 65858,
+   "subject": "commander gauge: probe base becomes CNX_DEPLOY_BASE (call-time) and a mixed-side"
+  },
+  {
+   "commit": "df69b4fc5cfd",
+   "date": "2026-09-23T05:28:00Z",
+   "blob16": "a886329fe1ee8d72",
+   "size": 62571,
+   "subject": "commander gauge: pre-flight BEFORE the switch (phase 2b refuses while the old ge"
+  }
+ ],
+ "walked_count": 3,
+ "ordered": {
+  "commit": "df69b4fc5cfdcdf87312bd68b7386887be1ba789",
+  "blob40": "a886329fe1ee8d728f8a06c273c0674b5ad27e8c",
+  "bytes": 62571,
+  "size_matches": true,
+  "verdict": "FETCHED_VERIFIED"
+ },
+ "ordered_f_shape": {
+  "configured_branch_stores_top_level_verdict": true,
+  "unconfigured_branch_stores_verdict": true,
+  "aggregation_lines": [
+   "unconfigured = any(p.get(\"verdict\") == \"NOT_CONFIGURED\" for p in probes)"
+  ],
+  "aggregation_reads_p_verdict_bracket": true,
+  "aggregation_uses_p_get": true
+ },
+ "ordered_has_preflight_mode": true,
+ "ordered_has_arm_I": true,
+ "ordered_a9_default": [
+  "CNX_DEPLOY_SHELL_MAX_AGE\")",
+  "CNX_DEPLOY_SHELL_MAX_AGE_BASIS\", \"\").strip()"
+ ],
+ "tip": {
+  "blob40": "f2ed26012a633f304218b4f5343abfa4fcf318bb",
+  "bytes": 83927,
+  "subject": true
+ },
+ "tip_f_shape": {
+  "configured_branch_stores_top_level_verdict": true,
+  "unconfigured_branch_stores_verdict": true,
+  "aggregation_lines": [
+   "unconfigured = any(p.get(\"verdict\") == \"NOT_CONFIGURED\" for p in probes)"
+  ],
+  "aggregation_reads_p_verdict_bracket": true,
+  "aggregation_uses_p_get": true
+ }
+}
