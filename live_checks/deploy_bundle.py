@@ -39,6 +39,37 @@ def base_url() -> str:
     """The HTTP side of every comparison, resolved at CALL time so `--selftest` (and any other lane)
     can retarget it without editing this file.  Recorded in every probe as `base`."""
     return os.environ.get("CNX_DEPLOY_BASE", BASE_DEFAULT).rstrip("/")
+
+
+class _BaseEnv:
+    """Set CNX_DEPLOY_BASE for a block and hand back the OPERATOR's value afterwards.
+
+    Why this exists (HARNESS `5792073545`: 42/48 on its own surface while I read 59/59 on mine, with the
+    same gauge bytes): the selftest ended its env-changing blocks with `del os.environ["CNX_DEPLOY_BASE"]`.
+    That does not undo "what I set" - it deletes what the CALLING process exported.  From that line on,
+    every later arm judged the lane's disk root against the commander's HTTP base, i.e. the gauge itself
+    manufactured the mixed pair its own SIDES rule refuses in main().  A harness must return the
+    environment it borrowed, byte-for-byte, including "it was absent".
+    """
+
+    def __init__(self, value: str | None):
+        self.value = value
+
+    def __enter__(self):
+        self.saved = os.environ.get("CNX_DEPLOY_BASE")
+        if self.value is None:
+            os.environ.pop("CNX_DEPLOY_BASE", None)
+        else:
+            os.environ["CNX_DEPLOY_BASE"] = self.value
+        return self
+
+    def __exit__(self, *exc):
+        if self.saved is None:
+            os.environ.pop("CNX_DEPLOY_BASE", None)
+        else:
+            os.environ["CNX_DEPLOY_BASE"] = self.saved
+        return False
+
 # Why this is now env-declared instead of hardcoded: A-E read `--serve` from DISK but every status/MIME/
 # digest comes from HTTP against BASE.  Another lane pointing --serve at its own dist while BASE stays here
 # gets a mixed reading - its files judged against MY server's bytes - which is the A-3 wrong-side family
@@ -134,6 +165,19 @@ def surface_sides_check(serve: pathlib.Path) -> dict:
             f"{info['http_base']} and compared against files under {info.get('resolved_serve')}. "
             "Set CNX_DEPLOY_BASE=http://127.0.0.1:<your static port>, or CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 to say")
     return {"ok": ok, "info": info}
+
+
+def pair_binding(serve: pathlib.Path) -> dict:
+    """Name the (HTTP side, disk side) pair a run is actually judging, using the SAME predicate main()
+    enforces.  `DEPLOYMENT_SURFACE_OBSERVATION_V1` demands it: six arms were structurally red on a second
+    lane for a whole day because every arm printed a verdict and none printed its pairing."""
+    chk = surface_sides_check(serve)
+    info = dict(chk["info"])
+    info["co_resident"] = bool(chk["ok"])
+    info["pairing"] = chk["info"].get("pairing", "PAIR" if chk["ok"] else "MIXED")
+    info["rule"] = ("an arm may only compare served bytes against disk bytes when these two sides belong to "
+                    "one deployment; a defaulted base over a foreign disk root is not a comparison")
+    return info
 
 
 def manifest_binding_row(ref: str, served_status, served_sha, disk_sha, entry: dict | None) -> dict:
@@ -625,6 +669,8 @@ def selftest(serve: pathlib.Path) -> int:
     `200 + HTML at a .js URL = STALE_CLIENT_BREAKAGE_RISK` case of rule E.
     """
     live = pathlib.Path(os.environ.get("CNX_DEPLOY_SELFTEST_ROOT", str(serve)))
+    base_at_entry = base_url()          # reference for "did every arm hand the operator's env back?"
+    entry_pair = pair_binding(live)      # named once, printed in the receipt (DEPLOYMENT_SURFACE_OBSERVATION_V1)
     served = serve / "index.html"
     refs = asset_refs(served.read_text(encoding="utf-8")) if served.is_file() else []
     arms = [{"arm": f"true_positive:{r}", "expect": "GREEN",
@@ -777,22 +823,48 @@ def selftest(serve: pathlib.Path) -> int:
     # lane that runs this gauge against its own dist silently compares its files to MY :4781 bytes, which
     # is the A-3 "absent/foreign second side" family wearing a green badge.
     with _FirstOkThenFailServer() as edgeB:
-        os.environ["CNX_DEPLOY_BASE"] = "http://127.0.0.1:%d" % edgeB.port
-        try:
+        with _BaseEnv("http://127.0.0.1:%d" % edgeB.port):
             b_env = repeated_verdict("/anything.js", "javascript", live, times=2)
-        finally:
-            del os.environ["CNX_DEPLOY_BASE"]
-        b_back = repeated_verdict(killer_ref, "javascript", live, times=2)
+        with _BaseEnv(None):
+            b_back = repeated_verdict(killer_ref, "javascript", live, times=2)
+        restored_base = base_url()
     arms.append({"arm": "BASE-env:cnx_deploy_base_is_honoured_at_call_time", "expect": "RED",
                  "got": {"verdict": b_env["verdict"],
                          "error": "probe_base=%s statuses=%s" % (b_env["probes"][0]["base"], b_env["statuses"])}})
-    arms.append({"arm": "BASE-restore:unset_again_reads_the_commander_chain", "expect": "GREEN",
-                 "got": {"verdict": b_back["verdict"],
-                         "error": "probe_base=%s statuses=%s" % (b_back["probes"][0]["base"], b_back["statuses"])}})
+    # What this arm CLAIMS is about routing: with the variable gone, the gauge must read the commander's
+    # chain, and the operator's own value must still be there afterwards.  It used to assert a byte verdict
+    # taken across a mixed pair (my HTTP side vs another lane's disk side), which is structurally RED for a
+    # second lane - HARNESS `5792073545` measured 42/48 exactly here.  The byte verdict and the pairing are
+    # still printed, they are just no longer what the arm judges.
+    routed = (b_back["probes"][0]["base"] == BASE_DEFAULT and restored_base == base_at_entry)
+    arms.append({"arm": "BASE-restore:default_base_used_and_operators_value_handed_back", "expect": "GREEN",
+                 "got": {"verdict": "GREEN" if routed else "RED",
+                         "error": "probe_base=%s at_entry=%s after=%s byte_verdict=%s pair=%s" % (
+                             b_back["probes"][0]["base"], base_at_entry, restored_base,
+                             b_back["verdict"], entry_pair["pairing"])}})
+    arms.append({"arm": "BASE-restore-killer:wrong_base_or_lost_operators_value_is_red", "expect": "RED",
+                 "got": {"verdict": "RED" if not (
+                            "http://127.0.0.1:59998" == BASE_DEFAULT and restored_base == base_at_entry)
+                         else "GREEN",
+                         "error": "probe_base=http://127.0.0.1:59998 (not the default) at_entry=%s" % base_at_entry}})
+    # The binding itself, both ways (DEPLOYMENT_SURFACE_OBSERVATION_V1).  Synthetic roots so no lane's
+    # real dist is ever mutated by a selftest.
+    with _BaseEnv(None):
+        px_mixed = pair_binding(pathlib.Path("D:/moodle/_qoder_cmdr_canary_0923/foreign_pair"))
+    with _BaseEnv("http://127.0.0.1:5899"):
+        px_declared = pair_binding(pathlib.Path("D:/moodle/_qoder_cmdr_canary_0923/foreign_pair"))
+    arms.append({"arm": "PAIR-killer:defaulted_base_over_a_foreign_root_is_not_a_pair", "expect": "NOT_A_PAIR",
+                 "got": {"verdict": "NOT_A_PAIR" if not px_mixed["co_resident"] else "A_PAIR",
+                         "error": "%s | base=%s disk=%s" % (px_mixed["pairing"], px_mixed["http_base"],
+                                                            px_mixed["disk_serve"])}})
+    arms.append({"arm": "PAIR-true_positive:declared_base_with_its_own_root_is_a_pair", "expect": "A_PAIR",
+                 "got": {"verdict": "A_PAIR" if px_declared["co_resident"] else "NOT_A_PAIR",
+                         "error": "base=%s disk=%s" % (px_declared["http_base"], px_declared["disk_serve"])}})
     # ---- D1-3 (arbiter) + redteam hole 2 witnesses.  Every one of these has BOTH directions: a binding that
     # never went red would be decoration.
     j_disk = live / killer_ref.lstrip("/")
     j_served = http_get(killer_ref)
+    j_pair = pair_binding(live)
     j_real_sha = sha256(j_disk) if j_disk.is_file() else "MISSING"
     j_cases = (
         ("J-true_positive:served_and_disk_match_binding",
@@ -806,38 +878,50 @@ def selftest(serve: pathlib.Path) -> int:
     )
     for j_name, j_row in j_cases:
         arms.append({"arm": j_name, "expect": {"J-true_positive:served_and_disk_match_binding": "GREEN"}.get(j_name, "RED"),
-                     "got": {"verdict": j_row["verdict"], "error": j_row.get("why")}})
+                     "got": {"verdict": j_row["verdict"],
+                             "error": "%s | pair=%s base=%s disk=%s" % (j_row.get("why"), j_pair["pairing"],
+                                                                        j_served.get("base"), j_pair["disk_serve"])}})
     j_missing = asset_manifest_verdict(live / "__cnx_no_manifest_dir__", [killer_ref])
     arms.append({"arm": "J-killer:missing_manifest_is_not_a_pass", "expect": "RED",
                  "got": {"verdict": j_missing["verdict"], "error": j_missing.get("reason")}})
     # ---- surface-sides (my own hole + redteam `5790009042` hole 2)
+    # An arm may not quietly assume the OPERATOR's disk side is mine.  The foreign-surface witness
+    # (HARNESS `5792073545`, reproduced here on a second static root) showed three arms that could only
+    # fire when the caller happened to leave `CNX_DEPLOY_BASE` unset: their names state that precondition,
+    # so the code has to set it.  Each arm below names BOTH sides it judges.
     sides_cmdr = surface_sides_check(live)
-    sides_foreign = surface_sides_check(pathlib.Path("D:/moodle/_qoder_cmdr_canary_0923/foreign_dist"))
-    sides_traversal = surface_sides_check(pathlib.Path(CMDR_DIST + "/../_qoder_cmdr_canary_0923/trav"))
-    arms.append({"arm": "SIDES-true_positive:cmdr_dist_and_default_base_agree", "expect": "OK",
+    with _BaseEnv(None):
+        sides_foreign = surface_sides_check(pathlib.Path("D:/moodle/_qoder_cmdr_canary_0923/foreign_dist"))
+        sides_traversal = surface_sides_check(pathlib.Path(CMDR_DIST + "/../_qoder_cmdr_canary_0923/trav"))
+    arms.append({"arm": "SIDES-true_positive:this_runs_own_pair_agrees", "expect": "OK",
                  "got": {"verdict": "OK" if sides_cmdr["ok"] else "REFUSED",
-                         "error": "resolved=%s" % sides_cmdr["info"].get("resolved_serve")}})
+                         "error": "base=%s resolved=%s" % (sides_cmdr["info"].get("http_base"),
+                                                           sides_cmdr["info"].get("resolved_serve"))}})
     arms.append({"arm": "SIDES-killer:foreign_dist_without_base_is_refused", "expect": "REFUSED",
                  "got": {"verdict": "OK" if sides_foreign["ok"] else "REFUSED",
-                         "error": sides_foreign["info"].get("refuse_reason")}})
+                         "error": "base=%s(forced default) disk=%s %s" % (
+                             sides_foreign["info"].get("http_base"),
+                             sides_foreign["info"].get("resolved_serve"),
+                             sides_foreign["info"].get("refuse_reason") or "")}})
     arms.append({"arm": "SIDES-killer:dotdot_traversal_resolves_outside_and_is_refused", "expect": "REFUSED",
                  "got": {"verdict": "OK" if sides_traversal["ok"] else "REFUSED",
-                         "error": "resolved=%s" % sides_traversal["info"].get("resolved_serve")}})
-    # redteam `5790009042` hole 1 exactly: foreign base + MY dist as --serve.  Refusing only the "base was
-    # left defaulted" direction would have let this through, so both directions are asserted here.
-    os.environ["CNX_DEPLOY_BASE"] = "http://127.0.0.1:5899"
-    try:
-        sides_reversed = surface_sides_check(live)
-    finally:
-        del os.environ["CNX_DEPLOY_BASE"]
+                         "error": "base=%s(forced default) resolved=%s" % (
+                             sides_traversal["info"].get("http_base"),
+                             sides_traversal["info"].get("resolved_serve"))}})
+    # redteam `5790009042` hole 1 exactly: foreign base + the COMMANDER's dist as --serve.  This arm names
+    # that disk side, so it passes CMDR_DIST rather than the caller's root - on a second lane `live` is not
+    # my dist and the arm would have been structurally GREEN forever.
+    with _BaseEnv("http://127.0.0.1:5899"):
+        sides_reversed = surface_sides_check(pathlib.Path(CMDR_DIST))
     sides_reversed_ok = surface_sides_check(live)
     arms.append({"arm": "SIDES-killer:foreign_base_with_cmdr_serve_is_refused", "expect": "REFUSED",
                  "got": {"verdict": "OK" if sides_reversed["ok"] else "REFUSED",
                          "error": "%s | base=%s" % (sides_reversed["info"].get("pairing"),
                                                      sides_reversed["info"].get("http_base"))}})
-    arms.append({"arm": "SIDES-true_positive:same_pair_after_unset_passes", "expect": "OK",
+    arms.append({"arm": "SIDES-true_positive:pair_still_passes_after_the_borrowed_block", "expect": "OK",
                  "got": {"verdict": "OK" if sides_reversed_ok["ok"] else "REFUSED",
-                         "error": "base=%s" % sides_reversed_ok["info"].get("http_base")}})
+                         "error": "base=%s disk=%s" % (sides_reversed_ok["info"].get("http_base"),
+                                                        sides_reversed_ok["info"].get("resolved_serve"))}})
     # ---- D1-CLOSE-1: persistence of refusals is proved STRUCTURALLY, not by one happy artifact.
     rp = refusal_persistence_proof()
     arms.append({"arm": "REFUSE-proof:no_undocumented_refusal_exit_in_this_file", "expect": "GREEN",
@@ -887,7 +971,11 @@ def selftest(serve: pathlib.Path) -> int:
     # "first request fine, later requests broken".  Both directions are asserted.
     tp = repeated_verdict(killer_ref, "javascript", live, times=2)
     arms.append({"arm": "F-true_positive:two_live_probes_agree", "expect": "GREEN",
-                 "got": {"verdict": tp["verdict"], "error": None, "status": tp["statuses"]}})
+                 "got": {"verdict": tp["verdict"],
+                         "error": "base=%s disk=%s pair=%s" % (tp["probes"][0]["base"],
+                                                               pair_binding(live)["disk_serve"],
+                                                               pair_binding(live)["pairing"]),
+                         "status": tp["statuses"]}})
     with _FirstOkThenFailServer() as edge:
         st = repeated_verdict("/assets/edge-stateful.js", "javascript", live,
                               base=f"http://127.0.0.1:{edge.port}", times=2)
@@ -929,6 +1017,13 @@ def selftest(serve: pathlib.Path) -> int:
                              "status": idx["status"], "content_type": idx["content_type"],
                              "is_html_fallback": idx["is_html_fallback"], "sha256": idx["sha256"],
                              "disk_sha256": None, "disk_bytes": None, "body_size": idx.get("body_size")}})
+    # ENV regression for the bug HARNESS `5792073545` measured: a selftest must leave the caller's
+    # environment exactly as it found it.  Any arm that deletes instead of restoring now goes RED here.
+    final_base = base_url()
+    arms.append({"arm": "ENV-integrity:operators_base_survived_the_whole_selftest", "expect": "GREEN",
+                 "got": {"verdict": "GREEN" if final_base == base_at_entry else "RED",
+                         "error": "at_entry=%s final=%s (a bare `del os.environ[...]` in any arm is the "
+                                  "failure shape this catches)" % (base_at_entry, final_base)}})
     ok = True
     for arm in arms:
         got = arm["got"]["verdict"]
@@ -950,6 +1045,11 @@ def selftest(serve: pathlib.Path) -> int:
         "why": "arbiter 5781096542 (verdict assigned twice, lax one won) + 5788111742 A-3 "
                "(a comparison against an absent side is not a comparison)",
         "base": base_url(), "serve": str(serve), "overall": "GREEN" if ok else "RED",
+        "pair_binding": entry_pair, "base_at_entry": base_at_entry, "final_base": final_base,
+        "arms_matched": sum(1 for a in arms if a["got"]["verdict"] == a["expect"]),
+        "arms_total": len(arms),
+        "declared_arms": [a["arm"] for a in arms if str(a["got"]["verdict"]).startswith("DECLARED")]
+                         + [a["arm"] for a in arms if str(a["got"]["verdict"]).startswith("NOT_A_PAIR")],
         "gauge": gauge_self_binding(),
         "arms": [{"arm": a["arm"], "expect": a["expect"], "got": a["got"]["verdict"],
                   "status": a["got"].get("status"), "content_type": a["got"].get("content_type"),
