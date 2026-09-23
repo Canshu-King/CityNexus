@@ -1,0 +1,326 @@
+{
+  "base": "http://127.0.0.1:4185",
+  "run_label": "recon1",
+  "pid": 23168,
+  "viewport": [
+    390,
+    844
+  ],
+  "started_at": "2026-09-23T07:26:59.716Z",
+  "faces": {
+    "hub": {
+      "url": "/v8/hub",
+      "headings": [
+        "H1:Demo之旅",
+        "H2:每一天，紧密相连。"
+      ],
+      "nav": [
+        {
+          "txt": "今天",
+          "testid": "nav-hub",
+          "visible": true
+        },
+        {
+          "txt": "行程",
+          "testid": "nav-trips",
+          "visible": true
+        },
+        {
+          "txt": "地图",
+          "testid": "nav-map",
+          "visible": true
+        },
+        {
+          "txt": "Copilot",
+          "testid": "nav-agent",
+          "visible": true
+        },
+        {
+          "txt": "我的",
+          "testid": "nav-me",
+          "visible": true
+        }
+      ],
+      "buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "AI 帮我规划",
+        "试用其他城市",
+        "打开行程工作台",
+        "查看实时行程",
+        "对比住宿 →",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "text": "菜单 / 今天 跟随系统 EN DE 下午好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Riverside Museum 接下来 12:15 Central Food Hall 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 需要关注 已处理 刚才的变化已经处理好。 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 今天 行程 地图 Copilot 我的",
+      "simEntry": null,
+      "walletEntry": null
+    },
+    "trips": {
+      "url": "/v8/trips",
+      "headings": [
+        "H1:1 天行程"
+      ],
+      "nav": [
+        {
+          "txt": "今天",
+          "testid": "nav-hub",
+          "visible": true
+        },
+        {
+          "txt": "行程",
+          "testid": "nav-trips",
+          "visible": true
+        },
+        {
+          "txt": "地图",
+          "testid": "nav-map",
+          "visible": true
+        },
+        {
+          "txt": "Copilot",
+          "testid": "nav-agent",
+          "visible": true
+        },
+        {
+          "txt": "我的",
+          "testid": "nav-me",
+          "visible": true
+        }
+      ],
+      "buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "行程",
+        "住宿",
+        "预订",
+        "花费",
+        "10月10日周六 6 项",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "text": "菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 行程 1 天行程 逐日安排。已确认的预订会被标记为受保护。 10月10日周六 6 项 09:00 10:15 Old Town Gate 1 小时 15 分 详情 › 10:45 12:00 Riverside Museum 1 小时 15 分 当前 详情 › 12:15 13:15 Central Food Hall 1 小时 详情 › 13:35 14:55 Tech Art Center 1 小时 20 分 详情 › 15:30 16:30 Nexus River Cruise Pier 1 小时 已确认 · 受保护 详情 › 17:15 18:45 Skyline Dinner House 1 小时 30 分 详情 › 今天 行程 地图 Copilot 我的",
+      "simEntry": null,
+      "walletEntry": "预订",
+      "navClicked": true
+    },
+    "map": {
+      "url": "/v8/map",
+      "headings": [
+        "H1:整座城市，行程叠加其上。",
+        "H2:Central Food Hall"
+      ],
+      "nav": [
+        {
+          "txt": "今天",
+          "testid": "nav-hub",
+          "visible": true
+        },
+        {
+          "txt": "行程",
+          "testid": "nav-trips",
+          "visible": true
+        },
+        {
+          "txt": "地图",
+          "testid": "nav-map",
+          "visible": true
+        },
+        {
+          "txt": "Copilot",
+          "testid": "nav-agent",
+          "visible": true
+        },
+        {
+          "txt": "我的",
+          "testid": "nav-me",
+          "visible": true
+        }
+      ],
+      "buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "对比出行方式",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "text": "菜单 / 地图 跟随系统 EN DE 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 下一段路程 Central Food Hall 未知费用保持未知。 今天 行程 地图 Copilot 我的",
+      "simEntry": null,
+      "walletEntry": null,
+      "navClicked": true
+    },
+    "agent": {
+      "url": "/v8/agent",
+      "headings": [
+        "H1:你想改什么？",
+        "H2:需要改变什么？"
+      ],
+      "nav": [
+        {
+          "txt": "今天",
+          "testid": "nav-hub",
+          "visible": true
+        },
+        {
+          "txt": "行程",
+          "testid": "nav-trips",
+          "visible": true
+        },
+        {
+          "txt": "地图",
+          "testid": "nav-map",
+          "visible": true
+        },
+        {
+          "txt": "Copilot",
+          "testid": "nav-agent",
+          "visible": true
+        },
+        {
+          "txt": "我的",
+          "testid": "nav-me",
+          "visible": true
+        }
+      ],
+      "buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "询问 Copilot",
+        "为什么这样安排？",
+        "如果我多待 60 分钟会怎样？",
+        "找附近的室内地点",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "text": "菜单 / Copilot 跟随系统 EN DE 随时问关于这趟行程的任何事 你想改什么？ 可以提问、试算改动，或告诉我发生了什么。任何会影响行程的改动都会先说明再应用，你已确认的预订始终受保护。 画像上下文就绪 CN / AI 需要改变什么？ 使用自然语言。你的明确预算和受保护时刻在每一步都可见。 我可以给出建议，但任何花钱或改动已确认预订的操作，都会先等你确认。 消息 行程 · One Day in Nexus City 询问 Copilot 为什么这样安排？ 如果我多待 60 分钟会怎样？ 找附近的室内地点 我的理解 试算一次改动 在不改动已选方案的前提下，预览时间和成本变化。 受保护 到达 / 出发锚点 · 未发起支付 今天 行程 地图 Copilot 我的",
+      "simEntry": null,
+      "walletEntry": null,
+      "navClicked": true
+    },
+    "me": {
+      "url": "/v8/me",
+      "headings": [
+        "H1:我的行程与偏好"
+      ],
+      "nav": [
+        {
+          "txt": "今天",
+          "testid": "nav-hub",
+          "visible": true
+        },
+        {
+          "txt": "行程",
+          "testid": "nav-trips",
+          "visible": true
+        },
+        {
+          "txt": "地图",
+          "testid": "nav-map",
+          "visible": true
+        },
+        {
+          "txt": "Copilot",
+          "testid": "nav-agent",
+          "visible": true
+        },
+        {
+          "txt": "我的",
+          "testid": "nav-me",
+          "visible": true
+        }
+      ],
+      "buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "启用 Web Push",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "text": "菜单 / 我的 跟随系统 EN DE 我的 我的行程与偏好 这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。 这趟行程 DEMO 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 仅提供建议 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 RECORD_ONLY 正在检查推送通道… 启用 Web Push 高级详情 今天 行程 地图 Copilot 我的",
+      "simEntry": null,
+      "walletEntry": null,
+      "navClicked": true
+    },
+    "wizard": {
+      "url": "/v8/hub",
+      "headings": [
+        "H1:Demo之旅",
+        "H2:每一天，紧密相连。"
+      ],
+      "nav": [
+        {
+          "txt": "今天",
+          "testid": "nav-hub",
+          "visible": true
+        },
+        {
+          "txt": "行程",
+          "testid": "nav-trips",
+          "visible": true
+        },
+        {
+          "txt": "地图",
+          "testid": "nav-map",
+          "visible": true
+        },
+        {
+          "txt": "Copilot",
+          "testid": "nav-agent",
+          "visible": true
+        },
+        {
+          "txt": "我的",
+          "testid": "nav-me",
+          "visible": true
+        }
+      ],
+      "buttons": [
+        "菜单",
+        "跟随系统",
+        "EN",
+        "DE",
+        "AI 帮我规划",
+        "试用其他城市",
+        "打开行程工作台",
+        "查看实时行程",
+        "对比住宿 →",
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "text": "菜单 / 今天 跟随系统 EN DE 下午好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Riverside Museum 接下来 12:15 Central Food Hall 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 需要关注 已处理 刚才的变化已经处理好。 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 今天 行程 地图 Copilot 我的",
+      "simEntry": null,
+      "walletEntry": null
+    }
+  },
+  "apiEvents": [],
+  "console": [],
+  "pageErrors": []
+}
