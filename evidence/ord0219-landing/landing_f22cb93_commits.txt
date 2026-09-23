@@ -1,0 +1,94 @@
+f22cb93 2026-09-23 12:15:35 +0800 test(demo): the demo producer may only be reached from the demo seed
+Arbitration 5788528772 found the fourth thing in C's reverted file that my port list had
+missed: a static door. The runtime doors prove today's seeded data does not leak; this one
+refuses any product module outside services.py importing, naming or attribute-reaching the
+demo producer, so it cannot later become a helper for provider or catalogue truth.
+Detection is AST-based, and the node carries both witnesses: prose-only mentions must not
+count, and a real import must.
+
+(cherry picked from commit dfecf284bf6b872922a9b43528cba90009018d6d)
+
+78a2596 2026-09-23 11:40:57 +0800 test(feasibility): the inventory equality is a sealed-demo inventory, not a whole-product one
+Arbitration B-3: the right-hand side of that equality reads the same authoritative
+fixture the producer reads, so it is not a second ruler - but its scope must be pinned.
+Both sides now take only the sealed demo city, and the door fails if the store holds no
+places outside it (which would make "split by city later" an empty promise).
+
+(cherry picked from commit 06b975b625f250b063ed412a97e5dc559b333a84)
+
+ee98c23 2026-09-23 10:18:34 +0800 test(feasibility): the evidence-inventory equality refuses to hold over two empty sides
+Measured on the mainline shape (f5a6b9a, where the demo evidence producer is not
+present): both sides of the inventory equality are empty, so the door passed while
+pinning nothing. A precondition that can disappear must be asserted, not assumed.
+
+(cherry picked from commit f42f9f1235cf22e806e45172c818ef9798f5bd3e)
+
+718eb39 2026-09-23 03:33:04 +0800 test(feasibility): raw place tags are never an accessibility truth source
+ORD-0236 pins the frozen boundary rather than the accident of the current
+implementation: Place.tags_json is display/discovery/retention, and the
+accessibility evaluator consumes normalized evidence only. Three doors, each
+with its own killer arm -- raw tags alone yield no hard verdict, the same
+fact behind the normalized producer does name its blocker, and display
+taxonomy tokens never enlarge the set of places the evaluator can see.
+
+No product code changed: the contract is that the evaluator stays as it is.
+
+(cherry picked from commit 75bc8ca192db547a6169540ce28ce2f6f2d9fe4d)
+
+e7d72cf 2026-09-23 03:05:20 +0800 feat(plans): a no-candidate refusal names which rules broke which candidate
+Red team arm 2: three hard constraints on file made plans/generate answer the generic
+"No feasible plan candidates" whose details carried only counts, so the traveller could not tell
+which assertion killed the plan. The per-candidate rejections the gate already produces are now
+collected and put into the refusal's details, which main.py forwards verbatim - no main.py change,
+no rewritten sentence, no new vocabulary.
+
+Also fixes the false red my own two-hard node had: a candidate can conflict with both rules at the
+same stop, and the product correctly names both, so the judge compares presence against the
+expected structure instead of assuming at most one conflict per candidate.
+
+(cherry picked from commit 318a0348ee307048c5ca0ef0e055793efcb4e22e)
+
+0074c8d 2026-09-23 02:21:16 +0800 test(demo): two hard constraints on file each name only their own blocker
+The product already behaves this way but no node pinned it, so a blocker name leaking across rules
+would have gone unnoticed. Both crossing directions get their own mutant (M11, M12), each of which
+reddens exactly this node and nothing else.
+
+(cherry picked from commit dea1251d7bc493c80751bcba8a27808cf3adaba8)
+
+ed8c0b7 2026-09-23 02:02:49 +0800 feat(plans): a candidate the gate drops now leaves a named durable fact
+SILENT_CANDIDATE_LOSS, API half only. A hard capability that conflicted with a stop used to make the
+candidate vanish inside plans/generate, so the screen simply showed fewer plans with nothing to read.
+The rejection is now persisted as an audit fact carrying the gate's own failure names plus the hard
+rule codes on file, and it is reachable through GET /journeys/{id}/agent-feed - the route the frontend
+already calls - without touching main.py, changing the response shape, or turning a partial result
+into a failure. Making the reason visible on screen is the other half and belongs to the frontend lane.
+
+(cherry picked from commit a96fabf9ec09a64f25679096b15c802a93558e22)
+
+181233f 2026-09-23 01:09:14 +0800 test(demo): give the laundering tripwire its own owner assertion and positive control
+Absorbing lane C's assertion into the key-filter node left it without its own killer: widening the
+whitelist tripped the dict equality first, so the verdict claim was never the one that failed.  The
+tripwire now stands as its own node (producer output must never evaluate to step-free verified) with
+a positive control proving those keys would read as verified if they ever crossed, so widening the
+whitelist to a record-level verdict reddens it and nothing else.
+
+(cherry picked from commit 4d9ceaee785e78fd25482f91d80e3f832aa3f684)
+
+1ba00e6 2026-09-23 00:56:09 +0800 test(demo): the producer gate pins the evaluated verdict, not just the filtered keys
+Absorbs lane C's laundering assertion (arbiter port boundary 00:44): a single demo stroller fact
+must never make the whole record read as step-free verified. The node now reads the projected
+evidence back through the product's own accessibility readers and refuses ACCESSIBILITY_VERIFIED,
+so widening the producer whitelist reddens the claim rather than only the key list.
+
+(cherry picked from commit 84017af12cd9e3db8ee3bf082fc6ef3e04244b20)
+
+7b1eee5 2026-09-22 23:35:29 +0800 feat(demo): the sealed demo produces accessibility evidence the stroller and luggage gates can read
+The parser now forwards a HARD severity, but nothing ever wrote stroller_accessible /
+luggage_accessible, so the gate read None and neither blocked nor allowed (measured 0/16 places
+carry any accessibility evidence).  seed_demo now projects the deterministic demo fixture's
+booleans onto CNX-DEMO places under the metadata shape feasibility already reads, stamping DEMO
+provenance in code so editing JSON cannot turn a demo place into provider truth, and leaving the
+rest of the places evidence-free so UNKNOWN stays demonstrable.
+
+(cherry picked from commit 21309b996ecb474d9122f88b81fba2216a006833)
+
