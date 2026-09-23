@@ -1,0 +1,642 @@
+{
+ "at": "2026-09-23T13:26:49.786Z",
+ "base": "http://127.0.0.1:4441",
+ "window_s": 20,
+ "cdp_log_channel": "UNAVAILABLE: cdpSession.send: Protocol error (Log.enable): 'Log.enable' wasn't found",
+ "first_navigation": {
+  "ok": true,
+  "status": 200,
+  "from_service_worker": false
+ },
+ "second_navigation": {
+  "ok": true,
+  "status": 200,
+  "from_service_worker": false
+ },
+ "cache_timeline": [
+  {
+   "t_ms": 178,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 695,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 1199,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 1707,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 2213,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 2720,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 3226,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 3732,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 4239,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 4747,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 5256,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 5764,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 6272,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 6780,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 7287,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 7797,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 8304,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 8818,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 9326,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 9832,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 10342,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 10851,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 11358,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 11867,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 12372,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 12883,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 13388,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 13892,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 14401,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 14909,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 15415,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 15922,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 16429,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 16935,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 17444,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 17946,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 18456,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 18963,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 19469,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  {
+   "t_ms": 19987,
+   "cache_names": [],
+   "entries_per_cache": {},
+   "controller": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  }
+ ],
+ "precache_manifest_urls": [
+  "sw.js",
+  "index.html",
+  "assets/maplibre-gl-BWQWEO0M.js",
+  "assets/JourneyMap-VYnqykgh.js",
+  "assets/index-I45CQek8.css",
+  "assets/index-D76m_cky.js",
+  "/index.html",
+  "favicon.svg",
+  "manifest.webmanifest"
+ ],
+ "manifest_url_status_online": {
+  "sw.js": {
+   "status": 200
+  },
+  "index.html": {
+   "status": 200
+  },
+  "assets/maplibre-gl-BWQWEO0M.js": {
+   "status": 200
+  },
+  "assets/JourneyMap-VYnqykgh.js": {
+   "status": 200
+  },
+  "assets/index-I45CQek8.css": {
+   "status": 200
+  },
+  "assets/index-D76m_cky.js": {
+   "status": 200
+  },
+  "/index.html": {
+   "status": 200
+  },
+  "favicon.svg": {
+   "status": 200
+  },
+  "manifest.webmanifest": {
+   "status": 200
+  }
+ },
+ "navigation_preload_state": {
+  "eval_error": "r.navigationPreload.isEnabled is not a function"
+ },
+ "asset_probe_online": {
+  "/v8/hub": {
+   "status": 200,
+   "ct": "text/html"
+  },
+  "/assets/index-dummy": {
+   "status": 200,
+   "ct": "text/html"
+  },
+  "/index.html": {
+   "status": 200,
+   "ct": "text/html;charset=utf-8"
+  },
+  "/v10-sw.js": {
+   "status": 200,
+   "ct": "text/javascript"
+  }
+ },
+ "log_entries_total": 0,
+ "log_entries_worker_shaped": [],
+ "log_entries_all": []
+}
