@@ -1,0 +1,8 @@
+797dd65b7767a3d6d7f9dd78942dc5b81ec2db95  FAN_SWEEP_RECEIPT.md  10633 B  sha256=6f54bdb06c244966067079c684e35854dbcd52d5fcc64e962470aec1a600acb5  readable=True
+c9cc9d0d500ab3c107162ebe19f0bda1aa6c4bb4  fan_baseline.json  1598 B  sha256=c50dc2f7b352c8f2733b1b46028247c4e32ed95c4d01c6f2d425afade7a81ead  readable=True
+d34f51896ab543fdb700c53419052e31a288ad26  fake_backends_ord0262.py  1646 B  sha256=db0b3c3594a5503bf7cc400cab48ebea169848f0980bdd8f1a9df2f76ac4b291  readable=True
+78c6dfae6ac49a347ace62ff48b5a55fac9712ec  FAN-1930_cell5_map_before_drag.png  599088 B  sha256=b0c374de348aff8943df17ce9e63c16bec00be978b233129f3a77b3174774f7b  readable=True
+a316af5a82f909b5bfa2c7d945ce159fb07678e2  FAN-1930_cell5_map_after_drag.png  335924 B  sha256=ff7f19e61e4cf53359ba7e4a46f67bb48d14b26a7ac16d2d1da381c8373bdb61  readable=True
+bfd912501450e7f4d6bd017c1dd05fd5ca8c48ef  FAN-1930_cell8_simulation_panel.png  311643 B  sha256=57b7a4a5106d32964871f90bfb4dad41d88b42329e2ad0fdb516000bd2272eaf  readable=True
+1775ccc28cccf00dce94dd9e7ec1c37f4fa3aae4  FAN-1930_cell10b_500_face.png  95394 B  sha256=c837f35fec9ef51fcd25f670168e7cf554511bf45daeea1e9410d8eef4626383  readable=True
+lane=HJ-P3-aad2d1f2 run_id=FAN-1930 backend=D:/moodle/_qoder_cmdr_gate_20260921@53fe8e8(porcelain 0) db=_lane_aad2d1f2_livecopy.sqlite3 faces=:8474(published DJEINrOl/COUUKhbU) + :8481/:8482(silent/500 dummies) +:8474(published control DJEINrOl/COUUKhbU) purpose=10-cell real-user fan sweep on the published generation
