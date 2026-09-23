@@ -59,6 +59,164 @@ def sha256(p: pathlib.Path) -> str:
     return h.hexdigest()
 
 
+CMDR_DIST = "D:/moodle/_qoder_preview_20260920"      # the deployment this chain's --serve normally points at
+
+
+def git_blob_sha1(data: bytes) -> str:
+    """A real git blob id, computed without needing a repository (same formula git uses)."""
+    return hashlib.sha1(b"blob %d\x00" % len(data) + data).hexdigest()
+
+
+def gauge_self_binding() -> dict:
+    """D1-5 (arbiter `5789539216`): a selftest/receipt must name the exact bytes of the gauge that ran.
+
+    Without this, `33/31+... GREEN` says only "some version of this file passed", and an external auditor
+    cannot tell which blob it may rely on - the same defect that made me post a stale D-1 coordinate twice.
+    """
+    p = pathlib.Path(__file__)
+    data = p.read_bytes()
+    return {"gauge_path": str(p), "gauge_bytes": len(data),
+            "gauge_content_digest_sha256": hashlib.sha256(data).hexdigest(),
+            "gauge_git_blob_sha1": git_blob_sha1(data),
+            "gauge_git_blob_len": len(git_blob_sha1(data)),
+            "rule": "a receipt may only endorse the exact gauge bytes it names (arbiter D1-5)"}
+
+
+def surface_sides_check(serve: pathlib.Path) -> dict:
+    """The HTTP side (`base_url()`) and the disk side (`--serve`) must belong to one deployment.
+
+    Redteam hole 2 (`5790009042`): the first version compared a SUBSTRING, so
+    `--serve <CMDR_DIST>/../someone_else/dist` contained the marker and slipped past the refusal.
+    Comparing resolved paths closes `..`, backslash, and casing tricks in one go.
+    """
+    info = {"http_base": base_url(), "declared_via_env": "CNX_DEPLOY_BASE" in os.environ,
+            "disk_serve": str(serve), "rule": "the HTTP side and the disk side must belong to the same deployment",
+            "declares_cmdr_live_explicitly": os.environ.get("CNX_DEPLOY_BASE_IS_CMDR_LIVE", "").strip() == "1"}
+    try:
+        rs, rc = pathlib.Path(serve).resolve(), pathlib.Path(CMDR_DIST).resolve()
+        info["resolved_serve"], info["resolved_cmdr_dist"] = str(rs), str(rc)
+        inside = rs == rc or rs.is_relative_to(rc)
+    except (OSError, ValueError) as exc:                                  # noqa: BLE001
+        rs, inside = None, False
+        info["resolve_error"] = f"{type(exc).__name__}: {exc}"
+    info["inside_cmdr_dist_resolved"] = inside
+    # Redteam's hole-1 construction did NOT leave the base defaulted: it pointed CNX_DEPLOY_BASE at its own
+    # ephemeral server while --serve stayed on my dist.  So the rule has to run in BOTH directions:
+    # the base is classified, and a disagreement in either direction is a mixed pair.
+    try:
+        import urllib.parse as _up
+        _p = _up.urlsplit(base_url())
+        _port = _p.port
+        base_is_cmdr_like = (_port in (4781, 4782)) or (_p.hostname or "").endswith("trycloudflare.com")
+    except ValueError:
+        _port, base_is_cmdr_like = None, False
+    info["base_port"] = _port
+    info["base_is_cmdr_like"] = base_is_cmdr_like
+    defaulted = "CNX_DEPLOY_BASE" not in os.environ
+    ok = True
+    if info["declares_cmdr_live_explicitly"]:
+        info["pairing"] = "DECLARED_CMDR_LIVE_BY_OPERATOR"
+    elif inside and not base_is_cmdr_like:
+        ok = False
+        info["pairing"] = "MIXED: disk side is the commander dist, HTTP side is a foreign base"
+        info["refuse_reason"] = (
+            "--serve resolves INSIDE the commander's live dist but CNX_DEPLOY_BASE points at a foreign server "
+            f"({info['http_base']}). A pre-flight that reads my files and someone else's bytes is still a "
+            "mixed-sides claim (redteam 5790009042 hole 1). Point --serve at your own dist, or set "
+            "CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 if you really do mean to judge my chain.")
+    elif (not inside) and (defaulted or base_is_cmdr_like):
+        ok = False
+        info["pairing"] = "MIXED: disk side is foreign, HTTP side is the commander chain"
+        info["refuse_reason"] = (
+            "--serve resolves outside the commander's live dist while the HTTP side is my chain "
+            f"(base {'defaulted to' if defaulted else 'set to'} {info['http_base']}): bytes would be read from "
+            f"{info['http_base']} and compared against files under {info.get('resolved_serve')}. "
+            "Set CNX_DEPLOY_BASE=http://127.0.0.1:<your static port>, or CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 to say")
+    return {"ok": ok, "info": info}
+
+
+def manifest_binding_row(ref: str, served_status, served_sha, disk_sha, entry: dict | None) -> dict:
+    """D1-3 (arbiter `5789539216`) pure judge: a content-hashed filename claims a content; nothing in the
+    old receipt compared that claim to anything.  Redteam had already produced a bundle whose name said one
+    digest while its bytes were another, and six arms stayed GREEN.
+
+    Three sides now: served bytes, file on disk, and the digest recorded **when the tool published it**.
+    A hand edit after publication changes two of the three, which is exactly what this catches.
+    """
+    row = {"ref": ref, "bound_in_manifest": entry is not None,
+           "served_status": served_status, "served_sha256": served_sha, "disk_sha256": disk_sha,
+           "manifest_sha256": (entry or {}).get("sha256"), "manifest_bytes": (entry or {}).get("bytes")}
+    if entry is None:
+        row["verdict"] = "RED"
+        row["why"] = "asset is claimed/served but has no binding in assets_manifest.json (absent != passed)"
+        return row
+    row["served_matches_manifest"] = served_sha == entry["sha256"]
+    row["disk_matches_manifest"] = disk_sha == entry["sha256"]
+    row["verdict"] = "GREEN" if (served_status == 200 and row["served_matches_manifest"]
+                                 and row["disk_matches_manifest"]) else "RED"
+    if row["verdict"] == "RED":
+        row["why"] = ("name/content binding broken: "
+                      + ", ".join(k for k, v in (("served", row["served_matches_manifest"]),
+                                                 ("disk", row["disk_matches_manifest"]),
+                                                 ("status-200", served_status == 200)) if not v))
+    return row
+
+
+def asset_manifest_write(serve: pathlib.Path) -> dict:
+    """Record, at the moment of publication, the digest of every asset that now sits in the served tree."""
+    assets = serve / "assets"
+    entries = {}
+    if assets.is_dir():
+        for p in sorted(assets.iterdir()):
+            if p.is_file():
+                entries["/assets/" + p.name] = {"sha256": sha256(p), "bytes": p.stat().st_size}
+    doc = {"written_by": "live_checks/deploy_bundle.py", "gauge": gauge_self_binding(),
+           "t": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "rule": "name -> digest at publication time (D1-3)",
+           "assets": entries}
+    (serve / "assets_manifest.json").write_text(json.dumps(doc, indent=1, ensure_ascii=False),
+                                                 encoding="utf-8", newline="\n")
+    return doc
+
+
+def asset_manifest_verdict(serve: pathlib.Path, refs: list[str]) -> dict:
+    mf = serve / "assets_manifest.json"
+    out = {"manifest": str(mf), "rule": "served bytes == disk bytes == digest recorded at publication",
+           "checked": []}
+    if not mf.is_file():
+        if os.environ.get("CNX_DEPLOY_ALLOW_NO_MANIFEST", "").strip() == "1":
+            out["verdict"] = "DECLARED_NO_ASSET_MANIFEST"
+            out["why"] = ("declared gap: the tree carries no binding, so no name/content claim was verified; "
+                          "this is NOT a pass and never counts toward all_green")
+        else:
+            out["verdict"] = "RED"
+            out["reason"] = ("no assets_manifest.json next to the served tree - a deployment that cannot name "
+                             "what each hashed filename was supposed to contain has not been checked")
+        return out
+    doc = json.loads(mf.read_text(encoding="utf-8", errors="replace"))
+    assets = doc.get("assets", {})
+    out["manifest_gauge"] = doc.get("gauge")
+    bad = []
+    for ref in refs:
+        if not ref.startswith("/assets/"):
+            continue
+        g = http_get(ref)
+        disk = serve / ref.lstrip("/")
+        row = manifest_binding_row(ref, g["status"], g["sha256"],
+                                   sha256(disk) if disk.is_file() else None, assets.get(ref))
+        out["checked"].append(row)
+        if row["verdict"] != "GREEN":
+            bad.append(row)
+    out["refs_checked"] = len(out["checked"])
+    if not out["checked"]:
+        out["verdict"] = "RED"
+        out["reason"] = "manifest present but no /assets/ ref claimed by this receipt - nothing was bound (A-3)"
+    else:
+        out["verdict"] = "RED" if bad else "GREEN"
+        if bad:
+            out["reason"] = "; ".join(f"{r['ref']}: {r.get('why')}" for r in bad)[:300]
+    return out
+
+
 def http_get(path: str, want_head: bool = False, base: str | None = None, auth_file: str | None = None) -> dict:
     """GET one surface and classify the answer.
 
@@ -333,6 +491,15 @@ SW_REGISTER_RULE = ('every navigator.serviceWorker.register() in the SERVED bund
                     'scope "/" and updateViaCache "none"')
 
 
+def strip_js_comments(text: str) -> str:
+    """Redteam `5789637279`: a good-looking `register("/v10-sw.js", {...updateViaCache:"none"})` left in a
+    COMMENT was matched by the parser while the real, broken call used a variable URL and escaped it.
+    Judging executable code means removing the prose first."""
+    no_block = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
+    no_line = re.sub(r"(?m)^\s*//.*$", "", no_block)
+    return re.sub(r"(?<![:'\"])//[^'\"\n]*$", "", no_line, flags=re.M)
+
+
 def sw_register_verdict(text: str | None, source: str) -> dict:
     """Arm I (redteam `5789355832` ②): the registration parameters live only inside the bundle bytes.
 
@@ -346,8 +513,11 @@ def sw_register_verdict(text: str | None, source: str) -> dict:
         out["verdict"] = "RED"
         out["reason"] = f"bundle bytes could not be read from {source}: nothing was parsed"
         return out
+    code = strip_js_comments(text)
+    # Every textual registration attempt, then what the parser could actually read parameters from.
+    mentions = len(re.findall(r"serviceWorker\.register\s*\(", code))
     for m in re.finditer(r"serviceWorker\.register\(\s*(?P<url>[\"'`][^\"'`]*[\"'`])\s*(?:,\s*(?P<opts>\{[^{}]*\}))?\s*\)",
-                         text):
+                         code):
         url = m.group("url").strip("\"'`")
         opts = m.group("opts") or ""
         scope = re.search(r"scope\s*:\s*[\"'`]([^\"'`]*)[\"'`]", opts)
@@ -365,12 +535,22 @@ def sw_register_verdict(text: str | None, source: str) -> dict:
             entry["scope_ok"] = url.startswith("/") and "/" not in url.lstrip("/")
         entry["update_via_cache_ok"] = entry["updateViaCache"] == "none"
         out["calls"].append(entry)
-    out["register_calls_found"] = len(out["calls"])
+    out["register_mentions_in_code"] = mentions
+    out["register_calls_parsed"] = len(out["calls"])
+    out["unresolved_registrations"] = mentions - len(out["calls"])
     if not out["calls"]:
         out["verdict"] = "RED"
-        out["reason"] = ("no serviceWorker.register() call found in the served bundle - either the SW is "
+        out["reason"] = ("no serviceWorker.register() call found in the comment-stripped bundle - either the SW is "
                          "never installed or the minified shape moved out of this parser's range; neither "
                          "may be read as a pass (A-3)")
+        return out
+    # The hole redteam actually drove: one parseable GOOD call plus one real call the parser cannot see
+    # (variable URL, nested options object, template literal).  A partial read is not a read.
+    if out["unresolved_registrations"] > 0:
+        out["verdict"] = "RED"
+        out["reason"] = (f"{out['unresolved_registrations']} serviceWorker.register() mention(s) in the code could "
+                         "not be parsed to arguments - an unreadable registration is an unjudged one "
+                         "(redteam 5789637279: good call in a comment + variable-URL call outside range)")
         return out
     bad = [c for c in out["calls"] if not (c["scope_ok"] and c["update_via_cache_ok"])]
     if bad:
@@ -555,11 +735,13 @@ def selftest(serve: pathlib.Path) -> int:
     i_fetch = http_text(entry_js) if entry_js else {"text": None, "sha256": None, "error": "no entry .js"}
     i_real = sw_register_verdict(i_fetch["text"], f"served {entry_js}")
     arms.append({"arm": "I-true_positive:served_bundle_registers({} calls)".format(
-                     i_real.get("register_calls_found")),
+                     i_real.get("register_calls_parsed")),
                  "expect": "GREEN",
                  "got": {"verdict": i_real["verdict"], "error": i_real.get("reason"),
                          "served_sha256": str(i_fetch.get("sha256"))[:16],
-                         "calls": i_real.get("calls")}})
+                         "calls": i_real.get("calls"),
+                         "mentions": i_real.get("register_mentions_in_code"),
+                         "unresolved": i_real.get("unresolved_registrations")}})
     for i_name, i_text, i_expect in (
         ("I-killer:updateViaCache_all_is_red",
          'navigator.serviceWorker.register("/v10-sw.js",{scope:"/",updateViaCache:"all"})', "RED"),
@@ -569,6 +751,19 @@ def selftest(serve: pathlib.Path) -> int:
         ("I-killer:unreadable_bundle_bytes_are_red", None, "RED"),
         ("I-true_positive:synthetic_correct_call",
          'navigator.serviceWorker.register("/v10-sw.js",{scope:"/",updateViaCache:"none"})', "GREEN"),
+        # redteam `5789637279`: the good call is prose, the broken one is the code that actually runs.
+        ("I-killer:good_call_in_comment_variable_url_is_real",
+         '// navigator.serviceWorker.register("/v10-sw.js",{scope:"/",updateViaCache:"none"})\n'
+         'navigator.serviceWorker.register(window.__SW_PATH||"/v10-sw.js",{scope:"/",updateViaCache:"all"})',
+         "RED"),
+        ("I-killer:unresolved_registration_is_not_a_read",
+         'navigator.serviceWorker.register(e,"{scope:\'/\',updateViaCache:\'all\'}")', "RED"),
+        ("I-killer:nested_options_escape_the_parser",
+         'navigator.serviceWorker.register("/v10-sw.js",{scope:"/",installUrl:{a:1},updateViaCache:"all"})',
+         "RED"),
+        ("I-killer:one_readable_one_unreadable_is_partial_read",
+         'navigator.serviceWorker.register("/v10-sw.js",{scope:"/",updateViaCache:"none"});\n'
+         'navigator.serviceWorker.register(SW_URL,{scope:"/",updateViaCache:"all"})', "RED"),
     ):
         iv = sw_register_verdict(i_text, "synthetic")
         arms.append({"arm": i_name, "expect": i_expect,
@@ -589,6 +784,55 @@ def selftest(serve: pathlib.Path) -> int:
     arms.append({"arm": "BASE-restore:unset_again_reads_the_commander_chain", "expect": "GREEN",
                  "got": {"verdict": b_back["verdict"],
                          "error": "probe_base=%s statuses=%s" % (b_back["probes"][0]["base"], b_back["statuses"])}})
+    # ---- D1-3 (arbiter) + redteam hole 2 witnesses.  Every one of these has BOTH directions: a binding that
+    # never went red would be decoration.
+    j_disk = live / killer_ref.lstrip("/")
+    j_served = http_get(killer_ref)
+    j_real_sha = sha256(j_disk) if j_disk.is_file() else "MISSING"
+    j_cases = (
+        ("J-true_positive:served_and_disk_match_binding",
+         manifest_binding_row(killer_ref, j_served["status"], j_served["sha256"], j_real_sha,
+                              {"sha256": j_real_sha, "bytes": j_disk.stat().st_size if j_disk.is_file() else 0})),
+        ("J-killer:name_kept_content_changed",                    # the redteam construction, as a judge case
+         manifest_binding_row(killer_ref, j_served["status"], "0" * 64, j_real_sha,
+                              {"sha256": j_real_sha, "bytes": 1})),
+        ("J-killer:unbound_asset_is_not_a_pass",
+         manifest_binding_row(killer_ref, j_served["status"], j_served["sha256"], j_real_sha, None)),
+    )
+    for j_name, j_row in j_cases:
+        arms.append({"arm": j_name, "expect": {"J-true_positive:served_and_disk_match_binding": "GREEN"}.get(j_name, "RED"),
+                     "got": {"verdict": j_row["verdict"], "error": j_row.get("why")}})
+    j_missing = asset_manifest_verdict(live / "__cnx_no_manifest_dir__", [killer_ref])
+    arms.append({"arm": "J-killer:missing_manifest_is_not_a_pass", "expect": "RED",
+                 "got": {"verdict": j_missing["verdict"], "error": j_missing.get("reason")}})
+    # ---- surface-sides (my own hole + redteam `5790009042` hole 2)
+    sides_cmdr = surface_sides_check(live)
+    sides_foreign = surface_sides_check(pathlib.Path("D:/moodle/_qoder_cmdr_canary_0923/foreign_dist"))
+    sides_traversal = surface_sides_check(pathlib.Path(CMDR_DIST + "/../_qoder_cmdr_canary_0923/trav"))
+    arms.append({"arm": "SIDES-true_positive:cmdr_dist_and_default_base_agree", "expect": "OK",
+                 "got": {"verdict": "OK" if sides_cmdr["ok"] else "REFUSED",
+                         "error": "resolved=%s" % sides_cmdr["info"].get("resolved_serve")}})
+    arms.append({"arm": "SIDES-killer:foreign_dist_without_base_is_refused", "expect": "REFUSED",
+                 "got": {"verdict": "OK" if sides_foreign["ok"] else "REFUSED",
+                         "error": sides_foreign["info"].get("refuse_reason")}})
+    arms.append({"arm": "SIDES-killer:dotdot_traversal_resolves_outside_and_is_refused", "expect": "REFUSED",
+                 "got": {"verdict": "OK" if sides_traversal["ok"] else "REFUSED",
+                         "error": "resolved=%s" % sides_traversal["info"].get("resolved_serve")}})
+    # redteam `5790009042` hole 1 exactly: foreign base + MY dist as --serve.  Refusing only the "base was
+    # left defaulted" direction would have let this through, so both directions are asserted here.
+    os.environ["CNX_DEPLOY_BASE"] = "http://127.0.0.1:5899"
+    try:
+        sides_reversed = surface_sides_check(live)
+    finally:
+        del os.environ["CNX_DEPLOY_BASE"]
+    sides_reversed_ok = surface_sides_check(live)
+    arms.append({"arm": "SIDES-killer:foreign_base_with_cmdr_serve_is_refused", "expect": "REFUSED",
+                 "got": {"verdict": "OK" if sides_reversed["ok"] else "REFUSED",
+                         "error": "%s | base=%s" % (sides_reversed["info"].get("pairing"),
+                                                     sides_reversed["info"].get("http_base"))}})
+    arms.append({"arm": "SIDES-true_positive:same_pair_after_unset_passes", "expect": "OK",
+                 "got": {"verdict": "OK" if sides_reversed_ok["ok"] else "REFUSED",
+                         "error": "base=%s" % sides_reversed_ok["info"].get("http_base")}})
     dead = asset_verdict("/v10-sw.js", "javascript", live, base="http://127.0.0.1:59999")
     arms.append({"arm": "F-killer:unreachable_surface_is_red_not_absent", "expect": "RED",
                  "got": dead})
@@ -659,6 +903,7 @@ def selftest(serve: pathlib.Path) -> int:
         "why": "arbiter 5781096542 (verdict assigned twice, lax one won) + 5788111742 A-3 "
                "(a comparison against an absent side is not a comparison)",
         "base": base_url(), "serve": str(serve), "overall": "GREEN" if ok else "RED",
+        "gauge": gauge_self_binding(),
         "arms": [{"arm": a["arm"], "expect": a["expect"], "got": a["got"]["verdict"],
                   "status": a["got"].get("status"), "content_type": a["got"].get("content_type"),
                   "is_html_fallback": a["got"].get("is_html_fallback"),
@@ -795,6 +1040,14 @@ def main() -> int:
             print("REFUSED: --preflight-check needs --src (a build export, or the live dist to self-check)")
             return 5
         s, sv = pathlib.Path(a.src), pathlib.Path(a.serve)
+        # Redteam `5790009042` hole 1: this read-only branch used to return BEFORE the mixed-sides check, so it
+        # printed PREFLIGHT GREEN while HTTP came from one deployment and files from another.  Same judge now.
+        pf_sides = surface_sides_check(sv)
+        if not pf_sides["ok"]:
+            print("REFUSED (preflight):", pf_sides["info"].get("refuse_reason"))
+            print("         Set CNX_DEPLOY_BASE=<your static server>, or CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 to say you")
+            print("         really mean my chain.  A read-only pre-flight is still a claim about a surface.")
+            return 5
         srefs = asset_refs((s / "index.html").read_text(encoding="utf-8", errors="replace"))
         oidx = sv / "index.html"
         orefs = asset_refs(oidx.read_text(encoding="utf-8", errors="replace")) if oidx.is_file() else []
@@ -806,6 +1059,7 @@ def main() -> int:
         dest = out / f"preflight_{time.strftime('%m%d_%H%M%S')}.json"
         dest.write_text(json.dumps({"what": "PREFLIGHT ONLY - no union, no copy, no switch",
                                     "src": str(s), "serve": str(sv), "t": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                                    "surface_base": pf_sides["info"], "gauge": gauge_self_binding(),
                                     "src_index_refs": srefs, "served_index_refs": orefs, "preflight": pf},
                                    indent=1, ensure_ascii=False), encoding="utf-8", newline="\n")
         print(f"[receipt] {dest}\nPREFLIGHT {pf['verdict']}")
@@ -815,32 +1069,46 @@ def main() -> int:
         return 5
     src, serve, tree = pathlib.Path(a.src), pathlib.Path(a.serve), pathlib.Path(a.live_tree)
 
-    receipt: dict = {"sha": a.sha, "src": str(src), "serve": str(serve), "t": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
+    receipt: dict = {"sha": a.sha, "src": str(src), "serve": str(serve), "t": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                     "gauge": gauge_self_binding()}
 
-    # A-3 applied to the gauge itself: disk side = --serve, HTTP side = BASE.  Silently mixing my live
-    # chain with somebody else's dist directory produced a receipt that looked load-bearing and was not.
-    CMDR_DIST = "D:/moodle/_qoder_preview_20260920"
-    declares_cmdr_live = os.environ.get("CNX_DEPLOY_BASE_IS_CMDR_LIVE", "").strip() == "1"
-    probing_foreign_dist = CMDR_DIST not in str(serve).replace("\\", "/")
-    receipt["surface_base"] = {"http_base": BASE, "declared_via_env": not BASE_WAS_DEFAULTED,
-                               "disk_serve": str(serve),
-                               "rule": "the HTTP side and the disk side must belong to the same deployment"}
-    if BASE_WAS_DEFAULTED and probing_foreign_dist and not declares_cmdr_live:
-        print("REFUSED: --serve points outside the commander's live dist while CNX_DEPLOY_BASE is unset,")
-        print(f"         so bytes would be read from {BASE} and compared against files under {serve}.")
+    # A-3 applied to the gauge itself: disk side = --serve, HTTP side = base_url().  One implementation,
+    # used by both the deploy path and the read-only --preflight-check branch (redteam hole 1).
+    sides = surface_sides_check(serve)
+    receipt["surface_base"] = sides["info"]
+    if not sides["ok"]:
+        print("REFUSED:", sides["info"].get("refuse_reason"))
         print("         Fix one of two ways: CNX_DEPLOY_BASE=http://127.0.0.1:<your static port>, or")
         print("         CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 when you really do mean to probe my chain.")
         return 5
 
-    # --- precondition 0: the tree must not have the frontend dirty in a way that flatters us
+    # --- precondition 0: the tree must not have the **build inputs** dirty in a way that flatters us
     if not a.skip_build_check:
         dirty = subprocess.run(["git", "-C", str(tree), "status", "--porcelain", "--", "frontend/"],
                                capture_output=True, text=True).stdout.strip()
         receipt["frontend_dirty"] = dirty
-        if dirty:
-            print("REFUSED: frontend/ is dirty, refusing to deploy a half-built tree")
-            print(dirty[:600])
+        # `vite build` reads the working tree, so a dirty INPUT would ship code nobody accepted.  Dirt that
+        # cannot reach the bundle (e2e specs, review tooling) is a different claim - still named, but it must
+        # not silently block a deploy nor silently approve one.
+        BUILD_INPUTS = ("frontend/src/", "frontend/index.html", "frontend/public/", "frontend/vite.config",
+                        "frontend/tsconfig", "frontend/package.json", "frontend/package-lock.json")
+        input_lines = [l for l in dirty.splitlines() if any(b in l for b in BUILD_INPUTS)]
+        non_input = [l for l in dirty.splitlines() if l not in input_lines]
+        receipt["build_input_dirty"] = input_lines
+        if input_lines:
+            print("REFUSED: frontend/ **build inputs** are dirty, refusing to deploy a half-built tree")
+            print("\n".join(input_lines)[:600])
             return 5
+        if non_input:
+            receipt["declared_non_input_dirt"] = {
+                "verdict": "DECLARED_NON_INPUT_DIRT",
+                "files": non_input,
+                "why": "these paths do not feed vite build (frontend/e2e, review tooling, ...), so they cannot"
+                       " change the bundle bytes - but this is a NAMED gap, not a pass: the receipt says which"
+                       " files were dirty and that they were excluded from the build-input set"}
+            print(f"[declared] {len(non_input)} dirty frontend path(s) outside the build inputs (named, not silenced):")
+            for l in non_input[:8]:
+                print("   ", l[:150])
         tip = subprocess.run(["git", "-C", str(tree), "rev-parse", "--short", "HEAD"],
                              capture_output=True, text=True).stdout.strip()
         receipt["tree_tip"] = tip
@@ -899,28 +1167,30 @@ def main() -> int:
         copied.append(p.name)
     receipt["assets_union"] = {"added": added, "already_identical": [n for n in copied if n not in added],
                                "total_in_serve_assets": len(list(dst_assets.iterdir()))}
-    print(f"[union] added {len(added)} new asset(s); {len(copied) - len(added)} already byte-identical")
+    # D1-3: bind every published hashed filename to the bytes we actually have at this moment, BEFORE any arm
+    # is judged, so "the name claims digest X" becomes checkable instead of assumed.
+    mf_doc = asset_manifest_write(serve)
+    receipt["asset_manifest"] = {"path": str(serve / "assets_manifest.json"),
+                                 "assets_bound": len(mf_doc["assets"]), "gauge": mf_doc["gauge"]}
+    print(f"[union] added {len(added)} new asset(s); {len(copied) - len(added)} already byte-identical; "
+          f"{len(mf_doc['assets'])} name->digest bindings written")
 
-    # --- phase 2: PROVE the new assets answer before the switch (gate E lives here)
-    pre = []
-    for ref in new_refs:
-        got = http_get(ref)
-        on_disk = src / ref.lstrip("/")
-        got["disk_bytes"] = on_disk.stat().st_size
-        got["disk_sha256"] = sha256(on_disk)
-        got["verdict"] = ("OK" if (got["status"] == 200 and got["is_html_fallback"] is False
-                                   and got["sha256"] == got["disk_sha256"]) else "RED")
-        pre.append(got)
+    # --- phase 2: PROVE the new assets answer before the switch (gate E lives here).
+    # D1-4 (arbiter `5789539216`): this used to be ONE `http_get` with its own inline verdict, i.e. the gate
+    # that decides whether to switch was the least-observed arm in the tool.  Same judge as everywhere else.
+    pre = [repeated_verdict(ref, expect_ct_for(ref), src, times=PROBE_TIMES) for ref in new_refs]
     receipt["pre_switch_asset_probes"] = pre
-    reds = [p["path"] for p in pre if p["verdict"] != "OK"]
+    reds = [v for v in pre if v["verdict"] != "GREEN"]
     if reds:
-        print("REFUSED before switching index (E: 200 alone is never sufficient):")
-        for p in pre:
-            if p["verdict"] != "OK":
-                print(f"  {p['path']} status={p['status']} ct={p['content_type']} head={p['head_bytes']!r} "
-                      f"body_sha={str(p['sha256'])[:12]} disk_sha={str(p['disk_sha256'])[:12]}")
+        print("REFUSED before switching index (E: 200 alone is never sufficient; every attempt is recorded):")
+        for v in reds:
+            for r in v["probes"]:
+                if r["verdict"] != "GREEN":
+                    print(f"  {r['path']} status={r['status']} ct={r['content_type']} head={r['head_bytes']!r} "
+                          f"body_sha={str(r['sha256'])[:12]} disk_sha={str(r['disk_sha256'])[:12]} "
+                          f"disk_present={r['disk_present']}")
         return 7
-    print(f"[gate] {len(pre)} new asset(s) reachable, real bytes, no HTML fallback")
+    print(f"[gate] {len(pre)} new asset(s) reachable x{PROBE_TIMES}, real bytes vs the build export, no HTML fallback")
 
     # --- phase 2b: PRE-FLIGHT (the 13:02 lesson).  Every read-only arm is judged here, so a red stops
     # the deploy while the CURRENT generation is still what the user gets - never "switch, then find out".
@@ -934,10 +1204,18 @@ def main() -> int:
         return 4
 
     # --- phase 3: BACKUP then SWITCH the unhashed root files
-    stamp = time.strftime("%H%M%S")   # was %H%M: two deploys inside one minute would overwrite the
-                                    # backup the H arm reads as "previous generation" (redteam round 3)
-    bak = serve.parent / f"dist_bak_{stamp}"
-    bak.mkdir(parents=True, exist_ok=True)
+    stamp = time.strftime("%H%M%S")
+    # D1-6 (arbiter `5789539216`): seconds alone still collide (`mkdir(exist_ok=True)` silently reused a
+    # directory), which would let arm H measure "some generation inside this second".  Unique id, fail closed.
+    gen_id = f"{stamp}_{time.time_ns()}"
+    bak = serve.parent / f"dist_bak_{gen_id}"
+    try:
+        bak.mkdir(parents=True, exist_ok=False)
+    except FileExistsError:
+        print(f"REFUSED: backup dir {bak} already exists - refusing to mix two generations into one anchor")
+        return 9
+    receipt["backup_generation_id"] = gen_id
+    receipt["previous_index_sha256"] = sha256(old_index) if old_index.is_file() else None
     backed = []
     for name in ROOT_FILES + tuple(p.name for p in src.glob("workbox-*.js")):
         cur = serve / name
@@ -998,12 +1276,9 @@ def main() -> int:
         c_new.append(repeated_verdict(ref, expect_ct_for(ref), serve, times=PROBE_TIMES))
     d_sw = []
     for name in ("sw.js", "v10-sw.js"):
-        g = http_get("/" + name)
-        disk = serve / name
-        g["disk_bytes"] = disk.stat().st_size if disk.is_file() else None
-        g["matches_disk"] = (disk.is_file() and g["sha256"] == sha256(disk))
-        g["verdict"] = "GREEN" if (g["status"] == 200 and g["is_html_fallback"] is False and g["matches_disk"]) else "RED"
-        d_sw.append(g)
+        # D1-4 (arbiter): these were single `http_get` calls with a hand-rolled verdict while C/G/H repeated.
+        # The service worker is the file that decides whether a stale client survives - it is not a minor ref.
+        d_sw.append(repeated_verdict("/" + name, expect_ct_for(name), serve, times=PROBE_TIMES))
 
     # ---- F/G/H: the three blind spots redteam d2305848 broke this gauge with (bus 5788606895).
     # D only proved "the sw file on disk equals the sw file served"; it never opened the precache
@@ -1081,11 +1356,17 @@ def main() -> int:
         i_arms.append(v)
     i_green = bool(i_arms) and all(x["verdict"] == "GREEN" for x in i_arms)
 
+    # J: name -> content binding (arbiter D1-3).  Checked over every asset this receipt claims for either
+    # generation, against the digest written at publication time.
+    j_verdict = asset_manifest_verdict(serve, [r for r in new_refs] + [r for r in old_refs])
+    j_green = j_verdict["verdict"] == "GREEN"
+
     receipt["receipt_FGH_blindspot_arms"] = {
         "G_PRECACHE_INTEGRITY": g_precache,
         "H_PREVIOUS_GENERATION": {"refs_probed": len(h_prev), "probes": h_prev, "verdict": h_prev_verdict},
         "I_SW_REGISTER_PARAMS": {"arms": i_arms,
                                  "verdict": "GREEN" if i_green else ("NOT_CONFIGURED" if not i_arms else "RED")},
+        "J_ASSET_NAME_CONTENT_BINDING": j_verdict,
         "F_PROXY_AND_TUNNEL": {"probes": f_probes, "verdict": f_verdict,
                                "why": "BASE is 127.0.0.1:4781 (no auth proxy); the proxy and the tunnel "
                                       "were never probed by A-E - redteam bus 5788606895"},
@@ -1098,8 +1379,9 @@ def main() -> int:
     receipt["arms"] = {"A": (a_old or {}).get("verdict"), "B": "see receipt_ABCDE",
                        "G_precache": [e["verdict"] for e in g_precache],
                        "H_prevgen": h_prev_verdict, "I_sw_register": "GREEN" if i_green else "RED",
+                       "J_name_content_binding": j_verdict["verdict"],
                        "F_proxy_tunnel": f_verdict,
-                       "all_green_requires": "A,B,C,D,E + G + I + F (H reported; RED if it names an unreachable asset)"}
+                       "all_green_requires": "A,B,C,D,E + G + I + J + F (H reported; RED if it names an unreachable asset)"}
     receipt["receipt_ABCDE"] = {
         "A_OLD_ASSET_still_served": a_old,
         "B_NEW_INDEX": {"status": b_new["status"], "refs_match_new": b_refs_ok,
@@ -1116,7 +1398,7 @@ def main() -> int:
                  and all(x["verdict"] == "GREEN" for x in d_sw)
                  and receipt["receipt_ABCDE"]["B_NEW_INDEX"]["verdict"] == "GREEN"
                  and (a_old is None or a_old["verdict"] == "GREEN")
-                 and g_green and i_green and f_verdict == "GREEN")
+                 and g_green and i_green and j_green and f_verdict == "GREEN")
     receipt["overall"] = "GREEN" if all_green else "RED"
 
     out = pathlib.Path(__file__).with_name("receipts")
