@@ -1,0 +1,294 @@
+........................................................................ [  5%]
+........................................................................ [ 11%]
+.......s................................................................ [ 17%]
+...........F...FF.....F.F....F...F....................................F. [ 23%]
+........................................................................ [ 29%]
+........................................................x............... [ 35%]
+........................................................................ [ 41%]
+........................................................................ [ 47%]
+........................................................................ [ 52%]
+........................................................................ [ 58%]
+........................................................................ [ 64%]
+........................................................................ [ 70%]
+.........................................sssssssssssss.................. [ 76%]
+........................................................................ [ 82%]
+........................................................................ [ 88%]
+......................s................................................. [ 94%]
+........................................................................ [100%]
+================================== FAILURES ===================================
+____________ test_g5_an_ai_run_that_changed_must_say_which_it_was _____________
+
+    def test_g5_an_ai_run_that_changed_must_say_which_it_was():
+        """§11: 0 mutations / 0 proposals / 0 errors must not vanish silently.
+    
+        Measured shape today (`4c8c911`, own DB, AI off): the response is
+        `{event_id, mission, run}`; `run.outcome` exists but is `null`; `run.status` and
+        `mission.status` are the runtime label `SKIPPED_EXTERNAL_DEPENDENCY`. So the seam is
+        already there - what is missing is the truth poured into it.
+        """
+        journey_id = _seeded_journey_id()
+        response = client.post(
+            f"/api/v1/journeys/{journey_id}/agent/commands",
+            json={"command": "帮我把这趟行程重新安排一下", "requested_autonomy": "PLAN_ONLY"},
+        )
+        assert response.status_code < 500, (
+            f"期望：AI 无动作/被挡也要给出可读回答，而不是 5xx；实际：{_summary(response)}"
+        )
+        body = response.json() if isinstance(response.json(), dict) else {}
+        run = body.get("run")
+        assert isinstance(run, dict) and run, (
+            f"期望：响应里有 `run`（§11 说 outcome 挂在这一层）；实际：顶层键 {sorted(body)[:10]}，"
+            f"{_summary(response)[:160]}"
+        )
+    
+        outcome = run.get("outcome")
+>       assert isinstance(outcome, dict) and outcome, (
+            f"期望：`run.outcome` 带上 §11 的机器可读语义；实际：run.outcome={outcome!r}，"
+            f"而 run.status={run.get('status')!r} / failure_reason={str(run.get('failure_reason'))[:60]!r} —— "
+            "这次运行确实什么都没改（没 key、没动作），可它只留下一个运行时标签；"
+            "一个既没变化也没原因的 200，正是用户早上看到的那句「转了半天啥也没发生」"
+        )
+E       AssertionError: 期望：`run.outcome` 带上 §11 的机器可读语义；实际：run.outcome=None，而 run.status='SKIPPED_EXTERNAL_DEPENDENCY' / failure_reason='DeepSeek API key is not configured' —— 这次运行确实什么都没改（没 key、没动作），可它只留下一个运行时标签；一个既没变化也没原因的 200，正是用户早上看到的那句「转了半天啥也没发生」
+E       assert (False)
+E        +  where False = isinstance(None, dict)
+
+tests\test_qoder_anywhere_gates.py:842: AssertionError
+_ test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls _
+
+    def test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls():
+        _reset_seed()  # 一条确定的写路径：reset 会 seed 若干表
+        writes = _write_windows()
+        assert writes, (
+            "期望：仪器在已知写路径上至少抓到 1 个写事务窗口（否则 G9b 的「零重叠」等于没测）；"
+            f"实际：写窗口 {len(writes)}，全部事务窗口 {len(_windows)}"
+        )
+    
+>       with pytest.raises(Exception):  # noqa: BLE001 - 不可解析域，预期失败，只要窗口被记录
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'Exception'>
+
+tests\test_qoder_anywhere_lock_duration.py:207: Failed
+_____ test_g9b_provider_http_never_runs_inside_an_open_write_transaction ______
+
+    def test_g9b_provider_http_never_runs_inside_an_open_write_transaction():
+        """§6/§7: 短读 → 放锁 → 网络 → 短写。这条就是那句顺序的代码形式。"""
+        _reset_seed()
+        started = client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY})
+        assert not (started.status_code == 404 and started.json().get("detail") == "Not Found"), (
+            f"期望：{HYDRATIONS} 已实现（§17E 要量的就是它跑网络时握不握写锁）；实际：{_summary(started)}"
+        )
+        assert started.status_code in (200, 202), f"期望 200/202 受理；实际：{_summary(started)}"
+        operation_id = started.json().get("operation_id")
+    
+        deadline = time.perf_counter() + 60.0
+        body: dict = {}
+        while time.perf_counter() < deadline:
+            poll = client.get(f"{HYDRATIONS}/{operation_id}")
+            assert poll.status_code == 200, f"期望 GET 操作态 200；实际：{_summary(poll)}"
+            body = poll.json()
+            if body.get("terminal") is True or body.get("status") in {"COMPLETED", "FAILED", "UNAVAILABLE", "ABANDONED"}:
+                break
+            time.sleep(0.2)
+    
+        provider_calls = [c for c in _calls if c["host"] in LIVE_HOSTS]
+>       assert provider_calls, (
+            "期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；"
+            f"实际：observed provider calls = 0，操作态 {str(body)[:180]}"
+        )
+E       AssertionError: 期望：这次水合真的走过 provider（否则「没重叠」是假的——它什么都没做）；实际：observed provider calls = 0，操作态 {'operation_id': 'dda125f3-118d-404b-89a8-c2b72adc012a', 'fingerprint': '2d373c471fa007e5612db8267aef8040', 'reused': False, 'status': 'UNAVAILABLE', 'recorded_status': 'UNAVAILABL
+E       assert []
+
+tests\test_qoder_anywhere_lock_duration.py:242: AssertionError
+_______ test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts _______
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002458B3067B0>
+
+    def test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts(monkeypatch):
+        """N=11 撞 400 时今天已经成立的是「不许留下产物」——守住它别退化成半张矩阵。"""
+    
+        probe = MatrixProbe()
+        result = _capture(monkeypatch, probe, 11)
+        assert probe.matrix_requests, "SETUP 失败：假 provider 一次都没被调用，这条门是空门"
+>       assert result["status"] == "FAILED", (
+            f"期望：越界的矩阵判 FAILED（NOT_CONFIGURED 说明 live_valhalla_url 没换上来，"
+            f"那样这条门什么都能通过）；实际：{result['status']}"
+        )
+E       AssertionError: 期望：越界的矩阵判 FAILED（NOT_CONFIGURED 说明 live_valhalla_url 没换上来，那样这条门什么都能通过）；实际：CAPTURED
+E       assert 'CAPTURED' == 'FAILED'
+E         
+E         - FAILED
+E         + CAPTURED
+
+tests\test_qoder_anywhere_matrix_truth.py:374: AssertionError
+_______ test_g14c_the_verdict_must_not_depend_on_the_providers_wording ________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000002458B345FD0>
+
+    def test_g14c_the_verdict_must_not_depend_on_the_providers_wording(monkeypatch):
+        """上限是数字不是句子：换一句文案（并把 "locations" 一词去掉）判定必须一模一样。"""
+    
+        with_locations = MatrixProbe()
+        reworded = MatrixProbe(
+            error_body={"error_code": 150, "status_code": 400, "error": "リクエストが大きすぎます"}
+        )
+        assert "locations" in json.dumps(with_locations.error_body)
+        assert "locations" not in json.dumps(reworded.error_body), "SETUP 失败：两份文案没真正不同"
+        first = _capture(monkeypatch, with_locations, 11)
+        second = _capture(monkeypatch, reworded, 11)
+        assert with_locations.matrix_requests and reworded.matrix_requests, "SETUP 失败：一次请求都没发出"
+        assert [item["cells"] for item in with_locations.matrix_requests] == [
+            item["cells"] for item in reworded.matrix_requests
+        ], "SETUP 失败：两次发出的形状不同，比较无从成立"
+        for key in ("status", "error_type", "supported_modes", "route_provenance", "time_basis"):
+>           assert first[key] == second[key], (
+                   ^^^^^^^^^^
+                f"期望：分类只由 cells 数决定 —— provider 换一句话就换一个结论，等于把可诊断性外包给文案；"
+                f"字段 {key}：{first[key]!r} vs {second[key]!r}"
+            )
+E           KeyError: 'error_type'
+
+tests\test_qoder_anywhere_matrix_truth.py:465: KeyError
+___________ test_g8a_default_suite_contains_no_live_provider_calls ____________
+
+    def test_g8a_default_suite_contains_no_live_provider_calls():
+        """§17C: 常规套件里不得有真出网的调用。今天绿 = 它是护栏，不是成就证明。"""
+        offenders = _live_call_offenders()
+>       assert not offenders, (
+            "期望：backend/tests/** 里没有对 provider 域名的真实调用（§17C，live 只能走 "
+            "backend/live_checks/ 的 opt-in smoke）；实际：" + " ; ".join(offenders)
+        )
+E       AssertionError: 期望：backend/tests/** 里没有对 provider 域名的真实调用（§17C，live 只能走 backend/live_checks/ 的 opt-in smoke）；实际：backend\tests\test_qoder_catalog_hydration.py:608: httpx.get("https://photon.komoot.io/api/?q=instrument-selftest", timeout=1.0) ; backend\tests\test_qoder_provider_identity.py:325: status, headers, body = transport.get("https://photon.komoot.io/api/", {"q": "x"})
+E       assert not ['backend\\tests\\test_qoder_catalog_hydration.py:608: httpx.get("https://photon.komoot.io/api/?q=instrument-selftest"...st_qoder_provider_identity.py:325: status, headers, body = transport.get("https://photon.komoot.io/api/", {"q": "x"})']
+
+tests\test_qoder_anywhere_provider_independence.py:70: AssertionError
+_ test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes _
+
+    def test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes():
+        """§17 教训一：verbosity 不吃 node 坐标 ⇒ 11/24 行、无报错，就是静默丢数据。"""
+        _require("POST /api/v1/catalog-hydrations", client.post(HYDRATIONS, json={"query": UNSEEN_COUNTY}))
+        # 上面这条受理之后才有得量：水合产出的地点集合必须逐 kind 有坐标。
+        listing = client.get(CAPABILITY, params={"query": UNSEEN_COUNTY})
+        _require("GET /api/v1/destinations/capability", listing)
+        body = listing.json()
+        places = body.get("places") or body.get("catalog") or []
+>       assert places, (
+            f"期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；"
+            f"实际：空，响应键 {sorted(body)[:12]}"
+        )
+E       AssertionError: 期望：规范化目录里至少有地点可查（B 实测 Overpass `out center` 会返回 node/way/relation 三类）；实际：空，响应键 ['candidates', 'canonical_destination_id', 'capability', 'catalog_schema_version', 'coverage', 'coverage_detail', 'destination_pending_key', 'destination_resolution', 'destination_state', 'fingerprint', 'hard_gaps', 'malformed_candidates']
+E       assert []
+
+tests\test_qoder_anywhere_provider_truth.py:78: AssertionError
+_____ test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at _____
+
+_providers = {}
+
+    def test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at(_providers) -> None:
+        """Clause ②: provider-shaped outcomes and our own bad request, all distinguishable.
+    
+        Asserted at the mapping seam so every shape is named, and again through the endpoint for
+        the ones that can be driven there, because a mapping no response can reach proves nothing.
+        """
+    
+        assert real_city.live_failure_reason(httpx.ConnectTimeout("t")) == "PROVIDER_TIMEOUT"
+        assert real_city.live_failure_reason(httpx.ReadError("x")) == "RESOLVER_UNREACHABLE"
+        assert real_city.live_failure_reason(_status_error(429)) == "PROVIDER_RATE_LIMITED"
+>       assert real_city.live_failure_reason(_status_error(500)) == "PROVIDER_BAD_RESPONSE"
+E       AssertionError: assert 'PROVIDER_SERVER_ERROR' == 'PROVIDER_BAD_RESPONSE'
+E         
+E         - PROVIDER_BAD_RESPONSE
+E         + PROVIDER_SERVER_ERROR
+
+tests\test_qoder_city_failure_reasons.py:196: AssertionError
+============================== warnings summary ===============================
+..\..\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1
+  D:\moodle\CityNexus\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+..\..\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53
+  D:\moodle\CityNexus\.venv\Lib\site-packages\starlette\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]
+
+tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+  D:\moodle\CityNexus\.venv\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-1187 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\threading.py", line 1075, in _bootstrap_inner
+      self.run()
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\threading.py", line 1012, in run
+      self._target(*self._args, **self._kwargs)
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\subprocess.py", line 1599, in _readerthread
+      buffer.append(fh.read())
+                    ^^^^^^^^^
+    File "<frozen codecs>", line 322, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb4 in position 0: invalid start byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+  D:\moodle\CityNexus\.venv\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-1185 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\threading.py", line 1075, in _bootstrap_inner
+      self.run()
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\threading.py", line 1012, in run
+      self._target(*self._args, **self._kwargs)
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\subprocess.py", line 1599, in _readerthread
+      buffer.append(fh.read())
+                    ^^^^^^^^^
+    File "<frozen codecs>", line 322, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb4 in position 0: invalid start byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+  D:\moodle\CityNexus\.venv\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-1182 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\threading.py", line 1075, in _bootstrap_inner
+      self.run()
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\threading.py", line 1012, in run
+      self._target(*self._args, **self._kwargs)
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\subprocess.py", line 1599, in _readerthread
+      buffer.append(fh.read())
+                    ^^^^^^^^^
+    File "<frozen codecs>", line 322, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb3 in position 0: invalid start byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation
+  D:\moodle\CityNexus\.venv\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-1180 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\threading.py", line 1075, in _bootstrap_inner
+      self.run()
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\threading.py", line 1012, in run
+      self._target(*self._args, **self._kwargs)
+    File "C:\Users\仓鼠王\AppData\Roaming\uv\python\cpython-3.12.14-windows-x86_64-none\Lib\subprocess.py", line 1599, in _readerthread
+      buffer.append(fh.read())
+                    ^^^^^^^^^
+    File "<frozen codecs>", line 322, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xb3 in position 0: invalid start byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was
+FAILED tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls
+FAILED tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts
+FAILED tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording
+FAILED tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls
+FAILED tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes
+FAILED tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at
+8 failed, 1200 passed, 15 skipped, 1 xfailed, 6 warnings in 142.56s (0:02:22)
