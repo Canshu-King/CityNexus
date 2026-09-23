@@ -734,7 +734,9 @@ def main() -> int:
                              "got": repeated_verdict(ref, expect_ct_for(ref), serve, base=base,
                                                       auth_file=os.environ.get("CNX_DEPLOY_AUTH_FILE"),
                                                       times=int(os.environ.get("CNX_DEPLOY_PROBE_TIMES", "2")))})
-    f_unconfigured = any(p["verdict"] == "NOT_CONFIGURED" for p in f_probes)
+    # a configured surface stores its verdict under "got"; only the unconfigured placeholder has a top-level
+    # "verdict".  Reading one shape from both made a *configured* run crash AFTER the index was switched.
+    f_unconfigured = any(p.get("verdict") == "NOT_CONFIGURED" for p in f_probes)
     f_green = (not f_unconfigured) and all(p.get("got", {}).get("verdict") == "GREEN" for p in f_probes)
     if f_unconfigured and getattr(a, "allow_proxy_unprobed", False):
         f_verdict = "F_UNPROBED_DECLARED"          # declared gap, kept OUT of all_green by name
