@@ -1,0 +1,4 @@
+{"kind": "instrument_start", "mode": "empty", "port": 8411, "every_api_path_answers": 200}
+{"at": "23:02:17", "kind": "answered", "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience", "status": 200, "content_type": "application/json", "body_bytes": 0, "body_head": ""}
+{"at": "23:02:27", "kind": "answered", "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience", "status": 200, "content_type": "application/json", "body_bytes": 0, "body_head": ""}
+{"at": "23:02:27", "kind": "answered", "path": "/api/v1/health", "status": 200, "content_type": "application/json", "body_bytes": 0, "body_head": ""}
