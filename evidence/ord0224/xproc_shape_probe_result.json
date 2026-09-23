@@ -1,0 +1,395 @@
+{
+  "tree": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa",
+  "generated": "2026-09-23T10:32:26+08:00",
+  "sqlite_config": "WAL + busy_timeout=30000 (app/db/session.py:55-67)",
+  "results": [
+    {
+      "summary": {
+        "mode": "raw_conflict",
+        "bootstrap_exit": 0,
+        "announced": 2,
+        "child_errors": [],
+        "inserts": [
+          "COMMITTED - the index did not stop it",
+          "IntegrityError: UNIQUE constraint failed: catalog_hydration_operations.fingerprint"
+        ],
+        "distinct_operation_ids": 0,
+        "reused_flags": [],
+        "children_returning_an_id": 0,
+        "durable": {
+          "rows_for_probe_fingerprint": 1,
+          "open_rows_for_probe_fingerprint": 1,
+          "rows_for_the_product_query": 0,
+          "total_rows": 1,
+          "index_present": true
+        },
+        "temp_dir_removed": true,
+        "restored_sha_matches_before": null,
+        "anchor_hits": null
+      },
+      "full": {
+        "mode": "raw_conflict",
+        "mutant_Y3_applied": false,
+        "db": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_xprobe_raw_conflict_9p8k47ds/x.db",
+        "bootstrap_exit": 0,
+        "bootstrap_error": "",
+        "children": [
+          {
+            "mode": "read_then_write",
+            "label": "p0",
+            "pid": 23100,
+            "waited_for_latch_ms": 0.19,
+            "open_rows_seen": 0,
+            "insert": "COMMITTED - the index did not stop it"
+          },
+          {
+            "mode": "read_then_write",
+            "label": "p1",
+            "pid": 50700,
+            "waited_for_latch_ms": 0.01,
+            "open_rows_seen": 1,
+            "insert": "IntegrityError: UNIQUE constraint failed: catalog_hydration_operations.fingerprint"
+          }
+        ],
+        "exit_codes": [
+          0,
+          0
+        ],
+        "announced": 2,
+        "durable": {
+          "rows_for_probe_fingerprint": 1,
+          "open_rows_for_probe_fingerprint": 1,
+          "rows_for_the_product_query": 0,
+          "total_rows": 1,
+          "index_present": true
+        },
+        "temp_dir_removed": true
+      }
+    },
+    {
+      "summary": {
+        "mode": "product_honest",
+        "bootstrap_exit": 0,
+        "announced": 5,
+        "child_errors": [],
+        "inserts": [],
+        "distinct_operation_ids": 1,
+        "reused_flags": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "children_returning_an_id": 5,
+        "durable": {
+          "rows_for_probe_fingerprint": 0,
+          "open_rows_for_probe_fingerprint": 0,
+          "rows_for_the_product_query": 1,
+          "total_rows": 1,
+          "index_present": true
+        },
+        "temp_dir_removed": true,
+        "restored_sha_matches_before": null,
+        "anchor_hits": null
+      },
+      "full": {
+        "mode": "product_honest",
+        "mutant_Y3_applied": false,
+        "db": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_xprobe_product_honest_rksalkx3/x.db",
+        "bootstrap_exit": 0,
+        "bootstrap_error": "",
+        "children": [
+          {
+            "mode": "product_sees",
+            "label": "p0",
+            "pid": 24120,
+            "instrument": "none (honest race)",
+            "waited_for_latch_ms": 17.86,
+            "operation_id": "084ad728-358c-4028-8b0a-5eb26af7e552",
+            "reused": true,
+            "status": "QUEUED",
+            "submit_ms": 956.2
+          },
+          {
+            "mode": "product_sees",
+            "label": "p1",
+            "pid": 49436,
+            "instrument": "none (honest race)",
+            "waited_for_latch_ms": 14.41,
+            "operation_id": "084ad728-358c-4028-8b0a-5eb26af7e552",
+            "reused": true,
+            "status": "QUEUED",
+            "submit_ms": 930.8
+          },
+          {
+            "mode": "product_sees",
+            "label": "p2",
+            "pid": 2236,
+            "instrument": "none (honest race)",
+            "waited_for_latch_ms": 7.7,
+            "operation_id": "084ad728-358c-4028-8b0a-5eb26af7e552",
+            "reused": true,
+            "status": "QUEUED",
+            "submit_ms": 928.4
+          },
+          {
+            "mode": "product_sees",
+            "label": "p3",
+            "pid": 15444,
+            "instrument": "none (honest race)",
+            "waited_for_latch_ms": 7.86,
+            "operation_id": "084ad728-358c-4028-8b0a-5eb26af7e552",
+            "reused": false,
+            "status": "QUEUED",
+            "submit_ms": 929.4
+          },
+          {
+            "mode": "product_sees",
+            "label": "p4",
+            "pid": 37324,
+            "instrument": "none (honest race)",
+            "waited_for_latch_ms": 0.22,
+            "operation_id": "084ad728-358c-4028-8b0a-5eb26af7e552",
+            "reused": true,
+            "status": "QUEUED",
+            "submit_ms": 964.1
+          }
+        ],
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "announced": 5,
+        "durable": {
+          "rows_for_probe_fingerprint": 0,
+          "open_rows_for_probe_fingerprint": 0,
+          "rows_for_the_product_query": 1,
+          "total_rows": 1,
+          "index_present": true
+        },
+        "temp_dir_removed": true
+      }
+    },
+    {
+      "summary": {
+        "mode": "product_blind",
+        "bootstrap_exit": 0,
+        "announced": 5,
+        "child_errors": [],
+        "inserts": [],
+        "distinct_operation_ids": 1,
+        "reused_flags": [
+          true,
+          true,
+          true,
+          false,
+          true
+        ],
+        "children_returning_an_id": 5,
+        "durable": {
+          "rows_for_probe_fingerprint": 0,
+          "open_rows_for_probe_fingerprint": 0,
+          "rows_for_the_product_query": 1,
+          "total_rows": 1,
+          "index_present": true
+        },
+        "temp_dir_removed": true,
+        "restored_sha_matches_before": null,
+        "anchor_hits": null
+      },
+      "full": {
+        "mode": "product_blind",
+        "mutant_Y3_applied": false,
+        "db": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_xprobe_product_blind_0vybbb6j/x.db",
+        "bootstrap_exit": 0,
+        "bootstrap_error": "",
+        "children": [
+          {
+            "mode": "product",
+            "label": "p0",
+            "pid": 47000,
+            "instrument": "first two find_open_operation calls answered None",
+            "waited_for_latch_ms": 24.02,
+            "operation_id": "115de322-61f2-4450-a5dd-3d88d0a874d2",
+            "reused": true,
+            "status": "QUEUED",
+            "submit_ms": 922.5
+          },
+          {
+            "mode": "product",
+            "label": "p1",
+            "pid": 44676,
+            "instrument": "first two find_open_operation calls answered None",
+            "waited_for_latch_ms": 28.34,
+            "operation_id": "115de322-61f2-4450-a5dd-3d88d0a874d2",
+            "reused": true,
+            "status": "QUEUED",
+            "submit_ms": 939.8
+          },
+          {
+            "mode": "product",
+            "label": "p2",
+            "pid": 49600,
+            "instrument": "first two find_open_operation calls answered None",
+            "waited_for_latch_ms": 30.14,
+            "operation_id": "115de322-61f2-4450-a5dd-3d88d0a874d2",
+            "reused": true,
+            "status": "QUEUED",
+            "submit_ms": 932.3
+          },
+          {
+            "mode": "product",
+            "label": "p3",
+            "pid": 43632,
+            "instrument": "first two find_open_operation calls answered None",
+            "waited_for_latch_ms": 22.16,
+            "operation_id": "115de322-61f2-4450-a5dd-3d88d0a874d2",
+            "reused": false,
+            "status": "QUEUED",
+            "submit_ms": 906.5
+          },
+          {
+            "mode": "product",
+            "label": "p4",
+            "pid": 43504,
+            "instrument": "first two find_open_operation calls answered None",
+            "waited_for_latch_ms": 0.17,
+            "operation_id": "115de322-61f2-4450-a5dd-3d88d0a874d2",
+            "reused": true,
+            "status": "QUEUED",
+            "submit_ms": 918.6
+          }
+        ],
+        "exit_codes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "announced": 5,
+        "durable": {
+          "rows_for_probe_fingerprint": 0,
+          "open_rows_for_probe_fingerprint": 0,
+          "rows_for_the_product_query": 1,
+          "total_rows": 1,
+          "index_present": true
+        },
+        "temp_dir_removed": true
+      }
+    },
+    {
+      "summary": {
+        "mode": "product_blind+Y3",
+        "bootstrap_exit": 0,
+        "announced": 5,
+        "child_errors": [
+          "HydrationStoreBusy: MUTANT Y3: the loser stopped reporting the winner",
+          "HydrationStoreBusy: MUTANT Y3: the loser stopped reporting the winner",
+          "HydrationStoreBusy: MUTANT Y3: the loser stopped reporting the winner",
+          "HydrationStoreBusy: MUTANT Y3: the loser stopped reporting the winner"
+        ],
+        "inserts": [],
+        "distinct_operation_ids": 1,
+        "reused_flags": [
+          false
+        ],
+        "children_returning_an_id": 1,
+        "durable": {
+          "rows_for_probe_fingerprint": 0,
+          "open_rows_for_probe_fingerprint": 0,
+          "rows_for_the_product_query": 1,
+          "total_rows": 1,
+          "index_present": true
+        },
+        "temp_dir_removed": true,
+        "restored_sha_matches_before": true,
+        "anchor_hits": 1
+      },
+      "full": {
+        "mode": "product_blind",
+        "mutant_Y3_applied": true,
+        "db": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_xprobe_product_blind_sjg7amb9/x.db",
+        "bootstrap_exit": 0,
+        "bootstrap_error": "",
+        "anchor": {
+          "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_349c4fa\\backend\\app\\catalog_hydration_operations.py",
+          "anchor_hits": 1,
+          "expected_anchor_hits": 1,
+          "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+          "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+          "bytes_changed": true
+        },
+        "sha_during_mutation": "583540f6394bd976",
+        "children": [
+          {
+            "mode": "product",
+            "label": "p0",
+            "pid": 36680,
+            "instrument": "first two find_open_operation calls answered None",
+            "waited_for_latch_ms": 0.17,
+            "error": "HydrationStoreBusy: MUTANT Y3: the loser stopped reporting the winner"
+          },
+          {
+            "mode": "product",
+            "label": "p1",
+            "pid": 49632,
+            "instrument": "first two find_open_operation calls answered None",
+            "waited_for_latch_ms": 10.6,
+            "error": "HydrationStoreBusy: MUTANT Y3: the loser stopped reporting the winner"
+          },
+          {
+            "mode": "product",
+            "label": "p2",
+            "pid": 51948,
+            "instrument": "first two find_open_operation calls answered None",
+            "waited_for_latch_ms": 22.31,
+            "error": "HydrationStoreBusy: MUTANT Y3: the loser stopped reporting the winner"
+          },
+          {
+            "mode": "product",
+            "label": "p3",
+            "pid": 44600,
+            "instrument": "first two find_open_operation calls answered None",
+            "waited_for_latch_ms": 3.75,
+            "operation_id": "d49a699c-1cdd-4aa4-a34d-9bb2b4782531",
+            "reused": false,
+            "status": "QUEUED",
+            "submit_ms": 820.2
+          },
+          {
+            "mode": "product",
+            "label": "p4",
+            "pid": 52440,
+            "instrument": "first two find_open_operation calls answered None",
+            "waited_for_latch_ms": 3.5,
+            "error": "HydrationStoreBusy: MUTANT Y3: the loser stopped reporting the winner"
+          }
+        ],
+        "exit_codes": [
+          1,
+          1,
+          1,
+          0,
+          1
+        ],
+        "announced": 5,
+        "durable": {
+          "rows_for_probe_fingerprint": 0,
+          "open_rows_for_probe_fingerprint": 0,
+          "rows_for_the_product_query": 1,
+          "total_rows": 1,
+          "index_present": true
+        },
+        "restored_sha_matches_before": true,
+        "restored_sha_now": "7d51d7acc1eddfa6",
+        "no_mutant_marker_left": true,
+        "temp_dir_removed": true
+      }
+    }
+  ]
+}
