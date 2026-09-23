@@ -68,7 +68,7 @@ async function probe(page: Page, summary: Locator) {
       display: getComputedStyle(el).display,
       markerListStyle: getComputedStyle(el).listStyleType,
       open: details ? details.hasAttribute("open") : null,
-      touchToken: getComputedStyle(document.documentElement).getPropertyValue("--cn-touch-min").trim(),
+      touchFloor: getComputedStyle(document.documentElement).getPropertyValue("--cn-touch-min").trim(),
     };
   });
 }
@@ -81,12 +81,12 @@ test("ord0247-1-the-disclosure-box-is-at-least-the-products-touch-floor — 命�
   const measured = await probe(page, summary);
 
   // The number comes from the product's own token, so the gate cannot drift from the design system.
-  expect(measured.touchToken, node("ord0247-1", "--cn-touch-min is not the frozen 44px")).toBe("44px");
+  expect(measured.touchFloor, node("ord0247-1", "--cn-touch-min is not the frozen 44px")).toBe("44px");
   expect(
     measured.height,
     node(
       "ord0247-1",
-      `"${measured.text}" measures ${measured.width}x${measured.height} at ${MOBILE.width}x${MOBILE.height}; the mobile floor is ${measured.touchToken}`,
+      `"${measured.text}" measures ${measured.width}x${measured.height} at ${MOBILE.width}x${MOBILE.height}; the mobile floor is ${measured.touchFloor}`,
     ),
   ).toBeGreaterThanOrEqual(44);
 
@@ -165,7 +165,7 @@ test.afterAll(async () => {
         target: "details.v8-advanced > summary (「高级：结构化数据」, bookings screen)",
         judgedBy:
           "elementFromPoint(盒中心) === 该 summary 本身 ＋ 真触摸屏点把它打开；桌面另一格守住 44px 只在移动层",
-        mobileFloorToken: "--cn-touch-min = 44px",
+        mobileTouchFloor: "--cn-touch-min = 44px",
         desktopMaxHeight: DESKTOP_MAX_HEIGHT,
         readings,
       },
