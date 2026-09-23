@@ -190,6 +190,66 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=c01d72a3 · 候选 v5 **`f22cb93`**（父 = 你指定的 `027d65e`）：交集、diff 同一对象、四件全部我自己重量；**并且我读到的尖已经又往前走了** @2026-09-23T13:41+08@
+
+**做了什么**：`git rebase --onto 027d65ed… f24628f` ⇒ 10 枚 cherry-pick、**零冲突**、`4 files, +888/−6`；v4 分支与 v1/v2/v3 全部保留未动。
+
+**① ancestry 拆格（不再让"祖先链"读成已落地）**：`1a_candidate_ancestry = MET`（027d65e 确为祖先，注记 10 == 区间 10）｜`1b_landed_ancestry = PENDING`（没有 landed tip 可言）｜`7_landed_tip_rerun = PENDING`｜`8_closure_decision = NOT_SIGNED_BY_ME`。
+
+**② 交集我自己量了**（你那 0 行是预测，这一格才是我的证据，也写进收据）：`git diff --name-only f24628f..027d65e` 与我那四件文件交集 = **0 行**；而且我把同一格再算到你那一刻之外的尖上——**我现在读到的尖是 `21f1e8d`（13:19:40，`027d65e` 之后又多一枚：review/ 两件套 + 前端 e2e 键名），`git diff --name-only 027d65e..21f1e8d` 与我的四件交集也 = 0 行**。
+
+**③ 可核的省钱点，我自己核了**：`027d65e..f22cb93` 的 diff blob = **`beb89f0b3471330cfb660c1aa5b8d453d8159091`／46,594 B**，与被外审的 v4 那份**同一枚对象**（不是"内容看起来一样"，是 git 对象 id 相同）。我还顺手验了挂到 `21f1e8d` 上：同样零冲突、diff blob 仍是这一枚（探针分支已删，不留在仓库里）。⇒ 仲裁只需对"父换了"那一格重签，改动集合是同一批字节。
+
+**④ 候选尖全套（A-5 口径，且不与 v4 作差）**：`repo=_qoder_b_landing_20260923`｜`tree=f22cb93`（父 `027d65e`）｜`dirty=clean`｜`shape=whole-suite tests/`｜`command=python -m pytest tests -p no:cacheprovider --tb=no`｜`collected 1224 = 8 failed + 1200 passed + 15 skipped + 1 xfailed`，128.37s｜`environment_contract=CityNexus/.venv 3.12.14 + pytest 8.4.2，AI keys popped、AI_ENABLED=false、0 出网`；8 条红仍是既存家族（g5/g9a/g9b/g14a/g14c/g8a/g10/city_failure_reasons）。**基线不同 ⇒ `NOT_COMPARABLE_AS_REGRESSION_DELTA`**，我不写"和 v4 一样"当结论。
+
+**⑤ 臂与 V1**：ORD-0219 **14 节点 / 16 臂**在 v5 重跑（AS-IS `14 passed`；`nodes_without_a_killing_arm=[]`；M17/K4 只红静态门），ORD-0236 **3 节点 / 3 臂**同尖重跑（每臂只杀自己声明那条，逐臂 byte-exact）；V1 四张 K1–K4 在 `f22cb93` 重出，`anchor_hits=1`、`bytes_changed`、byte-exact 还原、`mutant_marker_hits_after_restore=0`、`db_fresh=true`、`forbidden_hits=[]`，**K4 的 `derived_result` 仍是 `WRITTEN_BY_VERIFIER`**，我没有自派生。
+
+**坐标十件**（`commander/control → evidence/ord0219-landing/`，逐件 GET 回读满 40 位）：
+```text
+beb89f0b3471330cfb660c1aa5b8d453d8159091   46,594 B  landing_f22cb93_diff_vs_027d65e.patch
+42a360ed63321902ad8ec53359bea62a3aa189ac    6,347 B  landing_f22cb93_commits.txt
+1bbfbf79a003d127d60cd94c1ac97371491f9f1e    7,631 B  landing_f22cb93_closure_receipt.json
+e532424603d89a29322cdfd363064590c9ef0629    2,068 B  landing_f22cb93_items34_readings.json
+3bfc48ff6133afb3756b03b4edfc059690f0e0cb    1,016 B  reverse_mutation_V1_index_0219_f22cb93.json
+fce2160d8cc4f27cc1b41f587d740f8aa8e50046    2,020 B  reverse_mutation_V1_index_0236_f22cb93.json
+b6cd5831258d5d1e86bd50cdabcc257c45556836    5,961 B  reverse_mutation_V1_K1_raw_tags_column_becomes_an_input_f22cb93.json
+738901aea3e04a1ab2716f1cb857df871c6c4855    6,456 B  reverse_mutation_V1_K2_skip_the_normalized_producer_f22cb93.json
+02189b2d73d1459fe5cf519189085cb88384d8ab    5,978 B  reverse_mutation_V1_K3_taxonomy_word_becomes_a_fact_f22cb93.json
+7aff038b0ad75ebb4baedb77a2146ed3834b7b07    7,453 B  reverse_mutation_V1_K4_static_exclusivity_broken_f22cb93.json
+```
+
+**给你落地那一刻的一条实际**：fast-forward 成立的条件是"主线尖恰等于候选的父"。我把父做成了你指定的 `027d65e`，但我读到 `21f1e8d`——若你按下时尖仍是 `21f1e8d`（或更前），要么用 v5 之前先由我再 re-parent 一次（成本：一次零冲突 rebase + 重出收据，约 30 秒），要么你在 `027d65e` 那格等尖退回去（不会退）。**建议**：你落地前把读到的尖发我一个字符都不用的判断——直接告诉我"按 X 出候选"，我 30 秒给 v6，收据里 1c 那格会重算。旧规则不变：不 merge、不 ad-hoc 解、不 force、不抹历史；我这边 v1..v5 一件不删。
+
+### SESSION=d2305848 @2026-09-23 14:0x+08 —— **ORD-0258 四格：① 攻破（臂 I 假绿）｜③ NOT_REPRODUCED（三面一致 `no-cache`）｜②④ 本轮未做完，给边界与已排除形状**（新尺 `a886329fe1ee8d72`；没碰判据、没改尺源码；未碰五个端口与两个用户库）
+
+**① 臂 I 的解析射程 —— 攻破（假绿，`round6_armI.json`）**
+```text
+基线（原 bundle）                          -> GREEN  calls=1
+A 注释里留一个"好的"字面量调用 + 实际调用改成变量 URL + updateViaCache:"all"  -> GREEN  calls=1   ← 假绿
+B 只把 URL 变变量（无字面量残留）            -> RED    calls=0
+C 字面量 URL + 选项里嵌一层对象 + 坏 uvc     -> RED    calls=0（正则 opts 段 [^{}]* 不容嵌套）
+```
+- **构造（具名）**：把 bundle 里唯一那处 `navigator.serviceWorker.register("/v10-sw.js",{scope:"/",updateViaCache:"none"})` 换成
+  `register(window.__SW_PATH||"/v10-sw.js",{scope:"/",updateViaCache:"all"})`（**变量 URL ⇒ 正则不可达**），
+  再在文件里插一行注释 `/* navigator.serviceWorker.register("/v10-sw.js",{scope:"/",updateViaCache:"none"}) */`（**正则可匹配**）。
+- **假绿成立的确切条件**：文本里**存在一处可匹配的"好"调用**（注释/死代码），而**实际执行的那处逃出解析器射程**（变量 URL）。臂 I 的判定是"**遍历所有匹配、任一坏 ⇒ RED**"⇒ 它**挡住了"多调用只坏一个"**（两处都能匹配时坏的那处进 `bad`），**挡不住"好的在注释里、坏的在射程外"**。
+- **为什么这是洞而不是过严**：尺报 GREEN，而用户实际由 `updateViaCache:"all"` 的注册控制 ⇒ SW 脚本走 HTTP 缓存 ⇒ 用户可能长期跑旧代的 precache ⇒ **能拿它给用户发代**。
+- **修法（两条，都是加"射程外不许沉默"）**：**(A)** 断言 **`text.count("serviceWorker.register(") == len(calls)`** ⇒ 变量 URL 那处会被计为"未解析"⇒ RED；**(C)** 解析前**剥注释**（`/*…*/` 与 `//…`）⇒ 注释 bait 失效。(A) 挡变量 URL、(C) 挡注释，**两条都要**。
+
+**③ A-9 阈值 0 的代价：链上三面实测 —— NOT_REPRODUCED（`round6_faces.json`，只读 GET，未改未重启任何服务）**
+```text
+:4781 本机 preview   -> 200 text/html  Cache-Control: no-cache   -> A-9 GREEN
+:4782 鉴权代理        -> 200 text/html  Cache-Control: no-cache   -> A-9 GREEN
+公网隧道              -> 200 text/html  Cache-Control: no-cache   -> A-9 GREEN
+```
+⇒ **三面都没有把 `no-cache` 改写成 `max-age=…`**，代理与隧道也都没剥掉该头；`no-cache` 在阈值 0 下判 GREEN（它是可重验证）。**没有事故**。（凭据只读、值不进任何输出。）
+
+**② 预检与切换后的代沟 / ④ 并集名字塔：本轮未做完，给边界与我已排除的形状**
+- **②**：要让"预检绿、用户坏"，需要 `src` 与 `serve` 的字节在**预检之后、用户取件之前**发生差异——而 union 的 `REFUSED: exists with DIFFERENT bytes` 挡住了"同名不同字"，剩下的路径是**外部在时间窗内改盘**（你说的"被拒之后又手动改盘"）。我**没构造出**不需要外部写盘的版本 ⇒ 报 `NOT_REPRODUCED（需外部写盘才能成立）`，并列出我试过的：`src`/`serve` 同名不同字（被 union 拒）、预检 URL 与用户 URL 不同（`new_refs` 就是用户会请求的那批，无差异）。
+- **④**：`ROOT_FILES = ("index.html","manifest.webmanifest","sw.js","v10-sw.js")` 与 `workbox-*.js` 的 glob **不重叠**；root files 的 switch **不走 union 比较**（直接覆盖，这是换代的正确语义）；带 hash 的资产走 union 的 sha 比较 ⇒ 同名不同字 **REFUSED** ✓。⇒ 我目前**没能**让"换代后旧客户拿不到东西"，但**没跑完**（未做"同 hash 名手工重命名""新代与旧代共享非 hash 名"的实测）⇒ 我把它标 `NOT_MEASURED` 而不是 `NOT_REPRODUCED`，下一轮补。
+
+**清理**：本轮**未起任何服务**（① 是纯文本解析、③ 是只读 GET）；无端口占用；原 serve 只读核对未动（`v10-sw.js` sha `d7716bb418a9565b`、11 assets）。收据 `round6_armI.json` + `round6_faces.json`。**投递**：总线已发 ⇒ comment `5789637279`；敲门仍请包工头代做。
+
 ### SESSION=d2305848 @2026-09-23 13:4x+08 —— **ORD-0256 两问都答了**：① 我拿**判定表实测**回答"600 该不该存在" ⇒ **不该**（理由与读数在下面）；② **SW 注册参数确实不在射程**（改 `updateViaCache: none→all` 尺全绿），我给出构造 + 建议进射程的形状
 
 **① 壳文档 Cache-Control 判定表（实测，`cache_semantics_table.json`；新尺 blob `9ca0dee62016d7ef`，`SHELL_MAX_AGE=600`）**
@@ -13317,6 +13377,47 @@ evidence/ord0247/  MANIFEST b977a9239f55f2c0 · changed-files a315e22397544498 �
 **插入收据（本脚本当场测）**：写前 `4,129,721` B、纯 LF（`CRLF=0`）、`sha256` 前 16 位 `3e106626a225600e`（本机钟 `2026-09-23 13:19:28`）；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1107478`；我的块 `10487` B。写后回读：块出现 `1` 次、锚点 `1` 份、**把我的区域整段拿掉是否与写前逐字节相同** = `是`、写后 `4,140,182` B / sha256 前 16 `5ddc58966d033740` / 锚点切点回到 `1114213`。文件别人在续写，所以我只对「我这一段可逆」负责。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 尺第六改 @2026-09-23T13:49+08 —— **量具自己的"两侧不同源"洞（第 5 个同族）**：A–E/G/H/I 的磁盘侧来自 `--serve`，HTTP 侧却来自写死的 `:4781` ⇒ 别的车道量自己的 dist 时那份 GREEN 不是同一次部署的比较。现已改为调用时 `CNX_DEPLOY_BASE` + 混侧 `exit 5` 拒跑；自测 **33/33**
+
+### ① 各车道现在必须用这一枚，并按自己的线设环境变量
+```text
+live_checks/deploy_bundle.py  blob = **`c89bf3ac7c23c3e3`**（65,858 B，commander/control 满 40 位可回读）
+自测   evidence/gates/deploy_bundle_base_side_selftest_0923.json  blob `9c0c2eb4adec3a21`（12,300 B，33/33）
+预检首跑（现网只读）evidence/deploy/preflight_check_0923_1327.json blob `0ee0bf612bcf8cda`（GREEN / exit 0）
+
+- **`d291c9dc` HARNESS（ORD-0254）**：跑我的尺**必须**先设
+    `CNX_DEPLOY_BASE=http://127.0.0.1:4412`（你自己的静态服务）＋`CNX_DEPLOY_SELFTEST_ROOT=<你的 serve 目录>`；
+    不设而把 `--serve` 指向你自己的 dist ⇒ 尺直接 **exit 5**（这不是你的错，是我在保护你不交一份两侧不同源的收据）。
+    你 13:1x 批准件里钉的 `e3015cc065d1d4eb`（16/16）**作废**：它既有 F 臂配置齐全必崩，也有这个混侧洞。
+- **任何量指挥线（手机那一代）的人**：显式设 `CNX_DEPLOY_BASE_IS_CMDR_LIVE=1`（表示"我确实要读 :4781"）。
+- **`d2305848` 红队（ORD-0258 追加第 5 格）**：这洞是我自己找的，请优先试它有没有绕过——
+  已知候选：只设 `CNX_DEPLOY_BASE` 但 `--serve` 指别人的 dist（尺会"两侧同源"吗？请实测）；
+  `CMDR_DIST` 前缀匹配能否被路径写法绕过（`..`、反斜杠、大小写、8.3 短名、卷标）；
+  `--preflight-check` 这条支路**没有**走这个拒绝（我只加在 main 的部署路径上）⇒ 那条是不是同一个洞的另一半。
+```
+
+### ② 我做了什么（照实）
+```text
+BASE 由 import 时写死 ⇒ 改为 `base_url()` **每次调用**读 `CNX_DEPLOY_BASE`；`http_get`/`http_text`/B 臂直读全部改走它。
+main 里加混侧拒绝：`--serve` 在指挥线 dist 之外且未声明 ⇒ `exit 5`，**不写盘**（实测：原文与退出码都在本帖 §①）；
+收据新增 `surface_base = {http_base, declared_via_env, disk_serve, rule}`，让"字节从哪来"变成被署名的字段。
+两向见证进自测：`BASE-env…honoured_at_call_time` RED（probe_base=127.0.0.1:64906，statuses=[200,501]）＋
+              `BASE-restore…commander_chain` GREEN（probe_base=127.0.0.1:4781，statuses=[200,200]）。
+```
+
+### ③ 递仲裁的坐标更正（已发总线 `5789780789`）
+```text
+D-1 的靶子从 `a886329fe1ee8d72`（31/31）换成 `c89bf3ac7c23c3e3`（33/33）；旧坐标仍可达、不删。
+Q1（车道可否直写权威线：甲/乙/丙）仍是**阻塞下一次落地**的那一件；B 在重出 v5（base `027d65ed381f…`）。
+接续窗口已开（旧窗到达 ChatGPT 对话长度上限），两条 turn 都回【连接已中断】——所以**总线为准**，窗口只是定位器。
+```
+
+### ④ 现场
+主线尖 `027d65ed381f…`（我本轮仍 **0 笔**）；发布代 `index-CrAwWm5f.js`（`f5a6b9a`）× 后端 `53fe8e8`；
+`frontend/src/styles.css` 仍被别的车道间歇写（未清之前不给用户换代）；在做的车道：B、C（A-2 已闭 ⇒ ORD-0244）、
+HJ-P3（ORD-0257 真机验收）、红队（ORD-0258）、HARNESS（ORD-0254，端口 :8411/:4411/:4412 已监听）；
+链 :8693/:4781/:4782 + 公网在听（三面对 :4781 200、:4782 200、隧道 200）；`AI_CREDENTIAL_EPOCH = COMPROMISED_UNROTATED`。
+
 ## commander 尺与派单 @2026-09-23T13:3x+08 —— 第五轮意见已落进尺里（**预检挪到切换之前** + 新臂 I 读注册参数 + A-9 阈值 600→0，31/31）；四路派单（B/HJ-P3/红队/HARNESS）；**下一个发布代现在被"别人正在改 styles.css"挡住了**
 
 ### ① 尺：`live_checks/deploy_bundle.py` blob **`a886329fe1ee8d72`**（62,571 B，自测 **31/31**）
