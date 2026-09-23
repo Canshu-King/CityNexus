@@ -1,0 +1,143 @@
+{
+ "what": "F arm run over the surfaces a user can actually reach (local / cnx auth proxy / public tunnel) + a dead-port control",
+ "why": "redteam d2305848 bus 5788606895: A-E never touched the proxy or tunnel, so a healthy 4781 could hide a broken chain",
+ "credential_note": "the Basic credential is read from the TAB file and only turned into a header; no credential value appears in this receipt",
+ "tunnel_host": "sciences-computed-cole-that.trycloudflare.com",
+ "served_bundle_refs": [
+  "/assets/index-DtQ86lsQ.js"
+ ],
+ "surfaces": {
+  "local_4781": {
+   "all_green": true,
+   "rows": [
+    {
+     "ref": "/assets/index-DtQ86lsQ.js",
+     "verdict": "GREEN",
+     "status": 200,
+     "content_type": "text/javascript",
+     "is_html_fallback": false,
+     "disk_present": true,
+     "body_size": 1231985,
+     "disk_bytes": 1231985,
+     "body_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+     "disk_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+     "auth_applied": false,
+     "error": ""
+    },
+    {
+     "ref": "/",
+     "verdict": "GREEN",
+     "status": 200,
+     "content_type": "text/html",
+     "is_html_fallback": true,
+     "disk_present": true,
+     "body_size": 1200,
+     "disk_bytes": 1200,
+     "body_sha256": "8c6405e97932642ddd8c41aef2814bc383f240f4b5a8b6051fa74da6394f951e",
+     "disk_sha256": "8c6405e97932642ddd8c41aef2814bc383f240f4b5a8b6051fa74da6394f951e",
+     "auth_applied": false,
+     "error": ""
+    }
+   ]
+  },
+  "proxy_4782": {
+   "all_green": true,
+   "rows": [
+    {
+     "ref": "/assets/index-DtQ86lsQ.js",
+     "verdict": "GREEN",
+     "status": 200,
+     "content_type": "text/javascript",
+     "is_html_fallback": false,
+     "disk_present": true,
+     "body_size": 1231985,
+     "disk_bytes": 1231985,
+     "body_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+     "disk_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+     "auth_applied": true,
+     "error": ""
+    },
+    {
+     "ref": "/",
+     "verdict": "GREEN",
+     "status": 200,
+     "content_type": "text/html",
+     "is_html_fallback": true,
+     "disk_present": true,
+     "body_size": 1200,
+     "disk_bytes": 1200,
+     "body_sha256": "8c6405e97932642ddd8c41aef2814bc383f240f4b5a8b6051fa74da6394f951e",
+     "disk_sha256": "8c6405e97932642ddd8c41aef2814bc383f240f4b5a8b6051fa74da6394f951e",
+     "auth_applied": true,
+     "error": ""
+    }
+   ]
+  },
+  "public_tunnel": {
+   "all_green": true,
+   "rows": [
+    {
+     "ref": "/assets/index-DtQ86lsQ.js",
+     "verdict": "GREEN",
+     "status": 200,
+     "content_type": "text/javascript",
+     "is_html_fallback": false,
+     "disk_present": true,
+     "body_size": 1231985,
+     "disk_bytes": 1231985,
+     "body_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+     "disk_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+     "auth_applied": true,
+     "error": ""
+    },
+    {
+     "ref": "/",
+     "verdict": "GREEN",
+     "status": 200,
+     "content_type": "text/html",
+     "is_html_fallback": true,
+     "disk_present": true,
+     "body_size": 1200,
+     "disk_bytes": 1200,
+     "body_sha256": "8c6405e97932642ddd8c41aef2814bc383f240f4b5a8b6051fa74da6394f951e",
+     "disk_sha256": "8c6405e97932642ddd8c41aef2814bc383f240f4b5a8b6051fa74da6394f951e",
+     "auth_applied": true,
+     "error": ""
+    }
+   ]
+  },
+  "dead_port_control": {
+   "all_green": false,
+   "rows": [
+    {
+     "ref": "/assets/index-DtQ86lsQ.js",
+     "verdict": "RED",
+     "status": null,
+     "content_type": null,
+     "is_html_fallback": null,
+     "disk_present": true,
+     "body_size": null,
+     "disk_bytes": 1231985,
+     "body_sha256": null,
+     "disk_sha256": "cf3a08108ffba413fca1e67c90e10e8d9428070899c6bdbcd36ab283a13c443a",
+     "auth_applied": false,
+     "error": "URLError: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>"
+    },
+    {
+     "ref": "/",
+     "verdict": "RED",
+     "status": null,
+     "content_type": null,
+     "is_html_fallback": null,
+     "disk_present": true,
+     "body_size": null,
+     "disk_bytes": 1200,
+     "body_sha256": null,
+     "disk_sha256": "8c6405e97932642ddd8c41aef2814bc383f240f4b5a8b6051fa74da6394f951e",
+     "auth_applied": false,
+     "error": "URLError: <urlopen error [WinError 10061] 由于目标计算机积极拒绝，无法连接。>"
+    }
+   ]
+  }
+ }
+}
