@@ -1,0 +1,73 @@
+{
+ "at": "2026-09-23T19:07:21+08:00",
+ "label": "post",
+ "capture": "D:\\moodle\\_qoder_b_ord0263_20260923\\capture_post.json",
+ "ruler": {
+  "path": "D:\\moodle\\_qoder_harness_ord0254\\tools\\ord0263_verifier.py",
+  "blob40": "ed8a61dc79d87cc2acf18ef93ecca7caf89b4b83",
+  "bytes": 12642,
+  "published_blob40_expected": "ed8a61dc79d87cc2acf18ef93ecca7caf89b4b83",
+  "ruler_unchanged_after": true,
+  "retargeted_in_my_process_only": "mod.BASE -> my order dir"
+ },
+ "verdicts_computed_from_measured_fields": {
+  "S1_live": {
+   "verdict": "GREEN"
+  },
+  "V1_origin_error_5xx": {
+   "verdict": "GREEN",
+   "measured": {
+    "http_status": 500,
+    "says_network_words": false,
+    "says_service_words": true,
+    "says_snapshot_words": true,
+    "navigator_onLine": true
+   },
+   "rule": "answered non-2xx + snapshot: must name the service and the snapshot, and must not claim the network"
+  },
+  "V2_no_answer": {
+   "verdict": "GREEN",
+   "measured": {
+    "fetch_thrown": true,
+    "settled_within_deadline": true,
+    "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "retry_door_present": true,
+    "still_on_loading_skeleton": false,
+    "snapshot_present": true,
+    "seconds_to_settle": 16.58
+   },
+   "rule": "no answer at all: the read must settle inside a deadline, be labelled as its own class, show the snapshot and leave a door"
+  },
+  "V3_distinctness": {
+   "verdict": "GREEN",
+   "measured": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "s3_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "same_sentence": false,
+    "s3_is_unclassified_skeleton": false
+   },
+   "rule": "the two arms must not collapse into one classified outcome; a skeleton is not a classification"
+  }
+ },
+ "S4_probe_speaks": {
+  "counts_as_one_of_the_three_cells": false,
+  "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+  "same_v1_rule_applied": {
+   "verdict": "GREEN",
+   "measured": {
+    "http_status": 500,
+    "says_network_words": false,
+    "says_service_words": true,
+    "says_snapshot_words": true,
+    "navigator_onLine": true
+   },
+   "rule": "answered non-2xx + snapshot: must name the service and the snapshot, and must not claim the network"
+  },
+  "why": "state S4 is where the probe, not the read, decides the sentence: the read never answered while the origin answered 500. A merged `response.ok` has nothing to say here, so this is the reading that tells whether cause 1 was really fixed."
+ },
+ "verifier_selftest": {
+  "overall": 0,
+  "meaning": "the judge can say RED; this says nothing about the product"
+ },
+ "meaning": "RED here is the defect standing; GREEN would be the fix landing"
+}
