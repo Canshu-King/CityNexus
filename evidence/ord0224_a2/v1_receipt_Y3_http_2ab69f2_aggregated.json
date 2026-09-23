@@ -1,0 +1,1966 @@
+{
+  "schema_version": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+  "receipt_kind": "reverse_mutation",
+  "scope": {
+    "repo": "Canshu-King/CityNexus",
+    "exact_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+    "tree_kind": "clean_sha",
+    "composite_recipe": [],
+    "dirty": false,
+    "dirty_paths": [],
+    "target_nodeids": [
+      "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+    ],
+    "run_shape": "single-node",
+    "command_argv": [
+      "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "pytest",
+      "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+      "-p",
+      "no:cacheprovider",
+      "-v",
+      "-rA"
+    ],
+    "tree_note": "被测树 = `git archive <exact_sha>` 的一次性只读导出（不是车道工作树）；突变只施加在这份导出的 product 文件上，每轮复原后按 sha256 复验。dirty=false 的判据 = 该文件在这棵树里逐字节等于 `git show <exact_sha>:<path>`。",
+    "tree_clean_check": {
+      "path": "backend/app/catalog_hydration_operations.py",
+      "export_tree_digest": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+      "committed_at_exact_sha_digest": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+      "identical": true
+    }
+  },
+  "environment": {
+    "cwd": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend",
+    "python_executable": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+    "python_version": "Python 3.12.14",
+    "pytest_version": "pytest 8.4.2",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "pythonpath": [
+      "(unset for the parent; the spawned uvicorn children get PYTHONPATH=<export tree>/backend, set inside the door)"
+    ],
+    "required_local_modules": [
+      {
+        "name": "app",
+        "import_origin": "NOT_FOUND"
+      },
+      {
+        "name": "app.main",
+        "import_origin": "NOT_FOUND"
+      },
+      {
+        "name": "uvicorn",
+        "import_origin": "D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\uvicorn\\__init__.py"
+      },
+      {
+        "name": "fastapi",
+        "import_origin": "D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\fastapi\\__init__.py"
+      },
+      {
+        "name": "sqlalchemy",
+        "import_origin": "D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\sqlalchemy\\__init__.py"
+      },
+      {
+        "name": "pytest",
+        "import_origin": "D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\pytest\\__init__.py"
+      }
+    ],
+    "forbidden_command_surface_hits": []
+  },
+  "baseline": {
+    "receipt_ref": "evidence/ord0224_a2/streak_xproc_http_2ab69f2.json",
+    "receipt_blob": "02a42d1bb21546038bd347a8169eb136dabef978",
+    "same_exact_sha": true,
+    "same_target_nodeids": true,
+    "same_run_shape": true,
+    "target_outcomes": {
+      "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation": "GREEN"
+    },
+    "this_run_exit_code": 0,
+    "this_run_collected": 1,
+    "this_run_pytest_counts": {
+      "passed": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "failed_nodeids": [],
+    "errored_nodeids": [],
+    "collection_or_setup_errors": [],
+    "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_x8jmn_8_\\suite.db",
+    "path_source": "app_printed_receipt_line",
+    "initial_db_state": {
+      "path_did_not_exist_before_this_run": true,
+      "temp_dirs_present_before_round": 408,
+      "door_store_dirs_present_before_round": 0
+    },
+    "final_db_state": {
+      "present": false,
+      "looked_for": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_x8jmn_8_\\suite.db",
+      "store_role": "pytest process suite DB - NOT the store this door's claim is about",
+      "door_store_witnessed_mid_round": {
+        "samples_taken": 45,
+        "distinct_door_stores_seen": [
+          "cnx_g3http_tqcrw56n"
+        ],
+        "peak_row_sample": {
+          "elapsed_ms": 3812.0,
+          "door_store_dir": "cnx_g3http_tqcrw56n",
+          "table_count": 56,
+          "job_rows": 2,
+          "statuses": [
+            "QUEUED"
+          ],
+          "distinct_operation_ids": 2,
+          "operation_id_prefixes": [
+            "1fa9df64",
+            "cdfe5e7e"
+          ],
+          "open_rows_per_fingerprint": {
+            "b54ff1b86279": 1,
+            "41afddae115f": 1
+          },
+          "max_open_rows_on_one_fingerprint": 1,
+          "fingerprints_with_more_than_one_open_row": []
+        },
+        "last_sample": {
+          "elapsed_ms": 5562.0,
+          "door_store_dir": "cnx_g3http_tqcrw56n",
+          "table_count": 56,
+          "job_rows": 2,
+          "statuses": [
+            "QUEUED"
+          ],
+          "distinct_operation_ids": 2,
+          "operation_id_prefixes": [
+            "1fa9df64",
+            "cdfe5e7e"
+          ],
+          "open_rows_per_fingerprint": {
+            "b54ff1b86279": 1,
+            "41afddae115f": 1
+          },
+          "max_open_rows_on_one_fingerprint": 1,
+          "fingerprints_with_more_than_one_open_row": []
+        },
+        "max_job_rows_observed": 2,
+        "max_distinct_operation_ids_observed": 2,
+        "worst_open_rows_on_one_fingerprint": 1,
+        "fingerprints_ever_holding_two_open_rows": []
+      },
+      "door_store_dirs_seen": [
+        "cnx_g3http_tqcrw56n"
+      ],
+      "door_store_left_behind_after_round": [],
+      "door_store_printed_by_the_door": {
+        "source": "the door's own receipt line, emitted after it read the file back",
+        "line": "[G3_XPROC_LOSER_READBACK·HTTP] 2 个真 uvicorn 进程 → 每臂 1 枚作业；ports=[51418, 51419]，serving pids=[21440, 51928]，netstat pids=[21440, 51928]，natural=cdfe5e7e/QUEUED（开行于 pid 21440 @ :51418），scheduled=1fa9df64/QUEUED（开行于 pid 21440 @ :51418），提交阻塞 ms=[(51418, 2041.6), (51419, 2148.0)]",
+        "per_arm": {
+          "natural": {
+            "operation_id_prefix": "cdfe5e7e",
+            "status": "QUEUED"
+          },
+          "scheduled": {
+            "operation_id_prefix": "1fa9df64",
+            "status": "QUEUED"
+          }
+        }
+      }
+    },
+    "db_fresh": true,
+    "summary_line": "======================== 1 passed, 4 warnings in 5.44s ========================"
+  },
+  "mutation": {
+    "mutation_id": "C-ORD0224-Y3-loser-readback",
+    "claim_broken": "product protection point = the loser's read-back inside `except IntegrityError` in submit_operation: the process whose INSERT lost the race reports the winner's id instead of failing. Removing it makes a cross-process HTTP caller receive 503 HYDRATION_STORE_BUSY rather than the one operation both callers must be handed.",
+    "allowed_scope": "product",
+    "actual_scope": "product",
+    "primary_target_nodeids": [
+      "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+    ],
+    "patch_or_mutator_ref": "evidence/ord0224_a2/xproc_v1_receipt.py",
+    "changed_files": [
+      {
+        "path": "backend/app/catalog_hydration_operations.py",
+        "before_blob": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+        "before_digest": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "expected_anchor_hits": 1,
+        "anchor_hits": 1,
+        "bytes_changed": true
+      }
+    ],
+    "not_a_test_assertion_edit": "这一臂只改产品保护点（app/… 或 db/schema.sql）；门文件与断言一个字节都没动（门的 sha 在 baseline 里可比）"
+  },
+  "mutated_runs": {
+    "rounds": 10,
+    "runs": [
+      {
+        "run_index": 1,
+        "mutated": true,
+        "anchor": {
+          "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+          "anchor_hits": 1,
+          "expected_anchor_hits": 1,
+          "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+          "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+          "bytes_changed": true
+        },
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "exit_code": 1,
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_v0rgy1to\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(56249, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+        "summary_line": "======================== 1 failed, 4 warnings in 5.47s ========================",
+        "door_print_line": "",
+        "door_store_witness": {
+          "samples_taken": 44,
+          "distinct_door_stores_seen": [
+            "cnx_g3http_rurel3lj"
+          ],
+          "peak_row_sample": {
+            "elapsed_ms": 3922.0,
+            "door_store_dir": "cnx_g3http_rurel3lj",
+            "table_count": 56,
+            "job_rows": 2,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 2,
+            "operation_id_prefixes": [
+              "797bdda0",
+              "f7fcbd8f"
+            ],
+            "open_rows_per_fingerprint": {
+              "08732dbf4fbf": 1,
+              "0a05129d3bb7": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "last_sample": {
+            "elapsed_ms": 5547.0,
+            "door_store_dir": "cnx_g3http_rurel3lj",
+            "table_count": 56,
+            "job_rows": 2,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 2,
+            "operation_id_prefixes": [
+              "797bdda0",
+              "f7fcbd8f"
+            ],
+            "open_rows_per_fingerprint": {
+              "08732dbf4fbf": 1,
+              "0a05129d3bb7": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "max_job_rows_observed": 2,
+          "max_distinct_operation_ids_observed": 2,
+          "worst_open_rows_on_one_fingerprint": 1,
+          "fingerprints_ever_holding_two_open_rows": []
+        },
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 408,
+          "door_store_dirs_present_before_round": 0
+        },
+        "final_db_state": {
+          "present": false,
+          "looked_for": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_v0rgy1to\\suite.db",
+          "store_role": "pytest process suite DB - NOT the store this door's claim is about",
+          "door_store_witnessed_mid_round": {
+            "samples_taken": 44,
+            "distinct_door_stores_seen": [
+              "cnx_g3http_rurel3lj"
+            ],
+            "peak_row_sample": {
+              "elapsed_ms": 3922.0,
+              "door_store_dir": "cnx_g3http_rurel3lj",
+              "table_count": 56,
+              "job_rows": 2,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 2,
+              "operation_id_prefixes": [
+                "797bdda0",
+                "f7fcbd8f"
+              ],
+              "open_rows_per_fingerprint": {
+                "08732dbf4fbf": 1,
+                "0a05129d3bb7": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "last_sample": {
+              "elapsed_ms": 5547.0,
+              "door_store_dir": "cnx_g3http_rurel3lj",
+              "table_count": 56,
+              "job_rows": 2,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 2,
+              "operation_id_prefixes": [
+                "797bdda0",
+                "f7fcbd8f"
+              ],
+              "open_rows_per_fingerprint": {
+                "08732dbf4fbf": 1,
+                "0a05129d3bb7": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "max_job_rows_observed": 2,
+            "max_distinct_operation_ids_observed": 2,
+            "worst_open_rows_on_one_fingerprint": 1,
+            "fingerprints_ever_holding_two_open_rows": []
+          },
+          "door_store_dirs_seen": [
+            "cnx_g3http_rurel3lj"
+          ],
+          "door_store_left_behind_after_round": [],
+          "door_store_printed_by_the_door": {
+            "source": "the door's own receipt line, emitted after it read the file back",
+            "line": null,
+            "per_arm": {}
+          }
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        },
+        "db_removed_after_receipt": "cnx_pytest_v0rgy1to"
+      },
+      {
+        "run_index": 2,
+        "mutated": true,
+        "anchor": {
+          "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+          "anchor_hits": 1,
+          "expected_anchor_hits": 1,
+          "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+          "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+          "bytes_changed": true
+        },
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "exit_code": 1,
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_b8000e7u\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(58591, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+        "summary_line": "======================== 1 failed, 4 warnings in 3.32s ========================",
+        "door_print_line": "",
+        "door_store_witness": {
+          "samples_taken": 26,
+          "distinct_door_stores_seen": [
+            "cnx_g3http_rx58uf8q"
+          ],
+          "peak_row_sample": {
+            "elapsed_ms": 1890.0,
+            "door_store_dir": "cnx_g3http_rx58uf8q",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "22b220ba"
+            ],
+            "open_rows_per_fingerprint": {
+              "91e915cd6e83": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "last_sample": {
+            "elapsed_ms": 3375.0,
+            "door_store_dir": "cnx_g3http_rx58uf8q",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "22b220ba"
+            ],
+            "open_rows_per_fingerprint": {
+              "91e915cd6e83": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "max_job_rows_observed": 1,
+          "max_distinct_operation_ids_observed": 1,
+          "worst_open_rows_on_one_fingerprint": 1,
+          "fingerprints_ever_holding_two_open_rows": []
+        },
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 408,
+          "door_store_dirs_present_before_round": 0
+        },
+        "final_db_state": {
+          "present": false,
+          "looked_for": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_b8000e7u\\suite.db",
+          "store_role": "pytest process suite DB - NOT the store this door's claim is about",
+          "door_store_witnessed_mid_round": {
+            "samples_taken": 26,
+            "distinct_door_stores_seen": [
+              "cnx_g3http_rx58uf8q"
+            ],
+            "peak_row_sample": {
+              "elapsed_ms": 1890.0,
+              "door_store_dir": "cnx_g3http_rx58uf8q",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "22b220ba"
+              ],
+              "open_rows_per_fingerprint": {
+                "91e915cd6e83": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "last_sample": {
+              "elapsed_ms": 3375.0,
+              "door_store_dir": "cnx_g3http_rx58uf8q",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "22b220ba"
+              ],
+              "open_rows_per_fingerprint": {
+                "91e915cd6e83": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "max_job_rows_observed": 1,
+            "max_distinct_operation_ids_observed": 1,
+            "worst_open_rows_on_one_fingerprint": 1,
+            "fingerprints_ever_holding_two_open_rows": []
+          },
+          "door_store_dirs_seen": [
+            "cnx_g3http_rx58uf8q"
+          ],
+          "door_store_left_behind_after_round": [],
+          "door_store_printed_by_the_door": {
+            "source": "the door's own receipt line, emitted after it read the file back",
+            "line": null,
+            "per_arm": {}
+          }
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        },
+        "db_removed_after_receipt": "cnx_pytest_b8000e7u"
+      },
+      {
+        "run_index": 3,
+        "mutated": true,
+        "anchor": {
+          "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+          "anchor_hits": 1,
+          "expected_anchor_hits": 1,
+          "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+          "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+          "bytes_changed": true
+        },
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "exit_code": 1,
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_h3mmvcm0\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(58190, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+        "summary_line": "======================== 1 failed, 4 warnings in 3.24s ========================",
+        "door_print_line": "",
+        "door_store_witness": {
+          "samples_taken": 24,
+          "distinct_door_stores_seen": [
+            "cnx_g3http_5b0dxcit"
+          ],
+          "peak_row_sample": {
+            "elapsed_ms": 1750.0,
+            "door_store_dir": "cnx_g3http_5b0dxcit",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "02d661d5"
+            ],
+            "open_rows_per_fingerprint": {
+              "3f9138c72acb": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "last_sample": {
+            "elapsed_ms": 3250.0,
+            "door_store_dir": "cnx_g3http_5b0dxcit",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "02d661d5"
+            ],
+            "open_rows_per_fingerprint": {
+              "3f9138c72acb": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "max_job_rows_observed": 1,
+          "max_distinct_operation_ids_observed": 1,
+          "worst_open_rows_on_one_fingerprint": 1,
+          "fingerprints_ever_holding_two_open_rows": []
+        },
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 408,
+          "door_store_dirs_present_before_round": 0
+        },
+        "final_db_state": {
+          "present": false,
+          "looked_for": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_h3mmvcm0\\suite.db",
+          "store_role": "pytest process suite DB - NOT the store this door's claim is about",
+          "door_store_witnessed_mid_round": {
+            "samples_taken": 24,
+            "distinct_door_stores_seen": [
+              "cnx_g3http_5b0dxcit"
+            ],
+            "peak_row_sample": {
+              "elapsed_ms": 1750.0,
+              "door_store_dir": "cnx_g3http_5b0dxcit",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "02d661d5"
+              ],
+              "open_rows_per_fingerprint": {
+                "3f9138c72acb": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "last_sample": {
+              "elapsed_ms": 3250.0,
+              "door_store_dir": "cnx_g3http_5b0dxcit",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "02d661d5"
+              ],
+              "open_rows_per_fingerprint": {
+                "3f9138c72acb": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "max_job_rows_observed": 1,
+            "max_distinct_operation_ids_observed": 1,
+            "worst_open_rows_on_one_fingerprint": 1,
+            "fingerprints_ever_holding_two_open_rows": []
+          },
+          "door_store_dirs_seen": [
+            "cnx_g3http_5b0dxcit"
+          ],
+          "door_store_left_behind_after_round": [],
+          "door_store_printed_by_the_door": {
+            "source": "the door's own receipt line, emitted after it read the file back",
+            "line": null,
+            "per_arm": {}
+          }
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        },
+        "db_removed_after_receipt": "cnx_pytest_h3mmvcm0"
+      },
+      {
+        "run_index": 4,
+        "mutated": true,
+        "anchor": {
+          "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+          "anchor_hits": 1,
+          "expected_anchor_hits": 1,
+          "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+          "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+          "bytes_changed": true
+        },
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "exit_code": 1,
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_x4khfhv_\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(59557, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+        "summary_line": "======================== 1 failed, 4 warnings in 3.03s ========================",
+        "door_print_line": "",
+        "door_store_witness": {
+          "samples_taken": 24,
+          "distinct_door_stores_seen": [
+            "cnx_g3http_dfa29omj"
+          ],
+          "peak_row_sample": {
+            "elapsed_ms": 1781.0,
+            "door_store_dir": "cnx_g3http_dfa29omj",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "54537454"
+            ],
+            "open_rows_per_fingerprint": {
+              "7e2c70a8d0ae": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "last_sample": {
+            "elapsed_ms": 3140.0,
+            "door_store_dir": "cnx_g3http_dfa29omj",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "54537454"
+            ],
+            "open_rows_per_fingerprint": {
+              "7e2c70a8d0ae": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "max_job_rows_observed": 1,
+          "max_distinct_operation_ids_observed": 1,
+          "worst_open_rows_on_one_fingerprint": 1,
+          "fingerprints_ever_holding_two_open_rows": []
+        },
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 408,
+          "door_store_dirs_present_before_round": 0
+        },
+        "final_db_state": {
+          "present": false,
+          "looked_for": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_x4khfhv_\\suite.db",
+          "store_role": "pytest process suite DB - NOT the store this door's claim is about",
+          "door_store_witnessed_mid_round": {
+            "samples_taken": 24,
+            "distinct_door_stores_seen": [
+              "cnx_g3http_dfa29omj"
+            ],
+            "peak_row_sample": {
+              "elapsed_ms": 1781.0,
+              "door_store_dir": "cnx_g3http_dfa29omj",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "54537454"
+              ],
+              "open_rows_per_fingerprint": {
+                "7e2c70a8d0ae": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "last_sample": {
+              "elapsed_ms": 3140.0,
+              "door_store_dir": "cnx_g3http_dfa29omj",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "54537454"
+              ],
+              "open_rows_per_fingerprint": {
+                "7e2c70a8d0ae": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "max_job_rows_observed": 1,
+            "max_distinct_operation_ids_observed": 1,
+            "worst_open_rows_on_one_fingerprint": 1,
+            "fingerprints_ever_holding_two_open_rows": []
+          },
+          "door_store_dirs_seen": [
+            "cnx_g3http_dfa29omj"
+          ],
+          "door_store_left_behind_after_round": [],
+          "door_store_printed_by_the_door": {
+            "source": "the door's own receipt line, emitted after it read the file back",
+            "line": null,
+            "per_arm": {}
+          }
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        },
+        "db_removed_after_receipt": "cnx_pytest_x4khfhv_"
+      },
+      {
+        "run_index": 5,
+        "mutated": true,
+        "anchor": {
+          "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+          "anchor_hits": 1,
+          "expected_anchor_hits": 1,
+          "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+          "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+          "bytes_changed": true
+        },
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "exit_code": 1,
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_bzcnuin1\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(51675, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+        "summary_line": "======================== 1 failed, 4 warnings in 3.31s ========================",
+        "door_print_line": "",
+        "door_store_witness": {
+          "samples_taken": 25,
+          "distinct_door_stores_seen": [
+            "cnx_g3http_1q4d0gcj"
+          ],
+          "peak_row_sample": {
+            "elapsed_ms": 1765.0,
+            "door_store_dir": "cnx_g3http_1q4d0gcj",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "11643843"
+            ],
+            "open_rows_per_fingerprint": {
+              "b869201e5b5c": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "last_sample": {
+            "elapsed_ms": 3375.0,
+            "door_store_dir": "cnx_g3http_1q4d0gcj",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "11643843"
+            ],
+            "open_rows_per_fingerprint": {
+              "b869201e5b5c": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "max_job_rows_observed": 1,
+          "max_distinct_operation_ids_observed": 1,
+          "worst_open_rows_on_one_fingerprint": 1,
+          "fingerprints_ever_holding_two_open_rows": []
+        },
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 408,
+          "door_store_dirs_present_before_round": 0
+        },
+        "final_db_state": {
+          "present": false,
+          "looked_for": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_bzcnuin1\\suite.db",
+          "store_role": "pytest process suite DB - NOT the store this door's claim is about",
+          "door_store_witnessed_mid_round": {
+            "samples_taken": 25,
+            "distinct_door_stores_seen": [
+              "cnx_g3http_1q4d0gcj"
+            ],
+            "peak_row_sample": {
+              "elapsed_ms": 1765.0,
+              "door_store_dir": "cnx_g3http_1q4d0gcj",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "11643843"
+              ],
+              "open_rows_per_fingerprint": {
+                "b869201e5b5c": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "last_sample": {
+              "elapsed_ms": 3375.0,
+              "door_store_dir": "cnx_g3http_1q4d0gcj",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "11643843"
+              ],
+              "open_rows_per_fingerprint": {
+                "b869201e5b5c": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "max_job_rows_observed": 1,
+            "max_distinct_operation_ids_observed": 1,
+            "worst_open_rows_on_one_fingerprint": 1,
+            "fingerprints_ever_holding_two_open_rows": []
+          },
+          "door_store_dirs_seen": [
+            "cnx_g3http_1q4d0gcj"
+          ],
+          "door_store_left_behind_after_round": [],
+          "door_store_printed_by_the_door": {
+            "source": "the door's own receipt line, emitted after it read the file back",
+            "line": null,
+            "per_arm": {}
+          }
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        },
+        "db_removed_after_receipt": "cnx_pytest_bzcnuin1"
+      },
+      {
+        "run_index": 6,
+        "mutated": true,
+        "anchor": {
+          "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+          "anchor_hits": 1,
+          "expected_anchor_hits": 1,
+          "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+          "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+          "bytes_changed": true
+        },
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "exit_code": 1,
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_8f4llylk\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(58116, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+        "summary_line": "======================== 1 failed, 4 warnings in 3.34s ========================",
+        "door_print_line": "",
+        "door_store_witness": {
+          "samples_taken": 25,
+          "distinct_door_stores_seen": [
+            "cnx_g3http_g131p_wr"
+          ],
+          "peak_row_sample": {
+            "elapsed_ms": 1750.0,
+            "door_store_dir": "cnx_g3http_g131p_wr",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "6c4655ef"
+            ],
+            "open_rows_per_fingerprint": {
+              "02e64b2cbd35": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "last_sample": {
+            "elapsed_ms": 3375.0,
+            "door_store_dir": "cnx_g3http_g131p_wr",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "6c4655ef"
+            ],
+            "open_rows_per_fingerprint": {
+              "02e64b2cbd35": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "max_job_rows_observed": 1,
+          "max_distinct_operation_ids_observed": 1,
+          "worst_open_rows_on_one_fingerprint": 1,
+          "fingerprints_ever_holding_two_open_rows": []
+        },
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 408,
+          "door_store_dirs_present_before_round": 0
+        },
+        "final_db_state": {
+          "present": false,
+          "looked_for": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_8f4llylk\\suite.db",
+          "store_role": "pytest process suite DB - NOT the store this door's claim is about",
+          "door_store_witnessed_mid_round": {
+            "samples_taken": 25,
+            "distinct_door_stores_seen": [
+              "cnx_g3http_g131p_wr"
+            ],
+            "peak_row_sample": {
+              "elapsed_ms": 1750.0,
+              "door_store_dir": "cnx_g3http_g131p_wr",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "6c4655ef"
+              ],
+              "open_rows_per_fingerprint": {
+                "02e64b2cbd35": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "last_sample": {
+              "elapsed_ms": 3375.0,
+              "door_store_dir": "cnx_g3http_g131p_wr",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "6c4655ef"
+              ],
+              "open_rows_per_fingerprint": {
+                "02e64b2cbd35": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "max_job_rows_observed": 1,
+            "max_distinct_operation_ids_observed": 1,
+            "worst_open_rows_on_one_fingerprint": 1,
+            "fingerprints_ever_holding_two_open_rows": []
+          },
+          "door_store_dirs_seen": [
+            "cnx_g3http_g131p_wr"
+          ],
+          "door_store_left_behind_after_round": [],
+          "door_store_printed_by_the_door": {
+            "source": "the door's own receipt line, emitted after it read the file back",
+            "line": null,
+            "per_arm": {}
+          }
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        },
+        "db_removed_after_receipt": "cnx_pytest_8f4llylk"
+      },
+      {
+        "run_index": 7,
+        "mutated": true,
+        "anchor": {
+          "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+          "anchor_hits": 1,
+          "expected_anchor_hits": 1,
+          "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+          "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+          "bytes_changed": true
+        },
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "exit_code": 1,
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_tbtmk3t5\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(54826, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+        "summary_line": "======================== 1 failed, 4 warnings in 3.12s ========================",
+        "door_print_line": "",
+        "door_store_witness": {
+          "samples_taken": 25,
+          "distinct_door_stores_seen": [
+            "cnx_g3http_npimd9cq"
+          ],
+          "peak_row_sample": {
+            "elapsed_ms": 1750.0,
+            "door_store_dir": "cnx_g3http_npimd9cq",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "95f46966"
+            ],
+            "open_rows_per_fingerprint": {
+              "35a638573f43": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "last_sample": {
+            "elapsed_ms": 3218.0,
+            "door_store_dir": "cnx_g3http_npimd9cq",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "95f46966"
+            ],
+            "open_rows_per_fingerprint": {
+              "35a638573f43": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "max_job_rows_observed": 1,
+          "max_distinct_operation_ids_observed": 1,
+          "worst_open_rows_on_one_fingerprint": 1,
+          "fingerprints_ever_holding_two_open_rows": []
+        },
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 408,
+          "door_store_dirs_present_before_round": 0
+        },
+        "final_db_state": {
+          "present": false,
+          "looked_for": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_tbtmk3t5\\suite.db",
+          "store_role": "pytest process suite DB - NOT the store this door's claim is about",
+          "door_store_witnessed_mid_round": {
+            "samples_taken": 25,
+            "distinct_door_stores_seen": [
+              "cnx_g3http_npimd9cq"
+            ],
+            "peak_row_sample": {
+              "elapsed_ms": 1750.0,
+              "door_store_dir": "cnx_g3http_npimd9cq",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "95f46966"
+              ],
+              "open_rows_per_fingerprint": {
+                "35a638573f43": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "last_sample": {
+              "elapsed_ms": 3218.0,
+              "door_store_dir": "cnx_g3http_npimd9cq",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "95f46966"
+              ],
+              "open_rows_per_fingerprint": {
+                "35a638573f43": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "max_job_rows_observed": 1,
+            "max_distinct_operation_ids_observed": 1,
+            "worst_open_rows_on_one_fingerprint": 1,
+            "fingerprints_ever_holding_two_open_rows": []
+          },
+          "door_store_dirs_seen": [
+            "cnx_g3http_npimd9cq"
+          ],
+          "door_store_left_behind_after_round": [],
+          "door_store_printed_by_the_door": {
+            "source": "the door's own receipt line, emitted after it read the file back",
+            "line": null,
+            "per_arm": {}
+          }
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        },
+        "db_removed_after_receipt": "cnx_pytest_tbtmk3t5"
+      },
+      {
+        "run_index": 8,
+        "mutated": true,
+        "anchor": {
+          "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+          "anchor_hits": 1,
+          "expected_anchor_hits": 1,
+          "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+          "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+          "bytes_changed": true
+        },
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "exit_code": 1,
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_pplq3k0a\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E       AssertionError: 期望：scheduled 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(54041, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+        "summary_line": "======================== 1 failed, 4 warnings in 5.39s ========================",
+        "door_print_line": "",
+        "door_store_witness": {
+          "samples_taken": 44,
+          "distinct_door_stores_seen": [
+            "cnx_g3http_o4avxnlm"
+          ],
+          "peak_row_sample": {
+            "elapsed_ms": 3828.0,
+            "door_store_dir": "cnx_g3http_o4avxnlm",
+            "table_count": 56,
+            "job_rows": 2,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 2,
+            "operation_id_prefixes": [
+              "5ddbaac2",
+              "a8cd23d6"
+            ],
+            "open_rows_per_fingerprint": {
+              "64693f75ba38": 1,
+              "d0562aff35ca": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "last_sample": {
+            "elapsed_ms": 5453.0,
+            "door_store_dir": "cnx_g3http_o4avxnlm",
+            "table_count": 56,
+            "job_rows": 2,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 2,
+            "operation_id_prefixes": [
+              "5ddbaac2",
+              "a8cd23d6"
+            ],
+            "open_rows_per_fingerprint": {
+              "64693f75ba38": 1,
+              "d0562aff35ca": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "max_job_rows_observed": 2,
+          "max_distinct_operation_ids_observed": 2,
+          "worst_open_rows_on_one_fingerprint": 1,
+          "fingerprints_ever_holding_two_open_rows": []
+        },
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 408,
+          "door_store_dirs_present_before_round": 0
+        },
+        "final_db_state": {
+          "present": false,
+          "looked_for": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_pplq3k0a\\suite.db",
+          "store_role": "pytest process suite DB - NOT the store this door's claim is about",
+          "door_store_witnessed_mid_round": {
+            "samples_taken": 44,
+            "distinct_door_stores_seen": [
+              "cnx_g3http_o4avxnlm"
+            ],
+            "peak_row_sample": {
+              "elapsed_ms": 3828.0,
+              "door_store_dir": "cnx_g3http_o4avxnlm",
+              "table_count": 56,
+              "job_rows": 2,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 2,
+              "operation_id_prefixes": [
+                "5ddbaac2",
+                "a8cd23d6"
+              ],
+              "open_rows_per_fingerprint": {
+                "64693f75ba38": 1,
+                "d0562aff35ca": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "last_sample": {
+              "elapsed_ms": 5453.0,
+              "door_store_dir": "cnx_g3http_o4avxnlm",
+              "table_count": 56,
+              "job_rows": 2,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 2,
+              "operation_id_prefixes": [
+                "5ddbaac2",
+                "a8cd23d6"
+              ],
+              "open_rows_per_fingerprint": {
+                "64693f75ba38": 1,
+                "d0562aff35ca": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "max_job_rows_observed": 2,
+            "max_distinct_operation_ids_observed": 2,
+            "worst_open_rows_on_one_fingerprint": 1,
+            "fingerprints_ever_holding_two_open_rows": []
+          },
+          "door_store_dirs_seen": [
+            "cnx_g3http_o4avxnlm"
+          ],
+          "door_store_left_behind_after_round": [],
+          "door_store_printed_by_the_door": {
+            "source": "the door's own receipt line, emitted after it read the file back",
+            "line": null,
+            "per_arm": {}
+          }
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        },
+        "db_removed_after_receipt": "cnx_pytest_pplq3k0a"
+      },
+      {
+        "run_index": 9,
+        "mutated": true,
+        "anchor": {
+          "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+          "anchor_hits": 1,
+          "expected_anchor_hits": 1,
+          "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+          "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+          "bytes_changed": true
+        },
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "exit_code": 1,
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_lzk9_3gp\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(49318, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+        "summary_line": "======================== 1 failed, 4 warnings in 3.18s ========================",
+        "door_print_line": "",
+        "door_store_witness": {
+          "samples_taken": 24,
+          "distinct_door_stores_seen": [
+            "cnx_g3http_5f6lfz8t"
+          ],
+          "peak_row_sample": {
+            "elapsed_ms": 1750.0,
+            "door_store_dir": "cnx_g3http_5f6lfz8t",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "02e205c0"
+            ],
+            "open_rows_per_fingerprint": {
+              "3d6be64858aa": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "last_sample": {
+            "elapsed_ms": 3250.0,
+            "door_store_dir": "cnx_g3http_5f6lfz8t",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "02e205c0"
+            ],
+            "open_rows_per_fingerprint": {
+              "3d6be64858aa": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "max_job_rows_observed": 1,
+          "max_distinct_operation_ids_observed": 1,
+          "worst_open_rows_on_one_fingerprint": 1,
+          "fingerprints_ever_holding_two_open_rows": []
+        },
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 408,
+          "door_store_dirs_present_before_round": 0
+        },
+        "final_db_state": {
+          "present": false,
+          "looked_for": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_lzk9_3gp\\suite.db",
+          "store_role": "pytest process suite DB - NOT the store this door's claim is about",
+          "door_store_witnessed_mid_round": {
+            "samples_taken": 24,
+            "distinct_door_stores_seen": [
+              "cnx_g3http_5f6lfz8t"
+            ],
+            "peak_row_sample": {
+              "elapsed_ms": 1750.0,
+              "door_store_dir": "cnx_g3http_5f6lfz8t",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "02e205c0"
+              ],
+              "open_rows_per_fingerprint": {
+                "3d6be64858aa": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "last_sample": {
+              "elapsed_ms": 3250.0,
+              "door_store_dir": "cnx_g3http_5f6lfz8t",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "02e205c0"
+              ],
+              "open_rows_per_fingerprint": {
+                "3d6be64858aa": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "max_job_rows_observed": 1,
+            "max_distinct_operation_ids_observed": 1,
+            "worst_open_rows_on_one_fingerprint": 1,
+            "fingerprints_ever_holding_two_open_rows": []
+          },
+          "door_store_dirs_seen": [
+            "cnx_g3http_5f6lfz8t"
+          ],
+          "door_store_left_behind_after_round": [],
+          "door_store_printed_by_the_door": {
+            "source": "the door's own receipt line, emitted after it read the file back",
+            "line": null,
+            "per_arm": {}
+          }
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        },
+        "db_removed_after_receipt": "cnx_pytest_lzk9_3gp"
+      },
+      {
+        "run_index": 10,
+        "mutated": true,
+        "anchor": {
+          "path": "D:\\moodle\\_qoder_ord30_evidence_20260920\\ord213\\snap_2ab69f2\\backend\\app\\catalog_hydration_operations.py",
+          "anchor_hits": 1,
+          "expected_anchor_hits": 1,
+          "before_sha256": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5",
+          "mutated_sha256": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+          "bytes_changed": true
+        },
+        "mutated_digest": "583540f6394bd976277bf401dfec9d3c182a6fcaeeb9cdfb8ce1b2ffc4528695",
+        "argv": [
+          "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+          "-X",
+          "utf8",
+          "-m",
+          "pytest",
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+          "-p",
+          "no:cacheprovider",
+          "-v",
+          "-rA"
+        ],
+        "exit_code": 1,
+        "collected": 1,
+        "pytest_counts": {
+          "passed": 0,
+          "failed": 1,
+          "errors": 0,
+          "skipped": 0
+        },
+        "target_outcomes": {
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation": "RED"
+        },
+        "failed_nodeids": [
+          "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation"
+        ],
+        "errored_nodeids": [],
+        "collection_or_setup_errors": [],
+        "resolved_absolute_db_path": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_krmemdad\\suite.db",
+        "path_source": "app_printed_receipt_line",
+        "assertion_red_reason": "E       AssertionError: 期望：natural 两发都被受理并拿到 operation_id（跨进程幂等不许把人推开）；实际 [(60969, 503, None, \"{'error': {'code': 'HYDRATION_STORE_BUSY', 'message': 'Another catalog write is in flight; this request was not recorded\")]",
+        "summary_line": "======================== 1 failed, 4 warnings in 3.62s ========================",
+        "door_print_line": "",
+        "door_store_witness": {
+          "samples_taken": 27,
+          "distinct_door_stores_seen": [
+            "cnx_g3http_lg7r4gar"
+          ],
+          "peak_row_sample": {
+            "elapsed_ms": 1906.0,
+            "door_store_dir": "cnx_g3http_lg7r4gar",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "fbca1442"
+            ],
+            "open_rows_per_fingerprint": {
+              "496a630ae266": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "last_sample": {
+            "elapsed_ms": 3672.0,
+            "door_store_dir": "cnx_g3http_lg7r4gar",
+            "table_count": 55,
+            "job_rows": 1,
+            "statuses": [
+              "QUEUED"
+            ],
+            "distinct_operation_ids": 1,
+            "operation_id_prefixes": [
+              "fbca1442"
+            ],
+            "open_rows_per_fingerprint": {
+              "496a630ae266": 1
+            },
+            "max_open_rows_on_one_fingerprint": 1,
+            "fingerprints_with_more_than_one_open_row": []
+          },
+          "max_job_rows_observed": 1,
+          "max_distinct_operation_ids_observed": 1,
+          "worst_open_rows_on_one_fingerprint": 1,
+          "fingerprints_ever_holding_two_open_rows": []
+        },
+        "initial_db_state": {
+          "path_did_not_exist_before_this_run": true,
+          "temp_dirs_present_before_round": 408,
+          "door_store_dirs_present_before_round": 0
+        },
+        "final_db_state": {
+          "present": false,
+          "looked_for": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_krmemdad\\suite.db",
+          "store_role": "pytest process suite DB - NOT the store this door's claim is about",
+          "door_store_witnessed_mid_round": {
+            "samples_taken": 27,
+            "distinct_door_stores_seen": [
+              "cnx_g3http_lg7r4gar"
+            ],
+            "peak_row_sample": {
+              "elapsed_ms": 1906.0,
+              "door_store_dir": "cnx_g3http_lg7r4gar",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "fbca1442"
+              ],
+              "open_rows_per_fingerprint": {
+                "496a630ae266": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "last_sample": {
+              "elapsed_ms": 3672.0,
+              "door_store_dir": "cnx_g3http_lg7r4gar",
+              "table_count": 55,
+              "job_rows": 1,
+              "statuses": [
+                "QUEUED"
+              ],
+              "distinct_operation_ids": 1,
+              "operation_id_prefixes": [
+                "fbca1442"
+              ],
+              "open_rows_per_fingerprint": {
+                "496a630ae266": 1
+              },
+              "max_open_rows_on_one_fingerprint": 1,
+              "fingerprints_with_more_than_one_open_row": []
+            },
+            "max_job_rows_observed": 1,
+            "max_distinct_operation_ids_observed": 1,
+            "worst_open_rows_on_one_fingerprint": 1,
+            "fingerprints_ever_holding_two_open_rows": []
+          },
+          "door_store_dirs_seen": [
+            "cnx_g3http_lg7r4gar"
+          ],
+          "door_store_left_behind_after_round": [],
+          "door_store_printed_by_the_door": {
+            "source": "the door's own receipt line, emitted after it read the file back",
+            "line": null,
+            "per_arm": {}
+          }
+        },
+        "db_fresh": true,
+        "restore": {
+          "attempted": true,
+          "restored": true,
+          "restored_digest_by_file": {
+            "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+          },
+          "byte_exact_match_before": true,
+          "mutant_marker_hits_after_restore": 0,
+          "post_restore_dirty_paths": []
+        },
+        "db_removed_after_receipt": "cnx_pytest_krmemdad"
+      }
+    ]
+  },
+  "derivation": {
+    "claimed_result": "KILLED",
+    "claimed_result_note": "交付方自称，仅供参考；closure 只认 verifier 派生的 derived_result。上一批 `mutant_rounds_*.json` 里的 deterministic_kill / campaign_valid 属同一类自称，按 B-1 不再单独生效。",
+    "derived_result": null,
+    "direct_red_nodeids": null,
+    "collateral_red_nodeids": null,
+    "verifier_problems": [],
+    "primary_red_rounds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "every_round_named_a_fresh_db": true,
+    "every_round_restored_byte_exact": true,
+    "every_round_zero_collateral": true
+  },
+  "restore": {
+    "attempted": true,
+    "restored": true,
+    "restored_digest_by_file": {
+      "backend/app/catalog_hydration_operations.py": "7d51d7acc1eddfa62310e42951836b23f11d4bdd8647a3b03eec6b78ef1133b5"
+    },
+    "byte_exact_match_before": true,
+    "mutant_marker_hits_after_restore": 0,
+    "post_restore_dirty_paths": [],
+    "rounds_verified": 10,
+    "aggregation": "all_mutated_runs",
+    "aggregation_semantics": "all() 覆盖 attempted/restored/byte_exact；restored_digest_by_file 取每轮一致的那一个并与 mutation.changed_files[path].before_digest 逐一对齐（不齐就拒绝出件）；marker 用 max（必须 0）；dirty 用 union（必须 []）。全部从 per-run 对象读，不手写。",
+    "derived_from_run_indices": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ]
+  },
+  "envelope_repair": {
+    "repair_kind": "envelope_only_no_remeasurement",
+    "source_file": "v1_receipt_Y3_http_2ab69f2.json",
+    "source_git_blob_sha1": "89b698678fb67538a3efaa9ccca35cd9ff731f05",
+    "source_bytes": 74207,
+    "source_is_untouched": true,
+    "why": "仲裁/红队读到的缺的是**信封字段**，不是实验失败：同一份 10 轮 per-run 里都有 restore。本件只把它机械聚合到顶层，没有重跑一轮，也没有改动任何一条读数。",
+    "published_path_frozen": "旧路径与旧 blob 原样保留，本件走新路径（Q2 之后的规矩）。"
+  },
+  "repaired_at_local_clock": "2026-09-23T16:51+0800"
+}
