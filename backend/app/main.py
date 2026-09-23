@@ -18,7 +18,7 @@ import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, StreamingResponse
-from sqlalchemy import delete, func, select, update
+from sqlalchemy import delete, func, insert, select, update
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
 
@@ -1085,53 +1085,110 @@ def run_agent_command(
         }
     )
     scoped_key = f"agent.command:{header_key}"
-    scoped_key = f"agent.command:{header_key}"
     with journey_write_lock(str(journey_id)):
-        # 进程内这把锁只是优化；**互斥点是唯一索引在提交时说的那句话**。
+        # 进程内这把锁只是优化；**跨进程的所有权点是 idempotency_keys 的唯一索引，而且必须在
+        # 任何副作用之前被裁决**。
         #
-        # 为什么不在这里"先提交占位、再跑 impl"：`_run_agent_command_impl` 自己在函数里
-        # `session.commit()`，那只会把"两枚 mission"换成"一枚 mission + 一次失败运行"，
-        # 库里仍然留痕（红队 5795662769 的硬要求，我照做）。现在占位行、impl 写的 mission、
-        # 这一发的答案在**同一个外层事务**里：impl 的 commit 在 create_savepoint 模式下只
-        # RELEASE SAVEPOINT，不落库，所以抢不到键的那一方在最外层 commit 撞主键、整个事务
-        # 回滚 —— mission 与占位一起消失，不是"回滚收不回已提交的那一行"。
+        # 上一版（1f86a8f）把占位、mission、回执塞进同一个外层事务，指望 create_savepoint 让
+        # impl 内部的 session.commit() 只 RELEASE SAVEPOINT。实测不成立：pysqlite 不会在 SAVEPOINT
+        # 之前替我们发 BEGIN，最外层 SAVEPOINT 的 RELEASE 就等于提交 —— 撞键之前那一枚 mission
+        # 已经 durable（探针 o253_ghost_writer_probe：INSERT journey_missions → RELEASE →
+        # ROLLBACK TO SAVEPOINT_3 → 库里仍 1 行）。那一版记 (i) NOT MET AS CLAIM-FIRST。
         replayed = _replay_committed_accept(session, scoped_key, signature)
         if replayed is not None:
             return replayed
         now = datetime.now(timezone.utc)
-        with engine.connect() as claim_conn:
-            claim_tx = claim_conn.begin()
-            claim_session = Session(bind=claim_conn,
-                                    join_transaction_mode="create_savepoint",
-                                    expire_on_commit=False)
-            try:
-                response = _run_agent_command_impl(journey_id, payload, claim_session)
-                claim_session.add(
-                    IdempotencyKey(
-                        key=scoped_key,
-                        operation="agent.command",
-                        request_hash=signature,
-                        response_status=getattr(response, "status_code", 200),
-                        response_json=json.dumps(response, sort_keys=True),
-                        created_at=now.isoformat(),
-                        expires_at=(now + timedelta(days=7)).isoformat(),
-                    )
-                )
-                claim_session.flush()        # 关键：外层连接 commit 不会替 ORM 落待写对象
-                claim_tx.commit()          # 同一时刻：mission 可见 + 回执完整
-            except IntegrityError as exc:
-                # 唯一索引判定别人先落地了。回滚之后只能**读**赢家的答案；
-                # 绝不删行、绝不重跑 impl —— 那正是"重复既有副作用"的入口。
-                claim_tx.rollback()
-                raced = _replay_committed_accept(session, scoped_key, signature, wait=True)
-                if raced is not None:
-                    return raced
-                raise HTTPException(
-                    409, "agent idempotency record is incomplete"
-                ) from exc
-            finally:
-                claim_session.close()
+        raced = _claim_agent_command_key(scoped_key, signature, session, now)
+        if raced is not None:
+            return raced
+        # 走到这里：这把键**归这一发**（NULL 占位已提交，别的进程只能等或 409）。
+        response = _execute_agent_command_claimed(journey_id, payload, scoped_key, now)
     return response
+
+
+class _DeferredCommitSession:
+    """把**提交所有权**收回 Phase B：被调方里的 `commit()` 在这一发里只 flush。
+
+    只给 keyed `run_agent_command` 用；全仓其它地方的 commit 一处不动（包工头 22:1x §① 的围栏）。
+    """
+
+    __slots__ = ("_session",)
+
+    def __init__(self, session: Session) -> None:
+        self._session = session
+
+    def commit(self) -> None:
+        self._session.flush()
+
+    def __getattr__(self, name: str):
+        if name == "_session":
+            raise AttributeError(name)
+        return getattr(self._session, name)
+
+
+def _claim_agent_command_key(scoped_key: str, signature: str, session: Session,
+                             now: datetime) -> dict | None:
+    """Phase A CLAIM：先插一枚 NULL 占位并**独立提交**，这才是跨进程的所有权点。
+
+    唯一索引说"已经有了" ⇒ 这一发不许进 impl（回放到这里就停）；只能**读**赢家的答案，
+    读不到就 fail closed 成现成那句 409。绝不删占位、绝不按 expires_at 回收、绝不在别人
+    那一发上重跑副作用 —— 恢复的前提是"证明不会重复既有副作用"，而这里证不出来。
+    """
+
+    with engine.connect() as claim_conn:
+        claim_tx = claim_conn.begin()
+        try:
+            claim_conn.execute(
+                insert(IdempotencyKey).values(
+                    key=scoped_key,
+                    operation="agent.command",
+                    request_hash=signature,
+                    response_status=None,
+                    response_json=None,
+                    created_at=now.isoformat(),
+                    expires_at=(now + timedelta(days=7)).isoformat(),
+                )
+            )
+            claim_tx.commit()          # 早于任何 mission / run / audit / event
+        except IntegrityError as exc:
+            claim_tx.rollback()
+            raced = _replay_committed_accept(session, scoped_key, signature, wait=True)
+            if raced is not None:
+                return raced
+            raise HTTPException(
+                409, "agent idempotency record is incomplete"
+            ) from exc
+    return None
+
+
+def _execute_agent_command_claimed(journey_id: UUID, payload: AgentCommandRequest,
+                                   scoped_key: str, now: datetime) -> dict:
+    """Phase B EXECUTE：赢家的副作用与"占位 → 完成回执"在同一次可回滚提交里。
+
+    这一段只有一次真提交（`engine.begin` 正常退出时）。中途任何异常 ⇒ mission / run / audit /
+    event 一行 durable 都不留，而 Phase A 那枚 NULL 占位**留着** —— 它是"有主之物没跑完"的
+    证据，不删、不顶、不重跑。
+    """
+
+    with engine.begin() as work_conn:
+        work_session = Session(bind=work_conn, expire_on_commit=False)
+        try:
+            response = _run_agent_command_impl(
+                journey_id, payload, _DeferredCommitSession(work_session))
+            filled = work_session.execute(
+                update(IdempotencyKey)
+                .where(IdempotencyKey.key == scoped_key,
+                       IdempotencyKey.response_json.is_(None))
+                .values(response_status=getattr(response, "status_code", 200),
+                        response_json=json.dumps(response, sort_keys=True))
+                .execution_options(synchronize_session=False)
+            ).rowcount
+            if filled != 1:
+                # 只允许 NULL → 完成：覆盖别人填好的回执，就是拿别人的答案冒充自己的
+                raise HTTPException(409, "agent idempotency record is incomplete")
+            return response
+        finally:
+            work_session.close()
 
 
 def _run_agent_command_impl(
