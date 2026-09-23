@@ -190,6 +190,52 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-23 11:0x+08 —— **ORD-0243 复验（我自己重做那一对实验，不引 B 的收据）**：一对实验三条读数全部独立复现（含**它没明写的 pre-guard 对照**）；全套红数我量到的是**两棵导出树稳定红集相同（8 条）**，B 报的"新尖 10"是**车道树的环境差**（`test_aiv3_02`），我在导出树上实测 4 passed；另自首一条我自己的 flaky 读数
+
+**树与坐标（全部 `git archive` 干净导出，权威树 0 改动）**
+```text
+臂 1   tree20 = git archive f5a6b9a（主线 tip 04:10）＋ 仅门文件（从 f42f9f1 取，sha256[:16] f3415b0c75e3c947）
+臂 1'  tree20 ＋ 门文件的 **pre-guard 版**（从 75bc8ca 取，sha256[:16] 9495bb933216042d）← 这一格是 B 块里没单独列出的对照
+臂 2   tree21 = git archive f42f9f1（B 的树，parent 75bc8ca）
+门文件 backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py（T1/T2/T3 三节点）
+```
+
+**一、一对实验（三条读数，我自己跑）**
+
+| 臂 | 形状 | 读数 | 判词落在哪一句 |
+|---|---|---|---|
+| **1'** | 主线 f5a6b9a ＋ **pre-guard** 门 | **3 passed** ⇒ **空对空永真**：`carrying 0 == declared 0` 两侧都是空集、等式成立、门绿什么也没钉 | 这就是"假绿"的直接正证；B 的块只写了 guard 后的对照，这一格我补上 |
+| **1** | 主线 f5a6b9a ＋ **guard** 门 | **1 failed / 2 passed**，红的就是 **T3**，断言消息逐字为：`生产者一个地点都没声明 / 求值方一个地点都看不见 ⇒ 下面那条等式是空对空，它钉不住任何东西（declared=[] carrying=[]）…` | 新 guard `assert declared and carrying`（`f42f9f1` diff 的 `+7` 行，位置在 `assert carrying == declared` 之前） |
+| **2** | B 的树 f42f9f1 | **3 passed** | 同上三节点 |
+
+⇒ **B 的"假绿 → guard → 双向证明"这条链，我逐条独立复现，读数与它报的一致**（含它没列的 pre-guard 对照）。
+
+**二、全套红数（我的导出树读数，逐条列出）**
+
+```text
+旧尖 f5a6b9a（tree20，纯净、无门文件）  run1: 10 failed / 1179 passed / 15 skipped / 1 xfailed（collected 1205）
+                                        run2:  8 failed / 1181 passed / 15 skipped / 1 xfailed（同一棵树、全新导出）
+新尖 f42f9f1（tree21）                   8 failed / 1176 passed / 15 skipped / 1 xfailed（collected 1200）
+```
+**稳定红集（两棵树逐条相同，8 条）**：`gates::test_g5…`｜`lock_duration::test_g9a…`｜`lock_duration::test_g9b…`｜`matrix_truth::test_g14a…`｜`matrix_truth::test_g14c…`｜`provider_independence::test_g8a…`｜`provider_truth::test_g10…`｜`city_failure_reasons::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at`。
+
+**三、与 B 报的"10 / 8"的差（这是本轮最要紧的一格）**
+- **它报的"新尖 10"我在导出树上复现不出**：我的新尖 = **8**。多的两条它自己已注明是 `test_aiv3_02`（`citynexus_mcp` 环境依赖）＋ `g3`（形态依赖）——**我在导出树上实测 `tests/test_gpt_agent_authority_v3.py` = 4 passed**（`importlib.util.find_spec('citynexus_mcp')` 在我的 venv = **None**）⇒ **"10 红"是它车道树的环境读数，不是树差异**，与它自己的判断一致，我用导出树独立确认了这一点。
+- **它报的"旧尖 8"我复现到了**（run2 = 8，且红集与新尖逐条相同）⇒ **两棵树的稳定红集是同一个 8 条集合**。
+- collected 差：我量 f5a6b9a = **1205**、f42f9f1 = **1200**（B 报旧尖 1197 / 新尖 1200）。新尖一致；旧尖差 8 个节点 ⇒ 说明 B 的"旧尖"与我的 f5a6b9a **不是同一棵树**（它的分支从更早的主线分出），或它把某些文件排除在收集外。**我按我量的报，不替它圆。**
+
+**四、我自首一条 flaky（按纪律不归因）**：旧尖**同一棵树**两次全套得到 **10 与 8** 两个不同红集，多出的两条是 `catalog_hydration::test_abandon_reports_a_request_not_a_death` 与 `sol_guardian_projection::test_a_preventive_run_carries_the_fields_the_panel_selects_on`——**复跑不复现** ⇒ 按我的纪律**不归因给任何树**，也不写成"新尖修掉了两条"（那正是把 flaky 读成因果）。稳定基线取两次交集 = 那 8 条。
+
+**纪律**：只读；两棵树均 `git archive` 导出、权威树 0 改动；未碰 `:4781/:4782/:8693/:8713/:4185` 与 `_live.db`/`_preview.db`；臂 1' 的门文件替换后已逐字节还原（`f3415b0c75e3c947` 亲验）。**报红均带 tree=**（上表每行都写了树）。
+
+**发布状态**：本块读数为导出树现场跑出，无新产物需发布（收据文本已在本块内）；如需外审坐标我可把这两次全套的 `-rf` 输出落成 blob 再发布。
+
+**交付投递（按令"发总线并敲门"）**：
+- **总线：已发** ⇒ `Canshu-King/CityNexus-Workspace#1` comment id **`5788231358`**（内容 = 本块一、二、三节摘要）。
+- **敲门：未送达（机制限制，如实报）** ⇒ 我的 in-app browser 实例打开 `chatgpt.com` 后**没有可见视口**：点击动作被拒，原文 `NATIVE_BROWSER_VIEWPORT_UNAVAILABLE: In-app Browser did not provide an attached surface with a positive viewport within 1000ms (viewport=0x0, visible=false, attached=false, cdpAttached=true)`；`take_snapshot` 仍可用（结构可见：已登录、停在**新会话**首页）。加上账本里没有仲裁窗口的完整 URL（只有 `chatgpt.com/c/WEB` 这个占位串）⇒ **我这一侧无法完成指针级敲门**。**请包工头代敲**（或把窗口 URL 给我并确保浏览器视口打开）。这与账本里既有的先例同类（"被本机策略拒绝…这是机制限制，不是我没送"），**我不把总线已发写成"已送达仲裁"**。
+
+
+### d291c9dc · ORD-0239 只读交付：11 城矩阵（两棵树各一份）＋ support contract 规格 @2026-09-23T10:57+08 → **头条：`capability=READY` 在 220 格里出现 0 次**（11 城×2 写法×5 库状态×两棵树全实测）。8 座 HYDRATABLE / 3 座 UNAVAILABLE（福州·东京·新加坡 NO_CANONICAL_IDENTITY）两树相同；**空库与 seed_demo 判定分布完全一样 ⇒ 今天的数据没让任何一座城前进一格**（北京 0→8 行仍与厦门 0 行同词同因）；两种查询写法逐格相同 ⇒ 不是 UI 传参的锅。正控证明判据没死：北京 intents 4/6（差 lodging+nightlife），我给 XIAMEN 填满 4 类 place intent＋3 个 mobility 服务＋2 个可订服务到 5/6 仍不改口——**mobility 的输入是显式 OD 矩阵**：北京 56/56、CNX-DEMO 9/56、XIAMEN 0 ⇒ 说 READY 目前只有北京具备条件。**两棵树对「没有身份」的编码互相矛盾**：活线 canonical=None＋pending；手机树把「unresolved:3b27d…」塞进身份列，且 payload 少 10 键（无 destination_state/retryable/pending 五列）⇒ parity 门必须按树各出一版。⚠ 自报：我第一版判据写 bool(canonical_destination_id)，把手机树读成「11/11 都有身份」——上面那条差异就是查这个矛盾掉出来的。**契约四轴有两轴现在没有字段**：hydration-capability（只有 action=START_HYDRATION，北京 8 行与厦门 0 行同一个词）与 user-visible support（UI 直接吃 capability）⇒ 规格要求新增 hydratable 与 support_state＋可测投影规则（GOLDEN_FIXTURE 不是 LIVE 成为可测分支）。**parity 门实算：今天应显示 8 座「需要加载数据」＋3 座「不支持」，LIVE_READY/DEMO_READY 均为 0 ⇒「11 城已支持」是超前承诺。** 另：这条读路由实测写中性（22 次 GET 逐表行数不变）。请你处理：①宣传名单由 SELECTABLE 驱动还是摘掉那三座（结构性，词表没这三个码，补数据救不回）；②活线 :13 文档改四值（手机树自洽别动）；③support_state 与 hydratable 一起落。6 件外读 **6/6 PROVEN**（evidence/ord0239_harness/，含一次按文件名拒收⇒只改名不动字节）。
 ### SESSION=c01d72a3 · 唤醒批 1 已读；回主线核"合流那一格"时发现 **撤了 C、却没留 B**，而它顺手打穿了我自己门里的一条空断言（已修） 2026-09-23T10:35+08 → 新尖 **`f42f9f1`**（`git log -1` 原样：`f42f9f1 Wed Sep 23 10:18:34 2026 +0800 test(feasibility): the evidence-inventory equality refuses to hold over two empty sides`，40 位 `f42f9f1235cf22e806e45172c818ef9798f5bd3e`，parent `75bc8ca`，1 file **+7/−0**，**未 push**；首发 `75bc8ca` 的账本块在 04:03，不动它）
 
 **① 要你认的一格（不是求你让我改主线）**：你 10:0x 那块说 ORD-0219 第②步"选型已裁（留 B `21309b9`、撤 C `00bc9b5`），合流那格等 C 移植件到位"。C 的移植件我这边早就收了（`4d9ceae` 那批，账本 01:05/01:43 两块），所以我回主线只读核了一遍合流状态，四条读数（全部在 `_qoder_integration_20260919` 现场跑，`f5a6b9a` = tip 04:10:55）：
@@ -12576,7 +12622,122 @@ sha1sum /tmp/x.json   # 期望 c39349098b847bf8bf31e0b0208ae6536bda910d
 `STATUS: ORD-0232-DONE-RENDERING-HALF-BLOCKED-ON-MERGE-FOR-E2E | files frontend/src/{app/V8Experience.tsx,i18n/LocaleContext.tsx,api/candidateRejections.ts}+frontend/e2e/{qoder-dropped-candidates-say-why.spec.ts,_qoderTextScan.ts}+frontend/{e2e-ord0232-real/,playwright.ord0232-real.config.ts}+review/{ord0232_kill_arms.py,ord0232_arm_matrix.py,ord0232_e2e_replay.py,build-evidence-payload.py}；**backend/ 0 个文件** | tests 新档 5 passed、回归两档 6/6 passed、tsc 两配置 exit 0、六臂 6/6 KILLED 且四格独占杀手齐 | blocker 有（具名：`a96fabf` 未合入 ⇒ 端到端正向格 BLOCKED_ON_MERGE，我给它可跑命令而非绿）| writes 全在我自己的 _run<id>.db；预览台 :4781/:4782/:8781/_preview.db、B 的 spike 树与 `q219b_handoff.db` 一字节未动 | evidence 上列 10 blob + 本节`
 status: ORD-0232 的"上屏那一半"已交（含四格四把独占杀手）；端到端那一半等 `a96fabf` 合流，命令已备好并实测会自己拒跑。
 
+#### aad2d1f2 HJ-P3 重启后第一批（新链）@2026-09-23 10:3x–10:5x —— **ORD-0146 手机口径整条走通（含"确认并保护"→1 个受保护事实）**；ORD-0237③ 你点的实验做完了：**双击窗口没关，只是我 60 ms 没赶上帧提交**；另两条新读数（44px / 跨 tab 残留错误）
+
+**读数归属（先把分母钉住）**
+- 前端：`index-DtQ86lsQ.js`，1,231,985 B，**公网那份与本机 dist 逐字节同一**：`sha256` 前 16 位两边都是 `cf3a08108ffba413`（`public_bundle_check.py` 当场打印；`GET /` 200 1,200 B 的 index 里就引用这一个 JS + `index-cWMF3pBW.css`）。
+- 视口/输入：Playwright 自建 `hasTouch` 移动 context，`390×844`、`deviceScaleFactor 3`、`locale zh-CN`，`ontouchstart in window = true`，按钮一律 **`page.touchscreen.tap()` 真触摸**（每次点前用 `elementFromPoint` 证明命中框归它）。
+- 后端：我的 lane `:8424`（树 = `_qoder_cmdr_gate_20260921`，与手机的 `:8693` 同一代 `53fe8e8`）+ 前端 `:8464` 服务**同一个 dist 目录**；`CITYNEXUS_DEMO_MODE=true` 与手机一致；库 = 我自己的 backup 副本 `_lane_aad2d1f2_livecopy.sqlite3`。
+- 归属双向证明（重启后重做的）：`GET :8424/api/v1/journeys/3dadf0c1…`（只在副本里）= **200**；`GET …/d1bdc755…`（只在旧 lane 库里）= **404**。
+
+---
+
+##### ① ORD-0146 手机复验：**整条走通，终点是"1 个受保护事实"**（写路径 1/1）
+
+自然语言操作序列（全部真触摸，屏上原文照抄）：
+1. 开 `/v8/bookings` → h1 **"你的真实预订，受保护。"**；审核区 `inbox-pending-queue` 渲染 **"等你审核的确认单 / 这里没有等你审核的确认单。"**（空态是具名的，不是白屏）。
+2. 点 `inbox-tab-manual`（**44 px** 高）→ 表单：类型（`航班/火车/酒店/门票/预订`，实测 options 就这 5 个）+ 这是什么/确认号/出发地/目的地/出发时间/到达时间/金额；填 火车 · G102 二等座 北京南-上海虹桥 · EH22938471 · 北京南站 · 上海虹桥站 · 09-25 08:00 · 09-25 12:21 · 662。
+3. 点 **"预览这条预订"**（381×44）→ 写请求原文（从请求里读，不是屏上推）：
+   `POST /api/v1/journeys/51929591…/inbox/import` → `{"artifact_type":"STRUCTURED_JSON","payload":{"reservation":{"reservation_type":"RAIL","title":"G102 二等座 北京南-上海虹桥","confirmation_ref":"EH22938471","origin":"北京南站","destination":"上海虹桥站","scheduled_departure_at":"2026-09-2…`
+4. 队列立刻出现一行（`inbox-pending-row`）：**"结构化数据 · 待确认 EH22938471 服务器说这条可以收下了 打开核对"**，`inbox-open-review` 渲染文字 **"打开核对"**（96×44），空态元素消失。
+5. 点 "打开核对" → 详情面板逐项**回读我填的字段**（预订类型 火车 / 名称 / 订单号 EH22938471 / 出发地 / 到达地 / 出发时间 9月25日 08:00 / 到达时间 / 币种 CNY / 来源 **手动录入**），并诚实写 **"DeepSeek 语义解读未确定 · 置信度待定"**、**"未绑定的语义目标"**、**"锚点角色 未知 · 需要审核"**、**"已核对：需要你补充信息"**；按钮 **"需审核后才能应用"** + **"确认并保护"**（112×44）+ "保存更正" + "高级：原始值"。
+6. 点 **"确认并保护"** → `POST /api/v1/journeys/51929591…/inbox/b11adda0-270e-4e73-bf9d-2d6b62` body `{}` → 屏上：Journey Memory **"1 个受保护事实"**（原来是 0）、`[role=status]` **"已确认事实现受保护于行程记忆中。"**、队列回到空态、票夹卡出现 **"EH22938471 9月25日 08:00 → 9月25日 12:21 ¥662.00 已确认 · 受保护 BOOKING · C4_Anchored · ACTIVE v12:51929591…:arrival-anchor"**。
+
+**库里的行（我这副本，表/列/行数）**：`external_reservation_drafts` 1 行 `status=CONFIRMED`、`extraction_mode=DETERMINISTIC`、`confirmed_at=2026-09-23T02:44:09.715`；`transport_reservations` 1 行 `status=CONFIRMED`、`commitment_id=349c64b3…`、`provider_key=manual-entry`、`realtime_status=UNKNOWN_REALTIME`（没编造实时状态）；`bookings` 1 行 `status=CONFIRMED`、`amount_minor=66200`、`amount_status=KNOWN`、同一 `commitment_id`。⇒ **通过/驳回由服务器判**（走 `…/inbox/{draft_id}` 与 `…/confirm` 路由），前端没有自己决定 —— 这正是单里 ① 要求的那一条。
+
+**两格判定**：
+- `REPRODUCED (tree)` = **走通**（上面 1–6 就是我树上跑的同一份字节）。
+- **公网那一格我不写"未部署"，也不写"我在手机上走过了"**：写路径受 `_live.db` 禁令约束，公网我只发了三个 GET（`/`、`/assets/index-DtQ86lsQ.js`、`/api/v1/demo/scene`，全 200，TLS 校验未关）。所以手机侧的结论是**两条实测事实拼出来的部署同一性**：① 公网 JS 与我这字节相同；② 手机后端 `53fe8e8` 里七条 inbox 路由全在（`git show 53fe8e8:backend/app/main.py` 行 **3580 import / 3597 GET inbox / 3664 text-extract / 3701 vision / 3747 patch / 3788 smart-apply / 3977 confirm**），而 `6b208ee` 这笔 `git show --stat` 显示 **7 个文件里 backend 0 个** ⇒ "后端那代比前端旧"在这一条上不构成缺陷。**只差你在自己手机上亲手点一次**（这是只有你能做的那半格）。
+- 复现率：导入→队列→详情→确认→受保护 **1/1**；空态 2/2（导入前后各一次）。
+
+---
+
+##### ② ORD-0237③：你要的那一枪做完了 —— 答案是**"窗口还在"**，不是"已关闭"
+
+| 枪 | 输入方式 | 实测两击间隔 | POST 数 | `b.disabled` 当场读值 | `agent_runs` |
+| --- | --- | --- | --- | --- | --- |
+| 1 | 两次 `touchscreen.tap` | **883 ms**（被我自己的 `isDisabled()` 探针拖长，不是 120 ms） | 1 | — | 1 行 `fdd55845` |
+| 2 | 两次 `touchscreen.tap` | **828 ms** | 1 | — | 1 行 `7dee5862` |
+| 3 | **`dblclick({delay:60})`**（间隔由浏览器生成，不是我 round-trip） | 60 ms | **1** | — | 1 行 `eed4f908` |
+| 4 | 同一 tick 内页内 `b.click()` ×2（保证在 React 提交之前） | 同 task | **2** | **before:false / 两击之间:false / after:false** | **2 行** `c0ecf668` + `18ccecf4` |
+
+- 所以：**毫秒级真实输入（60 ms 双击）挡得住**，`disabled={busy}` 在帧提交之后有效；但**同一 tick 两击仍是 2 行**，且那一刻 `disabled` 属性根本还没变成 true ⇒ **没有任何同步门**。代码：`PlanWithAiSheet.tsx:432 const submit = async () =>` → `:434 if (command.length < 8) return;` → `:438 setBusy(true)`，**没有 `if (busy) return`**；唯一保护是 `:886 disabled={busy || text.trim().length < 8}`（渲染态，不是门）。
+- 该文件最近三笔改动 `2d3b3fb / e9efec6 / df5ad73` **没有一笔是防双击的** ⇒ 别把第 3 枪读成"已修"。
+- 诚实记录两行不重合：同枪的两行 `created_at` 是 `02:52:24.216` 与 `02:52:47.896`（相差 **23.6 s**，不是旧读数的 23 ms），第二行我查询时仍 `RUNNING` ⇒ 服务器把它们串成了行，但**一次用户动作确实产生了两趟真 run**。
+- **仪器自报（这条会咬下一个车道）**：`page.touchscreen.tap()` 一次 CDP round-trip ≈ 0.4 s ⇒ **我的仪器做不到"120 ms 两次独立 tap"**（第 1、2 枪实测 883/828 ms）。120 ms 那一档我是用 **60 ms 浏览器双击**与**同 tick 合成**两端夹出来的，中间那档没直接量到。另外别信 `navigator.maxTouchPoints>0`：它在没开 `hasTouch` 的 context 里也返回真，我第一枪就被它骗过（`touchscreen.tap` 当场报 `hasTouch must be enabled`）。
+
+##### ③ 顺手量到的两条，都要定级（复现各 1/1）
+
+1. **`HUMAN_ACCESSIBILITY`** —— `/v8/bookings` 里 **"高级：结构化数据" 是 `<summary>`，命中框实测 311×14 px**。同页其它控件都是 44 px 高（粘贴确认信息 44 / 预览这条预订 381×44 / 打开核对 96×44 / 确认并保护 112×44）⇒ 只有这一格低于 Amendment F 的移动端 44 px。补一条正面读数：**真触摸点 `<summary>` 是能展开的**（`details.open` false→true）——我第一次报"点不开"是因为 `boundingBox()` 的 y = **−124**（在视口外），是我的坐标错，不是产品缺陷，已重测并写在这里。最小回归点：`summary` 的 `getBoundingClientRect().height >= 44`（断言读几何，不读 CSS）。
+2. **`HUMAN_MISLEADING`** —— 模型腿失败的那行 **"DeepSeek Responses request failed"** 在页上**跨 tab 存活**：它在"提取文本草稿"失败后出现，我随后切到"手动填写"、成功导入→审核→确认，同一屏上**它还在**，而它既不指向当前 tab 也不指向当前状态。⇒ 用户看到一句不知道属于谁的模型错误挂在已经成功的屏幕上。环境附注：我这腿用的还是那把**待吊销泄露 key**（只记名/长度/前 12 位），本轮 5 趟 run 里 **2 趟 `FAILED_EXTERNAL`** 都是这一句 ⇒ "模型腿会断"在这台机器上是常态而不是偶发，这条残留的杀伤力请按常态算。最小回归点：切 tab / 下一次成功写入必须清 `error` 态，并让错误行带上"属于哪条通道"的名字。
+
+##### ④ ORD-0211②（35 文件包）我**没动**，点名在此
+`review/apply_qoder_cmd_dispatch_ledger.py`、`review/DELIVERY_DISPATCH_AUDIT.md`、`raw/dispatch_audit.py` 三件 mtime 实测 **09-22 14:57 / 14:56 / 14:48**（都在你"先别动"之前），本轮我**一次都没跑过那 5 步**，写集 **0**。⇒ 这一格要么交给能一次跑完整包的车道，要么给一个具名窄口径；不要挂在我这条人视角线上过夜。
+
+##### ⑤ 我上一轮欠你的那句已经落了墨（别再去补）
+"选甲就落墨"那条：`⇒ **这一格按「甲」处理**…` 在账本**第 12327 行**（`downgrade_caveat.py` 于 10:28:20 写入，实测旧措辞 `count=0`、新句 `count=1`、delta +1,134 B、纯 LF）。你 10:40 那块写"选甲就要落墨"时它已经在里面了。
+
+**禁令遵守**：产品码 0 改动；公网链 **0 写**（只三个 GET）；`_live.db` 只以 `mode=ro` + `query_only=1` 读过（用于确认它此刻 `external_reservation_drafts` = **0 行**、`bookings` = 1 行 CONFIRMED ⇒ 公网没法只读复验这一步，写路径才必须落在我自己副本上）；未碰 `:4781/:4782/:8693`；未 `demo/reset`；未新建隧道；TLS 校验未关；凭据只在脚本里从 `preview_auth.txt` 读、**未打印**；建行程/导入/审核全部走 UI（含"预览这条预订"这一步），无 API 捷径。
+**lane 与库**：`:8424`/`:8464` 已重启并重新做过归属双向证明；两个副本库仍 **RETAINED**（`_lane_aad2d1f2_livecopy.sqlite3` = 本轮全部分母；`_lane_aad2d1f2_db.sqlite3` = 09-22 读数的分母），owner=aad2d1f2，要删请点名。D 盘 12.3 GB 我按你说的不动。
+
+**插入收据（本脚本当场测）**：写前 `3836824` B、纯 LF（`CRLF=0`）、`sha256` 前 16 位 `0c3c127c82f700d8`，本机钟 `2026-09-23 10:57:10 `；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1679372`；我的块 `10937` B。写后回读：**把我的区域整段拿掉是否与写前逐字节相同**、块出现次数、锚点回到哪个切点。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 自扫 @2026-09-23T11:0x+08 —— **A-3 先扫我自己那两把尺：`deploy_bundle.py` 里真有一条"空对空"（已修 + 双向证明），`gate_streak.py` 扫过没有等式门（贴实际读到的行，不写"已确认干净"）**
+
+### ① 我这条尺上的真实洞（不掩饰）
+
+`asset_verdict()` 原来是：
+```python
+and (g["disk_sha256"] is None or g["sha256"] == g["disk_sha256"])
+and (g["disk_bytes"] is None or g.get("body_size") == g["disk_bytes"])
+```
+⇒ **当 `serve/<ref>` 不在磁盘上时，两个字节比较合取式自动通过**：一个"HTTP 200 + MIME 正确"但**零字节被比较**的资产可以判 GREEN。
+这正是仲裁 A-3 那一族（拿缺席的一侧冒充比较通过）。**修法**：记录 `disk_present`，把它变成必需合取式，
+并把等式改成硬等式（`sha256 == disk_sha256`、`body_size == disk_bytes`）。
+
+### ② 双向证明（不靠"我加了断言"）
+
+```text
+修好的尺：deploy_bundle.py --selftest --serve <发布 outDir>
+  [OK] true_positive:/assets/index-DtQ86lsQ.js        GREEN 200 text/javascript
+  [OK] true_positive:/assets/index-cWMF3pBW.css       GREEN 200 text/css
+  [OK] killer:wrong_mime_non_html                     RED（对）
+  [OK] killer:missing_asset_spa_html_fallback         RED（对，200 + text/html）
+  [OK] killer:served_but_absent_on_disk(真 ref)       RED（对，新增那一臂）
+  [OK] B1:live_index_refs_all_resolve                 GREEN
+  SELFTEST GREEN (6/6 arms matched)
+  receipt: evidence/gates/deploy_bundle_a3_selftest_0923.json  blob 25476cea49bf9377（2,613 B）
+
+反向突变 = 把那一处改回旧的松写法（同一把尺、其它一字不动）：
+  [BAD] killer:served_but_absent_on_disk  expect=RED **got=GREEN**
+  SELFTEST RED (5/6 arms matched)，rc = 9
+  ⇒ 新杀手臂是**受力的**：旧写法下它必然放绿（200 + MIME 对 + 零字节比较）。
+  mutant 源与 diff 都是具名的：`receipts/_lax_mutant_deploy_bundle.py`（21,149 B，anchor_hits=1，byte-differs=True）
+```
+发布件：`live_checks/deploy_bundle.py` @ `commander/control`，commit `b4282b610ddb`，
+**blob `b0bd89f859f1c18c` / 21,169 B**（旧版是 `f02e36062dc9de4e` / 19,902 B）——外审拿这一把就够，不需要我的树。
+
+### ③ 另一把尺：扫了，**没有**等式门（把读到的贴出来，不写"已确认干净"）
+
+`gate_streak.py` 里所有相等判断都是标量，不是集合相等：
+`rounds != 10`（:148）、`path == "NOT_PRINTED"`（:111/:165）、`grade == "CLOSED"`（:238）、
+`args[1:3] == ["-m","pytest"]`（:156 注释里的形状）、`clause6_declared`（:188 环境变量比对）。
+`set()` 只出现在 :64 的返回值；:123 是 `len(have)` 计数，不参与判绿。
+⇒ **这一把不需要改**；A-3 对它的作用点是"以后新加判据时别造等式门"。
+
+### ④ 顺带一条：我差点误报一个洞（自曝）
+
+我原以为 `resolved = all(... for r in live_refs)` 在 `live_refs == []` 时会 `all([]) == True` 放过。
+**读了源码才发现第 138 行本来就写着 `if live_refs else False`** —— 那个洞不存在。
+⇒ 记成口头规矩：**"先读那两行，再宣布别人的尺有洞"**（和今天"8 次锚点命中"是同一族，我今天第二次差点对没读过的代码下结论）。
+
+### ⑤ 现场
+
+链四条在听；canary `:4185`/`:8713` 待 ORD-0242 收据；账本远端 `bb11bd06db29e2c4` / 3,836,824 B（本块写完后重镜）；
+仲裁侧：总线 `5788185652`（B-1…B-4）+ 新窗口第 2 次敲门已发（`composerLen→0` 已验），等回。
+车道：B 改做 composite landing candidate、C 按"两 uvicorn + HTTP"写门、HARNESS 加 canonical identity 去重、
+红队 ORD-0243 独立复验空对空、HJ-P2 ORD-0242 兼容烟测。清理闸门仍关（0 删除）。
+
 ## commander 落地 @2026-09-23T10:5x+08 —— **仲裁 GPT WINDOW ARBITRATION #1（总线 `5788111742`）全文已转成指令：A-1 落地单改写（B 做 composite candidate，闭包六件）、A-2 门本体必须走两 uvicorn HTTP、A-3/A-5 两条常态规则已签、A-6 加"先规范化身份再计数"**
 
 ### ① A-1：我原来的落地单**不够**，按仲裁改写（B 是 owner）
@@ -32678,3 +32839,83 @@ D0/D1 两臂 `generate` 111,545 / 74,357 → 归因信号两臂都 0，差分 **
 **没测的那一格（明写，不留模糊）**：我**没有**直接量"一个进程尚未提交的 INSERT 对另一个进程可见吗"（SQLite 语义上是不可见，但我不想把教科书当读数）。我的做法是**强制**"谁也看不见谁"的那个决定时刻（遮蔽前两查），因为门要钉的命题就是"此时只有 durable 层能交付收敛"。如果你或仲裁要的是那条可见性本身，我下一步加一个 5 分钟的直接量法（writer 持未提交事务、父进程开第二条连接读）。
 
 产物：`ord213/xproc_shape_probe.py` + `xproc_child.py` + `xproc_shape_probe_result.json`（已外读，见下面 `evidence/ord0224/`）。当前 tip `f5a6b9a 2026-09-23 04:10:55 +0800 docs(review): the live-generation probe receipt, with the bundle content hash it measured`；`git status --porcelain -- backend/` 我下一步写门之前保持 0 行。snap_349c4fa 按令**留着**，等跨进程门跑完再删。
+
+### d291c9dc · `ORD-0239` 只读交付：**11 城矩阵（两棵树各一份）＋ 后端 support contract 规格** 2026-09-23T10:57+08 → 头条是 **"READY" 这个词今天一次都没出现**（220 格 0 命中），而两棵树对「没有身份」的编码方式**互相矛盾**
+
+**照 12896/12788 派给我的那格做**：矩阵与契约规格由只读车道先钉，不等 C；**没修产品、没改 evaluator、没写任何库**。
+你的 03:38/03:40 读数我**先复现再引用**（§A 第一条），复现全部成立，另外量到 4 条你没提到的。
+
+**坐标与护栏**（读数离开这两行没有意义）：
+```text
+活线   _qoder_integration_20260919  head f5a6b9a   anywhere_capability.py 75,980 B sha cb0e24c14fa7ad73 干净  四值(:74)
+手机树 _qoder_cmdr_gate_20260921    head 53fe8e8   同文件 23,225 B sha 0231d36670b8b543 干净  三值(:49)
+CITYNEXUS_ANYWHERE_RESOLVER=off（import 前设）、CITYNEXUS_PHOTON_BASE_URL=http://127.0.0.1:9 当绊线、AI=false
+TestClient 进程内（0 端口 0 对外 HTTP）；一次性库自建自删：**释放 2,949,120 B**（741,376×2 + 733,184×2）；从未 demo/reset
+_live.db 只 mode=ro + PRAGMA query_only=1（读回 1），size/mtime 前后相同；_preview.db 我试的路径打不开
+  （OperationalError，具名尝试 `D:/moodle/_qoder_preview_20260920/backend/_preview.db`）⇒ **不声称看过它**
+
+**清理数字更正（我随后自己盘点出来的）**：上面那个 `2,949,120 B` 只算了**正常收尾**的几次；盘点 `lab/evidence/_db/` 后发现还留着 **16 个今天由我这些工具的崩溃分支留下的库**（`hard_cap_probe_*` 11、`mobaxis_*` 2、`ord0239_phone_pinned_*` 3），按**自己前缀＋今日 mtime** 具名删净，另释放 **13,451,264 B** ⇒ 本会话（ORD-0239 ＋ EXP-010）合计 **19,329,520 B ≈ 18.4 MiB**。`_db/` 剩下 58 个文件是 09-21/22 的旧库（已发布收据的存储侧对照），**具名保留、没删**。要点自报：**崩溃分支不会走到 cleanup 那一行**，所以「删了自己临时库」必须按目录实际盘点兑现，不能按设计意图说。
+```
+
+**A · 先复现你的读数**（都对，另给边界）：① 活线 `:74` 四值、`:823` 注释原文 `HYDRATABLE until this catalog holds something for it`；
+② **两棵树的 `:13` 文档段逐字相同**，都写"three values, deliberately no fourth unknown" ⇒ **"文档落后"只在活线成立**，手机树代码本来三值、它内部自洽（你 03:40 的方向对）；
+③ 路由两棵树都在（`main.py:2823` / `:2813`）；④ 活库 `places` 按 city_code：**CN-BEIJING 8 / CNX-DEMO 8，宣传名单里其余 9 城 0 行**（我只读数过）。
+
+**B · 矩阵头条（11 城 × 2 种写法 × 5 种库状态 × 两棵树 = 220 格，全部实测）**
+```text
+判定分布（两棵树、空库与 seed_demo 都一样）：8 座 HYDRATABLE / 3 座 UNAVAILABLE
+  UNAVAILABLE 的三座 = 福州 / 东京 / 新加坡，reason_code=NO_CANONICAL_IDENTITY，action=CHOOSE_ANOTHER_DESTINATION
+  ⇒ 后端词表 `_CITY_DISPLAY_NAMES` 是 16 个中国城码（两棵树内容相同），**不含这三座**；UI 名单 `CITY_NAME_BY_SLUG` 11 座
+     （frontend/src/app/V8Experience.tsx:4106-4118）⇒ 两份名单交集只有 8
+中文名与 CN-<SLUG> 两种写法结果**逐格相同** ⇒ 不是 UI 传参形状的锅
+**S1 空库 与 S2 seed_demo 的判定分布完全一样** ⇒ 今天这套演示数据没让任何一座城的 support state 前进一格
+   （北京 0 行 → 8 行，词和原因都还是 HYDRATABLE / COVERAGE_INCOMPLETE，与厦门 0 行同格）
+"capability = READY" 在 220 格里出现 **0 次**；正控证明判据不是死的：
+   北京 ready intents = attractions, booking, food, mobility（只差 lodging、nightlife）
+   CNX-DEMO ready intents = 2/6
+   我给 XIAMEN 填满 4 类 place intent + 3 个 mobility 服务 + 2 个可订服务 ⇒ 到 5/6，**verdict 仍不改口**
+   mobility 的输入是**显式 OD 矩阵**：北京 56/56 对(ratio 1.000)、CNX-DEMO 9/56(0.161)、XIAMEN 0 对
+   ⇒ "能不能对旅客说 READY"目前由 `data/mock/mobility_matrix.json` 的成对覆盖决定，**它只对北京一座城到位**
+```
+
+**C · 两棵树的编码互相矛盾（这是 parity 门必须按树各出一版的原因）**
+```text
+payload 键数：手机树 16 键，活线 26 键
+  手机树**没有** destination_state、没有 pending 五列、没有 retryable ⇒ 按 destination_state 分支的 UI 在手机上永远走 default
+"没有身份"怎么表达：
+  活线   canonical_destination_id = None  +  pending_destination_label = "CN-TOKYO"
+  手机树 canonical_destination_id = "unresolved:3b27db745ef31062"   ← 字符串占在**身份列**里
+⇒ 契约凡判"有没有身份"必须再判一次 `startswith("unresolved:")`，否则同一份 UI 代码在两棵树得出相反结论
+⇒ **我自报一个假读数**：我第一版判据写的是 `bool(canonical_destination_id)`，于是把手机树读成「11/11 都有身份」。
+   上面那行差异就是查这个矛盾时掉出来的，不是先有结论再找证据。
+私有函数已漂：`_mobility_evidence()` 活线返 3 元组、手机树返 2 元组（我工具第一版当场 ValueError）
+  ⇒ 契约只能钉 payload，不能钉内部函数
+```
+
+**D · support contract 规格（四轴 → 字段 → 谁写 → 怎么验）摘要**（全文在交付里）
+① identity：字段已具备（`canonical_destination_id`＋pending 五列），**要做的是统一两树"未解析"编码**（以活线为规范）；
+② catalogue-readiness：`coverage{6}`/`coverage_detail{state,candidate_count,min_ready,stale,source_kinds}`/`place_count` **够用**；
+③ **hydration-capability：现在没有字段** —— 只有 `action=START_HYDRATION`，而实测北京(8 行)与厦门(0 行)发同一个 action，
+   它把"该补水"和"能补水"混成一格 ⇒ 规格要求新增 `hydratable: true|false` ＋ `hydration_reason ∈ {SOURCE_HAS_NO_ADMIN_ID, ALREADY_IN_FLIGHT, RETRY_LATER, NOT_NEEDED}`；
+④ **user-visible support：现在没有字段**，UI 直接吃 `capability` ⇒ 新增派生 `support_state ∈ {LIVE_READY, DEMO_READY, HYDRATABLE_ON_DEMAND, UNKNOWN_RETRYABLE, UNAVAILABLE}`
+   ＋投影规则写成可测函数（身份未解析→UNAVAILABLE；UNKNOWN_RETRYABLE→单独一格"暂时问不到可重试"；
+   READY 且各 READY intent 的 `source_kinds` ⊆ {GOLDEN_FIXTURE,OFFLINE_SNAPSHOT,SIMULATED,REPLAY}→**DEMO_READY**；有 REMOTE_PROVIDER/LIVE 捕获→LIVE_READY；HYDRATABLE→HYDRATABLE_ON_DEMAND）。
+   ⇒ 仲裁压轴"`GOLDEN_FIXTURE` 不是 LIVE"在这套规则里是一个**可测分支**，不是口头纪律。
+**parity 门实算今天的正确显示集**：`SELECTABLE = 8 座`（11 − 那 3 座），**`LIVE_READY` 0 座、`DEMO_READY` 0 座**
+⇒ 手机选择器今天应当是"8 座：需要加载数据 ＋ 3 座：不支持/敬请期待"，**不该是"11 城已支持"**。
+顺手量到：这条读路由**写中性**（每状态 22 次 GET 后逐表行数不变，两树都是）⇒ parity 门可放心轮询；**别拿 `GET /experience` 替代**（它读时会写）。
+
+**E · 请 commander 处理的三件事**
+1. **产品决定（要我转仲裁的话说一声）**：宣传名单由后端 `SELECTABLE` 驱动，还是把福州/东京/新加坡从宣传里摘掉？
+   两份名单交集只有 8，这是**结构性**的，不是数据补齐能救的（词表根本没有那三个码）。
+2. 活线 `app/anywhere_capability.py:13` 文档那句"three values…"改成与 `:74` 一致（**只活线**；手机树自洽，别动它）。
+3. `support_state` 落地时**同时**落 `hydratable`，否则 UI 还得从 `action` 反推。
+（我没跑 UI、没测 AMBIGUOUS/RUNTIME_FAILURE 两格——要它们得由 owning lane 用注入 transport 出；`RECOVERY_COSTLY` 的 ≤1 动作/保留草稿归真机与人视角车道，我不代签。）
+
+**F · 现场**：0 端口、0 对外 HTTP、0 provider/0 AI；权威树、活库、用户库、预览库 **0 写入**；没改任何人的测试。
+外读 **6/6 PROVEN**（`Canshu-King/CityNexus @ commander/control` → `evidence/ord0239_harness/`，逐件 GET 回读 git blob sha1 **前缀＋字节数**双校验）：
+`ORD_0239_HARNESS_MATRIX_AND_CONTRACT.md c901701ecbd16239`(15,914 B)｜`ord0239_matrix_f5a6b9a.json b23bd4ea7f2373bf`(288,044 B)｜
+`ord0239_matrix_phone.json 347c3260da214004`(259,418 B)｜`ord0239_mobility_axis_1044.json f3a940788b3b915d`(1,193 B)｜
+`ord0239_mobility_axis_1045.json 11d7e6bd57f18958`(1,258 B)｜`ord0239_store_axis_readonly.json 2ac78b50f1313d0e`(146 B)。
+⚠ 两处工具自报：① 发布器按**文件名**拒了 `_live` 那一枚（`FORBIDDEN_NAME_FRAGMENT(_live)`，带 ACTIONABLE 提示）⇒ 我**只改名**为 `ord0239_matrix_f5a6b9a.json`、字节未动（改名前后 blob 相同，已核）；
+② 我第一版回读脚本拿 16 位前缀去 `==` 40 位 full sha，打出过一个假 "0/6 MISMATCH"——**远端一直是对的**，假的是我的校验；已改成前缀＋size 双校验再报 6/6。
