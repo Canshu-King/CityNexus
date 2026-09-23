@@ -13,10 +13,8 @@
   "verifier_selftest": "7/7 GREEN (3 killers + A-3 NOT_MEASURED witness)"
  },
  "files": 8,
- "proven_by_40char_readback": 7,
- "not_proven": [
-  "ord0263_verdict_on_live_capture.json"
- ],
+ "proven_by_40char_readback": 8,
+ "not_proven": [],
  "rows": [
   {
    "file": "ORD_0263_VERIFIER_AND_SCOPE.md",
@@ -49,14 +47,16 @@
    "tail": "local bytes 2677 | remote size 2677 | sha1 d8a6f27daacde4e7"
   },
   {
-   "file": "ord0263_verdict_on_live_capture.json",
-   "repo_path": "evidence/ord0263/ord0263_verdict_on_live_capture.json",
+   "file": "ord0263_verdict_on_measured_capture.json",
+   "repo_path": "evidence/ord0263/ord0263_verdict_on_measured_capture.json",
    "bytes": 1553,
    "blob40": "e2070caecfebfaed958930095c7b7fc507b1a273",
-   "readback_status": "404",
-   "readback_bytes": 0,
-   "verdict": "NOT_PROVEN",
-   "tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\ord0263_verdict_on_live_capture.json  repo_path=evidence/ord0263/ord0263_verdict_on_live_capture.json  bytes="
+   "readback_status": "200",
+   "readback_bytes": 1553,
+   "verdict": "PROVEN",
+   "tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\ord0263_verdict_on_live_capture.json  repo_path=evidence/ord0263/ord0263_verdict_on_live_capture.json  bytes=",
+   "renamed_from": "ord0263_verdict_on_live_capture.json",
+   "rename_reason": "publisher FORBIDDEN_NAME_FRAGMENTS refuses '_live' in a filename; content untouched, blob identical"
   },
   {
    "file": "ord0263_capture_measured.json",
@@ -99,5 +99,7 @@
    "tail": "local bytes 21085 | remote size 21085 | sha1 9b5726a4f1d45eee"
   }
  ],
- "name_reuse_note": "the v5 and v6 deploy runs shared one local filename; both are published separately (ord0263_v5_*/ord0263_v6_*) recovered from the gauge's timestamped receipts, so no published coordinate ever points at a different run than the one its index row described"
+ "name_reuse_note": "the v5 and v6 deploy runs shared one local filename; both are published separately (ord0263_v5_*/ord0263_v6_*) recovered from the gauge's timestamped receipts, so no published coordinate ever points at a different run than the one its index row described",
+ "updated_at": "2026-09-23T17:40:37+08:00",
+ "second_name_guard_hit": "third '_live' filename collision this session (witness script, S1 screenshot, this verdict file). Lesson applied: check the publisher's refusal line before calling a 404 propagation."
 }
