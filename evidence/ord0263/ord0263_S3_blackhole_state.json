@@ -1,0 +1,17 @@
+{
+ "at": "2026-09-23T16:52:16+08:00",
+ "preview_pid": 56656,
+ "api_port": 8411,
+ "shell": {
+  "shell_status": 200,
+  "cache_control": "no-cache",
+  "bytes": 1200
+ },
+ "direct_api_probe": {
+  "raised": "TimeoutError",
+  "str": "timed out"
+ },
+ "seconds_until_failure": 5.01,
+ "meaning": "TCP accepts, nothing is written back => the page's own 4 s AbortController fires; this is the transport-timeout half of the arbiter's three states",
+ "ports_of_others_touched": []
+}
