@@ -1,0 +1,31 @@
+{
+ "at": "2026-09-23T16:41:52+08:00",
+ "mode": "preflight",
+ "rc": 4,
+ "seconds": 0.5,
+ "ruler_blob40": "e0b4f3c055b9027ae12469b18ad43e920d543bd0",
+ "ruler_unchanged": true,
+ "keyerror_or_traceback": false,
+ "receipt_written_by_gauge": true,
+ "gauge_receipt": "ord0263_preflight_gauge_receipt.json",
+ "bytes": 22349,
+ "blob40": "30782f875911443ce1b4be29672937fc81c9cf13",
+ "overall": "RED",
+ "arms": null,
+ "pairing": {},
+ "F_verdict": null,
+ "F_detail": [],
+ "I_verdict": null,
+ "preflight": {},
+ "how_base_was_set": "environment CNX_DEPLOY_BASE (call-time resolution) - NOT an in-process replacement of the module global",
+ "argv": [
+  "-X",
+  "utf8",
+  "D:\\moodle\\_qoder_harness_ord0254\\tools\\ruler_v5.py",
+  "--preflight-check",
+  "--src",
+  "D:\\moodle\\_qoder_harness_ord0254\\repo\\frontend\\dist",
+  "--serve",
+  "D:\\moodle\\_qoder_harness_ord0254\\serve"
+ ]
+}
