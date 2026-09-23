@@ -6,10 +6,8 @@
  "branch": "commander/control",
  "dir": "evidence/ord0263",
  "files": 12,
- "proven_by_40char_readback": 11,
- "not_proven": [
-  "ord0263_S1_live.png"
- ],
+ "proven_by_40char_readback": 12,
+ "not_proven": [],
  "rows": [
   {
    "file": "ORD_0263_ORIGIN_ERROR_VS_NETWORK_COPY.md",
@@ -116,8 +114,9 @@
    "bytes": 279520,
    "blob40": "80489a02f228f977759f9f5e7693447f549a9c8c",
    "readback_status": "404",
-   "verdict": "PUBLISHED_UNPROVEN",
-   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\shots\\ord0263_S1_live.png  repo_path=evidence/ord0263/ord0263_S1_live.png  bytes=279520"
+   "verdict": "PROVEN",
+   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\shots\\ord0263_S1_live.png  repo_path=evidence/ord0263/ord0263_S1_live.png  bytes=279520",
+   "readback_note": "proven on re-read"
   }
  ],
  "candidate_from_ORD_0254": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df (unchanged by this order)",
@@ -126,5 +125,6 @@
   "red-finding-1 (KeyError verdict) NOT_REPRODUCED_ON_e0b4f3c0",
   "phase-2b shell conflict (G_pre now declares pending_root_docs)",
   "refusal-writes-no-receipt (it does now)"
- ]
+ ],
+ "updated_at": "2026-09-23T17:07:59+08:00"
 }
