@@ -1,0 +1,248 @@
+{
+ "at": "2026-09-23T23:25:00+08:00",
+ "order": "ORD-0263 第五格判据在未修树上的机械派生（控制轮）",
+ "ruler": {
+  "path": "D:\\moodle\\_qoder_harness_ord0254\\tools\\ord0263_verifier.py",
+  "blob40": "ed8a61dc79d87cc2acf18ef93ecca7caf89b4b83",
+  "expected": "ed8a61dc79d87cc2acf18ef93ecca7caf89b4b83",
+  "unchanged_after": true,
+  "word_tables_imported_not_copied": true
+ },
+ "tree": "landed tip 2b49e3ca + ORD-0268 一行（src 与 2b49e3ca 相同）；第五态尚未修",
+ "V5_control_round": {
+  "generation_1": {
+   "V5a_fact_kept": {
+    "verdict": "RED",
+    "measured": {
+     "evidence_kind": "TRANSPORT",
+     "http_status": null,
+     "read_status_measured": 200
+    },
+    "rule": "the answered fact and its status must survive into the attribution"
+   },
+   "V5b_not_a_network_or_no_reply_class": {
+    "verdict": "RED",
+    "measured": {
+     "reason": "NETWORK_UNAVAILABLE",
+     "message_key": "failure.networkUnavailable",
+     "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT"
+    },
+    "rule": "the mechanical fingerprint: answered==True with a NETWORK_UNREACHABLE-family label"
+   },
+   "V5c_screen_says_a_true_sentence": {
+    "verdict": "RED",
+    "measured": {
+     "network_words": true,
+     "service_words": false,
+     "snapshot_words": false,
+     "names_http_200_and_html": false
+    },
+    "rule": "must name the origin and the unusable answer, never the network"
+   },
+   "V5d_both_read_channels": {
+    "verdict": "NOT_MEASURED",
+    "why": "the requestJson leg has only its source shape (citynexus.ts:652-668) so far; no on-screen reading of a 200+HTML answer reaching that channel yet"
+   },
+   "V5e_probe_may_not_cover_it": {
+    "verdict": "RED",
+    "measured": {
+     "evidence_kind": "TRANSPORT",
+     "probe_status": 200,
+     "retry_door": 1,
+     "snapshot_door": 1
+    },
+    "rule": "a 200 probe must not be used to launder the attribution, and both doors stay"
+   }
+  },
+  "generation_2": {
+   "V5a_fact_kept": {
+    "verdict": "RED",
+    "measured": {
+     "evidence_kind": "TRANSPORT",
+     "http_status": null,
+     "read_status_measured": 200
+    },
+    "rule": "the answered fact and its status must survive into the attribution"
+   },
+   "V5b_not_a_network_or_no_reply_class": {
+    "verdict": "RED",
+    "measured": {
+     "reason": "NETWORK_UNAVAILABLE",
+     "message_key": "failure.networkUnavailable",
+     "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT"
+    },
+    "rule": "the mechanical fingerprint: answered==True with a NETWORK_UNREACHABLE-family label"
+   },
+   "V5c_screen_says_a_true_sentence": {
+    "verdict": "RED",
+    "measured": {
+     "network_words": true,
+     "service_words": false,
+     "snapshot_words": false,
+     "names_http_200_and_html": false
+    },
+    "rule": "must name the origin and the unusable answer, never the network"
+   },
+   "V5d_both_read_channels": {
+    "verdict": "NOT_MEASURED",
+    "why": "the requestJson leg has only its source shape (citynexus.ts:652-668) so far; no on-screen reading of a 200+HTML answer reaching that channel yet"
+   },
+   "V5e_probe_may_not_cover_it": {
+    "verdict": "RED",
+    "measured": {
+     "evidence_kind": "TRANSPORT",
+     "probe_status": 200,
+     "retry_door": 1,
+     "snapshot_door": 1
+    },
+    "rule": "a 200 probe must not be used to launder the attribution, and both doors stay"
+   }
+  }
+ },
+ "V5_cells": {
+  "generation_1": {
+   "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+   "rendered_text": "连接\n\n网络不可用\n\n这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\n\n看已保存的只读副本\n重试\n归因详情",
+   "origin_answer": {
+    "status": 200,
+    "ct": "application/json",
+    "thrown": false,
+    "probe_ms": 9
+   },
+   "read_answer": {
+    "status": 200,
+    "content_type": "text/html",
+    "body_head": "<!doctype html><html><head><meta c"
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 0.84,
+   "navigator_onLine": true,
+   "snapshot_present": true,
+   "doors": {
+    "retry": 1,
+    "read_cached": 1
+   },
+   "attribution": {
+    "reason": "NETWORK_UNAVAILABLE",
+    "evidence_kind": "TRANSPORT",
+    "http_status": null,
+    "source_layer": "TRANSPORT",
+    "retryable": true,
+    "recovery_action": "read-only-cached",
+    "message_key": "failure.networkUnavailable",
+    "telemetry": "attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+    "cached_copy_present": true,
+    "at": "2026-09-23T15:15:18.486Z",
+    "context": "shell.boot.journeyRead"
+   }
+  },
+  "generation_2": {
+   "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+   "rendered_text": "连接\n\n网络不可用\n\n这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\n\n看已保存的只读副本\n重试\n归因详情",
+   "origin_answer": {
+    "status": 200,
+    "ct": "application/json",
+    "thrown": false,
+    "probe_ms": 4
+   },
+   "read_answer": {
+    "status": 200,
+    "content_type": "text/html",
+    "body_head": "<!doctype html><html><head><meta c"
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 0.44,
+   "navigator_onLine": true,
+   "snapshot_present": true,
+   "doors": {
+    "retry": 1,
+    "read_cached": 1
+   },
+   "attribution": {
+    "reason": "NETWORK_UNAVAILABLE",
+    "evidence_kind": "TRANSPORT",
+    "http_status": null,
+    "source_layer": "TRANSPORT",
+    "retryable": true,
+    "recovery_action": "read-only-cached",
+    "message_key": "failure.networkUnavailable",
+    "telemetry": "attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+    "cached_copy_present": true,
+    "at": "2026-09-23T15:19:43.109Z",
+    "context": "shell.boot.journeyRead"
+   }
+  }
+ },
+ "S1_to_S4_before_any_fix": {
+  "S1_live": {
+   "verdict": "GREEN"
+  },
+  "V1_origin_error_5xx": {
+   "verdict": "GREEN",
+   "measured": {
+    "http_status": 500,
+    "says_network_words": false,
+    "says_service_words": true,
+    "says_snapshot_words": true,
+    "navigator_onLine": true
+   },
+   "rule": "answered non-2xx + snapshot: must name the service and the snapshot, and must not claim the network"
+  },
+  "V2_no_answer": {
+   "verdict": "GREEN",
+   "measured": {
+    "fetch_thrown": true,
+    "settled_within_deadline": true,
+    "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "retry_door_present": true,
+    "still_on_loading_skeleton": false,
+    "snapshot_present": true,
+    "seconds_to_settle": 16.58
+   },
+   "rule": "no answer at all: the read must settle inside a deadline, be labelled as its own class, show the snapshot and leave a door"
+  },
+  "V3_distinctness": {
+   "verdict": "GREEN",
+   "measured": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "s3_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "same_sentence": false,
+    "s3_is_unclassified_skeleton": false
+   },
+   "rule": "the two arms must not collapse into one classified outcome; a skeleton is not a classification"
+  }
+ },
+ "reverse_sentinel_s3_must_stay": {
+  "measured": {
+   "S3_classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+   "S3_origin_answer_thrown": true
+  },
+  "must_remain": "NETWORK_UNREACHABLE_WITH_SNAPSHOT with thrown==True",
+  "meaning": "if the fifth state later swallows 'never answered', this reading flips and I have over-reached -- that is what keeps V5 inside ORD-0263's scope"
+ },
+ "A3": {
+  "verdict": "NOT_THE_SAME_LIE_NOT_MERGED",
+  "measured": {
+   "writes": [
+    {
+     "method": "POST",
+     "url": "/api/v1/travelers",
+     "at": 1790176787351
+    }
+   ],
+   "write_responses_settled": [],
+   "samples": 10,
+   "ever_blamed_network_or_origin": false,
+   "attribution_records": 0,
+   "stop_door_clicked_at_s": 8.2,
+   "after_stop_rendered": "已停止等待\n已停止等待，行程还没有创建。",
+   "origin_counters": {
+    "health_json": 4,
+    "html_for_api_get": 2,
+    "post_hanging": 1
+   }
+  },
+  "instrument_self_report": "hit_test==NONE on the stop button (no scrollIntoView first); the door's usability is proven by the rendered sentence after the click, not by that field",
+  "cause_line": "readDeadline.ts:43-44 returns a bare fetch() for non-GET/HEAD, so a hung write has no deadline -- a deadline question, not an attribution one (ORD-0262 family)"
+ }
+}
