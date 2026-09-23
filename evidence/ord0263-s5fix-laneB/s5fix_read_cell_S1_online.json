@@ -1,0 +1,66 @@
+{
+ "mode": "live",
+ "at": "2026-09-23T16:57:06.233Z",
+ "url": "http://127.0.0.1:4443/v8/hub",
+ "settled_after_ms": 168,
+ "state_nodes": {
+  "failure-view": 0,
+  "today-heading": 1,
+  "trial-setup": 0
+ },
+ "rendered_text": "菜单\n/\n今天\n跟随系统\nEN\nDE\n\n还没休息\n\nDemo之旅\n\n10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天\n\nAI 帮我规划\n试用其他城市\n打开行程工作台\n今天\n还没有安排\n“现在”取自服务器场景（行程起点）：10月10日 09:00 · 服务器的执行投影还没到，这一屏没有按游标定位\n路线上下文\n0 段路程\n供应商支持的路线 · WGS84\n\n单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方\n\n住宿\n还没有选定\n到达\n10月10日 09:00\n出发\n10月10日 19:00\n这个行程还没有可信的坐标\n\n方案概览\n\n每一天，紧密相连。\n对比住宿 →\n还没有可以预览的行程\n\n选定方案后，这里会显示每天的安排。",
+ "body_text_head": "菜单 / 今天 跟随系统 EN DE 还没休息 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 今天 还没有安排 “现在”取自服务器场景（行程起点）：10月10日 09:00 · 服务器的执行投影还没到，这一屏没有按游标定位 路线上下文 0 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 这个行程还没有可信的坐标 方案概览 每一天，紧密相连。 对比住宿 → 还没",
+ "attribution_expand": {
+  "present": 0,
+  "clicked": false,
+  "line_before": null,
+  "line_after": null
+ },
+ "resource_timing": {
+  "all": [
+   {
+    "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "duration_ms": 9,
+    "status": 200,
+    "kind": "fetch"
+   },
+   {
+    "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+    "duration_ms": 6,
+    "status": 200,
+    "kind": "fetch"
+   },
+   {
+    "url": "/api/v1/demo/scene",
+    "duration_ms": 9,
+    "status": 200,
+    "kind": "fetch"
+   },
+   {
+    "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+    "duration_ms": 15,
+    "status": 200,
+    "kind": "fetch"
+   },
+   {
+    "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+    "duration_ms": 14,
+    "status": 200,
+    "kind": "fetch"
+   }
+  ],
+  "journey": {
+   "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "duration_ms": 9,
+   "status": 200,
+   "kind": "fetch"
+  },
+  "health": null
+ },
+ "snapshot": {
+  "rows": 1
+ },
+ "buttons": [],
+ "in_memory_attribution_last": null,
+ "service_worker": true
+}
