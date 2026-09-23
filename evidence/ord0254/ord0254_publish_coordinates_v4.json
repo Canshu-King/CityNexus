@@ -1,0 +1,183 @@
+{
+ "at": "2026-09-23T15:46:42+08:00",
+ "what": "ORD-0254 re-run under the phase-2b/arm-I ruler (fourth swap) - coordinates index",
+ "supersedes": "sections 3/8/9 readings; section 10 is authoritative for the gauge. Sections 1/2/4/5 unchanged (same tip, same bundle bytes)",
+ "ruler_blob40": "a886329fe1ee8d728f8a06c273c0674b5ad27e8c",
+ "ruler_bytes": 62571,
+ "ruler_commit": "df69b4fc5cfdcdf87312bd68b7386887be1ba789",
+ "commander_witnesses": {
+  "round5_selftest_31_31": "f401af71d0242dbced6846b6a9a04a63488ab192",
+  "live_preflight": "0ee0bf612bcf8cda51c1d0a39ea398a9d8141df1"
+ },
+ "candidate_tip": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df",
+ "files_requested": 15,
+ "proven_by_40char_readback": 14,
+ "not_proven": [
+  "ord0254_witness_preflight_live.json"
+ ],
+ "rows": [
+  {
+   "file": "ORD_0254_FRONTEND_COMPAT_BACKPORT.md",
+   "repo_path": "evidence/ord0254/ORD_0254_FRONTEND_COMPAT_BACKPORT.md",
+   "local_bytes": 38726,
+   "local_blob40": "8e42095f06826835578defedf968d6c3945477b8",
+   "readback_status": 200,
+   "readback_bytes": 38726,
+   "readback_blob40": "8e42095f06826835578defedf968d6c3945477b8",
+   "verdict": "PROVEN",
+   "publisher_commit": "b58ef3982d50"
+  },
+  {
+   "file": "ord0254_ruler_v4_hunt.json",
+   "repo_path": "evidence/ord0254/ord0254_ruler_v4_hunt.json",
+   "local_bytes": 1924,
+   "local_blob40": "eedae5a504149e350b826967f2e30e1ebafa1ece",
+   "readback_status": 200,
+   "readback_bytes": 1924,
+   "readback_blob40": "eedae5a504149e350b826967f2e30e1ebafa1ece",
+   "verdict": "PROVEN",
+   "publisher_commit": "987754bdbea7"
+  },
+  {
+   "file": "ord0254_witness_selftest_31.json",
+   "repo_path": "evidence/ord0254/ord0254_witness_selftest_31.json",
+   "local_bytes": 11560,
+   "local_blob40": "f401af71d0242dbced6846b6a9a04a63488ab192",
+   "readback_status": 200,
+   "readback_bytes": 11560,
+   "readback_blob40": "f401af71d0242dbced6846b6a9a04a63488ab192",
+   "verdict": "PROVEN",
+   "publisher_commit": "81f2a1372863"
+  },
+  {
+   "file": "ord0254_witness_preflight_live.json",
+   "repo_path": "evidence/ord0254/ord0254_witness_preflight_live.json",
+   "local_bytes": 25981,
+   "local_blob40": "0ee0bf612bcf8cda51c1d0a39ea398a9d8141df1",
+   "readback_status": "404",
+   "verdict": "PUBLISHED_UNPROVEN",
+   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\ord0254_witness_preflight_live.json  repo_path=evidence/ord0254/ord0254_witness_preflight_live.json  bytes=25981"
+  },
+  {
+   "file": "ord0254_v4_preflight_1_RED_153143.json",
+   "repo_path": "evidence/ord0254/ord0254_v4_preflight_1_RED_153143.json",
+   "local_bytes": 24360,
+   "local_blob40": "11c3b02498940e780e858128b4dd8184a3871f49",
+   "readback_status": 200,
+   "readback_bytes": 24360,
+   "readback_blob40": "11c3b02498940e780e858128b4dd8184a3871f49",
+   "verdict": "PROVEN",
+   "publisher_commit": "d4b3853d142a"
+  },
+  {
+   "file": "ord0254_v4_preflight_2_RED_153424.json",
+   "repo_path": "evidence/ord0254/ord0254_v4_preflight_2_RED_153424.json",
+   "local_bytes": 26374,
+   "local_blob40": "0d7199d4855934e3f89591767e697f4a03a9044c",
+   "readback_status": 200,
+   "readback_bytes": 26374,
+   "readback_blob40": "0d7199d4855934e3f89591767e697f4a03a9044c",
+   "verdict": "PROVEN",
+   "publisher_commit": "f7acc5194085"
+  },
+  {
+   "file": "ord0254_v4_preflight_3_GREEN_153849.json",
+   "repo_path": "evidence/ord0254/ord0254_v4_preflight_3_GREEN_153849.json",
+   "local_bytes": 26193,
+   "local_blob40": "7d8db2f7644eeca1b7c3465070e103c74d6c8342",
+   "readback_status": 200,
+   "readback_bytes": 26193,
+   "readback_blob40": "7d8db2f7644eeca1b7c3465070e103c74d6c8342",
+   "verdict": "PROVEN",
+   "publisher_commit": "eadd4ae598a9"
+  },
+  {
+   "file": "ord0254_v4_deploy_nochange_with_bases_gauge_receipt.json",
+   "repo_path": "evidence/ord0254/ord0254_v4_deploy_nochange_with_bases_gauge_receipt.json",
+   "local_bytes": 58823,
+   "local_blob40": "6ed3f934dc271cac1f489b8297368db06ee2b58f",
+   "readback_status": 200,
+   "readback_bytes": 58823,
+   "readback_blob40": "6ed3f934dc271cac1f489b8297368db06ee2b58f",
+   "verdict": "PROVEN",
+   "publisher_commit": "712644337c28"
+  },
+  {
+   "file": "ord0254_v4_deploy_nochange_with_bases_summary.json",
+   "repo_path": "evidence/ord0254/ord0254_v4_deploy_nochange_with_bases_summary.json",
+   "local_bytes": 29286,
+   "local_blob40": "2783ecb87712da6b0b243adac56218552532cffc",
+   "readback_status": 200,
+   "readback_bytes": 29286,
+   "readback_blob40": "2783ecb87712da6b0b243adac56218552532cffc",
+   "verdict": "PROVEN",
+   "publisher_commit": "f71d5424ceba"
+  },
+  {
+   "file": "ord0254_v4_selftest_gauge_receipt.json",
+   "repo_path": "evidence/ord0254/ord0254_v4_selftest_gauge_receipt.json",
+   "local_bytes": 12311,
+   "local_blob40": "09533c34afa67a9ac2e1cfa864771b33a59ebd57",
+   "readback_status": 200,
+   "readback_bytes": 12311,
+   "readback_blob40": "09533c34afa67a9ac2e1cfa864771b33a59ebd57",
+   "verdict": "PROVEN",
+   "publisher_commit": "bfbd9825035a"
+  },
+  {
+   "file": "ord0254_v4_selftest_summary.json",
+   "repo_path": "evidence/ord0254/ord0254_v4_selftest_summary.json",
+   "local_bytes": 1515,
+   "local_blob40": "891436cf4927f0021b4a3d3ec804a544f06af439",
+   "readback_status": 200,
+   "readback_bytes": 1515,
+   "readback_blob40": "891436cf4927f0021b4a3d3ec804a544f06af439",
+   "verdict": "PROVEN",
+   "publisher_commit": "aad6d5634e8f"
+  },
+  {
+   "file": "ord0254_v4_manual_switch_note.json",
+   "repo_path": "evidence/ord0254/ord0254_v4_manual_switch_note.json",
+   "local_bytes": 1167,
+   "local_blob40": "147111298e328a1efd163a2ee31921c0c30c4b0d",
+   "readback_status": 200,
+   "readback_bytes": 1167,
+   "readback_blob40": "147111298e328a1efd163a2ee31921c0c30c4b0d",
+   "verdict": "PROVEN",
+   "publisher_commit": "d4d8790caaaf"
+  },
+  {
+   "file": "ord0254_backend_receipt.json",
+   "repo_path": "evidence/ord0254/ord0254_backend_receipt.json",
+   "local_bytes": 1449,
+   "local_blob40": "a6ef0356276852c07de94e23d6863dcda746451a",
+   "readback_status": 200,
+   "readback_bytes": 1449,
+   "readback_blob40": "a6ef0356276852c07de94e23d6863dcda746451a",
+   "verdict": "PROVEN",
+   "publisher_commit": "31cfab2d1dcd"
+  },
+  {
+   "file": "ord0254_surface_receipt.json",
+   "repo_path": "evidence/ord0254/ord0254_surface_receipt.json",
+   "local_bytes": 1560,
+   "local_blob40": "98f4038f2e1c37410663ff799ac0f4e39c5c191f",
+   "readback_status": 200,
+   "readback_bytes": 1560,
+   "readback_blob40": "98f4038f2e1c37410663ff799ac0f4e39c5c191f",
+   "verdict": "PROVEN",
+   "publisher_commit": "3e047051d7ab"
+  },
+  {
+   "file": "ord0254_v4_cleanup_receipt.json",
+   "repo_path": "evidence/ord0254/ord0254_v4_cleanup_receipt.json",
+   "local_bytes": 3115,
+   "local_blob40": "7e795eb04c0d14d1b780bda55f39ea652926b763",
+   "readback_status": 200,
+   "readback_bytes": 3115,
+   "readback_blob40": "7e795eb04c0d14d1b780bda55f39ea652926b763",
+   "verdict": "PROVEN",
+   "publisher_commit": "a9c5ac7cb771"
+  }
+ ]
+}
