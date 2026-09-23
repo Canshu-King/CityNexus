@@ -1,0 +1,8 @@
+ORD-0247 (widened: the whole <summary> class) evidence surface, lane e345b9d6, commits 0fd3cc7
+
+   59277 B  sha256 c336a947e131e43e9eede2e05efa474b9287e36ec36580f617dc720ce8f366d6  0fd3cc7__0fd3cc7.patch
+     496 B  sha256 b379d4b24290bac679c44e211781ee934bf9c77457859e7b3fd9cb90a69e8c70  0fd3cc7__changed-files.txt
+     754 B  sha256 3380a0059835ab615590a42f4b5f73e5db011fbd3eda6e30cc97ea6b476e1207  0fd3cc7__source-and-parent.txt
+     766 B  sha256 bee1fec4e3e28c3ddffd4c7d463d8a1178c5ff1f689c0b46052d92ea21671443  gate-desktop-summary-inventory.json
+     846 B  sha256 f5cfdab684ffb145911082a9bacac5c3d962323489b7086f343f9f4524be0aae  gate-mobile-summary-inventory.json
+   26189 B  sha256 051e8f10001e9e26025c1df312353f24dd28ee7901d16f2e48232c8812ecb5e6  mutation-receipts.json
