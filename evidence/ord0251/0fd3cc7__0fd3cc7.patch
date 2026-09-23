@@ -1,0 +1,1280 @@
+commit 0fd3cc70d788f1e062669b528714d946e044ccd2
+Author: 仓鼠王 <yjianbin419@gmail.com>
+Date:   Wed Sep 23 13:58:43 2026 +0800
+
+    fix(frontend): say what a refused press is missing, stop echoing server vocabulary, widen the touch floor to the class (ORD-0250, ORD-0251, ORD-0247)
+    
+    An empty request produced neither a request nor a word; /v8/me printed the push enum as its status
+    line; and the >=44px mobile floor enumerated control classes, which is why two screens reported the
+    same 14-25px disclosure. The sweep now measures every rendered <summary> and found a third one that
+    nobody had reported.
+
+diff --git a/frontend/e2e/qoder-empty-request-says-what-is-missing.spec.ts b/frontend/e2e/qoder-empty-request-says-what-is-missing.spec.ts
+new file mode 100644
+index 0000000..4ed0e34
+--- /dev/null
++++ b/frontend/e2e/qoder-empty-request-says-what-is-missing.spec.ts
+@@ -0,0 +1,216 @@
++/**
++ * ORD-0250 -- "开始规划" with an empty request used to be a silent refusal: no request left the
++ * browser (the backend log for that press holds no POST) and the screen said nothing.  The grey
++ * example sentence sits in the field as a placeholder, so the box reads as answerable and the tap
++ * reads as ignored -- the same family as the wizard that used to swallow the traveller.
++ *
++ * Accepted shape (the order's own words): either keep the control disabled AND say what is missing on
++ * screen, or explain on press.  This lane does both halves at once and is explicitly NOT allowed to
++ * buy green by filling the field for the traveller, so every node below re-reads the field's value.
++ */
++import { expect, test, type Page } from "@playwright/test";
++import { writeFileSync } from "node:fs";
++import { evidencePath } from "./_qoderEvidence";
++import { scanScreenText } from "./_qoderTextScan";
++
++const FILE = "e2e/qoder-empty-request-says-what-is-missing.spec.ts";
++const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
++const VIEWPORT = { width: 390, height: 844 };
++test.use({ viewport: VIEWPORT, hasTouch: true });
++
++/** Held by this gate; the product constant is never imported. */
++const FROZEN_REASON_ZH = "还差你自己的一句话：上面灰色的例子只是提示，不算你说的需求，所以我们没有东西可以拿去排。";
++/** The floor as it stands in code today, asserted as a boundary rather than trusted.  These fixtures
++ *  are 7 and 8 *characters* (one CJK glyph = one `length` unit), not 7 and 8 words. */
++const MIN_LENGTH = 8;
++const SEVEN = "我想慢慢逛两天";
++const EIGHT = "我想慢慢逛两天呀";
++
++async function openEmptySheet(page: Page) {
++  const seeded = (await (await page.request.get("/api/v1/demo/scene")).json()) as {
++    journey_id?: string;
++  };
++  const journeyId = String(seeded.journey_id ?? "");
++  expect(journeyId.length, node("seed", "/api/v1/demo/scene returned no journey_id")).toBeGreaterThan(8);
++  await page.addInitScript((id) => {
++    localStorage.clear();
++    localStorage.setItem("citynexus.v8.journey_id", id as string);
++    localStorage.setItem("citynexus.locale", "zh-CN");
++  }, journeyId);
++  let posts = 0;
++  /* Registered before any navigation, and counted rather than answered: a refused press must not
++     create a request at all, so the only correct stub behaviour here is "resolve fast if it fires". */
++  await page.route("**/api/v1/journeys/*/agent/commands", async (route) => {
++    posts += 1;
++    await route.fulfill({
++      status: 200,
++      contentType: "application/json",
++      body: JSON.stringify({ mission: { status: "COMPLETED", failure_reason: null, reasoning_summary: null } }),
++    });
++  });
++  await page.route("**/api/v1/journeys/*/plans", async (route) =>
++    route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify([]) }),
++  );
++  await page.goto("/v8/hub", { waitUntil: "load" });
++  await expect(page.getByTestId("today-hero")).toBeVisible({ timeout: 30_000 });
++  await page.getByTestId("hub-plan-with-ai").click();
++  await expect(page.getByTestId("plan-ai-sheet")).toBeVisible({ timeout: 15_000 });
++  return { posts: () => posts, journeyId };
++}
++
++const input = (page: Page) => page.getByTestId("plan-ai-input");
++const hint = (page: Page) => page.getByTestId("plan-ai-empty-request");
++
++test("ord0250-1-a-refused-press-leaves-a-reason-on-the-screen — 点了不说为什么，就是没点", async ({
++  page,
++}) => {
++  test.setTimeout(180_000);
++  const counter = await openEmptySheet(page);
++  const box = input(page);
++
++  // The trap this order is about: the placeholder makes an empty field look answerable.
++  const placeholder = await box.getAttribute("placeholder");
++  expect(placeholder && placeholder.length > 0, node("ord0250-1", "no placeholder example is shown")).toBeTruthy();
++  expect((await box.inputValue()) === "", node("ord0250-1", "the field is not empty")).toBe(true);
++
++  /* `{ force: true }` because Playwright reads aria-disabled="true" as "not actionable" and waits
++     forever -- this lane's own trap list, item 1.  A real browser does deliver the click to an
++     aria-disabled control, and what the traveller sees afterwards is the whole subject of this order. */
++  await page.getByTestId("plan-ai-submit").click({ force: true });
++
++  await expect(
++    hint(page),
++    node(
++      "ord0250-1",
++      `the press was refused with no word on screen (posts=${counter.posts()}); the traveller tapped and nothing answered`,
++    ),
++  ).toBeVisible({ timeout: 10_000 });
++  const painted = (await hint(page).innerText()).trim();
++  expect(painted, node("ord0250-1", `the reason read "${painted}"`)).toBe(FROZEN_REASON_ZH);
++
++  const scan = await scanScreenText(page);
++  for (const [layer, text] of [
++    ["painted", scan.visual],
++    ["announced", scan.accessible],
++  ] as const) {
++    expect(
++      text.includes(FROZEN_REASON_ZH),
++      node("ord0250-1", `the reason never reached the ${layer} layer`),
++    ).toBe(true);
++  }
++  // ORD-0220 (3)'s lesson: a hint off-screen is a hint nobody sees.
++  const onScreen = await hint(page).evaluate((el) => {
++    const box = el.getBoundingClientRect();
++    const hit = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
++    return {
++      inViewport: box.top >= 0 && box.bottom <= window.innerHeight,
++      hitIsHintOrItsText: hit === el || el.contains(hit),
++      hitTag: hit ? hit.tagName : "",
++      insideSrOnly: Boolean(el.closest(".v8-sr-only")),
++    };
++  });
++  expect(onScreen.inViewport, node("ord0250-1", `the reason sat outside the viewport: ${JSON.stringify(onScreen)}`)).toBe(true);
++  expect(onScreen.hitIsHintOrItsText, node("ord0250-1", `the centre hit <${onScreen.hitTag}>`)).toBe(true);
++  expect(onScreen.insideSrOnly, node("ord0250-1", "the reason is screen-reader-only, so nobody sees why")).toBe(false);
++
++  expect(counter.posts(), node("ord0250-1", "a refused press issued a request after all")).toBe(0);
++  expect(
++    (await input(page).inputValue()) === "",
++    node("ord0250-1", "the field was filled in for the traveller to make this assertion pass"),
++  ).toBe(true);
++
++  writeFileSync(
++    evidencePath("ord0250-refused-press-reading.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        node: "ord0250-1",
++        placeholderShown: placeholder,
++        fieldValueAfterPress: await input(page).inputValue(),
++        reasonPainted: painted,
++        inViewport: onScreen.inViewport,
++        centreHitTag: onScreen.hitTag,
++        posts: counter.posts(),
++        rule: "拒绝照旧（没有需求就没得排），但必须留下一句人话，且不替用户填任何东西",
++      },
++      null,
++      1,
++    ),
++  );
++});
++
++test("ord0250-2-the-floor-is-a-real-boundary-not-a-vibe — 边界就是代码里那一格", async ({ page }) => {
++  test.setTimeout(300_000);
++  const counter = await openEmptySheet(page);
++
++  await input(page).fill(SEVEN);
++  expect(
++    SEVEN.trim().length,
++    node("ord0250-2", "the fixture itself no longer sits under the floor, so this node measures nothing"),
++  ).toBe(MIN_LENGTH - 1);
++  // Forced because under the floor the control is aria-disabled (see node 1's note).
++  await page.getByTestId("plan-ai-submit").click({ force: true });
++  // A poll for 0 would answer on its first sample, so this waits a real window before judging.
++  await page.waitForTimeout(1_500);
++  expect(counter.posts(), node("ord0250-2", "a below-floor request was sent")).toBe(0);
++  /* Deliberately not asserted: whether a reason was painted belongs to node 1, and repeating the
++     claim here would give that node's mutant two nodes to redden.  Recorded so the reading exists. */
++  const reasonPainted = await hint(page).isVisible().catch(() => false);
++
++  await input(page).fill(EIGHT);
++  expect(EIGHT.trim().length, node("ord0250-2", "fixture moved off the floor")).toBe(MIN_LENGTH);
++  await page.getByTestId("plan-ai-submit").click();
++  await expect
++    .poll(() => counter.posts(), {
++      timeout: 60_000,
++      message: node("ord0250-2", "exactly the floor's worth of words was still refused -- the guard is off by one"),
++    })
++    .toBe(1);
++  await expect(hint(page), node("ord0250-2", "the nag stayed up once the requirement was met")).toHaveCount(0);
++
++  writeFileSync(
++    evidencePath("ord0250-length-boundary.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        node: "ord0250-2",
++        underFloor: { text: SEVEN, length: SEVEN.trim().length },
++        reasonPaintedAtSeven: reasonPainted,
++        atFloor: { text: EIGHT, length: EIGHT.trim().length },
++        posts: counter.posts(),
++      },
++      null,
++      1,
++    ),
++  );
++});
++
++test("ord0250-3-the-control-says-it-cannot-be-advanced-and-is-still-reachable — 不能走也要说得清", async ({
++  page,
++}) => {
++  test.setTimeout(180_000);
++  await openEmptySheet(page);
++  const button = page.getByTestId("plan-ai-submit");
++
++  expect(
++    await button.getAttribute("aria-disabled"),
++    node("ord0250-3", "an unusable press was presented as an ordinary button"),
++  ).toBe("true");
++  // ORD-0066 (甲): a hard `disabled` removes the control from the keyboard path; reach it instead.
++  await button.focus();
++  const focused = await button.evaluate((el) => document.activeElement === el);
++  expect(focused, node("ord0250-3", "the control could not be focused, so a keyboard traveller skips it")).toBe(
++    true,
++  );
++  const washed = await button.evaluate((el) => Number(getComputedStyle(el).opacity));
++  expect(
++    washed < 0.6,
++    node("ord0250-3", `opacity ${washed} -- it does not look like a control that cannot advance`),
++  ).toBe(true);
++
++  await input(page).fill(EIGHT);
++  expect(
++    (await button.getAttribute("aria-disabled")) ?? "",
++    node("ord0250-3", "it still claimed it could not advance once the request was long enough"),
++  ).toBe("");
++});
+diff --git a/frontend/e2e/qoder-every-summary-is-tappable.spec.ts b/frontend/e2e/qoder-every-summary-is-tappable.spec.ts
+new file mode 100644
+index 0000000..6e551f7
+--- /dev/null
++++ b/frontend/e2e/qoder-every-summary-is-tappable.spec.ts
+@@ -0,0 +1,184 @@
++/**
++ * ORD-0247, widened by the commander @12:3x: two surfaces reported the same defect (311x14 on the
++ * bookings 「高级：结构化数据」 and 316x25 on the AI sheet's 「技术详情」), so the acceptance is "the class of
++ * controls", not "the control somebody happened to tap".
++ *
++ * So this file measures **every rendered `<summary>`** it can reach instead of naming one selector.
++ * Two guards keep that from becoming a vacuous sweep:
++ *   - the inventory must actually contain the reported controls (a sweep over nothing would pass even
++ *     with the rule deleted);
++ *   - the desktop read checks the *applied* `min-height`, so the touch floor cannot leak onto the
++ *     pointer layout by hiding behind something that happens to be tall today.
++ */
++import { expect, test, type Page } from "@playwright/test";
++import { writeFileSync } from "node:fs";
++import { evidencePath } from "./_qoderEvidence";
++
++const FILE = "e2e/qoder-every-summary-is-tappable.spec.ts";
++const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
++const MOBILE = { width: 390, height: 844 };
++const DESKTOP = { width: 1280, height: 900 };
++const FLOOR = 44;
++const REPORTED = ["高级：结构化数据", "技术详情"];
++
++type Entry = {
++  surface: string;
++  text: string;
++  width: number;
++  height: number;
++  minHeight: string;
++  inViewport: boolean;
++};
++
++/** Every <summary> the surface currently paints, with the box and the applied floor. */
++async function inventory(page: Page, surface: string): Promise<Entry[]> {
++  return await page.evaluate((name) => {
++    const out: unknown[] = [];
++    for (const el of Array.from(document.querySelectorAll("summary"))) {
++      const box = el.getBoundingClientRect();
++      const style = getComputedStyle(el);
++      out.push({
++        surface: name,
++        text: (el.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 40),
++        width: Math.round(box.width),
++        height: Math.round(box.height),
++        minHeight: style.minHeight,
++        inViewport: box.top >= 0 && box.bottom <= window.innerHeight && box.height > 0,
++      });
++    }
++    return out;
++  }, surface);
++}
++
++async function seedJourney(page: Page) {
++  const seeded = (await (await page.request.get("/api/v1/demo/scene")).json()) as {
++    journey_id?: string;
++  };
++  const journeyId = String(seeded.journey_id ?? "");
++  expect(journeyId.length, node("seed", "/api/v1/demo/scene returned no journey_id")).toBeGreaterThan(8);
++  await page.addInitScript((id) => {
++    localStorage.clear();
++    localStorage.setItem("citynexus.v8.journey_id", id as string);
++    localStorage.setItem("citynexus.locale", "zh-CN");
++  }, journeyId);
++}
++
++/**
++ * The surfaces that actually carry disclosures.  The AI sheet is reached by a real submitted request,
++ * because 「技术详情」 exists only inside an answered result -- sweeping a sheet that never answered
++ * would be a sweep over nothing.
++ */
++async function collectAll(page: Page): Promise<Entry[]> {
++  const rows: Entry[] = [];
++  for (const path of ["/v8/hub", "/v8/bookings", "/v8/me", "/v8/trips"]) {
++    await page.goto(path, { waitUntil: "load" });
++    const marker = path === "/v8/hub" ? "today-hero" : null;
++    if (marker) await expect(page.getByTestId(marker)).toBeVisible({ timeout: 30_000 });
++    else await page.waitForTimeout(1_200);
++    rows.push(...(await inventory(page, path)));
++  }
++  await page.goto("/v8/hub", { waitUntil: "load" });
++  await expect(page.getByTestId("today-hero")).toBeVisible({ timeout: 30_000 });
++  await page.getByTestId("hub-plan-with-ai").click();
++  await expect(page.getByTestId("plan-ai-sheet")).toBeVisible({ timeout: 15_000 });
++  await page.getByTestId("plan-ai-input").fill("我想两天慢慢逛，晚上看夜景，别排太满");
++  await page.getByTestId("plan-ai-submit").click();
++  await expect(page.getByTestId("plan-ai-result"), node("sweep", "the sheet never answered")).toBeVisible({
++    timeout: 180_000,
++  });
++  rows.push(...(await inventory(page, "plan-ai-sheet")));
++  return rows;
++}
++
++test("ord0247w-1-every-disclosure-clears-the-touch-floor — 整类 summary 都够 44px", async ({ page }) => {
++  test.setTimeout(420_000);
++  await page.setViewportSize(MOBILE);
++  await seedJourney(page);
++  const rows = await collectAll(page);
++
++  const under = rows.filter((row) => row.height < FLOOR);
++  expect(
++    under.length,
++    node(
++      "ord0247w-1",
++      `${under.length} disclosure(s) under ${FLOOR}px: ${under
++        .map((r) => `${r.surface}:${r.text}=${r.width}x${r.height}`)
++        .join(" | ")}`,
++    ),
++  ).toBe(0);
++
++  writeFileSync(
++    evidencePath("ord0247w-mobile-summary-inventory.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        node: "ord0247w-1",
++        viewport: MOBILE,
++        floor: FLOOR,
++        counted: rows.length,
++        surfaces: [...new Set(rows.map((r) => r.surface))],
++        rows,
++        underFloor: under,
++      },
++      null,
++      1,
++    ),
++  );
++});
++
++test("ord0247w-2-the-sweep-really-reached-the-reported-controls — 扫到的是那两处", async ({ page }) => {
++  test.setTimeout(420_000);
++  await page.setViewportSize(MOBILE);
++  await seedJourney(page);
++  const rows = await collectAll(page);
++
++  /* The positive control the whole class-wide claim depends on: if the reported disclosures are not in
++     the inventory, node 1 is measuring nothing and a deleted rule would still read green. */
++  for (const label of REPORTED) {
++    expect(
++      rows.some((row) => row.text.includes(label)),
++      node(
++        "ord0247w-2",
++        `"${label}" was not in the sweep at all (inventoried: ${rows.map((r) => r.text).join(" / ") || "nothing"})`,
++      ),
++    ).toBe(true);
++  }
++  expect(
++    rows.length,
++    node("ord0247w-2", `the sweep found only ${rows.length} disclosures across the surfaces`),
++  ).toBeGreaterThanOrEqual(REPORTED.length);
++});
++
++test("ord0247w-3-the-touch-floor-stays-out-of-the-pointer-layout — 桌面不被撑大", async ({ page }) => {
++  test.setTimeout(420_000);
++  await page.setViewportSize(DESKTOP);
++  await seedJourney(page);
++  const rows = await collectAll(page);
++
++  const carried = rows.filter((row) => row.minHeight === `${FLOOR}px`);
++  expect(
++    carried.length,
++    node(
++      "ord0247w-3",
++      `${carried.length} disclosure(s) still apply min-height:${FLOOR}px at ${DESKTOP.width}x${DESKTOP.height} (Amendment F-2 keeps desktop compact): ${carried
++        .map((r) => `${r.surface}:${r.text}`)
++        .join(" | ")}`,
++    ),
++  ).toBe(0);
++
++  writeFileSync(
++    evidencePath("ord0247w-desktop-summary-inventory.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        node: "ord0247w-3",
++        viewport: DESKTOP,
++        counted: rows.length,
++        minHeights: [...new Set(rows.map((r) => r.minHeight))],
++        rows,
++      },
++      null,
++      1,
++    ),
++  );
++});
+diff --git a/frontend/e2e/qoder-no-internal-words-or-sentinels.spec.ts b/frontend/e2e/qoder-no-internal-words-or-sentinels.spec.ts
+new file mode 100644
+index 0000000..1b5abd1
+--- /dev/null
++++ b/frontend/e2e/qoder-no-internal-words-or-sentinels.spec.ts
+@@ -0,0 +1,249 @@
++/**
++ * ORD-0251 -- the interface must not hand a traveller a word the product invented for itself, and it
++ * must not express "we could not tell" as a number.
++ *
++ * Measured source: `/v8/me` printed the server's own push label (`RECORD_ONLY`, from
++ * `backend/app/integrations/push.py:18`) as the status line, and the AI sheet published its internal
++ * indeterminate sentinel on `data-plan-count="-1"` -- an attribute gates read, where `-1` means
++ * "not knowable", not "negative one plans".
++ *
++ * Both scans below are the two-layer ones (`_qoderTextScan`): a raw token must be absent from what is
++ * painted AND from what an announcer could speak, because "only in sr-only" is still a human-facing
++ * defect -- it just announces it instead of showing it.
++ */
++import { expect, test, type Page } from "@playwright/test";
++import { writeFileSync } from "node:fs";
++import { evidencePath } from "./_qoderEvidence";
++import { scanScreenText } from "./_qoderTextScan";
++
++const FILE = "e2e/qoder-no-internal-words-or-sentinels.spec.ts";
++const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
++const VIEWPORT = { width: 390, height: 844 };
++test.use({ viewport: VIEWPORT, hasTouch: true });
++
++/** The frozen human wording, held by this gate and NOT imported from the product file. */
++const FROZEN_RECORD_ONLY_ZH = "只记录，不发推送";
++const FROZEN_RECORD_ONLY_HELP_ZH = "服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。";
++const FROZEN_UNKNOWN_ZH = "说不准推送能不能用";
++/** What the sheet's own component uses internally for "not knowable"; it must never reach the DOM. */
++const SENTINEL = "-1";
++
++async function seedJourney(page: Page) {
++  const seeded = (await (await page.request.get("/api/v1/demo/scene")).json()) as {
++    journey_id?: string;
++  };
++  const journeyId = String(seeded.journey_id ?? "");
++  expect(journeyId.length, node("seed", "/api/v1/demo/scene returned no journey_id")).toBeGreaterThan(8);
++  await page.addInitScript((id) => {
++    localStorage.clear();
++    localStorage.setItem("citynexus.v8.journey_id", id as string);
++    localStorage.setItem("citynexus.locale", "zh-CN");
++  }, journeyId);
++  return journeyId;
++}
++
++/** Answer the push read with a chosen server label, and record that the read really fired. */
++async function stubPushConfig(page: Page, capability: string) {
++  let reads = 0;
++  await page.route("**/api/v1/travelers/*/push-config", async (route) => {
++    reads += 1;
++    await route.fulfill({
++      status: 200,
++      contentType: "application/json",
++      body: JSON.stringify({
++        capability,
++        public_key: capability === "WEB_PUSH_CONFIGURED" ? "BFakeKeyForThisGate0000000" : null,
++        record_fallback: true,
++      }),
++    });
++  });
++  return () => reads;
++}
++
++test("ord0251-1-the-push-card-says-the-state-in-plain-words — 状态句不得是服务器标签", async ({
++  page,
++}) => {
++  test.setTimeout(180_000);
++  await seedJourney(page);
++  const pushReads = await stubPushConfig(page, "RECORD_ONLY");
++  await page.goto("/v8/me", { waitUntil: "load" });
++
++  const card = page.getByTestId("push-capability");
++  await expect(card, node("ord0251-1", "the push card never rendered")).toBeVisible({ timeout: 20_000 });
++  /* The stub firing only proves the request left; the answer still has to reach React.  Waiting on the
++     attribute the answered read writes is what makes "CHECKING" below a defect rather than a race. */
++  await expect
++    .poll(() => card.getAttribute("data-capability"), {
++      timeout: 20_000,
++      message: node(
++        "ord0251-1",
++        `the read never landed (stub fired ${String(pushReads())}x), so any state line below is still "checking"`,
++      ),
++    })
++    .toBe("RECORD_ONLY");
++
++  const state = (await card.locator("strong").innerText()).trim();
++  const help = (await card.locator("p").first().innerText()).trim();
++  expect(state, node("ord0251-1", `the status line read "${state}"`)).toBe(FROZEN_RECORD_ONLY_ZH);
++  expect(help, node("ord0251-1", `the explanation read "${help}"`)).toBe(FROZEN_RECORD_ONLY_HELP_ZH);
++
++  /* The raw label must be absent from BOTH layers, while staying on the element as a diagnosable
++     attribute -- that is the split: gates can still name what the server said, a traveller cannot. */
++  const scan = await scanScreenText(page);
++  for (const [layer, text] of [
++    ["painted", scan.visual],
++    ["announced", scan.accessible],
++  ] as const) {
++    expect(
++      text.includes("RECORD_ONLY"),
++      node("ord0251-1", `the server label reached the ${layer} layer of /v8/me`),
++    ).toBe(false);
++  }
++  expect(await card.getAttribute("data-capability")).toBe("RECORD_ONLY");
++
++  writeFileSync(
++    evidencePath("ord0251-push-card-reading.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        node: "ord0251-1",
++        serverLabel: "RECORD_ONLY",
++        stateLine: state,
++        explanation: help,
++        labelInPaintedText: scan.visual.includes("RECORD_ONLY"),
++        labelInAnnouncedText: scan.accessible.includes("RECORD_ONLY"),
++        rawKeptAsAttribute: await card.getAttribute("data-capability"),
++        visualLeaves: scan.visualLeaves,
++      },
++      null,
++      1,
++    ),
++  );
++});
++
++test("ord0251-2-a-label-this-screen-does-not-know-is-not-echoed — 不认识的标签不许原样回显", async ({
++  page,
++}) => {
++  test.setTimeout(180_000);
++  await seedJourney(page);
++  const invented = "A_SERVER_STATUS_NOMINATED_BY_NOBODY_HERE";
++  await stubPushConfig(page, invented);
++  await page.goto("/v8/me", { waitUntil: "load" });
++
++  const card = page.getByTestId("push-capability");
++  await expect(card, node("ord0251-2", "the push card never rendered")).toBeVisible({ timeout: 20_000 });
++  await expect
++    .poll(() => card.getAttribute("data-capability"), {
++      timeout: 20_000,
++      message: node("ord0251-2", "the invented label never reached the card, so nothing below was measured"),
++    })
++    .toBe(invented);
++  const state = (await card.locator("strong").innerText()).trim();
++  const scan = await scanScreenText(page);
++
++  expect(state, node("ord0251-2", `an unknown label came through as "${state}"`)).toBe(FROZEN_UNKNOWN_ZH);
++  for (const [layer, text] of [
++    ["painted", scan.visual],
++    ["announced", scan.accessible],
++  ] as const) {
++    expect(
++      text.includes(invented),
++      node("ord0251-2", `the unknown label leaked into the ${layer} layer`),
++    ).toBe(false);
++  }
++  // Fail closed also means "did not fall back to the known-good sentence".
++  expect(state).not.toBe(FROZEN_RECORD_ONLY_ZH);
++
++  writeFileSync(
++    evidencePath("ord0251-unknown-label-reading.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        node: "ord0251-2",
++        inventedLabel: invented,
++        stateLine: state,
++        leakedInPaintedText: scan.visual.includes(invented),
++        leakedInAnnouncedText: scan.accessible.includes(invented),
++        fellBackToRecordOnly: state === FROZEN_RECORD_ONLY_ZH,
++      },
++      null,
++      1,
++    ),
++  );
++});
++
++test("ord0251-3-the-plan-count-attribute-never-carries-the-unknown-sentinel — 「不知道」不是负数", async ({
++  page,
++}) => {
++  test.setTimeout(300_000);
++  const journeyId = await seedJourney(page);
++  let posts = 0;
++  await page.route("**/api/v1/journeys/*/agent/commands", async (route) => {
++    posts += 1;
++    await route.fulfill({
++      status: 200,
++      contentType: "application/json",
++      body: JSON.stringify({
++        mission: { status: "COMPLETED", failure_reason: null, reasoning_summary: null },
++      }),
++    });
++  });
++  /* Make the pre-run baseline unreadable: this is the branch that produces the component's internal
++     "not knowable" value, so the attribute under test is exercised on its real path. */
++  let planReads = 0;
++  await page.route("**/api/v1/journeys/*/plans", async (route) => {
++    planReads += 1;
++    await route.fulfill({ status: 500, contentType: "application/json", body: JSON.stringify({}) });
++  });
++  await page.goto("/v8/hub", { waitUntil: "load" });
++  await expect(page.getByTestId("today-hero")).toBeVisible({ timeout: 30_000 });
++  await page.getByTestId("hub-plan-with-ai").click();
++  await expect(page.getByTestId("plan-ai-sheet")).toBeVisible({ timeout: 15_000 });
++  await page.getByTestId("plan-ai-input").fill("我想两天慢慢逛，晚上看夜景");
++  await page.getByTestId("plan-ai-submit").click();
++
++  const result = page.getByTestId("plan-ai-result");
++  await expect(result, node("ord0251-3", "the sheet never answered")).toBeVisible({ timeout: 90_000 });
++  expect(posts, node("ord0251-3", "0 POST, so the sheet was never exercised")).toBe(1);
++  expect(planReads, node("ord0251-3", "the baseline read never fired")).toBeGreaterThan(0);
++
++  const status = await result.getAttribute("data-result-status");
++  const count = await result.getAttribute("data-plan-count");
++  // Positive control: this really is the indeterminate branch, not an empty-but-known zero.
++  expect(status, node("ord0251-3", `expected the unreadable-baseline branch, got "${status}"`)).toBe(
++    "BASELINE_UNAVAILABLE",
++  );
++  expect(
++    count === SENTINEL,
++    node(
++      "ord0251-3",
++      `data-plan-count carried "${count}": the sentinel for "not knowable" reads as a count to anything that parses it`,
++    ),
++  ).toBe(false);
++  expect(count, node("ord0251-3", "the unknown state has no name of its own")).toBe("unknown");
++  const painted = (await result.innerText()).replace(/\s+/g, " ");
++  expect(
++    painted.includes("-1"),
++    node("ord0251-3", `the sentinel also reached the traveller: "${painted.slice(0, 120)}"`),
++  ).toBe(false);
++
++  writeFileSync(
++    evidencePath("ord0251-plan-count-attribute.json"),
++    JSON.stringify(
++      {
++        generatedBy: "e345b9d6",
++        node: "ord0251-3",
++        journeyId,
++        posts,
++        planReads,
++        resultStatus: status,
++        dataPlanCount: count,
++        sentinelOnAttribute: count === SENTINEL,
++        paintedText: painted.slice(0, 160),
++        rule: "内部仍然可以用 -1 表示「不知道」，但它不得出现在被门消费的 data-* 上，也不得上屏",
++      },
++      null,
++      1,
++    ),
++  );
++});
+diff --git a/frontend/src/features/notifications/PushCapabilityCard.tsx b/frontend/src/features/notifications/PushCapabilityCard.tsx
+index b911ef5..1077e5b 100644
+--- a/frontend/src/features/notifications/PushCapabilityCard.tsx
++++ b/frontend/src/features/notifications/PushCapabilityCard.tsx
+@@ -4,6 +4,17 @@ import { useT } from "../../i18n/LocaleContext";
+ type Props = { travelerId: string };
+ type PushConfig = { capability: string; public_key: string | null; record_fallback: boolean };
+ 
++/* ORD-0251: this card used to render the server's own label (`RECORD_ONLY`) straight into the
++   traveller's screen.  The vocabulary is `push_capability()` in backend/app/integrations/push.py --
++   three answers today -- and an answer this file does not know is reported as unknown, never echoed
++   back as if it were prose.  The raw value stays in data-capability for gates and bug reports. */
++const CAPABILITY_KEYS: Record<string, { state: string; help: string }> = {
++  RECORD_ONLY: { state: "push.capRecordOnly", help: "push.capRecordOnlyHelp" },
++  DEPENDENCY_MISSING: { state: "push.capDependencyMissing", help: "push.capDependencyMissingHelp" },
++  WEB_PUSH_CONFIGURED: { state: "push.capWebPushConfigured", help: "push.capWebPushConfiguredHelp" },
++};
++const UNKNOWN_CAPABILITY = { state: "push.capUnknown", help: "push.capUnknownHelp" };
++
+ function decodeKey(value: string): Uint8Array<ArrayBuffer> {
+   const padded = `${value}${"=".repeat((4 - (value.length % 4)) % 4)}`;
+   const binary = window.atob(padded.replace(/-/g, "+").replace(/_/g, "/"));
+@@ -13,13 +24,22 @@ function decodeKey(value: string): Uint8Array<ArrayBuffer> {
+ export function PushCapabilityCard({ travelerId }: Props) {
+   const t = useT();
+   const [config, setConfig] = useState<PushConfig | null>(null);
+-  const [message, setMessage] = useState(t("push.checking"));
++  /* Only an action writes this; the standing line is derived from what the read answered, so a
++     capability we have already learned is never described as "still checking". */
++  const [message, setMessage] = useState<string | null>(null);
++  /* A failed read is not a read still in flight: without this the status line sat on "CHECKING"
++     forever after the fetch threw, which is the same class of untruth ORD-0251 was filed for. */
++  const [unreadable, setUnreadable] = useState(false);
++  const keys = config ? CAPABILITY_KEYS[config.capability] ?? UNKNOWN_CAPABILITY : null;
+ 
+   useEffect(() => {
+     void fetch(`/api/v1/travelers/${travelerId}/push-config`)
+       .then((response) => response.json() as Promise<PushConfig>)
+       .then(setConfig)
+-      .catch(() => setMessage(t("push.unavailable")));
++      .catch(() => {
++        setUnreadable(true);
++        setMessage(t("push.unavailable"));
++      });
+   }, [travelerId]);
+ 
+   const enable = async () => {
+@@ -46,10 +66,16 @@ export function PushCapabilityCard({ travelerId }: Props) {
+   };
+ 
+   return (
+-    <article className="v8-me-card" data-testid="push-capability">
++    <article
++      className="v8-me-card"
++      data-testid="push-capability"
++      data-capability={config?.capability ?? ""}
++    >
+       <span className="v8-kicker">{t("push.kicker")}</span>
+-      <strong>{config?.capability ?? t("push.checkingState")}</strong>
+-      <p>{message}</p>
++      <strong>
++        {keys ? t(keys.state) : unreadable ? t("push.capUnread") : t("push.checkingState")}
++      </strong>
++      <p>{message ?? t(keys ? keys.help : "push.checking")}</p>
+       <button className="v8-secondary" type="button" onClick={() => void enable()}>
+         {t("push.enable")}
+       </button>
+diff --git a/frontend/src/features/planning/PlanWithAiSheet.tsx b/frontend/src/features/planning/PlanWithAiSheet.tsx
+index ddd6009..58c0580 100644
+--- a/frontend/src/features/planning/PlanWithAiSheet.tsx
++++ b/frontend/src/features/planning/PlanWithAiSheet.tsx
+@@ -23,6 +23,11 @@ import { useLocale } from "../../i18n/LocaleContext";
+ /** The phases this component itself drives, in the order it can enter them. */
+ type PhaseKey = "baseline" | "request" | "verify" | "fallback";
+ 
++/* ORD-0250: this floor used to be a bare `8` inside submit() while the button next to it refused
++   silently -- so an empty box looked like a button that did nothing.  Named once, read by the
++   refusal, the control's aria-disabled and the reason we now paint on screen. */
++const REQUEST_MIN_LENGTH = 8;
++
+ const PHASES: { key: PhaseKey; zh: string; en: string }[] = [
+   { key: "baseline", zh: "读取已有方案作为基线", en: "Reading existing plans as a baseline" },
+   { key: "request", zh: "发出请求，等待模型返回", en: "Request sent, waiting for the model" },
+@@ -51,6 +56,14 @@ const NEUTRAL_PLACEHOLDER = {
+   en: "In your own words: how you want this trip to go, what to eat, what you must not miss.",
+ };
+ 
++/* ORD-0250: what the screen says when a press is refused for want of a request.  It names the grey
++   example as an example, because that is exactly what makes an empty box look answerable.  No number
++   here: the length floor lives in one place in code, and prose that repeats it goes stale. */
++const REQUEST_TOO_SHORT = {
++  zh: "还差你自己的一句话：上面灰色的例子只是提示，不算你说的需求，所以我们没有东西可以拿去排。",
++  en: "We still need it in your own words. The grey example above is a hint, not a request we can plan from.",
++};
++
+ function examplesFor(
+   placeNames: string[],
+   zh: boolean,
+@@ -317,6 +330,9 @@ export function PlanWithAiSheet({
+      watching suggestions appear a second later has no way to tell which happened. */
+   const [namesRead, setNamesRead] = useState(false);
+   const [busy, setBusy] = useState(false);
++  /* Set when a press was refused because there is nothing to plan from; the reason is painted, not
++     announced only to a screen reader.  Cleared by the same gate once the words are long enough. */
++  const [requestTooShort, setRequestTooShort] = useState(false);
+   const [phase, setPhase] = useState<PhaseKey | null>(null);
+   const [elapsed, setElapsed] = useState(0);
+   const [aiState, setAiState] = useState<"checking" | "ready" | "unconfigured" | "unknown">(
+@@ -434,7 +450,14 @@ export function PlanWithAiSheet({
+ 
+   const submit = async () => {
+     const command = text.trim();
+-    if (command.length < 8) return;
++    if (command.length < REQUEST_MIN_LENGTH) {
++      /* ORD-0250: this `return` used to be silent -- no request, no word, nothing to read.  The press
++         is still refused (there is genuinely nothing to plan from) but it now leaves a reason on the
++         screen, and the placeholder example is not treated as if the traveller had said it. */
++      setRequestTooShort(true);
++      return;
++    }
++    setRequestTooShort(false);
+     /* Synchronous, ahead of every await and every setState below: the second click of a same-tick
+        double tap reaches this function while the button is still rendered as enabled, so refusing
+        it here is the only place it can be refused.  Silence is deliberate -- the first request is
+@@ -705,6 +728,9 @@ export function PlanWithAiSheet({
+             rows={5}
+             value={text}
+             disabled={busy}
++            aria-describedby={
++              requestTooShort && text.trim().length < REQUEST_MIN_LENGTH ? "plan-ai-request-hint" : undefined
++            }
+             onChange={(event) => setText(event.target.value)}
+             placeholder={
+               examples.length
+@@ -718,6 +744,22 @@ export function PlanWithAiSheet({
+           />
+         </label>
+ 
++        {/* ORD-0250: the example sentence sits in the box as a placeholder, so a traveller who presses
++            开始规划 with nothing typed sees a filled-looking field and an inert button.  The refusal
++            stays (there is nothing to plan from) but it now says what is missing, in painted text --
++            and it says the box is still empty, which is the part the placeholder hides. */}
++        {requestTooShort && text.trim().length < REQUEST_MIN_LENGTH && (
++          <p
++            className="plan-ai-field-hint"
++            id="plan-ai-request-hint"
++            data-testid="plan-ai-empty-request"
++            data-request-length={text.trim().length}
++            role="status"
++          >
++            {zh ? REQUEST_TOO_SHORT.zh : REQUEST_TOO_SHORT.en}
++          </p>
++        )}
++
+         {/* No chips at all when this city has fewer than two catalogued places -- an absent
+             suggestion is honest, an invented one is a claim about a trip we know nothing about. */}
+         <div
+@@ -811,7 +853,12 @@ export function PlanWithAiSheet({
+             data-testid="plan-ai-result"
+             data-result-status={result?.status ?? ""}
+             data-result-tone={copy.tone}
+-            data-plan-count={result?.planCount ?? 0}
++            /* ORD-0251: `-1` is how this component knows "we could not tell" (indeterminate baseline or
++               an unread re-count).  That is a real state; it is not a number of plans, and publishing it
++               on an attribute a gate reads made "unknowable" indistinguishable from a count. */
++            data-plan-count={
++              result?.planCount !== undefined && result.planCount >= 0 ? result.planCount : "unknown"
++            }
+             data-new-plan-ids={(result?.newPlanIds ?? []).join(",")}
+             role="status"
+           >
+@@ -893,7 +940,12 @@ export function PlanWithAiSheet({
+             type="button"
+             className="v8-primary-button"
+             data-testid="plan-ai-submit"
+-            disabled={busy || text.trim().length < 8}
++            /* Busy is a real `disabled` (the control means something else while a run is going).  A
++               missing request is `aria-disabled` instead -- the ORD-0066 (甲) shape -- so the press
++               reaches submit() and the traveller reads why it did not advance, instead of tapping a
++               dead surface.  The existing `[aria-disabled="true"]` rule keeps it looking unwalkable. */
++            disabled={busy}
++            aria-disabled={text.trim().length < REQUEST_MIN_LENGTH || undefined}
+             onClick={() => void submit()}
+           >
+             {busy ? (zh ? "规划中…" : "Planning…") : zh ? "开始规划" : "Plan my trip"}
+diff --git a/frontend/src/i18n/LocaleContext.tsx b/frontend/src/i18n/LocaleContext.tsx
+index 79b22ed..bf15fc9 100644
+--- a/frontend/src/i18n/LocaleContext.tsx
++++ b/frontend/src/i18n/LocaleContext.tsx
+@@ -656,6 +656,21 @@ const en: Dict = {
+   "push.kicker": "NOTIFICATIONS",
+   "push.checkingState": "CHECKING",
+   "push.enable": "Enable Web Push",
++  /* ORD-0251: the server's own labels (RECORD_ONLY / DEPENDENCY_MISSING / WEB_PUSH_CONFIGURED) are not
++     prose, and an unknown one is reported as unknown rather than echoed back. */
++  "push.capRecordOnly": "Recorded, not pushed",
++  "push.capRecordOnlyHelp":
++    "The server has no push key, so notifications stay in the journey and never reach this device.",
++  "push.capDependencyMissing": "Push component missing on the server",
++  "push.capDependencyMissingHelp":
++    "A push component is missing on the server, so records stay in the journey. That is the server's to install, not yours to fix.",
++  "push.capWebPushConfigured": "Push is configured",
++  "push.capWebPushConfiguredHelp":
++    "The server can send push. The button below asks the browser to subscribe this device.",
++  "push.capUnknown": "Push availability unclear",
++  "push.capUnknownHelp":
++    "The server answered with a status this screen does not know, so we do not guess whether it can push.",
++  "push.capUnread": "Push status unreadable",
+ 
+   // ── Shared formatting ──
+   "fmt.priceUnavailable": "Price not available",
+@@ -1322,6 +1337,18 @@ const zhCN: Dict = {
+   "push.kicker": "通知",
+   "push.checkingState": "检查中",
+   "push.enable": "启用 Web Push",
++  /* ORD-0251：服务器那几个标签（RECORD_ONLY / DEPENDENCY_MISSING / WEB_PUSH_CONFIGURED）不是给人看的话，
++     不认识的那个只说"不认识"，不原样回显。 */
++  "push.capRecordOnly": "只记录，不发推送",
++  "push.capRecordOnlyHelp": "服务器没有配置推送密钥，所以通知只会记在行程里，不会弹到这台设备上。",
++  "push.capDependencyMissing": "服务器缺推送组件",
++  "push.capDependencyMissingHelp":
++    "服务器少了一个推送组件，目前只能记在行程里；这一格要服务器装上才会变，不是你这边的问题。",
++  "push.capWebPushConfigured": "推送已配置",
++  "push.capWebPushConfiguredHelp": "服务器已经能发推送；下面的按钮是让浏览器把这台设备加进订阅。",
++  "push.capUnknown": "说不准推送能不能用",
++  "push.capUnknownHelp": "服务器回了一个本界面不认识的状态，所以我们不猜它能不能推送。",
++  "push.capUnread": "读不到推送状态",
+ 
+   // ── 共享格式化 ──
+   "fmt.priceUnavailable": "暂无价格",
+diff --git a/frontend/src/styles.css b/frontend/src/styles.css
+index fc21a1c..893796d 100644
+--- a/frontend/src/styles.css
++++ b/frontend/src/styles.css
+@@ -273,11 +273,15 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
+ @media (max-width: 680px) { .v12-offline-now-next { grid-template-columns: 1fr; } }
+ @media (max-width: 680px) { .v9-live-actions { align-items: stretch; flex-direction: column; }.v9-live-actions button { margin-top: 8px !important; }.v9-wallet-layout { grid-template-columns: 1fr; }.v9-offline { margin-top: 20px; padding: 22px; } }
+ @media (max-width: 680px) { .v8-mobile-nav button { min-height: var(--cn-nav-item-h); }.v8-mobile-nav button span { font-size: var(--cn-fs-caption); }.v8-mode-chips button, .v8-compare-button { min-height: var(--cn-touch-min); }/* The 44px floor had holes: every one of these is a deliberate tap, and .v8-quiet-button carried no min-height at all, so Today's three secondary actions measured 30px. */.v8-quiet-button, .v8-primary, .v8-outline-button, .v8-rain-button, .v8-page-intro button, .trial-chips button, .trial-sticky-cta button { min-height: var(--cn-touch-min); } }
+-/* ORD-0247: the >=44px floor above enumerates controls and never covered <summary>, so the
+-   "高级：结构化数据" disclosure measured 311x14 next to 44px buttons.  line-height grows the box instead of
+-   switching to flex, which would drop the native disclosure marker; it stays inside the media query so
+-   the desktop compact density (Amendment F-2) is untouched. */
+-@media (max-width: 680px) { .v8-advanced > summary { min-height: var(--cn-touch-min); line-height: var(--cn-touch-min); } }
++/* ORD-0247 (widened by the commander @12:3x): the >=44px floor enumerated control classes and never
++   covered <summary>, so "高级：结构化数据" measured 311x14 on bookings and "技术详情" 316x25 inside the AI
++   sheet -- same defect on two screens, so the fix is the whole element, not the one class that was
++   reported. line-height centres the label; flex stays out of it because flexing a summary drops the
++   native disclosure marker. */
++@media (max-width: 680px) { summary { min-height: var(--cn-touch-min); line-height: var(--cn-touch-min); } }
++/* The evidence drawer lays its own row out with flex + padding, so it takes the floor as a height
++   only: line-height there would stretch two independently aligned columns. */
++@media (max-width: 680px) { .v9-evidence-summary { line-height: normal; } }
+ 
+ /* Progressive disclosure, mobile comparison, and accessible focus states. */
+ .v8-product-shell button:focus-visible, .v8-product-shell [role="button"]:focus-visible, .v8-product-shell textarea:focus-visible { outline: 3px solid #9aa8ff; outline-offset: 3px; }
+@@ -844,6 +848,20 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
+   resize: vertical;
+ }
+ .plan-ai-field textarea::placeholder { color: var(--cn-ink-tertiary); }
++/* ORD-0250: a refused press has to leave a reason a traveller can read, so it takes the same token
++   treatment as the result block -- same surface, hairline and semantic left rule, no new fill and no
++   colour carrying the meaning by itself. */
++.plan-ai-field-hint {
++  margin: 8px 0 0;
++  padding: var(--cn-s-12);
++  border: 1px solid var(--cn-hairline);
++  border-left: 3px solid var(--cn-warning);
++  border-radius: var(--cn-r-control);
++  background: var(--cn-secondary);
++  color: var(--v8-ink);
++  font-size: var(--cn-fs-body);
++  line-height: 1.5;
++}
+ .plan-ai-examples {
+   display: flex;
+   gap: 6px;
+diff --git a/review/ord0250_0251_0247w_kill_arms.py b/review/ord0250_0251_0247w_kill_arms.py
+new file mode 100644
+index 0000000..87b4bef
+--- /dev/null
++++ b/review/ord0250_0251_0247w_kill_arms.py
+@@ -0,0 +1,320 @@
++"""ORD-0250 + ORD-0251 + ORD-0247(widened) acceptance: nine sabotage shapes, each owning one node.
++
++The discipline this lane already earned, unchanged: green baseline of the owner file before every arm,
++mutations only through `live_checks/mutation_anchor_guard.py` (sha-verified restore), a run without a
++per-test summary is `INVALID_STACK` rather than a verdict, ports pre-flighted against netstat (an
++unstarted webServer exits non-zero exactly like a kill), and every arm is also played against another
++lane-critical spec so collateral cannot hide behind one owner.
++
++Arm list -- what each one is the *named* regression of:
++  M1 the silent refusal of ORD-0250 coming back       K1 the raw server label of ORD-0251 coming back
++  M2 the length floor drifting                        K2 an unknown label falling back to a known one
++  M3 the control no longer saying it cannot advance   K3 the "not knowable" sentinel back on data-*
++  W2 the touch floor re-narrowed to one class         W3 a reported disclosure leaving the sweep
++  W4 the touch floor leaking into the pointer layout
++"""
++
++from __future__ import annotations
++
++import json
++import re
++import subprocess
++import sys
++import time
++from hashlib import sha256
++from pathlib import Path
++
++ROOT = Path("D:/moodle/_qoder_integration_20260919")
++sys.path.insert(0, str(ROOT / "live_checks"))
++from mutation_anchor_guard import temporary_guarded_replace  # noqa: E402
++
++for _stream in (sys.stdout, sys.stderr):
++    if hasattr(_stream, "reconfigure"):
++        _stream.reconfigure(encoding="utf-8", errors="replace")
++
++SHEET = ROOT / "frontend/src/features/planning/PlanWithAiSheet.tsx"
++CARD = ROOT / "frontend/src/features/notifications/PushCapabilityCard.tsx"
++CSS = ROOT / "frontend/src/styles.css"
++PYTHON = "D:/moodle/CityNexus/.venv/Scripts/python.exe"
++RECEIPT = ROOT / "review/evidence/ui-overnight/ord0250-0251-0247w-arms.json"
++
++A = "e2e/qoder-empty-request-says-what-is-missing.spec.ts"
++B = "e2e/qoder-no-internal-words-or-sentinels.spec.ts"
++C = "e2e/qoder-every-summary-is-tappable.spec.ts"
++
++FILES = [SHEET, CARD, CSS]
++
++SUMMARY_RULE = (
++    "@media (max-width: 680px) { summary "
++    "{ min-height: var(--cn-touch-min); line-height: var(--cn-touch-min); } }\n"
++)
++
++# name, order, owner spec, mirror spec, file, anchor, mutant, why, owner node
++ARMS = [
++    (
++        "killM1-refusal-goes-silent-again",
++        "ORD-0250",
++        A,
++        B,
++        SHEET,
++        "      setRequestTooShort(true);\n      return;\n",
++        "      return;\n",
++        "the exact defect ORD-0250 was filed for: a press that is refused and says nothing",
++        "ord0250-1",
++    ),
++    (
++        "killM2-length-floor-lowered-to-one",
++        "ORD-0250",
++        A,
++        B,
++        SHEET,
++        "const REQUEST_MIN_LENGTH = 8;\n",
++        "const REQUEST_MIN_LENGTH = 1;\n",
++        "the boundary stops being the boundary: seven characters is planned from",
++        "ord0250-2",
++    ),
++    (
++        "killM3-control-stops-saying-it-cannot-advance",
++        "ORD-0250",
++        A,
++        B,
++        SHEET,
++        "            aria-disabled={text.trim().length < REQUEST_MIN_LENGTH || undefined}\n",
++        "            /* mutant: the control no longer declares that it cannot be advanced */\n",
++        "an unusable press presented as an ordinary button, and dropped out of the keyboard path",
++        "ord0250-3",
++    ),
++    (
++        "killK1-server-label-echoed-again",
++        "ORD-0251",
++        B,
++        A,
++        CARD,
++        '      <strong>\n        {keys ? t(keys.state) : unreadable ? t("push.capUnread") : t("push.checkingState")}\n      </strong>\n',
++        '      <strong>{config?.capability ?? t("push.checkingState")}</strong>\n',
++        "the pre-fix line from /v8/me: the server's own enum as the traveller's status",
++        "ord0251-1",
++    ),
++    (
++        "killK2-unknown-label-wears-a-known-sentence",
++        "ORD-0251",
++        B,
++        A,
++        CARD,
++        'const UNKNOWN_CAPABILITY = { state: "push.capUnknown", help: "push.capUnknownHelp" };\n',
++        'const UNKNOWN_CAPABILITY = { state: "push.capRecordOnly", help: "push.capRecordOnlyHelp" };\n',
++        "fail closed quietly becomes fail comfortable: a status we do not know is reported as one we do",
++        "ord0251-2",
++    ),
++    (
++        "killK3-not-knowable-sentinel-back-on-data",
++        "ORD-0251",
++        B,
++        A,
++        SHEET,
++        '              result?.planCount !== undefined && result.planCount >= 0 ? result.planCount : "unknown"\n',
++        "              result?.planCount ?? 0\n",
++        "the internal -1 published again on an attribute a gate parses as a count",
++        "ord0251-3",
++    ),
++    (
++        "killW2-touch-floor-re-narrowed-to-one-class",
++        "ORD-0247",
++        C,
++        B,
++        CSS,
++        SUMMARY_RULE,
++        SUMMARY_RULE.replace("summary {", ".v8-advanced > summary {"),
++        "the single-page fix the widened acceptance exists to refuse: bookings passes, the AI sheet's "
++        "「技术详情」 goes back to 25px",
++        "ord0247w-1",
++    ),
++    (
++        "killW3-reported-disclosure-leaves-the-sweep",
++        "ORD-0247",
++        C,
++        B,
++        SHEET,
++        '{zh ? "技术详情" : "Technical detail"}',
++        '{zh ? "细节" : "Detail"}',
++        "a sweep over nothing would still read green, so the inventory has to keep containing the "
++        "controls that were reported",
++        "ord0247w-2",
++    ),
++    (
++        "killW4-touch-floor-moved-out-of-the-mobile-layer",
++        "ORD-0247",
++        C,
++        B,
++        CSS,
++        SUMMARY_RULE,
++        SUMMARY_RULE.replace("@media (max-width: 680px)", "@media (min-width: 0px)"),
++        "the touch floor leaking onto the pointer layout, which Amendment F-2 owns",
++        "ord0247w-3",
++    ),
++]
++
++
++def digests() -> dict[str, str]:
++    return {path.name: sha256(path.read_bytes()).hexdigest() for path in FILES}
++
++
++def port_busy(port: int) -> bool:
++    out = subprocess.run(
++        "netstat -ano -p tcp",
++        capture_output=True,
++        text=True,
++        encoding="utf-8",
++        errors="replace",
++        shell=True,
++    ).stdout
++    return any(f":{port} " in line and "LISTENING" in line for line in out.splitlines())
++
++
++def run(label: str, port: int, spec: str) -> dict:
++    cmd = [PYTHON, str(ROOT / "review/run_spec.py"), spec, str(port)]
++    started = time.time()
++    proc = subprocess.run(
++        cmd, cwd=str(ROOT), capture_output=True, text=True, encoding="utf-8", errors="replace"
++    )
++    out = proc.stdout + proc.stderr
++    log = next((line.split("log=", 1)[1].strip() for line in out.splitlines() if line.startswith("exit=")), "")
++    run_id = next(
++        (line.split("run_id=", 1)[1].split()[0] for line in out.splitlines() if line.startswith("run_id=")), ""
++    )
++    summary = next(
++        (line.strip() for line in reversed(out.splitlines()) if " passed" in line or " failed" in line), ""
++    )
++    nodes: dict[str, str] = {}
++    for line in out.splitlines():
++        match = re.match(r"^\s*(ok|x|✘)\s+\d+\s+\[[a-z-]+\].*›\s*([a-z0-9]+(?:w)?-[a-z0-9]+)", line)
++        if match:
++            nodes[match.group(2)] = "GREEN" if match.group(1) == "ok" else "RED"
++    print(
++        f"[{label}] exit={proc.returncode} run_id={run_id} {round(time.time() - started)}s {summary!r} "
++        + " ".join(f"{k}:{v}" for k, v in sorted(nodes.items())),
++        flush=True,
++    )
++    return {
++        "label": label,
++        "spec": spec,
++        "exitCode": proc.returncode,
++        "runId": run_id,
++        "log": log,
++        "summary": summary,
++        "stackStarted": bool(summary),
++        "nodes": nodes,
++    }
++
++
++def main() -> int:
++    tag = sys.argv[1] if len(sys.argv) > 1 else ""
++    port = int(sys.argv[2]) if len(sys.argv) > 2 else 5300
++    span = list(range(port, port + 3 * len(ARMS)))
++    busy = sorted({p for p in span + [p + 4000 for p in span] if port_busy(p)})
++    if busy:
++        print(f"ABORT: these ports are already listening: {busy} -- another chain owns them")
++        return 6
++    originals = digests()
++    for name, _order, _spec, _mirror, path, anchor, _mutant, _why, _owner in ARMS:
++        hits = open(path, encoding="utf-8", newline="").read().count(anchor)
++        if hits != 1:
++            print(f"ABORT: {name} anchor hits={hits} in {path.name}, expected exactly 1")
++            return 2
++
++    record = {
++        "generatedBy": "e345b9d6",
++        "orders": ["ORD-0250", "ORD-0251", "ORD-0247 (widened)"],
++        "runTag": tag or "first",
++        "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
++        "guard": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace",
++        "specs": {"ORD-0250": A, "ORD-0251": B, "ORD-0247": C},
++        "runShape": (
++            "whole owner spec file per arm (3 nodes + the real-seed setup project = 4 passes when green); "
++            "the same mutant is then played against another lane-critical spec as the collateral mirror"
++        ),
++        "verifierNote": (
++            "claimed_result lives here; derived_result / direct_red / collateral_red are WRITTEN_BY_VERIFIER "
++            "per the frozen receipt schema -- this lane does not grade its own kills"
++        ),
++        "filesBefore": originals,
++        "arms": [],
++    }
++    for name, order, spec, mirror_spec, path, anchor, mutant, why, owner in ARMS:
++        print(f"\n=== {name} ({order}, owner {owner}) ===", flush=True)
++        baseline = run("baseline-owner-spec", port, spec)
++        port += 1
++        before = digests()[path.name]
++        with temporary_guarded_replace(path, anchor.encode(), mutant.encode(), expected_hits=1) as guard:
++            attempt = run("mutated-owner-spec", port, spec)
++            port += 1
++            mirror = run("same-mutant-mirror-spec", port, mirror_spec)
++            port += 1
++        after = digests()[path.name]
++        red = sorted(k for k, v in attempt["nodes"].items() if v == "RED")
++        green = sorted(k for k, v in attempt["nodes"].items() if v == "GREEN")
++        record["arms"].append(
++            {
++                "name": name,
++                "order": order,
++                "why": why,
++                "file": str(path),
++                "ownerNode": owner,
++                "ownerSpec": spec,
++                "anchor_hits": guard.anchor_hits,
++                "bytes_changed": guard.bytes_changed,
++                "mutated_sha256": guard.mutated_sha256,
++                "restored_sha256": after,
++                "restored_exact": after == before == originals[path.name],
++                "baseline": baseline,
++                "attempt": attempt,
++                "mirror": mirror,
++                "redSet": red,
++                "survivingNodes": green,
++                "exclusiveToOwner": red == [owner],
++                "claimed_result": (
++                    "INVALID_STACK"
++                    if not (baseline["stackStarted"] and attempt["stackStarted"])
++                    else "KILLED"
++                    if attempt["nodes"].get(owner) == "RED" and baseline["nodes"].get(owner) == "GREEN"
++                    else "SURVIVED"
++                    if attempt["nodes"].get(owner) == "GREEN"
++                    else "BASELINE_RED -- arm not measured"
++                ),
++            }
++        )
++
++    record["filesAfter"] = digests()
++    record["treeUnchangedByThisRun"] = record["filesAfter"] == originals
++    record["allArmsKilled"] = all(a["claimed_result"] == "KILLED" for a in record["arms"])
++    owners = [a["ownerNode"] for a in record["arms"]]
++    record["exclusiveKiller"] = {
++        owner: [a["name"] for a in record["arms"] if a["exclusiveToOwner"] and a["ownerNode"] == owner]
++        for owner in owners
++    }
++    record["nodesWithoutAKillingArm"] = [o for o in owners if not record["exclusiveKiller"].get(o)]
++    record["mirrorCollateral"] = [
++        {"arm": a["name"], "mirrorRed": sorted(k for k, v in a["mirror"]["nodes"].items() if v == "RED")}
++        for a in record["arms"]
++    ]
++    record["invalidStackArms"] = [a["name"] for a in record["arms"] if a["claimed_result"] == "INVALID_STACK"]
++    out_path = RECEIPT.with_name(f"ord0250-0251-0247w-arms{'-' + tag if tag else ''}.json")
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
++    for arm in record["arms"]:
++        print(
++            f"{arm['claimed_result']:16s} exclusive={str(arm['exclusiveToOwner']):5s} owner={arm['ownerNode']} "
++            f"red={','.join(arm['redSet']) or '-'} survivors={','.join(arm['survivingNodes']) or '-'} "
++            f"anchor_hits={arm['anchor_hits']} bytes_changed={arm['bytes_changed']} "
++            f"restored_exact={arm['restored_exact']}  {arm['name']}"
++        )
++    print(f"exclusive killers: {json.dumps(record['exclusiveKiller'], ensure_ascii=False)}")
++    print(f"nodes without a killing arm: {record['nodesWithoutAKillingArm']}")
++    print(f"mirror collateral: {json.dumps([m for m in record['mirrorCollateral'] if m['mirrorRed']], ensure_ascii=False)}")
++    print(f"allArmsKilled={record['allArmsKilled']} treeUnchanged={record['treeUnchangedByThisRun']}")
++    print(f"receipt={out_path}")
++    return 0 if record["treeUnchangedByThisRun"] and record["allArmsKilled"] else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
