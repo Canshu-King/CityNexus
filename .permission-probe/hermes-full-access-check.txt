@@ -1,0 +1,1 @@
+Temporary permission probe for GitHub connector approval flow. Safe to delete.
