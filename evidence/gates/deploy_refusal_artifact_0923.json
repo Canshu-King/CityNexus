@@ -1,0 +1,29 @@
+{
+ "sha": "dea8410",
+ "src": "D:\\moodle\\_qoder_preview_20260920\\dist",
+ "serve": "D:\\moodle\\_qoder_cmdr_canary_0923\\foreign_dist",
+ "t": "2026-09-23T16:42:52+0800",
+ "gauge": {
+  "gauge_path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\deploy_bundle.py",
+  "gauge_bytes": 87842,
+  "gauge_content_digest_sha256": "f327541aa7422aa05da10ae568b698c9514f11bfa8a5fdce89de1b55d8cef705",
+  "gauge_git_blob_sha1": "23d3ffe570f7754e841bebf0c312f4b69adc1ae9",
+  "gauge_git_blob_len": 40,
+  "rule": "a receipt may only endorse the exact gauge bytes it names (arbiter D1-5)"
+ },
+ "surface_base": {
+  "http_base": "http://127.0.0.1:4781",
+  "declared_via_env": false,
+  "disk_serve": "D:\\moodle\\_qoder_cmdr_canary_0923\\foreign_dist",
+  "rule": "the HTTP side and the disk side must belong to the same deployment",
+  "declares_cmdr_live_explicitly": false,
+  "resolved_serve": "D:\\moodle\\_qoder_cmdr_canary_0923\\foreign_dist",
+  "resolved_cmdr_dist": "D:\\moodle\\_qoder_preview_20260920",
+  "inside_cmdr_dist_resolved": false,
+  "base_port": 4781,
+  "base_is_cmdr_like": true,
+  "pairing": "MIXED: disk side is foreign, HTTP side is the commander chain",
+  "refuse_reason": "--serve resolves outside the commander's live dist while the HTTP side is my chain (base defaulted to http://127.0.0.1:4781): bytes would be read from http://127.0.0.1:4781 and compared against files under D:\\moodle\\_qoder_cmdr_canary_0923\\foreign_dist. Set CNX_DEPLOY_BASE=http://127.0.0.1:<your static port>, or CNX_DEPLOY_BASE_IS_CMDR_LIVE=1 to say"
+ },
+ "refusal_tag": "refused_mixed_sides"
+}
