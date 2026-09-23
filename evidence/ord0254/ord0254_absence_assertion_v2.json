@@ -1,0 +1,96 @@
+{
+ "at": "2026-09-23T13:46:08+08:00",
+ "predicate": "a read of retryable/candidates/pending_destination_label/destination_state/hard_gaps counts as a contract dependency only when the SAME file is capability-connected; other occurrences are listed and not counted",
+ "supersedes": "assert_contract_absent.py v1 (two defects named in its module docstring)",
+ "baseline": {
+  "rev": "53fe8e8",
+  "shipped_files_scanned": 63,
+  "capability_connected_files": [
+   "frontend/src/app/v8Types.ts",
+   "frontend/src/features/notifications/PushCapabilityCard.tsx",
+   "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+   "frontend/src/features/traveler-twin/TwinPanel.tsx",
+   "frontend/src/generated/api.ts",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ],
+  "dependency_reads_in_connected_files": [],
+  "field_reads_elsewhere_count": 1,
+  "field_reads_elsewhere_sample": [
+   {
+    "field": "candidates",
+    "file": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+    "line": 171,
+    "text": "{result.discovery.candidates.slice(0, 4).map((candidate) => {",
+    "file_is_capability_connected": false
+   }
+  ]
+ },
+ "candidate": {
+  "rev": "HEAD",
+  "shipped_files_scanned": 65,
+  "capability_connected_files": [
+   "frontend/src/app/v8Types.ts",
+   "frontend/src/features/notifications/PushCapabilityCard.tsx",
+   "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+   "frontend/src/features/traveler-twin/TwinPanel.tsx",
+   "frontend/src/generated/api.ts",
+   "frontend/src/i18n/LocaleContext.tsx"
+  ],
+  "dependency_reads_in_connected_files": [],
+  "field_reads_elsewhere_count": 1,
+  "field_reads_elsewhere_sample": [
+   {
+    "field": "candidates",
+    "file": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+    "line": 171,
+    "text": "{result.discovery.candidates.slice(0, 4).map((candidate) => {",
+    "file_is_capability_connected": false
+   }
+  ]
+ },
+ "killer_control_live_line": {
+  "repo": "D:\\moodle\\_qoder_integration_20260919",
+  "rev": "HEAD",
+  "found": 7,
+  "examples": [
+   {
+    "field": "pending_destination_label",
+    "file": "frontend/src/api/citynexus.ts",
+    "line": 685,
+    "text": "pending_destination_label?: string | null;",
+    "file_is_capability_connected": true
+   },
+   {
+    "field": "pending_destination_label",
+    "file": "frontend/src/api/citynexus.ts",
+    "line": 708,
+    "text": "pending_destination_label: string | null;",
+    "file_is_capability_connected": true
+   },
+   {
+    "field": "candidates",
+    "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+    "line": 149,
+    "text": "const candidates = capability?.candidates ?? [];",
+    "file_is_capability_connected": true
+   },
+   {
+    "field": "pending_destination_label",
+    "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+    "line": 187,
+    "text": "? `服务器说「${capability.pending_destination_label ?? capability.query}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。",
+    "file_is_capability_connected": true
+   },
+   {
+    "field": "pending_destination_label",
+    "file": "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+    "line": 188,
+    "text": ": `The server says \"${capability.pending_destination_label ?? capability.query}\" cannot be resolved to a destination fro",
+    "file_is_capability_connected": true
+   }
+  ]
+ },
+ "built_artifact_capability_fragments": [],
+ "verdict": "PASS",
+ "failure_reasons": []
+}
