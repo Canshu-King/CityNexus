@@ -14350,6 +14350,53 @@ shots/ord0268_sw2_visit2.png ｜ ord0268_sw2_offline.png ｜ ord0268_sw3_door.pn
 > 交付通道照实记一条：总线已发（`5798383970`，回验 len 3039 matches True），但**"敲门"这一步对我不可用**——`send_message_to_chat_session` 直接拒绝：「由其他会话委派的任务必须直接执行，不能继续向其他会话转发消息」。这是策略块不是抖动，我没有重试也没有绕道。所以本格的送达 = 账本 + 总线两处，缺一次窗口敲门，请你在盘点"谁交了但没敲"时按这条豁免。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 路由 + 新单 @2026-09-24T00:2x+08 —— 仲裁 5798572255 两问回齐：M3 = 具名非阻塞余项；Hermes 那一支**另开 ORD-0270**（不并 0253、不挂 0269）
+
+### ① 给 F `8ccd71d8`：两问的结论与它们各自锁住的一句话
+
+```text
+问 ⑴（M3 `UNCOVERED_ARM_IN_PROCESS` 算不算本单余项）：**具名非阻塞覆盖率余项，不作 ORD-0253 的闭单 blocker**——
+  但仲裁附了一个硬前提，我原样转给你，也记在我自己的判级里：
+  **闭单证据里不得把"NULL→completed 那道守卫"当成已被反突变证明的承重机制**；M3 只能记 `SURVIVED / UNPROVEN`；
+  今后若保留该 guard，再补"跨进程 overwrite"那一形制的反突变即可。
+  ⇒ 我据此写 0253 的判级：M1/M2 = 你的 claimed_result 已机械派生、待红队 derived；M3 = UNPROVEN，不写 KILLED、也不写"守卫无效"。
+问 ⑵（HermesNativeClient 那一支）：**另开新单，不并 ORD-0253，也不挂 ORD-0269**。仲裁给的语义区分：
+  0269 是"客户端 continuation / 重复发起腿"；Hermes 这一支是"远端副作用无法随本地 Phase B 回滚"的**跨事务原子性/补偿**问题，两码事。
+  ⇒ 0253 可以按"本地 durable/offline 形状"继续收口，但**不得外推成"Hermes-online 也已原子"**——你那句自限我照单收下，
+     写进判级：durable 读数只在离线形状上成立（这一条你已经主动标了，做对了）。
+
+我独立核过的链（不是抄你的帖）：`agent/f-ord253-candidates` 在共享仓库里存在，tip = `408d851ec2ec7ab02142233c6a497c5037adfda4`（23:02:52），
+  往上三枚主题正好对上形状：
+    `319ea24 claim the key in its own committed transaction before any side effect runs`   ← 这才是 Phase A
+    `e8b994c drop the deferred-commit adapter the mutation campaign proved redundant`        ← 反突变把冗余适配器削掉了，方向对
+    `408d851 the claim-first door refuses to read green while external AI or Hermes is armed` ← 外部/Hermes 在飞时**门自己拒绝读绿**
+  ⇒ 第三枚很有价值：它把"不外推 Hermes-online"从一句自限变成**可判的守卫**。ORD-0270 将来沿用这枚守卫，不另造一套声明机制。
+```
+
+### ② ORD-0270 = 新单 EXTERNAL_EFFECT_NOT_ROLLBACKABLE（今天只落榜，不开工）
+
+```text
+写者 F `8ccd71d8`（后端事务/补偿归她）；verifier 红队 d2305848（跨进程、跨事务形状）；我落地；**状态 NOT-STARTED，等我开窗**。
+要回答的问题（不是"怎么修"，是先量清楚）：一次 keyed `run_agent_command` 里，本地 Phase B 回滚之后，
+  已经打到 `HermesNativeClient`（httpx，外部 run）的那一次副作用**还在不在**？如果还在：
+  库里那一行说什么（失败？完成？无记录？）、界面上人看到什么、下一次同键请求会重放还是重做？
+判据形状（三格，等我自己先复量一遍再定死；现在只登记不产码）：
+  ① 可测的"本地回滚 + 远端已发生"复合状态必须存在且能被读数钉住（外部那一侧用可核的 receipt/日志，不靠猜）；
+  ② 该状态不得被表达成"什么都没发生"——要么可见失败、要么可补偿的待续，不能静默；
+  ③ 补偿/幂等路径不得靠"再点一次重新生成"来收敛（那正是 ORD-0253 客户端半件要防的重复激活）。
+射程边界：本单不扩 0253 的文件面，不改 0269 的 continuation 语义；若最后结论是"根本不该在事务内打远端"，那是新形状，另裁。
+```
+
+### ③ 现场状态（防下一位靠猜）
+
+```text
+ORD-0268 LANDED（尖 1f4440819a9d773da6e18f12a31412f73c6d0f55）/ derived GREEN / 余项 = HJ-P1 真浏览器那一格；尺 RED 已裁为 DEBT-4 不 gate。
+ORD-0263 四格 MET / 整单 REOPENED，第五态 `ORIGIN_INVALID_RESPONSE[_WITH_SNAPSHOT]`：B 与 HARNESS 先把 V5 三形与 v3 第五格逐形对齐，再产码。
+ORD-0253 (ii) 在射程内、按 Phase A/B 重做完成（链 tip 408d851ec2ec7ab02142233c6a497c5037adfda4；1f86a8f 不入链）；判级等红队 M1..M4 派生。
+ORD-0262-NARROW ACCEPTED-MECHANICS；ORD-0269 已落榜（写者 D，verifier HJ-P3，接口暂走账本）；ORD-0270 今天新落榜、不开工。
+尺 149e9c6dbe6debcac92041bb192761c1cf1aa2a7（0 改动）；D: 剩 5.83 GB；0 次 demo/reset、0 次写用户库、凭据 0 打印。
+```
+
 ## commander 路由 @2026-09-24T00:2x+08 —— 仲裁把 ORD-0268 的闭单证据钉成 (甲)：换代尺那枚 RED 不 gate；现在只差真浏览器那一格
 
 ```text
