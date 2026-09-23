@@ -1,0 +1,234 @@
+{
+ "at": "2026-09-23T14:29:07+08:00",
+ "what": "F arm driven with the swapped ruler's own repeated_verdict (main() cannot run it)",
+ "ruler_blob40": "c0aafc940136c502a2d021f0535537ee3298c888",
+ "aggregation_rule": "every probe of every target must be GREEN (lines 659-672 equivalent)",
+ "probe_times": 2,
+ "auth_file": null,
+ "allow_proxy_unprobed_used": false,
+ "targets": [
+  {
+   "label": "static_4412_serve_union",
+   "base": "http://127.0.0.1:4412"
+  },
+  {
+   "label": "preview_4411_candidate",
+   "base": "http://127.0.0.1:4411"
+  }
+ ],
+ "refs": [
+  "/assets/index-C0qSwD3N.js",
+  "/"
+ ],
+ "probes": [
+  {
+   "surface": "static_4412_serve_union",
+   "base": "http://127.0.0.1:4412",
+   "ref": "/assets/index-C0qSwD3N.js",
+   "got": {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/assets/index-C0qSwD3N.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1213215",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4412",
+      "auth_applied": false,
+      "body_size": 1213215,
+      "disk_present": true,
+      "disk_bytes": 1213215,
+      "disk_sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/assets/index-C0qSwD3N.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1213215",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4412",
+      "auth_applied": false,
+      "body_size": 1213215,
+      "disk_present": true,
+      "disk_bytes": 1213215,
+      "disk_sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   }
+  },
+  {
+   "surface": "static_4412_serve_union",
+   "base": "http://127.0.0.1:4412",
+   "ref": "/",
+   "got": {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html",
+      "length": "1200",
+      "head_bytes": "<!doctype html>\n<html la",
+      "sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "is_html_fallback": true,
+      "error": null,
+      "base": "http://127.0.0.1:4412",
+      "auth_applied": false,
+      "body_size": 1200,
+      "disk_present": true,
+      "disk_bytes": 1200,
+      "disk_sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "expect_content_type_substring": "html",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html",
+      "length": "1200",
+      "head_bytes": "<!doctype html>\n<html la",
+      "sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "is_html_fallback": true,
+      "error": null,
+      "base": "http://127.0.0.1:4412",
+      "auth_applied": false,
+      "body_size": 1200,
+      "disk_present": true,
+      "disk_bytes": 1200,
+      "disk_sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "expect_content_type_substring": "html",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   }
+  },
+  {
+   "surface": "preview_4411_candidate",
+   "base": "http://127.0.0.1:4411",
+   "ref": "/assets/index-C0qSwD3N.js",
+   "got": {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/assets/index-C0qSwD3N.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1213215",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4411",
+      "auth_applied": false,
+      "body_size": 1213215,
+      "disk_present": true,
+      "disk_bytes": 1213215,
+      "disk_sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/assets/index-C0qSwD3N.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1213215",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4411",
+      "auth_applied": false,
+      "body_size": 1213215,
+      "disk_present": true,
+      "disk_bytes": 1213215,
+      "disk_sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   }
+  },
+  {
+   "surface": "preview_4411_candidate",
+   "base": "http://127.0.0.1:4411",
+   "ref": "/",
+   "got": {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html",
+      "length": "1200",
+      "head_bytes": "<!doctype html>\n<html la",
+      "sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "is_html_fallback": true,
+      "error": null,
+      "base": "http://127.0.0.1:4411",
+      "auth_applied": false,
+      "body_size": 1200,
+      "disk_present": true,
+      "disk_bytes": 1200,
+      "disk_sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "expect_content_type_substring": "html",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html",
+      "length": "1200",
+      "head_bytes": "<!doctype html>\n<html la",
+      "sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "is_html_fallback": true,
+      "error": null,
+      "base": "http://127.0.0.1:4411",
+      "auth_applied": false,
+      "body_size": 1200,
+      "disk_present": true,
+      "disk_bytes": 1200,
+      "disk_sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "expect_content_type_substring": "html",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   }
+  }
+ ],
+ "verdict": "GREEN"
+}
