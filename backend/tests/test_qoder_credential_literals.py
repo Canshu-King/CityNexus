@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import hashlib
 import math
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -44,6 +45,70 @@ PLACEHOLDER_MARKERS = (
 
 #: 高熵阈值（shannon bits/char）。真随机 key 一般 > 3.2；占位串通常低。
 MIN_ENTROPY_BITS_PER_CHAR = 3.2
+
+#: 产品自己会当凭据读的环境变量（`app/core/config.py:22-23,53` 就是这三把）——
+#: "现役真凭据"这一侧只从这里取，别处不算；**只取指纹与条数，绝不印值**。
+LIVE_CREDENTIAL_ENV_VARS = ("CITYNEXUS_AI_API_KEY", "DEEPSEEK_API_KEY", "CITYNEXUS_HERMES_API_KEY")
+
+#: **D-2 裁定＝甲（commander 2026-09-23 18:5x）**：测试桩里的假凭据**不修掉、不缩射程**，
+#: 而是**具名声明 + 指纹**进收据。声明必须带它自己那颗 token 指纹 ⇒ 桩一改，指纹就对不上，
+#: 那条声明自动失效并变回"未声明 ⇒ 红"。这不是白名单：白名单看路径，声明看**内容摘要**。
+DECLARED_NON_LIVE_SAMPLES: tuple[dict, ...] = (
+    {
+        "at": "frontend/e2e/qoder-e2e-config-guard.spec.ts:140",
+        "token_fp": "faca4b0049a4",
+        "what": "e2e 配置守卫自己塞进子进程环境的**假** DEEPSEEK_API_KEY（形状真、值假）",
+        "evidence": ("同文件 :144 断言 `run.status != 0`",
+                     "同文件 :145 断言 stderr 含 'external AI must be off'"),
+        "declared_by": "commander 494abfd7 裁定 D-2=甲；lane F 8ccd71d8 录入 @2026-09-23",
+    },
+)
+
+
+def live_credentials() -> list[dict]:
+    """现役侧：**只**取长度与指纹，不取也不印原文；缺侧 ⇒ NOT_MEASURED，不当 False。"""
+    out = []
+    for name in LIVE_CREDENTIAL_ENV_VARS:
+        value = os.environ.get(name) or ""
+        if not value:
+            continue
+        out.append({"env": name, "len": len(value), "fp": hashlib.sha256(
+            value.encode("utf-8", errors="replace")).hexdigest()[:12]})
+    return out
+
+
+def classify_offenders(offenders: list[dict], live: list[dict],
+                       scanned_paths: int) -> list[dict]:
+    """给每一处命中判级：**扫描射程一字未减**，只是把"它是什么"连同两侧指纹一起写清楚。
+
+    判级规则（三态，缺读数绝不写成 False）：
+      LIVE_CREDENTIAL_LEAK      与现役凭据精确相等 ⇒ 必红
+      UNDECLARED                没有任何具名声明，或声明里的 token 指纹与扫到的不符 ⇒ 必红
+      DECLARED_NON_LIVE_SAMPLE  声明存在且指纹吻合，且**测得**与现役凭据不等 ⇒ 绿（但仍逐条进收据）
+    """
+    rows = []
+    live_fps = {c["fp"] for c in live}
+    for off in offenders:
+        decl = next((d for d in DECLARED_NON_LIVE_SAMPLES
+                     if d["at"] == off["at"] and d["token_fp"] == off["token_fp"]), None)
+        decl_stale = next((d for d in DECLARED_NON_LIVE_SAMPLES
+                           if d["at"] == off["at"] and d["token_fp"] != off["token_fp"]), None)
+        if live:
+            equals_live: bool | str = off["token_fp"] in live_fps
+        else:
+            equals_live = "NOT_MEASURED"
+        if equals_live is True:
+            verdict = "LIVE_CREDENTIAL_LEAK"
+        elif decl is None:
+            verdict = "UNDECLARED" if decl_stale is None else "DECLARATION_STALE(指纹不吻合)"
+        else:
+            verdict = "DECLARED_NON_LIVE_SAMPLE"
+        rows.append({**off, "verdict": verdict, "equals_live_credential": equals_live,
+                     "declaration": decl or decl_stale,
+                     "scanned_paths": scanned_paths, "offender_total": len(offenders),
+                     "live_side_count": len(live), "live_side_fps": sorted(live_fps),
+                     "live_side_declaration": decl is not None})
+    return rows
 
 
 def shannon_entropy(text: str) -> float:
@@ -104,10 +169,10 @@ def tracked_files() -> list[str]:
     return [line for line in proc.stdout.splitlines() if line.strip()]
 
 
-def scan_paths(paths: Iterable[str]) -> list[str]:
-    """扫描给定路径，返回**位置+形状**（不含原文）。"""
+def scan_paths(paths: Iterable[str]) -> list[dict]:
+    """扫描给定路径，返回**位置+形状**的结构化行（不含原文）。"""
 
-    offenders: list[str] = []
+    offenders: list[dict] = []
     for rel in paths:
         path = REPO / rel
         if not path.is_file():
@@ -118,12 +183,32 @@ def scan_paths(paths: Iterable[str]) -> list[str]:
             continue
         for number, pattern_name, length, token_fp in find_credential_shapes(text):
             # 只报位置与形状；两个都是摘要，**任何情况下都不印原文或前缀**
-            digest = hashlib.sha256(f"{rel}:{number}".encode("utf-8")).hexdigest()[:12]
-            offenders.append(
-                f"{rel}:{number} 形状={pattern_name}… 长度={length} "
-                f"位置指纹={digest} token指纹={token_fp}"
-            )
+            offenders.append({
+                "at": f"{rel}:{number}",
+                "shape": pattern_name,
+                "len": length,
+                "loc_fp": hashlib.sha256(f"{rel}:{number}".encode("utf-8")).hexdigest()[:12],
+                "token_fp": token_fp,
+            })
     return offenders
+
+
+def render(off: dict) -> str:
+    return (f"{off['at']} 形状={off['shape']}… 长度={off['len']} "
+            f"位置指纹={off['loc_fp']} token指纹={off['token_fp']}")
+
+
+def _table(rows: list[dict]) -> str:
+    lines = []
+    for r in rows:
+        lines.append(
+            f"    {render(r)}\n"
+            f"      判级={r['verdict']} 与现役凭据相等={r['equals_live_credential']}\n"
+            f"      声明={ (r['declaration'] or {}).get('what') or '（无）'} ｜ "
+            f"声明指纹={ (r['declaration'] or {}).get('token_fp') or '—'} ｜ 依据="
+            f"{'; '.join((r['declaration'] or {}).get('evidence') or ('—',))} ｜ 由={(r['declaration'] or {}).get('declared_by') or '—'}"
+        )
+    return "\n".join(lines) if lines else "    （0 处）"
 
 
 # ======================================================================================
@@ -133,11 +218,21 @@ def test_1_no_credential_literal_in_any_versioned_path():
     paths = tracked_files()
     assert paths, "SETUP 失败：受版本控制路径清单为空 ⇒ 这条门没有分母，不许报绿"
     offenders = scan_paths(paths)
-    assert not offenders, (
-        f"期望：受版本控制的 {len(paths)} 个路径里没有凭据字面量"
-        "（**含 `*.patch` 里 `+` 开头那种套补丁的形状** —— 2026-09-22 就是这么漏的）；"
-        f"实际 {len(offenders)} 处（只给位置与形状，不给原文）：{offenders}"
+    live = live_credentials()
+    rows = classify_offenders(offenders, live, len(paths))
+    bad = [r for r in rows if r["verdict"] != "DECLARED_NON_LIVE_SAMPLE"]
+    header = (
+        f"扫描侧 cardinality：受版本控制路径 {len(paths)} 个 ⇒ 形状命中 {len(rows)} 处\n"
+        f"现役侧 cardinality：env 里可比的现役凭据 {len(live)} 把 "
+        f"{[(c['env'], c['len'], c['fp']) for c in live] or '（0 把 ⇒ 相等性 NOT_MEASURED，不写成不等）'}\n"
     )
+    assert not bad, (
+        "期望：每一处命中要么与现役凭据**测得**不等且有**指纹吻合**的具名声明（甲），"
+        f"要么根本没有命中；实际 {len(bad)} 处不合格（**射程一字未减**，仍全部列在下面）：\n"
+        + header + _table(rows)
+    )
+    if rows:  # 绿也要把读数留下：判级表必须出现在可见输出里，不能只活着不说话
+        print("\n[credential-literals 读数表]\n" + header + _table(rows))
 
 
 # ======================================================================================
@@ -214,6 +309,57 @@ def test_2c_the_token_fingerprint_identifies_the_secret_not_its_location():
             assert str(field) not in (key_a, key_b), f"泄漏：返回字段里出现了原文（{hit[0]}）"
 
 
+def test_2d_the_declaration_is_load_bearing_not_a_whitelist():
+    """D-2=甲 的五面自证：**声明看内容摘要，不看路径**；缺读数一律 NOT_MEASURED。
+
+    全部用内存里的合成 offender —— 绝不往任何真文件里塞凭据来"证明门会红"。
+    """
+    key_a = "sk-" + "aB3dE7gH1jK4mN8pQ2sT5vW9yZ6c"          # 合成串，不是任何真 key
+    fp_a = token_fingerprint(key_a)
+    off = [{"at": "some/test_stub.spec.ts:1", "shape": "sk-", "len": len(key_a),
+            "loc_fp": "x", "token_fp": fp_a}]
+    other_live = [{"env": "DEEPSEEK_API_KEY", "len": 31,
+                   "fp": token_fingerprint("sk-" + "zZ9yY8xX7wW6vV5uU4tT3sS2rR1qQpP")}]
+    saved = DECLARED_NON_LIVE_SAMPLES
+
+    def with_decl(**override):
+        globals()["DECLARED_NON_LIVE_SAMPLES"] = ({**saved[0], "at": off[0]["at"],
+                                                   **override},)
+
+    try:
+        # 面①：没有声明 ⇒ 必红（"新出现的字面量一定会响"这一面）
+        globals()["DECLARED_NON_LIVE_SAMPLES"] = ()
+        v1 = classify_offenders(off, other_live, 10)[0]["verdict"]
+        assert v1 == "UNDECLARED", f"期望：未声明的命中判 UNDECLARED；实际 {v1}"
+
+        # 面②：声明在、但**指纹不吻合**（桩被改过）⇒ 声明作废，仍红
+        with_decl(token_fp="0" * 12)
+        v2 = classify_offenders(off, other_live, 10)[0]["verdict"]
+        assert v2.startswith("DECLARATION_STALE"), (
+            f"期望：指纹不吻合的声明要自动作废并仍红；实际 {v2}")
+
+        # 面③：声明吻合 + 与现役**测得**不等 ⇒ 判成测试桩（绿），但两侧 cardinality 进收据
+        with_decl(token_fp=fp_a)
+        row3 = classify_offenders(off, other_live, 10)[0]
+        assert row3["verdict"] == "DECLARED_NON_LIVE_SAMPLE", (
+            f"期望：判成具名测试桩；实际 {row3['verdict']}")
+        assert row3["equals_live_credential"] is False, "有现役可比时必须**测得**不等，不许空判"
+        assert row3["offender_total"] == 1 and row3["scanned_paths"] == 10, (
+            f"两侧 cardinality 必须进收据：{row3['offender_total']}/{row3['scanned_paths']}")
+
+        # 面④：现役侧缺席 ⇒ NOT_MEASURED（**不许**写成"不等"）
+        row4 = classify_offenders(off, [], 10)[0]
+        assert row4["equals_live_credential"] == "NOT_MEASURED", (
+            f"期望：没有可比现役凭据时写 NOT_MEASURED；实际 {row4['equals_live_credential']!r}")
+
+        # 面⑤：与现役**相等** ⇒ 无论声明成什么都必红
+        row5 = classify_offenders(off, [{"env": "DEEPSEEK_API_KEY", "len": 31, "fp": fp_a}], 10)[0]
+        assert row5["verdict"] == "LIVE_CREDENTIAL_LEAK", (
+            f"期望：等于现役凭据必红；实际 {row5['verdict']}")
+    finally:
+        globals()["DECLARED_NON_LIVE_SAMPLES"] = saved
+
+
 # ======================================================================================
 # 3 · 判据承重（可被突变杀掉）
 # ======================================================================================
@@ -242,6 +388,25 @@ def test_3_the_scan_is_load_bearing():
     a = find_credential_shapes(f'K="{key_a}"\n')[0][3]
     b = find_credential_shapes(f'K="{key_b}"\n')[0][3]
     assert a != b and len(a) == 12, "恢复后两把 key 必须给出不同指纹"
+
+    # 第三处承重：甲案的"声明看指纹"。把判级换成"一律算已声明"（= 偷偷变成白名单），
+    # 未声明的命中就会被放绿 ⇒ 这一格必须抓住它。
+    real_classify = globals()["classify_offenders"]
+    probe = [{"at": "unreported.spec.ts:9", "shape": "sk-", "len": 31, "loc_fp": "y", "token_fp": a}]
+
+    def _lax(offenders, live, scanned_paths):
+        return [{**r, "verdict": "DECLARED_NON_LIVE_SAMPLE"}
+                for r in real_classify(offenders, live, scanned_paths)]
+
+    try:
+        globals()["classify_offenders"] = _lax
+        lax = classify_offenders(probe, [], 1)[0]["verdict"]
+    finally:
+        globals()["classify_offenders"] = real_classify
+    assert lax == "DECLARED_NON_LIVE_SAMPLE", "SETUP：常数桩没生效，测不出东西"
+    strict = real_classify(probe, [], 1)[0]["verdict"]
+    assert strict == "UNDECLARED", (
+        f"恢复后未声明的命中必须回到 UNDECLARED；实际 {strict}")
 
 
 if __name__ == "__main__":  # pragma: no cover
