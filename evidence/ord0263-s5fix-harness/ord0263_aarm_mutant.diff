@@ -1,0 +1,15 @@
+diff --git a/frontend/src/app/V8Experience.tsx b/frontend/src/app/V8Experience.tsx
+index f9889ab..02fb974 100644
+--- a/frontend/src/app/V8Experience.tsx
++++ b/frontend/src/app/V8Experience.tsx
+@@ -211,7 +211,9 @@ async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
+   }
+   /* ORD-0263 fifth state: a 2xx that reached us and still gives this screen nothing is an answered
+      request, and it has to be classified as one. */
+-  if (body === null) {
++  /* MUTANT (A-arm counterfactual, never committed): the guard is switched off so the discarded 200
++     becomes a TypeError two frames later again - everything else in this file is B's code untouched. */
++  if (false && body === null) {
+     throw new OriginResponseUnusableError(
+       response.status,
+       contentType,
