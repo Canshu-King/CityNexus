@@ -1,0 +1,123 @@
+{
+ "at": "2026-09-23T12:03:01+08:00",
+ "baseline_head": "53fe8e8",
+ "head_head": "2ab69f2",
+ "endpoints_compared": [
+  "GET /api/v1/demo/scene",
+  "GET /api/v1/destinations/capability",
+  "GET /api/v1/health",
+  "GET /api/v1/journeys/{journey_id}",
+  "GET /api/v1/journeys/{journey_id}/constraints",
+  "GET /api/v1/journeys/{journey_id}/experience",
+  "GET /api/v1/journeys/{journey_id}/plans",
+  "GET /api/v1/places",
+  "GET /api/v1/travelers/{traveler_id}/capabilities",
+  "PATCH /api/v1/journeys/{journey_id}",
+  "POST /api/v1/catalog-hydrations",
+  "POST /api/v1/journeys/{journey_id}/constraints",
+  "POST /api/v1/journeys/{journey_id}/plans/generate",
+  "PUT /api/v1/travelers/{traveler_id}/capabilities"
+ ],
+ "per_endpoint": {
+  "GET /api/v1/demo/scene": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "GET /api/v1/destinations/capability": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "GET /api/v1/health": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "GET /api/v1/journeys/{journey_id}": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "GET /api/v1/journeys/{journey_id}/constraints": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "GET /api/v1/journeys/{journey_id}/experience": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "GET /api/v1/journeys/{journey_id}/plans": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "GET /api/v1/places": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "GET /api/v1/travelers/{traveler_id}/capabilities": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "PATCH /api/v1/journeys/{journey_id}": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "POST /api/v1/catalog-hydrations": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "POST /api/v1/journeys/{journey_id}/constraints": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "POST /api/v1/journeys/{journey_id}/plans/generate": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  },
+  "PUT /api/v1/travelers/{traveler_id}/capabilities": {
+   "request_required_added": [],
+   "request_required_removed": [],
+   "request_props_added": [],
+   "response_fields_added": [],
+   "identical": true
+  }
+ },
+ "new_required_request_fields": {},
+ "new_response_fields": {}
+}
