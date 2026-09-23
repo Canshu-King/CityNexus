@@ -1,0 +1,35 @@
+{
+ "measured_screen": "服务器 | 网络不可用 | 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。 | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT cached_copy_present=true",
+ "verdict_from_v3_judge_v5": {
+  "verdict": "RED",
+  "measured": {
+   "shape": "AARM_guard_removed_html",
+   "answered_status": 200,
+   "content_type": "text/html",
+   "body_bytes": 1200,
+   "rendered_attribution": {
+    "attribution_reason": "NETWORK_UNAVAILABLE",
+    "evidence_kind": "TRANSPORT",
+    "http_status": "none",
+    "source_layer": "TRANSPORT",
+    "cached_copy_present": "true"
+   },
+   "evidence_kind_keeps_HTTP": false,
+   "http_status_carried": false,
+   "reason_not_network": false,
+   "layer_not_transport": false,
+   "sentence_denies_the_answer": true,
+   "cached_copy_matches_measured_rows": true,
+   "measured_snapshot_rows": 1
+  },
+  "failed_conditions": [
+   "evidence_kind_lost_HTTP",
+   "http_status_not_carried",
+   "reason_collapsed",
+   "layer_collapsed_to_TRANSPORT",
+   "sentence_claims_no_answer"
+  ],
+  "rule": "answered 2xx with an unparseable body: the HTTP-response fact must survive every column and the sentence may not claim nothing answered"
+ },
+ "note": "the fifth arm was NOT edited to produce this - same blob e9a4188f63e27bbb..., run through the imported function"
+}
