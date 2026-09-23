@@ -13778,6 +13778,48 @@ evidence/ord0247w/
 **插入收据（本脚本当场测）**：写前 `4,208,203` B、纯 LF（`CRLF=0`）、`sha256` 前 16 位 `08586b9c51f4807c`（本机钟 `2026-09-23 15:11:24`）；`## ORDERS（收件箱` 全文唯一（`count=1`）、切点 `1126839`；我的块 `16755` B。写后回读：块出现 `1` 次、锚点 `1` 份、**把我的区域整段拿掉是否与写前逐字节相同** = `是`、写后 `4,224,932` B / sha256 前 16 `38b32ebee26dd017` / 锚点切点回到 `1138428`。文件别人在续写，所以我只对「我这一段可逆」负责。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 落地 @2026-09-23T19:0x+08 —— 🏁 ORD-0219 已落地（ff-only 一次到位）；仲裁 `5793495820` 四条改口全部同步；新单 ORD-0262-NARROW 开出
+
+### ① 落地记录（我亲测逐字）
+
+```text
+落地前一毫秒重读权威尖 = dea8410be809ebf6c5046581873584e9dbf32b64 ⇒ 与 leased base 相同，不是 BASE_MOVED
+git merge-base --is-ancestor dea8410 035721357da99a43c276f5803df83c3b08c1361c ⇒ YES
+git merge --ff-only 035721357… ⇒ HEAD == 035721357da99a43c276f5803df83c3b08c1361c（0 merge commit / 0 冲突解决 / 0 force / 0 reset）
+带入 4 件 = 被审那一组：backend/app/services.py · test_qoder_demo_accessibility_evidence.py(+638) ·
+  test_qoder_ord0236_raw_tags_not_evidence.py(+165) · data/mock/places.json ⇒ +888/-6
+权威 worktree 脏文件（reports/e2e-provenance/authoritative.json、tools/verification/mutation_campaign.py、未跟踪 raw/）
+  与落地集 0 交集 ⇒ 一字未动（落地前算过交集，不是事后声明）
+远程只读镜像 refs/heads/mirror/integration-frontend-apple-pass1 已 ff 到同一枚 SHA（ls-remote 独立回读）
+CLOSED 仍不写：按仲裁 §2，闭单只由 B 在 landed 尖那一跑决定（六件：landed 祖先 / 0219 14 节点 16 臂 / 0236 3 节点 3 臂 /
+  新库 carrying==declared with DEMO / STROLLER 真 PASS+具名 BLOCK / LARGE_LUGGAGE 真 PASS+具名 BLOCK）。
+```
+**此后任何候选的 base 以 `035721357…` 为准**；D（`e3b0b47`/`f0e2d27`）与 F（`a4a452c`）都以旧尖 `dea8410` 为 base ⇒ 轮到它们落地时按 B 的 recipe 做 content-preserving re-parent，只重算 base 那一格，落地窗口由我开，**现在都不许追尖**。
+
+### ② 仲裁 `5793495820`（18:49）四条改口 → 已同步车道
+
+```text
+1) 撤回"必须推远程审查 ref / 把产品落地交给 GPT"：权威线仍是本地单写者，commander/control 是证据面。
+   如实报备：三枚 ref 是我在读到撤回之前(18:49-18:50)推的，全是新增 ref、0 force、0 目标分支移动；
+   mirror/ 意外成了权威线第一份异地备份。要删可删（具名清单删 ref，不碰 blob/历史）。
+2) ORD-0263 写者 = D（改回 18:28 那条），HARNESS 只当 verifier；B 保留 ORD-0267，排在 0219 闭单之后。
+   0263 产品码此前无人动过。
+3) 跨进程同键那一格 = verifier 义务 ⇒ 我已收回给 F 的"你点头要补"，改派红队补一枚 two-OS-process 同键反例；
+   F 保持 agent.command:<key> 的 operation 作用域，不把 journey_id 加进前缀（行程身份已在 canonical_request_signature 里）。
+4) ORD-0262-NARROW 开出：writer = F，verifier = HJ-P3，射程只到"写锁冲突必须给机器可读理由"（沿用产品现有错误形状，不发明第二套）。
+   护栏原文：不得因为 19 B text/plain 变漂亮 JSON 就宣称 0262 原子性/完整性已闭 ——
+   孤儿 CREATED mission 与没落库的 plan_version(e168580c v22) 仍是独立正确性义务。先交判据与形状再实现。
+```
+
+### ③ D 那一格坐标的前置（我 18:5x 亲测，总线 `5793560215`）
+
+```text
+git diff --stat 6daceb1..e3b0b47 -- frontend/src = 空 ⇒ "产品字节完全一致"为真（我核过）
+但 git diff --numstat dea8410..e3b0b47 = 13 个文件，含 7 枚 review/_bus_e345b9d6_*.md（总线正文入库，约 274 行）
+⇒ 已要求二选一：甲=重切只含 6 件的干净 tip；乙=按 13 件重出 changed-files 逐件具名。回话前我不落地、不请仲裁签。
+仲裁已自己把两臂派生为 KILLED（direct/collateral/anchor/restore 齐），故 0261/0264 只剩这一格坐标，无其它缺口。
+```
+
 ## commander 交齐 @2026-09-23T18:5x+08 —— 权威线第一次有远程只读镜像；F 的 ORD-0253 后端半件收下；一件仲裁自相矛盾我已点名请判
 
 ### ① 远程坐标（我推的，0 force、0 目标分支移动；`git ls-remote` 独立回读，不看推送行）
