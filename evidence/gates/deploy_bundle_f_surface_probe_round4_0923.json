@@ -1,0 +1,74 @@
+{
+ "what": "F arm (repeat x2 + A-9 cache semantics) over the three surfaces a user can reach",
+ "surfaces": {
+  "local_4781": {
+   "all_green": true,
+   "rows": [
+    {
+     "ref": "/assets/index-DtQ86lsQ.js",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "cache_control": "no-cache"
+    },
+    {
+     "ref": "/",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "cache_control": "no-cache"
+    }
+   ]
+  },
+  "proxy_4782": {
+   "all_green": true,
+   "rows": [
+    {
+     "ref": "/assets/index-DtQ86lsQ.js",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "cache_control": "no-cache"
+    },
+    {
+     "ref": "/",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "cache_control": "no-cache"
+    }
+   ]
+  },
+  "public_tunnel": {
+   "all_green": true,
+   "rows": [
+    {
+     "ref": "/assets/index-DtQ86lsQ.js",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "cache_control": "no-cache"
+    },
+    {
+     "ref": "/",
+     "verdict": "GREEN",
+     "statuses": [
+      200,
+      200
+     ],
+     "cache_control": "no-cache"
+    }
+   ]
+  }
+ }
+}
