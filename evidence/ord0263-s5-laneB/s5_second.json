@@ -1,0 +1,63 @@
+{
+ "label": "S5_second_generation",
+ "at": "2026-09-23T15:19:43.429Z",
+ "url": "http://127.0.0.1:4441/v8/hub",
+ "window_s": 25,
+ "render_shape": "persistent-context full document load, phone 390x844 zh-CN",
+ "seconds_to_settle": 0.44,
+ "skeleton_seen_during_wait": true,
+ "classification_nodes": {
+  "offline-retry": 0,
+  "backend-unreachable": 0,
+  "backend-unreachable-retry": 0,
+  "load-failed": 0,
+  "load-failed-reason": 0,
+  "journey-gone": 0,
+  "today-heading": 0,
+  "trial-setup": 0,
+  "failure-view": 1,
+  "failure-reason": 1,
+  "failure-read-cached": 1,
+  "failure-retry": 1
+ },
+ "rendered_text": "连接\n\n网络不可用\n\n这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\n\n看已保存的只读副本\n重试\n归因详情",
+ "rendered_text_head": "连接 网络不可用 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。 看已保存的只读副本 重试 归因详情",
+ "snapshot": {
+  "present": true,
+  "count": 1,
+  "store_names": [
+   "journeys"
+  ]
+ },
+ "origin_probe": {
+  "status": 200,
+  "ct": "application/json",
+  "thrown": false,
+  "ms": 4
+ },
+ "app_attribution": {
+  "present": true,
+  "last": {
+   "reason": "NETWORK_UNAVAILABLE",
+   "evidence_kind": "TRANSPORT",
+   "http_status": null,
+   "source_layer": "TRANSPORT",
+   "retryable": true,
+   "recovery_action": "read-only-cached",
+   "message_key": "failure.networkUnavailable",
+   "telemetry": "attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+   "cached_copy_present": true,
+   "at": "2026-09-23T15:19:43.109Z",
+   "context": "shell.boot.journeyRead"
+  },
+  "count": 1
+ },
+ "service_worker": {
+  "controller": true,
+  "onLine": true
+ },
+ "enter_proof": null,
+ "non_get_requests": [],
+ "profile": "D:\\moodle\\_qoder_b_ord0263_20260923\\profile_s5",
+ "playwright": "D:\\moodle\\_qoder_integration_20260919\\frontend\\node_modules\\playwright"
+}
