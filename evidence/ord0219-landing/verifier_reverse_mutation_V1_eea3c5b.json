@@ -1,0 +1,93 @@
+{
+  "schema_version": "CNX_REVERSE_MUTATION_VERIFIER_V1",
+  "candidate_exact_sha": "eea3c5b3e51656fee0d5f65497003e1da3378ac0",
+  "reviewed_bus_comment": 5789073327,
+  "receipt_schema": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+  "verifier": "GPT external reviewer",
+  "derivation_policy_source": "GitHub issue #1 comment 5788270524",
+  "baseline_authorities": {
+    "ord0236_same_sha_index": {
+      "path": "evidence/ord0219-landing/reverse_mutation_V1_index_0236_eea3c5b.json",
+      "blob": "6b1b607d11228b11457256fea5b6895e561ae5a1",
+      "exact_sha": "eea3c5b3e51656fee0d5f65497003e1da3378ac0",
+      "baseline": "3 passed / 0 failed"
+    },
+    "ord0219_same_sha_index": {
+      "path": "evidence/ord0219-landing/reverse_mutation_V1_index_0219_eea3c5b.json",
+      "blob": "69cf17f6951d4429f1d0c683a7900116e1d12e4e",
+      "exact_sha": "eea3c5b3e51656fee0d5f65497003e1da3378ac0",
+      "baseline": "14 passed / 0 failed"
+    }
+  },
+  "results": [
+    {
+      "receipt": "reverse_mutation_V1_K1_raw_tags_column_becomes_an_input_eea3c5b.json",
+      "receipt_blob": "18e74c6067eb59067a0ba5cb628b085355615510",
+      "mutation_id": "K1_raw_tags_column_becomes_an_input",
+      "derived_result": "KILLED",
+      "direct_red_nodeids": [
+        "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t1_raw_tags_column_alone_never_causes_a_hard_verdict"
+      ],
+      "collateral_red_nodeids": [],
+      "verifier_problems": []
+    },
+    {
+      "receipt": "reverse_mutation_V1_K2_skip_the_normalized_producer_eea3c5b.json",
+      "receipt_blob": "e0678ebba632fee71b100ce7900289b793c85991",
+      "mutation_id": "K2_skip_the_normalized_producer",
+      "derived_result": "KILLED",
+      "direct_red_nodeids": [
+        "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker"
+      ],
+      "collateral_red_nodeids": [
+        "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t1_raw_tags_column_alone_never_causes_a_hard_verdict",
+        "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+      ],
+      "verifier_problems": []
+    },
+    {
+      "receipt": "reverse_mutation_V1_K3_taxonomy_word_becomes_a_fact_eea3c5b.json",
+      "receipt_blob": "274a8fe45d9d398735473964567b783767b66b44",
+      "mutation_id": "K3_taxonomy_token_becomes_a_fact",
+      "derived_result": "KILLED",
+      "direct_red_nodeids": [
+        "tests/test_qoder_ord0236_raw_tags_not_evidence.py::test_t3_display_taxonomy_tags_never_become_accessibility_evidence"
+      ],
+      "collateral_red_nodeids": [],
+      "verifier_problems": []
+    },
+    {
+      "receipt": "reverse_mutation_V1_K4_static_exclusivity_broken_eea3c5b.json",
+      "receipt_blob": "e937442aed8031441e9122b51ab92a28ecb437c9",
+      "mutation_id": "K4_static_exclusivity_broken",
+      "derived_result": "KILLED",
+      "direct_red_nodeids": [
+        "tests/test_qoder_demo_accessibility_evidence.py::test_the_demo_producer_stays_reachable_only_from_the_demo_seed"
+      ],
+      "collateral_red_nodeids": [],
+      "verifier_problems": []
+    }
+  ],
+  "validity_checks": {
+    "all_scope_exact_sha_same": true,
+    "all_dirty_false": true,
+    "all_run_shape_whole_file": true,
+    "all_anchor_hits_match_expected": true,
+    "all_bytes_changed_true": true,
+    "all_primary_targets_observed": true,
+    "all_primary_targets_red_in_every_mutated_run": true,
+    "all_collection_or_setup_errors_empty": true,
+    "all_db_fresh_true": true,
+    "all_actual_scope_matches_allowed_scope": true,
+    "all_restore_byte_exact": true,
+    "all_post_restore_dirty_paths_empty": true,
+    "all_forbidden_command_surface_hits_empty": true,
+    "all_claimed_result_matches_derived_result": true
+  },
+  "advisories": [
+    "The historical baseline receipt_ref fields are not themselves sufficient to prove eea3c5b. Verifier therefore used the published same-SHA V1 index receipts as the baseline authority for exact-sha baseline GREEN.",
+    "K2's mutant_marker_substring_hits_after_restore=1 is not a restore failure: the frozen schema uses exact mutant_marker_hits_after_restore, which is 0, and byte-exact digest restoration is true.",
+    "citynexus_mcp=NOT_FOUND is disclosed environment context and is not imported by these two whole-file target suites; no setup/import error occurred in any mutation run."
+  ],
+  "overall_reverse_mutation_verdict": "VERIFIER_DERIVED_KILLED_ALL_4"
+}
