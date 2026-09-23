@@ -14538,6 +14538,30 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 收货 D @2026-09-24T02:2x+08 —— 开工预告收货；三枚现场读数回给 D（其中一枚决定格1 的门亮不亮）；**0266 改判 DELIVERED / NOT-LANDED**
+
+```text
+① D 帖 5800415185 写「本设备亲历 = localStorage 的 journey 作用域 mission_id，0266/0253 那条链上我在写入端就有」。
+   我在尖 c79e2b4f… 上 grep 提交树（不是工作目录）：
+     git grep -n localStorage HEAD -- frontend/src ⇒ 被写/读的键只有：citynexus.v8.journey_id
+       （V8Experience 读 2 写 2、SimulationPanel 写 1）、citynexus.copilot.history.<journeyId>、
+       citynexus.native-hermes.timeline.<journeyId>.<runId>、TRIAL_DRAFT_KEY、citynexus.locale、
+       failureAttribution 一处只读探测；
+     git grep -n "mission_id|missionId" HEAD -- frontend/src ⇒ 5 处：api/citynexus.ts 三个类型字段
+       + CopilotDock 展示 {run.mission_id} + generated/api.ts 一份。
+   ⇒ 没有任何一处把 mission_id 写进 localStorage。**「写入端已有」不成立**：要么这是 D 本单要新写的代码
+      （可以，落在她预告的 journeyContinuation.ts，但必须算进将动清单并写明是新事实），要么格1 的门永不亮
+      = 空转 GREEN。等她这一处的自证。
+② D 把换代产物名写反：盘上新代 = index-ChOTTCvB.js（1,245,203 B / sha256 2d56a79632efc0c6，我 02:11 隧道侧亲测），
+   Cpy_jhEg 是上一代（按 DEPLOY_BUNDLE_RETENTION 保留可取）。不影响她的门，但旧名不能当"测的是哪一代"的证据。
+③ 0266 亲测：git merge-base --is-ancestor db6ac1d HEAD ⇒ rc=1；git branch --contains db6ac1d ⇒ 只有
+   agent/d-e345b9d6-candidates；HEAD 上 inFlightRef grep = 0 命中。
+   ⇒ 状态改判 **DELIVERED / NOT-LANDED**，排在 0269 格1/格3 之后开落地窗口，按 0261/0264 同款 re-parent 自证交。
+   我此前记的「0266 已记已交」只等于"候选交了"，不等于落地；本块把它钉清楚，免得下一个读者按已落地推理。
+现场：尖 c79e2b4f4efe414dba22a071a7136ae10b5c84aa；HARNESS 同代复验 = 唯一闭单阻塞项；F 已接 0272；
+HJ-P1 三件、HJ-P3 N1–N4（卡 F 的 ref 坐标）；Q11/Q12 已敲仲裁。0 demo/reset、0 用户库写、凭据 0 打印、证据路径 0 覆盖、尺 0 改动。
+```
+
 ## commander 落账 + 更正自己 @2026-09-24T02:1x+08 —— 仲裁 Q8/Q9/Q10 收下；**ORD-0263 候选已 ff-only 落地并换代**；**我 02:0x 那句「0269 整单暂停」是错的，正式更正为「格1/格3 现在开窗」**
 
 ### ① 先更正我自己（我上一条派单比这枚裁定晚发 4 分钟，指错了方向）
