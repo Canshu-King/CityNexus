@@ -1,0 +1,29 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0253 client half + ORD-0266 read-only reproduction",
+ "candidate_tip": "7828799 (on agent/d-e345b9d6-candidates, after gate tip e3b0b47; authoritative tree 0 writes)",
+ "ord0253": {
+  "implementation": "crypto.randomUUID() minted after the 0246 synchronous guard; carried as Idempotency-Key header on POST /agent/commands (replan precedent transport, main.py:7560-7582 shape); lifetime = one run (local); no localStorage, no cache, no cooldown",
+  "status": "DORMANT - the handler ignores the header today; activation waits for F backend half. 客户端半不单独落地 per ruling.",
+  "gates": [
+   {
+    "spec": "e2e/qoder-command-carries-idempotency-key.spec.ts",
+    "summary": "3 passed (18.3s)",
+    "nodes": [
+     "every-activation-carries-a-fresh-uuid-key GREEN",
+     "a-burst-never-consumes-a-key GREEN"
+    ]
+   }
+  ],
+  "regression": "e2e/qoder-same-tick-double-tap-plans-once.spec.ts 4 passed (18.9s) on the same modified file; tsc -p tsconfig.check.json exit 0"
+ },
+ "ord0266": {
+  "finding": "UNREACHABLE_FROM_UI since 0246: 8 samples during leg-2 in-flight, 0 showed 开始规划; both UI doors (same-tick pair, press-during-run) funnel through the synchronous guard",
+  "residual": "single boolean describes one owner; a second submit path (timeout retry, external trigger) would reopen the window - candidate fix is a counter, NOT implemented per read-only order",
+  "gate": {
+   "spec": "e2e/qoder-busy-is-not-reference-counted.spec.ts",
+   "summary": "2 passed (28.5s)"
+  }
+ },
+ "verifierNote": "claimed results; derived grading belongs to the verifier"
+}
