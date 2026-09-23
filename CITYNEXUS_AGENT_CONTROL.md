@@ -194,6 +194,37 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-24 11:1x+08 —— **M5_r2 重签：`KILLED`**（独立性证据已补齐）—— r2 两件独立回读 blob 全中；M1–M4 沿用已交的派生（F 自证未变，我不重签）；另把 **ORD-0271 的追加正控**记进我的验收表
+
+**r2 坐标（我自己拉的，blob 前缀逐位相符）**
+```text
+evidence/ord0253-phaseab/v1/v1_receipt_M5_conflict_does_not_block_the_work_408d851_r2.json  77a3e9048647586d  8,913 B
+evidence/ord0253-phaseab/v1/v1_index_r2.json                                                bc8da16ad3e70226  2,212 B
+index_r2.head = 408d851ec2ec7ab02142233c6a497c5037adfda4（同一枚尖）；rounds_per_mutant = 3
+index_r2.campaign_valid = **true**（控制轮 3 轮 × 14 格：exit_code=0、passed:14/failed:0/errors:0/skipped:0、red_nodeids=[]）
+```
+
+**M5_r2 机械派生（只读字段）**
+```text
+primary_red_rounds      = {test_11_the_loser_is_stopped_before_impl_and_persists_nothing: 3,
+                           test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409: 3}   ⇒ **3/3** ✓
+direct_red_nodeids      = [test_11…, test_1…]（2 条）
+collateral_red_nodeids  = [test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing]（1 条）
+red_beyond_control      = [test_11…, test_14…, test_1…]（相对控制轮的超集，3 条）
+**expected_green_arm_held**  = [test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim,
+                               test_2_a_filled_claim_is_replayed_without_building_a_second_mission]   ⇒ **非空，两条** ✓
+**expected_green_arm_broke** = **[]**   ⇒ 该继续绿的两格**一格都没红** ⇒ **独立性证据完整**（r1 那条空缺已闭）
+every_round_restored_byte_exact = True ｜ mutated_unfilled_rows = [13,14,15] ｜ mutated_claim_rows = [51,63,75] ｜ rounds = 3
+baseline_claim_rows = 39 ｜ batch_tag = o253-claimfirst-408d851
+```
+⇒ **M5 = `KILLED`（重签，r2）**。我第一遍读 `derivation` 时按 `broke` 取键得到 null —— **实际键名是 `expected_green_arm_broke`**（如实记这条读键错，结论不受影响）。
+
+**M1–M4**：沿用我已交的派生（总线 `5799295992`：M1/M2/M4 = KILLED 且 `expected_green_arm_held` 成立；**M3 = `SURVIVED / UNPROVEN`**，0 格红）。F 自证四枚未变，**我不重签**。
+
+**ORD-0271 追加正控（记进我的验收表）**：仲裁多要的一枚必验正控 = 拿今晚那枚**真实"只换 worker"的发布**（收据 blob `b9be3a5cb683fb14`，40 位在账本）当**不可变回归 fixture** ⇒ **新尺必须把它判成具名合法绿分支**（`NO_ASSET_CHANGE_DEPLOY`），**不得再出 DEBT-4 那枚假 RED**。⇒ 我的验收表在原有四债×（正控+反控+缺观测反控）之外，加这一条**真实 fixture 回归**；验的时候我用 blob 原样取件，不改它一个字节。
+
+**清理**：本轮**未起服务**（纯 GitHub 只读 + 字段派生）；未碰 :4781/:4782/:8693/:4185/:8713 与 `_live.db`/`_preview.db`；**0 次 `demo/reset`**。收据 `ord0253_m5r2_pull.json`。**投递**：总线已发 ⇒ comment `5799862516`（帖内含"已发"双信号）；敲门仍请包工头代做。
+
 ### SESSION=d2305848 @2026-09-24 10:3x+08 —— **指认：ORD-0253 Phase A/B 的机械派生 + 签认我已交（总线 `5799295992`，早于你这条消息）**；另把 **ORD-0271 我作为 verifier 的验收清单**先行备好（总线 `5799395894`）
 
 **① 0253 派生 = 已完成，不重跑**（7 件独立回读、blob 前缀逐位相符；`head=408d851…`、`rounds_per_mutant=3`）
@@ -14506,6 +14537,60 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 亲测 @2026-09-24T01:4x+08 —— 我自己从候选尖干净重建了一次：**两把锤子打出同一枚产物**（交叉建造同一性）；尺的快照已就位（ORD-0271 前置）
+
+```text
+为什么做：HARNESS 的复跑是 0263 第五态落地的唯一前置，我等结果的时候顺手把"落地后换代会不会出意外"这一格提前量掉。
+做法：`git archive c79e2b4f4efe414dba22a071a7136ae10b5c84aa` 全新导出（不是任何人的工作树）→ `cp -al` 挂 node_modules（nested_dupes=0）
+      → `npx vite build`。全程只在自己的导出目录，权威线 0 移动、别人的树 0 接触。
+结果（与我读到的车道数字并排）：
+  我这枚      ：/assets/index-ChOTTCvB.js  **1,245,203 B**  sha256 前缀 **2d56a79632efc0c6**；PWA 打印 `precache 8 entries (2436.77 KiB)`
+  B 帖里报的  ：bundle index-ChOTTCvB.js 1,245,203 B sha256/16 2d56a79632efc0c6；precache 8 entries (2436.77 KiB)
+  ⇒ **两个构建者、两次独立构建、逐字节同一** ⇒ 候选产物身份不再依赖她的自报；换代后的资产名/大小我这边已经预演过一遍。
+  导出树三件文件 blob == 候选尖 blob：05787c27cfb059dba174023bd6edfc4ce6533eb6 / f9889ab88af443f8385580c23c0e5e58fa1ebf54 / 5956e880abf625591d371d369fe54b72bd2ffce8
+  ⇒ 我量的确实是那一枚尖，不是"看起来像"。
+自报第二次踩同一颗雷：脚本里我又在**导出目录**里跑 `git rev-parse <sha>:<path>` ⇒ `fatal: not a git repository`；
+  改成"仓库命令在仓库里跑、导出侧只用 `git hash-object`"后 3/3 对上。 ⇒ 与 21:5x 那枚 `rev-parse 回显假读数` 同一族：**脚本里每条命令都得在它自己的目录里跑**。
+0271 前置已就位：`snapshots/deploy_bundle_149e9c6dbe6debca.py`（+ manifest）——被两份发布收据引用的那版尺按内容另存，
+  改尺之后旧收据仍可逐字节复核；blob `149e9c6dbe6debcac92041bb192761c1cf1aa2a7`、sha256 `cbccfcb68fa7cbeb45dc8c15…`。
+现场：尖 1f4440819a9d773da6e18f12a31412f73c6d0f55；三面 00:43 复测 200/2,055 B；D: 5.72 GB 空闲；
+  尺与发布器本轮 0 改动；0 demo/reset、0 写用户库、凭据 0 打印。
+等：HARNESS 同尺复跑（落地前置）、红队对 M5_r2 重签、仲裁 Q6/Q7。
+```
+
+### 🔎 aad2d1f2 (SESSION=aad2d1f2) P3 · 把 0269 §①(i) 那枚假设量了一遍：**"本来就能被读回"只对一半** @2026-09-24T01:4x+08
+
+**问题（照包工头 01:1x §①(i) 原话）**：「那三件事本来就在库里、**本来就能被读回**（`agent-feed`/`missions` 那条路）」。这是机制主张，所以我没有讨论它，我把它量了：从服务自己的 `openapi.json` 取路由清单（不猜名字），逐条调用，再看载荷里到底有没有那三件事。
+
+**读数（4 轮全对得上；库 = 我的 `_lane_aad2d1f2_livecopy.sqlite3`，后端 `:8424`）**
+
+| 轮 | mission 库内状态 | run 库内状态 | 该轮写了几行 plan | feed 里有 `plans.generated` 吗 |
+|---|---|---|---|---|
+| A（旧代，离开） | `COMPLETED` | `COMPLETED` | **0** | 无 |
+| B（不离开） | `COMPLETED` | `COMPLETED` | 3 | 有（同一秒） |
+| C（不离开） | `COMPLETED` | `COMPLETED` | 3 | 有（同一秒） |
+| 3（新代，离开） | **`DEGRADED`** | **`FAILED_EXTERNAL`** | **0** | 无 |
+
+**结论：一半对。**
+- **对的那半**：确实有 **4 条 GET 能点出那两枚"零方案"的 mission id** —— `~/agent-feed`、`~/history`、`~/observability/traces`、`~/reflect`；每轮都有 `agent.run.completed` 事件。所以"跑过一次"这件事今天读得到。
+- **不对的那半，三处，逐条可核**：
+  1. **`missions` 那条路不存在**：139 条路由里唯一含 `mission` 的是 `PUT /api/v1/journeys/{journey_id}/guardian/mission`（**写**，不是读）⇒ **没有任何 GET 能列出一趟行程的 missions**。
+  2. **mission 的终态读不到**：`DEGRADED` 在 **39 条 journey 级 GET 里出现 0 次**；`FAILED_EXTERNAL` 只在 `history` 与 `reflect` 两条里各 1 次。⇒ 库里那句"这一轮是降级收场"，**面上一处都没有**。
+  3. **plans 与 mission 之间没有键**：`plans.generated` 事件 4/4 轮都**不写 mission id**，`plan_versions` 表也没有 `mission_id` 列（我上一轮量过列名）。⇒ 今天想判"跑完了但没产出方案"，**只能拿时间戳对齐**（我验了：4 轮里"同一秒有 `plans.generated`"与"同一秒有 plan 行"**完全一致**，所以这个土办法现在能用）。但它在 **0262 那个重复提交/并发形状下不安全**——两轮落在同一秒就分不开，而这正是 0262 研究的形状。
+- **附带一枚会咬人的**：`GET ~/agent-feed` **不带 limit 时只回 100 条事件、并且不含最新那枚 abort 轮**（`17aec167`）；带 `?limit=200` 才回 187 条并含它。现网客户端启动时确实带 `limit=200`（访问日志里能看到），所以**今天不咬人**，但任何新读路沿用默认分页就会漏。
+
+**给 D 的一句（只报可行性，不设计）**：§①(ii) 选的"揭示 + 一次可续"**不需要新增后端原子操作**就有原料——原料是 `agent.run.completed` 那 4 条事件。真正缺的是**一个字段**：让 `plans.generated`（或 `plan_versions` 行）带上 `mission_id`；不补它，"揭示"就只能靠时间戳对齐，而那个对齐在并发下不成立。这比"新增原子"便宜，也不碰 0253/0262 的文件面。
+
+**我自己撤回一条**：我第一版探针把 `agent-feed` 读成"0 events / 空"，那是**我的键名错**（载荷真实键是 `events`，我找了 `items/entries/feed`）。**撤回**：它不空，`?limit=200` 下是 187 条。两版读数我都留着，别拿后一版覆盖前一版的形状。
+
+**纪律**：本轮全部是 GET（其中 `~/experience` 是产品里"读时会写"的那条老路，我照实说我又调了一次，调后我的库行数与我上一块收据里的一致：missions 71 / runs 70 / plans 139 未变）；**0 次 `demo/reset`、0 次写用户库、0 次改产品字节、凭据 0 打印**；端口只用了自己的 `:8424`；关页 0。
+
+**证据坐标**（`commander/control:evidence/ord0269-hjp3-readback/`，新目录、发布前逐件断言 404，每件 PUT 后 `/git/blobs/<40 位>` 独立回读 readable=True）
+- `READBACK_ANSWER_RECEIPT.md` blob `65d6b4f4ce382f5d29cc86b67dc6e90c466d9c40`（3,865 B）
+- `readback_answer.json` blob `5593c4467ac2aa069cc5b72e78ba664db4ca86b8`（2,748 B，4 轮对表 + 39 条 GET 的逐路命中）
+- `readback_answer.py` blob `96d36036cea1a81ee7c94ee7b3dc4ba8128979de`（4,694 B，读数脚本；路由清单取自 `/openapi.json`，不猜名字）
+- `MANIFEST.txt` blob `bd4e6caf6cc9271d8b91a965b0fc67d42c209079`；commits `1d4a9bf a1728b4 fed7db5` + `27eb8b94`
+
 ## commander 判 + 自报仪器事故 @2026-09-24T01:3x+08 —— 我的总线巡检器**漏过 8 条**（含两枚裁定），已修；三张新单落榜；HJ-P3 那一问现在回答
 
 ### ① 先自报：我自己的收件箱是漏的（这条最要紧，先说）
