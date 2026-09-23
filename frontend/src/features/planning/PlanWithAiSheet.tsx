@@ -23,6 +23,11 @@ import { useLocale } from "../../i18n/LocaleContext";
 /** The phases this component itself drives, in the order it can enter them. */
 type PhaseKey = "baseline" | "request" | "verify" | "fallback";
 
+/* ORD-0250: this floor used to be a bare `8` inside submit() while the button next to it refused
+   silently -- so an empty box looked like a button that did nothing.  Named once, read by the
+   refusal, the control's aria-disabled and the reason we now paint on screen. */
+const REQUEST_MIN_LENGTH = 8;
+
 const PHASES: { key: PhaseKey; zh: string; en: string }[] = [
   { key: "baseline", zh: "读取已有方案作为基线", en: "Reading existing plans as a baseline" },
   { key: "request", zh: "发出请求，等待模型返回", en: "Request sent, waiting for the model" },
@@ -49,6 +54,14 @@ const PHASES: { key: PhaseKey; zh: string; en: string }[] = [
 const NEUTRAL_PLACEHOLDER = {
   zh: "用你自己的话说：这趟想怎么玩、想吃什么、哪儿一定要去。",
   en: "In your own words: how you want this trip to go, what to eat, what you must not miss.",
+};
+
+/* ORD-0250: what the screen says when a press is refused for want of a request.  It names the grey
+   example as an example, because that is exactly what makes an empty box look answerable.  No number
+   here: the length floor lives in one place in code, and prose that repeats it goes stale. */
+const REQUEST_TOO_SHORT = {
+  zh: "还差你自己的一句话：上面灰色的例子只是提示，不算你说的需求，所以我们没有东西可以拿去排。",
+  en: "We still need it in your own words. The grey example above is a hint, not a request we can plan from.",
 };
 
 function examplesFor(
@@ -317,6 +330,9 @@ export function PlanWithAiSheet({
      watching suggestions appear a second later has no way to tell which happened. */
   const [namesRead, setNamesRead] = useState(false);
   const [busy, setBusy] = useState(false);
+  /* Set when a press was refused because there is nothing to plan from; the reason is painted, not
+     announced only to a screen reader.  Cleared by the same gate once the words are long enough. */
+  const [requestTooShort, setRequestTooShort] = useState(false);
   const [phase, setPhase] = useState<PhaseKey | null>(null);
   const [elapsed, setElapsed] = useState(0);
   const [aiState, setAiState] = useState<"checking" | "ready" | "unconfigured" | "unknown">(
@@ -434,7 +450,14 @@ export function PlanWithAiSheet({
 
   const submit = async () => {
     const command = text.trim();
-    if (command.length < 8) return;
+    if (command.length < REQUEST_MIN_LENGTH) {
+      /* ORD-0250: this `return` used to be silent -- no request, no word, nothing to read.  The press
+         is still refused (there is genuinely nothing to plan from) but it now leaves a reason on the
+         screen, and the placeholder example is not treated as if the traveller had said it. */
+      setRequestTooShort(true);
+      return;
+    }
+    setRequestTooShort(false);
     /* Synchronous, ahead of every await and every setState below: the second click of a same-tick
        double tap reaches this function while the button is still rendered as enabled, so refusing
        it here is the only place it can be refused.  Silence is deliberate -- the first request is
@@ -705,6 +728,9 @@ export function PlanWithAiSheet({
             rows={5}
             value={text}
             disabled={busy}
+            aria-describedby={
+              requestTooShort && text.trim().length < REQUEST_MIN_LENGTH ? "plan-ai-request-hint" : undefined
+            }
             onChange={(event) => setText(event.target.value)}
             placeholder={
               examples.length
@@ -717,6 +743,22 @@ export function PlanWithAiSheet({
             }
           />
         </label>
+
+        {/* ORD-0250: the example sentence sits in the box as a placeholder, so a traveller who presses
+            开始规划 with nothing typed sees a filled-looking field and an inert button.  The refusal
+            stays (there is nothing to plan from) but it now says what is missing, in painted text --
+            and it says the box is still empty, which is the part the placeholder hides. */}
+        {requestTooShort && text.trim().length < REQUEST_MIN_LENGTH && (
+          <p
+            className="plan-ai-field-hint"
+            id="plan-ai-request-hint"
+            data-testid="plan-ai-empty-request"
+            data-request-length={text.trim().length}
+            role="status"
+          >
+            {zh ? REQUEST_TOO_SHORT.zh : REQUEST_TOO_SHORT.en}
+          </p>
+        )}
 
         {/* No chips at all when this city has fewer than two catalogued places -- an absent
             suggestion is honest, an invented one is a claim about a trip we know nothing about. */}
@@ -811,7 +853,12 @@ export function PlanWithAiSheet({
             data-testid="plan-ai-result"
             data-result-status={result?.status ?? ""}
             data-result-tone={copy.tone}
-            data-plan-count={result?.planCount ?? 0}
+            /* ORD-0251: `-1` is how this component knows "we could not tell" (indeterminate baseline or
+               an unread re-count).  That is a real state; it is not a number of plans, and publishing it
+               on an attribute a gate reads made "unknowable" indistinguishable from a count. */
+            data-plan-count={
+              result?.planCount !== undefined && result.planCount >= 0 ? result.planCount : "unknown"
+            }
             data-new-plan-ids={(result?.newPlanIds ?? []).join(",")}
             role="status"
           >
@@ -893,7 +940,12 @@ export function PlanWithAiSheet({
             type="button"
             className="v8-primary-button"
             data-testid="plan-ai-submit"
-            disabled={busy || text.trim().length < 8}
+            /* Busy is a real `disabled` (the control means something else while a run is going).  A
+               missing request is `aria-disabled` instead -- the ORD-0066 (甲) shape -- so the press
+               reaches submit() and the traveller reads why it did not advance, instead of tapping a
+               dead surface.  The existing `[aria-disabled="true"]` rule keeps it looking unwalkable. */
+            disabled={busy}
+            aria-disabled={text.trim().length < REQUEST_MIN_LENGTH || undefined}
             onClick={() => void submit()}
           >
             {busy ? (zh ? "规划中…" : "Planning…") : zh ? "开始规划" : "Plan my trip"}
