@@ -3,5 +3,6 @@ ORD-0247 evidence surface, lane e345b9d6, commits dc690d7
      356 B  sha256 11f29c066ebf699b74590382162c939ee90ddc285701dde8e7bdbc447c9aff59  dc690d7__changed-files.txt
    46109 B  sha256 c0e3c00831cd96693427ce20e9803d44d48f964e3b711584bfd33f584c5db1ba  dc690d7__dc690d7.patch
      683 B  sha256 79bc385c8245520941221987ce8a58e9a1db225a1edaefbbed89fabb6e5eb6e7  dc690d7__source-and-parent.txt
-    1984 B  sha256 b056748e217abdf057b06574099e25482de5cac073febd7b9aa3f11221acff00  gate-readings.json
-    8581 B  sha256 f0b375039652081fe5471cc06eaf7e8a9cfe05a142b6d302aa2b335b836172a6  mutation-receipts.json
+   20387 B  sha256 30f8a9ccd25526ec36aa31b89e05f2b62090a6fd890b12d1c8fda1ea1bc75bb2  delivery-range__dc690d7-plus-027d65e.patch
+    1984 B  sha256 2ad8b3249d92f158b63591753282b897960d3c79097b2aa6cf5a58b6e9a7445d  gate-readings.json
+    8578 B  sha256 95cf4f1097721550f0daed1c48de78adf6ab323beb3a170976385d555c608f8f  mutation-receipts.json
