@@ -1,0 +1,126 @@
+{
+ "order": "ORD-0254",
+ "lane": "HARNESS d291c9dc",
+ "at": "2026-09-23T13:5x+08:00 (transcribed from the playwright readings of this session, 13:32-13:46)",
+ "surface": {
+   "preview_bundle": "http://127.0.0.1:4411  (vite preview over repo/frontend/dist, /api -> my backend :8411)",
+   "static_union": "http://127.0.0.1:4412 (my own static server over serve/)",
+   "backend": "http://127.0.0.1:8411 (my sqlite db/canary_8411.db, marker row harness-ord0254-canary-8411)",
+   "routes_note": "the shell routes on /v8/<key>; a bare /map, /trips, /agent silently renders the hub. Measured: ord0254_agent.png, ord0254_map.png and ord0254_trips.png are byte-identical frames (sha256[:16] f876d5044723e9b5), and only /v8/* produced distinct faces. Other lanes walking this app by URL must use /v8/*.",
+   "viewport": "390x844, isMobile, hasTouch, deviceScaleFactor 2, locale zh-CN",
+   "forbidden_ports_requested": []
+ },
+ "fix_by_fix": {
+   "d76992a_panel_itself_scrolls": {
+     "clicked": true, "screen": "模拟台 overlay opened from the hub",
+     "reading": {"sim-panel overflow-y": "auto", "scrollHeight": 1267, "clientHeight": 435,
+                 "scrollTop 0 -> 832.75 after scroll": true,
+                 "ancestor chain scrollers": ["sim-panel(is_scroller=true)", "sim-pop-body(false)", "sim-pop(false)", "sim-float(false)"],
+                 "elementFromPoint at panel mid/lower": "P|sim-blocked-accept", "hit_inside_panel": true},
+     "verdict": "LANDED - the panel is its own scroller and the node the probe names answers at the probe point"
+   },
+   "e9efec6_examples_ordered_by_name": {
+     "clicked": true, "screen": "AI 帮我规划 sheet, 旅行需求 examples",
+     "reading": {
+       "places_read_order_first_two": ["Nexus City Park", "Design Library"],
+       "name_sorted_first_two": ["Central Food Hall", "Design Library"],
+       "chips_on_screen": ["我想去Central Food Ha…", "Central Food Hall排…"],
+       "discriminator": "read order would have produced a different sentence (Nexus City Park first) - so the screen reading discriminates the fix",
+       "source_endpoint_seen_by_page": "/api/v1/places?city_code=CNX-DEMO"},
+     "verdict": "LANDED"
+   },
+   "2d3b3fb_ai_sheet_sized_by_visible_viewport": {
+     "clicked": true,
+     "reading": {"visualViewport": {"w": 375, "h": 844}, "sheet_box": {"y": 0, "height": 844.03},
+                 "稍后 (plan-ai-dismiss)": {"rect_top": 772, "rect_bottom": 828, "height": 56, "in_viewport": true, "elementFromPoint_answers": "BUTTON|plan-ai-dismiss"},
+                 "开始规划 (plan-ai-submit)": {"rect": [784, 828], "elementFromPoint_answers": "BUTTON|plan-ai-submit", "is_self_or_child": true},
+                 "plan-ai-scroll": {"overflow-y": "auto", "scrollHeight": 350, "clientHeight": 350, "scrollable_in_this_state": false}},
+     "verdict": "LANDED for the footer claim (both actions hit-test to themselves inside the visual viewport). The inner scroll node had nothing to scroll in this state, so that half is not demonstrated here."
+   },
+   "82f136f_wizard_speaks_human_and_offers_a_route": {
+     "clicked": true, "screen": "新建行程 step 1",
+     "reading": {"trial-required-hint": "还需要填写：目的地、抵达地点、离开地点",
+                 "trial-missing-jump count": 3, "labels": ["目的地", "抵达地点", "离开地点"],
+                 "jump click": "locator.click reported Timeout 3000ms (actionability), yet document.activeElement became trial-city immediately after",
+                 "focus_after_jump": "trial-city",
+                 "after_filling_the_three": "the hint node disappears and 下一步 advances to trial-step2-body",
+                 "step2_words": "旅行人数 / 房间数（建议值，可调整）/ 总预算 / 住宿预算 / 旅行节奏：轻松 适中 紧凑 / 兴趣：美食 自然 人文 海边 购物 亲子 / 特殊要求"},
+     "verdict": "LANDED (route-to-missing works; the click-vs-focus discrepancy is the aria-disabled/actionability instrument trap, recorded not smoothed)"
+   },
+   "952ec40_demo_entry_addresses_sealed_journey": {
+     "clicked": true, "loops": 3,
+     "reading": {"entry_label": "使用封存的天津演示",
+                 "sealed_unavailable_nodes": 0,
+                 "server_scene": "/api/v1/demo/scene 200 demo_mode=true journey_id=22222222-2222-4222-8222-222222222222",
+                 "non_GET_requests_during_3_entries": 0,
+                 "journeys_POSTs": 0,
+                 "landed_on": "today-heading=Demo之旅, today_hero carries 游标状态 ABSENT_FALLBACK and server scene time 2026-10-10T09:00:00+08:00",
+                 "localStorage citynexus.v8.journey_id": "22222222-2222-4222-8222-222222222222 (the sealed id, on every one of the 3 loops)"},
+     "verdict": "LANDED - three re-entries, zero creations, and the id entered is the server's sealed id"
+   },
+   "7580206_failed_read_names_its_kind_and_leaves_a_door": {
+     "clicked": true,
+     "experiment": "my own backend stopped (only :8411 in my tree), so the origin answers through the preview proxy",
+     "reading": {"origin_answer": "/api/v1/health -> HTTP 500 text/plain (an answer, not a throw)",
+                 "navigator.onLine": true,
+                 "sentence_on_screen_verbatim": "离线 · 只读 | 你未来 24 小时已保存。 | 网络不可用 · 正在显示只读的已保存行程。 | 重试",
+                 "emitter": "a <P> inside <MAIN> with no data-testid (LocaleContext key shell.offlineMsg), NOT the load-failed family",
+                 "load-failed / load-failed-reason / load-failed-retry / backend-unreachable / journey-gone": "all 0 nodes",
+                 "offline-retry": "present, BUTTON, not disabled, hit-tests to itself, takes focus when focused",
+                 "after_clicking_retry_while_still_down": "screen unchanged"},
+     "verdict": "PARTIAL / RED ON THE CANDIDATE: the door is real and focusable (offline-retry), but with the origin answering 500 and navigator.onLine true the shell still says 网络不可用. boot() calls probeHealth() and probeHealth requires 2xx, so a proxy 500 is classified as a network failure whenever a local snapshot exists. This is inside the file 7580206 patched, so it is not an out-of-scope surface - but I did not measure the same state on the 53fe8e8 baseline, so I am not claiming a regression."
+   },
+   "4176e7b_map_gesture_ownership": {
+     "clicked": false,
+     "why_not": "the map never renders in this seed: /v8/map shows 尚未获取地图位置 (this trip has no trusted coordinates), so there is no canvas, no panel and no gesture hint to read or drag. Attempted to reach it: granted geolocation to my own origin and clicked 更新位置 on /v8/live - the live face re-rendered and the map stayed in the same empty state (tiles 0, canvas false).",
+     "reading": {"v8-map-empty": "尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+                 "v8-map-gesture-hint": null, "tiles": 0, "markers": 0,
+                 "frozen_string_in_source_and_bundle": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 (MapPanel.tsx:395) - present in the built index-C0qSwD3N.js"},
+     "evidence_used": "source + build (string compiled into the candidate bundle) + a named screen reason for the missing click"
+   },
+   "56d20ec_today_keeps_only_the_tight_budget_verdict": {
+     "clicked": false,
+     "why_not": "budget-advisory renders only when a plan exists; the sealed demo journey has no plan selected (hub-glance-empty: 还没有可以预览的行程 选定方案后，这里会显示每天的安排。), and generating a plan is ORD-0238's line, not this order's.",
+     "reading": {"budget-advisory nodes": 0, "hub-glance-empty": "还没有可以预览的行程 / 选定方案后，这里会显示每天的安排。"},
+     "evidence_used": "source + build"
+   },
+   "8f42cb7_hub_names_the_dropped_stop_in_words": {
+     "clicked": false,
+     "why_not": "the dropped-candidates block needs a generated plan plus a hard rule that drops a candidate; neither exists in the sealed demo state (0 nodes on screen).",
+     "reading": {"dropped-candidates-heading": null, "dropped-candidate-row": null},
+     "frozen_strings_in_patch": "规划前被去掉的候选地点（1 个）/ 去掉「科技馆」：这一站不满足婴儿车通行的硬性条件",
+     "evidence_used": "source + build"
+   },
+   "6b208ee_review_has_somewhere_to_be_reviewed": {
+     "clicked": "half",
+     "reading": {"face": "/v8/bookings 行程收件箱 · 旅行票夹",
+                 "inbox-pending-queue": "等你审核的确认单 这里没有等你审核的确认单。 (1 node)",
+                 "inbox-pending-empty": "这里没有等你审核的确认单。",
+                 "inbox-open-review rows": 0,
+                 "v13-2-memory": "权威记忆 Journey Memory 0 个受保护事实 暂无已确认工件绑定到此行程。"},
+     "why_not_further": "the queue and its server sentence are on screen, but a review control needs a pending confirmation. Producing one means pasting structured booking JSON into the extractor, which is the intake path 6b208ee did not touch - so I did not manufacture a row to make the face greener.",
+     "evidence_used": "screen (container + empty sentence) + source + build"
+   },
+   "107e2db_review_actions_carry_idempotency_key": {
+     "clicked": false,
+     "why_not": "same gate as 6b208ee: no pending row, therefore no review POST to observe a header on. Across the entire six-face walk the page issued 0 non-GET /api requests, so there is no header to report and I am not inventing one.",
+     "evidence_used": "source + build (SimulationPanel.tsx patch)"
+   }
+ },
+ "clicked_count": 6,
+ "not_clickable_named": ["4176e7b", "56d20ec", "8f42cb7", "107e2db", "6b208ee(action row only)"],
+ "six_faces": {
+   "Today": {"path": "/v8/hub", "state": "GREEN", "screen": "下午好 / Demo之旅 / 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天; today-hero: 今天 还没有安排 “现在”取自服务器场景（行程起点，游标状态 ABSENT_FALLBACK）：2026-10-10T09:00:00+08:00 · 现在/接下来由服务器的执行投影给出"},
+   "Journey": {"path": "/v8/live", "state": "GREEN", "screen": "实时行程 · 已保存; 现在 等待方案; 下一步 · 选择方案以计算下一段路程; 当前没有需要你决定的调整; actions 更新位置 / 报告降雨; 下一段路程方式 步行 骑行 公交地铁 驾车 网约车 对比所有方式"},
+   "Map": {"path": "/v8/map", "state": "RED", "named": "尚未获取地图位置 (no trusted coordinates for this journey)", "screen": "地图 · 一目了然 ... 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 下一段路程 等待方案 未知费用保持未知。", "instrument": "canvas false, tile containers 0, markers 0"},
+   "AI": {"path": "/v8/agent + the plan sheet", "state": "GREEN", "screen": "随时问关于这趟行程的任何事 / 任何会影响行程的改动都会先说明再应用，你已确认的预订始终受保护 / 画像上下文就绪 CN; sheet preflight: 这台服务没有接入 AI 模型：现在提交不会真的由 AI 规划，结果会走其它路径。"},
+   "Wallet": {"path": "/v8/bookings", "state": "GREEN-with-empty-basis", "screen": "行程收件箱 · 旅行票夹 / 等你审核的确认单 这里没有等你审核的确认单。 / 住宿证据 未选择住宿 / 权威记忆 0 个受保护事实"},
+   "Simulation": {"path": "sim-float overlay on /v8/hub", "state": "GREEN", "screen": "这是教学模拟场景，不是真实出行提醒 · 屏幕上的“现在”由服务器给定：2026-10-10 09:00 +08:00 demo_mode=true · basis=JOURNEY_START · evidence=NO_FROZEN_EVIDENCE · 台上行程 22222222 · DRAFT · 这趟没有冻结证据 · 没有到期时间"}
+ },
+ "packaging_note": "5 faces answer with content, 1 face (Map) is RED and named above with its own screen sentence; this is not offered as '5/6 绿'.",
+ "not_measured": [
+   "the same six faces on the 53fe8e8 baseline surface (I have no baseline canary, so nothing here is claimed as a regression or an improvement over the baseline)",
+   "the public tunnel / auth-proxy chain (forbidden to touch; my F targets are my own :4412 and :4411)",
+   "any state that requires a generated plan or a pending confirmation"
+ ]
+}
