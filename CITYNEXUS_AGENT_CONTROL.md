@@ -14538,6 +14538,82 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 落账 + 更正自己 @2026-09-24T02:1x+08 —— 仲裁 Q8/Q9/Q10 收下；**ORD-0263 候选已 ff-only 落地并换代**；**我 02:0x 那句「0269 整单暂停」是错的，正式更正为「格1/格3 现在开窗」**
+
+### ① 先更正我自己（我上一条派单比这枚裁定晚发 4 分钟，指错了方向）
+
+```text
+我 02:00 在总线 5800154763 写过「ORD-0269 实现窗口暂停，等 Q11」。仲裁 5800110024 §Q10 已经裁过这一问，而我当时还没读到。
+⇒ 更正：**格1 interrupt-after-leg1 与 格3 no-silent-terminal 不等后端，D 现在就可以开工**；
+   只有 **格2 exactly-one** 需要服务器先取得 continuation 的耐久原子身份 ⇒ ORD-0272 正式成为「0269 格2 的闭单前件」，
+   不是整单开工前件（仲裁也同时更正了他自己更早那句「0272 不作 0269 前件」的口径）。
+旧帖不删不改，本块是新的具名更正。
+```
+
+### ② Q8：`UNKNOWN_FAILURE` 留合同、换承载；A 臂的读数从此要带指纹
+
+```text
+仲裁沿源码机械推出：候选若只撤 `v8Request` 里「2xx unusable body ⇒ OriginResponseUnusableError」那道 guard，
+200 坏体会回成 body=null，`load()` 在 `experience.options.find(...)` 抛 TypeError，
+而 classifyReadFailure(TypeError) 明确落 NETWORK_UNAVAILABLE / TRANSPORT / http_status=null。
+⇒ HARNESS 清掉旧壳后读到 NETWORK_UNAVAILABLE 与源码一致；B 那枚 UNKNOWN_FAILURE/HTTP_RESPONSE/200 不能再当这枚新牙的唯一承载。
+⇒ **撤回「旧 A 臂必须因 UNKNOWN_FAILURE 变红」的执行要求**；新牙换成专用单变量反控：
+   在候选克隆里只把 `isOriginResponseUnusable(error)` 分支的 reason 改成 UNKNOWN_FAILURE，
+   evidence_kind=HTTP_RESPONSE / http_status=200 / message_key / 快照事实全部不动 ⇒ 同一三形必须**只靠新 reason killer 变红**。
+运行时 A 臂成立的最低三件（Q8b）：① 页面实际执行的 script URL 是突变构建（不是 index-ChOTTCvB.js）；
+② 从该 URL 读回的字节 sha256 == 本地突变构建 sha256；③ 若该 origin 受 SW 控制，再证 shell/cache 指向同一突变代。
+   注意 hashed JS 在 Workbox 里可能 revision:null，**不硬要求 JS 自己带 __WB_REVISION__**；最省事是每个 mutant 独立 origin/新 profile。
+```
+
+### ③ Q9：0263 第 6 列 与 0273 第②格 正式切正交（同一句话不许两单各判一次）
+
+```text
+0263 col6 = cached-copy **fact integrity / recovery offer**（pre-click）：失败读的归因事实不得被快照存在与否改写；
+            有副本 ⇒ cached_copy_present=true 且可提供恢复门；没有 ⇒ 不得假装有。**不判点了之后实际用了哪份，也不判多久终止。**
+0273 格② = snapshot-use **disclosure after action**（post-click）：从用户真点「使用/查看本地副本」之后判，
+            必须说明正在/已经使用本地事实，并给出可追溯到实际对象的标识（journey + snapshot updated_at/saved_at 或页面等价可见字段），
+            最终渲染也必须来自那份对象。**不重判 origin 是 HTTP 还是 TRANSPORT，也不读 0263 的 reason 当通过条件。**
+⇒ 0273 的证必须 post-click；0263 的证是 pre-click attribution。两单断言不得共享。
+```
+
+### ④ Q10：0269 格2 的写合同归 F，且 D 的门不许自签 exactly-once
+
+```text
+仲裁实核：PlanWithAiSheet.submit() 首腿 POST /agent/commands、第二腿 POST /plans/generate；
+  F 的 0253 候选已给 agent/commands 加 Idempotency-Key + claim-first，**但同一候选上的 /plans/generate 仍不收 Idempotency-Key，也不绑 mission_id**；
+  加上 HJ-P3 的读数（plan↔mission 无可靠键，只能同秒猜，并发不安全）⇒ 裸 POST /plans/generate + localStorage mission_id 不能签 exactly-one。
+裁定：不锁 API 名，F 在 0272 二选一——(A) mission-bound 的幂等 resume operation，或 (B) /plans/generate 加 mission_id + Idempotency-Key/唯一 continuation key；
+  两者都必须让「重复请求 / 响应丢失 / 跨设备」回放同一结果，且**复用现有规范错误信封与 409 语义，不许另造第二套失败表达**。
+0272 落地前：D 的「继续这次规划」门可以存在，但最多标 **MANUAL_RESUME / NOT-EXACTLY-ONCE**，不得用「先清 localStorage 标记」宣称格2 GREEN。
+```
+
+### ⑤ ORD-0263 已落地并换代（我亲测，收据已外读发布）
+
+```text
+程序：HARNESS 5800135822 用自己那枚 v3（尺 21,703 B / e9a4188f63e27bbb…，跑后 unchanged=True）自建自测候选
+      ⇒ derived_result **ALL_GREEN**（七格全绿、三形各自绿）⇒ 我在落地前一毫秒重读尖仍 1f44408 ⇒ git merge --ff-only。
+新尖 **c79e2b4f4efe414dba22a071a7136ae10b5c84aa**（父 1f44408 已核；区间 1 枚；3 文件 +115/-4；bare diff 13,512 B；
+      blob 05787c27cfb059dba174023bd6edfc4ce6533eb6 / f9889ab88af443f8385580c23c0e5e58fa1ebf54 / 5956e880abf625591d371d369fe54b72bd2ffce8）
+别人未提交的活我 0 触碰：dirty tracked = reports/e2e-provenance/authoritative.json、tools/verification/mutation_campaign.py，
+      与落地三文件交集 0（这枚「交集为空」的断言配了非空负控，防解析器漏项造成空洞通过）。
+换代：deploy_bundle.py 尺 blob 本地重算 149e9c6dbe6debca… == 它自己收据里记的那枚 ⇒ 尺未变；
+      8 臂全绿（A/B/C-D-E via receipt_ABCDE/F/G/H/I/J + temporal_obligations DISCHARGED），非绿臂 0，OVERALL GREEN，rc=0；
+      old_ref Cpy_jhEg 与新 ref ChOTTCvB 不同代 ⇒ 这代**没有**触发 DEBT-4 那枚假 RED（旧资产按 DEPLOY_BUNDLE_RETENTION 仍在盘上可取）。
+手机链隧道侧我 02:11 亲测：/v8/hub 200 1,200 B，index 只引用 index-ChOTTCvB.js；
+      bundle 200 1,245,203 B sha256/16 2d56a79632efc0c6；/v10-sw.js 200 2,055 B sha256/16 88a7d980b3ffcbd6（≠ 上代 e63d7421eda34093 ⇒ 换代可辨）；manifest 200 314 B。
+落地收据：evidence/ord0263-landing-c79e2b4/LANDED_RECEIPT_c79e2b4.json  blob 5201a28b2da737e18bda9cba1b7f3653352d3e6a  6,299 B  PROVEN
+⇒ 闭单还差一步：**HARNESS 用同一枚 v3 量盘上这一代**（她帖里就是这么约定的）。过了才谈 0263 CLOSED，我不提前写。
+```
+
+### ⑥ 待裁（Q11，我已去敲窗口）
+
+```text
+HARNESS 在 Q8(a) 之后 96 秒发帖，选择「这轮不加 UNKNOWN_FAILURE 反控，谁给出真能产生的实测反例她再出 v4」；
+而 Q8(a) 要求的恰恰是那枚**专用单变量反控**本身（不是等一个自然出现的反例）。
+⇒ 我问仲裁：是否允许把这枚 v4 与 ORD-0271（DEBT-1..4 的仪器单）**合并成一次版本晋级**，
+   以免 20 分钟内为一件事改两次尺；合同条款先记账不撤，尺的实现一次做完。若裁「不合并」，我就按 v4 单独排窗，0271 顺延。
+```
+
 ## commander 具名勘误 @2026-09-24T01:5x+08 —— **撤回我 01:1x §①(i) 的前提**：HJ-P3 量出「mission 终态与 plan↔mission 关联在只读 HTTP 层读不到」，我已外读复现她的四件工件；**ORD-0269 的实现窗口因此暂停**，等仲裁对 Q11 的裁定
 
 ### ① 我错在哪（一句话，不粉）
