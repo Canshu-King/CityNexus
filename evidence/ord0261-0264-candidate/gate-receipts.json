@@ -1,0 +1,49 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0261 + ORD-0264 candidate externalization",
+ "candidate_tip": "6daceb19d36691000f19189f8ebd51067e225643",
+ "parent": "a0fbe030494a027de85c92f462e1e1d4ea6c2a42",
+ "base": "dea8410",
+ "worktree": "D:/moodle/_qoder_d_lane_20260923 (CNX_LANE_ROOT pointed here; authoritative tree 0 writes)",
+ "gates": [
+  {
+   "cmd": "CNX_LANE_ROOT=D:/moodle/_qoder_d_lane_20260923 python review/run_spec.py e2e/qoder-wizard-advanced-is-tappable.spec.ts 4610",
+   "exit": 0,
+   "summary": "3 passed (16.3s)",
+   "run": "run155129",
+   "log": "review/run-run155129.log"
+  },
+  {
+   "cmd": "CNX_LANE_ROOT=D:/moodle/_qoder_d_lane_20260923 python review/run_spec.py e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts 4612",
+   "exit": 0,
+   "summary": "2 passed (11.7s)",
+   "run": "run155147",
+   "log": "review/run-run155147.log",
+   "note": "read-only reproduction spec keeps its scroll-top method and its REPRODUCED verdict on purpose; post-fix judgements live in the 4610 gate"
+  }
+ ],
+ "regression": [
+  {
+   "spec": "qoder-wizard-hint-surface-readings",
+   "summary": "6 passed"
+  },
+  {
+   "spec": "qoder-wizard-speaks-human-and-survives-reload",
+   "summary": "6 passed"
+  },
+  {
+   "spec": "qoder-wizard-blocked-next-a11y",
+   "summary": "8 passed"
+  },
+  {
+   "spec": "qoder-wizard-city-basis",
+   "summary": "6 passed"
+  }
+ ],
+ "tsc": {
+  "check": "exit 0",
+  "typecheck_all": "exit 0"
+ },
+ "verifierNote": "claimed results only; derived_result / direct_red / collateral_red are WRITTEN_BY_VERIFIER per the frozen schema",
+ "openRuling": "K261/K264 arms per the arbiter 17:19 ruling are NOT yet run - the 0264 viewport contract is now SCROLL_REACHABLE_AND_TAPPABLE and the gate will be rewritten to that contract before the matrix runs"
+}
