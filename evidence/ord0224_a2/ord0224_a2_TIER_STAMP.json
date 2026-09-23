@@ -76,6 +76,15 @@
       "git_blob_sha1": "90b8e0d9e4fa9cd76c63d14e2710a1fc5699b8a5",
       "grade": "HANDOFF_TO_B_NOT_CLOSURE_EVIDENCE",
       "why": "只含测试文件的 diff（不含 app/services.py 那 45 行 producer），供 B `git apply --check` 后摘取断言原文。"
+    },
+    {
+      "file": "xproc_y3_rounds_raw_test_g3_concurrent_open_ge_2ab69f2.json",
+      "bytes": 9245,
+      "git_blob_sha1": "ee79303eb72a17044f41585b50a35efe0f7416dd",
+      "grade": "PUBLISHED_FOR_ITS_OWN_SCOPE_ONLY",
+      "why": "Y3 对**进程内**那枚 g3 门的批量反例：run_shape=single-node、控制轮 GREEN、RED 3/10（campaign_valid=False 按“必须全红”的定义）。它只回答“Y3 能不能杀掉那一枚单进程门”，不能替跨进程闭包门签字，也不能反过来 拿闭包门的 10/10 给它充数；两批的 scope 各自是 (SHA, nodeid, run_shape) 三元组。另：更早那批 probe_y3_determinism_349c4fa.json 的 run_shape 是“一轮跑 5 个声明 nodeid 的单进程”，它的 red:10 与本件不可互换。"
     }
-  ]
+  ],
+  "revision": 2,
+  "revision_note": "v2（12:5x）：补进 F 那一臂的 3/10 收据并限它自己的 scope；v1 只列 10 件，已发布的 v1 blob 仍可达，本件的 v1 sha 见账本 12:4x 那块。"
 }
