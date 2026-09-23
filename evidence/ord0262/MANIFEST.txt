@@ -1,0 +1,9 @@
+4fe34f9027a9d4d8bb71e3c22871ebe54890cbfe  ORD0262_RECEIPT.md  14997 B  sha256=bc02afcda3d3f7af0bf490932b36c5bb97bcf11a95b527ec8d9011a187537c7b  readable=True
+1907456e047df93e2ac2b8680516c979f0470dcc  receipt_ord0262.json  39369 B  sha256=e445c555c45262110e62b64afeb5db01e9297005acff07bd80500ec1741c82ba  readable=True
+307f0595a79ede20da184af6dd5531923d34f610  measure_ord0262.py  6978 B  sha256=b6913423efda80932a69f6efa1a970dd5ba4ca20b018d31ead86f888b99530f6  readable=True
+cc3e576a0c0755235ce6220f6208a070f748e750  rounds_capture_ord0262.json  7943 B  sha256=9d476dcbada88c2f2d00c710c39c59c5c274835d1f264d3c9470bec1e629474f  readable=True
+26cb6f5dcce82b57e14e459e8cc40cd075d13479  qp_capture_ord0262.json  7902 B  sha256=99a10a1f76b34edf7e7bd7096a036385609db0871976176b3dda3b143fcd9671  readable=True
+0b49e7f3dc7cdc901f8500e224ffb2cf73acd165  backend_contention_extract_ord0262.txt  20887 B  sha256=41abffa7ed5992fec1e17998d5321ee712403e0a4806d9cb9b42cf3844daccb5  readable=True
+ddf542341dccde26642264858be72cbbee47b0cc  ord0262_A_0810_http500_card.png  67902 B  sha256=b59afe26dc4738d471749beb9c2eee4499c55be14c6bd224c3d764738dc2aa69  readable=True
+92af43609febcb02f9e32364a425798d9dd55801  ORD0257B-PUB-1641_published_bookings_advanced_summary.png  216094 B  sha256=92bd4efe448a6e9067206d1228e2ba9c2ce6c1a6e365c2f8c89d21b23ba2df62  readable=True
+lane=HJ-P3-aad2d1f2 run_id=ORD0262-QP-1652 backend=D:/moodle/_qoder_cmdr_gate_20260921@53fe8e8(porcelain 0) db=_lane_aad2d1f2_livecopy.sqlite3 faces=:8476(previous gen CrAwWm5f) +:8474(published gen DJEINrOl/COUUKhbU) gauge=measure_ord0262.py(computed from log+DB)
