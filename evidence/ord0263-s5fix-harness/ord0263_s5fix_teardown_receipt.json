@@ -1,0 +1,76 @@
+{
+ "at": "2026-09-24T01:52:37+08:00",
+ "order": "ORD-0263 s5fix teardown",
+ "ports_i_owned_and_stopped": {
+  "4416": [],
+  "8411": []
+ },
+ "ports_still_listening_after": {
+  "4416": [],
+  "8411": []
+ },
+ "other_lane_and_user_ports_observed_only": {
+  "4781": [],
+  "4782": [],
+  "8693": [],
+  "4185": [],
+  "8713": [],
+  "4411": [],
+  "4412": [],
+  "4413": [],
+  "4414": [],
+  "4415": []
+ },
+ "user_chain": {
+  "ports_signalled": [],
+  "db_files_opened": [],
+  "demo_reset_issued": false,
+  "tunnel_or_proxy_touched": false
+ },
+ "clone_returned_to": {
+  "branch": "compat/ord0254",
+  "head": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df",
+  "expected_tip": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df",
+  "matches": true,
+  "checkout_tail": "Already on 'compat/ord0254'"
+ },
+ "candidate_rebuilt": {
+  "vite_rc": 0,
+  "index_asset": [
+   "assets/index-C0qSwD3N.js"
+  ],
+  "note": "dist is git-ignored, so the rebuild is what makes the bundle on disk match the signed candidate again instead of my A-arm mutant"
+ },
+ "porcelain_frontend": {
+  "before_rebuild": [],
+  "after_rebuild": [],
+  "line_count_after": 0
+ },
+ "mutant_status": {
+  "committed": false,
+  "source_reverted": "git checkout -- before this script",
+  "diff_kept_as_evidence": "ord0263_aarm_mutant.diff",
+  "build_replaced": true
+ },
+ "named_scratch_removed": [
+  "aarm_preview.log",
+  "aarm_preview.log (still held by a just-stopped process, left in place)",
+  "s5fix_junk_html.out",
+  "s5fix_junk_empty.out",
+  "s5fix_junk_nonjson.out",
+  "aarm_junk_html.out",
+  "s5fix_preview.pid",
+  "aarm_preview.pid"
+ ],
+ "bytes_freed": 527,
+ "kept": [
+  "every ord0263_* capture / verdict / receipt / side log",
+  "tools/*",
+  "repo/"
+ ],
+ "correction_after_the_first_receipt": "the first two runs of this teardown believed the ports were free while pid 10236 (my preview) and pid 2204 (my junk origin) were still LISTENING - the crash left them alive and a later re-run only saw the empty window in between. They are killed now and this row is a fresh netstat reading, not the earlier optimism.",
+ "stale_preview_logs_removed": [
+  "aarm_preview.log",
+  "s5fix_preview.log"
+ ]
+}
