@@ -1,0 +1,143 @@
+{
+ "at": "2026-09-23T20:17:36+08:00",
+ "what": "ORD-0263 - my verifier v2 (S2 cell no longer vacuous) run against B's candidate for all four states, plus the cause-2 v8Request mutant proof",
+ "lane": "HARNESS d291c9dc",
+ "subject": "B candidate a380287033da (local coordinate only; branch absent from GitHub)",
+ "authority_tip": "035721357da99a43c276f5803df83c3b08c1361c",
+ "b_parent": "dea8410",
+ "externally_readable_statement": {
+  "b_branch_on_github": "ABSENT - `git ls-remote https://github.com/Canshu-King/CityNexus.git refs/heads/agent/b-c01d72a3-ord0263` printed no line; a380287033da is therefore a LOCAL coordinate only",
+  "what_is_readable_here": "only the evidence/ord0263/ blobs listed in these rows, each read back at 40 chars from Canshu-King/CityNexus @ commander/control"
+ },
+ "results": {
+  "b_candidate": "ALL_GREEN (6 arms, derived_result computed from measured fields)",
+  "old_tree_same_judge": "RED_CELLS: V1_origin_error_5xx,V2_no_answer,V3_distinctness,V4_silent_read_answered_health",
+  "verifier_selftest": "SELFTEST GREEN (14/14)",
+  "cause2_answer_derived": "YES - identical skeleton, and it never settles"
+ },
+ "files_requested": 10,
+ "proven_by_40char_readback": 10,
+ "not_proven": [],
+ "rows": [
+  {
+   "file": "ORD_0263_B_CANDIDATE_RUNTIME.md",
+   "repo_path": "evidence/ord0263/ORD_0263_B_CANDIDATE_RUNTIME.md",
+   "bytes": 9022,
+   "blob40": "1ef90ada56148b08639b80f213d2235d7a625866",
+   "readback_status": 200,
+   "readback_bytes": 9022,
+   "readback_blob40": "1ef90ada56148b08639b80f213d2235d7a625866",
+   "verdict": "PROVEN",
+   "publisher_commit": "41b662be2423",
+   "publisher_tail": "local bytes 9022 | remote size 9022 | sha1 1ef90ada56148b08"
+  },
+  {
+   "file": "ord0263_verifier_v2.py",
+   "repo_path": "evidence/ord0263/ord0263_verifier_v2.py",
+   "bytes": 15671,
+   "blob40": "aeece06ba30d4bedfbb162005ec6cc537f5575ec",
+   "readback_status": 200,
+   "readback_bytes": 15671,
+   "readback_blob40": "aeece06ba30d4bedfbb162005ec6cc537f5575ec",
+   "verdict": "PROVEN",
+   "publisher_commit": "3317d6e2d602",
+   "publisher_tail": "local bytes 15671 | remote size 15671 | sha1 aeece06ba30d4bed"
+  },
+  {
+   "file": "ord0263_verifier_v2_selftest.json",
+   "repo_path": "evidence/ord0263/ord0263_verifier_v2_selftest.json",
+   "bytes": 4908,
+   "blob40": "b44f797cda6c78a7c073d2f2ad40e5dc25953baa",
+   "readback_status": 200,
+   "readback_bytes": 4908,
+   "readback_blob40": "b44f797cda6c78a7c073d2f2ad40e5dc25953baa",
+   "verdict": "PROVEN",
+   "publisher_commit": "67b5de3cae87",
+   "publisher_tail": "local bytes 4908 | remote size 4908 | sha1 b44f797cda6c78a7"
+  },
+  {
+   "file": "ord0263_capture_b_candidate.json",
+   "repo_path": "evidence/ord0263/ord0263_capture_b_candidate.json",
+   "bytes": 8596,
+   "blob40": "85dc2f87ffac6530da721b346f30220b46634435",
+   "readback_status": 200,
+   "readback_bytes": 8596,
+   "readback_blob40": "85dc2f87ffac6530da721b346f30220b46634435",
+   "verdict": "PROVEN",
+   "publisher_commit": "a2c0ad4f335f",
+   "publisher_tail": "local bytes 8596 | remote size 8596 | sha1 85dc2f87ffac6530"
+  },
+  {
+   "file": "ord0263_verdict_ord0263_capture_b_candidate.json",
+   "repo_path": "evidence/ord0263/ord0263_verdict_ord0263_capture_b_candidate.json",
+   "bytes": 2467,
+   "blob40": "ba8f4532da9074d8c8b1109e7ece9c97f618fdb7",
+   "readback_status": 200,
+   "readback_bytes": 2467,
+   "readback_blob40": "ba8f4532da9074d8c8b1109e7ece9c97f618fdb7",
+   "verdict": "PROVEN",
+   "publisher_commit": "fb929c357f5a",
+   "publisher_tail": "local bytes 2467 | remote size 2467 | sha1 ba8f4532da9074d8"
+  },
+  {
+   "file": "ord0263_capture_measured.json",
+   "repo_path": "evidence/ord0263/ord0263_capture_measured.json",
+   "bytes": 1527,
+   "blob40": "1f0259cec9c179f29a752d9516424f6adbef6943",
+   "readback_status": 200,
+   "readback_bytes": 1527,
+   "readback_blob40": "1f0259cec9c179f29a752d9516424f6adbef6943",
+   "verdict": "PROVEN",
+   "publisher_commit": null,
+   "publisher_tail": "already identical - nothing to push"
+  },
+  {
+   "file": "ord0263_verdict_ord0263_capture_measured.json",
+   "repo_path": "evidence/ord0263/ord0263_verdict_ord0263_capture_measured.json",
+   "bytes": 1966,
+   "blob40": "1c13bf62f3bb47c40b1684f628fad9b15ca6028f",
+   "readback_status": 200,
+   "readback_bytes": 1966,
+   "readback_blob40": "1c13bf62f3bb47c40b1684f628fad9b15ca6028f",
+   "verdict": "PROVEN",
+   "publisher_commit": "8020b0e83409",
+   "publisher_tail": "local bytes 1966 | remote size 1966 | sha1 1c13bf62f3bb47c4"
+  },
+  {
+   "file": "ord0263_cause2_v8request_receipt.json",
+   "repo_path": "evidence/ord0263/ord0263_cause2_v8request_receipt.json",
+   "bytes": 3664,
+   "blob40": "3d92451b2b6abc3bf1c968a8d7bf400c61cc2e2a",
+   "readback_status": 200,
+   "readback_bytes": 3664,
+   "readback_blob40": "3d92451b2b6abc3bf1c968a8d7bf400c61cc2e2a",
+   "verdict": "PROVEN",
+   "publisher_commit": "d724823f7a24",
+   "publisher_tail": "local bytes 3664 | remote size 3664 | sha1 3d92451b2b6abc3b"
+  },
+  {
+   "file": "ord0263_cause2_mutant.diff",
+   "repo_path": "evidence/ord0263/ord0263_cause2_mutant.diff",
+   "bytes": 631,
+   "blob40": "d1b792185900d220cd59dd0aef3d6566b9c8be72",
+   "readback_status": 200,
+   "readback_bytes": 631,
+   "readback_blob40": "d1b792185900d220cd59dd0aef3d6566b9c8be72",
+   "verdict": "PROVEN",
+   "publisher_commit": "f33b26da8007",
+   "publisher_tail": "local bytes 631 | remote size 631 | sha1 d1b792185900d220"
+  },
+  {
+   "file": "ord0263_backend_restart_for_b.json",
+   "repo_path": "evidence/ord0263/ord0263_backend_restart_for_b.json",
+   "bytes": 814,
+   "blob40": "eb1f1330e6b0ef67c5d8df43953fa21125082c26",
+   "readback_status": 200,
+   "readback_bytes": 814,
+   "readback_blob40": "eb1f1330e6b0ef67c5d8df43953fa21125082c26",
+   "verdict": "PROVEN",
+   "publisher_commit": "dc4428959f1d",
+   "publisher_tail": "local bytes 814 | remote size 814 | sha1 eb1f1330e6b0ef67"
+  }
+ ]
+}
