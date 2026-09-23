@@ -1,0 +1,19 @@
+AST OK
+ORD_0263_S5_CRITERIA_AND_SHAPE.md      d80ac353ea2f vs d80ac353ea2f PROVEN
+q263_s5_criteria_control.json          4309824322e9 vs 4309824322e9 PROVEN
+q263_s5_reproduction.json              af8af6d533d1 vs af8af6d533d1 PROVEN
+q263_a3_reproduction.json              37f58c233f0c vs 37f58c233f0c PROVEN
+s5_state.json                          2af97156aa52 vs 2af97156aa52 PROVEN
+s5_second.json                         672d9a81ef99 vs 672d9a81ef99 PROVEN
+a3_leg.json                            5b21a8d55251 vs 5b21a8d55251 PROVEN
+q263_html_origin.py                    0553ae3f5689 vs HTTP 404 NOT_PROVEN
+q263_s5_run.py                         df3eca3f5e0a vs df3eca3f5e0a PROVEN
+q263_a3_run.py                         c27380348a4d vs c27380348a4d PROVEN
+q263_a3_leg.js                         fe7c8a9b29b6 vs fe7c8a9b29b6 PROVEN
+q263_s5_criteria_run.py                abeed8ef04b3 vs abeed8ef04b3 PROVEN
+ord0263_s5_index.json                  034cd5548d39 vs 034cd5548d39 PROVEN
+Traceback (most recent call last):
+  File "D:\moodle\_qoder_spike_20260921\q263_s5_deliver.py", line 127, in <module>
+    f"πÈ“Ú {len(a3m['attribution_records'])} Ãı°¢failure-view 0°¢Àµª—={a3m['ever_blamed_network_or_origin']}£ª"
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: object of type 'int' has no len()
