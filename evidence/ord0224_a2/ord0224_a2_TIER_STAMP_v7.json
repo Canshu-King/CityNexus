@@ -1,0 +1,350 @@
+{
+  "kind": "CNX_EVIDENCE_TIER_STAMP_V1",
+  "session": "8c66aa92",
+  "issued_at": "2026-09-23T17:0x+08",
+  "ruling": "arbiter A-2, bus 5788111742, 由 commander 落地块 @2026-09-23T10:5x §② 转成指令",
+  "closure_door_nodeid": "backend/tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+  "source_sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+  "not_signed": "FINAL CLOSED / composite DoD：PROVIDER_WORK_COALESCING（真实并发 calls=5）仍是第二个未收口子，在此之前任何 G3/DoD 不得写 FINAL CLOSED；强修 claim-before-work 一行未动。 本轮同样不签：所有 derived_result 仍为 null（B-1：交付方不得给自己派生 verdict）；F 那格 (ec65a3e, 具名 nodeid, single-node) 我**没有**在同一键上量过，本件里没有任何一枚收据用 2ab69f2/21f1e8d/0fd3cc7 的数去替它签名。 v7 仍不签任何东西：ORD-0225 依 Q5 继续 STREAK_GREEN / 不 CLOSED；Y123 两枚是复合切集证据，不得当单臂杀手读；G3 与 product DoD 在 ORD-0244 收之前不得写 FINAL CLOSED。",
+  "items": [
+    {
+      "file": "xproc_shape_probe_result.json",
+      "bytes": 12629,
+      "git_blob_sha1": "961170548555e605aa0ffcbc589fd937ce432fc1",
+      "grade": "ACCEPTED_STORE_LEVEL_SUPPORTING_EVIDENCE",
+      "why": "仲裁 A-2（总线 5788111742，commander 落地块 §②）原判：探针绕过 HTTP/app-process 边界，且 product_blind 用仪器强制前两查 None；raw_conflict 两读数 p0 open_rows_seen=0 / p1=1 ⇒ 未实测『两个真 caller 都看不见对方时作出相同决定』。"
+    },
+    {
+      "file": "streak_xproc_a1cc0c1.json",
+      "bytes": 57143,
+      "git_blob_sha1": "c4042085be00d7a62b58c1e26971ee3d216202d2",
+      "grade": "ACCEPTED_STORE_LEVEL_SUPPORTING_EVIDENCE",
+      "why": "同一形状的 10 连（存储层、5 个直连子进程）。它证明 durable 索引 + 败者回读跨 OS 进程收敛，且 Y3 能杀机制；它不是 closure 门本体。"
+    },
+    {
+      "file": "xproc_y3_rounds_a1cc0c1.json",
+      "bytes": 10904,
+      "git_blob_sha1": "624679e4bf7bbb8e353eea4fc358391b4302e090",
+      "grade": "ACCEPTED_STORE_LEVEL_SUPPORTING_EVIDENCE",
+      "why": "上面那把存储层门的 Y3 十轮；scope = (a1cc0c1, test_g3_xproc_loser_readback_five_processes_one_operation, single-node)。"
+    },
+    {
+      "file": "xproc_http_probe_natural.json",
+      "bytes": 9507,
+      "git_blob_sha1": "11d024cb5bf686fc4d1c5f5212afd0c7ef2df742",
+      "grade": "CLOSURE_SHAPE_PREMEASUREMENT",
+      "why": "闭包形状写门前的探针（自然并发 3 轮）：证明两真 uvicorn + HTTP 可行、三联归属可证；判据在门里，不在这里。"
+    },
+    {
+      "file": "xproc_http_probe_lock.json",
+      "bytes": 6349,
+      "git_blob_sha1": "e6698b57d2c3fbdd014b8cfa3ab53429d283a119",
+      "grade": "CLOSURE_SHAPE_PREMEASUREMENT",
+      "why": "同上（持写锁排竞态 2 轮）：两发各自被挡 >2 s ⇒ 『谁也看不见谁』由存储层状态证明，不靠把某次读改成 None。"
+    },
+    {
+      "file": "streak_xproc_http_2ab69f2.json",
+      "bytes": 103825,
+      "git_blob_sha1": "02a42d1bb21546038bd347a8169eb136dabef978",
+      "grade": "CLOSURE_GRADE_MEASUREMENT_NOT_SIGNED",
+      "why": "closure 门本体的 10 连：STREAK_MET(10)/STREAK_GREEN，closure_allowed=False（量测步不吃闭包号）。"
+    },
+    {
+      "file": "mutant_rounds_Y3_http_2ab69f2.json",
+      "bytes": 13789,
+      "git_blob_sha1": "091b692280f59944d5686b1afe35ba255d38eed8",
+      "grade": "SUPERSEDED_BY_V1_CLAIM_ONLY",
+      "why": "A-2 两枚反例之一（layer C 败者回读，改 app/catalog_hydration_operations.py）：控制轮 GREEN、RED 10/10、campaign_valid=True。这一版每轮都记了自己用的绝对临时库路径并在批尾自删（removed 11 / left 0）；它替掉的 v1（blob 2650cd5a17c85f7b）同一棵树、同一判据同样 10/10，只是拿不出具名清理依据。 ｜ 按 B-1：本件的 deterministic_kill/campaign_valid 属交付方自称，已被同 sha 的 V1 收据取代（V1 里 derived_result 留 null 等 verifier）。",
+      "sha_normalized_in_revision_6": true
+    },
+    {
+      "file": "mutant_rounds_Y2_http_2ab69f2.json",
+      "bytes": 12794,
+      "git_blob_sha1": "49eec1e31a18b375e4cc5b277c60446c67047648",
+      "grade": "SUPERSEDED_BY_V1_CLAIM_ONLY",
+      "why": "A-2 两枚反例之二（layer B 部分唯一索引谓词永不命中，改 db/schema.sql）：控制轮 GREEN、RED 10/10、campaign_valid=True；十轮全部红在臂一（两发拿到 2 枚不同 operation_id、都 202 且 reused=False）。同样带具名自清（removed 11 / left 0）；被替掉的 v1 blob bf72437f4d6f3eba。 ｜ 按 B-1：本件的 deterministic_kill/campaign_valid 属交付方自称，已被同 sha 的 V1 收据取代（V1 里 derived_result 留 null 等 verifier）。",
+      "sha_normalized_in_revision_6": true
+    },
+    {
+      "file": "c_to_b_ord0219_unique_assertions.md",
+      "bytes": 12075,
+      "git_blob_sha1": "882159fb0adeb32303cf7d91fae34821f6f9e11f",
+      "grade": "HANDOFF_TO_B_NOT_CLOSURE_EVIDENCE",
+      "why": "A-1：B 做 composite landing candidate；本件只交独有断言语义 + 原文 + P4 杀手语义（锚点须搬到 B 的 producer）。不构成任何闭包证据。"
+    },
+    {
+      "file": "c_ord0219_test_only_extract.patch",
+      "bytes": 12884,
+      "git_blob_sha1": "90b8e0d9e4fa9cd76c63d14e2710a1fc5699b8a5",
+      "grade": "HANDOFF_TO_B_NOT_CLOSURE_EVIDENCE",
+      "why": "只含测试文件的 diff（不含 app/services.py 那 45 行 producer），供 B `git apply --check` 后摘取断言原文。"
+    },
+    {
+      "file": "xproc_y3_rounds_raw_test_g3_concurrent_open_ge_2ab69f2.json",
+      "bytes": 9245,
+      "git_blob_sha1": "ee79303eb72a17044f41585b50a35efe0f7416dd",
+      "grade": "PUBLISHED_FOR_ITS_OWN_SCOPE_ONLY",
+      "why": "Y3 对**进程内**那枚 g3 门的批量反例：run_shape=single-node、控制轮 GREEN、RED 3/10（campaign_valid=False 按“必须全红”的定义）。它只回答“Y3 能不能杀掉那一枚单进程门”，不能替跨进程闭包门签字，也不能反过来 拿闭包门的 10/10 给它充数；两批的 scope 各自是 (SHA, nodeid, run_shape) 三元组。另：更早那批 probe_y3_determinism_349c4fa.json 的 run_shape 是“一轮跑 5 个声明 nodeid 的单进程”，它的 red:10 与本件不可互换。"
+    },
+    {
+      "file": "v1_receipt_Y3_http_2ab69f2.json",
+      "bytes": 74207,
+      "git_blob_sha1": "89b698678fb67538a3efaa9ccca35cd9ff731f05",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "按 B-1 冻结 schema 出的那张：逐轮 argv/exit/collected/pytest_counts/完整红集/具名临时库+新鲜度/复原逐字节。derived_result 留 null —— KILLED 不由交付方声明，等 verifier 派生。独立佐证：突变轮里第二连接读到『同一 fingerprint 上 1 行开放 + 一发 HTTP 503 HYDRATION_STORE_BUSY』（十轮皆然）。"
+    },
+    {
+      "file": "v1_receipt_Y2_http_2ab69f2.json",
+      "bytes": 77102,
+      "git_blob_sha1": "5612cd30cd7944a5ed81c4ba92ff1c27994f4ea1",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "同 schema 的第二张（layer B 索引谓词）。独立佐证来自门外的第二个连接：基线十轮里『单 fingerprint 上最多 1 行开放』，突变十轮里全部变成 **2 行开放**，且每轮复原逐字节相等。"
+    },
+    {
+      "file": "xproc_v1_receipt.py",
+      "bytes": 24946,
+      "git_blob_sha1": "54aad900d99f36abb01a3247f040f8bc35af2edd",
+      "grade": "EMITTER_INSTRUMENT",
+      "why": "出上面两张收据的仪器（含中途窥视门自己那份临时库的 watcher）。引用它不是为了自证，而是让 verifier 能复放同一批字段。"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y123_a_21f1e8d.json",
+      "bytes": 59368,
+      "git_blob_sha1": "7fecbb9189a655e9dd448ed6ec64441cacad0200",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y123），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y123_b_21f1e8d.json",
+      "bytes": 59368,
+      "git_blob_sha1": "048d82c166aa61f6f44473dc225fa7d4f36b5511",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y123），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_OFF_A1_a_21f1e8d.json",
+      "bytes": 49656,
+      "git_blob_sha1": "f5771b270e3095ab82bfcdb72e1b8fc3117f22e5",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y23 attribution），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_OFF_A2_a_21f1e8d.json",
+      "bytes": 52146,
+      "git_blob_sha1": "fd29667d8a03d1f23cdf38bb9f7da70c16b8636f",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y23 attribution），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_a_21f1e8d.json",
+      "bytes": 45208,
+      "git_blob_sha1": "e0dddec96528b306ce6422f19fbc8860f58606a2",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y23 命令那一臂），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_b_21f1e8d.json",
+      "bytes": 43217,
+      "git_blob_sha1": "4152e46ecf5ba769c314d572b511a9c91c85d09f",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y23 命令那一臂），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_c_21f1e8d.json",
+      "bytes": 43216,
+      "git_blob_sha1": "583db798a14d569c4fa4be6876eee49aacc5ebe6",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 反例收据（Y23 命令那一臂），tree_kind=clean_sha 且两份被测文件与 21f1e8d 逐字节相同；derived_result 留 null 等 verifier。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/xproc_v1_gate_receipt.py",
+      "bytes": 26848,
+      "git_blob_sha1": "ed5b7f81ef7da15d4d0967fe9f4d4a55be201d53",
+      "grade": "EMITTER_INSTRUMENT",
+      "why": "出 ORD-0225 那批 V1 收据的仪器（行读数引用 commander 自己那把尺 gate_streak.row_counts，blob ac5377f207f18334 记在收据里）。",
+      "prefix": "evidence/ord0225/",
+      "path_reuse_self_report": "14:5x 我把新版仪器 PUT 到同一个路径，覆盖了旧版 0e7bf4174400c2f8 的字节。已发布那六枚 21f1e8d 收据里的 patch_or_mutator_ref 因此指不到生它的那份字节。旧字节按原名带摘要找回并另存为 *_pre_provenance_0e7bf417.py；教训：仪器路径一旦进过收据就只能版本化，不能复用。"
+    },
+    {
+      "file": "evidence/ord0225/ord0225_arm_repeats_21f1e8d.json",
+      "bytes": 10418,
+      "git_blob_sha1": "9a951605f09bece697bdae17bf1ad575e0b7565d",
+      "grade": "REPEAT_SUMMARY_NOT_A_CLOSURE_CLAIM",
+      "why": "四臂 × 多批的并排读数（含 Y23 三批 6/2/2 与 Y123 两批 10/10）；它替交付方把'挑一批好看的结果'这条路堵掉。",
+      "prefix": "evidence/ord0225/"
+    },
+    {
+      "file": "evidence/ord0224_a2/v1_gate_receipt_Y3_a_2ab69f2.json",
+      "bytes": 36588,
+      "git_blob_sha1": "e7ca04725e7b7ce657ac77c4fdeaae1ac210c707",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "F §① 要的 V1 重出：Y3（只坏败者回读）× 进程内 corrected g3 门 × 2ab69f2 × single-node，5/10 红、控制轮绿。",
+      "prefix": "evidence\\ord0224_a2/"
+    },
+    {
+      "file": "evidence/ord0224_a2/v1_gate_receipt_Y3_b_2ab69f2.json",
+      "bytes": 36906,
+      "git_blob_sha1": "a2fb514fefa9a985ad1dc46573cb77ebc37bc8b9",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "同一 scope 键第二批：6/10 红。批次之间不一样就是结论，不是挑一批的理由。",
+      "prefix": "evidence\\ord0224_a2/"
+    },
+    {
+      "file": "evidence/ord0224_a2/v1_gate_receipt_Y3_c_2ab69f2.json",
+      "bytes": 37521,
+      "git_blob_sha1": "65ac846ef2aeff692aa4c5086235f68a7afc4fc1",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "同一 scope 键第三批：3/10 红。与 12:1x 那份 pre-V1 件的 3/10 同级同键。",
+      "prefix": "evidence\\ord0224_a2/"
+    },
+    {
+      "file": "evidence/ord0224_a2/v1_gate_receipt_Y3_d_2ab69f2.json",
+      "bytes": 37839,
+      "git_blob_sha1": "a2de20a3bbe9ad358c78bc532181f13e5f5bf953",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "同一 scope 键第四批：4/10 红。四批 + 旧件 = 3..6/10 的带，恒不满轮。",
+      "prefix": "evidence\\ord0224_a2/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_a_0fd3cc7.json",
+      "bytes": 45550,
+      "git_blob_sha1": "0d70d9e69e6d12b0bb51555e37ff0973bc3552e9",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "ORD-0225 命令那一臂（B+C）在**当前主线尖** 0fd3cc7 上的读数：5/10 红，行数 1/1/4/4/2/2/1/1/5/1。",
+      "prefix": "evidence\\ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y23_b_0fd3cc7.json",
+      "bytes": 44554,
+      "git_blob_sha1": "2e6abed756b13511dcb19302c362213fa7f18720",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "同一 scope 键第二批：3/10 红。与 21f1e8d 三批 6/2/2 同一形状：不是确定性杀手。",
+      "prefix": "evidence\\ord0225/"
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y3_a_0fd3cc7.json",
+      "bytes": 37111,
+      "git_blob_sha1": "0312db377d1faa4f9c47c1924643a40c0ed621af",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "Y3 单格突变也在主线尖上量一批：4/10 红（红的形状=败者 503，库内仍 1 行）。",
+      "prefix": "evidence\\ord0225/"
+    },
+    {
+      "file": "evidence/ord0224_a2/scope_key_index_v1.json",
+      "bytes": 34056,
+      "git_blob_sha1": "a64bd57c0243c3a8bb82d63d833416ddb6eb9aab",
+      "grade": "SCOPE_KEY_INDEX_ANSWERS_THE_NO_SCOPE_KEY_COMPLAINT",
+      "why": "机器可读的 scope 键索引：每枚收据的 (exact_sha, nodeid, run_shape) + 突变 + 批次分布 + 主线事实，全部从盘上文件与 git 现读，不转述。这就是 F 说『拿不到 scope 键』的那一格。",
+      "prefix": "evidence\\ord0224_a2/"
+    },
+    {
+      "file": "evidence/ord0224_a2/build_scope_key_index.py",
+      "bytes": 14089,
+      "git_blob_sha1": "21fa6dfab87608225eec1e88739df451062d05bb",
+      "grade": "EMITTER_INSTRUMENT",
+      "why": "出索引那件仪器的字节；含两处反向自测（祖先判据双向、空 blob 必须拒绝出件）。",
+      "prefix": "evidence\\ord0224_a2/"
+    },
+    {
+      "file": "evidence/ord0224_a2/_inventory_v1_receipts.py",
+      "bytes": 5051,
+      "git_blob_sha1": "25f07142bace340d9f1f4cc3a61ab98d78726af5",
+      "grade": "EMITTER_INSTRUMENT",
+      "why": "只读清点本机全部 V1 收据；写它是因为『每份收据形状不一样』等于没发布。",
+      "prefix": "evidence\\ord0224_a2/"
+    },
+    {
+      "file": "evidence/ord0225/xproc_v1_gate_receipt_pre_provenance_0e7bf417.py",
+      "bytes": 22778,
+      "git_blob_sha1": "0e7bf4174400c2f8b125f6408ab30239f1df29cf",
+      "grade": "EMITTER_INSTRUMENT",
+      "why": "被我路径复用覆盖掉的那版仪器的**原字节**，从已发布 blob 取回并按 sha1 核对后另存；21f1e8d 那六枚收据的仪器引用现在能落到真字节上。",
+      "prefix": "evidence\\ord0225/"
+    },
+    {
+      "file": "evidence/ord0224_a2/xproc_v1_gate_receipt.py",
+      "bytes": 26848,
+      "git_blob_sha1": "ed5b7f81ef7da15d4d0967fe9f4d4a55be201d53",
+      "grade": "EMITTER_INSTRUMENT",
+      "why": "与 evidence/ord0225/ 同一 blob（ed5b7f81…）：本轮新增 Y3 臂 + provenance 块（含同键旧件与自算仪器摘要）。",
+      "prefix": "evidence\\ord0224_a2/"
+    },
+    {
+      "file": "evidence/ord0224_a2/v1_receipt_Y3_http_2ab69f2_aggregated.json",
+      "bytes": 75732,
+      "git_blob_sha1": "f165d2be91beb3b2bcaa67e2f55c641f4a97efe9",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "仲裁 §Minimal repair 的信封补件：顶层 restore 由 10 轮 per-run 机械聚合（digest 与 changed_files.before_digest 逐一对齐、marker max=0、dirty union=[]、rounds_verified=10）；schema 仍是 V1，derivation.* 留 null，旧件未覆盖。",
+      "prefix": "evidence/ord0224_a2/",
+      "adds_no_overwrite": true
+    },
+    {
+      "file": "evidence/ord0224_a2/v1_receipt_Y2_http_2ab69f2_aggregated.json",
+      "bytes": 78605,
+      "git_blob_sha1": "0acb5cb2d7a0bc71eb92667121d09e0b2fc3a233",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "同上，Y2（索引谓词永不命中）那一枚。",
+      "prefix": "evidence/ord0224_a2/",
+      "adds_no_overwrite": true
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y123_a_21f1e8d_v2.json",
+      "bytes": 61817,
+      "git_blob_sha1": "3a98d482d077e1b696af21ac874427847800e3f7",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "红队 16:39（总线 5791721578）抓到的自宣偏差修正件：carriers_removed=4 ⇒ claimed_result 由 KILLED 改 MULTI_CARRIER_CUTSET_KILLED（见 correction.was），顺带补顶层 restore；旧件仍在原路径未覆盖。",
+      "prefix": "evidence/ord0225/",
+      "adds_no_overwrite": true
+    },
+    {
+      "file": "evidence/ord0225/v1_gate_receipt_Y123_b_21f1e8d_v2.json",
+      "bytes": 61817,
+      "git_blob_sha1": "7222499ba7eab31b8bf126eb6e79bc575ac51ba7",
+      "grade": "REVERSE_MUTATION_RECEIPT_V1_CLAIM_ONLY_NOT_DERIVED",
+      "why": "同上，第二批。",
+      "prefix": "evidence/ord0225/",
+      "adds_no_overwrite": true
+    },
+    {
+      "file": "evidence/ord0224_a2/ord0224_a2_RECEIPT_LINEAGE.json",
+      "bytes": 21054,
+      "git_blob_sha1": "505069b67f589f2ab745bd03cb2c46dde61579f2",
+      "grade": "RECEIPT_LINEAGE_APPEND_ONLY",
+      "why": "Q2=PARTIAL_COMPLIANCE 的追加式更正：旧路径+旧 blob（8 枚全部从分支提交历史解析出全 40 位、取回字节并重算 sha1 证明仍可达）、替换 blob、原因、scope 键是否同键（字段级比对）、supersession 关系。",
+      "prefix": "evidence/ord0224_a2/",
+      "adds_no_overwrite": true
+    },
+    {
+      "file": "evidence/ord0224_a2/aggregate_v1_envelope.py",
+      "bytes": 8346,
+      "git_blob_sha1": "1d1663b0bf5cf86aeef7912363c10159ccff0fc9",
+      "grade": "EMITTER_INSTRUMENT",
+      "why": "机械聚合器：拒绝手写 restore、拒绝覆盖已存在的目标路径、digest 不齐就不出件。",
+      "prefix": "evidence/ord0224_a2/",
+      "adds_no_overwrite": true
+    },
+    {
+      "file": "evidence/ord0224_a2/build_receipt_lineage.py",
+      "bytes": 15567,
+      "git_blob_sha1": "0ca5b0cae5c7d70367d37957e5887cb65a081f5f",
+      "grade": "EMITTER_INSTRUMENT",
+      "why": "生成 lineage 那件的仪器；含两处真实约束：前缀不直接采信（必须从 commits→contents 解全 40 位）、TLS 抖动重试 4 次（一次失败曾被误读成 NOT_RESOLVED，那是仪器噪声不是历史缺失）。",
+      "prefix": "evidence/ord0224_a2/",
+      "adds_no_overwrite": true
+    }
+  ],
+  "revision": 7,
+  "revision_note": "v7（17:0x，走新文件名 = Q2 之后的规矩）：加入仲裁 §Minimal repair 的两张顶层 restore 聚合件（Y3/Y2 http 闭包门收据，schema 仍 V1、derivation 留 null）、红队 16:39 修正的两张 Y123 件（claimed_result KILLED → MULTI_CARRIER_CUTSET_KILLED，旧值保留在 correction.was 与旧 blob 里）、以及 CNX_RECEIPT_LINEAGE_V1（8 枚旧 blob 全部解析为全 40 位、取回重算 sha1 并证明仍可达）。本版的 v6 仍在原路径原字节（a59af511…），我没有再覆盖任何已发布路径。",
+  "supersedes": {
+    "file": "evidence/ord0224_a2/ord0224_a2_TIER_STAMP.json",
+    "git_blob_sha1": "a59af511bf7a3e18f4989ad87693dafcbf8d12d7",
+    "relation": "append-only revision at a NEW path; the v6 path is left untouched"
+  }
+}
