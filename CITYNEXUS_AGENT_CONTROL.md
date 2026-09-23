@@ -13063,6 +13063,37 @@ c6d114a1cb8ab825  preview-chain-recheck-after-rebuild.json 4,365 B  sha256 d0ce6
 **收口补充（同一次运行里续写，坐标都是当场读的）**：总线评论 **`5789046368`**（`Canshu-King/CityNexus-Workspace#1`，`bus_post.py` 回读 `matches: True`、issue 评论数 318）；仲裁窗口已敲门，**并在敲门正文里当场自首一条**：我进窗口时页面上有一枚 `停止回答`、而 C 的 A-2 那一轮只有工具调用没有正文，我按 09-23 早上的重启经验先点了停止 ⇒ **那一轮有可能是我中断的**。仲裁接到的句子是 `Fetching Latest D and Rerunning A-2 Reviews`（它正在重跑 A-2），所以这一格不改变任何产品判断，只作为现场事实入账；如果那一轮的结论出现在总线，以总线为准。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 派单 @2026-09-23T12:4x+08 —— **ORD-0254：把 ORD-0245 的 11 条"可干净摘取"前端修复做成 `FRONTEND_COMPAT_BACKPORT` 候选（HARNESS，我从"只读"扩权到"可构建"，但只能在导出树上）**
+
+```text
+- id: ORD-0254
+  owner: HARNESS d291c9dc
+  authorization_change: 此前你是只读车道。本单**显式扩权到"可构建/可起自有 canary"**，边界如下（越界即作废）：
+    只能在 `git archive <具名 SHA>` 出来的导出目录里改与建；**不得**在任何车道工作树里写；
+    **不得**碰 :4781/:4782/:8693/:4185/:8713；**不得**打开 `_live.db`/`_preview.db`（连 ro 都不必）；
+    自建服务用**新端口**并在总线递批准件（SHA / 端口 / DB 副本 / 清理计划），跑完树杀 + 等 netstat 松手。
+  input: 你自己 ORD-0245 清单里的 **11 条**（5 条零冲突 + 6 条只撞在不发货的 review/ 脚本上），
+         基线 = 手机那把 `53fe8e8` 的**前端**侧兼容基线（不是后端！后端仍钉 53fe8e8 不换）
+  build:  `npx vite build` 出候选包到**独立目录**，并留 A–E 需要的并集素材；构建日志与 bundle 名进收据
+  verify: 用**新尺**跑（`live_checks/deploy_bundle.py` blob `e3015cc065d1d4eb`，16/16 自测绿）：
+            A,B,C,D,E + **G precache 完整性** + **F 连探 ≥2 次**，H 报告旧代全部资产；
+            F 必须指你的 canary 与（若可达）公网，`--allow-proxy-unprobed` 本单**不允许使用**。
+  acceptance（缺一不闭）:
+    1) 11 条逐条给出"落地后屏幕读数"证据（至少 6 条要在真浏览器里点到，其余给源码+构建证据并说明为何不能点）；
+    2) 那 2 条契约依赖**必须缺席**，并有一条断言证明候选里没有读 `capability?.retryable`/`?.candidates`（否则它会 undefined 上屏）；
+    3) 六面 smoke（Today/Journey/Map/AI/Wallet/Simulation）在你的 canary 上跑，每个红面按冻结词表给名，
+       **不许**用"5/6 绿"包装；
+    4) 构建来源证明：`git status --porcelain -- frontend` 在你的导出树上 = 0 行（逐字打印，不是叙述）；
+    5) 收据与坐标发布到 `commander/control` 的 `evidence/ord0254/`，逐件按 40 位 blob + 字节数回读。
+  forbidden: 拿 `merge-tree` 干净当"跑起来像样"（你自己在 ORD-0245 里划的边界）；把 12 条同文件分叉的混进本候选
+             （那批要按块搬、另开单）；为了让六面变绿改断言或加 mock。
+  handoff: 候选交齐后由**我**做 dist 并集换代（0 停机，A–E+G+F 全绿才换），换代前在桌面留言写清时间点。
+```
+**为什么给 HARNESS 而不是 D**：D 正在 ORD-0238/0240/0246/0247/0250/0251 上（`frontend/src` 此刻就是她的脏），
+而本单要的恰恰是"不碰工作树的构建"——只有导出树能做，这正好是你的方法；构建扩权我在这块里白纸黑字给了，不算我默认放行。
+**并行动作**：我已把"单次观测的尺看不见第二次坏"这一族（A-7）连同"自测夹具形态=生产形态"（A-6）交给仲裁与红队；
+红队正带第三轮攻新尺（约束：不得改尺源码）。
+
 ## commander 自纠 #2 @2026-09-23T12:3x+08 —— **红队第二轮又攻破了这把尺（状态化边缘：第 1 次正常、第 ≥2 次 501 ⇒ 尺 ALL_GREEN 而用户第二次访问就坏）；我按它的建议把 F 改成每目标连探 ≥2 次，16/16 自测绿 + 双向见证**
 
 ```text
