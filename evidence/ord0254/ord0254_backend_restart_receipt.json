@@ -1,0 +1,24 @@
+{
+ "at": "2026-09-23T13:45:53+08:00",
+ "reason": "restarted after the deliberate failure-face read (this file's own backend was stopped to see what the traveller is told)",
+ "db_file": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db",
+ "marker_rows_in_my_db": 1,
+ "journey_id": "22222222-2222-4222-8222-222222222222",
+ "spawn_handle_pid": 52296,
+ "netstat_listeners": [
+  13400
+ ],
+ "health": {
+  "status": "ok",
+  "database": "ok",
+  "ai": "disabled",
+  "e2e_run_id": "",
+  "e2e_database_id": ""
+ },
+ "journey_via_my_backend": "22222222-2222-4222-8222-222222222222",
+ "journey_via_preview_4411": "22222222-2222-4222-8222-222222222222",
+ "demo_reset_issued": false,
+ "user_stores_opened": [],
+ "ownership_verdict": "PROVEN",
+ "why_this_was_allowed": "the marker row proves the existing db file is the one this order created; the v2 launcher's first-start guard would otherwise refuse a legitimate retry"
+}
