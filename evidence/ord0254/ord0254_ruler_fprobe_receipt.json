@@ -1,0 +1,239 @@
+{
+ "at": "2026-09-23T13:21:55+08:00",
+ "what": "F arm re-driven with the signed ruler's own repeated_verdict/asset_verdict, because main() line 654 raises KeyError on any configured base",
+ "ruler_blob": "e3015cc065d1d4ebca2c0ba28fe3b95f85b64a73",
+ "predicate_source": "D:\\moodle\\_qoder_harness_ord0254\\tools\\ruler.py (unmodified) lines 200-213 + 145-186",
+ "aggregation_rule": "every target every probe must be GREEN (ruler 654-661 equivalent)",
+ "probe_times": 2,
+ "auth_file": null,
+ "allow_proxy_unprobed_used": false,
+ "targets": [
+  {
+   "label": "static_4412_serve_union",
+   "base": "http://127.0.0.1:4412",
+   "what_it_is": "my static union surface over serve/"
+  },
+  {
+   "label": "preview_4411_candidate",
+   "base": "http://127.0.0.1:4411",
+   "what_it_is": "my vite preview over the candidate bundle, /api -> my backend :8411"
+  }
+ ],
+ "refs": [
+  "/assets/index-C0qSwD3N.js",
+  "/"
+ ],
+ "probes": [
+  {
+   "surface": "static_4412_serve_union",
+   "base": "http://127.0.0.1:4412",
+   "ref": "/assets/index-C0qSwD3N.js",
+   "got": {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/assets/index-C0qSwD3N.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1213215",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4412",
+      "auth_applied": false,
+      "body_size": 1213215,
+      "disk_present": true,
+      "disk_bytes": 1213215,
+      "disk_sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/assets/index-C0qSwD3N.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1213215",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4412",
+      "auth_applied": false,
+      "body_size": 1213215,
+      "disk_present": true,
+      "disk_bytes": 1213215,
+      "disk_sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   }
+  },
+  {
+   "surface": "static_4412_serve_union",
+   "base": "http://127.0.0.1:4412",
+   "ref": "/",
+   "got": {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html",
+      "length": "1200",
+      "head_bytes": "<!doctype html>\n<html la",
+      "sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "is_html_fallback": true,
+      "error": null,
+      "base": "http://127.0.0.1:4412",
+      "auth_applied": false,
+      "body_size": 1200,
+      "disk_present": true,
+      "disk_bytes": 1200,
+      "disk_sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "expect_content_type_substring": "html",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html",
+      "length": "1200",
+      "head_bytes": "<!doctype html>\n<html la",
+      "sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "is_html_fallback": true,
+      "error": null,
+      "base": "http://127.0.0.1:4412",
+      "auth_applied": false,
+      "body_size": 1200,
+      "disk_present": true,
+      "disk_bytes": 1200,
+      "disk_sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "expect_content_type_substring": "html",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   }
+  },
+  {
+   "surface": "preview_4411_candidate",
+   "base": "http://127.0.0.1:4411",
+   "ref": "/assets/index-C0qSwD3N.js",
+   "got": {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/assets/index-C0qSwD3N.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1213215",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4411",
+      "auth_applied": false,
+      "body_size": 1213215,
+      "disk_present": true,
+      "disk_bytes": 1213215,
+      "disk_sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/assets/index-C0qSwD3N.js",
+      "status": 200,
+      "content_type": "text/javascript",
+      "length": "1213215",
+      "head_bytes": "const __vite__mapDeps=(i",
+      "sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "is_html_fallback": false,
+      "error": null,
+      "base": "http://127.0.0.1:4411",
+      "auth_applied": false,
+      "body_size": 1213215,
+      "disk_present": true,
+      "disk_bytes": 1213215,
+      "disk_sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287",
+      "expect_content_type_substring": "javascript",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   }
+  },
+  {
+   "surface": "preview_4411_candidate",
+   "base": "http://127.0.0.1:4411",
+   "ref": "/",
+   "got": {
+    "verdict": "GREEN",
+    "times": 2,
+    "statuses": [
+     200,
+     200
+    ],
+    "probes": [
+     {
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html",
+      "length": "1200",
+      "head_bytes": "<!doctype html>\n<html la",
+      "sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "is_html_fallback": true,
+      "error": null,
+      "base": "http://127.0.0.1:4411",
+      "auth_applied": false,
+      "body_size": 1200,
+      "disk_present": true,
+      "disk_bytes": 1200,
+      "disk_sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "expect_content_type_substring": "html",
+      "verdict": "GREEN"
+     },
+     {
+      "path": "/",
+      "status": 200,
+      "content_type": "text/html",
+      "length": "1200",
+      "head_bytes": "<!doctype html>\n<html la",
+      "sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "is_html_fallback": true,
+      "error": null,
+      "base": "http://127.0.0.1:4411",
+      "auth_applied": false,
+      "body_size": 1200,
+      "disk_present": true,
+      "disk_bytes": 1200,
+      "disk_sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b",
+      "expect_content_type_substring": "html",
+      "verdict": "GREEN"
+     }
+    ],
+    "red_refs": []
+   }
+  }
+ ],
+ "verdict": "GREEN",
+ "labels_note": "main() names its two F targets proxy_4782/tunnel; here the equivalent roles are my own :4412 and :4411, so the label strings are replaced rather than pointing at someone else's chain",
+ "forbidden_ports_requested": []
+}
