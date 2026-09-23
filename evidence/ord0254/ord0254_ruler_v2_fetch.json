@@ -1,0 +1,61 @@
+{
+ "at": "2026-09-23T14:24:46+08:00",
+ "steps": [
+  {
+   "step": "GET commit",
+   "status": 200
+  }
+ ],
+ "commit": {
+  "sha40": "a0eae311039371ab8dc35f35cf2094b62f847f8b",
+  "tree": "8cf109eda01eb1548cd8fd0b094793b7698080ac",
+  "date": "2026-09-23T04:48:02Z",
+  "subject": "commander: repeat-probe now covers C/G/H too + backup anchor to seconds (redteam round 3, bus 5789163700) - 18/18 arms"
+ },
+ "tree_entry": {
+  "status": 200,
+  "sha": "c0aafc940136c502a2d021f0535537ee3298c888",
+  "size": 40848
+ },
+ "ruler": {
+  "expected_blob16": "c0aafc940136c502",
+  "expected_bytes": 40848,
+  "fetched_blob40": "c0aafc940136c502a2d021f0535537ee3298c888",
+  "fetched_bytes": 40848,
+  "verdict": "FETCHED_VERIFIED"
+ },
+ "witness_receipt": {
+  "status": 200,
+  "bytes": 6982,
+  "blob40": "00df58af8504ac99c9177ae83c17b6fa57c1a821",
+  "matches_order": true,
+  "arms_total": 18,
+  "arms_matched": 18,
+  "overall": "GREEN",
+  "base": "http://127.0.0.1:4781",
+  "round3_arms_verbatim": [
+   "G-killer:precache_url_breaks_on_second_probe => RED",
+   "G-true_positive:same_url_twice_on_real_server => GREEN"
+  ]
+ },
+ "F_aggregation_lines_in_new_object": [
+  "204: def repeated_verdict(ref: str, expect_ct: str, serve: pathlib.Path, base: str | None = None,",
+  "306: v = repeated_verdict(ref, expect_ct_for(ref), live, base=base, times=times)",
+  "351: tp = repeated_verdict(killer_ref, \"javascript\", live, times=2)",
+  "353: \"got\": {\"verdict\": tp[\"verdict\"], \"error\": None, \"status\": tp[\"statuses\"]}})",
+  "355: st = repeated_verdict(\"/assets/edge-stateful.js\", \"javascript\", live,",
+  "435: help=\"declare that CNX_DEPLOY_PROXY_BASE / CNX_DEPLOY_TUNNEL_BASE were not set, so F is \"",
+  "530: reds = [p[\"path\"] for p in pre if p[\"verdict\"] != \"OK\"]",
+  "534: if p[\"verdict\"] != \"OK\":",
+  "597: c_new.append(repeated_verdict(ref, expect_ct_for(ref), serve, times=PROBE_TIMES))",
+  "639: \"got\": repeated_verdict(ref, expect_ct_for(ref), serve, times=PROBE_TIMES)})",
+  "651: h_prev.append({\"ref\": r, \"got\": repeated_verdict(r, expect_ct_for(r), serve, times=PROBE_TIMES)})",
+  "653: else (\"NOT_CONFIGURED\" if not h_prev else \"RED\"))",
+  "659: for label, base in ((\"proxy_4782\", os.environ.get(\"CNX_DEPLOY_PROXY_BASE\")),",
+  "662: f_probes.append({\"surface\": label, \"verdict\": \"NOT_CONFIGURED\", \"base\": None})"
+ ],
+ "red_finding_1_status_in_new_object": "STILL_PRESENT (main() still reads p['verdict'] unconditionally over f_probes)",
+ "arms_using_repeated_verdict": [
+  "repeated_verdict("
+ ]
+}
