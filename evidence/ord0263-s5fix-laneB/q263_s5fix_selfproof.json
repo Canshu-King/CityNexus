@@ -1,0 +1,425 @@
+{
+ "at": "2026-09-24T01:00:12+08:00",
+ "order": "ORD-0263 第五态候选 · 六格自证（三形 + 前四格，尺自己的 live 判级）",
+ "lane": "B c01d72a3",
+ "how_computed": "the driver's browser round completed and wrote every reading; it then crashed in my assembly code on a wrong ruler entry point (v3 exposes live(), not judge_all). This script re-JUDGES the same artifacts -- nothing was re-measured, and no reading was retyped.",
+ "ruler": {
+  "path": "D:\\moodle\\_qoder_harness_ord0254\\tools\\ord0263_verifier_v3.py",
+  "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "expected": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "unchanged_after": true,
+  "retargeted_in_my_process_only": "v3.BASE -> my order directory (output path, no rule touched)",
+  "entry_point_used": "live()"
+ },
+ "surface": {
+  "preview": 4443,
+  "origin": 8443,
+  "bundle": "dist_s5 built from agent/b-c01d72a3-ord0263-s5",
+  "snapshot_earned_via": "the app's own sealed-demo control against a real uvicorn (enter reading: settle 3.25s, snapshot present, count 1)",
+  "proxy_ownership": "pairwise per shape: browser Resource Timing and my origin's log agree on status and path for the same journey read (see pairwise_proofs)",
+  "provider_egress": "AI off, resolver off, Photon at 127.0.0.1:9",
+  "write_leg_probe": "not run: forbidden this round by commander 5798766898"
+ },
+ "pairwise_proofs": {
+  "200_html": {
+   "browser_resource_timing": {
+    "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "duration_ms": 2,
+    "status": 200,
+    "kind": "fetch"
+   },
+   "origin_log_row": {
+    "kind": "answered",
+    "mode": "html",
+    "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "method": "GET",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "body_bytes": 1200,
+    "body_head": "<!doctype html>\n<html lang=\"en\">\n  <head>\n    <m",
+    "at": "2026-09-24T00:57:08"
+   },
+   "status_agrees": true,
+   "path_agrees": true
+  },
+  "200_empty": {
+   "browser_resource_timing": {
+    "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "duration_ms": 4,
+    "status": 200,
+    "kind": "fetch"
+   },
+   "origin_log_row": {
+    "kind": "answered",
+    "mode": "empty",
+    "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "method": "GET",
+    "status": 200,
+    "content_type": "application/json",
+    "body_bytes": 0,
+    "body_head": "",
+    "at": "2026-09-24T00:57:11"
+   },
+   "status_agrees": true,
+   "path_agrees": true
+  },
+  "200_not_json": {
+   "browser_resource_timing": {
+    "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "duration_ms": 3,
+    "status": 200,
+    "kind": "fetch"
+   },
+   "origin_log_row": {
+    "kind": "answered",
+    "mode": "nonjson",
+    "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+    "method": "GET",
+    "status": 200,
+    "content_type": "text/plain; charset=utf-8",
+    "body_bytes": 40,
+    "body_head": "origin says: plan service is warming up\n",
+    "at": "2026-09-24T00:57:14"
+   },
+   "status_agrees": true,
+   "path_agrees": true
+  }
+ },
+ "screen_sentences": {
+  "live": "菜单 | / | 今天 | 跟随系统 | EN | DE |  | 还没休息 |  | Demo之旅 |  | 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 |  | AI 帮我规划 | 试用其他城市 | 打开行程工作台 | 今天 | 还没有安排 | “现在”取自服务器场景（行程起点）：10月10日 09:00 · 服务器的执行投影还没到，这一屏没有按游标定位 | 路线上下文 | 0 段路程 | 供应商支持的路线 · WGS84 |  | 单指拖动地图 · 双指缩放 · 想翻",
+  "200_html": "服务器 |  | 服务器答了 200，可带回来的不是这一屏能用的数据 |  | 它确实回了话（HTTP 200，Content-Type: text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 |  | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=ORIGIN_INVALID_RESPONSE evidence_",
+  "200_empty": "服务器 |  | 服务器答了 200，可带回来的不是这一屏能用的数据 |  | 它确实回了话（HTTP 200，Content-Type: application/json），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 |  | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTT",
+  "200_not_json": "服务器 |  | 服务器答了 200，可带回来的不是这一屏能用的数据 |  | 它确实回了话（HTTP 200，Content-Type: text/plain; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 |  | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=ORIGIN_INVALID_RESPONSE evidence",
+  "S2_origin_error": "服务器 |  | 服务暂时不可用 |  | 服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 |  | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=500 source_layer=RUNTIME retryable=true recover",
+  "S3_no_answer": "没有回音 |  | 等了 12 秒，这台服务器一个字也没回答 |  | 这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。 |  | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT ",
+  "S4_read_silent_health_answered": "服务器 |  | 服务暂时不可用 |  | 服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 |  | 看已保存的只读副本 | 重试 | 归因详情 | attribution_reason=SERVER_ERROR evidence_kind=HEALTH_PROBE http_status=500 source_layer=RUNTIME retryable=true recovery"
+ },
+ "judge_v5_per_shape": {
+  "200_html": {
+   "verdict": "GREEN",
+   "measured": {
+    "shape": "200_html",
+    "answered_status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "body_bytes": 1200,
+    "rendered_attribution": {
+     "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+     "evidence_kind": "HTTP_RESPONSE",
+     "http_status": "200",
+     "source_layer": "RUNTIME",
+     "cached_copy_present": "true",
+     "retryable": "true"
+    },
+    "evidence_kind_keeps_HTTP": true,
+    "http_status_carried": true,
+    "reason_not_network": true,
+    "layer_not_transport": true,
+    "sentence_denies_the_answer": false,
+    "cached_copy_matches_measured_rows": true,
+    "measured_snapshot_rows": 1
+   },
+   "failed_conditions": [],
+   "rule": "answered 2xx with an unparseable body: the HTTP-response fact must survive every column and the sentence may not claim nothing answered"
+  },
+  "200_empty": {
+   "verdict": "GREEN",
+   "measured": {
+    "shape": "200_empty",
+    "answered_status": 200,
+    "content_type": "application/json",
+    "body_bytes": 0,
+    "rendered_attribution": {
+     "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+     "evidence_kind": "HTTP_RESPONSE",
+     "http_status": "200",
+     "source_layer": "RUNTIME",
+     "cached_copy_present": "true",
+     "retryable": "true"
+    },
+    "evidence_kind_keeps_HTTP": true,
+    "http_status_carried": true,
+    "reason_not_network": true,
+    "layer_not_transport": true,
+    "sentence_denies_the_answer": false,
+    "cached_copy_matches_measured_rows": true,
+    "measured_snapshot_rows": 1
+   },
+   "failed_conditions": [],
+   "rule": "answered 2xx with an unparseable body: the HTTP-response fact must survive every column and the sentence may not claim nothing answered"
+  },
+  "200_not_json": {
+   "verdict": "GREEN",
+   "measured": {
+    "shape": "200_not_json",
+    "answered_status": 200,
+    "content_type": "text/plain; charset=utf-8",
+    "body_bytes": 40,
+    "rendered_attribution": {
+     "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+     "evidence_kind": "HTTP_RESPONSE",
+     "http_status": "200",
+     "source_layer": "RUNTIME",
+     "cached_copy_present": "true",
+     "retryable": "true"
+    },
+    "evidence_kind_keeps_HTTP": true,
+    "http_status_carried": true,
+    "reason_not_network": true,
+    "layer_not_transport": true,
+    "sentence_denies_the_answer": false,
+    "cached_copy_matches_measured_rows": true,
+    "measured_snapshot_rows": 1
+   },
+   "failed_conditions": [],
+   "rule": "answered 2xx with an unparseable body: the HTTP-response fact must survive every column and the sentence may not claim nothing answered"
+  }
+ },
+ "ruler_live_verdict": {
+  "at": "2026-09-24T01:00:12+08:00",
+  "capture": "D:\\moodle\\_qoder_b_ord0263_20260923\\ord0263_capture_candidate_s5fix.json",
+  "capture_subject": "CANDIDATE branch agent/b-c01d72a3-ord0263-s5, dist_s5, my :4443 -> my :8443",
+  "verdicts_computed_from_measured_fields": {
+   "S1_live": {
+    "verdict": "GREEN"
+   },
+   "V1_origin_error_5xx": {
+    "verdict": "GREEN",
+    "measured": {
+     "http_status": 500,
+     "network_words": false,
+     "names_service": true,
+     "hands_over_snapshot": true,
+     "navigator_onLine": true,
+     "retry_door_in_text": true
+    },
+    "rule": "answered non-2xx + snapshot: must NAME the service AND HAND OVER the snapshot AND carry no network word"
+   },
+   "V1_vacuity_witness": {
+    "verdict": "GREEN",
+    "measured": {
+     "network_words": false,
+     "names_service": true,
+     "hands_over_snapshot": true,
+     "note": ""
+    },
+    "rule": "an absent sentence is not a classification; only 网络词=0 且 服务词=1 且 快照词=1 counts"
+   },
+   "V2_no_answer": {
+    "verdict": "GREEN",
+    "measured": {
+     "fetch_thrown": true,
+     "settled_within_deadline": true,
+     "seconds_to_settle": 12.15,
+     "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+     "retry_door": true,
+     "still_on_loading_skeleton": false,
+     "hands_over_snapshot": true
+    },
+    "rule": "no answer at all: bounded read + its own label + snapshot handed over + a door"
+   },
+   "V3_distinctness": {
+    "verdict": "GREEN",
+    "measured": {
+     "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+     "s3_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+     "same_sentence": false,
+     "s3_unclassified_skeleton": false
+    },
+    "rule": "the two arms must not collapse into one outcome; a skeleton is not a classification"
+   },
+   "V4_silent_read_answered_health": {
+    "verdict": "GREEN",
+    "measured": {
+     "read_never_answered": true,
+     "health_status": 500,
+     "settled_within_deadline": true,
+     "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+     "network_words": false,
+     "seconds_to_settle": 12.15
+    },
+    "rule": "read silent + health answered => ORIGIN_ERROR_WITH_SNAPSHOT, bounded, never called a network failure"
+   },
+   "V5_origin_invalid_response": {
+    "verdict": "GREEN",
+    "measured": {
+     "shapes_total": 3,
+     "green": 3,
+     "red": 0,
+     "not_measured": 0,
+     "red_shapes": [],
+     "per_shape_conditions": {}
+    },
+    "rule": "HTML / empty / not-JSON are three readings, not one: any shape that collapses is RED",
+    "rows": [
+     {
+      "shape": "200_html",
+      "verdict": "GREEN",
+      "measured": {
+       "shape": "200_html",
+       "answered_status": 200,
+       "content_type": "text/html; charset=utf-8",
+       "body_bytes": 1200,
+       "rendered_attribution": {
+        "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+        "evidence_kind": "HTTP_RESPONSE",
+        "http_status": "200",
+        "source_layer": "RUNTIME",
+        "cached_copy_present": "true",
+        "retryable": "true"
+       },
+       "evidence_kind_keeps_HTTP": true,
+       "http_status_carried": true,
+       "reason_not_network": true,
+       "layer_not_transport": true,
+       "sentence_denies_the_answer": false,
+       "cached_copy_matches_measured_rows": true,
+       "measured_snapshot_rows": 1
+      },
+      "failed_conditions": [],
+      "rule": "answered 2xx with an unparseable body: the HTTP-response fact must survive every column and the sentence may not claim nothing answered"
+     },
+     {
+      "shape": "200_empty",
+      "verdict": "GREEN",
+      "measured": {
+       "shape": "200_empty",
+       "answered_status": 200,
+       "content_type": "application/json",
+       "body_bytes": 0,
+       "rendered_attribution": {
+        "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+        "evidence_kind": "HTTP_RESPONSE",
+        "http_status": "200",
+        "source_layer": "RUNTIME",
+        "cached_copy_present": "true",
+        "retryable": "true"
+       },
+       "evidence_kind_keeps_HTTP": true,
+       "http_status_carried": true,
+       "reason_not_network": true,
+       "layer_not_transport": true,
+       "sentence_denies_the_answer": false,
+       "cached_copy_matches_measured_rows": true,
+       "measured_snapshot_rows": 1
+      },
+      "failed_conditions": [],
+      "rule": "answered 2xx with an unparseable body: the HTTP-response fact must survive every column and the sentence may not claim nothing answered"
+     },
+     {
+      "shape": "200_not_json",
+      "verdict": "GREEN",
+      "measured": {
+       "shape": "200_not_json",
+       "answered_status": 200,
+       "content_type": "text/plain; charset=utf-8",
+       "body_bytes": 40,
+       "rendered_attribution": {
+        "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+        "evidence_kind": "HTTP_RESPONSE",
+        "http_status": "200",
+        "source_layer": "RUNTIME",
+        "cached_copy_present": "true",
+        "retryable": "true"
+       },
+       "evidence_kind_keeps_HTTP": true,
+       "http_status_carried": true,
+       "reason_not_network": true,
+       "layer_not_transport": true,
+       "sentence_denies_the_answer": false,
+       "cached_copy_matches_measured_rows": true,
+       "measured_snapshot_rows": 1
+      },
+      "failed_conditions": [],
+      "rule": "answered 2xx with an unparseable body: the HTTP-response fact must survive every column and the sentence may not claim nothing answered"
+     }
+    ]
+   }
+  },
+  "derived_result": "ALL_GREEN",
+  "note": "v3 adds only the fifth arm; the six verdicts above the fifth are produced by the same v2 code paths, byte-compared in the selftest"
+ },
+ "ruler_live_rc": 0,
+ "attribution_as_measured_in_memory": {
+  "200_html": {
+   "reason": "ORIGIN_INVALID_RESPONSE",
+   "evidence_kind": "HTTP_RESPONSE",
+   "http_status": 200,
+   "source_layer": "RUNTIME",
+   "retryable": true,
+   "recovery_action": "read-only-cached",
+   "message_key": "failure.originInvalidResponse",
+   "content_type": "text/html; charset=utf-8",
+   "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=true",
+   "cached_copy_present": true,
+   "at": "2026-09-23T16:57:08.099Z",
+   "context": "shell.boot.journeyRead"
+  },
+  "200_empty": {
+   "reason": "ORIGIN_INVALID_RESPONSE",
+   "evidence_kind": "HTTP_RESPONSE",
+   "http_status": 200,
+   "source_layer": "RUNTIME",
+   "retryable": true,
+   "recovery_action": "read-only-cached",
+   "message_key": "failure.originInvalidResponse",
+   "content_type": "application/json",
+   "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=true",
+   "cached_copy_present": true,
+   "at": "2026-09-23T16:57:11.406Z",
+   "context": "shell.boot.journeyRead"
+  },
+  "200_not_json": {
+   "reason": "ORIGIN_INVALID_RESPONSE",
+   "evidence_kind": "HTTP_RESPONSE",
+   "http_status": 200,
+   "source_layer": "RUNTIME",
+   "retryable": true,
+   "recovery_action": "read-only-cached",
+   "message_key": "failure.originInvalidResponse",
+   "content_type": "text/plain; charset=utf-8",
+   "telemetry": "attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/plain; charset=utf-8 cached_copy_present=true",
+   "cached_copy_present": true,
+   "at": "2026-09-23T16:57:14.841Z",
+   "context": "shell.boot.journeyRead"
+  },
+  "S2_origin_error": {
+   "reason": "SERVER_ERROR",
+   "evidence_kind": "HTTP_RESPONSE",
+   "http_status": 500,
+   "source_layer": "RUNTIME",
+   "retryable": true,
+   "recovery_action": "read-only-cached",
+   "message_key": "failure.serverError",
+   "telemetry": "attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+   "cached_copy_present": true,
+   "at": "2026-09-23T16:57:18.132Z",
+   "context": "shell.boot.journeyRead"
+  },
+  "S3_no_answer": {
+   "reason": "NETWORK_UNAVAILABLE",
+   "evidence_kind": "TRANSPORT",
+   "http_status": null,
+   "source_layer": "TRANSPORT",
+   "retryable": true,
+   "recovery_action": "read-only-cached",
+   "message_key": "failure.noAnswer",
+   "telemetry": "attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+   "cached_copy_present": true,
+   "at": "2026-09-23T16:57:33.522Z",
+   "context": "shell.boot.journeyRead"
+  },
+  "S4_read_silent_health_answered": {
+   "reason": "SERVER_ERROR",
+   "evidence_kind": "HEALTH_PROBE",
+   "http_status": 500,
+   "source_layer": "RUNTIME",
+   "retryable": true,
+   "recovery_action": "read-only-cached",
+   "message_key": "failure.serverError",
+   "telemetry": "attribution_reason=SERVER_ERROR evidence_kind=HEALTH_PROBE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+   "cached_copy_present": true,
+   "at": "2026-09-23T16:57:49.168Z",
+   "context": "shell.boot.journeyRead"
+  }
+ }
+}
