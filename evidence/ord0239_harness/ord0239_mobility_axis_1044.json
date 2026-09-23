@@ -1,0 +1,56 @@
+{
+ "at": "2026-09-23T10:44:52+08:00",
+ "backend": "D:\\moodle\\_qoder_integration_20260919\\backend",
+ "thresholds": {
+  "min_ready_pairs": 3,
+  "ratio_needed": 0.8,
+  "stale_after_days": 90
+ },
+ "cities": {
+  "CN-BEIJING": {
+   "places": 8,
+   "mobility_covered_pairs": 56,
+   "mobility_ordered_pairs": 56,
+   "ratio": 1.0,
+   "provenance_classes": [
+    "EXPLICIT_FROZEN_FIXTURE"
+   ],
+   "mobility_state": "READY",
+   "intents_ready": [
+    "attractions",
+    "booking",
+    "food",
+    "mobility"
+   ],
+   "intents_missing": [
+    "lodging",
+    "nightlife"
+   ],
+   "capability_verdict": "HYDRATABLE",
+   "canonical_destination_id": "CN-BEIJING"
+  },
+  "CNX-DEMO": {
+   "places": 8,
+   "mobility_covered_pairs": 9,
+   "mobility_ordered_pairs": 56,
+   "ratio": 0.1607,
+   "provenance_classes": [
+    "EXPLICIT_FROZEN_FIXTURE"
+   ],
+   "mobility_state": "PARTIAL",
+   "intents_ready": [
+    "attractions",
+    "booking"
+   ],
+   "intents_missing": [
+    "food",
+    "lodging",
+    "mobility",
+    "nightlife"
+   ],
+   "capability_verdict": "HYDRATABLE",
+   "canonical_destination_id": "CNX-DEMO"
+  }
+ },
+ "cities_reachable_ready": []
+}
