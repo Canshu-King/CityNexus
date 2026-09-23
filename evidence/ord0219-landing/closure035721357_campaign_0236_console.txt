@@ -1,0 +1,24 @@
+AS-IS baseline: exit=0 | ============================== 3 passed in 0.68s ==============================
+  nodes: 3 | non-green: []
+
+K1_raw_tags_column_becomes_an_input   (declared owner: test_t1_raw_tags_column_alone_never_causes_a_hard_verdict)
+   anchor_hits=1 bytes_changed=True restored_byte_exactly=True
+   suite: ========================= 1 failed, 2 passed in 0.56s =========================
+     RED -> test_t1_raw_tags_column_alone_never_causes_a_hard_verdict   <= declared owner
+
+K2_skip_the_normalized_producer   (declared owner: test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker)
+   anchor_hits=1 bytes_changed=True restored_byte_exactly=True
+   suite: ============================== 3 failed in 0.61s ==============================
+     RED -> test_t1_raw_tags_column_alone_never_causes_a_hard_verdict
+     RED -> test_t2_the_same_fact_through_the_normalized_producer_does_name_the_blocker   <= declared owner
+     RED -> test_t3_display_taxonomy_tags_never_become_accessibility_evidence
+
+K3_taxonomy_token_becomes_a_fact   (declared owner: test_t3_display_taxonomy_tags_never_become_accessibility_evidence)
+   anchor_hits=1 bytes_changed=True restored_byte_exactly=True
+   suite: ========================= 1 failed, 2 passed in 0.47s =========================
+     RED -> test_t3_display_taxonomy_tags_never_become_accessibility_evidence   <= declared owner
+
+覆盖：每条门至少被一臂打红？ True -> none
+归属：每臂都打红自己声明的那条门？ True
+还原：全部字节级还原？ True
+receipt -> q236_mutation_receipt.json
