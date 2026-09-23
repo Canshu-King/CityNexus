@@ -1,0 +1,112 @@
+{
+ "order": "ORD-0267 · 实现令第一步的 install/控制台读数",
+ "lane": "B c01d72a3",
+ "at": "2026-09-23T21:31:11+08:00",
+ "mode": "READ-ONLY，无产品码改动；跑在 `git archive d2665e25855aeb265329266831983de42321697d` 的导出树上",
+ "instrument": {
+  "node": "q267_install_probe.js",
+  "driver": "q267_install_run.py",
+  "shape": "chromium.launch + 全新 context（无既有 profile），在线一次导航 + 19.5 s 内 500 ms 一次缓存采样",
+  "surface": "vite preview :4441 → 我自己的 backend :8441（新库、seed_demo、AI off、resolver off）",
+  "no_mocks": "没有任何 route 拦截或假响应；唯一的杠杆是我自己的进程在/不在"
+ },
+ "measurements": {
+  "cache_samples": {
+   "count": 40,
+   "with_any_cache": 0,
+   "first_sample_t_ms": 178,
+   "caches_ever_seen": false,
+   "controller_at_first_sample": "/v10-sw.js",
+   "registration_at_first_sample": [
+    {
+     "scope": "http://127.0.0.1:4441/",
+     "active": "/v10-sw.js",
+     "installing": null,
+     "waiting": null
+    }
+   ]
+  },
+  "worker_answered_anything": {
+   "first_navigation_from_service_worker": false,
+   "second_navigation_from_service_worker": false
+  },
+  "precache_manifest_as_built": {
+   "count": 9,
+   "urls": [
+    "sw.js",
+    "index.html",
+    "assets/maplibre-gl-BWQWEO0M.js",
+    "assets/JourneyMap-VYnqykgh.js",
+    "assets/index-I45CQek8.css",
+    "assets/index-D76m_cky.js",
+    "/index.html",
+    "favicon.svg",
+    "manifest.webmanifest"
+   ],
+   "extracted_from": "the built v10-sw.js inside the exported tree at tip d2665e2"
+  },
+  "manifest_url_status_while_online": {
+   "sw.js": {
+    "status": 200
+   },
+   "index.html": {
+    "status": 200
+   },
+   "assets/maplibre-gl-BWQWEO0M.js": {
+    "status": 200
+   },
+   "assets/JourneyMap-VYnqykgh.js": {
+    "status": 200
+   },
+   "assets/index-I45CQek8.css": {
+    "status": 200
+   },
+   "assets/index-D76m_cky.js": {
+    "status": 200
+   },
+   "/index.html": {
+    "status": 200
+   },
+   "favicon.svg": {
+    "status": 200
+   },
+   "manifest.webmanifest": {
+    "status": 200
+   }
+  },
+  "urls_not_200": {},
+  "navigation_preload_state": {
+   "eval_error": "r.navigationPreload.isEnabled is not a function"
+  }
+ },
+ "hypotheses_named_in_the_order": {
+  "H1_removeLegacyServiceWorkerCaches_deleted_what_workbox_wrote": {
+   "verdict": "REFUTED",
+   "because_static": "它只删三个具名缓存：citynexus-trip-operations-v1 / citynexus-pages / citynexus-static，以及前缀 citynexus-trip-operations-v*；workbox 写的是 workbox-precache-<origin> 与 citynexus-pages-m3-a4-v1 / -static-m3-a4-v1，一枚都不匹配",
+   "because_measured": "40 次采样里 0 次见到任何缓存 ⇒ 从未出现，不是出现后被删"
+  },
+  "H2_manifest_points_at_urls_the_server_cannot_serve": {
+   "verdict": "REFUTED（在线一侧）",
+   "because_measured": "构建出的清单 9 个 URL 全部 status 200；非 200 的：无",
+   "residue": "这否证的是『取不到』；不否证『取到了但 install 里那一步没执行』"
+  },
+  "H3_the_generated_worker_threw_during_evaluation_before_registering_routes": {
+   "verdict": "SUPPORTED BY ELIMINATION + POSITIVE SIGNATURE — 但错误文本没抓到，见 not_captured",
+   "signature": [
+    "首个采样 t=178 ms 时 controller 已是 /v10-sw.js（全新 context 的第一份文档能被控制 ⇒ `skipWaiting()` 与 `clientsClaim()` 这两句已经跑过）",
+    "40 次采样缓存恒为 []（紧随其后的 `precacheAndRoute([...])` 没留下任何东西）",
+    "两次导航 from_service_worker 均为 false（`registerRoute(NavigationRoute(...))` 与两条运行时路由都没生效，否则被 SW 处理过的响应该报 true）"
+   ],
+   "localizes_to": "v10-sw.js 里 `e.clientsClaim()` 之后、`e.precacheAndRoute(...)` 那一段（同一回调内）"
+  }
+ },
+ "not_captured": {
+  "worker_error_text": "两条通道都空：CDP `Log.enable` 在 browser 级 session 上不可用（UNAVAILABLE: cdpSession.send: Protocol error (Log.enable): 'Log.enable' wasn't found）；`--enable-logging=stderr` 也没有落到本进程的 [service_worker] 行（捕获 0 条）。要拿这句话需要 target 级 CDP session 或 DevTools 的 SW 控制台，那是工具缺口，不是我可以填的空格",
+  "posture": "所以本收据给的是**层位**（哪一段负责），不给**错误原因**（为什么抛）—— 后者我没量到就不写"
+ },
+ "for_the_ruling": {
+  "layer_to_act_on": "按读数，该动的是**生成 worker 的 install/eval 那一段**；不是壳层重定向，也不是部署根",
+  "root_slash_allowlist": "维持指挥官的提醒：`navigateFallbackAllowlist [/^\\/(?:v8|index)/]` 不含裸根 \"/\" —— 本收据**不立案为缺陷**，只与 install 读数一并交上，等仲裁判它是不是故意的",
+  "cold_never_visited_device": "产品内任何一层都救不了（什么都没装就没有可拦截的东西）；它和 B 不是同一个修法，也不是 0263 的同族"
+ }
+}
