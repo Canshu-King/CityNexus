@@ -9,7 +9,7 @@
    "verdict": "MET"
   },
   "2_single_truth": {
-   "DEMO_ACCESSIBILITY_EVIDENCE_hits_in_app": "138",
+   "DEMO_ACCESSIBILITY_EVIDENCE_files_with_nonzero_hits_in_app": "0",
    "write_sites_of_accessibility_evidence": 1,
    "write_sites_of_bare_accessibility_key": 0,
    "capabilities_py_diff_lines": 0,
