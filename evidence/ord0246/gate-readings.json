@@ -1,7 +1,7 @@
 {
   "generatedBy": "e345b9d6",
   "order": "ORD-0246",
-  "at": "2026-09-23T05:00:57.306Z",
+  "at": "2026-09-23T05:13:54.224Z",
   "judgingCriterion": "同一 tick 两击 ⇒ 1 POST / 1 行（行数由服务器自己的 GET agent-feed 数出，不是我另开一个 sqlite 句柄）",
   "missionEvent": "agent.mission.created",
   "sabotageStatuses": [
@@ -12,13 +12,13 @@
   "readings": [
     {
       "node": "ord0246-1",
-      "journeyId": "1b70dd6e-663b-4040-bbd1-153c9d913483",
+      "journeyId": "03dcc000-f185-4223-a129-b11faecb6af6",
       "action": "same_tick_pair",
       "posts": 1,
       "rowsBefore": 0,
       "rowsAfter": 1,
       "newRowIds": [
-        "8958bdd6-4696-4748-874d-342435468033"
+        "54497ab8-b2f0-44ee-969e-46457a23bbf4"
       ],
       "buttonDisabled": {
         "before": false,
@@ -30,7 +30,7 @@
     },
     {
       "node": "ord0246-2",
-      "journeyId": "1b70dd6e-663b-4040-bbd1-153c9d913483",
+      "journeyId": "03dcc000-f185-4223-a129-b11faecb6af6",
       "action": "click, settle, click, settle, then dblclick({delay:60})",
       "posts": 4,
       "rows": {
@@ -39,14 +39,14 @@
         "after": 3,
         "bracket": 5
       },
-      "runLatencyMs": 99,
+      "runLatencyMs": 108,
       "realDoubleTapRows": 2,
       "residual": "RESIDUAL_FAST_RUN_DOUBLE_TAP: a 60 ms real double tap created realDoubleTapRows run(s); a re-entry guard only covers clicks that arrive while a run is in flight, so this needs a coalescing window or a per-command idempotency key, which ORD-0246 does not ask for.",
       "secondActionStatus": "BLOCKED:CATALOG_EMPTY"
     },
     {
       "node": "ord0246-3",
-      "journeyId": "1b70dd6e-663b-4040-bbd1-153c9d913483",
+      "journeyId": "03dcc000-f185-4223-a129-b11faecb6af6",
       "posts": 1,
       "rowsCreated": 1,
       "resultStatus": "BLOCKED:CATALOG_EMPTY",
