@@ -1,0 +1,697 @@
+{
+ "at": "2026-09-23T11:16:34+08:00",
+ "discipline_header": {
+  "repo": "D:/moodle/_qoder_integration_20260919",
+  "tree_label": "live_line",
+  "head": "a1cc0c1d19148c97e7a7c9a27c292f07600a2835",
+  "head_short": "a1cc0c1",
+  "worktree_dirty_for_this_file": false,
+  "capability_file_bytes": 75980,
+  "capability_file_sha256_16": "cb0e24c14fa7ad73",
+  "capability_states": [
+   "CAPABILITY_STATES = (\"READY\", \"HYDRATABLE\", \"UNKNOWN_RETRYABLE\", \"UNAVAILABLE\")"
+  ],
+  "run_shape": "in-process TestClient GET, one disposable seeded store, resolver=off",
+  "command": "python lab/tools/harness_ord0239_alias_dedupe.py --tree live_line --repo D:/moodle/_qoder_integration_20260919 --out evidence/ord0239_alias_live.json",
+  "collected": "36 spellings over 14 cities",
+  "environment_contract": {
+   "CITYNEXUS_ENV": "test",
+   "CITYNEXUS_AI_ENABLED": "false",
+   "CITYNEXUS_DEMO_MODE": "false",
+   "CITYNEXUS_GUARDIAN_AUTORUN": "false",
+   "DEEPSEEK_API_KEY": "",
+   "CITYNEXUS_AI_API_KEY": "",
+   "CITYNEXUS_ANYWHERE_RESOLVER": "off",
+   "CITYNEXUS_PHOTON_BASE_URL": "http://127.0.0.1:9 (tripwire; must never be dialled)"
+  },
+  "cross_shape_rule": "a difference measured under a different run shape is NOT_COMPARABLE_AS_REGRESSION_DELTA"
+ },
+ "rows": [
+  {
+   "advertised_slug": "XIAMEN",
+   "spelling_sent": "厦门",
+   "http": 200,
+   "raw_canonical_field": "CN-XIAMEN",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "XIAMEN",
+   "spelling_sent": "CN-XIAMEN",
+   "http": 200,
+   "raw_canonical_field": "CN-XIAMEN",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "BEIJING",
+   "spelling_sent": "北京",
+   "http": 200,
+   "raw_canonical_field": "CN-BEIJING",
+   "destination_state": "RESOLVED",
+   "resolution_method": "catalog",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 8,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "BEIJING",
+   "spelling_sent": "CN-BEIJING",
+   "http": 200,
+   "raw_canonical_field": "CN-BEIJING",
+   "destination_state": "RESOLVED",
+   "resolution_method": "catalog",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 8,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 8
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "SHANGHAI",
+   "spelling_sent": "上海",
+   "http": 200,
+   "raw_canonical_field": "CN-SHANGHAI",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "SHANGHAI",
+   "spelling_sent": "CN-SHANGHAI",
+   "http": 200,
+   "raw_canonical_field": "CN-SHANGHAI",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "TIANJIN",
+   "spelling_sent": "天津",
+   "http": 200,
+   "raw_canonical_field": "CN-TIANJIN",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "TIANJIN",
+   "spelling_sent": "CN-TIANJIN",
+   "http": 200,
+   "raw_canonical_field": "CN-TIANJIN",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "FUZHOU",
+   "spelling_sent": "福州",
+   "http": 200,
+   "raw_canonical_field": null,
+   "destination_state": "NO_MATCH",
+   "resolution_method": "unresolved",
+   "capability": "UNAVAILABLE",
+   "reason": "NO_CANONICAL_IDENTITY",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": false
+  },
+  {
+   "advertised_slug": "FUZHOU",
+   "spelling_sent": "CN-FUZHOU",
+   "http": 200,
+   "raw_canonical_field": null,
+   "destination_state": "NO_MATCH",
+   "resolution_method": "unresolved",
+   "capability": "UNAVAILABLE",
+   "reason": "NO_CANONICAL_IDENTITY",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": false
+  },
+  {
+   "advertised_slug": "GUANGZHOU",
+   "spelling_sent": "广州",
+   "http": 200,
+   "raw_canonical_field": "CN-GUANGZHOU",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "GUANGZHOU",
+   "spelling_sent": "CN-GUANGZHOU",
+   "http": 200,
+   "raw_canonical_field": "CN-GUANGZHOU",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "SHENZHEN",
+   "spelling_sent": "深圳",
+   "http": 200,
+   "raw_canonical_field": "CN-SHENZHEN",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "SHENZHEN",
+   "spelling_sent": "CN-SHENZHEN",
+   "http": 200,
+   "raw_canonical_field": "CN-SHENZHEN",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "CHENGDU",
+   "spelling_sent": "成都",
+   "http": 200,
+   "raw_canonical_field": "CN-CHENGDU",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "CHENGDU",
+   "spelling_sent": "CN-CHENGDU",
+   "http": 200,
+   "raw_canonical_field": "CN-CHENGDU",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "HANGZHOU",
+   "spelling_sent": "杭州",
+   "http": 200,
+   "raw_canonical_field": "CN-HANGZHOU",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "HANGZHOU",
+   "spelling_sent": "CN-HANGZHOU",
+   "http": 200,
+   "raw_canonical_field": "CN-HANGZHOU",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "TOKYO",
+   "spelling_sent": "东京",
+   "http": 200,
+   "raw_canonical_field": null,
+   "destination_state": "NO_MATCH",
+   "resolution_method": "unresolved",
+   "capability": "UNAVAILABLE",
+   "reason": "NO_CANONICAL_IDENTITY",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": false
+  },
+  {
+   "advertised_slug": "TOKYO",
+   "spelling_sent": "CN-TOKYO",
+   "http": 200,
+   "raw_canonical_field": null,
+   "destination_state": "NO_MATCH",
+   "resolution_method": "unresolved",
+   "capability": "UNAVAILABLE",
+   "reason": "NO_CANONICAL_IDENTITY",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": false
+  },
+  {
+   "advertised_slug": "SINGAPORE",
+   "spelling_sent": "新加坡",
+   "http": 200,
+   "raw_canonical_field": null,
+   "destination_state": "NO_MATCH",
+   "resolution_method": "unresolved",
+   "capability": "UNAVAILABLE",
+   "reason": "NO_CANONICAL_IDENTITY",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": false
+  },
+  {
+   "advertised_slug": "SINGAPORE",
+   "spelling_sent": "CN-SINGAPORE",
+   "http": 200,
+   "raw_canonical_field": null,
+   "destination_state": "NO_MATCH",
+   "resolution_method": "unresolved",
+   "capability": "UNAVAILABLE",
+   "reason": "NO_CANONICAL_IDENTITY",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": false
+  },
+  {
+   "advertised_slug": "SUZHOU",
+   "spelling_sent": "苏州",
+   "http": 200,
+   "raw_canonical_field": "CN-SUZHOU",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "SUZHOU",
+   "spelling_sent": "CN-SUZHOU",
+   "http": 200,
+   "raw_canonical_field": "CN-SUZHOU",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "SUZHOU",
+   "spelling_sent": "CN-苏州",
+   "http": 200,
+   "raw_canonical_field": null,
+   "destination_state": "NO_MATCH",
+   "resolution_method": "unresolved",
+   "capability": "UNAVAILABLE",
+   "reason": "NO_CANONICAL_IDENTITY",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": false
+  },
+  {
+   "advertised_slug": "SUZHOU",
+   "spelling_sent": "suzhou",
+   "http": 200,
+   "raw_canonical_field": "CN-SUZHOU",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "WUHAN",
+   "spelling_sent": "武汉",
+   "http": 200,
+   "raw_canonical_field": "CN-WUHAN",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "WUHAN",
+   "spelling_sent": "CN-WUHAN",
+   "http": 200,
+   "raw_canonical_field": "CN-WUHAN",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "WUHAN",
+   "spelling_sent": "CN-武汉",
+   "http": 200,
+   "raw_canonical_field": null,
+   "destination_state": "NO_MATCH",
+   "resolution_method": "unresolved",
+   "capability": "UNAVAILABLE",
+   "reason": "NO_CANONICAL_IDENTITY",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": false
+  },
+  {
+   "advertised_slug": "WUHAN",
+   "spelling_sent": "wuhan",
+   "http": 200,
+   "raw_canonical_field": "CN-WUHAN",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "KUNMING",
+   "spelling_sent": "昆明",
+   "http": 200,
+   "raw_canonical_field": "CN-KUNMING",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "KUNMING",
+   "spelling_sent": "CN-KUNMING",
+   "http": 200,
+   "raw_canonical_field": "CN-KUNMING",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "KUNMING",
+   "spelling_sent": "CN-昆明",
+   "http": 200,
+   "raw_canonical_field": null,
+   "destination_state": "NO_MATCH",
+   "resolution_method": "unresolved",
+   "capability": "UNAVAILABLE",
+   "reason": "NO_CANONICAL_IDENTITY",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": false
+  },
+  {
+   "advertised_slug": "KUNMING",
+   "spelling_sent": "kunming",
+   "http": 200,
+   "raw_canonical_field": "CN-KUNMING",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "SUZHOU",
+   "spelling_sent": "CN-SUZHOU",
+   "http": 200,
+   "raw_canonical_field": "CN-SUZHOU",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  },
+  {
+   "advertised_slug": "SUZHOU",
+   "spelling_sent": "苏州",
+   "http": 200,
+   "raw_canonical_field": "CN-SUZHOU",
+   "destination_state": "RESOLVED",
+   "resolution_method": "vocabulary",
+   "capability": "HYDRATABLE",
+   "reason": "COVERAGE_INCOMPLETE",
+   "place_count": 0,
+   "places_endpoint": {
+    "http": 200,
+    "rows_returned": 0
+   },
+   "is_real_identity": true
+  }
+ ],
+ "counts": {
+  "spellings_probed": 36,
+  "raw_rows_if_not_deduped": 36,
+  "distinct_cities_after_canonicalize": 14,
+  "cities_with_a_real_canonical": [
+   "BEIJING",
+   "CHENGDU",
+   "GUANGZHOU",
+   "HANGZHOU",
+   "KUNMING",
+   "SHANGHAI",
+   "SHENZHEN",
+   "SUZHOU",
+   "TIANJIN",
+   "WUHAN",
+   "XIAMEN"
+  ],
+  "cities_without_identity": [
+   "FUZHOU",
+   "SINGAPORE",
+   "TOKYO"
+  ],
+  "aliases_collapsing_to_one_identity": {
+   "SUZHOU": [
+    "<NO-IDENTITY>",
+    "CN-SUZHOU"
+   ],
+   "WUHAN": [
+    "<NO-IDENTITY>",
+    "CN-WUHAN"
+   ],
+   "KUNMING": [
+    "<NO-IDENTITY>",
+    "CN-KUNMING"
+   ]
+  },
+  "one_identity_shared_by_two_cities": {},
+  "place_rows_grouped_by_canonical": {
+   "CN-XIAMEN": [
+    0
+   ],
+   "CN-BEIJING": [
+    0,
+    8
+   ],
+   "CN-SHANGHAI": [
+    0
+   ],
+   "CN-TIANJIN": [
+    0
+   ],
+   "<NO-IDENTITY>": [
+    0
+   ],
+   "CN-GUANGZHOU": [
+    0
+   ],
+   "CN-SHENZHEN": [
+    0
+   ],
+   "CN-CHENGDU": [
+    0
+   ],
+   "CN-HANGZHOU": [
+    0
+   ],
+   "CN-SUZHOU": [
+    0
+   ],
+   "CN-WUHAN": [
+    0
+   ],
+   "CN-KUNMING": [
+    0
+   ]
+  },
+  "spellings_that_are_not_identities": [
+   "CN-FUZHOU",
+   "CN-SINGAPORE",
+   "CN-TOKYO",
+   "CN-昆明",
+   "CN-武汉",
+   "CN-苏州",
+   "东京",
+   "新加坡",
+   "福州"
+  ]
+ },
+ "demo_reset_issued": false,
+ "write_connection_opened_to_any_real_store": false
+}
