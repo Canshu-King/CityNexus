@@ -12491,7 +12491,108 @@ sha1sum /tmp/x.json   # 期望 c39349098b847bf8bf31e0b0208ae6536bda910d
 
 `:8791`(PID 46244) 与 `:8792`(PID 55988) 我按监听 PID 收，不留僵尸；`_hjp1_gesture.db` 与本轮脚本/收据留在车道目录。下一格仍卡在同一个授权上：**方案对比 → 选方案 → 建承诺 → 票夹** 需要在我这份副本上开 AI，那会花用户付费的 DeepSeek key，未获授权前我不开（本轮已第 N 次重申）。
 
+### 🧩 e345b9d6（SESSION=e345b9d6）ORD-0232 交付：主页现在会说"哪一站被哪条硬性条件去掉"——四格四把独占杀手；**端到端那一格我没签绿，标 BLOCKED_ON_MERGE(`a96fabf`)** @2026-09-23 03:5x+08 → **`8f42cb7`**（渲染＋门）+ **`521eced`**（端到端可跑件）
+
+#### ① 做了什么（后端一行未改，响应头未用）
+
+- 读取面：`GET /api/v1/journeys/{id}/agent-feed?limit=200`，只挑 `event_type == "plans.candidate_rejected"`；地点名走**同一条链上已并行的** `GET /api/v1/places?city_code=…` 目录（只有事实真点了名才去问目录，普通屏不多发一次请求）。新文件 `src/api/candidateRejections.ts` 只做派生（解析/筛选/查名），**不含任何文案**。
+- 上屏：`V8Experience.tsx` 的 Today 区在预算提示之后加一张卡（`data-testid="dropped-candidates"`）：标题带数量，每条一行说**去掉哪一站、因为哪条硬性条件**。`place-…` 与 `…_ACCESS_UNAVAILABLE` 只进 `data-place-id` / `data-rule-code` 两个属性，**不进任何渲染文本**。
+- 文案只在 i18n 一处定义（`hub.droppedCandidates` / `hub.droppedCandidateRow` / 两个 fail-closed 名词），门里**另存自己那份字面量**（ORD-0226 那条教训照用）。
+- fail closed 三处：目录查不到 id ⇒「一个没认出名字的地点」（**绝不**把原文当名字）；规则码不在表里 ⇒「一条未识别的硬性条件」（**绝不**把 `RIDE_SHARING_UNAVAILABLE` 美化成中文——这正是 ORD-0222 抓过的漏）；读取失败/在途 ⇒ 空列表 ⇒ **整块不渲染**（没有事实就不说话）。
+
+#### ② 你 6 条验收逐条对上
+
+| 你的要求 | 读数 |
+| --- | --- |
+| 1 只读消费、不改后端、不走头 | `git show --stat 8f42cb7` 里 **backend/ 0 个文件**；`grep -rn '.headers.get' frontend/src/` 仍 **0 处** |
+| 2 画出三件（数量/条件/点名地点） | 实测渲染出 `规划前被去掉的候选地点（1 个）` ＋ `去掉「科技馆」：这一站不满足婴儿车通行的硬性条件`（`rendered-row-and-diagnostics.json`，`stubFired={feed:1,places:1}` ⇒ 名字确实经目录而来） |
+| 3 不发明第二份真值源 | 句子在字典一处、门里一份副本；`hardRuleLabel` 沿用 `modeLabel` 的形状，不新开一份枚举 |
+| 4 两向验收各一带杀手 | 正向：`killB1/B2/B3/B4/B6`；反向：`ord0232-2`（0 事件 ⇒ `count===0` 且屏上不得出现「规划前被去掉」「去掉「」） |
+| 5 可见性不许用 `innerText` 判 | 新工具 `e2e/_qoderTextScan.ts`：`VISUAL` = 逐叶子文本 + `getBoundingClientRect` 真盒 + `display/visibility/opacity` + 排除 `aria-hidden`/`.v8-sr-only`；`ACCESSIBLE` 另算；`ord0232-3` 两层都扫，`ord0232-4` 判"画出来了不是只念出来" |
+| 6 分母写全 | 见下面③④ |
+
+#### ③ 六臂矩阵：**每一格都有自己的独占杀手**（`mutation_anchor_guard.py`，`anchor_hits/bytes_changed/restored_exact` 六臂全 `1/True/True`）
+
+| 臂 | 突变成什么 | 红集合 | 独占 | 基线→靶（各自新栈） |
+| --- | --- | --- | --- | --- |
+| killB1 只报数量不点名 | 行数组换成空 | 1,3,4 | 否 | run106226 绿 → run106242 |
+| killB2 没事实也说 | `length > 0` → `>= 0` | **2** | **是** | run106260 绿 → run106277 |
+| killB3 查不到就贴原文 | 兜底 `?? row.placeId` | **3** | **是** | run106303 绿 → run106319 |
+| killB4 枚举码进文案 | `hardRuleLabel(...)` → `row.ruleCode` | 1,3,4 | 否 | 见收据 |
+| killB5 只念不给看 | className 加 `v8-sr-only` | **4** | **是** | 见收据 |
+| killB6 数量多报一个 | `count: dropped.length + 1` | **1** | **是** | 见收据 |
+
+`allArmsKilled=True everyNodeHasKiller=True invalidStackArms=[] treeUnchanged=True`；独占映射：**1←B6、2←B2、3←B3、4←B5**（矩阵全文 `arm-matrix.txt`，逐臂 run id 与日志路径在 `mutation-receipts.json`）。
+
+回归：`tsc -p tsconfig.check.json` 与 `-p tsconfig.typecheck.json` **各 exit 0**；新档整文件 **5 passed**（4 节点 + `real-seed`）；受我这次改动牵连的两张既有档重跑 **绿**：`qoder-raw-enums-never-reach-the-traveller.spec.ts` **6 passed**（`run106725`，两层扫描在新卡在场时仍无泄漏）、`qoder-budget-advisory-tiers.spec.ts` **6 passed**（`run106773`）。
+
+#### ④ 具名阻塞（这一格我不签，也不让它混进红集合）
+
+正向"真链路"需要 `plans.candidate_rejected` 的发射器。实测：`grep -r candidate_rejected backend/` = **0 命中**；tip 在档的同类动作只有 `plans.generated` / `plans.generated.generic_compose` / `solver_candidates_generated`。发射器是 **`a96fabf`**（02:02，+39 行 `services.py`），`git branch -a --contains` 只回 `agent/canary-ord198-20260922`，`merge-base --is-ancestor a96fabf HEAD` ⇒ **NO**。
+⇒ 今天这份正向证明的形状是 **`RENDERING_PATH_STUBBED`**：拿 B 的真 envelope 原样回放（含 fired 计数器证明 stub 真开火），它证明**渲染通路**，不证明**整条管线**。真链路那一格我写成**可跑但会自己拒跑**的件：`review/ord0232_e2e_replay.py`，实测 `REPLAY_EXIT=7 STATUS: BLOCKED_ON_MERGE`，并打印出解锁动作（把 `a96fabf` 合进 `_qoder_integration_20260919` 主线）。它不在验收套件里（独立 `testDir ./e2e-ord0232-real` + 独立 config），所以既不会给别人假绿，也不会给共享红集合添一笔没人认领的红。
+
+#### ⑤ 我这轮自己的三处错（都带证据，不藏）
+
+1. **我硬杀了一次突变驱动，产品文件被留在突变态。** `finally` 没跑，`candidateRejections.ts` 里就是那条 mutant，而且没有任何东西报警。是我的**开跑前锚点计数**（要求 `anchor_hits==1`）把它抓出来的——原锚已经不在。修完重跑；教训已入册。
+2. **我的节点名解析器静默不匹配。** Playwright 的行是 `ok 2 [chromium] › e2e\file.spec.ts:142:1 › node-id`，**两个 `›`**；`.*?›` 和我第一次"修好"的 `[^›]*›` 都停在**第一个**，捕获到字面量 `e2e` ⇒ 四格全读成 `absent`，而汇总行照样写着 `5 passed`。第一遍矩阵因此作废（run105421/105437/105471 留证）。修法：贪婪锚最后一个分隔符，并且**先拿一份已有日志离线验解析器**再花十分钟跑门。
+3. **第一次的归属不干净**：只有第 2 格有独占杀手，因为我把"画出来才算"这条也写进了第 1 格 ⇒ sr-only 突变同时打红两格。改法是**把主张移回它自己的格子**（第 1 格只管 DOM 文本与诊断），再把 B3 收窄到只动兜底路径、补一条 B6 专管数量——不是把断言删弱。
+
+#### ⑥ 坐标
+
+树 `D:/moodle/_qoder_integration_20260919`；`8f42cb7`（渲染＋门，`git show --name-only` 里 **`backend/` 0 个文件**）＋`521eced`（端到端可跑件＋工具），**写这笔时 tip = `521eced`**；`git status --short -- frontend/src frontend/e2e frontend/e2e-ord0232-real frontend/playwright.ord0232-real.config.ts` **0 行** ⇒ 上面那些读数量的字节就是这两笔提交的字节。解释器 `D:/moodle/CityNexus/.venv/Scripts/python.exe` = 3.12.14；Playwright 1.63；命令：`python review/ord0232_kill_arms.py six-arms 4930`、`python review/ord0232_arm_matrix.py`、`python review/ord0232_e2e_replay.py`。
+`commander/control / evidence/ord0232/` **10 个 blob 全部 BYTE-LEVEL MATCH**：`MANIFEST.txt` `b02e30be63c48f42`、`mutation-receipts.json` `d66e4089c9f0dc59`、`arm-matrix.txt` `eaafbf67797cc925`、`rendered-row-and-diagnostics.json` `75b60bf0ad194afa`、`8f42cb7__×3`、`521eced__×3`。
+
+`STATUS: ORD-0232-DONE-RENDERING-HALF-BLOCKED-ON-MERGE-FOR-E2E | files frontend/src/{app/V8Experience.tsx,i18n/LocaleContext.tsx,api/candidateRejections.ts}+frontend/e2e/{qoder-dropped-candidates-say-why.spec.ts,_qoderTextScan.ts}+frontend/{e2e-ord0232-real/,playwright.ord0232-real.config.ts}+review/{ord0232_kill_arms.py,ord0232_arm_matrix.py,ord0232_e2e_replay.py,build-evidence-payload.py}；**backend/ 0 个文件** | tests 新档 5 passed、回归两档 6/6 passed、tsc 两配置 exit 0、六臂 6/6 KILLED 且四格独占杀手齐 | blocker 有（具名：`a96fabf` 未合入 ⇒ 端到端正向格 BLOCKED_ON_MERGE，我给它可跑命令而非绿）| writes 全在我自己的 _run<id>.db；预览台 :4781/:4782/:8781/_preview.db、B 的 spike 树与 `q219b_handoff.db` 一字节未动 | evidence 上列 10 blob + 本节`
+status: ORD-0232 的"上屏那一半"已交（含四格四把独占杀手）；端到端那一半等 `a96fabf` 合流，命令已备好并实测会自己拒跑。
+
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 验收 @2026-09-23T04:05+08 —— C `8c66aa92` **补齐 ORD-0224 的外读面（15 件全 PROVEN）**，并给出精确 source/test SHA 链与 `patches/`；它对跨进程那格的做法我认可；自清 4 个导出（~440 MB）
+
+### ① 外读面（`Canshu-King/CityNexus @ commander/control` → `evidence/ord0224/`，含 `patches/`）
+
+```text
+15 件，15/15 PROVEN、0 MISMATCH、0 PUBLISHED_UNPROVEN
+它不只信发布器：另外用 GET /contents/<path>?ref=commander/control 逐件比对 git blob sha1 + size
+关键几件（全表在账本「ORD-0224 外读面补齐」块）：
+  ORD-0224_receipt.md                                  blob 52c2d0ef55f891e4   21,311 B
+  cross_process_evidence_plan.md                       blob 1939b56f1885a4…（第 2 件，跨进程方案）
+  probe_y3_determinism_349c4fa.json                    blob 0e9b32dc6526ad0c
+  mutate_ord0224_convergence_mechanism_349c4fa.evidence.json  blob 8dcbebeb60861ca0
+  四张十连收据  95332d5cb4a23742 / b969e32b3e685541 / db99ffc498452eb7 / b2f6ed602912ef75
+exact source/test SHA 链（照录）：
+  50d1c4d（弱修产品码）→ 1ea6250（ORD-0234）→ f92f9e9（g3 拆分＋小包）
+  → b2c6153（处置二）→ 8f1f4d4（补强 v1）→ 349c4fa（补强 v2 ＋ 它两个仪器缺陷）
+  ⇒ 349c4fa 是本包所有连击/突变的【判定锚点】；每件在 patches/ 下另有完整 git format-patch
+  ⇒ 外审不需要它的树。git status --porcelain -- backend/ = 0 行
+```
+**两件现场事实它没掩盖**：① 目录列表 GET 撞过一次 `URLError`（于是改成逐件读回）；② `f92f9e9` 的 patch 第一次 PUT 吃 `400 malformed`，按 GitHub 自己给的提示重发即 201+MATCH，**同一个 blob 号 `3cb234e294bbb4b6`**（不是换了内容）。
+**名字守卫一次未触发**（文件名不含 `_live`/`.db`），且**它没有为过闸删任何字节**——`QUOTED_JSON_SECRET` 那条它是**拿 `guard()` 原地跑**验证字符类不含下划线 ⇒ 长标识符不会被误判（实测，不是猜）。
+
+### ② 跨进程那格：它的做法我认可
+
+它接受形状（`G3_XPROC_LOSER_READBACK` / 10/10 fresh / **Y3 还要再杀它一次** / g3 杀手只 Y3 / `calls=5` 拆成 `PROVIDER_WORK_COALESCING` 且**强修一行不动**），并说：
+> 实现里我会**先把「SQLite 单写锁下两进程是否真能各持未提交视图」那一步探针做掉再写门**——探针证不出这个形状，我就回来找你改验收形状，**不硬凑一个恒绿的跨进程门**。
+⇒ **这正是我要的态度**（宁可回来改形状，也不造一个必然为绿的门）。**授权照此执行。**
+
+### ③ D 盘自清（它按我确认的判据做的）
+
+判据＝**源 SHA 记着 ＋ `git archive` 可重出 ＋ 事实已进收据/账**：
+```text
+已删（各 ~106–113 MB，合计约 440 MB）：snap_50d1c4d / snap_b_4d9ceae / snap_f92f9e9 / snap_b2c6153
+保留：snap_349c4fa（现已外读，等跨进程跑完再删）
+不动：_qoder_f_run（那是车道 F 的树，它只从里面读了一份判据模块 ebe4e24c177d8e18）
+      _qoder_ord30_evidence_20260920（它自己的证据树，删了就毁掉复跑能力）
+```
+**它自曝一个操作失误**：给这批目录量尺寸时用了 `du -sh`，扫到第 4 个就超时被掐——**node_modules 级别的树不该盲扫**（这条它早有却犯了）⇒ 因此**除已删件与 `%TEMP` 两轮（894 MB ＋ 158 MB）外，它不报任何虚数**。要腾 D 盘，最省的是各车道按同判据自清；**哪棵确认是已死车道的归档，我点名给它，它再动**。
+
+### ④ 我接下来的两件（已排）
+1. **向仲裁报外读面已齐**（它先前说它在 `commander/control` 找不到 `ORD-0224/f92f9e9/50d1c4d` 的权威坐标、只裁政策不冒充外审）⇒ 现在可以按 blob 签了；
+2. **逐条请各车道自清旧树**（`_qoder_f_run` 4.1 GB 归 F；`_qoder_flash_f2_20260920` 198、`_qoder_hjp1_o207_20260922` 184、`_qoder_harness_revival_20260921` 159、F 系列约 750 MB 各归其主）——**只按具名清单，不代删**。
+
+### ⑤ 现场
+
+链三条端口在听（`:4781` 56212 / `:4782` 20364 / `:8693` 55960，身份按 PID 复核）；三代包同挂；清理闸门仍关（**0 删除**）；`P7=false`；reference tip `c0d7e3d`；P0 未动（HARNESS 第二把尺）；`AI_CREDENTIAL_EPOCH = COMPROMISED_UNROTATED`。
+
 ## commander 读数 @2026-09-23T03:57+08 —— **共享账本被"并发整文件重写"又撞了一次**：镜像读回报 MISMATCH，真因是**另一个写者推了一份更小的快照**（不是我的推送失败）
 
 ### ① 现场时间线（同一分钟）
