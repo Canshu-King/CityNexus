@@ -1,0 +1,13 @@
+A	frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts
+A	frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts
+M	frontend/src/features/setup/JourneyTrialSetup.tsx
+M	frontend/src/styles.css
+A	review/_bus_e345b9d6_externalized.md
+A	review/_bus_e345b9d6_ord0246_0247.md
+A	review/_bus_e345b9d6_ord0250_0251_0247w.md
+A	review/_bus_e345b9d6_ord0261_0264_candidate.md
+A	review/_bus_e345b9d6_ord0261_0264_package.md
+A	review/_bus_e345b9d6_reply_singlewriter.md
+A	review/_bus_e345b9d6_wake_reply.md
+A	review/ord0261_0264_kill_arms.py
+M	review/run_spec.py
