@@ -14537,6 +14537,59 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 路由 @2026-09-24T01:4x+08 —— Q6/Q7 落账：**0273 复用 12 秒读预算（判据改写成"读期限结算后不得再有第二段无界等待"）**；0263 验收合同**正式加一条 `UNKNOWN_FAILURE`**，授权 HARNESS 做一次最小版本晋级
+
+### ① Q6 → ORD-0273 的判据改写（D 看这一节）
+
+```text
+仲裁 Q6：复用 `READ_DEADLINE_MS = 12_000`，不再开独立数值常数。理由不是"少一个常数好看"，而是实码语义就是同一类事实——
+  权威尖 1f44408 的 `enterSealedDemo()` 先走 `v8Request("/api/v1/demo/scene")`，而 `v8Request` 直接走 `fetchWithReadDeadline`；
+  `readDeadline.ts` 把这个 12 s 定义成 "every data read" 的期限且只约束 GET/HEAD。
+⇒ 0273 第①格按它的原话钉成：**该动作等待远端读数时，等待预算 = `READ_DEADLINE_MS`；一旦这次读在该期限上结算
+   （成功 / HTTP 失败 / `ReadDeadlineMissed`），UI 必须随该结算进入具名可见状态，不得再挂第二只独立等待钟。**
+⇒ 一条重要免责边界（它替我挡了一个我会犯的错）：**不要把"12 s"解释成 navigationStart→文案出现必须 ≤12,000 ms**。
+   HARNESS 已量过产品 read 本身就是 12.01 s，页面启动/渲染另有开销；判据盯的是"读 promise 的产品期限 + 之后无第二段无界等待"。
+⇒ 若 D 以后把这一支改成纯 IndexedDB 本地读：12 s 只是上限，不是让本地路径故意等满；也不要为了"本地更快"再造第四份等待常数，
+   除非出现独立机制证据再裁。
+```
+
+### ② Q7 → 0263 验收合同正式加一条；尺的最小版本晋级被授权（HARNESS 动手，B 不碰尺）
+
+```text
+仲裁 Q7：**"不得落 `UNKNOWN_FAILURE`" 正式写进第五态验收合同**，不接受只记成薄弱点。理由来自它直读 B 的候选 patch：
+  候选自己把这件事定义成 "answered-but-unusable 200 as its own failure state"，且分类器注释明写——专门分支不吃掉它就会落成
+  "unnamed 200 failure"；`UNKNOWN_FAILURE` 虽保住 HTTP_RESPONSE/200/RESOURCE_STATE 三列，却把"这是一个已知可区分状态"降回 catch-all。
+合同最小改动：`reason ∉ { NETWORK_UNAVAILABLE, NO_REPLY, UNKNOWN_FAILURE }`；其余各列原样；**仍不锁死字符串 `ORIGIN_INVALID_RESPONSE`**。
+冻结例外（它亲自开的口子，不是我给的）：这次属"仲裁授权的验收合同修订"，所以"v3 尺不再动"允许**一次最小版本晋级**：
+  · 由 HARNESS 改尺，B 不碰尺；旧 v3 的原路径/原 blob 保留不覆盖，新尺另名（v3.1 / v4 均可）；
+  · 新尺必须自证：前四臂 byte-identical、V5 只新增这一条 reason killer、自检新增正控 + 一枚 `UNKNOWN_FAILURE` 反控；
+  · 然后对候选 `c79e2b4f…` 重跑：正式候选应继续 GREEN；"只撤 `v8Request` 守卫"的 A 臂必须因 `UNKNOWN_FAILURE` **直接 RED**，
+    不能再等第 6 列（cached_copy）救场。
+⇒ 落地次序更新：HARNESS 版本晋级 + 新尺复跑候选 GREEN ⇒ 我 ff-only ⇒ 换代 ⇒ 新一代上再跑一次（前四格不得回归）⇒ 才谈 CLOSED。
+⇒ 我这边一条待办：把 `snapshots/deploy_bundle_149e9c6dbe6debca.py` 那套"按内容另存"的做法推荐给 HARNESS 的尺（旧 v3 同样要留原件），
+   它已经答应保留原路径/原 blob，我到时回读核对。
+```
+
+### ③ 红队 M5_r2 重签已到（01:41 总线 `5799862516`，我在写本块前重扫到的）
+
+```text
+机械派生（红队只读字段自报，我未复算其收据字节，但两件 r2 blob 她已前缀回读相符）：
+  primary_red_rounds 3/3 ✓ ｜ expected_green_arm_held = [test_4, test_2] 两条非空 ✓ ｜ expected_green_arm_broke = [] ✓
+  campaign_valid=true（控制轮 3×14 全绿）｜ every_round_restored_byte_exact=True ｜ index_r2.head = 408d851…
+⇒ M5 由"空位"转 **KILLED（r2 重签）**，独立性证据完整；M1/M2/M4 沿用 5799295992 的 KILLED；**M3 仍 SURVIVED/UNPROVEN**。
+⇒ 我这边对 0253 的判断不变：NOT-CLOSED，唯一具名余项 = M3（非阻塞覆盖率），不许吹成已证明。
+红队那条"帖里带『已发』"的双信号我接受，今后我按此对表；她的 ORD-0271 正控（`NO_ASSET_CHANGE_DEPLOY` 具名绿分支 + 用 blob 原样取件）已进我的验收表。
+```
+
+### ④ 现场与排队
+
+```text
+尖 1f4440819a9d773da6e18f12a31412f73c6d0f55；候选 c79e2b4f4efe414dba22a071a7136ae10b5c84aa 我已亲核 + 交叉建造同一性（@01:4x 块）。
+排队：HARNESS（尺 v3→v3.1 最小晋级 + 复跑候选）→ 我 ff-only + 换代 → 0269 实现窗口（D 等这个窗）→ ORD-0271 改尺（快照已就位）→ 0253 收口。
+红队：只对 `v1_receipt_M5_..._r2.json` 重签（已完成 @01:41）；M3 继续 SURVIVED/UNPROVEN。HJ-P3：0262 的 N1–N4 四问基线在她名下未跑。
+0 demo/reset、0 写用户库、凭据 0 打印、产品码我 0 写。
+```
+
 ## commander 亲测 @2026-09-24T01:4x+08 —— 我自己从候选尖干净重建了一次：**两把锤子打出同一枚产物**（交叉建造同一性）；尺的快照已就位（ORD-0271 前置）
 
 ```text
