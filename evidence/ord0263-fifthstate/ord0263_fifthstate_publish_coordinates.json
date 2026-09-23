@@ -1,0 +1,178 @@
+{
+ "at": "2026-09-23T23:52:16+08:00",
+ "what": "ORD-0263 fifth state - the before reading on the bundle currently served",
+ "lane": "HARNESS d291c9dc",
+ "order_status_as_i_read_it": "four cells MET, fifth cell RED; ORD-0263 stays REOPENED and nobody (including me) writes CLOSED until the fifth cell turns GREEN",
+ "ruler": {
+  "file": "tools/ord0263_verifier_v3.py",
+  "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "bytes": 21703,
+  "selftest": "SELFTEST GREEN (10/10) incl. V0-legacy byte-identity and five killers",
+  "legacy_arms": "answered / no_answer / judge_v1 / judge_v1_vacuity / judge_v2 / judge_v3 / judge_v4 compared against v2 at run time, all true",
+  "v2_left_untouched": {
+   "blob40": "aeece06ba30d4bedfbb162005ec6cc537f5575ec",
+   "bytes": 15671
+  }
+ },
+ "measured_bundle": {
+  "index-Cpy_jhEg.js_sha256": "5d674a444291f10b45fa50dc53f57845c888013bc3d941f6fc6d0f9f5ad7b2d7",
+  "index-I45CQek8.css_sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+  "generation_marker_v10_sw_sha256_prefix": "e63d7421eda34093",
+  "generation_note": "the 23:2x Workbox generation changed the served root tree (074267d9... -> 7a76b743..., 41 B) but not these two asset bytes, which I re-hashed against my face-start receipt; so this reading applies to the generation now on disk"
+ },
+ "derived_result": "RED_CELLS: V5_origin_invalid_response",
+ "fifth_cell_shapes_red": {
+  "shapes": [
+   "200_html",
+   "200_empty",
+   "200_not_json"
+  ],
+  "each_failed": [
+   "evidence_kind_lost_HTTP",
+   "http_status_not_carried",
+   "reason_collapsed",
+   "layer_collapsed_to_TRANSPORT",
+   "sentence_claims_no_answer"
+  ],
+  "origin_actually_answered": "200 in 4-6 ms, three body shapes (1200 B html / 0 B / 33 B text)"
+ },
+ "old_paths_touched": [],
+ "externally_readable_scope": "only the rows below",
+ "files_requested": 11,
+ "proven_by_40char_readback": 11,
+ "not_proven": [],
+ "rows": [
+  {
+   "local_file": "ORD_0263_FIFTHSTATE.md",
+   "repo_path": "evidence/ord0263-fifthstate/ORD_0263_FIFTHSTATE.md",
+   "bytes": 7572,
+   "blob40": "9b532231b8336d1539ed17731a10a682cafa7bdd",
+   "readback_status": 200,
+   "readback_bytes": 7572,
+   "readback_blob40": "9b532231b8336d1539ed17731a10a682cafa7bdd",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 7572 | remote size 7572 | sha1 9b532231b8336d15"
+  },
+  {
+   "local_file": "tools/ord0263_verifier_v3.py",
+   "repo_path": "evidence/ord0263-fifthstate/ord0263_verifier_v3.py",
+   "bytes": 21703,
+   "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+   "readback_status": 200,
+   "readback_bytes": 21703,
+   "readback_blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 21703 | remote size 21703 | sha1 e9a4188f63e27bbb"
+  },
+  {
+   "local_file": "ord0263_verifier_v3_selftest.json",
+   "repo_path": "evidence/ord0263-fifthstate/ord0263_verifier_v3_selftest.json",
+   "bytes": 4375,
+   "blob40": "695b3b6232aaf524ddcce0a098426ec01ba9639f",
+   "readback_status": 200,
+   "readback_bytes": 4375,
+   "readback_blob40": "695b3b6232aaf524ddcce0a098426ec01ba9639f",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 4375 | remote size 4375 | sha1 695b3b6232aaf524"
+  },
+  {
+   "local_file": "ord0263_capture_landedgen_fifth.json",
+   "repo_path": "evidence/ord0263-fifthstate/ord0263_capture_landedgen_fifth.json",
+   "bytes": 17367,
+   "blob40": "7f6b3d7df52da305d6f36cea7efd31f9e7c9e7cb",
+   "readback_status": 200,
+   "readback_bytes": 17367,
+   "readback_blob40": "7f6b3d7df52da305d6f36cea7efd31f9e7c9e7cb",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 17367 | remote size 17367 | sha1 7f6b3d7df52da305"
+  },
+  {
+   "local_file": "ord0263_verdict_ord0263_capture_landedgen_fifth.json",
+   "repo_path": "evidence/ord0263-fifthstate/ord0263_verdict_ord0263_capture_landedgen_fifth.json",
+   "bytes": 6807,
+   "blob40": "ec3b1645bcdcfb0a68647f3d822de34a5bf08131",
+   "readback_status": 200,
+   "readback_bytes": 6807,
+   "readback_blob40": "ec3b1645bcdcfb0a68647f3d822de34a5bf08131",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 6807 | remote size 6807 | sha1 ec3b1645bcdcfb0a"
+  },
+  {
+   "local_file": "ord0263_junk_html.log",
+   "repo_path": "evidence/ord0263-fifthstate/ord0263_junk_html.log",
+   "bytes": 1090,
+   "blob40": "8612b97df7f39601a6e382630304c7227ad7b56a",
+   "readback_status": 200,
+   "readback_bytes": 1090,
+   "readback_blob40": "8612b97df7f39601a6e382630304c7227ad7b56a",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 1090 | remote size 1090 | sha1 8612b97df7f39601"
+  },
+  {
+   "local_file": "ord0263_junk_empty.log",
+   "repo_path": "evidence/ord0263-fifthstate/ord0263_junk_empty.log",
+   "bytes": 645,
+   "blob40": "bcfef792f3f5105d8d82cb20631ad52a38c9af11",
+   "readback_status": 200,
+   "readback_bytes": 645,
+   "readback_blob40": "bcfef792f3f5105d8d82cb20631ad52a38c9af11",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 645 | remote size 645 | sha1 bcfef792f3f5105d"
+  },
+  {
+   "local_file": "ord0263_junk_nonjson.log",
+   "repo_path": "evidence/ord0263-fifthstate/ord0263_junk_nonjson.log",
+   "bytes": 779,
+   "blob40": "1bfcfca46805ba46a079e5e7ac87851d20b00bb6",
+   "readback_status": 200,
+   "readback_bytes": 779,
+   "readback_blob40": "1bfcfca46805ba46a079e5e7ac87851d20b00bb6",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 779 | remote size 779 | sha1 1bfcfca46805ba46"
+  },
+  {
+   "local_file": "tools/origin_answers_junk_200.py",
+   "repo_path": "evidence/ord0263-fifthstate/origin_answers_junk_200.py",
+   "bytes": 4417,
+   "blob40": "bae592a5f3660d809174d8bb10f5e8a4d7b22a4d",
+   "readback_status": 200,
+   "readback_bytes": 4417,
+   "readback_blob40": "bae592a5f3660d809174d8bb10f5e8a4d7b22a4d",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 4417 | remote size 4417 | sha1 bae592a5f3660d80"
+  },
+  {
+   "local_file": "tools/splice_v3_arms.py",
+   "repo_path": "evidence/ord0263-fifthstate/splice_v3_arms.py",
+   "bytes": 1951,
+   "blob40": "684ca9c84d94460377438d4d79eedf24028deb7b",
+   "readback_status": 200,
+   "readback_bytes": 1951,
+   "readback_blob40": "684ca9c84d94460377438d4d79eedf24028deb7b",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 1951 | remote size 1951 | sha1 684ca9c84d944603"
+  },
+  {
+   "local_file": "tools/build_fifthstate_capture.py",
+   "repo_path": "evidence/ord0263-fifthstate/build_fifthstate_capture.py",
+   "bytes": 8092,
+   "blob40": "cce8cbe70c88ec1972efb5710176250aa7663ae1",
+   "readback_status": 200,
+   "readback_bytes": 8092,
+   "readback_blob40": "cce8cbe70c88ec1972efb5710176250aa7663ae1",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 8092 | remote size 8092 | sha1 cce8cbe70c88ec19"
+  }
+ ]
+}
