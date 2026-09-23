@@ -1,0 +1,39 @@
+{
+ "at": "2026-09-24T01:32:37+08:00",
+ "label": "s5fix",
+ "bundle": {
+  "refs": [
+   "assets/index-ChOTTCvB.js",
+   "assets/index-I45CQek8.css"
+  ],
+  "per_asset_sha256": {
+   "assets/index-ChOTTCvB.js": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+   "assets/index-I45CQek8.css": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f"
+  },
+  "dist_files": 10,
+  "dist_bytes": 2520739,
+  "dist_tree_sha256": "e47028f1fe6ea1655bd2077c1060407cb3dbca85f8cea49e92c58c5a327eebf0",
+  "commit_built_from": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa"
+ },
+ "surface": {
+  "port": 4416,
+  "preview_pid": 36676,
+  "listeners": [],
+  "citynexus_backend_port": 8411,
+  "backend_listeners": [],
+  "proof_200_marker_journey": {
+   "status": 200,
+   "via_backend_direct": 200
+  },
+  "proof_404_absent_id": {
+   "uuid": "7c42e86a-84cd-44d6-991a-e73b2d43f70c",
+   "status": 404
+  },
+  "ownership_verdict": "PROVEN"
+ },
+ "user_chain": {
+  "ports_contacted": [],
+  "db_files_opened": [],
+  "demo_reset_issued": false
+ }
+}
