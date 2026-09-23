@@ -1,0 +1,75 @@
+{
+ "at": "2026-09-23T13:12:43+08:00",
+ "tree": "D:\\moodle\\_qoder_harness_ord0254\\repo",
+ "candidate_tip": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df",
+ "outDir": "D:\\moodle\\_qoder_harness_ord0254\\repo\\frontend\\dist",
+ "ignored_by": ".gitignore:25:dist/\tfrontend/dist/index.html",
+ "porcelain_before": {
+  "text": "?? frontend/dist_ord0254/\n",
+  "lines": 1
+ },
+ "porcelain_after": {
+  "text": "",
+  "lines": 0
+ },
+ "stale_outdir_deleted": "D:\\moodle\\_qoder_harness_ord0254\\repo\\frontend\\dist_ord0254",
+ "index_asset_refs": [
+  "/assets/index-C0qSwD3N.js",
+  "/assets/index-CBXSx-f9.css"
+ ],
+ "file_count": 10,
+ "files": [
+  {
+   "path": "assets/index-C0qSwD3N.js",
+   "bytes": 1213215,
+   "sha256": "ae7979ff0f23d73eb1b8537e6d4dcf38db2a0628c89a933c9560c61ddeaf3287"
+  },
+  {
+   "path": "assets/index-CBXSx-f9.css",
+   "bytes": 181513,
+   "sha256": "7aa40039ffacad3bbbc20c91c64c4a6224ccfdadd8b04a107cc7cdc21f4a9900"
+  },
+  {
+   "path": "assets/JourneyMap-ClyBl6Yh.js",
+   "bytes": 4392,
+   "sha256": "f5422d215939390e243c0a01624fd82a9d86e1da2e76298493d0f2d7ed3864be"
+  },
+  {
+   "path": "assets/maplibre-gl-BGf_2f8F.js",
+   "bytes": 1053381,
+   "sha256": "1bba3fe62bfd12be0103b9e469f15851740ac97205f8c95fdc2c776deff23a7e"
+  },
+  {
+   "path": "favicon.svg",
+   "bytes": 199,
+   "sha256": "daae73a74d90412ba924a82bba737946f735c0abb15d16b2c28a0d843f42a140"
+  },
+  {
+   "path": "index.html",
+   "bytes": 1200,
+   "sha256": "c045b5ef5dacbc99b3a971b8b660f853491ea211c65a43e3ee95946a945bf69b"
+  },
+  {
+   "path": "manifest.webmanifest",
+   "bytes": 314,
+   "sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0"
+  },
+  {
+   "path": "sw.js",
+   "bytes": 7178,
+   "sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9"
+  },
+  {
+   "path": "v10-sw.js",
+   "bytes": 2096,
+   "sha256": "e92af6edece9071e7003018efca8a1209e9362f965b0daea622ea15090d73363"
+  },
+  {
+   "path": "workbox-6923124b.js",
+   "bytes": 22920,
+   "sha256": "e3f4163ae57222c2bde00307d5dd7e4305a6d915f881a8c2890736b848ed9f39"
+  }
+ ],
+ "build_log_bytes": 1354,
+ "vite_rc": 0
+}
