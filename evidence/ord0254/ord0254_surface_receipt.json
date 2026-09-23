@@ -1,25 +1,25 @@
 {
- "at": "2026-09-23T14:57:20+08:00",
+ "at": "2026-09-23T15:29:34+08:00",
  "ruler_blob16": "9ca0dee62016d7ef",
  "ports": {
   "static": 4412,
   "preview": 4411,
   "backend": 8411
  },
- "surface_pid": 32836,
- "preview_pid": 54584,
+ "surface_pid": 61092,
+ "preview_pid": 58192,
  "backend_pids": [
-  24580
+  16152
  ],
  "listeners": {
   "4412": [
-   32836
+   61092
   ],
   "4411": [
-   54584
+   58192
   ],
   "8411": [
-   24580
+   16152
   ]
  },
  "static_answer": {
@@ -55,7 +55,7 @@
   "bytes": 1200
  },
  "seeded": {
-  "files_copied": 20,
+  "files_copied": 25,
   "source_read_only": "D:\\moodle\\_qoder_preview_20260920\\dist",
   "served_index_asset_refs": [
    "/assets/index-CrAwWm5f.js",
