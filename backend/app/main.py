@@ -1086,18 +1086,22 @@ def run_agent_command(
     )
     scoped_key = f"agent.command:{header_key}"
     with journey_write_lock(str(journey_id)):
-        replayed = _replay_committed_accept(session, scoped_key, signature)
-        if replayed is not None:
-            return replayed
-        response = _run_agent_command_impl(journey_id, payload, session)
+        # claim-first: 先把这把键**占住并提交**，才有资格写 mission。
+        #
+        # 旧写法是"先跑 impl、再写收据"。`_run_agent_command_impl` 自己在函数里就
+        # `session.commit()`，所以两个写者同时进来时，败者的 mission 早已落库——之后
+        # 收据那一插撞唯一索引、回滚，也收不回已经提交的那一行：两边各拿同一枚 mission
+        # 的正文，库里却留了两行（实测形态名 GHOST_MISSION_ROW）。
+        # 现在所有权由"唯一索引 + 已提交的占位行"决定：抢不到键的人**根本不进 impl**，
+        # 因此根本不建行。进程内那把锁仍是优化，不是契约。
         now = datetime.now(timezone.utc)
         session.add(
             IdempotencyKey(
                 key=scoped_key,
                 operation="agent.command",
                 request_hash=signature,
-                response_status=200,
-                response_json=json.dumps(response, sort_keys=True),
+                response_status=None,
+                response_json=None,
                 created_at=now.isoformat(),
                 expires_at=(now + timedelta(days=7)).isoformat(),
             )
@@ -1105,16 +1109,18 @@ def run_agent_command(
         try:
             session.commit()
         except IntegrityError as exc:
-            # The durable unique index decided that another claim of this key won.
-            # Nothing of this request's work may survive to look like a second
-            # activation, and the answer comes from the receipt that committed.
             session.rollback()
-            raced = _replay_committed_accept(session, scoped_key, signature)
-            if raced is None:
-                raise HTTPException(
-                    409, "agent command idempotency key is already claimed"
-                ) from exc
-            return raced
+            raced = _replay_committed_accept(session, scoped_key, signature, wait=True)
+            if raced is not None:
+                return raced
+            # 现成那句，不新造词：占了键却永远没回填，就是"回执不完整"（agent/gateway.py:66 同句）。
+            # 不写成 503——这不是锁忙，是一次没走完的 claim；也不许被顺手洗成 200。
+            raise HTTPException(409, "agent idempotency record is incomplete") from exc
+        response = _run_agent_command_impl(journey_id, payload, session)
+        receipt = session.get(IdempotencyKey, scoped_key)
+        receipt.response_status = getattr(response, "status_code", 200)
+        receipt.response_json = json.dumps(response, sort_keys=True)
+        session.commit()
     return response
 
 
