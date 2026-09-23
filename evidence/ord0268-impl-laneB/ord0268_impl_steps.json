@@ -1,0 +1,156 @@
+{
+ "note": "both rounds, one invocation, one instrument (q268_step_probe.js)",
+ "steps": {
+  "impl_step_ctrl_a": {
+   "at": "2026-09-23T14:37:49.030Z",
+   "step": "ctrl_a",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": true,
+    "status": 200,
+    "from_service_worker": false
+   },
+   "document_read": {
+    "url": "http://127.0.0.1:4441/v8/hub",
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "onLine": true,
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "script_srcs": [
+     "/assets/index-D76m_cky.js"
+    ],
+    "style_hrefs": [
+     "/assets/index-I45CQek8.css"
+    ],
+    "cache_names": []
+   },
+   "page_errors": []
+  },
+  "impl_step_ctrl_b": {
+   "at": "2026-09-23T14:37:55.256Z",
+   "step": "ctrl_b",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": true,
+    "status": 200,
+    "from_service_worker": false
+   },
+   "document_read": {
+    "url": "http://127.0.0.1:4441/v8/hub",
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "onLine": true,
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "script_srcs": [
+     "/assets/index-Cpy_jhEg.js"
+    ],
+    "style_hrefs": [
+     "/assets/index-I45CQek8.css"
+    ],
+    "cache_names": []
+   },
+   "page_errors": []
+  },
+  "impl_step_ctrl_c": {
+   "at": "2026-09-23T14:38:00.447Z",
+   "step": "ctrl_c",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": false,
+    "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub"
+   },
+   "document_read": {
+    "url": "chrome-error://chromewebdata/",
+    "controlled": false,
+    "controller": null,
+    "onLine": true,
+    "body_head": "",
+    "script_srcs": [],
+    "style_hrefs": [],
+    "cache_names": [
+     "read threw"
+    ]
+   },
+   "page_errors": []
+  },
+  "impl_step_fix_a": {
+   "at": "2026-09-23T14:38:06.226Z",
+   "step": "fix_a",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": true,
+    "status": 200,
+    "from_service_worker": false
+   },
+   "document_read": {
+    "url": "http://127.0.0.1:4441/v8/hub",
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "onLine": true,
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "script_srcs": [
+     "/assets/index-D76m_cky.js"
+    ],
+    "style_hrefs": [
+     "/assets/index-I45CQek8.css"
+    ],
+    "cache_names": []
+   },
+   "page_errors": []
+  },
+  "impl_step_fix_b": {
+   "at": "2026-09-23T14:38:12.460Z",
+   "step": "fix_b",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": true,
+    "status": 200,
+    "from_service_worker": false
+   },
+   "document_read": {
+    "url": "http://127.0.0.1:4441/v8/hub",
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "onLine": true,
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "script_srcs": [
+     "/assets/index-Cpy_jhEg.js"
+    ],
+    "style_hrefs": [
+     "/assets/index-I45CQek8.css"
+    ],
+    "cache_names": [
+     "workbox-precache-v2-http://127.0.0.1:4441/"
+    ]
+   },
+   "page_errors": []
+  },
+  "impl_step_fix_c": {
+   "at": "2026-09-23T14:38:17.008Z",
+   "step": "fix_c",
+   "base": "http://127.0.0.1:4441",
+   "navigation": {
+    "ok": true,
+    "status": 200,
+    "from_service_worker": true
+   },
+   "document_read": {
+    "url": "http://127.0.0.1:4441/v8/hub",
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "onLine": true,
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "script_srcs": [
+     "/assets/index-Cpy_jhEg.js"
+    ],
+    "style_hrefs": [
+     "/assets/index-I45CQek8.css"
+    ],
+    "cache_names": [
+     "workbox-precache-v2-http://127.0.0.1:4441/"
+    ]
+   },
+   "page_errors": []
+  }
+ }
+}
