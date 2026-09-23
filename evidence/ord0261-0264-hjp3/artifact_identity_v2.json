@@ -1,0 +1,78 @@
+{
+ "ancestor_6daceb1_of_e3b0b47": true,
+ "commits_between": [
+  "e3b0b47 test(e2e): rewrite the wizard gate to SCROLL_REACHABLE_AND_TAPPABLE and run the two ruling arms (ORD-0261/0264)",
+  "1a80a0e chore(review): record the arbiter's SCROLL_REACHABLE_AND_TAPPABLE contract revision; evidence set lives on commander/control, not in git (ignored by design)",
+  "1821ce0 chore(review): bus message bodies (candidate package, single-writer replies, prior deliveries)"
+ ],
+ "changed_paths": [
+  "M\tfrontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+  "A\treview/_bus_e345b9d6_externalized.md",
+  "A\treview/_bus_e345b9d6_ord0246_0247.md",
+  "A\treview/_bus_e345b9d6_ord0250_0251_0247w.md",
+  "A\treview/_bus_e345b9d6_ord0261_0264_candidate.md",
+  "A\treview/_bus_e345b9d6_ord0261_0264_package.md",
+  "A\treview/_bus_e345b9d6_reply_singlewriter.md",
+  "A\treview/_bus_e345b9d6_wake_reply.md",
+  "A\treview/ord0261_0264_kill_arms.py"
+ ],
+ "bundled_input_changes": [],
+ "frontend_src_tree_hash": {
+  "6daceb1": "389c1bd6b4fe25e13a179484ae2207ab32522e5b",
+  "e3b0b47": "389c1bd6b4fe25e13a179484ae2207ab32522e5b"
+ },
+ "frontend_src_tree_equal": true,
+ "built_assets": {
+  "JourneyMap-VYnqykgh.js": {
+   "bytes": 4392,
+   "sha256_e3b0b47": "9ad3967c6022b8c21bd7070cfdd751d412f6e67c28860f423590e9040cd45260",
+   "sha256_6daceb1": "9ad3967c6022b8c21bd7070cfdd751d412f6e67c28860f423590e9040cd45260",
+   "equal": true
+  },
+  "index-D76m_cky.js": {
+   "bytes": 1238834,
+   "sha256_e3b0b47": "270377c83471a5a1e44a756296e15ea42c47c626760723e47b6b4a6759e43274",
+   "sha256_6daceb1": "270377c83471a5a1e44a756296e15ea42c47c626760723e47b6b4a6759e43274",
+   "equal": true
+  },
+  "index-I45CQek8.css": {
+   "bytes": 183897,
+   "sha256_e3b0b47": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+   "sha256_6daceb1": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+   "equal": true
+  },
+  "maplibre-gl-BWQWEO0M.js": {
+   "bytes": 1053381,
+   "sha256_e3b0b47": "219e27df88e0cdf1b4d3c6377e327e35fc4d728aab0a73372631a86f9a3d6d97",
+   "sha256_6daceb1": "219e27df88e0cdf1b4d3c6377e327e35fc4d728aab0a73372631a86f9a3d6d97",
+   "equal": true
+  }
+ },
+ "all_assets_equal": true,
+ "gate_v2_dir": [
+  {
+   "name": "gate-and-arms-receipt.json",
+   "bytes": 2538,
+   "blob": "e088e7ca37d1da1c8dbd2391cf155d2ef8c97f05",
+   "recomputed_local_blob_equal": "LINK_DOWN <urlopen error [SSL: UNEXPECTED_EOF_WHIL"
+  },
+  {
+   "name": "gate__qoder-wizard-advanced-is-tappable.spec.ts",
+   "bytes": 9945,
+   "blob": "feb0b3bd0929ee78878f0b75addbeb4fd73ab5f5",
+   "recomputed_local_blob_equal": "LINK_DOWN <urlopen error [SSL: UNEXPECTED_EOF_WHIL"
+  }
+ ],
+ "my_published_v2_inputs_untouched": [
+  "MANIFEST_ord0262.txt",
+  "artifact_identity.json",
+  "candidate__changed-files.txt",
+  "candidate__dea8410-to-6daceb1.patch",
+  "candidate__lineage.txt",
+  "gate-receipts.json",
+  "shots_ORD0261-P3-1815",
+  "shots_ORD0261-P3-V2-1841",
+  "snap_6daceb1",
+  "snap_e3b0b47"
+ ]
+}
