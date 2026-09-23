@@ -1,0 +1,199 @@
+{
+ "at": "2026-09-23T15:06:39+08:00",
+ "what": "ORD-0254 re-run under the A-9 ruler (third swap) - coordinates index",
+ "supersedes": "sections 3 and 8 readings taken with rulers e3015cc065d1d4eb and c0aafc940136c502; sections 1/2/4/5 unchanged (same tip, same bytes)",
+ "ruler_blob40": "9ca0dee62016d7ef421b1dc085027ff4d6654c23",
+ "ruler_bytes": 45153,
+ "ruler_commit": "23eb1f5c5856",
+ "commander_witnesses": {
+  "a9_selftest_21_21": "391d59cbd4cb7341f6cdf9fd731fd2dfbd24da13",
+  "f_surface_round4": "02459564e6f225a62d75660f1baddb0df12e1c0c"
+ },
+ "candidate_tip": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df",
+ "files_requested": 17,
+ "proven_by_40char_readback": 15,
+ "not_proven": [
+  "ord0254_v3_fprobe_receipt.json",
+  "ord0254_v3_cleanup_receipt.json"
+ ],
+ "rows": [
+  {
+   "file": "ORD_0254_FRONTEND_COMPAT_BACKPORT.md",
+   "repo_path": "evidence/ord0254/ORD_0254_FRONTEND_COMPAT_BACKPORT.md",
+   "local_bytes": 33077,
+   "local_blob40": "fa51ff2b2594b708cdbebd0799ee0c3457199ede",
+   "readback_status": 200,
+   "readback_bytes": 33077,
+   "readback_blob40": "fa51ff2b2594b708cdbebd0799ee0c3457199ede",
+   "verdict": "PROVEN",
+   "publisher_commit": "6095b849f77c"
+  },
+  {
+   "file": "ord0254_ruler_v3_fetch.json",
+   "repo_path": "evidence/ord0254/ord0254_ruler_v3_fetch.json",
+   "local_bytes": 5292,
+   "local_blob40": "3dba88270ad6b5b8cec9b1867df9f0f551365744",
+   "readback_status": 200,
+   "readback_bytes": 5292,
+   "readback_blob40": "3dba88270ad6b5b8cec9b1867df9f0f551365744",
+   "verdict": "PROVEN",
+   "publisher_commit": "25664a2c8b47"
+  },
+  {
+   "file": "ord0254_witness_selftest_21_21.json",
+   "repo_path": "evidence/ord0254/ord0254_witness_selftest_21_21.json",
+   "local_bytes": 7980,
+   "local_blob40": "391d59cbd4cb7341f6cdf9fd731fd2dfbd24da13",
+   "readback_status": 200,
+   "readback_bytes": 7980,
+   "readback_blob40": "391d59cbd4cb7341f6cdf9fd731fd2dfbd24da13",
+   "verdict": "PROVEN",
+   "publisher_commit": "507399e4fe90"
+  },
+  {
+   "file": "ord0254_witness_three_surface_retest.json",
+   "repo_path": "evidence/ord0254/ord0254_witness_three_surface_retest.json",
+   "local_bytes": 1190,
+   "local_blob40": "02459564e6f225a62d75660f1baddb0df12e1c0c",
+   "readback_status": 200,
+   "readback_bytes": 1190,
+   "readback_blob40": "02459564e6f225a62d75660f1baddb0df12e1c0c",
+   "verdict": "PROVEN",
+   "publisher_commit": "7b5aa89e13e1"
+  },
+  {
+   "file": "ord0254_witness_fetch.json",
+   "repo_path": "evidence/ord0254/ord0254_witness_fetch.json",
+   "local_bytes": 1569,
+   "local_blob40": "07192ab865ff7d27715ee9af89064272823f3347",
+   "readback_status": 200,
+   "readback_bytes": 1569,
+   "readback_blob40": "07192ab865ff7d27715ee9af89064272823f3347",
+   "verdict": "PROVEN",
+   "publisher_commit": "96cd59e55b82"
+  },
+  {
+   "file": "ord0254_v3_deploy_receipt.json",
+   "repo_path": "evidence/ord0254/ord0254_v3_deploy_receipt.json",
+   "local_bytes": 25923,
+   "local_blob40": "cd7cbf0fa7692124f1fd16ee30169f52cc9fced1",
+   "readback_status": 200,
+   "readback_bytes": 25923,
+   "readback_blob40": "cd7cbf0fa7692124f1fd16ee30169f52cc9fced1",
+   "verdict": "PROVEN",
+   "publisher_commit": "d29d7a21edf8"
+  },
+  {
+   "file": "ord0254_v3_deploy_summary.json",
+   "repo_path": "evidence/ord0254/ord0254_v3_deploy_summary.json",
+   "local_bytes": 1916,
+   "local_blob40": "fc41a2d401c44c0cce65c313c9d8ead7738972e9",
+   "readback_status": 200,
+   "readback_bytes": 1916,
+   "readback_blob40": "fc41a2d401c44c0cce65c313c9d8ead7738972e9",
+   "verdict": "PROVEN",
+   "publisher_commit": "069169568ad4"
+  },
+  {
+   "file": "ord0254_v3_fprobe_receipt.json",
+   "repo_path": "evidence/ord0254/ord0254_v3_fprobe_receipt.json",
+   "local_bytes": 7063,
+   "local_blob40": "59f690f6829f82008cd5ccfd70f152541d0c5061",
+   "readback_status": "404",
+   "verdict": "PUBLISHED_UNPROVEN",
+   "publisher_tail": "PUT -> 409 commit={\"message\":\"is at ffa3cfbf51ae99cce6a3f4674da67b66323d3d73 but expected 069169568ad4ddce57cd48ac66fb8bfb4cbd5050\",\"documentation_url\":\"https:/"
+  },
+  {
+   "file": "ord0254_v3_selftest_receipt.json",
+   "repo_path": "evidence/ord0254/ord0254_v3_selftest_receipt.json",
+   "local_bytes": 8731,
+   "local_blob40": "6b44ef385e898332d4784c42ef2397229c72b840",
+   "readback_status": 200,
+   "readback_bytes": 8731,
+   "readback_blob40": "6b44ef385e898332d4784c42ef2397229c72b840",
+   "verdict": "PROVEN",
+   "publisher_commit": "5884459c3bfa"
+  },
+  {
+   "file": "ord0254_v3_selftest_summary.json",
+   "repo_path": "evidence/ord0254/ord0254_v3_selftest_summary.json",
+   "local_bytes": 780,
+   "local_blob40": "ae359ce2127e3fc2082b147deaed53ff69baad38",
+   "readback_status": 200,
+   "readback_bytes": 780,
+   "readback_blob40": "ae359ce2127e3fc2082b147deaed53ff69baad38",
+   "verdict": "PROVEN",
+   "publisher_commit": "02ad3e2663db"
+  },
+  {
+   "file": "ord0254_v3_keyerr_summary.json",
+   "repo_path": "evidence/ord0254/ord0254_v3_keyerr_summary.json",
+   "local_bytes": 1106,
+   "local_blob40": "798b32d063b84bc4a831c9fad0c13f764e8f58ae",
+   "readback_status": 200,
+   "readback_bytes": 1106,
+   "readback_blob40": "798b32d063b84bc4a831c9fad0c13f764e8f58ae",
+   "verdict": "PROVEN",
+   "publisher_commit": "b7e193414cc0"
+  },
+  {
+   "file": "ord0254_v3_keyerr_traceback.txt",
+   "repo_path": "evidence/ord0254/ord0254_v3_keyerr_traceback.txt",
+   "local_bytes": 1052,
+   "local_blob40": "9b453cb3866c93a225b5cce2ae857e62b0e0eabb",
+   "readback_status": 200,
+   "readback_bytes": 1052,
+   "readback_blob40": "9b453cb3866c93a225b5cce2ae857e62b0e0eabb",
+   "verdict": "PROVEN",
+   "publisher_commit": "def5c84b7c75"
+  },
+  {
+   "file": "ord0254_v3_headers_before.json",
+   "repo_path": "evidence/ord0254/ord0254_v3_headers_before.json",
+   "local_bytes": 2840,
+   "local_blob40": "4686d2f3db34c05b0a6bb315a1189e73ce209ca7",
+   "readback_status": 200,
+   "readback_bytes": 2840,
+   "readback_blob40": "4686d2f3db34c05b0a6bb315a1189e73ce209ca7",
+   "verdict": "PROVEN",
+   "publisher_commit": "70ba2f809360"
+  },
+  {
+   "file": "ord0254_v3_headers_after.json",
+   "repo_path": "evidence/ord0254/ord0254_v3_headers_after.json",
+   "local_bytes": 1271,
+   "local_blob40": "8ce4f469d944c4f8473a5f5d2a5d55ef07c1629b",
+   "readback_status": 200,
+   "readback_bytes": 1271,
+   "readback_blob40": "8ce4f469d944c4f8473a5f5d2a5d55ef07c1629b",
+   "verdict": "PROVEN",
+   "publisher_commit": "2c06e0f36db6"
+  },
+  {
+   "file": "ord0254_backend_receipt.json",
+   "repo_path": "evidence/ord0254/ord0254_backend_receipt.json",
+   "local_bytes": 1424,
+   "local_blob40": "b0c132c9054b72a4fcf48779cf6caa7f718c597d",
+   "readback_status": 200,
+   "readback_bytes": 1424,
+   "readback_blob40": "b0c132c9054b72a4fcf48779cf6caa7f718c597d",
+   "verdict": "PROVEN",
+   "publisher_commit": "856d04dee01e"
+  },
+  {
+   "file": "ord0254_surface_receipt.json",
+   "repo_path": "evidence/ord0254/ord0254_surface_receipt.json",
+   "local_bytes": 1560,
+   "local_blob40": "b730c07678eb0dd7ca40e3e6e393b9174c022122",
+   "readback_status": 200,
+   "readback_bytes": 1560,
+   "readback_blob40": "b730c07678eb0dd7ca40e3e6e393b9174c022122",
+   "verdict": "PROVEN",
+   "publisher_commit": "5ba7a1b11f9b"
+  },
+  {
+   "file": "ord0254_v3_cleanup_receipt.json",
+   "verdict": "MISSING_LOCAL_FILE"
+  }
+ ]
+}
