@@ -1,0 +1,1433 @@
+{
+ "discipline_header": {
+  "at": "2026-09-23T11:59:28+08:00",
+  "repo": "D:\\moodle\\_qoder_integration_20260919",
+  "head": "a1cc0c1d19148c97e7a7c9a27c292f07600a2835",
+  "head_short": "a1cc0c1",
+  "baseline": "53fe8e86920aed0ddb5fb325f070b4ed8210b686",
+  "baseline_short": "53fe8e8",
+  "worktree_dirty_files_count": 364,
+  "worktree_dirty_sample": [
+   "frontend/e2e/_qoderTextScan.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/features/planning/PlanComparison.tsx",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "reports/e2e-provenance/authoritative.json",
+   "tools/verification/mutation_campaign.py"
+  ],
+  "run_shape": "git-only read-only inventory (log/show/name-only + merge-tree predictor); no DB opened, no port bound, no user chain touched",
+  "commands": [
+   "git -C <repo> log --format=%H|%ad|%s 53fe8e8..HEAD -- frontend/",
+   "git -C <repo> show --pretty= --name-only <sha>",
+   "git -C <repo> show --pretty= --unified=0 <sha> -- frontend/  (added lines only)",
+   "git -C <repo> merge-tree --write-tree --merge-base <sha^> 53fe8e8 <sha>"
+  ],
+  "collected": "38 commits touch frontend/ since the baseline; 25 are fix/feat/refactor(frontend) candidates",
+  "environment_contract": "no network, no credentials read, no database URL set; merge-tree writes loose objects only - no ref/branch/worktree change",
+  "cross_shape_rule": "a failure difference measured under a different run shape is NOT_COMPARABLE_AS_REGRESSION_DELTA",
+  "classification_inputs": [
+   "ord0245_frontend_candidates.json",
+   "ord0245_payload_diff.json"
+  ],
+  "diverged_endpoints": [
+   "GET /api/v1/destinations/capability",
+   "POST /api/v1/catalog-hydrations"
+  ],
+  "distinctive_new_fields_used": {
+   "GET /api/v1/destinations/capability": [
+    "candidates",
+    "destination_pending_key",
+    "destination_state",
+    "hard_eligible",
+    "hard_gaps",
+    "malformed_candidates",
+    "osm_type",
+    "pending_destination_label",
+    "pending_label_fidelity",
+    "places",
+    "places[]",
+    "resolver_query_normalized",
+    "retryable",
+    "source_classes",
+    "source_identity"
+   ],
+   "POST /api/v1/catalog-hydrations": [
+    "destination_pending_key",
+    "destination_state",
+    "pending_destination_label",
+    "pending_label_fidelity",
+    "resolver_query_normalized",
+    "retryable"
+   ]
+  },
+  "excluded_because_generic_on_the_baseline": {
+   "GET /api/v1/destinations/capability": [
+    "category",
+    "coverage_detail",
+    "id",
+    "latitude",
+    "longitude",
+    "name",
+    "source_provider"
+   ]
+  },
+  "stability_note": "the baseline's background hydration worker raised TransitionRefused(ABANDON_REQUESTED -> UNAVAILABLE) at catalog_hydration_operations.py:598->:238 in 3/3 independent processes; the live line raised it 0/1"
+ },
+ "summary": {
+  "candidates": 25,
+  "backport_clean": [
+   "d76992a",
+   "e9efec6",
+   "2d3b3fb",
+   "4176e7b",
+   "6b208ee",
+   "7580206",
+   "82f136f",
+   "107e2db",
+   "952ec40",
+   "56d20ec",
+   "8f42cb7"
+  ],
+  "field_dependent": [
+   "15a114e",
+   "d0dfc90"
+  ],
+  "conflict_in_frontend": [
+   "15a114e",
+   "d0dfc90",
+   "199067b",
+   "8ee64ae",
+   "f1bdbbe",
+   "bfdeb1f",
+   "fab8cb8",
+   "50b35e0",
+   "3e259bd",
+   "dfdc5d5",
+   "f7ce8ff",
+   "c4a4001",
+   "9544628",
+   "e08131e"
+  ],
+  "touches_backend_too": []
+ },
+ "rows": [
+  {
+   "sha": "d76992aa593d2950058a34fcbe110ac603255ea7",
+   "short": "d76992a",
+   "at": "2026-09-21T18:15+08",
+   "subject": "fix(frontend): the panel itself scrolls, so the node a probe names is the node that answers",
+   "files_frontend": [
+    "frontend/e2e/qoder-today-follows-the-stage.spec.ts",
+    "frontend/src/features/simulation/SimulationPanel.css"
+   ],
+   "files_backend": [],
+   "files_other": [],
+   "endpoints_added_lines": [],
+   "cherry_pick_onto_base": "CLEAN",
+   "merge_tree_exit": 0,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 0,
+    "verdict": "CLEAN",
+    "conflicted_paths": [],
+    "conflicts_in_frontend": [],
+    "conflicts_outside_frontend": [],
+    "messages": []
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": true
+  },
+  {
+   "sha": "e9efec6bff2fef9e09231cf1a87cc7139fc0a856",
+   "short": "e9efec6",
+   "at": "2026-09-21T18:31+08",
+   "subject": "refactor(frontend): the example places are ordered by name, not by the read's order",
+   "files_frontend": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [],
+   "endpoints_added_lines": [],
+   "cherry_pick_onto_base": "CLEAN",
+   "merge_tree_exit": 0,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 0,
+    "verdict": "CLEAN",
+    "conflicted_paths": [],
+    "conflicts_in_frontend": [],
+    "conflicts_outside_frontend": [],
+    "messages": []
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": true
+  },
+  {
+   "sha": "2d3b3fba82504b02d75ebaa08635be9653bf223b",
+   "short": "2d3b3fb",
+   "at": "2026-09-21T19:54+08",
+   "subject": "fix(frontend): the AI sheet is sized by what the traveller can see, and its footer never scrolls",
+   "files_frontend": [
+    "frontend/e2e/qoder-ai-sheet-blocked.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "frontend/src/lib/visualViewport.ts",
+    "frontend/src/styles.css"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/journeys/",
+    "/api/v1/places"
+   ],
+   "cherry_pick_onto_base": "CLEAN",
+   "merge_tree_exit": 0,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 0,
+    "verdict": "CLEAN",
+    "conflicted_paths": [],
+    "conflicts_in_frontend": [],
+    "conflicts_outside_frontend": [],
+    "messages": []
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": true
+  },
+  {
+   "sha": "4176e7b6c238cd296b40a80303b07366183a2cad",
+   "short": "4176e7b",
+   "at": "2026-09-21T20:43+08",
+   "subject": "fix(frontend): a finger on the map moves the map, a finger on the page moves the page",
+   "files_frontend": [
+    "frontend/e2e/qoder-map-gesture-ownership.spec.ts",
+    "frontend/src/components/v8/MapPanel.tsx",
+    "frontend/src/styles.css"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [],
+   "cherry_pick_onto_base": "CLEAN",
+   "merge_tree_exit": 0,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 0,
+    "verdict": "CLEAN",
+    "conflicted_paths": [],
+    "conflicts_in_frontend": [],
+    "conflicts_outside_frontend": [],
+    "messages": []
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": true
+  },
+  {
+   "sha": "6b208ee33df9492d9cb03f670746e1daa675c46a",
+   "short": "6b208ee",
+   "at": "2026-09-21T21:38+08",
+   "subject": "fix(frontend): what the screen asks to review now has somewhere to be reviewed (ORD-0146)",
+   "files_frontend": [
+    "frontend/e2e/qoder-inbox-review-queue.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+    "frontend/src/i18n/LocaleContext.tsx",
+    "frontend/src/styles.css",
+    "frontend/src/v10.css"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/journeys/"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "Auto-merging frontend/src/styles.css",
+     "Auto-merging review/ord0082_0087_kill_drivers.py",
+     "CONFLICT (content): Merge conflict in review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": true
+  },
+  {
+   "sha": "758020684db9e5bf66dd6dc973d08cc047e38ed6",
+   "short": "7580206",
+   "at": "2026-09-21T22:04+08",
+   "subject": "fix(frontend): a failed read now says which kind of failure it is, and leaves a door (ORD-0126)",
+   "files_frontend": [
+    "frontend/e2e/qoder-failure-has-an-exit.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/i18n/LocaleContext.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/health",
+    "/api/v1/journeys/"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "Auto-merging frontend/src/i18n/LocaleContext.tsx",
+     "Auto-merging review/ord0082_0087_kill_drivers.py",
+     "CONFLICT (content): Merge conflict in review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": true
+  },
+  {
+   "sha": "82f136f5b2fc36d2f5d2cf1a06fbd94bc26c251d",
+   "short": "82f136f",
+   "at": "2026-09-21T22:38+08",
+   "subject": "fix(frontend): the wizard stops speaking its own vocabulary and offers a route to what is missing (ORD-0135)",
+   "files_frontend": [
+    "frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "Auto-merging review/ord0082_0087_kill_drivers.py",
+     "CONFLICT (content): Merge conflict in review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": true
+  },
+  {
+   "sha": "107e2db7a102f5497d38377e5f6edd2bc8851f92",
+   "short": "107e2db",
+   "at": "2026-09-22T01:01+08",
+   "subject": "feat(frontend): the review actions carry their idempotency key, and the bridge is marked (ORD-0180/0183)",
+   "files_frontend": [
+    "frontend/e2e/qoder-replan-review-actions.spec.ts",
+    "frontend/e2e/qoder-today-follows-the-stage.spec.ts",
+    "frontend/src/features/simulation/SimulationPanel.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py",
+    "review/rewrite-ord0180-gate.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/journeys/"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "Auto-merging frontend/e2e/qoder-today-follows-the-stage.spec.ts",
+     "Auto-merging review/ord0082_0087_kill_drivers.py",
+     "CONFLICT (content): Merge conflict in review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": true
+  },
+  {
+   "sha": "952ec4075877870d34cf8c5904819c3ee3310cc6",
+   "short": "952ec40",
+   "at": "2026-09-22T15:08+08",
+   "subject": "fix(frontend): the demo entry addresses the sealed journey instead of creating one (ORD-0209)",
+   "files_frontend": [
+    "frontend/e2e/qoder-demo-entry-addresses-dont-create.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "live_checks/mutation_anchor_guard.py",
+    "review/add-ord0209-mutant.py",
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/journeys",
+    "/api/v1/journeys/",
+    "/api/v1/travelers"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "Auto-merging frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "Auto-merging review/ord0082_0087_kill_drivers.py",
+     "CONFLICT (content): Merge conflict in review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": true
+  },
+  {
+   "sha": "56d20ec3b09a5836ddb2838368bb7cf4a5ecfe7a",
+   "short": "56d20ec",
+   "at": "2026-09-22T15:22+08",
+   "subject": "fix(frontend): the Today hub keeps only the tight budget verdict (ORD-0212, user's direct instruction)",
+   "files_frontend": [
+    "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+    "frontend/e2e/qoder-trip-shape-and-budget.spec.ts",
+    "frontend/src/app/V8Experience.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/add-ord0212-mutant.py",
+    "review/ord0082_0087_kill_drivers.py",
+    "review/redirect-ord0064-gate.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/journeys/"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "Auto-merging review/ord0082_0087_kill_drivers.py",
+     "CONFLICT (content): Merge conflict in review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": true
+  },
+  {
+   "sha": "8f42cb7d87175e996d2b81473200e5920d6a3ba3",
+   "short": "8f42cb7",
+   "at": "2026-09-23T03:53+08",
+   "subject": "feat(frontend): the hub names the stop a hard rule dropped, in words and not in ids (ORD-0232)",
+   "files_frontend": [
+    "frontend/e2e/_qoderTextScan.ts",
+    "frontend/e2e/qoder-dropped-candidates-say-why.spec.ts",
+    "frontend/src/api/candidateRejections.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/i18n/LocaleContext.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/journeys/",
+    "/api/v1/places"
+   ],
+   "cherry_pick_onto_base": "CLEAN",
+   "merge_tree_exit": 0,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 0,
+    "verdict": "CLEAN",
+    "conflicted_paths": [],
+    "conflicts_in_frontend": [],
+    "conflicts_outside_frontend": [],
+    "messages": []
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": true
+  },
+  {
+   "sha": "15a114e2e777c2526345435ee806875053721368",
+   "short": "15a114e",
+   "at": "2026-09-22T02:07+08",
+   "subject": "feat(frontend): preparing a destination is a flow the traveller can see on a phone (ORD-0193)",
+   "files_frontend": [
+    "frontend/e2e/qoder-destination-preparation.spec.ts",
+    "frontend/src/api/citynexus.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+    "frontend/src/styles.css"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py",
+    "review/probe-ord0193-preparation.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/catalog-hydrations",
+    "/api/v1/catalog-hydrations/",
+    "/api/v1/demo/scene",
+    "/api/v1/destinations/capability"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/src/styles.css",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/src/styles.css"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "Auto-merging frontend/src/styles.css",
+     "CONFLICT (content): Merge conflict in frontend/src/styles.css",
+     "Auto-merging review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [
+    "GET /api/v1/destinations/capability",
+    "POST /api/v1/catalog-hydrations"
+   ],
+   "only_at_head_fields_read": {
+    "GET /api/v1/destinations/capability": [
+     "candidates",
+     "pending_destination_label",
+     "retryable"
+    ],
+    "POST /api/v1/catalog-hydrations": [
+     "pending_destination_label",
+     "retryable"
+    ]
+   },
+   "evidence_added_lines": {
+    "GET /api/v1/destinations/capability": [
+     "body.retryable = true;",
+     "body.retryable = false;",
+     "const candidates = capability?.candidates ?? [];"
+    ],
+    "POST /api/v1/catalog-hydrations": [
+     "body.retryable = true;",
+     "body.retryable = false;",
+     "? `服务器说「${capability.pending_destination_label ?? capability.query}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。`"
+    ]
+   },
+   "new_field_reads_by_role": {
+    "GET /api/v1/destinations/capability": {
+     "E2E-MOCK": {
+      "files": [
+       "frontend/e2e/qoder-destination-preparation.spec.ts"
+      ],
+      "tokens": [
+       "retryable"
+      ],
+      "sample": "body.retryable = true;"
+     },
+     "SHIPPED": {
+      "files": [
+       "frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+      ],
+      "tokens": [
+       "candidates",
+       "pending_destination_label",
+       "retryable"
+      ],
+      "sample": "const candidates = capability?.candidates ?? [];"
+     },
+     "REVIEW-SCRIPT": {
+      "files": [
+       "review/ord0082_0087_kill_drivers.py"
+      ],
+      "tokens": [
+       "pending_destination_label",
+       "retryable"
+      ],
+      "sample": "\"            ? `服务器说「${capability.pending_destination_label ?? capability.query}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。`\\n\","
+     }
+    },
+    "POST /api/v1/catalog-hydrations": {
+     "E2E-MOCK": {
+      "files": [
+       "frontend/e2e/qoder-destination-preparation.spec.ts"
+      ],
+      "tokens": [
+       "retryable"
+      ],
+      "sample": "body.retryable = true;"
+     },
+     "SHIPPED": {
+      "files": [
+       "frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+      ],
+      "tokens": [
+       "pending_destination_label",
+       "retryable"
+      ],
+      "sample": "? `服务器说「${capability.pending_destination_label ?? capability.query}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。`"
+     },
+     "REVIEW-SCRIPT": {
+      "files": [
+       "review/ord0082_0087_kill_drivers.py"
+      ],
+      "tokens": [
+       "pending_destination_label",
+       "retryable"
+      ],
+      "sample": "\"            ? `服务器说「${capability.pending_destination_label ?? capability.query}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。`\\n\","
+     }
+    }
+   },
+   "shipped_new_field_reads": {
+    "GET /api/v1/destinations/capability": {
+     "files": [
+      "frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+     ],
+     "tokens": [
+      "candidates",
+      "pending_destination_label",
+      "retryable"
+     ],
+     "sample": "const candidates = capability?.candidates ?? [];"
+    },
+    "POST /api/v1/catalog-hydrations": {
+     "files": [
+      "frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+     ],
+     "tokens": [
+      "pending_destination_label",
+      "retryable"
+     ],
+     "sample": "? `服务器说「${capability.pending_destination_label ?? capability.query}」没有任何可追溯来源能把它定成一个目的地。这不是网络问题——服务器刚才答得出来。换个写法，或另选一个地方。`"
+    }
+   },
+   "contract_verdict": "DEPENDS_ON_NEWER_CONTRACT",
+   "backport_candidate": false
+  },
+  {
+   "sha": "d0dfc907a293e7b0be93e3247bd983064b33b44d",
+   "short": "d0dfc90",
+   "at": "2026-09-22T13:17+08",
+   "subject": "feat(frontend): the fourth capability cell is on screen, and its retry consumes retryable (ORD-0203)",
+   "files_frontend": [
+    "frontend/e2e/qoder-not-answered-cell.spec.ts",
+    "frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/add-ord0203-mutants.py",
+    "review/ord0082_0087_kill_drivers.py",
+    "review/probe-ord0203-not-answered.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/destinations/capability"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/src/features/discovery/DestinationPreparationPanel.tsx",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "CONFLICT (modify/delete): frontend/src/features/discovery/DestinationPreparationPanel.tsx deleted in 53fe8e8 and modifie",
+     "Auto-merging review/ord0082_0087_kill_drivers.py",
+     "CONFLICT (content): Merge conflict in review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [
+    "GET /api/v1/destinations/capability"
+   ],
+   "only_at_head_fields_read": {
+    "GET /api/v1/destinations/capability": [
+     "retryable"
+    ]
+   },
+   "evidence_added_lines": {
+    "GET /api/v1/destinations/capability": [
+     "server.retryable,",
+     "const retryable = Boolean(capability?.retryable);"
+    ]
+   },
+   "new_field_reads_by_role": {
+    "GET /api/v1/destinations/capability": {
+     "E2E-MOCK": {
+      "files": [
+       "frontend/e2e/qoder-not-answered-cell.spec.ts"
+      ],
+      "tokens": [
+       "retryable"
+      ],
+      "sample": "server.retryable,"
+     },
+     "SHIPPED": {
+      "files": [
+       "frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+      ],
+      "tokens": [
+       "retryable"
+      ],
+      "sample": "const retryable = Boolean(capability?.retryable);"
+     }
+    }
+   },
+   "shipped_new_field_reads": {
+    "GET /api/v1/destinations/capability": {
+     "files": [
+      "frontend/src/features/discovery/DestinationPreparationPanel.tsx"
+     ],
+     "tokens": [
+      "retryable"
+     ],
+     "sample": "const retryable = Boolean(capability?.retryable);"
+    }
+   },
+   "contract_verdict": "DEPENDS_ON_NEWER_CONTRACT",
+   "backport_candidate": false
+  },
+  {
+   "sha": "199067bbdc9026f43d40c4ed51c818554fa56dd2",
+   "short": "199067b",
+   "at": "2026-09-21T22:22+08",
+   "subject": "fix(frontend): a journey the server lost is cleared, named, and never asked for again (ORD-0164)",
+   "files_frontend": [
+    "frontend/e2e/qoder-failure-has-an-exit.spec.ts",
+    "frontend/src/app/V8Experience.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py",
+    "review/probe-ord0164-review-routes.py"
+   ],
+   "endpoints_added_lines": [],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/e2e/qoder-failure-has-an-exit.spec.ts",
+     "frontend/src/app/V8Experience.tsx",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/e2e/qoder-failure-has-an-exit.spec.ts",
+     "frontend/src/app/V8Experience.tsx"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "CONFLICT (modify/delete): frontend/e2e/qoder-failure-has-an-exit.spec.ts deleted in 53fe8e8 and modified in 199067bbdc90",
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/app/V8Experience.tsx",
+     "Auto-merging review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  },
+  {
+   "sha": "8ee64ae0ce287f99bc352ca0d7a5b6c43d0d751a",
+   "short": "8ee64ae",
+   "at": "2026-09-21T23:57+08",
+   "subject": "fix(frontend): one classification per failure, read by banner, aria-live, telemetry and recovery (ORD-0169/R14)",
+   "files_frontend": [
+    "frontend/e2e/qoder-failure-has-an-exit.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "frontend/src/lib/failureAttribution.ts",
+    "frontend/src/styles.css"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py",
+    "review/rewrite-failure-views.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/journeys/"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/e2e/qoder-failure-has-an-exit.spec.ts",
+     "frontend/src/app/V8Experience.tsx",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/e2e/qoder-failure-has-an-exit.spec.ts",
+     "frontend/src/app/V8Experience.tsx",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "CONFLICT (modify/delete): frontend/e2e/qoder-failure-has-an-exit.spec.ts deleted in 53fe8e8 and modified in 8ee64ae0ce28",
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/app/V8Experience.tsx",
+     "Auto-merging frontend/src/features/setup/JourneyTrialSetup.tsx"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  },
+  {
+   "sha": "f1bdbbe2e597c080128cd208d48cc476459f5fb9",
+   "short": "f1bdbbe",
+   "at": "2026-09-22T00:38+08",
+   "subject": "fix(frontend): the saved-copy claim is measured, not assumed (ORD-0178)",
+   "files_frontend": [
+    "frontend/e2e/qoder-offline-persistence.spec.ts",
+    "frontend/e2e/qoder-today-follows-the-stage.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/i18n/LocaleContext.tsx",
+    "frontend/src/lib/offlineJourney.ts"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/src/app/V8Experience.tsx",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/src/app/V8Experience.tsx"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "Auto-merging frontend/e2e/qoder-today-follows-the-stage.spec.ts",
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/app/V8Experience.tsx",
+     "Auto-merging frontend/src/i18n/LocaleContext.tsx"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  },
+  {
+   "sha": "bfdeb1f07109e7c73bbf131d39848ee62f1d6c55",
+   "short": "bfdeb1f",
+   "at": "2026-09-22T01:33+08",
+   "subject": "fix(frontend): the review step's button carries the missing-field fact the screen already prints (ORD-0135 3)",
+   "files_frontend": [
+    "frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/fix-0135-disabled-probe.py",
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "CONFLICT (modify/delete): frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts deleted in 53fe8e8 and modi",
+     "Auto-merging frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "Auto-merging review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  },
+  {
+   "sha": "fab8cb8c98f1e791ae58408e10e22e4c61c6c72e",
+   "short": "fab8cb8",
+   "at": "2026-09-22T14:06+08",
+   "subject": "fix(frontend): the screens stop speaking the product's private vocabulary (ORD-0208)",
+   "files_frontend": [
+    "frontend/e2e/qoder-speaks-the-travellers-language.spec.ts",
+    "frontend/e2e/qoder-today-follows-the-stage.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "frontend/src/styles.css"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/add-ord0208-mutants.py",
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/journeys/"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "frontend/src/styles.css",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "frontend/src/styles.css"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "Auto-merging frontend/e2e/qoder-today-follows-the-stage.spec.ts",
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "Auto-merging frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/features/setup/JourneyTrialSetup.tsx"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  },
+  {
+   "sha": "50b35e038a98dbb055b24d59f6af9d1b270e62d1",
+   "short": "50b35e0",
+   "at": "2026-09-22T16:41+08",
+   "subject": "fix(frontend): the wizard hint recomputes from current values, and the advisory pair is a two-way gate (ORD-0216)",
+   "files_frontend": [
+    "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+    "frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+     "frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+     "frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "CONFLICT (modify/delete): frontend/e2e/qoder-budget-advisory-tiers.spec.ts deleted in 53fe8e8 and modified in 50b35e038a",
+     "CONFLICT (modify/delete): frontend/e2e/qoder-wizard-speaks-human-and-survives-reload.spec.ts deleted in 53fe8e8 and modi",
+     "Auto-merging frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/features/setup/JourneyTrialSetup.tsx"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  },
+  {
+   "sha": "3e259bd32be43a6da5ab3a44a4502f19abb9f99c",
+   "short": "3e259bd",
+   "at": "2026-09-22T18:27+08",
+   "subject": "fix(frontend): the sealed-demo entry stops naming a city the server never chose (ORD-0216 ④)",
+   "files_frontend": [
+    "frontend/e2e/qoder-demo-entry-copy-matches-the-stage.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx",
+    "frontend/src/i18n/LocaleContext.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py",
+    "review/probe-ord0216-scene-city.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/journeys",
+    "/api/v1/travelers"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/src/app/V8Experience.tsx",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/src/app/V8Experience.tsx",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/app/V8Experience.tsx",
+     "Auto-merging frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/features/setup/JourneyTrialSetup.tsx"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  },
+  {
+   "sha": "dfdc5d59205f680306ce429f73240f28e9332b1f",
+   "short": "dfdc5d5",
+   "at": "2026-09-22T19:37+08",
+   "subject": "fix(frontend): the caveat must mean something, the announcement retires, and a refused press reveals its reason (ORD-0220 ①②)",
+   "files_frontend": [
+    "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+    "frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/add-ord0220-2-mutant.py",
+    "review/add-ord0220-2-node.py",
+    "review/add-ord0220-3-mutant.py",
+    "review/add-ord0220-3-node.py",
+    "review/add-ord0220-mutants.py",
+    "review/add-ord0220-semantic-arm.py",
+    "review/ord0082_0087_kill_drivers.py",
+    "review/probe-ord0220-budget-conflict.py"
+   ],
+   "endpoints_added_lines": [],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+     "frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+     "frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "CONFLICT (modify/delete): frontend/e2e/qoder-budget-advisory-tiers.spec.ts deleted in 53fe8e8 and modified in dfdc5d5920",
+     "CONFLICT (modify/delete): frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts deleted in 53fe8e8 and modified in dfd",
+     "Auto-merging frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/features/setup/JourneyTrialSetup.tsx"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  },
+  {
+   "sha": "f7ce8ff13e1bfd94a40be7d72674e89b7d20889e",
+   "short": "f7ce8ff",
+   "at": "2026-09-22T20:10+08",
+   "subject": "fix(frontend): close the raw-enum leak on every path, and scan the screen instead of one node (ORD-0222)",
+   "files_frontend": [
+    "frontend/e2e/qoder-raw-enums-never-reach-the-traveller.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/app/v8Types.ts",
+    "frontend/src/i18n/LocaleContext.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/add-ord0222-mutant.py",
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/journeys/"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/src/app/V8Experience.tsx",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/src/app/V8Experience.tsx"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/app/V8Experience.tsx",
+     "Auto-merging frontend/src/i18n/LocaleContext.tsx",
+     "Auto-merging review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  },
+  {
+   "sha": "c4a40016d25842c221c6fd7a68a86923d0e437ff",
+   "short": "c4a4001",
+   "at": "2026-09-22T20:40+08",
+   "subject": "fix(frontend): reveal the blocked reason instantly, not with an animation (commander's 19:48 rule)",
+   "files_frontend": [
+    "frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts",
+    "frontend/src/features/setup/JourneyTrialSetup.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts",
+     "frontend/src/features/setup/JourneyTrialSetup.tsx"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "CONFLICT (modify/delete): frontend/e2e/qoder-wizard-hint-surface-readings.spec.ts deleted in 53fe8e8 and modified in c4a",
+     "Auto-merging frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/features/setup/JourneyTrialSetup.tsx",
+     "Auto-merging review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  },
+  {
+   "sha": "9544628471a8b963d9e0d23e8b9187fdcce0e443",
+   "short": "9544628",
+   "at": "2026-09-23T01:09+08",
+   "subject": "fix(frontend): a 403 says permission, not sign-in, and the screen's journey is the one submitted (ORD-0126 follow-ups)",
+   "files_frontend": [
+    "frontend/e2e/qoder-a-refusal-says-what-it-is.spec.ts",
+    "frontend/src/lib/failureAttribution.ts"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/add-ord0126-mutants.py",
+    "review/ord0082_0087_kill_drivers.py"
+   ],
+   "endpoints_added_lines": [
+    "/api/v1/demo/scene",
+    "/api/v1/journeys/"
+   ],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/src/lib/failureAttribution.ts",
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/src/lib/failureAttribution.ts"
+    ],
+    "conflicts_outside_frontend": [
+     "review/ord0082_0087_kill_drivers.py"
+    ],
+    "messages": [
+     "CONFLICT (modify/delete): frontend/src/lib/failureAttribution.ts deleted in 53fe8e8 and modified in 9544628471a8b963d9e0",
+     "Auto-merging review/ord0082_0087_kill_drivers.py",
+     "CONFLICT (content): Merge conflict in review/ord0082_0087_kill_drivers.py"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  },
+  {
+   "sha": "e08131e31339977516e1e7a2f3f70c906f37a2d2",
+   "short": "e08131e",
+   "at": "2026-09-23T02:04+08",
+   "subject": "fix(frontend): freeze the tight budget caveat as one sentence the gate compares literally (ORD-0226)",
+   "files_frontend": [
+    "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+    "frontend/src/app/V8Experience.tsx"
+   ],
+   "files_backend": [],
+   "files_other": [
+    "review/build-evidence-payload.py",
+    "review/ord0226_kill_arms.py",
+    "review/ord0226_red_messages.py"
+   ],
+   "endpoints_added_lines": [],
+   "cherry_pick_onto_base": "CONFLICT",
+   "merge_tree_exit": 1,
+   "conflicting_paths": [],
+   "cherry_pick": {
+    "exit": 1,
+    "verdict": "CONFLICT",
+    "conflicted_paths": [
+     "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+     "frontend/src/app/V8Experience.tsx",
+     "review/build-evidence-payload.py"
+    ],
+    "conflicts_in_frontend": [
+     "frontend/e2e/qoder-budget-advisory-tiers.spec.ts",
+     "frontend/src/app/V8Experience.tsx"
+    ],
+    "conflicts_outside_frontend": [
+     "review/build-evidence-payload.py"
+    ],
+    "messages": [
+     "CONFLICT (modify/delete): frontend/e2e/qoder-budget-advisory-tiers.spec.ts deleted in 53fe8e8 and modified in e08131e313",
+     "Auto-merging frontend/src/app/V8Experience.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/app/V8Experience.tsx",
+     "CONFLICT (modify/delete): review/build-evidence-payload.py deleted in 53fe8e8 and modified in e08131e31339977516e1e7a2f3"
+    ]
+   },
+   "diverged_endpoints_touched": [],
+   "only_at_head_fields_read": {},
+   "evidence_added_lines": {},
+   "new_field_reads_by_role": {},
+   "shipped_new_field_reads": {},
+   "contract_verdict": "NO_DEPENDENCE_ON_DIVERGED_FIELDS",
+   "backport_candidate": false
+  }
+ ]
+}
