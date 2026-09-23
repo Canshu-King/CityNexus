@@ -1,0 +1,13 @@
+{
+  "generatedBy": "e345b9d6",
+  "node": "ord0251-3",
+  "journeyId": "5766e88b-d68f-45d5-8b56-02ce375a8577",
+  "posts": 1,
+  "planReads": 2,
+  "resultStatus": "BASELINE_UNAVAILABLE",
+  "dataPlanCount": "unknown",
+  "sentinelOnAttribute": false,
+  "paintedText": "无法确认这次的结果 无法确认本次是否生成了新方案，请重试或刷新页面。",
+  "rule": "内部仍然可以用 -1 表示「不知道」，但它不得出现在被门消费的 data-* 上，也不得上屏",
+  "publishedBy": "e345b9d6 for ORD-0251"
+}
