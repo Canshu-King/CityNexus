@@ -595,7 +595,17 @@ def test_g3e_admission_race_no_caller_may_see_another_before_commit(monkeypatch)
 
 
 def test_g3_xproc_loser_readback_five_processes_one_operation() -> None:
-    """G3_XPROC_LOSER_READBACK: five separate OS processes must be handed one operation.
+    """G3_XPROC_LOSER_READBACK, **supporting** tier per arbiter A-2 (bus ``5788111742``, 10:5x).
+
+    A-2's ruling on this exact shape: ``ACCEPTED_STORE_LEVEL_SUPPORTING_EVIDENCE`` - the value is
+    real (five OS processes, durable index + loser read-back, mutant Y3 kills it), but it calls
+    ``submit_operation`` inside a bare interpreter, so it crosses no HTTP / app-process boundary, and
+    it buys its interleaving by *answering* the first two open-operation lookups with ``None``.  The
+    closure claim therefore lives in ``tests/test_qoder_g3_xproc_http.py`` (two spawned uvicorn PIDs,
+    HTTP, one fresh database, and the blind spot scheduled on the storage layer instead of imposed on
+    a read).  This door stays because it is the only arm that measures the *earliest* possible
+    interleaving - both callers told "nothing is open" before either wrote - at no process-startup
+    cost; it is not the door a closure signature gets written against.
 
     Why this door exists as its own process-level shape: every other g3 door runs its callers inside
     one interpreter, where a SQLAlchemy session, an identity map and the module-level dispatch set are
