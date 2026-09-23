@@ -1,0 +1,677 @@
+diff --git a/frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts b/frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts
+new file mode 100644
+index 0000000..94c1ea0
+--- /dev/null
++++ b/frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts
+@@ -0,0 +1,112 @@
++/**
++ * ORD-0261 (read-only reproduction first): HJ-P3 measured that `0fd3cc7` fixed the *sizes* on the
++ * wizard screen — 「看支持的目的地」91×30⇒91×44 and 「高级设置」349×16⇒349×44 — but the centre of the
++ * 「高级设置」 SUMMARY lands on a different control with the same label (the `trial-show-advanced`
++ * BUTTON that sits beside the details and force-opens it).  Size is not tappability.
++ *
++ * This file measures and reports only: it enumerates every rendered control by label on the wizard
++ * screen at 390×844 and records, for each, what `elementFromPoint(centre)` actually hits.  The
++ * red/green acceptance and its killer get written only after the commander rules on the reproduction;
++ * per the single-writer protocol this candidate ships as a measurement, not a fix.
++ */
++import { expect, test, type Page } from "@playwright/test";
++import { writeFileSync } from "node:fs";
++import { evidencePath } from "./_qoderEvidence";
++
++const FILE = "e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts";
++const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
++const VIEWPORT = { width: 390, height: 844 };
++test.use({ viewport: VIEWPORT, hasTouch: true });
++
++const LABELS = ["高级设置", "看支持的目的地"];
++
++type Hit = {
++  label: string;
++  role: string;
++  box: [number, number];
++  centre: [number, number];
++  hitTag: string;
++  hitRole: string;
++  hitText: string;
++  hitsItself: boolean;
++};
++
++async function openWizard(page: Page) {
++  const seeded = (await (await page.request.get("/api/v1/demo/scene")).json()) as {
++    journey_id?: string;
++  };
++  const journeyId = String(seeded.journey_id ?? "");
++  expect(journeyId.length, node("seed", "/api/v1/demo/scene returned no journey_id")).toBeGreaterThan(8);
++  await page.addInitScript((id) => {
++    localStorage.clear();
++    localStorage.setItem("citynexus.locale", "zh-CN");
++    // A stored journey id would drop the wizard straight to the hub; this screen needs the wizard.
++    localStorage.removeItem("citynexus.v8.journey_id");
++  }, journeyId);
++  await page.goto("/v8", { waitUntil: "load" });
++  await page.waitForTimeout(1_000);
++}
++
++/** Every rendered control whose text matches one of the labels, with the true centre hit. */
++async function inventory(page: Page): Promise<Hit[]> {
++  return await page.evaluate((labels: string[]) => {
++    const out: unknown[] = [];
++    for (const el of Array.from(document.querySelectorAll("button, summary, a"))) {
++      const text = (el.textContent ?? "").replace(/\s+/g, " ").trim();
++      if (!labels.some((label) => text.includes(label))) continue;
++      const box = el.getBoundingClientRect();
++      if (box.width <= 0 || box.height <= 0) continue;
++      const cx = box.left + box.width / 2;
++      const cy = box.top + box.height / 2;
++      const hit = document.elementFromPoint(cx, cy);
++      const hitText = hit ? (hit.textContent ?? "").replace(/\s+/g, " ").trim() : "";
++      const role = el.tagName === "SUMMARY" ? "summary" : el.tagName.toLowerCase();
++      const hitRole = hit ? (hit.tagName === "SUMMARY" ? "summary" : hit.tagName.toLowerCase()) : "";
++      out.push({
++        label: text.slice(0, 20),
++        role,
++        box: [Math.round(box.width), Math.round(box.height)],
++        centre: [Math.round(cx), Math.round(cy)],
++        hitTag: hit ? hit.tagName : "",
++        hitRole,
++        hitText: hitText.slice(0, 20),
++        // "命中它自己（或它内部的 label）" — a control counts when the browser's own hit test lands
++        // on it or on a descendant of it, not on a sibling that happens to share the words.
++        hitsItself: hit === el || (!!hit && el.contains(hit)),
++      });
++    }
++    return out;
++  }, LABELS);
++}
++
++test("ord0261-readonly-1-the-reproduction-at-current-head — 复现：中心到底命中谁", async ({ page }) => {
++  test.setTimeout(180_000);
++  await openWizard(page);
++  const rows = await inventory(page);
++
++  // The sweep must have actually found both reported controls; an empty inventory measures nothing.
++  for (const label of LABELS) {
++    expect(
++      rows.some((row) => row.label.includes(label)),
++      node("ord0261-readonly-1", `"${label}" was not found on the wizard screen at all`),
++    ).toBe(true);
++  }
++
++  const overlapping = rows.filter((row) => !row.hitsItself);
++  const summary = {
++    generatedBy: "e345b9d6",
++    order: "ORD-0261 read-only reproduction (no fix shipped, per the single-writer protocol)",
++    at: new Date().toISOString(),
++    tree: "agent/d-e345b9d6-candidates @ dea8410 (the authoritative tree, read-only)",
++    viewport: VIEWPORT,
++    labelsSwept: LABELS,
++    controls: rows,
++    centreMisses: overlapping,
++    verdict:
++      overlapping.length === 0
++        ? "NOT_REPRODUCED_AT_THIS_HEAD — every labelled control's centre hits itself"
++        : `REPRODUCED: ${overlapping.map((row) => `${row.label}(${row.role}) ${row.box.join("x")} centre hits <${row.hitTag}> "${row.hitText}"`).join(" | ")}`,
++  };
++  writeFileSync(evidencePath("ord0261-overlap-readonly.json"), JSON.stringify(summary, null, 1));
++  console.log("ORD0261_VERDICT:", summary.verdict);
++});
+diff --git a/frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts b/frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts
+new file mode 100644
+index 0000000..82f7968
+--- /dev/null
++++ b/frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts
+@@ -0,0 +1,219 @@
++/**
++ * ORD-0261 + ORD-0264 -- wizard "高级设置" tappability, under the arbiter's 17:19 contract.
++ *
++ *   ORD-0264 contract = SCROLL_REACHABLE_AND_TAPPABLE (NOT "visible at scrollTop"): the opener is a
++ *   secondary/advanced entry, so it must stay in step 1, be reachable by ordinary scrolling, be free
++ *   of chrome at rest, hit-test to itself, and really open the details — with the draft intact.
++ *
++ * The five cells the ruling names:
++ *   1 locality    — the opener belongs to the step-1 region it opens, asserted by DOM containment
++ *                   inside the rendered step-1 card (NOT class-name geometry), so "move it back to
++ *                   the page tail" is a meaningful reverse mutation;
++ *   2 human path  — scrollIntoView is a geometric diagnostic only; the evidence of reachability is a
++ *                   real mouse wheel roll with a recorded scrollY delta, then the centre hit-test;
++ *   3 semantics   — the seven required behaviours asserted one by one, including "draft survives
++ *                   scrolling and expanding";
++ *   4 arms        — K261_REMOVE_STICKY_RESERVE and K264_MOVE_OPENER_BACK_TO_PAGE_TAIL (overlap reds
++ *                   under K264 are collateral, not independent evidence — that is what locality buys);
++ *   5 control     — 「看支持的目的地」 stays as the positive control so the gate cannot drift into
++ *                   "every summary must be big and centred".
++ */
++import { expect, test, type Page } from "@playwright/test";
++import { writeFileSync } from "node:fs";
++import { evidencePath } from "./_qoderEvidence";
++
++const FILE = "e2e/qoder-wizard-advanced-is-tappable.spec.ts";
++const node = (id: string, detail: string) => `${FILE} :: ${id} — ${detail}`;
++const VIEWPORT = { width: 390, height: 844 };
++test.use({ viewport: VIEWPORT, hasTouch: true });
++
++const LABELS = ["高级设置", "看支持的目的地"];
++/** A typed word that must survive scrolling and expanding (ruling cell 3). */
++const DRAFT_WORD = "外滩";
++
++type Hit = {
++  label: string;
++  role: string;
++  box: [number, number];
++  centre: [number, number];
++  hitTag: string;
++  hitText: string;
++  hitsItself: boolean;
++  inViewport: boolean;
++  scrollY: number;
++};
++
++async function openWizard(page: Page) {
++  const seeded = (await (await page.request.get("/api/v1/demo/scene")).json()) as {
++    journey_id?: string;
++  };
++  const journeyId = String(seeded.journey_id ?? "");
++  expect(journeyId.length, node("seed", "/api/v1/demo/scene returned no journey_id")).toBeGreaterThan(8);
++  await page.addInitScript((id) => {
++    localStorage.clear();
++    localStorage.setItem("citynexus.locale", "zh-CN");
++    localStorage.removeItem("citynexus.v8.journey_id");
++  }, journeyId);
++  await page.goto("/v8", { waitUntil: "load" });
++  await page.waitForTimeout(1_000);
++}
++
++async function typeDraft(page: Page) {
++  const city = page.getByTestId("trial-city");
++  await expect(city).toBeVisible({ timeout: 15_000 });
++  await city.fill(DRAFT_WORD);
++  expect(await city.inputValue(), node("draft", "the fixture word did not land in the field")).toBe(DRAFT_WORD);
++}
++
++/**
++ * Human-path witness: roll the mouse wheel until the element intersects the viewport, recording the
++ * scrollY delta. `scrollIntoView` teleports and proves nothing about a traveller's reach.
++ */
++async function wheelToControl(page: Page, selector: string) {
++  const before = await page.evaluate(() => Math.round(window.scrollY));
++  for (let roll = 0; roll < 30; roll += 1) {
++    const visible = await page.evaluate((sel) => {
++      const el = document.querySelector(sel);
++      if (!el) return false;
++      const box = el.getBoundingClientRect();
++      return box.top >= 0 && box.bottom <= window.innerHeight && box.height > 0;
++    }, selector);
++    if (visible) break;
++    await page.mouse.wheel(0, 240);
++    await page.waitForTimeout(120);
++  }
++  const after = await page.evaluate(() => Math.round(window.scrollY));
++  return { before, after, scrolled: after - before };
++}
++
++async function centreProbe(page: Page, selector: string) {
++  return await page.$eval(
++    selector,
++    (el) => {
++      const box = el.getBoundingClientRect();
++      const cx = box.left + box.width / 2;
++      const cy = box.top + box.height / 2;
++      const landed = document.elementFromPoint(cx, cy);
++      return {
++        box: [Math.round(box.width), Math.round(box.height)] as [number, number],
++        centre: [Math.round(cx), Math.round(cy)] as [number, number],
++        hitTag: landed ? landed.tagName : "",
++        hitText: landed ? (landed.textContent ?? "").replace(/\s+/g, " ").trim().slice(0, 20) : "",
++        hitsItself: landed === el || (!!landed && el.contains(landed)),
++        inViewport: cy >= 0 && cy <= window.innerHeight,
++        scrollY: Math.round(window.scrollY),
++      };
++    },
++  );
++}
++
++test("ord0261-sticky-bar-must-not-cover-the-summary-row — sticky 条不许压住 summary 行", async ({ page }) => {
++  test.setTimeout(180_000);
++  await openWizard(page);
++  await typeDraft(page);
++
++  // Human-path witness for the summary too: the row starts below the fold at 390x844.
++  const roll = await wheelToControl(page, ".trial-advanced > summary");
++  const probe = await centreProbe(page, ".trial-advanced > summary");
++  expect(
++    probe.hitsItself,
++    node(
++      "ord0261",
++      `after a real wheel roll of ${roll.scrolled}px the summary's centre (${probe.centre.join(",")}) hit <${probe.hitTag}> "${probe.hitText}" instead of the summary itself`,
++    ),
++  ).toBe(true);
++  expect(roll.scrolled, node("ord0261", "the wheel produced no scroll, so nothing was reached")).toBeGreaterThan(0);
++
++  // Positive control: a genuinely free control must still pass, so the gate cannot become
++  // "every disclosure must be big and centred".
++  await wheelToControl(page, ".trial-supported > summary");
++  const control = await centreProbe(page, ".trial-supported > summary");
++  expect(control.hitsItself, node("ord0261", "the positive control no longer hits itself")).toBe(true);
++
++  writeFileSync(
++    evidencePath("ord0261-tappability-reading.json"),
++    JSON.stringify(
++      { generatedBy: "e345b9d6", order: "ORD-0261", viewport: VIEWPORT, wheel: roll, summaryProbe: probe, controlProbe: control },
++      null,
++      1,
++    ),
++  );
++});
++
++test("ord0264-opener-is-scroll-reachable-and-tappable — 高级入口要滚得到、点得动、不伤草稿", async ({ page }) => {
++  test.setTimeout(240_000);
++  await openWizard(page);
++  await typeDraft(page);
++
++  // Cell 1, locality: the opener must live inside the rendered step-1 card -- the DOM region it
++  // opens. Asserted by containment, not by class names or geometry.
++  const locality = await page.evaluate(() => {
++    const opener = document.querySelector('[data-testid="trial-show-advanced"]');
++    const stepCard = document.querySelector('[data-testid="trial-step1-body"], .trial-advanced')?.closest(
++      '[data-testid="trial-step1-body"]',
++    );
++    const details = document.querySelector(".trial-advanced");
++    return {
++      openerPresent: !!opener,
++      insideStep1Card: !!opener && !!stepCard && stepCard.contains(opener),
++      adjacentToItsDetails: !!opener && !!details && (details.contains(opener) || details.nextElementSibling === opener || opener.nextElementSibling === details || details.parentElement === opener.parentElement),
++    };
++  });
++  expect(locality.openerPresent, node("ord0264", "the opener button is not rendered at all")).toBe(true);
++  expect(
++    locality.insideStep1Card,
++    node(
++      "ord0264",
++      `the opener is not inside the step-1 card it belongs to (locality ${JSON.stringify(locality)}) -- moved back to the page tail?`,
++    ),
++  ).toBe(true);
++  expect(
++    locality.adjacentToItsDetails,
++    node("ord0264", `the opener is not adjacent to the details it opens: ${JSON.stringify(locality)}`),
++  ).toBe(true);
++
++  // Cell 2, human path: an ordinary wheel roll must bring it into the viewport. Recorded delta is
++  // the proof the scroll really happened; scrollIntoView is not used here at all.
++  const roll = await wheelToControl(page, '[data-testid="trial-show-advanced"]');
++  expect(
++    roll.scrolled,
++    node("ord0264", `the wheel rolled 0px -- the opener is not scroll-reachable (${JSON.stringify(roll)})`),
++  ).toBeGreaterThan(0);
++
++  const probe = await centreProbe(page, '[data-testid="trial-show-advanced"]');
++  expect(
++    probe.inViewport,
++    node("ord0264", `after scrolling ${roll.scrolled}px the opener's centre is at y=${probe.centre[1]} -- still out of reach`),
++  ).toBe(true);
++  expect(
++    probe.hitsItself,
++    node(
++      "ord0264",
++      `the opener's centre hit <${probe.hitTag}> "${probe.hitText}" instead of the button -- chrome covering it at rest`,
++    ),
++  ).toBe(true);
++
++  // Draft survival across the scroll (cell 3): what the traveller typed must still be there.
++  expect(
++    await page.getByTestId("trial-city").inputValue(),
++    node("ord0264", "the typed draft did not survive the scroll"),
++  ).toBe(DRAFT_WORD);
++
++  // Cell 3 continued: a real click opens the advanced block, and the draft survives that too.
++  await page.getByTestId("trial-show-advanced").click();
++  await expect(page.locator(".trial-advanced")).toHaveAttribute("open", "");
++  expect(
++    await page.getByTestId("trial-city").inputValue(),
++    node("ord0264", "the typed draft did not survive opening the advanced block"),
++  ).toBe(DRAFT_WORD);
++
++  writeFileSync(
++    evidencePath("ord0264-scroll-reachable-reading.json"),
++    JSON.stringify(
++      { generatedBy: "e345b9d6", order: "ORD-0264", viewport: VIEWPORT, locality, wheel: roll, probe, draftWord: DRAFT_WORD },
++      null,
++      1,
++    ),
++  );
++  await page.screenshot({ path: evidencePath(`ui-overnight/ord0264-reachable-${process.env.CITYNEXUS_E2E_RUN_ID ?? "dev"}.png`) });
++});
+diff --git a/frontend/src/features/setup/JourneyTrialSetup.tsx b/frontend/src/features/setup/JourneyTrialSetup.tsx
+index 9ccbffe..cb0a785 100644
+--- a/frontend/src/features/setup/JourneyTrialSetup.tsx
++++ b/frontend/src/features/setup/JourneyTrialSetup.tsx
+@@ -800,6 +800,24 @@ export function JourneyTrialSetup({
+               </label>
+             </div>
+           </details>
++          {/* ORD-0264: this opener used to render in the page-bottom secondary row, where its centre
++              measured y=1208 in an 844px viewport -- on a phone it was permanently below the fold and
++              untappable. It now sits directly under the details it opens. The width (350×44) and the
++              min-height the class-level floor gives it are unchanged; only its position moved. */}
++          {step === 1 && (
++            <button
++              type="button"
++              className="trial-back-link"
++              data-testid="trial-show-advanced"
++              onClick={() => {
++                setAdvanced(true);
++                const node = document.querySelector(".trial-advanced") as HTMLDetailsElement | null;
++                if (node) node.open = true;
++              }}
++            >
++              {zh ? "高级设置" : "Advanced settings"}
++            </button>
++          )}
+         </div>
+       )}
+ 
+@@ -1239,20 +1257,6 @@ export function JourneyTrialSetup({
+         >
+           {t("trial.tianjinDemo")}
+         </button>
+-        {step === 1 && (
+-          <button
+-            type="button"
+-            className="trial-back-link"
+-            data-testid="trial-show-advanced"
+-            onClick={() => {
+-              setAdvanced(true);
+-              const node = document.querySelector(".trial-advanced") as HTMLDetailsElement | null;
+-              if (node) node.open = true;
+-            }}
+-          >
+-            {zh ? "高级设置" : "Advanced settings"}
+-          </button>
+-        )}
+       </div>
+     </section>
+   );
+diff --git a/frontend/src/styles.css b/frontend/src/styles.css
+index 893796d..b942bf6 100644
+--- a/frontend/src/styles.css
++++ b/frontend/src/styles.css
+@@ -668,6 +668,20 @@ button { display: block; width: 100%; margin-top: 12px; border: 0; border-radius
+   padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+   background: linear-gradient(to top, var(--v8-canvas) 70%, transparent);
+ }
++/* ORD-0261: the bar's gradient paints over whatever scrolls beneath it, and measured at 390x844 the
++   "高级设置" summary's centre landed on the bar's 下一步 button -- a control hidden by chrome. The bar
++   keeps its job (the primary action stays reachable); the scrolling content (.trial-steps wraps all
++   step content) now ends above the bar, so at rest it overlaps only the bar's own padding.  The
++   reserve rides the same media query as the bar's own bottom clearance, and it must track the bar's
++   real height (two 44px buttons + padding ≈ 76px). */
++.cn-onboarding .trial-steps {
++  padding-bottom: calc(76px + env(safe-area-inset-bottom, 0px));
++}
++@media (max-width: 680px) {
++  .cn-onboarding .trial-steps {
++    padding-bottom: calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px));
++  }
++}
+ .trial-sticky-cta .v8-primary-button {
+   min-width: 140px;
+ }
+diff --git a/review/ord0261_0264_kill_arms.py b/review/ord0261_0264_kill_arms.py
+new file mode 100644
+index 0000000..f38d819
+--- /dev/null
++++ b/review/ord0261_0264_kill_arms.py
+@@ -0,0 +1,240 @@
++"""ORD-0261/0264 acceptance: the two ruling-named arms, each owning one node, on my branch bytes.
++
++K261_REMOVE_STICKY_RESERVE deletes the 76px (+mobile clearance) reserve from styles.css -- the sticky
++bar's gradient then paints over the summary row again and the 0261 node must redden at its centre
++hit-test.
++
++K264_MOVE_OPENER_BACK_TO_PAGE_TAIL relocates the opener button back into the page-bottom secondary
++row -- the locality cell (step-1-card containment) must redden FIRST; any centre-hit overlap red is
++collateral, not independent evidence, which is exactly what the locality cell exists to guarantee.
++
++Same discipline as previous runs: green baseline of the owner file before every arm, mutations through
++`live_checks/mutation_anchor_guard.py` (sha-verified restore), INVALID_STACK when a run produces no
++per-test summary, ports pre-flighted, tree byte-identical after, and a mirror spec per arm for
++collateral visibility. Receipt = claimed_result only; grading is the verifier's.
++"""
++
++from __future__ import annotations
++
++import json
++import re
++import subprocess
++import sys
++import time
++from hashlib import sha256
++from pathlib import Path
++
++ROOT = Path("D:/moodle/_qoder_d_lane_20260923")
++sys.path.insert(0, str(Path("D:/moodle/_qoder_integration_20260919/live_checks")))
++from mutation_anchor_guard import temporary_guarded_replace  # noqa: E402
++
++for _stream in (sys.stdout, sys.stderr):
++    if hasattr(_stream, "reconfigure"):
++        _stream.reconfigure(encoding="utf-8", errors="replace")
++
++OWNER = "e2e/qoder-wizard-advanced-is-tappable.spec.ts"
++MIRROR = "e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts"
++TSX = ROOT / "frontend/src/features/setup/JourneyTrialSetup.tsx"
++CSS = ROOT / "frontend/src/styles.css"
++PYTHON = "D:/moodle/CityNexus/.venv/Scripts/python.exe"
++RECEIPT = ROOT / "review/evidence/ui-overnight/ord0261-0264-arms.json"
++
++FILES = [TSX, CSS]
++
++RESERVE = (
++    "@media (max-width: 680px) {\n"
++    "  .cn-onboarding .trial-steps {\n"
++    "    padding-bottom: calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px));\n"
++    "  }\n"
++    "}"
++)
++OPENER_BLOCK = (
++    "          {step === 1 && (\n"
++    "            <button\n"
++    "              type=\"button\"\n"
++    "              className=\"trial-back-link\"\n"
++    "              data-testid=\"trial-show-advanced\"\n"
++    "              onClick={() => {\n"
++    "                setAdvanced(true);\n"
++    "                const node = document.querySelector(\".trial-advanced\") as HTMLDetailsElement | null;\n"
++    "                if (node) node.open = true;\n"
++    "              }}\n"
++    "            >\n"
++    "              {zh ? \"高级设置\" : \"Advanced settings\"}\n"
++    "            </button>\n"
++    "          )}\n"
++)
++
++# name, owner node, file, anchor, mutant, why
++ARMS = [
++    (
++        "K261_REMOVE_STICKY_RESERVE",
++        "ord0261",
++        CSS,
++        RESERVE,
++        "",
++        "the named reverse mutation: the reserve is gone, so the sticky bar's gradient paints over the "
++        "summary row again and its centre hit-test must fail",
++    ),
++    (
++        "K264_MOVE_OPENER_BACK_TO_PAGE_TAIL",
++        "ord0264",
++        TSX,
++        OPENER_BLOCK,
++        "",
++        "the named reverse mutation: the opener returns to the page tail, the locality cell must redden "
++        "first and any overlap red is collateral",
++    ),
++]
++
++
++def digests() -> dict[str, str]:
++    return {path.name: sha256(path.read_bytes()).hexdigest() for path in FILES}
++
++
++def port_busy(port: int) -> bool:
++    out = subprocess.run(
++        "netstat -ano -p tcp",
++        capture_output=True,
++        text=True,
++        encoding="utf-8",
++        errors="replace",
++        shell=True,
++    ).stdout
++    return any(f":{port} " in line and "LISTENING" in line for line in out.splitlines())
++
++
++def run(label: str, port: int, spec: str) -> dict:
++    env_cmd = [PYTHON, str(ROOT / "review/run_spec.py"), spec, str(port)]
++    env = dict(os.environ)
++    env["CNX_LANE_ROOT"] = str(ROOT)
++    started = time.time()
++    proc = subprocess.run(
++        env_cmd, cwd=str(ROOT), env=env, capture_output=True, text=True, encoding="utf-8", errors="replace"
++    )
++    out = proc.stdout + proc.stderr
++    run_id = next(
++        (line.split("run_id=", 1)[1].split()[0] for line in out.splitlines() if line.startswith("run_id=")), ""
++    )
++    summary = next(
++        (line.strip() for line in reversed(out.splitlines()) if " passed" in line or " failed" in line), ""
++    )
++    nodes: dict[str, str] = {}
++    for line in out.splitlines():
++        verdict = "GREEN" if line.lstrip().startswith("ok") else "RED" if re.match(r"^\s*[x✘]", line) else None
++        if verdict:
++            m2 = re.search(r"(ord02[0-9]+)-", line)
++            if m2:
++                nodes[m2.group(1)] = verdict
++    print(
++        f"[{label}] exit={proc.returncode} run_id={run_id} {round(time.time() - started)}s {summary!r} "
++        + " ".join(f"{k}:{v}" for k, v in sorted(nodes.items())),
++        flush=True,
++    )
++    return {
++        "label": label,
++        "spec": spec,
++        "exitCode": proc.returncode,
++        "runId": run_id,
++        "summary": summary,
++        "stackStarted": bool(summary),
++        "nodes": nodes,
++    }
++
++
++import os  # noqa: E402
++
++
++def main() -> int:
++    tag = sys.argv[1] if len(sys.argv) > 1 else "first"
++    port = int(sys.argv[2]) if len(sys.argv) > 2 else 4630
++    span = list(range(port, port + 3 * len(ARMS)))
++    busy = sorted({p for p in span + [p + 4000 for p in span] if port_busy(p)})
++    if busy:
++        print(f"ABORT: ports already listening: {busy}")
++        return 6
++    originals = digests()
++    for name, _owner, path, anchor, _mutant, _why in ARMS:
++        hits = open(path, encoding="utf-8", newline="").read().count(anchor)
++        if hits != 1:
++            print(f"ABORT: {name} anchor hits={hits} in {path.name}, expected exactly 1")
++            return 2
++
++    record = {
++        "generatedBy": "e345b9d6",
++        "order": "ORD-0261 + ORD-0264",
++        "runTag": tag,
++        "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
++        "tree": str(ROOT),
++        "contract": "SCROLL_REACHABLE_AND_TAPPABLE (arbiter 17:19) with locality + human-path witness cells",
++        "armsNamedByRuling": [a[0] for a in ARMS],
++        "verifierNote": "claimed_result only; derived_result/direct_red/collateral_red are WRITTEN_BY_VERIFIER",
++        "filesBefore": originals,
++        "arms": [],
++    }
++    for name, owner, path, anchor, _mutant, why in ARMS:
++        print(f"\n=== {name} (owner {owner}) ===", flush=True)
++        baseline = run("baseline-owner-spec", port, OWNER)
++        port += 1
++        before = digests()
++        with temporary_guarded_replace(path, anchor.encode(), b"", expected_hits=1) as guard:
++            attempt = run("mutated-owner-spec", port, OWNER)
++            port += 1
++            mirror = run("same-mutant-mirror-spec", port, MIRROR)
++            port += 1
++        after = digests()
++        red = sorted(k for k, v in attempt["nodes"].items() if v == "RED")
++        record["arms"].append(
++            {
++                "name": name,
++                "ownerNode": owner,
++                "why": why,
++                "file": str(path),
++                "anchor_hits": guard.anchor_hits,
++                "bytes_changed": guard.bytes_changed,
++                "mutated_sha256": guard.mutated_sha256,
++                "restored_exact": after[path.name] == before[path.name] == originals[path.name],
++                "baseline": baseline,
++                "attempt": attempt,
++                "mirror": mirror,
++                "redSet": red,
++                "exclusiveToOwner": red == [owner],
++                "claimed_result": (
++                    "INVALID_STACK"
++                    if not (baseline["stackStarted"] and attempt["stackStarted"])
++                    else "KILLED"
++                    if attempt["nodes"].get(owner) == "RED" and baseline["nodes"].get(owner) == "GREEN"
++                    else "SURVIVED"
++                    if attempt["nodes"].get(owner) == "GREEN"
++                    else "BASELINE_RED -- arm not measured"
++                ),
++            }
++        )
++
++    record["filesAfter"] = digests()
++    record["treeUnchangedByThisRun"] = record["filesAfter"] == originals
++    record["allArmsKilled"] = all(a["claimed_result"] == "KILLED" for a in record["arms"])
++    record["exclusiveKiller"] = {
++        a["ownerNode"]: [a["name"] for a in record["arms"] if a["exclusiveToOwner"] and a["ownerNode"] == a["ownerNode"]]
++        for a in record["arms"]
++    }
++    record["mirrorCollateral"] = [
++        {"arm": a["name"], "mirrorRed": sorted(k for k, v in a["mirror"]["nodes"].items() if v == "RED")}
++        for a in record["arms"]
++    ]
++    out_path = RECEIPT.with_name(f"ord0261-0264-arms-{tag}.json")
++    out_path.parent.mkdir(parents=True, exist_ok=True)
++    out_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
++    for arm in record["arms"]:
++        print(
++            f"{arm['claimed_result']:14s} owner={arm['ownerNode']} red={','.join(arm['redSet']) or '-'} "
++            f"anchor_hits={arm['anchor_hits']} bytes_changed={arm['bytes_changed']} "
++            f"restored_exact={arm['restored_exact']}  {arm['name']}"
++        )
++    print(f"allArmsKilled={record['allArmsKilled']} treeUnchanged={record['treeUnchangedByThisRun']}")
++    print(f"receipt={out_path}")
++    return 0 if record["treeUnchangedByThisRun"] and record["allArmsKilled"] else 1
++
++
++if __name__ == "__main__":
++    sys.exit(main())
+diff --git a/review/run_spec.py b/review/run_spec.py
+index 2ecd634..c572b6b 100644
+--- a/review/run_spec.py
++++ b/review/run_spec.py
+@@ -16,7 +16,7 @@ for _stream in (sys.stdout, sys.stderr):
+     if hasattr(_stream, "reconfigure"):
+         _stream.reconfigure(encoding="utf-8", errors="replace")
+ 
+-ROOT = "D:/moodle/_qoder_integration_20260919"
++ROOT = os.environ.get("CNX_LANE_ROOT", "D:/moodle/_qoder_integration_20260919")
+ 
+ 
+ def main() -> int:
