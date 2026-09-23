@@ -1,0 +1,203 @@
+{
+ "candidate_tip": "0357213",
+ "base": "dea8410be809ebf6c5046581873584e9dbf32b64",
+ "items": {
+  "1a_candidate_ancestry": {
+   "base_is_ancestor_of_candidate": true,
+   "cherry_pick_attributions_present": 10,
+   "commits_on_candidate": 10,
+   "verdict": "MET"
+  },
+  "1b_landed_ancestry": {
+   "reviewed_baseline": "dea8410be809ebf6c5046581873584e9dbf32b64",
+   "landed_tip": "035721357da99a43c276f5803df83c3b08c1361c",
+   "measured_tree_head": "035721357da99a43c276f5803df83c3b08c1361c",
+   "authoritative_branch_tip": "035721357da99a43c276f5803df83c3b08c1361c",
+   "base_is_ancestor_of_landed": true,
+   "landed_equals_measured_tree": true,
+   "landed_equals_authoritative_tip": true,
+   "verdict": "MET"
+  },
+  "2_single_truth": {
+   "DEMO_ACCESSIBILITY_EVIDENCE_files_with_nonzero_hits_in_app": "0",
+   "write_sites_of_accessibility_evidence": 1,
+   "write_sites_of_bare_accessibility_key": 0,
+   "capabilities_py_diff_lines": 0,
+   "ruled_severity_lines_on_candidate": [
+    "        add(\"STROLLER\", {\"present\": True}, severity=\"HARD\" if hard else None)",
+    "        add(\"LARGE_LUGGAGE\", {\"present\": True}, severity=\"HARD\" if hard else None)"
+   ],
+   "verdict": "MET"
+  },
+  "3_carrying_vs_declared": {
+   "carrying": [
+    "place-city-park",
+    "place-design-library",
+    "place-tech-art"
+   ],
+   "declared": [
+    "place-city-park",
+    "place-design-library",
+    "place-tech-art"
+   ],
+   "both_non_empty": true,
+   "sets_agree": true,
+   "facts_agree": true,
+   "server_stamped_provenance": {
+    "place-tech-art": "DEMO",
+    "place-city-park": "DEMO",
+    "place-design-library": "DEMO"
+   },
+   "no_value_says_LIVE": true,
+   "fresh_db_existed_before": false,
+   "verdict": "MET"
+  },
+  "4_both_directions": {
+   "STROLLER": {
+    "candidates": 3,
+    "pass": 2,
+    "named_block": 1,
+    "per_candidate": {
+     "0a1dcd9c": "PASS",
+     "55523d40": "BLOCK(named)",
+     "6c07d3ca": "PASS"
+    },
+    "conflicting_stops": {
+     "0a1dcd9c": [],
+     "55523d40": [
+      "place-tech-art"
+     ],
+     "6c07d3ca": []
+    },
+    "verdict": "MET"
+   },
+   "LARGE_LUGGAGE": {
+    "candidates": 3,
+    "pass": 2,
+    "named_block": 1,
+    "per_candidate": {
+     "0a1dcd9c": "PASS",
+     "55523d40": "PASS",
+     "6c07d3ca": "BLOCK(named)"
+    },
+    "conflicting_stops": {
+     "0a1dcd9c": [],
+     "55523d40": [],
+     "6c07d3ca": [
+      "place-design-library"
+     ]
+    },
+    "verdict": "MET"
+   },
+   "verdict": "MET"
+  },
+  "5_tripwire_and_killer": {
+   "as_is": "======================= 14 passed, 2 warnings in 5.07s ========================",
+   "tripwire_green_as_is": true,
+   "arms_that_redden_only_the_tripwire": [
+    "M8 白名单放宽到整条记录裁决（step_free/evidence_status 也能穿过）"
+   ],
+   "all_arms_anchor_hit_1_and_byte_restored": true,
+   "nodes_without_a_killer": [],
+   "verdict": "MET"
+  },
+  "6_candidate_tip_rerun": {
+   "ord0219_doors": 14,
+   "ord0219_arms": 16,
+   "ord0236_as_is": "============================== 3 passed in 0.68s ==============================",
+   "ord0236_doors": 3,
+   "ord0236_arms_all_killed_their_owner": true,
+   "ord0236_every_door_has_a_killer": true,
+   "t3_non_empty_guard_still_present": true,
+   "full_suite_line": "8 failed, 1200 passed, 15 skipped, 1 xfailed, 6 warnings in 142.56s (0:02:22)",
+   "collected_denominator": "NOT CAPTURED",
+   "verdict": "MET"
+  },
+  "7_landed_tip_rerun": {
+   "landed_tip": "035721357da99a43c276f5803df83c3b08c1361c",
+   "tree_this_run_measured": "035721357da99a43c276f5803df83c3b08c1361c",
+   "reran_on_the_landed_commit_itself": true,
+   "campaign_0219": {
+    "arms": 16,
+    "nodes_with_a_killer": 14,
+    "nodes_without_a_killer": 0,
+    "every_arm_anchor1_bytes_restored": true,
+    "as_is_gate_run": "======================= 14 passed, 2 warnings in 5.07s ========================"
+   },
+   "campaign_0236": {
+    "arms": 3,
+    "every_door_has_a_killer": true,
+    "each_arm_reddens_its_declared_owner": true,
+    "all_arms_restored": true,
+    "as_is_gate_run": "============================== 3 passed in 0.68s =============================="
+   },
+   "fresh_db": {
+    "carrying": 3,
+    "declared": 3,
+    "provenance_values": [
+     "DEMO"
+    ],
+    "both_directions_satisfied": true
+   },
+   "full_suite_on_landed_tip": {
+    "collected_line": null,
+    "collected_line_absent_because": "this run used `-q`, which drops the collection line; the denominator is therefore derived from the summary counts",
+    "tail": "8 failed, 1200 passed, 15 skipped, 1 xfailed, 6 warnings in 142.56s (0:02:22)",
+    "collected_derived": {
+     "value": 1224,
+     "arithmetic": "8 failed + 1200 passed + 15 skipped + 1 xfailed",
+     "from_line": "8 failed, 1200 passed, 15 skipped, 1 xfailed, 6 warnings in 142.56s (0:02:22)"
+    },
+    "red_set_compared_to_named_baseline": {
+     "baseline_log": "cand_fullsuite__preland-1334.txt",
+     "baseline_reds": 8,
+     "landed_log": "cand_fullsuite.txt",
+     "landed_reds": 8,
+     "only_in_landed": [],
+     "only_in_baseline": [],
+     "verdict": "IDENTICAL",
+     "rule": "a regression call is made against the named baseline red set, by nodeid, same tree shape and interpreter -- not against a remembered number"
+    }
+   },
+   "verdict": "MET"
+  },
+  "8_closure_decision": {
+   "held_by": "external reviewer / commander, not the delivering lane",
+   "signed_by_me": false,
+   "reason": "all items above are measured on the landed commit itself (landed 035721357da9… == measured head 035721357da9…); the eighth step is CLOSED, which needs the verifier's derived_result per V1 receipt",
+   "verdict": "NOT_SIGNED_BY_ME"
+  }
+ },
+ "self_correction_v2": {
+  "what": "my bus post at 12:0x claimed items 1..6 MET on candidate 406bd6f, but the receipt published with it recorded 1_ancestry = NOT_MET (the script compared cherry-pick attributions to a hard-coded 8 while the candidate carried 9)",
+  "reading": "the claim was about my own artifact and I quoted my prose instead of the artifact",
+  "fixed_in": "this generator compares counts instead of a constant, and the ancestry cell is now split into candidate vs landed"
+ },
+ "reporting_provenance_A5": {
+  "repo": "D:/moodle/_qoder_b_landing_20260923 (linked worktree of the integration line)",
+  "tree": "candidate 035721357da99a43c276f5803df83c3b08c1361c",
+  "base": "dea8410be809ebf6c5046581873584e9dbf32b64 = dea8410be809ebf6c5046581873584e9dbf32b64",
+  "dirty": "clean",
+  "shape": "whole-suite (tests/) plus per-file door runs plus 19 mutation arms (16 ORD-0219 + 3 ORD-0236) with per-node verdicts",
+  "command": "python -m pytest tests -p no:cacheprovider --tb=no",
+  "collected_denominator": "NOT CAPTURED",
+  "environment_contract": {
+   "interpreter": "D:/moodle/CityNexus/.venv 3.12.14",
+   "local_packages_required": "citynexus_mcp is NOT tracked by git (0 files) => test_gpt_agent_authority_v3::test_aiv3_02 is environment dependent, recorded as such, not counted as a regression",
+   "provider_egress": "AI keys popped before import; AI_ENABLED=false; 0 provider calls"
+  },
+  "cross_run_comparison_allowed": "only against a run naming the same tree+shape+environment; the 03:35 composite-export run is NOT_COMPARABLE_AS_REGRESSION_DELTA against this one"
+ },
+ "verdicts_by_item": {
+  "1a_candidate_ancestry": "MET",
+  "1b_landed_ancestry": "MET",
+  "2_single_truth": "MET",
+  "3_carrying_vs_declared": "MET",
+  "4_both_directions": "MET",
+  "5_tripwire_and_killer": "MET",
+  "6_candidate_tip_rerun": "MET",
+  "7_landed_tip_rerun": "MET",
+  "8_closure_decision": "NOT_SIGNED_BY_ME"
+ },
+ "closure_grade_now": "LANDED-TIP RUN MEASURED: 1a_candidate_ancestry=MET, 1b_landed_ancestry=MET, 2_single_truth=MET, 3_carrying_vs_declared=MET, 4_both_directions=MET, 5_tripwire_and_killer=MET, 6_candidate_tip_rerun=MET, 7_landed_tip_rerun=MET, 8_closure_decision=NOT_SIGNED_BY_ME - CLOSED is signed by the external reviewer/verifier, not by this lane; per B-1 only derived_result closes a KILLED, and every claimed_result here is mine"
+}
