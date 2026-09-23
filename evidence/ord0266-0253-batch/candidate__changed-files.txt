@@ -1,0 +1,4 @@
+A	frontend/e2e/qoder-busy-is-not-reference-counted.spec.ts
+A	frontend/e2e/qoder-command-carries-idempotency-key.spec.ts
+M	frontend/src/features/planning/PlanWithAiSheet.tsx
+A	review/_bus_e345b9d6_gate_v2.md
