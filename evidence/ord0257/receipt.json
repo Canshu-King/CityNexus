@@ -1,0 +1,46 @@
+{
+  "run_id": "ORD0257-A-1352",
+  "lane": "aad2d1f2 (HJ-P3 急性子移动用户)",
+  "order": "ORD-0257",
+  "subject": "真机验收 dc690d7 落的 ORD-0246（同刻双击同步拒绝）与 ORD-0247（<summary> 命中盒 ≥44px）",
+  "built_from": "export(027d65ed381fbb4bfb81a07a7ae20a9f293454e1)",
+  "build_recipe": "git archive <sha> | tar -x -> cp -al node_modules (硬链接, 非 junction) -> vite build；绝不 build 工作树",
+  "working_tree_was_dirty_at_build": "git status --porcelain -- frontend = [' M frontend/src/styles.css']；styles.css 正是 dc690d7 改的文件之一",
+  "generations": {
+    "new": {"built_from": "export(027d65ed381fbb4bfb81a07a7ae20a9f293454e1)", "bundle": "index-DJEINrOl.js", "bytes": 1236190, "sha256_16": "80a8ca1afb915cfd", "runningRef_hits_in_source": 4, "css_summary_rule": ".v8-advanced > summary{min-height:var(--cn-touch-min);line-height:var(--cn-touch-min)}", "wide_summary_rule_present": false, "served_on": "127.0.0.1:8474"},
+    "control": {"built_from": "export(f5a6b9a)", "bundle": "index-CrAwWm5f.js", "bytes": 1234802, "sha256_16": "9fd89456daf12bca", "runningRef_hits_in_source": 0, "byte_identical_to_published_canary_bundle": true, "served_on": "127.0.0.1:8476"},
+    "head": {"built_from": "export(0fd3cc7)", "bundle": "index-Dx_HBGr5.js", "bytes": 1238837, "sha256_16": "30574be1d4835d12", "css_rules_of_interest": ["summary{min-height:var(--cn-touch-min);line-height:var(--cn-touch-min)}", ".v9-evidence-summary{line-height:normal}", "--cn-touch-min:44px", ".trial-supported summary{min-height:30px}", ".trips-advanced>summary{min-height:40px}"], "served_on": "127.0.0.1:8477"}
+  },
+  "discarded_artifact_self_report": {
+    "what": "第一次反例构建产出 index-DXuis0ST.js / 1,238,993 B，与发布代不符",
+    "cause": "我把 cp -al 打在已存在的 node_modules 上 -> 嵌出 node_modules/node_modules",
+    "action": "作废该产物、停用 :8475、重建到全新目录 snap_old2（结果即上表 control 行，逐字节等于发布代）"
+  },
+  "shape": {"tool": "Playwright MCP self-built context", "viewport": "390x844", "hasTouch": true, "isMobile": true, "deviceScaleFactor": 3, "locale": "zh-CN", "input": "page.touchscreen.tap() after scrollIntoViewIfNeeded + elementFromPoint proof", "backend": "my own :8424 (code 53fe8e8)", "db": "D:/moodle/_lane_aad2d1f2_livecopy.sqlite3 (my copy)", "ownership_proof": "GET :8476/api/v1/journeys/cc5e67c4… = 200 (only in my copy) ; GET …/d1bdc755… = 404"},
+  "ORD-0246_same_tap_double_submit": {
+    "protocol": "same tick: b.click(); b.click() with no await; POST counted by a page-side request listener attached BEFORE the clicks; button.disabled read at the same moment",
+    "trials": [
+      {"gen": "new", "journey": "ae79fbf1", "posts": 1, "disabled_before_between_after": [false, false, false], "agent_run_rows_created": 1, "row_id": "afdcb3ab"},
+      {"gen": "new", "journey": "ae79fbf1", "posts": 1, "note": "repeat 2"},
+      {"gen": "new", "journey": "ae79fbf1", "posts": 1, "note": "repeat 3"},
+      {"gen": "new", "journey": "51929591", "posts": 1, "agent_run_rows_created": 1, "row_id": "a8579c9e", "clean_before": "5 rows"},
+      {"gen": "control", "journey": "e168580c", "posts": 2, "disabled_before_between_after": [false, false, false], "agent_run_rows_created": 1, "second_post_outcome": "HTTP 500"},
+      {"gen": "control", "journey": "94669bae", "posts": 2, "agent_run_rows_created": 1, "row_id": "a5fd1824", "clean_before": "0 rows", "plan_versions_after": 3, "second_post_outcome": "HTTP 500 (no row)"}
+    ],
+    "verdict_posts": "PASS both directions: new 4/4 trials emit exactly 1 POST; published-generation control 2/2 trials emit 2 POSTs",
+    "verdict_rows": "MEASUREMENT-CRITERION WARNING: rows alone do NOT separate the generations tonight. In both control trials the second request produced no row (HTTP 500), so control showed 2 POST -> 1 row, identical to new's 1 POST -> 1 row. Earlier same-tick evidence on the same code line did produce 2 rows (c0ecf668 02:52:24.216 + 18ccecf4 02:52:47.896, journey 51929591, 23.6 s apart) => the old behaviour is bistable (duplicate row OR collision 500). Recommend asserting POST count + agent_runs delta + non-2xx count together.",
+    "mechanism_confirmed_live": "disabled reads false/false/false on both generations at click time => the rendered attribute is not the guard; the refusal is the synchronous guard at PlanWithAiSheet.tsx:442-443 (submit() starts at :435; reset in finally at :660) on BOTH dc690d7 and 027d65e",
+    "provider_leg": "6/6 FAILED_EXTERNAL 'DeepSeek Agent completion failed' (key len 35, sha256[:12] 4cab…, i.e. the pending-revocation leaked key; value never recorded here) => plan_version growth is fallback-only, not AI success"
+  },
+  "ORD-0247_summary_hit_boxes_px": {
+    "bookings_advanced": {"selector": ".v8-advanced > summary", "rendered_label": "高级：结构化数据", "new_gen": [311, 44], "control_gen": [311, 14], "head_gen": [311, 44], "computed_min_height": {"new": "44px", "control": "0px"}, "elementFromPoint_hits_self": {"new": true, "control": true, "head": true}, "verdict": "fixed for the named control; control reproduces the reported 311x14 exactly"},
+    "wizard_supported_destinations": {"rendered_label": "看支持的目的地", "new_gen": [91, 30], "control_gen": [91, 30], "head_gen": [91, 44], "note": "at HEAD computed min-height is still 30px (.trial-supported summary) yet the box measures 44 because the class-wide line-height:44px grows it"},
+    "wizard_advanced": {"rendered_label": "高级设置", "new_gen": [349, 16], "control_gen": [349, 16], "head_gen": [349, 44], "hit_at_center": {"new": "DIV (not itself)", "head": "BUTTON (not itself)"}, "verdict": "size fixed at HEAD, but the 'elementFromPoint must hit the control itself' criterion still FAILS: a same-label BUTTON sits on top of the <summary>"},
+    "ai_sheet_detail": {"rendered_label": "技术详情", "new_gen_box": [331, 25], "computed_min_height": "0px", "note": "self-correcting my own earlier quoted number 316x25 (taken from the commander's reading); my measured width here is 331"},
+    "class_level_acceptance": "NOT closed at 027d65e (only .v8-advanced covered). Closed at HEAD 0fd3cc7 for sizes, still open for the hit-own-control criterion on 高级设置"
+  },
+  "rollover_answer": "Do NOT hand the phone a new generation right now: frontend/src/styles.css is dirty and is one of the two files dc690d7 touches, so a working-tree build would ship uncommitted widening as if it were the accepted SHA. Reproducibility is not the problem (I rebuilt the published generation byte-for-byte from its SHA); tree cleanliness is.",
+  "constraints_kept": ["no product file edits", "authoritative tree read via git archive only", "never touched :4781/:4782/:8693/:4185/:8713", "never touched _live.db/_preview.db", "no demo/reset", "no mocks", "public net: 0 writes", "credential values never printed; publisher refuses any file containing them"],
+  "clock": "local 2026-09-23 14:3x (+08, shell `date` measured 14:31:14); all DB timestamps UTC",
+  "retained": {"ports": ["8424", "8464", "8474", "8476", "8477"], "dirs": ["D:/moodle/_hjp3_ord0257_0923 (snap_new, snap_old2, snap_head, shots_ORD0257-A-1352, discarded snap_old)", "D:/moodle/HJ-P3_evidence"], "note": "snap dirs contain HARD LINKS into frontend/node_modules: delete the link, never rm -rf through it"}
+}
