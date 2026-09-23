@@ -1106,26 +1106,6 @@ def run_agent_command(
     return response
 
 
-class _DeferredCommitSession:
-    """把**提交所有权**收回 Phase B：被调方里的 `commit()` 在这一发里只 flush。
-
-    只给 keyed `run_agent_command` 用；全仓其它地方的 commit 一处不动（包工头 22:1x §① 的围栏）。
-    """
-
-    __slots__ = ("_session",)
-
-    def __init__(self, session: Session) -> None:
-        self._session = session
-
-    def commit(self) -> None:
-        self._session.flush()
-
-    def __getattr__(self, name: str):
-        if name == "_session":
-            raise AttributeError(name)
-        return getattr(self._session, name)
-
-
 def _claim_agent_command_key(scoped_key: str, signature: str, session: Session,
                              now: datetime) -> dict | None:
     """Phase A CLAIM：先插一枚 NULL 占位并**独立提交**，这才是跨进程的所有权点。
@@ -1165,16 +1145,20 @@ def _execute_agent_command_claimed(journey_id: UUID, payload: AgentCommandReques
                                    scoped_key: str, now: datetime) -> dict:
     """Phase B EXECUTE：赢家的副作用与"占位 → 完成回执"在同一次可回滚提交里。
 
-    这一段只有一次真提交（`engine.begin` 正常退出时）。中途任何异常 ⇒ mission / run / audit /
-    event 一行 durable 都不留，而 Phase A 那枚 NULL 占位**留着** —— 它是"有主之物没跑完"的
-    证据，不删、不顶、不重跑。
+    实测（反突变 M2 与 1f86a8f 的对照）：把 Session 绑在 `engine.begin()` 拿到的连接上，
+    被调方里那三次 `session.commit()` 就落不了库 —— 唯一 durable 的时刻是这一段正常退出时
+    的那一次真提交。而 `join_transaction_mode="create_savepoint"` 恰恰反过来：pysqlite 不在
+    SAVEPOINT 之前发 BEGIN，最外层 RELEASE 就是提交，于是"mission 已建、回执未填"的窗口
+    会被写进盘里（就是 1f86a8f 的 ghost 形制）。所以这里**不加**那个模式。
+
+    中途任何异常 ⇒ mission / run / audit / event 一行 durable 都不留，而 Phase A 那枚 NULL
+    占位**留着** —— 它是"有主之物没跑完"的证据，不删、不顶、不重跑。
     """
 
     with engine.begin() as work_conn:
         work_session = Session(bind=work_conn, expire_on_commit=False)
         try:
-            response = _run_agent_command_impl(
-                journey_id, payload, _DeferredCommitSession(work_session))
+            response = _run_agent_command_impl(journey_id, payload, work_session)
             filled = work_session.execute(
                 update(IdempotencyKey)
                 .where(IdempotencyKey.key == scoped_key,
