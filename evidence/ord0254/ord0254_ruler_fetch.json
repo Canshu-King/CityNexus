@@ -1,0 +1,45 @@
+{
+ "at": "2026-09-23T13:07:35+08:00",
+ "repo": "Canshu-King/CityNexus",
+ "branch": "commander/control",
+ "wanted": {
+  "commit": "7914beb1baf1",
+  "blob": "e3015cc065d1d4eb",
+  "size": 39302
+ },
+ "measured": {
+  "commit40": "7914beb1baf1199600e661c358c6de14d7bca89d",
+  "blob": "e3015cc065d1d4eb",
+  "size": 39302
+ },
+ "verdict": "FETCHED_VERIFIED",
+ "chain": [
+  {
+   "step": "GET commit",
+   "status": 200
+  },
+  {
+   "step": "commit resolved",
+   "sha40": "7914beb1baf1199600e661c358c6de14d7bca89d",
+   "tree": "d9c1b54d3a7af0002608d836b66de92d93da333c",
+   "date": "2026-09-23T04:36:42Z",
+   "subject": "commander: F now probes each surface >=2 times (redteam second attack: stateful edge that serves #1 "
+  },
+  {
+   "step": "GET tree",
+   "status": 200,
+   "entries": 504,
+   "path_present": true,
+   "blob": "e3015cc065d1d4ebca2c0ba28fe3b95f85b64a73",
+   "size": 39302
+  },
+  {
+   "step": "GET blob",
+   "status": 200,
+   "decoded_bytes": 39302,
+   "blob16": "e3015cc065d1d4eb",
+   "blob_matches_order": true,
+   "size_matches_order": true
+  }
+ ]
+}
