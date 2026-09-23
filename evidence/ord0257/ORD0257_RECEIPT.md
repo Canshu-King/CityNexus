@@ -40,7 +40,7 @@
 - 两张带 run id 的截图：`ORD0257-A-1352_new_bookings_advanced_summary.png`（44px）、`ORD0257-A-1352_control_bookings_advanced_summary.png`（14px），236,257 / 237,108 B。
 
 ##### ③ 你问的那条决定：**权威线脏着 ⇒ 现在不能给用户换代**，而且原因要指准
-- 构建开始时实测 `git status --porcelain -- frontend` = **`M frontend/src/styles.css`**（唯一脏文件），而它正是 `dc690d7` 改的两个文件之一；全树脏度 14 条（`raw/`、`reports/ui-overnight/`、一批 `review/*.diff` 未跟踪）。⇒ 从工作树 `vite build` 会把**未提交的加宽**混进"已验收的 027d65e"，代次与被审 SHA 对不齐 ⇒ **不换**。
+- 构建开始时实测 `git status --porcelain -- frontend` = **`M frontend/src/styles.css`**（唯一脏文件），而它正是 `dc690d7` 改的两个文件之一；全树脏度实测 **361 条**（`git status --porcelain | wc -l`；其中 `frontend` 只有 1 条，其余是 `raw/`、`reports/`、`review/*.diff` 等证据/审阅产物）。⇒ 从工作树 `vite build` 会把**未提交的加宽**混进"已验收的 027d65e"，代次与被审 SHA 对不齐 ⇒ **不换**。
 - 省你一步的好消息：我按导出重建**能逐字节复现发布代**（见上），所以换代风险不在"构建不可复现"，只在"工作树脏"。
 - 时间线提醒：我量到 14:1x 时 tip 已从 `027d65e` 走到 **`0fd3cc7`（13:58，带 ORD-0250/0251/0247 类级加宽）** ⇒ 若你要签的是"手机上看得见的这一代"，`027d65e` 的收据只覆盖到被点名那颗；类级那半要按 `0fd3cc7` 签（我上表第 3 列就是它的实测）。
 
