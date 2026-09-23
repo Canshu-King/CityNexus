@@ -1,0 +1,95 @@
+{
+ "at": "2026-09-23T12:56:47.570Z",
+ "base": "http://127.0.0.1:4441",
+ "phase": "down",
+ "steps": [
+  {
+   "case": "B_returning_client_offline_deeplink",
+   "path": "/v8/hub",
+   "navigation": {
+    "ok": false,
+    "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub"
+   },
+   "facts": {
+    "url": "chrome-error://chromewebdata/",
+    "controlled": false,
+    "onLine": true,
+    "title": "",
+    "body_head": "",
+    "app_mounted": false
+   },
+   "registrations": {
+    "eval_error": "registrations: Cannot read properties of undefined (reading 'getRegistrations')"
+   },
+   "cache_state": {
+    "eval_error": "cache_state: caches is not defined"
+   }
+  },
+  {
+   "case": "B2_returning_client_offline_root",
+   "path": "/",
+   "navigation": {
+    "ok": false,
+    "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/"
+   },
+   "facts": {
+    "url": "chrome-error://chromewebdata/",
+    "controlled": false,
+    "onLine": true,
+    "title": "",
+    "body_head": "",
+    "app_mounted": false
+   },
+   "registrations": {
+    "eval_error": "registrations: Cannot read properties of undefined (reading 'getRegistrations')"
+   },
+   "cache_state": {
+    "eval_error": "cache_state: caches is not defined"
+   }
+  },
+  {
+   "case": "B3_returning_client_offline_other_deep_link",
+   "path": "/v8/discover",
+   "navigation": {
+    "ok": false,
+    "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/discover"
+   },
+   "facts": {
+    "url": "chrome-error://chromewebdata/",
+    "controlled": false,
+    "onLine": true,
+    "title": "",
+    "body_head": "",
+    "app_mounted": false
+   },
+   "registrations": {
+    "eval_error": "registrations: Cannot read properties of undefined (reading 'getRegistrations')"
+   },
+   "cache_state": {
+    "eval_error": "cache_state: caches is not defined"
+   }
+  },
+  {
+   "case": "C_never_visited_offline_deeplink",
+   "path": "/v8/hub",
+   "navigation": {
+    "ok": false,
+    "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4441/v8/hub"
+   },
+   "facts": {
+    "url": "chrome-error://chromewebdata/",
+    "controlled": false,
+    "onLine": true,
+    "title": "",
+    "body_head": "",
+    "app_mounted": false
+   },
+   "registrations": {
+    "eval_error": "registrations: Cannot read properties of undefined (reading 'getRegistrations')"
+   },
+   "cache_state": {
+    "eval_error": "cache_state: caches is not defined"
+   }
+  }
+ ]
+}
