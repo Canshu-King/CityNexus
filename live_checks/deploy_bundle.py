@@ -490,6 +490,10 @@ def http_text(path: str, base: str | None = None, auth_file: str | None = None) 
 SW_REGISTER_RULE = ('every navigator.serviceWorker.register() in the SERVED bundle must declare '
                     'scope "/" and updateViaCache "none"')
 
+# Module level because BOTH the pre-flight helper and main() need it (the 15:33 deploy crashed with
+# NameError: preflight referenced the copy that only existed inside main()).
+DECLARED_NO_PRECACHE = {"sw.js": "hand-written service worker, no workbox precacheAndRoute array"}
+
 
 def strip_js_comments(text: str) -> str:
     """Redteam `5789637279`: a good-looking `register("/v10-sw.js", {...updateViaCache:"none"})` left in a
@@ -943,6 +947,18 @@ def f_verdict_of(probes: list[dict], declared_unprobed: bool) -> str:
     return "GREEN" if all(p.get("got", {}).get("verdict") == "GREEN" for p in probes) else "RED"
 
 
+def persist_receipt(receipt: dict, tag: str) -> pathlib.Path:
+    """A refusal is the artifact most worth keeping.  Until 15:29 the early-return paths wrote nothing at
+    all, so "the gauge refused to switch" left no readable reason behind - the same family as not measuring."""
+    out = pathlib.Path(__file__).with_name("receipts")
+    out.mkdir(exist_ok=True)
+    dest = out / f"deploy_{tag}_{time.strftime('%m%d_%H%M%S')}.json"
+    receipt["refusal_tag"] = tag
+    dest.write_text(json.dumps(receipt, indent=1, ensure_ascii=False), encoding="utf-8", newline="\n")
+    print(f"[receipt] {dest}")
+    return dest
+
+
 def preflight_before_switch(src: pathlib.Path, serve: pathlib.Path, new_refs: list[str],
                             old_js: str | None, allow_unprobed: bool) -> dict:
     """The rule this tool owed since 13:02: **every read-only judgement runs BEFORE the switch**.
@@ -965,6 +981,12 @@ def preflight_before_switch(src: pathlib.Path, serve: pathlib.Path, new_refs: li
     out["C_pre_new_assets_reach_the_live_server"] = [
         repeated_verdict(r, expect_ct_for(r), src, times=PROBE_TIMES) for r in new_refs]
     # G_pre: parse the NEW sw's precache manifest out of the build export and resolve each url live.
+    # Self-referential flaw found on the FIRST live use (15:25, deploy refused at exit 4): a precache entry
+    # naming an UNHASHED root file (`/index.html`) can never be green before the switch, because the server
+    # still answers the previous generation for exactly that path - so a strict pre-switch judge on those
+    # refs is a permanent red, which is as useless as a permanent green.  Root docs are therefore NAMED
+    # gaps pre-switch, with both digests recorded; the post-switch G arm keeps full strictness.
+    ROOT_DOC_REFS = ("index.html", "manifest.webmanifest", "sw.js", "v10-sw.js")
     g_pre = []
     for name in ("sw.js", "v10-sw.js"):
         swf = src / name
@@ -972,12 +994,28 @@ def preflight_before_switch(src: pathlib.Path, serve: pathlib.Path, new_refs: li
             continue
         urls = precache_urls(swf.read_text(encoding="utf-8", errors="replace"))
         entry = {"sw": name, "sw_sha256_src": sha256(swf), "urls_found": len(urls), "probes": []}
+        asset_rows, declared_rows = [], []
         for u in urls:
             ref = u if u.startswith("/") else "/" + u
-            entry["probes"].append({"ref": ref,
-                                    "got": repeated_verdict(ref, expect_ct_for(ref), src, times=PROBE_TIMES)})
-        entry["verdict"] = ("GREEN" if urls and all(p["got"]["verdict"] == "GREEN" for p in entry["probes"])
-                            else ("DECLARED_NO_PRECACHE_ARRAY" if not urls and name == "sw.js" else "RED"))
+            if ref.lstrip("/") in ROOT_DOC_REFS:
+                served = http_get(ref)
+                entry["probes"].append({"declared_gap": "DECLARED_NOT_YET_PUBLISHED_PRE_SWITCH", "ref": ref,
+                                        "src_sha256": sha256(src / ref.lstrip("/")) if (src / ref.lstrip("/")).is_file() else None,
+                                        "served_status": served["status"], "served_sha256": served["sha256"],
+                                        "why": "this path is replaced BY the switch, so the pre-flight cannot "
+                                               "judge it; the post-switch G arm checks it for real"})
+                declared_rows.append(ref)
+                continue
+            v = repeated_verdict(ref, expect_ct_for(ref), src, times=PROBE_TIMES)
+            asset_rows.append(v)
+            entry["probes"].append({"ref": ref, "got": v})
+        assets_ok = bool(asset_rows) and all(v["verdict"] == "GREEN" for v in asset_rows)
+        entry["hashed_assets_checked"] = len(asset_rows)
+        entry["root_docs_declared_pending"] = declared_rows
+        entry["verdict"] = ("GREEN" if assets_ok else "RED") if asset_rows else (
+            "DECLARED_NO_PRECACHE_ARRAY" if name in DECLARED_NO_PRECACHE else "RED")
+        if not assets_ok and asset_rows:
+            entry["reason"] = "; ".join(str(v.get("red_refs")) for v in asset_rows if v["verdict"] != "GREEN")[:300]
         g_pre.append(entry)
     out["G_pre_precache_of_the_new_sw_resolves"] = g_pre
     # I_pre: the registration parameters of the bundle about to go live, read from the build export.
@@ -999,7 +1037,11 @@ def preflight_before_switch(src: pathlib.Path, serve: pathlib.Path, new_refs: li
         hits = []
         if isinstance(node, dict):
             if node.get("verdict") == "RED":
-                hits.append(node.get("reason") or node.get("ref") or node.get("sw") or "RED")
+                who = node.get("ref") or node.get("sw") or node.get("path") or node.get("source") or "?"
+                detail = (node.get("reason") or node.get("why") or node.get("red_refs")
+                          or (node.get("probes") and [p.get("status") for p in node["probes"][:1]] or None)
+                          or node.get("statuses") or "")
+                hits.append(f"{who} :: {str(detail)[:200]}")
             for v in node.values():
                 hits += _reds(v)
         elif isinstance(node, list):
@@ -1201,6 +1243,7 @@ def main() -> int:
         print("  RED:", str(line)[:180])
     if pf["verdict"] != "GREEN":
         print("REFUSED before switching index.html: the pre-flight is RED, so the old generation stays live.")
+        persist_receipt(receipt, "refused_preflight")
         return 4
 
     # --- phase 3: BACKUP then SWITCH the unhashed root files
