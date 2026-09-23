@@ -1,0 +1,404 @@
+{
+  "generatedBy": "e345b9d6",
+  "order": "ORD-0238 + ORD-0240",
+  "runTag": "six-arms-v2",
+  "at": "2026-09-23T11:56:41+0800",
+  "guard": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace",
+  "specs": [
+    "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+    "e2e/qoder-model-words-are-labelled.spec.ts"
+  ],
+  "runShape": "whole spec file per arm (owner's file for the verdict, the other file as the mirror run); the real-seed setup project counts as one extra pass",
+  "filesBefore": {
+    "JourneyTrialSetup.tsx": "f88b41e5ade5d96bfc67b2e256aadd227be2ba30a95cf6eb23022df2ff79032f",
+    "V8Experience.tsx": "753e0e38bbf05a83bc54ae6ff709ba4a812aff9d58050a7469bace76a6b8d79a",
+    "PlanComparison.tsx": "406d613bcd217f35a670a16a6c16b5d69c5245a1dfa6bf5df859b4b0b6baf72b",
+    "PlanWithAiSheet.tsx": "abc0515d397f62719aeced3b2638d3c1fe69189c7d305c9b0cdf17bc48f8a3d5"
+  },
+  "arms": [
+    {
+      "name": "killD1-review-drops-what-she-picked",
+      "why": "layer 1 breaks: the confirmation screen no longer reports the chips she pressed",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\setup\\JourneyTrialSetup.tsx",
+      "ownerNode": "ord0238-1",
+      "ownerSpec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "a92ef9beaf063468716528d10be17769d7dd26f19eead486f639e3bceab4aa27",
+      "restored_sha256": "f88b41e5ade5d96bfc67b2e256aadd227be2ba30a95cf6eb23022df2ff79032f",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+        "exitCode": 0,
+        "runId": "run135801",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135801.log",
+        "summary": "4 passed (21.4s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0238-1": "GREEN",
+          "ord0238-2": "GREEN",
+          "ord0238-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+        "exitCode": 1,
+        "runId": "run135824",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135824.log",
+        "summary": "3 passed (19.2s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0238-1": "RED",
+          "ord0238-2": "GREEN",
+          "ord0238-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-other-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 0,
+        "runId": "run135844",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135844.log",
+        "summary": "4 passed (13.7s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "GREEN",
+          "ord0240-2": "GREEN",
+          "ord0240-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0238-1"
+      ],
+      "exclusiveToOwner": true,
+      "verdict": "KILLED"
+    },
+    {
+      "name": "killD2-interests-never-reach-the-server",
+      "why": "layer 2 breaks: her words are shown but never stored through the contract",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\app\\V8Experience.tsx",
+      "ownerNode": "ord0238-2",
+      "ownerSpec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "67f367a90d97afd46f50b03b6773bc1ee98da4ba30132cd425d5dacca714aa38",
+      "restored_sha256": "753e0e38bbf05a83bc54ae6ff709ba4a812aff9d58050a7469bace76a6b8d79a",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+        "exitCode": 0,
+        "runId": "run135859",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135859.log",
+        "summary": "4 passed (18.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0238-1": "GREEN",
+          "ord0238-2": "GREEN",
+          "ord0238-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+        "exitCode": 1,
+        "runId": "run135879",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135879.log",
+        "summary": "3 passed (19.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0238-1": "GREEN",
+          "ord0238-2": "RED",
+          "ord0238-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-other-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 0,
+        "runId": "run135899",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135899.log",
+        "summary": "4 passed (13.3s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "GREEN",
+          "ord0240-2": "GREEN",
+          "ord0240-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0238-2"
+      ],
+      "exclusiveToOwner": true,
+      "verdict": "KILLED"
+    },
+    {
+      "name": "killD3-headline-claims-pace-again",
+      "why": "layer 3 breaks: the screen promises an input the planner does not take",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanComparison.tsx",
+      "ownerNode": "ord0238-3",
+      "ownerSpec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "430ab892b2ee6f04f3cc38b3e6c833088c51c9aed5c8819e96947a142d21851e",
+      "restored_sha256": "406d613bcd217f35a670a16a6c16b5d69c5245a1dfa6bf5df859b4b0b6baf72b",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+        "exitCode": 0,
+        "runId": "run135914",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135914.log",
+        "summary": "4 passed (18.9s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0238-1": "GREEN",
+          "ord0238-2": "GREEN",
+          "ord0238-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+        "exitCode": 1,
+        "runId": "run135933",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135933.log",
+        "summary": "3 passed (18.4s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0238-1": "GREEN",
+          "ord0238-2": "GREEN",
+          "ord0238-3": "RED"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-other-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 0,
+        "runId": "run135953",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135953.log",
+        "summary": "4 passed (13.0s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "GREEN",
+          "ord0240-2": "GREEN",
+          "ord0240-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0238-3"
+      ],
+      "exclusiveToOwner": true,
+      "verdict": "KILLED"
+    },
+    {
+      "name": "killD4-model-words-back-in-the-main-flow",
+      "why": "the exact defect ORD-0240 was filed for: the model's English sentence painted into a Chinese screen's own copy",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "ownerNode": "ord0240-1",
+      "ownerSpec": "e2e/qoder-model-words-are-labelled.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "d163a86a976eae0bc8f86965d71ab87f28a31c212b1a3b20a8242c77bd151be4",
+      "restored_sha256": "abc0515d397f62719aeced3b2638d3c1fe69189c7d305c9b0cdf17bc48f8a3d5",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 0,
+        "runId": "run135967",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135967.log",
+        "summary": "4 passed (13.0s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "GREEN",
+          "ord0240-2": "GREEN",
+          "ord0240-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 1,
+        "runId": "run135981",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135981.log",
+        "summary": "2 passed (13.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "RED",
+          "ord0240-2": "GREEN",
+          "ord0240-3": "RED"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-other-spec",
+        "spec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+        "exitCode": 0,
+        "runId": "run135995",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run135995.log",
+        "summary": "4 passed (18.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0238-1": "GREEN",
+          "ord0238-2": "GREEN",
+          "ord0238-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0240-1",
+        "ord0240-3"
+      ],
+      "exclusiveToOwner": false,
+      "verdict": "KILLED"
+    },
+    {
+      "name": "killD5-model-words-unlabelled",
+      "why": "the raw sentence survives but loses the label that says whose words they are",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "ownerNode": "ord0240-2",
+      "ownerSpec": "e2e/qoder-model-words-are-labelled.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "d2816aca2c85cda1b6640957155372845f9efadc48bdfb4b57f0c7c6862b1336",
+      "restored_sha256": "abc0515d397f62719aeced3b2638d3c1fe69189c7d305c9b0cdf17bc48f8a3d5",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 0,
+        "runId": "run136015",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run136015.log",
+        "summary": "4 passed (13.3s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "GREEN",
+          "ord0240-2": "GREEN",
+          "ord0240-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 1,
+        "runId": "run136029",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run136029.log",
+        "summary": "3 passed (29.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "GREEN",
+          "ord0240-2": "RED",
+          "ord0240-3": "GREEN"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-other-spec",
+        "spec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+        "exitCode": 0,
+        "runId": "run136059",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run136059.log",
+        "summary": "4 passed (19.0s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0238-1": "GREEN",
+          "ord0238-2": "GREEN",
+          "ord0238-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0240-2"
+      ],
+      "exclusiveToOwner": true,
+      "verdict": "KILLED"
+    },
+    {
+      "name": "killD6-disclosure-open-by-default",
+      "why": "the technical layer spills onto the first screen without anyone opening it -- node 3's property alone",
+      "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "ownerNode": "ord0240-3",
+      "ownerSpec": "e2e/qoder-model-words-are-labelled.spec.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "971565a4fa1948006f1f50f8271d6ef8cd87f9557858998e6f324e2cdf73b4cb",
+      "restored_sha256": "abc0515d397f62719aeced3b2638d3c1fe69189c7d305c9b0cdf17bc48f8a3d5",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 0,
+        "runId": "run136079",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run136079.log",
+        "summary": "4 passed (13.6s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "GREEN",
+          "ord0240-2": "GREEN",
+          "ord0240-3": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-model-words-are-labelled.spec.ts",
+        "exitCode": 1,
+        "runId": "run136094",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run136094.log",
+        "summary": "3 passed (13.3s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0240-1": "GREEN",
+          "ord0240-2": "GREEN",
+          "ord0240-3": "RED"
+        }
+      },
+      "mirror": {
+        "label": "same-mutant-other-spec",
+        "spec": "e2e/qoder-stated-versus-stored-versus-planned.spec.ts",
+        "exitCode": 0,
+        "runId": "run136108",
+        "log": "D:/moodle/_qoder_integration_20260919/review/run-run136108.log",
+        "summary": "4 passed (19.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0238-1": "GREEN",
+          "ord0238-2": "GREEN",
+          "ord0238-3": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0240-3"
+      ],
+      "exclusiveToOwner": true,
+      "verdict": "KILLED"
+    }
+  ],
+  "filesAfter": {
+    "JourneyTrialSetup.tsx": "f88b41e5ade5d96bfc67b2e256aadd227be2ba30a95cf6eb23022df2ff79032f",
+    "V8Experience.tsx": "753e0e38bbf05a83bc54ae6ff709ba4a812aff9d58050a7469bace76a6b8d79a",
+    "PlanComparison.tsx": "406d613bcd217f35a670a16a6c16b5d69c5245a1dfa6bf5df859b4b0b6baf72b",
+    "PlanWithAiSheet.tsx": "abc0515d397f62719aeced3b2638d3c1fe69189c7d305c9b0cdf17bc48f8a3d5"
+  },
+  "treeUnchangedByThisRun": true,
+  "allArmsKilled": true,
+  "exclusiveKiller": {
+    "ord0238-1": [
+      "killD1-review-drops-what-she-picked"
+    ],
+    "ord0238-2": [
+      "killD2-interests-never-reach-the-server"
+    ],
+    "ord0238-3": [
+      "killD3-headline-claims-pace-again"
+    ],
+    "ord0240-1": [],
+    "ord0240-2": [
+      "killD5-model-words-unlabelled"
+    ],
+    "ord0240-3": [
+      "killD6-disclosure-open-by-default"
+    ]
+  },
+  "invalidStackArms": [],
+  "publishedBy": "e345b9d6 for ORD-0238 + ORD-0240",
+  "guardPath": "live_checks/mutation_anchor_guard.py :: temporary_guarded_replace"
+}
