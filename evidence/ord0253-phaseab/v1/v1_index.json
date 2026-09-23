@@ -1,0 +1,143 @@
+{
+ "schema_version": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+ "generated_at": "2026-09-24T00:34:31+08:00",
+ "order": "ORD-0253",
+ "lane": "F 8ccd71d8",
+ "head": "408d851ec2ec7ab02142233c6a497c5037adfda4",
+ "tree": "1791ac84b7fbb9f3c791c337d630b1bb6fc60f71",
+ "rounds_per_mutant": 3,
+ "campaign_valid": true,
+ "control": {
+  "runs": [
+   {
+    "exit_code": 0,
+    "summary": "14 passed, 2 warnings in 4.29s",
+    "seconds": 4.9,
+    "executed": 14,
+    "pytest_counts": {
+     "passed": 14,
+     "failed": 0,
+     "errors": 0,
+     "skipped": 0
+    },
+    "red_nodeids": [],
+    "stderr_tail": ""
+   },
+   {
+    "exit_code": 0,
+    "summary": "14 passed, 2 warnings in 3.60s",
+    "seconds": 4.2,
+    "executed": 14,
+    "pytest_counts": {
+     "passed": 14,
+     "failed": 0,
+     "errors": 0,
+     "skipped": 0
+    },
+    "red_nodeids": [],
+    "stderr_tail": ""
+   },
+   {
+    "exit_code": 0,
+    "summary": "14 passed, 2 warnings in 3.65s",
+    "seconds": 4.2,
+    "executed": 14,
+    "pytest_counts": {
+     "passed": 14,
+     "failed": 0,
+     "errors": 0,
+     "skipped": 0
+    },
+    "red_nodeids": [],
+    "stderr_tail": ""
+   }
+  ],
+  "red_union": [],
+  "second_connection": {
+   "agent_command_claim_rows": 39,
+   "agent_command_unfilled_rows": 12,
+   "journey_missions_total": 21,
+   "db_file": "v1.db"
+  }
+ },
+ "ruling": "仲裁 5798572255：M3 = 具名非阻塞覆盖率余项，只记 SURVIVED/UNPROVEN；闭单证据不得把 NULL→completed 守卫说成已被反突变证明",
+ "receipts": [
+  {
+   "mutation_id": "M1_claim_never_committed",
+   "file": "v1_receipt_M1_claim_never_committed_408d851.json",
+   "bytes": 10975,
+   "blob_sha1": "de2e948e53ea65c3841d2d1d00ea095468ab16e3",
+   "claimed_result": "KILLED",
+   "primary_red_rounds": {
+    "test_10_a_competing_connection_sees_the_committed_null_claim_before_impl_starts": 3,
+    "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work": 3
+   },
+   "red_beyond_control": [
+    "test_10_a_competing_connection_sees_the_committed_null_claim_before_impl_starts",
+    "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work",
+    "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+    "test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+    "test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim",
+    "test_5_two_threads_one_key_in_one_process_stay_at_one_row",
+    "test_8_a_committed_run_never_leaves_an_unfilled_claim",
+    "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+   ]
+  },
+  {
+   "mutation_id": "M2_savepoint_join_restored",
+   "file": "v1_receipt_M2_savepoint_join_restored_408d851.json",
+   "bytes": 9642,
+   "blob_sha1": "29b404844ba583f2529544c63eda7084cc5bbd3d",
+   "claimed_result": "KILLED",
+   "primary_red_rounds": {
+    "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim": 3,
+    "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work": 3
+   },
+   "red_beyond_control": [
+    "test_12_the_claim_commits_first_and_the_answer_shares_one_commit_with_the_work",
+    "test_13_a_phase_b_failure_leaves_no_durable_side_effect_but_keeps_the_null_claim",
+    "test_4_the_happy_path_still_creates_exactly_one_mission_and_fills_the_claim",
+    "test_5_two_threads_one_key_in_one_process_stay_at_one_row",
+    "test_8_a_committed_run_never_leaves_an_unfilled_claim"
+   ]
+  },
+  {
+   "mutation_id": "M3_fill_guard_removed",
+   "file": "v1_receipt_M3_fill_guard_removed_408d851.json",
+   "bytes": 6669,
+   "blob_sha1": "9ea759fde4292dc47400161be13c150ccf28755b",
+   "claimed_result": "SURVIVED",
+   "primary_red_rounds": {},
+   "red_beyond_control": []
+  },
+  {
+   "mutation_id": "M4_claim_ttl_shortened",
+   "file": "v1_receipt_M4_claim_ttl_shortened_408d851.json",
+   "bytes": 7279,
+   "blob_sha1": "592d18339b842d4fe0f292b657c29e89e7c21029",
+   "claimed_result": "KILLED",
+   "primary_red_rounds": {
+    "test_9_completed_receipts_keep_the_existing_seven_day_semantics": 3
+   },
+   "red_beyond_control": [
+    "test_9_completed_receipts_keep_the_existing_seven_day_semantics"
+   ]
+  },
+  {
+   "mutation_id": "M5_conflict_does_not_block_the_work",
+   "file": "v1_receipt_M5_conflict_does_not_block_the_work_408d851.json",
+   "bytes": 8431,
+   "blob_sha1": "d67f8a564ac91ea917e35e367daceb827b03f9c8",
+   "claimed_result": "KILLED",
+   "primary_red_rounds": {
+    "test_11_the_loser_is_stopped_before_impl_and_persists_nothing": 3,
+    "test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409": 3
+   },
+   "red_beyond_control": [
+    "test_11_the_loser_is_stopped_before_impl_and_persists_nothing",
+    "test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+    "test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409"
+   ]
+  }
+ ]
+}
