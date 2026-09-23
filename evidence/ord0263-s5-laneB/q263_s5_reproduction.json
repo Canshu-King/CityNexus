@@ -1,0 +1,174 @@
+{
+ "at": "2026-09-23T23:15:26+08:00",
+ "order": "ORD-0263 第五态复量 + A3 判定",
+ "lane": "B c01d72a3",
+ "surface": {
+  "built_from": "landed tip 2b49e3ca (含 0263)，preview :4441 -> origin :8441",
+  "origin_swap": "real uvicorn -> my own 200-HTML origin on the SAME port",
+  "no_browser_mocks": true,
+  "forbidden_ports_requested": [
+   4781,
+   4782,
+   8693,
+   4185,
+   8713
+  ]
+ },
+ "origin_probe_measured": {
+  "direct_read": {
+   "status": 200,
+   "content_type": "text/html",
+   "body_head": "<!doctype html><html><head><meta c"
+  },
+  "via_proxy_read": {
+   "status": 200,
+   "content_type": "text/html",
+   "body_head": "<!doctype html><html><head><meta c"
+  }
+ },
+ "S5": {
+  "label": "S5_origin_answered_html",
+  "at": "2026-09-23T15:15:18.937Z",
+  "url": "http://127.0.0.1:4441/v8/hub",
+  "window_s": 25,
+  "render_shape": "persistent-context full document load, phone 390x844 zh-CN",
+  "seconds_to_settle": 0.84,
+  "skeleton_seen_during_wait": true,
+  "classification_nodes": {
+   "offline-retry": 0,
+   "backend-unreachable": 0,
+   "backend-unreachable-retry": 0,
+   "load-failed": 0,
+   "load-failed-reason": 0,
+   "journey-gone": 0,
+   "today-heading": 0,
+   "trial-setup": 0,
+   "failure-view": 1,
+   "failure-reason": 1,
+   "failure-read-cached": 1,
+   "failure-retry": 1
+  },
+  "rendered_text": "连接\n\n网络不可用\n\n这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。\n\n看已保存的只读副本\n重试\n归因详情",
+  "rendered_text_head": "连接 网络不可用 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。 看已保存的只读副本 重试 归因详情",
+  "snapshot": {
+   "present": true,
+   "count": 1,
+   "store_names": [
+    "journeys"
+   ]
+  },
+  "origin_probe": {
+   "status": 200,
+   "ct": "application/json",
+   "thrown": false,
+   "ms": 9
+  },
+  "app_attribution": {
+   "present": true,
+   "last": {
+    "reason": "NETWORK_UNAVAILABLE",
+    "evidence_kind": "TRANSPORT",
+    "http_status": null,
+    "source_layer": "TRANSPORT",
+    "retryable": true,
+    "recovery_action": "read-only-cached",
+    "message_key": "failure.networkUnavailable",
+    "telemetry": "attribution_reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+    "cached_copy_present": true,
+    "at": "2026-09-23T15:15:18.486Z",
+    "context": "shell.boot.journeyRead"
+   },
+   "count": 1
+  },
+  "service_worker": {
+   "controller": true,
+   "onLine": true
+  },
+  "enter_proof": null,
+  "non_get_requests": [],
+  "profile": "D:\\moodle\\_qoder_b_ord0263_20260923\\profile_s5",
+  "playwright": "D:\\moodle\\_qoder_integration_20260919\\frontend\\node_modules\\playwright"
+ },
+ "A3": {
+  "label": "A3_write_leg_hangs",
+  "at": "2026-09-23T15:15:24.040Z",
+  "url": "http://127.0.0.1:4441/v8/hub",
+  "window_s": 35,
+  "render_shape": "persistent-context full document load, phone 390x844 zh-CN",
+  "seconds_to_settle": 3.62,
+  "skeleton_seen_during_wait": false,
+  "classification_nodes": {
+   "offline-retry": 0,
+   "backend-unreachable": 0,
+   "backend-unreachable-retry": 0,
+   "load-failed": 0,
+   "load-failed-reason": 0,
+   "journey-gone": 0,
+   "today-heading": 0,
+   "trial-setup": 1,
+   "failure-view": 0,
+   "failure-reason": 0,
+   "failure-read-cached": 0,
+   "failure-retry": 0
+  },
+  "rendered_text": "用你自己的城市试用 CITYNEXUS\n\n新建行程\n\n三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。\n\nEN\n1\n目的地与时间\n2\n人数与偏好\n3\n确认创建\n目的地\n看支持的目的地\n抵达地点\n离开地点\n抵达时间\n离开时间\n高级设置\n高级设置\n\n还需要填写：目的地、抵达地点、离开地点\n\n下一步\n\n没读到封存演示的信息: Cannot read properties of null (reading 'journey_id')\n\n使用封存的演示行程",
+  "rendered_text_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 没读到封存演示的信息: Cannot read properties of null (reading 'journey_id') 使用封存的演示行程",
+  "snapshot": {
+   "present": false,
+   "reason": "db absent",
+   "db_names": []
+  },
+  "origin_probe": {
+   "status": 200,
+   "ct": "application/json",
+   "thrown": false,
+   "ms": 7
+  },
+  "app_attribution": {
+   "present": false,
+   "rows": null
+  },
+  "service_worker": {
+   "controller": true,
+   "onLine": true
+  },
+  "enter_proof": {
+   "clicked": "使用封存的演示行程",
+   "hit_test": null,
+   "hit_test_matches": false,
+   "candidates": [
+    {
+     "label": "EN",
+     "visible": true
+    },
+    {
+     "label": "高级设置",
+     "visible": true
+    },
+    {
+     "label": "目的地",
+     "visible": true
+    },
+    {
+     "label": "抵达地点",
+     "visible": true
+    },
+    {
+     "label": "离开地点",
+     "visible": true
+    },
+    {
+     "label": "下一步",
+     "visible": true
+    },
+    {
+     "label": "使用封存的演示行程",
+     "visible": true
+    }
+   ]
+  },
+  "non_get_requests": [],
+  "profile": "D:\\moodle\\_qoder_b_ord0263_20260923\\profile_a3",
+  "playwright": "D:\\moodle\\_qoder_integration_20260919\\frontend\\node_modules\\playwright"
+ }
+}
