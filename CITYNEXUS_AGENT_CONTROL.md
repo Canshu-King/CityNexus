@@ -14032,6 +14032,71 @@ ord0242_journey_wizard.cjs        cb66e85fde0e138e   第一版（学到 step1 �
 ```
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 转达 + 自我更正 @2026-09-23T22:1x+08 —— 仲裁 5796421307 三格全部落成指令；我 §④ 给 F 的那道围栏写反了，现在撤
+
+### ① 先更正我自己（给 F `8ccd71d8`）
+
+```text
+我 22:0x 那块 §④ 写的是："在仲裁回话之前不许在本单改 impl 的提交结构" —— 这句与仲裁 5796421307 §② 相反，作废，我撤回。
+仲裁裁的是：(ii) 就在 ORD-0253 server-half 本单射程内，而且是 blocker；允许（也要求）你**只为 keyed run_agent_command 这一条路径**
+改提交所有权，让 impl 内部那三次 session.commit() 在 Phase B 之下不逃出外层事务；不许顺手改全仓 17 处 mission/flush。
+另一条我原本判轻了，按仲裁收紧：你的 (i) 不能记"部分"——仲裁直接读了 1f86a8f：现在是先跑 _run_agent_command_impl(...)、
+之后才 session.add(IdempotencyKey(...response...))，唯一索引要到最外层 commit 才裁决 ⇒ 跨进程裁决点仍在 impl **之后**，
+两个进程都可能先执行 impl ⇒ 记 **(i) NOT MET AS CLAIM-FIRST**，这一版不得并线。
+形状钉成两段（仲裁原话，我按它写死，别自己软化）：
+  Phase A CLAIM      = 先 INSERT NULL claim + COMMIT        ← 这才是跨进程所有权点，败者必须在进 impl 之前就被挡住
+  Phase B EXECUTE    = 赢家的 mission/run/audit/event 副作用 + claim 从 NULL → completed receipt，在同一个可回滚提交边界内
+  注意：**不是**要求 claim 行跟 mission 一起回滚——claim 必须比 mission 更早提交，否则就不是 claim-first。
+机械门五格（缺一格不算完成）：
+  1 竞争连接能在 impl 开始**之前**看到已提交的 NULL claim；2 败者不进 impl，mission/run 行数不增长；
+  3 赢家成功时 mission 副作用与 completed receipt 同一次提交可见；
+  4 在"mission 已建、receipt 尚未填"处做故障注入 ⇒ Phase B 回滚后 mission/run/audit/event 无 durable 行、而 NULL claim 仍在；
+  5 stale claim 恢复沿上一裁：不得按 expires_at 删掉再重跑；恢复之前必须先证明不会重复既有副作用。
+ORD-0262-NARROW 那一半不受影响（(iii) 达成 + 3×3 干净，我按 ACCEPTED-MECHANICS 已收）；你按上面重做 claim-first 那一版即可。
+```
+
+### ② 给 HARNESS `d291c9dc`：你那一格现在是 0263 的唯一余项
+
+```text
+仲裁 5796421307 §①：LANDING_IDENTITY = CLOSED（它外读 mirror 确认尖 = 2b49e3ca、内容保持、bare diff 同枚、增量交集为空）；
+但 ORD-0263 整单 = PENDING-SAME-GENERATION-VERIFIER，并且它明确写了：deploy_bundle.py 的 OVERALL GREEN 只证明换代/资产/三面/
+时间性义务，**不证明 S1–S4 产品语义** ⇒ 我不拿换代收据当闭单证据，也不许任何人这么写。
+余项 = 你用同一把 v2 尺（aeece06ba30d4bed…）在**盘上这一代** /assets/index-Cpy_jhEg.js（sha256 5d674a444291f10b…5ad7b2d7）重跑：
+  S1 + V1/V2/V3/V4 全 GREEN ⇒ ORD-0263 = CLOSED（不再重开实现、不再跑宽套件）；
+  其中 S4 必须由**产品自己的 deadline** 收敛——仲裁把它写成硬条件：不得由仪器主动断 socket 收口（你 v2 里那条
+  settled_within_deadline=false 的自限就是这一格的意义，保持）。HJ-P3 的"中途退出重进/第二腿未发"是另一条产品义务，不阻塞 0263。
+```
+
+### ③ 给 B `c01d72a3`：0268 成立，按仲裁的三格做，根因假设已经给你了
+
+```text
+仲裁 §③：0268 = 独立单（0267 的子 defect / 具体机制单），不要并回 0267。三格收紧如下，判据用它的，不用我的初版：
+G268-1 manifest identity：解析**实际换代产物**的 precache 列表；证明 index.html 与 /index.html resolve 到同一 absolute URL、
+  而 revision/cache-key 不同（派生 vs 手写 v10-shell）。public/sw.js 被生产 precache 单记为 dead-weight/hygiene，**先不当根因**。
+G268-2 runtime consequence：fresh profile + target 级 SW console/exception（或等价可观测点）。判的是冲突条目是否让
+  precacheAndRoute 在注册 install/fetch 路由**之前**抛错 ⇒ 现场就正是"worker 已 active/controller、CacheStorage=0、导航从未
+  from_service_worker"。别问抽象的"谁赢"：对当前 Workbox 7.4.1，同一 canonical URL 对应不同 cacheKey 时上游
+  PrecacheController.addToCacheList() 直接抛 `add-to-cache-list-conflicting-entries`；若现场吻合，答案是**没人赢、脚本中断**。
+G268-3 causal killer：控制轮保持现状为红；只把重复声明消掉（二选一：让手写条目与 generated 条目 revision/cache-key 完全同一，
+  或更干净——删掉 additionalManifestEntries 里那条显式 /index.html）。重建后必须**三件同时翻转**才算 KILLED：
+  (1) conflict exception 消失；(2) precache 缓存真的出现且 index shell 可命中；(3) 整站下线后 returning client 的 /v8/hub
+  由 SW 回答而不是 chrome-error://。只"构建不报错"而离线导航仍死 ⇒ killer 不算。
+实现倾向（仲裁给的，不是我猜的）：若因果成立，正式修复 = 删掉重复的 additionalManifestEntries[/index.html]，
+  让 Workbox 只维护一份内容派生 revision；不要再造一套"手算 revision"机制去让两份重复声明相安无事。
+另（这条对 HJ-P3 与所有车道通用，不是更正 B）：我在 22:0x 块 §⑤ 里给 HJ-P3 写过"把那条第二生产者发 F（会话 8ccd71d8）"——现在更正：
+  车道之间的话一律走总线或账本，不走会话消息（对方那一轮看不见，消息只会排队，账本才是唯一信道）。
+```
+
+### ④ 状态与现场
+
+```text
+ORD-0263 = LANDING_IDENTITY CLOSED / 整单 PENDING（余项 = HARNESS 同代 v2 全绿，已在催）
+ORD-0253 = NOT CLOSED，(ii) 是 blocker 且在本单射程内；1f86a8f 不得并线；claim-first 形状按 §① 重做
+ORD-0268 = 成立（0267 子单），今日仍只开读数令；实现等 G268-2/3 的因果回来定形
+ORD-0262-NARROW = ACCEPTED-MECHANICS（闭单等红队 M1..M4 派生 + 两个 OS 进程同键那一格）
+现场：权威尖 2b49e3ca；手机代 index-Cpy_jhEg.js（22:02 换代 OVERALL GREEN）；账本镜像本块之后重发；0 demo/reset、0 写用户库、凭据 0 打印
+```
+
 ## commander 判 + 派 @2026-09-23T22:1x+08 —— HJ-P1 那份 ORD-0242 收据的 G1–G5 判定；换代之后给人视角的那一格
 
 ### ① 判（对 1a986a24 HJ-P1 总线 21:1x 那一问）
