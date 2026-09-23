@@ -43,13 +43,29 @@ def sha256(p: pathlib.Path) -> str:
     return h.hexdigest()
 
 
-def http_get(path: str, want_head: bool = False) -> dict:
-    """GET through the local preview (no auth proxy) and classify the answer."""
-    req = urllib.request.Request(BASE + path, method="HEAD" if want_head else "GET")
+def http_get(path: str, want_head: bool = False, base: str | None = None, auth_file: str | None = None) -> dict:
+    """GET one surface and classify the answer.
+
+    `base` defaults to the unauthenticated vite port; F passes the cnx proxy / the public tunnel,
+    because the surface the user actually reaches is not 127.0.0.1:4781.  `auth_file` is the
+    TAB-separated `user<TAB>password` preview credential - it is only ever turned into a header and
+    never appears in the returned dict or any print.
+    """
+    url = (base or BASE) + path
+    req = urllib.request.Request(url, method="HEAD" if want_head else "GET")
     req.add_header("Cache-Control", "no-cache")
     req.add_header("User-Agent", "cnx-deploy-receipt")
+    if auth_file:
+        try:
+            raw = open(auth_file, encoding="utf-8").read().strip().split("\t")
+            if len(raw) == 2:
+                import base64 as _b64
+                req.add_header("Authorization", "Basic " + _b64.b64encode(f"{raw[0]}:{raw[1]}".encode()).decode())
+        except OSError:
+            pass
     out = {"path": path, "status": None, "content_type": None, "length": None,
-           "head_bytes": None, "sha256": None, "is_html_fallback": None, "error": None}
+           "head_bytes": None, "sha256": None, "is_html_fallback": None, "error": None,
+           "base": base or BASE, "auth_applied": bool(auth_file)}
     try:
         with urllib.request.urlopen(req, timeout=60) as r:
             body = b"" if want_head else r.read()
@@ -80,7 +96,54 @@ def asset_refs(html: str) -> list[str]:
     return ordered
 
 
-def asset_verdict(ref: str, expect_ct: str, serve: pathlib.Path) -> dict:
+def precache_urls(sw_text: str) -> list[str]:
+    """URLs the generated service worker promises to precache.
+
+    D proves only "the sw bytes on disk == the sw bytes served"; it never opened this list, so a
+    manifest naming an unreachable asset kept the whole A-E receipt GREEN (redteam bus 5788606895).
+    Parsed from the workbox `precacheAndRoute([...])` array.  Measured against the real generated
+    file, entries look like `{url:"sw.js",revision:"1eebbb..."}` - the KEY IS UNQUOTED, so a `"url"`
+    pattern silently returns zero urls and "zero urls" must never be readable as "nothing to check".
+    """
+    urls = re.findall(r'\{[^{}]*?\burl\s*:\s*"([^"]+)"[^{}]*?\}', sw_text)
+    seen, ordered = set(), []
+    for u in urls:
+        u = "/" + u if u and not u.startswith("/") else u    # normalize BEFORE dedupe: the real
+        if u and u not in seen:                              # manifest holds "index.html" and
+                                                             # "/index.html" - same file, and a
+                                                             # doubled count would inflate the
+                                                             # non-emptiness claim A-3 rests on
+            seen.add(u)
+            ordered.append(u)
+    return ordered
+
+
+def expect_ct_for(ref: str) -> str:
+    """Content-Type substring a served asset must carry, by extension (single place, so G/H/C agree).
+
+    The precache manifest carries `favicon.svg` and pngs too; forcing those to "javascript" would
+    manufacture a red that is an artifact of my judge, not of the deploy.
+    """
+    if ref.endswith(".css"):
+        return "css"
+    if ref.endswith((".json", ".webmanifest")):
+        return "json"
+    if ref.endswith((".html", ".htm")) or ref.endswith("/"):
+        # Measured while building F: judging "/" as javascript made the index document RED on every
+        # surface (status=200 ct=text/html), i.e. the new arm would have failed every deploy for the
+        # wrong reason.  "/" is the shell, and HTML there is correct.
+        return "html"
+    if ref.endswith(".svg"):
+        return "svg"
+    if ref.endswith((".png", ".jpg", ".jpeg", ".webp")):
+        return "image"
+    if ref.endswith((".woff", ".woff2")):
+        return "font"
+    return "javascript"
+
+
+def asset_verdict(ref: str, expect_ct: str, serve: pathlib.Path, base: str | None = None,
+                  auth_file: str | None = None) -> dict:
     """THE single strict judge for one served asset.
 
     Deliberately the only place this predicate lives: the arbiter caught the previous version
@@ -88,15 +151,25 @@ def asset_verdict(ref: str, expect_ct: str, serve: pathlib.Path) -> dict:
     and left only `200 and not html`.  One predicate means the gauge that ships is the gauge that
     was tested against a mutant in --selftest.
     """
-    g = http_get(ref)
-    on_disk = serve / ref.lstrip("/")
+    g = http_get(ref, base=base, auth_file=auth_file)
+    disk_ref = "index.html" if ref in ("/", "") else ref.lstrip("/")   # "/" is served AS index.html;
+                                                           # joining it to an empty name makes the
+                                                           # directory, which is never a file
+    on_disk = serve / disk_ref
     g["disk_present"] = on_disk.is_file()
     g["disk_bytes"] = on_disk.stat().st_size if g["disk_present"] else None
     g["disk_sha256"] = sha256(on_disk) if g["disk_present"] else None
     g["expect_content_type_substring"] = expect_ct
+    # An HTML document is only a "fallback" when HTML was NOT the answer for this URL.  "/" and
+    # index.html legitimately serve HTML; a .js URL answered with HTML is the E case.
+    html_ok = ref.endswith((".html", ".htm", "/"))
     g["verdict"] = "GREEN" if (
         g["status"] == 200
-        and g["is_html_fallback"] is False                       # E: 200+HTML at a .js URL is RED
+        # E is about HTML answering a **non-HTML** URL.  The precache manifest legitimately carries
+        # /index.html, so judging its real HTML as a fallback manufactures a red (measured: G true
+        # positive read `index.html status=200 ct=text/html html=True disk=True`).  HTML at a .js
+        # URL stays RED, which is the case rule E was written for.
+        and (g["is_html_fallback"] is False or html_ok)
         and isinstance(g["content_type"], str)
         and expect_ct in g["content_type"].lower()                # MIME must match the extension
         and g["sha256"] is not None
@@ -139,6 +212,43 @@ def selftest(serve: pathlib.Path) -> int:
     arms.append({"arm": f"killer:served_but_absent_on_disk({killer_ref})", "expect": "RED",
                  "got": asset_verdict(killer_ref, "css" if killer_ref.endswith(".css") else "javascript",
                                        ghost_root)})
+
+    # ---- G/H/F arms: the blind spots redteam d2305848 broke this gauge with (bus 5788606895).
+    # Built synthetically (extra urls appended to a parsed list, a fake previous index, an unreachable
+    # base) so the live dist is never mutated by a selftest.
+    def g_detail(urls):
+        """verdict + the offending refs: a boolean-only red is not diagnosable (A-5 discipline)."""
+        if not urls:                                   # A-3: an empty manifest proves nothing
+            return {"verdict": "RED", "bad_refs": ["<empty manifest>"]}
+        bad = []
+        for u in urls:
+            ref = u if u.startswith("/") else "/" + u
+            v = asset_verdict(ref, expect_ct_for(ref), live)
+            if v["verdict"] != "GREEN":
+                bad.append(f"{ref} status={v['status']} ct={v['content_type']} html={v['is_html_fallback']} "
+                           f"disk={v['disk_present']}")
+        return {"verdict": "RED" if bad else "GREEN", "bad_refs": bad}
+
+    def g_verdict(urls):
+        return g_detail(urls)["verdict"]
+
+    swf = live / "v10-sw.js"
+    g_urls = precache_urls(swf.read_text(encoding="utf-8", errors="replace")) if swf.is_file() else []
+    arms.append({"arm": f"G-true_positive:precache_resolves({len(g_urls)} urls)", "expect": "GREEN",
+                 "got": g_detail(g_urls)})
+    arms.append({"arm": "G-killer:precache_names_unreachable_asset", "expect": "RED",
+                 "got": g_detail(g_urls + ["/assets/__cnx_not_in_manifest__.js"])})
+    arms.append({"arm": "G-killer:empty_manifest_is_not_a_pass", "expect": "RED",
+                 "got": {"verdict": g_verdict([])}})
+    prev_ok = "\n".join(f'<script src="{r}"></script>' for r in refs)
+    prev_bad = prev_ok + '\n<script src="/assets/__cnx_old_generation_gone.js"></script>'
+    arms.append({"arm": f"H-true_positive:previous_generation_resolves({len(refs)} refs)", "expect": "GREEN",
+                 "got": {"verdict": g_verdict(asset_refs(prev_ok))}})
+    arms.append({"arm": "H-killer:previous_generation_asset_missing", "expect": "RED",
+                 "got": {"verdict": g_verdict(asset_refs(prev_bad))}})
+    dead = asset_verdict("/v10-sw.js", "javascript", live, base="http://127.0.0.1:59999")
+    arms.append({"arm": "F-killer:unreachable_surface_is_red_not_absent", "expect": "RED",
+                 "got": dead})
     # B-arm (redteam 2026-09-23): the live index must name refs that actually resolve, and the
     # previous generation's entry must be absent.  Both halves are asserted as separate fields so
     # "the old name is gone" is a claim rather than something derived from a before/after diff.
@@ -180,24 +290,28 @@ def selftest(serve: pathlib.Path) -> int:
         got = arm["got"]["verdict"]
         match = got == arm["expect"]
         ok = ok and match
+        g = arm["got"]
         print(f"  [{'OK ' if match else 'BAD'}] {arm['arm']}  expect={arm['expect']} got={got}"
-              f"  status={arm['got']['status']} ct={arm['got']['content_type']} "
-              f"html={arm['got']['is_html_fallback']} body_sha={str(arm['got']['sha256'])[:12]}")
+              f"  status={g.get('status')} ct={g.get('content_type')} "
+              f"html={g.get('is_html_fallback')} body_sha={str(g.get('sha256'))[:12]}"
+              f"{' err=' + str(g.get('error'))[:60] if g.get('error') else ''}"
+              f"{' bad_refs=' + '; '.join(map(str, g.get('bad_refs') or []))[:220] if g.get('bad_refs') else ''}")
     print(f"SELFTEST {'GREEN' if ok else 'RED'} ({sum(1 for a in arms if a['got']['verdict'] == a['expect'])}"
           f"/{len(arms)} arms matched)")
     out = pathlib.Path(__file__).with_name("receipts")
     out.mkdir(exist_ok=True)
     dest = out / f"gauge_selftest_{time.strftime('%m%d_%H%M%S')}.json"
     dest.write_text(json.dumps({
-        "what": "deploy_bundle.py asset-gauge selftest (true positives + the two killers)",
+        "what": "deploy_bundle.py asset-gauge selftest (true positives + killers, incl. A-3 disk presence, G precache, H prev-generation, F unreachable surface)",
         "why": "arbiter 5781096542 (verdict assigned twice, lax one won) + 5788111742 A-3 "
                "(a comparison against an absent side is not a comparison)",
         "base": BASE, "serve": str(serve), "overall": "GREEN" if ok else "RED",
         "arms": [{"arm": a["arm"], "expect": a["expect"], "got": a["got"]["verdict"],
-                  "status": a["got"]["status"], "content_type": a["got"]["content_type"],
-                  "is_html_fallback": a["got"]["is_html_fallback"],
-                  "body_sha256": a["got"]["sha256"], "disk_sha256": a["got"]["disk_sha256"],
-                  "body_size": a["got"].get("body_size"), "disk_bytes": a["got"]["disk_bytes"]}
+                  "status": a["got"].get("status"), "content_type": a["got"].get("content_type"),
+                  "is_html_fallback": a["got"].get("is_html_fallback"),
+                  "body_sha256": a["got"].get("sha256"), "disk_sha256": a["got"].get("disk_sha256"),
+                  "disk_present": a["got"].get("disk_present"), "error": a["got"].get("error"),
+                  "body_size": a["got"].get("body_size"), "disk_bytes": a["got"].get("disk_bytes")}
                  for a in arms]}, indent=1, ensure_ascii=False), encoding="utf-8", newline="\n")
     print(f"[receipt] {dest}")
     return 0 if ok else 9
@@ -210,6 +324,10 @@ def main() -> int:
     ap.add_argument("--live-tree")
     ap.add_argument("--sha")
     ap.add_argument("--skip-build-check", action="store_true")
+    ap.add_argument("--allow-proxy-unprobed", action="store_true",
+                    help="declare that CNX_DEPLOY_PROXY_BASE / CNX_DEPLOY_TUNNEL_BASE were not set, so F is "
+                         "recorded as F_UNPROBED_DECLARED instead of RED.  Neither is GREEN: the user-facing "
+                         "surface stays unprobed either way (A-3 fail-closed, redteam bus 5788606895).")
     ap.add_argument("--selftest", action="store_true",
                     help="prove the asset gauge both ways against the live server; no deploy is performed")
     a = ap.parse_args()
@@ -377,6 +495,75 @@ def main() -> int:
         g["matches_disk"] = (disk.is_file() and g["sha256"] == sha256(disk))
         g["verdict"] = "GREEN" if (g["status"] == 200 and g["is_html_fallback"] is False and g["matches_disk"]) else "RED"
         d_sw.append(g)
+
+    # ---- F/G/H: the three blind spots redteam d2305848 broke this gauge with (bus 5788606895).
+    # D only proved "the sw file on disk equals the sw file served"; it never opened the precache
+    # manifest, so a manifest naming an asset that is not reachable still produced A-E all GREEN -
+    # exactly the stale-client white screen this whole rule exists to prevent.  A probed only the one
+    # .js the old index named, leaving old CSS/other assets out of range.  And BASE is the unauthenticated
+    # vite port, so the cnx proxy and the public tunnel were never touched at all.
+
+    # G: precache integrity - every url the registered service workers promise must resolve as real
+    # bytes, through the same asset_verdict predicate (no second, laxer judge).
+    g_precache = []
+    for name in ("sw.js", "v10-sw.js"):
+        swf = serve / name
+        if not swf.is_file():
+            continue
+        urls = precache_urls(swf.read_text(encoding="utf-8", errors="replace"))
+        entry = {"sw": name, "urls_found": len(urls), "probes": []}
+        for u in urls:
+            ref = u if u.startswith("/") else "/" + u
+            entry["probes"].append({"ref": ref, "got": asset_verdict(ref, expect_ct_for(ref), serve)})
+        # A-3: an empty manifest is not a passed check.  If a sw carries no precache at all, that is a
+        # legitimate state only when it is declared - here we require the parse to have found entries.
+        entry["verdict"] = ("GREEN" if entry["urls_found"] > 0 and all(p["got"]["verdict"] == "GREEN" for p in entry["probes"])
+                            else "RED")
+        g_precache.append(entry)
+
+    # H: previous-generation completeness - every asset the PREVIOUS index named must still resolve.
+    h_prev = []
+    prev_index = (bak / "index.html") if bak.is_dir() else None
+    if prev_index is not None and prev_index.is_file():
+        for r in asset_refs(prev_index.read_text(encoding="utf-8", errors="replace")):
+            h_prev.append({"ref": r, "got": asset_verdict(r, expect_ct_for(r), serve)})
+    h_prev_verdict = ("GREEN" if h_prev and all(x["got"]["verdict"] == "GREEN" for x in h_prev)
+                      else ("NOT_CONFIGURED" if not h_prev else "RED"))
+
+    # F: the surface the user actually reaches - auth proxy and public tunnel - probed for the NEW
+    # bundle, not just for `/`.  Bases come from the environment; unset means UNPROBED, which is
+    # never GREEN (fail closed) unless the operator declares the gap out loud.
+    f_probes = []
+    for label, base in (("proxy_4782", os.environ.get("CNX_DEPLOY_PROXY_BASE")),
+                        ("tunnel", os.environ.get("CNX_DEPLOY_TUNNEL_BASE"))):
+        if not base:
+            f_probes.append({"surface": label, "verdict": "NOT_CONFIGURED", "base": None})
+            continue
+        for ref in [r for r in new_refs if r.endswith(".js")] + ["/"]:
+            f_probes.append({"surface": label, "base": base,
+                             "got": asset_verdict(ref, expect_ct_for(ref), serve, base=base,
+                                                   auth_file=os.environ.get("CNX_DEPLOY_AUTH_FILE"))})
+    f_unconfigured = any(p["verdict"] == "NOT_CONFIGURED" for p in f_probes)
+    f_green = (not f_unconfigured) and all(p.get("got", {}).get("verdict") == "GREEN" for p in f_probes)
+    if f_unconfigured and getattr(a, "allow_proxy_unprobed", False):
+        f_verdict = "F_UNPROBED_DECLARED"          # declared gap, kept OUT of all_green by name
+    elif f_unconfigured:
+        f_verdict = "RED"                          # fail closed: absent comparison != passed comparison
+    else:
+        f_verdict = "GREEN" if f_green else "RED"
+
+    receipt["receipt_FGH_blindspot_arms"] = {
+        "G_PRECACHE_INTEGRITY": g_precache,
+        "H_PREVIOUS_GENERATION": {"refs_probed": len(h_prev), "probes": h_prev, "verdict": h_prev_verdict},
+        "F_PROXY_AND_TUNNEL": {"probes": f_probes, "verdict": f_verdict,
+                               "why": "BASE is 127.0.0.1:4781 (no auth proxy); the proxy and the tunnel "
+                                      "were never probed by A-E - redteam bus 5788606895"},
+    }
+    g_green = bool(g_precache) and all(e["verdict"] == "GREEN" for e in g_precache)
+    receipt["arms"] = {"A": (a_old or {}).get("verdict"), "B": "see receipt_ABCDE",
+                       "G_precache": [e["verdict"] for e in g_precache],
+                       "H_prevgen": h_prev_verdict, "F_proxy_tunnel": f_verdict,
+                       "all_green_requires": "A,B,C,D,E + G + F (H reported; RED if it names an unreachable asset)"}
     receipt["receipt_ABCDE"] = {
         "A_OLD_ASSET_still_served": a_old,
         "B_NEW_INDEX": {"status": b_new["status"], "refs_match_new": b_refs_ok,
@@ -392,7 +579,8 @@ def main() -> int:
     all_green = (all(x["verdict"] == "GREEN" for x in c_new)
                  and all(x["verdict"] == "GREEN" for x in d_sw)
                  and receipt["receipt_ABCDE"]["B_NEW_INDEX"]["verdict"] == "GREEN"
-                 and (a_old is None or a_old["verdict"] == "GREEN"))
+                 and (a_old is None or a_old["verdict"] == "GREEN")
+                 and g_green and f_verdict == "GREEN")
     receipt["overall"] = "GREEN" if all_green else "RED"
 
     out = pathlib.Path(__file__).with_name("receipts")
