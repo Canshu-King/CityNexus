@@ -231,3 +231,33 @@ def test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal()
         f"FINDING_OPEN：三处 raise 点写的是 {sorted(set(literals))}ms，而操作自己的阶梯下限是 "
         f"{floor}ms ⇒ 同一件「忙」对用户承诺了两套等待。commander 明令今晚只钉不改，"
         f"要改的是把常数收口进阶梯（两枚 retry_after_ms(row) 之一），不是把断言放宽")
+
+
+SHEET = Path(__file__).resolve().parents[2] / "frontend/src/features/planning/PlanWithAiSheet.tsx"
+
+
+def test_6_the_surface_that_calls_this_route_still_reads_the_envelope_message() -> None:
+    """owner=⑤（两侧都有份）：卡片的回落链里必须还有一格读 `body?.error?.message`。
+
+    少了这一格，我给的具名答案会在屏上退化成客户端自造的 `HTTP <status>` —— 那正是 commander
+    点名的失败形制。链子被谁拆了，这一格当场红，并说是哪一侧坏。
+    """
+    assert SHEET.is_file(), f"SETUP：读不到 {SHEET} ⇒ 前端耦合无从判定，不许当通过"
+    text = SHEET.read_text(encoding="utf-8")
+    assert "/agent/commands" in text, "⑤：这个组件不再调本门覆盖的路由 ⇒ 先确认归属再谈红绿"
+    lines = text.splitlines()
+    at = next((i for i, ln in enumerate(lines)
+               if re.match(r"^\s*failureReason:\s*$", ln)), None)
+    assert at is not None, (
+        "SETUP：找不到「值为一条回落链」的 failureReason（类型声明里也有同名字段，不算）"
+        " ⇒ 前端改了形制，这一格要重读而不是放宽")
+    body = "\n".join(lines[at:at + 5])          # 链体就是紧随其后的那几行，不靠括号配对
+    assert "body?.error?.message" in body, (
+        f"⑤ **前端侧坏**：回落链不再读 `error.message` ⇒ 服务器的话上不了屏，用户只剩自造的 "
+        f"HTTP <status>。实测链体：{body[:260]}")
+    rungs = [i for i, key in enumerate(("body?.detail", "body?.error?.message",
+                                        "`HTTP ${response.status}`")) if key in body]
+    assert rungs == [0, 1, 2], (
+        f"⑤：三档缺一或顺序变了（detail → error.message → 自造 HTTP）⇒ 需重新判定谁在造原因：{body[:260]}")
+    assert re.search(r'^\s+"message": message,$', MAIN_PY.read_text(encoding="utf-8"), re.M), (
+        "⑤ **服务端侧坏**：信封正文不再组装 `message` 那一格 ⇒ 前端无从显示服务器的话")
