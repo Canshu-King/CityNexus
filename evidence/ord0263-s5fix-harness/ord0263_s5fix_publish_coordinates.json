@@ -1,0 +1,239 @@
+{
+ "at": "2026-09-24T01:58:03+08:00",
+ "what": "ORD-0263 fifth-state candidate verification - harness coordinates",
+ "lane": "HARNESS d291c9dc",
+ "subject": "B candidate c79e2b4f4efe414dba22a071a7136ae10b5c84aa (parent 1f444081..., is-ancestor rc=0, range 1, 3 files +115/-4, bare diff 13,512 B) built by me to index-ChOTTCvB.js 1,245,203 B sha256 2d56a79632efc0c6...",
+ "ruler": {
+  "file": "tools/ord0263_verifier_v3.py",
+  "bytes": 21703,
+  "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "promised_before_the_run": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "unchanged_after_the_run": true,
+  "note": "also published in evidence/ord0263-fifthstate/; not re-uploaded here"
+ },
+ "result": {
+  "derived_result": "ALL_GREEN",
+  "arms": "S1 + V1 + V1_vacuity + V2 + V3 + V4 + V5",
+  "fifth_cell_shapes": {
+   "green": 3,
+   "red": 0,
+   "each": [
+    "200_html",
+    "200_empty",
+    "200_not_json"
+   ]
+  },
+  "verdict_for_the_close": "candidate side is green with an untouched ruler; the final gate is still the bundle on disk after the next generation switch, judged by this same file"
+ },
+ "a_arm_counterfactual": {
+  "what": "only the OriginResponseUnusableError throw in v8Request switched off (801 B diff, never committed, reverted after)",
+  "measured": "reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=none source_layer=TRANSPORT",
+  "fifth_arm_verdict_on_it": "RED on all five conditions",
+  "disagreement_recorded": "the candidate author reported this arm as UNKNOWN_FAILURE / HTTP_RESPONSE / 200 / RESOURCE_STATE; I could not reproduce that and posted both readings rather than adjudicate from hers",
+  "ruler_change_decision": "not this round - see the report; a v4 would only follow a measured shape that really yields UNKNOWN_FAILURE with the other four intact"
+ },
+ "publisher_rc_finding": {
+  "refusal_via_local_filename": "rc=5 (reproduced on my copy)",
+  "refusal_via_repo_path_only": "NOT refused, rc=0, and it really uploads - the guard keys on the local name",
+  "my_two_stray_uploads_reverted": [
+   "9e4aa886ec",
+   "962b33c63b"
+  ],
+  "no_one_elses_tool_was_edited": true
+ },
+ "old_paths_touched": [
+  "none - B's evidence/ord0263-s5fix-laneB/ and my four earlier evidence directories are left exactly as published"
+ ],
+ "files_requested": 17,
+ "proven_by_40char_readback": 17,
+ "not_proven": [],
+ "rows": [
+  {
+   "local_file": "ORD_0263_S5FIX_VERIFY.md",
+   "repo_path": "evidence/ord0263-s5fix-harness/ORD_0263_S5FIX_VERIFY.md",
+   "bytes": 8356,
+   "blob40": "dea483669eabf42c3807d10b333c8800ecf694fe",
+   "readback_status": 200,
+   "readback_bytes": 8356,
+   "readback_blob40": "dea483669eabf42c3807d10b333c8800ecf694fe",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_capture_s5fix.json",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_capture_s5fix.json",
+   "bytes": 14149,
+   "blob40": "3e154c45ffbe5e1153dbdeb16821c85eae046657",
+   "readback_status": 200,
+   "readback_bytes": 14149,
+   "readback_blob40": "3e154c45ffbe5e1153dbdeb16821c85eae046657",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_verdict_ord0263_capture_s5fix.json",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_verdict_ord0263_capture_s5fix.json",
+   "bytes": 5652,
+   "blob40": "6654cefc0f5081b0c5965eea0925ff47a4b14a46",
+   "readback_status": 200,
+   "readback_bytes": 5652,
+   "readback_blob40": "6654cefc0f5081b0c5965eea0925ff47a4b14a46",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_s5fix_surface_receipt.json",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_s5fix_surface_receipt.json",
+   "bytes": 1035,
+   "blob40": "30e2da2d4a9ee900fe1539c8e880d178b36006ff",
+   "readback_status": 200,
+   "readback_bytes": 1035,
+   "readback_blob40": "30e2da2d4a9ee900fe1539c8e880d178b36006ff",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_s5fix_teardown_receipt.json",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_s5fix_teardown_receipt.json",
+   "bytes": 2130,
+   "blob40": "38805bf19659e361ab183b1dd1401aebac879001",
+   "readback_status": 200,
+   "readback_bytes": 2130,
+   "readback_blob40": "38805bf19659e361ab183b1dd1401aebac879001",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_aarm_mutant.diff",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_aarm_mutant.diff",
+   "bytes": 801,
+   "blob40": "6b865ff09ed03db0f9f63fc2ef84e987a965bac2",
+   "readback_status": 200,
+   "readback_bytes": 801,
+   "readback_blob40": "6b865ff09ed03db0f9f63fc2ef84e987a965bac2",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_aarm_fiftharm_reading.json",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_aarm_fiftharm_reading.json",
+   "bytes": 1535,
+   "blob40": "a4227beff5797d54015be28a3e56d5af796b5e1f",
+   "readback_status": 200,
+   "readback_bytes": 1535,
+   "readback_blob40": "a4227beff5797d54015be28a3e56d5af796b5e1f",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_publisher_rc_probe.json",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_publisher_rc_probe.json",
+   "bytes": 2322,
+   "blob40": "6f3eedd6feac3797e18c4525a3eb7193a4f3883d",
+   "readback_status": 200,
+   "readback_bytes": 2322,
+   "readback_blob40": "6f3eedd6feac3797e18c4525a3eb7193a4f3883d",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_stray_probe_revert.json",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_stray_probe_revert.json",
+   "bytes": 910,
+   "blob40": "ec664612bafd6a4ee5ba4dab00b12f6272e96752",
+   "readback_status": 200,
+   "readback_bytes": 910,
+   "readback_blob40": "ec664612bafd6a4ee5ba4dab00b12f6272e96752",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_origin_state_answered_health.log",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_origin_state_answered_health.log",
+   "bytes": 5001,
+   "blob40": "8686268c979ec8493d47a3f88244f428e48fc002",
+   "readback_status": 200,
+   "readback_bytes": 5001,
+   "readback_blob40": "8686268c979ec8493d47a3f88244f428e48fc002",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_origin_state_fully_silent.log",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_origin_state_fully_silent.log",
+   "bytes": 5120,
+   "blob40": "b691374c8c63dabf4769b0196dc5296772d65622",
+   "readback_status": 200,
+   "readback_bytes": 5120,
+   "readback_blob40": "b691374c8c63dabf4769b0196dc5296772d65622",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_junk_html.log",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_junk_html.log",
+   "bytes": 2215,
+   "blob40": "e7b6f2acbac94c9340ade115a893ed859dc9945c",
+   "readback_status": 200,
+   "readback_bytes": 2215,
+   "readback_blob40": "e7b6f2acbac94c9340ade115a893ed859dc9945c",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_junk_empty.log",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_junk_empty.log",
+   "bytes": 494,
+   "blob40": "072875884f1203291e755745ce66271ca9cb7f77",
+   "readback_status": 200,
+   "readback_bytes": 494,
+   "readback_blob40": "072875884f1203291e755745ce66271ca9cb7f77",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_junk_nonjson.log",
+   "repo_path": "evidence/ord0263-s5fix-harness/ord0263_junk_nonjson.log",
+   "bytes": 584,
+   "blob40": "ae4d53cfc7d9226fdbf83bedccc5042f104c85af",
+   "readback_status": 200,
+   "readback_bytes": 584,
+   "readback_blob40": "ae4d53cfc7d9226fdbf83bedccc5042f104c85af",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "tools/build_s5fix_capture.py",
+   "repo_path": "evidence/ord0263-s5fix-harness/build_s5fix_capture.py",
+   "bytes": 16885,
+   "blob40": "507d53a2187c86ea6777c5fdb599b4a0c532168d",
+   "readback_status": 200,
+   "readback_bytes": 16885,
+   "readback_blob40": "507d53a2187c86ea6777c5fdb599b4a0c532168d",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "tools/run_built_face.py",
+   "repo_path": "evidence/ord0263-s5fix-harness/run_built_face.py",
+   "bytes": 5882,
+   "blob40": "e31d0df3064254d2348d97d8611dab9e32126236",
+   "readback_status": 200,
+   "readback_bytes": 5882,
+   "readback_blob40": "e31d0df3064254d2348d97d8611dab9e32126236",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "tools/teardown_s5fix.py",
+   "repo_path": "evidence/ord0263-s5fix-harness/teardown_s5fix.py",
+   "bytes": 5480,
+   "blob40": "99014f9b3013ab54db031087040f270739d891d1",
+   "readback_status": 200,
+   "readback_bytes": 5480,
+   "readback_blob40": "99014f9b3013ab54db031087040f270739d891d1",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  }
+ ]
+}
