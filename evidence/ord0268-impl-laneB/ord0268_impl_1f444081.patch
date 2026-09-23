@@ -1,0 +1,36 @@
+commit 1f4440819a9d773da6e18f12a31412f73c6d0f55
+Author:     仓鼠王 <yjianbin419@gmail.com>
+AuthorDate: Wed Sep 23 22:39:23 2026 +0800
+Commit:     仓鼠王 <yjianbin419@gmail.com>
+CommitDate: Wed Sep 23 22:39:23 2026 +0800
+
+    fix(build): let Workbox keep the single content-derived shell entry (ORD-0268)
+    
+    additionalManifestEntries named the shell a second time as "/index.html" with a revision that
+    never changes, next to the generated "index.html" entry whose revision does change per build. With
+    both in one manifest, Workbox's precache never materialised on a real client: CacheStorage stayed
+    empty through install, a generation swap and an offline revisit, so the offline shell the config
+    promises was never there to serve.
+    
+    Measured in the shape the order asked for: control round (line still present) - no precache cache at
+    any step and the offline navigation ends in the browser's own ERR_CONNECTION_REFUSED; fixed round -
+    the workbox-precache cache appears and the same offline navigation is answered by the worker with the
+    new generation's asset.
+
+diff --git a/frontend/vite.config.ts b/frontend/vite.config.ts
+index 726df37..f40aff0 100644
+--- a/frontend/vite.config.ts
++++ b/frontend/vite.config.ts
+@@ -49,7 +49,11 @@ export default defineConfig({
+           /\/assets\//,
+           /\.(?:js|mjs|css|map|json|wasm|ico|svg|png|jpe?g|gif|webp|avif|woff2?|ttf|otf|webmanifest)$/i,
+         ],
+-        additionalManifestEntries: [{ url: "/index.html", revision: "v10-shell" }],
++        /* ORD-0268: no entry here. The generated manifest already carries the shell as `index.html`
++           with a content-derived revision; naming it a second time as `/index.html` with a constant
++           revision is what stopped Workbox's precache from ever materialising (measured: 9 -> 8 entries,
++           the `workbox-precache-<origin>` cache appears, and an offline navigation after a real
++           generation swap is then served by the worker instead of dying in the browser). */
+         cleanupOutdatedCaches: true,
+         /* An upgrade has to reach the traveller without them clearing storage: the new
+            worker takes over waiting clients and claims them once, and main.tsx reloads a
