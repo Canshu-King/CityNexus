@@ -20,6 +20,7 @@ import math
 import os
 import re
 import subprocess
+import sys
 from pathlib import Path
 from typing import Iterable
 
@@ -211,6 +212,32 @@ def _table(rows: list[dict]) -> str:
     return "\n".join(lines) if lines else "    （0 处）"
 
 
+def safe_stdout_write(text: str) -> str:
+    """把读数印出去，但**绝不让控制台编码把门判红**。
+
+    真形状：`pytest -s` 在 cp936 控制台上因 `⇒` 抛 UnicodeEncodeError ⇒ test_1 红，
+    而门什么都没测出来 —— 红因是我的输出通道，不是被测内容。
+    打不出来的字符退化成 `\\uXXXX`（内容不丢，只是难读一格）。
+    """
+    try:
+        sys.stdout.write(text + "\n")
+        return "written"
+    except UnicodeEncodeError:
+        enc = getattr(sys.stdout, "encoding", None) or "utf-8"
+        sys.stdout.write(text.encode(enc, "backslashreplace").decode(enc, "replace") + "\n")
+        return "backslashreplaced"
+
+
+def reading_table(paths: list[str], rows: list[dict], live: list[dict]) -> str:
+    """test_1 与 test_2e **共用**这一份读数：自测样本必须是真文本，不能是自己编的软样本。"""
+    header = (
+        f"扫描侧 cardinality：受版本控制路径 {len(paths)} 个 ⇒ 形状命中 {len(rows)} 处\n"
+        f"现役侧 cardinality：env 里可比的现役凭据 {len(live)} 把 "
+        f"{[(c['env'], c['len'], c['fp']) for c in live] or '（0 把 ⇒ 相等性 NOT_MEASURED，不写成不等）'}\n"
+    )
+    return "[credential-literals 读数表]\n" + header + _table(rows)
+
+
 # ======================================================================================
 # 1 · 受版本控制的路径里不得有凭据字面量（含 `.patch` 里套补丁的形状）
 # ======================================================================================
@@ -221,18 +248,14 @@ def test_1_no_credential_literal_in_any_versioned_path():
     live = live_credentials()
     rows = classify_offenders(offenders, live, len(paths))
     bad = [r for r in rows if r["verdict"] != "DECLARED_NON_LIVE_SAMPLE"]
-    header = (
-        f"扫描侧 cardinality：受版本控制路径 {len(paths)} 个 ⇒ 形状命中 {len(rows)} 处\n"
-        f"现役侧 cardinality：env 里可比的现役凭据 {len(live)} 把 "
-        f"{[(c['env'], c['len'], c['fp']) for c in live] or '（0 把 ⇒ 相等性 NOT_MEASURED，不写成不等）'}\n"
-    )
+    table = reading_table(paths, rows, live)
     assert not bad, (
         "期望：每一处命中要么与现役凭据**测得**不等且有**指纹吻合**的具名声明（甲），"
         f"要么根本没有命中；实际 {len(bad)} 处不合格（**射程一字未减**，仍全部列在下面）：\n"
-        + header + _table(rows)
+        + table
     )
     if rows:  # 绿也要把读数留下：判级表必须出现在可见输出里，不能只活着不说话
-        print("\n[credential-literals 读数表]\n" + header + _table(rows))
+        safe_stdout_write("\n" + table)
 
 
 # ======================================================================================
@@ -358,6 +381,52 @@ def test_2d_the_declaration_is_load_bearing_not_a_whitelist():
             f"期望：等于现役凭据必红；实际 {row5['verdict']}")
     finally:
         globals()["DECLARED_NON_LIVE_SAMPLES"] = saved
+
+
+def test_2e_the_reading_table_cannot_be_killed_by_the_console_codepage():
+    """真形状：`pytest -s` 在 cp936 控制台上把 test_1 判红 —— 红因是**输出通道**。
+
+    双向自测：先证明"直接写"在这台控制台上确实抛（不然这一格是空的），
+    再证明走 `safe_stdout_write` 不抛且内容还在（`⇒` 退化成转义，中文不丢）。
+    """
+    import io
+
+    sample = reading_table(["x/y.ts"], classify_offenders(
+        [{"at": "x/y.ts:1", "shape": "sk-[A-Za-z0-", "len": 23,
+          "loc_fp": "0" * 12, "token_fp": "f" * 12}], [], 1), [])
+    assert "⇒" in sample, "SETUP：样本里没有会被 codepage 吃掉的字符 ⇒ 测不出东西"
+
+    def cp936_stdout():
+        buf = io.BytesIO()
+        return io.TextIOWrapper(buf, encoding="cp936", errors="strict"), buf
+
+    real = sys.stdout
+    try:
+        # 正控：不经保护的写法在这台控制台上就是会炸
+        w, _ = cp936_stdout()
+        sys.stdout = w
+        try:
+            w.write(sample)
+            raised = None
+        except UnicodeEncodeError as exc:
+            raised = type(exc).__name__
+        assert raised == "UnicodeEncodeError", (
+            "SETUP：控制台没拒绝这段文本 ⇒ 这一格测不到东西（换样本，别改判据）")
+
+        # 承重：保护过的写法必须不抛，且读数仍然落到同一个通道里
+        w2, buf2 = cp936_stdout()
+        sys.stdout = w2
+        outcome = safe_stdout_write(sample)
+        w2.flush()
+        assert outcome == "backslashreplaced", (
+            f"期望：cp936 走退化分支；实际 {outcome!r}")
+        printed = buf2.getvalue().decode("cp936", "replace")
+        assert "⇒" not in printed and "\\u21d2" in printed, (
+            "期望：打不出的字符退化成转义；实际 " + repr(printed[:80]))
+        assert "判级=" in printed and "token指纹" in printed, (
+            "期望：退化分支仍把读数的中文字段印全；实际丢掉了一部分")
+    finally:
+        sys.stdout = real
 
 
 # ======================================================================================
