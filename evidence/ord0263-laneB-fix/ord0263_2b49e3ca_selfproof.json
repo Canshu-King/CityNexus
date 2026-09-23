@@ -1,0 +1,181 @@
+{
+ "at": "2026-09-23T20:41:23+08:00",
+ "order": "ORD-0263 re-parent",
+ "lane": "B c01d72a3",
+ "mode": "no product code changed by this run",
+ "old_tip": "a380287033da6ff0bd36b8e1baa6f79c61ad03bd",
+ "new_tip": "2b49e3cab1fcdbc55219065520ced8dea4fdfe73",
+ "old_base": "dea8410be809ebf6c5046581873584e9dbf32b64",
+ "new_base": "d2665e25855aeb265329266831983de42321697d",
+ "authoritative_tip_now": "d2665e25855aeb265329266831983de42321697d",
+ "1_parent_equals_new_base": {
+  "parent_of_candidate": "d2665e25855aeb265329266831983de42321697d",
+  "new_base": "d2665e25855aeb265329266831983de42321697d",
+  "authoritative_tip": "d2665e25855aeb265329266831983de42321697d",
+  "parent_equals_new_base": true,
+  "parent_equals_authoritative_tip": true,
+  "verdict": "MET"
+ },
+ "2_candidate_descends": {
+  "commits_from_new_base": 1,
+  "new_base_is_ancestor": true,
+  "old_tip_is_not_an_ancestor_of_new": true,
+  "old_tip_still_reachable": true,
+  "verdict": "MET"
+ },
+ "3_commit_attribution": {
+  "sha40": "2b49e3cab1fcdbc55219065520ced8dea4fdfe73",
+  "subject": "fix(frontend): give every read a deadline, and let an answered origin speak fo",
+  "carries_cherry_pick_marker": false,
+  "original_commit_kept_for_the_record": "a380287033da6ff0bd36b8e1baa6f79c61ad03bd",
+  "same_author_and_subject_as_old_tip": true,
+  "verdict": "MET (single original commit; old tip retained, nothing rewritten away)"
+ },
+ "4_file_set_unchanged": {
+  "files": [
+   "frontend/src/api/citynexus.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/lib/failureAttribution.ts",
+   "frontend/src/lib/readDeadline.ts"
+  ],
+  "count": 5,
+  "per_file": [
+   {
+    "path": "frontend/src/api/citynexus.ts",
+    "blob_old": "aefdab8925208174f0a9ccd43c17fc695cb91cef",
+    "blob_new": "aefdab8925208174f0a9ccd43c17fc695cb91cef",
+    "identical": true,
+    "bytes_new": 34362
+   },
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "blob_old": "c853ba128405f85cb8397eaa53a958f17122905b",
+    "blob_new": "c853ba128405f85cb8397eaa53a958f17122905b",
+    "identical": true,
+    "bytes_new": 162540
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "blob_old": "ec50b071eb2086754ce0b7237846067edd28485e",
+    "blob_new": "ec50b071eb2086754ce0b7237846067edd28485e",
+    "identical": true,
+    "bytes_new": 71971
+   },
+   {
+    "path": "frontend/src/lib/failureAttribution.ts",
+    "blob_old": "1fcac1007d5bb85ebdae1ac16b6ddf5746afb6a9",
+    "blob_new": "1fcac1007d5bb85ebdae1ac16b6ddf5746afb6a9",
+    "identical": true,
+    "bytes_new": 18601
+   },
+   {
+    "path": "frontend/src/lib/readDeadline.ts",
+    "blob_old": "709222bd712a2bc22e2296a326063be22b97ee57",
+    "blob_new": "709222bd712a2bc22e2296a326063be22b97ee57",
+    "identical": true,
+    "bytes_new": 2710
+   }
+  ],
+  "all_blobs_identical": true,
+  "old_file_count": 5,
+  "verdict": "MET"
+ },
+ "5_no_overlap_with_new_base_increment": {
+  "increment_range": "dea8410be809..d2665e25855a",
+  "increment_commits": 11,
+  "left_cardinality_files": 10,
+  "left_diff_fingerprint16": "ce39397ae4d4fd42",
+  "left_files": [
+   "backend/app/services.py",
+   "backend/tests/test_qoder_demo_accessibility_evidence.py",
+   "backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py",
+   "data/mock/places.json",
+   "frontend/e2e/qoder-ord0261-overlap-readonly-reproduction.spec.ts",
+   "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+   "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "frontend/src/styles.css",
+   "review/ord0261_0264_kill_arms.py",
+   "review/run_spec.py"
+  ],
+  "right_cardinality_files": 5,
+  "right_diff_fingerprint16": "30283a68ade6da52",
+  "right_files": [
+   "frontend/src/api/citynexus.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/i18n/LocaleContext.tsx",
+   "frontend/src/lib/failureAttribution.ts",
+   "frontend/src/lib/readDeadline.ts"
+  ],
+  "intersection": [],
+  "intersection_cardinality": 0,
+  "both_sides_non_empty": true,
+  "verdict": "MEASURED - NO OVERLAP"
+ },
+ "6_diff_object_and_clean_trees": {
+  "diff_vs_old_base": {
+   "object_sha1": "9202334ebf34093de729b4581d786f82c5b5a680",
+   "bytes": 21202,
+   "plus": 213,
+   "minus": 35,
+   "files": [
+    "frontend/src/api/citynexus.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/i18n/LocaleContext.tsx",
+    "frontend/src/lib/failureAttribution.ts",
+    "frontend/src/lib/readDeadline.ts"
+   ],
+   "fingerprint_sha256_16": "30283a68ade6da52"
+  },
+  "diff_vs_new_base": {
+   "object_sha1": "9202334ebf34093de729b4581d786f82c5b5a680",
+   "bytes": 21202,
+   "plus": 213,
+   "minus": 35,
+   "files": [
+    "frontend/src/api/citynexus.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/i18n/LocaleContext.tsx",
+    "frontend/src/lib/failureAttribution.ts",
+    "frontend/src/lib/readDeadline.ts"
+   ],
+   "fingerprint_sha256_16": "30283a68ade6da52"
+  },
+  "primary_identity": {
+   "rule": "content preservation across a parent change = the bare diff object is the SAME object",
+   "same_object": true,
+   "same_bytes": true,
+   "same_plus_minus": true,
+   "object_sha1": "9202334ebf34093de729b4581d786f82c5b5a680",
+   "bytes": 21202
+  },
+  "git_show_container_comparison": {
+   "note": "the accepted delivery `e96c60fe1675de6f93e65de7dbf2c39dea8a4cd7` (22,670 B) is a `git show` output, which carries commit header lines (parent, author date, message); a bare diff can never equal it, and comparing them was my error, not a finding",
+   "show_old_tip_blob40": "e96c60fe1675de6f93e65de7dbf2c39dea8a4cd7",
+   "show_new_tip_blob40": "f19bcc38d0fbfa8c0afd4293ff0529c5bcbaa5a1",
+   "diff_body_identical_inside_the_two_shows": true,
+   "message_identical": true,
+   "header_lines_expected_to_differ": [
+    "commit",
+    "Merge:",
+    "Date"
+   ]
+  },
+  "lane_worktree_porcelain": "",
+  "lane_worktree_branch": "agent/b-c01d72a3-ord0263",
+  "candidates_worktree_porcelain": "",
+  "verdict": "MET"
+ },
+ "7_what_this_does_not_claim": {
+  "not_a_re_verification": "the four states (S1..S4) and the three cells were measured on base dea8410 with HARNESS's v1 ruler; the new base carries 0261/0264 wizard fixes in features/setup/JourneyTrialSetup.tsx and styles.css -- adjacent to my boot path, not conflicting. Re-claiming GREEN here would be a quote, not a reading.",
+  "what_would_close_it": "one run of HARNESS's v2 ruler (aeece06ba30d4bed…) on this tree, on order",
+  "no_product_code_changed_in_this_run": {
+   "lane_working_tree_dirty_under_frontend_src": false,
+   "candidate_touches_only_my_five_files": true
+  }
+ },
+ "self_corrections_this_pass": [
+  "cell 6 first compared a bare `git diff` object to the published `git show` artifact and therefore reported NOT_MET against an impossible expectation; the judgement is now same-container-to-same-container (bare diff before vs after the re-parent) plus an explicit note about the `git show` header lines. The artifacts never changed -- only my comparison was wrong.",
+  "the first version of the last cell was an unreadable boolean expression (and did not parse); replaced by two named measurements."
+ ]
+}
