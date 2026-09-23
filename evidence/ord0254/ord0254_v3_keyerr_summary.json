@@ -1,0 +1,15 @@
+{
+ "at": "2026-09-23T14:47:52+08:00",
+ "mode": "keyerr",
+ "seconds": 1.5,
+ "ruler_blob40": "9ca0dee62016d7ef421b1dc085027ff4d6654c23",
+ "crash_reproduced_under_new_ruler": true,
+ "crash": {
+  "exception": "KeyError",
+  "str": "'verdict'",
+  "traceback": "Traceback (most recent call last):\n  File \"D:\\moodle\\_qoder_harness_ord0254\\tools\\run_ruler_v3.py\", line 143, in run_deploy\n    rc = mod.main()\n         ^^^^^^^^^^\n  File \"D:\\moodle\\_qoder_harness_ord0254\\tools\\ruler_v3.py\", line 737, in main\n    f_unconfigured = any(p[\"verdict\"] == \"NOT_CONFIGURED\" for p in f_probes)\n                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"D:\\moodle\\_qoder_harness_ord0254\\tools\\ruler_v3.py\", line 737, in <genexpr>\n    f_unconfigured = any(p[\"verdict\"] == \"NOT_CONFIGURED\" for p in f_probes)\n                         ~^^^^^^^^^^^\nKeyError: 'verdict'\n"
+ },
+ "previous_object_was": "e3015cc065d1d4eb (line 654)",
+ "reading": "the swapped gauge still cannot complete F's pass path inside main()",
+ "traceback_file": "ord0254_v3_keyerr_traceback.txt"
+}
