@@ -1,0 +1,115 @@
+{
+ "at": "2026-09-23T21:49:23+08:00",
+ "what": "ORD-0263 release-generation measurement - complete coordinates index (v2)",
+ "supersedes": "ord0263_releasegen_publish_coordinates.json (v1, 8 rows) by adding the bus receipt and re-reading every row independently at 40 chars; v1 is left published and untouched",
+ "lane": "HARNESS d291c9dc",
+ "subject": "release generation index-D76m_cky.js / index-I45CQek8.css, landed tip d2665e2, no ORD-0263 - measured on my own face :4414 with my backend :8411",
+ "verdict_summary": {
+  "arms_red": 4,
+  "derived_result": "RED_CELLS: V1_origin_error_5xx,V2_no_answer,V3_distinctness,V4_silent_read_answered_health",
+  "s3_observation": "186/186 samples on the skeleton across 84.0 s, 0 buttons, 1 saved snapshot row present",
+  "s4_validity": "settled=false: the sentence appeared at 40.311 s, which is my instrument closing the socket at HANG_SECONDS=40"
+ },
+ "delivery": {
+  "bus_comment": "5796006809",
+  "bus_receipt_blob40": "5a710cdd5a8a31a7c215707d28e2bf28103325ff",
+  "ledger_marker": "HARNESS-ORD0263-RELEASEGEN-20260923T2130"
+ },
+ "old_paths_touched": [],
+ "externally_readable_scope": "only the rows below",
+ "files_requested": 9,
+ "proven_by_40char_readback": 9,
+ "not_proven": [],
+ "rows": [
+  {
+   "local_file": "ORD_0263_RELEASEGEN.md",
+   "repo_path": "evidence/ord0263-livegen/ORD_0263_RELEASEGEN.md",
+   "bytes": 6313,
+   "blob40": "1ca97b76cc9e346a676ddc9bd569e13d7f27429d",
+   "readback_status": 200,
+   "readback_bytes": 6313,
+   "readback_blob40": "1ca97b76cc9e346a676ddc9bd569e13d7f27429d",
+   "verdict": "PROVEN"
+  },
+  {
+   "local_file": "ord0263_capture_releasegen.json",
+   "repo_path": "evidence/ord0263-livegen/ord0263_capture_releasegen.json",
+   "bytes": 9050,
+   "blob40": "a0a459ce8470ffaad92e8202687c940bcc60d79b",
+   "readback_status": 200,
+   "readback_bytes": 9050,
+   "readback_blob40": "a0a459ce8470ffaad92e8202687c940bcc60d79b",
+   "verdict": "PROVEN"
+  },
+  {
+   "local_file": "ord0263_verdict_ord0263_capture_releasegen.json",
+   "repo_path": "evidence/ord0263-livegen/ord0263_verdict_ord0263_capture_releasegen.json",
+   "bytes": 2409,
+   "blob40": "36708090df3452e322924e8df7dabc19ef1d597d",
+   "readback_status": 200,
+   "readback_bytes": 2409,
+   "readback_blob40": "36708090df3452e322924e8df7dabc19ef1d597d",
+   "verdict": "PROVEN"
+  },
+  {
+   "local_file": "ord0263_releasegen_surface_receipt.json",
+   "repo_path": "evidence/ord0263-livegen/ord0263_releasegen_surface_receipt.json",
+   "bytes": 1688,
+   "blob40": "f707d1cb28b7bc1b9e0e5af3bf587372a9161a7b",
+   "readback_status": 200,
+   "readback_bytes": 1688,
+   "readback_blob40": "f707d1cb28b7bc1b9e0e5af3bf587372a9161a7b",
+   "verdict": "PROVEN"
+  },
+  {
+   "local_file": "ord0263_releasegen_teardown_receipt.json",
+   "repo_path": "evidence/ord0263-livegen/ord0263_releasegen_teardown_receipt.json",
+   "bytes": 2217,
+   "blob40": "0298c5aa6f5a543e61abccb6085e48b1677a2ec1",
+   "readback_status": 200,
+   "readback_bytes": 2217,
+   "readback_blob40": "0298c5aa6f5a543e61abccb6085e48b1677a2ec1",
+   "verdict": "PROVEN"
+  },
+  {
+   "local_file": "tools/build_releasegen_capture.py",
+   "repo_path": "evidence/ord0263-livegen/build_releasegen_capture.py",
+   "bytes": 12604,
+   "blob40": "c6640a7badb38c0e5bcdf0208d80b1d62908bc74",
+   "readback_status": 200,
+   "readback_bytes": 12604,
+   "readback_blob40": "c6640a7badb38c0e5bcdf0208d80b1d62908bc74",
+   "verdict": "PROVEN"
+  },
+  {
+   "local_file": "tools/start_releasegen_surface.py",
+   "repo_path": "evidence/ord0263-livegen/start_releasegen_surface.py",
+   "bytes": 8297,
+   "blob40": "edc535a00badc9e4317052ce9c677e0292f96c4d",
+   "readback_status": 200,
+   "readback_bytes": 8297,
+   "readback_blob40": "edc535a00badc9e4317052ce9c677e0292f96c4d",
+   "verdict": "PROVEN"
+  },
+  {
+   "local_file": "tools/teardown_releasegen.py",
+   "repo_path": "evidence/ord0263-livegen/teardown_releasegen.py",
+   "bytes": 6048,
+   "blob40": "e316d6bea3f98d59cacbc16ef823f669e009cf3a",
+   "readback_status": 200,
+   "readback_bytes": 6048,
+   "readback_blob40": "e316d6bea3f98d59cacbc16ef823f669e009cf3a",
+   "verdict": "PROVEN"
+  },
+  {
+   "local_file": "ord0263_releasegen_bus_receipt.json",
+   "repo_path": "evidence/ord0263-livegen/ord0263_releasegen_bus_receipt.json",
+   "bytes": 299,
+   "blob40": "5a710cdd5a8a31a7c215707d28e2bf28103325ff",
+   "readback_status": 200,
+   "readback_bytes": 299,
+   "readback_blob40": "5a710cdd5a8a31a7c215707d28e2bf28103325ff",
+   "verdict": "PROVEN"
+  }
+ ]
+}
