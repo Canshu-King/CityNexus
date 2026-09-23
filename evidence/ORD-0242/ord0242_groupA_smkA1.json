@@ -1,0 +1,680 @@
+{
+  "order": "ORD-0242",
+  "group": "A",
+  "surface": "http://127.0.0.1:4185/ (canary @4185/8713)",
+  "bundle_expected": "index-CrAwWm5f.js",
+  "run_label": "smkA1",
+  "pid": 47512,
+  "viewport": [
+    390,
+    844
+  ],
+  "started_at": "2026-09-23T11:08:57.168Z",
+  "faces": {
+    "Today": {
+      "read": {
+        "url": "/v8/hub",
+        "h1": "Demo之旅",
+        "h2": [
+          "每一天，紧密相连。"
+        ],
+        "body": "菜单 / 今天 跟随系统 EN DE 晚上好 Demo之旅 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Riverside Museum 接下来 12:15 Central Food Hall 今天还有 6 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 10月10日 09:00 出发 10月10日 19:00 需要关注 已处理 刚才的变化已经处理好。 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 今天 行程 地图 Copilot 我的",
+        "buttons": [
+          "菜单",
+          "跟随系统",
+          "EN",
+          "DE",
+          "AI 帮我规划",
+          "试用其他城市",
+          "打开行程工作台",
+          "查看实时行程",
+          "对比住宿 →",
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的"
+        ],
+        "errorCopy": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+        "emptyCopy": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。"
+      },
+      "tap": {
+        "label": "查看实时行程",
+        "point": [
+          107,
+          468
+        ],
+        "hitTag": "BUTTON",
+        "pointHitsThisButton": true
+      },
+      "afterTap": {
+        "url": "/v8/live",
+        "h1": "选择你的下一段路程。",
+        "h2": [
+          "Riverside Museum"
+        ],
+        "body": "菜单 / 实时行程 跟随系统 EN DE 实时行程 · 已保存 9月21日 20:07 选择你的下一段路程。 当前步骤、下一个受保护时刻、最晚出发指引，以及一条清晰的恢复路径。 现在 Riverside Museum 下一步 · Central Food Hall · 公交地铁 · 时长待定 10:45 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 当前没有需要你决定的调整。 刚才的行程变化已经处理好，已确认的预订保持不变。 更新位置 报告降雨 下一段路程方式 选择平稳路线 步行 骑行 公交地铁 驾车 网约车 对比所有方式 下一步 · 最晚出发 Central Food Hall 10月10日 12:15 前到达 · 余量 0 分钟 12:15 预计到达 · 公交地铁 风险 低 · 路线证据有效 证据 供应商路线、时效、费用和可行性 实时状态 当前正在发生什么 刚刚更新 时钟 19:09 Asia/Shanghai 当前步骤 进行中 行程状态 离线 只读就绪 未来 24 小时已保存 0 个来源 暂无记录 今天 行程 地图 Copilot 我的",
+        "buttons": [
+          "菜单",
+          "跟随系统",
+          "EN",
+          "DE",
+          "更新位置",
+          "报告降雨",
+          "步行",
+          "骑行",
+          "公交地铁",
+          "驾车",
+          "网约车",
+          "对比所有方式",
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的"
+        ],
+        "errorCopy": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+        "emptyCopy": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。"
+      },
+      "verdict_bits": {
+        "rendered": true,
+        "errorCopyCandidate_for_note_only": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+        "http4xx_named": [],
+        "pageErrors": 0,
+        "taps_that_missed": []
+      },
+      "contract_boundary": null,
+      "writes_user_data": "只读面：进入 Today 会触发 GET /experience，而该路由读时会写（见收据 apiNamed），改的是 _compat.db 副本，不是 _live.db",
+      "entered_via_hidden_control": false,
+      "verdict": "COMPATIBLE"
+    },
+    "Map": {
+      "nav": true,
+      "read": {
+        "url": "/v8/map",
+        "h1": "整座城市，行程叠加其上。",
+        "h2": [
+          "Central Food Hall"
+        ],
+        "body": "菜单 / 地图 跟随系统 EN DE 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 下一段路程 Central Food Hall 未知费用保持未知。 今天 行程 地图 Copilot 我的",
+        "buttons": [
+          "菜单",
+          "跟随系统",
+          "EN",
+          "DE",
+          "对比出行方式",
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的"
+        ],
+        "errorCopy": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+        "emptyCopy": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。"
+      },
+      "panel": {
+        "panelPresent": true,
+        "panelClass": "v8-map-panel v8-map-empty",
+        "legs": null,
+        "emptyBranch": true,
+        "emptyText": "尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+        "hintPresent": false,
+        "hintText": null,
+        "hintVisible": null,
+        "canvasCount": 0,
+        "maplibreglElement": false
+      },
+      "compare": {
+        "label": "对比出行方式",
+        "point": [
+          82,
+          269
+        ],
+        "hitTag": "BUTTON",
+        "pointHitsThisButton": true
+      },
+      "afterCompare": {
+        "url": "/v8/map",
+        "h1": "整座城市，行程叠加其上。",
+        "h2": [
+          "Central Food Hall",
+          "选择平稳路线"
+        ],
+        "body": "菜单 / 地图 跟随系统 EN DE 地图 · 一目了然 整座城市，行程叠加其上。 采集的路线几何和供应商事实在你穿越行程时始终可见。 对比出行方式 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 下一段路程 Central Food Hall 未知费用保持未知。 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 下一段路程 · 证据对比 选择平稳路线 × WALK 不可用 — 无供应商证据 BICYCLE 不可用 — 无供应商证据 TRANSIT 不可用 — 无供应商证据 AUTO 不可用 — 无供应商证据 RIDE HAIL 不可用 — 无供应商证据 让 CityNexus 选择 费用仅在从供应商采集时显示。未知不被视为零。",
+        "buttons": [
+          "菜单",
+          "跟随系统",
+          "EN",
+          "DE",
+          "对比出行方式",
+          "✦ CityNexus Copilot",
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的",
+          "×",
+          "WALK 不可用 — 无供应商证据",
+          "BICYCLE 不可用 — 无供应商证据",
+          "TRANSIT 不可用 — 无供应商证据",
+          "AUTO 不可用 — 无供应商证据",
+          "RIDE HAIL 不可用 — 无供应商证据",
+          "让 CityNexus 选择"
+        ],
+        "errorCopy": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+        "emptyCopy": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。"
+      },
+      "verdict_bits": {
+        "rendered": true,
+        "errorCopyCandidate_for_note_only": "这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。",
+        "http4xx_named": [],
+        "pageErrors": 0,
+        "taps_that_missed": []
+      },
+      "contract_boundary": null,
+      "writes_user_data": "只读面，写副本同上",
+      "entered_via_hidden_control": false,
+      "verdict": "COMPATIBLE"
+    },
+    "Wallet": {
+      "nav": true,
+      "tripsRead": {
+        "url": "/v8/trips",
+        "h1": "1 天行程",
+        "h2": [
+          "选择平稳路线"
+        ],
+        "body": "菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 行程 1 天行程 逐日安排。已确认的预订会被标记为受保护。 10月10日周六 6 项 09:00 10:15 Old Town Gate 1 小时 15 分 详情 › 10:45 12:00 Riverside Museum 1 小时 15 分 当前 详情 › 12:15 13:15 Central Food Hall 1 小时 详情 › 13:35 14:55 Tech Art Center 1 小时 20 分 详情 › 15:30 16:30 Nexus River Cruise Pier 1 小时 已确认 · 受保护 详情 › 17:15 18:45 Skyline Dinner House 1 小时 30 分 详情 › ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 下一段路程 · 证据对比 选择平稳路线 × WALK 不可用 — 无供应商证据 BICYCLE 不可用 — 无供应商证据 TRANSIT 不可用 — 无供应商证据 AUTO 不可用 — 无供应商证据 RIDE HAIL 不可用 — 无供应商证据 让 CityNexus 选择 费用仅在从供应商采集时显示。未知不被视为零。",
+        "buttons": [
+          "菜单",
+          "跟随系统",
+          "EN",
+          "DE",
+          "行程",
+          "10月10日周六 6 项",
+          "✦ CityNexus Copilot",
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的",
+          "×",
+          "WALK 不可用 — 无供应商证据",
+          "BICYCLE 不可用 — 无供应商证据",
+          "TRANSIT 不可用 — 无供应商证据",
+          "AUTO 不可用 — 无供应商证据",
+          "RIDE HAIL 不可用 — 无供应商证据",
+          "让 CityNexus 选择"
+        ],
+        "errorCopy": "不可用",
+        "emptyCopy": null
+      },
+      "tabTap": {
+        "found": false,
+        "tabs": [
+          "菜单",
+          "跟随系统",
+          "EN",
+          "DE",
+          "行程",
+          "10月10日周六\n6 项",
+          "✦\nCityNexus ",
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的",
+          "×",
+          "WALK\n不可用\n—\n无"
+        ]
+      },
+      "read": {
+        "url": "/v8/trips",
+        "h1": "1 天行程",
+        "h2": [
+          "选择平稳路线"
+        ],
+        "body": "菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 行程 1 天行程 逐日安排。已确认的预订会被标记为受保护。 10月10日周六 6 项 09:00 10:15 Old Town Gate 1 小时 15 分 详情 › 10:45 12:00 Riverside Museum 1 小时 15 分 当前 详情 › 12:15 13:15 Central Food Hall 1 小时 详情 › 13:35 14:55 Tech Art Center 1 小时 20 分 详情 › 15:30 16:30 Nexus River Cruise Pier 1 小时 已确认 · 受保护 详情 › 17:15 18:45 Skyline Dinner House 1 小时 30 分 详情 › ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 下一段路程 · 证据对比 选择平稳路线 × WALK 不可用 — 无供应商证据 BICYCLE 不可用 — 无供应商证据 TRANSIT 不可用 — 无供应商证据 AUTO 不可用 — 无供应商证据 RIDE HAIL 不可用 — 无供应商证据 让 CityNexus 选择 费用仅在从供应商采集时显示。未知不被视为零。",
+        "buttons": [
+          "菜单",
+          "跟随系统",
+          "EN",
+          "DE",
+          "行程",
+          "10月10日周六 6 项",
+          "✦ CityNexus Copilot",
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的",
+          "×",
+          "WALK 不可用 — 无供应商证据",
+          "BICYCLE 不可用 — 无供应商证据",
+          "TRANSIT 不可用 — 无供应商证据",
+          "AUTO 不可用 — 无供应商证据",
+          "RIDE HAIL 不可用 — 无供应商证据",
+          "让 CityNexus 选择"
+        ],
+        "errorCopy": "不可用",
+        "emptyCopy": null
+      },
+      "verdict_bits": {
+        "rendered": true,
+        "errorCopyCandidate_for_note_only": "不可用",
+        "http4xx_named": [],
+        "pageErrors": 0,
+        "taps_that_missed": []
+      },
+      "contract_boundary": null,
+      "writes_user_data": "只读 tab 切换，无写请求",
+      "entered_via_hidden_control": false,
+      "verdict": "COMPATIBLE"
+    },
+    "Drawer": {
+      "open": {
+        "label": "菜单",
+        "point": [
+          40,
+          33
+        ],
+        "hitTag": "DIV",
+        "pointHitsThisButton": false
+      },
+      "read": {
+        "url": "/v8/trips",
+        "h1": "1 天行程",
+        "h2": [
+          "选择平稳路线"
+        ],
+        "body": "菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 行程 1 天行程 逐日安排。已确认的预订会被标记为受保护。 10月10日周六 6 项 09:00 10:15 Old Town Gate 1 小时 15 分 详情 › 10:45 12:00 Riverside Museum 1 小时 15 分 当前 详情 › 12:15 13:15 Central Food Hall 1 小时 详情 › 13:35 14:55 Tech Art Center 1 小时 20 分 详情 › 15:30 16:30 Nexus River Cruise Pier 1 小时 已确认 · 受保护 详情 › 17:15 18:45 Skyline Dinner House 1 小时 30 分 详情 › ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 下一段路程 · 证据对比 选择平稳路线 × WALK 不可用 — 无供应商证据 BICYCLE 不可用 — 无供应商证据 TRANSIT 不可用 — 无供应商证据 AUTO 不可用 — 无供应商证据 RIDE HAIL 不可用 — 无供应商证据 让 CityNexus 选择 费用仅在从供应商采集时显示。未知不被视为零。",
+        "buttons": [
+          "菜单",
+          "跟随系统",
+          "EN",
+          "DE",
+          "行程",
+          "10月10日周六 6 项",
+          "✦ CityNexus Copilot",
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的",
+          "×",
+          "WALK 不可用 — 无供应商证据",
+          "BICYCLE 不可用 — 无供应商证据",
+          "TRANSIT 不可用 — 无供应商证据",
+          "AUTO 不可用 — 无供应商证据",
+          "RIDE HAIL 不可用 — 无供应商证据",
+          "让 CityNexus 选择"
+        ],
+        "errorCopy": "不可用",
+        "emptyCopy": null
+      },
+      "drawerItems": {
+        "present": true,
+        "visible": false,
+        "items": [],
+        "groups": [
+          "TODAY",
+          "PLAN",
+          "TRAVEL",
+          "SYSTEM"
+        ],
+        "text": "TODAY今天实时行程地图PLAN行程工作台住宿选择城市探索TRAVEL旅行票夹CopilotSYSTEM恢复与执行智能守护旅行者画像"
+      },
+      "verdict_bits": {
+        "rendered": true,
+        "errorCopyCandidate_for_note_only": "不可用",
+        "http4xx_named": [],
+        "pageErrors": 0,
+        "taps_that_missed": [
+          "菜单@[40,33]"
+        ]
+      },
+      "contract_boundary": null,
+      "writes_user_data": null,
+      "entered_via_hidden_control": false,
+      "verdict": "COMPATIBLE_WITH_DECLARED_DEGRADATION"
+    },
+    "Simulation": {
+      "entryFound": false,
+      "drawerClick": {
+        "scope": "sidebar",
+        "clicked": "恢复与执行",
+        "box": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "point": [
+          0,
+          0
+        ],
+        "visibleInViewport": false,
+        "offsetParentNull": true,
+        "hitTag": null,
+        "pointHitsThisButton": false
+      },
+      "read": {
+        "url": "/v8/trips",
+        "h1": "1 天行程",
+        "h2": [
+          "选择平稳路线"
+        ],
+        "body": "菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 行程 1 天行程 逐日安排。已确认的预订会被标记为受保护。 10月10日周六 6 项 09:00 10:15 Old Town Gate 1 小时 15 分 详情 › 10:45 12:00 Riverside Museum 1 小时 15 分 当前 详情 › 12:15 13:15 Central Food Hall 1 小时 详情 › 13:35 14:55 Tech Art Center 1 小时 20 分 详情 › 15:30 16:30 Nexus River Cruise Pier 1 小时 已确认 · 受保护 详情 › 17:15 18:45 Skyline Dinner House 1 小时 30 分 详情 › ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 下一段路程 · 证据对比 选择平稳路线 × WALK 不可用 — 无供应商证据 BICYCLE 不可用 — 无供应商证据 TRANSIT 不可用 — 无供应商证据 AUTO 不可用 — 无供应商证据 RIDE HAIL 不可用 — 无供应商证据 让 CityNexus 选择 费用仅在从供应商采集时显示。未知不被视为零。",
+        "buttons": [
+          "菜单",
+          "跟随系统",
+          "EN",
+          "DE",
+          "行程",
+          "10月10日周六 6 项",
+          "✦ CityNexus Copilot",
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的",
+          "×",
+          "WALK 不可用 — 无供应商证据",
+          "BICYCLE 不可用 — 无供应商证据",
+          "TRANSIT 不可用 — 无供应商证据",
+          "AUTO 不可用 — 无供应商证据",
+          "RIDE HAIL 不可用 — 无供应商证据",
+          "让 CityNexus 选择"
+        ],
+        "errorCopy": "不可用",
+        "emptyCopy": null
+      },
+      "entryUnreachableAt390": true,
+      "verdict_bits": {
+        "rendered": true,
+        "errorCopyCandidate_for_note_only": "不可用",
+        "http4xx_named": [],
+        "pageErrors": 0,
+        "taps_that_missed": []
+      },
+      "contract_boundary": "不是契约边界：入口在 390px 下不可达（scope=sidebar, visibleInViewport=false, offsetParentNull=true）",
+      "writes_user_data": "未进入，0 请求",
+      "entered_via_hidden_control": true,
+      "verdict": "COMPATIBLE_WITH_DECLARED_DEGRADATION"
+    },
+    "Me": {
+      "nav": true,
+      "read": {
+        "url": "/v8/me",
+        "h1": "我的行程与偏好",
+        "h2": [
+          "选择平稳路线"
+        ],
+        "body": "菜单 / 我的 跟随系统 EN DE 我的 我的行程与偏好 这里是你这趟行程的事实：同行人数、预算、住宿和已确认的预订。 这趟行程 DEMO 1 位旅行者 · ¥500.00 住宿 还没有选定 在「行程 · 住宿」里挑选 已确认的预订 还没有 在「行程 · 预订」里导入你的票或确认单。 改动偏好 仅提供建议 任何会影响已确认预订或受保护安排的改动，都会先征得你同意。 开启自动执行 通知 RECORD_ONLY 正在检查推送通道… 启用 Web Push 高级详情 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的 下一段路程 · 证据对比 选择平稳路线 × WALK 不可用 — 无供应商证据 BICYCLE 不可用 — 无供应商证据 TRANSIT 不可用 — 无供应商证据 AUTO 不可用 — 无供应商证据 RIDE HAIL 不可用 — 无供应商证据 让 CityNexus 选择 费用仅在从供应商采集时显示。未知不被视为零。",
+        "buttons": [
+          "菜单",
+          "跟随系统",
+          "EN",
+          "DE",
+          "启用 Web Push",
+          "✦ CityNexus Copilot",
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的",
+          "×",
+          "WALK 不可用 — 无供应商证据",
+          "BICYCLE 不可用 — 无供应商证据",
+          "TRANSIT 不可用 — 无供应商证据",
+          "AUTO 不可用 — 无供应商证据",
+          "RIDE HAIL 不可用 — 无供应商证据",
+          "让 CityNexus 选择"
+        ],
+        "errorCopy": "不可用",
+        "emptyCopy": null
+      },
+      "verdict_bits": {
+        "rendered": true,
+        "errorCopyCandidate_for_note_only": "不可用",
+        "http4xx_named": [],
+        "pageErrors": 0,
+        "taps_that_missed": []
+      },
+      "contract_boundary": null,
+      "writes_user_data": "只读面",
+      "entered_via_hidden_control": false,
+      "verdict": "COMPATIBLE"
+    }
+  },
+  "browser": "chromium 153.0.8010.12",
+  "served_bundle": {
+    "file": "index-CrAwWm5f.js",
+    "bytes": 1234802,
+    "sha256": "9fd89456daf12bcab4bb775c8a8522d506a0acb2d3ac6d888209f86d04131536",
+    "matches_expected": true
+  },
+  "ended_at": "2026-09-23T11:09:47.749Z",
+  "net": [
+    {
+      "at": "/v8/hub",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "kind": "request"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "at": "/v8/hub",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "kind": "request"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "at": "/v8/hub",
+      "method": "GET",
+      "url": "/api/v1/demo/scene",
+      "kind": "request"
+    },
+    {
+      "at": "/v8/hub",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200",
+      "kind": "request"
+    },
+    {
+      "at": "/v8/hub",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+      "kind": "request"
+    },
+    {
+      "at": "/v8/hub",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "kind": "request"
+    },
+    {
+      "at": "/v8/hub",
+      "method": "GET",
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+      "kind": "request"
+    },
+    {
+      "at": "/v8/hub",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+      "kind": "request"
+    },
+    {
+      "at": "/v8/hub",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+      "kind": "request"
+    },
+    {
+      "at": "/v8/hub",
+      "method": "GET",
+      "url": "/api/v1/agent/runtime-status",
+      "kind": "request"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/demo/scene",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/agent-policy",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/wallet",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/offline-snapshot",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/plans",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/agent/runtime-status",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "at": "/v8/live",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "kind": "request"
+    },
+    {
+      "at": "/v8/live",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "kind": "request"
+    },
+    {
+      "at": "/v8/live",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/execution-clock",
+      "kind": "request"
+    },
+    {
+      "at": "/v8/live",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/web-observations",
+      "kind": "request"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/execution-clock",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/web-observations",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/replans",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "at": "/v8/hub",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "kind": "request"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "at": "/v8/trips",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "kind": "request"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "at": "/v8/me",
+      "method": "GET",
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/push-config",
+      "kind": "request"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/travelers/11111111-1111-4111-8111-111111111111/push-config",
+      "status": 200,
+      "kind": "response"
+    },
+    {
+      "at": "/v8/me",
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "kind": "request"
+    },
+    {
+      "method": "GET",
+      "url": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/twin",
+      "status": 200,
+      "kind": "response"
+    }
+  ],
+  "console": [],
+  "pageErrors": [],
+  "nonGetApi": [],
+  "http4xx": []
+}
