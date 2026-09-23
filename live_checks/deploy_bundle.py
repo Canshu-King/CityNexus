@@ -642,6 +642,107 @@ def selftest(serve: pathlib.Path) -> int:
     return 0 if ok else 9
 
 
+def f_surface_probes(refs: list[str], serve: pathlib.Path, times: int | None = None) -> list[dict]:
+    """Probe every configured user-facing surface for `refs`.  Shared by the pre-flight and the
+    post-switch receipt so the two can never disagree by using two different judges."""
+    probes = []
+    for label, base in (("proxy_4782", os.environ.get("CNX_DEPLOY_PROXY_BASE")),
+                        ("tunnel", os.environ.get("CNX_DEPLOY_TUNNEL_BASE"))):
+        if not base:
+            probes.append({"surface": label, "verdict": "NOT_CONFIGURED", "base": None})
+            continue
+        for ref in refs:
+            probes.append({"surface": label, "base": base,
+                           "got": repeated_verdict(ref, expect_ct_for(ref), serve, base=base,
+                                                   auth_file=os.environ.get("CNX_DEPLOY_AUTH_FILE"),
+                                                   times=times or int(os.environ.get("CNX_DEPLOY_PROBE_TIMES", "2")))})
+    return probes
+
+
+def f_verdict_of(probes: list[dict], declared_unprobed: bool) -> str:
+    # a configured surface stores its verdict under "got"; only the unconfigured placeholder has a top-level
+    # "verdict".  Reading one shape from both made a *configured* run crash AFTER the index was switched.
+    unconfigured = any(p.get("verdict") == "NOT_CONFIGURED" for p in probes)
+    if unconfigured and declared_unprobed:
+        return "F_UNPROBED_DECLARED"          # declared gap, kept OUT of all_green by name
+    if unconfigured:
+        return "RED"                          # fail closed: absent comparison != passed comparison
+    return "GREEN" if all(p.get("got", {}).get("verdict") == "GREEN" for p in probes) else "RED"
+
+
+def preflight_before_switch(src: pathlib.Path, serve: pathlib.Path, new_refs: list[str],
+                            old_js: str | None, allow_unprobed: bool) -> dict:
+    """The rule this tool owed since 13:02: **every read-only judgement runs BEFORE the switch**.
+
+    The 13:0x deploy switched `index.html` and only then reached the code that crashed, so for ~6 minutes
+    the phone was on a generation with no receipt.  Union-before-switch is what kept the user off a white
+    screen, not luck - but a *sequence* fix is available too: nothing below writes anything, so any red
+    here stops the deploy while the old generation is still the one being served.
+
+    Which arms can legitimately run pre-switch: the new assets are already unioned into `serve/`, so they
+    resolve; the NEW service worker and the NEW bundle are read from the build export (`src`), because they
+    are only served after the switch.  B-after/H/D are inherently post-switch (they ask "what does the
+    server hand out now that we switched") and stay in the post-switch receipt.
+    """
+    out: dict = {}
+    html = (src / "index.html").read_text(encoding="utf-8", errors="replace")
+    out["B_pre_index_names_new_refs"] = {
+        "refs": new_refs, "all_present": all(r in html for r in new_refs),
+        "verdict": "GREEN" if all(r in html for r in new_refs) else "RED"}
+    out["C_pre_new_assets_reach_the_live_server"] = [
+        repeated_verdict(r, expect_ct_for(r), src, times=PROBE_TIMES) for r in new_refs]
+    # G_pre: parse the NEW sw's precache manifest out of the build export and resolve each url live.
+    g_pre = []
+    for name in ("sw.js", "v10-sw.js"):
+        swf = src / name
+        if not swf.is_file():
+            continue
+        urls = precache_urls(swf.read_text(encoding="utf-8", errors="replace"))
+        entry = {"sw": name, "sw_sha256_src": sha256(swf), "urls_found": len(urls), "probes": []}
+        for u in urls:
+            ref = u if u.startswith("/") else "/" + u
+            entry["probes"].append({"ref": ref,
+                                    "got": repeated_verdict(ref, expect_ct_for(ref), src, times=PROBE_TIMES)})
+        entry["verdict"] = ("GREEN" if urls and all(p["got"]["verdict"] == "GREEN" for p in entry["probes"])
+                            else ("DECLARED_NO_PRECACHE_ARRAY" if not urls and name == "sw.js" else "RED"))
+        g_pre.append(entry)
+    out["G_pre_precache_of_the_new_sw_resolves"] = g_pre
+    # I_pre: the registration parameters of the bundle about to go live, read from the build export.
+    i_pre = []
+    for ref in [r for r in new_refs if r.endswith(".js")]:
+        p = src / ref.lstrip("/")
+        text = p.read_text(encoding="utf-8", errors="replace") if p.is_file() else None
+        v = sw_register_verdict(text, f"src {ref}")
+        v["src_sha256"] = sha256(p) if p.is_file() else None
+        i_pre.append(v)
+    out["I_pre_sw_register_params_of_new_bundle"] = i_pre
+    f_pre = f_surface_probes([r for r in new_refs if r.endswith(".js")] + ["/"], serve)
+    out["F_pre_user_surfaces"] = {"probes": f_pre, "verdict": f_verdict_of(f_pre, allow_unprobed)}
+    if old_js:
+        g = asset_verdict(old_js, expect_ct_for(old_js), serve)
+        out["A_pre_current_generation_still_served"] = {"ref": old_js, "got": g}
+
+    def _reds(node) -> list[str]:
+        hits = []
+        if isinstance(node, dict):
+            if node.get("verdict") == "RED":
+                hits.append(node.get("reason") or node.get("ref") or node.get("sw") or "RED")
+            for v in node.values():
+                hits += _reds(v)
+        elif isinstance(node, list):
+            for v in node:
+                hits += _reds(v)
+        return hits
+    reds = _reds(out)
+    # F_UNPROBED_DECLARED is a named gap, not a red: it stays out of all_green by name (A-3), exactly as
+    # in the post-switch receipt, so the pre-flight cannot be greener than the thing it gates.
+    out["verdict"] = "GREEN" if not reds else "RED"
+    out["reds"] = reds[:12]
+    out["rule"] = ("read-only arms judged against the live server + build export BEFORE index.html moves; "
+                   "a RED here means the old generation is still being served and nothing was switched")
+    return out
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--src")
@@ -655,9 +756,32 @@ def main() -> int:
                          "surface stays unprobed either way (A-3 fail-closed, redteam bus 5788606895).")
     ap.add_argument("--selftest", action="store_true",
                     help="prove the asset gauge both ways against the live server; no deploy is performed")
+    ap.add_argument("--preflight-check", action="store_true",
+                    help="read-only: run the PRE-SWITCH arms against --src and the live server, print the "
+                         "receipt and stop.  Nothing is unioned, copied or switched.")
     a = ap.parse_args()
     if a.selftest:
         return selftest(pathlib.Path(a.serve))
+    if a.preflight_check:
+        if not a.src:
+            print("REFUSED: --preflight-check needs --src (a build export, or the live dist to self-check)")
+            return 5
+        s, sv = pathlib.Path(a.src), pathlib.Path(a.serve)
+        srefs = asset_refs((s / "index.html").read_text(encoding="utf-8", errors="replace"))
+        oidx = sv / "index.html"
+        orefs = asset_refs(oidx.read_text(encoding="utf-8", errors="replace")) if oidx.is_file() else []
+        pf = preflight_before_switch(s, sv, srefs, next((r for r in orefs if r.endswith(".js")), None),
+                                     bool(a.allow_proxy_unprobed))
+        print(json.dumps(pf, indent=1, ensure_ascii=False)[:3000])
+        out = pathlib.Path(__file__).with_name("receipts")
+        out.mkdir(exist_ok=True)
+        dest = out / f"preflight_{time.strftime('%m%d_%H%M%S')}.json"
+        dest.write_text(json.dumps({"what": "PREFLIGHT ONLY - no union, no copy, no switch",
+                                    "src": str(s), "serve": str(sv), "t": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                                    "src_index_refs": srefs, "served_index_refs": orefs, "preflight": pf},
+                                   indent=1, ensure_ascii=False), encoding="utf-8", newline="\n")
+        print(f"[receipt] {dest}\nPREFLIGHT {pf['verdict']}")
+        return 0 if pf["verdict"] == "GREEN" else 4
     if not a.src or not a.live_tree or not a.sha:
         print("REFUSED: --src, --live-tree and --sha are required unless --selftest is given")
         return 5
@@ -754,6 +878,17 @@ def main() -> int:
                       f"body_sha={str(p['sha256'])[:12]} disk_sha={str(p['disk_sha256'])[:12]}")
         return 7
     print(f"[gate] {len(pre)} new asset(s) reachable, real bytes, no HTML fallback")
+
+    # --- phase 2b: PRE-FLIGHT (the 13:02 lesson).  Every read-only arm is judged here, so a red stops
+    # the deploy while the CURRENT generation is still what the user gets - never "switch, then find out".
+    pf = preflight_before_switch(src, serve, new_refs, old_js, bool(getattr(a, "allow_proxy_unprobed", False)))
+    receipt["preflight_before_switch"] = pf
+    print(f"[preflight] {pf['verdict']}  (B_pre/C_pre/G_pre/I_pre/F_pre/A_pre; reds={len(pf['reds'])})")
+    for line in pf["reds"]:
+        print("  RED:", str(line)[:180])
+    if pf["verdict"] != "GREEN":
+        print("REFUSED before switching index.html: the pre-flight is RED, so the old generation stays live.")
+        return 4
 
     # --- phase 3: BACKUP then SWITCH the unhashed root files
     stamp = time.strftime("%H%M%S")   # was %H%M: two deploys inside one minute would overwrite the
@@ -884,27 +1019,8 @@ def main() -> int:
     # F: the surface the user actually reaches - auth proxy and public tunnel - probed for the NEW
     # bundle, not just for `/`.  Bases come from the environment; unset means UNPROBED, which is
     # never GREEN (fail closed) unless the operator declares the gap out loud.
-    f_probes = []
-    for label, base in (("proxy_4782", os.environ.get("CNX_DEPLOY_PROXY_BASE")),
-                        ("tunnel", os.environ.get("CNX_DEPLOY_TUNNEL_BASE"))):
-        if not base:
-            f_probes.append({"surface": label, "verdict": "NOT_CONFIGURED", "base": None})
-            continue
-        for ref in [r for r in new_refs if r.endswith(".js")] + ["/"]:
-            f_probes.append({"surface": label, "base": base,
-                             "got": repeated_verdict(ref, expect_ct_for(ref), serve, base=base,
-                                                      auth_file=os.environ.get("CNX_DEPLOY_AUTH_FILE"),
-                                                      times=int(os.environ.get("CNX_DEPLOY_PROBE_TIMES", "2")))})
-    # a configured surface stores its verdict under "got"; only the unconfigured placeholder has a top-level
-    # "verdict".  Reading one shape from both made a *configured* run crash AFTER the index was switched.
-    f_unconfigured = any(p.get("verdict") == "NOT_CONFIGURED" for p in f_probes)
-    f_green = (not f_unconfigured) and all(p.get("got", {}).get("verdict") == "GREEN" for p in f_probes)
-    if f_unconfigured and getattr(a, "allow_proxy_unprobed", False):
-        f_verdict = "F_UNPROBED_DECLARED"          # declared gap, kept OUT of all_green by name
-    elif f_unconfigured:
-        f_verdict = "RED"                          # fail closed: absent comparison != passed comparison
-    else:
-        f_verdict = "GREEN" if f_green else "RED"
+    f_probes = f_surface_probes([r for r in new_refs if r.endswith(".js")] + ["/"], serve)
+    f_verdict = f_verdict_of(f_probes, bool(getattr(a, "allow_proxy_unprobed", False)))
 
     # I: the registration parameters are not in any header or filename - they exist only inside the
     # bundle bytes, which is exactly why A-H could all stay GREEN while `updateViaCache` was broken
