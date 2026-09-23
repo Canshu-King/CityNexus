@@ -1,0 +1,477 @@
+{
+  "kind": "CNX_RECEIPT_LINEAGE_V1",
+  "issued_for": "Q2 = PARTIAL_COMPLIANCE（history preserved YES / same published path unchanged NO）",
+  "arbitration_source": "arbiter 13:32 与 15:14；commander 转达（总线 5789505851 = Q2 递仲裁那一贴）",
+  "session": "8c66aa92",
+  "generated_at_local_clock": "2026-09-23T17:03+0800",
+  "how_the_old_numbers_were_recovered": "消息里给我的 16 位前缀不直接采信：先用 GET /commits?path=<p>&sha=commander/control 列出该路径在分支上的每次提交，再对每个提交 GET /contents/<p>?ref=<commit> 读出**当时**那枚 blob 的全 40 位，与前缀对上后去 GET /git/blobs/<full> 取回字节并重算 sha1。取不到就写 NOT_RESOLVED，不补全。",
+  "entries": [
+    {
+      "published_path": "evidence/ord0224_a2/mutant_rounds_Y3_http_2ab69f2.json",
+      "reason_for_the_replacement": "同一 scope 键上又跑了一批，并把新批次写到了旧路径：新文件多了 self_clean（每轮具名临时库 + 受审自清），control_round 随之不同。本 entry 的 diff 还量出一件旧缺陷：旧 blob 的顶层 sha 只有 28 个字符（`2ab69f20adf783a6f288580129e3`，被截断），新版是完整 40 位；tree / node / run_shape 两版一致，所以替换件与旧件是同一 scope 键，不是换了一棵树。旧 blob 是仲裁与 F 复算时读的那一份。",
+      "scope": {
+        "arm": "mutant_rounds_Y3_http_2ab69f2.json",
+        "target_nodeid_or_stamp": "closure door: backend/tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation, single-node"
+      },
+      "history_on_the_branch_newest_first": [
+        {
+          "commit": "7dea271e1159",
+          "commit_date": "2026-09-23T05:05:45Z",
+          "message": "commander C: mutant batches v2 with per-round named temp DBs + audited self-clean; tier st",
+          "blob_at_that_commit": "091b692280f59944d5686b1afe35ba255d38eed8"
+        },
+        {
+          "commit": "1ee7346d1736",
+          "commit_date": "2026-09-23T04:43:29Z",
+          "message": "commander C: A-2 tier stamp + Y2/Y3 mutant batches + ORD-0219 handoff to B",
+          "blob_at_that_commit": "2650cd5a17c85f7bf0546037c522cc72edcc0362"
+        }
+      ],
+      "quoted_old_blobs": [
+        {
+          "quoted_prefix": "2650cd5a17c85f7b",
+          "resolved_full_sha1": "2650cd5a17c85f7bf0546037c522cc72edcc0362",
+          "commit": "1ee7346d1736",
+          "commit_date": "2026-09-23T04:43:29Z",
+          "commit_message": "commander C: A-2 tier stamp + Y2/Y3 mutant batches + ORD-0219 handoff to B",
+          "old_bytes": 12145,
+          "reachability": {
+            "reachable": true,
+            "status": 200,
+            "size_reported": 12145,
+            "bytes_fetched": 12145,
+            "sha1_of_fetched_bytes": "2650cd5a17c85f7bf0546037c522cc72edcc0362",
+            "sha_matches": true,
+            "note": "一致"
+          },
+          "diff_vs_current_published_bytes": {
+            "keys_only_in_old": [],
+            "keys_only_in_new": [
+              "self_clean"
+            ],
+            "top_level_keys_whose_value_changed": [
+              "control_round",
+              "rounds",
+              "sha"
+            ],
+            "scope_key_same_as_old": {
+              "sha": false,
+              "tree": true,
+              "node": true,
+              "run_shape": true
+            },
+            "scope_key_old": {
+              "sha": "2ab69f20adf783a6f288580129e3",
+              "tree": "snap_2ab69f2",
+              "node": "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+              "run_shape": "single-node"
+            },
+            "scope_key_new": {
+              "sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+              "tree": "snap_2ab69f2",
+              "node": "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+              "run_shape": "single-node"
+            },
+            "verdict_fields": {
+              "old": {
+                "rounds": 10,
+                "killed": 10,
+                "deterministic_kill": true,
+                "control_green": true,
+                "all_restores_clean": true,
+                "all_markers_restored": true,
+                "campaign_valid": true
+              },
+              "new": {
+                "rounds": 10,
+                "killed": 10,
+                "deterministic_kill": true,
+                "control_green": true,
+                "all_restores_clean": true,
+                "all_markers_restored": true,
+                "campaign_valid": true
+              }
+            }
+          },
+          "restored_under_a_frozen_name": null
+        }
+      ],
+      "current_content_at_that_path": {
+        "local_bytes": 13789,
+        "local_git_blob_sha1": "091b692280f59944d5686b1afe35ba255d38eed8"
+      },
+      "supersession_relation": "supersedes(旧 blob 仍可寻址，路径当前内容 = 新版本；旧号未消失，只是不再是该路径的当前内容)"
+    },
+    {
+      "published_path": "evidence/ord0224_a2/mutant_rounds_Y2_http_2ab69f2.json",
+      "reason_for_the_replacement": "同上：Y2（索引谓词永不命中）那批也一样被同路径升版覆盖了。",
+      "scope": {
+        "arm": "mutant_rounds_Y2_http_2ab69f2.json",
+        "target_nodeid_or_stamp": "closure door: backend/tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation, single-node"
+      },
+      "history_on_the_branch_newest_first": [
+        {
+          "commit": "109fa23a4b07",
+          "commit_date": "2026-09-23T05:05:53Z",
+          "message": "commander C: mutant batches v2 with per-round named temp DBs + audited self-clean; tier st",
+          "blob_at_that_commit": "49eec1e31a18b375e4cc5b277c60446c67047648"
+        },
+        {
+          "commit": "b981be6642b7",
+          "commit_date": "2026-09-23T04:43:23Z",
+          "message": "commander C: A-2 tier stamp + Y2/Y3 mutant batches + ORD-0219 handoff to B",
+          "blob_at_that_commit": "bf72437f4d6f3eba83a2db948b75811227b036a5"
+        }
+      ],
+      "quoted_old_blobs": [
+        {
+          "quoted_prefix": "bf72437f4d6f3eba",
+          "resolved_full_sha1": "bf72437f4d6f3eba83a2db948b75811227b036a5",
+          "commit": "b981be6642b7",
+          "commit_date": "2026-09-23T04:43:23Z",
+          "commit_message": "commander C: A-2 tier stamp + Y2/Y3 mutant batches + ORD-0219 handoff to B",
+          "old_bytes": 11162,
+          "reachability": {
+            "reachable": true,
+            "status": 200,
+            "size_reported": 11162,
+            "bytes_fetched": 11162,
+            "sha1_of_fetched_bytes": "bf72437f4d6f3eba83a2db948b75811227b036a5",
+            "sha_matches": true,
+            "note": "一致"
+          },
+          "diff_vs_current_published_bytes": {
+            "keys_only_in_old": [],
+            "keys_only_in_new": [
+              "self_clean"
+            ],
+            "top_level_keys_whose_value_changed": [
+              "control_round",
+              "rounds"
+            ],
+            "scope_key_same_as_old": {
+              "sha": true,
+              "tree": true,
+              "node": true,
+              "run_shape": true
+            },
+            "scope_key_old": {
+              "sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+              "tree": "snap_2ab69f2",
+              "node": "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+              "run_shape": "single-node"
+            },
+            "scope_key_new": {
+              "sha": "2ab69f20adf783a6f29133f577877a88580129e3",
+              "tree": "snap_2ab69f2",
+              "node": "tests/test_qoder_g3_xproc_http.py::test_g3_xproc_two_uvicorn_workers_over_http_share_one_operation",
+              "run_shape": "single-node"
+            },
+            "verdict_fields": {
+              "old": {
+                "rounds": 10,
+                "killed": 10,
+                "deterministic_kill": true,
+                "control_green": true,
+                "all_restores_clean": true,
+                "all_markers_restored": true,
+                "campaign_valid": true
+              },
+              "new": {
+                "rounds": 10,
+                "killed": 10,
+                "deterministic_kill": true,
+                "control_green": true,
+                "all_restores_clean": true,
+                "all_markers_restored": true,
+                "campaign_valid": true
+              }
+            }
+          },
+          "restored_under_a_frozen_name": null
+        }
+      ],
+      "current_content_at_that_path": {
+        "local_bytes": 12794,
+        "local_git_blob_sha1": "49eec1e31a18b375e4cc5b277c60446c67047648"
+      },
+      "supersession_relation": "supersedes(旧 blob 仍可寻址，路径当前内容 = 新版本；旧号未消失，只是不再是该路径的当前内容)"
+    },
+    {
+      "published_path": "evidence/ord0224_a2/ord0224_a2_TIER_STAMP.json",
+      "reason_for_the_replacement": "分级戳按 revision 递增、一直在同一路径上覆盖（v1→v6）。这是 Q2 判 PARTIAL_COMPLIANCE 的第三条： 每一版的 blob 都还能取到，但路径当前内容换过。从 v7 起改为**每版一个新文件名**。",
+      "scope": {
+        "arm": "ord0224_a2_TIER_STAMP.json",
+        "target_nodeid_or_stamp": "evidence 分级戳（不是收据）"
+      },
+      "history_on_the_branch_newest_first": [
+        {
+          "commit": "e0b11e708cbf",
+          "commit_date": "2026-09-23T07:42:16Z",
+          "message": "commander: lane C - tier stamp v6 (V1 re-emission + live-tip batches + path-reuse self-rep",
+          "blob_at_that_commit": "a59af511bf7a3e18f4989ad87693dafcbf8d12d7"
+        },
+        {
+          "commit": "d10b00e07bf9",
+          "commit_date": "2026-09-23T06:29:21Z",
+          "message": "commander C: tier stamp v5 - folds in the ORD-0225 V1 receipts and the repeat-batch counts",
+          "blob_at_that_commit": "512aca2bf2a1f488c36f35dbafe019aba0fd994a"
+        },
+        {
+          "commit": "7cc6e8da0226",
+          "commit_date": "2026-09-23T05:26:14Z",
+          "message": "commander C: CNX_REVERSE_MUTATION_RECEIPT_V1 for Y3/Y2 (B-1 frozen schema) + emitter + tie",
+          "blob_at_that_commit": "e7c0b1600165462cbc15e39a8a374982ac9e2201"
+        },
+        {
+          "commit": "9d8292bf8704",
+          "commit_date": "2026-09-23T05:05:59Z",
+          "message": "commander C: mutant batches v2 with per-round named temp DBs + audited self-clean; tier st",
+          "blob_at_that_commit": "fb3e250c4451e3cf34dc610a7c689d3729e612b7"
+        },
+        {
+          "commit": "2ebc34eb7e53",
+          "commit_date": "2026-09-23T04:50:54Z",
+          "message": "commander C: tier stamp v2 - adds the in-process 3/10 batch and limits its scope",
+          "blob_at_that_commit": "6ff6b0d824bbf906690d9b07a9f8a81e067a496f"
+        },
+        {
+          "commit": "dcfba9e9ec2d",
+          "commit_date": "2026-09-23T04:43:12Z",
+          "message": "commander C: A-2 tier stamp + Y2/Y3 mutant batches + ORD-0219 handoff to B",
+          "blob_at_that_commit": "5ca7356ccaacc97b40cdee66171bb0b085064b76"
+        }
+      ],
+      "quoted_old_blobs": [
+        {
+          "quoted_prefix": "5ca7356ccaacc97b",
+          "resolved_full_sha1": "5ca7356ccaacc97b40cdee66171bb0b085064b76",
+          "commit": "dcfba9e9ec2d",
+          "commit_date": "2026-09-23T04:43:12Z",
+          "commit_message": "commander C: A-2 tier stamp + Y2/Y3 mutant batches + ORD-0219 handoff to B",
+          "old_bytes": 4392,
+          "reachability": {
+            "reachable": true,
+            "status": 200,
+            "size_reported": 4392,
+            "bytes_fetched": 4392,
+            "sha1_of_fetched_bytes": "5ca7356ccaacc97b40cdee66171bb0b085064b76",
+            "sha_matches": true,
+            "note": "一致"
+          },
+          "diff_vs_current_published_bytes": {
+            "keys_only_in_old": [],
+            "keys_only_in_new": [
+              "revision",
+              "revision_note"
+            ],
+            "top_level_keys_whose_value_changed": [
+              "items",
+              "not_signed"
+            ]
+          },
+          "restored_under_a_frozen_name": null
+        },
+        {
+          "quoted_prefix": "6ff6b0d824bbf906",
+          "resolved_full_sha1": "6ff6b0d824bbf906690d9b07a9f8a81e067a496f",
+          "commit": "2ebc34eb7e53",
+          "commit_date": "2026-09-23T04:50:54Z",
+          "commit_message": "commander C: tier stamp v2 - adds the in-process 3/10 batch and limits its scope",
+          "old_bytes": 5380,
+          "reachability": {
+            "reachable": true,
+            "status": 200,
+            "size_reported": 5380,
+            "bytes_fetched": 5380,
+            "sha1_of_fetched_bytes": "6ff6b0d824bbf906690d9b07a9f8a81e067a496f",
+            "sha_matches": true,
+            "note": "一致"
+          },
+          "diff_vs_current_published_bytes": {
+            "keys_only_in_old": [],
+            "keys_only_in_new": [],
+            "top_level_keys_whose_value_changed": [
+              "items",
+              "not_signed",
+              "revision",
+              "revision_note"
+            ]
+          },
+          "restored_under_a_frozen_name": null
+        },
+        {
+          "quoted_prefix": "fb3e250c4451e3cf",
+          "resolved_full_sha1": "fb3e250c4451e3cf34dc610a7c689d3729e612b7",
+          "commit": "9d8292bf8704",
+          "commit_date": "2026-09-23T05:05:59Z",
+          "commit_message": "commander C: mutant batches v2 with per-round named temp DBs + audited self-clean; tier st",
+          "old_bytes": 6133,
+          "reachability": {
+            "reachable": true,
+            "status": 200,
+            "size_reported": 6133,
+            "bytes_fetched": 6133,
+            "sha1_of_fetched_bytes": "fb3e250c4451e3cf34dc610a7c689d3729e612b7",
+            "sha_matches": true,
+            "note": "一致"
+          },
+          "diff_vs_current_published_bytes": {
+            "keys_only_in_old": [],
+            "keys_only_in_new": [],
+            "top_level_keys_whose_value_changed": [
+              "items",
+              "not_signed",
+              "revision",
+              "revision_note"
+            ]
+          },
+          "restored_under_a_frozen_name": null
+        },
+        {
+          "quoted_prefix": "e7c0b1600165462c",
+          "resolved_full_sha1": "e7c0b1600165462cbc15e39a8a374982ac9e2201",
+          "commit": "7cc6e8da0226",
+          "commit_date": "2026-09-23T05:26:14Z",
+          "commit_message": "commander C: CNX_REVERSE_MUTATION_RECEIPT_V1 for Y3/Y2 (B-1 frozen schema) + emitter + tie",
+          "old_bytes": 7681,
+          "reachability": {
+            "reachable": true,
+            "status": 200,
+            "size_reported": 7681,
+            "bytes_fetched": 7681,
+            "sha1_of_fetched_bytes": "e7c0b1600165462cbc15e39a8a374982ac9e2201",
+            "sha_matches": true,
+            "note": "一致"
+          },
+          "diff_vs_current_published_bytes": {
+            "keys_only_in_old": [],
+            "keys_only_in_new": [],
+            "top_level_keys_whose_value_changed": [
+              "items",
+              "not_signed",
+              "revision",
+              "revision_note"
+            ]
+          },
+          "restored_under_a_frozen_name": null
+        },
+        {
+          "quoted_prefix": "512aca2bf2a1f488",
+          "resolved_full_sha1": "512aca2bf2a1f488c36f35dbafe019aba0fd994a",
+          "commit": "d10b00e07bf9",
+          "commit_date": "2026-09-23T06:29:21Z",
+          "commit_message": "commander C: tier stamp v5 - folds in the ORD-0225 V1 receipts and the repeat-batch counts",
+          "old_bytes": 11563,
+          "reachability": {
+            "reachable": true,
+            "status": 200,
+            "size_reported": 11563,
+            "bytes_fetched": 11563,
+            "sha1_of_fetched_bytes": "512aca2bf2a1f488c36f35dbafe019aba0fd994a",
+            "sha_matches": true,
+            "note": "一致"
+          },
+          "diff_vs_current_published_bytes": {
+            "keys_only_in_old": [],
+            "keys_only_in_new": [],
+            "top_level_keys_whose_value_changed": [
+              "items",
+              "not_signed",
+              "revision",
+              "revision_note"
+            ]
+          },
+          "restored_under_a_frozen_name": null
+        }
+      ],
+      "current_content_at_that_path": {
+        "local_bytes": 17736,
+        "local_git_blob_sha1": "a59af511bf7a3e18f4989ad87693dafcbf8d12d7"
+      },
+      "supersession_relation": "supersedes(旧 blob 仍可寻址，路径当前内容 = 新版本；旧号未消失，只是不再是该路径的当前内容)"
+    },
+    {
+      "published_path": "evidence/ord0225/xproc_v1_gate_receipt.py",
+      "reason_for_the_replacement": "本轮我自己抓到并自报的那件：新仪器 PUT 复用了已发布路径，覆盖了六枚 ORD-0225 收据引用的字节。",
+      "scope": {
+        "arm": "xproc_v1_gate_receipt.py",
+        "target_nodeid_or_stamp": "instrument（不是收据）"
+      },
+      "history_on_the_branch_newest_first": [
+        {
+          "commit": "b057dc43a955",
+          "commit_date": "2026-09-23T07:19:56Z",
+          "message": "commander: lane C - same emitter bytes, ord0225 prefix",
+          "blob_at_that_commit": "ed5b7f81ef7da15d4d0967fe9f4d4a55be201d53"
+        },
+        {
+          "commit": "dd8c092d8dc3",
+          "commit_date": "2026-09-23T06:11:54Z",
+          "message": "commander C: ORD-0225 product-side reverse mutation, V1 receipts (ordered arm + attributio",
+          "blob_at_that_commit": "0e7bf4174400c2f8b125f6408ab30239f1df29cf"
+        }
+      ],
+      "quoted_old_blobs": [
+        {
+          "quoted_prefix": "0e7bf4174400c2f8",
+          "resolved_full_sha1": "0e7bf4174400c2f8b125f6408ab30239f1df29cf",
+          "commit": "dd8c092d8dc3",
+          "commit_date": "2026-09-23T06:11:54Z",
+          "commit_message": "commander C: ORD-0225 product-side reverse mutation, V1 receipts (ordered arm + attributio",
+          "old_bytes": 22778,
+          "reachability": {
+            "reachable": true,
+            "status": 200,
+            "size_reported": 22778,
+            "bytes_fetched": 22778,
+            "sha1_of_fetched_bytes": "0e7bf4174400c2f8b125f6408ab30239f1df29cf",
+            "sha_matches": true,
+            "note": "一致"
+          },
+          "diff_vs_current_published_bytes": {
+            "not_applicable": "两份字节不是 JSON（仪器文件），只比摘要与大小"
+          },
+          "restored_under_a_frozen_name": "evidence/ord0225/xproc_v1_gate_receipt_pre_provenance_0e7bf417.py"
+        }
+      ],
+      "current_content_at_that_path": {
+        "local_bytes": 26848,
+        "local_git_blob_sha1": "ed5b7f81ef7da15d4d0967fe9f4d4a55be201d53"
+      },
+      "supersession_relation": "supersedes(旧 blob 仍可寻址，路径当前内容 = 新版本；旧号未消失，只是不再是该路径的当前内容)"
+    }
+  ],
+  "additive_files_this_round": {
+    "note": "以下新文件**不替换**任何旧内容：旧路径与旧 blob 原样在位。",
+    "files": [
+      {
+        "file": "evidence/ord0224_a2/v1_receipt_Y3_http_2ab69f2_aggregated.json",
+        "derived_from": "evidence/ord0224_a2/v1_receipt_Y3_http_2ab69f2.json",
+        "source_blob": "89b698678fb67538a3efaa9ccca35cd9ff731f05",
+        "source_blob_quoted_by_verifier": "89b698678fb67538a3efaa9ccca35cd9ff731f05",
+        "why": "仲裁 §Minimal repair：顶层 restore 从 10 轮 per-run 机械聚合"
+      },
+      {
+        "file": "evidence/ord0224_a2/v1_receipt_Y2_http_2ab69f2_aggregated.json",
+        "derived_from": "evidence/ord0224_a2/v1_receipt_Y2_http_2ab69f2.json",
+        "source_blob": "5612cd30cd7944a5ed81c4ba92ff1c27994f4ea1",
+        "source_blob_quoted_by_verifier": "5612cd30cd7944a5ed81c4ba92ff1c27994f4ea1",
+        "why": "同上"
+      },
+      {
+        "file": "evidence/ord0225/v1_gate_receipt_Y123_a_21f1e8d_v2.json",
+        "derived_from": "evidence/ord0225/v1_gate_receipt_Y123_a_21f1e8d.json",
+        "source_blob": "7fecbb9189a655e9dd448ed6ec64441cacad0200",
+        "why": "红队 16:39（总线 5791721578）：carriers_removed=4 ⇒ claimed_result 从 KILLED 改 MULTI_CARRIER_CUTSET_KILLED；顺带补顶层 restore"
+      },
+      {
+        "file": "evidence/ord0225/v1_gate_receipt_Y123_b_21f1e8d_v2.json",
+        "derived_from": "evidence/ord0225/v1_gate_receipt_Y123_b_21f1e8d.json",
+        "source_blob": "048d82c166aa61f6f44473dc225fa7d4f36b5511",
+        "why": "同上"
+      }
+    ]
+  },
+  "go_forward_rule": "已发布路径冻结：任何改版一律新文件名（`..._v2.json` / `..._aggregated.json` / 戳按版本 `..._v7.json`）。这条也解释了为什么本版分级戳本身走新路径。"
+}
