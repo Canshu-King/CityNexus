@@ -800,6 +800,24 @@ export function JourneyTrialSetup({
               </label>
             </div>
           </details>
+          {/* ORD-0264: this opener used to render in the page-bottom secondary row, where its centre
+              measured y=1208 in an 844px viewport -- on a phone it was permanently below the fold and
+              untappable. It now sits directly under the details it opens. The width (350×44) and the
+              min-height the class-level floor gives it are unchanged; only its position moved. */}
+          {step === 1 && (
+            <button
+              type="button"
+              className="trial-back-link"
+              data-testid="trial-show-advanced"
+              onClick={() => {
+                setAdvanced(true);
+                const node = document.querySelector(".trial-advanced") as HTMLDetailsElement | null;
+                if (node) node.open = true;
+              }}
+            >
+              {zh ? "高级设置" : "Advanced settings"}
+            </button>
+          )}
         </div>
       )}
 
@@ -1239,20 +1257,6 @@ export function JourneyTrialSetup({
         >
           {t("trial.tianjinDemo")}
         </button>
-        {step === 1 && (
-          <button
-            type="button"
-            className="trial-back-link"
-            data-testid="trial-show-advanced"
-            onClick={() => {
-              setAdvanced(true);
-              const node = document.querySelector(".trial-advanced") as HTMLDetailsElement | null;
-              if (node) node.open = true;
-            }}
-          >
-            {zh ? "高级设置" : "Advanced settings"}
-          </button>
-        )}
       </div>
     </section>
   );
