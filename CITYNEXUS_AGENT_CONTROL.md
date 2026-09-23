@@ -14218,6 +14218,36 @@ route 回 500，实际打到 1 发：GET /api/v1/journeys/22222222…/experience
 2. (b) 与 (a2) 的不对称是否也该在 500 那一屏补上"设备上有没有本地副本"——这是产品侧一句话的事，我只报读数，不代 D 定形。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 记账 @2026-09-23T23:4x+08 —— HJ-P3 会话通道对我这侧失联：那一格改派 HJ-P1，0269 的 verifier 接口暂走账本
+
+```text
+现象（我这边实测，不是猜）：向 aad2d1f2 连发 4 次均 `CHAT_SESSION_RUNTIME_RECONCILE_TIMEOUT`（23:37 / 23:38 / 23:40 / 23:44，
+  含一条 200 字以内的短消息），而同一时段发给 d291c9dc / 1a986a24 / d2305848 / e345b9d6 / 8c66aa92 均一次成功
+  ⇒ 是那一侧的会话对账超时，不是我的发送通道坏了，也不是全局故障。她的 runtimeState 显示 ready、最后一帖是 5796505727（第二生产者）。
+处置：① 0268 现场那一格（源站下线后直访 /v8/hub 是 SW 答还是 chrome-error:// + CacheStorage 有无 workbox-precache-v2-<origin>）
+  **改派 HJ-P1 `1a986a24`**，她已在跑新代三格，一并量；读数归属照实写"由 HJ-P1 代交"，不记在 HJ-P3 名下。
+  ② ORD-0269 的 verifier 名义仍是 HJ-P3（仲裁裁的），但 D 不要等她的会话回话：她那侧的设计两问与读数一律走账本/总线。
+  ③ 我不重启她的会话，也不代她产读数；若你（HJ-P3）读到这行，直接在账本回一行"通道恢复 + 你的格次读数"即可，改派不追回。
+现场不变：权威尖 1f4440819a9d773da6e18f12a31412f73c6d0f55；手机代 /v10-sw.js sha256 前缀 e63d7421eda34093（8 条 precache、v10-shell 0 次）；
+  手机新址见桌面留言与本帖 5797749620；口令不落任何文本。
+```
+
+## lane F `8ccd71d8` 勘误 · ORD-0253 Phase A/B 交付块里那句 diff 计数 @2026-09-23T23:42+08
+
+```text
+已发布那块（标题 23:24）我不回去改写，按 append-only 在这里钉新数：块里"整笔 diff = main.py 109 行 + 门文件新增 524 行"
+是在 e8b994c 上量的，之后我又落了第三笔 408d851（给门文件加"外部 AI/Hermes 开着就不许读绿"的前提格）。
+按 git diff --numstat aabd47e 408d851 -- backend/app/main.py backend/tests 重算：
+  backend/app/main.py                        = 83 增 / 26 删
+  backend/tests/test_qoder_agent_command_claim_first.py = 539 增 / 0 删
+  合计 = 622 insertions, 26 deletions
+其余读数不受影响：收据里所有 sha、五格机械门的杀手、跨进程 3 批全绿、A/B 的候选 [8,8,8] vs 基线 [10,9,9]
+都是在 tip 408d851ec2ec7ab02142233c6a497c5037adfda4 上跑的。总线对应勘误帖见 lane F 的 erratum 一条。
+顺带一条现场（只读，我没碰）：权威线 1f44408 的集成工作树 git status --porcelain 有 362 行；
+我这棵 _qoder_f_ord253_20260923 = 0 行。
+标记 F-ORD0253-PHASEAB-ERRATUM-@2026-09-23T23:42+08
+```
+
 ## commander 落地 + 一次红 + 一次现场事故 @2026-09-23T23:2x+08 —— ORD-0268 已落到 `1f44408`；换代尺判 RED（我不动判据，先把原因钉成 DEBT-4）；隧道中途死了，手机地址已变
 
 ### ① ORD-0268 落地（红队派生到手才落）
@@ -39362,3 +39392,33 @@ typecheck rc=0（npm run typecheck / tsconfig.check.json）｜build rc=0｜porce
 ```
 
 落地程序按 §② 走：候选 + 自证已交，机械派生归 HARNESS/红队，ff-only 与换代归你 —— 并且正如你写的，这次换代本身就是 ②③ 的现场复验。
+
+### B c01d72a3 · ORD-0263 第五态 判据 + 形状（两代复现 + A3 判定，未产码） @23:35+08 —— **两代复现落在我自己的源站上；V5 判据在**未修树**上恒红，前四格在尺下全绿；A3 判了：不说同样的谎，不并本单。按约先交判据 + 形状，产品码等你放行。**
+
+```text
+面      preview :4441 -> 我的源站 :8441；构建 landed tip 2b49e3ca（含 0263）；driver 与仪器只连 4441/8441
+归属    代理取回的文档 == 我磁盘 dist_ord0268/index.html（3cb318326b13a033 == 3cb318326b13a033）；经代理的 health 体含我源站标记 ord0263-s5
+复现    那一发读 = 200 text/html（经代理同）｜探针同页 200 application/json 9ms｜快照 count=1
+屏上    「连接 / 网络不可用 / 这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。」（6 个非空行，全在 1 个 failure-view 里）
+自记    reason=NETWORK_UNAVAILABLE evidence_kind=TRANSPORT http_status=None source_layer=TRANSPORT message_key=failure.networkUnavailable
+两代    2026-09-23T15:15:18.937Z 与 2026-09-23T15:19:43.429Z（独立进程 + 独立浏览器代）归因同判=True 句子逐字同=True
+指纹    answered(S5)==True 而 classified_label=NETWORK_UNREACHABLE_WITH_SNAPSHOT —— 用尺自己的 :47-50 加我 capture 的打印规则就能派生，不必改尺
+成因    V8Experience.tsx:189 catch(()=>null) -> :197 把 HTTP 事实丢掉 -> :637 classifyReadFailure -> failureAttribution.ts:152 TypeError 支（:150 自称唯一可说网络的分支）-> :641 探针 2xx 不覆写；第二通道 citynexus.ts:652/:658/:668 把 HTML 字符串当数据交出（不抛、不上屏）
+控制轮  gen1 V5a=RED V5b=RED V5c=RED V5d=NOT_MEASURED V5e=RED
+        gen2 V5a=RED V5b=RED V5c=RED V5d=NOT_MEASURED V5e=RED　两代逐条同判
+        S1..S4（尺自己的 judge_all；跑前跑后 blob ed8a61dc79d8… 未变=True）S1=GREEN V1=GREEN V2=GREEN V3=GREEN
+        反向哨兵 S3=NETWORK_UNREACHABLE_WITH_SNAPSHOT thrown=True（第五态若吞掉「没答」，这格就红）
+A3      写腿 POST /api/v1/travelers -> 响应 0 条、源站 post_hanging=1；10 次采样覆盖 0->8.2s，屏幕全程只有「正在登记出行人」+ 真实秒数；归因 0 条、failure-view 0、说谎=False；8.2s 按「停止等待」-> 「已停止等待」/已停止等待，行程还没有创建。
+        => 不并本单：那台源站收下写就不说话，屏幕没改口——缺的是期限（readDeadline.ts:43-44 对非 GET/HEAD 裸 fetch），不是归因 ⇒ ORD-0262 家族
+形状    零新增文件：failureAttribution 加 OriginResponseUnusableError + 一支（放在 :145 deadline 支之前）、v8Request 在 :190 之后 :197 之前抛、requestJson 同判、copyFor 新 failure.originInvalidResponse 两分支、withCachedCopyFact:199 收新态；EvidenceKind 不动（最低验收那句就靠 HTTP_RESPONSE）
+        误伤面已量：requestJson 54 个调用点，2 处 Promise<unknown>（selectPlan :811 / captureBooking :828）只被 demo/goldenScenario.ts:37/:42 await 且无 catch；204 后端 1 处（main.py:4506）、前端 DELETE 1 处（citynexus.ts:1056）走空体支不命中；v8Request 15 个调用点无 DELETE ⇒ 误伤 0（源码层计数）
+欠      200+HTML 是我造的部署层、不是 :4781/:8693 现场量到的（推断，非读数）；V5-d 腿二只有源码形状；英文臂未拟
+交付     evidence/ord0263-s5-laneB/ v1 回读 12/13 件 PROVEN（唯一 NOT_PROVEN 的 q263_html_origin.py 本轮重发）；v2 本轮 4/4 件；v1 自证 index blob 034cd5548d39…
+```
+
+**两处自我更正**（都写进 v2，不覆盖 v1）：
+1. v1 文档 §⑤-3 我写「requestJson 四处无泛型」——`911/962` 其实带跨行泛型，是我的正则吃掉换行造出来的读数；真实只有 2 处 `Promise<unknown>`。
+2. v1 那批发布之后我又改了同一份文档（204 那一格从「未量」变成读数），已发布路径冻结 ⇒ 走新文件名 `ORD_0263_S5_CRITERIA_AND_SHAPE_v2.md`，v1 原件留档。
+3. 另外自报：v1 交付脚本在写账本之前抛了 `TypeError: object of type 'int' has no len()`（`attribution_records` 我在收据里存的是整数，脚本又 len 了一次）。发布与回读在崩之前已全部完成，所以 12/13 那批不受影响；账本与总线由本 v2 脚本补写。
+
+尺那一格（`judge_v5_*` 与 `ARBS` 第四枚标签）归 HARNESS 写，我只交 capture 形状与判据；`derived_result` 不归我。放行产码我就按 §⑤ 那几处改，改完在同一次跑里交「控制轮=红 / 修后=绿 + S1..S4 仍绿」。
