@@ -1,0 +1,480 @@
+{
+  "base": "http://127.0.0.1:4185",
+  "run_label": "canary1",
+  "pid": 12544,
+  "viewport": [
+    390,
+    844
+  ],
+  "displacement_rationale": "Arms A and B share (-90,-60), a horizontal-dominant drag, so B is a same-gesture specificity control for the camera. RETRACTED: matrix run mtx1 said the off-map drag failed to scroll because 60px was \"too short\". mtx2 refuted that — a short PURE-vertical (0,-60) scrolls DOCUMENT 0->45 and a vertical-dominant (-60,-90) scrolls 0->78, while horizontal-dominant (-90,-60) never scrolls at either start y or step count. Direction, not length, decides whether the browser treats a touch drag as a page scroll. Consequence: arm A2 drags vertical-dominant (0,-120) INSIDE the canvas, because that is the only swipe shape that could steal the page scroll, and arm C uses a long vertical (0,-320) OUTSIDE it to test the page-turn clause of the on-screen sentence.",
+  "started_at": "2026-09-23T21:20:52.610+08:00",
+  "started_at_utc": "2026-09-23T13:20:52.610Z",
+  "browser": "chromium 153.0.8010.12",
+  "served_bundle": {
+    "file": "index-CrAwWm5f.js",
+    "bytes": 1234802,
+    "sha256": "9fd89456daf12bcab4bb775c8a8522d506a0acb2d3ac6d888209f86d04131536"
+  },
+  "entry_mode": "seeded localStorage journey_id = e7d04d55-ff27-42c0-ba6b-e528c6bcbdd6",
+  "landing": {
+    "heading": "北京之旅",
+    "hasMapPanel": true,
+    "hasMobileNav": true,
+    "url": "/v8/hub",
+    "textStart": "菜单 / 今天 跟随系统 EN BE 晚上好 北京之旅 9月24日 10:00 — 9月26日 20:00 · 2 位旅行者 · 3 天 AI 帮我规划 试用其他城市 打开行程工作台 今天 还没有安排 “现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时"
+  },
+  "via": "hub already shows the map",
+  "map_handle": {
+    "ok": true,
+    "depth": 7,
+    "via": "fiber.stateNode.__reactFiber$9k6nt6l9zq.return.memoizedState.memoizedState.current.citynexusMap",
+    "start_center": [
+      116.44089999999994,
+      39.90557686984988
+    ],
+    "zoom": 9.263232800749604,
+    "routeLegsAttr": "7",
+    "modesAttr": "BICYCLE TRANSIT AUTO WALK"
+  },
+  "precondition": {
+    "routeLegs": 7,
+    "canvasPresent": true,
+    "gestureCopy": "单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方",
+    "degradationNotice": "服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月10日 10:45 · 现在/接下来由服务器的执行投影给出 1 底图未加载，显示的是路线示意。",
+    "tileNotice": {
+      "text": "底图未加载，显示的是路线示意。",
+      "visible": true,
+      "box": [
+        26,
+        487,
+        338,
+        34
+      ]
+    },
+    "panelAttrs": {
+      "data-route-legs": "7",
+      "data-route-modes": "BICYCLE TRANSIT AUTO WALK"
+    },
+    "scrollTop": 0
+  },
+  "armA": {
+    "where": "inside map canvas",
+    "box": [
+      18,
+      479,
+      354,
+      245
+    ],
+    "before": {
+      "center": [
+        116.44089999999994,
+        39.90557686984988
+      ],
+      "zoom": 9.263232800749604,
+      "scrollTop": 0,
+      "docScrollHeight": 1723,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        479,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1723,
+          "ch": 844
+        }
+      ]
+    },
+    "after": {
+      "center": [
+        116.55449133131333,
+        39.84746143298514
+      ],
+      "zoom": 9.263232800749604,
+      "scrollTop": 0,
+      "docScrollHeight": 1723,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        479,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1723,
+          "ch": 844
+        }
+      ]
+    },
+    "centerMoved": true,
+    "centerDelta": [
+      0.113591,
+      -0.058115
+    ],
+    "pageScrolled": false,
+    "anyScrollerMoved": [],
+    "scrollSubjects": [
+      "DOCUMENT 0/1723>844"
+    ]
+  },
+  "armA2": {
+    "where": "vertical-dominant drag starting inside map canvas",
+    "box": [
+      18,
+      479,
+      354,
+      245
+    ],
+    "before": {
+      "center": [
+        116.55449133131333,
+        39.84746143298514
+      ],
+      "zoom": 9.263232800749604,
+      "scrollTop": 0,
+      "docScrollHeight": 1723,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        479,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1723,
+          "ch": 844
+        }
+      ]
+    },
+    "after": {
+      "center": [
+        116.5544913313031,
+        39.729698130364795
+      ],
+      "zoom": 9.263232800749604,
+      "scrollTop": 0,
+      "docScrollHeight": 1723,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        479,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1723,
+          "ch": 844
+        }
+      ]
+    },
+    "centerMoved": true,
+    "centerDelta": [
+      0,
+      -0.117763
+    ],
+    "pageScrolled": false,
+    "anyScrollerMoved": []
+  },
+  "controlTap": {
+    "where": "same map point, no movement",
+    "before": [
+      116.5544913313031,
+      39.729698130364795
+    ],
+    "after": [
+      116.5544913313031,
+      39.729698130364795
+    ],
+    "centerDrifted": false
+  },
+  "armB": {
+    "where": "body text outside map, same displacement as arm A",
+    "target": {
+      "tag": "DIV",
+      "cls": "v8-page-intro",
+      "txt": "晚上好北京之旅9月24日 10:00 — 9月2",
+      "x": 195,
+      "y": 169,
+      "hitTag": "P",
+      "hitCls": "v8-lede",
+      "hitPosition": "static",
+      "rejectedBefore": [
+        [
+          195,
+          806,
+          "below-map-top"
+        ]
+      ]
+    },
+    "before": {
+      "center": [
+        116.5544913313031,
+        39.729698130364795
+      ],
+      "zoom": 9.263232800749604,
+      "scrollTop": 0,
+      "docScrollHeight": 1723,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        479,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1723,
+          "ch": 844
+        }
+      ]
+    },
+    "after": {
+      "center": [
+        116.5544913313031,
+        39.729698130364795
+      ],
+      "zoom": 9.263232800749604,
+      "scrollTop": 0,
+      "docScrollHeight": 1723,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        479,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1723,
+          "ch": 844
+        }
+      ]
+    },
+    "centerMoved": false,
+    "centerBitIdentical": true
+  },
+  "armD": {
+    "where": "two-finger spread inside map canvas",
+    "before": {
+      "center": [
+        116.5544913313031,
+        39.729698130364795
+      ],
+      "zoom": 9.263232800749604,
+      "scrollTop": 0,
+      "docScrollHeight": 1723,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        479,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1723,
+          "ch": 844
+        }
+      ]
+    },
+    "after": {
+      "center": [
+        116.55449133131049,
+        39.72993798265853
+      ],
+      "zoom": 10.519781320537426,
+      "scrollTop": 0,
+      "docScrollHeight": 1723,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        479,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1723,
+          "ch": 844
+        }
+      ]
+    },
+    "zoomDelta": 1.256549,
+    "zoomChanged": true,
+    "centerMoved": true,
+    "anyScrollerMoved": []
+  },
+  "armC": {
+    "where": "long vertical swipe outside the map",
+    "target": {
+      "tag": "ARTICLE",
+      "cls": "v8-trip-hero",
+      "txt": "今天还没有安排“现在”取自服务器场景（执行游标。",
+      "x": 195,
+      "y": 364,
+      "hitTag": "SMALL",
+      "hitCls": "cn-clock-source",
+      "hitPosition": "static",
+      "rejectedBefore": []
+    },
+    "before": {
+      "center": [
+        116.55449133131049,
+        39.72993798265853
+      ],
+      "zoom": 10.519781320537426,
+      "scrollTop": 0,
+      "docScrollHeight": 1723,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        479,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 0,
+          "sh": 1723,
+          "ch": 844
+        }
+      ]
+    },
+    "after": {
+      "center": [
+        116.55449133131049,
+        39.72993798265853
+      ],
+      "zoom": 10.519781320537426,
+      "scrollTop": 305,
+      "docScrollHeight": 1723,
+      "docClientHeight": 844,
+      "vw": 390,
+      "vh": 844,
+      "canvas": [
+        18,
+        174,
+        354,
+        245
+      ],
+      "scrollers": [
+        {
+          "el": "DOCUMENT",
+          "scrollTop": 305,
+          "sh": 1723,
+          "ch": 844
+        }
+      ]
+    },
+    "documentScrolled": true,
+    "anyScrollerMoved": [
+      {
+        "el": "DOCUMENT",
+        "from": 0,
+        "to": 305
+      }
+    ],
+    "cameraUntouched": true,
+    "scrollSubjects": [
+      "DOCUMENT 0/1723>844"
+    ]
+  },
+  "verdict": "GESTURE_CONTRACT_OK: 单指拖地图→相机动且无任何可滚主体位移；地图外同位移→相机逐位不变；地图外 -320px 长滑→页面翻（[{\"el\":\"DOCUMENT\",\"from\":0,\"to\":305}]）；双指分离→zoom Δ1.256549；无位移轻点→相机不动",
+  "noticeAtEnd": {
+    "present": true,
+    "text": "底图未加载，显示的是路线示意。",
+    "visible": true,
+    "box": [
+      26,
+      182,
+      338,
+      34
+    ]
+  },
+  "tileOutcome": {
+    "ok200": 18,
+    "failed": 17,
+    "raster200": 18
+  },
+  "ended_at": "2026-09-23T21:21:08.083+08:00",
+  "ended_at_utc": "2026-09-23T13:21:08.083Z",
+  "nonGetRequests": [],
+  "offOriginRequests": [
+    "200 blob:http://127.0.0.1:4185/3ca64452-2a9a-4e11-bfda-eb59e5ce18f1",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3372/1552.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3372/1551.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3371/1552.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3373/1552.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3371/1551.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/12/3373/1551.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/11/1686/776.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/11/1686/775.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/11/1685/776.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/11/1685/775.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/11/1687/776.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/11/1687/775.png",
+    "200 https://tile.openstreetmap.org/10/843/387.png",
+    "200 https://tile.openstreetmap.org/10/842/387.png",
+    "200 https://tile.openstreetmap.org/10/842/388.png",
+    "200 https://tile.openstreetmap.org/10/843/388.png",
+    "200 https://tile.openstreetmap.org/10/844/387.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/10/844/387.png",
+    "200 https://tile.openstreetmap.org/10/844/388.png",
+    "200 https://tile.openstreetmap.org/10/842/389.png",
+    "200 https://tile.openstreetmap.org/10/844/389.png",
+    "200 https://tile.openstreetmap.org/10/843/389.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/11/1687/777.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/11/1686/777.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/11/1687/776.png",
+    "FAILED net::ERR_ABORTED https://tile.openstreetmap.org/11/1686/776.png",
+    "200 https://tile.openstreetmap.org/12/3374/1554.png",
+    "200 https://tile.openstreetmap.org/12/3373/1554.png",
+    "200 https://tile.openstreetmap.org/12/3374/1555.png",
+    "200 https://tile.openstreetmap.org/12/3373/1555.png",
+    "200 https://tile.openstreetmap.org/12/3374/1553.png",
+    "200 https://tile.openstreetmap.org/12/3375/1554.png",
+    "200 https://tile.openstreetmap.org/12/3373/1553.png",
+    "200 https://tile.openstreetmap.org/12/3375/1555.png",
+    "200 https://tile.openstreetmap.org/12/3375/1553.png"
+  ]
+}
