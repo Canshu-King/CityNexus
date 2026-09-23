@@ -1,10 +1,10 @@
 {
- "started_at": "2026-09-23T14:49:55+08:00",
+ "started_at": "2026-09-23T15:26:17+08:00",
  "port": 8411,
  "netstat_listeners": [
-  24580
+  16152
  ],
- "spawned_pid_file": "50564",
+ "spawned_pid_file": "52148",
  "backend_tree": "D:\\moodle\\_qoder_harness_ord0254\\backend53\\backend",
  "backend_head": "53fe8e8",
  "db_file": "D:\\moodle\\_qoder_harness_ord0254\\db\\canary_8411.db",
@@ -43,5 +43,6 @@
   "audit_marker_rows": 1
  },
  "ownership_verdict": "PROVEN",
- "attached": true
+ "attached": false,
+ "spawned_pid": 52148
 }
