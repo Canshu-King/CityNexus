@@ -1,0 +1,92 @@
+{
+ "at": "2026-09-23T21:37:49+08:00",
+ "order": "ORD-0263 livegen teardown",
+ "ports_i_owned_and_stopped": {
+  "4414": [],
+  "8411": []
+ },
+ "ports_still_listening_after": {
+  "4414": [],
+  "8411": []
+ },
+ "forbidden_or_other_lane_ports_observed_only": {
+  "4781": [
+   47376
+  ],
+  "4782": [
+   33880
+  ],
+  "8693": [
+   33104
+  ],
+  "4185": [
+   47124
+  ],
+  "8713": [
+   52820
+  ],
+  "4411": [],
+  "4412": []
+ },
+ "user_chain": {
+  "ports_signalled": [],
+  "db_files_opened": [],
+  "demo_reset_issued": false,
+  "tunnel_or_proxy_touched": false
+ },
+ "named_removals": [
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\livegen\\dist",
+   "kind": "absent",
+   "bytes": 0
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\livegen_preview.log",
+   "kind": "absent",
+   "bytes": 0
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\livegen_preview.pid",
+   "kind": "absent",
+   "bytes": 0
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\livegen_s4_mixed.log",
+   "kind": "absent",
+   "bytes": 0
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\livegen_s3_silent.log",
+   "kind": "absent",
+   "bytes": 0
+  }
+ ],
+ "bytes_freed": 0,
+ "live_source_untouched": {
+  "path": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "root_is_readable": true,
+  "rehashed_after_teardown": {
+   "files": 29,
+   "bytes": 14518104,
+   "tree_sha256": "54d2da94b4aa00dc23c615e1a7f3677f1bddf742a50991e2a263bf990e287538"
+  },
+  "recorded_before_run": {
+   "files": 29,
+   "bytes": 14518104,
+   "tree_sha256": "54d2da94b4aa00dc23c615e1a7f3677f1bddf742a50991e2a263bf990e287538"
+  },
+  "byte_identical_to_before": true,
+  "served_refs_still": [
+   "assets/index-D76m_cky.js",
+   "assets/index-I45CQek8.css"
+  ],
+  "note": "first draft of this check asked is_file() of a DIRECTORY and so reported the source as unreadable; that was my bug, corrected here and re-measured by re-hash",
+  "why_i_may_delete_my_copy": "digest-proven duplicate recorded in ord0263_livegen_surface_receipt.json and republished in this run's index"
+ },
+ "kept": [
+  "all ord0263_* captures/verdicts/receipts",
+  "tools/*",
+  "repo/ (compat/ord0254 @ 6a39c527f2aa3b16e73dfd122c34d6e6be7102df, porcelain 0 lines)",
+  "db/canary_8411.db"
+ ]
+}
