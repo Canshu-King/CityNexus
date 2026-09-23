@@ -1,0 +1,124 @@
+{
+  "order": "ORD-0242",
+  "group": "A2",
+  "surface": "canary @4185/8713",
+  "bundle_expected": "index-CrAwWm5f.js",
+  "run_label": "smkA2b",
+  "pid": 29032,
+  "started_at": "2026-09-23T11:11:42.786Z",
+  "tabStrip": {
+    "present": true,
+    "rect": [
+      741,
+      105,
+      356,
+      40
+    ],
+    "insideViewport": false,
+    "scroller": {
+      "cls": "trips-tabs",
+      "scrollWidth": 1442,
+      "clientWidth": 356,
+      "scrollLeft": 0
+    },
+    "offsetParentCls": ""
+  },
+  "tabAfterScroll": {
+    "rect": [
+      17,
+      105,
+      356,
+      40
+    ],
+    "point": [
+      195,
+      125
+    ],
+    "insideViewport": true,
+    "hitTag": "BUTTON",
+    "hitCls": "",
+    "pointHitsThisButton": true,
+    "clicked": true
+  },
+  "walletRead": {
+    "url": "/v8/trips",
+    "h1": "",
+    "h2": [
+      "将确认带入行程",
+      "place-river-cruise",
+      ""
+    ],
+    "body": "菜单 / 行程 跟随系统 EN DE 行程 住宿 预订 花费 多模态收件箱 将确认带入行程 已读取 · 已核对 · 已记住 粘贴确认信息 手动填写 粘贴的确认 提取文本草稿 确认截图 图片字节仅用于此次提取请求。 提取图片草稿 权威记忆 Journey Memory 1 个受保护事实 Nexus River Cruise Pier · 中途Nexus River Cruise Pier · 2026-10-10T15:30:00+08:00受保护 · 置信度待定 Protected by a confirmed Journey commitment. 等你审核的确认单 这里没有等你审核的确认单。 BOOKING · C3_Guaranteed · ACTIVE · 模拟承诺 place-river-cruise 10月10日 15:30 → 10月10日 16:30 ¥120.00 时间已锁定 高级 / 开发者 今天 行程 地图 Copilot 我的",
+    "buttons": [
+      "菜单",
+      "跟随系统",
+      "EN",
+      "DE",
+      "预订",
+      "粘贴确认信息",
+      "手动填写",
+      "提取文本草稿",
+      "提取图片草稿",
+      "今天",
+      "行程",
+      "地图",
+      "Copilot",
+      "我的"
+    ]
+  },
+  "walletTabVerdict": "REACHABLE_AFTER_HORIZONTAL_SCROLL",
+  "menuProbe": {
+    "present": true,
+    "btnRect": [
+      17,
+      19,
+      46,
+      27
+    ],
+    "point": [
+      40,
+      33
+    ],
+    "btnPosition": "static",
+    "btnZ": "auto",
+    "btnPointerEvents": "auto",
+    "hitIsButtonOrChild": true,
+    "hitTag": "BUTTON",
+    "hitCls": "v8-mobile-menu",
+    "hitChain": [
+      "button.v8-mobile-menu pos=static z=auto pe=auto",
+      "header.v8-topbar pos=static z=auto pe=auto",
+      "main.v8-main pos=static z=auto pe=auto",
+      "div.v8-product-shell pos=static z=auto pe=auto",
+      "div#root pos=static z=auto pe=auto",
+      "body pos=static z=auto pe=auto"
+    ],
+    "btnBoxFromLayout": true,
+    "offsetParentNull": false
+  },
+  "drawerAfterTouchTap": {
+    "drawerPresent": true,
+    "drawerVisible": false,
+    "items": [
+      "关闭",
+      "今天",
+      "实时行程",
+      "地图",
+      "行程工作台",
+      "住宿选择",
+      "城市探索",
+      "旅行票夹",
+      "Copilot",
+      "恢复与执行",
+      "智能守护",
+      "旅行者画像",
+      "行程",
+      "我的"
+    ],
+    "text": "全部路由 关闭 TODAY 今天 实时行程 地图 PLAN 行程工作台 住宿选择 城市探索 TRAVEL 旅行票夹 Copilot SYSTEM 恢复与执行 智能守护 旅行者画像 行程 我的"
+  },
+  "ended_at": "2026-09-23T11:12:05.370Z",
+  "net": [],
+  "console": [],
+  "pageErrors": []
+}
