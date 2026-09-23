@@ -1,0 +1,234 @@
+{
+ "schema": "CNX_LANDING_RECEIPT_V1",
+ "order": "ORD-0263",
+ "action": "LAND_FF_ONLY",
+ "generated_at_local": "\"2026/09/24 周四  2:11:23.16\"",
+ "landed_tip": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "tip_equals_candidate": true,
+ "declared_parent": "1f4440819a9d773da6e18f12a31412f73c6d0f55",
+ "actual_parent": "1f4440819a9d773da6e18f12a31412f73c6d0f55",
+ "parent_matches_declaration": true,
+ "commits_brought_in": 1,
+ "is_fast_forward": true,
+ "tip_subject": "fix(frontend): name an answered-but-unusable 200 as its own failure state (ORD-0263)",
+ "tip_author_date": "2026-09-24T01:06:23+08:00",
+ "files_changed": [
+  {
+   "path": "frontend/src/api/citynexus.ts",
+   "insertions": 17,
+   "deletions": 1,
+   "blob_after": "05787c27cfb059dba174023bd6edfc4ce6533eb6"
+  },
+  {
+   "path": "frontend/src/app/V8Experience.tsx",
+   "insertions": 27,
+   "deletions": 2,
+   "blob_after": "f9889ab88af443f8385580c23c0e5e58fa1ebf54"
+  },
+  {
+   "path": "frontend/src/lib/failureAttribution.ts",
+   "insertions": 71,
+   "deletions": 1,
+   "blob_after": "5956e880abf625591d371d369fe54b72bd2ffce8"
+  }
+ ],
+ "sum_insertions": 115,
+ "sum_deletions": 4,
+ "bare_diff_bytes": 13512,
+ "touch_product_code": true,
+ "product_paths_only_frontend": true,
+ "worktree_porcelain_lines_total": 362,
+ "dirty_tracked_files": [
+  "reports/e2e-provenance/authoritative.json",
+  "tools/verification/mutation_campaign.py"
+ ],
+ "overlap_between_landed_files_and_dirty": [],
+ "dirty_files_not_touched_by_this_landing": true,
+ "dirty_list_cross_check": {
+  "source": "git diff --name-only HEAD  ∪  git diff --cached --name-only",
+  "count_dirty_tracked": 2,
+  "count_untracked_or_other": 360,
+  "non_empty_negative_control": true
+ },
+ "verifier": {
+  "lane": "HARNESS d291c9dc",
+  "bus_post": 5800135822,
+  "posted_at_utc": "2026-09-23T17:59:35Z",
+  "derived_result_quoted": "ALL_GREEN",
+  "derivation_owner": "HARNESS (self-built from the commit on her own surface :4416/:8411)",
+  "gauge_blob_prefix_quoted": "e9a4188f63e27bbb",
+  "gauge_size_quoted": 21703,
+  "gauge_unchanged_after_run_quoted": true,
+  "commander_note": "I did NOT re-derive this; closure still needs the same gauge on the landed generation."
+ },
+ "arbiter_rulings_in_force": {
+  "Q6/Q7": 5799895734,
+  "Q8_Q9_Q10": 5800110024,
+  "Q8a": "UNKNOWN_FAILURE stays in the contract; the old A-arm is no longer its carrier - a dedicated single-variable counter-control is owed",
+  "Q9": "0263 col6 = pre-click cached-copy fact integrity; 0273 cell2 = post-click snapshot-use disclosure; assertions must not be shared",
+  "Q10": "0269 cells 1 and 3 may proceed client-side; cell 2 exactly-one is gated on 0272 (closure precondition only, not start precondition)"
+ },
+ "discipline": {
+  "demo_reset_calls": 0,
+  "user_db_writes": 0,
+  "credentials_printed": 0,
+  "published_evidence_paths_overwritten": 0,
+  "authoritative_branch_writer": "commander only (AUTHORITATIVE_BRANCH_SINGLE_WRITER_V1)"
+ },
+ "deploy_gauge": {
+  "receipt_path": "deploy_c79e2b4f4efe414dba22a071a7136ae10b5c84aa_0924_020432.json",
+  "receipt_bytes": 66509,
+  "receipt_blob_sha1": "dccc1ee1359154dc54de79e5571a30c8d4cc818a",
+  "gauge_blob_local_recomputed": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+  "gauge_blob_in_gauge_own_receipt": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+  "gauge_blob_agrees": true,
+  "gauge_bytes_in_receipt": 40,
+  "per_arm": {
+   "A": {
+    "green": [
+     "GREEN"
+    ],
+    "bad": [],
+    "notes": [],
+    "all_green": true
+   },
+   "B": {
+    "green": [
+     "GREEN",
+     "GREEN",
+     "GREEN",
+     "GREEN",
+     "GREEN",
+     "GREEN",
+     "GREEN",
+     "GREEN",
+     "GREEN",
+     "GREEN",
+     "GREEN",
+     "GREEN",
+     "GREEN",
+     "GREEN"
+    ],
+    "bad": [],
+    "notes": [],
+    "all_green": true
+   },
+   "G_precache": {
+    "green": [
+     "GREEN"
+    ],
+    "bad": [],
+    "notes": [
+     "DECLARED_NO_PRECACHE_ARRAY"
+    ],
+    "all_green": true
+   },
+   "H_prevgen": {
+    "green": [
+     "GREEN"
+    ],
+    "bad": [],
+    "notes": [],
+    "all_green": true
+   },
+   "I_sw_register": {
+    "green": [
+     "GREEN"
+    ],
+    "bad": [],
+    "notes": [],
+    "all_green": true
+   },
+   "J_name_content_binding": {
+    "green": [
+     "GREEN"
+    ],
+    "bad": [],
+    "notes": [],
+    "all_green": true
+   },
+   "temporal_obligations": {
+    "green": [
+     "DISCHARGED"
+    ],
+    "bad": [],
+    "notes": [],
+    "all_green": true
+   },
+   "F_proxy_tunnel": {
+    "green": [
+     "GREEN"
+    ],
+    "bad": [],
+    "notes": [],
+    "all_green": true
+   }
+  },
+  "classifier_selftest": {
+   "positive": {
+    "GREEN_is_not_bad": true,
+    "DISCHARGED_is_not_bad": true,
+    "DECLARED_NO_PRECACHE_ARRAY_is_not_bad": true
+   },
+   "negative": {
+    "NOT_GREEN_is_bad": true,
+    "FAILED_is_bad": true,
+    "OLD_REFS_STILL_ABSENT_is_not_a_false_red": true
+   }
+  },
+  "arms_total": 8,
+  "arms_all_green": [
+   "A",
+   "B",
+   "F_proxy_tunnel",
+   "G_precache",
+   "H_prevgen",
+   "I_sw_register",
+   "J_name_content_binding",
+   "temporal_obligations"
+  ],
+  "arms_not_green": [],
+  "verdict_leaves_total": 21,
+  "overall_quoted": "GREEN",
+  "tree_tip_quoted_by_gauge": "c79e2b4",
+  "sha_quoted_by_gauge": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+  "old_index_refs": [
+   "/assets/index-Cpy_jhEg.js",
+   "/assets/index-I45CQek8.css"
+  ],
+  "new_index_refs": [
+   "/assets/index-ChOTTCvB.js",
+   "/assets/index-I45CQek8.css"
+  ],
+  "served_after_switch_refs": [
+   "/assets/index-ChOTTCvB.js",
+   "/assets/index-I45CQek8.css"
+  ],
+  "assets_union_added": 3,
+  "assets_union_already_identical": 1,
+  "backed_up_files": 5,
+  "switched_files": 5,
+  "preflight_arms": [
+   "A_pre_current_generation_still_served",
+   "B_pre_index_names_new_refs",
+   "C_pre_new_assets_reach_the_live_server",
+   "F_pre_user_surfaces",
+   "G_pre_precache_of_the_new_sw_resolves",
+   "I_pre_sw_register_params_of_new_bundle",
+   "promotion_state",
+   "reds",
+   "rule",
+   "switch_readiness",
+   "temporal_obligations",
+   "verdict"
+  ],
+  "temporal_obligation_verdict": "DISCHARGED",
+  "frontend_dirty_reported_by_gauge": "",
+  "backup_dir": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_020417_1790186657960796200",
+  "log_corroboration": {
+   "overall_green_line_present": true,
+   "swap_rc_zero_line_present": true,
+   "python_line": "python=3.10.11"
+  }
+ }
+}
