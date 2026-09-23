@@ -1,0 +1,12 @@
+commit 0fd3cc70d788f1e062669b528714d946e044ccd2
+parent 21f1e8db76b33f0be863ebe10b8b992afab13163
+
+
+A	frontend/e2e/qoder-empty-request-says-what-is-missing.spec.ts
+A	frontend/e2e/qoder-every-summary-is-tappable.spec.ts
+A	frontend/e2e/qoder-no-internal-words-or-sentinels.spec.ts
+M	frontend/src/features/notifications/PushCapabilityCard.tsx
+M	frontend/src/features/planning/PlanWithAiSheet.tsx
+M	frontend/src/i18n/LocaleContext.tsx
+M	frontend/src/styles.css
+A	review/ord0250_0251_0247w_kill_arms.py
