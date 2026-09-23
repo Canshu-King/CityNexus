@@ -1,0 +1,341 @@
+{
+ "ruling": "D-2 = 甲（commander 494abfd7 @2026-09-23 18:5x）：具名声明 + 指纹列，不修桩、不缩射程",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-23T19:25:59+08:00",
+ "gate_file": {
+  "path": "D:\\moodle\\_qoder_f_run\\snap\\cred_gate_v4.py",
+  "bytes": 23763,
+  "git_blob_sha1": "a820679f03b3deb9a534a58c8485658672a9ef5a",
+  "ref_pinned_on": "refs/heads/gates/credential-literals-20260923 @ 9cdaf6c（父 83c6ea0，其父 7d86f49 → 12b7dd2；未推）"
+ },
+ "scan_side": {
+  "paths_scanned": 6898,
+  "shape_hits": 1,
+  "denominator_source": "快照仓 `git ls-files`（与门内 test_1 同一函数 ⇒ 一个分母，两个读数）",
+  "tree": "D:/moodle/_qoder_f_run/e_cred_a1cc0c1 @ 1bfe232 =「a1cc0c1 的 git archive 导出＋门自己那一枚仪器」，未推；工作树里唯一改动就是该仪器文件",
+  "not_scanned_vs_ref": {
+   "ref_listing_total": 6950,
+   "snapshot_total": 6898,
+   "missing_count": 53,
+   "missing_by_extension": {
+    ".csv": 1,
+    ".json": 21,
+    ".md": 5,
+    ".patch": 5,
+    ".png": 1,
+    ".txt": 19,
+    ".yaml": 1
+   },
+   "missing_list": [
+    "reports/product-v12/evidence/v12-authoritative-trip-studio-final.png",
+    "review/CityNexus-MVP-WP04-Checkpoint-Review-20260909/evidence/gate-report.md",
+    "review/CityNexus-MVP-WP04-Checkpoint-Review-20260909/evidence/source-reconciliation.md",
+    "review/CityNexus-MVP-WP04-Checkpoint-Review-20260909/evidence/wp04-status-addendum.csv",
+    "review/CityNexus-Overnight-Checkpoint-20260910/evidence/GATE_MATRIX.md",
+    "review/CityNexus-WP06-WP07-Road-Prep-Checkpoint-20260910/evidence/GATE_MATRIX.md",
+    "review/CityNexus-WP06-WP07-Road-Prep-GPT-Review-20260910/evidence/GATE_MATRIX.md",
+    "review/P1-Topology-and-Planner-GPT-Opinion-Review-20260907/evidence/CANDIDATE-SHA256.txt",
+    "review/P1-Topology-and-Planner-GPT-Opinion-Review-20260907/evidence/FULL-TEST-RESULT.txt",
+    "review/P1-Topology-and-Planner-GPT-Opinion-Review-20260907/evidence/TOPOLOGY-REPRODUCE-RESULT.txt",
+    "review/P1-Topology-and-Planner-GPT-Opinion-Review-20260907/evidence/V2-CURRENT-RERUN.txt",
+    "review/P1-Topology-and-Planner-GPT-Opinion-Review-20260907/evidence/V3-CURRENT-RERUN.txt",
+    "review/P1-Topology-and-Planner-GPT-Opinion-Review-20260907/evidence/topology-current.json",
+    "review/P1-Topology-and-Planner-GPT-Opinion-Review-20260907/evidence/topology-plan-o.json",
+    "review/P1-Topology-and-Planner-GPT-Opinion-Review-20260907/evidence/topology-plan-r.json",
+    "review/P1-Topology-and-Planner-GPT-Opinion-Review-20260907/evidence/traveler-corridor-skeleton.yaml",
+    "review/evidence/ord0126d/9544628__9544628.patch",
+    "review/evidence/ord0126d/9544628__changed-files.txt",
+    "review/evidence/ord0126d/9544628__source-and-parent.txt",
+    "review/evidence/ord0126d/MANIFEST.txt",
+    "review/evidence/ord0126d/mutation-receipts.json",
+    "review/evidence/ord0126d/refusal-403-visible-text.json",
+    "review/evidence/ord0126d/shown-versus-submitted-journey.json",
+    "review/evidence/ord0220/MANIFEST.txt",
+    "review/evidence/ord0220/announcement-retired.json",
+    "review/evidence/ord0220/budget-conflict-blackbox-probe.json",
+    "review/evidence/ord0220/c4a4001__c4a4001.patch",
+    "review/evidence/ord0220/c4a4001__changed-files.txt",
+    "review/evidence/ord0220/c4a4001__source-and-parent.txt",
+    "review/evidence/ord0220/caveat-meaning.json",
+    "review/evidence/ord0220/dfdc5d5__changed-files.txt",
+    "review/evidence/ord0220/dfdc5d5__dfdc5d5.patch",
+    "review/evidence/ord0220/dfdc5d5__source-and-parent.txt",
+    "review/evidence/ord0220/mutation-receipts.json",
+    "review/evidence/ord0220/reason-on-screen-before-after.json",
+    "review/evidence/ord0221/MANIFEST.txt",
+    "review/evidence/ord0221/b41b4cc__b41b4cc.patch",
+    "review/evidence/ord0221/b41b4cc__changed-files.txt",
+    "review/evidence/ord0221/b41b4cc__source-and-parent.txt",
+    "review/evidence/ord0221/mutation-receipt-pair-gates.json",
+    "review/evidence/ord0221/step2-visible-before-after.json",
+    "review/evidence/ord0221/step3-visible-before-after.json",
+    "review/evidence/ord0222/MANIFEST.txt",
+    "review/evidence/ord0222/accessible-text-scan.json",
+    "review/evidence/ord0222/dark-scheme-scan.json",
+    "review/evidence/ord0222/days-payload-versus-visible-card.json",
+    "review/evidence/ord0222/f7ce8ff__changed-files.txt",
+    "review/evidence/ord0222/f7ce8ff__f7ce8ff.patch",
+    "review/evidence/ord0222/f7ce8ff__source-and-parent.txt",
+    "review/evidence/ord0222/mutation-receipts.json",
+    "review/evidence/ord0222/unknown-value-fail-closed.json",
+    "review/evidence/ord0222/visual-text-scan.json",
+    "review/evidence/ui-overnight/phone-bundle-readings.json"
+   ],
+   "consequence": "这 53 个路径在快照里根本没有 ⇒ 本收据的 6898 **不是**全尖分母；其中含 `review/evidence/**.patch`（当年漏的形状就在那类文件里）⇒ 全尖总数另由对象库直读那把给出，见 tip_wide_*"
+  }
+ },
+ "live_side": {
+  "credentials_found": 1,
+  "detail": [
+   {
+    "env": "DEEPSEEK_API_KEY",
+    "len": 35,
+    "fp": "4cabe6bcaff4"
+   }
+  ],
+  "meaning": "只取 env 里的长度与指纹（`app/core/config.py:22-23,53` 那三把），绝不印值"
+ },
+ "classification": [
+  {
+   "at": "frontend/e2e/qoder-e2e-config-guard.spec.ts:140",
+   "shape": "sk-[A-Za-z0-",
+   "len": 23,
+   "loc_fp": "ed02cc15b114",
+   "token_fp": "faca4b0049a4",
+   "verdict": "DECLARED_NON_LIVE_SAMPLE",
+   "equals_live_credential": false,
+   "declaration": {
+    "at": "frontend/e2e/qoder-e2e-config-guard.spec.ts:140",
+    "token_fp": "faca4b0049a4",
+    "what": "e2e 配置守卫自己塞进子进程环境的**假** DEEPSEEK_API_KEY（形状真、值假）",
+    "evidence": [
+     "同文件 :144 断言 `run.status != 0`",
+     "同文件 :145 断言 stderr 含 'external AI must be off'"
+    ],
+    "declared_by": "commander 494abfd7 裁定 D-2=甲；lane F 8ccd71d8 录入 @2026-09-23"
+   },
+   "scanned_paths": 6898,
+   "offender_total": 1,
+   "live_side_count": 1,
+   "live_side_fps": [
+    "4cabe6bcaff4"
+   ],
+   "live_side_declaration": true
+  }
+ ],
+ "by_verdict": {
+  "DECLARED_NON_LIVE_SAMPLE": 1
+ },
+ "historical_blob_equality": {
+  "c0d7e3d": {
+   "path": "qoder-handoff/qoder_xiaomi_truth_hardening_v6.patch",
+   "blob_sha1": "03b0ff82c6b5a1e82afc4e7bdb810917dbfa06dd",
+   "bytes": 370873,
+   "shape_hits": 1,
+   "fingerprints": [
+    "4cabe6bcaff4"
+   ],
+   "equals_live_credential": true
+  },
+  "13377d3": {
+   "path": "qoder-handoff/qoder_xiaomi_truth_hardening_v6.patch",
+   "blob_sha1": "6e9e090abc866ce053fa12c1fc77985cb8033336",
+   "bytes": 370861,
+   "shape_hits": 0,
+   "fingerprints": [],
+   "equals_live_credential": false
+  },
+  "dea8410be809ebf6c5046581873584e9dbf32b64": {
+   "path": "qoder-handoff/qoder_xiaomi_truth_hardening_v6.patch",
+   "blob_sha1": "6e9e090abc866ce053fa12c1fc77985cb8033336",
+   "bytes": 370861,
+   "shape_hits": 0,
+   "fingerprints": [],
+   "equals_live_credential": false
+  }
+ },
+ "self_proofs": {
+  "declarations_match_by_digest_not_path": "test_2d 面②：改桩 ⇒ 指纹不吻合 ⇒ 声明作废并红",
+  "undeclared_hit_is_red": "test_2d 面①/面⑤ + test_3 第三处承重（把判级换成一律放过 ⇒ 该格抓住）",
+  "equality_side_this_run": {
+   "live_credentials_in_env": 1,
+   "values_of_equals_live_credential": [
+    "False"
+   ],
+   "reading": "现役侧有值 ⇒ 该列是**测得**的布尔；现役侧为空 ⇒ 只能写 NOT_MEASURED（test_2d 面④钉这条）"
+  }
+ },
+ "live_side_inside_pytest": {
+  "conftest": "backend/tests/conftest.py",
+  "strips_these_env": [
+   "DEEPSEEK_API_KEY",
+   "OPENAI_API_KEY",
+   "CITYNEXUS_AI_API_KEY",
+   "CITYNEXUS_AI_ENABLED",
+   "CITYNEXUS_AI_PROVIDER",
+   "CITYNEXUS_AI_MODEL",
+   "CITYNEXUS_AI_VISION_MODEL",
+   "CITYNEXUS_HERMES_API_KEY",
+   "CITYNEXUS_HERMES_API_SERVER_KEY",
+   "CITYNEXUS_HERMES_MODEL",
+   "CITYNEXUS_HERMES_NATIVE_PROVIDER",
+   "CITYNEXUS_HERMES_NATIVE_MODEL"
+  ],
+  "of_which_are_live_credential_vars": [
+   "CITYNEXUS_AI_API_KEY",
+   "DEEPSEEK_API_KEY",
+   "CITYNEXUS_HERMES_API_KEY"
+  ],
+  "live_side_in_this_receipt_process": 1,
+  "consequence": "门在 pytest 里那一侧被摘成 0 把 ⇒ 等值列**恒**写 NOT_MEASURED（这是判据要求，不是缺陷）；'与现役凭据测得不等'那一格只能由**门外**的本收据给出（本趟 1 把可比）。",
+  "pytest_run": {
+   "path": "D:\\moodle\\_qoder_f_run\\o225_receipts\\cred_gate_v4_run_0923.txt",
+   "present": true,
+   "sha256_12": "1fc3029de51a",
+   "rc": {
+    "collect_rc": "0",
+    "plain_rc": "0",
+    "dash_s_rc": "0"
+   },
+   "passed_lines": [
+    "7 passed in 5.38s",
+    "7 passed in 4.70s"
+   ],
+   "gate_reading": [
+    "cardinality���ܰ汾����·�� 6898 �� \\u21d2 ��״���� 1 ��",
+    "cardinality��env ��ɱȵ�����ƾ�� 0 �� ��0 �� \\u21d2 ����� NOT_MEASURED����д�ɲ��ȣ�"
+   ]
+  }
+ },
+ "channel": {
+  "publisher": "publish_evidence_fixed.py → Canshu-King/CityNexus@commander/control",
+  "gate_file_itself": "REFUSED —— 见 refusal_log",
+  "refusal_log": {
+   "path": "D:\\moodle\\_qoder_f_run\\o225_receipts\\cred_gate_publish_refusal_0923.txt",
+   "present": true,
+   "sha256_12": "d0672776b3a1",
+   "verbatim_rule": [
+    "REFUSED (fail-closed, nothing uploaded): FORBIDDEN_CONTENT(secret-shaped value: [已遮形]��)"
+   ],
+   "shapes_masked": 1,
+   "local_only_because": "这一份日志自己也带那枚占位样本 ⇒ 发布器同样会拒；遮了再发就等于改台账，所以它只留在本地，收据里存路径 + 摘要 + 被遮后的规则名"
+  },
+  "refusal_says_nothing_uploaded": true,
+  "landed_v3_generation": {
+   "evidence/cred-literals-f/cred_tip_scan_receipt_0923.json": {
+    "local_bytes": 3229,
+    "git_blob_sha1": "c77aa8b58e771a54eccf4d92c0e4dfdcd83471f0"
+   },
+   "evidence/cred-literals-f/cred_declared_sample_receipt_0923.json": {
+    "local_bytes": 10594,
+    "git_blob_sha1": "e23534d4e42535c8aa27dec141406d6b05fbb721"
+   },
+   "evidence/cred-literals-f/cred_tip_scan_0923.py": {
+    "local_bytes": 9404,
+    "git_blob_sha1": "3485c153283ba31d29d0240107ef209d41146c27"
+   },
+   "evidence/cred-literals-f/cred_declared_receipt_0923.py": {
+    "local_bytes": 9675,
+    "git_blob_sha1": "6039f01d14f20a513294ecc88b0f8c75c49b89d2"
+   }
+  },
+  "note": "v4 那一代落在同前缀的 `_v4` 文件名上（发布不覆盖已进收据的路径）。拒绝**不是**我把内容削了去迎合闸门：占位样本 `sk-aaaa…` 是 test_2 的自证材料，删了它 test_2 就测不到'占位必须放过'。要不要为它开一格具名例外，由 commander 裁。"
+ },
+ "tip_wide_total": {
+  "status": "MEASURED",
+  "source_receipt": {
+   "path": "D:\\moodle\\_qoder_f_run\\o225_receipts\\cred_tip_scan_receipt_v4.json",
+   "sha256_12": "d9c837764b60",
+   "instrument_blob": "a820679f03b3deb9a534a58c8485658672a9ef5a"
+  },
+  "exact_ref": "dea8410be809ebf6c5046581873584e9dbf32b64",
+  "tree": "d71a5454e444e245056fd95005fecfbdfa7adecf",
+  "denominator": {
+   "paths_in_listing": 6973,
+   "blobs_read": 6973,
+   "blobs_unreadable": 0,
+   "unreadable_list": [],
+   "bytes_read": 97693138,
+   "non_utf8_blobs": 191,
+   "extensions_covered": {
+    ".py": 2648,
+    ".json": 1471,
+    ".err": 950,
+    ".md": 821,
+    ".ts": 238,
+    ".yaml": 162,
+    ".png": 130,
+    ".txt": 125,
+    ".svg": 91,
+    ".ps1": 63,
+    ".vsdx": 54,
+    ".tsx": 52,
+    ".csv": 39,
+    ".toml": 21,
+    ".patch": 20,
+    ".example": 17,
+    ".sql": 17,
+    ".css": 17,
+    ".html": 14,
+    ".mjs": 8,
+    "(无扩展名)": 6,
+    ".js": 2,
+    ".bak": 2,
+    ".lock": 1,
+    ".webmanifest": 1,
+    ".diff": 1,
+    ".theme-pristine": 1,
+    ".pdf": 1
+   },
+   "meaning": "分母 = 该尖 `ls-tree -r` 的**全部**路径 ⇒ 不是限定 pathspec 的抽样；每个路径都必须真读到字节，读不到就单列，不并进命中数"
+  },
+  "shape_hits": 1,
+  "by_verdict": {
+   "DECLARED_NON_LIVE_SAMPLE": 1
+  },
+  "classification": [
+   {
+    "at": "frontend/e2e/qoder-e2e-config-guard.spec.ts:140",
+    "shape": "sk-[A-Za-z0-",
+    "len": 23,
+    "token_fp": "faca4b0049a4",
+    "loc_fp": "ed02cc15b114",
+    "utf8_clean": true,
+    "verdict": "DECLARED_NON_LIVE_SAMPLE",
+    "equals_live_credential": false,
+    "declaration": {
+     "at": "frontend/e2e/qoder-e2e-config-guard.spec.ts:140",
+     "token_fp": "faca4b0049a4",
+     "what": "e2e 配置守卫自己塞进子进程环境的**假** DEEPSEEK_API_KEY（形状真、值假）",
+     "evidence": [
+      "同文件 :144 断言 `run.status != 0`",
+      "同文件 :145 断言 stderr 含 'external AI must be off'"
+     ],
+     "declared_by": "commander 494abfd7 裁定 D-2=甲；lane F 8ccd71d8 录入 @2026-09-23"
+    },
+    "scanned_paths": 6973,
+    "offender_total": 1,
+    "live_side_count": 1,
+    "live_side_fps": [
+     "4cabe6bcaff4"
+    ],
+    "live_side_declaration": true
+   }
+  ],
+  "note": "转述自对象库直读那把（`cred_tip_scan.py`）：路径来自 `ls-tree -r`，字节来自 `cat-file --batch` ⇒ 与工作树是否脏、快照导出缺哪 52 个路径无关"
+ },
+ "cross_check": {
+  "path": "frontend/e2e/qoder-e2e-config-guard.spec.ts",
+  "blob_at_a1cc0c1": "ca7e1729b72509b0acbcf1703728c313f44d5d3a",
+  "blob_at_tip": "ca7e1729b72509b0acbcf1703728c313f44d5d3a",
+  "identical": true,
+  "meaning": "同一枚 blob ⇒ 那一处具名声明在两尖都成立（不是只对旧树成立）"
+ },
+ "print_policy": "只印位置/长度/摘要/布尔/计数；原文、前缀、env 值一律不印",
+ "leak_guard": {
+  "values_tested": 1,
+  "matches_found": [],
+  "credential_shaped_tokens_in_this_receipt": 0,
+  "note": "只测非空值；空串对 `in` 恒真是假命中，第一版就在这自暴过一次。另外用门自己的形状判据反扫这份收据——发布器拒收门本体就是因为那枚占位样本，这份收据必须自证一格不带"
+ }
+}
