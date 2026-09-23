@@ -840,18 +840,33 @@ def selftest(serve: pathlib.Path) -> int:
                          "error": "base=%s" % sides_reversed_ok["info"].get("http_base")}})
     # ---- D1-CLOSE-1: persistence of refusals is proved STRUCTURALLY, not by one happy artifact.
     rp = refusal_persistence_proof()
-    arms.append({"arm": "REFUSE-proof:no_naked_refusal_returns_in_main", "expect": "GREEN",
+    arms.append({"arm": "REFUSE-proof:no_undocumented_refusal_exit_in_this_file", "expect": "GREEN",
                  "got": {"verdict": rp["verdict"],
-                         "error": "naked=%s routed=%s min=%s" % (rp["naked_refusal_returns_in_main"],
-                                                                  rp["routed_refusals_in_main"],
+                         "error": "naked=%s routed=%s min=%s" % (rp["naked_refusal_returns"],
+                                                                  rp["routed_refusals"],
                                                                   rp["min_routed_required"])}})
+    # The scanner itself must be falsifiable, or it is decoration (redteam `5792183031` holes A + B).
+    for s_name, s_src, s_expect, s_min in (
+        ("REFUSE-killer:bare_refusal_return_is_caught", "def f():\n    return 5\n", "RED", 0),
+        ("REFUSE-killer:ifexp_refusal_is_caught", "def f(ok):\n    return 0 if ok else 9\n", "RED", 0),
+        ("REFUSE-killer:function_other_than_main_is_not_exempt",
+         "def main():\n    return 0\ndef side():\n    return 7\n", "RED", 0),
+        ("REFUSE-true_positive:refuse_call_is_compliant",
+         "def f(c):\n    return refuse(c, 'tag', 5, 'reason')\n", "GREEN", 1),
+    ):
+        sc = refusal_scan(s_src, min_routed=s_min)
+        arms.append({"arm": s_name, "expect": s_expect,
+                     "got": {"verdict": sc["verdict"], "error": str(sc["naked_refusal_returns"])[:120]}})
+    # redteam `5792183031` ②: the predicate used to lstrip every leading slash.
+    for n_name, n_ref, n_expect in (
+        ("TEMPORAL-true_positive:canonical_root_ref_is_owned", "/index.html", "OK"),
+        ("TEMPORAL-killer:no_leading_slash_is_not_owned", "index.html", "REFUSED"),
+        ("TEMPORAL-killer:double_leading_slash_is_not_owned", "//index.html", "REFUSED"),
+        ("TEMPORAL-killer:hashed_asset_may_not_be_waived", "/assets/index-CrAwWm5f.js", "REFUSED"),
+    ):
+        arms.append({"arm": n_name, "expect": n_expect,
+                     "got": {"verdict": "OK" if temporal_declaration_ok(n_ref) else "REFUSED", "error": None}})
     # ---- D1-CLOSE-2 (PRE_ACTION_TEMPORAL_OBLIGATION_V1), both directions each.
-    arms.append({"arm": "TEMPORAL-true_positive:root_ref_may_be_declared", "expect": "OK",
-                 "got": {"verdict": "OK" if temporal_declaration_ok("/index.html") else "REFUSED",
-                         "error": None}})
-    arms.append({"arm": "TEMPORAL-killer:hashed_asset_may_not_be_waived", "expect": "REFUSED",
-                 "got": {"verdict": "OK" if temporal_declaration_ok("/assets/index-CrAwWm5f.js") else "REFUSED",
-                         "error": None}})
     ob = [{"ref": "/index.html", "src_sha256": "AA", "discharged_by": "G arm"}]
     led_ok = obligation_ledger_verdict(ob, {"/index.html": {"verdict": "GREEN", "probes": [{"sha256": "AA"}]}})
     led_gone = obligation_ledger_verdict(ob, {})          # the post-switch witness removed/broken
@@ -944,7 +959,13 @@ def selftest(serve: pathlib.Path) -> int:
                   "body_size": a["got"].get("body_size"), "disk_bytes": a["got"].get("disk_bytes")}
                  for a in arms]}, indent=1, ensure_ascii=False), encoding="utf-8", newline="\n")
     print(f"[receipt] {dest}")
-    return 0 if ok else 9
+    if not ok:
+        return refuse({"argv": sys.argv[1:], "selftest_receipt": str(dest),
+                       "mismatched_arms": [a["arm"] for a in arms if a["got"]["verdict"] != a["expect"]][:12]},
+                      "refused_selftest_failed", 9,
+                      f"selftest arms did not all match: {sum(1 for a in arms if a['got']['verdict'] != a['expect'])}"
+                      f"/{len(arms)} mismatched", quiet=True)
+    return 0
 
 
 def f_surface_probes(refs: list[str], serve: pathlib.Path, times: int | None = None) -> list[dict]:
@@ -1010,27 +1031,50 @@ def refuse(ctx: dict, tag: str, rc: int, reason: str, quiet: bool = False) -> in
     return rc
 
 
-def refusal_persistence_proof() -> dict:
-    """Structural regression: one real refusal artifact proves ONE path, not universal persistence."""
-    src = pathlib.Path(__file__).read_text(encoding="utf-8")
-    tree = ast.parse(src)
-    fn = next((n for n in ast.walk(tree)
-               if isinstance(n, ast.FunctionDef) and n.name == "main"), None)
-    naked, routed = [], 0
-    if fn is not None:
+def refusal_scan(source: str, min_routed: int = 1) -> dict:
+    """Pure scanner: any `return` carrying a REFUSAL_RC constant anywhere in its expression
+    (bare constant, `IfExp` branch, `BoolOp`, tuple...) is a refusal that leaves no artifact
+    unless the return IS a `refuse(...)` call.  Kept pure so --selftest can drive it both ways."""
+    tree = ast.parse(source)
+
+    def carries_refusal_code(node: ast.AST) -> bool:
+        for sub in ast.walk(node):
+            if isinstance(sub, ast.Constant) and sub.value in REFUSAL_RC:
+                return True
+        return False
+
+    naked, routed, per_fn = [], 0, {}
+    for fn in [n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)]:
         for n in ast.walk(fn):
-            if isinstance(n, ast.Return) and isinstance(n.value, ast.Constant) and n.value.value in REFUSAL_RC:
-                naked.append(n.lineno)
-            if (isinstance(n, ast.Call)
-                    and getattr(n.func, "id", getattr(n.func, "attr", "")) == "refuse"):
+            if not isinstance(n, ast.Return) or n.value is None:
+                continue
+            is_refuse_call = isinstance(n.value, ast.Call) and \
+                getattr(n.value.func, "id", getattr(n.value.func, "attr", "")) == "refuse"
+            if is_refuse_call:
                 routed += 1
-    ok = fn is not None and not naked and routed >= MIN_ROUTED_REFUSALS
-    return {"verdict": "GREEN" if ok else "RED",
-            "naked_refusal_returns_in_main": naked,
-            "routed_refusals_in_main": routed,
-            "min_routed_required": MIN_ROUTED_REFUSALS,
-            "main_found": fn is not None,
-            "rule": "no naked `return 4/5/6/7/9` inside main(); every refusal must go through refuse()"}
+                continue
+            if carries_refusal_code(n.value):
+                naked.append(f"{fn.name}:{n.lineno}")
+                per_fn[fn.name] = per_fn.get(fn.name, 0) + 1
+    return {"verdict": "GREEN" if (not naked and routed >= min_routed) else "RED",
+            "naked_refusal_returns": naked,
+            "functions_with_violations": per_fn,
+            "routed_refusals": routed,
+            "scope": "every FunctionDef in the scanned source; IfExp/BoolOp/Tuple bodies included",
+            "rule": "no return may carry a REFUSAL_RC constant unless it is a refuse() call"}
+
+
+def refusal_persistence_proof() -> dict:
+    """Structural regression: one real refusal artifact proves ONE path, not universal persistence.
+
+    Redteam `5792183031` drove two holes in the first version of this check:
+      A) it scanned only `main()`, so `selftest()`'s own failure exit left nothing on disk;
+      B) `return 0 if ok else 9` is an `ast.IfExp`, not a bare constant, so a refusal could hide in it.
+    Both are closed in `refusal_scan`, and the scanner itself is exercised by synthetic arms.
+    """
+    out = refusal_scan(pathlib.Path(__file__).read_text(encoding="utf-8"), MIN_ROUTED_REFUSALS)
+    out["min_routed_required"] = MIN_ROUTED_REFUSALS
+    return out
 
 
 ACTION_OWNED_ROOT_REFS = ("index.html", "manifest.webmanifest", "sw.js", "v10-sw.js")
@@ -1038,8 +1082,16 @@ ACTION_OWNED_ROOT_REFS = ("index.html", "manifest.webmanifest", "sw.js", "v10-sw
 
 def temporal_declaration_ok(ref: str, owned: tuple = ACTION_OWNED_ROOT_REFS) -> bool:
     """PRE_ACTION_TEMPORAL_OBLIGATION_V1, half 1: only a ref the action itself replaces may be declared
-    'not yet published'.  Anything else using that state is hiding a real gap behind a waiver."""
-    return ref.lstrip("/") in owned
+    'not yet published'.  Anything else using that state is hiding a real gap behind a waiver.
+
+    Redteam `5792183031` ②: the first version `lstrip(\"/\")`-ed the ref, so `index.html` (no slash) and
+    `//index.html` / `///index.html` all passed the predicate.  None of those is how the switch addresses
+    a root file, so they are now rejected: a ref that is not exactly `/name` gets judged strictly like
+    any other asset (a stricter尺, not a loophole).
+    """
+    if not ref.startswith("/") or ref.count("/") != 1:
+        return False
+    return ref[1:] in owned
 
 
 def obligation_ledger_verdict(obligations: list[dict], post_rows: dict) -> dict:
