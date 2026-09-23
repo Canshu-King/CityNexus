@@ -1,0 +1,73 @@
+{
+ "generated_at": "2026-09-24T02:20:37+08:00",
+ "branch": "agent/f-ord0262-narrow",
+ "exact_sha": "3093eea773c79fa00744fe72d1f2c43b4d0bd75e",
+ "tree": "5ae9f8959b059d04e5a41c53f0b6fa11470b19d0",
+ "ref": "review/ord0262-narrow-f",
+ "ls_remote_line": "3093eea773c79fa00744fe72d1f2c43b4d0bd75e\trefs/heads/review/ord0262-narrow-f",
+ "readable": "6/6",
+ "files": [
+  {
+   "path": "backend/app/main.py",
+   "git_blob_sha1": "347bdc68bbe5a910a4903ce6e6edeafe96007631",
+   "bytes": 475541,
+   "remote_sha": "347bdc68bbe5a910a4903ce6e6edeafe96007631",
+   "remote_size": 475541,
+   "byte_equal": true,
+   "how": "http=200"
+  },
+  {
+   "path": "backend/tests/test_qoder_ord0262_narrow_contention.py",
+   "git_blob_sha1": "ceffcc9d20d44f2418122c100ac1b62801f7bf36",
+   "bytes": 17581,
+   "remote_sha": "ceffcc9d20d44f2418122c100ac1b62801f7bf36",
+   "remote_size": 17581,
+   "byte_equal": true,
+   "how": "http=200"
+  },
+  {
+   "path": "backend/app/stay_generation_operations.py",
+   "git_blob_sha1": "2878d2bc3d7eabf2378561c3f63bd794bd01d3c7",
+   "bytes": 33195,
+   "remote_sha": "2878d2bc3d7eabf2378561c3f63bd794bd01d3c7",
+   "remote_size": 33195,
+   "byte_equal": true,
+   "how": "http=200"
+  },
+  {
+   "path": "backend/app/catalog_hydration_operations.py",
+   "git_blob_sha1": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+   "bytes": 40451,
+   "remote_sha": "c6fe73e03e911eef8df682f9f35ad4d8f74835c3",
+   "remote_size": 40451,
+   "byte_equal": true,
+   "how": "http=200"
+  },
+  {
+   "path": "contracts/openapi.yaml",
+   "git_blob_sha1": "4bc58e2e95a09ae46e346d9b243b165a03f58be8",
+   "bytes": 105641,
+   "remote_sha": "4bc58e2e95a09ae46e346d9b243b165a03f58be8",
+   "remote_size": 105641,
+   "byte_equal": true,
+   "how": "http=200"
+  },
+  {
+   "path": "backend/tests/test_qoder_stay_generation_operations.py",
+   "git_blob_sha1": "1a08f0482990ea55152e1953d5b756502aadf9af",
+   "bytes": 39183,
+   "remote_sha": "1a08f0482990ea55152e1953d5b756502aadf9af",
+   "remote_size": 39183,
+   "byte_equal": true,
+   "how": "http=200"
+  }
+ ],
+ "raw_urls": [
+  "https://raw.githubusercontent.com/Canshu-King/CityNexus/3093eea773c79fa00744fe72d1f2c43b4d0bd75e/backend/app/main.py",
+  "https://raw.githubusercontent.com/Canshu-King/CityNexus/3093eea773c79fa00744fe72d1f2c43b4d0bd75e/backend/tests/test_qoder_ord0262_narrow_contention.py",
+  "https://raw.githubusercontent.com/Canshu-King/CityNexus/3093eea773c79fa00744fe72d1f2c43b4d0bd75e/backend/app/stay_generation_operations.py",
+  "https://raw.githubusercontent.com/Canshu-King/CityNexus/3093eea773c79fa00744fe72d1f2c43b4d0bd75e/backend/app/catalog_hydration_operations.py",
+  "https://raw.githubusercontent.com/Canshu-King/CityNexus/3093eea773c79fa00744fe72d1f2c43b4d0bd75e/contracts/openapi.yaml",
+  "https://raw.githubusercontent.com/Canshu-King/CityNexus/3093eea773c79fa00744fe72d1f2c43b4d0bd75e/backend/tests/test_qoder_stay_generation_operations.py"
+ ]
+}
