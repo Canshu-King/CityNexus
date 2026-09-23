@@ -197,6 +197,70 @@ def g_prod_shape_verdict(root: pathlib.Path) -> dict:
     return {"declared": dec, "undeclared": und, "urls_found": len(urls)}
 
 
+def repeated_verdict(ref: str, expect_ct: str, serve: pathlib.Path, base: str | None = None,
+                     auth_file: str | None = None, times: int = 2) -> dict:
+    """Probe the SAME url `times` times and require every answer to be GREEN.
+
+    Why this exists (redteam bus `5788977359`, second attack): the old F arm hit each target once,
+    and that single probe *was* the first request.  A stateful edge/proxy that serves request #1 fine
+    and answers 501 from request #2 onward therefore produced gauge `ALL_GREEN` while the user's
+    second visit was broken - deterministic, not the probabilistic `UNEXPLAINED_EDGE_501`.
+    """
+    rows = [asset_verdict(ref, expect_ct, serve, base=base, auth_file=auth_file) for _ in range(max(1, times))]
+    ok = bool(rows) and all(r["verdict"] == "GREEN" for r in rows)
+    return {"verdict": "GREEN" if ok else "RED", "times": len(rows),
+            "statuses": [r["status"] for r in rows], "probes": rows,
+            "red_refs": [f"{r['status']}/{r['content_type']}" for r in rows if r["verdict"] != "GREEN"]}
+
+
+class _FirstOkThenFailServer:
+    """Local one-shot-then-501 server, used ONLY by --selftest to make the repeat witness load-bearing.
+
+    Binds an ephemeral port on 127.0.0.1, serves 200+javascript for the first hit of a URL and
+    501 for every later hit - the exact shape of the redteam construction.  Serves a fixed tiny body
+    so the byte checks are exercised too.
+    """
+
+    def __enter__(self):
+        import http.server
+        import threading
+
+        seen = {}
+
+        class H(http.server.BaseHTTPRequestHandler):
+            def do_GET(self):  # noqa: N802
+                n = seen.get(self.path, 0) + 1
+                seen[self.path] = n
+                if n == 1:
+                    body = b"first-ok-probe-body"
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/javascript")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                else:
+                    body = b"edge refuses now"
+                    self.send_response(501)
+                    self.send_header("Content-Type", "text/html")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+
+            def log_message(self, *a):  # silence
+                pass
+
+        self.srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), H)
+        self.port = self.srv.server_address[1]
+        self.th = threading.Thread(target=self.srv.serve_forever, daemon=True)
+        self.th.start()
+        return self
+
+    def __exit__(self, *exc):
+        self.srv.shutdown()
+        self.srv.server_close()
+        return False
+
+
 def selftest(serve: pathlib.Path) -> int:
     """Prove the asset gauge BOTH ways against the live server, without touching the deploy.
 
@@ -269,6 +333,16 @@ def selftest(serve: pathlib.Path) -> int:
     dead = asset_verdict("/v10-sw.js", "javascript", live, base="http://127.0.0.1:59999")
     arms.append({"arm": "F-killer:unreachable_surface_is_red_not_absent", "expect": "RED",
                  "got": dead})
+    # Second-attack witness (redteam bus 5788977359): a single probe cannot see
+    # "first request fine, later requests broken".  Both directions are asserted.
+    tp = repeated_verdict(killer_ref, "javascript", live, times=2)
+    arms.append({"arm": "F-true_positive:two_live_probes_agree", "expect": "GREEN",
+                 "got": {"verdict": tp["verdict"], "error": None, "status": tp["statuses"]}})
+    with _FirstOkThenFailServer() as edge:
+        st = repeated_verdict("/assets/edge-stateful.js", "javascript", live,
+                              base=f"http://127.0.0.1:{edge.port}", times=2)
+    arms.append({"arm": "F-killer:edge_serves_first_then_refuses_later", "expect": "RED",
+                 "got": {"verdict": st["verdict"], "error": None, "status": st["statuses"]}})
     # B-arm (redteam 2026-09-23): the live index must name refs that actually resolve, and the
     # previous generation's entry must be absent.  Both halves are asserted as separate fields so
     # "the old name is gone" is a claim rather than something derived from a before/after diff.
@@ -574,8 +648,9 @@ def main() -> int:
             continue
         for ref in [r for r in new_refs if r.endswith(".js")] + ["/"]:
             f_probes.append({"surface": label, "base": base,
-                             "got": asset_verdict(ref, expect_ct_for(ref), serve, base=base,
-                                                   auth_file=os.environ.get("CNX_DEPLOY_AUTH_FILE"))})
+                             "got": repeated_verdict(ref, expect_ct_for(ref), serve, base=base,
+                                                      auth_file=os.environ.get("CNX_DEPLOY_AUTH_FILE"),
+                                                      times=int(os.environ.get("CNX_DEPLOY_PROBE_TIMES", "2")))})
     f_unconfigured = any(p["verdict"] == "NOT_CONFIGURED" for p in f_probes)
     f_green = (not f_unconfigured) and all(p.get("got", {}).get("verdict") == "GREEN" for p in f_probes)
     if f_unconfigured and getattr(a, "allow_proxy_unprobed", False):
