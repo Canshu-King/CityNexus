@@ -1,0 +1,76 @@
+{
+  "lane": "HJ-P3 aad2d1f2",
+  "run_id": "ORD0262-QP-1652",
+  "purpose": "2(a) same-condition repetition distribution on the PREVIOUS generation + 2(b) the two ORD-0257 cells re-run on the now-PUBLISHED generation",
+  "generation_note": "Publish line moved at 15:53 by the commander: PUBLISHED = index-DJEINrOl.js + index-COUUKhbU.css built from 027d65ed381fbb4bfb81a07a7ae20a9f293454e1 (his swap receipt evidence/deploy/swap_027d65e_0923_1553.json, blob 89e91c7e369fc8f3: new_index_refs = those two, assets_union.already_identical lists both, arm J_name_content_binding = GREEN, overall GREEN). The generation I called 'new' in ORD-0257 is therefore now the published one, and CrAwWm5f is the PREVIOUS generation (backup anchor dist_bak_154923_1790149763821685500).",
+  "my_faces": {
+    "published": {
+      "url": "http://127.0.0.1:8474/v8/hub",
+      "served_index_refs": ["/assets/index-DJEINrOl.js", "/assets/index-COUUKhbU.css"],
+      "bytes_served": { "index-DJEINrOl.js": 1236190, "index-COUUKhbU.css": 183342 },
+      "sha256_served": { "index-DJEINrOl.js": "80a8ca1afb915cfd", "index-COUUKhbU.css": "4a3926211fda806e" },
+      "identity_argument": "same content-hashed basenames the commander's swap receipt names as deployed + same byte lengths; Vite basenames are content hashes, so name equality is the byte-identity claim, and arm J on his side checked name/content binding",
+      "my_build_provenance": "vite build of my own `git archive 027d65ed381fbb4bfb81a07a7ae20a9f293454e1` export (ORD-0257)"
+    },
+    "previous": {
+      "url": "http://127.0.0.1:8476/v8/hub",
+      "served_index_refs": ["/assets/index-CrAwWm5f.js", "/assets/index-cWMF3pBW.css"],
+      "sha256_index-CrAwWm5f.js": "9fd89456daf12bcab4bb775c8a8522d50628a... see receipt (matches the sha256 in the commander's swap receipt for generation_OLD exactly)",
+      "identity_argument": "his swap receipt records generation_OLD probe sha256 9fd89456daf12bca... and disk_bytes 1234802; my served file is 1234802 B with the same sha256 => byte-identical to the generation the user was on until 15:53"
+    }
+  },
+  "instrument": "390x844, hasTouch, isMobile, deviceScaleFactor 3, locale zh-CN; double press = two element.click() inside ONE task (t0/t1 identical ms) because two real touch taps cannot be same-tick; sheet opened by a real tap on [data-testid=hub-plan-with-ai]; request text 31 chars typed via the textarea",
+  "Q_series_previous_generation": {
+    "condition": "one journey (ae79fbf1), same-tick double press, repeated; gate between rounds = the sheet's own busy flag (button label 开始规划 and not disabled) + 4-6 s margin",
+    "rounds": [
+      { "round": "Q1", "clicks_same_tick_ms": [0, 0], "posts": [ { "sent": "08:54:24.453", "dur_ms": 95438, "status": 200, "mission": "a26792ce" }, { "sent": "08:54:24.696", "dur_ms": 61848, "status": 500, "ct": "text/plain; charset=utf-8", "body": "Internal Server Error" } ], "outcome": "1x200 + 1x500" },
+      { "round": "Q2", "posts": [ { "sent": "08:55:33.446", "dur_ms": 56990, "status": 200, "mission": "fff0f243" }, { "sent": "08:55:33.800", "dur_ms": 106601, "status": 200, "mission": "571e961c" } ], "outcome": "2x200" },
+      { "round": "Q3", "posts": [ { "sent": "08:56:06.971", "dur_ms": 11963, "status": 500 }, { "sent": "08:56:07.322", "dur_ms": 47229, "status": 200, "mission": "9eba26d7" } ], "outcome": "1x200 + 1x500" },
+      { "round": "Q4", "posts": [ { "sent": "08:56:57.251", "dur_ms": 12615, "status": 500 }, { "sent": "08:56:57.593", "dur_ms": 35357, "status": 200, "mission": "722e3a88" } ], "outcome": "1x200 + 1x500" },
+      { "round": "Q5", "posts": [ { "sent": "08:57:26.656", "dur_ms": 21927, "status": 500 }, { "sent": "08:57:27.012", "dur_ms": 33327, "status": 200, "mission": "a6eebb9d" } ], "outcome": "1x200 + 1x500" },
+      { "round": "Q6", "posts": [ { "sent": "08:57:57.021", "status": 200, "mission": "07d89eb4" }, { "sent": "08:57:57.370", "status": 200, "mission": "0140e283" } ], "outcome": "2x200", "note": "statuses from the DB/endpoint-histogram delta, page had navigated away before my read" }
+    ],
+    "distribution": {
+      "rounds": 6,
+      "clicks_total": 12,
+      "posts_total": 12,
+      "clicks_swallowed": 0,
+      "per_round_outcome_counts": { "2x200": 2, "1x200+1x500": 4, "2x500": 0, "0 posts": 0 },
+      "post_level": { "200": 8, "500": 4 },
+      "which_leg_loses": "4/4 of the losses were the LATER leg of the pair (same as R7's 3/3)",
+      "agent_runs_delta_in_window": 8,
+      "plan_versions_delta_in_window": 9
+    },
+    "reconciliation": "backend access log 200 34 -> 45 and 500 10 -> 14 across Q+P = +11 x 200 +4 x 500 = 15 posts, and hard-fail tracebacks 16 -> 20 = +4, i.e. exactly one unhandled OperationalError per 500",
+    "extra_reading": "the sheet's busy flag is NOT ref-counted: with both legs of a pair in flight, the leg that returns first flips the button back to 开始规划 while the other is still running (observed at the Q2 fire: Q1 leg1 resolved at 08:55:59, i.e. after Q2 was fired at 08:55:33)"
+  },
+  "P_series_published_generation": {
+    "condition": "same as Q series (one journey ae79fbf1, same-tick double press, 3 rounds) + the earlier arm on journey cc5e67c4 (P0)",
+    "rounds": [
+      { "round": "P0", "clicks": [ "08:41:17.086", "08:41:17.088" ], "both_saw_disabled": false, "posts": 1, "status": 200, "mission": "08:41:32.224 row", "agent_runs_delta": 1, "plan_versions_delta": 3, "non_2xx": 0 },
+      { "round": "P1", "clicks": [ "09:01:54.575", "09:01:54.577" ], "posts": 1, "sent": "09:01:54.936", "dur_ms": 30108, "status": 200, "mission": "9750770e" },
+      { "round": "P2", "clicks": [ "09:02:30.004", "09:02:30.004" ], "posts": 1, "sent": "09:02:30.330", "dur_ms": 34040, "status": 200, "mission": "3799b570" },
+      { "round": "P3", "clicks": [ "09:03:09.552", "09:03:09.552" ], "posts": 1, "sent": "09:03:09.894", "status": 200, "mission": "6e72a007" }
+    ],
+    "verdict_three_columns": { "POST_count": "1 in 4/4 rounds (2 presses -> 1 request)", "agent_runs_delta": "+1 per round, never +2", "non_2xx_count": 0 },
+    "cell_summary_hitbox": {
+      "url": "http://127.0.0.1:8474/v8/bookings",
+      "selector": "[data-testid=bookings-advanced] > summary",
+      "text": "高级：结构化数据",
+      "rect_px": { "x": 39.5, "y": 614, "w": 311.3, "h": 44 },
+      "computed": { "line-height": "44px", "min-height": "44px", "padding": "0px", "font-size": "11px" },
+      "innerWidth": 390, "devicePixelRatio": 3,
+      "elementFromPoint_at_center_195.2_636": "SUMMARY itself (stack: SUMMARY > DETAILS.v8-advanced > ASIDE.v9-inbox)",
+      "real_touch_tap": { "open_before": false, "open_after": true },
+      "screenshot": "ORD0257B-PUB-1641_published_bookings_advanced_summary.png",
+      "comparison": "previous generation measured 311 x 14 in ORD-0257; published generation measures 311.3 x 44 => ORD-0247 is now 现网验过, not just 树里验过"
+    }
+  },
+  "caveats": [
+    "Q-series rounds were spaced by the sheet's busy flag, which the extra_reading above shows is not reliable while both legs are in flight; so Q2..Q6 are NOT lab-isolated - another POST may have been in flight. I report the condition as measured rather than claiming isolation; Q1 is the one round that was demonstrably isolated (78 s after the previous activity ended).",
+    "Q6's statuses come from the endpoint-histogram + DB rows, not from the page (the page had moved on); labelled as such.",
+    "The lane still has several hub pages polling /twin, so background write pressure is higher than a real single phone; the 25.6%/4-in-12 rates are lane rates, not user rates.",
+    "Runs mostly end FAILED_EXTERNAL (the pending-revocation DeepSeek key), which lengthens write windows; shape with a healthy AI is untested.",
+    "No product code changed, no demo/reset, no writes to _live.db/_preview.db/:4781/:4782/:8693 or the tunnel."
+  ]
+}
