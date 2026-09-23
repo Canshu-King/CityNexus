@@ -1,0 +1,151 @@
+{
+ "at": "2026-09-23T22:19:42+08:00",
+ "order": "ORD-0268 cell 1 (mechanical)",
+ "lane": "B c01d72a3",
+ "how": "git archive <tip> of two real consecutive tips + repo's own vite build; no source edited, no product file touched",
+ "generations": {
+  "A_tip": "d2665e25855aeb265329266831983de42321697d",
+  "B_tip": "2b49e3cab1fcdbc55219065520ced8dea4fdfe73",
+  "A_index_html_blob40": "22c06833b56c72679b60085fea5bcb435db1d027",
+  "B_index_html_blob40": "cf230773437c3dd6bc44173674781be95e9a3cde",
+  "A_script_tags": [
+   "assets/index-D76m_cky.js",
+   "assets/index-I45CQek8.css"
+  ],
+  "B_script_tags": [
+   "assets/index-Cpy_jhEg.js",
+   "assets/index-I45CQek8.css"
+  ]
+ },
+ "manifest_A": [
+  {
+   "url": "sw.js",
+   "revision": "1eebbb6edab96b95a31dc1f94d1a6cda"
+  },
+  {
+   "url": "index.html",
+   "revision": "628fd49519473fd61645cad59085be7e"
+  },
+  {
+   "url": "assets/maplibre-gl-BWQWEO0M.js",
+   "revision": ""
+  },
+  {
+   "url": "assets/JourneyMap-VYnqykgh.js",
+   "revision": ""
+  },
+  {
+   "url": "assets/index-I45CQek8.css",
+   "revision": ""
+  },
+  {
+   "url": "assets/index-D76m_cky.js",
+   "revision": ""
+  },
+  {
+   "url": "/index.html",
+   "revision": "v10-shell"
+  },
+  {
+   "url": "favicon.svg",
+   "revision": "339a4892318ff75bf4dccf7d426c193c"
+  },
+  {
+   "url": "manifest.webmanifest",
+   "revision": "d726b6647c68d06bafae8784f74043e3"
+  }
+ ],
+ "manifest_B": [
+  {
+   "url": "sw.js",
+   "revision": "1eebbb6edab96b95a31dc1f94d1a6cda"
+  },
+  {
+   "url": "index.html",
+   "revision": "213aa276841d50a8a61cf75dd7408a7f"
+  },
+  {
+   "url": "assets/maplibre-gl-kx9AWR05.js",
+   "revision": ""
+  },
+  {
+   "url": "assets/JourneyMap-TiEm8jyP.js",
+   "revision": ""
+  },
+  {
+   "url": "assets/index-I45CQek8.css",
+   "revision": ""
+  },
+  {
+   "url": "assets/index-Cpy_jhEg.js",
+   "revision": ""
+  },
+  {
+   "url": "/index.html",
+   "revision": "v10-shell"
+  },
+  {
+   "url": "favicon.svg",
+   "revision": "339a4892318ff75bf4dccf7d426c193c"
+  },
+  {
+   "url": "manifest.webmanifest",
+   "revision": "d726b6647c68d06bafae8784f74043e3"
+  }
+ ],
+ "counts": {
+  "A": 9,
+  "B": 9
+ },
+ "duplicate_shell_entries": {
+  "A": [
+   {
+    "normalized_url": "/index.html",
+    "first": "index.html",
+    "also": "/index.html",
+    "same_raw_string": false
+   }
+  ],
+  "B": [
+   {
+    "normalized_url": "/index.html",
+    "first": "index.html",
+    "also": "/index.html",
+    "same_raw_string": false
+   }
+  ]
+ },
+ "revisions_that_did_not_change_between_generations": [
+  "sw.js",
+  "assets/index-I45CQek8.css",
+  "/index.html",
+  "favicon.svg",
+  "manifest.webmanifest"
+ ],
+ "revisions_that_did_change": [
+  "index.html"
+ ],
+ "the_shell_pair_read_verbatim": {
+  "content_derived": [
+   {
+    "url": "index.html",
+    "revision": "213aa276841d50a8a61cf75dd7408a7f"
+   }
+  ],
+  "hand_written_constant": [
+   {
+    "url": "/index.html",
+    "revision": "v10-shell"
+   }
+  ],
+  "vite_config_line_that_adds_it": [
+   "additionalManifestEntries: [{ url: \"/index.html\", revision: \"v10-shell\" }],"
+  ]
+ },
+ "sw_js_entry_note": {
+  "url": "sw.js",
+  "points_at": "frontend/public/sw.js",
+  "bytes": 7178,
+  "registered_only_in_dev_branch": "main.tsx register(\"/sw.js\") sits under import.meta.env.DEV"
+ }
+}
