@@ -1,0 +1,35 @@
+{
+ "at": "2026-09-23T14:40:36+08:00",
+ "comment_id": 5790288955,
+ "post_status": 201,
+ "readback_status": 200,
+ "body_bytes": 2295,
+ "readback_bytes": 2295,
+ "verbatim_match": true,
+ "html_url": "https://github.com/Canshu-King/CityNexus-Workspace/issues/1#issuecomment-5790288955",
+ "closed_contexts": 9,
+ "remaining_contexts": 1,
+ "urls_that_were_open": [
+  "http://127.0.0.1:4411/hub",
+  "http://127.0.0.1:8464/v8/hub",
+  "http://127.0.0.1:4185/v8/agent",
+  "http://127.0.0.1:4781/v8/bookings",
+  "http://127.0.0.1:8474/v8/bookings",
+  "http://127.0.0.1:8474/",
+  "http://127.0.0.1:8476/v8/hub",
+  "http://127.0.0.1:8474/v8/hub",
+  "http://127.0.0.1:8474/v8/hub"
+ ],
+ "mine_only_these_ports": [
+  4411,
+  4412,
+  8411
+ ],
+ "not_mine_these_ports_appear_in_the_list": [
+  4185,
+  4781,
+  8464,
+  8474,
+  8476
+ ]
+}
