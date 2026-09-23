@@ -30,6 +30,10 @@ import urllib.request
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 BASE = "http://127.0.0.1:4781"
+# Redteam round 3 (bus 5789163700): a single probe was only forbidden on F, so a URL that exactly one
+# arm probes (the dynamically-imported maplibre chunk - in the SW precache, not in index.html) could still
+# serve #1 fine and 404 forever after while the gauge read ALL_GREEN.  Repeat is now the default for every
+PROBE_TIMES = int(os.environ.get("CNX_DEPLOY_PROBE_TIMES", "2"))
 HTML_FALLBACK_MARKERS = ("<!DOCTYPE", "<!doctype", "<html", "<!ENTITY")
 UNION_EXT = (".js", ".css", ".mjs", ".map", ".woff", ".woff2", ".svg", ".png", ".json")
 ROOT_FILES = ("index.html", "manifest.webmanifest", "sw.js", "v10-sw.js")
@@ -292,17 +296,17 @@ def selftest(serve: pathlib.Path) -> int:
     # ---- G/H/F arms: the blind spots redteam d2305848 broke this gauge with (bus 5788606895).
     # Built synthetically (extra urls appended to a parsed list, a fake previous index, an unreachable
     # base) so the live dist is never mutated by a selftest.
-    def g_detail(urls):
+    def g_detail(urls, base=None, times=2):
         """verdict + the offending refs: a boolean-only red is not diagnosable (A-5 discipline)."""
         if not urls:                                   # A-3: an empty manifest proves nothing
             return {"verdict": "RED", "bad_refs": ["<empty manifest>"]}
         bad = []
         for u in urls:
             ref = u if u.startswith("/") else "/" + u
-            v = asset_verdict(ref, expect_ct_for(ref), live)
+            v = repeated_verdict(ref, expect_ct_for(ref), live, base=base, times=times)
             if v["verdict"] != "GREEN":
-                bad.append(f"{ref} status={v['status']} ct={v['content_type']} html={v['is_html_fallback']} "
-                           f"disk={v['disk_present']}")
+                bad.append(f"{ref} statuses={v['statuses']} first_ct={v['probes'][0]['content_type']} "
+                           f"disk={v['probes'][0]['disk_present']}")
         return {"verdict": "RED" if bad else "GREEN", "bad_refs": bad}
 
     def g_verdict(urls):
@@ -316,6 +320,15 @@ def selftest(serve: pathlib.Path) -> int:
                  "got": g_detail(g_urls + ["/assets/__cnx_not_in_manifest__.js"])})
     arms.append({"arm": "G-killer:empty_manifest_is_not_a_pass", "expect": "RED",
                  "got": {"verdict": g_verdict([])}})
+    # Round-3 witness (redteam bus 5789163700): a dynamically-imported chunk that only the precache arm
+    # probes, served 200 once and 501 afterwards.  With C/G/H repeating, G must see it.
+    with _FirstOkThenFailServer() as edge3:
+        g3 = g_detail(["/assets/maplibre-gl-CLqlEDxz.js"], base=f"http://127.0.0.1:{edge3.port}", times=2)
+    arms.append({"arm": "G-killer:precache_url_breaks_on_second_probe", "expect": "RED",
+                 "got": {"verdict": g3["verdict"], "error": "; ".join(g3["bad_refs"])[:160]}})
+    g3b = g_detail(["/assets/maplibre-gl-CLqlEDxz.js"], base=None, times=2)
+    arms.append({"arm": "G-true_positive:same_url_twice_on_real_server", "expect": "GREEN",
+                 "got": {"verdict": g3b["verdict"], "error": "; ".join(g3b["bad_refs"])[:160]}})
     # G-killer 2 (redteam bus 5788897591, measured on the production chain): a file with NO precache
     # array must not turn the gauge permanently RED if it is declared, and MUST be RED if it is not.
     # Both directions are asserted so "declared" cannot become a blanket exemption.
@@ -525,7 +538,8 @@ def main() -> int:
     print(f"[gate] {len(pre)} new asset(s) reachable, real bytes, no HTML fallback")
 
     # --- phase 3: BACKUP then SWITCH the unhashed root files
-    stamp = time.strftime("%H%M")
+    stamp = time.strftime("%H%M%S")   # was %H%M: two deploys inside one minute would overwrite the
+                                    # backup the H arm reads as "previous generation" (redteam round 3)
     bak = serve.parent / f"dist_bak_{stamp}"
     bak.mkdir(parents=True, exist_ok=True)
     backed = []
@@ -579,8 +593,8 @@ def main() -> int:
         receipt["served_after_switch_refs"] = got_refs
     c_new = []
     for ref in new_refs:
-        expect_ct = "css" if ref.endswith(".css") else "javascript"
-        c_new.append(asset_verdict(ref, expect_ct, serve))
+        # C now repeats too (redteam round 3): one arm, one probe, is blind to "first fine, later broken"
+        c_new.append(repeated_verdict(ref, expect_ct_for(ref), serve, times=PROBE_TIMES))
     d_sw = []
     for name in ("sw.js", "v10-sw.js"):
         g = http_get("/" + name)
@@ -621,7 +635,8 @@ def main() -> int:
             continue
         for u in urls:
             ref = u if u.startswith("/") else "/" + u
-            entry["probes"].append({"ref": ref, "got": asset_verdict(ref, expect_ct_for(ref), serve)})
+            entry["probes"].append({"ref": ref,
+                                    "got": repeated_verdict(ref, expect_ct_for(ref), serve, times=PROBE_TIMES)})
         # A-3: an empty manifest is not a passed check.  If a sw carries no precache at all, that is a
         # legitimate state only when it is declared - here we require the parse to have found entries.
         entry["verdict"] = ("GREEN" if entry["urls_found"] > 0 and all(p["got"]["verdict"] == "GREEN" for p in entry["probes"])
@@ -633,7 +648,7 @@ def main() -> int:
     prev_index = (bak / "index.html") if bak.is_dir() else None
     if prev_index is not None and prev_index.is_file():
         for r in asset_refs(prev_index.read_text(encoding="utf-8", errors="replace")):
-            h_prev.append({"ref": r, "got": asset_verdict(r, expect_ct_for(r), serve)})
+            h_prev.append({"ref": r, "got": repeated_verdict(r, expect_ct_for(r), serve, times=PROBE_TIMES)})
     h_prev_verdict = ("GREEN" if h_prev and all(x["got"]["verdict"] == "GREEN" for x in h_prev)
                       else ("NOT_CONFIGURED" if not h_prev else "RED"))
 
