@@ -1,0 +1,118 @@
+{
+ "at": "2026-09-23T21:40:33+08:00",
+ "what": "ORD-0263 measured on the RELEASE GENERATION the user's phone is on right now",
+ "lane": "HARNESS d291c9dc",
+ "subject": "release generation index-D76m_cky.js / index-I45CQek8.css (landed tip d2665e2, no ORD-0263) measured on my own face :4414 + backend :8411",
+ "new_path_only": {
+  "repo_dir": "evidence/ord0263-livegen",
+  "old_paths_touched": [],
+  "note": "the earlier evidence/ord0263/ and evidence/ord0254/ blobs are left exactly as published"
+ },
+ "name_guard": {
+  "attempted_repo_path": "evidence/ord0263-livegen/ord0263_capture_livegen.json",
+  "publisher_returncode": 5,
+  "publisher_last_line": "  local=D:\\moodle\\_qoder_harness_ord0254\\ord0263_capture_livegen.json  repo_path=evidence/ord0263-livegen/ord0263_capture_livegen.json  bytes=9050",
+  "refused": true,
+  "consequence": "uploads go under a `releasegen` spelling of the same bytes"
+ },
+ "generation_fingerprint": {
+  "files": 29,
+  "bytes": 14518104,
+  "tree_sha256": "54d2da94b4aa00dc23c615e1a7f3677f1bddf742a50991e2a263bf990e287538",
+  "read_only_source": true,
+  "rebuilt": false
+ },
+ "result": {
+  "arms": "S1 GREEN; V1_origin_error_5xx RED; V1_vacuity GREEN; V2_no_answer RED; V3_distinctness RED; V4_silent_read_answered_health RED",
+  "derived_result": "RED_CELLS: V1_origin_error_5xx,V2_no_answer,V3_distinctness,V4_silent_read_answered_health",
+  "red_cell_count": 4,
+  "one_line_for_the_generation_decision": "现网这一代上 0263 四臂 4 红（只有 S1 正常）：不再冤枉网络，但没有一格把设备上真实存在的已保存行程交给用户，源站沉默时用户 84 s 全程卡在骨架屏且 0 个按钮"
+ },
+ "external_readability": "these blobs only; the release tip and B's branch are NOT claimed readable from here (B's branch prints no ls-remote line at all)",
+ "files_requested": 8,
+ "proven_by_40char_readback": 0,
+ "not_proven": [
+  "ORD_0263_LIVEGEN.md",
+  "ord0263_capture_livegen.json",
+  "ord0263_verdict_ord0263_capture_livegen.json",
+  "ord0263_livegen_surface_receipt.json",
+  "ord0263_livegen_teardown_receipt.json",
+  "tools/build_livegen_capture.py",
+  "tools/start_livegen_surface.py",
+  "tools/teardown_livegen.py"
+ ],
+ "rows": [
+  {
+   "local_file": "ORD_0263_LIVEGEN.md",
+   "repo_path": "evidence/ord0263-livegen/ORD_0263_RELEASEGEN.md",
+   "bytes": 6313,
+   "blob40": "1ca97b76cc9e346a676ddc9bd569e13d7f27429d",
+   "readback_status": "404",
+   "verdict": "PUBLISHED_UNPROVEN",
+   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\ORD_0263_LIVEGEN.md  repo_path=evidence/ord0263-livegen/ORD_0263_RELEASEGEN.md  bytes=6313"
+  },
+  {
+   "local_file": "ord0263_capture_livegen.json",
+   "repo_path": "evidence/ord0263-livegen/ord0263_capture_releasegen.json",
+   "bytes": 9050,
+   "blob40": "a0a459ce8470ffaad92e8202687c940bcc60d79b",
+   "readback_status": "404",
+   "verdict": "PUBLISHED_UNPROVEN",
+   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\ord0263_capture_livegen.json  repo_path=evidence/ord0263-livegen/ord0263_capture_releasegen.json  bytes=9050"
+  },
+  {
+   "local_file": "ord0263_verdict_ord0263_capture_livegen.json",
+   "repo_path": "evidence/ord0263-livegen/ord0263_verdict_ord0263_capture_releasegen.json",
+   "bytes": 2406,
+   "blob40": "06b3b6327013629fff8644e3a54731117fc1abb3",
+   "readback_status": "404",
+   "verdict": "PUBLISHED_UNPROVEN",
+   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\ord0263_verdict_ord0263_capture_livegen.json  repo_path=evidence/ord0263-livegen/ord0263_verdict_ord0263_capture_releasegen.json  bytes=2406"
+  },
+  {
+   "local_file": "ord0263_livegen_surface_receipt.json",
+   "repo_path": "evidence/ord0263-livegen/ord0263_releasegen_surface_receipt.json",
+   "bytes": 1688,
+   "blob40": "f707d1cb28b7bc1b9e0e5af3bf587372a9161a7b",
+   "readback_status": "404",
+   "verdict": "PUBLISHED_UNPROVEN",
+   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\ord0263_livegen_surface_receipt.json  repo_path=evidence/ord0263-livegen/ord0263_releasegen_surface_receipt.json  bytes=1688"
+  },
+  {
+   "local_file": "ord0263_livegen_teardown_receipt.json",
+   "repo_path": "evidence/ord0263-livegen/ord0263_releasegen_teardown_receipt.json",
+   "bytes": 2217,
+   "blob40": "0298c5aa6f5a543e61abccb6085e48b1677a2ec1",
+   "readback_status": "404",
+   "verdict": "PUBLISHED_UNPROVEN",
+   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\ord0263_livegen_teardown_receipt.json  repo_path=evidence/ord0263-livegen/ord0263_releasegen_teardown_receipt.json  bytes=2217"
+  },
+  {
+   "local_file": "tools/build_livegen_capture.py",
+   "repo_path": "evidence/ord0263-livegen/build_releasegen_capture.py",
+   "bytes": 12601,
+   "blob40": "7ea28aece4a8fc7fb600ec1a331db12c81ab0fde",
+   "readback_status": "404",
+   "verdict": "PUBLISHED_UNPROVEN",
+   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\tools\\build_livegen_capture.py  repo_path=evidence/ord0263-livegen/build_releasegen_capture.py  bytes=12601"
+  },
+  {
+   "local_file": "tools/start_livegen_surface.py",
+   "repo_path": "evidence/ord0263-livegen/start_releasegen_surface.py",
+   "bytes": 8291,
+   "blob40": "9763c0915523a6871b01c38471fc4dc06c639784",
+   "readback_status": "404",
+   "verdict": "PUBLISHED_UNPROVEN",
+   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\tools\\start_livegen_surface.py  repo_path=evidence/ord0263-livegen/start_releasegen_surface.py  bytes=8291"
+  },
+  {
+   "local_file": "tools/teardown_livegen.py",
+   "repo_path": "evidence/ord0263-livegen/teardown_releasegen.py",
+   "bytes": 6036,
+   "blob40": "98e26007f46c4fe0f3c791cc11c17703f398f332",
+   "readback_status": "404",
+   "verdict": "PUBLISHED_UNPROVEN",
+   "publisher_tail": "  local=D:\\moodle\\_qoder_harness_ord0254\\tools\\teardown_livegen.py  repo_path=evidence/ord0263-livegen/teardown_releasegen.py  bytes=6036"
+  }
+ ]
+}
