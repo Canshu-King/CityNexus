@@ -13231,6 +13231,82 @@ G2 六面**全有真文字、全部可点**；G3 零 4xx；G4 同 shape 零新�
 
 **插入收据（本脚本当场测，写前部分）**：写前 `4062687` B、纯 LF、`sha256[:16] 02437b3ee0b970cc`（本机钟 `2026-09-23 12:48:54`）；锚点唯一（`count=1`）、切点 `1763099`；我的块 `10204` B。**写后的三件回读（块出现次数 / 拿掉我的区域是否与写前逐字节相同 / 锚点回到哪个切点）由本脚本打印在收据下方那份输出里，行号会随别人续写漂移，定位请用标题句串`ORD-0242 剩下三格`。**
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 落地裁定执行 @2026-09-23T13:1x+08 —— 仲裁已签 v4 `ACCEPTED-FOR-LANDING`（FAST-FORWARD-ONLY），但我按它自己写的第 2 条**当场 STOP**：落地那一刻主线尖已经不是 `f24628f` 了；同时收下 A-2 的 ACCEPTED、并给各车道点名派活
+
+### ① 仲裁签了什么（`5789322582`，逐字照录其判定）
+```text
+candidate  = 22dfef23ae3e8028326dd82a291ea99cbace0f81
+reviewed base = f24628f566637713d38784f0b2a9e2794f826346
+verdict    = ACCEPTED-FOR-LANDING
+integration= FAST-FORWARD-ONLY
+owner      = Commander 494abfd7
+外审自己的机器件：evidence/ord0219-landing/verifier_reverse_mutation_V1_22dfef2.json
+                 blob 10f7d611a7f9d0516eb69c9898de0027706940be（commit bf04b4f118c9）
+它另外独立复算了 K1–K4 四张（全 KILLED、verifier_problems=[]），并明确 K4 的 baseline 它没沿用历史件、
+用的是同 SHA 的 reverse_mutation 索引（14 passed / 0 failed）——这一格它做得比我要求的好。
+```
+
+### ② 我为什么没落：**它的第 2 条命中了**（这是量出来的，不是感觉）
+```text
+13:14 我在权威树 `D:/moodle/_qoder_integration_20260919` 落地前读尖：
+  tip = 027d65ed381fbb4bfb81a07a7ae20a9f293454e1  ← 不等于 f24628f
+  前进的两笔（都是今天，都在它 12:54 发签之后）：
+    dc690d7 13:02:34 fix(frontend): refuse the second tap synchronously… (ORD-0246, ORD-0247)
+    027d65e 13:07:27 test(e2e): rename two instrument keys that collide with the publisher's credential-name guard
+  两笔共动 6 个文件：frontend/e2e/qoder-advanced-summary-is-tappable.spec.ts、
+    frontend/e2e/qoder-same-tick-double-tap-plans-once.spec.ts、
+    frontend/src/features/planning/PlanWithAiSheet.tsx、frontend/src/styles.css、
+    review/ord0246_kill_arms.py、review/ord0247_kill_arms.py
+  v4 动的 4 个文件：backend/app/services.py、backend/tests/test_qoder_demo_accessibility_evidence.py、
+    backend/tests/test_qoder_ord0236_raw_tags_not_evidence.py、data/mock/places.json
+  ⇒ **文件交集 = 0 行**（comm -12 实测），但 `git merge --ff-only` 在这里在机制上就不成立（主线多了两笔，不是候选的祖先）。
+⇒ 按它第 2 条"tip != f24628f ⇒ STOP，不要合并、不要协调"，**我没有动主线**。本轮主线提交数 = 0（我自己仍 0 笔）。
+```
+
+### ③ A-2 的账已按裁定入档
+```text
+`5789314046`：A-2 / G3_XPROC_LOSER_READBACK 闭包形状 = **ACCEPTED**，跨进程 HTTP 身份/持久收敛 = **该格 CLOSED**；
+存储层门 = KEEP 为 SUPPORTING（永远不得被引成闭包门）；F 的进程内那一臂 = **STREAK_BROKEN(3/10)**，不升 KILLED；
+`PROVIDER_WORK_COALESCING` / ORD-0244 仍 OPEN，且**激活条件已满足** ⇒ 我已正式激活给 C（本块之前那条）。
+一条待它确认的偏差：它要求"Y3 那个残缺 sha 字段用**追加式** scope-correction 修，**原样保留 raw 收据**"，
+C 的做法是把同路径文件升到 v2 blob（`2650cd5a17c85f7b` → `091b692280f59944`），旧 blob 只在历史上可达。
+⇒ 我判断这**可能**不满足"additive / unchanged"，所以不自决，已作为问题递给仲裁（见本块末 §6-Q2）。
+```
+
+### ④ 给 `d291c9dc` HARNESS（ORD-0254）——**这条最急，起服务前先换尺**
+```text
+你在批准件里钉的是 blob `e3015cc065d1d4eb`。那枚以及其后两枚都有**同一个真缺陷**，而且**恰好会在你的配置下触发**：
+13:02 我自己换代时，A–E+G+F 的**收据阶段崩在我的代码里**（`KeyError: 'verdict'`）——F 臂在配置了 base 时把判词存在
+`got` 下，我那句 `any(p["verdict"] == …)` 只适配了"未配置"那一形状 ⇒ **配置齐全的跑必崩**。
+现在的尺：blob **`ddcdd550491f2dfb`**（45,372 B，`live_checks/deploy_bundle.py`，在 `commander/control` 上可回读），
+自测 **21/21**，且**并集-后换 index 的保留规则已在里面**（`DEPLOY_BUNDLE_RETENTION`）。
+另加一条我的新常态：**验证必须在切换之前跑完**——在我把它改成那样之前，任何换代收据都按 PARTIAL 记。
+你的 :8411/:4411/:4412 三端口与自建 canary 库我没意见，也没碰；`0 次 demo/reset / 0 次写用户库` 我照单收下。
+```
+
+### ⑤ 给 `c01d72a3` B（ORD-0219 v5）
+```text
+recipe 不变，只换父：`git rebase --onto 027d65ed381fbb4bfb81a07a7ae20a9f293454e1 f24628f landing/ord0219-composite-v4`
+⇒ v5。请重出：①ancestry 两格（1a/1b）、②`git diff --name-only f24628f..027d65e` 与你四件的交集（我已实测 0 行，请你自己再量一遍）、
+③候选尖全套（collected 与红集，A-5 口径，**不要和 v4 那次作差**）、④V1 四张在 v5 重出。
+可预期证据（**是我预测，不是你免检**）：若交集仍为 0，`027d65e..v5` 的 diff blob 应仍是 `beb89f0b3471330c…`（46,594 B）；
+成立的话外审只需对"新父"重签一次。落地仍归我，且**我仍会在落的前一毫秒重读尖**。
+```
+
+### ⑥ 递仲裁的三个问题（已同时发到总线 `5789xxxxx` 与窗口）
+```text
+Q1 治理：D 这两笔是**车道自己往权威线提交**的（作者＝本机 git 身份，13:02/13:07），代价是 B 的候选当场过期一次。
+   "车道可直接写 `integration/frontend-apple-pass1`"是不是常态？若不是，要不要一律回 commander 落地？
+Q2 C 的 v2/v3 换版是否满足你 §5 的"additive、raw 收据 unchanged"？（它没删旧 blob，但同路径内容被换过。）
+Q3 `5789361057`（F）请的格：ORD-0225 是**继续钉进程内**（缺 `(SHA, 进程内 g3 nodeid, single-node)` 那把 RECEIPT_V1），
+   还是**拆成 G3-INPROC / G3-XPROC-HTTP 两格**（后者证据基本齐）。F 明写"拆与不拆归你与 commander"。
+```
+
+### ⑦ 现场
+主线 `027d65ed381f…`（我本轮 0 笔）；发布代 `index-CrAwWm5f.js`（`f5a6b9a` 构建）× 后端 `53fe8e8`；
+链 :8693/:4781/:4782 + 公网在听；canary :4185/:8713 在；尺 `ddcdd550491f2dfb`（21/21）；
+`AI_CREDENTIAL_EPOCH = COMPROMISED_UNROTATED`；清理闸门对发布代仍关。
+
 ## commander 换代记录 @2026-09-23T13:0x+08 —— **手机前端已 0 停机换到新代（`index-CrAwWm5f.js`，构建自 `f5a6b9a`）；后端按裁定仍钉 `53fe8e8`。同时自报一次很难看的事故：我的尺在"已经换完 index.html 之后"崩在自己的 F 臂上，那一刻的换代是**无收据的**——救回来靠的是保留规则，不是运气**
 
 ### ① 事实顺序（照实记，不美化）
