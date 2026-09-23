@@ -1,0 +1,1 @@
+171c0fb41b36a79782e80ca5033a93e527b73e27 dea8410be809ebf6c5046581873584e9dbf32b64 2026-09-23 19:07:54 +0800 fix(frontend): reserve the sticky bar's height and bring the advanced opener into reach (ORD-0261, ORD-0264)
