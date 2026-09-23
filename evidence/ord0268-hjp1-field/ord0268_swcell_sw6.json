@@ -1,0 +1,493 @@
+{
+  "lane": "1a986a24 HJ-P1",
+  "order": "ORD-0268 (3) part (2) v5",
+  "base": "https://planning-tracks-singer-bedford.trycloudflare.com",
+  "run_label": "sw6",
+  "profile": "D:\\moodle\\_qoder_hjp1_o207_20260922\\profile_0268_sw4",
+  "started_at": "2026-09-24T00:50:11.162+08:00",
+  "worker": {
+    "bytes": 2055,
+    "sha256": "e63d7421eda340937df28bd0cae35624ab413607f9819e69b519b7d7ede69dbd",
+    "sha16": "e63d7421eda34093",
+    "matches_marker": true,
+    "manifestCount": 8,
+    "manifest": [
+      {
+        "url": "sw.js",
+        "revision": "1eebbb6edab96b95a31dc1f94d1a6cda"
+      },
+      {
+        "url": "index.html",
+        "revision": "213aa276841d50a8a61cf75dd7408a7f"
+      },
+      {
+        "url": "assets/maplibre-gl-kx9AWR05.js",
+        "revision": null
+      },
+      {
+        "url": "assets/JourneyMap-TiEm8jyP.js",
+        "revision": null
+      },
+      {
+        "url": "assets/index-I45CQek8.css",
+        "revision": null
+      },
+      {
+        "url": "assets/index-Cpy_jhEg.js",
+        "revision": null
+      },
+      {
+        "url": "favicon.svg",
+        "revision": "339a4892318ff75bf4dccf7d426c193c"
+      },
+      {
+        "url": "manifest.webmanifest",
+        "revision": "d726b6647c68d06bafae8784f74043e3"
+      }
+    ],
+    "v10ShellInSource": 0,
+    "sliceHead": "[{url:\"sw.js\",revision:\"1eebbb6edab96b95a31dc1f94d1a6cda\"},{url:\"index.html\",revision:\"213aa276841d50a8a61cf75dd7408a7f\"},{url:\"assets/maplibre-gl-kx9AWR05.js\",revision:null},{url:\"assets/JourneyMap-TiEm8jyP.js\",revision:null},{url:\"assets/index-I45CQek8.css\",revision:null},{url:\"assets/index-Cpy_jhEg.js\",revision:null},{url:\"favicon.svg\",revision:\"339a4892318ff75bf4dccf7d426c193c\"},{url:\"manifest"
+  },
+  "online_index": {
+    "bytes": 1200,
+    "sha256": "3cb318326b13a033ef9496965e51620c48078c66feaec8c000ee2f34acd84fe0"
+  },
+  "manifestPaths": [
+    "/assets/JourneyMap-TiEm8jyP.js",
+    "/assets/index-Cpy_jhEg.js",
+    "/assets/index-I45CQek8.css",
+    "/assets/maplibre-gl-kx9AWR05.js",
+    "/favicon.svg",
+    "/index.html",
+    "/manifest.webmanifest",
+    "/sw.js"
+  ],
+  "online": {
+    "href": "https://planning-tracks-singer-bedford.trycloudflare.com/v8/hub",
+    "isChromeError": false,
+    "leafCount": 77,
+    "bodyHead": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "controller": true,
+    "scriptURL": [
+      "https://planning-tracks-singer-bedford.trycloudflare.com/v10-sw.js"
+    ],
+    "activeStates": [
+      "activated"
+    ],
+    "cached": [
+      {
+        "path": "/sw.js",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda",
+        "wbRevision": "1eebbb6edab96b95a31dc1f94d1a6cda",
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faefcc0ac2ea8d-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/javascript",
+          "date": "Wed, 23 Sep 2026 16:30:56 GMT",
+          "etag": "W/\"7178-1790174363000\"",
+          "last-modified": "Wed, 23 Sep 2026 14:39:23 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/index.html",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/index.html?__WB_REVISION__=213aa276841d50a8a61cf75dd7408a7f",
+        "wbRevision": "213aa276841d50a8a61cf75dd7408a7f",
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faefd31d42ea8d-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/html;charset=utf-8",
+          "date": "Wed, 23 Sep 2026 16:30:57 GMT",
+          "last-modified": "Wed, 23 Sep 2026 15:07:28 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": "3cb318326b13a033ef9496965e51620c48078c66feaec8c000ee2f34acd84fe0",
+        "bodyLen": 1200
+      },
+      {
+        "path": "/assets/maplibre-gl-kx9AWR05.js",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/assets/maplibre-gl-kx9AWR05.js",
+        "wbRevision": null,
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faefdbee52ea8d-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/javascript",
+          "date": "Wed, 23 Sep 2026 16:30:58 GMT",
+          "etag": "W/\"1053381-1790171883758\"",
+          "last-modified": "Wed, 23 Sep 2026 13:58:03 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/assets/JourneyMap-TiEm8jyP.js",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/assets/JourneyMap-TiEm8jyP.js",
+        "wbRevision": null,
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faf00bff2ad1eb-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/javascript",
+          "date": "Wed, 23 Sep 2026 16:31:06 GMT",
+          "etag": "W/\"4392-1790171883757\"",
+          "last-modified": "Wed, 23 Sep 2026 13:58:03 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/assets/index-I45CQek8.css",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/assets/index-I45CQek8.css",
+        "wbRevision": null,
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faf012888dd1eb-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/css",
+          "date": "Wed, 23 Sep 2026 16:31:07 GMT",
+          "etag": "W/\"183897-1790165102537\"",
+          "last-modified": "Wed, 23 Sep 2026 12:05:02 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/assets/index-Cpy_jhEg.js",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/assets/index-Cpy_jhEg.js",
+        "wbRevision": null,
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faf01cfe3fd1eb-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/javascript",
+          "date": "Wed, 23 Sep 2026 16:31:09 GMT",
+          "etag": "W/\"1242399-1790171883758\"",
+          "last-modified": "Wed, 23 Sep 2026 13:58:03 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/favicon.svg",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c",
+        "wbRevision": "339a4892318ff75bf4dccf7d426c193c",
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faf05e184fd1eb-ICN",
+          "content-encoding": "gzip",
+          "content-type": "image/svg+xml",
+          "date": "Wed, 23 Sep 2026 16:31:19 GMT",
+          "etag": "W/\"199-1789794268775\"",
+          "last-modified": "Sat, 19 Sep 2026 05:04:28 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/manifest.webmanifest",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3",
+        "wbRevision": "d726b6647c68d06bafae8784f74043e3",
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faf064ceb3d1eb-ICN",
+          "content-encoding": "gzip",
+          "content-type": "application/manifest+json",
+          "date": "Wed, 23 Sep 2026 16:31:20 GMT",
+          "etag": "W/\"314-1790176048289\"",
+          "last-modified": "Wed, 23 Sep 2026 15:07:28 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      }
+    ]
+  },
+  "offline": {
+    "href": "https://planning-tracks-singer-bedford.trycloudflare.com/v8/hub",
+    "isChromeError": false,
+    "leafCount": 77,
+    "bodyHead": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "controller": true,
+    "scriptURL": [
+      "https://planning-tracks-singer-bedford.trycloudflare.com/v10-sw.js"
+    ],
+    "activeStates": [
+      "activated"
+    ],
+    "cached": [
+      {
+        "path": "/sw.js",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda",
+        "wbRevision": "1eebbb6edab96b95a31dc1f94d1a6cda",
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faefcc0ac2ea8d-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/javascript",
+          "date": "Wed, 23 Sep 2026 16:30:56 GMT",
+          "etag": "W/\"7178-1790174363000\"",
+          "last-modified": "Wed, 23 Sep 2026 14:39:23 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/index.html",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/index.html?__WB_REVISION__=213aa276841d50a8a61cf75dd7408a7f",
+        "wbRevision": "213aa276841d50a8a61cf75dd7408a7f",
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faefd31d42ea8d-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/html;charset=utf-8",
+          "date": "Wed, 23 Sep 2026 16:30:57 GMT",
+          "last-modified": "Wed, 23 Sep 2026 15:07:28 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": "3cb318326b13a033ef9496965e51620c48078c66feaec8c000ee2f34acd84fe0",
+        "bodyLen": 1200
+      },
+      {
+        "path": "/assets/maplibre-gl-kx9AWR05.js",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/assets/maplibre-gl-kx9AWR05.js",
+        "wbRevision": null,
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faefdbee52ea8d-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/javascript",
+          "date": "Wed, 23 Sep 2026 16:30:58 GMT",
+          "etag": "W/\"1053381-1790171883758\"",
+          "last-modified": "Wed, 23 Sep 2026 13:58:03 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/assets/JourneyMap-TiEm8jyP.js",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/assets/JourneyMap-TiEm8jyP.js",
+        "wbRevision": null,
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faf00bff2ad1eb-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/javascript",
+          "date": "Wed, 23 Sep 2026 16:31:06 GMT",
+          "etag": "W/\"4392-1790171883757\"",
+          "last-modified": "Wed, 23 Sep 2026 13:58:03 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/assets/index-I45CQek8.css",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/assets/index-I45CQek8.css",
+        "wbRevision": null,
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faf012888dd1eb-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/css",
+          "date": "Wed, 23 Sep 2026 16:31:07 GMT",
+          "etag": "W/\"183897-1790165102537\"",
+          "last-modified": "Wed, 23 Sep 2026 12:05:02 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/assets/index-Cpy_jhEg.js",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/assets/index-Cpy_jhEg.js",
+        "wbRevision": null,
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faf01cfe3fd1eb-ICN",
+          "content-encoding": "gzip",
+          "content-type": "text/javascript",
+          "date": "Wed, 23 Sep 2026 16:31:09 GMT",
+          "etag": "W/\"1242399-1790171883758\"",
+          "last-modified": "Wed, 23 Sep 2026 13:58:03 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/favicon.svg",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c",
+        "wbRevision": "339a4892318ff75bf4dccf7d426c193c",
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faf05e184fd1eb-ICN",
+          "content-encoding": "gzip",
+          "content-type": "image/svg+xml",
+          "date": "Wed, 23 Sep 2026 16:31:19 GMT",
+          "etag": "W/\"199-1789794268775\"",
+          "last-modified": "Sat, 19 Sep 2026 05:04:28 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      },
+      {
+        "path": "/manifest.webmanifest",
+        "cacheUrl": "https://planning-tracks-singer-bedford.trycloudflare.com/manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3",
+        "wbRevision": "d726b6647c68d06bafae8784f74043e3",
+        "status": 200,
+        "headers": {
+          "cache-control": "no-cache",
+          "cf-cache-status": "DYNAMIC",
+          "cf-ray": "a3faf064ceb3d1eb-ICN",
+          "content-encoding": "gzip",
+          "content-type": "application/manifest+json",
+          "date": "Wed, 23 Sep 2026 16:31:20 GMT",
+          "etag": "W/\"314-1790176048289\"",
+          "last-modified": "Wed, 23 Sep 2026 15:07:28 GMT",
+          "server": "cloudflare",
+          "vary": "Origin",
+          "x-robots-tag": "none, none"
+        },
+        "bodySha256": null,
+        "bodyLen": null
+      }
+    ],
+    "navError": null,
+    "elapsedMs": 7085
+  },
+  "derived": {
+    "c1_sw_answered_offline": true,
+    "c1_href": "https://planning-tracks-singer-bedford.trycloudflare.com/v8/hub",
+    "c1_leafCount": 77,
+    "c1_navError": null,
+    "c2_controller_offline": true,
+    "c2_shell_wb_revision_offline": [
+      "213aa276841d50a8a61cf75dd7408a7f"
+    ],
+    "c2_v10Shell_revisions_in_cache_offline": 0,
+    "c2_cache_revisions_vs_manifest_mismatch": [],
+    "c2_cache_urls_offline": [
+      "/sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda",
+      "/index.html?__WB_REVISION__=213aa276841d50a8a61cf75dd7408a7f",
+      "/assets/maplibre-gl-kx9AWR05.js",
+      "/assets/JourneyMap-TiEm8jyP.js",
+      "/assets/index-I45CQek8.css",
+      "/assets/index-Cpy_jhEg.js",
+      "/favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c",
+      "/manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3"
+    ],
+    "c2_scriptURL_online": [
+      "https://planning-tracks-singer-bedford.trycloudflare.com/v10-sw.js"
+    ],
+    "c2_scriptURL_offline": [
+      "https://planning-tracks-singer-bedford.trycloudflare.com/v10-sw.js"
+    ],
+    "c2_same_worker": true,
+    "c2_cached_count_offline": 8,
+    "c2_manifest_count": 8,
+    "c2_path_sets_equal": true,
+    "c2_paths_only_in_cache": [],
+    "c2_paths_only_in_manifest": [],
+    "c2_shell_headers_offline": [
+      {
+        "cache-control": "no-cache",
+        "cf-cache-status": "DYNAMIC",
+        "cf-ray": "a3faefd31d42ea8d-ICN",
+        "content-encoding": "gzip",
+        "content-type": "text/html;charset=utf-8",
+        "date": "Wed, 23 Sep 2026 16:30:57 GMT",
+        "last-modified": "Wed, 23 Sep 2026 15:07:28 GMT",
+        "server": "cloudflare",
+        "vary": "Origin",
+        "x-robots-tag": "none, none"
+      }
+    ],
+    "c2_shell_body_sha_offline": [
+      "3cb318326b13a033ef9496965e51620c48078c66feaec8c000ee2f34acd84fe0"
+    ],
+    "c2_shell_body_len_offline": [
+      1200
+    ],
+    "c2_shell_sha_equals_online_index": true,
+    "c2_v10Shell_in_worker_source": 0,
+    "c2_marker_matched": true,
+    "digestErrors": []
+  },
+  "verdict_c1": "MET",
+  "verdict_c2": "MET",
+  "verdict": "BOTH_CELLS_MET",
+  "finished_at": "2026-09-24T00:50:36.021+08:00"
+}
