@@ -1,0 +1,82 @@
+{
+ "schema_version": "CNX_REVERSE_MUTATION_RECEIPT_V1",
+ "generated_at": "2026-09-24T01:33:14+08:00",
+ "order": "ORD-0253",
+ "lane": "F 8ccd71d8",
+ "head": "408d851ec2ec7ab02142233c6a497c5037adfda4",
+ "tree": "1791ac84b7fbb9f3c791c337d630b1bb6fc60f71",
+ "rounds_per_mutant": 3,
+ "campaign_valid": true,
+ "control": {
+  "runs": [
+   {
+    "exit_code": 0,
+    "summary": "14 passed, 2 warnings in 4.18s",
+    "seconds": 4.8,
+    "executed": 14,
+    "pytest_counts": {
+     "passed": 14,
+     "failed": 0,
+     "errors": 0,
+     "skipped": 0
+    },
+    "red_nodeids": [],
+    "stderr_tail": ""
+   },
+   {
+    "exit_code": 0,
+    "summary": "14 passed, 2 warnings in 3.68s",
+    "seconds": 4.3,
+    "executed": 14,
+    "pytest_counts": {
+     "passed": 14,
+     "failed": 0,
+     "errors": 0,
+     "skipped": 0
+    },
+    "red_nodeids": [],
+    "stderr_tail": ""
+   },
+   {
+    "exit_code": 0,
+    "summary": "14 passed, 2 warnings in 3.60s",
+    "seconds": 4.1,
+    "executed": 14,
+    "pytest_counts": {
+     "passed": 14,
+     "failed": 0,
+     "errors": 0,
+     "skipped": 0
+    },
+    "red_nodeids": [],
+    "stderr_tail": ""
+   }
+  ],
+  "red_union": [],
+  "second_connection": {
+   "agent_command_claim_rows": 39,
+   "agent_command_unfilled_rows": 12,
+   "journey_missions_total": 21,
+   "db_file": "v1.db"
+  }
+ },
+ "ruling": "仲裁 5798572255：M3 = 具名非阻塞覆盖率余项，只记 SURVIVED/UNPROVEN；闭单证据不得把 NULL→completed 守卫说成已被反突变证明",
+ "receipts": [
+  {
+   "mutation_id": "M5_conflict_does_not_block_the_work",
+   "file": "v1_receipt_M5_conflict_does_not_block_the_work_408d851_r2.json",
+   "bytes": 8913,
+   "blob_sha1": "77a3e9048647586d42b081d98dd8d1aa665fa9a9",
+   "claimed_result": "KILLED",
+   "primary_red_rounds": {
+    "test_11_the_loser_is_stopped_before_impl_and_persists_nothing": 3,
+    "test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409": 3
+   },
+   "red_beyond_control": [
+    "test_11_the_loser_is_stopped_before_impl_and_persists_nothing",
+    "test_14_stale_claim_recovery_fails_closed_and_duplicates_nothing",
+    "test_1_an_unfilled_claim_blocks_the_write_and_is_answered_with_the_existing_409"
+   ]
+  }
+ ]
+}
