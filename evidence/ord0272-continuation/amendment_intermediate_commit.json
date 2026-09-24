@@ -1,0 +1,134 @@
+{
+ "what": "ORD-0272 收尾修正件：中间提交披露（commander 问 1，选 (b)）+ 40 位坐标表（问 2）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-24T17:48:51+08:00",
+ "answer_1_intermediate_commit": {
+  "choice": "(b) 保留两笔，把 44b428d 的存在与它的具名缺陷写进披露（不改历史、不 force-push）",
+  "why_b_not_a": "本窗出口整层断（连 example.com 都 SSL EOF）⇒ (a) 的『压笔重推同名分支』此刻物理上做不到；(b) 同时保留审计链，且不需要重写任何已推坐标",
+  "history": "agent/f-ord272-candidates: c79e2b4f4 → 44b428da8 → aa29612c8；GitHub ref review/ord0272-continuation-f 只在成功那一次被推过，尖 = aa29612c855c10f1584a333cc19526066813b072（44b428da8 是它的祖先）",
+  "named_defect_of_44b428d": {
+   "one_line": "路由签名把 session 从第三位挤到第四位，而演示舞台是**进程内直调**该路由函数",
+   "mechanism": "`Header(default=None)` 只有 FastAPI 解析；进程内直调时该参数是 FieldInfo 哨兵，于是 Stage 走的路由分支拿到 sentinel 而不是 None ⇒ 舞台『推进了但没有方案』",
+   "measured_red_cells": [
+    "tests/test_qoder_current_plan_is_named.py::test_a_journey_without_a_pointer_names_nothing_rather_than_the_first_row",
+    "tests/test_qoder_current_plan_is_named.py::test_selecting_another_candidate_moves_the_answer_not_the_order",
+    "tests/test_qoder_current_plan_is_named.py::test_switching_while_a_plan_is_executing_still_supersedes_it",
+    "tests/test_qoder_current_plan_is_named.py::test_the_current_plan_is_named_and_is_not_the_last_row",
+    "tests/test_qoder_simulation_mode.py::test_reset_leaves_a_bookable_stage_and_start_scenario_makes_it_executable",
+    "tests/test_qoder_simulation_mode.py::test_the_seeded_stage_is_executable_and_both_branches_share_one_key_set"
+   ],
+   "superseded_reading_artifact": "o272_ab.json（第一版候选 44b428d 的整套件 A/B；本轮为准的是 o272_ab_r2.json）",
+   "my_own_gate_was_green": true,
+   "how_found": "整套件 3×3 A/B 的差集（only_in_candidate 6 条），不是新门自己发现的",
+   "fixed_in": "aa29612c855c10f1584a333cc19526066813b072",
+   "fix_shape": "舞台改调生成器本身（`_advance_steps` 不再经过 HTTP 路由）；路由 docstring 写明『路由函数不得被进程内直调』"
+  },
+  "offer_if_he_prefers_squashed": "出口恢复后我可另推一枚**不同 ref 名**的压好分支（例如 review/ord0272-continuation-f-squashed，尖=压好的单笔），这样既不动已被逐字核对过的 aa29612 坐标，你也能 ff-only 落干净的一笔；是否要，等你一句话，我不主动改已推 ref"
+ },
+ "answer_2_coordinate_table": {
+  "how_computed": "40 位 git blob sha1 由本地字节现算（sha1('blob <len>\\0'+bytes)），并与发布时 publisher 的回读值前 16 位对表（4/4 一致）",
+  "evidence_files": [
+   {
+    "repo_path": "evidence/ord0272-continuation/day1_receipt.json",
+    "blob_sha1_40": "e414c710430af052905a444af1d63f9a47a3ec57",
+    "bytes": 21395,
+    "what": "门收据（八格判据 + 八臂摘要 + 三态 A/B 判级 + 未测面）",
+    "landed": true,
+    "proof": "收尾独立 GET 回读 OK（bytes 与本地一致）",
+    "readback_prefix_seen": "e414c710430af052"
+   },
+   {
+    "repo_path": "evidence/ord0272-continuation/mutation_receipt.json",
+    "blob_sha1_40": "fb8d8f91e5a057fcec40629be7a1042b06f58292",
+    "bytes": 48522,
+    "what": "8 臂反突变 campaign（含 claimed_result / carriers_removed / 每轮还原）",
+    "landed": true,
+    "proof": "收尾独立 GET 回读 OK（bytes 与本地一致）",
+    "readback_prefix_seen": "fb8d8f91e5a057fc"
+   },
+   {
+    "repo_path": "evidence/ord0272-continuation/ab_3x3.json",
+    "blob_sha1_40": "5678b6fa7b70d906a5f96e82255173d973255771",
+    "bytes": 16126,
+    "what": "3×3 全量 A/B 原始读数（逐轮红集 + 导出字节等值 + 分母）",
+    "landed": true,
+    "proof": "收尾独立 GET 回读 OK（bytes 与本地一致）",
+    "readback_prefix_seen": "5678b6fa7b70d906"
+   },
+   {
+    "repo_path": "evidence/ord0272-continuation/swimmer_triage.json",
+    "blob_sha1_40": "a304be2ee40be11c9994511ba6f7165d6dfa89e7",
+    "bytes": 13481,
+    "what": "泳者分诊表（4 格 × 2 树 × 5 轮交替聚焦跑的复现率）",
+    "landed": true,
+    "proof": "收尾独立 GET 回读 OK（bytes 与本地一致）",
+    "readback_prefix_seen": "a304be2ee40be11c"
+   },
+   {
+    "repo_path": "evidence/ord0272-continuation/coordinates.json",
+    "blob_sha1_40": "794a7efa05e8b3da19f37e177f0aaf6413258a8d",
+    "bytes": 2914,
+    "what": "具名坐标（ref + ls-remote 回读行 + 四件 blob 外读）",
+    "landed": true,
+    "proof": "发布时 publisher 打印 BYTE-LEVEL MATCH；收尾独立回读被出口断网挡住（不记为未落）",
+    "readback_prefix_seen": ""
+   },
+   {
+    "repo_path": "evidence/ord0272-continuation/coordinates_r2.json",
+    "blob_sha1_40": "5cdb1869bb08ebda2105e1b95ec33c90fc0d4f51",
+    "bytes": 3363,
+    "what": "**修正版**坐标（new path；旧件保留不删）",
+    "landed": false,
+    "proof": "NOT-LANDED：本窗出口整层断（api.github.com/raw/github.com/example.com 全 SSL EOF）",
+    "readback_prefix_seen": ""
+   },
+   {
+    "repo_path": "evidence/ord0272-continuation/ERRATA_coordinates_overwrite.txt",
+    "blob_sha1_40": "5c10e6baeec06a41c952ce630fba0a5f0220227f",
+    "bytes": 1022,
+    "what": "勘误：coordinates.json 被同一路径重写一次（was/now/why）",
+    "landed": false,
+    "proof": "NOT-LANDED：本窗出口整层断（api.github.com/raw/github.com/example.com 全 SSL EOF）",
+    "readback_prefix_seen": ""
+   }
+  ],
+  "code_blobs_at_candidate": {
+   "ref": "review/ord0272-continuation-f",
+   "tip40": "aa29612c855c10f1584a333cc19526066813b072",
+   "tree40": "d96c2974924d19831495f2945117d4221a1b6d62",
+   "files": [
+    {
+     "path": "backend/app/main.py",
+     "blob_sha1_40": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "bytes": 482850
+    },
+    {
+     "path": "backend/app/schemas.py",
+     "blob_sha1_40": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "bytes": 25591
+    },
+    {
+     "path": "backend/tests/test_qoder_ord0272_continuation.py",
+     "blob_sha1_40": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "bytes": 24562
+    },
+    {
+     "path": "contracts/openapi.yaml",
+     "blob_sha1_40": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "bytes": 106971
+    }
+   ]
+  },
+  "diff_vs_parent_numstat": [
+   "241\t36\tbackend/app/main.py",
+   "5\t0\tbackend/app/schemas.py",
+   "457\t0\tbackend/tests/test_qoder_ord0272_continuation.py",
+   "22\t0\tcontracts/openapi.yaml"
+  ],
+  "triple_tables": {
+   "claimed_result_carriers_removed": "evidence/ord0272-continuation/mutation_receipt.json（arms[*].claimed_result / carriers_removed / per_round）",
+   "gate_cells_sha_nodeid_shape": "evidence/ord0272-continuation/day1_receipt.json（cells[*] 三元组）",
+   "ab_triage": "evidence/ord0272-continuation/swimmer_triage.json（cells[*].per_tree + triage 判词）"
+  }
+ }
+}
