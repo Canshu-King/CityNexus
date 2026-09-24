@@ -1,0 +1,227 @@
+{
+  "derived_at": "2026-09-24T08:35:18+0800",
+  "rows": [
+    {
+      "gen": "c79e2b4",
+      "served_bundle_proved": true,
+      "arm": "swallow_journeys",
+      "source_sha": "c79e2b4f4efe",
+      "trip_written_assignments_in_source": 1,
+      "journeys_rows_after": 1,
+      "journeys_rows_live_second_connection": 1,
+      "journey_pks": [
+        "940ac5e0-2d35-40d0-939a-247a77f5faeb"
+      ],
+      "traveler_pks": [
+        "f364fab9-c9fa-4d8d-a139-84c4759d342f"
+      ],
+      "tables_measured": 55,
+      "trip_write_withheld_from_traveller": true,
+      "trip_write_never_reached_server": false,
+      "backend_logged_201_for_journeys": true,
+      "server_answer_bytes": 395,
+      "terminal_rendered_text_present": [
+        "已停止等待，行程还没有创建。"
+      ],
+      "sentence_claims_no_journey_exists": true,
+      "sentence_claims_journey_exists": false,
+      "waiting_copy_still_on_screen_past_deadline": true,
+      "named_attribution_view_appeared": false,
+      "localStorage_journey_id": null,
+      "isolation": {
+        "tempdir_deleted": true,
+        "db_leftovers": [],
+        "ports_released": true
+      },
+      "read_deadline_ms_in_source": 12000,
+      "wall_s": 105.4,
+      "screen_matches_store": false
+    },
+    {
+      "gen": "c79e2b4",
+      "served_bundle_proved": true,
+      "arm": "never",
+      "source_sha": "c79e2b4f4efe",
+      "trip_written_assignments_in_source": 1,
+      "journeys_rows_after": 0,
+      "journeys_rows_live_second_connection": 0,
+      "journey_pks": [],
+      "traveler_pks": [
+        "d3ca6656-6a77-4864-802a-3a194623e893"
+      ],
+      "tables_measured": 55,
+      "trip_write_withheld_from_traveller": false,
+      "trip_write_never_reached_server": true,
+      "backend_logged_201_for_journeys": false,
+      "server_answer_bytes": null,
+      "terminal_rendered_text_present": [
+        "已停止等待，行程还没有创建。"
+      ],
+      "sentence_claims_no_journey_exists": true,
+      "sentence_claims_journey_exists": false,
+      "waiting_copy_still_on_screen_past_deadline": true,
+      "named_attribution_view_appeared": false,
+      "localStorage_journey_id": null,
+      "isolation": {
+        "tempdir_deleted": true,
+        "db_leftovers": [],
+        "ports_released": true
+      },
+      "read_deadline_ms_in_source": 12000,
+      "wall_s": 105.2,
+      "screen_matches_store": true
+    },
+    {
+      "gen": "1f44408",
+      "served_bundle_proved": true,
+      "arm": "swallow_journeys",
+      "source_sha": "1f4440819a9d",
+      "trip_written_assignments_in_source": 1,
+      "journeys_rows_after": 1,
+      "journeys_rows_live_second_connection": 1,
+      "journey_pks": [
+        "9ec1f58d-3a1b-431c-b5e0-c611c6f74228"
+      ],
+      "traveler_pks": [
+        "ffb80ea5-5e64-414a-b0c4-b98a2c2b7e61"
+      ],
+      "tables_measured": 55,
+      "trip_write_withheld_from_traveller": true,
+      "trip_write_never_reached_server": false,
+      "backend_logged_201_for_journeys": true,
+      "server_answer_bytes": 395,
+      "terminal_rendered_text_present": [
+        "已停止等待，行程还没有创建。"
+      ],
+      "sentence_claims_no_journey_exists": true,
+      "sentence_claims_journey_exists": false,
+      "waiting_copy_still_on_screen_past_deadline": true,
+      "named_attribution_view_appeared": false,
+      "localStorage_journey_id": null,
+      "isolation": {
+        "tempdir_deleted": true,
+        "db_leftovers": [],
+        "ports_released": true
+      },
+      "read_deadline_ms_in_source": 12000,
+      "wall_s": 105.4,
+      "screen_matches_store": false
+    },
+    {
+      "gen": "1f44408",
+      "served_bundle_proved": true,
+      "arm": "never",
+      "source_sha": "1f4440819a9d",
+      "trip_written_assignments_in_source": 1,
+      "journeys_rows_after": 0,
+      "journeys_rows_live_second_connection": 0,
+      "journey_pks": [],
+      "traveler_pks": [
+        "76c6444d-1c3c-460a-8bd2-70cceeb43ddc"
+      ],
+      "tables_measured": 55,
+      "trip_write_withheld_from_traveller": false,
+      "trip_write_never_reached_server": true,
+      "backend_logged_201_for_journeys": false,
+      "server_answer_bytes": null,
+      "terminal_rendered_text_present": [
+        "已停止等待，行程还没有创建。"
+      ],
+      "sentence_claims_no_journey_exists": true,
+      "sentence_claims_journey_exists": false,
+      "waiting_copy_still_on_screen_past_deadline": true,
+      "named_attribution_view_appeared": false,
+      "localStorage_journey_id": null,
+      "isolation": {
+        "tempdir_deleted": true,
+        "db_leftovers": [],
+        "ports_released": true
+      },
+      "read_deadline_ms_in_source": 12000,
+      "wall_s": 105.5,
+      "screen_matches_store": true
+    },
+    {
+      "gen": "1f44408",
+      "served_bundle_proved": true,
+      "arm": "answer",
+      "source_sha": "1f4440819a9d",
+      "trip_written_assignments_in_source": 1,
+      "journeys_rows_after": 1,
+      "journeys_rows_live_second_connection": 1,
+      "journey_pks": [
+        "9002e184-a12f-42cd-aab5-42a45a362767"
+      ],
+      "traveler_pks": [
+        "50651873-5aec-48d5-a477-9f586785aa55"
+      ],
+      "tables_measured": 55,
+      "trip_write_withheld_from_traveller": false,
+      "trip_write_never_reached_server": false,
+      "backend_logged_201_for_journeys": true,
+      "server_answer_bytes": null,
+      "terminal_rendered_text_present": [],
+      "sentence_claims_no_journey_exists": false,
+      "sentence_claims_journey_exists": false,
+      "waiting_copy_still_on_screen_past_deadline": false,
+      "named_attribution_view_appeared": false,
+      "localStorage_journey_id": "9002e184-a12f-42cd-aab5-42a45a362767",
+      "isolation": {
+        "tempdir_deleted": false,
+        "db_leftovers": [],
+        "ports_released": true
+      },
+      "read_deadline_ms_in_source": 12000,
+      "wall_s": 105.4,
+      "screen_matches_store": true
+    }
+  ],
+  "verdict_block": {
+    "cell": "ORD-0269 第四格 (A3 write leg silent) - runtime, HJ-P1 代任",
+    "why_red": [
+      "swallow_journeys"
+    ],
+    "false_claim_count": 2,
+    "truthful_control_count": 2,
+    "control_answer_arm_present": true,
+    "write_leg_deadline_covered": false,
+    "per_generation": {
+      "c79e2b4": {
+        "arms": [
+          "swallow_journeys",
+          "never"
+        ],
+        "false_claim_arms": [
+          "swallow_journeys"
+        ],
+        "truthful_control_arms": [
+          "never"
+        ],
+        "terminal_sentences_distinct_across_arms": 1,
+        "deadline_named_state_reached_by_any_arm": false
+      },
+      "1f44408": {
+        "arms": [
+          "swallow_journeys",
+          "never",
+          "answer"
+        ],
+        "false_claim_arms": [
+          "swallow_journeys"
+        ],
+        "truthful_control_arms": [
+          "never"
+        ],
+        "terminal_sentences_distinct_across_arms": 2,
+        "deadline_named_state_reached_by_any_arm": false
+      }
+    },
+    "verdict": "RED"
+  },
+  "derived_from": [
+    "o269_arm_*.json",
+    "o269_walk_*.json",
+    "git show <sha>:frontend/src/app/V8Experience.tsx",
+    "git show <sha>:frontend/src/lib/readDeadline.ts"
+  ]
+}
