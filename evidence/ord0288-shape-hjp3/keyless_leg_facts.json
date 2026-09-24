@@ -1,0 +1,231 @@
+{
+ "journey": "f14f7521-f38b-417b-82d2-07d194db490e",
+ "schema_idempotency_keys_columns": [
+  "key",
+  "operation",
+  "request_hash",
+  "response_status",
+  "response_json",
+  "created_at",
+  "expires_at"
+ ],
+ "baseline": {
+  "journey_missions": 0,
+  "agent_runs": 0,
+  "idempotency_keys": 2,
+  "audit_logs": 1,
+  "plan_versions": 0,
+  "mission_ids": []
+ },
+ "runs": [
+  {
+   "label": "no_key x3",
+   "requests": [
+    {
+     "http": 200,
+     "bytes": 7079,
+     "echoed_idempotency_key_header": null,
+     "trace_id_in_body": null,
+     "mission_id": "bf27b03f-61a2-4832-a781-9baf2a93e239",
+     "response_headers": [
+      "connection",
+      "content-length",
+      "content-type",
+      "date",
+      "server"
+     ]
+    },
+    {
+     "http": 200,
+     "bytes": 7079,
+     "echoed_idempotency_key_header": null,
+     "trace_id_in_body": null,
+     "mission_id": "e3feafae-7468-482e-b09b-7262d657d40e",
+     "response_headers": [
+      "connection",
+      "content-length",
+      "content-type",
+      "date",
+      "server"
+     ]
+    },
+    {
+     "http": 200,
+     "bytes": 7079,
+     "echoed_idempotency_key_header": null,
+     "trace_id_in_body": null,
+     "mission_id": "93417045-3dbe-45c1-9d58-b5e4052ef567",
+     "response_headers": [
+      "connection",
+      "content-length",
+      "content-type",
+      "date",
+      "server"
+     ]
+    }
+   ],
+   "counts_after": {
+    "journey_missions": 3,
+    "agent_runs": 3,
+    "idempotency_keys": 2,
+    "audit_logs": 7,
+    "plan_versions": 0,
+    "mission_ids": [
+     "bf27b03f",
+     "e3feafae",
+     "93417045"
+    ]
+   }
+  },
+  {
+   "label": "with_Idempotency-Key x3",
+   "requests": [
+    {
+     "http": 200,
+     "bytes": 7079,
+     "echoed_idempotency_key_header": null,
+     "trace_id_in_body": null,
+     "mission_id": "b94db26b-d0a9-4108-995f-50acc305ca15",
+     "response_headers": [
+      "connection",
+      "content-length",
+      "content-type",
+      "date",
+      "server"
+     ]
+    },
+    {
+     "http": 200,
+     "bytes": 7079,
+     "echoed_idempotency_key_header": null,
+     "trace_id_in_body": null,
+     "mission_id": "0dcfd8d5-00c7-479e-af93-859017d1d0ab",
+     "response_headers": [
+      "connection",
+      "content-length",
+      "content-type",
+      "date",
+      "server"
+     ]
+    },
+    {
+     "http": 200,
+     "bytes": 7079,
+     "echoed_idempotency_key_header": null,
+     "trace_id_in_body": null,
+     "mission_id": "8bea6f03-6956-4fda-97bf-513608a5dc9c",
+     "response_headers": [
+      "connection",
+      "content-length",
+      "content-type",
+      "date",
+      "server"
+     ]
+    }
+   ],
+   "counts_after": {
+    "journey_missions": 6,
+    "agent_runs": 6,
+    "idempotency_keys": 2,
+    "audit_logs": 13,
+    "plan_versions": 0,
+    "mission_ids": [
+     "bf27b03f",
+     "e3feafae",
+     "93417045",
+     "b94db26b",
+     "0dcfd8d5",
+     "8bea6f03"
+    ]
+   }
+  },
+  {
+   "label": "same key again",
+   "requests": [
+    {
+     "http": 200,
+     "bytes": 7079,
+     "echoed_idempotency_key_header": null,
+     "trace_id_in_body": null,
+     "mission_id": "39b14779-7084-4589-abb3-71e9654cc931",
+     "response_headers": [
+      "connection",
+      "content-length",
+      "content-type",
+      "date",
+      "server"
+     ]
+    }
+   ],
+   "counts_after": {
+    "journey_missions": 7,
+    "agent_runs": 7,
+    "idempotency_keys": 2,
+    "audit_logs": 15,
+    "plan_versions": 0,
+    "mission_ids": [
+     "bf27b03f",
+     "e3feafae",
+     "93417045",
+     "b94db26b",
+     "0dcfd8d5",
+     "8bea6f03",
+     "39b14779"
+    ]
+   }
+  }
+ ],
+ "schema_journey_missions_columns": [
+  "id",
+  "journey_id",
+  "traveler_id",
+  "trigger_event_id",
+  "user_text",
+  "objective_codes_json",
+  "protected_activity_ids_json",
+  "mutable_activity_ids_json",
+  "intent_json",
+  "resolved_intent_json",
+  "allowed_action_classes_json",
+  "unresolved_references_json",
+  "compiler_provider_key",
+  "compiler_model_key",
+  "compiler_confidence",
+  "reasoning_summary",
+  "is_standing",
+  "parent_mission_id",
+  "max_cost_delta_minor",
+  "max_loss_minor",
+  "max_schedule_drift_min",
+  "preferences_json",
+  "requested_autonomy",
+  "status",
+  "created_at",
+  "started_at",
+  "completed_at",
+  "failure_reason"
+ ],
+ "comparison_plans_generate": {
+  "http": 422,
+  "receipt_rows_now": [
+   [
+    "plans.generate:hjp3-0279x-cont-75wn0xts",
+    "plans.generate",
+    422,
+    "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy "
+   ],
+   [
+    "plans.generate:cont:4d70080c-1ea2-4f82-b86e-3d52076b979a",
+    "plans.generate",
+    422,
+    "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy "
+   ],
+   [
+    "plans.generate:hjp3-0288-cmp-b012b0ab",
+    "plans.generate",
+    422,
+    "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy "
+   ]
+  ]
+ }
+}
