@@ -1,0 +1,70 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0272 K8 derived_result (two-cell signing per the commander's scope ruling) + T1 receipts check",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T05:4x+08",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "coordinates_all_verified": {
+  "stale_blob_probe": {"path": "evidence/ord0272-k8-f/stale_blob_probe_r1.json", "blob": "83642644fc9ad35746fbaa1bc0f134738026d394", "bytes": 5366, "sha_ok": true},
+  "hjp3_k8_receipt": {"blob": "fbb154cf9ce598ad1d3a4241b0f2b96181f0037b", "bytes": 6282, "sha_ok": true},
+  "t1_deploy_green": {"path": "evidence/t1-postunion-45b0a5e/deploy_green_r1.json", "blob": "f1748f4cef8b836e366bd179f7464d67d72e32ea", "bytes": 74249, "sha_ok": true},
+  "t1_preflight_preunion": {"blob": "f73844151f6847b8c2a863d52a651d4daae37d4f", "bytes": 33477, "sha_ok": true},
+  "t1_preflight_receipt": {"blob": "dc1cf7150b701e3851a6a5132094a7bce6a5d6b4", "bytes": 34158, "sha_ok": true},
+  "t1_refused_unauth": {"blob": "0c7a6e33df4ed143a0519bfd90d7b907f8cfe215", "bytes": 35832, "sha_ok": true}
+ },
+ "generation_boundary_self_proven": {
+  "run_generation_of_the_K8_readings": "7c806fab58e872060cb5811ff96c770b40dad165 (candidate)",
+  "landed_generation": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "main_py": {"candidate": "ad13f4395e3405ce722ae8660836f3c2aaa29df2", "landed": "416ea4f210e967130710a900cdecd20e7a1b5eca", "different": true},
+  "test_G9_file": {"candidate": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9", "landed": "efa783397e6105ca8f15be9a5701e60e5ace0296", "different": true},
+  "reading": "the K8 readings come from a generation whose main.py AND carrier file differ from the landed one - per Q24 these are candidate-generation facts; saying them on the landed generation requires the cheap rerun (one db, two processes)"
+ },
+ "signed_cells": {
+  "K8_SEAM_OBSERVED_CROSS_PROCESS_FLIP": {
+   "signed": true,
+   "derivation": [
+    "guard_present: A_filled=1, B_filled=0, bytes_survive=true (pids 41920/45800) - the second process could not rewrite the first process's filled receipt",
+    "guard_removed (single-variable mutant: IdempotencyKey.response_json.is_(None) excised, py_compile-passed, main.py blob f7263d6b): A_filled=1, B_filled=1, bytes_survive=false (pids 688/35508) - the rewrite happened",
+    "the flip is the mutant's only job; two processes, one db, row-level evidence via the out-of-band sqlite connection",
+    "second observer: carrier cell test_G9... rc=0 on candidate, rc=1 on mutant (CELL_FLIPS_TOO)"
+   ],
+   "generation_class": "candidate 7c806fab5 (per Q24) - the FLIP is a code_determined fact of the cited blobs; it speaks for the landed generation only after the cheap rerun",
+   "k8_upgrade": "UNPROVEN_AS_KILL -> KILLED (seam face, cross-process, carrier test_G9, single-variable mutant with cited pre/post main.py blobs)"
+  },
+  "K8_USER_FACE_NOT_REACHABLE": {
+   "signed": true,
+   "derivation": "HJ-P3 recorded HTTP_FACE_CANNOT_REACH_K8 as an INDEPENDENT reading: receipts unchanged in both trees at the user-visible face, any_reading_differs_between_trees=false",
+   "scope_ruling": "the seam observation must NOT be folded into 'user face verified' - the seam is a db-row level property reachable only through the dedicated cross-process rig; the phone face has its own coverage debt (separate orders)",
+   "k8_upgrade_constraint": "K8's kill license is SEAM-ONLY; no claim about what a user-visible surface would show"
+  }
+ },
+ "stale_blob_probe_check": {
+  "reading": "NOT_CONTAMINATED_EIGHT_OF_EIGHT_RE_READ_EQUAL is now a re-runnable coordinate (blob 83642644...), not a self-report",
+  "verified": "blob fetched, sha1 recomputed, byte count matches"
+ },
+ "t1_check": {
+  "deploy_green_r1": {
+   "derived": "T1_CLEARED_AS_Q27_1_RULED",
+   "generation": "45b0a5e2 (exact sha in receipt, Q24-correct citation form)",
+   "overall": "GREEN",
+   "B_NEW_INDEX": {"refs_match_new": true, "new_refs_present": true, "old_refs_absent": true, "debt4_branch": "NORMAL_ASSET_CHANGE_DEPLOY", "verdict": "GREEN"},
+   "arms": {"H_prevgen": "GREEN", "F_proxy_tunnel": "GREEN", "G_precache": ["DECLARED_NO_PRECACHE_ARRAY", "GREEN"], "temporal_obligations": "DISCHARGED"},
+   "debt4_worker_identity": {"previous_sha256": "88a7d980b3ffcbd6...", "installed_sha256": "5e8e0f0d7e2a4058...", "worker_changed": true,
+     "reading": "this deploy is a REAL asset change (refs differ) AND the worker moved - the DEBT-4 rule judges it via the NORMAL branch, old_refs_absent=true satisfied, GREEN is correct under both old and new rules"},
+   "gauge_endorsed": "0686670743c079647aa678370aa5481562c4c0a8 (the r4 gauge, unchanged)",
+   "assets_union_added_empty": true,
+   "note_on_added_empty": "added=[] with already_identical=4 is consistent: the new asset had already been placed on the serve disk by the build/union step before the gauge probed; the RETENTION union happened before switch as designed"
+  },
+  "refused_unauthenticated_receipt": {
+   "reading": "the first POST_UNION attempt is BLOCKED with reason naming the 401 probes; nothing switched, old generation stayed live - this is the fail-closed behavior working, and publishing the failed receipt alongside the green one is exactly right"
+  },
+  "conclusion": "T1's POST_UNION face is now run on a REAL frontend generation change (old refs ChOTTCvB -> new CtuiCkKf), the debt Q27 ruled on is genuinely discharged, and 0271-A/0277 may cite deploy_green_r1.json as same-generation evidence with generation=45b0a5e2 written per Q24"
+ },
+ "remaining_for_0269_0273": {
+  "what": "same-generation gate rerun on 45b0a5e2 (same instrument, only variable = tree), producing commander_samegen_* receipts - then and only then do the v6 9/9 kills become landed-generation facts",
+  "note": "frontend subtree of 45b0a5e2 vs e7135108: the commander proved tree-oid equality for frontend/ (d6885e002eb6...), so no re-derivation of the arms was needed for the landing; the rerun is about the RUN generation, not the bytes"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this derivation)"}
+}
