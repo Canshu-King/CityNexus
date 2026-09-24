@@ -1,0 +1,242 @@
+{
+ "at": "2026-09-24T10:40:42+08:00",
+ "order": "ORD-0267 定形重取 · 第 1 步：当前代基线",
+ "lane": "B c01d72a3",
+ "mode": "READ-ONLY; no product byte changed",
+ "generation": {
+  "tip": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+  "subject": "2026-09-24 01:06:23 +0800 fix(frontend): name an answered-but-unusable 200 as its own failure state (ORD-0263)",
+  "contains": "ORD-0263 fifth state (c79e2b4f) + ORD-0268 precache fix",
+  "previous_shaping_was_measured_on": "d2665e25855aeb265329266831983de42321697d",
+  "build": {
+   "outDir": "dist_ord0267b",
+   "precache_line": "precache  8 entries (2436.77 KiB)",
+   "worker_precache_entries": 0,
+   "index_html_rows": []
+  }
+ },
+ "surface": {
+  "preview": 4445,
+  "backend": 8445,
+  "profiles": [
+   "profile_install_b (installs while the site is up)",
+   "profile_cold_b (never visited)"
+  ],
+  "loopback_only": true,
+  "never_touched_or_opened": [
+   ":4781",
+   ":4782",
+   ":8693",
+   "tunnel",
+   "cnx proxy",
+   "_live.db",
+   "_preview.db"
+  ],
+  "demo_reset": 0,
+  "provider_egress": "off"
+ },
+ "up_phase": {
+  "at": "2026-09-24T02:36:15.500Z",
+  "phase": "up",
+  "cases": [
+   {
+    "case": "A_install_while_online",
+    "path": "/v8/hub",
+    "navigation": {
+     "ok": true,
+     "status": 200
+    },
+    "url_after": "http://127.0.0.1:4445/v8/hub",
+    "controlled": true,
+    "controller_script": "/v10-sw.js",
+    "app_mounted": true,
+    "registrations": 1,
+    "cache_names": [
+     "workbox-precache-v2-http://127.0.0.1:4445/"
+    ],
+    "precache_entries": 8,
+    "precache_has_index_html": true,
+    "precache_sample_paths": [
+     "/assets/JourneyMap-tqEgrjRA.js",
+     "/assets/index-ChOTTCvB.js",
+     "/assets/index-I45CQek8.css",
+     "/assets/maplibre-gl-CHrWFrV5.js",
+     "/favicon.svg",
+     "/index.html",
+     "/manifest.webmanifest",
+     "/sw.js"
+    ]
+   },
+   {
+    "case": "A2_second_navigation_while_online",
+    "path": "/v8/hub",
+    "navigation": {
+     "ok": true,
+     "status": 200
+    },
+    "url_after": "http://127.0.0.1:4445/v8/hub",
+    "controlled": true,
+    "controller_script": "/v10-sw.js",
+    "app_mounted": true,
+    "registrations": 1,
+    "cache_names": [
+     "workbox-precache-v2-http://127.0.0.1:4445/"
+    ],
+    "precache_entries": 8,
+    "precache_has_index_html": true,
+    "precache_sample_paths": [
+     "/assets/JourneyMap-tqEgrjRA.js",
+     "/assets/index-ChOTTCvB.js",
+     "/assets/index-I45CQek8.css",
+     "/assets/maplibre-gl-CHrWFrV5.js",
+     "/favicon.svg",
+     "/index.html",
+     "/manifest.webmanifest",
+     "/sw.js"
+    ]
+   }
+  ]
+ },
+ "down_phase": {
+  "at": "2026-09-24T02:36:23.427Z",
+  "phase": "down",
+  "cases": [
+   {
+    "case": "B_returning_client_offline_deeplink",
+    "path": "/v8/hub",
+    "navigation": {
+     "ok": true,
+     "status": 200
+    },
+    "url_after": "http://127.0.0.1:4445/v8/hub",
+    "controlled": true,
+    "controller_script": "/v10-sw.js",
+    "app_mounted": true,
+    "registrations": 1,
+    "cache_names": [
+     "workbox-precache-v2-http://127.0.0.1:4445/"
+    ],
+    "precache_entries": 8,
+    "precache_has_index_html": true,
+    "precache_sample_paths": [
+     "/assets/JourneyMap-tqEgrjRA.js",
+     "/assets/index-ChOTTCvB.js",
+     "/assets/index-I45CQek8.css",
+     "/assets/maplibre-gl-CHrWFrV5.js",
+     "/favicon.svg",
+     "/index.html",
+     "/manifest.webmanifest",
+     "/sw.js"
+    ]
+   },
+   {
+    "case": "B2_returning_client_offline_root",
+    "path": "/",
+    "navigation": {
+     "ok": true,
+     "status": 200
+    },
+    "url_after": "http://127.0.0.1:4445/",
+    "controlled": true,
+    "controller_script": "/v10-sw.js",
+    "app_mounted": true,
+    "registrations": 1,
+    "cache_names": [
+     "workbox-precache-v2-http://127.0.0.1:4445/"
+    ],
+    "precache_entries": 8,
+    "precache_has_index_html": true,
+    "precache_sample_paths": [
+     "/assets/JourneyMap-tqEgrjRA.js",
+     "/assets/index-ChOTTCvB.js",
+     "/assets/index-I45CQek8.css",
+     "/assets/maplibre-gl-CHrWFrV5.js",
+     "/favicon.svg",
+     "/index.html",
+     "/manifest.webmanifest",
+     "/sw.js"
+    ]
+   },
+   {
+    "case": "B3_returning_client_offline_other_deep_link",
+    "path": "/v8/discover",
+    "navigation": {
+     "ok": true,
+     "status": 200
+    },
+    "url_after": "http://127.0.0.1:4445/v8/discover",
+    "controlled": true,
+    "controller_script": "/v10-sw.js",
+    "app_mounted": true,
+    "registrations": 1,
+    "cache_names": [
+     "workbox-precache-v2-http://127.0.0.1:4445/"
+    ],
+    "precache_entries": 8,
+    "precache_has_index_html": true,
+    "precache_sample_paths": [
+     "/assets/JourneyMap-tqEgrjRA.js",
+     "/assets/index-ChOTTCvB.js",
+     "/assets/index-I45CQek8.css",
+     "/assets/maplibre-gl-CHrWFrV5.js",
+     "/favicon.svg",
+     "/index.html",
+     "/manifest.webmanifest",
+     "/sw.js"
+    ]
+   },
+   {
+    "case": "C_never_visited_offline_deeplink",
+    "path": "/v8/hub",
+    "navigation": {
+     "ok": false,
+     "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4445/v8/hub"
+    },
+    "url_after": "chrome-error://chromewebdata/",
+    "controlled": false,
+    "controller_script": null,
+    "app_mounted": false,
+    "registrations": null,
+    "cache_names": null,
+    "precache_entries": null,
+    "precache_has_index_html": null,
+    "precache_sample_paths": null
+   }
+  ]
+ },
+ "correction": {
+  "what_was_wrong": "the driver looked for probe_up.json / probe_down.json and recorded {\"missing\": true}; q267_probe.js appends the phase to --out itself, so the real files were probe_up_up.json / probe_down_down.json",
+  "what_changed": "assembly only - no reading was retaken, no number altered",
+  "instrument_line": "q267b_baseline.py:probe() now receives the file the probe actually writes"
+ },
+ "finding": {
+  "one_line": "On the current generation (tip c79e2b4f) the ORD-0267 symptom survives only for a client that never installed the worker; for a client that did, all three offline navigations are answered 200 by the workbox precache - so the shaping has to be re-cut, not re-argued.",
+  "installed_client_offline": {
+   "cases_measured": 3,
+   "all_answered_200": true,
+   "all_controlled": true,
+   "all_mounted": true,
+   "precache_entries": [
+    8
+   ],
+   "paths": [
+    "/v8/hub",
+    "/",
+    "/v8/discover"
+   ]
+  },
+  "cold_client_offline": {
+   "cases_measured": 1,
+   "all_chrome_error": true,
+   "all_uncontrolled": true,
+   "errors": [
+    "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4445/v8/hub"
+   ],
+   "paths": [
+    "/v8/hub"
+   ]
+  },
+  "superseded_reading": "my 2026-09-23 shaping (evidence/ord0267-laneB-shaping) recorded CacheStorage == [] and chrome-error for the INSTALLED client; that was true on d2665e2 and is no longer true here - ORD-0268 (removing the hand-written v10-shell precache entry) is what changed it",
+  "what_this_leaves_for_0267": "a cold client has no bytes to be served from, so 'render something' is not achievable by the product at that moment; the version of this that the product CAN be responsible for is a first visit whose precache install only partially succeeded - measured next (step 2)"
+ }
+}
