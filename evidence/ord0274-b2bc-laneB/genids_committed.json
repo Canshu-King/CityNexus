@@ -1,0 +1,143 @@
+{
+ "ruler": {
+  "path": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\deploy_bundle_v2_draft_r4.py",
+  "blob_sha": "0686670743c079647aa678370aa5481562c4c0a8",
+  "extracted": [
+   "DECLARED_NO_PRECACHE",
+   "SW_REGISTER_RULE",
+   "_ord0277_generation_verdict",
+   "asset_refs",
+   "strip_js_comments",
+   "sw_register_verdict"
+  ],
+  "bytes_extracted": 7284
+ },
+ "generations": [
+  {
+   "label": "candidate_from_committed",
+   "index_sha256": "1218b56b422a6f052ba1c38dfcca7d638d3453ef0dde635ef2db958da9022f22",
+   "index_body_size": 1200,
+   "index_named_refs": [
+    "/assets/index-BhbHloNw.js",
+    "/assets/index-I45CQek8.css"
+   ],
+   "scripts_observed": [
+    "/assets/index-BhbHloNw.js"
+   ],
+   "per_script": {
+    "/assets/index-BhbHloNw.js": {
+     "source": "candidate_from_committed:/assets/index-BhbHloNw.js",
+     "rule": "every navigator.serviceWorker.register() in the SERVED bundle must declare scope \"/\" and updateViaCache \"none\"",
+     "calls": [
+      {
+       "sw_url": "/v10-sw.js",
+       "scope": "/",
+       "updateViaCache": "none",
+       "opts_present": true,
+       "scope_ok": true,
+       "update_via_cache_ok": true
+      }
+     ],
+     "verdict": "GREEN",
+     "register_mentions_in_code": 1,
+     "register_calls_parsed": 1,
+     "unresolved_registrations": 0,
+     "ref": "/assets/index-BhbHloNw.js",
+     "readable": true,
+     "sha256": "a75c917775a3c7ed11f8807a02915ac32437100439731022c72175a300f3fd96",
+     "body_size": 1245920
+    }
+   },
+   "generation_verdict": "GREEN",
+   "generation_reason": "owner(s) /assets/index-BhbHloNw.js; 0 other script(s) name no registration, which is not a defect",
+   "owner_refs": [
+    "/assets/index-BhbHloNw.js"
+   ],
+   "register_calls_parsed_total": 1,
+   "unresolved_total": 0,
+   "bytes_fingerprint": "8ee390a7321480bf51d56d61be8cd585e1b9161b2e70c34698698a556e2e3ae3",
+   "content_fingerprint": "9b10f8846b928e4fde2fd5bfe339f3e6b98d6885bc7a2850e09de554dad7bc50",
+   "ruler": {
+    "path": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\deploy_bundle_v2_draft_r4.py",
+    "blob_sha": "0686670743c079647aa678370aa5481562c4c0a8",
+    "extracted": [
+     "DECLARED_NO_PRECACHE",
+     "SW_REGISTER_RULE",
+     "_ord0277_generation_verdict",
+     "asset_refs",
+     "strip_js_comments",
+     "sw_register_verdict"
+    ],
+    "bytes_extracted": 7284
+   },
+   "sw_bytes": {
+    "sw_url": "/v10-sw.js",
+    "sha256": "389f16dec713caf9eb03db85c536772180a793853ed08c2cd05b45df6ef5088c",
+    "body_size": 2055
+   }
+  },
+  {
+   "label": "gen2b",
+   "index_sha256": "79d8694e671c3f68c02c123a6412b3a422b36f6aa26ba8fe133bec73ff54dc8c",
+   "index_body_size": 1200,
+   "index_named_refs": [
+    "/assets/index-CEGoPIGb.js",
+    "/assets/index-I45CQek8.css"
+   ],
+   "scripts_observed": [
+    "/assets/index-CEGoPIGb.js"
+   ],
+   "per_script": {
+    "/assets/index-CEGoPIGb.js": {
+     "source": "gen2b:/assets/index-CEGoPIGb.js",
+     "rule": "every navigator.serviceWorker.register() in the SERVED bundle must declare scope \"/\" and updateViaCache \"none\"",
+     "calls": [
+      {
+       "sw_url": "/v10-sw.js",
+       "scope": "/",
+       "updateViaCache": "none",
+       "opts_present": true,
+       "scope_ok": true,
+       "update_via_cache_ok": true
+      }
+     ],
+     "verdict": "GREEN",
+     "register_mentions_in_code": 1,
+     "register_calls_parsed": 1,
+     "unresolved_registrations": 0,
+     "ref": "/assets/index-CEGoPIGb.js",
+     "readable": true,
+     "sha256": "d3025c41c7a960e956336915e2b05b083ca69fd0d9f727ecbbf5f5b5bb9b9c8b",
+     "body_size": 1245961
+    }
+   },
+   "generation_verdict": "GREEN",
+   "generation_reason": "owner(s) /assets/index-CEGoPIGb.js; 0 other script(s) name no registration, which is not a defect",
+   "owner_refs": [
+    "/assets/index-CEGoPIGb.js"
+   ],
+   "register_calls_parsed_total": 1,
+   "unresolved_total": 0,
+   "bytes_fingerprint": "ff7f3b8d79ddd5024e04205de17b90b6611e085d36f8dea7d4d5405249f1d85b",
+   "content_fingerprint": "419d9017dd6182ff08e529fd2c8ed50a06b5c3705b1b8805fceac480531e786f",
+   "ruler": {
+    "path": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\deploy_bundle_v2_draft_r4.py",
+    "blob_sha": "0686670743c079647aa678370aa5481562c4c0a8",
+    "extracted": [
+     "DECLARED_NO_PRECACHE",
+     "SW_REGISTER_RULE",
+     "_ord0277_generation_verdict",
+     "asset_refs",
+     "strip_js_comments",
+     "sw_register_verdict"
+    ],
+    "bytes_extracted": 7284
+   },
+   "sw_bytes": {
+    "sw_url": "/v10-sw.js",
+    "sha256": "9a588a41573f025a0d19492f79b8bd82d6f0834e74c1b1710d100ae9a2923996",
+    "body_size": 2055
+   }
+  }
+ ]
+}
