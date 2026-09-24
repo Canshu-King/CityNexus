@@ -1,0 +1,138 @@
+{
+ "at": 1790286575.6774533,
+ "candidate_tip": "853c54944a0b7ea2c7111867915566171650c564",
+ "branch": "review/0274-b2c-b",
+ "files": [
+  {
+   "name": "ord0274_b2bc_selfproof.json",
+   "blob40": "7c889033d6963e1f40d24a061245db668cb6dc2f",
+   "bytes": 18298
+  },
+  {
+   "name": "ord0274_b2bc_853c549.patch",
+   "blob40": "856e5463ab5ca8abb8d0246fb09186e61106803d",
+   "bytes": 3608
+  },
+  {
+   "name": "ORD_0274_B2BC_READINGS.md",
+   "blob40": "3e38afe9e90c21cd0d3b26b239f16e9d1d50b5b0",
+   "bytes": 6250
+  },
+  {
+   "name": "ord0274_ident_selftest.json",
+   "blob40": "ee29de09b7ea3079aa72d1df2610b0714665ecf8",
+   "bytes": 3789
+  },
+  {
+   "name": "ord0274_b2c_runtime_fixed.json",
+   "blob40": "ccb612d0604c1f8fac9b33b4cf6e2d10031068e8",
+   "bytes": 139655
+  },
+  {
+   "name": "ord0274_b2c_runtime_run2.json",
+   "blob40": "512343124cdaf1dbe987bf1833f26f6c0c842ac4",
+   "bytes": 120490
+  },
+  {
+   "name": "ord0274_b2c_rejudged.json",
+   "blob40": "90de14bc783d99c6aad6decb948880d20aedf0cc",
+   "bytes": 125010
+  },
+  {
+   "name": "ord0274_b2b_runtime_v3.json",
+   "blob40": "fcfdf9f26f4981a2397222eb4fe848410c5eb5e2",
+   "bytes": 18474
+  },
+  {
+   "name": "ord0274_b2b_mutant_shapes.json",
+   "blob40": "782cb8986cf50f060038fa652837b7531a1858a0",
+   "bytes": 5959
+  },
+  {
+   "name": "b2b_candidate_prefix_run.json",
+   "blob40": "a67339d0fbeeec1392b12818ec1f14bcc707c615",
+   "bytes": 117711
+  },
+  {
+   "name": "q274sw_regression_equivalents.json",
+   "blob40": "757ed3f1ac1dbde6df748e3eaf55c74521f744e5",
+   "bytes": 2011
+  },
+  {
+   "name": "q274_gen_identity.py",
+   "blob40": "4e03c9dcb6b8ff0e14112f0600f9355b3556f28e",
+   "bytes": 20942
+  },
+  {
+   "name": "q274_gen_origin.py",
+   "blob40": "94f0f6965b6fb6be55c8cca1bc57614cf2a4450e",
+   "bytes": 7936
+  },
+  {
+   "name": "q274_b2c_probe.js",
+   "blob40": "e9f358c68f15404cf191ac2e69202bf95d99a115",
+   "bytes": 13535
+  },
+  {
+   "name": "q274_b2c_run.py",
+   "blob40": "6361ac46995a801171d632df338d558a83343ab4",
+   "bytes": 14457
+  },
+  {
+   "name": "q274_b2c_rejudge.py",
+   "blob40": "2423be84f13199602d59b6402553bde42f721377",
+   "bytes": 3514
+  },
+  {
+   "name": "q274_b2b_probe.js",
+   "blob40": "29034963bd8ee1591e705eaf195680a7cf53fc79",
+   "bytes": 12611
+  },
+  {
+   "name": "q274_b2b_run.py",
+   "blob40": "cff91da3d042885ecd523e6eeeb5066a9d42cabc",
+   "bytes": 19480
+  },
+  {
+   "name": "q274_build_gen2.py",
+   "blob40": "b1ee3457658037749918b1cf22297094fb155464",
+   "bytes": 5035
+  },
+  {
+   "name": "q274_build_b2c_mutants.py",
+   "blob40": "030b1ea986b9555ad9c27658de705c39c8f96011",
+   "bytes": 5725
+  },
+  {
+   "name": "q274_build_b2b_mutants.py",
+   "blob40": "0fbca85013f2f79507a2c44225f8a736e905ed33",
+   "bytes": 9709
+  },
+  {
+   "name": "q274_regression_run.py",
+   "blob40": "21a816bf17e154380e272877e57c5b5d747783cc",
+   "bytes": 9016
+  },
+  {
+   "name": "q274_transition_probe.js",
+   "blob40": "f67d150127f4abb1d28bd92752865e10c26d14d3",
+   "bytes": 9047
+  },
+  {
+   "name": "q274_inplace_run.py",
+   "blob40": "2dae371c97c73a67e054af02877a0422e9dd7f45",
+   "bytes": 9621
+  },
+  {
+   "name": "ord0274_b2b_runtime_v4.json",
+   "blob40": "a96aa250eca5a43d028c8446fca91348dcc6bfcd",
+   "bytes": 18454
+  },
+  {
+   "name": "genids_committed.json",
+   "blob40": "260e5256e1e7cb4bd82f7e36bf478085e46ee5dd",
+   "bytes": 4556
+  }
+ ],
+ "listed": 26
+}
