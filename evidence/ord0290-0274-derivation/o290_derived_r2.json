@@ -1,0 +1,652 @@
+{
+  "order": "ORD-0290",
+  "revision": "r2",
+  "verifier": "1a986a24 HJ-P1 (B-1: only the verifier's derived closes)",
+  "candidate_tip_read_by_me_first": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+  "how_read": "GET /repos/Canshu-King/CityNexus/git/ref/heads/review/0274-b2c-c -> 200 that sha; commits + compare(45b0a5e2...ef277b2) read the same way",
+  "cells": {
+    "B2a_idle_automatic_convergence": {
+      "claim_under_test": "B2a idle convergence must happen inside ONE navigation (commit 69fd2f85)",
+      "derived_result": "VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL",
+      "why": "idle page installed on 69fd2f85 executed index-BLpFjUjp.js -> index-DimRtCQm.js, converged=True, at 4013 ms, on exactly 1 navigation(s) issued by the instrument; the same instrument on 45b0a5e2 executed index-CtuiCkKf.js -> index-CtuiCkKf.js, converged=False",
+      "controls": [
+        {
+          "arm": "b2a_notrestored",
+          "sha": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+          "discriminating_field": "converged_onto_next",
+          "measured": false,
+          "expected_to_see": "False"
+        }
+      ],
+      "field_lines": [
+        "b2a_restored@69fd2f85 user_navs=1 converged=True cut=False rel_to_settlement_ms=None client_got_reply=False journeys_rows=0",
+        "b2a_notrestored@45b0a5e2 user_navs=1 converged=False cut=False rel_to_settlement_ms=None client_got_reply=False journeys_rows=0"
+      ],
+      "triples": [
+        {
+          "sha": "69fd2f85cab22ad93724195ba132ba4f8618d9a0",
+          "nodeid": "b2a_restored",
+          "shape": "fixed_idle + install=two_navigations + write=answer",
+          "converged": true,
+          "user_navs": 1,
+          "executed": [
+            "index-BLpFjUjp.js",
+            "index-DimRtCQm.js"
+          ]
+        },
+        {
+          "sha": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+          "nodeid": "b2a_notrestored",
+          "shape": "fixed_idle + install=two_navigations + write=answer",
+          "converged": false,
+          "user_navs": 1,
+          "executed": [
+            "index-CtuiCkKf.js",
+            "index-CtuiCkKf.js"
+          ]
+        }
+      ],
+      "same_key_precondition": "same instrument, same origin, same persistent-profile procedure, same 'next' tree (index-DimRtCQm.js); only the installed commit differs",
+      "isolation": {
+        "b2a_restored": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        },
+        "b2a_notrestored": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      },
+      "draft_evidence": {
+        "typed_values_in_before_draft": [
+          "cityName",
+          "arrivalLocation",
+          "departureLocation",
+          "startAt",
+          "endAt",
+          "specialRequirements"
+        ],
+        "mismatched_named_keys": [],
+        "step_before_after": [
+          3,
+          3
+        ],
+        "mutant_selftest_detected": true
+      },
+      "write_evidence": {
+        "positive": {
+          "reload_cut_the_write": false,
+          "converged_after_settlement": false,
+          "client_received_write_reply": false,
+          "journeys_rows_after": 0,
+          "server_logged_201_for_journeys": false
+        },
+        "control": {
+          "reload_cut_the_write": false,
+          "converged_after_settlement": false,
+          "client_received_write_reply": false,
+          "journeys_rows_after": 0,
+          "server_logged_201_for_journeys": false
+        }
+      }
+    },
+    "B2b_dirty_form_preservation": {
+      "claim_under_test": "B2b (commit ef277b2d): a document claimed during its own lifetime must still converge, with the typed draft preserved value by value",
+      "derived_result": "VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL",
+      "why": "document claimed during its own lifetime on ef277b2d executed index-xKIGmoBz.js -> index-DimRtCQm.js with 0 further navigations; wizard step 3 -> 3; named fields differing after the reload = []; 6 of them carry values the instrument typed (['cityName', 'arrivalLocation', 'departureLocation', 'startAt', 'endAt', 'specialRequirements']); mutant self-test flagged=True; the same shape on 45a3d568 executed index-C2DKD_R7.js -> index-C2DKD_R7.js, converged=False",
+      "controls": [
+        {
+          "arm": "b2b_notrestored",
+          "sha": "45a3d56862fcebd7aa50c16b4a80842320a97856",
+          "discriminating_field": "converged_onto_next",
+          "measured": false,
+          "expected_to_see": "False"
+        }
+      ],
+      "field_lines": [
+        "b2b_restored@ef277b2d user_navs=0 converged=True cut=False rel_to_settlement_ms=None client_got_reply=False journeys_rows=0",
+        "b2b_notrestored@45a3d568 user_navs=0 converged=False cut=False rel_to_settlement_ms=None client_got_reply=False journeys_rows=0"
+      ],
+      "triples": [
+        {
+          "sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+          "nodeid": "b2b_restored",
+          "shape": "b2b_claimed + install=single_navigation + write=answer",
+          "converged": true,
+          "user_navs": 0,
+          "executed": [
+            "index-xKIGmoBz.js",
+            "index-DimRtCQm.js"
+          ]
+        },
+        {
+          "sha": "45a3d56862fcebd7aa50c16b4a80842320a97856",
+          "nodeid": "b2b_notrestored",
+          "shape": "b2b_claimed + install=single_navigation + write=answer",
+          "converged": false,
+          "user_navs": 0,
+          "executed": [
+            "index-C2DKD_R7.js",
+            "index-C2DKD_R7.js"
+          ]
+        }
+      ],
+      "same_key_precondition": "same instrument, same origin, same persistent-profile procedure, same 'next' tree (index-DimRtCQm.js); only the installed commit differs",
+      "isolation": {
+        "b2b_restored": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        },
+        "b2b_notrestored": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      },
+      "draft_evidence": {
+        "typed_values_in_before_draft": [
+          "cityName",
+          "arrivalLocation",
+          "departureLocation",
+          "startAt",
+          "endAt",
+          "specialRequirements"
+        ],
+        "mismatched_named_keys": [],
+        "step_before_after": [
+          3,
+          3
+        ],
+        "mutant_selftest_detected": true
+      },
+      "write_evidence": {
+        "positive": {
+          "reload_cut_the_write": false,
+          "converged_after_settlement": false,
+          "client_received_write_reply": false,
+          "journeys_rows_after": 0,
+          "server_logged_201_for_journeys": false
+        },
+        "control": {
+          "reload_cut_the_write": false,
+          "converged_after_settlement": false,
+          "client_received_write_reply": false,
+          "journeys_rows_after": 0,
+          "server_logged_201_for_journeys": false
+        }
+      }
+    },
+    "B2c_inflight_write_safe_point": {
+      "claim_under_test": "B2c safe point (commit 45a3d568): a non-idempotent write in flight must not be cut; converge right after it settles, still no second navigation",
+      "derived_result": "VERIFIED_FIXED_WITH_TWO_DISCRIMINATING_CONTROLS",
+      "why": "handover on 45a3d568 reloaded 22.0 ms RELATIVE to its own write settling (cut=False) and the client received that write=True; on 69fd2f85 (B2a present, safe point absent) the same in-flight write was reloaded -2790.0 ms relative to settlement (cut=True) and the client received it=False - both arms converged, so the discriminator here is the sign of that number, not the convergence; and on 45b0a5e2 (no B2a at all) there was NO product-initiated navigation in the watch window at all (reload epoch=None), converged=False after 0 navigations, while its write still settled normally (client received it=True) - so the convergence the other two arms show is not something every tree gets for free",
+      "controls": [
+        {
+          "arm": "b2c_notrestored",
+          "sha": "69fd2f85cab22ad93724195ba132ba4f8618d9a0",
+          "discriminating_field": "reload_ms_relative_to_settlement",
+          "measured": -2790.0,
+          "expected_to_see": "negative (reloaded before the write settled)"
+        },
+        {
+          "arm": "b2c_noconvergence",
+          "sha": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+          "discriminating_field": "converged_onto_next",
+          "measured": false,
+          "expected_to_see": "False on a tree with no B2a convergence"
+        }
+      ],
+      "field_lines": [
+        "b2c_restored@45a3d568 user_navs=0 converged=True cut=False rel_to_settlement_ms=22.0 client_got_reply=True journeys_rows=1",
+        "b2c_notrestored@69fd2f85 user_navs=0 converged=True cut=True rel_to_settlement_ms=-2790.0 client_got_reply=False journeys_rows=1",
+        "b2c_noconvergence@45b0a5e2 user_navs=0 converged=False cut=False rel_to_settlement_ms=None client_got_reply=True journeys_rows=1"
+      ],
+      "triples": [
+        {
+          "sha": "45a3d56862fcebd7aa50c16b4a80842320a97856",
+          "nodeid": "b2c_restored",
+          "shape": "fixed_inflight + install=two_navigations + write=release_journeys_after_8000",
+          "converged": true,
+          "user_navs": 0,
+          "executed": [
+            "index-C2DKD_R7.js",
+            "index-DimRtCQm.js"
+          ]
+        },
+        {
+          "sha": "69fd2f85cab22ad93724195ba132ba4f8618d9a0",
+          "nodeid": "b2c_notrestored",
+          "shape": "fixed_inflight + install=two_navigations + write=release_journeys_after_8000",
+          "converged": true,
+          "user_navs": 0,
+          "executed": [
+            "index-BLpFjUjp.js",
+            "index-DimRtCQm.js"
+          ]
+        }
+      ],
+      "same_key_precondition": "same instrument, same origin, same persistent-profile procedure, same 'next' tree (index-DimRtCQm.js); only the installed commit differs",
+      "isolation": {
+        "b2c_restored": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        },
+        "b2c_notrestored": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        },
+        "b2c_noconvergence": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      },
+      "draft_evidence": {
+        "typed_values_in_before_draft": [
+          "cityName",
+          "arrivalLocation",
+          "departureLocation",
+          "startAt",
+          "endAt",
+          "specialRequirements"
+        ],
+        "mismatched_named_keys": [],
+        "step_before_after": [
+          3,
+          3
+        ],
+        "mutant_selftest_detected": true
+      },
+      "write_evidence": {
+        "positive": {
+          "reload_cut_the_write": false,
+          "converged_after_settlement": true,
+          "client_received_write_reply": true,
+          "journeys_rows_after": 1,
+          "server_logged_201_for_journeys": true
+        },
+        "control": {
+          "reload_cut_the_write": true,
+          "converged_after_settlement": false,
+          "client_received_write_reply": false,
+          "journeys_rows_after": 1,
+          "server_logged_201_for_journeys": true
+        }
+      }
+    }
+  },
+  "arms": {
+    "b2a_restored": {
+      "arm": "b2a_restored",
+      "installed_commit": "69fd2f85cab22ad93724195ba132ba4f8618d9a0",
+      "next_commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+      "shape": "fixed_idle + install=two_navigations + write=answer",
+      "identity_installed_bundle": "index-BLpFjUjp.js",
+      "identity_next_bundle": "index-DimRtCQm.js",
+      "separable": true,
+      "executed_before": "index-BLpFjUjp.js",
+      "executed_after": "index-DimRtCQm.js",
+      "converged_onto_next": true,
+      "converged_atMs": 4013,
+      "user_navigations_after_transition": 1,
+      "document_replaced": true,
+      "draft_step_before_after": [
+        3,
+        3
+      ],
+      "step_preserved": true,
+      "mismatched_named_keys": [],
+      "typed_values_in_before_draft": [
+        "cityName",
+        "arrivalLocation",
+        "departureLocation",
+        "startAt",
+        "endAt",
+        "specialRequirements"
+      ],
+      "draft_present_after": true,
+      "mutant_selftest_detected": true,
+      "journeys_rows_after": 0,
+      "server_logged_201_for_journeys": false,
+      "origin_held_writes": 0,
+      "origin_released": 0,
+      "client_received_write_reply": false,
+      "convergence_epoch": 1790291098797,
+      "write_settlement_epoch": null,
+      "actual_reload_epoch": 1790291096040,
+      "reload_ms_relative_to_settlement": null,
+      "reload_cut_the_write": false,
+      "converged_after_settlement": false,
+      "arm_invalid_reason": null,
+      "fatal": null,
+      "isolation_ok": true,
+      "tables_measured": 55,
+      "pageErrors": 0
+    },
+    "b2a_notrestored": {
+      "arm": "b2a_notrestored",
+      "installed_commit": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+      "next_commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+      "shape": "fixed_idle + install=two_navigations + write=answer",
+      "identity_installed_bundle": "index-CtuiCkKf.js",
+      "identity_next_bundle": "index-DimRtCQm.js",
+      "separable": true,
+      "executed_before": "index-CtuiCkKf.js",
+      "executed_after": "index-CtuiCkKf.js",
+      "converged_onto_next": false,
+      "converged_atMs": null,
+      "user_navigations_after_transition": 1,
+      "document_replaced": true,
+      "draft_step_before_after": [
+        3,
+        3
+      ],
+      "step_preserved": true,
+      "mismatched_named_keys": [],
+      "typed_values_in_before_draft": [
+        "cityName",
+        "arrivalLocation",
+        "departureLocation",
+        "startAt",
+        "endAt",
+        "specialRequirements"
+      ],
+      "draft_present_after": true,
+      "mutant_selftest_detected": true,
+      "journeys_rows_after": 0,
+      "server_logged_201_for_journeys": false,
+      "origin_held_writes": 0,
+      "origin_released": 0,
+      "client_received_write_reply": false,
+      "convergence_epoch": null,
+      "write_settlement_epoch": null,
+      "actual_reload_epoch": null,
+      "reload_ms_relative_to_settlement": null,
+      "reload_cut_the_write": false,
+      "converged_after_settlement": false,
+      "arm_invalid_reason": null,
+      "fatal": null,
+      "isolation_ok": true,
+      "tables_measured": 55,
+      "pageErrors": 0
+    },
+    "b2b_restored": {
+      "arm": "b2b_restored",
+      "installed_commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+      "next_commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+      "shape": "b2b_claimed + install=single_navigation + write=answer",
+      "identity_installed_bundle": "index-xKIGmoBz.js",
+      "identity_next_bundle": "index-DimRtCQm.js",
+      "separable": true,
+      "executed_before": "index-xKIGmoBz.js",
+      "executed_after": "index-DimRtCQm.js",
+      "converged_onto_next": true,
+      "converged_atMs": 4017,
+      "user_navigations_after_transition": 0,
+      "document_replaced": true,
+      "draft_step_before_after": [
+        3,
+        3
+      ],
+      "step_preserved": true,
+      "mismatched_named_keys": [],
+      "typed_values_in_before_draft": [
+        "cityName",
+        "arrivalLocation",
+        "departureLocation",
+        "startAt",
+        "endAt",
+        "specialRequirements"
+      ],
+      "draft_present_after": true,
+      "mutant_selftest_detected": true,
+      "journeys_rows_after": 0,
+      "server_logged_201_for_journeys": false,
+      "origin_held_writes": 0,
+      "origin_released": 0,
+      "client_received_write_reply": false,
+      "convergence_epoch": 1790291512850,
+      "write_settlement_epoch": null,
+      "actual_reload_epoch": 1790291510016,
+      "reload_ms_relative_to_settlement": null,
+      "reload_cut_the_write": false,
+      "converged_after_settlement": false,
+      "arm_invalid_reason": null,
+      "fatal": null,
+      "isolation_ok": true,
+      "tables_measured": 55,
+      "pageErrors": 0
+    },
+    "b2b_notrestored": {
+      "arm": "b2b_notrestored",
+      "installed_commit": "45a3d56862fcebd7aa50c16b4a80842320a97856",
+      "next_commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+      "shape": "b2b_claimed + install=single_navigation + write=answer",
+      "identity_installed_bundle": "index-C2DKD_R7.js",
+      "identity_next_bundle": "index-DimRtCQm.js",
+      "separable": true,
+      "executed_before": "index-C2DKD_R7.js",
+      "executed_after": "index-C2DKD_R7.js",
+      "converged_onto_next": false,
+      "converged_atMs": null,
+      "user_navigations_after_transition": 0,
+      "document_replaced": false,
+      "draft_step_before_after": [
+        3,
+        3
+      ],
+      "step_preserved": true,
+      "mismatched_named_keys": [],
+      "typed_values_in_before_draft": [
+        "cityName",
+        "arrivalLocation",
+        "departureLocation",
+        "startAt",
+        "endAt",
+        "specialRequirements"
+      ],
+      "draft_present_after": true,
+      "mutant_selftest_detected": true,
+      "journeys_rows_after": 0,
+      "server_logged_201_for_journeys": false,
+      "origin_held_writes": 0,
+      "origin_released": 0,
+      "client_received_write_reply": false,
+      "convergence_epoch": null,
+      "write_settlement_epoch": null,
+      "actual_reload_epoch": null,
+      "reload_ms_relative_to_settlement": null,
+      "reload_cut_the_write": false,
+      "converged_after_settlement": false,
+      "arm_invalid_reason": null,
+      "fatal": null,
+      "isolation_ok": true,
+      "tables_measured": 55,
+      "pageErrors": 0
+    },
+    "b2c_noconvergence": {
+      "arm": "b2c_noconvergence",
+      "installed_commit": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+      "next_commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+      "shape": "fixed_inflight + install=two_navigations + write=release_journeys_after_8000",
+      "identity_installed_bundle": "index-CtuiCkKf.js",
+      "identity_next_bundle": "index-DimRtCQm.js",
+      "separable": true,
+      "executed_before": "index-CtuiCkKf.js",
+      "executed_after": "index-CtuiCkKf.js",
+      "converged_onto_next": false,
+      "converged_atMs": null,
+      "user_navigations_after_transition": 0,
+      "document_replaced": false,
+      "draft_step_before_after": [
+        3,
+        3
+      ],
+      "step_preserved": true,
+      "mismatched_named_keys": [],
+      "typed_values_in_before_draft": [
+        "cityName",
+        "arrivalLocation",
+        "departureLocation",
+        "startAt",
+        "endAt",
+        "specialRequirements"
+      ],
+      "draft_present_after": true,
+      "mutant_selftest_detected": true,
+      "journeys_rows_after": 1,
+      "server_logged_201_for_journeys": true,
+      "origin_held_writes": 1,
+      "origin_released": 1,
+      "client_received_write_reply": true,
+      "convergence_epoch": null,
+      "write_settlement_epoch": 1790293393220.0,
+      "actual_reload_epoch": null,
+      "reload_ms_relative_to_settlement": null,
+      "reload_cut_the_write": false,
+      "converged_after_settlement": false,
+      "arm_invalid_reason": null,
+      "fatal": null,
+      "isolation_ok": true,
+      "tables_measured": 55,
+      "pageErrors": 0
+    },
+    "b2c_restored": {
+      "arm": "b2c_restored",
+      "installed_commit": "45a3d56862fcebd7aa50c16b4a80842320a97856",
+      "next_commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+      "shape": "fixed_inflight + install=two_navigations + write=release_journeys_after_8000",
+      "identity_installed_bundle": "index-C2DKD_R7.js",
+      "identity_next_bundle": "index-DimRtCQm.js",
+      "separable": true,
+      "executed_before": "index-C2DKD_R7.js",
+      "executed_after": "index-DimRtCQm.js",
+      "converged_onto_next": true,
+      "converged_atMs": 4015,
+      "user_navigations_after_transition": 0,
+      "document_replaced": true,
+      "draft_step_before_after": [
+        3,
+        3
+      ],
+      "step_preserved": true,
+      "mismatched_named_keys": [],
+      "typed_values_in_before_draft": [
+        "cityName",
+        "arrivalLocation",
+        "departureLocation",
+        "startAt",
+        "endAt",
+        "specialRequirements"
+      ],
+      "draft_present_after": true,
+      "mutant_selftest_detected": true,
+      "journeys_rows_after": 1,
+      "server_logged_201_for_journeys": true,
+      "origin_held_writes": 1,
+      "origin_released": 1,
+      "client_received_write_reply": true,
+      "convergence_epoch": 1790291314651,
+      "write_settlement_epoch": 1790291314604.0,
+      "actual_reload_epoch": 1790291314626,
+      "reload_ms_relative_to_settlement": 22.0,
+      "reload_cut_the_write": false,
+      "converged_after_settlement": true,
+      "arm_invalid_reason": null,
+      "fatal": null,
+      "isolation_ok": true,
+      "tables_measured": 55,
+      "pageErrors": 0
+    },
+    "b2c_notrestored": {
+      "arm": "b2c_notrestored",
+      "installed_commit": "69fd2f85cab22ad93724195ba132ba4f8618d9a0",
+      "next_commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+      "shape": "fixed_inflight + install=two_navigations + write=release_journeys_after_8000",
+      "identity_installed_bundle": "index-BLpFjUjp.js",
+      "identity_next_bundle": "index-DimRtCQm.js",
+      "separable": true,
+      "executed_before": "index-BLpFjUjp.js",
+      "executed_after": "index-DimRtCQm.js",
+      "converged_onto_next": true,
+      "converged_atMs": 4013,
+      "user_navigations_after_transition": 0,
+      "document_replaced": true,
+      "draft_step_before_after": [
+        3,
+        3
+      ],
+      "step_preserved": true,
+      "mismatched_named_keys": [],
+      "typed_values_in_before_draft": [
+        "cityName",
+        "arrivalLocation",
+        "departureLocation",
+        "startAt",
+        "endAt",
+        "specialRequirements"
+      ],
+      "draft_present_after": true,
+      "mutant_selftest_detected": true,
+      "journeys_rows_after": 1,
+      "server_logged_201_for_journeys": true,
+      "origin_held_writes": 1,
+      "origin_released": 1,
+      "client_received_write_reply": false,
+      "convergence_epoch": 1790291421664,
+      "write_settlement_epoch": 1790291421619.0,
+      "actual_reload_epoch": 1790291418829,
+      "reload_ms_relative_to_settlement": -2790.0,
+      "reload_cut_the_write": true,
+      "converged_after_settlement": false,
+      "arm_invalid_reason": null,
+      "fatal": null,
+      "isolation_ok": true,
+      "tables_measured": 55,
+      "pageErrors": 0
+    }
+  },
+  "not_run": {
+    "B3_offline_after_convergence": "fixture built (5 distinct trees); arm not run yet",
+    "A_never_reconnected": "needs its own arm + the partial-deploy teeth control; not run yet"
+  },
+  "selftest_duplicate_why": {
+    "cells": 3,
+    "distinct_why_strings": 3,
+    "duplicates": [],
+    "result": "PASS"
+  }
+}
