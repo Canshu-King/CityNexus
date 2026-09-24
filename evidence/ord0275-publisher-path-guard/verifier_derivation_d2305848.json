@@ -1,0 +1,291 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0275",
+ "verifier": "lane E d2305848",
+ "artifacts": {
+  "receipt": {
+   "repo_path": "evidence/ord0275-publisher-path-guard/ord0275_selftest.json",
+   "blob_sha1_40": "6cfbf34642058c08b809d7e1a9337e335d200683",
+   "bytes": 2802
+  },
+  "instrument": {
+   "repo_path": "live_checks/test_ord0275_publisher_guard.py",
+   "blob_sha1_40": "9e0d4b96a47b0bc48d040bd88f25e982a2855fab",
+   "bytes": 10140
+  },
+  "publisher_new": {
+   "repo_path": "live_checks/publish_evidence.py",
+   "blob_sha1_40": "d13d5e77b54cd00e8eaa1e8c2b582c7b12806686",
+   "bytes": 12076
+  },
+  "publisher_old": {
+   "repo_path": "evidence/ord0275-publisher-path-guard/publish_evidence_f04dd226c969e0d6.py",
+   "blob_sha1_40": "f04dd226c969e0d6cfb51f205621092caf950301",
+   "bytes": 11077
+  },
+  "local_blob_sha1_of_my_copies": {
+   "publisher": "d13d5e77b54cd00e8eaa1e8c2b582c7b12806686",
+   "instrument": "9e0d4b96a47b0bc48d040bd88f25e982a2855fab"
+  }
+ },
+ "independent_rerun": {
+  "command": "python test_ord0275_publisher_guard.py (cwd=my verified copy dir, python 3.10.11)",
+  "derived_result": "ALL_GREEN",
+  "rc": 0,
+  "my_receipt_blob_sha1": "6cfbf34642058c08b809d7e1a9337e335d200683",
+  "byte_identical_to_published_receipt": true
+ },
+ "out_of_band_zero_put": {
+  "method": "contents API GET on commander/control for every negative-control target and its parent",
+  "readings": {
+   "evidence/ord0275": 404,
+   "evidence/ord0275/_live_read.json": 404,
+   "evidence/ord0275-publisher-path-guard/receipt.json": 404,
+   "evidence/_live_read.json": 404,
+   "_live.db-witness.json": 404,
+   "evidence/ord0275-publisher-path-guard": "dir with exactly 2 entries (receipt + old publisher)"
+  },
+  "verdict": "ZERO_PUT_CONFIRMED_FROM_BRANCH_STATE"
+ },
+ "rederived_cells": {
+  "guard_verdicts_match_receipt": true,
+  "mismatches": {},
+  "computed": {
+   "LOCAL_NAME_DIRTY_refused": true,
+   "REPO_PATH_DIRTY_refused": true,
+   "CLEAN_CLEAN_allowed": true,
+   "REGRESSION_traversal_refused": true,
+   "REGRESSION_bad_prefix_refused": true,
+   "REGRESSION_control_tool_gate": true,
+   "REGRESSION_sqlite_magic_refused": true,
+   "REGRESSION_secret_content_refused": true,
+   "REFUSAL_NAMES_RULE_NO_SECRET": true
+  }
+ },
+ "mutation_arms": {
+  "m1_source_changed": true,
+  "m2_source_changed": true,
+  "m1_m2_readings_identical": true,
+  "m1_vs_base": {
+   "local_dirty": [
+    true,
+    true
+   ],
+   "repo_dirty": [
+    true,
+    false
+   ],
+   "clean_clean": [
+    false,
+    false
+   ],
+   "traversal": [
+    true,
+    true
+   ],
+   "bad_prefix": [
+    true,
+    true
+   ],
+   "sqlite": [
+    true,
+    true
+   ],
+   "secret": [
+    true,
+    true
+   ]
+  },
+  "m2_vs_base": {
+   "local_dirty": [
+    true,
+    true
+   ],
+   "repo_dirty": [
+    true,
+    false
+   ],
+   "clean_clean": [
+    false,
+    false
+   ],
+   "traversal": [
+    true,
+    true
+   ],
+   "bad_prefix": [
+    true,
+    true
+   ],
+   "sqlite": [
+    true,
+    true
+   ],
+   "secret": [
+    true,
+    true
+   ]
+  },
+  "m2_replacement_iterable_is_empty": true,
+  "receipt_reports_identical_arms": true
+ },
+ "missing_arm_M3": {
+  "source_changed": true,
+  "readings": {
+   "local_dirty": [
+    true,
+    false
+   ],
+   "repo_dirty": [
+    true,
+    false
+   ],
+   "clean_clean": [
+    false,
+    false
+   ],
+   "traversal": [
+    true,
+    true
+   ],
+   "bad_prefix": [
+    true,
+    true
+   ],
+   "sqlite": [
+    true,
+    true
+   ],
+   "secret": [
+    true,
+    true
+   ]
+  },
+  "local_scope_flips": true,
+  "repo_scope_flips": true,
+  "note": "M3 is the only arm that can show _name_refusal is load-bearing for BOTH scopes; the published instrument has no such arm, so cell5_single_helper_both_scopes is backed by a predicate ('both scopes refuse') rather than by an arm."
+ },
+ "cell6_predicate": {
+  "assignments_found_in_instrument": [
+   "True",
+   "\"BYTE-LEVEL MATCH\" not in out and \"PUT -> 201\" not in out"
+  ],
+  "predicate_actually_used_for_the_claim": "\"BYTE-LEVEL MATCH\" not in out and \"PUT -> 201\" not in out",
+  "lax_twin_note": "the same key is set to literal True in the branch where the CLI is skipped to avoid writing the branch -- so cell6 is satisfied when a case never ran at all",
+  "against_a_real_put_attempt_line": {
+   "stdout": "GET x.json: 404 existing_sha=None\nPUT -> 403 commit=\n",
+   "predicate_says_no_upload_claim": true
+  },
+  "against_201": {
+   "stdout": "PUT -> 201 commit=abc\n",
+   "predicate_says_no_upload_claim": false
+  },
+  "publisher_put_print_format": [
+   "print(f\"PUT -> {st} commit={commit}\")"
+  ],
+  "finding": "cell6 is a stdout substring test for the exact literal 'PUT -> 201'; a PUT that was attempted and answered 4xx leaves it green. The durable 0-PUT reading therefore does not come from this cell -- it comes from the out-of-band branch read-back."
+ },
+ "repo_path_false_positive_surface": {
+  "measured": {
+   "ord0271-a-gauge-fixtures": false,
+   "ord0275-publisher-path-guard": false,
+   "ord0263-s5fix-laneB": false,
+   "s5fix_read_live.json": true,
+   "credential-literals-gate": true,
+   "review_credential_literals.json": true,
+   "secret_scan_report.json": true,
+   "token_budget_ledger.json": true,
+   "ord0262-narrow-f": false,
+   "publisher_safedefault_selftest.py": false,
+   "gauge_selftest_0923_110732.json": false,
+   "deploy_bundle.py": false,
+   "publish_evidence.py": false,
+   "ord0271-acceptance": false,
+   "cookie_jar_audit.json": true,
+   "api_key_rotation_note.md": true,
+   "password_policy_review.json": true
+  },
+  "refused": [
+   "api_key_rotation_note.md",
+   "cookie_jar_audit.json",
+   "credential-literals-gate",
+   "password_policy_review.json",
+   "review_credential_literals.json",
+   "s5fix_read_live.json",
+   "secret_scan_report.json",
+   "token_budget_ledger.json"
+  ],
+  "note": "the repo_path guard refuses any component that merely *mentions* a denylisted word, so descriptive evidence names are now refused. The branch review/credential-literals-gate exists in this very repo -- a publish under evidence/credential-literals-gate/ would be refused. The old guard had this property for LOCAL names only."
+ },
+ "verdict": {
+  "core_fix": "VERIFIED",
+  "core_fix_basis": "repo_path now goes through the single `_name_refusal` helper (source-level: 3 call sites, one helper, shown in the old->new diff); dirty repo_path refused in-process and at the CLI with rc=5; CLEAN/CLEAN still allowed; the six pre-existing boundaries still refuse; and zero PUT is confirmed OUT OF BAND from branch state (5 targets 404, parent dir has exactly the 2 published entries).",
+  "receipt_is_reproducible": true,
+  "receipt_reproduced_byte_identical": true,
+  "cells_re_derived": 9,
+  "cell_mismatches": {},
+  "independent_kills": 1,
+  "corrections": [
+   {
+    "id": "C1-M1-eq-M2",
+    "severity": "arm accounting",
+    "what": "M1_repo_path_guard_removed and M2_local_only_regression are observationally the SAME mutant: M1 deletes the loop, M2 rewrites its iterable to `([] if False else [])`; in both cases the loop body never runs. Measured: the full 7-input battery is identical for the two mutants, and the receipt itself reports identical `mutation_arms` readings.",
+    "consequence": "the two killer rows are ONE piece of evidence reported twice, not two. The claim that they are `各自` (each) independent is not supported.",
+    "also": "M2's label names a mutation that was not performed -- nothing in it is 'local only'. Neither arm touches `_name_refusal`'s scope argument."
+   },
+   {
+    "id": "C2-cell5-not-load-bearing",
+    "severity": "cell name vs measurement",
+    "what": "`cell5_single_helper_both_scopes` = LOCAL_NAME_DIRTY_refused and REPO_PATH_DIRTY_refused, i.e. 'both scopes refuse'. That predicate is equally satisfied by two duplicated denylists.",
+    "consequence": "the cell does not measure 'single helper'. The arm that WOULD make it load-bearing is missing; I built it (M3: `_name_refusal` returns None) and it flips BOTH scopes (local_dirty true->false, repo_dirty true->false) while every REGRESSION_* stays refused -- so the implementation is a single helper, but the published receipt contains no evidence of that.",
+    "suggested_arm": "M3_shared_helper_mutated, expectation: both scope cells go green, regressions held."
+   },
+   {
+    "id": "C3-cell6-evidence-misattributed",
+    "severity": "receipt evidence class",
+    "what": "the file docstring states 'call() is stubbed and the PUT invocation count is asserted mechanically'. Neither is true: there is no stub and no count. The predicate actually used is a stdout substring test for the exact literal 'PUT -> 201', and the SAME key is set to literal True in the branch where the CLI is skipped -- so cell6 is satisfied when a case never ran at all.",
+    "measured": "feeding the predicate a stdout that really contains a PUT attempt with a non-201 status (`PUT -> 403 commit=`) returns True, i.e. it reads as 'no upload'. For `PUT -> 201` it correctly returns False, so the predicate is not dead -- it is just narrower than its name.",
+    "consequence": "the 'zero PUT' claim is TRUE (I proved it out of band) but this cell does not prove it. Keep the claim; re-attribute the evidence, or make the instrument count invocations (e.g. stub `call` and assert its PUT count == 0)."
+   },
+   {
+    "id": "C4-no-cli-positive-control",
+    "severity": "missing control",
+    "what": "cell3 (CLEAN/CLEAN) is in-process only (`mod.guard(...) is None`). No CLI-level positive control exists, so the CLI's rc=5 cells are equally satisfied by a CLI that refuses everything and never uploads.",
+    "consequence": "this is precisely the failure the instrument's own docstring warns about ('the safest publisher is one that uploads nothing'), applied one layer down.",
+    "suggested_arm": "one CLEAN/CLEAN CLI run against a throw-away target on a scratch branch, asserting the PUT really happened -- or, cheaper, a stubbed `call` that records the PUT."
+   }
+  ],
+  "registered_side_effect_ruling": {
+   "asked": "paths already published that contain a forbidden fragment (e.g. `evidence/ord0263-s5fix-laneB/s5fix_read_live.json`) can no longer be re-published at the same path. Defect or not?",
+   "ruling": "NOT a defect of ORD-0275. It is a correctly-registered consequence.",
+   "why": [
+    "the guard is fail-closed and fires before any network call: in the new publisher, guard() returns before the initial GET, so even the 'already identical - nothing to push' early return is unreachable for a forbidden path;",
+    "'the path already exists on the branch' is an UNSAFE exemption predicate: this tool is not the only writer to commander/control (the GitHub API and UI are), so path existence is partly controlled by whoever can write -- an existence-based exemption converts into a bypass;",
+    "the chosen handling (publish under a new name, leave the old path untouched) is the right one and already matches the fragment notice's own advice."
+   ],
+   "if_an_exemption_is_wanted": "it needs its own order, its own cell and its own counter-control; it must not be keyed on path existence. Scope-limited out of 0275 is correct.",
+   "false_positive_surface_measured": {
+    "note": "broader than the one case that was registered: any component that merely MENTIONS a denylisted word is refused. Measured on 17 components drawn from real paths in this project -> 8 refused.",
+    "refused_examples": [
+     "api_key_rotation_note.md",
+     "cookie_jar_audit.json",
+     "credential-literals-gate",
+     "password_policy_review.json",
+     "review_credential_literals.json",
+     "s5fix_read_live.json",
+     "secret_scan_report.json",
+     "token_budget_ledger.json"
+    ],
+    "notable": "`credential-literals-gate` is the name of a branch that exists in this very repo, so a publish under evidence/credential-literals-gate/ would now be refused."
+   }
+  },
+  "scope_kept": [
+   "只读 GitHub + 本机复跑仪器（按构造零 PUT）",
+   "未起服务",
+   "未碰 :4781/:4782/:8693/隧道/_live.db/_preview.db",
+   "demo/reset 0 次",
+   "凭据 0 打印",
+   "已发布证据路径 0 覆盖"
+  ]
+ }
+}
