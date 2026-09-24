@@ -103,10 +103,13 @@ ARMS = [
         CELL1,
         SPEC_269,
         V8,
-        CLEAR_LINE,
-        "    clearPendingContinuation(data.journey.id);",
-        "clause 5's forbidden shape: the record is erased whatever the answer was, so an interrupted "
-        "round becomes unfindable again; cell 1 owns that clause",
+        "    setResumeOutcome(null);\n    const outcome = await continuePendingPlan({",
+        "    setResumeOutcome(null);\n    clearPendingContinuation(data.journey.id);\n"
+        "    const outcome = await continuePendingPlan({",
+        "clause 5's forbidden shape -- the record is erased AHEAD of the send, so a run interrupted "
+        "after this press is unfindable again. (v1 measured this arm with a different edit: moving "
+        "the post-await clear out of its condition still erased after the send, which is a different "
+        "defect and cell 1 correctly ignored it. That mutant was wrong, not the gate.)",
     ),
     (
         "K278_SILENCE_ON_NON_ACCEPT",
