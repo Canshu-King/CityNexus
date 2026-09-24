@@ -1,0 +1,179 @@
+{
+  "run": "camp2",
+  "campaign_exit": {
+    "exit": 0,
+    "wall_s": 203.8
+  },
+  "surface": {
+    "backend_openapi_paths": 139,
+    "origin_root_status": 200,
+    "served_entry": "index-Cpy_jhEg.js"
+  },
+  "identities": {
+    "old_bundle": "index-Cpy_jhEg.js",
+    "new_bundle": "index-ChOTTCvB.js",
+    "old_shell_md5": "213aa276841d50a8a61cf75dd7408a7f",
+    "new_shell_md5": "54b3cca9be55e076da6be6911d7a8984",
+    "new_worker_sha256_full": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a",
+    "worker_seen_on_disk_after_the_swap": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a",
+    "worker_matches_new_generation_on_disk": true
+  },
+  "precondition_returning_client_on_old_gen": {
+    "executed_scripts": [
+      "/assets/index-Cpy_jhEg.js"
+    ],
+    "controller": true,
+    "precache_shell_generation": {
+      "label": "old",
+      "shared_revisions_that_do_not_identify_a_generation": [
+        "1eebbb6edab96b95a31dc1f94d1a6cda",
+        "339a4892318ff75bf4dccf7d426c193c",
+        "d726b6647c68d06bafae8784f74043e3"
+      ]
+    },
+    "navigations_used_to_establish_this": 2,
+    "matches_old_generation": true
+  },
+  "generation_flip_timeline": {
+    "precache_shell_at_P0_old_page": "old",
+    "precache_shell_at_P1_offline": "old",
+    "precache_shell_at_P1_back_online": "old",
+    "precache_shell_at_B1_after_one_navigation": "new",
+    "executed_bundle_at_B1_after_one_navigation": [
+      "/assets/index-Cpy_jhEg.js"
+    ]
+  },
+  "forbidden_moves": {
+    "unregister_called_by_instrument": 0,
+    "cache_clear_called_by_instrument": 0,
+    "source_audit": {
+      "file": "o274_arms.cjs",
+      "code_lines_scanned": 243,
+      "forbidden_calls_found": [],
+      "clean": true
+    }
+  },
+  "isolation": {
+    "rundir_deleted": true,
+    "db_leftovers": [],
+    "profile_leftovers": false,
+    "ports_final": {
+      "backend": [],
+      "origin": []
+    }
+  },
+  "instrument_page_errors": [],
+  "update_notice_search": {
+    "pattern": "更新|新版本|刷新|重新加载|升级|重启",
+    "samples_scanned": 21,
+    "hits": []
+  },
+  "cells": {
+    "B1_reconnect_first_navigation": {
+      "navigations_issued_in_this_cell": 1,
+      "executed_bundle_first_sample": [
+        "/assets/index-Cpy_jhEg.js"
+      ],
+      "executed_bundle_final_sample": [
+        "/assets/index-Cpy_jhEg.js"
+      ],
+      "worker_lifecycle_events_recorded": [
+        "DOMContentLoaded",
+        "controllerchange",
+        "document-start",
+        "load",
+        "state:active",
+        "state:installing",
+        "sw-ready",
+        "updatefound"
+      ],
+      "registrations_final": [
+        {
+          "scope": "/",
+          "installing": null,
+          "waiting": null,
+          "active": "/v10-sw.js"
+        }
+      ],
+      "new_worker_already_active_while_page_still_old": true,
+      "precache_shell_generation_at_final_sample": {
+        "label": "new",
+        "shared_revisions_that_do_not_identify_a_generation": [
+          "1eebbb6edab96b95a31dc1f94d1a6cda",
+          "339a4892318ff75bf4dccf7d426c193c",
+          "d726b6647c68d06bafae8784f74043e3"
+        ]
+      },
+      "page_usable_and_not_chrome_error": true,
+      "update_or_reload_notice_rendered": false,
+      "verdict": "MET"
+    },
+    "B2_automatic_convergence": {
+      "watch_window_samples": 12,
+      "watch_window_ms": 60157,
+      "executed_bundles_seen_without_any_help": [
+        "/assets/index-Cpy_jhEg.js"
+      ],
+      "new_bundle_executed_without_any_second_action": false,
+      "docNonce_distinct_values_in_watch_window": [
+        "5nt53ma81u"
+      ],
+      "auto_reload_or_equivalent_detected": false,
+      "precache_shell_generation_before_extra_action_from_B1_final": {
+        "label": "new",
+        "shared_revisions_that_do_not_identify_a_generation": [
+          "1eebbb6edab96b95a31dc1f94d1a6cda",
+          "339a4892318ff75bf4dccf7d426c193c",
+          "d726b6647c68d06bafae8784f74043e3"
+        ]
+      },
+      "b2_probes_carried_no_cache_listing": true,
+      "manual_navigations_needed_to_reach_new_bundle": 2,
+      "user_actions_the_contract_allows": 1,
+      "executed_bundle_after_the_extra_manual_navigation": [
+        "/assets/index-ChOTTCvB.js"
+      ],
+      "verdict": "RED_A_SECOND_MANUAL_NAVIGATION_WAS_REQUIRED"
+    },
+    "B3_offline_after_convergence": {
+      "chrome_error": false,
+      "href": "http://127.0.0.1:8941/v8/hub",
+      "rendered_leaf_chars": 112,
+      "executed_scripts": [
+        "/assets/index-ChOTTCvB.js"
+      ],
+      "executed_css": [
+        "/assets/index-I45CQek8.css"
+      ],
+      "old_bundle_present_in_executed_document": false,
+      "fell_back_to_previous_generation": false,
+      "precache_entry_count": 8,
+      "precache_shell_generation": {
+        "label": "new",
+        "shared_revisions_that_do_not_identify_a_generation": [
+          "1eebbb6edab96b95a31dc1f94d1a6cda",
+          "339a4892318ff75bf4dccf7d426c193c",
+          "d726b6647c68d06bafae8784f74043e3"
+        ]
+      },
+      "registrations": [
+        {
+          "scope": "/",
+          "installing": null,
+          "waiting": null,
+          "active": "/v10-sw.js"
+        }
+      ],
+      "in_app_navigation_while_offline": "NOT_MEASURED: this one-shot DB holds 0 journeys, so the offline page renders the create-a-trip wizard and there is no bottom nav to tap",
+      "verdict": "MET"
+    }
+  },
+  "summary": {
+    "B1": "MET",
+    "B2": "RED_A_SECOND_MANUAL_NAVIGATION_WAS_REQUIRED",
+    "B3": "MET",
+    "cells_red_releasing_B_write_right": [
+      "B2"
+    ]
+  }
+}
