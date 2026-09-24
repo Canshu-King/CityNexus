@@ -1,0 +1,10 @@
+selftest SELFTEST_GREEN | arms run 9 passed 9 | failed: []
+  arm S1_distinct_whys cells 3 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok
+  arm S2_identical_why_three_cells cells 3 got Q38_GATE_RED_HARD ['DUPLICATE_WHY_LITERALS', 'WHY_CARRIES_NO_EVIDENCE_TOKEN'] | want Q38_GATE_RED_HARD ['DUPLICATE_WHY_LITERALS'] -> ok
+  arm S3_crosspointed_whys cells 2 got Q38_GATE_SOFT_FINDINGS ['WHY_NOT_FROM_OWN_READINGS'] | want Q38_GATE_SOFT_FINDINGS ['WHY_NOT_FROM_OWN_READINGS'] -> ok
+  arm S4_shared_plus_fake_derived_from cells 2 got Q38_GATE_RED_HARD ['DUPLICATE_WHY_LITERALS', 'FAKE_OR_INEFFECTIVE_DERIVED_FROM'] | want Q38_GATE_RED_HARD ['DUPLICATE_WHY_LITERALS', 'FAKE_OR_INEFFECTIVE_DERIVED_FROM'] -> ok
+  arm S5_shared_but_each_cites_its_own_unique cells 2 got Q38_GATE_GREEN ['SHARED_WHY_EXEMPTED_BY_DERIVED_FROM'] | want Q38_GATE_GREEN [] -> ok
+  arm S6_single_cell cells 0 got NOT_ASSESSABLE [] | want NOT_ASSESSABLE [] -> ok
+  arm S7_short_verdict_no_why cells 2 got Q38_GATE_RED_HARD ['MISSING_WHY'] | want Q38_GATE_RED_HARD ['MISSING_WHY'] -> ok
+  arm S8_sibling_cells_no_container cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok
+  arm S9_paired_map_entry cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok
