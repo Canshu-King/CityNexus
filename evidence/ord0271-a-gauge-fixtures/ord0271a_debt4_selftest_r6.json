@@ -1,0 +1,104 @@
+{
+ "schema": "CNX_INSTRUMENT_SELFPTEST_V1",
+ "order": "ORD-0271-A",
+ "cell": "DEBT-4 worker-only deploy must not demand an unsatisfiable old_refs_absent",
+ "instrument_under_change": "live_checks/deploy_bundle_v2_draft.py",
+ "draft_blob_sha1": "0686670743c079647aa678370aa5481562c4c0a8",
+ "in_service_gauge_blob_sha1": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+ "in_service_gauge_untouched": true,
+ "draft_differs_from_in_service_gauge": true,
+ "surface_dependency": {
+  "serve_root": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "surface_source": "DEFAULT_WRITER_MACHINE",
+  "served_worker_sha256_now": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a",
+  "byte_identical_rerun_holds_when": "same instrument blob + same draft/in-service gauge blobs + same serve_root; a different surface MUST produce a different served_worker_sha256_now, and that is the reason field to read before anyone says 'the chain is broken'"
+ },
+ "published_paths": {
+  "instrument_local_name": "test_ord0271a_debt4.py",
+  "note": "the local artifact name carries no revision suffix by design (writing a publish number back into the instrument is how the published-vs-run drift started tonight); the published path is recorded here and in the ledger instead"
+ },
+ "samples": {
+  "A": {
+   "blob": "b9be3a5cb683fb14dce44477e8ed8ae07e1f0658",
+   "old_ref": "/assets/index-Cpy_jhEg.js",
+   "new_refs": [
+    "/assets/index-Cpy_jhEg.js",
+    "/assets/index-I45CQek8.css"
+   ],
+   "prev_worker_sha256": "3a826b12db054f2f2afac2bedcd4233157a2fe756685fba6031056b3d09f19f9",
+   "installed_worker_sha256": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a",
+   "shipped_verdict_overall": "RED",
+   "shipped_B_fields": {
+    "status": 200,
+    "refs_match_new": false,
+    "new_refs_present": true,
+    "old_refs_absent": false,
+    "old_ref_tested": "/assets/index-Cpy_jhEg.js",
+    "verdict": "RED"
+   }
+  },
+  "B": {
+   "blob": "dccc1ee1359154dc54de79e5571a30c8d4cc818a",
+   "old_ref": "/assets/index-Cpy_jhEg.js",
+   "new_refs": [
+    "/assets/index-ChOTTCvB.js",
+    "/assets/index-I45CQek8.css"
+   ],
+   "prev_worker_sha256": "e63d7421eda340937df28bd0cae35624ab413607f9819e69b519b7d7ede69dbd",
+   "installed_worker_sha256": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a",
+   "shipped_verdict_overall": "GREEN",
+   "shipped_B_fields": {
+    "status": 200,
+    "refs_match_new": true,
+    "new_refs_present": true,
+    "old_refs_absent": true,
+    "old_ref_tested": "/assets/index-Cpy_jhEg.js",
+    "verdict": "GREEN"
+   }
+  }
+ },
+ "derived_decisions": {
+  "A": {
+   "old_refs_absent": null,
+   "refs_ok": true,
+   "branch": "GREEN_WORKER_ONLY_DEPLOY",
+   "worker_changed": true,
+   "worker_only": true
+  },
+  "B": {
+   "old_refs_absent": true,
+   "refs_ok": true,
+   "branch": "NORMAL_ASSET_CHANGE_DEPLOY",
+   "worker_changed": true,
+   "worker_only": false
+  },
+  "counter_worker_not_moved": {
+   "refs_ok": false,
+   "branch": "RED_WORKER_ONLY_DEPLOY_WITHOUT_WORKER_CHANGE"
+  },
+  "counter_stale_ref": {
+   "old_refs_absent": false,
+   "refs_ok": false,
+   "branch": "NORMAL_ASSET_CHANGE_DEPLOY"
+  },
+  "counter_missing_observation": {
+   "refs_ok": false,
+   "branch": "RED_WORKER_ONLY_DEPLOY_WITHOUT_WORKER_CHANGE"
+  }
+ },
+ "checks": {
+  "sampleA_is_recognised_as_worker_only": true,
+  "sampleA_absent_is_not_applicable_not_true": true,
+  "sampleA_turns_GREEN_WORKER_ONLY_DEPLOY": true,
+  "sampleA_would_have_been_RED_under_the_old_rule": true,
+  "sampleB_not_worker_only": true,
+  "sampleB_original_semantics_hold": true,
+  "countercontrol_worker_not_moved_is_RED": true,
+  "countercontrol_mixed_generation_is_not_worker_only_and_is_RED": true,
+  "countercontrol_empty_previous_observation_is_not_worker_only": true,
+  "failclosed_missing_worker_observation_is_RED": true,
+  "live_worker_observation_present": true
+ },
+ "derived_result": "ALL_GREEN",
+ "note": "The shipped gauge's own B-field for sample A is quoted above: old_refs_absent=false with overall=RED. This test never runs a deployment and never writes the shared branch."
+}
