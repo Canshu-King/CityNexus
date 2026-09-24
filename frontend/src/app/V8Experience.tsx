@@ -22,8 +22,13 @@ import {
   type Attribution,
   type OriginProbeFact,
 } from "../lib/failureAttribution";
-import { fetchWithReadDeadline } from "../lib/readDeadline";
+import { fetchWithReadDeadline, READ_DEADLINE_MS } from "../lib/readDeadline";
 import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
+import {
+  clearPendingContinuation,
+  continuePendingPlan,
+  type ContinuationOutcome,
+} from "../api/journeyContinuation";
 import { useElapsedSeconds } from "../lib/waitClock";
 import { readChoice, setThemeChoice, type ThemeChoice } from "../theme";
 import { MobilitySheet } from "../features/mobility/MobilitySheet";
@@ -2179,6 +2184,37 @@ function Hub({
   const { state: continuation, feedReadFailed: continuationFeedFailed } = useContinuationState(
     data.journey.id,
   );
+  /* ORD-0278 -- the one deliberate continue press.  `resumingRef` is synchronous and ahead of every
+     await because a rendered `disabled` cannot be the re-entry guard (two clicks in one tick both
+     arrive while it still reads enabled).  The transport key is minted INSIDE that guard, so the
+     refused second click consumes no key and nothing is stored between presses: the key identifies
+     this intent, it is not a session token or a cooldown. */
+  const resumingRef = useRef(false);
+  const [resuming, setResuming] = useState(false);
+  const [resumeOutcome, setResumeOutcome] = useState<ContinuationOutcome | null>(null);
+  const resumePendingPlan = async (missionId: string) => {
+    if (resumingRef.current) return;
+    resumingRef.current = true;
+    setResuming(true);
+    setResumeOutcome(null);
+    const outcome = await continuePendingPlan({
+      journeyId: data.journey.id,
+      missionId,
+      idempotencyKey: crypto.randomUUID(),
+      /* The hub's own read deadline -- the same single clock ORD-0263 established, not a fourth
+         waiting constant.  A resume that could not answer inside it says so instead of hanging. */
+      deadlineMs: READ_DEADLINE_MS,
+    });
+    /* The marker leaves only after the server accepted this leg; a refusal, a timeout or a dead
+       transport keeps it, because "I could not finish" is still the truth the traveller deserves.
+       Clause 5 in the other direction: nothing here clears the marker before a request goes out. */
+    if (outcome.kind === "accepted") clearPendingContinuation(data.journey.id);
+    setResumeOutcome(outcome);
+    setResuming(false);
+    resumingRef.current = false;
+    if (outcome.kind === "accepted" && outcome.planIds.length > 0) onStageChanged();
+  };
+
   const stayWaited = useElapsedSeconds(
     staySearch === "searching" ? waitStartedAt : null,
   );
@@ -2470,18 +2506,49 @@ function Hub({
                 type="button"
                 className="v8-primary"
                 data-testid="continuation-resume"
-                onClick={() => {
-                  /* MANUAL_RESUME: the sheet opens on the plan flow; it does NOT auto-send.  The
-                     marker deliberately stays until a visible outcome exists (clause 5). */
-                  const sheetButton = document.querySelector(
-                    '[data-testid="hub-plan-with-ai"]',
-                  ) as HTMLButtonElement | null;
-                  sheetButton?.click();
-                }}
+                disabled={resuming}
+                onClick={() => void resumePendingPlan(continuation.missionId)}
               >
-                {t("hub.continuationResume")}
+                {resuming ? t("hub.continuationResuming") : t("hub.continuationResume")}
               </button>
             </section>
+          )}
+          {/* The outcome stands OUTSIDE the card on purpose: an accepted resume clears the marker,
+              which unmounts the card, and a sentence living inside it would vanish with it -- a
+              successful continue would then be the one outcome the screen says nothing about. */}
+          {resumeOutcome && (
+            <p
+              className="today-continuation-resume-outcome"
+              data-testid="continuation-resume-outcome"
+              data-outcome={resumeOutcome.kind}
+            >
+              {resumeOutcome.kind === "accepted"
+                ? resumeOutcome.planIds.length > 0
+                  ? t("hub.continuationResumed")
+                  : t("hub.continuationResumedEmpty")
+                : null}
+              {resumeOutcome.kind === "refused" && (
+                <>
+                  {t("hub.continuationResumeRefused")}
+                  {resumeOutcome.serverReason ? (
+                    <span data-testid="continuation-resume-server-reason">
+                      {`${zh ? "服务器给出的原因：" : "Server's own reason: "}`}
+                      {resumeOutcome.serverReason}
+                    </span>
+                  ) : (
+                    /* The label the traveller must not be lied to about: an HTTP status this screen
+                       wrote itself is not "the server's reason". */
+                    <span data-testid="continuation-resume-no-server-reason">
+                      {zh
+                        ? "服务器没有给出原因文字（这条是本机说的，不是服务器说的）。"
+                        : "The server sent no reason text -- this sentence is ours, not the server's."}
+                    </span>
+                  )}
+                </>
+              )}
+              {resumeOutcome.kind === "deadline" && t("hub.continuationResumeDeadline")}
+              {resumeOutcome.kind === "transport" && t("hub.continuationResumeTransport")}
+            </p>
           )}
           {continuation.kind === "unconfirmable" && (
             /* ORD-0269 cell 3: a marker exists but the feed cannot confirm the mission (read failed

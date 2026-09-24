@@ -12,7 +12,9 @@
  *           never treated as a mission association;
  *   clause 5 the marker must NOT be cleared before a request goes out (sampled mid-flight).
  *
- * The resume gate is MANUAL_RESUME / NOT-EXACTLY-ONCE until ORD-0272 lands.
+ * The resume gate is MANUAL_RESUME / NOT-EXACTLY-ONCE: one press re-issues the second leg with the
+ * recorded mission (ORD-0278), but nothing here proves exactly-once delivery, and that boundary is
+ * named rather than claimed away.
  */
 import { expect, test, type Page } from "@playwright/test";
 import { writeFileSync } from "node:fs";
@@ -151,23 +153,50 @@ test("ord0269-cell1-reveals-and-names-its-boundary — 腿1 之后重进必须�
   await expect(gate).toBeEnabled();
   expect((await gate.innerText()).trim(), node("ord0269-cell1", "the resume gate has no label")).toBe(RESUME_LABEL);
 
-  // Clause 5 teeth: opening the sheet (the MANUAL_RESUME path) must not clear the marker before any
-  // request goes out -- sample the storage right after the click.
+  /* Clause 5, measured against what the press does NOW.  ORD-0278 turned this gate into "re-issue
+     the second leg carrying the recorded mission", so asserting that the sheet opens is no longer
+     the contract -- and the clause this node owns cannot be judged by a click that sends nothing.
+     The stub answers after a delay, which gives a real in-flight window; what must hold inside it
+     is that the marker is still there.  The outcome sentence and the after-acceptance clearing are
+     judged by ORD-0278's own gate, not duplicated here. */
+  let leg2Started = 0;
+  await page.route("**/api/v1/journeys/*/plans/generate", async (route) => {
+    leg2Started += 1;
+    await new Promise((resolve) => setTimeout(resolve, 6_000));
+    await route.fulfill({ status: 201, contentType: "application/json", body: JSON.stringify([]) });
+  });
   await gate.click();
-  await expect(page.getByTestId("plan-ai-sheet")).toBeVisible({ timeout: 15_000 });
-  const markerAfterClick = await page.evaluate(
+  await expect
+    .poll(() => leg2Started, {
+      timeout: 20_000,
+      message: node("ord0269-cell1", "pressing the resume gate sent no second-leg request at all"),
+    })
+    .toBeGreaterThan(0);
+  const markerDuringFlight = await page.evaluate(
     (jid) => localStorage.getItem(`citynexus.v8.continuation.${jid}`),
     journeyId,
   );
   expect(
-    markerAfterClick,
-    node("ord0269-cell1", "the marker was cleared on click -- clause 5 forbids clearing before a request"),
+    markerDuringFlight,
+    node(
+      "ord0269-cell1",
+      "the marker was gone while the second leg was still in flight -- clause 5 forbids clearing ahead of a visible outcome",
+    ),
   ).not.toBeNull();
 
   writeFileSync(
     evidencePath("ord0269-cell1-reading.json"),
     JSON.stringify(
-      { generatedBy: "e345b9d6", node: "ord0269-cell1", journeyId, marker, feedRequests, heading },
+      {
+        generatedBy: "e345b9d6",
+        node: "ord0269-cell1",
+        journeyId,
+        marker,
+        feedRequests,
+        heading,
+        leg2StartedDuringFlight: leg2Started,
+        markerBytesDuringFlight: String(markerDuringFlight ?? "").length,
+      },
       null,
       1,
     ),

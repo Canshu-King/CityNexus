@@ -100,3 +100,70 @@ export function classifyContinuation(
   );
   return { kind: "pending", missionId: marker.missionId, ...(runCompleted ? { runObserved: true } : {}) } as ContinuationState;
 }
+
+/** What a continuation attempt can come back as.  Four named shapes; none of them is "silence". */
+export type ContinuationOutcome =
+  | { kind: "accepted"; planIds: string[] }
+  | { kind: "refused"; httpStatus: number; serverReason: string | null }
+  | { kind: "deadline"; waitedMs: number }
+  | { kind: "transport"; detail: string };
+
+/**
+ * ORD-0278 -- re-issue the SECOND leg for a mission the marker already names.
+ *
+ * Field names are not guesses: `mission_id` is a declared field of the landed
+ * `GeneratePlansRequest` (backend/app/schemas.py, ORD-0272), and `Idempotency-Key` as a header is
+ * the replan route's own precedent (backend/app/main.py).  The two keys stay two keys on purpose:
+ * the header answers "is this the same send", the body answers "whose batch is this", and merging
+ * them makes "same mission, different request" indistinguishable from "same request, resent".
+ *
+ * The marker is NOT cleared here -- that is the caller's decision and only after the traveller can
+ * see an outcome (ORD-0269 clause 5).  `deadlineMs` is supplied by the caller so a resume cannot
+ * open a second unbounded wait.
+ */
+export async function continuePendingPlan(args: {
+  journeyId: string;
+  missionId: string;
+  idempotencyKey: string;
+  deadlineMs: number;
+  fetchImpl?: typeof fetch;
+}): Promise<ContinuationOutcome> {
+  const send = args.fetchImpl ?? fetch;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort("deadline"), args.deadlineMs);
+  try {
+    const response = await send(`/api/v1/journeys/${args.journeyId}/plans/generate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Idempotency-Key": args.idempotencyKey,
+      },
+      // candidate_count matches the sheet's own first run so a resumed round is not a different
+      // request shape pretending to be the same intent.
+      body: JSON.stringify({ candidate_count: 3, mission_id: args.missionId }),
+      signal: controller.signal,
+    });
+    const payload = (await response.json().catch(() => null)) as unknown;
+    if (!response.ok) {
+      const detail = payload as { detail?: unknown; error?: { message?: unknown }; reason_code?: unknown } | null;
+      const serverReason =
+        (typeof detail?.error?.message === "string" ? detail.error.message : null) ??
+        (typeof detail?.detail === "string" ? detail.detail : null) ??
+        null;
+      return { kind: "refused", httpStatus: response.status, serverReason };
+    }
+    const planIds = (Array.isArray(payload) ? payload : [])
+      .map((item: { id?: unknown }) => (typeof item?.id === "string" ? item.id : ""))
+      .filter((id: string) => id.length > 0);
+    return { kind: "accepted", planIds };
+  } catch (cause) {
+    if (cause instanceof Error && cause.name === "AbortError") {
+      return { kind: "deadline", waitedMs: args.deadlineMs };
+    }
+    return { kind: "transport", detail: cause instanceof Error ? cause.name : "Unknown" };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
