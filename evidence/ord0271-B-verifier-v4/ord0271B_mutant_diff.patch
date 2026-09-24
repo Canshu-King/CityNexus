@@ -1,0 +1,13 @@
+diff --git a/frontend/src/lib/failureAttribution.ts b/frontend/src/lib/failureAttribution.ts
+index 5956e88..ba175e2 100644
+--- a/frontend/src/lib/failureAttribution.ts
++++ b/frontend/src/lib/failureAttribution.ts
+@@ -156,7 +156,7 @@ export function classifyReadFailure(error: unknown, server?: ServerErrorShape |
+      has to precede the TypeError branch, because that is what a discarded 200 body turns into two
+      frames later -- and `error instanceof TypeError` is the one place allowed to say 网络不可用. */
+   if (isOriginResponseUnusable(error)) {
+-    return make("ORIGIN_INVALID_RESPONSE", "HTTP_RESPONSE", error.status, "RUNTIME", true,
++    return make("UNKNOWN_FAILURE", "HTTP_RESPONSE", error.status, "RUNTIME", true,
+       "retry", "failure.originInvalidResponse", null, error.content_type ?? `empty ${error.body_kind} body`);
+   }
+ 
