@@ -1,0 +1,55 @@
+From 3093eea773c79fa00744fe72d1f2c43b4d0bd75e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=BB=93=E9=BC=A0=E7=8E=8B?= <yjianbin419@gmail.com>
+Date: Thu, 24 Sep 2026 02:05:18 +0800
+Subject: [PATCH 2/2] test(ord0262): the busy-door assertion stops pinning the
+ number it was meant to follow
+
+The resident door test asserted retry_after_ms == 500 on both generation doors, which is the
+disagreement this order exists to remove - the A/B caught it as the one name only the candidate
+turned red. It now compares against the ladder's own floor and additionally requires the two
+doors to agree with each other, a property the literal could not express.
+---
+ .../tests/test_qoder_stay_generation_operations.py | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/backend/tests/test_qoder_stay_generation_operations.py b/backend/tests/test_qoder_stay_generation_operations.py
+index 0a12ee4..1a08f04 100644
+--- a/backend/tests/test_qoder_stay_generation_operations.py
++++ b/backend/tests/test_qoder_stay_generation_operations.py
+@@ -682,12 +682,22 @@ def test_a_busy_store_answers_a_named_retry_on_both_doors(monkeypatch) -> None:
+     """
+ 
+     from app import main as main_module
++    from datetime import datetime, timezone
++    from types import SimpleNamespace
++
++    from app.stay_generation_operations import QUEUED
++    from app.stay_generation_operations import retry_after_ms as ladder_floor
+ 
+     def _busy(*_args, **_kwargs):
+         raise main_module.GenerationStoreBusy("the store is busy")
+ 
+     monkeypatch.setattr(main_module, "submit_operation", _busy)
+     journey_id = _journey()
++    # 阶梯对「刚排队的非终态作业」给的下限：门里留自带副本的调用，不写死数字——
++    # 这一枚断言从前钉的是 `== 500`，那正是"同一件忙承诺两套等待"的旧形制（01:1x §③ 已裁收口进阶梯）。
++    floor = ladder_floor(
++        SimpleNamespace(status=QUEUED, queued_at=datetime.now(timezone.utc).isoformat()))
++    seen: dict[str, object] = {}
+     for url in (
+         f"/api/v1/journeys/{journey_id}/stay-generations",
+         f"/api/v1/journeys/{journey_id}/stay-options/generate",
+@@ -697,7 +707,9 @@ def test_a_busy_store_answers_a_named_retry_on_both_doors(monkeypatch) -> None:
+         body = response.json()["error"]
+         assert body["code"] == "GENERATION_STORE_BUSY", body
+         assert body["message_key"] == "generation.store_busy", body
+-        assert body["details"]["retry_after_ms"] == 500, body
++        assert body["details"]["retry_after_ms"] == floor, (url, floor, body["details"])
++        seen[url] = body["details"]["retry_after_ms"]
++    assert len(set(seen.values())) == 1, f"两个门给出的等值必须一致，实际 {seen}"
+ 
+ 
+ def test_the_acceptance_retry_is_bounded_and_then_names_the_condition() -> None:
+-- 
+2.45.1.windows.1
+
