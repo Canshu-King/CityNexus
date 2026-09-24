@@ -1,0 +1,69 @@
+{
+  "order": "ORD-0290",
+  "purpose": "build staircase for the five-arm derivation",
+  "trees": {
+    "baseline": {
+      "commit": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+      "build_exit": 0,
+      "dist": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\baseline\\frontend\\dist",
+      "bundle": "index-CtuiCkKf.js",
+      "bundle_bytes": 1248629,
+      "bundle_sha256_16": "08e5de2c560ce5a8",
+      "shell_md5": "03ebc9cb17a7770813254a2eb3016325",
+      "worker_sha256_16": "5e8e0f0d7e2a4058",
+      "precache_entries": 8,
+      "index_html_sha256_16": "656893c82f5931a8"
+    },
+    "s1_b2a": {
+      "commit": "69fd2f85cab22ad93724195ba132ba4f8618d9a0",
+      "build_exit": 0,
+      "dist": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\s1_b2a\\frontend\\dist",
+      "bundle": "index-BLpFjUjp.js",
+      "bundle_bytes": 1248612,
+      "bundle_sha256_16": "1592fa4b70cea4b3",
+      "shell_md5": "261edc5f9117f73e505dfe659fdf3411",
+      "worker_sha256_16": "7015c3bfe107ec95",
+      "precache_entries": 8,
+      "index_html_sha256_16": "cef5c4b3e8eb117d"
+    },
+    "s2_b2c": {
+      "commit": "45a3d56862fcebd7aa50c16b4a80842320a97856",
+      "build_exit": 0,
+      "dist": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\s2_b2c\\frontend\\dist",
+      "bundle": "index-C2DKD_R7.js",
+      "bundle_bytes": 1249312,
+      "bundle_sha256_16": "185ed95b17bf0236",
+      "shell_md5": "30ab2aca8c9b741d7ec3fb78293db837",
+      "worker_sha256_16": "c948da14ccfe003b",
+      "precache_entries": 8,
+      "index_html_sha256_16": "068e9c45808f4074"
+    },
+    "s3_b2b": {
+      "commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+      "build_exit": 0,
+      "dist": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\s3_b2b\\frontend\\dist",
+      "bundle": "index-xKIGmoBz.js",
+      "bundle_bytes": 1249346,
+      "bundle_sha256_16": "ba6654a08dd6f98e",
+      "shell_md5": "3f2914575322ce0b952eeab2809716c5",
+      "worker_sha256_16": "6a2eee7091c7cdc0",
+      "precache_entries": 8,
+      "index_html_sha256_16": "7aa9afc77bcb1e43"
+    }
+  },
+  "next_generation_edit": {
+    "commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+    "build_exit": 0,
+    "dist": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+    "bundle": "index-DimRtCQm.js",
+    "bundle_bytes": 1249395,
+    "bundle_sha256_16": "c4fabe4c79e77ef7",
+    "shell_md5": "fda5c1b827695979d9d7ca46ee745f34",
+    "worker_sha256_16": "79b41ed2fffe8e5f",
+    "marker_line_added": "window.__cnxNextGenerationMarker = \"ORD-0290-next\";",
+    "main_tsx_blob_before_edit": "63a08b2344c72526758d639dd655bd55b5ef3047",
+    "main_tsx_blob_after_edit": "c08a13c729c2c0074aa3a20c9c757a27e895407a",
+    "marker_survives_in_bundle": true
+  },
+  "pairwise_distinct": true
+}
