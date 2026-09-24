@@ -1,0 +1,188 @@
+{
+ "built_as": "swap TARGET generations (the restoring code is the incoming one)",
+ "candidate_client": {
+  "dir": "dist_0274sw",
+  "content_fingerprint": "c6529965ed89d214d1b03c9d051292897a72e94e7d95ea3c2b2a09d58e80179d"
+ },
+ "arms": {
+  "dist_0274b2b_steponly_t": {
+   "tag": "b2b-steponly",
+   "declared": {
+    "write_drops_draft": true,
+    "write_keeps_pair": false,
+    "read_ternary_intact": true
+   },
+   "shipped": {
+    "bundle": "index-ANxDgNzp.js",
+    "bundle_sha256": "06eacbe22711cf6d8c47c44baeb80e01ee4c96eeb30ee2b00f45a55a6bb76848",
+    "draft_writes_found": 1,
+    "write_keeps_pair": false,
+    "write_drops_draft": true,
+    "read_ternary_intact": true,
+    "advertises_tag": true
+   },
+   "shape_mismatch": {},
+   "generation": {
+    "label": "dist_0274b2b_steponly_t",
+    "index_sha256": "5bf542848d1ea54349945af3a14c23d3e413cf604be0fb48dbae8daa295382a1",
+    "index_body_size": 1200,
+    "index_named_refs": [
+     "/assets/index-ANxDgNzp.js",
+     "/assets/index-I45CQek8.css"
+    ],
+    "scripts_observed": [
+     "/assets/index-ANxDgNzp.js"
+    ],
+    "per_script": {
+     "/assets/index-ANxDgNzp.js": {
+      "source": "dist_0274b2b_steponly_t:/assets/index-ANxDgNzp.js",
+      "rule": "every navigator.serviceWorker.register() in the SERVED bundle must declare scope \"/\" and updateViaCache \"none\"",
+      "calls": [
+       {
+        "sw_url": "/v10-sw.js",
+        "scope": "/",
+        "updateViaCache": "none",
+        "opts_present": true,
+        "scope_ok": true,
+        "update_via_cache_ok": true
+       }
+      ],
+      "verdict": "GREEN",
+      "register_mentions_in_code": 1,
+      "register_calls_parsed": 1,
+      "unresolved_registrations": 0,
+      "ref": "/assets/index-ANxDgNzp.js",
+      "readable": true,
+      "sha256": "06eacbe22711cf6d8c47c44baeb80e01ee4c96eeb30ee2b00f45a55a6bb76848",
+      "body_size": 1249377
+     }
+    },
+    "generation_verdict": "GREEN",
+    "generation_reason": "owner(s) /assets/index-ANxDgNzp.js; 0 other script(s) name no registration, which is not a defect",
+    "owner_refs": [
+     "/assets/index-ANxDgNzp.js"
+    ],
+    "register_calls_parsed_total": 1,
+    "unresolved_total": 0,
+    "bytes_fingerprint": "4e100db1d6cb49eaa9f8ccb3f7be6ea877eff57ad8743e9f8426332b575c14cb",
+    "content_fingerprint": "833d1f69fb7d43929ec5d65c798bd93272c3a2a5b792e4cdef6247cdeccbb8bc",
+    "ruler": {
+     "path": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\deploy_bundle_v2_draft_r4.py",
+     "blob_sha": "0686670743c079647aa678370aa5481562c4c0a8",
+     "extracted": [
+      "DECLARED_NO_PRECACHE",
+      "SW_REGISTER_RULE",
+      "_ord0277_generation_verdict",
+      "asset_refs",
+      "precache_urls",
+      "strip_js_comments",
+      "sw_register_verdict"
+     ],
+     "bytes_extracted": 8574
+    },
+    "sw_bytes": {
+     "sw_url": "/v10-sw.js",
+     "sha256": "313a192d6530c4ba5bdaf74cd5040c8394f1760984e35d6ef581621d4574b99e",
+     "body_size": 2055
+    }
+   },
+   "build": {
+    "rc": 0,
+    "tail": [
+     "  dist_0274b2b_steponly_t/v10-sw.js",
+     "  dist_0274b2b_steponly_t/workbox-6923124b.js"
+    ]
+   }
+  },
+  "dist_0274b2b_stepforced_t": {
+   "tag": "b2b-stepforced",
+   "declared": {
+    "write_drops_draft": false,
+    "write_keeps_pair": true,
+    "read_ternary_intact": false
+   },
+   "shipped": {
+    "bundle": "index-BAv32_dV.js",
+    "bundle_sha256": "c46dcefc3e7fc47b7543f7c11e737985235e03704270791d81dd63f4fb995f0a",
+    "draft_writes_found": 1,
+    "write_keeps_pair": true,
+    "write_drops_draft": false,
+    "read_ternary_intact": false,
+    "advertises_tag": true
+   },
+   "shape_mismatch": {},
+   "generation": {
+    "label": "dist_0274b2b_stepforced_t",
+    "index_sha256": "e4a4aad7cce20f3724dbbd637e7022fddbc974c113b0fb9c5ca00d988263649c",
+    "index_body_size": 1200,
+    "index_named_refs": [
+     "/assets/index-BAv32_dV.js",
+     "/assets/index-I45CQek8.css"
+    ],
+    "scripts_observed": [
+     "/assets/index-BAv32_dV.js"
+    ],
+    "per_script": {
+     "/assets/index-BAv32_dV.js": {
+      "source": "dist_0274b2b_stepforced_t:/assets/index-BAv32_dV.js",
+      "rule": "every navigator.serviceWorker.register() in the SERVED bundle must declare scope \"/\" and updateViaCache \"none\"",
+      "calls": [
+       {
+        "sw_url": "/v10-sw.js",
+        "scope": "/",
+        "updateViaCache": "none",
+        "opts_present": true,
+        "scope_ok": true,
+        "update_via_cache_ok": true
+       }
+      ],
+      "verdict": "GREEN",
+      "register_mentions_in_code": 1,
+      "register_calls_parsed": 1,
+      "unresolved_registrations": 0,
+      "ref": "/assets/index-BAv32_dV.js",
+      "readable": true,
+      "sha256": "c46dcefc3e7fc47b7543f7c11e737985235e03704270791d81dd63f4fb995f0a",
+      "body_size": 1249359
+     }
+    },
+    "generation_verdict": "GREEN",
+    "generation_reason": "owner(s) /assets/index-BAv32_dV.js; 0 other script(s) name no registration, which is not a defect",
+    "owner_refs": [
+     "/assets/index-BAv32_dV.js"
+    ],
+    "register_calls_parsed_total": 1,
+    "unresolved_total": 0,
+    "bytes_fingerprint": "59c60f66a51ac7d5dd22b45211a0081af13d4763baa77e4178f60dcd323b17e8",
+    "content_fingerprint": "409918ed9378cdaae300d901ee87df9044ac1539e9ef4e7799f11893388ae6c4",
+    "ruler": {
+     "path": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\deploy_bundle_v2_draft_r4.py",
+     "blob_sha": "0686670743c079647aa678370aa5481562c4c0a8",
+     "extracted": [
+      "DECLARED_NO_PRECACHE",
+      "SW_REGISTER_RULE",
+      "_ord0277_generation_verdict",
+      "asset_refs",
+      "precache_urls",
+      "strip_js_comments",
+      "sw_register_verdict"
+     ],
+     "bytes_extracted": 8574
+    },
+    "sw_bytes": {
+     "sw_url": "/v10-sw.js",
+     "sha256": "b70ec90ab8165b3743f963a2b38df43cdebe4baaf4422f9253585dcb07b82354",
+     "body_size": 2055
+    }
+   },
+   "build": {
+    "rc": 0,
+    "tail": [
+     "  dist_0274b2b_stepforced_t/v10-sw.js",
+     "  dist_0274b2b_stepforced_t/workbox-6923124b.js"
+    ]
+   }
+  }
+ },
+ "all_shapes_match_declaration": true
+}
