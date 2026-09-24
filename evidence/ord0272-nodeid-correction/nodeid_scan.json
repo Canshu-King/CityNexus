@@ -1,0 +1,64 @@
+{
+ "why": "包工头说 21 条载体里有 4 条根不匹配；我按同一把尺全量扫，受影响的是 4 件已发布件、共 29 条（含 day1 收据 17 条）",
+ "measured_on": "2026-09-25T01:45:48+08:00",
+ "files": {
+  "rv_corrected.json": {
+   "nodeid_rows": 29,
+   "mismatched_rows": [
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+   ],
+   "count": 4
+  },
+  "rv_worktree.json": {
+   "nodeid_rows": 29,
+   "mismatched_rows": [
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+   ],
+   "count": 4
+  },
+  "rv_export.json": {
+   "nodeid_rows": 29,
+   "mismatched_rows": [
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+   ],
+   "count": 4
+  },
+  "o225_receipts/ord0272_day1_receipt.json": {
+   "nodeid_rows": 55,
+   "mismatched_rows": [
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "backend/tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+   ],
+   "count": 17
+  },
+  "rv_corrected_r2.json": {
+   "nodeid_rows": 50,
+   "mismatched_rows": [],
+   "count": 0
+  },
+  "o225_receipts/ord0272_day1_receipt_r2.json": {
+   "nodeid_rows": 55,
+   "mismatched_rows": [],
+   "count": 0
+  }
+ },
+ "totals": {
+  "before": 29,
+  "after": 0
+ }
+}
