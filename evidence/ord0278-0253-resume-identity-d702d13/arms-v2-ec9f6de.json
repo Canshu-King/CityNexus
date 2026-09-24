@@ -1,0 +1,390 @@
+{
+  "generatedBy": "e345b9d6",
+  "orders": [
+    "ORD-0278 resume carries mission_id + Idempotency-Key",
+    "ORD-0253 client half: both legs carry the key"
+  ],
+  "runTag": "0278-0253-v2-ec9f6de",
+  "at": "2026-09-25T05:41:40+0800",
+  "head": "ec9f6de5c54e4069fb92810e4059273b7af39589",
+  "verifierNote": "claimed_result is self-reported; derived_result / direct_red / collateral_red are WRITTEN_BY_VERIFIER",
+  "manualControlsAlreadyRecorded": "before this batch: removing the leg-2 header reddened all three ORD-0253 nodes and the tree restored clean -- the same shape is re-measured here as K253_LEG2_KEY_DROPPED",
+  "filesBefore": {
+    "journeyContinuation.ts": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+    "V8Experience.tsx": "1563697b315de5ba6e1c87c7f830d1d88abac8e90395e3e348bd18df7483f36c",
+    "PlanWithAiSheet.tsx": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7"
+  },
+  "arms": [
+    {
+      "name": "K278_NO_MISSION_ID_IN_BODY",
+      "ownerNode": "ord0278-positive-the-resume-request-carries-both-keys",
+      "why": "the resumed batch no longer says whose it is: the server can replay it but cannot bind it to the interrupted round, which is the half this order was opened for",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\api\\journeyContinuation.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "e8cae1f914296326e7c431caae741bd5340f2915f9a5f3a68b2c542fa6b8255a",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 0,
+        "runId": "run286100",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286100.log",
+        "tallies": [
+          "5 passed (21.3s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "GREEN",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 1,
+        "runId": "run286123",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286123.log",
+        "tallies": [
+          "1 failed",
+          "4 passed (21.9s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "RED",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0278-positive-the-resume-request-carries-both-keys"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K278_TWO_KEYS_MERGED",
+      "ownerNode": "ord0278-positive-the-resume-request-carries-both-keys",
+      "why": "the ruling's 'two keys, never merged' violated in the direction that looks harmless: one name standing in for both, so 'same mission, different request' and 'same request, resent' collapse in storage",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\api\\journeyContinuation.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "13c42505c5aff6a4c3df3ec75f13db9d870751aa4e719eeb2f6248a87217e8cf",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 0,
+        "runId": "run286146",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286146.log",
+        "tallies": [
+          "5 passed (21.1s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "GREEN",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 1,
+        "runId": "run286169",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286169.log",
+        "tallies": [
+          "1 failed",
+          "4 passed (23.2s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "RED",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0278-positive-the-resume-request-carries-both-keys"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K278_CLEAR_BEFORE_SEND",
+      "ownerNode": "ord0269-cell1-reveals-and-names-its-boundary",
+      "why": "clause 5's forbidden shape -- the record is erased AHEAD of the send, so a run interrupted after this press is unfindable again. (v1 measured this arm with a different edit: moving the post-await clear out of its condition still erased after the send, which is a different defect and cell 1 correctly ignored it. That mutant was wrong, not the gate.)",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\app\\V8Experience.tsx",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "a18cbe925a3d1d91d6f2089288d29b2d066447fe798ae798da88607c27baab9d",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 0,
+        "runId": "run286193",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286193.log",
+        "tallies": [
+          "5 passed (20.9s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "GREEN",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 1,
+        "runId": "run286216",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286216.log",
+        "tallies": [
+          "1 failed",
+          "4 passed (20.7s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "RED",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0269-cell1-reveals-and-names-its-boundary"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K278_SILENCE_ON_NON_ACCEPT",
+      "ownerNode": "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are",
+      "why": "a refusal, timeout or dead transport paints no word and leaves the card standing -- the 'never silence' half of the reveal",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\app\\V8Experience.tsx",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "0dd14e0f41944755b65f135e978383713e775b446010f621523d654efc02cb9b",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 0,
+        "runId": "run286238",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286238.log",
+        "tallies": [
+          "5 passed (22.5s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "GREEN",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+        "exitCode": 1,
+        "runId": "run286262",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286262.log",
+        "tallies": [
+          "1 failed",
+          "4 passed (41.1s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0278-positive-the-resume-request-carries-both-keys": "GREEN",
+          "ord0278-negative-no-marker-sends-nothing": "GREEN",
+          "ord0278-negative-off-page-sends-nothing": "GREEN",
+          "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are": "RED"
+        }
+      },
+      "redSet": [
+        "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K253_LEG2_KEY_DROPPED",
+      "ownerNode": "ord0253-both-legs-of-one-intent-share-one-key",
+      "why": "the pre-fix shape: the leg the server actually reads arrives with no identity, so the receipt machinery never sees the phone's own press",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "0c60a2f0ca6d74f737c09568490ac160e129c24b72bea04efe18c335eae8796b",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 0,
+        "runId": "run286304",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286304.log",
+        "tallies": [
+          "4 passed (16.2s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "GREEN",
+          "ord0253-each-intent-mints-a-fresh-key": "GREEN",
+          "ord0253-a-burst-consumes-no-key": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 1,
+        "runId": "run286322",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286322.log",
+        "tallies": [
+          "3 failed",
+          "1 passed (18.6s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "RED",
+          "ord0253-each-intent-mints-a-fresh-key": "RED",
+          "ord0253-a-burst-consumes-no-key": "RED"
+        }
+      },
+      "redSet": [
+        "ord0253-a-burst-consumes-no-key",
+        "ord0253-both-legs-of-one-intent-share-one-key",
+        "ord0253-each-intent-mints-a-fresh-key"
+      ],
+      "exclusiveToOwner": false,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K253_LEG1_KEY_DROPPED",
+      "ownerNode": "ord0253-both-legs-of-one-intent-share-one-key",
+      "why": "only one leg of one press carries the identity, so the two disagree about whose send this is -- 'one intent, one key' broken across the legs rather than dropped from both",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "fe5ab9f5c9359460837231f0c8746966c0ee97b4b888bace3a51a873b8444dea",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 0,
+        "runId": "run286342",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286342.log",
+        "tallies": [
+          "4 passed (16.7s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "GREEN",
+          "ord0253-each-intent-mints-a-fresh-key": "GREEN",
+          "ord0253-a-burst-consumes-no-key": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 1,
+        "runId": "run286360",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286360.log",
+        "tallies": [
+          "3 failed",
+          "1 passed (18.8s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "RED",
+          "ord0253-each-intent-mints-a-fresh-key": "RED",
+          "ord0253-a-burst-consumes-no-key": "RED"
+        }
+      },
+      "redSet": [
+        "ord0253-a-burst-consumes-no-key",
+        "ord0253-both-legs-of-one-intent-share-one-key",
+        "ord0253-each-intent-mints-a-fresh-key"
+      ],
+      "exclusiveToOwner": false,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K253_ONE_KEY_FOR_ALL_INTENTS",
+      "ownerNode": "ord0253-each-intent-mints-a-fresh-key",
+      "why": "the key stops being per intent and becomes a per-session constant: both legs still agree, so only the second-press node can see it -- which is what that node exists for",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "2aba1f33cc8a9f0f98b07aa5a6426994b8cd4bab32896ddc1c42da81e9cddab8",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 0,
+        "runId": "run286380",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286380.log",
+        "tallies": [
+          "4 passed (18.4s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "GREEN",
+          "ord0253-each-intent-mints-a-fresh-key": "GREEN",
+          "ord0253-a-burst-consumes-no-key": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+        "exitCode": 1,
+        "runId": "run286401",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run286401.log",
+        "tallies": [
+          "3 failed",
+          "1 passed (18.5s)"
+        ],
+        "stackStarted": true,
+        "missingNodes": [],
+        "nodes": {
+          "ord0253-both-legs-of-one-intent-share-one-key": "RED",
+          "ord0253-each-intent-mints-a-fresh-key": "RED",
+          "ord0253-a-burst-consumes-no-key": "RED"
+        }
+      },
+      "redSet": [
+        "ord0253-a-burst-consumes-no-key",
+        "ord0253-both-legs-of-one-intent-share-one-key",
+        "ord0253-each-intent-mints-a-fresh-key"
+      ],
+      "exclusiveToOwner": false,
+      "claimed_result": "KILLED"
+    }
+  ],
+  "filesAfter": {
+    "journeyContinuation.ts": "081c8491a206c984934b241196eba10f91f2e50570a91e488309442f975f9ece",
+    "V8Experience.tsx": "1563697b315de5ba6e1c87c7f830d1d88abac8e90395e3e348bd18df7483f36c",
+    "PlanWithAiSheet.tsx": "6a2e742627b341be4a7654acb87d8a81aac26a029dc9ffd86c8e194b505154b7"
+  },
+  "treeUnchangedByThisRun": true,
+  "allArmsKilled": true
+}
