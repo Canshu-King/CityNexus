@@ -1,0 +1,153 @@
+{
+ "what": "ORD-0287 判据 3：载体两态可跑（守卫在位 / 拆掉），K2 正控两边都绿 ⇒ 红可归因",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T07:09:04+08:00",
+ "tree": {
+  "backend_cwd": "D:\\moodle\\_qoder_f_run\\o287_archive\\backend",
+  "main_py_landing_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "carrier_file": "tests/test_qoder_ord0287_k8_carrier.py",
+  "carrier_blob": "894c6d54e345dabdc4050a38f413fdaaa1a92748"
+ },
+ "rounds": [
+  {
+   "round": 1,
+   "authoritative": {
+    "both_cells": {
+     "target": "tests/test_qoder_ord0287_k8_carrier.py",
+     "rc": 0,
+     "seconds": 3.7,
+     "collected_line": "",
+     "summary_line": "2 passed, 2 warnings in 2.27s",
+     "failure_lines": []
+    },
+    "K1": {
+     "target": "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+     "rc": 0,
+     "seconds": 3.1,
+     "collected_line": "",
+     "summary_line": "1 passed, 2 warnings in 1.82s",
+     "failure_lines": []
+    },
+    "K2": {
+     "target": "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+     "rc": 0,
+     "seconds": 3.1,
+     "collected_line": "",
+     "summary_line": "1 passed, 2 warnings in 1.60s",
+     "failure_lines": []
+    },
+    "main_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+   },
+   "mutant": {
+    "before_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "after_blob_40": "784599fdb406b4242c2d202868b5eefd10861287",
+    "hunks": 1,
+    "hunk_headers": [
+     "@@ -4770,8 +4770,7 @@"
+    ],
+    "py_compile_ok": true,
+    "removed_expression": "IdempotencyKey.response_json.is_(None)",
+    "lines_delta": [
+     11417,
+     11416
+    ],
+    "K1": {
+     "target": "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+     "rc": 1,
+     "seconds": 3.0,
+     "collected_line": "",
+     "summary_line": "1 failed, 2 warnings in 1.82s",
+     "failure_lines": [
+      "FAILED tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+     ]
+    },
+    "K2": {
+     "target": "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+     "rc": 0,
+     "seconds": 3.6,
+     "collected_line": "",
+     "summary_line": "1 passed, 2 warnings in 1.90s",
+     "failure_lines": []
+    }
+   },
+   "restored_byte_exact": true
+  },
+  {
+   "round": 2,
+   "authoritative": {
+    "both_cells": {
+     "target": "tests/test_qoder_ord0287_k8_carrier.py",
+     "rc": 0,
+     "seconds": 3.0,
+     "collected_line": "",
+     "summary_line": "2 passed, 2 warnings in 1.85s",
+     "failure_lines": []
+    },
+    "K1": {
+     "target": "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+     "rc": 0,
+     "seconds": 2.8,
+     "collected_line": "",
+     "summary_line": "1 passed, 2 warnings in 1.40s",
+     "failure_lines": []
+    },
+    "K2": {
+     "target": "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+     "rc": 0,
+     "seconds": 4.4,
+     "collected_line": "",
+     "summary_line": "1 passed, 2 warnings in 1.90s",
+     "failure_lines": []
+    },
+    "main_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+   },
+   "mutant": {
+    "before_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "after_blob_40": "784599fdb406b4242c2d202868b5eefd10861287",
+    "hunks": 1,
+    "hunk_headers": [
+     "@@ -4770,8 +4770,7 @@"
+    ],
+    "py_compile_ok": true,
+    "removed_expression": "IdempotencyKey.response_json.is_(None)",
+    "lines_delta": [
+     11417,
+     11416
+    ],
+    "K1": {
+     "target": "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+     "rc": 1,
+     "seconds": 3.6,
+     "collected_line": "",
+     "summary_line": "1 failed, 2 warnings in 1.94s",
+     "failure_lines": [
+      "FAILED tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+     ]
+    },
+    "K2": {
+     "target": "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+     "rc": 0,
+     "seconds": 3.0,
+     "collected_line": "",
+     "summary_line": "1 passed, 2 warnings in 1.59s",
+     "failure_lines": []
+    }
+   },
+   "restored_byte_exact": true
+  }
+ ],
+ "backend_env_override": "D:/moodle/_qoder_f_run/o287_archive/backend",
+ "final": {
+  "main_blob_after_all": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "byte_exact_vs_landing": true
+ },
+ "derived": {
+  "carrier_green_on_authoritative": true,
+  "same_cell_red_under_mutation": true,
+  "positive_control_still_green_under_mutation": true,
+  "one_hunk_every_round": true,
+  "py_compile_every_round": true,
+  "restored_every_round": true,
+  "verdict": "TWO_STATE_CARRIER_OK"
+ }
+}
