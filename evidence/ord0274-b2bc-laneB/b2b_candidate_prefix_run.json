@@ -1,0 +1,5732 @@
+{
+ "at": "2026-09-24T21:02:57.940Z",
+ "base": "http://127.0.0.1:8471",
+ "window_s": 60,
+ "before_step1": {
+  "gen_tag": null,
+  "executing_bundle": "/assets/index-zCtIwAVy.js",
+  "fields": {
+   "trial-city": {
+    "present": true,
+    "value": "厦门",
+    "raw": "厦门",
+    "tag": "input",
+    "type": null
+   },
+   "trial-arrival": {
+    "present": true,
+    "value": "厦门高崎国际机场 T4",
+    "raw": "厦门高崎国际机场 T4",
+    "tag": "input",
+    "type": null
+   },
+   "trial-departure": {
+    "present": true,
+    "value": "厦门站",
+    "raw": "厦门站",
+    "tag": "input",
+    "type": null
+   },
+   "trial-party": {
+    "present": false
+   },
+   "trial-budget": {
+    "present": false
+   },
+   "trial-special": {
+    "present": false
+   },
+   "trial-start": {
+    "present": true,
+    "value": "2026-10-05T08:30",
+    "raw": "2026-10-05T08:30",
+    "tag": "input",
+    "type": "datetime-local"
+   },
+   "trial-end": {
+    "present": true,
+    "value": "2026-10-09T19:45",
+    "raw": "2026-10-09T19:45",
+    "tag": "input",
+    "type": "datetime-local"
+   }
+  },
+  "step_marks": [
+   {
+    "id": "trial-step-1",
+    "class_name": "active",
+    "marker": "1"
+   },
+   {
+    "id": "trial-step-2",
+    "class_name": "",
+    "marker": "2"
+   },
+   {
+    "id": "trial-step-3",
+    "class_name": "",
+    "marker": "3"
+   }
+  ],
+  "visible_bodies": [
+   "trial-step1-body"
+  ],
+  "onboarding_present": true,
+  "submit_label": "",
+  "cta_text": "下一步",
+  "draft": {
+   "step": 1,
+   "draft": {
+    "cityName": "厦门",
+    "countryCode": "CN",
+    "timezone": "Asia/Shanghai",
+    "startAt": "2026-10-05T08:30",
+    "endAt": "2026-10-09T19:45",
+    "arrivalLocation": "厦门高崎国际机场 T4",
+    "departureLocation": "厦门站",
+    "budgetMajor": 3000,
+    "stayBudgetMajor": 1000,
+    "currency": "CNY",
+    "partySize": 2,
+    "rooms": 1,
+    "pace": "relaxed",
+    "interests": [],
+    "specialRequirements": ""
+   }
+  },
+  "loads": 1,
+  "reload_key": null,
+  "pending_key": null,
+  "mounted": true
+ },
+ "before_swap": {
+  "gen_tag": null,
+  "executing_bundle": "/assets/index-zCtIwAVy.js",
+  "fields": {
+   "trial-city": {
+    "present": false
+   },
+   "trial-arrival": {
+    "present": false
+   },
+   "trial-departure": {
+    "present": false
+   },
+   "trial-party": {
+    "present": true,
+    "value": "4",
+    "raw": "4",
+    "tag": "input",
+    "type": "number"
+   },
+   "trial-budget": {
+    "present": true,
+    "value": "4321",
+    "raw": "4321",
+    "tag": "input",
+    "type": "number"
+   },
+   "trial-special": {
+    "present": true,
+    "value": "需要无障碍通道 · B2b",
+    "raw": "需要无障碍通道 · B2b",
+    "tag": "textarea",
+    "type": null
+   },
+   "trial-start": {
+    "present": false
+   },
+   "trial-end": {
+    "present": false
+   }
+  },
+  "step_marks": [
+   {
+    "id": "trial-step-1",
+    "class_name": "done",
+    "marker": "✓"
+   },
+   {
+    "id": "trial-step-2",
+    "class_name": "active",
+    "marker": "2"
+   },
+   {
+    "id": "trial-step-3",
+    "class_name": "",
+    "marker": "3"
+   }
+  ],
+  "visible_bodies": [
+   "trial-step2-body"
+  ],
+  "onboarding_present": true,
+  "submit_label": "",
+  "cta_text": "返回\n下一步",
+  "draft": {
+   "step": 2,
+   "draft": {
+    "cityName": "厦门",
+    "countryCode": "CN",
+    "timezone": "Asia/Shanghai",
+    "startAt": "2026-10-05T08:30",
+    "endAt": "2026-10-09T19:45",
+    "arrivalLocation": "厦门高崎国际机场 T4",
+    "departureLocation": "厦门站",
+    "budgetMajor": 4321,
+    "stayBudgetMajor": 1000,
+    "currency": "CNY",
+    "partySize": 4,
+    "rooms": 2,
+    "pace": "relaxed",
+    "interests": [],
+    "specialRequirements": "需要无障碍通道 · B2b"
+   }
+  },
+  "loads": 1,
+  "reload_key": null,
+  "pending_key": null,
+  "mounted": true
+ },
+ "swap": {
+  "swap_response": {
+   "from": "old",
+   "to": "new",
+   "writes_open": 0
+  },
+  "registration_after_update": {
+   "installing": "installing",
+   "waiting": null,
+   "active": "activated"
+  }
+ },
+ "samples": [
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 1
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 2
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 3
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 4
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 5
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 6
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 7
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 8
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 9
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 10
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 11
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 12
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 13
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 14
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 15
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 16
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 17
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 18
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 19
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 20
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 21
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 22
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 23
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 24
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 25
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 26
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 27
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 28
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 29
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 30
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 31
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 32
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 33
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 34
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 35
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 36
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 37
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 38
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 39
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 40
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 41
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 42
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 43
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 44
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 45
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 46
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 47
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 48
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 49
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 50
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 51
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 52
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 53
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 54
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 55
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 56
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 57
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 58
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 59
+  },
+  {
+   "gen_tag": null,
+   "executing_bundle": "/assets/index-zCtIwAVy.js",
+   "fields": {
+    "trial-city": {
+     "present": false
+    },
+    "trial-arrival": {
+     "present": false
+    },
+    "trial-departure": {
+     "present": false
+    },
+    "trial-party": {
+     "present": true,
+     "value": "4",
+     "raw": "4",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-budget": {
+     "present": true,
+     "value": "4321",
+     "raw": "4321",
+     "tag": "input",
+     "type": "number"
+    },
+    "trial-special": {
+     "present": true,
+     "value": "需要无障碍通道 · B2b",
+     "raw": "需要无障碍通道 · B2b",
+     "tag": "textarea",
+     "type": null
+    },
+    "trial-start": {
+     "present": false
+    },
+    "trial-end": {
+     "present": false
+    }
+   },
+   "step_marks": [
+    {
+     "id": "trial-step-1",
+     "class_name": "done",
+     "marker": "✓"
+    },
+    {
+     "id": "trial-step-2",
+     "class_name": "active",
+     "marker": "2"
+    },
+    {
+     "id": "trial-step-3",
+     "class_name": "",
+     "marker": "3"
+    }
+   ],
+   "visible_bodies": [
+    "trial-step2-body"
+   ],
+   "onboarding_present": true,
+   "submit_label": "",
+   "cta_text": "返回\n下一步",
+   "draft": {
+    "step": 2,
+    "draft": {
+     "cityName": "厦门",
+     "countryCode": "CN",
+     "timezone": "Asia/Shanghai",
+     "startAt": "2026-10-05T08:30",
+     "endAt": "2026-10-09T19:45",
+     "arrivalLocation": "厦门高崎国际机场 T4",
+     "departureLocation": "厦门站",
+     "budgetMajor": 4321,
+     "stayBudgetMajor": 1000,
+     "currency": "CNY",
+     "partySize": 4,
+     "rooms": 2,
+     "pace": "relaxed",
+     "interests": [],
+     "specialRequirements": "需要无障碍通道 · B2b"
+    }
+   },
+   "loads": 1,
+   "reload_key": null,
+   "pending_key": null,
+   "mounted": true,
+   "t_s": 60
+  }
+ ],
+ "after": {
+  "gen_tag": null,
+  "executing_bundle": "/assets/index-zCtIwAVy.js",
+  "fields": {
+   "trial-city": {
+    "present": false
+   },
+   "trial-arrival": {
+    "present": false
+   },
+   "trial-departure": {
+    "present": false
+   },
+   "trial-party": {
+    "present": true,
+    "value": "4",
+    "raw": "4",
+    "tag": "input",
+    "type": "number"
+   },
+   "trial-budget": {
+    "present": true,
+    "value": "4321",
+    "raw": "4321",
+    "tag": "input",
+    "type": "number"
+   },
+   "trial-special": {
+    "present": true,
+    "value": "需要无障碍通道 · B2b",
+    "raw": "需要无障碍通道 · B2b",
+    "tag": "textarea",
+    "type": null
+   },
+   "trial-start": {
+    "present": false
+   },
+   "trial-end": {
+    "present": false
+   }
+  },
+  "step_marks": [
+   {
+    "id": "trial-step-1",
+    "class_name": "done",
+    "marker": "✓"
+   },
+   {
+    "id": "trial-step-2",
+    "class_name": "active",
+    "marker": "2"
+   },
+   {
+    "id": "trial-step-3",
+    "class_name": "",
+    "marker": "3"
+   }
+  ],
+  "visible_bodies": [
+   "trial-step2-body"
+  ],
+  "onboarding_present": true,
+  "submit_label": "",
+  "cta_text": "返回\n下一步",
+  "draft": {
+   "step": 2,
+   "draft": {
+    "cityName": "厦门",
+    "countryCode": "CN",
+    "timezone": "Asia/Shanghai",
+    "startAt": "2026-10-05T08:30",
+    "endAt": "2026-10-09T19:45",
+    "arrivalLocation": "厦门高崎国际机场 T4",
+    "departureLocation": "厦门站",
+    "budgetMajor": 4321,
+    "stayBudgetMajor": 1000,
+    "currency": "CNY",
+    "partySize": 4,
+    "rooms": 2,
+    "pace": "relaxed",
+    "interests": [],
+    "specialRequirements": "需要无障碍通道 · B2b"
+   }
+  },
+  "loads": 1,
+  "reload_key": null,
+  "pending_key": null,
+  "mounted": true,
+  "t_s": 60
+ },
+ "executed_bytes": {
+  "ref": "/assets/index-zCtIwAVy.js",
+  "bytes": 1200,
+  "content_type": "text/html; charset=utf-8",
+  "sha256": "05063885bca92834765a2216f243693006445a41eb8b54bbb25bde3e1d445f69"
+ },
+ "probe_events": [
+  {
+   "kind": "document-start",
+   "load_id": 1,
+   "t": 1790283707930,
+   "iso": "2026-09-24T21:01:47.930Z",
+   "gen_tag": null
+  },
+  {
+   "kind": "controllerchange",
+   "load_id": 1,
+   "t": 1790283708235,
+   "iso": "2026-09-24T21:01:48.235Z"
+  },
+  {
+   "kind": "controllerchange",
+   "load_id": 1,
+   "t": 1790283717423,
+   "iso": "2026-09-24T21:01:57.423Z"
+  }
+ ],
+ "loads": [
+  {
+   "id": 1,
+   "at": 1790283707930,
+   "gen_tag": null
+  }
+ ],
+ "console_errors": [],
+ "page_errors": [],
+ "profile": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\profile_b2b_candidate"
+}
