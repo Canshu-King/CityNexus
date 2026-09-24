@@ -2,6 +2,7 @@ import type { JourneyTwin } from "../contracts/journeyTwin";
 import type { ReplanProposal } from "../contracts/replan";
 import { fetchWithReadDeadline } from "../lib/readDeadline";
 import { OriginResponseUnusableError } from "../lib/failureAttribution";
+import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
 
 export interface Money {
   amount_minor: number;
@@ -642,6 +643,15 @@ export class CityNexusApiError extends Error {
 }
 
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
+  const releaseInFlight = beginNonIdempotentRequest(init?.method);
+  try {
+    return await requestJsonInner<T>(path, init);
+  } finally {
+    releaseInFlight();
+  }
+}
+
+async function requestJsonInner<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetchWithReadDeadline("/api/v1" + path, {
     ...init,
     headers: {
