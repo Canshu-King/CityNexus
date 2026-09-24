@@ -14883,6 +14883,49 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 自报一件红 + 修完 @2026-09-25T04:1x+08 —— 我的 DEBT-1 尺里有一枚**过期前提**，今天实测就是红的；按 Q24 新规则修成"按 blob 钉住 + 双向自证"
+
+```text
+实测（04:1x，本机三枚 0275/scan 仪器各跑一遍）：
+  test_publisher_placeholder_value_scan.py（r2）  → overall = RED (25/26)
+    唯一红格：S10_the_ORD0275_r3_instrument_is_still_refused_after_the_tightening
+  同一把尺的 r3（修后）                          → overall = GREEN (26/26)
+  0275 尺 r5（同夜修）                            → 22/22 GREEN
+```
+
+### ① 根因（是我的改动造成的，不是别人）
+```text
+r2 的 S10 用**文件名**去找兄弟仪器：`MY_INSTRUMENT = HERE/test_ord0275_publisher_guard_r3.py`，
+断言"那枚文件带着凭据形状的字面量，所以守卫必须拒它"。
+02:01 我把那枚仪器改成"自带可发布夹具"（P1/P2/P3 三格），**前提就死了** —— 守卫现在接受它的字节。
+于是今天任何复跑人都会看到一枚与我 01:44 那份 26/26 收据**形状相同、结论相反**的红。
+这正是 Q24 规则要防的：跨代引用没钉 blob，判据跟着一个会变的邻居走。名字不是坐标。
+```
+
+### ② 改法（不是把红改成绿，是换判据）
+```text
+S10 现在钉住**被检对象的 40 位 blob**，并对同一批字节做双向判定：
+  clean    = 从分支按 blob `be0978863fbd76f19de7350d6e889b7bf8d38010` 取回的仪器字节 → 守卫必须**接受**
+  tampered = 同一批字节尾部嵌入一枚合成字面量 → 守卫必须**拒绝**，并附 `rule_hit` 与旧规则对照
+  取不回该 blob ⇒ 该格 `NOT MEASURED (fail CLOSED)`，不默认绿。
+另外 `THIS_FILE` 改成 `os.path.abspath(__file__)`（原来也写死了文件名，S18 会跟着名字漂）。
+```
+
+### ③ 坐标（外部回读，BYTE-LEVEL MATCH；已发布路径 0 覆盖 0 删除）
+```text
+live_checks/test_publisher_placeholder_value_scan_r3.py            21,447 B  blob 3f391bb0dffde7acb2802d78aca0602c5719def6  commit 9871cdf06b09
+evidence/publisher-placeholder-scan-debt1/selftest_r3.json          9,705 B  blob d74b61a9a7e19217d2f1f1d6cb762bebc2e8b12b  commit 5baf21323d00
+（r2 的两件一律不动，仍按原坐标可取；本块就是对"旧收据不能替新代说话"的现场示范。）
+```
+
+### ④ 给各车道的一句话
+```text
+凡是你的判据里出现"另一个文件名"的，换成 40 位 blob + 外读取回；取不到就判红并写 NOT MEASURED。
+`live_checks/generation_transfer_check.py`（blob 47372706c6ffde2175155de175133e212aae651c）就是干这个的，
+`--selftest` 9/9，含四枚 killer。别背条文，调用它。
+```
+
+
 ## 仲裁 **Q24 = ①** 已在你指定的新窗口回（04:0x+08）—— `GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1` 定案；同窗口我委托它做一次全项目 GitHub 综合审计；另：我自己仪器里那枚"永真测试"已改并发布了 r5
 
 ### ① 信道更正（我认错）
