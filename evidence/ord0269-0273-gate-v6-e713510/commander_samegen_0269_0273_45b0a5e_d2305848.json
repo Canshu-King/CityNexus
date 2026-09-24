@@ -1,0 +1,72 @@
+{
+ "schema": "CNX_SAMEGEN_GATE_RECEIPT_V1",
+ "what": "ORD-0269/0273 gate same-generation rerun on the LANDED tip 45b0a5e2 (same instrument, only variable = tree)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T05:35+08:00",
+ "tree": {
+  "landed_tip": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "source": "GitHub tarball of the mirror ref (50,284,763 B), not any lane working tree",
+  "mirror_tip_read_before_export": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "frontend_subtree_note": "the commander proved frontend/ tree-oid equality between e7135108 and 45b0a5e2; I verified per-file: all 8 gate files blob-identical to both the v6 candidate tree and the landed tree (sha1 recomputed from my export bytes)"
+ },
+ "node_modules": {
+  "junction": "_qoder_cmdr_ref_20260921/frontend/node_modules",
+  "package_json_sha1_prefix": "3bdc4709f27ac2d2 (verified equal to the landed generation before junctioning)"
+ },
+ "run": {
+  "mode": "CITYNEXUS_E2E_AUTHORITATIVE=1",
+  "command": "npx playwright test e2e/qoder-continuation-owner.spec.ts e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+  "cwd": "<export>/frontend",
+  "env": {
+   "CITYNEXUS_E2E_PORT": "4891",
+   "CITYNEXUS_BACKEND_PORT": "8891",
+   "CITYNEXUS_PYTHON": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+   "CITYNEXUS_DATABASE_URL": "sqlite:///./_samegen45b0a5e_8891.db (throwaway _*.db containing the run id)",
+   "CITYNEXUS_E2E_RUN_ID": "samegen45b0a5e_8891",
+   "CITYNEXUS_AI_ENABLED": "false",
+   "DEEPSEEK_API_KEY": "unset in-process (authoritative mode refused the first attempt while it was set - the refusal is the guard working)"
+  },
+  "collection": "8 tests in 3 files (7 gate nodes + 1 real-seed setup) - matches the receipt",
+  "result": "8 passed (45.4s), rc=0",
+  "per_node": [
+   "cell1-reveals-and-names-its-boundary GREEN",
+   "cell3-feed-failure-and-page-exclusion-are-named GREEN",
+   "r6-page-exclusion-yields-no-conclusion GREEN",
+   "r4-a-brand-new-journey-shows-nothing GREEN",
+   "0273-text GREEN",
+   "0273-text-en GREEN",
+   "0273-action GREEN"
+  ]
+ },
+ "derived_readings": {
+  "r4_premise_on_landed_generation": {
+   "bScopedReadsObserved": 8,
+   "markerBytesOnA": 90,
+   "journeyWithMarker": "cb6c9e82-cc1f-4b5d-a9ab-6087083e9cf2",
+   "unplannedJourney": "ce293692-e6e5-4e8b-9c06-27ba5d7559e3",
+   "pendingCardsOnB": 0,
+   "unconfirmableLinesOnB": 0,
+   "note": "the R-4 positive-observation premise now measured ON THE LANDED GENERATION, not inherited"
+  },
+  "provenance": {
+   "authoritative": true,
+   "runId": "samegen45b0a5e_8891",
+   "ai": "disabled",
+   "reuseExistingServer": false
+  }
+ },
+ "generation_license": {
+  "before": "v6 9/9 kills were candidate-generation facts (Q24/Q25: zero cross-generation transfer license)",
+  "now": "the GATE (green face) is re-run on 45b0a5e2 with byte-identical gate files => the 7 gate nodes are now LANDED-GENERATION facts",
+  "arms_note": "the 9 reverse-mutation KILLs remain facts of the mutation runs (aef5765c generation); they gain landed-generation status via the same logic only if rerun - the green face rerun is what the closure procedure required"
+ },
+ "evidence_class": "REAL_EXECUTION_SAME_GENERATION",
+ "discipline": {
+  "services_started": "two one-shot servers started by playwright webServer on my ports 4891/8891, torn down by the run",
+  "user_dbs_touched": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "throwaway_db": "_samegen45b0a5e_8891.db (git-ignored _*.db shape, fresh-or-no-run)",
+  "ai_disabled": true
+ }
+}
