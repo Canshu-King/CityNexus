@@ -1,0 +1,498 @@
+{
+ "what": "ORD-0282 · K8 那一处回填守卫在落地代 45b0a5e2 的重跑（唯一变量=树）+ 包工头 r3 尺第二观察者",
+ "lane": "F 8ccd71d8",
+ "run_id": "O282S-250612-226b4c",
+ "generated_at": "2026-09-25T06:18:19+08:00",
+ "criterion_1_tree": {
+  "branch": "mirror/integration-frontend-apple-pass1",
+  "mirror_tip_first_read": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "expected": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "equal": true,
+  "commit_tree": "039e5eafa260a6c30dc186947c1c1d1f0145a8a1",
+  "parents": [
+   "63b7702f47917be6da98b29e5a56a6646891184b"
+  ],
+  "candidate_ancestry": {
+   "candidate": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "status": "diverged",
+   "ahead_by": 35,
+   "behind_by": 1
+  },
+  "source": "GitHub tarball（api.github.com/repos/…/tarball/<sha>，重定向到 codeload）",
+  "tarball_bytes": 50284763,
+  "tarball_sha256_16": "9fa38ba757b163e8",
+  "export_dir": "D:\\moodle\\_qoder_f_run\\e_0282_45b0a5e\\Canshu-King-CityNexus-45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "lane_worktrees_used": [],
+  "commander_export_reused": false
+ },
+ "criterion_1b_byte_equality": {
+  "backend/app/main.py": {
+   "in_export": true,
+   "bytes": 482850,
+   "export_blob_40": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "api_blob_40": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "equal": true
+  },
+  "backend/tests/test_qoder_ord0272_continuation.py": {
+   "in_export": true,
+   "bytes": 24562,
+   "export_blob_40": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "api_blob_40": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "equal": true
+  },
+  "backend/app/schemas.py": {
+   "in_export": true,
+   "bytes": 25591,
+   "export_blob_40": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "api_blob_40": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "equal": true
+  },
+  "contracts/openapi.yaml": {
+   "in_export": true,
+   "bytes": 106971,
+   "export_blob_40": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "api_blob_40": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "equal": true
+  },
+  "live_checks/audit_closure_coordinates_r3.py": {
+   "in_export": false
+  }
+ },
+ "criterion_2_shape": {
+  "seam_face": {
+   "roles": {
+    "A": "claim_and_fill：产品的占位 + Phase B 生成回填",
+    "B": "re_enter_phase_B：同一组键再进一次 Phase B（落地代无『只回填』入口）"
+   },
+   "processes_per_round": 3,
+   "database": "每轮一座一次性 `_o282seam_<run_id>_<state>_r<i>.db`（跑完删，含 -wal/-shm）",
+   "out_of_band": "父进程只用 sqlite3 直连读 idempotency_keys 的 (status, json) 三态",
+   "demo_reset_calls": 0,
+   "user_dbs_touched": [],
+   "external_ai_stripped": true
+  },
+  "http_face": {
+   "processes_per_round": 2,
+   "legs": "A 占位并生成 / B 同一 mission 另一把客户端键 / 外加一发同 mission 并发对照",
+   "database": "每轮一座一次性 `_o282_<run_id>_<state>_r<i>.db`（跑完删）",
+   "demo_reset_calls": 0,
+   "user_dbs_touched": [],
+   "external_ai_stripped": true
+  }
+ },
+ "criterion_3_mutation": {
+  "before_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "before_blob_matches_landing": true,
+  "after_blob_40": "784599fdb406b4242c2d202868b5eefd10861287",
+  "hunks": 1,
+  "hunk_headers": [
+   "@@ -4770,8 +4770,7 @@"
+  ],
+  "py_compile_ok": true,
+  "removed_expression": "IdempotencyKey.response_json.is_(None)",
+  "lines_delta": [
+   11417,
+   11416
+  ],
+  "expected_landed_before_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "matches_expected": true,
+  "per_round_blob_matches_state": true,
+  "restore": {
+   "byte_exact": true,
+   "blob": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+  }
+ },
+ "criterion_4_readings_seam_face": [
+  {
+   "face": "seam_two_process",
+   "state": "guard",
+   "round": 1,
+   "A_filled_rows": 2,
+   "B_refused_status": 409,
+   "B_refused_detail": "agent idempotency record is incomplete",
+   "B_overwritten_rows": 0,
+   "A_bytes_survive": true,
+   "plan_versions_after_both": 3,
+   "detector_selftest_sees_change": true,
+   "three_distinct_pids": true,
+   "main_blob_at_round": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "seam_symbol_at_round": false,
+   "db": "_o282seam_O282S-250612-226b4c_guard_r1.db"
+  },
+  {
+   "face": "seam_two_process",
+   "state": "guard",
+   "round": 2,
+   "A_filled_rows": 2,
+   "B_refused_status": 409,
+   "B_refused_detail": "agent idempotency record is incomplete",
+   "B_overwritten_rows": 0,
+   "A_bytes_survive": true,
+   "plan_versions_after_both": 3,
+   "detector_selftest_sees_change": true,
+   "three_distinct_pids": true,
+   "main_blob_at_round": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "seam_symbol_at_round": false,
+   "db": "_o282seam_O282S-250612-226b4c_guard_r2.db"
+  },
+  {
+   "face": "seam_two_process",
+   "state": "guard",
+   "round": 3,
+   "A_filled_rows": 2,
+   "B_refused_status": 409,
+   "B_refused_detail": "agent idempotency record is incomplete",
+   "B_overwritten_rows": 0,
+   "A_bytes_survive": true,
+   "plan_versions_after_both": 3,
+   "detector_selftest_sees_change": true,
+   "three_distinct_pids": true,
+   "main_blob_at_round": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "seam_symbol_at_round": false,
+   "db": "_o282seam_O282S-250612-226b4c_guard_r3.db"
+  },
+  {
+   "face": "seam_two_process",
+   "state": "mutant",
+   "round": 1,
+   "A_filled_rows": 2,
+   "B_refused_status": null,
+   "B_refused_detail": null,
+   "B_overwritten_rows": 2,
+   "A_bytes_survive": false,
+   "plan_versions_after_both": 6,
+   "detector_selftest_sees_change": true,
+   "three_distinct_pids": true,
+   "main_blob_at_round": "784599fdb406b4242c2d202868b5eefd10861287",
+   "seam_symbol_at_round": false,
+   "db": "_o282seam_O282S-250612-226b4c_mutant_r1.db"
+  },
+  {
+   "face": "seam_two_process",
+   "state": "mutant",
+   "round": 2,
+   "A_filled_rows": 2,
+   "B_refused_status": null,
+   "B_refused_detail": null,
+   "B_overwritten_rows": 2,
+   "A_bytes_survive": false,
+   "plan_versions_after_both": 6,
+   "detector_selftest_sees_change": true,
+   "three_distinct_pids": true,
+   "main_blob_at_round": "784599fdb406b4242c2d202868b5eefd10861287",
+   "seam_symbol_at_round": false,
+   "db": "_o282seam_O282S-250612-226b4c_mutant_r2.db"
+  },
+  {
+   "face": "seam_two_process",
+   "state": "mutant",
+   "round": 3,
+   "A_filled_rows": 2,
+   "B_refused_status": null,
+   "B_refused_detail": null,
+   "B_overwritten_rows": 2,
+   "A_bytes_survive": false,
+   "plan_versions_after_both": 6,
+   "detector_selftest_sees_change": true,
+   "three_distinct_pids": true,
+   "main_blob_at_round": "784599fdb406b4242c2d202868b5eefd10861287",
+   "seam_symbol_at_round": false,
+   "db": "_o282seam_O282S-250612-226b4c_mutant_r3.db"
+  }
+ ],
+ "criterion_4_readings_http_face": [
+  {
+   "face": "http_two_process",
+   "state": "guard",
+   "round": 1,
+   "A_status": 201,
+   "B_status": 201,
+   "A_filled": 2,
+   "B_own_key_filled": false,
+   "A_bytes_survive": true,
+   "detector_selftest_sees_change": true,
+   "n_filled_keys_after_both": 2,
+   "main_blob_at_round": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "seam_symbol_at_round": null,
+   "guard_hits_at_round": 1,
+   "same_mission_race_statuses": [
+    201,
+    201
+   ],
+   "two_distinct_pids": true,
+   "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r1.db"
+  },
+  {
+   "face": "http_two_process",
+   "state": "guard",
+   "round": 2,
+   "A_status": 201,
+   "B_status": 201,
+   "A_filled": 2,
+   "B_own_key_filled": false,
+   "A_bytes_survive": true,
+   "detector_selftest_sees_change": true,
+   "n_filled_keys_after_both": 2,
+   "main_blob_at_round": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "seam_symbol_at_round": null,
+   "guard_hits_at_round": 1,
+   "same_mission_race_statuses": [
+    201,
+    201
+   ],
+   "two_distinct_pids": true,
+   "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r2.db"
+  },
+  {
+   "face": "http_two_process",
+   "state": "guard",
+   "round": 3,
+   "A_status": 201,
+   "B_status": 201,
+   "A_filled": 2,
+   "B_own_key_filled": false,
+   "A_bytes_survive": true,
+   "detector_selftest_sees_change": true,
+   "n_filled_keys_after_both": 2,
+   "main_blob_at_round": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "seam_symbol_at_round": null,
+   "guard_hits_at_round": 1,
+   "same_mission_race_statuses": [
+    201,
+    201
+   ],
+   "two_distinct_pids": true,
+   "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r3.db"
+  },
+  {
+   "face": "http_two_process",
+   "state": "mutant",
+   "round": 1,
+   "A_status": 201,
+   "B_status": 201,
+   "A_filled": 2,
+   "B_own_key_filled": false,
+   "A_bytes_survive": true,
+   "detector_selftest_sees_change": true,
+   "n_filled_keys_after_both": 2,
+   "main_blob_at_round": "784599fdb406b4242c2d202868b5eefd10861287",
+   "seam_symbol_at_round": null,
+   "guard_hits_at_round": null,
+   "same_mission_race_statuses": [
+    201,
+    201
+   ],
+   "two_distinct_pids": true,
+   "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r1.db"
+  },
+  {
+   "face": "http_two_process",
+   "state": "mutant",
+   "round": 2,
+   "A_status": 201,
+   "B_status": 201,
+   "A_filled": 2,
+   "B_own_key_filled": false,
+   "A_bytes_survive": true,
+   "detector_selftest_sees_change": true,
+   "n_filled_keys_after_both": 2,
+   "main_blob_at_round": "784599fdb406b4242c2d202868b5eefd10861287",
+   "seam_symbol_at_round": null,
+   "guard_hits_at_round": null,
+   "same_mission_race_statuses": [
+    201,
+    201
+   ],
+   "two_distinct_pids": true,
+   "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r2.db"
+  },
+  {
+   "face": "http_two_process",
+   "state": "mutant",
+   "round": 3,
+   "A_status": 201,
+   "B_status": 201,
+   "A_filled": 2,
+   "B_own_key_filled": false,
+   "A_bytes_survive": true,
+   "detector_selftest_sees_change": true,
+   "n_filled_keys_after_both": 2,
+   "main_blob_at_round": "784599fdb406b4242c2d202868b5eefd10861287",
+   "seam_symbol_at_round": null,
+   "guard_hits_at_round": null,
+   "same_mission_race_statuses": [
+    201,
+    201
+   ],
+   "two_distinct_pids": true,
+   "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r3.db"
+  }
+ ],
+ "criterion_4_derived": {
+  "K8_SEAM_ON_LANDED_GENERATION": "FLIP_OBSERVED",
+  "derivation": "guard 3 轮：A 的字节全存活、B 覆盖 0 行、B 全被现成那句具名 409 挡回；mutant 3 轮：A 的字节全不存活、B 每轮覆盖 ≥1 行；检测器自证（带外真改一次）每轮都看见；每轮 main.py 的 blob 与状态相符；每轮三个 pid 互不相同 ⇒ FLIP_OBSERVED",
+  "guard_A_bytes_survive": [
+   true,
+   true,
+   true
+  ],
+  "guard_B_overwrote_rows": [
+   0,
+   0,
+   0
+  ],
+  "guard_B_refused": [
+   "409 / agent idempotency record is incomplete",
+   "409 / agent idempotency record is incomplete",
+   "409 / agent idempotency record is incomplete"
+  ],
+  "mutant_A_bytes_survive": [
+   false,
+   false,
+   false
+  ],
+  "mutant_B_overwrote_rows": [
+   2,
+   2,
+   2
+  ],
+  "plan_versions_guard_vs_mutant": [
+   [
+    3,
+    3,
+    3
+   ],
+   [
+    6,
+    6,
+    6
+   ]
+  ],
+  "detector_never_blind": true,
+  "per_round_blob_ok": true,
+  "pids_ok": true,
+  "http_face_no_flip": true
+ },
+ "second_face_http": {
+  "A_bytes_survive": {
+   "guard": [
+    true,
+    true,
+    true
+   ],
+   "mutant": [
+    true,
+    true,
+    true
+   ]
+  },
+  "B_own_key_filled": {
+   "guard": [
+    false,
+    false,
+    false
+   ],
+   "mutant": [
+    false,
+    false,
+    false
+   ]
+  },
+  "same_mission_race_statuses": {
+   "guard": [
+    [
+     201,
+     201
+    ],
+    [
+     201,
+     201
+    ],
+    [
+     201,
+     201
+    ]
+   ],
+   "mutant": [
+    [
+     201,
+     201
+    ],
+    [
+     201,
+     201
+    ],
+    [
+     201,
+     201
+    ]
+   ]
+  },
+  "reading": "同一对代、同一处守卫，从 HTTP 面量到的是两态都不翻：腿 B 的占位在唯一索引上先撞回，走回放门 ⇒ 到不了回填语句 ⇒ 这一面的 NO_FLIP 是射程，不是守卫没用。红队的 HTTP_FACE_CANNOT_REACH_K8 在落地代同样成立（这条是量出来的）。"
+ },
+ "criterion_5_two_generations_side_by_side": {
+  "candidate_generation": {
+   "tree": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "main_py_blob": "ad13f4395e3405ce722ae8660836f3c2aaa29df2",
+   "gate_file_blob": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9",
+   "carrier": "G9 test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer",
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "red_rounds": {
+    "test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer": 3
+   },
+   "seam_symbol_extracted": true,
+   "hjp3_cross_process": "evidence/ord0272-k8-hjp3-crossprocess/K8_XP_readings.json blob fbb154cf9ce598ad1d3a4241b0f1b96181f0037b"
+  },
+  "landed_generation": {
+   "tree": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "main_py_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "gate_file_blob": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "gate_cells_collected_at_landed": 8,
+   "seam_symbol_extracted": false,
+   "guard_inline_at": "backend/app/main.py:4770-4779（Phase B 内联）",
+   "this_orders_reading": {
+    "K8_SEAM_ON_LANDED_GENERATION": "FLIP_OBSERVED",
+    "run_id": "O282S-250612-226b4c"
+   }
+  },
+  "difference_stated": "两代的守卫语义相同、载体形状不同：候选代有抽出来的缝与 test_G9，落地代没有（那一代那道门收集到 8 格，缝符号 0 命中）。所以本件的落地代读数不是『同名格的同代复现』，而是『同一处回填语句 + 同一个两进程形状』在落地代的行为；这句话写在判级旁边，不冒充成前者。"
+ },
+ "criterion_6_second_observer": {
+  "how_verified": "python 重算 git blob sha1（等价于 git hash-object）",
+  "path": "audit_closure_coordinates_r3.py",
+  "bytes": 8589,
+  "computed_blob_40": "fc35335aadffb8f0de6f8030e9fc5a747f24f463",
+  "expected_from_order": "fc35335aadffb8f0de6f8030e9fc5a747f24f463",
+  "source": "GET /repos/Canshu-King/CityNexus/contents/live_checks/audit_closure_coordinates_r3.py?ref=commander/control（sha 与 body 同读）",
+  "equal": true,
+  "rc": 0,
+  "summary_line": "claims=50 failing=0  branch=commander/control",
+  "verdict_line_counts": {
+   "OK": 50,
+   "FAIL": 0
+  },
+  "nonsummary_tail": [],
+  "stderr_tail": [],
+  "includes_lane_f_rows": [
+   "OK    evidence/ord0272-k8-f/stale_blob_probe_r1.json  [lane F probe]",
+   "OK    evidence/ord0272-k8-hjp3-crossprocess/K8_XP_readings.json  [lane HJ-P3 K8 cross-process]",
+   "OK    evidence/ord0279x-hjp3-run/O0279X-2504_readings.json  [ORD-0279-X readings]",
+   "OK    evidence/ord0272-k8-f/verifier_derivation_d2305848.json  [0272 K8 two-cell derivation (lane E)]"
+  ]
+ },
+ "not_claimed": [
+  "derived_result 不自签（B-1）：本件只交 claimed_result 与读数，闭单判级归 verifier；",
+  "用户面到不到得了 K8 仍按红队的射程声明，不折算成『用户面已验』；",
+  "权威线 0 次写；候选代与既有发布件 0 覆盖 0 删除。"
+ ],
+ "discipline": {
+  "demo_reset_calls": 0,
+  "live_or_preview_db_touched": false,
+  "credentials_printed": 0,
+  "authoritative_branch_written": false,
+  "published_paths_overwritten": 0,
+  "published_paths_deleted": 0,
+  "lane_worktrees_used": 0,
+  "commander_export_reused": false
+ }
+}
