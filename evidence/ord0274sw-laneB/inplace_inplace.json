@@ -1,0 +1,351 @@
+{
+ "phase": "inplace",
+ "at": "2026-09-24T03:24:57.548Z",
+ "base": "http://127.0.0.1:8452",
+ "window_s": 40,
+ "observed_for_ms": 43632,
+ "seen": {
+  "loads": [
+   {
+    "id": 1,
+    "at": 14.199999999254942,
+    "href": "http://127.0.0.1:8452/v8/hub"
+   },
+   {
+    "id": 2,
+    "at": 1022.3000000007451,
+    "href": "http://127.0.0.1:8452/v8/hub"
+   }
+  ],
+  "events": [
+   {
+    "kind": "document-start",
+    "t_ms": 1022,
+    "load_id": 2,
+    "controller": "/v10-sw.js",
+    "bundle": null
+   },
+   {
+    "kind": "registration-looked-up",
+    "t_ms": 1024,
+    "load_id": 2,
+    "controller": "/v10-sw.js",
+    "bundle": null,
+    "installing": null,
+    "waiting": null,
+    "active": "activated",
+    "active_script": "/v10-sw.js"
+   }
+  ],
+  "controller_now": "/v10-sw.js",
+  "registrations": [
+   {
+    "scope": "/",
+    "active": "/v10-sw.js",
+    "active_state": "activated",
+    "waiting": null,
+    "waiting_state": null,
+    "installing": null
+   }
+  ],
+  "product_reload_key": "1",
+  "executing_bundle": "/assets/index-0274gen2.js",
+  "shell_in_document": [
+   "/assets/index-0274gen2.js"
+  ],
+  "mounted": true,
+  "onLine": true
+ },
+ "console_errors": [],
+ "page_errors": [],
+ "swap_request": {
+  "swap_response": {
+   "from": "old",
+   "to": "new"
+  },
+  "registration_after_update": {
+   "installing": "installing",
+   "waiting": null,
+   "active": "activated"
+  }
+ },
+ "samples": [
+  {
+   "evaluate_failed": true
+  },
+  {
+   "t_s": 2,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 3,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 5.1,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 6.1,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 7.1,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 8.1,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 9.1,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 10.1,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 11.1,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 12.1,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 13.1,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 14.2,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 15.2,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 16.2,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 17.2,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 18.2,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 19.2,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 20.2,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 21.2,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 22.3,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 23.3,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 24.3,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 25.3,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 26.3,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 27.3,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 28.3,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 29.3,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 30.4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 31.4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 32.4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 33.4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 34.4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 35.4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 36.4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 37.4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 38.4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 39.4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  },
+  {
+   "t_s": 40.4,
+   "bundle": "/assets/index-0274gen2.js",
+   "controller": "/v10-sw.js",
+   "loads": 2,
+   "reload_key": "1"
+  }
+ ],
+ "profile": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\profile_inplace"
+}
