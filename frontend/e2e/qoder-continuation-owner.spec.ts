@@ -190,9 +190,44 @@ test("ord0269-cell3-feed-failure-and-page-exclusion-are-named — 读不到就�
   // The pending card must NOT show: an unconfirmable state is not a pending state.
   await expect(page.getByTestId("continuation-pending")).toHaveCount(0);
 
+  /* Cell 3b: the feed ANSWERS -- 200, JSON -- but the body carries no events array.  That is a
+     different emitter than 3a (the classifier's malformed guard, not the hook's isError branch),
+     so it needs its own read: the first arms run proved that 3a alone left this branch untested. */
+  await page.route("**/api/v1/journeys/*/agent-feed*", async (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ journey_id: journeyId, source: "stub" }),
+    }),
+  );
+  await page.reload({ waitUntil: "load" });
+  await expect(page.getByTestId("today-hero")).toBeVisible({ timeout: 30_000 });
+  await expect(
+    page.getByTestId("continuation-unconfirmable"),
+    node("ord0269-cell3", "a 200 feed with no events array stayed silent instead of naming itself"),
+  ).toBeVisible({ timeout: 15_000 });
+  const malformedLine = (await page.getByTestId("continuation-unconfirmable").innerText())
+    .replace(/\s+/g, " ")
+    .trim();
+  expect(malformedLine, node("ord0269-cell3", `the malformed-200 line reads "${malformedLine}"`)).toBe(
+    UNCONFIRMABLE_TEXT,
+  );
+  await expect(page.getByTestId("continuation-pending")).toHaveCount(0);
+
   writeFileSync(
     evidencePath("ord0269-cell3-feed-failure.json"),
-    JSON.stringify({ generatedBy: "e345b9d6", node: "ord0269-cell3", journeyId, line }, null, 1),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        node: "ord0269-cell3",
+        journeyId,
+        line,
+        malformedTwentyHundredLine: malformedLine,
+        note: "two emitters, two reads: 3a the read fails (500), 3b it answers 200 with no events array",
+      },
+      null,
+      1,
+    ),
   );
 });
 
@@ -227,18 +262,79 @@ test("ord0269-r6-page-exclusion-yields-no-conclusion — 本页不含目标轮�
 });
 
 test("ord0269-r4-a-brand-new-journey-shows-nothing — 全新行程不得亮待续卡", async ({ page }) => {
-  test.setTimeout(180_000);
-  const { journeyId } = await installStack(page, { includeMissionOnPage: false });
-  // No leg 1: no marker, no history -- the R-4 negative control.
-  await page.waitForTimeout(1_000);
+  test.setTimeout(300_000);
+  /* R-4 read the strong way.  "No marker anywhere, no card" is nearly free: it stays green even if
+     the marker stops being journey-scoped, which is the failure this control exists to catch.  So
+     leg 1 writes a REAL marker on journey A first, then a second journey that was never planned is
+     created through the product API and opened -- journey A's card must not follow the traveller. */
+  const { journeyId } = await installStack(page, { includeMissionOnPage: true });
+  await runLeg1(page);
+  const markerOnA = await page.evaluate(
+    (jid) => localStorage.getItem(`citynexus.v8.continuation.${jid}`) ?? "",
+    journeyId,
+  );
+  expect(
+    markerOnA.length > 0,
+    node("ord0269-r4", `journey A has no marker to leak (storage key empty) -- negative control is vacuous`),
+  ).toBe(true);
+
+  const traveler = (await (
+    await page.request.post("/api/v1/travelers", {
+      data: { display_name: "ORD-0269 R-4 second traveller", locale: "en-GB", timezone: "Asia/Shanghai" },
+    })
+  ).json()) as { id?: string };
+  expect(traveler.id, node("ord0269-r4", "no second traveller -- journey B could not be created")).toBeTruthy();
+  const journeyB = (await (
+    await page.request.post("/api/v1/journeys", {
+      data: {
+        traveler_id: traveler.id,
+        title: "ORD-0269 R-4 unplanned journey",
+        city_code: "CN-TIANJIN",
+        timezone: "Asia/Shanghai",
+        start_at: "2026-11-09T18:00:00+08:00",
+        end_at: "2026-11-11T15:00:00+08:00",
+        budget: { amount_minor: 120000, currency: "CNY" },
+      },
+    })
+  ).json()) as { id?: string };
+  expect(journeyB.id, node("ord0269-r4", "the product API refused to create journey B")).toBeTruthy();
+  const otherJourneyId = String(journeyB.id);
+  expect(
+    otherJourneyId !== journeyId,
+    node("ord0269-r4", `journey B came back as the same id as A (${otherJourneyId})`),
+  ).toBe(true);
+
+  await page.evaluate((id) => {
+    localStorage.setItem("citynexus.v8.journey_id", id);
+  }, otherJourneyId);
+  await page.reload({ waitUntil: "load" });
+  /* The screen has to be there before "no card" means anything. */
+  await expect(page.getByTestId("today-hero")).toBeVisible({ timeout: 30_000 });
   await expect(
     page.getByTestId("continuation-pending"),
-    node("ord0269-r4", "a journey that was never planned painted the pending card"),
+    node("ord0269-r4", "journey A's interrupted round painted a pending card on journey B"),
   ).toHaveCount(0);
-  await expect(page.getByTestId("continuation-unconfirmable")).toHaveCount(0);
+  await expect(
+    page.getByTestId("continuation-unconfirmable"),
+    node("ord0269-r4", "journey A's marker leaked into journey B as an unconfirmable line"),
+  ).toHaveCount(0);
 
   writeFileSync(
     evidencePath("ord0269-r4-negative.json"),
-    JSON.stringify({ generatedBy: "e345b9d6", node: "ord0269-r4", journeyId, note: "no marker, no card" }, null, 1),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        node: "ord0269-r4",
+        journeyWithMarker: journeyId,
+        markerBytesOnA: markerOnA.length,
+        unplannedJourney: otherJourneyId,
+        pendingCardsOnB: 0,
+        unconfirmableLinesOnB: 0,
+        note: "strong form: a real marker exists on A, B is a separate real journey, B shows nothing",
+      },
+      null,
+      1,
+    ),
   );
 });
+
