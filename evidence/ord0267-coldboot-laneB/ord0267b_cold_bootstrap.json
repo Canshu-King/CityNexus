@@ -1,0 +1,358 @@
+{
+ "at": "2026-09-24T10:56:13+08:00",
+ "order": "ORD-0267 定形重取 · 第 2 步：冷启完整性（四臂）",
+ "lane": "B c01d72a3",
+ "mode": "READ-ONLY; no product byte changed",
+ "surface": {
+  "origin_and_shell": "http://127.0.0.1:8446",
+  "served_from": "dist_ord0267b (tip c79e2b4f)",
+  "one_fresh_profile_per_arm": true,
+  "loopback_only": true,
+  "never_touched_or_opened": [
+   ":4781",
+   ":4782",
+   ":8693",
+   "tunnel",
+   "cnx proxy",
+   "_live",
+   "_preview"
+  ],
+  "demo_reset": 0
+ },
+ "arms": {
+  "clean": {
+   "install": {
+    "nav": {
+     "ok": true,
+     "status": 200
+    },
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "registrations": [
+     {
+      "scope": "/",
+      "active": "/v10-sw.js",
+      "active_state": "activated",
+      "waiting": null,
+      "installing": null
+     }
+    ],
+    "manifest_count": null,
+    "cached_count": null,
+    "missing_from_cache": null,
+    "cache_names": [],
+    "precache_entries": null,
+    "worker_source": {
+     "status": 200,
+     "ok": true,
+     "rev": 4,
+     "precacheCalls": 1
+    },
+    "page_errors": [],
+    "console_errors": [],
+    "non_200_responses": [],
+    "origin_served": {
+     "requests": 17,
+     "non_200": [],
+     "non_200_count": 0,
+     "paths_500": []
+    }
+   },
+   "offline": {
+    "nav": {
+     "ok": true,
+     "status": 200
+    },
+    "url": "http://127.0.0.1:8446/v8/hub",
+    "controlled": true,
+    "mounted": true,
+    "leaf_count": 77,
+    "rendered_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "requests_failed": [
+     {
+      "url": "/api/v1/demo/scene",
+      "why": "net::ERR_CONNECTION_REFUSED"
+     },
+     {
+      "url": "/v10-sw.js",
+      "why": "net::ERR_CONNECTION_REFUSED"
+     }
+    ],
+    "non_200": [],
+    "asset_probe": [
+     {
+      "url": "/assets/index-ChOTTCvB.js",
+      "status": 200,
+      "from_sw": "n/a"
+     },
+     {
+      "url": "/assets/index-I45CQek8.css",
+      "status": 200,
+      "from_sw": "n/a"
+     }
+    ],
+    "cache_names": []
+   }
+  },
+  "css_fails": {
+   "install": {
+    "nav": {
+     "ok": true,
+     "status": 200
+    },
+    "controlled": false,
+    "controller": null,
+    "registrations": [],
+    "manifest_count": null,
+    "cached_count": null,
+    "missing_from_cache": null,
+    "cache_names": [],
+    "precache_entries": null,
+    "worker_source": {
+     "status": 200,
+     "ok": true,
+     "rev": 4,
+     "precacheCalls": 1
+    },
+    "page_errors": [],
+    "console_errors": [
+     "Failed to load resource: the server responded with a status of 500 (X)"
+    ],
+    "non_200_responses": [
+     {
+      "url": "/assets/index-I45CQek8.css",
+      "status": 500,
+      "sw": null
+     }
+    ],
+    "origin_served": {
+     "requests": 12,
+     "non_200": [
+      {
+       "path": "/assets/index-I45CQek8.css",
+       "code": 500,
+       "bytes": 15,
+       "at": "10:49:26"
+      },
+      {
+       "path": "/assets/index-I45CQek8.css",
+       "code": 500,
+       "bytes": 15,
+       "at": "10:49:26"
+      }
+     ],
+     "non_200_count": 2,
+     "paths_500": [
+      "/assets/index-I45CQek8.css"
+     ]
+    }
+   },
+   "offline": {
+    "nav": {
+     "ok": false,
+     "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8446/v8/hub\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:8446/v8/hub\", waiting until \"domcontent"
+    },
+    "url": null,
+    "controlled": null,
+    "mounted": null,
+    "leaf_count": null,
+    "rendered_head": "",
+    "requests_failed": [
+     {
+      "url": "/v8/hub",
+      "why": "net::ERR_CONNECTION_REFUSED"
+     }
+    ],
+    "non_200": [],
+    "asset_probe": [],
+    "cache_names": null
+   }
+  },
+  "sw_fails": {
+   "install": {
+    "nav": {
+     "ok": true,
+     "status": 200
+    },
+    "controlled": false,
+    "controller": null,
+    "registrations": [],
+    "manifest_count": null,
+    "cached_count": null,
+    "missing_from_cache": null,
+    "cache_names": [],
+    "precache_entries": null,
+    "worker_source": {
+     "status": 500,
+     "ok": false,
+     "rev": 0,
+     "precacheCalls": 0
+    },
+    "page_errors": [],
+    "console_errors": [
+     "A bad HTTP response code (500) was received when fetching the script.",
+     "Failed to load resource: the server responded with a status of 500 (X)"
+    ],
+    "non_200_responses": [
+     {
+      "url": "/v10-sw.js",
+      "status": 500,
+      "sw": null
+     }
+    ],
+    "origin_served": {
+     "requests": 6,
+     "non_200": [
+      {
+       "path": "/v10-sw.js",
+       "code": 500,
+       "bytes": 15,
+       "at": "10:49:46"
+      },
+      {
+       "path": "/v10-sw.js",
+       "code": 500,
+       "bytes": 15,
+       "at": "10:49:58"
+      }
+     ],
+     "non_200_count": 2,
+     "paths_500": [
+      "/v10-sw.js"
+     ]
+    }
+   },
+   "offline": {
+    "nav": {
+     "ok": false,
+     "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8446/v8/hub\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:8446/v8/hub\", waiting until \"domcontent"
+    },
+    "url": null,
+    "controlled": null,
+    "mounted": null,
+    "leaf_count": null,
+    "rendered_head": "",
+    "requests_failed": [
+     {
+      "url": "/v8/hub",
+      "why": "net::ERR_CONNECTION_REFUSED"
+     }
+    ],
+    "non_200": [],
+    "asset_probe": [],
+    "cache_names": null
+   }
+  },
+  "nonmember_fails": {
+   "install": {
+    "nav": {
+     "ok": true,
+     "status": 200
+    },
+    "controlled": true,
+    "controller": "/v10-sw.js",
+    "registrations": [
+     {
+      "scope": "/",
+      "active": "/v10-sw.js",
+      "active_state": "activated",
+      "waiting": null,
+      "installing": null
+     }
+    ],
+    "manifest_count": null,
+    "cached_count": null,
+    "missing_from_cache": null,
+    "cache_names": [],
+    "precache_entries": null,
+    "worker_source": {
+     "status": 200,
+     "ok": true,
+     "rev": 4,
+     "precacheCalls": 1
+    },
+    "page_errors": [],
+    "console_errors": [
+     "Failed to load resource: the server responded with a status of 500 (X)"
+    ],
+    "non_200_responses": [
+     {
+      "url": "/assets/probe-extra.js",
+      "status": 500,
+      "sw": null
+     }
+    ],
+    "origin_served": {
+     "requests": 18,
+     "non_200": [
+      {
+       "path": "/assets/probe-extra.js",
+       "code": 500,
+       "bytes": 15,
+       "at": "10:56:04"
+      }
+     ],
+     "non_200_count": 1,
+     "paths_500": [
+      "/assets/probe-extra.js"
+     ]
+    }
+   },
+   "offline": {
+    "nav": {
+     "ok": true,
+     "status": 200
+    },
+    "url": "http://127.0.0.1:8446/v8/hub",
+    "controlled": true,
+    "mounted": true,
+    "leaf_count": 77,
+    "rendered_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+    "requests_failed": [
+     {
+      "url": "/api/v1/demo/scene",
+      "why": "net::ERR_CONNECTION_REFUSED"
+     },
+     {
+      "url": "/v10-sw.js",
+      "why": "net::ERR_CONNECTION_REFUSED"
+     }
+    ],
+    "non_200": [],
+    "asset_probe": [
+     {
+      "url": "/assets/index-ChOTTCvB.js",
+      "status": 200,
+      "from_sw": "n/a"
+     },
+     {
+      "url": "/assets/index-I45CQek8.css",
+      "status": 200,
+      "from_sw": "n/a"
+     }
+    ],
+    "cache_names": []
+   }
+  }
+ },
+ "arm_corrections": [
+  {
+   "arm": "nonmember_fails",
+   "what_was_wrong": "my member comparison used the leading-slash form (`/assets/x.js`) against the worker's own list (`assets/x.js`), so nothing matched and the arm 500-ed a REAL member (the main chunk). That reading is superseded, not averaged in.",
+   "now": "compared after stripping the leading slash; the picked path is printed by the origin at startup together with the member list it read"
+  },
+  {
+   "arm": "nonmember_fails",
+   "what_was_wrong": "my member comparison used the leading-slash form (`/assets/x.js`) against the worker's own list (`assets/x.js`), so nothing matched and the arm 500-ed a REAL member (the main chunk). That reading is superseded, not averaged in.",
+   "now": "compared after stripping the leading slash; the picked path is printed by the origin at startup together with the member list it read"
+  },
+  {
+   "arm": "nonmember_fails",
+   "what_was_wrong": "my member comparison used the leading-slash form (`/assets/x.js`) against the worker's own list (`assets/x.js`), so nothing matched and the arm 500-ed a REAL member (the main chunk). That reading is superseded, not averaged in.",
+   "now": "compared after stripping the leading slash; the picked path is printed by the origin at startup together with the member list it read"
+  }
+ ],
+ "re_ran_only": [
+  "nonmember_fails"
+ ]
+}
