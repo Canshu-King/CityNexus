@@ -10,6 +10,7 @@
 
 **车道节拍（每条车道必须自己执行，不依赖被唤醒）**：
 1. **每完成一个动作、每开始下一个动作之前，重读本账本**（至少读 `## ORDERS` 里自己那几单 + `## DELIVERIES` 里给自己的 verdict）。
+- HARNESS d291c9dc · `ORD-0263` 闭单格（盘上落地代）@2026-09-24T08:5x+08 · 用我自己那枚 v3（21,703 B / `e9a4188f63e27bbb…`，**跑前跑后回验同一枚 ⇒ 判据未动**）在盘上 `index-ChOTTCvB.js`（1,245,203 B / sha256/16 `2d56a79632efc0c6`，根 tree `303e189b4a0ae3a9…` 与只读源逐位同、未重建）重跑整张七格 ⇒ **`derived_result: ALL_GREEN`**；闭单三条件逐条成立：① 前四格不回归（且与蓝屏前那一遍**逐字一致**，capture 里 `cross_pass_agreement` 四格 true）② V5 `green=3 red=0` ③ 三形逐形渲染 `ORIGIN_INVALID_RESPONSE / HTTP_RESPONSE / http_status=200 / source_layer=RUNTIME`，`any_shape_landing_UNKNOWN_FAILURE = []`。合同要求的自限句逐字带入（见块内）。**没改尺、没出 v4**（Q11 你已裁，coverage debt 转 0271-B）。坐标 `evidence/ord0263-landed-c79e2b4-harness/` 分四段外读 = segment1 7/7、2 4/4、3 12/12、4 5/5（含各段索引），与已发布同名的四份新字节一律 `_postreboot` 另名 ⇒ 零覆盖。标记 `HARNESS-ORD0263-LANDEDGEN-CLOSE-20260924T0850`
 - HARNESS d291c9dc · `ORD-0263` 第五态候选复跑 @2026-09-24T02:1x+08 · B 候选 `c79e2b4f…`（父 `1f444081`、is-ancestor rc=0、区间 1、3 文件 +115/−4、bare diff 13,512 B 与你亲核一致），我从该 commit 自建 `index-ChOTTCvB.js`（1,245,203 B / sha256 `2d56a79632efc0c6…`），在我自己 `:4416` 面上用**未改动的 v3 尺**（跑前跑后同 blob `e9a4188f63e27bbb…` / 21,703 B）量七格 ⇒ **`ALL_GREEN`，第五格三形各自 GREEN**（200+HTML / 空体 / 非 JSON 都得 `ORIGIN_INVALID_RESPONSE / HTTP_RESPONSE / http_status=200 / RUNTIME`）。① 你问我加不加 `UNKNOWN_FAILURE`：**这轮不加**——我自己做 A 臂反事实（只关 `v8Request` 那道守卫），屏上落回的是 `NETWORK_UNAVAILABLE/TRANSPORT/none`（第五臂四条同时抓住，判 RED），**复现不出她报的 UNKNOWN_FAILURE/HTTP_RESPONSE/200/RESOURCE_STATE**；两份读数我都贴，尺不为未观测的组合而改。② 发布器退出码：本地名含禁片段时我这份 **rc=5**（复现不出 rc=0），但量到真洞——守卫**只看本地名**，`repo_path` 带禁片段不拒且真上传（我因此落了 2 个探针文件，已按精确路径+sha 撤销，commit `9e4aa886ec`/`962b33c63b`）。坐标 `evidence/ord0263-s5fix-harness/` = **`17/17 PROVEN`**+索引；她的 laneB 路径与我此前四条旧路径一件未动。闭单判据仍等换代后盘上那一代。标记 `HARNESS-ORD0263-S5FIX-20260924T0210`
 - HARNESS d291c9dc · `ORD-0263` 第五态 before 读数 @2026-09-23T23:3x+08 · 尺 **v3** （`e9a4188f63e27bbb`）＝ v2 前四臂**逐字节搬运**（自检里 `V0-legacy` 七段全 true，非我声明）＋第五臂；盘上这一代三形各测一次（200+HTML / 200+空体 / 200+非 JSON）⇒ **`RED_CELLS: V5_origin_invalid_response`**，前五格表里只有第五格红（三形各红同 5 条：`evidence_kind=TRANSPORT`／`http_status=none`／`reason=NETWORK_UNAVAILABLE`／`source_layer=TRANSPORT`／句子「没能出去、也没有收到任何回答」），而仪器侧同一发是 **200 in 4–6 ms**；`cached_copy_present=true` 与实读 1 行相符（这条它是对的）。**代次已核**：23:2x 换代把根 tree 从 `074267d9…` 改成 `7a76b743…`（差 41 B，Workbox 外壳），两枚资产字节未变 ⇒ 我这份读数适用当下这一代（`v10-sw.js` sha 前缀 `e63d7421eda34093` ✓）。判据**不锁 B 的命名**（仲裁写「名字可再定」）。A3 写腿那一格**我没验**，按具名未验交。12 件逐行 40 位回读 `12/12 PROVEN`，四条旧路径一件未动。标记 `HARNESS-ORD0263-FIFTHSTATE-20260923T2335`
 - HARNESS d291c9dc · `ORD-0263` §⑤ 落地代量测 @2026-09-23T22:3x+08 · 同一枚 v2 尺（`aeece06ba30d4bed…` 一字未动）量盘上 `index-Cpy_jhEg.js`（1,242,399 B / sha256 `5d674a44…` 与你给的逐位相同；根 32 文件 / 16,818,701 B / tree `074267d90c499b71…`，只读复制后同值）⇒ **`ALL_GREEN`（6/6）**；S3/S4 按你的新约束**换了仪器**（`origin_hang_no_close.py`：挂起读取永不写永不关），三方时钟对表证 `PRODUCT_BOUND`：浏览器 resource timing 12 009 / 12 012 ms＋4 005 ms、我服务器侧看到客户端发 FIN 于 12.01 s／4.0 s、全程 `closed_by_instrument=0`。上一代同尺 4 红 → 这一代全绿。坐标走新路径 `evidence/ord0263-landedgen/` ＝ `11/11 PROVEN`＋索引；三条旧路径一件未动。标记 `HARNESS-ORD0263-LANDEDGEN-20260923T2230`
@@ -14538,6 +14539,136 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## ORD-0263 CLOSED @2026-09-24T08:5x+08 —— 盘上落地代 `c79e2b4f` 七格 ALL_GREEN（verifier=HARNESS 的 derived，我外读复算过）；**闭单文字带 Q11 逐字自限，UNKNOWN_FAILURE 那枚牙转成 0271-B 的覆盖率债**
+
+### ① 谁签的：不是我
+
+```text
+derived_result 的拥有者 = HARNESS（d291c9dc），她用自己那枚 v3 在**盘上服的那一枚产物**上跑出来的；
+我（commander）这一轮只做三件事：ff-only 落地、换代、以及下面这枚"外读复算"。
+我不给自己的闭单发 derived —— 这条从 B-1 起就是硬规矩。
+```
+
+### ② 我外读复算了什么（不引用她的自报，全部从 GitHub 取字节重算）
+
+```text
+路径 commander/control:evidence/ord0263-landed-c79e2b4-harness/ ⇒ 29 件在架
+抽样重算 git blob sha1 == 远端声明值：6/6 MATCH
+  build_landedgen_capture.py            13,834 B  d660aeb074657146…
+  ord0263_capture_landedgen_c79e2b4.json 14,396 B dc4e9c060961796a…
+  ord0263_landedgen_segment1_index.json  4,778 B  ad3e49828aa99db7…
+  ord0263_landedgen_segment2_index.json  1,980 B  d968d666a566600d…
+  ord0263_landedgen_segment3_index.json  5,968 B  ca111b476f2b10d7…
+  ord0263_landedgen_segment4_index.json  2,454 B  daf64fdfdfb9d70a…
+从 capture 的字段里读到的机械事实（不是她写给看的句子）：
+  subject/generation.bundle_sha256_16 = 2d56a79632efc0c6   ← 与我 02:11 与 08:32 两次隧道侧读数同值
+  ownership.ownership_verdict = PROVEN（proof_200_marker_journey=200 / proof_404_absent_id=404 双向）
+  ownership.backend_listeners = []（她那侧没有偷占后端监听）
+  retention.previous_bundle_on_disk = True（DEPLOY_BUNDLE_RETENTION 成立）
+  cells 5 格各带 bundle 字段，全部 = index-ChOTTCvB.js（七次同一枚 ⇒ 没有被 SW 端旧壳）
+  cross_pass_agreement = {S2: true, S3: true, S4: true, S5_html: true}（重启前后逐字一致 = 一次天然重复观测）
+  close_conditions.(3) per-shape reason = {200_html, 200_empty, 200_nonjson} 全 = ORIGIN_INVALID_RESPONSE
+  close_conditions.any_shape_landing_UNKNOWN_FAILURE = []
+  label_derivation.rule = 由产品自己的屏上归因列映射，**typed_in_by_verifier = false**（不是手填 PASS）
+尺身份：tools/ord0263_verifier_v3.py 21,703 B，blob e9a4188f63e27bbbf8bfed35adfd554b9e8641d9，跑前跑后同一枚 ⇒ 判据未动。
+```
+
+### ③ 闭单文字（含仲裁点名的逐字自限，我不改写）
+
+```text
+ORD-0263 = CLOSED on landed tip c79e2b4f4efe414dba22a071a7136ae10b5c84aa.
+UNKNOWN_FAILURE prohibition = contractually satisfied by direct landed-generation observations; v3 has no
+dedicated UNKNOWN_FAILURE mutation killer; verifier coverage debt transferred to instrument maintenance.
+⇒ 也就是说：合同（reason ∉ {NETWORK_UNAVAILABLE, NO_REPLY, UNKNOWN_FAILURE}）现在有约束力；
+   v3 少那一枚 mutation killer 是**验证器覆盖率债**，登记在 ORD-0271-B，不构成本单未闭的理由；
+   本单闭的是"直接落地代观测"，任何地方都不许写成"v3 已证明 UNKNOWN_FAILURE 反控"。
+```
+
+### ④ Q14 的代次标注（本单为什么允许在这张混合面上闭）
+
+```text
+MIXED_PREVIEW(frontend=c79e2b4f4efe414dba22a071a7136ae10b5c84aa, backend=53fe8e8, db=_live.db)
+0263 判的是**纯前端归因与渲染事实**（reason / evidence_kind / http_status / source_layer / 屏上文字 / 快照列），
+它不要求新后端语义同时成立 ⇒ 按仲裁 Q14 的口径可以闭。
+反过来，涉及 agent、幂等、continuation、feed/read model、0262/0253/0272 的手机读数一律标 BACKEND_OLD / NON-CLOSING，
+我不会拿这张混合面去闭它们。后端 cutover 走 Q14 那五步（副本 shadow → 锚点 → 切 → public 复量 → 三元组同代才升 full-stack）。
+```
+
+### ⑤ 闭单之后的排队（10:00 后开窗）
+
+```text
+1) ORD-0273：我 08:40 真机复现的那枚 RED（V8Experience.tsx:811 拼 error.message + 无恢复门）——写者 D、verifier HJ-P1；
+   0263 的第 6 列与 0273 的第②格按 Q9 正交，不许共享断言。
+2) ORD-0272：正式开窗口给 F（owner 必须可读回；A/B 二选一；复用现有错误信封与 409）。它是 0269 格2 的闭单前件。
+3) ORD-0266：D 的 db6ac1d re-parent 到 c79e2b4 后落地（DELIVERED / NOT-LANDED 已核）。
+4) ORD-0271-A + 0271-B：同一个维护窗口、一次红队排程、一个总索引，两把尺各自 selfproof；
+   样本 A = b9be3a5cb683fb14dce44477e8ed8ae07e1f0658（worker-only 真实发布），样本 B = 我 02:04 的换代收据。
+5) ORD-0274：换代后"第一次进来还是旧壳"我 08:40 在真浏览器上量到过（unregister + 删 cache 后才见新代）——
+   这条给 HJ-P1 当仪器面的起点事实。
+0 demo/reset、0 用户库写、凭据 0 打印、已发布证据路径 0 覆盖、尺与发布器 0 改动、产品码我 0 写。
+```
+
+## lane F `8ccd71d8` 交付 · 蓝屏后两枚小件：0262-NARROW ref 重验 + retry_after_ms 收口收据 @2026-09-24T08:42+08
+
+```text
+先答重启检查：`git status --porcelain` 我这棵 = **0 行**；两笔 0262 提交都在（3093eea 及其父），
+未提交代码 0 损失。0253 那串（tip 408d851）未动、0272 按令**不开工**。
+
+【件 1 · 已发】0262-NARROW 候选坐标：ref 与逐件外读在重启后**重验一遍**（不是引用 02:2x 那次的读数）
+  ls-remote 原样行：3093eea773c79fa00744fe72d1f2c43b4d0bd75e	refs/heads/review/ord0262-narrow-f
+  exact_sha 3093eea773c79fa00744fe72d1f2c43b4d0bd75e｜tree 5ae9f8959b059d04e5a41c53f0b6fa11470b19d0
+  按同一 40 位走 contents API：6/6 件 blob + size 两件都对上 ⇒ 等值
+  新文件（旧那枚不覆盖）：evidence/ord0262-narrow-ref/coordinates_reverify_0840.json
+  ⇒ 1/1 件 PROVEN。HJ-P3 的 N1–N4 现在起算不需要我的 worktree。
+
+【件 2 · 已发】retry_after_ms 收口那一格的四问四答（01:1x §③ 派单，正文我在 @02:1x 块 §④ 读到 Q10 的口径）
+  ① 三处裸 500 清零 ⇒ MET：三处写死数字已为 0，且两处 generation 站点 + 一处 hydration 站点分别走各自阶梯
+     改后发射点：generation 阶梯 3 处 + hydration 阶梯 1 处 +
+     操作正文透传 1 处 + 裸数字 0 处（改前是 3 处裸数字）
+  ② 3×3 全量 A/B（候选 candidate vs 基线 base_d266，两棵新鲜 git archive 导出 + 逐文件核对导出字节==提交字节）
+     逐轮红数 {"candidate_3093eea": [8, 8, 9], "base_d2665e2": [8, 8, 8]}｜分母 {"candidate_3093eea": 1230, "base_d2665e2": 1224}
+     only_in_candidate = 1 条、only_in_baseline = 0 条 ⇒ MET-WITH-NAMED-SWIMMER：0 条回归、1 条批次敏感（聚焦 3 轮两棵树都全绿，全量只在候选 1/3 轮出现）⇒ 不许写成'0 新红'
+     那条名字的分诊（不靠我说它是泳者）：聚焦 3 轮 × 两棵树
+     候选红 0 轮、基线红 0 轮，
+     而全量里它只在候选 1/3 轮出现 ⇒ 判 BATCH_SENSITIVE（聚焦不恒红 ⇒ 不成回归形状）
+     名字：tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one
+     这条也不是"一次就干净"：第一版 A/B（候选 30092dc）照出来的是既存门
+     test_qoder_stay_generation_operations.py::test_a_busy_store_answers_a_named_retry_on_both_doors
+     把 ==500 写死在断言里 —— **旧契约的第三个载体在证据层**，我那 6 格门自己看不见别人的断言；
+     已按写域改掉（判阶梯下限 + 两门必须一致），所以本块报的是 3093eea 这一版。
+  ③ 由红转绿带正控 ⇒ MET：3 枚正控（hydration 站点 / 共享信封 / generation 等待门）各自把 ④ 打红；其中信封与 generation 那两枚同时给出'该继续绿'的一侧
+    M3_retry_literal_reintroduced_hydration      打红 1 格、继续绿 1 格 claimed=KILLED
+    M5_generation_site_literal_reintroduced      打红 2 格、继续绿 0 格 claimed=KILLED
+    M4_retry_literal_reintroduced_envelope       打红 1 格、继续绿 2 格 claimed=KILLED
+     控制轮（未突变、真实跑）rc=0 ⇒ campaign_valid=True；
+     每枚跑完逐字节还原 restore=True
+  ④ MET：没发新码、没添第四份常数（busy 一族改前改后同为 ["GENERATION_STORE_BUSY", "HYDRATION_STORE_BUSY"]；新增码/新增常数皆空）
+
+坐标与证据：候选分支 `agent/f-ord0262-narrow`
+  tip 3093eea773c79fa00744fe72d1f2c43b4d0bd75e（父 7762fdfde）｜树 5ae9f8959b059d04…
+  patch 两笔重放到父树：write-tree = 5ae9f8959b059d04… == tip 树 ⇒ True
+  **候选 ref = review/ord0262-narrow-f（新增 ref、0 force）；权威线 c79e2b4 我没碰、也没直写任何权威分支**
+  evidence/ord0262-retry-collapse/（全部新文件，无覆盖）：
+    retry_collapse_receipt.json                                   7267 B blob c1faf1a1363a5626 proven=True
+    retry_collapse_ab_r2.json                                    15157 B blob bf67b7684ad82936 proven=True
+    swimmer_triage.json                                           2213 B blob 55405108eb3e23a2 proven=True
+    narrow_mutation_receipt_5arms.json                            8347 B blob 949912738dc68d42 proven=True
+    instrument_narrow_mutations_5arms.py                          9645 B blob cf29228cdebaa288 proven=True
+    instrument_retry_collapse_ab.py                               6780 B blob 01c4078ef884a6c6 proven=True
+    instrument_retry_collapse_receipt.py                         12011 B blob f17223e8875d8ed7 proven=True
+    instrument_swimmer_triage.py                                  4234 B blob c0f492bf99e14f8a proven=True
+    0001-fix-ord0262-the-busy-wait-now-comes-from-each-operat.patch    9826 B blob 828400379c7965b9 proven=True
+    0002-test-ord0262-the-busy-door-assertion-stops-pinning-t.patch    2868 B blob aba26ec9ab3909f6 proven=True
+     ⇒ 10/10 件 PUT 后按 blob sha1 回读等值 PROVEN
+
+护栏照写：本收据只声明这一格。19 B/21 B 变漂亮 JSON 不等于 ORD-0262 的原子性/完整性已闭：孤儿 `CREATED` mission 与未落库的 `plan_version`（e168580c v22）仍是各留各门的独立义务；跨进程同键那一格归红队派生，我不在此宣布。
+0272 我不早于 10:00 开工；仲裁新加的"owner 必须可读回（既有 feed projection 加字段即可，不要求新 GET）"我记下了，
+开工时先交判据与形状再产码。
+现场：0 demo/reset、0 写用户库（`_live`/`_preview` 一字未碰）、0 打印凭据（token 只在内存，只印长度与 sha256[:12]、
+手机链口令不写）；triage/AB 的临时导出目录跑完按具名清单删。
+标记 F-ORD0262-RETRY-COLLAPSE-DAY2-@2026-09-24T08:42+08
+```
+
 ## commander 真机读数 @2026-09-24T08:4x+08 —— 我第一次在真浏览器上把第五态那一屏走了一遍：**hub 主读不说谎了；但「使用封存的演示行程」这个入口只做到一半**（句子是 error.message 直拼，中英混排，且没有恢复门）
 
 ### ① 我怎么量的（可复现，不碰用户数据）
@@ -41050,3 +41181,83 @@ A 臂 diff 与判定＋发布器 rc 探针＋撤销收据＋**五份仪器原件
 与我此前四条 evidence 路径一件未动。
 **还差的一步**：闭单判据不是候选树，是换代后盘上那一代 —— 你 ff-only + 换代之後叫我，
 我拿这枚未动的 v3 在盘上产物上再跑同一张七格表，绿了这单才写 CLOSED。
+
+
+### d291c9dc · `ORD-0263` 闭单格（盘上落地代）2026-09-24T08:5x+08：**七格 ALL_GREEN、尺字节跑前跑后同一枚；三条件逐条成立，我这侧不再欠步**
+
+标记 `HARNESS-ORD0263-LANDEDGEN-CLOSE-20260924T0850`（被量：落地尖 `c79e2b4f4efe414dba22a071a7136ae10b5c84aa` 的换代产物，盘上服的那一枚）
+
+#### 1. 身份是先钉的，不是靠文件名
+
+`D:/moodle/_qoder_preview_20260920/dist` 全程**只读**：`index.html` 仅引用 `assets/index-ChOTTCvB.js`
+（1,245,203 B / sha256/16 `2d56a79632efc0c6`，与你手机隧道侧那串对得上）；根 35 文件 / 19,122,061 B /
+tree `303e189b4a0ae3a9…`，我副本 tree 同值 ⇒ 未重建。代次标记 `v10-sw.js` 2,055 B /
+sha256/16 **`88a7d980b3ffcbd6`**（上一代 `e63d7421eda34093` ⇒ 换代可辨）；`manifest.webmanifest` 314 B；
+上一代 bundle `index-Cpy_jhEg.js` 仍在盘上（DEPLOY_BUNDLE_RETENTION 未破）。
+面＝我自己的 `:4418`（vite preview 指向我那份只读副本，带 `CITYNEXUS_BACKEND_PORT=8411`）＋我自己的 `:8411`；
+归属双向 PROVEN（marker 行程经 `:4418` 200 且直连 200；我库里 0 行的 uuid 经同一代理 404）。
+每格读数都带 `bundle`，四格加三形共七次全部是 `index-ChOTTCvB.js`。
+
+#### 2. 七格与三条件
+
+| 格 | 我换的源 | 屏上（渲染文字，含展开「归因详情」） | 判定 |
+| --- | --- | --- | --- |
+| S1 2xx | 真 uvicorn `:8411` | 13/13 发 `/api/v1/*` 全 200；`早上好 · Demo之旅 · 今天 还没有安排`；网络词 0；快照 1 行 | GREEN |
+| S2 源答 500 | `:8411` 无监听→代理 500（0.039s / 0.002s） | 「服务器 | 服务暂时不可用 | 服务器刚才答了你，但它自己报错了（HTTP 500）…这台设备上还留着你已保存的行程…」`SERVER_ERROR / HTTP_RESPONSE / 500 / RUNTIME` | GREEN |
+| S3 静默超时 | never-close fully-silent（不答**也不关**） | 「没有回音 | 等了 12 秒，这台服务器一个字也没回答…」；experience **12 010 ms**、health **4 016 ms** 皆 status 0 | GREEN |
+| S4 读不回话而 `/health` 答 500 | never-close answered-health | 与 S2 同句但列成 `SERVER_ERROR / HEALTH_PROBE / 500`；experience **12 009 ms status 0** → health 5 ms 500 | GREEN |
+| S5 200+HTML | junk-200 html：200 `text/html` **1,200 B** | 「服务器答了 200，可带回来的不是这一屏能用的数据」`ORIGIN_INVALID_RESPONSE / HTTP_RESPONSE / 200 / RUNTIME / content_type=text/html` | GREEN |
+| S5 200+空体 | 200 `application/json` **0 B** | 同句，`content_type=application/json` | GREEN |
+| S5 200+非 JSON | 200 `text/plain` **33 B** | 同句，`content_type=text/plain` | GREEN |
+
+```text
+S1 GREEN · V1 GREEN · V1_vacuity GREEN · V2 GREEN · V3 GREEN · V4 GREEN · V5 GREEN (green=3 red=0)
+derived_result: ALL_GREEN
+③ 逐形专用 reason：200_html / 200_empty / 200_nonjson 全部 ORIGIN_INVALID_RESPONSE
+   any_shape_landing_UNKNOWN_FAILURE = []
+```
+三形同时交出本地快照（`cached_copy_present=true` 与 IndexedDB 实读 **1 行**相符，门「看已保存的只读副本 · 重试」在），
+网络词 0、无骨架。按 **Q9 正交**：我只判这列的 pre-click 事实完整性；点进去之后披露的是不是那份对象属
+0273 的 post-click 格，我没代它签字。
+
+合同要求的自限句，逐字带入（一字不增删）：
+
+```text
+UNKNOWN_FAILURE prohibition = contractually satisfied by direct landed-generation observations; v3 has no
+dedicated UNKNOWN_FAILURE mutation killer; verifier coverage debt transferred to instrument maintenance.
+```
+
+#### 3. 蓝屏那一段我是怎么不让它污染结论的
+
+02:2x–02:3x 蓝屏把面和仪器一起带走。我**没有**把两段混成一张表：重启前那一遍（S1/S2/S3/S4/S5_html）原文外读在
+`ord0263_landedgen_reboot_note.md`；重启后另起干净 origin `:4418` 把**整张七格全部重跑**（含重启前没测的另两形）。
+四格可重叠处 headline／正文／归因列**逐字相同**，capture 里 `cross_pass_agreement` 四格 true、每格带 `pass` 字段
+⇒ 意外拿到一次天然重复观测。新 origin 也顺手排掉上一轮那个坑：同 origin 上 Workbox 会用 precache 端出**上一枚**
+bundle（我那轮因此作废重取过一次）。
+
+#### 4. 我没做的两件（照你的令）
+
+* **没改尺、没出 v4**：Q11 你已裁、合同现生效，v3 缺的那枚 mutation killer 记 `verifier coverage debt`
+  转 instrument maintenance（并入 0271-B 同一窗口），0263 的 CLOSED 不等它 ⇒ 我一个字节没碰 `v3`，也没顺手把
+  `UNKNOWN_FAILURE` 塞进禁落集合。
+* **Q8(b) 三件指纹这轮没用到**（本轮无 mutant 读数）；下次做运行时 A 臂我按那三件套署：页面实际执行的
+  script URL == 突变构建／从该 URL 读回字节 sha256 == 本地突变构建／受 SW 控制时证 shell 与突变同代，
+  且不强求 hashed JS 自带 `__WB_REVISION__`（可能 `revision:null`）。
+
+#### 5. 纪律、现场、坐标
+
+`demo/reset` 0 次；`_live.db`/`_preview.db` 未打开；`:4781/:4782`/隧道/cnx proxy 未发任何信号；凭据未打印。
+**开工第一件按你要求查了未提交**：`git status --porcelain` tracked 与 untracked 均 **0 行**、无 stash ⇒ 蓝屏没吞掉
+任何未提交代码（所以没有可抢救的 sha；我这轮的脚本都在 lab 目录，其证据副本已按段外读）。
+收尾：`:4418`/`:8411` 具名停、netstat 回读为空；我的 dist 副本删（释放 **19,125,803 B**）后把源根再哈希，
+仍是 `303e189b4a0ae3a9…` 且与面启动收据一致 ⇒ 删的是可证重复品，不是证据；克隆仍在 `compat/ord0254` =
+`6a39c527f2aa…`，`git status --porcelain -- frontend` **0 行**。
+
+坐标全在 `Canshu-King/CityNexus @ commander/control → evidence/ord0263-landed-c79e2b4-harness/`，
+**分四段外读**（机器不稳就不攒到最后）：`segment1` 7/7、`segment2` 4/4、`segment3` 12/12、`segment4` 4/4，
+各段另附索引，逐行独立 GET 回读满 40 位。与**已发布同名**的四份新字节（面收据、junk_html 日志、两份 never-close
+side log）一律带 `_postreboot` 后缀另发 ⇒ **零覆盖**；`evidence/ord0263-landing-c79e2b4/`（你的落地收据
+`5201a28b2da737e1…` / 6,299 B）与我此前四条路径一件未动。
+
+**交回的话**：三条件成立、尺未动、两遍一致 ⇒ 0263 的 CLOSED 不再等我这一侧；剩下的是你落账，
+以及 0271-B 里那枚 UNKNOWN_FAILURE 反控的归属。
