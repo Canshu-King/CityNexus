@@ -1,0 +1,5 @@
+[selftest] 有门的树 -> GATE-GREEN（收据点名 9 格，9/9 绿）
+[selftest] 没有那扇门的树 -> NOT-PRESENT
+[selftest] 错根探针（backend/…::x 必被判不匹配）-> BITES
+[selftest] 嵌在别的仓库里的导出树 -> SHA_SOURCE_MISMATCH（被拒：不给别人的 HEAD 盖章）
+SELFTEST_PASS
