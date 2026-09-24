@@ -48,8 +48,12 @@ const en: Dict = {
      rule).  Naming *any* city here is the `HUMAN_MISLEADING` defect; so would be "Guangzhou". */
   "trial.tianjinDemo": "Use the sealed demo trip",
   /* ORD-0273: the sealed-demo read failure is a named product state, not a raw error passthrough.
-     The technical facts ride in data-* of the element (see V8Experience), never in this sentence. */
-  "trial.sealedUnreadable": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+     The technical facts ride in data-* of the element (see V8Experience), never in this sentence.
+     This is the `en` copy: the same key in `zhCN` below carries the Chinese sentence, and neither
+     dictionary may hold the other's language -- an English screen speaking Chinese is the ORD-0240
+     defect wearing the other coat. */
+  "trial.sealedUnreadable":
+    "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
 
   "trial.city": "Destination city",
   "trial.country": "Country/region code",

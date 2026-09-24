@@ -5,6 +5,11 @@
  * the raw error facts (message, error name, MIME shapes) live only in data-* on the alert element
  * and must never leak into the main copy.  The leak shapes are named precisely -- no wide regex.
  *
+ * TEXT-EN: the same sentence has to hold in the *other* locale too.  The first cut of this fix put
+ * the Chinese sentence into both dictionaries, which is ORD-0240's defect wearing the other coat --
+ * an English screen speaking Chinese.  So this node reads the painted copy under `en` as well, and
+ * checks the language of each arm with a CJK scan that is proven to fire on the Chinese arm.
+ *
  * ACTION: the failure screen carries an executable next step -- 「重试」 bound to the same read.
  * The read is deadline-bounded by ORD-0263's READ_DEADLINE_MS, so a retry cannot open a second
  * unbounded wait (0273 cell 1's single-clock principle).
@@ -20,23 +25,30 @@ test.use({ viewport: VIEWPORT, hasTouch: true });
 
 /** The registered i18n value, held by this gate and never imported from the product file. */
 const FROZEN_SENTENCE = "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。";
+/** The registered English value, likewise held here -- equality with the disk copy is checked twice. */
+const FROZEN_SENTENCE_EN =
+  "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.";
 /** The named leak shapes (commander's list): none of these may appear in the main copy. */
 const LEAK_SHAPES = ["origin answered", "unusable body", "text/html", "text/plain", "Error", "TypeError"];
+const hasCJK = (text: string) => /[\u3400-\u9fff]/.test(text);
 
-async function openWizardWithBrokenScene(page: Page) {
+async function openWizardWithBrokenScene(page: Page, locale = "zh-CN") {
   const seeded = (await (await page.request.get("/api/v1/demo/scene")).json()) as {
     journey_id?: string;
   };
   const journeyId = String(seeded.journey_id ?? "");
   expect(journeyId.length, node("seed", "/api/v1/demo/scene returned no journey_id")).toBeGreaterThan(8);
-  await page.addInitScript((id) => {
-    if (localStorage.getItem("citynexus.storage-seeded") !== "1") {
-      localStorage.clear();
-      localStorage.setItem("citynexus.storage-seeded", "1");
-    }
-    localStorage.setItem("citynexus.locale", "zh-CN");
-    localStorage.removeItem("citynexus.v8.journey_id");
-  }, journeyId);
+  await page.addInitScript(
+    ([id, loc]) => {
+      if (localStorage.getItem("citynexus.storage-seeded") !== "1") {
+        localStorage.clear();
+        localStorage.setItem("citynexus.storage-seeded", "1");
+      }
+      localStorage.setItem("citynexus.locale", loc);
+      localStorage.removeItem("citynexus.v8.journey_id");
+    },
+    [journeyId, locale] as const,
+  );
   /* The commander's 08:40 shape: the sealed-demo read answers 200 with an HTML body. */
   await page.route("**/api/v1/demo/scene*", async (route) => {
     await route.fulfill({
@@ -89,6 +101,69 @@ test("ord0273-text-the-sentence-is-the-key-and-no-shape-leaks — 主文案是�
   await page.screenshot({
     path: evidencePath(`ui-overnight/ord0273-sealed-failure-${process.env.CITYNEXUS_E2E_RUN_ID ?? "dev"}.png`),
   });
+});
+
+test("ord0273-text-en-arm-speaks-english-and-neither-side-leaks — 英文臂不得说中文", async ({
+  page,
+}) => {
+  test.setTimeout(180_000);
+  await openWizardWithBrokenScene(page, "en");
+  await page.getByTestId("trial-tianjin-demo").click();
+
+  const alert = page.getByTestId("trial-sealed-unavailable");
+  await expect(alert, node("ord0273-text-en", "the failure alert never rendered under locale=en")).toBeVisible({
+    timeout: 15_000,
+  });
+  const sentence = (await alert.locator("p").innerText()).replace(/\s+/g, " ").trim();
+  expect(
+    sentence,
+    node(
+      "ord0273-text-en",
+      `the English screen reads "${sentence}" -- it must equal the registered English value`,
+    ),
+  ).toBe(FROZEN_SENTENCE_EN);
+  /* Two-way control for the language scan: it has to fire on the Chinese arm's own frozen sentence,
+     otherwise "the English copy contains no CJK" is a scan that can never fail. */
+  expect(
+    hasCJK(FROZEN_SENTENCE),
+    node("ord0273-text-en", "the CJK scan did not fire on the Chinese constant -- the scan is dead"),
+  ).toBe(true);
+  expect(
+    hasCJK(sentence),
+    node("ord0273-text-en", `Chinese copy reached the English screen: "${sentence}"`),
+  ).toBe(false);
+  for (const shape of LEAK_SHAPES) {
+    expect(
+      sentence.toLowerCase().includes(shape.toLowerCase()),
+      node("ord0273-text-en", `the leak shape "${shape}" reached the English main copy`),
+    ).toBe(false);
+  }
+  const detail = await alert.evaluate((el) => ({
+    errorName: el.getAttribute("data-error-name") ?? "",
+    errorMessage: el.getAttribute("data-error-message") ?? "",
+  }));
+  expect(
+    detail.errorMessage.length > 0,
+    node("ord0273-text-en", "the technical detail vanished under locale=en too -- telemetry lost its facts"),
+  ).toBe(true);
+
+  writeFileSync(
+    evidencePath("ord0273-text-en-reading.json"),
+    JSON.stringify(
+      {
+        generatedBy: "e345b9d6",
+        node: "ord0273-text-en",
+        locale: "en",
+        sentence,
+        cjkInEnglishArm: hasCJK(sentence),
+        cjkControlOnChineseConstant: hasCJK(FROZEN_SENTENCE),
+        detail,
+        leakShapesChecked: LEAK_SHAPES,
+      },
+      null,
+      1,
+    ),
+  );
 });
 
 test("ord0273-action-retry-is-a-real-executable-step — 失败屏带着能走的那一步", async ({ page }) => {

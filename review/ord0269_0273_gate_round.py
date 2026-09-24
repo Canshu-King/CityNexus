@@ -24,6 +24,9 @@ for _stream in (sys.stdout, sys.stderr):
 
 ROOT = os.environ.get("CNX_LANE_ROOT", "D:/moodle/_qoder_d_lane_20260923")
 EVIDENCE = f"{ROOT}/review/evidence"
+# Where the reverse-mutation driver writes.  The green round only points at it; it never claims a
+# kill it has not read back from that file.
+ARMS_RECEIPT = f"{EVIDENCE}/ui-overnight/ord0269-0273-arms.json"
 OUT = sys.argv[1] if len(sys.argv) > 1 else f"{EVIDENCE}/ord0269-0273-gate-round.json"
 
 NODE_RE = re.compile(r"^\s+(ok|failed|passed|skipped|interrupted) (\d+) \[([^\]]+)\] . (\S+\.spec\.ts):(\d+):\d+ . (.*?)(?:\s+\(([\d.]+[ms]+)\))?\s*$")
@@ -40,6 +43,7 @@ EXPECTED = {
     ],
     "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts": [
         "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks",
+        "ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
         "ord0273-action-retry-is-a-real-executable-step",
     ],
 }
@@ -78,7 +82,9 @@ def parse_log(path: str) -> dict:
                 "status": status,
                 "index": int(index),
                 "project": project,
-                "nodeid": f"{spec} :: {test_id}",
+                # The log prints `e2e\file.spec.ts` on Windows; every other coordinate in this repo
+                # is spelled with forward slashes, so normalise here rather than losing the node.
+                "nodeid": f"{spec.replace(chr(92), '/')} :: {test_id}",
                 "title": title.strip(),
                 "duration": duration or "",
             }
@@ -161,6 +167,7 @@ def main() -> int:
         "ord0269-r6-exclusion-reading.json",
         "ord0269-r4-negative.json",
         "ord0273-text-reading.json",
+        "ord0273-text-en-reading.json",
         "ord0273-action-reading.json",
     ):
         path = f"{EVIDENCE}/{name}"
@@ -173,26 +180,54 @@ def main() -> int:
     sentence = text_reading.get("sentence", "")
     detail = text_reading.get("detail", {}) or {}
     error_message = detail.get("errorMessage", "")
+    en_reading = readings.get("ord0273-text-en-reading.json", {})
+    sentence_en = en_reading.get("sentence", "")
 
     # self-test A: the leak scan must be able to fail -- run it against the technical detail and
     # require a hit there.  An always-false scan would "prove" the sentence clean for free.
     scan = lambda s: [shape for shape in LEAK_SHAPES if shape.lower() in s.lower()]
+    has_cjk = lambda s: bool(re.search(r"[\u3400-\u9fff]", s))
     leak_shapes_seen = {
         "main_sentence": scan(sentence),
+        "english_main_sentence": scan(sentence_en),
         "technical_detail_control": scan(error_message),
     }
     if leak_shapes_seen["main_sentence"]:
-        problems.append(f"leak in the main sentence: {leak_shapes_seen['main_sentence']}")
+        problems.append(f"leak in the Chinese main sentence: {leak_shapes_seen['main_sentence']}")
+    if leak_shapes_seen["english_main_sentence"]:
+        problems.append(f"leak in the English main sentence: {leak_shapes_seen['english_main_sentence']}")
     if not leak_shapes_seen["technical_detail_control"]:
         problems.append("self-test A failed: the leak scan did not fire on the technical detail")
 
-    # self-test B: the frozen sentence must be the dictionary value on disk
+    # self-test B: each locale's painted copy must be that locale's own dictionary value, and each
+    # dictionary must speak its own language.  A flat "count the key" check cannot see a Chinese
+    # sentence sitting in the `en` dictionary -- that is the defect this exists to catch.
     locale_src = open(f"{ROOT}/frontend/src/i18n/LocaleContext.tsx", encoding="utf-8").read()
-    dict_hits = re.findall(r'"trial\.sealedUnreadable":\s*"([^"]+)"', locale_src)
-    if len(dict_hits) != 1:
-        problems.append(f"trial.sealedUnreadable occurrences in LocaleContext.tsx = {len(dict_hits)}, expected 1")
-    elif dict_hits[0] != sentence:
-        problems.append("the painted sentence is not the dictionary string byte-for-byte")
+
+    def dict_block(name: str, until: str) -> str:
+        start = locale_src.index(f"const {name}: Dict = {{")
+        return locale_src[start : locale_src.index(until, start)]
+
+    blocks = {
+        "en": dict_block("en", "const zhCN: Dict = {"),
+        "zh-CN": dict_block("zhCN", "const dictionaries: Record<TripLocale, Dict>"),
+    }
+    KEY_RE = re.compile(r'"trial\.sealedUnreadable":\s*\n?\s*"([^"]+)"')
+    dict_values = {}
+    for locale, block in blocks.items():
+        hits = KEY_RE.findall(block)
+        if len(hits) != 1:
+            problems.append(f"trial.sealedUnreadable in the {locale} dictionary = {len(hits)} hits, expected 1")
+            continue
+        dict_values[locale] = hits[0]
+    cjk_by_dictionary = {locale: has_cjk(value) for locale, value in dict_values.items()}
+    if cjk_by_dictionary.get("zh-CN") is not True or cjk_by_dictionary.get("en") is not False:
+        problems.append(f"self-test B failed: the CJK scan is not firing both ways: {cjk_by_dictionary}")
+    if dict_values.get("zh-CN") != sentence:
+        problems.append("the painted Chinese sentence is not the zhCN dictionary value byte-for-byte")
+    if dict_values.get("en") != sentence_en:
+        problems.append("the painted English sentence is not the en dictionary value byte-for-byte")
+
 
     payload = {
         "generatedBy": "e345b9d6",
@@ -221,10 +256,29 @@ def main() -> int:
         "measured_readings": readings,
         "leak_scan_selftest": leak_shapes_seen,
         "dictionary_equality": {
-            "trial.sealedUnreadable_on_disk": dict_hits[0] if len(dict_hits) == 1 else None,
-            "sentence_painted": sentence,
-            "equal": len(dict_hits) == 1 and dict_hits[0] == sentence,
+            "per_locale": {
+                locale: {
+                    "dictionary_value": dict_values.get(locale),
+                    "painted": sentence if locale == "zh-CN" else sentence_en,
+                    "equal": dict_values.get(locale)
+                    == (sentence if locale == "zh-CN" else sentence_en),
+                    "contains_cjk": cjk_by_dictionary.get(locale),
+                }
+                for locale in ("en", "zh-CN")
+            },
         },
+        "caught_this_round": (
+            "commit 9d28c2b carried the Chinese sentence in the `en` dictionary, so an English screen "
+            "would have spoken Chinese (ORD-0240's defect in the other coat). This segment replaces it "
+            "with the registered English value and adds the ord0273-text-en node that reads the English "
+            "arm off the rendered screen."
+        ),
+        "reddening_proof": (
+            os.path.basename(ARMS_RECEIPT)
+            if os.path.exists(ARMS_RECEIPT)
+            else "NOT_PRESENT_YET -- the arm that puts the Chinese sentence back into `en` must be run "
+            "before this round may claim the English node reddens"
+        ),
         "verdict": "GREEN" if not problems else "PROBLEMS",
         "problems": problems,
     }
