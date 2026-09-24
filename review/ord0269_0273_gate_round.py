@@ -143,7 +143,8 @@ def collect_evidence(landed_tip: str, pre_rebase_tip: str, problems: list) -> di
         "base_proof": {
             "landed_tip": landed_tip,
             "candidate_is_descendant": is_desc,
-            "commits_ahead": git_out(f"git rev-list --count {landing_tip}..HEAD"),
+            "commits_ahead": git_out(f"git rev-list --count {landed_tip}..HEAD"),
+
             "base_tip": pre_rebase_tip,
             "frontend_files_differring_from_base": [
                 line for line in git_out(f"git diff --name-only {pre_rebase_tip} HEAD -- frontend").splitlines() if line
