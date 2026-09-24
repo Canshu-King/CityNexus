@@ -1,0 +1,55 @@
+{
+ "at": "2026-09-24T08:39:28+08:00",
+ "segment": "segment2",
+ "lane": "HARNESS d291c9dc",
+ "subject": "landed generation c79e2b4f4efe414dba22a071a7136ae10b5c84aa as served from disk, measured on my own face after the 02:2x-02:3x blue-screen reboot",
+ "ruler": {
+  "file": "tools/ord0263_verifier_v3.py",
+  "bytes": 21703,
+  "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "promised": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "unchanged_so_far": true
+ },
+ "files_requested": 3,
+ "proven_by_40char_readback": 3,
+ "not_proven": [],
+ "older_segments_untouched": true,
+ "rows": [
+  {
+   "local_file": "ord0263_landedgen_readings.jsonl",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_landedgen_readings.jsonl",
+   "bytes": 3660,
+   "blob40": "64d117ae33a2fe774daa05b636da664ca2cb17e3",
+   "readback_status": 200,
+   "readback_bytes": 3660,
+   "readback_blob40": "64d117ae33a2fe774daa05b636da664ca2cb17e3",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 3660 | remote size 3660 | sha1 64d117ae33a2fe77"
+  },
+  {
+   "local_file": "tools/publish_increment.py",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/publish_increment.py",
+   "bytes": 5796,
+   "blob40": "46be39e68465aec5630856654fd69b7f3ecb5355",
+   "readback_status": 200,
+   "readback_bytes": 5796,
+   "readback_blob40": "46be39e68465aec5630856654fd69b7f3ecb5355",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 5796 | remote size 5796 | sha1 46be39e68465aec5"
+  },
+  {
+   "local_file": "tools/ship_s5fix.py",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ship_s5fix.py",
+   "bytes": 15964,
+   "blob40": "5c184bea795887d9a1bf3c6f6ad1df3747465e79",
+   "readback_status": 200,
+   "readback_bytes": 15964,
+   "readback_blob40": "5c184bea795887d9a1bf3c6f6ad1df3747465e79",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 15964 | remote size 15964 | sha1 5c184bea795887d9"
+  }
+ ]
+}
