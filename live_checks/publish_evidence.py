@@ -75,26 +75,39 @@ def _content_refusal(blob: bytes) -> str | None:
     return None
 
 
+def _name_refusal(candidate: str, scope: str) -> str | None:
+    """ORD-0275: THE single source of truth for "is this one file name / path component forbidden?".
+
+    Arbiter 5805656486 §5 forbids the obvious shortcut of copying the denylist twice - two lists drift,
+    and the gap that this order exists to close was exactly "local names are checked, repo_path is not".
+    Local basenames and every component of repo_path must therefore go through THIS helper.
+    """
+    c = candidate.lower()
+    if c in FORBIDDEN_BASENAMES or c.endswith(".env") or ".env." in c:
+        return f"FORBIDDEN_BASENAME(scope={scope}: {c})"
+    if c.endswith(FORBIDDEN_SUFFIXES):
+        return f"FORBIDDEN_SUFFIX(scope={scope}: {c})"
+    hit = [f for f in FORBIDDEN_NAME_FRAGMENTS if f in c]
+    if hit:
+        return (f"FORBIDDEN_NAME_FRAGMENT(scope={scope}: {hit[0]} in {c})"
+                " -- ACTIONABLE: this is a NAME-shaped guard (a second belt on top of the SQLite-magic"
+                " content scan). If the artifact is a read-only INSTRUMENT that merely documents such a"
+                " path, rename the FILE and keep the content untouched; the rename shows up in the"
+                " receipt, so it stays auditable. Do NOT weaken the fragment list and do NOT strip"
+                " content to get past it (HARNESS 2026-09-23 hit this with a _live-named witness script)")
+    return None
+
+
 def guard(local_path: str, repo_path: str, blob: bytes, message: str = "",
           control_tool: bool = False) -> str | None:
     """Return a refusal reason, or None when the upload may proceed."""
     import os.path as _p
 
-    name = _p.basename(local_path).lower()
-    real = _p.basename(_p.realpath(local_path)).lower()  # a symlink must not smuggle a denylisted file
-    for candidate in {name, real}:
-        if candidate in FORBIDDEN_BASENAMES or candidate.endswith(".env") or ".env." in candidate:
-            return f"FORBIDDEN_BASENAME({candidate})"
-        if candidate.endswith(FORBIDDEN_SUFFIXES):
-            return f"FORBIDDEN_SUFFIX({candidate})"
-        hit = [f for f in FORBIDDEN_NAME_FRAGMENTS if f in candidate]
-        if hit:
-            return (f"FORBIDDEN_NAME_FRAGMENT({hit[0]} in {candidate})"
-                    " -- ACTIONABLE: this is a NAME-shaped guard (a second belt on top of the SQLite-magic"
-                    " content scan). If the artifact is a read-only INSTRUMENT that merely documents such a"
-                    " path, rename the FILE and keep the content untouched; the rename shows up in the"
-                    " receipt, so it stays auditable. Do NOT weaken the fragment list and do NOT strip"
-                    " content to get past it (HARNESS 2026-09-23 hit this with a _live-named witness script)")
+    for candidate, scope in ((_p.basename(local_path), "local"),
+                             (_p.basename(_p.realpath(local_path)), "local-realpath")):
+        refused = _name_refusal(candidate, scope)  # a symlink must not smuggle a denylisted file
+        if refused:
+            return refused
     if blob[:16] == SQLITE_MAGIC:
         return "FORBIDDEN_CONTENT(sqlite file header)"
     refused = _content_refusal(blob)
@@ -103,6 +116,13 @@ def guard(local_path: str, repo_path: str, blob: bytes, message: str = "",
     rp = repo_path.replace("\\", "/")
     if ".." in rp.split("/"):
         return f"FORBIDDEN_REPO_PATH(traversal: {repo_path})"
+    # ORD-0275 cell 2: a clean local name must not be enough.  Every component of the remote target is
+    # judged by the same helper, so `evidence/x/_live.db`-shaped or token-shaped targets are refused
+    # before anything is PUT, regardless of what the file is called on this disk.
+    for comp in [c for c in rp.split("/") if c]:
+        refused = _name_refusal(comp, "repo_path")
+        if refused:
+            return refused
     # B6: an evidence-submission tool must not double as a control-tool rewriter.  Default target
     # is evidence/** only; live_checks/** needs the explicit --control-tool flag.
     if rp.startswith("evidence/"):
