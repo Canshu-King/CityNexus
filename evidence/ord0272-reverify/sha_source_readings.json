@@ -1,0 +1,92 @@
+{
+ "generated_at": "2026-09-25T02:32:25+08:00",
+ "landed_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+ "outer_repo_head": "8ad10f3e2ba7575f516f4cbfd01a15d14c34583d",
+ "cases": [
+  {
+   "case": "干净导出（周围无 .git）+ 申报落地 sha",
+   "cwd_tree": "D:\\moodle\\_qoder_f_run\\selftest_r3\\clean\\export",
+   "declared_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "exit_code": 0,
+   "verdict": "GATE-GREEN",
+   "stamp_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "sha_source": "declared(--expect-sha / --gen)",
+   "content_provenance": "declared-only：本树周围无 .git，读数只证明『这一代能跑』，不证明『这一代 == 该 sha』",
+   "reason": "",
+   "expected": "GATE-GREEN",
+   "as_expected": true
+  },
+  {
+   "case": "嵌在别的仓库里 + 申报落地 sha",
+   "cwd_tree": "D:\\moodle\\_qoder_f_run\\selftest_r3\\nested_host\\sub\\export",
+   "declared_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "exit_code": 6,
+   "verdict": "SHA_SOURCE_MISMATCH",
+   "stamp_sha": null,
+   "sha_source": "OUTER-REPO HEAD of D:/moodle/_qoder_f_run/selftest_r3/nested_host（与被验快照无关）",
+   "content_provenance": null,
+   "reason": "被验树 D:\\moodle\\_qoder_f_run\\selftest_r3\\nested_host\\sub\\export 不是自己的 git 根，但 git 往上解析到了 8ad10f3e2ba7575f516f4cbfd01a15d14c34583d（属于外层仓库 D:/moodle/_qoder_f_run/selftest_r3/nested_host）。这种形状的 exact_sha 一定是错的 —— 包工头实测到的正是它（戳",
+   "expected": "SHA_SOURCE_MISMATCH",
+   "as_expected": true
+  },
+  {
+   "case": "嵌在别的仓库里 + 申报外层仓库自己的 HEAD（第一版 r3 的洞）",
+   "cwd_tree": "D:\\moodle\\_qoder_f_run\\selftest_r3\\nested_host\\sub\\export",
+   "declared_sha": "8ad10f3e2ba7575f516f4cbfd01a15d14c34583d",
+   "exit_code": 6,
+   "verdict": "SHA_SOURCE_MISMATCH",
+   "stamp_sha": null,
+   "sha_source": "OUTER-REPO HEAD of D:/moodle/_qoder_f_run/selftest_r3/nested_host（与被验快照无关）",
+   "content_provenance": null,
+   "reason": "被验树 D:\\moodle\\_qoder_f_run\\selftest_r3\\nested_host\\sub\\export 不是自己的 git 根，但 git 往上解析到了 8ad10f3e2ba7575f516f4cbfd01a15d14c34583d（属于外层仓库 D:/moodle/_qoder_f_run/selftest_r3/nested_host）。这种形状的 exact_sha 一定是错的 —— 包工头实测到的正是它（戳",
+   "expected": "SHA_SOURCE_MISMATCH",
+   "as_expected": true
+  },
+  {
+   "case": "嵌在别的仓库里 + 不申报",
+   "cwd_tree": "D:\\moodle\\_qoder_f_run\\selftest_r3\\nested_host\\sub\\export",
+   "declared_sha": null,
+   "exit_code": 6,
+   "verdict": "SHA_SOURCE_MISMATCH",
+   "stamp_sha": null,
+   "sha_source": "OUTER-REPO HEAD of D:/moodle/_qoder_f_run/selftest_r3/nested_host（与被验快照无关）",
+   "content_provenance": null,
+   "reason": "被验树 D:\\moodle\\_qoder_f_run\\selftest_r3\\nested_host\\sub\\export 不是自己的 git 根，但 git 往上解析到了 8ad10f3e2ba7575f516f4cbfd01a15d14c34583d（属于外层仓库 D:/moodle/_qoder_f_run/selftest_r3/nested_host）。这种形状的 exact_sha 一定是错的 —— 包工头实测到的正是它（戳",
+   "expected": "SHA_SOURCE_MISMATCH",
+   "as_expected": true
+  },
+  {
+   "case": "干净导出 + 不申报",
+   "cwd_tree": "D:\\moodle\\_qoder_f_run\\selftest_r3\\clean\\export",
+   "declared_sha": null,
+   "exit_code": 6,
+   "verdict": "SHA_SOURCE_UNTRUSTED",
+   "stamp_sha": null,
+   "sha_source": null,
+   "content_provenance": null,
+   "reason": "周围没有 git、又没有 --expect-sha/--gen 里的 40 位申报 ⇒ 这一代给不出可信坐标；请申报落地 sha 后重跑",
+   "expected": "SHA_SOURCE_UNTRUSTED",
+   "as_expected": true
+  },
+  {
+   "case": "没有门的树（反向：不能假装绿）",
+   "cwd_tree": "D:\\moodle\\_qoder_f_run\\e_272ab_base_c79e2b4",
+   "declared_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "exit_code": 3,
+   "verdict": "NOT-PRESENT",
+   "stamp_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "sha_source": "declared(--expect-sha / --gen)",
+   "content_provenance": "declared-only：本树周围无 .git，读数只证明『这一代能跑』，不证明『这一代 == 该 sha』",
+   "reason": "落地树里没有门文件 backend/tests/test_qoder_ord0272_continuation.py ⇒ 这一代不可用本命令复验（不是绿）",
+   "expected": "NOT-PRESENT",
+   "as_expected": true
+  }
+ ],
+ "selftest_output": [
+  "[selftest] 有门的树 -> GATE-GREEN（八格 8/8 绿）",
+  "[selftest] 没门的树 -> NOT-PRESENT",
+  "[selftest] 错根探针（backend/…::x 必被判不匹配）-> BITES",
+  "[selftest] 嵌在别的仓库里的导出树 -> SHA_SOURCE_MISMATCH（被拒：不给别人的 HEAD 盖章）",
+  "SELFTEST_PASS"
+ ]
+}
