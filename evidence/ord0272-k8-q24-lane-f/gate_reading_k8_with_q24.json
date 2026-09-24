@@ -1,0 +1,618 @@
+{
+ "tree": "D:\\moodle\\_qoder_f_ord253_20260923",
+ "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+ "gen": "7c806fab5",
+ "declared_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+ "git_toplevel": "D:/moodle/_qoder_f_ord253_20260923",
+ "git_head_resolved": "7c806fab58e872060cb5811ff96c770b40dad165",
+ "git_root_is_the_verified_tree": true,
+ "sha_source": "git-resolved（被验树自己就是 git 根）",
+ "stamp_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+ "content_provenance": "verified-by-git",
+ "tree_head40": "7c806fab58e872060cb5811ff96c770b40dad165",
+ "tree_branch": "agent/f-ord272-k8",
+ "started_at": "2026-09-25T04:20:30+08:00",
+ "read_only": [
+  "-p no:cacheprovider + PYTHONDONTWRITEBYTECODE=1（不落 .pytest_cache/__pycache__）",
+  "不部署、不起服务",
+  "不写任何数据库（套件用 ORD-0211 一次性临时库；本报告贴出该行并断言不含 _live.db）",
+  "跑前跑后对被验文件做 sha256，任何差异判 FAIL"
+ ],
+ "verdict": "GATE-GREEN",
+ "cells": [
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+   "exact_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\_qoder_f_ord253_20260923\\backend)",
+   "result": "GREEN",
+   "cited_files": [
+    "backend/app/main.py",
+    "backend/app/schemas.py",
+    "backend/tests/test_qoder_ord0272_continuation.py",
+    "contracts/openapi.yaml"
+   ],
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+   "transfer_blocking_files": [
+    "backend/app/main.py",
+    "backend/tests/test_qoder_ord0272_continuation.py"
+   ]
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+   "exact_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\_qoder_f_ord253_20260923\\backend)",
+   "result": "GREEN",
+   "cited_files": [
+    "backend/app/main.py",
+    "backend/app/schemas.py",
+    "backend/tests/test_qoder_ord0272_continuation.py",
+    "contracts/openapi.yaml"
+   ],
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+   "transfer_blocking_files": [
+    "backend/app/main.py",
+    "backend/tests/test_qoder_ord0272_continuation.py"
+   ]
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+   "exact_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\_qoder_f_ord253_20260923\\backend)",
+   "result": "GREEN",
+   "cited_files": [
+    "backend/app/main.py",
+    "backend/app/schemas.py",
+    "backend/tests/test_qoder_ord0272_continuation.py",
+    "contracts/openapi.yaml"
+   ],
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+   "transfer_blocking_files": [
+    "backend/app/main.py",
+    "backend/tests/test_qoder_ord0272_continuation.py"
+   ]
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+   "exact_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\_qoder_f_ord253_20260923\\backend)",
+   "result": "GREEN",
+   "cited_files": [
+    "backend/app/main.py",
+    "backend/app/schemas.py",
+    "backend/tests/test_qoder_ord0272_continuation.py",
+    "contracts/openapi.yaml"
+   ],
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+   "transfer_blocking_files": [
+    "backend/app/main.py",
+    "backend/tests/test_qoder_ord0272_continuation.py"
+   ]
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+   "exact_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\_qoder_f_ord253_20260923\\backend)",
+   "result": "GREEN",
+   "cited_files": [
+    "backend/app/main.py",
+    "backend/app/schemas.py",
+    "backend/tests/test_qoder_ord0272_continuation.py",
+    "contracts/openapi.yaml"
+   ],
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+   "transfer_blocking_files": [
+    "backend/app/main.py",
+    "backend/tests/test_qoder_ord0272_continuation.py"
+   ]
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+   "exact_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\_qoder_f_ord253_20260923\\backend)",
+   "result": "GREEN",
+   "cited_files": [
+    "backend/app/main.py",
+    "backend/app/schemas.py",
+    "backend/tests/test_qoder_ord0272_continuation.py",
+    "contracts/openapi.yaml"
+   ],
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+   "transfer_blocking_files": [
+    "backend/app/main.py",
+    "backend/tests/test_qoder_ord0272_continuation.py"
+   ]
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+   "exact_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\_qoder_f_ord253_20260923\\backend)",
+   "result": "GREEN",
+   "cited_files": [
+    "backend/app/main.py",
+    "backend/app/schemas.py",
+    "backend/tests/test_qoder_ord0272_continuation.py",
+    "contracts/openapi.yaml"
+   ],
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+   "transfer_blocking_files": [
+    "backend/app/main.py",
+    "backend/tests/test_qoder_ord0272_continuation.py"
+   ]
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+   "exact_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\_qoder_f_ord253_20260923\\backend)",
+   "result": "GREEN",
+   "cited_files": [
+    "backend/app/main.py",
+    "backend/app/schemas.py",
+    "backend/tests/test_qoder_ord0272_continuation.py",
+    "contracts/openapi.yaml"
+   ],
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+   "transfer_blocking_files": [
+    "backend/app/main.py",
+    "backend/tests/test_qoder_ord0272_continuation.py"
+   ]
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer",
+   "exact_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\_qoder_f_ord253_20260923\\backend)",
+   "result": "GREEN",
+   "cited_files": [
+    "backend/app/main.py",
+    "backend/app/schemas.py",
+    "backend/tests/test_qoder_ord0272_continuation.py",
+    "contracts/openapi.yaml"
+   ],
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+   "transfer_blocking_files": [
+    "backend/app/main.py",
+    "backend/tests/test_qoder_ord0272_continuation.py"
+   ]
+  }
+ ],
+ "arms": {
+  "K1_claim_stops_committing_before_generation": {
+   "line_named": "            claim_tx.commit()",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+    }
+   ],
+   "collectible_count": 6,
+   "expected": 6,
+   "cross_process_owner": null
+  },
+  "K2_two_identities_merged_into_one": {
+   "line_named": "    if continuation_id is not None and f\"plans.generate:{continuation_id}\" not in keys:  （连同下一行 append）",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+    }
+   ],
+   "collectible_count": 1,
+   "expected": 1,
+   "cross_process_owner": null
+  },
+  "K3_mission_ownership_door_removed": {
+   "line_named": "        _require_journeys_mission(session, journey, request.mission_id)",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+    }
+   ],
+   "collectible_count": 1,
+   "expected": 1,
+   "cross_process_owner": null
+  },
+  "K4_link_event_stops_naming_the_plans": {
+   "line_named": "                               \"plan_version_ids\": feasible_ids,",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+    }
+   ],
+   "collectible_count": 1,
+   "expected": 1,
+   "cross_process_owner": null
+  },
+  "K5_both_replay_doors_removed": {
+   "line_named": "            return _plan_generation_http_answer(replayed)   /                   return raced",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+    }
+   ],
+   "collectible_count": 5,
+   "expected": 5,
+   "cross_process_owner": null
+  },
+  "K6_unowned_path_laundered_into_a_bare_500": {
+   "line_named": "            return _plan_generation_http_answer(_plan_generation_refusal(session, journey, exc))",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+    },
+    {
+     "nodeid": "tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable"
+    },
+    {
+     "nodeid": "tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict"
+    },
+    {
+     "nodeid": "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative"
+    },
+    {
+     "nodeid": "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+    }
+   ],
+   "collectible_count": 5,
+   "expected": 5,
+   "cross_process_owner": null
+  },
+  "K7_refusal_stops_persisting_the_durable_fact": {
+   "line_named": "    record_replan_outcome(session, journey, feasible_candidate_ids=[], failures=[str(exc)])",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative"
+    },
+    {
+     "nodeid": "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+    }
+   ],
+   "collectible_count": 2,
+   "expected": 2,
+   "cross_process_owner": null
+  },
+  "K8_receipt_overwrite_guard_removed": {
+   "line_named": "                   IdempotencyKey.response_json.is_(None))",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer"
+    }
+   ],
+   "collectible_count": 1,
+   "expected": 1,
+   "cross_process_owner": null
+  }
+ },
+ "extra": {
+  "what": "本单回归的两枚既存载体（顺带；不改变本单判据）",
+  "targets": [
+   "tests/test_qoder_current_plan_is_named.py",
+   "tests/test_qoder_simulation_mode.py"
+  ],
+  "summary": "======================= 13 passed, 2 warnings in 2.67s ========================",
+  "failed": []
+ },
+ "silent_alarms": [],
+ "pytest_cache_preexisting": {
+  "backend/.pytest_cache": true,
+  ".pytest_cache": false
+ },
+ "cells_declared_by": {
+  "source": "campaign 收据 denominator.named_carriers",
+  "collected_extra_not_in_receipt": []
+ },
+ "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\_qoder_f_ord253_20260923\\backend)",
+ "db_header_line": "ORD-0211 test database: resolved=C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_780nr71d\\suite.db | exists=False | declared_by=conftest temp dir",
+ "cells_summary": "======================== 9 passed, 2 warnings in 2.59s ========================",
+ "files_before": {
+  "backend/app/main.py": "fe6958154963bcad82e5a3226b3e8b5ba41404b37fba1c7617e1c55fd668a148",
+  "backend/app/schemas.py": "dceb66e5697c12e1e4bf205b85d0ab11c77ee9f45115794367498da2dc7a2afc",
+  "backend/tests/test_qoder_ord0272_continuation.py": "0cfa81ebfc3afa36d6b509fd56f486bf775f42135b5fef39ce91cc5d72fd0582",
+  "contracts/openapi.yaml": "76b0c6e834661ee7f8e8641a66d8ca195275a79da9a234f05063a38638226ef6"
+ },
+ "files_after": {
+  "backend/app/main.py": "fe6958154963bcad82e5a3226b3e8b5ba41404b37fba1c7617e1c55fd668a148",
+  "backend/app/schemas.py": "dceb66e5697c12e1e4bf205b85d0ab11c77ee9f45115794367498da2dc7a2afc",
+  "backend/tests/test_qoder_ord0272_continuation.py": "0cfa81ebfc3afa36d6b509fd56f486bf775f42135b5fef39ce91cc5d72fd0582",
+  "contracts/openapi.yaml": "76b0c6e834661ee7f8e8641a66d8ca195275a79da9a234f05063a38638226ef6"
+ },
+ "q24": {
+  "rule": "GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1（仲裁 Q24 = ①）",
+  "pair": [
+   "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "7c806fab58e872060cb5811ff96c770b40dad165"
+  ],
+  "files": [
+   {
+    "file": "backend/app/main.py",
+    "cited_blob_at_each_generation": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+    "reason": "两代内容不同 ⇒ 该格须在目标代重跑"
+   },
+   {
+    "file": "backend/app/schemas.py",
+    "cited_blob_at_each_generation": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "generation_transfer": "TRANSFERABLE_BY_CITED_BLOB_EQUALITY",
+    "reason": "两代 40 位逐位相等"
+   },
+   {
+    "file": "backend/tests/test_qoder_ord0272_continuation.py",
+    "cited_blob_at_each_generation": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+    "reason": "两代内容不同 ⇒ 该格须在目标代重跑"
+   },
+   {
+    "file": "contracts/openapi.yaml",
+    "cited_blob_at_each_generation": {
+     "dcae1bc964125c3a975916f6bf667794cc19622a": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab58e872060cb5811ff96c770b40dad165": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    },
+    "generation_transfer": "TRANSFERABLE_BY_CITED_BLOB_EQUALITY",
+    "reason": "两代 40 位逐位相等"
+   }
+  ],
+  "cells_transferable": 0,
+  "cells_total": 9,
+  "unit": "观察格：每格只许声明实际跑过的那一代；引用旧代须逐文件两侧 blob 相等"
+ }
+}
