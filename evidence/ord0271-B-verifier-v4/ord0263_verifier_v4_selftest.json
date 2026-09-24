@@ -1,0 +1,725 @@
+{
+ "at": "2026-09-24T11:08:21+08:00",
+ "what": "ORD-0271-B verifier v4 selftest - the catch-all reason clause, its dedicated single-variable carrier, and proof the four old arms and v3 itself are untouched",
+ "arms_total": 21,
+ "arms_matched": 21,
+ "capture": {
+  "path": "ord0271b_capture_round1.json",
+  "missing": false,
+  "control_shapes": 3,
+  "mutant_shapes": 3,
+  "blob40": "8e55e1762bf11f866c914753475c33b1f53e1fd1"
+ },
+ "cross_ruler": {
+  "v3_path": "ord0263_verifier_v3.py",
+  "v3_loaded": true,
+  "runtime_rows": [
+   {
+    "shape": "200_empty",
+    "pass": "mutant1_empty",
+    "v4": "RED",
+    "v3": "RED",
+    "v4_only": [
+     "reason_collapsed"
+    ],
+    "v3_only": [],
+    "v4_failed_conditions": [
+     "cached_copy_column_not_measured",
+     "reason_collapsed"
+    ],
+    "v3_failed_conditions": [
+     "cached_copy_column_not_measured"
+    ],
+    "reason_column": "UNKNOWN_FAILURE"
+   },
+   {
+    "shape": "200_html",
+    "pass": "mutant1_html",
+    "v4": "RED",
+    "v3": "RED",
+    "v4_only": [
+     "reason_collapsed"
+    ],
+    "v3_only": [],
+    "v4_failed_conditions": [
+     "cached_copy_column_not_measured",
+     "reason_collapsed"
+    ],
+    "v3_failed_conditions": [
+     "cached_copy_column_not_measured"
+    ],
+    "reason_column": "UNKNOWN_FAILURE"
+   },
+   {
+    "shape": "200_html_rerun",
+    "pass": "mutant1_html_rerun",
+    "v4": "RED",
+    "v3": "RED",
+    "v4_only": [
+     "reason_collapsed"
+    ],
+    "v3_only": [],
+    "v4_failed_conditions": [
+     "cached_copy_column_not_measured",
+     "reason_collapsed"
+    ],
+    "v3_failed_conditions": [
+     "cached_copy_column_not_measured"
+    ],
+    "reason_column": "UNKNOWN_FAILURE"
+   }
+  ],
+  "single_variable_carriers": [
+   {
+    "shape": "200_empty",
+    "tokens_changed": 1,
+    "v4": "RED",
+    "v4_failed_conditions": [
+     "reason_collapsed"
+    ],
+    "v3": "GREEN",
+    "v3_failed_conditions": [],
+    "reason_column_now": "UNKNOWN_FAILURE",
+    "evidence_kind_untouched": true,
+    "http_status_untouched": true,
+    "snapshot_column_untouched": true
+   },
+   {
+    "shape": "200_html",
+    "tokens_changed": 1,
+    "v4": "RED",
+    "v4_failed_conditions": [
+     "reason_collapsed"
+    ],
+    "v3": "GREEN",
+    "v3_failed_conditions": [],
+    "reason_column_now": "UNKNOWN_FAILURE",
+    "evidence_kind_untouched": true,
+    "http_status_untouched": true,
+    "snapshot_column_untouched": true
+   },
+   {
+    "shape": "200_not_json",
+    "tokens_changed": 1,
+    "v4": "RED",
+    "v4_failed_conditions": [
+     "reason_collapsed"
+    ],
+    "v3": "GREEN",
+    "v3_failed_conditions": [],
+    "reason_column_now": "UNKNOWN_FAILURE",
+    "evidence_kind_untouched": true,
+    "http_status_untouched": true,
+    "snapshot_column_untouched": true
+   }
+  ]
+ },
+ "legacy_arm_comparison": {
+  "blocks_compared": 8,
+  "all_identical": true,
+  "rows": [
+   {
+    "block": "regex_block",
+    "v2_chars": 379,
+    "v4_chars": 379,
+    "identical": true,
+    "digest_v2": "d99bb6ff20e9",
+    "digest_v4": "d99bb6ff20e9"
+   },
+   {
+    "block": "answered",
+    "v2_chars": 140,
+    "v4_chars": 140,
+    "identical": true,
+    "digest_v2": "a27b0b157c92",
+    "digest_v4": "a27b0b157c92"
+   },
+   {
+    "block": "no_answer",
+    "v2_chars": 95,
+    "v4_chars": 95,
+    "identical": true,
+    "digest_v2": "ce09e2833d0c",
+    "digest_v4": "ce09e2833d0c"
+   },
+   {
+    "block": "judge_v1",
+    "v2_chars": 890,
+    "v4_chars": 890,
+    "identical": true,
+    "digest_v2": "7dd57947e815",
+    "digest_v4": "7dd57947e815"
+   },
+   {
+    "block": "judge_v1_vacuity",
+    "v2_chars": 672,
+    "v4_chars": 672,
+    "identical": true,
+    "digest_v2": "9c565dbd8d46",
+    "digest_v4": "9c565dbd8d46"
+   },
+   {
+    "block": "judge_v2",
+    "v2_chars": 1206,
+    "v4_chars": 1206,
+    "identical": true,
+    "digest_v2": "0ad0fca690d4",
+    "digest_v4": "0ad0fca690d4"
+   },
+   {
+    "block": "judge_v3",
+    "v2_chars": 723,
+    "v4_chars": 723,
+    "identical": true,
+    "digest_v2": "6cda30bb2618",
+    "digest_v4": "6cda30bb2618"
+   },
+   {
+    "block": "judge_v4",
+    "v2_chars": 1423,
+    "v4_chars": 1423,
+    "identical": true,
+    "digest_v2": "04149cd3acb8",
+    "digest_v4": "04149cd3acb8"
+   }
+  ]
+ },
+ "fifth_arm_delta": {
+  "v3_lines": 87,
+  "v4_lines": 93,
+  "added": [
+   "# v4's one addition. A catch-all name is not a classification either: `UNKNOWN_FAILURE` is",
+   "# what the product falls back to when it has decided nothing, so a fifth state filed there has",
+   "# lost the one fact it was meant to carry even when every other column of the line is honest.",
+   "BAD_REASONS_V4 = BAD_REASONS | {\"UNKNOWN_FAILURE\"}",
+   "    reason_ok = bool(reason) and reason not in BAD_REASONS_V4",
+   "                         \"only_reason_clause_failed\": fails == [\"reason_collapsed\"],",
+   "                    \"and the sentence may not claim nothing answered; and the reason may not \"",
+   "                    \"be a catch-all either (v4): UNKNOWN_FAILURE names no state at all\"}"
+  ],
+  "removed": [
+   "    reason_ok = bool(reason) and reason not in BAD_REASONS",
+   "                    \"and the sentence may not claim nothing answered\"}"
+  ],
+  "changed_line_count": 10
+ },
+ "v3_blob": {
+  "path": "ord0263_verifier_v3.py",
+  "bytes": 21703,
+  "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "expected_blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "expected_bytes": 21703,
+  "unchanged": true
+ },
+ "overall": "GREEN",
+ "rows": [
+  {
+   "arm": "V5-true_positive:answered_200_junk_body_keeps_the_HTTP_fact",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "match": true,
+   "detail": {
+    "shape": "200_html",
+    "answered_status": 200,
+    "content_type": "text/html",
+    "body_bytes": 1200,
+    "rendered_attribution": {
+     "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+     "evidence_kind": "HTTP_RESPONSE",
+     "http_status": "200",
+     "source_layer": "APPLICATION",
+     "cached_copy_present": "true"
+    },
+    "evidence_kind_keeps_HTTP": true,
+    "http_status_carried": true,
+    "reason_not_network": true,
+    "layer_not_transport": true,
+    "sentence_denies_the_answer": false,
+    "cached_copy_matches_measured_rows": true,
+    "only_reason_clause_failed": false,
+    "measured_snapshot_rows": 1
+   }
+  },
+  {
+   "arm": "V5-killer:the_measured_landed_reading_is_red",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "evidence_kind_lost_HTTP",
+    "http_status_not_carried",
+    "reason_collapsed",
+    "layer_collapsed_to_TRANSPORT",
+    "sentence_claims_no_answer"
+   ]
+  },
+  {
+   "arm": "V5-killer:reason_still_network",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "reason_collapsed"
+   ]
+  },
+  {
+   "arm": "V5-killer:http_status_dropped",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "http_status_not_carried"
+   ]
+  },
+  {
+   "arm": "V5-killer:layer_is_transport",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "layer_collapsed_to_TRANSPORT"
+   ]
+  },
+  {
+   "arm": "V5-killer:sentence_denies_the_answer",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "sentence_claims_no_answer"
+   ]
+  },
+  {
+   "arm": "V5-killer:copy_column_ignores_measurement",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": [
+    "cached_copy_column_not_measured"
+   ]
+  },
+  {
+   "arm": "V5-not_measured:origin_that_never_answered_is_not_this_state",
+   "expect": "NOT_MEASURED",
+   "got": "NOT_MEASURED",
+   "match": true,
+   "detail": null
+  },
+  {
+   "arm": "V5-aggregate:one_green_shape_cannot_carry_two_red_ones",
+   "expect": "RED",
+   "got": "RED",
+   "match": true,
+   "detail": {
+    "shapes_total": 3,
+    "green": 1,
+    "red": 2,
+    "not_measured": 0,
+    "red_shapes": [
+     "200_html",
+     "200_html"
+    ],
+    "per_shape_conditions": {
+     "200_html": [
+      "evidence_kind_lost_HTTP",
+      "http_status_not_carried",
+      "reason_collapsed",
+      "layer_collapsed_to_TRANSPORT",
+      "sentence_claims_no_answer"
+     ]
+    }
+   }
+  },
+  {
+   "arm": "V5-positive_control:three_real_control_readings_are_green",
+   "expect": 3,
+   "got": 3,
+   "match": true,
+   "detail": {
+    "capture": "ord0271b_capture_round1.json",
+    "capture_missing": null,
+    "shapes": [
+     [
+      "200_empty",
+      "GREEN"
+     ],
+     [
+      "200_html",
+      "GREEN"
+     ],
+     [
+      "200_not_json",
+      "GREEN"
+     ]
+    ]
+   }
+  },
+  {
+   "arm": "V5-positive_control:aggregate_of_the_real_control_readings",
+   "expect": "GREEN",
+   "got": "GREEN",
+   "match": true,
+   "detail": {
+    "shapes_total": 3,
+    "green": 3,
+    "red": 0,
+    "not_measured": 0,
+    "red_shapes": [],
+    "per_shape_conditions": {}
+   }
+  },
+  {
+   "arm": "V5-positive_control:no_control_shape_fails_the_new_reason_clause",
+   "expect": [],
+   "got": [],
+   "match": true,
+   "detail": {
+    "why": "the new clause must fire on the catch-all, not on every fifth-state reading"
+   }
+  },
+  {
+   "arm": "V5-killer:dedicated_single_variable_carrier_is_red_only_on_the_new_clause",
+   "expect": [
+    true,
+    true,
+    true
+   ],
+   "got": [
+    true,
+    true,
+    true
+   ],
+   "match": true,
+   "detail": [
+    {
+     "shape": "200_empty",
+     "tokens_changed": 1,
+     "v4": "RED",
+     "v4_failed_conditions": [
+      "reason_collapsed"
+     ],
+     "v3": "GREEN",
+     "v3_failed_conditions": [],
+     "reason_column_now": "UNKNOWN_FAILURE",
+     "evidence_kind_untouched": true,
+     "http_status_untouched": true,
+     "snapshot_column_untouched": true
+    },
+    {
+     "shape": "200_html",
+     "tokens_changed": 1,
+     "v4": "RED",
+     "v4_failed_conditions": [
+      "reason_collapsed"
+     ],
+     "v3": "GREEN",
+     "v3_failed_conditions": [],
+     "reason_column_now": "UNKNOWN_FAILURE",
+     "evidence_kind_untouched": true,
+     "http_status_untouched": true,
+     "snapshot_column_untouched": true
+    },
+    {
+     "shape": "200_not_json",
+     "tokens_changed": 1,
+     "v4": "RED",
+     "v4_failed_conditions": [
+      "reason_collapsed"
+     ],
+     "v3": "GREEN",
+     "v3_failed_conditions": [],
+     "reason_column_now": "UNKNOWN_FAILURE",
+     "evidence_kind_untouched": true,
+     "http_status_untouched": true,
+     "snapshot_column_untouched": true
+    }
+   ]
+  },
+  {
+   "arm": "V5-killer:the_same_three_carriers_read_GREEN_under_v3",
+   "expect": [
+    "GREEN",
+    "GREEN",
+    "GREEN"
+   ],
+   "got": [
+    "GREEN",
+    "GREEN",
+    "GREEN"
+   ],
+   "match": true,
+   "detail": {
+    "why": "proof the new clause is the only thing that fires here, and that v3 could not see it"
+   }
+  },
+  {
+   "arm": "V5-real_mutant_runtime_readings_are_red_under_v4",
+   "expect": [
+    "RED",
+    "RED",
+    "RED"
+   ],
+   "got": [
+    "RED",
+    "RED",
+    "RED"
+   ],
+   "match": true,
+   "detail": [
+    {
+     "shape": "200_empty",
+     "pass": "mutant1_empty",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "v3_only": [],
+     "v4_failed_conditions": [
+      "cached_copy_column_not_measured",
+      "reason_collapsed"
+     ],
+     "v3_failed_conditions": [
+      "cached_copy_column_not_measured"
+     ],
+     "reason_column": "UNKNOWN_FAILURE"
+    },
+    {
+     "shape": "200_html",
+     "pass": "mutant1_html",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "v3_only": [],
+     "v4_failed_conditions": [
+      "cached_copy_column_not_measured",
+      "reason_collapsed"
+     ],
+     "v3_failed_conditions": [
+      "cached_copy_column_not_measured"
+     ],
+     "reason_column": "UNKNOWN_FAILURE"
+    },
+    {
+     "shape": "200_html_rerun",
+     "pass": "mutant1_html_rerun",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "v3_only": [],
+     "v4_failed_conditions": [
+      "cached_copy_column_not_measured",
+      "reason_collapsed"
+     ],
+     "v3_failed_conditions": [
+      "cached_copy_column_not_measured"
+     ],
+     "reason_column": "UNKNOWN_FAILURE"
+    }
+   ]
+  },
+  {
+   "arm": "V5-real_mutant_runtime_readings:the_condition_v4_adds_is_exactly_the_new_clause",
+   "expect": [],
+   "got": [],
+   "match": true,
+   "detail": [
+    {
+     "shape": "200_empty",
+     "pass": "mutant1_empty",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "v3_only": [],
+     "v4_failed_conditions": [
+      "cached_copy_column_not_measured",
+      "reason_collapsed"
+     ],
+     "v3_failed_conditions": [
+      "cached_copy_column_not_measured"
+     ],
+     "reason_column": "UNKNOWN_FAILURE"
+    },
+    {
+     "shape": "200_html",
+     "pass": "mutant1_html",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "v3_only": [],
+     "v4_failed_conditions": [
+      "cached_copy_column_not_measured",
+      "reason_collapsed"
+     ],
+     "v3_failed_conditions": [
+      "cached_copy_column_not_measured"
+     ],
+     "reason_column": "UNKNOWN_FAILURE"
+    },
+    {
+     "shape": "200_html_rerun",
+     "pass": "mutant1_html_rerun",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "v3_only": [],
+     "v4_failed_conditions": [
+      "cached_copy_column_not_measured",
+      "reason_collapsed"
+     ],
+     "v3_failed_conditions": [
+      "cached_copy_column_not_measured"
+     ],
+     "reason_column": "UNKNOWN_FAILURE"
+    }
+   ]
+  },
+  {
+   "arm": "V5-real_mutant_runtime_readings:v4_loses_nothing_v3_had",
+   "expect": [],
+   "got": [],
+   "match": true,
+   "detail": [
+    {
+     "shape": "200_empty",
+     "pass": "mutant1_empty",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "v3_only": [],
+     "v4_failed_conditions": [
+      "cached_copy_column_not_measured",
+      "reason_collapsed"
+     ],
+     "v3_failed_conditions": [
+      "cached_copy_column_not_measured"
+     ],
+     "reason_column": "UNKNOWN_FAILURE"
+    },
+    {
+     "shape": "200_html",
+     "pass": "mutant1_html",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "v3_only": [],
+     "v4_failed_conditions": [
+      "cached_copy_column_not_measured",
+      "reason_collapsed"
+     ],
+     "v3_failed_conditions": [
+      "cached_copy_column_not_measured"
+     ],
+     "reason_column": "UNKNOWN_FAILURE"
+    },
+    {
+     "shape": "200_html_rerun",
+     "pass": "mutant1_html_rerun",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "v3_only": [],
+     "v4_failed_conditions": [
+      "cached_copy_column_not_measured",
+      "reason_collapsed"
+     ],
+     "v3_failed_conditions": [
+      "cached_copy_column_not_measured"
+     ],
+     "reason_column": "UNKNOWN_FAILURE"
+    }
+   ]
+  },
+  {
+   "arm": "V0-legacy:four_old_arms_two_helpers_and_the_regex_block_are_byte-identical_to_v2",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "detail": {
+    "regex_block": true,
+    "answered": true,
+    "no_answer": true,
+    "judge_v1": true,
+    "judge_v1_vacuity": true,
+    "judge_v2": true,
+    "judge_v3": true,
+    "judge_v4": true
+   }
+  },
+  {
+   "arm": "V0b-fifth-arm:v4_forbids_exactly_one_more_reason_than_v3",
+   "expect": [
+    "UNKNOWN_FAILURE"
+   ],
+   "got": [
+    "UNKNOWN_FAILURE"
+   ],
+   "match": true,
+   "detail": {
+    "v3_forbids": [
+     "NETWORK_UNAVAILABLE",
+     "NO_REPLY"
+    ],
+    "v4_forbids": [
+     "NETWORK_UNAVAILABLE",
+     "NO_REPLY",
+     "UNKNOWN_FAILURE"
+    ],
+    "source_lines_added": [
+     "# v4's one addition. A catch-all name is not a classification either: `UNKNOWN_FAILURE` is",
+     "# what the product falls back to when it has decided nothing, so a fifth state filed there has",
+     "# lost the one fact it was meant to carry even when every other column of the line is honest.",
+     "BAD_REASONS_V4 = BAD_REASONS | {\"UNKNOWN_FAILURE\"}",
+     "    reason_ok = bool(reason) and reason not in BAD_REASONS_V4",
+     "                         \"only_reason_clause_failed\": fails == [\"reason_collapsed\"],",
+     "                    \"and the sentence may not claim nothing answered; and the reason may not \"",
+     "                    \"be a catch-all either (v4): UNKNOWN_FAILURE names no state at all\"}"
+    ],
+    "source_lines_removed": [
+     "    reason_ok = bool(reason) and reason not in BAD_REASONS",
+     "                    \"and the sentence may not claim nothing answered\"}"
+    ],
+    "changed_line_count": 10
+   }
+  },
+  {
+   "arm": "V0b-fifth-arm:the_fifth_state_label_is_still_not_pinned_to_a_string",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "detail": {
+    "rule": "v4 forbids names that describe another state; it does not require any particular name"
+   }
+  },
+  {
+   "arm": "V0c-v3-blob-unchanged:the_old_ruler_was_not_edited_to_make_the_new_one_fit",
+   "expect": true,
+   "got": true,
+   "match": true,
+   "detail": {
+    "path": "ord0263_verifier_v3.py",
+    "bytes": 21703,
+    "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+    "expected_blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+    "expected_bytes": 21703,
+    "unchanged": true
+   }
+  }
+ ]
+}
