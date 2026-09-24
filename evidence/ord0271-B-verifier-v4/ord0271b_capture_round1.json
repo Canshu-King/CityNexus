@@ -1,0 +1,430 @@
+{
+ "at": "2026-09-24T10:59:59+08:00",
+ "order": "ORD-0271-B",
+ "lane": "HARNESS d291c9dc",
+ "subject": "runtime readings for the fifth state on candidate c79e2b4f: control build and the single-variable UNKNOWN_FAILURE mutant of the same build, same face, same instrument",
+ "commit_under_test": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "mutant": {
+  "source_file": "frontend/src/lib/failureAttribution.ts",
+  "line": 159,
+  "change": "make(\"ORIGIN_INVALID_RESPONSE\", ...) -> make(\"UNKNOWN_FAILURE\", ...)",
+  "diff_file": "ord0271B_mutant_diff.patch",
+  "diff_blob40": "117e071b2f158cc27b376a889559fd7b22fbf14c",
+  "control_asset": "assets/index-ChOTTCvB.js",
+  "control_sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+  "mutant_asset": "assets/index-BlYkFxF7.js",
+  "mutant_sha256": "a919a53f7a91ab79fbc669056f146270bba00b8f63d4ef0f1dd4244e7b94ab4a"
+ },
+ "cells": {
+  "S5_invalid_response": {
+   "shapes": [
+    {
+     "shape": "200_empty",
+     "pass_label": "control1_empty",
+     "snapshot_rows": 1,
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "application/json",
+      "body_bytes": 0,
+      "body_head": "",
+      "answered_at": "10:54:05",
+      "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "wire": "ord0263_junk_empty.log: answered 200 application/json 0 B (drift 3 s)",
+      "log_blob40": "cab5245af1575fc7a44d6ea64312071375235499"
+     },
+     "rendered_text": "服务器 | 服务器答了 200，可带回来的不是这一屏能用的数据 | 它确实回了话（HTTP 200，Content-Type: application/json），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 | 归因详情 | attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=true",
+     "doors_on_screen": [
+      "看已保存的只读副本",
+      "重试"
+     ],
+     "snapshot_words_on_screen": [
+      "已保存",
+      "本地快照",
+      "只读副本"
+     ],
+     "network_words_on_screen": [],
+     "q8b_fingerprints": {
+      "executed_script_urls": [
+       "http://127.0.0.1:4418/assets/index-ChOTTCvB.js"
+      ],
+      "rehashed_from_own_url": [
+       {
+        "url": "http://127.0.0.1:4418/assets/index-ChOTTCvB.js",
+        "bytes": 1245203,
+        "sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+        "status": 200
+       }
+      ],
+      "asset_matches_expected": true,
+      "sha_matches_local_build": true,
+      "sw_controls_page": true,
+      "shell_same_generation": true,
+      "cached_shell_same_generation": true,
+      "expected_asset": "assets/index-ChOTTCvB.js",
+      "expected_sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de"
+     },
+     "generation_evidence": {
+      "face_receipt": "ord0271B_face_control1.json",
+      "face_served_asset": "assets/index-ChOTTCvB.js",
+      "face_answered_over_http": {
+       "status": 200,
+       "content_type": "text/javascript",
+       "bytes": 1245203,
+       "sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+       "equals_source_build_file": true
+      },
+      "face_tree_sha256": "e47028f1fe6ea1655bd2077c1060407cb3dbca85f8cea49e92c58c5a327eebf0",
+      "face_ownership": "PROVEN"
+     },
+     "reading_provenance": {
+      "collector_sha256": "ead39c5ea3b10471ee3fb8eba1c22ce0f754732459850f880f1d9a90616041a0",
+      "bytes": 2010,
+      "readings_file": "ord0271b_readings.jsonl",
+      "readings_file_blob40": "c69be25ea9036cdb98f96b41add017ca1bf64a66"
+     }
+    },
+    {
+     "shape": "200_html",
+     "pass_label": "control1_html_rerun",
+     "snapshot_rows": 1,
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 1200,
+      "body_head": "<!doctype html>\n<html lang=\"en\">\n  <",
+      "answered_at": "10:52:56",
+      "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "wire": "ord0263_junk_html.log: answered 200 text/html; charset=utf-8 1200 B (drift 4 s)",
+      "log_blob40": "29caa8d623094f0eab534398f1fb72687506371d"
+     },
+     "rendered_text": "服务器 | 服务器答了 200，可带回来的不是这一屏能用的数据 | 它确实回了话（HTTP 200，Content-Type: text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 | 归因详情 | attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=true",
+     "doors_on_screen": [
+      "看已保存的只读副本",
+      "重试"
+     ],
+     "snapshot_words_on_screen": [
+      "已保存",
+      "本地快照",
+      "只读副本"
+     ],
+     "network_words_on_screen": [],
+     "q8b_fingerprints": {
+      "executed_script_urls": [
+       "http://127.0.0.1:4418/assets/index-ChOTTCvB.js"
+      ],
+      "rehashed_from_own_url": [
+       {
+        "url": "http://127.0.0.1:4418/assets/index-ChOTTCvB.js",
+        "bytes": 1245203,
+        "sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+        "status": 200
+       }
+      ],
+      "asset_matches_expected": true,
+      "sha_matches_local_build": true,
+      "sw_controls_page": true,
+      "shell_same_generation": true,
+      "cached_shell_same_generation": true,
+      "expected_asset": "assets/index-ChOTTCvB.js",
+      "expected_sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de"
+     },
+     "generation_evidence": {
+      "face_receipt": "ord0271B_face_control1.json",
+      "face_served_asset": "assets/index-ChOTTCvB.js",
+      "face_answered_over_http": {
+       "status": 200,
+       "content_type": "text/javascript",
+       "bytes": 1245203,
+       "sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+       "equals_source_build_file": true
+      },
+      "face_tree_sha256": "e47028f1fe6ea1655bd2077c1060407cb3dbca85f8cea49e92c58c5a327eebf0",
+      "face_ownership": "PROVEN"
+     },
+     "reading_provenance": {
+      "collector_sha256": "f01a1e5f0195d15d841879645f9821701a058501bbe7f5afd8d2b0e33ab83d5f",
+      "bytes": 2026,
+      "readings_file": "ord0271b_readings.jsonl",
+      "readings_file_blob40": "c69be25ea9036cdb98f96b41add017ca1bf64a66"
+     }
+    },
+    {
+     "shape": "200_not_json",
+     "pass_label": "control1_nonjson",
+     "snapshot_rows": 1,
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 33,
+      "body_head": "this sentence is not JSON at all\n",
+      "answered_at": "10:54:32",
+      "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "wire": "ord0263_junk_nonjson.log: answered 200 text/plain; charset=utf-8 33 B (drift 4 s)",
+      "log_blob40": "5e46279eebc0eac914f2580a68cd5f706cf4af25"
+     },
+     "rendered_text": "服务器 | 服务器答了 200，可带回来的不是这一屏能用的数据 | 它确实回了话（HTTP 200，Content-Type: text/plain; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 | 归因详情 | attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/plain; charset=utf-8 cached_copy_present=true",
+     "doors_on_screen": [
+      "看已保存的只读副本",
+      "重试"
+     ],
+     "snapshot_words_on_screen": [
+      "已保存",
+      "本地快照",
+      "只读副本"
+     ],
+     "network_words_on_screen": [],
+     "q8b_fingerprints": {
+      "executed_script_urls": [
+       "http://127.0.0.1:4418/assets/index-ChOTTCvB.js"
+      ],
+      "rehashed_from_own_url": [
+       {
+        "url": "http://127.0.0.1:4418/assets/index-ChOTTCvB.js",
+        "bytes": 1245203,
+        "sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+        "status": 200
+       }
+      ],
+      "asset_matches_expected": true,
+      "sha_matches_local_build": true,
+      "sw_controls_page": true,
+      "shell_same_generation": true,
+      "cached_shell_same_generation": true,
+      "expected_asset": "assets/index-ChOTTCvB.js",
+      "expected_sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de"
+     },
+     "generation_evidence": {
+      "face_receipt": "ord0271B_face_control1.json",
+      "face_served_asset": "assets/index-ChOTTCvB.js",
+      "face_answered_over_http": {
+       "status": 200,
+       "content_type": "text/javascript",
+       "bytes": 1245203,
+       "sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+       "equals_source_build_file": true
+      },
+      "face_tree_sha256": "e47028f1fe6ea1655bd2077c1060407cb3dbca85f8cea49e92c58c5a327eebf0",
+      "face_ownership": "PROVEN"
+     },
+     "reading_provenance": {
+      "collector_sha256": "a1e6bbe7beaac510ebbf5c98e95b5f13cadf988819ffb1d65c818445b47fe5f0",
+      "bytes": 2028,
+      "readings_file": "ord0271b_readings.jsonl",
+      "readings_file_blob40": "c69be25ea9036cdb98f96b41add017ca1bf64a66"
+     }
+    }
+   ]
+  },
+  "S5_invalid_response_mutant": {
+   "shapes": [
+    {
+     "shape": "200_empty",
+     "pass_label": "mutant1_empty",
+     "snapshot_rows": 1,
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "application/json",
+      "body_bytes": 0,
+      "body_head": "",
+      "answered_at": "10:45:42",
+      "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "wire": "ord0263_junk_empty.log: answered 200 application/json 0 B (drift 3 s)",
+      "log_blob40": "cab5245af1575fc7a44d6ea64312071375235499"
+     },
+     "rendered_text": "服务器 | 服务器答了 200，可带回来的不是这一屏能用的数据 | 它确实回了话（HTTP 200，Content-Type: application/json），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。 | 归因详情 | attribution_reason=UNKNOWN_FAILURE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json",
+     "doors_on_screen": [
+      "重试"
+     ],
+     "snapshot_words_on_screen": [],
+     "network_words_on_screen": [],
+     "q8b_fingerprints": {
+      "executed_script_urls": [
+       "http://127.0.0.1:4418/assets/index-BlYkFxF7.js"
+      ],
+      "rehashed_from_own_url": [
+       {
+        "url": "http://127.0.0.1:4418/assets/index-BlYkFxF7.js",
+        "bytes": 1245195,
+        "sha256": "a919a53f7a91ab79fbc669056f146270bba00b8f63d4ef0f1dd4244e7b94ab4a",
+        "status": 200
+       }
+      ],
+      "asset_matches_expected": true,
+      "sha_matches_local_build": true,
+      "sw_controls_page": true,
+      "shell_same_generation": true,
+      "cached_shell_same_generation": true,
+      "expected_asset": "assets/index-BlYkFxF7.js",
+      "expected_sha256": "a919a53f7a91ab79fbc669056f146270bba00b8f63d4ef0f1dd4244e7b94ab4a"
+     },
+     "generation_evidence": {
+      "face_receipt": "ord0271B_face_mutant1.json",
+      "face_served_asset": "assets/index-BlYkFxF7.js",
+      "face_answered_over_http": {
+       "status": 200,
+       "content_type": "text/javascript",
+       "bytes": 1245195,
+       "sha256": "a919a53f7a91ab79fbc669056f146270bba00b8f63d4ef0f1dd4244e7b94ab4a",
+       "equals_source_build_file": true
+      },
+      "face_tree_sha256": "aed627f96891ff5a3806d8a0ba6ff0d2b002b796c98eae672da03ddaa870e034",
+      "face_ownership": "PROVEN"
+     },
+     "reading_provenance": {
+      "collector_sha256": "109d6cd26aa7c887cc732f2082e5a5b618c7fe96cbe270ff78aac8847cc7e6ea",
+      "bytes": 1891,
+      "readings_file": "ord0271b_readings.jsonl",
+      "readings_file_blob40": "c69be25ea9036cdb98f96b41add017ca1bf64a66"
+     }
+    },
+    {
+     "shape": "200_html",
+     "pass_label": "mutant1_html",
+     "snapshot_rows": 1,
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 1200,
+      "body_head": "<!doctype html>\n<html lang=\"en\">\n  <",
+      "answered_at": "10:43:04",
+      "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "wire": "ord0263_junk_html.log: answered 200 text/html; charset=utf-8 1200 B (drift 16 s)",
+      "log_blob40": "29caa8d623094f0eab534398f1fb72687506371d"
+     },
+     "rendered_text": "服务器 | 服务器答了 200，可带回来的不是这一屏能用的数据 | 它确实回了话（HTTP 200，Content-Type: text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。 | 归因详情 | attribution_reason=UNKNOWN_FAILURE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8",
+     "doors_on_screen": [
+      "重试"
+     ],
+     "snapshot_words_on_screen": [],
+     "network_words_on_screen": [],
+     "q8b_fingerprints": {
+      "executed_script_urls": [
+       "http://127.0.0.1:4418/assets/index-BlYkFxF7.js"
+      ],
+      "rehashed_from_own_url": [
+       {
+        "url": "http://127.0.0.1:4418/assets/index-BlYkFxF7.js",
+        "bytes": 1245195,
+        "sha256": "a919a53f7a91ab79fbc669056f146270bba00b8f63d4ef0f1dd4244e7b94ab4a",
+        "status": 200
+       }
+      ],
+      "asset_matches_expected": true,
+      "sha_matches_local_build": true,
+      "sw_controls_page": true,
+      "shell_same_generation": true,
+      "cached_shell_same_generation": true,
+      "expected_asset": "assets/index-BlYkFxF7.js",
+      "expected_sha256": "a919a53f7a91ab79fbc669056f146270bba00b8f63d4ef0f1dd4244e7b94ab4a"
+     },
+     "generation_evidence": {
+      "face_receipt": "ord0271B_face_mutant1.json",
+      "face_served_asset": "assets/index-BlYkFxF7.js",
+      "face_answered_over_http": {
+       "status": 200,
+       "content_type": "text/javascript",
+       "bytes": 1245195,
+       "sha256": "a919a53f7a91ab79fbc669056f146270bba00b8f63d4ef0f1dd4244e7b94ab4a",
+       "equals_source_build_file": true
+      },
+      "face_tree_sha256": "aed627f96891ff5a3806d8a0ba6ff0d2b002b796c98eae672da03ddaa870e034",
+      "face_ownership": "PROVEN"
+     },
+     "reading_provenance": {
+      "collector_sha256": "d2fe33b718d8625b0cf3796bdf8acf124e8edb2e90c6f3d586534492c4395603",
+      "bytes": 1908,
+      "readings_file": "ord0271b_readings.jsonl",
+      "readings_file_blob40": "c69be25ea9036cdb98f96b41add017ca1bf64a66"
+     }
+    },
+    {
+     "shape": "200_html_rerun",
+     "pass_label": "mutant1_html_rerun",
+     "snapshot_rows": 1,
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 1200,
+      "body_head": "<!doctype html>\n<html lang=\"en\">\n  <",
+      "answered_at": "10:47:05",
+      "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "wire": "ord0263_junk_html.log: answered 200 text/html; charset=utf-8 1200 B (drift 3 s)",
+      "log_blob40": "29caa8d623094f0eab534398f1fb72687506371d"
+     },
+     "rendered_text": "服务器 | 服务器答了 200，可带回来的不是这一屏能用的数据 | 它确实回了话（HTTP 200，Content-Type: text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还没有可只读查看的本地副本，所以现在没有内容可显示；可以稍后重试。 | 归因详情 | attribution_reason=UNKNOWN_FAILURE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8",
+     "doors_on_screen": [
+      "重试"
+     ],
+     "snapshot_words_on_screen": [],
+     "network_words_on_screen": [],
+     "q8b_fingerprints": {
+      "executed_script_urls": [
+       "http://127.0.0.1:4418/assets/index-BlYkFxF7.js"
+      ],
+      "rehashed_from_own_url": [
+       {
+        "url": "http://127.0.0.1:4418/assets/index-BlYkFxF7.js",
+        "bytes": 1245195,
+        "sha256": "a919a53f7a91ab79fbc669056f146270bba00b8f63d4ef0f1dd4244e7b94ab4a",
+        "status": 200
+       }
+      ],
+      "asset_matches_expected": true,
+      "sha_matches_local_build": true,
+      "sw_controls_page": true,
+      "shell_same_generation": true,
+      "cached_shell_same_generation": true,
+      "expected_asset": "assets/index-BlYkFxF7.js",
+      "expected_sha256": "a919a53f7a91ab79fbc669056f146270bba00b8f63d4ef0f1dd4244e7b94ab4a"
+     },
+     "generation_evidence": {
+      "face_receipt": "ord0271B_face_mutant1.json",
+      "face_served_asset": "assets/index-BlYkFxF7.js",
+      "face_answered_over_http": {
+       "status": 200,
+       "content_type": "text/javascript",
+       "bytes": 1245195,
+       "sha256": "a919a53f7a91ab79fbc669056f146270bba00b8f63d4ef0f1dd4244e7b94ab4a",
+       "equals_source_build_file": true
+      },
+      "face_tree_sha256": "aed627f96891ff5a3806d8a0ba6ff0d2b002b796c98eae672da03ddaa870e034",
+      "face_ownership": "PROVEN"
+     },
+     "reading_provenance": {
+      "collector_sha256": "ae5c4e23402c7526cb9b20dface5b0dfce2e226439c4d8035e8e753772ec3500",
+      "bytes": 1907,
+      "readings_file": "ord0271b_readings.jsonl",
+      "readings_file_blob40": "c69be25ea9036cdb98f96b41add017ca1bf64a66"
+     }
+    }
+   ]
+  }
+ },
+ "rejected_readings": [
+  {
+   "label": "control1_html",
+   "why": "the bundle the page executed is not the generation this pass claims (stale shell / one load behind after a generation switch)",
+   "asset_matches_expected": false,
+   "sha_matches_local_build": false,
+   "executed": [
+    "http://127.0.0.1:4418/assets/index-BlYkFxF7.js"
+   ]
+  }
+ ],
+ "counts": {
+  "readings_admitted": 6,
+  "control_shapes": 3,
+  "mutant_shapes": 3,
+  "readings_rejected": 1,
+  "readings_not_fifth_state": [
+   "mutant1_live",
+   "mutant1_live"
+  ]
+ }
+}
