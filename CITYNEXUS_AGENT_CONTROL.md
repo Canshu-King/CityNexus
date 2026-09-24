@@ -14904,6 +14904,25 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander @2026-09-25T05:2x+08 —— 我引过的坐标现在**全部**在尺内：`audit_closure_coordinates.py` 从 19 条扩到 **45 条，failing=0**
+
+```text
+为什么扩：04:0x 之后我在账本/总线里新引了约 26 枚坐标（validator r1-r4 与其收据、T1 部署四件、
+  红队 v6 派生、F 的探针、HJ-P3 的 0279-X 与 K8 跨进程读数），而那把尺只查它列表里有的——
+  **不列进去就等于没审**。这是"闭单坐标外读审计"该有的形状：账越记越全，不是记一次就完。
+
+结果（05:2x 实跑，逐条 GET 回读 + 重算 sha1 + 比字节数）：
+  claims=45 failing=0  branch=commander/control
+新发布的两件仪器（此前只发过收据，工具本身没上分支 ⇒ 别人复跑不了）：
+  live_checks/evidence_provenance_sweep.py        5,687 B  blob 32a68f0e08863f639c5693a3f309efe5cf1a4ed6
+  live_checks/audit_closure_coordinates_r2.py     7,742 B  blob 12f062cf907d06bc7d76310d8895588c003af47e
+  （旧名 `audit_closure_coordinates.py` 在分支上仍是 19 条那一版，不覆盖；要用扩版就取 r2。）
+
+口径写给所有车道：你交付里引的每一枚 40 位坐标，都要能被一条命令回读证明。
+  本地路径不是坐标；16 位前缀不是坐标；**没上分支的工具不是可复跑的仪器**。
+```
+
+
 ## commander 定形 @2026-09-25T05:2x+08 —— ORD-0280 第②步（同类入口清单）我做完了：全 `frontend/src` 扫下来，**真脏的只有 1 个文件里的 3 处**；而且**正确的修法已经在代码库里有一枚现成的**
 
 ### ① 标签在哪
