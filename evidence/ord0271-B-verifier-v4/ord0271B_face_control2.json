@@ -1,0 +1,127 @@
+{
+ "at": "2026-09-24T11:29:34+08:00",
+ "gen": "control2",
+ "build_source": "D:\\moodle\\_qoder_harness_ord0254\\builds\\control2\\dist",
+ "source_build": {
+  "files": 10,
+  "bytes": 2520739,
+  "tree_sha256": "e47028f1fe6ea1655bd2077c1060407cb3dbca85f8cea49e92c58c5a327eebf0",
+  "assets": {
+   "assets/index-ChOTTCvB.js": {
+    "bytes": 1245203,
+    "sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de"
+   },
+   "assets/index-I45CQek8.css": {
+    "bytes": 183897,
+    "sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f"
+   },
+   "assets/JourneyMap-tqEgrjRA.js": {
+    "bytes": 4392,
+    "sha256": "fa790caf9c87ac6718bf79cc6ffa6671ce1e9a6956a68f1f392eb1cb34402e4c"
+   },
+   "assets/maplibre-gl-CHrWFrV5.js": {
+    "bytes": 1053381,
+    "sha256": "9d88d8965eb85ebbfc07f4721119e8747cc2467ca4597fb31467e71e58f2bcb1"
+   },
+   "favicon.svg": {
+    "bytes": 199,
+    "sha256": "daae73a74d90412ba924a82bba737946f735c0abb15d16b2c28a0d843f42a140"
+   },
+   "index.html": {
+    "bytes": 1200,
+    "sha256": "2a07070b37b288dd3978b9dd745b5696ce0cb84a9f3e9e22dcf7f5dd37ab7303"
+   },
+   "manifest.webmanifest": {
+    "bytes": 314,
+    "sha256": "643f91ecc6d80155ebad6b42a64c1e5d1ec5eab8eb0b32460ab83f02324b56e0"
+   },
+   "sw.js": {
+    "bytes": 7178,
+    "sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9"
+   },
+   "v10-sw.js": {
+    "bytes": 2055,
+    "sha256": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a"
+   },
+   "workbox-6923124b.js": {
+    "bytes": 22920,
+    "sha256": "e3f4163ae57222c2bde00307d5dd7e4305a6d915f881a8c2890736b848ed9f39"
+   }
+  }
+ },
+ "served_root": {
+  "path": "D:\\moodle\\_qoder_harness_ord0254\\diskgen\\dist",
+  "files": 10,
+  "bytes": 2520739,
+  "tree_sha256": "e47028f1fe6ea1655bd2077c1060407cb3dbca85f8cea49e92c58c5a327eebf0",
+  "copy_byte_identical": true
+ },
+ "shell": {
+  "status": 200,
+  "names_asset": [
+   "assets/index-ChOTTCvB.js"
+  ],
+  "answered_over_http": {
+   "assets/index-ChOTTCvB.js": {
+    "status": 200,
+    "content_type": "text/javascript",
+    "bytes": 1245203,
+    "sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+    "equals_source_build_file": true
+   },
+   "assets/index-I45CQek8.css": {
+    "status": 200,
+    "content_type": "text/css",
+    "bytes": 183897,
+    "sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+    "equals_source_build_file": true
+   }
+  }
+ },
+ "previous_listener": {
+  "port": 4418,
+  "found": [
+   {
+    "pid": 50260,
+    "mine": true,
+    "command_line": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_qoder_harness_ord0254\\diskgen\\dist --port 4418 --strictPort --host 127.0.0.1"
+   }
+  ],
+  "killed": [
+   50260
+  ],
+  "free_after": true
+ },
+ "surface": {
+  "port": 4418,
+  "preview_pid": 57872,
+  "actual_listener_pids_after_start": [
+   57872
+  ],
+  "spawned_pid_is_the_listener": true,
+  "listener_command_lines": [
+   "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_qoder_harness_ord0254\\diskgen\\dist --port 4418 --strictPort --host 127.0.0.1"
+  ],
+  "citynexus_backend_port": 8411,
+  "backend_listeners": [
+   56080
+  ],
+  "proof_200_marker_journey": {
+   "status": 200,
+   "via_backend_direct": 200
+  },
+  "proof_404_absent_id": {
+   "uuid": "2ae6f990-8bd6-470d-bc14-37b50fdeb50c",
+   "rows_in_my_db": 0,
+   "status": 404
+  },
+  "db_marker_rows": 1,
+  "query_only_read_back": 1,
+  "ownership_verdict": "PROVEN"
+ },
+ "user_chain": {
+  "ports_contacted": [],
+  "db_files_opened": [],
+  "demo_reset_issued": false
+ }
+}
