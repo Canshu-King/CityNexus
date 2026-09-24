@@ -1,0 +1,62 @@
+{
+ "phase": "install",
+ "at": "2026-09-24T03:24:13.354Z",
+ "base": "http://127.0.0.1:8452",
+ "window_s": 8,
+ "observed_for_ms": 9117,
+ "seen": {
+  "loads": [
+   {
+    "id": 1,
+    "at": 21.90000000037253,
+    "href": "http://127.0.0.1:8452/v8/hub"
+   }
+  ],
+  "events": [
+   {
+    "kind": "document-start",
+    "t_ms": 22,
+    "load_id": 1,
+    "controller": null,
+    "bundle": null
+   },
+   {
+    "kind": "no-registration",
+    "t_ms": 24,
+    "load_id": 1,
+    "controller": null,
+    "bundle": null
+   },
+   {
+    "kind": "controllerchange",
+    "t_ms": 209,
+    "load_id": 1,
+    "controller": "/v10-sw.js",
+    "bundle": "/assets/index-F4TeHVOB.js"
+   }
+  ],
+  "controller_now": "/v10-sw.js",
+  "registrations": [
+   {
+    "scope": "/",
+    "active": "/v10-sw.js",
+    "active_state": "activated",
+    "waiting": null,
+    "waiting_state": null,
+    "installing": null
+   }
+  ],
+  "product_reload_key": null,
+  "executing_bundle": "/assets/index-F4TeHVOB.js",
+  "shell_in_document": [
+   "/assets/index-F4TeHVOB.js"
+  ],
+  "mounted": true,
+  "onLine": true
+ },
+ "console_errors": [],
+ "page_errors": [],
+ "swap_request": null,
+ "samples": [],
+ "profile": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\profile_inplace"
+}
