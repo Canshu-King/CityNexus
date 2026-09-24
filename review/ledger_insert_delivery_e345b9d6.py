@@ -18,9 +18,10 @@ for _stream in (sys.stdout, sys.stderr):
         _stream.reconfigure(encoding="utf-8", errors="replace")
 
 LEDGER = "D:/moodle/CITYNEXUS_AGENT_CONTROL.md"
-BLOCK = "D:/moodle/_qoder_d_lane_20260923/review/ledger_block_e345b9d6_2e.md"
+# argv[1] = the block file, argv[2] = the time token inside it.  Defaults keep the first use working.
+BLOCK = sys.argv[1] if len(sys.argv) > 1 else "D:/moodle/_qoder_d_lane_20260923/review/ledger_block_e345b9d6_2e.md"
 HEADING = "## DELIVERIES（车道交付登记处 · 追加，不改别人的块）"
-TIME_TOKEN = "@2026-09-25 03:1x+08"
+TIME_TOKEN = sys.argv[2] if len(sys.argv) > 2 else "@2026-09-25 03:1x+08"
 
 
 def read(path: str) -> str:
