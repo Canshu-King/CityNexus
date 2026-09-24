@@ -23,6 +23,7 @@ import {
   type OriginProbeFact,
 } from "../lib/failureAttribution";
 import { fetchWithReadDeadline } from "../lib/readDeadline";
+import { beginNonIdempotentRequest } from "../lib/inFlightWrites";
 import { useElapsedSeconds } from "../lib/waitClock";
 import { readChoice, setThemeChoice, type ThemeChoice } from "../theme";
 import { MobilitySheet } from "../features/mobility/MobilitySheet";
@@ -184,6 +185,15 @@ class V8Rejection extends Error {
 }
 
 async function v8Request<T>(path: string, init?: RequestInit): Promise<T> {
+  const releaseInFlight = beginNonIdempotentRequest(init?.method);
+  try {
+    return await v8RequestInner<T>(path, init);
+  } finally {
+    releaseInFlight();
+  }
+}
+
+async function v8RequestInner<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetchWithReadDeadline(path, {
     headers: { "Content-Type": "application/json", ...(init?.headers ?? {}) },
     ...init,

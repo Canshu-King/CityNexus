@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { createActor } from "xstate";
 import { citynexusQueryClient } from "./lib/queryClient";
 import { formatMinorMoney } from "./lib/money";
+import { hasNonIdempotentRequestInFlight, onNonIdempotentRequestsQuiet } from "./lib/inFlightWrites";
 import "./v10.css";
 import {
   CityNexusApiError,
@@ -1679,6 +1680,7 @@ createRoot(document.getElementById("root")!).render(
 );
 
 const serviceWorkerReloadMarkerKey = "citynexus.sw.controller-transition";
+const serviceWorkerPendingHandoverKey = "citynexus.sw.generation-handover-pending";
 const MAX_AUTOMATIC_CONVERGENCE_PER_SESSION = 2;
 
 /**
@@ -1734,7 +1736,17 @@ async function registerProductionServiceWorker() {
 
     // Reload so an old shell cannot keep executing against a new asset graph after an auto-update.
     sessionStorage.setItem(serviceWorkerReloadMarkerKey, String(switchesTaken + 1));
-    window.location.reload();
+    /* B2c: a write that has already left the client is not mine to abandon. If one is in flight, name it
+       as a pending handover and reload at the next quiet point instead of mid-request; with nothing in
+       flight the quiet point is now, so no user action is ever added. */
+    if (hasNonIdempotentRequestInFlight()) {
+      sessionStorage.setItem(serviceWorkerPendingHandoverKey, "pending");
+      window.dispatchEvent(new CustomEvent("citynexus:generation-handover-pending"));
+    }
+    onNonIdempotentRequestsQuiet(() => {
+      sessionStorage.removeItem(serviceWorkerPendingHandoverKey);
+      window.location.reload();
+    });
   });
 
   const registration = await navigator.serviceWorker.register("/v10-sw.js", {
