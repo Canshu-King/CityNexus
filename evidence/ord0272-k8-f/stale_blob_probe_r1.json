@@ -1,0 +1,180 @@
+{
+ "what": "回答包工头 05:0x 那一问：跨仪器复判是否被过期 blob 引用污染（外取重读，派生结论）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T04:44:03+08:00",
+ "generations_pinned": {
+  "gen_a": "dcae1bc964125c3a975916f6bf667794cc19622a",
+  "gen_b": "7c806fab58e872060cb5811ff96c770b40dad165",
+  "cmdr_selftest_gen_a": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa"
+ },
+ "tips": {
+  "main": {
+   "ref": "main",
+   "sha": null,
+   "why": "HTTP 404"
+  },
+  "commander/control": {
+   "ref": "commander/control",
+   "sha": "a2322364e29b0cdbd000c3300baf0e8f15f1075e",
+   "why": null
+  },
+  "mirror/integration-frontend-apple-pass1": {
+   "ref": "mirror/integration-frontend-apple-pass1",
+   "sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "why": null
+  },
+  "review/ord0272-k8-f": {
+   "ref": "review/ord0272-k8-f",
+   "sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "why": null
+  },
+  "agent/f-ord272-k8": {
+   "ref": "agent/f-ord272-k8",
+   "sha": null,
+   "why": "HTTP 404"
+  }
+ },
+ "inventory": [
+  {
+   "ref": "dcae1bc96412",
+   "path": "backend/app/main.py",
+   "blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "bytes": 482850,
+   "type": "file",
+   "recorded_in_my_receipt": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "unchanged": true
+  },
+  {
+   "ref": "dcae1bc96412",
+   "path": "backend/app/schemas.py",
+   "blob": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "bytes": 25591,
+   "type": "file",
+   "recorded_in_my_receipt": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "unchanged": true
+  },
+  {
+   "ref": "dcae1bc96412",
+   "path": "backend/tests/test_qoder_ord0272_continuation.py",
+   "blob": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "bytes": 24562,
+   "type": "file",
+   "recorded_in_my_receipt": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "unchanged": true
+  },
+  {
+   "ref": "dcae1bc96412",
+   "path": "contracts/openapi.yaml",
+   "blob": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "bytes": 106971,
+   "type": "file",
+   "recorded_in_my_receipt": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "unchanged": true
+  },
+  {
+   "ref": "7c806fab58e8",
+   "path": "backend/app/main.py",
+   "blob": "ad13f4395e3405ce722ae8660836f3c2aaa29df2",
+   "bytes": 483511,
+   "type": "file",
+   "recorded_in_my_receipt": "ad13f4395e3405ce722ae8660836f3c2aaa29df2",
+   "unchanged": true
+  },
+  {
+   "ref": "7c806fab58e8",
+   "path": "backend/app/schemas.py",
+   "blob": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "bytes": 25591,
+   "type": "file",
+   "recorded_in_my_receipt": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "unchanged": true
+  },
+  {
+   "ref": "7c806fab58e8",
+   "path": "backend/tests/test_qoder_ord0272_continuation.py",
+   "blob": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9",
+   "bytes": 28087,
+   "type": "file",
+   "recorded_in_my_receipt": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9",
+   "unchanged": true
+  },
+  {
+   "ref": "7c806fab58e8",
+   "path": "contracts/openapi.yaml",
+   "blob": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "bytes": 106971,
+   "type": "file",
+   "recorded_in_my_receipt": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "unchanged": true
+  }
+ ],
+ "derived": {
+  "my_cited_paths": [
+   "backend/app/main.py",
+   "backend/app/schemas.py",
+   "backend/tests/test_qoder_ord0272_continuation.py",
+   "contracts/openapi.yaml"
+  ],
+  "any_frontend_cited": false,
+  "my_citations_all_resolve": true,
+  "my_citations_unchanged_since_receipt": true,
+  "drifted": [],
+  "validator_path_still_the_arbiter_verified_blob": true,
+  "validator_blob_at_path_now": "47372706c6ffde2175155de175133e212aae651c",
+  "planwithai_pair_readings": [
+   {
+    "ref": "c79e2b4f4efe",
+    "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "blob": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+    "bytes": 43631,
+    "type": "file"
+   },
+   {
+    "ref": "dcae1bc96412",
+    "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "blob": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+    "bytes": 43631,
+    "type": "file"
+   },
+   {
+    "ref": "7c806fab58e8",
+    "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "blob": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+    "bytes": 43631,
+    "type": "file"
+   },
+   {
+    "ref": "dcae1bc96412",
+    "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "blob": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+    "bytes": 43631,
+    "type": "file",
+    "label": "authoritative_tip"
+   }
+  ],
+  "which_pair_is_red": [
+   {
+    "a": "c79e2b4f4efe",
+    "b": "dcae1bc96412",
+    "equal": true,
+    "either_missing": false
+   },
+   {
+    "a": "c79e2b4f4efe",
+    "b": "7c806fab58e8",
+    "equal": true,
+    "either_missing": false
+   },
+   {
+    "a": "dcae1bc96412",
+    "b": "7c806fab58e8",
+    "equal": true,
+    "either_missing": false
+   }
+  ],
+  "my_rejudge_contaminated": false,
+  "verdict": "NOT_CONTAMINATED_EIGHT_OF_EIGHT_RE_READ_EQUAL"
+ },
+ "method": "每格每路径每代各一次 GitHub contents 外取；与我收据里当初记的那枚 40 位逐位对表；PlanWithAiSheet 在他 selftest 的 A 代、我的两代与权威尖四处各读一次",
+ "note": "我的判据只读 backend/app/{main,schemas}.py、backend/tests/test_qoder_ord0272_continuation.py、contracts/openapi.yaml 这四件（上面清单是实读全集），且两代都是 40 位钉住的提交"
+}
