@@ -140,14 +140,17 @@ def collect_evidence(landed_tip: str, pre_rebase_tip: str, problems: list) -> di
         "playwright_node_count": len(pw_nodes),
         "backend_collected_line": bt_line,
         "backend_collected": int(bt_collected.group(1)) if bt_collected else None,
-        "re_parent_proof": {
+        "base_proof": {
             "landed_tip": landed_tip,
             "candidate_is_descendant": is_desc,
-            "commits_ahead": git_out(f"git rev-list --count {landed_tip}..HEAD"),
-            "pre_rebase_tip": pre_rebase_tip,
-            "frontend_files_moved_by_reparent": [
+            "commits_ahead": git_out(f"git rev-list --count {landing_tip}..HEAD"),
+            "base_tip": pre_rebase_tip,
+            "frontend_files_differring_from_base": [
                 line for line in git_out(f"git diff --name-only {pre_rebase_tip} HEAD -- frontend").splitlines() if line
             ],
+            "reading": "base_tip is the branch this work started from, not a re-parent target; the "
+            "frontend files listed are what this segment changed on top of it. The generational claim "
+            "that matters is `candidate_is_descendant` against the landed tip.",
         },
     }
 
@@ -423,14 +426,14 @@ def main() -> int:
     print(f"candidate_tip={head}")
     print(f"triples={len(triples)}  problems={len(problems)}")
     if collection:
-        proof = collection["re_parent_proof"]
+        proof = collection["base_proof"]
         print(
             f"collection: playwright {collection['playwright_total_line']!r} nodes={collection['playwright_node_count']}"
             f" | backend collected={collection['backend_collected']} ({collection['backend_collected_line']!r})"
         )
         print(
-            f"re-parent: descendant={proof['candidate_is_descendant']} ahead={proof['commits_ahead']}"
-            f" frontend_moved={len(proof['frontend_files_moved_by_reparent'])}"
+            f"base: descendant-of-landed={proof['candidate_is_descendant']} ahead={proof['commits_ahead']}"
+            f" frontend_changed_since_base={len(proof['frontend_files_differring_from_base'])}"
         )
 
     for t in triples:
