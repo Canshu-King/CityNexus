@@ -458,6 +458,11 @@ class GeneratePlansRequest(BaseModel):
     planning_mode: PlanningMode | None = None
     candidate_count: int = Field(default=3, ge=1, le=5)
     place_ids: list[str] | None = Field(default=None, min_length=2, max_length=12)
+    #: ORD-0272: *whose* batch this is - business semantics, so it lives in the body.
+    #: `Idempotency-Key` stays the transport-level "is this the same send" control; merging the
+    #: two into one key would make "same mission, different request" and "same request, resent"
+    #: indistinguishable in storage, which is the mistake ORD-0262 keeps tripping over.
+    mission_id: str | None = None
 
 
 class CatalogHydrationRequest(BaseModel):
