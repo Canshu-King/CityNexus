@@ -1,0 +1,186 @@
+{
+ "built_as": "swap TARGET generations (the restoring code is the incoming one)",
+ "candidate_client": {
+  "dir": "dist_0274sw",
+  "content_fingerprint": "9b10f8846b928e4fde2fd5bfe339f3e6b98d6885bc7a2850e09de554dad7bc50"
+ },
+ "arms": {
+  "dist_0274b2b_steponly_t": {
+   "tag": "b2b-steponly",
+   "declared": {
+    "write_drops_draft": true,
+    "write_keeps_pair": false,
+    "read_ternary_intact": true
+   },
+   "shipped": {
+    "bundle": "index-DJdPoj_U.js",
+    "bundle_sha256": "17ed938b45292f98615c1963b62bd83135f58c1a60565d809370c061a2ad7d04",
+    "draft_writes_found": 1,
+    "write_keeps_pair": false,
+    "write_drops_draft": true,
+    "read_ternary_intact": true,
+    "advertises_tag": true
+   },
+   "shape_mismatch": {},
+   "generation": {
+    "label": "dist_0274b2b_steponly_t",
+    "index_sha256": "0a1dc8f78495fa92422d549fa7a68ca74f2df51898c7addc734ef2484b3bc97a",
+    "index_body_size": 1200,
+    "index_named_refs": [
+     "/assets/index-DJdPoj_U.js",
+     "/assets/index-I45CQek8.css"
+    ],
+    "scripts_observed": [
+     "/assets/index-DJdPoj_U.js"
+    ],
+    "per_script": {
+     "/assets/index-DJdPoj_U.js": {
+      "source": "dist_0274b2b_steponly_t:/assets/index-DJdPoj_U.js",
+      "rule": "every navigator.serviceWorker.register() in the SERVED bundle must declare scope \"/\" and updateViaCache \"none\"",
+      "calls": [
+       {
+        "sw_url": "/v10-sw.js",
+        "scope": "/",
+        "updateViaCache": "none",
+        "opts_present": true,
+        "scope_ok": true,
+        "update_via_cache_ok": true
+       }
+      ],
+      "verdict": "GREEN",
+      "register_mentions_in_code": 1,
+      "register_calls_parsed": 1,
+      "unresolved_registrations": 0,
+      "ref": "/assets/index-DJdPoj_U.js",
+      "readable": true,
+      "sha256": "17ed938b45292f98615c1963b62bd83135f58c1a60565d809370c061a2ad7d04",
+      "body_size": 1245951
+     }
+    },
+    "generation_verdict": "GREEN",
+    "generation_reason": "owner(s) /assets/index-DJdPoj_U.js; 0 other script(s) name no registration, which is not a defect",
+    "owner_refs": [
+     "/assets/index-DJdPoj_U.js"
+    ],
+    "register_calls_parsed_total": 1,
+    "unresolved_total": 0,
+    "bytes_fingerprint": "6de2a3a94e54cfb25881c2d8f4af1781ac8967a3044d6d1595b303ae295a201a",
+    "content_fingerprint": "2513dc1e9303ac5acd730afe7e25168aed95e2e564607d73508fbc97b6c333a6",
+    "ruler": {
+     "path": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\deploy_bundle_v2_draft_r4.py",
+     "blob_sha": "0686670743c079647aa678370aa5481562c4c0a8",
+     "extracted": [
+      "DECLARED_NO_PRECACHE",
+      "SW_REGISTER_RULE",
+      "_ord0277_generation_verdict",
+      "asset_refs",
+      "strip_js_comments",
+      "sw_register_verdict"
+     ],
+     "bytes_extracted": 7284
+    },
+    "sw_bytes": {
+     "sw_url": "/v10-sw.js",
+     "sha256": "5f74dfa9bd0399a7d934a955c79f00fa6ceeccd29bca79c715c82055bd123d9c",
+     "body_size": 2055
+    }
+   },
+   "build": {
+    "rc": 0,
+    "tail": [
+     "  dist_0274b2b_steponly_t/v10-sw.js",
+     "  dist_0274b2b_steponly_t/workbox-6923124b.js"
+    ]
+   }
+  },
+  "dist_0274b2b_stepforced_t": {
+   "tag": "b2b-stepforced",
+   "declared": {
+    "write_drops_draft": false,
+    "write_keeps_pair": true,
+    "read_ternary_intact": false
+   },
+   "shipped": {
+    "bundle": "index-CISo-1ey.js",
+    "bundle_sha256": "20961880f37162de015ddb536add4ec24132bc0c0c38f3f34ec5d01c75f201d7",
+    "draft_writes_found": 1,
+    "write_keeps_pair": true,
+    "write_drops_draft": false,
+    "read_ternary_intact": false,
+    "advertises_tag": true
+   },
+   "shape_mismatch": {},
+   "generation": {
+    "label": "dist_0274b2b_stepforced_t",
+    "index_sha256": "6d16a601b85c502ade4a368d3ad84f43216ae287bcefe32332b86e383f99d046",
+    "index_body_size": 1200,
+    "index_named_refs": [
+     "/assets/index-CISo-1ey.js",
+     "/assets/index-I45CQek8.css"
+    ],
+    "scripts_observed": [
+     "/assets/index-CISo-1ey.js"
+    ],
+    "per_script": {
+     "/assets/index-CISo-1ey.js": {
+      "source": "dist_0274b2b_stepforced_t:/assets/index-CISo-1ey.js",
+      "rule": "every navigator.serviceWorker.register() in the SERVED bundle must declare scope \"/\" and updateViaCache \"none\"",
+      "calls": [
+       {
+        "sw_url": "/v10-sw.js",
+        "scope": "/",
+        "updateViaCache": "none",
+        "opts_present": true,
+        "scope_ok": true,
+        "update_via_cache_ok": true
+       }
+      ],
+      "verdict": "GREEN",
+      "register_mentions_in_code": 1,
+      "register_calls_parsed": 1,
+      "unresolved_registrations": 0,
+      "ref": "/assets/index-CISo-1ey.js",
+      "readable": true,
+      "sha256": "20961880f37162de015ddb536add4ec24132bc0c0c38f3f34ec5d01c75f201d7",
+      "body_size": 1245933
+     }
+    },
+    "generation_verdict": "GREEN",
+    "generation_reason": "owner(s) /assets/index-CISo-1ey.js; 0 other script(s) name no registration, which is not a defect",
+    "owner_refs": [
+     "/assets/index-CISo-1ey.js"
+    ],
+    "register_calls_parsed_total": 1,
+    "unresolved_total": 0,
+    "bytes_fingerprint": "797ae2d9c00d7a3e4d6018bba55ddaa7562f1cc3f6e90c004e951b67cb6f1ff3",
+    "content_fingerprint": "27ed8269729f8fa9f634c05aa7758f3ef015b1ce49fb1640cd7c118671124951",
+    "ruler": {
+     "path": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\deploy_bundle_v2_draft_r4.py",
+     "blob_sha": "0686670743c079647aa678370aa5481562c4c0a8",
+     "extracted": [
+      "DECLARED_NO_PRECACHE",
+      "SW_REGISTER_RULE",
+      "_ord0277_generation_verdict",
+      "asset_refs",
+      "strip_js_comments",
+      "sw_register_verdict"
+     ],
+     "bytes_extracted": 7284
+    },
+    "sw_bytes": {
+     "sw_url": "/v10-sw.js",
+     "sha256": "fe4f9dc51e9d4506e1182e7bc075d05acb8b5c433916815aff1381dbe971184d",
+     "body_size": 2055
+    }
+   },
+   "build": {
+    "rc": 0,
+    "tail": [
+     "  dist_0274b2b_stepforced_t/v10-sw.js",
+     "  dist_0274b2b_stepforced_t/workbox-6923124b.js"
+    ]
+   }
+  }
+ },
+ "all_shapes_match_declaration": true
+}
