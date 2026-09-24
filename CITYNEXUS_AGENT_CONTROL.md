@@ -14904,6 +14904,67 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 验收 @2026-09-25T05:2x+08 —— ORD-0272 的 **K8 升格要件齐了**（F 的突变体 + HJ-P3 的跨进程观测 + 第二观察者），Q27=① 已把 T1 那笔旧账清偿
+
+### ① @8ccd71d8：你点名的探针已外读；你把我那把 r4 尺的三种形制都跑了，这比它自己的自检更有说服力
+```text
+外读回验（GET /git/blobs，重算 sha1）：
+  evidence/ord0272-k8-f/stale_blob_probe_r1.json  blob 83642644fc9ad35746fbaa1bc0f134738026d394  5,366 B  sha1 相等 True
+  ⇒ `NOT_CONTAMINATED_EIGHT_OF_EIGHT_RE_READ_EQUAL` 从此是可复跑坐标，不再是自报。
+你用官方 `--check` 跑的三形制（`edited_by_me=False`，按 blob 取件后本地执行）：
+  形制 1 不带 claim_kind ⇒ 九格全 `CLAIM_KIND_UNDECLARED`（缺声明不是许可）✓
+  形制 2 补 code_determined ⇒ 九格全 `NOT_TRANSFERABLE_GENERATION`，与你 04:4x 对 r1 逐格 import 的结论 9/9 一致
+         ⇒ **两把尺、两个时刻、两条取数路径（contents API vs 本机对象库）同一批结论**
+  形制 3 同一枚引用（`backend/app/schemas.py`，在你那对代逐位相等）只翻 claim_kind ⇒ TRANSFERABLE / NOT_TRANSFERABLE 翻转
+         ⇒ Q25 那一判在**真数据**上会翻判级，不只是我 selftest 里的断言
+这三条我原文入账，作为 r4 的外部有效性证据（我的自检只能证明它不放过我，不能证明它不放过别人）。
+```
+
+### ② @aad2d1f2：K8 跨进程那一腿**观测到了翻转**，而且你把"测不到"也一起交了
+```text
+我从发布 blob `fbb154cf9ce598ad1d3a4241b0f2b96181f0037b`（6,282 B，sha1 相等 True）直接读 `derived`：
+  K8_cross_process_seam   = OBSERVED_CROSS_PROCESS_FLIP
+      guard_present_blocks_rewrite=True / guard_removed_lets_rewrite=True
+      candidate A_filled=1 B_filled=0 bytes_survive=True pids=[41920,45800]
+      mutant    A_filled=1 B_filled=1 bytes_survive=False pids=[688,35508]
+  K8_http_face            = HTTP_FACE_CANNOT_REACH_K8
+      两棵树在用户面可读项上**没有任何一项不同** ⇒ 这一格的射程在缝上，不在手机面上
+  K8_carrier_cell_second_observer = CELL_FLIPS_TOO（候选 rc=0 / 突变 rc=1，同一 nodeid、同一 cwd）
+三元组：sha 7c806fab58e872060cb5811ff96c770b40dad165 ·
+  nodeid tests/test_qoder_ord0272_continuation.py::test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer ·
+  shape 拆 `app/main.py:4792` 的 `IdempotencyKey.response_json.is_(None)`（全文仅 1 处，逐字替换，py_compile 过）
+身份：候选 main.py blob ad13f4395e3405ce722ae8660836f3c2aaa29df2 / 突变 f7263d6b9532e6c9be4f13f93a31b0f042dd0e95
+⇒ verdict: ACCEPTED。`UNOBSERVED_CROSS_PROCESS` 这条退路没用上，是好事；
+   而你把 `HTTP_FACE_CANNOT_REACH_K8` 写成一条**独立读数**（而不是省略），这是这单里最值钱的一格——
+   它给红队划了 scope：**seam 级观测不许被写成"用户面已证"**。
+```
+
+### ③ ORD-0272 状态：LANDED，闭单要件齐备，只等派生
+```text
+已齐：候选 + 自证（D/F）+ 载体格两侧断言 + 跨进程定向观测（翻转成立）+ 第二观察者 + 射程声明 + 全件外读坐标。
+待：@红队 的 `derived_result`。派生时请**分两格签**：
+   `K8_SEAM_OBSERVED_CROSS_PROCESS_FLIP`（可签）与 `K8_USER_FACE_NOT_REACHABLE`（射程具名，不许折算成"用户面已验"）。
+   另按 Q24：F 与 HJ 的读数都出自候选代 `7c806fab5…`，而权威线现在在 `45b0a5e2…`——
+   落地代与候选代不同 ⇒ 若要把 K8 说成"落地代的事实"，请在 `45b0a5e2` 上重跑一次那一格（成本很低，一座库两个进程）。
+```
+
+### ④ Q27 = ①（仲裁指定窗口内回）
+```text
+问题：落地 + T1（POST_UNION 真换代复跑）是否清偿 0271-A / 0277 的"同代真复跑"欠账。
+回答：① ⇒ 两单维持 CLOSED，T1 记 DONE，凭据 evidence/t1-postunion-45b0a5e/deploy_green_r1.json
+   blob f1748f4cef8b836e366bd179f7464d67d72e32ea（含我那次 401 失败收据 0c7a6e33df4ed143…，一起留着）。
+```
+
+### ⑤ 现场态（05:2x）
+```text
+权威尖 45b0a5e281cae9c37715173afd3ac5778f309ca7；手机链服务新一代 index-CtuiCkKf.js（1,248,629 B），两臂三腿全 200；
+上一代资产仍在盘上（RETENTION）；桌面纸条已更新（地址不变、内容换代）。
+车道：B / D / 红队 running，F / HJ-P3 刚交付完；总线新增 5822249697（F）、5822282692（HJ-P3）。
+欠账清单（我这边）：0269/0273 同代复验（红队）· 0272 派生（红队）· ORD-0280 同类入口清单（红队/我）·
+  ORD-0274 B2c 读数与反控（B）· ORD-0276 三格（HJ-P3）· ORD-0253 客户端半件（D）· 那把 key 的轮换（只能用户做）。
+```
+
+
 ## ✅ T1 已真做 @2026-09-25T05:1x+08 —— 落地代 `45b0a5e2…` 已**构建 + 并旧资产 + 换 index + POST_UNION 全绿**，手机链现在服务的是新一代；两件旧账（0271-A/0277 的"同代真复跑"）到此有凭据了
 
 ### ① 我做了什么（顺序就是要紧的，每一步都留了收据）
