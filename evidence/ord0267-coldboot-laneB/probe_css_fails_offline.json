@@ -1,0 +1,23 @@
+{
+ "phase": "offline",
+ "at": "2026-09-24T02:49:45.111Z",
+ "base": "http://127.0.0.1:8446",
+ "profile": "D:\\moodle\\_qoder_b_ord0267_20260923\\profile_css_fails",
+ "navigation": {
+  "ok": false,
+  "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8446/v8/hub\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:8446/v8/hub\", waiting until \"domcontent"
+ },
+ "facts": {
+  "evaluate_error": "page.evaluate: TypeError: Cannot read properties of undefined (reading 'getRegistrations')\n    at eval (eval at evaluate (:311:30), <anonymous>:3:48)\n    at UtilityScript.evaluate (<anonymous>:313:16)"
+ },
+ "page_errors": [],
+ "console_errors": [],
+ "requests_failed": [
+  {
+   "url": "/v8/hub",
+   "why": "net::ERR_CONNECTION_REFUSED"
+  }
+ ],
+ "non_200_responses": [],
+ "offline_asset_probe": []
+}
