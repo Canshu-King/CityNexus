@@ -1,0 +1,37 @@
+{"kind": "static", "path": "/", "root": "dist", "t": 1790291371.85, "iso": "2026-09-25T07:09:31+0800"}
+{"kind": "static", "path": "/v8/hub", "root": "dist", "t": 1790291374.401, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/assets/index-BLpFjUjp.js", "root": "dist", "t": 1790291374.448, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/assets/index-I45CQek8.css", "root": "dist", "t": 1790291374.449, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/v10-sw.js", "root": "dist", "t": 1790291374.586, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/workbox-6923124b.js", "root": "dist", "t": 1790291374.613, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/sw.js", "root": "dist", "t": 1790291374.637, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/index.html", "root": "dist", "t": 1790291374.655, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/assets/maplibre-gl-B88ndxpp.js", "root": "dist", "t": 1790291374.662, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/assets/JourneyMap-D1kzH2tZ.js", "root": "dist", "t": 1790291374.692, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/assets/index-I45CQek8.css", "root": "dist", "t": 1790291374.7, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/assets/index-BLpFjUjp.js", "root": "dist", "t": 1790291374.709, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/favicon.svg", "root": "dist", "t": 1790291374.775, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/manifest.webmanifest", "root": "dist", "t": 1790291374.784, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/v10-sw.js", "root": "dist", "t": 1790291374.797, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "static", "path": "/workbox-6923124b.js", "root": "dist", "t": 1790291374.801, "iso": "2026-09-25T07:09:34+0800"}
+{"kind": "api", "method": "GET", "path": "/api/v1/demo/scene", "status": 200, "t": 1790291375.002, "iso": "2026-09-25T07:09:35+0800"}
+{"kind": "static", "path": "/v10-sw.js", "root": "dist", "t": 1790291389.685, "iso": "2026-09-25T07:09:49+0800"}
+{"kind": "static", "path": "/workbox-6923124b.js", "root": "dist", "t": 1790291389.688, "iso": "2026-09-25T07:09:49+0800"}
+{"kind": "api", "method": "GET", "path": "/api/v1/demo/scene", "status": 200, "t": 1790291389.724, "iso": "2026-09-25T07:09:49+0800"}
+{"kind": "static", "path": "/v10-sw.js", "root": "dist", "t": 1790291391.238, "iso": "2026-09-25T07:09:51+0800"}
+{"kind": "static", "path": "/workbox-6923124b.js", "root": "dist", "t": 1790291391.242, "iso": "2026-09-25T07:09:51+0800"}
+{"kind": "api", "method": "POST", "path": "/api/v1/travelers", "status": 201, "ms": 18.7, "t": 1790291413.587, "iso": "2026-09-25T07:10:13+0800"}
+{"kind": "write_held", "mode": "release_journeys_after_8000", "method": "POST", "path": "/api/v1/journeys", "forwarded": true, "upstream_status": 201, "upstream_bytes": 395, "upstream_ms": 25.5, "hold_ms": 8000, "why": "server committed; the traveller is left with an unsettled write", "t": 1790291413.619, "iso": "2026-09-25T07:10:13+0800"}
+{"kind": "static", "path": "/v10-sw.js", "root": "dist", "t": 1790291417.611, "iso": "2026-09-25T07:10:17+0800"}
+{"kind": "static", "path": "/workbox-6923124b.js", "root": "dist", "t": 1790291417.632, "iso": "2026-09-25T07:10:17+0800"}
+{"kind": "static", "path": "/index.html", "root": "dist", "t": 1790291417.648, "iso": "2026-09-25T07:10:17+0800"}
+{"kind": "static", "path": "/assets/maplibre-gl-Dj9AUtyJ.js", "root": "dist", "t": 1790291417.658, "iso": "2026-09-25T07:10:17+0800"}
+{"kind": "static", "path": "/assets/JourneyMap-TEg7ZblP.js", "root": "dist", "t": 1790291417.685, "iso": "2026-09-25T07:10:17+0800"}
+{"kind": "static", "path": "/assets/index-DimRtCQm.js", "root": "dist", "t": 1790291417.697, "iso": "2026-09-25T07:10:17+0800"}
+{"kind": "static", "path": "/v10-sw.js", "root": "dist", "t": 1790291418.984, "iso": "2026-09-25T07:10:18+0800"}
+{"kind": "static", "path": "/workbox-6923124b.js", "root": "dist", "t": 1790291418.987, "iso": "2026-09-25T07:10:18+0800"}
+{"kind": "api", "method": "GET", "path": "/api/v1/demo/scene", "status": 200, "t": 1790291419.018, "iso": "2026-09-25T07:10:19+0800"}
+{"kind": "static", "path": "/v10-sw.js", "root": "dist", "t": 1790291420.697, "iso": "2026-09-25T07:10:20+0800"}
+{"kind": "static", "path": "/workbox-6923124b.js", "root": "dist", "t": 1790291420.7, "iso": "2026-09-25T07:10:20+0800"}
+{"kind": "write_released", "mode": "release_journeys_after_8000", "path": "/api/v1/journeys", "hold_ms": 8000, "delivered_status": 201, "at_release": true, "t": 1790291421.619, "iso": "2026-09-25T07:10:21+0800"}
+{"kind": "api", "method": "POST", "path": "/api/v1/journeys", "status": 201, "ms": 25.5, "t": 1790291421.62, "iso": "2026-09-25T07:10:21+0800"}
