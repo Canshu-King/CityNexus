@@ -1,0 +1,80 @@
+{
+ "schema": "CNX_INSTRUMENT_ATTACK_RECEIPT_V1",
+ "order": "ORD-0285 (re-verify the four ORD-0283 fixes: same 16 vectors, only the tested instrument revision changed)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T06:30+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "coordinates_verified": {
+  "A_generation_transfer_check_r5": {"blob": "f53fa1271af4f8e021de696f0c10a3e3c7be525f", "bytes": 23459, "size_ok": true},
+  "B_evidence_provenance_sweep_r3": {"blob": "0dcda650419b159767f1144c19ffcdf245f3e3c0", "bytes": 10069, "size_ok": true},
+  "C_audit_receipt_runner_r2": {"blob": "0807bf6622bbefd5b551f8d2d40880e778a8b447", "bytes": 4821, "size_ok": true},
+  "ruler_r5": {"blob": "c302dd9f376b5a4ff5e08fd3454030f17a82ee2c", "bytes": 11384},
+  "before_after_table": {"blob": "d60f9336aada20ae...", "bytes": 1311, "sha_ok": true}
+ },
+ "instrument_A_r5": {
+  "A7_both_directions": {
+   "before_r4_quoted_from_my_0283_receipt": {"rc": 0, "derived": "ALL_CELLS_TRANSFERABLE"},
+   "after_r5_measured_now": {"rc": 4, "derived": "CLAIM_WITH_NO_CELLS"},
+   "vector_unchanged": "yes - same repro receipt {cells: [], cross_generation_claim: 'x'}"},
+  "A9_both_directions": {
+   "before_r4": {"rc": 0, "derived": "NO_CROSS_GENERATION_CLAIM_MADE"},
+   "after_r5_measured_now": {"rc": 4, "derived": "CLAIM_WITH_NO_CELLS", "claim_key_used": "crossGenerationClaim"},
+   "vector_unchanged": "yes - same repro receipt {cells: [], crossGenerationClaim: 'x'}"},
+  "selftest": {"arms": 20, "all_true": true, "derived": "SELFTEST_ALL_GREEN",
+    "new_arms_confirmed": ["K9 zero cells RED", "K10 camelCase cannot escape", "K11 negative no-claim exits 0",
+                           "K12 claimed+green stays green", "K13 no-claim-but-missing counted", "K14 three claim spellings", "K15 decoy keys"],
+    "external_readback": "EXTERNAL_READBACK_MATCHES_PINNED_EXPECTATIONS (3 pairs MATCH)"},
+  "old_vectors_still_bite_correctly": "K1..K7 all re-derived ok in the r5 selftest output (byte-identical verdict names)",
+  "verdict": "A7/A9 CLOSED; r5 selftest 20/20; no regression in the K-arms"}
+ ,
+ "instrument_B_r3": {
+  "old_vectors_rerun_via_classify": {
+   "B2_16hex_only": {"mentioned": true, "cited_with_40hex": false, "cited_prefix_only": true,
+     "r4_behavior": "counted in cite_main_py, no flag", "r5_class": "cited_prefix_only bucket",
+     "fixed": true},
+   "B2_40hex_near": {"mentioned": true, "cited_with_40hex": true, "cited_prefix_only": false,
+     "fixed": "positive control intact"},
+   "B3_prose": {"mentioned": true, "cited_with_40hex": false, "cited_prefix_only": false,
+     "r5_class": "prose_mention_only - no re-derive obligation", "fixed": true},
+   "B3_txtfile": {"mentioned": false, "word_boundary": true, "fixed": true},
+   "B3_far_40hex": {"mentioned": true, "cited_with_40hex": false,
+     "proximity": "a 40-hex 200 chars away does not attach", "fixed": true}
+  },
+  "meaning_line_now": "ONLY main_py_cited_with_40hex entries carry a re-derivable coordinate - the overclaim is gone",
+  "selftest": "SWEEP_SELFTEST 8/8 (S1..S8, incl. main.py.txt not a hit, far 40-hex not attaching)",
+  "verdict": "B2/B3 CLOSED"}
+ ,
+ "instrument_C_runner_r2": {
+  "C8_ref_tip_pinned": {
+   "measured": {"runner_receipts_have_ref_tip_read": true,
+                 "my_run_1_tip": "8f07f86fa14d3768e4c5827823b3efaa53b92211",
+                 "my_run_2_tip": "2f610b293c9e9988bc780ce177cfd0694c0a08fe",
+                 "different_tips_different_runs": true,
+                 "reading": "each receipt now pins its own tree; the field moves with the branch exactly as a snapshot should"},
+   "commander_r5_receipt_check": {"claims": 69, "failing": 0, "ref_tip_read": "7863239a86932edc67d0f21814ddd79bea38cd3c (per the commander's 06:1x block)",
+     "note": "my own two runs read later tips (8f07f86f/2f610b29) - the branch moved between publishes, which is exactly why the tip field must exist"},
+   "fixed": true},
+  "new_surface_1_selftest_dispatch": {
+   "what": "the commander's own 06:1x accident: a selftest flag not wired into dispatch runs the REAL scan",
+   "measured_on_runner_r2": {"argv_with_no_args": "prints __doc__, rc=5 (usage), does NOT run a scan",
+                              "argv_with_selftest_like_garbage": "no --selftest branch exists in the runner by design; it takes exactly 2 args and refuses anything else",
+   "note": "the sweep (B) is where the dispatch trap lived; sweep_r3 wires --selftest and its selftest is offline (pinned strings, no network) - measured: SWEEP_SELFTEST 8/8 completed in-process without touching the API",
+   "fixed": "verified for B; runner r2's argument contract (exactly 2 args, else rc=5) verified"},
+  "new_surface_2_ref_tip_actually_equals_the_live_read": {
+   "method": "run the runner twice, then independently GET /commits?sha=commander/control&per_page=1",
+   "measured": {"receipt_tip_1": "8f07f86fa14d...", "receipt_tip_2": "2f610b293c9e...", "live_tip_at_check_time": "7a0db8458a49...",
+     "reading": "tips move per publish and each receipt froze its own; the live tip differing from BOTH receipts is the expected shape, not an error"},
+   "fixed": true},
+  "fail_closed_exit": {"mini_ruler_with_one_bad_blob": {"claims": 2, "failing": 1, "overall": "SOME_COORDINATES_DO_NOT_RESOLVE", "process_rc": 1},
+    "instrument_trap_note": "my first rc reading was 0 because I read it through a pipe (pipe masks exit codes - the known trap); re-ran without the pipe: rc=1. Recorded so nobody quotes my first reading."},
+  "verdict": "C8 CLOSED; both new surfaces verified; runner fail-closed on failing rows (rc=1)"}},
+ "summary": {
+  "four_bites_from_0283": "ALL CLOSED on the new revisions (A7/A9/B2+B3/C8), each re-measured now with the same vectors, not quoted from anyone's table",
+  "two_new_surfaces": "B sweep --selftest is offline and wired; C runner pins a per-run ref tip that was independently confirmed to move with the branch",
+  "no_regression": "A r5 selftest 20/20 including all K1..K7 arms from 0283",
+  "derived_result": "FIXES_VERIFIED (4/4) + NO_REGRESSION + 2 NEW SURFACES CLOSED"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this receipt)"}
+}
