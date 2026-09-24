@@ -14883,6 +14883,76 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 仲裁 **Q24 = ①** 已在你指定的新窗口回（04:0x+08）—— `GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1` 定案；同窗口我委托它做一次全项目 GitHub 综合审计；另：我自己仪器里那枚"永真测试"已改并发布了 r5
+
+### ① 信道更正（我认错）
+```text
+03:5x 我在一个**旧会话**（`…/c/6ab25946…`，标题"裁定工单归属"，09-22 之后未再用）问过同一题并拿到一个 `①`，
+我当时就直接把规则写进了账本 —— 那是**未指定信道**的裁决。
+04:0x 用户点名新窗口：`https://chatgpt.com/g/g-p-6a9917acdc208191ae161a1f5e4728bf-moodle/c/6ab58067-1c78-83e8-9b11-4664ee9a83d3`
+（标题 `moodle - GitHub高风险授权`）。我在该窗口重问同一题，**同一裁决在指定信道再次拿到** ⇒ 规则成立，
+旧窗口那次记 SUPERSEDED_BY_IN_CHANNEL_RULING（结论相同，不影响内容）。
+投递证明：`[data-message-author-role="user"]` 含我标题的节点数 = 1、composer 归 0、末节点非生成中。
+（第一次尝试时页面自己跳到 `chrome-error://chromewebdata/`，框空但**没送**——已按"数节点"而不是"看框"判。）
+```
+
+### ② 仲裁给的执行口径（逐字要点，今后按这个写判据）
+```text
+Q24 = ①。理由：认 GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1。
+ · 跨代转移的判断单位是**观察格（cell）**，不是整份任务单；
+ · 每个格只允许声明"实际运行过的那一代"的结果；
+ · 要引用旧代证据必须满足：该格依赖的**每一个** cited file 在两代中 blob 40 位完全一致，
+   且收据记录 `cited_blob_at_each_generation` 两侧值；
+ · 任一 blob 不一致 / 缺任一代 blob / 无法证明同一内容 ⇒ `NOT_TRANSFERABLE_GENERATION`，
+   并且**只重跑该格**，不要求整单重跑。
+ 它点名的两类被避免的错误：「代码没动所以整个结果沿用」的过度继承；「换了一代所以全部作废」的过度重跑。
+ 它对我给的样本的判定与我一处一致：`PlanWithAiSheet.tsx` 两代同 blob ⇒ 可跨代引用；
+   `backend/app/main.py` 两代不等 ⇒ 相关观察不得沿用，须在目标代重测。
+```
+
+### ③ 仲裁另给的三条边界 + 四条"下一步该挖"（我全部转成账本内的单/待办）
+```text
+边界（它主动表态度）：
+ · ORD-0280 优先级合理，但**两个缺陷不要混在一次修复里**（归因真实性 vs 可靠性），保持证据链；
+ · 0275 仪器修复方向正确："自比文件 blob"属典型永真测试，"固定锚点 + 外读 blob 验证"才是独立验证；
+ · 不要让 Qoder 动 authoritative branch —— 单写边界维持。
+下一步（它点名最值得挖的）：
+ 1) ORD-0280 的真实影响面扫描；2) deadline 缺失是否还有同类路径；
+ 3) error provenance 是否还有别的 UI 伪造入口；4) 把本规则做进 validator，别靠人工记忆。
+⇒ 1/2/3 我已派给 @红队 / @e345b9d6 / @8ccd71d8（见 ⑤）；4 是我自己的活，已开工（见 ④）。
+```
+
+### ④ 我自己的仪器：那枚永真测试已死，r5 已发布（外读坐标）
+```text
+缺陷（自查，不是谁举报）：0275 尺的 R 格写的是
+  blob_sha(读 publish_evidence.py) == blob_sha(pub_src())，而 pub_src() 读的是**同一个文件** ⇒ 永真。
+r5 改成三枚可咬的格（22/22 GREEN，rc=0）：
+  R1 与钉住的坐标比（离线就能咬到"本地被改"）：blob == ea4416dbafa7ac84718c3d87bd56394fb5ca5f7b
+  R2 从分支按 40 位 blob 取回再比（外读；取不回就红，不 skip）
+  R3 扫本文件源码，不许再出现 `test_ord0275_publisher_guard_r<N>.py` 这类硬编码修订文件名字面量
+     —— 这条同时收掉 T2 的第二半：改名不再是红，写死名字才是红。
+坐标：live_checks/test_ord0275_publisher_guard_r5.py 26,006 B blob be0978863fbd76f19de7350d6e889b7bf8d38010（commit 4e4cd5d62453）
+      evidence/ord0275-publisher-path-guard/ord0275_selftest_r5.json 11,919 B blob 13881e29dc8fc21d157056ee6619ff46660629e9（commit 26666b264e16）
+两件 BYTE-LEVEL MATCH，由 r5 发布器（同一枚 ea4416db）上传，已发布路径 0 覆盖 0 删除。
+```
+
+### ⑤ 号令（收件箱 · 三件新的，都带可复跑要求）
+```text
+@红队 d2305848：ORD-0280 的**影响面扫描**（仲裁点名的第 1、3 条）。范围 = `frontend/src` 全量：
+  凡"把字符串放进归因标签（服务器给出的原因 / 服务端原因 / server reason 一类）"的渲染点，逐个判该字符串
+  是**服务器字节里有的**还是**客户端拼的**；判据用 `==` 不用 `in`，并给每处 文件:行 + 所在代 blob。
+  产出写成一张表：入口 / 标签文字 / 字符串来源 / 可跨代引用性（按 Q24 逐格判）。
+@e345b9d6：仲裁点名的第 2 条 —— deadline 覆盖面。范围 = 发布代资产 + `frontend/src`：
+  除 `if(r!=="GET"&&r!=="HEAD")return fetch(t,e);` 那一支，还有哪些等待没有可命名期限；
+  每条给"用户能感到什么"（等满多久、屏上写什么），不许只列代码位置。
+@8ccd71d8：把你那枚坐标诚信尺与 Q24 合流——**同一把尺多一个判据**：收据里每个被引文件必须带
+  `cited_blob_at_each_generation` 两侧值，缺任一侧 ⇒ 该格 `NOT_TRANSFERABLE_GENERATION`（不是"未填"就放行）。
+
+commander 自己做（不派）：`live_checks/generation_transfer_check.py` —— 读一份收据 JSON，对每个声明可跨代的格
+  去 GitHub 取两代 blob 并逐位比，输出机械 `derived_result`；先拿 ORD-0279 那 9 件当第一个样本。
+```
+
+
 ## 仲裁回 **①** @2026-09-25T03:5x+08 —— 跨代引用口径升为常设规则 `GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1`；附我这次敲门的投递事实（第一次没送到，我没把"框空了"当送达）
 
 ### ① 裁决与规则正文（今后所有车道/所有单据都按这条走）
