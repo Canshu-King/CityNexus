@@ -1,0 +1,153 @@
+{
+ "what": "ORD-0289：把 HJ-P3 的 33/13 可能对应的范围口径逐个试一遍（命中与否都记）",
+ "gens": {
+  "earlier_dcae1bc9": {
+   "bounded_regex_total": 39,
+   "bounded_regex_per_file": {
+    "api/candidateRejections.ts": 1,
+    "api/travelerPreferences.ts": 1,
+    "api/v10Execution.ts": 2,
+    "api/v12Authoritative.ts": 1,
+    "app/V8Experience.tsx": 1,
+    "lib/readDeadline.ts": 2,
+    "lib/sceneClock.ts": 1,
+    "features/discovery/RealCityDiscoveryPanel.tsx": 1,
+    "features/execution/LiveRecovery.tsx": 3,
+    "features/inbox/JourneyInboxWorkbench.tsx": 1,
+    "features/notifications/PushCapabilityCard.tsx": 2,
+    "features/planning/PlanComparison.tsx": 1,
+    "features/planning/PlanWithAiSheet.tsx": 8,
+    "features/recovery/RecoveryRequiredPanel.tsx": 1,
+    "features/recovery/V14PreventivePanel.tsx": 1,
+    "features/recovery/V14RecoveryTruthPanel.tsx": 2,
+    "features/simulation/simulationAdapter.ts": 6,
+    "features/stay/HotelsPanel.tsx": 4
+   },
+   "hypotheses": {
+    "all_ast": {
+     "sites": 38,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "exclude_test_mock": {
+     "sites": 38,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "only_features_dir": {
+     "sites": 29,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "exclude_app_and_i18n": {
+     "sites": 37,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "only_with_options_object": {
+     "sites": 30,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "only_bare_fetch_no_member": {
+     "sites": 38,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "exclude_components_dir": {
+     "sites": 38,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    }
+   },
+   "targets_from_hjp3": {
+    "sites": 33,
+    "writes": 13,
+    "signal": 2,
+    "timer": 0
+   }
+  },
+  "landed_45b0a5e2": {
+   "bounded_regex_total": 40,
+   "bounded_regex_per_file": {
+    "api/candidateRejections.ts": 1,
+    "api/travelerPreferences.ts": 1,
+    "api/useContinuationState.ts": 1,
+    "api/v10Execution.ts": 2,
+    "api/v12Authoritative.ts": 1,
+    "app/V8Experience.tsx": 1,
+    "lib/readDeadline.ts": 2,
+    "lib/sceneClock.ts": 1,
+    "features/discovery/RealCityDiscoveryPanel.tsx": 1,
+    "features/execution/LiveRecovery.tsx": 3,
+    "features/inbox/JourneyInboxWorkbench.tsx": 1,
+    "features/notifications/PushCapabilityCard.tsx": 2,
+    "features/planning/PlanComparison.tsx": 1,
+    "features/planning/PlanWithAiSheet.tsx": 8,
+    "features/recovery/RecoveryRequiredPanel.tsx": 1,
+    "features/recovery/V14PreventivePanel.tsx": 1,
+    "features/recovery/V14RecoveryTruthPanel.tsx": 2,
+    "features/simulation/simulationAdapter.ts": 6,
+    "features/stay/HotelsPanel.tsx": 4
+   },
+   "hypotheses": {
+    "all_ast": {
+     "sites": 39,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "exclude_test_mock": {
+     "sites": 39,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "only_features_dir": {
+     "sites": 29,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "exclude_app_and_i18n": {
+     "sites": 38,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "only_with_options_object": {
+     "sites": 31,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "only_bare_fetch_no_member": {
+     "sites": 39,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    },
+    "exclude_components_dir": {
+     "sites": 39,
+     "writes": 14,
+     "writes_signal": 2,
+     "writes_timer": 0
+    }
+   },
+   "targets_from_hjp3": {
+    "sites": 33,
+    "writes": 13,
+    "signal": 2,
+    "timer": 0
+   }
+  }
+ },
+ "reading": "没有任何一个候选口径凑出 33 且 13（最接近的见 hypotheses）⇒ 33/13 只能作为他们那棵树 + 他们那份口径的读数保留，不外推、不指错；能对齐的是承重那两项：写腿带 signal=2、写腿带计时器=0（四种口径、两代、三方人数一致）。"
+}
