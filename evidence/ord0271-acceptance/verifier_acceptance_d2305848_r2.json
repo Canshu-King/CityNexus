@@ -1,0 +1,465 @@
+{
+ "schema": "CNX_VERIFIER_ACCEPTANCE_V1",
+ "order": "ORD-0271",
+ "title": "GAUGE_REPAIR_DEBT_1_4 —— verifier 验收表 r2（一枚尺一次晋级）",
+ "verifier": {
+  "lane": "E",
+  "session": "d2305848",
+  "role": "verifier（写者=commander）"
+ },
+ "prepared_at": "2026-09-24T10:33:38+08:00",
+ "supersedes": {
+  "path": "evidence/ord0271-acceptance/verifier_acceptance_d2305848.json",
+  "blob_sha1_40": "0156274fd6e7aef88616143c638a233692ba2b5c",
+  "what_changed_in_r2": [
+   "样本 B 由『本地文件』改为外读坐标 evidence/ord0271-a-gauge-fixtures/sample_B_real_asset_change_0924_020432.json（blob dccc1ee1… 未变，变的只是它现在真的可取）",
+   "A-DEBT4-neg2 由 BLOCKED_COORDINATE 回到 NOT_MEASURED",
+   "preconditions P2 由 BLOCKED 改为 FIXED_THEN_VERIFIED，并保留 r1 的原文读数（was/now）",
+   "A-DEBT4-neg3 降为备用行（B 已发布）"
+  ],
+  "r1_kept": "r1 件不覆盖、不删；它记的是 r1 时刻的真实状态。"
+ },
+ "status": "TABLE_PREPARED_AWAITING_ARTIFACT（不开写码窗口；工件未到，全部 verdict 未测）",
+ "scope_rule": {
+  "one_gauge_one_promotion": true,
+  "text": "每次晋级只验一把尺。ORD-0271-A（deploy gauge）、ORD-0271-B（0263 verifier v4）可以共用同一个维护窗口 / 同一次红队排程 / 同一个总索引，但**各自一个 verdict 槽**，不许揉成一个『整体绿』，也不许把一次调度说成『同一枚尺的一次晋级』。",
+  "consequences": [
+   "一个 gauge 缺 selfproof ⇒ 只有它那一槽 NOT_MEASURED，不阻塞另一槽",
+   "两槽的 verdict 分别落账；任何汇总行必须显示两槽各自的字",
+   "A 的 4 条债与 B 的 V5 新增条款各自独立；不许用 B 的绿去补 A 的缺观测"
+  ]
+ },
+ "derivation_rule": {
+  "text": "每一行的 verdict 必须从收据里具名字段可派生（computed, not literal）；claimed_* 字段只读不采信",
+  "fail_closed": "缺观测 / 空集合 / 未知阶段 ⇒ RED，不得沿用上一轮结论，不得转 GREEN",
+  "no_self_claim": "交付方的 claimed_result 不入判据；closure 只认 verifier 的 derived_result"
+ },
+ "promotions": [
+  {
+   "gauge_id": "ORD-0271-A",
+   "gauge": "live_checks/deploy_bundle.py（换代尺）",
+   "writer": "commander",
+   "fixes": [
+    "DEBT-1",
+    "DEBT-2",
+    "DEBT-3",
+    "DEBT-4"
+   ],
+   "before_sha": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+   "before_sha_bytes": 106731,
+   "artifact_expectation": "新文件版本；旧尺按 old blob 取回另存；不改动进过收据的路径",
+   "unchanged_region_rule": "前四债之外的既有臂输出必须与旧尺 byte-identical（同一输入、同一臂）；旧 blob 149e9c6d… 必须仍可取且字节不变",
+   "rows": [
+    {
+     "id": "A-DEBT1-pos",
+     "debt": "DEBT-1 常量红",
+     "kind": "positive_control",
+     "construction": "造一个真会红的形状（资产 URL 被 SPA 回退成 HTML）",
+     "expected": "RED",
+     "observable_fields": [
+      "probes[].status",
+      "probes[].content_type",
+      "probes[].is_html_fallback"
+     ],
+     "verdict_rule": "该臂 RED 必须由上述实测列推导；收据内不得以字面量作判据来源",
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT1-neg",
+     "debt": "DEBT-1",
+     "kind": "negative_control",
+     "construction": "同一形状但事实成立（资产真在、content-type 正确）",
+     "expected": "该臂不红（证明 RED 不是硬编码）",
+     "observable_fields": [
+      "同上；外加该臂的 verdict 字段"
+     ],
+     "verdict_rule": "事实成立 ⇒ verdict 离开 RED",
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT1-blind",
+     "debt": "DEBT-1",
+     "kind": "missing_observation",
+     "construction": "把决定该臂的观测字段从收据里移除",
+     "expected": "RED（fail-closed，不得沿用上次结论）",
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT2-pos",
+     "debt": "DEBT-2 surface_base / pair_binding 同名异体",
+     "kind": "positive_control",
+     "construction": "两个字段同名、内容不同（指向不同 deployment / 不同 disk root）",
+     "expected": "判『不同』——按内容身份判，不按同名 ref",
+     "observable_fields": [
+      "surface_base.http_base",
+      "surface_base.disk_serve",
+      "pair_binding 侧同名字段的内容摘要"
+     ],
+     "note": "样本 A 的 surface_base 实形已取（见 fixtures）：{http_base, declared_via_env, disk_serve, rule, declares_cmdr_live_explicitly, resolved_serve, resolved_cmdr_dist, inside_cmdr_dist_resolved, base_port, base_is_cmdr_like}",
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT2-neg",
+     "debt": "DEBT-2",
+     "kind": "negative_control",
+     "construction": "同名同内容",
+     "expected": "判『相同』",
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT2-blind",
+     "debt": "DEBT-2",
+     "kind": "missing_observation",
+     "construction": "只有名字、拿不到内容",
+     "expected": "RED（不得按 ref 名判相同）",
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT3-pos",
+     "debt": "DEBT-3 pre-union 只读预检 vs post-union gate",
+     "kind": "positive_control",
+     "construction": "pre-union 阶段只缺 post 条件；样本 A 的真实取值：preflight_before_switch.verdict=READY_TO_SWITCH、promotion_state=PENDING_POST_SWITCH、reds=[]",
+     "expected": "**不得判红**（也不得提前判最终绿）",
+     "observable_fields": [
+      "preflight_before_switch.verdict",
+      "preflight_before_switch.promotion_state",
+      "preflight_before_switch.reds",
+      "temporal_obligation_ledger.discharged"
+     ],
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT3-neg",
+     "debt": "DEBT-3",
+     "kind": "negative_control",
+     "construction": "post-union 条件成立（换完 index 后那条真缺陷仍在）",
+     "expected": "该红",
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT3-blind",
+     "debt": "DEBT-3",
+     "kind": "missing_observation",
+     "construction": "阶段未知（拿不到 promotion_state）",
+     "expected": "不得提前判红也不得提前判绿；落 RED（fail-closed）",
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT4-pos-fixtureA",
+     "debt": "DEBT-4 old_ref == new_ref",
+     "kind": "fixture_regression",
+     "construction": "样本 A 原样字节（blob b9be3a5cb683fb14…），一个字节不改",
+     "expected": "具名合法绿分支（**必须恰好等于申报的那一个 literal**），overall 由 RED 变 GREEN；不得再出 old_refs_absent 造成的假 RED",
+     "observable_fields": [
+      "old_index_refs == new_index_refs",
+      "assets_union.added == []",
+      "D_SERVICE_WORKER[1].probes[].sha256 (v10-sw.js)",
+      "G_PRECACHE_INTEGRITY[1] (v10-sw.js) urls_found",
+      "switched[] 根文件集"
+     ],
+     "derived_from_fixture": {
+      "old_eq_new": true,
+      "assets_added_n": 0,
+      "v10_sw_after": "e63d7421eda340937df28bd0cae35624ab413607f9819e69b519b7d7ede69dbd",
+      "v10_sw_bytes_after": "2055",
+      "sw_js": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+      "old_B_arm_was": "old_refs_absent=False ⇒ RED"
+     },
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT4-neg1-true_noop",
+     "debt": "DEBT-4",
+     "kind": "negative_control",
+     "construction": "保持 old_ref == new_ref，但让 **worker/manifest 代际与 precache/cacheURL 全部对不上**：即 5 个根文件全部与 pre-switch 字节相同、precache URL 集相同、manifest 相同",
+     "expected": "**RED**（真·空部署必须红；不得把门放宽成『资产没变就放行』）",
+     "discriminator_vs_fixtureA": {
+      "rule": "refs 相等 ∧ 根文件字节全同 ∧ precache URL 集同 ⇒ RED；与之相对，样本 A 的承重是 worker 变了",
+      "measured_change_in_A": "3a826b12db054f2f…/2096 B  →  e63d7421eda34093…/2055 B"
+     },
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT4-neg2-fixtureB",
+     "debt": "DEBT-4",
+     "kind": "negative_control",
+     "construction": "样本 B 原样字节（refs 真不同）",
+     "expected": "仍 GREEN，且仍要求 old_refs_absent == true（新分支不得成 blanket）",
+     "derived_from_fixture": {
+      "old_eq_new": false,
+      "assets_added_n": 3,
+      "B_NEW_INDEX": {
+       "status": 200,
+       "refs_match_new": true,
+       "new_refs_present": true,
+       "old_refs_absent": true,
+       "old_ref_tested": "/assets/index-Cpy_jhEg.js",
+       "verdict": "GREEN"
+      }
+     },
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT4-neg3-published_substitute",
+     "debt": "DEBT-4",
+     "kind": "negative_control_substitute",
+     "construction": "备用（B 已于 09-24 ~10:3x 发布，故此行现在可选、不替代 neg2）：已发布的同形对照 evidence/deploy/swap_2b49e3ca_0923_2202.json（已外读，blob 3963310e…）",
+     "expected": "仍 GREEN，且 old_refs_absent == true 仍被要求",
+     "derived_from_fixture": {
+      "old_index_refs": [
+       "/assets/index-D76m_cky.js",
+       "/assets/index-I45CQek8.css"
+      ],
+      "new_index_refs": [
+       "/assets/index-Cpy_jhEg.js",
+       "/assets/index-I45CQek8.css"
+      ],
+      "old_eq_new": false,
+      "B_NEW_INDEX": {
+       "status": 200,
+       "refs_match_new": true,
+       "new_refs_present": true,
+       "old_refs_absent": true,
+       "old_ref_tested": "/assets/index-D76m_cky.js",
+       "verdict": "GREEN"
+      }
+     },
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "A-DEBT4-blind",
+     "debt": "DEBT-4",
+     "kind": "missing_observation",
+     "construction": "拿不到 worker 字节 / manifest 代际 / precache cacheURL 列表",
+     "expected": "RED（fail-closed）",
+     "status": "NOT_MEASURED"
+    }
+   ],
+   "verdict": "NOT_MEASURED"
+  },
+  {
+   "gauge_id": "ORD-0271-B",
+   "gauge": "ORD-0263 verifier v4",
+   "writer": "commander（旧 v3 原 blob 不覆盖）",
+   "artifact_expectation": "v3 → v4 的最小晋级",
+   "unchanged_region_rule": "前四臂必须与 v3 byte-identical（同输入同输出）",
+   "rows": [
+    {
+     "id": "B-unchanged-blob",
+     "kind": "unchanged_region",
+     "construction": "旧 v3 的 blob 仍可取且字节不变（未被覆盖）",
+     "expected": "旧 blob 200 且 sha 不变",
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "B-unchanged-arms",
+     "kind": "unchanged_region",
+     "construction": "v3 与 v4 在同一输入上跑前四臂",
+     "expected": "前四臂输出 byte-identical",
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "B-new-killer-pos",
+     "kind": "positive_control",
+     "construction": "专用单变量 mutant：真落 UNKNOWN_FAILURE，其余列保持正确，**只因新 reason 条款 RED**",
+     "expected": "RED，且 RED 的唯一自变量是新条款（其余列必须逐字正确）",
+     "observable_fields": [
+      "该 mutant 的 reason 列",
+      "其余列（逐列）"
+     ],
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "B-new-killer-neg",
+     "kind": "negative_control",
+     "construction": "同一 mutant 但 reason 落成专用非 catch-all 值",
+     "expected": "不红（证明新条款不是恒红）",
+     "status": "NOT_MEASURED"
+    },
+    {
+     "id": "B-blind",
+     "kind": "missing_observation",
+     "construction": "拿不到『其余列』的读数",
+     "expected": "RED（不得只凭新条款宣称 RED）",
+     "status": "NOT_MEASURED"
+    }
+   ],
+   "verdict": "NOT_MEASURED"
+  }
+ ],
+ "fixtures": {
+  "A": {
+   "role": "DEBT-4 正控（真实『只换 worker、资产字节不变』的发布）",
+   "blob_sha1_40": "b9be3a5cb683fb14dce44477e8ed8ae07e1f0658",
+   "externally_readable": true,
+   "repo_path": "evidence/deploy/swap_1f44408_0923_2321_RED.json",
+   "bytes": 66553,
+   "sha1_recomputed": "b9be3a5cb683fb14dce44477e8ed8ae07e1f0658",
+   "sha1_matches": true,
+   "contents_api_sha": "b9be3a5cb683fb14dce44477e8ed8ae07e1f0658",
+   "contents_api_size": 66553,
+   "tip": "1f4440819a9d773da6e18f12a31412f73c6d0f55",
+   "tree_tip": "1f44408",
+   "t": "2026-09-23T23:18:08+0800",
+   "overall": "RED",
+   "old_index_refs": [
+    "/assets/index-Cpy_jhEg.js",
+    "/assets/index-I45CQek8.css"
+   ],
+   "new_index_refs": [
+    "/assets/index-Cpy_jhEg.js",
+    "/assets/index-I45CQek8.css"
+   ],
+   "old_eq_new_ordered": true,
+   "assets_added": [],
+   "assets_already_identical_n": 4,
+   "B_NEW_INDEX": {
+    "status": 200,
+    "refs_match_new": false,
+    "new_refs_present": true,
+    "old_refs_absent": false,
+    "old_ref_tested": "/assets/index-Cpy_jhEg.js",
+    "verdict": "RED"
+   },
+   "arms": {
+    "A": "GREEN",
+    "B": "see receipt_ABCDE",
+    "G_precache": [
+     "DECLARED_NO_PRECACHE_ARRAY",
+     "GREEN"
+    ],
+    "H_prevgen": "GREEN_H_EQ_C_NO_CHANGE_DEPLOY",
+    "I_sw_register": "GREEN",
+    "J_name_content_binding": "GREEN",
+    "temporal_obligations": "DISCHARGED",
+    "F_proxy_tunnel": "GREEN",
+    "all_green_requires": "A,B,C,D,E + G + I + J + F + discharged temporal obligations"
+   },
+   "H_prevgen_literal": "GREEN_H_EQ_C_NO_CHANGE_DEPLOY",
+   "v10_sw_sha256_after": "e63d7421eda340937df28bd0cae35624ab413607f9819e69b519b7d7ede69dbd",
+   "v10_sw_bytes_after": "2055",
+   "sw_js_sha256": "1fc94905be2dbf920f7d933ebf65d81af531728bc2688a3f657066bc0b629ac9",
+   "sw_js_bytes": "7178",
+   "previous_index_sha256": "3cb318326b13a033ef9496965e51620c48078c66feaec8c000ee2f34acd84fe0",
+   "gauge_git_blob_sha1_in_receipt": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+   "gauge_bytes_in_receipt": 106731,
+   "generation_OLD_asset_sha256": "5d674a444291f10b45fa50dc53f57845c888013bc3d941f6fc6d0f9f5ad7b2d7",
+   "has_pre_switch_worker_digest": false
+  },
+  "A_predecessor": {
+   "role": "A 所替代的那一代（判断『worker 到底变没变』的唯一来源）",
+   "blob_sha1_40": "3963310e8deffd0c94c49aff8c371c4c5c4c10dd",
+   "repo_path": "evidence/deploy/swap_2b49e3ca_0923_2202.json",
+   "externally_readable": true,
+   "t": "2026-09-23T22:01:51+0800",
+   "tree_tip": "2b49e3c",
+   "overall": "GREEN",
+   "new_index_refs": [
+    "/assets/index-Cpy_jhEg.js",
+    "/assets/index-I45CQek8.css"
+   ],
+   "v10_sw_sha256_after": "3a826b12db054f2f2afac2bedcd4233157a2fe756685fba6031056b3d09f19f9",
+   "v10_sw_bytes_after": "2096",
+   "B_NEW_INDEX": {
+    "status": 200,
+    "refs_match_new": true,
+    "new_refs_present": true,
+    "old_refs_absent": true,
+    "old_ref_tested": "/assets/index-D76m_cky.js",
+    "verdict": "GREEN"
+   }
+  },
+  "B": {
+   "role": "反控 B（refs 真不同 ⇒ 仍须 RED 前先要 old_refs_absent 那一支继续成立）",
+   "blob_sha1_40": "dccc1ee1359154dc54de79e5571a30c8d4cc818a",
+   "externally_readable": true,
+   "repo_path": "evidence/ord0271-a-gauge-fixtures/sample_B_real_asset_change_0924_020432.json",
+   "was_unreadable_until": "2026-09-24 ~10:2x: this coordinate 404'd as a git blob in both repos and no branch tree carried the path; it was local-only. Published by the writer at ~10:3x; r2 records the fixed state, r1 recorded BLOCKED_COORDINATE.",
+   "bytes_fetched": 66509,
+   "sha1_recomputed_from_fetched": "dccc1ee1359154dc54de79e5571a30c8d4cc818a",
+   "sha1_matches_declared": true,
+   "local_path_cross_check": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\receipts\\deploy_c79e2b4f4efe414dba22a071a7136ae10b5c84aa_0924_020432.json",
+   "fetched_bytes_equal_local": true,
+   "bytes": 66509,
+   "tip": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+   "tree_tip": "c79e2b4",
+   "t": "2026-09-24T02:04:03+0800",
+   "overall": "GREEN",
+   "old_eq_new_ordered": false,
+   "assets_added": [
+    "index-ChOTTCvB.js",
+    "JourneyMap-tqEgrjRA.js",
+    "maplibre-gl-CHrWFrV5.js"
+   ],
+   "B_NEW_INDEX": {
+    "status": 200,
+    "refs_match_new": true,
+    "new_refs_present": true,
+    "old_refs_absent": true,
+    "old_ref_tested": "/assets/index-Cpy_jhEg.js",
+    "verdict": "GREEN"
+   },
+   "v10_sw_sha256_after": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a"
+  },
+  "gauge_before_fix": {
+   "repo_path": "live_checks/deploy_bundle.py",
+   "blob_sha1_40": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+   "bytes": 106731,
+   "matches_receipt_declaration": true,
+   "role": "unchanged-region rule 的 before-sha：修复版必须另存新文件，此 blob 字节不变"
+  }
+ },
+ "derived_now": {
+  "A_worker_really_changed": true,
+  "A_worker_change": "3a826b12db054f2f…/2096 B  →  e63d7421eda34093…/2055 B",
+  "A_refs_unchanged": true,
+  "A_index_html_unchanged": true,
+  "note": "A 与 B 的 previous_index_sha256 相同 ⇒ 该字段单独不能区分 A/B；区分 A 与『真·空部署』的承重是 worker 字节 + precache URL 集"
+ },
+ "preconditions_from_measurement": [
+  {
+   "id": "P1-fixtureA-readable",
+   "severity": "info",
+   "state": "OK",
+   "finding": "样本 A 可外读：contents API 200（sha=b9be3a5c…、size=66,553）＋ git blobs 200，本机重算 blob sha1 == 申报 40 位。"
+  },
+  {
+   "id": "P2-fixtureB-coordinate",
+   "severity": "was_blocking_for_one_row",
+   "state": "FIXED_THEN_VERIFIED",
+   "was": "r1 时样本 B 的 40 位坐标在 GitHub 上取不到：git/blobs/dccc1ee1… 在 Canshu-King/CityNexus 与 -Workspace 均 404；遍历 CityNexus 全部 29 个分支的 recursive tree（无一条 truncated）内含该 blob 的路径 = 0；live_checks/receipts/ 在 GitHub 上不存在。本机文件在、其 blob sha1 == dccc1ee1…（40 位是对字节的忠实描述，只是从未发布）。⇒ r1 把 A-DEBT4-neg2 记 BLOCKED_COORDINATE，不升格也不删。",
+   "now": "writer 于 09-24 ~10:3x 发布到 evidence/ord0271-a-gauge-fixtures/sample_B_real_asset_change_0924_020432.json；我自己三路取过：contents sha == git blob 重算 == 本机那份逐字节 == dccc1ee1…（66,509 B）⇒ 坐标成立，neg2 回到 NOT_MEASURED。",
+   "action": "无需再动；r1 的那条 BLOCKED 记录留在 r1 件里，不覆盖。"
+  },
+  {
+   "id": "P3-literal-collision",
+   "severity": "blocking_for_one_word",
+   "state": "NEEDS_RULING",
+   "finding": "DEBT-4 的具名绿分支目前有两个字面量在流通：H 臂在样本 A/B 里**实际发出的**是 `GREEN_H_EQ_C_NO_CHANGE_DEPLOY`；而 ORD-0271 §③ 引用我的草案名 `NO_ASSET_CHANGE_DEPLOY`。",
+   "action": "请申报**恰好一个** literal；我按 `==` 等值判，不接受同义词/前后缀漂移。（我的偏好：沿用 H 臂已有的那一个，或明确宣布新旧两个都合法并各给一行判据。）"
+  },
+  {
+   "id": "P4-pre-switch-worker-digest-absent",
+   "severity": "design",
+   "state": "NEEDS_FIX_IN_GAUGE",
+   "finding": "单张收据**不含**换前的 worker 摘要：样本 A 里所有 v10-sw.js 摘要（e63d7421…）都是换后/构建侧的值；它替换掉的那一代（3a826b12…、2,096 B）只存在于**上一张收据**（swap_2b49e3ca_0923_2202.json）。收据里唯一『换前』摘要字段是 previous_index_sha256。",
+   "action": "若 DEBT-4 的承重是『worker/manifest 代际变了』，新尺必须把**换前的 worker 摘要与 precache URL 集**写进收据（照 previous_index_sha256 的既有形制），否则该判据无法从单张收据重放 ⇒ 样本 A 不能当可重放的 fixture。"
+  },
+  {
+   "id": "P5-precache-lives-in-v10-sw",
+   "severity": "design",
+   "state": "NEEDS_FIX_IN_GAUGE",
+   "finding": "G 臂的两条条目形制不同：`sw.js`（7,178 B、1fc94905…）是 `DECLARED_NO_PRECACHE_ARRAY`、urls_found=0；真正带 precache 的是 `v10-sw.js`（2,055 B、e63d7421…）、urls_found=8。",
+   "action": "『precache/cacheURL 一致性』不能挂在 sw.js 那一条上；必须读 G 臂的 v10-sw.js 条目（样本 A 的 arms.G_precache 是二元组 ['DECLARED_NO_PRECACHE_ARRAY','GREEN']，第二个元素才是 v10-sw.js 的判定）。"
+  }
+ ],
+ "discipline_this_round": {
+  "read_only": true,
+  "services_started": 0,
+  "touched_ports": [],
+  "user_dbs_touched": [],
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "published_paths_overwritten": 0
+ }
+}
