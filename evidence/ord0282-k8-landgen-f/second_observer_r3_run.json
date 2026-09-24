@@ -1,0 +1,23 @@
+{
+ "how_verified": "python 重算 git blob sha1（等价于 git hash-object）",
+ "path": "audit_closure_coordinates_r3.py",
+ "bytes": 8589,
+ "computed_blob_40": "fc35335aadffb8f0de6f8030e9fc5a747f24f463",
+ "expected_from_order": "fc35335aadffb8f0de6f8030e9fc5a747f24f463",
+ "source": "GET /repos/Canshu-King/CityNexus/contents/live_checks/audit_closure_coordinates_r3.py?ref=commander/control（sha 与 body 同读）",
+ "equal": true,
+ "rc": 0,
+ "summary_line": "claims=50 failing=0  branch=commander/control",
+ "verdict_line_counts": {
+  "OK": 50,
+  "FAIL": 0
+ },
+ "nonsummary_tail": [],
+ "stderr_tail": [],
+ "includes_lane_f_rows": [
+  "OK    evidence/ord0272-k8-f/stale_blob_probe_r1.json  [lane F probe]",
+  "OK    evidence/ord0272-k8-hjp3-crossprocess/K8_XP_readings.json  [lane HJ-P3 K8 cross-process]",
+  "OK    evidence/ord0279x-hjp3-run/O0279X-2504_readings.json  [ORD-0279-X readings]",
+  "OK    evidence/ord0272-k8-f/verifier_derivation_d2305848.json  [0272 K8 two-cell derivation (lane E)]"
+ ]
+}
