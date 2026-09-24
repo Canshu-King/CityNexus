@@ -1,0 +1,206 @@
+{
+ "what": "ORD-0289 交付：AST 口径的写腿普查（两代）+ 与两份既有读数的逐条归因",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T07:26:00+08:00",
+ "exports": {
+  "landed_45b0a5e2": {
+   "sha": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "tree": "039e5eafa260a6c30dc186947c1c1d1f0145a8a1",
+   "authoritative_tip_read_now": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "tarball_bytes": 50284763,
+   "tarball_sha256_16": "9fa38ba757b163e8",
+   "recursive_tree_entries_frontend_src_ts_tsx": 71,
+   "exported_files_local": 71,
+   "local_equals_remote_list": true,
+   "tree_truncated": false
+  },
+  "earlier_dcae1bc9": {
+   "sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "tree": "d96c2974924d19831495f2945117d4221a1b6d62",
+   "authoritative_tip_read_now": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "tarball_bytes": 50243964,
+   "tarball_sha256_16": "c52eb5e5bae063bc",
+   "recursive_tree_entries_frontend_src_ts_tsx": 69,
+   "exported_files_local": 69,
+   "local_equals_remote_list": true,
+   "tree_truncated": false
+  }
+ },
+ "per_generation": {
+  "landed_45b0a5e2": {
+   "fetch_sites": 39,
+   "write": 14,
+   "write_with_signal": 2,
+   "write_with_timer": 0,
+   "read_by_default_options_without_method": 17,
+   "no_options_at_all": 8,
+   "method_unresolved": 0,
+   "options_with_spread": 4,
+   "write_detail": [
+    "features/execution/LiveRecovery.tsx:225 POST signal=False timer=None",
+    "features/notifications/PushCapabilityCard.tsx:56 POST signal=False timer=None",
+    "features/planning/PlanComparison.tsx:88 POST signal=False timer=None",
+    "features/planning/PlanWithAiSheet.tsx:492 POST signal=True timer=None",
+    "features/planning/PlanWithAiSheet.tsx:605 POST signal=True timer=None",
+    "features/recovery/RecoveryRequiredPanel.tsx:26 POST signal=False timer=None",
+    "features/recovery/V14RecoveryTruthPanel.tsx:69 POST signal=False timer=None",
+    "features/simulation/simulationAdapter.ts:229 POST signal=False timer=None",
+    "features/simulation/simulationAdapter.ts:296 POST signal=False timer=None",
+    "features/simulation/simulationAdapter.ts:335 POST signal=False timer=None",
+    "features/simulation/simulationAdapter.ts:376 POST signal=False timer=None",
+    "features/stay/HotelsPanel.tsx:63 POST signal=False timer=None",
+    "features/stay/HotelsPanel.tsx:64 POST signal=False timer=None",
+    "features/stay/HotelsPanel.tsx:87 POST signal=False timer=None"
+   ],
+   "bucket_sum_equals_total": true
+  },
+  "earlier_dcae1bc9": {
+   "fetch_sites": 38,
+   "write": 14,
+   "write_with_signal": 2,
+   "write_with_timer": 0,
+   "read_by_default_options_without_method": 16,
+   "no_options_at_all": 8,
+   "method_unresolved": 0,
+   "options_with_spread": 4,
+   "write_detail": [
+    "features/execution/LiveRecovery.tsx:225 POST signal=False timer=None",
+    "features/notifications/PushCapabilityCard.tsx:56 POST signal=False timer=None",
+    "features/planning/PlanComparison.tsx:88 POST signal=False timer=None",
+    "features/planning/PlanWithAiSheet.tsx:491 POST signal=True timer=None",
+    "features/planning/PlanWithAiSheet.tsx:598 POST signal=True timer=None",
+    "features/recovery/RecoveryRequiredPanel.tsx:26 POST signal=False timer=None",
+    "features/recovery/V14RecoveryTruthPanel.tsx:69 POST signal=False timer=None",
+    "features/simulation/simulationAdapter.ts:229 POST signal=False timer=None",
+    "features/simulation/simulationAdapter.ts:296 POST signal=False timer=None",
+    "features/simulation/simulationAdapter.ts:335 POST signal=False timer=None",
+    "features/simulation/simulationAdapter.ts:376 POST signal=False timer=None",
+    "features/stay/HotelsPanel.tsx:63 POST signal=False timer=None",
+    "features/stay/HotelsPanel.tsx:64 POST signal=False timer=None",
+    "features/stay/HotelsPanel.tsx:87 POST signal=False timer=None"
+   ],
+   "bucket_sum_equals_total": true
+  }
+ },
+ "regex_replication": {
+  "landed_45b0a5e2": {
+   "bounded_regex_sites": 50,
+   "window_regex_writes": {
+    "write": 17,
+    "with_signal": 0,
+    "with_timer": 0,
+    "detail": [
+     "features/execution/LiveRecovery.tsx:225 POST",
+     "features/inbox/JourneyInboxWorkbench.tsx:82 POST",
+     "features/notifications/PushCapabilityCard.tsx:56 POST",
+     "features/planning/PlanComparison.tsx:88 POST",
+     "features/planning/PlanWithAiSheet.tsx:492 POST",
+     "features/planning/PlanWithAiSheet.tsx:605 POST",
+     "features/recovery/RecoveryRequiredPanel.tsx:26 POST",
+     "features/recovery/V14RecoveryTruthPanel.tsx:55 POST",
+     "features/recovery/V14RecoveryTruthPanel.tsx:69 POST",
+     "features/simulation/simulationAdapter.ts:229 POST",
+     "features/simulation/simulationAdapter.ts:296 POST",
+     "features/simulation/simulationAdapter.ts:335 POST",
+     "features/simulation/simulationAdapter.ts:376 POST",
+     "features/stay/HotelsPanel.tsx:54 POST",
+     "features/stay/HotelsPanel.tsx:63 POST",
+     "features/stay/HotelsPanel.tsx:64 POST",
+     "features/stay/HotelsPanel.tsx:87 POST"
+    ]
+   }
+  },
+  "earlier_dcae1bc9": {
+   "bounded_regex_sites": 49,
+   "window_regex_writes": {
+    "write": 17,
+    "with_signal": 0,
+    "with_timer": 0,
+    "detail": [
+     "features/execution/LiveRecovery.tsx:225 POST",
+     "features/inbox/JourneyInboxWorkbench.tsx:82 POST",
+     "features/notifications/PushCapabilityCard.tsx:56 POST",
+     "features/planning/PlanComparison.tsx:88 POST",
+     "features/planning/PlanWithAiSheet.tsx:491 POST",
+     "features/planning/PlanWithAiSheet.tsx:598 POST",
+     "features/recovery/RecoveryRequiredPanel.tsx:26 POST",
+     "features/recovery/V14RecoveryTruthPanel.tsx:55 POST",
+     "features/recovery/V14RecoveryTruthPanel.tsx:69 POST",
+     "features/simulation/simulationAdapter.ts:229 POST",
+     "features/simulation/simulationAdapter.ts:296 POST",
+     "features/simulation/simulationAdapter.ts:335 POST",
+     "features/simulation/simulationAdapter.ts:376 POST",
+     "features/stay/HotelsPanel.tsx:54 POST",
+     "features/stay/HotelsPanel.tsx:63 POST",
+     "features/stay/HotelsPanel.tsx:64 POST",
+     "features/stay/HotelsPanel.tsx:87 POST"
+    ]
+   }
+  }
+ },
+ "attribution": {
+  "commander_gap": "3 处窗口越界（逐处在 ord0289_attribution.json 里带源码上下文）",
+  "regex_vs_ast_per_file": {
+   "landed_45b0a5e2": {
+    "regex_total": 40,
+    "ast_total": 39,
+    "files_that_differ": [
+     {
+      "file": "features/planning/PlanWithAiSheet.tsx",
+      "regex": 8,
+      "ast": 7
+     }
+    ]
+   },
+   "earlier_dcae1bc9": {
+    "regex_total": 39,
+    "ast_total": 38,
+    "files_that_differ": [
+     {
+      "file": "features/planning/PlanWithAiSheet.tsx",
+      "regex": 8,
+      "ast": 7
+     }
+    ]
+   }
+  },
+  "hjp3_bucket_search": "没有任何一个候选口径凑出 33 且 13（最接近的见 hypotheses）⇒ 33/13 只能作为他们那棵树 + 他们那份口径的读数保留，不外推、不指错；能对齐的是承重那两项：写腿带 signal=2、写腿带计时器=0（四种口径、两代、三方人数一致）。",
+  "my_own_bound": "2 处第二实参是变量 ⇒ 写腿 14 是下界（上界 16）"
+ },
+ "for_0280_0281": {
+  "write_legs_landed": [
+   "features/planning/PlanWithAiSheet.tsx:492 POST",
+   "features/planning/PlanWithAiSheet.tsx:605 POST",
+   "features/execution/LiveRecovery.tsx:225 POST",
+   "features/notifications/PushCapabilityCard.tsx:56 POST",
+   "features/planning/PlanComparison.tsx:88 POST",
+   "features/recovery/RecoveryRequiredPanel.tsx:26 POST",
+   "features/recovery/V14RecoveryTruthPanel.tsx:69 POST",
+   "features/simulation/simulationAdapter.ts:229 POST",
+   "features/simulation/simulationAdapter.ts:296 POST",
+   "features/simulation/simulationAdapter.ts:335 POST",
+   "features/simulation/simulationAdapter.ts:376 POST",
+   "features/stay/HotelsPanel.tsx:63 POST",
+   "features/stay/HotelsPanel.tsx:64 POST",
+   "features/stay/HotelsPanel.tsx:87 POST"
+  ],
+  "with_signal": [
+   "features/planning/PlanWithAiSheet.tsx:492",
+   "features/planning/PlanWithAiSheet.tsx:605"
+  ],
+  "with_timer": [],
+  "unresolved_method_sites": [
+   "features/inbox/JourneyInboxWorkbench.tsx:82",
+   "lib/readDeadline.ts:44"
+  ]
+ },
+ "code_changed": 0,
+ "authoritative_branch_written": false,
+ "discipline": {
+  "demo_reset_calls": 0,
+  "live_or_preview_db_touched": false,
+  "credentials_printed": 0,
+  "published_paths_overwritten": 0,
+  "published_paths_deleted": 0
+ }
+}
