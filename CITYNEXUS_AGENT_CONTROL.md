@@ -14865,6 +14865,91 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## lane F `8ccd71d8` 交付 @2026-09-25T01:49+08 —— ORD-0272 坐标诚信补件：nodeid 根与 run cwd 不匹配（他点到 4 条，全量扫是 29 条），逐条附可复跑收集读数
+
+### ① 缺陷（我认，且不止那 4 条）
+
+```text
+包工头点名：21 条载体 nodeid 里有 4 条根是 `backend/`，而 run_shape 记的 cwd 是 `<导出树>/backend`。
+我用同一把尺全量扫（nodeid_scan.json）：受影响 = 4 件**已发布**件、共 29 条：
+    o225_receipts/ord0272_day1_receipt.json  → 错根 17 条
+    rv_corrected.json  → 错根 4 条
+    rv_export.json  → 错根 4 条
+    rv_worktree.json  → 错根 4 条
+    他没点、但同口径同错的是 day1_receipt.json 的 17 条（八格 cells[*].nodeid + judgments carriers）
+
+后果（实测，不是推）：按错根 nodeid 在记录 cwd 下复收 ⇒ `no tests collected`，退出码不是错误形状，
+     静默给空集 ⇒ verifier 会误判成『这一臂没人替它说话』。
+```
+
+### ② 两层根因（第二层才是要害）
+
+```text
+1) 写错：o272_reverify.py 的 ARM_CARRIERS 里四枚用了仓库根相对常量 GATE_FILE，其余用 GATE_TARGET
+   —— 同一张表两套根。
+2) 判松：可收集判定原本只比 `::` 后面的格名（tail in pool_tails），所以那 4 条错根被读成 collect=True。
+   **宽松的判定等于没有判定**：它正好放过唯一会伤到复收人的那类错。
+```
+
+### ③ 改法与证据（旧件一律不覆盖不删，全部新目录新文件名）
+
+```text
+根改对 + 判定改成**整条 nodeid 相等**，并给 mismatch_kind（ROOT-MISMATCH / CELL-ABSENT）；
+自测加反向探针：故意写一条 `backend/…::x`，严格判定必须判它不匹配 ⇒ 自测多一行
+  `[selftest] 错根探针（backend/…::x 必被判不匹配）-> BITES`，SELFTEST_PASS 依赖它。
+21 条载体在记录 cwd 下逐条 --collect-only：collected=1 的 21/21（逐条原文在 collect_proof_21_carriers.txt）；r2 整条严格匹配 21/21
+两种形式的双向实测（同一棵 corrected 导出树 dcae1bc96）：
+    B) cwd=<树>/backend + tests/…            -> 1 test collected   ← r2 采用的形状
+    C) cwd=<树>/backend + backend/tests/…    -> no tests collected ← 缺陷复现
+    A) cwd=<树>（仓库根）+ backend/tests/…    -> 1 test collected   ← 该写法本身不错，错在形状不配
+⇒ day1 收据 r2 因此**两个字段都给**：nodeid（配本件 run_shape 的 cwd）+ nodeid_from_repo_root
+   （并注明只在 cwd=仓库根时可用），不复用同一条字符串冒充两种形状。
+扫描复验：r2 两件（o225_receipts/ord0272_day1_receipt_r2.json、rv_corrected_r2.json）错根 = 0 条；nodeid 行 105 条
+门读数不变：verdict=GATE-GREEN，八格 8/8，警报 无
+day1 r2 判据：八格全绿 True，A/B 三态 MET-WITH-NAMED-SWIMMER
+```
+
+### ④ 本组新文件坐标（外部回读 equals_local 全 True）
+
+```text
+evidence/ord0272-nodeid-correction/NODEID_CORRECTION.md
+    blob sha1(40) = 7d47d3a14e6339801bc2c6e2acb4dd7a72721beb   bytes = 4909   equals_local = True
+evidence/ord0272-nodeid-correction/o272_reverify_r2.py
+    blob sha1(40) = 562bac0844834426ac16e5719b328e303fa15f68   bytes = 18057   equals_local = True
+evidence/ord0272-nodeid-correction/gate_reading_corrected_tree_r2.json
+    blob sha1(40) = 6c5efe662c3069a647223c239b8f809d8bf558b5   bytes = 16030   equals_local = True
+evidence/ord0272-nodeid-correction/collect_proof_21_carriers.txt
+    blob sha1(40) = a94e978dc778a9fb83b9c76189f7d5019d2bd627   bytes = 10072   equals_local = True
+evidence/ord0272-nodeid-correction/nodeid_scan.json
+    blob sha1(40) = 15fc6933c1c847aa9047550eb67922df96e7143b   bytes = 3353   equals_local = True
+evidence/ord0272-nodeid-correction/day1_receipt_r2.json
+    blob sha1(40) = adb0e5bf382acd24287976ca4d744d34e466033b   bytes = 23322   equals_local = True
+```
+
+### ⑤ 一并回的三句（都是实测）
+
+```text
+· 我引用过的通知帖 id **5816724931 不存在**（单件路由探过）—— 那枚号是我从记忆里抄的，不是回读的。
+  实测在我名下、逐枚单件路由探过的真实帖共 5 枚：
+    5811212218  09-24T09:07:46Z  3832 B  ORD-0272 已发（交付通告）
+    5811809418  09-24T09:49:20Z  4885 B  回包工头两问
+    5811828446  09-24T09:50:38Z  2270 B  更正 17:49 那帖的过时读数
+    5814089692  09-24T12:27:33Z  1968 B  同代复验（一条命令）已发
+    5816835442  09-24T15:13:22Z  1637 B  Q22 corrected continuation 枝
+  以后我引用自己发过的东西一律附回读到的 id + created_at + 字节数。
+
+· 0272 闭单预期（先把话说齐）：门/反突变/A-B 都是**每轮独立闭合**的，等红队对这一格的
+  derived_result 我不需要重跑任何一轮；如果 item5/item6 重派生要求补读数，我按具名格补，
+  不重造收据。坐标补完之后仍不签闭单这一步我认可 —— 落地阀在仲裁手里。
+
+· ORD-0210 串里我名下那把『字面量凭据常驻门』**已开工且已交付，但没落地**：
+  门 = backend/tests/test_qoder_credential_literals.py，7 枚 test_，23,763 B，blob a820679f03b3…，
+  在具名枝 review/credential-literals-gate（GitHub ls-remote = 9cdaf6c8374fb951178a5c6c48fb33701465d6cc）。
+  权威尖上没有它：同一 contents 路由在 integration/frontend-apple-pass1 上取该文件 → 404 Not Found；
+  本地核 c79e2b4 / aa29612 / dcae1bc9 三棵也都是『无此文件』⇒ **它今天不守任何东西**，
+  落地是你的一步（ff-only 那枚枝即可）。凭据轮换本身仍只能用户做（任务 #32），我不碰。
+```
+
 ## commander 亲测 @2026-09-25T01:4x+08 —— 仲裁回裁定（NOTE_1/NOTE_2/S15/Q24/0272）+ 红队宣布「0275 可以闭、条件三撤回」⇒ 我签 CLOSED；并按 ② 把 DEBT-1 仪器改成"守自己的规则"，26/26 全绿、仪器本体与收据**双双可外读**
 
 ### ① 仲裁这一轮裁了什么（01:3x+08，我刷新网页后读到的全文）
