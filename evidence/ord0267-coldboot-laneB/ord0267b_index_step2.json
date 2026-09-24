@@ -1,0 +1,125 @@
+{
+ "at": "2026-09-24T11:02:48+08:00",
+ "order": "ORD-0267 重定形 · 第 2 段 + 定形件",
+ "lane": "B c01d72a3",
+ "generation_tip": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "files": [
+  {
+   "name": "ORD_0267RESHAPED.md",
+   "blob40": "1617469c32adc11156dba111272b93968cb9e1a0",
+   "bytes": 9889
+  },
+  {
+   "name": "ord0267b_cold_bootstrap.json",
+   "blob40": "a90f3f89a9f6bc9ba22bf103d4863e946c934d3c",
+   "bytes": 9240
+  },
+  {
+   "name": "probe_clean_install.json",
+   "blob40": "37ca8a575db7d56d53d61446f5d96d9e988cdabf",
+   "bytes": 1266
+  },
+  {
+   "name": "probe_css_fails_install.json",
+   "blob40": "773ff02eb82512eee3e01fbdb1e86aca14ac98fb",
+   "bytes": 1360
+  },
+  {
+   "name": "probe_sw_fails_install.json",
+   "blob40": "d565a8ce5dc7363be8fc31551be873ea5aac6271",
+   "bytes": 1345
+  },
+  {
+   "name": "probe_nonmember_fails_install.json",
+   "blob40": "aa2d9bae706a28c60e0f59d2995c465fcedd4b00",
+   "bytes": 1490
+  },
+  {
+   "name": "probe_clean_offline.json",
+   "blob40": "96d5f4f864fb361fb90063400223055181e0b7d7",
+   "bytes": 1672
+  },
+  {
+   "name": "probe_css_fails_offline.json",
+   "blob40": "e8a01efb2ac35be97c790be06609a5c80e0c8bb0",
+   "bytes": 817
+  },
+  {
+   "name": "partial_origin_nonmember.out",
+   "blob40": "42b21b5205bc1a39739b3b8c4ae871bac3f3adec",
+   "bytes": 946
+  },
+  {
+   "name": "q267b_cold_arms.py",
+   "blob40": "173f2eaacb98e559b9baa95a2d481f29c783de40",
+   "bytes": 8990
+  },
+  {
+   "name": "q267b_partial_origin.py",
+   "blob40": "ea5a91c7d9d78e79213425e882530142417ecfed",
+   "bytes": 5784
+  },
+  {
+   "name": "q267b_probe.js",
+   "blob40": "1f91adc37aae5919c379dc98ee29c7ae565c8bfc",
+   "bytes": 7749
+  },
+  {
+   "name": "q267b_shape_doc.py",
+   "blob40": "39bd451a750c282e11cb128479145938cb73f6f1",
+   "bytes": 13502
+  }
+ ],
+ "listed": 13,
+ "required_but_absent": [],
+ "readings_this_batch": {
+  "clean": {
+   "install_registrations": [
+    {
+     "scope": "/",
+     "active": "/v10-sw.js",
+     "active_state": "activated",
+     "waiting": null,
+     "installing": null
+    }
+   ],
+   "install_controlled": true,
+   "offline_nav": {
+    "ok": true,
+    "status": 200
+   }
+  },
+  "css_fails": {
+   "install_registrations": [],
+   "install_controlled": false,
+   "offline_nav": {
+    "ok": false,
+    "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8446/v8/hub\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:8446/v8/hub\", waiting until \"domcontent"
+   }
+  },
+  "sw_fails": {
+   "install_registrations": [],
+   "install_controlled": false,
+   "offline_nav": {
+    "ok": false,
+    "error": "page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8446/v8/hub\nCall log:\n\u001b[2m  - navigating to \"http://127.0.0.1:8446/v8/hub\", waiting until \"domcontent"
+   }
+  },
+  "nonmember_fails": {
+   "install_registrations": [
+    {
+     "scope": "/",
+     "active": "/v10-sw.js",
+     "active_state": "activated",
+     "waiting": null,
+     "installing": null
+    }
+   ],
+   "install_controlled": true,
+   "offline_nav": {
+    "ok": true,
+    "status": 200
+   }
+  }
+ }
+}
