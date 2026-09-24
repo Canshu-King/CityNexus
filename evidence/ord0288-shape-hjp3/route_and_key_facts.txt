@@ -1,0 +1,8 @@
+{
+ "agent_commands_route": {
+  "line": 1057,
+  "source": " 1057| @app.post(\"/api/v1/journeys/{journey_id}/agent/commands\")\n 1058| def run_agent_command(\n 1059|     journey_id: UUID,\n 1060|     payload: AgentCommandRequest,\n 1061|     session: Session = Depends(get_session),\n 1062| ):\n 1063|     journey = require(session, Journey, str(journey_id), \"Journey\")\n 1064|     now_dt = datetime.now(timezone.utc)\n 1065|     now = now_dt.isoformat()\n 1066|     interpretation = _copilot_fallback_or_ai(payload.command, _copilot_context(session, journey))\n 1067|     event_type = (\n 1068|         str(interpretation.entities.get(\"event_type\"))"
+ },
+ "header_aliases_in_main": [],
+ "validate_idempotency_key": "NOT FOUND in commerce/idempotency.py"
+}
