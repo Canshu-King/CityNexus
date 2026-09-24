@@ -1,0 +1,56 @@
+{
+ "arm": "X",
+ "port": 8484,
+ "constant_ms": 12000,
+ "face_serves": "dist_X",
+ "hub_reached": true,
+ "request_text": "想傍晚在老城慢慢走一圈，别太赶",
+ "request_text_length": 15,
+ "rig": "write-lock rig (backend 127.0.0.1:8493 with a bounded write-lock window)",
+ "ms_from_fill_to_lock_window": 633,
+ "write_legs": [
+  {
+   "url": "/api/v1/journeys/91f78c9b-b768-46c9-a62e-4ac09b6609da/agent/commands",
+   "method": "POST",
+   "api": true,
+   "sent_ms_since_load_start": 1397,
+   "sent_wall": "2026-09-24T23:43:02.608Z",
+   "has_signal": true,
+   "request_body": "{\"command\":\"想傍晚在老城慢慢走一圈，别太赶\"}",
+   "request_headers_idempotency_key": null,
+   "status": 500,
+   "content_type": "text/plain; charset=utf-8",
+   "bytes": 21,
+   "body_head": "Internal Server Error",
+   "elapsed_ms": 32392
+  }
+ ],
+ "deadline_card_during_flight": null,
+ "counter_at_end": null,
+ "result_card": "服务端处理失败\n\n这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。\n\n技术详情",
+ "server_reason_rendered": "",
+ "max_counter_seen": 32,
+ "timeline_points": 125,
+ "timeline_tail": [
+  {
+   "ms": 31979,
+   "counter": "发出请求，等待模型返回 · 已等待 31 秒",
+   "posts_settled": 0
+  },
+  {
+   "ms": 32240,
+   "counter": "发出请求，等待模型返回 · 已等待 32 秒",
+   "posts_settled": 0
+  },
+  {
+   "ms": 32510,
+   "counter": null,
+   "posts_settled": 1
+  }
+ ],
+ "run_id": "O0291-2507",
+ "run_tag": "lock",
+ "stage": "write",
+ "measured_at": "2026-09-24T23:43:35.548Z",
+ "viewport": "390x844 zh-CN"
+}
