@@ -1,0 +1,2544 @@
+{
+  "order": "ORD-0269",
+  "cell": "4 (A3 write leg silent)",
+  "session": "1a986a24 HJ-P1",
+  "run_label": "answer",
+  "arm_mode": "answer",
+  "base": "http://127.0.0.1:8932",
+  "pid": 4656,
+  "viewport": [
+    390,
+    844
+  ],
+  "started_at": "2026-09-23T17:14:47.633Z",
+  "instrument": {
+    "pageErrors": [],
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+      "Failed to load resource: the server responded with a status of 500 (Internal Server Error)"
+    ],
+    "sampleCount": 6
+  },
+  "landing": {
+    "url": "http://127.0.0.1:8932/v8/hub",
+    "pathname": "/v8/hub",
+    "title": "CityNexus Trip Operations",
+    "leaves": [
+      {
+        "tag": "P",
+        "cls": "v8-kicker",
+        "testid": null,
+        "box": [
+          20,
+          32,
+          350,
+          14
+        ],
+        "txt": "用你自己的城市试用 CITYNEXUS"
+      },
+      {
+        "tag": "H1",
+        "cls": "",
+        "testid": null,
+        "box": [
+          20,
+          56,
+          350,
+          39
+        ],
+        "txt": "新建行程"
+      },
+      {
+        "tag": "P",
+        "cls": "v8-lede",
+        "testid": null,
+        "box": [
+          20,
+          108,
+          350,
+          43
+        ],
+        "txt": "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-outline-button",
+        "testid": null,
+        "box": [
+          20,
+          169,
+          47,
+          44
+        ],
+        "txt": "EN"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          20,
+          240,
+          22,
+          22
+        ],
+        "txt": "1"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          48,
+          243,
+          66,
+          15
+        ],
+        "txt": "目的地与时间"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          122,
+          240,
+          22,
+          22
+        ],
+        "txt": "2"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          152,
+          240,
+          22,
+          22
+        ],
+        "txt": "3"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          491,
+          348,
+          16
+        ],
+        "txt": "目的地"
+      },
+      {
+        "tag": "SUMMARY",
+        "cls": "",
+        "testid": "trial-supported-toggle",
+        "box": [
+          21,
+          567,
+          91,
+          44
+        ],
+        "txt": "看支持的目的地"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          635,
+          348,
+          16
+        ],
+        "txt": "抵达地点"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          711,
+          348,
+          16
+        ],
+        "txt": "离开地点"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          787,
+          169,
+          16
+        ],
+        "txt": "抵达时间"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-start",
+        "box": [
+          21,
+          807,
+          169,
+          44
+        ],
+        "txt": "2026-09-25T10:00"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          200,
+          787,
+          169,
+          16
+        ],
+        "txt": "离开时间"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-end",
+        "box": [
+          200,
+          807,
+          169,
+          44
+        ],
+        "txt": "2026-09-27T20:00"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-primary-button",
+        "testid": "trial-next",
+        "box": [
+          20,
+          652,
+          350,
+          44
+        ],
+        "txt": "下一步"
+      }
+    ],
+    "buttons": [
+      {
+        "t": "EN",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          20,
+          169,
+          47,
+          44
+        ]
+      },
+      {
+        "t": "下一步",
+        "disabled": false,
+        "ariaDisabled": "true",
+        "box": [
+          20,
+          652,
+          350,
+          44
+        ]
+      }
+    ],
+    "controller": true
+  },
+  "entry": {
+    "found": false,
+    "onScreenButtons": [
+      "EN",
+      "下一步"
+    ]
+  },
+  "wizardOpened": {
+    "url": "http://127.0.0.1:8932/v8/hub",
+    "pathname": "/v8/hub",
+    "title": "CityNexus Trip Operations",
+    "leaves": [
+      {
+        "tag": "P",
+        "cls": "v8-kicker",
+        "testid": null,
+        "box": [
+          20,
+          32,
+          350,
+          14
+        ],
+        "txt": "用你自己的城市试用 CITYNEXUS"
+      },
+      {
+        "tag": "H1",
+        "cls": "",
+        "testid": null,
+        "box": [
+          20,
+          56,
+          350,
+          39
+        ],
+        "txt": "新建行程"
+      },
+      {
+        "tag": "P",
+        "cls": "v8-lede",
+        "testid": null,
+        "box": [
+          20,
+          108,
+          350,
+          43
+        ],
+        "txt": "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-outline-button",
+        "testid": null,
+        "box": [
+          20,
+          169,
+          47,
+          44
+        ],
+        "txt": "EN"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          20,
+          240,
+          22,
+          22
+        ],
+        "txt": "1"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          48,
+          243,
+          66,
+          15
+        ],
+        "txt": "目的地与时间"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          122,
+          240,
+          22,
+          22
+        ],
+        "txt": "2"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          152,
+          240,
+          22,
+          22
+        ],
+        "txt": "3"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          491,
+          348,
+          16
+        ],
+        "txt": "目的地"
+      },
+      {
+        "tag": "SUMMARY",
+        "cls": "",
+        "testid": "trial-supported-toggle",
+        "box": [
+          21,
+          567,
+          91,
+          44
+        ],
+        "txt": "看支持的目的地"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          635,
+          348,
+          16
+        ],
+        "txt": "抵达地点"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          711,
+          348,
+          16
+        ],
+        "txt": "离开地点"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          787,
+          169,
+          16
+        ],
+        "txt": "抵达时间"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-start",
+        "box": [
+          21,
+          807,
+          169,
+          44
+        ],
+        "txt": "2026-09-25T10:00"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          200,
+          787,
+          169,
+          16
+        ],
+        "txt": "离开时间"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-end",
+        "box": [
+          200,
+          807,
+          169,
+          44
+        ],
+        "txt": "2026-09-27T20:00"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-primary-button",
+        "testid": "trial-next",
+        "box": [
+          20,
+          652,
+          350,
+          44
+        ],
+        "txt": "下一步"
+      }
+    ],
+    "buttons": [
+      {
+        "t": "EN",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          20,
+          169,
+          47,
+          44
+        ]
+      },
+      {
+        "t": "下一步",
+        "disabled": false,
+        "ariaDisabled": "true",
+        "box": [
+          20,
+          652,
+          350,
+          44
+        ]
+      }
+    ]
+  },
+  "emptyTextFields": [
+    {
+      "n": 0,
+      "ph": "例如：天津、东京、新加坡",
+      "len": 0
+    },
+    {
+      "n": 1,
+      "ph": "例如：某地站 / 机场",
+      "len": 0
+    },
+    {
+      "n": 2,
+      "ph": "例如：某地站 / 机场",
+      "len": 0
+    },
+    {
+      "n": 3,
+      "ph": null,
+      "len": 2
+    },
+    {
+      "n": 4,
+      "ph": null,
+      "len": 13
+    },
+    {
+      "n": 5,
+      "ph": null,
+      "len": 3
+    }
+  ],
+  "fieldSelectorUsed": "input:not([type])",
+  "fills": [
+    {
+      "n": 0,
+      "wrote": 2,
+      "after": {
+        "len": 2,
+        "ph": "例如：天津、东京、新加坡"
+      }
+    },
+    {
+      "n": 1,
+      "wrote": 4,
+      "after": {
+        "len": 4,
+        "ph": "例如：北京站 / 机场"
+      }
+    },
+    {
+      "n": 2,
+      "wrote": 4,
+      "after": {
+        "len": 4,
+        "ph": "例如：北京站 / 机场"
+      }
+    }
+  ],
+  "step1": {
+    "url": "http://127.0.0.1:8932/v8/hub",
+    "pathname": "/v8/hub",
+    "title": "CityNexus Trip Operations",
+    "leaves": [
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          208,
+          348,
+          16
+        ],
+        "txt": "目的地"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-city",
+        "box": [
+          21,
+          228,
+          348,
+          44
+        ],
+        "txt": "北京"
+      },
+      {
+        "tag": "P",
+        "cls": "trial-inferred",
+        "testid": "trial-inferred",
+        "box": [
+          21,
+          284,
+          348,
+          16
+        ],
+        "txt": "已自动设置：中国 · 人民币 · 中国标准时间"
+      },
+      {
+        "tag": "SUMMARY",
+        "cls": "",
+        "testid": "trial-supported-toggle",
+        "box": [
+          21,
+          312,
+          91,
+          44
+        ],
+        "txt": "看支持的目的地"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          380,
+          348,
+          16
+        ],
+        "txt": "抵达北京"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-arrival",
+        "box": [
+          21,
+          400,
+          348,
+          44
+        ],
+        "txt": "北京南站"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          456,
+          348,
+          16
+        ],
+        "txt": "离开北京"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-departure",
+        "box": [
+          21,
+          476,
+          348,
+          44
+        ],
+        "txt": "北京南站"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          532,
+          169,
+          16
+        ],
+        "txt": "抵达时间"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-start",
+        "box": [
+          21,
+          552,
+          169,
+          44
+        ],
+        "txt": "2026-09-25T10:00"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          200,
+          532,
+          169,
+          16
+        ],
+        "txt": "离开时间"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-end",
+        "box": [
+          200,
+          552,
+          169,
+          44
+        ],
+        "txt": "2026-09-27T20:00"
+      },
+      {
+        "tag": "SUMMARY",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          608,
+          348,
+          44
+        ],
+        "txt": "高级设置"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-country",
+        "box": [
+          21,
+          672,
+          169,
+          44
+        ],
+        "txt": "CN"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-timezone",
+        "box": [
+          200,
+          672,
+          169,
+          44
+        ],
+        "txt": "Asia/Shanghai"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-currency",
+        "box": [
+          21,
+          746,
+          348,
+          44
+        ],
+        "txt": "CNY"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "trial-back-link",
+        "testid": "trial-show-advanced",
+        "box": [
+          21,
+          676,
+          348,
+          44
+        ],
+        "txt": "高级设置"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-primary-button",
+        "testid": "trial-next",
+        "box": [
+          20,
+          652,
+          350,
+          44
+        ],
+        "txt": "下一步"
+      }
+    ],
+    "buttons": [
+      {
+        "t": "高级设置",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          21,
+          676,
+          348,
+          44
+        ]
+      },
+      {
+        "t": "下一步",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          20,
+          652,
+          350,
+          44
+        ]
+      }
+    ]
+  },
+  "step1_hintStillMissing": [],
+  "next1": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "ariaDisabled": null,
+    "point": [
+      195,
+      674
+    ],
+    "box": [
+      20,
+      652,
+      350,
+      44
+    ],
+    "hitTag": "BUTTON",
+    "hitIsSelf": true,
+    "tappedByTouch": true
+  },
+  "step2": {
+    "url": "http://127.0.0.1:8932/v8/hub",
+    "pathname": "/v8/hub",
+    "title": "CityNexus Trip Operations",
+    "leaves": [
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          67,
+          169,
+          16
+        ],
+        "txt": "旅行人数"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-party",
+        "box": [
+          21,
+          87,
+          169,
+          44
+        ],
+        "txt": "2"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          200,
+          67,
+          169,
+          16
+        ],
+        "txt": "房间数（建议值，可调整）"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-rooms",
+        "box": [
+          200,
+          87,
+          169,
+          44
+        ],
+        "txt": "1"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          143,
+          169,
+          16
+        ],
+        "txt": "总预算"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-budget",
+        "box": [
+          21,
+          163,
+          169,
+          44
+        ],
+        "txt": "3000"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          200,
+          143,
+          169,
+          16
+        ],
+        "txt": "住宿预算"
+      },
+      {
+        "tag": "INPUT",
+        "cls": "",
+        "testid": "trial-stay-budget",
+        "box": [
+          200,
+          163,
+          169,
+          44
+        ],
+        "txt": "1000"
+      },
+      {
+        "tag": "LEGEND",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          219,
+          48,
+          22
+        ],
+        "txt": "旅行节奏"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "active",
+        "testid": "trial-pace-relaxed",
+        "box": [
+          21,
+          253,
+          348,
+          44
+        ],
+        "txt": "轻松"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "",
+        "testid": "trial-pace-balanced",
+        "box": [
+          21,
+          315,
+          348,
+          44
+        ],
+        "txt": "适中"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "",
+        "testid": "trial-pace-packed",
+        "box": [
+          21,
+          377,
+          348,
+          44
+        ],
+        "txt": "紧凑"
+      },
+      {
+        "tag": "LEGEND",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          433,
+          24,
+          22
+        ],
+        "txt": "兴趣"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "",
+        "testid": "trial-interest-food",
+        "box": [
+          21,
+          467,
+          348,
+          44
+        ],
+        "txt": "美食"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "",
+        "testid": "trial-interest-nature",
+        "box": [
+          21,
+          529,
+          348,
+          44
+        ],
+        "txt": "自然"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "",
+        "testid": "trial-interest-culture",
+        "box": [
+          21,
+          591,
+          348,
+          44
+        ],
+        "txt": "人文"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "",
+        "testid": "trial-interest-seaside",
+        "box": [
+          21,
+          653,
+          348,
+          44
+        ],
+        "txt": "海边"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "",
+        "testid": "trial-interest-shopping",
+        "box": [
+          21,
+          715,
+          348,
+          44
+        ],
+        "txt": "购物"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "",
+        "testid": "trial-interest-family",
+        "box": [
+          21,
+          777,
+          348,
+          44
+        ],
+        "txt": "亲子"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          833,
+          348,
+          16
+        ],
+        "txt": "特殊要求"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-outline-button",
+        "testid": "trial-back",
+        "box": [
+          20,
+          640,
+          49,
+          56
+        ],
+        "txt": "返回"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-primary-button",
+        "testid": "trial-next",
+        "box": [
+          79,
+          652,
+          291,
+          44
+        ],
+        "txt": "下一步"
+      }
+    ],
+    "buttons": [
+      {
+        "t": "轻松",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          21,
+          253,
+          348,
+          44
+        ]
+      },
+      {
+        "t": "适中",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          21,
+          315,
+          348,
+          44
+        ]
+      },
+      {
+        "t": "紧凑",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          21,
+          377,
+          348,
+          44
+        ]
+      },
+      {
+        "t": "美食",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          21,
+          467,
+          348,
+          44
+        ]
+      },
+      {
+        "t": "自然",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          21,
+          529,
+          348,
+          44
+        ]
+      },
+      {
+        "t": "人文",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          21,
+          591,
+          348,
+          44
+        ]
+      },
+      {
+        "t": "海边",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          21,
+          653,
+          348,
+          44
+        ]
+      },
+      {
+        "t": "购物",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          21,
+          715,
+          348,
+          44
+        ]
+      },
+      {
+        "t": "亲子",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          21,
+          777,
+          348,
+          44
+        ]
+      },
+      {
+        "t": "返回",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          20,
+          640,
+          49,
+          56
+        ]
+      },
+      {
+        "t": "下一步",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          79,
+          652,
+          291,
+          44
+        ]
+      }
+    ]
+  },
+  "next2": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "ariaDisabled": null,
+    "point": [
+      225,
+      674
+    ],
+    "box": [
+      79,
+      652,
+      291,
+      44
+    ],
+    "hitTag": "BUTTON",
+    "hitIsSelf": true,
+    "tappedByTouch": true
+  },
+  "step3": {
+    "url": "http://127.0.0.1:8932/v8/hub",
+    "pathname": "/v8/hub",
+    "title": "CityNexus Trip Operations",
+    "leaves": [
+      {
+        "tag": "P",
+        "cls": "v8-lede",
+        "testid": null,
+        "box": [
+          20,
+          -21,
+          350,
+          43
+        ],
+        "txt": "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-outline-button",
+        "testid": null,
+        "box": [
+          20,
+          40,
+          47,
+          44
+        ],
+        "txt": "EN"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          20,
+          111,
+          22,
+          22
+        ],
+        "txt": "✓"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          50,
+          111,
+          22,
+          22
+        ],
+        "txt": "✓"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          80,
+          111,
+          22,
+          22
+        ],
+        "txt": "3"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          108,
+          114,
+          44,
+          15
+        ],
+        "txt": "确认创建"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          362,
+          39,
+          17
+        ],
+        "txt": "目的地"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": "review-city",
+        "box": [
+          343,
+          362,
+          26,
+          17
+        ],
+        "txt": "北京"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          387,
+          26,
+          17
+        ],
+        "txt": "抵达"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": "review-arrival",
+        "box": [
+          206,
+          387,
+          163,
+          17
+        ],
+        "txt": "北京南站 · 2026-09-25 10:00"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          412,
+          26,
+          17
+        ],
+        "txt": "离开"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": "review-departure",
+        "box": [
+          206,
+          412,
+          163,
+          17
+        ],
+        "txt": "北京南站 · 2026-09-27 20:00"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          437,
+          64,
+          17
+        ],
+        "txt": "人数 / 房间"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-default-mark",
+        "testid": "review-default-mark",
+        "box": [
+          281,
+          437,
+          88,
+          17
+        ],
+        "txt": "· 我们替你填的"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          462,
+          77,
+          17
+        ],
+        "txt": "总预算 / 住宿"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-default-mark",
+        "testid": "review-default-mark",
+        "box": [
+          281,
+          462,
+          88,
+          17
+        ],
+        "txt": "· 我们替你填的"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          487,
+          26,
+          17
+        ],
+        "txt": "节奏"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-default-mark",
+        "testid": "review-default-mark",
+        "box": [
+          281,
+          487,
+          88,
+          17
+        ],
+        "txt": "· 我们替你填的"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          512,
+          26,
+          17
+        ],
+        "txt": "兴趣"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": "review-interests",
+        "box": [
+          356,
+          512,
+          13,
+          17
+        ],
+        "txt": "—"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          537,
+          52,
+          17
+        ],
+        "txt": "特殊要求"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": "review-special",
+        "box": [
+          356,
+          537,
+          13,
+          17
+        ],
+        "txt": "—"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          562,
+          52,
+          17
+        ],
+        "txt": "自动设置"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": null,
+        "box": [
+          225,
+          562,
+          144,
+          17
+        ],
+        "txt": "CN · CNY · Asia/Shanghai"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-outline-button",
+        "testid": "trial-back",
+        "box": [
+          20,
+          640,
+          49,
+          56
+        ],
+        "txt": "返回"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-primary-button",
+        "testid": "trial-create",
+        "box": [
+          79,
+          652,
+          291,
+          44
+        ],
+        "txt": "确认创建"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "trial-back-link",
+        "testid": "trial-tianjin-demo",
+        "box": [
+          20,
+          768,
+          350,
+          44
+        ],
+        "txt": "使用封存的演示行程"
+      }
+    ],
+    "buttons": [
+      {
+        "t": "EN",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          20,
+          40,
+          47,
+          44
+        ]
+      },
+      {
+        "t": "返回",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          20,
+          640,
+          49,
+          56
+        ]
+      },
+      {
+        "t": "确认创建",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          79,
+          652,
+          291,
+          44
+        ]
+      },
+      {
+        "t": "使用封存的演示行程",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          20,
+          768,
+          350,
+          44
+        ]
+      }
+    ]
+  },
+  "armed": {
+    "modeFile": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o269_run\\answer\\mode.txt",
+    "written": "answer",
+    "readBack": "answer"
+  },
+  "submit": {
+    "found": true,
+    "label": "确认创建",
+    "disabled": false,
+    "ariaDisabled": null,
+    "point": [
+      225,
+      674
+    ],
+    "box": [
+      79,
+      652,
+      291,
+      44
+    ],
+    "hitTag": "BUTTON",
+    "hitIsSelf": true,
+    "tappedByTouch": true
+  },
+  "samples": [
+    {
+      "atMs": 3124,
+      "resourceTimingForWrites": [
+        {
+          "name": "/api/v1/travelers",
+          "durationMs": 15,
+          "responseEnd": 26979,
+          "transferSize": 519
+        },
+        {
+          "name": "/api/v1/journeys",
+          "durationMs": 36,
+          "responseEnd": 27018,
+          "transferSize": 695
+        }
+      ],
+      "waitCopies": [
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "确认创建"
+        },
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "这一步没有成功——行程已创建，但住宿搜索没有完成。"
+        },
+        {
+          "cls": "v8-primary-button",
+          "testid": "trial-create",
+          "txt": "确认创建"
+        }
+      ],
+      "buttons": [
+        "EN",
+        "返回",
+        "确认创建"
+      ],
+      "url": "http://127.0.0.1:8932/v8/hub"
+    },
+    {
+      "atMs": 8192,
+      "resourceTimingForWrites": [
+        {
+          "name": "/api/v1/travelers",
+          "durationMs": 15,
+          "responseEnd": 26979,
+          "transferSize": 519
+        },
+        {
+          "name": "/api/v1/journeys",
+          "durationMs": 36,
+          "responseEnd": 27018,
+          "transferSize": 695
+        }
+      ],
+      "waitCopies": [
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "确认创建"
+        },
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "这一步没有成功——行程已创建，但住宿搜索没有完成。"
+        },
+        {
+          "cls": "v8-primary-button",
+          "testid": "trial-create",
+          "txt": "确认创建"
+        }
+      ],
+      "buttons": [
+        "EN",
+        "返回",
+        "确认创建"
+      ],
+      "url": "http://127.0.0.1:8932/v8/hub"
+    },
+    {
+      "atMs": 14023,
+      "resourceTimingForWrites": [
+        {
+          "name": "/api/v1/travelers",
+          "durationMs": 15,
+          "responseEnd": 26979,
+          "transferSize": 519
+        },
+        {
+          "name": "/api/v1/journeys",
+          "durationMs": 36,
+          "responseEnd": 27018,
+          "transferSize": 695
+        }
+      ],
+      "waitCopies": [
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "确认创建"
+        },
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "这一步没有成功——行程已创建，但住宿搜索没有完成。"
+        },
+        {
+          "cls": "v8-primary-button",
+          "testid": "trial-create",
+          "txt": "确认创建"
+        }
+      ],
+      "buttons": [
+        "EN",
+        "返回",
+        "确认创建"
+      ],
+      "url": "http://127.0.0.1:8932/v8/hub"
+    },
+    {
+      "atMs": 25084,
+      "resourceTimingForWrites": [
+        {
+          "name": "/api/v1/travelers",
+          "durationMs": 15,
+          "responseEnd": 26979,
+          "transferSize": 519
+        },
+        {
+          "name": "/api/v1/journeys",
+          "durationMs": 36,
+          "responseEnd": 27018,
+          "transferSize": 695
+        }
+      ],
+      "waitCopies": [
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "确认创建"
+        },
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "这一步没有成功——行程已创建，但住宿搜索没有完成。"
+        },
+        {
+          "cls": "v8-primary-button",
+          "testid": "trial-create",
+          "txt": "确认创建"
+        }
+      ],
+      "buttons": [
+        "EN",
+        "返回",
+        "确认创建"
+      ],
+      "url": "http://127.0.0.1:8932/v8/hub"
+    },
+    {
+      "atMs": 40085,
+      "resourceTimingForWrites": [
+        {
+          "name": "/api/v1/travelers",
+          "durationMs": 15,
+          "responseEnd": 26979,
+          "transferSize": 519
+        },
+        {
+          "name": "/api/v1/journeys",
+          "durationMs": 36,
+          "responseEnd": 27018,
+          "transferSize": 695
+        }
+      ],
+      "waitCopies": [
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "确认创建"
+        },
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "这一步没有成功——行程已创建，但住宿搜索没有完成。"
+        },
+        {
+          "cls": "v8-primary-button",
+          "testid": "trial-create",
+          "txt": "确认创建"
+        }
+      ],
+      "buttons": [
+        "EN",
+        "返回",
+        "确认创建"
+      ],
+      "url": "http://127.0.0.1:8932/v8/hub"
+    },
+    {
+      "atMs": 60070,
+      "resourceTimingForWrites": [
+        {
+          "name": "/api/v1/travelers",
+          "durationMs": 15,
+          "responseEnd": 26979,
+          "transferSize": 519
+        },
+        {
+          "name": "/api/v1/journeys",
+          "durationMs": 36,
+          "responseEnd": 27018,
+          "transferSize": 695
+        }
+      ],
+      "waitCopies": [
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "确认创建"
+        },
+        {
+          "cls": "",
+          "testid": null,
+          "txt": "这一步没有成功——行程已创建，但住宿搜索没有完成。"
+        },
+        {
+          "cls": "v8-primary-button",
+          "testid": "trial-create",
+          "txt": "确认创建"
+        }
+      ],
+      "buttons": [
+        "EN",
+        "返回",
+        "确认创建"
+      ],
+      "url": "http://127.0.0.1:8932/v8/hub"
+    }
+  ],
+  "stop": {
+    "found": false,
+    "onScreenButtons": [
+      "EN",
+      "返回",
+      "确认创建"
+    ]
+  },
+  "terminal": {
+    "url": "http://127.0.0.1:8932/v8/hub",
+    "pathname": "/v8/hub",
+    "title": "CityNexus Trip Operations",
+    "leaves": [
+      {
+        "tag": "P",
+        "cls": "v8-lede",
+        "testid": null,
+        "box": [
+          20,
+          -21,
+          350,
+          43
+        ],
+        "txt": "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-outline-button",
+        "testid": null,
+        "box": [
+          20,
+          40,
+          47,
+          44
+        ],
+        "txt": "EN"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          20,
+          111,
+          22,
+          22
+        ],
+        "txt": "✓"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          50,
+          111,
+          22,
+          22
+        ],
+        "txt": "✓"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-step-dot",
+        "testid": null,
+        "box": [
+          80,
+          111,
+          22,
+          22
+        ],
+        "txt": "3"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          108,
+          114,
+          44,
+          15
+        ],
+        "txt": "确认创建"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          362,
+          39,
+          17
+        ],
+        "txt": "目的地"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": "review-city",
+        "box": [
+          343,
+          362,
+          26,
+          17
+        ],
+        "txt": "北京"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          387,
+          26,
+          17
+        ],
+        "txt": "抵达"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": "review-arrival",
+        "box": [
+          206,
+          387,
+          163,
+          17
+        ],
+        "txt": "北京南站 · 2026-09-25 10:00"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          412,
+          26,
+          17
+        ],
+        "txt": "离开"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": "review-departure",
+        "box": [
+          206,
+          412,
+          163,
+          17
+        ],
+        "txt": "北京南站 · 2026-09-27 20:00"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          437,
+          64,
+          17
+        ],
+        "txt": "人数 / 房间"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-default-mark",
+        "testid": "review-default-mark",
+        "box": [
+          281,
+          437,
+          88,
+          17
+        ],
+        "txt": "· 我们替你填的"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          462,
+          77,
+          17
+        ],
+        "txt": "总预算 / 住宿"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-default-mark",
+        "testid": "review-default-mark",
+        "box": [
+          281,
+          462,
+          88,
+          17
+        ],
+        "txt": "· 我们替你填的"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          487,
+          26,
+          17
+        ],
+        "txt": "节奏"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "trial-default-mark",
+        "testid": "review-default-mark",
+        "box": [
+          281,
+          487,
+          88,
+          17
+        ],
+        "txt": "· 我们替你填的"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          512,
+          26,
+          17
+        ],
+        "txt": "兴趣"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": "review-interests",
+        "box": [
+          356,
+          512,
+          13,
+          17
+        ],
+        "txt": "—"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          537,
+          52,
+          17
+        ],
+        "txt": "特殊要求"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": "review-special",
+        "box": [
+          356,
+          537,
+          13,
+          17
+        ],
+        "txt": "—"
+      },
+      {
+        "tag": "DT",
+        "cls": "",
+        "testid": null,
+        "box": [
+          21,
+          562,
+          52,
+          17
+        ],
+        "txt": "自动设置"
+      },
+      {
+        "tag": "DD",
+        "cls": "",
+        "testid": null,
+        "box": [
+          225,
+          562,
+          144,
+          17
+        ],
+        "txt": "CN · CNY · Asia/Shanghai"
+      },
+      {
+        "tag": "STRONG",
+        "cls": "",
+        "testid": null,
+        "box": [
+          39,
+          676,
+          315,
+          49
+        ],
+        "txt": "这一步没有成功——行程已创建，但住宿搜索没有完成。"
+      },
+      {
+        "tag": "SPAN",
+        "cls": "",
+        "testid": null,
+        "box": [
+          39,
+          733,
+          315,
+          123
+        ],
+        "txt": "FileNotFoundError: [Errno 2] No such file or directory: 'D:\\\\moodle\\\\_qoder_hjp1_o207_20260922\\\\o269_tree\\\\data\\\\v9\\\\city_operations.json'"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-outline-button",
+        "testid": "trial-back",
+        "box": [
+          20,
+          640,
+          49,
+          56
+        ],
+        "txt": "返回"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-primary-button",
+        "testid": "trial-create",
+        "box": [
+          79,
+          652,
+          291,
+          44
+        ],
+        "txt": "确认创建"
+      }
+    ],
+    "buttons": [
+      {
+        "t": "EN",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          20,
+          40,
+          47,
+          44
+        ]
+      },
+      {
+        "t": "返回",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          20,
+          640,
+          49,
+          56
+        ]
+      },
+      {
+        "t": "确认创建",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          79,
+          652,
+          291,
+          44
+        ]
+      }
+    ]
+  },
+  "terminal_elapsedMsFromSubmit": 64192,
+  "afterReload": {
+    "url": "http://127.0.0.1:8932/v8/hub",
+    "pathname": "/v8/hub",
+    "title": "CityNexus Trip Operations",
+    "leaves": [
+      {
+        "tag": "P",
+        "cls": "v8-kicker",
+        "testid": null,
+        "box": [
+          0,
+          0,
+          390,
+          14
+        ],
+        "txt": "服务器"
+      },
+      {
+        "tag": "H1",
+        "cls": "",
+        "testid": null,
+        "box": [
+          0,
+          24,
+          390,
+          78
+        ],
+        "txt": "服务器这次没能把行程读出来"
+      },
+      {
+        "tag": "P",
+        "cls": "v8-lede",
+        "testid": "failure-reason",
+        "box": [
+          0,
+          115,
+          390,
+          43
+        ],
+        "txt": "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-primary-button",
+        "testid": "failure-retry",
+        "box": [
+          0,
+          184,
+          390,
+          44
+        ],
+        "txt": "重试"
+      },
+      {
+        "tag": "SUMMARY",
+        "cls": "",
+        "testid": null,
+        "box": [
+          0,
+          253,
+          390,
+          44
+        ],
+        "txt": "归因详情"
+      }
+    ],
+    "buttons": [
+      {
+        "t": "重试",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          0,
+          184,
+          390,
+          44
+        ]
+      }
+    ]
+  },
+  "tripsTab": {
+    "found": false,
+    "onScreenButtons": [
+      "重试"
+    ]
+  },
+  "tripsFace": {
+    "url": "http://127.0.0.1:8932/v8/hub",
+    "pathname": "/v8/hub",
+    "title": "CityNexus Trip Operations",
+    "leaves": [
+      {
+        "tag": "P",
+        "cls": "v8-kicker",
+        "testid": null,
+        "box": [
+          0,
+          0,
+          390,
+          14
+        ],
+        "txt": "服务器"
+      },
+      {
+        "tag": "H1",
+        "cls": "",
+        "testid": null,
+        "box": [
+          0,
+          24,
+          390,
+          78
+        ],
+        "txt": "服务器这次没能把行程读出来"
+      },
+      {
+        "tag": "P",
+        "cls": "v8-lede",
+        "testid": "failure-reason",
+        "box": [
+          0,
+          115,
+          390,
+          43
+        ],
+        "txt": "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。"
+      },
+      {
+        "tag": "BUTTON",
+        "cls": "v8-primary-button",
+        "testid": "failure-retry",
+        "box": [
+          0,
+          184,
+          390,
+          44
+        ],
+        "txt": "重试"
+      },
+      {
+        "tag": "SUMMARY",
+        "cls": "",
+        "testid": null,
+        "box": [
+          0,
+          253,
+          390,
+          44
+        ],
+        "txt": "归因详情"
+      }
+    ],
+    "buttons": [
+      {
+        "t": "重试",
+        "disabled": false,
+        "ariaDisabled": null,
+        "box": [
+          0,
+          184,
+          390,
+          44
+        ]
+      }
+    ]
+  },
+  "localStorageJourneyId": "9002e184-a12f-42cd-aab5-42a45a362767",
+  "submitToStopMs": 64192,
+  "netEvents": [
+    {
+      "at": 1790183688349,
+      "ev": "req",
+      "m": "GET",
+      "p": "/api/v1/demo/scene"
+    },
+    {
+      "at": 1790183688467,
+      "ev": "res",
+      "m": "GET",
+      "p": "/api/v1/demo/scene",
+      "s": 200
+    },
+    {
+      "at": 1790183715153,
+      "ev": "req",
+      "m": "POST",
+      "p": "/api/v1/travelers"
+    },
+    {
+      "at": 1790183715154,
+      "ev": "res",
+      "m": "POST",
+      "p": "/api/v1/travelers",
+      "s": 201
+    },
+    {
+      "at": 1790183715156,
+      "ev": "req",
+      "m": "POST",
+      "p": "/api/v1/journeys"
+    },
+    {
+      "at": 1790183715192,
+      "ev": "res",
+      "m": "POST",
+      "p": "/api/v1/journeys",
+      "s": 201
+    },
+    {
+      "at": 1790183715193,
+      "ev": "req",
+      "m": "GET",
+      "p": "/api/v1/travelers/50651873-5aec-48d5-a477-9f586785aa55/preferences"
+    },
+    {
+      "at": 1790183715201,
+      "ev": "res",
+      "m": "GET",
+      "p": "/api/v1/travelers/50651873-5aec-48d5-a477-9f586785aa55/preferences",
+      "s": 200
+    },
+    {
+      "at": 1790183715201,
+      "ev": "req",
+      "m": "PUT",
+      "p": "/api/v1/travelers/50651873-5aec-48d5-a477-9f586785aa55/preferences"
+    },
+    {
+      "at": 1790183715211,
+      "ev": "res",
+      "m": "PUT",
+      "p": "/api/v1/travelers/50651873-5aec-48d5-a477-9f586785aa55/preferences",
+      "s": 200
+    },
+    {
+      "at": 1790183715212,
+      "ev": "req",
+      "m": "GET",
+      "p": "/api/v1/travelers/50651873-5aec-48d5-a477-9f586785aa55/preferences"
+    },
+    {
+      "at": 1790183715229,
+      "ev": "res",
+      "m": "GET",
+      "p": "/api/v1/travelers/50651873-5aec-48d5-a477-9f586785aa55/preferences",
+      "s": 200
+    },
+    {
+      "at": 1790183715230,
+      "ev": "req",
+      "m": "POST",
+      "p": "/api/v1/journeys/9002e184-a12f-42cd-aab5-42a45a362767/stay-options/generate"
+    },
+    {
+      "at": 1790183715300,
+      "ev": "res",
+      "m": "POST",
+      "p": "/api/v1/journeys/9002e184-a12f-42cd-aab5-42a45a362767/stay-options/generate",
+      "s": 500
+    },
+    {
+      "at": 1790183779505,
+      "ev": "req",
+      "m": "GET",
+      "p": "/api/v1/journeys/9002e184-a12f-42cd-aab5-42a45a362767/experience"
+    },
+    {
+      "at": 1790183779534,
+      "ev": "res",
+      "m": "GET",
+      "p": "/api/v1/journeys/9002e184-a12f-42cd-aab5-42a45a362767/experience",
+      "s": 500
+    }
+  ],
+  "ended_at": "2026-09-23T17:16:32.692Z"
+}
