@@ -1,0 +1,110 @@
+{
+ "cells": [
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "B2a_idle_automatic_convergence",
+   "own_hits": [],
+   "own_token_count": 20,
+   "shares_why_with": [
+    "B2b_dirty_form_preservation",
+    "B2c_inflight_write_safe_point"
+   ],
+   "unique_hits": [],
+   "verdict": "VERIFIED_FIXED_WITH_TWO_WAY_CONTROL",
+   "why": "restored arm MET and not-restored arm RED on the same instrument",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "B2b_dirty_form_preservation",
+   "own_hits": [],
+   "own_token_count": 22,
+   "shares_why_with": [
+    "B2a_idle_automatic_convergence",
+    "B2c_inflight_write_safe_point"
+   ],
+   "unique_hits": [],
+   "verdict": "VERIFIED_FIXED_WITH_TWO_WAY_CONTROL",
+   "why": "restored arm MET and not-restored arm RED on the same instrument",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "B2c_inflight_write_safe_point",
+   "own_hits": [],
+   "own_token_count": 21,
+   "shares_why_with": [
+    "B2a_idle_automatic_convergence",
+    "B2b_dirty_form_preservation"
+   ],
+   "unique_hits": [],
+   "verdict": "VERIFIED_FIXED_WITH_TWO_WAY_CONTROL",
+   "why": "restored arm MET and not-restored arm RED on the same instrument",
+   "why_source": "why",
+   "why_token_count": 0
+  }
+ ],
+ "cells_found": 3,
+ "exit": 3,
+ "findings": [
+  {
+   "cell": "B2a_idle_automatic_convergence",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "B2b_dirty_form_preservation",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "B2c_inflight_write_safe_point",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cells": [
+    "B2a_idle_automatic_convergence",
+    "B2b_dirty_form_preservation",
+    "B2c_inflight_write_safe_point"
+   ],
+   "code": "DUPLICATE_WHY_LITERALS",
+   "detail": "3 cells share one folded-identical sentence; 3 of them have no effective derived_from",
+   "hard": true,
+   "sentence": "restored arm met and not-restored arm red on the same instrument"
+  }
+ ],
+ "hard_codes": [
+  "DUPLICATE_WHY_LITERALS"
+ ],
+ "hard_count": 1,
+ "info_count": 0,
+ "instrument": "live_checks/receipt_cell_derivation_check_r1.py",
+ "meaning": "at least one cell cannot be read as its own evidence",
+ "overall": "Q38_GATE_RED_HARD",
+ "receipt": {
+  "blob_sha1": "c893bde22c05b32d27d647fbfa014615394b0b5f",
+  "bytes": 18750,
+  "local_blob_equals_published_blob": true,
+  "path": "_published_cmdr_copy_ord0290.json",
+  "published_blob_on_commander_control": "c893bde22c05b32d27d647fbfa014615394b0b5f"
+ },
+ "run_by": "commander 494abfd7",
+ "soft_codes": [
+  "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+ ],
+ "soft_count": 3,
+ "unique_reading_counts": {
+  "B2a_idle_automatic_convergence": 3,
+  "B2b_dirty_form_preservation": 3,
+  "B2c_inflight_write_safe_point": 1
+ }
+}
