@@ -196,6 +196,50 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=8ccd71d8 @2026-09-25 07:14+08 —— **ORD-0287 交：权威线上现在有一格守着那半个条件了（test-only 候选 `c31ba195d…`，同一格在权威字节绿、拆掉守卫红、正控两态都绿）**
+
+```text
+判据 1 父 = 我先读到的权威尖 45b0a5e281cae9c37715173afd3ac5778f309ca7 ⇒ parent_equals_base=True；候选尖 c31ba195d94ae6ab0cd0a50e17470bebc7587f44  tree f26f35091433a1d4b19fe8361b97d50bb707d63f
+判据 2 只加测试：diff --name-only = ['backend/tests/test_qoder_ord0287_k8_carrier.py']（220	0	backend/tests/test_qoder_ord0287_k8_carrier.py），产品路径改动 = 0 件；0272 那道门文件未被改动 = True；候选里 main.py 仍是 416ea4f210e967130710a900cdecd20e7a1b5eca（与落地字节相等 = True）
+  创建方式：只用 plumbing（hash-object/read-tree/update-index/write-tree/commit-tree）⇒ 工作树 0 次 checkout，跑完本道 `git status --porcelain` = 0 行
+判据 3 同一格两态（候选自己的导出树，2 轮）：
+  守卫在位 K1 rc=0（1 passed, 2 warnings in 1.82s）  K2 rc=0（1 passed, 2 warnings in 1.60s）
+  拆掉守卫 K1 rc=1（1 failed, 2 warnings in 1.82s）  K2 rc=0（仍绿 ⇒ 红可归因）
+  突变 before 416ea4f210e967130710a900cdecd20e7a1b5eca → after 784599fdb406b4242c2d202868b5eefd10861287；hunks=1（@@ -4770,8 +4770,7 @@）；py_compile=True；行数 [11417, 11416]；每轮逐字节还原=True
+  派生 {"carrier_green_on_authoritative": true, "same_cell_red_under_mutation": true, "positive_control_still_green_under_mutation": true, "one_hunk_every_round": true, "verdict": "TWO_STATE_CARRIER_OK"}
+  另：落地代导出树上同载体再跑一份（两态同结论）；载体 + 0272 那道门一座库一次进程 = 10 passed；收集分母先量：整套件 1234 collected（1232 + 本文件 2 格），单文件 2 collected，无 collection error
+```
+
+```text
+格子里有什么（为什么不引那枚缝也能测守卫）：
+  test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name：门外 sqlite 真落盘两把键成『别人已答完』⇒ 进产品自己的 Phase B（`_execute_plan_generation_claimed`，落地代就在 main.py:4736）⇒ 断三件：抛现成那句具名 409（句子是测试文件自带的字面副本，不 import 产品常量）、别人两行字节逐字不动、被拒那一发不许多写候选（拆掉守卫时这条会翻倍 = ORD-0282 量到的那条副作用）
+  K2 正控：我占的两把 NULL 必须真被填上并留回我这一发的答案 ⇒ K1 不可能靠『永远失败』假绿；K2 只测回填通路，两态都该绿 ⇒ 归因干净
+  不走 HTTP：Phase A 的唯一索引让第二个抢键者在门前就被挡回（回放/409）⇒ 到不了回填语句 ⇒  红队那句 HTTP_FACE_CANNOT_REACH_K8 是射程；跨进程那一面仍归 verifier
+  第 0 条的边界保留：候选代那枚 test_G9 在 45b0a5e2 跑不起（`_fill_plan_generation_receipts` 命中 0），所以本候选一个字都不引它 ⇒ 正是 Q35=② 要的『只依赖权威线』形状
+```
+
+```text
+判据 5 外部坐标：GitHub ls-remote ⇒ c31ba195d94ae6ab0cd0a50e17470bebc7587f44  refs/heads/review/ord0287-k8-carrier-f；落点 sha == 候选尖 = True；https GET /git/ref/heads/review/ord0287-k8-carrier-f = c31ba195d94ae6ab0cd0a50e17470bebc7587f44
+未 force-push、未改写任何已发布 ref；兄弟提交披露：我先后铸过两枚同 tree/同父/同信息的提交（c31ba195d… 上了 ref；d1e069207… 未推、无 ref 指向），外部坐标只有一个。
+发布（新目录 evidence/ord0287-k8-carrier-f/，共 8 件 + 第 0 条那 3 件 = 8 件，逐件 GET /contents 回读 equals_local=True，rule_hit 全 None，0 覆盖 0 删除）：
+  ORD0287_RECEIPT.md                     b447c6bf5caf26076824d2baa745699981c12481  6,881 B
+  candidate_commit_facts.json            e86c2b8a2a1d8085f99d5ed47f71d96643bafe1e  2,803 B
+  o287_make_candidate.py                 fae1219dde23a856b5ae9f6a157a5caec355b783  8,429 B
+  o287_two_state.py                      52e08797348126a0abca7a07537cb0839b25a00f  6,821 B
+  ref_readback.json                      d57e6dc730a12442cdbb856ed61dd63f06f1e5fd    299 B
+  test_qoder_ord0287_k8_carrier.py       894c6d54e345dabdc4050a38f413fdaaa1a92748 11,253 B
+  two_state_on_candidate.json            94a106942d5a7d7a5c1ba704b38472469d66460a  5,074 B
+  two_state_on_landed_export.json        49d2bba73d09a9fa15373198b73c4f6046577265  5,068 B
+
+复跑：git fetch origin refs/heads/review/ord0287-k8-carrier-f ⇒ git archive c31ba195… backend data contracts tools | tar -x；cd backend; CITYNEXUS_DATABASE_URL=sqlite:///<一次性库> python -m pytest tests/test_qoder_ord0287_k8_carrier.py -q -p no:cacheprovider -rf ⇒ 2 passed；再把那一处 `.where(key, response_json IS NULL)` 改成 `.where(key)`（1 hunk）⇒ K1 FAILED / K2 passed，然后逐字节还原（或直接 O287_BACKEND=<导出树> python o287_two_state.py）
+
+判据 6 与不越界：权威线 0 次写（只写自己的 review ref）；已发布路径 0 覆盖 0 删除；demo/reset 0 次；_live/_preview 0 读写；凭据 0 打印；derived_result 归 @红队，我不自签；判据 4：两进程 rig 没塞进候选（候选只交 CI 形状那两格），两进程读数留在 ORD-0282 证据目录。
+落地与否等你与仲裁：我这边候选就绪、外部可读、两态可跑。ORD-0289 等点名，不并行。
+```
+
+### SESSION=d2305848 @2026-09-25 07:15+08 —— **ORD-0286 交：D 候选两门真跑全绿、分开签——0278 GATE_GREEN_4_4 / 0253 GATE_GREEN_3_3，均 REAL_EXECUTION on 06717045（我自己先读到的那枚尖，不采 D 自陈 f86d24e9）**；ancestry 自读 ahead 13（D 报 11，分支在交读之间又动）；击杀面 UNPROVEN（臂脚本在分支上但无收据）
+（派生件 d3582cabcce72efbe8ed908bcfc11e3213bf02c6 @ evidence/ord0286-0278-0253-derivation/derivation_d2305848.json；总线 comment 5823802157。跑法：AUTHORITATIVE=1/4893/8893/_ord0286_06717045_8893.db/run_id ord0286_06717045_8893/AI false/reuse=false；收集 8 tests/3 files = 7 门节点 + seed；8 passed 38.2s rc=0；0253 三格读数落盘 reports/。5/8 门文件与 v6/落地代 blob 不同 ⇒ v6 的 9/9 击杀不随用（Q24），本代臂重跑才算。落地次序不背书。）
+
 ### SESSION=8ccd71d8 @2026-09-25 06:41+08 —— **ORD-0287 只答第 0 条：`test_G9` 原样摘到 `45b0a5e2` 跑不起**（拦路符号具名 + 两代 blob + 报错原文照抄），按判据 0 已停手
 
 ```text
@@ -15017,6 +15061,107 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 号令 @2026-09-25 07:2x+08 —— **ORD-0293 派 @红队**：独立复现 0288 那条"键被静默忽略"的现场读数（我自己只能核静态部分，那三发是真 POST）
+
+### ORD-0293 · 第二观察者复现 · @红队（`d2305848`，0286 已交、现 ready）
+```text
+要复现的主张（来自 HJ-P3 的 ORD-0288 定形，总线 5823596418）：
+  在同一趟新行程上，同一把 Idempotency-Key 连发三发 POST /api/v1/agent/commands
+    ⇒ journey_missions 0→3、agent_runs 0→3，而 idempotency_keys **一行都不多**；
+      7 次请求得到 7 个互不相同的 mission id（零重放），响应不回显这把键；
+      对照：POST /plans/generate 带同一形状 ⇒ +1 行 idempotency_keys（operation=plans.generate）。
+  判论："请求里有个头不算凭条"，而且是**静默忽略**（不是 422/409）。
+
+为什么值得你再跑一遍：这条读数是 0281 / 0288 排产的承重墙，而我只核了静态那一半
+  （alias 行号 [4606,7740,9907,11364] 一致；def run_agent_command 在 1058；
+   `WRITE_DEADLINE` 全 frontend/src 0 命中；validate_idempotency_key 在 validators.py:109）。
+  动态那一半必须是第二个人的，不然它就是"一个人的读数"。
+
+判据：
+ 1) 树：先读权威尖（应为 45b0a5e2…）并从 GitHub tarball/`git archive` 干净导出；不许用任何车道工作树。
+ 2) 一次性后端 + 一次性库（`_*.db` 带 run id、`ensure_schema()`，fresh-or-no-run）；
+    **0 demo/reset、0 用户库读写**；行数以**第二条 sqlite 连接**读，不用 HTTP 响应推断。
+ 3) 三格：R-1 同键三发的三张表行数；R-2 对照支（plans/generate）确实落 `idempotency_keys`；
+    R-3 键是否回显/是否被 422/409 拒绝（今天预期是 **200 且无回执** = 静默忽略）。
+ 4) 双向防空转：再对 plans/generate 那一支做一次"把键拿掉"的反控 ⇒ 它应当**不再落回执行**；
+    否则说明我的表读法本身在骗我。
+ 5) 若与 HJ-P3 的数不一致：**两份读数并贴**，具名你的端口/库/run id/树 sha，不许覆盖它的收据。
+ 6) 发布 evidence/ord0293-keyless-leg-repro/；账本块 + 总线一条；权威线不动、已发布路径 0 覆盖。
+成本 20~30 分钟（一台一次性后端 + 几次 POST）。
+```
+
+### 现场与坐标（07:2x）
+- 尺 r7 已发布：`live_checks/audit_closure_coordinates_r7.py` `7fd9b43dcb60d1f4419000cfba9f50db473d65bd`（17,650 B）⇒ **claims=107 failing=0 rc=0**，其中**可核对的申报 89 枚**、**存在性枚举 18 枚**（后者 cited_by 带 `ENUMERATED(existence only…)` 前缀，我自己把这类混进来就是永真格）。收据 `evidence/commander-coordinate-audit/audit_r7_receipt_r1.json`（43,843 B，`ref_tip_read=1b605858b4ed…`）。
+- **Q36 已提**（写期限常量的默认值该不该 > busy_timeout）；HJ-P3 那两条我复现不出来的读数已退回它对表，**我不拿未复现的机理排产**。
+- 车道：B running（0280）｜ F running（0287②→0289，队列 3）｜ HJ-P1 running（0290）｜ D running（0292 + 冻结 ref）｜ HJ-P3 running（0291）｜ 红队 → 0293。
+- 权威线未动（`45b0a5e2…`）；手机链最后实测 06:34 两面全 200 + 无凭据 401；`demo/reset` 0 次；凭据 0 打印。
+
+
+## 亲测 @2026-09-25 07:1x+08 —— ORD-0286 回来了：**门面两签、击杀面 UNPROVEN**（我按 Q24 认这个边界）；新单 **ORD-0292** 给 D；另外提一条常设规则候选 **CANDIDATE_REF_FREEZE_V1**（移靶已经咬到收据）
+
+### ① ORD-0286（红队验 D）我收到的东西
+总线 `5823802157`（07:13:56）。它签的是**两枚门绿**，不签击杀：
+```text
+跑法（REAL_EXECUTION_ON_CANDIDATE_TIP）：CITYNEXUS_E2E_AUTHORITATIVE=1、端口 4893/8893、
+  一次性库 _ord0286_06717045_8893.db（名字带 run id、fresh-or-no-run）、AI 显式 false、
+  reuseExistingServer=false、DEEPSEEK_API_KEY 进程内 unset；收集 8 tests in 3 files（7 门节点 + 1 setup）
+结果 8 passed (38.2s) rc=0，authoritative 溯源文件写入
+分开签：ORD-0278 = GATE_GREEN_4_4（正控 1 + 反控 3 全 GREEN）；ORD-0253 = GATE_GREEN_3_3
+击杀面：D 的臂脚本 review/ord0278_0253_kill_arms.py 在分支上（+280 行），但**本代没有逐臂收据**
+        ⇒ 任何 KILL 主张维持 UNPROVEN；且 5/8 枚门文件 blob 与 v6/落地代不同
+        ⇒ 按 Q24，v6 那 9/9 击杀**不随用到这条分支**
+```
+⇒ **我接受这个边界**（这正是 Q29 那次我们说清的分工：门面是产品状态，击杀证明的是判据有没有牙齿）。所以 **0278/0253 现在不落地**：先补本代击杀（ORD-0292），再谈落地次序。
+**它同时也纠了我一处**：我 **06:33** 亲自 `compare 45b0a5e2...06717045` 读到 **ahead 13 / behind 0**，而 D 在 06:16 的帖里报的是"领先 11 笔"，红队 07:13 读到的又是**父 `2d3b2f63`**⇒ **同一枚 ref 在我们三方之间至少动过两次**。谁都没说错，错的是**没有"验哪一枚"的约定**——所以有 ②。
+
+### ② 常设规则候选 `CANDIDATE_REF_FREEZE_V1`（提请仲裁，Q36）
+```text
+症状：同一枚候选 ref，交付方报领先 11、我读到 13（父链不同）、验方再读到另一个尖；
+     每移一次靶，前面所有收据的"我对哪棵树做的"就要重核一遍，闭单成本变成开平方。
+提案：车道交付 = **冻结一枚 40 位尖并写进收据顶部**（`frozen_tip` + `frozen_at`），
+     从交付到"我落地"或"我退回"之间**不再推那枚 ref**；新东西另开 ref 或另起代，
+     旧尖上的读数与新尖上的读数**不互相折算**（沿用 Q24/Q25）。
+     我这边的义务：落地前一毫秒重读 ref，若 != frozen_tip 就停手上报，不"顺手验最新那枚"（这条已在 0286 勘误块写过）。
+只回符号：① = 按提案生效（含"验方只认 frozen_tip"）；② = 只要求交付方写 frozen_tip，不要求停止推送；③ = 别的。
+我推荐 ①。
+```
+
+### ③ ORD-0292 · 本代击杀收据 · @D（`e345b9d6`，已点名）
+```text
+1) 顶部写 frozen_tip（一枚 40 位）+ frozen_at；从现在到我落地/退回，不再推那枚 ref。
+2) 逐臂交 (sha, nodeid, shape) 三元组 + 同键前件 + 每轮字节级还原回验；`claimed_result` 你可以写，
+   `derived_result` 归红队（B-1）。树来源 = 你自己从 GitHub 干净导出，不许用工作树。
+3) 5/8 门文件本代与 v6 不同 ⇒ 不许引 v6 的 9/9 当本代牙齿；要就在本代重跑。
+4) 发布新目录 evidence/ord0292-0278-0253-kills-d/；账本块 + 总线一条；0 覆盖已发布路径；权威线不动。
+```
+
+### ④ 现场（07:1x 实测）
+B running（0280 写窗口内）｜ 红队 running（0286 已交，接下来等 D 的 0292 复核）｜ F running（**队列 3 条**，0287②→0289）｜ HJ-P1 running（0290 五臂）｜ HJ-P3 running（0291 常量探针）｜ D 已点名 0292。
+**权威线未动**（`45b0a5e2…`，07:1x 读）。手机链：06:34 两面全 200 + 无凭据 401。
+**我自己两件小账**：⑴ 尺扩到 **r7 = 107 枚**（`7fd9b43dcb60d1f4419000cfba9f50db473d65bd`，17,650 B；实跑 claims=107 failing=0 rc=0），其中**只有 89 枚是"有人申报过、可核对"的**，另 **18 枚是我从目录列表里数出来的存在性检查**——我把这个区分**写进 cited_by 前缀 `ENUMERATED(existence only...)`**，因为"申报==远端"对那 18 枚**永远不可能失败**，混在 107 里就是我自己今早刚被咬的那一类永真格。⑵ 我发过一条含错字的 knock（把"按住"写成"按住宿"，意思会反过来），**在发送前清掉重打**，并在正文里向仲裁自报了这件事；另外 `bus_read_one.py` 第三次在同一枚 `U+2713` 上崩（GBK），我已给它加 `reconfigure`，修好而不是绕开。
+
+### ⑥ **Q36（只回符号）—— 但先看我复现不出来的部分**（我不 relay 车道的机理）
+HJ-P3 交 0288 时随件给了两条我**没能复现**的读数，先贴我的：
+```text
+它说：现草案 DEFAULT_WRITE_DEADLINE_MS = 10000 < busy_timeout 30 s ⇒ T-b 永不触发
+  我在落地代 _qoder_wt_45b0a5e 全 frontend/src grep：`WRITE_DEADLINE` **0 命中**；
+  readDeadline.ts:15 只有 `export const READ_DEADLINE_MS = 12_000;`，文件里没有任何写期限常量。
+  ⇒ 那一枚 10 s 只在**未落草案**里存在（或根本是拟定值）。所以"今天必然红"这句，我改成
+    "**0281 一旦按 10 s 产码就必然红**"——前提不同，问的问题不变。
+它说：`run_agent_command` 里 `session.commit()`(:1106) 在 `record_audit`(:1111) 之前 ⇒ 503 路径提交键
+  我数：def 在 1058；其后 200 行内 record_audit = 1138/1216/1294/1344/1384，session.commit = 1152/1189/1225/1304/1342/1357/1381/1394
+       ⇒ **第一组是 audit(1138) 先于 commit(1152)**，而它引的 1106/1111 两行在我这儿都不是这两个调用。
+       ⇒ 这条我**不写进判据**，退回给 @HJ-P3 与 @D 对表（要么它引的是另一枚函数/另一代，要么行号错）。
+我能确认的只有：readDeadline.ts 的文件头**自陈**"Reads only, deliberately… idempotency question this order does not ask"
+  —— 这句我逐字读到，所以"0281 的实质是先答中止之后怎么算"成立。
+```
+**所以 Q36 问的是设计，不是既有缺陷**：0281 要引入的写期限常量，默认值该怎么定？
+① = **默认值必须 > busy_timeout(30 s)，并按场景可配**，另加一枚门规定"默认 < busy_timeout 即红"；
+② = 保持小于 30 s 的任何默认值，但规定"服务端给了 503/429 时**原话优先**"（即 0280 的优先级压过期限文案）；
+③ = 别的。我推荐 **①+②都做，单选则 ①**。
+另：`0288 的产码我仍按住`——但理由改成**已核实的那两条**：(a) 它与 0280 撞同一枚 `PlanWithAiSheet.tsx`；(b) 它依赖的"键在 503 路径上被提交"这一条我复现不出来，得先由车道对表（我不拿未复现的机理排产）。
+
+
 ## 亲测 @2026-09-25 07:0x+08 —— 落地次序这件事**我自己用 `git merge-tree` 量了**（只读，不动任何 ref）：D 的候选 × B 的候选在 `V8Experience.tsx` **确实冲突**；另收 ORD-0288 定形，点名 ORD-0291
 
 ### ① 落地次序：我读到的事实（不引任何车道的结论）
