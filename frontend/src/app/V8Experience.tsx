@@ -57,6 +57,7 @@ import {
   type PlanVersion,
 } from "../api/v12Authoritative";
 import { useCandidateRejections } from "../api/candidateRejections";
+import { useContinuationState } from "../api/useContinuationState";
 import { syncStatedInterests } from "../api/travelerPreferences";
 import { desktopRoutes, mobileRoutes } from "../routes/v8Routes";
 import {
@@ -2156,6 +2157,11 @@ function Hub({
   /* ORD-0232: "fewer stops than I asked for" needs its reason on the same screen that shows the
      stops.  An empty list is also what a still-running or failed read gives: no rows, no claims. */
   const dropped = useCandidateRejections(data.journey.id, data.journey.city_code).data ?? [];
+  /* ORD-0269 cell 1: the continuation reveal is derived from a device-local marker joined
+     against the real agent-feed events.  Its coverage boundary is named, not hidden. */
+  const { state: continuation, feedReadFailed: continuationFeedFailed } = useContinuationState(
+    data.journey.id,
+  );
   const stayWaited = useElapsedSeconds(
     staySearch === "searching" ? waitStartedAt : null,
   );
@@ -2433,6 +2439,39 @@ function Hub({
                 </button>
               </div>
             </div>
+          )}
+          {continuation.kind === "pending" && (
+            /* ORD-0269 cell 1: an interrupted plan is a durable fact, not a silence.  The marker is
+               device-local, so the sentence itself names the boundary ("on this device").  The resume
+               gate is MANUAL_RESUME / NOT-EXACTLY-ONCE until ORD-0272 gives the continuation a durable
+               server-side identity -- no marker clearing happens before any request is sent. */
+            <section className="today-continuation" data-testid="continuation-pending">
+              <strong data-testid="continuation-pending-heading">
+                {t("hub.continuationPending")}
+              </strong>
+              <button
+                type="button"
+                className="v8-primary"
+                data-testid="continuation-resume"
+                onClick={() => {
+                  /* MANUAL_RESUME: the sheet opens on the plan flow; it does NOT auto-send.  The
+                     marker deliberately stays until a visible outcome exists (clause 5). */
+                  const sheetButton = document.querySelector(
+                    '[data-testid="hub-plan-with-ai"]',
+                  ) as HTMLButtonElement | null;
+                  sheetButton?.click();
+                }}
+              >
+                {t("hub.continuationResume")}
+              </button>
+            </section>
+          )}
+          {continuation.kind === "unconfirmable" && (
+            /* ORD-0269 cell 3: a marker exists but the feed cannot confirm the mission (read failed
+               or the ascending capped page excluded it).  Named state, never silence. */
+            <p className="today-continuation-unconfirmable" data-testid="continuation-unconfirmable">
+              {t("hub.continuationUnconfirmable")}
+            </p>
           )}
           {dropped.length > 0 && (
             /* ORD-0232: the number of stops the traveller asked for and the number the plan can

@@ -131,6 +131,11 @@ const en: Dict = {
   "hub.droppedCandidateRow": "Removed {place}: the {rule} condition is not met at this stop",
   "hub.droppedCandidateUnknownPlace": "a stop whose name we could not read",
   "hub.droppedCandidateUnknownRule": "an unnamed hard condition",
+  // ORD-0269 cells 1 and 3: continuation reveal. On-this-device is the named coverage boundary.
+  "hub.continuationPending": "上次有一次规划在这台设备上没跑完：前半段已完成，但还没有产出方案。",
+  "hub.continuationResume": "继续这次规划",
+  "hub.continuationUnconfirmable": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+
 
   // ── Studio ──
   "studio.kicker": "Trip Studio · multi-day plan",
@@ -815,6 +820,11 @@ const zhCN: Dict = {
   "hub.droppedCandidateRow": "去掉「{place}」：这一站不满足{rule}的硬性条件",
   "hub.droppedCandidateUnknownPlace": "一个没认出名字的地点",
   "hub.droppedCandidateUnknownRule": "一条未识别的硬性条件",
+  // ORD-0269 cells 1 and 3: continuation reveal. On-this-device is the named coverage boundary.
+  "hub.continuationPending": "上次有一次规划在这台设备上没跑完：前半段已完成，但还没有产出方案。",
+  "hub.continuationResume": "继续这次规划",
+  "hub.continuationUnconfirmable": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+
 
   // ── Studio ──
   "studio.kicker": "行程工作台 · 多日方案",
