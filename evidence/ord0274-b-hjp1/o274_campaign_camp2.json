@@ -1,0 +1,1821 @@
+{
+  "order": "ORD-0274",
+  "arm": "B (reconnected transition)",
+  "session": "1a986a24 HJ-P1",
+  "role": "instrument owner + runtime verifier",
+  "run_label": "camp2",
+  "base": "http://127.0.0.1:8941",
+  "started_at": "2026-09-24T01:14:57.639Z",
+  "forbidden_moves_taken": {
+    "unregister_called": 0,
+    "cache_clear_called": 0
+  },
+  "viewport": [
+    390,
+    844
+  ],
+  "generations": {
+    "A_old": {
+      "dir": "dist_gen",
+      "bundle": "index-Cpy_jhEg.js",
+      "worker_sha256": "e63d7421eda340937df28bd0cae35624ab413607f9819e69b519b7d7ede69dbd",
+      "worker_bytes": 2055
+    },
+    "B_new": {
+      "dir": "dist_gen_c79e2b4",
+      "bundle": "index-ChOTTCvB.js",
+      "worker_sha256": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a",
+      "worker_bytes": 2055
+    }
+  },
+  "phases": {
+    "P0_setup": {
+      "root": {
+        "pointer": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o274_run\\camp2\\current_root.txt",
+        "root": "dist_gen",
+        "readBack": true
+      },
+      "served_on_disk": "index-Cpy_jhEg.js",
+      "worker_on_disk": {
+        "status": 200,
+        "bytes": 2055,
+        "sha256": "e63d7421eda340937df28bd0cae35624ab413607f9819e69b519b7d7ede69dbd"
+      },
+      "nav1": {
+        "label": "P0-nav1 (install)",
+        "phase": "P0",
+        "httpStatus": 200,
+        "err": null,
+        "at": 1790212498156
+      },
+      "nav2": {
+        "label": "P0-nav2 (take-control)",
+        "phase": "P0",
+        "httpStatus": 200,
+        "err": null,
+        "at": 1790212513370
+      },
+      "precondition": {
+        "atMsSincePhaseStart": 1790212525485,
+        "measured": true,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "pathname": "/v8/hub",
+        "docNonce": "yicxpis6x4",
+        "docBirth": 1790212513398,
+        "docAgeMs": 12099,
+        "scripts": [
+          "/assets/index-Cpy_jhEg.js"
+        ],
+        "css": [
+          "/assets/index-I45CQek8.css"
+        ],
+        "bodyChars": 112,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间"
+        ],
+        "controller": true,
+        "controllerScript": "/v10-sw.js",
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 26,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": []
+          },
+          {
+            "ev": "sw-ready",
+            "t": 28,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "active": "http://127.0.0.1:8941/v10-sw.js",
+            "waiting": false,
+            "installing": false
+          },
+          {
+            "ev": "DOMContentLoaded",
+            "t": 72,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": [
+              "index-Cpy_jhEg.js"
+            ]
+          },
+          {
+            "ev": "load",
+            "t": 72,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": [
+              "index-Cpy_jhEg.js"
+            ]
+          }
+        ],
+        "chromeError": false,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "caches": {
+          "keys": [
+            "workbox-precache-v2-http://127.0.0.1:8941/"
+          ],
+          "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+          "precacheUrls": [
+            "/assets/JourneyMap-TiEm8jyP.js",
+            "/assets/index-Cpy_jhEg.js",
+            "/assets/index-I45CQek8.css",
+            "/assets/maplibre-gl-kx9AWR05.js",
+            "/favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c",
+            "/index.html?__WB_REVISION__=213aa276841d50a8a61cf75dd7408a7f",
+            "/manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3",
+            "/sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda"
+          ],
+          "revisions": [
+            "1eebbb6edab96b95a31dc1f94d1a6cda",
+            "213aa276841d50a8a61cf75dd7408a7f",
+            "339a4892318ff75bf4dccf7d426c193c",
+            "d726b6647c68d06bafae8784f74043e3",
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "precondition_navigations_issued": 2
+    },
+    "P1_transition": {
+      "root": {
+        "pointer": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o274_run\\camp2\\current_root.txt",
+        "root": "dist_gen_c79e2b4",
+        "readBack": true
+      },
+      "served_on_disk_now": "index-ChOTTCvB.js",
+      "worker_on_disk_now": {
+        "status": 200,
+        "bytes": 2055,
+        "sha256": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a"
+      },
+      "note": "the browser is not told anything; only the disk root behind the same origin moved",
+      "offline_sample": {
+        "atMsSincePhaseStart": 1790212531687,
+        "measured": true,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "pathname": "/v8/hub",
+        "docNonce": "yicxpis6x4",
+        "docBirth": 1790212513398,
+        "docAgeMs": 18307,
+        "scripts": [
+          "/assets/index-Cpy_jhEg.js"
+        ],
+        "css": [
+          "/assets/index-I45CQek8.css"
+        ],
+        "bodyChars": 112,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间"
+        ],
+        "controller": true,
+        "controllerScript": "/v10-sw.js",
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 26,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": []
+          },
+          {
+            "ev": "sw-ready",
+            "t": 28,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "active": "http://127.0.0.1:8941/v10-sw.js",
+            "waiting": false,
+            "installing": false
+          },
+          {
+            "ev": "DOMContentLoaded",
+            "t": 72,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": [
+              "index-Cpy_jhEg.js"
+            ]
+          },
+          {
+            "ev": "load",
+            "t": 72,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": [
+              "index-Cpy_jhEg.js"
+            ]
+          }
+        ],
+        "chromeError": false,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "caches": {
+          "keys": [
+            "workbox-precache-v2-http://127.0.0.1:8941/"
+          ],
+          "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+          "precacheUrls": [
+            "/assets/JourneyMap-TiEm8jyP.js",
+            "/assets/index-Cpy_jhEg.js",
+            "/assets/index-I45CQek8.css",
+            "/assets/maplibre-gl-kx9AWR05.js",
+            "/favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c",
+            "/index.html?__WB_REVISION__=213aa276841d50a8a61cf75dd7408a7f",
+            "/manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3",
+            "/sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda"
+          ],
+          "revisions": [
+            "1eebbb6edab96b95a31dc1f94d1a6cda",
+            "213aa276841d50a8a61cf75dd7408a7f",
+            "339a4892318ff75bf4dccf7d426c193c",
+            "d726b6647c68d06bafae8784f74043e3",
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "back_online_sample": {
+        "atMsSincePhaseStart": 1790212535704,
+        "measured": true,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "pathname": "/v8/hub",
+        "docNonce": "yicxpis6x4",
+        "docBirth": 1790212513398,
+        "docAgeMs": 22328,
+        "scripts": [
+          "/assets/index-Cpy_jhEg.js"
+        ],
+        "css": [
+          "/assets/index-I45CQek8.css"
+        ],
+        "bodyChars": 112,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间"
+        ],
+        "controller": true,
+        "controllerScript": "/v10-sw.js",
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 26,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": []
+          },
+          {
+            "ev": "sw-ready",
+            "t": 28,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "active": "http://127.0.0.1:8941/v10-sw.js",
+            "waiting": false,
+            "installing": false
+          },
+          {
+            "ev": "DOMContentLoaded",
+            "t": 72,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": [
+              "index-Cpy_jhEg.js"
+            ]
+          },
+          {
+            "ev": "load",
+            "t": 72,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": [
+              "index-Cpy_jhEg.js"
+            ]
+          }
+        ],
+        "chromeError": false,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "caches": {
+          "keys": [
+            "workbox-precache-v2-http://127.0.0.1:8941/"
+          ],
+          "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+          "precacheUrls": [
+            "/assets/JourneyMap-TiEm8jyP.js",
+            "/assets/index-Cpy_jhEg.js",
+            "/assets/index-I45CQek8.css",
+            "/assets/maplibre-gl-kx9AWR05.js",
+            "/favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c",
+            "/index.html?__WB_REVISION__=213aa276841d50a8a61cf75dd7408a7f",
+            "/manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3",
+            "/sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda"
+          ],
+          "revisions": [
+            "1eebbb6edab96b95a31dc1f94d1a6cda",
+            "213aa276841d50a8a61cf75dd7408a7f",
+            "339a4892318ff75bf4dccf7d426c193c",
+            "d726b6647c68d06bafae8784f74043e3",
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      }
+    },
+    "B1": {
+      "navigations_issued_in_this_cell": [
+        {
+          "label": "B1-the-one-navigation",
+          "phase": "B1",
+          "httpStatus": 200,
+          "err": null,
+          "at": 1790212535710
+        }
+      ],
+      "docNonce_before": "yicxpis6x4",
+      "scripts_before": [
+        "/assets/index-Cpy_jhEg.js"
+      ],
+      "samples": [
+        {
+          "atMs": 3118,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controller": true,
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "caches": {
+            "keys": [
+              "workbox-precache-v2-http://127.0.0.1:8941/"
+            ],
+            "precacheCount": 8,
+            "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+            "revisions": [
+              "1eebbb6edab96b95a31dc1f94d1a6cda",
+              "339a4892318ff75bf4dccf7d426c193c",
+              "54b3cca9be55e076da6be6911d7a8984",
+              "d726b6647c68d06bafae8784f74043e3",
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 12,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": []
+            },
+            {
+              "ev": "sw-ready",
+              "t": 13,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "active": "http://127.0.0.1:8941/v10-sw.js",
+              "waiting": false,
+              "installing": false
+            },
+            {
+              "ev": "DOMContentLoaded",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "load",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "updatefound",
+              "t": 84,
+              "href": "http://127.0.0.1:8941/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 197,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 204,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "controller": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 1216,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            }
+          ],
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "chromeError": false,
+          "bodyChars": 112,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ],
+          "measured": true,
+          "probeError": null
+        },
+        {
+          "atMs": 8205,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controller": true,
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "caches": {
+            "keys": [
+              "workbox-precache-v2-http://127.0.0.1:8941/"
+            ],
+            "precacheCount": 8,
+            "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+            "revisions": [
+              "1eebbb6edab96b95a31dc1f94d1a6cda",
+              "339a4892318ff75bf4dccf7d426c193c",
+              "54b3cca9be55e076da6be6911d7a8984",
+              "d726b6647c68d06bafae8784f74043e3",
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 12,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": []
+            },
+            {
+              "ev": "sw-ready",
+              "t": 13,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "active": "http://127.0.0.1:8941/v10-sw.js",
+              "waiting": false,
+              "installing": false
+            },
+            {
+              "ev": "DOMContentLoaded",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "load",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "updatefound",
+              "t": 84,
+              "href": "http://127.0.0.1:8941/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 197,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 204,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "controller": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 1216,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            }
+          ],
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "chromeError": false,
+          "bodyChars": 112,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ],
+          "measured": true,
+          "probeError": null
+        },
+        {
+          "atMs": 15286,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controller": true,
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "caches": {
+            "keys": [
+              "workbox-precache-v2-http://127.0.0.1:8941/"
+            ],
+            "precacheCount": 8,
+            "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+            "revisions": [
+              "1eebbb6edab96b95a31dc1f94d1a6cda",
+              "339a4892318ff75bf4dccf7d426c193c",
+              "54b3cca9be55e076da6be6911d7a8984",
+              "d726b6647c68d06bafae8784f74043e3",
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 12,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": []
+            },
+            {
+              "ev": "sw-ready",
+              "t": 13,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "active": "http://127.0.0.1:8941/v10-sw.js",
+              "waiting": false,
+              "installing": false
+            },
+            {
+              "ev": "DOMContentLoaded",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "load",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "updatefound",
+              "t": 84,
+              "href": "http://127.0.0.1:8941/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 197,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 204,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "controller": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 1216,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            }
+          ],
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "chromeError": false,
+          "bodyChars": 112,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ],
+          "measured": true,
+          "probeError": null
+        },
+        {
+          "atMs": 25409,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controller": true,
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "caches": {
+            "keys": [
+              "workbox-precache-v2-http://127.0.0.1:8941/"
+            ],
+            "precacheCount": 8,
+            "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+            "revisions": [
+              "1eebbb6edab96b95a31dc1f94d1a6cda",
+              "339a4892318ff75bf4dccf7d426c193c",
+              "54b3cca9be55e076da6be6911d7a8984",
+              "d726b6647c68d06bafae8784f74043e3",
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 12,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": []
+            },
+            {
+              "ev": "sw-ready",
+              "t": 13,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "active": "http://127.0.0.1:8941/v10-sw.js",
+              "waiting": false,
+              "installing": false
+            },
+            {
+              "ev": "DOMContentLoaded",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "load",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "updatefound",
+              "t": 84,
+              "href": "http://127.0.0.1:8941/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 197,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 204,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "controller": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 1216,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            }
+          ],
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "chromeError": false,
+          "bodyChars": 112,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ],
+          "measured": true,
+          "probeError": null
+        },
+        {
+          "atMs": 40124,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controller": true,
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "caches": {
+            "keys": [
+              "workbox-precache-v2-http://127.0.0.1:8941/"
+            ],
+            "precacheCount": 8,
+            "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+            "revisions": [
+              "1eebbb6edab96b95a31dc1f94d1a6cda",
+              "339a4892318ff75bf4dccf7d426c193c",
+              "54b3cca9be55e076da6be6911d7a8984",
+              "d726b6647c68d06bafae8784f74043e3",
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 12,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": []
+            },
+            {
+              "ev": "sw-ready",
+              "t": 13,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "active": "http://127.0.0.1:8941/v10-sw.js",
+              "waiting": false,
+              "installing": false
+            },
+            {
+              "ev": "DOMContentLoaded",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "load",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "updatefound",
+              "t": 84,
+              "href": "http://127.0.0.1:8941/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 197,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 204,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "controller": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 1216,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            }
+          ],
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "chromeError": false,
+          "bodyChars": 112,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ],
+          "measured": true,
+          "probeError": null
+        },
+        {
+          "atMs": 60386,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controller": true,
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "caches": {
+            "keys": [
+              "workbox-precache-v2-http://127.0.0.1:8941/"
+            ],
+            "precacheCount": 8,
+            "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+            "revisions": [
+              "1eebbb6edab96b95a31dc1f94d1a6cda",
+              "339a4892318ff75bf4dccf7d426c193c",
+              "54b3cca9be55e076da6be6911d7a8984",
+              "d726b6647c68d06bafae8784f74043e3",
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 12,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": []
+            },
+            {
+              "ev": "sw-ready",
+              "t": 13,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "active": "http://127.0.0.1:8941/v10-sw.js",
+              "waiting": false,
+              "installing": false
+            },
+            {
+              "ev": "DOMContentLoaded",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "load",
+              "t": 61,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-Cpy_jhEg.js"
+              ]
+            },
+            {
+              "ev": "updatefound",
+              "t": 84,
+              "href": "http://127.0.0.1:8941/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 197,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 203,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 204,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "controller": "http://127.0.0.1:8941/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 1216,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8941/v10-sw.js"
+            }
+          ],
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "chromeError": false,
+          "bodyChars": 112,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ],
+          "measured": true,
+          "probeError": null
+        }
+      ],
+      "lifecycle_after_window": [
+        {
+          "ev": "document-start",
+          "t": 12,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "scripts": []
+        },
+        {
+          "ev": "sw-ready",
+          "t": 13,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "active": "http://127.0.0.1:8941/v10-sw.js",
+          "waiting": false,
+          "installing": false
+        },
+        {
+          "ev": "DOMContentLoaded",
+          "t": 61,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "scripts": [
+            "index-Cpy_jhEg.js"
+          ]
+        },
+        {
+          "ev": "load",
+          "t": 61,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "scripts": [
+            "index-Cpy_jhEg.js"
+          ]
+        },
+        {
+          "ev": "updatefound",
+          "t": 84,
+          "href": "http://127.0.0.1:8941/v8/hub"
+        },
+        {
+          "ev": "state:installing",
+          "t": 197,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "state": "installed",
+          "script": "http://127.0.0.1:8941/v10-sw.js"
+        },
+        {
+          "ev": "state:active",
+          "t": 203,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "state": "redundant",
+          "script": "http://127.0.0.1:8941/v10-sw.js"
+        },
+        {
+          "ev": "state:installing",
+          "t": 203,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "state": "activating",
+          "script": "http://127.0.0.1:8941/v10-sw.js"
+        },
+        {
+          "ev": "controllerchange",
+          "t": 204,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "controller": "http://127.0.0.1:8941/v10-sw.js"
+        },
+        {
+          "ev": "state:installing",
+          "t": 1216,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "state": "activated",
+          "script": "http://127.0.0.1:8941/v10-sw.js"
+        }
+      ],
+      "nav_events_during_cell": [
+        {
+          "at": 1790212535710,
+          "issuedByMe": true,
+          "label": "B1-the-one-navigation",
+          "phase": "B1"
+        },
+        {
+          "at": 1790212535721,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "label": "framenavigated"
+        }
+      ]
+    },
+    "B2": {
+      "extra_manual_actions_taken": 1,
+      "samples_after_60s": [
+        {
+          "atMs": 5015,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 10030,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 15050,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 20058,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 25070,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 30076,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 35084,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 40100,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 45109,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 50124,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 55145,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 60157,
+          "docNonce": "5nt53ma81u",
+          "scripts": [
+            "/assets/index-Cpy_jhEg.js"
+          ],
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "measured": true
+        }
+      ],
+      "executed_scripts_before_any_help": [
+        "/assets/index-Cpy_jhEg.js"
+      ],
+      "doc_nonce_changed_without_my_navigation": true,
+      "recovery_costly": {
+        "needed_a_second_manual_navigation": true
+      },
+      "after_extra_navigation": {
+        "docNonce": "8hzhz4wfxvm",
+        "scripts": [
+          "/assets/index-ChOTTCvB.js"
+        ],
+        "controllerScript": "/v10-sw.js",
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "caches": {
+          "keys": [
+            "workbox-precache-v2-http://127.0.0.1:8941/"
+          ],
+          "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+          "precacheUrls": [
+            "/assets/JourneyMap-tqEgrjRA.js",
+            "/assets/index-ChOTTCvB.js",
+            "/assets/index-I45CQek8.css",
+            "/assets/maplibre-gl-CHrWFrV5.js",
+            "/favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c",
+            "/index.html?__WB_REVISION__=54b3cca9be55e076da6be6911d7a8984",
+            "/manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3",
+            "/sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda"
+          ],
+          "revisions": [
+            "1eebbb6edab96b95a31dc1f94d1a6cda",
+            "339a4892318ff75bf4dccf7d426c193c",
+            "54b3cca9be55e076da6be6911d7a8984",
+            "d726b6647c68d06bafae8784f74043e3",
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      }
+    },
+    "B3": {
+      "offline_before": true,
+      "samples": [
+        {
+          "atMs": 3117,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "chromeError": false,
+          "scripts": [
+            "/assets/index-ChOTTCvB.js"
+          ],
+          "css": [
+            "/assets/index-I45CQek8.css"
+          ],
+          "controller": true,
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "caches": {
+            "keys": [
+              "workbox-precache-v2-http://127.0.0.1:8941/"
+            ],
+            "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+            "precacheUrls": [
+              "/assets/JourneyMap-tqEgrjRA.js",
+              "/assets/index-ChOTTCvB.js",
+              "/assets/index-I45CQek8.css",
+              "/assets/maplibre-gl-CHrWFrV5.js",
+              "/favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c",
+              "/index.html?__WB_REVISION__=54b3cca9be55e076da6be6911d7a8984",
+              "/manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3",
+              "/sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda"
+            ],
+            "revisions": [
+              "1eebbb6edab96b95a31dc1f94d1a6cda",
+              "339a4892318ff75bf4dccf7d426c193c",
+              "54b3cca9be55e076da6be6911d7a8984",
+              "d726b6647c68d06bafae8784f74043e3",
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          "bodyChars": 112,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ],
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 19,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": []
+            },
+            {
+              "ev": "sw-ready",
+              "t": 21,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "active": "http://127.0.0.1:8941/v10-sw.js",
+              "waiting": false,
+              "installing": false
+            },
+            {
+              "ev": "DOMContentLoaded",
+              "t": 82,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-ChOTTCvB.js"
+              ]
+            },
+            {
+              "ev": "load",
+              "t": 82,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-ChOTTCvB.js"
+              ]
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 10214,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "chromeError": false,
+          "scripts": [
+            "/assets/index-ChOTTCvB.js"
+          ],
+          "css": [
+            "/assets/index-I45CQek8.css"
+          ],
+          "controller": true,
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "caches": {
+            "keys": [
+              "workbox-precache-v2-http://127.0.0.1:8941/"
+            ],
+            "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+            "precacheUrls": [
+              "/assets/JourneyMap-tqEgrjRA.js",
+              "/assets/index-ChOTTCvB.js",
+              "/assets/index-I45CQek8.css",
+              "/assets/maplibre-gl-CHrWFrV5.js",
+              "/favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c",
+              "/index.html?__WB_REVISION__=54b3cca9be55e076da6be6911d7a8984",
+              "/manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3",
+              "/sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda"
+            ],
+            "revisions": [
+              "1eebbb6edab96b95a31dc1f94d1a6cda",
+              "339a4892318ff75bf4dccf7d426c193c",
+              "54b3cca9be55e076da6be6911d7a8984",
+              "d726b6647c68d06bafae8784f74043e3",
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          "bodyChars": 112,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ],
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 19,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": []
+            },
+            {
+              "ev": "sw-ready",
+              "t": 21,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "active": "http://127.0.0.1:8941/v10-sw.js",
+              "waiting": false,
+              "installing": false
+            },
+            {
+              "ev": "DOMContentLoaded",
+              "t": 82,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-ChOTTCvB.js"
+              ]
+            },
+            {
+              "ev": "load",
+              "t": 82,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-ChOTTCvB.js"
+              ]
+            }
+          ],
+          "measured": true
+        },
+        {
+          "atMs": 20330,
+          "href": "http://127.0.0.1:8941/v8/hub",
+          "chromeError": false,
+          "scripts": [
+            "/assets/index-ChOTTCvB.js"
+          ],
+          "css": [
+            "/assets/index-I45CQek8.css"
+          ],
+          "controller": true,
+          "controllerScript": "/v10-sw.js",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "caches": {
+            "keys": [
+              "workbox-precache-v2-http://127.0.0.1:8941/"
+            ],
+            "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+            "precacheUrls": [
+              "/assets/JourneyMap-tqEgrjRA.js",
+              "/assets/index-ChOTTCvB.js",
+              "/assets/index-I45CQek8.css",
+              "/assets/maplibre-gl-CHrWFrV5.js",
+              "/favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c",
+              "/index.html?__WB_REVISION__=54b3cca9be55e076da6be6911d7a8984",
+              "/manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3",
+              "/sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda"
+            ],
+            "revisions": [
+              "1eebbb6edab96b95a31dc1f94d1a6cda",
+              "339a4892318ff75bf4dccf7d426c193c",
+              "54b3cca9be55e076da6be6911d7a8984",
+              "d726b6647c68d06bafae8784f74043e3",
+              null,
+              null,
+              null,
+              null
+            ]
+          },
+          "bodyChars": 112,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ],
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 19,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": []
+            },
+            {
+              "ev": "sw-ready",
+              "t": 21,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "active": "http://127.0.0.1:8941/v10-sw.js",
+              "waiting": false,
+              "installing": false
+            },
+            {
+              "ev": "DOMContentLoaded",
+              "t": 82,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-ChOTTCvB.js"
+              ]
+            },
+            {
+              "ev": "load",
+              "t": 82,
+              "href": "http://127.0.0.1:8941/v8/hub",
+              "scripts": [
+                "index-ChOTTCvB.js"
+              ]
+            }
+          ],
+          "measured": true
+        }
+      ],
+      "nav": {
+        "label": "B3-one-navigation-while-offline",
+        "phase": "B3",
+        "httpStatus": 200,
+        "err": null,
+        "at": 1790212671803
+      },
+      "nav_test": {
+        "candidates": []
+      }
+    }
+  },
+  "instrument": {
+    "pageErrors": [],
+    "navEvents": [
+      {
+        "at": 1790212498156,
+        "issuedByMe": true,
+        "label": "P0-nav1 (install)",
+        "phase": "P0"
+      },
+      {
+        "at": 1790212498190,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      },
+      {
+        "at": 1790212513370,
+        "issuedByMe": true,
+        "label": "P0-nav2 (take-control)",
+        "phase": "P0"
+      },
+      {
+        "at": 1790212513397,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      },
+      {
+        "at": 1790212535710,
+        "issuedByMe": true,
+        "label": "B1-the-one-navigation",
+        "phase": "B1"
+      },
+      {
+        "at": 1790212535721,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      },
+      {
+        "at": 1790212656403,
+        "issuedByMe": true,
+        "label": "B2-EXTRA-manual-navigation (RECOVERY_COSTLY)",
+        "phase": "B2"
+      },
+      {
+        "at": 1790212656416,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      },
+      {
+        "at": 1790212671803,
+        "issuedByMe": true,
+        "label": "B3-one-navigation-while-offline",
+        "phase": "B3"
+      },
+      {
+        "at": 1790212671822,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      }
+    ],
+    "probeFunctionsInstalled": true,
+    "navEventsFinal": [
+      {
+        "at": 1790212498156,
+        "issuedByMe": true,
+        "label": "P0-nav1 (install)",
+        "phase": "P0"
+      },
+      {
+        "at": 1790212498190,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      },
+      {
+        "at": 1790212513370,
+        "issuedByMe": true,
+        "label": "P0-nav2 (take-control)",
+        "phase": "P0"
+      },
+      {
+        "at": 1790212513397,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      },
+      {
+        "at": 1790212535710,
+        "issuedByMe": true,
+        "label": "B1-the-one-navigation",
+        "phase": "B1"
+      },
+      {
+        "at": 1790212535721,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      },
+      {
+        "at": 1790212656403,
+        "issuedByMe": true,
+        "label": "B2-EXTRA-manual-navigation (RECOVERY_COSTLY)",
+        "phase": "B2"
+      },
+      {
+        "at": 1790212656416,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      },
+      {
+        "at": 1790212671803,
+        "issuedByMe": true,
+        "label": "B3-one-navigation-while-offline",
+        "phase": "B3"
+      },
+      {
+        "at": 1790212671822,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      }
+    ]
+  },
+  "ended_at": "2026-09-24T01:18:09.286Z"
+}
