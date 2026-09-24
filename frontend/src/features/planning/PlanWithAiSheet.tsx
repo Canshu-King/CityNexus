@@ -157,6 +157,24 @@ function serverReasonSentence(body: unknown): string | null {
   return null;
 }
 
+/**
+ * ORD-0280: which mouth a failure sentence came from, carried with the sentence.
+ *
+ * `server` means this very answer carried the words; `device` means this screen composed them.  The
+ * distinction used to be lost at render time, so a client-invented `HTTP 500` sat under the label
+ * 「服务器给出的原因」 and a traveller read our guess as the backend's own statement -- the same trust hole
+ * ORD-0262 closed for the copilot's copy, in a different sheet.
+ *
+ * The shape is `simulationAdapter.ts`'s existing `said ? <quote it> : <say we have no wording>`, moved
+ * here as one decision point so all three refusal legs share it.  Nothing is deleted: a device-composed
+ * line stays visible as what it is, because the status code really was observed and is worth reading.
+ */
+type FailureNote = { text: string; from: "server" | "device" };
+
+function failureNote(serverText: string | null, deviceText: string): FailureNote {
+  return serverText ? { text: serverText, from: "server" } : { text: deviceText, from: "device" };
+}
+
 
 /** Map internal mission status -> traveller language. */
 function statusCopy(
@@ -341,7 +359,7 @@ export function PlanWithAiSheet({
   );
   const [result, setResult] = useState<null | {
     status: string;
-    failureReason: string | null;
+    failureReason: FailureNote | null;
     summary: string | null;
     planCount?: number;
     newPlanIds?: string[];
@@ -509,10 +527,16 @@ export function PlanWithAiSheet({
            the backend explicitly rejected. */
         setResult({
           status: `HTTP_${response.status}`,
-          failureReason:
-            (typeof body?.detail === "string" ? body.detail : null) ??
-            (typeof body?.error?.message === "string" ? body.error.message : null) ??
-            `HTTP ${response.status}`,
+          /* ORD-0280 site 1 of 3.  The server fields are read through the same helper the other legs
+             use, so one envelope cannot be "from the server" here and "unknown" there; the status line
+             is kept as what it is, and the LABEL is what says who spoke.  Side effect worth stating:
+             when an answer carries BOTH `error.message` and `detail`, `error.message` wins now, where
+             the old inline chain answered `detail` first -- the other two legs already treat
+             `error.message` as the server's sentence, so the sheet now agrees with itself. */
+          failureReason: failureNote(
+            serverReasonSentence(body),
+            `agent/commands -> HTTP ${response.status}`,
+          ),
           summary: null,
           planCount: -1,
           newPlanIds: [],
@@ -554,7 +578,7 @@ export function PlanWithAiSheet({
       // has already materialised for this journey.  Only attempted when the
       // baseline is KNOWN — otherwise we cannot attribute what it created.
       let blockedCode = "";
-      let blockedSentence: string | null = null;
+      let blockedSentence: FailureNote | null = null;
       if (baseline !== null && planCount === 0) {
         enter("fallback");
         try {
@@ -569,8 +593,11 @@ export function PlanWithAiSheet({
             const unreadable = await placesResponse.json().catch(() => null);
             setResult({
               status: `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.status}`}`,
-              failureReason:
-                serverReasonSentence(unreadable) ?? `GET /places -> HTTP ${placesResponse.status}`,
+              /* ORD-0280 site 2 of 3. */
+              failureReason: failureNote(
+                serverReasonSentence(unreadable),
+                `GET /places -> HTTP ${placesResponse.status}`,
+              ),
               summary: null,
               planCount: -1,
               newPlanIds: [],
@@ -589,7 +616,13 @@ export function PlanWithAiSheet({
                said as one. */
             setResult({
               status: knownIds.size === 0 ? "BLOCKED:CATALOG_EMPTY" : "BLOCKED:CATALOG_INSUFFICIENT",
-              failureReason: `GET /places?city_code=${cityCode} -> ${knownIds.size} places`,
+              /* A count this screen measured out of a 200 it was allowed to read.  It is a fact about
+                 our data, said as one, and it is NOT the server's reason -- ORD-0280 puts the label
+                 where the words came from. */
+              failureReason: {
+                text: `GET /places?city_code=${cityCode} -> ${knownIds.size} places`,
+                from: "device",
+              },
               summary: null,
               planCount: -1,
               newPlanIds: [],
@@ -625,8 +658,11 @@ export function PlanWithAiSheet({
           } else {
             const refused = await generate.json().catch(() => null);
             blockedCode = serverReasonCode(refused);
-            blockedSentence =
-              serverReasonSentence(refused) ?? `POST /plans/generate -> HTTP ${generate.status}`;
+            /* ORD-0280 site 3 of 3. */
+            blockedSentence = failureNote(
+              serverReasonSentence(refused),
+              `POST /plans/generate -> HTTP ${generate.status}`,
+            );
           }
         } catch (cause) {
           if (isAbort(cause)) throw cause;
@@ -667,8 +703,11 @@ export function PlanWithAiSheet({
       setResult({
         status,
         newPlanIds,
-        failureReason:
-          mission?.failure_reason ?? blockedSentence ?? null,
+        /* `failure_reason` is the mission's own stored field, i.e. words that came off this server, so
+           it is labelled as such; the refused-request note carries its own origin from where it was set. */
+        failureReason: mission?.failure_reason
+          ? { text: mission.failure_reason, from: "server" as const }
+          : blockedSentence,
         summary: mission?.reasoning_summary ?? null,
         planCount,
       });
@@ -878,10 +917,26 @@ export function PlanWithAiSheet({
                 </summary>
                 {result?.failureReason && (
                   <>
-                    <span className="plan-ai-detail-label" data-testid="plan-ai-detail-kind">
-                      {zh ? "服务器给出的原因" : "Reason the server gave"}
+                    {/* ORD-0280: the label is chosen by who spoke, not by whichever branch ran.  A
+                        server-sent sentence keeps 「服务器给出的原因」; anything this screen composed says
+                        so, because an HTTP number we invented is not the backend's statement -- the
+                        screen used to print our guess under the attribution label on all three refusal
+                        legs.  `data-reason-origin` is here so a gate can read the same fact the
+                        traveller reads instead of parsing prose. */}
+                    <span
+                      className="plan-ai-detail-label"
+                      data-testid="plan-ai-detail-kind"
+                      data-reason-origin={result.failureReason.from}
+                    >
+                      {result.failureReason.from === "server"
+                        ? zh
+                          ? "服务器给出的原因"
+                          : "Reason the server gave"
+                        : zh
+                          ? "这台设备自己的读数（服务器没给句子）"
+                          : "This device's own reading (the server sent no sentence)"}
                     </span>
-                    <code data-testid="plan-ai-reason">{result.failureReason}</code>
+                    <code data-testid="plan-ai-reason">{result.failureReason.text}</code>
                   </>
                 )}
                 {result?.summary && (
