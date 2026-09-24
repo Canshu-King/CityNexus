@@ -19,6 +19,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLocale } from "../../i18n/LocaleContext";
+import { markPendingContinuation } from "../../api/journeyContinuation";
 
 /** The phases this component itself drives, in the order it can enter them. */
 type PhaseKey = "baseline" | "request" | "verify" | "fallback";
@@ -496,6 +497,12 @@ export function PlanWithAiSheet({
       });
       const body = await response.json().catch(() => null);
       const mission = body?.mission ?? null;
+      /* ORD-0269 clause 1: the pending marker is written the moment leg 1 returns a mission id --
+         after the response is in hand and before leg 2 could ever be sent.  It is NOT cleared when
+         a request goes out (clause 5); only a visible outcome supersedes it. */
+      if (mission?.id) {
+        markPendingContinuation(journeyId, String(mission.id));
+      }
       if (!response.ok) {
         /* A refused or failed request is reported as what it is.  Letting the
            fallback re-plan run here would let a synthetic plan answer for a request
