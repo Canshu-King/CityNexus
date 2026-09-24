@@ -68,6 +68,67 @@ def porcelain_lines() -> int:
     return len([line for line in out.splitlines() if line.strip()])
 
 
+def run(cmd: str, cwd: str) -> tuple[int, str]:
+    proc = subprocess.run(
+        cmd, cwd=cwd, capture_output=True, text=True, shell=True, encoding="utf-8", errors="replace"
+    )
+    return proc.returncode, (proc.stdout or "") + (proc.stderr or "")
+
+
+def git_out(args: str) -> str:
+    return run(args, ROOT)[1].strip()
+
+
+def collect_evidence(landed_tip: str, pre_rebase_tip: str, problems: list) -> dict:
+    """The commander asked for collection numbers after a re-parent, so they are measured here.
+
+    A count is only printed when the command that produced it exited 0 and actually said a number;
+    a failed probe is recorded as a problem, never as `0 collected`.
+    """
+    specs = list(EXPECTED.keys())
+    pw_cmd = f"npx playwright test --list {' '.join(specs)}"
+    pw_rc, pw_out = run(pw_cmd, f"{ROOT}/frontend")
+    pw_total = next((line.strip() for line in pw_out.splitlines() if line.strip().startswith("Total:")), "")
+    pw_nodes = sorted(set(re.findall(r"[›:] (ord02[0-9]+-[a-z0-9-]+)", pw_out)))
+    if pw_rc != 0 or not pw_total:
+        problems.append(f"playwright --list rc={pw_rc} total_line={pw_total!r} -- no count is reported")
+
+    bt_cmd = "python -m pytest --collect-only -q"
+    bt_rc, bt_out = run(f'D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q', f"{ROOT}/backend")
+    bt_collected = re.search(r"(\d+) tests? collected", bt_out)
+    bt_line = next((line.strip() for line in bt_out.splitlines() if "collected" in line), "")
+    if bt_rc != 0 or bt_collected is None:
+        problems.append(f"backend --collect-only rc={bt_rc} line={bt_line!r} -- no count is reported")
+
+    is_desc = run(f"git merge-base --is-ancestor {landed_tip} HEAD", ROOT)[0] == 0
+    return {
+        "commands": {
+            "playwright_list": {"cwd": f"{ROOT}/frontend", "cmd": pw_cmd, "rc": pw_rc},
+            "backend_collect_only": {
+                "cwd": f"{ROOT}/backend",
+                "cmd": bt_cmd,
+                "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+                "rc": bt_rc,
+            },
+        },
+        "playwright_total_line": pw_total,
+        "playwright_nodes": pw_nodes,
+        "playwright_node_count": len(pw_nodes),
+        "backend_collected_line": bt_line,
+        "backend_collected": int(bt_collected.group(1)) if bt_collected else None,
+        "re_parent_proof": {
+            "landed_tip": landed_tip,
+            "candidate_is_descendant": is_desc,
+            "commits_ahead": git_out(f"git rev-list --count {landed_tip}..HEAD"),
+            "pre_rebase_tip": pre_rebase_tip,
+            "frontend_files_moved_by_reparent": [
+                line for line in git_out(f"git diff --name-only {pre_rebase_tip} HEAD -- frontend").splitlines() if line
+            ],
+        },
+    }
+
+
+
 def parse_log(path: str) -> dict:
     text = open(path, encoding="utf-8", errors="replace").read()
     nodes = []
@@ -114,7 +175,19 @@ def parse_log(path: str) -> dict:
 
 
 def main() -> int:
-    logs = sys.argv[2:] or [
+    argv = sys.argv[1:]
+
+    def flag(name: str) -> str:
+        return argv[argv.index(name) + 1] if name in argv else ""
+
+    landing_tip = flag("--landing")
+    pre_rebase_tip = flag("--pre-rebase")
+    positional = [
+        token
+        for index, token in enumerate(argv)
+        if not token.startswith("--") and argv[index - 1] not in ("--landing", "--pre-rebase")
+    ]
+    logs = positional[1:] or [
         f"{ROOT}/review/run-run222109.log",
         f"{ROOT}/review/run-run222133.log",
     ]
@@ -246,8 +319,16 @@ def main() -> int:
         problems.append("the painted English sentence is not the en dictionary value byte-for-byte")
 
 
+    collection = None
+    if landing_tip or pre_rebase_tip:
+        if not (landing_tip and pre_rebase_tip):
+            problems.append("--landing and --pre-rebase must be given together (one without the other proves nothing)")
+        else:
+            collection = collect_evidence(landing_tip, pre_rebase_tip, problems)
+
     payload = {
         "generatedBy": "e345b9d6",
+        "collection": collection,
         "orders": ["ORD-0269 cells 1/3 + R-4 negative + R-6 pagination", "ORD-0273 TEXT + ACTION"],
         "authoritative_tip_at_delivery": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
         "candidate_tip": head,
@@ -318,6 +399,17 @@ def main() -> int:
     print(f"wrote {OUT} bytes={len(blob)} sha1={hashlib.sha1(blob).hexdigest()[:16]}")
     print(f"candidate_tip={head}")
     print(f"triples={len(triples)}  problems={len(problems)}")
+    if collection:
+        proof = collection["re_parent_proof"]
+        print(
+            f"collection: playwright {collection['playwright_total_line']!r} nodes={collection['playwright_node_count']}"
+            f" | backend collected={collection['backend_collected']} ({collection['backend_collected_line']!r})"
+        )
+        print(
+            f"re-parent: descendant={proof['candidate_is_descendant']} ahead={proof['commits_ahead']}"
+            f" frontend_moved={len(proof['frontend_files_moved_by_reparent'])}"
+        )
+
     for t in triples:
         print(f"  {t['status_from_log']:>7} {t['exact_sha'][:9]} {t['nodeid']} ({t['duration_from_log']})")
     for line in problems:
