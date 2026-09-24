@@ -14904,6 +14904,61 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 定形 @2026-09-25T05:2x+08 —— ORD-0280 第②步（同类入口清单）我做完了：全 `frontend/src` 扫下来，**真脏的只有 1 个文件里的 3 处**；而且**正确的修法已经在代码库里有一枚现成的**
+
+### ① 标签在哪
+```text
+frontend/src/features/planning/PlanWithAiSheet.tsx:882
+    {zh ? "服务器给出的原因" : "Reason the server gave"}
+⇒ 这一格是"归因标签"。凡是往它底下塞**客户端拼的话**的，就是缺陷 1。
+```
+
+### ② 判定为脏（三处，全在同一个文件、同一个标签之下）
+```text
+PlanWithAiSheet.tsx:515   agent/commands 腿  failureReason = … ?? `HTTP ${response.status}`
+PlanWithAiSheet.tsx:573   GET /places 腿     ?? `GET /places -> HTTP ${placesResponse.status}`
+PlanWithAiSheet.tsx:629   plans/generate 腿  ?? `POST /plans/generate -> HTTP ${generate.status}`
+三处都是"服务器没给句子时，客户端拼一串带 HTTP 数字的话"，而这三处都会流到 :882 那个标签底下。
+（同文件 :511 / :571 的 `status:` 是**机器字段**，不是渲染给用户的句子 —— 不算这一单的缺陷，别混。）
+```
+
+### ③ 判定为**不脏**的（逐条给理由，不是"看着没事"）
+```text
+features/simulation/simulationAdapter.ts:145-155 —— **这才是正确形状**，我拿它当修复模板：
+    const said = serverSentence(error);
+    zh: said ? `…它的原话：${said}。这条我们没有本地文案，所以照它说的给，不替它解释。`
+             : `…我们没有这条拒绝的本地文案，所以不替它编造原因。`
+    ⇒ 只有服务器真发了句子才说"它的原话"；没发就明说没发。**统一修复模型 = 把这个二分支搬过去**，不新造。
+lib/failureAttribution.ts:337/358/365/378/387/414/422 —— 里面的 `HTTP ${attribution.http_status}` 是
+    **结构化来源**（attribution 带 http_status / content_type / server_code），句子是客户端自己的解释文案，
+    且没有塞进"服务器给出的原因"这类归因标签；:422 还只在 `server_code` 真存在时才追加它。⇒ 不算本单缺陷。
+api/useContinuationState.ts:27 抛 `agent-feed -> HTTP ${status}`，但消费方
+    app/V8Experience.tsx:2169 只取 `state` 与 `feedReadFailed`（布尔），这句话**不渲染**到任何归因标签。⇒ 排除。
+lib/sceneClock.ts:70-77 `rejectReason()` 兜底 `HTTP ${status}`，经 :131 抛成 `SceneReadError(status, reason)`
+    —— 状态与理由**分开携带**，形状是对的；但它最终渲染在哪个标签下我没量。
+    ⇒ 这一处标 `RENDERING_SITE_UNVERIFIED`，交给 @e345b9d6（她的界面队列）确认，不替它判清白也不判脏。
+```
+
+### ④ 射程与覆盖（照新口径写，不写"全部"）
+```text
+扫的：`frontend/src/**.{ts,tsx}`，模式 = `HTTP ${…status|code}` 与 归因标签词表
+     （服务器给出的原因 / 服务端原因 / 服务器给的 / serverReason / server reason）。
+没扫的：i18n 资源文件里的文案表、以及"标签由变量拼出来"的间接渲染 ⇒ `coverage: NOT EXHAUSTIVE`。
+补法（谁都能跑）：`rg -n 'HTTP \$\{[^}]*(status|code)' frontend/src` + `rg -n '服务器|server' frontend/src/i18n`。
+```
+
+### ⑤ 门槛状态与号令
+```text
+仲裁 Q25 那条顺序的②（找齐同类入口）：**已完成**（就上面 3 处 + 1 处待确认）。
+⇒ ORD-0280 缺陷 1 现在**解锁到"可以产码"**，但必须一次覆盖三处、且用 ③ 里那枚现成模型（`said ? … : …`）；
+   不许只修 :515 那一处就交（那正是仲裁点名的"A 修一个入口、C 在另一个入口复制同一个错"）。
+@B c01d72a3：这一单排在你 0274 之后，别并行开两个写窗口；产码时把 :515/:573/:629 三处一起改，
+   并给每处一条"服务器没句子 ⇒ 屏上不许出现归因标签"的反例。
+@e345b9d6：只认一件——`sceneClock.ts` 那处的渲染点（④ 里标 UNVERIFIED 的那条），量完写一行结论就好。
+@红队：如果 B 只改一处，请按"清单三处、实改一处"判 PARTIAL，别按绿收。
+```
+
+
 ## commander 验收 @2026-09-25T05:2x+08 —— ORD-0272 的 **K8 升格要件齐了**（F 的突变体 + HJ-P3 的跨进程观测 + 第二观察者），Q27=① 已把 T1 那笔旧账清偿
 
 ### ① @8ccd71d8：你点名的探针已外读；你把我那把 r4 尺的三种形制都跑了，这比它自己的自检更有说服力
