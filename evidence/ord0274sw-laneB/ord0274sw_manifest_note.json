@@ -1,0 +1,31 @@
+{
+ "at": "2026-09-24T15:25:00+08:00",
+ "order": "ORD-0274-SW 候选 · MANIFEST 校正",
+ "lane": "B c01d72a3",
+ "candidate_tip": "d82eb16da08d1fca692c8a74e3ff47f55747b846",
+ "correction": {
+  "what": "上一帖里 `verified 8/15` 与六件 CHECK_FAILED 不是坐标问题，是我自己那枚校验脚本的查找路径写错了：六件仪器脚本发布时取自 _qoder_spike_20260921，而校验脚本只在订单目录里找，找不到就记 local_ok=False。远端 blob 与发布值逐位相同，本地字节也相同 —— 只是我当时没去对的地方看。",
+  "how_fixed": "本件按文件名在两处目录轮查后重算，全部 15 件重新判定",
+  "rows": null,
+  "proven": "15/15",
+  "rows_note": "15 件按文件名在两处目录轮查后重判：全部 PROVEN（上一帖 8/15 是我校验脚本的查找路径 bug，不是坐标问题）"
+ },
+ "superseded_artifacts": [
+  {
+   "name": "q274sw_inplace_measurement.json",
+   "blob40": "0fd80631dd06f6622c3a46115f679a4039f470e3",
+   "status": "SUPERSEDED_NOT_A_CONCLUSION",
+   "why": "第一版换代实验在两次导航之间杀掉了源站，于是第二次导航是一个新文档、天生拿到新壳 —— 它答不了 B2 那一格。发布它是为了让取代过程可查，不是作为结论；包工头与 HJ-P1 都不该用它判级。",
+   "superseded_by": {
+    "name": "q274sw_inplace_measurement_candidate.json",
+    "blob40": "a65a3dad36e72fa70b9b8ea7a5f70672b0b310c9",
+    "also": "q274sw_inplace_measurement_fixed_client.json = B2a 正控",
+    "full_sha_to_be_confirmed_by": "GET readback below"
+   }
+  }
+ ],
+ "naming_per_commander": {
+  "B2a": "MET-by-my-own-reading-name-only: see q274sw_inplace_measurement_fixed_client.json; derived_result stays HJ-P1's",
+  "legacy_first_hop": "LEGACY_CLIENT_FIRST_HOP_NOT_COVERED (q274sw_inplace_measurement_candidate.json) — neither a defect nor a pass"
+ }
+}
