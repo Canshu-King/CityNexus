@@ -133,6 +133,16 @@ def main() -> int:
                 problems.append(f"{nodeid}: {len(hits)} log lines, expected exactly 1")
                 continue
             hit = hits[0]
+            # Resolve the run that judged THIS node: the two specs run separately, each with its own
+            # port and its own throwaway database, so run #1's coordinates cannot describe a node
+            # from the other file (that is what made the first 7-triple receipt un-collectable).
+            owner_run = next((r for r in runs if any(n["nodeid"] == nodeid for n in r["nodes"])), None)
+            if owner_run is None:
+                problems.append(f"{nodeid}: no run owns its log line")
+                continue
+            db_name = (owner_run["db_basenames"] or ["?"])[0]
+            port = (owner_run["ports"] or ["?"])[0].split("/")[0]
+            run_tag = (owner_run["run_ids"] or ["?"])[0]
             triples.append(
                 {
                     "exact_sha": head,
@@ -142,13 +152,12 @@ def main() -> int:
                     # from <tree>/frontend with run_shape claiming <tree> is a wrong coordinate, not
                     # a product red, and the verifier cannot re-collect it.
                     "nodeid_root": f"{ROOT}/frontend",
+                    "log": owner_run["log"],
                     "run_shape": (
                         f"cwd={ROOT}/frontend (the nodeid root above), {RUN_SHAPES[spec]}, "
-                        f"command=python review/run_spec.py {spec} <port>, "
-                        f"run {','.join(runs[0]['run_ids']) or '?'}"
-                        f" (fresh _{runs[0]['db_basenames'][0] if runs[0]['db_basenames'] else '?'}),"
-                        f" ports {','.join(runs[0]['ports']) or '?'}; verdict taken from the "
-                        f"`{hit['status']} {hit['index']}` line in {hit['duration']}"
+                        f"command=python review/run_spec.py {spec} {port}, "
+                        f"run_id={run_tag}, fresh {db_name}, ports {port}; "
+                        f"verdict taken from the `{hit['status']} {hit['index']}` line in {hit['duration']}"
                     ),
                     "status_from_log": hit["status"],
                     "duration_from_log": hit["duration"],

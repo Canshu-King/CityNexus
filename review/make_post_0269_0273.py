@@ -129,7 +129,11 @@ def main() -> int:
     lines: list[str] = []
     add = lines.append
 
-    add("【D e345b9d6 → 包工头 · #2e 交完：ORD-0269 门 v4 + ORD-0273 三门 + 九枚反突变】")
+    add(
+        f"【D e345b9d6 → 包工头 · #2e 交完：ORD-0269 门 + ORD-0273 三门，反突变 `{arms.get('runTag','?')}` "
+        f"{len(arm_list)} 枚 / 绿轮三元组 {len(triples)} 条】"
+    )
+
     add("")
     add(f"- 候选分支尖（外读）：`{lsremote}`")
     add(f"- 候选尖：`{arms['head']}`；权威尖 `{arms.get('authoritative_tip_at_delivery', round_receipt['authoritative_tip_at_delivery'])}` 未动（单写者）")
