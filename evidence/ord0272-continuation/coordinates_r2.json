@@ -1,0 +1,95 @@
+{
+ "what": "ORD-0272 具名坐标（**修正版**：run1 那版 coordinates.json 里带 TLS 抖动造成的 FAILED 读书，本件是重推成功后的同一份内容；旧件保留不删）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-24T16:44:01+08:00",
+ "repo": "Canshu-King/CityNexus",
+ "ref": "review/ord0272-continuation-f",
+ "head40": "aa29612c855c10f1584a333cc19526066813b072",
+ "parent40": "44b428da83e40abd6d2b770006cb88dc022cf2fd",
+ "tree40": "d96c2974924d19831495f2945117d4221a1b6d62",
+ "ls_remote_line": "aa29612c855c10f1584a333cc19526066813b072\trefs/heads/review/ord0272-continuation-f",
+ "ref_proven": true,
+ "candidate_blobs": {
+  "backend/app/main.py": {
+   "local_blob_sha1": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "recomputed_from_bytes": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "equal": true,
+   "github_http": 200,
+   "github_size": 482850,
+   "size_matches": true,
+   "readable": true
+  },
+  "backend/app/schemas.py": {
+   "local_blob_sha1": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "recomputed_from_bytes": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "equal": true,
+   "github_http": 200,
+   "github_size": 25591,
+   "size_matches": true,
+   "readable": true
+  },
+  "backend/tests/test_qoder_ord0272_continuation.py": {
+   "local_blob_sha1": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "recomputed_from_bytes": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "equal": true,
+   "github_http": 200,
+   "github_size": 24562,
+   "size_matches": true,
+   "readable": true
+  },
+  "contracts/openapi.yaml": {
+   "local_blob_sha1": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "recomputed_from_bytes": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "equal": true,
+   "github_http": 200,
+   "github_size": 106971,
+   "size_matches": true,
+   "readable": true
+  }
+ },
+ "published_files": {
+  "evidence/ord0272-continuation/day1_receipt.json": {
+   "rc": 0,
+   "tail": [
+    "PUT -> 201 commit=2e4674822097",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 21395 | remote size 21395 | sha1 e414c710430af052"
+   ],
+   "proven": true
+  },
+  "evidence/ord0272-continuation/mutation_receipt.json": {
+   "rc": 0,
+   "tail": [
+    "GET evidence/ord0272-continuation/mutation_receipt.json: 200 existing_sha=fb8d8f91e5",
+    "already identical - nothing to push"
+   ],
+   "proven": false
+  },
+  "evidence/ord0272-continuation/ab_3x3.json": {
+   "rc": 0,
+   "tail": [
+    "GET evidence/ord0272-continuation/ab_3x3.json: 200 existing_sha=5678b6fa7b",
+    "already identical - nothing to push"
+   ],
+   "proven": false
+  },
+  "evidence/ord0272-continuation/swimmer_triage.json": {
+   "rc": 0,
+   "tail": [
+    "GET evidence/ord0272-continuation/swimmer_triage.json: 200 existing_sha=a304be2ee4",
+    "already identical - nothing to push"
+   ],
+   "proven": false
+  }
+ },
+ "baseline": {
+  "c79e2b4": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+  "note": "A/B 的对照树 = 本候选的父提交，逐文件导出字节==提交字节见 ab_3x3.json"
+ },
+ "supersedes": {
+  "path": "evidence/ord0272-continuation/coordinates.json",
+  "was_blob_sha1_16": "c97c251251671698",
+  "now_blob_sha1_16": "794a7efa05e8b3da",
+  "why": "第一次推送与其中一件 PUT 吃 SSL_ERROR_SYSCALL；重跑后成功，coordinates.json 被同一路径重写了一次（我的纪律红线，已在勘误里具名）"
+ }
+}
