@@ -1,0 +1,97 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0272 (mechanical derivation, B-1: writer does not self-declare CLOSED)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T02:00+08:00",
+ "disclosure_note": {
+  "rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE (arbiter 01:3x+08, option 2)",
+  "applied": "this artifact quotes no guard refusal sentence; where a refusal class is referenced it is named by rule only",
+  "hits": []
+ },
+ "coordinates_all_verified_by_me": {
+  "reverify_tool": {"blob": "bd473995f80048ec5137160908d164e77953ed29", "bytes": 16407, "sha_ok": true},
+  "xp_receipt_md": {"blob": "ae1633483e8cd2bbbaa33580ad44ac0a4a47bbae", "bytes": 5584, "sha_ok": true,
+    "sha256": "0bcbc800d567a01de99bbcff0732fa19bfd12abbc5dbc9ca939abf0021a63b28", "manifest_sha256_ok": true},
+  "xp_json": {"blob": "7afa24aa3cf650e22c9dc85e9ecc8ad1e6ee8900", "bytes": 3401, "sha_ok": true,
+    "sha256": "cb11981e7a43cc4262d132e05636c5ab98c5aa0fa47328d6ee5a67b3a42e4f84", "manifest_sha256_ok": true},
+  "xp_rig": {"blob": "760a2e432530cc0c3c4cc1251873b9b0c7941aef", "bytes": 10554, "sha_ok": true,
+    "sha256": "2217320a4b7e50eef6182cb92b18de5f915558448b950d230777e3a5e551bd88", "manifest_sha256_ok": true},
+  "xp_manifest": {"blob": "e805328577aaeeb00a451fc64ed51816c82d7172", "bytes": 1487, "sha_ok": true}
+ },
+ "lineage_self_proven": {
+  "corrected_tip": "dcae1bc964125c3a975916f6bf667794cc19622a",
+  "parents": ["c79e2b4f4efe414dba22a071a7136ae10b5c84aa"],
+  "parent_is_authoritative_tip": true,
+  "tip_tree": "d96c2974924d19831495f2945117d4221a1b6d62",
+  "aa29612c8_tree": "d96c2974924d19831495f2945117d4221a1b6d62",
+  "tree_equals_aa29612c8": true,
+  "frontend_files_changed_vs_auth_tip": 0,
+  "files_changed_vs_auth_tip": ["backend/app/main.py", "backend/app/schemas.py",
+                                 "backend/tests/test_qoder_ord0272_continuation.py", "contracts/openapi.yaml"],
+  "total_commits_ahead": 1,
+  "compare_tip...44b428d": {"ahead_by": 1, "behind_by": 1,
+    "reading": "44b428d is NOT an ancestor of the corrected tip: the branches diverge, so 44b428d's gate is not in this generation"}
+ },
+ "layer1_cross_process_HJP3": {
+  "evidence_class": "derived from the raw JSON fields of crossprocess_0272.json (claimed->derived), not a re-execution",
+  "db": "xp_0272.s3db built by ensure_schema() (schema_source: product_migration per R-SCHEMA-01/02) - deleted at teardown",
+  "Q1_identity_cross_process": {"derived_true": ["both_201", "ids_really_equal", "no_second_batch", "rows_3_to_3"],
+    "plan_ids": ["f3aeae15-d0b2-54c1-89a4-7ba74f7daacc", "58e202c4-b9b3-5b3b-8ac1-c6bec62b94b7",
+                 "6941e254-d8a3-556b-a46a-72a684e5836b"],
+    "derived_result": "IDENTITY_CROSS_PROCESS_HOLD"},
+  "Q2a_same_key_replay": {"derived_true": ["both_201", "ids_really_equal"], "derived_result": "REPLAY_HOLD"},
+  "Q2b_same_key_different_body": {"derived_true": ["http_409", "message_equals_literal", "raw_header_key_left_no_rows"],
+    "message": "same idempotency key used for a different request",
+    "derived_result": "CANONICAL_409_HOLD"},
+  "Q2c_phase_A_placeholder_cross_process": {
+    "derived_true": ["mission_bound_key_shape (plans.generate:cont:<mission>)", "exactly_one_row_blanked",
+                     "before_was_201_json", "P2_after_blanking_409", "incomplete_literal"],
+    "message": "agent idempotency record is incomplete",
+    "derived_result": "PLACEHOLDER_VISIBLE_CROSS_PROCESS_HOLD - the committed placeholder row is durable state that a second process sees, and no rerun happens",
+    "owner_cell": "tests/test_qoder_ord0272_continuation.py::test_G2_...",
+    "k8_relation": "this is the cross-process face K8's single-process gap leaves open; HJ-P3 declared K8 NOT-YET-TARGETED pending F's carrier list - with F's ARM_CARRIERS now published (K8 carriers_removed = []), K8 remains a claimed-survivor with NO single-process carrier and the cross-process observation above as its only behavioural evidence; my verdict for K8 is UNPROVEN_AS_MUTANT_KILL, OBSERVED_AS_BEHAVIOUR (the placeholder-overwrite door is real and visible cross-process)"
+  },
+  "Q3_owner_readable_cross_process": {
+    "derived_true": ["read_by_other_process (8496, not the writer 8495)", "http_200", "owner_facts_found",
+                     "continuation_matches_mission", "plan_ids_match_Q1 (bit-identical 3 ids)", "summary_exact"],
+    "derived_result": "OWNER_CROSS_PROCESS_READABLE_HOLD"},
+  "teardown": {"derived_true": ["two_pids_killed (34608/55268 on 8495/8496)", "listeners_left_0",
+                                "db_deleted", "assert_clean"]},
+  "derived_result_layer1": "ALL_FOUR_LEGS_HOLD (every claimed boolean re-derived TRUE from raw fields; zero claims taken on faith)"
+ },
+ "layer2_reverify_tool": {
+  "selftest": {"shape": "--selftest --tree <with gate> --absent-tree <without gate>",
+    "with_gate": "GATE-GREEN (8/8)", "without_gate": "NOT-PRESENT", "SELFTEST": "PASS (rc=0, run twice: once without backend dir, once with an empty backend dir)"},
+  "real_run": {"tree": "tarball export of dcae1bc9 (50,243,964 B from GitHub, not a git checkout)",
+    "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+    "verdict": "GATE-GREEN", "cells": "8/8 GREEN", "summary": "8 passed, 2 warnings in 2.78s",
+    "exact_sha": "dcae1bc964125c3a975916f6bf667794cc19622a (all 8 cells, explicit --gen because a tarball export has no HEAD)",
+    "db_header_line": "ORD-0211 test database: resolved=<temp>/suite.db exists=False declared_by=conftest temp dir - no _live/_preview hit",
+    "regression_extra": "13 passed (test_qoder_current_plan_is_named.py + test_qoder_simulation_mode.py)",
+    "tree_untouched": true, "pytest_cache_new": false, "silent_alarms": []},
+  "carrier_attribution": {"K1": "6/6 collectible", "K2": "1/1", "K3": "1/1", "K4": "1/1",
+    "K5": "5/5", "K6": "5/5", "K7": "2/2", "K8": "0/0 (no single-process carriers, by design)",
+    "note": "the tool matches carriers by nodeid TAIL, so the 4 backend/-rooted rows still resolved in MY run"}
+ },
+ "the_4_mismatched_roots": {
+  "measured": "of the 21 carriers in F's ARM_CARRIERS table, 17 root at tests/ and 4 root at backend/tests/",
+  "the_4": ["K2 -> backend/tests/...::test_G3", "K3 -> backend/tests/...::test_G8",
+            "K4 -> backend/tests/...::test_G7", "K6 -> backend/tests/...::test_G6"],
+  "why_it_matters": "HJ-P3's declared run cwd is <snap>/backend, so HER nodeids root at tests/ - a consumer matching her carrier list against full nodeids would find 4 misses and could misread them as dead carriers",
+  "my_ruling": "MISSING_COORDINATE_NOT_PRODUCT_RED, as instructed: the tool's tail-matching resolves all 21 in a tree that actually contains the gate (proved: 21/21 collectible in my run), so the 4 rows are a coordinate-shape defect in the PUBLISHED CARRIER TABLE, not an absence in the landed tree",
+  "until_Fs_correction_arrives": "no verdict change; the 4 rows stay collectible-proven, the shape defect stays open against the table, not the product"
+ },
+ "derived_result_ORD0272": {
+  "gate": "GATE-GREEN on dcae1bc9 (8/8 cells, exact_sha=40-char tip, zero silent alarms, tree untouched, one-shot temp db)",
+  "lineage": "corrected branch = single commit on the authoritative tip, tree == aa29612c8, no frontend hits, 44b428d not an ancestor",
+  "cross_process": "all four HJ-P3 legs re-derived TRUE from raw fields; teardown asserted",
+  "carriers": "21/21 collectible; K1..K7 fully attributed; K8 has NO single-process carrier (0/0) - its only evidence is the cross-process Q2c observation, so K8 stays UNPROVEN_AS_KILL / OBSERVED_AS_BEHAVIOUR",
+  "blockers_remaining": ["F's corrected carrier table (4 root shapes) - coordinate debt, not product",
+                          "K8 remains claimed-survivor: a mutant for it has not been shown to flip anything, single-process or cross-process"],
+  "not_claimed_here": "I do not declare CLOSED; I do not judge ff-only readiness - that is the writer's move under the arbiter's conditions (corrected branch + explicit lineage + externally readable), which are now all measured TRUE"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "writes": "tarball export to my raw dir only; the reverify tool wrote only its report; network = GitHub GET + one PUT (my derivation)",
+   "read_only_of_tested_tree": "sha256 before/after equal on all 4 product files; no .pytest_cache created"}
+}
