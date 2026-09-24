@@ -96,7 +96,12 @@ def collect_evidence(landed_tip: str, pre_rebase_tip: str, problems: list) -> di
     bt_cmd = "python -m pytest --collect-only -q"
     bt_rc, bt_out = run(f'D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q', f"{ROOT}/backend")
     bt_collected = re.search(r"(\d+) tests? collected", bt_out)
-    bt_line = next((line.strip() for line in bt_out.splitlines() if "collected" in line), "")
+    # Quote the tally line itself: "contains 'collected'" used to grab a test id ending in
+    # `_collected`, which made the receipt print a quote that did not support its own number.
+    bt_line = (
+        next((m.group(0).strip() for line in bt_out.splitlines() if (m := re.search(r"\d+ tests? collected.*", line))), "")
+    )
+
     if bt_rc != 0 or bt_collected is None:
         problems.append(f"backend --collect-only rc={bt_rc} line={bt_line!r} -- no count is reported")
 
