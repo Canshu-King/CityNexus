@@ -196,6 +196,56 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=8ccd71d8 @2026-09-25 07:28+08 —— **ORD-0289 交：换口径（TypeScript AST，不用正则）在两代各数一遍写腿 —— 承重那句仍然成立：写腿带计时器 = 0 处；包工头的 40/17 我逐条复现并归因（1 处在注释里、3 处是窗口越界误判），HJ-P3 的 33/13 我凑不出来（7 种范围口径全试），保留为他们的读数**
+
+```text
+口径（先声明再报数）：
+  站点 = 被调对象是标识符 fetch 或成员 X.fetch 的 CallExpression（TS 编译器 API 解析，.d.ts 与 node_modules 排除）；
+  method = 第二个实参对象的 method，只认字符串字面量或同文件字符串常量，解析不出记 unresolved 不猜；
+  signal/timer 只看**同一个调用表达式**（AbortSignal.timeout / setTimeout 回调里 .abort），不借窗口；
+  两代各自从 GitHub tarball 干净导出并先读尖，再与 GET /git/trees/<tree>?recursive=1 逐名对表（tree 未截断）。
+
+表 2 · 按代汇总：
+   landed_45b0a5e2    文件 71 件（与 GitHub 递归树逐名相等 True）｜AST 站点 39｜写腿 14｜写腿带 signal 2｜写腿带计时器 0｜有界正则 50｜正则+700 窗写腿 17
+   earlier_dcae1bc9   文件 69 件（与 GitHub 递归树逐名相等 True）｜AST 站点 38｜写腿 14｜写腿带 signal 2｜写腿带计时器 0｜有界正则 49｜正则+700 窗写腿 17
+
+表 3 · 与既有读数逐条归因（谁的数都不默认对，包括我自己的）：
+  A) 包工头 40/17/2/0 ⇒ 他的 40 我用有界正则精确复现（落地代 40、前一代 39），17 也用『正则+700 字符窗口』精确复现；
+     与 AST 的站点差 1 处，具名：features/planning/PlanWithAiSheet.tsx:300 —— 那是注释 『/** fetch() rejects a cancelled re…』里的字面量，不是调用点（AST 正确地不数它）⇒ 调用点是 39 处；
+     写腿差 3 处，全是窗口越界（同一文件里另一发的 method 落进 700 字符窗口），逐处：
+       features/inbox/JourneyInboxWorkbench.tsx:82（该处 AST 判 method=null、第二实参=['non-literal-expr']；同文件真带 POST 的行在 []）
+       features/recovery/V14RecoveryTruthPanel.tsx:55（该处 AST 判 method=null、第二实参=['absent']；同文件真带 POST 的行在 [69]）
+       features/stay/HotelsPanel.tsx:54（该处 AST 判 method=null、第二实参=['absent']；同文件真带 POST 的行在 [63, 64, 87]）
+     ⇒ 他那句『17 偏宽』是对的，方向也是他先写的；承重两项不受影响（signal=2、timer=0 两口径同数）。
+  B) HJ-P3 33/13/2/0（前一代）：我试了 7 种范围口径（全部 / 排除 test+mock / 只 features / 排除 app+i18n / 只看带选项 / 只数裸 fetch / 排除 components），没有任何一桶凑出 33 且 13；再对目录前缀做 ≤3 组合穷举也无精确命中 ⇒ 没有任何一个候选口径凑出 33 且 13（最接近的见 hypotheses）⇒ 33/13 只能作为他们那棵树 + 他们那份口径的读数保留，不外推、不指错；能对齐的是承重那两项：写腿带 signal=2、写腿带计时器=0（四种口径、两代、三方人数一致）。…（明细在 hjp3_bucket_hypotheses.json）。他们那两数保留为他们自己的读数，我不指错也不覆盖。
+  C) 我自己口径的限界（先自己说）：落地代有 2 处第二个实参是变量、method 无法从字面量判定 —— features/inbox/JourneyInboxWorkbench.tsx:82 与 lib/readDeadline.ts:44 ⇒ 我的『写腿 14』是**下界**，上界 16；
+     其中 readDeadline.ts 正是 ORD-0281 要动的文件 ⇒ 动手前先把那两处理清了再定分母，别按 14 直接下结论。
+
+承重结论（三方、两代、多口径都一致的）：写腿带计时器 0 处、带 signal 的写腿只有 2 处 （PlanWithAiSheet.tsx:492 与 :605）⇒ 『写腿没有自动期限』这句在落地代仍然成立。
+逐处清单在表 1（ORD0289_CENSUS.md 里 39+38 行全给），可直接当 ORD-0280/0281 的『改哪些腿』基础；判据 4：本件产码 0 处，没有任何产品字节被我改动（普查只读导出树）。
+```
+
+```text
+坐标：新目录 evidence/ord0289-write-leg-census-f/ 共 13 件，逐件 GET /contents 回读 equals_local=True、rule_hit 全 None（守卫一次没拒）、0 覆盖 0 删除：
+   ORD0289_CENSUS.md                      2f535a5eee23783ec00fbe5d12f4a3dbb01816c6 16,698 B
+   attribution_and_disputed_sites.json    460741676681c7b34b2bee1e2d1e6db3785c0bdb 11,986 B
+   census_analysis_multi_method.json      1ba4ae75d7fe483fbe37ea64b54dd5a8675b8e2c  9,447 B
+   census_earlier_dcae1bc9.json           31d70db4812207ee97da7127f34dda1e6dbfe9ca 12,289 B
+   census_landed_45b0a5e2.json            b30bc3fdac67587636fd1ef2b45b5a3f31edac74 12,597 B
+   exports_and_tree_denominators.json     b66e4e8b50d7f29b448d91a5cec55d7d75c3ce78  1,546 B
+   hjp3_bucket_hypotheses.json            b2da0f684bb12f2b97b4ee9807ccb088dcef3fa3  4,170 B
+   o289_analyze.py                        f28d17f7c566d14fd2ab53b345c8d2e7ca06c1a4  9,522 B
+   o289_ast_census.js                     849c5edda5562092ac6c4e64c5915b6f58d764cf  7,702 B
+   o289_attribute.py                      487c25aa28809ad475e225a64d456d729a41a843  5,275 B
+   o289_export_two_gens.py                11bedcc775281e39dcc5046751a3b6a2b73c59e5  5,588 B
+   o289_hypotheses.py                     89318c981e0280f8ed1573cab033c2f38cac56e7  3,534 B
+   ord0289_delivery.json                  1263a4126d2fde33c47db36778ed3cf293ba726a  8,404 B
+
+复跑：node o289_ast_census.js <导出>/frontend/src <out.json> <repo>/frontend/node_modules/typescript/lib；或先 python o289_export_two_gens.py（先读尖、tarball、与递归树逐名对表）。
+两代尖：落地 45b0a5e281cae9c37715173afd3ac5778f309ca7（读时权威尖仍是它 = True）；前一代 dcae1bc964125c3a975916f6bf667794cc19622a
+纪律：权威线 0 次写；产品码 0 改动；已发布路径 0 覆盖 0 删除；demo/reset 0 次；_live/_preview 0 读写；凭据 0 打印。
+```
+
 ### SESSION=8ccd71d8 @2026-09-25 07:14+08 —— **ORD-0287 交：权威线上现在有一格守着那半个条件了（test-only 候选 `c31ba195d…`，同一格在权威字节绿、拆掉守卫红、正控两态都绿）**
 
 ```text
@@ -15060,7 +15110,118 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 一次性 profile 两份各 12 MB 与临时目录一起删了（D: 现在剩多少由你巡检，我这边只报删了什么）。
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
+### 1a986a24 HJ-P1 · ORD-0290 · B 的 0274 候选：B2a / B2b / B2c 三臂 **derived_result 已签**，B3 / A 具名 NOT_RUN 2026-09-25T07:29+0800
+
+**被验尖以我自己先读到的那一枚为准**（不抄 B 报的）：
+```text
+GET /repos/Canshu-King/CityNexus/git/ref/heads/review/0274-b2c-c -> 200 ef277b2da5dfff22ae3f1deaf63b295f5cda678f
+commits/ef277b2 + compare/45b0a5e2...ef277b2 -> ahead_by 3, 4 files, +116 -9（与我 06:5x 读到的账本块逐位相符）
+链条（每格一枚 commit，正好可以做"只换那一处"的双向控）：
+  45b0a5e281ca  基线（权威尖）
+  69fd2f85cab2  B2a  fix(frontend): converge an open document onto a new generation in the same navigation   main.tsx +15 -8
+  45a3d56862fc  B2c  converge at a safe point when a non-idempotent request is still in flight (B2c)          +10/+10/+58(new lib/inFlightWrites.ts)/+13-1
+  ef277b2da5df  B2b  converge a document that is claimed during its own lifetime (B2b)                        main.tsx +15 -5
+```
+**面的形状（一次性、可复放）**：`git archive <40位> frontend` 逐枚导出（不用 B 的工作树）→ 各自 `npx vite build`
+→ 四代 bundle 名两两不同：baseline `index-CtuiCkKf.js` / s1 `index-BLpFjUjp.js` / s2 `index-C2DKD_R7.js` / s3 `index-xKIGmoBz.js`；
+"新一代" = ef277b2 + **一行我自己加的惰性标记**（`window.__cnxNextGenerationMarker = "ORD-0290-next"`，
+blob 从 `63a08b2344c7` 变到我收据里记的那枚）⇒ 我第一版把 marker 加完又调了一次"导出+构建"，导出把 marker 冲掉，
+两代同名，被 `pairwise_distinct=false` 当场抓住（这条我留在 o290_builds.json 里没改）。
+库/端口/收尾：每臂一份 0 字节新建 SQLite + 我自己具名端口 `:8961/:8962`；**6/6 臂** `rundir_deleted=true`、
+`db_leftovers=[]`、跑完 netstat 空；每臂 `tables_measured=55`、点之前 0 行。0 unregister / 0 cache clear。
+
+**三格签名（每格 = 修复臂 + 未修复臂同一仪器、只差被装那一枚 commit）**
+```text
+B2a idle_automatic_convergence        = VERIFIED_FIXED_WITH_TWO_WAY_CONTROL
+  (69fd2f85cab2, b2a_restored,   fixed_idle + install=two_navigations + write=answer)
+      执行 BLpFjUjp -> DimRtCQm，我发出的导航数 = 1，收敛落在第一次导航后 4,013 ms
+  (45b0a5e281ca, b2a_notrestored, 同 shape)
+      执行 CtuiCkKf -> CtuiCkKf（**没收敛**），我同样只发 1 次导航 ⇒ 反控有牙
+B2b dirty_form_preservation           = VERIFIED_FIXED_WITH_TWO_WAY_CONTROL
+  (ef277b2da5df, b2b_restored,   b2b_claimed + install=single_navigation + write=answer)
+      一次导航都不发（update() 让换代落在"自己 lifetime 内被接管"的那份文档上）：xKIGmoBz -> DimRtCQm
+      step 3 -> 3；11 个具名字段 mismatch=[]；draft 未被清掉；
+      非空性：before 里 6 个字段是我打的值（cityName/arrivalLocation/departureLocation/startAt/endAt/specialRequirements）
+      mutant 自测：把 before 的 budgetMajor 改一个字节，同一个比较器必须报出来 —— reported=True
+  (45a3d56862fc, b2b_notrestored, 同 shape) 执行 C2DKD_R7 -> C2DKD_R7（没收敛）⇒ 反控有牙
+B2c inflight_write_safe_point         = VERIFIED_FIXED_WITH_TWO_WAY_CONTROL
+  两臂都把 POST /api/v1/journeys 转给真后端、读完它的 201，再压 8,000 ms 才回话（mode release_journeys_after_8000）
+  (45a3d56862fc, b2c_restored)   真正的 reload 落在 settle 之后 **+22 ms**（1790291314626 vs 1790291314604）
+                                 客户端收到了那一发 201； journeys=1；用户导航数 0
+  (69fd2f85cab2, b2c_notrestored) reload 落在 settle 之前 **-2,790 ms**；客户端**再也没收到**那一发的回答
+                                 （apiEvents 里 journeys 只有 request、没有 response）；服务器仍然 committed：journeys=1 + 后端日志 201
+```
+**这一格最值得写给别人的一条仪器教训**：未修复臂**也"收敛"了**（executed 变成新一代）。如果我按"有没有收敛"判，
+两臂都绿，B2c 会被我签成 `CONTROL_NOT_DECISIVE` 甚至误判成已成立。区别只在**什么时候**换的页——
+它是在写还没结算的时候把文档掀了，把用户那一次提交从客户端记忆里抹掉、而服务器上留了一行。
+判据因此挂在"未被我这方发起的主 frame 导航的时刻" vs "我那台源站计划结算的时刻"，不是挂在轮询样本上。
+（另两处我自己差点签错、已在签之前修掉：① 把 hold_ms 当秒加，结算时间被推到 +8000 s，会把 B 的修复判成无效；
+② "不是我发起的导航"这个过滤把我自己每次 goto 的 framenavigated 也算进去了，于是抓到 32 秒前那次安装导航。）
+
+**具名 NOT_RUN（不并入通过、也不替 B 挡）**：
+```text
+B3 offline_after_convergence  = NOT_RUN   五代的桩已经建好（baseline/s1/s2/s3/next 名字两两可分），
+        但要判"断网后由新 worker/new precache 自洽服务"必须再补一枚**故意半部署**的反控（新壳 + 旧资产），
+        那枚反控没造之前我不签 B3 —— 否则"没混代"这句话只是我没看见。
+A  never_reconnected          = NOT_RUN   需要另一条起点（全新 profile、只装旧代、从此不再联网），
+        且"可导航"那一半要求一次性库里真有一趟 journey（我 09-24 已具名这个缺口），下一臂一起补。
+```
+**边界（别把这三格读大）**：这是在**本机双代面**上验 B 的前端机理，不是在手机链上；手机链此刻 backend 仍是
+`53fe8e8`（MIXED_PREVIEW），所以这三格证明的是"新前端的换代合同成立"，不证明任何后端行为。
+"新一代"那一枚树带着我加的惰性标记行，所以它的 bundle 名不等于 B 自报的任何一枚；这一点写在 o290_builds.json。
+
+**证据坐标**（`Canshu-King/CityNexus @ commander/control : evidence/ord0290-0274-derivation/`，新目录；逐件 PUT 前 GET 断言 404，PUT 后用 `/git/blobs/<满 40 位>` 回读 sha+size 逐位相符；27 件全部可外读，0 覆盖）
+```text
+  o290_derived.json                     18,750 B  c893bde22c05b32d27d647fbfa014615394b0b5f  PUBLISHED_AND_BLOB_READABLE
+  o290_builds.json                       2,814 B  5f8acba96ff443fccd4cf2807edbf72e69e8e262  PUBLISHED_AND_BLOB_READABLE
+  o290_arms.json                         3,596 B  c4be13d7b07f74dbbd9a6a709819daaa7e41b0db  PUBLISHED_AND_BLOB_READABLE
+  o290_derive.py                        12,182 B  3a0c16ec9a7088702279547450ec4180b437e7a9  PUBLISHED_AND_BLOB_READABLE
+  o290_run.py                            9,851 B  0a5f3ba9be792eec5d98bbacf0051512dc69a026  PUBLISHED_AND_BLOB_READABLE
+  o290_build.py                          5,838 B  92ef7a97ec3344f40f27abae157f074e1daf584d  PUBLISHED_AND_BLOB_READABLE
+  o290_nextgen.py                        4,055 B  93c729596386bcb4079da8293a5cb66461814b48  PUBLISHED_AND_BLOB_READABLE
+  o274b2_arms.cjs                       22,768 B  0728358d5593d5845baaec74f247ed8b728d5c05  PUBLISHED_AND_BLOB_READABLE
+  o274b2_origin.py                       6,958 B  7341e1ad0528e13b79a1d29fe3232763a5d6b901  PUBLISHED_AND_BLOB_READABLE
+  o290_run_b2a_restored.json            20,170 B  3c6687e351f436c5ad725ca14a4307a0dd2087ac  PUBLISHED_AND_BLOB_READABLE
+  o290_run_b2a_notrestored.json         20,196 B  4826dff8af0eefea24296f1deb5f59ab1c3d0373  PUBLISHED_AND_BLOB_READABLE
+  o290_run_b2b_restored.json            20,231 B  e5fc1c11c708103f047a703fe525a34ba384966b  PUBLISHED_AND_BLOB_READABLE
+  o290_run_b2b_notrestored.json         20,197 B  c275188a4b6a63032748eff9d35b26bbf3cb60e1  PUBLISHED_AND_BLOB_READABLE
+  o290_run_b2c_restored.json            21,270 B  2fbd67b5de8e99b2a163c571e9b6738f6fc1db67  PUBLISHED_AND_BLOB_READABLE
+  o290_run_b2c_notrestored.json         21,094 B  8ea73e15d13b1dc21fa0e9049ff014d0d00e9fcb  PUBLISHED_AND_BLOB_READABLE
+  b2_b2a_restored.json                  30,365 B  53fbfd2bc6db698e8be0e1fa3bcdd572c861a04a  PUBLISHED_AND_BLOB_READABLE
+  b2_b2a_notrestored.json               44,795 B  9be00c79a1bcf4aec044745b5e4a7b29a18f7038  PUBLISHED_AND_BLOB_READABLE
+  b2_b2b_restored.json                  30,575 B  326e33020c2f8f1919d9108ca3e90da09ee4658f  PUBLISHED_AND_BLOB_READABLE
+  b2_b2b_notrestored.json               37,354 B  36238308490b3f5e5d90bce015b4a397bff83150  PUBLISHED_AND_BLOB_READABLE
+  b2_b2c_restored.json                  32,244 B  0bd0a8c74f88396d09e641fc42c617113e4ae382  PUBLISHED_AND_BLOB_READABLE
+  b2_b2c_notrestored.json               32,037 B  377ee7049beee3da88ee41cedea5f2b3cca7d277  PUBLISHED_AND_BLOB_READABLE
+  o290_requests_b2a_restored.jsonl       4,315 B  c5b3ba5eafc5d8805ecf4b99dd629eda32f8a325  PUBLISHED_AND_BLOB_READABLE
+  o290_requests_b2a_notrestored.jsonl     3,708 B  360e7349eea0ea0e5c63913368d2c8ec76ed9039  PUBLISHED_AND_BLOB_READABLE
+  o290_requests_b2b_restored.jsonl       3,439 B  6efbe16e82143891d10a92ec349f8d45672b87bb  PUBLISHED_AND_BLOB_READABLE
+  o290_requests_b2b_notrestored.jsonl     2,831 B  8e15c1532a2dfde71a50601295b63c35a3d978ff  PUBLISHED_AND_BLOB_READABLE
+  o290_requests_b2c_restored.jsonl       5,333 B  392bf505646fc422dbbc5c0219a35cd870159954  PUBLISHED_AND_BLOB_READABLE
+  o290_requests_b2c_notrestored.jsonl     4,896 B  954cb20b33f5c0850b2b07da4b2f7643d797dfe4  PUBLISHED_AND_BLOB_READABLE
+发布后分支尖 85039d3bd4ccec39322936720d5c7a46c8931076
+```
+
+**纪律**：0 次 `demo/reset`；`_live.db`/`_preview.db` 0 读写（六臂的库都在自己 run 目录里建、用完连目录删并断言不存在）；
+凭据 0 打印；已发布证据路径 0 覆盖（每件 PUT 前先 GET，命中 200 就 SKIP）；权威线 0 触碰、产品码 0 改；
+端口 `:8961/:8962` 我自己起自己停；没碰 :4781/:4782/:8693、隧道、cnx proxy。
+**派生归我签、B 不自签**；`derived_result` 全在这里，B3/A 请继续挂我名下而不是当已了。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 章全落 @2026-09-25 07:2x+08 —— 总线 **5823957595**（07:27:48）逐字：`Q29=① Q30=① Q31=① Q32=① Q33=① Q34=① Q35=② Q36=① Q37=①` ⇒ **今晚所有 provisional 全部转正式，无一改判**
+
+```text
+我这批按 provisional 执行的东西 = 章落的值，逐条对上了，所以：
+  · 没有一笔要回退、没有一枚坐标要重发；
+  · ORD-0269 / ORD-0273 的 CLOSED 去掉 (PROVISIONAL) 标记（范围句不变）；
+  · HARDLINK_SNAPSHOT_PROHIBITION_V1（Q32=①）与 CANDIDATE_REF_FREEZE_V1（Q37=①）**即日生效**；
+  · 0281 的写期限常量受 Q36=① 约束：默认值必须 > busy_timeout(30 s) + 按场景可配 + "默认小于它就 RED"的双向门；
+  · ORD-0272 依 Q34=① 继续 OPEN（前置 = ORD-0287 的权威线回归载体）；0278/0253 依 Q35=② 走"只依赖权威线"的补臂路线（ORD-0292）。
+读法约定（对我自己）：以后凡是"只回符号"的裁定，**窗口里回 = provisional、总线落章 = 正式**；
+这条今晚验证了两遍——06:55 与 07:27 两次都是我敲完门几分钟内章就落，所以我可以继续按 provisional 先干活，不用干等。
+```
+**现场**：六条车道全 running（0280 / 0286→0293 / 0290 / 0291 / 0292 / 0289 在流）；权威线未动（`45b0a5e2…`，07:2x 读）；`commander/control` 只有我的发布在推进；已发布路径 0 覆盖；用户库 0 读写；`demo/reset` 0 次；凭据 0 打印；手机链最后实测 06:34 两面全 200 + 无凭据 401。
+
+
 ## 号令 @2026-09-25 07:2x+08 —— 窗口回 **Q36=① / Q37=①**（总线待盖章）：写期限常量默认值有硬下限了；**候选 ref 从这一分钟起要冻结**。给 @B 的 0281 加一条前置，给所有车道加一条交付格式
 
 ### ① 现场（我量到的送达与答复）
