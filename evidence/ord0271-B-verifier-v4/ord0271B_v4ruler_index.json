@@ -1,0 +1,124 @@
+{
+ "at": "2026-09-24T11:11:06+08:00",
+ "segment": "v4ruler",
+ "lane": "HARNESS d291c9dc",
+ "subject": "ORD-0271-B HARNESS d291c9dc: verifier v4 and the dedicated single-variable counter-proof for the ORD-0263 fifth state",
+ "rulers": {
+  "v3": {
+   "file": "tools/ord0263_verifier_v3.py",
+   "bytes": 21703,
+   "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+   "published_blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+   "published_bytes": 21703,
+   "unchanged": true
+  },
+  "v4": {
+   "file": "tools/ord0263_verifier_v4.py",
+   "bytes": 33388,
+   "blob40": "21bbeae698796ceb4a71d2d8c0c5d668d35a74b5",
+   "present": true
+  }
+ },
+ "files_requested": 8,
+ "proven_by_40char_readback": 8,
+ "not_proven": [],
+ "older_segments_untouched": true,
+ "rows": [
+  {
+   "local_file": "tools/ord0263_verifier_v4.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0263_verifier_v4.py",
+   "bytes": 33388,
+   "blob40": "21bbeae698796ceb4a71d2d8c0c5d668d35a74b5",
+   "readback_status": 200,
+   "readback_bytes": 33388,
+   "readback_blob40": "21bbeae698796ceb4a71d2d8c0c5d668d35a74b5",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 33388 | remote size 33388 | sha1 21bbeae698796ceb"
+  },
+  {
+   "local_file": "tools/make_v4.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/make_v4.py",
+   "bytes": 5443,
+   "blob40": "a2a1c83b060fd85f705e4cea9c8f083d9bee7988",
+   "readback_status": 200,
+   "readback_bytes": 5443,
+   "readback_blob40": "a2a1c83b060fd85f705e4cea9c8f083d9bee7988",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 5443 | remote size 5443 | sha1 a2a1c83b060fd85f"
+  },
+  {
+   "local_file": "tools/build_0271b_capture.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/build_0271b_capture.py",
+   "bytes": 11592,
+   "blob40": "8d7e2f583135dbecd34eb804a1d900d3e69547e4",
+   "readback_status": 200,
+   "readback_bytes": 11592,
+   "readback_blob40": "8d7e2f583135dbecd34eb804a1d900d3e69547e4",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 11592 | remote size 11592 | sha1 8d7e2f583135dbec"
+  },
+  {
+   "local_file": "tools/ord0271b_round_receipt.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0271b_round_receipt.py",
+   "bytes": 10729,
+   "blob40": "a5834a8b47bca405b76187d088eb600ddfb36a4c",
+   "readback_status": 200,
+   "readback_bytes": 10729,
+   "readback_blob40": "a5834a8b47bca405b76187d088eb600ddfb36a4c",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 10729 | remote size 10729 | sha1 a5834a8b47bca405"
+  },
+  {
+   "local_file": "ord0271b_capture_round1.json",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0271b_capture_round1.json",
+   "bytes": 18974,
+   "blob40": "b5d15dd3290869ec6866d20d325047bc65cd682b",
+   "readback_status": 200,
+   "readback_bytes": 18974,
+   "readback_blob40": "b5d15dd3290869ec6866d20d325047bc65cd682b",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 18974 | remote size 18974 | sha1 b5d15dd3290869ec"
+  },
+  {
+   "local_file": "ord0271b_round1.json",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0271b_round1.json",
+   "bytes": 25408,
+   "blob40": "85d90442b0af9ca15569b447ed7872f7b01abb0c",
+   "readback_status": 200,
+   "readback_bytes": 25408,
+   "readback_blob40": "85d90442b0af9ca15569b447ed7872f7b01abb0c",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 25408 | remote size 25408 | sha1 85d90442b0af9ca1"
+  },
+  {
+   "local_file": "ord0263_verifier_v4_selftest.json",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0263_verifier_v4_selftest.json",
+   "bytes": 17155,
+   "blob40": "c88f9edd360429580aa8cd389617fa03a8398cd3",
+   "readback_status": 200,
+   "readback_bytes": 17155,
+   "readback_blob40": "c88f9edd360429580aa8cd389617fa03a8398cd3",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 17155 | remote size 17155 | sha1 c88f9edd36042958"
+  },
+  {
+   "local_file": "ord0263v4_verdict_ord0263_capture_landedgen_c79e2b4.json",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0263v4_verdict_ord0263_capture_landedgen_c79e2b4.json",
+   "bytes": 6370,
+   "blob40": "5d2a9a3808b2a6a47eac4f9466653940f2b5fe57",
+   "readback_status": 200,
+   "readback_bytes": 6370,
+   "readback_blob40": "5d2a9a3808b2a6a47eac4f9466653940f2b5fe57",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 6370 | remote size 6370 | sha1 5d2a9a3808b2a6a4"
+  }
+ ]
+}
