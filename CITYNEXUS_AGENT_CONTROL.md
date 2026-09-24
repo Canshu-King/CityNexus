@@ -14904,6 +14904,56 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## ✅ T1 已真做 @2026-09-25T05:1x+08 —— 落地代 `45b0a5e2…` 已**构建 + 并旧资产 + 换 index + POST_UNION 全绿**，手机链现在服务的是新一代；两件旧账（0271-A/0277 的"同代真复跑"）到此有凭据了
+
+### ① 我做了什么（顺序就是要紧的，每一步都留了收据）
+```text
+1) `git archive 45b0a5e2…` 取一棵**干净导出树**（不读任何车道的工作树 ⇒ 避开"vite build 读到脏 frontend/src"那个坑）
+2) node_modules 用**我自己那棵** `_qoder_cmdr_ref_20260921` 做 junction，接之前先比指纹：
+   package.json 3bdc4709f27ac2d2d8e806b8a937991ac96b452f、package-lock.json a35da4e97f6aeff219739b7ddaad12abf716a431
+   与落地代**逐位相同**才敢接（CityNexus 那棵的 package.json 是 e12dfaf4…，不一样，所以没用它）
+3) `npm run build` → exit 0，8.68 s，PWA 生成 v10-sw.js + workbox；新资产 `index-CtuiCkKf.js` 1,248,629 B
+   sha256 前缀 08e5de2c560ce5a8（与尺里 export_sha256 同值）
+4) 建一个 detached worktree `_qoder_wt_45b0a5e`（HEAD=45b0a5e2…），因为尺要求 `--live-tree` 的
+   `git status --porcelain -- frontend/` 为空 + `rev-parse HEAD` == `--sha`；实测两者都满足（dist 被 gitignore，不算脏）
+5) 先 `--preflight-check`（只读）：PRE_UNION 报 `named_gaps=3`，三条全是 `NOT_YET_UNIONED_NAMED_GAP`
+   ⇒ 这正是尺该有的形状：**没并之前不许换**
+6) 真跑：第一次 `POST_UNION BLOCKED`，12 枚红**全是 401** ⇒ 我的操作错：我给了
+   `CNX_DEPLOY_PROXY_BASE/TUNNEL_BASE` 却没给 `CNX_DEPLOY_AUTH_FILE`。**尺拒绝切换，老代继续在服**，
+   用户链一根毛没动（这就是它存在的意义）
+7) 补 `CNX_DEPLOY_AUTH_FILE=<run/preview_auth.txt>` 再跑 → `preflight_before_switch: phase=POST_UNION
+   verdict=READY_TO_SWITCH reds=[] named_gaps=[]`、`temporal_obligation_ledger: DISCHARGED`、`overall: GREEN`
+   备份 `dist_bak_051542_1790284542652833400`，切换 5 件：index.html / manifest.webmanifest / sw.js / v10-sw.js / workbox-*.js
+```
+
+### ② 落地后现场读数（05:1x 实探，两臂并列）
+```text
+公共面与本地对照臂都服务**新一代**：`/assets/index-CtuiCkKf.js` 200、1,248,629 B、真 JS 字节（不是 HTML 冒充）；
+`/` 200 1,200 B；`/api/v1/health` 200；`/api/v1/places?city_code=CN-BEIJING` n=8（bare_list）。
+`DEPLOY_BUNDLE_RETENTION` 实测满足：上一代 `index-ChOTTCvB.js` **仍在盘上**（1,245,203 B）⇒ 装过老壳的客户端不会 404。
+凭据 0 打印（只把路径交给尺，尺自己读）；`demo/reset` 0 次；`_live.db`/`_preview.db` 未碰；产品字节 0 改动。
+```
+
+### ③ 外读坐标（BYTE-LEVEL MATCH）
+```text
+evidence/t1-postunion-45b0a5e/deploy_green_r1.json                        74,249 B  f1748f4cef8b836e366bd179f7464d67d72e32ea
+evidence/t1-postunion-45b0a5e/preflight_preunion_named_gaps_r1.json       33,477 B  f73844151f6847b8c2a863d52a651d4daae37d4f
+evidence/t1-postunion-45b0a5e/preflight_receipt_r1.json                   34,158 B  dc1cf7150b701e3851a6a5132094a7bce6a5d6b4
+evidence/t1-postunion-45b0a5e/postunion_refused_unauthenticated_probes_r1.json 35,832 B  0c7a6e33df4ed143a0519bfd90d7b907f8cfe215
+   ↑ 这一件是**我操作错的那一次**，一起发布：拒绝切换的收据比成功的收据更值得留
+```
+
+### ④ 待办状态变更
+```text
+T1（0271-A / 0277 的"同代真复跑"降级项）：**现在才真正满足**——换代尺的 POST_UNION 面是在一次
+  真实前端换代上跑的（PRE_UNION 报缺口 → 并资产 → POST_UNION READY → 切换 → 现场复探三腿全绿）。
+  @红队 请把 `deploy_green_r1.json` 引为 0271-A/0277 的同代证据；引用时按 Q24 写清代际=45b0a5e2。
+纪律提醒（我自己犯的）：给尺设 PROXY/TUNNEL 探针却忘了 AUTH_FILE，会让 F 面整批 401。
+  以后带探针的跑法固定为：`CNX_DEPLOY_PROXY_BASE + CNX_DEPLOY_TUNNEL_BASE + CNX_DEPLOY_AUTH_FILE` 三件一起给，
+  少一件就明确用 `--allow-proxy-unprobed` 并承认 F 是 UNPROBED，不许把 401 当产品红。
+```
+
+
 ## ✅ 已落地 @2026-09-25T05:0x+08 —— ORD-0269 / ORD-0273 门 v6 **ff-only 落上权威线**：新尖 `45b0a5e281cae9c37715173afd3ac5778f309ca7`（Q26=① 授权，落地前逐条自检）
 
 ### ① 落地凭据（全部我自己读回来的，不是车道报的）
