@@ -144,9 +144,42 @@ def main() -> int:
 
     add("")
     add(f"- 候选分支尖（外读）：`{lsremote}`")
-    add(f"- 候选尖：`{arms['head']}`；权威尖 `{arms.get('authoritative_tip_at_delivery', round_receipt['authoritative_tip_at_delivery'])}` 未动（单写者）")
-    add(f"- 绿轮收据里三元组的 sha 集合：{', '.join('`'+s[:9]+'…`' for s in sorted(shas))}（{len(shas)} 枚）")
+    # The authoritative line moves under this branch; printing a tip captured at authoring time would
+    # be a stale claim, so read the live one from the integration worktree.
+    live_tip = subprocess.run(
+        "git rev-parse HEAD",
+        cwd="D:/moodle/_qoder_integration_20260919",
+        capture_output=True,
+        text=True,
+        shell=True,
+    ).stdout.strip()
+    predict = subprocess.run(
+        f'git merge-tree --write-tree {live_tip} {round_receipt["candidate_tip"]}',
+        cwd="D:/moodle/_qoder_integration_20260919",
+        capture_output=True,
+        text=True,
+        shell=True,
+    )
+    conflicted = [
+        line.split("\t")[0]
+        for line in predict.stdout.splitlines()[1:]
+        if line.startswith("\t") and len(line.split("\t")) >= 4
+    ]
+    add(
+        f"- 权威尖（现读，非发帖时快照）：`{live_tip or '?'}`；我这枚候选是从 "
+        f"`{round_receipt['authoritative_tip_at_delivery'][:9]}…` 切的。"
+    )
+    add(
+        f"- 只读合流预测 `git merge-tree --write-tree {live_tip[:9]}… {round_receipt['candidate_tip'][:9]}…`"
+        f" ⇒ 冲突文件 **{len(conflicted)}** 个{('：' + ', '.join(conflicted)) if conflicted else ''}"
+        f"（exit={predict.returncode}；这条不移动任何分支）"
+    )
+    add(
+        f"- 反突变尖 `{arms['head']}`；门绿轮三元组的 sha 集合："
+        f"{', '.join('`' + s + '`' for s in sorted(shas))}（{len(shas)} 枚）"
+    )
     add(f"- 门绿轮：{round_receipt['verdict']}，三元组 {len(triples)} 条，全部来自 Playwright 日志行的机械解析")
+
     add("")
     add(f"**反突变矩阵 {len(arm_list)} 枚：KILLED {len(killed)} / 其它 {len(survived)}**")
     add("")
