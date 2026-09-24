@@ -1,0 +1,55 @@
+{
+ "at": "2026-09-24T08:51:17+08:00",
+ "segment": "segment5",
+ "lane": "HARNESS d291c9dc",
+ "subject": "landed generation c79e2b4f4efe414dba22a071a7136ae10b5c84aa as served from disk, measured on my own face after the 02:2x-02:3x blue-screen reboot",
+ "ruler": {
+  "file": "tools/ord0263_verifier_v3.py",
+  "bytes": 21703,
+  "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "promised": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "unchanged_so_far": true
+ },
+ "files_requested": 3,
+ "proven_by_40char_readback": 3,
+ "not_proven": [],
+ "older_segments_untouched": true,
+ "rows": [
+  {
+   "local_file": "ord0263_landedgen_bus_receipt.json",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_landedgen_bus_receipt.json",
+   "bytes": 191,
+   "blob40": "e45b699b12a9faa5d37ac8a8c735b73fa4a20f64",
+   "readback_status": 200,
+   "readback_bytes": 191,
+   "readback_blob40": "e45b699b12a9faa5d37ac8a8c735b73fa4a20f64",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 191 | remote size 191 | sha1 e45b699b12a9faa5"
+  },
+  {
+   "local_file": "tools/ship_landedgen_close.py",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ship_landedgen_close.py",
+   "bytes": 16396,
+   "blob40": "f51f915a7053a2378a447189cbeb00f3cc6cefdd",
+   "readback_status": 200,
+   "readback_bytes": 16396,
+   "readback_blob40": "f51f915a7053a2378a447189cbeb00f3cc6cefdd",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 16396 | remote size 16396 | sha1 f51f915a7053a237"
+  },
+  {
+   "local_file": "tools/publish_landedgen_s1.py",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/publish_landedgen_s1.py",
+   "bytes": 8493,
+   "blob40": "93fcb5c75d9421638e112798b714210612fdd581",
+   "readback_status": 200,
+   "readback_bytes": 8493,
+   "readback_blob40": "93fcb5c75d9421638e112798b714210612fdd581",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 8493 | remote size 8493 | sha1 93fcb5c75d942163"
+  }
+ ]
+}
