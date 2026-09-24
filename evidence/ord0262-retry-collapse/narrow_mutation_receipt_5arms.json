@@ -1,0 +1,202 @@
+{
+ "what": "ORD-0262-NARROW 门的反突变 campaign（5 枚：①/② 的具名信封 + ④ 的三枚正控：把等值抄回写死数字）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-24T02:13:33+08:00",
+ "scope": {
+  "branch": "agent/f-ord0262-narrow",
+  "head": "3093eea773c79fa00744fe72d1f2c43b4d0bd75e",
+  "base": "d2665e25855aeb265329266831983de42321697d",
+  "target_file": "D:\\moodle\\_qoder_f_ord253_20260923\\backend\\app\\main.py",
+  "target_sha_before_and_after": "8c8ec04dbdc1defb",
+  "run_shape": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_ord0262_narrow_contention.py + tests/test_qoder_stay_generation_operations.py -q（每枚只跑点名的 nodeid）"
+ },
+ "control": {
+  "reading": {
+   "rc": 0,
+   "failed_nodeids": [],
+   "tail": "5 passed, 27 deselected, 2 warnings in 33.84s",
+   "collection_lines": []
+  },
+  "all_targets": [
+   "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+   "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500",
+   "test_4_a_non_lock_operational_error_is_not_called_contention",
+   "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal",
+   "test_a_busy_store_answers_a_named_retry_on_both_doors"
+  ],
+  "campaign_valid": true,
+  "rule": "控制轮 = 未突变、同两把门、同一组点名 nodeid 的真实读数；它不绿就整批作废（不出 KILLED/SURVIVED 判级）"
+ },
+ "mutations": {
+  "M1_whitelist_emptied": {
+   "mutation": {
+    "before_sha256_16": "8c8ec04dbdc1defb",
+    "after_sha256_16": "113d87f89b3ac73b",
+    "anchors": [
+     "CONTENTION_UNIQUE_ROWS = frozenset({\"traveler_agent_policies",
+     "CONTENTION_LOCK_MARKERS = (\"database is locked\", \"database i"
+    ]
+   },
+   "target_nodeids": [
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500",
+    "test_4_a_non_lock_operational_error_is_not_called_contention"
+   ],
+   "owner_assertion": "①/②：认不出来就没人翻译 ⇒ 这两格该红；③' 那格反向该**继续绿**（名单外本来就不认）",
+   "mutated_runs": {
+    "rc": 1,
+    "failed_nodeids": [
+     "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+     "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500",
+     "test_4_a_non_lock_operational_error_is_not_called_contention"
+    ],
+    "tail": "3 failed, 29 deselected, 2 warnings in 34.42s",
+    "collection_lines": [
+     "E       (Background on this error at: https://sqlalche.me/e/20/e3q8)"
+    ]
+   },
+   "seconds": 35.2,
+   "claimed_result": "KILLED",
+   "killed_by": [
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500",
+    "test_4_a_non_lock_operational_error_is_not_called_contention"
+   ],
+   "still_green": [],
+   "derived_result": null
+  },
+  "M2_envelope_replaced_by_bare_503": {
+   "mutation": {
+    "before_sha256_16": "8c8ec04dbdc1defb",
+    "after_sha256_16": "b0e8ea989aa23f19",
+    "anchors": [
+     "        \"Another generation is writing right now; this one w"
+    ]
+   },
+   "target_nodeids": [
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500"
+   ],
+   "owner_assertion": "①/②：只把状态码改对、信封掏空 ⇒ 必须红（证明门测的是契约不是状态码）",
+   "mutated_runs": {
+    "rc": 1,
+    "failed_nodeids": [
+     "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+     "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500"
+    ],
+    "tail": "2 failed, 30 deselected, 2 warnings in 33.71s",
+    "collection_lines": []
+   },
+   "seconds": 34.4,
+   "claimed_result": "KILLED",
+   "killed_by": [
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500"
+   ],
+   "still_green": [],
+   "derived_result": null
+  },
+  "M3_retry_literal_reintroduced_hydration": {
+   "mutation": {
+    "before_sha256_16": "8c8ec04dbdc1defb",
+    "after_sha256_16": "8af78148a969f1e8",
+    "anchors": [
+     "            details={\"retry_after_ms\": _hydration_busy_retry"
+    ]
+   },
+   "target_nodeids": [
+    "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal",
+    "test_a_busy_store_answers_a_named_retry_on_both_doors"
+   ],
+   "owner_assertion": "④ 的正控（commander 01:1x §③ 点名要的那一枚）：把 hydration 的等值抄回写死的 500 ⇒ 那一格**必须红**；generation 两门那枚既存门必须**继续绿**（它管的是另一条操作），这才说明这一刀切在 hydration 上，不是把整块产品打死",
+   "mutated_runs": {
+    "rc": 1,
+    "failed_nodeids": [
+     "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal"
+    ],
+    "tail": "1 failed, 1 passed, 30 deselected, 2 warnings in 1.24s",
+    "collection_lines": []
+   },
+   "seconds": 1.9,
+   "claimed_result": "KILLED",
+   "killed_by": [
+    "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal"
+   ],
+   "still_green": [
+    "test_a_busy_store_answers_a_named_retry_on_both_doors"
+   ],
+   "derived_result": null
+  },
+  "M5_generation_site_literal_reintroduced": {
+   "mutation": {
+    "before_sha256_16": "8c8ec04dbdc1defb",
+    "after_sha256_16": "10676bf529dbd93a",
+    "anchors": [
+     "            details={\"retry_after_ms\": _contention_retry_aft"
+    ]
+   },
+   "target_nodeids": [
+    "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal",
+    "test_a_busy_store_answers_a_named_retry_on_both_doors"
+   ],
+   "owner_assertion": "④ 的第三枚正控，也是这次 A/B 真找出来的那一格：把**等待门**那处抄回 500 ⇒ 我的 ④ 与既存那枚 resident 门（它从前钉死 ==500）必须同时红 —— resident 断言现在判的是'等于阶梯下限 + 两门一致'，不是旧数字",
+   "mutated_runs": {
+    "rc": 1,
+    "failed_nodeids": [
+     "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal",
+     "test_a_busy_store_answers_a_named_retry_on_both_doors"
+    ],
+    "tail": "2 failed, 30 deselected, 2 warnings in 1.22s",
+    "collection_lines": [
+     "        \"\"\"The database can be held by a generation in flight; that is not an internal error."
+    ]
+   },
+   "seconds": 1.9,
+   "claimed_result": "KILLED",
+   "killed_by": [
+    "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal",
+    "test_a_busy_store_answers_a_named_retry_on_both_doors"
+   ],
+   "still_green": [],
+   "derived_result": null
+  },
+  "M4_retry_literal_reintroduced_envelope": {
+   "mutation": {
+    "before_sha256_16": "8c8ec04dbdc1defb",
+    "after_sha256_16": "a4a53f795f919f44",
+    "anchors": [
+     "        details={\"retry_after_ms\": _contention_retry_after_m"
+    ]
+   },
+   "target_nodeids": [
+    "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal",
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500"
+   ],
+   "owner_assertion": "④ 的第二枚正控：共享具名信封里抄回 500 ⇒ ④ 必须红；①/② 记在 targets 里是要**看见它们继续绿**（它们断的是信封形状，不该被等值来源这一刀带走）",
+   "mutated_runs": {
+    "rc": 1,
+    "failed_nodeids": [
+     "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal"
+    ],
+    "tail": "1 failed, 2 passed, 29 deselected, 2 warnings in 33.80s",
+    "collection_lines": []
+   },
+   "seconds": 34.6,
+   "claimed_result": "KILLED",
+   "killed_by": [
+    "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal"
+   ],
+   "still_green": [
+    "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+    "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500"
+   ],
+   "derived_result": null
+  }
+ },
+ "campaign_valid": true,
+ "restore_verified": true,
+ "not_measured": {
+  "cross_process_same_key_face": "归 verifier（仲裁 §3）；本门是进程内形制，不借此声明跨进程已闭"
+ }
+}
