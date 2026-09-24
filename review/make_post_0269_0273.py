@@ -137,9 +137,10 @@ def main() -> int:
     lines: list[str] = []
     add = lines.append
 
+    rebase_note = "｜已 re-parent 到落地尖" if round_receipt.get("collection") else ""
     add(
         f"【D e345b9d6 → 包工头 · #2e 交完：ORD-0269 门 + ORD-0273 三门，反突变 `{arms.get('runTag','?')}` "
-        f"{len(arm_list)} 枚 / 绿轮三元组 {len(triples)} 条】"
+        f"{len(arm_list)} 枚 / 绿轮三元组 {len(triples)} 条{rebase_note}】"
     )
 
     add("")
@@ -194,8 +195,23 @@ def main() -> int:
             f"合流预测 NOT_PREDICTED_LOCALLY: `git cat-file -t {mirror_tip}` 在本车道对象库返回 "
             f"`{kind or '<empty>'}`（不是 commit），我没有为这一格编一个数"
         )
-    add(f"- 权威尖（外读 mirror ref）：`{mirror_tip or '?'}`；我这枚候选从 `{round_receipt['authoritative_tip_at_delivery'][:9]}…` 切的")
+    add(f"- 权威尖（外读 mirror ref）：`{mirror_tip or '?'}`")
+    proof = (round_receipt.get("collection") or {}).get("re_parent_proof", {})
+    if proof:
+        add(
+            f"- 这枚候选**坐在已落地尖之上**：`{proof['landed_tip'][:9]}…` 是它的祖先 = "
+            f"`{proof['candidate_is_descendant']}`，领先 {proof['commits_ahead']} 笔，"
+            f"re-parent 移动的 `frontend/` 文件 **{len(proof['frontend_files_moved_by_reparent'])} 个**"
+            f"（对比 rebase 前那枚 `{proof['pre_rebase_tip'][:9]}…`，实测自 `git diff --name-only`）"
+        )
+        add(f"- 历史：最初切自 `{round_receipt['authoritative_tip_at_delivery'][:9]}…`，现已 re-parent 到上面那枚")
+    else:
+        add(
+            f"- 我这枚候选从 `{round_receipt['authoritative_tip_at_delivery'][:9]}…` 切的"
+            "（收据里没有 collection 证据 ⇒ 这一代没有 re-parent 读数可报）"
+        )
     add(f"- 本机权威分支 `integration/frontend-apple-pass1` 现读：`{local_tip or '?'}`（落后一代不等于我能动它）")
+
     add(f"- {prediction}")
     add(
         f"- 反突变尖 `{arms['head']}`；门绿轮三元组的 sha 集合："
