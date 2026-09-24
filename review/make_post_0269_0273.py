@@ -276,7 +276,7 @@ def main() -> int:
         add("<details><summary>主线组（8 件，带 blob）</summary>")
         add("")
         for f in groups["mainline_needs"]:
-            add(f"- `{f['status']}` +{f['added']}/-{f['removed']} `{f['path']}` — blob `@`{f['blob_at_head']}`")
+            add(f"- `{f['status']}` +{f['added']}/-{f['removed']} `{f['path']}` — blob `{f['blob_at_head']}`")
         add("")
         add("</details>")
         add("")
