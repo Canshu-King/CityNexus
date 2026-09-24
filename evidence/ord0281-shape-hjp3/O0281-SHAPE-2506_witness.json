@@ -1,0 +1,90 @@
+{
+ "order": "ORD-0281 WRITE_LEG_DEADLINE - 定形的现场依据",
+ "lane": "HJ-P3 aad2d1f2",
+ "run_id": "O0281-SHAPE-2506",
+ "deadline_module": {
+  "file": "frontend/src/lib/readDeadline.ts",
+  "constant": "READ_DEADLINE_MS = 12_000 (line 15)",
+  "write_branch": "lines 43-45: `if (method !== \"GET\" && method !== \"HEAD\") { return fetch(input, init); }`",
+  "authors_own_note": "lines 10-12: reads-only on purpose, because aborting a write is an idempotency question this order did not ask"
+ },
+ "attribution_module": {
+  "file": "frontend/src/lib/failureAttribution.ts",
+  "read_deadline_sentence": "lines 390-407 name the read case (\"No answer from this server in N seconds\")"
+ },
+ "shipped_asset_anchors": {
+  "previous_bundle": {
+   "bytes": 1245203,
+   "sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+   "vb_char_index": 271706,
+   "vb_byte_offset": 271706,
+   "guard_char_index": 271777,
+   "guard_byte_offset": 271777,
+   "multibyte_chars_before_vb": 0,
+   "read_deadline_constant": "pb=12e3,"
+  },
+  "currently_served_bundle": {
+   "bytes": 1248629,
+   "sha256": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+   "vb_char_index": 271707,
+   "vb_byte_offset": 271707,
+   "guard_char_index": 271778,
+   "guard_byte_offset": 271778,
+   "multibyte_chars_before_vb": 0,
+   "read_deadline_constant": "pb=12e3,"
+  },
+  "note": "char index == byte offset for both anchors (no multi-byte characters before them); 271706 is the start of `async function vb(`, 271777 is the decision sentence inside it - both are true, of different anchors"
+ },
+ "write_leg_inventory": {
+  "raw_fetch_sites_total": 33,
+  "raw_fetch_write_sites": 13,
+  "with_signal": 2,
+  "with_timer": 0,
+  "list": [
+   "frontend/src/features\\execution\\LiveRecovery.tsx:225 POST signal=False timer=False",
+   "frontend/src/features\\notifications\\PushCapabilityCard.tsx:56 POST signal=False timer=False",
+   "frontend/src/features\\planning\\PlanComparison.tsx:88 POST signal=False timer=False",
+   "frontend/src/features\\planning\\PlanWithAiSheet.tsx:491 POST signal=True timer=False",
+   "frontend/src/features\\planning\\PlanWithAiSheet.tsx:598 POST signal=True timer=False",
+   "frontend/src/features\\recovery\\V14RecoveryTruthPanel.tsx:69 POST signal=False timer=False",
+   "frontend/src/features\\simulation\\simulationAdapter.ts:229 POST signal=False timer=False",
+   "frontend/src/features\\simulation\\simulationAdapter.ts:296 POST signal=False timer=False",
+   "frontend/src/features\\simulation\\simulationAdapter.ts:335 POST signal=False timer=False",
+   "frontend/src/features\\simulation\\simulationAdapter.ts:376 POST signal=False timer=False",
+   "frontend/src/features\\stay\\HotelsPanel.tsx:63 POST signal=False timer=False",
+   "frontend/src/features\\stay\\HotelsPanel.tsx:64 POST signal=False timer=False",
+   "frontend/src/features\\stay\\HotelsPanel.tsx:87 POST signal=False timer=False"
+  ]
+ },
+ "runtime_waits": {
+  "tree_c79e2b4_ms": [
+   32286,
+   32328,
+   32335
+  ],
+  "tree_dcae1bc9_ms": [
+   32379
+  ],
+  "client_errors": [
+   null,
+   null,
+   null,
+   null
+  ],
+  "manual_cancel": {
+   "elapsed_ms": 7046,
+   "client_error": "AbortError: signal is aborted without reason",
+   "card": "已中止后续核对 / 请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。"
+  }
+ },
+ "coverage_uneven_witness": {
+  "setup": "silent origin (accepts TCP, answers nothing) on :8597 + face :8596 on the frozen bundle, brand-new port so no stale service worker",
+  "origin_probe": {
+   "connect_accepted": true,
+   "answered_within_3s": false
+  },
+  "reading": "on /v8/hub onboarding the screen stopped changing at 1081 ms and NO deadline sentence appeared within 25781 ms; typing a destination produced a locally-derived line, not a deadline card",
+  "consequence_for_the_shape": "T-c must name WHICH legs carry the constant, because \"the app has a read deadline\" is not uniform across the 33 raw fetch sites",
+  "not_obtained": "a read-deadline sentence on THIS surface (NOT_OBTAINED_ON_THIS_SURFACE); the proven read-half receipts live under ORD-0263"
+ }
+}
