@@ -1,0 +1,70 @@
+{
+ "generatedBy": "e345b9d6",
+ "orders": [
+  "ORD-0269 cells 1/3 + R-4 + R-6",
+  "ORD-0273 TEXT / TEXT-EN / ACTION"
+ ],
+ "external_readback": "45b0a5e281cae9c37715173afd3ac5778f309ca7\trefs/heads/review/0269-0273-reparent-dcae1bc",
+ "authoritative_tip_at_delivery": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "arms_tip": "aef5765c53bc92e85ff4c548a8076b32a3579762",
+ "green_round_tip": "5b549be158e4c684c7e5e8293935f5f294ab51a1",
+ "tree_diff_between_tips": {
+  "full": [
+   "A\treview/ledger_block_e345b9d6_v6.md",
+   "M\treview/ledger_insert_delivery_e345b9d6.py",
+   "M\treview/make_post_0269_0273.py",
+   "M\treview/ord0269_0273_gate_round.py"
+  ],
+  "under_test_files": [],
+  "evidence_tooling_files": [
+   "A\treview/ledger_block_e345b9d6_v6.md",
+   "M\treview/ledger_insert_delivery_e345b9d6.py",
+   "M\treview/make_post_0269_0273.py",
+   "M\treview/ord0269_0273_gate_round.py"
+  ],
+  "anything_under_test_changed": false,
+  "reading": "0 file(s) under frontend/ differ between the arms tip and the green-round tip; 4 evidence-tooling file(s) differ. The arms mutate only frontend/, so the green round re-measures the same bytes the arms killed."
+ },
+ "files": [
+  {
+   "name": "ord0269-0273-arms-v6-aef5765.json",
+   "bytes": 22591,
+   "sha256": "93fbed06ecad2e985eb4ebbff726defef85f46d6567abc77cf9cab79d23437fb"
+  },
+  {
+   "name": "ord0269-0273-gate-round-5b549be.json",
+   "bytes": 20772,
+   "sha256": "33f2b0d3c7dc647c4361179e92d885cc9f0d560c31eb33184055ff78e4611ea7"
+  }
+ ],
+ "counts": {
+  "arms": 9,
+  "arms_killed": 9,
+  "triples": 7,
+  "triple_shas": [
+   "5b549be158e4c684c7e5e8293935f5f294ab51a1"
+  ]
+ },
+ "R_SCHEMA_01_class": {
+  "rule": "SCHEMA_SOURCE_METHOD_CORRECTED",
+  "row_source": "product API only -- e2e/_qoderRealSeed.setup.ts (travelers -> journeys -> stay-options/generate -> select) and ORD-0269 R-4's second journey via POST /api/v1/travelers + POST /api/v1/journeys",
+  "not_used": [
+   "DDL replay",
+   "direct ensure_schema() call",
+   "hand-written INSERTs"
+  ],
+  "conclusions_depend_on": "rendered text, element visibility, HTTP status and header/body shape on the wire -- none depend on table structure, column existence, indexes, constraints, migration state or schema version",
+  "therefore": "no schema re-run is required for these two gates"
+ },
+ "publisher_refusal_writing_rule": "evidence names the rule only (rule_hit: <NAME>); the guard's raw sentence is not copied into any artifact published for others to read",
+ "nodeid_root_rule": "every triple carries nodeid_root and names the same cwd in run_shape",
+ "attribution": "claimed_result is self-reported; derived_result belongs to the verifier",
+ "post_tip_delta": {
+  "head_at_publish": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "commits_after_the_green_round": [
+   "M\treview/make_post_0269_0273.py"
+  ],
+  "frontend_files_after_the_green_round": [],
+  "reading": "everything added after the green-round tip is evidence tooling; no file a triple points at changed (0 frontend files)"
+ }
+}
