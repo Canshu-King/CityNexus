@@ -1,0 +1,203 @@
+{
+ "what": "ORD-0277 SW_REGISTRATION_GENERATION_CONTRACT offline proof",
+ "t": "2026-09-24T22:36:17+0800",
+ "order": {
+  "id": "ORD-0277",
+  "name": "SW_REGISTRATION_GENERATION_CONTRACT",
+  "source": "arbiter Q20 ruling 2026-09-24 (bus, after my 0271-A DEBT-3 demo)",
+  "scope_rule": "0271-A keeps predicate/phase work; 0277 owns registration topology"
+ },
+ "real_input": {
+  "bundle": "D:/moodle/_qoder_preview_20260920/dist/assets/index-ChOTTCvB.js",
+  "bytes": 1245203,
+  "sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+  "registrations_parsed": 1
+ },
+ "draft_under_test": {
+  "path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/deploy_bundle_v2_draft.py",
+  "bytes": 132623,
+  "blob": "0686670743c079647aa678370aa5481562c4c0a8"
+ },
+ "in_service_gauge": {
+  "blob": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+  "expected": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7"
+ },
+ "cells": [
+  {
+   "cell": "S0_judge_signature",
+   "verdict": "GREEN",
+   "detail": {
+    "argnames": [
+     "rows"
+    ]
+   }
+  },
+  {
+   "cell": "S1_both_arms_use_the_generation_judge",
+   "verdict": "GREEN",
+   "detail": {
+    "calls_per_function": {
+     "selftest": 3,
+     "preflight_before_switch": 1,
+     "main": 1
+    },
+    "total_calls": 5,
+    "required": {
+     "preflight_before_switch": ">=1 (arm I_pre)",
+     "main": ">=1 (arm I post-switch)"
+    }
+   }
+  },
+  {
+   "cell": "S2_per_file_rule_gone_and_demoted_by_scope",
+   "verdict": "GREEN",
+   "detail": {
+    "old_aggregate_present": false,
+    "preflight_site_pooled": 1,
+    "key_renaming_left_behind": false,
+    "both_sites_tagged_gate_generation": 2,
+    "generation_is_the_gate": true,
+    "why": "if a per-file RED can still reach the red scan, ORD-0277 is only half closed"
+   }
+  },
+  {
+   "cell": "S3_in_service_gauge_untouched",
+   "verdict": "GREEN",
+   "detail": {
+    "blob": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+    "expected": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+    "bytes": 106731
+   }
+  },
+  {
+   "cell": "P1_real_entry_bundle_has_one_valid_registration",
+   "verdict": "GREEN",
+   "detail": {
+    "calls": [
+     {
+      "sw_url": "/v10-sw.js",
+      "scope": "/",
+      "updateViaCache": "none",
+      "scope_ok": true,
+      "update_via_cache_ok": true
+     }
+    ],
+    "parsed": 1,
+    "mentions": 1,
+    "bundle_bytes": 1245203,
+    "sha256": "2d56a79632efc0c6"
+   }
+  },
+  {
+   "cell": "G1_multi_entry_real_owner_plus_silent_chunk_is_GREEN",
+   "verdict": "GREEN",
+   "detail": {
+    "verdict": "GREEN",
+    "owners": [
+     "disk index-ChOTTCvB.js"
+    ],
+    "reason": "owner(s) disk index-ChOTTCvB.js; 1 other script(s) name no registration, which is not a defect",
+    "rule": "arbiter M1: index-a registers, index-b does not => GREEN"
+   }
+  },
+  {
+   "cell": "G2_the_old_per_file_rule_would_have_blocked_this_generation",
+   "verdict": "GREEN",
+   "detail": {
+    "owner_per_file": "GREEN",
+    "silent_per_file": "RED",
+    "meaning": "the shape that produced union_readiness=BLOCKED on a healthy export at 12:3x"
+   }
+  },
+  {
+   "cell": "G3_secondary_dangerous_registration_is_RED",
+   "verdict": "GREEN",
+   "detail": {
+    "reason": "INVALID_REGISTRATION_IN_GENERATION: [{'ref': '/assets/second-entry.example.js', 'sw_url': '/sub/sw.js', 'scope': '/app/', 'updateViaCache': 'all', 'scope_ok': False, 'upd",
+    "rule": "arbiter M2: a second ownership claim must not be ignored"
+   }
+  },
+  {
+   "cell": "G4_zero_registrations_still_RED",
+   "verdict": "GREEN",
+   "detail": {
+    "reason": "NO_SERVICE_WORKER_REGISTRATION_FOUND in any of the 2 script(s) the index names",
+    "rule": "the killer that made arm I exist stays armed"
+   }
+  },
+  {
+   "cell": "G5_unresolved_mention_is_RED_not_a_pass",
+   "verdict": "GREEN",
+   "detail": {
+    "reason": "UNRESOLVED_REGISTRATION: [{'ref': '/assets/unresolved.example.js', 'unresolved': 1}]"
+   }
+  },
+  {
+   "cell": "G6_unreadable_bundle_is_RED",
+   "verdict": "GREEN",
+   "detail": {
+    "reason": "UNREADABLE_BUNDLE: ['/assets/unreadable.example.js']"
+   }
+  },
+  {
+   "cell": "G7_empty_script_set_is_RED",
+   "verdict": "GREEN",
+   "detail": {
+    "reason": "NO_SERVICE_WORKER_REGISTRATION_FOUND in any of the 0 script(s) the index names",
+    "why": "an index that names no script is not evidence of a SW"
+   }
+  },
+  {
+   "cell": "K5_every_mutant_flips_only_its_own_cell",
+   "verdict": "GREEN",
+   "detail": {
+    "kills": [
+     {
+      "mutant": "K1_invalid_registration_washed_to_green",
+      "owner_cell": "G3_secondary_dangerous_registration_is_RED",
+      "clean_returned": "RED",
+      "mutant_returned": "GREEN",
+      "verdict": "KILLED"
+     },
+     {
+      "mutant": "K2_no_owner_stops_being_red",
+      "owner_cell": "G4_zero_registrations_still_RED",
+      "clean_returned": "RED",
+      "mutant_returned": "GREEN",
+      "verdict": "KILLED"
+     },
+     {
+      "mutant": "K3_unresolved_mention_ignored",
+      "owner_cell": "G5_unresolved_mention_is_RED_not_a_pass",
+      "clean_returned": "RED",
+      "mutant_returned": "GREEN",
+      "verdict": "KILLED"
+     },
+     {
+      "mutant": "K4_unreadable_treated_as_silent",
+      "owner_cell": "G6_unreadable_bundle_is_RED",
+      "clean_returned": "RED",
+      "mutant_returned": "GREEN",
+      "verdict": "KILLED"
+     }
+    ]
+   }
+  },
+  {
+   "cell": "L1_selftest_carries_the_two_approved_controls",
+   "verdict": "GREEN",
+   "detail": {
+    "arms": [
+     "0277-M1 GREEN",
+     "0277-M2 RED",
+     "0277-M3 RED"
+    ],
+    "measured_live": "the 15:3x run matched all three; the same run's other 10 arms went RED because the 14:51 reboot had taken the server down - see the chain-restoration note"
+   }
+  }
+ ],
+ "cells_total": 14,
+ "cells_green": 14,
+ "overall": "GREEN",
+ "claimed_result": "offline_selftest_GREEN"
+}
