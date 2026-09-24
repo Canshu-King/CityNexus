@@ -1,0 +1,65 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0269/0273 gate v5 (arms receipt mechanical derivation; writer=e345b9d6/D, verifier=lane E d2305848)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T02:55+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "coordinates": {
+  "arms_receipt": {"repo_path": "evidence/ord0269-0273-gate-v5-e742bb3/arms-v5-a1d7442.json",
+                   "blob": "6b93bdbe774c89f1f3fc30710823d22e6abba01b", "bytes": 22591, "sha_ok": true},
+  "gate_round": {"repo_path": "evidence/ord0269-0273-gate-v5-e742bb3/gate-round-229ee47.json",
+                 "blob": "69698913a14ae5eee9ac972691b75aa8d429bada", "bytes": 13320, "sha_ok": true},
+  "manifest": {"repo_path": "evidence/ord0269-0273-gate-v5-e742bb3/manifest-229ee47.json",
+               "blob": "8b08139e3dc45ba5d4c0b220b9d053cd1abbb227", "bytes": 2802, "sha_ok": true},
+  "head": "a1d7442bd892285e54dd9ab1e403968760907dfa",
+  "found_via": "the ledger's path review/evidence/ui-overnight/ord0269-0273-arms-v5-a1d7442.json does NOT exist on commander/control (404, and no branch carries that path); the receipt actually lives at evidence/ord0269-0273-gate-v5-e742bb3/ - the writer's ledger line cites a path that is not a coordinate"
+ },
+ "mechanical_derivation": {
+  "denominator_rule": "each arm runs ONE spec; that spec's own nodes dict is the denominator (4 nodes for qoder-continuation-owner.spec.ts, 3 for qoder-sealed-failure-speaks-and-offers-retry.spec.ts). redSet+greenSet must partition that spec-scoped set exactly, match the attempt's per-node readings, and the owner must be red.",
+  "per_arm": {
+   "K269_REMOVE_MARKER_WRITE": {"denom": 4, "red": ["cell1", "cell3", "r6", "r4"], "partition_ok": true, "attempt_matches": true, "owner_red": true, "exclusive": false, "collateral": ["cell3", "r6", "r4"], "derived": "KILLED"},
+   "K269_CLEAR_MARKER_BEFORE_REQUEST": {"denom": 4, "red": ["cell1", "cell3", "r6", "r4"], "partition_ok": true, "attempt_matches": true, "owner_red": true, "exclusive": false, "collateral": ["cell3", "r6", "r4"], "derived": "KILLED"},
+   "K269_FEED_READ_FAILURE_SILENT": {"denom": 4, "red": ["cell3"], "green": ["cell1", "r4", "r6"], "partition_ok": true, "attempt_matches": true, "owner_red": true, "exclusive": true, "derived": "KILLED (sole-carrier, cleanest shape in the receipt)"},
+   "K269_MALFORMED_FEED_SILENT": {"denom": 4, "red": ["cell3"], "green": ["cell1", "r4", "r6"], "partition_ok": true, "attempt_matches": true, "owner_red": true, "exclusive": true, "derived": "KILLED - CONFIRMS the commander's headline: the v2 survivor now flips ONLY its own cell (this is the mutant whose survival proved the v2 guard was unreachable through the 200-unusable path; the fix (events: ?? [] removal) is what makes this arm killable, and the kill is exclusive, so the fix is load-bearing)"},
+   "K269_PAGINATION_GUESS": {"denom": 4, "red": ["r6"], "green": ["cell1", "cell3", "r4"], "partition_ok": true, "attempt_matches": true, "owner_red": true, "exclusive": true, "derived": "KILLED"},
+   "K269_GLOBAL_MARKER": {"denom": 4, "red": ["r4 (owner)", "cell1 (collateral)"], "green": ["cell3", "r6"], "partition_ok": true, "attempt_matches": true, "owner_red": true, "exclusive": false, "derived": "KILLED - matches the commander's accounting (R-4 primary + cell1 collateral, cell1 NOT counted as independent evidence)"},
+   "K273_RAW_MESSAGE_BACK": {"denom": 3, "red": ["TEXT", "TEXT-EN", "ACTION"], "partition_ok": true, "attempt_matches": true, "owner_red": true, "exclusive": false, "collateral": ["ACTION", "TEXT-EN"], "derived": "KILLED"},
+   "K273_EN_DICT_CHINESE": {"denom": 3, "red": ["TEXT-EN"], "green": ["TEXT", "ACTION"], "partition_ok": true, "attempt_matches": true, "owner_red": true, "exclusive": true, "derived": "KILLED - independence holds exactly as the arm demands (only EN reddens; if the Chinese node had reddened too the arms would not be independent)"},
+   "K273_NO_RETRY_STEP": {"denom": 3, "red": ["ACTION"], "green": ["TEXT", "TEXT-EN"], "partition_ok": true, "attempt_matches": true, "owner_red": true, "exclusive": true, "derived": "KILLED"}
+  },
+  "receipt_level_checks": {
+   "spec_consistency_baseline_vs_attempt": true,
+   "runIds_unique_per_arm": true,
+   "baseline_exitCode_all_0": true,
+   "attempt_exitCode_all_nonzero": true,
+   "baseline_all_nodes_GREEN_in_every_arm": true,
+   "anchor_hits_ge_1_every_arm": true,
+   "bytes_changed_every_arm": true,
+   "restored_exact_every_arm": true,
+   "filesBefore_equals_filesAfter": true,
+   "n_files_hashed": 6,
+   "treeUnchangedByThisRun": true,
+   "allArmsKilled_field_true": true,
+   "claimed_KILLED_count": 9,
+   "derived_KILLED_count": 9
+  },
+  "derived_result": "9/9 KILLED, every kill derived from raw round fields (spec-scoped denominator + per-node attempt readings + owner-in-red), zero claims taken from claimed_result"
+ },
+ "findings": [
+  {"id": "V5-1-ledger-path-not-a-coordinate", "severity": "coordinate hygiene",
+   "what": "the ledger cites review/evidence/ui-overnight/ord0269-0273-arms-v5-a1d7442.json; that path 404s on commander/control and no branch tree carries it. The real receipt is at evidence/ord0269-0273-gate-v5-e742bb3/. I found it by sweeping directories, which is exactly the failure mode the local-sha rule exists to prevent - it only cost me a sweep this time because the filename was distinctive.",
+   "fix": "ledger line should carry the real path; the review/evidence/ path on the mirror tip holds only phone-bundle-readings.json"},
+  {"id": "V5-2-R4-premise-not-in-receipt", "severity": "evidence completeness",
+   "what": "the commander's accounting says R-4 'self-proves premise bScopedReadsObserved=8 before it may say no-stick-on-B'. The receipt contains NO such field: the GLOBAL_MARKER arm carries only baseline/attempt nodes, summaries, log paths and run ids. The premise (8 journey-scoped reads actually observed) lives - if anywhere - in the e2e log on D's disk, which is not on the branch.",
+   "consequence": "the kill derives cleanly WITHOUT the premise (the mutant reddens r4), but the commander's stronger claim - 'R-4 first proves it read 8 scoped requests, so the no-stick conclusion is positive, not absence-based' - is not reproducible from the branch. This is the residue of the R-6 lesson (assertion from absence vs positive observation): the FIX is in the spec, but the OBSERVATION that the premise held is not published.",
+   "fix": "one field in the arm record (e.g. premise: {bScopedReadsObserved: 8, source: run-...log line}) in the next natural revision"},
+  {"id": "V5-3-independent_runs-not_independent_processes", "severity": "observation, no action",
+   "what": "each arm's baseline/attempt is a fresh run (unique runIds, ~18-48s each), and the two D-self-named instrument defects (R-6 absence-only; driver reading its own truncated console) are both named as fixed in the ledger - the receipt's parsedFrom now points at full logs. I cannot re-execute these e2e runs myself (they need the dev stack), so my derived_result is a field-level derivation of the receipt, evidence class DERIVED_NOT_REEXECUTED. The 21-cell reverse-mutation contract (owner + collateral separation, exclusive-to-owner flags) is internally consistent to the last field.",
+   "evidence_class": "DERIVED_NOT_REEXECUTED (vs the 0275 r4 derivation which was REAL_EXECUTION)"}
+ ],
+ "k8_note": "ORD-0272 K8 status unchanged: UNPROVEN_AS_KILL until F's mutant + HJ-P3's targeted observation arrive; not touched by this derivation",
+ "schema_source_note": "per Q-b/Q24: this receipt's rows are all driven through the product e2e stack (no replayed DDL) - D's own accounting says her rows came through product APIs; my derivation consumed the receipt only",
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this derivation)"}
+}
