@@ -223,15 +223,16 @@ def main() -> int:
             f"`{kind or '<empty>'}`（不是 commit），我没有为这一格编一个数"
         )
     add(f"- 权威尖（外读 mirror ref）：`{mirror_tip or '?'}`")
-    proof = (round_receipt.get("collection") or {}).get("re_parent_proof", {})
+    proof = (round_receipt.get("collection") or {}).get("base_proof", {})
     if proof:
         add(
             f"- 这枚候选**坐在已落地尖之上**：`{proof['landed_tip'][:9]}…` 是它的祖先 = "
-            f"`{proof['candidate_is_descendant']}`，领先 {proof['commits_ahead']} 笔，"
-            f"re-parent 移动的 `frontend/` 文件 **{len(proof['frontend_files_moved_by_reparent'])} 个**"
-            f"（对比 rebase 前那枚 `{proof['pre_rebase_tip'][:9]}…`，实测自 `git diff --name-only`）"
+            f"`{proof['candidate_is_descendant']}`，领先 {proof['commits_ahead']} 笔。"
+            f"`frontend/` 相对本分支起点 `{proof['base_tip'][:9]}…` 改了 "
+            f"**{len(proof['frontend_files_differring_from_base'])} 件**（这一枚段的改动，不是 re-parent 搬动的；"
+            "实测自 `git diff --name-only`）"
         )
-        add(f"- 历史：最初切自 `{round_receipt['authoritative_tip_at_delivery'][:9]}…`，现已 re-parent 到上面那枚")
+        add(f"- 分支起点：`{proof['base_tip']}`（= 上一段 0269/0273 的交付尖），最初切自 `{round_receipt['authoritative_tip_at_delivery'][:9]}…`")
     else:
         add(
             f"- 我这枚候选从 `{round_receipt['authoritative_tip_at_delivery'][:9]}…` 切的"
