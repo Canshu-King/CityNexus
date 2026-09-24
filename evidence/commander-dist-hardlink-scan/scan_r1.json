@@ -1,0 +1,328 @@
+{
+ "serve_root": "D:\\moodle\\_qoder_preview_20260920\\dist",
+ "look_roots": [
+  "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist",
+  "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_1f44408_dist",
+  "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_2b49e3c_dist"
+ ],
+ "served_files": 38,
+ "hits": [
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets_manifest.json",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets_manifest.json",
+   "ino": 281474980876545,
+   "nlink": 2,
+   "served_size": 4954,
+   "external_size": 4954,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\favicon.svg",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\favicon.svg",
+   "ino": 562949956953693,
+   "nlink": 2,
+   "served_size": 199,
+   "external_size": 199,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\index.html",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\index.html",
+   "ino": 1688849863486668,
+   "nlink": 2,
+   "served_size": 1200,
+   "external_size": 1200,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\manifest.webmanifest",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\manifest.webmanifest",
+   "ino": 562949956953694,
+   "nlink": 2,
+   "served_size": 314,
+   "external_size": 314,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\sw.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\sw.js",
+   "ino": 562949956953692,
+   "nlink": 2,
+   "served_size": 7178,
+   "external_size": 7178,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\v10-sw.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\v10-sw.js",
+   "ino": 1125899910223615,
+   "nlink": 2,
+   "served_size": 2055,
+   "external_size": 2055,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\workbox-6923124b.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\workbox-6923124b.js",
+   "ino": 1125899910223616,
+   "nlink": 2,
+   "served_size": 22920,
+   "external_size": 22920,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\JourneyMap-2k6fUF4i.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\JourneyMap-2k6fUF4i.js",
+   "ino": 844424933229347,
+   "nlink": 2,
+   "served_size": 4392,
+   "external_size": 4392,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\JourneyMap-Bwn5FtB8.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\JourneyMap-Bwn5FtB8.js",
+   "ino": 1125899910684617,
+   "nlink": 2,
+   "served_size": 4392,
+   "external_size": 4392,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\JourneyMap-ByS2N5WZ.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\JourneyMap-ByS2N5WZ.js",
+   "ino": 281474980876543,
+   "nlink": 2,
+   "served_size": 4392,
+   "external_size": 4392,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\JourneyMap-Ca-Dd9f7.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\JourneyMap-Ca-Dd9f7.js",
+   "ino": 281474980676314,
+   "nlink": 2,
+   "served_size": 4392,
+   "external_size": 4392,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\JourneyMap-DiMhXnlj.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\JourneyMap-DiMhXnlj.js",
+   "ino": 562949956994095,
+   "nlink": 2,
+   "served_size": 4392,
+   "external_size": 4392,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\JourneyMap-TiEm8jyP.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\JourneyMap-TiEm8jyP.js",
+   "ino": 281474981089819,
+   "nlink": 2,
+   "served_size": 4392,
+   "external_size": 4392,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\JourneyMap-VYnqykgh.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\JourneyMap-VYnqykgh.js",
+   "ino": 281474981044597,
+   "nlink": 2,
+   "served_size": 4392,
+   "external_size": 4392,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\JourneyMap-tqEgrjRA.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\JourneyMap-tqEgrjRA.js",
+   "ino": 281474981224242,
+   "nlink": 2,
+   "served_size": 4392,
+   "external_size": 4392,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-BCF4ptyk.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-BCF4ptyk.js",
+   "ino": 5066549583655433,
+   "nlink": 2,
+   "served_size": 1230082,
+   "external_size": 1230082,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-COUUKhbU.css",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-COUUKhbU.css",
+   "ino": 281474980876541,
+   "nlink": 2,
+   "served_size": 183342,
+   "external_size": 183342,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-ChOTTCvB.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-ChOTTCvB.js",
+   "ino": 1688849864710841,
+   "nlink": 2,
+   "served_size": 1245203,
+   "external_size": 1245203,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-CnfHH2K_.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-CnfHH2K_.js",
+   "ino": 562949956994096,
+   "nlink": 2,
+   "served_size": 1228395,
+   "external_size": 1228395,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-Cpy_jhEg.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-Cpy_jhEg.js",
+   "ino": 4785074608332349,
+   "nlink": 2,
+   "served_size": 1242399,
+   "external_size": 1242399,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-CrAwWm5f.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-CrAwWm5f.js",
+   "ino": 1688849863755495,
+   "nlink": 2,
+   "served_size": 1234802,
+   "external_size": 1234802,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-D76m_cky.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-D76m_cky.js",
+   "ino": 562949957755251,
+   "nlink": 2,
+   "served_size": 1238834,
+   "external_size": 1238834,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-DJEINrOl.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-DJEINrOl.js",
+   "ino": 281474980876542,
+   "nlink": 2,
+   "served_size": 1236190,
+   "external_size": 1236190,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-DtQ86lsQ.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-DtQ86lsQ.js",
+   "ino": 562949957386969,
+   "nlink": 2,
+   "served_size": 1231985,
+   "external_size": 1231985,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-I45CQek8.css",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-I45CQek8.css",
+   "ino": 281474981044596,
+   "nlink": 2,
+   "served_size": 183897,
+   "external_size": 183897,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-cWMF3pBW.css",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-cWMF3pBW.css",
+   "ino": 1970324839838210,
+   "nlink": 2,
+   "served_size": 183233,
+   "external_size": 183233,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-jK0l3zzT.css",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\index-jK0l3zzT.css",
+   "ino": 562949956994098,
+   "nlink": 2,
+   "served_size": 183129,
+   "external_size": 183129,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\maplibre-gl-BWD2F19E.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\maplibre-gl-BWD2F19E.js",
+   "ino": 281474980876544,
+   "nlink": 2,
+   "served_size": 1053381,
+   "external_size": 1053381,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\maplibre-gl-BWQWEO0M.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\maplibre-gl-BWQWEO0M.js",
+   "ino": 281474981044598,
+   "nlink": 2,
+   "served_size": 1053381,
+   "external_size": 1053381,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\maplibre-gl-C4txx3Jw.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\maplibre-gl-C4txx3Jw.js",
+   "ino": 844424933973963,
+   "nlink": 2,
+   "served_size": 1053381,
+   "external_size": 1053381,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\maplibre-gl-CHrWFrV5.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\maplibre-gl-CHrWFrV5.js",
+   "ino": 281474981224243,
+   "nlink": 2,
+   "served_size": 1053381,
+   "external_size": 1053381,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\maplibre-gl-CLqlEDxz.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\maplibre-gl-CLqlEDxz.js",
+   "ino": 281474980676315,
+   "nlink": 2,
+   "served_size": 1053381,
+   "external_size": 1053381,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\maplibre-gl-DKm7HAkz.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\maplibre-gl-DKm7HAkz.js",
+   "ino": 562949956994097,
+   "nlink": 2,
+   "served_size": 1053381,
+   "external_size": 1053381,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\maplibre-gl-DukSzFv9.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\maplibre-gl-DukSzFv9.js",
+   "ino": 562949956591834,
+   "nlink": 2,
+   "served_size": 1053381,
+   "external_size": 1053381,
+   "same_bytes": true
+  },
+  {
+   "served": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\maplibre-gl-kx9AWR05.js",
+   "external": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist\\assets\\maplibre-gl-kx9AWR05.js",
+   "ino": 281474981089820,
+   "nlink": 2,
+   "served_size": 1053381,
+   "external_size": 1053381,
+   "same_bytes": true
+  }
+ ],
+ "unlinked_twins_unnamed": [],
+ "verdict": "EXTERNAL_HARDLINK_REFS"
+}
