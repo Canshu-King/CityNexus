@@ -1,0 +1,19 @@
+# ORD-0283 bites: before/after proof, run by the commander (494abfd7) at 2026-09-25 06:13:52 +0800
+# repro files: {"cells": [], "cross_generation_claim": "..."}  and  {"cells": [], "crossGenerationClaim": "..."}
+# command: python live_checks/generation_transfer_check_<ver>.py --check <repro>.json c79e2b4f4efe414dba22a071a7136ae10b5c84aa dcae1bc964125c3a975916f6bf667794cc19622a
+_repro_a7 r4 rc=0 "derived_result": "ALL_CELLS_TRANSFERABLE" 
+_repro_a7 r5 rc=4 "derived_result": "CLAIM_WITH_NO_CELLS" "claim_key_used": "cross_generation_claim"
+_repro_a9 r4 rc=0 "derived_result": "NO_CROSS_GENERATION_CLAIM_MADE" 
+_repro_a9 r5 rc=4 "derived_result": "CLAIM_WITH_NO_CELLS" "claim_key_used": "crossGenerationClaim"
+# selftest arm count r5:
+checks 20 all_true True derived SELFTEST_ALL_GREEN
+# sweep r3 classify selftest:
+  S1_no_mention_is_not_a_hit                           ok
+  S2_prose_mention_alone_is_not_a_citation             ok
+  S3_bare_main_py_without_the_app_dir_is_not_a_hit     ok
+  S4_path_plus_nearby_40hex                            ok
+  S5_16hex_only_is_prefix_not_auditable                ok
+  S6_far_away_40hex_does_not_attach                    ok
+  S7_main_py_txt_is_not_a_hit                          ok
+  S8_app_main_py_without_backend_prefix_still_counts   ok
+SWEEP_SELFTEST 8/8
