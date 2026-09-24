@@ -1,0 +1,71 @@
+{
+ "at": "2026-09-25T05:42:04+08:00",
+ "order": "ORD-0274-SW 候选的本地等价回归（A 臂形状 / B3 形状）",
+ "lane": "B c01d72a3",
+ "mode": "READ-ONLY; no product file changed by this script",
+ "surface": {
+  "port": 8453,
+  "dists": {
+   "g1": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_ord0267b",
+   "g2": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274sw",
+   "g3": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274gen2b"
+  },
+  "never_touched_or_opened": [
+   ":4781",
+   ":4782",
+   ":8693",
+   "tunnel",
+   "cnx proxy",
+   "_live",
+   "_preview",
+   "HJ-P1 ports 8941/8942"
+  ],
+  "unregister_calls": 0,
+  "cache_clear_calls": 0,
+  "demo_reset": 0
+ },
+ "reading": {
+  "A_equivalent": {
+   "online": {
+    "bundle": "/assets/index-ChOTTCvB.js",
+    "controller": "/v10-sw.js",
+    "registrations": [
+     {
+      "scope": "/",
+      "active": "/v10-sw.js",
+      "active_state": "activated",
+      "waiting": null,
+      "waiting_state": null,
+      "installing": null
+     }
+    ]
+   },
+   "offline": {
+    "nav": null,
+    "bundle": "/assets/index-ChOTTCvB.js",
+    "controlled": "/v10-sw.js",
+    "mounted": true,
+    "url": null,
+    "navigation": null
+   },
+   "same_generation_while_offline": true,
+   "answered_by_shell_offline": false,
+   "half_generation_mix": null
+  },
+  "B3_equivalent": {
+   "installed_generation_bundle": "/assets/index-BhbHloNw.js",
+   "after_swap_bundle": "/assets/index-CEGoPIGb.js",
+   "converged_within_one_navigation": true,
+   "product_marker_after_convergence": "1",
+   "offline_after_convergence": {
+    "bundle": "/assets/index-CEGoPIGb.js",
+    "controlled": "/v10-sw.js",
+    "mounted": true,
+    "navigation": null
+   },
+   "still_that_generation_offline": true,
+   "answered_offline": false
+  }
+ },
+ "what_this_is_not": "HJ-P1's verdicts. She owns B1/B2/B3 on the real chain and her instruments measure the tunnel path; this is a loopback shape check that my change does not break the two arms I was told must not regress."
+}
