@@ -1,0 +1,393 @@
+{
+ "at": "2026-09-24T08:43:27+08:00",
+ "subject": "LANDED generation c79e2b4f4efe414dba22a071a7136ae10b5c84aa as served from disk, re-measured on a fresh post-reboot face after the 02:2x-02:3x blue screen",
+ "generation": {
+  "source_root_read_only": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "rebuilt": false,
+  "index_html_mtime": "2026-09-24T01:44:45+08:00",
+  "index_refs": [
+   "assets/index-ChOTTCvB.js",
+   "assets/index-I45CQek8.css"
+  ],
+  "served_js_through_my_face": [
+   "assets/index-ChOTTCvB.js"
+  ],
+  "bundle_sha256_16": "2d56a79632efc0c6",
+  "root_files": 35,
+  "root_bytes": 19122061,
+  "root_tree_sha256": "303e189b4a0ae3a9375b851a38a5483580cb05aa61e85986731f1ec531a667ab",
+  "sw_markers": {
+   "v10-sw.js": {
+    "bytes": 2055,
+    "sha256_16": "88a7d980b3ffcbd6"
+   },
+   "manifest.webmanifest": {
+    "bytes": 314,
+    "sha256_16": "643f91ecc6d80155"
+   },
+   "sw.js": {
+    "bytes": 7178,
+    "sha256_16": "1fc94905be2dbf92"
+   }
+  },
+  "generation_is_distinguishable_from_previous": true,
+  "previous_v10_sw_prefix_for_reference": "e63d7421eda34093"
+ },
+ "ownership": {
+  "port": 4418,
+  "preview_pid": 4572,
+  "citynexus_backend_port": 8411,
+  "backend_listeners": [],
+  "proof_200_marker_journey": {
+   "status": 200,
+   "via_backend_direct": 200
+  },
+  "proof_404_absent_id": {
+   "uuid": "1fbc3f14-8c0e-478f-9bd4-12c6e65791da",
+   "rows_in_my_db": 0,
+   "status": 404
+  },
+  "db_marker_rows": 1,
+  "query_only_read_back": 1,
+  "fresh_origin_no_service_worker_from_earlier_rounds": true,
+  "ownership_verdict": "PROVEN"
+ },
+ "retention": {
+  "previous_bundle_on_disk": true,
+  "sha256_16": "5d674a444291f10b",
+  "expected_prefix": "5d674a444291f10b"
+ },
+ "passes": {
+  "pre_reboot": {
+   "cells": [
+    "S1",
+    "S2",
+    "S4",
+    "S3",
+    "S5_html"
+   ],
+   "recorded_in": "ord0263_landedgen_reboot_note.md",
+   "interrupted_by": "blue screen 02:2x-02:3x"
+  },
+  "post_reboot": {
+   "cells": [
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5_html",
+    "S5_empty",
+    "S5_nonjson"
+   ],
+   "readings_file": "ord0263_landedgen_readings.jsonl",
+   "every_cell_re_taken": true
+  }
+ },
+ "cross_pass_agreement": {
+  "S2": true,
+  "S3": true,
+  "S4": true,
+  "S5_html": true
+ },
+ "label_derivation": {
+  "rule": "the product's own on-screen attribution_reason mapped into the arbiter vocabulary (SERVER_ERROR->ORIGIN_ERROR_WITH_SNAPSHOT, NETWORK_UNAVAILABLE->NETWORK_UNREACHABLE_WITH_SNAPSHOT, ORIGIN_INVALID_RESPONSE kept); skeleton or empty => None",
+  "typed_in_by_verifier": false
+ },
+ "cells": {
+  "S1_live": {
+   "rendered_text": "早上好 | Demo之旅 | 10月10日 09:00 — 10月10日 19:00 · 1 位旅行者 · 1 天",
+   "classified_label": "LIVE",
+   "origin_answer": {
+    "status": 200,
+    "thrown": false,
+    "wire": "13/13 /api/v1 reads answered 200 through :4418"
+   },
+   "network_words": [],
+   "snapshot_present": true,
+   "snapshot_rows": 1,
+   "bundle": "index-ChOTTCvB.js",
+   "pass": "post_reboot"
+  },
+  "S2_origin_error": {
+   "rendered_text": "服务器 | 服务暂时不可用 | 服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。  attribution_reason=SERVER_ERROR evidence_kind=HTTP_RESPONSE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+   "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "origin_answer": {
+    "status": 500,
+    "thrown": false,
+    "wire": "no listener on :8411; via the face health -> 500 text/plain 0.039s, journey -> 500 0.002s; browser timing experience 8 ms status 500"
+   },
+   "snapshot_present": true,
+   "snapshot_rows": 1,
+   "navigator_onLine": true,
+   "settled_within_deadline": true,
+   "seconds_to_settle": 0.0,
+   "doors": {
+    "retry": 1
+   },
+   "screen_columns": {
+    "attribution_reason": "SERVER_ERROR",
+    "evidence_kind": "HTTP_RESPONSE",
+    "http_status": "500",
+    "source_layer": "RUNTIME",
+    "retryable": "true",
+    "recovery_action": "retry",
+    "cached_copy_present": "true"
+   },
+   "bundle": "index-ChOTTCvB.js",
+   "pass": "post_reboot"
+  },
+  "S3_no_answer": {
+   "rendered_text": "没有回音 | 等了 12 秒，这台服务器一个字也没回答 | 这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应，它只是没有说话。你的行程数据没有丢，这台设备上有已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以再试一次。  attribution_reason=NETWORK_UNAVAILABLE evidence_kind=HEALTH_PROBE http_status=none source_layer=TRANSPORT retryable=true recovery_action=read-only-cached cached_copy_present=true",
+   "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+   "origin_answer": {
+    "status": null,
+    "thrown": true,
+    "wire": "origin_hang_no_close fully-silent: accepts, never answers, never closes"
+   },
+   "settled_within_deadline": true,
+   "seconds_to_settle": 1.2,
+   "snapshot_present": true,
+   "snapshot_rows": 1,
+   "navigator_onLine": true,
+   "doors": {
+    "retry": 1
+   },
+   "screen_columns": {
+    "attribution_reason": "NETWORK_UNAVAILABLE",
+    "evidence_kind": "HEALTH_PROBE",
+    "http_status": "none",
+    "source_layer": "TRANSPORT",
+    "retryable": "true",
+    "recovery_action": "read-only-cached",
+    "cached_copy_present": "true"
+   },
+   "bundle": "index-ChOTTCvB.js",
+   "pass": "post_reboot",
+   "product_bound_evidence": {
+    "browser_resource_timing": [
+     {
+      "n": "experience",
+      "duration_ms": 12010,
+      "status": 0
+     },
+     {
+      "n": "health",
+      "duration_ms": 4016,
+      "status": 0
+     }
+    ],
+    "instrument_read_ended": [
+     {
+      "at": "08:37:36",
+      "t_s": 39.67,
+      "kind": "read_ended",
+      "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "age_s": 12.01,
+      "outcome": "abandoned_by_client",
+      "closed_by_instrument": false
+     },
+     {
+      "at": "08:37:40",
+      "t_s": 43.68,
+      "kind": "read_ended",
+      "path": "/api/v1/health",
+      "age_s": 4.01,
+      "outcome": "abandoned_by_client",
+      "closed_by_instrument": false
+     }
+    ],
+    "instrument_final_state": {
+     "opened": 3,
+     "answered_health": 0,
+     "hung_now": 0,
+     "closed_by_instrument": 0,
+     "abandoned_by_client": 3,
+     "still_open": 0
+    },
+    "verdict": "PRODUCT_BOUND - the browser's own timings are 12010 ms (read) and 4016 ms (health), the server saw the client send FIN at 12.01 s and 4.01 s, and closed_by_instrument stayed 0"
+   }
+  },
+  "S4_read_silent_health_answered": {
+   "rendered_text": "服务器 | 服务暂时不可用 | 服务器刚才答了你，但它自己报错了（HTTP 500）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。  attribution_reason=SERVER_ERROR evidence_kind=HEALTH_PROBE http_status=500 source_layer=RUNTIME retryable=true recovery_action=retry cached_copy_present=true",
+   "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+   "health_answer": {
+    "status": 500,
+    "thrown": false,
+    "wire": "browser timing health 5 ms status 500; instrument answered_health mode"
+   },
+   "read_never_answered": true,
+   "settled_within_deadline": true,
+   "seconds_to_settle": 12.009,
+   "snapshot_present": true,
+   "snapshot_rows": 1,
+   "navigator_onLine": true,
+   "doors": {
+    "retry": 1
+   },
+   "screen_columns": {
+    "attribution_reason": "SERVER_ERROR",
+    "evidence_kind": "HEALTH_PROBE",
+    "http_status": "500",
+    "source_layer": "RUNTIME",
+    "retryable": "true",
+    "recovery_action": "retry",
+    "cached_copy_present": "true"
+   },
+   "bundle": "index-ChOTTCvB.js",
+   "pass": "post_reboot",
+   "product_bound_evidence": {
+    "browser_resource_timing": [
+     {
+      "n": "experience",
+      "duration_ms": 12009,
+      "status": 0
+     },
+     {
+      "n": "health",
+      "duration_ms": 5,
+      "status": 500
+     }
+    ],
+    "instrument_read_ended": [
+     {
+      "at": "08:35:48",
+      "t_s": 38.07,
+      "kind": "read_ended",
+      "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+      "age_s": 12.01,
+      "outcome": "abandoned_by_client",
+      "closed_by_instrument": false
+     }
+    ],
+    "instrument_final_state": {
+     "opened": 2,
+     "answered_health": 2,
+     "hung_now": 0,
+     "closed_by_instrument": 0,
+     "abandoned_by_client": 2,
+     "still_open": 0
+    },
+    "verdict": "PRODUCT_BOUND - read hung 12009 ms then the client aborted it; closed_by_instrument 0"
+   }
+  },
+  "S5_invalid_response": {
+   "shapes": [
+    {
+     "shape": "200_html",
+     "rendered_text": "服务器 | 服务器答了 200，可带回来的不是这一屏能用的数据 它确实回了话（HTTP 200，Content-Type: text/html; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/html; charset=utf-8 cached_copy_present=true",
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 1200,
+      "body_head": "<!doctype html>\n<html lang=\"en\">\n  <",
+      "answered_at": "08:40:03",
+      "wire": "ord0263_junk_html.log: the origin answered 200 text/html; charset=utf-8 with 1200 B"
+     },
+     "snapshot_rows": 1,
+     "skeleton_sentence_present": false,
+     "settled_within_deadline": true,
+     "seconds_to_settle": 0.0,
+     "screen_columns": {
+      "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+      "evidence_kind": "HTTP_RESPONSE",
+      "http_status": "200",
+      "source_layer": "RUNTIME",
+      "retryable": "true",
+      "recovery_action": "retry",
+      "content_type": "text/html; charset=utf-8",
+      "cached_copy_present": "true"
+     },
+     "classified_label": "ORIGIN_INVALID_RESPONSE",
+     "snapshot_present": true,
+     "network_words_on_screen": [],
+     "doors_present": [
+      "看已保存的只读副本",
+      "重试"
+     ],
+     "pass": "post_reboot"
+    },
+    {
+     "shape": "200_empty",
+     "rendered_text": "服务器 | 服务器答了 200，可带回来的不是这一屏能用的数据 它确实回了话（HTTP 200，Content-Type: application/json），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=application/json cached_copy_present=true",
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "application/json",
+      "body_bytes": 0,
+      "body_head": "",
+      "answered_at": "08:40:47",
+      "wire": "ord0263_junk_empty.log: the origin answered 200 application/json with 0 B"
+     },
+     "snapshot_rows": 1,
+     "skeleton_sentence_present": false,
+     "settled_within_deadline": true,
+     "seconds_to_settle": 0.0,
+     "screen_columns": {
+      "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+      "evidence_kind": "HTTP_RESPONSE",
+      "http_status": "200",
+      "source_layer": "RUNTIME",
+      "retryable": "true",
+      "recovery_action": "retry",
+      "content_type": "application/json",
+      "cached_copy_present": "true"
+     },
+     "classified_label": "ORIGIN_INVALID_RESPONSE",
+     "snapshot_present": true,
+     "network_words_on_screen": [],
+     "doors_present": [
+      "看已保存的只读副本",
+      "重试"
+     ],
+     "pass": "post_reboot"
+    },
+    {
+     "shape": "200_nonjson",
+     "rendered_text": "服务器 | 服务器答了 200，可带回来的不是这一屏能用的数据 它确实回了话（HTTP 200，Content-Type: text/plain; charset=utf-8），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。 attribution_reason=ORIGIN_INVALID_RESPONSE evidence_kind=HTTP_RESPONSE http_status=200 source_layer=RUNTIME retryable=true recovery_action=retry content_type=text/plain; charset=utf-8 cached_copy_present=true",
+     "origin_answer": {
+      "status": 200,
+      "thrown": false,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 33,
+      "body_head": "this sentence is not JSON at all\n",
+      "answered_at": "08:41:27",
+      "wire": "ord0263_junk_nonjson.log: the origin answered 200 text/plain; charset=utf-8 with 33 B"
+     },
+     "snapshot_rows": 1,
+     "skeleton_sentence_present": false,
+     "settled_within_deadline": true,
+     "seconds_to_settle": 0.0,
+     "screen_columns": {
+      "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+      "evidence_kind": "HTTP_RESPONSE",
+      "http_status": "200",
+      "source_layer": "RUNTIME",
+      "retryable": "true",
+      "recovery_action": "retry",
+      "content_type": "text/plain; charset=utf-8",
+      "cached_copy_present": "true"
+     },
+     "classified_label": "ORIGIN_INVALID_RESPONSE",
+     "snapshot_present": true,
+     "network_words_on_screen": [],
+     "doors_present": [
+      "看已保存的只读副本",
+      "重试"
+     ],
+     "pass": "post_reboot"
+    }
+   ]
+  }
+ },
+ "close_conditions_from_the_commanders_contract": {
+  "(1) four earlier cells do not regress": "see cross_pass_agreement plus the verdict file - all four GREEN on this generation",
+  "(2) V5 GREEN for all three shapes": "see S5_invalid_response.shapes",
+  "(3) per-shape non-catch-all reason in the RAW capture": {
+   "200_html": "ORIGIN_INVALID_RESPONSE",
+   "200_empty": "ORIGIN_INVALID_RESPONSE",
+   "200_nonjson": "ORIGIN_INVALID_RESPONSE"
+  },
+  "any_shape_landing_UNKNOWN_FAILURE": []
+ }
+}
