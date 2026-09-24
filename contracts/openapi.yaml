@@ -493,8 +493,16 @@ paths:
   /journeys/{journey_id}/plans/generate:
     parameters:
       - {$ref: '#/components/parameters/JourneyId'}
+      - {$ref: '#/components/parameters/IdempotencyKeyOptional'}
     post:
       operationId: generatePlans
+      description: >-
+        Generate feasible candidates.  ORD-0272 gives a batch a server-readable owner:
+        `mission_id` (body) says *whose* continuation this is and is what a second tab, a cleared
+        storage or a second device replays on, while `Idempotency-Key` (header) stays the
+        transport-level "is this the same send" control.  They are deliberately two keys - merged
+        into one, "same mission, different request" and "same request, resent" become
+        indistinguishable in storage.  Omit both and the operation keeps its pre-ORD-0272 shape.
       requestBody:
         required: false
         content:
@@ -510,6 +518,12 @@ paths:
                   maxItems: 12
                   items: {type: string}
                   description: Explicit selected/discovered POIs for the generic Compose Engine path.
+                mission_id:
+                  type: string
+                  format: uuid
+                  description: >-
+                    Continuation owner (ORD-0272).  Must be a JourneyMission of *this* journey;
+                    an unknown or foreign one answers 404 and claims nothing.
       responses:
         '201':
           description: Feasible candidate plans
@@ -518,6 +532,7 @@ paths:
               schema:
                 type: array
                 items: {$ref: '#/components/schemas/PlanVersion'}
+        '409': {$ref: '#/components/responses/Conflict'}
         '422': {$ref: '#/components/responses/Infeasible'}
   /journeys/{journey_id}/plans:
     parameters:
@@ -1750,6 +1765,13 @@ components:
       name: Idempotency-Key
       in: header
       required: true
+      schema: {type: string, minLength: 8, maxLength: 128}
+    IdempotencyKeyOptional:
+      # Same transport vocabulary, only `required` differs: an operation that may be called
+      # without a client key references this sibling instead of restating the header.
+      name: Idempotency-Key
+      in: header
+      required: false
       schema: {type: string, minLength: 8, maxLength: 128}
   responses:
     NotFound:

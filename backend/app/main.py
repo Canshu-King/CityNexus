@@ -18,7 +18,7 @@ import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, Response
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, StreamingResponse
-from sqlalchemy import delete, func, select, update
+from sqlalchemy import delete, func, insert, select, update
 from sqlalchemy.exc import IntegrityError, OperationalError
 from sqlalchemy.orm import Session
 
@@ -160,7 +160,7 @@ from app.db.models import (
 from app.db.models import (
     ReplanProposal as ReplanProposalModel,
 )
-from app.db.session import SessionLocal, ensure_schema, get_session
+from app.db.session import SessionLocal, engine, ensure_schema, get_session
 from app.execution.clock import execution_clock
 from app.execution.traveler_twin import (
     clear_learned,
@@ -4588,47 +4588,232 @@ def search_services(
 def generate_journey_plans(
     journey_id: UUID,
     payload: GeneratePlansRequest | None = None,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
 ):
+    """ORD-0272: a continuation has one durable owner, and it is the server's to answer.
+
+    The second leg used to be a bare ``POST``: nothing said which mission the batch belonged
+    to, so a resend, a lost response, a second tab or a second device could each mint a fresh
+    set of candidates, and the only way to tell them apart afterwards was "same second" - which
+    is not an identity (HJ-P3 measured that, ORD-0269 §2).  Here the transport key answers "is
+    this the same send" and the mission-bound continuation answers "whose batch is this", kept as
+    *two* keys on purpose: merged into one, "same mission, different request" and "same request,
+    resent" become indistinguishable in storage - the exact class of mistake ORD-0262 was about.
+    Without either, the route behaves exactly as before.
+    """
+
     journey = require(session, Journey, str(journey_id), "Journey")
     request = payload or GeneratePlansRequest()
+    transport_key: str | None = None
+    if idempotency_key is not None:
+        try:
+            transport_key = validate_idempotency_key(idempotency_key)
+        except CommerceValidationError as exc:
+            raise HTTPException(422, str(exc)) from exc
+    if request.mission_id is None and transport_key is None:
+        try:
+            plans = _generate_plans_answer(session, journey, request)
+        except ValueError as exc:
+            return _plan_generation_http_answer(_plan_generation_refusal(session, journey, exc))
+        return [plan_schema(session, plan) for plan in plans]
+    if request.mission_id is not None:
+        _require_journeys_mission(session, journey, request.mission_id)
+
+    continuation_id, keys, signature = _plan_continuation_identity(journey_id, journey, request,
+                                                                   transport_key)
+    with journey_write_lock(str(journey.id)):
+        replayed = _replay_plan_generation(session, keys, signature)
+        if replayed is not None:
+            return _plan_generation_http_answer(replayed)
+        now = datetime.now(timezone.utc)
+        raced = _claim_plan_generation(keys, signature, session, now)
+        if raced is not None:
+            return _plan_generation_http_answer(raced)
+        answer = _execute_plan_generation_claimed(journey, request, keys, continuation_id, now)
+    return _plan_generation_http_answer(answer)
+
+
+def _require_journeys_mission(session: Session, journey: Journey, mission_id: str) -> None:
+    """续跑身份只能绑**这条旅程自己的** mission。
+
+    编造的 id 与别人旅程的 id 都按"不存在"回答：同一句、同一个码。这里若放行，落库的
+    `plans.continuation.linked` 就是一条会说谎的关联，而 owner 恰恰要靠它读回。
+    """
+
+    mission = require(session, JourneyMission, str(mission_id), "JourneyMission")
+    if mission.journey_id != str(journey.id):
+        raise HTTPException(404, f"JourneyMission {mission_id} was not found")
+
+
+def _plan_continuation_identity(journey_id: UUID, journey: Journey,
+                                request: GeneratePlansRequest,
+                                transport_key: str | None) -> tuple[str | None, list[str], str]:
+    """两条身份、两把键，签名材料只有业务语义（键本身不进签名，否则换设备必然对不上）。"""
+
+    continuation_id = f"cont:{request.mission_id}" if request.mission_id is not None else None
+    signature = canonical_request_signature(
+        {
+            "journey_id": str(journey_id),
+            "mission_id": request.mission_id,
+            "planning_mode": request.planning_mode or journey.planning_mode,
+            "candidate_count": request.candidate_count,
+            "place_ids": request.place_ids,
+        }
+    )
+    keys = [f"plans.generate:{transport_key}"] if transport_key is not None else []
+    if continuation_id is not None and f"plans.generate:{continuation_id}" not in keys:
+        keys.append(f"plans.generate:{continuation_id}")
+    return continuation_id, keys, signature
+
+
+def _replay_plan_generation(session: Session, keys: list[str],
+                            signature: str, *, wait: bool = False) -> dict | None:
+    """已经有人答过这把键 ⇒ 读那一份答案。签名不符由 `_replay_committed_accept` 说现成的 409。"""
+
+    for key in keys:
+        replayed = _replay_committed_accept(session, key, signature, wait=wait)
+        if replayed is not None:
+            return replayed
+    return None
+
+
+def _claim_plan_generation(keys: list[str], signature: str, session: Session,
+                           now: datetime) -> dict | None:
+    """Phase A CLAIM：一把或多把 NULL 占位**先独立提交**，唯一索引在生成之前裁决所有权。
+
+    抢不到 ⇒ 只读别人的答案；等不到 ⇒ 现成那句 409。绝不删占位、绝不按 expires_at 回收、
+    绝不在别人那发上重跑生成 —— 恢复的前提是"证明不会重复既有副作用"，这里证明不了。
+    """
+
+    with engine.connect() as claim_conn:
+        claim_tx = claim_conn.begin()
+        try:
+            for key in keys:
+                claim_conn.execute(
+                    insert(IdempotencyKey).values(
+                        key=key,
+                        operation="plans.generate",
+                        request_hash=signature,
+                        response_status=None,
+                        response_json=None,
+                        created_at=now.isoformat(),
+                        expires_at=(now + timedelta(days=7)).isoformat(),
+                    )
+                )
+            claim_tx.commit()
+        except IntegrityError as exc:
+            claim_tx.rollback()
+            raced = _replay_plan_generation(session, keys, signature, wait=True)
+            if raced is not None:
+                return raced
+            raise HTTPException(
+                409, "agent idempotency record is incomplete"
+            ) from exc
+    return None
+
+
+def _execute_plan_generation_claimed(journey: Journey, request: GeneratePlansRequest,
+                                     keys: list[str], continuation_id: str | None,
+                                     now: datetime) -> dict:
+    """Phase B EXECUTE：候选、审计链接与"占位 → 完成回执"在同一次可回滚提交里。
+
+    回执存的是**渲染失败要用到的那几样输入**（状态/原话/具名理由），不是另抄一份错误正文：
+    重发时仍由同一个 handler 渲染，所以"复用现成信封"不是我的口号而是唯一的一条路。
+    """
+
+    with engine.begin() as work_conn:
+        work_session = Session(bind=work_conn, expire_on_commit=False)
+        try:
+            try:
+                plans = _generate_plans_answer(work_session, journey, request)
+            except ValueError as exc:
+                answer = _plan_generation_refusal(work_session, journey, exc)
+            else:
+                feasible_ids = [plan.id for plan in plans]
+                if continuation_id is not None:
+                    record_audit(
+                        work_session,
+                        action="plans.continuation.linked",
+                        entity_type="JourneyMission",
+                        entity_id=str(request.mission_id),
+                        journey_id=journey.id,
+                        actor_type="USER",
+                        after={"continuation_id": continuation_id,
+                               "mission_id": request.mission_id,
+                               "plan_version_ids": feasible_ids,
+                               "summary": "this mission's continuation produced these plans"},
+                    )
+                answer = {"plans": [plan_schema(work_session, plan).model_dump(
+                    mode="json", by_alias=True) for plan in plans]}
+            filled = 0
+            for key in keys:
+                filled += work_session.execute(
+                    update(IdempotencyKey)
+                    .where(IdempotencyKey.key == key,
+                           IdempotencyKey.response_json.is_(None))
+                    .values(response_status=422 if "refusal" in answer else 201,
+                            response_json=json.dumps(answer, sort_keys=True))
+                    .execution_options(synchronize_session=False)
+                ).rowcount
+            if filled != len(keys):
+                # 只允许 NULL → 完成：覆盖别人填好的回执，就是拿别人的答案冒充自己的
+                raise HTTPException(409, "agent idempotency record is incomplete")
+            return answer
+        finally:
+            work_session.close()
+
+
+def _plan_generation_refusal(session: Session, journey: Journey, exc: ValueError) -> dict:
+    """这一发唯一的失败表达，两条路径共用（0272 不许有第二套）。
+
+    今天的路由在拒绝时做两件事，这里一件都不许少：把"没有可行替代"写成**耐久事实**，
+    并把原话/状态/具名理由/计数细节交给**现成的** handler 渲染。存的是渲染所需的输入而非
+    渲染好的正文，所以重发出来的仍是同一句话、同一个 `reason_code`。
+    """
+
+    record_replan_outcome(session, journey, feasible_candidate_ids=[], failures=[str(exc)])
+    session.commit()
+    return {"refusal": {
+        "status": 422,
+        "detail": str(exc),
+        "reason_code": getattr(exc, "reason_code", None),
+        "error_details": getattr(exc, "details", None),
+    }}
+
+
+def _plan_generation_http_answer(answer: dict):
+    """把存下来的那一份答案交出去：成功是同一批方案，拒绝走**同一个** handler 渲染。"""
+
+    refusal = answer.get("refusal")
+    if refusal is not None:
+        raised = HTTPException(refusal["status"], refusal["detail"])
+        if refusal.get("reason_code"):
+            raised.reason_code = refusal["reason_code"]
+            raised.error_details = refusal.get("error_details")
+        raise raised
+    return JSONResponse(status_code=201, content=answer["plans"])
+
+
+def _generate_plans_answer(session: Session, journey: Journey,
+                           request: GeneratePlansRequest) -> list[PlanVersion]:
+    """今天这一段的本体：一次生成 + 那次结果的耐久事实。被 Phase B 用同一条事务包住。"""
+
     planning_mode = request.planning_mode or journey.planning_mode
-    try:
-        plans = generate_plans(
-            session,
-            journey,
-            planning_mode,
-            request.candidate_count,
-            place_ids=request.place_ids,
-        )
-    except ValueError as exc:
-        # A recovery replan that yields nothing is a *durable fact*, not just a
-        # failed request.  Persist it so the no-alternative state is real and
-        # survives a reload.
-        record_replan_outcome(
-            session,
-            journey,
-            feasible_candidate_ids=[],
-            failures=[str(exc)],
-        )
-        session.commit()
-        refusal = HTTPException(422, str(exc))
-        # The message and the status stay exactly as they were; the *name* rides along as an
-        # attribute the envelope renderer publishes when one is present (ORD-0101).
-        reason = getattr(exc, "reason_code", None)
-        if reason:
-            refusal.reason_code = reason
-            refusal.error_details = getattr(exc, "details", None)
-        raise refusal from exc
-    # Candidates that survived the deterministic gate are the only ones exposed.
-    feasible_ids = [plan.id for plan in plans]
+    plans = generate_plans(
+        session,
+        journey,
+        planning_mode,
+        request.candidate_count,
+        place_ids=request.place_ids,
+    )
     record_replan_outcome(
         session,
         journey,
-        feasible_candidate_ids=feasible_ids,
+        feasible_candidate_ids=[plan.id for plan in plans],
     )
     session.commit()
-    return [plan_schema(session, plan) for plan in plans]
+    return plans
 
 
 @app.post("/api/v1/journeys/{journey_id}/plans/authoritative-compose", status_code=201)
