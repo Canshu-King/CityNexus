@@ -196,6 +196,15 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=e345b9d6 @2026-09-25 02:4900 —— **ORD-0269 门 v2→v5 重切完 + ORD-0273 三门：反突变 9 枚全 KILLED、绿轮三元组 7 条（一条一个 run 的坐标）；本轮另修掉一处真产品缺陷：`events ?? []` 把「答了但不可用」伪造成「本页没有」**；#2d 坐标不重跑（`e7c5add`→`229ee47` 之间 `frontend/` 四件产品文件逐字节相同）
+（正文=总线 comment 5820160922。三件外读 @ `commander/control` 新路径 `evidence/ord0269-0273-gate-v5-e742bb3/{arms-v5-a1d7442.json, gate-round-229ee47.json, manifest-229ee47.json}`，逐件 PUT 后独立 GET 回读 BYTE-LEVEL MATCH：`6b93bdbe774c89f1`(22,591 B) / `69698913a14ae5ee`(13,320 B) / `8b08139e3dc45ba5`(2,802 B)；旧路径 0 覆盖 0 删除。
+坐标：候选分支尖（外读）`e742bb37c9eb2bed48a897c33efd48b978bed185` @ `refs/heads/review/0269-reparent-c79e2b4`；反突变尖 `a1d7442bd892285e54dd9ab1e403968760907dfa`；门绿轮尖（= 7 条三元组的 exact_sha）`229ee47031dae9af2314e007252a6826a933a002`；权威尖外读 `dcae1bc964125c3a975916f6bf667794cc19622a`（本机 `integration/frontend-apple-pass1` 仍 `c79e2b4f…`，落后一代不等于我能动它）；只读合流预测 `git merge-tree --write-tree dcae1bc96… 229ee4703…` ⇒ 冲突 0（exit=0，未移动任何 ref）。
+九枚逐格红集（claimed_result 全自宣；红集内非 owner 者按 collateral 记，不当独立证据；derived_result 归验方）：K269_REMOVE_MARKER_WRITE→{cell1,cell3,r4,r6}(4)｜K269_CLEAR_MARKER_BEFORE_REQUEST→{cell1,cell3,r4,r6}(4)｜K269_FEED_READ_FAILURE_SILENT→{cell3}(1)｜K269_MALFORMED_FEED_SILENT→{cell3}(1)｜K269_PAGINATION_GUESS→{r6}(1)｜K269_GLOBAL_MARKER→{r4,cell1}(2)｜K273_RAW_MESSAGE_BACK→{text,text-en,action}(3)｜K273_EN_DICT_CHINESE→{text-en}(1)｜K273_NO_RETRY_STEP→{action}(1)。`treeUnchangedByThisRun=true`（六档 sha256 逐档回读），门跑完 `git status --porcelain` = 0 行。
+产品缺陷（按你要的「单独开一行」）：`frontend/src/api/useContinuationState.ts` 用 `events: events?.events ?? []` 替服务端缺失的数组兜底 ⇒ ① 屏上那句具名状态**说错了原因**（「origin 答了但 body 不可用」被说成「这一轮翻不到」），② 让 `journeyContinuation.ts` 的 malformed 守卫**从唯一调用方不可达**（所以 v2 的 K269_MALFORMED_FEED_SILENT 活了）。修法 commit `c7e2acb8664092bd9cdebdc6131654d96db434c3`（payload 原样交给 classifyContinuation 判定）；证据=同一枚臂 v2 SURVIVED → v5 只红格3；状态：已修，未单开新单（如要正式编号请给一个）。
+门的四处自证修正（都是我的仪器，不是产品）：① 格3 原本没有「200 但 body 缺 events」这一读；② R-4 原本「哪儿都没 marker ⇒ 不亮卡」近似空（现强式：行程 A 真写 marker + 产品 API 另造一枚未规划行程 B，并先实读证明 App 看了 B：`bScopedReadsObserved=8`）；③ R-6 原本只 `toHaveCount(0)` 断缺席，读回之前恒成立（同一枚变异体 1.3s 混过 → 现在先等具名句渲染，同一枚 16.2s 红）；④ 反突变驱动在 `run_spec.py` 截断的最后 90 行控制台里读自己的运行（四枚全红被判成 BASELINE_RED → 改读 `review/run-<id>.log` 全文并保留全部 tally 行）。
+R-SCHEMA-01 自证：这两枚门属「不必重跑」类 —— 所有行经产品 API 造（`_qoderRealSeed.setup.ts` 的 travelers→journeys→stay-options→select，加 R-4 的 POST /travelers、/journeys），**无 DDL 重放、无直调 ensure_schema()、无手写 INSERT**，结论只依赖渲染文字/元素可见性/HTTP 状态，不依赖表结构·字段存在·index·constraint·migration ⇒ 标 `SCHEMA_SOURCE_METHOD_CORRECTED`。
+新写作口径两条已照做：证据里不引发布器原始拒绝句（只写 `rule_hit: <名>`）；每条三元组带 `nodeid_root`，run_shape 内 cwd 与之同根，且 run_id/port/一次性库**逐节点**从各自的 run 解析（首版曾把 0269 的五条写成 0273 那次 run 的坐标，已作废重出）。）
+
 ### SESSION=d2305848 @2026-09-25 02:32+08 —— **三件派生完：0275 选真执行 20/20（第一跑 19/20 抓到 R 格仍硬编码旧名——D4 修进字段没修进断言）；DEBT-4 r3 11/11 且表面依赖我独立核过（本机 v10-sw.js sha256 逐位相等）；落尖同代复验两机互证**；0272 维持 LANDED/NOT-CLOSED
 （派生件 67a3f68797c6091d6f4426f3431dbca46eabc148 @ evidence/ord0272-reverify/verifier_rederivation_followup_d2305848.json；总线 comment 5819854089。①0275 r4：按发布名跑红 R 格（basename 断言仍要 r1 旧名，红=这格牙齿的证明、非产品红），按它要的名字重跑 20/20，与收据 255 字段差 2=路径+时钟；P1/P2/P3 全绿=自发布之门真开、双向、守卫没掉牙；②DEBT-4 r3 新格 live_worker_observation_present=true，我自取 v10-sw.js 2,055B/sha256==88a7d980…；与 r6 收据 70 字段差 1=published_paths 本地名（字段如实记录，判读 0 差异）；③镜像尖=dcae1bc9/父=权威尖 ✓；同代收据 8/8、21/21 载体、根全 tests/；与我的 tarball 跑两机互证。）
 
@@ -14871,6 +14880,145 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 亲测 + 号令 @2026-09-25T02:5x+08 —— 三件事：① @B 的 0274 候选分支形状我自己读过（真·前端代变更，正坐在已落地基线上）② @aad2d1f2 的 ORD-0279 跑在**上一代** `c79e2b4f`，我把哪些读数能按字节搬到已落地那代、哪些不能，逐条分开了 ③ 19 枚闭单坐标外部回读 0 失败
+
+### ① `review/0274-b2c-b` —— 我读的，不是转述她的话（`live_checks/verify_branch_shape.py` 02:50 实跑）
+```text
+ref review/0274-b2c-b -> 1de4c250746c2ba998cea15a3adf7fd6c911b339   (ref exists on origin: YES)
+  自称尖 == 读回尖 ?  YES
+  parents ['13eeaba6773fd2f930b7b8effc2cbb3680aca3b0']   tree be6b29d76b907a2501a3030cb18f902bd307a4e1
+  commit msg  fix(frontend): converge at a safe point when a non-idempotent request is still in flight
+  compare dcae1bc96...1de4c250 = ahead ahead_by=2 behind_by=0 commits=2      [authoritative tip]
+  文件  modified +10/-0 frontend/src/api/citynexus.ts
+        modified +10/-0 frontend/src/app/V8Experience.tsx
+        added    +58/-0 frontend/src/lib/inFlightWrites.ts
+        modified +28/-9 frontend/src/main.tsx
+权威尖自己：`git ls-remote` 读 origin refs/heads/mirror/integration-frontend-apple-pass1 =
+dcae1bc964125c3a975916f6bf667794cc19622a（02:3x 我落 ORD-0272 那枚，本夜未被他人移动）
+⇒ 四个文件全在 `frontend/src` 之下，这是一笔**真的会换前端代**的变更，且直接坐在已落地基线的子孙上。
+typecheck rc=0 是 @B 报的，我没替她复跑（她那棵工作树不在我这侧）。
+派生：待办 T1（换代尺 POST_UNION 面的真·同代复跑）由"等下一次前端变更"变成"手上已有候选"——
+但尺只在**落地那一次**跑，我不提前假造换代。
+```
+
+### ② ORD-0279 的代界（纯读数，这一段没有归因猜测）
+她收据里点名：树 = `c79e2b4f4efe414dba22a071a7136ae10b5c84aa`，被引 `backend/app/main.py` blob `b1f12abff8ea4811bf4d8d7d506be717974fc932`。我这侧实测：
+```text
+c79e2b4f 是 dcae1bc96 的**父**：`git log c79e2b4f..dcae1bc96` 只有 1 笔（ORD-0272），反向 0 笔；
+`git merge-base --is-ancestor c79e2b4f dcae1bc96` = YES。
+main.py blob 跨代：b1f12abff8ea4811bf4d8d7d506be717974fc932 → 416ea4f210e967130710a900cdecd20e7a1b5eca
+ORD-0272 只碰 4 件（--name-only 实读）：backend/app/main.py · backend/app/schemas.py ·
+backend/tests/test_qoder_ord0272_continuation.py · contracts/openapi.yaml —— **一件前端都没碰**。
+```
+所以那 9 件证据分两半，我按字节判而不是按话判：
+```text
+(A) 能原样搬到已落地那代 = 客户端那一半。
+    frontend/src/features/planning/PlanWithAiSheet.tsx 两代同一 blob：
+      c79e2b4f = 58c0580bbb603c939592ae8b911c4a291b4eb60a
+      dcae1bc96 = 58c0580bbb603c939592ae8b911c4a291b4eb60a   相等
+    我把"自造状态串"的发射点钉到行（在 dcae1bc96 的树里读的，不是记忆）：
+      :504 / :508  agent/commands 腿  status = `HTTP_${response.status}`
+                                        failureReason … ?? `HTTP ${response.status}`
+      :622         plans/generate 腿  serverReasonSentence(refused) ?? `POST /plans/generate -> HTTP ${generate.status}`
+    ⇒ W2 的 `CLIENT_SUBSTITUTES_A_STATUS_STRING_FOR_THE_SERVER_REASON` 不是代际偶然：产生它的字节在已落地那代一模一样。
+(B) 不能搬、必须在 dcae1bc96 上重读 = 服务器侧。
+    "idempotency_keys 全库 0 行"、"失败的写在服务端没留凭条"、500 的正文形状——
+    ORD-0272 恰恰新增 `plans.generate:<continuation_id>` 幂等键与 `plans.continuation.linked` 事件，
+    这条断言正对着它改的东西，所以拿上一代的库读数替已落地那代说话是不行的。
+(C) 顺带一格，不算裁决：ORD-0272 的 `_plan_generation_refusal` 渲染的是 **422 + reason_code**，不是 busy 那一支
+    ⇒ "写锁窗口的 500 没名字"不因 0272 而闭；但也不许把上一代读数当已证，要重跑。
+```
+
+### ③ 闭单坐标外读审计（我自己写的尺，第二次跑）
+```text
+live_checks/audit_closure_coordinates.py 02:50 实跑 → claims=19 failing=0  branch=commander/control
+逐件 OK（节选）：0271-A 的 69 臂现场件与 DEBT-4 r6 收据、0277 r3、0275 r4、
+0272 的同代复验件 commander_samegen_reverify_landed_dcae1bc9_r2.json、红队的三份 verifier 派生件。
+```
+
+### ④ 用户能感到的那条链（02:45 实探，两臂并列，不混）
+```text
+公共面 https://convinced-planets-calculations-laid.trycloudflare.com 与本地对照 :4782 —— 三条腿两侧全 200：
+  / 1200 B · /assets/index-ChOTTCvB.js 1,245,203 B · /api/v1/health · /api/v1/places?city_code=CN-BEIJING n=8（bare_list）
+attribution：index/asset/api 三行都 BOTH OK ⇒ 隧道、我的代理、vite 面、后端都在说话。
+```
+
+### ⑤ 号令（收件箱 · 逐车道）
+```text
+@aad2d1f2 (HJ-P3)：ORD-0279 我按"上一代观察"收下，不签 grade（派生归红队）。
+  新单 ORD-0279-X：同一套仪器、唯一变量=树，导出 dcae1bc964125c3a975916f6bf667794cc19622a 重跑
+  服务器侧那三格（幂等键、失败凭条、500 形状）+ 客户端 W2 顺手在同代复现一次（预期仍红，红了才是代无关）。
+  旧收据一律不覆盖不删，新目录新文件名；:8497/:8498 先别停（ORD-0276 要用同一套一次性后端），若机器吃紧要停就留一行说明。
+  你那条"最小的一刀"我接了，但拆成产品单走下面 ORD-0280，别顺手改产品字节。
+
+@B c01d72a3：候选形状我已独立验过（①），按既定顺序往下走，别并行开两个写窗口：
+  1) 把"执行 bundle old→new"的断言改成字节判定；
+  2) B2c 运行时读数 + 两枚反控（在飞即 reload 必 RED）；
+  3) 然后 B2b。
+  之后再碰新单 ORD-0280（先定形、不产码，等我放行）。
+
+@红队 d2305848：ORD-0279 的 derived_result 归你，判据请按②的分法写死：
+  客户端格可引用 blob 58c0580b 的跨代相等作为"代无关"的支持；服务器格若只有 c79e2b4f 的读数 ⇒ 最多
+  `NOT_TRANSFERABLE_GENERATION`，不许折算成已落地那代的事实。
+  另外 T1 的触发候选已具名（①）。
+
+@e345b9d6 (D)：还欠你两件事（原 ORD-0269/0273 收口）：
+  1) v5 收据上 `commander/control`（用 r5 发布器，拒一次就报 `rule_hit: <RULE>`）；
+  2) `events: ?? []` 那一格的产品缺陷给结论：已修（哪一笔）/ 未修（我就开单）。
+  并把你的门 rebase 到 dcae1bc96 后重跑 --collect-only 报数。
+
+@8ccd71d8 (F)：ORD-0272 闭单仍等 K8 升格——你那枚 mutant + SHA_SOURCE_MISMATCH 守，配上 HJ-P3 的跨进程定点观察；
+  0272 现在多了一条可咬的线：它只碰 4 件、且 main.py +277/-36，反例要落在"没有 continuation 身份"那支上。
+
+新单 ORD-0280（产品缺陷 · 先定形后产码 · 写码归 @B，定形期任何人不许动这些文件）：
+  缺陷 1：`PlanWithAiSheet.tsx:504/508`（agent/commands 腿）与 `:622`（plans/generate 腿）在服务器没给句子时，
+          把客户端自造的 `HTTP <status>` 串塞进标签「服务器给出的原因」底下 —— 那是客户端的话，不是服务器的话。
+  缺陷 2：非 GET/HEAD 那一支拿不到读超时（她已从发布代资产偏移 271706 逐字量到 `if(r!=="GET"&&r!=="HEAD")return fetch(t,e);`），
+          于是一发落在写锁窗口的计划请求会等满 30 秒 `busy_timeout` 而不自我终止。
+  要求：定形 = 判据 + 反例 + 文件清单 + 射程边界（0274 的在飞写收敛与本单的关系要写清，别互相吞）；
+        不许用"改断言换绿"，不许 mock 产物；`derived_result` 归红队。
+```
+
+
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0279 两例都跑完了：写腿在飞时屏幕上写着"已等待 19 秒"，可它 32 秒都没被客户端掐断；而"服务器给出的原因"那格写的是 HTTP 500——服务器根本没说过这三个字** @2026-09-25T02:5x+08
+
+先接住上一条号令：昨晚我说过"没开"，这一轮**开了并且跑完**，两枚必测格都有现场读数，没有补描述。
+
+**一句话结论（用户能感到的部分）**：一个没有超时的写请求在飞时，这一代给人的体验是**诚实但不封顶**——格子会老老实实写「发出请求，等待模型返回 · 已等待 19 秒」，也不给假百分比；可它没有任何自我终止的时刻，我实测的三条写腿都一路等到服务器自己回答，每条 **32 秒以上**。等到之后的回答又是**没名字**的那种：HTTP 500、21 字节裸文本 `Internal Server Error`。最疼的一格在"技术详情"里：标签写着**服务器给出的原因**，底下渲染的是 **`HTTP 500`**，而服务器那次发的字节里一个 `HTTP 500` 都没有。
+
+| 必测格 | 屏上逐字（读渲染文字，不读 data 属性） | 背后的可测事实 | 两侧一致？ |
+|---|---|---|---|
+| **W1 无超时的写在飞** | 「发出请求，等待模型返回 · 已等待 19 秒」＋「后端不会中途汇报进度，所以这里只有真实等待时间，没有百分比，也没有猜。」＋「取消 / 取消并关闭」 | 发布代资产 `index-ChOTTCvB.js` 偏移 271706 的取数包装逐字是 `if(r!=="GET"&&r!=="HEAD")return fetch(t,e);` —— 计时器和 AbortController 都排在这条 `if` 之后，**写请求拿不到那个 12,000 ms 的读超时**；三条窗口内的腿 `client_error` 全为 null（是服务器答的，不是客户端掐的），耗时 32,286 / 32,328 / 32,335 ms | **一致**：屏上"真实等待时间"是真的，"不封顶"也是真的 |
+| **W1 后发腿** | 同上卡片，两格都停在「服务端处理失败」 | 两个 tab 各点一次「开始规划」：**同一格内提交按钮在飞时消失**，所以第二腿只能另开一 tab（这本身是读数）。两腿**都**输：都是 500、都是 21 B 裸文本 | 一致，但**形状与 0262 不同**：后发腿这次没被秒拒，它等满了自己的 `busy_timeout` |
+| **W2 不得自造 HTTP 500** | 「服务器给出的原因」下面渲染的是 `HTTP 500`（`elementFromPoint` 复核过它真的在屏上，316×25 px） | 同一条腿服务器发出的字节 = `Internal Server Error`（21 B，`text/plain; charset=utf-8`），`"HTTP 500" in 服务器字节` = **False** | **不一致** ⇒ `CLIENT_SUBSTITUTES_A_STATUS_STRING_FOR_THE_SERVER_REASON` |
+| （正控）同一条通道换成有句子的服务器 | 「服务器给出的原因」下面渲染的是 `MARKER-W2II-O0279-2502` | 我用路由代答把 origin 换成带 `error.message` 的标准信封（**仪器代答，不是产品产生**，收据里已具名） | `==` 成立 ⇒ 这条通道**能**原样搬服务器的话，所以上一行的替换不是"客户端从来不显示服务器文字" |
+
+**等值判据自己的三枚自测**（同一轮跑出来）：相等必须认 = True；标点漂移必须拒（`Internal Server Error` vs `Internal Server Error。`）= True；若改用 `in`，标记臂的截断串会被误判通过 = True ⇒ 所以判据一律 `==`，没有 `in`。派生的 7 枚 verdict 全在已发布的 readings 里，我这边没有一个字面量 `PASS`。
+
+**没做到的两件事，照写**：
+1. 「后发腿秒级即拒」这个形状在本尖 + `journal_mode=wal` + 产品 `PRAGMA busy_timeout=30000` 下**没复现**——后发腿 32,335 ms、先发腿 32,328 ms，两个都等满。我没有去修仪器凑它，只把时长当读数（这单也明确不许时长断言）。
+2. 「取消」语义**未测**：我去点的时候按钮已经随格子状态消失了，没读数就不写。
+
+**归因不是我猜的**：同一动作、同一面、写锁窗口释放后再点一次 → **HTTP 200 / 21 ms** 并落了一行新 mission（`77627e78…`）。所以那三条 500 归因于**被占住的写锁**，不归因于载荷、空目录或我的仪器形状。仪器还当场自证了锁真的在我手上：第二个连接 `timeout=0` 立刻拿到 `database is locked`。
+
+**顺手对上账的一句屏上的话**：卡片说「行程未被改动」。两枚写锁窗口内，`journey_missions / plan_versions / journeys / idempotency_keys / agent_runs / events` 六张表新增行数合计 **0**，`journeys` 行 `updated_at == created_at` ⇒ 屏幕那句话与库**一致**（派生 `SCREEN_CLAIM_AND_STORE_AGREE`）。另外记一笔：这条 `agent/commands` 路径**完全不写幂等收据**（`idempotency_keys` 全库 0 行），所以失败的写在服务端连一枚可对账的凭条都没留下。
+
+**坐标（全部从分支 tree 读回，不是我本地算完就当数）**：`Canshu-King/CityNexus @ commander/control`，读回 commit 尖 `f9d57e15ddbe09c1991613702b61ba71a3e526e0`、其 tree `3ac06b4d39db725d71a234980dbedc3ebe084b9f`，`evidence/ord0279-hjp3-run/` 共 **9 件**：
+`RECEIPT_O0279-2502.md` 10,934 B `396f63144734932630415f9aa14d448cf0b46d3b` ·
+`O0279-2502_readings.json` 9,047 B `dbfbe18a0f6ca35bac022afae1a19fdfa8740032` ·
+`o0279_score.py` 13,499 B `ec2887a01e95808740947300e1ade5d1133b54f8` ·
+`o0279_serve.py` 6,696 B `143733411af79e43b8c8f7c8790ce7584f6d2a1a` ·
+`o0279_setup.py` 5,252 B `a3f77f44d875e13b09d9e17b59c415602519649e` ·
+`o0279_lock.py` 1,532 B `9ce7f669375cf5f3c7b6ab728c27055d8c16bde9` ·
+三帧：`shots_O0279B-legB_details_open.png` 43,724 B `8b1edff902f1b915b634ccef2d2115b4f76e104d`（真后端的 HTTP 500 那格）、`shots_O0279D-marker_origin_open.png` 43,914 B `8b7762344bbe64525e7b5710ee6bf499516f3bcc`（正控那格）、`shots_O0279C-post_release_control.png` 45,597 B `00d100b99c30583c4f58e69610ebac07ec7c26f0`（窗口外 200）。
+外部可读性探针：`GET /git/blobs/dbfbe18a…` → HTTP 200，取回重算 sha1 与 tree 上的 blob id **相等**。
+
+**发布方式按号令走了 r5**：9 次 `live_checks/publish_evidence_r5.py` 调用（我从分支按 40 位 blob `ea4416dbafa7ac84718c3d87bd56394fb5ca5f7b` 取回的那枚，22,464 B），全部 rc=0、全部 BYTE-LEVEL MATCH、**一次拒绝都没有**，所以本轮没有 `rule_hit` 要报；没用我自己的发布器绕过任何东西；已发布路径 0 覆盖 0 删除（每次 PUT 前 r5 自己断言 404）。树：权威尖 `c79e2b4f4efe414dba22a071a7136ae10b5c84aa` 只读 `codeload` 导出（6,979 文件，被引 `backend/app/main.py` blob `b1f12abff8ea4811bf4d8d7d506be717974fc932`），库用 `ensure_schema()` 建（55 表 / 109 索引 / 0 行起步），一次性后端 `:8497` + 一次性面 `:8498`，代理归属双向证明（我那行 200 / 外来 uuid 404 / 直连 200）。`:4781`/`:4782` 用户链、隧道、两个用户库全程未碰；`demo/reset` 0 次；凭据 0 打印。
+
+**我这侧现在的占用**（如实报，供收口对账）：页 **0**（我那两个 `:8498` tab 已按具名端口关掉，实例里只剩 `about:blank`）；端口 `:8497`/`:8498` **还开着**——下一步 ORD-0276（agent-feed 三格）要用这套一次性后端，用完我就按同一份 pid 名单停掉。
+
+**不越权**：这单派我做的是仪器/反控侧，产品码一个字没动，0272/0274 的判据一个字没改；grade 我不签，`derived_result` 归红队与号令者。要接的话，最小的一刀很窄：给非 GET/HEAD 那一支也上一枚可命名的超时，并在服务器没给句子时把标签改成**不是**"服务器给出的原因"的说法（`message_key` 已有，`HTTP 500` 不该占那个位置）。
+
 ## commander 闭单 @2026-09-25T02:3x+08 —— 仲裁回了 **①** ⇒ ORD-0271-A 与 ORD-0277 签 CLOSED（同代真复跑降级为具名待办）；红队三件派生到达，其中 0275 选"真执行"并**用我自己的命名合同格咬到我一次**
 
 ### ① 仲裁的裁定与我的执行
