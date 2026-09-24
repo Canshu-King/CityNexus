@@ -1,0 +1,174 @@
+{
+ "what": "ORD-0262-NARROW 最后一格：busy 的 retry 等值收口进两枚操作自己的阶梯（01:1x §③ 的派单）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-24T08:39:55+08:00",
+ "coordinates": {
+  "branch": "agent/f-ord0262-narrow",
+  "head": "3093eea773c79fa00744fe72d1f2c43b4d0bd75e",
+  "parent": "7762fdfde9a861a561d12111b8ae039582d4a230",
+  "base_of_this_order": "d2665e25855aeb265329266831983de42321697d",
+  "tree": "5ae9f8959b059d04e5a41c53f0b6fa11470b19d0",
+  "blobs": {
+   "backend/app/main.py": {
+    "parent": "aa058646b8a0c5542e7d8d6e394f8da82357ff00",
+    "head": "347bdc68bbe5a910a4903ce6e6edeafe96007631"
+   },
+   "backend/tests/test_qoder_ord0262_narrow_contention.py": {
+    "parent": "4bf155601f4f068ddaf95cb99621c242ecc00611",
+    "head": "ceffcc9d20d44f2418122c100ac1b62801f7bf36"
+   }
+  },
+  "diff_stat_vs_parent": [
+   "22\t9\tbackend/app/main.py",
+   "30\t10\tbackend/tests/test_qoder_ord0262_narrow_contention.py",
+   "13\t1\tbackend/tests/test_qoder_stay_generation_operations.py"
+  ],
+  "patch_replay": {
+   "base_tree_rev": "7762fdf",
+   "replayed_tree": "5ae9f8959b059d04e5a41c53f0b6fa11470b19d0",
+   "head_tree": "5ae9f8959b059d04e5a41c53f0b6fa11470b19d0",
+   "byte_equal": true,
+   "patches": [
+    {
+     "name": "0001-fix-ord0262-the-busy-wait-now-comes-from-each-operat.patch",
+     "bytes": 9826
+    },
+    {
+     "name": "0002-test-ord0262-the-busy-door-assertion-stops-pinning-t.patch",
+     "bytes": 2868
+    }
+   ]
+  },
+  "pushed": false
+ },
+ "question_1_three_literals_gone": {
+  "before": {
+   "total_emissions": 5,
+   "bare_numbers": [
+    "500",
+    "500",
+    "500"
+   ],
+   "from_generation_ladder": 1,
+   "from_hydration_ladder": 0,
+   "passthrough_of_operation_body": 1,
+   "distinct_codes_in_busy_family": [
+    "GENERATION_STORE_BUSY",
+    "HYDRATION_STORE_BUSY"
+   ]
+  },
+  "after": {
+   "total_emissions": 5,
+   "bare_numbers": [],
+   "from_generation_ladder": 3,
+   "from_hydration_ladder": 1,
+   "passthrough_of_operation_body": 1,
+   "distinct_codes_in_busy_family": [
+    "GENERATION_STORE_BUSY",
+    "HYDRATION_STORE_BUSY"
+   ]
+  },
+  "verdict": "MET：三处写死数字已为 0，且两处 generation 站点 + 一处 hydration 站点分别走各自阶梯"
+ },
+ "question_2_regression_ab": {
+  "shape": "3 轮 × 2 棵新鲜 git archive 导出，逐文件核对导出字节==提交字节",
+  "first_round_finding": "第一版 A/B（候选 30092dc）曾量到 1 条候选独有红：既存门 tests/test_qoder_stay_generation_operations.py::test_a_busy_store_answers_a_named_retry_on_both_doors 把 ==500 写死在断言里 ⇒ 收口之后它必然红。这一条不是我的格子坏了，是**旧契约在证据层还留着一个载体**；已按写域改掉那枚断言（判阶梯下限 + 两门必须一致），本收据只报 3093eea 这一版",
+  "per_round_red_counts": {
+   "candidate_3093eea": [
+    8,
+    8,
+    9
+   ],
+   "base_d2665e2": [
+    8,
+    8,
+    8
+   ]
+  },
+  "collect_denominators": {
+   "candidate_3093eea": 1230,
+   "base_d2665e2": 1224
+  },
+  "only_in_candidate": [
+   "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one"
+  ],
+  "only_in_baseline": [],
+  "expectation": "only_in_candidate 应为 0（那 1 条 FINDING_OPEN 格已收口转绿）",
+  "candidate_only_names_classified": {
+   "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one": {
+    "nodeid_matches_the_triage": true,
+    "whole_suite_rounds_red": 1,
+    "focused_red_rounds_candidate": 0,
+    "focused_red_rounds_baseline": 0,
+    "focused_rounds": 3,
+    "classification": "BATCH_SENSITIVE（聚焦不恒红 ⇒ 不成回归形状）"
+   }
+  },
+  "verdict": "MET-WITH-NAMED-SWIMMER：0 条回归、1 条批次敏感（聚焦 3 轮两棵树都全绿，全量只在候选 1/3 轮出现）⇒ 不许写成'0 新红'"
+ },
+ "question_3_positive_control": {
+  "note": "把某一处阶梯调用**抄回写死的 500**，该格必须红；共享信封那一处还要看见 ①/② 继续绿（独立性反证）",
+  "controls": {
+   "M3_retry_literal_reintroduced_hydration": {
+    "claimed_result": "KILLED",
+    "killed_by": [
+     "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal"
+    ],
+    "still_green": [
+     "test_a_busy_store_answers_a_named_retry_on_both_doors"
+    ],
+    "owner": "④ 的正控（commander 01:1x §③ 点名要的那一枚）：把 hydration 的等值抄回写死的 500 ⇒ 那一格**必须红**；generation 两门那枚既存门必须**继续绿**（它管的是另一条操作），这才说明这一刀切在 hydration 上，不是把整块产品打死"
+   },
+   "M5_generation_site_literal_reintroduced": {
+    "claimed_result": "KILLED",
+    "killed_by": [
+     "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal",
+     "test_a_busy_store_answers_a_named_retry_on_both_doors"
+    ],
+    "still_green": [],
+    "owner": "④ 的第三枚正控，也是这次 A/B 真找出来的那一格：把**等待门**那处抄回 500 ⇒ 我的 ④ 与既存那枚 resident 门（它从前钉死 ==500）必须同时红 —— resident 断言现在判的是'等于阶梯下限 + 两门一致'，不是旧数字"
+   },
+   "M4_retry_literal_reintroduced_envelope": {
+    "claimed_result": "KILLED",
+    "killed_by": [
+     "test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal"
+    ],
+    "still_green": [
+     "test_1_named_policy_claim_collision_answers_inside_the_existing_envelope",
+     "test_2_a_held_write_lock_answers_in_the_envelope_not_as_a_bare_500"
+    ],
+    "owner": "④ 的第二枚正控：共享具名信封里抄回 500 ⇒ ④ 必须红；①/② 记在 targets 里是要**看见它们继续绿**（它们断的是信封形状，不该被等值来源这一刀带走）"
+   }
+  },
+  "controls_run": 3,
+  "the_cell_under_test_red_when_literal_returned": true,
+  "verdict": "MET：3 枚正控（hydration 站点 / 共享信封 / generation 等待门）各自把 ④ 打红；其中信封与 generation 那两枚同时给出'该继续绿'的一侧"
+ },
+ "question_4_no_new_vocabulary": {
+  "codes_before": [
+   "GENERATION_STORE_BUSY",
+   "HYDRATION_STORE_BUSY"
+  ],
+  "codes_after": [
+   "GENERATION_STORE_BUSY",
+   "HYDRATION_STORE_BUSY"
+  ],
+  "new_code_introduced": [],
+  "fourth_constant_added": [],
+  "verdict": "MET：没发新码、没添第四份常数"
+ },
+ "guardrail_kept_verbatim": "本收据只声明这一格。19 B/21 B 变漂亮 JSON 不等于 ORD-0262 的原子性/完整性已闭：孤儿 `CREATED` mission 与未落库的 `plan_version`（e168580c v22）仍是各留各门的独立义务；跨进程同键那一格归红队派生，我不在此宣布。",
+ "campaign_health": {
+  "control_reading": {
+   "rc": 0,
+   "failed_nodeids": [],
+   "tail": "5 passed, 27 deselected, 2 warnings in 33.84s",
+   "collection_lines": []
+  },
+  "campaign_valid": true,
+  "restore_verified": true,
+  "target_file_sha_before_and_after": "8c8ec04dbdc1defb",
+  "mutation_receipt_blob": "949912738dc68d42cd3e102a108c1fbaf5623047"
+ },
+ "print_policy": "只印 sha/计数/来源表达式；0 凭据、0 用户库路径、0 demo/reset"
+}
