@@ -1,0 +1,311 @@
+{
+ "order": "ORD-0279 WRITE_LEG_HAS_NO_DEADLINE",
+ "run_id": "O0279-2502",
+ "lane": "HJ-P3 aad2d1f2",
+ "measured_at_local": "2026-09-25T02:36:56+0800",
+ "tree": {
+  "authoritative_tip": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+  "main_py_blob": "b1f12abff8ea4811bf4d8d7d506be717974fc932",
+  "exported_by": "codeload tarball pinned to the 40-char sha, 6979 files"
+ },
+ "services": {
+  "backend": "127.0.0.1:8497 (tip export, one-time DB, CITYNEXUS_AI_ENABLED=false)",
+  "face": "127.0.0.1:8498 (vite preview, --outDir snap_live_dist)",
+  "face_proxy_ownership": {
+   "mine_via_face": 200,
+   "foreign_via_face": 404,
+   "mine_direct_backend": 200,
+   "verdict": "PROXY_IS_MINE"
+  },
+  "bundle_proved_to_be_tip_generation": "index-ChOTTCvB.js carries OriginResponseUnusableError/ORIGIN_INVALID_RESPONSE (2+1 hits); the previous generation index-Cpy_jhEg.js has 0"
+ },
+ "db": {
+  "journal_mode": "wal",
+  "tables": {
+   "journey_missions": {
+    "total_rows": 5,
+    "rows_created_inside": {
+     "window1": 0,
+     "window2": 0
+    }
+   },
+   "plan_versions": {
+    "total_rows": 0,
+    "rows_created_inside": {
+     "window1": 0,
+     "window2": 0
+    }
+   },
+   "journeys": {
+    "total_rows": 1,
+    "rows_created_inside": {
+     "window1": 0,
+     "window2": 0
+    }
+   },
+   "idempotency_keys": {
+    "total_rows": 0,
+    "rows_created_inside": {
+     "window1": 0,
+     "window2": 0
+    }
+   },
+   "agent_runs": {
+    "total_rows": 5,
+    "rows_created_inside": {
+     "window1": 0,
+     "window2": 0
+    }
+   },
+   "events": {
+    "total_rows": 0,
+    "rows_created_inside": {
+     "window1": 0,
+     "window2": 0
+    }
+   }
+  },
+  "journeys_row": {
+   "created_at": "2026-09-24T18:18:02.565296+00:00",
+   "updated_at": "2026-09-24T18:18:02.565296+00:00",
+   "status": "DRAFT",
+   "never_updated": true
+  }
+ },
+ "bundle": {
+  "bundle": "index-ChOTTCvB.js",
+  "bundle_bytes": 1245203,
+  "bundle_sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de",
+  "vb_offset": 271706,
+  "write_branch_returns_plain_fetch": true,
+  "fragment": "async function vb(t,e={},n=pb){const r=(e.method??\"GET\").toUpperCase();if(r!==\"GET\"&&r!==\"HEAD\")return fetch(t,e);const i=new AbortController;let o=!1;const l=setTimeout(()=>{o=!0,i.abort()},n),c=e.signal??null,f=()=>i.abort();c&&(c.aborted?i.abort():c.addEventListener(\"abort\",f,{once:!0}));try{retu",
+  "read_deadline_ms_from_bundle": 12000,
+  "abort_signal_timeout_occurrences": 0
+ },
+ "legs": {
+  "clean_pre_lock": {
+   "tab": "A",
+   "status": 200,
+   "elapsed_ms": 26,
+   "ct": null,
+   "bytes": null,
+   "client_error": null,
+   "mission_id": "dc3729dd-b56d-40ee-881d-80f4093cb68c",
+   "source": "playwright evaluate: leg before any lock was armed"
+  },
+  "window1_leg1": {
+   "tab": "A",
+   "status": 500,
+   "elapsed_ms": 32286,
+   "ct": "text/plain; charset=utf-8",
+   "body": "Internal Server Error",
+   "bytes": 21,
+   "client_error": null,
+   "source": "playwright evaluate: __recs POST record (window 1)"
+  },
+  "window2_legA": {
+   "tab": "A",
+   "status": 500,
+   "elapsed_ms": 32328,
+   "ct": "text/plain; charset=utf-8",
+   "body": "Internal Server Error",
+   "bytes": 21,
+   "client_error": null,
+   "source": "playwright evaluate: __recs POST record (window 2, first write leg)"
+  },
+  "window2_legB": {
+   "tab": "B",
+   "status": 500,
+   "elapsed_ms": 32335,
+   "ct": "text/plain; charset=utf-8",
+   "body": "Internal Server Error",
+   "bytes": 21,
+   "client_error": null,
+   "source": "playwright evaluate: __recs POST record (window 2, later write leg, fired from a second tab while legA was still parked)"
+  },
+  "control_post_release": {
+   "tab": "A",
+   "status": 200,
+   "elapsed_ms": 21,
+   "ct": "application/json",
+   "bytes": 7083,
+   "client_error": null,
+   "mission_id": "77627e78-8cfd-4d5a-8860-fcc14c5db86a",
+   "source": "playwright evaluate: identical user action after the lock was released"
+  }
+ },
+ "lock_windows_utc": {
+  "window1": [
+   "2026-09-24T18:22:38",
+   "2026-09-24T18:23:58"
+  ],
+  "window2": [
+   "2026-09-24T18:25:45",
+   "2026-09-24T18:27:15"
+  ]
+ },
+ "lock_selfproof": [
+  "HELD at 02:22:38 (rows_touched=1)",
+  "SELFPROOF: second writer refused with 'database is locked' at 02:22:38",
+  "ARMED - browser legs may fire now",
+  "RELEASED at 02:23:58",
+  "HELD at 02:25:45 (rows_touched=1)",
+  "SELFPROOF: second writer refused with 'database is locked' at 02:25:45",
+  "ARMED - browser legs may fire now",
+  "RELEASED at 02:27:15"
+ ],
+ "screen": {
+  "card_title": "服务端处理失败",
+  "card_body": "这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。",
+  "label": "服务器给出的原因",
+  "reason_real_origin": "HTTP 500",
+  "reason_marker_origin": "MARKER-W2II-O0279-2502",
+  "inflight_samples": [
+   {
+    "ms": 1502,
+    "counter_s": 1
+   },
+   {
+    "ms": 3005,
+    "counter_s": 2
+   },
+   {
+    "ms": 4501,
+    "counter_s": 4
+   },
+   {
+    "ms": 6004,
+    "counter_s": 5
+   },
+   {
+    "ms": 7507,
+    "counter_s": 7
+   },
+   {
+    "ms": 9003,
+    "counter_s": 8
+   },
+   {
+    "ms": 10506,
+    "counter_s": 10
+   },
+   {
+    "ms": 12004,
+    "counter_s": 11
+   },
+   {
+    "ms": 13506,
+    "counter_s": 13
+   },
+   {
+    "ms": 15003,
+    "counter_s": 14
+   },
+   {
+    "ms": 16506,
+    "counter_s": 16
+   },
+   {
+    "ms": 18003,
+    "counter_s": 17
+   },
+   {
+    "ms": 19505,
+    "counter_s": 19
+   }
+  ],
+  "inflight_card_template": "发出请求，等待模型返回 · 已等待 {n} 秒\n\n后端不会中途汇报进度，所以这里只有真实等待时间，没有百分比，也没有猜。\n\n✓\n读取已有方案作为基线\n●\n发出请求，等待模型返回\n○\n核对本次是否真的产出了新方案\n取消\n取消并关闭\n规划中…"
+ },
+ "derived": {
+  "W1a_write_leg_deadline": {
+   "verdict": "WRITE_LEG_RUNS_PAST_THE_READ_DEADLINE_WITH_NO_CLIENT_ABORT",
+   "read_deadline_ms_product_constant": 12000,
+   "legs_exceeding_it": {
+    "clean_pre_lock": false,
+    "window1_leg1": true,
+    "window2_legA": true,
+    "window2_legB": true,
+    "control_post_release": false
+   },
+   "no_client_abort": true
+  },
+  "W1b_loser_answer": {
+   "verdict": "NOT_200_BUT_UNNAMED",
+   "not_200": {
+    "window1_leg1": true,
+    "window2_legA": true,
+    "window2_legB": true
+   },
+   "server_named_a_code": {
+    "window1_leg1": false,
+    "window2_legA": false,
+    "window2_legB": false
+   },
+   "loser_body": "Internal Server Error",
+   "loser_body_bytes": 21
+  },
+  "W1c_two_sided_equality": {
+   "verdict": "TWO_SIDED_EQUALITY_MEASURED",
+   "server_body_equals_rendered_real_origin": false,
+   "server_body_equals_rendered_marker_origin": true,
+   "judge_positive_control": true,
+   "judge_punctuation_drift_rejected": true,
+   "substring_judge_would_have_passed": true
+  },
+  "W1d_inflight_state": {
+   "verdict": "INFLIGHT_STATE_NAMED_WITH_REAL_WAITING_TIME_AND_NO_INVENTED_PROGRESS",
+   "max_counter_vs_wallclock_drift_ms": 1005,
+   "submit_button_present_in_sheet_while_inflight": false,
+   "second_tab_could_still_submit": true
+  },
+  "W1e_durability_claim": {
+   "verdict": "SCREEN_CLAIM_AND_STORE_AGREE",
+   "rows_written_inside_both_windows": 0
+  },
+  "W1f_attribution": {
+   "verdict": "ATTRIBUTED_TO_HELD_WRITE_LOCK"
+  },
+  "W2_rendered_reason": {
+   "verdict": "CLIENT_SUBSTITUTES_A_STATUS_STRING_FOR_THE_SERVER_REASON",
+   "token_present_in_server_bytes": false
+  },
+  "IMMEDIATE_REFUSAL_NOT_REPRODUCED": {
+   "note": "the later leg was refused after its own full busy_timeout, not immediately; journal_mode=wal, product PRAGMA busy_timeout=30000. Elapsed times are readings, not assertions.",
+   "window2_legA_elapsed_ms": 32328,
+   "window2_legB_elapsed_ms": 32335
+  }
+ },
+ "screenshots": [
+  {
+   "file": "shots_O0279A-legA_detail.png",
+   "bytes": 43991,
+   "sha256": "be1f18ff90c76aa0422017690bc4044f8b4c968dfd8e0ebdda8091171800cbbf"
+  },
+  {
+   "file": "shots_O0279A-tech_details.png",
+   "bytes": 43991,
+   "sha256": "be1f18ff90c76aa0422017690bc4044f8b4c968dfd8e0ebdda8091171800cbbf"
+  },
+  {
+   "file": "shots_O0279B-legB_details_open.png",
+   "bytes": 43724,
+   "sha256": "4fa7b0f93e29e0d9a839a044a8da6cbd17e44aca0fc5968f1125b7ccdf5c9dac"
+  },
+  {
+   "file": "shots_O0279C-post_release_control.png",
+   "bytes": 45597,
+   "sha256": "ab36c52e67a1b47e960c9b424a5b49ae110f383370abb611e62367ea7df08d37"
+  },
+  {
+   "file": "shots_O0279D-marker_origin.png",
+   "bytes": 44247,
+   "sha256": "d0d52117adc6815d473443101cc3f0e7aad2fdfb98b99af46e98f9d18c142646"
+  },
+  {
+   "file": "shots_O0279D-marker_origin_open.png",
+   "bytes": 43914,
+   "sha256": "fa937bb4f499739224d138a6d63c74e1f0fbabd69b99e67e3844394b2b272d1b"
+  }
+ ],
+ "screenshots_all_distinct": false
+}
