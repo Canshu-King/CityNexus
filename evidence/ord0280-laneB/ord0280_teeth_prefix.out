@@ -1,0 +1,209 @@
+Running 8 tests using 1 worker
+[1/8] [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API
+[qoder-real-seed] journey=0e5dca56-daa4-430a-b7bb-5c396bc77aa2 options=4 chosen=65f7c157-6e8a-4f18-8e45-0b5ba30abf87 (Haihe Riverside Hotel)
+[qoder-real-seed] trialWizard=false live-journey-current=true
+[2/8] [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:185:1 › ord0280-A1 agent/commands refused with NO server sentence does not wear the attribution label
+  1) [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:185:1 › ord0280-A1 agent/commands refused with NO server sentence does not wear the attribution label 
+    Test timeout of 60000ms exceeded.
+    Error: locator.click: Test timeout of 60000ms exceeded.
+    Call log:
+      - waiting for getByTestId('plan-ai-detail-toggle')
+      119 |   await expect(result, node(NODE, "the sheet never answered")).toBeVisible({ timeout: 120_000 });
+      120 |
+    > 121 |   await page.getByTestId("plan-ai-detail-toggle").click();
+          |                                                   ^
+      122 |   const kind = page.getByTestId("plan-ai-detail-kind");
+      123 |   const reason = page.getByTestId("plan-ai-reason");
+      124 |   await expect(reason, node(NODE, "no failure line rendered under 技术详情 at all")).toBeVisible();
+        at bootAndAsk (D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:121:51)
+        at D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:188:16
+    Error Context: test-results\qoder-ord0280-attribution--f2e1b--wear-the-attribution-label-chromium\error-context.md
+    Error Context: test-results\qoder-ord0280-attribution--f2e1b--wear-the-attribution-label-chromium\error-context.md
+[3/8] [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:193:1 › ord0280-A2 agent/commands refused WITH a server sentence shows it verbatim under the label
+  2) [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:193:1 › ord0280-A2 agent/commands refused WITH a server sentence shows it verbatim under the label 
+    Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: A2 — FAILED: label and origin agree :: {"want":"server","label":"服务器给出的原因","origin":"","reason":"该目的地的候选目录尚未就绪，请稍后重试。"}
+    expect(received).toEqual(expected) // deep equality
+    - Expected  -  1
+    + Received  + 10
+    - Array []
+    + Array [
+    +   Object {
+    +     "claim": "label and origin agree",
+    +     "got": Object {
+    +       "label": "服务器给出的原因",
+    +       "origin": "",
+    +     },
+    +     "ok": false,
+    +   },
+    + ]
+      174 |     node(NODE, `${bad.length ? "FAILED: " + bad.map((b) => b.claim).join("; ") : "ok"} :: ` +
+      175 |       JSON.stringify({ want, label: read.label, origin: read.origin, reason: read.reason })),
+    > 176 |   ).toEqual([]);
+          |     ^
+      177 |   return rows;
+      178 | }
+      179 |
+        at judge (D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)
+        at D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:202:34
+    Error Context: test-results\qoder-ord0280-attribution--ca916-it-verbatim-under-the-label-chromium\error-context.md
+    Error Context: test-results\qoder-ord0280-attribution--ca916-it-verbatim-under-the-label-chromium\error-context.md
+[4/8] [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:205:1 › ord0280-B1 GET /places unreadable with NO sentence is named as this device's reading
+  3) [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:205:1 › ord0280-B1 GET /places unreadable with NO sentence is named as this device's reading 
+    Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: B1 — FAILED: label and origin agree :: {"want":"device","label":"服务器给出的原因","origin":"","reason":"GET /places -> HTTP 502"}
+    expect(received).toEqual(expected) // deep equality
+    - Expected  -  1
+    + Received  + 10
+    - Array []
+    + Array [
+    +   Object {
+    +     "claim": "label and origin agree",
+    +     "got": Object {
+    +       "label": "服务器给出的原因",
+    +       "origin": "",
+    +     },
+    +     "ok": false,
+    +   },
+    + ]
+      174 |     node(NODE, `${bad.length ? "FAILED: " + bad.map((b) => b.claim).join("; ") : "ok"} :: ` +
+      175 |       JSON.stringify({ want, label: read.label, origin: read.origin, reason: read.reason })),
+    > 176 |   ).toEqual([]);
+          |     ^
+      177 |   return rows;
+      178 | }
+      179 |
+        at judge (D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)
+        at D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:216:34
+    Error Context: test-results\qoder-ord0280-attribution--759dc-ed-as-this-device-s-reading-chromium\error-context.md
+    Error Context: test-results\qoder-ord0280-attribution--759dc-ed-as-this-device-s-reading-chromium\error-context.md
+[5/8] [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:220:1 › ord0280-B2 GET /places refused with a detail sentence quotes the server
+  4) [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:220:1 › ord0280-B2 GET /places refused with a detail sentence quotes the server 
+    Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: B2 — FAILED: label and origin agree :: {"want":"server","label":"服务器给出的原因","origin":"","reason":"places 目录在该城市没有物化任何地点，无法组成候选。"}
+    expect(received).toEqual(expected) // deep equality
+    - Expected  -  1
+    + Received  + 10
+    - Array []
+    + Array [
+    +   Object {
+    +     "claim": "label and origin agree",
+    +     "got": Object {
+    +       "label": "服务器给出的原因",
+    +       "origin": "",
+    +     },
+    +     "ok": false,
+    +   },
+    + ]
+      174 |     node(NODE, `${bad.length ? "FAILED: " + bad.map((b) => b.claim).join("; ") : "ok"} :: ` +
+      175 |       JSON.stringify({ want, label: read.label, origin: read.origin, reason: read.reason })),
+    > 176 |   ).toEqual([]);
+          |     ^
+      177 |   return rows;
+      178 | }
+      179 |
+        at judge (D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)
+        at D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:230:34
+    Error Context: test-results\qoder-ord0280-attribution--ab070--sentence-quotes-the-server-chromium\error-context.md
+    Error Context: test-results\qoder-ord0280-attribution--ab070--sentence-quotes-the-server-chromium\error-context.md
+[6/8] [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:233:1 › ord0280-C1 plans/generate refused with NO sentence is not the server's reason
+  5) [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:233:1 › ord0280-C1 plans/generate refused with NO sentence is not the server's reason 
+    Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: C1 — FAILED: label and origin agree :: {"want":"device","label":"服务器给出的原因","origin":"","reason":"POST /plans/generate -> HTTP 422"}
+    expect(received).toEqual(expected) // deep equality
+    - Expected  -  1
+    + Received  + 10
+    - Array []
+    + Array [
+    +   Object {
+    +     "claim": "label and origin agree",
+    +     "got": Object {
+    +       "label": "服务器给出的原因",
+    +       "origin": "",
+    +     },
+    +     "ok": false,
+    +   },
+    + ]
+      174 |     node(NODE, `${bad.length ? "FAILED: " + bad.map((b) => b.claim).join("; ") : "ok"} :: ` +
+      175 |       JSON.stringify({ want, label: read.label, origin: read.origin, reason: read.reason })),
+    > 176 |   ).toEqual([]);
+          |     ^
+      177 |   return rows;
+      178 | }
+      179 |
+        at judge (D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)
+        at D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:249:34
+    Error Context: test-results\qoder-ord0280-attribution--70b68--is-not-the-server-s-reason-chromium\error-context.md
+    Error Context: test-results\qoder-ord0280-attribution--70b68--is-not-the-server-s-reason-chromium\error-context.md
+[7/8] [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:252:1 › ord0280-C2 plans/generate refused with a message quotes it exactly
+  6) [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:252:1 › ord0280-C2 plans/generate refused with a message quotes it exactly 
+    Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: C2 — FAILED: label and origin agree :: {"want":"server","label":"服务器给出的原因","origin":"","reason":"预算与停留上限无法同时满足，未生成方案。"}
+    expect(received).toEqual(expected) // deep equality
+    - Expected  -  1
+    + Received  + 10
+    - Array []
+    + Array [
+    +   Object {
+    +     "claim": "label and origin agree",
+    +     "got": Object {
+    +       "label": "服务器给出的原因",
+    +       "origin": "",
+    +     },
+    +     "ok": false,
+    +   },
+    + ]
+      174 |     node(NODE, `${bad.length ? "FAILED: " + bad.map((b) => b.claim).join("; ") : "ok"} :: ` +
+      175 |       JSON.stringify({ want, label: read.label, origin: read.origin, reason: read.reason })),
+    > 176 |   ).toEqual([]);
+          |     ^
+      177 |   return rows;
+      178 | }
+      179 |
+        at judge (D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)
+        at D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:269:34
+    Error Context: test-results\qoder-ord0280-attribution--a032d-a-message-quotes-it-exactly-chromium\error-context.md
+    Error Context: test-results\qoder-ord0280-attribution--a032d-a-message-quotes-it-exactly-chromium\error-context.md
+[8/8] [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:272:1 › ord0280-D the <2-places count this screen measured is a device statement too
+  7) [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:272:1 › ord0280-D the <2-places count this screen measured is a device statement too 
+    Error: e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts :: D — FAILED: label and origin agree :: {"want":"device","label":"服务器给出的原因","origin":"","reason":"GET /places?city_code=CN-TIANJIN -> 0 places"}
+    expect(received).toEqual(expected) // deep equality
+    - Expected  -  1
+    + Received  + 10
+    - Array []
+    + Array [
+    +   Object {
+    +     "claim": "label and origin agree",
+    +     "got": Object {
+    +       "label": "服务器给出的原因",
+    +       "origin": "",
+    +     },
+    +     "ok": false,
+    +   },
+    + ]
+      174 |     node(NODE, `${bad.length ? "FAILED: " + bad.map((b) => b.claim).join("; ") : "ok"} :: ` +
+      175 |       JSON.stringify({ want, label: read.label, origin: read.origin, reason: read.reason })),
+    > 176 |   ).toEqual([]);
+          |     ^
+      177 |   return rows;
+      178 | }
+      179 |
+        at judge (D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:176:5)
+        at D:\moodle\_qoder_b_lane_20260923\frontend\e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:281:33
+    Error Context: test-results\qoder-ord0280-attribution--64aa2-d-is-a-device-statement-too-chromium\error-context.md
+    Error Context: test-results\qoder-ord0280-attribution--64aa2-d-is-a-device-statement-too-chromium\error-context.md
+  7 failed
+    [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:185:1 › ord0280-A1 agent/commands refused with NO server sentence does not wear the attribution label 
+    [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:193:1 › ord0280-A2 agent/commands refused WITH a server sentence shows it verbatim under the label 
+    [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:205:1 › ord0280-B1 GET /places unreadable with NO sentence is named as this device's reading 
+    [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:220:1 › ord0280-B2 GET /places refused with a detail sentence quotes the server 
+    [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:233:1 › ord0280-C1 plans/generate refused with NO sentence is not the server's reason 
+    [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:252:1 › ord0280-C2 plans/generate refused with a message quotes it exactly 
+    [chromium] › e2e\qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:272:1 › ord0280-D the <2-places count this screen measured is a device statement too 
+  1 passed (1.4m)
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4378 backend=:8128 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280j.db ai=disabled reuseExistingServer=false
+[citynexus e2e] provenance ok: run=ord0280j frontend=:4378 -> backend=:8128 ai=disabled db=_ord0280j.db
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4378 backend=:8128 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280j.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4378 backend=:8128 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280j.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4378 backend=:8128 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280j.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4378 backend=:8128 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280j.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4378 backend=:8128 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280j.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4378 backend=:8128 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280j.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4378 backend=:8128 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280j.db ai=disabled reuseExistingServer=false
+[citynexus e2e] suite=current-product authoritative=true python=D:\moodle\CityNexus\.venv\Scripts\python.exe frontend=:4378 backend=:8128 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280j.db ai=disabled reuseExistingServer=false
