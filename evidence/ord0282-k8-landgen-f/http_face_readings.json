@@ -1,0 +1,862 @@
+{
+ "what": "ORD-0282 rig：落地代 45b0a5e2 上两进程一次性库的守卫读数（两态）",
+ "lane": "F 8ccd71d8",
+ "run_id": "O282-250616-630be3",
+ "generated_at": "2026-09-25T06:16:21+08:00",
+ "tree": {
+  "exported_from": "GitHub tarball @45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "backend_cwd": "D:\\moodle\\_qoder_f_run\\e_0282_45b0a5e\\Canshu-King-CityNexus-45b0a5e281cae9c37715173afd3ac5778f309ca7\\backend",
+  "main_py_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "seam_symbol_present": false,
+  "guard_line_present": true
+ },
+ "states": {
+  "guard": {
+   "mutation": "未突变（守卫在位）",
+   "rounds": [
+    {
+     "state": "guard",
+     "round": 1,
+     "run_id": "O282-250616-630be3",
+     "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r1.db",
+     "tree_provenance_at_round": {
+      "main_blob_at_round": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+      "guard_anchor_hits_at_round": 1,
+      "unguarded_anchor_hits_at_round": 0,
+      "seam_symbol_at_round": false
+     },
+     "db_bytes": 741376,
+     "ports": [
+      60469,
+      60470
+     ],
+     "ownership": {
+      "W1": {
+       "pid": 50336,
+       "netstat_pid": 50336,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r1.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "W2": {
+       "pid": 39144,
+       "netstat_pid": 39144,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r1.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "distinct_pids": true,
+      "ai_key_present_either": false
+     },
+     "mission_via": "agent/commands",
+     "agent_command_status": 200,
+     "legs": {
+      "A": {
+       "port": 60469,
+       "pid": 50336,
+       "status": 201,
+       "ms": 81.5,
+       "body_head": "[{\"id\":\"64889d39-3d2a-5da1-aa2a-61b95bd3e07d\",\"journey_id\":\"ced6a289-4ffa-4ef0-9279-2475916acf38\",\"version_no\":1,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":\"INITIAL\","
+      },
+      "B": {
+       "port": 60470,
+       "pid": 39144,
+       "status": 201,
+       "ms": 38.4,
+       "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\":\"CNY\"},\"i"
+      }
+     },
+     "readings": {
+      "receipts_before_A": {
+       "plans.generate:o282A-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282B-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:75d57c2f-af06-4f11-ab36-e9c5fa111cb2": [
+        "absent",
+        null
+       ]
+      },
+      "receipts_before_B": {
+       "plans.generate:o282A-O282-250616-630be3-1": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:75d57c2f-af06-4f11-ab36-e9c5fa111cb2": [
+        "filled",
+        201
+       ]
+      },
+      "receipts_after_B": {
+       "plans.generate:o282A-O282-250616-630be3-1": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:75d57c2f-af06-4f11-ab36-e9c5fa111cb2": [
+        "filled",
+        201
+       ]
+      },
+      "A_filled": 2,
+      "B_own_key_filled": false,
+      "A_bytes_survive": true,
+      "detector_selftest_sees_change": true,
+      "n_filled_keys_after_both": 2
+     },
+     "arm_C_same_mission_race": {
+      "mission": "0db17c21-333d-43bb-8c18-86d85210f747",
+      "legs": {
+       "1": {
+        "status": 201,
+        "ms": 862.1,
+        "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\""
+       },
+       "2": {
+        "status": 201,
+        "ms": 94.5,
+        "body_head": "[{\"id\":\"cc29e438-919e-5af2-8d4d-222794fb2c58\",\"journey_id\":\"ced6a289-4ffa-4ef0-9279-2475916acf38\",\"version_no\":4,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":"
+       }
+      },
+      "receipts": {
+       "plans.generate:o282C1-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282C2-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:0db17c21-333d-43bb-8c18-86d85210f747": [
+        "filled",
+        201
+       ]
+      },
+      "cont_c_filled_by_exactly_one": true
+     }
+    },
+    {
+     "state": "guard",
+     "round": 2,
+     "run_id": "O282-250616-630be3",
+     "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r2.db",
+     "tree_provenance_at_round": {
+      "main_blob_at_round": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+      "guard_anchor_hits_at_round": 1,
+      "unguarded_anchor_hits_at_round": 0,
+      "seam_symbol_at_round": false
+     },
+     "db_bytes": 741376,
+     "ports": [
+      51797,
+      51798
+     ],
+     "ownership": {
+      "W1": {
+       "pid": 36500,
+       "netstat_pid": 36500,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r2.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "W2": {
+       "pid": 12836,
+       "netstat_pid": 12836,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r2.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "distinct_pids": true,
+      "ai_key_present_either": false
+     },
+     "mission_via": "agent/commands",
+     "agent_command_status": 200,
+     "legs": {
+      "A": {
+       "port": 51797,
+       "pid": 36500,
+       "status": 201,
+       "ms": 87.5,
+       "body_head": "[{\"id\":\"7e379f94-38c2-5e54-94b6-e27636175bfa\",\"journey_id\":\"c94b1ffa-1e7f-4af8-bd94-e69a4f2e4f9c\",\"version_no\":1,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":\"INITIAL\","
+      },
+      "B": {
+       "port": 51798,
+       "pid": 12836,
+       "status": 201,
+       "ms": 20.3,
+       "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\":\"CNY\"},\"i"
+      }
+     },
+     "readings": {
+      "receipts_before_A": {
+       "plans.generate:o282A-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282B-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:e11aa240-f403-47bc-a32d-c56e0c462250": [
+        "absent",
+        null
+       ]
+      },
+      "receipts_before_B": {
+       "plans.generate:o282A-O282-250616-630be3-2": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:e11aa240-f403-47bc-a32d-c56e0c462250": [
+        "filled",
+        201
+       ]
+      },
+      "receipts_after_B": {
+       "plans.generate:o282A-O282-250616-630be3-2": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:e11aa240-f403-47bc-a32d-c56e0c462250": [
+        "filled",
+        201
+       ]
+      },
+      "A_filled": 2,
+      "B_own_key_filled": false,
+      "A_bytes_survive": true,
+      "detector_selftest_sees_change": true,
+      "n_filled_keys_after_both": 2
+     },
+     "arm_C_same_mission_race": {
+      "mission": "bab701f7-b5f6-49c9-a15d-ff7a0adc9550",
+      "legs": {
+       "1": {
+        "status": 201,
+        "ms": 866.3,
+        "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\""
+       },
+       "2": {
+        "status": 201,
+        "ms": 61.9,
+        "body_head": "[{\"id\":\"8611c592-a6ba-55ef-8e16-d4cd56efd150\",\"journey_id\":\"c94b1ffa-1e7f-4af8-bd94-e69a4f2e4f9c\",\"version_no\":4,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":"
+       }
+      },
+      "receipts": {
+       "plans.generate:o282C1-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282C2-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:bab701f7-b5f6-49c9-a15d-ff7a0adc9550": [
+        "filled",
+        201
+       ]
+      },
+      "cont_c_filled_by_exactly_one": true
+     }
+    },
+    {
+     "state": "guard",
+     "round": 3,
+     "run_id": "O282-250616-630be3",
+     "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r3.db",
+     "tree_provenance_at_round": {
+      "main_blob_at_round": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+      "guard_anchor_hits_at_round": 1,
+      "unguarded_anchor_hits_at_round": 0,
+      "seam_symbol_at_round": false
+     },
+     "db_bytes": 741376,
+     "ports": [
+      53676,
+      53677
+     ],
+     "ownership": {
+      "W1": {
+       "pid": 5836,
+       "netstat_pid": 5836,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r3.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "W2": {
+       "pid": 29212,
+       "netstat_pid": 29212,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_guard_r3.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "distinct_pids": true,
+      "ai_key_present_either": false
+     },
+     "mission_via": "agent/commands",
+     "agent_command_status": 200,
+     "legs": {
+      "A": {
+       "port": 53676,
+       "pid": 5836,
+       "status": 201,
+       "ms": 60.6,
+       "body_head": "[{\"id\":\"f01e9da5-e31c-5350-b917-209ab4d4d4dd\",\"journey_id\":\"b6014717-f22e-40f5-a83c-b681b234f435\",\"version_no\":1,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":\"INITIAL\","
+      },
+      "B": {
+       "port": 53677,
+       "pid": 29212,
+       "status": 201,
+       "ms": 38.4,
+       "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\":\"CNY\"},\"i"
+      }
+     },
+     "readings": {
+      "receipts_before_A": {
+       "plans.generate:o282A-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282B-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:508ae1c3-2090-43dd-8908-f2c1648e3169": [
+        "absent",
+        null
+       ]
+      },
+      "receipts_before_B": {
+       "plans.generate:o282A-O282-250616-630be3-3": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:508ae1c3-2090-43dd-8908-f2c1648e3169": [
+        "filled",
+        201
+       ]
+      },
+      "receipts_after_B": {
+       "plans.generate:o282A-O282-250616-630be3-3": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:508ae1c3-2090-43dd-8908-f2c1648e3169": [
+        "filled",
+        201
+       ]
+      },
+      "A_filled": 2,
+      "B_own_key_filled": false,
+      "A_bytes_survive": true,
+      "detector_selftest_sees_change": true,
+      "n_filled_keys_after_both": 2
+     },
+     "arm_C_same_mission_race": {
+      "mission": "f0b342da-597f-4e4a-8bf6-d1750e8284d2",
+      "legs": {
+       "1": {
+        "status": 201,
+        "ms": 24.0,
+        "body_head": "[{\"id\":\"d869352d-5ba6-5bcc-892e-e1cd0b888ede\",\"journey_id\":\"b6014717-f22e-40f5-a83c-b681b234f435\",\"version_no\":4,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":"
+       },
+       "2": {
+        "status": 201,
+        "ms": 25.1,
+        "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\""
+       }
+      },
+      "receipts": {
+       "plans.generate:o282C1-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282C2-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:f0b342da-597f-4e4a-8bf6-d1750e8284d2": [
+        "filled",
+        201
+       ]
+      },
+      "cont_c_filled_by_exactly_one": true
+     }
+    }
+   ]
+  },
+  "mutant": {
+   "mutation": {
+    "before_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "before_blob_matches_landing": true,
+    "after_blob_40": "784599fdb406b4242c2d202868b5eefd10861287",
+    "hunks": 1,
+    "hunk_headers": [
+     "@@ -4770,8 +4770,7 @@"
+    ],
+    "py_compile_ok": true,
+    "removed_expression": "IdempotencyKey.response_json.is_(None)",
+    "lines_delta": [
+     11417,
+     11416
+    ]
+   },
+   "rounds": [
+    {
+     "state": "mutant",
+     "round": 1,
+     "run_id": "O282-250616-630be3",
+     "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r1.db",
+     "tree_provenance_at_round": {
+      "main_blob_at_round": "784599fdb406b4242c2d202868b5eefd10861287",
+      "guard_anchor_hits_at_round": 0,
+      "unguarded_anchor_hits_at_round": 1,
+      "seam_symbol_at_round": false
+     },
+     "db_bytes": 741376,
+     "ports": [
+      57301,
+      57302
+     ],
+     "ownership": {
+      "W1": {
+       "pid": 33176,
+       "netstat_pid": 33176,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r1.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "W2": {
+       "pid": 37708,
+       "netstat_pid": 37708,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r1.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "distinct_pids": true,
+      "ai_key_present_either": false
+     },
+     "mission_via": "agent/commands",
+     "agent_command_status": 200,
+     "legs": {
+      "A": {
+       "port": 57301,
+       "pid": 33176,
+       "status": 201,
+       "ms": 68.6,
+       "body_head": "[{\"id\":\"13560e49-483d-5ab5-8324-4cd4073bd467\",\"journey_id\":\"a0f3227e-174f-4b77-8a3b-f605313a1aa7\",\"version_no\":1,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":\"INITIAL\","
+      },
+      "B": {
+       "port": 57302,
+       "pid": 37708,
+       "status": 201,
+       "ms": 14.7,
+       "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\":\"CNY\"},\"i"
+      }
+     },
+     "readings": {
+      "receipts_before_A": {
+       "plans.generate:o282A-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282B-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:69e445d5-ea32-4655-aaaf-b4f62617caff": [
+        "absent",
+        null
+       ]
+      },
+      "receipts_before_B": {
+       "plans.generate:o282A-O282-250616-630be3-1": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:69e445d5-ea32-4655-aaaf-b4f62617caff": [
+        "filled",
+        201
+       ]
+      },
+      "receipts_after_B": {
+       "plans.generate:o282A-O282-250616-630be3-1": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:69e445d5-ea32-4655-aaaf-b4f62617caff": [
+        "filled",
+        201
+       ]
+      },
+      "A_filled": 2,
+      "B_own_key_filled": false,
+      "A_bytes_survive": true,
+      "detector_selftest_sees_change": true,
+      "n_filled_keys_after_both": 2
+     },
+     "arm_C_same_mission_race": {
+      "mission": "da28895e-62b5-4502-a774-f02d9e51b1e9",
+      "legs": {
+       "1": {
+        "status": 201,
+        "ms": 47.2,
+        "body_head": "[{\"id\":\"37101563-99ed-5e73-8f56-64f400d407b0\",\"journey_id\":\"a0f3227e-174f-4b77-8a3b-f605313a1aa7\",\"version_no\":4,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":"
+       },
+       "2": {
+        "status": 201,
+        "ms": 856.6,
+        "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\""
+       }
+      },
+      "receipts": {
+       "plans.generate:o282C1-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282C2-O282-250616-630be3-1": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:da28895e-62b5-4502-a774-f02d9e51b1e9": [
+        "filled",
+        201
+       ]
+      },
+      "cont_c_filled_by_exactly_one": true
+     }
+    },
+    {
+     "state": "mutant",
+     "round": 2,
+     "run_id": "O282-250616-630be3",
+     "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r2.db",
+     "tree_provenance_at_round": {
+      "main_blob_at_round": "784599fdb406b4242c2d202868b5eefd10861287",
+      "guard_anchor_hits_at_round": 0,
+      "unguarded_anchor_hits_at_round": 1,
+      "seam_symbol_at_round": false
+     },
+     "db_bytes": 741376,
+     "ports": [
+      57346,
+      57347
+     ],
+     "ownership": {
+      "W1": {
+       "pid": 9268,
+       "netstat_pid": 9268,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r2.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "W2": {
+       "pid": 41940,
+       "netstat_pid": 41940,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r2.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "distinct_pids": true,
+      "ai_key_present_either": false
+     },
+     "mission_via": "agent/commands",
+     "agent_command_status": 200,
+     "legs": {
+      "A": {
+       "port": 57346,
+       "pid": 9268,
+       "status": 201,
+       "ms": 45.9,
+       "body_head": "[{\"id\":\"acaa017f-4f70-5d08-ba82-d7ab6613d38f\",\"journey_id\":\"b079d07b-7ccd-4593-b506-e42d20ec682c\",\"version_no\":1,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":\"INITIAL\","
+      },
+      "B": {
+       "port": 57347,
+       "pid": 41940,
+       "status": 201,
+       "ms": 15.1,
+       "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\":\"CNY\"},\"i"
+      }
+     },
+     "readings": {
+      "receipts_before_A": {
+       "plans.generate:o282A-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282B-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:3b5ca8c7-5db8-44d7-ac82-8fa9572d2f6b": [
+        "absent",
+        null
+       ]
+      },
+      "receipts_before_B": {
+       "plans.generate:o282A-O282-250616-630be3-2": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:3b5ca8c7-5db8-44d7-ac82-8fa9572d2f6b": [
+        "filled",
+        201
+       ]
+      },
+      "receipts_after_B": {
+       "plans.generate:o282A-O282-250616-630be3-2": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:3b5ca8c7-5db8-44d7-ac82-8fa9572d2f6b": [
+        "filled",
+        201
+       ]
+      },
+      "A_filled": 2,
+      "B_own_key_filled": false,
+      "A_bytes_survive": true,
+      "detector_selftest_sees_change": true,
+      "n_filled_keys_after_both": 2
+     },
+     "arm_C_same_mission_race": {
+      "mission": "0afbdfa1-1361-4808-995c-b4f42186f715",
+      "legs": {
+       "1": {
+        "status": 201,
+        "ms": 26.7,
+        "body_head": "[{\"id\":\"2dba5643-759d-58e0-afaf-6c84b8374faf\",\"journey_id\":\"b079d07b-7ccd-4593-b506-e42d20ec682c\",\"version_no\":4,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":"
+       },
+       "2": {
+        "status": 201,
+        "ms": 836.8,
+        "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\""
+       }
+      },
+      "receipts": {
+       "plans.generate:o282C1-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282C2-O282-250616-630be3-2": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:0afbdfa1-1361-4808-995c-b4f42186f715": [
+        "filled",
+        201
+       ]
+      },
+      "cont_c_filled_by_exactly_one": true
+     }
+    },
+    {
+     "state": "mutant",
+     "round": 3,
+     "run_id": "O282-250616-630be3",
+     "db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r3.db",
+     "tree_provenance_at_round": {
+      "main_blob_at_round": "784599fdb406b4242c2d202868b5eefd10861287",
+      "guard_anchor_hits_at_round": 0,
+      "unguarded_anchor_hits_at_round": 1,
+      "seam_symbol_at_round": false
+     },
+     "db_bytes": 741376,
+     "ports": [
+      57377,
+      57378
+     ],
+     "ownership": {
+      "W1": {
+       "pid": 49672,
+       "netstat_pid": 49672,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r3.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "W2": {
+       "pid": 3664,
+       "netstat_pid": 3664,
+       "ppid_ok": true,
+       "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282_O282-250616-630be3_mutant_r3.db",
+       "ai_key_present": false,
+       "stripped": []
+      },
+      "distinct_pids": true,
+      "ai_key_present_either": false
+     },
+     "mission_via": "agent/commands",
+     "agent_command_status": 200,
+     "legs": {
+      "A": {
+       "port": 57377,
+       "pid": 49672,
+       "status": 201,
+       "ms": 52.8,
+       "body_head": "[{\"id\":\"4d8803a4-a9a0-5759-ba6a-7049543d461f\",\"journey_id\":\"18b94073-bd62-4834-bc46-5714bff85078\",\"version_no\":1,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":\"INITIAL\","
+      },
+      "B": {
+       "port": 57378,
+       "pid": 3664,
+       "status": 201,
+       "ms": 40.4,
+       "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\":\"CNY\"},\"i"
+      }
+     },
+     "readings": {
+      "receipts_before_A": {
+       "plans.generate:o282A-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282B-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:232a6dcf-6d36-4d2c-9945-b2ea48c73d9b": [
+        "absent",
+        null
+       ]
+      },
+      "receipts_before_B": {
+       "plans.generate:o282A-O282-250616-630be3-3": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:232a6dcf-6d36-4d2c-9945-b2ea48c73d9b": [
+        "filled",
+        201
+       ]
+      },
+      "receipts_after_B": {
+       "plans.generate:o282A-O282-250616-630be3-3": [
+        "filled",
+        201
+       ],
+       "plans.generate:o282B-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:232a6dcf-6d36-4d2c-9945-b2ea48c73d9b": [
+        "filled",
+        201
+       ]
+      },
+      "A_filled": 2,
+      "B_own_key_filled": false,
+      "A_bytes_survive": true,
+      "detector_selftest_sees_change": true,
+      "n_filled_keys_after_both": 2
+     },
+     "arm_C_same_mission_race": {
+      "mission": "d30b2feb-7d21-41e2-9fcd-b927de0b24f2",
+      "legs": {
+       "1": {
+        "status": 201,
+        "ms": 31.3,
+        "body_head": "[{\"id\":\"f935b870-4fa4-5e6e-beb6-84d70934f345\",\"journey_id\":\"18b94073-bd62-4834-bc46-5714bff85078\",\"version_no\":4,\"planning_mode\":\"balanced\",\"status\":\"CANDIDATE\",\"source\":"
+       },
+       "2": {
+        "status": 201,
+        "ms": 841.5,
+        "body_head": "[{\"activities\":[{\"activity_type\":\"visit\",\"city_service_id\":null,\"cost_status\":\"UNKNOWN\",\"end_at\":\"2026-10-10T10:15:00+08:00\",\"estimated_cost\":{\"amount_minor\":0,\"currency\""
+       }
+      },
+      "receipts": {
+       "plans.generate:o282C1-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:o282C2-O282-250616-630be3-3": [
+        "absent",
+        null
+       ],
+       "plans.generate:cont:d30b2feb-7d21-41e2-9fcd-b927de0b24f2": [
+        "filled",
+        201
+       ]
+      },
+      "cont_c_filled_by_exactly_one": true
+     }
+    }
+   ]
+  }
+ },
+ "mutation_applied": {
+  "before_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "before_blob_matches_landing": true,
+  "after_blob_40": "784599fdb406b4242c2d202868b5eefd10861287",
+  "hunks": 1,
+  "hunk_headers": [
+   "@@ -4770,8 +4770,7 @@"
+  ],
+  "py_compile_ok": true,
+  "removed_expression": "IdempotencyKey.response_json.is_(None)",
+  "lines_delta": [
+   11417,
+   11416
+  ]
+ },
+ "restore": {
+  "restored_byte_exact": true,
+  "blob": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+ }
+}
