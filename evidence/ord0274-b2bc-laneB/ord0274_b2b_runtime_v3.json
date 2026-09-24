@@ -1,0 +1,638 @@
+{
+ "at": "2026-09-25T05:31:19+08:00",
+ "order": "ORD-0274 B2b 运行时读数 + 两枚反控",
+ "lane": "B c01d72a3",
+ "candidate_branch": "review/0274-b2c-b",
+ "run_id": "v3",
+ "mode": "re-derived from stored probe artifacts",
+ "window_s": 60,
+ "generation_identity_is_a_byte_verdict": {
+  "ruler": {
+   "path": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\deploy_bundle_v2_draft_r4.py",
+   "blob_sha": "0686670743c079647aa678370aa5481562c4c0a8",
+   "extracted": [
+    "DECLARED_NO_PRECACHE",
+    "SW_REGISTER_RULE",
+    "_ord0277_generation_verdict",
+    "asset_refs",
+    "strip_js_comments",
+    "sw_register_verdict"
+   ],
+   "bytes_extracted": 7284
+  },
+  "rule": "each arm converges into ITS OWN target generation, judged by the target entry's sha256 plus the tag statement inside those bytes"
+ },
+ "arms": {
+  "candidate": {
+   "step_before": {
+    "active_marks": [
+     "trial-step-2"
+    ],
+    "done_marks": [
+     "trial-step-1"
+    ],
+    "visible_bodies": [
+     "trial-step2-body"
+    ],
+    "from_storage": 2,
+    "on_screen": "trial-step2-body"
+   },
+   "step_after": {
+    "active_marks": [
+     "trial-step-2"
+    ],
+    "done_marks": [
+     "trial-step-1"
+    ],
+    "visible_bodies": [
+     "trial-step2-body"
+    ],
+    "from_storage": 2,
+    "on_screen": "trial-step2-body"
+   },
+   "step_preserved": true,
+   "values": {
+    "city": {
+     "typed": "厦门",
+     "testid": "trial-city",
+     "draft_key": "cityName",
+     "rendered_on_step": 1,
+     "rendered_before": "厦门",
+     "rendered_after": "厦门",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": "厦门",
+     "stored_after": "厦门",
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": true,
+     "rendered_equals_stored_after": true,
+     "still_the_typed_value": true
+    },
+    "startAt": {
+     "typed": "2026-10-05T08:30",
+     "testid": "trial-start",
+     "draft_key": "startAt",
+     "rendered_on_step": 1,
+     "rendered_before": "2026-10-05T08:30",
+     "rendered_after": "2026-10-05T08:30",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": "2026-10-05T08:30",
+     "stored_after": "2026-10-05T08:30",
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": true,
+     "rendered_equals_stored_after": true,
+     "still_the_typed_value": true
+    },
+    "endAt": {
+     "typed": "2026-10-09T19:45",
+     "testid": "trial-end",
+     "draft_key": "endAt",
+     "rendered_on_step": 1,
+     "rendered_before": "2026-10-09T19:45",
+     "rendered_after": "2026-10-09T19:45",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": "2026-10-09T19:45",
+     "stored_after": "2026-10-09T19:45",
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": true,
+     "rendered_equals_stored_after": true,
+     "still_the_typed_value": true
+    },
+    "partySize": {
+     "typed": "4",
+     "testid": "trial-party",
+     "draft_key": "partySize",
+     "rendered_on_step": 2,
+     "rendered_before": "4",
+     "rendered_after": "4",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": 4,
+     "stored_after": 4,
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": true,
+     "rendered_equals_stored_after": true,
+     "still_the_typed_value": true
+    },
+    "budget": {
+     "typed": "4321",
+     "testid": "trial-budget",
+     "draft_key": "budgetMajor",
+     "rendered_on_step": 2,
+     "rendered_before": "4321",
+     "rendered_after": "4321",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": 4321,
+     "stored_after": 4321,
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": true,
+     "rendered_equals_stored_after": true,
+     "still_the_typed_value": true
+    },
+    "specialRequirements": {
+     "typed": "需要无障碍通道 · B2b",
+     "testid": "trial-special",
+     "draft_key": "specialRequirements",
+     "rendered_on_step": 2,
+     "rendered_before": "需要无障碍通道 · B2b",
+     "rendered_after": "需要无障碍通道 · B2b",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": "需要无障碍通道 · B2b",
+     "stored_after": "需要无障碍通道 · B2b",
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": true,
+     "rendered_equals_stored_after": true,
+     "still_the_typed_value": true
+    }
+   },
+   "all_named_values_equal": true,
+   "values_read_on_the_right_screen": true,
+   "draft_still_present_after_convergence": true,
+   "draft_cleared_as_created": false,
+   "converged_to_new_generation": true,
+   "bundle_move_by_bytes": true,
+   "executed_bytes": {
+    "ref": "/assets/index-CEGoPIGb.js",
+    "sha256": "d3025c41c7a960e956336915e2b05b083ca69fd0d9f727ecbbf5f5b5bb9b9c8b",
+    "bytes": 1245961,
+    "content_type": "text/javascript"
+   },
+   "document_loads": 2,
+   "loads_series_tail": [
+    null,
+    2
+   ],
+   "reload_key_after": "1",
+   "pending_key_after": null,
+   "samples_needed_for_convergence": 2,
+   "probe_navigations": 1,
+   "back_press": {
+    "present": true
+   },
+   "console_errors": [],
+   "page_errors": [],
+   "target_generation": {
+    "dir": "dist_0274gen2b",
+    "tag": "gen2-standin",
+    "content_fingerprint": "419d9017dd6182ff08e529fd2c8ed50a06b5c3705b1b8805fceac480531e786f",
+    "entry": [
+     "/assets/index-CEGoPIGb.js"
+    ],
+    "entry_sha256": "d3025c41c7a960e956336915e2b05b083ca69fd0d9f727ecbbf5f5b5bb9b9c8b"
+   },
+   "client_generation": {
+    "dir": "dist_0274sw",
+    "content_fingerprint": "9b10f8846b928e4fde2fd5bfe339f3e6b98d6885bc7a2850e09de554dad7bc50",
+    "entry": [
+     "/assets/index-BhbHloNw.js"
+    ],
+    "entry_sha256": "a75c917775a3c7ed11f8807a02915ac32437100439731022c72175a300f3fd96",
+    "generation_verdict": "GREEN"
+   },
+   "swap_response": {
+    "swap_response": {
+     "from": "old",
+     "to": "new",
+     "writes_open": 0
+    },
+    "registration_after_update": {
+     "installing": "installing",
+     "waiting": null,
+     "active": "activated"
+    }
+   },
+   "probe_events": [
+    {
+     "kind": "document-start",
+     "load_id": 2,
+     "t": 1790285415242,
+     "iso": "2026-09-24T21:30:15.242Z",
+     "gen_tag": null
+    }
+   ],
+   "artifact": {
+    "run_blob": "7f034d909b910156eb73f81706682b79647883d3"
+   },
+   "expected": "MET",
+   "verdict": "MET",
+   "why": "step and every named value - city, both dates, partySize, budget, specialRequirements - came back per value on their own screens and in storage, into the new generation's bytes, with the draft still standing",
+   "agrees_with_expectation": true
+  },
+  "counter_step_only": {
+   "step_before": {
+    "active_marks": [
+     "trial-step-2"
+    ],
+    "done_marks": [
+     "trial-step-1"
+    ],
+    "visible_bodies": [
+     "trial-step2-body"
+    ],
+    "from_storage": 2,
+    "on_screen": "trial-step2-body"
+   },
+   "step_after": {
+    "active_marks": [
+     "trial-step-2"
+    ],
+    "done_marks": [
+     "trial-step-1"
+    ],
+    "visible_bodies": [
+     "trial-step2-body"
+    ],
+    "from_storage": 2,
+    "on_screen": "trial-step2-body"
+   },
+   "step_preserved": true,
+   "values": {
+    "city": {
+     "typed": "厦门",
+     "testid": "trial-city",
+     "draft_key": "cityName",
+     "rendered_on_step": 1,
+     "rendered_before": "厦门",
+     "rendered_after": "厦门",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": "厦门",
+     "stored_after": null,
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": false,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": true
+    },
+    "startAt": {
+     "typed": "2026-10-05T08:30",
+     "testid": "trial-start",
+     "draft_key": "startAt",
+     "rendered_on_step": 1,
+     "rendered_before": "2026-10-05T08:30",
+     "rendered_after": "2026-10-05T08:30",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": "2026-10-05T08:30",
+     "stored_after": null,
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": false,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": true
+    },
+    "endAt": {
+     "typed": "2026-10-09T19:45",
+     "testid": "trial-end",
+     "draft_key": "endAt",
+     "rendered_on_step": 1,
+     "rendered_before": "2026-10-09T19:45",
+     "rendered_after": "2026-10-09T19:45",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": "2026-10-09T19:45",
+     "stored_after": null,
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": false,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": true
+    },
+    "partySize": {
+     "typed": "4",
+     "testid": "trial-party",
+     "draft_key": "partySize",
+     "rendered_on_step": 2,
+     "rendered_before": "4",
+     "rendered_after": "4",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": 4,
+     "stored_after": null,
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": false,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": true
+    },
+    "budget": {
+     "typed": "4321",
+     "testid": "trial-budget",
+     "draft_key": "budgetMajor",
+     "rendered_on_step": 2,
+     "rendered_before": "4321",
+     "rendered_after": "4321",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": 4321,
+     "stored_after": null,
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": false,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": true
+    },
+    "specialRequirements": {
+     "typed": "需要无障碍通道 · B2b",
+     "testid": "trial-special",
+     "draft_key": "specialRequirements",
+     "rendered_on_step": 2,
+     "rendered_before": "需要无障碍通道 · B2b",
+     "rendered_after": "需要无障碍通道 · B2b",
+     "present_before": true,
+     "present_after": true,
+     "stored_before": "需要无障碍通道 · B2b",
+     "stored_after": null,
+     "typed_matches_before": true,
+     "rendered_equal": true,
+     "stored_equal": false,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": true
+    }
+   },
+   "all_named_values_equal": false,
+   "values_read_on_the_right_screen": true,
+   "draft_still_present_after_convergence": true,
+   "draft_cleared_as_created": false,
+   "converged_to_new_generation": true,
+   "bundle_move_by_bytes": true,
+   "executed_bytes": {
+    "ref": "/assets/index-DJdPoj_U.js",
+    "sha256": "17ed938b45292f98615c1963b62bd83135f58c1a60565d809370c061a2ad7d04",
+    "bytes": 1245951,
+    "content_type": "text/javascript"
+   },
+   "document_loads": 2,
+   "loads_series_tail": [
+    null,
+    2
+   ],
+   "reload_key_after": "1",
+   "pending_key_after": null,
+   "samples_needed_for_convergence": 2,
+   "probe_navigations": 1,
+   "back_press": {
+    "present": true
+   },
+   "console_errors": [],
+   "page_errors": [],
+   "target_generation": {
+    "dir": "dist_0274b2b_steponly_t",
+    "tag": "b2b-steponly",
+    "content_fingerprint": "2513dc1e9303ac5acd730afe7e25168aed95e2e564607d73508fbc97b6c333a6",
+    "entry": [
+     "/assets/index-DJdPoj_U.js"
+    ],
+    "entry_sha256": "17ed938b45292f98615c1963b62bd83135f58c1a60565d809370c061a2ad7d04"
+   },
+   "client_generation": {
+    "dir": "dist_0274sw",
+    "content_fingerprint": "9b10f8846b928e4fde2fd5bfe339f3e6b98d6885bc7a2850e09de554dad7bc50",
+    "entry": [
+     "/assets/index-BhbHloNw.js"
+    ],
+    "entry_sha256": "a75c917775a3c7ed11f8807a02915ac32437100439731022c72175a300f3fd96",
+    "generation_verdict": "GREEN"
+   },
+   "swap_response": {
+    "swap_response": {
+     "from": "old",
+     "to": "new",
+     "writes_open": 0
+    },
+    "registration_after_update": {
+     "installing": "installing",
+     "waiting": null,
+     "active": "activated"
+    }
+   },
+   "probe_events": [
+    {
+     "kind": "document-start",
+     "load_id": 2,
+     "t": 1790285430529,
+     "iso": "2026-09-24T21:30:30.529Z",
+     "gen_tag": null
+    }
+   ],
+   "artifact": {
+    "run_blob": "044df0c964466c8799981a901a3503c37ebd828c"
+   },
+   "expected": "RED",
+   "verdict": "RED",
+   "why": "named values differ: city, startAt, endAt, partySize, budget, specialRequirements",
+   "agrees_with_expectation": true
+  },
+  "counter_step_forced": {
+   "step_before": {
+    "active_marks": [
+     "trial-step-2"
+    ],
+    "done_marks": [
+     "trial-step-1"
+    ],
+    "visible_bodies": [
+     "trial-step2-body"
+    ],
+    "from_storage": 2,
+    "on_screen": "trial-step2-body"
+   },
+   "step_after": {
+    "active_marks": [
+     "trial-step-1"
+    ],
+    "done_marks": [],
+    "visible_bodies": [
+     "trial-step1-body"
+    ],
+    "from_storage": 1,
+    "on_screen": "trial-step1-body"
+   },
+   "step_preserved": false,
+   "values": {
+    "city": {
+     "typed": "厦门",
+     "testid": "trial-city",
+     "draft_key": "cityName",
+     "rendered_on_step": 1,
+     "rendered_before": "厦门",
+     "rendered_after": null,
+     "present_before": true,
+     "present_after": null,
+     "stored_before": "厦门",
+     "stored_after": "厦门",
+     "typed_matches_before": true,
+     "rendered_equal": false,
+     "stored_equal": true,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": false
+    },
+    "startAt": {
+     "typed": "2026-10-05T08:30",
+     "testid": "trial-start",
+     "draft_key": "startAt",
+     "rendered_on_step": 1,
+     "rendered_before": "2026-10-05T08:30",
+     "rendered_after": null,
+     "present_before": true,
+     "present_after": null,
+     "stored_before": "2026-10-05T08:30",
+     "stored_after": "2026-10-05T08:30",
+     "typed_matches_before": true,
+     "rendered_equal": false,
+     "stored_equal": true,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": false
+    },
+    "endAt": {
+     "typed": "2026-10-09T19:45",
+     "testid": "trial-end",
+     "draft_key": "endAt",
+     "rendered_on_step": 1,
+     "rendered_before": "2026-10-09T19:45",
+     "rendered_after": null,
+     "present_before": true,
+     "present_after": null,
+     "stored_before": "2026-10-09T19:45",
+     "stored_after": "2026-10-09T19:45",
+     "typed_matches_before": true,
+     "rendered_equal": false,
+     "stored_equal": true,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": false
+    },
+    "partySize": {
+     "typed": "4",
+     "testid": "trial-party",
+     "draft_key": "partySize",
+     "rendered_on_step": 2,
+     "rendered_before": "4",
+     "rendered_after": null,
+     "present_before": true,
+     "present_after": false,
+     "stored_before": 4,
+     "stored_after": 4,
+     "typed_matches_before": true,
+     "rendered_equal": false,
+     "stored_equal": true,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": false
+    },
+    "budget": {
+     "typed": "4321",
+     "testid": "trial-budget",
+     "draft_key": "budgetMajor",
+     "rendered_on_step": 2,
+     "rendered_before": "4321",
+     "rendered_after": null,
+     "present_before": true,
+     "present_after": false,
+     "stored_before": 4321,
+     "stored_after": 4321,
+     "typed_matches_before": true,
+     "rendered_equal": false,
+     "stored_equal": true,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": false
+    },
+    "specialRequirements": {
+     "typed": "需要无障碍通道 · B2b",
+     "testid": "trial-special",
+     "draft_key": "specialRequirements",
+     "rendered_on_step": 2,
+     "rendered_before": "需要无障碍通道 · B2b",
+     "rendered_after": null,
+     "present_before": true,
+     "present_after": false,
+     "stored_before": "需要无障碍通道 · B2b",
+     "stored_after": "需要无障碍通道 · B2b",
+     "typed_matches_before": true,
+     "rendered_equal": false,
+     "stored_equal": true,
+     "rendered_equals_stored_after": false,
+     "still_the_typed_value": false
+    }
+   },
+   "all_named_values_equal": false,
+   "values_read_on_the_right_screen": false,
+   "draft_still_present_after_convergence": true,
+   "draft_cleared_as_created": false,
+   "converged_to_new_generation": true,
+   "bundle_move_by_bytes": true,
+   "executed_bytes": {
+    "ref": "/assets/index-CISo-1ey.js",
+    "sha256": "20961880f37162de015ddb536add4ec24132bc0c0c38f3f34ec5d01c75f201d7",
+    "bytes": 1245933,
+    "content_type": "text/javascript"
+   },
+   "document_loads": 2,
+   "loads_series_tail": [
+    null,
+    2
+   ],
+   "reload_key_after": "1",
+   "pending_key_after": null,
+   "samples_needed_for_convergence": 2,
+   "probe_navigations": 1,
+   "back_press": null,
+   "console_errors": [],
+   "page_errors": [],
+   "target_generation": {
+    "dir": "dist_0274b2b_stepforced_t",
+    "tag": "b2b-stepforced",
+    "content_fingerprint": "27ed8269729f8fa9f634c05aa7758f3ef015b1ce49fb1640cd7c118671124951",
+    "entry": [
+     "/assets/index-CISo-1ey.js"
+    ],
+    "entry_sha256": "20961880f37162de015ddb536add4ec24132bc0c0c38f3f34ec5d01c75f201d7"
+   },
+   "client_generation": {
+    "dir": "dist_0274sw",
+    "content_fingerprint": "9b10f8846b928e4fde2fd5bfe339f3e6b98d6885bc7a2850e09de554dad7bc50",
+    "entry": [
+     "/assets/index-BhbHloNw.js"
+    ],
+    "entry_sha256": "a75c917775a3c7ed11f8807a02915ac32437100439731022c72175a300f3fd96",
+    "generation_verdict": "GREEN"
+   },
+   "swap_response": {
+    "swap_response": {
+     "from": "old",
+     "to": "new",
+     "writes_open": 0
+    },
+    "registration_after_update": {
+     "installing": "installing",
+     "waiting": null,
+     "active": "activated"
+    }
+   },
+   "probe_events": [
+    {
+     "kind": "document-start",
+     "load_id": 2,
+     "t": 1790285445913,
+     "iso": "2026-09-24T21:30:45.913Z",
+     "gen_tag": null
+    }
+   ],
+   "artifact": {
+    "run_blob": "3603911cee9a238b64d6478e46c18b71e0b1cf95"
+   },
+   "expected": "RED",
+   "verdict": "RED",
+   "why": "step did not come back: before={'active_marks': ['trial-step-2'], 'done_marks': ['trial-step-1'], 'visible_bodies': ['trial-step2-body'], 'from_storage': 2, 'on_screen': 'trial-step2-body'} after={'active_marks': ['trial-step-1'], 'done_marks': [], 'visible_bodies': ['trial-step1-body'], 'from_storage': 1, 'on_screen': 'trial-step1-body'}; the fields that therefore are not on any screen: ['budget', 'city', 'endAt', 'partySize', 'specialRequirements', 'startAt']",
+   "agrees_with_expectation": true
+  }
+ }
+}
