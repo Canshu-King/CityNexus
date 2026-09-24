@@ -1,0 +1,92 @@
+{
+ "what": "ORD-0272 终局复核：每件证据的外部回读 + 总线两帖 + 一处过时读数的更正",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-24T17:50:23+08:00",
+ "rule": "本件里每一行的 verdict 由**外部回读**推导：remote blob sha1 == 本地重算 sha1 才算 LANDED",
+ "evidence": {
+  "day1_receipt.json": {
+   "status": "LANDED",
+   "blob_sha1_40": "e414c710430af052905a444af1d63f9a47a3ec57",
+   "bytes": 21395,
+   "local_sha1_40": "e414c710430af052905a444af1d63f9a47a3ec57",
+   "external_equals_local": true
+  },
+  "mutation_receipt.json": {
+   "status": "LANDED",
+   "blob_sha1_40": "fb8d8f91e5a057fcec40629be7a1042b06f58292",
+   "bytes": 48522,
+   "local_sha1_40": "fb8d8f91e5a057fcec40629be7a1042b06f58292",
+   "external_equals_local": true
+  },
+  "ab_3x3.json": {
+   "status": "LANDED",
+   "blob_sha1_40": "5678b6fa7b70d906a5f96e82255173d973255771",
+   "bytes": 16126,
+   "local_sha1_40": "5678b6fa7b70d906a5f96e82255173d973255771",
+   "external_equals_local": true
+  },
+  "swimmer_triage.json": {
+   "status": "LANDED",
+   "blob_sha1_40": "a304be2ee40be11c9994511ba6f7165d6dfa89e7",
+   "bytes": 13481,
+   "local_sha1_40": "a304be2ee40be11c9994511ba6f7165d6dfa89e7",
+   "external_equals_local": true
+  },
+  "coordinates.json": {
+   "status": "LANDED",
+   "blob_sha1_40": "794a7efa05e8b3da19f37e177f0aaf6413258a8d",
+   "bytes": 2914,
+   "local_sha1_40": "794a7efa05e8b3da19f37e177f0aaf6413258a8d",
+   "external_equals_local": true
+  },
+  "coordinates_r2.json": {
+   "status": "LANDED",
+   "blob_sha1_40": "5cdb1869bb08ebda2105e1b95ec33c90fc0d4f51",
+   "bytes": 3363,
+   "local_sha1_40": "5cdb1869bb08ebda2105e1b95ec33c90fc0d4f51",
+   "external_equals_local": true
+  },
+  "ERRATA_coordinates_overwrite.txt": {
+   "status": "LANDED",
+   "blob_sha1_40": "5c10e6baeec06a41c952ce630fba0a5f0220227f",
+   "bytes": 1022,
+   "local_sha1_40": "5c10e6baeec06a41c952ce630fba0a5f0220227f",
+   "external_equals_local": true
+  },
+  "amendment_intermediate_commit.json": {
+   "status": "LANDED",
+   "blob_sha1_40": "13ca931283ced4851d6a6e1eeb073357eaabf35d",
+   "bytes": 7129,
+   "local_sha1_40": "13ca931283ced4851d6a6e1eeb073357eaabf35d",
+   "external_equals_local": true
+  }
+ },
+ "all_landed": true,
+ "files_with_a_problem": [],
+ "bus": {
+  "repo": "Canshu-King/CityNexus-Workspace#1",
+  "posts": [
+   {
+    "id": 5811212218,
+    "created_at": "2026-09-24T09:07:46Z",
+    "first_line": "【lane F 8ccd71d8 · ORD-0272 已发】CROSS_DEVICE_CONTINUATION_MARKER 服务端那一侧的承诺落码：候选 `aa29612`（父 `c79e2b4`",
+    "bytes": 3832,
+    "sha256_12": "5ba5ec6301d7"
+   },
+   {
+    "id": 5811809418,
+    "created_at": "2026-09-24T09:49:20Z",
+    "first_line": "【lane F 8ccd71d8 · 回包工头两问（ORD-0272）】你外读到的三行我复核过，与我本地逐字相同。",
+    "bytes": 4885,
+    "sha256_12": "590e46453eba"
+   }
+  ]
+ },
+ "correction": {
+  "what_was_wrong": "17:49 那帖（回包工头两问）的坐标表把 coordinates_r2.json / ERRATA_coordinates_overwrite.txt / amendment_intermediate_commit.json 三行写成 NOT-LANDED",
+  "why": "重试环在同一次探测里**先落件、后发帖**（相隔 ~2 秒）；帖文是在落件前写好的",
+  "was": "NOT-LANDED（三行）",
+  "now": "全部 LANDED（本件 evidence 段给出每枚 40 位 blob sha1 与字节数）",
+  "action": "发更正评论 + 本件（不覆盖旧帖，旧帖保留）"
+ }
+}
