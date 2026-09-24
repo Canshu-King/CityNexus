@@ -1,0 +1,165 @@
+From 30092dcb664cc2d968fb24fddfded8293b40ce60 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=E4=BB=93=E9=BC=A0=E7=8E=8B?= <yjianbin419@gmail.com>
+Date: Thu, 24 Sep 2026 01:46:59 +0800
+Subject: [PATCH 1/2] fix(ord0262): the busy wait now comes from each
+ operation's own ladder
+
+The three named-busy raise sites carried their own retry_after_ms=500 while both
+operation ladders floor a freshly queued job at 1000, so one condition promised two
+different waits depending on which line answered. Routing each site through the ladder it
+belongs to (generation for the two generation doors, hydration for the catalog door) removes
+the last numeric literal from those emissions; nothing new is declared and no fourth constant
+is introduced. The gate cell that used to pin the disagreement flips: it now refuses any bare
+number at a busy site, and the positive control copies one back to prove the cell bites.
+---
+ backend/app/main.py                           | 31 +++++++++-----
+ .../test_qoder_ord0262_narrow_contention.py   | 40 ++++++++++++++-----
+ 2 files changed, 52 insertions(+), 19 deletions(-)
+
+diff --git a/backend/app/main.py b/backend/app/main.py
+index aa05864..347bdc6 100644
+--- a/backend/app/main.py
++++ b/backend/app/main.py
+@@ -413,6 +413,9 @@ from app.catalog_hydration_operations import (
+ from app.catalog_hydration_operations import (
+     reconcile_interrupted_operations as reconcile_hydrations,
+ )
++from app.catalog_hydration_operations import (
++    retry_after_ms as hydration_retry_after_ms,
++)
+ from app.anywhere_capability import (
+     GAP_MOBILITY_EVIDENCE_NOT_HARD_ELIGIBLE,
+     evaluate_capability,
+@@ -637,18 +640,28 @@ def _contention_of(exc: Exception) -> str | None:
+     return None
+ 
+ 
+-def _contention_retry_after_ms() -> int:
+-    """Ask the generation ladder what it would tell a poller *now*, instead of copying a number.
++def _busy_retry_after_ms(ladder) -> int:
++    """Ask the operation's **own** ladder what it would tell a poller right now.
+ 
+-    `retry_after_ms` reads exactly `status` and `queued_at`, and the case here is "a write is
+-    busy at this instant" - a non-terminal job that just started.  Deriving the hint keeps
+-    this from becoming a fourth copy of the 500 literal the three raise sites already carry.
++    `retry_after_ms(row)` reads exactly `status` and `queued_at`; the case here is "a write is
++    busy at this instant" - a non-terminal job that just started.  Deriving the hint is what keeps
++    one condition from promising two different waits: the three busy raise sites used to carry
++    their own `500`, which is below the floor both ladders give a fresh job.
+     """
+-    return generation_retry_after_ms(
++
++    return ladder(
+         SimpleNamespace(status=QUEUED, queued_at=datetime.now(timezone.utc).isoformat())
+     )
+ 
+ 
++def _contention_retry_after_ms() -> int:
++    return _busy_retry_after_ms(generation_retry_after_ms)
++
++
++def _hydration_busy_retry_after_ms() -> int:
++    return _busy_retry_after_ms(hydration_retry_after_ms)
++
++
+ def _contention_response(reason: str) -> JSONResponse:
+     return error(
+         "GENERATION_STORE_BUSY",
+@@ -2927,7 +2940,7 @@ def create_or_reuse_catalog_hydration(
+             "HYDRATION_STORE_BUSY",
+             "Another catalog write is in flight; this request was not recorded. Try again.",
+             status=503,
+-            details={"retry_after_ms": 500},
++            details={"retry_after_ms": _hydration_busy_retry_after_ms()},
+             message_key="hydration.store_busy",
+         )
+     body = dict(job.payload)
+@@ -2987,7 +3000,7 @@ def submit_stay_generation(
+             "GENERATION_STORE_BUSY",
+             "Another generation is writing right now; this one was not recorded. Try again.",
+             status=503,
+-            details={"retry_after_ms": 500},
++            details={"retry_after_ms": _contention_retry_after_ms()},
+             message_key="generation.store_busy",
+         )
+     body = operation_payload(row)
+@@ -3086,7 +3099,7 @@ def generate_stay_journey_options(
+             "GENERATION_STORE_BUSY",
+             "Another generation is writing right now; this one was not recorded. Try again.",
+             status=503,
+-            details={"retry_after_ms": 500},
++            details={"retry_after_ms": _contention_retry_after_ms()},
+             message_key="generation.store_busy",
+         )
+     finished = wait_for_operation(row.id)
+diff --git a/backend/tests/test_qoder_ord0262_narrow_contention.py b/backend/tests/test_qoder_ord0262_narrow_contention.py
+index 4bf1556..ceffcc9 100644
+--- a/backend/tests/test_qoder_ord0262_narrow_contention.py
++++ b/backend/tests/test_qoder_ord0262_narrow_contention.py
+@@ -6,7 +6,8 @@
+   ② 端到端：真排一次 race，不许出现裸 500；**判在行上**（拿 503 的那发不能留下 mission）
+   ③ **名单外**的失败必须仍然是 500 —— 用另一张表的唯一冲突当正控，绝不拿 ① 那一枚冒充
+   ④ `retry_after_ms` 只能由操作自己的阶梯给出，不再抄第四份字面量；
+-     同时钉住"现有 3 处 raise 点的常数 == 阶梯下限"——**不一致就红，这一格今晚就是红的**（commander 明令只钉不改）
++     同时钉"三处 raise 点的等值 == 各自操作阶梯的下限"——01:1x §③ 裁定后常数已收口进阶梯，
++     这一格由红转绿；判据换向：**再出现任何数字字面量就红**（把阶梯调用改回写死的 500 是它的正控，见反突变 M5）
+ 
+ 护栏（commander 点名、仲裁 §3 同句）：本门**只声明这一格**。它不把 19 B/21 B 变成漂亮 JSON 就
+ 宣称 ORD-0262 的原子性或完整性已闭 —— 孤儿 `CREATED` mission 与未落库的 `plan_version` 是各留各门的独立义务。
+@@ -35,6 +36,7 @@ from app.main import (
+     _contention_of,
+     _contention_response,
+     _contention_retry_after_ms,
++    _hydration_busy_retry_after_ms,
+     app,
+ )
+ from app.stay_generation_operations import QUEUED
+@@ -234,18 +236,36 @@ def test_4_a_non_lock_operational_error_is_not_called_contention() -> None:
+ # ------------------------------------------------- ④ retry 提示归阶梯；三处旧常数只钉不改
+ 
+ def test_5_the_retry_hint_comes_from_the_operation_ladder_not_a_fourth_literal() -> None:
+-    """owner=④：新契约的数值必须 == 阶梯对「刚排队的非终态作业」给的下限；并钉住现有 3 处常数。"""
++    """owner=④：三处 busy raise 点的等值必须来自**各自操作的阶梯**，一处数字字面量都不许留。
++
++    01:1x §③ 裁定收口在两枚 `retry_after_ms(row)` 的默认。这一格由红转绿，判据换向：
++    从前是"三处 500 与阶梯下限 1000 不一致 ⇒ FINDING_OPEN 红"，现在是"再出现任何数字字面量 ⇒ 红"。
++    阶梯下限在门内留**自带副本**（不 import 产品常量）——否则它永远和自己相等，测不到漂移。
++    """
+     floor = generation_retry_after_ms(
+         SimpleNamespace(status=QUEUED, queued_at=datetime.now(timezone.utc).isoformat()))
++    assert floor == 1000, f"SETUP：阶梯对「刚排队的非终态作业」的下限不再是 1000（实测 {floor}）⇒ 重新判这一格"
+     assert _contention_retry_after_ms() == floor, (
+-        f"④：契约给的等值 ≠ 阶梯下限（{floor}）⇒ 有人在 raise 点又抄了一份数")
+-    literals = [int(m) for m in re.findall(
+-        r"details=\{[^{}]*\"retry_after_ms\":\s*([0-9]+)\}", MAIN_PY.read_text(encoding="utf-8"))]
+-    assert len(literals) >= 3, f"④：没找到那 3 处常数，实际 {literals}"
+-    assert set(literals) == {floor}, (
+-        f"FINDING_OPEN：三处 raise 点写的是 {sorted(set(literals))}ms，而操作自己的阶梯下限是 "
+-        f"{floor}ms ⇒ 同一件「忙」对用户承诺了两套等待。commander 明令今晚只钉不改，"
+-        f"要改的是把常数收口进阶梯（两枚 retry_after_ms(row) 之一），不是把断言放宽")
++        f"④：generation 具名答案给的等值 ≠ 阶梯下限（{floor}）⇒ 有人在 raise 点又抄了一份数")
++    assert _hydration_busy_retry_after_ms() == floor, (
++        f"④：hydration 具名答案给的等值 ≠ 它自己阶梯的下限（{floor}）⇒ 两套等待又回来了")
++
++    text = MAIN_PY.read_text(encoding="utf-8")
++    emissions = [v.strip() for v in re.findall(r"\"retry_after_ms\":\s*([^,}\n]+)", text)]
++    assert emissions, "SETUP：一处 `retry_after_ms` 的等值都没发出 ⇒ 这一格什么都没量到，不许当通过"
++    bare = [v for v in emissions if re.fullmatch(r"\d+", v)]
++    assert bare == [], (
++        f"④ **回归**：busy 的等值里有写死的数字 {bare} ⇒ 同一件「忙」对用户承诺两套等待"
++        "（01:1x §③ 已裁：收口在两枚 retry_after_ms(row) 的默认，不在调用点各写常数）")
++    ladder_calls = [v for v in emissions if v in {
++        "_contention_retry_after_ms()", "_hydration_busy_retry_after_ms()"}]
++    passthrough = [v for v in emissions if v.startswith("body[")]
++    assert len(ladder_calls) + len(passthrough) == len(emissions), (
++        f"④：有等值既不是阶梯调用也不是操作正文透传，来源不明：{emissions}")
++    assert text.count('"retry_after_ms": _hydration_busy_retry_after_ms()') >= 1, (
++        "④：hydration 那条具名答案不再走**它自己**的阶梯 ⇒ 两套等待会以另一种形式回来")
++    assert text.count('"retry_after_ms": _contention_retry_after_ms()') >= 2, (
++        "④：generation 的两处 busy raise 站点必须各自走到阶梯（共享信封那处一并算，不假装它是调用点）")
+ 
+ 
+ SHEET = Path(__file__).resolve().parents[2] / "frontend/src/features/planning/PlanWithAiSheet.tsx"
+-- 
+2.45.1.windows.1
+
