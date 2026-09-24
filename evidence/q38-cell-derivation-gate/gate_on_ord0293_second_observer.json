@@ -1,0 +1,101 @@
+{
+ "cells": [
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "R1_same_key_three_posts_agent_commands",
+   "own_hits": [],
+   "own_token_count": 25,
+   "unique_hits": [],
+   "verdict": "AGENTS_COMMANDS_KEY_SILENTLY_IGNORED - CONFIRMED (matches HJ-P3's claim)",
+   "why": "AGENTS_COMMANDS_KEY_SILENTLY_IGNORED - CONFIRMED (matches HJ-P3's claim)",
+   "why_source": "derived (prose)",
+   "why_token_count": 2
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "R2_control_plans_generate_writes_a_receipt",
+   "own_hits": [
+    "409",
+    "422"
+   ],
+   "own_token_count": 12,
+   "unique_hits": [],
+   "verdict": "PLANS_GENERATE_WRITES_A_DURABLE_RECEIPT - CONFIRMED. Note the 409: the receipt row is bound to the request, so reusing the first key for a different body is refused - the receipt is a real durable fact, not decoration. The receipts record response_status=422 (the row is written on the error path too, and carries the status).",
+   "why": "PLANS_GENERATE_WRITES_A_DURABLE_RECEIPT - CONFIRMED. Note the 409: the receipt row is bound to the request, so reusing the first key for a different body is refused - the receipt is a real durable fact, not decoration. The receipts record response_status=422 (the row is written on the error path too, and carries the status).",
+   "why_source": "derived (prose)",
+   "why_token_count": 4
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "R3_silence_shape",
+   "own_hits": [],
+   "own_token_count": 2,
+   "unique_hits": [],
+   "verdict": "SILENT_IGNORE_NOT_A_NAMED_REFUSAL - CONFIRMED",
+   "why": "SILENT_IGNORE_NOT_A_NAMED_REFUSAL - CONFIRMED",
+   "why_source": "derived (prose)",
+   "why_token_count": 2
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "R4_counter_control_no_key",
+   "own_hits": [],
+   "own_token_count": 5,
+   "unique_hits": [],
+   "verdict": "COUNTER_CONTROL_HOLD - the table readings discriminate",
+   "why": "COUNTER_CONTROL_HOLD - the table readings discriminate",
+   "why_source": "derived (prose)",
+   "why_token_count": 1
+  }
+ ],
+ "cells_found": 4,
+ "exit": 0,
+ "findings": [
+  {
+   "cell": "R1_same_key_three_posts_agent_commands",
+   "code": "WHY_NOT_FROM_OWN_READINGS",
+   "detail": "0 of 2 tokens in this cell's sentence appear in that cell's own readings",
+   "hard": false
+  },
+  {
+   "cell": "R3_silence_shape",
+   "code": "WHY_NOT_FROM_OWN_READINGS",
+   "detail": "0 of 2 tokens in this cell's sentence appear in that cell's own readings",
+   "hard": false
+  },
+  {
+   "cell": "R4_counter_control_no_key",
+   "code": "WHY_NOT_FROM_OWN_READINGS",
+   "detail": "0 of 1 tokens in this cell's sentence appear in that cell's own readings",
+   "hard": false
+  }
+ ],
+ "hard_codes": [],
+ "hard_count": 0,
+ "info_count": 0,
+ "instrument": "live_checks/receipt_cell_derivation_check_r1.py",
+ "meaning": "no hard defect, but some sentences carry nothing machine-checkable",
+ "overall": "Q38_GATE_SOFT_FINDINGS",
+ "receipt": {
+  "blob_sha1": "2a3166038d460a39ac796f02ff7dee95b921e470",
+  "bytes": 6031,
+  "local_blob_equals_published_blob": true,
+  "path": "_local_cmdr_copy_ord0293.json",
+  "published_blob_on_commander_control": "2a3166038d460a39ac796f02ff7dee95b921e470"
+ },
+ "run_by": "commander 494abfd7",
+ "soft_codes": [
+  "WHY_NOT_FROM_OWN_READINGS"
+ ],
+ "soft_count": 3,
+ "unique_reading_counts": {
+  "R1_same_key_three_posts_agent_commands": 4,
+  "R2_control_plans_generate_writes_a_receipt": 4,
+  "R3_silence_shape": 0,
+  "R4_counter_control_no_key": 1
+ }
+}
