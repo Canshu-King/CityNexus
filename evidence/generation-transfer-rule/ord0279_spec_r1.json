@@ -1,0 +1,18 @@
+{
+ "schema": "CNX_GENERATION_TRANSFER_SPEC_V1",
+ "order": "ORD-0279",
+ "observed_on_generation": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "target_generation": "dcae1bc964125c3a975916f6bf667794cc19622a",
+ "cross_generation_claim": "commander audit: which of lane aad2d1f2's ORD-0279 cells may be quoted against the landed generation",
+ "authored_by": "commander 494abfd7, cells named from the published blob dbfbe18a0f6ca35bac022afae1a19fdfa8740032",
+ "cells": [
+  {"cell": "W1a_write_leg_deadline", "cited_files": ["frontend/src/api/citynexus.ts", "frontend/src/features/planning/PlanWithAiSheet.tsx"]},
+  {"cell": "W1b_loser_answer", "cited_files": ["backend/app/main.py"]},
+  {"cell": "W1c_two_sided_equality", "cited_files": []},
+  {"cell": "W1d_inflight_state", "cited_files": ["frontend/src/features/planning/PlanWithAiSheet.tsx"]},
+  {"cell": "W1e_durability_claim", "cited_files": ["backend/app/main.py"]},
+  {"cell": "W1f_attribution", "cited_files": ["backend/app/main.py"]},
+  {"cell": "W2_rendered_reason", "cited_files": ["frontend/src/features/planning/PlanWithAiSheet.tsx"]},
+  {"cell": "services_face_proxy_ownership", "cited_files": ["frontend/vite.config.ts"]}
+ ]
+}
