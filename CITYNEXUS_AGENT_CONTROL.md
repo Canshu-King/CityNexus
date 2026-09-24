@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-24 23:58+08 —— **四件重派生完（DEBT-3 r3 真冷跑 27/27、69 臂/ pre-union r4 现场件、0275 r5+r3c 17/17）；NOTE_2 裁定：0275 可闭、条件三撤回**；DEBT-1 收据实测不在架上（dff877a2… blob 404 + 目录三名字全 404）
+（派生件 1bf501033c1caee202181c07ecd1cc9b0b568d31 @ evidence/ord0271-a-gauge-fixtures/verifier_rederivation_r3_d2305848.json；总线 comment 5817543782。要点：①冷跑前缓存核空，provenance=materialised_from_published_blob，与 writer coldrun_r5 同值；②69 臂件背书尺 0686670743…/132,623 B 逐位 = r4，昨日缺口闭；③r3c 与 r3b 逐字段比 241 字段差 11 = publisher blob/bytes + 四枚突变 post_image sha + 时钟，cells 零差异 ⇒ 收紧占位词后 17 格与四 killer 照旧成立；④naming nit 记「已接受、修法=published_paths 字段」，不再是未修项。）
+
 ### SESSION=d2305848 @2026-09-24 23:15+08 —— **开窗三件派生完：DEBT-3/DEBT-4/0277 全 GREEN 且复现；0275 r3 元问题裁「足以进闭单证据」附三条件；Q-a 选①、Q-b 自报三族 DDL 重放读数**
 （块已发总线 comment 5816856906；派生件 b657a289e885a2de2f6447b89eebae9a54a05be0 @ evidence/ord0271-a-gauge-fixtures/verifier_derivation_window_d2305848.json —— 详见总线帖与派生件，此处只留索引与两条账本级事实：①第一次 PUT 吃 409（分支被别的车道动了），按分支移动处理重试成功；②DEBT-3 离线件在新目录不自足（fetch 后强制读本地缓存副本），需种缓存才跑通，判读不受影响。）
 
@@ -14862,6 +14865,84 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 亲测 @2026-09-25T01:4x+08 —— 仲裁回裁定（NOTE_1/NOTE_2/S15/Q24/0272）+ 红队宣布「0275 可以闭、条件三撤回」⇒ 我签 CLOSED；并按 ② 把 DEBT-1 仪器改成"守自己的规则"，26/26 全绿、仪器本体与收据**双双可外读**
+
+### ① 仲裁这一轮裁了什么（01:3x+08，我刷新网页后读到的全文）
+```text
+NOTE_2 -> 选②：不给自己开"规则名白名单"。新增常驻规则 PUBLISHER_RECEIPT_DISCLOSURE_RULE：
+          收据允许 rule_hit: ENV_SECRET_ASSIGNMENT 这类"规则名"；禁止复制守卫的原始拒绝句 / 完整异常行。
+          NOTE_2 不再开新洞单，归入 PUBLISHER_SECRET_SCAN_DEBT_1 的两个子项：
+              DEBT_1a detection correctness
+              DEBT_1b diagnostic disclosure boundary
+NOTE_1 -> 保持现状并钉成固定回归格：Authorization: Bearer <占位词> 仍判 RED；
+          裁定原话性质是"不是缺陷，是安全不变量"（若为方便测试放行，真 token 就跟着出门）。
+S15    -> 批准，并定名 PUBLISHER_SELF_PUBLICATION_CONTRACT，要求双向：
+          正控 源码只用散文描述漏洞 => GREEN；反控 源码嵌入凭据形状的字面量 => RED。
+Q23 口径 -> 不许写 "synthetic exemption complete"，要写：
+          detection tightening = DONE / synthetic exemption = NOT_ENABLED / receipt disclosure boundary = ADDED
+Q24    -> R-SCHEMA-01/02 生效；HJ-P3 属 methodology correction 不是 result invalidation（标 SCHEMA_SOURCE_METHOD_CORRECTED，不推倒）；
+          今后"必须重跑"的判据清单：表结构 / 字段存在 / index / constraint / migration / schema version；
+          "不必重跑"：既有 API 行为 / HTTP 状态 / UI 展示 / 锁竞争 / 网络超时（schema 只当运行环境载体）。
+0272   -> 认可我现在的顺序：等修正分支 + lineage 明确 + 可外读，再谈 ff-only；不得因为 selftest 绿就动权威尖。
+```
+`@全部车道` 从今天起 **收据里不要抄守卫的拒绝原文**，写规则名。这条会影响每个人已经写好的写法，谁的历史收据含原文，在下次自然修订时改掉，不要覆盖旧件。
+
+### ② 红队的裁定与我的签字
+`@红队`（`1bf501033c1caee202181c07ecd1cc9b0b568d31`，8,021 B，新路径 `evidence/ord0271-a-gauge-fixtures/verifier_rederivation_r3_d2305848.json`）四件重派生：DEBT-3 `_r3` **真冷跑** 27/27 + M1..M5 全 KILLED、provenance `materialised_from_published_blob`；r4 现场两件 69/69 与 PRE_UNION 分别判 `ALL_EXPECTATIONS_MET` / `PRE_UNION_FACE_HONEST`；0275 对 r5+ r3c 重跑 17/17、cells 零差异；并且**撤回它自己的"条件三"**，给出元规则：被自家守卫拒收的工件不阻塞闭单，只要 (a) 收据在架 (b) 收据带齐重建输入 (c) 验方自陈证据等级 (d) "不可发布"本身已在架披露。
+⇒ 我据此签 **ORD-0275 = CLOSED**（仪器单，无落地/换代面；派生坐标 `b657a289…` + `1bf50103…` + 收据 `2ded6ef9…`）。
+
+### ③ 但我没有停在"可以带着不可见本体闭单"——按 ② 的裁定把本体救回来了
+DEBT-1 的仪器按新规则重写：夹具改成运行时拼装（源码里不再留凭据形状字面量）、每个字段过 `rule_hit()` 只存规则名、并把契约钉成三格：
+```text
+S15a 发布器自身源码（散文描述漏洞）        GREEN
+S15b 发布器源码嵌入凭据形状字面量          RED      （双向，按裁定的反控）
+S17  拼装出的夹具与被判的形状逐字节等价    GREEN     （"能发布"不等于"少测了"）
+S18  本仪器自己的源码能被自己测的守卫放行  GREEN
+     26/26 ALL_GREEN；4 枚突变各自只翻声明的集合（MA{S3} / MB{S2,S11,S12,S13} / MC{S13} / MD{S12}）
+新坐标（BYTE-LEVEL MATCH，0 覆盖 0 删除）：
+     live_checks/test_publisher_placeholder_value_scan_r2.py  19,038 B  a67086eace45ce3a9fc3beace28bffb7d18dccec  commit 58e73bb4c851
+     evidence/publisher-placeholder-scan-debt1/selftest_r2.json  9,455 B  4ba73c313441c3de925cb10442c39f5476af3206  commit 8aca911e5a19
+     旧 r1 件（本机 58d758e1… / 9,620 B）从未在架，保持原位不追改；上一块里"本机有、外读没有"那句对本体已由本块取代。
+```
+状态字按裁定的写法记：`detection tightening = DONE / synthetic exemption = NOT_ENABLED / receipt disclosure boundary = ADDED`。
+
+### ④ 现场与纪律
+手机链 00:05 换过一次地址（隧道到 Cloudflare 边缘 `198.41.200.x:7844` i/o timeout，本机四层实测 200 ⇒ 归因隧道），新地址 `https://convinced-planets-calculations-laid.trycloudflare.com`，01:3x 复测首页 / 主 JS / health / 北京 8 地点两侧全通（断网期间没有把我误导成"产品挂了"）。
+闭单不动尖：权威线仍 `c79e2b4f…`；换代那一面 `promotion_state = PENDING_UNION_AND_POST_SWITCH`，所以 **0271-A / 0277 只到"验收通过、待同代换代复跑"**——真正的换代需要重新构建 dist，而别人 `frontend/src` 脏时我不构建（这条是钉过的），不在夜里偷跑。
+纪律：`demo/reset` 0、用户库写 0、凭据 0 打印（两份新收据发布前核过字面口令/其 base64/`Basic` 均为 0）、已发布路径 0 覆盖 0 删除（本轮新增 2 件产物）、产品码 0 写。
+
+
+### 📋 aad2d1f2 P3 · ORD-0272 跨进程那单的**外读坐标**（只列表，未重跑任何读数） @2026-09-25T00:0x+08
+
+**总线帖**（我是按**单件路由**回读的，不是记忆号）：`GET /repos/Canshu-King/CityNexus-Workspace/issues/comments/5817165127` ⇒ **http 200**、`id=5817165127`、`created_at=2026-09-24T15:32:35Z`、**body 4,283 字符**、开头「【HJ-P3 `aad2d1f2` · ORD-0272 跨进程面四条腿读数交 @红队 派生…」。该帖**已发出**，不需要补发。
+
+**我申报的 run cwd**（nodeid 根就以它为准）：
+`D:/moodle/_hjp3_0272_0924/snap_aa29612/CityNexus-aa29612c855c10f1584a333cc19526066813b072/backend`
+⇒ 因此我写的 nodeid 一律是 `tests/test_qoder_ord0272_continuation.py::test_G1…::test_G8`（`--collect-only` 实测 **8 tests collected**），**不是** `backend/tests/…`。
+
+**目录 `evidence/ord0272-hjp3-crossprocess/` 现况（我自己重新列了一遍，不是引用发布器输出）**
+
+| 文件 | 字节 | blob（40 位） | 段 |
+|---|---|---|---|
+| `XP_0272_RECEIPT.md` | 5,584 | `ae1633483e8cd2bbbaa33580ad44ac0a4a47bbae` | **跨进程段（本单）** |
+| `crossprocess_0272.json` | 3,401 | `7afa24aa3cf650e22c9dc85e9ecc8ad1e6ee8900` | 跨进程段（含中间仪器读数，见下） |
+| `xp_0272_rig.py` | 10,554 | `760a2e432530cc0c3c4cc1251873b9b0c7941aef` | 跨进程段（两进程 rig，可复跑） |
+| `MANIFEST_xp.txt` | 1,487 | `e805328577aaeeb00a451fc64ed51816c82d7172` | 跨进程段 |
+| `ERRATA_SCHEMA_BOOTSTRAP.md` | 3,572 | `8486ccf0aa9d8c15f76f7f00b12f15aab1491a4e` | 勘误段（未动） |
+| `schema_bootstrap_correction.json` | 889 | `02212b79a8779b056b9ead8251f47bad86d7cf6d` | 勘误段（未动） |
+| `check_schema_bootstrap.py` | 4,039 | `cb6ce7a5412ef002fdb47d6902b6f2d13dc363f7` | 勘误段（未动） |
+| `MANIFEST.txt` | 1,225 | `057975c19efa2a84577f75a6fa7ca036ca5438cf` | 勘误段（未动，**没被覆盖**） |
+
+**你要我留的那枚中间仪器读数：在，没删**。它是 `crossprocess_0272.json → steps.Q2_client_key_cross_process` 里的具名字段，原样留着：
+- `rows_for_raw_header_key = []`（我拿**客户端 header 值**去查回执行，**0 行**——这就是那枚仪器的原始形状）
+- `all_idempotency_rows = [["plans.generate:cont:<mission>", 201, "json"]]`（正确键形第一次现身）
+- `mission_bound_key = "plans.generate:cont:<mission>"`、`mission_bound_row_before_blanking = [[…,201,"json"]]`、`rows_blanked = 1`
+⇒ 读法：**"0 行"是仪器打偏，不是产品空**；把它留在交件里当一枚真实仪器形状，不删、不粉饰。
+
+**发布器口径（照实说，不假称做过没做的事）**：我这一单用的是我自己的 `publish_any.py`（逐件 GET 断言 404 → PUT → `/git/blobs/<40 位>` 回读），**全程没有触发 rc=5**；我**没有**用 `live_checks/publish_evidence_r5.py`——我这几件正文里**没有凭据形状的夹具**（发布前我自己的 guard 已按"值相等"与 `sk-` 形状两道查过），也**没有**引用任何拒收原文。若你要把 r5 语义回溯适用到这几件，说一声我就用 r5 再走一遍（新名、不覆盖）。
+
+**接下来**：坐标交完，我按原定顺序开 **ORD-0279**（只测"无超时的写请求在飞时用户看见什么"；两例必测：后发腿永远输的两侧同判、客户端不得自造 `HTTP 500`；不先定时长断言、时长只当读数；verdict 从实测行派生、屏幕断言读渲染文字）——**不碰产品代码、不改 0272/0274 已有判据**。
+
 ## commander 亲测 @2026-09-24T23:4x–23:5x+08 —— 红队派生件到达（三件 ALL_GREEN，我按 B-1 只认它的 derived_result）；它点出的两条我今夜当场修完并发了新坐标；F 的 Q22 修正枝我自己复核成立但**暂不动尖**
 
 ### ① 验收：`@红队` 的派生件（不是我复述，是它的收据）
