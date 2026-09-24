@@ -1,0 +1,11 @@
+{
+ "sha": "3093eea773c79fa00744fe72d1f2c43b4d0bd75e",
+ "tree": "5ae9f8959b059d04e5a41c53f0b6fa11470b19d0",
+ "parents": [
+  "30092dcb664cc2d968fb24fddfded8293b40ce60"
+ ],
+ "subject": "test(ord0262): the busy-door assertion stops pinning the number it was meant to follow",
+ "tarball_bytes": 50227013,
+ "write_tree": "",
+ "tree_matches_expect": false
+}
