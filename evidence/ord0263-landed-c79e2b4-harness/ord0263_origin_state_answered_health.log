@@ -1,0 +1,31 @@
+{"at": "02:22:11", "t_s": 0.0, "kind": "instrument_start", "mode": "answered-health", "port": 8411, "never_closes_hangs": true}
+{"at": "02:22:15", "t_s": 3.95, "kind": "health_answered_500", "path": "/api/v1/health"}
+{"at": "02:22:15", "t_s": 4.02, "kind": "read_opened_hanging", "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience", "hung_no": 1}
+{"opened": 1, "answered_health": 1, "hung_now": 1, "closed_by_instrument": 0, "abandoned_by_client": 0, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 5.0, "at": "02:22:16"}
+{"opened": 1, "answered_health": 1, "hung_now": 1, "closed_by_instrument": 0, "abandoned_by_client": 0, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 10.0, "at": "02:22:21"}
+{"opened": 1, "answered_health": 1, "hung_now": 1, "closed_by_instrument": 0, "abandoned_by_client": 0, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 15.0, "at": "02:22:26"}
+{"at": "02:22:29", "t_s": 18.03, "kind": "read_ended", "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience", "age_s": 14.0, "outcome": "abandoned_by_client", "closed_by_instrument": false}
+{"opened": 1, "answered_health": 1, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 1, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 20.01, "at": "02:22:31"}
+{"opened": 1, "answered_health": 1, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 1, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 25.01, "at": "02:22:36"}
+{"opened": 1, "answered_health": 1, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 1, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 30.01, "at": "02:22:41"}
+{"opened": 1, "answered_health": 1, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 1, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 35.01, "at": "02:22:46"}
+{"at": "02:22:47", "t_s": 36.3, "kind": "read_opened_hanging", "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience", "hung_no": 2}
+{"opened": 2, "answered_health": 1, "hung_now": 1, "closed_by_instrument": 0, "abandoned_by_client": 1, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 40.01, "at": "02:22:51"}
+{"opened": 2, "answered_health": 1, "hung_now": 1, "closed_by_instrument": 0, "abandoned_by_client": 1, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 45.01, "at": "02:22:56"}
+{"at": "02:22:59", "t_s": 48.31, "kind": "read_ended", "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience", "age_s": 12.01, "outcome": "abandoned_by_client", "closed_by_instrument": false}
+{"at": "02:22:59", "t_s": 48.31, "kind": "health_answered_500", "path": "/api/v1/health"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 50.01, "at": "02:23:01"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 55.01, "at": "02:23:06"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 60.01, "at": "02:23:11"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 65.01, "at": "02:23:16"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 70.01, "at": "02:23:21"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 75.01, "at": "02:23:26"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 80.02, "at": "02:23:31"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 85.02, "at": "02:23:36"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 90.02, "at": "02:23:41"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 95.02, "at": "02:23:46"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 100.02, "at": "02:23:51"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 105.02, "at": "02:23:56"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 110.02, "at": "02:24:01"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 115.02, "at": "02:24:06"}
+{"opened": 2, "answered_health": 2, "hung_now": 0, "closed_by_instrument": 0, "abandoned_by_client": 2, "still_open": 0, "kind": "state", "mode": "answered-health", "t_s": 120.02, "at": "02:24:11"}
