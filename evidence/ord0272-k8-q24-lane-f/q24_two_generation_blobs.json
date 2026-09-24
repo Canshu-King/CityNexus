@@ -1,0 +1,111 @@
+{
+ "rule": "GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1（仲裁 Q24 = ①）",
+ "unit": "观察格（cell），不是整张任务单",
+ "generated_at": "2026-09-25T04:13:16+08:00",
+ "tree": "D:\\moodle\\_qoder_f_ord253_20260923",
+ "gen_a": "dcae1bc964125c3a975916f6bf667794cc19622a",
+ "gen_b": "7c806fab58e872060cb5811ff96c770b40dad165",
+ "gen_a_head_of": "dcae1bc",
+ "gen_b_head_of": "7c806fa",
+ "files": [
+  {
+   "file": "backend/app/main.py",
+   "generation_a": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "generation_b": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "blob_a": {
+    "path": "backend/app/main.py",
+    "blob_sha1_40": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "bytes": 482850,
+    "resolved": true
+   },
+   "blob_b": {
+    "path": "backend/app/main.py",
+    "blob_sha1_40": "ad13f4395e3405ce722ae8660836f3c2aaa29df2",
+    "bytes": 483511,
+    "resolved": true
+   },
+   "cited_blob_at_each_generation": {
+    "dcae1bc964125c3a975916f6bf667794cc19622a": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "7c806fab58e872060cb5811ff96c770b40dad165": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+   },
+   "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+   "reason": "两代内容不同（416ea4f21 vs ad13f4395）⇒ 该格必须在目标代重跑，只重跑这一格"
+  },
+  {
+   "file": "backend/app/schemas.py",
+   "generation_a": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "generation_b": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "blob_a": {
+    "path": "backend/app/schemas.py",
+    "blob_sha1_40": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+    "bytes": 25591,
+    "resolved": true
+   },
+   "blob_b": {
+    "path": "backend/app/schemas.py",
+    "blob_sha1_40": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+    "bytes": 25591,
+    "resolved": true
+   },
+   "cited_blob_at_each_generation": {
+    "dcae1bc964125c3a975916f6bf667794cc19622a": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+    "7c806fab58e872060cb5811ff96c770b40dad165": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+   },
+   "generation_transfer": "TRANSFERABLE_BY_CITED_BLOB_EQUALITY",
+   "reason": "两代 40 位逐位相等"
+  },
+  {
+   "file": "backend/tests/test_qoder_ord0272_continuation.py",
+   "generation_a": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "generation_b": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "blob_a": {
+    "path": "backend/tests/test_qoder_ord0272_continuation.py",
+    "blob_sha1_40": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+    "bytes": 24562,
+    "resolved": true
+   },
+   "blob_b": {
+    "path": "backend/tests/test_qoder_ord0272_continuation.py",
+    "blob_sha1_40": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9",
+    "bytes": 28087,
+    "resolved": true
+   },
+   "cited_blob_at_each_generation": {
+    "dcae1bc964125c3a975916f6bf667794cc19622a": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+    "7c806fab58e872060cb5811ff96c770b40dad165": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+   },
+   "generation_transfer": "NOT_TRANSFERABLE_GENERATION",
+   "reason": "两代内容不同（efa783397 vs 799fbd2fe）⇒ 该格必须在目标代重跑，只重跑这一格"
+  },
+  {
+   "file": "contracts/openapi.yaml",
+   "generation_a": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "generation_b": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "blob_a": {
+    "path": "contracts/openapi.yaml",
+    "blob_sha1_40": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+    "bytes": 106971,
+    "resolved": true
+   },
+   "blob_b": {
+    "path": "contracts/openapi.yaml",
+    "blob_sha1_40": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+    "bytes": 106971,
+    "resolved": true
+   },
+   "cited_blob_at_each_generation": {
+    "dcae1bc964125c3a975916f6bf667794cc19622a": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+    "7c806fab58e872060cb5811ff96c770b40dad165": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+   },
+   "generation_transfer": "TRANSFERABLE_BY_CITED_BLOB_EQUALITY",
+   "reason": "两代 40 位逐位相等"
+  }
+ ],
+ "summary": {
+  "total": 4,
+  "transferable": 2,
+  "not_transferable": 2,
+  "missing_a_side": 0
+ },
+ "read_only_declaration": "只跑 git rev-parse / git cat-file -s；不写树、不 checkout、不动 ref"
+}
