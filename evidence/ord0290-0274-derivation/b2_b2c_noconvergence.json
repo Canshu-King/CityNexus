@@ -1,0 +1,1704 @@
+{
+  "order": "ORD-0274",
+  "cell": "B2 (Q19 iii)",
+  "arm": "b2c_noconvergence",
+  "arm_kind": "fixed_inflight",
+  "session": "1a986a24 HJ-P1",
+  "base": "http://127.0.0.1:8961",
+  "started_at": "2026-09-24T23:42:25.876Z",
+  "viewport": [
+    390,
+    844
+  ],
+  "draft_key": "citynexus.v8.trial_draft",
+  "install_mode": "two_navigations",
+  "write_mode": "release_journeys_after_8000",
+  "forbidden_moves_taken": {
+    "unregister_called": 0,
+    "cache_clear_called": 0
+  },
+  "phases": {
+    "P0": {
+      "pointer": {
+        "root": "dist",
+        "ok": true
+      },
+      "mode": {
+        "written": "answer",
+        "readBack": "answer"
+      },
+      "install_mode": "two_navigations",
+      "nav1": {
+        "label": "P0-nav1-install",
+        "at": 1790293346375,
+        "status": 200
+      },
+      "nav2": {
+        "label": "P0-nav2-take-control",
+        "at": 1790293361471,
+        "status": 200
+      },
+      "navigations_used": 2,
+      "snapshot": {
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-CtuiCkKf.js"
+        ],
+        "docNonce": "9sg11uhzcmk",
+        "fields": {
+          "目的地": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "抵达地点": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "离开地点": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "抵达时间": {
+            "tag": "INPUT",
+            "type": "datetime-local",
+            "value": "2026-09-26T10:00"
+          },
+          "离开时间": {
+            "tag": "INPUT",
+            "type": "datetime-local",
+            "value": "2026-09-28T20:00"
+          },
+          "#5": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "CN"
+          },
+          "#6": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "Asia/Shanghai"
+          },
+          "#7": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "CNY"
+          }
+        },
+        "fieldCount": 8,
+        "draft": {
+          "step": 1,
+          "draft": {
+            "cityName": "",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-09-26T10:00",
+            "endAt": "2026-09-28T20:00",
+            "arrivalLocation": "",
+            "departureLocation": "",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": ""
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间",
+          "2",
+          "3"
+        ],
+        "leafCount": 21,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 17,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "marker": null
+          }
+        ]
+      }
+    },
+    "P1": {
+      "typed": {
+        "city": "北京",
+        "arrival": "北京南站",
+        "departure": "北京西站",
+        "startAt": "2026-10-05T09:30",
+        "endAt": "2026-10-07T18:00",
+        "budget": "480",
+        "stay": "150",
+        "special": "只看免费和便宜的地方"
+      },
+      "fills": [
+        {
+          "why": "city",
+          "idx": 0,
+          "ph": "例如：天津、东京、新加坡",
+          "wrote": 2,
+          "after": {
+            "len": 2,
+            "value": "北京"
+          }
+        },
+        {
+          "why": "arrival",
+          "idx": 1,
+          "ph": "例如：北京站 / 机场",
+          "wrote": 4,
+          "after": {
+            "len": 4,
+            "value": "北京南站"
+          }
+        },
+        {
+          "why": "departure",
+          "idx": 2,
+          "ph": "例如：北京站 / 机场",
+          "wrote": 4,
+          "after": {
+            "len": 4,
+            "value": "北京西站"
+          }
+        },
+        {
+          "why": "startAt",
+          "type": "datetime-local",
+          "idx": 0,
+          "before": "2026-09-26T10:00",
+          "wrote": 16,
+          "after": {
+            "len": 16,
+            "value": "2026-10-05T09:30"
+          }
+        },
+        {
+          "why": "endAt",
+          "type": "datetime-local",
+          "idx": 1,
+          "before": "2026-09-28T20:00",
+          "wrote": 16,
+          "after": {
+            "len": 16,
+            "value": "2026-10-07T18:00"
+          }
+        },
+        {
+          "why": "stayBudget",
+          "skipped": "no empty visible field matched",
+          "needle": "住宿"
+        },
+        {
+          "why": "budget",
+          "skipped": "no empty visible field matched",
+          "needle": "总预算|预算"
+        },
+        {
+          "why": "specialRequirements",
+          "idx": 4,
+          "ph": "例如：我妈妈坐轮椅；每天走路不超过 3000 米",
+          "wrote": 10,
+          "after": {
+            "len": 10,
+            "value": "只看免费和便宜的地方"
+          }
+        }
+      ],
+      "stepChecks": [
+        {
+          "label": "before first 下一步",
+          "draft_step": 1,
+          "missing_hint": [],
+          "fieldCount": 8,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ]
+        },
+        {
+          "label": "after first 下一步",
+          "draft_step": 2,
+          "missing_hint": [],
+          "fieldCount": 5,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "2"
+          ]
+        },
+        {
+          "label": "after second 下一步",
+          "draft_step": 3,
+          "missing_hint": [],
+          "fieldCount": 0,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓"
+          ]
+        }
+      ],
+      "afterStep1": {
+        "label": "before first 下一步",
+        "draft_step": 1,
+        "missing_hint": [],
+        "fieldCount": 8,
+        "marker": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间"
+        ]
+      },
+      "step2Fields": [
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "2"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "1"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "3000"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "1000"
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "ph": "例如：我妈妈坐轮椅；每天走路不超过 3000 米",
+          "value": ""
+        }
+      ],
+      "step2Buttons": [
+        "EN",
+        "轻松",
+        "适中",
+        "紧凑",
+        "美食",
+        "自然",
+        "人文",
+        "海边",
+        "购物",
+        "亲子",
+        "返回",
+        "下一步",
+        "使用封存的演示行程"
+      ],
+      "partyStepper": {
+        "clicked": false
+      }
+    },
+    "P2": {
+      "snapshot": {
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-CtuiCkKf.js"
+        ],
+        "docNonce": "9sg11uhzcmk",
+        "fields": {},
+        "fieldCount": 0,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "✓",
+          "✓",
+          "3",
+          "确认创建"
+        ],
+        "leafCount": 29,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 17,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "marker": null
+          }
+        ]
+      },
+      "confirm_box": [
+        79,
+        652,
+        291,
+        44
+      ]
+    },
+    "P3": {
+      "pointer": {
+        "root": "dist",
+        "ok": true
+      },
+      "mode": {
+        "written": "release_journeys_after_8000",
+        "readBack": "release_journeys_after_8000"
+      },
+      "submit": {
+        "found": true,
+        "label": "确认创建",
+        "disabled": false,
+        "point": [
+          225,
+          674
+        ],
+        "hitIsSelf": true,
+        "tapped": true
+      },
+      "during_write": {
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-CtuiCkKf.js"
+        ],
+        "docNonce": "9sg11uhzcmk",
+        "fields": {},
+        "fieldCount": 0,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "✓",
+          "✓",
+          "3",
+          "确认创建"
+        ],
+        "leafCount": 34,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 17,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "marker": null
+          }
+        ]
+      },
+      "update_trigger": {
+        "updated": true,
+        "via": "registration.update() while the trip write is unsettled"
+      },
+      "before_action": {
+        "marker": null,
+        "scripts": [
+          "/assets/index-CtuiCkKf.js"
+        ],
+        "docNonce": "9sg11uhzcmk",
+        "fields": {},
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "leafCount": 34,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": "installing",
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ]
+      },
+      "the_one_navigation": {
+        "skipped": "arm drives no navigation: fixed_inflight"
+      },
+      "watch": [
+        {
+          "atMs": 4013,
+          "atEpoch": 1790293393273,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 34,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        },
+        {
+          "atMs": 8034,
+          "atEpoch": 1790293397294,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        },
+        {
+          "atMs": 12053,
+          "atEpoch": 1790293401313,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        },
+        {
+          "atMs": 16061,
+          "atEpoch": 1790293405321,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        },
+        {
+          "atMs": 20084,
+          "atEpoch": 1790293409344,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        },
+        {
+          "atMs": 24093,
+          "atEpoch": 1790293413353,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        },
+        {
+          "atMs": 28103,
+          "atEpoch": 1790293417363,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        },
+        {
+          "atMs": 32115,
+          "atEpoch": 1790293421375,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        },
+        {
+          "atMs": 36134,
+          "atEpoch": 1790293425394,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        },
+        {
+          "atMs": 40151,
+          "atEpoch": 1790293429411,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        },
+        {
+          "atMs": 44161,
+          "atEpoch": 1790293433421,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        },
+        {
+          "atMs": 48180,
+          "atEpoch": 1790293437440,
+          "marker": null,
+          "scripts": [
+            "/assets/index-CtuiCkKf.js"
+          ],
+          "docNonce": "9sg11uhzcmk",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 31,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓",
+            "3",
+            "确认创建"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "updatefound",
+              "t": 27858,
+              "href": "http://127.0.0.1:8961/v8/hub"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28000,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "installed",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:active",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "redundant",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 28005,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activating",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "controllerchange",
+              "t": 28006,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            },
+            {
+              "ev": "state:installing",
+              "t": 29024,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "state": "activated",
+              "script": "http://127.0.0.1:8961/v10-sw.js"
+            }
+          ]
+        }
+      ],
+      "watch_started_at_epoch": 1790293389260,
+      "after": {
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-CtuiCkKf.js"
+        ],
+        "docNonce": "9sg11uhzcmk",
+        "fields": {},
+        "fieldCount": 0,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "✓",
+          "✓",
+          "3",
+          "确认创建"
+        ],
+        "leafCount": 31,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 17,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "marker": null
+          },
+          {
+            "ev": "updatefound",
+            "t": 27858,
+            "href": "http://127.0.0.1:8961/v8/hub"
+          },
+          {
+            "ev": "state:installing",
+            "t": 28000,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "state": "installed",
+            "script": "http://127.0.0.1:8961/v10-sw.js"
+          },
+          {
+            "ev": "state:active",
+            "t": 28005,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "state": "redundant",
+            "script": "http://127.0.0.1:8961/v10-sw.js"
+          },
+          {
+            "ev": "state:installing",
+            "t": 28005,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "state": "activating",
+            "script": "http://127.0.0.1:8961/v10-sw.js"
+          },
+          {
+            "ev": "controllerchange",
+            "t": 28006,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "script": "http://127.0.0.1:8961/v10-sw.js"
+          },
+          {
+            "ev": "state:installing",
+            "t": 29024,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "state": "activated",
+            "script": "http://127.0.0.1:8961/v10-sw.js"
+          }
+        ]
+      },
+      "after_written": {
+        "marker": null,
+        "scripts": [
+          "/assets/index-CtuiCkKf.js"
+        ],
+        "docNonce": "9sg11uhzcmk",
+        "fields": {},
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "✓",
+          "✓",
+          "3",
+          "确认创建"
+        ],
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "leafCount": 31
+      },
+      "nav_events_total": 4,
+      "nav_events_mine": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ]
+    }
+  },
+  "instrument": {
+    "pageErrors": [],
+    "navEvents": [
+      {
+        "at": 1790293346230,
+        "mine": true,
+        "label": "P0-nav1-install"
+      },
+      {
+        "at": 1790293346269,
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790293361387,
+        "mine": true,
+        "label": "P0-nav2-take-control"
+      },
+      {
+        "at": 1790293361405,
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "mine": false
+      }
+    ],
+    "apiEvents": [
+      {
+        "atEpoch": 1790293346502,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790293346670,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790293361512,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790293361536,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790293385194,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/travelers"
+      },
+      {
+        "atEpoch": 1790293385204,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/travelers",
+        "s": 201
+      },
+      {
+        "atEpoch": 1790293385206,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/journeys"
+      },
+      {
+        "atEpoch": 1790293393226,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/journeys",
+        "s": 201
+      },
+      {
+        "atEpoch": 1790293393227,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/06a97984-abdc-4d1c-950e-b57fe920ce5b/preferences"
+      },
+      {
+        "atEpoch": 1790293393244,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/travelers/06a97984-abdc-4d1c-950e-b57fe920ce5b/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790293393245,
+        "ev": "request",
+        "m": "PUT",
+        "p": "/api/v1/travelers/06a97984-abdc-4d1c-950e-b57fe920ce5b/preferences"
+      },
+      {
+        "atEpoch": 1790293393267,
+        "ev": "response",
+        "m": "PUT",
+        "p": "/api/v1/travelers/06a97984-abdc-4d1c-950e-b57fe920ce5b/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790293393267,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/06a97984-abdc-4d1c-950e-b57fe920ce5b/preferences"
+      },
+      {
+        "atEpoch": 1790293393279,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/travelers/06a97984-abdc-4d1c-950e-b57fe920ce5b/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790293393281,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/journeys/9afed402-66e8-4ecc-bc6f-9ff03e7f5052/stay-options/generate"
+      },
+      {
+        "atEpoch": 1790293393370,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/journeys/9afed402-66e8-4ecc-bc6f-9ff03e7f5052/stay-options/generate",
+        "s": 500
+      }
+    ]
+  },
+  "next1": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      195,
+      674
+    ],
+    "hitIsSelf": true,
+    "tapped": true
+  },
+  "next2": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      225,
+      674
+    ],
+    "hitIsSelf": true,
+    "tapped": true
+  },
+  "ended_at": "2026-09-24T23:43:57.631Z"
+}
