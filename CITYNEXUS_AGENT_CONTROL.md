@@ -15017,6 +15017,33 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 📐 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0288 定形交（无键写腿补凭条：三格判据 + 可跑反例 + 逐腿射程）——现场基线一句说完：同一把 `Idempotency-Key` 连发三发，库里堆了三行 mission，回执表一行都没多** @2026-09-25T07:0x+08
+
+**先给 @D 产码后要对的基线**（一次性后端 `:8493`、一次性库、本轮新建行程 `f14f7521-f38b-417b-82d2-07d194db490e`，行数全部用第二条 sqlite 连接判）：
+
+| 发了什么 | `journey_missions` | `agent_runs` | `idempotency_keys` |
+|---|---|---|---|
+| 起点 | 0 | 0 | 2 |
+| 同一条指令、不带键 ×3 | 3 | 3 | 2 |
+| **同一把 Idempotency-Key** ×3 | 6 | 6 | 2 |
+| 同一把键再发一发 | 7 | 7 | 2 |
+
+7 次请求 ⇒ **7 个互不相同的 mission id**（一次都没重放）；响应里也**没回显**这把键。对照：同一把库上按 `plans/generate` 的合同发一发带键请求，回执表立刻多一行（现共 3 行，`operation` = `plans.generate`）⇒ **机器是现成的，缺的是这一支没接**。路由侧：`Header(alias="Idempotency-Key")` 在落地树只有 `app/main.py:4606/:7740/:9907/:11364` 四处，本单的 `run_agent_command`（`:1057`）**不在其中**；校验函数现成 `app/commerce/validators.py:109`。
+⇒ 所以本单最重要的一条判据是：**"请求里有个头" 不算凭条**，今天这个头是**被静默忽略**（不是 422），只会给人假安全感。
+
+**三格（判据要点 + 反例名，全文在已发布 SHAPE）**
+- **T-1** 四件同时成立：客户端带键并过 `validate_idempotency_key`；服务端在**既有表** `idempotency_keys`（列 ``key`, `operation`, `request_hash`, `response_status`, `response_json`, `created_at`, `expires_at``）落一行且 `operation` 把这一支**具名**（建议 `agent.commands`）；同键+同体 ⇒ `request_hash` 相等 ⇒ 读回同一份、不增行；同键+**不同体** ⇒ 走现成那句 409。反例名：`KEY_IGNORED_NO_RECEIPT`（今天必红）/ `FRESH_KEY_PER_CLICK`（0253 老教训）/ `NO_READABLE_RECEIPT_ROW` / `KEY_REUSED_ACROSS_DIFFERENT_BODIES`。比对"同一份答案"一律**逐字段 `==` 且先去 `trace_id`**（0279-X 钉过：整段正文比必假不等）。
+- **T-2** 拆两半，依赖写明：**T-2a** 同键两发不得增行（今天就能验，本轮 3→6 就是它的红）；**T-2b** 中止/期限后重发同一凭条仍不得增行——**依赖 0281 先给写腿装上期限**，执行期标 `BLOCKED_BY-0281-T-b`，**不许拿 T-2a 的绿冒充 T-2b**。反例 `DUPLICATE_SIDE_EFFECT_AFTER_ABORT`（与 0281 T-d 同一枚反例、不同修复点：0281 管"要不要自动补发"，本单管"补发了服务端挡不挡得住"）。
+- **T-3** 拿不到凭条支持时（键校验失败 / 回读取不到 / 传输被中止）屏上只许出现"结果未知，先核对"这一类（今天那句就是范本：「已中止后续核对 / 请求本身已经发出去了…」），**不许**让标签「服务器给出的原因」顶客户端拼的串；库里**有**回执时也不许报"没发生"。反例名 `CLIENT_SENTENCE_UNDER_SERVER_LABEL` / `RECEIPT_EXISTS_BUT_UI_DENIES`（这格必须**同时**读库与读屏）；正控：服务器真给句子时标签必须出现且 `==` 服务器原文（两代我都用标记串验过这条通道能搬话）。与 0280 **共享判据、修复点不同文件**（0280 改 `PlanWithAiSheet.tsx:504/:508/:622`）。
+
+**逐腿射程（0281 T-c 的教训照做）**：在射程 1 条 —— `PlanWithAiSheet.tsx:491`；**不在射程具名 12 条** —— `PlanWithAiSheet.tsx:598`（走 0272 已有机器，归 0281）、`LiveRecovery.tsx:225`、`PushCapabilityCard.tsx:56`、`PlanComparison.tsx:88`、`V14RecoveryTruthPanel.tsx:69`、`simulationAdapter.ts:229/:296/:335/:376`、`HotelsPanel.tsx:63/:64/:87`（同样 0 处带计时器，要不要凭条属另一张单）；机理侧不吞：服务端锁/`busy_timeout`（0262）、写腿期限（0281）、归因真实性（0280）。搜索空间：`frontend/src` 全量 `fetch(` 扫描 + 落地树 `Header(alias=...)` 出现位置，未遍历第三方库与运行时拼接 URL ⇒ `coverage: NOT EXHAUSTIVE`。
+
+**验收前置（写进判据，别让绿长错地方）**：服务器侧几格必须**跨进程**再跑（两 uvicorn 共一把一次性库，我 rig 现成）——理由是我在 K8 那一腿实测过的机理：Phase A 唯一索引把第二发挡在 409/重放之外，**单进程里"同键撞车再改写"根本走不到**。
+
+**发布与坐标**：r5 共 4 件、全部 rc=0、全部 BYTE-LEVEL MATCH、一次拒绝都没有 ⇒ 无 `rule_hit`；坐标（脚本从分支 tree 读回，非手抄）：`Canshu-King/CityNexus @ commander/control` 读回 commit 尖 `6faf40e007312466aa7a29f1c9e2a95980d98348` · 其 tree `96456ba6bf8dea5d6e58995a46f705658c9baf78` · `evidence/ord0288-shape-hjp3/` 共 4 件：`SHAPE_ORD-0288.md` 7,602 B `072077ced7bd27fe1a355645ba8872024bfe6ba6` · `keyless_leg_facts.json` 5,011 B `d95a67195e870ac6bfbb6e6f1b68baf563062bae` · `o0288_facts.py` 5,163 B `a2ff782bfd3282e510fb64efc25493e69a7e50dd` · `route_and_key_facts.txt` 758 B `2de176ac963a6f0f26cf828c0f98d60ee049802f`。外部可读探针 `GET /git/blobs/072077ced7bd27fe1a355645ba8872024bfe6ba6` → 重算 sha1 与 tree 上 blob id 相等 = True。
+
+**纪律与边界**：本轮 0 改产品字节（只读导出 + 一次性库 + 直接 POST 真路由）；`demo/reset` 0 次、用户库 0 读写、`:4781`/`:4782` 与隧道未碰、凭据 0 打印；不产码（@D）、不签 `derived_result`（@红队）。读数边界也写清：§基线是**不经 UI** 的直接请求，所以"T-1 客户端半件"还没在真机路径上验过，等 @D 产码后我复跑、读数以当代为准；T-2b 今天跑不了（没有可命名的期限），不预支。**下一件**（已批）：T-c 那枚"改小常量 ⇒ 更早触发"可跑探针。
+
 ## 章已落 @2026-09-25 06:5x+08 —— 总线评论 **5823570235**（06:55:19，正文 41 字符，逐字引用：`Q29=① Q30=① Q31=① Q32=① Q33=① Q34=① Q35=②`）⇒ **七枚 provisional 全部转正式**，本块是唯一有效的状态源
 
 ### ① 逐笔转正式（前块里的 `(PROVISIONAL)` 标记自本块起失效，我不回去改历史）
