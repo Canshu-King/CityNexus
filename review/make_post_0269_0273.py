@@ -144,41 +144,61 @@ def main() -> int:
 
     add("")
     add(f"- 候选分支尖（外读）：`{lsremote}`")
-    # The authoritative line moves under this branch; printing a tip captured at authoring time would
-    # be a stale claim, so read the live one from the integration worktree.
-    live_tip = subprocess.run(
-        "git rev-parse HEAD",
+    # The authoritative line is whatever is externally readable, not what my worktree happens to have
+    # checked out -- the local branch lags a generation whenever the commander moves the line.
+    mirror_tip = subprocess.run(
+        "git ls-remote https://github.com/Canshu-King/CityNexus.git "
+        "refs/heads/mirror/integration-frontend-apple-pass1",
+        capture_output=True,
+        text=True,
+        shell=True,
+    ).stdout.split("\t")[0].strip()
+    local_tip = subprocess.run(
+        "git rev-parse refs/heads/integration/frontend-apple-pass1",
         cwd="D:/moodle/_qoder_integration_20260919",
         capture_output=True,
         text=True,
         shell=True,
     ).stdout.strip()
-    predict = subprocess.run(
-        f'git merge-tree --write-tree {live_tip} {round_receipt["candidate_tip"]}',
-        cwd="D:/moodle/_qoder_integration_20260919",
+    have = subprocess.run(
+        f"git cat-file -e {mirror_tip}^{{commit}}",
+        cwd="D:/moodle/_qoder_d_lane_20260923",
         capture_output=True,
         text=True,
         shell=True,
-    )
-    conflicted = [
-        line.split("\t")[0]
-        for line in predict.stdout.splitlines()[1:]
-        if line.startswith("\t") and len(line.split("\t")) >= 4
-    ]
-    add(
-        f"- 权威尖（现读，非发帖时快照）：`{live_tip or '?'}`；我这枚候选是从 "
-        f"`{round_receipt['authoritative_tip_at_delivery'][:9]}…` 切的。"
-    )
-    add(
-        f"- 只读合流预测 `git merge-tree --write-tree {live_tip[:9]}… {round_receipt['candidate_tip'][:9]}…`"
-        f" ⇒ 冲突文件 **{len(conflicted)}** 个{('：' + ', '.join(conflicted)) if conflicted else ''}"
-        f"（exit={predict.returncode}；这条不移动任何分支）"
-    )
+    ).returncode
+    if have == 0:
+        predict = subprocess.run(
+            f'git merge-tree --write-tree {mirror_tip} {round_receipt["candidate_tip"]}',
+            cwd="D:/moodle/_qoder_d_lane_20260923",
+            capture_output=True,
+            text=True,
+            shell=True,
+        )
+        conflicted = [
+            line.split("\t")[0]
+            for line in predict.stdout.splitlines()[1:]
+            if line.startswith("\t") and len(line.split("\t")) >= 4
+        ]
+        prediction = (
+            f"只读合流预测 `git merge-tree --write-tree {mirror_tip[:9]}… {round_receipt['candidate_tip'][:9]}…` "
+            f"⇒ 冲突文件 **{len(conflicted)}** 个{('：' + ', '.join(conflicted)) if conflicted else ''}"
+            f"（exit={predict.returncode}，不移动任何分支）"
+        )
+    else:
+        prediction = (
+            f"合流预测 NOT_PREDICTED_LOCALLY：外读尖 `{mirror_tip}` 的对象不在本机对象库里，"
+            "我没有为这一格编一个数"
+        )
+    add(f"- 权威尖（外读 mirror ref）：`{mirror_tip or '?'}`；我这枚候选从 `{round_receipt['authoritative_tip_at_delivery'][:9]}…` 切的")
+    add(f"- 本机权威分支 `integration/frontend-apple-pass1` 现读：`{local_tip or '?'}`（落后一代不等于我能动它）")
+    add(f"- {prediction}")
     add(
         f"- 反突变尖 `{arms['head']}`；门绿轮三元组的 sha 集合："
         f"{', '.join('`' + s + '`' for s in sorted(shas))}（{len(shas)} 枚）"
     )
     add(f"- 门绿轮：{round_receipt['verdict']}，三元组 {len(triples)} 条，全部来自 Playwright 日志行的机械解析")
+
 
     add("")
     add(f"**反突变矩阵 {len(arm_list)} 枚：KILLED {len(killed)} / 其它 {len(survived)}**")
