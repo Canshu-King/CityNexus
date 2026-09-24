@@ -1,0 +1,382 @@
+{
+ "kind": "V2 (erratum-corrected self-proof)",
+ "at": "2026-09-25T07:56:01+08:00",
+ "supersedes": {
+  "file": "ord0280_selfproof.json",
+  "blob40": "05bdec154242b97e0371b2ee39331f4836950457"
+ },
+ "erratum_reason": "the coordinates cell contradicted the arm table in the same receipt because my lookup strings did not match the code I had just written; no reading, arm, gate or conclusion changed",
+ "was": {
+  "cited_sites_changed": {
+   "site_515": false,
+   "site_573": true,
+   "site_629": true,
+   "extra_site_catalog_count": true
+  },
+  "all_three_plus_one": false,
+  "coordinates_re_measured_on_this_tree": {
+   "label_服务器给出的原因": [],
+   "site1_agent_commands_leg": [],
+   "site2_get_places_leg": [
+    599
+   ],
+   "site3_plans_generate_leg": [
+    664
+   ],
+   "site4_catalog_count": [
+    623
+   ],
+   "failureNote_helper": [
+    174
+   ],
+   "origin_attribute": [
+    929
+   ]
+  }
+ },
+ "now": {
+  "commander_rule": "一次覆盖三处；只改 :515 一处按 PARTIAL 判（红队口径）",
+  "cited_sites_changed": {
+   "site_515_agent_commands": true,
+   "site_573_get_places": true,
+   "site_629_plans_generate": true,
+   "extra_site_catalog_count": true
+  },
+  "all_three_plus_one": true,
+  "machine_fields_kept_out_of_this_fix": {
+   "status_HTTP_line": [
+    529
+   ],
+   "blocked_PLACES_HTTP_line": [
+    595
+   ]
+  },
+  "coordinates_re_measured_on_this_tree": {
+   "attribution_label_string": [
+    933
+   ],
+   "site1_agent_commands": [
+    538
+   ],
+   "site2_get_places": [
+    599
+   ],
+   "site3_plans_generate": [
+    664
+   ],
+   "site4_catalog_count": [
+    623
+   ],
+   "failureNote_helper": [
+    174
+   ],
+   "origin_attribute": [
+    929
+   ],
+   "device_label_string": [
+    936
+   ],
+   "machine_field_kept_status": [
+    529
+   ],
+   "machine_field_kept_blocked": [
+    595
+   ]
+  },
+  "how_these_were_measured": "each needle must match exactly one line of the file, and the matched line is stored; the previous version searched for a double-quoted form of template literals and for a pre-edit shape of the label ternary"
+ },
+ "cells": {
+  "1_ancestry": {
+   "candidate_tip": "48827a9d6402aaabffc5ff47b1540407fafed620",
+   "branch": "review/0280-attribution-label",
+   "authoritative_base": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "is_ancestor_rc": 0,
+   "files_this_commit": [
+    "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "diffstat": "2 files changed, 365 insertions(+), 16 deletions(-)",
+   "previous_candidate_left_untouched": "ef277b2da5df"
+  },
+  "2_scope_followed": {
+   "commander_rule": "一次覆盖三处；只改 :515 一处按 PARTIAL 判（红队口径）",
+   "cited_sites_changed": {
+    "site_515_agent_commands": true,
+    "site_573_get_places": true,
+    "site_629_plans_generate": true,
+    "extra_site_catalog_count": true
+   },
+   "all_three_plus_one": true,
+   "machine_fields_kept_out_of_this_fix": {
+    "status_HTTP_line": [
+     529
+    ],
+    "blocked_PLACES_HTTP_line": [
+     595
+    ]
+   },
+   "coordinates_re_measured_on_this_tree": {
+    "attribution_label_string": [
+     933
+    ],
+    "site1_agent_commands": [
+     538
+    ],
+    "site2_get_places": [
+     599
+    ],
+    "site3_plans_generate": [
+     664
+    ],
+    "site4_catalog_count": [
+     623
+    ],
+    "failureNote_helper": [
+     174
+    ],
+    "origin_attribute": [
+     929
+    ],
+    "device_label_string": [
+     936
+    ],
+    "machine_field_kept_status": [
+     529
+    ],
+    "machine_field_kept_blocked": [
+     595
+    ]
+   },
+   "how_these_were_measured": "each needle must match exactly one line of the file, and the matched line is stored; the previous version searched for a double-quoted form of template literals and for a pre-edit shape of the label ternary"
+  },
+  "3_arms_on_the_fix": {
+   "arms": [
+    {
+     "arm": "A1",
+     "want": "device",
+     "label_rendered": "这台设备自己的读数（服务器没给句子）",
+     "origin_attribute": "device",
+     "reason_rendered": "agent/commands -> HTTP 500",
+     "status": "HTTP_500",
+     "label_is_attribution": false,
+     "label_is_device": true,
+     "agree": true
+    },
+    {
+     "arm": "A2",
+     "want": "server",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "该目的地的候选目录尚未就绪，请稍后重试。",
+     "status": "HTTP_503",
+     "label_is_attribution": true,
+     "label_is_device": false,
+     "agree": true
+    },
+    {
+     "arm": "B1",
+     "want": "device",
+     "label_rendered": "这台设备自己的读数（服务器没给句子）",
+     "origin_attribute": "device",
+     "reason_rendered": "GET /places -> HTTP 502",
+     "status": "BLOCKED:UPSTREAM_UNREADABLE",
+     "label_is_attribution": false,
+     "label_is_device": true,
+     "agree": true
+    },
+    {
+     "arm": "B2",
+     "want": "server",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "places 目录在该城市没有物化任何地点，无法组成候选。",
+     "status": "BLOCKED:PLACES_HTTP_409",
+     "label_is_attribution": true,
+     "label_is_device": false,
+     "agree": true
+    },
+    {
+     "arm": "C1",
+     "want": "device",
+     "label_rendered": "这台设备自己的读数（服务器没给句子）",
+     "origin_attribute": "device",
+     "reason_rendered": "POST /plans/generate -> HTTP 422",
+     "status": "BLOCKED:VALIDATION_ERROR",
+     "label_is_attribution": false,
+     "label_is_device": true,
+     "agree": true
+    },
+    {
+     "arm": "C2",
+     "want": "server",
+     "label_rendered": "服务器给出的原因",
+     "origin_attribute": "server",
+     "reason_rendered": "预算与停留上限无法同时满足，未生成方案。",
+     "status": "BLOCKED:BUDGET_INFEASIBLE",
+     "label_is_attribution": true,
+     "label_is_device": false,
+     "agree": true
+    },
+    {
+     "arm": "D",
+     "want": "device",
+     "label_rendered": "这台设备自己的读数（服务器没给句子）",
+     "origin_attribute": "device",
+     "reason_rendered": "GET /places?city_code=CN-TIANJIN -> 0 places",
+     "status": "BLOCKED:CATALOG_EMPTY",
+     "label_is_attribution": false,
+     "label_is_device": true,
+     "agree": true
+    }
+   ],
+   "server_sentences_verbatim": [
+    "A2",
+    "B2",
+    "C2"
+   ],
+   "device_readings_still_visible": [
+    "A1",
+    "B1",
+    "C1",
+    "D"
+   ],
+   "agree_with_origin_attribute": [
+    "A1",
+    "A2",
+    "B1",
+    "B2",
+    "C1",
+    "C2",
+    "D"
+   ],
+   "count": {
+    "total": 7,
+    "agree": 7
+   }
+  },
+  "4_teeth_against_the_unfixed": {
+   "unfixed_component_sha": "aa212a6e3ded2d58",
+   "tally": [
+    "  7 failed",
+    "  1 passed (1.4m)"
+   ],
+   "failures_naming_the_defect": [
+    "FAILED: label and origin agree :: {\"want\":\"server\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"该目的地的候选目录尚未就绪，请稍后重试。\"}",
+    "FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"GET /places -> HTTP 502\"}",
+    "FAILED: label and origin agree :: {\"want\":\"server\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"places 目录在该城市没有物化任何地点，无法组成候选。\"}",
+    "FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"POST /plans/generate -> HTTP 422\"}",
+    "FAILED: label and origin agree :: {\"want\":\"server\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"预算与停留上限无法同时满足，未生成方案。\"}",
+    "FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"GET /places?city_code=CN-TIANJIN -> 0 places\"}"
+   ],
+   "device_arms_showing_the_defect_verbatim": [
+    "FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"GET /places -> HTTP 502\"}",
+    "FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"POST /plans/generate -> HTTP 422\"}",
+    "FAILED: label and origin agree :: {\"want\":\"device\",\"label\":\"服务器给出的原因\",\"origin\":\"\",\"reason\":\"GET /places?city_code=CN-TIANJIN -> 0 places\"}"
+   ],
+   "a1_extra_symptom": "on the unfixed component an envelope whose error.message is the empty string yields failureReason='' so the whole 技术详情 block never renders (node-replicated: pre-fix '' -> falsy; fixed -> device note). The A1 arm therefore fails pre-fix as a MISSING detail, which is a second symptom of the same family, not a label comparison",
+   "provenance": {
+    "authoritative": true,
+    "suite": "current-product",
+    "runId": "ord0280j",
+    "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+    "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+    "frontendPort": 4378,
+    "backendPort": 8128,
+    "databaseUrl": "sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280j.db",
+    "ai": "disabled",
+    "reuseExistingServer": false,
+    "workers": 1,
+    "retries": 0,
+    "recordedAt": "2026-09-24T23:13:39.775Z",
+    "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe frontend=:4378 backend=:8128 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280j.db ai=disabled reuseExistingServer=false"
+   }
+  },
+  "5_regressions": {
+   "three_gates_that_read_this_label": {
+    "file": "ord0280_regress.out",
+    "tally": [
+     "  15 passed (1.3m)"
+    ],
+    "hits": [
+     "  15 passed (1.3m)"
+    ]
+   },
+   "provenance": {
+    "authoritative": true,
+    "suite": "current-product",
+    "runId": "ord0280g",
+    "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+    "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+    "frontendPort": 4376,
+    "backendPort": 8126,
+    "databaseUrl": "sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280g.db",
+    "ai": "disabled",
+    "reuseExistingServer": false,
+    "workers": 1,
+    "retries": 0,
+    "recordedAt": "2026-09-24T23:07:21.526Z",
+    "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4376 backend=:8126 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280g.db ai=disabled reuseExistingServer=false"
+   },
+   "whole_suite_observation": {
+    "file": "ord0280_fullsuite2.out",
+    "tally": [],
+    "hits": [
+     "  1) [chromium] › e2e\\predictive-real-city-v6.spec.ts:86:1 › a forecast is prevented before the failure happens, and the traveller can see why ",
+     "  2) [chromium] › e2e\\qoder-ai-sheet-blocked.spec.ts:345:1 › ord0104-ai-sheet-examples-follow-the-destination — 例子要么跟这趟走，要么没有 ",
+     "  3) [chromium] › e2e\\qoder-ai-sheet-blocked.spec.ts:512:1 › ord0134-ai-sheet-actions-stay-inside-the-visible-viewport — 键盘顶起来时最后两枚动作仍要点得到 ",
+     "  4) [chromium] › e2e\\qoder-contrast-audit.spec.ts:194:5 › Qoder contrast audit (Today + Live, light + dark) › no contrast violations on Today/Live, light + dark (mobile) "
+    ],
+    "progress_last": [
+     "[128/250] [chromium] › e2e\\qoder-plan-ai-contrast.spec.ts:111:5 › ORD-0035 plan-ai sheet ink is legible in both themes ›"
+    ],
+    "complete": false,
+    "invalidated_sibling_run": "ord0280_fullsuite.out: this run was killed mid-flight because I switched branches under it, which changed the tree its dev server was serving. Its partial output is kept on disk and is NOT used as evidence."
+   },
+   "suite_provenance": {
+    "authoritative": true,
+    "suite": "current-product",
+    "runId": "ord0280full",
+    "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+    "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+    "frontendPort": 4379,
+    "backendPort": 8129,
+    "databaseUrl": "sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280full.db",
+    "ai": "disabled",
+    "reuseExistingServer": false,
+    "workers": 1,
+    "retries": 0,
+    "recordedAt": "2026-09-24T23:24:16.153Z",
+    "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4379 backend=:8129 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280full.db ai=disabled reuseExistingServer=false"
+   },
+   "named_boundary": "one whole-suite run is an OBSERVATION, not a baseline (arbiter standing rule)"
+  },
+  "6_provenance_of_the_arm_runs": {
+   "authoritative": true,
+   "suite": "current-product",
+   "runId": "ord0280e",
+   "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+   "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+   "frontendPort": 4374,
+   "backendPort": 8124,
+   "databaseUrl": "sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280e.db",
+   "ai": "disabled",
+   "reuseExistingServer": false,
+   "workers": 1,
+   "retries": 0,
+   "recordedAt": "2026-09-24T23:04:39.928Z",
+   "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4374 backend=:8124 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_ord0280e.db ai=disabled reuseExistingServer=false"
+  },
+  "7_disclosed": [
+   "ordering change, stated: when a refusal carries BOTH `error.message` and `detail`, the sheet now quotes `error.message`, where the old inline chain at :515 answered `detail` first. The other two legs already treated error.message as the server's sentence, so this makes one envelope mean one thing across the sheet; it is a behaviour change and is not hidden.",
+   "no invented number was removed: a device-composed reading still shows `GET /places -> HTTP 502`. The defect was who the screen claimed spoke, not whether the status is worth reading.",
+   "the `<2 places` line is a fourth site this file found beyond the commander's three; it is now classified as a device statement. If the arbiter would rather it stay out of scope, that is one line to revert and it changes nothing else.",
+   "i18n coverage is NOT EXHAUSTIVE per the 定形 block: the English device label is 'This device's own reading (the server sent no sentence)', asserted only for inequality with the attribution label in this zh run."
+  ],
+  "8_not_claimed": {
+   "derived_result_0280": "红队签（0280 与 0281 分开签）",
+   "derived_result_0274_cells": "HJ-P1 签"
+  }
+ },
+ "lane": "B c01d72a3",
+ "order": "ORD-0280 缺陷1 候选 · 自证格（v2）"
+}
