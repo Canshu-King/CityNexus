@@ -22,7 +22,7 @@ def load(path: str) -> dict:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
-ARM_PREFIX = "ord0269-0273-arms-"
+ARM_PREFIXES = ("ord0269-0273-arms-", "ord0278-0253-arms-")
 
 
 def arm_lineage(arms_path: str) -> tuple[dict, list, list]:
@@ -36,8 +36,10 @@ def arm_lineage(arms_path: str) -> tuple[dict, list, list]:
     tags: list[str] = []
     lineage: dict[str, dict[str, str]] = {}
     unreadable: list[str] = []
-    for path in sorted(directory.glob(f"{ARM_PREFIX}*.json"), key=lambda p: p.stat().st_mtime):
-        tag = path.name[len(ARM_PREFIX) : -len(".json")]
+    candidates = [p for prefix in ARM_PREFIXES for p in directory.glob(f"{prefix}*.json")]
+    for path in sorted(candidates, key=lambda p: p.stat().st_mtime):
+        prefix = next(pref for pref in ARM_PREFIXES if path.name.startswith(pref))
+        tag = path.name[len(prefix) : -len(".json")]
         try:
             record = json.loads(path.read_text(encoding="utf-8"))
         except Exception as exc:  # named below, never silently skipped
@@ -164,10 +166,14 @@ def main() -> int:
     lines: list[str] = []
     add = lines.append
 
-    rebase_note = "｜已 re-parent 到落地尖" if round_receipt.get("collection") else ""
+    # The subject line is built from the two receipts' own order fields, so it cannot go stale the
+    # way a hand-written "ORD-0269 + ORD-0273" heading did once this lane grew two more gates.
+    orders = ", ".join(
+        sorted({str(o) for group in (arms.get("orders", []), round_receipt.get("orders", [])) for o in ([group] if isinstance(group, str) else group)})
+    )
     add(
-        f"【D e345b9d6 → 包工头 · #2e 交完：ORD-0269 门 + ORD-0273 三门，反突变 `{arms.get('runTag','?')}` "
-        f"{len(arm_list)} 枚 / 绿轮三元组 {len(triples)} 条{rebase_note}】"
+        f"【D e345b9d6 → 包工头 · 交付：{orders or '?'}｜反突变 `{arms.get('runTag','?')}` "
+        f"{len(arm_list)} 枚 / 绿轮三元组 {len(triples)} 条】"
     )
 
     add("")
