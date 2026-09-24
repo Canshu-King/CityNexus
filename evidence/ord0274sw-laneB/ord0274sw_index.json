@@ -1,0 +1,83 @@
+{
+ "at": "2026-09-24T11:37:00+08:00",
+ "order": "ORD-0274-SW 候选 · 交付索引",
+ "candidate_tip": "d82eb16da08d1fca692c8a74e3ff47f55747b846",
+ "files": [
+  {
+   "name": "ord0274sw_selfproof.json",
+   "blob40": "df03fd4bd6984d45e653f161fa34407d2aa84284",
+   "bytes": 7439
+  },
+  {
+   "name": "ord0274sw_d82eb16.patch",
+   "blob40": "62ddc856d463759f4b28f693873a92d3d7c4c4c9",
+   "bytes": 3635
+  },
+  {
+   "name": "q274sw_transition_measurement.json",
+   "blob40": "fa56bbaae5fdcd5bc4acdd10243dc078a9cf806b",
+   "bytes": 6135
+  },
+  {
+   "name": "q274sw_inplace_measurement.json",
+   "blob40": "0fd80631dd06f6622c3a46115f679a4039f470e3",
+   "bytes": 13712
+  },
+  {
+   "name": "q274sw_inplace_measurement_candidate.json",
+   "blob40": "a65a3dad36e7b23842d5853dd5db3e39603ed586",
+   "bytes": 13920
+  },
+  {
+   "name": "q274sw_inplace_measurement_fixed_client.json",
+   "blob40": "58246b97a92df8ab398442cb92df7f6edad216a1",
+   "bytes": 10429
+  },
+  {
+   "name": "q274sw_regression_equivalents.json",
+   "blob40": "fbaedcfde63c3a124d2a3e9d5228b321332e9e98",
+   "bytes": 2013
+  },
+  {
+   "name": "inplace_inplace.json",
+   "blob40": "3479de3a97828169942bda0997c3da9bb9f22f79",
+   "bytes": 6723
+  },
+  {
+   "name": "inplace_install.json",
+   "blob40": "9e1450f34775369a9106d94f0556baa9df2db3fe",
+   "bytes": 1221
+  },
+  {
+   "name": "q274_gen_origin.py",
+   "blob40": "dc8eca3b69a825d4d4f674e192ce2f6f89dad775",
+   "bytes": 3972
+  },
+  {
+   "name": "q274_transition_probe.js",
+   "blob40": "f67d150127f4abb1d28bd92752865e10c26d14d3",
+   "bytes": 9047
+  },
+  {
+   "name": "q274_inplace_run.py",
+   "blob40": "2dae371c97c73a67e054af02877a0422e9dd7f45",
+   "bytes": 9621
+  },
+  {
+   "name": "q274_regression_run.py",
+   "blob40": "4e3c3174ed894217efc22297cc392bf326c43e0d",
+   "bytes": 8664
+  },
+  {
+   "name": "q274_make_gen2.py",
+   "blob40": "3d39dba4b993245f3d7ebb47200b8723af610659",
+   "bytes": 3240
+  },
+  {
+   "name": "q274_build_gen2.py",
+   "blob40": "558f8f3d88154169e2d93405862b02b3fd0bbe61",
+   "bytes": 2422
+  }
+ ],
+ "listed": 15
+}
