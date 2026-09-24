@@ -1,0 +1,80 @@
+swap target new generation: entry sha256=390febe6e7e0983b content=925f6ce2c60ac330
+
+=== arm candidate (client=dist_0274sw, new=dist_0274gen2b, POST_DELAY_S=10) ===
+      install: tag=null bundle=sets/index-xKIGmoBz.js sha=ba6654a08dd6 loads=1 reload_key=null pending=null samples_with_open_write=0 -> b2c_candidate_tip45_install.json
+      install: controller=/v10-sw.js bundle=/assets/index-xKIGmoBz.js
+      b2c: tag=gen2-standin bundle=sets/index-CL1NqhoE.js sha=390febe6e7e0 loads=2 reload_key="1" pending=null samples_with_open_write=9 -> b2c_candidate_tip45_run.json
+    writes=4/4 delivered=4 undelivered=0 open_at_swap=1 reload_with_open=[]
+    loads [[1], [2]] pending=True gen_tag='gen2-standin' sha==new:True
+    verdict=MET (expected MET)  no reload while a write was open, the write's answer was delivered, and the still-open document reached the new generation's bytes without another user navigation
+
+=== arm counter_eager (client=dist_0274b2c_eager, new=dist_0274gen2b, POST_DELAY_S=10) ===
+      install: tag=null bundle=sets/index-B-sFqRzq.js sha=d61ab0e586c7 loads=1 reload_key=null pending=null samples_with_open_write=0 -> b2c_counter_eager_tip45_install.json
+      install: controller=/v10-sw.js bundle=/assets/index-B-sFqRzq.js
+      b2c: tag=gen2-standin bundle=sets/index-CL1NqhoE.js sha=390febe6e7e0 loads=2 reload_key="1" pending=null samples_with_open_write=9 -> b2c_counter_eager_tip45_run.json
+    writes=4/4 delivered=3 undelivered=1 open_at_swap=1 reload_with_open=[]
+    loads [[2], [2]] pending=False gen_tag='gen2-standin' sha==new:True
+    verdict=RED (expected RED)  the document reloaded (or lost the answer) while the origin still held the write open
+
+=== arm counter_manual (client=dist_0274b2c_manual, new=dist_0274gen2b, POST_DELAY_S=10) ===
+      install: tag=null bundle=sets/index-EX5IfQcB.js sha=33d801b06bcf loads=1 reload_key=null pending=null samples_with_open_write=0 -> b2c_counter_manual_tip45_install.json
+      install: controller=/v10-sw.js bundle=/assets/index-EX5IfQcB.js
+      b2c: tag=null bundle=sets/index-EX5IfQcB.js sha=5e370a48daf0 loads=1 reload_key="1" pending="pending" samples_with_open_write=9 -> b2c_counter_manual_tip45_run.json
+    writes=4/4 delivered=4 undelivered=0 open_at_swap=1 reload_with_open=[]
+    loads [[1], [1]] pending=True gen_tag=None sha==new:False
+    verdict=RED (expected RED)  the open document never reached the new generation's bytes on its own (gen_tag=None, sha_match=False)
+
+=== arm idle_control (client=dist_0274sw, new=dist_0274gen2b, POST_DELAY_S=0) ===
+      install: tag=null bundle=sets/index-xKIGmoBz.js sha=ba6654a08dd6 loads=1 reload_key=null pending=null samples_with_open_write=0 -> b2c_idle_control_tip45_install.json
+      install: controller=/v10-sw.js bundle=/assets/index-xKIGmoBz.js
+      idle: tag=gen2-standin bundle=sets/index-CL1NqhoE.js sha=390febe6e7e0 loads=2 reload_key="1" pending=null samples_with_open_write=0 -> b2c_idle_control_tip45_run.json
+    writes=0/0 delivered=0 undelivered=0 open_at_swap=0 reload_with_open=[]
+    loads [[2], [2]] pending=False gen_tag='gen2-standin' sha==new:True
+    verdict=MET (expected MET)  with no write outstanding the same handover converged by itself, so the deferral is conditional and not the only behaviour
+
+-> ord0274_b2c_runtime_tip45b0a5e.json
+  candidate        MET  expected=MET  agrees=True
+  counter_eager    RED  expected=RED  agrees=True
+  counter_manual   RED  expected=RED  agrees=True
+  idle_control     MET  expected=MET  agrees=True
+B2C_TIP_RC=0
+candidate target: entry sha256=390febe6e7e0983b content=925f6ce2c60ac330
+
+=== arm candidate (client=dist_0274sw content=c6529965ed89 entry=['/assets/index-xKIGmoBz.js']) ===
+      b2b: tag=gen2-standin step_marks=[{"id":"trial-step-1","class_name":"done","marker":"✓"},{"id":"trial-s city=undefined party="4" budget="4321" draft_step=2 loads=2 sha=390febe6e7e0 -> b2b_candidate_tip45_run.js
+    step 2/trial-step2-body -> 2/trial-step2-body preserved=True | values_equal=True bytes_moved=True | draft_present=True | loads=2 in 2 sample(s)
+      city                 step1 typed='厦门'                       before='厦门'                       after='厦门'                       store='厦门'                       ok=True/True/True/True
+      startAt              step1 typed='2026-10-05T08:30'         before='2026-10-05T08:30'         after='2026-10-05T08:30'         store='2026-10-05T08:30'         ok=True/True/True/True
+      endAt                step1 typed='2026-10-09T19:45'         before='2026-10-09T19:45'         after='2026-10-09T19:45'         store='2026-10-09T19:45'         ok=True/True/True/True
+      partySize            step2 typed='4'                        before='4'                        after='4'                        store='4'                        ok=True/True/True/True
+      budget               step2 typed='4321'                     before='4321'                     after='4321'                     store='4321'                     ok=True/True/True/True
+      specialRequirements  step2 typed='需要无障碍通道 · B2b'            before='需要无障碍通道 · B2b'            after='需要无障碍通道 · B2b'            store='需要无障碍通道 · B2b'            ok=True/True/True/True
+    verdict=MET (expected MET)  step and every named value - city, both dates, partySize, budget, specialRequirements - came back per value on their own screens and in storage, into the new generation's
+
+=== arm counter_step_only (client=dist_0274sw content=c6529965ed89 entry=['/assets/index-xKIGmoBz.js']) ===
+      b2b: tag=b2b-steponly step_marks=[{"id":"trial-step-1","class_name":"done","marker":"✓"},{"id":"trial-s city=undefined party="4" budget="4321" draft_step=2 loads=2 sha=06eacbe22711 -> b2b_counter_step_only_tip4
+    step 2/trial-step2-body -> 2/trial-step2-body preserved=True | values_equal=False bytes_moved=True | draft_present=True | loads=2 in 2 sample(s)
+      city                 step1 typed='厦门'                       before='厦门'                       after='厦门'                       store='None'                     ok=True/False/True/False
+      startAt              step1 typed='2026-10-05T08:30'         before='2026-10-05T08:30'         after='2026-10-05T08:30'         store='None'                     ok=True/False/True/False
+      endAt                step1 typed='2026-10-09T19:45'         before='2026-10-09T19:45'         after='2026-10-09T19:45'         store='None'                     ok=True/False/True/False
+      partySize            step2 typed='4'                        before='4'                        after='4'                        store='None'                     ok=True/False/True/False
+      budget               step2 typed='4321'                     before='4321'                     after='4321'                     store='None'                     ok=True/False/True/False
+      specialRequirements  step2 typed='需要无障碍通道 · B2b'            before='需要无障碍通道 · B2b'            after='需要无障碍通道 · B2b'            store='None'                     ok=True/False/True/False
+    verdict=RED (expected RED)  named values differ: city, startAt, endAt, partySize, budget, specialRequirements
+
+=== arm counter_step_forced (client=dist_0274sw content=c6529965ed89 entry=['/assets/index-xKIGmoBz.js']) ===
+      b2b: tag=b2b-stepforced step_marks=[{"id":"trial-step-1","class_name":"active","marker":"1"},{"id":"trial city="厦门" party=undefined budget=undefined draft_step=1 loads=2 sha=c46dcefc3e7f -> b2b_counter_step_for
+    step 2/trial-step2-body -> 1/trial-step1-body preserved=False | values_equal=False bytes_moved=True | draft_present=True | loads=2 in 2 sample(s)
+      city                 step1 typed='厦门'                       before='厦门'                       after='None'                     store='厦门'                       ok=False/True/False/False
+      startAt              step1 typed='2026-10-05T08:30'         before='2026-10-05T08:30'         after='None'                     store='2026-10-05T08:30'         ok=False/True/False/False
+      endAt                step1 typed='2026-10-09T19:45'         before='2026-10-09T19:45'         after='None'                     store='2026-10-09T19:45'         ok=False/True/False/False
+      partySize            step2 typed='4'                        before='4'                        after='None'                     store='4'                        ok=False/True/False/False
+      budget               step2 typed='4321'                     before='4321'                     after='None'                     store='4321'                     ok=False/True/False/False
+      specialRequirements  step2 typed='需要无障碍通道 · B2b'            before='需要无障碍通道 · B2b'            after='None'                     store='需要无障碍通道 · B2b'            ok=False/True/False/False
+    verdict=RED (expected RED)  step did not come back: before={'active_marks': ['trial-step-2'], 'done_marks': ['trial-step-1'], 'visible_bodies': ['trial-step2-body'], 'from_storage': 2, 'on_screen': 
+
+-> ord0274_b2b_runtime_tip45b0a5e.json
+  candidate              MET  expected=MET  agrees=True
+  counter_step_only      RED  expected=RED  agrees=True
+  counter_step_forced    RED  expected=RED  agrees=True
+B2B_TIP_RC=0
