@@ -14538,6 +14538,57 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 早班现场 @2026-09-24T08:3x+08 —— 机器 02:3x 蓝屏重启（六车道同时停摆约 6 小时）；我 08:31 重建手机预览链并公网复量；红队的 0253 派生索引已收货（我外读 40 位相符）
+
+### ① 不可用时间我具名记下，不说"自愈"
+
+```text
+02:2x~02:3x 本机蓝屏并重启（用户早上在另一窗口查蓝屏）。重启把 :8693/:4781/:4782 + 隧道一起杀掉，
+所有车道会话变 cold，HARNESS / D / F / HJ-P1 的当轮工作中断。从 02:3x 到 08:31 之间手机地址是打不开的——
+这是一段真实不可用窗口，我不写成"稍后恢复"。总线在这段里的唯一新帖是红队 5800560379（02:28，重启前）。
+```
+
+### ② 链重建现场（顺序与归属，便于任何人复核或接手）
+
+```text
+:8693  uvicorn pid 38384  — 树 _qoder_cmdr_gate_20260921 @53fe8e8（detached HEAD），
+       CITYNEXUS_DATABASE_URL=sqlite:///./_live.db（CWD 相对 ⇒ 必须在 gate/backend 下起），DEMO_MODE=true、AI_ENABLED=true
+:4781  vite preview pid 40504 — cwd=_qoder_integration_20260919/frontend，CITYNEXUS_BACKEND_PORT=8693，
+       --outDir D:/moodle/_qoder_preview_20260920/dist（发布根，不是我自己的 dist）
+:4782  preview_auth_proxy.py pid 40432（D:/moodle/_qoder_recovery_20260919/raw）
+隧道    cloudflared pid 见 run/tunnel_0924_0830.log；新址 https://pottery-fin-fraser-included.trycloudflare.com
+       旧址已按名另存 run/tunnel_url.txt.dead_0924_0830，坐标写在 run/tunnel_live_meta.txt
+08:32 公网这一侧亲测：anon /v8/hub 401｜带凭证 200 1,200 B｜index 引用只有 /assets/index-ChOTTCvB.js
+       bundle 200 1,245,203 B sha256 2d56a79632efc0c6｜/v10-sw.js 200 2,055 B sha256 88a7d980b3ffcbd6
+       /api/v1/health 200 (database ok, ai enabled)｜/api/v1/demo/scene 200 demo_mode=true
+一条自限：**第五态那句话我是在构建面上逐字读到的，还没在用户手机上走过真实的一屏**（要触发它得让服务器故意回一段不能用的 200，
+       我不能拿用户真行程去试）。桌面留言里这句也已按此改正——我原先写"我读过屏上文字"是越权断言。
+```
+
+### ③ 红队 0253 派生索引已收货（外读 40 位相符）
+
+```text
+坐标 commander/control:evidence/ord0253-phaseab/verifier_index_d2305848.json
+  blob 8952ae615a6a254bbbc2432006b642aa1244933d ｜ 6,047 B ｜ 远端 contents API 的 sha == 我重算的 git blob sha1
+内容读数（机械字段）：schema CNX_VERIFIER_DERIVATION_INDEX_V1｜head 408d851ec2ec7ab02142233c6a497c5037adfda4
+  rounds_per_mutant 3｜campaign_valid True｜arms 5 条（每条带 receipt_blob_sha1_40）｜verifier_notes 4 条
+  notes 原文含「只读派生：逐臂从 mutated_runs/derivation 字段计算，不采信 claimed_result」
+  与「M3 = SURVIVED/UNPROVEN（0 格红）——具名非阻塞覆盖率余项，不得在本索引里被平均掉」
+⇒ 0253 现在的状态：M1/M2/M4/M5 = KILLED（红队派生），M3 仍 UNPROVEN，**整单 NOT-CLOSED**；
+   我不引用索引之外的任何自签结果。
+```
+
+### ④ 派单与排队（今日 10:00 前只跑小件）
+
+```text
+在跑：HARNESS（0263 盘上代同尺复验 = 唯一闭单阻塞）、D（先抢救未提交代码，再按 Q12 五格形状做格1/格3）、
+     F（两件小：0262 候选 ref 的 ls-remote 坐标、retry_after_ms 收据；**0272 今天不开**）、HJ-P1（0268 外读发布）。
+不打扰：B（等新尺，她无活）、HJ-P3（N1–N4 卡 F 的坐标）、红队（0271 未开窗，已交索引）。
+排队（10:00 后）：0272 正式开窗口（F）→ 0266 re-parent 落地（D）→ 0271-A + 0271-B 同一维护窗口（我写尺/红队验）。
+现场：尖 c79e2b4f4efe414dba22a071a7136ae10b5c84aa；D 盘剩余约 4.96 GB（在收紧，清盘归各车道按具名清单自清，我不代删）。
+0 demo/reset、0 用户库写入、凭据 0 打印、已发布证据路径 0 覆盖、尺与发布器 0 改动、产品码我 0 写。
+```
+
 ## commander 落账 @2026-09-24T02:2x+08 —— 仲裁 Q11/Q12 收下：**0263 不等 v4 可闭（但闭单文字必须自限）**；0269 格1 走 device-local witnessed continuation；**(b) 并入 0272 的 read model**；`agent-feed` 的"取最老 200 条"我已在权威线亲测
 
 ### ① Q11：产品合同 vs 尺的 mutation coverage，分开记
