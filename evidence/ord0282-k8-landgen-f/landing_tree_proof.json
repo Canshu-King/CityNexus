@@ -1,0 +1,108 @@
+{
+ "what": "ORD-0282 第一段：落地代 45b0a5e2 独立导出 + 那一格在不在（先量的部分）",
+ "lane": "F 8ccd71d8",
+ "began_at": "2026-09-25T05:50:43+08:00",
+ "generated_at": "2026-09-25T05:51:58+08:00",
+ "criterion_1_tree": {
+  "branch": "mirror/integration-frontend-apple-pass1",
+  "mirror_tip_first_read": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "expected": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "equal": true,
+  "commit_tree": "039e5eafa260a6c30dc186947c1c1d1f0145a8a1",
+  "parents": [
+   "63b7702f47917be6da98b29e5a56a6646891184b"
+  ],
+  "candidate_ancestry": {
+   "candidate": "7c806fab58e872060cb5811ff96c770b40dad165",
+   "status": "diverged",
+   "ahead_by": 35,
+   "behind_by": 1
+  },
+  "source": "GitHub tarball（api.github.com/repos/…/tarball/<sha>，重定向到 codeload）",
+  "tarball_bytes": 50284763,
+  "tarball_sha256_16": "9fa38ba757b163e8",
+  "export_dir": "D:\\moodle\\_qoder_f_run\\e_0282_45b0a5e\\Canshu-King-CityNexus-45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "lane_worktrees_used": [],
+  "commander_export_reused": false
+ },
+ "criterion_1b_byte_proof": {
+  "backend/app/main.py": {
+   "in_export": true,
+   "bytes": 482850,
+   "export_blob_40": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "api_blob_40": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "equal": true
+  },
+  "backend/tests/test_qoder_ord0272_continuation.py": {
+   "in_export": true,
+   "bytes": 24562,
+   "export_blob_40": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "api_blob_40": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "equal": true
+  },
+  "backend/app/schemas.py": {
+   "in_export": true,
+   "bytes": 25591,
+   "export_blob_40": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "api_blob_40": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "equal": true
+  },
+  "contracts/openapi.yaml": {
+   "in_export": true,
+   "bytes": 106971,
+   "export_blob_40": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "api_blob_40": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "equal": true
+  },
+  "live_checks/audit_closure_coordinates_r3.py": {
+   "in_export": false
+  }
+ },
+ "expected_blob_checks": {
+  "main_py_landed_before_blob": {
+   "expected": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "observed": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "equal": true
+  },
+  "gate_file_candidate_blob": {
+   "candidate_7c806fa": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9",
+   "landed": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "same": false
+  }
+ },
+ "criterion_3_landing_symbols": {
+  "seam": {
+   "symbol": "_fill_plan_generation_receipts",
+   "hits_in_main": [],
+   "count": 0
+  },
+  "guard_line": {
+   "symbol": "IdempotencyKey.response_json.is_(None)",
+   "hits_in_main": [
+    4774
+   ],
+   "count": 1
+  },
+  "g9_cell": {
+   "symbol": "test_G9",
+   "hits": [],
+   "count": 0
+  },
+  "ord0272_test_files": [
+   "test_qoder_ord0272_continuation.py"
+  ]
+ },
+ "criterion_6_second_observer_prereq": {
+  "expected_blob_40": "fc35335aadffb8f0de6f8030e9fc5a747f24f463",
+  "export_blob_40": null,
+  "equal": false,
+  "bytes": null
+ },
+ "discipline": {
+  "demo_reset_calls": 0,
+  "user_dbs_touched": [],
+  "credentials_printed": 0,
+  "refs_written": 0,
+  "lane_worktrees_used": 0
+ }
+}
