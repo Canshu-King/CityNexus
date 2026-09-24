@@ -1,0 +1,151 @@
+{
+ "at": "2026-09-24T08:46:01+08:00",
+ "segment": "segment3",
+ "lane": "HARNESS d291c9dc",
+ "subject": "landed generation c79e2b4f4efe414dba22a071a7136ae10b5c84aa as served from disk, measured on my own face after the 02:2x-02:3x blue-screen reboot",
+ "ruler": {
+  "file": "tools/ord0263_verifier_v3.py",
+  "bytes": 21703,
+  "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "promised": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "unchanged_so_far": true
+ },
+ "files_requested": 11,
+ "proven_by_40char_readback": 11,
+ "not_proven": [],
+ "older_segments_untouched": true,
+ "rows": [
+  {
+   "local_file": "ord0263_capture_landedgen_c79e2b4.json",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_capture_landedgen_c79e2b4.json",
+   "bytes": 14396,
+   "blob40": "dc4e9c060961796ab5070defa8aad7e63ffee088",
+   "readback_status": 200,
+   "readback_bytes": 14396,
+   "readback_blob40": "dc4e9c060961796ab5070defa8aad7e63ffee088",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 14396 | remote size 14396 | sha1 dc4e9c060961796a"
+  },
+  {
+   "local_file": "ord0263_verdict_ord0263_capture_landedgen_c79e2b4.json",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_verdict_ord0263_capture_landedgen_c79e2b4.json",
+   "bytes": 6267,
+   "blob40": "c7a745e34c14dc034d36dac811c064154ef0f25c",
+   "readback_status": 200,
+   "readback_bytes": 6267,
+   "readback_blob40": "c7a745e34c14dc034d36dac811c064154ef0f25c",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 6267 | remote size 6267 | sha1 c7a745e34c14dc03"
+  },
+  {
+   "local_file": "ord0263_landedgen_readings.jsonl",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_landedgen_readings.jsonl",
+   "bytes": 7066,
+   "blob40": "9318cfa7c653fea80b63520e78b6daf71e098c81",
+   "readback_status": 200,
+   "readback_bytes": 7066,
+   "readback_blob40": "9318cfa7c653fea80b63520e78b6daf71e098c81",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 7066 | remote size 7066 | sha1 9318cfa7c653fea8"
+  },
+  {
+   "local_file": "ord0263_landedgen_stage_manifest.json",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_landedgen_stage_manifest.json",
+   "bytes": 1683,
+   "blob40": "59a2c34c6d4adf077dc14d7c88afd13a817ade20",
+   "readback_status": 200,
+   "readback_bytes": 1683,
+   "readback_blob40": "59a2c34c6d4adf077dc14d7c88afd13a817ade20",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 1683 | remote size 1683 | sha1 59a2c34c6d4adf07"
+  },
+  {
+   "local_file": "ord0263_close_surface_receipt_postreboot.json",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_close_surface_receipt_postreboot.json",
+   "bytes": 1842,
+   "blob40": "f12dcee865905614a48ae1fed09cf60124fc60a9",
+   "readback_status": 200,
+   "readback_bytes": 1842,
+   "readback_blob40": "f12dcee865905614a48ae1fed09cf60124fc60a9",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 1842 | remote size 1842 | sha1 f12dcee865905614"
+  },
+  {
+   "local_file": "ord0263_junk_html_postreboot.log",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_junk_html_postreboot.log",
+   "bytes": 595,
+   "blob40": "726a80f8366984ad13cbb6011ff07f7bc0d981f2",
+   "readback_status": 200,
+   "readback_bytes": 595,
+   "readback_blob40": "726a80f8366984ad13cbb6011ff07f7bc0d981f2",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 595 | remote size 595 | sha1 726a80f8366984ad"
+  },
+  {
+   "local_file": "ord0263_junk_empty.log",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_junk_empty.log",
+   "bytes": 494,
+   "blob40": "be91103703423de65f0043eb58021a9f0297edcd",
+   "readback_status": 200,
+   "readback_bytes": 494,
+   "readback_blob40": "be91103703423de65f0043eb58021a9f0297edcd",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 494 | remote size 494 | sha1 be91103703423de6"
+  },
+  {
+   "local_file": "ord0263_junk_nonjson.log",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_junk_nonjson.log",
+   "bytes": 584,
+   "blob40": "f08cfc446819f15e8347daae8c269a41123a65a4",
+   "readback_status": 200,
+   "readback_bytes": 584,
+   "readback_blob40": "f08cfc446819f15e8347daae8c269a41123a65a4",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 584 | remote size 584 | sha1 f08cfc446819f15e"
+  },
+  {
+   "local_file": "ord0263_origin_state_answered_health_postreboot.log",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_origin_state_answered_health_postreboot.log",
+   "bytes": 5002,
+   "blob40": "08053067a0a3f14d56387f0a3e8eacbf89fc7b86",
+   "readback_status": 200,
+   "readback_bytes": 5002,
+   "readback_blob40": "08053067a0a3f14d56387f0a3e8eacbf89fc7b86",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 5002 | remote size 5002 | sha1 08053067a0a3f14d"
+  },
+  {
+   "local_file": "ord0263_origin_state_fully_silent_postreboot.log",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_origin_state_fully_silent_postreboot.log",
+   "bytes": 7669,
+   "blob40": "bc61ef821fe3cd3bbf9a61ead97666c7a11702fb",
+   "readback_status": 200,
+   "readback_bytes": 7669,
+   "readback_blob40": "bc61ef821fe3cd3bbf9a61ead97666c7a11702fb",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 7669 | remote size 7669 | sha1 bc61ef821fe3cd3b"
+  },
+  {
+   "local_file": "tools/build_landedgen_capture.py",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/build_landedgen_capture.py",
+   "bytes": 13834,
+   "blob40": "d660aeb074657146e25911b9c9bb85b21f896490",
+   "readback_status": 200,
+   "readback_bytes": 13834,
+   "readback_blob40": "d660aeb074657146e25911b9c9bb85b21f896490",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 13834 | remote size 13834 | sha1 d660aeb074657146"
+  }
+ ]
+}
