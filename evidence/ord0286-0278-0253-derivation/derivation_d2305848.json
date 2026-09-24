@@ -1,0 +1,100 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0286 (D candidate review/0278-0253-on-45b0a5e; 0278 and 0253 signed SEPARATELY per the order)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T06:45+08:00",
+ "disclosure_note": {
+  "rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE",
+  "hits": []
+ },
+ "tip_identity_per_corrected_criterion": {
+  "tip_i_read_first_myself": "0671704546f9c9ea1d1b57627b059124c7800803",
+  "method": "GET /git/ref/heads/review%2F0278-0253-on-45b0a5e at 06:4x, before any export",
+  "not_used": "f86d24e976d9b4309f4005b6af5bd31f97ea7524 (D self-reported; the commander already published a was/now erratum for it)",
+  "mirror_tip_read_before_export": "45b0a5e281cae9c37715173afd3ac5778f309ca7"
+ },
+ "ancestry_self_read": {
+  "parents_of_tip": [
+   "2d3b2f63fca1fbe860e892044b6a4c1b6fc052a8"
+  ],
+  "tip_tree": "84697460898a86d1d09134673b6099584c5bb0b1",
+  "compare_45b0a5e2...tip": {
+   "status": "diverged/ahead",
+   "ahead_by": 13,
+   "behind_by": 0,
+   "total_commits": 13
+  },
+  "files_changed": 16,
+  "product_e2e_files": 8,
+  "review_tools_files": 8,
+  "note": "D reported 11 ahead; I measure 13 - the branch moved again between her delivery and my read (normal for an active branch); my tip is what I verified"
+ },
+ "tree_source": {
+  "github_tarball_bytes": 50310100,
+  "junction": "cmdr_ref node_modules (package.json 3bdc4709 equal to landed)"
+ },
+ "gate_runs": {
+  "run_shape": {
+   "mode": "CITYNEXUS_E2E_AUTHORITATIVE=1",
+   "ports": "4893/8893",
+   "db": "sqlite:///./_ord0286_06717045_8893.db (throwaway _*.db with run id, fresh-or-no-run)",
+   "run_id": "ord0286_06717045_8893",
+   "ai": "disabled",
+   "reuseExistingServer": false,
+   "DEEPSEEK_API_KEY": "unset in-process"
+  },
+  "collection": "8 tests in 3 files (7 gate nodes + 1 real-seed setup)",
+  "result": "8 passed (38.2s), rc=0",
+  "ord0278_nodes": {
+   "spec": "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+   "nodes": [
+    "positive-the-resume-request-carries-both-keys GREEN",
+    "negative-no-marker-sends-nothing GREEN",
+    "negative-off-page-sends-nothing GREEN",
+    "negative-refused-keeps-the-marker-and-says-whose-words-these-are GREEN"
+   ],
+   "derived_result_0278": "GATE_GREEN_4_4 (all four 0278 nodes GREEN on tip 06717045)"
+  },
+  "ord0253_nodes": {
+   "spec": "frontend/e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+   "nodes": [
+    "both-legs-of-one-intent-share-one-key GREEN",
+    "each-intent-mints-a-fresh-key GREEN",
+    "a-burst-consumes-no-key GREEN"
+   ],
+   "derived_result_0253": "GATE_GREEN_3_3 (all three 0253 nodes GREEN on tip 06717045)"
+  },
+  "provenance": {
+   "authoritative": true,
+   "runId": "ord0286_06717045_8893",
+   "ai": "disabled",
+   "reuseExistingServer": false
+  },
+  "readings_written_by_the_gate": [
+   "reports/ord0253-both-legs-reading.json",
+   "reports/ord0253-burst-reading.json",
+   "reports/ord0253-fresh-per-intent-reading.json"
+  ]
+ },
+ "separate_signing": {
+  "0278": "GATE_GREEN_4_4 on 06717045",
+  "0253": "GATE_GREEN_3_3 on 06717045",
+  "combined_verdict_refused": "yes - signed separately as ordered"
+ },
+ "shared_files_note": {
+  "5_of_8_gate_files_differ_from_v6_and_landed": "(owner spec, journeyContinuation, V8Experience, PlanWithAiSheet differ; sealed-failure spec identical) - per Q24 the v6 9/9 kills do NOT transfer to this branch; D arms them here (review/ord0278_0253_kill_arms.py exists on the branch), and the kill rerun on THIS generation is the remaining piece if the order demands it"
+ },
+ "mutation_note": {
+  "status": "D arms published on the branch (review/ord0278_0253_kill_arms.py, 280-line diff added); the order criterion 4 says sign derived_result per receipt WITH (sha,nodeid,shape) - I have not yet been given a mutation RECEIPT for this branch, only the arm script",
+  "consequence": "gate faces signed GREEN above; any kill claims remain UNPROVEN until a receipt with per-arm rounds lands"
+ },
+ "evidence_class": "REAL_EXECUTION_ON_CANDIDATE_TIP (06717045, my own first read)",
+ "discipline": {
+  "services_started": "playwright webServer two one-shot servers 4893/8893, torn down by the run",
+  "user_dbs_touched": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "throwaway_db": "_ord0286_06717045_8893.db",
+  "network": "GitHub GET + one PUT (this receipt)"
+ }
+}
