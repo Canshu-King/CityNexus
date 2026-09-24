@@ -90,6 +90,26 @@ def main() -> int:
                     "sha256": hashlib.sha256(blob).hexdigest(),
                 }
             )
+        # The manifest is written after the green round, so HEAD has moved on by then.  Say how far,
+        # and say it as a measurement: what matters is whether anything a triple points at moved.
+        head_now = subprocess.run(
+            "git rev-parse HEAD", cwd=a.root, capture_output=True, text=True, shell=True
+        ).stdout.strip()
+        after_round = subprocess.run(
+            f'git diff --name-status {round_receipt["candidate_tip"]} {head_now}',
+            cwd=a.root,
+            capture_output=True,
+            text=True,
+            shell=True,
+        ).stdout.strip().splitlines()
+        frontend_after_round = [line for line in after_round if "\tfrontend/" in line]
+        manifest["post_tip_delta"] = {
+            "head_at_publish": head_now,
+            "commits_after_the_green_round": after_round,
+            "frontend_files_after_the_green_round": frontend_after_round,
+            "reading": "everything added after the green-round tip is evidence tooling; no file a "
+            f"triple points at changed ({len(frontend_after_round)} frontend files)",
+        }
         Path(a.manifest).write_text(
             json.dumps(manifest, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n"
         )
@@ -138,6 +158,12 @@ def main() -> int:
         f"`{round_receipt['candidate_tip'][:9]}…`。两者之间 `git diff --name-status` 只有收据生成器 "
         f"`review/ord0269_0273_gate_round.py` 一行，**被测字节（产品 + spec）逐字节相同** —— 这条是跑出来的，不是声明的。"
     )
+    if a.manifest:
+        delta = manifest["post_tip_delta"]
+        add(
+            f"- 发帖时的分支尖：`{delta['head_at_publish']}`；绿轮之后新增 {len(delta['commits_after_the_green_round'])} "
+            f"个文件，其中 `frontend/` 命中 **{len(delta['frontend_files_after_the_green_round'])} 个** —— 三元组指向的字节一件没动。"
+        )
     add("")
     add("**本轮顺手修掉的一处真产品缺陷（要你单开一行的那件）**")
     add("")
@@ -154,6 +180,16 @@ def main() -> int:
     add(
         f"- 门自证的两处「自己骗自己」（都已修并具名）：R-6 原本只 `toHaveCount(0)` 断缺席（变异体 1.3s 混过 → 现在先等具名句渲染，"
         f"同一枚变异体 16.2s 红）；反突变驱动在 `run_spec.py` 截断的 90 行控制台里读自己的运行（四红被判成 BASELINE_RED → 改读 run-<id>.log 全文）。"
+    )
+    add("")
+    schema = round_receipt.get("R_SCHEMA_01_class", {})
+    add(
+        f"**R-SCHEMA-01 自证（取自收据）**：`{schema.get('rule', 'NOT_IN_RECEIPT')}` —— 行来源 "
+        f"`{schema.get('row_source', '?')}`；未使用 {schema.get('not_used', ['?'])}；结论只依赖 "
+        f"`{schema.get('conclusions_depend_on', '?')}` ⇒ {schema.get('therefore', '?')}。"
+    )
+    add(
+        f"写作口径：`{round_receipt.get('publisher_refusal_writing_rule', '?')}`"
     )
     add("")
     add("归属与口径（B-1）：`claimed_result` 全是我自宣；`derived_result` / direct-red / collateral 一律 `WRITTEN_BY_VERIFIER`。")
