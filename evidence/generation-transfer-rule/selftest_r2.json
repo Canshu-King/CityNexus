@@ -1,0 +1,153 @@
+{
+ "schema": "CNX_GENERATION_TRANSFER_SELFTEST_V1",
+ "rule": "GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1",
+ "ruling": "arbiter Q24 = (1), 2026-09-25T04:0x+08, in the designated window",
+ "gen_a": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "gen_b": "dcae1bc964125c3a975916f6bf667794cc19622a",
+ "cells_under_test": {
+  "positive_identical_file": {
+   "cell": "pos_transferable",
+   "verdict": "TRANSFERABLE",
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": []
+  },
+  "negative_changed_file": {
+   "cell": "neg_changed",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "cited": {
+    "backend/app/main.py": {
+     "at_c79e2b4f4": "b1f12abff8ea4811bf4d8d7d506be717974fc932",
+     "at_dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": [
+    "backend/app/main.py"
+   ]
+  },
+  "missing_side": {
+   "cell": "neg_only_one_generation",
+   "verdict": "CITED_BLOB_MISSING",
+   "cited": {
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "at_c79e2b4f4": null,
+     "at_dcae1bc96": "efa783397e6105ca8f15be9a5701e60e5ace0296"
+    }
+   },
+   "errors": {
+    "backend/tests/test_qoder_ord0272_continuation.py": "HTTP_404"
+   },
+   "missing": [
+    "backend/tests/test_qoder_ord0272_continuation.py"
+   ],
+   "differ": []
+  },
+  "mixed_pair": {
+   "cell": "mixed_pair",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    },
+    "backend/app/main.py": {
+     "at_c79e2b4f4": "b1f12abff8ea4811bf4d8d7d506be717974fc932",
+     "at_dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": [
+    "backend/app/main.py"
+   ]
+  },
+  "no_citations": {
+   "cell": "no_citations",
+   "verdict": "CITED_BLOB_MISSING",
+   "cited": {},
+   "why": "NO_CITED_FILES"
+  },
+  "killer_near_miss": {
+   "cell": "killer_near_miss",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb600"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ]
+  },
+  "killer_prefix_only": {
+   "cell": "killer_prefix_only",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ]
+  },
+  "control_identical_pair": {
+   "cell": "control_identical_pair",
+   "verdict": "TRANSFERABLE",
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": []
+  },
+  "killer_transport_throw": {
+   "cell": "killer_transport_throw",
+   "verdict": "CITED_BLOB_MISSING",
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": null,
+     "at_dcae1bc96": null
+    }
+   },
+   "errors": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": null
+   },
+   "missing": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "differ": []
+  }
+ },
+ "checks": {
+  "positive_identical_file_is_TRANSFERABLE": true,
+  "negative_changed_file_is_NOT_TRANSFERABLE": true,
+  "missing_side_is_CITED_BLOB_MISSING_not_pass": true,
+  "one_changed_file_poisons_the_whole_cell": true,
+  "cell_citing_nothing_fails_closed": true,
+  "K1_one_hex_different_is_NOT_TRANSFERABLE": true,
+  "K2_prefix_equal_but_shorter_is_NOT_TRANSFERABLE": true,
+  "K3_identical_pair_control_stays_TRANSFERABLE": true,
+  "K4_missing_side_reader_is_NOT_transferable": true,
+  "K5_transport_exception_is_CITED_BLOB_MISSING_not_a_crash_not_a_pass": true
+ },
+ "derived_result": "SELFTEST_ALL_GREEN",
+ "note": "Verdicts are read back from the GitHub contents API per (path, ref); nothing here is a literal PASS.  A cell that cannot show both sides is CITED_BLOB_MISSING, never TRANSFERABLE."
+}
