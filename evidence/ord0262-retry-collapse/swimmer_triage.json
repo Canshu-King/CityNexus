@@ -1,0 +1,80 @@
+{
+ "what": "A/B 那条候选独有红的分诊（聚焦 N 轮 × 两棵树，与全量逐轮读数并排）",
+ "generated_at": "2026-09-24T02:28:26+08:00",
+ "nodeid": "tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one",
+ "focused_rounds": 3,
+ "trees": {
+  "candidate_3093eea": {
+   "full_sha": "3093eea773c79fa00744fe72d1f2c43b4d0bd75e",
+   "rounds": [
+    {
+     "round": 1,
+     "exit_code": 0,
+     "seconds": 2.5,
+     "summary": "1 passed, 2 warnings in 1.67s",
+     "red": false
+    },
+    {
+     "round": 2,
+     "exit_code": 0,
+     "seconds": 1.6,
+     "summary": "1 passed, 2 warnings in 0.98s",
+     "red": false
+    },
+    {
+     "round": 3,
+     "exit_code": 0,
+     "seconds": 1.7,
+     "summary": "1 passed, 2 warnings in 0.99s",
+     "red": false
+    }
+   ],
+   "red_rounds": 0
+  },
+  "base_d2665e2": {
+   "full_sha": "d2665e25855aeb265329266831983de42321697d",
+   "rounds": [
+    {
+     "round": 1,
+     "exit_code": 0,
+     "seconds": 2.0,
+     "summary": "1 passed, 2 warnings in 1.30s",
+     "red": false
+    },
+    {
+     "round": 2,
+     "exit_code": 0,
+     "seconds": 1.7,
+     "summary": "1 passed, 2 warnings in 1.05s",
+     "red": false
+    },
+    {
+     "round": 3,
+     "exit_code": 0,
+     "seconds": 1.7,
+     "summary": "1 passed, 2 warnings in 1.03s",
+     "red": false
+    }
+   ],
+   "red_rounds": 0
+  }
+ },
+ "whole_suite_context": {
+  "candidate_per_round_red": [
+   8,
+   8,
+   9
+  ],
+  "baseline_per_round_red": [
+   8,
+   8,
+   8
+  ],
+  "candidate_union_size": 9,
+  "candidate_always_red_size": 8,
+  "note": "全量里它只在候选的 3 轮中出现 1 轮 ⇒ union 9 > always 8"
+ },
+ "command": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m pytest tests/test_qoder_ord224_g3_generation_measurement.py::test_shape_a_terminal_job_then_five_requests_is_two_generations_not_one -q --no-header -p no:cacheprovider --tb=line",
+ "verdict": "BATCH_SENSITIVE / NOT_A_REGRESSION：聚焦轮里不是候选恒红 ⇒ 它不满足'系统性回归'的形状",
+ "rule": "只有『候选每轮都红且基线每轮都不红』才允许叫回归（ORD-0168 三分类：具名门/批次敏感/回归）"
+}
