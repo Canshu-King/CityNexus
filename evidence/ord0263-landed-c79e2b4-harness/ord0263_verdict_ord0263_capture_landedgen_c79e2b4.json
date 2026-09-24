@@ -1,0 +1,176 @@
+{
+ "at": "2026-09-24T08:43:44+08:00",
+ "capture": "ord0263_capture_landedgen_c79e2b4.json",
+ "capture_subject": "LANDED generation c79e2b4f4efe414dba22a071a7136ae10b5c84aa as served from disk, re-measured on a fresh post-reboot face after the 02:2x-02:3x blue screen",
+ "verdicts_computed_from_measured_fields": {
+  "S1_live": {
+   "verdict": "GREEN"
+  },
+  "V1_origin_error_5xx": {
+   "verdict": "GREEN",
+   "measured": {
+    "http_status": 500,
+    "network_words": false,
+    "names_service": true,
+    "hands_over_snapshot": true,
+    "navigator_onLine": true,
+    "retry_door_in_text": true
+   },
+   "rule": "answered non-2xx + snapshot: must NAME the service AND HAND OVER the snapshot AND carry no network word"
+  },
+  "V1_vacuity_witness": {
+   "verdict": "GREEN",
+   "measured": {
+    "network_words": false,
+    "names_service": true,
+    "hands_over_snapshot": true,
+    "note": ""
+   },
+   "rule": "an absent sentence is not a classification; only 网络词=0 且 服务词=1 且 快照词=1 counts"
+  },
+  "V2_no_answer": {
+   "verdict": "GREEN",
+   "measured": {
+    "fetch_thrown": true,
+    "settled_within_deadline": true,
+    "seconds_to_settle": 1.2,
+    "classified_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "retry_door": true,
+    "still_on_loading_skeleton": false,
+    "hands_over_snapshot": true
+   },
+   "rule": "no answer at all: bounded read + its own label + snapshot handed over + a door"
+  },
+  "V3_distinctness": {
+   "verdict": "GREEN",
+   "measured": {
+    "s2_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "s3_label": "NETWORK_UNREACHABLE_WITH_SNAPSHOT",
+    "same_sentence": false,
+    "s3_unclassified_skeleton": false
+   },
+   "rule": "the two arms must not collapse into one outcome; a skeleton is not a classification"
+  },
+  "V4_silent_read_answered_health": {
+   "verdict": "GREEN",
+   "measured": {
+    "read_never_answered": true,
+    "health_status": 500,
+    "settled_within_deadline": true,
+    "classified_label": "ORIGIN_ERROR_WITH_SNAPSHOT",
+    "network_words": false,
+    "seconds_to_settle": 12.009
+   },
+   "rule": "read silent + health answered => ORIGIN_ERROR_WITH_SNAPSHOT, bounded, never called a network failure"
+  },
+  "V5_origin_invalid_response": {
+   "verdict": "GREEN",
+   "measured": {
+    "shapes_total": 3,
+    "green": 3,
+    "red": 0,
+    "not_measured": 0,
+    "red_shapes": [],
+    "per_shape_conditions": {}
+   },
+   "rule": "HTML / empty / not-JSON are three readings, not one: any shape that collapses is RED",
+   "rows": [
+    {
+     "shape": "200_html",
+     "verdict": "GREEN",
+     "measured": {
+      "shape": "200_html",
+      "answered_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "body_bytes": 1200,
+      "rendered_attribution": {
+       "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+       "evidence_kind": "HTTP_RESPONSE",
+       "http_status": "200",
+       "source_layer": "RUNTIME",
+       "cached_copy_present": "true",
+       "retryable": "true"
+      },
+      "evidence_kind_keeps_HTTP": true,
+      "http_status_carried": true,
+      "reason_not_network": true,
+      "layer_not_transport": true,
+      "sentence_denies_the_answer": false,
+      "cached_copy_matches_measured_rows": true,
+      "measured_snapshot_rows": 1
+     },
+     "failed_conditions": [],
+     "rule": "answered 2xx with an unparseable body: the HTTP-response fact must survive every column and the sentence may not claim nothing answered"
+    },
+    {
+     "shape": "200_empty",
+     "verdict": "GREEN",
+     "measured": {
+      "shape": "200_empty",
+      "answered_status": 200,
+      "content_type": "application/json",
+      "body_bytes": 0,
+      "rendered_attribution": {
+       "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+       "evidence_kind": "HTTP_RESPONSE",
+       "http_status": "200",
+       "source_layer": "RUNTIME",
+       "cached_copy_present": "true",
+       "retryable": "true"
+      },
+      "evidence_kind_keeps_HTTP": true,
+      "http_status_carried": true,
+      "reason_not_network": true,
+      "layer_not_transport": true,
+      "sentence_denies_the_answer": false,
+      "cached_copy_matches_measured_rows": true,
+      "measured_snapshot_rows": 1
+     },
+     "failed_conditions": [],
+     "rule": "answered 2xx with an unparseable body: the HTTP-response fact must survive every column and the sentence may not claim nothing answered"
+    },
+    {
+     "shape": "200_nonjson",
+     "verdict": "GREEN",
+     "measured": {
+      "shape": "200_nonjson",
+      "answered_status": 200,
+      "content_type": "text/plain; charset=utf-8",
+      "body_bytes": 33,
+      "rendered_attribution": {
+       "attribution_reason": "ORIGIN_INVALID_RESPONSE",
+       "evidence_kind": "HTTP_RESPONSE",
+       "http_status": "200",
+       "source_layer": "RUNTIME",
+       "cached_copy_present": "true",
+       "retryable": "true"
+      },
+      "evidence_kind_keeps_HTTP": true,
+      "http_status_carried": true,
+      "reason_not_network": true,
+      "layer_not_transport": true,
+      "sentence_denies_the_answer": false,
+      "cached_copy_matches_measured_rows": true,
+      "measured_snapshot_rows": 1
+     },
+     "failed_conditions": [],
+     "rule": "answered 2xx with an unparseable body: the HTTP-response fact must survive every column and the sentence may not claim nothing answered"
+    }
+   ]
+  }
+ },
+ "derived_result": "ALL_GREEN",
+ "note": "v3 adds only the fifth arm; the six verdicts above the fifth are produced by the same v2 code paths, byte-compared in the selftest",
+ "ruler_blob_before": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+ "ruler_blob_after": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+ "ruler_unchanged_across_this_run": true,
+ "self_limiting_sentence": "UNKNOWN_FAILURE prohibition = contractually satisfied by direct landed-generation observations; v3 has no dedicated UNKNOWN_FAILURE mutation killer; verifier coverage debt transferred to instrument maintenance.",
+ "ruler_before_run": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+ "ruler_after_run": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+ "per_shape_reason_read_from_the_capture": {
+  "200_html": "ORIGIN_INVALID_RESPONSE",
+  "200_empty": "ORIGIN_INVALID_RESPONSE",
+  "200_nonjson": "ORIGIN_INVALID_RESPONSE"
+ },
+ "no_catch_all_reason_in_any_shape": true
+}
