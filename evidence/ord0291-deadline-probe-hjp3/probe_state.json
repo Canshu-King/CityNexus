@@ -1,0 +1,181 @@
+{
+ "source_asset": {
+  "path": "D:\\moodle\\_hjp3_0276_0925\\dist_frozen\\assets\\index-CtuiCkKf.js",
+  "bytes": 1248629,
+  "sha256": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+  "literal": "12e3",
+  "literal_offset": {
+   "char_index": 271498,
+   "byte_offset": 271498,
+   "char_eq_byte": true
+  },
+  "context": "cy:e,maximumFractionDigits:Vv(e)}).format(t/$v(e))}const pb=12e3,xd=pb/1e3;class dS extends Error{co"
+ },
+ "X": {
+  "dist": "D:\\moodle\\_hjp3_0291_0925\\dist_X",
+  "asset_sha256": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+  "asset_bytes": 1248629,
+  "preflight": {
+   "files": 38,
+   "nlink_gt1": 0,
+   "referenced_assets": [
+    "index-CtuiCkKf.js"
+   ],
+   "assets_present": [
+    [
+     "index-CtuiCkKf.js",
+     true
+    ]
+   ]
+  }
+ },
+ "Xhalf": {
+  "dist": "D:\\moodle\\_hjp3_0291_0925\\dist_Xhalf",
+  "asset_sha256": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed",
+  "asset_bytes": 1248629,
+  "preflight": {
+   "files": 38,
+   "nlink_gt1": 0,
+   "referenced_assets": [
+    "index-CtuiCkKf.js"
+   ],
+   "assets_present": [
+    [
+     "index-CtuiCkKf.js",
+     true
+    ]
+   ]
+  }
+ },
+ "patch": {
+  "before": "12e3",
+  "after": "6e03",
+  "offset": 271498,
+  "ms_before": 12000,
+  "ms_after": 6000,
+  "occurrences_of_before_literal": 1,
+  "why_equal_length": "a same-length literal keeps every other byte offset valid, so the only difference between arms is the deadline value"
+ },
+ "faces": {
+  "X": {
+   "port": 8487,
+   "pid": 35244,
+   "served_asset": "index-CtuiCkKf.js",
+   "served_sha256": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+   "matches_copy_on_disk": true,
+   "arm_expected_sha": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+   "sha_matches_expected_arm_value": true
+  },
+  "Xhalf": {
+   "port": 8486,
+   "pid": 6400,
+   "served_asset": "index-CtuiCkKf.js",
+   "served_sha256": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed",
+   "matches_copy_on_disk": true,
+   "arm_expected_sha": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed",
+   "sha_matches_expected_arm_value": true
+  }
+ },
+ "origin_pid_note": "silent origin lives inside this python process; it dies with it",
+ "write_faces": {
+  "X": {
+   "port": 8484,
+   "pid": 47756,
+   "adopted_existing": false,
+   "cmdline": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0291_0925\\dist_X --port 8484 --host 127.0.0.1 --strictPort",
+   "env": {
+    "CITYNEXUS_BACKEND_PORT": "8493"
+   },
+   "served_asset": "index-CtuiCkKf.js",
+   "served_sha256": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+   "arm_expected_sha": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+   "sha_matches_expected_arm_value": true,
+   "proxy_ownership": {
+    "mine_via_face": 200,
+    "foreign_via_face": 404,
+    "mine_direct_backend": 200,
+    "verdict": "PROXY_IS_MINE"
+   }
+  },
+  "Xhalf": {
+   "port": 8485,
+   "pid": 43976,
+   "adopted_existing": true,
+   "cmdline_matches_port_and_outdir": true,
+   "cmdline": "\"C:\\Program Files\\nodejs\\node.exe\" node_modules/vite/bin/vite.js preview --outDir D:/moodle/_hjp3_0291_0925/dist_Xhalf --port 8485 --host 127.0.0.1 --strictPort",
+   "served_asset": "index-CtuiCkKf.js",
+   "served_sha256": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed",
+   "arm_expected_sha": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed",
+   "sha_matches_expected_arm_value": true,
+   "proxy_ownership": {
+    "mine_via_face": 200,
+    "foreign_via_face": 404,
+    "mine_direct_backend": 200,
+    "verdict": "PROXY_IS_MINE"
+   }
+  }
+ },
+ "write_pair_note": "the only difference between the two write faces is the one 4-byte literal in their dist copies; both point at the same healthy backend :8493 and the same journey, so a write leg that moves in one arm and not the other is the constant",
+ "faces_extra": {
+  "8483": {
+   "arm": "X",
+   "port": 8483,
+   "pid": 47704,
+   "backend_port": 8596,
+   "served_asset": "index-CtuiCkKf.js",
+   "served_sha256": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+   "arm_expected_sha": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+   "sha_matches_expected_arm_value": true,
+   "cmdline": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0291_0925\\dist_X --port 8483 --host 127.0.0.1 --strictPort",
+   "proxy_ownership": {
+    "mine_via_face": 200,
+    "foreign_via_face": 404
+   }
+  },
+  "8482": {
+   "arm": "Xhalf",
+   "port": 8482,
+   "pid": 43644,
+   "backend_port": 8596,
+   "served_asset": "index-CtuiCkKf.js",
+   "served_sha256": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed",
+   "arm_expected_sha": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed",
+   "sha_matches_expected_arm_value": true,
+   "cmdline": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0291_0925\\dist_Xhalf --port 8482 --host 127.0.0.1 --strictPort",
+   "proxy_ownership": {
+    "mine_via_face": 200,
+    "foreign_via_face": 404
+   }
+  },
+  "8479": {
+   "arm": "X",
+   "port": 8479,
+   "pid": 17596,
+   "backend_port": 8598,
+   "served_asset": "index-CtuiCkKf.js",
+   "served_sha256": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+   "arm_expected_sha": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+   "sha_matches_expected_arm_value": true,
+   "cmdline": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0291_0925\\dist_X --port 8479 --host 127.0.0.1 --strictPort",
+   "proxy_ownership": {
+    "mine_via_face": 200,
+    "foreign_via_face": 404
+   }
+  },
+  "8478": {
+   "arm": "Xhalf",
+   "port": 8478,
+   "pid": 51244,
+   "backend_port": 8598,
+   "served_asset": "index-CtuiCkKf.js",
+   "served_sha256": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed",
+   "arm_expected_sha": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed",
+   "sha_matches_expected_arm_value": true,
+   "cmdline": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_0291_0925\\dist_Xhalf --port 8478 --host 127.0.0.1 --strictPort",
+   "proxy_ownership": {
+    "mine_via_face": 200,
+    "foreign_via_face": 404
+   }
+  }
+ }
+}
