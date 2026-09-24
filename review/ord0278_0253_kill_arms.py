@@ -180,6 +180,10 @@ def run(label: str, port: int, spec: str) -> dict:
     )
     out = proc.stdout + proc.stderr
     run_id = next((l.split("run_id=", 1)[1].split()[0] for l in out.splitlines() if l.startswith("run_id=")), "")
+    # The runner's id is `run293283`; the throwaway database it created is `_run293283.db`.  Naming a
+    # file that does not exist is a wrong coordinate, so build the name and then look for it.
+    db_name = f"_run{run_id[3:]}.db" if run_id.startswith("run") else "?"
+    db_seen = (RECEIPT_DIR.parent / db_name).exists()
     log_path = ROOT / f"review/run-{run_id}.log"
     text = log_path.read_text(encoding="utf-8", errors="replace") if run_id and log_path.exists() else out
     nodes: dict[str, str] = {}
@@ -201,7 +205,10 @@ def run(label: str, port: int, spec: str) -> dict:
     return {
         "label": label, "spec": spec, "exitCode": proc.returncode, "runId": run_id, "port": port,
         "log": log_path.name if run_id and log_path.exists() else "", "tallies": tallies,
-        "stackStarted": bool(tallies) and not missing, "missingNodes": missing, "nodes": nodes,
+        "db": db_name, "db_exists": db_seen,
+        # A stack that finished a spec but whose named throwaway database is not on disk did not run
+        # on the database the run_shape claims -- that reading is refused, not graded.
+        "stackStarted": bool(tallies) and not missing and db_seen, "missingNodes": missing, "nodes": nodes,
     }
 
 
@@ -372,7 +379,7 @@ def main() -> int:
                     f"cwd={ROOT.as_posix()}/frontend (the nodeid root above), whole owner spec {spec} with ONE "
                     f"guarded mutation live in {rel_to_root(path)}, 1 worker, mobile 390x844, "
                     f"command=python review/run_spec.py {spec} {attempt['port']}, "
-                    f"run_id={attempt['runId']}, fresh _run{attempt['runId']}.db, ports {attempt['port']}; "
+                    f"run_id={attempt['runId']}, fresh {attempt['db']}, ports {attempt['port']}; "
                     f"verdict taken from the `{name}` redSet below, log {attempt['log']}"
                 ),
             },
