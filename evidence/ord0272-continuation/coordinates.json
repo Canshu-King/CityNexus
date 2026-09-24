@@ -1,87 +1,85 @@
 {
  "what": "ORD-0272 候选与证据的具名坐标（每一枚都要求已外读成功）",
  "lane": "F 8ccd71d8",
- "generated_at": "2026-09-24T16:43:03+08:00",
+ "generated_at": "2026-09-24T16:44:01+08:00",
  "repo": "Canshu-King/CityNexus",
  "ref": "review/ord0272-continuation-f",
  "head40": "aa29612c855c10f1584a333cc19526066813b072",
  "parent40": "44b428da83e40abd6d2b770006cb88dc022cf2fd",
  "tree40": "d96c2974924d19831495f2945117d4221a1b6d62",
- "ls_remote_line": "",
- "ref_proven": false,
+ "ls_remote_line": "aa29612c855c10f1584a333cc19526066813b072\trefs/heads/review/ord0272-continuation-f",
+ "ref_proven": true,
  "candidate_blobs": {
   "backend/app/main.py": {
    "local_blob_sha1": "416ea4f210e967130710a900cdecd20e7a1b5eca",
    "recomputed_from_bytes": "416ea4f210e967130710a900cdecd20e7a1b5eca",
    "equal": true,
-   "github_http": "URLError",
-   "github_size": null,
-   "size_matches": false,
-   "readable": false
+   "github_http": 200,
+   "github_size": 482850,
+   "size_matches": true,
+   "readable": true
   },
   "backend/app/schemas.py": {
    "local_blob_sha1": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
    "recomputed_from_bytes": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
    "equal": true,
-   "github_http": "URLError",
-   "github_size": null,
-   "size_matches": false,
-   "readable": false
+   "github_http": 200,
+   "github_size": 25591,
+   "size_matches": true,
+   "readable": true
   },
   "backend/tests/test_qoder_ord0272_continuation.py": {
    "local_blob_sha1": "efa783397e6105ca8f15be9a5701e60e5ace0296",
    "recomputed_from_bytes": "efa783397e6105ca8f15be9a5701e60e5ace0296",
    "equal": true,
-   "github_http": "URLError",
-   "github_size": null,
-   "size_matches": false,
-   "readable": false
+   "github_http": 200,
+   "github_size": 24562,
+   "size_matches": true,
+   "readable": true
   },
   "contracts/openapi.yaml": {
    "local_blob_sha1": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
    "recomputed_from_bytes": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
    "equal": true,
-   "github_http": "URLError",
-   "github_size": null,
-   "size_matches": false,
-   "readable": false
+   "github_http": 200,
+   "github_size": 106971,
+   "size_matches": true,
+   "readable": true
   }
  },
  "published_files": {
   "evidence/ord0272-continuation/day1_receipt.json": {
-   "rc": 3,
+   "rc": 0,
    "tail": [
-    "GET evidence/ord0272-continuation/day1_receipt.json: URLError existing_sha=None",
-    "PUT -> URLError commit=<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)>"
+    "PUT -> 201 commit=2e4674822097",
+    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
+    "local bytes 21395 | remote size 21395 | sha1 e414c710430af052"
    ],
-   "proven": false
+   "proven": true
   },
   "evidence/ord0272-continuation/mutation_receipt.json": {
    "rc": 0,
    "tail": [
-    "PUT -> 201 commit=54473b68c7a6",
-    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
-    "local bytes 48522 | remote size 48522 | sha1 fb8d8f91e5a057fc"
+    "GET evidence/ord0272-continuation/mutation_receipt.json: 200 existing_sha=fb8d8f91e5",
+    "already identical - nothing to push"
    ],
-   "proven": true
+   "proven": false
   },
   "evidence/ord0272-continuation/ab_3x3.json": {
    "rc": 0,
    "tail": [
-    "PUT -> 201 commit=9d105e8be68c",
-    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
-    "local bytes 16126 | remote size 16126 | sha1 5678b6fa7b70d906"
+    "GET evidence/ord0272-continuation/ab_3x3.json: 200 existing_sha=5678b6fa7b",
+    "already identical - nothing to push"
    ],
-   "proven": true
+   "proven": false
   },
   "evidence/ord0272-continuation/swimmer_triage.json": {
    "rc": 0,
    "tail": [
-    "PUT -> 201 commit=a0061617c69c",
-    "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH",
-    "local bytes 13481 | remote size 13481 | sha1 a304be2ee40be11c"
+    "GET evidence/ord0272-continuation/swimmer_triage.json: 200 existing_sha=a304be2ee4",
+    "already identical - nothing to push"
    ],
-   "proven": true
+   "proven": false
   }
  },
  "baseline": {
