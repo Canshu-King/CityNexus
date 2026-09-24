@@ -1,0 +1,567 @@
+{
+ "at": "2026-09-25T05:49:35+08:00",
+ "order": "ORD-0274 B2c + B2b 候选批 · 自证格",
+ "lane": "B c01d72a3",
+ "cells": {
+  "1_ancestry": {
+   "candidate_tip": "853c54944a0b7ea2c7111867915566171650c564",
+   "parent": "1de4c250746c2ba998cea15a3adf7fd6c911b339",
+   "branch": "review/0274-b2c-b",
+   "required_base": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "parent_is_candidate_of_previous_cell": true,
+   "is_ancestor_rc": 0,
+   "authoritative_branch_moved_by_me": false,
+   "github_readback_line": "853c54944a0b7ea2c7111867915566171650c564\trefs/heads/review/0274-b2c-b"
+  },
+  "2_diff_boundary": {
+   "diffstat": "4 files changed, 116 insertions(+), 9 deletions(-)",
+   "files": [
+    "frontend/src/api/citynexus.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/lib/inFlightWrites.ts",
+    "frontend/src/main.tsx"
+   ],
+   "files_outside_frontend_src": [],
+   "this_commit_only": " 1 file changed, 15 insertions(+), 5 deletions(-)",
+   "write_domain_honoured": {
+    "touched_precache_structure": false,
+    "touched_0268_closed_cut": false,
+    "touched_business_logic_files": []
+   }
+  },
+  "3_generation_identity_is_a_byte_verdict": {
+   "ruler": {
+    "path": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\deploy_bundle_v2_draft_r4.py",
+    "blob_sha": "0686670743c079647aa678370aa5481562c4c0a8",
+    "extracted": [
+     "DECLARED_NO_PRECACHE",
+     "SW_REGISTER_RULE",
+     "_ord0277_generation_verdict",
+     "asset_refs",
+     "precache_urls",
+     "strip_js_comments",
+     "sw_register_verdict"
+    ],
+    "bytes_extracted": 8574
+   },
+   "selftest_arms_total": 15,
+   "selftest_arms_met": 15,
+   "arms": [
+    {
+     "arm": "F1_real_generations_both_green",
+     "expect": "GREEN",
+     "derived": "MET"
+    },
+    {
+     "arm": "F2_real_generations_bytes_differ",
+     "expect": "True",
+     "derived": "MET"
+    },
+    {
+     "arm": "F3_rename_only_is_not_a_content_change",
+     "expect": "True",
+     "derived": "MET"
+    },
+    {
+     "arm": "F3b_rename_still_moves_the_name_fingerprint",
+     "expect": "True",
+     "derived": "MET"
+    },
+    {
+     "arm": "F4_same_name_different_bytes_is_a_change",
+     "expect": "True",
+     "derived": "MET"
+    },
+    {
+     "arm": "F5_updateViaCache_all_in_bytes_is_RED",
+     "expect": "RED",
+     "derived": "MET"
+    },
+    {
+     "arm": "F6_good_call_in_a_comment_does_not_whiten_bad_code",
+     "expect": "RED",
+     "derived": "MET"
+    },
+    {
+     "arm": "F7_comment_claiming_all_does_not_blacken_good_code",
+     "expect": "GREEN",
+     "derived": "MET"
+    },
+    {
+     "arm": "F8_generation_without_any_registration_is_RED",
+     "expect": "RED",
+     "derived": "MET"
+    },
+    {
+     "arm": "F9_silent_second_chunk_is_not_a_defect",
+     "expect": "GREEN",
+     "derived": "MET"
+    },
+    {
+     "arm": "F10_unparseable_second_call_is_RED",
+     "expect": "RED",
+     "derived": "MET"
+    },
+    {
+     "arm": "F11a_RED_generation_is_refused_as_a_host",
+     "expect": "True",
+     "derived": "MET"
+    },
+    {
+     "arm": "F11b_GREEN_generation_is_not_refused",
+     "expect": "True",
+     "derived": "MET"
+    },
+    {
+     "arm": "F12_executed_equals_parsed_when_shas_agree",
+     "expect": "GREEN",
+     "derived": "MET"
+    },
+    {
+     "arm": "F13_one_differing_ref_is_RED",
+     "expect": "RED",
+     "derived": "MET"
+    }
+   ],
+   "rename_is_not_a_change": "F3 (same bytes, different file name) and F4 (same name, different bytes) both MET: a name can neither buy a 换代 nor hide one",
+   "the_previous_pair_was_a_rename": "the pair this lane used for the earlier 0274-SW delivery (dist_0274sw / dist_0274sw_gen2) has EQUAL content_fingerprint; it is superseded by a stand-in built from a real statement",
+   "committed_pair": {
+    "candidate_from_committed": {
+     "entry": [
+      "/assets/index-BhbHloNw.js"
+     ],
+     "entry_sha256": "a75c917775a3c7ed11f8807a02915ac32437100439731022c72175a300f3fd96",
+     "content_fingerprint": "9b10f8846b928e4fde2fd5bfe339f3e6b98d6885bc7a2850e09de554dad7bc50",
+     "generation_verdict": "GREEN"
+    },
+    "gen2b": {
+     "entry": [
+      "/assets/index-CEGoPIGb.js"
+     ],
+     "entry_sha256": "d3025c41c7a960e956336915e2b05b083ca69fd0d9f727ecbbf5f5b5bb9b9c8b",
+     "content_fingerprint": "419d9017dd6182ff08e529fd2c8ed50a06b5c3705b1b8805fceac480531e786f",
+     "generation_verdict": "GREEN"
+    }
+   }
+  },
+  "4_b2c_runtime": {
+   "receipt": "ord0274_b2c_runtime_fixed.json",
+   "post_hold_seconds": 10,
+   "window_seconds": 50,
+   "arms": {
+    "candidate": {
+     "verdict": "MET",
+     "expected": "MET",
+     "agrees": true,
+     "writes_started": 4,
+     "write_delivered": 4,
+     "write_undelivered": 0,
+     "writes_open_at_swap": 1,
+     "pending_marker_seen": true,
+     "document_loads": 2,
+     "gen_tag_at_end": "gen2-standin",
+     "executed_sha_equals_new_generation_bytes": true,
+     "why": "no reload while a write was open, the write's answer was delivered, and the still-open document reached the new generation's bytes without another user navigation"
+    },
+    "counter_eager": {
+     "verdict": "RED",
+     "expected": "RED",
+     "agrees": true,
+     "writes_started": 4,
+     "write_delivered": 3,
+     "write_undelivered": 1,
+     "writes_open_at_swap": 1,
+     "pending_marker_seen": false,
+     "document_loads": 2,
+     "gen_tag_at_end": "gen2-standin",
+     "executed_sha_equals_new_generation_bytes": true,
+     "why": "the document reloaded (or lost the answer) while the origin still held the write open"
+    },
+    "counter_manual": {
+     "verdict": "RED",
+     "expected": "RED",
+     "agrees": true,
+     "writes_started": 4,
+     "write_delivered": 4,
+     "write_undelivered": 0,
+     "writes_open_at_swap": 1,
+     "pending_marker_seen": true,
+     "document_loads": 1,
+     "gen_tag_at_end": null,
+     "executed_sha_equals_new_generation_bytes": false,
+     "why": "the open document never reached the new generation's bytes on its own (gen_tag=None, sha_match=False)"
+    },
+    "idle_control": {
+     "verdict": "MET",
+     "expected": "MET",
+     "agrees": true,
+     "writes_started": 0,
+     "write_delivered": 0,
+     "write_undelivered": 0,
+     "writes_open_at_swap": 0,
+     "pending_marker_seen": false,
+     "document_loads": 2,
+     "gen_tag_at_end": "gen2-standin",
+     "executed_sha_equals_new_generation_bytes": true,
+     "why": "with no write outstanding the same handover converged by itself, so the deferral is conditional and not the only behaviour"
+    }
+   },
+   "repetition": {
+    "second_sweep_run2": {
+     "candidate": "MET",
+     "counter_eager": "RED",
+     "counter_manual": "RED",
+     "idle_control": "MET"
+    },
+    "rejudged_first_sweep": {
+     "candidate": "MET",
+     "counter_eager": "RED",
+     "counter_manual": "RED",
+     "idle_control": "MET"
+    },
+    "verdict_flips_recorded_in_the_rejudge": {
+     "idle_control": {
+      "was": "RED",
+      "now": "MET"
+     }
+    }
+   }
+  },
+  "5_b2b_runtime": {
+   "receipts": [
+    "ord0274_b2b_runtime_v3.json",
+    "ord0274_b2b_runtime_v4.json"
+   ],
+   "arms": {
+    "candidate": {
+     "verdict": "MET",
+     "expected": "MET",
+     "agrees": true,
+     "step_before": "trial-step2-body",
+     "step_after": "trial-step2-body",
+     "step_storage_after": 2,
+     "step_preserved": true,
+     "all_named_values_equal": true,
+     "values": {
+      "city": {
+       "typed": "厦门",
+       "rendered_on_step": 1,
+       "rendered_after": "厦门",
+       "stored_after": "厦门",
+       "rendered_equal": true,
+       "stored_equal": true,
+       "still_the_typed_value": true
+      },
+      "startAt": {
+       "typed": "2026-10-05T08:30",
+       "rendered_on_step": 1,
+       "rendered_after": "2026-10-05T08:30",
+       "stored_after": "2026-10-05T08:30",
+       "rendered_equal": true,
+       "stored_equal": true,
+       "still_the_typed_value": true
+      },
+      "endAt": {
+       "typed": "2026-10-09T19:45",
+       "rendered_on_step": 1,
+       "rendered_after": "2026-10-09T19:45",
+       "stored_after": "2026-10-09T19:45",
+       "rendered_equal": true,
+       "stored_equal": true,
+       "still_the_typed_value": true
+      },
+      "partySize": {
+       "typed": "4",
+       "rendered_on_step": 2,
+       "rendered_after": "4",
+       "stored_after": 4,
+       "rendered_equal": true,
+       "stored_equal": true,
+       "still_the_typed_value": true
+      },
+      "budget": {
+       "typed": "4321",
+       "rendered_on_step": 2,
+       "rendered_after": "4321",
+       "stored_after": 4321,
+       "rendered_equal": true,
+       "stored_equal": true,
+       "still_the_typed_value": true
+      },
+      "specialRequirements": {
+       "typed": "需要无障碍通道 · B2b",
+       "rendered_on_step": 2,
+       "rendered_after": "需要无障碍通道 · B2b",
+       "stored_after": "需要无障碍通道 · B2b",
+       "rendered_equal": true,
+       "stored_equal": true,
+       "still_the_typed_value": true
+      }
+     },
+     "draft_present": true,
+     "bundle_move_by_bytes": true,
+     "target": "dist_0274gen2b",
+     "why": "step and every named value - city, both dates, partySize, budget, specialRequirements - came back per value on their own screens and in storage, into the new generation's bytes, with the draft still standing"
+    },
+    "counter_step_only": {
+     "verdict": "RED",
+     "expected": "RED",
+     "agrees": true,
+     "step_before": "trial-step2-body",
+     "step_after": "trial-step2-body",
+     "step_storage_after": 2,
+     "step_preserved": true,
+     "all_named_values_equal": false,
+     "values": {
+      "city": {
+       "typed": "厦门",
+       "rendered_on_step": 1,
+       "rendered_after": "厦门",
+       "stored_after": null,
+       "rendered_equal": true,
+       "stored_equal": false,
+       "still_the_typed_value": true
+      },
+      "startAt": {
+       "typed": "2026-10-05T08:30",
+       "rendered_on_step": 1,
+       "rendered_after": "2026-10-05T08:30",
+       "stored_after": null,
+       "rendered_equal": true,
+       "stored_equal": false,
+       "still_the_typed_value": true
+      },
+      "endAt": {
+       "typed": "2026-10-09T19:45",
+       "rendered_on_step": 1,
+       "rendered_after": "2026-10-09T19:45",
+       "stored_after": null,
+       "rendered_equal": true,
+       "stored_equal": false,
+       "still_the_typed_value": true
+      },
+      "partySize": {
+       "typed": "4",
+       "rendered_on_step": 2,
+       "rendered_after": "4",
+       "stored_after": null,
+       "rendered_equal": true,
+       "stored_equal": false,
+       "still_the_typed_value": true
+      },
+      "budget": {
+       "typed": "4321",
+       "rendered_on_step": 2,
+       "rendered_after": "4321",
+       "stored_after": null,
+       "rendered_equal": true,
+       "stored_equal": false,
+       "still_the_typed_value": true
+      },
+      "specialRequirements": {
+       "typed": "需要无障碍通道 · B2b",
+       "rendered_on_step": 2,
+       "rendered_after": "需要无障碍通道 · B2b",
+       "stored_after": null,
+       "rendered_equal": true,
+       "stored_equal": false,
+       "still_the_typed_value": true
+      }
+     },
+     "draft_present": true,
+     "bundle_move_by_bytes": true,
+     "target": "dist_0274b2b_steponly_t",
+     "why": "named values differ: city, startAt, endAt, partySize, budget, specialRequirements"
+    },
+    "counter_step_forced": {
+     "verdict": "RED",
+     "expected": "RED",
+     "agrees": true,
+     "step_before": "trial-step2-body",
+     "step_after": "trial-step1-body",
+     "step_storage_after": 1,
+     "step_preserved": false,
+     "all_named_values_equal": false,
+     "values": {
+      "city": {
+       "typed": "厦门",
+       "rendered_on_step": 1,
+       "rendered_after": null,
+       "stored_after": "厦门",
+       "rendered_equal": false,
+       "stored_equal": true,
+       "still_the_typed_value": false
+      },
+      "startAt": {
+       "typed": "2026-10-05T08:30",
+       "rendered_on_step": 1,
+       "rendered_after": null,
+       "stored_after": "2026-10-05T08:30",
+       "rendered_equal": false,
+       "stored_equal": true,
+       "still_the_typed_value": false
+      },
+      "endAt": {
+       "typed": "2026-10-09T19:45",
+       "rendered_on_step": 1,
+       "rendered_after": null,
+       "stored_after": "2026-10-09T19:45",
+       "rendered_equal": false,
+       "stored_equal": true,
+       "still_the_typed_value": false
+      },
+      "partySize": {
+       "typed": "4",
+       "rendered_on_step": 2,
+       "rendered_after": null,
+       "stored_after": 4,
+       "rendered_equal": false,
+       "stored_equal": true,
+       "still_the_typed_value": false
+      },
+      "budget": {
+       "typed": "4321",
+       "rendered_on_step": 2,
+       "rendered_after": null,
+       "stored_after": 4321,
+       "rendered_equal": false,
+       "stored_equal": true,
+       "still_the_typed_value": false
+      },
+      "specialRequirements": {
+       "typed": "需要无障碍通道 · B2b",
+       "rendered_on_step": 2,
+       "rendered_after": null,
+       "stored_after": "需要无障碍通道 · B2b",
+       "rendered_equal": false,
+       "stored_equal": true,
+       "still_the_typed_value": false
+      }
+     },
+     "draft_present": true,
+     "bundle_move_by_bytes": true,
+     "target": "dist_0274b2b_stepforced_t",
+     "why": "step did not come back: before={'active_marks': ['trial-step-2'], 'done_marks': ['trial-step-1'], 'visible_bodies': ['trial-step2-body'], 'from_storage': 2, 'on_screen': 'trial-step2-body'} after={'active_marks': ['trial-step-1'], 'done_marks': [], 'visible_bodies': ['trial-step1-body'], 'from_storage': 1, 'on_screen': 'trial-step1-body'}; the fields that therefore are not on any screen: ['budget', 'city', 'endAt', 'partySize', 'specialRequirements', 'startAt']"
+    }
+   },
+   "second_sweep_v4": {
+    "candidate": "MET",
+    "counter_step_only": "RED",
+    "counter_step_forced": "RED"
+   },
+   "counter_arm_shapes_shipped": {
+    "dist_0274b2b_steponly_t": {
+     "declared": {
+      "write_drops_draft": true,
+      "write_keeps_pair": false,
+      "read_ternary_intact": true
+     },
+     "shipped": {
+      "bundle": "index-DJdPoj_U.js",
+      "bundle_sha256": "17ed938b45292f98615c1963b62bd83135f58c1a60565d809370c061a2ad7d04",
+      "draft_writes_found": 1,
+      "write_keeps_pair": false,
+      "write_drops_draft": true,
+      "read_ternary_intact": true,
+      "advertises_tag": true
+     },
+     "mismatch": {}
+    },
+    "dist_0274b2b_stepforced_t": {
+     "declared": {
+      "write_drops_draft": false,
+      "write_keeps_pair": true,
+      "read_ternary_intact": false
+     },
+     "shipped": {
+      "bundle": "index-CISo-1ey.js",
+      "bundle_sha256": "20961880f37162de015ddb536add4ec24132bc0c0c38f3f34ec5d01c75f201d7",
+      "draft_writes_found": 1,
+      "write_keeps_pair": true,
+      "write_drops_draft": false,
+      "read_ternary_intact": false,
+      "advertises_tag": true
+     },
+     "mismatch": {}
+    }
+   },
+   "what_b2b_found_first": {
+    "artifact": "b2b_candidate_prefix_run.json",
+    "document_loads": 1,
+    "controllerchange_events": 2,
+    "executed_ref_after_swap": "/assets/index-zCtIwAVy.js",
+    "reading": "a document that was claimed DURING its own lifetime never converged: the guard read `controllerBefore` once at registration, and for a first visitor that value is null forever, so every later generation change returned at the same bail-out"
+   }
+  },
+  "6_non_regression": {
+   "receipt": "q274sw_regression_equivalents.json",
+   "reading": {
+    "A_equivalent": {
+     "online": {
+      "bundle": "/assets/index-ChOTTCvB.js",
+      "controller": "/v10-sw.js",
+      "registrations": [
+       {
+        "scope": "/",
+        "active": "/v10-sw.js",
+        "active_state": "activated",
+        "waiting": null,
+        "waiting_state": null,
+        "installing": null
+       }
+      ]
+     },
+     "offline": {
+      "nav": null,
+      "bundle": "/assets/index-ChOTTCvB.js",
+      "controlled": "/v10-sw.js",
+      "mounted": true,
+      "url": null,
+      "navigation": null
+     },
+     "same_generation_while_offline": true,
+     "answered_by_shell_offline": false,
+     "half_generation_mix": null
+    },
+    "B3_equivalent": {
+     "installed_generation_bundle": "/assets/index-BhbHloNw.js",
+     "after_swap_bundle": "/assets/index-CEGoPIGb.js",
+     "converged_within_one_navigation": true,
+     "product_marker_after_convergence": "1",
+     "offline_after_convergence": {
+      "bundle": "/assets/index-CEGoPIGb.js",
+      "controlled": "/v10-sw.js",
+      "mounted": true,
+      "navigation": null
+     },
+     "still_that_generation_offline": true,
+     "answered_offline": false
+    }
+   },
+   "note": "A-equivalent keeps its own generation offline; B3-equivalent converges inside one navigation across two byte-different generations and then keeps serving the new one offline"
+  },
+  "7_gates": {
+   "typecheck_rc": null,
+   "build_rc": null,
+   "precache_in_served_worker": null
+  },
+  "8_not_claimed": {
+   "derived_result_for": [
+    "B2",
+    "B2b",
+    "B2c",
+    "B3",
+    "A arm"
+   ],
+   "owner": "HJ-P1 (runtime verifier and instrument owner for 0274's B cells)"
+  }
+ },
+ "disclosed": [
+  "measured the first B2c candidate arm against a STALE dist (built before the B2c commit) and it read RED; that reading is superseded, not averaged, and the dist was rebuilt from the committed tree",
+  "my B2c judge counted a sample taken while the page was reloading as 'the probe navigated again', which turned a clean MET into RED; corrected, and the re-judge records the one verdict flip it caused",
+  "my first B2b counter-arms were built as CLIENTS; the restoring code is the INCOMING generation, so both read MET vacuously; rebuilt as targets and each arm's shipped bytes are now checked against its declaration",
+  "that rebuild also exposed a compound cut: the builder re-read the already-patched source inside the loop, so 'stepforced' carried 'steponly' too; both arms returning identical readings is how I caught it",
+  "my own regex reported '0 precache entries' for the served worker; that was a parser failure, so the count now comes from the ruler's own precache_urls",
+  "the earlier 0274-SW delivery's generation pair was a rename (equal content_fingerprint) - found by the Q20 judge, not by its author"
+ ]
+}
