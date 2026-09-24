@@ -1,0 +1,300 @@
+{
+ "schema": "CNX_GENERATION_TRANSFER_SELFTEST_V1",
+ "rule": "GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1",
+ "ruling": "arbiter Q24 = (1), 2026-09-25T04:0x+08, in the designated window",
+ "gen_a": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "gen_b": "dcae1bc964125c3a975916f6bf667794cc19622a",
+ "cells_under_test": {
+  "positive_identical_file": {
+   "cell": "pos_transferable",
+   "verdict": "TRANSFERABLE",
+   "claim_kind": "code_determined",
+   "why": null,
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": []
+  },
+  "negative_schemas_pinned": {
+   "cell": "neg_schemas",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "claim_kind": "code_determined",
+   "why": "cited blob differs",
+   "cited": {
+    "backend/app/schemas.py": {
+     "at_c79e2b4f4": "679ac2eb34b11f4e1a9dc7295292ae1df75c05cb",
+     "at_dcae1bc96": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": [
+    "backend/app/schemas.py"
+   ]
+  },
+  "negative_openapi_pinned": {
+   "cell": "neg_openapi",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "claim_kind": "code_determined",
+   "why": "cited blob differs",
+   "cited": {
+    "contracts/openapi.yaml": {
+     "at_c79e2b4f4": "4bc58e2e95a09ae46e346d9b243b165a03f58be8",
+     "at_dcae1bc96": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": [
+    "contracts/openapi.yaml"
+   ]
+  },
+  "missing_side": {
+   "cell": "neg_only_one_generation",
+   "verdict": "CITED_BLOB_MISSING",
+   "claim_kind": "code_determined",
+   "why": "one or both sides unread",
+   "cited": {
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "at_c79e2b4f4": null,
+     "at_dcae1bc96": null
+    }
+   },
+   "errors": {
+    "backend/tests/test_qoder_ord0272_continuation.py": null
+   },
+   "missing": [
+    "backend/tests/test_qoder_ord0272_continuation.py"
+   ],
+   "differ": []
+  },
+  "mixed_pair": {
+   "cell": "mixed_pair",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "claim_kind": "code_determined",
+   "why": "cited blob differs",
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    },
+    "backend/app/schemas.py": {
+     "at_c79e2b4f4": "679ac2eb34b11f4e1a9dc7295292ae1df75c05cb",
+     "at_dcae1bc96": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": [
+    "backend/app/schemas.py"
+   ]
+  },
+  "no_citations": {
+   "cell": "no_citations",
+   "verdict": "CITED_BLOB_MISSING",
+   "cited": {},
+   "why": "NO_CITED_FILES"
+  },
+  "killer_near_miss": {
+   "cell": "killer_near_miss",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "claim_kind": "code_determined",
+   "why": "cited blob differs",
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb600"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ]
+  },
+  "killer_prefix_only": {
+   "cell": "killer_prefix_only",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "claim_kind": "code_determined",
+   "why": "cited blob differs",
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ]
+  },
+  "control_identical_pair": {
+   "cell": "control_identical_pair",
+   "verdict": "TRANSFERABLE",
+   "claim_kind": "code_determined",
+   "why": null,
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": []
+  },
+  "killer_transport_throw": {
+   "cell": "killer_transport_throw",
+   "verdict": "CITED_BLOB_MISSING",
+   "claim_kind": "code_determined",
+   "why": "one or both sides unread",
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": null,
+     "at_dcae1bc96": null
+    }
+   },
+   "errors": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": null
+   },
+   "missing": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "differ": []
+  },
+  "killer_runtime_measured": {
+   "cell": "killer_runtime_measured",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "claim_kind": "runtime_measured",
+   "why": "RUNTIME_MEASURED_NOT_LICENSED_BY_BLOB_IDENTITY",
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    }
+   },
+   "errors": {},
+   "missing": [],
+   "differ": []
+  },
+  "killer_undeclared": {
+   "cell": "killer_undeclared",
+   "verdict": "CLAIM_KIND_UNDECLARED",
+   "claim_kind": null,
+   "cited": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    }
+   },
+   "why": "CLAIM_KIND_NOT_DECLARED - absence of a declaration is not a licence"
+  },
+  "receipt_claim_with_zero_cells": {
+   "verdict": "CLAIM_WITH_NO_CELLS",
+   "rc": 4,
+   "claimed": true
+  },
+  "receipt_camelCase_key": {
+   "verdict": "CLAIM_WITH_NO_CELLS",
+   "rc": 4,
+   "key": "crossGenerationClaim"
+  },
+  "receipt_no_claim_negative": {
+   "verdict": "NO_CROSS_GENERATION_CLAIM_MADE",
+   "rc": 0,
+   "key": null
+  },
+  "receipt_green_cell_negative": {
+   "verdict": "ALL_CELLS_TRANSFERABLE",
+   "rc": 0
+  },
+  "receipt_missing_tally_no_claim": {
+   "rc": 0,
+   "tally": {
+    "CITED_BLOB_MISSING": 1,
+    "TRANSFERABLE": 1
+   }
+  }
+ },
+ "checks": {
+  "positive_identical_file_is_TRANSFERABLE": true,
+  "negative_changed_file_is_NOT_TRANSFERABLE": true,
+  "missing_side_is_CITED_BLOB_MISSING_not_pass": true,
+  "one_changed_file_poisons_the_whole_cell": true,
+  "cell_citing_nothing_fails_closed": true,
+  "K1_one_hex_different_is_NOT_TRANSFERABLE": true,
+  "K2_prefix_equal_but_shorter_is_NOT_TRANSFERABLE": true,
+  "K3_identical_pair_control_stays_TRANSFERABLE": true,
+  "K4_missing_side_reader_is_NOT_transferable": true,
+  "K5_transport_exception_is_CITED_BLOB_MISSING_not_a_crash_not_a_pass": true,
+  "K6_runtime_measured_with_identical_blobs_is_STILL_NOT_TRANSFERABLE": true,
+  "K7_undeclared_claim_kind_is_NOT_a_pass": true,
+  "K9_claim_with_zero_cells_is_RED_not_vacuously_green": true,
+  "K10_camelCase_claim_key_cannot_escape_judgement": true,
+  "K11_negative_no_claim_key_still_exits_zero": true,
+  "K12_negative_claimed_with_a_real_green_cell_stays_green": true,
+  "K13_no_claim_but_missing_is_counted_not_hidden": true,
+  "K14_all_three_claim_spellings_are_detected": true,
+  "K15_decoy_keys_are_NOT_read_as_claims": true,
+  "K8_live_readback_cell_exists_and_is_separate_from_judge_checks": true
+ },
+ "judge_derived_result": "JUDGE_ALL_GREEN",
+ "external_readback_result": "EXTERNAL_READBACK_MATCHES_PINNED_EXPECTATIONS",
+ "external_rows": [
+  {
+   "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "role": "identical",
+   "expected_a": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+   "expected_b": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+   "observed_a": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+   "observed_b": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+   "state": "MATCH"
+  },
+  {
+   "path": "backend/app/schemas.py",
+   "role": "differing",
+   "expected_a": "679ac2eb34b11f4e1a9dc7295292ae1df75c05cb",
+   "expected_b": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "observed_a": "679ac2eb34b11f4e1a9dc7295292ae1df75c05cb",
+   "observed_b": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "state": "MATCH"
+  },
+  {
+   "path": "contracts/openapi.yaml",
+   "role": "differing",
+   "expected_a": "4bc58e2e95a09ae46e346d9b243b165a03f58be8",
+   "expected_b": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "observed_a": "4bc58e2e95a09ae46e346d9b243b165a03f58be8",
+   "observed_b": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "state": "MATCH"
+  }
+ ],
+ "control_pairs_pinned": [
+  [
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+   "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+   "identical"
+  ],
+  [
+   "backend/app/schemas.py",
+   "679ac2eb34b11f4e1a9dc7295292ae1df75c05cb",
+   "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "differing"
+  ],
+  [
+   "contracts/openapi.yaml",
+   "4bc58e2e95a09ae46e346d9b243b165a03f58be8",
+   "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+   "differing"
+  ]
+ ],
+ "derived_result": "SELFTEST_ALL_GREEN",
+ "note": "Verdicts are read back from the GitHub contents API per (path, ref); nothing here is a literal PASS.  A cell that cannot show both sides is CITED_BLOB_MISSING, never TRANSFERABLE."
+}
