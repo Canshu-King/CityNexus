@@ -1,0 +1,120 @@
+{
+ "kind": "ERRATUM",
+ "at": "2026-09-25T07:56:01+08:00",
+ "lane": "B c01d72a3",
+ "order": "ORD-0280 · 坐标格勘误",
+ "about_published_file": {
+  "name": "ord0280_selfproof.json",
+  "blob40": "05bdec154242b97e0371b2ee39331f4836950457",
+  "endpoint": "Canshu-King/CityNexus@commander/control:evidence/ord0280-laneB/ord0280_selfproof.json"
+ },
+ "was": {
+  "cited_sites_changed": {
+   "site_515": false,
+   "site_573": true,
+   "site_629": true,
+   "extra_site_catalog_count": true
+  },
+  "all_three_plus_one": false,
+  "coordinates_re_measured_on_this_tree": {
+   "label_服务器给出的原因": [],
+   "site1_agent_commands_leg": [],
+   "site2_get_places_leg": [
+    599
+   ],
+   "site3_plans_generate_leg": [
+    664
+   ],
+   "site4_catalog_count": [
+    623
+   ],
+   "failureNote_helper": [
+    174
+   ],
+   "origin_attribute": [
+    929
+   ]
+  }
+ },
+ "now": {
+  "cited_sites_changed": {
+   "site_515_agent_commands": true,
+   "site_573_get_places": true,
+   "site_629_plans_generate": true,
+   "extra_site_catalog_count": true
+  },
+  "all_three_plus_one": true,
+  "coordinates": {
+   "attribution_label_string": [
+    933
+   ],
+   "site1_agent_commands": [
+    538
+   ],
+   "site2_get_places": [
+    599
+   ],
+   "site3_plans_generate": [
+    664
+   ],
+   "site4_catalog_count": [
+    623
+   ],
+   "failureNote_helper": [
+    174
+   ],
+   "origin_attribute": [
+    929
+   ],
+   "device_label_string": [
+    936
+   ],
+   "machine_field_kept_status": [
+    529
+   ],
+   "machine_field_kept_blocked": [
+    595
+   ]
+  },
+  "matched_lines": {
+   "attribution_label_string": [
+    "? \"服务器给出的原因\""
+   ],
+   "site1_agent_commands": [
+    "`agent/commands -> HTTP ${response.status}`,"
+   ],
+   "site2_get_places": [
+    "`GET /places -> HTTP ${placesResponse.status}`,"
+   ],
+   "site3_plans_generate": [
+    "`POST /plans/generate -> HTTP ${generate.status}`,"
+   ],
+   "site4_catalog_count": [
+    "text: `GET /places?city_code=${cityCode} -> ${knownIds.size} places`,"
+   ],
+   "failureNote_helper": [
+    "function failureNote(serverText: string | null, deviceText: string): FailureNote {"
+   ],
+   "origin_attribute": [
+    "data-reason-origin={result.failureReason.from}"
+   ],
+   "device_label_string": [
+    "? \"这台设备自己的读数（服务器没给句子）\""
+   ],
+   "machine_field_kept_status": [
+    "status: `HTTP_${response.status}`,"
+   ],
+   "machine_field_kept_blocked": [
+    "status: `BLOCKED:${serverReasonCode(unreadable) || `PLACES_HTTP_${placesResponse.status}`}`,"
+   ]
+  }
+ },
+ "what_changed": "one cell's arithmetic (my needles). The seven measured arms, the teeth run, the three regressions and the candidate code are untouched.",
+ "does_not_retract": [
+  "3_arms_on_the_fix",
+  "4_teeth_against_the_unfixed",
+  "5_regressions"
+ ],
+ "replacement_file": "ord0280_selfproof_v2.json",
+ "endpoint_new": "Canshu-King/CityNexus@commander/control:evidence/ord0280-laneB/ord0280_selfproof_v2.json"
+}
