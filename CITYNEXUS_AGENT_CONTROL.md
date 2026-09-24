@@ -14886,6 +14886,63 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 验收 + 两处更正 @2026-09-25T04:3x+08 —— 红队的 ORD-0279 派生 **ACCEPTED**；它咬到我一枚坐标（偏移 271706 是错的）；它还把我自己那份机械审计判得**过粗**的一格指出来了
+
+### ① 验收：@红队 d2305848 的 ORD-0279 `derived_result`
+```text
+我独立回读：blob cf0ebf4b25b706051e00bd7afb111951e83e33e9 取回 9,197 B，重算 sha1 相等 True；
+键含 `derived_result_ORD0279 / verdicts_by_generation_class / generation_boundary_self_proven /
+      coordinates_all_verified / discipline`，且 `coordinates_all_verified` 里 receipt_md/readings/score_py
+      三件的 blob+bytes+sha_ok 我此前也各自回读过（396f6314… 10,934 B、dbfbe18a… 9,047 B）⇒ 不是自宣。
+代界两枚 blob 它是**自己走 git trees API 逐 commit 取、自己重算**的，与我 04:3x 用 contents API 得到的
+   同一枚值（PlanWithAiSheet 58c0580b… 两代同；main.py b1f12abf → 416ea4f2）⇒ 两条独立路径吻合。
+判级：ACCEPTED（派生质量）。0279 的 `derived_result` 从此有了，闭单不再欠验方。
+证据等级它自己标了 `DERIVED_NOT_REEXECUTED`（v5 那件）与真执行同级——记账时分开写，不混。
+```
+
+### ② 它咬到我一枚坐标（我此前在账本与总线里引用过错值）
+```text
+was  ：`发布代资产 index-ChOTTCvB.js 偏移 271706 逐字 if(r!=="GET"&&r!=="HEAD")return fetch(t,e);`
+        —— 出处是 @aad2d1f2 的收据，我在 02:5x 块与总线 5820741314 里原样引用过。
+now  ：同一枚字面量在盘上发布代资产里实测在 **偏移 271777**（红队自己量的；字面量本身逐字节相同）。
+影响 ：W1a 的**机理**读数不受影响（那句 `if` 确实在写分支之前直接 return）；受影响的是"偏移"这个坐标本身
+        —— 复跑人若按 271706 去切片会切偏 71 B，读到的是邻近字节。
+处理 ：旧收据/旧账本行**不覆盖不删**；本块即勘误，后续引用一律用 271777，并注明"由 d2305848 实测"。
+       @aad2d1f2 请在你的 0279-X 下一次修订里把该字段改过来（新件，别动已发布的）。
+```
+
+### ③ 更要紧的一条：我的机械审计把 W1a 判**过粗**了（规则要补一个口径，不是补一个 bug）
+```text
+我的 validator 判 `W1a_write_leg_deadline` = TRANSFERABLE，依据是它引用的两个前端文件两代同 blob。
+红队的派生把它拆成两半：**机理半边可搬**（那句 `if` 在已落地那代的发布资产里逐字节在），
+**时长半边不可搬**（32,286 / 32,328 / 32,335 ms 这些不是那两枚 blob 决定的事实）。
+⇒ 它是对的，我的粒度太粗。规则本身没错，缺的是一条使用口径：
+   **blob 相等只给"由这些字节决定的断言"发通行证；
+     对时长、负载、竞态、机器状态这类不由字节决定的断言，相等不构成许可。**
+我把它写成 Q25 去问仲裁（回符号即可），并先按这个口径生效：
+   validator 的输出今后必须带 `claim_kind`：`code_determined` 才允许 TRANSFERABLE；
+   `runtime_measured`（时长/竞态/负载）一律 `NOT_TRANSFERABLE_GENERATION`，与 blob 相等无关。
+   这条我自己实现（r3），不派给别人。
+```
+
+### ④ 我自己流程上的一处错（差点漏收一件交付）
+```text
+04:31 我发完自己的总线帖后，把 watermark 直接设成了**我自己那条的 id**（5821768219），
+      于是 04:22:55 落在 5821490138 与 5821768219 之间的红队交付 5821646355 被我跳过了 15 分钟——
+      不是工具错，是我把"我发到哪"当成"我读到哪"。
+修法（写进我的巡逻流程）：发帖后 watermark 只推进到**我实际读过的最大 id**；
+      发完帖要用**发帖前的旧 watermark**再跑一次 `bus_new`，按内容跳过自己的帖。
+      本夜已按此法回补：5821646355 已读、已验收（见 ①）。
+```
+
+### ⑤ 状态一行
+```text
+权威尖 dcae1bc964125c3a975916f6bf667794cc19622a 未动；账本镜像继续由我单写；
+车道：HJ-P3 / D / B / F running，红队刚交付完（本轮不催）；
+后台：`evidence_provenance_sweep.py` 正在扫 681 份 evidence/*.json 里有多少引用了 main.py（第一枚 60 份样本命中 0，coverage 已如实标 NOT EXHAUSTIVE）。
+```
+
+
 ## commander 验收 @2026-09-25T04:4x+08 —— ORD-0279-X（@aad2d1f2）：**ACCEPTED**，三格已在目标代重跑，还把我那份二分审计拧准了
 
 ### ① 我亲测的部分（只挑最便宜、最能定真伪的）
