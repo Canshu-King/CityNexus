@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-24 23:15+08 —— **开窗三件派生完：DEBT-3/DEBT-4/0277 全 GREEN 且复现；0275 r3 元问题裁「足以进闭单证据」附三条件；Q-a 选①、Q-b 自报三族 DDL 重放读数**
+（块已发总线 comment 5816856906；派生件 b657a289e885a2de2f6447b89eebae9a54a05be0 @ evidence/ord0271-a-gauge-fixtures/verifier_derivation_window_d2305848.json —— 详见总线帖与派生件，此处只留索引与两条账本级事实：①第一次 PUT 吃 409（分支被别的车道动了），按分支移动处理重试成功；②DEBT-3 离线件在新目录不自足（fetch 后强制读本地缓存副本），需种缓存才跑通，判读不受影响。）
+
 ### SESSION=d2305848 @2026-09-24 11:40+08 —— **ORD-0275 r2 派生已交：R2-2/R2-4 判 FIXED，R2-1/R2-3 判 PARTIAL（5 条残余具名）**；15 格全部复现；你要我核的签名向量与 cell3b 都有答案
 
 **坐标（40 位，三路回读全等）**：`b091bebbf69653a0c652ead183965c7c9d3bba50` — 10,248 B
@@ -14859,6 +14862,52 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 亲测 @2026-09-24T23:2x+08 —— 仲裁 Q23 补充裁定落地：`PUBLISHER_SECRET_SCAN_DEBT_1`（占位词只能挣在被匹配的 VALUE 里，名字/键/注释不算），23 格全绿 + 4 枚反突变；顺带量出两件不由我裁的东西
+
+### ① 改了哪几行（不是复述裁定）
+`live_checks/publish_evidence.py`：新增 `_matched_secret_value(rule, matched)` 与 `_placeholder_in_value(value)`，
+`_content_refusal()` 与 `synthetic_fixture_exemption()` **两层共用同一把判定**（S0 那格钉的就是"共用"，
+因为两层如果看不同的字节，豁免就变成可以扯皮的东西）。
+旧语义＝匹配行里出现占位词就跳过 ⇒ 变量名、JSON 键名、旁边一行注释都能给真形状的值洗钱；
+新语义＝**占位词必须出现在被匹配的那个 VALUE 里面**。
+Q23 的 `synthetic_fixture_exemption` 仍然**没上膛**（裁定顺序是先修旧 bypass，我没往洞上叠洞）。
+
+### ② 交付物是一枚行为变化，我把它量出来了
+```text
+S3b  SECRET_PLACEHOLDER_IN_NAME = "hunter2…"（值 21 位、名字里带 PLACEHOLDER）
+     改动前 GREEN（名字替值洗了钱）  /  改动后 RED:ENV_SECRET_ASSIGNMENT
+```
+### ③ 四枚反突变：每枚只翻它自己声明的那组格（不许静默连带、不许空转）
+```text
+MA line-scope 复原                       -> {S3}                     primary=S3
+MB 完全去掉占位处理                       -> {S2,S11,S12,S13}          唯一一枚具名复合切集，primary=S2
+MC 赋值分割不再认 JSON 冒号               -> {S13}                    primary=S13
+MD 占位匹配改成大小写敏感                 -> {S12}                    primary=S12
+K_mutants_have_four_distinct_primary_owners  /  K_no_mutant_is_a_noop  两格分别钉"不重复"与"不空转"
+```
+### ④ 顺带量出来的两件，我不自己裁定，只具名 + 交上去
+- **`PUBLISHER_SECRET_SCAN_NOTE_1`**（S9 格）：`Authorization: Bearer <占位词>` 仍然判红。原因是 AUTH_HEADER 那条 pattern 到第一个空格就结束，匹配里**根本没有 value**。**改动前后同答案**（我在收据里同时存了 before/after 两列），所以这不是这次收紧的副作用；我没有为了变绿去改它，而是钉成一格，让未来任何放宽都会在这里变红。
+- **`PUBLISHER_SECRET_SCAN_NOTE_2`**（S16 格，这条会影响所有车道）：**守卫会拒收"引用了它自己规则名"的文件**。证据是当场撞的：我这份 DEBT-1 收据（9,620 B）因为正文里写了守卫的拒收原文（secret_pattern 取值 ENV_SECRET_ASSIGNMENT 那一串），被发布器判红 rc=5、0 次 PUT；**用旧语义复算同样是红**，所以是既有性质，不是我改坏的。⇒ 任何车道只要把守卫的拒收原话抄进收据，那份收据就发不出去。我没改字面绕过、没放宽名单。**建议给仲裁的是**：加一条"值恰好等于守卫自己的 6 个规则名"的具名白名单（机械可判、不引入语义判断），而不是回头去放宽占位词。
+- 第三件我自己撞的，也记下来：我给这次改动写的**注释里举了一个真形状的例子**，结果**发布器拒收了自己的源码**（rc=5，0 PUT）。我把那个例子改成散文描述（真形状的字面量留在仪器文件里，那里才是测试夹具该待的地方），并新加一格 **S15「发布器必须还能发布它自己」**——以后谁在注释里再写一个凭据形状的例子，这一格会先红。
+
+### ⑤ 坐标（分支 `Canshu-King/CityNexus @ commander/control`，PUT 后逐字节回读）
+```text
+live_checks/publish_evidence_r5.py                              22,464 B  ea4416dbafa7ac84718c3d87bd56394fb5ca5f7b  commit 6633d5b5303d  BYTE-LEVEL MATCH
+evidence/ord0275-publisher-path-guard/ord0275_selftest_r3c.json 10,404 B  2ded6ef9e09a3f3dafd3a7f460a8c55d71924965      commit bfc552a9f998  BYTE-LEVEL MATCH
+   （ORD-0275 r3 那把 17 格已经在新发布器上重跑过：17/17 GREEN，收据里嵌的 publisher blob 就是 ea4416db…）
+本机有、外读没有（两条都是守卫自己拒的，见 ④）：
+   live_checks/test_publisher_placeholder_value_scan.py   14,925 B  58d758e175055fd6a2caa7a6878f9da0df465ace   23/23 GREEN
+   receipts/publisher_placeholder_value_scan_selftest.json 9,620 B  dff877a2bc91e68f6b9060fabba5b2a9712bb098
+在架换代尺未动：live_checks/deploy_bundle.py 149e9c6dbe6debcac92041bb192761c1cf1aa2a7
+```
+
+### ⑥ 手机链（用户能感觉到的那一件）
+22:5x 起公网那一跳全路径 530，而本机四层实测 200 ⇒ 归因在隧道注册口（cloudflared `Register tunnel error … context deadline exceeded`，QUIC 不通）。换 `--protocol http2` 重开并实测通过，新地址已写进 `run/tunnel_url.txt` 与桌面留言：`https://closes-version-alive-unit.trycloudflare.com`（账号密码不变）。
+顺手修了我自己一件仪器的错：老探针假定 `/api/v1/places` 返回 `{"items": …}`，实际今天返回**裸数组**，于是印出 `n=0` 差点让我报"北京没有地点"。新仪器 `live_checks/chain_probe_now.py` 两种形状都读并且把 `payload_shape` 印出来；实测北京 8 条。
+
+纪律读数：`demo/reset` 0、用户库写 0、凭据 0 打印（新仪器从 `run/preview_auth.txt` 读，只用于请求头，不落任何证据）、已发布路径 0 覆盖 0 删除（本轮新增 2 件产物 + 4 件我自己的只读仪器）、产品码 0 写、权威尖 `c79e2b4f…` 未动。
+
+
 ## commander 亲测 @2026-09-24T22:5x+08 —— 我自己查出两件仪器「发布版≠跑收据那一版」，已复跑并另路径重钉；红队派生正式开窗；一处我先前贴的旧坐标作废
 
 ### ① 怎么发现的（不是别人指出来的）
