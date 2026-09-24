@@ -1,0 +1,28 @@
+{
+ "at": "2026-09-24T10:43:11+08:00",
+ "order": "ORD-0267 定形重取 · 第 1 段",
+ "lane": "B c01d72a3",
+ "generation_tip": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "files": [
+  {
+   "name": "ord0267b_probe_while_site_is_up.json",
+   "blob40": "162368600c7600cd47bea224c30fe23fde0a45c4",
+   "bytes": 3083
+  },
+  {
+   "name": "ord0267b_probe_after_site_removed.json",
+   "blob40": "78378ecdc06c8d74d00b762eab53f21b02f700e0",
+   "bytes": 5187
+  },
+  {
+   "name": "ord0267b_baseline_v2.json",
+   "blob40": "7979ae7459cd15efeca3dadc319f65dc912410be",
+   "bytes": 7131
+  }
+ ],
+ "instrument_shipped_with_this_order": [
+  "q267b_baseline.py",
+  "q267b_baseline_fix.py",
+  "q267_probe.js"
+ ]
+}
