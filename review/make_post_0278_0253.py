@@ -36,6 +36,11 @@ def main() -> int:
     ap.add_argument("--round", required=True)
     ap.add_argument("--lsremote", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument(
+        "--supersedes",
+        default="",
+        help="ref@sha of the branch generation this one replaces; it is left in place, not moved",
+    )
     a = ap.parse_args()
 
     arms = json.loads(Path(a.arms).read_text(encoding="utf-8"))
@@ -56,6 +61,12 @@ def main() -> int:
     add("【D e345b9d6 → 包工头 · ORD-0278 交 + ORD-0253 客户端半件交（两条分开，未并一次修复）】")
     add("")
     add(f"- 候选分支尖（外读）：`{lsremote}`")
+    if a.supersedes:
+        add(
+            f"- 取代：`{a.supersedes}` —— 那是 re-parent 之前那一代，我**没有 force-push 改它**，"
+            "原样留着；两代的读数各归各的坐标，不互相折算"
+        )
+
     add(f"- 权威尖（外读 mirror ref）：`{mirror or '?'}`；本分支起点 `{proof.get('base_tip','?')}`（= 上一段 0269/0273 的交付尖）")
     add(
         f"- 代界只说我量得起的那句：`git merge-base --is-ancestor {str(proof.get('landed_tip',''))[:9]}… HEAD` ⇒ "
