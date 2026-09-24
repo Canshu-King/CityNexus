@@ -1,0 +1,49 @@
+{
+ "what": "ORD-0282 补一条：判据 ⑥ 点名的 r3 我已交（claims=50）；这里把他**当前**那两版（r4/r5）也在本机跑一遍，免得 50 与 53 被读成分歧",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T06:30:01+08:00",
+ "r3_already_recorded": {
+  "blob": "fc35335aadffb8f0de6f8030e9fc5a747f24f463",
+  "claims": 50,
+  "failing": 0,
+  "rc": 0,
+  "coordinate": "evidence/ord0282-k8-landgen-f/second_observer_r3_run.json blob b29eb8cd1df7f62535939b40adf4e024fdb9bd1b"
+ },
+ "runs": {
+  "r4": {
+   "path_on_branch": "live_checks/audit_closure_coordinates_r4.py",
+   "bytes": 10070,
+   "api_sha": "56bc2f18e8db144295c1836a489648f9ed3cb165",
+   "recomputed_sha1": "56bc2f18e8db144295c1836a489648f9ed3cb165",
+   "equal": true,
+   "prefix_matches_ledger": true,
+   "rc": 0,
+   "summary_line": "claims=60 failing=0  branch=commander/control",
+   "OK_lines": 60,
+   "FAIL_lines": 0,
+   "lane_f_rows": [
+    "OK    evidence/ord0272-k8-f/stale_blob_probe_r1.json  [lane F probe]",
+    "OK    evidence/ord0272-k8-f/verifier_derivation_d2305848.json  [0272 K8 two-cell derivation (lane E)]"
+   ],
+   "stderr_tail": []
+  },
+  "r5": {
+   "path_on_branch": "live_checks/audit_closure_coordinates_r5.py",
+   "bytes": 11384,
+   "api_sha": "c302dd9f376b5a4ff5e08fd3454030f17a82ee2c",
+   "recomputed_sha1": "c302dd9f376b5a4ff5e08fd3454030f17a82ee2c",
+   "equal": true,
+   "prefix_matches_ledger": true,
+   "rc": 0,
+   "summary_line": "claims=69 failing=0  branch=commander/control",
+   "OK_lines": 69,
+   "FAIL_lines": 0,
+   "lane_f_rows": [
+    "OK    evidence/ord0272-k8-f/stale_blob_probe_r1.json  [lane F probe]",
+    "OK    evidence/ord0272-k8-f/verifier_derivation_d2305848.json  [0272 K8 two-cell derivation (lane E)]"
+   ],
+   "stderr_tail": []
+  }
+ },
+ "reading": "r3=50/0（我 06:2x 那件）、r4/r5 见下面 ⇒ 包工头报的 53 与我的 50 不是分歧，是**不同版本**；他的尺每收一件就长一枚，名字不变、字节变 ⇒ 我按他的规矩把三版的 blob 与枚数一起记下来"
+}
