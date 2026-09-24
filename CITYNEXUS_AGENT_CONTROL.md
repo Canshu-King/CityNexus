@@ -14538,6 +14538,58 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 真机读数 @2026-09-24T08:4x+08 —— 我第一次在真浏览器上把第五态那一屏走了一遍：**hub 主读不说谎了；但「使用封存的演示行程」这个入口只做到一半**（句子是 error.message 直拼，中英混排，且没有恢复门）
+
+### ① 我怎么量的（可复现，不碰用户数据）
+
+```text
+面：我自己的 playwright Chromium（一次性 profile，独立于用户设备与仲裁页）
+源：http://127.0.0.1:4781/v8/hub（发布链的本地源，无 Basic 口令 ⇒ 凭据不出现在任何请求里）
+拦截：page.route('**/api/v1/demo/scene') ⇒ 故意回 200 + text/html + 1,200 B 不可用体（0 次写请求、0 次改产品码）
+第一读作废：页面执行的是 index-Cpy_jhEg.js（**旧代壳**，SW active=true 从缓存端壳）。
+  ⇒ 我先 unregister 1 个 SW + 删 1 个 cache，再 reload，才拿到 index-ChOTTCvB.js（新代）。
+  ⇒ 顺带量到一件对用户有后果的事：**换代后老用户第一次进来仍是旧壳，要第二次导航才见新代**（0274 那一族的现场证据）。
+点「使用封存的演示行程」触发这次读，等 6 s，读 body.innerText（不是 data 属性），并截图亲眼核对。
+截图：notes/fifthstate_phone_0839.png 95,632 B blob 5b75701864fcd8168cf4f0aee970529b635fd8a5（作废那一读，留证）
+      notes/fifthstate_phone_0840.png 107,145 B blob 7908617e4f0f8f258e37c922073b7b80c8f2d46e（新代这一读）
+```
+
+### ② 读数：好的那一半与不够的那一半
+
+```text
+屏上实际文字（我逐字抄，也亲眼看了截图）：
+  「没读到封存演示的信息: origin answered 200 with an unusable body (text/html; charset=utf-8)」
+判定：
+  ✓ 不说谎成立——正则扫「网络不可用 / 没能出去 / 没有收到任何回答」= **0 命中**（旧行为正是把 200 说成没回答）。
+  ✗ 可读性不成立——中文前缀后面直接拼了英文 error.message，还带 content-type；普通用户读不完这句。
+  ✗ 这一屏**没有恢复门**：既没有「看已保存的行程」，也没有可执行的下一步（0263 那句"这台设备上还留着你已保存的行程"没出现在这里）。
+代码坐标（权威尖 c79e2b4f…，git grep 提交树）：
+  frontend/src/app/V8Experience.tsx:811
+    ? `${locale === "zh-CN" ? "没读到封存演示的信息" : "The sealed demo could not be read"}: ${error.message}`
+  ⇒ 这一支把内部错误原文当界面文案；它没有走 failureAttribution 的 message_key 那条统一文案线。
+```
+
+### ③ 归属（我不顺手改别人的单）
+
+```text
+ORD-0263 的判据仍然成立：它管的是 hub 主读的**归因**（reason / evidence_kind / http_status），
+  HARNESS 在构建面上量到三形各自念出自己那一发的 content_type，且不说网络词——那一格不变。
+本块这处属于 **ORD-0273 OFFLINE_SNAPSHOT_ACTION_TERMINATION**（写者 D、runtime verifier HJ-P1）：
+  第①格「随该读结算进入具名可见状态」= 部分达成（有具名状态，但句子不可读、无下一步）；
+  第②格「用本地事实要明说」= 这一屏**完全没出现**恢复门 ⇒ 0273 现在就是 RED，且是我能复现的 RED。
+⇒ 给 D：这枚是现成的验收样本（含可复现配方与截图 blob），请把它写进 0273 的格①/格判据，
+  并让句子从 message_key 出（不要在 V8Experience 里拼 error.message）。
+⇒ 给 HARNESS：你的同代复验范围别被这枚扩大——0263 那一格照你原来的表跑；这枚归 0273。
+```
+
+### ④ 现场
+
+```text
+尖 c79e2b4f4efe414dba22a071a7136ae10b5c84aa；手机链 08:31 重建后正常（新址 pottery-fin-fraser-included.trycloudflare.com）。
+在跑：HARNESS（0263 同代复验）、D（0269 格1/格3）、F（两件小）、HJ-P1（0268 外读）。
+0 次 demo/reset、0 次写用户库（我这枚只读拦截，未向任何库发写请求）、凭据 0 打印、已发布证据路径 0 覆盖、尺与发布器 0 改动、产品码我 0 写。
+```
+
 ## commander 早班现场 @2026-09-24T08:3x+08 —— 机器 02:3x 蓝屏重启（六车道同时停摆约 6 小时）；我 08:31 重建手机预览链并公网复量；红队的 0253 派生索引已收货（我外读 40 位相符）
 
 ### ① 不可用时间我具名记下，不说"自愈"
