@@ -46,12 +46,31 @@ EXPECTED = {
         "ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
         "ord0273-action-retry-is-a-real-executable-step",
     ],
+    "e2e/qoder-continuation-resume-carries-identity.spec.ts": [
+        "ord0278-positive-the-resume-request-carries-both-keys",
+        "ord0278-negative-no-marker-sends-nothing",
+        "ord0278-negative-off-page-sends-nothing",
+        "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are",
+    ],
+    "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts": [
+        "ord0253-both-legs-of-one-intent-share-one-key",
+        "ord0253-each-intent-mints-a-fresh-key",
+        "ord0253-a-burst-consumes-no-key",
+    ],
 }
 # The named leak shapes, copied from the spec text (not imported) and re-checked below.
 LEAK_SHAPES = ["origin answered", "unusable body", "text/html", "text/plain", "Error", "TypeError"]
 RUN_SHAPES = {
     "e2e/qoder-continuation-owner.spec.ts": "whole owner spec on the committed tip, 1 worker, mobile 390x844",
     "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts": "whole owner spec on the committed tip, 1 worker, mobile 390x844",
+    "e2e/qoder-continuation-resume-carries-identity.spec.ts": (
+        "whole owner spec on the committed tip, 1 worker, mobile 390x844; every 0278 assertion is read "
+        "off the request Playwright observed, not off the source"
+    ),
+    "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts": (
+        "whole owner spec on the committed tip, 1 worker, mobile 390x844; both legs' headers come from "
+        "captured requests"
+    ),
 }
 
 
@@ -256,19 +275,18 @@ def main() -> int:
 
     # measured fields, re-read from the gates' own output
     readings = {}
-    for name in (
-        "ord0269-cell1-reading.json",
-        "ord0269-cell3-feed-failure.json",
-        "ord0269-r6-exclusion-reading.json",
-        "ord0269-r4-negative.json",
-        "ord0273-text-reading.json",
-        "ord0273-text-en-reading.json",
-        "ord0273-action-reading.json",
-    ):
+    names = sorted(
+        os.path.basename(p)
+        for p in __import__("glob").glob(f"{EVIDENCE}/ord02[0-9][0-9]-*-reading.json")
+        + __import__("glob").glob(f"{EVIDENCE}/ord02[0-9][0-9]-negative-*.json")
+        + __import__("glob").glob(f"{EVIDENCE}/ord02[0-9][0-9]-*-failure.json")
+        + __import__("glob").glob(f"{EVIDENCE}/ord02[0-9][0-9]-*-negative.json")
+    )
+    for family in ("ord0269", "ord0273", "ord0278", "ord0253"):
+        if not any(name.startswith(family) for name in names):
+            problems.append(f"no reading written by the {family} gate")
+    for name in names:
         path = f"{EVIDENCE}/{name}"
-        if not os.path.exists(path):
-            problems.append(f"missing reading {name}")
-            continue
         readings[name] = json.load(open(path, encoding="utf-8"))
 
     text_reading = readings.get("ord0273-text-reading.json", {})
