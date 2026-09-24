@@ -1,0 +1,197 @@
+{
+  "order": "ORD-0274",
+  "arm": "B (reconnected transition)",
+  "session": "1a986a24 HJ-P1",
+  "role": "instrument owner + runtime verifier",
+  "run_label": "camp1",
+  "base": "http://127.0.0.1:8941",
+  "started_at": "2026-09-24T01:13:04.988Z",
+  "forbidden_moves_taken": {
+    "unregister_called": 0,
+    "cache_clear_called": 0
+  },
+  "viewport": [
+    390,
+    844
+  ],
+  "generations": {
+    "A_old": {
+      "dir": "dist_gen",
+      "bundle": "index-Cpy_jhEg.js",
+      "worker_sha256": "e63d7421eda340937df28bd0cae35624ab413607f9819e69b519b7d7ede69dbd",
+      "worker_bytes": 2055
+    },
+    "B_new": {
+      "dir": "dist_gen_c79e2b4",
+      "bundle": "index-ChOTTCvB.js",
+      "worker_sha256": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a",
+      "worker_bytes": 2055
+    }
+  },
+  "phases": {
+    "P0_setup": {
+      "root": {
+        "pointer": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o274_run\\camp1\\current_root.txt",
+        "root": "dist_gen",
+        "readBack": true
+      },
+      "served_on_disk": "index-Cpy_jhEg.js",
+      "worker_on_disk": {
+        "status": 200,
+        "bytes": 2055,
+        "sha256": "e63d7421eda340937df28bd0cae35624ab413607f9819e69b519b7d7ede69dbd"
+      },
+      "nav1": {
+        "label": "P0-nav1 (install)",
+        "phase": "P0",
+        "httpStatus": 200,
+        "err": null,
+        "at": 1790212386637
+      },
+      "nav2": {
+        "label": "P0-nav2 (take-control)",
+        "phase": "P0",
+        "httpStatus": 200,
+        "err": null,
+        "at": 1790212401741
+      },
+      "precondition": {
+        "atMsSincePhaseStart": 1790212413806,
+        "measured": true,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "pathname": "/v8/hub",
+        "docNonce": "5tuyndm2f27",
+        "docBirth": 1790212401749,
+        "docAgeMs": 12057,
+        "scripts": [
+          "/assets/index-Cpy_jhEg.js"
+        ],
+        "css": [
+          "/assets/index-I45CQek8.css"
+        ],
+        "bodyChars": 112,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间"
+        ],
+        "controller": true,
+        "controllerScript": "/v10-sw.js",
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 6,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": []
+          },
+          {
+            "ev": "sw-ready",
+            "t": 7,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "active": "http://127.0.0.1:8941/v10-sw.js",
+            "waiting": false,
+            "installing": false
+          },
+          {
+            "ev": "DOMContentLoaded",
+            "t": 39,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": [
+              "index-Cpy_jhEg.js"
+            ]
+          },
+          {
+            "ev": "load",
+            "t": 40,
+            "href": "http://127.0.0.1:8941/v8/hub",
+            "scripts": [
+              "index-Cpy_jhEg.js"
+            ]
+          }
+        ],
+        "chromeError": false,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "caches": {
+          "keys": [
+            "workbox-precache-v2-http://127.0.0.1:8941/"
+          ],
+          "precacheName": "workbox-precache-v2-http://127.0.0.1:8941/",
+          "precacheUrls": [
+            "/assets/JourneyMap-TiEm8jyP.js",
+            "/assets/index-Cpy_jhEg.js",
+            "/assets/index-I45CQek8.css",
+            "/assets/maplibre-gl-kx9AWR05.js",
+            "/favicon.svg?__WB_REVISION__=339a4892318ff75bf4dccf7d426c193c",
+            "/index.html?__WB_REVISION__=213aa276841d50a8a61cf75dd7408a7f",
+            "/manifest.webmanifest?__WB_REVISION__=d726b6647c68d06bafae8784f74043e3",
+            "/sw.js?__WB_REVISION__=1eebbb6edab96b95a31dc1f94d1a6cda"
+          ],
+          "revisions": [
+            "1eebbb6edab96b95a31dc1f94d1a6cda",
+            "213aa276841d50a8a61cf75dd7408a7f",
+            "339a4892318ff75bf4dccf7d426c193c",
+            "d726b6647c68d06bafae8784f74043e3",
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      },
+      "precondition_navigations_issued": 2
+    },
+    "P1_transition": {
+      "root": {
+        "pointer": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o274_run\\camp1\\current_root.txt",
+        "root": "dist_gen_c79e2b4",
+        "readBack": true
+      },
+      "served_on_disk_now": "index-ChOTTCvB.js",
+      "worker_on_disk_now": {
+        "status": 200,
+        "bytes": 2055,
+        "sha256": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a"
+      },
+      "note": "the browser is not told anything; only the disk root behind the same origin moved"
+    }
+  },
+  "instrument": {
+    "pageErrors": [],
+    "navEvents": [
+      {
+        "at": 1790212386637,
+        "issuedByMe": true,
+        "label": "P0-nav1 (install)",
+        "phase": "P0"
+      },
+      {
+        "at": 1790212386654,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      },
+      {
+        "at": 1790212401741,
+        "issuedByMe": true,
+        "label": "P0-nav2 (take-control)",
+        "phase": "P0"
+      },
+      {
+        "at": 1790212401748,
+        "href": "http://127.0.0.1:8941/v8/hub",
+        "label": "framenavigated"
+      }
+    ],
+    "probeFunctionsInstalled": true
+  },
+  "fatal": "page.setOffline is not a function"
+}
