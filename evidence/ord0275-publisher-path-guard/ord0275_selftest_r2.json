@@ -1,0 +1,96 @@
+{
+ "schema": "CNX_INSTRUMENT_SELFPTEST_V2",
+ "order": "ORD-0275",
+ "revision": 2,
+ "revision_reason": "red team d2305848 named four defects in revision 1's PROOF (bus 5806428858); the core fix itself was already VERIFIED there and is unchanged by this revision.",
+ "instrument": "live_checks/publish_evidence.py",
+ "instrument_blob_sha1": "d13d5e77b54cd00e8eaa1e8c2b582c7b12806686",
+ "test_file": "test_ord0275_publisher_guard.py",
+ "test_file_blob_sha1": "54b69b7cd2dbd56a0b7c3304ae7329bb676286da",
+ "guard_verdicts": {
+  "LOCAL_NAME_DIRTY_refused": true,
+  "REPO_PATH_DIRTY_refused": true,
+  "CLEAN_CLEAN_allowed": true,
+  "REGRESSION_traversal_refused": true,
+  "REGRESSION_bad_prefix_refused": true,
+  "REGRESSION_control_tool_gate": true,
+  "REGRESSION_sqlite_magic_refused": true,
+  "REGRESSION_secret_content_refused": true,
+  "REFUSAL_NAMES_RULE_NO_SECRET": true
+ },
+ "cli_verdicts": {
+  "LOCAL_NAME_DIRTY_rc": 5,
+  "LOCAL_NAME_DIRTY_rc_is_5": true,
+  "LOCAL_NAME_DIRTY_zero_PUT": true,
+  "LOCAL_NAME_DIRTY_named_refusal_printed": true,
+  "LOCAL_NAME_DIRTY_stdout_head": "REFUSED (fail-closed, nothing uploaded): FORBIDDEN_NAME_FRAGMENT(scope=local: _live in _live.db-witness.json) ",
+  "REPO_PATH_DIRTY_rc": 5,
+  "REPO_PATH_DIRTY_rc_is_5": true,
+  "REPO_PATH_DIRTY_zero_PUT": true,
+  "REPO_PATH_DIRTY_named_refusal_printed": true,
+  "REPO_PATH_DIRTY_stdout_head": "REFUSED (fail-closed, nothing uploaded): FORBIDDEN_NAME_FRAGMENT(scope=repo_path: _live in _live_read.json) --",
+  "CLEAN_cli_positive_control_rc": 4,
+  "CLEAN_cli_positive_control_reached_PUT": true,
+  "CLEAN_cli_positive_control_no_refusal": true
+ },
+ "mutation_arms": {
+  "M1_repo_path_guard_removed": {
+   "rewrites": [
+    "    for comp in [c for c in rp.split(\"/\") if c]:"
+   ],
+   "LOCAL_NAME_DIRTY_refused": true,
+   "REPO_PATH_DIRTY_refused": false,
+   "CLEAN_allowed": true,
+   "regressions_still_held": true,
+   "cli_repo_path_zero_PUT": false,
+   "behaviour_signature_sha1": "672bbba0f0623c9b",
+   "differs_from_base": true
+  },
+  "M2_local_only_regression": {
+   "rewrites": [
+    "    for comp in [c for c in rp.split(\"/\") if c]:"
+   ],
+   "LOCAL_NAME_DIRTY_refused": true,
+   "REPO_PATH_DIRTY_refused": false,
+   "CLEAN_allowed": true,
+   "regressions_still_held": true,
+   "cli_repo_path_zero_PUT": false,
+   "behaviour_signature_sha1": "672bbba0f0623c9b",
+   "differs_from_base": true
+  },
+  "M3_helper_neutralised": {
+   "rewrites": [
+    "    c = candidate.lower()"
+   ],
+   "LOCAL_NAME_DIRTY_refused": false,
+   "REPO_PATH_DIRTY_refused": false,
+   "CLEAN_allowed": true,
+   "regressions_still_held": true,
+   "cli_repo_path_zero_PUT": false,
+   "behaviour_signature_sha1": "f41e5c6701f235dc",
+   "differs_from_base": true
+  }
+ },
+ "independent_kills": 2,
+ "arms_published": 3,
+ "arm_signatures_note": "M1 and M2 share a behaviour signature on this vector, so they are counted as ONE independent kill; M2 is retained as a name-shape check, not as a second killer (R2-3).",
+ "checks": {
+  "cell1_LOCAL_NAME_DIRTY_rc5_and_zero_PUT": true,
+  "cell2_REPO_PATH_DIRTY_rc5_and_zero_PUT": true,
+  "cell3_CLEAN_in_process_allowed": true,
+  "cell3b_CLEAN_cli_positive_control_reaches_PUT_exactly_once": true,
+  "cell4_traversal": true,
+  "cell4_bad_prefix": true,
+  "cell4_control_tool_gate": true,
+  "cell4_sqlite_magic": true,
+  "cell4_secret_content": true,
+  "cell5_M3_flips_both_scopes_together": true,
+  "cell6_zero_PUT_is_an_invocation_count_not_a_string": true,
+  "cell7_refusal_names_rule_not_secret": true,
+  "killer_M1_catches_repo_path_guard": true,
+  "killer_M2_catches_local_only_helper": true,
+  "mutants_differ_from_base": true
+ },
+ "derived_result": "ALL_GREEN",
+ "no_write_guarantee": "call() is replaced before main() in every CLI cell; the PUT counter is the assertion."
+}
