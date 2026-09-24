@@ -1,0 +1,301 @@
+{
+ "what": "ORD-0272 · 我的九格用包工头那把 Q24 尺（仲裁已验）复判 + 一处实测到的 --check 断口",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T04:34:51+08:00",
+ "validator_under_test": {
+  "path_on_branch": "live_checks/generation_transfer_check.py",
+  "blob_40": "47372706c6ffde2175155de175133e212aae651c",
+  "fetched_by": "GET /repos/.../git/blobs/<40>",
+  "readback": {
+   "requested_blob_40": "47372706c6ffde2175155de175133e212aae651c",
+   "api_sha": "47372706c6ffde2175155de175133e212aae651c",
+   "bytes": 10197,
+   "computed_sha1": "47372706c6ffde2175155de175133e212aae651c",
+   "matches_local_copy": true
+  },
+  "edited_by_me": false,
+  "imported_call": "judge_cell(cell, gen_a, gen_b, cited_files[, reader])",
+  "selftest_on_my_box": {
+   "first_run": "RED_CELLS:positive_identical_file_is_TRANSFERABLE （那一格 at_dcae1bc96 读回 null，同一路径稍后又两侧都读到 58c0580b…）",
+   "reruns": [
+    "SELFTEST_ALL_GREEN",
+    "SELFTEST_ALL_GREEN"
+   ],
+   "reading": "他的 blob_at 把网络抖动与 404 一并记成 None ⇒ 判 CITED_BLOB_MISSING，方向是 fail-closed（不会把『没看到』读成『相等』），但整支自测因此不是网络抖动的不变量"
+  }
+ },
+ "generations": {
+  "gen_a": "dcae1bc964125c3a975916f6bf667794cc19622a",
+  "gen_b": "7c806fab58e872060cb5811ff96c770b40dad165",
+  "gen_a_is": "已落地那一代（权威尖）",
+  "gen_b_is": "我的 K8 候选 review/ord0272-k8-f"
+ },
+ "check_mode_defect": {
+  "summary": "--check 对任何非空 cells 直接抛 TypeError：第 174 行 `verdict, _ = judge_cell(...)` 取到的是**判级字典**，第 178 行却拿它当字符串做 tally 的键",
+  "lines_cited": "174/175/178/180/185（本机那份与他 blob 字节相等，行号即他的行号）",
+  "second_symptom": "即使 178 行不炸，180 行 `o[\"verdict\"] != TRANSFERABLE` 也恒真（字典 ≠ 字符串）⇒ 每一格都会被列进 RED_CELLS，永远得不出 ALL_CELLS_TRANSFERABLE",
+  "direction": "两处都偏保守（要么崩、要么全判不转移），不会替谁假绿；但这一模式对任何车道都不可用",
+  "repro": {
+   "zero_cell_receipt": {
+    "rc": 0,
+    "stdout_head": "{\n \"schema\": \"CNX_GENERATION_TRANSFER_RECEIPT_V1\",\n \"rule\": \"GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1\",\n \"receipt_under_check\": \"D:\\\\moodle\\\\_qoder_f_run\\\\",
+    "stderr_last_line": "",
+    "stderr_traceback_lines": []
+   },
+   "one_cell_receipt": {
+    "rc": 1,
+    "stdout_head": "",
+    "stderr_last_line": "TypeError: unhashable type: 'dict'",
+    "stderr_traceback_lines": [
+     "  File \"D:\\moodle\\_qoder_f_run\\cmdr_generation_transfer_check_47372706.py\", line 207, in <module>",
+     "  File \"D:\\moodle\\_qoder_f_run\\cmdr_generation_transfer_check_47372706.py\", line 200, in main",
+     "  File \"D:\\moodle\\_qoder_f_run\\cmdr_generation_transfer_check_47372706.py\", line 178, in check_receipt",
+     "TypeError: unhashable type: 'dict'"
+    ]
+   },
+   "assertion_bites": true
+  },
+  "bites_both_ways": true,
+  "minimal_fix_I_did_not_apply": "175 行存 `verdict[\"verdict\"]`（其余照旧）；线是他的，我不改他的发布件",
+  "not_my_call": "是否另存 r2 发布由包工头定；我只交读数与最小复现"
+ },
+ "per_cell": [
+  {
+   "cell": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+   "his_verdict": "NOT_TRANSFERABLE_GENERATION",
+   "external_blobs": {
+    "backend/app/main.py": {
+     "dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab5": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc96": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab5": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc96": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab5": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc96": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab5": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "my_verdict_from_r4": "NOT_TRANSFERABLE_GENERATION",
+   "agree": true
+  },
+  {
+   "cell": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+   "his_verdict": "NOT_TRANSFERABLE_GENERATION",
+   "external_blobs": {
+    "backend/app/main.py": {
+     "dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab5": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc96": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab5": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc96": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab5": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc96": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab5": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "my_verdict_from_r4": "NOT_TRANSFERABLE_GENERATION",
+   "agree": true
+  },
+  {
+   "cell": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+   "his_verdict": "NOT_TRANSFERABLE_GENERATION",
+   "external_blobs": {
+    "backend/app/main.py": {
+     "dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab5": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc96": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab5": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc96": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab5": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc96": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab5": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "my_verdict_from_r4": "NOT_TRANSFERABLE_GENERATION",
+   "agree": true
+  },
+  {
+   "cell": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+   "his_verdict": "NOT_TRANSFERABLE_GENERATION",
+   "external_blobs": {
+    "backend/app/main.py": {
+     "dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab5": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc96": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab5": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc96": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab5": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc96": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab5": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "my_verdict_from_r4": "NOT_TRANSFERABLE_GENERATION",
+   "agree": true
+  },
+  {
+   "cell": "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+   "his_verdict": "NOT_TRANSFERABLE_GENERATION",
+   "external_blobs": {
+    "backend/app/main.py": {
+     "dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab5": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc96": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab5": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc96": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab5": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc96": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab5": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "my_verdict_from_r4": "NOT_TRANSFERABLE_GENERATION",
+   "agree": true
+  },
+  {
+   "cell": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+   "his_verdict": "NOT_TRANSFERABLE_GENERATION",
+   "external_blobs": {
+    "backend/app/main.py": {
+     "dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab5": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc96": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab5": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc96": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab5": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc96": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab5": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "my_verdict_from_r4": "NOT_TRANSFERABLE_GENERATION",
+   "agree": true
+  },
+  {
+   "cell": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+   "his_verdict": "NOT_TRANSFERABLE_GENERATION",
+   "external_blobs": {
+    "backend/app/main.py": {
+     "dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab5": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc96": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab5": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc96": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab5": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc96": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab5": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "my_verdict_from_r4": "NOT_TRANSFERABLE_GENERATION",
+   "agree": true
+  },
+  {
+   "cell": "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+   "his_verdict": "NOT_TRANSFERABLE_GENERATION",
+   "external_blobs": {
+    "backend/app/main.py": {
+     "dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab5": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc96": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab5": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc96": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab5": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc96": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab5": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "my_verdict_from_r4": "NOT_TRANSFERABLE_GENERATION",
+   "agree": true
+  },
+  {
+   "cell": "tests/test_qoder_ord0272_continuation.py::test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer",
+   "his_verdict": "NOT_TRANSFERABLE_GENERATION",
+   "external_blobs": {
+    "backend/app/main.py": {
+     "dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+     "7c806fab5": "ad13f4395e3405ce722ae8660836f3c2aaa29df2"
+    },
+    "backend/app/schemas.py": {
+     "dcae1bc96": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+     "7c806fab5": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e"
+    },
+    "backend/tests/test_qoder_ord0272_continuation.py": {
+     "dcae1bc96": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+     "7c806fab5": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+    },
+    "contracts/openapi.yaml": {
+     "dcae1bc96": "484c64cdaaa41e72d252563b84cef915cb4e80eb",
+     "7c806fab5": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+    }
+   },
+   "my_verdict_from_r4": "NOT_TRANSFERABLE_GENERATION",
+   "agree": true
+  }
+ ],
+ "memo_control": {
+  "cell": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+  "his_verdict_unwrapped": "NOT_TRANSFERABLE_GENERATION",
+  "his_wrapped_for_this_cell": "NOT_TRANSFERABLE_GENERATION",
+  "memo_wrapper_changes_nothing": true
+ },
+ "cross_instrument_agreement": {
+  "cells_total": 9,
+  "agreeing": 9,
+  "his_source": "GitHub contents API 外取 blob（他分支上的两代对象）",
+  "my_source": "本机 git rev-parse <gen>:<path>（候选 worktree 的对象库）",
+  "verdict": "AGREES",
+  "external_gets_made": 8
+ },
+ "discipline": {
+  "his_published_files_overwritten": 0,
+  "his_file_edited": false,
+  "credentials_printed": 0,
+  "authoritative_branch_written": false,
+  "demo_reset_calls": 0
+ }
+}
