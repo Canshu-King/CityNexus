@@ -1679,6 +1679,7 @@ createRoot(document.getElementById("root")!).render(
 );
 
 const serviceWorkerReloadMarkerKey = "citynexus.sw.controller-transition";
+const MAX_AUTOMATIC_CONVERGENCE_PER_SESSION = 2;
 
 /**
  * Caches the previous strategies left behind under names nothing owns any more.
@@ -1715,18 +1716,24 @@ async function unregisterProductionServiceWorkers() {
 }
 
 async function registerProductionServiceWorker() {
-  const controllerBefore = navigator.serviceWorker.controller?.scriptURL ?? null;
+  /* Identity, not URL. A generated worker is always served from /v10-sw.js, so `before === after` was
+     true for every real generation change and this handler returned before it could reload anything:
+     measured across two generations on one origin, `controllerchange` fired once, the document's load
+     count stayed at 1, no marker was ever written, and the previous bundle kept executing until a
+     SECOND navigation. A ServiceWorker object does change when a new generation takes over. */
+  const controllerBefore = navigator.serviceWorker.controller;
 
   navigator.serviceWorker.addEventListener("controllerchange", () => {
-    const controllerAfter = navigator.serviceWorker.controller?.scriptURL ?? null;
-    if (!controllerBefore || !controllerAfter || controllerBefore === controllerAfter) return;
+    const controllerAfter = navigator.serviceWorker.controller;
+    if (!controllerBefore || !controllerAfter || controllerAfter === controllerBefore) return;
 
-    const transition = `${controllerBefore}->${controllerAfter}`;
-    if (sessionStorage.getItem(serviceWorkerReloadMarkerKey) === transition) return;
+    // Bounded, so a worker that keeps re-taking control cannot turn into a reload loop; the first
+    // control acquisition of an uncontrolled document stays excluded by `!controllerBefore` above.
+    const switchesTaken = Number(sessionStorage.getItem(serviceWorkerReloadMarkerKey) || "0");
+    if (switchesTaken >= MAX_AUTOMATIC_CONVERGENCE_PER_SESSION) return;
 
-    // Reload exactly once when an already-controlled page moves to a new worker, so an old
-    // shell cannot keep executing against a new asset graph after an auto-update.
-    sessionStorage.setItem(serviceWorkerReloadMarkerKey, transition);
+    // Reload so an old shell cannot keep executing against a new asset graph after an auto-update.
+    sessionStorage.setItem(serviceWorkerReloadMarkerKey, String(switchesTaken + 1));
     window.location.reload();
   });
 
