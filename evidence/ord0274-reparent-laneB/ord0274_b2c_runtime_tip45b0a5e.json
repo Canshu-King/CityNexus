@@ -1,0 +1,5998 @@
+{
+ "at": "2026-09-25T06:15:48+08:00",
+ "order": "ORD-0274 B2c 运行时读数 + 两枚反控",
+ "lane": "B c01d72a3",
+ "candidate": "review/0274-b2c-b 1de4c25",
+ "run_id": "tip45",
+ "base": "dcae1bc964125c3a975916f6bf667794cc19622a",
+ "post_delay_s": 10,
+ "window_s": 50,
+ "generation_identity_is_a_byte_verdict": {
+  "ruler": {
+   "path": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\deploy_bundle_v2_draft_r4.py",
+   "blob_sha": "0686670743c079647aa678370aa5481562c4c0a8",
+   "extracted": [
+    "DECLARED_NO_PRECACHE",
+    "SW_REGISTER_RULE",
+    "_ord0277_generation_verdict",
+    "asset_refs",
+    "precache_urls",
+    "strip_js_comments",
+    "sw_register_verdict"
+   ],
+   "bytes_extracted": 8574
+  },
+  "new_generation_entry_sha256": "390febe6e7e0983b29c9b6ec0905e135f2fd3d29532d3da94789c79bb48bf136",
+  "new_generation_content_fingerprint": "925f6ce2c60ac330644d4b1829a4c64b3851deddbbc3acac891beae96e02916e",
+  "new_generation_verdict": "GREEN"
+ },
+ "arms": {
+  "candidate": {
+   "writes_started": 4,
+   "writes_finished": 4,
+   "write_delivered": 4,
+   "write_undelivered": 0,
+   "open_write_ids": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "swap_at_wall": 1790287820.573,
+   "writes_open_at_swap": 1,
+   "loads_series_first_last": [
+    [
+     1
+    ],
+    [
+     2
+    ]
+   ],
+   "loads_max": 2,
+   "reload_while_write_open_samples": [],
+   "samples_with_open_write": 9,
+   "pending_handover_marker_seen": true,
+   "gen_tag_at_end": "gen2-standin",
+   "executed_ref_at_end": "/assets/index-CL1NqhoE.js",
+   "executed_sha_at_end": "390febe6e7e0983b29c9b6ec0905e135f2fd3d29532d3da94789c79bb48bf136",
+   "executed_content_type": "text/javascript",
+   "html_at_js_url": false,
+   "executed_sha_equals_new_generation_bytes": true,
+   "converged_by_the_product_without_another_navigation": true,
+   "document_loads_seen": 2,
+   "samples_taken_while_the_page_was_changing": 0,
+   "probe_navigations_in_b2c_phase": 1,
+   "page_errors": [],
+   "console_errors": [
+    "TypeError: Cannot read properties of undefined (reading 'city_code')\n    at http://127.0.0.1:8461/assets/index-CL1NqhoE.js:37:99761\n    at Object.u1 [as useMemo"
+   ],
+   "fill_errors": [],
+   "swap_response": {
+    "held_at_swap": {
+     "gen": "old",
+     "writes_open": 1,
+     "open": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287820.557,
+       "req_bytes": 37,
+       "held_s": 0.01
+      }
+     ]
+    },
+    "swap_response": {
+     "from": "old",
+     "to": "new",
+     "writes_open": 1
+    },
+    "registration_after_update": {
+     "installing": "installing",
+     "waiting": null,
+     "active": "activated"
+    }
+   },
+   "draft_before_submit": "{\"step\":3,\"draft\":{\"cityName\":\"厦门\",\"countryCode\":\"CN\",\"timezone\":\"Asia/Shanghai\",\"startAt\":\"2026-09-26T10:00\",\"endAt\":\"2026-09-28T20:00\",\"arrivalLocation\":\"厦门高崎国际机场 T4\",\"departureLocation\":\"厦门站\",\"budgetMajor\":4321,\"stayBudgetMajor\":1000,\"currency\":\"CNY\",\"partySize\":4,\"rooms\":2,\"pace\":\"relaxed\",\"interests\":[],\"specialRequirements\":\"需要无障碍通道 · B2c\"}}",
+   "draft_at_end": "{\"step\":3,\"draft\":{\"cityName\":\"厦门\",\"countryCode\":\"CN\",\"timezone\":\"Asia/Shanghai\",\"startAt\":\"2026-09-26T10:00\",\"endAt\":\"2026-09-28T20:00\",\"arrivalLocation\":\"厦门高崎国际机场 T4\",\"departureLocation\":\"厦门站\",\"budgetMajor\":4321,\"stayBudgetMajor\":1000,\"currency\":\"CNY\",\"partySize\":4,\"rooms\":2,\"pace\":\"relaxed\",\"interests\":[],\"specialRequirements\":\"需要无障碍通道 · B2c\"}}",
+   "samples": [
+    {
+     "t_s": 398.4,
+     "wall": 1790287821626,
+     "bundle": "/assets/index-xKIGmoBz.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287781804,
+       "iso": "2026-09-24T22:09:41.804Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287820.557,
+       "req_bytes": 37,
+       "held_s": 1.08
+      }
+     ]
+    },
+    {
+     "t_s": 408.6,
+     "wall": 1790287822643,
+     "bundle": "/assets/index-xKIGmoBz.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287781804,
+       "iso": "2026-09-24T22:09:41.804Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287820.557,
+       "req_bytes": 37,
+       "held_s": 2.09
+      }
+     ]
+    },
+    {
+     "t_s": 418.8,
+     "wall": 1790287823670,
+     "bundle": "/assets/index-xKIGmoBz.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287781804,
+       "iso": "2026-09-24T22:09:41.804Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287820.557,
+       "req_bytes": 37,
+       "held_s": 3.12
+      }
+     ]
+    },
+    {
+     "t_s": 429,
+     "wall": 1790287824690,
+     "bundle": "/assets/index-xKIGmoBz.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287781804,
+       "iso": "2026-09-24T22:09:41.804Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287820.557,
+       "req_bytes": 37,
+       "held_s": 4.14
+      }
+     ]
+    },
+    {
+     "t_s": 439.3,
+     "wall": 1790287825714,
+     "bundle": "/assets/index-xKIGmoBz.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287781804,
+       "iso": "2026-09-24T22:09:41.804Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287820.557,
+       "req_bytes": 37,
+       "held_s": 5.16
+      }
+     ]
+    },
+    {
+     "t_s": 449.4,
+     "wall": 1790287826727,
+     "bundle": "/assets/index-xKIGmoBz.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287781804,
+       "iso": "2026-09-24T22:09:41.804Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287820.557,
+       "req_bytes": 37,
+       "held_s": 6.18
+      }
+     ]
+    },
+    {
+     "t_s": 459.6,
+     "wall": 1790287827744,
+     "bundle": "/assets/index-xKIGmoBz.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287781804,
+       "iso": "2026-09-24T22:09:41.804Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287820.557,
+       "req_bytes": 37,
+       "held_s": 7.19
+      }
+     ]
+    },
+    {
+     "t_s": 469.9,
+     "wall": 1790287828772,
+     "bundle": "/assets/index-xKIGmoBz.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287781804,
+       "iso": "2026-09-24T22:09:41.804Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287820.557,
+       "req_bytes": 37,
+       "held_s": 8.22
+      }
+     ]
+    },
+    {
+     "t_s": 480,
+     "wall": 1790287829787,
+     "bundle": "/assets/index-xKIGmoBz.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287781804,
+       "iso": "2026-09-24T22:09:41.804Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790287820789,
+       "iso": "2026-09-24T22:10:20.789Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287820.557,
+       "req_bytes": 37,
+       "held_s": 9.23
+      }
+     ]
+    },
+    {
+     "t_s": 2.1,
+     "wall": 1790287830796,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 12.3,
+     "wall": 1790287831807,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 22.4,
+     "wall": 1790287832819,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 32.6,
+     "wall": 1790287833838,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 42.7,
+     "wall": 1790287834853,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 52.9,
+     "wall": 1790287835867,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 63,
+     "wall": 1790287836877,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 73.1,
+     "wall": 1790287837890,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 83.4,
+     "wall": 1790287838919,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 93.5,
+     "wall": 1790287839927,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 103.6,
+     "wall": 1790287840941,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 113.8,
+     "wall": 1790287841959,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 124,
+     "wall": 1790287842985,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 134.2,
+     "wall": 1790287844001,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 144.5,
+     "wall": 1790287845028,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 154.7,
+     "wall": 1790287846053,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 165,
+     "wall": 1790287847080,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 175.1,
+     "wall": 1790287848094,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 185.4,
+     "wall": 1790287849123,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 195.7,
+     "wall": 1790287850151,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 205.9,
+     "wall": 1790287851174,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 216.1,
+     "wall": 1790287852191,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 226.3,
+     "wall": 1790287853214,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 236.6,
+     "wall": 1790287854238,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 246.8,
+     "wall": 1790287855264,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 257.1,
+     "wall": 1790287856288,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 267.2,
+     "wall": 1790287857305,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 277.4,
+     "wall": 1790287858319,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 287.6,
+     "wall": 1790287859343,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 297.8,
+     "wall": 1790287860358,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 307.9,
+     "wall": 1790287861373,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 318.2,
+     "wall": 1790287862402,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 328.4,
+     "wall": 1790287863418,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 338.7,
+     "wall": 1790287864448,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 348.8,
+     "wall": 1790287865464,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 359.1,
+     "wall": 1790287866488,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 369.3,
+     "wall": 1790287867515,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 379.6,
+     "wall": 1790287868544,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 389.9,
+     "wall": 1790287869568,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 400.1,
+     "wall": 1790287870590,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 410.3,
+     "wall": 1790287871613,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287830616,
+       "iso": "2026-09-24T22:10:30.616Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    }
+   ],
+   "origin_write_records": [
+    {
+     "event": "write_started",
+     "path": "/api/v1/travelers",
+     "method": "POST",
+     "code": null,
+     "content_type": null,
+     "bytes": 76,
+     "write_id": 1,
+     "gen": "old",
+     "at": 1790287790.515,
+     "clock": "06:09:50"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/travelers",
+     "method": "POST",
+     "code": 200,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 1,
+     "delivered": true,
+     "gen": "old",
+     "at": 1790287800.518,
+     "clock": "06:10:00"
+    },
+    {
+     "event": "write_started",
+     "path": "/api/v1/journeys",
+     "method": "POST",
+     "code": null,
+     "content_type": null,
+     "bytes": 514,
+     "write_id": 2,
+     "gen": "old",
+     "at": 1790287800.524,
+     "clock": "06:10:00"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/journeys",
+     "method": "POST",
+     "code": 200,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 2,
+     "delivered": true,
+     "gen": "old",
+     "at": 1790287810.527,
+     "clock": "06:10:10"
+    },
+    {
+     "event": "write_started",
+     "path": "/api/v1/travelers/cnx-0274sw-write-ack/preferences",
+     "method": "PUT",
+     "code": null,
+     "content_type": null,
+     "bytes": 2,
+     "write_id": 3,
+     "gen": "old",
+     "at": 1790287810.543,
+     "clock": "06:10:10"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/travelers/cnx-0274sw-write-ack/preferences",
+     "method": "PUT",
+     "code": 200,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 3,
+     "delivered": true,
+     "gen": "old",
+     "at": 1790287820.545,
+     "clock": "06:10:20"
+    },
+    {
+     "event": "write_started",
+     "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+     "method": "POST",
+     "code": null,
+     "content_type": null,
+     "bytes": 37,
+     "write_id": 4,
+     "gen": "old",
+     "at": 1790287820.557,
+     "clock": "06:10:20"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+     "method": "POST",
+     "code": 200,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 4,
+     "delivered": true,
+     "gen": "new",
+     "at": 1790287830.559,
+     "clock": "06:10:30"
+    }
+   ],
+   "verdict": "MET",
+   "why": "no reload while a write was open, the write's answer was delivered, and the still-open document reached the new generation's bytes without another user navigation",
+   "expected": "MET",
+   "agrees_with_expectation": true
+  },
+  "counter_eager": {
+   "writes_started": 4,
+   "writes_finished": 4,
+   "write_delivered": 3,
+   "write_undelivered": 1,
+   "open_write_ids": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "swap_at_wall": 1790287923.445,
+   "writes_open_at_swap": 1,
+   "loads_series_first_last": [
+    [
+     2
+    ],
+    [
+     2
+    ]
+   ],
+   "loads_max": 2,
+   "reload_while_write_open_samples": [],
+   "samples_with_open_write": 9,
+   "pending_handover_marker_seen": false,
+   "gen_tag_at_end": "gen2-standin",
+   "executed_ref_at_end": "/assets/index-CL1NqhoE.js",
+   "executed_sha_at_end": "390febe6e7e0983b29c9b6ec0905e135f2fd3d29532d3da94789c79bb48bf136",
+   "executed_content_type": "text/javascript",
+   "html_at_js_url": false,
+   "executed_sha_equals_new_generation_bytes": true,
+   "converged_by_the_product_without_another_navigation": true,
+   "document_loads_seen": 2,
+   "samples_taken_while_the_page_was_changing": 1,
+   "probe_navigations_in_b2c_phase": 1,
+   "page_errors": [],
+   "console_errors": [
+    "TypeError: Cannot read properties of undefined (reading 'city_code')\n    at http://127.0.0.1:8461/assets/index-CL1NqhoE.js:37:99761\n    at Object.u1 [as useMemo"
+   ],
+   "fill_errors": [],
+   "swap_response": {
+    "held_at_swap": {
+     "gen": "old",
+     "writes_open": 1,
+     "open": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287923.434,
+       "req_bytes": 37,
+       "held_s": 0
+      }
+     ]
+    },
+    "swap_response": {
+     "from": "old",
+     "to": "new",
+     "writes_open": 1
+    },
+    "registration_after_update": {
+     "installing": "installing",
+     "waiting": null,
+     "active": "activated"
+    }
+   },
+   "draft_before_submit": "{\"step\":3,\"draft\":{\"cityName\":\"厦门\",\"countryCode\":\"CN\",\"timezone\":\"Asia/Shanghai\",\"startAt\":\"2026-09-26T10:00\",\"endAt\":\"2026-09-28T20:00\",\"arrivalLocation\":\"厦门高崎国际机场 T4\",\"departureLocation\":\"厦门站\",\"budgetMajor\":4321,\"stayBudgetMajor\":1000,\"currency\":\"CNY\",\"partySize\":4,\"rooms\":2,\"pace\":\"relaxed\",\"interests\":[],\"specialRequirements\":\"需要无障碍通道 · B2c\"}}",
+   "draft_at_end": "{\"step\":3,\"draft\":{\"cityName\":\"厦门\",\"countryCode\":\"CN\",\"timezone\":\"Asia/Shanghai\",\"startAt\":\"2026-09-26T10:00\",\"endAt\":\"2026-09-28T20:00\",\"arrivalLocation\":\"厦门高崎国际机场 T4\",\"departureLocation\":\"厦门站\",\"budgetMajor\":4321,\"stayBudgetMajor\":1000,\"currency\":\"CNY\",\"partySize\":4,\"rooms\":2,\"pace\":\"relaxed\",\"interests\":[],\"specialRequirements\":\"需要无障碍通道 · B2c\"}}",
+   "samples": [
+    {
+     "dead": true,
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287923.434,
+       "req_bytes": 37,
+       "held_s": 1.21
+      }
+     ]
+    },
+    {
+     "t_s": 20.5,
+     "wall": 1790287925657,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287923.434,
+       "req_bytes": 37,
+       "held_s": 2.23
+      }
+     ]
+    },
+    {
+     "t_s": 30.7,
+     "wall": 1790287926678,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287923.434,
+       "req_bytes": 37,
+       "held_s": 3.25
+      }
+     ]
+    },
+    {
+     "t_s": 40.9,
+     "wall": 1790287927691,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287923.434,
+       "req_bytes": 37,
+       "held_s": 4.26
+      }
+     ]
+    },
+    {
+     "t_s": 51,
+     "wall": 1790287928704,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287923.434,
+       "req_bytes": 37,
+       "held_s": 5.27
+      }
+     ]
+    },
+    {
+     "t_s": 61.1,
+     "wall": 1790287929717,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287923.434,
+       "req_bytes": 37,
+       "held_s": 6.29
+      }
+     ]
+    },
+    {
+     "t_s": 71.3,
+     "wall": 1790287930732,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287923.434,
+       "req_bytes": 37,
+       "held_s": 7.3
+      }
+     ]
+    },
+    {
+     "t_s": 81.5,
+     "wall": 1790287931751,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287923.434,
+       "req_bytes": 37,
+       "held_s": 8.32
+      }
+     ]
+    },
+    {
+     "t_s": 91.6,
+     "wall": 1790287932766,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790287923.434,
+       "req_bytes": 37,
+       "held_s": 9.34
+      }
+     ]
+    },
+    {
+     "t_s": 101.8,
+     "wall": 1790287933779,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 111.9,
+     "wall": 1790287934792,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 122,
+     "wall": 1790287935802,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 132.1,
+     "wall": 1790287936818,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 142.3,
+     "wall": 1790287937833,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 152.4,
+     "wall": 1790287938845,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 162.6,
+     "wall": 1790287939863,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 172.8,
+     "wall": 1790287940878,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 182.9,
+     "wall": 1790287941893,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 193,
+     "wall": 1790287942906,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 203.2,
+     "wall": 1790287943924,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 213.3,
+     "wall": 1790287944936,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 223.5,
+     "wall": 1790287945952,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 233.6,
+     "wall": 1790287946964,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 243.7,
+     "wall": 1790287947975,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 254,
+     "wall": 1790287949002,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 264.1,
+     "wall": 1790287950015,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 274.4,
+     "wall": 1790287951041,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 284.6,
+     "wall": 1790287952068,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 294.9,
+     "wall": 1790287953095,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 305.1,
+     "wall": 1790287954110,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 315.3,
+     "wall": 1790287955138,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 325.5,
+     "wall": 1790287956153,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 335.8,
+     "wall": 1790287957180,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 346,
+     "wall": 1790287958205,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 356.2,
+     "wall": 1790287959227,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 366.5,
+     "wall": 1790287960253,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 376.7,
+     "wall": 1790287961269,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 386.8,
+     "wall": 1790287962285,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 397.1,
+     "wall": 1790287963314,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 407.4,
+     "wall": 1790287964346,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 417.6,
+     "wall": 1790287965363,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 427.8,
+     "wall": 1790287966387,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 438,
+     "wall": 1790287967400,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 448.2,
+     "wall": 1790287968424,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 458.4,
+     "wall": 1790287969441,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 468.5,
+     "wall": 1790287970457,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 478.8,
+     "wall": 1790287971479,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 488.9,
+     "wall": 1790287972496,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 499.2,
+     "wall": 1790287973520,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 509.3,
+     "wall": 1790287974537,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790287924634,
+       "iso": "2026-09-24T22:12:04.634Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    }
+   ],
+   "origin_write_records": [
+    {
+     "event": "write_started",
+     "path": "/api/v1/travelers",
+     "method": "POST",
+     "code": null,
+     "content_type": null,
+     "bytes": 76,
+     "write_id": 1,
+     "gen": "old",
+     "at": 1790287893.402,
+     "clock": "06:11:33"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/travelers",
+     "method": "POST",
+     "code": 200,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 1,
+     "delivered": true,
+     "gen": "old",
+     "at": 1790287903.403,
+     "clock": "06:11:43"
+    },
+    {
+     "event": "write_started",
+     "path": "/api/v1/journeys",
+     "method": "POST",
+     "code": null,
+     "content_type": null,
+     "bytes": 514,
+     "write_id": 2,
+     "gen": "old",
+     "at": 1790287903.41,
+     "clock": "06:11:43"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/journeys",
+     "method": "POST",
+     "code": 200,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 2,
+     "delivered": true,
+     "gen": "old",
+     "at": 1790287913.411,
+     "clock": "06:11:53"
+    },
+    {
+     "event": "write_started",
+     "path": "/api/v1/travelers/cnx-0274sw-write-ack/preferences",
+     "method": "PUT",
+     "code": null,
+     "content_type": null,
+     "bytes": 2,
+     "write_id": 3,
+     "gen": "old",
+     "at": 1790287913.422,
+     "clock": "06:11:53"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/travelers/cnx-0274sw-write-ack/preferences",
+     "method": "PUT",
+     "code": 200,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 3,
+     "delivered": true,
+     "gen": "old",
+     "at": 1790287923.424,
+     "clock": "06:12:03"
+    },
+    {
+     "event": "write_started",
+     "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+     "method": "POST",
+     "code": null,
+     "content_type": null,
+     "bytes": 37,
+     "write_id": 4,
+     "gen": "old",
+     "at": 1790287923.434,
+     "clock": "06:12:03"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+     "method": "POST",
+     "code": null,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 4,
+     "delivered": false,
+     "gen": "new",
+     "at": 1790287933.436,
+     "clock": "06:12:13"
+    }
+   ],
+   "verdict": "RED",
+   "why": "the document reloaded (or lost the answer) while the origin still held the write open",
+   "expected": "RED",
+   "agrees_with_expectation": true
+  },
+  "counter_manual": {
+   "writes_started": 4,
+   "writes_finished": 4,
+   "write_delivered": 4,
+   "write_undelivered": 0,
+   "open_write_ids": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "swap_at_wall": 1790288026.608,
+   "writes_open_at_swap": 1,
+   "loads_series_first_last": [
+    [
+     1
+    ],
+    [
+     1
+    ]
+   ],
+   "loads_max": 1,
+   "reload_while_write_open_samples": [],
+   "samples_with_open_write": 9,
+   "pending_handover_marker_seen": true,
+   "gen_tag_at_end": null,
+   "executed_ref_at_end": "/assets/index-EX5IfQcB.js",
+   "executed_sha_at_end": "5e370a48daf0a3ebfffe635d5e13c455d22206395f83f4f196aed5a37f055aa9",
+   "executed_content_type": "text/html; charset=utf-8",
+   "html_at_js_url": true,
+   "executed_sha_equals_new_generation_bytes": false,
+   "converged_by_the_product_without_another_navigation": false,
+   "document_loads_seen": 1,
+   "samples_taken_while_the_page_was_changing": 0,
+   "probe_navigations_in_b2c_phase": 1,
+   "page_errors": [],
+   "console_errors": [
+    "TypeError: Cannot read properties of undefined (reading 'city_code')\n    at http://127.0.0.1:8461/assets/index-EX5IfQcB.js:37:99761\n    at Object.c1 [as useMemo"
+   ],
+   "fill_errors": [],
+   "swap_response": {
+    "held_at_swap": {
+     "gen": "old",
+     "writes_open": 1,
+     "open": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790288026.587,
+       "req_bytes": 37,
+       "held_s": 0.01
+      }
+     ]
+    },
+    "swap_response": {
+     "from": "old",
+     "to": "new",
+     "writes_open": 1
+    },
+    "registration_after_update": {
+     "installing": "installing",
+     "waiting": null,
+     "active": "activated"
+    }
+   },
+   "draft_before_submit": "{\"step\":3,\"draft\":{\"cityName\":\"厦门\",\"countryCode\":\"CN\",\"timezone\":\"Asia/Shanghai\",\"startAt\":\"2026-09-26T10:00\",\"endAt\":\"2026-09-28T20:00\",\"arrivalLocation\":\"厦门高崎国际机场 T4\",\"departureLocation\":\"厦门站\",\"budgetMajor\":4321,\"stayBudgetMajor\":1000,\"currency\":\"CNY\",\"partySize\":4,\"rooms\":2,\"pace\":\"relaxed\",\"interests\":[],\"specialRequirements\":\"需要无障碍通道 · B2c\"}}",
+   "draft_at_end": "{\"step\":3,\"draft\":{\"cityName\":\"厦门\",\"countryCode\":\"CN\",\"timezone\":\"Asia/Shanghai\",\"startAt\":\"2026-09-26T10:00\",\"endAt\":\"2026-09-28T20:00\",\"arrivalLocation\":\"厦门高崎国际机场 T4\",\"departureLocation\":\"厦门站\",\"budgetMajor\":4321,\"stayBudgetMajor\":1000,\"currency\":\"CNY\",\"partySize\":4,\"rooms\":2,\"pace\":\"relaxed\",\"interests\":[],\"specialRequirements\":\"需要无障碍通道 · B2c\"}}",
+   "samples": [
+    {
+     "t_s": 397.1,
+     "wall": 1790288027667,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790288026.587,
+       "req_bytes": 37,
+       "held_s": 1.09
+      }
+     ]
+    },
+    {
+     "t_s": 407.4,
+     "wall": 1790288028696,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790288026.587,
+       "req_bytes": 37,
+       "held_s": 2.11
+      }
+     ]
+    },
+    {
+     "t_s": 417.6,
+     "wall": 1790288029715,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790288026.587,
+       "req_bytes": 37,
+       "held_s": 3.14
+      }
+     ]
+    },
+    {
+     "t_s": 427.8,
+     "wall": 1790288030735,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790288026.587,
+       "req_bytes": 37,
+       "held_s": 4.15
+      }
+     ]
+    },
+    {
+     "t_s": 438,
+     "wall": 1790288031753,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790288026.587,
+       "req_bytes": 37,
+       "held_s": 5.18
+      }
+     ]
+    },
+    {
+     "t_s": 448.3,
+     "wall": 1790288032781,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790288026.587,
+       "req_bytes": 37,
+       "held_s": 6.2
+      }
+     ]
+    },
+    {
+     "t_s": 458.4,
+     "wall": 1790288033797,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790288026.587,
+       "req_bytes": 37,
+       "held_s": 7.21
+      }
+     ]
+    },
+    {
+     "t_s": 468.5,
+     "wall": 1790288034809,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790288026.587,
+       "req_bytes": 37,
+       "held_s": 8.23
+      }
+     ]
+    },
+    {
+     "t_s": 478.7,
+     "wall": 1790288035823,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 1,
+     "open_writes": [
+      {
+       "id": 4,
+       "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+       "method": "POST",
+       "started_at": 1790288026.587,
+       "req_bytes": 37,
+       "held_s": 9.24
+      }
+     ]
+    },
+    {
+     "t_s": 488.8,
+     "wall": 1790288036835,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 499,
+     "wall": 1790288037850,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 509.1,
+     "wall": 1790288038865,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 519.3,
+     "wall": 1790288039882,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 529.4,
+     "wall": 1790288040894,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 539.6,
+     "wall": 1790288041913,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 549.7,
+     "wall": 1790288042930,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 560,
+     "wall": 1790288043959,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 570.2,
+     "wall": 1790288044980,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 580.5,
+     "wall": 1790288046001,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 590.6,
+     "wall": 1790288047013,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 600.8,
+     "wall": 1790288048033,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 611,
+     "wall": 1790288049053,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 621.1,
+     "wall": 1790288050068,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 631.4,
+     "wall": 1790288051091,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 641.5,
+     "wall": 1790288052109,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 651.7,
+     "wall": 1790288053129,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 662,
+     "wall": 1790288054155,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 672.2,
+     "wall": 1790288055173,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 682.3,
+     "wall": 1790288056188,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 692.5,
+     "wall": 1790288057206,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 702.7,
+     "wall": 1790288058222,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 712.9,
+     "wall": 1790288059245,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 723.1,
+     "wall": 1790288060265,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 733.2,
+     "wall": 1790288061278,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 743.4,
+     "wall": 1790288062291,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 753.5,
+     "wall": 1790288063304,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 763.7,
+     "wall": 1790288064321,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 773.9,
+     "wall": 1790288065344,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 784,
+     "wall": 1790288066357,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 794.2,
+     "wall": 1790288067371,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 804.3,
+     "wall": 1790288068389,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 814.5,
+     "wall": 1790288069409,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 824.8,
+     "wall": 1790288070435,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 835,
+     "wall": 1790288071456,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 845.2,
+     "wall": 1790288072472,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 855.3,
+     "wall": 1790288073485,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 865.5,
+     "wall": 1790288074501,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 875.6,
+     "wall": 1790288075513,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 885.7,
+     "wall": 1790288076524,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 895.8,
+     "wall": 1790288077536,
+     "bundle": "/assets/index-EX5IfQcB.js",
+     "gen_tag": null,
+     "loads": 1,
+     "reload_key": "1",
+     "pending_key": "pending",
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 1,
+       "t": 1790287987977,
+       "iso": "2026-09-24T22:13:07.977Z",
+       "gen_tag": null
+      },
+      {
+       "kind": "controllerchange",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z",
+       "controller": "/v10-sw.js"
+      },
+      {
+       "kind": "handover-pending",
+       "load_id": 1,
+       "t": 1790288026815,
+       "iso": "2026-09-24T22:13:46.815Z"
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    }
+   ],
+   "origin_write_records": [
+    {
+     "event": "write_started",
+     "path": "/api/v1/travelers",
+     "method": "POST",
+     "code": null,
+     "content_type": null,
+     "bytes": 76,
+     "write_id": 1,
+     "gen": "old",
+     "at": 1790287996.551,
+     "clock": "06:13:16"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/travelers",
+     "method": "POST",
+     "code": 200,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 1,
+     "delivered": true,
+     "gen": "old",
+     "at": 1790288006.553,
+     "clock": "06:13:26"
+    },
+    {
+     "event": "write_started",
+     "path": "/api/v1/journeys",
+     "method": "POST",
+     "code": null,
+     "content_type": null,
+     "bytes": 514,
+     "write_id": 2,
+     "gen": "old",
+     "at": 1790288006.56,
+     "clock": "06:13:26"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/journeys",
+     "method": "POST",
+     "code": 200,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 2,
+     "delivered": true,
+     "gen": "old",
+     "at": 1790288016.562,
+     "clock": "06:13:36"
+    },
+    {
+     "event": "write_started",
+     "path": "/api/v1/travelers/cnx-0274sw-write-ack/preferences",
+     "method": "PUT",
+     "code": null,
+     "content_type": null,
+     "bytes": 2,
+     "write_id": 3,
+     "gen": "old",
+     "at": 1790288016.572,
+     "clock": "06:13:36"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/travelers/cnx-0274sw-write-ack/preferences",
+     "method": "PUT",
+     "code": 200,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 3,
+     "delivered": true,
+     "gen": "old",
+     "at": 1790288026.574,
+     "clock": "06:13:46"
+    },
+    {
+     "event": "write_started",
+     "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+     "method": "POST",
+     "code": null,
+     "content_type": null,
+     "bytes": 37,
+     "write_id": 4,
+     "gen": "old",
+     "at": 1790288026.587,
+     "clock": "06:13:46"
+    },
+    {
+     "event": "write_finished",
+     "path": "/api/v1/journeys/cnx-0274sw-write-ack/stay-options/generate",
+     "method": "POST",
+     "code": 200,
+     "content_type": "application/json",
+     "bytes": 126,
+     "write_id": 4,
+     "delivered": true,
+     "gen": "new",
+     "at": 1790288036.59,
+     "clock": "06:13:56"
+    }
+   ],
+   "verdict": "RED",
+   "why": "the open document never reached the new generation's bytes on its own (gen_tag=None, sha_match=False)",
+   "expected": "RED",
+   "agrees_with_expectation": true
+  },
+  "idle_control": {
+   "writes_started": 0,
+   "writes_finished": 0,
+   "write_delivered": 0,
+   "write_undelivered": 0,
+   "open_write_ids": [],
+   "swap_at_wall": 1790288096.602,
+   "writes_open_at_swap": 0,
+   "loads_series_first_last": [
+    [
+     2
+    ],
+    [
+     2
+    ]
+   ],
+   "loads_max": 2,
+   "reload_while_write_open_samples": [],
+   "samples_with_open_write": 0,
+   "pending_handover_marker_seen": false,
+   "gen_tag_at_end": "gen2-standin",
+   "executed_ref_at_end": "/assets/index-CL1NqhoE.js",
+   "executed_sha_at_end": "390febe6e7e0983b29c9b6ec0905e135f2fd3d29532d3da94789c79bb48bf136",
+   "executed_content_type": "text/javascript",
+   "html_at_js_url": false,
+   "executed_sha_equals_new_generation_bytes": true,
+   "converged_by_the_product_without_another_navigation": true,
+   "document_loads_seen": 2,
+   "samples_taken_while_the_page_was_changing": 1,
+   "probe_navigations_in_b2c_phase": 1,
+   "page_errors": [],
+   "console_errors": [],
+   "fill_errors": [],
+   "swap_response": {
+    "writes_open_before_swap": {
+     "gen": "old",
+     "writes_open": 0,
+     "open": []
+    },
+    "swap_response": {
+     "from": "old",
+     "to": "new",
+     "writes_open": 0
+    },
+    "registration_after_update": {
+     "installing": "installing",
+     "waiting": null,
+     "active": "activated"
+    }
+   },
+   "draft_before_submit": null,
+   "draft_at_end": "{\"step\":1,\"draft\":{\"cityName\":\"\",\"countryCode\":\"CN\",\"timezone\":\"Asia/Shanghai\",\"startAt\":\"2026-09-26T10:00\",\"endAt\":\"2026-09-28T20:00\",\"arrivalLocation\":\"\",\"departureLocation\":\"\",\"budgetMajor\":3000,\"stayBudgetMajor\":1000,\"currency\":\"CNY\",\"partySize\":2,\"rooms\":1,\"pace\":\"relaxed\",\"interests\":[],\"specialRequirements\":\"\"}}",
+   "samples": [
+    {
+     "dead": true,
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 20.6,
+     "wall": 1790288098856,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 30.7,
+     "wall": 1790288099868,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 40.9,
+     "wall": 1790288100891,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 51.1,
+     "wall": 1790288101905,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 61.2,
+     "wall": 1790288102918,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 71.3,
+     "wall": 1790288103927,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 81.5,
+     "wall": 1790288104950,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 91.7,
+     "wall": 1790288105968,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 101.9,
+     "wall": 1790288106990,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 112,
+     "wall": 1790288108002,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 122.3,
+     "wall": 1790288109026,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 132.4,
+     "wall": 1790288110038,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 142.7,
+     "wall": 1790288111065,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 152.9,
+     "wall": 1790288112088,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 163.1,
+     "wall": 1790288113111,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 173.3,
+     "wall": 1790288114124,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 183.5,
+     "wall": 1790288115151,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 193.7,
+     "wall": 1790288116166,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 203.8,
+     "wall": 1790288117181,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 214,
+     "wall": 1790288118197,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 224.3,
+     "wall": 1790288119225,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 234.4,
+     "wall": 1790288120239,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 244.6,
+     "wall": 1790288121257,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 254.7,
+     "wall": 1790288122270,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 264.9,
+     "wall": 1790288123292,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 275.1,
+     "wall": 1790288124306,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 285.2,
+     "wall": 1790288125318,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 295.4,
+     "wall": 1790288126336,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 305.5,
+     "wall": 1790288127353,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 315.7,
+     "wall": 1790288128371,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 325.8,
+     "wall": 1790288129382,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 336,
+     "wall": 1790288130397,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 346.2,
+     "wall": 1790288131415,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 356.3,
+     "wall": 1790288132428,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 366.5,
+     "wall": 1790288133450,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 376.7,
+     "wall": 1790288134466,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 386.8,
+     "wall": 1790288135480,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 397,
+     "wall": 1790288136494,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 407.2,
+     "wall": 1790288137516,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 417.4,
+     "wall": 1790288138541,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 427.5,
+     "wall": 1790288139552,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 437.7,
+     "wall": 1790288140566,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 447.8,
+     "wall": 1790288141576,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 458,
+     "wall": 1790288142593,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 468.1,
+     "wall": 1790288143611,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 478.3,
+     "wall": 1790288144626,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 488.4,
+     "wall": 1790288145638,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 498.5,
+     "wall": 1790288146652,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    },
+    {
+     "t_s": 508.7,
+     "wall": 1790288147670,
+     "bundle": "/assets/index-CL1NqhoE.js",
+     "gen_tag": "gen2-standin",
+     "loads": 2,
+     "reload_key": "1",
+     "pending_key": null,
+     "draft_present": true,
+     "mounted": true,
+     "events": [
+      {
+       "kind": "document-start",
+       "load_id": 2,
+       "t": 1790288097833,
+       "iso": "2026-09-24T22:14:57.833Z",
+       "gen_tag": null
+      }
+     ],
+     "writes_open": 0,
+     "open_writes": []
+    }
+   ],
+   "origin_write_records": [],
+   "verdict": "MET",
+   "why": "with no write outstanding the same handover converged by itself, so the deferral is conditional and not the only behaviour",
+   "expected": "MET",
+   "agrees_with_expectation": true
+  }
+ }
+}
