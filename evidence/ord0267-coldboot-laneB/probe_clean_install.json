@@ -1,0 +1,42 @@
+{
+ "phase": "install",
+ "at": "2026-09-24T02:49:18.577Z",
+ "base": "http://127.0.0.1:8446",
+ "profile": "D:\\moodle\\_qoder_b_ord0267_20260923\\profile_clean",
+ "navigation": {
+  "ok": true,
+  "status": 200
+ },
+ "facts": {
+  "url": "http://127.0.0.1:8446/v8/hub",
+  "title": "CityNexus Trip Operations",
+  "controlled": true,
+  "controller_script": "/v10-sw.js",
+  "onLine": true,
+  "app_mounted": true,
+  "registrations": [
+   {
+    "scope": "/",
+    "active": "/v10-sw.js",
+    "active_state": "activated",
+    "waiting": null,
+    "installing": null
+   }
+  ],
+  "worker_source": {
+   "status": 200,
+   "ok": true,
+   "rev": 4,
+   "precacheCalls": 1
+  },
+  "manifest_urls": null,
+  "caches": {},
+  "rendered_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+  "leaf_count": 77
+ },
+ "page_errors": [],
+ "console_errors": [],
+ "requests_failed": [],
+ "non_200_responses": [],
+ "offline_asset_probe": null
+}
