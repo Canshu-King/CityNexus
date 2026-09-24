@@ -1,0 +1,626 @@
+{
+ "at": "2026-09-24T11:12:33+08:00",
+ "order": "ORD-0274-SW 前置测量 v2（只读）：换代会自己收敛吗",
+ "lane": "B c01d72a3",
+ "mode": "READ-ONLY; no product file edited; no unregister, no cache clear",
+ "why_v2": "v1 killed the origin between navigations, so the second navigation was a fresh document and could not answer the question; that reading is kept (q274sw_transition_measurement.json) and superseded here, not averaged in",
+ "surface": {
+  "origin_port": 8452,
+  "one_process_one_port_one_origin": true,
+  "modules": {
+   "old": "/assets/index-Cpy_jhEg.js",
+   "new": "/assets/index-ChOTTCvB.js"
+  },
+  "swap_trigger": "the page itself: GET /__admin/swap then registration.update()",
+  "document_under_test": "the one that was already open before the swap",
+  "never_touched_or_opened": [
+   ":4781",
+   ":4782",
+   ":8693",
+   "tunnel",
+   "cnx proxy",
+   "_live",
+   "_preview",
+   "HJ-P1 ports 8941/8942"
+  ],
+  "demo_reset": 0,
+  "unregister_calls": 0,
+  "cache_clear_calls": 0
+ },
+ "install_phase": {
+  "seen": {
+   "loads": [
+    {
+     "id": 1,
+     "at": 49.80000000074506,
+     "href": "http://127.0.0.1:8452/v8/hub"
+    }
+   ],
+   "events": [
+    {
+     "kind": "document-start",
+     "t_ms": 52,
+     "load_id": 1,
+     "controller": null,
+     "bundle": null
+    },
+    {
+     "kind": "no-registration",
+     "t_ms": 68,
+     "load_id": 1,
+     "controller": null,
+     "bundle": null
+    },
+    {
+     "kind": "controllerchange",
+     "t_ms": 317,
+     "load_id": 1,
+     "controller": "/v10-sw.js",
+     "bundle": "/assets/index-Cpy_jhEg.js"
+    }
+   ],
+   "controller_now": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "/",
+     "active": "/v10-sw.js",
+     "active_state": "activated",
+     "waiting": null,
+     "waiting_state": null,
+     "installing": null
+    }
+   ],
+   "product_reload_key": null,
+   "executing_bundle": "/assets/index-Cpy_jhEg.js",
+   "shell_in_document": [
+    "/assets/index-Cpy_jhEg.js"
+   ],
+   "mounted": true,
+   "onLine": true
+  },
+  "console_errors": []
+ },
+ "inplace_phase": {
+  "swap_request": {
+   "swap_response": {
+    "from": "old",
+    "to": "new"
+   },
+   "registration_after_update": {
+    "installing": "installing",
+    "waiting": null,
+    "active": "activated"
+   }
+  },
+  "samples": [
+   {
+    "t_s": 4.1,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 5.2,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 6.2,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 7.2,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 8.2,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 9.2,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 10.2,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 11.2,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 12.2,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 13.3,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 14.3,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 15.3,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 16.3,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 17.3,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 18.3,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 19.3,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 20.3,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 21.4,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 22.4,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 23.4,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 24.4,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 25.4,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 26.4,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 27.4,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 28.4,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 29.4,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 30.5,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 31.5,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 32.5,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 33.5,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 34.5,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 35.5,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 36.5,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 37.5,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 38.5,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 39.6,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 40.6,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 41.6,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 42.6,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   },
+   {
+    "t_s": 43.6,
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "controller": "/v10-sw.js",
+    "loads": 1,
+    "reload_key": null
+   }
+  ],
+  "events": [
+   {
+    "kind": "document-start",
+    "t_ms": 11,
+    "load_id": 1,
+    "controller": "/v10-sw.js",
+    "bundle": null
+   },
+   {
+    "kind": "registration-looked-up",
+    "t_ms": 13,
+    "load_id": 1,
+    "controller": "/v10-sw.js",
+    "bundle": null,
+    "installing": null,
+    "waiting": null,
+    "active": "activated",
+    "active_script": "/v10-sw.js"
+   },
+   {
+    "kind": "updatefound",
+    "t_ms": 3134,
+    "load_id": 1,
+    "controller": "/v10-sw.js",
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "installing": "installing",
+    "waiting": null,
+    "active": "activated",
+    "active_script": "/v10-sw.js"
+   },
+   {
+    "kind": "statechange:installed",
+    "t_ms": 3294,
+    "load_id": 1,
+    "controller": "/v10-sw.js",
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "installing": null,
+    "waiting": "installed",
+    "active": "activated",
+    "active_script": "/v10-sw.js"
+   },
+   {
+    "kind": "statechange:activating",
+    "t_ms": 3294,
+    "load_id": 1,
+    "controller": "/v10-sw.js",
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "installing": null,
+    "waiting": null,
+    "active": "activating",
+    "active_script": "/v10-sw.js"
+   },
+   {
+    "kind": "controllerchange",
+    "t_ms": 3294,
+    "load_id": 1,
+    "controller": "/v10-sw.js",
+    "bundle": "/assets/index-Cpy_jhEg.js"
+   },
+   {
+    "kind": "statechange:activated",
+    "t_ms": 3298,
+    "load_id": 1,
+    "controller": "/v10-sw.js",
+    "bundle": "/assets/index-Cpy_jhEg.js",
+    "installing": null,
+    "waiting": null,
+    "active": "activated",
+    "active_script": "/v10-sw.js"
+   }
+  ],
+  "seen_at_end": {
+   "loads": [
+    {
+     "id": 1,
+     "at": 10.800000000745058,
+     "href": "http://127.0.0.1:8452/v8/hub"
+    }
+   ],
+   "events": [
+    {
+     "kind": "document-start",
+     "t_ms": 11,
+     "load_id": 1,
+     "controller": "/v10-sw.js",
+     "bundle": null
+    },
+    {
+     "kind": "registration-looked-up",
+     "t_ms": 13,
+     "load_id": 1,
+     "controller": "/v10-sw.js",
+     "bundle": null,
+     "installing": null,
+     "waiting": null,
+     "active": "activated",
+     "active_script": "/v10-sw.js"
+    },
+    {
+     "kind": "updatefound",
+     "t_ms": 3134,
+     "load_id": 1,
+     "controller": "/v10-sw.js",
+     "bundle": "/assets/index-Cpy_jhEg.js",
+     "installing": "installing",
+     "waiting": null,
+     "active": "activated",
+     "active_script": "/v10-sw.js"
+    },
+    {
+     "kind": "statechange:installed",
+     "t_ms": 3294,
+     "load_id": 1,
+     "controller": "/v10-sw.js",
+     "bundle": "/assets/index-Cpy_jhEg.js",
+     "installing": null,
+     "waiting": "installed",
+     "active": "activated",
+     "active_script": "/v10-sw.js"
+    },
+    {
+     "kind": "statechange:activating",
+     "t_ms": 3294,
+     "load_id": 1,
+     "controller": "/v10-sw.js",
+     "bundle": "/assets/index-Cpy_jhEg.js",
+     "installing": null,
+     "waiting": null,
+     "active": "activating",
+     "active_script": "/v10-sw.js"
+    },
+    {
+     "kind": "controllerchange",
+     "t_ms": 3294,
+     "load_id": 1,
+     "controller": "/v10-sw.js",
+     "bundle": "/assets/index-Cpy_jhEg.js"
+    },
+    {
+     "kind": "statechange:activated",
+     "t_ms": 3298,
+     "load_id": 1,
+     "controller": "/v10-sw.js",
+     "bundle": "/assets/index-Cpy_jhEg.js",
+     "installing": null,
+     "waiting": null,
+     "active": "activated",
+     "active_script": "/v10-sw.js"
+    }
+   ],
+   "controller_now": "/v10-sw.js",
+   "registrations": [
+    {
+     "scope": "/",
+     "active": "/v10-sw.js",
+     "active_state": "activated",
+     "waiting": null,
+     "waiting_state": null,
+     "installing": null
+    }
+   ],
+   "product_reload_key": null,
+   "executing_bundle": "/assets/index-Cpy_jhEg.js",
+   "shell_in_document": [
+    "/assets/index-Cpy_jhEg.js"
+   ],
+   "mounted": true,
+   "onLine": true
+  },
+  "page_errors": []
+ },
+ "second_navigation": {
+  "loads": [
+   {
+    "id": 1,
+    "at": 22.5,
+    "href": "http://127.0.0.1:8452/v8/hub"
+   }
+  ],
+  "events": [
+   {
+    "kind": "document-start",
+    "t_ms": 23,
+    "load_id": 1,
+    "controller": "/v10-sw.js",
+    "bundle": null
+   },
+   {
+    "kind": "registration-looked-up",
+    "t_ms": 25,
+    "load_id": 1,
+    "controller": "/v10-sw.js",
+    "bundle": null,
+    "installing": null,
+    "waiting": null,
+    "active": "activated",
+    "active_script": "/v10-sw.js"
+   }
+  ],
+  "controller_now": "/v10-sw.js",
+  "registrations": [
+   {
+    "scope": "/",
+    "active": "/v10-sw.js",
+    "active_state": "activated",
+    "waiting": null,
+    "waiting_state": null,
+    "installing": null
+   }
+  ],
+  "product_reload_key": null,
+  "executing_bundle": "/assets/index-ChOTTCvB.js",
+  "shell_in_document": [
+   "/assets/index-ChOTTCvB.js"
+  ],
+  "mounted": true,
+  "onLine": true
+ },
+ "derived": {
+  "controllerchange_events": 1,
+  "distinct_controller_scriptURLs": [
+   "/v10-sw.js"
+  ],
+  "document_changed_bundle_without_navigation": false,
+  "load_ids_first_to_last": [
+   [
+    1,
+    1
+   ]
+  ],
+  "product_reload_marker_values_seen": [
+   "None"
+  ],
+  "registrations_at_end": [
+   {
+    "scope": "/",
+    "active": "/v10-sw.js",
+    "active_state": "activated",
+    "waiting": null,
+    "waiting_state": null,
+    "installing": null
+   }
+  ],
+  "bundle_at_end_of_open_document": "/assets/index-Cpy_jhEg.js",
+  "bundle_after_second_navigation": "/assets/index-ChOTTCvB.js",
+  "navigations_needed_for_convergence": 2
+ },
+ "verdict_for_me": "OPEN_DOCUMENT_DID_NOT_CONVERGE__A_SECOND_NAVIGATION_IS_REQUIRED",
+ "what_this_is_not": "Not HJ-P1's B2 verdict and not a self-signed derived_result: hers runs the real chain through the tunnel and she owns that cell. This is loopback evidence about the mechanism, so I know what to change before I change it."
+}
