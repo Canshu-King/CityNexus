@@ -1,0 +1,36 @@
+  MET     F1_real_generations_both_green                       expect=GREEN got={"verdict": "GREEN"}
+  MET     F2_real_generations_bytes_differ                     expect=True  got={"bytes_fingerprint": true, "content_fingerprint": true}
+  MET     F3_rename_only_is_not_a_content_change               expect=True  got={"content_fingerprint_equal": true, "names_differ": true}
+  MET     F3b_rename_still_moves_the_name_fingerprint          expect=True  got={"bytes_fingerprint": true}
+  MET     F4_same_name_different_bytes_is_a_change             expect=True  got={"content_fingerprint": true, "names_equal": true}
+  MET     F5_updateViaCache_all_in_bytes_is_RED                expect=RED   got={"verdict": "RED"}
+  MET     F6_good_call_in_a_comment_does_not_whiten_bad_code   expect=RED   got={"verdict": "RED"}
+  MET     F7_comment_claiming_all_does_not_blacken_good_code   expect=GREEN got={"verdict": "GREEN"}
+  MET     F8_generation_without_any_registration_is_RED        expect=RED   got={"verdict": "RED"}
+  MET     F9_silent_second_chunk_is_not_a_defect               expect=GREEN got={"verdict": "GREEN", "scripts_observed": 2, "owners": ["/assets/index-S.js"]}
+  MET     F10_unparseable_second_call_is_RED                   expect=RED   got={"verdict": "RED", "unresolved": 1}
+  MET     F11a_RED_generation_is_refused_as_a_host             expect=True  got={"refused": true}
+  MET     F11b_GREEN_generation_is_not_refused                 expect=True  got={"not_refused": true}
+  MET     F12_executed_equals_parsed_when_shas_agree           expect=GREEN got={"verdict": "GREEN", "refs_compared": 2}
+  MET     F13_one_differing_ref_is_RED                         expect=RED   got={"verdict": "RED"}
+
+selftest 15/15 MET  ruler blob=0686670743c0 extracted=7 symbols 8,574 B
+-> ord0274_ident_selftest_tip45.json
+IDENT_RC=0
+== A-equivalent (never reconnected)
+      install: bundle=/assets/index-ChOTTCvB.js controller=/v10-sw.js loads=1 reload_key=null waiting=null events=3 -> reg_profile_A_install.json
+      again: bundle=/assets/index-ChOTTCvB.js controller=/v10-sw.js loads=1 reload_key=null waiting=null events=2 -> reg_profile_A_again.json
+== B3-equivalent (offline after convergence)
+      install: bundle=/assets/index-xKIGmoBz.js controller=/v10-sw.js loads=1 reload_key=null waiting=null events=3 -> reg_profile_B3_install.json
+      inplace: bundle=/assets/index-CL1NqhoE.js controller=/v10-sw.js loads=2 reload_key="1" waiting=null events=2 -> reg_profile_B3_inplace.json
+      again: bundle=/assets/index-CL1NqhoE.js controller=/v10-sw.js loads=1 reload_key=null waiting=null events=2 -> reg_profile_B3_again.json
+
+  A: {"online": {"bundle": "/assets/index-ChOTTCvB.js", "controller": "/v10-sw.js", "registrations": [{"scope": "/", "active": "/v10-sw.js", "active_state": "activated", "waiting": null, "waiting_state": null, "installing": null}]}, "offline": {"nav": null, "bundle": "/assets/index-ChOTTCvB.js", "control
+  B3: {"installed_generation_bundle": "/assets/index-xKIGmoBz.js", "after_swap_bundle": "/assets/index-CL1NqhoE.js", "converged_within_one_navigation": true, "product_marker_after_convergence": "1", "offline_after_convergence": {"bundle": "/assets/index-CL1NqhoE.js", "controlled": "/v10-sw.js", "mounted":
+-> q274sw_regression_equivalents.json
+REG_RC=0
+
+> typecheck
+> tsc -p tsconfig.check.json --noEmit
+
+TYPECHECK_RC=0
