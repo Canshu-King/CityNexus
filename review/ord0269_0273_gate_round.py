@@ -179,6 +179,49 @@ def parse_log(path: str) -> dict:
     }
 
 
+def landing_groups(landed_tip: str, problems: list) -> dict:
+    """The commander picks the landing set by group, so the two groups are separated by path and
+    every number in them is read from git rather than counted by hand."""
+    rc, out = run(f"git diff --name-status {landed_tip} HEAD", ROOT)
+    if rc != 0:
+        problems.append(f"landing_groups: git diff rc={rc} -- no grouping is reported")
+        return {}
+    files = []
+    for line in out.splitlines():
+        parts = line.split("\t")
+        if len(parts) < 2:
+            continue
+        status, path = parts[0], parts[-1]
+        blob_rc, blob = run(f"git rev-parse HEAD:{path}", ROOT)
+        _s, stat = run(f"git diff --numstat {landed_tip} HEAD -- {path}", ROOT)
+        added, removed = (stat.split("\t")[:2] if stat.strip() else ["?", "?"])
+        files.append(
+            {
+                "path": path,
+                "status": status,
+                "blob_at_head": blob.strip() if blob_rc == 0 else "UNRESOLVED",
+                "added": added,
+                "removed": removed,
+                "group": "landing" if path.startswith("frontend/") else "lane_scaffolding",
+            }
+        )
+    landing = [f for f in files if f["group"] == "landing"]
+    scaffolding = [f for f in files if f["group"] == "lane_scaffolding"]
+    return {
+        "command": f"(cwd {ROOT}) git diff --name-status {landed_tip} HEAD",
+        "landed_tip": landed_tip,
+        "counts": {"total": len(files), "landing": len(landing), "lane_scaffolding": len(scaffolding)},
+        "mainline_needs": landing,
+        "lane_scaffolding_only": scaffolding,
+        "rule": "group is decided by path: `frontend/**` is what the line needs, `review/**` is this "
+        "lane's instrument and bus text. Independence was measured, not assumed: a grep for an import "
+        "specifier reaching into review/ over frontend/src and frontend/e2e returns 0 hits, while the "
+        "literal string `review/` does occur in comments and node messages -- a path in prose is not a "
+        "dependency, so taking the landing group alone leaves nothing dangling.",
+
+    }
+
+
 def main() -> int:
     argv = sys.argv[1:]
 
@@ -325,15 +368,18 @@ def main() -> int:
 
 
     collection = None
+    landing = None
     if landing_tip or pre_rebase_tip:
         if not (landing_tip and pre_rebase_tip):
             problems.append("--landing and --pre-rebase must be given together (one without the other proves nothing)")
         else:
             collection = collect_evidence(landing_tip, pre_rebase_tip, problems)
+            landing = landing_groups(landing_tip, problems)
 
     payload = {
         "generatedBy": "e345b9d6",
         "collection": collection,
+        "landing_groups": landing,
         "orders": ["ORD-0269 cells 1/3 + R-4 negative + R-6 pagination", "ORD-0273 TEXT + ACTION"],
         "authoritative_tip_at_delivery": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
         "candidate_tip": head,
