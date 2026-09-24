@@ -1,0 +1,20 @@
+{
+ "answered": 37,
+ "silenced": 2,
+ "silenced_paths": [
+  "/api/v1/journeys/91f78c9b-b768-46c9-a62e-4ac09b6609da/agent/commands",
+  "/api/v1/journeys/91f78c9b-b768-46c9-a62e-4ac09b6609da/agent/commands"
+ ],
+ "silenced_log": [
+  {
+   "path": "/api/v1/journeys/91f78c9b-b768-46c9-a62e-4ac09b6609da/agent/commands",
+   "method": "POST",
+   "at": "07:41:32"
+  },
+  {
+   "path": "/api/v1/journeys/91f78c9b-b768-46c9-a62e-4ac09b6609da/agent/commands",
+   "method": "POST",
+   "at": "07:42:09"
+  }
+ ]
+}
