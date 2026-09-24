@@ -1722,15 +1722,25 @@ async function registerProductionServiceWorker() {
      true for every real generation change and this handler returned before it could reload anything:
      measured across two generations on one origin, `controllerchange` fired once, the document's load
      count stayed at 1, no marker was ever written, and the previous bundle kept executing until a
-     SECOND navigation. A ServiceWorker object does change when a new generation takes over. */
-  const controllerBefore = navigator.serviceWorker.controller;
+     SECOND navigation. A ServiceWorker object does change when a new generation takes over.
+
+     Tracked across events, not read once. A first visitor is not controlled when this runs, so a single
+     `controllerBefore` captured here stayed null for the whole document: the claim arrived as the first
+     `controllerchange`, and every later generation change was bailed out by that same null. Measured on the B2b arm -
+     two controllerchange events, no marker written, load count 1, and the old bundle still executing after
+     the new generation had taken over. The exclusion that is actually wanted is "the first time this
+     document was ever controlled", which is a property of the transition, not of registration time. */
+  let lastController = navigator.serviceWorker.controller ?? null;
 
   navigator.serviceWorker.addEventListener("controllerchange", () => {
     const controllerAfter = navigator.serviceWorker.controller;
-    if (!controllerBefore || !controllerAfter || controllerAfter === controllerBefore) return;
+    if (!controllerAfter || controllerAfter === lastController) return;
+    const wasControlledBeforeThisEvent = lastController !== null;
+    lastController = controllerAfter;
+    // A document that was never controlled has no old shell to converge; this is the claim, not a generation change.
+    if (!wasControlledBeforeThisEvent) return;
 
-    // Bounded, so a worker that keeps re-taking control cannot turn into a reload loop; the first
-    // control acquisition of an uncontrolled document stays excluded by `!controllerBefore` above.
+    // Bounded, so a worker that keeps re-taking control cannot turn into a reload loop.
     const switchesTaken = Number(sessionStorage.getItem(serviceWorkerReloadMarkerKey) || "0");
     if (switchesTaken >= MAX_AUTOMATIC_CONVERGENCE_PER_SESSION) return;
 
