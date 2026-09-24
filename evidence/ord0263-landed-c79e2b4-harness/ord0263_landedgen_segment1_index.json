@@ -1,0 +1,111 @@
+{
+ "at": "2026-09-24T08:31:42+08:00",
+ "what": "ORD-0263 landed-generation close-out - segment 1: pre-reboot originals",
+ "lane": "HARNESS d291c9dc",
+ "interruption": {
+  "event": "blue screen + reboot 02:2x-02:3x",
+  "my_face_and_instruments": "all gone",
+  "ports_after_reboot": "4411-4417 and 8411 all free (netstat read after reboot)",
+  "readings_taken_before_the_reboot": [
+   "S1",
+   "S2",
+   "S4",
+   "S3",
+   "S5/200+HTML"
+  ],
+  "readings_not_reached_before_the_reboot": [
+   "S5/200+empty",
+   "S5/200+not_json"
+  ],
+  "policy_i_adopted": "re-take the whole table on a fresh post-reboot face and report the two passes side by side; nothing from before the reboot is merged silently into the after-the-reboot table"
+ },
+ "subject": "landed generation c79e2b4f4efe414dba22a071a7136ae10b5c84aa as served from disk (index.html refs only assets/index-ChOTTCvB.js, 1,245,203 B sha256/16 2d56a79632efc0c6; v10-sw.js 2,055 B sha256/16 88a7d980b3ffcbd6 which differs from the previous generation's e63d7421eda34093, so the re-spin is distinguishable; manifest.webmanifest 314 B; the previous bundle index-Cpy_jhEg.js is still on disk per DEPLOY_BUNDLE_RETENTION)",
+ "ruler_under_test_unchanged_so_far": {
+  "file_bytes": 21703,
+  "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "promised": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "match": true
+ },
+ "commander_contract_for_this_cell": {
+  "close_conditions": [
+   "(1) the four earlier cells do not regress on this generation",
+   "(2) V5 GREEN for all three shapes",
+   "(3) the raw capture shows, per shape, a dedicated non-catch-all reason - any shape really landing UNKNOWN_FAILURE blocks closing"
+  ],
+  "self_limiting_sentence_that_must_appear_verbatim_in_my_close_text": "UNKNOWN_FAILURE prohibition = contractually satisfied by direct landed-generation observations; v3 has no dedicated UNKNOWN_FAILURE mutation killer; verifier coverage debt transferred to instrument maintenance.",
+  "ruler_changes_this_round": "none - no v4, no killer added (arbiter 5800456557); the missing mutation killer is recorded as verifier coverage debt, not as a product blocker"
+ },
+ "previous_landing_receipt_from_commander": "commander/control:evidence/ord0263-landing-c79e2b4/LANDED_RECEIPT_c79e2b4.json blob 5201a28b2da737e18bda9cba1b7f3653352d3e6a 6,299 B",
+ "files_requested": 6,
+ "proven_by_40char_readback": 6,
+ "not_proven": [],
+ "old_paths_touched": [],
+ "rows": [
+  {
+   "local_file": "ord0263_landedgen_reboot_note.md",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_landedgen_reboot_note.md",
+   "bytes": 3557,
+   "blob40": "7538ed645265c8aaa13eba180cbf71da7bd641bf",
+   "readback_status": 200,
+   "readback_bytes": 3557,
+   "readback_blob40": "7538ed645265c8aaa13eba180cbf71da7bd641bf",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_close_surface_receipt.json",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_close_surface_receipt.json",
+   "bytes": 1843,
+   "blob40": "fda286e0688ffc05d106ca30bdd49b01559cae68",
+   "readback_status": 200,
+   "readback_bytes": 1843,
+   "readback_blob40": "fda286e0688ffc05d106ca30bdd49b01559cae68",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "tools/run_disk_face.py",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/run_disk_face.py",
+   "bytes": 9311,
+   "blob40": "b76e591598fd9bf68380dde8e6aab4e6e758afed",
+   "readback_status": 200,
+   "readback_bytes": 9311,
+   "readback_blob40": "b76e591598fd9bf68380dde8e6aab4e6e758afed",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_origin_state_answered_health.log",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_origin_state_answered_health.log",
+   "bytes": 5796,
+   "blob40": "000dd6159215688b2e46cbd1a42543f634666820",
+   "readback_status": 200,
+   "readback_bytes": 5796,
+   "readback_blob40": "000dd6159215688b2e46cbd1a42543f634666820",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_origin_state_fully_silent.log",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_origin_state_fully_silent.log",
+   "bytes": 6490,
+   "blob40": "fe067c899e28b458bfe685640ec8787d3f1b0249",
+   "readback_status": 200,
+   "readback_bytes": 6490,
+   "readback_blob40": "fe067c899e28b458bfe685640ec8787d3f1b0249",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  },
+  {
+   "local_file": "ord0263_junk_html.log",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_junk_html.log",
+   "bytes": 595,
+   "blob40": "bfb4672b4cfb4b6449802473b62f8d2806592520",
+   "readback_status": 200,
+   "readback_bytes": 595,
+   "readback_blob40": "bfb4672b4cfb4b6449802473b62f8d2806592520",
+   "verdict": "PROVEN",
+   "publisher_rc": 0
+  }
+ ]
+}
