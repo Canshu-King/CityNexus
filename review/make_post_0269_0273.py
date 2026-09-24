@@ -160,13 +160,17 @@ def main() -> int:
         text=True,
         shell=True,
     ).stdout.strip()
-    have = subprocess.run(
-        f"git cat-file -e {mirror_tip}^{{commit}}",
+    # `git cat-file -e <sha>^{commit}` is not usable here: shell=True goes through cmd.exe on
+    # Windows, where ^ is the escape character, so the probe answered "absent" for a commit that is
+    # in this object store.  A probe that manufactures a false absence is worse than no probe.
+    kind = subprocess.run(
+        f"git cat-file -t {mirror_tip}",
         cwd="D:/moodle/_qoder_d_lane_20260923",
         capture_output=True,
         text=True,
         shell=True,
-    ).returncode
+    ).stdout.strip()
+    have = 0 if kind == "commit" else 1
     if have == 0:
         predict = subprocess.run(
             f'git merge-tree --write-tree {mirror_tip} {round_receipt["candidate_tip"]}',
@@ -187,8 +191,8 @@ def main() -> int:
         )
     else:
         prediction = (
-            f"合流预测 NOT_PREDICTED_LOCALLY：外读尖 `{mirror_tip}` 的对象不在本机对象库里，"
-            "我没有为这一格编一个数"
+            f"合流预测 NOT_PREDICTED_LOCALLY: `git cat-file -t {mirror_tip}` 在本车道对象库返回 "
+            f"`{kind or '<empty>'}`（不是 commit），我没有为这一格编一个数"
         )
     add(f"- 权威尖（外读 mirror ref）：`{mirror_tip or '?'}`；我这枚候选从 `{round_receipt['authoritative_tip_at_delivery'][:9]}…` 切的")
     add(f"- 本机权威分支 `integration/frontend-apple-pass1` 现读：`{local_tip or '?'}`（落后一代不等于我能动它）")
