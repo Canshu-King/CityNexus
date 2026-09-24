@@ -1,0 +1,196 @@
+{
+ "at": "2026-09-24T10:57:56+08:00",
+ "segment": "runtime1",
+ "lane": "HARNESS d291c9dc",
+ "subject": "ORD-0271-B HARNESS d291c9dc: verifier v4 and the dedicated single-variable counter-proof for the ORD-0263 fifth state",
+ "rulers": {
+  "v3": {
+   "file": "tools/ord0263_verifier_v3.py",
+   "bytes": 21703,
+   "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+   "published_blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+   "published_bytes": 21703,
+   "unchanged": true
+  },
+  "v4": {
+   "file": "tools/ord0263_verifier_v4.py",
+   "bytes": 0,
+   "blob40": null,
+   "present": false
+  }
+ },
+ "files_requested": 14,
+ "proven_by_40char_readback": 14,
+ "not_proven": [],
+ "older_segments_untouched": true,
+ "rows": [
+  {
+   "local_file": "ord0271b_readings.jsonl",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0271b_readings.jsonl",
+   "bytes": 29969,
+   "blob40": "c69be25ea9036cdb98f96b41add017ca1bf64a66",
+   "readback_status": 200,
+   "readback_bytes": 29969,
+   "readback_blob40": "c69be25ea9036cdb98f96b41add017ca1bf64a66",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 29969 | remote size 29969 | sha1 c69be25ea9036cdb"
+  },
+  {
+   "local_file": "ord0271B_face_mutant1.json",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0271B_face_mutant1.json",
+   "bytes": 3574,
+   "blob40": "c4c686daca58599614e7f278703e3ec401cc6027",
+   "readback_status": 200,
+   "readback_bytes": 3574,
+   "readback_blob40": "c4c686daca58599614e7f278703e3ec401cc6027",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 3574 | remote size 3574 | sha1 c4c686daca585996"
+  },
+  {
+   "local_file": "ord0271B_face_control1.json",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0271B_face_control1.json",
+   "bytes": 3578,
+   "blob40": "4c6581dc0fb4bb7461fd117ade084f85e3956619",
+   "readback_status": 200,
+   "readback_bytes": 3578,
+   "readback_blob40": "4c6581dc0fb4bb7461fd117ade084f85e3956619",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 3578 | remote size 3578 | sha1 4c6581dc0fb4bb74"
+  },
+  {
+   "local_file": "ord0271b_origin_junkhtml.json",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0271b_origin_junkhtml.json",
+   "bytes": 1497,
+   "blob40": "69d2e85aac5febf92f0e5f397186479091bcf3c4",
+   "readback_status": 200,
+   "readback_bytes": 1497,
+   "readback_blob40": "69d2e85aac5febf92f0e5f397186479091bcf3c4",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 1497 | remote size 1497 | sha1 69d2e85aac5febf9"
+  },
+  {
+   "local_file": "ord0271b_origin_junkempty.json",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0271b_origin_junkempty.json",
+   "bytes": 1396,
+   "blob40": "855a93df97ac7d825282cf2b5649bc95376b9456",
+   "readback_status": 200,
+   "readback_bytes": 1396,
+   "readback_blob40": "855a93df97ac7d825282cf2b5649bc95376b9456",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 1396 | remote size 1396 | sha1 855a93df97ac7d82"
+  },
+  {
+   "local_file": "ord0271b_origin_junknonjson.json",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0271b_origin_junknonjson.json",
+   "bytes": 1508,
+   "blob40": "e35c0f4000e08dd7fcbab175cb3ac359204b90cf",
+   "readback_status": 200,
+   "readback_bytes": 1508,
+   "readback_blob40": "e35c0f4000e08dd7fcbab175cb3ac359204b90cf",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 1508 | remote size 1508 | sha1 e35c0f4000e08dd7"
+  },
+  {
+   "local_file": "ord0271b_origin_backend.json",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0271b_origin_backend.json",
+   "bytes": 1222,
+   "blob40": "878593ff8397ef6f5c98658b81d1ca60d0c9e46c",
+   "readback_status": 200,
+   "readback_bytes": 1222,
+   "readback_blob40": "878593ff8397ef6f5c98658b81d1ca60d0c9e46c",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 1222 | remote size 1222 | sha1 878593ff8397ef6f"
+  },
+  {
+   "local_file": "ord0271B_mutant_diff.patch",
+   "repo_path": "evidence/ord0271-B-verifier-v4/ord0271B_mutant_diff.patch",
+   "bytes": 856,
+   "blob40": "117e071b2f158cc27b376a889559fd7b22fbf14c",
+   "readback_status": 200,
+   "readback_bytes": 856,
+   "readback_blob40": "117e071b2f158cc27b376a889559fd7b22fbf14c",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 856 | remote size 856 | sha1 117e071b2f158cc2"
+  },
+  {
+   "local_file": "tools/start_0271b_face.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/start_0271b_face.py",
+   "bytes": 10834,
+   "blob40": "e21f16cc680f86629e506449d649cc3b0f50698f",
+   "readback_status": 200,
+   "readback_bytes": 10834,
+   "readback_blob40": "e21f16cc680f86629e506449d649cc3b0f50698f",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 10834 | remote size 10834 | sha1 e21f16cc680f8662"
+  },
+  {
+   "local_file": "tools/swap_origin_8411.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/swap_origin_8411.py",
+   "bytes": 11653,
+   "blob40": "424ee108fa1901e83a1565aacc4268d20c49d3d7",
+   "readback_status": 200,
+   "readback_bytes": 11653,
+   "readback_blob40": "424ee108fa1901e83a1565aacc4268d20c49d3d7",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 11653 | remote size 11653 | sha1 424ee108fa1901e8"
+  },
+  {
+   "local_file": "tools/collect_readings.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/collect_readings.py",
+   "bytes": 4205,
+   "blob40": "249b99a89fd75dac907f4c40b5c72e6055705c59",
+   "readback_status": 200,
+   "readback_bytes": 4205,
+   "readback_blob40": "249b99a89fd75dac907f4c40b5c72e6055705c59",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 4205 | remote size 4205 | sha1 249b99a89fd75dac"
+  },
+  {
+   "local_file": "tools/q8b_readout.js",
+   "repo_path": "evidence/ord0271-B-verifier-v4/q8b_readout.js",
+   "bytes": 6139,
+   "blob40": "7fc8cdf383cd5540edac03bc652298c8aad04489",
+   "readback_status": 200,
+   "readback_bytes": 6139,
+   "readback_blob40": "7fc8cdf383cd5540edac03bc652298c8aad04489",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 6139 | remote size 6139 | sha1 7fc8cdf383cd5540"
+  },
+  {
+   "local_file": "tools/q8b_driver.js",
+   "repo_path": "evidence/ord0271-B-verifier-v4/q8b_driver.js",
+   "bytes": 1256,
+   "blob40": "ed6a4c567cefeaff89fe11dc4817b07d4cc3275f",
+   "readback_status": 200,
+   "readback_bytes": 1256,
+   "readback_blob40": "ed6a4c567cefeaff89fe11dc4817b07d4cc3275f",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 1256 | remote size 1256 | sha1 ed6a4c567cefeaff"
+  },
+  {
+   "local_file": "tools/publish_0271b.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/publish_0271b.py",
+   "bytes": 6252,
+   "blob40": "7084c1669549d5a527910a52ebeb8bd5492d4d86",
+   "readback_status": 200,
+   "readback_bytes": 6252,
+   "readback_blob40": "7084c1669549d5a527910a52ebeb8bd5492d4d86",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 6252 | remote size 6252 | sha1 7084c1669549d5a5"
+  }
+ ]
+}
