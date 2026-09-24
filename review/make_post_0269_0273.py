@@ -52,8 +52,13 @@ def main() -> int:
             text=True,
             shell=True,
         ).stdout.strip().splitlines()
-        under_test = [line for line in diff if not line.endswith("review/ord0269_0273_gate_round.py")]
+        # "Under test" is a path question, not a count: the arms mutate files under frontend/ and the
+        # gates read files under frontend/.  Evidence tooling committed in between is not a change to
+        # what was measured -- but saying so requires naming which files those are.
+        under_test = [line for line in diff if "\tfrontend/" in line]
+        tooling = [line for line in diff if "\tfrontend/" not in line]
         manifest = {
+
             "generatedBy": "e345b9d6",
             "orders": ["ORD-0269 cells 1/3 + R-4 + R-6", "ORD-0273 TEXT / TEXT-EN / ACTION"],
             "external_readback": lsremote,
@@ -62,11 +67,14 @@ def main() -> int:
             "green_round_tip": round_receipt["candidate_tip"],
             "tree_diff_between_tips": {
                 "full": diff,
+                "under_test_files": under_test,
+                "evidence_tooling_files": tooling,
                 "anything_under_test_changed": bool(under_test),
-                "reading": "the only delta between the two tips is the receipt generator itself "
-                "(review/ord0269_0273_gate_round.py); every product and spec byte the arms mutated "
-                "is identical at the green-round tip",
+                "reading": f"{len(under_test)} file(s) under frontend/ differ between the arms tip and "
+                f"the green-round tip; {len(tooling)} evidence-tooling file(s) differ. The arms mutate "
+                "only frontend/, so the green round re-measures the same bytes the arms killed.",
             },
+
             "files": [],
             "counts": {
                 "arms": len(arm_list),
@@ -157,11 +165,14 @@ def main() -> int:
     for t in triples:
         add(f"- `{t['exact_sha']}` · `{t['nodeid']}` · {t['run_shape']}")
     add("")
+    bridge = manifest["tree_diff_between_tips"] if a.manifest else {}
     add(
         f"**尖桥（两枚尖，不是同一刻量的）**：反突变在 `{arms['head'][:9]}…`，绿轮在 "
-        f"`{round_receipt['candidate_tip'][:9]}…`。两者之间 `git diff --name-status` 只有收据生成器 "
-        f"`review/ord0269_0273_gate_round.py` 一行，**被测字节（产品 + spec）逐字节相同** —— 这条是跑出来的，不是声明的。"
+        f"`{round_receipt['candidate_tip'][:9]}…`。两者之间 `git diff --name-status` 实测："
+        f"`frontend/` 命中 **{len(bridge.get('under_test_files', []))} 件**、证据工具 **{len(bridge.get('evidence_tooling_files', []))} 件** —— "
+        f"臂只改 `frontend/` 下的文件，所以绿轮量的就是被杀的那批字节（这条是跑出来的，不是声明的）。"
     )
+
     if a.manifest:
         delta = manifest["post_tip_delta"]
         add(
