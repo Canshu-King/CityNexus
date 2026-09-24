@@ -1873,9 +1873,23 @@ def advance_seed_to_executable(session: Session, journey_id: str) -> dict:
 
 
 def _advance_steps(session: Session, journey_id: str, timed) -> None:
-    plans = timed("plans/generate", lambda: generate_journey_plans(UUID(journey_id), None, session))
-    # Called in-process, the handler hands back ORM rows rather than the JSON a client would
-    # see - the id is the same either way, and guessing the shape is how this line died once.
+    # The stage wants ORM rows and it already owns a session, so it calls the generator - never the
+    # HTTP route.  A route function called in-process keeps its `Header(default=None)` as a FastAPI
+    # sentinel rather than None, which is why reaching through it made this step advance with no
+    # plans at all (measured on 2026-09-24: six resident cells red, invisible to the route's own
+    # gate).  `timed()` still turns a refusal into a recorded step instead of a failed reset.
+    journey = require(session, Journey, str(journey_id), "Journey")
+
+    def _generate() -> list[PlanVersion]:
+        try:
+            return _generate_plans_answer(session, journey, GeneratePlansRequest())
+        except ValueError as exc:
+            _plan_generation_refusal(session, journey, exc)   # 与 HTTP 路径同一份耐久事实
+            raise
+
+    plans = timed("plans/generate", _generate)
+    # In-process, this is the ORM rows rather than the JSON a client would see - the id is the
+    # same either way, and guessing the shape is how this line died once.
     plan_id = None
     if plans:
         first = plans[0]
@@ -4588,8 +4602,8 @@ def search_services(
 def generate_journey_plans(
     journey_id: UUID,
     payload: GeneratePlansRequest | None = None,
-    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
     session: Session = Depends(get_session),
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
 ):
     """ORD-0272: a continuation has one durable owner, and it is the server's to answer.
 
@@ -4601,6 +4615,12 @@ def generate_journey_plans(
     *two* keys on purpose: merged into one, "same mission, different request" and "same request,
     resent" become indistinguishable in storage - the exact class of mistake ORD-0262 was about.
     Without either, the route behaves exactly as before.
+
+    Note for whoever adds the next parameter: a route function must not be called in-process.
+    Its ``Header``/``Depends`` defaults are only resolved by FastAPI, so a direct call hands the
+    body a sentinel instead of ``None``; the demo stage used to reach through here and made the
+    stage advance with no plans at all (measured on 2026-09-24, visible only in a whole-suite A/B).
+    ``_advance_steps`` now calls the generator itself.
     """
 
     journey = require(session, Journey, str(journey_id), "Journey")
