@@ -196,6 +196,23 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=e345b9d6 @2026-09-25 06:1700 —— **上一条 06:1x 那块自报"地基旧一代"的问题已修：ORD-0278 + ORD-0253 两笔产品 commit re-parent 到你落地的 `45b0a5e28…` 之上重测**（四枚门 14 条三元组全绿、七枚臂 7/7 KILLED、`landing_groups` 分组交上）；**旧那一代我没有 force-push，原样留着**，两块读数各归各坐标
+（取代：总线 comment 5822934902 与本账 06:1x 那块（`9b2f11b063ff1a87`）的**坐标**；两块的定性结论不变，只是量在旧一代上。新正文=总线 comment 5823138298。
+新坐标（全部外读回验）：分支 `refs/heads/review/0278-0253-on-45b0a5e` ⇒ `f86d24e976d9b4309f4005b6af5bd31f97ea7524`；被取代的旧代 `refs/heads/review/0278-on-0269-rebased` ⇒ `e7cf57986b5afd8137ba6f8255f337d19f41f19c`（**未移动、未 force-push**）。本分支起点 = 权威落地尖 `45b0a5e281cae9c37715173afd3ac5778f309ca7`（`merge-base --is-ancestor` 真、领先 11 笔、相对起点 `frontend/` 改 7 件）；反突变尖与绿轮三元组 sha 同为 `f86d24e9…`；七枚臂 v3 全 `KILLED`、`treeUnchangedByThisRun=true`；旧收据 `…v1-c657403`（臂自身写错那一版）与 `…v2-ec9f6de`（旧一代那一版）都留着不覆盖。
+④ 段那两件按组取的账，现在在收据里了：`landing_groups` ⇒ 本段 **15 件 = 主线 7（`frontend/**`，逐件带 blob 与 ±）+ 车道脚手架 8（`review/**`，落主线不需要）**；独立性那条也是量的：`frontend/src`+`frontend/e2e` 里指向 `review/` 的 import 计数 = 0（`review/` 只出现在注释与消息文本里）。收集数：Playwright `Total: 15 tests in 5 files` ⇒ 判据 14；后端 `1232 tests collected`（rc=0）。
+新路径外读：`commander/control` @ `evidence/ord0278-0253-on-landed-f86d24e/` ⇒ `arms-v3-f86d24e.json` blob `a598db9d79a4a71e`(16,308 B)、`gate-round-f86d24e-with-landing-groups.json` blob `c8125a918817d63e`(35,538 B)，逐件 PUT 后独立 GET BYTE-LEVEL MATCH；06:0x 那三件（`…-d702d13/`）原样在架，不覆盖不删。
+口径：`claimed_result` 全我自宣，`derived_result` 归 @红队；`MANUAL_RESUME / NOT-EXACTLY-ONCE` 未升格；R-SCHEMA-01 仍 `SCHEMA_SOURCE_METHOD_CORRECTED`（行全经产品 API 造，无 DDL 重放、无直调 ensure_schema()）；权威线我 0 次移动，`demo/reset` 0 次，`_live/_preview` 库 0 写，凭据 0 打印。）
+
+### SESSION=e345b9d6 @2026-09-25 06:0100 —— **ORD-0278 交 + ORD-0253 客户端半件交**（两单分开交，没并一次修复）：续发那一发真的带 `mission_id`(body) + `Idempotency-Key`(header)，普通提交两腿同键；四枚门绿轮 14 条三元组、反突变 7/7 KILLED。**另：我发现我这一支的地基比你落地的尖旧一代，正打算 re-parent，下面所有读数都标着它们量在哪一枚上**
+（正文=总线 comment 5822934902。外读 @ `commander/control` 新路径 `evidence/ord0278-0253-resume-identity-d702d13/`：`arms-v2-ec9f6de.json` blob `b38c6cbbc56c2db0`(16,308 B)、`gate-round-51320db-four-gates.json` blob `bad566e88f2795ec`(31,510 B)、`manifest.json` blob `d3a177286c22e577`(2,812 B)，逐件 PUT 后独立 GET 回读 BYTE-LEVEL MATCH。
+本段读数所在坐标（全部自宣 `claimed_result`，`derived_result` 归红队）：产品+门两笔 commit = `91d5888d8c962c0e292f4632d0c191e44f2b0079`(0253) 与 `edbfdaa0be9326045b86493baf00d4b2f6f8ac41`(0278)；反突变尖 `ec9f6de5c54e4069fb92810e4059273b7af39589`（7/7 KILLED、`treeUnchangedByThisRun=true`）；绿轮三元组 `exact_sha` = `51320db992d452a4b75ba6894d995f73bb9acc84`（14 条、problems 0；收集数 Playwright `Total: 15 tests in 5 files` ⇒ 判据 14 个，后端 `1232 tests collected`，rc=0）；分支起点 `9d82d7665384a5d4924bd4bea83e508a0b505338`。
+一条我自己查到的代界问题（所以这条块只报坐标不下"可搬"结论）：你在 06:0x 前把我上一段落在 `45b0a5e281cae9c37715173afd3ac5778f309ca7`（外读 mirror ref 现读），而本分支从 `9d82d7665…` 起 —— **它是 `45b0a5e` 的祖先**（`merge-base --is-ancestor` 实测真）。后果两条：① 我这一支的收据生成器没有落地那支才有的 `landing_groups`，所以本段收据里"按组取"那格是**空的**，不是 0 件；② 我上面这些 sha 量在旧一代的树上，按 Q24/你新钉的 `claim_kind` 口径，**门跑绿这一类是 runtime_measured，不能折算成"在已落地那代也绿"**。下一步我把这两笔产品 commit re-parent 到 `45b0a5e` 之上重跑四枚门 + 七枚臂，另发新收据（旧收据不覆盖不删）。
+本轮三处我自己写错又改对的账：① clause-5 那枚臂第一版**根本不是那个形状**（把"accepted 才清"改成"无条件清"，erase 依然在发送之后）⇒ v1 收据 `ord0278-0253-arms-0278-0253-v1-c657403.json` 全绿存活照留，v2 改成 await 之前 erase 才被 0269 cell1 咬住；② 续发结果句原来画在待续卡里面，而 accepted 会清 marker ⇒ "成功"反而一个字不说，结果段已挪到卡外（`edbfdaa`）；③ 我上一段自己把 `hub.continuation*` 的**英文**词典值抄成中文（与 ORD-0273 同类、同一人），本轮改成整块扫 `en` 块含 CJK 必须为 0，例外只点名减 `nav.language` 一枚（语言开关用该语言自己的字）—— 我没有断言它与 `zhCN` 逐字节相等，那要再加一道检查才有资格说。
+仍欠：本段两枚门的 `derived_result` 归 @红队；ORD-0266 候选 `db6ac1d` 仍 DELIVERED/NOT-LANDED 等窗口；格二在 exactly-once 被证明之前仍只叫 `MANUAL_RESUME / NOT-EXACTLY-ONCE`。R-SCHEMA-01：本段四枚门仍属「不必重跑」类（行全部经产品 API 造，无 DDL 重放、无直调 ensure_schema()）⇒ `SCHEMA_SOURCE_METHOD_CORRECTED`。）
+
+### SESSION=d2305848 @2026-09-25 06:01+08 —— **ORD-0283 交：16 向量打三把仪器，4 枚真咬（A7 空格集合+claim ⇒ ALL_CELLS_TRANSFERABLE rc=0；B2/B3 引用分母混入 16 位前缀与散文提及；C8 审计收据不钉 ref_tip_read）**；你引的五个数重算全对（8589/50/20308/6211/3499），50 格 blob_matches/size_matches 重推 0 不符
+（攻击收据 b4bdc3ddec46f0b82e08c7f77bc4fd6f73ed3021 @ evidence/ord0283-cmdr-instruments-attack/attack_receipt_d2305848.json；总线 comment 5822945962。A 尺 9 向量：7 没咬（双侧None/空串/空白/大写/空kind/runtime+缺侧/传输异常 全按 fail-closed 立住）+ A7 咬 + A8/A9 边缘；B 尺 4 向量：B2/B3 咬（meaning line 过宽）+ B4/B10 没咬，另核实读失败不入 scanned/截断树标 NOT EXHAUSTIVE/续跑吞截断重扫 三条强度；C 尺 4 向量：字节±1/重复矛盾/网断全 fail-closed 咬不到 + C8 咬（只有墙钟没树）。每条 bite 带复跑命令与三行实测；修法建议各一行。可覆盖路径向量对尺本体不适用（都只写本地 receipts/ 或 stdout）。）
+
 ### SESSION=d2305848 @2026-09-25 05:36+08 —— **0272 K8 分两格签（seam 可签：UNPROVEN_AS_KILL→KILLED seam-only；用户面射程具名不折算；K8 读数=候选代 7c806fab5 事实，main.py ad13f439≠416ea4f2 我逐 blob 核过）**；**0269/0273 在落地代 45b0a5e2 真跑同代门：8 passed authoritative（45.4s）**，R-4 前提在落地代现测；T1 凭据派生完
 （K8 派生件 709f9c8f99314a6b1ce5096e5ee3008b884f3c85 @ evidence/ord0272-k8-f/verifier_derivation_d2305848.json；同代收据 bd12f1fb08833b98ebd93b83d0a0fa94773bce9d @ evidence/ord0269-0273-gate-v6-e713510/commander_samegen_0269_0273_45b0a5e_d2305848.json；总线 comment 5822625613。同代门跑法：镜像尖先读=45b0a5e2、tarball 干净导出、8 门文件逐 sha1 == 候选树与落地树、junction 前比 package.json 指纹 3bdc4709、AUTHORITATIVE=1/4891/8891/_samegen45b0a5e_8891.db/AI false/reuse=false；第一跑被权威模式拒（环境带 DEEPSEEK_API_KEY ⇒ external AI must be off——守卫真咬人），进程内 unset 后跑通。T1 deploy_green_r1（f1748f4c…）派生：GREEN、B 臂 old_refs_absent=true（ChOTTCvB→CtuiCkKf 真换代）、debt4 worker 88a7d980→5e8e0f0d 走 NORMAL 分支、401 拒绝收据同架 fail-closed 有凭据。9 枚反突变击杀仍是突变运行代事实，落地代身份同法可重跑获得。）
 
@@ -14907,6 +14924,83 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 亲测 @2026-09-25 06:1x+08 —— 红队 ORD-0283 **四枚真咬我全部复现并修好**（A7/A9、B2/B3、C8）；**ORD-0276 = ACCEPTED**（14 臂复算 ALL_AGREE）；白页机理已钉死＝**硬链接**；我自己这一拍也制造并如实记下一场事故
+
+### ⓪ 先说我自己那件（不遮）
+我给 `evidence_provenance_sweep_r3.py` 打补丁时，**r3 还没接 `--selftest` 分派**，于是 `python … --selftest` **穿过去跑了一次真扫描**：扫到 75/726 被墙钟砍掉（rc=124），并把 `receipts/evidence_provenance_sweep.json` 写成了**半份**。
+- 后果核对：GitHub 上已发布的 `provenance_r1.json`（`be0140fc…`）**一件未动**；本地那半份我**改名留存**为 `evidence_provenance_sweep_PARTIAL_75of726_by_commander_0611.json`（不删，里面 `ref_tip_read=d39b7fbca…` 就是它自己的死亡证明）；r2 的续跑逻辑比 `ref_tip_read`，尖已前进 ⇒ **不会被后来的扫描误当作可续状态**。
+- 这条为什么值得入账本：**"加了自检却没接分派"和"没加自检"是同一件事**，而且只有跑一遍才知道。修完再跑 ⇒ `SWEEP_SELFTEST 8/8`、rc=0。
+
+### ① ORD-0283（红队）验收：**四枚咬中，我逐枚复现**
+攻击收据 `evidence/ord0283-cmdr-instruments-attack/attack_receipt_d2305848.json` 11,900 B / `b4bdc3ddec46f0b82e08c7f77bc4fd6f73ed3021`（三路回读等值由红队自证，我按 blob 复核）。**16 枚向量、4 枚真咬、12 枚没咬住的逐条写了为什么**；我引的五个计数（8,589 / 50 / 20,308 / 6,211 / 3,499）它逐个取工件重算全对，**没有要点名的**。
+复现与修复（**先复现再修**，不是我信它的摘要）：
+```text
+A7  r4 实测：--check {"cells":[], "cross_generation_claim":"..."}  -> rc=0  derived=ALL_CELLS_TRANSFERABLE
+    ⇒ 空集合聚合当成全量证明。r5：同一发 -> rc=4  derived=CLAIM_WITH_NO_CELLS
+A9  r4 实测：把键写成 crossGenerationClaim               -> rc=0  derived=NO_CROSS_GENERATION_CLAIM_MADE
+    ⇒ 换个拼写就逃出审判。r5：同一发 -> rc=4  derived=CLAIM_WITH_NO_CELLS  claim_key_used=crossGenerationClaim
+B2/B3  r2 的 MAIN_PY 无词界（main.py.txt 也中）且不分"引用/散文"，16 位前缀与 40 位坐标混进同一分母
+    ⇒ r3 改成 proximity 分类：cited_with_40hex / cited_prefix_only / prose_mention_only，meaning 行只把义务压在 40 位那一档；自检 8/8（含 S7 `main.py.txt` 不算命中、S6 远处 40 位不吸附）
+C8  审计收据不钉 ref_tip_read（50 枚 OK 只钉钟点）
+    ⇒ runner r2 现场读尖并写入；本轮跑出的 r5 收据里 ref_tip_read=7863239a86932edc67d0f21814ddd79bea38cd3c
+```
+新坐标（全部 BYTE-LEVEL MATCH，`commander/control`）：
+`live_checks/generation_transfer_check_r5.py` `f53fa1271af4f8e021de696f0c10a3e3c7be525f`（23,459 B，**自检 20 臂 ALL_GREEN**）· `evidence/generation-transfer-rule/selftest_r5.json` `595742f7…`（9,317 B）· `live_checks/evidence_provenance_sweep_r3.py` `0dcda650419b159767f1144c19ffcdf245f3e3c0`（10,069 B）· `evidence/commander-instrument-fixes-ord0283/sweep_selftest_r1.txt` `c525d77d…`（492 B）· `live_checks/audit_receipt_runner_r2.py` `0807bf6622bbefd5b551f8d2d40880e778a8b447`（4,821 B）· `evidence/commander-instrument-fixes-ord0283/before_after_r1.txt` `d60f9336…`（1,311 B，就是上面那张 before/after 表）
+尺：`live_checks/audit_closure_coordinates_r5.py` `c302dd9f376b5a4ff5e08fd3454030f17a82ee2c`（11,384 B）**60 → 69 枚**；收据 `evidence/commander-coordinate-audit/audit_r5_receipt_r1.json` `258ac9f4710839f83279503b8b945fd442b98a7d`（28,105 B）⇒ **claims=69 failing=0 rc=0**。
+按 B-1：**修复方不给自己签级** ⇒ 上面四格最多算 `claimed_result`，closure 要红队拿同一批向量对新尖复跑（见 ③ ORD-0285）。
+
+### ② ORD-0276（HJ-P3）= **ACCEPTED**；白页**机理**已钉死
+14 臂复算尺 `live_checks/receipt_consistency_o0276_r1.py` `6d789e68…`（5,085 B）跑 `evidence/ord0276-hjp3-cells/O0276-2505_readings.json` ⇒ **`arms=14 disagreements=0 INTERNAL_CONSISTENCY ALL_AGREE` rc=0**；正控 A12（`limit=1` 真被 honored）证明"四个分页参数返回与默认页逐字节相同"不是"所有请求碰巧一样"。产品结论我照车道原文引：`ASC_TRUNCATION_PUSHES_THE_NEWEST_OUT_PERMANENTLY` / `NO_CURSOR_NO_OFFSET_UNDOCUMENTED_PARAMS_SILENTLY_IGNORED` / `TRUNCATION_UNNAMED_AND_CLIENT_CONCLUDES_ABSENCE`，**用户可见性仍按它的 `NO_PIXEL_READING`，我不升格**。
+白页成因不是"被同步"，是**同一个文件**：`_hjp3_fan_sweep_0923\snap_live_dist\index.html` 与在服 `_qoder_preview_20260920\dist\index.html` **同 inode 1688849863486668、nlink=2**；在服 38 个可扫文件里 **35 个**被它硬链接（35/35 same_bytes=True）。仪器 `live_checks/dist_hardlink_scan.py` `ec3a3814…`（9,958 B，自检 5/5；**r1 实测 3/5**，两处夹具 bug、判据未动），真扫 `evidence/commander-dist-hardlink-scan/scan_r1.json` `1ee0d991…` ⇒ `EXTERNAL_HARDLINK_REFS` rc=3。**提请常设规则 `HARDLINK_SNAPSHOT_PROHIBITION_V1`**：快照一律 copy、禁止 hard link 进别人在写的目录；换代方跑一次扫描但**只报告不停线**。
+
+### ③ ORD-0285 · 复验我这四处修复 · @红队（`d2305848`，你现在 ready）
+```text
+唯一变量 = 被验的那把尺换了修订号。把你 ORD-0283 的 16 枚向量原封不动重打到：
+  A live_checks/generation_transfer_check_r5.py   f53fa1271af4f8e021de696f0c10a3e3c7be525f  23,459 B
+  B live_checks/evidence_provenance_sweep_r3.py   0dcda650419b159767f1144c19ffcdf245f3e3c0  10,069 B
+  C live_checks/audit_receipt_runner_r2.py        0807bf6622bbefd5b551f8d2d40880e778a8b447   4,821 B
+判据：
+ 1) **不许改你的向量**（只准改被验对象那一栏）；每枚给出 (向量, 复跑命令, 实测 rc/derived 两值)。
+ 2) 对 A7/A9 必须**双向**：修复前 r4 的那两发你已有读数，直接引；修复后必须在 r5 上实测到 rc=4。
+ 3) 顺手补两枚我这次没被覆盖的面：`--selftest` 与真扫描的分派（我 06:1x 就是在这里自己踩了一次，
+    见块首 ⓪）；以及 r5 收据里 `ref_tip_read` 是否**真的等于**当时 `GET /commits?sha=commander/control&per_page=1`。
+ 4) 派生签级：`derived_result` 只认你的；我这边四格在你签之前最多算 claimed_result。
+ 5) 发布 `evidence/ord0285-cmdr-fix-reverify/`；账本块 + 总线一条；权威线不动、旧路径不覆盖。
+成本 15~25 分钟（向量已有，换靶重跑）。
+```
+
+### ④ 车道点名与下一步
+- **HJ-P3 `aad2d1f2`**：0276 已 ACCEPTED ⇒ 按仲裁 05:31 的顺序，你下一件是 **ORD-0281 定形**；另外请把你那三个快照目录从 hard link 改成 **copy**（判据见 ②，这是你自己白页的成因）。
+- **F `8ccd71d8`**：ORD-0282 进行中（33 次工具调用，没停）。
+- **B `c01d72a3` / D `e345b9d6`**：running，未打断、未重发。
+- 后端线 `8c66aa92` 继续 PARKED（理由在 05:4x 块 ④）。
+- 权威线未动：`mirror/integration-frontend-apple-pass1` = `45b0a5e2…`；`commander/control` 由我这批发布推进（最后一件 `audit_r5_receipt_r1.json` 落在 commit `305e9e7fc5d2`，镜像本账本后尖会再前进一次——所以引用请以**文件 blob** 为准，不要以尖号为准）。
+
+
+### 📐 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0281 定形交（写腿期限：判据 + 反例 + 射程，产品字节 0 改动）——最关键的一条：今天症状的承重处不是 `vb()` 那半个 `if`，而是 13 处裸 `fetch` 写点根本没进那个包装** @2026-09-25T06:0x+08
+
+**大白话先说**：号令者把 0281 的定形派给我（我手上有写锁 rig、两代都跑过）。我把机理钉了一遍才写判据，结果和直觉不一样：**修 `readDeadline.ts` 的写分支修不到这一格**。实测 `frontend/src` 有 33 处裸 `fetch`，其中 **13 处是写腿**（`PlanWithAiSheet.tsx:491/:598` 等），带 `signal`（手动取消）的只有 **2** 处，**带计时器的是 0 处**——它们连那个带期限的包装都不经过。所以判据里必须写"哪条腿带常量"，否则 @B 会绿在一个错误的文件上。
+
+**另两枚我量到的硬事实（写进定形的 §0）**
+- `frontend/src/lib/readDeadline.ts:15` `READ_DEADLINE_MS = 12_000`，同文件 `:43-45` 对非 GET/HEAD 直接 `return fetch(input, init)`；而 `:10-12` 是作者**自陈**："故意只覆盖读腿，因为中止写腿时服务器可能还在收尾，那是幂等问题，本单不问"。⇒ 0281 不是"加个计时器"，是要先把"中止之后怎么重发"这件事答清楚（我把这条做成了 T-d）。
+- 运行时两代同形：写锁窗口内的写腿 `32286, 32328, 32335` ms（`c79e2b4`）与 `32379` ms（`dcae1bc9`），客户端错误一律 null；手动取消那发是 `7046` ms ⇒ `AbortError: signal is aborted without reason`，屏上写「已中止后续核对 / 请求本身已经发出去了…」。⇒ "手动取消有、自动期限无"这句在两代都成立。
+
+**四格（判据 / 反例 / 红态名，全文在已发布的 SHAPE 里）**
+- **T-a** 期限内被服务器答 ⇒ 不许出现期限文案；服务器给了句子时，标签「服务器给出的原因」下的值必须 `==` 服务器 `error.message`。红态 `DEADLINE_TEXT_SHOWN_ON_TIME_ANSWER`。
+- **T-b** 超期限 ⇒ (i) 由**客户端期限**结束且与"用户点取消"可区分（写腿要有自己的错误名，不许复用读腿的 `ReadDeadlineMissed`）；(ii) 屏上句子必须具名"**服务端没在期限内回答**"并带常量值，**不得**复用读腿那句「后台连一个字也没回答」；(iii) 期限句**不许**占用标签「服务器给出的原因」。反例三件：静默源站今天必然红（`13` 处写点 0 处带计时器）／期限后 1 ms 才答 200 不许显示成功／origin 答裸 500 时标签下出现 `HTTP 500` 仍按 0279 的 `CLIENT_SUBSTITUTES_…` 红。红态 `WRITE_LEG_STILL_UNBOUNDED` / `WRITE_DEADLINE_IMPERSONATES_SERVER`。
+- **T-c** 常量单一来源、可命名、可配置，且"把常量改小 ⇒ T-b 更早触发"**可执行**（以 `X` 与 `X/2` 各跑一次，只看触发时刻是否随常量移动；不硬编码秒数，按 Q25 `runtime_measured` 不跨代继承）。反例：只改读腿常量、写腿不变 ⇒ `DEADLINE_NOT_APPLIED_TO_WRITE_LEGS`；常量出现两份内联 ⇒ `DEADLINE_CONSTANT_NOT_SINGLE_SOURCE`。**我这侧还量到一个不利事实必须写进去**：在"接受连接但不回答"的静默源站上，`/v8/hub` 引导屏 25781 ms 内**没有**任何期限文案（输入目的地得到的是本地推导行）⇒ 期限连读腿之间都不均匀，所以 T-c 必须逐腿点名，不在射程内的要**具名列出**、不许沉默。读腿文案我这轮没拿到现场（`NOT_OBTAINED_ON_THIS_SURFACE`），我不拿 0263 的旧收据冒充本轮。
+- **T-d** 中止后重发必须落进三态之一并被命名：`REPLAYED_SERVER_ANSWER`（有耐久身份 ⇒ 读回同一份，比正文先去掉 `trace_id`）／`FRESH_WRITE_WITH_KEY`／`UNKNOWN_OUTCOME_NOT_PRESENTED_AS_NONE`（无键路径只许报"结果未知，先核对"，**不许**自动补第二发）。反例：无键路径中止后自动重发 ⇒ 库里出现第二条 mission 行 ⇒ `DUPLICATE_SIDE_EFFECT_AFTER_ABORT`（用 SQL 判行数，不读文案）；有键路径重发而回执已被别的进程填好 ⇒ 必须 replay 不许改写（这一支我 09-25 跨进程验过会翻，地基已落地，不依赖未落候选）。
+
+**与 0274 / 0280 的边界（防互吞）**：0274 管换代与在飞写收敛（反例是"在飞即 reload 必红"），0280 管归因真实性（标签不许冒充），0281 管**写腿有没有期限 + 中止之后怎么算**；三单共用"中止≠没发生"这一句屏上事实，但**修复点不同文件**，谁也不许拿自己的绿替别人交卷。`agent/commands` 缺幂等键这件事我建议**单开一张**，别让期限顺手吞掉根因。
+
+**关于那个偏移**：我复核了红队记的 71 B 差。本轮实测（同一枚在服资产）：`async function vb(` 在 **271706**，判决句 `if(r!=="GET"&&r!=="HEAD")return fetch(t,e);` 在 **271777**；两个数的 **char 索引 == 字节偏移**（该点之前没有多字节字符），所以那 71 位不是"把字符当字节"，是**锚点不同**——我原来引的是函数起点，红队引的是判决句。两枚都真，我原收据那句"偏移 271706 处的取数包装，逐字 <片段>"对它引用的片段起点也是准的。**但这是我自己引得不清楚**：以后一律给两枚锚点，且注明各自锚的是什么。本轮的对表已发布（`offset_check.json`，含两代资产各自的两枚锚点 + sha256）。
+
+**发布与坐标**：坐标（本行由脚本从 `branchblobs.json` 生成，不是手抄）：`Canshu-King/CityNexus @ commander/control`，读回 commit 尖 `52ea72d60a3a57ffa52b133ef8bbe3fb44d923ad` · 其 tree `6461fd28cf279596fbcab68e9d8e13bde143a182` · `evidence/ord0281-shape-hjp3/` 共 5 件：`O0281-SHAPE-2506_witness.json` 4,242 B `2e7fa49c1d58acc65cb6081c98caf7c4cd7a9f20` · `SHAPE_ORD-0281.md` 9,288 B `9adfeef7b1f9d88dd5bf164119e8c3823b14fb36` · `frontend_write_legs.json` 5,375 B `be11a160bee782c03cbeea01c0ff683f70a0e05c` · `o0281_silent_face.py` 3,981 B `741c65388dc81d852774924c9263926e0b6589a6` · `offset_check.py` 1,909 B `3a77f40ce1b1875db35974d64dfe6e4f393424ea`。外部可读探针 `GET /git/blobs/9adfeef7b1f9d88dd5bf164119e8c3823b14fb36` → 取回重算 sha1 与 tree 上 blob id 相等 = True。 走 r5 共 5 件、全部 rc=0、全部 BYTE-LEVEL MATCH、一次拒绝都没有 ⇒ 本轮无 `rule_hit`。
+
+**仪器与边界**：全部只读——`dcae1bc9` 的私有导出、静默源站 `:8597` + 私有冻结面的**新端口** `:8596`（避开上一单发现的"端口复用 = SW 复用"坑），探针证明源站"接受连接但 3 s 内不答"；两件都跑完即停（`:8596`/`:8597` 已释放，`taskkill` 只停我自己记名的 pid）。`demo/reset` 0 次、用户库 0 读写、`:4781`/`:4782` 与隧道未碰、凭据 0 打印、**产品字节 0 改动**、不产码、不签 `derived_result`。发布走 r5，全新目录全新名字，已发布路径 0 覆盖 0 删除。
+
+**顺序**：0281 定形到此交完（它排在 0276 之后，我没并行）。若号令者要我继续，我名下现在没有欠账；可选的下一件是把 T-c 的"常量改小 ⇒ 更早触发"做成一枚**可跑的探针**（不改产品，只在我私有副本上改常量、量触发时刻），给 @B 产码后当验收工具——要不要做，等你一句话。
+
 ## 窗口回 **①①①**（Q29/Q30/Q31）@2026-09-25 05:4x+08 —— 三笔按 provisional 执行、请仲裁在总线盖章；**ORD-0283** 派 @红队（攻我这三把新仪器）；后端线 PARKED 的理由写死
 
 ### ① 仲裁回复的现场（我量到的，不是推测）
@@ -45255,3 +45349,29 @@ netstat 回读只剩 TIME_WAIT、无 LISTENING。**这是本地 DEV/静态代现
 仪器两台的默认树路径这次**没改**（包工头 ⑤ 选乙：树与 0244 一起收），`catalog_hydration_operations` 事务面仍 0 改动，
 强修一行未动，ORD-0244 仍只到"探针"这一步、没产实现码；欠件 2（桩形状 + 收据形状）我按你要求的顺序**先读账本再交**，
 下面这条就是它的读数入口：账本 `## ORDERS` 顶（grep `ORD-0244`），最新镜像 blob 你给的是 `883e83785e1f71ac25198272eccb230b33688f0f`。
+
+### B c01d72a3 · ORD-0274 B2c+B2b（853c549）换代安全点：逐值与在飞写各自有反控，并且 B2b 抓到我上一版自己的漏 @05:55+08 —— **顺序 1/2/3 全跑完：换代判定换成字节判定；B2c 两枚反控各自回红；B2b 先抓到我上一版自己的漏（自身生命周期内被 claim 的文档永不收敛），已修并落候选枝。B2/B2b/B2c 的 `derived_result` 我不自签（归 HJ-P1）。**
+
+```text
+尖/父     853c54944a0b ← 1de4c250746c ← 基线 dcae1bc96412（merge-base --is-ancestor rc=0）；权威线我 0 次移动
+GitHub    853c54944a0b7ea2c7111867915566171650c564	refs/heads/review/0274-b2c-b
+改动      4 files changed, 116 insertions(+), 9 deletions(-)；文件 frontend/src/api/citynexus.ts, frontend/src/app/V8Experience.tsx, frontend/src/lib/inFlightWrites.ts, frontend/src/main.tsx
+门禁      typecheck rc=0｜build rc=0｜服务 worker 的 precache=8 枚、重复 0 枚（用尺自己的 precache_urls 数；我那把正则报 0 是解析器坏了）｜重建字节与臂上所测一致=True｜跑完 frontend/src 干净=True
+判定尺    自证 15/15 臂 MET（尺 blob 0686670743c0…，AST 抽出 7 个符号执行、导入即核对）；改名不动字节 ⇒ 不算换代（F3）；同名改字节 ⇒ 算换代（F4）
+自抓旧空臂 上一版 0274-SW 用的那对“两代”content_fingerprint 相同（换代是改名买的）⇒ 已取代，换成含真语句的 stand-in 代；本轮 committed 两代 entry {"candidate_from_committed": "/assets/index-BhbHloNw.js", "gen2b": "/assets/index-CEGoPIGb.js"}
+B2c      4/4 臂与期望一致（候选 / 两枚反控 / 正控）
+        candidate：写在飞@换代=1、delivered=4、undelivered=0、pending 标记=True、loads=2（我 0 次追加导航）→ MET
+        反控 eager：undelivered=1（源站侧亲眼看见 ConnectionAbortedError）→ RED
+        反控 manual：loads=1 不自己收敛 → RED；正控 idle（无写在飞）→ MET
+        重复：第二批 {"candidate": "MET", "counter_eager": "RED", "counter_manual": "RED", "idle_control": "MET"}；第一批改判后重判 {"candidate": "MET", "counter_eager": "RED", "counter_manual": "RED", "idle_control": "MET"}（翻动仅 {"idle_control": {"was": "RED", "now": "MET"}}，那枚是我把“正在 reload 的采样”误读成“探针又导航了一次”）
+B2b      3/3 臂与期望一致；第二批 {"candidate": "MET", "counter_step_only": "RED", "counter_step_forced": "RED"}
+        candidate：step trial-step2-body→trial-step2-body（存储 2）、逐值全等=True、draft 仍在=True、老→新(字节)=True
+        逐值明细（字段在它自己那一屏读，屏幕值/存储值成对） {"city": ["厦门", "厦门", "厦门"], "startAt": ["2026-10-05T08:30", "2026-10-05T08:30", "2026-10-05T08:30"], "endAt": ["2026-10-09T19:45", "2026-10-09T19:45", "2026-10-09T19:45"], "partySize": ["4", "4", 4], "budget": ["4321", "4321", 4321], "specialRequirements": ["需要无障碍通道 · B2b", "需要无障碍通道 · B2b", "需要无障碍通道 · B2b"]}
+        反控 steponly → RED（值丢在存储侧：["city", "startAt", "endAt", "partySize", "budget", "specialRequirements"]）
+        反控 stepforced → RED（落回 trial-step1-body，那几枚字段因此不在任何屏上 —— 这是后果，不是仪器故障）
+        反件建在“进来的那一代”：先前建成 client 时两枚恒 MET（我这轮自己抓的第二个仪器缺陷）；每枚反件的 shipped 字节都对照其声明核过（mismatch 全空，件 ord0274_b2b_mutant_shapes.json）
+B2b 先红  第一臂跑在未含本轮修复的候选上：loads=1、controllerchange=2 次、换代后仍执行 /assets/index-zCtIwAVy.js ⇒ 在自身生命周期内被 claim 的文档永不收敛（上一版只在注册时读一次 controller，对首访者恒为 null）；本轮改成跨事件跟踪那个身份
+回归      A 等价：离线仍同代；B3 等价：一次导航内跨两代字节收敛，之后离线仍服务新代
+不自签    B2 / B2b / B2c / B3 / A 的 derived_result 归 HJ-P1 的仪器
+本轮我自己的缺陷（原物留在盘与件里，被取代但不删）：measured the first B2c candidate arm against a STALE dist (built before the B2c commit) and it read RED; that reading is superseded, not averaged, and the dist was rebuilt from the committed tree; my B2c judge counted a sample taken while the page was reloading as 'the probe navigated again', which turned a clean MET into RED; corrected, and the re-judge records the one verdict flip it caused; my first B2b counter-arms were built as CLIENTS; the restoring code is the INCOMING generation, so both read MET vacuously; rebuilt as targets and each arm's shipped bytes are now checked against its declaration; that rebuild also exposed a compound cut: the builder re-read the already-patched source inside the loop, so 'stepforced' carried 'steponly' too; both arms returning identical readings is how I caught it …
+```
