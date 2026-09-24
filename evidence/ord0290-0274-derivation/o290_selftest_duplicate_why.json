@@ -1,0 +1,24 @@
+{
+  "detector": "two cells explained by one identical sentence means at least one of them was never explained",
+  "as_is": {
+    "cells": 3,
+    "distinct": 3,
+    "result": "PASS",
+    "duplicates": []
+  },
+  "mutant_selftest": {
+    "mutation": "copy cell A's why into cell B, leave C alone",
+    "result": "FAIL",
+    "duplicates_flagged": 1,
+    "sample": [
+      "idle page installed on 69fd2f85 executed index-BLpFjUjp.js -"
+    ],
+    "meaning": "detector is not a no-op: it catches the duplicated sentence"
+  },
+  "r1_defect_reproduced": {
+    "r1_cells": 3,
+    "r1_distinct_why_strings": 1,
+    "note": "r1 shipped ONE literal why across all three cells - the exact thing the stop-order caught"
+  },
+  "measured_at": "2026-09-25T07:48:26+0800"
+}
