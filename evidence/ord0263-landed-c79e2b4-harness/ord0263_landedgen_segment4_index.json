@@ -1,0 +1,67 @@
+{
+ "at": "2026-09-24T08:48:33+08:00",
+ "segment": "segment4",
+ "lane": "HARNESS d291c9dc",
+ "subject": "landed generation c79e2b4f4efe414dba22a071a7136ae10b5c84aa as served from disk, measured on my own face after the 02:2x-02:3x blue-screen reboot",
+ "ruler": {
+  "file": "tools/ord0263_verifier_v3.py",
+  "bytes": 21703,
+  "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "promised": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+  "unchanged_so_far": true
+ },
+ "files_requested": 4,
+ "proven_by_40char_readback": 4,
+ "not_proven": [],
+ "older_segments_untouched": true,
+ "rows": [
+  {
+   "local_file": "ORD_0263_LANDEDGEN_CLOSE.md",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ORD_0263_LANDEDGEN_CLOSE.md",
+   "bytes": 7696,
+   "blob40": "dae6d3004d37c0fe843a27e9cbac672c930c9937",
+   "readback_status": 200,
+   "readback_bytes": 7696,
+   "readback_blob40": "dae6d3004d37c0fe843a27e9cbac672c930c9937",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 7696 | remote size 7696 | sha1 dae6d3004d37c0fe"
+  },
+  {
+   "local_file": "ord0263_landedgen_teardown_receipt.json",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/ord0263_landedgen_teardown_receipt.json",
+   "bytes": 4040,
+   "blob40": "acb97fc121d3a4492f0107fa0d2ad74b02436eff",
+   "readback_status": 200,
+   "readback_bytes": 4040,
+   "readback_blob40": "acb97fc121d3a4492f0107fa0d2ad74b02436eff",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 4040 | remote size 4040 | sha1 acb97fc121d3a449"
+  },
+  {
+   "local_file": "tools/teardown_landedgen_close.py",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/teardown_landedgen_close.py",
+   "bytes": 6661,
+   "blob40": "4f8c714ca124f29051d7571fba80720700b3d868",
+   "readback_status": 200,
+   "readback_bytes": 6661,
+   "readback_blob40": "4f8c714ca124f29051d7571fba80720700b3d868",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 6661 | remote size 6661 | sha1 4f8c714ca124f290"
+  },
+  {
+   "local_file": "tools/run_disk_face.py",
+   "repo_path": "evidence/ord0263-landed-c79e2b4-harness/run_disk_face.py",
+   "bytes": 9311,
+   "blob40": "b76e591598fd9bf68380dde8e6aab4e6e758afed",
+   "readback_status": 200,
+   "readback_bytes": 9311,
+   "readback_blob40": "b76e591598fd9bf68380dde8e6aab4e6e758afed",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "already identical - nothing to push"
+  }
+ ]
+}
