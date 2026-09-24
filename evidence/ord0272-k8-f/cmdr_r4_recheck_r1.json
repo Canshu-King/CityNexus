@@ -1,0 +1,205 @@
+{
+ "what": "包工头 r4（blob 32f717a9…）的 --check 在我九格上三形制复跑：缺 claim_kind / code_determined / 同字节换 runtime_measured",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T05:04:14+08:00",
+ "validator": {
+  "path_on_branch": "live_checks/generation_transfer_check_r4.py",
+  "blob_40": "32f717a9d4dfadaebd16a6bdaea34c8a289875c5",
+  "local_copy_verified": true,
+  "bytes": 18946,
+  "edited_by_me": false
+ },
+ "generations": {
+  "gen_a": "dcae1bc964125c3a975916f6bf667794cc19622a",
+  "gen_b": "7c806fab58e872060cb5811ff96c770b40dad165",
+  "note": "我这一对代（已落地 → 我的 K8 候选），与他 c79e2b4f→dcae1bc9 那一对不是一回事"
+ },
+ "shape_1_claim_kind_undeclared": {
+  "spec_file": "spec_undeclared.json",
+  "spec_blob_40": "84cb423127f0a8025b6f0c9f771b975878052d07",
+  "rc": 0,
+  "seconds": 126.9,
+  "cells_total": 9,
+  "tally": {
+   "CLAIM_KIND_UNDECLARED": 9
+  },
+  "derived_result": "NO_CROSS_GENERATION_CLAIM_MADE",
+  "cells": [
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "verdict": "CLAIM_KIND_UNDECLARED",
+    "claim_kind": null,
+    "why": "CLAIM_KIND_NOT_DECLARED - absence of a declaration is not a licence"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "verdict": "CLAIM_KIND_UNDECLARED",
+    "claim_kind": null,
+    "why": "CLAIM_KIND_NOT_DECLARED - absence of a declaration is not a licence"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "verdict": "CLAIM_KIND_UNDECLARED",
+    "claim_kind": null,
+    "why": "CLAIM_KIND_NOT_DECLARED - absence of a declaration is not a licence"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "verdict": "CLAIM_KIND_UNDECLARED",
+    "claim_kind": null,
+    "why": "CLAIM_KIND_NOT_DECLARED - absence of a declaration is not a licence"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "verdict": "CLAIM_KIND_UNDECLARED",
+    "claim_kind": null,
+    "why": "CLAIM_KIND_NOT_DECLARED - absence of a declaration is not a licence"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "verdict": "CLAIM_KIND_UNDECLARED",
+    "claim_kind": null,
+    "why": "CLAIM_KIND_NOT_DECLARED - absence of a declaration is not a licence"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "verdict": "CLAIM_KIND_UNDECLARED",
+    "claim_kind": null,
+    "why": "CLAIM_KIND_NOT_DECLARED - absence of a declaration is not a licence"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+    "verdict": "CLAIM_KIND_UNDECLARED",
+    "claim_kind": null,
+    "why": "CLAIM_KIND_NOT_DECLARED - absence of a declaration is not a licence"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer",
+    "verdict": "CLAIM_KIND_UNDECLARED",
+    "claim_kind": null,
+    "why": "CLAIM_KIND_NOT_DECLARED - absence of a declaration is not a licence"
+   }
+  ],
+  "stderr_tail": []
+ },
+ "shape_2_all_code_determined": {
+  "spec_file": "spec_code_determined.json",
+  "spec_blob_40": "569f9186cba4c9e875ed3cfbb857db80c9486885",
+  "rc": 0,
+  "seconds": 114.4,
+  "cells_total": 9,
+  "tally": {
+   "NOT_TRANSFERABLE_GENERATION": 9
+  },
+  "derived_result": "NO_CROSS_GENERATION_CLAIM_MADE",
+  "cells": [
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "verdict": "NOT_TRANSFERABLE_GENERATION",
+    "claim_kind": "code_determined",
+    "why": "cited blob differs"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "verdict": "NOT_TRANSFERABLE_GENERATION",
+    "claim_kind": "code_determined",
+    "why": "cited blob differs"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "verdict": "NOT_TRANSFERABLE_GENERATION",
+    "claim_kind": "code_determined",
+    "why": "cited blob differs"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "verdict": "NOT_TRANSFERABLE_GENERATION",
+    "claim_kind": "code_determined",
+    "why": "cited blob differs"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "verdict": "NOT_TRANSFERABLE_GENERATION",
+    "claim_kind": "code_determined",
+    "why": "cited blob differs"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "verdict": "NOT_TRANSFERABLE_GENERATION",
+    "claim_kind": "code_determined",
+    "why": "cited blob differs"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "verdict": "NOT_TRANSFERABLE_GENERATION",
+    "claim_kind": "code_determined",
+    "why": "cited blob differs"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+    "verdict": "NOT_TRANSFERABLE_GENERATION",
+    "claim_kind": "code_determined",
+    "why": "cited blob differs"
+   },
+   {
+    "cell": "tests/test_qoder_ord0272_continuation.py::test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer",
+    "verdict": "NOT_TRANSFERABLE_GENERATION",
+    "claim_kind": "code_determined",
+    "why": "cited blob differs"
+   }
+  ],
+  "stderr_tail": []
+ },
+ "shape_3_q25_flip_same_bytes": {
+  "spec_file": "spec_q25_flip.json",
+  "spec_blob_40": "5e8df1c0b7468e797c8467671d067b95c5a26b4c",
+  "rc": 4,
+  "seconds": 4.6,
+  "cells_total": 2,
+  "tally": {
+   "TRANSFERABLE": 1,
+   "NOT_TRANSFERABLE_GENERATION": 1
+  },
+  "derived_result": "RED_CELLS:probe_only_schemas_runtime_measured",
+  "cells": [
+   {
+    "cell": "probe_only_schemas_code_determined",
+    "verdict": "TRANSFERABLE",
+    "claim_kind": "code_determined",
+    "why": null
+   },
+   {
+    "cell": "probe_only_schemas_runtime_measured",
+    "verdict": "NOT_TRANSFERABLE_GENERATION",
+    "claim_kind": "runtime_measured",
+    "why": "RUNTIME_MEASURED_NOT_LICENSED_BY_BLOB_IDENTITY"
+   }
+  ],
+  "stderr_tail": []
+ },
+ "derived": {
+  "r4_check_now_runs": true,
+  "undeclared_is_not_a_pass": true,
+  "my_9_cells_agree_with_r1_import_run": {
+   "cells": 9,
+   "agreeing": 9,
+   "verdict": "AGREES"
+  },
+  "q25_arm_bites_on_identical_citations": {
+   "both_cells_cite": [
+    "backend/app/schemas.py"
+   ],
+   "code_determined": {
+    "verdict": "TRANSFERABLE",
+    "why": null
+   },
+   "runtime_measured": {
+    "verdict": "NOT_TRANSFERABLE_GENERATION",
+    "why": "RUNTIME_MEASURED_NOT_LICENSED_BY_BLOB_IDENTITY"
+   },
+   "flipped": true
+  },
+  "schemas_py_at_my_pair_is_equal_so_a_positive_control_here_is_valid": true
+ },
+ "not_published_without_ask": "本件之外没再动别的已发布路径；探针 r1 已按 04:5x ③ 发布"
+}
