@@ -1,0 +1,296 @@
+{
+ "generatedBy": "e345b9d6",
+ "orders": [
+  "ORD-0269 cells 1/3 + R-4 negative + R-6 pagination",
+  "ORD-0273 TEXT + ACTION"
+ ],
+ "authoritative_tip_at_delivery": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "candidate_tip": "229ee47031dae9af2314e007252a6826a933a002",
+ "candidate_blob_sha1_note": "sha1 of the tree bytes as committed; the authoritative line is untouched (single-writer)",
+ "clean_worktree": {
+  "porcelain_lines_frontend_review": 0
+ },
+ "R_SCHEMA_01_class": {
+  "rule": "SCHEMA_SOURCE_METHOD_CORRECTED",
+  "row_source": "product API only -- e2e/_qoderRealSeed.setup.ts (travelers -> journeys -> stay-options/generate -> select) and ORD-0269 R-4's second journey via POST /api/v1/travelers + POST /api/v1/journeys",
+  "not_used": [
+   "DDL replay",
+   "direct ensure_schema() call",
+   "hand-written INSERTs"
+  ],
+  "conclusions_depend_on": "rendered text, element visibility, HTTP status and header/body shape on the wire -- none depend on table structure, column existence, indexes, constraints, migration state or schema version",
+  "therefore": "no schema re-run is required for these two gates"
+ },
+ "publisher_refusal_writing_rule": "evidence names the rule only (rule_hit: <NAME>); the guard's raw sentence is not copied into any artifact published for others to read",
+ "runs": [
+  {
+   "log": "run-run274989.log",
+   "run_ids": [
+    "274989"
+   ],
+   "ports": [
+    "4870/8870"
+   ],
+   "dbs": [
+    "_run274989.db"
+   ],
+   "running_claimed": 5,
+   "tally": {
+    "passed": 5
+   },
+   "wall": "16.8s",
+   "node_lines": [
+    {
+     "status": "ok",
+     "index": 2,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-cell1-reveals-and-names-its-boundary",
+     "duration": "1.7s"
+    },
+    {
+     "status": "ok",
+     "index": 3,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+     "duration": "1.4s"
+    },
+    {
+     "status": "ok",
+     "index": 4,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-r6-page-exclusion-yields-no-conclusion",
+     "duration": "1.3s"
+    },
+    {
+     "status": "ok",
+     "index": 5,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-r4-a-brand-new-journey-shows-nothing",
+     "duration": "1.3s"
+    }
+   ]
+  },
+  {
+   "log": "run-run275007.log",
+   "run_ids": [
+    "275007"
+   ],
+   "ports": [
+    "4871/8871"
+   ],
+   "dbs": [
+    "_run275007.db"
+   ],
+   "running_claimed": 4,
+   "tally": {
+    "passed": 4
+   },
+   "wall": "28.8s",
+   "node_lines": [
+    {
+     "status": "ok",
+     "index": 2,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text-the-sentence-is-the-key-and-no-shape-leaks",
+     "duration": "1.5s"
+    },
+    {
+     "status": "ok",
+     "index": 3,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
+     "duration": "1.4s"
+    },
+    {
+     "status": "ok",
+     "index": 4,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-action-retry-is-a-real-executable-step",
+     "duration": "15.5s"
+    }
+   ]
+  }
+ ],
+ "triples": [
+  {
+   "exact_sha": "229ee47031dae9af2314e007252a6826a933a002",
+   "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-cell1-reveals-and-names-its-boundary",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run274989.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-owner.spec.ts 4870, run_id=274989, fresh _run274989.db, ports 4870; verdict taken from the `ok 2` line in 1.7s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.7s"
+  },
+  {
+   "exact_sha": "229ee47031dae9af2314e007252a6826a933a002",
+   "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run274989.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-owner.spec.ts 4870, run_id=274989, fresh _run274989.db, ports 4870; verdict taken from the `ok 3` line in 1.4s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.4s"
+  },
+  {
+   "exact_sha": "229ee47031dae9af2314e007252a6826a933a002",
+   "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-r6-page-exclusion-yields-no-conclusion",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run274989.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-owner.spec.ts 4870, run_id=274989, fresh _run274989.db, ports 4870; verdict taken from the `ok 4` line in 1.3s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.3s"
+  },
+  {
+   "exact_sha": "229ee47031dae9af2314e007252a6826a933a002",
+   "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-r4-a-brand-new-journey-shows-nothing",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run274989.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-owner.spec.ts 4870, run_id=274989, fresh _run274989.db, ports 4870; verdict taken from the `ok 5` line in 1.3s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.3s"
+  },
+  {
+   "exact_sha": "229ee47031dae9af2314e007252a6826a933a002",
+   "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text-the-sentence-is-the-key-and-no-shape-leaks",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run275007.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts 4871, run_id=275007, fresh _run275007.db, ports 4871; verdict taken from the `ok 2` line in 1.5s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.5s"
+  },
+  {
+   "exact_sha": "229ee47031dae9af2314e007252a6826a933a002",
+   "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run275007.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts 4871, run_id=275007, fresh _run275007.db, ports 4871; verdict taken from the `ok 3` line in 1.4s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.4s"
+  },
+  {
+   "exact_sha": "229ee47031dae9af2314e007252a6826a933a002",
+   "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-action-retry-is-a-real-executable-step",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run275007.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts 4871, run_id=275007, fresh _run275007.db, ports 4871; verdict taken from the `ok 4` line in 15.5s",
+   "status_from_log": "ok",
+   "duration_from_log": "15.5s"
+  }
+ ],
+ "measured_readings": {
+  "ord0269-cell1-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0269-cell1",
+   "journeyId": "c96dd4a6-d259-4985-8271-119e2dfcc211",
+   "marker": {
+    "missionId": "11111111-2222-4333-8444-555555555555",
+    "markedAt": "2026-09-24T18:36:42.088Z"
+   },
+   "feedRequests": [
+    "http://127.0.0.1:4870/api/v1/journeys/c96dd4a6-d259-4985-8271-119e2dfcc211/agent-feed?limit=200",
+    "http://127.0.0.1:4870/api/v1/journeys/c96dd4a6-d259-4985-8271-119e2dfcc211/agent-feed?limit=200",
+    "http://127.0.0.1:4870/api/v1/journeys/c96dd4a6-d259-4985-8271-119e2dfcc211/agent-feed?limit=200",
+    "http://127.0.0.1:4870/api/v1/journeys/c96dd4a6-d259-4985-8271-119e2dfcc211/agent-feed?limit=200"
+   ],
+   "heading": "上次有一次规划在这台设备上没跑完：前半段已完成，但还没有产出方案。"
+  },
+  "ord0269-cell3-feed-failure.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0269-cell3",
+   "journeyId": "c96dd4a6-d259-4985-8271-119e2dfcc211",
+   "line": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+   "malformedTwentyHundredLine": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+   "note": "two emitters, two reads: 3a the read fails (500), 3b it answers 200 with no events array"
+  },
+  "ord0269-r6-exclusion-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0269-r6",
+   "journeyId": "c96dd4a6-d259-4985-8271-119e2dfcc211",
+   "paintedLine": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+   "rule": "marker's mission off-page => pending card absent; the unconfirmable line is the only named state this shape may paint"
+  },
+  "ord0269-r4-negative.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0269-r4",
+   "journeyWithMarker": "c96dd4a6-d259-4985-8271-119e2dfcc211",
+   "markerBytesOnA": 90,
+   "unplannedJourney": "0be778cc-2bae-4055-8b05-6c7c96d728e4",
+   "bScopedReadsObserved": 8,
+   "pendingCardsOnB": 0,
+   "unconfirmableLinesOnB": 0,
+   "note": "strong form: A carries a real marker, B is a separate real journey the app actually read, B shows nothing"
+  },
+  "ord0273-text-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0273-text",
+   "sentence": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+   "detail": {
+    "errorName": "OriginResponseUnusableError",
+    "errorMessage": "origin answered 200 with an unusable body (text/html; charset=utf-8)"
+   },
+   "leakShapesChecked": [
+    "origin answered",
+    "unusable body",
+    "text/html",
+    "text/plain",
+    "Error",
+    "TypeError"
+   ]
+  },
+  "ord0273-text-en-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0273-text-en",
+   "locale": "en",
+   "sentence": "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
+   "cjkInEnglishArm": false,
+   "cjkControlOnChineseConstant": true,
+   "detail": {
+    "errorName": "OriginResponseUnusableError",
+    "errorMessage": "origin answered 200 with an unusable body (text/html; charset=utf-8)"
+   },
+   "leakShapesChecked": [
+    "origin answered",
+    "unusable body",
+    "text/html",
+    "text/plain",
+    "Error",
+    "TypeError"
+   ]
+  },
+  "ord0273-action-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0273-action",
+   "retryLabel": "重试",
+   "afterRetrySentence": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+   "note": "retry re-enters the same deadline-bounded read; the named failure state returns, no second clock"
+  }
+ },
+ "leak_scan_selftest": {
+  "main_sentence": [],
+  "english_main_sentence": [],
+  "technical_detail_control": [
+   "origin answered",
+   "unusable body",
+   "text/html"
+  ]
+ },
+ "dictionary_equality": {
+  "per_locale": {
+   "en": {
+    "dictionary_value": "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
+    "painted": "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
+    "equal": true,
+    "contains_cjk": false
+   },
+   "zh-CN": {
+    "dictionary_value": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+    "painted": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+    "equal": true,
+    "contains_cjk": true
+   }
+  }
+ },
+ "caught_this_round": "commit 9d28c2b carried the Chinese sentence in the `en` dictionary, so an English screen would have spoken Chinese (ORD-0240's defect in the other coat). This segment replaces it with the registered English value and adds the ord0273-text-en node that reads the English arm off the rendered screen.",
+ "reddening_proof": "NOT_PRESENT_YET -- the arm that puts the Chinese sentence back into `en` must be run before this round may claim the English node reddens",
+ "verdict": "GREEN",
+ "problems": []
+}
