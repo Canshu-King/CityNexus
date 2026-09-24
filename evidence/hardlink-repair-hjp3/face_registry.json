@@ -1,0 +1,38 @@
+{
+ "stopped_old_control_face": {
+  "pid": 12620,
+  "rc": 0,
+  "command_line_checked": "node node_modules/vite/bin/vite.js preview --outDir D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist --port 8498 --host 127",
+  "listening_after": []
+ },
+ "control_face_new": {
+  "port": 8495,
+  "pid": 54912,
+  "backend": 8497,
+  "outDir": "D:/moodle/_hjp3_fan_sweep_0923/snap_live_dist",
+  "asset": "index-CtuiCkKf.js",
+  "served_bytes": 1248629,
+  "served_sha256": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+  "matches_disk": true,
+  "disk_nlink": 1,
+  "listening": [
+   "54912"
+  ]
+ },
+ "still_listening": {
+  "8493": [
+   "12352"
+  ],
+  "8495": [
+   "54912"
+  ],
+  "8497": [
+   "9124"
+  ],
+  "8499": [
+   "49624"
+  ],
+  "8494": [],
+  "8498": []
+ }
+}
