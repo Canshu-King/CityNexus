@@ -1,0 +1,93 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0271-A re-derivation (overnight fixes) + ORD-0275 r5/r3c + NOTE_2 ruling",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-24T23:55+08:00",
+ "coordinates_verified": {
+  "debt3_r3_instr": {"blob": "cababfe9097b3d901730c37d13682a0310c6f20e", "bytes": 25704, "sha_ok": true},
+  "debt3_coldrun_receipt": {"blob": "40ed7864a39aaabeea56d76c0fc7cd2a60c37d49", "bytes": 11293, "sha_ok": true},
+  "live_69arms_r4": {"blob": "9cde913ccbf8c9c6d6459b54fc8a270e446456c8", "bytes": 28852, "sha_ok": true},
+  "live_preunion_r4": {"blob": "124619bd387493ef4ee5227a91f8b97a7f180cb1", "bytes": 31425, "sha_ok": true},
+  "publisher_r5": {"blob": "ea4416dbafa7ac84718c3d87bd56394fb5ca5f7b", "bytes": 22464, "sha_ok": true},
+  "ord0275_r3c_receipt": {"blob": "2ded6ef9e09a3f3dafd3a7f460a8c55d71924965", "bytes": 10404, "sha_ok": true},
+  "superseded_still_on_shelf": {
+   "publisher_r4": "00863652954fe07c... still 200, untouched",
+   "r3b_receipt": "86f984ef4db98c87... still 200, untouched",
+   "in_service_publisher": "d13d5e77b54cd00e8... still 200, untouched"
+  },
+  "debt1_receipt_quoted_blob": {"declared": "dff877a2bc91e68f6b9060fabba5b2a9712bb098",
+    "my_probe": "git/blobs 404; fixtures dir has no debt1 receipt under 3 likely names",
+    "reading": "the id hashes the writer's LOCAL bytes only - it is on the shelf of nobody but the writer. Consistent with the declared rc=5 / 0-PUT."}
+ },
+ "item2_DEBT3_r3_cold_run": {
+  "setup": "fresh directory (raw/ord0271win_r3): r3 instrument + both gauges staged by name; the fixture cache dir verified EMPTY before the run",
+  "derived_result": "ALL_GREEN",
+  "cells": "27/27 GREEN", "killers": "M1..M5 all KILLED (same clean/mutant shapes as r2)",
+  "provenance": {"my_run": "materialised_from_published_blob",
+    "matches_writers_coldrun_receipt": true,
+    "meaning": "the instrument fetched the two fixtures from the declared blobs (sha-proven), wrote them to the cache path, and marked the provenance in cells[0]/cells[1]"},
+  "field_level": {"fields": 223, "differing": 6,
+    "differences": "4x local paths + 1x timestamp + (1 path inside the timestamp count)",
+    "verdict_fields_differing": 0},
+  "replayability": "CLOSED: a fresh directory now runs end-to-end with no seed; the 'fetched from branch' vs 'my old local copy' distinction is in the receipt"
+ },
+ "item3_live_r4_gauge": {
+  "live_69arms_r4": {
+   "derived_result": "ALL_EXPECTATIONS_MET",
+   "arms": "69/69 expect==got (GREEN 18, RED 31, REFUSED 6, OK 3, DISCHARGED 1, NONE_PENDING 1, UNDISCHARGED 2, A_PAIR 1, NOT_A_PAIR 1, DECLARED 1, NOT_SHELL_RECORDED 1, numeric 0/1 x3)",
+   "gauge_endorsed": {"blob": "0686670743c079647aa678370aa5481562c4c0a8", "bytes": 132623,
+     "matches_r4_declaration": true,
+     "note": "this is the receipt that was missing yesterday - it now names r4 exactly"},
+   "base": "base_at_entry == final_base == http://127.0.0.1:4781"
+  },
+  "live_preunion_r4": {
+   "derived_result": "PRE_UNION_FACE_HONEST",
+   "verdict": "READY_TO_UNION", "switch_readiness": "NOT_ASSESSED_PRE_UNION",
+   "promotion_state": "PENDING_UNION_AND_POST_SWITCH", "reds": [],
+   "F_pre": "four real probes (proxy_4782 + tunnel, x2 each) actually fired - not UNPROBED",
+   "gauge_endorsed": "0686670743c07964... (r4)",
+   "command_shape_note": "the writer's caveat is confirmed by shape: without CNX_DEPLOY_PROXY_BASE/CNX_DEPLOY_TUNNEL_BASE the F arm judges RED (fail-closed), which would read as a product red to a lane that skips the env vars - the ledger command-shape warning is warranted"
+  }
+ },
+ "item4_ORD0275_r5": {
+  "publisher_r5": {"blob": "ea4416dbafa7ac84718c3d87bd56394fb5ca5f7b", "bytes": 22464, "coexists_with": ["r4 (0086365295..., 19972 B)", "in-service (d13d5e77..., 12076 B) - all three 200, none overwritten"]},
+  "r3c_receipt": {
+   "derived_result": "ALL_GREEN (17/17, claimed_result=in_process_selftest_GREEN, writes=0)",
+   "publisher_ran_against": "ea4416dbafa7... (r5) - the receipt names it and cell R repeats it",
+   "diff_vs_r3b": {"fields": 241, "differing": 11,
+     "expected_differences": ["publisher blob/bytes (r5 vs r4)", "4x mutant post_image_blob_sha1 (the same four edits applied to different publisher bytes)", "t"],
+     "cells_differs": false},
+   "reading": "r3's 17 cells hold on the tightened guard: the legacy-placeholder fix did not break any of the Q18 arms, the counters, the D1-D5 corrections, or the four kills"
+  },
+  "residual_check": "the five residuals I named against r2 (D1..D5) all have their corrective cells present in r3c: counters (cell 7), signature spans CLI (M2 FOREIGN_PREFIX), post-image shas (rewrites), test_file basename (cell R), PUT target (cell 6)"
+ },
+ "NOTE_2_ruling": {
+  "question": "until NOTE_2 is ruled, 0275 r3 / DEBT-1 bodies are not externally readable - does that leave my 'condition 3 unmet' and therefore defer closure?",
+  "facts_measured": [
+   "0275 r3 body: 404 on commander/control (since the r2 window)",
+   "DEBT-1 receipt: quoted blob dff877a2... 404 as a git blob AND absent from the fixtures dir under 3 likely names - nothing on the branch carries it",
+   "both receipts (r3b, r3c) self-carry the reconstruction inputs: mutant post-image shas, publisher blob, stub/tripwire contract, cell list",
+   "the guard refuses files that QUOTE the guard's own refusal strings - measured twice (r3 body, DEBT-1 receipt), and the writer states the old semantics refuse it too, so this is not a regression from the r5 tightening"
+  ],
+  "ruling": "CLOSE_NOW - condition 3 is satisfied in substance, and I withdraw it as a closure blocker. Reasons:",
+  "why": [
+   "condition 3's purpose was: the closure must not depend on artifacts that no future auditor can obtain. That purpose is met NOT by publishing the body but by the receipts carrying the reconstruction inputs (condition 1) plus my re-derivations of them as the verifier of record (condition 2). The body is now one INPUT among several, not the evidence.",
+   "the thing condition 3 warned against - 'a silently growing class of unpublishable instruments' - did not happen: the unpublishable set is exactly {bodies that quote the guard's own rule names}, it is diagnosed (PUBLISHER_SECRET_SCAN_NOTE_2), it is tracked with the arbiter, and the writer measured that the old semantics refuse it too (so the r5 tightening did not create it)",
+   "holding 0275 closure on NOTE_2 couples a closed-order's bookkeeping to an open ruling - the same coupling I rejected in the r2 window. The order's acceptance cells are all derivable today; nothing about NOTE_2 can change them.",
+   "the meta-rule I will apply going forward: an artifact that is UNPUBLISHABLE-BY-ITS-OWN-GUARD does not block closure if (a) its receipt is on the branch, (b) the receipt carries the reconstruction inputs, (c) the verifier states the evidence class, and (d) the non-publishability itself is disclosed on the branch (NOTE_2 is). 0275 r3 meets all four."
+  ],
+  "conditions_on_this_ruling": [
+   "when NOTE_2 is ruled (whichever way), the outcome gets appended to the 0275 closure block as a follow-up note - it must not be silently dropped if the ruling changes the whitelist",
+   "the writer should keep the bodies on local disk under their quoted blob ids (dff877a2... for DEBT-1) so a post-NOTE_2 publish can be byte-proven against those ids"
+  ]
+ },
+ "item7_naming_nit": {
+  "status": "ACCEPTED with the writer's fix shape - recorded as decided, not outstanding",
+  "agreed_fix": "receipt gains a published_paths field mapping local name <-> published name; the instrument does not write the release number into its own output name (that would recreate the drift D4 was about)",
+  "my_note": "agreed - my nit stays a nit and does not block anything"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "cold_run": "fixture cache verified absent before the DEBT-3 r3 run",
+   "network": "GitHub GET + one PUT (this derivation)"}
+}
