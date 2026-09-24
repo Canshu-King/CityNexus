@@ -1,0 +1,198 @@
+{
+ "at": "2026-09-24T11:37:00+08:00",
+ "order": "ORD-0274-SW 候选 · 六格自证",
+ "lane": "B c01d72a3",
+ "base": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "cells": {
+  "1_ancestry": {
+   "candidate_tip": "d82eb16da08d1fca692c8a74e3ff47f55747b846",
+   "parent": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+   "branch": "agent/b-c01d72a3-0274sw",
+   "required_base": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+   "parent_equals_landed_tip": true,
+   "is_ancestor_rc": 0,
+   "authoritative_branch_moved_by_me": false
+  },
+  "2_diff_boundary": {
+   "files": [
+    "frontend/src/main.tsx"
+   ],
+   "diffstat": "1 file changed, 15 insertions(+), 8 deletions(-)",
+   "removed_lines": [
+    "  const controllerBefore = navigator.serviceWorker.controller?.scriptURL ?? null;",
+    "    const controllerAfter = navigator.serviceWorker.controller?.scriptURL ?? null;",
+    "    if (!controllerBefore || !controllerAfter || controllerBefore === controllerAfter) return;",
+    "    const transition = `${controllerBefore}->${controllerAfter}`;",
+    "    if (sessionStorage.getItem(serviceWorkerReloadMarkerKey) === transition) return;",
+    "    // Reload exactly once when an already-controlled page moves to a new worker, so an old",
+    "    // shell cannot keep executing against a new asset graph after an auto-update.",
+    "    sessionStorage.setItem(serviceWorkerReloadMarkerKey, transition);"
+   ],
+   "write_domain_honoured": {
+    "touched_precache_structure": false,
+    "touched_0268_landing": false,
+    "touched_other_sw_behaviour": false,
+    "note": "one handler in one file; the registration call, clientsClaim/skipWaiting and every runtime route are byte-identical to the landed tip"
+   }
+  },
+  "3_gates": {
+   "typecheck_rc": 0,
+   "build_rc": 0,
+   "precache_line": "precache  8 entries (2436.75 KiB)"
+  },
+  "4_behaviour_three_readings": {
+   "a_unfixed_client_landed_tip": {
+    "client_module": "/assets/index-Cpy_jhEg.js",
+    "incoming_module": "/assets/index-ChOTTCvB.js",
+    "navigations_needed": 2,
+    "converged_within_one_navigation": false,
+    "product_reload_marker_values_seen": [
+     "None"
+    ],
+    "load_ids_first_to_last": [
+     [
+      1,
+      1
+     ]
+    ],
+    "bundle_at_end_of_open_document": "/assets/index-Cpy_jhEg.js",
+    "verdict_field_in_artifact": "OPEN_DOCUMENT_DID_NOT_CONVERGE__A_SECOND_NAVIGATION_IS_REQUIRED"
+   },
+   "b_landing_transition_incoming_has_the_fix": {
+    "client_module": "/assets/index-ChOTTCvB.js",
+    "incoming_module": "/assets/index-F4TeHVOB.js",
+    "navigations_needed": 2,
+    "converged_within_one_navigation": false,
+    "product_reload_marker_values_seen": [
+     "None"
+    ],
+    "load_ids_first_to_last": [
+     [
+      1,
+      1
+     ]
+    ],
+    "bundle_at_end_of_open_document": "/assets/index-ChOTTCvB.js",
+    "verdict_field_in_artifact": "OPEN_DOCUMENT_DID_NOT_CONVERGE__A_SECOND_NAVIGATION_IS_REQUIRED"
+   },
+   "c_client_already_fixed": {
+    "client_module": "/assets/index-F4TeHVOB.js",
+    "incoming_module": "/assets/index-0274gen2.js",
+    "navigations_needed": 1,
+    "converged_within_one_navigation": true,
+    "product_reload_marker_values_seen": [
+     "1"
+    ],
+    "load_ids_first_to_last": [
+     [
+      null,
+      2
+     ]
+    ],
+    "bundle_at_end_of_open_document": "/assets/index-0274gen2.js",
+    "verdict_field_in_artifact": "OPEN_DOCUMENT_CONVERGED_ON_ITS_OWN"
+   },
+   "instrument_note": "v1 of this experiment killed the origin between navigations, so the second navigation was a fresh document and could not answer the question; that reading (q274sw_transition_measurement.json) is published and superseded, not averaged in"
+  },
+  "5_non_regression": {
+   "at": "2026-09-24T11:34:37+08:00",
+   "order": "ORD-0274-SW 候选的本地等价回归（A 臂形状 / B3 形状）",
+   "lane": "B c01d72a3",
+   "mode": "READ-ONLY; no product file changed by this script",
+   "surface": {
+    "port": 8453,
+    "dists": {
+     "g1": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_ord0267b",
+     "g2": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274sw",
+     "g3": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274sw_gen2"
+    },
+    "never_touched_or_opened": [
+     ":4781",
+     ":4782",
+     ":8693",
+     "tunnel",
+     "cnx proxy",
+     "_live",
+     "_preview",
+     "HJ-P1 ports 8941/8942"
+    ],
+    "unregister_calls": 0,
+    "cache_clear_calls": 0,
+    "demo_reset": 0
+   },
+   "reading": {
+    "A_equivalent": {
+     "online": {
+      "bundle": "/assets/index-ChOTTCvB.js",
+      "controller": "/v10-sw.js",
+      "registrations": [
+       {
+        "scope": "/",
+        "active": "/v10-sw.js",
+        "active_state": "activated",
+        "waiting": null,
+        "waiting_state": null,
+        "installing": null
+       }
+      ]
+     },
+     "offline": {
+      "nav": null,
+      "bundle": "/assets/index-ChOTTCvB.js",
+      "controlled": "/v10-sw.js",
+      "mounted": true,
+      "url": null,
+      "navigation": null
+     },
+     "same_generation_while_offline": true,
+     "answered_by_shell_offline": false,
+     "half_generation_mix": null
+    },
+    "B3_equivalent": {
+     "installed_generation_bundle": "/assets/index-F4TeHVOB.js",
+     "after_swap_bundle": "/assets/index-0274gen2.js",
+     "converged_within_one_navigation": true,
+     "product_marker_after_convergence": "1",
+     "offline_after_convergence": {
+      "bundle": "/assets/index-0274gen2.js",
+      "controlled": "/v10-sw.js",
+      "mounted": true,
+      "navigation": null
+     },
+     "still_that_generation_offline": true,
+     "answered_offline": false
+    }
+   },
+   "what_this_is_not": "HJ-P1's verdicts. She owns B1/B2/B3 on the real chain and her instruments measure the tunnel path; this is a loopback shape check that my change does not break the two arms I was told must not regress."
+  },
+  "6_hygiene_and_limits": {
+   "porcelain_excluding_my_build_dirs": [],
+   "my_build_dirs_left": [
+    "?? frontend/dist_0274sw/",
+    "?? frontend/dist_0274sw_gen2/",
+    "?? frontend/dist_ord0267b/",
+    "?? frontend/dist_ord0268_impl/",
+    "?? frontend/dist_s5/"
+   ],
+   "ports_used": [
+    8451,
+    8452,
+    8453
+   ],
+   "forbidden_surfaces": {
+    "user_chain_ports": [],
+    "user_dbs": [],
+    "tunnel": false,
+    "demo_reset": 0,
+    "credentials_printed": 0
+   },
+   "bootstrapping_limit_named_for_the_commander": "a client running a generation WITHOUT the fix still needs one manual navigation for the first transition after landing - the code that would reload it has not been downloaded yet; B2 must be re-measured from a generation that already contains this change (two deploys), or judged as 'converges from here on'",
+   "instrument_disclosures": [
+    "v1 killed the origin between navigations, so the second navigation was a fresh document and could not answer the question; that reading is kept (q274sw_transition_measurement.json) and superseded here, not averaged in",
+    "the stand-in next generation was built at the artifact layer (same bytes, new module name and a rotated index.html revision, because Workbox will not re-download an entry whose revision is unchanged) - a real deploy changes both",
+    "controllerchange counted 0 in the converged reading because the observer re-installs after the self-reload; the load counter and the product's own marker are the evidence there"
+   ],
+   "not_claimed": "derived_result for B2 (and for B1/B3/A) belongs to HJ-P1"
+  }
+ }
+}
