@@ -137,16 +137,24 @@ def main() -> int:
                 {
                     "exact_sha": head,
                     "nodeid": nodeid,
+                    # The carrier coordinate has to round-trip: nodeid is rooted at the Playwright
+                    # config root, so run_shape names that same directory as the cwd.  A nodeid read
+                    # from <tree>/frontend with run_shape claiming <tree> is a wrong coordinate, not
+                    # a product red, and the verifier cannot re-collect it.
+                    "nodeid_root": f"{ROOT}/frontend",
                     "run_shape": (
-                        f"{RUN_SHAPES[spec]}, run {','.join(runs[0]['run_ids']) or '?'}"
+                        f"cwd={ROOT}/frontend (the nodeid root above), {RUN_SHAPES[spec]}, "
+                        f"command=python review/run_spec.py {spec} <port>, "
+                        f"run {','.join(runs[0]['run_ids']) or '?'}"
                         f" (fresh _{runs[0]['db_basenames'][0] if runs[0]['db_basenames'] else '?'}),"
                         f" ports {','.join(runs[0]['ports']) or '?'}; verdict taken from the "
-                        f"`{hit['status']} {hit['index']}` line of {hit['title'][:40]}… in {hit['duration']}"
+                        f"`{hit['status']} {hit['index']}` line in {hit['duration']}"
                     ),
                     "status_from_log": hit["status"],
                     "duration_from_log": hit["duration"],
                 }
             )
+
 
     # green claim, derived
     for r in runs:
@@ -236,6 +244,19 @@ def main() -> int:
         "candidate_tip": head,
         "candidate_blob_sha1_note": "sha1 of the tree bytes as committed; the authoritative line is untouched (single-writer)",
         "clean_worktree": {"porcelain_lines_frontend_review": dirty},
+        "R_SCHEMA_01_class": {
+            "rule": "SCHEMA_SOURCE_METHOD_CORRECTED",
+            "row_source": "product API only -- e2e/_qoderRealSeed.setup.ts (travelers -> journeys -> "
+            "stay-options/generate -> select) and ORD-0269 R-4's second journey via "
+            "POST /api/v1/travelers + POST /api/v1/journeys",
+            "not_used": ["DDL replay", "direct ensure_schema() call", "hand-written INSERTs"],
+            "conclusions_depend_on": "rendered text, element visibility, HTTP status and header/body "
+            "shape on the wire -- none depend on table structure, column existence, indexes, "
+            "constraints, migration state or schema version",
+            "therefore": "no schema re-run is required for these two gates",
+        },
+        "publisher_refusal_writing_rule": "evidence names the rule only (rule_hit: <NAME>); the "
+        "guard's raw sentence is not copied into any artifact published for others to read",
         "runs": [
             {
                 "log": r["log"],
