@@ -1,0 +1,43 @@
+{
+  "order": "ORD-0274",
+  "arm": "B",
+  "run": "camp2",
+  "verifier": "1a986a24 HJ-P1",
+  "source_sha": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+  "started_at": "2026-09-24T09:14:52+0800",
+  "ports": {
+    "backend": 8942,
+    "origin": 8941
+  },
+  "db": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o274_run\\camp2\\one_shot.sqlite3",
+  "profile": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o274_run\\camp2\\profile",
+  "surface": {
+    "backend_openapi_paths": 139,
+    "origin_root_status": 200,
+    "served_entry": "index-Cpy_jhEg.js"
+  },
+  "campaign": {
+    "exit": 0,
+    "wall_s": 203.8
+  },
+  "forbidden_move_audit": {
+    "file": "o274_arms.cjs",
+    "code_lines_scanned": 243,
+    "forbidden_calls_found": [],
+    "clean": true
+  },
+  "kept": [
+    "o274_requests_camp2.jsonl",
+    "o274_stdout_camp2.json"
+  ],
+  "isolation": {
+    "rundir_deleted": true,
+    "db_leftovers": [],
+    "profile_leftovers": false,
+    "ports_final": {
+      "backend": [],
+      "origin": []
+    }
+  },
+  "ended_at": "2026-09-24T09:18:25+0800"
+}
