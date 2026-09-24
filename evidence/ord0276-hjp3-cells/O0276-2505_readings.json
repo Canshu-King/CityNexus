@@ -1,0 +1,417 @@
+{
+ "order": "ORD-0276 FEED_ORDERING_OR_CURSOR",
+ "run_id": "O0276-2505",
+ "tree": "dcae1bc964125c3a975916f6bf667794cc19622a",
+ "measured_at_local": "2026-09-25T05:37:31+0800",
+ "journey": "48a5d9d8-3670-4127-a495-a6d1195d8e84",
+ "backend": "http://127.0.0.1:8493",
+ "db": "D:\\moodle\\_hjp3_0279x_0925\\o0279x.s3db",
+ "audit_writer": {
+  "rc": 0,
+  "wrote": {
+   "rows": 241,
+   "journey": "48a5d9d8-3670-4127-a495-a6d1195d8e84"
+  },
+  "stderr_tail": "",
+  "writer_pid_proven_separate_process": true
+ },
+ "store": {
+  "rows_for_journey": 242,
+  "rows_in_whole_table": 252,
+  "first_created_at": "2026-09-24T21:37:27.986805+00:00",
+  "last_created_at": "2026-09-24T21:37:29.864713+00:00",
+  "newest_row_id": "1aa9cd45-7ad6-4290-8cf0-4039abcf15ae",
+  "newest_row_is_the_target": true,
+  "target_present_in_store": true,
+  "target_id": "1aa9cd45-7ad6-4290-8cf0-4039abcf15ae",
+  "target_rank_from_oldest": 242
+ },
+ "pages": {
+  "default": {
+   "http": 200,
+   "top_level_keys": [
+    "events",
+    "journey_id",
+    "source"
+   ],
+   "events": 100,
+   "first_event_id": "93c6b332-9f4a-478c-80c8-75a6624e39c0",
+   "last_event_id": "37191da1-53af-48ca-8d09-5c5aac79357b",
+   "target_in_page": false,
+   "body_sha256": "d5eae309ad324ca5",
+   "event_keys_sample": [
+    "actor_id",
+    "actor_type",
+    "decision",
+    "entity_id",
+    "entity_type",
+    "event_type",
+    "facts",
+    "id",
+    "journey_id",
+    "proposal_id",
+    "reason_codes",
+    "source",
+    "summary",
+    "timestamp",
+    "tool",
+    "trace_id",
+    "type"
+   ],
+   "bytes": 51262
+  },
+  "limit_200": {
+   "http": 200,
+   "top_level_keys": [
+    "events",
+    "journey_id",
+    "source"
+   ],
+   "events": 200,
+   "first_event_id": "93c6b332-9f4a-478c-80c8-75a6624e39c0",
+   "last_event_id": "1d660904-54c4-413a-98e0-e17d6b9ca2de",
+   "target_in_page": false,
+   "body_sha256": "d4fcf8982532b945",
+   "event_keys_sample": [
+    "actor_id",
+    "actor_type",
+    "decision",
+    "entity_id",
+    "entity_type",
+    "event_type",
+    "facts",
+    "id",
+    "journey_id",
+    "proposal_id",
+    "reason_codes",
+    "source",
+    "summary",
+    "timestamp",
+    "tool",
+    "trace_id",
+    "type"
+   ],
+   "bytes": 102462
+  },
+  "limit_201": {
+   "http": 422,
+   "top_level_keys": [
+    "error"
+   ],
+   "events": 0,
+   "first_event_id": null,
+   "last_event_id": null,
+   "target_in_page": false,
+   "body_sha256": "3049557ff068fd31",
+   "event_keys_sample": [],
+   "bytes": 324
+  },
+  "limit_1": {
+   "http": 200,
+   "top_level_keys": [
+    "events",
+    "journey_id",
+    "source"
+   ],
+   "events": 1,
+   "first_event_id": "93c6b332-9f4a-478c-80c8-75a6624e39c0",
+   "last_event_id": "93c6b332-9f4a-478c-80c8-75a6624e39c0",
+   "target_in_page": false,
+   "body_sha256": "742f133dbc45f64f",
+   "event_keys_sample": [
+    "actor_id",
+    "actor_type",
+    "decision",
+    "entity_id",
+    "entity_type",
+    "event_type",
+    "facts",
+    "id",
+    "journey_id",
+    "proposal_id",
+    "reason_codes",
+    "source",
+    "summary",
+    "timestamp",
+    "tool",
+    "trace_id",
+    "type"
+   ],
+   "bytes": 574
+  },
+  "offset_100": {
+   "http": 200,
+   "top_level_keys": [
+    "events",
+    "journey_id",
+    "source"
+   ],
+   "events": 100,
+   "first_event_id": "93c6b332-9f4a-478c-80c8-75a6624e39c0",
+   "last_event_id": "37191da1-53af-48ca-8d09-5c5aac79357b",
+   "target_in_page": false,
+   "body_sha256": "d5eae309ad324ca5",
+   "event_keys_sample": [
+    "actor_id",
+    "actor_type",
+    "decision",
+    "entity_id",
+    "entity_type",
+    "event_type",
+    "facts",
+    "id",
+    "journey_id",
+    "proposal_id",
+    "reason_codes",
+    "source",
+    "summary",
+    "timestamp",
+    "tool",
+    "trace_id",
+    "type"
+   ],
+   "bytes": 51262
+  },
+  "cursor_x": {
+   "http": 200,
+   "top_level_keys": [
+    "events",
+    "journey_id",
+    "source"
+   ],
+   "events": 100,
+   "first_event_id": "93c6b332-9f4a-478c-80c8-75a6624e39c0",
+   "last_event_id": "37191da1-53af-48ca-8d09-5c5aac79357b",
+   "target_in_page": false,
+   "body_sha256": "d5eae309ad324ca5",
+   "event_keys_sample": [
+    "actor_id",
+    "actor_type",
+    "decision",
+    "entity_id",
+    "entity_type",
+    "event_type",
+    "facts",
+    "id",
+    "journey_id",
+    "proposal_id",
+    "reason_codes",
+    "source",
+    "summary",
+    "timestamp",
+    "tool",
+    "trace_id",
+    "type"
+   ],
+   "bytes": 51262
+  },
+  "since_newest": {
+   "http": 200,
+   "top_level_keys": [
+    "events",
+    "journey_id",
+    "source"
+   ],
+   "events": 100,
+   "first_event_id": "93c6b332-9f4a-478c-80c8-75a6624e39c0",
+   "last_event_id": "37191da1-53af-48ca-8d09-5c5aac79357b",
+   "target_in_page": false,
+   "body_sha256": "d5eae309ad324ca5",
+   "event_keys_sample": [
+    "actor_id",
+    "actor_type",
+    "decision",
+    "entity_id",
+    "entity_type",
+    "event_type",
+    "facts",
+    "id",
+    "journey_id",
+    "proposal_id",
+    "reason_codes",
+    "source",
+    "summary",
+    "timestamp",
+    "tool",
+    "trace_id",
+    "type"
+   ],
+   "bytes": 51262
+  },
+  "page_2": {
+   "http": 200,
+   "top_level_keys": [
+    "events",
+    "journey_id",
+    "source"
+   ],
+   "events": 100,
+   "first_event_id": "93c6b332-9f4a-478c-80c8-75a6624e39c0",
+   "last_event_id": "37191da1-53af-48ca-8d09-5c5aac79357b",
+   "target_in_page": false,
+   "body_sha256": "d5eae309ad324ca5",
+   "event_keys_sample": [
+    "actor_id",
+    "actor_type",
+    "decision",
+    "entity_id",
+    "entity_type",
+    "event_type",
+    "facts",
+    "id",
+    "journey_id",
+    "proposal_id",
+    "reason_codes",
+    "source",
+    "summary",
+    "timestamp",
+    "tool",
+    "trace_id",
+    "type"
+   ],
+   "bytes": 51262
+  }
+ },
+ "client_derivation": {
+  "default": {
+   "found": null,
+   "event_id": null
+  },
+  "max": {
+   "found": null,
+   "event_id": null
+  },
+  "store": {
+   "found": "appr-0276-TARGET",
+   "event_id": "1aa9cd45-7ad6-4290-8cf0-4039abcf15ae"
+  }
+ },
+ "r6_note": "the page that lacks the target is never used here to conclude the target is absent; the store read is a separate SQL query, and timestamps are not used as linkage",
+ "derived": {
+  "C1_ascending_truncation": {
+   "rows_in_store": 242,
+   "returned_default": 100,
+   "returned_at_documented_max": 200,
+   "target_present_in_store": true,
+   "target_is_newest_row": true,
+   "target_in_default_page": false,
+   "target_in_max_page": false,
+   "ordering_is_ascending_oldest_first": true,
+   "verdict": "ASC_TRUNCATION_PUSHES_THE_NEWEST_OUT_PERMANENTLY"
+  },
+  "C2_pagination_readback": {
+   "documented_parameters": [
+    "limit"
+   ],
+   "limit_201_http": 422,
+   "offset_100_body_equals_default": true,
+   "cursor_body_equals_default": true,
+   "since_body_equals_default": true,
+   "page_2_body_equals_default": true,
+   "http_status_of_each_probe": {
+    "default": 200,
+    "limit_200": 200,
+    "limit_201": 422,
+    "limit_1": 200,
+    "offset_100": 200,
+    "cursor_x": 200,
+    "since_newest": 200,
+    "page_2": 200
+   },
+   "verdict": "NO_CURSOR_NO_OFFSET_UNDOCUMENTED_PARAMS_SILENTLY_IGNORED"
+  },
+  "C3_named_failure": {
+   "payload_top_level_keys": [
+    "events",
+    "journey_id",
+    "source"
+   ],
+   "any_total_or_truncation_field": false,
+   "client_derivation_on_default_page": {
+    "found": null,
+    "event_id": null
+   },
+   "client_derivation_on_max_page": {
+    "found": null,
+    "event_id": null
+   },
+   "same_derivation_on_the_store": {
+    "found": "appr-0276-TARGET",
+    "event_id": "1aa9cd45-7ad6-4290-8cf0-4039abcf15ae"
+   },
+   "verdict": "TRUNCATION_UNNAMED_AND_CLIENT_CONCLUDES_ABSENCE"
+  }
+ },
+ "browser_arm": {
+  "shared_outDir_hazard_measured": {
+   "path": "D:/moodle/_hjp3_fan_sweep_0923/snap_live_dist",
+   "index_html_mtime": "2026-09-25 05:14:35",
+   "referenced_asset": "index-CtuiCkKf.js",
+   "that_asset_present_in_the_shared_copy": false,
+   "effect_on_my_face": "module script answered 200 + text/html (1,200 B) -> strict MIME check fails -> React never mounts -> blank page (#root children 0, innerText 0 chars)"
+  },
+  "stale_service_worker_hazard_measured": {
+   "origin": "http://127.0.0.1:8494",
+   "active_worker": "http://127.0.0.1:8494/v10-sw.js",
+   "caches": [
+    "workbox-precache-v2-http://127.0.0.1:8494/"
+   ],
+   "same_bundle_served_fine_by_curl_on_that_port": true,
+   "browser_answer_for_the_module_on_that_port": "200 + text/html, 1,200 B",
+   "effect": "my own face port carried a service worker from the earlier run, so it kept answering the stale shell for the new asset name - blank page while the server itself was healthy",
+   "fix_measured": "fresh face port :8499 on the same frozen bytes -> rootChildren 1, innerText 605 chars"
+  },
+  "faces": {
+   "8494_after_move": {
+    "pid": 32720,
+    "served_asset": "index-CtuiCkKf.js",
+    "served_sha256": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1",
+    "matches_frozen_disk": true
+   },
+   "8499_clean": {
+    "pid": 49624,
+    "asset": "index-CtuiCkKf.js",
+    "bytes": 1248629,
+    "sha256": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1"
+   }
+  },
+  "dom_readings_on_the_clean_port": {
+   "/v8/hub": {
+    "mounted": true,
+    "rootChildren": 1,
+    "innerText_chars": 605,
+    "agent_feed_card_count": 0,
+    "agent_feed_list_items": 0,
+    "note": "the traveller surface does not render the feed at all (measured, with the page proven mounted)"
+   },
+   "/legacy": {
+    "mounted": true,
+    "rootChildren": 1,
+    "innerText_chars": 186,
+    "agent_feed_card_count": 0,
+    "agent_feed_list_items": 0,
+    "console_errors": [
+     "403 Forbidden x2"
+    ],
+    "rendered_head": "CITYNEXUS · DETERMINISTIC JOURNEY MODE / Journey connection unavailable / ERROR · Resetting the demo scenario ne…",
+    "note": "the surface that DOES consume agent-feed needs the demo scenario; I do not run demo/reset (0 times this lane), so there is NO pixel reading for the truncation effect - the client-logic reading below stands on its own"
+   }
+  },
+  "client_logic_reading": {
+   "method": "the shipped derivation at frontend/src/main.tsx:338-344 (reversed feed search for a live facts.approval_id) replayed verbatim against the real HTTP payload",
+   "on_default_page": {
+    "found": null,
+    "event_id": null
+   },
+   "on_documented_max_page": {
+    "found": null,
+    "event_id": null
+   },
+   "on_the_store": {
+    "found": "appr-0276-TARGET",
+    "event_id": "1aa9cd45-7ad6-4290-8cf0-4039abcf15ae"
+   }
+  }
+ },
+ "user_visibility_verdict": "TRAVELLER_SURFACE_DOES_NOT_CONSUME_FEED__LEGACY_SURFACE_NEEDS_DEMO_SCENARIO__NO_PIXEL_READING"
+}
