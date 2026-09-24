@@ -1,0 +1,157 @@
+{
+ "ruler": {
+  "path": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\deploy_bundle_v2_draft_r4.py",
+  "blob_sha": "0686670743c079647aa678370aa5481562c4c0a8",
+  "extracted": [
+   "DECLARED_NO_PRECACHE",
+   "SW_REGISTER_RULE",
+   "_ord0277_generation_verdict",
+   "asset_refs",
+   "precache_urls",
+   "strip_js_comments",
+   "sw_register_verdict"
+  ],
+  "bytes_extracted": 8574
+ },
+ "arms": [
+  {
+   "arm": "F1_real_generations_both_green",
+   "expect": "GREEN",
+   "got": {
+    "verdict": "GREEN",
+    "error": "owner(s) /assets/index-Cpy_jhEg.js; 0 other script(s) name no registration, which is not a defect | owner(s) /assets/index-BhbHloNw.js; 0 other script(s) name no registration, which is not a defect"
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F2_real_generations_bytes_differ",
+   "expect": "True",
+   "got": {
+    "bytes_fingerprint": true,
+    "content_fingerprint": true
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F3_rename_only_is_not_a_content_change",
+   "expect": "True",
+   "got": {
+    "content_fingerprint_equal": true,
+    "names_differ": true
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F3b_rename_still_moves_the_name_fingerprint",
+   "expect": "True",
+   "got": {
+    "bytes_fingerprint": true
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F4_same_name_different_bytes_is_a_change",
+   "expect": "True",
+   "got": {
+    "content_fingerprint": true,
+    "names_equal": true
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F5_updateViaCache_all_in_bytes_is_RED",
+   "expect": "RED",
+   "got": {
+    "verdict": "RED",
+    "error": "INVALID_REGISTRATION_IN_GENERATION: [{'ref': '/assets/index-A.js', 'sw_url': '/v10-sw.js', 'scope': '/', 'updateViaCache': 'all', 'scope_ok': True, 'u"
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F6_good_call_in_a_comment_does_not_whiten_bad_code",
+   "expect": "RED",
+   "got": {
+    "verdict": "RED",
+    "error": "INVALID_REGISTRATION_IN_GENERATION: [{'ref': '/assets/index-A.js', 'sw_url': '/v10-sw.js', 'scope': '/', 'updateViaCache': 'all', 'scope_ok': True, 'u"
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F7_comment_claiming_all_does_not_blacken_good_code",
+   "expect": "GREEN",
+   "got": {
+    "verdict": "GREEN",
+    "error": "owner(s) /assets/index-A.js; 1 other script(s) name no registration, which is not a defect"
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F8_generation_without_any_registration_is_RED",
+   "expect": "RED",
+   "got": {
+    "verdict": "RED",
+    "error": "NO_SERVICE_WORKER_REGISTRATION_FOUND in any of the 2 script(s) the index names"
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F9_silent_second_chunk_is_not_a_defect",
+   "expect": "GREEN",
+   "got": {
+    "verdict": "GREEN",
+    "scripts_observed": 2,
+    "owners": [
+     "/assets/index-S.js"
+    ],
+    "error": "owner(s) /assets/index-S.js; 1 other script(s) name no registration, which is not a defect"
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F10_unparseable_second_call_is_RED",
+   "expect": "RED",
+   "got": {
+    "verdict": "RED",
+    "unresolved": 1,
+    "error": "UNRESOLVED_REGISTRATION: [{'ref': '/assets/index-A.js', 'unresolved': 1}]"
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F11a_RED_generation_is_refused_as_a_host",
+   "expect": "True",
+   "got": {
+    "refused": true
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F11b_GREEN_generation_is_not_refused",
+   "expect": "True",
+   "got": {
+    "not_refused": true
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F12_executed_equals_parsed_when_shas_agree",
+   "expect": "GREEN",
+   "got": {
+    "verdict": "GREEN",
+    "refs_compared": 2
+   },
+   "derived": "MET"
+  },
+  {
+   "arm": "F13_one_differing_ref_is_RED",
+   "expect": "RED",
+   "got": {
+    "verdict": "RED",
+    "error": "refs_compared=2"
+   },
+   "derived": "MET"
+  }
+ ],
+ "met": 15,
+ "arms_total": 15
+}
