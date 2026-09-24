@@ -265,6 +265,28 @@ def main() -> int:
     for t in triples:
         add(f"- `{t['exact_sha']}` · `{t['nodeid']}` · {t['run_shape']}")
     add("")
+    groups = round_receipt.get("landing_groups") or {}
+    if groups:
+        counts = groups["counts"]
+        add(
+            f"**落地按组取（`{groups['command']}`）**：共 **{counts['total']}** 件 = "
+            f"主线要的 **{counts['landing']}** 件（`frontend/**`） + 车道脚手架 **{counts['lane_scaffolding']}** 件（`review/**`）"
+        )
+        add("")
+        add("<details><summary>主线组（8 件，带 blob）</summary>")
+        add("")
+        for f in groups["mainline_needs"]:
+            add(f"- `{f['status']}` +{f['added']}/-{f['removed']} `{f['path']}` — blob `@`{f['blob_at_head']}`")
+        add("")
+        add("</details>")
+        add("")
+        add(
+            "脚手架组（只给车道用，落主线不需要）："
+            + "、".join(f"`{f['path']}`" for f in groups["lane_scaffolding_only"])
+        )
+        add(f"- 独立性这条是量出来的：{groups['rule']}")
+        add("")
+
     coll = round_receipt.get("collection") or {}
     if coll:
         pc = coll["commands"]["playwright_list"]
