@@ -1,0 +1,463 @@
+{
+ "what": "ORD-0275 r3: Q18 legacy no-op arms + the five D1..D5 corrections",
+ "t": "2026-09-25T04:02:47+0800",
+ "test_file": "test_ord0275_publisher_guard_r5.py",
+ "publisher": {
+  "path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/publish_evidence.py",
+  "bytes": 22464,
+  "blob": "ea4416dbafa7ac84718c3d87bd56394fb5ca5f7b"
+ },
+ "arbiter_requirement": {
+  "ruling": "bus 5806436649 Q18 (b)",
+  "arms": [
+   "FOREIGN_PREFIX",
+   "LEGACY_ABSENT",
+   "LEGACY_AUTH",
+   "LEGACY_DIFFERENT",
+   "LEGACY_IDENTICAL",
+   "POSITIVE_CLEAN_WRITE",
+   "REPO_NAME_DIRTY"
+  ],
+  "demanded_mutation": "exact SHA equality -> 'remote 200 is enough', killed by LEGACY_DIFFERENT"
+ },
+ "redteam_residuals_addressed": [
+  "D1 counters asserted",
+  "D2 signature spans CLI",
+  "D3 post-image sha1 published",
+  "D4 test_file basename",
+  "D5 PUT target asserted"
+ ],
+ "guard_readings": {
+  "LOCAL_NAME_DIRTY_refused": true,
+  "REPO_PATH_DIRTY_refused": true,
+  "CLEAN_CLEAN_allowed": true,
+  "REGRESSION_traversal_refused": true,
+  "REGRESSION_bad_prefix_refused": true,
+  "REGRESSION_control_tool_gate": true,
+  "REGRESSION_sqlite_magic_refused": true,
+  "REGRESSION_secret_content_refused": true,
+  "REFUSAL_NAMES_RULE_NO_SECRET": true
+ },
+ "cli_readings": {
+  "FOREIGN_PREFIX": [
+   5,
+   0
+  ],
+  "LEGACY_ABSENT": [
+   5,
+   0
+  ],
+  "LEGACY_AUTH": [
+   6,
+   0
+  ],
+  "LEGACY_DIFFERENT": [
+   5,
+   0
+  ],
+  "LEGACY_IDENTICAL": [
+   0,
+   0
+  ],
+  "POSITIVE_CLEAN_WRITE": [
+   4,
+   1
+  ],
+  "REPO_NAME_DIRTY": [
+   5,
+   0
+  ]
+ },
+ "behaviour_signature": "ba3b36b023af210fd96c5543ed5e5ad4d6cbaef2",
+ "rewrites": [
+  {
+   "mutant": "M1_repo_path_guard_removed",
+   "anchored": true,
+   "n_edits": 1,
+   "post_image_blob_sha1": "c83d82fae4e761f2bb6cce1711fa828a465e9f9d",
+   "pre_image_blob_sha1": "6d36f904800f6d8e8696188e3e336fa10cd52ac0"
+  },
+  {
+   "mutant": "M2_target_layer_dropped",
+   "anchored": true,
+   "n_edits": 1,
+   "post_image_blob_sha1": "ab00329a940fc1b6723742da52fd58ba05272f69",
+   "pre_image_blob_sha1": "c29042286d6b06e455f6b869b962466ed75bbdd2"
+  },
+  {
+   "mutant": "M3_helper_neutralised",
+   "anchored": true,
+   "n_edits": 1,
+   "post_image_blob_sha1": "c72ec4ade6fe32fad63b9c63ff2bdf3046a9df9a",
+   "pre_image_blob_sha1": "ba92f1a5d97785cd750fc3329bd0fb02f3260402"
+  },
+  {
+   "mutant": "M4_200_instead_of_exact_sha",
+   "anchored": true,
+   "n_edits": 1,
+   "post_image_blob_sha1": "7f292339c799aed3c74eba4bb211f4c24aac366f",
+   "pre_image_blob_sha1": "76de752aee2e6e4c19af7fbe9c2e0e1e3b020f04"
+  }
+ ],
+ "kills": [
+  {
+   "mutant": "M1_repo_path_guard_removed",
+   "owner_guard_cell": "REPO_PATH_DIRTY_refused",
+   "owner_cli_cell": "REPO_NAME_DIRTY",
+   "bool_diffs": [
+    "REPO_PATH_DIRTY_refused"
+   ],
+   "cli_diffs": [],
+   "signature_differs": true,
+   "verdict": "KILLED",
+   "owner_reads_differently": true
+  },
+  {
+   "mutant": "M2_target_layer_dropped",
+   "owner_guard_cell": "REGRESSION_bad_prefix_refused",
+   "owner_cli_cell": "FOREIGN_PREFIX",
+   "bool_diffs": [],
+   "cli_diffs": [
+    "FOREIGN_PREFIX"
+   ],
+   "signature_differs": true,
+   "verdict": "KILLED",
+   "owner_reads_differently": true
+  },
+  {
+   "mutant": "M3_helper_neutralised",
+   "owner_guard_cell": "LOCAL_NAME_DIRTY_refused",
+   "owner_cli_cell": "REPO_NAME_DIRTY",
+   "bool_diffs": [
+    "LOCAL_NAME_DIRTY_refused",
+    "REPO_PATH_DIRTY_refused"
+   ],
+   "cli_diffs": [
+    "LEGACY_ABSENT",
+    "LEGACY_DIFFERENT",
+    "REPO_NAME_DIRTY"
+   ],
+   "signature_differs": true,
+   "verdict": "KILLED",
+   "owner_reads_differently": true
+  },
+  {
+   "mutant": "M4_200_instead_of_exact_sha",
+   "owner_guard_cell": "CLEAN_CLEAN_allowed",
+   "owner_cli_cell": "LEGACY_DIFFERENT",
+   "bool_diffs": [],
+   "cli_diffs": [
+    "LEGACY_DIFFERENT"
+   ],
+   "signature_differs": true,
+   "verdict": "KILLED",
+   "owner_reads_differently": true
+  }
+ ],
+ "cells": [
+  {
+   "cell": "T0_no_arm_can_reach_the_network",
+   "verdict": "GREEN",
+   "detail": {
+    "tripwire": "urllib.request.urlopen is replaced by a raiser around every arm; the accident that motivated it is recorded in the receipt under unintended_write",
+    "unintended_write": {
+     "path": "evidence/ord0275-publisher-path-guard/receipt.json",
+     "commit": "cb8ef590",
+     "blob": "c1f029783f55406438de0bbcb509c6fb4248d156",
+     "bytes": 34,
+     "at": "2026-09-24T11:46:07Z",
+     "status": "accidental, disclosed, NOT an instrument output; it overwrote nothing (that path has exactly one commit, this one)"
+    }
+   }
+  },
+  {
+   "cell": "P1_this_instrument_can_be_published_by_the_guard_it_tests",
+   "verdict": "GREEN",
+   "detail": {
+    "own_bytes": 26006,
+    "rule_hit": "NONE"
+   }
+  },
+  {
+   "cell": "P2_the_assembled_fixture_is_still_one_whole_literal_of_the_named_shape",
+   "verdict": "GREEN",
+   "detail": {
+    "value_len": 44,
+    "blob_len": 60,
+    "secret_line_len": 8,
+    "rule": "r2's design note stands: the guard and the exemption must see ONE whole literal.  They do - it is the SOURCE that no longer spells it out contiguously"
+   }
+  },
+  {
+   "cell": "P3_the_guard_still_objects_to_the_runtime_bytes",
+   "verdict": "GREEN",
+   "detail": {
+    "refusal_rule": "QUOTED_JSON_SECRET",
+    "meaning": "composing the fixture did not create a way past the block: handed the finished bytes, the guard still refuses them"
+   }
+  },
+  {
+   "cell": "LEGACY_IDENTICAL_no_write_rc0",
+   "verdict": "GREEN",
+   "detail": {
+    "arm": {
+     "rc": 0,
+     "PUT": 0,
+     "GET": 1,
+     "PUT_targets": []
+    },
+    "want_sha": "bfd2d27a1dcc0273",
+    "rule": "historical path + byte-identical object = PROVED, nothing written; NOT a re-approval of the name"
+   }
+  },
+  {
+   "cell": "LEGACY_DIFFERENT_refused_zero_PUT",
+   "verdict": "GREEN",
+   "detail": {
+    "rc": 5,
+    "PUT": 0,
+    "GET": 1,
+    "PUT_targets": []
+   }
+  },
+  {
+   "cell": "LEGACY_ABSENT_refused_zero_PUT",
+   "verdict": "GREEN",
+   "detail": {
+    "rc": 5,
+    "PUT": 0,
+    "GET": 1,
+    "PUT_targets": []
+   }
+  },
+  {
+   "cell": "LEGACY_AUTH_ANOMALY_fail_closed_zero_PUT",
+   "verdict": "GREEN",
+   "detail": {
+    "rc": 6,
+    "PUT": 0,
+    "GET": 1,
+    "PUT_targets": []
+   }
+  },
+  {
+   "cell": "Q18_exemption_does_not_reach_prefix_or_name_layers",
+   "verdict": "GREEN",
+   "detail": {
+    "foreign_prefix": {
+     "rc": 5,
+     "PUT": 0,
+     "GET": 0
+    },
+    "repo_name_dirty": {
+     "rc": 5,
+     "PUT": 0
+    },
+    "rule": "hard boundary 2 of the ruling: only the NAME layer may be judged against the remote"
+   }
+  },
+  {
+   "cell": "CLEAN_PATH_positive_control_writes_once_to_the_named_target",
+   "verdict": "GREEN",
+   "detail": {
+    "PUT": 1,
+    "targets": [
+     "evidence/ord0275-publisher-path-guard/receipt.json"
+    ],
+    "rc": 4,
+    "GET": 4,
+    "rc_note": "0 = proved, 4/7 = read-back noise from the stubbed GET; neither is an extra write"
+   }
+  },
+  {
+   "cell": "CLI_cell_reads_the_PUT_counters_not_their_types",
+   "verdict": "GREEN",
+   "detail": {
+    "counters": {
+     "LEGACY_IDENTICAL": 0,
+     "LEGACY_DIFFERENT": 0,
+     "LEGACY_ABSENT": 0,
+     "LEGACY_AUTH": 0,
+     "FOREIGN_PREFIX": 0,
+     "REPO_NAME_DIRTY": 0,
+     "CLEAN_positive": 1
+    },
+    "rule": "r2's cell6 stayed True with every counter forced to False"
+   }
+  },
+  {
+   "cell": "K_M1_repo_path_guard_removed",
+   "verdict": "GREEN",
+   "detail": {
+    "mutant": "M1_repo_path_guard_removed",
+    "owner_guard_cell": "REPO_PATH_DIRTY_refused",
+    "owner_cli_cell": "REPO_NAME_DIRTY",
+    "bool_diffs": [
+     "REPO_PATH_DIRTY_refused"
+    ],
+    "cli_diffs": [],
+    "signature_differs": true,
+    "verdict": "KILLED",
+    "owner_reads_differently": true
+   }
+  },
+  {
+   "cell": "K_M2_target_layer_dropped",
+   "verdict": "GREEN",
+   "detail": {
+    "mutant": "M2_target_layer_dropped",
+    "owner_guard_cell": "REGRESSION_bad_prefix_refused",
+    "owner_cli_cell": "FOREIGN_PREFIX",
+    "bool_diffs": [],
+    "cli_diffs": [
+     "FOREIGN_PREFIX"
+    ],
+    "signature_differs": true,
+    "verdict": "KILLED",
+    "owner_reads_differently": true
+   }
+  },
+  {
+   "cell": "K_M3_helper_neutralised",
+   "verdict": "GREEN",
+   "detail": {
+    "mutant": "M3_helper_neutralised",
+    "owner_guard_cell": "LOCAL_NAME_DIRTY_refused",
+    "owner_cli_cell": "REPO_NAME_DIRTY",
+    "bool_diffs": [
+     "LOCAL_NAME_DIRTY_refused",
+     "REPO_PATH_DIRTY_refused"
+    ],
+    "cli_diffs": [
+     "LEGACY_ABSENT",
+     "LEGACY_DIFFERENT",
+     "REPO_NAME_DIRTY"
+    ],
+    "signature_differs": true,
+    "verdict": "KILLED",
+    "owner_reads_differently": true
+   }
+  },
+  {
+   "cell": "K_M4_200_instead_of_exact_sha",
+   "verdict": "GREEN",
+   "detail": {
+    "mutant": "M4_200_instead_of_exact_sha",
+    "owner_guard_cell": "CLEAN_CLEAN_allowed",
+    "owner_cli_cell": "LEGACY_DIFFERENT",
+    "bool_diffs": [],
+    "cli_diffs": [
+     "LEGACY_DIFFERENT"
+    ],
+    "signature_differs": true,
+    "verdict": "KILLED",
+    "owner_reads_differently": true
+   }
+  },
+  {
+   "cell": "K_mutants_have_four_distinct_owner_cells",
+   "verdict": "GREEN",
+   "detail": {
+    "owners": [
+     [
+      "REPO_PATH_DIRTY_refused",
+      "REPO_NAME_DIRTY"
+     ],
+     [
+      "REGRESSION_bad_prefix_refused",
+      "FOREIGN_PREFIX"
+     ],
+     [
+      "LOCAL_NAME_DIRTY_refused",
+      "REPO_NAME_DIRTY"
+     ],
+     [
+      "CLEAN_CLEAN_allowed",
+      "LEGACY_DIFFERENT"
+     ]
+    ]
+   }
+  },
+  {
+   "cell": "D3_M1_and_M2_are_distinguishable_in_the_published_fields",
+   "verdict": "GREEN",
+   "detail": {
+    "m1_post": "c83d82fae4e761f2",
+    "m2_post": "ab00329a940fc1b6",
+    "m1_pre": "6d36f904800f6d8e",
+    "m2_pre": "c29042286d6b06e4",
+    "rule": "r2 published only the PRE-image, and M1/M2 shared it, so every field agreed"
+   }
+  },
+  {
+   "cell": "D2_signature_is_no_longer_blind_to_CLI_only_mutants",
+   "verdict": "GREEN",
+   "detail": {
+    "note": "M2 changes only main()'s CLI composition; r2's 9-boolean vector could not see it",
+    "m2_cli_diffs": [
+     "FOREIGN_PREFIX"
+    ]
+   }
+  },
+  {
+   "cell": "REGRESSION_the_nine_guard_readings_all_hold",
+   "verdict": "GREEN",
+   "detail": {
+    "bools": {
+     "LOCAL_NAME_DIRTY_refused": true,
+     "REPO_PATH_DIRTY_refused": true,
+     "CLEAN_CLEAN_allowed": true,
+     "REGRESSION_traversal_refused": true,
+     "REGRESSION_bad_prefix_refused": true,
+     "REGRESSION_control_tool_gate": true,
+     "REGRESSION_sqlite_magic_refused": true,
+     "REGRESSION_secret_content_refused": true,
+     "REFUSAL_NAMES_RULE_NO_SECRET": true
+    },
+    "signature": "ba3b36b023af210f"
+   }
+  },
+  {
+   "cell": "R1_publisher_bytes_match_the_pinned_coordinate",
+   "verdict": "GREEN",
+   "detail": {
+    "local_blob": "ea4416dbafa7ac84718c3d87bd56394fb5ca5f7b",
+    "pinned": "ea4416dbafa7ac84718c3d87bd56394fb5ca5f7b",
+    "bytes": 22464,
+    "teeth": "an edit to the on-disk publisher goes RED here; r3 compared the file to itself"
+   }
+  },
+  {
+   "cell": "R2_pinned_coordinate_is_externally_readable_and_byte_equal",
+   "verdict": "GREEN",
+   "detail": {
+    "attempted": true,
+    "external_blob_sha1": "ea4416dbafa7ac84718c3d87bd56394fb5ca5f7b",
+    "external_bytes": 22464,
+    "equals_local_disk_bytes": true,
+    "equals_pinned": true
+   }
+  },
+  {
+   "cell": "R3_no_stale_revision_filename_literal_in_this_source",
+   "verdict": "GREEN",
+   "detail": {
+    "hits": [],
+    "test_file": "test_ord0275_publisher_guard_r5.py",
+    "note": "D4 kept, but as a computed field: the receipt names the file that ships these bytes; a hardcoded revision filename in an assertion is the defect, not the rename"
+   }
+  }
+ ],
+ "cells_total": 22,
+ "cells_green": 22,
+ "overall": "GREEN",
+ "claimed_result": "in_process_selftest_GREEN",
+ "writes_performed_to_github_by_this_run": 0,
+ "unintended_write_before_the_tripwire": {
+  "path": "evidence/ord0275-publisher-path-guard/receipt.json",
+  "commit": "cb8ef590",
+  "blob_sha1": "c1f029783f55406438de0bbcb509c6fb4248d156",
+  "bytes": 34,
+  "at_utc": "2026-09-24T11:46:07Z"
+ }
+}
