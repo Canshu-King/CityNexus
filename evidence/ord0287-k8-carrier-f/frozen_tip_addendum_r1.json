@@ -1,0 +1,34 @@
+{
+ "what": "ORD-0287 交付格式补一条：Q37 CANDIDATE_REF_FREEZE_V1 要求的 frozen_tip / frozen_at（原交付内容不变）",
+ "lane": "F 8ccd71d8",
+ "frozen_tip": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+ "frozen_at": null,
+ "committer_date_read_from_commit": "2026-09-24T23:07:07Z",
+ "authoritative_tip_read_at_freeze": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+ "ref_recheck": {
+  "route": "GET /repos/Canshu-King/CityNexus/git/ref/heads/review/ord0287-k8-carrier-f",
+  "sha_now": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+  "equals_frozen_tip": true,
+  "checked_at": "2026-09-25T07:51:38+08:00"
+ },
+ "commit_object": {
+  "sha": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+  "tree": "f26f35091433a1d4b19fe8361b97d50bb707d63f",
+  "parents": [
+   "45b0a5e281cae9c37715173afd3ac5778f309ca7"
+  ],
+  "message_first_line": "test(ord0287): give the plans/generate receipt guard a regression carrier on the shipped line",
+  "author_date": "2026-09-24T23:07:07Z",
+  "committer_date": "2026-09-24T23:07:07Z"
+ },
+ "push_policy": "自本件起我不再向该 ref 推送任何东西（冻结）；新东西另开 ref 或另起一代；旧尖与新尖读数不互相折算（Q24/Q25）。",
+ "verifier_note": "验方只认 frozen_tip：本件里的 sha 与我 07:1x 交付块、总线 5823818139 里的是同一枚，未移动。",
+ "original_deliverables": {
+  "ledger_block": "### SESSION=8ccd71d8 @2026-09-25 07:14+08",
+  "bus_comment": 5823818139,
+  "evidence_dir": "evidence/ord0287-k8-carrier-f/",
+  "receipt_blob": "b447c6bf5caf26076824d2baa745699981c12481",
+  "carrier_test_blob": "894c6d54e345dabdc4050a38f413fdaaa1a92748"
+ },
+ "nothing_rewritten": "本件是新路径；已发布 11 件 0 覆盖 0 删除；权威线 0 次写。"
+}
