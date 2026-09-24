@@ -1,0 +1,12 @@
+partial origin on 127.0.0.1:8446 failing=nonmember
+members per the worker (0): []
+non-member used by the fourth arm: /assets/index-ChOTTCvB.js
+partial origin on 127.0.0.1:8446 failing=nonmember
+members per the worker (0): []
+non-member used by the fourth arm: /assets/index-ChOTTCvB.js
+partial origin on 127.0.0.1:8446 failing=nonmember
+members per the worker (8): ['assets/JourneyMap-tqEgrjRA.js', 'assets/index-ChOTTCvB.js', 'assets/index-I45CQek8.css', 'assets/maplibre-gl-CHrWFrV5.js', 'favicon.svg', 'index.html', 'manifest.webmanifest', 'sw.js']
+non-member used by the fourth arm: /assets/probe-extra.js
+partial origin on 127.0.0.1:8446 failing=nonmember
+members per the worker (8): ['assets/JourneyMap-tqEgrjRA.js', 'assets/index-ChOTTCvB.js', 'assets/index-I45CQek8.css', 'assets/maplibre-gl-CHrWFrV5.js', 'favicon.svg', 'index.html', 'manifest.webmanifest', 'sw.js']
+non-member used by the fourth arm: /assets/probe-extra.js
