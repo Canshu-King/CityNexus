@@ -1,0 +1,717 @@
+{
+ "what": "ORD-0282 seam 面：落地代 Phase B 回填守卫的两进程读数（守卫在位 / 拆掉）",
+ "lane": "F 8ccd71d8",
+ "run_id": "O282S-250612-226b4c",
+ "generated_at": "2026-09-25T06:12:59+08:00",
+ "tree": {
+  "tip": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "source": "GitHub tarball 独立导出（不是任何车道工作树，也不是包工头那棵 _qoder_wt_45b0a5e）",
+  "backend_cwd": "D:\\moodle\\_qoder_f_run\\e_0282_45b0a5e\\Canshu-King-CityNexus-45b0a5e281cae9c37715173afd3ac5778f309ca7\\backend",
+  "main_py_before": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "seam_symbol_present_in_landed_tree": false,
+  "guard_site": "backend/app/main.py 里 Phase B 的 `.where(key=?, response_json IS NULL)`"
+ },
+ "roles": {
+  "A": "claim_and_fill：产品的占位 + Phase B 生成回填",
+  "B": "re_enter_phase_B：同一组键再进一次 Phase B（落地代无『只回填』入口）"
+ },
+ "why_not_http": "HTTP 面我先量过一轮：腿 B 的占位在唯一索引上撞回，走回放门 ⇒ 到不了回填语句，所以那一面两态同判（NO_FLIP）；本文件量的是判据 ② 要的那一面。",
+ "states": {
+  "guard": {
+   "rounds": [
+    {
+     "state": "guard",
+     "round": 1,
+     "run_id": "O282S-250612-226b4c",
+     "db": "_o282seam_O282S-250612-226b4c_guard_r1.db",
+     "db_bytes": 1069056,
+     "tree_provenance_at_round": {
+      "main_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+      "guard_hits": 1,
+      "unguarded_hits": 0,
+      "seam_symbol": false
+     },
+     "stage": {
+      "journey_id": "2a37a339-78dc-4511-b860-b46a1b19938a",
+      "mission": "da3380de-a951-4cd0-a0d3-1802fa6db457"
+     },
+     "stage_ownership": {
+      "pid": 4232,
+      "netstat_pid": 4232,
+      "ppid_ok": true,
+      "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282seam_O282S-250612-226b4c_guard_r1.db",
+      "ai_key_present": false,
+      "stripped": []
+     },
+     "pids": {
+      "A": 46804,
+      "B": 46236,
+      "stage": 4232,
+      "all_distinct": true
+     },
+     "role_A": {
+      "role": "claim_and_fill",
+      "pid": 46804,
+      "ppid": 9324,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-guard-1",
+       "plans.generate:cont:da3380de-a951-4cd0-a0d3-1802fa6db457"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_guard_r1.db",
+      "claim_returned_replay": false,
+      "refused": null,
+      "answer_shape": [
+       "plans"
+      ],
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "role_B": {
+      "role": "re_enter_phase_B",
+      "pid": 46236,
+      "ppid": 54880,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-guard-1",
+       "plans.generate:cont:da3380de-a951-4cd0-a0d3-1802fa6db457"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_guard_r1.db",
+      "refused": {
+       "type": "HTTPException",
+       "status": 409,
+       "detail": "agent idempotency record is incomplete"
+      },
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "receipts_pre": {
+      "plans.generate:o282s-O282S-250612-226b4c-guard-1": [
+       "absent",
+       null
+      ],
+      "plans.generate:cont:da3380de-a951-4cd0-a0d3-1802fa6db457": [
+       "absent",
+       null
+      ]
+     },
+     "receipts_after_A": {
+      "plans.generate:o282s-O282S-250612-226b4c-guard-1": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:da3380de-a951-4cd0-a0d3-1802fa6db457": [
+       "filled",
+       201
+      ]
+     },
+     "receipts_after_B": {
+      "plans.generate:o282s-O282S-250612-226b4c-guard-1": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:da3380de-a951-4cd0-a0d3-1802fa6db457": [
+       "filled",
+       201
+      ]
+     },
+     "readings": {
+      "A_filled_rows": 2,
+      "B_refused_status": 409,
+      "B_refused_detail": "agent idempotency record is incomplete",
+      "B_overwritten_rows": 0,
+      "A_bytes_survive": true,
+      "detector_selftest_sees_change": true,
+      "plan_versions_after_both": 3,
+      "stored_json_len_after_B": {
+       "plans.generate:o282s-O282S-250612-226b4c-guard-1": 111556,
+       "plans.generate:cont:da3380de-a951-4cd0-a0d3-1802fa6db457": 111556
+      }
+     }
+    },
+    {
+     "state": "guard",
+     "round": 2,
+     "run_id": "O282S-250612-226b4c",
+     "db": "_o282seam_O282S-250612-226b4c_guard_r2.db",
+     "db_bytes": 1069056,
+     "tree_provenance_at_round": {
+      "main_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+      "guard_hits": 1,
+      "unguarded_hits": 0,
+      "seam_symbol": false
+     },
+     "stage": {
+      "journey_id": "6cf19789-30cd-490d-bf14-9cde9e8c3dbb",
+      "mission": "0b6a0d38-ddfb-4ba5-a6b4-dab7acf69644"
+     },
+     "stage_ownership": {
+      "pid": 52328,
+      "netstat_pid": 52328,
+      "ppid_ok": true,
+      "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282seam_O282S-250612-226b4c_guard_r2.db",
+      "ai_key_present": false,
+      "stripped": []
+     },
+     "pids": {
+      "A": 54640,
+      "B": 46664,
+      "stage": 52328,
+      "all_distinct": true
+     },
+     "role_A": {
+      "role": "claim_and_fill",
+      "pid": 54640,
+      "ppid": 18804,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-guard-2",
+       "plans.generate:cont:0b6a0d38-ddfb-4ba5-a6b4-dab7acf69644"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_guard_r2.db",
+      "claim_returned_replay": false,
+      "refused": null,
+      "answer_shape": [
+       "plans"
+      ],
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "role_B": {
+      "role": "re_enter_phase_B",
+      "pid": 46664,
+      "ppid": 7748,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-guard-2",
+       "plans.generate:cont:0b6a0d38-ddfb-4ba5-a6b4-dab7acf69644"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_guard_r2.db",
+      "refused": {
+       "type": "HTTPException",
+       "status": 409,
+       "detail": "agent idempotency record is incomplete"
+      },
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "receipts_pre": {
+      "plans.generate:o282s-O282S-250612-226b4c-guard-2": [
+       "absent",
+       null
+      ],
+      "plans.generate:cont:0b6a0d38-ddfb-4ba5-a6b4-dab7acf69644": [
+       "absent",
+       null
+      ]
+     },
+     "receipts_after_A": {
+      "plans.generate:o282s-O282S-250612-226b4c-guard-2": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:0b6a0d38-ddfb-4ba5-a6b4-dab7acf69644": [
+       "filled",
+       201
+      ]
+     },
+     "receipts_after_B": {
+      "plans.generate:o282s-O282S-250612-226b4c-guard-2": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:0b6a0d38-ddfb-4ba5-a6b4-dab7acf69644": [
+       "filled",
+       201
+      ]
+     },
+     "readings": {
+      "A_filled_rows": 2,
+      "B_refused_status": 409,
+      "B_refused_detail": "agent idempotency record is incomplete",
+      "B_overwritten_rows": 0,
+      "A_bytes_survive": true,
+      "detector_selftest_sees_change": true,
+      "plan_versions_after_both": 3,
+      "stored_json_len_after_B": {
+       "plans.generate:o282s-O282S-250612-226b4c-guard-2": 111556,
+       "plans.generate:cont:0b6a0d38-ddfb-4ba5-a6b4-dab7acf69644": 111556
+      }
+     }
+    },
+    {
+     "state": "guard",
+     "round": 3,
+     "run_id": "O282S-250612-226b4c",
+     "db": "_o282seam_O282S-250612-226b4c_guard_r3.db",
+     "db_bytes": 1069056,
+     "tree_provenance_at_round": {
+      "main_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+      "guard_hits": 1,
+      "unguarded_hits": 0,
+      "seam_symbol": false
+     },
+     "stage": {
+      "journey_id": "0a59bc7a-512b-4cd6-a3a9-95adf0a9fcca",
+      "mission": "abd42b0a-7b38-48ea-a9b8-48cf0cb4c7d7"
+     },
+     "stage_ownership": {
+      "pid": 49528,
+      "netstat_pid": 49528,
+      "ppid_ok": true,
+      "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282seam_O282S-250612-226b4c_guard_r3.db",
+      "ai_key_present": false,
+      "stripped": []
+     },
+     "pids": {
+      "A": 38896,
+      "B": 14376,
+      "stage": 49528,
+      "all_distinct": true
+     },
+     "role_A": {
+      "role": "claim_and_fill",
+      "pid": 38896,
+      "ppid": 48728,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-guard-3",
+       "plans.generate:cont:abd42b0a-7b38-48ea-a9b8-48cf0cb4c7d7"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_guard_r3.db",
+      "claim_returned_replay": false,
+      "refused": null,
+      "answer_shape": [
+       "plans"
+      ],
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "role_B": {
+      "role": "re_enter_phase_B",
+      "pid": 14376,
+      "ppid": 55184,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-guard-3",
+       "plans.generate:cont:abd42b0a-7b38-48ea-a9b8-48cf0cb4c7d7"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_guard_r3.db",
+      "refused": {
+       "type": "HTTPException",
+       "status": 409,
+       "detail": "agent idempotency record is incomplete"
+      },
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "receipts_pre": {
+      "plans.generate:o282s-O282S-250612-226b4c-guard-3": [
+       "absent",
+       null
+      ],
+      "plans.generate:cont:abd42b0a-7b38-48ea-a9b8-48cf0cb4c7d7": [
+       "absent",
+       null
+      ]
+     },
+     "receipts_after_A": {
+      "plans.generate:o282s-O282S-250612-226b4c-guard-3": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:abd42b0a-7b38-48ea-a9b8-48cf0cb4c7d7": [
+       "filled",
+       201
+      ]
+     },
+     "receipts_after_B": {
+      "plans.generate:o282s-O282S-250612-226b4c-guard-3": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:abd42b0a-7b38-48ea-a9b8-48cf0cb4c7d7": [
+       "filled",
+       201
+      ]
+     },
+     "readings": {
+      "A_filled_rows": 2,
+      "B_refused_status": 409,
+      "B_refused_detail": "agent idempotency record is incomplete",
+      "B_overwritten_rows": 0,
+      "A_bytes_survive": true,
+      "detector_selftest_sees_change": true,
+      "plan_versions_after_both": 3,
+      "stored_json_len_after_B": {
+       "plans.generate:o282s-O282S-250612-226b4c-guard-3": 111556,
+       "plans.generate:cont:abd42b0a-7b38-48ea-a9b8-48cf0cb4c7d7": 111556
+      }
+     }
+    }
+   ]
+  },
+  "mutant": {
+   "mutation": {
+    "before_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "before_blob_matches_landing": true,
+    "after_blob_40": "784599fdb406b4242c2d202868b5eefd10861287",
+    "hunks": 1,
+    "hunk_headers": [
+     "@@ -4770,8 +4770,7 @@"
+    ],
+    "py_compile_ok": true,
+    "removed_expression": "IdempotencyKey.response_json.is_(None)",
+    "lines_delta": [
+     11417,
+     11416
+    ]
+   },
+   "rounds": [
+    {
+     "state": "mutant",
+     "round": 1,
+     "run_id": "O282S-250612-226b4c",
+     "db": "_o282seam_O282S-250612-226b4c_mutant_r1.db",
+     "db_bytes": 1171456,
+     "tree_provenance_at_round": {
+      "main_blob": "784599fdb406b4242c2d202868b5eefd10861287",
+      "guard_hits": 0,
+      "unguarded_hits": 1,
+      "seam_symbol": false
+     },
+     "stage": {
+      "journey_id": "1b720e71-7711-465b-8490-4ef4d6b8b907",
+      "mission": "8830a608-f8e1-4ccc-ae32-5567d5045438"
+     },
+     "stage_ownership": {
+      "pid": 40216,
+      "netstat_pid": 40216,
+      "ppid_ok": true,
+      "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282seam_O282S-250612-226b4c_mutant_r1.db",
+      "ai_key_present": false,
+      "stripped": []
+     },
+     "pids": {
+      "A": 12808,
+      "B": 30464,
+      "stage": 40216,
+      "all_distinct": true
+     },
+     "role_A": {
+      "role": "claim_and_fill",
+      "pid": 12808,
+      "ppid": 36884,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-mutant-1",
+       "plans.generate:cont:8830a608-f8e1-4ccc-ae32-5567d5045438"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_mutant_r1.db",
+      "claim_returned_replay": false,
+      "refused": null,
+      "answer_shape": [
+       "plans"
+      ],
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "role_B": {
+      "role": "re_enter_phase_B",
+      "pid": 30464,
+      "ppid": 48472,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-mutant-1",
+       "plans.generate:cont:8830a608-f8e1-4ccc-ae32-5567d5045438"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_mutant_r1.db",
+      "refused": null,
+      "answer_shape": [
+       "plans"
+      ],
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "receipts_pre": {
+      "plans.generate:o282s-O282S-250612-226b4c-mutant-1": [
+       "absent",
+       null
+      ],
+      "plans.generate:cont:8830a608-f8e1-4ccc-ae32-5567d5045438": [
+       "absent",
+       null
+      ]
+     },
+     "receipts_after_A": {
+      "plans.generate:o282s-O282S-250612-226b4c-mutant-1": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:8830a608-f8e1-4ccc-ae32-5567d5045438": [
+       "filled",
+       201
+      ]
+     },
+     "receipts_after_B": {
+      "plans.generate:o282s-O282S-250612-226b4c-mutant-1": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:8830a608-f8e1-4ccc-ae32-5567d5045438": [
+       "filled",
+       201
+      ]
+     },
+     "readings": {
+      "A_filled_rows": 2,
+      "B_refused_status": null,
+      "B_refused_detail": null,
+      "B_overwritten_rows": 2,
+      "A_bytes_survive": false,
+      "detector_selftest_sees_change": true,
+      "plan_versions_after_both": 6,
+      "stored_json_len_after_B": {
+       "plans.generate:o282s-O282S-250612-226b4c-mutant-1": 111556,
+       "plans.generate:cont:8830a608-f8e1-4ccc-ae32-5567d5045438": 111556
+      }
+     }
+    },
+    {
+     "state": "mutant",
+     "round": 2,
+     "run_id": "O282S-250612-226b4c",
+     "db": "_o282seam_O282S-250612-226b4c_mutant_r2.db",
+     "db_bytes": 1171456,
+     "tree_provenance_at_round": {
+      "main_blob": "784599fdb406b4242c2d202868b5eefd10861287",
+      "guard_hits": 0,
+      "unguarded_hits": 1,
+      "seam_symbol": false
+     },
+     "stage": {
+      "journey_id": "d7b7d58e-ff92-4840-ae93-7134347b3058",
+      "mission": "b034e162-44a8-4338-8f23-d9eaad9e5851"
+     },
+     "stage_ownership": {
+      "pid": 12248,
+      "netstat_pid": 12248,
+      "ppid_ok": true,
+      "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282seam_O282S-250612-226b4c_mutant_r2.db",
+      "ai_key_present": false,
+      "stripped": []
+     },
+     "pids": {
+      "A": 38288,
+      "B": 38648,
+      "stage": 12248,
+      "all_distinct": true
+     },
+     "role_A": {
+      "role": "claim_and_fill",
+      "pid": 38288,
+      "ppid": 22164,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-mutant-2",
+       "plans.generate:cont:b034e162-44a8-4338-8f23-d9eaad9e5851"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_mutant_r2.db",
+      "claim_returned_replay": false,
+      "refused": null,
+      "answer_shape": [
+       "plans"
+      ],
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "role_B": {
+      "role": "re_enter_phase_B",
+      "pid": 38648,
+      "ppid": 52844,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-mutant-2",
+       "plans.generate:cont:b034e162-44a8-4338-8f23-d9eaad9e5851"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_mutant_r2.db",
+      "refused": null,
+      "answer_shape": [
+       "plans"
+      ],
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "receipts_pre": {
+      "plans.generate:o282s-O282S-250612-226b4c-mutant-2": [
+       "absent",
+       null
+      ],
+      "plans.generate:cont:b034e162-44a8-4338-8f23-d9eaad9e5851": [
+       "absent",
+       null
+      ]
+     },
+     "receipts_after_A": {
+      "plans.generate:o282s-O282S-250612-226b4c-mutant-2": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:b034e162-44a8-4338-8f23-d9eaad9e5851": [
+       "filled",
+       201
+      ]
+     },
+     "receipts_after_B": {
+      "plans.generate:o282s-O282S-250612-226b4c-mutant-2": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:b034e162-44a8-4338-8f23-d9eaad9e5851": [
+       "filled",
+       201
+      ]
+     },
+     "readings": {
+      "A_filled_rows": 2,
+      "B_refused_status": null,
+      "B_refused_detail": null,
+      "B_overwritten_rows": 2,
+      "A_bytes_survive": false,
+      "detector_selftest_sees_change": true,
+      "plan_versions_after_both": 6,
+      "stored_json_len_after_B": {
+       "plans.generate:o282s-O282S-250612-226b4c-mutant-2": 111556,
+       "plans.generate:cont:b034e162-44a8-4338-8f23-d9eaad9e5851": 111556
+      }
+     }
+    },
+    {
+     "state": "mutant",
+     "round": 3,
+     "run_id": "O282S-250612-226b4c",
+     "db": "_o282seam_O282S-250612-226b4c_mutant_r3.db",
+     "db_bytes": 1171456,
+     "tree_provenance_at_round": {
+      "main_blob": "784599fdb406b4242c2d202868b5eefd10861287",
+      "guard_hits": 0,
+      "unguarded_hits": 1,
+      "seam_symbol": false
+     },
+     "stage": {
+      "journey_id": "d3e4ac49-9854-4902-929b-fec1fd553860",
+      "mission": "8dd391d5-c869-4c29-a256-567e72b2ac3e"
+     },
+     "stage_ownership": {
+      "pid": 6956,
+      "netstat_pid": 6956,
+      "ppid_ok": true,
+      "resolved_db": "D:\\moodle\\_qoder_f_run\\o282_harness\\_o282seam_O282S-250612-226b4c_mutant_r3.db",
+      "ai_key_present": false,
+      "stripped": []
+     },
+     "pids": {
+      "A": 17832,
+      "B": 22352,
+      "stage": 6956,
+      "all_distinct": true
+     },
+     "role_A": {
+      "role": "claim_and_fill",
+      "pid": 17832,
+      "ppid": 34776,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-mutant-3",
+       "plans.generate:cont:8dd391d5-c869-4c29-a256-567e72b2ac3e"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_mutant_r3.db",
+      "claim_returned_replay": false,
+      "refused": null,
+      "answer_shape": [
+       "plans"
+      ],
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "role_B": {
+      "role": "re_enter_phase_B",
+      "pid": 22352,
+      "ppid": 37956,
+      "keys": [
+       "plans.generate:o282s-O282S-250612-226b4c-mutant-3",
+       "plans.generate:cont:8dd391d5-c869-4c29-a256-567e72b2ac3e"
+      ],
+      "resolved_db_file": "D:/moodle/_qoder_f_run/o282_harness/_o282seam_O282S-250612-226b4c_mutant_r3.db",
+      "refused": null,
+      "answer_shape": [
+       "plans"
+      ],
+      "child_rc": 0,
+      "stderr_tail": []
+     },
+     "receipts_pre": {
+      "plans.generate:o282s-O282S-250612-226b4c-mutant-3": [
+       "absent",
+       null
+      ],
+      "plans.generate:cont:8dd391d5-c869-4c29-a256-567e72b2ac3e": [
+       "absent",
+       null
+      ]
+     },
+     "receipts_after_A": {
+      "plans.generate:o282s-O282S-250612-226b4c-mutant-3": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:8dd391d5-c869-4c29-a256-567e72b2ac3e": [
+       "filled",
+       201
+      ]
+     },
+     "receipts_after_B": {
+      "plans.generate:o282s-O282S-250612-226b4c-mutant-3": [
+       "filled",
+       201
+      ],
+      "plans.generate:cont:8dd391d5-c869-4c29-a256-567e72b2ac3e": [
+       "filled",
+       201
+      ]
+     },
+     "readings": {
+      "A_filled_rows": 2,
+      "B_refused_status": null,
+      "B_refused_detail": null,
+      "B_overwritten_rows": 2,
+      "A_bytes_survive": false,
+      "detector_selftest_sees_change": true,
+      "plan_versions_after_both": 6,
+      "stored_json_len_after_B": {
+       "plans.generate:o282s-O282S-250612-226b4c-mutant-3": 111556,
+       "plans.generate:cont:8dd391d5-c869-4c29-a256-567e72b2ac3e": 111556
+      }
+     }
+    }
+   ]
+  }
+ },
+ "mutation_applied": {
+  "before_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "before_blob_matches_landing": true,
+  "after_blob_40": "784599fdb406b4242c2d202868b5eefd10861287",
+  "hunks": 1,
+  "hunk_headers": [
+   "@@ -4770,8 +4770,7 @@"
+  ],
+  "py_compile_ok": true,
+  "removed_expression": "IdempotencyKey.response_json.is_(None)",
+  "lines_delta": [
+   11417,
+   11416
+  ]
+ },
+ "restore": {
+  "byte_exact": true,
+  "blob": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+ },
+ "derived": {
+  "guard_all_survive": true,
+  "guard_all_refused_named_409": true,
+  "mutant_all_overwrote": true,
+  "detector_never_blind": true,
+  "three_distinct_pids_every_round": true,
+  "guard_only_flip": true,
+  "K8_SEAM_ON_LANDED_GENERATION": "FLIP_OBSERVED"
+ }
+}
