@@ -229,11 +229,25 @@ def run(label: str, port: int, spec: str) -> dict:
     run_id = next(
         (line.split("run_id=", 1)[1].split()[0] for line in out.splitlines() if line.startswith("run_id=")), ""
     )
-    summary = next(
-        (line.strip() for line in reversed(out.splitlines()) if " passed" in line or " failed" in line), ""
-    )
+    # run_spec.py echoes only its last 90 console lines.  A run with several failures prints long
+    # error blocks, which pushes the per-test `x` lines out of that window -- an arm that reddened
+    # four nodes then read as "1 passed" with an empty node map, and the driver mislabelled it
+    # BASELINE_RED.  The full log is the record; the console is only a preview.
+    log_path = ROOT / f"review/run-{run_id}.log"
+    parsed_from = "console"
+    if run_id and log_path.exists():
+        parsed_text = log_path.read_text(encoding="utf-8", errors="replace")
+        parsed_from = str(log_path.name)
+    else:
+        parsed_text = out
+    tallies = [
+        line.strip()
+        for line in parsed_text.splitlines()
+        if re.match(r"^\s*\d+ (passed|failed|flaky|skipped)", line)
+    ]
+    summary = " / ".join(tallies) if tallies else ""
     nodes: dict[str, str] = {}
-    for line in out.splitlines():
+    for line in parsed_text.splitlines():
         m = NODE_RE.match(line)
         if not m:
             continue
@@ -243,7 +257,8 @@ def run(label: str, port: int, spec: str) -> dict:
         nodes[title] = {"ok": "GREEN"}.get(token, "RED")
     print(
         f"[{label}] exit={proc.returncode} run={run_id} {round(time.time() - started)}s {summary!r} "
-        + " ".join(f"{k.split('-')[0]}:{v}" for k, v in sorted(nodes.items())),
+        f"(parsed from {parsed_from}) "
+        + " ".join(f"{k.split('-')[1]}:{v}" for k, v in sorted(nodes.items())),
         flush=True,
     )
     return {
@@ -251,8 +266,10 @@ def run(label: str, port: int, spec: str) -> dict:
         "spec": spec,
         "exitCode": proc.returncode,
         "runId": run_id,
+        "log": str(log_path) if run_id and log_path.exists() else "",
+        "parsedFrom": parsed_from,
         "summary": summary,
-        "stackStarted": bool(summary),
+        "stackStarted": bool(summary) and bool(nodes),
         "nodes": nodes,
     }
 
