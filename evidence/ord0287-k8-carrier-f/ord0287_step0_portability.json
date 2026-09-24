@@ -1,0 +1,74 @@
+{
+ "what": "ORD-0287 第 0 条：test_G9 原样摘到 45b0a5e2 跑不跑得起（只答这一条，跑不起就停手）",
+ "lane": "F 8ccd71d8",
+ "run_id": "O287S0-250638-07baa0",
+ "generated_at": "2026-09-25T06:38:52+08:00",
+ "answer": "跑不起。拦路的是产品符号 `_fill_plan_generation_receipts`——它只在我那笔候选里，不在权威线；补一行测试文件自己的 import 之后露出来的就是这句 ImportError。",
+ "symbols": {
+  "missing_symbol": "_fill_plan_generation_receipts",
+  "hits_in_landed_main_py": 0,
+  "hits_in_candidate_main_py": 2,
+  "landed_main_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "candidate_main_blob": "ad13f4395e3405ce722ae8660836f3c2aaa29df2",
+  "external_readback": {
+   "45b0a5e28|backend/app/main.py": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "45b0a5e28|backend/tests/test_qoder_ord0272_continuation.py": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "7c806fab5|backend/app/main.py": "ad13f4395e3405ce722ae8660836f3c2aaa29df2",
+   "7c806fab5|backend/tests/test_qoder_ord0272_continuation.py": "799fbd2fe9d28433405408ddec1d7405b2d1c9d9"
+  },
+  "external_matches_local": true
+ },
+ "case_v1_verbatim_append": {
+  "gate_blob_after": "f7f311b86a87b6462e3fe5a4cdef6f851d82dd50",
+  "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer",
+  "rc": 1,
+  "db": "_o287_O287S0-250638-07baa0_v1.db",
+  "collected_line": "",
+  "summary_line": "1 failed, 2 warnings in 2.11s",
+  "verbatim_error_three_lines": [
+   "E   ImportError: cannot import name '_fill_plan_generation_receipts' from 'app.main' (D:\\moodle\\_qoder_f_run\\e_0287_step0\\Canshu-King-CityNexus-45b0a5e281cae9c37715173afd3ac5778f309ca7\\backend\\app\\main.py)",
+   "1 failed, 2 warnings in 2.11s"
+  ],
+  "stderr_tail": [],
+  "note": "一个字没改：候选文件的 G9 直接接到落地代那道门末尾"
+ },
+ "case_v2_plus_test_local_import": {
+  "gate_blob_after": "bbd1e16b63b6d5786b53c3b72c5f6838baa139f1",
+  "added_line": "from datetime import datetime, timedelta, timezone",
+  "assertions_touched": 0,
+  "product_files_touched": 0,
+  "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer",
+  "rc": 1,
+  "db": "_o287_O287S0-250638-07baa0_v2.db",
+  "collected_line": "",
+  "summary_line": "1 failed, 2 warnings in 1.39s",
+  "verbatim_error_three_lines": [
+   "E   ImportError: cannot import name '_fill_plan_generation_receipts' from 'app.main' (D:\\moodle\\_qoder_f_run\\e_0287_step0\\Canshu-King-CityNexus-45b0a5e281cae9c37715173afd3ac5778f309ca7\\backend\\app\\main.py)",
+   "1 failed, 2 warnings in 1.39s"
+  ],
+  "stderr_tail": []
+ },
+ "positive_control_landed_cell": {
+  "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+  "rc": 0,
+  "db": "_o287_O287S0-250638-07baa0_ctl_G1.db",
+  "collected_line": "",
+  "summary_line": "1 passed, 2 warnings in 1.51s",
+  "verbatim_error_three_lines": [],
+  "stderr_tail": [],
+  "meaning": "同库形制/同解释器/同一棵拷贝树下，权威线自己那格是绿的 ⇒ v1/v2 的红不是环境造成的"
+ },
+ "next_step_if_you_want_a_carrier": "要么先把 7c806fa 那笔（缝 + G9）落进权威线，要么我在权威线上不引那枚符号、直接对同一处 UPDATE 写一格（两半互控：别人已填不许动 + 我占的 NULL 必须填上）；两条都不改任何断言。等你点名走哪条。",
+ "discipline": {
+  "assertions_changed": 0,
+  "product_bytes_changed": 0,
+  "skips_added": 0,
+  "demo_reset_calls": 0,
+  "authoritative_branch_written": false,
+  "credentials_printed": 0,
+  "candidate_branch_created": false,
+  "source_export_reused_readonly": true,
+  "copy_tree": "D:\\moodle\\_qoder_f_run\\e_0287_step0\\Canshu-King-CityNexus-45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "landed_export_untouched_after": true
+ }
+}
