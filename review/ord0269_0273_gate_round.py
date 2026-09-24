@@ -499,7 +499,7 @@ def main() -> int:
     with open(OUT, "wb") as fh:
         fh.write(blob)
     print(f"wrote {OUT} bytes={len(blob)} sha1={hashlib.sha1(blob).hexdigest()[:16]}")
-    print(f"candidate_tip={head}")
+    print(f"triples carry exact_sha={exact_stamp}  scripts sat on={head}")
     print(f"triples={len(triples)}  problems={len(problems)}")
     if collection:
         proof = collection["base_proof"]
