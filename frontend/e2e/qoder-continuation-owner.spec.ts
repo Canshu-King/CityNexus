@@ -307,8 +307,28 @@ test("ord0269-r4-a-brand-new-journey-shows-nothing — 全新行程不得亮待�
   await page.evaluate((id) => {
     localStorage.setItem("citynexus.v8.journey_id", id);
   }, otherJourneyId);
+  /* installStack's init script re-writes journey A on EVERY navigation, so a one-off setItem above
+     is silently undone by the reload -- the v2 baselines caught the node passing for that reason
+     ("no card" on a screen that was never journey B is not a control).  Init scripts run in the
+     order they were added, so a second one carrying journey B is what actually moves the screen. */
+  await page.addInitScript((id) => {
+    localStorage.setItem("citynexus.v8.journey_id", id);
+  }, otherJourneyId);
+  const readsOnB: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().includes(`/journeys/${otherJourneyId}/`)) readsOnB.push(request.url());
+  });
   await page.reload({ waitUntil: "load" });
-  /* The screen has to be there before "no card" means anything. */
+  /* The screen has to be journey B's before "no card" means anything. */
+  await expect
+    .poll(() => readsOnB.length, {
+      timeout: 30_000,
+      message: node(
+        "ord0269-r4",
+        `the app never read journey ${otherJourneyId} -- the node would be asserting on journey A's screen`,
+      ),
+    })
+    .toBeGreaterThan(0);
   await expect(page.getByTestId("today-hero")).toBeVisible({ timeout: 30_000 });
   await expect(
     page.getByTestId("continuation-pending"),
@@ -328,9 +348,10 @@ test("ord0269-r4-a-brand-new-journey-shows-nothing — 全新行程不得亮待�
         journeyWithMarker: journeyId,
         markerBytesOnA: markerOnA.length,
         unplannedJourney: otherJourneyId,
+        bScopedReadsObserved: readsOnB.length,
         pendingCardsOnB: 0,
         unconfirmableLinesOnB: 0,
-        note: "strong form: a real marker exists on A, B is a separate real journey, B shows nothing",
+        note: "strong form: A carries a real marker, B is a separate real journey the app actually read, B shows nothing",
       },
       null,
       1,
