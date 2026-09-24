@@ -1,0 +1,114 @@
+{
+ "schema": "CNX_BUNDLE_SELFREFERENCE_CHECK_V1",
+ "served_index_bytes": 1200,
+ "served_refs": [
+  "/assets/index-CtuiCkKf.js",
+  "/assets/index-I45CQek8.css",
+  "/favicon.svg",
+  "/manifest.webmanifest"
+ ],
+ "roots": [
+  {
+   "dist": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist",
+   "index_present": true,
+   "refs": [
+    {
+     "ref": "/assets/index-CtuiCkKf.js",
+     "exists_in_this_dir": true,
+     "same_bytes_as_served": true,
+     "blob_local": "86866caeaac9603addcdff4432e9b9b3cb02349e"
+    },
+    {
+     "ref": "/assets/index-I45CQek8.css",
+     "exists_in_this_dir": true,
+     "same_bytes_as_served": true,
+     "blob_local": "7df7167b8577cd531581480f04a10b5718551baa"
+    },
+    {
+     "ref": "/favicon.svg",
+     "exists_in_this_dir": true,
+     "same_bytes_as_served": true,
+     "blob_local": "7324a106f32e4432da1d314ae313c3f13a22d42e"
+    },
+    {
+     "ref": "/manifest.webmanifest",
+     "exists_in_this_dir": true,
+     "same_bytes_as_served": true,
+     "blob_local": "ad262cd0eba79a1f23d406f518d66ff97cc87f22"
+    }
+   ],
+   "dangling": [],
+   "verdict": "SELF_REFERENTIAL",
+   "index_shares_inode_with_served": false,
+   "index_bytes": 1200
+  },
+  {
+   "dist": "D:\\moodle\\_hjp3_fan_sweep_0923\\snap_1f44408_dist",
+   "index_present": true,
+   "refs": [
+    {
+     "ref": "/assets/index-Cpy_jhEg.js",
+     "exists_in_this_dir": true
+    },
+    {
+     "ref": "/assets/index-I45CQek8.css",
+     "exists_in_this_dir": true,
+     "same_bytes_as_served": true,
+     "blob_local": "7df7167b8577cd531581480f04a10b5718551baa"
+    },
+    {
+     "ref": "/favicon.svg",
+     "exists_in_this_dir": true,
+     "same_bytes_as_served": true,
+     "blob_local": "7324a106f32e4432da1d314ae313c3f13a22d42e"
+    },
+    {
+     "ref": "/manifest.webmanifest",
+     "exists_in_this_dir": true,
+     "same_bytes_as_served": true,
+     "blob_local": "ad262cd0eba79a1f23d406f518d66ff97cc87f22"
+    }
+   ],
+   "dangling": [],
+   "verdict": "SELF_REFERENTIAL",
+   "index_shares_inode_with_served": false,
+   "index_bytes": 1200
+  },
+  {
+   "dist": "D:\\moodle\\_hjp3_0276_0925\\dist_frozen",
+   "index_present": true,
+   "refs": [
+    {
+     "ref": "/assets/index-CtuiCkKf.js",
+     "exists_in_this_dir": true,
+     "same_bytes_as_served": true,
+     "blob_local": "86866caeaac9603addcdff4432e9b9b3cb02349e"
+    },
+    {
+     "ref": "/assets/index-I45CQek8.css",
+     "exists_in_this_dir": true,
+     "same_bytes_as_served": true,
+     "blob_local": "7df7167b8577cd531581480f04a10b5718551baa"
+    },
+    {
+     "ref": "/favicon.svg",
+     "exists_in_this_dir": true,
+     "same_bytes_as_served": true,
+     "blob_local": "7324a106f32e4432da1d314ae313c3f13a22d42e"
+    },
+    {
+     "ref": "/manifest.webmanifest",
+     "exists_in_this_dir": true,
+     "same_bytes_as_served": true,
+     "blob_local": "ad262cd0eba79a1f23d406f518d66ff97cc87f22"
+    }
+   ],
+   "dangling": [],
+   "verdict": "SELF_REFERENTIAL",
+   "index_shares_inode_with_served": false,
+   "index_bytes": 1200
+  }
+ ],
+ "overall": "ALL_SELF_REFERENTIAL",
+ "scope": "Filesystem existence + byte equality only. No browser, no MIME assertion about a running server; it proves the white page is WAITING, not that a surface was observed white."
+}
