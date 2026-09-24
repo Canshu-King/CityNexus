@@ -1,0 +1,498 @@
+{
+ "what": "ORD-0272 r2 A/B 的 swimmer 分诊：候选侧 2 条独有红 + 基线侧 2 条对称独有红，两棵树各 5 轮交替聚焦跑",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-24T16:40:23+08:00",
+ "shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest <单枚 nodeid> -q --no-header -p no:cacheprovider --tb=line（cwd=<A/B 用的那两棵导出树>/backend；每轮一枚全新临时库；5 轮，两树交替）",
+ "trees": {
+  "candidate_aa29612": {
+   "full_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "export": "D:\\moodle\\_qoder_f_run\\e_272ab_candidate_aa29612"
+  },
+  "base_c79e2b4": {
+   "full_sha": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+   "export": "D:\\moodle\\_qoder_f_run\\e_272ab_base_c79e2b4"
+  }
+ },
+ "ab_context": {
+  "only_in_candidate": [
+   "tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned",
+   "tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage"
+  ],
+  "only_in_baseline": [
+   "tests/test_sol_guardian_projection.py::test_a_preventive_run_carries_the_fields_the_panel_selects_on",
+   "tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first"
+  ],
+  "candidate_per_round_red_counts": [
+   9,
+   9,
+   8
+  ],
+  "baseline_per_round_red_counts": [
+   8,
+   10,
+   9
+  ],
+  "both_trees_always_red": [
+   "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+   "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+   "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+   "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+   "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+   "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+   "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+   "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at"
+  ],
+  "note": "两棵树各自都有'只红一轮'的格子（候选 2 条、基线 2 条），且 8 条基线红两边三轮恒红⇒ 差集里那两条更像批次敏感，下面用复现率判"
+ },
+ "cells": {
+  "cand_only_abandon_from_another_process": {
+   "nodeid": "tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned",
+   "ab_side_it_was_named_on": "candidate",
+   "ab_rounds_red": {
+    "candidate_aa29612": [
+     2
+    ],
+    "base_c79e2b4": []
+   },
+   "per_tree": {
+    "candidate_aa29612": [
+     {
+      "exit_code": 0,
+      "seconds": 1.8,
+      "summary": "1 passed, 2 warnings in 1.05s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 1
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.6,
+      "summary": "1 passed, 2 warnings in 0.99s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 2
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.6,
+      "summary": "1 passed, 2 warnings in 0.97s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 3
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.6,
+      "summary": "1 passed, 2 warnings in 0.96s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 4
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.8,
+      "summary": "1 passed, 2 warnings in 1.06s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 5
+     }
+    ],
+    "base_c79e2b4": [
+     {
+      "exit_code": 0,
+      "seconds": 1.8,
+      "summary": "1 passed, 2 warnings in 1.11s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 1
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.6,
+      "summary": "1 passed, 2 warnings in 0.98s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 2
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.7,
+      "summary": "1 passed, 2 warnings in 1.02s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 3
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.7,
+      "summary": "1 passed, 2 warnings in 1.01s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 4
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.7,
+      "summary": "1 passed, 2 warnings in 1.04s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 5
+     }
+    ]
+   },
+   "red_rounds_candidate_aa29612": 0,
+   "red_rounds_base_c79e2b4": 0,
+   "triage": "NOT_REPRODUCED_IN_FOCUSED_RUNS (both trees green)"
+  },
+  "cand_only_empty_answer_vs_outage": {
+   "nodeid": "tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage",
+   "ab_side_it_was_named_on": "candidate",
+   "ab_rounds_red": {
+    "candidate_aa29612": [
+     1
+    ],
+    "base_c79e2b4": []
+   },
+   "per_tree": {
+    "candidate_aa29612": [
+     {
+      "exit_code": 0,
+      "seconds": 1.7,
+      "summary": "1 passed, 2 warnings in 1.01s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 1
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.6,
+      "summary": "1 passed, 2 warnings in 0.96s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 2
+     },
+     {
+      "exit_code": 1,
+      "seconds": 1.7,
+      "summary": "1 failed, 2 warnings in 1.01s",
+      "red": true,
+      "named_red": [
+       "tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage"
+      ],
+      "first_error_lines": [],
+      "round": 3
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.6,
+      "summary": "1 passed, 2 warnings in 0.96s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 4
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.7,
+      "summary": "1 passed, 2 warnings in 1.03s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 5
+     }
+    ],
+    "base_c79e2b4": [
+     {
+      "exit_code": 1,
+      "seconds": 1.6,
+      "summary": "1 failed, 2 warnings in 0.95s",
+      "red": true,
+      "named_red": [
+       "tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage"
+      ],
+      "first_error_lines": [],
+      "round": 1
+     },
+     {
+      "exit_code": 1,
+      "seconds": 1.6,
+      "summary": "1 failed, 2 warnings in 0.95s",
+      "red": true,
+      "named_red": [
+       "tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage"
+      ],
+      "first_error_lines": [],
+      "round": 2
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.7,
+      "summary": "1 passed, 2 warnings in 0.98s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 3
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.7,
+      "summary": "1 passed, 2 warnings in 0.97s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 4
+     },
+     {
+      "exit_code": 0,
+      "seconds": 1.7,
+      "summary": "1 passed, 2 warnings in 1.00s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 5
+     }
+    ]
+   },
+   "red_rounds_candidate_aa29612": 1,
+   "red_rounds_base_c79e2b4": 2,
+   "triage": "SWIMMER (batch-sensitive; flips on at least one tree)"
+  },
+  "base_only_preventive_run_fields": {
+   "nodeid": "tests/test_sol_guardian_projection.py::test_a_preventive_run_carries_the_fields_the_panel_selects_on",
+   "ab_side_it_was_named_on": "baseline",
+   "ab_rounds_red": {
+    "candidate_aa29612": [],
+    "base_c79e2b4": [
+     2
+    ]
+   },
+   "per_tree": {
+    "candidate_aa29612": [
+     {
+      "exit_code": 0,
+      "seconds": 3.0,
+      "summary": "1 passed, 2 warnings in 2.19s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 1
+     },
+     {
+      "exit_code": 0,
+      "seconds": 2.9,
+      "summary": "1 passed, 2 warnings in 2.13s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 2
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.1,
+      "summary": "1 passed, 2 warnings in 2.23s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 3
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.1,
+      "summary": "1 passed, 2 warnings in 2.23s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 4
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.0,
+      "summary": "1 passed, 2 warnings in 2.20s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 5
+     }
+    ],
+    "base_c79e2b4": [
+     {
+      "exit_code": 0,
+      "seconds": 2.9,
+      "summary": "1 passed, 2 warnings in 2.18s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 1
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.0,
+      "summary": "1 passed, 2 warnings in 2.22s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 2
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.1,
+      "summary": "1 passed, 2 warnings in 2.24s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 3
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.0,
+      "summary": "1 passed, 2 warnings in 2.18s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 4
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.1,
+      "summary": "1 passed, 2 warnings in 2.23s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 5
+     }
+    ]
+   },
+   "red_rounds_candidate_aa29612": 0,
+   "red_rounds_base_c79e2b4": 0,
+   "triage": "NOT_REPRODUCED_IN_FOCUSED_RUNS (both trees green)"
+  },
+  "base_only_guardian_newest_first": {
+   "nodeid": "tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first",
+   "ab_side_it_was_named_on": "baseline",
+   "ab_rounds_red": {
+    "candidate_aa29612": [],
+    "base_c79e2b4": [
+     2,
+     3
+    ]
+   },
+   "per_tree": {
+    "candidate_aa29612": [
+     {
+      "exit_code": 0,
+      "seconds": 3.0,
+      "summary": "1 passed, 2 warnings in 2.18s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 1
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.0,
+      "summary": "1 passed, 2 warnings in 2.20s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 2
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.1,
+      "summary": "1 passed, 2 warnings in 2.24s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 3
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.0,
+      "summary": "1 passed, 2 warnings in 2.21s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 4
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.1,
+      "summary": "1 passed, 2 warnings in 2.26s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 5
+     }
+    ],
+    "base_c79e2b4": [
+     {
+      "exit_code": 0,
+      "seconds": 3.0,
+      "summary": "1 passed, 2 warnings in 2.23s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 1
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.0,
+      "summary": "1 passed, 2 warnings in 2.18s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 2
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.1,
+      "summary": "1 passed, 2 warnings in 2.24s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 3
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.1,
+      "summary": "1 passed, 2 warnings in 2.21s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 4
+     },
+     {
+      "exit_code": 0,
+      "seconds": 3.1,
+      "summary": "1 passed, 2 warnings in 2.26s",
+      "red": false,
+      "named_red": [],
+      "first_error_lines": [],
+      "round": 5
+     }
+    ]
+   },
+   "red_rounds_candidate_aa29612": 0,
+   "red_rounds_base_c79e2b4": 0,
+   "triage": "NOT_REPRODUCED_IN_FOCUSED_RUNS (both trees green)"
+  }
+ },
+ "conclusion": {
+  "cand_only_abandon_from_another_process": "NOT_REPRODUCED_IN_FOCUSED_RUNS (both trees green)",
+  "cand_only_empty_answer_vs_outage": "SWIMMER (batch-sensitive; flips on at least one tree)",
+  "base_only_preventive_run_fields": "NOT_REPRODUCED_IN_FOCUSED_RUNS (both trees green)",
+  "base_only_guardian_newest_first": "NOT_REPRODUCED_IN_FOCUSED_RUNS (both trees green)"
+ }
+}
