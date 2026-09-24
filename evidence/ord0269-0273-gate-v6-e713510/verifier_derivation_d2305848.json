@@ -1,0 +1,72 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0269/0273 gate v6 (candidate tip e7135108, reverse-mutation tip aef5765c; v5 derivation NOT carried over per Q24/Q25)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T05:1x+08",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "coordinates_all_verified": {
+  "arms_v6": {"repo_path": "evidence/ord0269-0273-gate-v6-e713510/arms-v6-aef5765.json", "blob": "af2150a0e8097edd7e1be2c4a720f9e660f60b2a", "bytes": 22591, "sha_ok": true},
+  "gate_round": {"repo_path": "evidence/ord0269-0273-gate-v6-e713510/gate-round-1574884.json", "blob": "1f3ce1623be3ea5c8ec31fb9790cfc8caabfffcb", "bytes": 14669, "sha_ok": true},
+  "manifest": {"repo_path": "evidence/ord0269-0273-gate-v6-e713510/manifest-1574884.json", "blob": "3d87d705082034ce3d5091897cab3204344a0678", "bytes": 2729, "sha_ok": true},
+  "candidate_tip": "e71351080dcd10ebed2eb20bc39422380513acf4",
+  "reverse_mutation_tip": "aef5765c53bc92e85ff4c548a8076b32a3579762",
+  "gate_green_round_exact_sha": "1574884619edcaea9d99dca2e3c45c8dd2fbe78f",
+  "self_proven_lineage": {"method": "compare API dcae1bc96...e7135108", "ahead_by": 31, "behind_by": 0,
+    "note": "the commander measured 29 earlier, then 2 more landed; both readings valid at their own times"}
+ },
+ "mechanical_derivation": {
+  "denominator_rule": "same as v5: each arm runs one spec, that spec nodes dict is the denominator; redSet+greenSet must partition it, match attempt per-node readings, owner red",
+  "per_arm": {
+   "K269_REMOVE_MARKER_WRITE": {"red": 4, "exclusive": false, "partition_ok": true, "attempt_match": true, "owner_red": true, "derived": "KILLED"},
+   "K269_CLEAR_MARKER_BEFORE_REQUEST": {"red": 4, "exclusive": false, "partition_ok": true, "attempt_match": true, "owner_red": true, "derived": "KILLED"},
+   "K269_FEED_READ_FAILURE_SILENT": {"red": 1, "exclusive": true, "partition_ok": true, "attempt_match": true, "owner_red": true, "derived": "KILLED"},
+   "K269_MALFORMED_FEED_SILENT": {"red": 1, "exclusive": true, "partition_ok": true, "attempt_match": true, "owner_red": true, "derived": "KILLED"},
+   "K269_PAGINATION_GUESS": {"red": 1, "exclusive": true, "partition_ok": true, "attempt_match": true, "owner_red": true, "derived": "KILLED"},
+   "K269_GLOBAL_MARKER": {"red": 2, "exclusive": false, "partition_ok": true, "attempt_match": true, "owner_red": true, "derived": "KILLED"},
+   "K273_RAW_MESSAGE_BACK": {"red": 3, "exclusive": false, "partition_ok": true, "attempt_match": true, "owner_red": true, "derived": "KILLED"},
+   "K273_EN_DICT_CHINESE": {"red": 1, "exclusive": true, "partition_ok": true, "attempt_match": true, "owner_red": true, "derived": "KILLED"},
+   "K273_NO_RETRY_STEP": {"red": 1, "exclusive": true, "partition_ok": true, "attempt_match": true, "owner_red": true, "derived": "KILLED"}
+  },
+  "redsets_identical_to_v5_arm_by_arm": true,
+  "receipt_level": {"baseline_exit0_all": true, "attempt_nonzero_all": true, "runIds_unique": true,
+   "anchor_ge1_all": true, "restored_exact_all": true, "filesBefore_eq_filesAfter": true, "treeUnchangedByThisRun": true,
+   "claimed_KILLED": 9, "derived_KILLED": 9,
+   "collection": {"playwright": "8 tests in 3 files (7 gate nodes + 1 real-seed setup)", "backend_collect_only": "1232 tests, rc=0, python 3.12.14"},
+   "clean_worktree_porcelain": 0}
+ },
+ "generation_classification_Q24_Q25": {
+  "method": "per-arm claim_kind + cited-blob identity between candidate e7135108 and landed dcae1bc96 (blob shas measured by me via trees API)",
+  "per_arm": {
+   "K269_REMOVE_MARKER_WRITE": {"claim_kind": "code_determined", "cited": "frontend/src/features/planning/PlanWithAiSheet.tsx", "landed_blob": "58c0580bbb603c93...", "candidate_blob": "4c3821b7129320d7...", "classification": "KILL_VALID_ON_THIS_GENERATION; NO cross-generation license (blob changed)"},
+   "K269_CLEAR_MARKER_BEFORE_REQUEST": {"classification": "same as REMOVE_MARKER_WRITE (same file)"},
+   "K269_FEED_READ_FAILURE_SILENT": {"claim_kind": "code_determined", "cited": "frontend/src/api/useContinuationState.ts", "classification": "CITED_BLOB_MISSING_ON_LANDED (file is new on this branch); the kill is this-generation fact only"},
+   "K269_MALFORMED_FEED_SILENT": {"classification": "CITED_BLOB_MISSING_ON_LANDED (frontend/src/api/journeyContinuation.ts new here)"},
+   "K269_PAGINATION_GUESS": {"classification": "CITED_BLOB_MISSING_ON_LANDED (journeyContinuation.ts new here)"},
+   "K269_GLOBAL_MARKER": {"classification": "blob changed -> this-generation only"},
+   "K273_RAW_MESSAGE_BACK": {"classification": "blob changed (frontend/src/app/V8Experience.tsx) -> this-generation only"},
+   "K273_EN_DICT_CHINESE": {"classification": "blob changed (frontend/src/i18n/LocaleContext.tsx) -> this-generation only"},
+   "K273_NO_RETRY_STEP": {"classification": "blob changed (frontend/src/features/setup/JourneyTrialSetup.tsx) -> this-generation only"}
+  },
+  "summary": "9/9 KILLED on the candidate generation; ZERO arms carry cross-generation transfer license (6 cite blobs that differ, 3 cite files that exist only on this branch). This is Q24/Q25 doing its job: the branch is where the product files live, so the kills are facts OF THE BRANCH, and they become landed-generation facts the moment the branch lands."
+ },
+ "v5_findings_recheck": [
+  {"id": "V5-1-ledger-path-not-a-coordinate", "status": "FIXED_IN_V6",
+   "evidence": "v6 published at evidence/ord0269-0273-gate-v6-e713510/ on commander/control, three blobs verified; the ledger delivery block cites the real path and blob ids"},
+  {"id": "V5-2-R4-premise-not-published", "status": "FIXED_IN_V6",
+   "evidence": "gate-round-1574884.json now carries measured_readings with the R-4 positive-observation premise: bScopedReadsObserved=8, markerBytesOnA=90, unplannedJourney=f8687511-60ac-4cc7-a80b-46d4743e587d, pendingCardsOnB=0, note='strong form: A carries a real marker, B is a separate real journey the app actually read, B shows nothing'"},
+  {"id": "V6-1-reddening_proof-field-stale", "severity": "receipt-label gap, not a missing proof",
+   "what": "gate-round.reddening_proof reads NOT_PRESENT_YET (the en-dictionary mutant must run before the round may claim the English node reddens)",
+   "note": "the arms receipt DOES contain K273_EN_DICT_CHINESE with redSet=[text-en] exclusive and attempt '1 failed / 3 passed' - the reddening IS proven in the arms receipt; the gate-round field is a stale label from before the arm ran. D should flip it in the next natural revision."},
+  {"id": "V6-2-arms-receipt-premise-per-arm", "severity": "minor",
+   "what": "the ARMS receipt still has no per-arm premise field; the R-4 premise lives in the gate-round measured_readings (one file away, same directory). Acceptable: the coordinate resolves."}
+ ],
+ "derived_result_ORD0269_0273_v6": {
+  "gate": "GREEN on candidate tip 1574884619 (7 triples, nodeid_root consistent with run cwd, collection numbers in-receipt, dictionary_equality per-locale recorded, leak_scan_selftest recorded)",
+  "arms": "9/9 KILLED, redsets identical to v5 arm-by-arm, all derived from raw round fields",
+  "generation": "all kills are facts of the candidate generation; zero cross-generation transfer license (Q24/Q25)",
+  "schema_source": "product API only per R-SCHEMA-01 class in the receipt (real-seed setup + product endpoints), no DDL replay",
+  "evidence_class": "DERIVED_NOT_REEXECUTED (e2e needs the dev stack)"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0, "credentials_printed": 0,
+   "published_paths_overwritten": 0, "network": "GitHub GET + one PUT (this derivation)"}
+}
