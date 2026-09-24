@@ -1,0 +1,132 @@
+{
+ "db": "D:\\moodle\\_hjp3_0272_0924\\xp_0272.s3db",
+ "ports": [
+  8495,
+  8496
+ ],
+ "stage": {
+  "city_code": "CNX-DEMO",
+  "timezone": "Asia/Shanghai",
+  "start_at": "2026-10-10T09:00:00+08:00",
+  "end_at": "2026-10-10T19:00:00+08:00",
+  "planning_mode": "balanced",
+  "budget": {
+   "amount_minor": 50000,
+   "currency": "CNY"
+  },
+  "party_size": 2
+ },
+ "steps": {
+  "seed_my_journey": {
+   "traveler_http": 201,
+   "journey_http": 201,
+   "journey": "2a7efe72-03e7-4078-bff5-57191b31f0ef"
+  },
+  "agent_command": {
+   "http": 200,
+   "mission": "ddec7993-a3d6-4475-9cbb-18338993898e",
+   "raw_head": "{\"mission\":{\"id\":\"ddec7993-a3d6-4475-9cbb-18338993898e\",\"journey_id\":\"2a7efe72-03e7-4078-bff5-57191b31f0ef\",\"trigger_event_id\":null,\"user_text\":\"我护照丢了，请告诉我怎么办。\""
+  },
+  "Q1_identity_cross_process": {
+   "P1": {
+    "http": 201,
+    "ids": [
+     "f3aeae15-d0b2-54c1-89a4-7ba74f7daacc",
+     "58e202c4-b9b3-5b3b-8ac1-c6bec62b94b7",
+     "6941e254-d8a3-556b-a46a-72a684e5836b"
+    ]
+   },
+   "P2": {
+    "http": 201,
+    "ids": [
+     "f3aeae15-d0b2-54c1-89a4-7ba74f7daacc",
+     "58e202c4-b9b3-5b3b-8ac1-c6bec62b94b7",
+     "6941e254-d8a3-556b-a46a-72a684e5836b"
+    ]
+   },
+   "plan_rows_after_P1": 3,
+   "plan_rows_after_P2": 3,
+   "ids_identical": true,
+   "no_second_batch": true
+  },
+  "Q2_client_key_cross_process": {
+   "P1_first": {
+    "http": 201,
+    "ids": [
+     "f3aeae15-d0b2-54c1-89a4-7ba74f7daacc",
+     "58e202c4-b9b3-5b3b-8ac1-c6bec62b94b7",
+     "6941e254-d8a3-556b-a46a-72a684e5836b"
+    ]
+   },
+   "P2_replay": {
+    "http": 201,
+    "ids": [
+     "f3aeae15-d0b2-54c1-89a4-7ba74f7daacc",
+     "58e202c4-b9b3-5b3b-8ac1-c6bec62b94b7",
+     "6941e254-d8a3-556b-a46a-72a684e5836b"
+    ]
+   },
+   "replay_same_ids": true,
+   "P2_mismatch_body": {
+    "http": 409,
+    "message": "same idempotency key used for a different request",
+    "equals_literal": true
+   },
+   "rows_for_raw_header_key": [],
+   "all_idempotency_rows": [
+    [
+     "plans.generate:cont:ddec7993-a3d6-4475-9cbb-18338993898e",
+     201,
+     "json"
+    ]
+   ],
+   "mission_bound_key": "plans.generate:cont:ddec7993-a3d6-4475-9cbb-18338993898e",
+   "mission_bound_row_before_blanking": [
+    [
+     "plans.generate:cont:ddec7993-a3d6-4475-9cbb-18338993898e",
+     201,
+     "json"
+    ]
+   ],
+   "rows_blanked": 1,
+   "P2_after_blanking_receipt": {
+    "http": 409,
+    "message": "agent idempotency record is incomplete",
+    "equals_literal": true
+   }
+  },
+  "Q3_owner_readable_cross_process": {
+   "reader_process": 8496,
+   "http": 200,
+   "events": 5,
+   "owner_facts_found": true,
+   "owner_facts": {
+    "continuation_id": "cont:ddec7993-a3d6-4475-9cbb-18338993898e",
+    "mission_id": "ddec7993-a3d6-4475-9cbb-18338993898e",
+    "plan_version_ids": [
+     "f3aeae15-d0b2-54c1-89a4-7ba74f7daacc",
+     "58e202c4-b9b3-5b3b-8ac1-c6bec62b94b7",
+     "6941e254-d8a3-556b-a46a-72a684e5836b"
+    ],
+    "summary": "this mission's continuation produced these plans"
+   }
+  }
+ },
+ "teardown": {
+  "killed": [
+   {
+    "port": 8495,
+    "pid": 34608,
+    "returncode": 1
+   },
+   {
+    "port": 8496,
+    "pid": 55268,
+    "returncode": 1
+   }
+  ],
+  "listeners_left": 0,
+  "db_exists_after_delete": false,
+  "assert_clean": true
+ }
+}
