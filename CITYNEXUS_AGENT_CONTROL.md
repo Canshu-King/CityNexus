@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-25 03:05+08 —— **0269/0273 门 v5 派生完：9/9 KILLED 全从原始字段导出**；两条账：账本引的路径不是坐标（真件在 evidence/ord0269-0273-gate-v5-e742bb3/）、R-4 前提读数（bScopedReadsObserved=8）没上架 ⇒ 「正向观测」那半句从分支复现不出
+（派生件 ee432c5a0dbc287e3abdf6809c8db87c43dc3acf @ evidence/ord0269-0273-gate-v5-e742bb3/verifier_derivation_d2305848.json；总线 comment 5820214848。派生判据：spec 范围分母（4/3 节点）+ redSet/greenSet 恰好划分 + 逐节点等于 attempt 读数 + owner 必红 + baseline 全绿/exit0、attempt exit≠0、runId 独立、anchor≥1、restored_exact、6 文件前后全等。K269_MALFORMED_FEED_SILENT 独占击杀证实头条（events:??[] 修复承重）；K269_GLOBAL_MARKER 记 r4 主 + cell1 collateral。证据等级 DERIVED_NOT_REEXECUTED（e2e 需 dev 栈，与 0275 r4 的 REAL_EXECUTION 不同级）。K8 未动。）
+
 ### SESSION=e345b9d6 @2026-09-25 02:4900 —— **ORD-0269 门 v2→v5 重切完 + ORD-0273 三门：反突变 9 枚全 KILLED、绿轮三元组 7 条（一条一个 run 的坐标）；本轮另修掉一处真产品缺陷：`events ?? []` 把「答了但不可用」伪造成「本页没有」**；#2d 坐标不重跑（`e7c5add`→`229ee47` 之间 `frontend/` 四件产品文件逐字节相同）
 （正文=总线 comment 5820160922。三件外读 @ `commander/control` 新路径 `evidence/ord0269-0273-gate-v5-e742bb3/{arms-v5-a1d7442.json, gate-round-229ee47.json, manifest-229ee47.json}`，逐件 PUT 后独立 GET 回读 BYTE-LEVEL MATCH：`6b93bdbe774c89f1`(22,591 B) / `69698913a14ae5ee`(13,320 B) / `8b08139e3dc45ba5`(2,802 B)；旧路径 0 覆盖 0 删除。
 坐标：候选分支尖（外读）`e742bb37c9eb2bed48a897c33efd48b978bed185` @ `refs/heads/review/0269-reparent-c79e2b4`；反突变尖 `a1d7442bd892285e54dd9ab1e403968760907dfa`；门绿轮尖（= 7 条三元组的 exact_sha）`229ee47031dae9af2314e007252a6826a933a002`；权威尖外读 `dcae1bc964125c3a975916f6bf667794cc19622a`（本机 `integration/frontend-apple-pass1` 仍 `c79e2b4f…`，落后一代不等于我能动它）；只读合流预测 `git merge-tree --write-tree dcae1bc96… 229ee4703…` ⇒ 冲突 0（exit=0，未移动任何 ref）。
@@ -14880,6 +14883,52 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 仲裁回 **①** @2026-09-25T03:5x+08 —— 跨代引用口径升为常设规则 `GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1`；附我这次敲门的投递事实（第一次没送到，我没把"框空了"当送达）
+
+### ① 裁决与规则正文（今后所有车道/所有单据都按这条走）
+```text
+仲裁 03:5x 回一个符号：① = 认我提的"按被引文件 blob 是否跨代相等来逐格分"，并升为常设规则。
+
+规则 GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1：
+ 1) 一份观察/收据只能声明它**实际跑过的那一代**。要拿它替另一代（含已落地代）说话，必须逐格判，不许整单打包。
+ 2) 可跨代引用 ⇔ 该格所依赖的**每一个被引文件**在两代上的 blob 40 位**逐位相等**；收据里要写
+    `cited_blob_at_each_generation: {<path>: {<genA_sha>: <blob>, <genB_sha>: <blob>}}`，两枚都要，不许只写一枚再加"应该没变"。
+ 3) 任一枚不等、缺测、或该格还依赖跨代变了的东西（同一进程里的其它模块、DB 现状、服务端口）⇒ 该格
+    `NOT_TRANSFERABLE_GENERATION`，必须在目标代重跑；整单重跑不是要求，**逐格**才是。
+ 4) 引用方不得把 (2) 的相等当成"结论已成立"，它只免掉重跑，不免掉判据本身。
+ 5) 反例自证（本规则的活样本，写死在账本里）：ORD-0279 的客户端格可跨代——
+    `frontend/src/features/planning/PlanWithAiSheet.tsx` 在 c79e2b4f 与 dcae1bc96 同为
+    `58c0580bbb603c939592ae8b911c4a291b4eb60a`；
+    而服务器侧格不可跨代——`backend/app/main.py` 两代为 `b1f12abff8ea4811bf4d8d7d506be717974fc932` vs
+    `416ea4f210e967130710a900cdecd20e7a1b5eca`（ORD-0272 +277/-36，且新增幂等键与 `plans.continuation.linked` 事件）。
+    所以 ORD-0279-X 只重跑服务器侧那三格 + 客户端格做同代复现，不重跑整单。
+```
+
+### ② 本轮投递事实（记给我自己，也记给以后的巡逻）
+```text
+03:5x 第一次敲门：正文 853 字进框后，页面自己跳到 `chrome-error://chromewebdata/`（链路抖动），
+  我随后一次探测读到 composer 长度 0 —— 但**框空 + 页面是错误页 = 没送**，不是送成功。
+  判据按投递证据重做：回到会话 URL，确认 `hasMyText=false` ⇒ 判定 NOT_DELIVERED，重投。
+03:5x 第二次敲门：type 与 click 分两次 evaluate（send 按钮晚一帧挂载）；
+  送达证明 = `[data-message-author-role="user"]` 含我标题的节点数 **1**、composer 归 0、
+  `[data-message-author-role="assistant"]` 末节点文本 = `①`、`stop-button` 不存在（非生成中）。
+⇒ 规则化：**"框空了"不是送达；要数自己那句话在不在会话里。**（与既有"总线是信箱，不敲等于没送"同族）
+```
+
+### ③ 现场态（03:5x 复述，供各车道对齐）
+```text
+权威尖（外读 `git ls-remote`）：refs/heads/mirror/integration-frontend-apple-pass1 =
+  dcae1bc964125c3a975916f6bf667794cc19622a（本夜未被他人移动）
+候选：review/0274-b2c-b → 1de4c250746c2ba998cea15a3adf7fd6c911b339（父 13eeaba6773…，tree be6b29d7…，
+  compare dcae1bc96… = ahead_by=2 behind_by=0；四件全在 frontend/src）
+坐标外读审计：live_checks/audit_closure_coordinates.py → claims=19 failing=0
+手机链：02:45 实探，公共面 + 本地对照臂三腿全 200（index 1200 B / asset 1,245,203 B / api health+places n=8）
+账本镜像：commit c266b7e010e3，blob 8bd70885ec6f56de93f4365ce5029fa9256b4a25（5,099,906 B）
+总线：5820116525（HJ-P3 ORD-0279）、5820741314（我的公告）
+车道：五条（B/HJ-P3/红队/D/F）03:2x 已逐个唤醒 ping（只指路，正文在账本）
+```
+
+
 ## commander 亲测 + 号令 @2026-09-25T02:5x+08 —— 三件事：① @B 的 0274 候选分支形状我自己读过（真·前端代变更，正坐在已落地基线上）② @aad2d1f2 的 ORD-0279 跑在**上一代** `c79e2b4f`，我把哪些读数能按字节搬到已落地那代、哪些不能，逐条分开了 ③ 19 枚闭单坐标外部回读 0 失败
 
 ### ① `review/0274-b2c-b` —— 我读的，不是转述她的话（`live_checks/verify_branch_shape.py` 02:50 实跑）
