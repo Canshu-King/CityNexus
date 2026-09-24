@@ -41,6 +41,7 @@ for _stream in (sys.stdout, sys.stderr):
 
 SHEET = ROOT / "frontend/src/features/planning/PlanWithAiSheet.tsx"
 MODULE = ROOT / "frontend/src/api/journeyContinuation.ts"
+HOOK = ROOT / "frontend/src/api/useContinuationState.ts"
 V8 = ROOT / "frontend/src/app/V8Experience.tsx"
 LOCALE = ROOT / "frontend/src/i18n/LocaleContext.tsx"
 SETUP = ROOT / "frontend/src/features/setup/JourneyTrialSetup.tsx"
@@ -49,7 +50,7 @@ SPEC_273 = "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts"
 PYTHON = "D:/moodle/CityNexus/.venv/Scripts/python.exe"
 RECEIPT_DIR = ROOT / "review/evidence/ui-overnight"
 
-FILES = [SHEET, MODULE, V8, LOCALE, SETUP]
+FILES = [SHEET, MODULE, HOOK, V8, LOCALE, SETUP]
 
 MARK_BLOCK = (
     "      if (mission?.id) {\n"
