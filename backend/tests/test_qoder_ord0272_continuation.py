@@ -1,9 +1,10 @@
 """ORD-0272 · `POST /journeys/{id}/plans/generate` 的续跑身份：一次生成只属于一次 mission。
 
-八格（G1–G7 为批准的判据，G8 见下），每格只问一条问题（`owner=` 写在名字与断言里）；一臂红多格 ≠
+九格（G1–G7 为批准的判据，G8/G9 见各自 docstring），每格只问一条问题（`owner=` 写在名字与断言里）；一臂红多格 ≠
 多份证据，所以每格还写明**它不该被谁扰动**。判一律落在**行**与**投影字段**上，不落在状态码上
 （0262 那一族的病就在这）。
-批准的判据是 G1–G7；`G8` 是本车道自加的一格，理由写在它自己的 docstring 里（产码多写了归属检查）。
+批准的判据是 G1–G7；`G8`（归属检查）与 `G9`（K8 回填守卫的载体）是本车道自加的两格，理由都写在
+各自 docstring 里 —— G9 之所以在缝上测，是因为单进程 HTTP 面走不到\覆盖别人已填回执\那一幕。
 
 形制说明（先看这条再引用任何绿）：
   · 本文件全部**单进程**（TestClient 与测试同进程）⇒ "双进程/两设备"用的是**不同连接 + 不带客户端键**
@@ -16,6 +17,7 @@ import contextlib
 import json
 import sqlite3
 import uuid
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -455,3 +457,53 @@ def test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity() -> None:
         "SELECT key FROM idempotency_keys WHERE operation = 'plans.generate'")}
     assert keys_after == keys_before, (
         f"G8：身份不成立就不该先占位（占了即成别人的锁），多出 {sorted(keys_after - keys_before)}")
+
+
+# ---------------------------------------------------------------------------- G9 (K8 的载体)
+def test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer() -> None:
+    """owner=G9（K8 的载体，本车道自加）：`NULL → 完成` 这条不变量在缝上测，不在 HTTP 面假装测过。
+
+    为什么必须走缝：Phase A 的唯一索引让第二个抢同一把键的人根本进不到回填（它拿 409），所以
+    "覆盖别人已填的答案"在单进程 HTTP 面上**不可达** —— 红队因此把 K8 判成
+    `UNPROVEN_AS_KILL / OBSERVED_AS_BEHAVIOUR`。守卫本身仍是可测的：直接对同一条键调产品的回填，
+    看它动不动那一行。跨进程那一面照旧归 verifier（HJ-P3），这一格不替它宣称已闭。
+    两半互相控住：负例（别人已填 ⇒ 不许动、返回 0）与正控（我占的 NULL ⇒ 必须填成 1），
+    所以这一格不会因为"永远失败"而假绿。
+    """
+
+    from app.main import _fill_plan_generation_receipts
+
+    suffix = uuid.uuid4().hex[:12]
+    foreign_key = f"plans.generate:k9f-{suffix}"      # 别人已经答完的那把
+    mine_key = f"plans.generate:k9m-{suffix}"         # 我占了还没答的那把
+    created = datetime.now(timezone.utc).isoformat()
+    expires = (datetime.now(timezone.utc) + timedelta(days=7)).isoformat()
+    foreign = {"plans": [{"id": "someone-elses-batch"}]}
+    mine = {"plans": [{"id": "my-own-batch"}]}
+    insert = ("INSERT INTO idempotency_keys (key, operation, request_hash, response_status, "
+              "response_json, created_at, expires_at) VALUES (?,?,?,?,?,?,?)")
+    _durable_write(insert, (foreign_key, "plans.generate", "sig-foreign", 201,
+                            json.dumps(foreign, sort_keys=True), created, expires))
+    _durable_write(insert, (mine_key, "plans.generate", "sig-mine", None, None, created, expires))
+
+    # 前置必须真落盘，否则两半都是空对空
+    assert _receipt(foreign_key)[:2] == ("filled", 201), "SETUP：别人的已填回执没落盘 ⇒ 这一格会读空"
+    assert _receipt(mine_key)[:2] == ("unfilled", None), "SETUP：我的未填占位没落盘 ⇒ 正控无从判定"
+    stored_before = _durable("SELECT response_json FROM idempotency_keys WHERE key = ?",
+                             (foreign_key,))[0][0]
+
+    with SessionLocal() as session:
+        filled = _fill_plan_generation_receipts(session, [foreign_key, mine_key], mine)
+        session.commit()
+
+    assert filled == 1, (
+        f"G9：两把键里只有我占的那把该被填上，实际填了 {filled} 把"
+        f"{' ⇒ 别人的已填回执被覆盖了（守卫那一行没生效）' if filled > 1 else ''}")
+    stored_after = _durable("SELECT response_json FROM idempotency_keys WHERE key = ?",
+                            (foreign_key,))[0][0]
+    assert stored_after == stored_before, (
+        f"G9：别人那一份答案被改写了（逐字比对失败）：{stored_before} → {stored_after}")
+    assert json.loads(stored_after) == foreign, "G9：盘上那一行现在住的不是别人的答案，就是冒充"
+    state, status, body = _receipt(mine_key)
+    assert (state, status, body) == ("filled", 201, mine), (
+        f"G9：我占的那把必须填成完成态（正控），实际 {state}/{status}/{body}")

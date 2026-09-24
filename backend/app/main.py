@@ -4766,22 +4766,35 @@ def _execute_plan_generation_claimed(journey: Journey, request: GeneratePlansReq
                     )
                 answer = {"plans": [plan_schema(work_session, plan).model_dump(
                     mode="json", by_alias=True) for plan in plans]}
-            filled = 0
-            for key in keys:
-                filled += work_session.execute(
-                    update(IdempotencyKey)
-                    .where(IdempotencyKey.key == key,
-                           IdempotencyKey.response_json.is_(None))
-                    .values(response_status=422 if "refusal" in answer else 201,
-                            response_json=json.dumps(answer, sort_keys=True))
-                    .execution_options(synchronize_session=False)
-                ).rowcount
+            filled = _fill_plan_generation_receipts(work_session, keys, answer)
             if filled != len(keys):
                 # 只允许 NULL → 完成：覆盖别人填好的回执，就是拿别人的答案冒充自己的
                 raise HTTPException(409, "agent idempotency record is incomplete")
             return answer
         finally:
             work_session.close()
+
+
+def _fill_plan_generation_receipts(session: Session, keys: list[str], answer: dict) -> int:
+    """把 claim 填成完成态，返回**真的**填了几把；只允许 `NULL → 完成`。
+
+    那半个条件（`response_json.is_(None)`）就是 K8 的靶子：去掉它，两条请求会互相覆盖答案，
+    而后到的那一发读起来像"这批是我答的"。它不能靠 HTTP 面测：Phase A 的唯一索引先把第二个
+    抢同一把键的人挡在 409 之外，所以单进程里根本走不到"覆盖"那一幕 —— 于是这条不变量在缝上
+    测（`test_G9_…`），跨进程那一面仍归 verifier。
+    """
+
+    filled = 0
+    for key in keys:
+        filled += session.execute(
+            update(IdempotencyKey)
+            .where(IdempotencyKey.key == key,
+                   IdempotencyKey.response_json.is_(None))
+            .values(response_status=422 if "refusal" in answer else 201,
+                    response_json=json.dumps(answer, sort_keys=True))
+            .execution_options(synchronize_session=False)
+        ).rowcount
+    return filled
 
 
 def _plan_generation_refusal(session: Session, journey: Journey, exc: ValueError) -> dict:
