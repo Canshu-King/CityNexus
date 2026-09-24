@@ -140,9 +140,30 @@ const en: Dict = {
   "hub.droppedCandidateUnknownPlace": "a stop whose name we could not read",
   "hub.droppedCandidateUnknownRule": "an unnamed hard condition",
   // ORD-0269 cells 1 and 3: continuation reveal. On-this-device is the named coverage boundary.
-  "hub.continuationPending": "上次有一次规划在这台设备上没跑完：前半段已完成，但还没有产出方案。",
-  "hub.continuationResume": "继续这次规划",
-  "hub.continuationUnconfirmable": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+  /* ORD-0269 cells 1 and 3, and ORD-0278's outcomes.  These are the `en` copies: the Chinese
+     sentences live in `zhCN` below and neither dictionary may hold the other's language -- an
+     English screen answering a traveller in Chinese is ORD-0240's defect in the other coat.
+     `nav.language` stays 「中文」 on purpose: a language switcher names each language in its own
+     script, which is a value, not a leaked sentence. */
+  "hub.continuationPending":
+    "A plan started on this device did not finish: the first step completed, but no plan came out of it.",
+  "hub.continuationResume": "Continue this plan",
+  /* ORD-0278: pressing this re-issues the SECOND leg carrying the recorded mission.  Each outcome
+     says what actually happened.  A refusal never dresses an HTTP status up as the server's reason:
+     that label is only ever filled with text the server itself sent. */
+  "hub.continuationResuming": "Continuing…",
+  "hub.continuationResumed": "The second step went through, and the new plans are below.",
+  "hub.continuationResumedEmpty":
+    "The second step went through, but this round produced no new plan.",
+  "hub.continuationResumeRefused":
+    "The server refused this attempt. Nothing was created, and the record is still here so you can try again.",
+  "hub.continuationResumeDeadline":
+    "This wait reached the limit this screen allows. The request may or may not have arrived -- refresh to check before pressing again.",
+  "hub.continuationResumeTransport":
+    "This device could not send the request at all (connection failure). The record is still here.",
+  "hub.continuationUnconfirmable":
+    "There is a record of the last plan, but its progress cannot be read now, so how far it got is unconfirmed.",
+
 
 
   // ── Studio ──
@@ -831,9 +852,19 @@ const zhCN: Dict = {
   "hub.droppedCandidateUnknownPlace": "一个没认出名字的地点",
   "hub.droppedCandidateUnknownRule": "一条未识别的硬性条件",
   // ORD-0269 cells 1 and 3: continuation reveal. On-this-device is the named coverage boundary.
+  // ORD-0269 cells 1 and 3: continuation reveal. On-this-device is the named coverage boundary.
+  // ORD-0278: 按下这一键是把第二步带着那枚 mission 再发一次；每种结果各说各的话，
+  // 「服务器给出的原因」这一标签只填服务器真发来的文字，服务器没给就明说是本机说的。
   "hub.continuationPending": "上次有一次规划在这台设备上没跑完：前半段已完成，但还没有产出方案。",
   "hub.continuationResume": "继续这次规划",
+  "hub.continuationResuming": "正在续发…",
+  "hub.continuationResumed": "已接着上次把第二步发出去，新方案在下面。",
+  "hub.continuationResumedEmpty": "已接着上次把第二步发出去，但这一轮没有产出新方案。",
+  "hub.continuationResumeRefused": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。",
+  "hub.continuationResumeDeadline": "这一次等待到了本屏幕允许的时限。请求可能已经到达、也可能没有——请先刷新确认，不要连着再点。",
+  "hub.continuationResumeTransport": "这一发在本机就没送出去（连接失败）。上次的记录还在。",
   "hub.continuationUnconfirmable": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+
 
 
   // ── Studio ──
