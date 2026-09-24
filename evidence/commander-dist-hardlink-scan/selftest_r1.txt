@@ -1,0 +1,7 @@
+GREEN  H1_hardlinked_twin_is_found  hits=2 verdict=EXTERNAL_HARDLINK_REFS
+GREEN  H2_hardlink_hit_shares_inode_and_bytes  every hit must prove nlink>=2 and equal sha1
+GREEN  H3_copied_twin_is_NOT_a_hit_negative_control  verdict=NO_EXTERNAL_HARDLINK_REFS hits=0 unnamed=0
+GREEN  H4_after_unlinking_the_twin_the_scan_goes_clean  verdict=NO_EXTERNAL_HARDLINK_REFS
+GREEN  H5_nlink_gt1_with_unscanned_partner_is_refused_not_clean  unnamed=1 verdict=EXTERNAL_HARDLINK_REFS
+
+SELFTEST 5/5 ALL_GREEN
