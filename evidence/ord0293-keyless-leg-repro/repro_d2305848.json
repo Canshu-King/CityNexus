@@ -1,0 +1,73 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0293 (second-observer reproduction of HJ-P3's ORD-0288 claim: the Idempotency-Key on the agent/commands leg is silently ignored)",
+ "verifier": "lane E d2305848 (second observer; HJ-P3's readings are NOT overwritten - both stand side by side)",
+ "at": "2026-09-25T07:35+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "tree_and_env": {
+  "authoritative_tip_read_FIRST": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "source": "GitHub tarball of the mirror ref (50,284,763 B), not any lane working tree",
+  "backend": {"port": 8895, "pid": 25936, "started_by": "me, uvicorn app.main:app",
+              "db": "_ord0293_45b0a5e2_8895.db (throwaway _*.db containing the run id, fresh-or-no-run, deleted=false: kept as the durable artifact)",
+              "schema": "product ensure_schema() on first open (R-SCHEMA-01 compliant)",
+              "ai": "DEEPSEEK_API_KEY unset in-process, CITYNEXUS_AI_ENABLED=false",
+              "stopped_after": "taskkill on my own named pid; port 8895 free"},
+  "journey": {"id": "857dc6a3-6731-4259-a4c5-a778560075d7",
+              "staged_via": "product API only: POST /travelers + POST /journeys (real-seed shape: CN-TIANJIN, 2026-10-09..11, 120000 CNY)",
+              "stay_chain": "stay-options/generate -> 4 CANDIDATE options -> select 200"},
+  "demo_reset": 0, "user_dbs_touched": 0
+ },
+ "R1_same_key_three_posts_agent_commands": {
+  "route": "POST /api/v1/journeys/{journey_id}/agent/commands (path param; body = AgentCommandRequest{command}, extra=forbid)",
+  "header": "Idempotency-Key: ord0293-second-observer-key-0001 (same on every send)",
+  "measured": {
+   "statuses": [200, 200, 200, 200, 200, 200, 200],
+   "key_echoed_in_any_body": false,
+   "refused_with_422_or_409": false,
+   "journey_missions": "0 -> 7 after 7 sends",
+   "agent_runs": "0 -> 7 after 7 sends",
+   "idempotency_keys": "+0 across all 7 sends (the only rows in the table come from my plans/generate controls)",
+   "mission_ids_distinct": "7 of 7 (zero replay)"
+  },
+  "derived": "AGENTS_COMMANDS_KEY_SILENTLY_IGNORED - CONFIRMED (matches HJ-P3's claim)",
+  "hjp3_comparison": "her claim: 3 sends -> missions/runs +3, idempotency_keys +0, 7 requests 7 distinct ids, no echo. My numbers: same shape, independently measured on my own backend/db/ports. NO DISCREPANCY - nothing to reconcile, both readings stand."
+ },
+ "R2_control_plans_generate_writes_a_receipt": {
+  "measured": [
+   {"key": "ord0293-second-observer-key-0001-gen", "status": 422, "note": "journey had no selected stay yet",
+    "idempotency_keys_delta": "+1", "operation": "plans.generate", "response_status_recorded": 422},
+   {"key": "ord0293-control-key-201", "status": 422, "note": "same journey constraint",
+    "idempotency_keys_delta": "+1", "operation": "plans.generate", "response_status_recorded": 422},
+   {"key": "same first key reused for a DIFFERENT request", "status": 409,
+    "message": "same idempotency key used for a different request",
+    "idempotency_keys_delta": "+0"}
+  ],
+  "derived": "PLANS_GENERATE_WRITES_A_DURABLE_RECEIPT - CONFIRMED. Note the 409: the receipt row is bound to the request, so reusing the first key for a different body is refused - the receipt is a real durable fact, not decoration. The receipts record response_status=422 (the row is written on the error path too, and carries the status).",
+  "generation_note": "the 422s are honest product answers for a journey whose constraints admit no candidates (this db has no places rows, live providers off); they do not affect the cell, which is about whether a durable receipt row is written."
+ },
+ "R3_silence_shape": {
+  "measured": "agent/commands answers 200 with mission bodies; 'HTTP 4xx/5xx' never appears; the key string never appears in any response",
+  "derived": "SILENT_IGNORE_NOT_A_NAMED_REFUSAL - CONFIRMED"
+ },
+ "R4_counter_control_no_key": {
+  "measured": "plans/generate WITHOUT the key: 422, idempotency_keys +0, plan_versions +0 - nothing durable lands",
+  "source_reconciliation": "generate_journey_plans writes the IdempotencyKey row only under `if idempotency_key is not None:` - so with no key there is no receipt by construction; the two-sided reading (with key -> row, without key -> nothing) proves my table-read method is not lying",
+  "derived": "COUNTER_CONTROL_HOLD - the table readings discriminate"
+ },
+ "derived_result_ORD0293": {
+  "R1": "CONFIRMED (missions 0->7, runs 0->7, idempotency_keys +0, 7/7 distinct ids, no echo, no refusal)",
+  "R2": "CONFIRMED (plans/generate writes durable idempotency_keys rows; same key + different request = 409)",
+  "R3": "CONFIRMED (silently ignored: 200s, no echo, no 422/409 on the agent/commands leg)",
+  "R4": "CONFIRMED (no key -> nothing durable: the counter-control discriminates)",
+  "consistency_with_hjp3": "FULL AGREEMENT on every number the order named; second-observer requirement satisfied (independent backend, db, ports, run id, interpreter process)",
+  "load_bearing_for": "ORD-0281/0288 scheduling - the wall now has two independent readings"
+ },
+ "instrument_notes": [
+  "my first journey-staging attempt used a wrong body shape and 404s on a guessed route (/agent/commands vs /journeys/{id}/agent/commands) - corrected against the e2e real-seed shape and the route table before any reading was taken; the wrong-shape attempts are in repro_readings.json (kept, superseded by repro_readings2.json)",
+  "the first R-2 control reused a key already bound to a 422 request and got the correct 409 - kept as a bonus reading of the receipt's request-binding",
+  "row counts were read through a second sqlite connection (mode=ro) at every step; HTTP bodies were never used to infer counts"
+ ],
+ "discipline": {"services_started": "one uvicorn on 8895, stopped after use (named pid)", "user_dbs_touched": 0,
+   "demo_reset": 0, "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this receipt); everything else was localhost"}
+}
