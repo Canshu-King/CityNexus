@@ -1,0 +1,378 @@
+{
+ "what": "ORD-0272 CROSS_DEVICE_CONTINUATION_MARKER 交付收据（选型 B：/plans/generate 收 mission_id + 可选 Idempotency-Key；一次生成绑定一次 mission，可跨设备回放）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T01:44:02+08:00",
+ "coordinates": {
+  "branch": "agent/f-ord272-candidates",
+  "head": "aa29612c855c10f1584a333cc19526066813b072",
+  "parent": "44b428da83e40abd6d2b770006cb88dc022cf2fd",
+  "tree": "d96c2974924d19831495f2945117d4221a1b6d62",
+  "blobs_at_head": {
+   "backend/app/main.py": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+   "backend/app/schemas.py": "2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e",
+   "backend/tests/test_qoder_ord0272_continuation.py": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+   "contracts/openapi.yaml": "484c64cdaaa41e72d252563b84cef915cb4e80eb"
+  },
+  "diff_stat_vs_parent": [
+   "24\t4\tbackend/app/main.py"
+  ],
+  "pushed_ref": null,
+  "github_ls_remote_line": null
+ },
+ "shape_as_ruled": {
+  "mission_id_location": "请求体（业务语义）",
+  "idempotency_key_location": "Idempotency-Key header（传输层）",
+  "two_keys_not_merged": "commander 10:4x ②原话照做：合并 ⇒ '同一 mission 的两次不同请求' 与 '同一请求重发' 在存储层不可区分；这一条的载体是 K2 臂（只有 G3 红）",
+  "api_name": "未锁死 ⇒ 沿用现成 POST /api/v1/journeys/{journey_id}/plans/generate，不新增写入口（0272 判据第 3 条：优先复用）"
+ },
+ "cells": {
+  "test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans": {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+   "nodeid_shape": "相对 cwd（本收据 run_shape 记的 <导出树>/backend）；python -m pytest <nodeid> 在此 cwd 下 collected=1",
+   "nodeid_from_repo_root": "backend/tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+   "nodeid_from_repo_root_shape": "仅在 cwd=<导出树>（仓库根）时可用；实测 collected=1，在本收据的 cwd 下 collected=0",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m pytest --no-header -p no:cacheprovider -q --tb=no -rf（cwd=<git archive 导出 aa29612c8>/backend，整套件 3 轮，每轮一枚全新临时库）",
+   "red_in_rounds": [],
+   "green_in_all_three_rounds": true
+  },
+  "test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation": {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+   "nodeid_shape": "相对 cwd（本收据 run_shape 记的 <导出树>/backend）；python -m pytest <nodeid> 在此 cwd 下 collected=1",
+   "nodeid_from_repo_root": "backend/tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+   "nodeid_from_repo_root_shape": "仅在 cwd=<导出树>（仓库根）时可用；实测 collected=1，在本收据的 cwd 下 collected=0",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m pytest --no-header -p no:cacheprovider -q --tb=no -rf（cwd=<git archive 导出 aa29612c8>/backend，整套件 3 轮，每轮一枚全新临时库）",
+   "red_in_rounds": [],
+   "green_in_all_three_rounds": true
+  },
+  "test_G3_second_device_with_no_client_header_still_gets_the_same_answer": {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+   "nodeid_shape": "相对 cwd（本收据 run_shape 记的 <导出树>/backend）；python -m pytest <nodeid> 在此 cwd 下 collected=1",
+   "nodeid_from_repo_root": "backend/tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+   "nodeid_from_repo_root_shape": "仅在 cwd=<导出树>（仓库根）时可用；实测 collected=1，在本收据的 cwd 下 collected=0",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m pytest --no-header -p no:cacheprovider -q --tb=no -rf（cwd=<git archive 导出 aa29612c8>/backend，整套件 3 轮，每轮一枚全新临时库）",
+   "red_in_rounds": [],
+   "green_in_all_three_rounds": true
+  },
+  "test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409": {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+   "nodeid_shape": "相对 cwd（本收据 run_shape 记的 <导出树>/backend）；python -m pytest <nodeid> 在此 cwd 下 collected=1",
+   "nodeid_from_repo_root": "backend/tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+   "nodeid_from_repo_root_shape": "仅在 cwd=<导出树>（仓库根）时可用；实测 collected=1，在本收据的 cwd 下 collected=0",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m pytest --no-header -p no:cacheprovider -q --tb=no -rf（cwd=<git archive 导出 aa29612c8>/backend，整套件 3 轮，每轮一枚全新临时库）",
+   "red_in_rounds": [],
+   "green_in_all_three_rounds": true
+  },
+  "test_G5_requests_with_neither_mission_nor_header_keep_todays_shape": {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+   "nodeid_shape": "相对 cwd（本收据 run_shape 记的 <导出树>/backend）；python -m pytest <nodeid> 在此 cwd 下 collected=1",
+   "nodeid_from_repo_root": "backend/tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+   "nodeid_from_repo_root_shape": "仅在 cwd=<导出树>（仓库根）时可用；实测 collected=1，在本收据的 cwd 下 collected=0",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m pytest --no-header -p no:cacheprovider -q --tb=no -rf（cwd=<git archive 导出 aa29612c8>/backend，整套件 3 轮，每轮一枚全新临时库）",
+   "red_in_rounds": [],
+   "green_in_all_three_rounds": true
+  },
+  "test_G6_no_second_failure_vocabulary_is_introduced": {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+   "nodeid_shape": "相对 cwd（本收据 run_shape 记的 <导出树>/backend）；python -m pytest <nodeid> 在此 cwd 下 collected=1",
+   "nodeid_from_repo_root": "backend/tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+   "nodeid_from_repo_root_shape": "仅在 cwd=<导出树>（仓库根）时可用；实测 collected=1，在本收据的 cwd 下 collected=0",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m pytest --no-header -p no:cacheprovider -q --tb=no -rf（cwd=<git archive 导出 aa29612c8>/backend，整套件 3 轮，每轮一枚全新临时库）",
+   "red_in_rounds": [],
+   "green_in_all_three_rounds": true
+  },
+  "test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced": {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+   "nodeid_shape": "相对 cwd（本收据 run_shape 记的 <导出树>/backend）；python -m pytest <nodeid> 在此 cwd 下 collected=1",
+   "nodeid_from_repo_root": "backend/tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+   "nodeid_from_repo_root_shape": "仅在 cwd=<导出树>（仓库根）时可用；实测 collected=1，在本收据的 cwd 下 collected=0",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m pytest --no-header -p no:cacheprovider -q --tb=no -rf（cwd=<git archive 导出 aa29612c8>/backend，整套件 3 轮，每轮一枚全新临时库）",
+   "red_in_rounds": [],
+   "green_in_all_three_rounds": true
+  },
+  "test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity": {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+   "nodeid_shape": "相对 cwd（本收据 run_shape 记的 <导出树>/backend）；python -m pytest <nodeid> 在此 cwd 下 collected=1",
+   "nodeid_from_repo_root": "backend/tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+   "nodeid_from_repo_root_shape": "仅在 cwd=<导出树>（仓库根）时可用；实测 collected=1，在本收据的 cwd 下 collected=0",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m pytest --no-header -p no:cacheprovider -q --tb=no -rf（cwd=<git archive 导出 aa29612c8>/backend，整套件 3 轮，每轮一枚全新临时库）",
+   "red_in_rounds": [],
+   "green_in_all_three_rounds": true
+  }
+ },
+ "judgments": {
+  "Q1_重复请求回放同一结果": {
+   "carriers": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans"
+   ],
+   "all_green_three_rounds": true
+  },
+  "Q2_同一键的未回填与已回填必须两样答（响应丢失那一形）": {
+   "carriers": [
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation"
+   ],
+   "all_green_three_rounds": true
+  },
+  "Q3_清_storage_或第二设备不带客户端键也要回放": {
+   "carriers": [
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+   ],
+   "all_green_three_rounds": true
+  },
+  "Q4_双_tab_与两把身份键不得合并": {
+   "carriers": [
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409"
+   ],
+   "all_green_three_rounds": true
+  },
+  "Q5_两个都不带时今天的形状一字不改": {
+   "carriers": [
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape"
+   ],
+   "all_green_three_rounds": true
+  },
+  "Q6_复用现成错误信封与_409_语义_不许第二套失败表达": {
+   "carriers": [
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+   ],
+   "all_green_three_rounds": true
+  },
+  "Q7_owner_可读回_continuation_与那批方案的关联": {
+   "carriers": [
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+   ],
+   "all_green_three_rounds": true
+  },
+  "Q8_mission_身份必须真（本车道自加）": {
+   "carriers": [
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+   ],
+   "all_green_three_rounds": true
+  }
+ },
+ "owner_readable_projection": {
+  "where": "既有 feed 投影里那条 `plans.continuation.linked` 事件的 `facts`（无新增 GET 路由）",
+  "fields": [
+   "continuation_id",
+   "mission_id",
+   "plan_version_ids",
+   "summary"
+  ],
+  "ruling": "(甲)：只证『字段存在且与 mission 稳定关联』（commander 10:4x ①）",
+  "named_remainder": "ORD-0276 FEED_ORDERING_OR_CURSOR —— agent-feed 升序 limit 截断 ⇒ 事件很多时 owner 可能读不到最早那条；已具名另单，verifier=HJ-P3，不塞进 0272"
+ },
+ "regression_caught_by_the_gate": {
+  "what": "无身份路径的 `ValueError → 422` 映射在我第一版实现里丢了 ⇒ 今天的 422 变裸 500",
+  "how_found": "G5 第一次跑就回 500（不是我看出来的，是那格量出来的）",
+  "fixed_in": "aa29612c855c10f1584a333cc19526066813b072",
+  "carrier_now": [
+   "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+   "tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable"
+  ],
+  "arm": "K6_unowned_path_laundered_into_a_bare_500"
+ },
+ "mutation_campaign": {
+  "receipt": "evidence/ord0272-continuation/mutation_receipt.json",
+  "arms": {
+   "K1_claim_stops_committing_before_generation": {
+    "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+    "carriers_removed": [
+     "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+     "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+     "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+     "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+     "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+     "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+    ],
+    "collateral_red": [
+     "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape"
+    ],
+    "expected_green_stayed_green": true,
+    "unexpected_red": [],
+    "line_named": "            claim_tx.commit()",
+    "derived_result": null
+   },
+   "K2_two_identities_merged_into_one": {
+    "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+    "carriers_removed": [
+     "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+    ],
+    "collateral_red": [],
+    "expected_green_stayed_green": true,
+    "unexpected_red": [],
+    "line_named": "    if continuation_id is not None and f\"plans.generate:{continuation_id}\" not in keys:  （连同下一行 append）",
+    "derived_result": null
+   },
+   "K3_mission_ownership_door_removed": {
+    "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+    "carriers_removed": [
+     "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+    ],
+    "collateral_red": [],
+    "expected_green_stayed_green": true,
+    "unexpected_red": [],
+    "line_named": "        _require_journeys_mission(session, journey, request.mission_id)",
+    "derived_result": null
+   },
+   "K4_link_event_stops_naming_the_plans": {
+    "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+    "carriers_removed": [
+     "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+    ],
+    "collateral_red": [],
+    "expected_green_stayed_green": true,
+    "unexpected_red": [],
+    "line_named": "                               \"plan_version_ids\": feasible_ids,",
+    "derived_result": null
+   },
+   "K5_both_replay_doors_removed": {
+    "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+    "carriers_removed": [
+     "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+     "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+     "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+     "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+     "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+    ],
+    "collateral_red": [],
+    "expected_green_stayed_green": true,
+    "unexpected_red": [],
+    "line_named": "            return _plan_generation_http_answer(replayed)   /                   return raced",
+    "derived_result": null
+   },
+   "K6_unowned_path_laundered_into_a_bare_500": {
+    "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+    "carriers_removed": [
+     "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+     "tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable",
+     "tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict",
+     "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+     "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+    ],
+    "collateral_red": [],
+    "expected_green_stayed_green": true,
+    "unexpected_red": [],
+    "line_named": "            return _plan_generation_http_answer(_plan_generation_refusal(session, journey, exc))",
+    "derived_result": null
+   },
+   "K7_refusal_stops_persisting_the_durable_fact": {
+    "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+    "carriers_removed": [
+     "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+     "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+    ],
+    "collateral_red": [],
+    "expected_green_stayed_green": true,
+    "unexpected_red": [],
+    "line_named": "    record_replan_outcome(session, journey, feasible_candidate_ids=[], failures=[str(exc)])",
+    "derived_result": null
+   },
+   "K8_receipt_overwrite_guard_removed": {
+    "claimed_result": "SURVIVED_BY_DESIGN",
+    "carriers_removed": [],
+    "collateral_red": [],
+    "expected_green_stayed_green": true,
+    "unexpected_red": [],
+    "line_named": "                           IdempotencyKey.response_json.is_(None))",
+    "derived_result": null
+   }
+  },
+  "note": "claimed_result 全部由每臂 `carriers_removed`（该 nodeid 三轮全红）派生；判级（KILLED）不自签，`derived_result` 一律 null 交 verifier。K8 期望红为空且具名理由：回填守卫的覆盖面要两个进程才观测得到。"
+ },
+ "verdict_fields": {
+  "gate_all_green_three_rounds": true,
+  "gate_red_cells": [],
+  "ab_only_in_candidate": [
+   "tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned",
+   "tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage"
+  ],
+  "ab_verdict": "NOT MET / 需逐条归因：only_in_candidate=['tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned', 'tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage'] 分母=1232 vs 1224",
+  "collect_denominators": {
+   "candidate_aa29612": 1232,
+   "base_c79e2b4": 1224
+  },
+  "mutation_campaign_valid": true,
+  "arms_killed_candidate": [
+   "K1_claim_stops_committing_before_generation",
+   "K2_two_identities_merged_into_one",
+   "K3_mission_ownership_door_removed",
+   "K4_link_event_stops_naming_the_plans",
+   "K5_both_replay_doors_removed",
+   "K6_unowned_path_laundered_into_a_bare_500",
+   "K7_refusal_stops_persisting_the_durable_fact"
+  ],
+  "arms_survived_or_by_design": [
+   "K8_receipt_overwrite_guard_removed"
+  ],
+  "every_arm_has_a_green_table_and_a_red_or_a_reason": true,
+  "restore_byte_exact_every_round": true
+ },
+ "ab_three_state": {
+  "verdict": "MET-WITH-NAMED-SWIMMER",
+  "only_in_candidate": [
+   "tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned",
+   "tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage"
+  ],
+  "explained": {
+   "tests/test_qoder_catalog_hydration.py::test_an_abandon_from_another_process_resolves_the_terminal_write_as_abandoned": "跨两棵树各 5 轮一次不复现（候选 0/5、基线 0/5）",
+   "tests/test_qoder_ord197_four_class_receipt.py::test_r3_an_empty_answer_proves_it_came_from_a_reply_and_not_from_an_outage": "泳者：聚焦 5 轮里候选 1/5 红、**基线也 2/5 红**（两棵树都会翻）"
+  },
+  "unexplained_regressions": [],
+  "only_in_baseline": [
+   "tests/test_sol_guardian_projection.py::test_a_preventive_run_carries_the_fields_the_panel_selects_on",
+   "tests/test_sol_guardian_projection.py::test_guardian_status_lists_runs_newest_first"
+  ],
+  "both_trees_always_red_all_rounds": [
+   "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+   "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+   "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+   "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+   "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+   "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+   "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+   "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at"
+  ],
+  "baseline_per_round_red_counts": {
+   "candidate_aa29612": [
+    9,
+    9,
+    8
+   ],
+   "base_c79e2b4": [
+    8,
+    10,
+    9
+   ]
+  },
+  "triage_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest <单枚 nodeid> -q --no-header -p no:cacheprovider --tb=line（cwd=<A/B 用的那两棵导出树>/backend；每轮一枚全新临时库；5 轮，两树交替）",
+  "ab_artifact": "evidence/ord0272-continuation/ab_3x3.json",
+  "triage_artifact": "evidence/ord0272-continuation/swimmer_triage.json",
+  "superseded_run": {
+   "artifact": "o272_ab.json（第一版候选 44b428d）",
+   "what_it_showed": "6 条候选独有红：current_plan_is_named 4 + simulation_mode 2",
+   "cause": "舞台进程内直调路由、参数错位（见 regression_caught_by_the_gate）",
+   "fixed_in": "aa29612c855c10f1584a333cc19526066813b072"
+  }
+ },
+ "not_measured": {
+  "cross_process_same_key": "本门全单进程（TestClient 同进程）。跨进程同键那一面归 HJ-P3 的 verifier 门；此处不声明已闭",
+  "receipt_overwrite_guard": "K8：进程内不可观测，交给跨进程门",
+  "frontend_consumes_mission_id": "前端还没带 mission_id ⇒ **用户可感知的『换设备接着看』今天没有变好**，本单只把服务端那一侧的承诺做成可判的",
+  "hermes_online": "ORD-0270 射程，NOT-STARTED，不外推"
+ },
+ "discipline": {
+  "demo_reset_endpoint_calls": 0,
+  "catalog_precondition": "in-process `seed_demo`（与我已接受的 0236 / 无障碍门同形），且只在缺目录或缺可抄旅程时才触发——不洗别人的行",
+  "live_or_preview_db_touched": false,
+  "credentials_printed": 0,
+  "authoritative_branch_written": false,
+  "published_paths_overwritten": 0
+ }
+}
