@@ -1,0 +1,147 @@
+{
+ "what": "mirror_ledger read-back contract (measurement-chain reliability fix, arbiter-approved narrow scope)",
+ "t": "2026-09-24T15:30:48+0800",
+ "tool_under_change": {
+  "path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/mirror_ledger.py",
+  "bytes": 5634,
+  "blob": "77279bc97c4f71c27d6111dec7126a203f671076"
+ },
+ "trigger": {
+  "incident": "PUT 200 commit d1a86a3166b3 then contents body empty -> printed MISMATCH",
+  "independent_proof_used_at_the_time": "94cef773ef8f6cce7dfa5f710bfb2d9ab07eccee"
+ },
+ "cells": [
+  {
+   "cell": "T1_full_body_agreement_is_byte_level",
+   "verdict": "GREEN",
+   "detail": {
+    "state": "BYTE_LEVEL_CONFIRMED"
+   }
+  },
+  {
+   "cell": "T2_empty_body_with_equal_shas_is_not_mismatch",
+   "verdict": "GREEN",
+   "detail": {
+    "state": "CONTENTS_BODY_UNUSABLE_BLOB_CONFIRMED",
+    "why": "exactly the 4.9 MB case: the contents serializer gave up, the object did not change"
+   }
+  },
+  {
+   "cell": "T3_different_remote_sha_is_mismatch",
+   "verdict": "GREEN",
+   "detail": {
+    "state": "MISMATCH"
+   }
+  },
+  {
+   "cell": "T4_git_hash_object_disagreeing_is_mismatch",
+   "verdict": "GREEN",
+   "detail": {
+    "state": "MISMATCH",
+    "why": "the third route exists to catch a bug in MY OWN hashing, so it must be able to veto"
+   }
+  },
+  {
+   "cell": "T5_missing_remote_sha_is_mismatch_not_absent_comparison",
+   "verdict": "GREEN",
+   "detail": {
+    "empty": "MISMATCH",
+    "none": "MISMATCH",
+    "rule": "A-3 fail-closed stays: no remote coordinate, no confirmation"
+   }
+  },
+  {
+   "cell": "T6_local_route_unavailable_degrades_but_does_not_veto",
+   "verdict": "GREEN",
+   "detail": {
+    "state": "BYTE_LEVEL_CONFIRMED"
+   }
+  },
+  {
+   "cell": "T7_size_disagreement_with_equal_sha_is_not_byte_level",
+   "verdict": "GREEN",
+   "detail": {
+    "rule": "size mismatch kills the body-level claim but the git object sha is the authority"
+   }
+  },
+  {
+   "cell": "R1_empty_body_never_decides_the_verdict_on_the_real_file",
+   "verdict": "GREEN",
+   "detail": {
+    "local_bytes": 4927030,
+    "remote_size": 4923416,
+    "local_drift_vs_remote": 3614,
+    "local_blob_sha1": "a31283547fb6f854831cedb5624760bb166dccd8",
+    "git_hash_object": "a31283547fb6f854831cedb5624760bb166dccd8",
+    "remote_sha": "94cef773ef8f6cce7dfa5f710bfb2d9ab07eccee",
+    "shas_equal": false,
+    "state_returned": "MISMATCH",
+    "rule": "the old proof answered MISMATCH in both moments, which is why it trained people to ignore a real mismatch"
+   }
+  },
+  {
+   "cell": "R2_the_two_local_routes_agree_independently",
+   "verdict": "GREEN",
+   "detail": {
+    "computed_local_blob_sha1": "a31283547fb6f854831cedb5624760bb166dccd8",
+    "git_hash_object": "a31283547fb6f854831cedb5624760bb166dccd8",
+    "agree": true,
+    "remote_sha": "94cef773ef8f6cce7dfa5f710bfb2d9ab07eccee",
+    "drift_is_reported_not_judged": true
+   }
+  },
+  {
+   "cell": "R3_contents_body_route_still_capped_on_this_file",
+   "verdict": "GREEN",
+   "detail": {
+    "body_bytes_returned": 0,
+    "local_bytes": 4927030,
+    "body_equals_local": false,
+    "meaning": "asserted so the assumption behind the fix stays watched: if GitHub ever returns the full body here this cell goes RED and the degraded state stops being needed"
+   }
+  },
+  {
+   "cell": "K8_every_mutant_flips_only_its_own_cell",
+   "verdict": "GREEN",
+   "detail": {
+    "kills": [
+     {
+      "mutant": "K1_empty_body_treated_as_mismatch",
+      "owner_cell": "T2_empty_body_with_equal_shas_is_not_mismatch",
+      "clean_returned": "CONTENTS_BODY_UNUSABLE_BLOB_CONFIRMED",
+      "mutant_returned": "MISMATCH",
+      "verdict": "KILLED"
+     },
+     {
+      "mutant": "K2_remote_sha_equality_dropped",
+      "owner_cell": "T3_different_remote_sha_is_mismatch",
+      "clean_returned": "MISMATCH",
+      "mutant_returned": "CONTENTS_BODY_UNUSABLE_BLOB_CONFIRMED",
+      "verdict": "KILLED"
+     },
+     {
+      "mutant": "K3_local_route_allowed_to_veto_when_absent",
+      "owner_cell": "T6_local_route_unavailable_degrades_but_does_not_veto",
+      "clean_returned": "BYTE_LEVEL_CONFIRMED",
+      "mutant_returned": "MISMATCH",
+      "verdict": "KILLED"
+     }
+    ]
+   }
+  },
+  {
+   "cell": "S1_old_single_route_proof_is_gone_from_the_tool",
+   "verdict": "GREEN",
+   "detail": {
+    "old_line_still_present": 0,
+    "new_lines_present": [
+     true
+    ]
+   }
+  }
+ ],
+ "cells_total": 12,
+ "cells_green": 12,
+ "overall": "GREEN",
+ "claimed_result": "offline_selftest_GREEN"
+}
