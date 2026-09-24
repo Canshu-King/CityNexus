@@ -1,0 +1,101 @@
+{
+ "at": "2026-09-24T02:36:15.500Z",
+ "base": "http://127.0.0.1:4445",
+ "phase": "up",
+ "steps": [
+  {
+   "case": "A_install_while_online",
+   "path": "/v8/hub",
+   "navigation": {
+    "ok": true,
+    "status": 200
+   },
+   "facts": {
+    "url": "http://127.0.0.1:4445/v8/hub",
+    "controlled": true,
+    "onLine": true,
+    "title": "CityNexus Trip Operations",
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演",
+    "app_mounted": true
+   },
+   "registrations": {
+    "count": 1,
+    "controller_script": "/v10-sw.js",
+    "list": [
+     {
+      "scope": "http://127.0.0.1:4445/",
+      "update_via_cache": "none",
+      "active": "/v10-sw.js",
+      "installing": null,
+      "waiting": null
+     }
+    ]
+   },
+   "cache_state": {
+    "cache_names": [
+     "workbox-precache-v2-http://127.0.0.1:4445/"
+    ],
+    "precache_name": "workbox-precache-v2-http://127.0.0.1:4445/",
+    "precache_entries": 8,
+    "precache_has_index_html": true,
+    "precache_sample_paths": [
+     "/assets/JourneyMap-tqEgrjRA.js",
+     "/assets/index-ChOTTCvB.js",
+     "/assets/index-I45CQek8.css",
+     "/assets/maplibre-gl-CHrWFrV5.js",
+     "/favicon.svg",
+     "/index.html",
+     "/manifest.webmanifest",
+     "/sw.js"
+    ]
+   }
+  },
+  {
+   "case": "A2_second_navigation_while_online",
+   "path": "/v8/hub",
+   "navigation": {
+    "ok": true,
+    "status": 200
+   },
+   "facts": {
+    "url": "http://127.0.0.1:4445/v8/hub",
+    "controlled": true,
+    "onLine": true,
+    "title": "CityNexus Trip Operations",
+    "body_head": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1 目的地与时间 2 人数与偏好 3 确认创建 目的地 看支持的目的地 抵达地点 离开地点 抵达时间 离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演",
+    "app_mounted": true
+   },
+   "registrations": {
+    "count": 1,
+    "controller_script": "/v10-sw.js",
+    "list": [
+     {
+      "scope": "http://127.0.0.1:4445/",
+      "update_via_cache": "none",
+      "active": "/v10-sw.js",
+      "installing": null,
+      "waiting": null
+     }
+    ]
+   },
+   "cache_state": {
+    "cache_names": [
+     "workbox-precache-v2-http://127.0.0.1:4445/"
+    ],
+    "precache_name": "workbox-precache-v2-http://127.0.0.1:4445/",
+    "precache_entries": 8,
+    "precache_has_index_html": true,
+    "precache_sample_paths": [
+     "/assets/JourneyMap-tqEgrjRA.js",
+     "/assets/index-ChOTTCvB.js",
+     "/assets/index-I45CQek8.css",
+     "/assets/maplibre-gl-CHrWFrV5.js",
+     "/favicon.svg",
+     "/index.html",
+     "/manifest.webmanifest",
+     "/sw.js"
+    ]
+   }
+  }
+ ]
+}
