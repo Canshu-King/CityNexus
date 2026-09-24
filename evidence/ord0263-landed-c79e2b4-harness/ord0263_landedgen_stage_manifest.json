@@ -1,0 +1,34 @@
+{
+ "at": "2026-09-24T08:44:14+08:00",
+ "rule": "published evidence paths are never overwritten",
+ "moved": [
+  {
+   "from": "ord0263_close_surface_receipt.json",
+   "to": "ord0263_close_surface_receipt_postreboot.json",
+   "bytes": 1842,
+   "sha256_16": "5f50a59ef286ec86",
+   "why": "the pre-reboot bytes of this exact name are already published in evidence/ord0263-landed-c79e2b4-harness/; publishing new bytes under the same repo path would overwrite a coordinate someone may already be quoting"
+  },
+  {
+   "from": "ord0263_junk_html.log",
+   "to": "ord0263_junk_html_postreboot.log",
+   "bytes": 595,
+   "sha256_16": "0d25e01ab5a9262e",
+   "why": "the pre-reboot bytes of this exact name are already published in evidence/ord0263-landed-c79e2b4-harness/; publishing new bytes under the same repo path would overwrite a coordinate someone may already be quoting"
+  },
+  {
+   "from": "ord0263_origin_state_answered_health.log",
+   "to": "ord0263_origin_state_answered_health_postreboot.log",
+   "bytes": 5002,
+   "sha256_16": "8104731cbbe88289",
+   "why": "the pre-reboot bytes of this exact name are already published in evidence/ord0263-landed-c79e2b4-harness/; publishing new bytes under the same repo path would overwrite a coordinate someone may already be quoting"
+  },
+  {
+   "from": "ord0263_origin_state_fully_silent.log",
+   "to": "ord0263_origin_state_fully_silent_postreboot.log",
+   "bytes": 7669,
+   "sha256_16": "6515b2099f203ea9",
+   "why": "the pre-reboot bytes of this exact name are already published in evidence/ord0263-landed-c79e2b4-harness/; publishing new bytes under the same repo path would overwrite a coordinate someone may already be quoting"
+  }
+ ]
+}
