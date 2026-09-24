@@ -1,0 +1,56 @@
+{
+ "compare_base_to_corrected": {
+  "status": "ahead",
+  "ahead_by": 1,
+  "behind_by": 0,
+  "total_commits": 1,
+  "commit_shas": [
+   "dcae1bc964"
+  ],
+  "files": [
+   "backend/app/main.py",
+   "backend/app/schemas.py",
+   "backend/tests/test_qoder_ord0272_continuation.py",
+   "contracts/openapi.yaml"
+  ]
+ },
+ "compare_corrected_to_44b428d": {
+  "status": "diverged",
+  "ahead_by": 1,
+  "behind_by": 1
+ },
+ "compare_base_to_old_branch": {
+  "status": "ahead",
+  "ahead_by": 2,
+  "behind_by": 0,
+  "commit_shas": [
+   "44b428da83",
+   "aa29612c85"
+  ]
+ },
+ "corrected_ancestor_scan": {
+  "commits_walked": 100,
+  "44b428d_present": false,
+  "aa29612_present": false,
+  "first_three": [
+   "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+   "1f4440819a9d773da6e18f12a31412f73c6d0f55"
+  ]
+ },
+ "corrected_commit_object": {
+  "sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+  "parents": [
+   "c79e2b4f4efe414dba22a071a7136ae10b5c84aa"
+  ],
+  "tree": "d96c2974924d19831495f2945117d4221a1b6d62"
+ },
+ "aa29612_tree": "d96c2974924d19831495f2945117d4221a1b6d62",
+ "trees_identical": true,
+ "old_ref_untouched": true,
+ "ls_remote_both_refs": [
+  "dcae1bc964125c3a975916f6bf667794cc19622a\trefs/heads/review/ord0272-continuation-corrected",
+  "aa29612c855c10f1584a333cc19526066813b072\trefs/heads/review/ord0272-continuation-f"
+ ],
+ "old_ref_head_via_api": "aa29612c855c10f1584a333cc19526066813b072"
+}
