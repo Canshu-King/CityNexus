@@ -1,0 +1,51 @@
+{
+ "round_http": 503,
+ "round_ctype": "application/json",
+ "round_secs": 41.47,
+ "server_code": "GENERATION_STORE_BUSY",
+ "server_message_key": "generation.store_busy",
+ "server_message": "Another generation is writing right now; this one was not recorded. Try again.",
+ "screen_plan_ai_reason": "Another generation is writing right now; this one was not recorded. Try again.",
+ "N3": {
+  "reason_equals_server_message": true,
+  "positive_control_equal_pair_accepted": true,
+  "negative_control_punctuation_drift_rejected": true,
+  "client_invented_http_status_on_screen": false,
+  "note": "browser regex scan of document.body.innerText found no \"HTTP 500\"/\"HTTP 503\"; the reason node sits inside the 技术详情 <details> element"
+ },
+ "N4": {
+  "missions_before_this_round": {
+   "journey_missions": 1,
+   "agent_runs": 1,
+   "plan_versions": 0,
+   "missions_all": 1
+  },
+  "missions_after_this_round": {
+   "journey_missions": 1,
+   "agent_runs": 1,
+   "plan_versions": 0,
+   "missions_all": 1
+  },
+  "mission_rows_created_by_this_503_round": 0,
+  "screen_says_not_recorded": true,
+  "claim_is_true_for_this_round": true
+ },
+ "raw_body_head": "{\"error\":{\"code\":\"GENERATION_STORE_BUSY\",\"message\":\"Another generation is writing right now; this one was not recorded. Try again.\",\"message_key\":\"generation.store_busy\",\"trace_id\":\"1c62cb85-9c6b-4545-849c-9955500a96b8\",\"details\":{\"retry_after_ms\":1000,\"contention\":\"sqlite_write_lock_busy\"},\"reason_",
+ "teardown": {
+  "killed": [
+   {
+    "port": 8492,
+    "pid": "44524",
+    "proven_by": "\"C:\\Users\\仓鼠王\\AppData\\Roaming\\uv\\python\\cpython-3.12.14-windows-x86_64-none\\python.exe\" -m uvicorn app.main:ap"
+   },
+   {
+    "port": 8493,
+    "pid": "56664",
+    "proven_by": "\"C:\\Program Files\\nodejs\\node.exe\" node_modules/vite/bin/vite.js preview --outDir D:/moodle/_hjp3_fan_sweep_09"
+   }
+  ],
+  "listeners_left_8492_8493": 0,
+  "db_exists_after_delete": false,
+  "assert_clean": true
+ }
+}
