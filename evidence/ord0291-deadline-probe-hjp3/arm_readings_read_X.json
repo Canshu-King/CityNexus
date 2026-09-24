@@ -1,0 +1,63 @@
+{
+ "arm": "X",
+ "port": 8487,
+ "constant_ms": 12000,
+ "face_serves": "dist_X",
+ "origin": "silent 127.0.0.1:8595 (accepts, never answers)",
+ "first_trigger": {
+  "ms": 16321,
+  "seconds_shown": "12",
+  "deadline_line": "等了 12 秒，这台服务器一个字也没回答"
+ },
+ "trigger_moves_expected_seconds": 12,
+ "stable_3s_later": true,
+ "api_legs": [
+  {
+   "url": "/api/v1/journeys/91f78c9b-b768-46c9-a62e-4ac09b6609da/experience",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load_start": 203,
+   "sent_wall": "2026-09-24T23:22:42.705Z",
+   "has_signal": true,
+   "request_body": null,
+   "request_headers_idempotency_key": null,
+   "client_error": "AbortError: signal is aborted without reason",
+   "elapsed_ms": 12004
+  },
+  {
+   "url": "/api/v1/health",
+   "method": "GET",
+   "api": true,
+   "sent_ms_since_load_start": 12210,
+   "sent_wall": "2026-09-24T23:22:54.712Z",
+   "has_signal": true,
+   "request_body": null,
+   "request_headers_idempotency_key": null,
+   "client_error": "AbortError: signal is aborted without reason",
+   "elapsed_ms": 4009
+  }
+ ],
+ "hung_legs": 0,
+ "timeline_sample": [
+  {
+   "ms": 16321,
+   "has_line": true,
+   "counter": null
+  },
+  {
+   "ms": 16715,
+   "has_line": true,
+   "counter": null
+  },
+  {
+   "ms": 16931,
+   "has_line": true,
+   "counter": null
+  }
+ ],
+ "timeline_points": 91,
+ "run_id": "O0291-2507",
+ "stage": "read",
+ "measured_at": "2026-09-24T23:23:02.127Z",
+ "viewport": "390x844 zh-CN"
+}
