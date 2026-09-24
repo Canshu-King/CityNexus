@@ -1,0 +1,225 @@
+{
+ "order": "ORD-0272 / K8 cross-process observation",
+ "lane": "HJ-P3 aad2d1f2",
+ "candidate_sha": "7c806fab58e872060cb5811ff96c770b40dad165",
+ "carrier": {
+  "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer",
+  "cwd": "<tree>/backend",
+  "target_line": "app/main.py:4792",
+  "removed_expression": "IdempotencyKey.response_json.is_(None)"
+ },
+ "main_blobs": {
+  "candidate": "ad13f4395e3405ce722ae8660836f3c2aaa29df2",
+  "mutant": "f7263d6b9532e6c9be4f13f93a31b0f042dd0e95"
+ },
+ "run_id": "K8XP-2505",
+ "measured_at_local": "2026-09-25T05:03:29+0800",
+ "arms": {
+  "seam_candidate": {
+   "stage": {
+    "rc": 0,
+    "ok": true,
+    "db": "D:\\moodle\\_hjp3_k8_0925\\k8_cand.s3db",
+    "db_bytes": 733184
+   },
+   "A": {
+    "pid": 41920,
+    "mode": "claim_and_fill",
+    "key": "plans.generate:cont:k8-xp-fixed-mission",
+    "claim_returned_replay": false,
+    "filled": 1
+   },
+   "stored_after_A": "{\"answer\": \"A\"}",
+   "B": {
+    "pid": 45800,
+    "mode": "fill_only",
+    "key": "plans.generate:cont:k8-xp-fixed-mission",
+    "filled": 0
+   },
+   "stored_after_B": "{\"answer\": \"A\"}",
+   "A_and_B_are_different_pids": true,
+   "A_bytes_survive": true,
+   "B_rowcount": 0,
+   "A_rowcount": 1,
+   "db": "D:\\moodle\\_hjp3_k8_0925\\k8_cand.s3db"
+  },
+  "seam_mutant": {
+   "stage": {
+    "rc": 0,
+    "ok": true,
+    "db": "D:\\moodle\\_hjp3_k8_0925\\k8_mut.s3db",
+    "db_bytes": 733184
+   },
+   "A": {
+    "pid": 688,
+    "mode": "claim_and_fill",
+    "key": "plans.generate:cont:k8-xp-fixed-mission",
+    "claim_returned_replay": false,
+    "filled": 1
+   },
+   "stored_after_A": "{\"answer\": \"A\"}",
+   "B": {
+    "pid": 35508,
+    "mode": "fill_only",
+    "key": "plans.generate:cont:k8-xp-fixed-mission",
+    "filled": 1
+   },
+   "stored_after_B": "{\"answer\": \"B\"}",
+   "A_and_B_are_different_pids": true,
+   "A_bytes_survive": false,
+   "B_rowcount": 1,
+   "A_rowcount": 1,
+   "db": "D:\\moodle\\_hjp3_k8_0925\\k8_mut.s3db"
+  },
+  "http_candidate": {
+   "stage": {
+    "rc": 0,
+    "ok": true,
+    "db": "D:\\moodle\\_hjp3_k8_0925\\k8_http_cand.s3db",
+    "db_bytes": 733184
+   },
+   "ports": [
+    8481,
+    8482
+   ],
+   "pids": [
+    32756,
+    42860
+   ],
+   "seed_http": [
+    201,
+    true
+   ],
+   "first": [
+    422,
+    "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key"
+   ],
+   "duplicate": [
+    422,
+    "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key"
+   ],
+   "receipts_after_first": [
+    [
+     "plans.generate:k8xp-cand",
+     422,
+     "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constrai"
+    ]
+   ],
+   "receipts_after_duplicate": [
+    [
+     "plans.generate:k8xp-cand",
+     422,
+     "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constrai"
+    ]
+   ],
+   "receipts_unchanged_by_duplicate": true,
+   "duplicate_body_equals_first_body": false
+  },
+  "http_mutant": {
+   "stage": {
+    "rc": 0,
+    "ok": true,
+    "db": "D:\\moodle\\_hjp3_k8_0925\\k8_http_mut.s3db",
+    "db_bytes": 733184
+   },
+   "ports": [
+    8481,
+    8482
+   ],
+   "pids": [
+    31880,
+    47928
+   ],
+   "seed_http": [
+    201,
+    true
+   ],
+   "first": [
+    422,
+    "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key"
+   ],
+   "duplicate": [
+    422,
+    "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key"
+   ],
+   "receipts_after_first": [
+    [
+     "plans.generate:k8xp-mut",
+     422,
+     "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constrai"
+    ]
+   ],
+   "receipts_after_duplicate": [
+    [
+     "plans.generate:k8xp-mut",
+     422,
+     "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constrai"
+    ]
+   ],
+   "receipts_unchanged_by_duplicate": true,
+   "duplicate_body_equals_first_body": false
+  },
+  "cell_candidate": {
+   "rc": 0,
+   "tail": [
+    "..\\..\\..\\..\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53",
+    "  D:\\moodle\\CityNexus\\.venv\\Lib\\site-packages\\starlette\\testclient.py:53: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.",
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1 passed, 2 warnings in 1.44s"
+   ],
+   "nodeid_root_is_this_tree": true
+  },
+  "cell_mutant": {
+   "rc": 1,
+   "tail": [
+    "",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "=========================== short test summary info ===========================",
+    "FAILED tests/test_qoder_ord0272_continuation.py::test_G9_a_filled_receipt_is_never_rewritten_by_a_later_answer",
+    "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "1 failed, 2 warnings in 1.59s"
+   ],
+   "nodeid_root_is_this_tree": true
+  }
+ },
+ "derived": {
+  "K8_cross_process_seam": {
+   "guard_present_blocks_rewrite": true,
+   "guard_removed_lets_rewrite": true,
+   "verdict": "OBSERVED_CROSS_PROCESS_FLIP",
+   "detail": {
+    "candidate": {
+     "A_filled": 1,
+     "B_filled": 0,
+     "bytes_survive": true,
+     "pids": [
+      41920,
+      45800
+     ]
+    },
+    "mutant": {
+     "A_filled": 1,
+     "B_filled": 1,
+     "bytes_survive": false,
+     "pids": [
+      688,
+      35508
+     ]
+    }
+   }
+  },
+  "K8_http_face": {
+   "candidate_receipts_unchanged": true,
+   "mutant_receipts_unchanged": true,
+   "any_reading_differs_between_trees": false,
+   "verdict": "HTTP_FACE_CANNOT_REACH_K8"
+  },
+  "K8_carrier_cell_second_observer": {
+   "candidate_rc": 0,
+   "mutant_rc": 1,
+   "verdict": "CELL_FLIPS_TOO"
+  }
+ }
+}
