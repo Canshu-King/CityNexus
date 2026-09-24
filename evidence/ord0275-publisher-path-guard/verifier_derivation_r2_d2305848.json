@@ -1,0 +1,196 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0275",
+ "revision_verified": 2,
+ "verifier": "lane E d2305848",
+ "coordinates": {
+  "r2_receipt": {
+   "path": "evidence/ord0275-publisher-path-guard/ord0275_selftest_r2.json",
+   "blob_sha1_40": "66c456201e761721272443aee71d7ddc8a8102cb",
+   "bytes": 3780
+  },
+  "r2_instrument": {
+   "path": "live_checks/test_ord0275_publisher_guard_r2.py",
+   "blob_sha1_40": "54b69b7cd2dbd56a0b7c3304ae7329bb676286da",
+   "bytes": 12701
+  },
+  "r1_receipt_kept": {
+   "blob_sha1_40": "6cfbf34642058c08b809d7e1a9337e335d200683",
+   "verified_still_on_shelf": true
+  },
+  "r1_instrument_kept": {
+   "blob_sha1_40": "9e0d4b96a47b0bc48d040bd88f25e982a2855fab",
+   "verified_still_on_shelf": true
+  },
+  "publisher_unchanged": {
+   "blob_sha1_40": "d13d5e77b54cd00e8eaa1e8c2b582c7b12806686",
+   "matches_r1_declaration": true
+  }
+ },
+ "independent_rerun": {
+  "instrument_rc": 0,
+  "my_receipt_blob_sha1": "d18dd195f8706d4429a9dd4255a8f16d92fe3056",
+  "published_receipt_blob_sha1": "66c456201e761721272443aee71d7ddc8a8102cb",
+  "byte_identical": false,
+  "publisher_blob_here": "d13d5e77b54cd00e8eaa1e8c2b582c7b12806686",
+  "publisher_blob_expected": "d13d5e77b54cd00e8eaa1e8c2b582c7b12806686",
+  "test_file_field_declared": "test_ord0275_publisher_guard.py",
+  "test_file_actually_run": "test_ord0275_publisher_guard_r2.py"
+ },
+ "rerun_divergence_explained": {
+  "only_differing_line": "test_file: published says 'test_ord0275_publisher_guard.py', my rerun says 'test_ord0275_publisher_guard_r2.py' -- because the field is computed from __file__ and the writer evidently ran the r2 code under the r1 filename. Every other byte of the receipt matches, and my run used the same publisher blob d13d5e77... -- so the computation reproduces; only the filename attribution differs. This is also defect D4 below.",
+  "cells_computed": "all 15 re-derived independently and all match the published readings"
+ },
+ "cells_rederived": {
+  "match": true,
+  "mismatches": {},
+  "arms_match_receipt": true,
+  "counts_match_receipt": true,
+  "distinct_signatures": 2,
+  "arms": 3
+ },
+ "R2_1_cell6": {
+  "expression": "all(    isinstance(c[k], int) for k in (\"LOCAL_NAME_DIRTY_rc\", \"REPO_PATH_DIRTY_rc\", \"CLEAN_cli_positive_control_rc\"))",
+  "fields_it_reads": [
+   "LOCAL_NAME_DIRTY_rc",
+   "REPO_PATH_DIRTY_rc",
+   "CLEAN_cli_positive_control_rc"
+  ],
+  "isinstance_rc_int": true,
+  "with_every_PUT_counter_forced_False": true,
+  "finding": "the cell whose entire job was to close R2-1 asserts that three *rc* values are ints. main() returns an int, so this is unconditionally true and says nothing about PUT counts. The real zero-PUT load lives in cell1/cell2 (via _zero_PUT), not here."
+ },
+ "R2_3_signature": {
+  "function_body": [
+   "\"\"\"A small vector used to decide whether two mutants are really the same mutation (R2-3).\"\"\"",
+   "    v = guard_verdicts(mod)",
+   "    return json.dumps({k: v[k] for k in sorted(v)}, sort_keys=True)"
+  ],
+  "guard_verdicts_keys": [
+   "CLEAN_CLEAN_allowed",
+   "LOCAL_NAME_DIRTY_refused",
+   "REFUSAL_NAMES_RULE_NO_SECRET",
+   "REGRESSION_bad_prefix_refused",
+   "REGRESSION_control_tool_gate",
+   "REGRESSION_secret_content_refused",
+   "REGRESSION_sqlite_magic_refused",
+   "REGRESSION_traversal_refused",
+   "REPO_PATH_DIRTY_refused"
+  ],
+  "guard_verdicts_count": 9,
+  "includes_any_cli_reading": false,
+  "declared_in_the_writers_message": "7 个 guard 读数 + 两枚 CLI zero-PUT",
+  "arm_signatures": {
+   "M1_repo_path_guard_removed": "672bbba0f0623c9b",
+   "M2_local_only_regression": "672bbba0f0623c9b",
+   "M3_helper_neutralised": "f41e5c6701f235dc"
+  },
+  "M1_eq_M2_signature": true,
+  "M3_differs_from_M1": true,
+  "M4_signature_equals_base_despite_real_CLI_change": true,
+  "rewrites_recorded": {
+   "M1_repo_path_guard_removed": [
+    "    for comp in [c for c in rp.split(\"/\") if c]:"
+   ],
+   "M2_local_only_regression": [
+    "    for comp in [c for c in rp.split(\"/\") if c]:"
+   ],
+   "M3_helper_neutralised": [
+    "    c = candidate.lower()"
+   ]
+  },
+  "M1_rewrites_equal_M2_rewrites": true
+ },
+ "R2_4_cell3b_and_counter_teeth": {
+  "M4_put_before_guard": {
+   "guard_verdicts_identical_to_base": true,
+   "behaviour_signature_equals_base": true,
+   "REPO_PATH_DIRTY_zero_PUT": false,
+   "LOCAL_NAME_DIRTY_zero_PUT": false,
+   "CLEAN_cli_positive_control_reached_PUT": false,
+   "CLEAN_cli_positive_control_no_refusal": true,
+   "CLEAN_cli_positive_control_rc": 4,
+   "cell1": false,
+   "cell2": false,
+   "cell3b": false
+  },
+  "M5_never_upload": {
+   "guard_verdicts_identical_to_base": true,
+   "behaviour_signature_equals_base": true,
+   "REPO_PATH_DIRTY_zero_PUT": true,
+   "LOCAL_NAME_DIRTY_zero_PUT": true,
+   "CLEAN_cli_positive_control_reached_PUT": false,
+   "CLEAN_cli_positive_control_no_refusal": true,
+   "CLEAN_cli_positive_control_rc": 0,
+   "cell1": true,
+   "cell2": true,
+   "cell3b": false
+  }
+ },
+ "R2_2_cell5": {
+  "predicate": "not M3.LOCAL_refused and not M3.REPO_refused and M3.regressions_still_held",
+  "M3_readings": {
+   "LOCAL_NAME_DIRTY_refused": false,
+   "REPO_PATH_DIRTY_refused": false,
+   "regressions_still_held": true
+  },
+  "fixed": "the cell is now derived from an ARM, not from two scope readings of the base module. A mutated helper neutralises BOTH scopes at once while every REGRESSION_* stays refused, which is the reading that makes 'one shared helper' derivable.",
+  "residual": "the arm proves the helper is load-bearing for both scopes. It does not, on its own, rule out 'two duplicated lists that both happen to route through one helper' -- but that shape is not what the order asked to exclude (arbiter's shortcut was two copied LISTS, which M3 does exclude, because a copied list would not be neutralised by mutating the helper)."
+ },
+ "residual_defects": [
+  {
+   "id": "D1-cell6-vacuous",
+   "severity": "the cell that names the fix asserts nothing about it",
+   "what": "`cell6_zero_PUT_is_an_invocation_count_not_a_string` = all(isinstance(c[k], int) for three rc fields). main() returns int, so it is unconditionally true; it never reads a PUT counter.",
+   "evidence": "forced every PUT counter False -> predicate still True",
+   "fix": "assert the counters themselves (e.g. all(isinstance(c[k], int) for the *_zero_PUT keys) AND at least one counter is 0 and the positive control's is 1), or drop the cell and let cell1/cell2 carry it."
+  },
+  {
+   "id": "D2-signature-narrower-than-described",
+   "severity": "description vs code",
+   "what": "the writer described the vector as '7 guard readings + two CLI zero-PUT'. The code's behaviour_signature() is guard_verdicts() only -- 9 in-process guard booleans, no CLI reading at all.",
+   "evidence": "M4_put_before_guard changes the CLI behaviour (REPO_PATH_DIRTY_zero_PUT true->false) while its behaviour_signature equals the base signature",
+   "consequence": "`independent_kills` is blind to any mutant whose only effect is on the CLI path; such a mutant collides with BASE, and the collision surfaces as `mutants_differ_from_base` going red -- a false RED, not a silent over-merge. So the direction is safe; the described scope is not.",
+   "fix": "either widen the vector to include the CLI readings, or restate what the vector is."
+  },
+  {
+   "id": "D3-M1-M2-indistinguishable-on-every-published-field",
+   "severity": "arm accounting, residual",
+   "what": "`rewrites` records `old.splitlines()[0]` -- the PRE-image line, which is identical for M1 and M2. So M1 and M2 have identical `rewrites`, identical readings and identical `behaviour_signature_sha1`: they are indistinguishable on every field the receipt publishes.",
+   "consequence": "the note says M2 is 'retained as a name-shape check', but no field records a shape, so the receipt does not evidence that check. Also `killer_M2_catches_local_only_helper` still names a mutation that was not performed (M2 does not touch the helper's scope).",
+   "fix": "record the REPLACEMENT text (or its sha1) per arm -- then M1/M2 differ -- and rename the M2 check to what M2 actually does, or drop M2 to one row with a note."
+  },
+  {
+   "id": "D4-test_file-name-vs-sha-mismatch",
+   "severity": "coordinate hygiene",
+   "what": "the receipt's `test_file` is 'test_ord0275_publisher_guard.py' while `test_file_blob_sha1` is the blob of 'test_ord0275_publisher_guard_r2.py'. A reader following the NAME fetches the r1 instrument (9e0d4b96...) and gets a different file than the sha implies.",
+   "evidence": "live_checks/test_ord0275_publisher_guard.py on commander/control is still the r1 blob",
+   "fix": "the field is computed from __file__; run it under the published name, or publish under the name it reports."
+  },
+  {
+   "id": "D5-cell3b-does-not-check-the-target",
+   "severity": "docstring vs code",
+   "what": "the docstring says the clean control must reach 'exactly one PUT with the right target'; the assertion is `puts2 == 1` only -- fake_call receives `payload` and never records it.",
+   "consequence": "the 'right target' half is asserted by nothing.",
+   "fix": "record the PUT's repo_path in fake_call and assert it equals CLEAN_REPO."
+  }
+ ],
+ "verdict": {
+  "core_fix": "VERIFIED_unchanged",
+  "independent_kills": 2,
+  "arms": 3,
+  "reproducible": "REPRODUCED (the single differing line is the test_file name attribution, D4; all 15 cell values match)",
+  "R2_1": "PARTIAL -- the counter is real and cell1/cell2 do carry it (proved: a PUT before the guard turns cell2 red), but the cell NAMED after the fix is a vacuous rc type check (D1).",
+  "R2_2": "FIXED -- cell5 is now derived from the M3 arm; both scopes flip together, regressions held.",
+  "R2_3": "PARTLY -- the vector does separate M1 from M3 and correctly merges M1/M2, and its failure direction is safe; but it is NOT the vector that was described (D2), and M1/M2 remain indistinguishable on every published field (D3).",
+  "R2_4": "FIXED -- cell3b goes red for a never-uploading publisher (proved by construction)."
+ },
+ "scope_kept": [
+  "只读 GitHub + 本机复跑仪器（按构造零 PUT，call() 在 main() 前被替换）",
+  "未起服务",
+  "未碰 :4781/:4782/:8693/隧道/_live.db/_preview.db",
+  "demo/reset 0 次",
+  "凭据 0 打印",
+  "已发布证据路径 0 覆盖"
+ ]
+}
