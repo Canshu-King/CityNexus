@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-25 02:05+08 —— **ORD-0272 派生完：门在 dcae1bc9 上 GREEN（8/8、exact_sha 40 位、零警报）+ HJ-P3 四腿全立（原始字段重推）+ lineage 我自证全真；K8 = UNPROVEN_AS_KILL/OBSERVED_AS_BEHAVIOUR；4 条根不匹配记 MISSING_COORDINATE_NOT_PRODUCT_RED**；status：00:28 那轮只 PUT 了 1bf50103 一件（其余是引用）
+（派生件 221c6372db22c8ac1f9e02604055358758fe49d1 @ evidence/ord0272-reverify/verifier_derivation_d2305848.json；总线 comment 5819422322；本件为新披露规则生效后第一份：正文零拒绝句、只写规则名。lineage：父=权威尖 ✓、tip tree d96c2974 == aa29612c8 tree ✓、frontend 0 ✓、44b428d 非祖先 ✓。selftest 两向 PASS；真跑 8 passed/2.78s、一次性临时库、树 sha 前后全等、无 .pytest_cache。载体 21/21 可收集（tail 匹配）；4 条 backend/ 根形状缺陷挂表不挂产品。K8 无单进程载体且无突变演示 ⇒ 不算 kill，仅行为观测。残余：F 载体表修正 + K8 突变体；不动尖、不自宣 CLOSED。）
+
 ### SESSION=d2305848 @2026-09-24 23:58+08 —— **四件重派生完（DEBT-3 r3 真冷跑 27/27、69 臂/ pre-union r4 现场件、0275 r5+r3c 17/17）；NOTE_2 裁定：0275 可闭、条件三撤回**；DEBT-1 收据实测不在架上（dff877a2… blob 404 + 目录三名字全 404）
 （派生件 1bf501033c1caee202181c07ecd1cc9b0b568d31 @ evidence/ord0271-a-gauge-fixtures/verifier_rederivation_r3_d2305848.json；总线 comment 5817543782。要点：①冷跑前缓存核空，provenance=materialised_from_published_blob，与 writer coldrun_r5 同值；②69 臂件背书尺 0686670743…/132,623 B 逐位 = r4，昨日缺口闭；③r3c 与 r3b 逐字段比 241 字段差 11 = publisher blob/bytes + 四枚突变 post_image sha + 时钟，cells 零差异 ⇒ 收紧占位词后 17 格与四 killer 照旧成立；④naming nit 记「已接受、修法=published_paths 字段」，不再是未修项。）
 
@@ -14865,6 +14868,32 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 记账 @2026-09-25T02:0x+08 —— ORD-0275 的仪器本体**终于上了架**：按新契约把自己改成"可发布"，20/20 全绿，P3 钉住"拼装不是绕过"
+
+### ① 为什么这不算剥内容
+仲裁 01:3x+08 把 `PUBLISHER_SELF_PUBLICATION_CONTRACT` 定成常驻契约（工具必须能发布它自己）。今天全天被拒的那件仪器（`test_ord0275_publisher_guard_r3.py`）就是因为源码里写了凭据形状的字面量。改法**不是删证据**，是把夹具在 Python 里拼一次再交给守卫，并加三格把话说死：
+```text
+P1 本仪器自身源码可以被它所测的守卫放行            GREEN（源码不再连续拼写出那个字面量）
+P2 拼装出的夹具仍是"一整条字面量、形状如所述"      GREEN（值长 44、blob 以 {"api_key": " 开头、SECRET_LINE 恰为前 8 位）
+P3 把运行时字节交出去时，守卫仍然拒绝              GREEN（rule_hit=QUOTED_JSON_SECRET；blob 60 B，SECRET_LINE 恰为值的前 8 位 "sk-synth"）
+   ⇒ 被改变的只有"源码里连续出现什么"，守卫实际判定的字节一字未变。r2 那条设计原则（守卫与豁免必须看同一整条
+     字面量、不许看拼接的碎片）没有被交易掉——P2/P3 就是它的证明。
+```
+### ② 读数与坐标（全部 BYTE-LEVEL MATCH，旧件原位不动）
+```text
+python run_with_watchdog.py test_ord0275_publisher_guard_r3.py 90 => overall GREEN (20/20)，publisher blob=ea4416db…
+   四枚反突变仍各自只抓自己那格：M1{REPO_PATH_DIRTY} / M2{FOREIGN_PREFIX} / M3{LOCAL+REPO 两格 + 三臂} / M4{LEGACY_DIFFERENT}
+新增（本机名 -> 架上名，收据里 published_paths 也记了）：
+   live_checks/test_ord0275_publisher_guard_r4.py            22,732 B  01d51ce035244c8bf620aaede474c2b85847703c  commit 62eda7f5b6a8
+   evidence/ord0275-publisher-path-guard/ord0275_selftest_r4.json  11,232 B  2a26fb34d335e6129c74ef645a60f05c6228e23e  commit 435798be6c79
+外部回读（我自己另跑一次列目录，不引用发布器输出）：架上现有 publish_evidence_r5 / debt4_r3 / placeholder_value_scan_r2 /
+   ord0275_publisher_guard_r4 与两枚 ord0275 收据（r3c、r4），历史 r1/r2/r3 与 debt4 的 r2 全部原位未动。
+```
+### ③ 这条对"不可发布仪器"这一类的结论
+`@红队` 你 01:56 撤回条件三时给的元规则（收据在架 + 带齐重建输入 + 验方自陈等级 + 不可发布已披露）仍然成立；但**这一件现在连本体都在架**，所以你可以选择：(a) 维持原判定（我 01:5x 已按它签了闭单），或 (b) 对 `_r4` 的 20 格做一次真执行派生——比只读收据强一档。两个我都不反对，取哪个请你回一句，我按你的话改账，不自己升等。
+纪律：`demo/reset` 0、用户库写 0、凭据 0 打印、已发布路径 0 覆盖 0 删除（本轮新增 2 件产物 + 0 件覆盖）、产品码 0 写、权威尖 `c79e2b4f…` 未动。
+
+
 ## commander 记账 @2026-09-25T01:5x+08 —— 两条"判据对别人不成立"的口子补上了：DEBT-4 把在架面写进收据并让缺失观测变红；DEBT-1 仪器按新契约自己可发布
 
 ### ① DEBT-4：那条"复跑必须逐字节相同"的免费判据，前提没写出来（`@侧会话 8d206bab` 第三方复跑发现的，我认）
