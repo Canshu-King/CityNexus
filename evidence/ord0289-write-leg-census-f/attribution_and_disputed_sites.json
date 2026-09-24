@@ -1,0 +1,520 @@
+{
+ "what": "ORD-0289 归因层（逐文件正则-vs-AST、范围穷举凑 33/13、三处争议写腿的源码上下文）",
+ "per_file_regex_vs_ast": {
+  "landed_45b0a5e2": {
+   "regex_total": 40,
+   "ast_total": 39,
+   "files_that_differ": [
+    {
+     "file": "features/planning/PlanWithAiSheet.tsx",
+     "regex": 8,
+     "ast": 7
+    }
+   ]
+  },
+  "earlier_dcae1bc9": {
+   "regex_total": 39,
+   "ast_total": 38,
+   "files_that_differ": [
+    {
+     "file": "features/planning/PlanWithAiSheet.tsx",
+     "regex": 8,
+     "ast": 7
+    }
+   ]
+  }
+ },
+ "scope_search_for_hjp3": {
+  "target": {
+   "sites": 33,
+   "writes": 13
+  },
+  "exact_combos": [],
+  "near_combos": [
+   {
+    "scope": [
+     "features",
+     "features/recovery"
+    ],
+    "sites": 33,
+    "writes": 16,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/stay"
+    ],
+    "sites": 33,
+    "writes": 17,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/stay/HotelsPanel.tsx"
+    ],
+    "sites": 33,
+    "writes": 17,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/candidateRejections.ts",
+     "features",
+     "features/execution"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/candidateRejections.ts",
+     "features",
+     "features/execution/LiveRecovery.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/candidateRejections.ts",
+     "features",
+     "lib"
+    ],
+    "sites": 33,
+    "writes": 14,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/travelerPreferences.ts",
+     "features",
+     "features/execution"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/travelerPreferences.ts",
+     "features",
+     "features/execution/LiveRecovery.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/travelerPreferences.ts",
+     "features",
+     "lib"
+    ],
+    "sites": 33,
+    "writes": 14,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/v10Execution.ts",
+     "features",
+     "features/notifications"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/v10Execution.ts",
+     "features",
+     "features/notifications/PushCapabilityCard.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/v10Execution.ts",
+     "features",
+     "features/recovery/V14RecoveryTruthPanel.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/v10Execution.ts",
+     "features",
+     "lib/readDeadline.ts"
+    ],
+    "sites": 33,
+    "writes": 14,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/v12Authoritative.ts",
+     "features",
+     "features/execution"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/v12Authoritative.ts",
+     "features",
+     "features/execution/LiveRecovery.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "api/v12Authoritative.ts",
+     "features",
+     "lib"
+    ],
+    "sites": 33,
+    "writes": 14,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "app",
+     "features",
+     "features/execution"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "app",
+     "features",
+     "features/execution/LiveRecovery.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "app",
+     "features",
+     "lib"
+    ],
+    "sites": 33,
+    "writes": 14,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "app/V8Experience.tsx",
+     "features",
+     "features/execution"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "app/V8Experience.tsx",
+     "features",
+     "features/execution/LiveRecovery.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "app/V8Experience.tsx",
+     "features",
+     "lib"
+    ],
+    "sites": 33,
+    "writes": 14,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/discovery",
+     "features/execution"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/discovery",
+     "features/execution/LiveRecovery.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/discovery",
+     "lib"
+    ],
+    "sites": 33,
+    "writes": 14,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/discovery/RealCityDiscoveryPanel.tsx",
+     "features/execution"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/discovery/RealCityDiscoveryPanel.tsx",
+     "features/execution/LiveRecovery.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/discovery/RealCityDiscoveryPanel.tsx",
+     "lib"
+    ],
+    "sites": 33,
+    "writes": 14,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution",
+     "features/inbox"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution",
+     "features/inbox/JourneyInboxWorkbench.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution",
+     "features/planning/PlanComparison.tsx"
+    ],
+    "sites": 33,
+    "writes": 16,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution",
+     "features/recovery/RecoveryRequiredPanel.tsx"
+    ],
+    "sites": 33,
+    "writes": 16,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution",
+     "features/recovery/V14PreventivePanel.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution",
+     "lib/sceneClock.ts"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution/LiveRecovery.tsx",
+     "features/inbox"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution/LiveRecovery.tsx",
+     "features/inbox/JourneyInboxWorkbench.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution/LiveRecovery.tsx",
+     "features/planning/PlanComparison.tsx"
+    ],
+    "sites": 33,
+    "writes": 16,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution/LiveRecovery.tsx",
+     "features/recovery/RecoveryRequiredPanel.tsx"
+    ],
+    "sites": 33,
+    "writes": 16,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution/LiveRecovery.tsx",
+     "features/recovery/V14PreventivePanel.tsx"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   },
+   {
+    "scope": [
+     "features",
+     "features/execution/LiveRecovery.tsx",
+     "lib/sceneClock.ts"
+    ],
+    "sites": 33,
+    "writes": 15,
+    "matches_both": false
+   }
+  ]
+ },
+ "disputed_write_sites": [
+  {
+   "file": "features/inbox/JourneyInboxWorkbench.tsx",
+   "line_regex_saw_method": 82,
+   "window_700_chars": "   73| };\n   74| \n   75| type ApplyResponse = {\n   76|   status: string;\n   77|   decision?: string;\n   78|   draft?: Draft;\n   79| };\n   80| \n   81| async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {\n   82|   const response = await fetch(path, init);\n   83|   const payload = (await response.json()) as T & {\n   84|     detail?: string;\n   85|     error?: { message?: string };\n   86|   };\n   87|   if (!response.ok) {\n   88|     throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);\n   89|   }\n   90|   return payload;",
+   "ast_sites_in_this_file": [
+    {
+     "line": 82,
+     "method": null,
+     "method_how": "absent",
+     "signal": false,
+     "timer": null,
+     "second_arg": "non-literal-expr",
+     "callee": "fetch"
+    }
+   ]
+  },
+  {
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line_regex_saw_method": 55,
+   "window_700_chars": "   46|   return `${value > 0 ? \"+\" : \"−\"}${formatMinorMoney(Math.abs(value), currency, \"en-US\")}`;\n   47| }\n   48| \n   49| export function V14RecoveryTruthPanel({ journeyId, policy, currency = \"CNY\", onAccepted }: Props) {\n   50|   const [proposal, setProposal] = useState<Proposal | null>(null);\n   51|   const [busy, setBusy] = useState(false);\n   52|   const [message, setMessage] = useState<string | null>(null);\n   53| \n   54|   const refresh = async () => {\n   55|     const response = await fetch(`/api/v1/journeys/${journeyId}/replans`);\n   56|     if (!response.ok) return;\n   57|     const items = (await response.json()) as Proposal[];\n   58|     setProposal(items.find((item) => item.status === \"PRESENTED\") ?? items[0] ?? null);\n   59|   };\n   60| \n   61|   useEffect(() => {\n   62|     void refresh();\n   63|   }, [journeyId]);",
+   "ast_sites_in_this_file": [
+    {
+     "line": 55,
+     "method": null,
+     "method_how": "absent",
+     "signal": false,
+     "timer": null,
+     "second_arg": "absent",
+     "callee": "fetch"
+    },
+    {
+     "line": 69,
+     "method": "POST",
+     "method_how": "literal",
+     "signal": false,
+     "timer": null,
+     "second_arg": "object-literal",
+     "callee": "fetch"
+    }
+   ]
+  },
+  {
+   "file": "features/stay/HotelsPanel.tsx",
+   "line_regex_saw_method": 54,
+   "window_700_chars": "   45|   const [error, setError] = useState<string | null>(null);\n   46|   const [chosen, setChosen] = useState<string | null>(null);\n   47| \n   48|   useEffect(() => {\n   49|     let cancelled = false;\n   50|     void (async () => {\n   51|       try {\n   52|         // Read first: a previous capture may already have produced options.\n   53|         const read = async () => {\n   54|           const r = await fetch(`/api/v1/journeys/${journeyId}/experience`);\n   55|           const body = await r.json();\n   56|           return (body?.options ?? []) as StayOption[];\n   57|         };\n   58|         let list = await read();\n   59|         if (!list.length) {\n   60|           // Acquisition is a live provider call and can be slow; only pay for\n   61|           // it when nothing has been captured yet.\n   62|           try {",
+   "ast_sites_in_this_file": [
+    {
+     "line": 54,
+     "method": null,
+     "method_how": "absent",
+     "signal": false,
+     "timer": null,
+     "second_arg": "absent",
+     "callee": "fetch"
+    },
+    {
+     "line": 63,
+     "method": "POST",
+     "method_how": "literal",
+     "signal": false,
+     "timer": null,
+     "second_arg": "object-literal",
+     "callee": "fetch"
+    },
+    {
+     "line": 64,
+     "method": "POST",
+     "method_how": "literal",
+     "signal": false,
+     "timer": null,
+     "second_arg": "object-literal",
+     "callee": "fetch"
+    },
+    {
+     "line": 87,
+     "method": "POST",
+     "method_how": "literal",
+     "signal": false,
+     "timer": null,
+     "second_arg": "object-literal",
+     "callee": "fetch"
+    }
+   ]
+  }
+ ],
+ "reading": "有界正则（包工头口径）与 AST 的总差是 1 处，且在同一个文件里；他那 17 比我多的 3 处是**窗口越界**（同一文件里别的调用的 method 落进了 700 字符窗口）——上下文在 disputed_write_sites 里逐处给全。"
+}
