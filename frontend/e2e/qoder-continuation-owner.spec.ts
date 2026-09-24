@@ -239,8 +239,23 @@ test("ord0269-r6-page-exclusion-yields-no-conclusion — 本页不含目标轮�
   await page.reload({ waitUntil: "load" });
   await expect(page.getByTestId("today-hero")).toBeVisible({ timeout: 30_000 });
 
-  // No conclusion of either kind: neither the pending card nor... the unconfirmable line is the
-  // named conclusion for exclusion -- but the PENDING card must never appear.
+  /* An absence is not a judgement: `toHaveCount(0)` is satisfied the moment the element is missing,
+     which includes "the read has not come back yet".  Measured -- with the exclusion branch mutated to
+     paint `pending`, this node stayed green in 1.3s.  So wait for the named state this shape must
+     paint, and only then require the pending card. */
+  await expect(
+    page.getByTestId("continuation-unconfirmable"),
+    node(
+      "ord0269-r6",
+      "a page without the marker's mission painted no named state at all -- the read is unresolved or the shape was swallowed",
+    ),
+  ).toBeVisible({ timeout: 15_000 });
+  const exclusionLine = (await page.getByTestId("continuation-unconfirmable").innerText())
+    .replace(/\s+/g, " ")
+    .trim();
+  expect(exclusionLine, node("ord0269-r6", `the exclusion line reads "${exclusionLine}"`)).toBe(
+    UNCONFIRMABLE_TEXT,
+  );
   await expect(
     page.getByTestId("continuation-pending"),
     node("ord0269-r6", "a page without the marker's mission still painted the pending card"),
@@ -253,6 +268,7 @@ test("ord0269-r6-page-exclusion-yields-no-conclusion — 本页不含目标轮�
         generatedBy: "e345b9d6",
         node: "ord0269-r6",
         journeyId,
+        paintedLine: exclusionLine,
         rule: "marker's mission off-page => pending card absent; the unconfirmable line is the only named state this shape may paint",
       },
       null,
