@@ -14539,6 +14539,103 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 落账 @2026-09-24T09:0x+08 —— 仲裁 Q15/Q16 收下：**0273 加两条硬判据（TEXT 泄漏形状 + ACTION 可执行下一步），0263 不重开**；**0274 B 臂拆成 B1/B2/B3，禁止拿 unregister/clear 当通过条件**；0271-B 已开工
+
+### ① Q15：我那两问都归 0273（总线 5805553583），0263 的 CLOSED 不动
+
+```text
+仲裁先确认：08:40 那枚不是"归因分类错了"，而是"动作失败后把内部异常原文端给用户 + 没有可执行下一步"，因果层不同。
+0273-TEXT / user-copy boundary
+  · enterSealedDemo 的主用户文案必须来自 i18n/message-key（或等价产品 copy table）；
+  · 禁止在主文案区域直接渲染原始 error.message（内部 Error 文本、异常类名、MIME/content-type、stack-ish 技术串都不得漏进普通用户句子）；
+  · 要展示 HTTP 200 / text/html 这类事实，只能放在明确的"技术详情/诊断"层；底层 error 可继续供 telemetry；
+  · 验收**不得用"禁止所有 ASCII"这种过宽正则**：钉具体泄漏形状（主文案不得含 `origin answered … unusable body`、原始 MIME、Error.name/stack），
+    同时断言主文案确实命中一个**已登记的 i18n key**。
+  ⇒ 我量到的 V8Experience.tsx:811 那行按此判据 = RED（已作为 0273 的现成验收样本交给 D）。
+0273-ACTION / executable recovery
+  · 失败屏必须同时给一个真实可执行的下一步；CTA 要和事实匹配：可重试⇒重试；服务器明确没有 sealed demo⇒新建/返回；
+    **若且仅若本机实测存在可用 snapshot** 才可给"使用已保存副本"；
+  · 点击 CTA 后必须进入已有 0273 的终止性合同，不得再产生第二段无界等待。
+边界逐字：0263 只判"收到过 HTTP 回答有没有被改写成网络/no-reply/catch-all"+ pre-click cached-copy 事实；
+  0273 只判"动作失败后人看到什么、能做什么、post-click 是否进入可解释终态"。同一处代码可被两个机制经过，但断言不共享。
+```
+
+### ② Q16：0274 的 B 臂必须走"普通用户换代收敛"
+
+```text
+合同（逐字）：老客户端重新联网后，只允许用户做一次正常导航；该次导航可以短暂由旧 active SW 起页，
+  但在这次导航触发的 update/install/activate/claim 周期完成后，页面必须自动收敛到新代；
+  不得要求用户第二次手动导航、强刷、注销 SW、清 CacheStorage 或清站点数据。
+B1 reconnect-first-navigation：旧 worker + 旧 cache，0 unregister / 0 cache clear；恢复网络，一次正常导航；
+   最初执行 bundle 可为旧代，但必须记录 worker update 生命周期。
+B2 automatic-convergence：新 worker install/activate/claim 后，当前页面必须自动 reload 或等价切换到新 asset graph；
+   最终执行 bundle = 新代；用户动作计数仍是 1 次导航。
+B3 offline-after-convergence：随后再次断网，普通导航由新 worker/new precache 自洽服务；不得混代，也不得退回上一代。
+⇒ 我 08:40 的真浏览器读数（换代后第一次进来是旧壳，清 SW 才见新代）作为这一族的起点事实交给 HJ-P1，不必重量；
+   仲裁同时明确：unregister()/cache.clear() 只能当仪器隔离手段，不能当产品通过条件。
+```
+
+### ③ 已派出去的重启后工作（09:0x 现场）
+
+```text
+D（e345b9d6）：分段 #2 = ① re-parent e3e6cd4 到 c79e2b4（我 merge-tree 只读预测无冲突，但基点不在权威线上）
+  → ② sheet 侧 marker 写入（marker 不得在请求发出前清）→ ③ 门 spec（含 R-6 两条硬断言）→ ④ 0273-TEXT/ACTION。
+  分段 #1 我亲测收下：e3e6cd4 存在（08:55:28）、4 文件 +209/−0、branch --contains 只有她分支、权威尖未动。
+HARNESS（d291c9dc）：0271-B 开工 = 出 v4，只加那枚专用单变量反控；旧 v3 原路径/原 blob 不覆盖；
+  前四臂 byte-identical 作为自检臂；正控 + UNKNOWN_FAILURE 反控各一枚；与 0271-A 共用窗口但证据分两 section。
+HJ-P1（1a986a24）：① 0268 那格的外读发布仍未见坐标帖 ⇒ 先交它；② 0274 B1/B2/B3 仪器面（不得注销 SW 为前提）。
+HJ-P3（aad2d1f2）：0262 的 N1–N4 在跑（F 的 3093eea… 坐标我已外读 10/10 blob 等值后交给她）。
+F（8ccd71d8）：两件已交并被我外读复算；0272 等窗口。红队 / B：待命（0271-A 验收表按一次晋级准备）。
+待问仲裁：HARNESS 上轮发现的发布器守卫只 key 本地文件名、repo_path 禁片段静默通过并真上传 —— 归 0271-A 还是单独一枚仪器单。
+0 demo/reset、0 用户库写、凭据 0 打印、已发布证据路径 0 覆盖、尺与发布器 0 改动（0271-B 已授权另名 v4）、产品码我 0 写。
+```
+
+### ✅ aad2d1f2 (SESSION=aad2d1f2) P3 · ORD-0262-NARROW verifier **第一段**：N1 / N2 我证到了源码级；**N3 / N4 没跑**，阻塞具名 @2026-09-24T09:0x+08
+
+**我量的是哪一枚**：候选 `3093eea773c79fa00744fe72d1f2c43b4d0bd75e`（tree `5ae9f8959b059d04e5a41c53f0b6fa11470b19d0`，父 `30092dcb664c`，subject `test(ord0262): the busy-door assertion stops pinning the number it was meant to follow`）。
+取树方式：**按那 40 位 sha** 向 GitHub 要 tarball（`codeload…/tar.gz/<sha>`，不取分支名，所以分支移动不能顶包），落到 `_hjp3_narrow_0924/snap_3093eea/`。**我没碰 F 的 worktree，也没碰权威线 `c79e2b4`。**
+诚实交代一处没证成：我顺手 `git write-tree` 复算得 `31ebf0fe…` **不等于** `5ae9f895…`——原因是我把整包 `git add -A` 重算，`.gitignore`/mode 差异会改树形，**这不能说明包不对**；包的身份由"按 40 位 sha 请求 tarball + 提交对象里 tree 字段逐位相符"这两条支撑（与包工头逐件 blob 复算 10/10 一致）。
+
+### N1 · 具名码是否真走 `error()` 信封 —— **成立（源码级，逐处可核）**
+
+| 站点 | 位置 | 走的是什么 |
+|---|---|---|
+| 共用出口 | `backend/app/main.py:666-673` `_contention_response()` | `error("GENERATION_STORE_BUSY", …, status=503, details={"retry_after_ms": …, "contention": reason}, message_key="generation.store_busy", reason_code=reason)` |
+| generation 站点 | `main.py:2997-3004`（`except GenerationStoreBusy`） | 同一个 `error(...)`，`message_key="generation.store_busy"` |
+| hydration 站点 | `main.py:2939-2944`（`except HydrationStoreBusy`） | `error("HYDRATION_STORE_BUSY", …, status=503, details={"retry_after_ms": _hydration_busy_retry_after_ms()}, message_key="hydration.store_busy")` |
+| 信封本体 | `main.py:452-466` `def error(...)` | 全产品唯一信封（docstring 自述 ORD-0055：`message_key` 由 `code` 派生，**永不**由 `message` 派生） |
+| 同步那扇门 | `main.py:3097-3104`（另一处 `except GenerationStoreBusy`，`submit_operation` + `wait_for_operation` 那一路） | 与异步门**同一具名、同一措辞**：`error("GENERATION_STORE_BUSY", …, status=503, details={"retry_after_ms": _contention_retry_after_ms()}, message_key="generation.store_busy")`；注释自述"one condition, one wording, no endpoint-specific invention" |
+
+⇒ **没有一处手拼 JSON**；四处都经由 `error()`。`grep -n "STORE_BUSY" backend/app --include=*.py` 的命中就是这 4 行（`667` 共用出口 / `2940` hydration / `3000` generation 异步 / `3099` generation 同步），我把命中行原样打出来了，不是"我找过没有"。
+**顺带核到 F 那格收口的形状**：`main.py:643-662` 的 `_busy_retry_after_ms(ladder)` 用 `ladder(SimpleNamespace(status=QUEUED, queued_at=now))` **向操作自己的阶梯要数**，generation 走 `stay_generation_operations.retry_after_ms`、hydration 走 `catalog_hydration_operations.retry_after_ms`（`main.py:397/417` 两处 import 别名）⇒ 三处硬编码 `500` 已经不在代码里（`grep -rn "retry_after_ms" backend/app` 的 14 处命中里没有一处赋常数 500）。
+
+### N2 · 三处 `create_mission(` + 两处 flush，**按分布判** —— **成立（源码级），但有一处我没能排除**
+
+- 三处 `create_mission(` 实测在 `main.py:1211`、`main.py:1365`、`main.py:10992`（`copilot_message` 那一路，正是包工头点过"容易漏看的第三处"）。**三处都不在 `try/except OperationalError` 里**（`main.py` 里 `except OperationalError` 只有 **1** 处：`:6026`，是 twin 那条软跳过）。
+- 那三处逃出来的 `OperationalError` 由**全局**处理器接：`main.py:684-690` `@app.exception_handler(OperationalError) busy_write_lock`：
+  `reason = _contention_of(exc)`；**`if reason is None: raise exc`** ⇒ 名单外一律原样再抛、仍落框架那一面；命中才 `_contention_response(reason)`。
+- 判据用的名单在 `main.py:625-627`：`CONTENTION_UNIQUE_ROWS = {"traveler_agent_policies.traveler_id"}`、`CONTENTION_LOCK_MARKERS = ("database is locked", "database is busy")`，注释自述"名单外保持 500，否则契约变成洗白机器"（与 `TEMPORAL_REJECTIONS` 同一条不洗白规则）。
+⇒ **分布结论**：三处 mission 创建点 + 两处 flush 的锁冲突，今天都会从同一个出口出去，且**只有可具名的那两种**会被收进 503 信封；逃手的那一支（名单外）确实仍落框架面，**这是设计意图而不是漏**。
+⚠ **我没能排除的一件事**：Starlette 的自定义异常处理器对**同步路由在线程池里抛出**的 `OperationalError` 是否 100% 生效，属于运行时问题，源码读不出来。这一条只能靠下面那枚运行时反例来判，而**我没跑成**（见末尾）。
+
+### N3 / N4 —— **未跑（NOT-RUN），阻塞具名，不拿源码级冒充**
+
+我按口径起了"一次性新 SQLite + 一次性具名端口 `:8491`"的真后端（`_hjp3_narrow_0924/one_time_n1.db`，只 seed 我自己那 1 traveler / 1 journey，全程没读没写 `_live.db`/`_preview.db`/任何 lane 库），**两步都卡在环境上**：
+1. 我用的解释器（uv 那份 `cpython-3.12.14`，正是 `:8424` 在跑的那个）**`No module named uvicorn`** ⇒ 后端没起来，`one_time_backend.log` 只有这一行，DB 文件 0 字节。盘上有 `/d/moodle/CityNexus/.venv/Scripts/python.exe`（下一步换它），但…
+2. 我在候选树 `backend/` 里**找不到建表入口**：`grep -rln "create_all|alembic upgrade|init_db" app tools ../tools` = **0 命中**，也没有 `alembic*/migrations` 目录 ⇒ 一个全新的空库跑不起这个 app，schema 是从别处来的（现成 .db 文件或包外工具），我今晚没定位到。
+⇒ 所以 **N3（`.plan-ai-reason` 文字必须 `==` 服务器 `message`、屏上不得出现客户端自造 `HTTP 500`）与 N4（有 mission 行时不得说"没记录"）我一枚读数都没有**，两侧同判那套（服务端字段用 `==` + "等值必须认"正控）也还没上。**这一格仍挂我名下、状态是 NOT-RUN，不是 PARTIAL、更不是 PASS。**
+
+**下一步（谁接手都能直接做，两条我实测过一半）**：一次性库的 schema 用**在线备份只取结构**从现成库复制（`sqlite3` 读 `sqlite_master` 里 `type='table'` 的 CREATE 语句逐条执行到新库，**不带数据行**），解释器换 `/d/moodle/CityNexus/.venv/Scripts/python.exe`；然后照我已写好的 `run_n1_n2_rig.py` 跑：控制轮（无锁）→ 持锁轮（generation / hydration / agent-commands 各一发，测 503 或框架 21 B）→ 释放后再一发（证明 503 不是无条件），收尾真杀端口 + 删库 + 断言不存在。脚本与读数都在证据里。
+
+**纪律**：0 次 `demo/reset`、0 次读写 `_live.db`/`_preview.db`、0 次改产品字节、凭据 0 打印。收尾照实说：那枚脚本在删库之前就崩了，所以一次性 DB 是**我事后手工删的**，不是脚本断言掉的；删完实测 `ls one_time_n1.db*` = 无文件、`netstat | grep 127.0.0.1:8491` = **0 行**（后端从未成功起过监听，也就没留下端口）。
+
+**证据坐标**（`commander/control:evidence/ord0262-narrow-hjp3-verify/`，新目录、逐件断言 404 后才 PUT，每件 `/git/blobs/<40 位>` 回读 readable=True）
+- `NARROW_VERIFY_R1_RECEIPT.md` blob `0c085e391dccf5771fbf37ab4191209a04fac1ad`（7,235 B）
+- `run_n1_n2_rig.py` blob `2118f05bb0de2134988daa5019a0069dab880cef`（6,563 B，一次性后端/一次性库/持锁三轮的读数脚本，接手可直接跑）
+- `candidate_identity.json` blob `89589297cc022479438f6757d4c8a3b9e7b9f12d`（360 B，sha/tree/parent 与取包方式）
+- `MANIFEST.txt` blob `4bcb26017696b81899a0f0ff6979118c4e89389c`；commits `0609c81 95155c6 dd63b8a` + `3ca9aeb7`
+- 账本这块 = receipt 正文 + 本坐标段（坐标段不进 receipt，对正文请按 7,235 B）。
+
 ## commander 落账 @2026-09-24T08:5x+08 —— 仲裁 Q13/Q14 收下：**断点可续、质量不降**（STREAK 改为"逻辑连续"，聚合器锁 campaign identity）；手机面正式标 `MIXED_PREVIEW`
 
 ### ① Q13：三轮连击不再要求"一次开机跑完"（总线 5805343602）
