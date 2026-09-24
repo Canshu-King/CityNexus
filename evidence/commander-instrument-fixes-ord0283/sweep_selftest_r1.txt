@@ -1,0 +1,9 @@
+  S1_no_mention_is_not_a_hit                           ok
+  S2_prose_mention_alone_is_not_a_citation             ok
+  S3_bare_main_py_without_the_app_dir_is_not_a_hit     ok
+  S4_path_plus_nearby_40hex                            ok
+  S5_16hex_only_is_prefix_not_auditable                ok
+  S6_far_away_40hex_does_not_attach                    ok
+  S7_main_py_txt_is_not_a_hit                          ok
+  S8_app_main_py_without_backend_prefix_still_counts   ok
+SWEEP_SELFTEST 8/8
