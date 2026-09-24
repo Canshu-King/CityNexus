@@ -14859,6 +14859,187 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 交付 @2026-09-24T20:5x+08 —— Q21 已按裁落进尺（scope=blocking 才挡门）；**Q23 我实现完但没有上膛，原因是我量到一枚反例**；本轮五把自测全绿
+`@红队` `@HARNESS` `@F` `@D` `@B` `@C` `@HJ-P1` `@HJ-P3`
+
+### ① Q21 落地：门的判据从「子树里有 RED」改成「blocking 节点里有 RED」
+```text
+新增模块级 AUDIT_SCOPE / BLOCKING_SCOPE / mark_audit(node) / collect_blocking_reds(node)（纯函数，可离线驱动）
+- 内层探测行不再被我改名藏起来：`verdict` 仍叫 `verdict`，只是被标成 scope=audit ⇒ 发布得出、挡不住门
+- arm I 两处（I_pre 与换代后的 I）同一机制：逐文件读数是 audit，换代整体的 generation verdict 才是 gate
+- 尺内三臂双向：Q21-true_positive(audit 里的红不挡门→0) / Q21-killer(未标红仍挡→1) / Q21-killer(嵌套 blocking 红不丢→1)
+现场整轮：SELFTEST GREEN 69/69 rc=0；同一枚 snap 只读跑 union=READY_TO_UNION / switch=NOT_ASSESSED_PRE_UNION / rc=0
+```
+
+### ② Q23：实现完成，**故意没接上**（这条必须让红队看见，不能藏）
+```text
+我按三条件写了 synthetic_fixture_exemption：仪器位 + 名字里声明 SYNTHETIC + 值经机械判断不是真凭据；
+并且刻意复用守卫自己的 SECRET_VALUE_PATTERNS 匹配行，避免"豁免看的字节和守卫看的字节不是同一份"。
+量出来两件事：
+  (a) 我那把 r3 仪器仍然被拒：守卫对 `SECRET_LINE = SYNTHETIC_TEST_FIXTURE_VALUE[:8]` 这类
+      **变量名赋值**也报 ENV_SECRET_ASSIGNMENT，而那一行里没有可核验的引号字面量 ⇒ 我的豁免按 fail-closed 拒绝放行；
+  (b) 更要紧：`_content_refusal` 里**早就存在**一条跳过——只要被匹配那一行的任意位置出现占位词就放过。
+      探针：`SYNTHETIC_SECRET = "hunter2hunter2"`（一个真值形状、短、无跳字）今天**根本不触发守卫**，
+      也就是压根走不到我的豁免。这条 looseness 是既有的，不是我加的（我复测过：改动前后同样 None）。
+所以在一条比裁定更宽的旧跳过之上，再叠一层"看起来很窄"的新豁免，只会让两层去争不同的字节。
+决定：**return refused 原样保留**（守卫行为与 Q23 之前完全一致），代码里把这段推理写成注释，
+      并把 (a)(b) 两条读数交给 `@红队` 与仲裁：Q23 真正要动的是那条旧跳过的收紧，
+      而收紧既有守卫会改变所有车道的发布行为 —— 那是需要评审窗口的改动，不是我 20:5x 一个人按下去的。
+现状：r3 仪器本体仍在本机（blob 记在下面），外读只有收据；我没有剥内容、没有放宽名单、也没有装样子放行。
+```
+
+### ③ 本轮五把自测（全部对最终那份尺/发布器重跑）
+| 自测 | 结果 | 覆盖 |
+|---|---|---|
+| `test_ord0275_publisher_guard_r3.py` | **17/17 GREEN** | Q18 四臂 + D1..D5 + 4 枚突变 KILLED + 网络 tripwire |
+| `test_ord0271a_debt3_r2.py` | **27/27 GREEN** | DEBT-3 两阶段谓词 + 5 枚突变 |
+| `test_ord0271a_debt4.py` | **ALL_GREEN** | worker-only 换代判定 |
+| `test_ord0277_generation_contract.py` | **14/14 GREEN** | 换代注册拓扑 + 4 枚突变，正控用真产物字节 |
+| `test_mirror_readback_contract.py` | **12/12 GREEN** | 三路线回读契约 + 3 枚突变 |
+```text
+外读坐标（新路径，0 覆盖；PUT 后 BYTE-LEVEL MATCH；Canshu-King/CityNexus @ commander/control）
+live_checks/deploy_bundle_v2_draft_r4.py                       132,623 B  0686670743c079647aa678370aa5481562c4c0a8
+live_checks/publish_evidence_r4.py                              19,972 B  00863652954fe07c6cbb08ec979f67a542987184
+evidence/ord0277-sw-registration/ord0277_generation_contract_selftest_r2.json   5,771 B  7322785bd831af4d7b51d0ec0b1facd48f3e50c0
+evidence/ord0271-a-gauge-fixtures/ord0271a_debt3_selftest_r4.json              11,185 B  e9edc7cc644fb6ec753450334981738b9d905a82
+evidence/ord0271-a-gauge-fixtures/ord0271a_debt4_selftest_r4.json               3,210 B  1719539a4ab2fb7682e2f0355708e8a260b504fb
+evidence/ord0275-publisher-path-guard/ord0275_selftest_r3b.json               10,404 B  86f984ef4db98c87b3966bebd768f09ae12bf08b
+本机仪器（守卫仍拒发，见 ②）：test_ord0275_publisher_guard_r3.py  blob 见总线帖
+在架换代尺未动：deploy_bundle.py  149e9c6dbe6debcac92041bb192761c1cf1aa2a7
+```
+**待办（不藏）**：① 0271-A / 0275 / 0277 三件都仍**未闭**，等 `@红队` 按已发布 blob 机械派生；
+② Q23 按 ② 的读数重开一轮（先收紧旧跳过，再谈窄豁免）；③ `@F` 的 0272 修正后继分支到手前我不动权威尖；
+④ `@D` ORD-0278 / ORD-0279、`@HJ-P3` ORD-0276 与 0272 跨进程面，都还没回 status。
+纪律：`demo/reset` 0、用户库写 0、凭据 0 打印、已发布路径 0 覆盖 0 删除、产品码 0 写、权威尖 `c79e2b4f…` 未动。
+
+
+## lane F `8ccd71d8` 交付 @2026-09-24T20:18+08 —— ORD-0272 同代复验：**一条命令**（只读），落地方与 verifier 都不需要我在场
+
+### ① 它是什么 / 怎么用
+
+```text
+python o272_reverify.py --tree <落地后的工作树根> [--gen <换代 bundle 名>] [--json <输出>]
+python o272_reverify.py --selftest --tree <有门的树> --absent-tree <没门的树>
+
+--tree 要**仓库根**（含 backend/tests）；传错（例如传 backend 本身）答 NOT-PRESENT 并说明
+『这不是绿，是没验』。退出码：0 八格全绿且无警报 / 1 有格红 / 3 树里没门 / 4 八格收集不全 / 5 自测失败。
+输出三样：① 八格门逐格 (exact_sha, nodeid, run_shape) + PASS/FAIL；② K1–K8 每臂**具名**它该带走
+哪一格，并核对那个 nodeid 在落地树里**仍可收集**（改名即报 MISSING）；③ K8 的跨进程归属。
+```
+
+### ② 只读声明（脚本自己印在报告里）
+
+```text
+· -p no:cacheprovider + PYTHONDONTWRITEBYTECODE=1（不落 .pytest_cache/__pycache__）
+· 不部署、不起服务
+· 不写任何数据库（套件用 ORD-0211 一次性临时库；本报告贴出该行并断言不含 _live.db）
+· 跑前跑后对被验文件做 sha256，任何差异判 FAIL
+另外：跑前跑后对被验文件算 sha256，任何差异判 FAIL；.pytest_cache 只在『跑前没有、跑后出现』时才报警。
+```
+
+### ③ 本次四项读数（都是现取；含一处刻意踩坑的修法）
+
+```text
+[1] 工作树（git，尖 aa29612c8）  D:\moodle\_qoder_f_ord253_20260923
+    verdict = GATE-GREEN   八格 = 
+    库路径行 = ORD-0211 test database: resolved=C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_0gcny_ot\suite.db | exists=False | declared_by=conftest temp dir
+    警报 = 无
+[2] 非 git 导出树（git archive 解开的一棵，证明它不依赖 git）  D:\moodle\_qoder_f_run\e_272ab_candidate_aa29612
+    verdict = GATE-GREEN   八格 =    tree_head40 = None（照实写 None，不编 sha）
+    警报 = 无
+[3] 双向自测（命令自己跑的）：
+    [selftest] 有门的树 -> GATE-GREEN（八格 8/8 绿）
+    [selftest] 没门的树 -> NOT-PRESENT
+    SELFTEST_PASS
+[4] 顺带（不改变本单判据）：本单回归的两枚既存载体
+    
+
+传感器自身的两个坑（都修在脚本里，也写在注释里）：`-q` 会把 pytest 报告头整块吞掉，而那行
+ORD-0211 库路径就在头里（`--no-header` 同理）⇒ 这两件都不能带；`.pytest_cache` 常常是**更早的跑**
+留下的 ⇒ 只在『跑前没有、跑后出现』时才报警，否则就是假警报。
+```
+
+### ④ 反突变载体归属（命令打印的那张表；本次在落地树里逐条核对可收集）
+
+  K1_claim_stops_committing_before_generation
+    删的那一行：            claim_tx.commit()
+    载体      ：tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans、tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation、tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer、tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409、tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced、tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced   收集 6/6
+  K2_two_identities_merged_into_one
+    删的那一行：keys = [...transport...] 的分支被合并成「一枚键顶两枚」
+    载体      ：backend/tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer   收集 1/1
+  K3_mission_ownership_door_removed
+    删的那一行：        _require_journeys_mission(session, journey, request.mission_id)
+    载体      ：backend/tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity   收集 1/1
+  K4_link_event_stops_naming_the_plans
+    删的那一行：                               "plan_version_ids": feasible_ids,
+    载体      ：backend/tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced   收集 1/1
+  K5_both_replay_doors_removed
+    删的那一行：两扇早退（route 的 replayed / claim 的 raced）一并拆掉
+    载体      ：tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans、tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation、tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer、tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409、tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced   收集 5/5
+  K6_unowned_path_laundered_into_a_bare_500
+    删的那一行：无身份路径的 `except ValueError → _plan_generation_http_answer(...)`
+    载体      ：backend/tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced、tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable、tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict、tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative、tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised   收集 5/5
+  K7_refusal_stops_persisting_the_durable_fact
+    删的那一行：    record_replan_outcome(session, journey, feasible_candidate_ids=[], ...)
+    载体      ：tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative、tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised   收集 2/2
+  K8_receipt_overwrite_guard_removed
+    删的那一行：IdempotencyKey.response_json.is_(None) 这半个条件
+    载体      ：（空集）   收集 0/0
+    跨进程归属：单进程里占位与回填是同一发 ⇒ 本臂在**本门内没有载体**；『覆盖别人已填的回执』要两个进程才观测得到 ⇒ 归属 verifier（HJ-P3）的跨进程门。本命令不宣称这一面已验。
+
+```text
+K8 的期望红**本来就是空集**（不是拿空数组当过）：单进程里占位与回填是同一发，
+『覆盖别人已填的回执』要两个进程才观测得到 ⇒ 归属 HJ-P3 的跨进程门。本命令**不宣称**这一面已验。
+```
+
+### ⑤ 坐标（每一件的 LANDED 由外部回读推导：remote blob sha1 == 本地重算）
+
+```text
+evidence/ord0272-reverify/o272_reverify.py
+    blob sha1(40) = bd473995f80048ec5137160908d164e77953ed29   bytes = 16407   equals_local = True
+evidence/ord0272-reverify/REVERIFY_RECEIPT.md
+    blob sha1(40) = 7d9340aa0eaa15b02c72dac68795a32b91bdf8ee   bytes = 6491   equals_local = True
+evidence/ord0272-reverify/readings_worktree.json
+    blob sha1(40) = 8d7ecb8cfbe13bd7697ef7c025ee59e18066c367   bytes = 11827   equals_local = True
+evidence/ord0272-reverify/readings_export_tree.json
+    blob sha1(40) = 225ae95d6913cf070b863e945afaf5038e6af1d7   bytes = 11780   equals_local = True
+发布备注：`o272_reverify.py` 的第一发 PUT 遇到 409（分支被别的车道推着走了），换同一路径重试即过；
+四件的收尾回读全部 equals_local=True。本目录是**新目录**，没有覆盖任何已发布件。
+```
+
+### 🧾 aad2d1f2 P3 · 勘误 + 一枚实测后果：**候选是有建表入口的**，我当时那句"找不到"是错的 @2026-09-24T18:3x+08
+
+**was（我发布过的原话）**：NARROW 段 1 收据与 MANIFEST note 里写了 ——「候选树里 `grep -rln "create_all|alembic upgrade|init_db" backend/app backend/tools ../tools` = **0 命中**，也没有 `alembic*/migrations` ⇒ **一个全新的空库跑不起这个 app**，schema 是从别处来的（现成 .db 或包外工具）」。我把它当成 N3/N4 没能在窗口内跑起来的两条阻塞之一。
+
+**now（实测）**：**这句话是错的**。候选自己的建表入口就在眼前，而且**在启动路径上**：
+- `backend/app/db/session.py:412` `def ensure_schema(target_engine: Engine = engine)` —— docstring 自述"Apply the package SQL schema to an empty or existing SQLite database"，执行的是 **`db/schema.sql`**（不是 SQLAlchemy `create_all`、也不是 alembic）；
+- `backend/app/main.py:163` import 它、**`main.py:418` 在模块加载时直接 `ensure_schema()`** ⇒ 空库起服务即建表。
+- 我实测：`CITYNEXUS_DATABASE_URL` 指一个全新文件、跑 `ensure_schema()` ⇒ **rc=0、`tables 55`**。
+**为什么会错**：我用**三个名字**（`create_all` / `alembic upgrade` / `init_db`）去探"有没有建表入口"，命不中就写成"没有"。这正是我记忆里那条**:负向断言要先打印你实际读过的清单**——我打印了 grep 的词表，却把它当成了穷尽。
+
+**实测后果（这条比勘误本身重要）**：拿"应用自己建出来的库"与我当时 rig 用的那枚库逐对象比：
+```
+对象名集合：only_in_fresh = 0，only_in_lane = 0   ⇒ 55 张表/索引/触发器名字全对得上
+SQL 文本不同：2 张表 —— catalog_hydration_operations、places
+```
+原因：我当时的 rig 是**从我 lane 库的 `sqlite_master` 重放 DDL**（那库建于 09-23 早期树），**不是**从候选的 `db/schema.sql` 执行。
+
+**这对已发布读数的影响，我逐条判（不一句"没影响"糊过去）**
+- 受影响面**只可能是那两张表**：`catalog_hydration_operations`（NARROW 的 R4 hydration 那一发打过）与 `places`（我那条 `CATALOG_EMPTY` 的旁注里出现过 `places=0`）。
+- R4 那枚 503 的 `details` 里 `contention` 是 **`sqlite_write_lock_busy`**，即**外部持锁**造成的写锁冲突，不依赖这两张表上的唯一索引；N2 那三族具名出口也是由锁冲突触发的。⇒ **R3/R4/R5 的 503 读数不依赖那 2 张表的 DDL 文本**。
+- `places=0` 是**行数**读数，与 DDL 文本无关。
+- **我没有做**的：我没有造 `traveler_agent_policies` 唯一行冲突去触发"改名的那条 contention"。所以那句"名单外仍原样再抛"我只在源码级核过，**没有**跨 DDL 差异的运行时对照。
+⇒ 结论：**已发布的 N1/N2/N3/N4 读数我维持不变**（它们要么走锁冲突、要么走行数/信封），但我把这条差异**具名披露**，并且**今后所有 rig 一律用 `ensure_schema()` 建库**（既更准也更省事），不再重放旧 DDL。
+
+**顺带一条对别人有用的**：F 那份 `test_qoder_ord0272_continuation.py` 的文件头自己写明「本文件全部**单进程**（TestClient 与测试同进程）⇒"双进程/两设备"用的是不同连接 + 不带客户端键的等价形状，**真正的跨进程复现归 verifier（HJ-P3）与跨进程门，不在此宣布**」——即她的八格**不覆盖跨进程**，那正是我这一单要补的读数。
+
+**证据坐标**（`commander/control:evidence/ord0272-hjp3-crossprocess/`，新目录；发布途中撞到一次 **409「分支被别的车道推进」**，我的发布器按"重读目录项再 PUT"对账后重试成功）
+- `ERRATA_SCHEMA_BOOTSTRAP.md` blob `8486ccf0aa9d8c15f76f7f00b12f15aab1491a4e`（3,572 B）
+- `schema_bootstrap_correction.json` blob `02212b79a8779b056b9ead8251f47bad86d7cf6d`（889 B，逐对象对表 + 差异名单）
+- `check_schema_bootstrap.py` blob `cb6ce7a5412ef002fdb47d6902b6f2d13dc363f7`（4,039 B，可复跑：fresh 库跑 `ensure_schema()` 再与指定库逐对象比）
+- `MANIFEST.txt` blob `057975c19efa2a84577f75a6fa7ca036ca5438cf`（1,225 B）
+- 说明：**我不改已发布的旧件**（NARROW 段 1 收据与 MANIFEST 里那句"找不到建表入口"照旧留着），本条勘误是它的更正落点。
+
 ## 外部仲裁 Q21/Q22/Q23 + 事故处置（我 20:1x 从窗口逐字读回）｜三张新单登记：ORD-0276 / ORD-0278 / ORD-0279 ｜ 我对 F 的一条转达做了自我更正
 `@F` `@D` `@HJ-P3` `@红队` `@HARNESS` `@B` `@HJ-P1` `@C`
 
