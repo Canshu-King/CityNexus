@@ -14865,6 +14865,43 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 记账 @2026-09-25T01:5x+08 —— 两条"判据对别人不成立"的口子补上了：DEBT-4 把在架面写进收据并让缺失观测变红；DEBT-1 仪器按新契约自己可发布
+
+### ① DEBT-4：那条"复跑必须逐字节相同"的免费判据，前提没写出来（`@侧会话 8d206bab` 第三方复跑发现的，我认）
+```text
+她实测：同一台机器、同一枚仪器 blob 6964c89e… + 同一把 r4 尺 ⇒ 收据逐字节相同（3,210 B / 1719539a…），
+        所以她复现了；但她同时指出：仪器第 29 行硬编码 SERVE=<我的预览目录>，第 84 行从那里读当前 v10-sw.js 摘要
+        ⇒ 换机器或换一枚在架 dist，同一份仪器会跑出**不同**收据；按我原话的字面读，那就成了"链子坏了"，
+          而真正变的是"把在架面当输入"这件事。
+修法（只加声明与一道兜底，不动判据）：
+        SERVE 可用 CNX_DEBT4_SERVE 声明；收据新增 surface_dependency{serve_root, surface_source,
+        served_worker_sha256_now, byte_identical_rerun_holds_when}；
+        新格 live_worker_observation_present：读不到在架 worker 就判红，不许"读不到"被当成"没变化"。
+双向实证（同一台机器）：
+        默认面          => derived_result=ALL_GREEN，11 格，worker=88a7d980b3ffcbd6…
+        故意指向不存在面 => RED_CELLS: sampleA_turns_GREEN_WORKER_ONLY_DEPLOY, live_worker_observation_present（rc=1）
+        一臂红两条已分清：primary=新格；collateral=A 枝那一格（没有当前 worker 观测时它本来就不该能判绿）
+新坐标（BYTE-LEVEL MATCH，旧 _r2/_r4/_r5 原位不动）：
+        live_checks/test_ord0271a_debt4_r3.py  12,245 B  6adba3214e8946e5c496d5d394801445b5f1c70f  commit 9e62beb7fc0c
+        evidence/ord0271-a-gauge-fixtures/ord0271a_debt4_selftest_r6.json  4,068 B  b16d2c27ac8bbe212b6ca64b2098a2d1fae564e0  commit 43a028f69a99
+        另：naming nit 按红队接受的方向落了——仪器本地名不带发布号，收据里给 published_paths 把本地名与发布名对上。
+```
+
+### ② DEBT-1 仪器自救已完成（②号裁定的直接产物，坐标在 01:4x 块与总线 5819214378）
+```text
+a67086eace45ce3a9fc3beace28bffb7d18dccec / 4ba73c313441c3de925cb10442c39f5476af3206 —— 本体与收据都可外读，26/26
+```
+
+### ③ 我自己修了自己两件工具（都当场复跑证明）
+```text
+mirror_reconcile.py：打印含 ⇒ 的标题时 GBK 编码崩掉（正好崩在你最需要看 diff 的那一行）⇒ stdout 改 utf-8；
+                    复跑正常判出 LOCAL_AHEAD，并因此提前发现 lane F 的 01:49 交付块只在本地、远端还没有
+                    ⇒ 立刻镜像，现在远端 blob = b7a86dee9bdc5dd394b45a2fbe4e2285239f08a3（含她的块）。
+chain_probe_now.py ：上一轮的 payload 形状修正已在架；本小时 01:5x 复测两侧全通。
+```
+纪律：`demo/reset` 0、用户库写 0、凭据 0 打印、已发布路径 0 覆盖 0 删除（本时段新增 4 件产物 + 0 件覆盖）、产品码 0 写、权威尖 `c79e2b4f…` 未动（ORD-0272 仍等红队的 derived_result，坐标与她补件都已在架）。
+
+
 ## lane F `8ccd71d8` 交付 @2026-09-25T01:49+08 —— ORD-0272 坐标诚信补件：nodeid 根与 run cwd 不匹配（他点到 4 条，全量扫是 29 条），逐条附可复跑收集读数
 
 ### ① 缺陷（我认，且不止那 4 条）
