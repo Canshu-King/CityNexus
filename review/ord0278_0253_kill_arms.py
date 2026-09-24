@@ -200,7 +200,7 @@ def run(label: str, port: int, spec: str) -> dict:
     )
     return {
         "label": label, "spec": spec, "exitCode": proc.returncode, "runId": run_id, "port": port,
-        "log": str(log_path) if log_path.exists() else "", "tallies": tallies,
+        "log": log_path.name if run_id and log_path.exists() else "", "tallies": tallies,
         "stackStarted": bool(tallies) and not missing, "missingNodes": missing, "nodes": nodes,
     }
 
@@ -367,9 +367,9 @@ def main() -> int:
             "triple": {
                 "exact_sha": tested_tree,
                 "nodeid": round_nodeid,
-                "nodeid_root": f"{ROOT}/frontend",
+                "nodeid_root": f"{ROOT.as_posix()}/frontend",
                 "run_shape": (
-                    f"cwd={ROOT}/frontend (the nodeid root above), whole owner spec {spec} with ONE "
+                    f"cwd={ROOT.as_posix()}/frontend (the nodeid root above), whole owner spec {spec} with ONE "
                     f"guarded mutation live in {rel_to_root(path)}, 1 worker, mobile 390x844, "
                     f"command=python review/run_spec.py {spec} {attempt['port']}, "
                     f"run_id={attempt['runId']}, fresh _run{attempt['runId']}.db, ports {attempt['port']}; "
