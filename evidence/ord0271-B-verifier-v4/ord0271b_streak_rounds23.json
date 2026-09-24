@@ -1,0 +1,232 @@
+{
+ "at": "2026-09-24T16:21:23+08:00",
+ "order": "ORD-0271-B",
+ "lane": "HARNESS d291c9dc",
+ "what": "Q13 streak over self-contained rounds: each round's control readings GREEN, its restore byte-exact, its runtime mutant readings RED with the new clause as the only addition, and its one-token dedicated carrier RED on the new clause while v3 reads it GREEN",
+ "ruler": {
+  "v4": {
+   "file": "ord0263_verifier_v4.py",
+   "bytes": 33388,
+   "blob40": "21bbeae698796ceb4a71d2d8c0c5d668d35a74b5"
+  },
+  "v3": {
+   "file": "ord0263_verifier_v3.py",
+   "bytes": 21703,
+   "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+   "published_blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9"
+  }
+ },
+ "rounds_requested": 2,
+ "rounds_green": 2,
+ "longest_consecutive_green_run": {
+  "length": 2,
+  "rounds": [
+   2,
+   3
+  ]
+ },
+ "red_rounds": [],
+ "consecutiveness_gaps": [],
+ "stored_vs_recomputed_mismatches": [],
+ "reading_order_warnings": [],
+ "ruler_changed_between_rounds": [],
+ "derived_result": "STREAK_MET(2)",
+ "rounds": [
+  {
+   "file": "ord0271b_round2.json",
+   "round": 2,
+   "at": "2026-09-24T11:33:10+08:00",
+   "stored_derived_result": "ROUND_GREEN",
+   "recomputed": "ROUND_GREEN",
+   "checks_green": "11/11",
+   "red_checks": [],
+   "recomputation_drift": {},
+   "control_rows": [
+    {
+     "shape": "200_empty",
+     "v4": "GREEN",
+     "v4_failed": []
+    },
+    {
+     "shape": "200_html",
+     "v4": "GREEN",
+     "v4_failed": []
+    },
+    {
+     "shape": "200_not_json",
+     "v4": "GREEN",
+     "v4_failed": []
+    }
+   ],
+   "mutant_rows": [
+    {
+     "shape": "200_empty",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "reason": "UNKNOWN_FAILURE"
+    },
+    {
+     "shape": "200_html",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "reason": "UNKNOWN_FAILURE"
+    },
+    {
+     "shape": "200_not_json",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "reason": "UNKNOWN_FAILURE"
+    }
+   ],
+   "carrier_rows": [
+    {
+     "from_shape": "200_empty",
+     "tokens_changed": 1,
+     "v4": "RED",
+     "v4_failed": [
+      "reason_collapsed"
+     ],
+     "v3": "GREEN"
+    },
+    {
+     "from_shape": "200_html",
+     "tokens_changed": 1,
+     "v4": "RED",
+     "v4_failed": [
+      "reason_collapsed"
+     ],
+     "v3": "GREEN"
+    },
+    {
+     "from_shape": "200_not_json",
+     "tokens_changed": 1,
+     "v4": "RED",
+     "v4_failed": [
+      "reason_collapsed"
+     ],
+     "v3": "GREEN"
+    }
+   ],
+   "ruler_v4_blob40": "21bbeae698796ceb4a71d2d8c0c5d668d35a74b5",
+   "instruments_match": true,
+   "capture_blob40": "02fe44fc9ee621721af2b8f478ae1aa18cca61af",
+   "checks_only_in_aggregator": [
+    "mutant_face_answered_the_mutant_bytes"
+   ],
+   "checks_only_in_receipt": [
+    "control_source_file_back_at_pre_mutation_sha",
+    "control_still_green_under_v3",
+    "product_tree_clean_after_restore",
+    "q8b_fingerprints_complete"
+   ],
+   "latest_reading_on_origin_clock": "11:31:29"
+  },
+  {
+   "file": "ord0271b_round3.json",
+   "round": 3,
+   "at": "2026-09-24T11:40:11+08:00",
+   "stored_derived_result": "ROUND_GREEN",
+   "recomputed": "ROUND_GREEN",
+   "checks_green": "11/11",
+   "red_checks": [],
+   "recomputation_drift": {},
+   "control_rows": [
+    {
+     "shape": "200_empty",
+     "v4": "GREEN",
+     "v4_failed": []
+    },
+    {
+     "shape": "200_html",
+     "v4": "GREEN",
+     "v4_failed": []
+    },
+    {
+     "shape": "200_not_json",
+     "v4": "GREEN",
+     "v4_failed": []
+    }
+   ],
+   "mutant_rows": [
+    {
+     "shape": "200_empty",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "reason": "UNKNOWN_FAILURE"
+    },
+    {
+     "shape": "200_html",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "reason": "UNKNOWN_FAILURE"
+    },
+    {
+     "shape": "200_not_json",
+     "v4": "RED",
+     "v3": "RED",
+     "v4_only": [
+      "reason_collapsed"
+     ],
+     "reason": "UNKNOWN_FAILURE"
+    }
+   ],
+   "carrier_rows": [
+    {
+     "from_shape": "200_empty",
+     "tokens_changed": 1,
+     "v4": "RED",
+     "v4_failed": [
+      "reason_collapsed"
+     ],
+     "v3": "GREEN"
+    },
+    {
+     "from_shape": "200_html",
+     "tokens_changed": 1,
+     "v4": "RED",
+     "v4_failed": [
+      "reason_collapsed"
+     ],
+     "v3": "GREEN"
+    },
+    {
+     "from_shape": "200_not_json",
+     "tokens_changed": 1,
+     "v4": "RED",
+     "v4_failed": [
+      "reason_collapsed"
+     ],
+     "v3": "GREEN"
+    }
+   ],
+   "ruler_v4_blob40": "21bbeae698796ceb4a71d2d8c0c5d668d35a74b5",
+   "instruments_match": true,
+   "capture_blob40": "89c145b672c6042eff63bded641d700f80069f00",
+   "checks_only_in_aggregator": [
+    "mutant_face_answered_the_mutant_bytes"
+   ],
+   "checks_only_in_receipt": [
+    "control_source_file_back_at_pre_mutation_sha",
+    "control_still_green_under_v3",
+    "product_tree_clean_after_restore",
+    "q8b_fingerprints_complete"
+   ],
+   "latest_reading_on_origin_clock": "11:39:43"
+  }
+ ]
+}
