@@ -1,0 +1,285 @@
+{
+ "tree": "D:\\moodle\\cnx_landcheck_dcae1bc9\\CityNexus-dcae1bc964125c3a975916f6bf667794cc19622a",
+ "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+ "gen": "dcae1bc964125c3a975916f6bf667794cc19622a",
+ "tree_head40": null,
+ "tree_branch": null,
+ "started_at": "2026-09-25T02:17:43+08:00",
+ "read_only": [
+  "-p no:cacheprovider + PYTHONDONTWRITEBYTECODE=1（不落 .pytest_cache/__pycache__）",
+  "不部署、不起服务",
+  "不写任何数据库（套件用 ORD-0211 一次性临时库；本报告贴出该行并断言不含 _live.db）",
+  "跑前跑后对被验文件做 sha256，任何差异判 FAIL"
+ ],
+ "verdict": "GATE-GREEN",
+ "cells": [
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+   "exact_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\cnx_landcheck_dcae1bc9\\CityNexus-dcae1bc964125c3a975916f6bf667794cc19622a\\backend)",
+   "result": "GREEN"
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+   "exact_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\cnx_landcheck_dcae1bc9\\CityNexus-dcae1bc964125c3a975916f6bf667794cc19622a\\backend)",
+   "result": "GREEN"
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+   "exact_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\cnx_landcheck_dcae1bc9\\CityNexus-dcae1bc964125c3a975916f6bf667794cc19622a\\backend)",
+   "result": "GREEN"
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+   "exact_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\cnx_landcheck_dcae1bc9\\CityNexus-dcae1bc964125c3a975916f6bf667794cc19622a\\backend)",
+   "result": "GREEN"
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+   "exact_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\cnx_landcheck_dcae1bc9\\CityNexus-dcae1bc964125c3a975916f6bf667794cc19622a\\backend)",
+   "result": "GREEN"
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+   "exact_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\cnx_landcheck_dcae1bc9\\CityNexus-dcae1bc964125c3a975916f6bf667794cc19622a\\backend)",
+   "result": "GREEN"
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+   "exact_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\cnx_landcheck_dcae1bc9\\CityNexus-dcae1bc964125c3a975916f6bf667794cc19622a\\backend)",
+   "result": "GREEN"
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+   "exact_sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\cnx_landcheck_dcae1bc9\\CityNexus-dcae1bc964125c3a975916f6bf667794cc19622a\\backend)",
+   "result": "GREEN"
+  }
+ ],
+ "arms": {
+  "K1_claim_stops_committing_before_generation": {
+   "line_named": "            claim_tx.commit()",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+    }
+   ],
+   "collectible_count": 6,
+   "expected": 6,
+   "cross_process_owner": null
+  },
+  "K2_two_identities_merged_into_one": {
+   "line_named": "keys = [...transport...] 的分支被合并成「一枚键顶两枚」",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+    }
+   ],
+   "collectible_count": 1,
+   "expected": 1,
+   "cross_process_owner": null
+  },
+  "K3_mission_ownership_door_removed": {
+   "line_named": "        _require_journeys_mission(session, journey, request.mission_id)",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+    }
+   ],
+   "collectible_count": 1,
+   "expected": 1,
+   "cross_process_owner": null
+  },
+  "K4_link_event_stops_naming_the_plans": {
+   "line_named": "                               \"plan_version_ids\": feasible_ids,",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+    }
+   ],
+   "collectible_count": 1,
+   "expected": 1,
+   "cross_process_owner": null
+  },
+  "K5_both_replay_doors_removed": {
+   "line_named": "两扇早退（route 的 replayed / claim 的 raced）一并拆掉",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409"
+    },
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+    }
+   ],
+   "collectible_count": 5,
+   "expected": 5,
+   "cross_process_owner": null
+  },
+  "K6_unowned_path_laundered_into_a_bare_500": {
+   "line_named": "无身份路径的 `except ValueError → _plan_generation_http_answer(...)`",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+    },
+    {
+     "nodeid": "tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable"
+    },
+    {
+     "nodeid": "tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict"
+    },
+    {
+     "nodeid": "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative"
+    },
+    {
+     "nodeid": "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+    }
+   ],
+   "collectible_count": 5,
+   "expected": 5,
+   "cross_process_owner": null
+  },
+  "K7_refusal_stops_persisting_the_durable_fact": {
+   "line_named": "    record_replan_outcome(session, journey, feasible_candidate_ids=[], ...)",
+   "carriers_removed": [
+    {
+     "nodeid": "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative"
+    },
+    {
+     "nodeid": "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised",
+     "collectible_in_landed_tree": true,
+     "mismatch_kind": "OK",
+     "collect_cmd": "python -m pytest --collect-only -q tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+    }
+   ],
+   "collectible_count": 2,
+   "expected": 2,
+   "cross_process_owner": null
+  },
+  "K8_receipt_overwrite_guard_removed": {
+   "line_named": "IdempotencyKey.response_json.is_(None) 这半个条件",
+   "carriers_removed": [],
+   "collectible_count": 0,
+   "expected": 0,
+   "cross_process_owner": "单进程里占位与回填是同一发 ⇒ 本臂在**本门内没有载体**；『覆盖别人已填的回执』要两个进程才观测得到 ⇒ 归属 verifier（HJ-P3）的跨进程门。本命令不宣称这一面已验。"
+  }
+ },
+ "extra": {
+  "what": "本单回归的两枚既存载体（顺带；不改变本单判据）",
+  "targets": [
+   "tests/test_qoder_current_plan_is_named.py",
+   "tests/test_qoder_simulation_mode.py"
+  ],
+  "summary": "======================= 13 passed, 2 warnings in 2.17s ========================",
+  "failed": []
+ },
+ "silent_alarms": [],
+ "pytest_cache_preexisting": {
+  "backend/.pytest_cache": false,
+  ".pytest_cache": false
+ },
+ "run_shape": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py --tb=line -p no:cacheprovider -rf   (cwd=D:\\moodle\\cnx_landcheck_dcae1bc9\\CityNexus-dcae1bc964125c3a975916f6bf667794cc19622a\\backend)",
+ "db_header_line": "ORD-0211 test database: resolved=C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_pytest_s_drnbnn\\suite.db | exists=False | declared_by=conftest temp dir",
+ "cells_summary": "======================== 8 passed, 2 warnings in 2.65s ========================",
+ "files_before": {
+  "backend/app/main.py": "86975f76c5245eb16299673f7615a60f811f8f4e06f18e181d85060a248a5a50",
+  "backend/app/schemas.py": "dceb66e5697c12e1e4bf205b85d0ab11c77ee9f45115794367498da2dc7a2afc",
+  "backend/tests/test_qoder_ord0272_continuation.py": "380781da923361e32348826ff1fc7e5a56753d7c1abd19f01a988a225e8e1b74",
+  "contracts/openapi.yaml": "76b0c6e834661ee7f8e8641a66d8ca195275a79da9a234f05063a38638226ef6"
+ },
+ "files_after": {
+  "backend/app/main.py": "86975f76c5245eb16299673f7615a60f811f8f4e06f18e181d85060a248a5a50",
+  "backend/app/schemas.py": "dceb66e5697c12e1e4bf205b85d0ab11c77ee9f45115794367498da2dc7a2afc",
+  "backend/tests/test_qoder_ord0272_continuation.py": "380781da923361e32348826ff1fc7e5a56753d7c1abd19f01a988a225e8e1b74",
+  "contracts/openapi.yaml": "76b0c6e834661ee7f8e8641a66d8ca195275a79da9a234f05063a38638226ef6"
+ }
+}
