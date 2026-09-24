@@ -483,6 +483,14 @@ export function PlanWithAiSheet({
        running and the screen already says so. */
     if (runningRef.current) return;
     runningRef.current = true;
+    /* ORD-0253: one identity per submission INTENT.  Minted here -- after the synchronous guard that
+       refuses the second click of a same-tick double tap, and before the first await -- so a refused
+       burst never gets one, both legs of the accepted press carry the same one, and the next deliberate
+       press mints a new one.  Not held in state, storage or a cooldown: none of those is the intent,
+       and a cooldown dressed up as correctness would let two different asks reuse a key.
+       The leg that matters is `plans/generate` -- the server reads the transport key there
+       (`main.py`, ORD-0272), and its validator wants 8..128 characters, which a v4 UUID satisfies. */
+    const idempotencyKey = crypto.randomUUID();
     const controller = new AbortController();
     abortRef.current = controller;
     const signal = controller.signal;
@@ -509,7 +517,14 @@ export function PlanWithAiSheet({
       enter("request");
       const response = await fetch(`/api/v1/journeys/${journeyId}/agent/commands`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        /* The transport key travels with the whole intent.  This route declares no such parameter
+           today, so it is inert HERE -- the leg that reads it is plans/generate below.  The body
+           gains nothing: AgentCommandRequest is extra="forbid", so a new key would be a 422. */
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "Idempotency-Key": idempotencyKey,
+        },
         body: JSON.stringify({ command }),
         signal,
       });
@@ -639,7 +654,15 @@ export function PlanWithAiSheet({
             `/api/v1/journeys/${journeyId}/plans/generate`,
             {
               method: "POST",
-              headers: { "Content-Type": "application/json" },
+              /* ORD-0253's whole point: this is the leg the server reads the transport key on.
+                 Without it the request reaches the route with no identity at all, and the durable
+                 receipt machinery never sees this submission -- "the phone's press leaves no trace"
+                 is literally this header being absent. */
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "Idempotency-Key": idempotencyKey,
+              },
               body: JSON.stringify({ candidate_count: 3 }),
               signal,
             },
