@@ -1,0 +1,51 @@
+{
+ "arm": "Xhalf",
+ "port": 8478,
+ "constant_ms": 6000,
+ "face_serves": "dist_Xhalf",
+ "hub_reached": true,
+ "request_text": "想傍晚在老城慢慢走一圈，别太赶",
+ "request_text_length": 15,
+ "rig": "selective origin 127.0.0.1:8598 - reads answered by backend 8493, POST accepted and held open with no response",
+ "ms_from_fill_to_lock_window": 0,
+ "write_legs": [
+  {
+   "url": "/api/v1/journeys/91f78c9b-b768-46c9-a62e-4ac09b6609da/agent/commands",
+   "method": "POST",
+   "api": true,
+   "sent_ms_since_load_start": 803,
+   "sent_wall": "2026-09-24T23:42:09.693Z",
+   "has_signal": true,
+   "request_body": "{\"command\":\"想傍晚在老城慢慢走一圈，别太赶\"}",
+   "request_headers_idempotency_key": null
+  }
+ ],
+ "deadline_card_during_flight": null,
+ "counter_at_end": "发出请求，等待模型返回 · 已等待 29 秒",
+ "result_card": null,
+ "server_reason_rendered": null,
+ "max_counter_seen": 29,
+ "timeline_points": 115,
+ "timeline_tail": [
+  {
+   "ms": 29495,
+   "counter": "发出请求，等待模型返回 · 已等待 29 秒",
+   "posts_settled": 0
+  },
+  {
+   "ms": 29757,
+   "counter": "发出请求，等待模型返回 · 已等待 29 秒",
+   "posts_settled": 0
+  },
+  {
+   "ms": 30028,
+   "counter": "发出请求，等待模型返回 · 已等待 29 秒",
+   "posts_settled": 0
+  }
+ ],
+ "run_id": "O0291-2507",
+ "run_tag": "silent",
+ "stage": "write",
+ "measured_at": "2026-09-24T23:42:40.166Z",
+ "viewport": "390x844 zh-CN"
+}
