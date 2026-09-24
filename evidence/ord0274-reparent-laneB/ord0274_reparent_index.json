@@ -1,0 +1,63 @@
+{
+ "candidate_tip": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+ "branch": "review/0274-b2c-c",
+ "authoritative_base": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+ "files": [
+  {
+   "name": "ord0274_reparent_receipt.json",
+   "blob40": "a8bf252a1c5e45f39031308937e3e611c4cf3109",
+   "bytes": 21241
+  },
+  {
+   "name": "ord0274_reparent_ef277b2.patch",
+   "blob40": "69c3a9b9a28c660ed3396a5eea4dcaec60d26dd3",
+   "bytes": 3608
+  },
+  {
+   "name": "ord0274_q24_per_cell.json",
+   "blob40": "15ec650a3553030435a1390affdacfcae5e7038f",
+   "bytes": 9793
+  },
+  {
+   "name": "ord0274_b2c_runtime_tip45b0a5e.json",
+   "blob40": "a8e4eff0001f883bf56b14c1ff70e4840dbae04b",
+   "bytes": 139671
+  },
+  {
+   "name": "ord0274_b2b_runtime_tip45b0a5e.json",
+   "blob40": "e874c5be6920137b412993c700ea245b57e0b16d",
+   "bytes": 18478
+  },
+  {
+   "name": "ord0274_ident_selftest_tip45.json",
+   "blob40": "a68e70931b05a2c7f4742c9bd580d9071d6868d1",
+   "bytes": 3789
+  },
+  {
+   "name": "q274sw_regression_equivalents.json",
+   "blob40": "542766561fc715a89086e0629b7a73cd27d9c206",
+   "bytes": 2011
+  },
+  {
+   "name": "reparent_gates.out",
+   "blob40": "5a468fb5c20d58d760c1607f782afeb8fb9ea906",
+   "bytes": 3390
+  },
+  {
+   "name": "reparent_sweeps.out",
+   "blob40": "635bfb507c1092864b107eedf9f4e51d1de32fcf",
+   "bytes": 9468
+  },
+  {
+   "name": "ord0274_b2b_mutant_shapes.json",
+   "blob40": "6d36d7aba7a9da4c10d12522157642d59c888f2f",
+   "bytes": 6005
+  },
+  {
+   "name": "q274_q24_per_cell.py",
+   "blob40": "3400100503a46ad0f190a7dcb435316e420c2c89",
+   "bytes": 9933
+  }
+ ],
+ "listed": 11
+}
