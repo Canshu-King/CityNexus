@@ -1,0 +1,174 @@
+{
+  "kind": "CNX_ANSWERED_ENVELOPE_READING_V1",
+  "owe": "欠件 1：错误信封在正常路径上确实 VALID 的三行现场读数",
+  "asked_by": "包工头 @15:3x（总线 5806340154 同批），口径：路由 + HTTP 码 + 屏上文字/服务端字段两侧同判；服务端字段用 == 不用 in，并带一枚「等值必须认」的正控",
+  "surface": {
+    "authoritative_tip_at_read_time": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+    "frontend_bundle_served": {
+      "path": "D:\\moodle\\_qoder_lane_c_env0924\\dist\\assets\\index-Cpy_jhEg.js",
+      "bytes": 1242399,
+      "sha256": "5d674a444291f10b45fa50dc53f57845c888013bc3d941f6fc6d0f9f5ad7b2d7",
+      "same_as_commander_quoted_prefix": true
+    },
+    "bundle_source_tree": "我的副本，取自 _qoder_cmdr_deploy_2b49e3c_0923/repo/frontend/dist（2b49e3ca 那一代，含 ORD-0263 的分类器；权威线一字未动）",
+    "preview": {
+      "url": "http://127.0.0.1:8610",
+      "note": "vite preview --outDir 指我自己那份 dist，CITYNEXUS_BACKEND_PORT=8611 让 /api 落在我自己的假源站（归属由 origin_log + 响应头 server: BaseHTTP/0.6 Python/3.12.14 两侧证明）"
+    },
+    "origin": {
+      "port": 8611,
+      "role": "只答合法信封的假源站；它同时是被测服务端字段的记录者"
+    },
+    "listeners_at_build_time": {
+      "8610": {
+        "local": "127.0.0.1:8610",
+        "pid": "9652",
+        "state": "LISTENING"
+      },
+      "8611": {
+        "local": "127.0.0.1:8611",
+        "pid": "39356",
+        "state": "LISTENING"
+      }
+    },
+    "db": "本探针 0 打开任何 .db：假源站不回真数据，产品后端没被起过；_live.db/_preview.db 0 接触"
+  },
+  "reading_method": {
+    "client_side": "页面自己发的 fetch：performance.getEntriesByType('resource') 的 route + responseStatus",
+    "screen_side": "document.body.innerText（渲染文字）+ 点开 <summary>「归因详情」后的遥测串",
+    "server_side": "假源站自己 append 的 origin_log.jsonl（route/status/content_type/server_error_code）",
+    "not_used": "没有从任何 app 日志 grep；没有我自己调用分类器；没有读 data-* 属性"
+  },
+  "equality_self_test": {
+    "positive_control_equality_accepted": true,
+    "negative_control_containment_rejected": true,
+    "the_lax_operator_would_have_said": true,
+    "meaning": "把带后缀的漂移读成匹配是 `in` 的常规失误；本收据里所有服务端字段比较都是 ==，所以第 2 行那句「服务端确实具名了 VALIDATION_ERROR」不会因为屏上没出现它就被记成匹配。"
+  },
+  "rows": [
+    {
+      "line": 1,
+      "route": "/api/v1/journeys/11111111-2222-3333-4444-555555555555/experience",
+      "http_status_client_side_observed": 404,
+      "http_status_origin_side": 404,
+      "statuses_agree_both_sides": true,
+      "origin_content_type": "application/json",
+      "server_field_equality": {
+        "left": "JOURNEY_NOT_FOUND",
+        "right": "JOURNEY_NOT_FOUND",
+        "equal": true,
+        "operator": "=="
+      },
+      "screen_headline_rendered": "这台服务器上没有这一趟行程了",
+      "screen_body_rendered": "这台设备还记得行程 11111111…，但服务器明确回答它不存在（HTTP 404）。这不是网络问题：服务器刚才答得出来。你的其它行程没有受影响。",
+      "screen_ctas_rendered": "选一趟行程 · 重试 · 归因详情",
+      "attribution_telemetry_expanded_on_screen": [
+        "attribution_reason=JOURNEY_NOT_FOUND",
+        "evidence_kind=HTTP_RESPONSE",
+        "http_status=404",
+        "source_layer=RESOURCE_STATE",
+        "retryable=false",
+        "recovery_action=choose-journey"
+      ],
+      "reason": "JOURNEY_NOT_FOUND",
+      "ord0263_contract": {
+        "banned": [
+          "NETWORK_UNAVAILABLE",
+          "NO_REPLY",
+          "UNKNOWN_FAILURE"
+        ],
+        "reason_in_banned": false,
+        "verdict": "合同内"
+      },
+      "server_named_code_carried_to_screen": false
+    },
+    {
+      "line": 2,
+      "route": "/api/v1/journeys/11111111-2222-3333-4444-555555555555/experience",
+      "http_status_client_side_observed": 422,
+      "http_status_origin_side": 422,
+      "statuses_agree_both_sides": true,
+      "origin_content_type": "application/json",
+      "server_field_equality": {
+        "left": "VALIDATION_ERROR",
+        "right": "VALIDATION_ERROR",
+        "equal": true,
+        "operator": "=="
+      },
+      "screen_headline_rendered": "这一次没读到",
+      "screen_body_rendered": "服务器接上了，但这次读取没有成功，原因还没有分类。可以重试。",
+      "screen_ctas_rendered": "重试 · 归因详情",
+      "attribution_telemetry_expanded_on_screen": [
+        "attribution_reason=UNKNOWN_FAILURE",
+        "evidence_kind=HTTP_RESPONSE",
+        "http_status=422",
+        "source_layer=RESOURCE_STATE",
+        "retryable=false",
+        "recovery_action=retry"
+      ],
+      "reason": "UNKNOWN_FAILURE",
+      "ord0263_contract": {
+        "banned": [
+          "NETWORK_UNAVAILABLE",
+          "NO_REPLY",
+          "UNKNOWN_FAILURE"
+        ],
+        "reason_in_banned": true,
+        "verdict": "合同破（answered 却落进被禁那一格）"
+      },
+      "server_named_code_carried_to_screen": false
+    },
+    {
+      "line": 3,
+      "route": "/api/v1/journeys/11111111-2222-3333-4444-555555555555/experience",
+      "http_status_client_side_observed": 503,
+      "http_status_origin_side": 503,
+      "statuses_agree_both_sides": true,
+      "origin_content_type": "application/json",
+      "server_field_equality": {
+        "left": "HYDRATION_STORE_BUSY",
+        "right": "HYDRATION_STORE_BUSY",
+        "equal": true,
+        "operator": "=="
+      },
+      "screen_headline_rendered": "服务器这次没能把行程读出来",
+      "screen_body_rendered": "服务器自己报错了（HTTP 503）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+      "screen_ctas_rendered": "重试 · 归因详情",
+      "attribution_telemetry_expanded_on_screen": [
+        "attribution_reason=SERVER_ERROR",
+        "evidence_kind=HTTP_RESPONSE",
+        "http_status=503",
+        "source_layer=RUNTIME",
+        "retryable=true",
+        "recovery_action=retry",
+        "cached_copy_present=false"
+      ],
+      "reason": "SERVER_ERROR",
+      "ord0263_contract": {
+        "banned": [
+          "NETWORK_UNAVAILABLE",
+          "NO_REPLY",
+          "UNKNOWN_FAILURE"
+        ],
+        "reason_in_banned": false,
+        "verdict": "合同内"
+      },
+      "server_named_code_carried_to_screen": false
+    }
+  ],
+  "summary": {
+    "answered_envelope_never_says_network_down": true,
+    "lines_inside_contract": 2,
+    "lines_outside_contract": [
+      2
+    ],
+    "server_named_code_reaches_screen_on_any_line": false
+  },
+  "unscripted_route_disclosure": {
+    "route": "/api/v1/demo/scene",
+    "status_in_my_origin_log": 599,
+    "meaning": "这一条不是产品答的，是我的假源站对**没脚本化**的路由打的标记（我让它在未指定时 loudly 599 而不是假装 200）。它出现在日志里所以我写出来，不藏。"
+  },
+  "generated_at_local_clock": "2026-09-24T23:31+0800",
+  "constraints": "0 产品码改动、0 次 demo/reset、0 写 _live.db/_preview.db、0 新建隧道、不直写权威线；证据文件名不含被禁片段"
+}
