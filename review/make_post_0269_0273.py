@@ -22,6 +22,33 @@ def load(path: str) -> dict:
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
+ARM_PREFIX = "ord0269-0273-arms-"
+
+
+def arm_lineage(arms_path: str) -> tuple[dict, list, list]:
+    """Every arms receipt this lane has written, in the order they were written.
+
+    Returns (name -> {tag: claimed_result}, ordered tags, unreadable file names).  A round that
+    cannot be read is named, not dropped: "we never measured that" and "we lost the file" are
+    different facts.
+    """
+    directory = Path(arms_path).parent
+    tags: list[str] = []
+    lineage: dict[str, dict[str, str]] = {}
+    unreadable: list[str] = []
+    for path in sorted(directory.glob(f"{ARM_PREFIX}*.json"), key=lambda p: p.stat().st_mtime):
+        tag = path.name[len(ARM_PREFIX) : -len(".json")]
+        try:
+            record = json.loads(path.read_text(encoding="utf-8"))
+        except Exception as exc:  # named below, never silently skipped
+            unreadable.append(f"{path.name} ({type(exc).__name__})")
+            continue
+        tags.append(tag)
+        for arm in record.get("arms", []):
+            lineage.setdefault(arm["name"], {})[tag] = arm["claimed_result"]
+    return lineage, tags, unreadable
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--arms", required=True)
@@ -238,6 +265,22 @@ def main() -> int:
     for t in triples:
         add(f"- `{t['exact_sha']}` · `{t['nodeid']}` · {t['run_shape']}")
     add("")
+    coll = round_receipt.get("collection") or {}
+    if coll:
+        pc = coll["commands"]["playwright_list"]
+        bc = coll["commands"]["backend_collect_only"]
+        add("**re-parent 之后的收集数（在写这张收据的同一个进程里跑的，rc 一并记着）**")
+        add("")
+        add(
+            f"- Playwright 收集：`{coll['playwright_total_line']}` ⇒ 两枚门 **{coll['playwright_node_count']} 个判据节点**"
+            "（多出来那条是 real-seed setup 项目，不是判据）"
+        )
+        add(f"  - `{pc['cmd']}`（cwd `{pc['cwd']}`，rc={pc['rc']}）")
+        add(f"  - 节点：{', '.join('`'+n+'`' for n in coll['playwright_nodes'])}")
+        add(f"- 后端 `--collect-only`：**{coll['backend_collected']}** 条（`{coll['backend_collected_line']}`）")
+        add(f"  - `{bc['cmd']}`（cwd `{bc['cwd']}`，解释器 `{bc['interpreter']}`，rc={bc['rc']}）")
+        add("  - 这两条命令原样可复跑；rc≠0 或没读出数字时我不报数，直接进 problems。")
+        add("")
     bridge = manifest["tree_diff_between_tips"] if a.manifest else {}
     add(
         f"**尖桥（两枚尖，不是同一刻量的）**：反突变在 `{arms['head'][:9]}…`，绿轮在 "
@@ -258,17 +301,41 @@ def main() -> int:
     add(
         "- 形状：`frontend/src/api/useContinuationState.ts` 用 `events: events?.events ?? []` 把「回了 200 但 body 里没有 "
         "events 数组」伪造成「本页没有这一轮」。后果有两层：屏上那句具名状态**说错了原因**（把「答了但用不了」说成「翻不到」），"
-        "并且分类器里那道 malformed 守卫**从唯一调用方不可达**——所以 v2 那枚 `K269_MALFORMED_FEED_SILENT` 活了。"
+        "并且分类器里那道 malformed 守卫**从唯一调用方不可达**——所以 `v2-030120e` 那枚 "
+        "`K269_MALFORMED_FEED_SILENT` 活了（那一枚臂本身没变，变的是有人去读那道守卫了没有）。"
+
     )
     add(
-        "- 修法：payload 原样交给 `classifyContinuation` 判定（commit `c7e2acb8664092bd9cdebdc6131654d96db434c3`）。"
-        "证据：v5 里同一枚臂 **只红细胞3**（独占红集），产品字节未再改动即 9/9。"
+        f"- 修法：payload 原样交给 `classifyContinuation` 判定（commit `c7e2acb8664092bd9cdebdc6131654d96db434c3`）。"
+        f"证据：本轮收据 `{Path(a.arms).name}` 里同一枚臂 **只红细胞3**（独占红集）。"
     )
+
     add("")
-    add(
-        f"- 门自证的两处「自己骗自己」（都已修并具名）：R-6 原本只 `toHaveCount(0)` 断缺席（变异体 1.3s 混过 → 现在先等具名句渲染，"
-        f"同一枚变异体 16.2s 红）；反突变驱动在 `run_spec.py` 截断的 90 行控制台里读自己的运行（四红被判成 BASELINE_RED → 改读 run-<id>.log 全文）。"
-    )
+    lineage, lineage_tags, lineage_unreadable = arm_lineage(a.arms)
+    ever_imperfect = {
+        name: tags for name, tags in lineage.items() if any(v != "KILLED" for v in tags.values())
+    }
+    if ever_imperfect:
+        add("**每一枚臂 across 全部已跑轮次的判定（取自磁盘上的收据，不是回忆）**")
+        add("")
+        add("| 臂 | " + " | ".join(f"`{t}`" for t in lineage_tags) + " |")
+        add("| --- | " + " | ".join("---" for _ in lineage_tags) + " |")
+        for name, tags in sorted(ever_imperfect.items()):
+            add(f"| `{name}` | " + " | ".join(f"{tags.get(t, '—')}" for t in lineage_tags) + " |")
+        add("")
+        if lineage_unreadable:
+            add(f"- 有两份收据读不出来，我点名而不是当代它没发生：{', '.join('`'+u+'`' for u in lineage_unreadable)}")
+        add(
+            "- 存活轮次证明的是**我门当时没人读那一格**（不是产品当时说谎）；同一枚臂在后续轮次变 KILLED 才是门的强度回来了。"
+        )
+        add("- 表格里的 tag 就是收据文件名（`ord0269-0273-arms-<tag>.json`），逐枚可开。")
+        add("")
+        add(
+            "- 另外一处同类修正：反突变驱动曾经在 `run_spec.py` 只回显的最后 90 行控制台里读自己的运行，"
+            "四枚全红会被判成 `BASELINE_RED`（v4 的头两枚就是这么误判的）；改读 `review/run-<id>.log` 全文后，"
+            "同一批臂的红集在 v5/v6 逐枚可读——这条也是收据里能对的，不在上面表内是因为它改的是判定器不是臂。"
+        )
+
     add("")
     schema = round_receipt.get("R_SCHEMA_01_class", {})
     add(
