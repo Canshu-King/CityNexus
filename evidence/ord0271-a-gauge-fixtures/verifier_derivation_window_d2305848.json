@@ -1,0 +1,129 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0271-A + ORD-0277 + ORD-0275(r3 meta)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-24T23:11+08:00",
+ "coordinates_all_verified_by_me": {
+  "gauge_unchanged": {"path": "live_checks/deploy_bundle.py", "blob": "149e9c6dbe6debca...", "bytes": 106731, "sha_ok": true},
+  "gauge_v2_r4": {"path": "live_checks/deploy_bundle_v2_draft_r4.py", "blob": "0686670743c07964...", "bytes": 132623, "sha_ok": true},
+  "debt3_instr": {"blob": "ad0575c10c586c94...", "bytes": 24698, "sha_ok": true},
+  "debt3_receipt": {"blob": "e9edc7cc644fb6ec...", "bytes": 11185, "sha_ok": true},
+  "debt4_instr": {"blob": "6964c89e236f61b0...", "bytes": 10125, "sha_ok": true},
+  "debt4_receipt": {"blob": "1719539a4ab2fb76...", "bytes": 3210, "sha_ok": true},
+  "ord0277_instr": {"blob": "47abf7d8305162b7...", "bytes": 14530, "sha_ok": true},
+  "ord0277_receipt": {"blob": "0e0f646fc4a44740...", "bytes": 5771, "sha_ok": true},
+  "live_66arms": {"blob": "e05756ccd141777c...", "bytes": 27674, "sha_ok": true},
+  "live_preunion": {"blob": "a2638dc804e18bf5...", "bytes": 39949, "sha_ok": true},
+  "publisher_r4": {"blob": "00863652954fe07c...", "bytes": 19972, "sha_ok": true},
+  "ord0275_r3b_receipt": {"blob": "86f984ef4db98c87...", "bytes": 10404, "sha_ok": true},
+  "ord0275_r3_body": {"path": "live_checks/test_ord0275_publisher_guard_r3.py", "status": 404, "ABSENT_AS_DECLARED": true},
+  "dist_positive_control": {"path": "D:/moodle/_qoder_preview_20260920/dist/assets/index-ChOTTCvB.js", "present": true,
+                            "bytes": 1245203, "sha256": "2d56a79632efc0c6b30396ebbddcd54bd84c0d2fa6a30d3f20d09f4655d419de", "sha256_ok": true}
+ },
+ "item2_DEBT3": {
+  "command": "python test_ord0271a_debt3_r2.py (python 3.10.11, fresh dir, fixtures re-fetched from the two declared blobs)",
+  "derived_result": "ALL_GREEN",
+  "cells": "27/27 GREEN",
+  "killers": {"M1_drop_present_in_export_clause": "KILLED clean=RED mutant=NOT_YET_UNIONED_NAMED_GAP",
+              "M2_drop_published_on_served_disk_clause": "KILLED clean=RED mutant=NOT_YET_UNIONED_NAMED_GAP",
+              "M3_postunion_inherits_the_gap": "KILLED clean=RED mutant=NOT_YET_UNIONED_NAMED_GAP",
+              "M4_unknown_phase_no_longer_raises": "KILLED clean=ValueError mutant=NOT_YET_UNIONED_NAMED_GAP",
+              "M5_f_verdict_of_ignores_phase": "KILLED clean=RED mutant=PARTIAL_NAMED_GAPS"},
+  "field_level_reproduction": {"fields": 221, "differing": 6,
+    "differences": ["4x local filesystem paths (my dir vs writer dir)", "2x timestamp t"],
+    "verdict_fields_differing": 0,
+    "note": "every cell verdict, killer verdict and measured detail matches the published receipt"},
+  "replayability_finding": {
+   "what": "the instrument fetch_blob()s each fixture and then io.open()s a local cache path, asserting the two are byte-identical. On a fresh directory that cache does not exist, so a first run dies with FileNotFoundError before any cell executes.",
+   "measured": "fresh dir -> FileNotFoundError preflight_0923_200628.json; I seeded the cache from the declared blobs and the run then passed.",
+   "severity": "reproducibility, not correctness - the fixture bytes ARE re-fetched and proven by blob sha; only the redundant local copy is mandatory",
+   "fix": "write the fetched bytes to the cache path when absent instead of requiring a seed."
+  }
+ },
+ "item3_DEBT4": {
+  "command": "python test_ord0271a_debt4_r2.py",
+  "derived_result": "ALL_GREEN",
+  "cells": "10/10 ok",
+  "receipt_sha_reproduction": {"my_receipt_blob": "1719539a4ab2fb7682e2f0355708e8a260b504fb",
+                               "published_blob": "1719539a4ab2fb7682e2f0355708e8a260b504fb",
+                               "SHA_IDENTICAL": true,
+                               "note": "no clock field, so the writer's bar was sha equality - met"},
+  "derived_decisions_recomputed": {"A": "worker_only=true, branch=GREEN_WORKER_ONLY_DEPLOY, old_refs_absent=null(N/A)",
+                                   "B": "worker_only=false, branch=NORMAL_ASSET_CHANGE_DEPLOY, old_refs_absent=true",
+                                   "counter_worker_not_moved": "RED branch",
+                                   "counter_stale_ref": "NORMAL_ASSET_CHANGE_DEPLOY (old rule applies)",
+                                   "counter_missing_observation": "RED branch (fail-closed)"},
+  "product_facts": {"A_worker_change": "3a826b12db054f2f (2096 B) -> 88a7d980b3ffcbd6", "B_worker": "e63d7421eda34093 -> 88a7d980b3ffcbd6",
+                    "cross_check": "installed worker sha identical in A and B (88a7d980b3ffcbd6) - the same landed generation"},
+  "naming_nit": "the instrument writes receipts/ord0271a_debt4_selftest.json (no _r5); bytes equal, but the artifact name differs from the published name (same class as 0275 r2's D4)"
+ },
+ "item4_ORD0277": {
+  "command": "python test_ord0277_generation_contract_r2.py (positive control read from the local dist, sha256 proven before the run)",
+  "derived_result": "ALL_GREEN",
+  "cells": "14/14 GREEN",
+  "killers": {"K1_invalid_registration_washed_to_green": "KILLED clean=RED mutant=GREEN",
+              "K2_no_owner_stops_being_red": "KILLED clean=RED mutant=GREEN",
+              "K3_unresolved_mention_ignored": "KILLED clean=RED mutant=GREEN",
+              "K4_unreadable_treated_as_silent": "KILLED clean=RED mutant=GREEN"},
+  "cells_vs_published": {"fields": 110, "differing_after_stripping_t": 1,
+                          "the_one": "draft_under_test.path (my dir vs writer dir)",
+                          "verdict_fields_differing": 0}
+ },
+ "item5_live": {
+  "live_66arms": {"arms_total": 66, "matched": 66, "expect_equals_got": 66,
+    "matrix": {"GREEN": 18, "RED": 31, "REFUSED": 6, "OK": 3, "DISCHARGED": 1, "NONE_PENDING": 1,
+               "UNDISCHARGED": 2, "A_PAIR": 1, "NOT_A_PAIR": 1, "DECLARED": 1, "NOT_SHELL_RECORDED": 1},
+    "note": "48 arms are killers expecting RED - they all got RED; zero expectations unmet; base_at_entry == final_base == http://127.0.0.1:4781",
+    "gauge_endorsed": {"blob": "5bdc7525664c39cf...", "bytes": 129139,
+      "note": "the live receipts endorse an EARLIER draft (5bdc7525, 129139 B), not r4 (0686670743, 132623 B) - they are still valid as observations of that earlier draft, and the offline r4 pieces carry the current one"},
+    "derived_result": "ALL_EXPECTATIONS_MET (66/66)"},
+  "live_preunion": {"verdict": "READY_TO_UNION", "switch_readiness": "NOT_ASSESSED_PRE_UNION",
+    "promotion_state": "PENDING_UNION_AND_POST_SWITCH", "reds": [],
+    "named_gaps_present": true,
+    "derived_result": "PRE_UNION_FACE_HONEST (no POST_UNION question answered before the union; reds empty; gaps named)"
+  }
+ },
+ "item6_ORD0275_r3_meta": {
+  "facts_measured": {
+   "r3_body": "404 on commander/control (declared; the writer refused to strip content or widen the list)",
+   "r3_receipt": "200, blob 86f984ef4db98c87..., 10,404 B",
+   "receipt_self_declaration": "17/17 GREEN, claimed_result=in_process_selftest_GREEN, writes_performed_to_github_by_this_run=0",
+   "disclosed_accidental_write": {"path": "evidence/ord0275-publisher-path-guard/receipt.json",
+     "commit": "cb8ef590", "blob": "c1f029783f55406438de0bbcb509c6fb4248d156", "bytes": 34,
+     "my_verification": "contents GET 200, blob and size match the disclosure; commits-on-path = exactly ONE (cb8ef590, 'positive control') - it overwrote nothing and is disclosed inside the receipt itself (cell T0)"}
+  },
+  "residuals_mapping": ["D1 counters asserted (cell 7 reads the counters)", "D2 signature spans CLI (M2's FOREIGN_PREFIX cli diff)",
+    "D3 post-image sha1 published per mutant", "D4 test_file basename (cell R)", "D5 PUT target asserted (cell 6 targets)"],
+  "ruling_on_the_meta_question": {
+   "question": "an instrument whose own body is refused by its own guard: is 'receipt on the branch, body not externally readable' enough to enter closure evidence?",
+   "answer": "SUFFICIENT FOR CLOSURE, with three conditions, because the closure rule is about the VERIFIER's ability to re-derive, not about the writer's ability to publish:",
+   "conditions": [
+    "the receipt must carry every input an auditor needs to reconstruct the run without the body: mutant post-image blob shas (D3 is already in), the base publisher blob it ran against, the stub/tripwire contract, and the cell list - r3b does carry these, which is why I could accept it; a receipt that only says ALL_GREEN would NOT be enough",
+    "the verifier side must state in its own artifact (this one) that it judged the receipt only, could not execute the instrument, and therefore its derived_result is a DERIVATION of declared fields rather than an independent re-execution - different evidence class, must not be written as reproduced",
+    "the body must still reach GitHub through some fail-closed route (a --control-tool publish of the sanitized text, or the exempt-and-rename route the writer already used for the old publisher), because an unfixable class of 'unpublishable instruments' would silently grow"
+   ],
+   "why_not_a_DEFER": "the alternative (hold closure until the guard changes) couples 0275's closure to Q-a, which is a product-wide behaviour change - exactly the coupling the arbiter's scope rule forbids"
+  },
+  "Q_a": {
+   "recommendation": "option 1 - tighten the legacy placeholder skip (the word must sit INSIDE the literal that matched), with the non-retroactive clause",
+   "why": [
+    "measured: the loose skip fires on any byte occurrence of a placeholder word, so a value-shaped hit inside a docstring, a filename, or a hex digest is skipped before the strict layer is ever reached - that is a fail-open in the security path, and fail-open paths do not age well",
+    "the counter-example the writer gave (historical receipts containing key=changeme turning RED on re-publish) is real but is a RE-PUBLISH event, not an archive event: nothing forces anyone to re-publish an old receipt, and when it happens the publisher's own ACTIONABLE text already prescribes the fix (rename, keep content)",
+    "the non-retroactive clause is not even load-bearing if scoped to the skip: tightening the skip only affects blobs that would otherwise have been silently allowed - every blob it now rejects was previously accepted because of a bug, so 'grandfathering' would be grandfathering the bug"
+   ],
+   "caveat": "do it in its own order with the two-way cells (a hit inside the matched literal must still refuse; a mention outside it must now be judged by the strict layer, which is the point), and land it when no lane is mid-publish"
+  },
+  "Q_b_self_report": {
+   "named_readings_that_rest_on_DDL_replayed_by_script_rather_than_product_migration": [
+    "ORD-0253 Phase A/B (408d851): the durable-row counts mutated_unfilled_rows=[13,14,15] / mutated_claim_rows=[51,63,75] and baseline_claim_rows=39 - the mutant environment built its schema by replaying DDL, not via ensure_schema, so those numbers are valid for THAT schema shape only; my derivation consumed them as given and did not re-create the environment",
+    "ORD-0225 Y123/Y23 (four-carrier cutset): the per-round fresh app-resolved temp DB and its row counts (5 rows per round) came from the same DDL-replay shape; the KILL verdicts stand because they were derived from pytest outcomes plus counters, but any durability claim quoting those row counts inherits this caveat",
+    "the ORD-0200/0201/0204 family: my own attack drivers created their fixtures by executing product DDL directly; every '0 rows before / N rows after' reading in those receipts is DDL-replay provenance",
+    "NOT affected: anything derived from published deploy/preview receipts (samples A/B, the 66-arm live selftest, the pre-union preflight) - those name real served trees, no DDL replay involved"
+   ],
+   "recommended_treatment": "add a provenance field (schema_source: product_migration | replayed_DDL) to the affected receipts at their next natural revision rather than re-running them now; none of them is load-bearing for today's closure"
+  }
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET only + one PUT (my own derivation artifact)"}
+}
