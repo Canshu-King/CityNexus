@@ -1,0 +1,124 @@
+{
+ "at": "2026-09-24T08:47:03+08:00",
+ "order": "ORD-0263 landed-generation close-out teardown",
+ "ports_i_owned_and_stopped": {
+  "4418": [],
+  "8411": []
+ },
+ "ports_still_listening_after": {
+  "4418": [],
+  "8411": []
+ },
+ "other_lane_and_user_ports_observed_only": {
+  "4781": [],
+  "4782": [],
+  "8693": [],
+  "4185": [],
+  "8713": [],
+  "4411": [],
+  "4412": [],
+  "4413": [],
+  "4414": [],
+  "4415": [],
+  "4416": [],
+  "4417": []
+ },
+ "user_chain": {
+  "ports_signalled": [],
+  "db_files_opened": [],
+  "demo_reset_issued": false,
+  "tunnel_or_proxy_touched": false
+ },
+ "source_root": {
+  "path": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "at_teardown_start": {
+   "files": 35,
+   "bytes": 19122061,
+   "tree": "303e189b4a0ae3a9375b851a38a5483580cb05aa61e85986731f1ec531a667ab"
+  },
+  "after_teardown": {
+   "files": 35,
+   "bytes": 19122061,
+   "tree": "303e189b4a0ae3a9375b851a38a5483580cb05aa61e85986731f1ec531a667ab"
+  },
+  "unchanged": true,
+  "matches_face_start_receipt": true
+ },
+ "named_removals": [
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\diskgen\\dist",
+   "kind": "dir",
+   "bytes": 19122061
+  },
+  {
+   "path": "diskgen",
+   "kind": "empty dir"
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\close_preview.log",
+   "kind": "left in place",
+   "why": "[WinError 32] 另一个程序正在使用此文件，进程无法访问。: 'D:\\\\moodle\\\\_qoder_harness_ord0254\\\\close_preview.log"
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\close_preview.pid",
+   "kind": "left in place",
+   "why": "[WinError 2] 系统找不到指定的文件。: 'D:\\\\moodle\\\\_qoder_harness_ord0254\\\\close_preview.pid'"
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\close_s4.log",
+   "kind": "left in place",
+   "why": "[WinError 2] 系统找不到指定的文件。: 'D:\\\\moodle\\\\_qoder_harness_ord0254\\\\close_s4.log'"
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\close_s3.log",
+   "kind": "left in place",
+   "why": "[WinError 2] 系统找不到指定的文件。: 'D:\\\\moodle\\\\_qoder_harness_ord0254\\\\close_s3.log'"
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\close_junk_html.log",
+   "kind": "left in place",
+   "why": "[WinError 2] 系统找不到指定的文件。: 'D:\\\\moodle\\\\_qoder_harness_ord0254\\\\close_junk_html.log'"
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\close_s4b.log",
+   "kind": "left in place",
+   "why": "[WinError 2] 系统找不到指定的文件。: 'D:\\\\moodle\\\\_qoder_harness_ord0254\\\\close_s4b.log'"
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\close_s3b.log",
+   "kind": "left in place",
+   "why": "[WinError 2] 系统找不到指定的文件。: 'D:\\\\moodle\\\\_qoder_harness_ord0254\\\\close_s3b.log'"
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\close_j1.log",
+   "kind": "left in place",
+   "why": "[WinError 2] 系统找不到指定的文件。: 'D:\\\\moodle\\\\_qoder_harness_ord0254\\\\close_j1.log'"
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\close_j2.log",
+   "kind": "left in place",
+   "why": "[WinError 2] 系统找不到指定的文件。: 'D:\\\\moodle\\\\_qoder_harness_ord0254\\\\close_j2.log'"
+  },
+  {
+   "path": "D:\\moodle\\_qoder_harness_ord0254\\close_j3.log",
+   "kind": "left in place",
+   "why": "[WinError 2] 系统找不到指定的文件。: 'D:\\\\moodle\\\\_qoder_harness_ord0254\\\\close_j3.log'"
+  }
+ ],
+ "bytes_freed": 19125803,
+ "why_i_may_delete_my_copy": "byte-identical duplicate of the served root (same tree digest) whose digests are published; the originals remain on disk",
+ "clone": {
+  "branch_after": "compat/ord0254",
+  "head": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df",
+  "expected_tip": "6a39c527f2aa3b16e73dfd122c34d6e6be7102df",
+  "matches": true,
+  "checkout_tail": "Already on 'compat/ord0254'",
+  "porcelain_frontend_lines": [],
+  "porcelain_line_count": 0
+ },
+ "kept": [
+  "all ord0263_* captures / verdicts / readings / receipts / side logs",
+  "tools/*",
+  "repo/ (compat/ord0254, clean)"
+ ]
+}
