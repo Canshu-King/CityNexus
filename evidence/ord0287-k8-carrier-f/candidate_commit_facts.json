@@ -1,0 +1,56 @@
+{
+ "what": "ORD-0287 判据 1/2/5 事实表：test-only 候选、父=权威尖、外部 ref 与文件字节回读",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T07:11:09+08:00",
+ "criterion_1_parent_is_landed_tip": {
+  "base_read_by_me_first": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "tip": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+  "parent_observed": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "parent_equals_base": true,
+  "tree": "f26f35091433a1d4b19fe8361b97d50bb707d63f",
+  "main_py_at_tip": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "main_py_equals_landing": true,
+  "commit_subject": "test(ord0287): give the plans/generate receipt guard a regression carrier on the shipped line"
+ },
+ "criterion_2_test_only": {
+  "files_changed": [
+   "backend/tests/test_qoder_ord0287_k8_carrier.py"
+  ],
+  "numstat": [
+   "220\t0\tbackend/tests/test_qoder_ord0287_k8_carrier.py"
+  ],
+  "all_paths_under_backend_tests": true,
+  "product_paths_touched": [],
+  "0272_gate_file_unchanged": true,
+  "carrier_blob_at_tip": "894c6d54e345dabdc4050a38f413fdaaa1a92748",
+  "carrier_blob_expected": "894c6d54e345dabdc4050a38f413fdaaa1a92748",
+  "carrier_blob_matches": true
+ },
+ "criterion_5_external_readback": {
+  "ref": "refs/heads/review/ord0287-k8-carrier-f",
+  "github_ls_remote_line": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44\trefs/heads/review/ord0287-k8-carrier-f",
+  "ls_remote_sha_equals_candidate_tip": true,
+  "https_ref_readback": {
+   "tip": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+   "ref": "refs/heads/review/ord0287-k8-carrier-f",
+   "github_ls_remote_line": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44\trefs/heads/review/ord0287-k8-carrier-f",
+   "https_sha": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+   "https_equals_tip": true
+  },
+  "https_file_readback": {
+   "path": "backend/tests/test_qoder_ord0287_k8_carrier.py",
+   "bytes": 11253,
+   "error": null,
+   "nonempty": true
+  },
+  "how_created": "plumbing only（hash-object/read-tree/update-index/write-tree/commit-tree），任何工作树 0 次 checkout；本道工作树跑完仍是 clean"
+ },
+ "sibling_commit_disclosed": {
+  "note": "我先后铸过两枚兄弟提交（同一 tree、同一父、同一信息，只差 committer 时间戳）：c31ba195…（推到 ref 的那枚，本表全部按它）与 d1e06920…（第二次跑脚本时手滑重铸，未推、无 ref 指向）。外部坐标只有一个：refs/heads/review/ord0287-k8-carrier-f = c31ba195…；我没有 force-push、没有改写任何已发布 ref。",
+  "adopted_tip": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+  "abandoned_sibling": "d1e0692076108726a84c6805e1fae2ca2b2091c9",
+  "identical_tree": true
+ },
+ "lane_worktree_dirty_lines_after": 0,
+ "authoritative_line": "0 次写（权威尖仍是 45b0a5e2…，由包工头单写）"
+}
