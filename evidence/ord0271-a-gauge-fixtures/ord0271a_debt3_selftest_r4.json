@@ -1,0 +1,409 @@
+{
+ "what": "ORD-0271-A / DEBT-3 offline proof r2 (no deploy, no gauge import, published fixtures)",
+ "supersedes": "test_ord0271a_debt3.py (r1, local only, never published)",
+ "t": "2026-09-24T20:54:19+0800",
+ "draft_under_test": {
+  "path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/deploy_bundle_v2_draft.py",
+  "bytes": 132623,
+  "blob": "0686670743c079647aa678370aa5481562c4c0a8"
+ },
+ "in_service_gauge": {
+  "path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/deploy_bundle.py",
+  "blob": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+  "expected": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7"
+ },
+ "fixtures": {
+  "A": {
+   "repo_path": "evidence/ord0271-a-gauge-fixtures/sample_A_preunion_preflight_0923_200628.json",
+   "blob": "c8e23ddd42259fb05e49376c5074a812839dad0f",
+   "local": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/receipts/preflight_0923_200628.json"
+  },
+  "B": {
+   "repo_path": "evidence/ord0271-a-gauge-fixtures/sample_B_postunion_deploy_d2665e25_0923_200854.json",
+   "blob": "0aa298042d78d317828e2d33a6a55eeabefe7bff",
+   "local": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/receipts/deploy_d2665e25855aeb265329266831983de42321697d_0923_200854.json"
+  }
+ },
+ "derivation": {
+  "export_present": "the row's own disk_present: the pre-flight probes pass the BUILD EXPORT as the disk root, so that field measures the export",
+  "published_on_served_disk": "false exactly for names listed in sample B's assets_union.added (the union copied them in from the export, so they were absent from that root when A ran)",
+  "decision_table_inputs": [
+   "phase",
+   "present_in_export",
+   "published_on_served_disk",
+   "http_ok"
+  ]
+ },
+ "cells": [
+  {
+   "cell": "fixture_A_published_and_byte_identical",
+   "verdict": "GREEN",
+   "detail": {
+    "repo_path": "evidence/ord0271-a-gauge-fixtures/sample_A_preunion_preflight_0923_200628.json",
+    "blob": "c8e23ddd42259fb05e49376c5074a812839dad0f",
+    "published_len": 26281,
+    "local_len": 26281
+   }
+  },
+  {
+   "cell": "fixture_B_published_and_byte_identical",
+   "verdict": "GREEN",
+   "detail": {
+    "repo_path": "evidence/ord0271-a-gauge-fixtures/sample_B_postunion_deploy_d2665e25_0923_200854.json",
+    "blob": "0aa298042d78d317828e2d33a6a55eeabefe7bff",
+    "published_len": 66470,
+    "local_len": 66470
+   }
+  },
+  {
+   "cell": "S0_predicate_signature_matches_this_test",
+   "verdict": "GREEN",
+   "detail": {
+    "argnames": [
+     "phase",
+     "present_in_export",
+     "published_on_served_disk",
+     "http_ok"
+    ],
+    "why": "if the gauge grows a fifth input, driving four of them here would be decoration"
+   }
+  },
+  {
+   "cell": "A1_sampleA_rows_say_http_absent_export_present",
+   "verdict": "GREEN",
+   "detail": {
+    "rows": 11,
+    "contradictions": 6,
+    "example": {
+     "arm": "C_pre",
+     "ref": "/assets/index-D76m_cky.js",
+     "status": 200,
+     "ct": "text/html",
+     "export_bytes": 1238834
+    }
+   }
+  },
+  {
+   "cell": "A2_shipped_gauge_called_that_BLOCKED",
+   "verdict": "GREEN",
+   "detail": {
+    "switch_readiness": "BLOCKED",
+    "red_count_printed": 12
+   }
+  },
+  {
+   "cell": "A3_shipped_reds_carry_no_ref",
+   "verdict": "GREEN",
+   "detail": {
+    "unnamed_reds": 4,
+    "total_reds": 12,
+    "first_reds": [
+     "? :: ['200/text/html', '200/text/html']",
+     "/assets/index-D76m_cky.js :: ",
+     "/assets/index-D76m_cky.js :: "
+    ],
+    "why": "_debt3_row stamps every row with its ref, so a refusal names what it refused"
+   }
+  },
+  {
+   "cell": "D1_preunion_export_present_unserved_name_is_a_named_gap",
+   "verdict": "GREEN",
+   "detail": {
+    "n": 6,
+    "outcomes": [
+     "NOT_YET_UNIONED_NAMED_GAP"
+    ],
+    "arms": [
+     "C_pre",
+     "G_pre/v10-sw.js"
+    ]
+   }
+  },
+  {
+   "cell": "D1b_gap_set_includes_precached_chunks_the_index_never_names",
+   "verdict": "GREEN",
+   "detail": {
+    "n": 2,
+    "refs": [
+     "/assets/JourneyMap-VYnqykgh.js",
+     "/assets/maplibre-gl-BWQWEO0M.js"
+    ],
+    "rule": "this cell killed my first predicate (index-membership): an index-derived rule judged these RED in a read-only run and left DEBT-3 half open"
+   }
+  },
+  {
+   "cell": "D2_named_gap_is_never_reported_as_green",
+   "verdict": "GREEN",
+   "detail": {
+    "outcomes": [
+     "NOT_YET_UNIONED_NAMED_GAP"
+    ],
+    "rule": "not green: nothing was proven over HTTP"
+   }
+  },
+  {
+   "cell": "D3_same_rows_post_union_are_still_red",
+   "verdict": "GREEN",
+   "detail": {
+    "n": 6,
+    "outcomes": [
+     "RED"
+    ]
+   }
+  },
+  {
+   "cell": "D4_served_real_bytes_green_in_both_phases",
+   "verdict": "GREEN",
+   "detail": {
+    "n": 2,
+    "refs": [
+     "/assets/index-D76m_cky.js",
+     "/assets/index-I45CQek8.css"
+    ]
+   }
+  },
+  {
+   "cell": "D5_export_missing_name_is_red_even_pre_union",
+   "verdict": "GREEN",
+   "detail": {
+    "input": {
+     "phase": "PRE_UNION",
+     "present_in_export": false,
+     "published_on_served_disk": false,
+     "http_ok": false
+    },
+    "synthetic": true,
+    "why": "an index that names an asset the export lacks is the white screen this gauge exists for"
+   }
+  },
+  {
+   "cell": "D6_root_surface_observed_alive_in_A",
+   "verdict": "GREEN",
+   "detail": {
+    "n": 2,
+    "outcomes": [
+     "GREEN"
+    ]
+   }
+  },
+  {
+   "cell": "D6b_already_served_surface_down_is_red_even_pre_union",
+   "verdict": "GREEN",
+   "detail": {
+    "input": {
+     "phase": "PRE_UNION",
+     "present_in_export": true,
+     "published_on_served_disk": true,
+     "http_ok": false
+    },
+    "synthetic": true,
+    "why": "the live generation must be answering right now; that is not the union's debt"
+   }
+  },
+  {
+   "cell": "D7_unknown_phase_raises",
+   "verdict": "GREEN",
+   "detail": {
+    "message": "DEBT-3 unknown phase 'SOMETIMES' - refusing to guess which arms are answerable"
+   }
+  },
+  {
+   "cell": "D8_phase_is_keyword_only_without_default",
+   "verdict": "GREEN",
+   "detail": {
+    "kwonlyargs": [
+     "phase"
+    ],
+    "kw_defaults": [
+     "<none>"
+    ]
+   }
+  },
+  {
+   "cell": "D9_every_call_site_declares_its_phase",
+   "verdict": "GREEN",
+   "detail": {
+    "n_calls": 2,
+    "phases": [
+     "POST_UNION",
+     "PRE_UNION"
+    ],
+    "keywords": [
+     [
+      "phase"
+     ],
+     [
+      "phase"
+     ]
+    ]
+   }
+  },
+  {
+   "cell": "D10_in_service_gauge_untouched",
+   "verdict": "GREEN",
+   "detail": {
+    "path": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks/deploy_bundle.py",
+    "bytes": 106731,
+    "blob": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7",
+    "expected": "149e9c6dbe6debcac92041bb192761c1cf1aa2a7"
+   }
+  },
+  {
+   "cell": "D11_the_gap_token_is_neither_green_nor_red",
+   "verdict": "GREEN",
+   "detail": {
+    "PRE_UNION": "PRE_UNION",
+    "POST_UNION": "POST_UNION",
+    "NAMED_GAP": "NOT_YET_UNIONED_NAMED_GAP"
+   }
+  },
+  {
+   "cell": "X1_named_gap_discharged_by_measured_digest_identity",
+   "verdict": "GREEN",
+   "detail": {
+    "links": [
+     {
+      "ref": "/assets/index-D76m_cky.js",
+      "A_export_sha256": "270377c83471a5a1e44a756296e15ea42c47c626760723e47b6b4a6759e43274",
+      "B_served_body_sha256": "270377c83471a5a1e44a756296e15ea42c47c626760723e47b6b4a6759e43274",
+      "equal": true,
+      "in_union_added": true
+     },
+     {
+      "ref": "/assets/index-I45CQek8.css",
+      "A_export_sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+      "B_served_body_sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+      "equal": true,
+      "in_union_added": true
+     },
+     {
+      "ref": "/assets/index-I45CQek8.css",
+      "A_export_sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+      "B_served_body_sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+      "equal": true,
+      "in_union_added": true
+     },
+     {
+      "ref": "/assets/index-D76m_cky.js",
+      "A_export_sha256": "270377c83471a5a1e44a756296e15ea42c47c626760723e47b6b4a6759e43274",
+      "B_served_body_sha256": "270377c83471a5a1e44a756296e15ea42c47c626760723e47b6b4a6759e43274",
+      "equal": true,
+      "in_union_added": true
+     }
+    ],
+    "n": 4,
+    "union_added": [
+     "JourneyMap-VYnqykgh.js",
+     "index-D76m_cky.js",
+     "index-I45CQek8.css",
+     "maplibre-gl-BWQWEO0M.js"
+    ]
+   }
+  },
+  {
+   "cell": "D12_F_preunion_gap_only_is_partial_not_green",
+   "verdict": "GREEN",
+   "detail": {
+    "verdict": "PARTIAL_NAMED_GAPS"
+   }
+  },
+  {
+   "cell": "D13_F_postunion_cannot_inherit_the_gap_reading",
+   "verdict": "GREEN",
+   "detail": {
+    "verdict": "RED",
+    "why": "a gap token in the strict arm means the lax reading leaked; refuse.  This cell caught a fail-open in my own first version, which answered GREEN here."
+   }
+  },
+  {
+   "cell": "D14_F_real_red_dominates_even_pre_union",
+   "verdict": "GREEN",
+   "detail": {
+    "verdict": "RED"
+   }
+  },
+  {
+   "cell": "D15_F_pre_existing_rules_unchanged",
+   "verdict": "GREEN",
+   "detail": {
+    "all_green": "GREEN",
+    "declared": "F_UNPROBED_DECLARED",
+    "undeclared": "RED",
+    "unknown_token": "RED",
+    "rule": "regression control: DEBT-3 must not quietly re-point A-3 / F_UNPROBED_DECLARED"
+   }
+  },
+  {
+   "cell": "K1_every_mutant_flips_only_its_own_cell",
+   "verdict": "GREEN",
+   "detail": {
+    "kills": [
+     {
+      "mutant": "M1_drop_present_in_export_clause",
+      "owner_cell": "D5_export_missing_name_is_red_even_pre_union",
+      "anchored": true,
+      "clean_returned": "RED",
+      "mutant_returned": "NOT_YET_UNIONED_NAMED_GAP",
+      "verdict": "KILLED"
+     },
+     {
+      "mutant": "M2_drop_published_on_served_disk_clause",
+      "owner_cell": "D6b_already_served_surface_down_is_red_even_pre_union",
+      "anchored": true,
+      "clean_returned": "RED",
+      "mutant_returned": "NOT_YET_UNIONED_NAMED_GAP",
+      "verdict": "KILLED"
+     },
+     {
+      "mutant": "M3_postunion_inherits_the_gap",
+      "owner_cell": "D3_same_rows_post_union_are_still_red",
+      "anchored": true,
+      "clean_returned": "RED",
+      "mutant_returned": "NOT_YET_UNIONED_NAMED_GAP",
+      "verdict": "KILLED"
+     },
+     {
+      "mutant": "M4_unknown_phase_no_longer_raises",
+      "owner_cell": "D7_unknown_phase_raises",
+      "anchored": true,
+      "clean_returned": "ValueError",
+      "mutant_returned": "NOT_YET_UNIONED_NAMED_GAP",
+      "verdict": "KILLED"
+     },
+     {
+      "mutant": "M5_f_verdict_of_ignores_phase",
+      "owner_cell": "D13_F_postunion_cannot_inherit_the_gap_reading",
+      "anchored": true,
+      "clean_returned": "RED",
+      "mutant_returned": "PARTIAL_NAMED_GAPS",
+      "verdict": "KILLED"
+     }
+    ],
+    "n": 5,
+    "owners_are_distinct": true
+   }
+  },
+  {
+   "cell": "R1_preunion_publishes_both_readiness_keys",
+   "verdict": "GREEN",
+   "detail": {
+    "keys": [
+     "union_readiness",
+     "switch_readiness"
+    ],
+    "preunion_switch_state": "NOT_ASSESSED_PRE_UNION"
+   }
+  },
+  {
+   "cell": "R2_readonly_exit_is_judged_on_union_readiness",
+   "verdict": "GREEN",
+   "detail": {
+    "rule": "a read-only run may answer 'may the union run', never 'may the index move'"
+   }
+  }
+ ],
+ "cells_total": 27,
+ "cells_green": 27,
+ "overall": "GREEN",
+ "claimed_result": "offline_selftest_GREEN"
+}
