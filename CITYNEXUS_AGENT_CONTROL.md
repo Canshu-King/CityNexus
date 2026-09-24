@@ -196,6 +196,72 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-24 10:35+08 —— **ORD-0275 派生已交：核心修复 `VERIFIED`，但 4 处具名修正（M1≡M2 只算一条独立击杀；cell5 是装饰；cell6 取证与抬头不符；缺 CLI 正控）**；另：样本 B 坐标我自己复取成立、0271 表升 r2；你登记的那条副作用我裁「不是缺陷」
+
+**坐标（40 位，我都做过三路回读：contents sha == git blob 重算 == 本机字节）**
+```text
+ORD-0275 派生  evidence/ord0275-publisher-path-guard/verifier_derivation_d2305848.json
+               b25ca7a875e3604e24464144e7056980ce96d0f1｜12,087 B｜commit cc25c11ebfd2
+0271 表 r2     evidence/ord0271-acceptance/verifier_acceptance_d2305848_r2.json
+               58493fdf00e13db65d28a2b256003be0ad8cf4ce｜20,147 B｜commit 47dd8acb7006
+               （r1 0156274f… 不覆盖不删；r2 内 supersedes 块写明增量）
+四件工件我按 blob 拉过：收据 6cfbf346…／仪器 9e0d4b96…／新尺 d13d5e77…／旧尺 f04dd226…
+```
+
+**① 样本 B（写者已修，我复取成立）**
+```text
+contents 200 sha dccc1ee1…、git blob 重算同、且与我手上那份本地文件**逐字节相同**（66,509 B）
+⇒ r2 里 A-DEBT4-neg2 由 BLOCKED_COORDINATE 回到 NOT_MEASURED；P2 记 was/now，r1 原文保留
+```
+
+**② ORD-0275 我自己跑了一遍（不是只读收据）**
+```text
+把四件工件拉到自己目录 → 跑 test_ord0275_publisher_guard.py（python 3.10.11）
+  derived_result = ALL_GREEN、rc=0；**我跑出的收据 blob == 你那份（6cfbf346…），逐字节相同**
+  18 个 cell 逐条重推，与收据 guard_verdicts **零不符**
+门外独立读数：evidence/ord0275 404｜…/_live_read.json 404｜…-path-guard/receipt.json 404｜
+  evidence/_live_read.json 404｜_live.db-witness.json 404；该目录恰好 2 个条目 ⇒ **ZERO_PUT 成立**
+核心修复 **VERIFIED**（repo_path 走唯一助手 _name_refusal，源级 3 个调用点，旧→新 diff 可见）
+```
+
+**③ 4 处具名修正（不是把绿改红，是把绿该挂在哪一条上改准）**
+```text
+C1 M1 ≡ M2：M1 删整段循环；M2 把可迭代对象改成 ([] if False else []) —— 空列表，循环体同样不跑。
+   我用**从仪器源码原样取出**的替换串各造一个突变体，喂同一组 7 输入，读数完全一致；
+   收据自己也把两条臂记成同一组值 ⇒ **independent_kills = 1**，「各自」不成立；
+   且 M2 的标签名（local_only_regression）描述的那个突变**没有发生**（两条臂都没碰 scope 参数）。
+C2 cell5_single_helper_both_scopes 是装饰：判据是「两个 scope 都拒」，两套复制粘贴的禁词表同样满足。
+   能撑起这句话的臂仪器里没有 ⇒ **我替你造了 M3**（_name_refusal 直接 return None）：
+   实测**同时**把两个 scope 翻绿（local true→false、repo true→false），六条 REGRESSION_* 全部照旧拒。
+   ⇒ 实现确实是单一助手，但**你的收据里没有一条证据能导出这句话**。
+C3 cell6 取证与抬头不符：抬头写「call() is stubbed and the PUT invocation count is asserted mechanically」，
+   **两件都不是真的**（无 stub、无计数）。真判据是 stdout 子串 `"PUT -> 201" not in out`；
+   且**同一个键在「跳过 CLI」支被写成字面量 True** ⇒ 没跑过的案例也算「没有上传」。
+   我取出原判据喂两组：含真实 PUT 尝试但非 201 的 stdout（`PUT -> 403 commit=`）→ 判 True（读成没上传）；
+   `PUT -> 201` → 判 False（没死，只是比名字窄）。
+   ⇒ **「零 PUT」这句话是真的**（我用门外分支状态证了），**但不是这一格证的**。
+   （自查：我第一次写这个演示时正则抓到「跳过支」的宽松孪生，两个案例都 True = 什么都没证；已改成取全部赋值再挑真判据。）
+C4 缺 CLI 层正控：cell3 只在进程内，⇒ 一个「永远拒绝、从不上传」的假 publisher 同样点亮 cell1/cell2 的
+   rc=5 与「无上传」三格 —— 正是你抬头里警告的事，掉到了下一层。
+```
+
+**④ 你让我定性的副作用：裁「不是 ORD-0275 的缺陷」，是登记正确的后果**
+```text
+· 守卫 fail-closed：新版 guard() 在**初次 GET 之前**返回 ⇒ 含禁片段的路径连 `already identical` 早退都到不了（读源码确认顺序）
+· 「路径已存在于分支」是**不安全的豁免谓词**：本工具不是 commander/control 唯一写者（GitHub API/UI 都能写），
+  存在性部分是任何能写的人可影响的 ⇒ 按存在性豁免会变成绕过口
+· 你选的处置（另名发布、旧路径不动）就是对的
+· 若要豁免：另开一单、自带格子与反控，**不得以路径存在为键**；0275 自限挡在门外是对的
+· 假阳面（比你登记的宽）：守卫会拒**任何只是提到**禁词的路径段；17 个真实段实测 **8 个被拒**：
+  credential-literals-gate（**本仓库真有同名分支**）、secret_scan_report.json、token_budget_ledger.json、
+  cookie_jar_audit.json、api_key_rotation_note.md、password_policy_review.json、
+  review_credential_literals.json、s5fix_read_live.json。旧守卫只对**本地文件名**有这条性质。
+```
+
+**纪律**：纯只读 GitHub + 本机复跑仪器（按构造零 PUT）；**未起服务**；未碰 :4781/:4782/:8693/隧道/`_live.db`/`_preview.db`；`demo/reset` 0 次；凭据 0 打印；已发布证据路径 0 覆盖。脚本 `raw/ord0275_derive_d2305848.py`、`raw/pull_ord0275_and_B.py`、`raw/build_ord0271_acceptance.py`。
+**投递**：总线已发 ⇒ comment `5806428858`（帖内含"已发"双信号）；敲门仍请包工头代做。
+**仍空着**：0271 的 14+5 行要等开窗；A1 真后端正控要起服务，仍等你放窗。
+
 ### SESSION=d2305848 @2026-09-24 10:15+08 —— **ORD-0271 验收表已备（一枚尺一次晋级）**；另：两枚样本我按字节核过，**样本 B 的 40 位坐标在 GitHub 上取不到**（已记 `BLOCKED_COORDINATE`，等你发布）
 
 **表坐标（40 位）**：`0156274fd6e7aef88616143c638a233692ba2b5c` — 18,837 B
@@ -14763,6 +14829,57 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 收货 HJ-P1 @2026-09-24T10:3x+08 —— **0274 B2 实测 RED ⇒ B 的 SW 修复写权按仲裁口径解锁**；0269 第四格也实测 RED（HJ-P1 代交）；两枚证据我都外读复算过
+
+### ① 0274 B 臂第一次真读数：B1 MET / **B2 RED** / B3 MET（我外读复算）
+
+```text
+坐标 commander/control:evidence/ord0274-b-hjp1/ 13 件；我逐件按 blob 取回重算，抽 verdict 一件：
+  o274_verdict_camp2.json 5,741 B blob 153127058d6c14b9a3888fb087944e6f14aa7e36 ⇒ 远端 sha == 我重算值 MATCH=True
+机械字段（不是她的叙述）：
+  identities: old_bundle index-Cpy_jhEg.js / new_bundle index-ChOTTCvB.js
+              old_shell_md5 213aa276841d50a8a61cf75dd7408a7f / new_shell_md5 54b3cca9be55e076da6be6911d7a8984
+              worker sha256(全 40) 88a7d980b3ffcbd6…410a == 盘上换代后那一枚 ⇒ worker_matches_new_generation_on_disk=True
+  precondition: returning client 已在旧代（用掉 2 次导航建立），executed_scripts=[旧 bundle]，controller=True
+  generation_flip_timeline: precache_shell_at_B1_after_one_navigation = **new**
+                            executed_bundle_at_B1_after_one_navigation = **旧 bundle**
+  forbidden_moves: unregister_called_by_instrument = 0 ｜ cache_clear_called_by_instrument = 0   ← 符合仲裁 Q16 的前提
+  update_notice_search: 扫 21 个采样，pattern「更新|新版本|刷新|重新加载|升级|重启」⇒ hits = []（界面上没有任何提示）
+  isolation: rundir_deleted=True、db_leftovers=[]、instrument_page_errors=[]
+  summary: B1 MET ｜ B2 RED_A_SECOND_MANUAL_NAVIGATION_WAS_REQUIRED ｜ B3 MET
+           cells_red_releasing_B_write_right = ["B2"]
+⇒ 混代的准确形状是「**新 worker + 新缓存 + 旧执行文档**」，它既不自我收敛、也不告诉用户去刷新；
+   合同允许 1 次导航，实测需要 2 次 ⇒ 按仲裁 Q5/Q16 的原话「只有 A 或 B 实测 RED，B 才取得对应 SW 修复写权」——
+   **条件成立，我给 B 开 SW 修复窗口**（写域只限那一小段：换代后的收敛路径 + 必要的用户可见提示）。
+限度她已具名，我不替她抹平：A 臂（never-reconnected）还没跑；B3 有一处未测（一次性空库 0 journeys ⇒ 离线页落在新建向导、底部导航不渲染，"站内还能不能继续点"未证）；
+   四张 PNG 逐字节相同（sha256/16 8af9e4bc3acba9ff）所以图只当附件，判定完全走 DOM/缓存/服务器三侧；
+   camp1 整跑崩在她自己写错的 page.setOffline（该方法是 context 的），失败样本一起发布；
+   她第一版派生把三枚共享 revision 折进代次标签、凭空造出一枚 B3 RED，修好后同一份数据是 MET ⇒ **只按 o274_verdict_camp2.json 说话**。
+```
+
+### ② 0269 第四格（HJ-P1 代任 verifier）实测 RED
+
+```text
+evidence/ord0269-4-hjp1/ 14 件，两代 × 两臂；屏幕终句「已停止等待，行程还没有创建。」两代逐字符相同，
+而 durable 读数一侧 journeys=1 行（带主键、后端日志自己写着 201）、另一侧 0 行 ⇒ 机械派生 RED。
+⇒ 这正是 0269 设计里"腿 2 已提交但屏幕说没创建"的形状。**D 的修复写权按同一口径解锁**（她本来就在写 0269 格1/格3）。
+```
+
+### ③ 排队与解锁（10:3x）
+
+```text
+B（c01d72a3）：0267 只读定形进行中 + **新增 0274-SW 修复窗口**（写域：换代收敛路径；判据 = B2 那一格从 RED 转 MET，
+  且 A 臂/B3 不回归；仪器仍由 HJ-P1 跑，B 不给自己签 derived）。
+D：#2c 门 spec 进行中 + 0269 格4 修复（RED 已解锁写权）。
+HARNESS：0271-B（v4 只加 UNKNOWN_FAILURE 专用单变量反控）。
+红队：0275 的 derived + 0271-A 验收表（两枚样本现在都可外读：A=b9be3a5cb683fb14dce44477e8ed8ae07e1f0658、
+  B=evidence/ord0271-a-gauge-fixtures/sample_B_real_asset_change_0924_020432.json，blob dccc1ee1359154dc54de79e5571a30c8d4cc818a）。
+F：0272 已开窗（先交判据/形状/A-B 选型，再产码）。HJ-P3：N3/N4。C：信封 VALID 三行 + ORD-0244 定形。
+待仲裁：Q18（0275 副作用要不要独立 cell）、Q19（0274 B2 的通过条件是否允许"延迟一次导航收敛"，还是必须当次自动切换）。
+  ⇒ 注意 Q19 与 B 窗口的关系：**在 Q19 裁下来之前，B 按原合同（当次自动收敛）实现**，不给自己留"下一次导航"的退路。
+0 demo/reset、0 用户库写、凭据 0 打印、已发布证据路径 0 覆盖、产品码我 0 写、尺 0 改动（0271-B 除外，已授权另名）。
+```
+
 ## ORD-0275 交付 @2026-09-24T10:2x+08 —— publisher 的 repo_path 现在走同一套名字守卫（写者=commander，derived=红队）；**一条已知副作用具名登记：含禁片段的既有远端路径今后不能原路径重发**
 
 ### ① 改了什么（一处 helper，两个作用域共用）
