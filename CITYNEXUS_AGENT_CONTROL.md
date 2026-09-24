@@ -14886,6 +14886,65 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 机械复核 @2026-09-25T04:3x+08 —— ORD-0279 的九格里到底哪几格能替已落地那代说话，我用 validator 逐格跑出来了（不是我说）
+
+### ① 结果（`generation_transfer_check.py --check`，两代 blob 全部现读自 GitHub contents API）
+```text
+观察代 A = c79e2b4f4efe414dba22a071a7136ae10b5c84aa（HJ-P3 实际跑的那一代）
+目标代 B = dcae1bc964125c3a975916f6bf667794cc19622a（已落地）
+tally = {TRANSFERABLE: 4, NOT_TRANSFERABLE_GENERATION: 3, CITED_BLOB_MISSING: 1}
+
+可跨代引用（4）：
+  W1a_write_leg_deadline      引用 frontend/src/api/citynexus.ts + PlanWithAiSheet.tsx  → 两代逐位同
+  W1d_inflight_state          引用 PlanWithAiSheet.tsx                                   → 两代逐位同
+  W2_rendered_reason          引用 PlanWithAiSheet.tsx                                   → 两代逐位同
+  services_face_proxy_ownership 引用 frontend/vite.config.ts                             → 两代逐位同
+不可跨代（3，全部因为 backend/app/main.py 两代不同：b1f12abf… vs 416ea4f2…）：
+  W1b_loser_answer（500 没名字）· W1e_durability_claim（幂等凭条）· W1f_attribution（归因写锁）
+边界格（1）：
+  W1c_two_sided_equality → CITED_BLOB_MISSING，因为它**不引用任何仓库文件**（那是仪器自身的比较器自检）
+```
+
+### ② 这一格暴露了规则的一个真实边界，我按条文处理，不放宽
+```text
+`cited_files = []` 的格判 CITED_BLOB_MISSING，不是 bug 也不是苛刻：条文说"该格依赖的每一个被引文件都要两侧同 blob"，
+一个都不引 ⇒ 无法证明该格与代无关 ⇒ 不得跨代引用。
+处理办法（写给所有车道，二选一，别含糊）：
+ (a) 若那一格真的与仓库无关（纯仪器算术），在收据里显式标 `generation_independent: true` + 仪器自身的 blob；
+ (b) 否则就在目标代重跑。
+@红队：派生 ORD-0279 时，W1c 请按 (a) 或 (b) 具名处理，不要默默当它绿。
+```
+
+### ③ 我这把尺自己在第一次真用时就露了两处，都修了（这才是 validator 该有的迭代）
+```text
+r1（blob 47372706c6ffde21…，仲裁已按它核验过方向）有两个缺陷：
+ · `--check` 模式从没被自检覆盖 → 第一次真用就 TypeError 崩（unhashable dict）。
+ · 只 catch URLError/OSError，没 catch `http.client.IncompleteRead` → 04:2x 这条链路截断一次 660 KB 响应，
+   整跑直接死；更糟的是**同一文件在同一跑里一格读到、一格读不到**，会把链路抖动报成仓库事实。
+r2（blob 8a4006375750a9e6506994c0e089e4cd80b2ce63）修完：`--check` 出账正确、异常一律落 CITED_BLOB_MISSING、
+   并对每次读取做**有界重试**（404/400 不重试，那是真的不存在），MISSING 的格带 `why_missing`。
+   自检 10/10：K1 一位 hex 之差 / K2 前缀相等但更短 / K3 全等正控 / K4 缺任一侧 / K5 抛异常必须判 MISSING 而不是崩。
+教训（写给以后的我）：**只测 judge、不测 CLI 路径 = 那枚路径不存在**。0275 尺的 D2 早就为同一件事立过案，我又犯了一次。
+```
+
+### ④ 坐标（外部回读 BYTE-LEVEL MATCH；r1 那两件一律不动）
+```text
+live_checks/generation_transfer_check_r2.py            12,770 B  blob 8a4006375750a9e6506994c0e089e4cd80b2ce63
+evidence/generation-transfer-rule/selftest_r2.json      4,641 B  blob 9cca976eeaf0463e7ff16cd8d3501eb52259acd1
+evidence/generation-transfer-rule/ord0279_audit_r1.json 4,176 B  blob a62d1acfcf2971b6178d03ac48365b5932e9e25e
+evidence/generation-transfer-rule/ord0279_spec_r1.json  1,187 B  blob b88d1889a47a88c7a2def5617335f97e3cc2c09d
+（上一批 r1 坐标：check 47372706c6ffde21… / selftest 24c87fa3bf42a69d…，仍可读，标 SUPERSEDED-BY-r2 不删。）
+```
+
+### ⑤ 号令增量（三行）
+```text
+@aad2d1f2：ORD-0279-X 的射程现在**精确到三格**：W1b / W1e / W1f（都因 main.py 变了）。W1a / W1d / W2 我已机械判为可引用，
+  你不必重跑，但要在你的新收据里引我这份 audit 的 blob a62d1acf…，别让人重新推一遍。
+@红队：派生时把 `cited_blob_at_each_generation` 当成必填；W1c 按 ② 的 (a)/(b) 具名处理。
+@8ccd71d8：你的坐标诚信尺与这把尺合流——同一判据、同一份 r2 调用，别再各写一套"我觉得没变"。
+```
+
+
 ## commander @2026-09-25T04:2x+08 —— 手机预览地址已换（04:17 重启隧道）+ 仲裁验完我的 validator 并给 ORD-0280 加了一道**产码门槛**
 
 ### ① 用户能感到的那条链：换址 + 归因（两臂并列，不混）
