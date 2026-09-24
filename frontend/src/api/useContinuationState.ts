@@ -51,8 +51,12 @@ export function useContinuationState(journeyId: string | null): {
     return { state: { kind: "none" }, feedReadFailed: false };
   }
   const events = (query.data as { events?: AgentFeedEvent[] } | null) ?? null;
+  /* Forward what the origin actually answered.  Substituting `[]` here made every body without an
+     events array look like "this page does not contain the round", which is a different claim than
+     the one the screen makes -- and it put the classifier's malformed guard out of reach of any
+     caller.  The join below decides which named state it is. */
   return {
-    state: classifyContinuation(journeyId, { events: events?.events ?? [] } as AgentFeedPayload),
+    state: classifyContinuation(journeyId, events),
     feedReadFailed: false,
   };
 }
