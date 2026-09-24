@@ -1,0 +1,55 @@
+{
+ "at": "2026-09-24T10:53:53+08:00",
+ "want": "empty",
+ "expected_wire": {
+  "status": 200,
+  "content_type": "application/json",
+  "bytes": 0,
+  "head": ""
+ },
+ "spawned_pid": 50300,
+ "args": [
+  "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python310\\python.exe",
+  "D:\\moodle\\_qoder_harness_ord0254\\tools\\origin_answers_junk_200.py",
+  "empty"
+ ],
+ "cwd": "D:\\moodle\\_qoder_harness_ord0254\\tools",
+ "instrument_log": "0271b_origin_junkempty.log",
+ "probe": {
+  "status": 200,
+  "content_type": "application/json",
+  "bytes": 0,
+  "head": "",
+  "sha256_16": "e3b0c44298fc1c14"
+ },
+ "probe_attempts": 1,
+ "probe_matches_mode": true,
+ "probe_mismatches": [],
+ "listeners_on_port_after_start": [
+  50300
+ ],
+ "spawned_process_owns_port": true,
+ "spawned_process_tree": [
+  50300
+ ],
+ "listener_command_lines": [
+  "C:\\Users\\������\\AppData\\Local\\Programs\\Python\\Python310\\python.exe D:\\moodle\\_qoder_harness_ord0254\\tools\\origin_answers_junk_200.py empty"
+ ],
+ "instrument_answered_rows_from_this_probe": [
+  {
+   "at": "10:53:52",
+   "kind": "answered",
+   "path": "/api/v1/journeys/22222222-2222-4222-8222-222222222222/experience",
+   "status": 200,
+   "content_type": "application/json",
+   "body_bytes": 0,
+   "body_head": ""
+  }
+ ],
+ "alive": true,
+ "user_chain": {
+  "ports_contacted": [],
+  "db_files_opened": [],
+  "demo_reset_issued": false
+ }
+}
