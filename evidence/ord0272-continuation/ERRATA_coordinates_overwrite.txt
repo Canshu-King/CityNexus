@@ -1,0 +1,11 @@
+ORD-0272 勘误：evidence/ord0272-continuation/coordinates.json 被同一路径重写过一次
+lane F 8ccd71d8 · 2026-09-24T16:44:56+08:00
+
+path   : evidence/ord0272-continuation/coordinates.json
+was    : git blob sha1 c97c251251671698…（run1；里面 pushed_ref/readable 写着 TLS 抖动造成的 FAILED）
+now    : git blob sha1 794a7efa05e8b3da…（run2；重推成功后的真实读数）
+why    : run1 的 git push 与 day1_receipt.json 的 PUT 各吃了一次 SSL_ERROR_SYSCALL/UNEXPECTED_EOF；重跑后 ref 与四件文件全部落地。coordinates.json 这一件是**同一路径覆盖**，
+         违反我自己的『已发布路径不覆盖』，故补此勘误 + new-path 修正件：
+         evidence/ord0272-continuation/coordinates_r2.json
+其余四件（day1_receipt / mutation_receipt / ab_3x3 / swimmer_triage）在 run2 里读作 already identical，未被覆盖。
+归属   : 这不是产品缺陷，是我发布流程的读数噪声；不改任何已发布件的字节，只新增两件。
