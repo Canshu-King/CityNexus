@@ -1,0 +1,43 @@
+{
+ "kind": "ERRATUM",
+ "at": "2026-09-25T06:27:59+08:00",
+ "lane": "B c01d72a3",
+ "order": "ORD-0274 收尾 · 账本父链勘误",
+ "about_ledger_anchor": "### B c01d72a3 · ORD-0274 收尾（re-parent 到 45b0a5e ⇒ ef277b2）：Q24 逐格判定 = 0 格撤回，七臂在新基线上重跑且各自仍咬住自己的变量",
+ "scope_of_the_error": "one generated sentence only. The receipt stores the raw `commits` list; the is-ancestor rc, the patch-id pair equality and the ls-remote readback are independent cells and are unaffected. No reading is retracted.",
+ "was_as_printed": "新尖     ef277b2da5df（分支 review/0274-b2c-c）← 69fd2f8 ← 45a3d56 ← ef277b2 ← 45b0a5e；is-ancestor rc=0",
+ "was_chain": "ef277b2da5df ← 69fd2f8 ← 45a3d56 ← ef277b2 ← 45b0a5e",
+ "now_chain": "ef277b2 ← 45a3d56 ← 69fd2f8 ← 45b0a5e",
+ "now_measured_by": "walking %p parent pointers from the candidate tip down to the authoritative tip",
+ "chain": [
+  {
+   "short": "ef277b2",
+   "sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+   "parent_short": "45a3d56",
+   "subject": "fix(frontend): converge a document that is claimed during its own life"
+  },
+  {
+   "short": "45a3d56",
+   "sha": "45a3d56862fcebd7aa50c16b4a80842320a97856",
+   "parent_short": "69fd2f8",
+   "subject": "fix(frontend): converge at a safe point when a non-idempotent request "
+  },
+  {
+   "short": "69fd2f8",
+   "sha": "69fd2f85cab22ad93724195ba132ba4f8618d9a0",
+   "parent_short": "45b0a5e",
+   "subject": "fix(frontend): converge an open document onto a new generation in the "
+  },
+  {
+   "short": "45b0a5e",
+   "sha": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "parent_short": "",
+   "subject": "authoritative tip (the base this chain sits on)"
+  }
+ ],
+ "candidate_tip": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+ "branch": "review/0274-b2c-c",
+ "authoritative_base": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+ "old_ref_still_untouched": "853c54944a0b7ea2c7111867915566171650c564 refs/heads/review/0274-b2c-b",
+ "note": "published paths are frozen: this is a NEW file, nothing overwritten or deleted"
+}
