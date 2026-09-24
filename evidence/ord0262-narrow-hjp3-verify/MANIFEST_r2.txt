@@ -1,0 +1,6 @@
+86d08edb80734239fafc38d029018f02c463009a  NARROW_VERIFY_R2_RECEIPT.md  5565 B
+b24e1d06fa1d60d38555856aba6d61f9bfe5f486  n1_n2_runtime.json  18192 B
+segment=2 (N1/N2 runtime) candidate=3093eea773c79fa00744fe72d1f2c43b4d0bd75e one_time_port=8491 one_time_db=schema-only replay 92 stmts/55 tables/0 rows
+R2 200/5163B/0.34s | R3 503 GENERATION_STORE_BUSY 255B/33.34s | R4 503 HYDRATION_STORE_BUSY 252B/0.29s | R5 503 +reason_code=sqlite_write_lock_busy 332B/8.25s | R6 200/5163B/0.14s
+retry_after_ms=1000 in all three 503s (ladder floor, not the old hardcoded 500); N3/N4 NOT-RUN; cleanup port_still_listening=False db_exists_after_delete=False
+MANIFEST.txt of this directory belongs to segment 1 (blob 4bcb26017696b81899a0f0ff6979118c4e89389c) and was NOT overwritten
