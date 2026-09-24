@@ -98,7 +98,7 @@ def git_out(args: str) -> str:
     return run(args, ROOT)[1].strip()
 
 
-def collect_evidence(landed_tip: str, pre_rebase_tip: str, problems: list) -> dict:
+def collect_evidence(landed_tip: str, pre_rebase_tip: str, problems: list, stamped_tip: str = "") -> dict:
     """The commander asked for collection numbers after a re-parent, so they are measured here.
 
     A count is only printed when the command that produced it exited 0 and actually said a number;
@@ -144,6 +144,9 @@ def collect_evidence(landed_tip: str, pre_rebase_tip: str, problems: list) -> di
             "landed_tip": landed_tip,
             "candidate_is_descendant": is_desc,
             "commits_ahead": git_out(f"git rev-list --count {landed_tip}..HEAD"),
+            "stamped_tree_is_descendant": run(f"git merge-base --is-ancestor {landed_tip} {stamped_tip}", ROOT)[0] == 0,
+            "stamped_tree": stamped_tip,
+            "stamped_tree_commits_ahead": git_out(f"git rev-list --count {landed_tip}..{stamped_tip}"),
 
             "base_tip": pre_rebase_tip,
             "frontend_files_differring_from_base": [
@@ -253,16 +256,33 @@ def main() -> int:
 
     landing_tip = flag("--landing")
     pre_rebase_tip = flag("--pre-rebase")
+    tested_tree = flag("--tested-tree")
     positional = [
         token
         for index, token in enumerate(argv)
-        if not token.startswith("--") and argv[index - 1] not in ("--landing", "--pre-rebase")
+        if not token.startswith("--")
+        and argv[index - 1] not in ("--landing", "--pre-rebase", "--tested-tree")
     ]
     logs = positional[1:] or [
         f"{ROOT}/review/run-run222109.log",
         f"{ROOT}/review/run-run222133.log",
     ]
     head = sha_of_head()
+    # A frozen candidate may be judged from a tooling commit that only adds review/**: then the
+    # triples are stamped with the FROZEN tip, so an arm receipt can key its same-key precondition
+    # on the very sha the commander holds.  Only legal if frontend/** is byte-identical, measured.
+    if tested_tree:
+        moved_frontend = subprocess.run(
+            f"git diff --name-only {tested_tree} {head} -- frontend",
+            cwd=ROOT, capture_output=True, text=True, shell=True,
+        ).stdout.splitlines()
+        moved_frontend = [l for l in moved_frontend if l.strip()]
+        if moved_frontend:
+            print(f"ABORT: frontend differs between {tested_tree[:12]} and {head[:12]}: {moved_frontend}")
+            return 5
+    else:
+        moved_frontend = []
+    exact_stamp = tested_tree or head
     dirty = porcelain_lines()
     runs = [parse_log(p) for p in logs]
     all_nodes = [n for r in runs for n in r["nodes"]]
@@ -289,7 +309,7 @@ def main() -> int:
             run_tag = (owner_run["run_ids"] or ["?"])[0]
             triples.append(
                 {
-                    "exact_sha": head,
+                    "exact_sha": exact_stamp,
                     "nodeid": nodeid,
                     # The carrier coordinate has to round-trip: nodeid is rooted at the Playwright
                     # config root, so run_shape names that same directory as the cwd.  A nodeid read
@@ -395,7 +415,7 @@ def main() -> int:
         if not (landing_tip and pre_rebase_tip):
             problems.append("--landing and --pre-rebase must be given together (one without the other proves nothing)")
         else:
-            collection = collect_evidence(landing_tip, pre_rebase_tip, problems)
+            collection = collect_evidence(landing_tip, pre_rebase_tip, problems, exact_stamp)
             landing = landing_groups(landing_tip, problems)
 
     payload = {
@@ -404,7 +424,16 @@ def main() -> int:
         "landing_groups": landing,
         "orders": ["ORD-0269 cells 1/3 + R-4 negative + R-6 pagination", "ORD-0273 TEXT + ACTION"],
         "authoritative_tip_at_delivery": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
-        "candidate_tip": head,
+        "candidate_tip": exact_stamp,
+        "generation": {
+            "sha_the_triples_carry": exact_stamp,
+            "tooling_commit_the_scripts_ran_from": head,
+            "same_commit": exact_stamp == head,
+            "frontend_files_moved_between_them": moved_frontend,
+            "reading": "triples are stamped with the tree under test.  When that is not the commit the "
+            "scripts sit on, the only legal difference is review/** -- measured here as an empty "
+            "frontend diff, and the run aborts otherwise, so a stamp can never be inherited by intent.",
+        },
         "candidate_blob_sha1_note": "sha1 of the tree bytes as committed; the authoritative line is untouched (single-writer)",
         "clean_worktree": {"porcelain_lines_frontend_review": dirty},
         "R_SCHEMA_01_class": {

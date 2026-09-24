@@ -199,15 +199,80 @@ def run(label: str, port: int, spec: str) -> dict:
         flush=True,
     )
     return {
-        "label": label, "spec": spec, "exitCode": proc.returncode, "runId": run_id,
+        "label": label, "spec": spec, "exitCode": proc.returncode, "runId": run_id, "port": port,
         "log": str(log_path) if log_path.exists() else "", "tallies": tallies,
         "stackStarted": bool(tallies) and not missing, "missingNodes": missing, "nodes": nodes,
     }
 
 
+def rel_to_root(path: Path) -> str:
+    return path.relative_to(ROOT).as_posix()
+
+
+def committed_digests(rev: str) -> dict:
+    """sha256 of each mutated file AS COMMITTED in `rev`, read straight out of the object store.
+
+    The round's own restore check (working bytes == bytes before the mutation) cannot see a working
+    tree that drifted from the candidate; this can, and it is what lets the receipt say the kills
+    are evidence about `rev`."""
+    out = {}
+    for p in FILES:
+        proc = subprocess.run(
+            f"git cat-file blob {rev}:{rel_to_root(p)}",
+            cwd=str(ROOT), capture_output=True, shell=True,
+        )
+        out[p.name] = {
+            "path": rel_to_root(p),
+            "object_readable": proc.returncode == 0 and bool(proc.stdout),
+            "bytes": len(proc.stdout),
+            "sha256": sha256(proc.stdout).hexdigest(),
+        }
+    return out
+
+
 def main() -> int:
-    tag = sys.argv[1] if len(sys.argv) > 1 else "first"
-    port = int(sys.argv[2]) if len(sys.argv) > 2 else 4920
+    argv = sys.argv[1:]
+
+    def flag(name: str) -> str:
+        return argv[argv.index(name) + 1] if name in argv else ""
+
+    positional = [
+        token
+        for index, token in enumerate(argv)
+        if not token.startswith("--") and argv[index - 1] not in ("--tested-tree", "--round")
+    ]
+    tag = positional[0] if positional else "first"
+    port = int(positional[1]) if len(positional) > 1 else 4920
+    head_now = subprocess.run(
+        "git rev-parse HEAD", cwd=str(ROOT), capture_output=True, text=True, shell=True
+    ).stdout.strip()
+    tested_tree = flag("--tested-tree") or head_now
+    round_path = flag("--round")
+    remote_line = flag("--remote-line")
+    # The tree the gates were judged on is the FROZEN candidate tip, not this branch's tooling tip.
+    # If they differ, only review/** may differ, and that has to be measured rather than claimed.
+    moved_frontend = [
+        line
+        for line in subprocess.run(
+            f"git diff --name-only {tested_tree} {head_now} -- frontend",
+            cwd=str(ROOT), capture_output=True, text=True, shell=True,
+        ).stdout.splitlines()
+        if line.strip()
+    ]
+    dirty_frontend = [
+        line
+        for line in subprocess.run(
+            "git status --porcelain -- frontend",
+            cwd=str(ROOT), capture_output=True, text=True, shell=True,
+        ).stdout.splitlines()
+        if line.strip()
+    ]
+    round_receipt = json.loads(Path(round_path).read_text(encoding="utf-8")) if round_path else None
+    round_keys = (
+        {f"{t['exact_sha']} :: {t['nodeid']}" for t in round_receipt.get("triples", [])}
+        if round_receipt
+        else set()
+    )
     busy = sorted({
         p
         for base in range(port, port + 2 * len(ARMS))
@@ -219,18 +284,61 @@ def main() -> int:
         print(f"ABORT: ports already listening: {busy}")
         return 6
     originals = digests()
+    committed = committed_digests(tested_tree)
     for name, _o, _s, path, anchor, _m, _w in ARMS:
         hits = open(path, encoding="utf-8", newline="").read().count(anchor)
         if hits != 1:
             print(f"ABORT: {name} anchor hits={hits} in {path.name}, expected exactly 1")
             return 2
+    for p in FILES:
+        entry = committed[p.name]
+        if not entry["object_readable"]:
+            print(f"ABORT: {p.name} is not readable at {tested_tree}")
+            return 3
+        if originals[p.name] != entry["sha256"]:
+            print(
+                f"ABORT: working {p.name} sha {originals[p.name][:16]} != {tested_tree[:16]} blob "
+                f"{entry['sha256'][:16]} -- the arms would be mutating a drifted file"
+            )
+            return 4
 
     record = {
         "generatedBy": "e345b9d6",
+        "order": "ORD-0292 (re-run this lane's own reverse-mutation arms on the current generation)",
         "orders": ["ORD-0278 resume carries mission_id + Idempotency-Key", "ORD-0253 client half: both legs carry the key"],
         "runTag": tag,
         "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
-        "head": subprocess.run("git rev-parse HEAD", cwd=str(ROOT), capture_output=True, text=True, shell=True).stdout.strip(),
+        "frozen_candidate": {
+            "ref": "refs/heads/review/0278-0253-on-45b0a5e",
+            "tip": tested_tree,
+            "externally_readable_ls_remote_line": remote_line or "NOT_GIVEN",
+            "push_stopped_at": "this ref is not pushed by ORD-0292; the tooling commit below lives on "
+            "refs/heads/review/0292-arm-receipt-tooling, and any later work opens a separate ref",
+        },
+        "tested_tree": tested_tree,
+        "tooling_commit": head_now,
+        "tooling_vs_tested_tree": {
+            "frontend_files_moved": moved_frontend,
+            "identical_under_test": not moved_frontend,
+            "worktree_dirty_frontend": dirty_frontend,
+            "worktree_clean_for_frontend": not dirty_frontend,
+            "reading": "the arms mutate frontend/ only, so the kills are evidence about `tested_tree` "
+            "even though the scripts run from a tooling commit on top of it -- but only if that list "
+            "is empty, which is measured here rather than promised",
+        },
+        "pristine_files_match_tested_tree": {
+            p.name: {"path": committed[p.name]["path"], "sha256": originals[p.name],
+                     "equals_blob_at_tested_tree": originals[p.name] == committed[p.name]["sha256"]}
+            for p in FILES
+        },
+        "gate_round": {
+            "file": round_path or "NOT_GIVEN",
+            "tip": (round_receipt or {}).get("candidate_tip", ""),
+            "tip_equals_tested_tree": (round_receipt or {}).get("candidate_tip", "") == tested_tree,
+            "triple_keys": len(round_keys),
+            "reading": "every arm below re-states the (exact_sha, nodeid) key it was green under in this "
+            "round, so a kill can only be read against a node that was measured green on the same tree",
+        },
         "verifierNote": "claimed_result is self-reported; derived_result / direct_red / collateral_red are WRITTEN_BY_VERIFIER",
         "manualControlsAlreadyRecorded": (
             "before this batch: removing the leg-2 header reddened all three ORD-0253 nodes and the "
@@ -249,8 +357,51 @@ def main() -> int:
             port += 1
         after = digests()
         red = sorted(k for k, v in attempt["nodes"].items() if v == "RED")
+        # (exact_sha, nodeid, run_shape) for the ARM run itself, keyed exactly the way the green
+        # round keys it -- spec-qualified title, slash-normalised -- so the two receipts join on
+        # the same string and a kill cannot quietly borrow another generation's green.
+        round_nodeid = f"{spec} :: {owner}".replace("\\", "/")
+        key = f"{tested_tree} :: {round_nodeid}"
         record["arms"].append({
             "name": name, "ownerNode": owner, "why": why, "file": str(path),
+            "triple": {
+                "exact_sha": tested_tree,
+                "nodeid": round_nodeid,
+                "nodeid_root": f"{ROOT}/frontend",
+                "run_shape": (
+                    f"cwd={ROOT}/frontend (the nodeid root above), whole owner spec {spec} with ONE "
+                    f"guarded mutation live in {rel_to_root(path)}, 1 worker, mobile 390x844, "
+                    f"command=python review/run_spec.py {spec} {attempt['port']}, "
+                    f"run_id={attempt['runId']}, fresh _run{attempt['runId']}.db, ports {attempt['port']}; "
+                    f"verdict taken from the `{name}` redSet below, log {attempt['log']}"
+                ),
+            },
+            "same_key_precondition": {
+                "key": key,
+                "was_green_under_this_key_in_the_gate_round": key in round_keys,
+                "gate_round_file": round_path or "NOT_GIVEN",
+                "gate_round_tip": (round_receipt or {}).get("candidate_tip", ""),
+                "gate_round_verdict_for_this_key": next(
+                    (t.get("status_from_log") for t in (round_receipt or {}).get("triples", [])
+                     if f"{t['exact_sha']} :: {t['nodeid']}" == key), "NO SUCH TRIPLE"
+                ),
+                "baseline_owner_verdict_this_batch": baseline["nodes"].get(owner),
+                "arm_shape_digest": guard.mutated_sha256,
+                "reading": "an arm only counts as a kill on this generation if the identical "
+                "(sha :: spec :: title) string is present in the green round, that round's line read "
+                "`ok`, and this batch's own baseline run of the same spec read GREEN before the mutant "
+                "went in -- three independent readings, none of them inherited from an earlier tip",
+            },
+            "restore_proof": {
+                "file": rel_to_root(path),
+                "digest_before_mutant": before[path.name],
+                "digest_mutated": guard.mutated_sha256,
+                "digest_after_restore": after[path.name],
+                "digest_as_committed_in_tested_tree": committed[path.name]["sha256"],
+                "roundtrip_equal": before[path.name] == after[path.name],
+                "restored_to_tested_tree_bytes": after[path.name] == committed[path.name]["sha256"],
+                "owner_spec_ran_to_completion_under_the_mutant": bool(attempt["stackStarted"]),
+            },
             "anchor_hits": guard.anchor_hits, "bytes_changed": guard.bytes_changed,
             "mutated_sha256": guard.mutated_sha256,
             "restored_exact": after[path.name] == before[path.name] == originals[path.name],
@@ -267,13 +418,36 @@ def main() -> int:
     record["filesAfter"] = digests()
     record["treeUnchangedByThisRun"] = record["filesAfter"] == originals
     record["allArmsKilled"] = all(a["claimed_result"] == "KILLED" for a in record["arms"])
+    record["allArmsRestoredToTestedTreeBytes"] = all(
+        a["restore_proof"]["restored_to_tested_tree_bytes"] for a in record["arms"]
+    )
+    record["allArmsCarryAGreenSameKeyPrecondition"] = all(
+        a["same_key_precondition"]["was_green_under_this_key_in_the_gate_round"]
+        and a["same_key_precondition"]["gate_round_verdict_for_this_key"] == "ok"
+        and a["same_key_precondition"]["baseline_owner_verdict_this_batch"] == "GREEN"
+        for a in record["arms"]
+    )
     out_path = RECEIPT_DIR / f"ord0278-0253-arms-{tag}.json"
     out_path.write_text(json.dumps(record, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     for arm in record["arms"]:
-        print(f"{arm['claimed_result']:14s} owner={arm['ownerNode'][:44]:44s} red={','.join(arm['redSet']) or '-'}")
-    print(f"allArmsKilled={record['allArmsKilled']} treeUnchanged={record['treeUnchangedByThisRun']}")
+        print(
+            f"{arm['claimed_result']:14s} owner={arm['ownerNode'][:44]:44s} "
+            f"same_key={arm['same_key_precondition']['was_green_under_this_key_in_the_gate_round']} "
+            f"restored={arm['restore_proof']['restored_to_tested_tree_bytes']} "
+            f"red={','.join(arm['redSet']) or '-'}"
+        )
+    print(
+        f"allArmsKilled={record['allArmsKilled']} treeUnchanged={record['treeUnchangedByThisRun']} "
+        f"restoredToTestedTree={record['allArmsRestoredToTestedTreeBytes']} "
+        f"sameKeyPrecondition={record['allArmsCarryAGreenSameKeyPrecondition']}"
+    )
     print(f"receipt={out_path}")
-    return 0 if record["treeUnchangedByThisRun"] and record["allArmsKilled"] else 1
+    return 0 if (
+        record["treeUnchangedByThisRun"]
+        and record["allArmsKilled"]
+        and record["allArmsRestoredToTestedTreeBytes"]
+        and record["allArmsCarryAGreenSameKeyPrecondition"]
+    ) else 1
 
 
 if __name__ == "__main__":
