@@ -1,0 +1,42 @@
+{
+ "candidate_tip": "48827a9d6402aaabffc5ff47b1540407fafed620",
+ "branch": "review/0280-attribution-label",
+ "files": [
+  {
+   "name": "ord0280_selfproof.json",
+   "blob40": "05bdec154242b97e0371b2ee39331f4836950457",
+   "bytes": 12375
+  },
+  {
+   "name": "ord0280_48827a9.patch",
+   "blob40": "5566d1a6b77e1611bb9792e91ec9adcb335579fa",
+   "bytes": 22242
+  },
+  {
+   "name": "attribution_label_arms.json",
+   "blob40": "2536a400bb25b6bd76a65569e27c59d456c8d0a0",
+   "bytes": 8264
+  },
+  {
+   "name": "ord0280_teeth_prefix.out",
+   "blob40": "2789f74e00e2a78670a990e3e9a43f5a948d90af",
+   "bytes": 15894
+  },
+  {
+   "name": "ord0280_regress.out",
+   "blob40": "3e3eaef79ddf344ec1ded09d268f430d3112ea11",
+   "bytes": 63909
+  },
+  {
+   "name": "qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "blob40": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+   "bytes": 12134
+  },
+  {
+   "name": "ord0280_teeth_run.py",
+   "blob40": "062188992b4c47ca5fee2ea87483fbb8ce099fcb",
+   "bytes": 4724
+  }
+ ],
+ "listed": 7
+}
