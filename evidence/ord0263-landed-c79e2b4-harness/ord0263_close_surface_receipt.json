@@ -1,0 +1,71 @@
+{
+ "at": "2026-09-24T02:18:22+08:00",
+ "generation": {
+  "source_root_read_only": "D:\\moodle\\_qoder_preview_20260920\\dist",
+  "rebuilt": false,
+  "index_html_mtime": "2026-09-24T01:44:45+08:00",
+  "index_refs": [
+   "assets/index-ChOTTCvB.js",
+   "assets/index-I45CQek8.css"
+  ],
+  "served_js_through_my_face": [
+   "assets/index-ChOTTCvB.js"
+  ],
+  "bundle_sha256_16": "2d56a79632efc0c6",
+  "root_files": 35,
+  "root_bytes": 19122061,
+  "root_tree_sha256": "303e189b4a0ae3a9375b851a38a5483580cb05aa61e85986731f1ec531a667ab",
+  "sw_markers": {
+   "v10-sw.js": {
+    "bytes": 2055,
+    "sha256_16": "88a7d980b3ffcbd6"
+   },
+   "manifest.webmanifest": {
+    "bytes": 314,
+    "sha256_16": "643f91ecc6d80155"
+   },
+   "sw.js": {
+    "bytes": 7178,
+    "sha256_16": "1fc94905be2dbf92"
+   }
+  },
+  "generation_is_distinguishable_from_previous": true,
+  "previous_v10_sw_prefix_for_reference": "e63d7421eda34093"
+ },
+ "retention": {
+  "previous_bundle_on_disk": true,
+  "sha256_16": "5d674a444291f10b",
+  "expected_prefix": "5d674a444291f10b"
+ },
+ "my_copy": {
+  "root": "D:\\moodle\\_qoder_harness_ord0254\\diskgen\\dist",
+  "files": 35,
+  "bytes": 19122061,
+  "tree_sha256": "303e189b4a0ae3a9375b851a38a5483580cb05aa61e85986731f1ec531a667ab",
+  "byte_identical": true
+ },
+ "surface": {
+  "port": 4417,
+  "preview_pid": 54668,
+  "citynexus_backend_port": 8411,
+  "backend_listeners": [],
+  "proof_200_marker_journey": {
+   "status": 200,
+   "via_backend_direct": 200
+  },
+  "proof_404_absent_id": {
+   "uuid": "5ef90656-d553-44c1-80bf-729a48bde904",
+   "rows_in_my_db": 0,
+   "status": 404
+  },
+  "db_marker_rows": 1,
+  "query_only_read_back": 1,
+  "fresh_origin_no_service_worker_from_earlier_rounds": true,
+  "ownership_verdict": "PROVEN"
+ },
+ "user_chain": {
+  "ports_contacted": [],
+  "db_files_opened": [],
+  "demo_reset_issued": false
+ }
+}
