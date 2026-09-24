@@ -1,0 +1,870 @@
+{
+ "what": "ORD-0272 门的反突变 campaign：八臂（K1–K6 点名 + K7/K8 附带），逐臂具名删的是哪一行",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-24T16:23:41+08:00",
+ "coordinates": {
+  "branch": "agent/f-ord272-candidates",
+  "head": "aa29612c855c10f1584a333cc19526066813b072",
+  "parent": "44b428da83e40abd6d2b770006cb88dc022cf2fd",
+  "target_file": "backend/app/main.py",
+  "target_sha256_before_and_after": "86975f76c5245eb16299673f7615a60f811f8f4e06f18e181d85060a248a5a50",
+  "target_git_blob_at_head": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+  "worktree_clean_after": true
+ },
+ "denominator": {
+  "collected_in_scope": 33,
+  "named_carriers": [
+   "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+   "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+   "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+   "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+   "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+   "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+   "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+   "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+   "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+   "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+  ],
+  "collect_command": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest tests/test_qoder_ord0272_continuation.py tests/test_v1923_final_code_gate.py tests/test_v1924_final_truth_gate.py --collect-only -q"
+ },
+ "control": {
+  "rounds": [
+   {
+    "label": "control_r1",
+    "rc": 0,
+    "failed": [],
+    "summary": "33 passed, 2 warnings in 5.75s",
+    "seconds": 6.7
+   },
+   {
+    "label": "control_r2",
+    "rc": 0,
+    "failed": [],
+    "summary": "33 passed, 2 warnings in 6.57s",
+    "seconds": 7.6
+   },
+   {
+    "label": "control_r3",
+    "rc": 0,
+    "failed": [],
+    "summary": "33 passed, 2 warnings in 6.18s",
+    "seconds": 7.2
+   }
+  ],
+  "campaign_valid": true,
+  "rule": "控制轮不绿 ⇒ 整批作废、不出判级；每轮另外回验字节级还原"
+ },
+ "arms": {
+  "K1_claim_stops_committing_before_generation": {
+   "carrier_note": null,
+   "site": "_claim_plan_generation",
+   "line_named": "            claim_tx.commit()",
+   "ops": [
+    {
+     "before": "            claim_tx.commit()\n",
+     "after": ""
+    }
+   ],
+   "what_the_cut_does": "删掉这一行 ⇒ 占位不再于生成之前独立提交（Phase A 连接关掉时 INSERT 一起回滚，Phase B 再去填一把盘上不存在键）",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "mutated_sha256_16": "8b1e267edaa9f605",
+   "run_shape": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py + tests/test_v1923_final_code_gate.py + tests/test_v1924_final_truth_gate.py -q --no-header --tb=no -p no:cacheprovider（3 轮；每轮：应用 → 整片跑 → 逐字节还原 → 回验 sha256==86975f76c5245eb1…）",
+   "expected_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+   ],
+   "collateral_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape"
+   ],
+   "collateral_red_rounds": {
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape": 3
+   },
+   "collateral_why": "G5 判的是'两个都不带 ⇒ 保持旧形'，但它最后一枚断言要用一发**带 mission** 的请求比对字段词汇 ⇒ 占位不先提交时那一发先得 409。这一格不是本臂的主载体，是同一枚 cell 里搭车的断言，所以分开记账",
+   "expected_green_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "reading": {
+      "label": "K1_claim_stops_committing_before_generation_r1",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+       "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+       "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+       "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+       "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+       "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+       "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+      ],
+      "summary": "7 failed, 26 passed, 2 warnings in 5.70s",
+      "seconds": 6.9
+     },
+     "applied_sha256_16": "8b1e267edaa9f605",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 2,
+     "reading": {
+      "label": "K1_claim_stops_committing_before_generation_r2",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+       "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+       "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+       "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+       "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+       "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+       "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+      ],
+      "summary": "7 failed, 26 passed, 2 warnings in 5.60s",
+      "seconds": 6.9
+     },
+     "applied_sha256_16": "8b1e267edaa9f605",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 3,
+     "reading": {
+      "label": "K1_claim_stops_committing_before_generation_r3",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+       "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+       "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+       "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+       "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+       "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+       "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+      ],
+      "summary": "7 failed, 26 passed, 2 warnings in 7.66s",
+      "seconds": 9.9
+     },
+     "applied_sha256_16": "8b1e267edaa9f605",
+     "restored_byte_exact": true
+    }
+   ],
+   "per_nodeid_red_rounds": {
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans": 3,
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation": 3,
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer": 3,
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409": 3,
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape": 3,
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced": 3,
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced": 3
+   },
+   "carriers_removed": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+   ],
+   "every_round_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+   ],
+   "survivors": [],
+   "expected_green_stayed_green": true,
+   "unexpected_red": [],
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  "K2_two_identities_merged_into_one": {
+   "carrier_note": null,
+   "site": "_plan_continuation_identity",
+   "line_named": "    if continuation_id is not None and f\"plans.generate:{continuation_id}\" not in keys:  （连同下一行 append）",
+   "ops": [
+    {
+     "before": "    keys = [f\"plans.generate:{transport_key}\"] if transport_key is not None else []\n    if continuation_id is not None and f\"plans.generate:{continuation_id}\" not in keys:\n        keys.append(f\"plans.generate:{continuation_id}\")\n",
+     "after": "    keys = [f\"plans.generate:{transport_key}\"] if transport_key is not None else (\n        [f\"plans.generate:{continuation_id}\"] if continuation_id else [])  # K2: one key stands in for both\n"
+    }
+   ],
+   "what_the_cut_does": "两枚键合并成一枚（带 header 时业务身份被 transport 身份顶掉）⇒ 换了设备/清了 storage 的第二发拿不到同一枚键，只能另起一批。其余各格每次只带一枚身份，观测不到这一刀 ⇒ 载体应当**只有 G3**，这正是'独立性'要读数而不是口号的地方",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "mutated_sha256_16": "3d2dd62f4adad224",
+   "run_shape": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py + tests/test_v1923_final_code_gate.py + tests/test_v1924_final_truth_gate.py -q --no-header --tb=no -p no:cacheprovider（3 轮；每轮：应用 → 整片跑 → 逐字节还原 → 回验 sha256==86975f76c5245eb1…）",
+   "expected_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+   ],
+   "collateral_red_nodeids": [],
+   "collateral_red_rounds": {},
+   "collateral_why": null,
+   "expected_green_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "reading": {
+      "label": "K2_two_identities_merged_into_one_r1",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+      ],
+      "summary": "1 failed, 32 passed, 2 warnings in 7.71s",
+      "seconds": 9.2
+     },
+     "applied_sha256_16": "3d2dd62f4adad224",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 2,
+     "reading": {
+      "label": "K2_two_identities_merged_into_one_r2",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+      ],
+      "summary": "1 failed, 32 passed, 2 warnings in 6.70s",
+      "seconds": 7.7
+     },
+     "applied_sha256_16": "3d2dd62f4adad224",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 3,
+     "reading": {
+      "label": "K2_two_identities_merged_into_one_r3",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+      ],
+      "summary": "1 failed, 32 passed, 2 warnings in 6.10s",
+      "seconds": 6.9
+     },
+     "applied_sha256_16": "3d2dd62f4adad224",
+     "restored_byte_exact": true
+    }
+   ],
+   "per_nodeid_red_rounds": {
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer": 3
+   },
+   "carriers_removed": [
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+   ],
+   "every_round_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer"
+   ],
+   "survivors": [],
+   "expected_green_stayed_green": true,
+   "unexpected_red": [],
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  "K3_mission_ownership_door_removed": {
+   "carrier_note": null,
+   "site": "generate_journey_plans",
+   "line_named": "        _require_journeys_mission(session, journey, request.mission_id)",
+   "ops": [
+    {
+     "before": "    if request.mission_id is not None:\n        _require_journeys_mission(session, journey, request.mission_id)\n",
+     "after": ""
+    }
+   ],
+   "what_the_cut_does": "删掉这次调用（连同它的 if 共两行；单删一行会让 `if` 掉空、先坏语法）⇒ 编造的或别家旅程的 mission 也能成为续跑身份",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "mutated_sha256_16": "6ca2de8f50882f97",
+   "run_shape": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py + tests/test_v1923_final_code_gate.py + tests/test_v1924_final_truth_gate.py -q --no-header --tb=no -p no:cacheprovider（3 轮；每轮：应用 → 整片跑 → 逐字节还原 → 回验 sha256==86975f76c5245eb1…）",
+   "expected_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+   ],
+   "collateral_red_nodeids": [],
+   "collateral_red_rounds": {},
+   "collateral_why": null,
+   "expected_green_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "reading": {
+      "label": "K3_mission_ownership_door_removed_r1",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+      ],
+      "summary": "1 failed, 32 passed, 2 warnings in 5.72s",
+      "seconds": 6.5
+     },
+     "applied_sha256_16": "6ca2de8f50882f97",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 2,
+     "reading": {
+      "label": "K3_mission_ownership_door_removed_r2",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+      ],
+      "summary": "1 failed, 32 passed, 2 warnings in 6.40s",
+      "seconds": 7.3
+     },
+     "applied_sha256_16": "6ca2de8f50882f97",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 3,
+     "reading": {
+      "label": "K3_mission_ownership_door_removed_r3",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+      ],
+      "summary": "1 failed, 32 passed, 2 warnings in 6.31s",
+      "seconds": 7.4
+     },
+     "applied_sha256_16": "6ca2de8f50882f97",
+     "restored_byte_exact": true
+    }
+   ],
+   "per_nodeid_red_rounds": {
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity": 3
+   },
+   "carriers_removed": [
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+   ],
+   "every_round_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+   ],
+   "survivors": [],
+   "expected_green_stayed_green": true,
+   "unexpected_red": [],
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  "K4_link_event_stops_naming_the_plans": {
+   "carrier_note": null,
+   "site": "_execute_plan_generation_claimed",
+   "line_named": "                               \"plan_version_ids\": feasible_ids,",
+   "ops": [
+    {
+     "before": "                               \"plan_version_ids\": feasible_ids,\n",
+     "after": ""
+    }
+   ],
+   "what_the_cut_does": "删掉这一行 ⇒ 事件还在、mission 还在，但不再指回这批方案（owner 读回的是字段，不是「有条事件」）",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "mutated_sha256_16": "b9dae35b9f3bc987",
+   "run_shape": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py + tests/test_v1923_final_code_gate.py + tests/test_v1924_final_truth_gate.py -q --no-header --tb=no -p no:cacheprovider（3 轮；每轮：应用 → 整片跑 → 逐字节还原 → 回验 sha256==86975f76c5245eb1…）",
+   "expected_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+   ],
+   "collateral_red_nodeids": [],
+   "collateral_red_rounds": {},
+   "collateral_why": null,
+   "expected_green_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "reading": {
+      "label": "K4_link_event_stops_naming_the_plans_r1",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+      ],
+      "summary": "1 failed, 32 passed, 2 warnings in 7.06s",
+      "seconds": 8.3
+     },
+     "applied_sha256_16": "b9dae35b9f3bc987",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 2,
+     "reading": {
+      "label": "K4_link_event_stops_naming_the_plans_r2",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+      ],
+      "summary": "1 failed, 32 passed, 2 warnings in 7.11s",
+      "seconds": 8.6
+     },
+     "applied_sha256_16": "b9dae35b9f3bc987",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 3,
+     "reading": {
+      "label": "K4_link_event_stops_naming_the_plans_r3",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+      ],
+      "summary": "1 failed, 32 passed, 2 warnings in 7.86s",
+      "seconds": 9.5
+     },
+     "applied_sha256_16": "b9dae35b9f3bc987",
+     "restored_byte_exact": true
+    }
+   ],
+   "per_nodeid_red_rounds": {
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced": 3
+   },
+   "carriers_removed": [
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+   ],
+   "every_round_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced"
+   ],
+   "survivors": [],
+   "expected_green_stayed_green": true,
+   "unexpected_red": [],
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  "K5_both_replay_doors_removed": {
+   "carrier_note": null,
+   "site": "generate_journey_plans + _claim_plan_generation（复合切集：两扇都拆，逐扇单拆会掉空 `if`）",
+   "line_named": "            return _plan_generation_http_answer(replayed)   /                   return raced",
+   "ops": [
+    {
+     "before": "        replayed = _replay_plan_generation(session, keys, signature)\n        if replayed is not None:\n            return _plan_generation_http_answer(replayed)\n",
+     "after": ""
+    },
+    {
+     "before": "            raced = _replay_plan_generation(session, keys, signature, wait=True)\n            if raced is not None:\n                return raced\n",
+     "after": ""
+    }
+   ],
+   "what_the_cut_does": "同时删掉两扇早退 ⇒ 已答过的键不再被读回，第二发只会撞上占位",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "mutated_sha256_16": "f327dd55ca300913",
+   "run_shape": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py + tests/test_v1923_final_code_gate.py + tests/test_v1924_final_truth_gate.py -q --no-header --tb=no -p no:cacheprovider（3 轮；每轮：应用 → 整片跑 → 逐字节还原 → 回验 sha256==86975f76c5245eb1…）",
+   "expected_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+   ],
+   "collateral_red_nodeids": [],
+   "collateral_red_rounds": {},
+   "collateral_why": null,
+   "expected_green_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "reading": {
+      "label": "K5_both_replay_doors_removed_r1",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+       "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+       "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+       "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+       "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+      ],
+      "summary": "5 failed, 28 passed, 2 warnings in 6.16s",
+      "seconds": 7.7
+     },
+     "applied_sha256_16": "f327dd55ca300913",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 2,
+     "reading": {
+      "label": "K5_both_replay_doors_removed_r2",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+       "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+       "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+       "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+       "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+      ],
+      "summary": "5 failed, 28 passed, 2 warnings in 6.30s",
+      "seconds": 7.2
+     },
+     "applied_sha256_16": "f327dd55ca300913",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 3,
+     "reading": {
+      "label": "K5_both_replay_doors_removed_r3",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+       "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+       "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+       "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+       "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+      ],
+      "summary": "5 failed, 28 passed, 2 warnings in 5.11s",
+      "seconds": 6.0
+     },
+     "applied_sha256_16": "f327dd55ca300913",
+     "restored_byte_exact": true
+    }
+   ],
+   "per_nodeid_red_rounds": {
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans": 3,
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation": 3,
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer": 3,
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409": 3,
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced": 3
+   },
+   "carriers_removed": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+   ],
+   "every_round_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced"
+   ],
+   "survivors": [],
+   "expected_green_stayed_green": true,
+   "unexpected_red": [],
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  "K6_unowned_path_laundered_into_a_bare_500": {
+   "carrier_note": "后两枚是上一轮 campaign 量出来的既存同主张载体（它们各自断言 `generate_plans()` 必须回 422 / 必须带具名锚点码），不是这次新造的期望",
+   "site": "generate_journey_plans（无 mission 无键那一支）",
+   "line_named": "            return _plan_generation_http_answer(_plan_generation_refusal(session, journey, exc))",
+   "ops": [
+    {
+     "before": "        except ValueError as exc:\n            return _plan_generation_http_answer(_plan_generation_refusal(session, journey, exc))\n",
+     "after": "        except ValueError as exc:\n            raise\n"
+    }
+   ],
+   "what_the_cut_does": "把无身份路径的失败映射换成裸重抛 ⇒ 今天的 422 退回框架 500（本轮 A/B 真抓到过这一枚）。单删那两行会让 `try` 掉空，所以用最小替换，替换后字节写在收据里",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "mutated_sha256_16": "ca13da5672ad589e",
+   "run_shape": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py + tests/test_v1923_final_code_gate.py + tests/test_v1924_final_truth_gate.py -q --no-header --tb=no -p no:cacheprovider（3 轮；每轮：应用 → 整片跑 → 逐字节还原 → 回验 sha256==86975f76c5245eb1…）",
+   "expected_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised",
+    "tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable",
+    "tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict"
+   ],
+   "collateral_red_nodeids": [],
+   "collateral_red_rounds": {},
+   "collateral_why": null,
+   "expected_green_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "reading": {
+      "label": "K6_unowned_path_laundered_into_a_bare_500_r1",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+       "tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable",
+       "tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict",
+       "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+       "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+      ],
+      "summary": "5 failed, 28 passed, 2 warnings in 5.39s",
+      "seconds": 6.1
+     },
+     "applied_sha256_16": "ca13da5672ad589e",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 2,
+     "reading": {
+      "label": "K6_unowned_path_laundered_into_a_bare_500_r2",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+       "tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable",
+       "tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict",
+       "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+       "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+      ],
+      "summary": "5 failed, 28 passed, 2 warnings in 5.13s",
+      "seconds": 6.2
+     },
+     "applied_sha256_16": "ca13da5672ad589e",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 3,
+     "reading": {
+      "label": "K6_unowned_path_laundered_into_a_bare_500_r3",
+      "rc": 1,
+      "failed": [
+       "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+       "tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable",
+       "tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict",
+       "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+       "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+      ],
+      "summary": "5 failed, 28 passed, 2 warnings in 5.42s",
+      "seconds": 6.3
+     },
+     "applied_sha256_16": "ca13da5672ad589e",
+     "restored_byte_exact": true
+    }
+   ],
+   "per_nodeid_red_rounds": {
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced": 3,
+    "tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable": 3,
+    "tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict": 3,
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative": 3,
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised": 3
+   },
+   "carriers_removed": [
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable",
+    "tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict",
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+   ],
+   "every_round_red_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable",
+    "tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict",
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+   ],
+   "survivors": [],
+   "expected_green_stayed_green": true,
+   "unexpected_red": [],
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  "K7_refusal_stops_persisting_the_durable_fact": {
+   "carrier_note": null,
+   "site": "_plan_generation_refusal",
+   "line_named": "    record_replan_outcome(session, journey, feasible_candidate_ids=[], failures=[str(exc)])",
+   "ops": [
+    {
+     "before": "    record_replan_outcome(session, journey, feasible_candidate_ids=[], failures=[str(exc)])\n",
+     "after": ""
+    }
+   ],
+   "what_the_cut_does": "删掉这一行 ⇒ 拒绝不再写成耐久事实（「没有可行替代」又变回一句日志）。本臂的载体**不在我这道门里**，在两枚既存门（v1923 R03 / v1924 R04B）上",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "mutated_sha256_16": "119fa69e28e0b467",
+   "run_shape": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py + tests/test_v1923_final_code_gate.py + tests/test_v1924_final_truth_gate.py -q --no-header --tb=no -p no:cacheprovider（3 轮；每轮：应用 → 整片跑 → 逐字节还原 → 回验 sha256==86975f76c5245eb1…）",
+   "expected_red_nodeids": [
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+   ],
+   "collateral_red_nodeids": [],
+   "collateral_red_rounds": {},
+   "collateral_why": null,
+   "expected_green_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "reading": {
+      "label": "K7_refusal_stops_persisting_the_durable_fact_r1",
+      "rc": 1,
+      "failed": [
+       "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+       "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+      ],
+      "summary": "2 failed, 31 passed, 2 warnings in 5.08s",
+      "seconds": 5.8
+     },
+     "applied_sha256_16": "119fa69e28e0b467",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 2,
+     "reading": {
+      "label": "K7_refusal_stops_persisting_the_durable_fact_r2",
+      "rc": 1,
+      "failed": [
+       "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+       "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+      ],
+      "summary": "2 failed, 31 passed, 2 warnings in 5.72s",
+      "seconds": 6.7
+     },
+     "applied_sha256_16": "119fa69e28e0b467",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 3,
+     "reading": {
+      "label": "K7_refusal_stops_persisting_the_durable_fact_r3",
+      "rc": 1,
+      "failed": [
+       "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+       "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+      ],
+      "summary": "2 failed, 31 passed, 2 warnings in 5.43s",
+      "seconds": 6.4
+     },
+     "applied_sha256_16": "119fa69e28e0b467",
+     "restored_byte_exact": true
+    }
+   ],
+   "per_nodeid_red_rounds": {
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative": 3,
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised": 3
+   },
+   "carriers_removed": [
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+   ],
+   "every_round_red_nodeids": [
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+   ],
+   "survivors": [],
+   "expected_green_stayed_green": true,
+   "unexpected_red": [],
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  "K8_receipt_overwrite_guard_removed": {
+   "carrier_note": null,
+   "site": "_execute_plan_generation_claimed",
+   "line_named": "                           IdempotencyKey.response_json.is_(None))",
+   "ops": [
+    {
+     "before": "                    .where(IdempotencyKey.key == key,\n                           IdempotencyKey.response_json.is_(None))\n",
+     "after": "                    .where(IdempotencyKey.key == key)\n"
+    }
+   ],
+   "what_the_cut_does": "把半个条件删掉 ⇒ 回填不再要求 NULL → 完成，可以覆盖别人已经填好的回执",
+   "exact_sha": "aa29612c855c10f1584a333cc19526066813b072",
+   "mutated_sha256_16": "206352d4128bc8c6",
+   "run_shape": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8 -m pytest tests/test_qoder_ord0272_continuation.py + tests/test_v1923_final_code_gate.py + tests/test_v1924_final_truth_gate.py -q --no-header --tb=no -p no:cacheprovider（3 轮；每轮：应用 → 整片跑 → 逐字节还原 → 回验 sha256==86975f76c5245eb1…）",
+   "expected_red_nodeids": [],
+   "collateral_red_nodeids": [],
+   "collateral_red_rounds": {},
+   "collateral_why": null,
+   "expected_green_nodeids": [
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+    "tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative",
+    "tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised"
+   ],
+   "per_round": [
+    {
+     "round": 1,
+     "reading": {
+      "label": "K8_receipt_overwrite_guard_removed_r1",
+      "rc": 0,
+      "failed": [],
+      "summary": "33 passed, 2 warnings in 5.40s",
+      "seconds": 6.5
+     },
+     "applied_sha256_16": "206352d4128bc8c6",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 2,
+     "reading": {
+      "label": "K8_receipt_overwrite_guard_removed_r2",
+      "rc": 0,
+      "failed": [],
+      "summary": "33 passed, 2 warnings in 6.33s",
+      "seconds": 7.2
+     },
+     "applied_sha256_16": "206352d4128bc8c6",
+     "restored_byte_exact": true
+    },
+    {
+     "round": 3,
+     "reading": {
+      "label": "K8_receipt_overwrite_guard_removed_r3",
+      "rc": 0,
+      "failed": [],
+      "summary": "33 passed, 2 warnings in 5.45s",
+      "seconds": 6.3
+     },
+     "applied_sha256_16": "206352d4128bc8c6",
+     "restored_byte_exact": true
+    }
+   ],
+   "per_nodeid_red_rounds": {},
+   "carriers_removed": [],
+   "every_round_red_nodeids": [],
+   "survivors": [],
+   "expected_green_stayed_green": true,
+   "unexpected_red": [],
+   "claimed_result": "SURVIVED_BY_DESIGN",
+   "derived_result": null,
+   "note": "本臂期望红**故意留空**，而且留得有理由：单进程里占位与回填是同一条键的同一发，「覆盖别人那一行」要两个进程才观测得到 ⇒ 预期 SURVIVED，载体具名交给跨进程门（HJ-P3 的 verifier 面）。它问的是「这枚守卫在本文件里到底有没有人替它说话」。"
+  }
+ },
+ "campaign_valid": true,
+ "not_measured": {
+  "receipt_overwrite": "K8：单进程观测不到，载体具名交给跨进程门（HJ-P3）",
+  "hermes_online": "ORD-0270 射程，NOT-STARTED，不外推"
+ }
+}
