@@ -1,0 +1,77 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "follow-up: 0275 r4 real-execution derivation + DEBT-4 r3 re-derivation + landed same-gen reverify check",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T02:30+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": [],
+   "applied": "refusal classes referenced by rule name only"},
+ "choice_on_the_writers_question": {
+  "asked": "keep the receipt-only ruling, or do a real-execution derivation against r4?",
+  "answer": "REAL EXECUTION - chosen and done. Reason: the receipt-only ruling was a fallback for an unpublishable body; the moment the body IS on the shelf, the stronger evidence class is available and the ruling's own logic demands taking it. Reading the receipt when execution is possible would be choosing the weaker instrument for comfort."
+ },
+ "coordinates_verified": {
+  "ord0275_r4_instr": {"blob": "01d51ce035244c8bf620aaede474c2b85847703c", "bytes": 22732, "sha_ok": true},
+  "ord0275_r4_receipt": {"blob": "2a26fb34d335e6129c74ef645a60f05c6228e23e", "bytes": 11232, "sha_ok": true},
+  "debt4_r3_instr": {"blob": "6adba3214e8946e5c496d5d394801445b5f1c70f", "bytes": 12245, "sha_ok": true},
+  "debt4_r6_receipt": {"blob": "b16d2c27ac8bbe212b6ca64b2098a2d1fae564e0", "bytes": 4068, "sha_ok": true},
+  "cmdr_samegen_receipt": {"blob": "31996a40d57c4f3c33f0e32ce02cdc5159993808", "bytes": 16308, "sha_ok": true}
+ },
+ "ff_only_landing_self_proven": {
+  "mirror_ref": "mirror/integration-frontend-apple-pass1",
+  "tip_after": "dcae1bc964125c3a975916f6bf667794cc19622a",
+  "tip_parents": ["c79e2b4f4efe414dba22a071a7136ae10b5c84aa"],
+  "reading": "the readable mirror tip IS the corrected branch and its single parent is the authoritative tip - consistent with an ff-only move with force:false",
+  "naming_correction_noted": "the readable ref is mirror/-prefixed; integration/frontend-apple-pass1 does not exist on GitHub - recorded, matches the writer's own correction"
+ },
+ "item_0275_r4_real_execution": {
+  "run_shape": "r4 instrument executed in my directory against the r5 publisher (publish_evidence.py = ea4416db..., bytes 22464, staged by name)",
+  "first_run": {"verdict": "RED 19/20", "the_red_cell": "R_publisher_unchanged_on_disk_and_test_named_by_its_own_basename",
+    "why": "the R cell asserts os.path.basename(__file__) == 'test_ord0275_publisher_guard_r3.py' - I ran the file under its PUBLISHED name (r4), so the basename check failed. The cell hard-codes the r1-era name a third time: the D4 fix was applied to the receipt field but the assertion still demands the OLD name.",
+    "verdict_on_the_red": "INSTRUMENT_NAMING_CONTRACT_RED, not product red and not a guard defect - my run is the proof the cell bites; the writer's 20/20 run used the r3 name"},
+  "second_run": {"how": "same instrument bytes, executed under the name the cell demands (test_ord0275_publisher_guard_r3.py), copied byte-for-byte from the r4 blob",
+    "verdict": "GREEN 20/20",
+    "field_vs_published_receipt": {"fields": 255, "differing": 2,
+      "differences": ["publisher.path (my dir vs writer dir)", "t"]},
+    "verdict_fields_differing": 0},
+  "P1_P2_P3_new_cells": {"what": "PUBLISHER_SELF_PUBLICATION_CONTRACT applied to the instrument itself",
+    "P1_this_instrument_can_be_published_by_the_guard_it_tests": "GREEN - the body that was rc=5 in the r3 era now passes its own guard",
+    "P2_the_assembled_fixture_is_still_one_whole_literal_of_the_named_shape": "GREEN",
+    "P3_the_guard_still_objects_to_the_runtime_bytes": "GREEN - the runtime-assembled forbidden bytes are still refused (the tightening did not open a hole)",
+    "assessment": "the self-publication door is real, two-way, and the guard keeps its teeth"},
+  "kills": {"M1": "KILLED (bool REPO_PATH_DIRTY_refused)", "M2": "KILLED (cli FOREIGN_PREFIX)",
+            "M3": "KILLED (both scopes + 3 cli)", "M4": "KILLED (cli LEGACY_DIFFERENT)"},
+  "derived_result": "ALL_GREEN (20/20, real execution, r5 publisher ea4416db..., field-identical to the published receipt modulo path+clock)"
+ },
+ "item_DEBT4_r3": {
+  "what_changed": "new cell live_worker_observation_present - the 'rerun is byte-identical' premise now NAMES its dependency on the in-service dist's v10-sw.js and judges RED when the surface is absent",
+  "my_run": {"setup": "both gauges staged by name; serve = the default in-service dist",
+    "derived_result": "ALL_GREEN", "cells": "11/11 ok",
+    "live_worker_observation_present": true,
+    "served_worker_sha256_now": "88a7d980b3ffcbd6b0eca817dde4bf7d7da07ddbc4480cbda0b408a02964410a",
+    "independent_check": "I hashed D:/moodle/_qoder_preview_20260920/dist/v10-sw.js myself: 2055 B, sha256 == that value - the surface dependency is real and currently satisfied on this machine"},
+  "field_vs_published_r6": {"fields": 70, "differing": 1,
+    "the_one": "published_paths.instrument_local_name: mine 'test_ord0271a_debt4_r3.py' vs published 'test_ord0271a_debt4.py' - because I ran the r3 file under its own name; the writer ran it under the base name. The field is doing its job (recording the local name); no verdict field differs.",
+    "verdict_fields_differing": 0},
+  "prior_stub_reading": "the third-party observation is confirmed by shape: r5's premise (receipt sha equality across reruns) silently required the served v10-sw.js to stay 88a7d980... on the rerun machine; r3 makes that premise a named, fail-closed cell",
+  "derived_result": "ALL_GREEN (11/11) with the surface dependency now explicit"
+ },
+ "item_samegen_landed": {
+  "receipt": "commander_samegen_reverify_landed_dcae1bc9_r2.json (31996a40...)",
+  "derived": {"verdict": "GATE-GREEN", "cells": "8/8 GREEN",
+    "exact_sha_all_cells": "dcae1bc964125c3a975916f6bf667794cc19622a",
+    "nodeid_roots": "tests/ only - the corrected shape",
+    "carriers": "21/21 collectible, zero non-collectible",
+    "db": "ORD-0211 one-shot temp db, no _live/_preview hit",
+    "tree_untouched": true, "silent_alarms": [],
+    "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+    "codeload_export": "50,240,091 B, backend/data/contracts/tools only (sparse) - consistent with the sparse-worktree rule (backend+data+contracts+tools)"},
+  "cross_check_with_my_own_run": "same verdict, same 8 cells, same exact_sha, same carrier collectibility - two independent trees (my tarball export, the writer's codeload export) agree",
+  "derived_result": "LANDED_GENERATION_VERIFIED_SAME_GEN (the tip the mirror now serves re-verifies green on both machines)"
+ },
+ "ORD0272_status_on_my_side": {
+  "level": "LANDED / NOT-CLOSED (agreed): K8 still UNPROVEN_AS_KILL - awaiting F's mutant and HJ-P3's targeted cross-process observation; the four root-shape coordinate debts are superseded by her corrected table (o272_reverify_r2, 29 roots fixed to full-nodeid equality + reverse probe), which the same-gen run above already uses"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this derivation)"}
+}
