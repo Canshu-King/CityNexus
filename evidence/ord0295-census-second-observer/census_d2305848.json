@@ -1,0 +1,490 @@
+{
+ "schema": "CNX_CENSUS_SECOND_OBSERVER_V1",
+ "order": "ORD-0295 (second observer on the write-leg AST census)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T08:0x+08:00",
+ "ref_tip_read": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+ "tree_source": "GitHub tarball of the mirror ref, exported 07:24 for ORD-0293; tip re-read before use; export reused byte-identical (same tip)",
+ "parser": "TypeScript compiler API 5.9.3 (my own visitor; F implementation not read)",
+ "scope_declaration": {
+  "walk": "frontend/src only, node_modules excluded, *.d.ts excluded",
+  "site": "CallExpression with Identifier fetch or PropertyAccessExpression .fetch",
+  "method": "method property of the options object of THE SAME call; string literal or same-file module-level const; else 'unresolved' (never guessed)",
+  "signal_timer": "same CallExpression argument subtree only"
+ },
+ "claimed_result": {
+  "files_scanned": 71,
+  "ast_sites": 39,
+  "write_legs": 14,
+  "with_signal_same_call": 10,
+  "with_timer_same_call": 0,
+  "write_legs_detail": [
+   {
+    "file": "frontend/src/features/execution/LiveRecovery.tsx",
+    "line": 225,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/notifications/PushCapabilityCard.tsx",
+    "line": 56,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/planning/PlanComparison.tsx",
+    "line": 88,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 492,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 605,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+    "line": 26,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+    "line": 69,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/simulation/simulationAdapter.ts",
+    "line": 229,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/simulation/simulationAdapter.ts",
+    "line": 296,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/simulation/simulationAdapter.ts",
+    "line": 335,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/simulation/simulationAdapter.ts",
+    "line": 376,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/stay/HotelsPanel.tsx",
+    "line": 63,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/stay/HotelsPanel.tsx",
+    "line": 64,
+    "method": "POST"
+   },
+   {
+    "file": "frontend/src/features/stay/HotelsPanel.tsx",
+    "line": 87,
+    "method": "POST"
+   }
+  ],
+  "sites_detail": [
+   {
+    "file": "frontend/src/api/candidateRejections.ts",
+    "line": 37,
+    "col": 26,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/api/travelerPreferences.ts",
+    "line": 23,
+    "col": 26,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/api/useContinuationState.ts",
+    "line": 22,
+    "col": 26,
+    "method": "unresolved",
+    "signal_same_call": true,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/api/v10Execution.ts",
+    "line": 26,
+    "col": 26,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/api/v10Execution.ts",
+    "line": 32,
+    "col": 26,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/api/v12Authoritative.ts",
+    "line": 21,
+    "col": 26,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/app/V8Experience.tsx",
+    "line": 243,
+    "col": 28,
+    "method": "unresolved",
+    "signal_same_call": true,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx",
+    "line": 59,
+    "col": 26,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/execution/LiveRecovery.tsx",
+    "line": 112,
+    "col": 23,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/execution/LiveRecovery.tsx",
+    "line": 151,
+    "col": 25,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/execution/LiveRecovery.tsx",
+    "line": 225,
+    "col": 23,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+    "line": 82,
+    "col": 26,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/notifications/PushCapabilityCard.tsx",
+    "line": 36,
+    "col": 10,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/notifications/PushCapabilityCard.tsx",
+    "line": 56,
+    "col": 30,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/planning/PlanComparison.tsx",
+    "line": 88,
+    "col": 30,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 374,
+    "col": 10,
+    "method": "unresolved",
+    "signal_same_call": true,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 402,
+    "col": 10,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 434,
+    "col": 30,
+    "method": "unresolved",
+    "signal_same_call": true,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 492,
+    "col": 30,
+    "method": "POST",
+    "signal_same_call": true,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 534,
+    "col": 39,
+    "method": "unresolved",
+    "signal_same_call": true,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 561,
+    "col": 40,
+    "method": "unresolved",
+    "signal_same_call": true,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 605,
+    "col": 34,
+    "method": "POST",
+    "signal_same_call": true,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+    "line": 26,
+    "col": 10,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/recovery/V14PreventivePanel.tsx",
+    "line": 79,
+    "col": 28,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+    "line": 55,
+    "col": 28,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+    "line": 69,
+    "col": 30,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/simulation/simulationAdapter.ts",
+    "line": 229,
+    "col": 26,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/simulation/simulationAdapter.ts",
+    "line": 296,
+    "col": 26,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/simulation/simulationAdapter.ts",
+    "line": 335,
+    "col": 26,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/simulation/simulationAdapter.ts",
+    "line": 376,
+    "col": 26,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/simulation/simulationAdapter.ts",
+    "line": 433,
+    "col": 26,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/simulation/simulationAdapter.ts",
+    "line": 480,
+    "col": 26,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/stay/HotelsPanel.tsx",
+    "line": 54,
+    "col": 27,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/stay/HotelsPanel.tsx",
+    "line": 63,
+    "col": 19,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/stay/HotelsPanel.tsx",
+    "line": 64,
+    "col": 19,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/features/stay/HotelsPanel.tsx",
+    "line": 87,
+    "col": 23,
+    "method": "POST",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/lib/readDeadline.ts",
+    "line": 44,
+    "col": 12,
+    "method": "unresolved",
+    "signal_same_call": false,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/lib/readDeadline.ts",
+    "line": 59,
+    "col": 18,
+    "method": "unresolved",
+    "signal_same_call": true,
+    "timer_same_call": false
+   },
+   {
+    "file": "frontend/src/lib/sceneClock.ts",
+    "line": 116,
+    "col": 26,
+    "method": "unresolved",
+    "signal_same_call": true,
+    "timer_same_call": false
+   }
+  ],
+  "with_signal_write_legs": 2,
+  "with_signal_write_legs_detail": [
+   {
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 492
+   },
+   {
+    "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "line": 605
+   }
+  ],
+  "signal_denominator_note": "with_signal_same_call counts ALL sites whose own argument subtree carries a signal/abort token (10: 2 write legs + 8 read/GET legs). The commanders quoted number 2 matches with_signal_write_legs (write legs with signal), a different denominator. Both readings are reported so the census cell cannot be quoted with a hidden denominator."
+ },
+ "discriminative_counter_examples": {
+  "i_comment_not_a_site": {
+   "comment_fetch_lines_found": [
+    300,
+    440,
+    446,
+    486,
+    487,
+    488,
+    489,
+    522,
+    523,
+    526,
+    527,
+    528,
+    529,
+    530,
+    551,
+    552,
+    553,
+    554,
+    555,
+    616,
+    646,
+    647,
+    648,
+    664
+   ],
+   "comment_lines_that_are_ast_sites": [],
+   "check_bites": true
+  },
+  "ii_no_method_leak": {
+   "methods_seen": [
+    "unresolved",
+    "POST"
+   ],
+   "no_method_call_is_unresolved_not_post": true,
+   "check_bites": true
+  }
+ },
+ "derived_result": null,
+ "f_comparison": {
+  "sites": {
+   "f": 39,
+   "mine": 39,
+   "match": true
+  },
+  "write_legs": {
+   "f": 14,
+   "mine": 14,
+   "match": true,
+   "note": "my 14 legs listed by file:line; F did not publish its list in the blocks I have, so comparison is count-level"
+  },
+  "signal": {
+   "f": 2,
+   "mine_all_sites": 10,
+   "mine_write_legs_only": 2,
+   "reconciliation": "F's 2 = write legs with signal (the denominator is write legs); my 10 = all sites with signal. Both true; the cell must name its denominator."
+  },
+  "timer": {
+   "f": 0,
+   "mine": 0,
+   "match": true
+  },
+  "files_scanned": {
+   "f": 71,
+   "mine": 71,
+   "match": true
+  }
+ }
+}
