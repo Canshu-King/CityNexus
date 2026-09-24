@@ -1,0 +1,253 @@
+{
+ "order": "ORD-0291",
+ "run_id": "O0291-2507",
+ "lane": "HJ-P3 aad2d1f2",
+ "frozen_tip": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+ "frozen_tip_source": "read back with `git rev-parse HEAD` inside the very tree the scans ran against, and that tree's `git status --porcelain` is empty (0 lines) - see tip_readback.json; the abbreviated form in the ledger is not a coordinate",
+ "claim_kind": "runtime_measured - per Q25 none of these durations may be inherited by another generation",
+ "constant": {
+  "export_name": "READ_DEADLINE_MS",
+  "source_site": "frontend/src/lib/readDeadline.ts:15",
+  "source_constant_line": [
+   "export const READ_DEADLINE_MS = 12_000;"
+  ],
+  "minified_site_offset": 271498,
+  "before_literal": "12e3",
+  "after_literal": "6e03",
+  "ms_before": 12000,
+  "ms_after": 6000,
+  "occurrences_of_before_literal": 1,
+  "product_bytes_changed": 0,
+  "why": "the patch was applied only inside two private copies of a frozen dist; the served bundle on the user chain was never rewritten"
+ },
+ "verdicts": {
+  "V1_constant_is_single_site_and_named": {
+   "rule": "the before-literal must occur exactly once and the source must name one export",
+   "occurrences": 1,
+   "source_constant_lines": [
+    15
+   ],
+   "derived": "SINGLE_SITE_NAMED"
+  },
+  "V2_read_trigger_moves_with_the_constant": {
+   "rule": "the rendered trigger moment must shift by (within 1 s) the constant delta",
+   "constant_delta_ms": 6000,
+   "card_ms": {
+    "X": 16321,
+    "X_half": 10336
+   },
+   "card_delta_ms": 5985,
+   "abort_ms": {
+    "X": 12004,
+    "X_half": 6005
+   },
+   "abort_delta_ms": 5999,
+   "seconds_shown": {
+    "X": "12",
+    "X_half": "6"
+   },
+   "sentence_X": "等了 12 秒，这台服务器一个字也没回答",
+   "sentence_X_half": "等了 6 秒，这台服务器一个字也没回答",
+   "derived": "MOVES_WITH_CONSTANT"
+  },
+  "V3_write_leg_is_insensitive_on_the_lock_rig": {
+   "rule": "with the same two constants, a write leg that showed no card at either value is not being bounded by the constant",
+   "arms_without_card": [
+    "X",
+    "Xhalf"
+   ],
+   "arms_expected": [
+    "X",
+    "Xhalf"
+   ],
+   "server_status_seen": {
+    "X": [
+     500
+    ],
+    "Xhalf": [
+     500
+    ]
+   },
+   "elapsed_ms": {
+    "X": [
+     32392
+    ],
+    "Xhalf": [
+     32312
+    ]
+   },
+   "derived": "WRITE_LEG_IGNORES_CONSTANT"
+  },
+  "V4_write_leg_against_a_silent_origin": {
+   "rule": "the origin answers every read and never answers the POST; if the client has no bound of its own the leg stays open and the screen never changes - that is ORD-0281 T-b counter-example 1, executable today",
+   "arms_without_card": [
+    "X",
+    "Xhalf"
+   ],
+   "leg_still_open_at_cap": {
+    "X": [
+     true
+    ],
+    "Xhalf": [
+     true
+    ]
+   },
+   "cap_ms": {
+    "X": 30013,
+    "Xhalf": 30028
+   },
+   "derived": "WRITE_LEG_STILL_UNBOUNDED"
+  },
+  "V5_the_instrument_can_see_the_card": {
+   "rule": "a negative reading is only worth its positive control: the same matcher must fire on the deadline sentence and must not fire on the progress counter",
+   "selftest": {
+    "matches_deadline_sentence": true,
+    "matches_progress_counter": false,
+    "verdict": "SELFTEST_OK"
+   },
+   "read_arms_produced_a_card": [
+    true,
+    true
+   ],
+   "derived": "CONTROL_OK"
+  },
+  "V6_range_which_legs_the_constant_can_reach": {
+   "rule": "name every write leg and the channel it travels on (per-file helper resolution)",
+   "tree_scanned": "D:\\moodle\\_qoder_wt_45b0a5e",
+   "search_space": "every *.ts / *.tsx under frontend/src; rows matched by method:\"POST|PUT|PATCH|DELETE\"",
+   "channel_tally": {
+    "WRAPPER": 29,
+    "UNRESOLVED": 13,
+    "OTHER": 8,
+    "RAW_FETCH": 14
+   },
+   "through_the_wrapper_short_circuited_by_readDeadline_line_43": 29,
+   "raw_fetch_never_seeing_the_wrapper": 14,
+   "unresolved_rows": [
+    "frontend/src/api/citynexus.ts:777",
+    "frontend/src/api/citynexus.ts:935",
+    "frontend/src/api/citynexus.ts:994",
+    "frontend/src/api/citynexus.ts:1003",
+    "frontend/src/api/citynexus.ts:1012",
+    "frontend/src/api/citynexus.ts:1050",
+    "frontend/src/api/citynexus.ts:1066",
+    "frontend/src/api/v12Authoritative.ts:79",
+    "frontend/src/app/V8Experience.tsx:843",
+    "frontend/src/app/V8Experience.tsx:1045",
+    "frontend/src/app/V8Experience.tsx:1049",
+    "frontend/src/app/V8Experience.tsx:1077",
+    "frontend/src/app/V8Experience.tsx:1131"
+   ],
+   "coverage": "NOT EXHAUSTIVE - the enclosing call is the first call-shaped token on the literal line else on the 12 lines above; a helper is followed exactly one import hop; UNRESOLVED rows are listed rather than assigned to a channel",
+   "derived": "RANGE_NAMED"
+  }
+ },
+ "arms": {
+  "read_X": {
+   "port": 8487,
+   "origin": "silent 127.0.0.1:8595 (accepts, never answers)",
+   "face_bytes_sha": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1"
+  },
+  "read_Xhalf": {
+   "port": 8486,
+   "origin": "silent 127.0.0.1:8595 (accepts, never answers)",
+   "face_bytes_sha": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed"
+  },
+  "write_lock_X": {
+   "port": 8484,
+   "rig": {
+    "present_in_file": true,
+    "value": "write-lock rig (backend 127.0.0.1:8493 with a bounded write-lock window)",
+    "file_was_written_before_the_field_existed": false
+   },
+   "face_bytes_sha": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1"
+  },
+  "write_lock_Xhalf": {
+   "port": 8485,
+   "rig": {
+    "present_in_file": false,
+    "value": "write-lock rig (backend 127.0.0.1:8493, bounded SQLite busy_timeout)",
+    "file_was_written_before_the_field_existed": true
+   },
+   "face_bytes_sha": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed"
+  },
+  "write_silent_X": {
+   "port": 8479,
+   "rig": {
+    "present_in_file": true,
+    "value": "selective origin 127.0.0.1:8598 - reads answered by backend 8493, POST accepted and held open with no response",
+    "file_was_written_before_the_field_existed": false
+   },
+   "face_bytes_sha": "08e5de2c560ce5a8d54dca98d67c842e89a41fffafc795ecbea579e64f099fd1"
+  },
+  "write_silent_Xhalf": {
+   "port": 8478,
+   "rig": {
+    "present_in_file": true,
+    "value": "selective origin 127.0.0.1:8598 - reads answered by backend 8493, POST accepted and held open with no response",
+    "file_was_written_before_the_field_existed": false
+   },
+   "face_bytes_sha": "7853c5f18ec877ba9f6d80fa2b8e760c46206fcf537bea895249a5107e7774ed"
+  }
+ },
+ "disclosed_instrument_failures": [
+  {
+   "what": "the first selective origin closed the connection instead of holding it, so vite's proxy answered the browser with its own 500 in 90 ms; that arm was discarded, the file kept as arm_readings_write_X_silent-INSTRUMENT_BROKEN.json",
+   "fix": "hold the handler thread on an event until teardown (o0291_selective_origin.py SILENCE)"
+  },
+  {
+   "what": "the write arm for X on the lock rig was overwritten by that discarded run; it was re-executed and now lives in arm_readings_write_X_lock.json",
+   "fix": "every artefact name now carries the rig tag (_lock / _silent)"
+  }
+ ],
+ "arbitration_items_returned_to_this_lane": {
+  "method": "every artefact file this lane published for ORD-0281 / ORD-0288 was read and searched for the literal strings; the inventory with byte counts is printed below",
+  "files_read": [
+   [
+    "D:/moodle/_hjp3_0281_0925/SHAPE_ORD-0281.md",
+    5358
+   ],
+   [
+    "D:/moodle/_hjp3_0288_0925/SHAPE_ORD-0288.md",
+    4150
+   ],
+   [
+    "D:/moodle/HJ-P3_evidence/block_0281.md",
+    4042
+   ],
+   [
+    "D:/moodle/HJ-P3_evidence/bus_0281.md",
+    3426
+   ],
+   [
+    "D:/moodle/HJ-P3_evidence/block_0288.md",
+    3594
+   ],
+   [
+    "D:/moodle/HJ-P3_evidence/bus_0288.md",
+    2730
+   ],
+   [
+    "D:/moodle/HJ-P3_evidence/o0288_shape.py",
+    6302
+   ],
+   [
+    "D:/moodle/HJ-P3_evidence/o0281_shape.py",
+    10256
+   ]
+  ],
+  "coverage": "NOT EXHAUSTIVE - chat/bus prose that was never written to one of these files is outside this search",
+  "hits": {
+   "DEFAULT_WRITE_DEADLINE_MS": [],
+   "ten_thousand_ms": [],
+   "commit_1106": [],
+   "record_audit_1111": []
+  },
+  "hit_counts": {
+   "DEFAULT_WRITE_DEADLINE_MS": 0,
+   "ten_thousand_ms": 0,
+   "commit_1106": 0,
+   "record_audit_1111": 0
+  }
+ }
+}
