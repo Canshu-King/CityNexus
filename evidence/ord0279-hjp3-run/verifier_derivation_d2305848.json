@@ -1,0 +1,113 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0279 (run on the PREVIOUS generation c79e2b4f; generation-boundary verdicts per the commander's ruling at 02:5x, cross-generation support = blob equality only)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T04:20+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "coordinates_all_verified": {
+  "receipt_md": {"blob": "396f63144734932630415f9aa14d448cf0b46d3b", "bytes": 10934, "sha_ok": true},
+  "readings": {"blob": "dbfbe18a0f6ca35bac022afae1a19fdfa8740032", "bytes": 9047, "sha_ok": true},
+  "score_py": {"blob": "ec2887a01e95808740947300e1ade5d1133b54f8", "bytes": 13499, "sha_ok": true},
+  "serve_py": {"blob": "143733411af79e43b8c8f7c8790ce7584f6d2a1a", "bytes": 6696, "sha_ok": true},
+  "setup_py": {"blob": "a3f77f44d875e13b09d9e17b59c415602519649e", "bytes": 5252, "sha_ok": true},
+  "lock_py": {"blob": "9ce7f669375cf5f3c7b6ab728c27055d8c16bde9", "bytes": 1532, "sha_ok": true},
+  "shot_B": {"blob": "8b1edff902f1b915b634ccef2d2115b4f76e104d", "bytes": 43724, "sha_ok": true},
+  "shot_D": {"blob": "8b7762344bbe64525e7b5710ee6bf499516f3bcc", "bytes": 43914, "sha_ok": true},
+  "shot_C": {"blob": "00d100b99c30583c4f58e69610ebac07ec7c26f0", "bytes": 45597, "sha_ok": true},
+  "branch_tip_at_run": {"commit": "f9d57e15ddbe09c1991613702b61ba71a3e526e0",
+                        "tree": "3ac06b4d39db725d71a234980dbedc3ebe084b9f",
+                        "note": "the readings' own branch-tip coordinate, taken from the receipt not from the ledger"}
+ },
+ "generation_boundary_self_proven": {
+  "run_tree": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa (PREVIOUS generation, parent of the landed tip)",
+  "PlanWithAiSheet_tsx": {"c79e2b4f": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+                           "dcae1bc964125c3a975916f6bf667794cc19622a": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+                           "identical_across_generations": true,
+                           "method": "git trees API per commit, blob shas recomputed by me"},
+  "main_py": {"c79e2b4f": "b1f12abff8ea4811bf4d8d7d506be717974fc932",
+              "dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+              "changed": true,
+              "note": "ORD-0272 changed exactly the 4 files the commander listed, none in frontend/ - so server-side readings from c79e2b4f cannot speak for the landed generation"}
+ },
+ "verdicts_by_generation_class": {
+  "class_A_CLIENT_generation_independent": {
+   "W2_rendered_reason": {
+    "claimed": "CLIENT_SUBSTITUTES_A_STATUS_STRING_FOR_THE_SERVER_REASON",
+    "derived": "CONFIRMED_ON_RUN_GENERATION, AND GENERATION-INDEPENDENT BY BLOB IDENTITY",
+    "basis": [
+     "the receipt's own two-sided equality: server body 'Internal Server Error' (21 B) vs rendered 'HTTP 500' -> server_body_equals_rendered_real_origin=false",
+     "positive control on the SAME channel: marker origin renders the server's own sentence verbatim (==) -> the channel CAN carry server words, so the substitution is the client's doing, not a transport property",
+     "judge self-tests: equality accepted, punctuation drift rejected, substring judge would have passed the truncation -> the == discipline is what makes the mismatch a fact",
+     "GENERATION-INDEPENDENT SUPPORT (verified by me, not taken from anyone): the emitting bytes live in frontend/src/features/planning/PlanWithAiSheet.tsx, blob 58c0580b... IDENTICAL in both c79e2b4f and the landed dcae1bc96; the receipt cites the emission sites at :504/:508 (agent/commands leg) and :622 (plans/generate leg)"
+    ],
+    "generation_class": "A - may be cited against the landed generation WITH the blob-equality support"},
+   "W1d_inflight_state": {
+    "claimed": "INFLIGHT_STATE_NAMED_WITH_REAL_WAITING_TIME_AND_NO_INVENTED_PROGRESS",
+    "derived": "CONFIRMED_ON_RUN_GENERATION (client-side rendering)",
+    "basis": ["max_counter_vs_wallclock_drift_ms=1005 (honest counter)",
+              "submit_button_present_in_sheet_while_inflight=false (which is itself the measured reason a second leg needed a second tab)",
+              "second_tab_could_still_submit=true"],
+    "generation_class": "A - client-side; same blob support as W2"
+   }
+  },
+  "class_B_SERVER_generation_bound": {
+   "W1a_write_leg_deadline": {
+    "claimed": "WRITE_LEG_RUNS_PAST_THE_READ_DEADLINE_WITH_NO_CLIENT_ABORT",
+    "derived": "NOT_TRANSFERABLE_GENERATION (mechanism reading transfers, elapsed readings do not)",
+    "basis": [
+     "the no-abort mechanism is byte-verifiable against the LANDED generation's published asset: I read D:/moodle/_qoder_preview_20260920/dist/assets/index-ChOTTCvB.js (sha256 2d56a79632efc0c6... matching the published generation) and the literal if(r!==\"GET\"&&r!==\"HEAD\")return fetch(t,e); IS present - the read-deadline wrapper provably skips non-GET/HEAD",
+     "BUT the three elapsed readings (32286/32328/32335 ms) are timings of the c79e2b4f backend under the held write lock; the landed generation's main.py is a different blob (416ea4f2 vs b1f12abf), so those numbers speak for the run generation only"
+    ],
+    "generation_class": "B (mechanism half transfers; timing half does not)",
+    "offset_correction": {
+     "claimed_offset": 271706,
+     "my_measured_offset": 271777,
+     "difference_bytes": 71,
+     "literal_still_byte_identical_in_context": true,
+     "my_asset_sha256_matches_published_generation": "2d56a79632efc0c6...",
+     "verdict": "the offset coordinate in the receipt is WRONG (71 bytes off); the mechanism finding is unaffected because the literal itself is byte-identical, but the number 271706 must not be re-quoted - use 271777 or re-derive per asset"
+    }
+   },
+   "W1b_loser_answer": {
+    "claimed": "NOT_200_BUT_UNNAMED (500, 21 B bare text, no server-named code)",
+    "derived": "NOT_TRANSFERABLE_GENERATION",
+    "basis": ["the unnamed-500 readings are server-side facts of the c79e2b4f backend",
+              "the landed generation's main.py differs, and ORD-0272 added plans.generate:<continuation_id> idempotency keys and plans.continuation.linked events - exactly the surfaces these readings describe; last generation's DB readings cannot endorse them"],
+    "generation_class": "B"},
+   "W1e_durability_claim": {
+    "claimed": "SCREEN_CLAIM_AND_STORE_AGREE (6 tables +0 rows, updated_at==created_at)",
+    "derived": "NOT_TRANSFERABLE_GENERATION (durable-store readings of the run generation)",
+    "generation_class": "B"},
+   "W1f_attribution": {
+    "claimed": "ATTRIBUTED_TO_HELD_WRITE_LOCK",
+    "derived": "NOT_TRANSFERABLE_GENERATION as a server fact; the attribution METHOD (same action retried after the lock window -> 200/21ms with a new mission row; second connection timeout=0 -> immediate database is locked) is instrument-shape and transfers",
+    "generation_class": "B with a transferable method"},
+   "IMMEDIATE_REFUSAL_NOT_REPRODUCED": {
+    "claimed": "the later leg was refused after its own full busy_timeout, not immediately (32328/32335 ms)",
+    "derived": "NOT_REPRODUCED_ON_RUN_GENERATION - honest negative, timings are readings not assertions; and NOT_TRANSFERABLE_GENERATION like the other server facts",
+    "generation_class": "B"},
+   "idempotency_keys_zero_rows": {
+    "claimed": "the agent/commands path writes no idempotency receipt at all (0 rows in the whole table)",
+    "derived": "NOT_TRANSFERABLE_GENERATION - this is the sharpest case: ORD-0272's own diff ADDS idempotency receipts on the plans.generate path, so a c79e2b4f zero-row reading must never be quoted as a landed-generation fact",
+    "generation_class": "B"
+   }
+  }
+ },
+ "derived_result_ORD0279": {
+  "on_the_run_generation": "all seven derived verdicts re-derived TRUE from the readings' raw fields; W2's two-sided equality and the judge self-tests are internally consistent; W1e screen-vs-store agreement is derived from the six-table zero-delta",
+  "generation_classification": {
+   "generation_independent_by_blob_identity": ["W2_rendered_reason", "W1d_inflight_state"],
+   "not_transferable_to_landed_generation": ["W1a (timings)", "W1b", "W1e", "W1f (as facts)", "IMMEDIATE_REFUSAL_NOT_REPRODUCED", "idempotency_keys_zero_rows"],
+   "mechanism_half_transferable": "W1a's no-abort mechanism (byte-verified against the LANDED generation's published asset by me)"
+  },
+  "no_grade_signed": "per the standing rule the writer does not self-sign and the grade for ORD-0280 shaping stays with the commander; ORD-0279-X (same instrument, only variable = tree, on dcae1bc96) is what turns class B rows into landed-generation facts",
+  "corrections_for_the_record": [
+   "asset offset 271706 -> my measurement 271777 (71 bytes); literal byte-identical, mechanism unaffected",
+   "the ledger's receipt path (review/evidence/ui-overnight/...) was already corrected for v5; this receipt's own branch-tip coordinate f9d57e15/3ac06b4d is self-consistent"
+  ]
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this derivation)",
+   "resumed_after_failed_turn": "state read back before writing; nothing re-published"}
+}
