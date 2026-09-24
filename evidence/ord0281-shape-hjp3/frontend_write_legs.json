@@ -1,0 +1,139 @@
+{
+ "api_dir": [
+  "src\\api\\candidateRejections.ts",
+  "src\\api\\citynexus.ts",
+  "src\\api\\travelerPreferences.ts",
+  "src\\api\\v10Execution.ts",
+  "src\\api\\v12Authoritative.ts"
+ ],
+ "deadline_files": [
+  "src\\lib\\failureAttribution.ts",
+  "src\\lib\\readDeadline.ts"
+ ],
+ "deadline_lines": [
+  "failureAttribution.ts:24| import { isReadDeadlineMissed, READ_DEADLINE_SECONDS } from \"./readDeadline\";",
+  "failureAttribution.ts:102| /** Matched by name, the same way the read deadline is, so a bundling pass cannot break the fact. */",
+  "failureAttribution.ts:188| /* 3a: our own per-read deadline expired (ORD-0263).  Same *fact class* as a transport failure --",
+  "failureAttribution.ts:189| nothing ever came back -- but not the same sentence: a request that was abandoned at a deadline",
+  "failureAttribution.ts:192| if (isReadDeadlineMissed(error)) {",
+  "failureAttribution.ts:390| /* ORD-0263 V2: a read that hit its own deadline.  The measured fact is \"no answer arrived\";",
+  "failureAttribution.ts:392| claim it.  The deadline's own value comes from the mechanism, not from a second number. */",
+  "failureAttribution.ts:397| title: zh ? `等了 ${READ_DEADLINE_SECONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,",
+  "failureAttribution.ts:400| : `This read reached its deadline with no answer at all: the server neither refused nor agreed, it simply said nothing. Your trip ",
+  "failureAttribution.ts:404| title: zh ? `等了 ${READ_DEADLINE_SECONDS} 秒，这台服务器一个字也没回答` : `No answer from this server in ${READ_DEADLINE_SECONDS} seconds`,",
+  "failureAttribution.ts:407| : `This read reached its deadline with no answer at all: the server neither refused nor agreed. This device holds no local copy to",
+  "readDeadline.ts:2| * ORD-0263 -- every data *read* carries a deadline, so \"the origin never answered\" becomes an event",
+  "readDeadline.ts:10| * Reads only, deliberately.  Aborting a *write* at a deadline tells the client the request is over",
+  "readDeadline.ts:15| export const READ_DEADLINE_MS = 12_000;",
+  "readDeadline.ts:16| export const READ_DEADLINE_SECONDS = READ_DEADLINE_MS / 1000;",
+  "readDeadline.ts:18| /** Thrown when our own deadline fired -- distinct from a transport error and from an HTTP answer. */",
+  "readDeadline.ts:19| export class ReadDeadlineMissed extends Error {",
+  "readDeadline.ts:20| readonly deadlineMs: number;",
+  "readDeadline.ts:21| constructor(deadlineMs: number) {",
+  "readDeadline.ts:22| super(`no answer within ${deadlineMs} ms`);",
+  "readDeadline.ts:23| this.name = \"ReadDeadlineMissed\";",
+  "readDeadline.ts:24| this.deadlineMs = deadlineMs;",
+  "readDeadline.ts:28| export function isReadDeadlineMissed(error: unknown): boolean {",
+  "readDeadline.ts:29| return error instanceof Error && error.name === \"ReadDeadlineMissed\";",
+  "readDeadline.ts:33| * `fetch` with a per-read deadline.  A caller-supplied `signal` is honoured, not overwritten: an",
+  "readDeadline.ts:35| * came from this timer, or the deadline would impersonate the user.",
+  "readDeadline.ts:37| export async function fetchWithReadDeadline(",
+  "readDeadline.ts:40| deadlineMs: number = READ_DEADLINE_MS,",
+  "readDeadline.ts:51| }, deadlineMs);",
+  "readDeadline.ts:61| if (firedHere) throw new ReadDeadlineMissed(deadlineMs);"
+ ],
+ "raw_fetch_sites_total": 33,
+ "raw_fetch_write_sites": [
+  {
+   "file": "src\\features\\execution\\LiveRecovery.tsx",
+   "line": 225,
+   "verb": "POST",
+   "has_signal": false,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\notifications\\PushCapabilityCard.tsx",
+   "line": 56,
+   "verb": "POST",
+   "has_signal": false,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\planning\\PlanComparison.tsx",
+   "line": 88,
+   "verb": "POST",
+   "has_signal": false,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\planning\\PlanWithAiSheet.tsx",
+   "line": 491,
+   "verb": "POST",
+   "has_signal": true,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\planning\\PlanWithAiSheet.tsx",
+   "line": 598,
+   "verb": "POST",
+   "has_signal": true,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\recovery\\V14RecoveryTruthPanel.tsx",
+   "line": 69,
+   "verb": "POST",
+   "has_signal": false,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\simulation\\simulationAdapter.ts",
+   "line": 229,
+   "verb": "POST",
+   "has_signal": false,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\simulation\\simulationAdapter.ts",
+   "line": 296,
+   "verb": "POST",
+   "has_signal": false,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\simulation\\simulationAdapter.ts",
+   "line": 335,
+   "verb": "POST",
+   "has_signal": false,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\simulation\\simulationAdapter.ts",
+   "line": 376,
+   "verb": "POST",
+   "has_signal": false,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\stay\\HotelsPanel.tsx",
+   "line": 63,
+   "verb": "POST",
+   "has_signal": false,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\stay\\HotelsPanel.tsx",
+   "line": 64,
+   "verb": "POST",
+   "has_signal": false,
+   "has_timer": false
+  },
+  {
+   "file": "src\\features\\stay\\HotelsPanel.tsx",
+   "line": 87,
+   "verb": "POST",
+   "has_signal": false,
+   "has_timer": false
+  }
+ ]
+}
