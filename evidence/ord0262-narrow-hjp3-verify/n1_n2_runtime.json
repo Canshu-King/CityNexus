@@ -1,0 +1,117 @@
+{
+ "port": 8491,
+ "db": "D:\\moodle\\_hjp3_narrow_0924\\one_time_n1.db",
+ "tree": "D:\\moodle\\_hjp3_narrow_0924\\snap_3093eea\\CityNexus-3093eea773c79fa00744fe72d1f2c43b4d0bd75e\\backend",
+ "uvicorn_pid": 42368,
+ "steps": [
+  [
+   "health",
+   {
+    "method": "GET",
+    "path": "/health",
+    "http": 200,
+    "ctype": "application/json",
+    "bytes": 84,
+    "secs": 0.02,
+    "raw": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}",
+    "body": "{\"status\":\"ok\",\"database\":\"ok\",\"ai\":\"disabled\",\"e2e_run_id\":\"\",\"e2e_database_id\":\"\"}"
+   }
+  ],
+  [
+   "traveler",
+   {
+    "method": "POST",
+    "path": "/travelers",
+    "http": 201,
+    "ctype": "application/json",
+    "bytes": 228,
+    "secs": 0.01,
+    "raw": "{\"display_name\":\"HJP3 verifier one-time\",\"email\":null,\"locale\":\"en-GB\",\"timezone\":\"Asia/Shanghai\",\"id\":\"1df5eafa-c219-40a1-9ee3-159344eb9a13\",\"created_at\":\"2026-09-24T01:12:14.560556Z\",\"updated_at\":\"2026-09-24T01:12:14.560556Z\"}",
+    "body": "{\"display_name\":\"HJP3 verifier one-time\",\"email\":null,\"locale\":\"en-GB\",\"timezone\":\"Asia/Shanghai\",\"id\":\"1df5eafa-c219-40a1-9ee3-159344eb9a13\",\"created_at\":\"2026-09-24T01:12:14.560556Z\",\"updated_at\":\"2026-09-24T01:12:14.560556Z\"}"
+   }
+  ],
+  [
+   "journey",
+   {
+    "method": "POST",
+    "path": "/journeys",
+    "http": 201,
+    "ctype": "application/json",
+    "bytes": 404,
+    "secs": 0.01,
+    "raw": "{\"id\":\"f5b9de5c-bf22-4022-bebd-cdb0de3f2e21\",\"traveler_id\":\"1df5eafa-c219-40a1-9ee3-159344eb9a13\",\"title\":\"HJP3 one-time N1\",\"city_code\":\"CN-BEIJING\",\"timezone\":\"Asia/Shanghai\",\"start_at\":\"2026-09-25T10:00:00+08:00\",\"end_at\":\"2026-09-26T20:00:00+08:00\",\"budget\":{\"amount_minor\":300000,\"currency\":\"CNY\"},\"planning_mode\":\"balanced\",\"status\":\"DRAFT\",\"active_plan_version_id\":null,\"current_activity_id\":null}",
+    "body": "{\"id\":\"f5b9de5c-bf22-4022-bebd-cdb0de3f2e21\",\"traveler_id\":\"1df5eafa-c219-40a1-9ee3-159344eb9a13\",\"title\":\"HJP3 one-time N1\",\"city_code\":\"CN-BEIJING\",\"timezone\":\"Asia/Shanghai\",\"start_at\":\"2026-09-25T10:00:00+08:00\",\"end_at\":\"2026-09-26T20:00:00+08:00\",\"budget\":{\"amount_minor\":300000,\"currency\":\"CNY\"},\"planning_mode\":\"balanced\",\"status\":\"DRAFT\",\"active_plan_version_id\":null,\"current_activity_id\":n"
+   }
+  ],
+  [
+   "R2_control_generate",
+   {
+    "method": "POST",
+    "path": "/journeys/f5b9de5c-bf22-4022-bebd-cdb0de3f2e21/stay-options/generate",
+    "http": 200,
+    "ctype": "application/json",
+    "bytes": 5163,
+    "secs": 0.34,
+    "raw": "{\"optimizer\":\"ORTOOLS_MODE_AWARE_CP_SAT\",\"query\":\"stay-aware journey\",\"sort\":\"BEST_FOR_JOURNEY\",\"top_k\":[{\"id\":\"f1990e04-3f71-44fd-bbd7-9535485f4ce7\",\"rank\":1,\"status\":\"CANDIDATE\",\"score\":1.1297,\"stay\":{\"id\":\"11916683-2dbc-4508-8b3f-b058466608e9\",\"external_offer_id\":\"beijing-south-courtyard\",\"provider_key\":\"citynexus-city-fixture\",\"property_name\":\"Beijing South Courtyard\",\"location\":{\"latitude\":39.8788,\"longitude\":116.3831,\"crs\":\"WGS84\"},\"room_type\":\"Standard twin\",\"occupancy\":{\"adults\":2,\"party_size\":2,\"rooms\":1,\"rooms_source\":\"SUGGESTED\"},\"check_in_at\":\"2026-09-25T14:00:00+08:00\",\"check_out_at\":\"2026-09-26T12:00:00+08:00\",\"nightly_amount_minor\":28500,\"taxes_amount_minor\":0,\"total_amount_minor\":28500,\"currency\":\"CNY\",\"cancellation_policy\":{\"deadline\":\"2026-09-25T10:00:00+08:00\",\"refundable\":true,\"summary\":\"Free cancellation before arrival\"},\"luggage_drop\":{\"available\":true,\"open_from\":\"07:00\",\"open_to\":\"23:00\",\"pickup_deadline\":\"22:30\"},\"refundable\":true,\"evidence\":{\"city_fixture\":\"CN-BEIJING\",\"confidence\":0.96,\"currency_explicit\":true,\"price_basis\":\"per_night × nights\",\"provider\":\"citynexus-city-fixture\",\"source\":\"CAPTURED_REPLAY\"},\"captured_at\":\"2026-09-24T01:12:14.601471+00:00\",\"expires_at\":\"2026-09-25T01:12:14.601471+00:00\",\"status\":\"CAPTURED\",\"bookable\":true},\"stay_total_minor\":28500,\"daily_travel_minor\":3800,\"mobility_total_minor\":3800,\"walking_min\":27,\"protected_margin_min\":412,\"arrival_fit\":1.0,\"departure_fit\":1.0,\"cancellation_score\":1.0,\"days\":[{\"activities\":[\"Arrival\",\"Check in · Beijing South Courtyard\",\"Temple of Heaven\",\"Overnight · Beijing South Courtyard\"],\"anchor\":\"ARRIVAL\",\"date\":\"2026-09-25\",\"day\":1,\"label\":\"Friday · 25 Sep\",\"mode\":\"BICYCLE\"},{\"activities\":[\"National Museum of China\",\"Check out · Beijing South Courtyard\",\"Departure\"],\"anchor\":\"DEPARTURE\",\"date\":\"2026-09-26\",\"day\":2,\"label\":\"Saturday · 26 Sep\",\"mode\":\"TRANSIT\"}],\"leg_modes\":[\"BICYCLE\",\"TRANSIT\",\"BICYCLE\",\"BICYCLE\",\"AUTO\",\"TRANSIT\"],\"leg_mode_map\":[{\"cost_status\":\"ESTIMATED\",\"from_key\":\"arrival-anchor\",\"mobility_fact_id\":\"251c99f7-7348-4a75-8f4f-67894a30c4e0\",\"mode\":\"BICYCLE\",\"to_key\":\"stay:beijing-south-courtyard:check-in\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"place:national-museum\",\"mobility_fact_id\":\"7f87899b-5f90-4a4e-868a-7d6cbadbe2f7\",\"mode\":\"TRANSIT\",\"to_key\":\"stay:beijing-south-courtyard:check-out\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"place:temple-of-heaven\",\"mobility_fact_id\":\"d66fbe6f-cd69-4e45-aa54-55930ae9b284\",\"mode\":\"BICYCLE\",\"to_key\":\"stay:beijing-south-courtyard:night:1\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:check-in\",\"mobility_fact_id\":\"fc90644c-a730-43a6-b244-875ad086f1c1\",\"mode\":\"BICYCLE\",\"to_key\":\"place:temple-of-heaven\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:check-out\",\"mobility_fact_id\":\"9287ba59-7fae-40e0-85b9-781a0d70e462\",\"mode\":\"AUTO\",\"to_key\":\"departure-anchor\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:night:1\",\"mobility_fact_id\":\"4aa9fc5b-cb08-4dcd-9ace-de43817ac881\",\"mode\":\"TRANSIT\",\"to_key\":\"place:national-museum\"}],\"journey_impact\":{\"leg_mode_map\":[{\"cost_status\":\"ESTIMATED\",\"from_key\":\"arrival-anchor\",\"mobility_fact_id\":\"251c99f7-7348-4a75-8f4f-67894a30c4e0\",\"mode\":\"BICYCLE\",\"to_key\":\"stay:beijing-south-courtyard:check-in\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"place:national-museum\",\"mobility_fact_id\":\"7f87899b-5f90-4a4e-868a-7d6cbadbe2f7\",\"mode\":\"TRANSIT\",\"to_key\":\"stay:beijing-south-courtyard:check-out\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"place:temple-of-heaven\",\"mobility_fact_id\":\"d66fbe6f-cd69-4e45-aa54-55930ae9b284\",\"mode\":\"BICYCLE\",\"to_key\":\"stay:beijing-south-courtyard:night:1\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:check-in\",\"mobility_fact_id\":\"fc90644c-a730-43a6-b244-875ad086f1c1\",\"mode\":\"BICYCLE\",\"to_key\":\"place:temple-of-heaven\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:check-out\",\"mobility_fact_id\":\"9287ba59-7fae-40e0-85b9-781a0d70e462\",\"mode\":\"AUTO\",\"to_key\":\"departure-anchor\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:night:1\",\"mobility_fact_id\":\"4aa9fc5b-cb08-4dcd-9ace-de43817ac881\",\"mode\":\"TRANSIT\",\"to_key\":\"place:national-museum\"}],\"mode_solver\":{\"kind\":\"ORTOOLS_MODE_AWARE_CP_SAT\",\"objective_value\":14503,\"status\":\"OPTIMAL\",\"unknown_paid_cost_selected\":false},\"modes_available\":[\"WALK\",\"BICYCLE\",\"TRANSIT\",\"AUTO\",\"RIDE_HAIL\"],\"schedule_evidence\":{\"arrival_fit\":1.0,\"departure_fit\":1.0,\"protected_margin_min\":412,\"source\":\"actual candidate timeline and selected route durations\"},\"twin\":{\"authority\":\"ranking_only\",\"dimensions\":[]},\"weather\":{\"protected_commitments_preserved\":true,\"state\":\"NORMAL\"}},\"hard_constraints_passed\":true,\"optimizer_kind\":\"ORTOOLS_MODE_AWARE_CP_SAT\",\"weather_state\":\"NORMAL\",\"materialized_plan_version_id\":null}],\"generation\":{\"outcome\":\"OPTIONS_FOUND\",\"offers_from_provider\":1,\"options_ranked\":1,\"rejections_by_reason\":{},\"provider_attempts\":[{\"step\":\"provider\",\"target\":\"citynexus-city-fixture\",\"outcome\":\"ok\",\"detail\":\"fixture=yes drafts=1\"}]},\"hard_constraints\":{\"protected_commitments\":\"PRESERVED\",\"deterministic_feasibility\":\"PASSED\"}}",
+    "body": "{\"optimizer\":\"ORTOOLS_MODE_AWARE_CP_SAT\",\"query\":\"stay-aware journey\",\"sort\":\"BEST_FOR_JOURNEY\",\"top_k\":[{\"id\":\"f1990e04-3f71-44fd-bbd7-9535485f4ce7\",\"rank\":1,\"status\":\"CANDIDATE\",\"score\":1.1297,\"stay\":{\"id\":\"11916683-2dbc-4508-8b3f-b058466608e9\",\"external_offer_id\":\"beijing-south-courtyard\",\"provider_key\":\"citynexus-city-fixture\",\"property_name\":\"Beijing South Courtyard\",\"location\":{\"latitude\":39"
+   }
+  ],
+  [
+   "R3_generate_under_lock",
+   {
+    "method": "POST",
+    "path": "/journeys/f5b9de5c-bf22-4022-bebd-cdb0de3f2e21/stay-options/generate",
+    "http": 503,
+    "ctype": "application/json",
+    "bytes": 255,
+    "secs": 33.34,
+    "raw": "{\"error\":{\"code\":\"GENERATION_STORE_BUSY\",\"message\":\"Another generation is writing right now; this one was not recorded. Try again.\",\"message_key\":\"generation.store_busy\",\"trace_id\":\"6827b309-aaed-492d-b0fd-dd35bc47abc0\",\"details\":{\"retry_after_ms\":1000}}}",
+    "body": "{\"error\":{\"code\":\"GENERATION_STORE_BUSY\",\"message\":\"Another generation is writing right now; this one was not recorded. Try again.\",\"message_key\":\"generation.store_busy\",\"trace_id\":\"6827b309-aaed-492d-b0fd-dd35bc47abc0\",\"details\":{\"retry_after_ms\":1000}}}"
+   }
+  ],
+  [
+   "R4_hydration_under_lock",
+   {
+    "method": "POST",
+    "path": "/catalog-hydrations",
+    "http": 503,
+    "ctype": "application/json",
+    "bytes": 252,
+    "secs": 0.29,
+    "raw": "{\"error\":{\"code\":\"HYDRATION_STORE_BUSY\",\"message\":\"Another catalog write is in flight; this request was not recorded. Try again.\",\"message_key\":\"hydration.store_busy\",\"trace_id\":\"14f89632-db6b-402e-b22a-4528684ff17f\",\"details\":{\"retry_after_ms\":1000}}}",
+    "body": "{\"error\":{\"code\":\"HYDRATION_STORE_BUSY\",\"message\":\"Another catalog write is in flight; this request was not recorded. Try again.\",\"message_key\":\"hydration.store_busy\",\"trace_id\":\"14f89632-db6b-402e-b22a-4528684ff17f\",\"details\":{\"retry_after_ms\":1000}}}"
+   }
+  ],
+  [
+   "R5_agent_commands_under_lock",
+   {
+    "method": "POST",
+    "path": "/journeys/f5b9de5c-bf22-4022-bebd-cdb0de3f2e21/agent/commands",
+    "http": 503,
+    "ctype": "application/json",
+    "bytes": 332,
+    "secs": 8.25,
+    "raw": "{\"error\":{\"code\":\"GENERATION_STORE_BUSY\",\"message\":\"Another generation is writing right now; this one was not recorded. Try again.\",\"message_key\":\"generation.store_busy\",\"trace_id\":\"7ca88c77-d57a-489d-8cdd-398d60dcd9ff\",\"details\":{\"retry_after_ms\":1000,\"contention\":\"sqlite_write_lock_busy\"},\"reason_code\":\"sqlite_write_lock_busy\"}}",
+    "body": "{\"error\":{\"code\":\"GENERATION_STORE_BUSY\",\"message\":\"Another generation is writing right now; this one was not recorded. Try again.\",\"message_key\":\"generation.store_busy\",\"trace_id\":\"7ca88c77-d57a-489d-8cdd-398d60dcd9ff\",\"details\":{\"retry_after_ms\":1000,\"contention\":\"sqlite_write_lock_busy\"},\"reason_code\":\"sqlite_write_lock_busy\"}}"
+   }
+  ],
+  [
+   "R6_control_after_release",
+   {
+    "method": "POST",
+    "path": "/journeys/f5b9de5c-bf22-4022-bebd-cdb0de3f2e21/stay-options/generate",
+    "http": 200,
+    "ctype": "application/json",
+    "bytes": 5163,
+    "secs": 0.14,
+    "raw": "{\"optimizer\":\"ORTOOLS_MODE_AWARE_CP_SAT\",\"query\":\"stay-aware journey\",\"sort\":\"BEST_FOR_JOURNEY\",\"top_k\":[{\"id\":\"f1990e04-3f71-44fd-bbd7-9535485f4ce7\",\"rank\":1,\"status\":\"CANDIDATE\",\"score\":1.1297,\"stay\":{\"id\":\"11916683-2dbc-4508-8b3f-b058466608e9\",\"external_offer_id\":\"beijing-south-courtyard\",\"provider_key\":\"citynexus-city-fixture\",\"property_name\":\"Beijing South Courtyard\",\"location\":{\"latitude\":39.8788,\"longitude\":116.3831,\"crs\":\"WGS84\"},\"room_type\":\"Standard twin\",\"occupancy\":{\"adults\":2,\"party_size\":2,\"rooms\":1,\"rooms_source\":\"SUGGESTED\"},\"check_in_at\":\"2026-09-25T14:00:00+08:00\",\"check_out_at\":\"2026-09-26T12:00:00+08:00\",\"nightly_amount_minor\":28500,\"taxes_amount_minor\":0,\"total_amount_minor\":28500,\"currency\":\"CNY\",\"cancellation_policy\":{\"deadline\":\"2026-09-25T10:00:00+08:00\",\"refundable\":true,\"summary\":\"Free cancellation before arrival\"},\"luggage_drop\":{\"available\":true,\"open_from\":\"07:00\",\"open_to\":\"23:00\",\"pickup_deadline\":\"22:30\"},\"refundable\":true,\"evidence\":{\"city_fixture\":\"CN-BEIJING\",\"confidence\":0.96,\"currency_explicit\":true,\"price_basis\":\"per_night × nights\",\"provider\":\"citynexus-city-fixture\",\"source\":\"CAPTURED_REPLAY\"},\"captured_at\":\"2026-09-24T01:12:14.601471+00:00\",\"expires_at\":\"2026-09-25T01:12:14.601471+00:00\",\"status\":\"CAPTURED\",\"bookable\":true},\"stay_total_minor\":28500,\"daily_travel_minor\":3800,\"mobility_total_minor\":3800,\"walking_min\":27,\"protected_margin_min\":412,\"arrival_fit\":1.0,\"departure_fit\":1.0,\"cancellation_score\":1.0,\"days\":[{\"activities\":[\"Arrival\",\"Check in · Beijing South Courtyard\",\"Temple of Heaven\",\"Overnight · Beijing South Courtyard\"],\"anchor\":\"ARRIVAL\",\"date\":\"2026-09-25\",\"day\":1,\"label\":\"Friday · 25 Sep\",\"mode\":\"BICYCLE\"},{\"activities\":[\"National Museum of China\",\"Check out · Beijing South Courtyard\",\"Departure\"],\"anchor\":\"DEPARTURE\",\"date\":\"2026-09-26\",\"day\":2,\"label\":\"Saturday · 26 Sep\",\"mode\":\"TRANSIT\"}],\"leg_modes\":[\"BICYCLE\",\"TRANSIT\",\"BICYCLE\",\"BICYCLE\",\"AUTO\",\"TRANSIT\"],\"leg_mode_map\":[{\"cost_status\":\"ESTIMATED\",\"from_key\":\"arrival-anchor\",\"mobility_fact_id\":\"251c99f7-7348-4a75-8f4f-67894a30c4e0\",\"mode\":\"BICYCLE\",\"to_key\":\"stay:beijing-south-courtyard:check-in\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"place:national-museum\",\"mobility_fact_id\":\"7f87899b-5f90-4a4e-868a-7d6cbadbe2f7\",\"mode\":\"TRANSIT\",\"to_key\":\"stay:beijing-south-courtyard:check-out\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"place:temple-of-heaven\",\"mobility_fact_id\":\"d66fbe6f-cd69-4e45-aa54-55930ae9b284\",\"mode\":\"BICYCLE\",\"to_key\":\"stay:beijing-south-courtyard:night:1\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:check-in\",\"mobility_fact_id\":\"fc90644c-a730-43a6-b244-875ad086f1c1\",\"mode\":\"BICYCLE\",\"to_key\":\"place:temple-of-heaven\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:check-out\",\"mobility_fact_id\":\"9287ba59-7fae-40e0-85b9-781a0d70e462\",\"mode\":\"AUTO\",\"to_key\":\"departure-anchor\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:night:1\",\"mobility_fact_id\":\"4aa9fc5b-cb08-4dcd-9ace-de43817ac881\",\"mode\":\"TRANSIT\",\"to_key\":\"place:national-museum\"}],\"journey_impact\":{\"leg_mode_map\":[{\"cost_status\":\"ESTIMATED\",\"from_key\":\"arrival-anchor\",\"mobility_fact_id\":\"251c99f7-7348-4a75-8f4f-67894a30c4e0\",\"mode\":\"BICYCLE\",\"to_key\":\"stay:beijing-south-courtyard:check-in\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"place:national-museum\",\"mobility_fact_id\":\"7f87899b-5f90-4a4e-868a-7d6cbadbe2f7\",\"mode\":\"TRANSIT\",\"to_key\":\"stay:beijing-south-courtyard:check-out\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"place:temple-of-heaven\",\"mobility_fact_id\":\"d66fbe6f-cd69-4e45-aa54-55930ae9b284\",\"mode\":\"BICYCLE\",\"to_key\":\"stay:beijing-south-courtyard:night:1\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:check-in\",\"mobility_fact_id\":\"fc90644c-a730-43a6-b244-875ad086f1c1\",\"mode\":\"BICYCLE\",\"to_key\":\"place:temple-of-heaven\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:check-out\",\"mobility_fact_id\":\"9287ba59-7fae-40e0-85b9-781a0d70e462\",\"mode\":\"AUTO\",\"to_key\":\"departure-anchor\"},{\"cost_status\":\"ESTIMATED\",\"from_key\":\"stay:beijing-south-courtyard:night:1\",\"mobility_fact_id\":\"4aa9fc5b-cb08-4dcd-9ace-de43817ac881\",\"mode\":\"TRANSIT\",\"to_key\":\"place:national-museum\"}],\"mode_solver\":{\"kind\":\"ORTOOLS_MODE_AWARE_CP_SAT\",\"objective_value\":14503,\"status\":\"OPTIMAL\",\"unknown_paid_cost_selected\":false},\"modes_available\":[\"WALK\",\"BICYCLE\",\"TRANSIT\",\"AUTO\",\"RIDE_HAIL\"],\"schedule_evidence\":{\"arrival_fit\":1.0,\"departure_fit\":1.0,\"protected_margin_min\":412,\"source\":\"actual candidate timeline and selected route durations\"},\"twin\":{\"authority\":\"ranking_only\",\"dimensions\":[]},\"weather\":{\"protected_commitments_preserved\":true,\"state\":\"NORMAL\"}},\"hard_constraints_passed\":true,\"optimizer_kind\":\"ORTOOLS_MODE_AWARE_CP_SAT\",\"weather_state\":\"NORMAL\",\"materialized_plan_version_id\":null}],\"generation\":{\"outcome\":\"OPTIONS_FOUND\",\"offers_from_provider\":1,\"options_ranked\":1,\"rejections_by_reason\":{},\"provider_attempts\":[{\"step\":\"provider\",\"target\":\"citynexus-city-fixture\",\"outcome\":\"ok\",\"detail\":\"fixture=yes drafts=1\"}]},\"hard_constraints\":{\"protected_commitments\":\"PRESERVED\",\"deterministic_feasibility\":\"PASSED\"}}",
+    "body": "{\"optimizer\":\"ORTOOLS_MODE_AWARE_CP_SAT\",\"query\":\"stay-aware journey\",\"sort\":\"BEST_FOR_JOURNEY\",\"top_k\":[{\"id\":\"f1990e04-3f71-44fd-bbd7-9535485f4ce7\",\"rank\":1,\"status\":\"CANDIDATE\",\"score\":1.1297,\"stay\":{\"id\":\"11916683-2dbc-4508-8b3f-b058466608e9\",\"external_offer_id\":\"beijing-south-courtyard\",\"provider_key\":\"citynexus-city-fixture\",\"property_name\":\"Beijing South Courtyard\",\"location\":{\"latitude\":39"
+   }
+  ]
+ ],
+ "cleanup": {
+  "port_still_listening": false,
+  "db_exists_after_delete": false,
+  "uvicorn_returncode": 1
+ }
+}
