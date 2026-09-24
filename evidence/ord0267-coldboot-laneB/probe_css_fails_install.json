@@ -1,0 +1,47 @@
+{
+ "phase": "install",
+ "at": "2026-09-24T02:49:38.705Z",
+ "base": "http://127.0.0.1:8446",
+ "profile": "D:\\moodle\\_qoder_b_ord0267_20260923\\profile_css_fails",
+ "navigation": {
+  "ok": true,
+  "status": 200
+ },
+ "facts": {
+  "url": "http://127.0.0.1:8446/v8/hub",
+  "title": "CityNexus Trip Operations",
+  "controlled": false,
+  "controller_script": null,
+  "onLine": true,
+  "app_mounted": true,
+  "registrations": [],
+  "worker_source": {
+   "status": 200,
+   "ok": true,
+   "rev": 4,
+   "precacheCalls": 1
+  },
+  "manifest_urls": null,
+  "caches": {},
+  "rendered_head": "用你自己的城市试用 CityNexus 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN 1目的地与时间 2人数与偏好 3确认创建 目的地 看支持的目的地 抵达地点离开地点 抵达时间离开时间 高级设置 高级设置 还需要填写：目的地、抵达地点、离开地点 下一步 使用封存的演示行程",
+  "leaf_count": 77
+ },
+ "page_errors": [],
+ "console_errors": [
+  "Failed to load resource: the server responded with a status of 500 (X)"
+ ],
+ "requests_failed": [
+  {
+   "url": "/assets/index-I45CQek8.css",
+   "why": "net::ERR_ABORTED"
+  }
+ ],
+ "non_200_responses": [
+  {
+   "url": "/assets/index-I45CQek8.css",
+   "status": 500,
+   "sw": null
+  }
+ ],
+ "offline_asset_probe": null
+}
