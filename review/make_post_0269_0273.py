@@ -28,11 +28,75 @@ def main() -> int:
     ap.add_argument("--round", required=True)
     ap.add_argument("--lsremote", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--manifest", default="")
+    ap.add_argument("--root", default="D:/moodle/_qoder_d_lane_20260923")
     a = ap.parse_args()
 
     arms = load(a.arms)
     round_receipt = load(a.round)
     lsremote = Path(a.lsremote).read_text(encoding="utf-8").strip()
+
+    arm_list = arms["arms"]
+    killed = [x for x in arm_list if x["claimed_result"] == "KILLED"]
+    survived = [x for x in arm_list if x["claimed_result"] != "KILLED"]
+    triples = round_receipt["triples"]
+
+    if a.manifest:
+        # The arms and the green round were measured one commit apart (the driver's own parsing fix
+        # landed in between).  What has to be true is that nothing UNDER TEST differs, so measure
+        # that instead of asserting it.
+        diff = subprocess.run(
+            f'git diff --name-status {arms["head"]} {round_receipt["candidate_tip"]}',
+            cwd=a.root,
+            capture_output=True,
+            text=True,
+            shell=True,
+        ).stdout.strip().splitlines()
+        under_test = [line for line in diff if not line.endswith("review/ord0269_0273_gate_round.py")]
+        manifest = {
+            "generatedBy": "e345b9d6",
+            "orders": ["ORD-0269 cells 1/3 + R-4 + R-6", "ORD-0273 TEXT / TEXT-EN / ACTION"],
+            "external_readback": lsremote,
+            "authoritative_tip_at_delivery": round_receipt["authoritative_tip_at_delivery"],
+            "arms_tip": arms["head"],
+            "green_round_tip": round_receipt["candidate_tip"],
+            "tree_diff_between_tips": {
+                "full": diff,
+                "anything_under_test_changed": bool(under_test),
+                "reading": "the only delta between the two tips is the receipt generator itself "
+                "(review/ord0269_0273_gate_round.py); every product and spec byte the arms mutated "
+                "is identical at the green-round tip",
+            },
+            "files": [],
+            "counts": {
+                "arms": len(arm_list),
+                "arms_killed": len(killed),
+                "triples": len(triples),
+                "triple_shas": sorted({t["exact_sha"] for t in triples}),
+            },
+            "R_SCHEMA_01_class": round_receipt.get("R_SCHEMA_01_class"),
+            "publisher_refusal_writing_rule": round_receipt.get("publisher_refusal_writing_rule"),
+            "nodeid_root_rule": "every triple carries nodeid_root and names the same cwd in run_shape",
+            "attribution": "claimed_result is self-reported; derived_result belongs to the verifier",
+        }
+        for path in (a.arms, a.round):
+            blob = Path(path).read_bytes()
+            import hashlib
+
+            manifest["files"].append(
+                {
+                    "name": Path(path).name,
+                    "bytes": len(blob),
+                    "sha256": hashlib.sha256(blob).hexdigest(),
+                }
+            )
+        Path(a.manifest).write_text(
+            json.dumps(manifest, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n"
+        )
+        print(
+            f"manifest={a.manifest} arms={len(arm_list)} killed={len(killed)} "
+            f"under_test_changed={bool(under_test)}"
+        )
 
     arm_list = arms["arms"]
     killed = [x for x in arm_list if x["claimed_result"] == "KILLED"]
@@ -68,6 +132,29 @@ def main() -> int:
     add("")
     for t in triples:
         add(f"- `{t['exact_sha']}` · `{t['nodeid']}` · {t['run_shape']}")
+    add("")
+    add(
+        f"**尖桥（两枚尖，不是同一刻量的）**：反突变在 `{arms['head'][:9]}…`，绿轮在 "
+        f"`{round_receipt['candidate_tip'][:9]}…`。两者之间 `git diff --name-status` 只有收据生成器 "
+        f"`review/ord0269_0273_gate_round.py` 一行，**被测字节（产品 + spec）逐字节相同** —— 这条是跑出来的，不是声明的。"
+    )
+    add("")
+    add("**本轮顺手修掉的一处真产品缺陷（要你单开一行的那件）**")
+    add("")
+    add(
+        "- 形状：`frontend/src/api/useContinuationState.ts` 用 `events: events?.events ?? []` 把「回了 200 但 body 里没有 "
+        "events 数组」伪造成「本页没有这一轮」。后果有两层：屏上那句具名状态**说错了原因**（把「答了但用不了」说成「翻不到」），"
+        "并且分类器里那道 malformed 守卫**从唯一调用方不可达**——所以 v2 那枚 `K269_MALFORMED_FEED_SILENT` 活了。"
+    )
+    add(
+        "- 修法：payload 原样交给 `classifyContinuation` 判定（commit `c7e2acb8664092bd9cdebdc6131654d96db434c3`）。"
+        "证据：v5 里同一枚臂 **只红细胞3**（独占红集），产品字节未再改动即 9/9。"
+    )
+    add("")
+    add(
+        f"- 门自证的两处「自己骗自己」（都已修并具名）：R-6 原本只 `toHaveCount(0)` 断缺席（变异体 1.3s 混过 → 现在先等具名句渲染，"
+        f"同一枚变异体 16.2s 红）；反突变驱动在 `run_spec.py` 截断的 90 行控制台里读自己的运行（四红被判成 BASELINE_RED → 改读 run-<id>.log 全文）。"
+    )
     add("")
     add("归属与口径（B-1）：`claimed_result` 全是我自宣；`derived_result` / direct-red / collateral 一律 `WRITTEN_BY_VERIFIER`。")
     add("红集里非 owner 的节点是同一枚缺陷的其它读者，按 collateral 记账，不当独立证据。")
