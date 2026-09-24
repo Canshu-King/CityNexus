@@ -1,0 +1,235 @@
+{
+ "at": "2026-09-24T11:08:04+08:00",
+ "order": "ORD-0274-SW 前置测量（只读）：换代时那条 scriptURL 等值 return 到底有没有被走到",
+ "lane": "B c01d72a3",
+ "mode": "READ-ONLY; no product file changed; HJ-P1 stays the verifier",
+ "surface": {
+  "origin_port": 8451,
+  "same_origin_across_swap": true,
+  "old_generation_dir": "D:\\moodle\\_qoder_b_ord0268_20260923\\genB\\frontend\\dist_ord0268",
+  "new_generation_dir": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_ord0267b",
+  "modules": {
+   "old": "/assets/index-Cpy_jhEg.js",
+   "new": "/assets/index-ChOTTCvB.js"
+  },
+  "one_persistent_profile": true,
+  "never_touched_or_opened": [
+   ":4781",
+   ":4782",
+   ":8693",
+   "tunnel",
+   "cnx proxy",
+   "_live",
+   "_preview",
+   "HJ-P1's ports 8941/8942"
+  ],
+  "demo_reset": 0,
+  "unregister_calls": 0,
+  "cache_clear_calls": 0,
+  "note": "the profile is brand new and only ever visited 127.0.0.1:8451; I did not unregister anything - the swap is the origin changing what it serves"
+ },
+ "reading": {
+  "serve_old": {
+   "gen": "old",
+   "module": "/assets/index-Cpy_jhEg.js"
+  },
+  "install": {
+   "phase": "install",
+   "at": "2026-09-24T03:07:18.649Z",
+   "base": "http://127.0.0.1:8451",
+   "window_s": 10,
+   "observed_for_ms": 9141,
+   "seen": {
+    "loads": [
+     {
+      "id": 1,
+      "at": 25.5,
+      "href": "http://127.0.0.1:8451/v8/hub"
+     }
+    ],
+    "events": [
+     {
+      "kind": "document-start",
+      "t_ms": 26,
+      "load_id": 1,
+      "controller": null,
+      "bundle": null
+     },
+     {
+      "kind": "no-registration",
+      "t_ms": 30,
+      "load_id": 1,
+      "controller": null,
+      "bundle": "/assets/index-Cpy_jhEg.js"
+     },
+     {
+      "kind": "controllerchange",
+      "t_ms": 186,
+      "load_id": 1,
+      "controller": "/v10-sw.js",
+      "bundle": "/assets/index-Cpy_jhEg.js"
+     }
+    ],
+    "controller_now": "/v10-sw.js",
+    "registrations": [
+     {
+      "scope": "/",
+      "active": "/v10-sw.js",
+      "active_state": "activated",
+      "waiting": null,
+      "waiting_state": null,
+      "installing": null
+     }
+    ],
+    "product_reload_key": null,
+    "executing_bundle": "/assets/index-Cpy_jhEg.js",
+    "shell_in_document": [
+     "/assets/index-Cpy_jhEg.js"
+    ],
+    "mounted": true,
+    "onLine": true
+   },
+   "console_errors": [],
+   "page_errors": [],
+   "profile": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\profile_transition"
+  },
+  "serve_new": {
+   "gen": "new",
+   "module": "/assets/index-ChOTTCvB.js",
+   "same_port_same_origin": true
+  },
+  "watch": {
+   "phase": "watch",
+   "at": "2026-09-24T03:08:03.170Z",
+   "base": "http://127.0.0.1:8451",
+   "window_s": 40,
+   "observed_for_ms": 40400,
+   "seen": {
+    "loads": [
+     {
+      "id": 1,
+      "at": 122.60000000149012,
+      "href": "http://127.0.0.1:8451/v8/hub"
+     }
+    ],
+    "events": [
+     {
+      "kind": "document-start",
+      "t_ms": 129,
+      "load_id": 1,
+      "controller": "/v10-sw.js",
+      "bundle": null
+     },
+     {
+      "kind": "registration-looked-up",
+      "t_ms": 174,
+      "load_id": 1,
+      "controller": "/v10-sw.js",
+      "bundle": null,
+      "installing": null,
+      "waiting": null,
+      "active": "activated",
+      "active_script": "/v10-sw.js"
+     },
+     {
+      "kind": "updatefound",
+      "t_ms": 643,
+      "load_id": 1,
+      "controller": "/v10-sw.js",
+      "bundle": "/assets/index-ChOTTCvB.js",
+      "installing": "installing",
+      "waiting": null,
+      "active": "activated",
+      "active_script": "/v10-sw.js"
+     },
+     {
+      "kind": "statechange:installed",
+      "t_ms": 653,
+      "load_id": 1,
+      "controller": "/v10-sw.js",
+      "bundle": "/assets/index-ChOTTCvB.js",
+      "installing": null,
+      "waiting": "installed",
+      "active": "activated",
+      "active_script": "/v10-sw.js"
+     },
+     {
+      "kind": "statechange:activating",
+      "t_ms": 653,
+      "load_id": 1,
+      "controller": "/v10-sw.js",
+      "bundle": "/assets/index-ChOTTCvB.js",
+      "installing": null,
+      "waiting": null,
+      "active": "activating",
+      "active_script": "/v10-sw.js"
+     },
+     {
+      "kind": "controllerchange",
+      "t_ms": 653,
+      "load_id": 1,
+      "controller": "/v10-sw.js",
+      "bundle": "/assets/index-ChOTTCvB.js"
+     },
+     {
+      "kind": "statechange:activated",
+      "t_ms": 654,
+      "load_id": 1,
+      "controller": "/v10-sw.js",
+      "bundle": "/assets/index-ChOTTCvB.js",
+      "installing": null,
+      "waiting": null,
+      "active": "activated",
+      "active_script": "/v10-sw.js"
+     }
+    ],
+    "controller_now": "/v10-sw.js",
+    "registrations": [
+     {
+      "scope": "/",
+      "active": "/v10-sw.js",
+      "active_state": "activated",
+      "waiting": null,
+      "waiting_state": null,
+      "installing": null
+     }
+    ],
+    "product_reload_key": null,
+    "executing_bundle": "/assets/index-ChOTTCvB.js",
+    "shell_in_document": [
+     "/assets/index-ChOTTCvB.js"
+    ],
+    "mounted": true,
+    "onLine": true
+   },
+   "console_errors": [],
+   "page_errors": [],
+   "profile": "D:\\moodle\\_qoder_b_ord0274sw_20260924\\profile_transition"
+  },
+  "second_navigation": null
+ },
+ "derived": {
+  "executing_bundle_after_one_navigation": "/assets/index-ChOTTCvB.js",
+  "executing_bundle_after_second_navigation": null,
+  "converged_within_one_navigation": true,
+  "document_loads_seen_by_observer": 1,
+  "controllerchange_events": 1,
+  "distinct_controller_scriptURLs_observed": [
+   "/v10-sw.js"
+  ],
+  "product_wrote_its_reload_marker": false,
+  "registrations_at_end": [
+   {
+    "scope": "/",
+    "active": "/v10-sw.js",
+    "active_state": "activated",
+    "waiting": null,
+    "waiting_state": null,
+    "installing": null
+   }
+  ],
+  "navigations_needed_for_convergence": 1
+ },
+ "verdict_for_me": "CONVERGED_WITHOUT_A_SECOND_NAVIGATION",
+ "what_this_is_not": "This is not a claim about HJ-P1's B2 cell: hers measured a real transition through the tunnel and stayed inside her instrument surface. What I measured is narrower - the mechanism behind it, on loopback, so I know what to fix before I touch a file."
+}
