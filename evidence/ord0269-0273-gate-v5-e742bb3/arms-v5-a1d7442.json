@@ -1,0 +1,497 @@
+{
+  "generatedBy": "e345b9d6",
+  "orders": [
+    "ORD-0269 cells 1/3 + R-4 + R-6",
+    "ORD-0273 TEXT / TEXT-EN / ACTION"
+  ],
+  "runTag": "v5-a1d7442",
+  "at": "2026-09-24T23:47:15+0800",
+  "head": "a1d7442bd892285e54dd9ab1e403968760907dfa",
+  "tree": "D:\\moodle\\_qoder_d_lane_20260923",
+  "arms": [
+    {
+      "name": "K269_REMOVE_MARKER_WRITE",
+      "ownerNode": "ord0269-cell1-reveals-and-names-its-boundary",
+      "why": "the clause-1 write is gone: after leg 1 answers there is nothing to trust, so a re-entry must show neither the sentence nor the door",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "c8ba17bf5ba93e68276d2ce2cce3d03284aaea292b0be5fa71ff223516441124",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 0,
+        "runId": "run264835",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run264835.log",
+        "parsedFrom": "run-run264835.log",
+        "summary": "5 passed (17.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "GREEN",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 1,
+        "runId": "run264854",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run264854.log",
+        "parsedFrom": "run-run264854.log",
+        "summary": "4 failed / 1 passed (47.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "RED",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "RED",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "RED",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "RED"
+        }
+      },
+      "redSet": [
+        "ord0269-cell1-reveals-and-names-its-boundary",
+        "ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+        "ord0269-r4-a-brand-new-journey-shows-nothing",
+        "ord0269-r6-page-exclusion-yields-no-conclusion"
+      ],
+      "greenSet": [],
+      "exclusiveToOwner": false,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K269_CLEAR_MARKER_BEFORE_REQUEST",
+      "ownerNode": "ord0269-cell1-reveals-and-names-its-boundary",
+      "why": "arbiter clause 5's own shape: the marker is written and then wiped as the request goes out, so the interrupted run is unfindable again -- this is the design the ruling rejected",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\features\\planning\\PlanWithAiSheet.tsx",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "5d860d4c21a4b9bb63f3687b9cb33a02e50eafaba9a53a321a33afe885c0d7e1",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 0,
+        "runId": "run264903",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run264903.log",
+        "parsedFrom": "run-run264903.log",
+        "summary": "5 passed (18.4s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "GREEN",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 1,
+        "runId": "run264923",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run264923.log",
+        "parsedFrom": "run-run264923.log",
+        "summary": "4 failed / 1 passed (48.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "RED",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "RED",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "RED",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "RED"
+        }
+      },
+      "redSet": [
+        "ord0269-cell1-reveals-and-names-its-boundary",
+        "ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+        "ord0269-r4-a-brand-new-journey-shows-nothing",
+        "ord0269-r6-page-exclusion-yields-no-conclusion"
+      ],
+      "greenSet": [],
+      "exclusiveToOwner": false,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K269_FEED_READ_FAILURE_SILENT",
+      "ownerNode": "ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+      "why": "the read fails and the hook reports 'nothing pending': cell 3's first read (feed 500) is the one that exercises this emitter",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\api\\useContinuationState.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "f5e25da7e95a7811493503f129470c0694234d55963f8de588d79f1f1276d1e4",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 0,
+        "runId": "run264973",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run264973.log",
+        "parsedFrom": "run-run264973.log",
+        "summary": "5 passed (18.1s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "GREEN",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 1,
+        "runId": "run264992",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run264992.log",
+        "parsedFrom": "run-run264992.log",
+        "summary": "1 failed / 4 passed (33.0s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "GREEN",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "RED",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0269-cell3-feed-failure-and-page-exclusion-are-named"
+      ],
+      "greenSet": [
+        "ord0269-cell1-reveals-and-names-its-boundary",
+        "ord0269-r4-a-brand-new-journey-shows-nothing",
+        "ord0269-r6-page-exclusion-yields-no-conclusion"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K269_MALFORMED_FEED_SILENT",
+      "ownerNode": "ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+      "why": "an answered-but-unusable 200 (no events array) is reported as silence. The first arms pass ran this same mutant against a gate that only read the 500 path, and it survived -- which proved the guard had no reader, not that the product was right; cell 3 now has its own read",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\api\\journeyContinuation.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "d6729a1b4e8f77f45a9775b1d1ab373a3e0c34b99b36692c038850b60381539b",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 0,
+        "runId": "run265027",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265027.log",
+        "parsedFrom": "run-run265027.log",
+        "summary": "5 passed (17.9s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "GREEN",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 1,
+        "runId": "run265046",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265046.log",
+        "parsedFrom": "run-run265046.log",
+        "summary": "1 failed / 4 passed (33.9s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "GREEN",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "RED",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0269-cell3-feed-failure-and-page-exclusion-are-named"
+      ],
+      "greenSet": [
+        "ord0269-cell1-reveals-and-names-its-boundary",
+        "ord0269-r4-a-brand-new-journey-shows-nothing",
+        "ord0269-r6-page-exclusion-yields-no-conclusion"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K269_PAGINATION_GUESS",
+      "ownerNode": "ord0269-r6-page-exclusion-yields-no-conclusion",
+      "why": "absence from a capped, ascending page is read as a conclusion -- the exact inference R-6 forbids; cell 3's page-exclusion half is expected as collateral",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\api\\journeyContinuation.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "3f4f83f1d9a90e1c9f7c051b110163e42f997905940ec0a28cc90d94770c7068",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 0,
+        "runId": "run265081",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265081.log",
+        "parsedFrom": "run-run265081.log",
+        "summary": "5 passed (18.7s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "GREEN",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 1,
+        "runId": "run265100",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265100.log",
+        "parsedFrom": "run-run265100.log",
+        "summary": "1 failed / 4 passed (33.6s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "GREEN",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "RED",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0269-r6-page-exclusion-yields-no-conclusion"
+      ],
+      "greenSet": [
+        "ord0269-cell1-reveals-and-names-its-boundary",
+        "ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+        "ord0269-r4-a-brand-new-journey-shows-nothing"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K269_GLOBAL_MARKER",
+      "ownerNode": "ord0269-r4-a-brand-new-journey-shows-nothing",
+      "why": "the marker stops being journey-scoped, so one journey's interrupted round lights up on a brand-new journey -- R-4 exists to catch exactly that",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\api\\journeyContinuation.ts",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "1e5ca7a4874e0b50cb1a39ea5c79d95694138f5a65791e6d1501272cdcec39f4",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 0,
+        "runId": "run265135",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265135.log",
+        "parsedFrom": "run-run265135.log",
+        "summary": "5 passed (18.4s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "GREEN",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-continuation-owner.spec.ts",
+        "exitCode": 1,
+        "runId": "run265155",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265155.log",
+        "parsedFrom": "run-run265155.log",
+        "summary": "2 failed / 3 passed (18.0s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0269-cell1-reveals-and-names-its-boundary": "RED",
+          "ord0269-cell3-feed-failure-and-page-exclusion-are-named": "GREEN",
+          "ord0269-r6-page-exclusion-yields-no-conclusion": "GREEN",
+          "ord0269-r4-a-brand-new-journey-shows-nothing": "RED"
+        }
+      },
+      "redSet": [
+        "ord0269-cell1-reveals-and-names-its-boundary",
+        "ord0269-r4-a-brand-new-journey-shows-nothing"
+      ],
+      "greenSet": [
+        "ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+        "ord0269-r6-page-exclusion-yields-no-conclusion"
+      ],
+      "exclusiveToOwner": false,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K273_RAW_MESSAGE_BACK",
+      "ownerNode": "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks",
+      "why": "the pre-fix shape: raw error.message glued onto the user sentence, so MIME and error shapes land in the main copy; every 0273 node that reads the sentence is expected red, the retry-node red is collateral from the same sentence assertion",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\app\\V8Experience.tsx",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "05122a078291df1e01693716584eea01d5c14c67f618ca3bbb381a1b4199c275",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+        "exitCode": 0,
+        "runId": "run265174",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265174.log",
+        "parsedFrom": "run-run265174.log",
+        "summary": "4 passed (29.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks": "GREEN",
+          "ord0273-text-en-arm-speaks-english-and-neither-side-leaks": "GREEN",
+          "ord0273-action-retry-is-a-real-executable-step": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+        "exitCode": 1,
+        "runId": "run265205",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265205.log",
+        "parsedFrom": "run-run265205.log",
+        "summary": "3 failed / 1 passed (16.2s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks": "RED",
+          "ord0273-text-en-arm-speaks-english-and-neither-side-leaks": "RED",
+          "ord0273-action-retry-is-a-real-executable-step": "RED"
+        }
+      },
+      "redSet": [
+        "ord0273-action-retry-is-a-real-executable-step",
+        "ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
+        "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks"
+      ],
+      "greenSet": [],
+      "exclusiveToOwner": false,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K273_EN_DICT_CHINESE",
+      "ownerNode": "ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
+      "why": "the defect this segment fixed, put back on purpose: the English dictionary speaking Chinese. Only the English node may redden -- if the Chinese node reddens too, the arms are not independent",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\i18n\\LocaleContext.tsx",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "20e096d62e70f6d98519f9487ca957763483bf5c8ed06423510b90f964048a7f",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+        "exitCode": 0,
+        "runId": "run265223",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265223.log",
+        "parsedFrom": "run-run265223.log",
+        "summary": "4 passed (28.9s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks": "GREEN",
+          "ord0273-text-en-arm-speaks-english-and-neither-side-leaks": "GREEN",
+          "ord0273-action-retry-is-a-real-executable-step": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+        "exitCode": 1,
+        "runId": "run265253",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265253.log",
+        "parsedFrom": "run-run265253.log",
+        "summary": "1 failed / 3 passed (29.9s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks": "GREEN",
+          "ord0273-text-en-arm-speaks-english-and-neither-side-leaks": "RED",
+          "ord0273-action-retry-is-a-real-executable-step": "GREEN"
+        }
+      },
+      "redSet": [
+        "ord0273-text-en-arm-speaks-english-and-neither-side-leaks"
+      ],
+      "greenSet": [
+        "ord0273-action-retry-is-a-real-executable-step",
+        "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    },
+    {
+      "name": "K273_NO_RETRY_STEP",
+      "ownerNode": "ord0273-action-retry-is-a-real-executable-step",
+      "why": "the failure screen keeps its sentence but loses its next step: ACTION must redden while the two TEXT nodes stay green, which is what proves ACTION is judged on its own",
+      "file": "D:\\moodle\\_qoder_d_lane_20260923\\frontend\\src\\features\\setup\\JourneyTrialSetup.tsx",
+      "anchor_hits": 1,
+      "bytes_changed": true,
+      "mutated_sha256": "65b9fd8bc0186ec0a125f4b1d5af71f701297e72985bbc2aa18ca23af83d92b3",
+      "restored_exact": true,
+      "baseline": {
+        "label": "baseline-owner-spec",
+        "spec": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+        "exitCode": 0,
+        "runId": "run265284",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265284.log",
+        "parsedFrom": "run-run265284.log",
+        "summary": "4 passed (29.8s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks": "GREEN",
+          "ord0273-text-en-arm-speaks-english-and-neither-side-leaks": "GREEN",
+          "ord0273-action-retry-is-a-real-executable-step": "GREEN"
+        }
+      },
+      "attempt": {
+        "label": "mutated-owner-spec",
+        "spec": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+        "exitCode": 1,
+        "runId": "run265315",
+        "log": "D:\\moodle\\_qoder_d_lane_20260923\\review\\run-run265315.log",
+        "parsedFrom": "run-run265315.log",
+        "summary": "1 failed / 3 passed (25.5s)",
+        "stackStarted": true,
+        "nodes": {
+          "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks": "GREEN",
+          "ord0273-text-en-arm-speaks-english-and-neither-side-leaks": "GREEN",
+          "ord0273-action-retry-is-a-real-executable-step": "RED"
+        }
+      },
+      "redSet": [
+        "ord0273-action-retry-is-a-real-executable-step"
+      ],
+      "greenSet": [
+        "ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
+        "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks"
+      ],
+      "exclusiveToOwner": true,
+      "claimed_result": "KILLED"
+    }
+  ],
+  "verifierNote": "claimed_result is self-reported; derived_result / direct_red / collateral_red are WRITTEN_BY_VERIFIER",
+  "filesBefore": {
+    "PlanWithAiSheet.tsx": "aa212a6e3ded2d58685feeb0267df468e18c447223aa38def371d5e3e172ecb7",
+    "journeyContinuation.ts": "ca527c269d7db5685c23a4c7d7ee383692350ac9d06d232587124f340457e526",
+    "useContinuationState.ts": "1940d19d4216a36847646ec1842e660e74b4786ae30f24a403962e6f4ded2f27",
+    "V8Experience.tsx": "9bd389cd3832a978b8437e5edf14c2df76459dfe4bbe95f7e2d524f8dfe423fa",
+    "LocaleContext.tsx": "bd31e0a891364b94eb356cbfa83f33b5bd787165d70dcc7de32dd4714de4283c",
+    "JourneyTrialSetup.tsx": "9295a52ff973db06d15cf83c3f8552f6d232a78a530fefdb6f0df3362ff4f2ed"
+  },
+  "filesAfter": {
+    "PlanWithAiSheet.tsx": "aa212a6e3ded2d58685feeb0267df468e18c447223aa38def371d5e3e172ecb7",
+    "journeyContinuation.ts": "ca527c269d7db5685c23a4c7d7ee383692350ac9d06d232587124f340457e526",
+    "useContinuationState.ts": "1940d19d4216a36847646ec1842e660e74b4786ae30f24a403962e6f4ded2f27",
+    "V8Experience.tsx": "9bd389cd3832a978b8437e5edf14c2df76459dfe4bbe95f7e2d524f8dfe423fa",
+    "LocaleContext.tsx": "bd31e0a891364b94eb356cbfa83f33b5bd787165d70dcc7de32dd4714de4283c",
+    "JourneyTrialSetup.tsx": "9295a52ff973db06d15cf83c3f8552f6d232a78a530fefdb6f0df3362ff4f2ed"
+  },
+  "treeUnchangedByThisRun": true,
+  "allArmsKilled": true,
+  "baselineNodesGreen": [
+    "ord0269-cell1-reveals-and-names-its-boundary",
+    "ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+    "ord0269-r4-a-brand-new-journey-shows-nothing",
+    "ord0269-r6-page-exclusion-yields-no-conclusion",
+    "ord0273-action-retry-is-a-real-executable-step",
+    "ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
+    "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks"
+  ]
+}
