@@ -777,6 +777,9 @@ export function V8Experience() {
      interruption, replan) -- those keep their existing ownership constraints, which this order
      explicitly leaves alone. */
   const [sealedDemoUnavailable, setSealedDemoUnavailable] = useState<string | null>(null);
+  /* ORD-0273: the technical shape of the sealed-demo read failure (raw message + error name).
+     Rendered only inside data-* on the wizard's alert -- a diagnosable fact, not user copy. */
+  const [sealedDemoDetail, setSealedDemoDetail] = useState<{ message: string; name: string } | null>(null);
   const enterSealedDemo = async () => {
     setSetupBusy(true);
     setMessage(null);
@@ -806,11 +809,14 @@ export function V8Experience() {
       setSetupOpen(false);
       navigate("hub");
     } catch (error) {
-      /* The scene read itself failed: named and fail-closed, never a creation. */
-      setSealedDemoUnavailable(
+      /* ORD-0273-TEXT: the user sentence comes from an i18n key -- the raw error.message (with its
+         MIME/content-type and error shapes) must not reach the main copy.  The technical facts stay
+         available to telemetry through the data-* attributes on the wizard's alert element. */
+      setSealedDemoUnavailable(t("trial.sealedUnreadable"));
+      setSealedDemoDetail(
         error instanceof Error
-          ? `${locale === "zh-CN" ? "没读到封存演示的信息" : "The sealed demo could not be read"}: ${error.message}`
-          : t("shell.loadError"),
+          ? { message: error.message, name: error.name }
+          : { message: String(error), name: "Unknown" },
       );
     } finally {
       setSetupBusy(false);
@@ -1309,6 +1315,7 @@ export function V8Experience() {
           onCreate={createJourney}
           onUseSealedDemo={enterSealedDemo}
           sealedDemoUnavailable={sealedDemoUnavailable}
+          sealedDemoDetail={sealedDemoDetail}
           onCancel={data ? () => setSetupOpen(false) : undefined}
           busy={setupBusy}
           /* Both lanes landed this same line independently: this comment came from ORD-0034's

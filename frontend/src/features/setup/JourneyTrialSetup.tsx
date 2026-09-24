@@ -321,6 +321,7 @@ export function JourneyTrialSetup({
   onCreate,
   onUseSealedDemo,
   sealedDemoUnavailable,
+  sealedDemoDetail,
   onCancel,
   busy,
   message,
@@ -334,6 +335,8 @@ export function JourneyTrialSetup({
   onUseSealedDemo: () => Promise<void>;
   /* ORD-0209: named fail-closed reason when the sealed demo cannot be addressed. */
   sealedDemoUnavailable?: string | null;
+  /** ORD-0273: technical facts (raw message, error name) for data-* only -- never user copy. */
+  sealedDemoDetail?: { message: string; name: string } | null;
   onCancel?: () => void;
   busy: boolean;
   /* The shell's createJourney catch writes the named backend error into its own state, and
@@ -1233,14 +1236,28 @@ export function JourneyTrialSetup({
 
       {/* Secondary, de-emphasised: the sealed demo is not the golden path. */}
       {sealedDemoUnavailable && (
-        /* ORD-0209 5: fail-closed with the reason, never a silent creation fallback. */
-        <p
+        /* ORD-0209 5: fail-closed with the reason, never a silent creation fallback.
+           ORD-0273-TEXT: the sentence is an i18n key; the raw error facts ride in data-*.
+           ORD-0273-ACTION: an executable next step travels with the failure -- retry the same
+           read here; creating one's own trip stays available below regardless. */
+        <div
           className="trial-city-warning"
           data-testid="trial-sealed-unavailable"
           role="alert"
+          data-error-name={sealedDemoDetail?.name ?? ""}
+          data-error-message={sealedDemoDetail?.message ?? ""}
         >
-          {sealedDemoUnavailable}
-        </p>
+          <p>{sealedDemoUnavailable}</p>
+          <button
+            type="button"
+            className="trial-back-link"
+            data-testid="trial-sealed-retry"
+            disabled={busy}
+            onClick={() => void onUseSealedDemo()}
+          >
+            {zh ? "重试" : "Retry"}
+          </button>
+        </div>
       )}
       <div className="trial-secondary">
         {/* ORD-0216 ④: the label comes from `trial.tianjinDemo` and must stay **city-neutral** --

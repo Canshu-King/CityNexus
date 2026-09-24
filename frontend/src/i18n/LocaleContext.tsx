@@ -47,6 +47,10 @@ const en: Dict = {
      Guangzhou (`review/evidence/ui-overnight/ord0216-scene-city.json` reproduces the selection
      rule).  Naming *any* city here is the `HUMAN_MISLEADING` defect; so would be "Guangzhou". */
   "trial.tianjinDemo": "Use the sealed demo trip",
+  /* ORD-0273: the sealed-demo read failure is a named product state, not a raw error passthrough.
+     The technical facts ride in data-* of the element (see V8Experience), never in this sentence. */
+  "trial.sealedUnreadable": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+
   "trial.city": "Destination city",
   "trial.country": "Country/region code",
   "trial.timezone": "Time zone",
@@ -737,6 +741,8 @@ const zhCN: Dict = {
      城市。HJ-P1 在封存那趟为广州的舞台上读到「使用封存的天津演示」（`ord0216-scene-city.json` 复现了
      这条选择规则）。写任何城市名都是 `HUMAN_MISLEADING`；改成"广州"同样只是把不一致挪个地方。 */
   "trial.tianjinDemo": "使用封存的演示行程",
+  "trial.sealedUnreadable": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+
   "trial.city": "目的城市",
   "trial.country": "国家/地区代码",
   "trial.timezone": "时区",
