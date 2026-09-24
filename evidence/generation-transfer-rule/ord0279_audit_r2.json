@@ -1,0 +1,203 @@
+{
+ "schema": "CNX_GENERATION_TRANSFER_RECEIPT_V1",
+ "rule": "GENERATION_TRANSFER_BY_CITED_BLOB_EQUALITY_V1",
+ "receipt_under_check": "receipts/ord0279_generation_spec_r2.json",
+ "gen_a": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "gen_b": "dcae1bc964125c3a975916f6bf667794cc19622a",
+ "cells_total": 10,
+ "tally": {
+  "TRANSFERABLE": 3,
+  "NOT_TRANSFERABLE_GENERATION": 6,
+  "CITED_BLOB_MISSING": 1
+ },
+ "cells": [
+  {
+   "cell": "W1a_mechanism_write_leg_gets_no_deadline",
+   "verdict": "TRANSFERABLE",
+   "cited_files": [
+    "frontend/src/api/citynexus.ts",
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "claim_kind": "code_determined",
+   "why": null,
+   "cited_blob_at_each_generation": {
+    "frontend/src/api/citynexus.ts": {
+     "at_c79e2b4f4": "05787c27cfb059dba174023bd6edfc4ce6533eb6",
+     "at_dcae1bc96": "05787c27cfb059dba174023bd6edfc4ce6533eb6"
+    },
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    }
+   },
+   "why_missing": {},
+   "differ": [],
+   "missing": []
+  },
+  {
+   "cell": "W1a_timings_32s_observed",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "cited_files": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "claim_kind": "runtime_measured",
+   "why": "RUNTIME_MEASURED_NOT_LICENSED_BY_BLOB_IDENTITY",
+   "cited_blob_at_each_generation": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    }
+   },
+   "why_missing": {},
+   "differ": [],
+   "missing": []
+  },
+  {
+   "cell": "W1b_loser_answer_shape",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "cited_files": [
+    "backend/app/main.py"
+   ],
+   "claim_kind": "code_determined",
+   "why": "cited blob differs",
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "at_c79e2b4f4": "b1f12abff8ea4811bf4d8d7d506be717974fc932",
+     "at_dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+    }
+   },
+   "why_missing": {},
+   "differ": [
+    "backend/app/main.py"
+   ],
+   "missing": []
+  },
+  {
+   "cell": "W1c_two_sided_equality",
+   "verdict": "CITED_BLOB_MISSING",
+   "cited_files": [],
+   "claim_kind": "code_determined",
+   "why": "NO_CITED_FILES",
+   "cited_blob_at_each_generation": {},
+   "why_missing": {},
+   "differ": [],
+   "missing": []
+  },
+  {
+   "cell": "W1d_inflight_state",
+   "verdict": "TRANSFERABLE",
+   "cited_files": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "claim_kind": "code_determined",
+   "why": null,
+   "cited_blob_at_each_generation": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    }
+   },
+   "why_missing": {},
+   "differ": [],
+   "missing": []
+  },
+  {
+   "cell": "W1e_durability_rows",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "cited_files": [
+    "backend/app/main.py"
+   ],
+   "claim_kind": "runtime_measured",
+   "why": "cited blob differs",
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "at_c79e2b4f4": "b1f12abff8ea4811bf4d8d7d506be717974fc932",
+     "at_dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+    }
+   },
+   "why_missing": {},
+   "differ": [
+    "backend/app/main.py"
+   ],
+   "missing": []
+  },
+  {
+   "cell": "W1f_attribution_to_held_write_lock",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "cited_files": [
+    "backend/app/main.py"
+   ],
+   "claim_kind": "runtime_measured",
+   "why": "cited blob differs",
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "at_c79e2b4f4": "b1f12abff8ea4811bf4d8d7d506be717974fc932",
+     "at_dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+    }
+   },
+   "why_missing": {},
+   "differ": [
+    "backend/app/main.py"
+   ],
+   "missing": []
+  },
+  {
+   "cell": "W2_rendered_reason",
+   "verdict": "TRANSFERABLE",
+   "cited_files": [
+    "frontend/src/features/planning/PlanWithAiSheet.tsx"
+   ],
+   "claim_kind": "code_determined",
+   "why": null,
+   "cited_blob_at_each_generation": {
+    "frontend/src/features/planning/PlanWithAiSheet.tsx": {
+     "at_c79e2b4f4": "58c0580bbb603c939592ae8b911c4a291b4eb60a",
+     "at_dcae1bc96": "58c0580bbb603c939592ae8b911c4a291b4eb60a"
+    }
+   },
+   "why_missing": {},
+   "differ": [],
+   "missing": []
+  },
+  {
+   "cell": "services_face_proxy_ownership",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "cited_files": [
+    "frontend/vite.config.ts"
+   ],
+   "claim_kind": "runtime_measured",
+   "why": "RUNTIME_MEASURED_NOT_LICENSED_BY_BLOB_IDENTITY",
+   "cited_blob_at_each_generation": {
+    "frontend/vite.config.ts": {
+     "at_c79e2b4f4": "f40aff0ad7ec9a840edf93f265603ad8c2503b92",
+     "at_dcae1bc96": "f40aff0ad7ec9a840edf93f265603ad8c2503b92"
+    }
+   },
+   "why_missing": {},
+   "differ": [],
+   "missing": []
+  },
+  {
+   "cell": "IMMEDIATE_REFUSAL_NOT_REPRODUCED",
+   "verdict": "NOT_TRANSFERABLE_GENERATION",
+   "cited_files": [
+    "backend/app/main.py"
+   ],
+   "claim_kind": "runtime_measured",
+   "why": "cited blob differs",
+   "cited_blob_at_each_generation": {
+    "backend/app/main.py": {
+     "at_c79e2b4f4": "b1f12abff8ea4811bf4d8d7d506be717974fc932",
+     "at_dcae1bc96": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+    }
+   },
+   "why_missing": {},
+   "differ": [
+    "backend/app/main.py"
+   ],
+   "missing": []
+  }
+ ],
+ "claim_made_by_delivery": true,
+ "derived_result": "RED_CELLS:W1a_timings_32s_observed,W1b_loser_answer_shape,W1c_two_sided_equality,W1e_durability_rows,W1f_attribution_to_held_write_lock,services_face_proxy_ownership,IMMEDIATE_REFUSAL_NOT_REPRODUCED"
+}
