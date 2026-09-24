@@ -1,0 +1,24 @@
+{
+ "schema": "CNX_GENERATION_TRANSFER_SPEC_V2",
+ "order": "ORD-0279",
+ "observed_on_generation": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
+ "target_generation": "dcae1bc964125c3a975916f6bf667794cc19622a",
+ "cross_generation_claim": "commander audit r2: every cell now declares claim_kind; W1a is SPLIT because the red team's derivation showed one cell mixed a code-determined mechanism with runtime-measured durations",
+ "authored_by": "commander 494abfd7; split taken from verifier derivation cf0ebf4b25b706051e00bd7afb111951e83e33e9",
+ "cells": [
+  {"cell": "W1a_mechanism_write_leg_gets_no_deadline", "claim_kind": "code_determined",
+   "cited_files": ["frontend/src/api/citynexus.ts", "frontend/src/features/planning/PlanWithAiSheet.tsx"]},
+  {"cell": "W1a_timings_32s_observed", "claim_kind": "runtime_measured",
+   "cited_files": ["frontend/src/features/planning/PlanWithAiSheet.tsx"]},
+  {"cell": "W1b_loser_answer_shape", "claim_kind": "code_determined", "cited_files": ["backend/app/main.py"]},
+  {"cell": "W1c_two_sided_equality", "claim_kind": "code_determined", "cited_files": []},
+  {"cell": "W1d_inflight_state", "claim_kind": "code_determined",
+   "cited_files": ["frontend/src/features/planning/PlanWithAiSheet.tsx"]},
+  {"cell": "W1e_durability_rows", "claim_kind": "runtime_measured", "cited_files": ["backend/app/main.py"]},
+  {"cell": "W1f_attribution_to_held_write_lock", "claim_kind": "runtime_measured", "cited_files": ["backend/app/main.py"]},
+  {"cell": "W2_rendered_reason", "claim_kind": "code_determined",
+   "cited_files": ["frontend/src/features/planning/PlanWithAiSheet.tsx"]},
+  {"cell": "services_face_proxy_ownership", "claim_kind": "runtime_measured", "cited_files": ["frontend/vite.config.ts"]},
+  {"cell": "IMMEDIATE_REFUSAL_NOT_REPRODUCED", "claim_kind": "runtime_measured", "cited_files": ["backend/app/main.py"]}
+ ]
+}
