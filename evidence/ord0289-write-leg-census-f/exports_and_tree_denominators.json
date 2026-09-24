@@ -1,0 +1,39 @@
+{
+ "what": "ORD-0289 导出与分母核对：两代 frontend/src 从 GitHub tarball 干净导出",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T07:19:14+08:00",
+ "gens": {
+  "landed_45b0a5e2": {
+   "sha": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "tree": "039e5eafa260a6c30dc186947c1c1d1f0145a8a1",
+   "authoritative_tip_read_now": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "tarball_bytes": 50284763,
+   "tarball_sha256_16": "9fa38ba757b163e8",
+   "tarball_members_under_frontend_src": 176,
+   "recursive_tree_entries_frontend_src_ts_tsx": 71,
+   "tree_truncated": false,
+   "export_root_stripped_to": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "exported_files_local": 71,
+   "local_equals_remote_list": true,
+   "only_in_export": [],
+   "only_in_tree": [],
+   "export_dir": "D:\\moodle\\_qoder_f_run\\o289_landed_45b0a5e2"
+  },
+  "earlier_dcae1bc9": {
+   "sha": "dcae1bc964125c3a975916f6bf667794cc19622a",
+   "tree": "d96c2974924d19831495f2945117d4221a1b6d62",
+   "authoritative_tip_read_now": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "tarball_bytes": 50243964,
+   "tarball_sha256_16": "c52eb5e5bae063bc",
+   "tarball_members_under_frontend_src": 174,
+   "recursive_tree_entries_frontend_src_ts_tsx": 69,
+   "tree_truncated": false,
+   "export_root_stripped_to": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "exported_files_local": 69,
+   "local_equals_remote_list": true,
+   "only_in_export": [],
+   "only_in_tree": [],
+   "export_dir": "D:\\moodle\\_qoder_f_run\\o289_earlier_dcae1bc9"
+  }
+ }
+}
