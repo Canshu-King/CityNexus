@@ -68,6 +68,9 @@ MARKER_KEY_GLOBAL = (
     "const MARKER_KEY = (_journeyId: string) => `citynexus.v8.continuation.global`;"
 )
 UNREADABLE_LINE = '    return { kind: "unconfirmable", reason: "feed_unreadable" };'
+HOOK_ERROR_RETURN = (
+    "    return { state: { kind: \"unconfirmable\", reason: \"feed_unreadable\" }, feedReadFailed: true };"
+)
 OUT_OF_PAGE_LINE = '    return { kind: "unconfirmable", reason: "mission_out_of_page" };'
 SENTENCE_SET_LINE = '      setSealedDemoUnavailable(t("trial.sealedUnreadable"));'
 EN_DICT_ENTRY = (
@@ -111,14 +114,25 @@ ARMS = [
         "so the interrupted run is unfindable again -- this is the design the ruling rejected",
     ),
     (
-        "K269_FEED_FAILURE_SILENT",
+        "K269_FEED_READ_FAILURE_SILENT",
+        "ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+        SPEC_269,
+        HOOK,
+        HOOK_ERROR_RETURN,
+        "    return { state: { kind: \"none\" }, feedReadFailed: false };",
+        "the read fails and the hook reports 'nothing pending': cell 3's first read (feed 500) is "
+        "the one that exercises this emitter",
+    ),
+    (
+        "K269_MALFORMED_FEED_SILENT",
         "ord0269-cell3-feed-failure-and-page-exclusion-are-named",
         SPEC_269,
         MODULE,
         UNREADABLE_LINE,
         '    return { kind: "none" };',
-        "an unreadable feed is indistinguishable from 'no continuation': cell 3's whole point is "
-        "that silence is not an answer",
+        "an answered-but-unusable 200 (no events array) is reported as silence. The first arms pass "
+        "ran this same mutant against a gate that only read the 500 path, and it survived -- which "
+        "proved the guard had no reader, not that the product was right; cell 3 now has its own read",
     ),
     (
         "K269_PAGINATION_GUESS",
