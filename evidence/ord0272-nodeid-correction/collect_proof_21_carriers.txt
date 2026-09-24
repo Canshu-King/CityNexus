@@ -1,0 +1,113 @@
+# 21 条载体 nodeid 的逐条收集读数
+# 树 = corrected 枝 dcae1bc964125c3a975916f6bf667794cc19622a（git archive 导出）
+# cwd = D:\moodle\_qoder_f_run\e_0272_corrected\backend（与各件 run_shape 里记录的 cwd 同一个）
+
+[K1] tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans
+    tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K1] tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation
+    tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K1] tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer
+    tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K1] tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409
+    tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K1] tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced
+    tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K1] tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced
+    tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K2] tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer
+    tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K3] tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity
+    tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K4] tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced
+    tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K5] tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans
+    tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K5] tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation
+    tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K5] tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer
+    tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K5] tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409
+    tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K5] tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced
+    tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K6] tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced
+    $ python -m pytest --collect-only -q tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced
+    tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K6] tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable
+    $ python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable
+    tests/test_v1923_final_code_gate.py::test_v1923_acknowledge_does_not_make_infeasible_plan_selectable
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K6] tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict
+    $ python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict
+    tests/test_v1923_final_code_gate.py::test_v1923_arrival_after_departure_is_a_precise_conflict
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K6] tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative
+    $ python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative
+    tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K6] tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised
+    $ python -m pytest --collect-only -q tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised
+    tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K7] tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative
+    $ python -m pytest --collect-only -q tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative
+    tests/test_v1923_final_code_gate.py::test_v1923_zero_alternatives_persists_explicit_no_alternative
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+[K7] tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised
+    $ python -m pytest --collect-only -q tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised
+    tests/test_v1924_final_truth_gate.py::test_v1924_replan_validated_candidates_are_advertised
+    rc=0  collected=1? True  no-tests-collected? False  strict_pool_match=True (OK)
+
+# 两种形式的双向证明（同一枚格，换 cwd 结果不同）
+B) cwd=backend + `tests/…`   -> collected=1? True
+C) cwd=backend + `backend/tests/…` -> collected=1? False (读数：no tests collected)
+A) cwd=仓库根 + `backend/tests/…` -> collected=1? True
