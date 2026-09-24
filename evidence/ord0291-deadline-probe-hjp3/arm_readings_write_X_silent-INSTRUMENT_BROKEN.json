@@ -1,0 +1,55 @@
+{
+ "arm": "X",
+ "port": 8483,
+ "constant_ms": 12000,
+ "face_serves": "dist_X",
+ "hub_reached": true,
+ "request_text": "想傍晚在老城慢慢走一圈，别太赶",
+ "request_text_length": 15,
+ "rig": "selective origin 127.0.0.1:8596 - reads answered by backend 8493, POST accepted and never answered",
+ "ms_from_fill_to_lock_window": 0,
+ "write_legs": [
+  {
+   "url": "/api/v1/journeys/91f78c9b-b768-46c9-a62e-4ac09b6609da/agent/commands",
+   "method": "POST",
+   "api": true,
+   "sent_ms_since_load_start": 533,
+   "sent_wall": "2026-09-24T23:39:07.124Z",
+   "has_signal": true,
+   "request_body": "{\"command\":\"想傍晚在老城慢慢走一圈，别太赶\"}",
+   "request_headers_idempotency_key": null,
+   "status": 500,
+   "content_type": "text/plain",
+   "bytes": 0,
+   "body_head": "",
+   "elapsed_ms": 90
+  }
+ ],
+ "deadline_card_during_flight": null,
+ "counter_at_end": null,
+ "result_card": "服务端处理失败\n\n这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。\n\n技术详情",
+ "server_reason_rendered": "",
+ "max_counter_seen": 0,
+ "timeline_points": 13,
+ "timeline_tail": [
+  {
+   "ms": 2717,
+   "counter": null,
+   "posts_settled": 1
+  },
+  {
+   "ms": 2975,
+   "counter": null,
+   "posts_settled": 1
+  },
+  {
+   "ms": 3235,
+   "counter": null,
+   "posts_settled": 1
+  }
+ ],
+ "run_id": "O0291-2507",
+ "stage": "write",
+ "measured_at": "2026-09-24T23:39:10.638Z",
+ "viewport": "390x844 zh-CN"
+}
