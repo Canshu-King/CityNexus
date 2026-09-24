@@ -1,0 +1,1193 @@
+{
+  "order": "ORD-0274",
+  "cell": "B2 (Q19 iii)",
+  "arm": "b2c_restored",
+  "arm_kind": "fixed_inflight",
+  "session": "1a986a24 HJ-P1",
+  "base": "http://127.0.0.1:8961",
+  "started_at": "2026-09-24T23:07:47.049Z",
+  "viewport": [
+    390,
+    844
+  ],
+  "draft_key": "citynexus.v8.trial_draft",
+  "install_mode": "two_navigations",
+  "write_mode": "release_journeys_after_8000",
+  "forbidden_moves_taken": {
+    "unregister_called": 0,
+    "cache_clear_called": 0
+  },
+  "phases": {
+    "P0": {
+      "pointer": {
+        "root": "dist",
+        "ok": true
+      },
+      "mode": {
+        "written": "answer",
+        "readBack": "answer"
+      },
+      "install_mode": "two_navigations",
+      "nav1": {
+        "label": "P0-nav1-install",
+        "at": 1790291267557,
+        "status": 200
+      },
+      "nav2": {
+        "label": "P0-nav2-take-control",
+        "at": 1790291282649,
+        "status": 200
+      },
+      "navigations_used": 2,
+      "snapshot": {
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-C2DKD_R7.js"
+        ],
+        "docNonce": "f1l2i29nfe",
+        "fields": {
+          "目的地": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "抵达地点": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "离开地点": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "抵达时间": {
+            "tag": "INPUT",
+            "type": "datetime-local",
+            "value": "2026-09-26T10:00"
+          },
+          "离开时间": {
+            "tag": "INPUT",
+            "type": "datetime-local",
+            "value": "2026-09-28T20:00"
+          },
+          "#5": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "CN"
+          },
+          "#6": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "Asia/Shanghai"
+          },
+          "#7": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "CNY"
+          }
+        },
+        "fieldCount": 8,
+        "draft": {
+          "step": 1,
+          "draft": {
+            "cityName": "",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-09-26T10:00",
+            "endAt": "2026-09-28T20:00",
+            "arrivalLocation": "",
+            "departureLocation": "",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": ""
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间",
+          "2",
+          "3"
+        ],
+        "leafCount": 21,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 13,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "marker": null
+          }
+        ]
+      }
+    },
+    "P1": {
+      "typed": {
+        "city": "北京",
+        "arrival": "北京南站",
+        "departure": "北京西站",
+        "startAt": "2026-10-05T09:30",
+        "endAt": "2026-10-07T18:00",
+        "budget": "480",
+        "stay": "150",
+        "special": "只看免费和便宜的地方"
+      },
+      "fills": [
+        {
+          "why": "city",
+          "idx": 0,
+          "ph": "例如：天津、东京、新加坡",
+          "wrote": 2,
+          "after": {
+            "len": 2,
+            "value": "北京"
+          }
+        },
+        {
+          "why": "arrival",
+          "idx": 1,
+          "ph": "例如：北京站 / 机场",
+          "wrote": 4,
+          "after": {
+            "len": 4,
+            "value": "北京南站"
+          }
+        },
+        {
+          "why": "departure",
+          "idx": 2,
+          "ph": "例如：北京站 / 机场",
+          "wrote": 4,
+          "after": {
+            "len": 4,
+            "value": "北京西站"
+          }
+        },
+        {
+          "why": "startAt",
+          "type": "datetime-local",
+          "idx": 0,
+          "before": "2026-09-26T10:00",
+          "wrote": 16,
+          "after": {
+            "len": 16,
+            "value": "2026-10-05T09:30"
+          }
+        },
+        {
+          "why": "endAt",
+          "type": "datetime-local",
+          "idx": 1,
+          "before": "2026-09-28T20:00",
+          "wrote": 16,
+          "after": {
+            "len": 16,
+            "value": "2026-10-07T18:00"
+          }
+        },
+        {
+          "why": "stayBudget",
+          "skipped": "no empty visible field matched",
+          "needle": "住宿"
+        },
+        {
+          "why": "budget",
+          "skipped": "no empty visible field matched",
+          "needle": "总预算|预算"
+        },
+        {
+          "why": "specialRequirements",
+          "idx": 4,
+          "ph": "例如：我妈妈坐轮椅；每天走路不超过 3000 米",
+          "wrote": 10,
+          "after": {
+            "len": 10,
+            "value": "只看免费和便宜的地方"
+          }
+        }
+      ],
+      "stepChecks": [
+        {
+          "label": "before first 下一步",
+          "draft_step": 1,
+          "missing_hint": [],
+          "fieldCount": 8,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ]
+        },
+        {
+          "label": "after first 下一步",
+          "draft_step": 2,
+          "missing_hint": [],
+          "fieldCount": 5,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "2"
+          ]
+        },
+        {
+          "label": "after second 下一步",
+          "draft_step": 3,
+          "missing_hint": [],
+          "fieldCount": 0,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓"
+          ]
+        }
+      ],
+      "afterStep1": {
+        "label": "before first 下一步",
+        "draft_step": 1,
+        "missing_hint": [],
+        "fieldCount": 8,
+        "marker": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间"
+        ]
+      },
+      "step2Fields": [
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "2"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "1"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "3000"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "1000"
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "ph": "例如：我妈妈坐轮椅；每天走路不超过 3000 米",
+          "value": ""
+        }
+      ],
+      "step2Buttons": [
+        "EN",
+        "轻松",
+        "适中",
+        "紧凑",
+        "美食",
+        "自然",
+        "人文",
+        "海边",
+        "购物",
+        "亲子",
+        "返回",
+        "下一步",
+        "使用封存的演示行程"
+      ],
+      "partyStepper": {
+        "clicked": false
+      }
+    },
+    "P2": {
+      "snapshot": {
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-C2DKD_R7.js"
+        ],
+        "docNonce": "f1l2i29nfe",
+        "fields": {},
+        "fieldCount": 0,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "✓",
+          "✓",
+          "3",
+          "确认创建"
+        ],
+        "leafCount": 29,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 13,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "marker": null
+          }
+        ]
+      },
+      "confirm_box": [
+        79,
+        652,
+        291,
+        44
+      ]
+    },
+    "P3": {
+      "pointer": {
+        "root": "dist",
+        "ok": true
+      },
+      "mode": {
+        "written": "release_journeys_after_8000",
+        "readBack": "release_journeys_after_8000"
+      },
+      "submit": {
+        "found": true,
+        "label": "确认创建",
+        "disabled": false,
+        "point": [
+          225,
+          674
+        ],
+        "hitIsSelf": true,
+        "tapped": true
+      },
+      "during_write": {
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-C2DKD_R7.js"
+        ],
+        "docNonce": "f1l2i29nfe",
+        "fields": {},
+        "fieldCount": 0,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "✓",
+          "✓",
+          "3",
+          "确认创建"
+        ],
+        "leafCount": 34,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 13,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "marker": null
+          }
+        ]
+      },
+      "update_trigger": {
+        "updated": true,
+        "via": "registration.update() while the trip write is unsettled"
+      },
+      "before_action": {
+        "marker": null,
+        "scripts": [
+          "/assets/index-C2DKD_R7.js"
+        ],
+        "docNonce": "f1l2i29nfe",
+        "fields": {},
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "leafCount": 34,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": "installing",
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ]
+      },
+      "the_one_navigation": {
+        "skipped": "arm drives no navigation: fixed_inflight"
+      },
+      "watch": [
+        {
+          "atMs": 4015,
+          "atEpoch": 1790291314651,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 0,
+          "headings": [],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 8032,
+          "atEpoch": 1790291318668,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 12038,
+          "atEpoch": 1790291322675,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 16050,
+          "atEpoch": 1790291326686,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 20064,
+          "atEpoch": 1790291330700,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 24081,
+          "atEpoch": 1790291334717,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 28092,
+          "atEpoch": 1790291338728,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 32111,
+          "atEpoch": 1790291342747,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 36123,
+          "atEpoch": 1790291346759,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 40140,
+          "atEpoch": 1790291350776,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 44156,
+          "atEpoch": 1790291354792,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 48174,
+          "atEpoch": 1790291358810,
+          "marker": null,
+          "scripts": [
+            "/assets/index-DimRtCQm.js"
+          ],
+          "docNonce": "mjr0vh1unki",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 5,
+          "headings": [
+            "服务器",
+            "服务器这次没能把行程读出来",
+            "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+            "重试",
+            "归因详情"
+          ],
+          "fieldCount": 0,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 20,
+              "href": "http://127.0.0.1:8961/v8/hub",
+              "marker": null
+            }
+          ]
+        }
+      ],
+      "watch_started_at_epoch": 1790291310636,
+      "after": {
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index-DimRtCQm.js"
+        ],
+        "docNonce": "mjr0vh1unki",
+        "fields": {},
+        "fieldCount": 0,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "服务器",
+          "服务器这次没能把行程读出来",
+          "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+          "重试",
+          "归因详情"
+        ],
+        "leafCount": 5,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 20,
+            "href": "http://127.0.0.1:8961/v8/hub",
+            "marker": null
+          }
+        ]
+      },
+      "after_written": {
+        "marker": null,
+        "scripts": [
+          "/assets/index-DimRtCQm.js"
+        ],
+        "docNonce": "mjr0vh1unki",
+        "fields": {},
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "headings": [
+          "服务器",
+          "服务器这次没能把行程读出来",
+          "服务器自己报错了（HTTP 500）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+          "重试",
+          "归因详情"
+        ],
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "leafCount": 5
+      },
+      "nav_events_total": 5,
+      "nav_events_mine": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ]
+    }
+  },
+  "instrument": {
+    "pageErrors": [],
+    "navEvents": [
+      {
+        "at": 1790291267458,
+        "mine": true,
+        "label": "P0-nav1-install"
+      },
+      {
+        "at": 1790291267481,
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790291282571,
+        "mine": true,
+        "label": "P0-nav2-take-control"
+      },
+      {
+        "at": 1790291282584,
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790291314626,
+        "href": "http://127.0.0.1:8961/v8/hub",
+        "mine": false
+      }
+    ],
+    "apiEvents": [
+      {
+        "atEpoch": 1790291267656,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790291267821,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790291282685,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790291282719,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790291306580,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/travelers"
+      },
+      {
+        "atEpoch": 1790291306585,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/travelers",
+        "s": 201
+      },
+      {
+        "atEpoch": 1790291306586,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/journeys"
+      },
+      {
+        "atEpoch": 1790291314608,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/journeys",
+        "s": 201
+      },
+      {
+        "atEpoch": 1790291314614,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/1e0a7631-95e2-43d1-a713-cf198bc130d7/preferences"
+      },
+      {
+        "atEpoch": 1790291314794,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/7f5f6c32-2461-4c6c-a412-1d15dd7468b8/experience"
+      },
+      {
+        "atEpoch": 1790291314869,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/7f5f6c32-2461-4c6c-a412-1d15dd7468b8/experience",
+        "s": 500
+      }
+    ]
+  },
+  "next1": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      195,
+      674
+    ],
+    "hitIsSelf": true,
+    "tapped": true
+  },
+  "next2": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      225,
+      674
+    ],
+    "hitIsSelf": true,
+    "tapped": true
+  },
+  "ended_at": "2026-09-24T23:09:18.972Z"
+}
