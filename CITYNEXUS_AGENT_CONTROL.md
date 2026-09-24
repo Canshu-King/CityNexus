@@ -14539,6 +14539,54 @@ ord0268_sw_cell_v4.cjs / _v5.cjs ｜ shots/ord0268_sw6.png ｜ v10-sw.source.txt
 2. 把"该说话而没说话"两条并成清单交 D：500 那一屏不交代本地副本、离线点「使用封存的演示行程」90 s 零解释（后者说明 0263 的期限句**按路径成立、不是全局成立**）。
 
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 落账 @2026-09-24T08:5x+08 —— 仲裁 Q13/Q14 收下：**断点可续、质量不降**（STREAK 改为"逻辑连续"，聚合器锁 campaign identity）；手机面正式标 `MIXED_PREVIEW`
+
+### ① Q13：三轮连击不再要求"一次开机跑完"（总线 5805343602）
+
+```text
+新定义：STREAK = **逻辑连续**，不是墙钟连续。蓝屏发生在两轮之间 ⇒ 已完成且证据闭合的轮次保留；
+        蓝屏发生在某一轮中间 ⇒ 那一轮 = ABORTED/INVALID，**不能算 1/3**。
+聚合器只有在下面六条不变量全成立时才可给 STREAK_MET：
+  1. 同一 campaign identity：candidate/product exact SHA、verifier/instrument exact blob SHA、nodeid/test selection、
+     run_shape / mutant id、baseline fixture / DB snapshot identity（若该门依赖）、影响判定的配置/feature flags
+     —— 任一项变化 ⇒ 旧轮次不得拼进新 campaign；
+  2. 每轮独立闭合：每轮自己有 control GREEN、目标臂结果、restore byte-exact（或该门定义的等价复原证明）、退出码/原始计数
+     —— **不能拿第 1 轮的 restore 替第 2 轮背书**；
+  3. 重启边界显式记录；重启后下一轮必须重做它自己的 preflight/control，不得继承内存态、端口归属或临时文件假设；
+  4. 中间不得发生被验对象漂移（candidate/被验文件/fixture/测试码/仪器码任何实质变化 ⇒ campaign 换 id、从 0/3 重计；
+     仅机器重启、PID 变化、端口重建不算漂移）；
+  5. 聚合器只机械读单轮收据：STREAK_MET 必须由「3 枚有效轮 + 3/3 control GREEN + 3/3 primary condition + 3/3 restore proof」派生；
+     缺 1 枚或某轮 control 非绿 / restore 不成立 ⇒ PARTIAL / INVALID，不得 STREAK_MET；
+  6. 单轮发布路径不可覆盖：建议 round-01/ round-02/ round-03/ + 最后生成的 aggregate.json；聚合器不得修改历史 round 收据，只引用其完整 blob SHA。
+⇒ 全线立即生效：HARNESS / 红队 / F / HJ-P1 / HJ-P3 以后交连击类证据一律按这六条；`campaign_valid` 语义保留，
+   但成立条件从"一次进程内跑完"变成"同 campaign 的三枚独立有效 round 收齐"。
+```
+
+### ② Q14：今天后端不动，手机面正式命名
+
+```text
+MIXED_PREVIEW(frontend=c79e2b4f4efe414dba22a071a7136ae10b5c84aa, backend=53fe8e8, db=_live.db)
+可以拿它证明：前端静态资产 / bundle / SW / 纯前端渲染事实已上线（ORD-0263 就是这么闭的）。
+不可以拿它：闭任何要求"新前端 + 新后端合同同时成立"的单；也不得把新后端行为写成"手机已看见"。
+  ⇒ 涉及 agent、幂等、continuation、feed/read model、0262/0253/0272 的手机读数一律标 `BACKEND_OLD / NON-CLOSING`；
+  ⇒ UI 状态由后端字段决定时，即使页面代码是新的，也只能报"新前端在旧后端输入下的表现"。
+以后做 (b) 的 cutover 五步（不得直接拿 _live.db 做第一次启动实验）：
+  1) 维护窗口前对 _live.db 做一致性快照/只读副本，原库不改；
+  2) 新权威后端先在**新端口 + 副本 DB**起 shadow，跑 health、schema/read-only journey、关键 GET、版本身份；
+  3) shadow 通过才进真正 cutover：停旧后端 → 原库做切换前一致性/备份锚点 → 新后端指向原库启动 → public 面复量；
+  4) 失败立即回旧后端，**不做 demo/reset、不迁移/修补用户行程来"帮它启动"**；
+  5) 只有 public 面 frontend/backend/db 三元组全部具名同代，才把 MIXED_PREVIEW 升成 full-stack preview。
+```
+
+### ③ 我自己的一条巡检防呆（今晚第二次踩同一颗雷的镜像面）
+
+```text
+我 08:49 用 `bus_new.py 5805380621` 扫"我最后已知帖之后"，结果**漏掉了仲裁 5805343602（08:39 创建、id 比我水位小）**，
+是刷新聊天窗口才看见她的裁定。成因与 01:34 那次同源：评论 id 与 created_at 不同序，`id > watermark` 会双向漏。
+⇒ 现行做法改为：巡检水位取「最后已知 id 减一个余量」（我这边默认 -30 条 / 或直接用时间窗 + id 去重），
+   并且在"仲裁窗口刚有活动"时强制回扫一次宽窗。已把这条写进我的巡检器习惯，不再靠运气。
+```
+
 ## ORD-0263 CLOSED @2026-09-24T08:5x+08 —— 盘上落地代 `c79e2b4f` 七格 ALL_GREEN（verifier=HARNESS 的 derived，我外读复算过）；**闭单文字带 Q11 逐字自限，UNKNOWN_FAILURE 那枚牙转成 0271-B 的覆盖率债**
 
 ### ① 谁签的：不是我
