@@ -196,6 +196,68 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=8ccd71d8 @2026-09-25 06:22+08 —— **ORD-0282 交：落地代 `45b0a5e28…` 上那一处回填守卫仍然咬人 （FLIP_OBSERVED，两进程 + 一次性库 + 带外 rowcount，两态各 3 轮）**；另外两条现场事实要报：那道门在这代只收集到 8 格（无 test_G9），而 HTTP 面两态都不翻
+
+```text
+判据 ④ 的派生判级：K8_SEAM_ON_LANDED_GENERATION = FLIP_OBSERVED（这是 claimed + 读数；derived_result 不自签，闭单判级归 verifier，B-1）
+  守卫在位 3 轮 : A_bytes_survive = [True, True, True]；B 覆盖行数 = [0, 0, 0]；B 被拒 = ['409 / agent idempotency record is incomplete', '409 / agent idempotency record is incomplete', '409 / agent idempotency record is incomplete']（现成那句具名 409，没另造词）
+  守卫拆掉 3 轮 : A_bytes_survive = [False, False, False]；B 覆盖行数 = [2, 2, 2]
+  顺带一条产品事实：轮末 plan_versions 计数 guard=[3, 3, 3] vs mutant=[6, 6, 6] ⇒ 拆掉守卫不只让别人的回执被覆盖，第二发还重新生成了一整套候选（副作用翻倍）
+  三道防空转：检测器自证（每轮带外真改一次 A 的字节，必须看得见）= True；每轮 main.py 的 blob 与当时状态相符 = True；每轮三个 pid 互不相同（阶段台 / A / B）= True
+```
+
+```text
+判据 ① 树：镜像尖先读 45b0a5e281cae9c37715173afd3ac5778f309ca7 == 期望 ⇒ True；commit tree 039e5eafa260a6c30dc186947c1c1d1f0145a8a1；父 63b7702f47917be6da98b29e5a56a6646891184b
+  来源 = GitHub tarball（50,284,763 B，sha256[:16] 9fa38ba757b163e8），车道工作树 0 座、你导出的 _qoder_wt_45b0a5e 没用
+  逐件重算 blob 并与提交对表：main.py 416ea4f210e967130710a900cdecd20e7a1b5eca（482,850 B，判据点名那枚 ⇒ True）、门文件 efa783397e6105ca8f15be9a5701e60e5ace0296（24,562 B）、schemas.py 2e6e26ce17a9e25a40dd8d686f64def5ef1bff0e、openapi.yaml 484c64cdaaa41e72d252563b84cef915cb4e80eb ⇒ 四件全 equal=True
+  与候选代的关系 compare(7c806fa…45b0a5e2) = diverged（ahead 35 / behind 1）⇒ 我那笔重构没在这条线上（下面那段就讲这个）
+判据 ③ 突变：before 416ea4f210e967130710a900cdecd20e7a1b5eca → after 784599fdb406b4242c2d202868b5eefd10861287；hunks=1（@@ -4770,8 +4770,7 @@，只有一处）；删掉的表达式 = IdempotencyKey.response_json.is_(None)；py_compile=True；行数 11417→11416；跑完逐字节还原=True（两态各 3 轮，每轮都还原并回验）
+```
+
+```text
+两条要你看现场的（不是判据要的，但量到了就说）：
+  1) 落地代没有那枚缝：`_fill_plan_generation_receipts` 在这代 main.py 里 0 命中，那道门收集到 8 格（test_G1…G8，无 test_G9，门文件 efa783397e6105ca8f15be9a5701e60e5ace0296），守卫以 Phase B 内联形式存在（main.py:4770-4779）。⇒ 本件不是『同名格的同代复现』，是『同一处回填语句 + 同一个两进程形状』在落地代的行为；我按这个措辞交，不冒充前者。
+  2) HTTP 面两态都不翻：A_bytes_survive guard=[True, True, True] mutant=[True, True, True]，B 自己那把键都没被填（[False, False, False]）——腿 B 的占位在唯一索引上先撞回 ⇒ 走回放门 ⇒ 到不了回填语句。⇒ 红队的 HTTP_FACE_CANNOT_REACH_K8 在落地代同样成立，这条是量出来的不是引来的；同 mission 并发那一发（两进程同时进）三轮都是两发 201 且 cont 键只被一户填。
+```
+
+```text
+判据 ⑤ 两代并贴（候选代那两份一个字没动）：
+  候选代 7c806fab5… main.py ad13f4395… / 门文件 799fbd2fe…：缝已抽出、载体 G9、KILLED_CANDIDATE_ALL_ROUNDS_RED、红轮 [3]；HJ-P3 跨进程读数 blob fbb154cf9ce598ad1d3a4241b0f1b96181f0037b
+  落地代 45b0a5e28… main.py 416ea4f21… / 门文件 efa783397…：缝符号 False、8 格、守卫内联；本件读数 = FLIP_OBSERVED（run O282S-250612-226b4c）
+  ⇒ 差异写明：两代语义相同、载体形状不同；两边同向（都翻），所以 K8 的 seam 面结论现在在落地代也有读数，不需要把候选代那格挪过来。
+```
+
+```text
+判据 ⑥ 第二观察者（你的 r3 尺）：先证身份——重算 blob fc35335aadffb8f0de6f8030e9fc5a747f24f463 == 申报 fc35335aadffb8f0de6f8030e9fc5a747f24f463 ⇒ True（8,589 B，从他分支 contents API 取回，不是本机副本、没改一个字）；
+  再原样报数：claims=50 failing=0  branch=commander/control  rc=0；逐行 OK=50 / FAIL=0 ⇒ 与你 04:3x 申报的同一个数，在我这台机独立复现；顺带说明：那把尺引用的 live_checks/audit_closure_coordinates_r3.py 不在这代树里（404），所以我按你分支上的 blob 跑，不从 45b0a5e2 里找它。
+```
+
+```text
+判据 ⑦ 发布：新目录 evidence/ord0282-k8-landgen-f/（11 件，逐件 GET /contents 回读 equals_local=True，rule_hit 全 None ⇒ 守卫一次没拒；0 覆盖 0 删除）
+  ORD0282_RECEIPT.md               885f072e2f16a3da78f0a3a10b6fc2476b9ea9d9  5,374 B
+  _o282_seam_role.py               99a2d912e2c725006a34f2a5f06d136185751fb6  2,071 B
+  _o282_worker.py                  dd12dd7746141904033ec2be373b3b7f5599ac0e  1,886 B
+  http_face_readings.json          bf43fec86dc1f1294b2453786d4c251ad5114366 26,224 B
+  landing_tree_proof.json          ec98fd76ea580cab38bb4c8293fe4af3b4d096ef  3,214 B
+  o282_phase1_tree.py              94a7554ac994ae887c2242a87f48894f07f5e382  9,865 B
+  o282_rig.py                      3c5584fa2c01eb37be96bb4cc731fc7bb7ab430b 21,646 B
+  o282_seam_face.py                3b2bc8659a84cbc9550da3859e1522222f0d6bdc 15,169 B
+  ord0282_receipt.json             f93312c9ae1871744b94c54df843b3d59f3a585c 15,288 B
+  seam_face_readings.json          eeedddaa26d7626623046b27de2a214181cdd81b 20,733 B
+  second_observer_r3_run.json      b29eb8cd1df7f62535939b40adf4e024fdb9bd1b  1,009 B
+
+复跑（四条，顺序无关）：
+  python o282_phase1_tree.py                                              # 取尖 + tarball 导出 + 逐件 blob
+  python o282_seam_face.py --rounds 3 --json o282_seam_readings.json       # 主面（判级用的那一面）
+  python o282_rig.py --rounds 3 --json o282_rig_readings_v2.json            # HTTP 面
+  python audit_closure_coordinates_r3.py                                    # 第二观察者（先重算它的 blob）
+（四件仪器都在上面那批里，按 blob 取回即可跑；一次性库跑完自己删，含 -wal/-shm）
+
+纪律：demo/reset 0 次；_live/_preview 库 0 读写；凭据 0 打印；权威线 0 次写（我只读尖）；候选代与既有发布件 0 覆盖 0 删除；每轮 main.py 逐字节还原并回验 blob；三个角色都是独立 OS 进程。
+一次性库的准确说法（06:2x 自报勘误，总线 5823231612）：发布的脚本是每轮**开跑前**清同名库，所以末轮各留一份；本轮跑完我已手动扫掉（harness 里 .db/.db-wal/.db-shm 计数=0，两进程自报日志留着）。读数与判级不受影响。
+不越界：不自签 derived_result；用户面到不到得了 K8 仍按红队射程声明；ORD-0273 的 ③④ 不抢。
+```
+
 ### SESSION=e345b9d6 @2026-09-25 06:1700 —— **上一条 06:1x 那块自报"地基旧一代"的问题已修：ORD-0278 + ORD-0253 两笔产品 commit re-parent 到你落地的 `45b0a5e28…` 之上重测**（四枚门 14 条三元组全绿、七枚臂 7/7 KILLED、`landing_groups` 分组交上）；**旧那一代我没有 force-push，原样留着**，两块读数各归各坐标
 （取代：总线 comment 5822934902 与本账 06:1x 那块（`9b2f11b063ff1a87`）的**坐标**；两块的定性结论不变，只是量在旧一代上。新正文=总线 comment 5823138298。
 新坐标（全部外读回验）：分支 `refs/heads/review/0278-0253-on-45b0a5e` ⇒ `f86d24e976d9b4309f4005b6af5bd31f97ea7524`；被取代的旧代 `refs/heads/review/0278-on-0269-rebased` ⇒ `e7cf57986b5afd8137ba6f8255f337d19f41f19c`（**未移动、未 force-push**）。本分支起点 = 权威落地尖 `45b0a5e281cae9c37715173afd3ac5778f309ca7`（`merge-base --is-ancestor` 真、领先 11 笔、相对起点 `frontend/` 改 7 件）；反突变尖与绿轮三元组 sha 同为 `f86d24e9…`；七枚臂 v3 全 `KILLED`、`treeUnchangedByThisRun=true`；旧收据 `…v1-c657403`（臂自身写错那一版）与 `…v2-ec9f6de`（旧一代那一版）都留着不覆盖。
@@ -14924,6 +14986,84 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 亲测 @2026-09-25 06:2x+08 —— **ORD-0282 = ACCEPTED**（F 在落地代把 K8 那一格跑出来了；我用 10 臂复算尺从它自己的逐轮读数重算 ⇒ ALL_AGREE）；顺带量到一条新事实：**拆掉守卫 ⇒ `plan_versions` 3→6，第二发重新生成一整套候选**；F 提的问题立案 **ORD-0287**，并请仲裁裁 **Q34**
+
+### ① 我这一拍量的（先核字节，再复算，不念它的摘要）
+四件按 blob 回读全等（`commander/control`，声明 == `contents.sha` == 我用 body 现场重算）：
+```text
+evidence/ord0282-k8-landgen-f/ord0282_receipt.json          15,288 B  f93312c9ae1871744b94c54df843b3d59f3a585c
+evidence/ord0282-k8-landgen-f/seam_face_readings.json       20,733 B  eeedddaa26d7626623046b27de2a214181cdd81b
+evidence/ord0282-k8-landgen-f/landing_tree_proof.json        3,214 B  ec98fd76ea580cab38bb4c8293fe4af3b4d096ef
+evidence/ord0282-k8-landgen-f/second_observer_r3_run.json    1,009 B  b29eb8cd1df7f62535939b40adf4e024fdb9bd1b
+```
+新尺 `live_checks/receipt_consistency_o0282_r1.py` `331a8b5651bb7dc015d9156769e6823431a82f0c`（3,731 B）
+跑法：先按 blob 取回上面第一件到本地，再 `python live_checks/receipt_consistency_o0282_r1.py --path <本地副本>`
+⇒ **arms=10 disagreements=0 `INTERNAL_CONSISTENCY ALL_AGREE` rc=0**。关键三臂不是我信它写的串：
+**A07** 逐轮 `main.py` 的 blob 必须与它当时自称的状态一致（guard=`416ea4f2…`／mutant=`784599fd…`，**6 行（guard 3 + mutant 3）全对**）；
+**A08** 反向：没有一轮"自称守卫在位、实际跑在突变体上"；
+**A10** `FLIP_OBSERVED` 这个判级是我**从逐行读数重新算出来的**（guard 三轮 `A_bytes_survive` 全真 + `B_overwritten_rows` 全 0；mutant 三轮全反），不是从它文件里抄的字符串。
+**第二观察者那格我认**：F 独立复跑我的 `audit_closure_coordinates_r3.py`（先重算 blob `fc35335a…` == 申报值）⇒ **claims=50 failing=0 rc=0**，与我 04:3x 申报同数、不同机器不同时刻。它还如实报了一条：那把尺**不在 45b0a5e2 这代树里**（两侧 404），所以它是按我分支上的 blob 跑的——这句说得对，我这把尺从来就是 commander 写域的工具，不是产品文件。
+⇒ **ORD-0282 = ACCEPTED**。`derived_result` 仍归 verifier（B-1，F 自己也在 `not_claimed` 里写明了）。
+
+### ② 一条顺手量到的产品事实（值得单独记，因为它改变"这枚守卫值多少"）
+轮末 `plan_versions` 计数：**guard=[3,3,3] vs mutant=[6,6,6]** ⇒ 拆掉那半个条件不只是"别人的回执被覆盖"，**第二发会重新生成一整套候选**。也就是说这枚守卫挡住的副作用是**翻倍**级别的，不是"脏一行"级别的。这条我引 F 的读数（`criterion_4_derived.plan_versions_guard_vs_mutant`，我的 A03..A06 已核过其与逐轮行一致）。
+
+### ③ F 提的问题我接，但不自己拍：ORD-0287 + Q34
+F 原话要点：**落地代没有那枚 seam 符号与 `test_G9` 载体**（它每轮 `seam_symbol_at_round=false`），所以"同名格同代复现"要先决定候选 `7c806fab5…` 那笔重构落不落。
+我的判断：**守卫的行为已经是落地代事实（①），但这枚守卫在权威线上没有回归载体** —— 这才是 0272 真正欠的那块。
+```text
+ORD-0287 · 给 K8 守卫在权威线上补一枚回归载体（test-only）· @F（8ccd71d8）
+status: DISPATCHED@2026-09-25 06:2x
+ 0) **先答一句可移植性，再动手**：把 `7c806fab5` 的 `test_G9` 原样摘到 `45b0a5e2` 的树上，跑不跑得起？
+    跑不起就交"它依赖哪个不在权威线的符号"（具名 + 那一枚 blob + 报错原文三行）然后**停手**——
+    不许为了让格子变绿去改断言、去改产品码、去 skip。**交事实与下一步，比交一枚假绿值钱。**
+ 1) 从权威尖 45b0a5e2 起分支（先 GET /git/ref 读尖并写进收据；不是从 7c806fab5 续，它父是 dcae1bc9）。
+ 2) **只加测试文件，产品字节 0 改动**：`git diff --name-only 45b0a5e2 <新尖>` 必须全部落在 backend/tests/**，
+    出现任何 backend/app/** 或 frontend/** ⇒ 自报 NOT_ELIGIBLE 并停手。
+ 3) 载体必须两态可跑：在权威树 GREEN；把 `IdempotencyKey.response_json.is_(None)` 拆掉后同一格 RED
+    （具名前后 main.py blob、hunks=1、py_compile 过、跑完逐字节还原并回验）。
+ 4) 你 0282 那套两进程 rig 不要塞进候选——候选只交"能在 CI 形状里跑的那一枚"；两进程读数留在证据目录。
+ 5) 发布新目录 `evidence/ord0287-k8-carrier-f/`；候选分支外读 ref 必附 GitHub https 的 ls-remote 回读行，
+    且**落点 sha == 候选尖**；账本块 + 总线一条。
+ 6) 权威线你不写。`derived_result` 我不签，等 @红队。
+成本 20~30 分钟。
+```
+**Q34（请仲裁裁，只回符号）**：`ORD-0272` 现在怎么记？
+① = **保持 OPEN**，等 ORD-0287 的 test-only 候选落地后再 CLOSED（我的推荐：**回归载体本来就是 0272 的交付物**，让一枚守卫裸奔进权威线是我不想要的先例）；
+② = 按 Q30=① 立刻 CLOSED（只署 seam 面），0287 作为独立单另计；
+③ = 别的。
+（若你回 ①，则 0272/0287 一起等红队的 `derived_result`；若回 ②，我在闭单范围句里会写明"权威线上暂无回归载体，见 ORD-0287"。）
+
+### ④ 队列与边界
+红队：`ORD-0285`（复验我四处修复）→ `ORD-0286`（验 D 的 0278+0253 候选，0278 与 0253 分开签）→ 若 Q34=① 再加 0287 的派生。
+F：0287（0282 已交）。D：等 0286 的派生结论，我不提前落地。HJ-P3：0276/0281 定形都已收，已请它把三个 `snap_*_dist` 从硬链接改成 copy。B：仍是 0274 → 0280 → 0281 顺序，未打断。
+**我这一拍没动**：权威线（`mirror/integration-frontend-apple-pass1` 仍 `45b0a5e2…`）、任何人的已发布路径（新目录 4 个）、任何用户库（`_live`/`_preview` 0 读写）、`demo/reset` 0 次、凭据 0 打印。
+
+
+### 🔧 aad2d1f2 (SESSION=aad2d1f2) P3 · **号令⑴办了：我那三个 `snap_*_dist` 里确有 35 个文件是指向你在服 dist 的硬链接（同 inode、nlink=2），已全部换成独立副本并复验 0 共享** @2026-09-25T06:3x+08
+
+先把我上一轮的**归因错**认下来：我把白页写成"共享 outDir 被**半同步**"，那只是症状（`index.html` 换代、资产不在），**机理说错了**——真正的原因就是号令者说的这条：**我那份目录根本不是拷贝，是硬链接**，所以他那边原地一写，我这边的字节跟着变。读数本身没受影响（我当时在调用内核对了 `script src` 与 sha256），但**结论的因写错了**，以本块为准。
+
+**量到的（审计，改前）**
+- 我的三个目录各自文件数：{"D:\\moodle\\_hjp3_fan_sweep_0923\\snap_live_dist": 35, "D:\\moodle\\_hjp3_0281_0925\\dist_frozen": 0, "D:\\moodle\\_hjp3_0276_0925\\dist_frozen": 38}。
+- 与 `_qoder_preview_20260920/dist` **同 inode** 的文件：**35 个**；例子 `index-BCF4ptyk.js` → inode `5066549583655433`、nlink `2`、两边 sha256 相等 = `True`。
+
+**改的（只动我自己目录内的路径）**
+- 对每个 nlink>1 的文件：读原字节 → 写同目录临时文件 → `os.replace` 顶回同名（换新 inode）→ 逐件复验"字节数相等 + sha256 相等 + nlink==1"。35 件全部通过（`fix_all_independent=True`）。
+- 复审计：**仍然共享的文件 = 0 个**；此刻 `snap_live_dist` 里 36 个文件的 nlink 取值集合 `[1]`。
+- 顺手补自洽：它的 `index.html` 引 `index-CtuiCkKf.js` 而该资产当时在我目录里不存在（白页的直接触发器），我从他那边**复制**了一份（1,248,629 B，`nlink=1`，与源 sha256 相等），**没写他的任何路径**。
+
+**控制臂重接（换端口的理由）**：旧控制面 `:8498` 带着上一单的 Service Worker（上一单我量过：同一 URL curl 拿到 1,248,629 B `text/javascript`，浏览器里却被旧壳答成 1,200 B HTML），所以不是原地重启，而是换干净端口。
+- 停：pid `12620` —— 先核对"记录的 pid == netstat 上的 listener"，再核对它命令行里确有 `--port 8498` 才 `taskkill`（停后监听 `[]`）。
+- 起：`:8495`（pid `54912`，outDir `snap_live_dist`，`CITYNEXUS_BACKEND_PORT=8497`）。发的是 `index-CtuiCkKf.js`、1,248,629 B、sha256 `08e5de2c560ce5a8…`、**与盘上字节相等** = `True`。
+- 现场挂载复验：`#root` 子节点 `1`、正文 `168` 字、`script src` 就是那枚资产、`GET /api/v1/journeys` = `405`（路由在、方法不对 ⇒ 后端活着）。
+
+**现在的端口名单（全是我自己记名的）**：{"8493": ["12352"], "8495": ["54912"], "8497": ["9124"], "8499": ["49624"], "8494": [], "8498": []}。页 0（本轮探针 tab 已按具名端口关掉）。
+
+**纪律**：`os.replace` 只发生在我目录内；`demo/reset` 0 次、用户库 0 读写、凭据 0 打印、产品字节 0 改动；审计/修复脚本已发布可复跑（`hardlink_audit.py`、`face_registry.py`）。号令⑵（T-c 那枚可跑探针）我不擅自开工，等 Q33 落定点名。
+
+**以后这一车道的规矩（写死）**：任何"快照/冻结"目录一律真拷贝（`shutil.copytree`），起面之前先跑 `hardlink_audit.py audit` 断言两件事——目录内没有共享 inode、`index.html` 引的资产在盘上存在。
+
 ## 勘误 @2026-09-25 06:2x+08（我自己 60 秒前写错的那一行）—— D 的候选尖**我已经读错过一次**：`was f86d24e9… → now 0671704546f9c9ea1d1b57627b059124c7800803`
 
 ```text
@@ -45420,4 +45560,43 @@ B2b 先红  第一臂跑在未含本轮修复的候选上：loads=1、controller
 回归      A 等价：离线仍同代；B3 等价：一次导航内跨两代字节收敛，之后离线仍服务新代
 不自签    B2 / B2b / B2c / B3 / A 的 derived_result 归 HJ-P1 的仪器
 本轮我自己的缺陷（原物留在盘与件里，被取代但不删）：measured the first B2c candidate arm against a STALE dist (built before the B2c commit) and it read RED; that reading is superseded, not averaged, and the dist was rebuilt from the committed tree; my B2c judge counted a sample taken while the page was reloading as 'the probe navigated again', which turned a clean MET into RED; corrected, and the re-judge records the one verdict flip it caused; my first B2b counter-arms were built as CLIENTS; the restoring code is the INCOMING generation, so both read MET vacuously; rebuilt as targets and each arm's shipped bytes are now checked against its declaration; that rebuild also exposed a compound cut: the builder re-read the already-patched source inside the loop, so 'stepforced' carried 'steponly' too; both arms returning identical readings is how I caught it …
+```
+
+### B c01d72a3 · ORD-0274 收尾（re-parent 到 45b0a5e ⇒ ef277b2）：Q24 逐格判定 = 0 格撤回，七臂在新基线上重跑且各自仍咬住自己的变量 @06:25+08 —— **唤醒指的两块都读了（commander 的 ORD-0280 清单 / 仲裁 Q27①Q28③）。按你说的先逐格判、再决定 re-parent：判定用的是引用区间的字节摘要，结论是 0 格撤回；然后 re-parent 并在新一代字节上把七臂重跑，每臂仍各自咬住自己那一枚变量。B2/B2b/B2c/B3/A 的 `derived_result` 仍不自签（归 HJ-P1）。**
+
+```text
+为什么动 权威尖已是 45b0a5e281ca；我原候选 853c54944a0b 坐在 dcae1bc96412（落后一代）
+新尖     ef277b2da5df（分支 review/0274-b2c-c）← 69fd2f8 ← 45a3d56 ← ef277b2 ← 45b0a5e；is-ancestor rc=0
+回读     ef277b2da5dfff22ae3f1deaf63b295f5cda678f  refs/heads/review/0274-b2c-c
+旧枝未动 853c54944a0b7ea2c7111867915566171650c564  refs/heads/review/0274-b2c-b  <- 我没有移动/删除/force-push 任何已有 ref
+内容未变 {"aggregate_patch_id_old_base": "ab2d9690eb4d385bc31c89bd95455fb22005b6fe", "aggregate_patch_id_new_base": "ab2d9690eb4d385bc31c89bd95455fb22005b6fe", "equal": true, "method": "git diff <base>..<tip> | git patch-id --stable on both pairs"}
+改动面   4 files changed, 116 insertions(+), 9 deletions(-)；文件 frontend/src/api/citynexus.ts, frontend/src/app/V8Experience.tsx, frontend/src/lib/inFlightWrites.ts, frontend/src/main.tsx
+
+Q24 逐格（两个依赖文件在新一代里都改过，所以粒度必须是引用区间，不是整文件）：
+  B2c candidate arm (defer to the  | handover handler               区间摘要相等=True  行  1717 ->  1717  HOLDS
+  B2c write leg belongs to the pro | v8Request + v8RequestInner     区间摘要相等=True  行   185 ->   186  HOLDS_BY_REGION
+  B2c write leg belongs to the pro | createJourney's first write le 区间摘要相等=True  行   890 ->   897  HOLDS_BY_REGION
+  B2b per-value draft preservation | draft key + read/write persist 区间摘要相等=True  行    17 ->    17  HOLDS
+  B2b per-value draft preservation | defaultDraft                   区间摘要相等=True  行   370 ->   373  HOLDS_BY_REGION
+  B2b per-value draft preservation | trial-next control             区间摘要相等=True  行  1188 ->  1191  HOLDS_BY_REGION
+  B2b per-value draft preservation | trial-create control           区间摘要相等=True  行  1212 ->  1215  HOLDS_BY_REGION
+  B2b per-value draft preservation | trial-back control             区间摘要相等=True  行  1177 ->  1180  HOLDS_BY_REGION
+  B2b per-value draft preservation | step marks (active/done)       区间摘要相等=True  行   624 ->   627  HOLDS_BY_REGION
+  计数 {"HOLDS": 1, "HOLDS_BY_REGION": 2, "RE_MEASURE": 0} ⇒ 0 格 RE_MEASURE、0 格撤回。真正动的是行号（+1 / +3 / +7）和构建产物的字节（同文件别处改了），所以臂要在新基线上重跑，而不是把旧读数搬过来继续用。
+
+新基线上的重跑（候选代 = 45b0a5e + 我三笔 重新构建；五代替互异，每枚反件的 shipped 形状都回读核对）：
+  B2c candidate      MET  期望=MET  一致=True  写 4/4 delivered=4 undelivered=0｜换代时在飞=1 pending=True loads=2 执行字节==目标代=True
+  B2c counter_eager  RED  期望=RED  一致=True  写 4/4 delivered=3 undelivered=1｜换代时在飞=1 pending=False loads=2 执行字节==目标代=True
+  B2c counter_manual RED  期望=RED  一致=True  写 4/4 delivered=4 undelivered=0｜换代时在飞=1 pending=True loads=1 执行字节==目标代=False
+  B2c idle_control   MET  期望=MET  一致=True  写 0/0 delivered=0 undelivered=0｜换代时在飞=0 pending=False loads=2 执行字节==目标代=True
+  B2b candidate      MET  期望=MET  一致=True  step 存储 2->2 屏幕 trial-step2-body->trial-step2-body｜逐值全等=True 反方字段=[]｜draft 仍在=True｜目标代 dist_0274gen2b sha=390febe6e7e0 执行 sha=390febe6e7e0
+  B2b counter_step_onlyRED  期望=RED  一致=True  step 存储 2->2 屏幕 trial-step2-body->trial-step2-body｜逐值全等=False 反方字段=["city", "startAt", "endAt", "partySize", "budget", "specialRequirements"]｜draft 仍在=True｜目标代 dist_0274b2b_steponly_t sha=06eacbe22711 执行 sha=06eacbe22711
+  B2b counter_step_forcedRED  期望=RED  一致=True  step 存储 2->1 屏幕 trial-step2-body->trial-step1-body｜逐值全等=False 反方字段=["city", "startAt", "endAt", "partySize", "budget", "specialRequirements"]｜draft 仍在=True｜目标代 dist_0274b2b_stepforced_t sha=c46dcefc3e7f 执行 sha=c46dcefc3e7f
+  B2c 一致 4/4；B2b 一致 3/3
+  两枚 B2b 反控各自咬住自己那一枚：steponly 只有存储侧空（屏幕上那句话还在），stepforced 只有屏幕落回 step1（存储里值都还在）—— 正是「或反之」那一格。
+
+门禁     TYPECHECK_RC=0｜尺自证 15/15 臂 MET（blob 0686670743c0…）
+回归等价 B3：装的是 /assets/index-xKIGmoBz.js → 换代后 /assets/index-CL1NqhoE.js，一次导航内收敛=True、之后离线仍服务那一代=True；A：离线仍同代=True
+
+下一件按固定顺序（0274 收尾 → 0280 三处一起改 → 0281）：0280 的坐标我已在新一代复核过——标签 :882 未动、三处 :515/:573/:629 未动、机器字段 :511/:571 仍按界线排除、`said ? … : …` 那枚修复模型就位。**写窗口没开**，等你放行；0263 那七项在新代上的复跑仍欠。
 ```
