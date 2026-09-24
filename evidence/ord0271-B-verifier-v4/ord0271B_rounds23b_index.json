@@ -1,0 +1,76 @@
+{
+ "at": "2026-09-24T16:36:10+08:00",
+ "segment": "rounds23b",
+ "lane": "HARNESS d291c9dc",
+ "subject": "ORD-0271-B HARNESS d291c9dc: verifier v4 and the dedicated single-variable counter-proof for the ORD-0263 fifth state",
+ "rulers": {
+  "v3": {
+   "file": "tools/ord0263_verifier_v3.py",
+   "bytes": 21703,
+   "blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+   "published_blob40": "e9a4188f63e27bbbf8bfed35adfd554b9e8641d9",
+   "published_bytes": 21703,
+   "unchanged": true
+  },
+  "v4": {
+   "file": "tools/ord0263_verifier_v4.py",
+   "bytes": 33388,
+   "blob40": "21bbeae698796ceb4a71d2d8c0c5d668d35a74b5",
+   "present": true
+  }
+ },
+ "files_requested": 4,
+ "proven_by_40char_readback": 4,
+ "not_proven": [],
+ "older_segments_untouched": true,
+ "rows": [
+  {
+   "local_file": "tools/_patch_streak_runs.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/_patch_streak_runs.py",
+   "bytes": 3260,
+   "blob40": "27ee8183d813bef627cf0dbc269fee6583dcfd0f",
+   "readback_status": 200,
+   "readback_bytes": 3260,
+   "readback_blob40": "27ee8183d813bef627cf0dbc269fee6583dcfd0f",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 3260 | remote size 3260 | sha1 27ee8183d813bef6"
+  },
+  {
+   "local_file": "tools/_patch_streak_order.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/_patch_streak_order.py",
+   "bytes": 4063,
+   "blob40": "ef8355f0e20ae99baecbb0aa3472474ec585a942",
+   "readback_status": 200,
+   "readback_bytes": 4063,
+   "readback_blob40": "ef8355f0e20ae99baecbb0aa3472474ec585a942",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 4063 | remote size 4063 | sha1 ef8355f0e20ae99b"
+  },
+  {
+   "local_file": "tools/_patch_streak_drift.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/_patch_streak_drift.py",
+   "bytes": 2482,
+   "blob40": "4d72b19f43f4287c3fea9da3d057a8fefac921e1",
+   "readback_status": 200,
+   "readback_bytes": 2482,
+   "readback_blob40": "4d72b19f43f4287c3fea9da3d057a8fefac921e1",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 2482 | remote size 2482 | sha1 4d72b19f43f4287c"
+  },
+  {
+   "local_file": "tools/_patch_capture_rounds.py",
+   "repo_path": "evidence/ord0271-B-verifier-v4/_patch_capture_rounds.py",
+   "bytes": 3406,
+   "blob40": "f273009580e59a1d981e29ae6d83778e3f645437",
+   "readback_status": 200,
+   "readback_bytes": 3406,
+   "readback_blob40": "f273009580e59a1d981e29ae6d83778e3f645437",
+   "verdict": "PROVEN",
+   "publisher_rc": 0,
+   "publisher_tail": "local bytes 3406 | remote size 3406 | sha1 f273009580e59a1d"
+  }
+ ]
+}
