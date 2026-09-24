@@ -14829,6 +14829,187 @@ NOT_MEASURED：这枚一次性库 0 journeys ⇒ 离线页落在新建行程向�
 **A 臂（never-reconnected）还没跑** —— 今天先交 B；A 臂用同一座面换起点（全新 profile + 只装旧代 + 全程不联网），我按同一份仪器改两处就能出。
 **证据坐标**：见紧随其后的总线帖。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## commander 落账 @2026-09-24T10:5x+08 —— 0275 走到 r2（红队四处"证明缺陷"全接受）；F 的 0272 两问已裁；**下一步我自己开 0271-A，但绝不在用的尺上直接改**
+
+### ① 0275 的验收状态（谁签什么）
+
+```text
+核心修复：红队 d2305848 独立复跑我的仪器 ⇒ ALL_GREEN、rc=0、她跑出的收据与我发布那份逐字节相同、18 格零不符 ⇒ VERIFIED。
+证明缺陷四处：全部接受，r2 已修（详见总线 5806610594）：
+  R2-1 CLI 改为**进程内**驱动 + 真实 PUT 调用计数（原来只 grep stdout，且 skip 支写字面量 True）；
+  R2-2 补 M3（_name_refusal 直接 return None）⇒ "单一助手"这句话第一次有证据可导出；
+  R2-3 independent_kills 由行为签名派生 ⇒ r2 实测 2 of 3 arms（M1/M2 同签名，只算一枚；M2 保留为名字形状检查）；
+  R2-4 新增 cell3b CLI 正控（干净用例必须恰好到达 1 次 PUT）⇒ 杀"永不上传的假 publisher"。
+r2 读数：derived_result = ALL_GREEN，15 格。坐标：
+  evidence/ord0275-publisher-path-guard/ord0275_selftest_r2.json  3,780 B  66c456201e761721272443aee71d7ddc8a8102cb
+  live_checks/test_ord0275_publisher_guard_r2.py                12,701 B  54b69b7cd2dbd56a0b7c3304ae7329bb676286da
+  r1 两件与 publisher 本体（d13d5e77b54cd00e8eaa1e8c2b582c7b12806686）均未覆盖、未删；derived 仍归红队重派生。
+她的定性我接受并全线公告：守卫会拒任何"只是提到"禁词的段（17 段实测 8 拒，含仓库里真存在的分支名 credential-literals-gate）；
+  "路径已存在"是**不安全的豁免谓词**（这个工具不是该分支的唯一写者）⇒ 不是缺陷，不另开 cell。
+```
+
+### ② 我裁给 F 的两问（0272 产码段已放行）
+
+```text
+① feed 升序截断（main.py:6818，default=100/le=200，取最老 N 条）⇒ 选 (甲)：G7 只证"字段存在且与 mission 稳定关联"，
+   截断具名为余项，另开 ORD-0276 FEED_ORDERING_OR_CURSOR（写者待定、verifier=HJ-P3），不塞进 0272；
+   理由：修排序/加游标动的是别人的读面（HJ-P3 量过、D 的 0269 门也依赖）。
+② mission_id 进**请求体**（它是签名材料/业务语义），幂等控制走 header 的 Idempotency-Key 一族；
+   两者不得合并成一个键——否则"同一 mission 的两次不同请求"与"同一请求重发"在存储层不可区分（0262 就是在这上头摔过的）。
+   若仲裁 Q10 原文被读成"mission_id 也要进 header"，不改实现：它只要求不另造第二套失败表达 + 复用 409，没锁字段位置。
+③ 我要求他：六臂 K1–K6 每臂**声明它删的是哪一行**（红队刚用这个口径发现我的 M1/M2 是同一个突变）。
+```
+
+### ③ 我下一步做什么（以及不做什么）
+
+```text
+开 ORD-0271-A（换代尺 DEBT-1..4，写者=我、验=红队）。两条硬约束我自己先钉住：
+  (a) **不在正在守手机链的那枚尺上直接改**：deploy_bundle.py（blob 149e9c6dbe6debca…，106,731 B）保持原样，
+      改动在 live_checks/deploy_bundle_v2_draft.py 上做，自测通过 + 红队派生后才谈换轨；旧版快照已在
+      live_checks/snapshots/deploy_bundle_149e9c6dbe6debca.py + manifest。
+  (b) 两枚不可变样本都已可外读：A = git blob b9be3a5cb683fb14dce44477e8ed8ae07e1f0658（worker-only，old==new，
+      唯一红源 B_NEW_INDEX.old_refs_absent=false，H 臂已具名 GREEN_H_EQ_C_NO_CHANGE_DEPLOY）；
+      B = evidence/ord0271-a-gauge-fixtures/sample_B_real_asset_change_0924_020432.json，blob dccc1ee1359154dc54de79e5571a30c8d4cc818a。
+      新尺必须两枚都不误判，另配反控：old==new 但 worker/manifest 代际或 precache/cacheURL 故意不一致 ⇒ 必须 RED。
+待仲裁：Q18（0275 副作用要不要独立 cell —— 红队已裁"不要"，我只需仲裁确认口径）、Q19（0274 B2 允许"延迟一次导航收敛"吗；
+  裁之前 B 按原合同实现，不留退路）。
+车道现场：D（#2c 门 spec + 格4 修复）、HARNESS（0271-B v4）、HJ-P1（0274 A 臂 + B3 余量）、HJ-P3（N3/N4）、
+  红队（0275 r2 重派生 + 0271-A 表 r2）、F（0272 产码）、B（0267 定形 + 0274-SW 修复窗）、C（信封 VALID + 0244 定形）。
+0 demo/reset、0 用户库写、凭据 0 打印、已发布证据路径 0 覆盖、产品码我 0 写、在用的尺与镜像器 0 改动。
+```
+
+### ✅ aad2d1f2 (SESSION=aad2d1f2) P3 · ORD-0262-NARROW verifier **第三段：N3 / N4 运行时读数到手（四问齐）** @2026-09-24T10:5x+08
+
+**现场（一次性，跑完在脚本里真杀真删，见末尾）**
+- 服务端 = 候选 `3093eea773c79fa00744fe72d1f2c43b4d0bd75e`（tree `5ae9f8959b059d04e5a41c53f0b6fa11470b19d0`）起在一次性端口 **`:8492`**；一次性库 `one_time_n34.s3db` 按你给的配方**只重放结构**（`sqlite_master` 里 table/index/trigger 的 CREATE，**92 条 / 55 张表 / 新库 journeys 0 行**），只 seed 我自己那 1 traveler（`4da2eb07…`）+ 1 journey（`b6aad6ba-8177-4eca-9514-8eecb22027c6`）。
+- 前端 = **当前发布的那一枚包**：从用户链 `_qoder_preview_20260920/dist` 用 `cp -al` 只读复制成我自己的快照（没动用户链），`index.html` 引用 `/assets/index-ChOTTCvB.js`（sha256 前缀 `2d56a79632ef`），起在一次性 face **`:8493`**，`CITYNEXUS_BACKEND_PORT=8492`。**归属双向证明**：我的行程 `200`、外来 uuid `404`。⇒ 屏是用户会看到的那层，服务器是被测候选那一版。
+- 冲突 = `BEGIN IMMEDIATE` + 一条 `UPDATE journeys` 不提交，另挂一个排队写手（让 SQLite 立刻回 BUSY 而不是等满 30 s）。
+
+### N3 · `.plan-ai-reason` 必须等于服务器 `message`，屏上不得出现客户端自造的 `HTTP 500` —— **成立（运行时）**
+
+浏览器那一发（点「开始规划」）：`POST …/agent/commands` → **`503 / application/json`，10.1 s**，body =
+`{"error":{"code":"GENERATION_STORE_BUSY","message":"Another generation is writing right now; this one was not recorded. Try again.","message_key":"generation.store_busy","trace_id":"736aa081-…","details":{"retry_after_ms":1000,"contention":"sqlite_write_lock_busy"},"reason_code":…}}`
+
+屏上（逐字）：「服务端处理失败」「这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。」+「技术详情」
+
+| 判据 | 读数 |
+|---|---|
+| `[data-testid="plan-ai-reason"].textContent` **`==`** 服务器 `message` | **True**（两边都是 `Another generation is writing right now; this one was not recorded. Try again.`，逐字） |
+| 正控：等值必须被认 | True（同一枚 message 自比 `==` 成立） |
+| 负控：只改标点必须不被认 | True（把句末 `.` 换成 `,` 后 `!=`） |
+| 屏上有没有客户端自造的 `HTTP 500` / `HTTP 503` | **没有**：对 `document.body.innerText` 扫 `/HTTP ?\d{3}/g` = `[]` |
+| reason 节点位置 | 在「技术详情」那个 `<details>` 里（`closest('details') = true`） |
+
+⚠ **一处我不当已验**：`reasonVisible` 我读到过 `height>0`，但**同一枚页面前一轮我手工展开过 `details.open=true`**，所以"未展开时它对用户是否可见"这条**不算我验过的**，标 NOT-VERIFIED（要判就得新开一次、不碰 details）。
+
+### N4 · 有 mission 行时不得说"没记录" —— **这一形下一致；但射程要说清**
+
+同一枚持锁配方，脚本自己再发一发（不靠转写）：`503 / application/json / 41.47 s`，服务器 `message` 与屏上 reason 仍逐字相同。
+**行数对表**：这一发之前 `journey_missions=1 / agent_runs=1 / plan_versions=0`，之后 **1 / 1 / 0** ⇒ **这一枚 503 没留下任何 mission 行**，所以它说的 "this one was not recorded" **与库内事实一致**（`claim_is_true_for_this_round = True`）。
+⚠ **但 N4 原本担心的那一形我没复现出来**：第一次持锁尝试里，mission `cf7451a3` **写成功了**（它在锁释放前约 1 秒挤进去，`created_at=10:36:19` 是 Python 侧构造时间、不是提交时间——我一开始误把它读成"锁内写入"，实测我的锁是真挡人的：裸连接第二条写 `database is locked`，5.5 s）。那一屏说的是 `CATALOG_EMPTY`（一次性空库没有 places），**不是**"没记录"。⇒ 结论写成 **NOT-REPRODUCED**，不写成 PROVEN-CLOSED：我没能造出"有 mission 行 + 屏上说没记录"这个组合。
+
+### 顺手两枚对别人有用的读数
+
+1. **写腿没有客户端期限**：浏览器那一发等了 **39.2 s** 还在等（`发出请求，等待模型返回 · 已等待 18 秒` 一路涨上去），而读腿有 12 s 期限（ORD-0263 我量过）。⇒ 归 **0269** 那一族（A3 不并 0263 已裁），这里给的是运行时证据。
+2. **同一件忙，四种时长都出现过**：10.1 s / 8.25 s / 33.34 s / 41.47 s。⇒ 再次确认**时长只能当读数，不能当判据**；牙齿全在"必须 503 + 必须具名 + 必须在信封里 + 屏上文字必须 `==` 服务器 message"。
+3. 一次性空库（只有结构、`places=0`）会让「AI 帮我规划」落到 `CATALOG_EMPTY`，屏上句子是对的，但 `.plan-ai-reason` 里放的是内部诊断串 `GET /places?city_code=CN-BEIJING -> 0 places`。
+
+### 收尾（这次写进脚本，不再手工补）
+
+`n3_n4_answer.py` 末尾自己做完并断言：先用 `Win32_Process.CommandLine` 证明两条 listener 都是我起的，再 `Stop-Process` —— `:8492` pid **44524**（`-m uvicorn app.main:app`，venv 启动器 re-exec 成 uv 3.12.14，与我记忆里那条一致）、`:8493` pid **56664**（`vite.js preview --outDir D:/moodle/_hjp3_fan_sweep_09…`）；然后删 `one_time_n34.s3db` 及 `-wal/-shm`；**断言结果 `listeners_left_8492_8493 = 0`、`db_exists_after_delete = False`、`assert_clean = True`**。
+
+### 一处偏差我写明，不假装照办
+
+你要求"被测树用 `git archive 3093eea…` 新鲜导出"。我本地没有该 ref 的仓库、也不想为取包动凭据 helper，所以**仍用按那 40 位 sha 向 GitHub 取的 tarball**（`codeload…/tar.gz/<sha>`，分支移动顶不掉它），树身份由"提交对象的 tree 字段 `5ae9f8959b05…` 与你 ls-remote 复算值逐位相符"支撑。若你要求必须是 `git archive`，给我一条能非交互取该 ref 的凭据路径我就换。
+
+**纪律**：0 次 `demo/reset`、0 次读写 `_live.db`/`_preview.db`（一次性库只重放结构、seed 只有我自己那两条）、0 次改产品字节、凭据 0 打印、已发布路径 0 覆盖。
+
+**证据坐标（段 3）**：`commander/control:evidence/ord0262-narrow-hjp3-verify/`，新名不覆盖
+- `NARROW_VERIFY_R3_RECEIPT.md` blob `a78ac0e4b04af18934e8b177585d5517eb81be22`（6,221 B）
+- `n3_n4_answer.json` blob `365694ba7cf422f9c0f9e8068c804365ee142ff3`（2,039 B，等值三判 + N4 行数对表 + 收尾断言）
+- `n3_n4_answer.py` blob `ee7153dadca9d5aaefa5fd4f3fa578a4739ff17d`（5,710 B，含"真杀端口 + 删库 + 断言不存在"的脚本内收尾）
+- `MANIFEST_r3.txt` blob `1229e5bbe212259988ea3bf46d05e0449f24e73c`（1,164 B）；段 3 commits `7bdd948 9c6a031 bcd7e2f 8fd944d`
+- 段 1 `MANIFEST.txt`（`4bcb2601…`）与段 2 `MANIFEST_r2.txt`（`0a03f7af…`）都未被覆盖。
+- 这块 = receipt 正文 + 坐标段（对正文请按 6,221 B）。
+
+## lane F `8ccd71d8` · ORD-0272 第一段：判据 + 形状 + A/B 选型（**未产码**）@2026-09-24T10:40+08
+
+```text
+ORD-0272 · 第一段：判据 + 形状 + A/B 选型（这一帖不产码；过了我再动 main.py 与门文件）
+
+【选型：B（不新建 operation），但键必须由服务端从 mission 派生 —— 这一点比 A/B 之争更决定成败】
+实测的现场（全部刚量，不是引用别人的话）：
+  · `POST /api/v1/journeys/{id}/plans/generate`（backend/app/main.py:4667）签名只有
+    `journey_id + GeneratePlansRequest|None + session`；`GeneratePlansRequest`（app/schemas.py:457）字段是
+    `planning_mode? / candidate_count=3 / place_ids?` —— **没有 mission_id，也不读 Idempotency-Key**；
+  · 契约里这个 operation（contracts/openapi.yaml:~493）`parameters` 只有 `JourneyId`，`operationId: generatePlans`；
+  · 它写的是 `plan_versions`（models.py:500 起）：列里有 journey_id/version_no/status/parent…，**没有任何 mission 关联列**；
+    每次调用铸新 id ⇒ "回放同一结果"必须靠回执里存的那份正文，不能靠再查一次（同秒对齐就是 HJ-P3 量到的那条绝路）；
+  · 读回面 `_audit_projection`（main.py:6728）走 `AuditLog`，feed 路由
+    `/journeys/{id}/agent-feed`（main.py:6818）是 `order_by(created_at, id).limit(default=100, ge=1, le=200)`
+    ⇒ **取最老的前 N 条**（这一条对我不利，见下面「我不自己决定的两件事」）。
+为什么不选 A：A 要新增一枚 resume operation + 它的状态机与错误面，等于在第二腿上再开一个入口；
+而 B 复用的正是产品已有的那一族（`validate_idempotency_key` / `canonical_request_signature` / `idempotency_keys` 表 /
+`error()` 信封 / 现成 409 那两句），也就是 ORD-0253 已经落地并过了红队派生的同一套词汇。
+**硬要求"清 storage / 第二设备仍回放同一结果"决定了键不能是客户端造的字符串**：客户端造的东西一清就没了。
+⇒ continuation 身份 = 服务端从 mission 派生：`continuation_id = "cont:" + mission_id`，
+  幂等键 = `plans.generate:cont:<mission_id>`。客户端若另带 `Idempotency-Key`，只允许它与派生值**相等**；
+  不等 ⇒ 现成 409 那句，绝不"两个键各插一行"（那正是"一个意图两条腿"的放大器）。
+
+【形状】（照 ORD-0253 已过裁的 Phase A/B，不发明第二种机制）
+  Phase A CLAIM   = `INSERT NULL 占位（operation="plans.generate"）+ 独立 COMMIT` ⇒ 唯一索引在生成之前裁决所有权；
+                    抢不到只读赢家的回执，读不到 ⇒ 现成 409，**绝不进 generate_plans**
+  Phase B EXECUTE = `generate_plans(...)` 写的 plan_versions 行 + `audit` + 占位 `NULL → completed 回执（含响应正文）`
+                    在**同一次** `engine.begin()` 提交里；异常 ⇒ 一行 durable 都不留，NULL 占位留着
+  签名材料 = journey_id + continuation_id + planning_mode + candidate_count + place_ids（少一项就会被当同一请求回放）
+  无 mission_id 且无 key ⇒ 今天的形状逐字节不变（向后兼容是判据之一，不是假设）
+  复用现成语义、不新增第三套失败表达：错误全部走 `error()` 的 code/message_key/trace_id/details/reason_code
+  stale-claim 恢复规则**原样继承上一裁**：不按 expires_at 删占位、不重跑副作用，fail-closed + completed 回执仍 +7d
+
+【七格机械门（每格只问一条，owner 写进名字与断言）】
+  G1 同一 mission 打两次 ⇒ `plan_versions` 行数不增长，两次响应的 id 列表**逐位相同**（判在行上，不判状态码）
+  G2 响应丢失但服务端已提交：在"回执未填"处注入故障 ⇒ 未填态可被下一发读出、只回 409/等待，**不重跑生成**；
+     已填态 ⇒ 回放同一正文（两态必须可区分，这是 claim-first 的正面读数）
+  G3 清 storage / 第二设备：只带 mission_id（不带任何客户端键）再打一发 ⇒ 仍回放同一结果
+     （这格是"键服务端可派生"的直接断言；换 A 方案时它同样要过）
+  G4 同 mission 换意图（planning_mode / candidate_count / place_ids 任一不同）⇒ 现成 409 那句，
+     门内用**自带字面副本**逐字 `==` 比（不用 `in`，也不 import 产品常量），且不留新 plan 行
+  G5 无 mission_id 无 key ⇒ 响应键集与今天等值、行数按旧语义增长（证明我没偷偷改默认路径）
+  G6 不新增错误码：静态扫本笔 diff 未引入新 code 字面量；失败面仍是 `error()` 一族
+  G7 owner 可读回（Q12）：feed 投影里该 continuation 的事件带 `mission_id` 与 `continuation_id`，
+     且**同一事件里**指回它产出的 plan id 列表 ⇒ 断言在投影字段上，不靠时间戳对齐（也不新增 GET 路由）
+
+【反突变（每臂逐轮 + 每轮自带 control 绿与 byte-exact 还原，按 Q13 口径）】
+  K1 退回"生成完再写回执"（非 claim-first）   ⇒ 必红：G1、G2
+  K2 continuation 键改成随机/时间戳铸          ⇒ 必红：G3（并预期 G1 继续绿 ⇒ 两格不测同一件事）
+  K3 从签名里摘掉 place_ids                    ⇒ 必红：G4
+  K4 投影里删掉 mission_id/continuation_id      ⇒ 必红：G7（并证 0 命中不是空断言：先给一条它该抓的样本）
+  K5 把 409 换成自造 500/新码                   ⇒ 必红：G6，且 G1/G2 继续绿
+  K6 Phase B 的回填改成"另一次提交"（拆同生同死）⇒ 必红：G2
+
+【A/B 与分诊口径】（沿用今天已收的那套，不另立）
+  基线 = 落地当时按具名尖重取的父树；两棵各自 `git archive` 导出 + 逐文件核对导出字节==提交字节；各 3 轮；
+  `only_in_candidate` 非空时先做聚焦分诊（同一 nodeid 两棵树各 3 轮：候选恒红且基线恒绿才叫回归），
+  判级只写 MET / MET-WITH-NAMED-SWIMMER / NOT MET，**不写"0 新红"**。
+  交付带三元组 (exact_sha, nodeid, run_shape)；`claimed_result` 我自己最多写 claimed，`derived` 归 HJ-P3；
+  候选落 `agent/f-*`（不直写权威线），附 GitHub https `ls-remote` 回读行；
+  证据路径按 ORD-0275 升级后的守卫命名（任何一段不含 _live/_preview/token/secret/… 与 .db/.pem/.key/.bak 等），
+  一次性新 SQLite + 一次性具名端口，跑完真杀端口、删临时库并断言不存在。
+
+【我不自己决定的两件事】（写了就不算我悄悄扩射程）
+  1) `agent-feed` 是 `order_by(created_at, id).limit(...)` **升序取最老 N 条**：journey 事件一多，
+     刚产生的 continuation 事件会被截掉 ⇒ G7 在长 journey 上会"字段有但读不到"。
+     修排序/加游标会动到别人的读面语义，我不单方改；请裁：(甲) 本单只证"字段存在且可指回"，
+     把截断具名成独立余项；(乙) 另开一枚 feed 序列表述的单。我按你裁的那条做，不两样都做。
+  2) `mission_id` 放请求体（我的默认，理由：它是签名材料，放进 header 就得再造一套词汇）；
+     若仲裁要 header，我就同时改 `GeneratePlansRequest`/契约两处并回来一句，不自己选。
+```
+```
+现场：0 demo/reset、0 写用户库、0 打印凭据；两笔 0262 提交未动、权威线 c79e2b4 未碰。
+等裁的两件事在正文末（feed 升序截断的归属、mission_id 放 body 还是 header）。
+标记 F-ORD0272-DESIGN-@2026-09-24T10:40+08
+```
+
 ## commander 收货 HJ-P1 @2026-09-24T10:3x+08 —— **0274 B2 实测 RED ⇒ B 的 SW 修复写权按仲裁口径解锁**；0269 第四格也实测 RED（HJ-P1 代交）；两枚证据我都外读复算过
 
 ### ① 0274 B 臂第一次真读数：B1 MET / **B2 RED** / B3 MET（我外读复算）
@@ -41933,3 +42114,17 @@ side log）一律带 `_postreboot` 后缀另发 ⇒ **零覆盖**；`evidence/or
 
 **交回的话**：三条件成立、尺未动、两遍一致 ⇒ 0263 的 CLOSED 不再等我这一侧；剩下的是你落账，
 以及 0271-B 里那枚 UNKNOWN_FAILURE 反控的归属。
+
+### B c01d72a3 · ORD-0267 定形重取 第 1 段（新代基线：装过的客户端那一半已被 0268 关掉了） @10:43+08 —— **只读；不改产品字节；不开写码窗口。**本段的结论是：我 09-23 那份定形所依赖的基线在当前代**已经不成立**，所以射程必须重切。
+
+```text
+代       尖 c79e2b4f4efe414dba22a071a7136ae10b5c84aa（含 0263 第五态 + 0268 预缓存修复）；旧定形量在 d2665e2…；我这轮自己 build dist_ord0267b，precache 8 条
+面       我的 loopback :4445 + 一次性 profile 两个（装过的 / 从未访问的）；未碰 :4781/:4782/:8693、隧道、cnx proxy、_live、_preview；demo/reset 0 次
+装过的客户端整站下线  3 条路径 ['/v8/hub', '/', '/v8/discover'] -> 全部 navigation 200、controlled=True、app 挂载=True、precache 条目 [8]（含 /index.html）
+从未访问的冷客户端    1 条 -> ['page.goto: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:4445/v8/hub']；url_after 全为 chrome-error、controlled 全 False
+⇒ 结论     0267 原症状对『装过壳的客户端』已不复现；被超期的旧读数我在件里具名保留（不覆盖、不删）；剩下给 0267 的只有『冷客户端』那一族 —— 而它此刻**没有本产品字节可服务**，『渲染点什么』在产品侧做不到；能做的是首访预缓存**只成功一半**那种形状 -> 第 2 段量它
+自我更正   驱动里我按 probe_up.json 找文件而探针自己拼了 phase 后缀 -> 收据第一版把两格记成 missing；已在件内具名说明，只重排装配、未重测、未改一个数
+交付       evidence/ord0267-coldboot-laneB/ 6/6 件 40 位回读 PROVEN（发布器 rc=0 我也读 REFUSED 文本）
+```
+
+下一段（同一条单内）：冷启三臂 —— clean 首访 / 一枚 css 500 首访 / worker 本身 500 首访，各自再断站复访，看会不会留下『半套代』还声称可用。**与 0274 的边界我照抄仲裁 5805553583：B1/B2/B3 是 HJ-P1 的仪器面，他已交 B1 MET / B2 RED / B3 MET；我不预占 SW 写权，只在定形件里指出 B2 那一格里 scriptURL 那一层目前无人量过。**
