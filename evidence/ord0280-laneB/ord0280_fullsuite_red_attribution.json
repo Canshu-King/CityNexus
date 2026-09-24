@@ -1,0 +1,53 @@
+{
+ "at": "2026-09-25T07:59:45+08:00",
+ "order": "ORD-0280 · 全量套里落在我改的那个文件上的两枚红 —— 归因",
+ "lane": "B c01d72a3",
+ "the_two_reds": [
+  "e2e/qoder-ai-sheet-blocked.spec.ts :: ord0104-ai-sheet-examples-follow-the-destination",
+  "e2e/qoder-ai-sheet-blocked.spec.ts :: ord0134-ai-sheet-actions-stay-inside-the-visible-viewport"
+ ],
+ "observed_in": "the whole-suite run (ord0280_fullsuite2.out), which is still running and is NOT part of any claim I make about 0280",
+ "standalone_ab": {
+  "A_fixed_tree": {
+   "result": "3 passed (29.4s)",
+   "provenance": {
+    "authoritative": true,
+    "suite": "current-product",
+    "runId": "attrib01",
+    "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+    "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+    "frontendPort": 4383,
+    "backendPort": 8133,
+    "databaseUrl": "sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_attrib01.db",
+    "ai": "disabled",
+    "reuseExistingServer": false,
+    "workers": 1,
+    "retries": 0,
+    "recordedAt": "2026-09-24T23:57:24.189Z",
+    "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4383 backend=:8133 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_attrib01.db ai=disabled reuseExistingServer=false"
+   }
+  },
+  "B_unfixed_tree_HEAD_1": {
+   "result": "3 passed (26.2s)",
+   "provenance": {
+    "authoritative": true,
+    "suite": "current-product",
+    "runId": "attrib02",
+    "python": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+    "pythonResolved": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+    "frontendPort": 4384,
+    "backendPort": 8134,
+    "databaseUrl": "sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_attrib02.db",
+    "ai": "disabled",
+    "reuseExistingServer": false,
+    "workers": 1,
+    "retries": 0,
+    "recordedAt": "2026-09-24T23:58:06.623Z",
+    "provenanceLine": "[citynexus e2e] suite=current-product authoritative=true python=D:/moodle/CityNexus/.venv/Scripts/python.exe frontend=:4384 backend=:8134 db=sqlite:///D:/moodle/_qoder_b_lane_20260923/backend/_attrib02.db ai=disabled reuseExistingServer=false"
+   }
+  }
+ },
+ "command_used_to_swap": "git checkout HEAD~1 -- frontend/src/features/planning/PlanWithAiSheet.tsx, then git checkout HEAD -- <same path>; frontend/src verified clean afterwards",
+ "reading": "the two tests pass standalone on BOTH trees, so what they need in order to fail is the suite's prior state, not my change. What this does NOT establish: that they are pre-existing - I did not re-run the whole suite against the unfixed tree, so they stay UNATTRIBUTED rather than being waved away as someone else's.",
+ "claim_this_supports": "0280's own support remains the seven arms (7/7) plus the teeth run (7 failed on the unfixed component) plus the targeted three-file regression (15 passed)."
+}
