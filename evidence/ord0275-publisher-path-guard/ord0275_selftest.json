@@ -1,0 +1,69 @@
+{
+ "schema": "CNX_INSTRUMENT_SELFPTEST_V1",
+ "order": "ORD-0275",
+ "instrument": "live_checks/publish_evidence.py",
+ "instrument_blob_sha1": "d13d5e77b54cd00e8eaa1e8c2b582c7b12806686",
+ "test_file": "test_ord0275_publisher_guard.py",
+ "publisher_source_bytes": 12076,
+ "guard_verdicts": {
+  "LOCAL_NAME_DIRTY_refused": true,
+  "REPO_PATH_DIRTY_refused": true,
+  "CLEAN_CLEAN_allowed": true,
+  "REGRESSION_traversal_refused": true,
+  "REGRESSION_bad_prefix_refused": true,
+  "REGRESSION_control_tool_gate": true,
+  "REGRESSION_sqlite_magic_refused": true,
+  "REGRESSION_secret_content_refused": true,
+  "REFUSAL_NAMES_RULE_NO_SECRET": true
+ },
+ "cli_verdicts": {
+  "LOCAL_NAME_DIRTY_preflight": "refused in-process: FORBIDDEN_NAME_FRAGMENT(scope=local: _live in _live.db-witness.json) -- ACTIONAB",
+  "LOCAL_NAME_DIRTY_rc": 5,
+  "LOCAL_NAME_DIRTY_rc_is_5": true,
+  "LOCAL_NAME_DIRTY_printed_refusal": true,
+  "LOCAL_NAME_DIRTY_no_upload_claim": true,
+  "LOCAL_NAME_DIRTY_stdout_head": "REFUSED (fail-closed, nothing uploaded): FORBIDDEN_NAME_FRAGMENT(scope=local: _live in _live.db-witness.json) -- ACTIONA",
+  "REPO_PATH_DIRTY_preflight": "refused in-process: FORBIDDEN_NAME_FRAGMENT(scope=repo_path: _live in _live_read.json) -- ACTIONABLE",
+  "REPO_PATH_DIRTY_rc": 5,
+  "REPO_PATH_DIRTY_rc_is_5": true,
+  "REPO_PATH_DIRTY_printed_refusal": true,
+  "REPO_PATH_DIRTY_no_upload_claim": true,
+  "REPO_PATH_DIRTY_stdout_head": "REFUSED (fail-closed, nothing uploaded): FORBIDDEN_NAME_FRAGMENT(scope=repo_path: _live in _live_read.json) -- ACTIONABL"
+ },
+ "mutation_arms": {
+  "M1_repo_path_guard_removed": {
+   "repo_path_dirty_now_allowed": true,
+   "local_name_still_refused": true,
+   "clean_still_allowed": true,
+   "regressions_still_held": true
+  },
+  "M2_local_only_regression": {
+   "repo_path_dirty_now_allowed": true,
+   "local_name_still_refused": true,
+   "clean_still_allowed": true,
+   "regressions_still_held": true
+  }
+ },
+ "checks": {
+  "cell1_LOCAL_NAME_DIRTY_refused": true,
+  "cell1_cli_rc5": true,
+  "cell1_cli_named_refusal_and_zero_put": true,
+  "cell2_REPO_PATH_DIRTY_refused": true,
+  "cell2_cli_rc5": true,
+  "cell2_cli_named_refusal_and_zero_put": true,
+  "cell3_CLEAN_CLEAN_positive_control": true,
+  "cell4_traversal": true,
+  "cell4_bad_prefix": true,
+  "cell4_control_tool_gate": true,
+  "cell4_sqlite_magic": true,
+  "cell4_secret_content": true,
+  "cell5_single_helper_both_scopes": true,
+  "cell6_zero_put_in_refusal_paths": true,
+  "cell7_refusal_names_rule_not_secret": true,
+  "killer_M1_repo_path_guard_removed_is_caught": true,
+  "killer_M2_local_only_regression_is_caught": true,
+  "mutants_do_not_break_other_cells": true
+ },
+ "derived_result": "ALL_GREEN",
+ "note": "derived_result is computed from the cells above; the red team re-derives independently (B-1)."
+}
