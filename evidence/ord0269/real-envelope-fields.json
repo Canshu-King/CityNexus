@@ -1,0 +1,18 @@
+{
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0269 — real agent-feed envelope field names (hard requirement: pin keys from a real payload, never guess)",
+ "at": "2026-09-24T08:5x+08",
+ "source": "GET http://127.0.0.1:4781/api/v1/journeys/22222222-2222-4222-8222-222222222222/agent-feed?limit=200 (release surface, read-only GET)",
+ "envelope_top_keys": ["journey_id", "source", "events"],
+ "event_envelope_keys": ["actor_id", "actor_type", "decision", "entity_id", "entity_type", "event_type", "facts", "id", "journey_id", "proposal_id", "reason_codes", "source", "summary", "timestamp", "tool", "trace_id", "type"],
+ "pinned_facts": {
+  "agent.mission.created": {"facts_keys": ["mission_id", "event_id", "requested_autonomy"], "entity_id_is_mission_id": true},
+  "agent_run_started": {"facts_keys": ["run_id", "mission_id", "model"], "event_type_has_underscores_not_dots": true},
+  "agent.run.completed": {"facts_keys": ["run_id", "mission_id", "status", "outcome"], "status_example": "COMPLETED"}
+ },
+ "derivation_rule_used_by_journeyContinuation.ts": {
+  "marker_links": "marker.missionId == facts.mission_id on agent.mission.created (exact string equality)",
+  "run_observed": "∃ agent.run.completed with facts.mission_id == marker.missionId -- its facts.status is quoted verbatim in diagnostics, NOT translated into 'mission terminal is readable' (mission status itself is not a feed field today)",
+  "note": "agent_run_started / agent.run.completed use different spellings on purpose; both carry facts.mission_id, which is the join key"
+ }
+}
