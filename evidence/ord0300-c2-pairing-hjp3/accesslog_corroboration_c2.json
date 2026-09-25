@@ -1,0 +1,149 @@
+{
+ "generated_at_local": "2026-09-25T21:50:19+0800",
+ "question": "does the product own uvicorn access log agree, leg by leg, with the proxy audit lines the token pairing was built from and with what the page read",
+ "cases": [
+  {
+   "arm_file": "arm_t90_t90_lock_C2-191014.json",
+   "run_id": "C2-191014",
+   "measured_on_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "journey_id": "e0840633-aeb1-4f6c-8d56-709365307ac5",
+   "access_log_file": "backend_access.log",
+   "log_lines_naming_this_journey": 15,
+   "write_legs": [
+    {
+     "leg": "agent/commands",
+     "pair_id": "hjp3c2-75d0be21dad147fd",
+     "audit_status": 200,
+     "audit_bytes": 7147,
+     "pair_id_spelled_this_way_because": "the guard pattern QUOTED_JSON_SECRET",
+     "page_saw_status": 200,
+     "access_log_lines_for_this_leg": 1,
+     "access_log_statuses": [
+      200
+     ],
+     "log_line": "INFO:     127.0.0.1:64881 - \"POST /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/agent/commands HTTP/1.1\" 200 OK",
+     "one_leg_one_line_and_three_statuses_agree": true
+    },
+    {
+     "leg": "plans/generate",
+     "pair_id": "hjp3c2-985043c111c84ce1",
+     "audit_status": 500,
+     "audit_bytes": 21,
+     "pair_id_spelled_this_way_because": "the guard pattern QUOTED_JSON_SECRET",
+     "page_saw_status": 500,
+     "access_log_lines_for_this_leg": 1,
+     "access_log_statuses": [
+      500
+     ],
+     "log_line": "INFO:     127.0.0.1:64887 - \"POST /api/v1/journeys/e0840633-aeb1-4f6c-8d56-709365307ac5/plans/generate HTTP/1.1\" 500 Internal Server Error",
+     "one_leg_one_line_and_three_statuses_agree": true
+    }
+   ],
+   "leg_that_answered_500": "plans/generate",
+   "card_painted": "SKIPPED_EXTERNAL_DEPENDENCY",
+   "detail_regions_in_dom": 1,
+   "every_leg_agrees": true
+  },
+  {
+   "arm_file": "arm_old_old_lock_C2-214340.json",
+   "run_id": "C2-214340",
+   "measured_on_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "journey_id": "957cfaec-d57b-4e07-b0e3-01b84955b2ef",
+   "access_log_file": "backend_access_old.log",
+   "log_lines_naming_this_journey": 14,
+   "write_legs": [
+    {
+     "leg": "agent/commands",
+     "pair_id": "hjp3c2-6dcedbeb74324cc8",
+     "audit_status": 200,
+     "audit_bytes": 7147,
+     "pair_id_spelled_this_way_because": "the guard pattern QUOTED_JSON_SECRET",
+     "page_saw_status": 200,
+     "access_log_lines_for_this_leg": 1,
+     "access_log_statuses": [
+      200
+     ],
+     "log_line": "INFO:     127.0.0.1:56843 - \"POST /api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/agent/commands HTTP/1.1\" 200 OK",
+     "one_leg_one_line_and_three_statuses_agree": true
+    },
+    {
+     "leg": "plans/generate",
+     "pair_id": "hjp3c2-44d380ef105d430f",
+     "audit_status": 500,
+     "audit_bytes": 21,
+     "pair_id_spelled_this_way_because": "the guard pattern QUOTED_JSON_SECRET",
+     "page_saw_status": 500,
+     "access_log_lines_for_this_leg": 1,
+     "access_log_statuses": [
+      500
+     ],
+     "log_line": "INFO:     127.0.0.1:56849 - \"POST /api/v1/journeys/957cfaec-d57b-4e07-b0e3-01b84955b2ef/plans/generate HTTP/1.1\" 500 Internal Server Error",
+     "one_leg_one_line_and_three_statuses_agree": true
+    }
+   ],
+   "leg_that_answered_500": "plans/generate",
+   "card_painted": "SKIPPED_EXTERNAL_DEPENDENCY",
+   "detail_regions_in_dom": 1,
+   "every_leg_agrees": true
+  }
+ ],
+ "old_tip_lock_runs": {
+  "runs": [
+   {
+    "file": "arm_old_old_lock_C2-183632.json",
+    "run_id": "C2-183632",
+    "per_leg_pairing": false
+   },
+   {
+    "file": "arm_old_old_lock_C2-183723.json",
+    "run_id": "C2-183723",
+    "per_leg_pairing": false
+   },
+   {
+    "file": "arm_old_old_lock_C2-183817.json",
+    "run_id": "C2-183817",
+    "per_leg_pairing": false
+   },
+   {
+    "file": "arm_old_old_lock_C2-184018.json",
+    "run_id": "C2-184018",
+    "per_leg_pairing": true,
+    "leg_with_500": "agent/commands",
+    "card": "NETWORK",
+    "detail_regions": 0
+   },
+   {
+    "file": "arm_old_old_lock_C2-184643.json",
+    "run_id": "C2-184643",
+    "per_leg_pairing": true,
+    "leg_with_500": "plans/generate",
+    "card": "SKIPPED_EXTERNAL_DEPENDENCY",
+    "detail_regions": 1
+   },
+   {
+    "file": "arm_old_old_lock_C2-214340.json",
+    "run_id": "C2-214340",
+    "per_leg_pairing": true,
+    "leg_with_500": "plans/generate",
+    "card": "SKIPPED_EXTERNAL_DEPENDENCY",
+    "detail_regions": 1
+   }
+  ],
+  "paired_runs": 3,
+  "legs_seen": [
+   "agent/commands",
+   "plans/generate"
+  ],
+  "cards_seen": [
+   "NETWORK",
+   "SKIPPED_EXTERNAL_DEPENDENCY"
+  ]
+ },
+ "which_proves_identity": "the token, not the log line: the marker is minted where the answer is made (c2proxy.py:47) and reaches three readers that never share memory, while an access-log line carries no id at all",
+ "why_some_logs_are_missing": "c2_rig.py opened every backend on one shared access-log filename, so each arm truncated the last one; only the final arm of that era (the 90d29a17 run) still has lines, in backend_access.log. c2_rig_r2.py now writes one log per generation, and arm C2-214340 is a fresh old-tip run made with that fix. The arm that lifted the challenged cell (C2-184018) has no log of its own - and its token pairing does not need one",
+ "verdict": {
+  "every_leg_in_every_logged_arm_has_one_line_and_agreeing_statuses": true,
+  "the_500_leg_of_each_case_is_the_leg_the_audit_and_the_log_both_name": true,
+  "ALL_HOLD": true
+ }
+}
