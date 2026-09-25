@@ -1,0 +1,346 @@
+{
+ "ord0310-arms-receipt-r4.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-arms-receipt-r4.json - byte-identical already on the branch (d86e0e7ba757fbf18a0ba8d065b482b46a0b7bc1)",
+  "bytes": 21496
+ },
+ "ord0310-arms-receipt-r5.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-arms-receipt-r5.json - byte-identical already on the branch (1c9a4599816afce169b69222cccb6587304b74fb)",
+  "bytes": 24786
+ },
+ "ord0310-backend-readings-r2.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-backend-readings-r2.json - byte-identical already on the branch (74d4c0ea276c1126f4f4302e474f61d906606bec)",
+  "bytes": 2053
+ },
+ "ord0310-backend-readings-r3.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-backend-readings-r3.json - byte-identical already on the branch (89588274ba0180b51f3e26fb789f33ddbcd7a24f)",
+  "bytes": 2053
+ },
+ "ord0310-erratum-r1.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 6916 | remote size 6916 | sha1 bb0e1c1506157593",
+  "bytes": 6916
+ },
+ "ord0310-ledger-block-erratum-r1.md": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 5864 | remote size 5864 | sha1 b9b9a80e282c81a4",
+  "bytes": 5864
+ },
+ "ord0310-ledger-block-r2.md": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-ledger-block-r2.md - byte-identical already on the branch (320084ace903d1c195f2fc036768ffbab6278c35)",
+  "bytes": 15511
+ },
+ "ord0310-ledger-block-r3.md": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-ledger-block-r3.md - byte-identical already on the branch (39d5079158fd8018a35ece12fbaa1cd691be7254)",
+  "bytes": 16734
+ },
+ "ord0310-left-right-count-trap.out": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-left-right-count-trap.out - byte-identical already on the branch (ee03cf3206ff6f8e0138050c10d2be8fe9e26d91)",
+  "bytes": 521
+ },
+ "ord0310-mergetree-tip-x-candidate-r2.out": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-mergetree-tip-x-candidate-r2.out - byte-identical already on the branch (8db66d7493f634f8e4f9a4a217fc3c963b30db6a)",
+  "bytes": 485
+ },
+ "ord0310-mergetree-tip-x-candidate-r3.out": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-mergetree-tip-x-candidate-r3.out - byte-identical already on the branch (f39d52e81e0fb9a0a1f4f772debdd5d36c40ce88)",
+  "bytes": 485
+ },
+ "ord0310-mergetree-tip-x-previous-ref.out": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-mergetree-tip-x-previous-ref.out - byte-identical already on the branch (73cafd8de3e1a36ebd31fe767ab52d7b77a09e30)",
+  "bytes": 41
+ },
+ "ord0310-path-disjointness-r2.tsv": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-path-disjointness-r2.tsv - byte-identical already on the branch (d74dbd49ff8975b05020d0984dcc128d23f2af34)",
+  "bytes": 897
+ },
+ "ord0310-path-disjointness-r3.tsv": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-path-disjointness-r3.tsv - byte-identical already on the branch (b8bc20e7a980c443719c74fba3a3f17a1c65d69f)",
+  "bytes": 2292
+ },
+ "ord0310-post-body-r2.md": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-post-body-r2.md - byte-identical already on the branch (da843bf4b6b3155debe75701a9444c1882d24eee)",
+  "bytes": 13430
+ },
+ "ord0310-q38r2-on-receipt-r2.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-q38r2-on-receipt-r2.json - byte-identical already on the branch (64c7fd6398fb025b1feae8278a32bc96ec6e2150)",
+  "bytes": 12127
+ },
+ "ord0310-q38r2-on-receipt-r3.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-q38r2-on-receipt-r3.json - byte-identical already on the branch (5c59548f0031d6fde4f7e18edd24c16d94a141bc)",
+  "bytes": 12111
+ },
+ "ord0310-q38r2-on-receipt-r3b.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 12112 | remote size 12112 | sha1 5c05265d9ae1a44c",
+  "bytes": 12112
+ },
+ "ord0310-q43r3-on-block-erratum-r1.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 595 | remote size 595 | sha1 875fbeff37ccc6c6",
+  "bytes": 595
+ },
+ "ord0310-q43r3-on-block-r2.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-q43r3-on-block-r2.json - byte-identical already on the branch (9d04379b6cb3795e954aff51bf355936359ca356)",
+  "bytes": 588
+ },
+ "ord0310-q43r3-on-block-r3.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-q43r3-on-block-r3.json - byte-identical already on the branch (75ea55056e5750241cff9f4950245e598b076fe8)",
+  "bytes": 588
+ },
+ "ord0310-q43r3-on-post-r2.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-q43r3-on-post-r2.json - byte-identical already on the branch (131ddc226caa23c79db0acc8302960fc529d0a7b)",
+  "bytes": 585
+ },
+ "ord0310-q43r4b-on-block-erratum-r1.json": {
+  "exit": 7,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "69f407d1ff31a84e6f99401b)\n   \nINITIAL_GET_FAILED(URLError) - fail-closed, no PUT attempted. body=<urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)>",
+  "bytes": 562
+ },
+ "ord0310-q43r4b-on-block-r2.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-q43r4b-on-block-r2.json - byte-identical already on the branch (bfbc4a1fe4e77b82a735c9ffa80aad997cf4d763)",
+  "bytes": 576
+ },
+ "ord0310-q43r4b-on-block-r3.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-q43r4b-on-block-r3.json - byte-identical already on the branch (411c64372bf3605748c0b29c887e6cc00e2cac6e)",
+  "bytes": 576
+ },
+ "ord0310-q43r4b-on-post-r2.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-q43r4b-on-post-r2.json - byte-identical already on the branch (2600ff44d31bad0353f050b2d184ddb48df2e314)",
+  "bytes": 559
+ },
+ "ord0310-readback-r5.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 52058 | remote size 52058 | sha1 01d9f0d92b560d72",
+  "bytes": 52058
+ },
+ "ord0310-signal-vs-deadline-proof.out": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-signal-vs-deadline-proof.out - byte-identical already on the branch (eaa24028b6be59cb92ea10516a910567bd37ed62)",
+  "bytes": 1469
+ },
+ "ord0310-tip-read-r2.out": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-tip-read-r2.out - byte-identical already on the branch (0e19d401a3174edfd204c03bca81c8e8e0435682)",
+  "bytes": 1617
+ },
+ "ord0310-tip-read-r3.out": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-tip-read-r3.out - byte-identical already on the branch (98f27ad4dc936c6d6561952b0a91a46d4b9c5aa3)",
+  "bytes": 1617
+ },
+ "ord0310-tool-gauge-landed-block-r2.py": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-tool-gauge-landed-block-r2.py - byte-identical already on the branch (76e76aa1418988f3c14dda9d764276f3c3a4b6e8)",
+  "bytes": 2356
+ },
+ "ord0310-tool-kill-arms-r2.py": {
+  "exit": 1,
+  "fresh_path": false,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "one\\Lib\\urllib\\request.py\", line 1347, in do_open\n    raise URLError(err)\nurllib.error.URLError: <urlopen error [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1010)>",
+  "bytes": 14811
+ },
+ "ord0310-tool-make-block-r4.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 25614 | remote size 25614 | sha1 5e6441b12a2e61bd",
+  "bytes": 25614
+ },
+ "ord0310-tool-make-post-r4.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 30667 | remote size 30667 | sha1 ea4361387c8d752f",
+  "bytes": 30667
+ },
+ "ord0310-tool-make-receipt-r4.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 42470 | remote size 42470 | sha1 615d899b36ebd2c5",
+  "bytes": 42470
+ },
+ "ord0310-tool-pub-names-r5.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 8864 | remote size 8864 | sha1 48a4cc5e490226b9",
+  "bytes": 8864
+ },
+ "ord0310-tool-publish.py": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-tool-publish.py - byte-identical already on the branch (08bf5229f6a52077b99ef49a37fb92d5e9536f4c)",
+  "bytes": 2715
+ },
+ "ord0310-tool-readback-r3.py": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-tool-readback-r3.py - byte-identical already on the branch (702fe9e35a39d45d977614f390c08ff6e4c4bc81)",
+  "bytes": 6429
+ },
+ "ord0310-tool-signal-proof.py": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310-tool-signal-proof.py - byte-identical already on the branch (1508fb18f149ddcace4497e896dc49a15062b5fb)",
+  "bytes": 3581
+ },
+ "ord0310-tool-stage-pub-r5.py": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 7271 | remote size 7271 | sha1 51f46eb83454887d",
+  "bytes": 7271
+ },
+ "ord0310_keyless_deadline_receipt_r2.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310_keyless_deadline_receipt_r2.json - byte-identical already on the branch (35e40da15ef65b024b10269cb3774faca77f9641)",
+  "bytes": 34150
+ },
+ "ord0310_keyless_deadline_receipt_r3.json": {
+  "exit": 0,
+  "fresh_path": false,
+  "identical_skipped": true,
+  "refused": [],
+  "proof_line": "SKIP   evidence/ord0288-keyless-deadline/ord0310_keyless_deadline_receipt_r3.json - byte-identical already on the branch (df1c18a4456314b633018e31da48ea3c4cf0dac6)",
+  "bytes": 37187
+ },
+ "ord0310_keyless_deadline_receipt_r3b.json": {
+  "exit": 0,
+  "fresh_path": true,
+  "identical_skipped": false,
+  "refused": [],
+  "proof_line": "PROOF (git blob sha1 equality): BYTE-LEVEL MATCH   local bytes 37233 | remote size 37233 | sha1 c92e565bc5466ff8",
+  "bytes": 37233
+ }
+}
