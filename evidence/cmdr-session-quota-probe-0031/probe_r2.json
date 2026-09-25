@@ -1,0 +1,99 @@
+{
+ "schema": "CNX_CMDR_SESSION_QUOTA_PROBE_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T00:31:31+0800",
+ "what": "record-level (not substring) read of each session's JSONL to say who is quota-blocked right now",
+ "method": "type==assistant + displayErrorCode/isApiErrorMessage at record level; then compare newest error timestamp against newest content-bearing record",
+ "sessions": {
+  "B c01d72a3": {
+   "jsonl": "c01d72a3-8bae-43d9-8491-5b300bd43797.jsonl",
+   "path": "C:\\Users\\仓鼠王\\.qoder\\projects\\D--moodle\\c01d72a3-8bae-43d9-8491-5b300bd43797.jsonl",
+   "api_error_records": 11,
+   "last_error_at": "2026-09-25T15:52:31.114Z",
+   "last_error_code": "110",
+   "last_content_at": "2026-09-25T16:31:14.673Z",
+   "alive_now": true,
+   "last_write_local": "00:31:14"
+  },
+  "F 8ccd71d8": {
+   "jsonl": "8ccd71d8-51d2-4f3f-a6b3-bfe7bc6a4510.jsonl",
+   "path": "C:\\Users\\仓鼠王\\.qoder\\projects\\D--moodle\\8ccd71d8-51d2-4f3f-a6b3-bfe7bc6a4510.jsonl",
+   "api_error_records": 18,
+   "last_error_at": "2026-09-25T15:31:12.936Z",
+   "last_error_code": "110",
+   "last_content_at": "2026-09-25T16:18:12.427Z",
+   "alive_now": true,
+   "last_write_local": "00:18:16"
+  },
+  "D e345b9d6": {
+   "jsonl": "e345b9d6-c2a1-4ed2-8fd6-9c9099d57bd5.jsonl",
+   "path": "C:\\Users\\仓鼠王\\.qoder\\projects\\D--moodle\\e345b9d6-c2a1-4ed2-8fd6-9c9099d57bd5.jsonl",
+   "api_error_records": 19,
+   "last_error_at": "2026-09-25T15:34:30.013Z",
+   "last_error_code": "110",
+   "last_content_at": "2026-09-25T16:18:04.164Z",
+   "alive_now": true,
+   "last_write_local": "00:18:09"
+  },
+  "E d2305848": {
+   "jsonl": "d2305848-0281-4e92-9735-6ca66c065884.jsonl",
+   "path": "C:\\Users\\仓鼠王\\.qoder\\projects\\D--moodle\\d2305848-0281-4e92-9735-6ca66c065884.jsonl",
+   "api_error_records": 6,
+   "last_error_at": "2026-09-24T19:36:59.372Z",
+   "last_error_code": "no_healthy_account",
+   "last_content_at": "2026-09-25T15:11:51.372Z",
+   "alive_now": true,
+   "last_write_local": "23:11:51"
+  },
+  "HJ-P3 aad2d1f2": {
+   "jsonl": "aad2d1f2-4de9-406b-a5df-afa0e2bcea58.jsonl",
+   "path": "C:\\Users\\仓鼠王\\.qoder\\projects\\D--moodle\\aad2d1f2-4de9-406b-a5df-afa0e2bcea58.jsonl",
+   "api_error_records": 10,
+   "last_error_at": "2026-09-24T19:42:40.072Z",
+   "last_error_code": 500,
+   "last_content_at": "2026-09-25T16:17:18.582Z",
+   "alive_now": true,
+   "last_write_local": "00:17:32"
+  },
+  "cmdr 494abfd7": {
+   "jsonl": "494abfd7-5a79-4cc1-8487-e873818a2db3.jsonl",
+   "path": "C:\\Users\\仓鼠王\\.qoder\\projects\\D--moodle\\494abfd7-5a79-4cc1-8487-e873818a2db3.jsonl",
+   "api_error_records": 33,
+   "last_error_at": "2026-09-25T03:04:31.942Z",
+   "last_error_code": "110",
+   "last_content_at": "2026-09-25T16:31:29.681Z",
+   "alive_now": true,
+   "last_write_local": "00:31:29"
+  },
+  "watchdog 42d1a6fa": {
+   "jsonl": "42d1a6fa-7040-4508-bf0a-53562a79572b.jsonl",
+   "path": "C:\\Users\\仓鼠王\\.qoder\\projects\\D--moodle\\42d1a6fa-7040-4508-bf0a-53562a79572b.jsonl",
+   "api_error_records": 2,
+   "last_error_at": "2026-09-24T19:36:25.834Z",
+   "last_error_code": 500,
+   "last_content_at": "2026-09-25T16:31:29.469Z",
+   "alive_now": true,
+   "last_write_local": "00:31:29"
+  }
+ },
+ "still_blocked": [],
+ "alive": [
+  "B c01d72a3",
+  "F 8ccd71d8",
+  "D e345b9d6",
+  "E d2305848",
+  "HJ-P3 aad2d1f2",
+  "cmdr 494abfd7",
+  "watchdog 42d1a6fa"
+ ],
+ "why_not_substring": "my own session shows the strings `110` and 'Billing daily count exceeded' because I print lane posts and this probe's code into tool inputs; a substring count there would report phantom quota errors (that is how a watchdog reading can overcount).",
+ "discipline": {
+  "sessions_messaged": 0,
+  "files_written": 1,
+  "product_bytes_changed": 0,
+  "credential_values_printed": 0
+ },
+ "claim_kind": "log_determined",
+ "claimed_result": "at 2026-09-26T00:31:31+0800: still quota-blocked = none ; alive (newest content newer than newest error) = ['B c01d72a3', 'F 8ccd71d8', 'D e345b9d6', 'E d2305848', 'HJ-P3 aad2d1f2', 'cmdr 494abfd7', 'watchdog 42d1a6fa']",
+ "derived_result": null
+}
