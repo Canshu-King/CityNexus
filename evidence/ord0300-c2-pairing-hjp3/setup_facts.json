@@ -1,0 +1,97 @@
+{
+ "ran_at_local": "2026-09-25T18:25:01+0800",
+ "repo": "D:\\moodle\\CityNexus",
+ "repo_head_read_only": "a9c2504274dd3284b1a98b6707f7c4c9f7071cc3",
+ "tips_used": {
+  "old": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "new": "5aff3722d5c36c760a424f5fea5c3a771298f9ac"
+ },
+ "exports": {
+  "old": {
+   "which": "old",
+   "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "snap": "D:\\moodle\\_hjp3_0300c2_0925\\snap_old",
+   "sheet_blob_recomputed_40_hex": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+   "sheet_blob_expected": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+   "sheet_blob_matches_the_generation": true,
+   "sheet_bytes": 49063,
+   "unguarded_detail_reads": 2,
+   "guarded_detail_reads": 0
+  },
+  "new": {
+   "which": "new",
+   "tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+   "snap": "D:\\moodle\\_hjp3_0300c2_0925\\snap_new",
+   "sheet_blob_recomputed_40_hex": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+   "sheet_blob_expected": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+   "sheet_blob_matches_the_generation": true,
+   "sheet_bytes": 50281,
+   "unguarded_detail_reads": 0,
+   "guarded_detail_reads": 2
+  }
+ },
+ "mutant": {
+  "dir": "D:\\moodle\\_hjp3_0300c2_0925\\snap_mut",
+  "lines_that_differ": [
+   147,
+   155
+  ],
+  "edits": 2,
+  "only_file_changed_vs_snap_new": [
+   "frontend\\src\\features\\planning\\PlanWithAiSheet.tsx"
+  ],
+  "sheet_sha256_new": "342cb8e3e43d132f899456982efb6f9a5704bd497a2195c0d0d55b665a8b8e53",
+  "sheet_sha256_mut": "c223d781d6bcff75123b1a87152c2b07681f796229d249d2d2e88393e845e97d",
+  "sheet_blob_mut": "2838fbb69d55671f4cb14d2fd1424dd1a2be064d",
+  "hardlink_free_note": "copytree, no junctions inside src"
+ },
+ "bundles": {
+  "old": {
+   "which": "old",
+   "outdir": "D:\\moodle\\_hjp3_0300c2_0925\\dist_old",
+   "asset": "index--q2k569d.js",
+   "bytes": 1253228,
+   "sha256_64_hex": "a55e8bcebe3cae47eacc485fb19c4381211ac6b437de2a495ce5f59493d4bf93",
+   "markers": {
+    "network_card_wording": true,
+    "device_note_for_network_branch": false,
+    "http_branch_wording": true,
+    "technical_detail_wording": true
+   },
+   "build_rc": 0
+  },
+  "new": {
+   "which": "new",
+   "outdir": "D:\\moodle\\_hjp3_0300c2_0925\\dist_new",
+   "asset": "index-BTzTyrqI.js",
+   "bytes": 1253398,
+   "sha256_64_hex": "9d117a64cd1d52f64d5eff3b04e55272805598390574702369d3cbe04a5f6057",
+   "markers": {
+    "network_card_wording": true,
+    "device_note_for_network_branch": true,
+    "http_branch_wording": true,
+    "technical_detail_wording": true
+   },
+   "build_rc": 0
+  },
+  "mut": {
+   "which": "mut",
+   "outdir": "D:\\moodle\\_hjp3_0300c2_0925\\dist_mut",
+   "asset": "index-BOGNlWDY.js",
+   "bytes": 1253396,
+   "sha256_64_hex": "84bdb9750b71187a733673a646870b53d9a8140ffff4842e8db60ffb20e7f689",
+   "markers": {
+    "network_card_wording": true,
+    "device_note_for_network_branch": true,
+    "http_branch_wording": true,
+    "technical_detail_wording": true
+   },
+   "build_rc": 0
+  }
+ },
+ "bundle_discriminators": {
+  "new_has_the_device_note_and_old_does_not": true,
+  "mut_bundle_differs_from_new_bundle": true,
+  "old_new_mut_all_three_are_different_bytes": true
+ }
+}
