@@ -1,0 +1,242 @@
+{
+ "at": "2026-09-25T16:20:39+0800",
+ "base_named_by_the_order": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "cells": [
+  {
+   "A_merge_tree_raw": {
+    "command": "git merge-tree --write-tree dc964086c9d412573ac19d70b24b30e6c3ee6168 02da4602bfd4f7af38154a26dd345aba9f69876d",
+    "conflict_section": [
+     "NONE"
+    ],
+    "predicted_tree": "77e0ee47e7786527cda7c992aa1718a4a0057ac1",
+    "raw_output_file": "ord0304-mergetree-B-0281-keyed-write-deadline.out",
+    "raw_output_lines": 1,
+    "raw_output_sha256": "d62340cc5fa8051986adaf85e1e5a6a96690df77a6703d115c6e5c9dbca30b1e",
+    "rc": 0
+   },
+   "B_file_level": {
+    "ancestry": {
+     "base_named_in_the_order_is_ancestor_of_candidate": true,
+     "base_used_is_ancestor_of_candidate": true,
+     "candidate_ahead_of_tip": "1",
+     "candidate_behind_tip": "10",
+     "candidate_commits_since_own_base": "1"
+    },
+    "candidate_paths": [
+     "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+     "frontend/src/features/execution/LiveRecovery.tsx",
+     "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+     "frontend/src/lib/readDeadline.ts",
+     "frontend/src/lib/writeDeadline.ts"
+    ],
+    "counts": {
+     "candidate": 5,
+     "intersection": 0,
+     "tip": 17
+    },
+    "intersection": [],
+    "tip_paths_since_base": [
+     "frontend/e2e/qoder-continuation-owner.spec.ts",
+     "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+     "frontend/e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+     "frontend/src/api/journeyContinuation.ts",
+     "frontend/src/app/V8Experience.tsx",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "frontend/src/i18n/LocaleContext.tsx",
+     "review/ledger_block_e345b9d6_0298.md",
+     "review/ledger_block_e345b9d6_0298b.md",
+     "review/ledger_block_e345b9d6_0298c.md",
+     "review/ledger_insert_delivery_e345b9d6.py",
+     "review/make_post_0298.py",
+     "review/ord0269_0273_gate_round.py",
+     "review/ord0278_0253_kill_arms.py",
+     "review/ord0298_gate_batch.py",
+     "review/rewire_0269_cell1_for_0278.py",
+     "review/wire_0278_i18n.py"
+    ]
+   },
+   "C_per_file_judgement": [
+    "NOT_APPLICABLE_intersection_empty"
+   ],
+   "D_criterion": "B (empty intersection), corroborated by A (rc=0, no conflict section)",
+   "base_actually_used": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "base_as_named_in_the_order": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "candidate_ref_read_back": "02da4602bfd4f7af38154a26dd345aba9f69876d",
+   "derived_from": "merge_tree.raw_output_sha256=d62340cc5fa80519 · predicted_tree=77e0ee47e7786527cda7c992aa1718a4a0057ac1 · intersection=0 · candidate_paths_sha1=984c253404f8",
+   "id": "B-0281-keyed-write-deadline",
+   "verdict": "CLEAN_REPARENT",
+   "why": "B c01d72a3 的 02da4602bfd4f7af38154a26dd345aba9f69876d 只带自有 1 笔、领先当前尖 1 笔、落后 10 笔；它动 5 条路径、当前尖自 90d29a172… 以来动 17 条，交集 0 条；`git merge-tree --write-tree dc964086c… 02da4602b…` rc=0、预测树 77e0ee47e7786527cda7c992aa1718a4a0057ac1、conflict 段 NONE ⇒ 判据来自 B（交集为空），A 的 rc=0 一致背书"
+  },
+  {
+   "A_merge_tree_raw": {
+    "command": "git merge-tree --write-tree dc964086c9d412573ac19d70b24b30e6c3ee6168 6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1",
+    "conflict_section": [
+     "NONE"
+    ],
+    "predicted_tree": "2899ca1a909598bded1617be226b021ea3ab0491",
+    "raw_output_file": "ord0304-mergetree-F-0296-startup-door-r2.out",
+    "raw_output_lines": 1,
+    "raw_output_sha256": "abc1fab1bcf124687792ff09a70d9acdb431c1df085de738fd644d898069a7b3",
+    "rc": 0
+   },
+   "B_file_level": {
+    "ancestry": {
+     "base_named_in_the_order_is_ancestor_of_candidate": false,
+     "base_used_is_ancestor_of_candidate": true,
+     "candidate_ahead_of_tip": "1",
+     "candidate_behind_tip": "11",
+     "candidate_commits_since_own_base": "1"
+    },
+    "candidate_paths": [
+     "backend/tests/test_qoder_ord0296_write_deadline.py"
+    ],
+    "counts": {
+     "candidate": 1,
+     "intersection": 0,
+     "tip": 18
+    },
+    "intersection": [],
+    "tip_paths_since_base": [
+     "frontend/e2e/qoder-continuation-owner.spec.ts",
+     "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+     "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+     "frontend/e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+     "frontend/src/api/journeyContinuation.ts",
+     "frontend/src/app/V8Experience.tsx",
+     "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "frontend/src/i18n/LocaleContext.tsx",
+     "review/ledger_block_e345b9d6_0298.md",
+     "review/ledger_block_e345b9d6_0298b.md",
+     "review/ledger_block_e345b9d6_0298c.md",
+     "review/ledger_insert_delivery_e345b9d6.py",
+     "review/make_post_0298.py",
+     "review/ord0269_0273_gate_round.py",
+     "review/ord0278_0253_kill_arms.py",
+     "review/ord0298_gate_batch.py",
+     "review/rewire_0269_cell1_for_0278.py",
+     "review/wire_0278_i18n.py"
+    ]
+   },
+   "C_per_file_judgement": [
+    "NOT_APPLICABLE_intersection_empty"
+   ],
+   "D_criterion": "B (empty intersection), corroborated by A (rc=0, no conflict section)",
+   "base_actually_used": "6d041dcce11d05f28a55abadd40717f321b4db38",
+   "base_as_named_in_the_order": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "candidate_ref_read_back": "6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1",
+   "derived_from": "merge_tree.raw_output_sha256=abc1fab1bcf12468 · predicted_tree=2899ca1a909598bded1617be226b021ea3ab0491 · intersection=0 · candidate_paths_sha1=d1926915821a",
+   "id": "F-0296-startup-door-r2",
+   "verdict": "CLEAN_REPARENT",
+   "why": "F 8ccd71d8 的 6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1 只带自有 1 笔、领先当前尖 1 笔、落后 11 笔；它动 1 条路径、当前尖自 6d041dcce… 以来动 18 条，交集 0 条；`git merge-tree --write-tree dc964086c… 6c20f04b1…` rc=0、预测树 2899ca1a909598bded1617be226b021ea3ab0491、conflict 段 NONE ⇒ 判据来自 B（交集为空），A 的 rc=0 一致背书"
+  },
+  {
+   "D_criterion": "B (per-file blob equality between base and tip, read from the lane's own receipt)",
+   "derived_from": "receipt_blob=10e13c7935ab17ae027a69897b27c0b0fe97ec87 · drifted=0 · identical=2 · backend_deps_all_same=True",
+   "detail": {
+    "backend_dependencies": {
+     "backend/app/db/session.py": {
+      "base": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+      "tip": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678"
+     },
+     "backend/app/db/write_deadline.py": {
+      "base": "ba2393c3da30d6941587869be26cd303389b7f46",
+      "tip": "ba2393c3da30d6941587869be26cd303389b7f46"
+     },
+     "backend/app/main.py": {
+      "base": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+      "tip": "871aec006a3f6482f7a2700a8baeff8c25f7690f"
+     }
+    },
+    "backend_dependencies_all_same": true,
+    "cells_in_receipt": 11,
+    "drifted": [],
+    "identical_between_base_and_tip": [
+     "backend/tests/test_qoder_ord0272_continuation.py",
+     "backend/tests/test_qoder_ord0287_k8_carrier.py"
+    ],
+    "measured_on_claimed": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "per_test_file": {
+     "backend/tests/test_qoder_ord0272_continuation.py": {
+      "base": {
+       "blob": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+       "bytes": 24561,
+       "object_type": "blob",
+       "path": "backend/tests/test_qoder_ord0272_continuation.py",
+       "sha256_of_blob_bytes": "d101e0da73c10cead9e4cfb4f75a337d9da7fc2f91f7d39a3b48bd2271d8caaa"
+      },
+      "tip": {
+       "blob": "efa783397e6105ca8f15be9a5701e60e5ace0296",
+       "bytes": 24561,
+       "object_type": "blob",
+       "path": "backend/tests/test_qoder_ord0272_continuation.py",
+       "sha256_of_blob_bytes": "d101e0da73c10cead9e4cfb4f75a337d9da7fc2f91f7d39a3b48bd2271d8caaa"
+      }
+     },
+     "backend/tests/test_qoder_ord0287_k8_carrier.py": {
+      "base": {
+       "blob": "894c6d54e345dabdc4050a38f413fdaaa1a92748",
+       "bytes": 11252,
+       "object_type": "blob",
+       "path": "backend/tests/test_qoder_ord0287_k8_carrier.py",
+       "sha256_of_blob_bytes": "50b081a7aa1632fbcaa7c74eb915e6d9400d33d432a001782fc4c04f1d50592d"
+      },
+      "tip": {
+       "blob": "894c6d54e345dabdc4050a38f413fdaaa1a92748",
+       "bytes": 11252,
+       "object_type": "blob",
+       "path": "backend/tests/test_qoder_ord0287_k8_carrier.py",
+       "sha256_of_blob_bytes": "50b081a7aa1632fbcaa7c74eb915e6d9400d33d432a001782fc4c04f1d50592d"
+      }
+     }
+    },
+    "receipt_blob_matches_the_one_named_in_the_order": true,
+    "receipt_blob_read_back": "10e13c7935ab17ae027a69897b27c0b0fe97ec87",
+    "receipt_bytes": 39296,
+    "receipt_path": "evidence/ord0303-generation-rerun/ord0303_generation_rerun_r1.json",
+    "receipt_sha256": "776f98025bb7485dd262145756dbaf7a6cd7ef6f5bec45bbee6c3870d53f0473",
+    "scope_actually_run": [
+     "tests/test_qoder_ord0272_continuation.py",
+     "tests/test_qoder_ord0287_k8_carrier.py"
+    ]
+   },
+   "id": "F-0303-carry-check",
+   "verdict": "CARRIES_TO_CURRENT_TIP",
+   "why": "从 F 自己的收据 blob 10e13c7935ab17ae027a69897b27c0b0fe97ec87（39296 B）读出 measured_on=90d29a172e186aab6e6cb138ab4583ccf93bfa68 与 scope_actually_run 2 支；这 2 支测试文件在基座与当前尖之间字节相同的 2 支、漂移 0 支；它依赖的三枚后端件（main.py、db/write_deadline.py、db/session.py）两侧 blob 全等 = True；收据里 cells 计数 = 11 格（同一枚 blob `10e13c7935ab17ae027a69897b27c0b0fe97ec87` 内可复算）⇒ 这一格判 `CARRIES_TO_CURRENT_TIP`，不需重跑；判据来自 B 的文件级 blob 等式"
+  }
+ ],
+ "discipline": {
+  "authority_line_moved": 0,
+  "credentials_printed": 0,
+  "demo_reset": 0,
+  "live_preview_db_reads_writes": 0,
+  "product_files_written": 0,
+  "refs_pushed": 0
+ },
+ "genealogy_note": "the order calls 90d29a17 the 祖父 of F's `ord0296-write-deadline-f-r2`; measured: that candidate's parent is 6d041dcc, which is 90d29a17's own parent ⇒ 90d29a17 is not above it in the chain (`merge-base --is-ancestor 90d29a17 <cand>` = False). Nothing in the verdict depends on the label; the file sets were taken from the real parent.",
+ "generatedBy": "e345b9d6",
+ "order": "ORD-0304",
+ "scope": "read-only fork prediction; 0 refs written, 0 product code touched",
+ "tip_equals_what_the_order_named": true,
+ "tip_ref_read_back": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "tip_under_prediction": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "triples": [
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "ORD-0304 :: B-0281-keyed-write-deadline :: CLEAN_REPARENT",
+   "nodeid_root": "D:\\moodle\\_qoder_d_lane_20260923",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923 (read-only git object queries; 0 ref writes), commands: `git merge-tree --write-tree dc964086c9d412573ac19d70b24b30e6c3ee6168 <candidate>` + `git diff --name-only <base> <rev>` + `git cat-file -t/-s <rev>:<path>`; remote tips read by `git ls-remote https://github.com/Canshu-King/CityNexus.git`; verdict derived from counts printed in this cell, not from a sentence"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "ORD-0304 :: F-0296-startup-door-r2 :: CLEAN_REPARENT",
+   "nodeid_root": "D:\\moodle\\_qoder_d_lane_20260923",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923 (read-only git object queries; 0 ref writes), commands: `git merge-tree --write-tree dc964086c9d412573ac19d70b24b30e6c3ee6168 <candidate>` + `git diff --name-only <base> <rev>` + `git cat-file -t/-s <rev>:<path>`; remote tips read by `git ls-remote https://github.com/Canshu-King/CityNexus.git`; verdict derived from counts printed in this cell, not from a sentence"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "ORD-0304 :: F-0303-carry-check :: CARRIES_TO_CURRENT_TIP",
+   "nodeid_root": "D:\\moodle\\_qoder_d_lane_20260923",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923 (read-only git object queries; 0 ref writes), commands: `git merge-tree --write-tree dc964086c9d412573ac19d70b24b30e6c3ee6168 <candidate>` + `git diff --name-only <base> <rev>` + `git cat-file -t/-s <rev>:<path>`; remote tips read by `git ls-remote https://github.com/Canshu-King/CityNexus.git`; verdict derived from counts printed in this cell, not from a sentence"
+  }
+ ]
+}
