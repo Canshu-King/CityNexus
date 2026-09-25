@@ -321,7 +321,6 @@ export function JourneyTrialSetup({
   onCreate,
   onUseSealedDemo,
   sealedDemoUnavailable,
-  sealedDemoDetail,
   onCancel,
   busy,
   message,
@@ -335,7 +334,9 @@ export function JourneyTrialSetup({
   onUseSealedDemo: () => Promise<void>;
   /* ORD-0209: named fail-closed reason when the sealed demo cannot be addressed. */
   sealedDemoUnavailable?: string | null;
-  /** ORD-0273: technical facts (raw message, error name) for data-* only -- never user copy. */
+  /** ORD-0273 wrote this as "technical facts for data-* only".  ORD-0339 (Q71) withdrew that: an
+   *  exception's name and sentence may not enter the DOM in any position, so this screen no longer
+   *  reads it.  The type stays optional so the call site compiles unchanged. */
   sealedDemoDetail?: { message: string; name: string } | null;
   onCancel?: () => void;
   busy: boolean;
@@ -1237,15 +1238,17 @@ export function JourneyTrialSetup({
       {/* Secondary, de-emphasised: the sealed demo is not the golden path. */}
       {sealedDemoUnavailable && (
         /* ORD-0209 5: fail-closed with the reason, never a silent creation fallback.
-           ORD-0273-TEXT: the sentence is an i18n key; the raw error facts ride in data-*.
+           ORD-0273-TEXT: the sentence is an i18n key, never the error's own words.
+           ORD-0339 (Q71): those words may not ride in `data-*` either.  An attribute is not on
+           screen, but it is in the DOM, and from there a screen reader, an export or any later
+           render can speak it.  What may land here is a Q64 field this device measured, with its
+           contract-name anchor (Q70) - and nothing that comes out of an exception.
            ORD-0273-ACTION: an executable next step travels with the failure -- retry the same
            read here; creating one's own trip stays available below regardless. */
         <div
           className="trial-city-warning"
           data-testid="trial-sealed-unavailable"
           role="alert"
-          data-error-name={sealedDemoDetail?.name ?? ""}
-          data-error-message={sealedDemoDetail?.message ?? ""}
         >
           <p>{sealedDemoUnavailable}</p>
           <button
