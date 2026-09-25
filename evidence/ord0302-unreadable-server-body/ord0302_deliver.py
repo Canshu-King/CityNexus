@@ -30,6 +30,9 @@ PUBLISHER = pathlib.Path(r"D:\moodle\_qoder_f_run\publish_evidence_fixed.py")
 LIVE = pathlib.Path(r"D:\moodle\_qoder_cmdr_ref_20260921\live_checks")
 Q38 = LIVE / "receipt_cell_derivation_check_r2.py"
 Q43S = [LIVE / "claim_coordinate_check_r3.py", LIVE / "claim_coordinate_check_r4b.py"]
+CLOSING = (LIVE / "CLOSING_LINE.txt").read_text(encoding="utf-8").strip()
+if not CLOSING or "\n" in CLOSING:
+    raise SystemExit("the standing closing line is not a single non-empty line in " + str(LIVE))
 PY = r"D:\moodle\CityNexus\.venv\Scripts\python.exe"
 GH, BRC = "Canshu-King/CityNexus", "commander/control"
 WS = "Canshu-King/CityNexus-Workspace"
@@ -91,28 +94,30 @@ FIXED = MATRIX["runs"]["fixed"]
 sheet_text = subprocess.run(["git", "-C", str(LANE), "show", f"{CAND}:{SHEET}"], capture_output=True).stdout.decode("utf-8")
 bugged_text = subprocess.run(["git", "-C", str(LANE), "show", f"{BASE}:{SHEET}"], capture_output=True).stdout.decode("utf-8")
 ANCHORS = {
-    "unsafe_detail_read_1": "  const detail = (body as { detail?: unknown } | null)?.detail;",
-    "unsafe_detail_read_2": "  const detail = (body as { detail?: unknown } | null)?.detail;",
+    "guarded_detail_read": "  const detail = (body as { detail?: unknown } | null)?.detail;",
+    "unguarded_detail_read": "  const detail = (body as { detail?: unknown }).detail;",
     "body_null_for_unparseable": "const body = await response.json().catch(() => null);",
     "not_ok_branch": "      if (!response.ok) {",
-    "network_write": "          status: \"NETWORK\",",
+    "network_write": 'status: "NETWORK"',
     "details_gate": "{(result?.failureReason || result?.summary) && (",
 }
 lines_of = lambda text, needle: [i + 1 for i, l in enumerate(text.splitlines()) if needle in l]
-measured = {}
+# Both trees are measured, because the order names line numbers off the generation that still has the
+# defect and the candidate's own comments shift everything below them.  A number that was copied rather
+# than re-read would be exactly the kind of claim this receipt is not allowed to make.
+measured, measured_base = {}, {}
 for name, needle in ANCHORS.items():
-    n = lines_of(sheet_text, needle)
-    if name in ("unsafe_detail_read_1", "unsafe_detail_read_2"):
-        if len(n) != 2:
-            raise SystemExit(f"expected the two safe reads at one place each, got {n}")
-        measured[name] = n[0] if name.endswith("1") else n[1]
-    else:
-        if len(n) != 1:
-            raise SystemExit(f"anchor {name} is not unique on the candidate: {n}")
-        measured[name] = n[0]
-unsafe_before = lines_of(bugged_text, "  const detail = (body as { detail?: unknown }).detail;")
-if len(unsafe_before) != 2:
-    raise SystemExit(f"the bugged blob does not carry exactly two unsafe reads: {unsafe_before}")
+    n, nb = lines_of(sheet_text, needle), lines_of(bugged_text, needle)
+    want = 2 if "detail_read" in name else 1
+    for tree, hits in (("candidate", n), ("base", nb)):
+        if len(hits) > want:
+            raise SystemExit(f"anchor {name} occurs {len(hits)} times on the {tree}: {hits}")
+    measured[name], measured_base[name] = n, nb
+unsafe_before = measured_base["unguarded_detail_read"]
+if len(unsafe_before) != 2 or len(measured["guarded_detail_read"]) != 2 \
+        or measured["unguarded_detail_read"] or measured_base["guarded_detail_read"]:
+    raise SystemExit(f"the guard did not move where expected: base={unsafe_before} "
+                     f"candidate={measured['guarded_detail_read']}")
 
 cells = []
 
@@ -197,24 +202,36 @@ for shape in [s for s in MATRIX["runs"] if s != "fixed"]:
 
 root = {"base_tip": BASE, "bugged_sheet_blob": BUGGED, "candidate_sheet_blob": SHEET_BLOB,
         "predecessor_order": "ORD-0280", "this_order": "ORD-0302",
-        "unsafe_reads_at": unsafe_before, "safe_reads_at": [measured["unsafe_detail_read_1"],
-                                                             measured["unsafe_detail_read_2"]],
-        "body_null_line": measured["body_null_for_unparseable"], "not_ok_line": measured["not_ok_branch"],
-        "network_write_line": measured["network_write"], "details_gate_line": measured["details_gate"],
+        "unsafe_reads_at": unsafe_before, "safe_reads_at": measured["guarded_detail_read"],
+        "body_null_line": measured_base["body_null_for_unparseable"],
+        "not_ok_line": measured_base["not_ok_branch"],
+        "network_write_line": measured_base["network_write"],
+        "details_gate_line": measured_base["details_gate"],
+        "candidate_lines_of_the_same_anchors": {k: measured[k] for k in
+                                                ("body_null_for_unparseable", "not_ok_branch",
+                                                 "network_write", "details_gate")},
+        "status_written": "NETWORK",
         "previous_generation_sheet_blob": PREV_GEN, "spec_blob": SPEC_BLOB,
+        # Every line number this cell names is written as `path:line`, which is what the claim gate accepts
+        # as a coordinate a reader can resolve; a bare "531" pins nothing once the file moves.
+        "unsafe_read_coords": [f"{SHEET}:{n}" for n in unsafe_before],
+        "safe_read_coords": [f"{SHEET}:{n}" for n in measured["guarded_detail_read"]],
+        "coord_body_null": f"{SHEET}:{measured_base['body_null_for_unparseable']}",
+        "coord_not_ok": f"{SHEET}:{measured_base['not_ok_branch']}",
+        "coord_network": f"{SHEET}:{measured_base['network_write']}",
+        "coord_details_gate": f"{SHEET}:{measured_base['details_gate']}",
         "rulers": {"q38": blob_of(Q38), "q43": [blob_of(p) for p in Q43S]}}
 root_why = ("root cause, re-measured on this tree rather than copied from the order: in the bugged blob "
             + BUGGED + " the two envelope helpers read the detail field without a guard on `body` itself, at "
-            "lines " + ", ".join(str(x) for x in root["unsafe_reads_at"]) + "; the leg that reaches them sets "
-            "`body = null` for an unparseable answer at line " + str(root["body_null_line"]) + ", the refusal "
-            "branch starts at line " + str(root["not_ok_line"]) + ", and the throw is caught where "
-            "status is written as " + str(root["network_write_line"]) + " with the note nulled, which is also "
-            "the line the detail block depends on at " + str(root["details_gate_line"]) + ". On the candidate "
-            "the same two reads are guarded, now at lines " + ", ".join(str(x) for x in root["safe_reads_at"])
-            + " (sheet blob " + SHEET_BLOB + ", spec blob " + SPEC_BLOB + "). The generation before "
-            "0280 (" + PREV_GEN + ") did not throw there -- it answered with an invented status string, which "
-            "is the defect 0280 removed; both states are wrong in different ways and only the "
-            "body-has-a-JSON-object reading separates them.")
+            + " and ".join(root["unsafe_read_coords"]) + "; the leg that reaches them sets `body = null` for an "
+            "unparseable answer at " + root["coord_body_null"] + ", the refusal branch starts at "
+            + root["coord_not_ok"] + ", and the throw is caught where status is written as NETWORK at "
+            + root["coord_network"] + " with the note nulled, which is also the line the detail block depends "
+            "on at " + root["coord_details_gate"] + ". On the candidate the same two reads are guarded, now at "
+            + " and ".join(root["safe_read_coords"]) + " (sheet blob " + SHEET_BLOB + ", spec blob "
+            + SPEC_BLOB + "). The generation before ORD-0280 (sheet blob " + PREV_GEN + ") did not throw there "
+            "-- it answered with an invented status string, which is the defect that order removed; both states "
+            "are wrong in different ways and only the body-has-a-JSON-object reading separates them.")
 cells.append({"cell": "root cause and the coordinates it was measured at", "claimed_result": "MET",
               "derived_result": None, "why": C.cite(root_why, root, PATS) and root_why, "readings": root})
 
@@ -428,7 +445,8 @@ lines += ["", "```text",
           "反件      " + "；".join(
               f"{c['readings']['shape']}→只 {c['readings']['arm_that_flipped']} 红={c['claimed_result']}"
               f"，其余 {set(c['readings']['outcomes'].get(a) for a in ARMS_ALL if a != c['readings']['arm_that_flipped'])}"
-              f"（digest {c['readings']['digest_before']}→{c['readings']['digest_running']}）" for c in cas)
+              f"（digest {c['readings']['digest_before']}→{c['readings']['digest_running']}，"
+              f"report blob {c['readings']['report_blob']}）" for c in cas)
           + "。四枚各自只咬自己那一格：N2 在 ca_unsafe_read 下仍绿（带 error.message 的正文在读 detail 之前就返回了），"
             "N1 在 ca_null_on_network 下仍绿，五枚里除 X1 之外在两枚 X-5 反件下仍绿 —— "
             "全红只能证明我改坏了别处",
@@ -443,7 +461,8 @@ lines += ["", "```text",
           + " 的 digests）",
           "```"]
 ledger_txt = WORK / "ord0302_ledger_block.txt"
-ledger_txt.write_text("\n".join(lines) + "\n", "utf-8", newline="\n")
+LEDGER_BODY = "\n".join(lines) + "\n" + CLOSING + "\n"
+ledger_txt.write_text(LEDGER_BODY, "utf-8", newline="\n")
 
 
 def gate(path):
@@ -471,7 +490,7 @@ if MARK.encode("utf-8") in before:
     print("ledger anchor already present; not appending twice")
 else:
     with open(str(LEDGER), "a", encoding="utf-8", newline="\n") as fh:
-        fh.write("\n".join(lines) + "\n")
+        fh.write(LEDGER_BODY)
     print("ledger appended:", len(LEDGER.read_bytes()) - len(before), "B")
 
 first = ("B c01d72a3 → 号令者 494abfd7：ORD-0302 交候选 " + CAND + "（基座 " + BASE
@@ -498,7 +517,7 @@ body = "\n".join([first, ""] + lines[1:] + [
     "我不拿推理替读数）；X-5 我也只在 vite dev 上量到——按你的代次口径，手机上那一代是否真有这个空洞仍是 "
     "NOT-DEPLOYED-OBSERVED，换代后请 HJ-P3 或红队在目标代重读一次；手机换代与切换归你，我没动 dist/index/预览后端。",
     "",
-    "竭尽所能的替qoder铺路",
+    CLOSING,
 ])
 bus_txt = WORK / "ord0302_bus_body.txt"
 bus_txt.write_text(body, "utf-8", newline="\n")
@@ -511,5 +530,5 @@ for k, v in outs.items():
 made = api(f"https://api.github.com/repos/{WS}/issues/1/comments", {"body": body}, verb="POST")
 back = api(f"https://api.github.com/repos/{WS}/issues/comments/{made['id']}")
 print("bus comment", made.get("id"), "| bytes", len(back.get("body", "")), "| closing line ok:",
-      back.get("body", "").rstrip().endswith("竭尽所能的替qoder铺路"))
+      back.get("body", "").rstrip().endswith(CLOSING))
 (WORK / "ord0302_bus_id.txt").write_text(str(made["id"]), "utf-8", newline="\n")
