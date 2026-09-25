@@ -1,0 +1,213 @@
+{
+ "batch": "batch1",
+ "stamped": "2026-09-25T16:06:44+0800",
+ "run_ids": [
+  "o297r-b3_primary-151812",
+  "o297r-b3_control_partial-151943",
+  "o297r-a_never_reconnects-152057",
+  "o297r-a_control_update_lands-152311"
+ ],
+ "why_superseded": "the instrument of this batch computed the tap decision (hit-test-self, disabled, press point) but pushed only found/tapped into the artifact, so the A arm's 'found on screen, 0 of 3 reached' could not be told apart from a covered button, a disabled button or a dead navigation bar -- three different product facts. These rounds also carry the arm_artifact_correction stamp: their saved arm file had first been copied from b2_<ARM>.json, which belongs to ORD-0297, not to this order.",
+ "instrument_change": "the runner began naming the arm artifact after the run id (b2_<RUN_ID>.json) and the step record began carrying the tap decision fields",
+ "readings_of_these_rounds": [
+  {
+   "run_id": "o297r-b3_primary-151812",
+   "arm": "o297r-b3_primary-151812",
+   "offline_first_bodyChars": 651,
+   "offline_first_marker": "ORD-0297r-next",
+   "offline_first_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "nav_steps": 3,
+   "nav_found": 3,
+   "nav_tapped": 3,
+   "nav_path_changed": 3,
+   "nav_hit_test_was_self": [
+    null,
+    null,
+    null
+   ],
+   "nav_disabled": [
+    null,
+    null,
+    null
+   ],
+   "nav_blocked_by": [],
+   "nav_bodyChars_after_each": [
+    114,
+    271,
+    334
+   ],
+   "reload_bodyChars": 91,
+   "reload_marker": "ORD-0297r-next",
+   "reload_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "origin_html_at_js_urls": []
+  },
+  {
+   "run_id": "o297r-b3_control_partial-151943",
+   "arm": "o297r-b3_control_partial-151943",
+   "offline_first_bodyChars": 0,
+   "offline_first_marker": null,
+   "offline_first_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "nav_steps": 0,
+   "nav_found": 0,
+   "nav_tapped": 0,
+   "nav_path_changed": 0,
+   "nav_hit_test_was_self": [],
+   "nav_disabled": [],
+   "nav_blocked_by": [],
+   "nav_bodyChars_after_each": [],
+   "reload_bodyChars": 0,
+   "reload_marker": null,
+   "reload_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "origin_html_at_js_urls": []
+  },
+  {
+   "run_id": "o297r-a_never_reconnects-152057",
+   "arm": "o297r-a_never_reconnects-152057",
+   "offline_first_bodyChars": 789,
+   "offline_first_marker": null,
+   "offline_first_executed": [
+    "/assets/index--q2k569d.js"
+   ],
+   "nav_steps": 3,
+   "nav_found": 3,
+   "nav_tapped": 0,
+   "nav_path_changed": 0,
+   "nav_hit_test_was_self": [
+    null,
+    null,
+    null
+   ],
+   "nav_disabled": [
+    null,
+    null,
+    null
+   ],
+   "nav_blocked_by": [
+    [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ],
+    [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ],
+    [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   ],
+   "nav_bodyChars_after_each": [
+    789,
+    789,
+    789
+   ],
+   "reload_bodyChars": 91,
+   "reload_marker": "ORD-0297r-next",
+   "reload_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "origin_html_at_js_urls": []
+  },
+  {
+   "run_id": "o297r-a_control_update_lands-152311",
+   "arm": "o297r-a_control_update_lands-152311",
+   "offline_first_bodyChars": 91,
+   "offline_first_marker": "ORD-0297r-next",
+   "offline_first_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "nav_steps": 0,
+   "nav_found": 0,
+   "nav_tapped": 0,
+   "nav_path_changed": 0,
+   "nav_hit_test_was_self": [],
+   "nav_disabled": [],
+   "nav_blocked_by": [],
+   "nav_bodyChars_after_each": [],
+   "reload_bodyChars": 91,
+   "reload_marker": "ORD-0297r-next",
+   "reload_executed": [
+    "/assets/index-jVHM43pf.js"
+   ],
+   "origin_html_at_js_urls": []
+  }
+ ],
+ "what_these_readings_are": "recomputed from these rounds' own artifacts at seal time so a superseded batch stays auditable; they are readings, not verdicts -- no cell was derived from them and neither ruler ran over them",
+ "instrument_that_produced_them": {
+  "per_run_fingerprints": [],
+  "all_runs_same_bytes": false,
+  "hash_of_the_file_at_seal_time_which_is_NOT_this_batch": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643"
+ },
+ "moved_or_missing": {
+  "moved": [
+   "b2_o297r-a_control_update_lands-152311.json",
+   "b2_o297r-a_never_reconnects-152057.json",
+   "b2_o297r-b3_control_partial-151943.json",
+   "b2_o297r-b3_primary-151812.json",
+   "o297r_arm_o297r-a_control_update_lands-152311.json",
+   "o297r_arm_o297r-a_never_reconnects-152057.json",
+   "o297r_arm_o297r-b3_control_partial-151943.json",
+   "o297r_arm_o297r-b3_primary-151812.json",
+   "o297r_requests_o297r-a_control_update_lands-152311.jsonl",
+   "o297r_requests_o297r-a_never_reconnects-152057.jsonl",
+   "o297r_requests_o297r-b3_control_partial-151943.jsonl",
+   "o297r_requests_o297r-b3_primary-151812.jsonl",
+   "o297r_run_o297r-a_control_update_lands-152311.json",
+   "o297r_run_o297r-a_never_reconnects-152057.json",
+   "o297r_run_o297r-b3_control_partial-151943.json",
+   "o297r_run_o297r-b3_primary-151812.json",
+   "o297r_stdout_o297r-a_control_update_lands-152311.json",
+   "o297r_stdout_o297r-a_never_reconnects-152057.json",
+   "o297r_stdout_o297r-b3_control_partial-151943.json",
+   "o297r_stdout_o297r-b3_primary-151812.json"
+  ],
+  "not_present": []
+ },
+ "folder_now_holds": [
+  "b2_o297r-a_control_update_lands-152311.json",
+  "b2_o297r-a_never_reconnects-152057.json",
+  "b2_o297r-b3_control_partial-151943.json",
+  "b2_o297r-b3_primary-151812.json",
+  "o297r_arm_o297r-a_control_update_lands-152311.json",
+  "o297r_arm_o297r-a_never_reconnects-152057.json",
+  "o297r_arm_o297r-b3_control_partial-151943.json",
+  "o297r_arm_o297r-b3_primary-151812.json",
+  "o297r_requests_o297r-a_control_update_lands-152311.jsonl",
+  "o297r_requests_o297r-a_never_reconnects-152057.jsonl",
+  "o297r_requests_o297r-b3_control_partial-151943.jsonl",
+  "o297r_requests_o297r-b3_primary-151812.jsonl",
+  "o297r_run_o297r-a_control_update_lands-152311.json",
+  "o297r_run_o297r-a_never_reconnects-152057.json",
+  "o297r_run_o297r-b3_control_partial-151943.json",
+  "o297r_run_o297r-b3_primary-151812.json",
+  "o297r_stdout_o297r-a_control_update_lands-152311.json",
+  "o297r_stdout_o297r-a_never_reconnects-152057.json",
+  "o297r_stdout_o297r-b3_control_partial-151943.json",
+  "o297r_stdout_o297r-b3_primary-151812.json"
+ ],
+ "field_provenance": {
+  "readings_of_these_rounds.origin_html_at_js_urls": "computed here from the round's own in-artifact 12-event sample of origin traffic, so an empty list in this note is NOT a claim that the origin served no HTML at a .js URL -- the full request log is a separate artifact and the judged receipt reads that one",
+  "instrument_that_produced_them": "the runner began fingerprinting the instrument file only from batch 4; an empty per-run list here means no fingerprint was taken at the time, not that the batch was inconsistent",
+  "stamped": "2026-09-25T16:07:04+0800"
+ }
+}
