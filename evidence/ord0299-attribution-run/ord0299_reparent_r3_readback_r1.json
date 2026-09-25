@@ -1,0 +1,72 @@
+{
+ "at": "2026-09-25T09:36:41+08:00",
+ "lane": "B c01d72a3",
+ "order": "ORD-0299 step 6 (re-parent onto 6d041dcc and make it externally readable)",
+ "branch": "review/0280-attribution-label-r3",
+ "tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "parent": "6d041dcce11d05f28a55abadd40717f321b4db38",
+ "previous_base": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+ "new_base": "6d041dcce11d05f28a55abadd40717f321b4db38",
+ "previous_candidate_left_at": "549ac8f1b20bc04e70eadbd238ade737eefbff01",
+ "ls_remote_line_verbatim": "90d29a172e186aab6e6cb138ab4583ccf93bfa68\trefs/heads/review/0280-attribution-label-r3",
+ "ls_remote_matches_tip": true,
+ "commit_api": {
+  "http": 200,
+  "parents": [
+   "6d041dcce11d05f28a55abadd40717f321b4db38"
+  ],
+  "tree": "18578b7a63d1428c43a2233f6643c662b266d5e5",
+  "parent_is_new_landed_tip_ff_only": true
+ },
+ "patch_id_reparented": "773fb67446445ac37bb7beac8ae0bebd393b47c6",
+ "patch_id_previous_candidate": "773fb67446445ac37bb7beac8ae0bebd393b47c6",
+ "patch_ids_equal": true,
+ "frontend_files_changed_between_the_two_bases": 0,
+ "frontend_files_identical_between_5c4608ce_and_6d041dcc": true,
+ "frontend_diff_name_only_lines": [],
+ "all_files_changed_between_the_two_bases": [
+  "backend/app/core/config.py",
+  "backend/app/db/session.py",
+  "backend/app/db/write_deadline.py",
+  "backend/app/main.py",
+  "backend/tests/test_qoder_ord0296_write_deadline.py"
+ ],
+ "contents_byte_readback": [
+  {
+   "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "remote_blob_sha1": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+   "my_tree_blob": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+   "graded_candidate_blob": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+   "remote_size": 47470,
+   "my_tree_size": 47470,
+   "identical_bytes": true
+  },
+  {
+   "path": "frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+   "remote_blob_sha1": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+   "my_tree_blob": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+   "graded_candidate_blob": "0edae5cf262833e996bbfc3b56f60d0548ca3e3f",
+   "remote_size": 12134,
+   "my_tree_size": 12134,
+   "identical_bytes": true
+  }
+ ],
+ "ruler": {
+  "path": "D:\\moodle\\_qoder_cmdr_ref_20260921\\live_checks\\receipt_cell_derivation_check_r2.py",
+  "blob": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+  "blob_matches_declared": true,
+  "headline": "cells 10 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []",
+  "rc": 0,
+  "green_hard0_soft0": true,
+  "receipt_blob": "02dfbb817e5add8577c4c47a7e898983743b7202"
+ },
+ "arms_not_rerun_because": "the two graded files are the same blobs at both bases (PlanWithAiSheet.tsx c22cf42506a4175db992bde387ed8d9c6f1ffb9d, spec 0edae5cf262833e996bbfc3b56f60d0548ca3e3f) and 5 changed paths between the bases are all under backend/** (named above), so the run evidence still describes these bytes",
+ "push": {
+  "force_used": false,
+  "refs_touched": [
+   "review/0280-attribution-label-r3:review/0280-attribution-label-r3"
+  ]
+ },
+ "verdict": "REMOTE_COORDINATE_PROVEN",
+ "derived_result": null
+}
