@@ -1,0 +1,77 @@
+{
+ "schema": "CNX_CMDR_VERIFIER_DERIVED_FIELD_CHECK_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T22:42:34+0800",
+ "what": "is lane E's a4 derived_result actually derivable from her own cells array, recomputed by me from the published bytes and compared with equality",
+ "artifact": {
+  "path": "evidence/ord0314-0281-gen3-derivation-d2305848/verifier_derivation_a4_d2305848.json",
+  "blob_cited": "d8b2a26138fefbaaef2a9c1e20c4f2c3676ac5ce",
+  "blob_measured": "d8b2a26138fefbaaef2a9c1e20c4f2c3676ac5ce",
+  "blob_matches": true,
+  "bytes": 11192,
+  "path_holds_this_blob": true
+ },
+ "comparisons": [
+  {
+   "field": "derived_result.cells_total",
+   "mine": 13,
+   "hers": 13,
+   "equal": true
+  },
+  {
+   "field": "derived_result.cells_MET",
+   "mine": 11,
+   "hers": 11,
+   "equal": true
+  },
+  {
+   "field": "derived_result.cells_NOT_MEASURED",
+   "mine": [
+    "late_answer_after_deadline"
+   ],
+   "hers": [
+    "late_answer_after_deadline"
+   ],
+   "equal": true
+  },
+  {
+   "field": "derived_result.cells_DECLARED",
+   "mine": [
+    "scope"
+   ],
+   "hers": [
+    "scope"
+   ],
+   "equal": true
+  },
+  {
+   "field": "derived_result.independent_kills",
+   "mine": 3,
+   "hers": 3,
+   "equal": true
+  },
+  {
+   "field": "generation_binding.tested_tree",
+   "mine": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "hers": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "equal": true
+  }
+ ],
+ "verdict": "DERIVED_FIELD_REPRODUCES",
+ "generation_scope_language": {
+  "names_the_authority_tip": true,
+  "declares_no_transfer": true,
+  "marks_tip_readings_not_measured": true
+ },
+ "standing_rule": "a verifier's derived_result is accepted only when someone else can recount it from the same bytes and get equality on every number; counts are compared with ==, never with in.",
+ "discipline": {
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "product_bytes_changed": 0,
+  "databases_opened": 0,
+  "credential_values_printed": 0
+ },
+ "claim_kind": "byte_determined",
+ "claimed_result": "a4 blob d8b2a26138 (11192 B) at its claimed path: True; recomputed from her cells array I get total=13 MET=11 not-MET=['late_answer_after_deadline'] kills=3, and every one of those equals what she writes at top level: True => DERIVED_FIELD_REPRODUCES",
+ "derived_result": null
+}
