@@ -196,6 +196,30 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=e345b9d6 @2026-09-25 14:36+08 —— **ORD-0298 第三跳照令完成：候选重切到基座 `90d29a17…`，新 ref `refs/heads/review/0278-0253-on-90d29a17`，一轮绿 + 一轮拆全部在新代重测（不是携带）**
+（坐标：`refs/heads/review/0278-0253-on-90d29a17` ⇒ `dc964086c9d412573ac19d70b24b30e6c3ee6168`；总线正文 comment 5828015823，其逐字节 = blob `0340d9f018c6fc5c512d92577480053eca584555`。）
+
+**为什么这一跳必须重跑（按你引用的 Q24/Q25，也按红队 5827736408 那条）**：红队派生件 `evidence/ord0298c-on-6d041dcc/verifier_derivation_d2305848.json` blob `21e32170c9cf4ae2344e58b16b1d8f6dd1b7c73b` 判 `dbd0f9d9…` 与当时权威线 diverged ⇒ 不折算。我用子树 oid 复核，结论一致：`git rev-parse 90d29a172e186aab6e6cb138ab4583ccf93bfa68:frontend` = `663b4516bd8d79eecb1ebc7991dd7d3a45fb90c0`，而上一代被测尖 `dbd0f9d9c…:frontend` = `c9623f46cace7a9c069ad9c36bfa395f9ffa790a`，本代新尖 `dc964086c…:frontend` = `a53c7303c6d1513010ff91ecf9c022591c3e513c` ⇒ **三枚各不同，这是真换代**（携带只在 oid 相等时谈得上）。
+
+**重切怎么做到的（可复跑）**：`git rebase --onto 90d29a172… 6d041dcce… review/0278-0253-on-90d29a17` ⇒ 10 笔重放、**0 冲突**；"没冲突"我不当"没串味"，另外查三件：① 我这一腿的两枚 header 仍在（`frontend/src/features/planning/PlanWithAiSheet.tsx:526` 与 `:664` 各一处 `"Idempotency-Key"`）；② 每按一次重新造键的入口仍在守卫之后（同一文件 `:484`、`:485`、`:493`）；③ ORD-0280 的归属标签机器件没被我吃掉（同一文件 `:362`、`:551`、`:612`、`:637`、`:731`、`:744`、`:748`、`:936` 的 `failureReason` 逐处都在）。反向也查：`git diff 6d041dcc… 90d29a172… -- frontend/src/features/planning/PlanWithAiSheet.tsx` 里 header 行命中 **0** ⇒ 0280 没改 header，我没有覆盖它的余地。`npm run typecheck` ⇒ rc=0（同一枚新尖上）。
+
+**新代读数（全钉在 `dc964086c9d412573ac19d70b24b30e6c3ee6168`）**
+- 绿轮 `evidence/ord0298d-on-90d29a17/ord0298d-gate-round-dc96408.json` blob `211c67f88b4360c63c1e4ed1c6284f36b3f354fd`（36,722 B）⇒ `verdict=GREEN`、`problems=0`、14 条三元组 `exact_sha` 全 = 该尖；四枚门 run `run317077 / run317107 / run317144 / run317164`（exit 全 0，同一枚 blob 的 `runs` 里逐条可查）。
+- 同一枚绿轮的收集数：后端 `1244 tests collected in 1.64s`（rc=0），Playwright `Total: 15 tests in 5 files` ⇒ 判据 14（blob `211c67f88b4360c63c1e4ed1c6284f36b3f354fd`）。
+- 拆轮 `evidence/ord0298d-on-90d29a17/ord0278-0253-arms-0298d-on-dc96408.json` blob `457313365eda53e9634ddf522839fe3714d0e86d`（53,650 B）⇒ `claimed_result` **7/7 KILLED**、同键前件 7/7、还原到被测树字节 7/7、`treeUnchangedByThisRun=true`；spec run 14 次 = `run317295 … run317565`（每臂 `triple.run_shape` 内具名）。
+- 红集分布（同一枚 blob `457313365eda53e9634ddf522839fe3714d0e86d`）：4 枚独占（`exclusiveToOwner=true`）+ 3 枚 K253 同割集（各红 3 节点）⇒ **独立击杀份数 = 5** 的现场形状与红队所数一致；`derived_result` 仍归她，我不签级。
+- 逐文件对表（`generation_compare`，同一枚 blob `457313365eda53e9634ddf522839fe3714d0e86d`）：tracked 前端文件 182 / 182 / 184，三方中有一方不同的 11 件，其中不等于冻结树的 6 件；`PlanWithAiSheet.tsx` 相对基座 25 增 / 2 删、相对冻结树 71 增 / 16 删（这正是两代都动的那一枚）。
+
+**两把尺（新代重跑，不引用旧判读）**
+- `91ae8b1ec55f5c19122af11bf775df14580955e4`（Q38 r2）判新臂收据 ⇒ `Q38_GATE_GREEN`、cells 7、硬 0、软 0；原样输出 blob `c419b0e8784dd222c4f5ef2816187925fb235d58`。
+- `e653e597c2e6fd74a5f8d3be65fe60e017b03017`（Q43 r3）判正文 ⇒ `claims checked 34` / `Q43_GATE_CLEAN` / findings 0 / rc 0；原样输出 blob `d88d86962ad39183faa63784aa4b8e23bd2c511d`。两把尺均按 40 位取回、git blob sha1 等值后只读执行，我没有复制、改名或再发布。
+
+**一处读数分歧就地对齐（不是谁错）**：你说 `compare` 是 ahead 10 / behind 1，红队同一句；我自己量 `dbd0f9d9…` 对 `90d29a17…` 得 ahead 9 / behind 1 —— 差的那一笔是 ref 头上我后加的账本块 commit `833c413f9f2adb0f017eec0b4c944fc36f325975`（`review/**`，被测字节不变）。两个数都对，只是分别指"被测尖"与"ref 现头"。
+
+**你 09:49 那笔更正我收了**：点字原本发到了 `d2305848`（红队 E 的会话），正确收件人是 `e345b9d6`；总线里 `@D d2305848` 的标注以你的新账本块作废。这只影响送达标注，不影响我任何一次读数，我也没有因此少跑什么。
+
+**纪律**：`demo/reset` 0 次、`_live/_preview` 库 0 读写、凭据 0 打印、已发布路径 0 覆盖 0 删（新目录 `evidence/ord0298d-on-90d29a17/` 落位前 GET=404，逐件独立 GET 字节级 + git blob sha1 等值）；旧 ref 全停推：`refs/heads/review/0278-0253-on-5c4608ce` = `9023e023c9e8612d2e51cef78ebda6af5d69556f`、`refs/heads/review/0278-0253-on-6d041dcc` = `833c413f9f2adb0f017eec0b4c944fc36f325975`、`refs/heads/review/0278-0253-on-45b0a5e` = `0671704546f9c9ea1d1b57627b059124c7800803`；权威线 0 次移动（`refs/heads/mirror/integration-frontend-apple-pass1` 我只读）。口径：`MANUAL_RESUME / NOT-EXACTLY-ONCE` 未升格；R-SCHEMA-01 仍 `SCHEMA_SOURCE_METHOD_CORRECTED`。
+
 ### SESSION=d2305848 @2026-09-25 14:12+08 —— **ORD-0298c 派生交：D 的 re-run（tested_tree dbd0f9d9、基座 6d041dcc）—— 7/7 KILLED 全从原始轮字段导出；redSet 形状跨三代（06717045/8ccfcf7/dbd0f9d9）逐枚相同 ⇒ 牙齿稳定**；代际绑定写死：dbd0f9d9 与权威线 90d29a17 diverged（ahead 10/behind 1）⇒ Q24 不折算，D 还需一次 re-parent 到 90d29a17 并重跑
 （派生件 21e32170c9cf4ae2344e58b16b1d8f6dd1b7c73b @ evidence/ord0298c-on-6d041dcc/verifier_derivation_d2305848.json；总线 comment 5827736408。两件收据 85929270…/52,884B、861a8f66…/36,498B 核中；tree-map 截断解析不可靠换 contents 直读——记仪器账。D ref 又动到 833c413f（账本块，被测字节不变）。independent_kills=5（4 独占 K278 + 1 复合 K253），跨三代同形。）
 
@@ -432,6 +456,43 @@ only_in_candidate=空 ⇒ 无新增红（回归按具名基线红集合的子集
       `_live`/`_preview` 0 读写、凭据 0 打印。
 待命（不点不动）：若你要在「backend 子树变了」的那一代再确证一次，我在新的 git archive 导出上重跑那 10 格与十臂战役——
   只有子树 sha 变了才有必要，而现在它没变（上面那枚 sha 就是证据）。
+```
+
+**⑥ G11：你点名的那一枚照出了我门的洞，补格后复量**
+
+```text
+两样都补了。先说结论：你字面点名的第一枚（拆掉 `assert_configuration_reachable()` 的调用点）在我原来那十格下**存活**——不是产品没问题，是我的门没有一格看着启动路径。补了第 11 格 G11 之后它才红。
+
+存活那一次（十格、产品码只去括号）：10 passed, 2 warnings in 1.83s; 10 passed, 2 warnings in 1.70s; 10 passed, 2 warnings in 1.41s，red=[]（blob dca33fbf2693652bbdb859ad849cfc2f2c84de40）
+补的那一格走子进程真 import：`import app.main` 在 deadline = busy-1 时必须拒绝并报 DEADLINE_NOT_ABOVE_BUSY_TIMEOUT，在 busy+1 时必须导入成功（双向，缺一个不算）（blob 8cf1a395a9492906db4bf2fe97b5e1592b25e864）
+新门文件：backend/tests/test_qoder_ord0296_write_deadline.py blob f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93（20,366 B，原 deacc9d7483f1b8fd8d24b6e23e586bf402d85f6）；collect-only rc=0、collected=11（blob 325aa4d8ea3eef4ad25dc328f0afd6a6b97196e8）
+控制轮（产品码原样，同一棵树）：11 passed, 2 warnings in 3.01s; 11 passed, 2 warnings in 3.33s; 11 passed, 2 warnings in 3.34s，red=0 ⇒ 这格不是「任何情况都红」的坏格子（blob 8cf1a395a9492906db4bf2fe97b5e1592b25e864）
+M11 复量（只去掉那次调用）：1 failed, 10 passed, 2 warnings in 3.59s; 1 failed, 10 passed, 2 warnings in 3.51s; 1 failed, 10 passed, 2 warnings in 3.50s，三轮红的都是且仅是 test_G11_importing_the_app_is_what_arms_the_door（blob 8cf1a395a9492906db4bf2fe97b5e1592b25e864）
+  拆的行 427：assert_configuration_reachable()   # ORD-0296: refuse to boot a deadline that cannot mean anything；还原 byte-exact True、还原后 blob 871aec006a3f6482f7a2700a8baeff8c25f7690f（blob 8cf1a395a9492906db4bf2fe97b5e1592b25e864）
+  两次跑的 after_blob 不同（85e37d613038eff655953800d9373ced9d781a01 vs a2920c6adb44bbc1bd8aecbb3d88d9ba710b6c5f），我查过：差异只在行尾注释，`MUTANT M11` 之前逐字节相同 ⇒ 不是为了凑红换了反例（blob dca33fbf2693652bbdb859ad849cfc2f2c84de40）
+
+三元组（sha, nodeid, shape）——你问的那两枚加这一枚，都在同一份收据里：
+  M4_startup_door_disabled @ 6d041dcce11d… → ['test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout', 'test_G5_a_scenario_override_moves_one_route_and_names_every_other_case']（2 格）（blob 381c16f7e1007fc6b5fddd525e2466872dba1363）
+  M8_effective_cap_ignores_the_budget @ 6d041dcce11d… → ['test_G5_a_scenario_override_moves_one_route_and_names_every_other_case']（1 格）（blob 381c16f7e1007fc6b5fddd525e2466872dba1363）
+  M11_startup_door_not_wired @ 6c20f04b195f… → test_G11_importing_the_app_is_what_arms_the_door（1 格）（blob 381c16f7e1007fc6b5fddd525e2466872dba1363）
+十臂战役那份不变：survivors=[]、unexpected_red=0、control_rounds_green=True、restore_byte_exact_every_round=True（blob 381c16f7e1007fc6b5fddd525e2466872dba1363）
+
+候选（Q37：旧尖不推，新东西另开一代）：
+  r1（已落地，冻结）6d041dcce11d05f28a55abadd40717f321b4db38；父 6d041dcce11d… 那一枚的父我在铸时读过：90d29a172e18…（blob 325aa4d8ea3eef4ad25dc328f0afd6a6b97196e8）
+  r2（新增 G11 这一代）6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1 → ref `review/ord0296-write-deadline-f-r2`；ls-remote 与 git/ref 两路回读 = True/True；diff 恰好 1 件、产品码 4/4 件未变（blob 325aa4d8ea3eef4ad25dc328f0afd6a6b97196e8）
+  权威尖我一个字没动：True（blob 325aa4d8ea3eef4ad25dc328f0afd6a6b97196e8）
+
+我自己这两次仪表故障，写清楚不藏：
+  ① 第一版 M11 的替换文本引用了未导入的名字 ⇒ 子进程 NameError（rc=1、3 轮 0.2–0.3 s）——那是我反例坏了，不是门的结论；当场作废重做（blob dca33fbf2693652bbdb859ad849cfc2f2c84de40）
+  ② 第一版 G11 缺 `import os/subprocess` ⇒ **控制轮就红**（3 轮 1 failed, 10 passed）；红的格子不能证明任何事，修完才是上面那两条读数（blob 8cf1a395a9492906db4bf2fe97b5e1592b25e864）
+
+落盘：evidence/ord0296-write-deadline-f/ord0296_delivery_receipt_r1.json（blob 381c16f7e1007fc6b5fddd525e2466872dba1363）、evidence/ord0296-write-deadline-f/ord0296_candidate_r2.json（blob 325aa4d8ea3eef4ad25dc328f0afd6a6b97196e8）、evidence/ord0296-write-deadline-f/ord0296_G11_and_M11_r2.json（blob 8cf1a395a9492906db4bf2fe97b5e1592b25e864）、evidence/ord0296-write-deadline-f/ord0296_arm_M11_r1.json（blob dca33fbf2693652bbdb859ad849cfc2f2c84de40）（全部新路径，旧 18 件未动）
+纪律：权威线 0 写入；旧 ref 0 推送（r1 冻结）；demo/reset 0；`_live`/`_preview` 0 读写；凭据 0 打印。
+待你决定：r2 要不要落（只换门文件那一枚 blob）。不落也不影响线上——线上那十格仍然全绿。
+```
+
+```text
+Q43 自查：写入前由他那把尺量过 ⇒ claims 24、findings 0、Q43_GATE_CLEAN；尺本身 q43_ruler_r3_from_commander.py:49 的 DURABLE 形制（坐标一律 40 位 blob）
 ```
 
 ### SESSION=d2305848 @2026-09-25 09:17+08 —— **Q43 尺 r2 红队交：5 枚真咬**——B5 你预测的诱饵 40 位命中（声明只带 md:行号 + 窗口内放另一件收据的 blob ⇒ CLEAN）；B1 全角等号＝让 F1 整条隐身（claims=0）；B3 转述词表 10 短语被 'the lane said'/'据 F' 绕过（0 claims）；B6 两句转述借同一坐标跨节；B4 4 字母常量逃逸。4 枚没咬的记为强度（栅不隐身、10_000 被抓、全角数字被抓、窗口强制）。r3 修法：全角归一化一行 + B5/B6 同根（窗口收紧或同行要求）+ B3 反转 F2 判定方向
@@ -15905,6 +15966,27 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-1452 · Q47=②① 盖章（不切 index，等射程表→改文案→只换一次）＋ ORD-0298d 我独立派生 7/7 ＋ ORD-0303 派给 F ＋ 我第二笔误更正
+
+**Q47 的回字与对位**（总线盖章 `issuecomment-5828091963`；提问在 `issuecomment-5827977086`）：仲裁 14:3x 在窗口回 **②①**。第①问（换代窗口）→ **②** = 先等 HJ-P3 的 ORD-0301 射程表 ⇒ B 依表改文案 ⇒ 落地 ⇒ **只换一次**代 ⇒ 所以现在**不切** `dist/index.html`。第②问（ORD-0272 闭单前置）→ **①**，那一问我只给了"我倾向要（按 Q24）"一种读法 ⇒ 我记作**要重跑**，据此派 ORD-0303；若仲裁本意不同，回一个 ✗ 我立刻撤这单。
+可复算判读点：`grep -aoE 'assets/index-[A-Za-z0-9_-]+\.js' D:/moodle/_qoder_preview_20260920/dist/index.html` 在 14:40:41 打出的仍是 `assets/index-xKIGmoBz.js`（08:36 那一代）；同刻带 Basic 走 tunnel 拿到成功响应（凭据只从 `run/preview_auth.txt` 取用，不落字）。
+
+**ORD-0298d 的机械复核（我自己的读数，不抄车道正文）**：D 的新候选 `refs/heads/review/0278-0253-on-90d29a17` = `dc964086c9d412573ac19d70b24b30e6c3ee6168`（`tested_tree == tooling_commit`），臂收据 `457313365eda53e9634ddf522839fe3714d0e86d`，绿轮 gate `211c67f88b4360c63c1e4ed1c6284f36b3f354fd`。
+```text
+仪器  evidence/ord0298d-cmdr-derivation/derive_arms_commander_r2.py   blob 799f9b43690bb88b4a7f1722bf1ee3f4df742ca6   7,532 B
+派生  evidence/ord0298d-cmdr-derivation/commander_derivation_r1.json  blob 14794d2c78c7099b3797c0bf5587e8f89262cdc1   5,130 B
+结果  七臂 KILLED 由我逐条派生（十一枚布尔全过，`failing_checks` 全空），red sizes [1, 3]，claims agree True，rc 0
+控制  同仪器喂回 ORD-0292 的三枚 blob 与冻结尖 06717045… ⇒ 仍 arms 7 / killed 7 / agree True（⇒ 参数化改写没动判据：正本 `derive_ord0292_commander_r1.py` 一字未改，新文件 `derive_arms_commander_r2.py` 的十一枚 checks 与它逐字相同）
+还欠  `verifier_comparison.present = False`：红队签的是上一代 `dbd0f9d9…`，`dc964086…` 这代还没有 verifier 的 `derived_result`（B-1）⇒ 已点名红队；拿到我就 ff-only 落 ORD-0278 / ORD-0253
+```
+
+**ORD-0303 → F**：在 `90d29a172e186aab6e6cb138ab4583ccf93bfa68` 上重跑 ORD-0272 的九格 + K8 那一臂；先外读尖、每格 `(sha,nodeid,shape)` 与 runId、`derived_result` 留 null、两把尺原样输出随件发布、旧代次件不改。
+
+**我第二笔误更正（链条要留全，别只留结论）**：早上我记"F 欠 `evidence/ord0289-ast-census/write_legs_f.json`"——**是对的**；14:02 我看见另一个目录里有类似件，就宣布"我路径猜错了、F 早就交了"并在 `### CMDR-1404` 作废了早上那笔——**那笔"更正"才是假的**。F 真交那枚是在 14:20（blob `2a2343c67417223f7e447ce1f53a87d3a3b02ea6`，落笔提交 `2d326839fe71`）。⇒ 我的错法：**从"别处有类似东西"推出"你要的那件早已存在"**；唯一合法的存在证明是按那个确切路径取回并重算 blob。这条已升进 `EVIDENCE_INTEGRITY_GATE_V1` 的第①查（Artifact：path + blob + size 一致）。
+
+**常设口径 `EVIDENCE_INTEGRITY_GATE_V1`（源自仲裁 11:19 那轮，我采纳为验收门槛，即刻生效）**：① Artifact：path/blob/size 三者一致，按路径取回重算；② Claim：申报计数 = 观测计数，且写明 scope 与时间戳；③ Validator：每枚布尔 gate 带 positive / negative / mutation 三向；④ Identifier：判据、收据、换代规则里只允许完整 40 位 blob，短前缀只能当显示并标明是显示。
+
+
 ### CMDR-1447 · ORD-0300 亲测收下（我的仪器先误判后修正，r1 错版原样发布）＋ ORD-0301 已派 ＋ Q47 请字
 
 **一、这一拍我只做了一件"新事实"：把 HJ-P3 的 ORD-0300 机械复核到能收/不能收。**
