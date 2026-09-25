@@ -1,0 +1,57 @@
+{
+ "schema": "CNX_ORD0334_ARM_CUT_CONTROLS_V1",
+ "at_local": "2026-09-26T05:35:06+0800",
+ "candidate": "7188a2064edc8432a011291fc240b18c7f998a2c",
+ "subject_file": "agent-mcp/citynexus_mcp/client.py",
+ "witness_file": "agent-mcp/tests/test_client_error_detail.py",
+ "cuts": {
+  "M1_timeout_arm_cut": "the per-call budget becomes a constant default (kwarg still passed), so a red must come from the assertion on the two different timeouts",
+  "M2_detail_arm_cut": "the non-2xx branch reverts to a bare response.raise_for_status()"
+ },
+ "readings": {
+  "M0_control": {
+   "exit": 0,
+   "passed": 8,
+   "failed": 0,
+   "collect_errors": 0,
+   "failed_tests": [],
+   "assertion_errors": 0,
+   "type_errors": 0
+  },
+  "M1_timeout_arm_cut": {
+   "exit": 1,
+   "passed": 7,
+   "failed": 1,
+   "collect_errors": 0,
+   "failed_tests": [
+    "test_request_replan_gets_backend_generation_timeout_budget"
+   ],
+   "assertion_errors": 1,
+   "type_errors": 0
+  },
+  "M2_detail_arm_cut": {
+   "exit": 1,
+   "passed": 7,
+   "failed": 1,
+   "collect_errors": 0,
+   "failed_tests": [
+    "test_agent_client_preserves_server_owned_error_detail"
+   ],
+   "assertion_errors": 0,
+   "type_errors": 0
+  }
+ },
+ "checks": {
+  "M0_suite_all_green": true,
+  "M1_timeout_test_red_by_assertion": true,
+  "M1_detail_test_still_green": true,
+  "M2_detail_test_red_by_assertion": true,
+  "M2_timeout_test_still_green": true,
+  "arms_are_independently_witnessed": true,
+  "no_throwaway_dirs_left": true
+ },
+ "derived_ok": true,
+ "verdict": "ORD0334_BOTH_ARMS_SEPARATELY_RED",
+ "assertions_edited": 0,
+ "repo_writes": 0
+}
