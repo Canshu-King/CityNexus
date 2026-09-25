@@ -1,0 +1,7 @@
+exact_sha	nodeid	shape
+5aff3722d5c36c760a424f5fea5c3a771298f9ac	e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N1	["real-seed", "chromium"]
+5aff3722d5c36c760a424f5fea5c3a771298f9ac	e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N2	["real-seed", "chromium"]
+5aff3722d5c36c760a424f5fea5c3a771298f9ac	e2e/qoder-ord0302-unreadable-server-body.spec.ts :: ord0302-N3	["real-seed", "chromium"]
+NO_CANDIDATE_SHA	NOT_APPLICABLE_missing_candidate	["real-seed", "chromium"]
+5aff3722d5c36c760a424f5fea5c3a771298f9ac	NOT_RUN_missing_operand	["real-seed", "chromium"]
+dc964086c9d412573ac19d70b24b30e6c3ee6168	recommendation	["real-seed", "chromium"]
