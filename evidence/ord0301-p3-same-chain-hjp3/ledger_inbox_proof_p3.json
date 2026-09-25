@@ -1,0 +1,9 @@
+{
+ "block_file": "D:\\moodle\\_qoder_ledger_inbox\\aad2d1f2_2340.md",
+ "bytes": 9715,
+ "first_line": "### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0301 pass 3：按你 21:5x 三处修正继续 —— ② 两侧",
+ "q43_rc": 0,
+ "q43_out": "version Q43_r4 | input D:\\moodle\\_qoder_ledger_inbox\\aad2d1f2_2340.md 9715 B\nclaims checked 61 | exempt {\"HTTP_STATUS\": 15, \"PORT\": 5} | overall Q43_GATE_GREEN | findings 0 []\n",
+ "q43_err": "",
+ "ledger_written_by_this_lane": false
+}
