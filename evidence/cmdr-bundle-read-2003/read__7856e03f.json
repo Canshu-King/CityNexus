@@ -1,0 +1,55 @@
+{
+ "schema": "CNX_CMDR_BUNDLE_STRING_READ_V2",
+ "at_local": "2026-09-25T20:02:24+00:00+08",
+ "generation_under_test": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+ "identity_source": {
+  "probe_path": "evidence/cmdr-phone-chain-1919/phone_side_probe__7856e03f.json",
+  "probe_blob": "1020e014b78aec08ba6c2bf48ae809f01cf00ef5",
+  "probe_blob_named": "1020e014b78aec08ba6c2bf48ae809f01cf00ef5",
+  "probe_matches_citation": true,
+  "index_named_refs": [
+   "/assets/index-DWgtVWb0.js",
+   "/assets/index-I45CQek8.css"
+  ]
+ },
+ "rows": [
+  {
+   "asset": "/assets/index-DWgtVWb0.js",
+   "http_status": 200,
+   "content_type": "text/javascript",
+   "bytes": 1255094,
+   "sha256": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+   "served_equals_named_asset": true,
+   "counts": {
+    "label_technical_details": 8,
+    "promise_sentence_fragment": 1,
+    "no_plans_status_token": 3,
+    "guard_optional_chain": 16,
+    "unguarded_member_read": 0
+   }
+  },
+  {
+   "asset": "/assets/index-I45CQek8.css",
+   "http_status": 200,
+   "content_type": "text/css",
+   "bytes": 183897,
+   "sha256": "1b3632785212847b19ecbdbbdeb4fbae19ea9ce75060ed19739dc908c8f6a58f",
+   "served_equals_named_asset": false,
+   "counts": {
+    "label_technical_details": 0,
+    "promise_sentence_fragment": 0,
+    "no_plans_status_token": 0,
+    "guard_optional_chain": 0,
+    "unguarded_member_read": 0
+   }
+  }
+ ],
+ "decisions": {
+  "js_asset_named_by_the_probe_is_the_one_served": true,
+  "guard_present_in_shipped_bytes": true,
+  "no_unguarded_body_detail_read": true,
+  "promise_label_still_ships": true
+ },
+ "tool_sha1": "3c51a31827d4dd201ecc921b2212ba34e5dc444f",
+ "scope": "Bytes only: which sentences and which read-shapes are inside the file the phone downloads. It is NOT the runtime sentence, NOT a screen reading, and NOT a verdict - the deployed-generation reading of both shapes belongs to ORD-0312 (measurement lane), the levels to the verifier."
+}
