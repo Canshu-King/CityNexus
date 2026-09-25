@@ -1,0 +1,18 @@
+{
+ "recorded_pids": {
+  "backend": 16912,
+  "face": 11356,
+  "silent_origin": 51572,
+  "silent_face": 51904
+ },
+ "still_listening_after_stop": {
+  "8551": [],
+  "8552": [],
+  "8553": [],
+  "8554": []
+ },
+ "junction_removed_with_rmdir_and_target_intact": true,
+ "known_instrument_slip": "o0300_rig.py stop evaluates its cmdline_had_port check AFTER taskkill, so that field reported false for processes it had just stopped; it proved nothing either way",
+ "what_actually_protected_teardown": "the pids came from this rig s own Popen records written at start (o0300_pids.json), and all four ports are free now",
+ "fix": "verify listener+cmdline BEFORE killing (next rig); noted here rather than silently patched"
+}
