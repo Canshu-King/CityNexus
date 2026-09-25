@@ -1,0 +1,63 @@
+{
+ "file": "e2e/qoder-ord0310-keyless-write-deadline.spec.ts",
+ "runId": "run343283",
+ "deadline_constant_ms": 60000,
+ "arms": {
+  "K2": {
+   "elapsed_ms": 252,
+   "post_count": 1,
+   "read": {
+    "status": "HTTP_500",
+    "collapsed_text": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情",
+    "card_text": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情 服务器给出的原因 这一趟的模型通道没开，没排出方案。",
+    "detail_block_attached": true,
+    "label": "服务器给出的原因",
+    "origin": "server",
+    "reason": "这一趟的模型通道没开，没排出方案。"
+   },
+   "verdict": "MET",
+   "rows": [
+    {
+     "claim": "服务器按时答完时，这一支不被读成未知",
+     "ok": true,
+     "got": "HTTP_500"
+    },
+    {
+     "claim": "也没被读成网络问题",
+     "ok": true,
+     "got": "HTTP_500"
+    },
+    {
+     "claim": "没有「结果未知」那句话",
+     "ok": true,
+     "got": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情 服务器给出的原因 这一趟的模型通道没开，"
+    }
+   ]
+  },
+  "K3": {
+   "post_count": 1,
+   "read": {
+    "status": "CANCELLED_AFTER_SEND",
+    "collapsed_text": "已中止后续核对 请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。",
+    "card_text": "已中止后续核对 请求本身已经发出去了，可能已经生成方案。请先刷新确认，不要重复提交。",
+    "detail_block_attached": false,
+    "label": "",
+    "origin": "",
+    "reason": ""
+   },
+   "verdict": "MET",
+   "rows": [
+    {
+     "claim": "旅行者自己按的取消仍是取消，不是期限",
+     "ok": true,
+     "got": "CANCELLED_AFTER_SEND"
+    },
+    {
+     "claim": "取消那一格没有被 UNKNOWN_* 顶替",
+     "ok": true,
+     "got": "CANCELLED_AFTER_SEND"
+    }
+   ]
+  }
+ }
+}
