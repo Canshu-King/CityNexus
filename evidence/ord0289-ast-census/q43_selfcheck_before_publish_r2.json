@@ -1,0 +1,27 @@
+{
+ "ran_at": "2026-09-25T14:17:58+08:00",
+ "ruler": "q43_ruler_r3_from_commander.py",
+ "artifact": {
+  "path": "evidence/ord0289-ast-census/write_legs_f.json",
+  "blob": "2a2343c67417223f7e447ce1f53a87d3a3b02ea6",
+  "bytes": 26225
+ },
+ "inputs": {
+  "ledger_r2": {
+   "rc": 0,
+   "overall": "Q43_GATE_CLEAN",
+   "claims": 40,
+   "findings": 0,
+   "codes": [],
+   "unresolved_refs": []
+  },
+  "bus_r2": {
+   "rc": 0,
+   "overall": "Q43_GATE_CLEAN",
+   "claims": 40,
+   "findings": 0,
+   "codes": [],
+   "unresolved_refs": []
+  }
+ }
+}
