@@ -1,0 +1,68 @@
+{
+ "what": "ORD-0296 第三代：G11 那格 re-parent 到线尖（号令者 CMDR-0925-1640）",
+ "lane": "F 8ccd71d8",
+ "minted_at": "2026-09-25T16:45:13+08:00",
+ "ref": "review/ord0296-write-deadline-f-r3",
+ "lane_branch": "agent/f-ord0296-write-deadline-r3",
+ "commit": "fd8eaf3644b66b44c44ce3178a7babac2bf561c0",
+ "tree": "2899ca1a909598bded1617be226b021ea3ab0491",
+ "parent": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "claim_kind": "code_determined",
+ "claimed_result": "R3-MINTED-PUSHED-READ-BACK",
+ "derived_result": null,
+ "file_changed": "backend/tests/test_qoder_ord0296_write_deadline.py",
+ "blob_before": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+ "blob_after": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+ "bytes_after": 20366,
+ "diff_files_vs_parent": [
+  "backend/tests/test_qoder_ord0296_write_deadline.py"
+ ],
+ "carry_forward_justification": {
+  "commander_claimed": "门文件在基座/尖/r1父 三处 blob 相同（deacc9d7…），且 base...tip 的 17 件里 backend/ 0 件",
+  "measured_by_lane_F": {
+   "gate_blob_at_90d29a17": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+   "gate_blob_at_dc964086": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+   "gate_blob_at_r1_6d041dcc": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+   "gate_blob_at_r1_parent_5c4608ce": "该尖上这文件不存在（contents 路由 404）——r1 才是它的首次落地，所以『三处相同』里那一处应为『不存在』；不影响 re-parent 判据",
+   "compare_base_to_tip": {
+    "status": "ahead",
+    "commits_ahead": 12,
+    "files_listed": 17,
+    "backend_files_changed": 0
+   },
+   "backend_subtree_r2_vs_r3": {
+    "r2": "93f851d875c9ec3e5c6a33fcdb5ef86008fa8f7a",
+    "r3": "93f851d875c9ec3e5c6a33fcdb5ef86008fa8f7a",
+    "equal": true
+   }
+  },
+  "consequence": "后端字节面在两代之间未变 ⇒ 11 格与 M11 的读数按 Q24 携载，不重跑；携载的是『同一枚产品字节上的行为』，不是『同一枚提交上的记录』",
+  "readings_carried_from": [
+   "evidence/ord0296-write-deadline-f/ord0296_G11_and_M11_r2.json blob 8cf1a395a9492906db4bf2fe97b5e1592b25e864",
+   "evidence/ord0296-write-deadline-f/ord0296_delivery_receipt_r1.json blob 381c16f7e1007fc6b5fddd525e2466872dba1363"
+  ],
+  "base_of_those_readings": "90d29a172e186aab6e6cb138ab4583ccf93bfa68（backend 与 dc964086 逐字节同代）"
+ },
+ "readback": {
+  "ls_remote_sha_equals_commit": true,
+  "api_sha_equals_commit": true,
+  "line_tip_untouched": true,
+  "old_refs_untouched": {
+   "r1": true,
+   "r2": true
+  }
+ },
+ "idempotent_recast_same_sha": true,
+ "cells_carried": 11,
+ "discipline": {
+  "authoritative_line_written": 0,
+  "refs_pushed_only_new": [
+   "review/ord0296-write-deadline-f-r3"
+  ],
+  "checkout_performed": 0,
+  "product_files_changed": 0,
+  "demo_reset": 0,
+  "live_or_preview_db": 0,
+  "credentials_printed": 0
+ }
+}
