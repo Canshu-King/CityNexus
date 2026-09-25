@@ -1,0 +1,319 @@
+{
+ "what": "ORD-0287 收据按 Q38 口径重排成可判 `cells` 形状（读数一字未动，只是把每格的自己读数与句子配齐）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T08:10:48+08:00",
+ "why_this_exists": "包工头 08:0x 那拍把 Q38 落成了可跑仪器并要求『每格 why 自带本格读数的具名值』；他这台尺读我 07:14 那份两态收据报 NOT_ASSESSABLE（不足 2 格可判），也就是说我这一单在新规定下**不可核**。这一版只改收据的呈现形状，不改任何主张、不重跑产品。",
+ "claim_kind_rule": "9 格全部 code_determined：判据一项都不依赖时长；读数里出现的秒数只当读数。",
+ "cells": {
+  "S1_K1_green_on_authoritative_line": {
+   "claim": "权威线那一棵上，载体格 K1 两轮全绿",
+   "claim_kind": "code_determined",
+   "cell_named": "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+   "measured": {
+    "main_py_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "rounds": [
+     {
+      "round": 1,
+      "rc": 0,
+      "summary_line": "1 passed, 2 warnings in 1.82s",
+      "failure_lines": []
+     },
+     {
+      "round": 2,
+      "rc": 0,
+      "summary_line": "1 passed, 2 warnings in 1.40s",
+      "failure_lines": []
+     }
+    ],
+    "rc_values": [
+     0,
+     0
+    ],
+    "round_count": 2
+   },
+   "verdict": "CARRIER_GREEN_ON_AUTHORITATIVE_LINE",
+   "why": "2 轮在 main.py blob 416ea4f210e967130710a900cdecd20e7a1b5eca 上单独跑 tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name，每行 pytest 汇总逐字是 '1 passed, 2 warnings in 1.82s'，rc 依次 [0, 0]"
+  },
+  "S2_K1_red_when_guard_removed": {
+   "claim": "只删掉回填守卫那一个布尔谓词，同一格必红（这就是它咬人的那一面）",
+   "claim_kind": "code_determined",
+   "cell_named": "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+   "measured": {
+    "before_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "after_blob": "784599fdb406b4242c2d202868b5eefd10861287",
+    "rounds": [
+     {
+      "round": 1,
+      "rc": 1,
+      "summary_line": "1 failed, 2 warnings in 1.82s",
+      "failure_lines": [
+       "FAILED tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+      ]
+     },
+     {
+      "round": 2,
+      "rc": 1,
+      "summary_line": "1 failed, 2 warnings in 1.94s",
+      "failure_lines": [
+       "FAILED tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+      ]
+     }
+    ],
+    "rc_values": [
+     1,
+     1
+    ],
+    "removed_expression": "IdempotencyKey.response_json.is_(None)",
+    "authoritative_rc_for_comparison": [
+     0,
+     0
+    ],
+    "failure_lines": [
+     "FAILED tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+    ]
+   },
+   "verdict": "CARRIER_RED_WHEN_GUARD_REMOVED",
+   "why": "416ea4f210e967130710a900cdecd20e7a1b5eca 改成 784599fdb406b4242c2d202868b5eefd10861287 之后，同一格 tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name 的 rc 依次 [1, 1]，FAILED 行逐字含 'FAILED tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_rec'"
+  },
+  "S3_K2_positive_control_green_both_states": {
+   "claim": "正控：我占的两把 NULL 键在两态下都必须真被填上 ⇒ 红不能靠『永远失败』蒙出来",
+   "claim_kind": "code_determined",
+   "cell_named": "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+   "measured": {
+    "carrier_blob": "894c6d54e345dabdc4050a38f413fdaaa1a92748",
+    "authoritative_rounds": [
+     {
+      "round": 1,
+      "rc": 0,
+      "summary_line": "1 passed, 2 warnings in 1.60s",
+      "failure_lines": []
+     },
+     {
+      "round": 2,
+      "rc": 0,
+      "summary_line": "1 passed, 2 warnings in 1.90s",
+      "failure_lines": []
+     }
+    ],
+    "mutant_rounds": [
+     {
+      "round": 1,
+      "rc": 0,
+      "summary_line": "1 passed, 2 warnings in 1.90s",
+      "failure_lines": []
+     },
+     {
+      "round": 2,
+      "rc": 0,
+      "summary_line": "1 passed, 2 warnings in 1.59s",
+      "failure_lines": []
+     }
+    ],
+    "authoritative_rc": [
+     0,
+     0
+    ],
+    "mutant_rc": [
+     0,
+     0
+    ]
+   },
+   "verdict": "POSITIVE_CONTROL_GREEN_IN_BOTH_STATES",
+   "why": "载体文件 blob 894c6d54e345dabdc4050a38f413fdaaa1a92748 的 [0, 0] (守卫在位) 与 [0, 0] (守卫拆掉) 两侧 rc 全 0，两态汇总行分别是 '1 passed, 2 warnings in 1.60s' / '1 passed, 2 warnings in 1.90s'"
+  },
+  "S4_mutation_is_one_line_and_compiles": {
+   "claim": "变量只有一处：一枚 hunk、一行谓词、改动后仍可编译",
+   "claim_kind": "code_determined",
+   "measured": {
+    "hunks": 1,
+    "hunk_headers": [
+     "@@ -4770,8 +4770,7 @@"
+    ],
+    "lines_delta": [
+     11417,
+     11416
+    ],
+    "py_compile_ok": true,
+    "before_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "after_blob": "784599fdb406b4242c2d202868b5eefd10861287"
+   },
+   "verdict": "SINGLE_HUNK_SINGLE_PREDICATE",
+   "why": "@@ -4770,8 +4770,7 @@ 这一枚 hunk 把行数从 11417 改成 11416，blob 416ea4f210e967130710a900cdecd20e7a1b5eca → 784599fdb406b4242c2d202868b5eefd10861287，py_compile_ok=True"
+  },
+  "S5_tree_restored_byte_exact": {
+   "claim": "每轮跑完把产品文件按字节还原，末态与落地代逐位相同",
+   "claim_kind": "code_determined",
+   "measured": {
+    "per_round_restored": [
+     true,
+     true
+    ],
+    "final_main_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "landing_main_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "byte_exact_vs_landing": true
+   },
+   "verdict": "TREE_RESTORED_BYTE_EXACT",
+   "why": "2 轮逐轮还原 [True, True]，末态 main.py 读回 416ea4f210e967130710a900cdecd20e7a1b5eca 与落地代 416ea4f210e967130710a900cdecd20e7a1b5eca 相等：True"
+  },
+  "S6_candidate_is_test_only_on_authoritative_parent": {
+   "claim": "候选只动测试、父提交正是权威尖、产品 0 件",
+   "claim_kind": "code_determined",
+   "measured": {
+    "tip": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+    "parent": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+    "authoritative_read_first": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+    "tree": "f26f35091433a1d4b19fe8361b97d50bb707d63f",
+    "files_changed": [
+     "backend/tests/test_qoder_ord0287_k8_carrier.py"
+    ],
+    "numstat": [
+     "220\t0\tbackend/tests/test_qoder_ord0287_k8_carrier.py"
+    ],
+    "all_paths_under_backend_tests": true,
+    "parent_equals_base": true,
+    "carrier_blob_matches": true,
+    "product_paths_touched": [],
+    "carrier_blob_at_tip": "894c6d54e345dabdc4050a38f413fdaaa1a92748"
+   },
+   "verdict": "TEST_ONLY_ON_AUTHORITATIVE_PARENT",
+   "why": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44 的父是 45b0a5e281cae9c37715173afd3ac5778f309ca7（先读到的权威尖 45b0a5e281cae9c37715173afd3ac5778f309ca7），改动清单只有 backend/tests/test_qoder_ord0287_k8_carrier.py，numstat '220\\t0\\tbackend/tests/test_qoder_ord0287_k8_carrier.py'，产品路径 0 件"
+  },
+  "S7_frozen_tip_is_externally_readable": {
+   "claim": "按 Q37 冻结的那枚尖在 GitHub 上两条路都读得到，且没有第二条 ref",
+   "claim_kind": "code_determined",
+   "measured": {
+    "ref": "refs/heads/review/ord0287-k8-carrier-f",
+    "github_ls_remote_line": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44\trefs/heads/review/ord0287-k8-carrier-f",
+    "https_sha": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+    "tip": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+    "equals_frozen_tip": true,
+    "ref_recheck_at": "2026-09-25T07:51:38+08:00",
+    "committer_date": "2026-09-24T23:07:07Z"
+   },
+   "verdict": "FROZEN_TIP_EXTERNALLY_READABLE",
+   "why": "ls-remote 与 https 两条路都回 c31ba195d94ae6ab0cd0a50e17470bebc7587f44，与申报的 frozen_tip c31ba195d94ae6ab0cd0a50e17470bebc7587f44 相等：True（复校于 2026-09-25T07:51:38+08:00）"
+  },
+  "S8_verbatim_port_is_refused_at_import": {
+   "claim": "第 0 条：旧代那格原样搬到权威线跑不起，拦路的是产品符号而不是我的断言",
+   "claim_kind": "code_determined",
+   "measured": {
+    "missing_symbol": "_fill_plan_generation_receipts",
+    "hits_in_landed_main_py": 0,
+    "hits_in_candidate_main_py": 2,
+    "landed_main_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "candidate_main_blob": "ad13f4395e3405ce722ae8660836f3c2aaa29df2",
+    "verbatim_case_rc": 1,
+    "verbatim_gate_blob": "f7f311b86a87b6462e3fe5a4cdef6f851d82dd50",
+    "control_cell_rc": 0,
+    "control_cell": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "control_summary": "1 passed, 2 warnings in 1.51s"
+   },
+   "verdict": "VERBATIM_PORT_REFUSED_BY_IMPORT",
+   "why": "416ea4f210e967130710a900cdecd20e7a1b5eca 里 _fill_plan_generation_receipts 命中 0 处、ad13f4395e3405ce722ae8660836f3c2aaa29df2 里 2 处 ⇒ 原样 append 的 f7f311b86a87b6462e3fe5a4cdef6f851d82dd50 rc=1，同棵拷贝树同解释器下权威线自己的 tests/test_qoder_ord0272_continuation.py::test_G1_one_mi rc=0"
+  },
+  "S9_two_state_repeats_on_the_github_export": {
+   "claim": "两态读数不是只在车道工作树里成立：GitHub tarball 导出那棵同样翻",
+   "claim_kind": "code_determined",
+   "measured": {
+    "backend_cwd": "D:\\moodle\\_qoder_f_run\\e_0282_45b0a5e\\Canshu-King-CityNexus-45b0a5e281cae9c37715173afd3ac5778f309ca7\\backend",
+    "main_py_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca",
+    "carrier_blob": "894c6d54e345dabdc4050a38f413fdaaa1a92748",
+    "authoritative_rounds": [
+     {
+      "round": 1,
+      "rc": 0,
+      "summary_line": "1 passed, 2 warnings in 1.64s",
+      "failure_lines": []
+     },
+     {
+      "round": 2,
+      "rc": 0,
+      "summary_line": "1 passed, 2 warnings in 1.43s",
+      "failure_lines": []
+     }
+    ],
+    "mutant_rounds": [
+     {
+      "round": 1,
+      "rc": 1,
+      "summary_line": "1 failed, 2 warnings in 2.31s",
+      "failure_lines": [
+       "FAILED tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+      ]
+     },
+     {
+      "round": 2,
+      "rc": 1,
+      "summary_line": "1 failed, 2 warnings in 1.57s",
+      "failure_lines": [
+       "FAILED tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+      ]
+     }
+    ],
+    "authoritative_rc": [
+     0,
+     0
+    ],
+    "mutant_rc": [
+     1,
+     1
+    ],
+    "final_main_blob": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+   },
+   "verdict": "TWO_STATE_REPRODUCED_ON_EXPORT",
+   "why": "导出树 blob 416ea4f210e967130710a900cdecd20e7a1b5eca + 载体 894c6d54e345dabdc4050a38f413fdaaa1a92748：守卫在位 rc [0, 0]、拆掉 rc [1, 1]，跑完末态 416ea4f210e967130710a900cdecd20e7a1b5eca"
+  }
+ },
+ "carried_over_verdict_from_r1": "TWO_STATE_CARRIER_OK",
+ "unchanged_by_this_file": {
+  "candidate_frozen_tip": "c31ba195d94ae6ab0cd0a50e17470bebc7587f44",
+  "carrier_blob": "894c6d54e345dabdc4050a38f413fdaaa1a92748",
+  "product_files_touched": 0,
+  "assertions_changed": 0,
+  "new_commits_or_refs": 0
+ },
+ "derived_result": null,
+ "provenance_inputs_verified_by_blob": {
+  "candidate_commit_facts.json": {
+   "blob_sha1_40": "e86c2b8a2a1d8085f99d5ed47f71d96643bafe1e",
+   "bytes": 2803
+  },
+  "frozen_tip_addendum_r1.json": {
+   "blob_sha1_40": "5d140a6b961d7adf0eff5ca2ca54e31d421184c4",
+   "bytes": 1746
+  },
+  "ord0287_step0_portability.json": {
+   "blob_sha1_40": "3197c26db9702a40eb773db21c42565c7f912579",
+   "bytes": 3940
+  },
+  "ref_readback.json": {
+   "blob_sha1_40": "d57e6dc730a12442cdbb856ed61dd63f06f1e5fd",
+   "bytes": 299
+  },
+  "two_state_on_candidate.json": {
+   "blob_sha1_40": "94a106942d5a7d7a5c1ba704b38472469d66460a",
+   "bytes": 5074
+  },
+  "two_state_on_landed_export.json": {
+   "blob_sha1_40": "49d2bba73d09a9fa15373198b73c4f6046577265",
+   "bytes": 5068
+  }
+ },
+ "instrument": {
+  "name": "receipt_cell_derivation_check_r1.py",
+  "owner": "commander 494abfd7",
+  "blob_40": "35caa42c0697faf0a8eeb0929a3e11cb53c9709a",
+  "bytes": 17346,
+  "recomputed_sha1_equals_declared": true,
+  "how_used": "子进程按 --receipt / --selftest 调用，文件一字未改、未复制改写"
+ },
+ "discipline": {
+  "demo_reset_calls": 0,
+  "live_or_preview_db_touched": false,
+  "credentials_printed": 0,
+  "authoritative_branch_written": false,
+  "published_paths_overwritten": 0,
+  "published_paths_deleted": 0,
+  "candidate_ref_pushes_after_freeze": 0
+ }
+}
