@@ -1,0 +1,68 @@
+{
+ "file": "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+ "arm": "N1",
+ "runId": "0302unr05050533",
+ "status": "failed",
+ "expectation": "passed",
+ "reading": {
+  "want": "device",
+  "force_shape": {
+   "status": 500,
+   "contentType": "text/html; content-type=text/plain",
+   "body": "<html><body>502 Bad Gateway</body></html>"
+  },
+  "read": {
+   "arm": "N1",
+   "status": "NETWORK",
+   "detail_block_attached": true,
+   "label": "这台设备自己的读数（服务器没给句子）",
+   "origin": "device",
+   "reason": "no readable answer reached this device (network or origin)",
+   "card_text": "连不上服务端 网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。 技术详情",
+   "legs": [
+    "GET /plans(baseline)",
+    "GET /plans(baseline)",
+    "POST /agent/commands"
+   ]
+  },
+  "verdict": "NOT_MET",
+  "rows": [
+   {
+    "claim": "an unreadable answer stays HTTP_500 and never becomes NETWORK",
+    "ok": false,
+    "got": {
+     "status": "NETWORK"
+    }
+   },
+   {
+    "claim": "the technical-detail block is still in the DOM",
+    "ok": true,
+    "got": {
+     "detail_block_attached": true
+    }
+   },
+   {
+    "claim": "the reading is labelled as this device's, not the server's",
+    "ok": true,
+    "got": {
+     "label": "这台设备自己的读数（服务器没给句子）",
+     "origin": "device"
+    }
+   },
+   {
+    "claim": "the card does not blame the network",
+    "ok": false,
+    "got": {
+     "card_head": "连不上服务端 网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查"
+    }
+   },
+   {
+    "claim": "a device-composed line is still shown (this is not a mute-the-error fix)",
+    "ok": true,
+    "got": {
+     "reason": "no readable answer reached this device (network or origin)"
+    }
+   }
+  ]
+ }
+}
