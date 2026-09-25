@@ -1,0 +1,2 @@
+version Q43_r4 | input _scratch_0308/ord0308-post-body.md 11726 B
+claims checked 33 | exempt {} | overall Q43_GATE_GREEN | findings 0 []
