@@ -216,6 +216,76 @@ def rel_to_root(path: Path) -> str:
     return path.relative_to(ROOT).as_posix()
 
 
+def git_text(cmd: str) -> str:
+    return subprocess.run(
+        cmd, cwd=str(ROOT), capture_output=True, text=True, shell=True, encoding="utf-8", errors="replace"
+    ).stdout
+
+
+def git_bytes(arg: str) -> bytes:
+    return subprocess.run(arg, cwd=str(ROOT), capture_output=True, shell=True).stdout
+
+
+def frontend_blob_map(rev: str) -> dict:
+    """Every tracked file under `frontend/` in `rev`, as path -> git blob id."""
+    out = {}
+    for line in git_text(f"git ls-tree -r {rev} -- frontend").splitlines():
+        meta, path = line.split("\t", 1)
+        out[path] = meta.split()[2]
+    return out
+
+
+def sha256_at(rev: str, path: str) -> str:
+    raw = git_bytes(f"git cat-file blob {rev}:{path}")
+    return sha256(raw).hexdigest()
+
+
+def numstat(a: str, b: str, path: str) -> str:
+    line = git_text(f"git diff --numstat {a} {b} -- {path}").strip()
+    return line or "0\t0\t(no diff)"
+
+
+def generation_compare(frozen: str, landed: str, tested: str) -> dict:
+    """The per-file table a re-parent owes: this tip against the tree it was cut from, and against
+    the landed tip it was cut onto.  A whole-tree digest covers the files that did NOT change, so
+    'only these moved' is a measurement, not an impression."""
+    maps = {rev: frontend_blob_map(rev) for rev in (frozen, landed, tested)}
+    paths = sorted(set().union(*[set(m) for m in maps.values()]))
+    differing = [
+        p for p in paths
+        if len({maps[rev].get(p, "ABSENT") for rev in (frozen, landed, tested)}) > 1
+    ]
+    rows = []
+    for p in differing:
+        rows.append({
+            "path": p,
+            "sha256_at_frozen_tree": sha256_at(frozen, p) if p in maps[frozen] else "ABSENT",
+            "sha256_at_landed_tip": sha256_at(landed, p) if p in maps[landed] else "ABSENT",
+            "sha256_under_test": sha256_at(tested, p),
+            "equals_frozen_tree": maps[frozen].get(p) == maps[tested].get(p),
+            "equals_landed_tip": maps[landed].get(p) == maps[tested].get(p),
+            "lines_vs_landed_tip": numstat(landed, tested, p),
+            "lines_vs_frozen_tree": numstat(frozen, tested, p),
+        })
+    return {
+        "frozen_tree": frozen,
+        "landed_tip": landed,
+        "tested_tree": tested,
+        "frontend_tree_object": {rev: git_text(f"git rev-parse {rev}:frontend").strip() for rev in (frozen, landed, tested)},
+        "frontend_files_tracked": {rev: len(maps[rev]) for rev in (frozen, landed, tested)},
+        "files_differing_across_the_three": len(differing),
+        "files_equal_to_frozen_tree": sum(1 for r in rows if r["equals_frozen_tree"]) + (
+            len(paths) - len(differing)
+        ),
+        "identical_under_test": [r["path"] for r in rows if not r["equals_frozen_tree"]],
+        "rows": rows,
+        "reading": "the frontend/** files listed in `identical_under_test` are the ones this tip does NOT "
+        "carry byte-for-byte from the frozen tree; for each, `lines_vs_landed_tip` is what this lane re-added "
+        "and `lines_vs_frozen_tree` is what the landed line added underneath it. Every other tracked frontend "
+        "file has the same git blob id in all three trees, which is what the counts assert.",
+    }
+
+
 def committed_digests(rev: str) -> dict:
     """sha256 of each mutated file AS COMMITTED in `rev`, read straight out of the object store.
 
@@ -246,7 +316,8 @@ def main() -> int:
     positional = [
         token
         for index, token in enumerate(argv)
-        if not token.startswith("--") and argv[index - 1] not in ("--tested-tree", "--round")
+        if not token.startswith("--")
+        and argv[index - 1] not in ("--tested-tree", "--round", "--frozen-tree", "--landed-tip")
     ]
     tag = positional[0] if positional else "first"
     port = int(positional[1]) if len(positional) > 1 else 4920
@@ -256,6 +327,8 @@ def main() -> int:
     tested_tree = flag("--tested-tree") or head_now
     round_path = flag("--round")
     remote_line = flag("--remote-line")
+    frozen_tree = flag("--frozen-tree")
+    landed_tip = flag("--landed-tip")
     # The tree the gates were judged on is the FROZEN candidate tip, not this branch's tooling tip.
     # If they differ, only review/** may differ, and that has to be measured rather than claimed.
     moved_frontend = [
@@ -333,6 +406,16 @@ def main() -> int:
             "even though the scripts run from a tooling commit on top of it -- but only if that list "
             "is empty, which is measured here rather than promised",
         },
+        "generation_compare": (
+            generation_compare(frozen_tree, landed_tip, tested_tree)
+            if frozen_tree and landed_tip
+            else {
+                "status": "NOT_MEASURED",
+                "frozen_tree": frozen_tree or "NOT_GIVEN",
+                "landed_tip": landed_tip or "NOT_GIVEN",
+                "needs": "both --frozen-tree and --landed-tip, or the re-parent table is an impression",
+            }
+        ),
         "pristine_files_match_tested_tree": {
             p.name: {"path": committed[p.name]["path"], "sha256": originals[p.name],
                      "equals_blob_at_tested_tree": originals[p.name] == committed[p.name]["sha256"]}
@@ -369,8 +452,28 @@ def main() -> int:
         # the same string and a kill cannot quietly borrow another generation's green.
         round_nodeid = f"{spec} :: {owner}".replace("\\", "/")
         key = f"{tested_tree} :: {round_nodeid}"
+        # Q38: every cell's sentence has to name values that are checkable and that come out of THIS
+        # cell's own readings, so the sentence is assembled from the numbers the guard and the two runs
+        # produced rather than written by hand next to the arm definition.
+        mutated12 = guard.mutated_sha256[:12]
+        restored12 = after[path.name][:12]
+        committed12 = committed[path.name]["sha256"][:12]
+        why_measured = (
+            f"{why}  Measured on this tip: anchor {guard.anchor_hits} hit in {rel_to_root(path)}, "
+            f"{guard.bytes_changed} bytes changed, mutant {mutated12}. Baseline run {baseline['runId']} "
+            f"({baseline['db']}, port {baseline['port']}) read {baseline['nodes'].get(owner)}; the same "
+            f"spec with the mutant in place ran as {attempt['runId']} ({attempt['db']}, port "
+            f"{attempt['port']}) and put {len(red)} node(s) in RED [{', '.join(red) or 'none'}] out of "
+            f"{len(attempt['nodes'])}. After the arm the file hashed {restored12}, which equals the tested "
+            f"tree's blob {committed12}."
+        )
         record["arms"].append({
-            "name": name, "ownerNode": owner, "why": why, "file": str(path),
+            "name": name, "ownerNode": owner, "why": why_measured, "intent": why, "file": str(path),
+            "derived_from": (
+                f"this arm's own readings; the one no other arm can quote is the mutant hash: "
+                f"arm_shape_digest_12={mutated12} · attempt.db={attempt['db']} · baseline.db={baseline['db']} "
+                f"· attempt.port={attempt['port']} · baseline.port={baseline['port']}"
+            ),
             "triple": {
                 "exact_sha": tested_tree,
                 "nodeid": round_nodeid,
@@ -394,6 +497,7 @@ def main() -> int:
                 ),
                 "baseline_owner_verdict_this_batch": baseline["nodes"].get(owner),
                 "arm_shape_digest": guard.mutated_sha256,
+                "arm_shape_digest_12": mutated12,
                 "reading": "an arm only counts as a kill on this generation if the identical "
                 "(sha :: spec :: title) string is present in the green round, that round's line read "
                 "`ok`, and this batch's own baseline run of the same spec read GREEN before the mutant "
@@ -403,8 +507,11 @@ def main() -> int:
                 "file": rel_to_root(path),
                 "digest_before_mutant": before[path.name],
                 "digest_mutated": guard.mutated_sha256,
+                "digest_mutated_12": mutated12,
                 "digest_after_restore": after[path.name],
+                "digest_after_restore_12": restored12,
                 "digest_as_committed_in_tested_tree": committed[path.name]["sha256"],
+                "digest_as_committed_in_tested_tree_12": committed12,
                 "roundtrip_equal": before[path.name] == after[path.name],
                 "restored_to_tested_tree_bytes": after[path.name] == committed[path.name]["sha256"],
                 "owner_spec_ran_to_completion_under_the_mutant": bool(attempt["stackStarted"]),
