@@ -1,0 +1,45 @@
+{
+ "ref": "review/0281-write-deadline-keyed-b2",
+ "ref_tip": "64d14b205263ec03fd4810b1b0877418495b87b0",
+ "claimed": "64d14b205263ec03fd4810b1b0877418495b87b0",
+ "parent": [
+  "dc964086c9d412573ac19d70b24b30e6c3ee6168"
+ ],
+ "parent_is_current_tip": true,
+ "authoritative_tip_now": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "files": [
+  "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+  "frontend/src/features/execution/LiveRecovery.tsx",
+  "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+  "frontend/src/lib/readDeadline.ts",
+  "frontend/src/lib/writeDeadline.ts"
+ ],
+ "file_identity_across_bases": {
+  "frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts": {
+   "at_old_base": "ABSENT_AT_OLD_BASE",
+   "at_tip": "ABSENT_AT_TIP",
+   "identical": false
+  },
+  "frontend/src/features/execution/LiveRecovery.tsx": {
+   "at_old_base": "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+   "at_tip": "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+   "identical": true
+  },
+  "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx": {
+   "at_old_base": "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+   "at_tip": "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+   "identical": true
+  },
+  "frontend/src/lib/readDeadline.ts": {
+   "at_old_base": "709222bd712a2bc22e2296a326063be22b97ee57",
+   "at_tip": "709222bd712a2bc22e2296a326063be22b97ee57",
+   "identical": true
+  },
+  "frontend/src/lib/writeDeadline.ts": {
+   "at_old_base": "ABSENT_AT_OLD_BASE",
+   "at_tip": "ABSENT_AT_TIP",
+   "identical": false
+  }
+ },
+ "scope": "Static landing readiness for ORD-0281 keyed gen-2. Not a landing, and not a verifier signature: lane E's derived_result is bound to gen-1 (tested_tree 02da4602), so landing waits for ORD-0305-A1 on the gen-2 tree."
+}
