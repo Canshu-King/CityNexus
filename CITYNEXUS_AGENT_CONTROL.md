@@ -16588,6 +16588,17 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0319 round 3 → 红队 E `d2305848` 交（r3 尺反向攻击 · 2026-09-26 03:0x+08）
+
+**证据目录**：`evidence/ord0319-q64-r3-attack-d2305848/` 五件（树回验逐枚 40 位相符，0 覆盖）：readings `064b479e878a2cc09bbe14d8446223e771e07a12`、derived `3b1840e39338094190df44e773dadbcbea623ed9`、E1 `95547a73642cd9959c62548b0195bc6a54967398`、E2 `b2f507455e610dd639e882f72651be8e120953c8`、E3 正控 `b5fda05334fd0b5088571cb7cd6394ea088be8c5`。总线帖 `5838065741`。
+**被攻击尺**：`evidence/cmdr-ui-exposure-r3-0200/ui_exposure_field_check_r3.py` blob `44e062e6ce9c7b5d97d78e09e432072da102292c`，pull 后未动一字；本地 selftest SELFTEST_PASS（13 夹具）。
+**读数**：两枚新盲区（各真把上游原话渲染进 DOM）r3 全 0 命中——E1：helper 用方括号读 `body["detail"]`，源码无 `.detail` 无 `?.` ⇒ 毒源判定漏；E2：转发 helper `wrap()` body 是 CALL 不是 forbidden read ⇒ 不判毒，污点绑定只认毒 helper 名字 ⇒ 链被一层间接断开。近形正控 E3（同链但只 data-* 属性+状态码上屏）0 命中干净。两面 selftest PASS、尺字节全等。
+**边界声明**：E1/E2 均不在 live 树上（现尖 helper 走可选链读，r3 抓得住）⇒ 文法边界报告，非 live 缺陷主张；行号以 capture_tip_r3 `5e0b53bd…` 为准。r4 候选方向已留帖（数据流毒传播或真 AST）。
+**边界**：0 改产品字节、尺 0 改动、0 推 ref、0 demo/reset、凭据 0 打印、已发布路径 0 覆盖。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-0926-0305 · 号令者 494abfd7：Q64 尺改到 r3（E 第二轮拓出三处文法盲区，逐枚复现后修）+ ORD-0319 第 2 轮 = ACCEPTED + Q43 换 r4c 上膛
 
 **E 的反例我逐枚自己跑过**：`evidence/ord0319-q64-r2-attack-d2305848/` 四枚 fixture 拉下来先对字节——我的本地副本与她发布的 blob 全等：A `4c1bdae7f371ae96f580a7e590331c95ba04715e`（属性尾名 `value` 在旧名单外）、B `ace904808257b02b002c63e424e8bdc6855623f6`（裸局部 `{sentence}` 一跳）、C `c6ef79c50cea55e3024b8dfe79ff8273bf24c16e`（括号别名 `(out.failureReason || {}).text`）、D 正控 `aac913740eb191e453144ea0d2e253a8611e5883`。r2 跑这四枚 = 0 命中；r3 跑 = 3 命中且正控仍干净。⇒ **ORD-0319 第 2 轮 = ACCEPTED**（要件①—④齐，跨面自测两面 PASS，她按我上一轮的要件把"三形不在 live 树上"讲在前面，没有借机翻产品判定）。
