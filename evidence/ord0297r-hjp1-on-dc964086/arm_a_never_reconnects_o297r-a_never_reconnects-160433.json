@@ -1,0 +1,2026 @@
+{
+  "order": "ORD-0297r",
+  "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "expected_marker": "ORD-0297r-next",
+  "arm": "o297r-a_never_reconnects-160433",
+  "arm_kind": "a_never_reconnects",
+  "session": "1a986a24 HJ-P1",
+  "base": "http://127.0.0.1:9121",
+  "started_at": "2026-09-25T08:04:39.609Z",
+  "viewport": [
+    390,
+    844
+  ],
+  "draft_key": "citynexus.v8.trial_draft",
+  "install_mode": "two_navigations",
+  "write_mode": "answer",
+  "forbidden_moves_taken": {
+    "unregister_called": 0,
+    "cache_clear_called": 0
+  },
+  "phases": {
+    "P0": {
+      "pointer": {
+        "root": "dist",
+        "ok": true
+      },
+      "mode": {
+        "written": "answer",
+        "readBack": "answer"
+      },
+      "install_mode": "two_navigations",
+      "nav1": {
+        "label": "P0-nav1-install",
+        "at": 1790323481368,
+        "status": 200
+      },
+      "nav2": {
+        "label": "P0-nav2-take-control",
+        "at": 1790323496452,
+        "status": 200
+      },
+      "navigations_used": 2,
+      "snapshot": {
+        "href": "http://127.0.0.1:9121/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index--q2k569d.js"
+        ],
+        "docNonce": "pburvogss8",
+        "fields": {
+          "目的地": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "抵达地点": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "离开地点": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": ""
+          },
+          "抵达时间": {
+            "tag": "INPUT",
+            "type": "datetime-local",
+            "value": "2026-09-26T10:00"
+          },
+          "离开时间": {
+            "tag": "INPUT",
+            "type": "datetime-local",
+            "value": "2026-09-28T20:00"
+          },
+          "#5": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "CN"
+          },
+          "#6": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "Asia/Shanghai"
+          },
+          "#7": {
+            "tag": "INPUT",
+            "type": "text",
+            "value": "CNY"
+          }
+        },
+        "fieldCount": 8,
+        "draft": {
+          "step": 1,
+          "draft": {
+            "cityName": "",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-09-26T10:00",
+            "endAt": "2026-09-28T20:00",
+            "arrivalLocation": "",
+            "departureLocation": "",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": ""
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间",
+          "2",
+          "3"
+        ],
+        "leafCount": 21,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 25,
+            "href": "http://127.0.0.1:9121/v8/hub",
+            "marker": null
+          }
+        ]
+      }
+    },
+    "P1": {
+      "typed": {
+        "city": "北京",
+        "arrival": "北京南站",
+        "departure": "北京西站",
+        "startAt": "2026-10-05T09:30",
+        "endAt": "2026-10-07T18:00",
+        "budget": "480",
+        "stay": "150",
+        "special": "只看免费和便宜的地方"
+      },
+      "fills": [
+        {
+          "why": "city",
+          "idx": 0,
+          "ph": "例如：天津、东京、新加坡",
+          "wrote": 2,
+          "after": {
+            "len": 2,
+            "value": "北京"
+          }
+        },
+        {
+          "why": "arrival",
+          "idx": 1,
+          "ph": "例如：北京站 / 机场",
+          "wrote": 4,
+          "after": {
+            "len": 4,
+            "value": "北京南站"
+          }
+        },
+        {
+          "why": "departure",
+          "idx": 2,
+          "ph": "例如：北京站 / 机场",
+          "wrote": 4,
+          "after": {
+            "len": 4,
+            "value": "北京西站"
+          }
+        },
+        {
+          "why": "startAt",
+          "type": "datetime-local",
+          "idx": 0,
+          "before": "2026-09-26T10:00",
+          "wrote": 16,
+          "after": {
+            "len": 16,
+            "value": "2026-10-05T09:30"
+          }
+        },
+        {
+          "why": "endAt",
+          "type": "datetime-local",
+          "idx": 1,
+          "before": "2026-09-28T20:00",
+          "wrote": 16,
+          "after": {
+            "len": 16,
+            "value": "2026-10-07T18:00"
+          }
+        },
+        {
+          "why": "stayBudget",
+          "skipped": "no empty visible field matched",
+          "needle": "住宿"
+        },
+        {
+          "why": "budget",
+          "skipped": "no empty visible field matched",
+          "needle": "总预算|预算"
+        },
+        {
+          "why": "specialRequirements",
+          "idx": 4,
+          "ph": "例如：我妈妈坐轮椅；每天走路不超过 3000 米",
+          "wrote": 10,
+          "after": {
+            "len": 10,
+            "value": "只看免费和便宜的地方"
+          }
+        }
+      ],
+      "stepChecks": [
+        {
+          "label": "before first 下一步",
+          "draft_step": 1,
+          "missing_hint": [],
+          "fieldCount": 8,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "1",
+            "目的地与时间"
+          ]
+        },
+        {
+          "label": "after first 下一步",
+          "draft_step": 2,
+          "missing_hint": [],
+          "fieldCount": 5,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "2"
+          ]
+        },
+        {
+          "label": "after second 下一步",
+          "draft_step": 3,
+          "missing_hint": [],
+          "fieldCount": 0,
+          "marker": null,
+          "headings": [
+            "用你自己的城市试用 CITYNEXUS",
+            "新建行程",
+            "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+            "EN",
+            "✓",
+            "✓"
+          ]
+        }
+      ],
+      "afterStep1": {
+        "label": "before first 下一步",
+        "draft_step": 1,
+        "missing_hint": [],
+        "fieldCount": 8,
+        "marker": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "1",
+          "目的地与时间"
+        ]
+      },
+      "step2Fields": [
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "2"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "1"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "3000"
+        },
+        {
+          "tag": "INPUT",
+          "type": "number",
+          "ph": null,
+          "value": "1000"
+        },
+        {
+          "tag": "TEXTAREA",
+          "type": "textarea",
+          "ph": "例如：我妈妈坐轮椅；每天走路不超过 3000 米",
+          "value": ""
+        }
+      ],
+      "step2Buttons": [
+        "EN",
+        "轻松",
+        "适中",
+        "紧凑",
+        "美食",
+        "自然",
+        "人文",
+        "海边",
+        "购物",
+        "亲子",
+        "返回",
+        "下一步",
+        "使用封存的演示行程"
+      ],
+      "partyStepper": {
+        "clicked": false
+      }
+    },
+    "P2": {
+      "snapshot": {
+        "href": "http://127.0.0.1:9121/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index--q2k569d.js"
+        ],
+        "docNonce": "pburvogss8",
+        "fields": {},
+        "fieldCount": 0,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "用你自己的城市试用 CITYNEXUS",
+          "新建行程",
+          "三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。",
+          "EN",
+          "✓",
+          "✓",
+          "3",
+          "确认创建"
+        ],
+        "leafCount": 29,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 25,
+            "href": "http://127.0.0.1:9121/v8/hub",
+            "marker": null
+          }
+        ]
+      },
+      "confirm_box": [
+        79,
+        652,
+        291,
+        44
+      ]
+    },
+    "P3": {
+      "pointer": {
+        "root": "dist",
+        "ok": true
+      },
+      "back_to_installed_for_the_write": {
+        "root": "dist",
+        "ok": true
+      },
+      "mode": {
+        "written": "answer",
+        "readBack": "answer"
+      },
+      "submit": {
+        "found": true,
+        "label": "确认创建",
+        "disabled": false,
+        "point": [
+          225,
+          674
+        ],
+        "hitIsSelf": true,
+        "hitDesc": {
+          "tag": "BUTTON",
+          "cls": "v8-primary-button",
+          "testid": "trial-create",
+          "aria_disabled": null,
+          "text": "确认创建",
+          "outer": "<button type=\"button\" class=\"v8-primary-button\" data-testid=\"trial-create\">确认创建</button>",
+          "in_nav": false,
+          "owner_chain": [
+            "BUTTON.v8-primary-button",
+            "DIV.trial-sticky-cta",
+            "SECTION.v8-page.cn-onboarding",
+            "DIV#root",
+            "BODY",
+            "HTML"
+          ]
+        },
+        "button_rect": {
+          "x": 79,
+          "y": 652,
+          "w": 291,
+          "h": 44
+        },
+        "viewport": [
+          390,
+          844
+        ],
+        "scroll_settled": 2,
+        "tapped": true
+      },
+      "created_wait": [
+        {
+          "atMs": 4023,
+          "journey_id": "eeed9def-da5b-4702-8084-21a6b493750a",
+          "nav_labels": [
+            "今天",
+            "行程",
+            "地图",
+            "Copilot",
+            "我的"
+          ],
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统"
+          ]
+        }
+      ],
+      "retry_presses": [],
+      "journey_id": "eeed9def-da5b-4702-8084-21a6b493750a",
+      "nav_labels_at_creation": [
+        "今天",
+        "行程",
+        "地图",
+        "Copilot",
+        "我的"
+      ],
+      "retry_presses_made": 0,
+      "next_bundle_expected": "index-jVHM43pf.js",
+      "assets": {
+        "asset_root": "dist",
+        "read_back_ok": true
+      },
+      "update_trigger": {
+        "deferred": "no update attempted while online; the control attempts one inside the outage"
+      },
+      "before_action": {
+        "marker": null,
+        "scripts": [
+          "/assets/index--q2k569d.js"
+        ],
+        "docNonce": "pburvogss8",
+        "fields": {
+          "旅行需求": {
+            "tag": "TEXTAREA",
+            "type": "textarea",
+            "value": ""
+          }
+        },
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "leafCount": 56,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ]
+      },
+      "the_one_navigation": {
+        "skipped": "these arms get no navigation after the write"
+      },
+      "watch": [
+        {
+          "atMs": 4019,
+          "atEpoch": 1790323528995,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 8027,
+          "atEpoch": 1790323533003,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 12040,
+          "atEpoch": 1790323537016,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 16048,
+          "atEpoch": 1790323541024,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 20055,
+          "atEpoch": 1790323545031,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 24065,
+          "atEpoch": 1790323549041,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 28073,
+          "atEpoch": 1790323553049,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 32085,
+          "atEpoch": 1790323557061,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 36097,
+          "atEpoch": 1790323561073,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 40103,
+          "atEpoch": 1790323565079,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 44119,
+          "atEpoch": 1790323569095,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        },
+        {
+          "atMs": 48126,
+          "atEpoch": 1790323573102,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "docNonce": "pburvogss8",
+          "registrations": [
+            {
+              "scope": "/",
+              "installing": null,
+              "waiting": null,
+              "active": "/v10-sw.js"
+            }
+          ],
+          "controller": true,
+          "leafCount": 56,
+          "headings": [
+            "菜单",
+            "/",
+            "今天",
+            "跟随系统",
+            "EN",
+            "BE",
+            "知道了",
+            "下午好"
+          ],
+          "fieldCount": 1,
+          "draft_present": true,
+          "lifecycle": [
+            {
+              "ev": "document-start",
+              "t": 25,
+              "href": "http://127.0.0.1:9121/v8/hub",
+              "marker": null
+            }
+          ]
+        }
+      ],
+      "watch_started_at_epoch": 1790323524976,
+      "after": {
+        "href": "http://127.0.0.1:9121/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index--q2k569d.js"
+        ],
+        "docNonce": "pburvogss8",
+        "fields": {
+          "旅行需求": {
+            "tag": "TEXTAREA",
+            "type": "textarea",
+            "value": ""
+          }
+        },
+        "fieldCount": 1,
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "draftError": null,
+        "headings": [
+          "菜单",
+          "/",
+          "今天",
+          "跟随系统",
+          "EN",
+          "BE",
+          "知道了",
+          "下午好"
+        ],
+        "leafCount": 56,
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "lifecycle": [
+          {
+            "ev": "document-start",
+            "t": 25,
+            "href": "http://127.0.0.1:9121/v8/hub",
+            "marker": null
+          }
+        ]
+      },
+      "after_written": {
+        "marker": null,
+        "scripts": [
+          "/assets/index--q2k569d.js"
+        ],
+        "docNonce": "pburvogss8",
+        "fields": {
+          "旅行需求": {
+            "tag": "TEXTAREA",
+            "type": "textarea",
+            "value": ""
+          }
+        },
+        "draft": {
+          "step": 3,
+          "draft": {
+            "cityName": "北京",
+            "countryCode": "CN",
+            "timezone": "Asia/Shanghai",
+            "startAt": "2026-10-05T09:30",
+            "endAt": "2026-10-07T18:00",
+            "arrivalLocation": "北京南站",
+            "departureLocation": "北京西站",
+            "budgetMajor": 3000,
+            "stayBudgetMajor": 1000,
+            "currency": "CNY",
+            "partySize": 2,
+            "rooms": 1,
+            "pace": "relaxed",
+            "interests": [],
+            "specialRequirements": "只看免费和便宜的地方"
+          }
+        },
+        "headings": [
+          "菜单",
+          "/",
+          "今天",
+          "跟随系统",
+          "EN",
+          "BE",
+          "知道了",
+          "下午好"
+        ],
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "leafCount": 56
+      },
+      "nav_events_total": 10,
+      "nav_events_mine": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ]
+    },
+    "P4": {
+      "offline_at_epoch": 1790323573444,
+      "ui_state_before_offline": {
+        "before": {
+          "visible_boxes": [
+            {
+              "cls": "plan-ai-sheet",
+              "testid": null,
+              "rect": [
+                0,
+                401,
+                390,
+                443
+              ],
+              "over_nav_slots": 3
+            }
+          ],
+          "box_count": 1,
+          "boxes_over_nav": 1
+        },
+        "control": {
+          "needed": true,
+          "control_found": true,
+          "control": "×",
+          "testid": null,
+          "point": [
+            282,
+            452
+          ],
+          "pressed": true
+        },
+        "after": {
+          "visible_boxes": [],
+          "box_count": 0,
+          "boxes_over_nav": 0
+        },
+        "nav_clear": true
+      },
+      "precondition": "NAV_CLEAR_BEFORE_OUTAGE",
+      "first_screen_offline": {
+        "href": "http://127.0.0.1:9121/v8/hub",
+        "marker": null,
+        "scripts": [
+          "/assets/index--q2k569d.js"
+        ],
+        "leafCount": 50,
+        "bodyChars": 703,
+        "headings": [
+          "菜单",
+          "/",
+          "今天",
+          "跟随系统",
+          "EN",
+          "BE",
+          "知道了",
+          "下午好"
+        ],
+        "docNonce": "pburvogss8",
+        "controller": true,
+        "registrations": [
+          {
+            "scope": "/",
+            "installing": null,
+            "waiting": null,
+            "active": "/v10-sw.js"
+          }
+        ],
+        "nav_labels": [
+          "今天",
+          "行程",
+          "地图",
+          "Copilot",
+          "我的"
+        ]
+      },
+      "in_app_nav_offline": [
+        {
+          "label": "行程",
+          "found": true,
+          "tapped": true,
+          "hit_label": "行程",
+          "hit_test_was_self": true,
+          "disabled": false,
+          "press_point": [
+            119,
+            813
+          ],
+          "visible_buttons_when_missing": [],
+          "covered_by": {
+            "tag": "BUTTON",
+            "cls": "",
+            "testid": "nav-trips",
+            "aria_disabled": null,
+            "text": "行程",
+            "outer": "<button data-testid=\"nav-trips\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"",
+            "in_nav": true,
+            "owner_chain": [
+              "BUTTON",
+              "NAV.v8-mobile-nav",
+              "DIV.v8-product-shell",
+              "DIV#root",
+              "BODY",
+              "HTML"
+            ]
+          },
+          "button_rect": {
+            "x": 81,
+            "y": 789,
+            "w": 76,
+            "h": 48
+          },
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll_settled": 2,
+          "href_before": "http://127.0.0.1:9121/v8/hub",
+          "href_after": "http://127.0.0.1:9121/v8/trips",
+          "path_changed": true,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "leafCount": 22,
+          "bodyChars": 166,
+          "headings": [
+            "菜单",
+            "/",
+            "行程",
+            "跟随系统"
+          ]
+        },
+        {
+          "label": "地图",
+          "found": true,
+          "tapped": true,
+          "hit_label": "地图",
+          "hit_test_was_self": true,
+          "disabled": false,
+          "press_point": [
+            195,
+            813
+          ],
+          "visible_buttons_when_missing": [],
+          "covered_by": {
+            "tag": "BUTTON",
+            "cls": "",
+            "testid": "nav-map",
+            "aria_disabled": null,
+            "text": "地图",
+            "outer": "<button data-testid=\"nav-map\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\" s",
+            "in_nav": true,
+            "owner_chain": [
+              "BUTTON",
+              "NAV.v8-mobile-nav",
+              "DIV.v8-product-shell",
+              "DIV#root",
+              "BODY",
+              "HTML"
+            ]
+          },
+          "button_rect": {
+            "x": 157,
+            "y": 789,
+            "w": 76,
+            "h": 48
+          },
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll_settled": 2,
+          "href_before": "http://127.0.0.1:9121/v8/trips",
+          "href_after": "http://127.0.0.1:9121/v8/map",
+          "path_changed": true,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "leafCount": 34,
+          "bodyChars": 323,
+          "headings": [
+            "菜单",
+            "/",
+            "地图",
+            "跟随系统"
+          ]
+        },
+        {
+          "label": "Copilot",
+          "found": true,
+          "tapped": true,
+          "hit_label": "Copilot",
+          "hit_test_was_self": true,
+          "disabled": false,
+          "press_point": [
+            271,
+            813
+          ],
+          "visible_buttons_when_missing": [],
+          "covered_by": {
+            "tag": "BUTTON",
+            "cls": "",
+            "testid": "nav-agent",
+            "aria_disabled": null,
+            "text": "Copilot",
+            "outer": "<button data-testid=\"nav-agent\" class=\"\"><svg aria-hidden=\"true\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"",
+            "in_nav": true,
+            "owner_chain": [
+              "BUTTON",
+              "NAV.v8-mobile-nav",
+              "DIV.v8-product-shell",
+              "DIV#root",
+              "BODY",
+              "HTML"
+            ]
+          },
+          "button_rect": {
+            "x": 233,
+            "y": 789,
+            "w": 76,
+            "h": 48
+          },
+          "viewport": [
+            390,
+            844
+          ],
+          "scroll_settled": 2,
+          "href_before": "http://127.0.0.1:9121/v8/map",
+          "href_after": "http://127.0.0.1:9121/v8/agent",
+          "path_changed": true,
+          "marker": null,
+          "scripts": [
+            "/assets/index--q2k569d.js"
+          ],
+          "leafCount": 33,
+          "bodyChars": 386,
+          "headings": [
+            "菜单",
+            "/",
+            "Copilot",
+            "跟随系统"
+          ]
+        }
+      ],
+      "reload_offline": {
+        "http_status": 200,
+        "href": "http://127.0.0.1:9121/v8/agent",
+        "marker": "ORD-0297r-next",
+        "scripts": [
+          "/assets/index-jVHM43pf.js"
+        ],
+        "leafCount": 6,
+        "bodyChars": 91,
+        "headings": [
+          "连接",
+          "网络不可用",
+          "这一发请求没能出去，也没有收到任何回答，所以这是网络问题。你的行程数据没有丢失，已保存的只读副本还能看。请检查网络后重试。",
+          "看已保存的只读副本",
+          "重试",
+          "归因详情"
+        ],
+        "doc_nonce_before": "pburvogss8",
+        "doc_nonce_after": "qs7qf1lffdj"
+      },
+      "origin_saw_during_offline": {
+        "readable": true,
+        "count": 10,
+        "sample": [
+          {
+            "kind": "static",
+            "path": "/v10-sw.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "served": "v10-sw.js",
+            "html_at_js_url": false,
+            "t": 1790323598.637,
+            "iso": "2026-09-25T16:06:38+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/workbox-6923124b.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "served": "workbox-6923124b.js",
+            "html_at_js_url": false,
+            "t": 1790323598.658,
+            "iso": "2026-09-25T16:06:38+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/index.html",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "served": "index.html",
+            "html_at_js_url": false,
+            "t": 1790323598.671,
+            "iso": "2026-09-25T16:06:38+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/assets/maplibre-gl-CiduR3ZC.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "served": "maplibre-gl-CiduR3ZC.js",
+            "html_at_js_url": false,
+            "t": 1790323598.68,
+            "iso": "2026-09-25T16:06:38+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/assets/JourneyMap-C0NSafoP.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "served": "JourneyMap-C0NSafoP.js",
+            "html_at_js_url": false,
+            "t": 1790323598.7,
+            "iso": "2026-09-25T16:06:38+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/assets/index-jVHM43pf.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "served": "index-jVHM43pf.js",
+            "html_at_js_url": false,
+            "t": 1790323598.707,
+            "iso": "2026-09-25T16:06:38+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/v10-sw.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "served": "v10-sw.js",
+            "html_at_js_url": false,
+            "t": 1790323599.952,
+            "iso": "2026-09-25T16:06:39+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/workbox-6923124b.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "served": "workbox-6923124b.js",
+            "html_at_js_url": false,
+            "t": 1790323599.956,
+            "iso": "2026-09-25T16:06:39+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/v10-sw.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "served": "v10-sw.js",
+            "html_at_js_url": false,
+            "t": 1790323601.575,
+            "iso": "2026-09-25T16:06:41+0800"
+          },
+          {
+            "kind": "static",
+            "path": "/workbox-6923124b.js",
+            "shell_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "asset_root": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o297r\\landed_next\\frontend\\dist",
+            "served": "workbox-6923124b.js",
+            "html_at_js_url": false,
+            "t": 1790323601.577,
+            "iso": "2026-09-25T16:06:41+0800"
+          }
+        ]
+      },
+      "summary": {
+        "first_bodyChars": 703,
+        "nav_steps": 3,
+        "nav_changed": 3,
+        "reload_bodyChars": 91,
+        "origin_hits_offline": 10
+      }
+    }
+  },
+  "instrument": {
+    "pageErrors": [],
+    "navEvents": [
+      {
+        "at": 1790323481183,
+        "mine": true,
+        "label": "P0-nav1-install"
+      },
+      {
+        "at": 1790323481212,
+        "href": "http://127.0.0.1:9121/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790323496380,
+        "mine": true,
+        "label": "P0-nav2-take-control"
+      },
+      {
+        "at": 1790323496406,
+        "href": "http://127.0.0.1:9121/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790323522358,
+        "href": "http://127.0.0.1:9121/v8/hub",
+        "mine": false
+      },
+      {
+        "at": 1790323584324,
+        "href": "http://127.0.0.1:9121/v8/trips",
+        "mine": false
+      },
+      {
+        "at": 1790323589166,
+        "href": "http://127.0.0.1:9121/v8/map",
+        "mine": false
+      },
+      {
+        "at": 1790323594017,
+        "href": "http://127.0.0.1:9121/v8/agent",
+        "mine": false
+      },
+      {
+        "at": 1790323598567,
+        "href": "http://127.0.0.1:9121/v8/agent",
+        "mine": false
+      },
+      {
+        "at": 1790323599840,
+        "href": "http://127.0.0.1:9121/v8/agent",
+        "mine": false
+      }
+    ],
+    "probe_smoke": {
+      "ok": true,
+      "href": "about:blank",
+      "marker": null,
+      "leafCount": 0
+    },
+    "apiEvents": [
+      {
+        "atEpoch": 1790323481601,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790323481738,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323496483,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790323496511,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323520946,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/travelers"
+      },
+      {
+        "atEpoch": 1790323520948,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/travelers",
+        "s": 201
+      },
+      {
+        "atEpoch": 1790323520951,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/journeys"
+      },
+      {
+        "atEpoch": 1790323520965,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/journeys",
+        "s": 201
+      },
+      {
+        "atEpoch": 1790323520965,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/aee4b93c-e793-4a8e-bfbe-bbd64577ba81/preferences"
+      },
+      {
+        "atEpoch": 1790323520975,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/travelers/aee4b93c-e793-4a8e-bfbe-bbd64577ba81/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323520976,
+        "ev": "request",
+        "m": "PUT",
+        "p": "/api/v1/travelers/aee4b93c-e793-4a8e-bfbe-bbd64577ba81/preferences"
+      },
+      {
+        "atEpoch": 1790323520985,
+        "ev": "response",
+        "m": "PUT",
+        "p": "/api/v1/travelers/aee4b93c-e793-4a8e-bfbe-bbd64577ba81/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323520986,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/aee4b93c-e793-4a8e-bfbe-bbd64577ba81/preferences"
+      },
+      {
+        "atEpoch": 1790323520992,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/travelers/aee4b93c-e793-4a8e-bfbe-bbd64577ba81/preferences",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323520992,
+        "ev": "request",
+        "m": "POST",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/stay-options/generate"
+      },
+      {
+        "atEpoch": 1790323522074,
+        "ev": "response",
+        "m": "POST",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/stay-options/generate",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522076,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/experience"
+      },
+      {
+        "atEpoch": 1790323522103,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/experience",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522103,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/replans"
+      },
+      {
+        "atEpoch": 1790323522107,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/plans"
+      },
+      {
+        "atEpoch": 1790323522108,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/twin"
+      },
+      {
+        "atEpoch": 1790323522118,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/replans",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522119,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/travelers/aee4b93c-e793-4a8e-bfbe-bbd64577ba81/agent-policy"
+      },
+      {
+        "atEpoch": 1790323522120,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/wallet"
+      },
+      {
+        "atEpoch": 1790323522120,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/offline-snapshot"
+      },
+      {
+        "atEpoch": 1790323522120,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/agent/runtime-status"
+      },
+      {
+        "atEpoch": 1790323522136,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/plans",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522142,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/twin",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522158,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/travelers/aee4b93c-e793-4a8e-bfbe-bbd64577ba81/agent-policy",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522162,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/wallet",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522163,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/offline-snapshot",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522183,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/agent/runtime-status",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522353,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/demo/scene"
+      },
+      {
+        "atEpoch": 1790323522356,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/agent-feed"
+      },
+      {
+        "atEpoch": 1790323522356,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/agent-feed"
+      },
+      {
+        "atEpoch": 1790323522356,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/places"
+      },
+      {
+        "atEpoch": 1790323522356,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/agent/runtime-status"
+      },
+      {
+        "atEpoch": 1790323522366,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/agent-feed",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522367,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/demo/scene",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522378,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/places",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522384,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/agent-feed",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323522400,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/agent/runtime-status",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323537150,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/twin"
+      },
+      {
+        "atEpoch": 1790323537190,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/twin",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323552205,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/twin"
+      },
+      {
+        "atEpoch": 1790323552229,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/twin",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323567235,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/twin"
+      },
+      {
+        "atEpoch": 1790323567257,
+        "ev": "response",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/twin",
+        "s": 200
+      },
+      {
+        "atEpoch": 1790323598630,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/experience"
+      },
+      {
+        "atEpoch": 1790323598630,
+        "ev": "requestfailed",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/experience",
+        "why": "net::ERR_INTERNET_DISCONNECTED"
+      },
+      {
+        "atEpoch": 1790323598631,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/health"
+      },
+      {
+        "atEpoch": 1790323598632,
+        "ev": "requestfailed",
+        "m": "GET",
+        "p": "/api/v1/health",
+        "why": "net::ERR_INTERNET_DISCONNECTED"
+      },
+      {
+        "atEpoch": 1790323599956,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/experience"
+      },
+      {
+        "atEpoch": 1790323599956,
+        "ev": "requestfailed",
+        "m": "GET",
+        "p": "/api/v1/journeys/eeed9def-da5b-4702-8084-21a6b493750a/experience",
+        "why": "net::ERR_INTERNET_DISCONNECTED"
+      },
+      {
+        "atEpoch": 1790323599956,
+        "ev": "request",
+        "m": "GET",
+        "p": "/api/v1/health"
+      },
+      {
+        "atEpoch": 1790323599956,
+        "ev": "requestfailed",
+        "m": "GET",
+        "p": "/api/v1/health",
+        "why": "net::ERR_INTERNET_DISCONNECTED"
+      }
+    ]
+  },
+  "next1": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      195,
+      674
+    ],
+    "hitIsSelf": true,
+    "hitDesc": {
+      "tag": "BUTTON",
+      "cls": "v8-primary-button",
+      "testid": "trial-next",
+      "aria_disabled": null,
+      "text": "下一步",
+      "outer": "<button type=\"button\" class=\"v8-primary-button\" data-testid=\"trial-next\">下一步</button>",
+      "in_nav": false,
+      "owner_chain": [
+        "BUTTON.v8-primary-button",
+        "DIV.trial-sticky-cta",
+        "SECTION.v8-page.cn-onboarding",
+        "DIV#root",
+        "BODY",
+        "HTML"
+      ]
+    },
+    "button_rect": {
+      "x": 20,
+      "y": 652,
+      "w": 350,
+      "h": 44
+    },
+    "viewport": [
+      390,
+      844
+    ],
+    "scroll_settled": 2,
+    "tapped": true
+  },
+  "next2": {
+    "found": true,
+    "label": "下一步",
+    "disabled": false,
+    "point": [
+      225,
+      674
+    ],
+    "hitIsSelf": true,
+    "hitDesc": {
+      "tag": "BUTTON",
+      "cls": "v8-primary-button",
+      "testid": "trial-next",
+      "aria_disabled": null,
+      "text": "下一步",
+      "outer": "<button type=\"button\" class=\"v8-primary-button\" data-testid=\"trial-next\">下一步</button>",
+      "in_nav": false,
+      "owner_chain": [
+        "BUTTON.v8-primary-button",
+        "DIV.trial-sticky-cta",
+        "SECTION.v8-page.cn-onboarding",
+        "DIV#root",
+        "BODY",
+        "HTML"
+      ]
+    },
+    "button_rect": {
+      "x": 79,
+      "y": 652,
+      "w": 291,
+      "h": 44
+    },
+    "viewport": [
+      390,
+      844
+    ],
+    "scroll_settled": 2,
+    "tapped": true
+  },
+  "ended_at": "2026-09-25T08:06:45.783Z"
+}
