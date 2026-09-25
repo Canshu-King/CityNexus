@@ -1,0 +1,57 @@
+{
+ "order": "ORD-0331 follow-up",
+ "lane": "S4-ast-taint",
+ "subject": "re-pin of the r6 baseline to the authoritative tip",
+ "why": "receipt_r6.json (blob aaf01f5cee346ce0db03a00f81309c1953646a02) pinned its baseline at 821a0eb54cca1b305a4aa75c1ca8d46a95d51bba. While this addendum was being written the branch moved again and the two files it touched are inside my baseline, so the baseline is recomputed at the new tip rather than re-labelled. The published receipt is not rewritten.",
+ "tip_read_from_the_network": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+ "tip_equals_the_generation_measured": true,
+ "previous_generation": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba",
+ "generation": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+ "ruler": {
+  "path": "evidence/ord0331-ast-crossfile-S4/ui_exposure_taint_ast_r3.cjs",
+  "blob": "6a251d3a6bea70329e06581384a81d5ef54c96a6"
+ },
+ "modules_in_graph": 76,
+ "files_found": 76,
+ "baseline_cells": [
+  "frontend/src/app/V8Experience.tsx:2609 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+  "frontend/src/components/ProductErrorBoundary.tsx:104 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/components/ProductErrorBoundary.tsx:105 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/agent/AgentRunRail.tsx:18 UPSTREAM_READ_DIRECT",
+  "frontend/src/features/discovery/DestinationPreparationPanel.tsx:346 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/discovery/DestinationPreparationPanel.tsx:469 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/discovery/DestinationPreparationPanel.tsx:522 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/discovery/RealCityDiscoveryPanel.tsx:150 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:731 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/planning/PlanWithAiSheet.tsx:1019 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+  "frontend/src/features/planning/PlanWithAiSheet.tsx:1046 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+  "frontend/src/features/recovery/RecoveryRequiredPanel.tsx:166 RAW_BODY_TO_DOM",
+  "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx:162 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/simulation/SimulationPanel.tsx:934 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+  "frontend/src/features/studio/V12TripStudioPanel.tsx:106 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/trip/ActivityDetail.tsx:206 RAW_BODY_TO_DOM",
+  "frontend/src/main.tsx:968 UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+  "frontend/src/main.tsx:992 UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+ ],
+ "baseline_count": 20,
+ "previous_baseline_count": 23,
+ "flows_dropped_between_the_two_tips": [
+  "frontend/src/features/agent/AgentComposer.tsx:185 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/agent/CopilotDock.tsx:450 UPSTREAM_EXCEPTION_TO_DOM",
+  "frontend/src/features/agent/CopilotDock.tsx:770 UPSTREAM_EXCEPTION_TO_DOM"
+ ],
+ "flows_added_between_the_two_tips": [],
+ "why_they_dropped": "lane S1 ORD-0326 landed on this tip: AgentComposer.tsx:5 and CopilotDock.tsx now route the caught value through classifyReadFailure + copyFor in lib/failureAttribution.ts, so the screens show device wording instead of cause.message, and the raw reading (attribution.telemetry) is written to the data-attribution ATTRIBUTE at AgentComposer.tsx:193 - an attribute is not a sink under Q64, so it is not reported. This is the shared cross-file channel ORD-0331 was built to follow, seen working on the product.",
+ "coverage": {
+  "unresolved_import_specs": 35,
+  "parse_diagnostics": 0,
+  "depth_cut_lookups": 56,
+  "crossing_cuts": 0
+ },
+ "product_status_porcelain_frontend_lines": 0,
+ "claim_kind": "recomputation",
+ "derived_result": null,
+ "claimed_result": "live tip a8237d7b50a1 read from the network; r6 baseline recomputed there = 20 cells (was 23 at 821a0eb54cca); 3 flows dropped and 0 added between the two tips; product frontend dirty lines = 0"
+}
