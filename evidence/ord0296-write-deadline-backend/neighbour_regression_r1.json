@@ -1,0 +1,60 @@
+{
+ "what": "ORD-0296 邻居回归（跑在被改过的两条腿上的模块，逐模块读数 + 一次合跑）",
+ "lane": "F 8ccd71d8",
+ "ran_at": "2026-09-25T09:42:47+08:00",
+ "tree": "candidate 6d041dcce11d05f28a55abadd40717f321b4db38（从该尖 git archive 干净导出）",
+ "backend_cwd": "D:\\moodle\\_qoder_f_run\\snap_0296_g2\\backend",
+ "interpreter": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+ "modules": [
+  {
+   "module": "tests/test_qoder_ord0296_write_deadline.py",
+   "rc": 0,
+   "collected_line": "",
+   "summary_line": "10 passed, 2 warnings in 2.51s",
+   "red_nodeids": []
+  },
+  {
+   "module": "tests/test_qoder_ord0272_continuation.py",
+   "rc": 0,
+   "collected_line": "",
+   "summary_line": "8 passed, 2 warnings in 3.63s",
+   "red_nodeids": []
+  },
+  {
+   "module": "tests/test_qoder_ord0287_k8_carrier.py",
+   "rc": 0,
+   "collected_line": "",
+   "summary_line": "2 passed, 2 warnings in 1.81s",
+   "red_nodeids": []
+  },
+  {
+   "module": "tests/test_agent_mission_runtime.py",
+   "rc": 0,
+   "collected_line": "",
+   "summary_line": "2 passed, 2 warnings in 1.92s",
+   "red_nodeids": []
+  },
+  {
+   "module": "tests/test_v16_integration.py",
+   "rc": 0,
+   "collected_line": "",
+   "summary_line": "9 passed, 2 warnings in 1.91s",
+   "red_nodeids": []
+  },
+  {
+   "module": "tests/test_v18_2_agent_productization.py",
+   "rc": 0,
+   "collected_line": "",
+   "summary_line": "4 passed in 1.08s",
+   "red_nodeids": []
+  }
+ ],
+ "combined": {
+  "rc": 0,
+  "summary_line": "35 passed, 2 warnings in 4.95s",
+  "red_nodeids": [],
+  "passed_count": 35
+ },
+ "why_this_exists": "我收据 C9 里那句邻居汇总是手打的（23），而账本块写的是实测合跑（22）——两处不一致时按实测重跑一遍，把读数落成工件，而不是挑一个说。",
+ "claim_kind": "code_determined"
+}
