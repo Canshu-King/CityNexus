@@ -1,0 +1,848 @@
+{
+ "at": "2026-09-25T18:34:59+08:00",
+ "order": "ORD-0281 keyed half · arms",
+ "lane": "B c01d72a3",
+ "base_tip": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+ "spec": "e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+ "runs": {
+  "pristine": {
+   "rc": 0,
+   "outcomes": {
+    "TA": "passed",
+    "TB": "skipped",
+    "TC": "skipped",
+    "TD": "skipped",
+    "K1": "skipped",
+    "K2": "passed",
+    "K3": "skipped"
+   },
+   "log": "ord0281_pristine_183227.log",
+   "run_id": "0281p13227",
+   "per_arm": {
+    "K1": {
+     "status": "skipped",
+     "expectation": "skipped"
+    },
+    "K2": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "K3": {
+     "status": "skipped",
+     "expectation": "skipped"
+    },
+    "TA": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TB": {
+     "status": "skipped",
+     "expectation": "skipped"
+    },
+    "TC": {
+     "status": "skipped",
+     "expectation": "skipped"
+    },
+    "TD": {
+     "status": "skipped",
+     "expectation": "skipped"
+    }
+   },
+   "expected": {
+    "TA": "passed",
+    "TB": "skipped",
+    "TC": "skipped",
+    "TD": "skipped",
+    "K1": "skipped",
+    "K2": "passed",
+    "K3": "skipped"
+   },
+   "meets_expectation": true,
+   "arms_judged": [
+    "TA",
+    "TB",
+    "TC",
+    "TD",
+    "K1",
+    "K2",
+    "K3"
+   ],
+   "arms_aborted_by_the_red_arm": [],
+   "expected_arms_without_a_file": [],
+   "readings": {
+    "K1": null,
+    "K2": {
+     "arm": "K2",
+     "on_screen": null,
+     "observed_outcome": "This device stopped waiting after 60 s",
+     "server_said": "not-applicable",
+     "keys_seen": [],
+     "elapsed_ms": null,
+     "sentence_seconds_named": 60,
+     "had_network_blame": null,
+     "surface_not_judged": "the copy builder's return value and the shipped constants, not a panel read",
+     "verdict": "MET"
+    },
+    "K3": null,
+    "TA": {
+     "arm": "TA",
+     "clicked": 1790332361482,
+     "settled_at": 1790332361878,
+     "elapsed_ms": 396,
+     "on_screen": "success",
+     "sentence_seconds_named": null,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nApplying…\nAdjust today only\nRemind me later\n\nYour trip has be",
+     "server_said": "answered-200",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET"
+    },
+    "TB": null,
+    "TC": null,
+    "TD": null
+   }
+  },
+  "bound2000": {
+   "rc": 0,
+   "outcomes": {
+    "TA": "passed",
+    "TB": "passed",
+    "TC": "passed",
+    "TD": "passed",
+    "K1": "passed",
+    "K2": "skipped",
+    "K3": "passed"
+   },
+   "log": "ord0281_bound2000_183227.log",
+   "run_id": "0281p23227",
+   "per_arm": {
+    "K1": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "K2": {
+     "status": "skipped",
+     "expectation": "skipped"
+    },
+    "K3": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TA": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TB": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TC": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TD": {
+     "status": "passed",
+     "expectation": "passed"
+    }
+   },
+   "expected": {
+    "TA": "passed",
+    "TB": "passed",
+    "TC": "passed",
+    "TD": "passed",
+    "K1": "passed",
+    "K2": "skipped",
+    "K3": "passed"
+   },
+   "meets_expectation": true,
+   "arms_judged": [
+    "TA",
+    "TB",
+    "TC",
+    "TD",
+    "K1",
+    "K2",
+    "K3"
+   ],
+   "arms_aborted_by_the_red_arm": [],
+   "expected_arms_without_a_file": [],
+   "readings": {
+    "K1": {
+     "arm": "K1",
+     "elapsed_ms": 2007,
+     "on_screen": null,
+     "observed_outcome": "still-pending/WriteDeadlineMissed",
+     "server_said": "not-applicable",
+     "keys_seen": [],
+     "had_network_blame": null,
+     "surface_not_judged": "wire-level leg race; this arm never reads the panel",
+     "verdict": "MET",
+     "note": "module-level in real browser: the product has no keyless surface that renders this sentence"
+    },
+    "K2": null,
+    "K3": {
+     "arm": "K3",
+     "on_screen": null,
+     "observed_outcome": "WriteDeadlineMissed/still-pending",
+     "elapsed_ms": null,
+     "sentence_seconds_named": null,
+     "had_network_blame": null,
+     "surface_not_judged": "module-level race through readDeadline/writeDeadline",
+     "server_said": "not-applicable",
+     "keys_seen": [],
+     "verdict": "MET",
+     "note": "module-level: the client's own path; the read error name is not reused for writes"
+    },
+    "TA": {
+     "arm": "TA",
+     "clicked": 1790332373804,
+     "settled_at": 1790332374257,
+     "elapsed_ms": 453,
+     "on_screen": "success",
+     "sentence_seconds_named": null,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nYour trip ",
+     "server_said": "answered-200",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET"
+    },
+    "TB": {
+     "arm": "TB",
+     "clicked": 1790332374809,
+     "settled_at": 1790332377213,
+     "elapsed_ms": 2404,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 2,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET"
+    },
+    "TC": {
+     "arm": "TC",
+     "clicked": 1790332377787,
+     "settled_at": 1790332380194,
+     "elapsed_ms": 2407,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 2,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET",
+     "note": "bound_under_test=2000;baseline=4000"
+    },
+    "TD": {
+     "arm": "TD",
+     "clicked": 1790332380777,
+     "settled_at": 1790332385256,
+     "elapsed_ms": 4479,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 2,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal",
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE"
+    }
+   }
+  },
+  "bound1000": {
+   "rc": 0,
+   "outcomes": {
+    "TA": "passed",
+    "TB": "passed",
+    "TC": "passed",
+    "TD": "passed",
+    "K1": "passed",
+    "K2": "skipped",
+    "K3": "passed"
+   },
+   "log": "ord0281_bound1000_183227.log",
+   "run_id": "0281p33227",
+   "per_arm": {
+    "K1": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "K2": {
+     "status": "skipped",
+     "expectation": "skipped"
+    },
+    "K3": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TA": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TB": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TC": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TD": {
+     "status": "passed",
+     "expectation": "passed"
+    }
+   },
+   "expected": {
+    "TA": "passed",
+    "TB": "passed",
+    "TC": "passed",
+    "TD": "passed",
+    "K1": "passed",
+    "K2": "skipped",
+    "K3": "passed"
+   },
+   "meets_expectation": true,
+   "arms_judged": [
+    "TA",
+    "TB",
+    "TC",
+    "TD",
+    "K1",
+    "K2",
+    "K3"
+   ],
+   "arms_aborted_by_the_red_arm": [],
+   "expected_arms_without_a_file": [],
+   "readings": {
+    "K1": {
+     "arm": "K1",
+     "elapsed_ms": 1011,
+     "on_screen": null,
+     "observed_outcome": "still-pending/WriteDeadlineMissed",
+     "server_said": "not-applicable",
+     "keys_seen": [],
+     "had_network_blame": null,
+     "surface_not_judged": "wire-level leg race; this arm never reads the panel",
+     "verdict": "MET",
+     "note": "module-level in real browser: the product has no keyless surface that renders this sentence"
+    },
+    "K2": null,
+    "K3": {
+     "arm": "K3",
+     "on_screen": null,
+     "observed_outcome": "WriteDeadlineMissed/still-pending",
+     "elapsed_ms": null,
+     "sentence_seconds_named": null,
+     "had_network_blame": null,
+     "surface_not_judged": "module-level race through readDeadline/writeDeadline",
+     "server_said": "not-applicable",
+     "keys_seen": [],
+     "verdict": "MET",
+     "note": "module-level: the client's own path; the read error name is not reused for writes"
+    },
+    "TA": {
+     "arm": "TA",
+     "clicked": 1790332407046,
+     "settled_at": 1790332407517,
+     "elapsed_ms": 471,
+     "on_screen": "success",
+     "sentence_seconds_named": null,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nYour trip ",
+     "server_said": "answered-200",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET"
+    },
+    "TB": {
+     "arm": "TB",
+     "clicked": 1790332408073,
+     "settled_at": 1790332409506,
+     "elapsed_ms": 1433,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 1,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET"
+    },
+    "TC": {
+     "arm": "TC",
+     "clicked": 1790332410070,
+     "settled_at": 1790332411486,
+     "elapsed_ms": 1416,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 1,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET",
+     "note": "bound_under_test=1000;baseline=2000"
+    },
+    "TD": {
+     "arm": "TD",
+     "clicked": 1790332412037,
+     "settled_at": 1790332414543,
+     "elapsed_ms": 2506,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 1,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal",
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE"
+    }
+   }
+  },
+  "ca_no_delegate": {
+   "rc": 1,
+   "outcomes": {
+    "TA": "passed",
+    "TB": "passed",
+    "TC": "passed",
+    "TD": "passed",
+    "K1": "passed",
+    "K2": "skipped",
+    "K3": "failed"
+   },
+   "log": "ord0281_ca_no_delegate_183227.log",
+   "run_id": "0281p43227",
+   "per_arm": {
+    "K1": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "K2": {
+     "status": "skipped",
+     "expectation": "skipped"
+    },
+    "K3": {
+     "status": "failed",
+     "expectation": "passed"
+    },
+    "TA": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TB": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TC": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TD": {
+     "status": "passed",
+     "expectation": "passed"
+    }
+   },
+   "expected": {
+    "TA": "passed",
+    "TB": "passed",
+    "TC": "passed",
+    "TD": "passed",
+    "K1": "passed",
+    "K2": "skipped",
+    "K3": "failed"
+   },
+   "meets_expectation": true,
+   "arms_judged": [
+    "TA",
+    "TB",
+    "TC",
+    "TD",
+    "K1",
+    "K2",
+    "K3"
+   ],
+   "arms_aborted_by_the_red_arm": [],
+   "expected_arms_without_a_file": [],
+   "readings": {
+    "K1": {
+     "arm": "K1",
+     "elapsed_ms": 2011,
+     "on_screen": null,
+     "observed_outcome": "still-pending/WriteDeadlineMissed",
+     "server_said": "not-applicable",
+     "keys_seen": [],
+     "had_network_blame": null,
+     "surface_not_judged": "wire-level leg race; this arm never reads the panel",
+     "verdict": "MET",
+     "note": "module-level in real browser: the product has no keyless surface that renders this sentence"
+    },
+    "K2": null,
+    "K3": {
+     "arm": "K3",
+     "on_screen": null,
+     "observed_outcome": "still-pending/still-pending",
+     "elapsed_ms": null,
+     "sentence_seconds_named": null,
+     "had_network_blame": null,
+     "surface_not_judged": "module-level race through readDeadline/writeDeadline",
+     "server_said": "not-applicable",
+     "keys_seen": [],
+     "verdict": "NOT_MET",
+     "note": "module-level: the client's own path; the read error name is not reused for writes"
+    },
+    "TA": {
+     "arm": "TA",
+     "clicked": 1790332432310,
+     "settled_at": 1790332432756,
+     "elapsed_ms": 446,
+     "on_screen": "success",
+     "sentence_seconds_named": null,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nYour trip ",
+     "server_said": "answered-200",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET"
+    },
+    "TB": {
+     "arm": "TB",
+     "clicked": 1790332433293,
+     "settled_at": 1790332435737,
+     "elapsed_ms": 2444,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 2,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET"
+    },
+    "TC": {
+     "arm": "TC",
+     "clicked": 1790332436404,
+     "settled_at": 1790332438823,
+     "elapsed_ms": 2419,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 2,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET",
+     "note": "bound_under_test=2000;baseline=4000"
+    },
+    "TD": {
+     "arm": "TD",
+     "clicked": 1790332439441,
+     "settled_at": 1790332443914,
+     "elapsed_ms": 4473,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 2,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal",
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE"
+    }
+   }
+  },
+  "ca_keyless_too": {
+   "rc": 1,
+   "outcomes": {
+    "TA": "passed",
+    "TB": "passed",
+    "TC": "passed",
+    "TD": "passed",
+    "K1": "failed",
+    "K2": "skipped",
+    "K3": "skipped"
+   },
+   "log": "ord0281_ca_keyless_too_183227.log",
+   "run_id": "0281p53227",
+   "per_arm": {
+    "K1": {
+     "status": "failed",
+     "expectation": "passed"
+    },
+    "TA": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TB": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TC": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TD": {
+     "status": "passed",
+     "expectation": "passed"
+    }
+   },
+   "expected": {
+    "TA": "passed",
+    "TB": "passed",
+    "TC": "passed",
+    "TD": "passed",
+    "K1": "failed",
+    "K2": "skipped",
+    "K3": "failed"
+   },
+   "meets_expectation": true,
+   "arms_judged": [
+    "TA",
+    "TB",
+    "TC",
+    "TD",
+    "K1"
+   ],
+   "arms_aborted_by_the_red_arm": [
+    "K2",
+    "K3"
+   ],
+   "expected_arms_without_a_file": [],
+   "readings": {
+    "K1": {
+     "arm": "K1",
+     "elapsed_ms": 2015,
+     "on_screen": null,
+     "observed_outcome": "WriteDeadlineMissed/WriteDeadlineMissed",
+     "server_said": "not-applicable",
+     "keys_seen": [],
+     "had_network_blame": null,
+     "surface_not_judged": "wire-level leg race; this arm never reads the panel",
+     "verdict": "NOT_MET",
+     "note": "module-level in real browser: the product has no keyless surface that renders this sentence"
+    },
+    "TA": {
+     "arm": "TA",
+     "clicked": 1790332467057,
+     "settled_at": 1790332467518,
+     "elapsed_ms": 461,
+     "on_screen": "success",
+     "sentence_seconds_named": null,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nYour trip ",
+     "server_said": "answered-200",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET"
+    },
+    "TB": {
+     "arm": "TB",
+     "clicked": 1790332468058,
+     "settled_at": 1790332470449,
+     "elapsed_ms": 2391,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 2,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET"
+    },
+    "TC": {
+     "arm": "TC",
+     "clicked": 1790332471114,
+     "settled_at": 1790332473523,
+     "elapsed_ms": 2409,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 2,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET",
+     "note": "bound_under_test=2000;baseline=4000"
+    },
+    "TD": {
+     "arm": "TD",
+     "clicked": 1790332474136,
+     "settled_at": 1790332478621,
+     "elapsed_ms": 4485,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 2,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal",
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE"
+    }
+   }
+  },
+  "ca_fixed_secs": {
+   "rc": 1,
+   "outcomes": {
+    "TA": "passed",
+    "TB": "failed",
+    "TC": "skipped",
+    "TD": "skipped",
+    "K1": "skipped",
+    "K2": "skipped",
+    "K3": "skipped"
+   },
+   "log": "ord0281_ca_fixed_secs_183227.log",
+   "run_id": "0281p63227",
+   "per_arm": {
+    "TA": {
+     "status": "passed",
+     "expectation": "passed"
+    },
+    "TB": {
+     "status": "failed",
+     "expectation": "passed"
+    }
+   },
+   "expected": {
+    "TA": "passed",
+    "TB": "failed",
+    "TC": "failed",
+    "TD": "passed",
+    "K1": "passed",
+    "K2": "skipped",
+    "K3": "passed"
+   },
+   "meets_expectation": true,
+   "arms_judged": [
+    "TA",
+    "TB"
+   ],
+   "arms_aborted_by_the_red_arm": [
+    "TC",
+    "TD",
+    "K1",
+    "K2",
+    "K3"
+   ],
+   "expected_arms_without_a_file": [],
+   "readings": {
+    "TA": {
+     "arm": "TA",
+     "clicked": 1790332495013,
+     "settled_at": 1790332495417,
+     "elapsed_ms": 404,
+     "on_screen": "success",
+     "sentence_seconds_named": null,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nApplying…\nAdjust today only\nRemind me later\n\nYour trip has be",
+     "server_said": "answered-200",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "MET"
+    },
+    "TB": {
+     "arm": "TB",
+     "clicked": 1790332495989,
+     "settled_at": 1790332498389,
+     "elapsed_ms": 2400,
+     "on_screen": "bound-sentence",
+     "sentence_seconds_named": 99,
+     "had_network_blame": false,
+     "screen_text_head": "Option A · Suggested change\n\none stop closed\n\nConfirmed bookings and your arrival/departure stay unchanged.\n\nAccept new plan\nAdjust today only\nRemind me later\n\nThis devic",
+     "server_said": "never-answered",
+     "keys_seen": [
+      "accept-ord0281-proposal"
+     ],
+     "verdict": "NOT_MET"
+    }
+   }
+  }
+ },
+ "digests": {
+  "pristine": {
+   "before": {},
+   "mutant": {},
+   "restored": true
+  },
+  "bound2000": {
+   "before": {
+    "writeDeadline.ts": "0e1210c9702c6578"
+   },
+   "mutant": {
+    "writeDeadline.ts": "2a7b566bde29ba2e"
+   },
+   "restored": true
+  },
+  "bound1000": {
+   "before": {
+    "writeDeadline.ts": "0e1210c9702c6578"
+   },
+   "mutant": {
+    "writeDeadline.ts": "ee8385fea49d75c4"
+   },
+   "restored": true
+  },
+  "ca_no_delegate": {
+   "before": {
+    "writeDeadline.ts": "0e1210c9702c6578",
+    "readDeadline.ts": "eeb6c62698e79529"
+   },
+   "mutant": {
+    "writeDeadline.ts": "2a7b566bde29ba2e",
+    "readDeadline.ts": "76dcc82354f956f7"
+   },
+   "restored": true
+  },
+  "ca_keyless_too": {
+   "before": {
+    "writeDeadline.ts": "0e1210c9702c6578"
+   },
+   "mutant": {
+    "writeDeadline.ts": "0297735220872b37"
+   },
+   "restored": true
+  },
+  "ca_fixed_secs": {
+   "before": {
+    "writeDeadline.ts": "0e1210c9702c6578"
+   },
+   "mutant": {
+    "writeDeadline.ts": "46c8bc1c63b77235"
+   },
+   "restored": true
+  }
+ },
+ "counter_arms_bit": true,
+ "per_counter_arm_bit": {
+  "ca_no_delegate": true,
+  "ca_keyless_too": true,
+  "ca_fixed_secs": true
+ },
+ "baseline_arms_met": true,
+ "verdict": "TEETH_AND_BASELINE",
+ "derived_result": null
+}
