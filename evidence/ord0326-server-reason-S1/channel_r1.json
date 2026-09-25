@@ -1,0 +1,170 @@
+{
+ "schema": "CNX_ORD0326_CHANNEL_V1",
+ "order": "ORD-0326",
+ "lane": "S1-q64sweep",
+ "at_local": "2026-09-26T04:49:42+0800",
+ "generation": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "candidate_branch": "agent/S1-q64sweep-candidates",
+ "candidate_tip": "b32c0d6516fe60539d6485e95b8fa4534e1ad56d",
+ "candidate_verified_by_ls_remote": "b32c0d6516fe60539d6485e95b8fa4534e1ad56d",
+ "based_on": "65df31df96cfb8a954f5feb36484710a883e1597",
+ "base_is_ancestor_of_generation": true,
+ "frontend_tree_identical_base_vs_generation": true,
+ "authoritative_branch_pushed": false,
+ "ruler": "eb262f59e54d5142ad0e8041704e751eac473ace",
+ "ruler_route": "commander/control:evidence/ord0322-ast-taint-S4/ui_exposure_taint_ast_r1.cjs",
+ "collision_check": {
+  "method": "ls-remote all heads + the 03:34 commander dispatch in the ledger mirror (origin/cmdcontrol:CITYNEXUS_AGENT_CONTROL.md)",
+  "heads_seen": 85,
+  "lane_B_candidate_branch_found": false,
+  "B_claimed_per_ledger": [
+   "frontend/src/components/ProductErrorBoundary.tsx",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx (:88 and the 9 cells downstream of it)"
+  ],
+  "yielded_by_me": [
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "frontend/src/components/ProductErrorBoundary.tsx",
+   "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "frontend/src/features/planning/PlanComparison.tsx"
+  ],
+  "conflict_found": "the order named JourneyInboxWorkbench as this lane's home turf, while the ledger dispatch at 03:34 assigns the same file's thrower to @B; the order's own rule (two lanes, one file, not both) decided it - B keeps it"
+ },
+ "files_written": [
+  {
+   "path": "frontend/src/lib/serverReason.ts",
+   "blob_at_candidate_tip": "2b5a8b851bd908d3df11c81bb91f7cfe20e07e2d"
+  },
+  {
+   "path": "frontend/src/components/ServerReasonDetail.tsx",
+   "blob_at_candidate_tip": "573ec7360d62514279191592df1cf190f344d954"
+  },
+  {
+   "path": "frontend/src/features/stay/HotelsPanel.tsx",
+   "blob_at_candidate_tip": "72c28633cd4e4e85c8ab0505c278a6a700d84ea3"
+  },
+  {
+   "path": "frontend/src/features/agent/AgentComposer.tsx",
+   "blob_at_candidate_tip": "00a7cf08b3abec3665b16f3d360daf54143d72c6"
+  },
+  {
+   "path": "frontend/src/features/agent/CopilotDock.tsx",
+   "blob_at_candidate_tip": "1d94fb6ac4a404cbbb1118555a8fa83db2d61d90"
+  },
+  {
+   "path": "frontend/e2e/server-reason-ord0326.spec.ts",
+   "blob_at_candidate_tip": "8013851c6284ad4b18cb5f815c24007180f991d2"
+  },
+  {
+   "path": "frontend/playwright.logic.config.ts",
+   "blob_at_candidate_tip": "d19ac273ac1b46200ad538eb0cd66828e7eac143"
+  }
+ ],
+ "one_channel_design": {
+  "helper": "frontend/src/lib/serverReason.ts :: describeServerReason + reasonFromThrown",
+  "only_dom_slot": "frontend/src/components/ServerReasonDetail.tsx (attributed, inside <details>, per CMDR_DECISION Q67=1)",
+  "strings_for_the_screen": "serverReasonScreenTexts, JSX-free so a spec can assert what a traveller reads",
+  "allowed_fields": [
+   "http_status",
+   "content_type",
+   "body_bytes",
+   "response_received",
+   "elapsed_ms",
+   "request_id"
+  ],
+  "never_rendered": [
+   "a caught object",
+   "cause.message",
+   "a raw body",
+   "anything multi-line (stack-shaped)"
+  ]
+ },
+ "r4_hits_before": {
+  "frontend/src/app/V8Experience.tsx": 3,
+  "frontend/src/features/agent/AgentComposer.tsx": 1,
+  "frontend/src/features/agent/CopilotDock.tsx": 2,
+  "frontend/src/features/stay/HotelsPanel.tsx": 1
+ },
+ "r4_hits_after_by_file": {
+  "frontend/src/features/agent/AgentComposer.tsx": 1,
+  "frontend/src/features/agent/CopilotDock.tsx": 2
+ },
+ "r4_before_total_touched_files_only": 4,
+ "r4_after_total": 3,
+ "r4_file_not_attempted": {
+  "frontend/src/app/V8Experience.tsx": 3
+ },
+ "r4_after_rules": [
+  "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+ ],
+ "r4_remaining_reading": "HotelsPanel went 1 -> 0. AgentComposer/CopilotDock changed rule rather than disappearing: the sinks now read UPSTREAM_TEXT_VIA_HELPER_TO_DOM because reasonFromThrown touches `.body` on a caught error and r4 is per-file, so it cannot see that the helper sanitises the value. The raw-exception read (cause.message into a rendered string) is gone from those three sinks.",
+ "tsc": {
+  "command": "node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit",
+  "exit": 0,
+  "output": ""
+ },
+ "spec": {
+  "command": "node node_modules/@playwright/test/cli.js test --config playwright.logic.config.ts",
+  "exit": 0,
+  "summary": [
+   "4 passed (407ms)"
+  ],
+  "why_a_separate_config": "playwright.config.ts binds 127.0.0.1:8000 with reuseExistingServer:true; :8000 is NOT AVAILABLE by ruling and whatever answers there may be another lane's backend",
+  "harness_limit_measured": "Playwright's transform rewrites JSX into a node shape react-dom/server rejects ({__pw_type,type,props,key}), measured on a one-line JSX module, so the spec asserts the strings the component renders rather than the markup"
+ },
+ "mutations": [
+  {
+   "mutation": "A_sentence_into_main_copy",
+   "red_tests": [
+    "x  1 e2e\\server-reason-ord0326.spec.ts:26:1 › direction A - server wrote a sentence: that sentence and its req"
+   ],
+   "caught": true,
+   "summary": [
+    "1 failed",
+    "3 passed (866ms)"
+   ]
+  },
+  {
+   "mutation": "B_request_id_dropped_from_machine_line",
+   "red_tests": [
+    "x  1 e2e\\server-reason-ord0326.spec.ts:26:1 › direction A - server wrote a sentence: that sentence and its req"
+   ],
+   "caught": true,
+   "summary": [
+    "1 failed",
+    "3 passed (792ms)"
+   ]
+  },
+  {
+   "mutation": "C_multiline_guard_removed",
+   "red_tests": [
+    "x  4 e2e\\server-reason-ord0326.spec.ts:89:1 › a multi-line message is refused as a sentence, so an exception o"
+   ],
+   "caught": true,
+   "summary": [
+    "1 failed",
+    "3 passed (519ms)"
+   ]
+  }
+ ],
+ "all_mutations_caught": true,
+ "not_done": [
+  {
+   "what": "frontend/src/app/V8Experience.tsx (:1385 and :1562, both fed by the setMessage at :1030)",
+   "why_not": "the `message` state has 15 writers in that file and it is the one frontend file the ledger records as already hand-merged across two lanes; landing it properly means deciding the state shape, which is a larger change than I can verify in this window. Left whole rather than half-opened.",
+   "next_owner": "S1 after the B/F files settle, or whoever takes the shell state"
+  },
+  {
+   "what": "the 9 JourneyInboxWorkbench cells",
+   "why_not": "yielded to @B by the collision rule",
+   "next_owner": "B - the channel and its tests are on agent/S1-q64sweep-candidates, ready to adopt"
+  },
+  {
+   "what": "the full e2e suite",
+   "why_not": "needs :8000 plus a dev server; not started by ruling and not something I can attribute to my own branch if another lane's server answers",
+   "next_owner": "whoever holds the phone surface"
+  }
+ ],
+ "claim_kind": "code_landed_on_candidate_branch",
+ "claimed_result": "candidate agent/S1-q64sweep-candidates at b32c0d6516fe: 7 files written, tsc exit 0, spec 4 passed (407ms), r4 4 -> 3 on the touched files, all 3 mutations caught",
+ "derived_result": "one shared server-reason channel landed for the stay and agent surfaces; inbox and boundary files yielded to B; V8Experience left whole and named"
+}
