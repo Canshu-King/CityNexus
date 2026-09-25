@@ -1,0 +1,351 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.config.ts",
+      "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\playwright.config.ts",
+    "rootDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\_qoderAuthoritativeSetup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "real-seed",
+        "name": "real-seed",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "/_qoderRealSeed\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "_qoderRealSeed.setup.ts",
+      "file": "_qoderRealSeed.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "seed a real journey through the product API",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "real-seed",
+              "projectName": "real-seed",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4751,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "[qoder-real-seed] journey=32565d6e-4006-456c-aa08-7d9ef9d7ac18 options=4 chosen=384b667e-7ea6-423b-bb24-516214c845f0 (Haihe Riverside Hotel)\n"
+                    },
+                    {
+                      "text": "[qoder-real-seed] trialWizard=false live-journey-current=true\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T16:34:56.976Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e5b963f3c8f6099f74d0-d425156f0efa8e024368",
+          "file": "_qoderRealSeed.setup.ts",
+          "line": 110,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "qoder-ord0302-unreadable-server-body.spec.ts",
+      "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "ord0302-N1 a non-JSON 5xx stays an HTTP answer with a visible device reading",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 967,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T16:35:02.249Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-56f01151c154441a6af1",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 137,
+          "column": 3
+        },
+        {
+          "title": "ord0302-N2 a 4xx with the server's sentence still quotes it verbatim (positive control)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1012,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T16:35:03.314Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-3f34c398ce4d9d115610",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 137,
+          "column": 3
+        },
+        {
+          "title": "ord0302-N3 a genuine network failure keeps NETWORK and still renders the detail block",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 877,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T16:35:04.335Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-45a5eb871d0174f0311d",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 137,
+          "column": 3
+        },
+        {
+          "title": "ord0302-X1 every 200 shape whose card points at 技术详情 renders a block that carries a reading",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 900000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4701,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0302-unreadable-server-body.spec.ts :: X1 — {\"R19_④_200_empty_body\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"0\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"0\"}},\"R20_④_200_json_empty_object\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"}},\"R21_④_200_json_array\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"}},\"R22_④_200_text_plain_payload\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"33\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"33\"}},\"R23_④_200_mission_unusable_status\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"110\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"110\"}},\"R24_Q64_200_credential_shaped_text\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"82\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"82\"}}}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 44\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R19_④_200_empty_body: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R20_④_200_json_empty_object: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R21_④_200_json_array: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R22_④_200_text_plain_payload: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R23_④_200_mission_unusable_status: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R24_Q64_200_credential_shaped_text: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0302-unreadable-server-body.spec.ts :: X1 — {\"R19_④_200_empty_body\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"0\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"0\"}},\"R20_④_200_json_empty_object\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"}},\"R21_④_200_json_array\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"}},\"R22_④_200_text_plain_payload\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"33\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"33\"}},\"R23_④_200_mission_unusable_status\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"110\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"110\"}},\"R24_Q64_200_credential_shaped_text\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"82\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"82\"}}}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 44\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R19_④_200_empty_body: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R20_④_200_json_empty_object: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R21_④_200_json_array: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R22_④_200_text_plain_payload: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R23_④_200_mission_unusable_status: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R24_Q64_200_credential_shaped_text: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts:331:72",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts",
+                      "column": 72,
+                      "line": 331
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 329 |\u001b[39m                        read\u001b[33m:\u001b[39m { \u001b[33m...\u001b[39mhead\u001b[33m,\u001b[39m shape_count\u001b[33m:\u001b[39m \u001b[33mX5_SHAPES\u001b[39m\u001b[33m.\u001b[39mlength }\u001b[33m,\u001b[39m\n \u001b[90m 330 |\u001b[39m                        verdict\u001b[33m:\u001b[39m rows\u001b[33m.\u001b[39mevery((r) \u001b[33m=>\u001b[39m r\u001b[33m.\u001b[39mok) \u001b[33m?\u001b[39m \u001b[32m\"MET\"\u001b[39m \u001b[33m:\u001b[39m \u001b[32m\"NOT_MET\"\u001b[39m\u001b[33m,\u001b[39m rows }\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 331 |\u001b[39m     expect(rows\u001b[33m.\u001b[39mfilter((r) \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39mr\u001b[33m.\u001b[39mok)\u001b[33m,\u001b[39m node(\u001b[32m\"X1\"\u001b[39m\u001b[33m,\u001b[39m \u001b[33mJSON\u001b[39m\u001b[33m.\u001b[39mstringify(per)))\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                                                        \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 332 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 333 |\u001b[39m\n \u001b[90m 334 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts",
+                        "column": 72,
+                        "line": 331
+                      },
+                      "message": "Error: e2e/qoder-ord0302-unreadable-server-body.spec.ts :: X1 — {\"R19_④_200_empty_body\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"0\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"0\"}},\"R20_④_200_json_empty_object\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"}},\"R21_④_200_json_array\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"2\"}},\"R22_④_200_text_plain_payload\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"33\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"33\"}},\"R23_④_200_mission_unusable_status\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"110\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"application/json\",\"bytes\":\"110\"}},\"R24_Q64_200_credential_shaped_text\":{\"status\":\"NO_PLANS_PRODUCED\",\"promise_in_copy\":false,\"details_count\":1,\"reason\":\"\",\"origin\":\"\",\"raw_rendered\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"82\"},\"raw_expected\":{\"http_status\":\"200\",\"content-type\":\"text/plain; charset=utf-8\",\"bytes\":\"82\"}}}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 44\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R19_④_200_empty_body: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R20_④_200_json_empty_object: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R21_④_200_json_array: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R22_④_200_text_plain_payload: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R23_④_200_mission_unusable_status: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"claim\": \"R24_Q64_200_credential_shaped_text: the copy still points there (Q53=①: render it, keep the pointer)\",\u001b[39m\n\u001b[31m+     \"got\": Object {\u001b[39m\n\u001b[31m+       \"promise_in_copy\": false,\u001b[39m\n\u001b[31m+     },\u001b[39m\n\u001b[31m+     \"ok\": false,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  329 |                        read: { ...head, shape_count: X5_SHAPES.length },\n  330 |                        verdict: rows.every((r) => r.ok) ? \"MET\" : \"NOT_MET\", rows };\n> 331 |     expect(rows.filter((r) => !r.ok), node(\"X1\", JSON.stringify(per))).toEqual([]);\n      |                                                                        ^\n  332 |   });\n  333 |\n  334 |\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts:331:72"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T16:35:05.218Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0302-unreadable-s-0ea8a-lock-that-carries-a-reading-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0302-unreadable-server-body.spec.ts",
+                    "column": 72,
+                    "line": 331
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-8907b1decc65dd8ecf02",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 295,
+          "column": 1
+        },
+        {
+          "title": "ord0302-X2 a promise-free card stays honest, and the empty-block direction is named as unmeasured",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 956,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T16:35:10.329Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "c1c7d721c5f677c6c129-b88b0b1efdbd95ab78fd",
+          "file": "qoder-ord0302-unreadable-server-body.spec.ts",
+          "line": 335,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-25T16:34:53.513Z",
+    "duration": 18755.103,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  }
+}
