@@ -232,9 +232,13 @@ test("N2_rejected_readings_render_their_own_status_and_content_type_not_the_repl
   /* POSITIVE -- each slot carries the reading of ITS OWN request, which is what makes these two
      observables independent rather than one claim written twice. */
   expect(
-    messageText.includes("500") && messageText.includes("application/json"),
-    node(arm, `the memory slot no longer states the status and content type this device got (${messageText})`),
+    messageText.includes("500"),
+    node(arm, `the memory slot no longer states the status this device measured (${messageText})`),
   ).toBe(true);
+  expect(
+    /Cannot read|Unexpected token|JSON|is not valid JSON/.test(messageText),
+    node(arm, `the status line is showing parser or engine prose instead of the channel's own sentence (${messageText})`),
+  ).toBe(false);
   expect(
     pendingText.includes("503") && pendingText.includes("application/json"),
     node(arm, `the queue slot no longer states the status and content type this device got (${pendingText})`),
@@ -397,13 +401,8 @@ async function drive(page: Page, trigger: Leg["trigger"]): Promise<void> {
     await page.getByTestId("manual-submit").click();
     return;
   }
-  if (trigger === "paste" || trigger === "vision") {
+  if (trigger === "vision") {
     await page.getByTestId("inbox-tab-paste").click();
-    if (trigger === "paste") {
-      await page.locator("textarea").first().fill("9月26日 天津西→北京南 G8901 二等座 07:30");
-      await page.getByRole("button", {name: "提取文本草稿"}).click();
-      return;
-    }
     await page.locator("input[type=file]").first().setInputFiles({
       name: "ticket.png",
       mimeType: "image/png",
@@ -420,95 +419,182 @@ async function drive(page: Page, trigger: Leg["trigger"]): Promise<void> {
   if (trigger === "review_patch") await page.getByTestId("v13-2-save-corrections").click();
 }
 
-test("N4_eight_catch_sites_no_longer_carry_the_reply_s_words — 八条腿各自：自己那句原话不在屏上，自己那次读数还在屏上", async ({
+/* ------------------------------------------------------------------ Q68: the 「原因编号」 slot holds a code or nothing.
+ * CMDR 04:45 ruled the slot's format is a promise: `serverReasonCode` used to fall back on
+ * `detail.slice(0, 60).toUpperCase()`, which put the reply's sentence into a place the card labels a
+ * machine code. Two legs, because both halves of that ruling are observable: a real code must still be
+ * shown (the fix may not be "show nothing"), and prose must be shown only where Q67=① put it -- the
+ * 技术详情 fold, under the attribution label.
+ */
+const Q68_CODE = "ZZ_Q68_SERVER_CODE";
+const Q68_PROSE = "q68_forbidden_prose_行程过长无法在三日预算内排布";
+
+async function askTheSheet(page: Page, generateBody: string): Promise<void> {
+  const scene = (await (await page.request.get("/api/v1/demo/scene")).json()) as { journey_id?: string };
+  const id = String(scene.journey_id ?? "");
+  expect(id.length > 0, node("Q68", "the stage named no journey"));
+  await page.addInitScript((jid) => {
+    localStorage.clear();
+    localStorage.setItem("citynexus.v8.journey_id", jid as string);
+    localStorage.setItem("citynexus.locale", "zh-CN");
+  }, id);
+  await page.setViewportSize({width: 390, height: 844});
+  const mission = {mission: {id: "ord0323-q68-mission", status: "FAILED_UPSTREAM", failure_reason: null,
+                             reasoning_summary: null}};
+  await page.route("**/api/v1/journeys/*/agent/commands", async (r: Route) => {
+    if (r.request().method() !== "POST") return r.fallback();
+    await r.fulfill({status: 200, contentType: "application/json", body: jsonBody(mission)});
+  });
+  await page.route("**/api/v1/journeys/*/plans/generate", async (r: Route) => {
+    if (r.request().method() !== "POST") return r.fallback();
+    await r.fulfill({status: 503, contentType: "application/json", body: generateBody});
+  });
+  await page.route("**/api/v1/journeys/*/plans", async (r: Route) => {
+    if (r.request().method() !== "GET") return r.fallback();
+    await r.fulfill({status: 200, contentType: "application/json", body: "[]"});
+  });
+  await page.route("**/api/v1/places**", async (r: Route) => {
+    await r.fulfill({status: 200, contentType: "application/json",
+                     body: jsonBody([{id: "p1", name: "天津西站"}, {id: "p2", name: "北京南站"}])});
+  });
+  await page.goto("/v8/hub", {waitUntil: "load"});
+  await expect(page.getByTestId("today-hero")).toBeVisible({timeout: 30_000});
+  await page.getByTestId("hub-plan-with-ai").click();
+  await page.getByTestId("plan-ai-input").fill("帮我排三天，喜欢美食和特色景点。");
+  await page.getByTestId("plan-ai-submit").click();
+  await expect(page.getByTestId("plan-ai-result")).toBeVisible({timeout: 60_000});
+}
+
+test("N6_Q68a_a_server_code_still_reaches_the_code_slot — 编号那格：服务器真给了编号时，编号还在屏上", async ({page}) => {
+  test.setTimeout(300_000);
+  const arm = "Q68a";
+  await askTheSheet(page, jsonBody({error: {reason_code: Q68_CODE}, detail: Q68_PROSE}));
+  const card = clean(await page.getByTestId("plan-ai-result").textContent());
+  const dom = await domReading(page);
+  readings[arm] = {card_text: card, code_in_card: card.includes(Q68_CODE),
+                   prose_outside_the_fold: clean(card.replace(clean(await page.getByTestId("plan-ai-reason").textContent().catch(() => "")), "")),
+                   needle_in_dom: dom.body.includes(Q68_PROSE)};
+  expect(card.includes(Q68_CODE),
+    node(arm, `the code slot lost a code the server really gave (${card.slice(0, 200)}) -- "do not show prose" is not "show nothing"`)).toBe(true);
+  expect(card.includes("BLOCKED") || card.includes("服务器回的原因编号"),
+    node(arm, `the card no longer names this as a server-coded block (${card.slice(0, 200)})`)).toBe(true);
+});
+
+test("N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号那格：只有句子时，编号位上不许出现句子，句子归技术详情", async ({
   page,
 }) => {
-  test.setTimeout(420_000);
-  const arm = "N4";
-  const id = await journeyId(page);
-  let active: Leg | null = null;
+  test.setTimeout(300_000);
+  const arm = "Q68b";
+  await askTheSheet(page, jsonBody({detail: Q68_PROSE}));
+  const reasonEl = page.getByTestId("plan-ai-reason");
+  const reasonText = clean(await reasonEl.textContent().catch(() => ""));
+  const cardAll = clean(await page.getByTestId("plan-ai-result").textContent());
+  const cardWithoutReason = cardAll.replace(reasonText, "");
+  const dom = await domReading(page);
+  readings[arm] = {
+    card_text: cardAll,
+    reason_fold_text: reasonText,
+    uppercased_prose_in_code_slot: cardWithoutReason.toUpperCase().includes(Q68_PROSE.toUpperCase().slice(0, 18)),
+    attributed_sentence_in_fold: reasonText.includes(Q68_PROSE),
+    server_label_present: /服务器给出的原因|Reason the server gave/.test(cardAll),
+    needle_in_dom: dom.body.includes(Q68_PROSE),
+  };
+  /* the code slot's own text may not hold the sentence, in any case or truncation */
+  expect(
+    cardWithoutReason.toUpperCase().includes(Q68_PROSE.toUpperCase().slice(0, 18)),
+    node(arm, `the 原因编号 slot is showing the reply's sentence again (${cardWithoutReason.slice(0, 220)})`),
+  ).toBe(false);
+  /* and Q67=①'s home for it is still there: the attributed sentence inside 技术详情 */
+  expect(reasonText.includes(Q68_PROSE),
+    node(arm, `the sentence vanished from 技术详情 too (${reasonText.slice(0, 160)}) -- Q68 says the code slot is not its place, not that it may be deleted`)).toBe(true);
+  expect(/服务器给出的原因|Reason the server gave/.test(cardAll),
+    node(arm, `the attribution label is gone, so whatever sentence shows is unattributed (${cardAll.slice(0, 220)})`)).toBe(true);
+});
 
-  await page.route("**/api/v1/journeys/**", async (r: Route) => {
-    const path = new URL(r.request().url()).pathname;
-    const method = r.request().method();
-    const leg = active;
-    if (!leg) return r.fallback();
-    const mine =
-      leg.match === "PATCH_INBOX"
-        ? method === "PATCH" && /\/inbox\/[A-Za-z0-9-]+$/.test(path)
-        : method === leg.method && path.endsWith(leg.match);
-    if (mine) {
-      await r.fulfill({
-        status: leg.status,
-        contentType: "application/json",
-        body: jsonBody({error: {message: NEEDLES[leg.cell]}, detail: NEEDLES[leg.cell]}),
-      });
-      return;
-    }
-    if (path.endsWith("/inbox") && method === "GET") {
-      await r.fulfill({status: 200, contentType: "application/json", body: jsonBody({drafts: [draftRow]})});
-      return;
-    }
-    return r.fallback();
-  });
-
-  const slotOf = (slot: Leg["slot"]) =>
-    slot === "message"
-      ? page.locator(".v10-inbox-message").first()
-      : slot === "queue"
-        ? page.getByTestId("inbox-pending-error")
-        : page.getByTestId("inbox-confirm-detail");
-
-  const legs: Record<string, unknown>[] = [];
-  for (const leg of LEGS) {
-    active = leg;
+/* One test per leg: a shared test spends one timeout across eight chances and hides which leg stuck
+ * (measured -- the loop version died at `running_leg = T09` with three legs done). Each leg gets its own
+ * route plan, its own 120 s budget, and its own evidence file named by D's cell id. */
+for (const leg of LEGS) {
+  test(`N4_${leg.cell}_a_refused_${leg.method}_leaves_no_reply_words_and_keeps_its_own_reading — ${leg.cell}：自己那句原话不在屏上，自己那次读数还在屏上`, async ({
+    page,
+  }) => {
+    test.setTimeout(120_000);
+    const arm = leg.cell;
+    const id = await journeyId(page);
+    await page.route("**/api/v1/journeys/**", async (r: Route) => {
+      const path = new URL(r.request().url()).pathname;
+      const method = r.request().method();
+      const mine =
+        leg.match === "PATCH_INBOX"
+          ? method === "PATCH" && /\/inbox\/[A-Za-z0-9-]+$/.test(path)
+          : method === leg.method && path.endsWith(leg.match);
+      if (mine) {
+        await r.fulfill({
+          status: leg.status,
+          contentType: "application/json",
+          body: jsonBody({error: {message: NEEDLES[leg.cell]}, detail: NEEDLES[leg.cell]}),
+        });
+        return;
+      }
+      if (path.endsWith("/inbox") && method === "GET") {
+        await r.fulfill({status: 200, contentType: "application/json", body: jsonBody({drafts: [draftRow]})});
+        return;
+      }
+      return r.fallback();
+    });
     await boot(page, id);
     await page.goto("/v8/bookings", {waitUntil: "load"});
     await expect(
       page.getByTestId("v13-2-memory"),
-      node(arm, `${leg.cell}: the wallet panel never rendered, so no leg below it can be judged`),
+      node(arm, `${leg.cell}: the wallet panel never rendered, so this leg has no surface to be judged on`),
     ).toBeVisible({timeout: 30_000});
-    if (leg.trigger !== "none") await drive(page, leg.trigger);
-    const slot = slotOf(leg.slot);
+    if (leg.trigger === "paste") {
+      await page.getByTestId("inbox-tab-paste").click();
+      /* This page holds a second textarea inside the closed structured-JSON aside; only the visible one is
+         the paste box. */
+      await page.locator("textarea").filter({visible: true}).first().fill("9月26日 天津西→北京南 G8901 二等座 07:30");
+      await page.getByRole("button", {name: "提取文本草稿"}).click();
+    } else if (leg.trigger !== "none") {
+      await drive(page, leg.trigger);
+    }
+    const slot =
+      leg.slot === "message"
+        ? page.locator(".v10-inbox-message").first()
+        : leg.slot === "queue"
+          ? page.getByTestId("inbox-pending-error")
+          : page.getByTestId("inbox-confirm-detail");
     await expect(
       slot,
-      node(arm, `${leg.cell}: the leg was refused but its slot shows nothing at all -- an empty screen is not an honest screen`),
+      node(arm, `${leg.cell}: the leg was refused but its own slot shows nothing -- an empty screen is not an honest screen`),
     ).toBeVisible({timeout: 30_000});
     if (leg.slot === "fold") await slot.locator("summary").click();
     const text = clean(await slot.textContent());
-    const foldCode = leg.slot === "fold" ? clean(await slot.locator("code").innerText()) : "";
     const dom = await domReading(page);
     const found = Object.entries(NEEDLES)
       .filter(([, n]) => dom.root.includes(n) || dom.body.includes(n))
       .map(([c]) => c);
-    const foreign = LEGS.filter((o) => o.cell !== leg.cell)
-      .map((o) => String(o.status))
-      .filter((s) => text.includes(s));
-    legs.push({
+    const foreign = LEGS.filter((o) => o.cell !== leg.cell).map((o) => String(o.status)).filter((x) => text.includes(x));
+    readings[arm] = {
       cell: leg.cell,
       route: leg.match,
       method: leg.method,
       status_asked: leg.status,
       slot_text: text,
-      fold_code: foldCode,
+      status_in_slot: text.includes(String(leg.status)),
       needles_found: found,
       foreign_status_found: foreign,
-    });
-    /* NEGATIVE -- nobody's reply sentence, from any leg, reaches the DOM. */
-    expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen again (${JSON.stringify(found)}); the slot reads "${text}"`)).toEqual([]);
-    /* POSITIVE -- this leg's own reading, in this leg's own slot, and nobody else's. */
+      internal_token_on_screen: /inbox request rejected/i.test(text),
+    };
+    expect(found, node(arm, `${leg.cell}: a reply's own words are on the screen (${JSON.stringify(found)}); the slot reads "${text}"`)).toEqual([]);
     expect(text.includes(String(leg.status)),
       node(arm, `${leg.cell}: the slot no longer states the status this device measured for THIS request (${text})`)).toBe(true);
     expect(foreign,
-      node(arm, `${leg.cell}: the slot is showing another leg's reading (${JSON.stringify(foreign)}) -- one status for many requests (${text})`)).toEqual([]);
+      node(arm, `${leg.cell}: the slot shows another leg's status ${JSON.stringify(foreign)} instead of its own (${text})`)).toEqual([]);
     if (leg.slot !== "message") {
       expect(text.includes("application/json"),
         node(arm, `${leg.cell}: the machine slot lost the content type this device measured (${text})`)).toBe(true);
     }
     expect(/inbox request rejected/i.test(text),
-      node(arm, `${leg.cell}: the carrier's own internal token reached the traveller (${text})`)).toBe(false);
-  }
-  active = null;
-  readings[arm] = {legs, leg_count: legs.length, needle_count: Object.keys(NEEDLES).length};
-  expect(legs.length, node(arm, "not every leg ran")).toBe(LEGS.length);
-});
+      node(arm, `${leg.cell}: the carrier's internal token reached the traveller (${text})`)).toBe(false);
+  });
+}

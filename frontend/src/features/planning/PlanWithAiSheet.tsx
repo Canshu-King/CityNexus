@@ -151,8 +151,10 @@ function serverReasonCode(body: unknown): string {
     const value = error[key];
     if (typeof value === "string" && value.trim()) return value.trim().toUpperCase();
   }
-  const detail = (body as { detail?: unknown } | null)?.detail;
-  return typeof detail === "string" ? detail.slice(0, 60).toUpperCase() : "";
+  /* Q68 (CMDR 04:45): a slot named 原因编号 carries a code or it carries nothing. The reply's sentence
+     already has an attributed home in 技术详情 (Q67=①), and the caller's `|| PLACES_HTTP_n` /
+     `NO_PLANS_PRODUCED` fallbacks are this device's own readings. */
+  return "";
 }
 
 /** The server's own sentence, kept verbatim for 技术详情. */
