@@ -1,0 +1,17 @@
+{
+ "run_id": "0323fix0317",
+ "arm": "N1",
+ "panel_copy": "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailcaught_at=2026-09-25T20:03:28.362Z route=/v8/bookings failures_caught_here=1 online_at_this_device=yes failure_text_rendered=no",
+ "error_detail_text": "caught_at=2026-09-25T20:03:28.362Z\nroute=/v8/bookings\nfailures_caught_here=1\nonline_at_this_device=yes\nfailure_text_rendered=no",
+ "console_error_count": 1,
+ "console_error_head": [
+  "%o\n\n%s\n\n%s\n TypeError: Cannot read properties of undefined (reading 'length')\n    at http://127.0.0.1:4460/src/features/inbox/JourneyInboxWorkbench.tsx:949:82\n    at Array.map (<anonymous>)\n    at JourneyInboxWorkbench ("
+ ],
+ "root_text_length": 284,
+ "overlay_hosts": [
+  "div#root",
+  "script"
+ ],
+ "leaked_needles_still_on_screen": [],
+ "test_status": "passed"
+}
