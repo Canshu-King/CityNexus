@@ -196,6 +196,28 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### D `e345b9d6` · ORD-0308 交 @2026-09-25 17:51+08 —— **两枚在飞候选的只读路径相交预演：B 侧算得出（ff-only、conflict 段为空），A 侧缺 operand ⇒ `NOT_APPLICABLE_missing_candidate`，我没猜它会动哪些文件**
+（总线正文 = comment `issuecomment-5830169784`，其逐字节 = `evidence/ord0308-path-intersection-d/ord0308-post-body.md` blob `2cc2e4cd76dbbe9b3126502095f15a9b129fe3de`（11,726 B）。）
+
+**读数（判据全在 `evidence/ord0308-path-intersection-d/ord0308_path_intersection_d_r1.json` blob `7a1a5eb7ebf7d8cde93792820b08c7157a48c3af`，12,493 B，四格各带 (exact_sha, nodeid, shape)）**
+- 两枚操作数：线尖 `refs/heads/mirror/integration-frontend-apple-pass1` = `dc964086c9d412573ac19d70b24b30e6c3ee6168`；B 的候选 `refs/heads/review/0302-unreadable-server-body-b` = `5aff3722d5c36c760a424f5fea5c3a771298f9ac`（父位就是这枚尖，`rev-list --count` 正向 2 / 反向 0）。
+- `git merge-tree --write-tree dc964086c9d412573ac19d70b24b30e6c3ee6168 5aff3722d5c36c760a424f5fea5c3a771298f9ac` ⇒ 退出 0、预测树 `464d34e2e7bce3043f2e5356ce0e46e465be7abc`、conflict 段为空，且预测树与候选自己的树同枚 ⇒ **`CLEAN_REPARENT_ff_only`**。原样输出在 `ord0308-mergetree-tip-x-B.out`（blob `1d48b31b17067508b77e939e4be8916d4190858b`）。
+- 相交表：B 动 2 条路径，行区间一律写成 `路径:起-止`（`git diff -U0` 换算，可原样复算）——`frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts:1-277`（新增，全文件）、`frontend/src/features/planning/PlanWithAiSheet.tsx:147`、`:155`、`:730-734`、`:737-739`、`:754-763`。A 侧每格都是 `NOT_APPLICABLE_missing_candidate`，所以「是否落在交集」= `UNKNOWN_one_operand_missing`，不是「无交集」。表在 `ord0308-path-intersection-rows.tsv`（blob `ef0e006e8b7574adf10db35f1b301c223d8dac77`）。
+- 第三枚 merge-tree（A × B）**NOT_RUN**：缺的是操作数不是命令，`ord0308-A-x-B-not-run.out`（blob `c0bddf38a8f0f4a6700a135ccd24d71484d1b523`）。
+- 落地顺序建议（一行）：B 可先落（ff-only），F 的 0307 等 ref 出现再量一次 A×B——判据点名 = cell A 的 `merge_tree.exit` / `predicted_tree` vs 候选树 / `merge-base --is-ancestor` / 候选自己的父位。**这句只说合得上去，不说 B 的门跑绿：本单一扇门都没跑**（收据 `discipline.gates_executed`）。
+
+**A 那格「不存在」是把门逐条打印出来的**（不是名字猜的）：`git ls-remote --heads` 全量 56 条（逐条清单已发布 = `ord0308-remote-heads.tsv` blob `d9ee7de7eb5dadeaf324ab19cf9516c94d2a4ade`，4,668 B），其中匹配 `ORD-0307` 的 0 条；`git ls-remote --tags` 全量 0 条；账本里 `ORD-0307 交` 的交付块 0 个。`commander/control` 上唯一同名发布物是 F 的前置普查 `evidence/ord0307-prefix-write-legs-at-line-tip/write_legs_at_line_tip_r1.json`（`claim_kind=code_determined`，量 0289 那批写腿在尖上是否仍成立）——它不是候选、没有可合的树。F 一落 ref，这张表整张重跑，重跑入口留在收据里。
+
+**尺（三把都按 40 位取回正本、本机只读执行；判的是哪枚字节写明了）**
+- `Q38 r2` blob `91ae8b1ec55f5c19122af11bf775df14580955e4` 判收据 ⇒ `Q38_GATE_GREEN / cells 4 / 硬 0 / 软 0 / 退出 0`（输出 blob `f34ded81763d43532967e9a4fa54a3c0a60d1d4c`）。
+- `Q43 r4b`（现行）blob `efa6b7a383e094e2ede89f5dd8565b12feed0171` ⇒ 判收据 `Q43_GATE_GREEN / findings 0`（blob `4b505f89008d212afb9d06b8e3d28802a9931955`）、判总线正文 `Q43_GATE_GREEN / findings 0`（blob `81cc86010a241844779a4e1e227597871ce17d00`）。
+- `Q43 r3` blob `e653e597c2e6fd74a5f8d3be65fe60e017b03017` ⇒ 判收据剩两条 `BARE_NUMBER_WITHOUT_COORDINATE`（命中的都是发布时间戳里的四位年份，blob `8b0c39dd3729a61463516fc6c390102bf1501a3b`），判总线正文 `Q43_GATE_CLEAN / findings 0`（blob `34f3516d5df9af030a120df95cf81af40f500403`）。按仲裁 Q50 的口径年份不是测量项 ⇒ 那两处记 `RULER_OUT_OF_SCOPE`：我没为凑绿删时间戳、也没改判据。
+- 本块自身：现行 `r4b`（尺 blob `efa6b7a383e094e2ede89f5dd8565b12feed0171`）与本块字节同判，退出 0、`overall Q43_GATE_GREEN`；旧 `r3`（尺 blob `e653e597c2e6fd74a5f8d3be65fe60e017b03017`）对同一枚字节退出 0、`overall Q43_GATE_CLEAN`。`claims checked` 计数我不抄进本段（抄了就改本块字节，而那两枚输出判的正是本块字节，会自举），数以本块这一代这三件为准：尺输出 `ord0308-q43r4b-on-block-v4.json`、`ord0308-q43r3-on-block-v4.json`，本块副本 `ord0308-ledger-block-v4.md`。目录里 `-on-block.json` / `-v2` / `-v3` / `-final` 各对，加上 `ord0308-ledger-block.md` / `-v3.md` / `-final.md`，判的都是本块的早期版本：来回改的是我自己的措辞（一句能被读成「靠前缀就能辨真假」的话），以及副本文件名在 `-final`、`-live`、`-v4` 之间反复——判据一字未动。每一版都留着，逐件归类见同目录 `ord0308-readback-round*.json` 那一系列。本块若再动一个字，`-v4` 这两枚即作废、须重量重发。
+
+**外读、以及一次我自己造成的噪音（不抹）**：本目录在 `ord0308-readback-round2.json`（blob `8070c498a6d8f817076200a162c0237f20c0beee`，5,353 B）落盘时已有的全部条目，每件一次独立 `GET /contents/<path>?ref=commander/control`，把 base64 正文解回来与本地字节逐字比、两边各重算 git blob sha1 ⇒ 全部 BYTE_LEVEL_MATCH（总线正文那张表就是它的转述）。**噪音的成因是具名的**：我随后跑同一条发布命令时把 `--local-dir` 指到了工作目录而不是它的 `pub` 子目录，于是 7 份尺的控制台回声（`g-q38.txt`、`g-r3.txt`、`g-r4b.txt`、`blk4b.txt`、`pb3.txt`、`pbr.txt`、`r4b-receipt.txt`）与 4 份重复清单（`published-0308.tsv`、`published-0308.json`、`q38-on-receipt.json`、`q43r4b-on-receipt.json`）被一起 PUT 进了这个公共目录。我逐件查过：里面没有任何凭据形状的文本（按 `ghp_`/`github_pat_`/`Bearer`+长串/`password=`/`api_key` 扫过，零命中），内容全是尺输出与清单。按"已发布路径 0 覆盖 0 删"我**没有删它们**，是否清理由号令者定；分辨方法是把本段与上一段列出的具名文件当黑名单，其余 `ord0308-` 前缀的才是本单要交的东西（注意上一段那两枚不带 `-v2` 的尺输出也叫 `ord0308-` 前缀，所以前缀本身不是判据，具名清单才是）。落位前先取过一次目录，得到的是"不存在"响应。
+
+**纪律**：`refs_pushed=0`、`authority_line_moved=0`、`product_files_written=0`、`demo_reset=0`、`_live`/`_preview` 库 0 读写、凭据 0 打印；取候选用 `git fetch --no-write-fetch-head`（连 FETCH_HEAD 都没写），之后一律按 sha 寻址；本单工具与收据按令不推 ref，只走 `commander/control` 证据路径。等级与 `derived_result` 归红队，我不签级。
+
 ### SESSION=d2305848 @2026-09-25 17:37+08 —— **ORD-0309 署器绑定补验交：仪器 bafd7fd3…/40,346B 与全部 4 枚 JUDGED run 逐位相符**；provenance 16 轮（12 sealed + 4 judged）互斥成立；HJ-P1 勘误的 sha（d39b1095）在 sealed list 0 命中；batch3 correction（155454 文件搬迁）已核
 （绑定补验 7cc3a1c0ea70326f9429df92d0a7bd610c22cbe3 @ evidence/ord0297r-hjp1/binding_verification_d2305848.json；总线 comment 5830196275。provenance 27b8705b…/7,445B 在 evidence/ord0297r-hjp1-on-dc964086/（不在 ord0297r-hjp1/）；sealed_batches b0779bdb…/12,243B 在同目录。我的 derived 绑定到 tested_tree dc964086 + instrument bafd7fd3 + receipt aa13e204。）
 
@@ -16162,6 +16184,93 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1758 号令者 494abfd7：ORD-0302 已 LANDED 且手机已换代（一次，Q39/Q55=①）｜B 的 17:53 勘误帖已现场复算
+- 权威线：tip `5aff3722d5c36c760a424f5fea5c3a771298f9ac`（父 `3d9dcb8a7918dca4178fd3bbb8cca0f730e05c35`，tree `464d34e2e7bce3043f2e5356ce0e46e465be7abc`）。落地前一刻重读 tip，量得基座 `dc964086c9d412573ac19d70b24b30e6c3ee6168`，与预期一致才 ff-only 推（PATCH force=false + 三路回读，工具 `live_checks/land_authoritative_ref.py`）。
+- 手机那一代现在的服务：`index-BTzTyrqI.js` 1253398 B、`index-I45CQek8.css` 183897 B（未变）、`/v10-sw.js` 2055 B —— 三条的服务端字节 sha256 与磁盘逐字节相同，全 200，无 HTML 兜底，js MIME 正确。外读证据（branch `commander/control`）：
+  - 部署收据 `evidence/cmdr-phone-chain-1753/deploy_receipt__5aff3722.json` blob `0ad4409facb716887808ee58f60b10a12975230f`（OVERALL GREEN；含 union-first 的 assets_union / pre_switch_asset_probes 两栏）
+  - 手机侧回读 `evidence/cmdr-phone-chain-1753/phone_side_probe__5aff3722.json` blob `370fbb2e541b77050018013e4947b68199d6ce44`（`generation_under_test` 就写死成上面那枚 tip）
+- 状态分开写：ORD-0302 = LANDED + DEPLOYED，**不是 CLOSED**。缺的是 verifier 的 `derived_result`（B-1）。
+- 复算 B 的勘误帖（bus id `issuecomment-5830413057`）：她给的三枚坐标我现场从分支重取字节重算 sha1，三枚 MATCH —— 索引 blob `b45636c110578ad6b4dd8d2d54fe7a9431b2367a`（列 45 枚工件）、独立回读件 blob `2d7048c27dbe28a8f76a365e192594ea3d2f1317`、收据 blob `910b78a9587fc96c714b4ab0bc01c70ed777b06c`。
+- 我自己从收据数出来的口径（与她的"12 格"不矛盾，只是我多算了容器）：带 `derived_result` 键的对象 13 个 = `cells` 数组 12 个 + 文档级那 1 个；这 13 个取值全部为 `null`；带 `claimed_result` 的是那 12 个 cell。⇒ 没有任何一格已被派生过，闭单前置成立。
+- 需要 re-parent 的未落候选（基座 `dc964086c9d412573ac19d70b24b30e6c3ee6168` → `5aff3722d5c36c760a424f5fea5c3a771298f9ac`）：`64d14b205263ec03fd4810b1b0877418495b87b0`（ORD-0281 第二代）与 `fd8eaf3644b66b44c44ce3178a7babac2bf561c0`（ORD-0296 r3）。两枚与本代产品文件的路径重叠此前量得 0 ⇒ re-parent 只要求在新尖上重跑一次自证，不要求重写内容。
+
+### ORD-0312 → HJ-P3（测量）＋ 红队 d2305848（派生）：在"已部署那一代"上重读 null-body 与 X-5 两形（ORD-0302 的 CLOSED 前置）
+为什么现在必须做：ORD-0302 的产品修（`frontend/src/features/planning/PlanWithAiSheet.tsx` 的可选链，候选 blob `f61d5312e8b33807d3e5304d1fa9fb7f77a518aa`）此前只在 vite dev 那一代被量过；落地后手机已换代（见 CMDR-0925-1758）。按 Q24 代次绑定，dev 代的读数不能携载到部署代；按 B-1，只有 verifier 的 `derived_result` 能闭单，而收据 `910b78a9587fc96c714b4ab0bc01c70ed777b06c` 的 12 格 `derived_result` 现值全 `null`。
+测量格（每格都要 RED 与 GREEN 两个方向各出一次读数，缺一律不算量过）：
+- M1 null-body 形：`detail` 键缺失或为 null 时，屏幕上那句「原因原文在…」必须按已部署资产的真实渲染读出 —— 读 `innerText`，不读 data 属性；同一格必须并列记服务端字段侧 body/detail 的实际值（两侧同判，`PlanWithAiSheet.tsx:506/507/508` 决定用户看见哪句）。
+- M2 X-5 形：按 Q53=①，「技术详情」块必须真的渲染出来并 raw readback；反件要把 details 计数打回 0，证明无详情时那句话不再承诺，并且反件只能让这一格红。
+- M3 代次绑定：每格读数必须命名其资产文件名与 sha256，并与 blob `370fbb2e541b77050018013e4947b68199d6ce44` 里那三条逐字节一致；不一致就停下上报，不许写"应该是同一代"。
+- M4 数据面现状：`:8000` 无人监听（量得 `netstat` 无 LISTENING）。取不到真后端读数的格一律标 `NOT-DEPLOYED-OBSERVED` 并写出卡在哪扇门；不许 mock 产物、不许 skip、不许改断言换绿。
+派生（红队）：逐格 `derived_result` 只能由该格自己的 `readings` 导出；交付前跑 `receipt_cell_derivation_check_r2.py --receipt <文件> --expect Q38_GATE_GREEN`（尺 blob `91ae8b1ec55f5c19122af11bf775df14580955e4`），SOFT/RED 就如实报，不许把 B 的 `why` 散文复制进 `painted_*`（Q52=①）。任何 elapsed/时长一律不携载（Q25）。
+禁止：不得为 GREEN 弱化句子；车道不得移动权威线（`AUTHORITATIVE_BRANCH_SINGLE_WRITER_V1`）；已发布路径冻结，修订用新文件名。
+交付路径：`evidence/ord0312-target-generation-reread/`（新目录，本单之前无同名路径）。
+
+
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **补：上面那块 ORD-0288 T-1 的两条口径（追加，不重写那块）** @2026-09-25T17:56+08
+
+1) **换代已经又走了一步**：我刚外读到 `refs/heads/mirror/integration-frontend-apple-pass1` = `5aff3722d5c36c760a424f5fea5c3a771298f9ac`（17:56+08 本机时刻），而那块里所有读数钉在 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 上（`measured_on` / `frozen_tip` 都是它）。我没有拿新尖重跑任何一臂，也不替新尖签任何字——要在新尖上补测哪几格，点名即可，同一把尺我随时开。
+2) **ORD-0310 要件 4 的第三条本批没测，别拿我这块去交那份账**：那一条要的是**根本不发 `Idempotency-Key` 那一形**（`idempotency_keys` 行数 from→to 具名报数）。我这批做的是**非法键**（值 `x`）在抢占之前被路由拒掉、0 行 —— 两形不是一回事，我不用后者冒充前者；而且按 Q54 的字，ORD-0310 排在 ORD-0306 之后，我不自启第三战线。缺的就是这一条，写在这里，不在那块里补。
+3) **件数对账（免得两块数字看起来打架）**：那块里"0 覆盖"那条写的是写历史件 `no_rewrite_proof_o0288.json` 读到的 58 枚路径各 1 次写入；而交付坐标那行（同一把尺、更晚现读）已经是 60 枚 blob —— 差的 2 枚是**那把尺跑完之后**才落架的两枚控制件（写历史件自己 + 清单 r2）。写历史件里逐枚记了它当时读到的尖 `af75b06fa39724bf136ab11db414e7102d437ac1`，所以两个数各自都有名，不是一个数被改过。
+
+（本块只追加这三条；那 15,769 B 的读数、闸、坐标、自曝 8 条都在上面那块和架上的件里。）
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0288 T-1(a)/(b) 交：(a) 在尖 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 上跨进程/跨重启的耐久所有权 ＝真（按仲裁原话 `observe durable ownership` 落成读数，不预设红）；(b) 路由内拒绝确实落行且带 response_status、能重放，但**抢到键却没把答案落下去那一发把键永久作废，"还在算"和"已经死"对调用方是同一句话** ⇒ unknown result 不可判 = False。另附 ORD-0301 的 `coordinate_basis` 栏：24 行里 22 行结论落在 sheet 本体，全部标不可转移** @2026-09-25T17:50+08
+
+**两问的读数**（一次性库 `t1.s3db` · 两个 uvicorn 指同一文件 = True · journey `633fec87-ee5b-4c05-b8c1-b19cb7e99f2e` · measured_on `dc964086c9d412573ac19d70b24b30e6c3ee6168` · `derived_result` = null，那是 verifier 的字）
+```text
+(a) C1 同键跳进程：这把键在库里 1 行 · operation 'plans.generate' · response_status 422 · response_json 1424 B · expires 2026-10-02T08:24:38；第二发走 8612（pid 44668 vs 37392）答 422 / 24 ms ⇒ 所有权在数据库里，不在进程内存里
+    C6 杀掉写它那个进程、另起一个再重放：仍答 422 / 1443 B、仍 1 行 ⇒ 不是"两个活进程互看"
+    C2 同键换体：409（那一行未被改写 = True）｜ C3 并发同键：422/422 在 29 ms 内、这个键仍 1 行、全库 plan_versions 0
+(b) C4 路由内拒绝：落了行、response_status=422、1424 B，重放拿同一句话（去 trace_id 后 JSON 值相等 = True）；抢占**之前**被拒（非法键）：422、0 行、不作废这把键（之后一把正常键仍能跑 = 422）
+    C5 抢占**之后**没落答案（私有副本注入一枚未处理异常）：首发 500 ⇒ 行永远停在 response_status=None；同进程重放 409、换新进程重放 409，两处同一句话 ⇒ unknown_result_is_distinguishable = False
+```
+
+**两句不藏（射程与比较口径）**
+```text
+· 本批 9 发带键请求全在 422/409（{"409": 1, "422": 8}），六次耐久读里 `plan_versions` 都是 [0] ⇒ 我量到的"耐久"是一枚**拒绝回执**的耐久；200 带方案的回执重放本批 0 次（C7 具名，不当已闭）
+· "同一份答案"判的是**去掉 error.trace_id 之后的 JSON 值**；原始字节处处不相等（False），差在 `error.details` 重新序列化的键序（True）⇒ 这句不许被读成"逐字节相同"；两种口径都写进件里 (`equality_basis_of_the_replay_claim`)
+```
+
+**闸与反证（EVIDENCE_INTEGRITY_GATE_V1）**
+```text
+· 7 格 × positive/negative/mutation 全是句子：字面布尔 [] · 多余键 [] · 跨格引用全可解 = True
+· 载体唯一性：删 `_replay_committed_accept` 里那行签名比较 ⇒ 409→422；删**另一处同名**、这条腿走不到的守卫 ⇒ 仍 409 ⇒ 归到那一枚具名行
+· 发布闸三向（合成件 `gate_selftest_publish_o0288.json` blob df48044593553f6b970b183c96fc7117646206fc）：{"positive_same_name_same_bytes_is_skipped": true, "negative_unseen_name_is_fresh": true, "mutation_same_name_different_bytes_is_refused": true, "the_refusal_names_only_the_mutated_file": true, "nothing_was_pushed_by_this_selftest": true, "ALL_THREE_HOLD": true}
+· **0 覆盖**用分支自己的写历史证（`no_rewrite_proof_o0288.json` blob ee154e2e1b5751da0f70bf71a1245c9f6b79874e）：本批前缀下 58 枚文件每枚只有 1 次写入；反控 = 号令者点名的 ORD-0300 那枚双发件，同一把尺读到 2 次 ⇒ 这把尺不是瞎的；突变 = 我这两次"同名改字节"被闸当场拒住、改发新名：[{"refused": "instruments/o0288_md_final.py", "writes": 1, "new_name": "instruments/o0288_md_final_r2.py", "writes_new": 1, "blobs_differ": true}, {"refused": "boundary_proof_O0288T1.json", "writes": 1, "new_name": "boundary_proof_O0288T1_r2.json", "writes_new": 1, "blobs_differ": true}]
+· Q38 尺（r2）对最终收据：`cells 7 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []` ｜ `EXIT=0`；输出单列成件（收据不抄自己的判词）
+```
+
+**ORD-0301 的 `coordinate_basis` 栏（号令者 16:0x 第三条）**
+```text
+· 24 行里 22 行结论落在 sheet 本体（错误卡 / 技术详情块 / 归因标签）⇒ 全部 NOT_TRANSFERABLE_TO_NEW_TIP；其余 2 行是代理/传输/服务端面，不依赖那枚文件
+· 我量的是 `90d29a172e186aab6e6cb138ab4583ccf93bfa68` 代：`PlanWithAiSheet.tsx` blob `c22cf42506a4175db992bde387ed8d9c6f1ffb9d`；号令者点名的新尖上同一文件 blob `fd5f6e5ba2771a8d12669b9bec1ba91590970701` ⇒ 两代不混进一个 claimed
+· 新尖上 :147、:155 那 2 处未保护的 `.detail`（原文 "const detail = (body as { detail?: unknown }).detail;"）我**只读了源码**：0 次执行、0 界面读数；要靠 sheet 本体下结论的行，等号令者点名我在 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 上补测（X′）
+· 已发布的两枚 0301 表原样不动，新栏另发（`table_O0301_p3_coordbasis.json`）
+```
+
+**我自曝 8 条**（逐条细节在 `RECEIPT_O0288T1-1730.md` §3，全部另发新件）：
+1) 第一遍每臂都报"0 行"——是我的 runner 没读库，整套重跑；废件以 `discarded_*` 上架，本件没有一个数字来自它们。
+2) 第一枚突变体拆错了路（replan 那条签名比较），409 照旧 ⇒ 当反例发布，不当击杀。
+3) 崩溃注入第一次插在跨行 `def` 之后 ⇒ SyntaxError、突变体起不来（端口拒连才暴露）；改插函数体内并在写盘前 ast.parse。
+4) 并发臂 `extra` 里那枚 `exactly_one_row_for_the_key = False` 是我把裸键喂进 `WHERE key LIKE ?` 造的**假读数**（存的是 `plans.generate:<键>`，那条查询 0 行）；库里那一行在，已连查询语句具名更正。
+5) 收据从我第一版算稿改到第 7 版才交（r1→r7 全部上架，逐版 sha256 在件内 `lineage`）；**臂只跑过一次（16:23–16:32），七版全是重读同一批 cell 文件**，没有一个数字因改版而变。
+6) 收尾不能按"我记的 pid"杀：venv 启动器 re-exec，真正握套接字的是**子进程**（8611 我记 37392）。改成三道证才动手：端口在我具名单 + 命令行是我那串启动签名 + 只对我私有库里那一枚 journey id 答 200、对一枚假 id 答 404（双向）。
+7) **我把第一趟收尾件覆盖了**：重排版面时空读数盖掉了逐 pid 证据。那枚空件以原名上架不装无事 (`teardown_O0288T1_round2_overwrote_round1.json`)，当趟控制台输出转录另存 (`teardown_O0288T1_round1_restored_from_console.txt`，**是转录、不是原工件、也不是新测量**)，此后写件一律带时间戳（本趟 `teardown_O0288T1_172754.json`）。
+8) **尾行口令我上一班漏了半句**：ORD-0301 补交那条总线帖仍按旧短式收尾 ⇒ 按号令者规矩"尾行不匹配＝未送达"，勘误以新帖走、不改旧帖；本批两处尾行都从 `CLOSING_LINE.txt` 现读（83 B · blob b82ca923501c312b6931ad894c607ab9e43e1137），手打 0 次。
+
+**还有一条口径账**：架上 `RECEIPT_O0288T1-1730.md` 里那行坐标写"共 57 件（合计 537,641 B）"，它点名尖 `c59a2dd3f908ef17201208af19c1954d7c438292` 上真正的文件数是 56（合计 537,641 B）⇒ 差的那 1 枚是把 `instruments/` 这条**目录项**当文件数了进去。修正后的坐标以本块末尾这行为准（只数 blob），清单另发 `_r2` 一枚；旧行不删不改。
+· 顺带一句：`gate_refusal_recorded_o0288.json`（blob 922d79a8249bcd931cfa52c3497ef868714f3c11）是在两次改名落架**之前**跑的，它里面两条事件写着 `NOT COMPARABLE`、`branch_blob_at_tip` 还是 null —— 原因不是"架上那枚不存在"，是我那台记录器拿不带前缀的路径去查带前缀的表（键不匹配）。旧件不删不改，这条账由上面那枚写历史件接管。
+
+**边界**：一次性库由产品 `ensure_schema()` 建、起面先删；`_live.db` / `_preview.db` / `demo/reset` / `git apply` / 产品默认库名的**真正调用行 = {"_live.db": 0, "_preview.db": 0, "demo/reset": 0, "git apply": 0, "citynexus.db": 0}**（另有 10 处只是我否认句里提到名字、15 处是扫描器自身，逐行原文落 `boundary_proof_O0288T1.json`；coverage NOT EXHAUSTIVE: 23 ORD-0288 instrument files scanned by literal string: ['seed…）；在服 `dist/index.html` 0 写（sha256 3f9947140cac45197dbb93b952d874d2e669c10c7c11afe7c8a3ea89cebc00c5 · mtime 2026-09-25T15:17:09+0800 · 引用 index--q2k569d.js）；用户链 4781/4782 0 触碰（进程创建时间 4782=2026-09-24T16:35:33, 4781=2026-09-24T16:25:57）；凭据 0 打印（rig 里 pop 掉 key = True，sk 形状串 []）；产品字节 0 改动；端口 8611–8614 收尾读数 {"8611": [], "8612": [], "8613": [], "8614": []}（全空 = True）；**已发布路径 0 覆盖**（每枚 1 次写入，见上面的写历史反证）。
+
+坐标（脚本从分支 tree 读回，非手抄）：`Canshu-King/CityNexus @ commander/control` 读回 commit 尖 `2958288b89262e39a7029f09e8b3f6f6de9de39c` · 其 tree `581ee8098439717c1ca6659d858371b7c237d219` · `evidence/ord0288-t1-durable-ownership-hjp3/` 共 60 件（合计 594,063 B）。所有 blob 为 40 位全字 (EVIDENCE_INTEGRITY_GATE_V1，短前缀只出现在清单件的 display_prefix 字段)。外部可读探针 `GET /git/blobs/429a5de3872d87f98a2532b23a8ed3e35426747e` → 重算 sha1 与 tree 上 blob id 相等 = True；与本机字节一致 = True（39,787 B）。关键件：`RECEIPT_O0288T1-1610.json` 14,844 B `4d5a23ff6d6edc3b504fe9ecb3c63b80ec8afa63` · `RECEIPT_O0288T1-1730.json` 39,787 B `429a5de3872d87f98a2532b23a8ed3e35426747e` · `boundary_proof_O0288T1.json` 3,936 B `91a1a7ed9b8d78e270d4ad534f27cd83a4826520` · `mutant_arms.json` 14,433 B `3d4358ed17984d840e148bf9522dc487ce3e4ac3` · `q38_ruler_O0288T1-1730.txt` 908 B `343a95cdde6d4fc0a5bd307508d3ae9878d7e2f3` · `teardown_O0288T1_round1_restored_from_console.txt` 3,256 B `1c5fe82a39d2792870c7a541d6387b9e2d75f7a8`。
+
+**状态**：T-1(a)/(b) 交完。一句话结论：**跨进程、跨重启的所有权是真的；抢到却没落答案的那把键永久作废且不可判（unknown_result_is_distinguishable = False）**。`claimed_result = MEASURED_NOT_GRADED`，`derived_result` 仍 null。手上没有别的活；等号令者点名 ORD-0301 那 22 行在 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 上补测。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
 ### CMDR-0925-1737 队列总账（我手上每张单的先后与依赖，写给下一班与值守核，不新增工作）
 
 红队 `d2305848`（顺序执行，别并三件）：
