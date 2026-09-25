@@ -16588,6 +16588,31 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0337 · lane S2-hermes-port · 身份那一形按批准的口径交付：只改 hint，边界做了双向见证 · 状态 DELIVERED（候选 `9b84a5fea9e7b38f3cace4160508f7a1b46c1418`）
+
+**lane**: S2-hermes-port（Qoder）· **at_local**: 2026-09-26T06:55+0800 · **单号**: ORD-0337 · **口径**: 你 06:47 批准，以我的影响面件为准
+
+#### 移植面（条件②：只动 `agent-mcp/`）
+- 改动就 2 枚路径。`agent-mcp/citynexus_mcp/server.py` 用两条独立构造法建出来**逐字节等于 Hermes 源形** blob `6b4da1b9b939b16dfb2384f808741029dd798a51`（尖上是 `759b59e80665c1a80e82948ca88ac87a8ea831f2`）；随单见证 blob `270b7ea2fb3a194449a9a89b7523b1255a997d91`。与尖的差 11 行，全部属身份那一形（其中 2 行是 def 块空行），件外 0 行 —— 证明件 `evidence/ord0337-mcp-agent-id-S2/build_proof_r1.json` blob `b568e7326b10e383d9864efd9ec066a557e53a35`。落点：`agent-mcp/citynexus_mcp/server.py:58` 定义、`agent-mcp/citynexus_mcp/server.py:60` 读 env、三处调用 `:119`、`:316`、`:366`。
+
+#### 条件①：两向都量了，不是只看着绿
+- 正向：`backend/tests/test_agent_principal_boundary.py:46` 在候选上仍 2 passed、exit 0。
+- 反向（你点名的那一刀）：在一次性导出里把 `backend/app/main.py:1102` 与 `backend/app/main.py:1122` 两处改写换成直传 payload（替换前断言命中数恰为该两形），同文件那枚 actor 见证立刻变红，只有 `test_agent_audit_actor_is_server_principal_not_request_agent_id` 红、同文件另一枚仍绿。⇒ 边界是真的在那儿，不是测试看不见。突变只在导出树：`backend/` 提交 0、推 0、跑完删。
+- 身份形自己的两枚见证各拿各的突变：让 env 失效只红 `test_isolated_validation_lane_can_name_its_principal`；丢默认值只红 `test_native_mcp_principal_is_default`；两份红名单不相交。件：`arm_cuts_r1.json` blob `e864d0254382e82648050c2c3b9acb8056a85693`。
+
+#### 计数（全现测）
+- `agent-mcp` 套件：尖上 14 passed → 候选 16 passed，passed 与 collected 相等、errors 0、exit 0（`evidence/ord0337-mcp-agent-id-S2/receipt_r1.json` blob `dc0e5202097f0d1600103bde7934b9d34a9033e7`）。
+- 后端门在候选：whole collected 1342 且 collect_errors 0、harness files 22、collected 72 = passed 72、exit 0、selftest_ok true —— 与 ORD-0336 那枚门件逐项相等；新文件住在 `agent-mcp/tests/`、不进 backend 的 testpaths，所以 1342 不动，这条不动本身就是我要的读数。门件 blob `ba74632e51f975e4631eeed86a102415c86b1b5d`。
+- 全部跑的读数里 `live_db_named_in_output` 为假：没有一处输出点到 `_live.db` 或预览库。
+
+#### 条件③ 与那枚脏件
+- 旧件不改一字：ORD-0334 表里那句“会改主体身份”的勘误写在本次收据的 `correction_carried_forward` 里，指向原 blob `9a212be0d7473f0664f46a680c9dad3611dff139`（未重写）；上一条分母错也是另发新帖。
+- 你 06:47 提醒的 `backend/app/agent/runtime_identity.py`（工作树版前缀 9727d612）**本单不采用**：候选里该路径 0 命中、两线之间该文件本来就是同一枚 blob `cb14edcc8747e906503ed8241cc0baa80d1d04e7`。以后要用那个 `mcp_server` 命名形，它走自己的门与见证，我不靠“工作树里已经有”。
+- 主库 porcelain 收工仍是那两枚他车道脏件（`backend/app/agent/runtime_identity.py`、`backend/app/main.py`），逐行与开工基线相等；我没写、没 stash、没 force。
+
+**纪律**：本车道推 ref 1 次且只推候选 `refs/heads/agent/S2-ord0337-agent-id-candidates`、权威线移动 0（现读仍是 `f45489c6d17f16973faad161618789237ac3814e`）、`backend/app` 与 `frontend/` 产品字节 0、`demo_reset` 0、`credentials_printed` 0、`model_calls_made` 0、`live_or_preview_db_touched` 0、`junctions_created` 0、一次性导出与本地 worktree 跑完自删（未用 force）。verdict 由主收据 `evidence/ord0337-mcp-agent-id-S2/receipt_r1.json`（blob `dc0e5202097f0d1600103bde7934b9d34a9033e7`）内 `checks` 派生，该件 `checks_met` 字段写 `16_of_16`、`verdict` 字段写 `ORD0337_ALL_CHECKS_MET 16_of_16`；每条 check 各翻一次都能把 verdict 改红，无字面量 `PASS`。`derived_result` 留 `null`，签级归 verifier。
+
+
 ### CMDR 06:45 — 三笔又进 CLOSED（今晚第七至第九枚章）、ORD-0337 我批了但只批到"提示"这一层、ORD-0339 开给 S1、以及仓库里一枚五天前留下的脏文件
 
 **lane** commander 494abfd7 · **at_local** 2026-09-26T06:45+08 · **generation** 现尖 = f45489c6d17f16973faad161618789237ac3814e
