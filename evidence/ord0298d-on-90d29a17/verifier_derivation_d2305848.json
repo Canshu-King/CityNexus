@@ -1,0 +1,61 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0298d (D's arms re-run on tested_tree dc964086, base 90d29a17; derived per B-1, this is the closure-blocking derivation for ORD-0278/ORD-0253)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T14:50+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "tip_identity": {
+  "commander_coordinate": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "my_first_read_of_the_ref": "f035caeca53765a5c652fab200f66fa04a57bb0d",
+  "ref_drift": "compare dc964086...f035caec = ahead 1 / behind 0; the one commit is review/ledger_block_e345b9d6_0298d.md (a ledger block, 0 product bytes) - D added it after the commander read and before I read",
+  "resolution": "the tested_tree dc964086 (cited by all 14 green-round triples AND the arms receipt's tested_tree field) is the correct binding; my ref read is on the same tree + one ledger block",
+  "both_shas_are_the_same_tree_for_testing": "the tested_tree dc964086 is what the arms ran against; the extra ledger block does not change the tested bytes"
+ },
+ "coordinates_verified": {
+  "arms_receipt": {"path": "evidence/ord0298d-on-90d29a17/arms-0298d.json",
+                   "blob": "457313365eda53e9634ddf522839fe3714d0e86d", "bytes": 53650, "sha_ok": true},
+  "gate_round": {"path": "evidence/ord0298d-on-90d29a17/gate-round-0298d.json",
+                 "blob": "211c67f88b4360c63c1e4ed1c6284f36b3f354fd", "bytes": 36722, "sha_ok": true}
+ },
+ "green_round_check": {
+  "triples": 14, "exact_sha_all_equal_dc964086": true, "verdict": "GREEN", "problems": 0,
+  "spec_denominators": {"continuation-owner": 4, "sealed-failure": 3, "resume-carries-identity": 4, "sheet-legs-idempotency": 3}
+ },
+ "mechanical_derivation": {
+  "rules": "same as ORD-0292/0298/0298c: baseline exit 0, attempt exit nonzero, attempt node readings match redSet, owner red, anchor >= 1, restored_exact, mutation landed (before != mutated digest), triple exact_sha == tested tree, runIds distinct, same_key_precondition names tested tree",
+  "per_arm": {
+   "K278_NO_MISSION_ID_IN_BODY": {"red": 1, "exclusive": true, "derived": "KILLED (sole carrier)"},
+   "K278_TWO_KEYS_MERGED": {"red": 1, "exclusive": true, "derived": "KILLED (sole carrier)"},
+   "K278_CLEAR_BEFORE_SEND": {"red": 1, "exclusive": true, "derived": "KILLED (clause-5 shape)"},
+   "K278_SILENCE_ON_NON_ACCEPT": {"red": 1, "exclusive": true, "derived": "KILLED"},
+   "K253_LEG2_KEY_DROPPED": {"red": 3, "exclusive": false, "derived": "KILLED (compound cut-set)"},
+   "K253_LEG1_KEY_DROPPED": {"red": 3, "exclusive": false, "derived": "KILLED (compound cut-set)"},
+   "K253_ONE_KEY_FOR_ALL_INTENTS": {"red": 3, "exclusive": false, "derived": "KILLED (compound cut-set)"}
+  },
+  "receipt_level_checks": {
+   "claimed_KILLED": 7, "derived_KILLED": 7, "allArmsKilled": true,
+   "allArmsRestoredToTestedTreeBytes": true, "allArmsCarryAGreenSameKeyPrecondition": true,
+   "treeUnchangedByThisRun": true, "filesBefore_equals_filesAfter": true, "files_hashed": 3
+  },
+  "derived_result": "7/7 KILLED on tested_tree dc964086; every kill derived from raw round fields; zero claims taken"
+ },
+ "generation_binding": {
+  "tested_tree": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "base": "90d29a172e186aab6e6cb138ab4583ccf93bfa68 (the 0280 landing; the tested tree is a descendant of this)",
+  "these_kills_are_facts_of": "tested_tree dc964086",
+  "authority_line": "the commander's authority tip was 90d29a17 at the time of the order; dc964086 sits on top of it (base = 90d29a17 per the arms receipt's own lineage); after the 0296 hop + 0280 landing the authority has moved again, but the re-parent to 90d29a17 puts dc964086 on the correct line for ORD-0278/0253",
+  "closure_qualification": "this is the first generation where (a) the base is the authority line and (b) all 7 arms have been derived KILLED and (c) the green face has been re-run on the same tree - the three conditions the commander set for closure"
+ },
+ "evidence_counting": {
+  "independent_kills": 5,
+  "composition": "4 exclusive K278 sole-carrier kills + 1 compound K253 cut-set (3 arms red on all 3 nodes)",
+  "cross_generation_stability": "redSet shapes identical across 4 generations (06717045 / 8ccfcf7 / dbd0f9d9 / dc964086) - the gate's teeth have been stable through every re-parent"
+ },
+ "derivation_notes": [
+  "my first blob attempt used a truncated sha and 422'd (same trap as before); corrected to full 40-hex via contents API, no reading taken from the failed attempt",
+  "the ref moved between the commander's read and mine by exactly one ledger block (0 product bytes) - CANDIDATE_REF_FREEZE_V1 handled this correctly: I bound to the tested_tree cited by the receipts, not to the moving ref"
+ ],
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this derivation)"}
+}
