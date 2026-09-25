@@ -1,0 +1,283 @@
+{
+ "what": "ORD-0296 交付收据（0281 后端半）：判据五条的落点 + 三枚反例的 (sha, nodeid, shape) 三元组",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T14:35:33+08:00",
+ "claim_kind": "code_determined",
+ "claimed_result": "DELIVERED-KILLED-CANDIDATE-READY-FOR-LANDING",
+ "derived_result": null,
+ "ref_tip_read": {
+  "refs/heads/mirror/integration-frontend-apple-pass1": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+  "read_by": "git ls-remote --heads https://github.com/Canshu-King/CityNexus"
+ },
+ "generations": {
+  "r1_frozen": {
+   "ref": "review/ord0296-write-deadline-f",
+   "tip": "6d041dcce11d05f28a55abadd40717f321b4db38",
+   "status": "Q37 冻结：宣读数后不再推；已落在权威线里（父 = 5c4608cede6cb7bd5f3ac7e704bfee379ca47abc）"
+  },
+  "r2_new": {
+   "ref": "review/ord0296-write-deadline-f-r2",
+   "tip": "6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1",
+   "parent": "6d041dcce11d05f28a55abadd40717f321b4db38",
+   "diff_files": [
+    "backend/tests/test_qoder_ord0296_write_deadline.py"
+   ],
+   "blob_before": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+   "blob_after": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+   "cells": {
+    "before": 10,
+    "after": 11,
+    "collected_rc": 0
+   },
+   "why": "G11 是新增的一格，属于另一代；不覆盖 r1、不动旧 ref"
+  }
+ },
+ "five_files_at_r2_vs_r1": {
+  "backend/app/core/config.py": {
+   "blob_at_r2": "5f3062f5025569c927594c4a302df5d8ec75e267",
+   "bytes_at_r2": 6868,
+   "blob_at_r1": "5f3062f5025569c927594c4a302df5d8ec75e267",
+   "same_as_r1_delivery": true
+  },
+  "backend/app/db/session.py": {
+   "blob_at_r2": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+   "bytes_at_r2": 41017,
+   "blob_at_r1": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+   "same_as_r1_delivery": true
+  },
+  "backend/app/db/write_deadline.py": {
+   "blob_at_r2": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "bytes_at_r2": 9206,
+   "blob_at_r1": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "same_as_r1_delivery": true
+  },
+  "backend/app/main.py": {
+   "blob_at_r2": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+   "bytes_at_r2": 484325,
+   "blob_at_r1": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+   "same_as_r1_delivery": true
+  },
+  "backend/tests/test_qoder_ord0296_write_deadline.py": {
+   "blob_at_r2": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+   "bytes_at_r2": 20366,
+   "blob_at_r1": "deacc9d7483f1b8fd8d24b6e23e586bf402d85f6",
+   "same_as_r1_delivery": false
+  },
+  "aggregate": {
+   "product_files_identical": 4,
+   "product_files_total": 4,
+   "only_differing_file": [
+    "backend/tests/test_qoder_ord0296_write_deadline.py"
+   ],
+   "expected_difference": "backend/tests/test_qoder_ord0296_write_deadline.py（新增 G11 那一枚 blob）"
+  }
+ },
+ "criteria_map": {
+  "① 默认值严格大于锁等待 + 按场景可配": "ord0296_receipt_r4.json 的 C1/C2/C4（写时从工件重算）",
+  "② 门双向（调小必红、调高必绿）": "G2 + G3 两格；M1（>= 退化）红在 G2；M4 红在 G2/G5",
+  "③ 清单按 AST 口径": "写腿 14 / signal 2 / 计时器 0，逐条见 evidence/ord0289-ast-census/write_legs_f.json（普查代 blob 2a2343c67417223f7e447ce1f53a87d3a3b02ea6）",
+  "④ 候选 ref + 收据目录": "本文件；两代 ref 都给了 ls-remote/API 回读",
+  "⑤ 每格 why 带本格具名读数": "ord0296_receipt_r4.json 13 格；Q38 尺 r2 量过"
+ },
+ "kills": {
+  "M4_startup_door_disabled": {
+   "sha": "6d041dcce11d05f28a55abadd40717f321b4db38",
+   "nodeid": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "shape": "门只算不拦（raise 被摘）⇒ 坏配置能启动 ⇒ G2/G5 那两格当场红",
+   "mutant_file": "app\\db\\write_deadline.py",
+   "hunks": 1,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "38b86a7c7efd1c7c309e6745cb8777a594e4d531",
+   "rounds": [
+    {
+     "round": 1,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "2 failed, 8 passed, 2 warnings in 1.53s"
+    },
+    {
+     "round": 2,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "2 failed, 8 passed, 2 warnings in 1.43s"
+    },
+    {
+     "round": 3,
+     "red": [
+      "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "2 failed, 8 passed, 2 warnings in 1.50s"
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "restore_byte_exact_every_round": true,
+   "expected_red_declared_before_running": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "unexpected_red": [],
+   "carriers_removed": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  "M8_effective_cap_ignores_the_budget": {
+   "sha": "6d041dcce11d05f28a55abadd40717f321b4db38",
+   "nodeid": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "shape": "封顶不再看本请求预算（min 的预算那一侧被摘）⇒ G5 当场红",
+   "mutant_file": "app\\db\\write_deadline.py",
+   "hunks": 1,
+   "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+   "after_blob_40": "22d5983875caa0e56f7623c57429d789c92aa699",
+   "rounds": [
+    {
+     "round": 1,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.74s"
+    },
+    {
+     "round": 2,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.70s"
+    },
+    {
+     "round": 3,
+     "red": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ],
+     "summary_line": "1 failed, 9 passed, 2 warnings in 1.58s"
+    }
+   ],
+   "always_red_all_rounds": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "restore_byte_exact_every_round": true,
+   "expected_red_declared_before_running": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "unexpected_red": [],
+   "carriers_removed": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ],
+   "claimed_result": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_result": null
+  },
+  "M11_startup_door_not_wired": {
+   "sha": "6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1",
+   "nodeid": "test_G11_importing_the_app_is_what_arms_the_door",
+   "shape": "拆掉 app/main.py 启动处那次调用（只去掉括号）⇒ 子进程 `import app.main` 在坏配置下不再拒绝 ⇒ G11 红；同一格在产品码原样时 3 轮全绿 ⇒ 不是「永远红」",
+   "mutant_file": "app/main.py",
+   "line_named": 427,
+   "before_blob_40": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+   "after_blob_40": "a2920c6adb44bbc1bd8aecbb3d88d9ba710b6c5f",
+   "locate_hits": 1,
+   "removed": "assert_configuration_reachable()   # ORD-0296: refuse to boot a deadline that cannot mean anything",
+   "replaced_with": "assert_configuration_reachable  # MUTANT M11",
+   "rounds": [
+    {
+     "round": 1,
+     "rc": 1,
+     "red": [
+      "test_G11_importing_the_app_is_what_arms_the_door"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.59s"
+    },
+    {
+     "round": 2,
+     "rc": 1,
+     "red": [
+      "test_G11_importing_the_app_is_what_arms_the_door"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.51s"
+    },
+    {
+     "round": 3,
+     "rc": 1,
+     "red": [
+      "test_G11_importing_the_app_is_what_arms_the_door"
+     ],
+     "summary_line": "1 failed, 10 passed, 2 warnings in 3.50s"
+    }
+   ],
+   "only_that_cell_reddened_all_rounds": true,
+   "control_rounds_product_untouched": [
+    {
+     "round": 1,
+     "rc": 0,
+     "red": [],
+     "summary_line": "11 passed, 2 warnings in 3.01s"
+    },
+    {
+     "round": 2,
+     "rc": 0,
+     "red": [],
+     "summary_line": "11 passed, 2 warnings in 3.33s"
+    },
+    {
+     "round": 3,
+     "rc": 0,
+     "red": [],
+     "summary_line": "11 passed, 2 warnings in 3.34s"
+    }
+   ],
+   "restore": {
+    "main_byte_exact": true,
+    "main_blob_after": "871aec006a3f6482f7a2700a8baeff8c25f7690f"
+   },
+   "claimed_result": "G11_ADDED_CONTROL_GREEN_AND_M11_RED_ONLY_G11",
+   "derived_result": null,
+   "honest_provenance": "这一枚是包工头字面点名的第一枚。它在我原来的十格下**存活**：3 轮 ['10 passed, 2 warnings in 1.83s', '10 passed, 2 warnings in 1.70s', '10 passed, 2 warnings in 1.41s']（ord0296_arm_M11_r1.json，red=[]）。所以先补 G11、再复量，才有这条红。"
+  }
+ },
+ "campaign_summary": {
+  "arms": 10,
+  "control_rounds_green": true,
+  "survivors": [],
+  "unexpected_red_total": 0,
+  "restore_byte_exact_every_round": true
+ },
+ "neighbour_regression": {
+  "combined": "35 passed, 2 warnings in 4.95s",
+  "red": [],
+  "per_module": {
+   "test_qoder_ord0296_write_deadline.py": "10 passed, 2 warnings in 2.51s",
+   "test_qoder_ord0272_continuation.py": "8 passed, 2 warnings in 3.63s",
+   "test_qoder_ord0287_k8_carrier.py": "2 passed, 2 warnings in 1.81s",
+   "test_agent_mission_runtime.py": "2 passed, 2 warnings in 1.92s",
+   "test_v16_integration.py": "9 passed, 2 warnings in 1.91s",
+   "test_v18_2_agent_productization.py": "4 passed in 1.08s"
+  }
+ },
+ "instrument_defects_found_while_answering_this_order": [
+  "M11 第一版 mutant 引用了未导入的名字 ⇒ 子进程 NameError（那是我的反例坏了，不是门的结论）",
+  "G11 第一版缺 import os/subprocess ⇒ 控制轮就红 ⇒ 该格当时不具备判别力；修好后控制轮 3×11 passed",
+  "两次都写成收据字段，不抹：ord0296_G11_and_M11_r2.json 的 instrument_defect_found_and_fixed"
+ ],
+ "not_done": [
+  "未动权威线（r2 只是新 review ref，落不落由包工头决定）",
+  "未 demo/reset",
+  "未读写 _live/_preview",
+  "未打印凭据",
+  "未推旧 ref"
+ ],
+ "coordinate_hygiene": "正文里的数量一律由本文件字段派生；引用他件时给 40 位 blob 或 文件:行号"
+}
