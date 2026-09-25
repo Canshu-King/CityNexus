@@ -1,0 +1,57 @@
+{
+ "order": "ORD-0339",
+ "line": "origin/mirror/integration-frontend-apple-pass1",
+ "tip": "03ad438dc66b17ab313f9c216b044a38d33b101d",
+ "cand": "dbea61064b577ec7214d6f97183b04e507d0d511",
+ "merge_base": "f45489c6d17f16973faad161618789237ac3814e",
+ "commits_tip_ahead_of_base": 12,
+ "commits_cand_ahead_of_base": 1,
+ "merge_tree_rc": 0,
+ "changed_files": [
+  "frontend/e2e/fixtures/ord0339-sealed-alert-harness.tsx",
+  "frontend/e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts",
+  "frontend/playwright.ord0339-S1.config.ts",
+  "frontend/src/features/setup/JourneyTrialSetup.tsx"
+ ],
+ "files": [
+  {
+   "path": "frontend/e2e/fixtures/ord0339-sealed-alert-harness.tsx",
+   "cand_blob": "435630eb8e33a710a5b63f2f42b9783c2138f271",
+   "merged_blob": "435630eb8e33a710a5b63f2f42b9783c2138f271",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/e2e/qoder-ord0339-exception-words-stay-out-of-the-dom.spec.ts",
+   "cand_blob": "ec9bd384923611a6132f368638200e7b0a3b9876",
+   "merged_blob": "ec9bd384923611a6132f368638200e7b0a3b9876",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/playwright.ord0339-S1.config.ts",
+   "cand_blob": "e46d3bd452e96a6496bea1493101d9126dc3bfd1",
+   "merged_blob": "e46d3bd452e96a6496bea1493101d9126dc3bfd1",
+   "identical": true,
+   "cand_changed_the_file": true
+  },
+  {
+   "path": "frontend/src/features/setup/JourneyTrialSetup.tsx",
+   "cand_blob": "21e197b6004ab01a69a776f50c3978d763c877a1",
+   "merged_blob": "21e197b6004ab01a69a776f50c3978d763c877a1",
+   "identical": true,
+   "cand_changed_the_file": true
+  }
+ ],
+ "merged_tree": "d020fae0558519ef37f60cec41ae4b205a1f9a75",
+ "auto_merged_files": [],
+ "recut_commit": "c740f45d68f337c460a1a43b995162689d0110af",
+ "readback_tree": "d020fae0558519ef37f60cec41ae4b205a1f9a75",
+ "readback_tree_matches": true,
+ "readback_parents": [
+  "03ad438dc66b17ab313f9c216b044a38d33b101d",
+  "dbea61064b577ec7214d6f97183b04e507d0d511"
+ ],
+ "readback_parent_tip": true,
+ "verdict": "RECUT_OK"
+}
