@@ -1,0 +1,113 @@
+{
+ "schema": "CNX_CMDR_HARNESS_LANDING_SUITE_CHECK_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T03:56:15+0800",
+ "generations": {
+  "pre_landing_tip": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "post_landing_tip": "65df31df96cfb8a954f5feb36484710a883e1597",
+  "landing_receipt": "959f2738be18b43d23af1f723f0f536ddda30d33"
+ },
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe (CPython 3.12.14), PYTHONPATH=<export root>, cwd=<export>/backend",
+ "export_recipe_finding": {
+  "three_dir_backend_data_contracts_tools": {
+   "collected": 1261,
+   "collect_errors": 19,
+   "note": "pytest prints `Interrupted: 19 errors during collection` and executes ZERO tests"
+  },
+  "four_dir_plus_scripts": {
+   "collected": 1318,
+   "collect_errors": 0
+  },
+  "delta_tests_brought_in": 57,
+  "rule": "after ORD-0318 the backend suite must be exported WITH scripts/; the ported tests import `scripts.hermes_*` directly and a three-directory export silently turns the whole suite into zero execution"
+ },
+ "runs": [
+  {
+   "tree": "baseline 9a669c8b (4-dir)",
+   "summary": {
+    "failed": 13,
+    "passed": 1232,
+    "skipped": 15,
+    "xfailed": 1
+   },
+   "failed_names": [
+    "tests/test_gpt_agent_authority_v3.py::test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools",
+    "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+    "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+    "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+    "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+    "tests/test_qoder_ord0307_credential_gate.py::test_C01_the_scanned_set_is_named_and_actually_present",
+    "tests/test_qoder_ord0307_credential_gate.py::test_C06_declaration_is_by_digest_not_by_path",
+    "tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today",
+    "tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged"
+   ],
+   "wallclock_seen": "128.80s"
+  },
+  {
+   "tree": "post 65df31df (4-dir) run A",
+   "summary": {
+    "failed": 13,
+    "passed": 1289,
+    "skipped": 15,
+    "xfailed": 1
+   },
+   "wallclock_seen": "132.04s"
+  },
+  {
+   "tree": "post 65df31df (4-dir) run B",
+   "summary": {
+    "failed": 14,
+    "passed": 1288,
+    "skipped": 15,
+    "xfailed": 1
+   },
+   "failed_names": [
+    "tests/test_gpt_agent_authority_v3.py::test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools",
+    "tests/test_qoder_anywhere_gates.py::test_g5_an_ai_run_that_changed_must_say_which_it_was",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+    "tests/test_qoder_anywhere_lock_duration.py::test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+    "tests/test_qoder_anywhere_matrix_truth.py::test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+    "tests/test_qoder_anywhere_provider_independence.py::test_g8a_default_suite_contains_no_live_provider_calls",
+    "tests/test_qoder_anywhere_provider_truth.py::test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+    "tests/test_qoder_catalog_hydration.py::test_abandon_reports_a_request_not_a_death",
+    "tests/test_qoder_city_failure_reasons.py::test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+    "tests/test_qoder_ord0307_credential_gate.py::test_C01_the_scanned_set_is_named_and_actually_present",
+    "tests/test_qoder_ord0307_credential_gate.py::test_C06_declaration_is_by_digest_not_by_path",
+    "tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today",
+    "tests/test_v18_3_convergence.py::test_release_metadata_and_map_entrypoint_are_converged"
+   ],
+   "wallclock_seen": "140.18s"
+  }
+ ],
+ "failure_set_delta_post_minus_pre": [
+  "tests/test_qoder_catalog_hydration.py::test_abandon_reports_a_request_not_a_death"
+ ],
+ "isolation_repeats_of_the_extra_failure": {
+  "test": "tests/test_qoder_catalog_hydration.py::test_abandon_reports_a_request_not_a_death",
+  "post_tree_3_runs": [
+   "passed",
+   "passed",
+   "passed"
+  ],
+  "pre_tree_3_runs": [
+   "passed",
+   "passed",
+   "passed"
+  ],
+  "reading": "passes standalone on BOTH trees and failed once in three full-suite runs on the post tree and never on the pre tree, so it is an order-dependent flake, not something the landing broke - and it is now named so nobody reads it as a new defect"
+ },
+ "derived": {
+  "landing_added_passing_tests": 56,
+  "no_new_stable_failure": true,
+  "collection_clean_with_scripts": true,
+  "collection_broken_without_scripts": true,
+  "the_only_extra_failure_is_the_isolated_one": true
+ },
+ "claim_kind": "measured_comparison",
+ "claimed_result": "pre 13 failed / 1232 passed -> post 14 failed / 1288 passed (+56 passing); extra failures beyond the baseline set: ['tests/test_qoder_catalog_hydration.py::test_abandon_reports_a_request_not_a_death']; export without scripts/ = 19 collection errors"
+}
