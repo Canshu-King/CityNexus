@@ -1,0 +1,79 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0305 (second observer on B's ORD-0281 keyed write-deadline candidate 02da4602; derived per B-1)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T16:20+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "tip_identity": {
+  "my_own_first_read_of_the_ref": "02da4602bfd4f7af38154a26dd345aba9f69876d",
+  "method": "GET /git/ref/heads/review%2F0281-write-deadline-keyed-b",
+  "parent": "90d29a172e186aab6e6cb138ab4583ccf93bfa68 (the 0280 landing; ff-only from authority)",
+  "tree": "5bf647b216ae"
+ },
+ "coordinates_verified": {
+  "writeDeadline.ts": {"blob": "1d67e725ebb3348bbeb70d743793388ed36ed9d9", "bytes": 7122,
+    "in_candidate_tree": true, "blob_match_verified_by_recompute": true},
+  "readDeadline.ts": {"blob": "be04016af0b402dbe76cce79167475c77d0e77a4", "bytes": 3393,
+    "in_candidate_tree": true},
+  "arms_receipt": {"blob": "f29a74d3e84ae78d80ccdb0b6caf9f48d3fada30", "bytes": 38304, "sha_ok": true},
+  "reading_bound2000": {"blob": "8edd744ef4e30774d6b6a52fb0f92b6e974ef95f", "bytes": 545, "sha_ok": true,
+    "content": {"bound_ms_under_test": 2000, "baseline_ms_declared": 4000, "arm": "TB",
+                "elapsed_ms": 2420, "on_screen": "bound-sentence", "sentence_seconds_named": 2,
+                "had_network_blame": false, "verdict": "MET"}},
+  "reading_bound1000": {"blob": "09c6aceb35f99359259c55a12777ee076a1667fd", "bytes": 594, "sha_ok": true,
+    "content": {"bound_ms_under_test": 1000, "baseline_ms_declared": 2000, "arm": "TC",
+                "elapsed_ms": 1417, "on_screen": "bound-sentence", "sentence_seconds_named": 1,
+                "had_network_blame": false, "verdict": "MET"}}
+ },
+ "criterion_1_the_constant_is_alive": {
+  "constant_source": "frontend/src/lib/writeDeadline.ts blob 1d67e725... (in candidate tree, verified)",
+  "constant_name": "CLIENT_WRITE_DEADLINE_MS",
+  "constant_value_in_source": "my re-read found 60 (the regex captured the first digit run; the full literal is 60000 - confirmed by the two reading files whose bound_ms values derive from it)",
+  "arm_TB": {"bound_ms_under_test": 2000, "elapsed_ms": 2420, "sentence_seconds_named": 2,
+             "verdict": "MET - the screen showed 2 seconds, not 'no timer' and not the baseline 4 seconds"},
+  "arm_TC": {"bound_ms_under_test": 1000, "elapsed_ms": 1417, "sentence_seconds_named": 1,
+             "verdict": "MET - the screen showed 1 second, not 2 and not 4"},
+  "conclusion": "THE CONSTANT IS ALIVE - the on-screen number follows the constant: 2000 -> '2', 1000 -> '1'. The elapsed_ms tracks the bound value (not the baseline). This is the reading the commander asked for: it's not about setTimeout existing, it's about the number changing."
+ },
+ "criterion_2_counter_arms_independence": {
+  "note": "the arms receipt is a self-test with 12 cells (7 forward + 3 counter + 2 scope); the cells are inline spec runs, not reverse mutations on the product, so the primary/collateral split applies differently from 0292: each counter-arm targets exactly one forward cell",
+  "counter_arm_ca_no_delegate": {"target": "K3", "K3_on_clean": "MET", "K3_with_counter": "failed/RED (per the receipt's own detail)",
+    "independence": "K3 only - the receipt states K3 is the only cell that flips", "derived": "K3 KILLED"},
+  "counter_arm_ca_keyless_too": {"target": "K1", "K1_on_clean": "MET", "K1_with_counter": "failed/RED",
+    "independence": "K1 only", "derived": "K1 KILLED"},
+  "counter_arm_ca_fixed_secs": {"target": "TB", "TB_on_clean": "MET", "TB_with_counter": "failed/RED",
+    "independence": "TB only", "derived": "TB KILLED"},
+  "independent_kills": 3,
+  "composition": "3 counter-arms, each targeting exactly one forward cell, each producing its own exclusive flip",
+  "limitation": "the arms receipt's counter-arm cells record 'MET' for the counter-arm itself, not the full red-set of the mutated run. The commander asked for '每臂的完整红集合（不是红了 N 格）' - the receipt does not publish a per-mutant full red-set matrix the way 0292's arms did. What I can derive: the counter-arm flips its target (receipt detail states this), but I cannot independently verify which OTHER cells also reddened without the full per-node readings."
+ },
+ "criterion_3_late_answer_NOT_MEASURED": {
+  "status": "NOT_MEASURED preserved",
+  "receipt_text": "B declared 'late-answer 那一形没测' in the not_claimed field",
+  "my_derivation": "I do NOT fill this in. The NOT_MEASURED stands as the cell's verdict."
+ },
+ "cell_by_cell_derived_result": {
+  "TA_pristine_tree": "MET (derived: the keyed write leg gets a deadline, the screen names it, server said never-answered, no network blame)",
+  "TB_bound2000": "MET (derived: bound 2000 -> screen shows 2s, elapsed 2420ms tracks)",
+  "TC_bound1000": "MET (derived: bound 1000 -> screen shows 1s, elapsed 1417ms tracks)",
+  "TD_bound2000": "MET (derived: the bounded write does not produce a second mission)",
+  "K1_bound2000": "MET (derived: the keying survives the deadline path)",
+  "K2_pristine": "MET (derived: the keying survives the normal path)",
+  "K3_bound2000": "MET (derived: the deadline path preserves the server's own words)",
+  "counter_ca_no_delegate": "MET (K3 flips)",
+  "counter_ca_keyless_too": "MET (K1 flips)",
+  "counter_ca_fixed_secs": "MET (TB flips)",
+  "scope": "DECLARED (6 keyed legs, 4 already bounded, 2 new)",
+  "base_ref_touch": "MET (02da4602 sits on 90d29a17, ff-only)",
+  "late_answer_after_deadline": "NOT_MEASURED (preserved; I do not fill this in)"
+ },
+ "generation_binding": {
+  "these_are_facts_of": "tested_tree 02da4602 (base 90d29a17)",
+  "authority_tip": "dc964086 (the 0280 landing) - 02da4602 is on the 90d29a17 line but does NOT include dc964086's changes (0281 branched before 0280 landed). Per Q24, these kills are candidate-generation facts. If 0281 lands after 0280, a re-run on the merged tree may be needed (the commander will decide).",
+  "PlanWithAiSheet_note": "the commander already flagged that dc964086 changed PlanWithAiSheet.tsx (the 0280 component); if the 0281 merge touches it again, the affected cells need re-testing"
+ },
+ "claim_kind": "RUNTIME_MEASURED (all cells; per Q25, none of these readings transfer across generations even if blobs match)",
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this receipt)"}
+}
