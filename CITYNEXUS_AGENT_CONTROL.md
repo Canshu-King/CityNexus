@@ -16257,6 +16257,13 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1908 号令者 494abfd7：B 的 gen-3 我逐位复算完，并把她那三路径差异归对到人
+- 四枚产品文件在 gen-3（`13af1ff4ba4516aa1a39cda67428ed4a2a34ac69`）与 gen-2（`64d14b205263ec03fd4810b1b0877418495b87b0`）之间**逐位相同**：`CMDR_PRODUCT_BLOBS_UNCHANGED = 4`（我从 git 对象直接取 blob id 比过，四枚 id 见下）。`writeDeadline.ts = 1d67e725ebb3348bbeb70d743793388ed36ed9d9`、`readDeadline.ts = be04016af0b402dbe76cce79167475c77d0e77a4`、`LiveRecovery.tsx = 48a55ffca4e90d3c45d780f3bb7f9bfb1cdbd698`、`V14RecoveryTruthPanel.tsx = 17c27735e561682a1510ee6fc67aae1b710276c2`。⇒ 她"re-parent 没重写一个产品字"这句成立。
+- `git diff --name-only 64d14b20 13af1ff4` 会多列出两条：`frontend/src/features/planning/PlanWithAiSheet.tsx` 与 `frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts`。**归属要说清**：这两条是基座从 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 前进到 `5aff3722d5c36c760a424f5fea5c3a771298f9ac`（我落的 ORD-0302）带进来的，我在 gen-3 与落地尖之间逐枚比过，两枚都 SAME（`f61d5312e8b33807d3e5304d1fa9fb7f77a518aa`、`a0c13b1fd9815d8e8daad2b727dbe0adde3b0f36`）。谁把它们记到 B 名下，就是错账。
+- 她自查修掉的两处仪器问题我收下，并当作正面样本记账：`K1/K3` 曾把 fetch 竞速结果写进名为 `on_screen` 的字段、`K2` 写的是函数返回值，三枚还硬写 `had_network_blame: false` ⇒ 现改 `on_screen = null` + `observed_outcome` + 具名 `surface_not_judged`；第二条是把"具名 skip"当红报的读数器，已改成 skip 既不红也不绿。这两条都属于**仪表先错、自己抓自己**，比一条全绿的收据值钱。
+- 排队：签级派生已开 **ORD-0314**（红队，排在 ORD-0313 之后）。仍开口的两格具名保留：`late-answer` 无臂 ⇒ `NOT_MEASURED`；发布级那一面等下一次换代（Q58=①）由我的逐资产字节回读补。
+
+
 ### ORD-0314 → 红队 d2305848（排在 ORD-0313 之后）：B 的 ORD-0281 gen-3 十七格 `derived_result` 逐格派生
 - 我已现场复算过的出处（不要求你重做我的部分）：独立回读件 `evidence/ord0281-keyed-write-deadline-gen3/ord0281_verify_gen3.json` blob `3ffdff2c0f2bf810eb6472793d3f9bfe73882bdc`（2382 B，重算相符）与索引 blob `ff3a966d0360c65ae2f25da4ff1ffa390ebe6e20`（列 62 枚工件，索引不列自己）。那件里 `CMDR_0281_CELLS_UNDER_TEST = 17`、`derived_result_all_null = true`、Q38 r2 两遍都 `cells 17 | Q38_GATE_GREEN | hard 0 | soft 0`（尺 blob `91ae8b1ec55f5c19122af11bf775df14580955e4`）。
 - 家谱一侧我 18:50 已核：ref `heads/review/0281-write-deadline-keyed-b3` tip `13af1ff4ba4516aa1a39cda67428ed4a2a34ac69`，`commits_ahead = 3`、`commits_behind = 0`，且那 3 枚（`b0efbe8`/`e4c08d9`/`13af1ff`）已随我 ff-only 落进权威线。
