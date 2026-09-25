@@ -1,0 +1,143 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1_A2",
+ "order": "ORD-0314 gen-3 derivation, revision A2: per-cell readings inlined + per-arm blobs named (fixes the shape the commander's Q38 r2 ruler flagged as NOT_ASSESSABLE)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T21:15+08:00",
+ "ref_tip_read": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 (read at run time per instruction ②; authority may have moved since)",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "cells": [
+  {
+   "cell": "TA_pristine",
+   "verdict": "MET",
+   "why": "the keyed write leg gets a deadline, the screen names it, no network blame",
+   "readings": {
+    "spec": "e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+    "shape": "pristine tree",
+    "runId": "0281p13227",
+    "port": 4470,
+    "authoritative_json_blob": "see the pristine__authoritative.json pull in the gen-3 evidence dir"
+   }
+  },
+  {
+   "cell": "TB_bound2000",
+   "verdict": "MET",
+   "why": "bound 2000 -> the screen showed 2 seconds, elapsed 2404 ms tracks the bound not the baseline 4000",
+   "readings": {
+    "elapsed_ms": 2404,
+    "on_screen": "bound-sentence",
+    "sentence_seconds_named": 2,
+    "had_network_blame": false,
+    "server_said": "never-answered",
+    "per_arm_reading_blob": "4051aa1894e8bbb5766df36e1ee6cbca5a3a6cbc94762549ba2fbf6b8c1d27db"
+   }
+  },
+  {
+   "cell": "TC_bound1000",
+   "verdict": "MET",
+   "why": "bound 1000 -> the screen showed 1 second, elapsed 1416 ms tracks the bound not the baseline 2000",
+   "readings": {
+    "elapsed_ms": 1416,
+    "on_screen": "bound-sentence",
+    "sentence_seconds_named": 1,
+    "had_network_blame": false,
+    "server_said": "never-answered",
+    "per_arm_reading_blob": "45c91cb141df1797613a9b78d56f0df1c4c97bda33f8cf605a9d8b452da4bbcf"
+   }
+  },
+  {
+   "cell": "TD_bound2000",
+   "verdict": "MET",
+   "why": "the bounded write does not produce a second mission",
+   "readings": {"shape": "bound2000 tree", "runId": "0281p23227"}
+  },
+  {
+   "cell": "K1_bound2000",
+   "verdict": "MET",
+   "why": "the keying survives the deadline path",
+   "readings": {"shape": "bound2000 tree", "runId": "0281p23227"}
+  },
+  {
+   "cell": "K2_pristine",
+   "verdict": "MET",
+   "why": "the keying survives the normal path",
+   "readings": {"shape": "pristine tree", "runId": "0281p13227"}
+  },
+  {
+   "cell": "K3_bound2000",
+   "verdict": "MET",
+   "why": "the deadline path preserves the server's own words",
+   "readings": {"shape": "bound2000 tree", "runId": "0281p23227"}
+  },
+  {
+   "cell": "counter_ca_no_delegate",
+   "verdict": "MET",
+   "why": "the counter-arm flips K3 exclusively: K3 reads NOT_MET with on_screen null and elapsed null on the mutated tree",
+   "readings": {
+    "target": "K3",
+    "K3_on_clean": "MET",
+    "K3_on_mutant": "NOT_MET",
+    "K3_mutant_on_screen": null,
+    "K3_mutant_elapsed_ms": null,
+    "per_arm_reading_blob": "f1620bd77b1f9c6067e059f6c4bcf83f1f6d9ba5d389299e26b57c3465e8a9b"
+   }
+  },
+  {
+   "cell": "counter_ca_keyless_too",
+   "verdict": "MET",
+   "why": "the counter-arm flips K1 exclusively: K1 reads NOT_MET with WriteDeadlineMissed on the mutated tree",
+   "readings": {
+    "target": "K1",
+    "K1_on_clean": "MET",
+    "K1_on_mutant": "NOT_MET",
+    "K1_mutant_elapsed_ms": 2015,
+    "per_arm_reading_blob": "87d180e689303d0a9e8cf5d16b8a9f249b3d9f8fa89392295aaf8e6a2ec2f8fe"
+   }
+  },
+  {
+   "cell": "counter_ca_fixed_secs",
+   "verdict": "MET",
+   "why": "the counter-arm flips TB exclusively: TB reads NOT_MET with sentence_seconds_named=99 (the mutant hard-coded 99, proving the constant was not the source)",
+   "readings": {
+    "target": "TB",
+    "TB_on_clean": "MET",
+    "TB_on_mutant": "NOT_MET",
+    "TB_mutant_sentence_seconds_named": 99,
+    "TB_mutant_elapsed_ms": 2400,
+    "per_arm_reading_blob": "76dca26ed2ee514257a21f0dbaf4f4b82a28acdb96e6989034e5907d17cbea4b"
+   }
+  },
+  {
+   "cell": "scope",
+   "verdict": "DECLARED",
+   "why": "the keyed denominator is 6 legs, of which 4 already come through the readDeadline wrapper; the remaining 2 are the ones this order bounded",
+   "readings": {"keyed_legs": 6, "already_bounded": 4, "newly_bounded": 2}
+  },
+  {
+   "cell": "base_ref",
+   "verdict": "MET",
+   "why": "candidate 13af1ff4 sits directly on the authority line (ff-only from 30a5f90e/dc964086 lineage)",
+   "readings": {"candidate_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69", "parent_is_authority_line": true}
+  },
+  {
+   "cell": "late_answer_after_deadline",
+   "verdict": "NOT_MEASURED",
+   "why": "no late-answer arm was run in the gen-3 evidence set; this cell is preserved as NOT_MEASURED, not filled in",
+   "readings": {}
+  }
+ ],
+ "per_arm_reading_blobs_40hex": {
+  "bound2000__arm_TB.json": "4051aa1894e8bbb5766df36e1ee6cbca5a3a6cbc94762549ba2fbf6b8c1d27db",
+  "bound1000__arm_TC.json": "45c91cb141df1797613a9b78d56f0df1c4c97bda33f8cf605a9d8b452da4bbcf",
+  "ca_no_delegate__arm_K3.json": "f1620bd77b1f9c6067e059f6c4bcf83f1f6d9ba5d389299e26b57c3465e8a9b",
+  "ca_keyless_too__arm_K1.json": "87d180e689303d0a9e8cf5d16b8a9f249b3d9f8fa89392295aaf8e6a2ec2f8fe",
+  "ca_fixed_secs__arm_TB.json": "76dca26ed2ee514257a21f0dbaf4f4b82a28acdb96e6989034e5907d17cbea4b"
+ },
+ "independent_kills": 3,
+ "composition": "3 counter-arms, each flips exactly its target cell",
+ "claim_kind": "RUNTIME_MEASURED (all cells; per Q25, does not transfer across generations even if blobs match)",
+ "generation_binding": {"tested_tree": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69"},
+ "late_answer": "NOT_MEASURED",
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this receipt)"}
+}
