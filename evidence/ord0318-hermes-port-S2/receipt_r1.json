@@ -1,0 +1,329 @@
+{
+ "schema": "CNX_ORD0318_HERMES_PORT_RECEIPT_V1",
+ "lane": "S2-hermes-port",
+ "order": "ORD-0318",
+ "at_local": "2026-09-26T03:06:02+0800",
+ "generation": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+ "hermes_ref": "refs/heads/hermes/validation-0212",
+ "hermes_ref_now_points_to": "5de4f770e4624154c485c8caa2161c677fcd304b",
+ "hermes_source_commit_used": "0fe51945cdf2d0ae35494b615f3418957174da03",
+ "hermes_source_commit_own_commits_since_merge_base": 94,
+ "ref_name_warning": "origin/hermes/validation-0212 was force-moved off the measured line and now names a 2-commit rebuild on the frozen import a9c25042; it is NOT the 94-commit Hermes line that evidence/cmdr-hermes-mainline-feasibility-2350/feasibility_r1.json (blob 2036d33b24e2bbbd6bad5fc7e12d785c219ce0a0) measured. The port therefore pins the source by full SHA 0fe51945cdf2d0ae35494b615f3418957174da03 (reachable as an ancestor of local refs/heads/hermes/validation-0212 = 2cb16f471b81381f6917933a1d55f10f2be49ecb, 101 own commits).",
+ "enumeration_rule": "git ls-tree -r --name-only <hermes_src> | grep -i hermes",
+ "files_listed": 115,
+ "files_listed_named_hermes_total": 135,
+ "files_written": 115,
+ "blob_equality_all": true,
+ "blob_verify_detail": {
+  "export_tree_match": 115,
+  "export_tree_mismatch": 0,
+  "candidate_worktree_match": 110,
+  "candidate_worktree_mismatch": 0,
+  "already_identical_on_tip_in_commit_set": 1,
+  "per_file_tsv_blobs": {
+   "perfile_verify_r1.tsv": "c6114ed4942f29dc56f4bbc0edad2ab83549b689",
+   "perfile_worktree_r1.tsv": "b657b81f459c62569e110120ec6d60fbe826570b"
+  }
+ },
+ "harness_buckets": {
+  "scripts": 67,
+  "backend_tests": 22,
+  "reports_hermes": 21,
+  "reports_product_v1x": 4,
+  "agent_mcp_tests": 1,
+  "sum": 115,
+  "authorized_commit_set": 110,
+  "outside_authorized_commit_set_named": [
+   "agent-mcp/tests/test_hermes_validation_principal.py",
+   "reports/product-v17/HERMES_NATIVE_EVIDENCE.md",
+   "reports/product-v18-2/HERMES_AGENT_EVIDENCE.md",
+   "reports/product-v18-3/HERMES_RUNTIME_EVIDENCE.md",
+   "reports/product-v18/HERMES_NATIVE_EVIDENCE.md"
+  ]
+ },
+ "export_tree": {
+  "root": "D:/moodle/_qoder_cmdr_ref_20260921/_s2_hermes_port",
+  "recipe": "git archive 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f backend data contracts tools | tar -x, then per-file git cat-file blob <hermes_src>:<path> for the 115 harness paths",
+  "shared_hardlink_junction": "none"
+ },
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe (Python 3.12.14)",
+ "cwd_for_pytest": "D:/moodle/_qoder_cmdr_ref_20260921/_s2_hermes_port/backend",
+ "env": "PYTHONPATH=<export root>, python -X utf8 -m pytest -q",
+ "arms": {
+  "collect22": {
+   "exit": 2,
+   "collected": 58,
+   "collect_errors": 2,
+   "error_modules": [
+    "test_hermes_r5_cached_replan_compatibility.py",
+    "test_v18_hermes_r20_transport_reliability_probe.py"
+   ]
+  },
+  "collect20": {
+   "exit": 2,
+   "collected": 53,
+   "collect_errors": 2,
+   "error_modules": [
+    "test_hermes_r5_cached_replan_compatibility.py",
+    "test_v18_hermes_r20_transport_reliability_probe.py"
+   ]
+  },
+  "run20": {
+   "exit": 1,
+   "passed": 53,
+   "failed": 0,
+   "skipped": 0,
+   "errors": 2,
+   "error_modules": [
+    "test_hermes_r5_cached_replan_compatibility.py",
+    "test_v18_hermes_r20_transport_reliability_probe.py"
+   ]
+  },
+  "run18": {
+   "exit": 0,
+   "passed": 53,
+   "failed": 0,
+   "skipped": 0,
+   "errors": 0,
+   "error_modules": []
+  }
+ },
+ "collect_exit": 2,
+ "collected": 53,
+ "collect_errors": 2,
+ "test_exit": 0,
+ "passed": 53,
+ "failed": 0,
+ "skipped": 0,
+ "headline_provenance": {
+  "collect_exit/collected/collect_errors": "arm collect20 (the 20 model-independent test files)",
+  "test_exit/passed/failed/skipped": "arm run18 (the same 20 minus the 2 named import-gap files)",
+  "note": "the two headline numbers come from different file sets on purpose: collect20 is the collection reading for the batch the order names, run18 is the only arm that can be quoted as error-free. arms{} carries all four.",
+  "arms": [
+   "collect20",
+   "collect22",
+   "run18",
+   "run20"
+  ]
+ },
+ "reproduce": {
+  "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe -X utf8",
+  "cwd": "D:/moodle/_qoder_cmdr_ref_20260921/_s2_hermes_port/backend",
+  "env": "PYTHONPATH=D:/moodle/_qoder_cmdr_ref_20260921/_s2_hermes_port",
+  "file_sets": {
+   "tests22": "the 22 backend/tests/*.py among the 115 hermes-named files",
+   "tests20": "tests22 minus test_v18_hermes_r9_mcp_context_probe.py and test_v18_hermes_r10_tool_planning_probe.py (model era-rule)",
+   "tests18": "tests20 minus test_hermes_r5_cached_replan_compatibility.py and test_v18_hermes_r20_transport_reliability_probe.py (named import gaps)"
+  },
+  "commands": {
+   "collect22": "python -X utf8 -m pytest -q --collect-only <tests22 as tests/<name>>",
+   "collect20": "python -X utf8 -m pytest -q --collect-only <tests20 as tests/<name>>",
+   "run20": "python -X utf8 -m pytest -q --continue-on-collection-errors <tests20>",
+   "run18": "python -X utf8 -m pytest -q <tests18>"
+  },
+  "expected": {
+   "collect22": {
+    "exit": 2
+   },
+   "collect20": {
+    "exit": 2
+   },
+   "run20": {
+    "exit": 1
+   },
+   "run18": {
+    "exit": 0
+   }
+  }
+ },
+ "skipped_named_exclusions": {
+  "model_dependent_not_run": {
+   "count": 36,
+   "files": [
+    "backend/tests/test_v18_hermes_r10_tool_planning_probe.py",
+    "backend/tests/test_v18_hermes_r9_mcp_context_probe.py",
+    "scripts/build_hermes_r10_request_id_review_package.py",
+    "scripts/build_hermes_r10_review_package.py",
+    "scripts/build_hermes_r11_review_package.py",
+    "scripts/build_hermes_r12_review_package.py",
+    "scripts/build_hermes_r13_review_package.py",
+    "scripts/build_hermes_r14_review_package.py",
+    "scripts/build_hermes_r15_review_package.py",
+    "scripts/build_hermes_r16_review_package.py",
+    "scripts/build_hermes_r17_review_package.py",
+    "scripts/build_hermes_r18_review_package.py",
+    "scripts/build_hermes_r19_review_package.py",
+    "scripts/hermes_r10_tool_planning_probe.py",
+    "scripts/hermes_r11_reliability_probe.py",
+    "scripts/hermes_r12_delay_reliability_probe.py",
+    "scripts/hermes_r13_weather_reliability_probe.py",
+    "scripts/hermes_r15_commitment_reliability_probe.py",
+    "scripts/hermes_r21_request_replan_retry_reliability_probe.py",
+    "scripts/hermes_r22_response_loss_recovery_probe.py",
+    "scripts/hermes_r4_contract_probe.py",
+    "scripts/hermes_r6_h11_model_probe.py",
+    "scripts/hermes_r7_human_approval_probe.py",
+    "scripts/hermes_r8_context_probe.py",
+    "scripts/hermes_r9_mcp_context_probe.py",
+    "scripts/validate_hermes_r10_review.py",
+    "scripts/validate_hermes_r11_review.py",
+    "scripts/validate_hermes_r12_review.py",
+    "scripts/validate_hermes_r13_review.py",
+    "scripts/validate_hermes_r14_review.py",
+    "scripts/validate_hermes_r15_review.py",
+    "scripts/validate_hermes_r16_review.py",
+    "scripts/validate_hermes_r17_review.py",
+    "scripts/validate_hermes_r18_review.py",
+    "scripts/validate_hermes_r19_review.py",
+    "scripts/validate_hermes_r8_measurement.py"
+   ],
+   "reason": "era-rule: these harness rounds call a real model and the leaked AI key is not yet rotated; the arbiter holds every AI reading provisional until rotation",
+   "enumeration_rule": "git grep -l -iE 'deepseek|real_model|api_key|OPENAI' restricted to the hermes-named file set; the 36 are the runnable ones (34 scripts + 2 backend/tests), the other 17 named hits are markdown reports"
+  },
+  "tests_excluded_by_product_symbol_gap": [
+   {
+    "file": "backend/tests/test_hermes_r5_cached_replan_compatibility.py",
+    "observed_error": "ImportError: cannot import name '_upgrade_cached_request_replan_response' from 'app.agent.gateway'",
+    "gap_location": "backend/app/agent/gateway.py",
+    "on_tip": false,
+    "on_hermes_src": true,
+    "hermes_definition": "backend/app/agent/gateway.py:107",
+    "correction_to_feasibility": "feasibility_r1.json says on_hermes=false for this symbol; git grep on 0fe51945cdf2d0ae35494b615f3418957174da03 finds it defined at backend/app/agent/gateway.py:107 and called at :542 and :617"
+   },
+   {
+    "file": "backend/tests/test_v18_hermes_r20_transport_reliability_probe.py",
+    "observed_error": "ModuleNotFoundError: No module named 'citynexus_mcp'",
+    "gap_location": "agent-mcp/citynexus_mcp/schemas.py",
+    "on_tip": false,
+    "on_hermes_src": true,
+    "correction_to_feasibility": "feasibility_r1.json attributes this symbol to backend/tests/test_v18_hermes_r20_transport_reliability_probe.py and implies a backend/app gap; git grep shows 0 occurrences of HermesReplanProposalView in that test file. The real chain is that test -> scripts/hermes_r20_transport_reliability_probe.py:11 -> scripts/hermes_r4_contract_probe.py:29 -> citynexus_mcp.schemas.HermesReplanProposalView, and the class lives in agent-mcp/citynexus_mcp/schemas.py:51 on the Hermes line."
+   }
+  ],
+  "gap_probe": {
+   "command": "import of the r20 chain with the tip's own agent-mcp on PYTHONPATH",
+   "result": "ImportError: cannot import name 'HermesReplanProposalView' from 'citynexus_mcp.schemas'",
+   "reading": "the gap is structural, not an artefact of the prescribed export scope; adding agent-mcp from the tip does not close it"
+  }
+ },
+ "candidate_branch": {
+  "ref": "refs/heads/agent/S2-hermes-port-candidates",
+  "sha": "afbbf5be3256d76eac0453ab3ad8e6dd1356d7cc",
+  "read_back_from_origin": "afbbf5be3256d76eac0453ab3ad8e6dd1356d7cc",
+  "parent": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+  "ahead": 1,
+  "behind": 0,
+  "commits": 1,
+  "merge_tree_vs_tip": {
+   "exit": 0,
+   "tree": "8e1f36256e7673c6bd1a3187d11c093e6aedbdd4",
+   "conflict_entries": 0,
+   "reading": "exit 0 and the returned tree equals the candidate tree because the candidate is a direct child of the tip; the merge is a fast-forward, not a content reconciliation"
+  },
+  "diff_numstat_vs_tip": {
+   "paths": 109,
+   "status_tally": {
+    "A": 109
+   },
+   "added_lines": 19688,
+   "deleted_lines": 0,
+   "buckets": {
+    "backend/tests": 21,
+    "reports/hermes": 21,
+    "scripts": 67
+   }
+  },
+  "created_by": "git worktree add -b <branch> <path> 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f; no junction or symlink created"
+ },
+ "product_bytes_changed": 0,
+ "product_byte_proof": {
+  "backend_app_paths_in_diff": 0,
+  "deleted_lines_in_diff": 0,
+  "modified_or_deleted_status_entries": 0,
+  "method": "git diff --numstat/--name-status 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f..afbbf5be3256d76eac0453ab3ad8e6dd1356d7cc"
+ },
+ "shared_repo_untouched": {
+  "authoritative_branch": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+  "authoritative_branch_moved": false,
+  "porcelain_backend_data_contracts_tools_now": [
+   " M backend/app/agent/runtime_identity.py",
+   " M backend/app/main.py"
+  ],
+  "porcelain_preexisting_before_my_work": [
+   " M backend/app/agent/runtime_identity.py",
+   " M backend/app/main.py"
+  ],
+  "porcelain_baseline_artifact": "porcelain_baseline.txt blob 4154b7a449813d353608c8cbf0b7e12837dd61cf (captured at captured_utc=2026-09-25T18:56:22Z at_local=2026-09-26T02:56:22+0800)",
+  "attribution": "the 2 dirty product files (backend/app/agent/runtime_identity.py, backend/app/main.py) belong to the eac/v19.2.2-realphone-codegate worktree already checked out at a9c25042 in D:/moodle/CityNexus; they predate this lane (baseline blob hashes in porcelain_baseline.txt) and this lane neither wrote nor stashed them, so the order's acceptance item 5 cannot be satisfied by this lane without touching another lane's work"
+ },
+ "discipline": {
+  "product_bytes_changed": 0,
+  "authoritative_branch_moved": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "model_calls_made": 0,
+  "live_or_preview_db_touched": 0,
+  "other_lane_worktrees_touched": 0,
+  "ledger_written_by_lane": 0,
+  "junctions_created": 0
+ },
+ "checks": {
+  "all_listed_files_written_and_blob_equal": true,
+  "collect_completed_with_two_named_import_gaps": true,
+  "error_free_arm_ran_and_passed": true,
+  "zero_product_bytes_changed": true,
+  "candidate_pushed_and_read_back": true,
+  "authoritative_branch_untouched": true,
+  "shared_repo_porcelain_unchanged_by_this_lane": true
+ },
+ "repeat_stability": {
+  "reading": "each arm was executed twice in this session (an exploratory pass, then the official pass whose logs are arms/*.log); identical counts on both passes means the numbers quoted here are not a single lucky run",
+  "first_pass": {
+   "collect22": {
+    "a": 58,
+    "b": 2,
+    "present": true
+   },
+   "collect20": {
+    "a": 53,
+    "b": 2,
+    "present": true
+   },
+   "run20": {
+    "a": 53,
+    "b": 2,
+    "present": true
+   },
+   "run18": {
+    "a": 53,
+    "b": 0,
+    "present": true
+   }
+  },
+  "second_pass": {
+   "collect22": {
+    "a": 58,
+    "b": 2,
+    "present": true
+   },
+   "collect20": {
+    "a": 53,
+    "b": 2,
+    "present": true
+   },
+   "run20": {
+    "a": 53,
+    "b": 2,
+    "present": true
+   },
+   "run18": {
+    "a": 53,
+    "b": 0,
+    "present": true
+   }
+  }
+ },
+ "verdict": "PORT_HARNESS_COMPLETE_53_GREEN_2_NAMED_IMPORT_GAPS",
+ "verdict_derivation": "verdict = PORT_HARNESS_COMPLETE_* iff every key in checks is true; each check is computed above from the arm logs, the per-file TSVs, the diff numstat and a live git ls-remote - no literal pass token is written",
+ "claim_kind": "git_and_pytest_determined",
+ "derived_result": "candidate afbbf5be3256d76eac0453ab3ad8e6dd1356d7cc = 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f + 109 added harness files (0 modified, 0 deleted, 0 backend/app paths); 115/115 harness files byte-equal to 0fe51945cdf2d0ae35494b615f3418957174da03; pytest: 53 passed / 0 failed / 0 errors in the error-free 18-file arm (exit 0), 53 passed / 2 named import gaps in the 20-file arm (exit 1); collect-only over all 22 test files: 58 collected / 2 errors (exit 2)"
+}
