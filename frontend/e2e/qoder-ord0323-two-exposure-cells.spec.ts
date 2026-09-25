@@ -415,7 +415,9 @@ async function drive(page: Page, trigger: Leg["trigger"]): Promise<void> {
         "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000a49444154789c636000000200" +
         "0100ffff03000006000557bfabd40000000049454e44ae426082", "hex"),
     });
-    await page.getByRole("button", {name: "提取图片草稿"}).click();
+    /* A file <input> is itself exposed with role=button and carries the whole label in its accessible
+       name, so the substring match resolved to two controls. */
+    await page.getByRole("button", {name: "提取图片草稿", exact: true}).click();
     return;
   }
   await page.getByTestId("inbox-open-review").first().click();
@@ -558,7 +560,7 @@ for (const leg of LEGS) {
       /* This page holds a second textarea inside the closed structured-JSON aside; only the visible one is
          the paste box. */
       await page.locator("textarea").filter({visible: true}).first().fill("9月26日 天津西→北京南 G8901 二等座 07:30");
-      await page.getByRole("button", {name: "提取文本草稿"}).click();
+      await page.getByRole("button", {name: "提取文本草稿", exact: true}).click();
     } else if (leg.trigger !== "none") {
       await drive(page, leg.trigger);
     }
