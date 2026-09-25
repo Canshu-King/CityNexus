@@ -163,10 +163,14 @@ from app.db.models import (
 from app.db.session import SessionLocal, engine, ensure_schema, get_session
 from app.db.write_deadline import (
     SCENARIO_AGENT_COMMANDS,
+    SCENARIO_DEFAULT_WRITE,
     SCENARIO_PLANS_GENERATE,
     WriteDeadlineExceeded,
+    arm_request_budget,
     assert_configuration_reachable,
+    boundary_verdict,
     commit_within_budget,
+    reset_request_budget,
     start_request_budget,
     write_attempt,
 )
@@ -612,6 +616,46 @@ def write_deadline_answer(_: Request, exc: WriteDeadlineExceeded) -> JSONRespons
     """
 
     return error(exc.code, str(exc), status=503, details=exc.details())
+
+
+@app.middleware("http")
+async def write_budget_per_request(request: Request, call_next):
+    """ORD-0327: one request, one write clock -- so a traveller's press cannot wait forever.
+
+    Routes used to opt in one at a time (two scenarios did).  This arms a clock for every request, so
+    the routes that never named a scenario are no longer the ones a lost lock answers with a bare 500:
+    past budget, `write_contention_answer` below replies under `SERVER_WRITE_DEADLINE_EXCEEDED` (503,
+    with the two numbers in it); inside budget, the original error propagates untouched and this
+    middleware adds nothing.  A route that names its own scenario still replaces the clock when it
+    calls `start_request_budget`, and nothing here reaches background jobs -- they run outside any
+    request context, so their `OperationalError` stays the error their handlers already catch.
+    """
+
+    arm_request_budget(SCENARIO_DEFAULT_WRITE)
+    try:
+        return await call_next(request)
+    finally:
+        reset_request_budget()
+
+
+@app.exception_handler(OperationalError)
+async def write_contention_answer(request: Request, exc: OperationalError) -> JSONResponse:
+    """The boundary's one judge for "this request's write budget is gone because it lost the lock".
+
+    Two directions, both measured (ORD-0327 ②): `boundary_verdict` returns None unless a clock is
+    armed, expired, and the error is lock contention -- and on None this handler re-raises the very
+    same exception object, so inside budget the traveller's answer stays exactly today's answer with
+    no new name in it.  When the judge does speak, the response is the ORD-0280 envelope: the
+    server's own sentence plus the two numbers, never a contentless 500.
+
+    A route that catches `OperationalError` itself keeps handling it first -- this only sees errors
+    that were already going to reach the framework.
+    """
+
+    named = boundary_verdict(exc)
+    if named is None:
+        raise exc
+    return write_deadline_answer(request, named)
 
 
 @app.exception_handler(ValueError)

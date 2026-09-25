@@ -25,9 +25,15 @@ from app.core.config import settings
 
 SCENARIO_AGENT_COMMANDS = "agent.commands"
 SCENARIO_PLANS_GENERATE = "plans.generate"
+#: ORD-0327: every other write route.  A request without a named scenario still carries a clock, so
+#: a lost lock past its budget names itself instead of reaching the framework's contentless 500.
+#: Background work is deliberately excluded -- the clock is armed by the HTTP middleware and
+#: `boundary_verdict` only speaks for a request that armed one, so a job's `OperationalError` stays
+#: the error its own handlers were written against.
+SCENARIO_DEFAULT_WRITE = "default.write"
 #: The only place a scenario name exists.  Routes refer to their scenario through these constants, so
 #: a second inline copy of either the name or the number cannot be made (ORD-0281 T-c's killer).
-SCENARIOS: tuple[str, ...] = (SCENARIO_AGENT_COMMANDS, SCENARIO_PLANS_GENERATE)
+SCENARIOS: tuple[str, ...] = (SCENARIO_AGENT_COMMANDS, SCENARIO_PLANS_GENERATE, SCENARIO_DEFAULT_WRITE)
 
 CODE_DEADLINE = "SERVER_WRITE_DEADLINE_EXCEEDED"
 CONFIG_OK = "WRITE_DEADLINE_CONFIG_OK"
@@ -232,3 +238,36 @@ def commit_within_budget(session, scenario: str) -> int:
     with write_attempt(scenario) as budget:
         session.commit()
     return budget.elapsed_ms
+
+
+def active_budget() -> WriteBudget | None:
+    """The clock this request armed, or None for a write outside any request (a job, a script)."""
+
+    return _CURRENT.get()
+
+
+def arm_request_budget(scenario: str = SCENARIO_DEFAULT_WRITE) -> WriteBudget:
+    """Start the clock for one request.  Called by the HTTP middleware, not by a route."""
+
+    return start_request_budget(scenario)
+
+
+def boundary_verdict(exc: BaseException) -> WriteDeadlineExceeded | None:
+    """What this request's clock says about an escaping database error -- or None to leave it alone.
+
+    This is the one judge at the boundary, and it is deliberately narrow.  A write that lost the lock
+    *before* the budget ran out is today's error, unchanged: returning None means the caller re-raises
+    the same object and the traveller's answer stays exactly what it was.  An error that is not lock
+    contention is a bug, not a wait, and renaming it would launder it into a 503.  And with no clock
+    armed -- a job, a script -- nothing here applies.
+
+    The judge sits at the boundary rather than around `Session.commit()` because a request's writes do
+    not all leave at commit: `app/main.py:718` flushes mid-route (674 in the generation this branch is
+    cut from), so a commit-only wrapper would bound part of the same request and leave the rest
+    reaching the framework's contentless 500.
+    """
+
+    budget = _CURRENT.get()
+    if budget is None or not is_lock_contention(exc) or not budget.expired():
+        return None
+    return WriteDeadlineExceeded(budget.scenario, budget.elapsed_ms, budget.deadline_ms, str(exc))
