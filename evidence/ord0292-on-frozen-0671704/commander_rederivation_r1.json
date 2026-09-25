@@ -1,0 +1,161 @@
+{
+ "arms": [
+  {
+   "arm": "K278_NO_MISSION_ID_IN_BODY",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "red_observed_n": 1
+  },
+  {
+   "arm": "K278_TWO_KEYS_MERGED",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "red_observed_n": 1
+  },
+  {
+   "arm": "K278_CLEAR_BEFORE_SEND",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "red_observed_n": 1
+  },
+  {
+   "arm": "K278_SILENCE_ON_NON_ACCEPT",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "red_observed_n": 1
+  },
+  {
+   "arm": "K253_LEG2_KEY_DROPPED",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "red_observed_n": 3
+  },
+  {
+   "arm": "K253_LEG1_KEY_DROPPED",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "red_observed_n": 3
+  },
+  {
+   "arm": "K253_ONE_KEY_FOR_ALL_INTENTS",
+   "checks": {
+    "anchor_hits_ge_1": true,
+    "attempt_exitCode_nonzero": true,
+    "baseline_exitCode_zero": true,
+    "both_stacks_started": true,
+    "no_missing_nodes": true,
+    "owner_green_in_baseline": true,
+    "owner_red_in_attempt": true,
+    "redSet_equals_observed": true,
+    "restored_exact": true,
+    "run_ids_distinct": true,
+    "triple_sha_is_frozen": true
+   },
+   "claimed_by_lane": "KILLED",
+   "derived_by_commander": "KILLED",
+   "red_observed_n": 3
+  }
+ ],
+ "arms_failing_any_check": [],
+ "arms_total": 7,
+ "frozen_tip": "0671704546f9c9ea1d1b57627b059124c7800803",
+ "generation_scope": "candidate generation 0671704546f9 only -- per Q24/Q25 these do NOT transfer to the landed tip 5c4608ce; ORD-0298 (lane D re-parent + rerun) is the path",
+ "green_round": {
+  "problems": 0,
+  "triples_named": 14,
+  "verdict": "GREEN"
+ },
+ "independent_evidence_counting": "4 exclusive K278 arms + 1 compound K253 cut-set (3 arms red on the same 3-node spec) = 5 pieces of evidence, not 7",
+ "inputs": {
+  "all_three_recomputed_sha1_equal": true,
+  "arms_blob": "cb9270671adc323ff2816d406739e04518b9d05f",
+  "gate_round_blob": "0160e8db0295e600b44a5e5ff021d5da507bc7d2",
+  "verifier_derivation_blob": "7fa7946a4f154aadf5fbc5132374640129440cb7"
+ },
+ "killed_by_commander": 7,
+ "lane_claims_agree_with_my_derivation": true,
+ "order": "ORD-0292",
+ "red_set_sizes": [
+  1,
+  3
+ ],
+ "rederived_by": "commander 494abfd7 (independent of lane prose)"
+}
