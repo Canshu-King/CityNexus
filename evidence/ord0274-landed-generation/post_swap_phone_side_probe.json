@@ -1,0 +1,83 @@
+{
+ "what": "commander post-switch phone-side read (through the public tunnel, Basic auth from the file, nothing printed)",
+ "t": "2026-09-25T08:38:11+0800",
+ "tunnel_base": "https://obligation-plain-arcade-bean.trycloudflare.com",
+ "served_index_assets_on_disk": [
+  "/assets/index-xKIGmoBz.js",
+  "/assets/index-I45CQek8.css"
+ ],
+ "rows": [
+  {
+   "path": "/",
+   "status": 200,
+   "content_type": "text/html",
+   "bytes": 1200,
+   "ms": 1380
+  },
+  {
+   "path": "/assets/index-xKIGmoBz.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "bytes": 1249346,
+   "ms": 2096
+  },
+  {
+   "path": "/assets/index-I45CQek8.css",
+   "status": 200,
+   "content_type": "text/css",
+   "bytes": 183897,
+   "ms": 1956
+  },
+  {
+   "path": "/assets/index-CtuiCkKf.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "bytes": 1248629,
+   "ms": 2067
+  },
+  {
+   "path": "/assets/JourneyMap-DOROX9Q5.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "bytes": 4392,
+   "ms": 1130
+  },
+  {
+   "path": "/assets/maplibre-gl-JaODVDnV.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "bytes": 1053381,
+   "ms": 2243
+  },
+  {
+   "path": "/v10-sw.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "bytes": 2055,
+   "ms": 1137
+  },
+  {
+   "path": "/manifest.webmanifest",
+   "status": 200,
+   "content_type": "application/manifest+json",
+   "bytes": 314,
+   "ms": 1131
+  },
+  {
+   "path": "/api/v1/health",
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 84,
+   "ms": 1150
+  },
+  {
+   "path": "/api/v1/demo/scene",
+   "status": 200,
+   "content_type": "application/json",
+   "bytes": 583,
+   "ms": 1156
+  }
+ ],
+ "assets_answered_with_html": 0,
+ "derived_result": "NEW_GENERATION_SERVED_AND_OLD_GENERATION_RETAINED"
+}
