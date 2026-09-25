@@ -1,0 +1,864 @@
+{
+ "what": "ORD-0303：0272 的门与 K8 那一臂，在号令写死的基座上重跑（EVIDENCE_INTEGRITY_GATE_V1 形制）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T15:04:52+08:00",
+ "claim_kind": "runtime_measured",
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "ref_tip_read": {
+  "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+  "sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "heads_seen": 52,
+  "equal_to_ordered_base": false,
+  "ordered_base_is_ancestor_of_current_tip": true,
+  "compare_route": "90d29a172e186aab6e6cb138ab4583ccf93bfa68...dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "compare_status": "ahead",
+  "commits_between": 10,
+  "read_by": "git ls-remote --heads https://github.com/Canshu-King/CityNexus（动手之前） + compare 路由证祖先关系",
+  "note": "号令写死的基座已不是线尖（线又往前走了），所以本收据挂在**具名基座**上，不挂在线尖上；把基座当成线尖来读会读错，故两侧都记"
+ },
+ "tree": "D:/moodle/_qoder_f_run/snap_0272_line（git -c core.autocrlf=false archive 90d29a172e186aab6e6cb138ab4583ccf93bfa68 backend data contracts tools | tar -x）",
+ "product_blob_before": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+ "product_bytes": 484325,
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "backend_cwd": "D:\\moodle\\_qoder_f_run\\snap_0303_90d29a17\\backend",
+ "scope_actually_run": [
+  "tests/test_qoder_ord0272_continuation.py",
+  "tests/test_qoder_ord0287_k8_carrier.py"
+ ],
+ "collect_only_denominator": 10,
+ "runs_control": [
+  {
+   "runId": "0303-ctl1-d1d2c7a1bbb2",
+   "label": "ctl1",
+   "started_at": "2026-09-25T15:04:32+08:00",
+   "rc": 0,
+   "scope_actually_run": [
+    "tests/test_qoder_ord0272_continuation.py",
+    "tests/test_qoder_ord0287_k8_carrier.py"
+   ],
+   "collected": 10,
+   "summary_line": "======================= 10 passed, 2 warnings in 2.76s ========================",
+   "passed_nodes": 10,
+   "failed_nodes": 0,
+   "red_nodeids": [],
+   "durations_ms_call": {
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation": 860,
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced": 190,
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape": 110,
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans": 100,
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409": 90,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer": 60,
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer": 40,
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced": 40,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name": 40,
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity": 30
+   },
+   "database_url": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0303_ctl1_e6xfkm66/gate.db",
+   "database_file": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_0303_ctl1_e6xfkm66\\gate.db",
+   "database_file_exists": true
+  },
+  {
+   "runId": "0303-ctl2-c04d51601957",
+   "label": "ctl2",
+   "started_at": "2026-09-25T15:04:36+08:00",
+   "rc": 0,
+   "scope_actually_run": [
+    "tests/test_qoder_ord0272_continuation.py",
+    "tests/test_qoder_ord0287_k8_carrier.py"
+   ],
+   "collected": 10,
+   "summary_line": "======================= 10 passed, 2 warnings in 2.40s ========================",
+   "passed_nodes": 10,
+   "failed_nodes": 0,
+   "red_nodeids": [],
+   "durations_ms_call": {
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation": 860,
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced": 160,
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans": 100,
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape": 80,
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409": 70,
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer": 40,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer": 40,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name": 40,
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced": 40,
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity": 30
+   },
+   "database_url": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0303_ctl2_lf8d24pz/gate.db",
+   "database_file": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_0303_ctl2_lf8d24pz\\gate.db",
+   "database_file_exists": true
+  },
+  {
+   "runId": "0303-ctl3-0e5feaaec3da",
+   "label": "ctl3",
+   "started_at": "2026-09-25T15:04:39+08:00",
+   "rc": 0,
+   "scope_actually_run": [
+    "tests/test_qoder_ord0272_continuation.py",
+    "tests/test_qoder_ord0287_k8_carrier.py"
+   ],
+   "collected": 10,
+   "summary_line": "======================= 10 passed, 2 warnings in 2.42s ========================",
+   "passed_nodes": 10,
+   "failed_nodes": 0,
+   "red_nodeids": [],
+   "durations_ms_call": {
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation": 870,
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced": 170,
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape": 100,
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans": 90,
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409": 70,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer": 40,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name": 40,
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer": 40,
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced": 30,
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity": 30
+   },
+   "database_url": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0303_ctl3_b_3wq62f/gate.db",
+   "database_file": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_0303_ctl3_b_3wq62f\\gate.db",
+   "database_file_exists": true
+  }
+ ],
+ "runs_k8": [
+  {
+   "runId": "0303-k8_1-9a1a362b4633",
+   "label": "k8_1",
+   "started_at": "2026-09-25T15:04:42+08:00",
+   "rc": 1,
+   "scope_actually_run": [
+    "tests/test_qoder_ord0272_continuation.py",
+    "tests/test_qoder_ord0287_k8_carrier.py"
+   ],
+   "collected": 10,
+   "summary_line": "=================== 1 failed, 9 passed, 2 warnings in 2.40s ===================",
+   "passed_nodes": 9,
+   "failed_nodes": 1,
+   "red_nodeids": [
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+   ],
+   "durations_ms_call": {
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation": 860,
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced": 190,
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans": 90,
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409": 80,
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape": 80,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name": 50,
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer": 40,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer": 40,
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced": 40,
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity": 30
+   },
+   "database_url": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0303_k8_1_x1z36vn7/gate.db",
+   "database_file": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_0303_k8_1_x1z36vn7\\gate.db",
+   "database_file_exists": true
+  },
+  {
+   "runId": "0303-k8_2-58826deda896",
+   "label": "k8_2",
+   "started_at": "2026-09-25T15:04:45+08:00",
+   "rc": 1,
+   "scope_actually_run": [
+    "tests/test_qoder_ord0272_continuation.py",
+    "tests/test_qoder_ord0287_k8_carrier.py"
+   ],
+   "collected": 10,
+   "summary_line": "=================== 1 failed, 9 passed, 2 warnings in 3.16s ===================",
+   "passed_nodes": 9,
+   "failed_nodes": 1,
+   "red_nodeids": [
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+   ],
+   "durations_ms_call": {
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation": 920,
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced": 270,
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409": 170,
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced": 120,
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans": 120,
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape": 70,
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer": 60,
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity": 60,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer": 50,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name": 40
+   },
+   "database_url": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0303_k8_2_c9he51bk/gate.db",
+   "database_file": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_0303_k8_2_c9he51bk\\gate.db",
+   "database_file_exists": true
+  },
+  {
+   "runId": "0303-k8_3-943050fae6bf",
+   "label": "k8_3",
+   "started_at": "2026-09-25T15:04:49+08:00",
+   "rc": 1,
+   "scope_actually_run": [
+    "tests/test_qoder_ord0272_continuation.py",
+    "tests/test_qoder_ord0287_k8_carrier.py"
+   ],
+   "collected": 10,
+   "summary_line": "=================== 1 failed, 9 passed, 2 warnings in 2.46s ===================",
+   "passed_nodes": 9,
+   "failed_nodes": 1,
+   "red_nodeids": [
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+   ],
+   "durations_ms_call": {
+    "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation": 860,
+    "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced": 150,
+    "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409": 100,
+    "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans": 100,
+    "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer": 70,
+    "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape": 70,
+    "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity": 50,
+    "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced": 50,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer": 40,
+    "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name": 30
+   },
+   "database_url": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0303_k8_3_fk6hmyrg/gate.db",
+   "database_file": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\cnx_0303_k8_3_fk6hmyrg\\gate.db",
+   "database_file_exists": true
+  }
+ ],
+ "cells": [
+  {
+   "id": "C01",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "shape": "控制轮（产品码原样）必须全绿：owner=G1：同一 mission 重复请求 ⇒ 库里**不多一批**，两次响应的方案 id 逐位相同。\"\"\"",
+   "run_ids_control": [
+    "0303-ctl1-d1d2c7a1bbb2",
+    "0303-ctl2-c04d51601957",
+    "0303-ctl3-0e5feaaec3da"
+   ],
+   "run_ids_k8": [
+    "0303-k8_1-9a1a362b4633",
+    "0303-k8_2-58826deda896",
+    "0303-k8_3-943050fae6bf"
+   ],
+   "measured": {
+    "rounds": 3,
+    "control_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "k8_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "green_in_control": 3,
+    "red_when_guard_removed": 0,
+    "collected": 10,
+    "node_evidence_tag": "ce13eec892e3",
+    "node_evidence_tag_how": "sha1(nodeid) 前 12 位：只是让『这串读数属于本格』可被机械认出，不参与任何判据",
+    "duration_ms_call_control": [
+     100,
+     100,
+     90
+    ],
+    "duration_ms_call_k8": [
+     90,
+     120,
+     100
+    ],
+    "timing_role": "只是本格的观测行（Q25）：verdict 不用时长，任何一格都不会因快慢变色"
+   },
+   "derived_from": [
+    "measured.node_evidence_tag=ce13eec892e3",
+    "measured.duration_ms_call_control=[100, 100, 90]",
+    "measured.duration_ms_call_k8=[90, 120, 100]",
+    "measured.control_outcomes",
+    "measured.k8_outcomes"
+   ],
+   "verdict": "GREEN_3_of_3_AND_NOT_BITTEN_BY_K8",
+   "why": "节点 test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans 在产品码原样的 3 轮里 PASSED 3/3（collected=10），本格自己的逐轮 call 耗时 = [100, 100, 90] ms；拆掉回填守卫的 3 轮里 仍 PASSED 3/3（本格耗时 [90, 120, 100] ms）⇒ 它不守那一行，守它的是 test_K1_a_receipt_an…；本格读数标签 ce13eec892e3；runId=0303-ctl1-d1d2c7a1bbb2, 0303-ctl2-c04d51601957, 0303-ctl3-0e5feaaec3da",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C02",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "shape": "控制轮（产品码原样）必须全绿：（该节点无 docstring 首行，shape 只到节点级）",
+   "run_ids_control": [
+    "0303-ctl1-d1d2c7a1bbb2",
+    "0303-ctl2-c04d51601957",
+    "0303-ctl3-0e5feaaec3da"
+   ],
+   "run_ids_k8": [
+    "0303-k8_1-9a1a362b4633",
+    "0303-k8_2-58826deda896",
+    "0303-k8_3-943050fae6bf"
+   ],
+   "measured": {
+    "rounds": 3,
+    "control_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "k8_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "green_in_control": 3,
+    "red_when_guard_removed": 0,
+    "collected": 10,
+    "node_evidence_tag": "03d5a787dbc7",
+    "node_evidence_tag_how": "sha1(nodeid) 前 12 位：只是让『这串读数属于本格』可被机械认出，不参与任何判据",
+    "duration_ms_call_control": [
+     860,
+     860,
+     870
+    ],
+    "duration_ms_call_k8": [
+     860,
+     920,
+     860
+    ],
+    "timing_role": "只是本格的观测行（Q25）：verdict 不用时长，任何一格都不会因快慢变色"
+   },
+   "derived_from": [
+    "measured.node_evidence_tag=03d5a787dbc7",
+    "measured.duration_ms_call_control=[860, 860, 870]",
+    "measured.duration_ms_call_k8=[860, 920, 860]",
+    "measured.control_outcomes",
+    "measured.k8_outcomes"
+   ],
+   "verdict": "GREEN_3_of_3_AND_NOT_BITTEN_BY_K8",
+   "why": "节点 test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation 在产品码原样的 3 轮里 PASSED 3/3（collected=10），本格自己的逐轮 call 耗时 = [860, 860, 870] ms；拆掉回填守卫的 3 轮里 仍 PASSED 3/3（本格耗时 [860, 920, 860] ms）⇒ 它不守那一行，守它的是 test_K1_a_receipt_an…；本格读数标签 03d5a787dbc7；runId=0303-ctl1-d1d2c7a1bbb2, 0303-ctl2-c04d51601957, 0303-ctl3-0e5feaaec3da",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C03",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "shape": "控制轮（产品码原样）必须全绿：owner=G3：清 storage / 第二设备 = **不带任何客户端键**，只带 mission ⇒ 仍回放同一结果。\"\"\"",
+   "run_ids_control": [
+    "0303-ctl1-d1d2c7a1bbb2",
+    "0303-ctl2-c04d51601957",
+    "0303-ctl3-0e5feaaec3da"
+   ],
+   "run_ids_k8": [
+    "0303-k8_1-9a1a362b4633",
+    "0303-k8_2-58826deda896",
+    "0303-k8_3-943050fae6bf"
+   ],
+   "measured": {
+    "rounds": 3,
+    "control_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "k8_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "green_in_control": 3,
+    "red_when_guard_removed": 0,
+    "collected": 10,
+    "node_evidence_tag": "99ab9967b1c4",
+    "node_evidence_tag_how": "sha1(nodeid) 前 12 位：只是让『这串读数属于本格』可被机械认出，不参与任何判据",
+    "duration_ms_call_control": [
+     40,
+     40,
+     40
+    ],
+    "duration_ms_call_k8": [
+     40,
+     60,
+     70
+    ],
+    "timing_role": "只是本格的观测行（Q25）：verdict 不用时长，任何一格都不会因快慢变色"
+   },
+   "derived_from": [
+    "measured.node_evidence_tag=99ab9967b1c4",
+    "measured.duration_ms_call_control=[40, 40, 40]",
+    "measured.duration_ms_call_k8=[40, 60, 70]",
+    "measured.control_outcomes",
+    "measured.k8_outcomes"
+   ],
+   "verdict": "GREEN_3_of_3_AND_NOT_BITTEN_BY_K8",
+   "why": "节点 test_G3_second_device_with_no_client_header_still_gets_the_same_answer 在产品码原样的 3 轮里 PASSED 3/3（collected=10），本格自己的逐轮 call 耗时 = [40, 40, 40] ms；拆掉回填守卫的 3 轮里 仍 PASSED 3/3（本格耗时 [40, 60, 70] ms）⇒ 它不守那一行，守它的是 test_K1_a_receipt_an…；本格读数标签 99ab9967b1c4；runId=0303-ctl1-d1d2c7a1bbb2, 0303-ctl2-c04d51601957, 0303-ctl3-0e5feaaec3da",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C04",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "shape": "控制轮（产品码原样）必须全绿：owner=G4：同 mission 换语义、同 header 键换语义 ⇒ 都是现成那句 mismatch，逐字 `==`，都不留新候选。",
+   "run_ids_control": [
+    "0303-ctl1-d1d2c7a1bbb2",
+    "0303-ctl2-c04d51601957",
+    "0303-ctl3-0e5feaaec3da"
+   ],
+   "run_ids_k8": [
+    "0303-k8_1-9a1a362b4633",
+    "0303-k8_2-58826deda896",
+    "0303-k8_3-943050fae6bf"
+   ],
+   "measured": {
+    "rounds": 3,
+    "control_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "k8_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "green_in_control": 3,
+    "red_when_guard_removed": 0,
+    "collected": 10,
+    "node_evidence_tag": "4e76a6d04a95",
+    "node_evidence_tag_how": "sha1(nodeid) 前 12 位：只是让『这串读数属于本格』可被机械认出，不参与任何判据",
+    "duration_ms_call_control": [
+     90,
+     70,
+     70
+    ],
+    "duration_ms_call_k8": [
+     80,
+     170,
+     100
+    ],
+    "timing_role": "只是本格的观测行（Q25）：verdict 不用时长，任何一格都不会因快慢变色"
+   },
+   "derived_from": [
+    "measured.node_evidence_tag=4e76a6d04a95",
+    "measured.duration_ms_call_control=[90, 70, 70]",
+    "measured.duration_ms_call_k8=[80, 170, 100]",
+    "measured.control_outcomes",
+    "measured.k8_outcomes"
+   ],
+   "verdict": "GREEN_3_of_3_AND_NOT_BITTEN_BY_K8",
+   "why": "节点 test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409 在产品码原样的 3 轮里 PASSED 3/3（collected=10），本格自己的逐轮 call 耗时 = [90, 70, 70] ms；拆掉回填守卫的 3 轮里 仍 PASSED 3/3（本格耗时 [80, 170, 100] ms）⇒ 它不守那一行，守它的是 test_K1_a_receipt_an…；本格读数标签 4e76a6d04a95；runId=0303-ctl1-d1d2c7a1bbb2, 0303-ctl2-c04d51601957, 0303-ctl3-0e5feaaec3da",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C05",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "shape": "控制轮（产品码原样）必须全绿：owner=G5：两个都不带 ⇒ 今天的形状一字不改（每发各自一批候选，键不参与）。\"\"\"",
+   "run_ids_control": [
+    "0303-ctl1-d1d2c7a1bbb2",
+    "0303-ctl2-c04d51601957",
+    "0303-ctl3-0e5feaaec3da"
+   ],
+   "run_ids_k8": [
+    "0303-k8_1-9a1a362b4633",
+    "0303-k8_2-58826deda896",
+    "0303-k8_3-943050fae6bf"
+   ],
+   "measured": {
+    "rounds": 3,
+    "control_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "k8_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "green_in_control": 3,
+    "red_when_guard_removed": 0,
+    "collected": 10,
+    "node_evidence_tag": "415245e0ebba",
+    "node_evidence_tag_how": "sha1(nodeid) 前 12 位：只是让『这串读数属于本格』可被机械认出，不参与任何判据",
+    "duration_ms_call_control": [
+     110,
+     80,
+     100
+    ],
+    "duration_ms_call_k8": [
+     80,
+     70,
+     70
+    ],
+    "timing_role": "只是本格的观测行（Q25）：verdict 不用时长，任何一格都不会因快慢变色"
+   },
+   "derived_from": [
+    "measured.node_evidence_tag=415245e0ebba",
+    "measured.duration_ms_call_control=[110, 80, 100]",
+    "measured.duration_ms_call_k8=[80, 70, 70]",
+    "measured.control_outcomes",
+    "measured.k8_outcomes"
+   ],
+   "verdict": "GREEN_3_of_3_AND_NOT_BITTEN_BY_K8",
+   "why": "节点 test_G5_requests_with_neither_mission_nor_header_keep_todays_shape 在产品码原样的 3 轮里 PASSED 3/3（collected=10），本格自己的逐轮 call 耗时 = [110, 80, 100] ms；拆掉回填守卫的 3 轮里 仍 PASSED 3/3（本格耗时 [80, 70, 70] ms）⇒ 它不守那一行，守它的是 test_K1_a_receipt_an…；本格读数标签 415245e0ebba；runId=0303-ctl1-d1d2c7a1bbb2, 0303-ctl2-c04d51601957, 0303-ctl3-0e5feaaec3da",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C06",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "shape": "控制轮（产品码原样）必须全绿：owner=G6：本单不新增错误码；失败面仍是现成那一族（0262 的病就是客户端自造 HTTP 顶掉服务器原话）。\"\"\"",
+   "run_ids_control": [
+    "0303-ctl1-d1d2c7a1bbb2",
+    "0303-ctl2-c04d51601957",
+    "0303-ctl3-0e5feaaec3da"
+   ],
+   "run_ids_k8": [
+    "0303-k8_1-9a1a362b4633",
+    "0303-k8_2-58826deda896",
+    "0303-k8_3-943050fae6bf"
+   ],
+   "measured": {
+    "rounds": 3,
+    "control_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "k8_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "green_in_control": 3,
+    "red_when_guard_removed": 0,
+    "collected": 10,
+    "node_evidence_tag": "75ac6334300f",
+    "node_evidence_tag_how": "sha1(nodeid) 前 12 位：只是让『这串读数属于本格』可被机械认出，不参与任何判据",
+    "duration_ms_call_control": [
+     190,
+     160,
+     170
+    ],
+    "duration_ms_call_k8": [
+     190,
+     270,
+     150
+    ],
+    "timing_role": "只是本格的观测行（Q25）：verdict 不用时长，任何一格都不会因快慢变色"
+   },
+   "derived_from": [
+    "measured.node_evidence_tag=75ac6334300f",
+    "measured.duration_ms_call_control=[190, 160, 170]",
+    "measured.duration_ms_call_k8=[190, 270, 150]",
+    "measured.control_outcomes",
+    "measured.k8_outcomes"
+   ],
+   "verdict": "GREEN_3_of_3_AND_NOT_BITTEN_BY_K8",
+   "why": "节点 test_G6_no_second_failure_vocabulary_is_introduced 在产品码原样的 3 轮里 PASSED 3/3（collected=10），本格自己的逐轮 call 耗时 = [190, 160, 170] ms；拆掉回填守卫的 3 轮里 仍 PASSED 3/3（本格耗时 [190, 270, 150] ms）⇒ 它不守那一行，守它的是 test_K1_a_receipt_an…；本格读数标签 75ac6334300f；runId=0303-ctl1-d1d2c7a1bbb2, 0303-ctl2-c04d51601957, 0303-ctl3-0e5feaaec3da",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C07",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "shape": "控制轮（产品码原样）必须全绿：owner=G7（(甲) 口径）：只证\"字段存在且与 mission 稳定关联\"；feed 升序截断另单具名。\"\"\"",
+   "run_ids_control": [
+    "0303-ctl1-d1d2c7a1bbb2",
+    "0303-ctl2-c04d51601957",
+    "0303-ctl3-0e5feaaec3da"
+   ],
+   "run_ids_k8": [
+    "0303-k8_1-9a1a362b4633",
+    "0303-k8_2-58826deda896",
+    "0303-k8_3-943050fae6bf"
+   ],
+   "measured": {
+    "rounds": 3,
+    "control_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "k8_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "green_in_control": 3,
+    "red_when_guard_removed": 0,
+    "collected": 10,
+    "node_evidence_tag": "ab179141ff7e",
+    "node_evidence_tag_how": "sha1(nodeid) 前 12 位：只是让『这串读数属于本格』可被机械认出，不参与任何判据",
+    "duration_ms_call_control": [
+     40,
+     40,
+     30
+    ],
+    "duration_ms_call_k8": [
+     40,
+     120,
+     50
+    ],
+    "timing_role": "只是本格的观测行（Q25）：verdict 不用时长，任何一格都不会因快慢变色"
+   },
+   "derived_from": [
+    "measured.node_evidence_tag=ab179141ff7e",
+    "measured.duration_ms_call_control=[40, 40, 30]",
+    "measured.duration_ms_call_k8=[40, 120, 50]",
+    "measured.control_outcomes",
+    "measured.k8_outcomes"
+   ],
+   "verdict": "GREEN_3_of_3_AND_NOT_BITTEN_BY_K8",
+   "why": "节点 test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced 在产品码原样的 3 轮里 PASSED 3/3（collected=10），本格自己的逐轮 call 耗时 = [40, 40, 30] ms；拆掉回填守卫的 3 轮里 仍 PASSED 3/3（本格耗时 [40, 120, 50] ms）⇒ 它不守那一行，守它的是 test_K1_a_receipt_an…；本格读数标签 ab179141ff7e；runId=0303-ctl1-d1d2c7a1bbb2, 0303-ctl2-c04d51601957, 0303-ctl3-0e5feaaec3da",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C08",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "shape": "控制轮（产品码原样）必须全绿：owner=G8：**本车道自加的一格**（批准的判据是 G1–G7；因为产码多写了归属检查，就得给它载体）。",
+   "run_ids_control": [
+    "0303-ctl1-d1d2c7a1bbb2",
+    "0303-ctl2-c04d51601957",
+    "0303-ctl3-0e5feaaec3da"
+   ],
+   "run_ids_k8": [
+    "0303-k8_1-9a1a362b4633",
+    "0303-k8_2-58826deda896",
+    "0303-k8_3-943050fae6bf"
+   ],
+   "measured": {
+    "rounds": 3,
+    "control_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "k8_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "green_in_control": 3,
+    "red_when_guard_removed": 0,
+    "collected": 10,
+    "node_evidence_tag": "28e86019fe5a",
+    "node_evidence_tag_how": "sha1(nodeid) 前 12 位：只是让『这串读数属于本格』可被机械认出，不参与任何判据",
+    "duration_ms_call_control": [
+     30,
+     30,
+     30
+    ],
+    "duration_ms_call_k8": [
+     30,
+     60,
+     50
+    ],
+    "timing_role": "只是本格的观测行（Q25）：verdict 不用时长，任何一格都不会因快慢变色"
+   },
+   "derived_from": [
+    "measured.node_evidence_tag=28e86019fe5a",
+    "measured.duration_ms_call_control=[30, 30, 30]",
+    "measured.duration_ms_call_k8=[30, 60, 50]",
+    "measured.control_outcomes",
+    "measured.k8_outcomes"
+   ],
+   "verdict": "GREEN_3_of_3_AND_NOT_BITTEN_BY_K8",
+   "why": "节点 test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity 在产品码原样的 3 轮里 PASSED 3/3（collected=10），本格自己的逐轮 call 耗时 = [30, 30, 30] ms；拆掉回填守卫的 3 轮里 仍 PASSED 3/3（本格耗时 [30, 60, 50] ms）⇒ 它不守那一行，守它的是 test_K1_a_receipt_an…；本格读数标签 28e86019fe5a；runId=0303-ctl1-d1d2c7a1bbb2, 0303-ctl2-c04d51601957, 0303-ctl3-0e5feaaec3da",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C09",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "nodeid": "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "shape": "K8 反例（去掉 NULL 守卫）的载体：owner=K1（这枚守卫的负例）：两把键都住着别人的答案 ⇒ 一行都不许动，并且必须抛现成那句具名 409。",
+   "run_ids_control": [
+    "0303-ctl1-d1d2c7a1bbb2",
+    "0303-ctl2-c04d51601957",
+    "0303-ctl3-0e5feaaec3da"
+   ],
+   "run_ids_k8": [
+    "0303-k8_1-9a1a362b4633",
+    "0303-k8_2-58826deda896",
+    "0303-k8_3-943050fae6bf"
+   ],
+   "measured": {
+    "rounds": 3,
+    "control_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "k8_outcomes": [
+     "FAILED",
+     "FAILED",
+     "FAILED"
+    ],
+    "green_in_control": 3,
+    "red_when_guard_removed": 3,
+    "collected": 10,
+    "node_evidence_tag": "4d77480ef7b2",
+    "node_evidence_tag_how": "sha1(nodeid) 前 12 位：只是让『这串读数属于本格』可被机械认出，不参与任何判据",
+    "duration_ms_call_control": [
+     40,
+     40,
+     40
+    ],
+    "duration_ms_call_k8": [
+     50,
+     40,
+     30
+    ],
+    "timing_role": "只是本格的观测行（Q25）：verdict 不用时长，任何一格都不会因快慢变色"
+   },
+   "derived_from": [
+    "measured.node_evidence_tag=4d77480ef7b2",
+    "measured.duration_ms_call_control=[40, 40, 40]",
+    "measured.duration_ms_call_k8=[50, 40, 30]",
+    "measured.control_outcomes",
+    "measured.k8_outcomes"
+   ],
+   "verdict": "CARRIER_BITTEN_3_of_3",
+   "why": "守卫在位时 PASSED 3/3 轮（本格 [40, 40, 40] ms）、拆掉后红 3/3 轮（本格 [50, 40, 30] ms），同一节点两侧只变一个变量（那半个条件）；本格读数标签 4d77480ef7b2；runId 拆掉侧=0303-k8_1-9a1a362b4633, 0303-k8_2-58826deda896, 0303-k8_3-943050fae6bf",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C10",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "nodeid": "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "shape": "控制轮（产品码原样）必须全绿：owner=K1 的正控：两把我自己占的 NULL 必须被真填上并留回我的答案。",
+   "run_ids_control": [
+    "0303-ctl1-d1d2c7a1bbb2",
+    "0303-ctl2-c04d51601957",
+    "0303-ctl3-0e5feaaec3da"
+   ],
+   "run_ids_k8": [
+    "0303-k8_1-9a1a362b4633",
+    "0303-k8_2-58826deda896",
+    "0303-k8_3-943050fae6bf"
+   ],
+   "measured": {
+    "rounds": 3,
+    "control_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "k8_outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "green_in_control": 3,
+    "red_when_guard_removed": 0,
+    "collected": 10,
+    "node_evidence_tag": "4e6b5b4c9803",
+    "node_evidence_tag_how": "sha1(nodeid) 前 12 位：只是让『这串读数属于本格』可被机械认出，不参与任何判据",
+    "duration_ms_call_control": [
+     60,
+     40,
+     40
+    ],
+    "duration_ms_call_k8": [
+     40,
+     50,
+     40
+    ],
+    "timing_role": "只是本格的观测行（Q25）：verdict 不用时长，任何一格都不会因快慢变色"
+   },
+   "derived_from": [
+    "measured.node_evidence_tag=4e6b5b4c9803",
+    "measured.duration_ms_call_control=[60, 40, 40]",
+    "measured.duration_ms_call_k8=[40, 50, 40]",
+    "measured.control_outcomes",
+    "measured.k8_outcomes"
+   ],
+   "verdict": "GREEN_3_of_3_AND_NOT_BITTEN_BY_K8",
+   "why": "节点 test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer 在产品码原样的 3 轮里 PASSED 3/3（collected=10），本格自己的逐轮 call 耗时 = [60, 40, 40] ms；拆掉回填守卫的 3 轮里 仍 PASSED 3/3（本格耗时 [40, 50, 40] ms）⇒ 它不守那一行，守它的是 test_K1_a_receipt_an…；本格读数标签 4e6b5b4c9803；runId=0303-ctl1-d1d2c7a1bbb2, 0303-ctl2-c04d51601957, 0303-ctl3-0e5feaaec3da",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C-K8",
+   "sha": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "nodeid": "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "shape": "失败形状：回填语句不再要求 response_json IS NULL ⇒ 别人已答完的回执被后一发覆盖。唯一载体 = test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name，正控 = test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer（拆与不拆都该绿）",
+   "run_ids_control": [
+    "0303-ctl1-d1d2c7a1bbb2",
+    "0303-ctl2-c04d51601957",
+    "0303-ctl3-0e5feaaec3da"
+   ],
+   "run_ids_k8": [
+    "0303-k8_1-9a1a362b4633",
+    "0303-k8_2-58826deda896",
+    "0303-k8_3-943050fae6bf"
+   ],
+   "measured": {
+    "locate_hits": 1,
+    "line_named": 4798,
+    "before_blob_40": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+    "after_blob_40": "4192afed758de9060a69410d8b17cb8565109620",
+    "py_compile_ok": true,
+    "red_nodes_per_round": [
+     1,
+     1,
+     1
+    ],
+    "carriers_removed": [
+     "test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+    ],
+    "k2_green_per_round": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "unexpected_red": [],
+    "restore_byte_exact": true,
+    "main_blob_after": "871aec006a3f6482f7a2700a8baeff8c25f7690f"
+   },
+   "derived_from": [
+    "measured.after_blob_40=4192afed758de9060a69410d8b17cb8565109620",
+    "measured.before_blob_40=871aec006a3f6482f7a2700a8baeff8c25f7690f",
+    "measured.red_nodes_per_round=[1, 1, 1]",
+    "measured.k2_green_per_round",
+    "measured.restore_byte_exact"
+   ],
+   "verdict": "KILLED_K1_3_of_3",
+   "why": "锚点命中 1 次、app/main.py:4798 由 871aec006a3f… 改成 4192afed758d…；每轮红的节点数=[1, 1, 1]（恰好 1 才算归因干净），正控 K2 结果=['PASSED', 'PASSED', 'PASSED']，意外红 0 条，还原 byte-exact=True；runId=0303-k8_1-9a1a362b4633, 0303-k8_2-58826deda896, 0303-k8_3-943050fae6bf",
+   "claim_kind": "runtime_measured"
+  }
+ ],
+ "cell_count_note": "号令说『九格』：在这代 `test_qoder_ord0272_continuation.py` 实测 8 格（G1–G8），第九格 G9 只活在我车道候选树里；线上载体是 0287 的 K1/K2 ⇒ 本次交出 10 格逐格自证 + 1 格击杀 = 11 格。",
+ "aggregates_derived_from_this_runs_scope": {
+  "green_node_rows_control": 30,
+  "red_node_rows_control": 0,
+  "expected_green_rows_control": 30,
+  "files_in_scope": 2,
+  "rounds": 3,
+  "rule": "MODULE_LIST_FROM_THE_RUN_V1：分母/聚合只从本次真传进 pytest 的 scope 与它自己的节点行派生"
+ },
+ "supersession": {
+  "status": "SUPERSEDED_BY_GENERATION",
+  "old_readings": [
+   "ord0272_generation_rerun_90d29a17_r1.json（同日更早那次，缺 runId 与逐格 shape）",
+   "ord0272_mutation_receipt_v2 / cmdr_r4_recheck_v2（车道树那一代，含 G9）"
+  ],
+  "note": "旧件一件未改（已发布路径 0 覆盖）；本文件不搬旧轮次数字，也不搬时长（Q25：秒数只作读数，正文里连秒都不搬，见 dur_free）"
+ },
+ "evidence_integrity_gate_self_check": {
+  "Artifact": "本文件发布后回读 path+blob+size；两把尺的 blob 也本机重算过：Q38 r2 91ae8b1ec55f5c19122af11bf775df14580955e4 / Q43 r3 e653e597c2e6fd74a5f8d6be65fe60e017b03017",
+  "Claim": "申报 collected 与两把 scope 的节点行数都在 aggregates_* 里，由同一次跑的 scope 派生",
+  "Validator": "每枚布尔都在 measured 里（py_compile_ok / locate_hits / restore_byte_exact / green_in_control vs red_when_guard_removed 三向：在位绿、拆除红、正控仍绿）",
+  "Identifier": "判据字段里只用 40 位 full blob；短写只出现在句子中间，不作为判据"
+ },
+ "not_done": [
+  "未跑全量套件（scope 只那两枚文件）",
+  "未动权威线、未推任何 ref",
+  "旧代次件一字未动",
+  "demo/reset 0",
+  "_live/_preview 0 读写",
+  "凭据 0 打印"
+ ],
+ "claimed_result": "RERUN-ON-ORDERED-BASE-11-CELLS-SELF-JUSTIFIED",
+ "derived_result": null
+}
