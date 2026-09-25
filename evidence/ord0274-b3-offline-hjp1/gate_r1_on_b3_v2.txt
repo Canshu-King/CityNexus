@@ -1,0 +1,5 @@
+receipt o2b3_derived_delivered.json 24326 B blob_sha1 2f660f193f63941cb49ac910e6a46473b9b856f7
+cells 2 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []
+  cell B3_offline_after_convergence | why_source why | why tokens 21 | own hits 13 | unique hits 0 | shares why with []
+  cell B3_control_partial_deploy | why_source why | why tokens 17 | own hits 9 | unique hits 0 | shares why with []
+meaning: no shared literal and every sentence names its own readings
