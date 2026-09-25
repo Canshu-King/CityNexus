@@ -1,0 +1,7 @@
+{
+  "files_byte_verified_against_local": 22,
+  "files_total_published": 22,
+  "failures": [],
+  "method": "GET /git/blobs/<40> -> base64 decode -> compare bytes and recompute sha1",
+  "branch_tip_after_gate_v2": "1c7f615f86be6e447873c920c7257f731ff84b15"
+}
