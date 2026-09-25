@@ -1,0 +1,332 @@
+{
+ "schema": "CNX_ORD0325_PUBLISH_READBACK_V1",
+ "at_local": "2026-09-26T05:02:43+0800",
+ "evidence_dir": "evidence/ord0325-q64-three-cells-d",
+ "door": "live_checks/publish_evidence_gated_r1.py (commander's identical-or-refuse gate)",
+ "file_count": 14,
+ "published": [
+  "ord0325_arms_r1_first_campaign_with_the_misaimed_arm.json",
+  "ord0325_arms_r3.json",
+  "ord0325_gate_readings_r1.json",
+  "ord0325_q64_three_cells_r1.json",
+  "ord0325_ruler_r3_after_HotelsPanel.json",
+  "ord0325_ruler_r3_after_PlanComparison.json",
+  "ord0325_ruler_r3_after_V8Experience.json",
+  "ord0325_ruler_r3_after_shared_pair.json",
+  "ord0325_ruler_r3_before_HotelsPanel.json",
+  "ord0325_ruler_r3_before_PlanComparison.json",
+  "ord0325_ruler_r3_before_V8Experience.json",
+  "ord0325_ruler_r3_selftest.json",
+  "ord0325_runs_r1.json",
+  "ord0325_runs_r2.json"
+ ],
+ "publish_log": {
+  "ord0325_arms_r1_first_campaign_with_the_misaimed_arm.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"72d314378a9a2db4e96bfcb358c33e0e23f1da24\",",
+   "bytes": 12752
+  },
+  "ord0325_arms_r3.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"02d89298abe673339abe0c6630e4c6c75d524a3f\",",
+   "bytes": 15059
+  },
+  "ord0325_gate_readings_r1.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"c9c1867e1999b815134acf49f8b28e20e3547489\",",
+   "bytes": 9362
+  },
+  "ord0325_q64_three_cells_r1.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"f508e913c8dd1e328eb3e945ff6017265522b496\",",
+   "bytes": 30737
+  },
+  "ord0325_ruler_r3_after_HotelsPanel.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"8624710325b9ef62e33e778c2dc6c49e71fab951\",",
+   "bytes": 1653
+  },
+  "ord0325_ruler_r3_after_PlanComparison.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"f44eb5475beca31b35ccfc65d55d1d69da8c81eb\",",
+   "bytes": 1656
+  },
+  "ord0325_ruler_r3_after_V8Experience.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"0a8b8b9fe266e1370b8ef9633090185362c19508\",",
+   "bytes": 2228
+  },
+  "ord0325_ruler_r3_after_shared_pair.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"effd8bed248837b14b806372701bcc5f96ddba25\",",
+   "bytes": 1729
+  },
+  "ord0325_ruler_r3_before_HotelsPanel.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"9ded10668c82890f917ca0a81a411527b120c888\",",
+   "bytes": 1897
+  },
+  "ord0325_ruler_r3_before_PlanComparison.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"1dfec7fed3801968fe2005c75aff9be8b3f8077b\",",
+   "bytes": 1913
+  },
+  "ord0325_ruler_r3_before_V8Experience.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"35412f686d95398a39e3b9c4cc1e1ff8b2236d2c\",",
+   "bytes": 2460
+  },
+  "ord0325_ruler_r3_selftest.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"3b42290b6f66492dfa6355f59db360408ccab882\",",
+   "bytes": 2406
+  },
+  "ord0325_runs_r1.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"e654a665cd77e43f49695ffc637b6fc808ff7954\",",
+   "bytes": 1686
+  },
+  "ord0325_runs_r2.json": {
+   "exit": 0,
+   "decision": "SKIP_IDENTICAL",
+   "created": false,
+   "identical_skipped": true,
+   "refused": false,
+   "proof": "\"blob\": \"ce830db36c37a54201aedfdad382ca35dc3989da\",",
+   "bytes": 1844
+  }
+ },
+ "fresh_paths": 0,
+ "identical_skipped": 14,
+ "readback": {
+  "ord0325_arms_r1_first_campaign_with_the_misaimed_arm.json": {
+   "local_bytes": 12752,
+   "remote_bytes": 12752,
+   "byte_level_match": true,
+   "local_blob": "72d314378a9a2db4e96bfcb358c33e0e23f1da24",
+   "remote_blob": "72d314378a9a2db4e96bfcb358c33e0e23f1da24",
+   "blobs_equal": true,
+   "remote_sha_field": "72d314378a9a2db4e96bfcb358c33e0e23f1da24",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_arms_r3.json": {
+   "local_bytes": 15059,
+   "remote_bytes": 15059,
+   "byte_level_match": true,
+   "local_blob": "02d89298abe673339abe0c6630e4c6c75d524a3f",
+   "remote_blob": "02d89298abe673339abe0c6630e4c6c75d524a3f",
+   "blobs_equal": true,
+   "remote_sha_field": "02d89298abe673339abe0c6630e4c6c75d524a3f",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_gate_readings_r1.json": {
+   "local_bytes": 9362,
+   "remote_bytes": 9362,
+   "byte_level_match": true,
+   "local_blob": "c9c1867e1999b815134acf49f8b28e20e3547489",
+   "remote_blob": "c9c1867e1999b815134acf49f8b28e20e3547489",
+   "blobs_equal": true,
+   "remote_sha_field": "c9c1867e1999b815134acf49f8b28e20e3547489",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_q64_three_cells_r1.json": {
+   "local_bytes": 30737,
+   "remote_bytes": 30737,
+   "byte_level_match": true,
+   "local_blob": "f508e913c8dd1e328eb3e945ff6017265522b496",
+   "remote_blob": "f508e913c8dd1e328eb3e945ff6017265522b496",
+   "blobs_equal": true,
+   "remote_sha_field": "f508e913c8dd1e328eb3e945ff6017265522b496",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_ruler_r3_after_HotelsPanel.json": {
+   "local_bytes": 1653,
+   "remote_bytes": 1653,
+   "byte_level_match": true,
+   "local_blob": "8624710325b9ef62e33e778c2dc6c49e71fab951",
+   "remote_blob": "8624710325b9ef62e33e778c2dc6c49e71fab951",
+   "blobs_equal": true,
+   "remote_sha_field": "8624710325b9ef62e33e778c2dc6c49e71fab951",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_ruler_r3_after_PlanComparison.json": {
+   "local_bytes": 1656,
+   "remote_bytes": 1656,
+   "byte_level_match": true,
+   "local_blob": "f44eb5475beca31b35ccfc65d55d1d69da8c81eb",
+   "remote_blob": "f44eb5475beca31b35ccfc65d55d1d69da8c81eb",
+   "blobs_equal": true,
+   "remote_sha_field": "f44eb5475beca31b35ccfc65d55d1d69da8c81eb",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_ruler_r3_after_V8Experience.json": {
+   "local_bytes": 2228,
+   "remote_bytes": 2228,
+   "byte_level_match": true,
+   "local_blob": "0a8b8b9fe266e1370b8ef9633090185362c19508",
+   "remote_blob": "0a8b8b9fe266e1370b8ef9633090185362c19508",
+   "blobs_equal": true,
+   "remote_sha_field": "0a8b8b9fe266e1370b8ef9633090185362c19508",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_ruler_r3_after_shared_pair.json": {
+   "local_bytes": 1729,
+   "remote_bytes": 1729,
+   "byte_level_match": true,
+   "local_blob": "effd8bed248837b14b806372701bcc5f96ddba25",
+   "remote_blob": "effd8bed248837b14b806372701bcc5f96ddba25",
+   "blobs_equal": true,
+   "remote_sha_field": "effd8bed248837b14b806372701bcc5f96ddba25",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_ruler_r3_before_HotelsPanel.json": {
+   "local_bytes": 1897,
+   "remote_bytes": 1897,
+   "byte_level_match": true,
+   "local_blob": "9ded10668c82890f917ca0a81a411527b120c888",
+   "remote_blob": "9ded10668c82890f917ca0a81a411527b120c888",
+   "blobs_equal": true,
+   "remote_sha_field": "9ded10668c82890f917ca0a81a411527b120c888",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_ruler_r3_before_PlanComparison.json": {
+   "local_bytes": 1913,
+   "remote_bytes": 1913,
+   "byte_level_match": true,
+   "local_blob": "1dfec7fed3801968fe2005c75aff9be8b3f8077b",
+   "remote_blob": "1dfec7fed3801968fe2005c75aff9be8b3f8077b",
+   "blobs_equal": true,
+   "remote_sha_field": "1dfec7fed3801968fe2005c75aff9be8b3f8077b",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_ruler_r3_before_V8Experience.json": {
+   "local_bytes": 2460,
+   "remote_bytes": 2460,
+   "byte_level_match": true,
+   "local_blob": "35412f686d95398a39e3b9c4cc1e1ff8b2236d2c",
+   "remote_blob": "35412f686d95398a39e3b9c4cc1e1ff8b2236d2c",
+   "blobs_equal": true,
+   "remote_sha_field": "35412f686d95398a39e3b9c4cc1e1ff8b2236d2c",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_ruler_r3_selftest.json": {
+   "local_bytes": 2406,
+   "remote_bytes": 2406,
+   "byte_level_match": true,
+   "local_blob": "3b42290b6f66492dfa6355f59db360408ccab882",
+   "remote_blob": "3b42290b6f66492dfa6355f59db360408ccab882",
+   "blobs_equal": true,
+   "remote_sha_field": "3b42290b6f66492dfa6355f59db360408ccab882",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_runs_r1.json": {
+   "local_bytes": 1686,
+   "remote_bytes": 1686,
+   "byte_level_match": true,
+   "local_blob": "e654a665cd77e43f49695ffc637b6fc808ff7954",
+   "remote_blob": "e654a665cd77e43f49695ffc637b6fc808ff7954",
+   "blobs_equal": true,
+   "remote_sha_field": "e654a665cd77e43f49695ffc637b6fc808ff7954",
+   "remote_sha_equals_git_blob": true
+  },
+  "ord0325_runs_r2.json": {
+   "local_bytes": 1844,
+   "remote_bytes": 1844,
+   "byte_level_match": true,
+   "local_blob": "ce830db36c37a54201aedfdad382ca35dc3989da",
+   "remote_blob": "ce830db36c37a54201aedfdad382ca35dc3989da",
+   "blobs_equal": true,
+   "remote_sha_field": "ce830db36c37a54201aedfdad382ca35dc3989da",
+   "remote_sha_equals_git_blob": true
+  }
+ },
+ "all_readbacks_byte_identical": true,
+ "candidate_branch": {
+  "ref": "refs/heads/agent/d-e345b9d6-ord0325",
+  "commit": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+  "push_rc": 0,
+  "ls_remote_sha": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+  "equals_the_commit_i_pushed": true,
+  "baseline_tip": "0f8b925facabc9df57bab600b86d999dd515bf94"
+ },
+ "runs": {
+  "log": "ord0325-run8-green-after-arms.log",
+  "run_id": "run368837",
+  "port": "5760",
+  "db": "_run368837.db ai=disabled reuseExistingServer=false\n[citynexus e2e] provenance ok: run=run368837 frontend=:5760 -> backend=:9760 ai=disabled db=_run368837.db",
+  "passed_count": 7,
+  "duration": "22.7s",
+  "green_nodes": [
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:199:1 :: A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:225:1 :: A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:249:1 :: A3 住宿被拒：英文那半边同样两问",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:275:1 :: B1 采用方案被拒（409）：原话不上屏、三行读数在屏",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:355:1 :: C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数",
+   "e2e\\qoder-ord0325-upstream-prose-not-on-screen.spec.ts:403:1 :: C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话"
+  ],
+  "node_count_excluding_the_seed_project": 6,
+  "seed_project_nodes": 1,
+  "why_the_denominators_differ": "runner 那一行的分母含 [real-seed] 前置项目，本单自己的门节点数写在 node_count_excluding_the_seed_project"
+ },
+ "discipline": {
+  "authority_ref_writes": 0,
+  "vite_build_run": 0,
+  "node_modules_touched": 0,
+  "phone_chain_touched": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "how": "只推自己命名的候选分支；证据走号令者的门；token 不落任何文件也不打印"
+ }
+}
