@@ -1,0 +1,55 @@
+{
+ "schema": "CNX_CMDR_BUNDLE_STRING_READ_V1",
+ "read_at_local": "2026-09-25 16:54:47 +0800",
+ "origin": "http://127.0.0.1:4781",
+ "index_status": 200,
+ "index_bytes": 1200,
+ "assets_named_by_index": 2,
+ "rows": [
+  {
+   "ref": "/assets/index--q2k569d.js",
+   "status": 200,
+   "content_type": "text/javascript",
+   "bytes": 1253228,
+   "sha256": "a55e8bcebe3cae47",
+   "git_blob_sha1": "d6e8d468c86a029d3294ac276db53fcdd396cada",
+   "served_as_html": false,
+   "needle_hits": {
+    "label_technical_details": 8,
+    "no_plans_sentence": 1,
+    "no_plans_status_token": 2
+   },
+   "on_disk_equal": true,
+   "disk_bytes": 1253228
+  },
+  {
+   "ref": "/assets/index-I45CQek8.css",
+   "status": 200,
+   "content_type": "text/css",
+   "bytes": 183897,
+   "sha256": "1b3632785212847b",
+   "git_blob_sha1": "7df7167b8577cd531581480f04a10b5718551baa",
+   "served_as_html": false,
+   "needle_hits": {
+    "label_technical_details": 0,
+    "no_plans_sentence": 0,
+    "no_plans_status_token": 0
+   },
+   "on_disk_equal": true,
+   "disk_bytes": 183897
+  }
+ ],
+ "needle_totals": {
+  "label_technical_details": 8,
+  "no_plans_sentence": 1,
+  "no_plans_status_token": 2
+ },
+ "decisions": {
+  "every_named_asset_fetched_200": true,
+  "no_asset_served_as_html": true,
+  "x5_label_present_in_deployed_bundle": true,
+  "x5_promise_sentence_present_in_deployed_bundle": true,
+  "no_plans_branch_present": true
+ },
+ "scope": "Byte presence inside the JS the phone is served right now. It proves the code path is in the deployed generation; it does NOT prove the screen renders the sentence, which needs a runtime read (and, for the NO_PLANS_PRODUCED class, a working backend - the data plane is currently down, so that runtime half stays NOT-DEPLOYED-OBSERVED)."
+}
