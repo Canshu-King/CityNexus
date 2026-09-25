@@ -1,0 +1,37 @@
+{
+ "read_with_env_overrides_present": [],
+ "settings_write_busy_timeout_ms": 30000,
+ "settings_write_deadline_ms": 45000,
+ "busy_timeout_ms": 30000,
+ "deadline_per_scenario": {
+  "agent.commands": 45000,
+  "plans.generate": 45000
+ },
+ "verdict": {
+  "scenario": null,
+  "busy_timeout_ms": 30000,
+  "default_deadline_ms": 45000,
+  "scenario_overrides": {},
+  "per_scenario": {
+   "agent.commands": {
+    "deadline_ms": 45000,
+    "busy_timeout_ms": 30000,
+    "delta_ms": 15000,
+    "deadline_source": "default",
+    "effective_busy_timeout_ms": 30000,
+    "reachable": true,
+    "verdict": "WRITE_DEADLINE_CONFIG_OK"
+   },
+   "plans.generate": {
+    "deadline_ms": 45000,
+    "busy_timeout_ms": 30000,
+    "delta_ms": 15000,
+    "deadline_source": "default",
+    "effective_busy_timeout_ms": 30000,
+    "reachable": true,
+    "verdict": "WRITE_DEADLINE_CONFIG_OK"
+   }
+  },
+  "verdict": "WRITE_DEADLINE_CONFIG_OK"
+ }
+}
