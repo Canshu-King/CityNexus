@@ -1,0 +1,52 @@
+{
+ "file": "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+ "arm": "N3",
+ "runId": "0302nul05050555",
+ "status": "failed",
+ "expectation": "passed",
+ "reading": {
+  "want": "device",
+  "force_shape": {
+   "abort": true
+  },
+  "read": {
+   "arm": "N3",
+   "status": "NETWORK",
+   "detail_block_attached": false,
+   "label": "",
+   "origin": "",
+   "reason": "",
+   "card_text": "连不上服务端 网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+   "legs": [
+    "GET /plans(baseline)",
+    "GET /plans(baseline)",
+    "POST /agent/commands"
+   ]
+  },
+  "verdict": "NOT_MET",
+  "rows": [
+   {
+    "claim": "a request that really never got an answer is NETWORK",
+    "ok": true,
+    "got": {
+     "status": "NETWORK"
+    }
+   },
+   {
+    "claim": "ORD-0302 ②: even then the detail block is still there",
+    "ok": false,
+    "got": {
+     "detail_block_attached": false
+    }
+   },
+   {
+    "claim": "and it carries a device line rather than nothing",
+    "ok": false,
+    "got": {
+     "reason": "",
+     "origin": ""
+    }
+   }
+  ]
+ }
+}
