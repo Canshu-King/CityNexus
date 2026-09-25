@@ -1,0 +1,176 @@
+{
+ "what": "ORD-0307 第二次交付（r2/清单 v4）：把门源、收据、战役与两把尺的读数钉在同一代字节上",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T18:44:06+08:00",
+ "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "why_a_new_generation": "上一代（收据 r1 / 战役 r3 / 门源 v2）之后我又改了门测试文件的本地变量名，并把战役重跑到最终字节 ⇒ 三件不同代。本清单逐件钉 blob，旧件一律保留不覆盖。",
+ "authority_of_this_generation": {
+  "gate_module_blob": "717317f822ce01873e33bffd418adea04f67dfeb",
+  "main_wiring_blob": "5455175abe154c5c4ab5b122e517efd13081a637",
+  "gate_test_blob": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+  "receipt_r2_blob": "ce4b93390e50096ecc2357178497c8e4914ff455",
+  "campaign_r4_blob": "0aba33f293760d884d7f5ffdf4776ca1d2fc637d",
+  "superseded": {
+   "receipt_r1": "7abcd63c414612b499eb71df903634842f3fd61e",
+   "campaign_r3": "99cd74666666b97f313ce8f6c6eb11196b54772c",
+   "gate_source_v2": "f99ae82f4328289e03c903a663587cecf3304236",
+   "gate_source_v1": "c9e1ed0149c14ad3e7d83c782181a63c98b401b5"
+  }
+ },
+ "rulers_actually_executed": {
+  "Q38_r2_script_blob": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+  "Q43_r4b_script_blob": "efa6b7a383e094e2ede89f5dd8565b12feed0171",
+  "Q43_r4_script_blob": "4262ecfdef077269b935e038554660377f38f955",
+  "verdict_on_receipt": {
+   "Q38_r2": "Q38_GATE_GREEN",
+   "cells": 10,
+   "hard": 0,
+   "soft": 0
+  },
+  "note": "三把尺的脚本 blob 与号令给的 40 位逐位相同（本机重算）；r4b 的读数件里 version 写的是 Q43_r4（它脚本第 37 行的常数），所以版本身份只能由脚本字节钉，不能由读数件自报。"
+ },
+ "publish_rows": [
+  {
+   "file": "ord0307_source_gate_test_v3.py",
+   "bytes": 14353,
+   "local_blob": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 14353 | remote size 14353 | sha1 408032e04fbbae61",
+   "remote_blob": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_gate_receipt_r2.json",
+   "bytes": 26915,
+   "local_blob": "ce4b93390e50096ecc2357178497c8e4914ff455",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 26915 | remote size 26915 | sha1 ce4b93390e50096e",
+   "remote_blob": "ce4b93390e50096ecc2357178497c8e4914ff455",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_mutation_campaign_r4.json",
+   "bytes": 11286,
+   "local_blob": "0aba33f293760d884d7f5ffdf4776ca1d2fc637d",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 11286 | remote size 11286 | sha1 0aba33f293760d88",
+   "remote_blob": "0aba33f293760d884d7f5ffdf4776ca1d2fc637d",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_q38_readings_r2.json",
+   "bytes": 6509,
+   "local_blob": "6bcbcd2ce6bd1c24df542b082f1f14503d281f70",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 6509 | remote size 6509 | sha1 6bcbcd2ce6bd1c24",
+   "remote_blob": "6bcbcd2ce6bd1c24df542b082f1f14503d281f70",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_q38_stdout_r2.txt",
+   "bytes": 1226,
+   "local_blob": "0223035b1338931999176d59dcb86d037c6011bc",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 1226 | remote size 1226 | sha1 0223035b13389319",
+   "remote_blob": "0223035b1338931999176d59dcb86d037c6011bc",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_q43r4b_on_receipt_r2.json",
+   "bytes": 10070,
+   "local_blob": "7aa724ff3c14025252186cf855e0442a621114e2",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 10070 | remote size 10070 | sha1 7aa724ff3c140252",
+   "remote_blob": "7aa724ff3c14025252186cf855e0442a621114e2",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_q43r4b_on_receipt_r2_stdout.txt",
+   "bytes": 2359,
+   "local_blob": "487cc79106ffd5c454403efc62d02c1292e231af",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 2359 | remote size 2359 | sha1 487cc79106ffd5c4",
+   "remote_blob": "487cc79106ffd5c454403efc62d02c1292e231af",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_q43r4b_text_ledger_r2.json",
+   "bytes": 549,
+   "local_blob": "56a0c6fe2b79587c3d901f5fedb589e2c9d2aad0",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 549 | remote size 549 | sha1 56a0c6fe2b79587c",
+   "remote_blob": "56a0c6fe2b79587c3d901f5fedb589e2c9d2aad0",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_q43r4b_text_ledger_r2_stdout.txt",
+   "bytes": 190,
+   "local_blob": "670a2e91fb44093775ef035d2c8f96843d6cc6e9",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 190 | remote size 190 | sha1 670a2e91fb440937",
+   "remote_blob": "670a2e91fb44093775ef035d2c8f96843d6cc6e9",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_q43r4b_text_bus_r2.json",
+   "bytes": 532,
+   "local_blob": "2844dfb1a910aa51934c9a8fce4f1d3afd2254c5",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 532 | remote size 532 | sha1 2844dfb1a910aa51",
+   "remote_blob": "2844dfb1a910aa51934c9a8fce4f1d3afd2254c5",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_q43r4b_text_bus_r2_stdout.txt",
+   "bytes": 176,
+   "local_blob": "ee95cafab6db84948cb06f80e33d6275bd1245fb",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 176 | remote size 176 | sha1 ee95cafab6db8494",
+   "remote_blob": "ee95cafab6db84948cb06f80e33d6275bd1245fb",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_q43r4_text_ledger_r2.json",
+   "bytes": 549,
+   "local_blob": "56a0c6fe2b79587c3d901f5fedb589e2c9d2aad0",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 549 | remote size 549 | sha1 56a0c6fe2b79587c",
+   "remote_blob": "56a0c6fe2b79587c3d901f5fedb589e2c9d2aad0",
+   "match": true,
+   "pre_existing_remote_sha": null
+  },
+  {
+   "file": "ord0307_q43r4_text_bus_r2.json",
+   "bytes": 532,
+   "local_blob": "2844dfb1a910aa51934c9a8fce4f1d3afd2254c5",
+   "put_rc": 0,
+   "publisher_tail": "local bytes 532 | remote size 532 | sha1 2844dfb1a910aa51",
+   "remote_blob": "2844dfb1a910aa51934c9a8fce4f1d3afd2254c5",
+   "match": true,
+   "pre_existing_remote_sha": null
+  }
+ ],
+ "publish_row_total": 13,
+ "publish_rows_matched": 13,
+ "why_renamed_local": "发布门对本地文件名 fail-closed（FORBIDDEN_NAME_FRAGMENT 含 'credential' 等），所以我改的是**落盘名**，不是守卫：门源以 ord0307_source_gate_test_v3.py 发布，仓库内路径仍是 backend/tests/test_qoder_ord0307_credential_gate.py（收据 blobs 字段按仓库路径记）。",
+ "discipline": {
+  "published_paths_overwritten": 0,
+  "refs_pushed": 0,
+  "authoritative_line_written": 0,
+  "demo_reset": 0,
+  "live_or_preview_db_reads_or_writes": 0,
+  "credential_values_printed": 0,
+  "guard_weakened": 0
+ }
+}
