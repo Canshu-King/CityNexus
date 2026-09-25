@@ -1,0 +1,150 @@
+{
+ "schema": "CNX_ORD0326_CHANNEL_V3",
+ "order": "ORD-0326",
+ "lane": "S1-q64sweep",
+ "revision": "r3 - re-scoped by commander 04:50; supersedes the scope of channel_r1/r2",
+ "at_local": "2026-09-26T05:22:47+0800",
+ "generation_measured": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "authoritative_tip_now": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+ "tip_moved": true,
+ "branch_off_sha_ordered": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "candidate_branch": "agent/S1-q64sweep-candidates-r2",
+ "candidate_tip": "919f09a70a0a140cd0a19a8abeb90f340dfa9f11",
+ "candidate_verified_by_ls_remote": "919f09a70a0a140cd0a19a8abeb90f340dfa9f11",
+ "ruler": "ff98091cf3accb0d836ae25ba49820170b92d932",
+ "ruler_selftest": "SELFTEST_PASS",
+ "ruler_mode": "--tree over `git archive <sha> frontend/src` exports; per-file --ref reproduces r4 and was discarded as a measurement",
+ "files_touched_by_this_lane": [
+  "frontend/e2e/server-reason-ord0326.spec.ts",
+  "frontend/playwright.logic.config.ts",
+  "frontend/src/components/ProductErrorBoundary.tsx",
+  "frontend/src/components/ServerReasonDetail.tsx",
+  "frontend/src/features/agent/AgentComposer.tsx",
+  "frontend/src/features/agent/CopilotDock.tsx",
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+  "frontend/src/lib/serverReason.ts"
+ ],
+ "yielded_files_confirmed_untouched": {
+  "frontend/src/features/stay/HotelsPanel.tsx": true,
+  "frontend/src/app/V8Experience.tsx": true,
+  "frontend/src/features/planning/PlanWithAiSheet.tsx": true,
+  "frontend/src/features/planning/PlanComparison.tsx": true,
+  "note": "HotelsPanel was edited on the first branch (b32c0d65) and is reverted per-file to its branch-off blob here; no whole-branch reset was used"
+ },
+ "r5_before": {
+  "hits": 28,
+  "files": 17,
+  "per_rule": {
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 7,
+   "UPSTREAM_EXCEPTION_TO_DOM": 16,
+   "UPSTREAM_READ_DIRECT": 1,
+   "RAW_BODY_TO_DOM": 4
+  },
+  "at_generation": "0f8b925facabc9df57bab600b86d999dd515bf94"
+ },
+ "r5_after": {
+  "hits": 21,
+  "files": 14,
+  "per_rule": {
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM": 8,
+   "UPSTREAM_EXCEPTION_TO_DOM": 8,
+   "UPSTREAM_READ_DIRECT": 1,
+   "RAW_BODY_TO_DOM": 4
+  },
+  "measured_on": "the committed tree of 919f09a70a0a",
+  "matches_the_worktree_reading": true
+ },
+ "sinks_removed_by_this_lane": [
+  "AgentComposer.tsx:185|UPSTREAM_EXCEPTION_TO_DOM",
+  "CopilotDock.tsx:450|UPSTREAM_EXCEPTION_TO_DOM",
+  "CopilotDock.tsx:770|UPSTREAM_EXCEPTION_TO_DOM",
+  "JourneyInboxWorkbench.tsx:687|UPSTREAM_EXCEPTION_TO_DOM",
+  "JourneyInboxWorkbench.tsx:691|UPSTREAM_EXCEPTION_TO_DOM",
+  "JourneyInboxWorkbench.tsx:731|UPSTREAM_EXCEPTION_TO_DOM",
+  "ProductErrorBoundary.tsx:104|UPSTREAM_EXCEPTION_TO_DOM",
+  "ProductErrorBoundary.tsx:105|UPSTREAM_EXCEPTION_TO_DOM"
+ ],
+ "sinks_added_by_this_lane": [
+  "ServerReasonDetail.tsx:29|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+ ],
+ "assigned_scope_accounted": {
+  "journey_inbox_cells": [
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:731"
+  ],
+  "auto_on_mount_reads_kept": [
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:345",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:349"
+  ],
+  "agent_cells": [
+   "frontend/src/features/agent/AgentComposer.tsx:185",
+   "frontend/src/features/agent/CopilotDock.tsx:450",
+   "frontend/src/features/agent/CopilotDock.tsx:770"
+  ],
+  "boundary_cell": [
+   "frontend/src/components/ProductErrorBoundary.tsx:104",
+   "frontend/src/components/ProductErrorBoundary.tsx:105"
+  ],
+  "stack_surface_condition": "the boundary no longer stores or renders a component stack at all - it goes to console.error, so the change closes the stack face rather than opening it"
+ },
+ "three_lane_intersection": {
+  "S1_and_B": [
+   "frontend/src/components/ProductErrorBoundary.tsx",
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx"
+  ],
+  "S1_and_D": [],
+  "B_and_D": [],
+  "method": "each lane diffed against its own merge-base with the current tip; the tip is NOT used as the base, because D's ORD-0325 already landed into it and B branched two generations back"
+ },
+ "lane_file_sets": {
+  "S1": {
+   "branch_tip": "919f09a70a0a140cd0a19a8abeb90f340dfa9f11",
+   "branch_off_merge_base_with_current_tip": "0f8b925facabc9df57bab600b86d999dd515bf94",
+   "frontend_files": [
+    "frontend/e2e/server-reason-ord0326.spec.ts",
+    "frontend/playwright.logic.config.ts",
+    "frontend/src/components/ProductErrorBoundary.tsx",
+    "frontend/src/components/ServerReasonDetail.tsx",
+    "frontend/src/features/agent/AgentComposer.tsx",
+    "frontend/src/features/agent/CopilotDock.tsx",
+    "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+    "frontend/src/lib/serverReason.ts"
+   ],
+   "file_count": 8
+  },
+  "B": {
+   "branch_tip": "e302e4c433712284a23c1c0ab11147fe105e1e22",
+   "branch_off_merge_base_with_current_tip": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+   "frontend_files": [
+    "frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+    "frontend/src/components/ProductErrorBoundary.tsx",
+    "frontend/src/features/inbox/JourneyInboxWorkbench.tsx"
+   ],
+   "file_count": 3
+  },
+  "D": {
+   "branch_tip": "bff5c462bdea",
+   "branch_off_merge_base_with_current_tip": "0f8b925facabc9df57bab600b86d999dd515bf94",
+   "frontend_files": [
+    "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/components/RawFactsPanel.tsx",
+    "frontend/src/features/planning/PlanComparison.tsx",
+    "frontend/src/features/stay/HotelsPanel.tsx",
+    "frontend/src/lib/rawFacts.ts"
+   ],
+   "file_count": 6
+  }
+ },
+ "decision_needed": "S1 and B now modify the SAME two files (ProductErrorBoundary.tsx, JourneyInboxWorkbench.tsx): B delivered them at 04:50 on review/0323-two-exposure-cells-b, whose r5 reading is 28 -> 26 (five sinks removed, three still flagged); this re-scoped branch reads 28 -> 21 on the same ruler and mode (8 removed, 1 added at the sanctioned slot). One implementation per file has to be picked - the two are not mergeable by git.",
+ "verification": {
+  "tsc": "node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit 0",
+  "spec": "node node_modules/@playwright/test/cli.js test --config playwright.logic.config.ts -> 4 passed, on a config that starts no server (:8000 is NOT AVAILABLE and would otherwise let another lane's backend answer for mine)",
+  "mutations": "three mutants (sentence into main copy / request_id dropped / multi-line guard removed) each turn exactly one assertion red; restored byte-identical"
+ },
+ "command_i_ran": "git archive <sha> frontend/src | tar -x, then node ui_exposure_taint_ast_r2.cjs --tree <export>/frontend/src --out <json>, for the branch-off tip and for the committed candidate; lane branches diffed against their own merge-base with the tip",
+ "claim_kind": "code_landed_on_candidate_branch",
+ "claimed_result": "agent/S1-q64sweep-candidates-r2 @ 919f09a70a0a off 0f8b925facab: 8 frontend files, r5 28 -> 21 (8 sinks removed, 1 added), tsc exit 0, spec 4 passed, S1∩B = 2 files, S1∩D = 0",
+ "derived_result": "assigned scope closed under the r5 module graph; the only open item is the S1/B two-file overlap the commander must resolve"
+}
