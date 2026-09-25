@@ -135,6 +135,71 @@ def main() -> int:
         "还原后 sha12 与被测树 blob sha12），`derived_from` 点的是本性格拉才有的那枚 mutant sha12"
     )
     add("")
+    add("")
+    # The landing line moves while a generation is being measured; saying so, with the byte-level
+    # consequence, is cheaper than letting the commander discover it at merge time.
+    live = subprocess.run(
+        "git ls-remote https://github.com/Canshu-King/CityNexus.git "
+        "refs/heads/mirror/integration-frontend-apple-pass1",
+        cwd=LANE, capture_output=True, text=True, shell=True, encoding="utf-8", errors="replace",
+    ).stdout.strip()
+    live_tip = live.split("\t")[0].strip() if live else ""
+    if live_tip and live_tip != gc["landed_tip"]:
+        moved = subprocess.run(
+            f"git diff --name-only {gc['landed_tip']} {live_tip} -- frontend",
+            cwd=LANE, capture_output=True, text=True, shell=True, encoding="utf-8", errors="replace",
+        ).stdout.splitlines()
+        all_moved = subprocess.run(
+            f"git diff --name-only {gc['landed_tip']} {live_tip}",
+            cwd=LANE, capture_output=True, text=True, shell=True, encoding="utf-8", errors="replace",
+        ).stdout.splitlines()
+        desc = subprocess.run(
+            f"git merge-base --is-ancestor {gc['landed_tip']} {live_tip}",
+            cwd=LANE, capture_output=True, shell=True,
+        ).returncode == 0
+        mt = subprocess.run(
+            f"git merge-tree --write-tree {live_tip} {gc['tested_tree']}",
+            cwd=LANE, capture_output=True, text=True, shell=True, encoding="utf-8", errors="replace",
+        )
+        add("**被测期间权威线又动了一跳（读数照实，不等谁来问）**")
+        add(
+            f"- 我开工时读到 `{gc['landed_tip']}`，现在 `git ls-remote` 读到 `{live_tip}`；"
+            f"`merge-base --is-ancestor` ⇒ {desc}（我的基座是它的祖先）"
+        )
+        add(
+            f"- 那一跳改了 **{len(all_moved)} 件**，其中 `frontend/**` = **{len([m for m in moved if m.strip()])} 件** ⇒ "
+            f"本段所有前端字节级判据（臂、还原、绿轮三元组）不受它影响；合流预测 "
+            f"`git merge-tree --write-tree` ⇒ rc={mt.returncode}，tree `{mt.stdout.strip().splitlines()[0] if mt.stdout.strip() else '?'}`"
+            "（只读预测，我没动任何 ref）"
+        )
+    add("")
+    def blob_of(suffix: str) -> str:
+        return next((r[1] for r in published if r[0].endswith(suffix)), "NOT_PUBLISHED")
+
+    spec_runs = {x["attempt"]["runId"] for x in arms["arms"]} | {x["baseline"]["runId"] for x in arms["arms"]}
+    add("**本段的可判读数（F1 形式，每条 200 字内带耐久坐标）**")
+    add("")
+    add(
+        f"- KILLED_ARMS = {len(killed)}（共 {len(arms['arms'])} 枚，每臂 `claimed_result` 逐格派生自收据 "
+        f"`{blob_of('arms-0298b-8ccfcf7.json')}` · `refs/heads/review/0278-0253-on-5c4608ce`）"
+    )
+    add(
+        f"- GREEN_TRIPLES = {len(rd['triples'])}（四枚门 14 条，`exact_sha` 全 = 被测尖 `{rd['candidate_tip']}` · "
+        f"收据 `{blob_of('gate-round-8ccfcf7.json')}`）"
+    )
+    add(
+        f"- SPEC_RUNS = {len(spec_runs)}（一轮绿 + 一轮拆，run_id 逐臂写在 `{blob_of('arms-0298b-8ccfcf7.json')}` "
+        "的 `triple.run_shape`）"
+    )
+    add(
+        f"- SOFT_FINDINGS = {len(soft)}（上一代那 6 条已关掉；尺的原样输出发布在 "
+        f"`{blob_of('q38-gauge-run-on-arms.json')}`：硬 0 / 软 0 / 格数 {q38.get('cells_found', '?')}）"
+    )
+    add(
+        f"- RED_GATE_REATTRIBUTIONS = 0（那一轮 3 枚红改判为仪器红：厂商标志进程占了后端端口，逐端口探测与 "
+        f"PID 名单在 `{blob_of('port-preflight-gate-batch.json')}`）"
+    )
+    add("")
     add("**外读证据（新目录，`commander/control`；PUT 前先证目录不存在，逐件独立 GET 字节级回读）**")
     for row in published:
         add(f"- `{row[0]}` — blob `{row[1]}`，{row[2]} B")
