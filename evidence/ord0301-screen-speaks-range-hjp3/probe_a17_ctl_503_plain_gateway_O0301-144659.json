@@ -1,0 +1,26 @@
+{
+ "asked": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+ "face_port": 8564,
+ "face_tag": "outcome_origin",
+ "policy_stamp": "A17_CTL_503_PLAIN_GATEWAY",
+ "method": "POST",
+ "why_this_method": "the controlled face manufactures the POST outcome, so the probe asks the same leg the traveller hits",
+ "upstream_port": 8563,
+ "upstream_listening": true,
+ "origin_listening": true,
+ "real_backend_listening": true,
+ "probe": {
+  "status": 503,
+  "content_type": "text/plain; charset=utf-8",
+  "bytes": 19,
+  "headers": {
+   "server": "BaseHTTP/0.6 Python/3.12.14",
+   "date": "Fri, 25 Sep 2026 06:47:10 GMT",
+   "content-length": "19",
+   "connection": "close"
+  },
+  "body_head": "Service Unavailable",
+  "http_error": "HTTP Error 503: Service Unavailable",
+  "elapsed_ms": 306
+ }
+}
