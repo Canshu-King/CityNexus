@@ -196,6 +196,70 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=e345b9d6 @2026-09-25 20:55+08 —— **ORD-0310 交付（r2_recut_onto_the_frozen_tip）：给无键写腿一枚可指名的设备期限，屏上那句话只敢说自己射程以内的事（产码 2 件 + 门 2 件 + 臂 6 枚）**
+
+单号 ORD-0310，形制按仲裁 Q54=①。候选（我自己命名的新 ref，别人的 ref 一枚没碰）：`refs/heads/review/ord0310-keyless-deadline-d-on-30a5f90e` = `2344145ce6342b6ac32ac4d0955c0f524d8c9320`（`git ls-remote` 回读，原样输出在 `evidence/ord0288-keyless-deadline/ord0310-tip-read-r2.out`，blob `0e19d401a3174edfd204c03bca81c8e8e0435682`）。被量那一代 = `2344145ce6342b6ac32ac4d0955c0f524d8c9320`；推上去那一代 = `2344145ce6342b6ac32ac4d0955c0f524d8c9320`，四枚被测工件在两枚上逐枚同 blob（`subject_files_equal_to_the_tested_tree=true`），差的只有本车道自己的工具：[]。
+
+**权威尖只读、两路一致**：`refs/heads/mirror/integration-frontend-apple-pass1` = `30a5f90e5deaed6e45a704ddcc7d6e5e9790475b`；第二路（git/ref REST）= `30a5f90e5deaed6e45a704ddcc7d6e5e9790475b`，`the_two_routes_agree=true`，全部测量做完后复测 `30a5f90e5deaed6e45a704ddcc7d6e5e9790475b`，`stable_across_this_run=true`。我 0 次移动它。
+
+**这一代是怎么来的（号令者 20:2x 令走甲、线冻住）**：从现读的尖 `30a5f90e5deaed6e45a704ddcc7d6e5e9790475b` 直接切，产品那一笔 = `2344145ce6342b6ac32ac4d0955c0f524d8c9320`，其父位 `65656a7bacbcd9a3c18ceb917b1fbfdfa0791412` 与这枚尖相等 `true`。上一代被测尖 `b025432ded0381d83ebf36b85202a345bede2fcb` 的收据与预测树都不删：收据 blob `b7029fd3a8c806a3dceb6143133480a587c5c5f0`，预测树 `efd67d82c1acc68dcea0f683307e00bc029e25cc` 标 `SUPERSEDED_BY_THIS_GENERATION_NOT_DELETED`。只换基座不改字是量出来的，不是说的：产品那一笔在两代上的 `patch-id` 都是 `d82931effa099f5420e0d63ad38a873dc6b50a53`（`git show <commit> | git patch-id --stable`），四枚被测工件跨代同 blob `true`。三枚预测树各就各位、旧的都不删：上一枚 ref `b025432ded0381d83ebf36b85202a345bede2fcb` 对同一枚尖的预测树我自己复算 = `dee4b794b62797a9760b067d733ed96aa742060c`（与号令者那帖 `issuecomment-5832371591` 给的数逐位相同，原样输出 `evidence/ord0288-keyless-deadline/ord0310-mergetree-tip-x-previous-ref.out` blob `73cafd8de3e1a36ebd31fe767ab52d7b77a09e30`），上上代收据里那枚 `efd67d82c1acc68dcea0f683307e00bc029e25cc` 标 `SUPERSEDED_BY_THIS_GENERATION_NOT_DELETED`。本代按 ref 当下尖重算的合流预测：`git merge-tree --write-tree 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b 2344145ce6342b6ac32ac4d0955c0f524d8c9320` ⇒ 退出 `0`、预测树 `aeaaf03c3708529f410162a0aeeb1fbaf66b0ac0`、conflict 段 = `（空）`。臂跑的那一枚树与产品那一笔的关系也逐枚核过：`tested_tree_vs_product_commit.all_equal=true`。
+
+**代际绑定（不自宣携带）**：分叉点 `30a5f90e5deaed6e45a704ddcc7d6e5e9790475b`；尖上比我这一笔多 `0` 笔：（无 —— 我就是从尖上切的）。线自分叉动了 `0` 件，我动了 `13` 件，**两边交集 `0` 件**（逐行表 `evidence/ord0288-keyless-deadline/ord0310-path-disjointness-r2.tsv`，blob `d74dbd49ff8975b05020d0984dcc128d23f2af34`）。合流只读预测：`git merge-tree --write-tree 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b 2344145ce6342b6ac32ac4d0955c0f524d8c9320` ⇒ 退出 `0`、预测树 `aeaaf03c3708529f410162a0aeeb1fbaf66b0ac0`、conflict 段 = `（空）`（原样输出 `evidence/ord0288-keyless-deadline/ord0310-mergetree-tip-x-candidate-r2.out`，blob `8db66d7493f634f8e4f9a4a217fc3c963b30db6a`）。`frontend` 子树：我这一代 `3257a0266fbb73cfd452c5a1106ba416a4703ec0`、线尖 `a9076ce45f58f8c449950e573944cd801577c184` ⇒ 按 Q24 本块所有读数只属于 `2344145ce6342b6ac32ac4d0955c0f524d8c9320` 那一代；号令者落地之后我再在落成那一代重跑一轮绿 + 一轮拆。
+
+**一、两枚形状分开具名（谁也不替谁交卷）**
+
+- 有键那一支 = ORD-0281（不是我交的）：`frontend/src/lib/writeDeadline.ts` blob `1d67e725ebb3348bbeb70d743793388ed36ed9d9`，导出常数 `export const CLIENT_WRITE_DEADLINE_MS = 60_000`，引用者只有 `frontend/src/features/execution/LiveRecovery.tsx`、`frontend/src/features/recovery/V14RecoveryTruthPanel.tsx`；`git grep -n fetchWithWriteDeadline 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b -- frontend/src/features/planning/PlanWithAiSheet.tsx` 回 `0` 行。本单对它 0 字节改动 —— 它随基座进我的候选（树内 blob = `1d67e725ebb3348bbeb70d743793388ed36ed9d9` 与线尖同值），而本道那一笔的改动清单里没有它。
+- 无键那一支 = 本单：新建 `frontend/src/lib/keylessWriteDeadline.ts` blob `1aea861b887273f70ec6cf726369c36a1398786e`，常数一处 `KEYLESS_WRITE_DEADLINE_MS = 60000`，屏上秒数与计时器同取它（`KEYLESS_WRITE_DEADLINE_SECONDS = KEYLESS_WRITE_DEADLINE_MS / 1000`）；`frontend/src/features/planning/PlanWithAiSheet.tsx` blob `3bb6a39067a380c2f75629fd7562f0de8f5d2f2a` 里 `fetchWithKeylessWriteDeadline` 只裹 `agent/commands` 那一发。两枚数值都是 `60000` ms，但各管各的调用点，我没有替 0281 交卷。
+
+**期限为什么是 `60000` ms**：服务端写预算 `45000` ms（`backend/app/core/config.py:96`）、锁等待 `30000` ms（`backend/app/core/config.py:95`）——设备期限放在服务端预算之上，才会出现「服务器已判死、客户端还在等」那一句；压到它下面就等于在服务器还在写的时候催用户重来，那正是 Q54 要防的重复提交面。
+
+**二、屏上那句话（两件事都在，四句禁句都不在）**
+
+对象 = 干净轮 `run339785` 的 K1 节点（库 `_run339785.db`、端口 4910）。逐行读数在门禁自己写出的证据文件里：`evidence/ord0288-keyless-deadline/ord0310-gate-evidence-run339785.json`，blob `8a0fc019897f3a89f4c785ae7e1753eeb28ad3cc`（6242 B）。`status=UNKNOWN_KEYLESS_WRITE_DEADLINE`、`origin=device`、`label=这台设备自己的读数（服务器没给句子）`（不是「服务器给出的原因」那四个字，所以设备自报没冒充服务器），`detail_block_attached=true`，实测等待 `60519` ms、`post_count=1`（一发，不是重发），判据 `10` 行逐行来自这一轮运行。两件事：「结果未知」并明写「不是没发生」；「不能靠同一把键补问」逐字钉进断言。四句禁句（已取消 / 没有发生 / 再试一次 / 连不上服务端）逐条判缺。
+
+卡片正文（展开「技术详情」之后实际读到那段的前 96 字）：`这一笔的结果未知（不是没发生） 这台设备停止等待了，而请求已经发出去，服务器那边可能还在做。这条路线不收幂等键，所以这一笔既没有可回读的凭条，也不能靠同一把键补问。先刷新核对结果，不要重复提交`
+
+**常数可反推（先例是那对 TB/TC 反件，`refs/heads/review/0281-write-deadline-keyed-b3`）**：干净轮屏幕那句里的秒数是 `60`（实测等待 `60519` ms，证据 blob `8a0fc019897f3a89f4c785ae7e1753eeb28ad3cc`）；把常数从 `60000` 改小到 `7000` 的那一枚探针臂 `K0310_DERIVATION_PROBE_CONSTANT_TO_7S`（轮次 `run340266`，证据 `evidence/ord0288-keyless-deadline/ord0310-gate-evidence-run340266.json` blob `8ad7d0bb9190ed625ba623282715cf0cd622aefa`）⇒ 屏上跟着变成 `7` 秒、实测等待变成 `7580` ms、`post_count=1`，该臂判 `HOLDING_AS_EXPECTED`（仍绿）。两处一起动才叫同源；这就排除了「屏幕上那个秒数是另一处硬编码」。
+
+**号令者那条新事实我复算成立（判据是「到点」不是「有没有 signal」）**：在尖 `30a5f90e5deaed6e45a704ddcc7d6e5e9790475b` 上两条 POST 的选项对象本来就带 `signal,` —— 行号 394, 454, 529, 575, 667（调用点在第 452, 518, 573, 600, 653 行）。所以本单加的是期限：wrapper 先原样接住调用方的信号（`frontend/src/lib/keylessWriteDeadline.ts` 第 93 行读 `init.signal`），到点才由 `firedHere` 抛 `KeylessWriteDeadlineMissed`；旅行者自己按取消仍走取消那一支（`CANCELLED_AFTER_SEND`）。这条判据有牙齿：K3 反控本轮判 `GREEN`，而拆掉 `firedHere` 判定的臂 `K0310_DEADLINE_IMPERSONATES_TRAVELLER` 实测红的节点是 `["K3 反控：旅行者按取消时，期限不许冒充用户"]`，它自报 `KILLED`。
+
+**三、服务端字段读数（不用状态码冒充 DB 事实）**
+
+门 `backend/tests/test_qoder_ord0310_keyless_leg_receipts.py`（blob `bb2111362c00272d056e0a709bf73a1009366716`，`5` 格），库文件具名 `C:\Users\仓鼠王\AppData\Local\Temp\cnx_pytest_81mksw4j\suite.db`，表 `idempotency_keys`，回读走第二条只读连接（`mode=ro`），与写入方不同连接。
+
+- K-1（不带键连发三发 `agent/commands`）：`idempotency_keys.count(*)` 从 `0` 到 `0`（+0），同轮 `journey_missions` 从 `0` 到 `3`（+3），三个 mission id 互不相同（`distinct_mission_ids=3`）。**凭条表 +0 行而业务表 +3 行 = 「无键可回读」是服务器的形状，不是我推测的。**
+- K-2（带一把形制正确的键仍无凭条）：`count(*)` 从 `0` 到 `0`，`mission_id_present=true` ⇒ 请求里有个头不等于服务器收了键。
+- T-1(a)（服务器认键那一支 `plans/generate`，字段读数出处 `evidence/ord0288-keyless-deadline/ord0310-backend-readings-r2.json` blob `74d4c0ea276c1126f4f4302e474f61d906606bec`，表 `idempotency_keys`）：第一发回答 `201`、第二发同键不同正文回答 `409`，`idempotency_keys.count(*)` 两次读数 `[1, 1]`；服务器原话：`same idempotency key used for a different request`。那两个数是**观测到的回答**，不是本单主张的数量。
+- T-1(b)（凭条行落成长什么样，同一本账 `evidence/ord0288-keyless-deadline/ord0310-backend-readings-r2.json` 的 `T1b` 格 blob `74d4c0ea276c1126f4f4302e474f61d906606bec`）：`idempotency_keys.key` = `plans.generate:1b3ec233-4261-406e-9d00-e17136c6a711`、`.operation` = `plans.generate`、`.response_status` = `201`，客户端两发状态各为 `201` / `201`；键被拒那一发（畸形键）先落行为 `false`。读过的列：["key", "operation", "response_status"]。
+
+**四、反突变臂（逐臂带 (sha, nodeid, shape) 与还原摘要）**
+
+| 臂 | 红的节点（几枚 / 具名） | gate exit | 还原到被测字节 | claimed_result |
+| --- | --- | --- | --- | --- |
+| `K0310_DEADLINE_RENAMED_AS_CANCEL` | 1 枚：`K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源` | 1 | true | KILLED |
+| `K0310_DEVICE_NOTE_UNDER_SERVER_LABEL` | 1 枚：`K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源` | 1 | true | KILLED |
+| `K0310_SENTENCE_PROMISES_REPLAY` | 1 枚：`K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源` | 1 | true | KILLED |
+| `K0310_DEADLINE_IMPERSONATES_TRAVELLER` | 1 枚：`K3 反控：旅行者按取消时，期限不许冒充用户` | 1 | true | KILLED |
+| `K0310_TIMER_FIRES_BEFORE_THE_CONSTANT` | 3 枚：`K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源`；`K2 正控：服务器两秒内答完时，这枚期限不碰正常结局`；`K3 反控：旅行者按取消时，期限不许冒充用户` | 1 | true | KILLED |
+| `K0310_DERIVATION_PROBE_CONSTANT_TO_7S` | 0 枚：（无 —— 探针按预期绿） | 0 | true | HOLDING_AS_EXPECTED |
+
+聚合：`arms_total=6`、`killed=5`、`survived=0`、`probes=1`、`every_arm_parsed_at_least_one_node=true`、`all_arms_restored_to_tested_tree_bytes=true`、`tree_unchanged_by_this_run=true`。逐臂 `anchor_hits` 与 `expected_anchor_hits` 都是 1（改错了地方就不算臂），每臂同一枚键的先决条件在本轮成立：`all_arms_carry_a_green_same_key_precondition=true`。`claimed_result` 是本车道观测，`derived_result` 全为 null —— 等级与派生归红队。
+
+**五、我欠的账，写在这里不抹**
+
+其一：头两轮臂收据里 **每一枚臂都被误判成 SURVIVED**，而同一些运行的 pytest 行数明明是 `1 failed`。原因在量具：解析节点行的正则少了 `re.M`，`^` 与 `$` 只对着整段捕获文本的两端，于是一枚节点都没匹配上，计数恒为 0。修法提交（只改驱动器，产品字节与断言一字未动）`2344145ce6342b6ac32ac4d0955c0f524d8c9320` 之前那一笔，本块全部数字出自修好之后的轮次：臂收据 `evidence/ord0288-keyless-deadline/ord0310-arms-receipt-r4.json`，blob `d86e0e7ba757fbf18a0ba8d065b482b46a0b7bc1`。一个从不命中的计数既不是绿也不是杀。
+
+其二：`K0310_SENTENCE_PROMISES_REPLAY` 第一次是 SURVIVED —— 门禁只在折叠态读卡片，而我把禁句写进了「技术详情」展开之后；而且当时只要求句子里「提到一把键」，松散到能放过承诺补问的说法。补法是折叠态与展开态各读一遍、并把「不能靠同一把键补问」钉成逐字判据，改的是量具不是断言（门 `frontend/e2e/qoder-ord0310-keyless-write-deadline.spec.ts` blob `61fa23882dc0936ea29d08e12d15d1d936157049`）。收紧之后同一枚臂红。
+
+其三（本代新增的自纠，原样命令与输出都在 `evidence/ord0288-keyless-deadline/ord0310-left-right-count-trap.out` blob `ee03cf3206ff6f8e0138050c10d2be8fe9e26d91`）：我给上一代写 `ref_tip_read` 那格时把 `git rev-parse <rev>:<path>` 的**回显**当成了 blob（该路径不存在时它原样打印参数），于是一格印出空 blob、另一格印出像 sha 其实不是的串；另一处是把 `git rev-list --left-right --count A B` 少了三点号来读分母，同一对操作数用正确形制 `A...B` 量出来是领先 `6` / 落后 `5`（号令者亲测同值），错误形制吐出的那个数根本不是分母，而我一度把它当「落后好几百」写进汇报。两处都改成**先校验 40 位十六进制再落字**，并把工具随件发布（`evidence/ord0288-keyless-deadline/ord0310-tool-make-receipt-r2.py`），这样别人复跑用的是被判的那份字节。
+
+**判据与出处**：主收据 `evidence/ord0288-keyless-deadline/ord0310_keyless_deadline_receipt_r2.json`，blob `35e40da15ef65b024b10269cb3774faca77f9641`（34,150 B），6 格自证；服务端读数 `evidence/ord0288-keyless-deadline/ord0310-backend-readings-r2.json` blob `74d4c0ea276c1126f4f4302e474f61d906606bec`；尺 Q38 r2（尺 blob `91ae8b1ec55f5c19122af11bf775df14580955e4`）判这枚收据 ⇒ `Q38_GATE_GREEN`、hard `0`、soft `0`、exit `0`，输出 `evidence/ord0288-keyless-deadline/ord0310-q38r2-on-receipt-r2.json` blob `64c7fd6398fb025b1feae8278a32bc96ec6e2150`。本块自身的两把尺输出同目录（名字里带 `on-block` / `on-post`）。
+
+**纪律**：`0 权威线写入`、`0 推他人 ref`（只推了自己命名的 `refs/heads/review/ord0310-keyless-deadline-d-on-30a5f90e`）、`demo/reset 0`、`_live`/`_preview` 库 0 读写、凭据 0 打印 （第二路读 ref 的 token 只进内存，`evidence/ord0288-keyless-deadline/ord0310-tip-read-r2.out` 里那一行写的是占位符）、`0 为了绿而改断言`（红都是收紧量具修掉的，见第五节）；交件走新路径 `evidence/ord0288-keyless-deadline/`，逐件独立 GET 回读，已发布路径 0 覆盖 0 改名。
+
+### SESSION=d2305848 @2026-09-25 20:49+08 —— **ORD-0314 派生交：gen-3 常量活了（2000→'2'、1000→'1'、elapsed 跟走）**；全翻转集合从 per-arm reading 文件独立派生（deriving limit 在 gen-3 也解除）；independent_kills = 3、每枚独占；late-answer NOT_MEASURED 保留
+（派生件 d0f3ebc274213170e4a35cac55bda23c06079020 @ evidence/ord0314-0281-gen3-derivation-d2305848/verifier_derivation_d2305848.json；总线 comment 5832622169。被验尖 = 我自己先读的 13af1ff4（与你的坐标一致）。六枚 authoritative summaries + 5 枚 per-arm readings 全从 gen-3 evidence dir 拉。12 格 TA/TB/TC/TD/K1/K2/K3 全 MET；三枚 counter 各独占（ca_no_delegate→[K3]、ca_keyless_too→[K1]、ca_fixed_secs→[TB] 硬编码 99 秒）。scope DECLARED、base_ref MET。claim_kind=RUNTIME_MEASURED per Q25。）
+
 ### SESSION=e345b9d6 @2026-09-25 19:54+08 —— **ORD-0310 交付：给无键写腿一枚可指名的设备期限，屏上那句话只敢说自己射程以内的事（产码 2 件 + 门 2 件 + 臂 6 枚）**
 
 单号 ORD-0310，形制按仲裁 Q54=①。候选（我自己命名的新 ref，别人的 ref 一枚没碰）：`refs/heads/review/ord0310-keyless-deadline-d` = `b025432ded0381d83ebf36b85202a345bede2fcb`（`git ls-remote` 回读，原样输出在 `evidence/ord0288-keyless-deadline/ord0310-tip-read.out`，blob `dd1445df4b5524404dd07b46767d5282b91d9f86`）。被量那一代 = `b44a77148a2431252dfb546c8067d472813b2cbe`；推上去那一代 = `b025432ded0381d83ebf36b85202a345bede2fcb`，四枚被测工件在两枚上逐枚同 blob（`subject_files_equal_to_the_tested_tree=true`），差的只有本车道自己的臂驱动器：["review/ord0310_kill_arms.py"]。
@@ -458,6 +522,18 @@ K8 那一臂（去掉回填里的 NULL 守卫）：靶子在这代是内联的�
 
 ```text
 Q43 自查：写入前他那把尺量过 ⇒ claims 27、findings 0、Q43_GATE_CLEAN；每个数旁边是 40 位 blob 或 收据文件:行号（行号写在发布件上，不写在账本上）
+```
+
+### SESSION=8ccd71d8 · ORD-0315 交 @2026-09-25 20:46 —— 写腿普查与清单合一（只动量具，0 改产品字节）
+
+```text
+要件 1 反证 pass=True：`LiveRecovery.tsx:230`、`V14RecoveryTruthPanel.tsx:74`、`PlanWithAiSheet.tsx:518`/`:653` 全部替代旧锚点 —— 锚点改成 CallExpression 起始行 + 每枚锚点硬断言（空行/注释/无被调用名即 throw）
+要件 2 并集：我 20 处 × 号令 16 处 = 一致 12、只我 8、只他 4、并集 24；每处四问逐条在件里，归属用 git 现算的改动路径命中
+要件 3 自检：8 枚 fixture 双向，SELFTEST_PASS
+当下带期限 4 处、裸的 16 处；解析不出的 verb 进 unresolved 记数（6）不猜
+根因：225/69 在 45b0a5e2、90d29a17、dc964086 三代都曾是正确调用行，是 ORD-0281 落地各插 5 行才变空行 —— 我的错是清单钉旧代跨两跳没重普查，且违反了同一份清单里我自己写的 generation_bridge
+件 evidence/ord0315-write-leg-reconciliation-f/ord0315_leg_reconciliation_f_r1.json = b18d03516dd49f77ff49cb933d7f773b46483782；根因件 evidence/ord0315-write-leg-reconciliation-f/ord0315_anchor_root_cause_r1.json = 86134150bd7e1808d8dc7a32f459d56aaf9169f2
+对号令分母的反例：only_his 里 4 处是本地写（Set.delete / caches.delete / IDB put ×2），按原文不是网络写请求；去掉后并集即我这 20 处。两边清单都随件发布，不要求对方改数
 ```
 
 ### SESSION=8ccd71d8 · ORD-0307 交 @2026-09-25 18:15 —— 字面量凭据常驻启动门（树 + 环境两档）；10 格自证、5 臂全咬、正控与号令预期相反
@@ -16413,6 +16489,18 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-2100 号令者 494abfd7：ORD-0310 已 ff-only 落地（尖换到 2344145c…）；红队 E 的 ORD-0314 我按已发布的逐臂读数独立重算过，三条判据里两条复现、一条我第一遍读错了层级
+- **落地**：`30a5f90e5deaed6e45a704ddcc7d6e5e9790475b` → `2344145ce6342b6ac32ac4d0955c0f524d8c9320`（候选 `refs/heads/review/ord0310-keyless-deadline-d-on-30a5f90e`，落地树 `aeaaf03c3708529f410162a0aeeb1fbaf66b0ac0`，写法是 `PATCH force=false` 由 GitHub 服务端替我判"是不是后代"，落地后 `git/ref` 与 `branches` 两路回读同为那枚新尖）。冻结解除：这一枚落完，线重新对所有候选开放，顺序按我 20:29 那帖的排序走。全单在 `evidence/cmdr-landing-0310-2058/landing_receipt_r1.json` = e755c9ee707a2e7bb35bea800e3cafca0f9c1642。
+- 落地前我自己量的（不是我复述 D 的话）：整树导出后 `--collect-only` 退出 0、`6` 条收集到；同一进程把 D 的门与线上已有的两枚门（F 的 0307、0296）一起跑 ⇒ `27 passed`、退出 0、`11.41` 秒，解释器是 `.venv` 的 3.12.14（今晚唯一能跑这套件的）。两枚产品字节我在新尖上从 contents 路取回逐位重算：`keylessWriteDeadline.ts` = 1aea861b887273f70ec6cf726369c36a1398786e、`PlanWithAiSheet.tsx` = 3bb6a39067a380c2f75629fd7562f0de8f5d2f2a，与 D 引用的一致（她 rebase 之后字节没变形）。同一枚件里我留了一句 `suite_context_caveat`：pytest 的 conftest 在收集前把 AI key pop 掉，所以这套件的绿只证明门的逻辑，不证明 strict 会拒真开机——那条要在 pytest 之外跑（F 20:00 那四臂）。
+- **手机侧口径**：这一枚是 NOT-YET-DEPLOYED-to-phone。今晚那一次被授权的换代在 19:19 花在 7856e03f 那一代上（Q58=① 说"门能落时换一次"，那次已经花掉），所以手机上现在仍是 `index-DWgtVWb0.js`。要不要为 ORD-0310 再换一次代，是 @仲裁 的一个字，我不自己加。
+- **红队 E 20:47 交的 ORD-0314**：件 `evidence/ord0314-0281-gen3-derivation-d2305848/verifier_derivation_d2305848.json` = d0f3ebc274213170e4a35cac55bda23c06079020（4473 B，重算相符，`at` 20:50+08，`tip_identity` 里她自己写"按号令者②的指示记开跑时现读的尖"⇒ 记的是 `13af1ff4ba4516aa1a39cda67428ed4a2a34ac69`，与我的坐标一致）。我没只看她的表格：**我从 `evidence/ord0281-keyed-write-deadline-gen3/` 那 63 条目里 35 个逐臂读数自己重算了一遍**（件 `evidence/cmdr-ord0314-cross-derivation-2057/independent_derivation_r1.json` = af34c0fc7c28e4d354673f06c558b00a42617587）：
+  - 判据 2 复现：`ca_no_delegate` ⇒ 只 K3 失败、`ca_keyless_too` ⇒ 只 K1、`ca_fixed_secs` ⇒ 只 TB —— 三对三，每枚独占（我那件里 `criterion_2_recomputed` 逐配置列了"发布了哪些臂、各自 PASS/FAIL"）。
+  - 判据 3 复现：目录里含 `late` 的文件数 `0` ⇒ `NOT_MEASURED` 是唯一诚实值，她没把它写成通过。
+  - 判据 1 复现，**但我第一遍读错了层级**：TB 那枚读数件（blob `4051aa1894e8bbb58ae50a7cd955582f2170a6c2`）与 TC 那枚（`45c91cb141df1797613a9b78d56f0df1c4c97bda`）的观察值嵌在 `reading` 对象里，我第一次在顶层找 ⇒ 全是 null，于是错报 `NOT_CONFIRMED`。修好之后：`bound 2000 → 屏上报 2 秒`、`bound 1000 → 屏上报 1 秒`，与 E 的话一致；我那件里留了 `reading_level_probe`：同一份字节顶层读给 null、嵌套读给数字，这一对就是"我确实从观测里取值，而不是从我希望存在的键名取值"的证明。第一遍那个错报我没删，写在 `my_first_pass_defect` 里。
+  - 因此我对 ORD-0314 的判断是：**实质成立，形状不合格**。冻结的 Q38 尺（`receipt_cell_derivation_check_r2.py`，本机字节与 91ae8b1ec55f5c19122af11bf775df14580955e4 逐位相同）跑她那枚件 ⇒ `NOT_ASSESSABLE`、退出 4（她的格表是"结论字符串"，没有每格自己的 readings，也没有 (sha, nodeid, shape) 三元组；按我自己定的口径，退出 4 既不是通过也不是一次尺跑）。所以我给她的两件事都很小：① 逐臂读数按 blob 具名（她现在只给到目录名，目录会漂）；② 以可评的形状重发一格一格的 readings（不必重跑实验，只重排证据）。这两件做完我立刻跑尺。**签级仍归她**，我不越过去写 derived_result。
+- 顺带把 ORD-0281 的状态说清：格子的 `derived_result` 已由 E 出、内容由我第二方复算过；剩下的是她一枚"形状修正"的重发，以及手机侧那一代要不要重读（那是 ORD-0312，仍等 HJ-P3）。闭单口径不变：B-1 只认 verifier 的 derived_result，而我不把"我复算通过"当成签级。
+
+
 ### CMDR-0925-2045 号令者 494abfd7：巡逻转态 + 一条把 Q60' 从"抽象分母"变成"手机上看得见"的实测
 - 转态（四查）：`## ORDERS` 顶我这一批是 CMDR-0925-2022（分母修正与两条仪表交底）+ ORD-0315；总线两帖 `issuecomment-5832371591`（20:29）与 `issuecomment-5832492797`（20:36 回 D）；仲裁窗口 20:33 已收到汇报与 Q60'。车道侧：D 与 F 与红队 E 各收到一次点名（三条单各自的前件都已到位），HJ-P3 与 B 在跑，不敲门。
 - 落地窗：20:36 起权威线冻结给 D 的 ORD-0310。我的亲测全在件 `evidence/cmdr-ord0310-landing-prep-2036/landing_prep_r1.json` = 9b272c9925c9347c0d445f829d01284f833d4b1f：`ff_possible=false`（`merge-base --is-ancestor` rc=1）、`5` 落后 / `6` 领先、`merge-tree` 退出 0 且 conflict 段空、当下预测树 `dee4b794b62797a9760b067d733ed96aa742060c`、两侧文件交集 `0` 枚，并且她点名的两枚产品字节（`keylessWriteDeadline.ts` = 1aea861b887273f70ec6cf726369c36a1398786e、`PlanWithAiSheet.tsx` = 3bb6a39067a380c2f75629fd7562f0de8f5d2f2a）在她 ref 尖上逐位相符。她自己帖里的两枚预测树（efd67d82c1acc68dcea0f683307e00bc029e25cc、7b7a3f0b834c2801e5be5a1de30c1ce29e0ffda5）都是对旧一枚对象算的，已让她标 SUPERSEDED 而不删。
@@ -49419,5 +49507,18 @@ ls-remote  90d29a172e186aab6e6cb138ab4583ccf93bfa68	refs/heads/review/0280-attri
 坐标      base and shape: 176d04f554b3ff62c9321f24f132355e8887216d is the ref tip GitHub answers (176d04f554b3ff62c9321f24f132355e8887216d	refs/heads/review/0302-unreadable-server-body-b2), 1 commits over the order's tip 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 (ancestor check = True), so the two named cells land on the one ref the commander already holds rather than as two competing candidates. Process, stated rather than smoothed: the first half of this order was pushed alone as 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69, the X-5 work then went on top of it, and the earlier attempt to fold both into one commit was refused as non-fast-forward -- no force-push, so 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 is still an ancestor of this tip and every reading taken under it stays resolvable. 1 paths changed: qoder-ord0302-unreadable-server-body.spec.ts; the diff restricted to backend/ answers none. Both typecheck configs (tsconfig.check.json, tsconfig.typecheck.json) were clean before the arms ran. The arms ran against exactly the committed bytes: the sheet's sha256 at HEAD is 342cb8e3e43d132f and every run recorded that same value as the digest it started from (342cb8e3e43d132f), agree=True.
 尺        cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []（receipt_cell_derivation_check_r2.py blob 91ae8b1ec55f5c19122af11bf775df14580955e4，两遍都在发布那份字节上）；另过 claim_coordinate_check_r3.py 与 r4b（见 ord0302_index.json blob 212591329e3e7408241a2f4ab5b1f23d4ad3d568）；derived_result 全格 null
 还原      五枚形制跑完源文件按字节还原 = True（ord0302_arms_matrix.json blob 8acb2494fa44ad51fa85753ae0f73ecac016f273 的 digests）
+```
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+### B c01d72a3 · ORD-0302 文案修 r2（X-5 那一格从一形补到号令者点名的五形 R19-R23；产品字节 0 改动）基座 `13af1ff` 候选 `2f191eb` @20:58+08 —— **上一版 X1 只驱动了五形里的一形（200 + plans:[]），等于拿样本冒充整族；这一版五形各自读一遍，反件仍只咬 X1 那一格。**
+
+```text
+根因      root cause, re-measured on the generation that still carries it (dc964086c9d412573ac19d70b24b30e6c3ee6168) rather than copied from the order: in the bugged blob fd5f6e5ba2771a8d12669b9bec1ba91590970701 the two envelope helpers read the detail field without a guard on `body` itself, at frontend/src/features/planning/PlanWithAiSheet.tsx:147 and frontend/src/features/planning/PlanWithAiSheet.tsx:155; the leg that reaches them sets `body = null` for an unparseable answer at frontend/src/features/planning/PlanWithAiSheet.tsx:531 (on this candidate the same leg keeps the bytes first, at frontend/src/features/planning/PlanWithAiSheet.tsx:544), the refusal branch starts at frontend/src/features/planning/PlanWithAiSheet.tsx:539, and the throw is caught where status is written as NETWORK at frontend/src/features/planning/PlanWithAiSheet.tsx:748 with the note nulled, which is also the line the detail block depends on at frontend/src/features/planning/PlanWithAiSheet.tsx:936; on this candidate that gate also takes the raw reading, at frontend/src/features/planning/PlanWithAiSheet.tsx:983, and the same two reads are guarded, now at frontend/src/features/planning/PlanWithAiSheet.tsx:147 and frontend/src/features/planning/PlanWithAiSheet.tsx:155 (sheet blob 47ff8985a9963d77a4094eb970ad3fd5b639140b, spec blob 868059d0206418395513a05221071302720416a1). The generation before ORD-0280 (sheet blob 4c3821b7129320d7940237d33c5f7dd14742f292) did not throw there -- it answered with an invented status string, which is the defect that order removed; both states are wrong in different ways and only the body-has-a-JSON-object reading separates them.
+五枚臂    N1=MET(status=HTTP_500/块=True)；N2=MET(status=HTTP_422/块=True)；N3=MET(status=NETWORK/块=True)；X1=MET(status=NO_PLANS_PRODUCED/块=True)；X2=MET(status=BASELINE_UNAVAILABLE/块=True)；矩阵 TEETH_AND_BASELINE（evidence/ord0302-unreadable-server-body-q53/ord0302_arms_matrix.json blob f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536）
+反件      ca_unsafe_read→只 N1 红=MET，其余 {'passed'}（digest 4b5fb60bb377b479→55f224663f8087a5，report blob 0cbf89a96a1e1ac2a3a5bca7c7e129bef4931a13）；ca_null_on_network→只 N3 红=MET，其余 {'passed'}（digest 4b5fb60bb377b479→8f193d1834336734，report blob d9b22f2ceeb2d6e8ec48526245d01968c026a4e0）；ca_x5_no_block→只 X1 红=MET，其余 {'passed'}（digest 4b5fb60bb377b479→73a2b2de1e1d1f18，report blob 4a82b71206d47f876a184449fd503326dfca21f1）；ca_x5_soft_promise→只 X1 红=MET，其余 {'passed'}（digest 4b5fb60bb377b479→8cbdea67a0b03200，report blob 99717874e1da262ca11e360cba5fe58d16c0f392）。四枚各自只咬自己那一格：N2 在 ca_unsafe_read 下仍绿（带 error.message 的正文在读 detail 之前就返回了），N1 在 ca_null_on_network 下仍绿，五枚里除 X1 之外在两枚 X-5 反件下仍绿 —— 全红只能证明我改坏了别处
+边界      scope and boundaries: this delivery lives at evidence/ord0302-unreadable-server-body-q53; the two earlier ones keep their own paths and were not rewritten (evidence/ord0302-unreadable-server-body (first delivery, landed as 5aff3722d5c36c760a424f5fea5c3a771298f9ac); evidence/ord0302-unreadable-server-body-r2 (X-5 widened to the five rows, candidate 176d04f554b3ff62c9321f24f132355e8887216d)). Only two product paths changed in this candidate -- the sheet (47ff8985a9963d77a4094eb970ad3fd5b639140b) and its new spec (868059d0206418395513a05221071302720416a1); files belonging to other lanes: 0 touched, and review/0281-write-deadline-keyed-b2 was left alone. one device line, for the NETWORK cell (requirement ②); Q53=① deleted the count sentence X-5 used to show, so that block now carries measured fields only: 'no readable answer reached this device (network or origin)'. No other user-facing copy was written, because the wording for the wider family is still ORD-0301's call. neither cell was observed by me on the deployed generation -- both readings are vite dev, so the phone keeps whatever is shipped until the commander swaps, but the swap is the commander's: actions by me here = 0 -- no index switch, no preview restart, no dist change, and this face stays vite dev so release_grade=False. Not measured, named rather than implied: a non-JSON body on the places leg and the generate leg (same helper, arms not written); an HTML answer that still parses as JSON; the shipped bundle behind the phone: X-5 was measured on vite dev, so the generation that is live now is still NOT-DEPLOYED-OBSERVED for this cell.
+坐标      base and shape: 2f191eb5fd1682a53cf95f883c7200f00cbb6ebe is the ref tip GitHub answers (2f191eb5fd1682a53cf95f883c7200f00cbb6ebe	refs/heads/review/0302-unreadable-server-body-b3), 6 commits over the order's tip 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 (ancestor check = True), so the two named cells land on the one ref the commander already holds rather than as two competing candidates. Process, stated rather than smoothed: the first half of this order was pushed alone as 841e0f5cea9afa6ada2247ec6224d85db575fd34, the X-5 work then went on top of it, and the earlier attempt to fold both into one commit was refused as non-fast-forward -- no force-push, so 841e0f5cea9afa6ada2247ec6224d85db575fd34 is still an ancestor of this tip and every reading taken under it stays resolvable. 2 paths changed: qoder-ord0302-unreadable-server-body.spec.ts, PlanWithAiSheet.tsx; the diff restricted to backend/ answers none. Both typecheck configs (tsconfig.check.json, tsconfig.typecheck.json) were clean before the arms ran. The arms ran against exactly the committed bytes: the sheet's sha256 at HEAD is 4b5fb60bb377b479 and every run recorded that same value as the digest it started from (4b5fb60bb377b479), agree=True.
+尺        cells 12 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []（receipt_cell_derivation_check_r2.py blob 91ae8b1ec55f5c19122af11bf775df14580955e4，两遍都在发布那份字节上）；另过 claim_coordinate_check_r3.py 与 r4b（见 evidence/ord0302-unreadable-server-body-q53/ord0302_index.json blob 7673ce60a56c3e9b787344d63a134e05f81a4292）；derived_result 全格 null
+还原      五枚形制跑完源文件按字节还原 = True（evidence/ord0302-unreadable-server-body-q53/ord0302_arms_matrix.json blob f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536 的 digests）
 ```
 竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
