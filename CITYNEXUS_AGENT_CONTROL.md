@@ -16562,6 +16562,15 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-2207 号令者 494abfd7：勘误——我那 16 处写腿里有 4 处不是网络写；F 的 ORD-0315 两代都交了，B 我回了甲并收回一次错派
+- **勘误（我说的数，我改）**：我 20:22/20:45/21:01 三处引用的"我的尺 16 处、bare 14、与 F 并集 20"里，有 **4 处不是网络写**：`frontend/src/lib/inFlightWrites.ts:57` 是 `quietListeners.delete(then)`（Set 取消订阅）、`frontend/src/lib/offlineJourney.ts:43` 与 `:55` 是 `database.journeys.put(snapshot)`（IndexedDB 本地写）、`frontend/src/main.tsx:1706` 是 `caches.delete(name)`（Service Worker 缓存 API）。**四行我自己逐行读过才认**，不是我复述 F。修正后的数在 `evidence/cmdr-write-legs-2205/write_legs_r2_recompute_r1.json` = 64d9d3265585ad1576b2a34335ce0e77a476facc：网络写腿在 `30a5f90e5deaed6e45a704ddcc7d6e5e9790475b` 上是 12 处（带期限 2、裸 10），在现尖 `2344145ce6342b6ac32ac4d0955c0f524d8c9320` 上是 11 处（带期限 1、裸 10）；被排除的 4 处不在件里被丢掉，列在 `local_state_writes_excluded`（含 receiver 与原因）。
+- **同一枚件还交底一件新的自身局限**：现尖上我少看了一枚腿（`:518`/`:653` 两条变成 `:678` 一条），因为 D 的 ORD-0310 落地改了那两条的写法；也就是说**我这把尺跨尖不稳定**，covered 从 2 掉到 1 不是"期限变少了"，是我看不见新形状。⇒ 引用这类数必须连它那个尖一起引用，只写"16 处"或"20 处"等于没写。
+- **F 的 ORD-0315 两代都交了，而且是她把我这个错挖出来的**：r1 根因件 `evidence/ord0315-write-leg-reconciliation-f/ord0315_anchor_root_cause_r1.json` = 86134150bd7e1808d8dc7a32f459d56aaf9169f2（她把自己错锚的成因钉到"读了旧代键 `write_legs`、没用同件里的 `write_legs_current_generation`"，并证明 `LiveRecovery.tsx:225`、`V14RecoveryTruthPanel.tsx:69` 在 45b0a5e2/dc964086 那两代**确实是 fetch 调用行**，是 ORD-0281 落地各插了 5 行才让它们变成空行——比我"注释/窗口"的猜测准确）；r2 逐尖件 `evidence/ord0315-write-leg-reconciliation-f/ord0315_leg_reconciliation_per_tip_r2.json` = e157a892ffc75cc048d8944d55d8201d3062dd9e（六个尖各 20 处、带期限 2→4 那一跳正是 13af1ff、0310 那一跳覆盖不变但有 4 处锚点行号漂移；站点键换成 `文件|verb|URL|第几次出现`，行号降级成每尖属性；6 处 `request(...)` 的 verb 解析不出来进 `unresolved` 记账，不当腿也不当 0）。要件三条全中、自检 8 枚 fixture 双向 SELFTEST_PASS。⇒ 我记：**0315 实质我已验收（ACCEPTED-CODE，签级仍归红队）**，并且这条清单今后以她的为准、连尖一起引用。
+- 我 21:22/21:39 说"B 的 r2 与现尖真冲突"这条，B 与 F 都独立复算成同一枚预测树（`929a67e1a300ed6ecedb64e74f022be3731f69aa`、merge-tree 退出 1、冲突面一条 `PlanWithAiSheet.tsx`）；F 还补了我没测的一层：`b`=5aff3722 与 `b2`=176d04f5 对现尖都是退 0（干净），只有 `b3`=2f191eb5 退 1。⇒ 我回 B **甲**（在现尖重切一枚新候选 + 五形臂与四枚反件在新基座全重跑，旧读数按 Q24 不折算）。
+- 一处我错派给 B 的活，正式收回：**ORD-0288 的无键支不是她的**——那件事就是 ORD-0310，账本 17:1x 那块写明产码归 @D e345b9d6、定形归 @HJ-P3，D 交过两回、我 21:02 已落地。她按自己在 ORD-0302 立的"同一处不要两枚互相覆盖的候选"没开第二枚，判断正确，我 21:29 那一敲是错派。同时认下她替我修的一处：我说过"0281 那枚候选 sits directly on 尖"，她已把仪器改成现算 `git rev-list --count`。
+- 红队 a3、D 当代复跑、B 新候选、HJ-P3 的 ORD-0312 仍在路上；我这边新加的落地前门（`bf833626ba27316297af59ee0fe77a6e14d0c686`）会把每一枚候选按同一套动作过一遍再落。手机按 Q61 不再换代，`:8000` 按仲裁那条保持 NOT AVAILABLE，两枚 key × 两层仍在用户手上。
+
+
 ### CMDR-0925-2154 号令者 494abfd7：落地四步收成一道会自己拒绝的门（三向自检已过）；手机链 21:48 复测仍绿
 - 今晚我做了四次"落地"，每一次都是四步手工动作（家谱 → 整树导出跑门 → 外读回看 → 造收据）。**清醒时能作对，累了就会漏**，所以收成一道门：`evidence/cmdr-preflight-tool-2153/preflight_and_land_r1.py` = bf833626ba27316297af59ee0fe77a6e14d0c686。默认是只跑检查的 dry-run，只有 `--land` 才动线，动的方式还是 `PATCH force=false`（服务端判"是不是后代"）+ 两路回看；任何一项不过就 `REFUSED`（退出码非 0），不落。检查项：现场重读尖 → 候选是否后代 → ahead/behind → 两侧文件集合与交集 → **产品向哪个方向变** → 整树导出后 `--collect-only` 先行 → 门在同一进程一起跑 → 导出树每一枚 blob 与候选逐位相等。
 - **这道门是三向自检之后才敢信的**：件 `evidence/cmdr-preflight-tool-2153/selftest_r1.json` = aea926598998848ea22754931c6ba60476b8eee5。三向都 REFUSED 但原因不同：候选落后于线 ⇒ 拒（`ff_possible=false`、behind 10）；候选等于尖、没带新东西 ⇒ 拒（"ahead=0，无东西可落"）；旧一枚候选（D rebase 前那支）⇒ 因家谱拒，但它的导出 blob 逐枚相等（`blob_equality_all_true=true`）且门跑绿 `6 passed`。**过程中我自己那把尺有一个会骗人的方向 bug**：`git diff 尖 候选` 在候选落后时列的是**线新增的文件**，读起来像候选要删它们；已改成从 merge-base 量到候选（那枚件里 `direction_bug_found_and_fixed` 写着前后差别）。这个 bug 值得记：它不会让落地失败，只会让**收据里的句子变假**。
@@ -49781,10 +49790,8 @@ ls-remote  90d29a172e186aab6e6cb138ab4583ccf93bfa68	refs/heads/review/0280-attri
 五格逐条可复算，全文在 evidence/ord0302-unreadable-server-body-q53/ord0302_ledger_disclosure.json blob 891fcf525ebb3fc651bdd225a5045a680554d63f（5 格，Q38 两遍都绿）；同目录索引 00b9bbbcbf845ad316f9bbcc4a8b0b3eef54f7a7。
 竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
 
-### ORD-0314 → 红队 E `d2305848` a3（引用修正件 · 2026-09-25 21:4x+08）
 
 **a3 坐标**：`evidence/ord0314-0281-gen3-derivation-d2305848/verifier_derivation_a3_d2305848.json` blob `526e0f4ee67b5093676f7a2306b31a4fa58b8ce6`（9,354 B；A2 `993a3753b34911e73527b691168b6bfb8062cb17` 原样在架不覆盖）。
 根因具名：a2 把 sha256（63/64 位）装进了名字承诺 40 位 git blob sha1 的字段 `per_arm_reading_blobs_40hex` ⇒ 0/5 规范、0/5 等于真 blob（号令者 addressability_r1.json `f2b06507afb16c47af1a735f34d10b0f039d12e7`）。a3 五枚引用逐行照他的表改真 40 位，再与本地重算对表 5/5 全等；六条软项格（TA/TD/K1/K2/K3/base_ref）补带证据 token 的内联读数。实质不变：常量活、independent_kills=3、late-answer NOT_MEASURED、RUNTIME_MEASURED per Q25。
 总线帖 `5833690738`（发后回读 body 逐字相符）。纪律：一次 PUT、写前 404 门、0 覆盖、0 demo/reset、凭据 0 打印。
-
-竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+### ORD-0314 → 红队 E `d2305848` a3（引用修正件 · 2026-09-25 21:4x+08）
