@@ -1,0 +1,55 @@
+{
+ "what": "ORD-0296 追加一枚：拆掉 main.py 启动处对 assert_configuration_reachable() 的调用（包工头字面点名的第一枚）",
+ "lane": "F 8ccd71d8",
+ "ran_at": "2026-09-25T14:23:47+08:00",
+ "tree": "snap_0296_g2（其 main.py 与权威尖 90d29a17 上同一枚 blob 871aec006a3f6482f7a2700a8baeff8c25f7690f）",
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "module": "tests/test_qoder_ord0296_write_deadline.py",
+ "mutant": {
+  "arm": "M11_startup_door_not_wired",
+  "file": "app/main.py",
+  "line_named": 427,
+  "before_blob_40": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+  "after_blob_40": "85e37d613038eff655953800d9373ced9d781a01",
+  "removed_line": "assert_configuration_reachable()   # ORD-0296: refuse to boot a deadline that cannot mean anything",
+  "replaced_with": "assert_configuration_reachable  # MUTANT M11: 名字还在、括号没了 ⇒ 启动不再叫这道门",
+  "locate_hits": 1,
+  "py_compile_ok": true
+ },
+ "rounds": [
+  {
+   "round": 1,
+   "rc": 0,
+   "seconds": 2.75,
+   "red": [],
+   "red_raw": [],
+   "summary_line": "10 passed, 2 warnings in 1.83s"
+  },
+  {
+   "round": 2,
+   "rc": 0,
+   "seconds": 2.36,
+   "red": [],
+   "red_raw": [],
+   "summary_line": "10 passed, 2 warnings in 1.70s"
+  },
+  {
+   "round": 3,
+   "rc": 0,
+   "seconds": 2.09,
+   "red": [],
+   "red_raw": [],
+   "summary_line": "10 passed, 2 warnings in 1.41s"
+  }
+ ],
+ "named_cell_that_reddened": "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+ "kill_count": 0,
+ "verdict_computed": {
+  "always_red_all_rounds": false,
+  "survived": true,
+  "restore_byte_exact": true,
+  "rounds": 3
+ },
+ "claimed_result": "SURVIVED_GATE_HAS_NO_CELL_FOR_THE_STARTUP_WIRING",
+ "derived_result": null
+}
