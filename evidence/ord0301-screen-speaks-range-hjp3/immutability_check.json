@@ -1,0 +1,11 @@
+{
+ "tip_after_pass_1": "3267f2a0c90e279606d64277540b1b9580ab5047",
+ "tip_now": "85705741140f6de155d73ec02eaabd39207bd263",
+ "files_at_pass1_tip": 97,
+ "files_now": 162,
+ "added_since_pass1": 65,
+ "overwritten_paths": [],
+ "deleted_paths": [],
+ "verdict": "IMMUTABLE_0_OVERWRITE_0_DELETE",
+ "how_read": "GET /git/trees/<tip>?recursive=1 at both tips, blob ids compared per file name; the pass-1 tip is the one pass 1 published and read back in its own coordinate line"
+}
