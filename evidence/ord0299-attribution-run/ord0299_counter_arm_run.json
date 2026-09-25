@@ -1,0 +1,144 @@
+{
+ "at": "2026-09-25T08:48:27+08:00",
+ "order": "ORD-0299 步骤 2+3 · 真跑 + 反件",
+ "candidate_tip": "549ac8f1b20bc04e70eadbd238ade737eefbff01",
+ "landed_base": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+ "face": {
+  "mode": "playwright authoritative suite: this run OWNS the vite dev server and the uvicorn backend on its own ports and its own throwaway db (reuseExistingServer=false)",
+  "grade_honest_label": "dev face => 规格会红/会绿一级；不是发布级证据（发布级要跑在生产构建的产物上）",
+  "command": "node node_modules/@playwright/test/cli.js test -c playwright.config.ts e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts --reporter=json"
+ },
+ "baseline_fixed_component": {
+  "rc": 0,
+  "outcomes": {
+   "A1": {
+    "title": "ord0280-A1 agent/commands refused with NO server sentence does not wear the at",
+    "status": [
+     "passed"
+    ],
+    "ok": true
+   },
+   "A2": {
+    "title": "ord0280-A2 agent/commands refused WITH a server sentence shows it verbatim und",
+    "status": [
+     "passed"
+    ],
+    "ok": true
+   },
+   "B1": {
+    "title": "ord0280-B1 GET /places unreadable with NO sentence is named as this device's r",
+    "status": [
+     "passed"
+    ],
+    "ok": true
+   },
+   "B2": {
+    "title": "ord0280-B2 GET /places refused with a detail sentence quotes the server",
+    "status": [
+     "passed"
+    ],
+    "ok": true
+   },
+   "C1": {
+    "title": "ord0280-C1 plans/generate refused with NO sentence is not the server's reason",
+    "status": [
+     "passed"
+    ],
+    "ok": true
+   },
+   "C2": {
+    "title": "ord0280-C2 plans/generate refused with a message quotes it exactly",
+    "status": [
+     "passed"
+    ],
+    "ok": true
+   },
+   "D": {
+    "title": "ord0280-D the <2-places count this screen measured is a device statement too",
+    "status": [
+     "passed"
+    ],
+    "ok": true
+   }
+  },
+  "json_report": "ord0299_fixed_084739.json",
+  "log": "ord0299_fixed_084739.log"
+ },
+ "counter_arm": {
+  "patch": {
+   "data-reason-origin={result.failureReason.from}": "data-reason-origin={\"server\"}",
+   "{result.failureReason.from === \"server\"": "{(\"server\" as const) === \"server\""
+  },
+  "run": {
+   "rc": 1,
+   "outcomes": {
+    "A1": {
+     "title": "ord0280-A1 agent/commands refused with NO server sentence does not wear the at",
+     "status": [
+      "failed"
+     ],
+     "ok": false
+    },
+    "A2": {
+     "title": "ord0280-A2 agent/commands refused WITH a server sentence shows it verbatim und",
+     "status": [
+      "passed"
+     ],
+     "ok": true
+    },
+    "B1": {
+     "title": "ord0280-B1 GET /places unreadable with NO sentence is named as this device's r",
+     "status": [
+      "failed"
+     ],
+     "ok": false
+    },
+    "B2": {
+     "title": "ord0280-B2 GET /places refused with a detail sentence quotes the server",
+     "status": [
+      "passed"
+     ],
+     "ok": true
+    },
+    "C1": {
+     "title": "ord0280-C1 plans/generate refused with NO sentence is not the server's reason",
+     "status": [
+      "failed"
+     ],
+     "ok": false
+    },
+    "C2": {
+     "title": "ord0280-C2 plans/generate refused with a message quotes it exactly",
+     "status": [
+      "passed"
+     ],
+     "ok": true
+    },
+    "D": {
+     "title": "ord0280-D the <2-places count this screen measured is a device statement too",
+     "status": [
+      "failed"
+     ],
+     "ok": false
+    }
+   },
+   "json_report": "ord0299_counter_084739.json",
+   "log": "ord0299_counter_084739.log"
+  },
+  "expected": {
+   "device_arms_all_red": [
+    "A1",
+    "B1",
+    "C1",
+    "D"
+   ],
+   "server_arm_A2_still_green": true
+  },
+  "device_arms_all_red": true,
+  "A2_still_green": true
+ },
+ "baseline_all_seven_green": true,
+ "restored_byte_exact": true,
+ "verdict": "SPEC_HAS_TEETH",
+ "derived_result": null
+}
