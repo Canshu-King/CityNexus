@@ -1,0 +1,17 @@
+$ D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest backend/tests/test_qoder_ord0310_keyless_leg_receipts.py --collect-only -q
+tests/test_qoder_ord0310_keyless_leg_receipts.py::test_k1_keyless_agent_commands_three_presses_no_receipt_but_three_missions
+tests/test_qoder_ord0310_keyless_leg_receipts.py::test_k2_header_present_but_route_ignores_it_is_not_a_receipt
+tests/test_qoder_ord0310_keyless_leg_receipts.py::test_t1a_same_key_different_body_is_the_named_409_and_adds_no_row
+tests/test_qoder_ord0310_keyless_leg_receipts.py::test_t1b_landed_error_row_reports_the_status_the_client_saw
+tests/test_qoder_ord0310_keyless_leg_receipts.py::test_t1c_refused_before_the_claim_leaves_no_row_and_says_so
+tests/test_qoder_ord0310_keyless_leg_receipts.py::test_readings_are_written_out_for_the_receipt
+6 tests collected in 1.70s
+
+$ D:/moodle/CityNexus/.venv/Scripts/python.exe review/run_spec.py qoder-ord0310-keyless-write-deadline 5610
+(the kept runner log is review/run-run342959.log)
+ok 1 [real-seed] › e2e\_qoderRealSeed.setup.ts:110:1 › seed a real journey through the product API (5.6s)
+ok 2 [chromium] › e2e\qoder-ord0310-keyless-write-deadline.spec.ts:121:1 › K1 无键写腿到点：屏幕说结果未知、不能补问，秒数与计时器同源 (1.0m)
+ok 3 [chromium] › e2e\qoder-ord0310-keyless-write-deadline.spec.ts:148:1 › K2 正控：服务器两秒内答完时，这枚期限不碰正常结局 (1.8s)
+ok 4 [chromium] › e2e\qoder-ord0310-keyless-write-deadline.spec.ts:166:1 › K3 反控：旅行者按取消时，期限不许冒充用户 (1.3s)
+Running 4 tests using
+4 passed (1.5m)
