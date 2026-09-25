@@ -1,0 +1,262 @@
+{
+  "order": "ORD-0294",
+  "verifier": "1a986a24 HJ-P1",
+  "measured_at": "2026-09-25T08:20:30+0800",
+  "receipt_signed": {
+    "file": "o290_derived_r3.json",
+    "blob40": "37133521666190c7df3894d7fa0fcfd504cc6641",
+    "bytes": 24542
+  },
+  "rulers": {
+    "r1": {
+      "blob_verified": "35caa42c0697faf0a8eeb0929a3e11cb53c9709a",
+      "bytes": 17346,
+      "selftest_rc": 0,
+      "selftest_first_line": "selftest SELFTEST_GREEN | arms run 9 passed 9 | failed: []",
+      "on_receipt": {
+        "r1": {
+          "receipt_blob": "c893bde22c05b32d27d647fbfa014615394b0b5f",
+          "receipt_bytes": 18750,
+          "rc_read_without_pipe": 3,
+          "overall": "Q38_GATE_RED_HARD",
+          "hard_count": 1,
+          "hard_codes": [
+            "DUPLICATE_WHY_LITERALS"
+          ],
+          "soft_count": 3,
+          "soft_codes": [
+            "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+          ],
+          "cell_keys_offered": [
+            "derived_from",
+            "derived_from_key",
+            "id",
+            "own_hits",
+            "own_token_count",
+            "shares_why_with",
+            "unique_hits",
+            "verdict",
+            "why",
+            "why_source",
+            "why_token_count"
+          ],
+          "per_cell": [
+            {
+              "id": "B2a_idle_automatic_convergence",
+              "verdict": "VERIFIED_FIXED_WITH_TWO_WAY_CONTROL",
+              "why_token_count": 0,
+              "own_hits": 0,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": [
+                "B2b_dirty_form_preservation",
+                "B2c_inflight_write_safe_point"
+              ]
+            },
+            {
+              "id": "B2b_dirty_form_preservation",
+              "verdict": "VERIFIED_FIXED_WITH_TWO_WAY_CONTROL",
+              "why_token_count": 0,
+              "own_hits": 0,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": [
+                "B2a_idle_automatic_convergence",
+                "B2c_inflight_write_safe_point"
+              ]
+            },
+            {
+              "id": "B2c_inflight_write_safe_point",
+              "verdict": "VERIFIED_FIXED_WITH_TWO_WAY_CONTROL",
+              "why_token_count": 0,
+              "own_hits": 0,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": [
+                "B2a_idle_automatic_convergence",
+                "B2b_dirty_form_preservation"
+              ]
+            }
+          ]
+        },
+        "r3": {
+          "receipt_blob": "37133521666190c7df3894d7fa0fcfd504cc6641",
+          "receipt_bytes": 24542,
+          "rc_read_without_pipe": 0,
+          "overall": "Q38_GATE_GREEN",
+          "hard_count": 0,
+          "hard_codes": [],
+          "soft_count": 0,
+          "soft_codes": [],
+          "cell_keys_offered": [
+            "derived_from",
+            "derived_from_key",
+            "id",
+            "own_hits",
+            "own_token_count",
+            "unique_hits",
+            "verdict",
+            "why",
+            "why_source",
+            "why_token_count"
+          ],
+          "per_cell": [
+            {
+              "id": "B2a_idle_automatic_convergence",
+              "verdict": "VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL",
+              "why_token_count": 7,
+              "own_hits": 6,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": []
+            },
+            {
+              "id": "B2b_dirty_form_preservation",
+              "verdict": "VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL",
+              "why_token_count": 9,
+              "own_hits": 8,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": []
+            },
+            {
+              "id": "B2c_inflight_write_safe_point",
+              "verdict": "VERIFIED_FIXED_WITH_TWO_DISCRIMINATING_CONTROLS",
+              "why_token_count": 11,
+              "own_hits": 10,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": []
+            }
+          ]
+        }
+      }
+    },
+    "r2": {
+      "blob_verified": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+      "bytes": 18867,
+      "selftest_rc": 0,
+      "selftest_first_line": "selftest SELFTEST_GREEN | arms run 10 passed 10 | failed: []",
+      "on_receipt": {
+        "r1": {
+          "receipt_blob": "c893bde22c05b32d27d647fbfa014615394b0b5f",
+          "receipt_bytes": 18750,
+          "rc_read_without_pipe": 3,
+          "overall": "Q38_GATE_RED_HARD",
+          "hard_count": 1,
+          "hard_codes": [
+            "DUPLICATE_WHY_LITERALS"
+          ],
+          "soft_count": 3,
+          "soft_codes": [
+            "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+          ],
+          "cell_keys_offered": [
+            "derived_from",
+            "derived_from_key",
+            "id",
+            "own_hits",
+            "own_token_count",
+            "shares_why_with",
+            "unique_hits",
+            "verdict",
+            "why",
+            "why_source",
+            "why_token_count"
+          ],
+          "per_cell": [
+            {
+              "id": "B2a_idle_automatic_convergence",
+              "verdict": "VERIFIED_FIXED_WITH_TWO_WAY_CONTROL",
+              "why_token_count": 0,
+              "own_hits": 0,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": [
+                "B2b_dirty_form_preservation",
+                "B2c_inflight_write_safe_point"
+              ]
+            },
+            {
+              "id": "B2b_dirty_form_preservation",
+              "verdict": "VERIFIED_FIXED_WITH_TWO_WAY_CONTROL",
+              "why_token_count": 0,
+              "own_hits": 0,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": [
+                "B2a_idle_automatic_convergence",
+                "B2c_inflight_write_safe_point"
+              ]
+            },
+            {
+              "id": "B2c_inflight_write_safe_point",
+              "verdict": "VERIFIED_FIXED_WITH_TWO_WAY_CONTROL",
+              "why_token_count": 0,
+              "own_hits": 0,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": [
+                "B2a_idle_automatic_convergence",
+                "B2b_dirty_form_preservation"
+              ]
+            }
+          ]
+        },
+        "r3": {
+          "receipt_blob": "37133521666190c7df3894d7fa0fcfd504cc6641",
+          "receipt_bytes": 24542,
+          "rc_read_without_pipe": 0,
+          "overall": "Q38_GATE_GREEN",
+          "hard_count": 0,
+          "hard_codes": [],
+          "soft_count": 0,
+          "soft_codes": [],
+          "cell_keys_offered": [
+            "derived_from",
+            "derived_from_key",
+            "id",
+            "own_hits",
+            "own_token_count",
+            "unique_hits",
+            "verdict",
+            "why",
+            "why_source",
+            "why_token_count"
+          ],
+          "per_cell": [
+            {
+              "id": "B2a_idle_automatic_convergence",
+              "verdict": "VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL",
+              "why_token_count": 7,
+              "own_hits": 6,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": []
+            },
+            {
+              "id": "B2b_dirty_form_preservation",
+              "verdict": "VERIFIED_FIXED_WITH_DISCRIMINATING_CONTROL",
+              "why_token_count": 9,
+              "own_hits": 8,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": []
+            },
+            {
+              "id": "B2c_inflight_write_safe_point",
+              "verdict": "VERIFIED_FIXED_WITH_TWO_DISCRIMINATING_CONTROLS",
+              "why_token_count": 11,
+              "own_hits": 10,
+              "unique_hits": 0,
+              "derived_from": null,
+              "shares_why_with": []
+            }
+          ]
+        }
+      }
+    }
+  },
+  "how_rulers_fetched": "GET /git/blobs/<40 hex> -> 200 (the contents path 404s on commander/control; the object is reachable even where the path is not)",
+  "derived_from_note": "still absent on purpose: the ruler treats it as the exemption channel for SHARED sentences, and all three whys here are distinct (ruler reports shares_why_with=[] )"
+}
