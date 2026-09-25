@@ -1,0 +1,735 @@
+{
+ "what": "我这两条 evidence 目录的逐路径 commit 枚数（Q57 identical-or-refuse 形制自查的分母）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T19:23:14+08:00",
+ "repo": "Canshu-King/CityNexus",
+ "branch": "commander/control",
+ "how": "`GET /repos/{repo}/contents/{dir}?ref={branch}` 取清单，再对每条路径 `GET /repos/{repo}/commits?path=…&sha={branch}&per_page=20` 数 commit 枚数（外部读，不是本地猜）",
+ "dirs": [
+  "evidence/ord0307-credential-literals-f",
+  "evidence/ord0296-write-deadline-f"
+ ],
+ "paths_scanned": 89,
+ "paths_with_more_than_one_commit": 0,
+ "overwritten_paths": [],
+ "max_commits_on_any_path": 1,
+ "verdict": "NO_PATH_REWRITTEN",
+ "why_i_am_reporting_this": "Q57=② 要求单文件 evidence 发布走 identical-or-refuse 闸门。我 ORD-0307 r3 那一批是在读到你 18:25 那块之前用自家发布器发的（同路径异字节会带 sha 覆写而不是 REFUSE）。本件证明那批全部落在新路径上 ⇒ 结果没有覆盖，但形制仍不合，故具名自报，之后一律走 publish_evidence_gated_r1.py（blob e0a656bec4bf7d3005245215c8cb627329b1b1ad，本机重算逐位相同）。",
+ "gated_tool_local_recalc": "e0a656bec4bf7d3005245215c8cb627329b1b1ad",
+ "rows": [
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_candidate_ref_r1.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "1a9d77a59539"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_gate_receipt_r1.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "8882d241f79b"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_gate_receipt_r2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "2473b0a6718c"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_gate_receipt_r3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "b03d5b457136"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_main_wiring_r1.patch",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "785ae7c4cd28"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_mutation_campaign_r3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "788714eb340f"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_mutation_campaign_r4.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "113e84abf6a4"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_mutation_campaign_r5.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "57f16082d677"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_prototype_scan_r1.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "ffaef24c6424"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_publish_manifest_v4.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "274a63c1feb6"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_publish_manifest_v5.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "0248f7569d28"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q38_readings.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "d6e582030d34"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q38_readings_r2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "49054549430d"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q38_readings_r3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "51d4bca02baa"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q38_stdout.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "4204ac1db5ce"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q38_stdout_r2.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "40f7007e57ee"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q38_stdout_r3.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "b423a551c654"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4_text_bus_r2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "cccd0ef019f7"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4_text_bus_r3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "a2b9b0a631c0"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4_text_ledger_r2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "db06c15bfc48"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4_text_ledger_r3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "b45a7e677f03"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_bus.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "b66558ffceaa"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_ledger.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "90de1d69a207"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_on_receipt.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "5dcc129ce9bd"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_on_receipt_r2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "f798238bcd18"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_on_receipt_r2_stdout.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "4bb6614662ab"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_on_receipt_r3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "3bc6318df039"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_on_receipt_r3_stdout.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "611e41417a57"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_on_receipt_stdout.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "9a2909f561e2"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_stdout_bus.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "f5eb1d4b9abc"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_stdout_ledger.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "12fb350f3076"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_text_bus_r2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "f78f1f4cdf51"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_text_bus_r2_stdout.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "a01958bb1f91"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_text_bus_r3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "320a18ddf677"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_text_bus_r3_stdout.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "9bf76bb15224"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_text_ledger_r2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "641b04303a7f"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_text_ledger_r2_stdout.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "0159400d9167"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_text_ledger_r3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "19f29b4a4f0e"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_q43r4b_text_ledger_r3_stdout.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "a8bd9462ee8f"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_source_gate_test_v2.py",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "e08f1ed17d09"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_source_gate_test_v3.py",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "2f06661e30d3"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_source_literals.py",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "512ea66a5b62"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/ord0307_stdout_rename_fix_r1.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "1831a276619f"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/publish_manifest_r1.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "24df0d300f7a"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/publish_manifest_v2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "d26db4a31ffa"
+   ]
+  },
+  {
+   "path": "evidence/ord0307-credential-literals-f/publish_manifest_v3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "be4d8098852e"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/commander_derivation_r1.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "08b3da193b7c"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_G11_and_M11_r2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "ffff03cf92f0"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_arm_M11_r1.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "b336d929891b"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_candidate_r2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "8c94d58caec2"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_candidate_r3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "fa8552ae1c1e"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_candidate_r4.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "50977930dfdf"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_delivery_receipt_r1.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "8a9d54b085ed"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_bus.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "52505be8648c"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_bus_v2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "98571ddae63c"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_bus_v3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "c7c8a9332770"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_bus_v4.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "568bf5593b89"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_ledger_v2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "905ca657c01a"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_ledger_v3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "75613f8c759d"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_ledger_v4.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "d636e304737c"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_stdout_bus.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "ac815162021a"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_stdout_bus_v2.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "1caff9ec4522"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_stdout_bus_v3.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "f399a68d83ee"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_stdout_bus_v4.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "f578b7f90e39"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_stdout_ledger_v2.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "b9ed76bd8159"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_stdout_ledger_v3.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "7c9ab3b836f8"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r3_stdout_ledger_v4.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "7d80898ab5b7"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_bus.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "08f13a207d45"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_bus_v2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "7d56fd79e7f8"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_bus_v3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "63909f49bd61"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_bus_v4.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "0d0f90808014"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_ledger.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "4fae148dce59"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_ledger_v2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "04408a984e3f"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_ledger_v3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "2c30051153ce"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_ledger_v4.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "94abc86722b3"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_stdout_bus.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "3da31844325f"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_stdout_bus_v2.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "ed9a2613e71d"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_stdout_bus_v3.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "fd2d8da68c00"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_stdout_bus_v4.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "87dd2d3194b3"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_stdout_ledger.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "7f4ee677c8d3"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_stdout_ledger_v2.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "086161b63af9"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_stdout_ledger_v3.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "c5240a1b22c0"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_q43r4_stdout_ledger_v4.txt",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "3321c6457961"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_ruler_pair_manifest_v2.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "64a72ddaa4d0"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_ruler_pair_manifest_v3.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "f626e7192f7e"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r3_ruler_pair_manifest_v4.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "b955ee505f8b"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_r4_same_generation_r1.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "f2b7329b8d46"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/ord0296_reparent_prefix_r1.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "84f81cb97813"
+   ]
+  },
+  {
+   "path": "evidence/ord0296-write-deadline-f/q43_selfcheck_before_publish_r1.json",
+   "listing_http": 200,
+   "commits_on_path": 1,
+   "commits": [
+    "8275c6f9b748"
+   ]
+  }
+ ],
+ "claim_kind": "code_determined",
+ "derived_result": null
+}
