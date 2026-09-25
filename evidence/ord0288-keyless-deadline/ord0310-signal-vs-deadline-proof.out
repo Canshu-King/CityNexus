@@ -1,0 +1,15 @@
+$ git show 30de4ebe409f49c5e25f4758cb2e5f4e90764a4f:frontend/src/features/planning/PlanWithAiSheet.tsx
+  bytes=52799 blob=3bb6a39067a380c2f75629fd7562f0de8f5d2f2a
+anchor = `const response = await fetchWithKeylessWriteDeadline(`
+anchor 命中次数 = 1（臂要求 1；不等于 1 时驱动器拒绝改字节）
+mutant = `const response = await fetch(`
+变异后字节 = 52775（差 -24，少的只是包装函数名与右括号）
+变异后 blob = 5827cf1645f1e8fe1f168d9798384f53a020bd7c
+`signal,` 独立成行的行号 原件   = [474, 553, 600, 692]
+`signal,` 独立成行的行号 变异后 = [474, 553, 600, 692]
+行号集合是否一模一样 = True
+无键那一发（变异后）调用点原文（从锚点偏移 23728 起 340 字）：
+         const response = await fetch( ⏎         `/api/v1/journeys/${journeyId}/agent/commands`, ⏎         { ⏎           method: "POST", ⏎           /* The transport key travels with the whole intent.  This route declares no such parameter ⏎              today, so it is inert HERE -- the leg that reads it is plans/generate below.  The body ⏎            
+读法：`signal` 一行没少、一行没改，被拆掉的只有外面那层期限包装。
+该臂实测（同一代臂收据 `ord0310-arms-receipt-r5.json` 里 `attempt.nodes`）：K1 = RED，K2 = GREEN，K3 = GREEN。
+⇒ 屏上那句的判据确实是「期限到了」，不是「有没有 signal」；拆包装也没有碰旅行者取消那一支。
