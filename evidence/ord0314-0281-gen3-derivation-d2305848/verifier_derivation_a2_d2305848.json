@@ -4,7 +4,10 @@
  "verifier": "lane E d2305848",
  "at": "2026-09-25T21:15+08:00",
  "ref_tip_read": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 (read at run time per instruction ②; authority may have moved since)",
- "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "disclosure_note": {
+  "rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE",
+  "hits": []
+ },
  "cells": [
   {
    "cell": "TA_pristine",
@@ -48,25 +51,37 @@
    "cell": "TD_bound2000",
    "verdict": "MET",
    "why": "the bounded write does not produce a second mission",
-   "readings": {"shape": "bound2000 tree", "runId": "0281p23227"}
+   "readings": {
+    "shape": "bound2000 tree",
+    "runId": "0281p23227"
+   }
   },
   {
    "cell": "K1_bound2000",
    "verdict": "MET",
    "why": "the keying survives the deadline path",
-   "readings": {"shape": "bound2000 tree", "runId": "0281p23227"}
+   "readings": {
+    "shape": "bound2000 tree",
+    "runId": "0281p23227"
+   }
   },
   {
    "cell": "K2_pristine",
    "verdict": "MET",
    "why": "the keying survives the normal path",
-   "readings": {"shape": "pristine tree", "runId": "0281p13227"}
+   "readings": {
+    "shape": "pristine tree",
+    "runId": "0281p13227"
+   }
   },
   {
    "cell": "K3_bound2000",
    "verdict": "MET",
    "why": "the deadline path preserves the server's own words",
-   "readings": {"shape": "bound2000 tree", "runId": "0281p23227"}
+   "readings": {
+    "shape": "bound2000 tree",
+    "runId": "0281p23227"
+   }
   },
   {
    "cell": "counter_ca_no_delegate",
@@ -110,13 +125,20 @@
    "cell": "scope",
    "verdict": "DECLARED",
    "why": "the keyed denominator is 6 legs, of which 4 already come through the readDeadline wrapper; the remaining 2 are the ones this order bounded",
-   "readings": {"keyed_legs": 6, "already_bounded": 4, "newly_bounded": 2}
+   "readings": {
+    "keyed_legs": 6,
+    "already_bounded": 4,
+    "newly_bounded": 2
+   }
   },
   {
    "cell": "base_ref",
    "verdict": "MET",
    "why": "candidate 13af1ff4 sits directly on the authority line (ff-only from 30a5f90e/dc964086 lineage)",
-   "readings": {"candidate_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69", "parent_is_authority_line": true}
+   "readings": {
+    "candidate_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+    "parent_is_authority_line": true
+   }
   },
   {
    "cell": "late_answer_after_deadline",
@@ -135,9 +157,16 @@
  "independent_kills": 3,
  "composition": "3 counter-arms, each flips exactly its target cell",
  "claim_kind": "RUNTIME_MEASURED (all cells; per Q25, does not transfer across generations even if blobs match)",
- "generation_binding": {"tested_tree": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69"},
+ "generation_binding": {
+  "tested_tree": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69"
+ },
  "late_answer": "NOT_MEASURED",
- "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
-   "credentials_printed": 0, "published_paths_overwritten": 0,
-   "network": "GitHub GET + one PUT (this receipt)"}
+ "discipline": {
+  "services_started": 0,
+  "user_dbs_touched": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "published_paths_overwritten": 0,
+  "network": "GitHub GET + one PUT (this receipt)"
+ }
 }
