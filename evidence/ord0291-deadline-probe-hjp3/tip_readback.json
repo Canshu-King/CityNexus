@@ -1,0 +1,15 @@
+{
+ "scanned_tree": "D:\\moodle\\_qoder_wt_45b0a5e",
+ "tree_kind": "worktree",
+ "head_sha": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+ "head_rc": 0,
+ "head_stderr": "",
+ "git_dir": "D:/moodle/_qoder_integration_20260919/.git/worktrees/_qoder_wt_45b0a5e",
+ "working_tree_clean": true,
+ "porcelain_lines": 0,
+ "frontend_src_read": "True",
+ "readDeadline_sha_line": [
+  "export const READ_DEADLINE_MS = 12_000;"
+ ],
+ "note": "a worktree is still the commit bytes; it is named here because \"clean export\" would be false advertising for it"
+}
