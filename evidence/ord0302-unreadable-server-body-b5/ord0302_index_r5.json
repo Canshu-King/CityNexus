@@ -1,0 +1,115 @@
+{
+ "candidate_tip": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
+ "order_base": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+ "previous_candidate": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+ "branch": "refs/heads/review/0302-unreadable-server-body-b5",
+ "dir": "evidence/ord0302-unreadable-server-body-b5",
+ "self_reference": "an index cannot pin its own bytes; this one is named by the post that follows it",
+ "files": [
+  {
+   "name": "candidate_sheet.tsx",
+   "blob40": "8225299c6967f2fa78dfba715b86e19e37c990f0"
+  },
+  {
+   "name": "candidate_spec.ts",
+   "blob40": "70b1df97308f48b606add160b63ceaee3d17ed9b"
+  },
+  {
+   "name": "ord0302_arms_matrix.json",
+   "blob40": "e7d2f5e7c281ebaac4ff8f4152f2791f0799f72d"
+  },
+  {
+   "name": "ord0302_b5_q64_patch.py",
+   "blob40": "36190aa2cddabaf9c5489e91c773872eca78ef89"
+  },
+  {
+   "name": "ord0302_b5_receipt.json",
+   "blob40": "781c75f1c05234baee6f24fb8d1936050e286863"
+  },
+  {
+   "name": "ord0302_b5_receipt_r2.json",
+   "blob40": "7ae34eccbc202cbdd268c7ba266b3da2abf962ee"
+  },
+  {
+   "name": "ord0302_b5_receipt_r3.json",
+   "blob40": "e0bd0fedb4b43976bfce9dd566381acb477bfb84"
+  },
+  {
+   "name": "ord0302_index.json",
+   "blob40": "5b69cee459e2e30fb186fa08ce9b2e98fabd12ee"
+  },
+  {
+   "name": "ord0302_index_r2.json",
+   "blob40": "3699fb394049630435cd306cf45dc777212e9cdb"
+  },
+  {
+   "name": "ord0302_index_r3.json",
+   "blob40": "1fae7b262b237af38eacd8d32ee49051a0bd9161"
+  },
+  {
+   "name": "ord0302_index_r4.json",
+   "blob40": "6fb511729d555ede94cf5cfd7d20b1b4365e2254"
+  },
+  {
+   "name": "ord0302_run_arms_q64.py",
+   "blob40": "f7a282eed06ab321ef6bbf821470b229dac876d9"
+  },
+  {
+   "name": "playwright_report__ca_null_on_network.json",
+   "blob40": "101747915c779802c01a20a0fd11b3006b4a0810"
+  },
+  {
+   "name": "playwright_report__ca_q64_body_back.json",
+   "blob40": "23c6a42b646ce3a0d4b0ec54b94bd015b5152066"
+  },
+  {
+   "name": "playwright_report__ca_unsafe_read.json",
+   "blob40": "5ca94aaf87b4b681b58efcec8f5bee56bfc2dbf4"
+  },
+  {
+   "name": "playwright_report__ca_x5_no_block.json",
+   "blob40": "f9edd443433eb10fc995cad8812f50d4faf94bf3"
+  },
+  {
+   "name": "playwright_report__ca_x5_soft_promise.json",
+   "blob40": "a2a52adbaa8171ec521161bd9df0e8a6d26ae355"
+  },
+  {
+   "name": "playwright_report__fixed.json",
+   "blob40": "fa1e9f4168732920534403dd011e7c57ef5b1084"
+  },
+  {
+   "name": "uiexposure_b4.json",
+   "blob40": "88f64c4e7c99926a872723bd548050d39ee26a62"
+  },
+  {
+   "name": "uiexposure_b5.json",
+   "blob40": "56a651408883864084d01e8411bc5dccb6906c87"
+  },
+  {
+   "name": "uiexposure_b5_three_captures.json",
+   "blob40": "f0d94b9314efd5a0b375459a70bec9be1e1a994c"
+  },
+  {
+   "name": "uiexposure_r2_b4.json",
+   "blob40": "5d024806a1b11735d732068585f9b2ae69692cf6"
+  },
+  {
+   "name": "uiexposure_r2_b5.json",
+   "blob40": "45137e7d94d49a4ecb48480bd45d3e66f185fd6f"
+  },
+  {
+   "name": "uiexposure_r2_newtip_30de4ebe.json",
+   "blob40": "c27459e2c883e12e193304729f1c1e81f2a990ed"
+  },
+  {
+   "name": "uiexposure_r2_tip.json",
+   "blob40": "bf83ec4633c00df10ba223dabf450626d71e5ba1"
+  },
+  {
+   "name": "uiexposure_tip.json",
+   "blob40": "3a868a0aac46eee2fb4b74c07ddf7f2dd3d79933"
+  }
+ ],
+ "revision_note": "r5: adds the new-tip r2 capture, which was published AFTER index r4 was built -- i.e. index r4 was stale by exactly that one file for a while; stated here instead of hidden"
+}
