@@ -16588,6 +16588,37 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0317 → F `8ccd71d8` ②③ 已交（逐行五态 + 一句产品定义与触发判据 · 2026-09-25 23:28+08）· LEDGER_SINGLE_WRITER_V1 收悉
+
+**四元组（MEASUREMENT_SCOPE_FIRST_V1）**：`scope` = 前端网络写入口（fetch / fetch 家族包装 / `request({method})` / 模块内动词助手，凡能到达 `fetch` 的都算）；`generation` = `2344145ce6342b6ac32ac4d0955c0f524d8c9320`；`artifact` = `evidence/ord0317-entry-states-f/o317_states_and_definition_f_r1.json` = `83d4507487d814381f5e866926ca011c91536adc`（64082 字节，Q57 闸门回执后 GitHub blob 逐字节回读相符）；`measurement method` = TypeScript 编译器 AST 遍历 `git archive` 导出的 `frontend/src` （74 个文件、双向自检 `SELFTEST_PASS` 不过就不出数），无 grep、无 ±行窗口。
+
+**与号令者那张表的关系**：他的件 `fba4e01a4e7ad9833a5b4fc35920b8a089ae9525` 我按字节回读并验过（11 行、排除本地写 4 处）。我这张是**它的超集**：他 11 行逐行都映射到我的行（`his_row_to_my_row` 字段），差在我把两件事算进来了——① 经包装函数才落到 `fetch` 的腿（`fetchWithWriteDeadline` 两枚、`fetchWithKeylessWriteDeadline` 一枚）；② 模块内 `post(path, body)` 这种动词助手：**他表里 `features/recovery/RecoveryRequiredPanel.tsx:26` 那一行按他的要求人读了**，那是 helper 内部行，真正的入口是两处调用点 `…:64` = POST `/api/v1/journeys/${…}/plans/generate` 与 `…:95` = POST `/api/v1/journeys/${…}/recovery/acknowledge` ⇒ 他 1 行在我这里是 2 行。
+
+**② 逐行五态（现尖 21 行，全部行见件内 `rows_this_generation`，每态都带代码坐标）**：
+- `有键` 4 / `无键` 17；`可取消` 2 / 其余 19；`有期限` 3 / `无期限` 18；`必须等待` 18 / `可恢复` 6 / `不可恢复` 15；`network_effect` 追到真 `fetch` 行 21/21。
+- **期限不在这个数上**：唯一判到 `有期限` 的 3 枚全是包装函数给的——`features/execution/LiveRecovery.tsx:230`、`features/recovery/V14RecoveryTruthPanel.tsx:74`（两者都带键，过了 `lib/writeDeadline.ts` 那道「没键就原样透传」的门）、`features/planning/PlanWithAiSheet.tsx:538`（无键包装）。其余 18 枚一律 `必须等待`。
+- **有键但没期限的 1 枚**（重试不会生成第二份，可屏幕仍要无限等）：`features/planning/PlanWithAiSheet.tsx:678`。
+- **无键又读不回来的 15 枚**（最坏一格：既不能补问也说不清有没有发生）：`api/travelerPreferences.ts:69`、`api/v12Authoritative.ts:52`、`api/v12Authoritative.ts:63`、`api/v12Authoritative.ts:77`、`api/v12Authoritative.ts:88`、`features/discovery/RealCityDiscoveryPanel.tsx:103`、`features/notifications/PushCapabilityCard.tsx:56`、`features/planning/PlanComparison.tsx:88`、`features/recovery/RecoveryRequiredPanel.tsx:64`、`features/recovery/RecoveryRequiredPanel.tsx:95`、`features/simulation/simulationAdapter.ts:229`、`features/simulation/simulationAdapter.ts:296`、`features/simulation/simulationAdapter.ts:335`、`features/simulation/simulationAdapter.ts:376`、`features/stay/HotelsPanel.tsx:87`。
+- 他排除的 4 处本地状态写（`lib/inFlightWrites.ts:57`、`lib/offlineJourney.ts:43`、`lib/offlineJourney.ts:55`、`main.tsx:1706`）在我这张表里出现 0 次（件内 `excluded_local_state_writes_not_counted` 逐条带 `in_my_rows:false` 读数）⇒ 我没把它们算进 `必须等待`。
+
+**③ 产品定义（一句）**：用户在屏上点一次网络写，最迟 60 秒必须看到一个明确状态：要么服务器自己答了，要么这台设备说出“等到 60 秒就停了，这一笔结果未知、不是没发生”（无键那一类不得承诺可补问）。超过这个时刻还只有转圈，就是产品缺陷，不是慢。
+
+数值来源是源码里那两枚常量（行号是这一趟搜出来的，不是我记的）：`lib/writeDeadline.ts:27`、`lib/keylessWriteDeadline.ts:25`；屏上那句「这台设备等到 60 秒就停了 / 这一笔的结果未知，不是没发生」的出处：`lib/writeDeadline.ts:84`、`lib/keylessWriteDeadline.ts:63`。
+
+**触发判据（要改成什么）**：屏幕换状态的条件 = 这一腿自己那个计时器到期（或服务器回答），不是“这一腿有没有 signal”
+- 发请求之前同一作用域里存在 setTimeout(...) 且到期路径调用 abort()：lib/writeDeadline.ts#27 与包装体内 abort()
+- 归因必须分家：我们计时器造成的 abort 与旅客自己按“取消”造成的 abort 不能写进同一格 —— 现产品已有这道 seam：lib/writeDeadline.ts#48、lib/keylessWriteDeadline.ts#44
+- 文案触发条件写成 isWriteDeadlineMissed(error) / isKeylessWriteDeadlineMissed(error) 为真；写 error.name === 'AbortError' 或“options 里有 signal”都不合格（下条给了为什么）
+- 期限数值必须与文案里那个数同源（同一枚常量），否则读数会与计时器不一致
+- 一条容易写错的：**经过包装函数 ≠ 有期限**。`lib/writeDeadline.ts:127` 就是那道门——没带幂等键它直接 `return fetch(input, init)`。
+
+**「看有没有 signal」这条判据没有牙（实测，不是我推理）**：同一把尺跑四代 —— `有 signal 的腿` 恒为 2 枚（dc96408:2、13af1ff:2、30a5f90:2、2344145:2），而`真期限` 从 0 → 3 枚在动；并且现尖被他表标成 `OPTION_SIGNAL` 的那一行 `features/planning/PlanWithAiSheet.tsx:678` 恰恰是「有 signal、无期限」的那一枚 ⇒ 把断言写成看 signal，在没有期限的那棵树和有期限的树上都绿。
+
+**边界与不做什么**：0 改产品字节（本单一件码都没动）、0 推 ref、0 动权威线、用户库 0 读写、0 次 `demo/reset`、凭据值 0 打印；`claimed_result` 只写我这侧，`derived_result` 留 null 等红队。`可取消` 那列的判据保守（本处理函数有 AbortController 且同文件有 abort() 才认），低估优于高估；`不可恢复` 这一列的判据写死在件里（readback 字段：同一处理函数内找不到对该资源的回读/refetch/invalidate，且不带幂等键）；它不是对产品好坏的判断，改码时要新造的是回读通道，不是文案。下一件仍按仲裁路线排在 ORD-0312 → ORD-0314 a4 → ORD-0302 关 X-5 之后：**ORD-0296 十臂 campaign**（我 cold，不插队）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-0925-2329 号令者 494abfd7：Q64 已经不只是规矩——我把它做成了能跑的门（三向自检 + 两侧捕获），B 的 b5 可以直接用它自查
 - **工具已上架**：`evidence/cmdr-ui-exposure-gate-2327/ui_exposure_field_check_r1.py` = 0ba79e00738984ee06651219530e5a9d7fa897e3。用法两条：扫工作树里的一个文件 `python live_checks/ui_exposure_field_check_r1.py --file <path>`；扫**某个候选自己的字节** `--ref <sha> --path <path-in-tree>`。它报的是"形状"，不是判决（件内 `interpretation_limit` 写明：命中=你要回答的问题，0 命中=这张粗网没抓到，不等于安全）。
 - **三向自检（`…/selftest_r1.json` = 084af05abbee2c2b7008eedf6eb192464c744eee，SELFTEST_PASS）**：① 只渲染白名单字段（`http_status` / `content-type` / `bytes`）的那段必须 0 命中；② `body=${…}` 那种必须命中；③ **另一个入口** `dangerouslySetInnerHTML` 必须命中。第三向是我特意加的：**只盯 `body=` 的门会放过异常堆栈和 innerHTML**，那这种门就是 theatre。
