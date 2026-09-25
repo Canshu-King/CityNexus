@@ -205,6 +205,11 @@
    "bytes": 40085
   },
   {
+   "name": "ord0302_publish_and_audit.py",
+   "blob40": "ebf9af88d986cdc38f29de4a06ebf63ab5fc460a",
+   "bytes": 4615
+  },
+  {
    "name": "ord0302_receipt.json",
    "blob40": "910b78a9587fc96c714b4ab0bc01c70ed777b06c",
    "bytes": 36283
@@ -218,6 +223,11 @@
    "name": "ord0302_verify_published.json",
    "blob40": "2d7048c27dbe28a8f76a365e192594ea3d2f1317",
    "bytes": 2458
+  },
+  {
+   "name": "ord0302_verify_published.py",
+   "blob40": "06db75a8bd98e4f46e02a9745b5a0eed4f424330",
+   "bytes": 6871
   }
  ],
  "self_reference": "this file is not in its own list; its blob is what the read-back of the branch prints",
