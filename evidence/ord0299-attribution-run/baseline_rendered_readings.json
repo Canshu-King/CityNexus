@@ -1,0 +1,298 @@
+{
+ "file": "e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts",
+ "arms": {
+  "A1": {
+   "want": "device",
+   "read": {
+    "status": "HTTP_500",
+    "label": "这台设备自己的读数（服务器没给句子）",
+    "origin": "device",
+    "reason": "agent/commands -> HTTP 500",
+    "legs": [
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN",
+     "GET /plans(baseline)",
+     "POST /api/v1/journeys/7e8be686-ee3a-4509-a297-3bfe2c10a579/agent/commands"
+    ]
+   },
+   "rows": [
+    {
+     "claim": "label and origin agree",
+     "ok": true,
+     "got": {
+      "label": "这台设备自己的读数（服务器没给句子）",
+      "origin": "device"
+     }
+    },
+    {
+     "claim": "the server's own words are passed through verbatim",
+     "ok": true,
+     "got": {
+      "reason": "agent/commands -> HTTP 500",
+      "expected": ""
+     }
+    },
+    {
+     "claim": "a device-composed reading is still visible (this is not a mute-the-number fix)",
+     "ok": true,
+     "got": {
+      "reason": "agent/commands -> HTTP 500"
+     }
+    }
+   ]
+  },
+  "A2": {
+   "want": "server",
+   "read": {
+    "status": "HTTP_503",
+    "label": "服务器给出的原因",
+    "origin": "server",
+    "reason": "该目的地的候选目录尚未就绪，请稍后重试。",
+    "legs": [
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN",
+     "GET /plans(baseline)",
+     "POST /api/v1/journeys/7e8be686-ee3a-4509-a297-3bfe2c10a579/agent/commands"
+    ]
+   },
+   "rows": [
+    {
+     "claim": "label and origin agree",
+     "ok": true,
+     "got": {
+      "label": "服务器给出的原因",
+      "origin": "server"
+     }
+    },
+    {
+     "claim": "the server's own words are passed through verbatim",
+     "ok": true,
+     "got": {
+      "reason": "该目的地的候选目录尚未就绪，请稍后重试。",
+      "expected": "该目的地的候选目录尚未就绪，请稍后重试。"
+     }
+    },
+    {
+     "claim": "a device-composed reading is still visible (this is not a mute-the-number fix)",
+     "ok": true,
+     "got": {
+      "reason": "该目的地的候选目录尚未就绪，请稍后重试。"
+     }
+    }
+   ]
+  },
+  "B1": {
+   "want": "device",
+   "read": {
+    "status": "BLOCKED:UPSTREAM_UNREADABLE",
+    "label": "这台设备自己的读数（服务器没给句子）",
+    "origin": "device",
+    "reason": "GET /places -> HTTP 502",
+    "legs": [
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN",
+     "GET /plans(baseline)",
+     "POST /api/v1/journeys/7e8be686-ee3a-4509-a297-3bfe2c10a579/agent/commands",
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN"
+    ]
+   },
+   "rows": [
+    {
+     "claim": "label and origin agree",
+     "ok": true,
+     "got": {
+      "label": "这台设备自己的读数（服务器没给句子）",
+      "origin": "device"
+     }
+    },
+    {
+     "claim": "the server's own words are passed through verbatim",
+     "ok": true,
+     "got": {
+      "reason": "GET /places -> HTTP 502",
+      "expected": ""
+     }
+    },
+    {
+     "claim": "a device-composed reading is still visible (this is not a mute-the-number fix)",
+     "ok": true,
+     "got": {
+      "reason": "GET /places -> HTTP 502"
+     }
+    }
+   ]
+  },
+  "B2": {
+   "want": "server",
+   "read": {
+    "status": "BLOCKED:PLACES_HTTP_409",
+    "label": "服务器给出的原因",
+    "origin": "server",
+    "reason": "places 目录在该城市没有物化任何地点，无法组成候选。",
+    "legs": [
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN",
+     "GET /plans(baseline)",
+     "POST /api/v1/journeys/7e8be686-ee3a-4509-a297-3bfe2c10a579/agent/commands",
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN"
+    ]
+   },
+   "rows": [
+    {
+     "claim": "label and origin agree",
+     "ok": true,
+     "got": {
+      "label": "服务器给出的原因",
+      "origin": "server"
+     }
+    },
+    {
+     "claim": "the server's own words are passed through verbatim",
+     "ok": true,
+     "got": {
+      "reason": "places 目录在该城市没有物化任何地点，无法组成候选。",
+      "expected": "places 目录在该城市没有物化任何地点，无法组成候选。"
+     }
+    },
+    {
+     "claim": "a device-composed reading is still visible (this is not a mute-the-number fix)",
+     "ok": true,
+     "got": {
+      "reason": "places 目录在该城市没有物化任何地点，无法组成候选。"
+     }
+    }
+   ]
+  },
+  "C1": {
+   "want": "device",
+   "read": {
+    "status": "BLOCKED:VALIDATION_ERROR",
+    "label": "这台设备自己的读数（服务器没给句子）",
+    "origin": "device",
+    "reason": "POST /plans/generate -> HTTP 422",
+    "legs": [
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN",
+     "GET /plans(baseline)",
+     "POST /api/v1/journeys/7e8be686-ee3a-4509-a297-3bfe2c10a579/agent/commands",
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN",
+     "POST /api/v1/journeys/7e8be686-ee3a-4509-a297-3bfe2c10a579/plans/generate"
+    ]
+   },
+   "rows": [
+    {
+     "claim": "label and origin agree",
+     "ok": true,
+     "got": {
+      "label": "这台设备自己的读数（服务器没给句子）",
+      "origin": "device"
+     }
+    },
+    {
+     "claim": "the server's own words are passed through verbatim",
+     "ok": true,
+     "got": {
+      "reason": "POST /plans/generate -> HTTP 422",
+      "expected": ""
+     }
+    },
+    {
+     "claim": "a device-composed reading is still visible (this is not a mute-the-number fix)",
+     "ok": true,
+     "got": {
+      "reason": "POST /plans/generate -> HTTP 422"
+     }
+    }
+   ]
+  },
+  "C2": {
+   "want": "server",
+   "read": {
+    "status": "BLOCKED:BUDGET_INFEASIBLE",
+    "label": "服务器给出的原因",
+    "origin": "server",
+    "reason": "预算与停留上限无法同时满足，未生成方案。",
+    "legs": [
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN",
+     "GET /plans(baseline)",
+     "POST /api/v1/journeys/7e8be686-ee3a-4509-a297-3bfe2c10a579/agent/commands",
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN",
+     "POST /api/v1/journeys/7e8be686-ee3a-4509-a297-3bfe2c10a579/plans/generate"
+    ]
+   },
+   "rows": [
+    {
+     "claim": "label and origin agree",
+     "ok": true,
+     "got": {
+      "label": "服务器给出的原因",
+      "origin": "server"
+     }
+    },
+    {
+     "claim": "the server's own words are passed through verbatim",
+     "ok": true,
+     "got": {
+      "reason": "预算与停留上限无法同时满足，未生成方案。",
+      "expected": "预算与停留上限无法同时满足，未生成方案。"
+     }
+    },
+    {
+     "claim": "a device-composed reading is still visible (this is not a mute-the-number fix)",
+     "ok": true,
+     "got": {
+      "reason": "预算与停留上限无法同时满足，未生成方案。"
+     }
+    }
+   ]
+  },
+  "D": {
+   "want": "device",
+   "read": {
+    "status": "BLOCKED:CATALOG_EMPTY",
+    "label": "这台设备自己的读数（服务器没给句子）",
+    "origin": "device",
+    "reason": "GET /places?city_code=CN-TIANJIN -> 0 places",
+    "legs": [
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN",
+     "GET /plans(baseline)",
+     "POST /api/v1/journeys/7e8be686-ee3a-4509-a297-3bfe2c10a579/agent/commands",
+     "GET /plans(baseline)",
+     "GET /api/v1/places?city_code=CN-TIANJIN"
+    ]
+   },
+   "rows": [
+    {
+     "claim": "label and origin agree",
+     "ok": true,
+     "got": {
+      "label": "这台设备自己的读数（服务器没给句子）",
+      "origin": "device"
+     }
+    },
+    {
+     "claim": "the server's own words are passed through verbatim",
+     "ok": true,
+     "got": {
+      "reason": "GET /places?city_code=CN-TIANJIN -> 0 places",
+      "expected": ""
+     }
+    },
+    {
+     "claim": "a device-composed reading is still visible (this is not a mute-the-number fix)",
+     "ok": true,
+     "got": {
+      "reason": "GET /places?city_code=CN-TIANJIN -> 0 places"
+     }
+    }
+   ]
+  }
+ },
+ "server_label_zh": "服务器给出的原因"
+}
