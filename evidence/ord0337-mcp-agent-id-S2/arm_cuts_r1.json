@@ -1,0 +1,110 @@
+{
+ "schema": "CNX_ORD0337_ARM_CUTS_V1",
+ "order": "ORD-0337",
+ "lane": "S2-hermes-port",
+ "candidate": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+ "red_sets": {
+  "M1_env_ignored": [
+   "test_isolated_validation_lane_can_name_its_principal"
+  ],
+  "M2_default_dropped": [
+   "test_native_mcp_principal_is_default"
+  ],
+  "boundary_trust_hint_mutant": [
+   "test_agent_audit_actor_is_server_principal_not_request_agent_id"
+  ]
+ },
+ "mutants": {
+  "M1_env_ignored": "the env read replaced by the literal default - reddens only the env-named witness",
+  "M2_default_dropped": "the default argument dropped from os.getenv - reddens only the default witness",
+  "boundary_trust_hint_mutant": "in a throwaway export only, the two overwrite lines in backend/app/main.py are replaced by passing the raw payload, so the gateway trusts the hint. It reddens the audit-actor witness, which is what proves that witness can actually see the boundary. Nothing was committed or pushed in backend/.",
+  "nothing_in_backend_committed": true
+ },
+ "readings": {
+  "line_agent_mcp": {
+   "exit": 0,
+   "passed": 14,
+   "failed": 0,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [],
+   "live_db_named_in_output": false,
+   "tail": "14 passed in 1.61s",
+   "files": [
+    "conftest.py",
+    "test_client_error_detail.py",
+    "test_mcp_boundary.py",
+    "test_replan_proposal_view.py"
+   ]
+  },
+  "candidate_agent_mcp": {
+   "exit": 0,
+   "passed": 16,
+   "failed": 0,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [],
+   "live_db_named_in_output": false,
+   "tail": "16 passed in 1.39s",
+   "files": [
+    "conftest.py",
+    "test_client_error_detail.py",
+    "test_hermes_validation_principal.py",
+    "test_mcp_boundary.py",
+    "test_replan_proposal_view.py"
+   ]
+  },
+  "M1_env_ignored": {
+   "exit": 1,
+   "passed": 15,
+   "failed": 1,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [
+    "test_isolated_validation_lane_can_name_its_principal"
+   ],
+   "live_db_named_in_output": false,
+   "tail": "1 failed, 15 passed in 1.45s"
+  },
+  "M2_default_dropped": {
+   "exit": 1,
+   "passed": 15,
+   "failed": 1,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [
+    "test_native_mcp_principal_is_default"
+   ],
+   "live_db_named_in_output": false,
+   "tail": "1 failed, 15 passed in 1.41s"
+  },
+  "boundary_on_candidate": {
+   "exit": 0,
+   "passed": 2,
+   "failed": 0,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [],
+   "live_db_named_in_output": false,
+   "tail": "2 passed, 2 warnings in 1.61s"
+  },
+  "boundary_trust_hint_mutant": {
+   "exit": 1,
+   "passed": 1,
+   "failed": 1,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [
+    "test_agent_audit_actor_is_server_principal_not_request_agent_id"
+   ],
+   "live_db_named_in_output": false,
+   "tail": "1 failed, 1 passed, 2 warnings in 1.45s"
+  }
+ },
+ "requirement_two_directions": {
+  "boundary_witness_green_on_the_candidate": true,
+  "trust_the_hint_mutant_reddens_it": true,
+  "the_other_boundary_test_survives_the_mutant": true,
+  "each_identity_witness_owns_its_mutant": true
+ }
+}
