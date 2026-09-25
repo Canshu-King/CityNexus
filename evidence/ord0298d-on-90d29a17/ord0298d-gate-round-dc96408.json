@@ -1,0 +1,995 @@
+{
+ "generatedBy": "e345b9d6",
+ "collection": {
+  "commands": {
+   "playwright_list": {
+    "cwd": "D:/moodle/_qoder_d_lane_20260923/frontend",
+    "cmd": "npx playwright test --list e2e/qoder-continuation-owner.spec.ts e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts e2e/qoder-continuation-resume-carries-identity.spec.ts e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+    "rc": 0
+   },
+   "backend_collect_only": {
+    "cwd": "D:/moodle/_qoder_d_lane_20260923/backend",
+    "cmd": "python -m pytest --collect-only -q",
+    "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+    "rc": 0
+   }
+  },
+  "playwright_total_line": "Total: 15 tests in 5 files",
+  "playwright_nodes": [
+   "ord0253-a-burst-consumes-no-key",
+   "ord0253-both-legs-of-one-intent-share-one-key",
+   "ord0253-each-intent-mints-a-fresh-key",
+   "ord0269-cell1-reveals-and-names-its-boundary",
+   "ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+   "ord0269-r4-a-brand-new-journey-shows-nothing",
+   "ord0269-r6-page-exclusion-yields-no-conclusion",
+   "ord0273-action-retry-is-a-real-executable-step",
+   "ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
+   "ord0273-text-the-sentence-is-the-key-and-no-shape-leaks",
+   "ord0278-negative-no-marker-sends-nothing",
+   "ord0278-negative-off-page-sends-nothing",
+   "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are",
+   "ord0278-positive-the-resume-request-carries-both-keys"
+  ],
+  "playwright_node_count": 14,
+  "backend_collected_line": "1244 tests collected in 1.64s",
+  "backend_collected": 1244,
+  "base_proof": {
+   "landed_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "candidate_is_descendant": true,
+   "commits_ahead": "10",
+   "stamped_tree_is_descendant": true,
+   "stamped_tree": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "stamped_tree_commits_ahead": "10",
+   "base_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "frontend_files_differring_from_base": [
+    "frontend/e2e/qoder-continuation-owner.spec.ts",
+    "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+    "frontend/e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+    "frontend/src/api/journeyContinuation.ts",
+    "frontend/src/app/V8Experience.tsx",
+    "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "frontend/src/i18n/LocaleContext.tsx"
+   ],
+   "reading": "base_tip is the branch this work started from, not a re-parent target; the frontend files listed are what this segment changed on top of it. The generational claim that matters is `candidate_is_descendant` against the landed tip."
+  }
+ },
+ "landing_groups": {
+  "command": "(cwd D:/moodle/_qoder_d_lane_20260923) git diff --name-status 90d29a172e186aab6e6cb138ab4583ccf93bfa68 HEAD",
+  "landed_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+  "counts": {
+   "total": 17,
+   "landing": 7,
+   "lane_scaffolding": 10
+  },
+  "mainline_needs": [
+   {
+    "path": "frontend/e2e/qoder-continuation-owner.spec.ts",
+    "status": "M",
+    "blob_at_head": "bff3095bfad69ab929302b60db14f612e7c9191b",
+    "added": "37",
+    "removed": "8",
+    "group": "landing"
+   },
+   {
+    "path": "frontend/e2e/qoder-continuation-resume-carries-identity.spec.ts",
+    "status": "A",
+    "blob_at_head": "d05399c868909e1f51ba515d8ba3062e9c844512",
+    "added": "344",
+    "removed": "0",
+    "group": "landing"
+   },
+   {
+    "path": "frontend/e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+    "status": "A",
+    "blob_at_head": "af411ff5842e764023ca5de78c908f4574cad2c6",
+    "added": "275",
+    "removed": "0",
+    "group": "landing"
+   },
+   {
+    "path": "frontend/src/api/journeyContinuation.ts",
+    "status": "M",
+    "blob_at_head": "358141e6250aeae361aeae4d9df06f80e1417cf0",
+    "added": "67",
+    "removed": "0",
+    "group": "landing"
+   },
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "status": "M",
+    "blob_at_head": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+    "added": "77",
+    "removed": "10",
+    "group": "landing"
+   },
+   {
+    "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+    "status": "M",
+    "blob_at_head": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+    "added": "25",
+    "removed": "2",
+    "group": "landing"
+   },
+   {
+    "path": "frontend/src/i18n/LocaleContext.tsx",
+    "status": "M",
+    "blob_at_head": "ece74118543434e855b874420dcc075df31f4f05",
+    "added": "34",
+    "removed": "3",
+    "group": "landing"
+   }
+  ],
+  "lane_scaffolding_only": [
+   {
+    "path": "review/ledger_block_e345b9d6_0298.md",
+    "status": "A",
+    "blob_at_head": "9546a95be514365a22ab2432781d347c2a6913c2",
+    "added": "27",
+    "removed": "0",
+    "group": "lane_scaffolding"
+   },
+   {
+    "path": "review/ledger_block_e345b9d6_0298b.md",
+    "status": "A",
+    "blob_at_head": "64b9522eb5d5c0eeec9889b2cca978a805192b9a",
+    "added": "19",
+    "removed": "0",
+    "group": "lane_scaffolding"
+   },
+   {
+    "path": "review/ledger_block_e345b9d6_0298c.md",
+    "status": "A",
+    "blob_at_head": "1545eb938f7bc23568a391831e1887d66c7ad1e5",
+    "added": "26",
+    "removed": "0",
+    "group": "lane_scaffolding"
+   },
+   {
+    "path": "review/ledger_insert_delivery_e345b9d6.py",
+    "status": "M",
+    "blob_at_head": "552ddb50d212bd30e16ee412d8e51438435acf03",
+    "added": "8",
+    "removed": "1",
+    "group": "lane_scaffolding"
+   },
+   {
+    "path": "review/make_post_0298.py",
+    "status": "A",
+    "blob_at_head": "c1cc799761a28ea6cb8c41687166924cb655d017",
+    "added": "264",
+    "removed": "0",
+    "group": "lane_scaffolding"
+   },
+   {
+    "path": "review/ord0269_0273_gate_round.py",
+    "status": "M",
+    "blob_at_head": "3e73f15cd9f70adfae71d5d06d8f83212786d2ee",
+    "added": "95",
+    "removed": "26",
+    "group": "lane_scaffolding"
+   },
+   {
+    "path": "review/ord0278_0253_kill_arms.py",
+    "status": "A",
+    "blob_at_head": "4e816c72bf47ee66e441b5a8faf07261d733dc13",
+    "added": "596",
+    "removed": "0",
+    "group": "lane_scaffolding"
+   },
+   {
+    "path": "review/ord0298_gate_batch.py",
+    "status": "A",
+    "blob_at_head": "f7215a0b30ad32fa9e2749cdcafd136876bf0eb8",
+    "added": "138",
+    "removed": "0",
+    "group": "lane_scaffolding"
+   },
+   {
+    "path": "review/rewire_0269_cell1_for_0278.py",
+    "status": "A",
+    "blob_at_head": "b5314ba242eb3cdb0d142914256e24346035668c",
+    "added": "110",
+    "removed": "0",
+    "group": "lane_scaffolding"
+   },
+   {
+    "path": "review/wire_0278_i18n.py",
+    "status": "A",
+    "blob_at_head": "a9f0dc2058260efbf21659ff5e483a21c2caf8b0",
+    "added": "111",
+    "removed": "0",
+    "group": "lane_scaffolding"
+   }
+  ],
+  "rule": "group is decided by path: `frontend/**` is what the line needs, `review/**` is this lane's instrument and bus text. Independence was measured, not assumed: a grep for an import specifier reaching into review/ over frontend/src and frontend/e2e returns 0 hits, while the literal string `review/` does occur in comments and node messages -- a path in prose is not a dependency, so taking the landing group alone leaves nothing dangling."
+ },
+ "orders": [
+  "ORD-0269 cells 1/3 + R-4 negative + R-6 pagination",
+  "ORD-0273 TEXT + ACTION",
+  "ORD-0278 resume carries both keys",
+  "ORD-0253 client half: both legs carry the key"
+ ],
+ "authoritative_tip_at_delivery": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "candidate_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "generation": {
+  "sha_the_triples_carry": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "tooling_commit_the_scripts_ran_from": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "same_commit": true,
+  "frontend_files_moved_between_them": [],
+  "reading": "triples are stamped with the tree under test.  When that is not the commit the scripts sit on, the only legal difference is review/** -- measured here as an empty frontend diff, and the run aborts otherwise, so a stamp can never be inherited by intent."
+ },
+ "candidate_blob_sha1_note": "sha1 of the tree bytes as committed; the authoritative line is untouched (single-writer)",
+ "clean_worktree": {
+  "porcelain_lines_frontend_review": 0
+ },
+ "R_SCHEMA_01_class": {
+  "rule": "SCHEMA_SOURCE_METHOD_CORRECTED",
+  "row_source": "product API only -- e2e/_qoderRealSeed.setup.ts (travelers -> journeys -> stay-options/generate -> select) and ORD-0269 R-4's second journey via POST /api/v1/travelers + POST /api/v1/journeys",
+  "not_used": [
+   "DDL replay",
+   "direct ensure_schema() call",
+   "hand-written INSERTs"
+  ],
+  "conclusions_depend_on": "rendered text, element visibility, HTTP status and header/body shape on the wire -- none depend on table structure, column existence, indexes, constraints, migration state or schema version",
+  "therefore": "no schema re-run is required for these two gates"
+ },
+ "publisher_refusal_writing_rule": "evidence names the rule only (rule_hit: <NAME>); the guard's raw sentence is not copied into any artifact published for others to read",
+ "runs": [
+  {
+   "log": "run-run317077.log",
+   "run_ids": [
+    "317077"
+   ],
+   "ports": [
+    "4940/8940"
+   ],
+   "dbs": [
+    "_run317077.db"
+   ],
+   "running_claimed": 5,
+   "tally": {
+    "passed": 5
+   },
+   "wall": "27.4s",
+   "node_lines": [
+    {
+     "status": "ok",
+     "index": 2,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-cell1-reveals-and-names-its-boundary",
+     "duration": "1.8s"
+    },
+    {
+     "status": "ok",
+     "index": 3,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+     "duration": "1.6s"
+    },
+    {
+     "status": "ok",
+     "index": 4,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-r6-page-exclusion-yields-no-conclusion",
+     "duration": "1.3s"
+    },
+    {
+     "status": "ok",
+     "index": 5,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-r4-a-brand-new-journey-shows-nothing",
+     "duration": "1.4s"
+    }
+   ]
+  },
+  {
+   "log": "run-run317107.log",
+   "run_ids": [
+    "317107"
+   ],
+   "ports": [
+    "4941/8941"
+   ],
+   "dbs": [
+    "_run317107.db"
+   ],
+   "running_claimed": 4,
+   "tally": {
+    "passed": 4
+   },
+   "wall": "32.9s",
+   "node_lines": [
+    {
+     "status": "ok",
+     "index": 2,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text-the-sentence-is-the-key-and-no-shape-leaks",
+     "duration": "1.6s"
+    },
+    {
+     "status": "ok",
+     "index": 3,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
+     "duration": "1.6s"
+    },
+    {
+     "status": "ok",
+     "index": 4,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-action-retry-is-a-real-executable-step",
+     "duration": "15.7s"
+    }
+   ]
+  },
+  {
+   "log": "run-run317144.log",
+   "run_ids": [
+    "317144"
+   ],
+   "ports": [
+    "4942/8942"
+   ],
+   "dbs": [
+    "_run317144.db"
+   ],
+   "running_claimed": 5,
+   "tally": {
+    "passed": 5
+   },
+   "wall": "16.9s",
+   "node_lines": [
+    {
+     "status": "ok",
+     "index": 2,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-positive-the-resume-request-carries-both-keys",
+     "duration": "1.8s"
+    },
+    {
+     "status": "ok",
+     "index": 3,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-negative-no-marker-sends-nothing",
+     "duration": "1.2s"
+    },
+    {
+     "status": "ok",
+     "index": 4,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-negative-off-page-sends-nothing",
+     "duration": "1.4s"
+    },
+    {
+     "status": "ok",
+     "index": 5,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are",
+     "duration": "2.2s"
+    }
+   ]
+  },
+  {
+   "log": "run-run317164.log",
+   "run_ids": [
+    "317164"
+   ],
+   "ports": [
+    "4943/8943"
+   ],
+   "dbs": [
+    "_run317164.db"
+   ],
+   "running_claimed": 4,
+   "tally": {
+    "passed": 4
+   },
+   "wall": "13.1s",
+   "node_lines": [
+    {
+     "status": "ok",
+     "index": 2,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-both-legs-of-one-intent-share-one-key",
+     "duration": "1.0s"
+    },
+    {
+     "status": "ok",
+     "index": 3,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-each-intent-mints-a-fresh-key",
+     "duration": "1.2s"
+    },
+    {
+     "status": "ok",
+     "index": 4,
+     "project": "chromium",
+     "nodeid": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-a-burst-consumes-no-key",
+     "duration": "911ms"
+    }
+   ]
+  }
+ ],
+ "triples": [
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-cell1-reveals-and-names-its-boundary",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317077.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-owner.spec.ts 4940, run_id=317077, fresh _run317077.db, ports 4940; verdict taken from the `ok 2` line in 1.8s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.8s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-cell3-feed-failure-and-page-exclusion-are-named",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317077.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-owner.spec.ts 4940, run_id=317077, fresh _run317077.db, ports 4940; verdict taken from the `ok 3` line in 1.6s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.6s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-r6-page-exclusion-yields-no-conclusion",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317077.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-owner.spec.ts 4940, run_id=317077, fresh _run317077.db, ports 4940; verdict taken from the `ok 4` line in 1.3s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.3s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-continuation-owner.spec.ts :: ord0269-r4-a-brand-new-journey-shows-nothing",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317077.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-continuation-owner.spec.ts 4940, run_id=317077, fresh _run317077.db, ports 4940; verdict taken from the `ok 5` line in 1.4s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.4s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text-the-sentence-is-the-key-and-no-shape-leaks",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317107.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts 4941, run_id=317107, fresh _run317107.db, ports 4941; verdict taken from the `ok 2` line in 1.6s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.6s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317107.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts 4941, run_id=317107, fresh _run317107.db, ports 4941; verdict taken from the `ok 3` line in 1.6s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.6s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts :: ord0273-action-retry-is-a-real-executable-step",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317107.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844, command=python review/run_spec.py e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts 4941, run_id=317107, fresh _run317107.db, ports 4941; verdict taken from the `ok 4` line in 15.7s",
+   "status_from_log": "ok",
+   "duration_from_log": "15.7s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-positive-the-resume-request-carries-both-keys",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317144.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844; every 0278 assertion is read off the request Playwright observed, not off the source, command=python review/run_spec.py e2e/qoder-continuation-resume-carries-identity.spec.ts 4942, run_id=317144, fresh _run317144.db, ports 4942; verdict taken from the `ok 2` line in 1.8s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.8s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-negative-no-marker-sends-nothing",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317144.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844; every 0278 assertion is read off the request Playwright observed, not off the source, command=python review/run_spec.py e2e/qoder-continuation-resume-carries-identity.spec.ts 4942, run_id=317144, fresh _run317144.db, ports 4942; verdict taken from the `ok 3` line in 1.2s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.2s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-negative-off-page-sends-nothing",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317144.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844; every 0278 assertion is read off the request Playwright observed, not off the source, command=python review/run_spec.py e2e/qoder-continuation-resume-carries-identity.spec.ts 4942, run_id=317144, fresh _run317144.db, ports 4942; verdict taken from the `ok 4` line in 1.4s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.4s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-continuation-resume-carries-identity.spec.ts :: ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317144.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844; every 0278 assertion is read off the request Playwright observed, not off the source, command=python review/run_spec.py e2e/qoder-continuation-resume-carries-identity.spec.ts 4942, run_id=317144, fresh _run317144.db, ports 4942; verdict taken from the `ok 5` line in 2.2s",
+   "status_from_log": "ok",
+   "duration_from_log": "2.2s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-both-legs-of-one-intent-share-one-key",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317164.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844; both legs' headers come from captured requests, command=python review/run_spec.py e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts 4943, run_id=317164, fresh _run317164.db, ports 4943; verdict taken from the `ok 2` line in 1.0s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.0s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-each-intent-mints-a-fresh-key",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317164.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844; both legs' headers come from captured requests, command=python review/run_spec.py e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts 4943, run_id=317164, fresh _run317164.db, ports 4943; verdict taken from the `ok 3` line in 1.2s",
+   "status_from_log": "ok",
+   "duration_from_log": "1.2s"
+  },
+  {
+   "exact_sha": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "nodeid": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts :: ord0253-a-burst-consumes-no-key",
+   "nodeid_root": "D:/moodle/_qoder_d_lane_20260923/frontend",
+   "log": "run-run317164.log",
+   "run_shape": "cwd=D:/moodle/_qoder_d_lane_20260923/frontend (the nodeid root above), whole owner spec on the committed tip, 1 worker, mobile 390x844; both legs' headers come from captured requests, command=python review/run_spec.py e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts 4943, run_id=317164, fresh _run317164.db, ports 4943; verdict taken from the `ok 4` line in 911ms",
+   "status_from_log": "ok",
+   "duration_from_log": "911ms"
+  }
+ ],
+ "measured_readings": {
+  "ord0253-both-legs-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0253-both-legs",
+   "leg1": {
+    "posts": 1,
+    "keyShape": "v4-uuid",
+    "bodyKeys": [
+     "command"
+    ]
+   },
+   "leg2": {
+    "posts": 1,
+    "keyShape": "v4-uuid",
+    "bodyKeys": [
+     "candidate_count"
+    ]
+   },
+   "sameKeyAcrossLegs": true,
+   "keyLength": 36,
+   "serverContract": "validate_idempotency_key: 8..128 after strip (commerce/validators.py:8..128)",
+   "claim": "transport shape only -- replay/409 semantics are the server's half"
+  },
+  "ord0253-burst-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0253-burst",
+   "leg1Posts": 1,
+   "leg2Posts": 1,
+   "keysMinted": 1,
+   "disabledBefore": false,
+   "disabledDuring": false,
+   "reading": "one physical burst = one intent = one key = one pair of legs"
+  },
+  "ord0253-fresh-per-intent-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0253-each-intent",
+   "presses": 2,
+   "distinctKeys": 2,
+   "perPressLegsAgree": [
+    true,
+    true
+   ],
+   "note": "distinct across intents, identical within one intent -- no storage, no cooldown"
+  },
+  "ord0253-key-transport-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0253",
+   "posts": [
+    {
+     "index": 1,
+     "keyShape": "v4-uuid"
+    },
+    {
+     "index": 2,
+     "keyShape": "v4-uuid"
+    }
+   ],
+   "keysDistinct": true,
+   "transport": "Idempotency-Key header (replan precedent shape)",
+   "serverReading": "the handler ignores the header today -- semantics (replay/409) are F's half, out of scope here"
+  },
+  "ord0261-closure-deployed-reading.json": {
+   "generatedBy": "e345b9d6",
+   "order": "ORD-0261/0264 closure cell 4 (deployed generation)",
+   "releaseBase": "http://127.0.0.1:4781",
+   "servedBundle": "index-D76m_cky.js",
+   "stickyBarTop": 628,
+   "reservePadding": "212px",
+   "summaryProbe": {
+    "box": [
+     348,
+     44
+    ],
+    "centre": [
+     195,
+     405
+    ],
+    "hitTag": "SUMMARY",
+    "hitText": "高级设置",
+    "hitsItself": true
+   },
+   "locality": {
+    "present": true,
+    "insideStep1Card": true,
+    "adjacent": true
+   },
+   "advancedOpened": true,
+   "blockedWrites": [],
+   "read_only_guarantee": "only GET + local-state clicks; no journey creation, no demo/reset"
+  },
+  "ord0261-tappability-reading.json": {
+   "generatedBy": "e345b9d6",
+   "order": "ORD-0261",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "wheel": {
+    "before": 0,
+    "after": 240,
+    "scrolled": 240
+   },
+   "summaryProbe": {
+    "box": [
+     348,
+     44
+    ],
+    "centre": [
+     195,
+     795
+    ],
+    "hitTag": "SUMMARY",
+    "hitText": "高级设置",
+    "hitsItself": true,
+    "inViewport": true,
+    "scrollY": 240
+   },
+   "controlProbe": {
+    "box": [
+     91,
+     44
+    ],
+    "centre": [
+     67,
+     499
+    ],
+    "hitTag": "SUMMARY",
+    "hitText": "看支持的目的地",
+    "hitsItself": true,
+    "inViewport": true,
+    "scrollY": 240
+   }
+  },
+  "ord0264-scroll-reachable-reading.json": {
+   "generatedBy": "e345b9d6",
+   "order": "ORD-0264",
+   "viewport": {
+    "width": 390,
+    "height": 844
+   },
+   "locality": {
+    "openerPresent": true,
+    "insideStep1Card": true,
+    "adjacentToItsDetails": true
+   },
+   "wheel": {
+    "before": 0,
+    "after": 480,
+    "scrolled": 480
+   },
+   "probe": {
+    "box": [
+     348,
+     44
+    ],
+    "centre": [
+     195,
+     623
+    ],
+    "hitTag": "BUTTON",
+    "hitText": "高级设置",
+    "hitsItself": true,
+    "inViewport": true,
+    "scrollY": 480
+   },
+   "draftWord": "外滩"
+  },
+  "ord0266-busy-window-reading.json": {
+   "generatedBy": "e345b9d6",
+   "order": "ORD-0266 (read-only reproduction, no fix shipped)",
+   "journeyId": "d93c6098-dc36-462e-bd1f-1a0d5d4cb52e",
+   "doorA_sameTickPair": {
+    "attempted": true,
+    "buttonAfterSettle": {
+     "label": "开始规划",
+     "disabled": false,
+     "phase": null
+    }
+   },
+   "doorB_pressDuringRun": {
+    "samples": [
+     {
+      "t": 0,
+      "label": "规划中…",
+      "disabled": true,
+      "phase": "baseline"
+     },
+     {
+      "t": 250,
+      "label": "规划中…",
+      "disabled": true,
+      "phase": "baseline"
+     },
+     {
+      "t": 500,
+      "label": "规划中…",
+      "disabled": true,
+      "phase": "baseline"
+     },
+     {
+      "t": 750,
+      "label": "规划中…",
+      "disabled": true,
+      "phase": "baseline"
+     },
+     {
+      "t": 1000,
+      "label": "规划中…",
+      "disabled": true,
+      "phase": "baseline"
+     },
+     {
+      "t": 1250,
+      "label": "规划中…",
+      "disabled": true,
+      "phase": "baseline"
+     },
+     {
+      "t": 1500,
+      "label": "规划中…",
+      "disabled": true,
+      "phase": "baseline"
+     },
+     {
+      "t": 1750,
+      "label": "规划中…",
+      "disabled": true,
+      "phase": "baseline"
+     }
+    ],
+    "lyingSamples": 0,
+    "afterRun": {
+     "label": "开始规划",
+     "disabled": false,
+     "phase": null
+    }
+   },
+   "verdict": "UNREACHABLE_FROM_UI: with the 0246 synchronous guard, no sampled moment showed the button re-enabled while a leg was in flight",
+   "residual": "the single boolean can still only describe one owner; if a second submit path is ever added (timeout retry, external trigger), the window reopens -- the candidate fix is a counter, but per the order this file only measures"
+  },
+  "ord0266-reference-count-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0266",
+   "journeyId": "e8014059-9e2e-4085-a10a-1a28ae550579",
+   "samples": [
+    {
+     "t": 0,
+     "label": "规划中…",
+     "disabled": true
+    },
+    {
+     "t": 250,
+     "label": "规划中…",
+     "disabled": true
+    },
+    {
+     "t": 500,
+     "label": "规划中…",
+     "disabled": true
+    },
+    {
+     "t": 750,
+     "label": "规划中…",
+     "disabled": true
+    },
+    {
+     "t": 1000,
+     "label": "规划中…",
+     "disabled": true
+    },
+    {
+     "t": 1250,
+     "label": "规划中…",
+     "disabled": true
+    },
+    {
+     "t": 1500,
+     "label": "规划中…",
+     "disabled": true
+    },
+    {
+     "t": 1750,
+     "label": "规划中…",
+     "disabled": true
+    }
+   ],
+   "lyingSamples": 0,
+   "afterLastLeg": {
+    "label": "开始规划",
+    "disabled": false
+   },
+   "rule": "acquire/release 计数：任一腿在飞 busy 必为 true；最后一腿离开才清"
+  },
+  "ord0269-cell1-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0269-cell1",
+   "journeyId": "e7f43cd0-a5c2-4d9f-8d64-a26147d388b6",
+   "marker": {
+    "missionId": "11111111-2222-4333-8444-555555555555",
+    "markedAt": "2026-09-25T06:18:19.596Z"
+   },
+   "feedRequests": [
+    "http://127.0.0.1:4940/api/v1/journeys/e7f43cd0-a5c2-4d9f-8d64-a26147d388b6/agent-feed?limit=200",
+    "http://127.0.0.1:4940/api/v1/journeys/e7f43cd0-a5c2-4d9f-8d64-a26147d388b6/agent-feed?limit=200",
+    "http://127.0.0.1:4940/api/v1/journeys/e7f43cd0-a5c2-4d9f-8d64-a26147d388b6/agent-feed?limit=200",
+    "http://127.0.0.1:4940/api/v1/journeys/e7f43cd0-a5c2-4d9f-8d64-a26147d388b6/agent-feed?limit=200"
+   ],
+   "heading": "上次有一次规划在这台设备上没跑完：前半段已完成，但还没有产出方案。",
+   "leg2StartedDuringFlight": 1,
+   "markerBytesDuringFlight": 90
+  },
+  "ord0269-cell3-feed-failure.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0269-cell3",
+   "journeyId": "e7f43cd0-a5c2-4d9f-8d64-a26147d388b6",
+   "line": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+   "malformedTwentyHundredLine": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+   "note": "two emitters, two reads: 3a the read fails (500), 3b it answers 200 with no events array"
+  },
+  "ord0269-r4-negative.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0269-r4",
+   "journeyWithMarker": "e7f43cd0-a5c2-4d9f-8d64-a26147d388b6",
+   "markerBytesOnA": 90,
+   "unplannedJourney": "e6e991c1-92c1-4878-a0c4-d1e0a31840bb",
+   "bScopedReadsObserved": 8,
+   "pendingCardsOnB": 0,
+   "unconfirmableLinesOnB": 0,
+   "note": "strong form: A carries a real marker, B is a separate real journey the app actually read, B shows nothing"
+  },
+  "ord0269-r6-exclusion-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0269-r6",
+   "journeyId": "e7f43cd0-a5c2-4d9f-8d64-a26147d388b6",
+   "paintedLine": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+   "rule": "marker's mission off-page => pending card absent; the unconfirmable line is the only named state this shape may paint"
+  },
+  "ord0273-action-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0273-action",
+   "retryLabel": "重试",
+   "afterRetrySentence": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+   "note": "retry re-enters the same deadline-bounded read; the named failure state returns, no second clock"
+  },
+  "ord0273-text-en-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0273-text-en",
+   "locale": "en",
+   "sentence": "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
+   "cjkInEnglishArm": false,
+   "cjkControlOnChineseConstant": true,
+   "detail": {
+    "errorName": "OriginResponseUnusableError",
+    "errorMessage": "origin answered 200 with an unusable body (text/html; charset=utf-8)"
+   },
+   "leakShapesChecked": [
+    "origin answered",
+    "unusable body",
+    "text/html",
+    "text/plain",
+    "Error",
+    "TypeError"
+   ]
+  },
+  "ord0273-text-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0273-text",
+   "sentence": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+   "detail": {
+    "errorName": "OriginResponseUnusableError",
+    "errorMessage": "origin answered 200 with an unusable body (text/html; charset=utf-8)"
+   },
+   "leakShapesChecked": [
+    "origin answered",
+    "unusable body",
+    "text/html",
+    "text/plain",
+    "Error",
+    "TypeError"
+   ]
+  },
+  "ord0278-negative-no-marker-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0278-negative-no-marker",
+   "reentries": 3,
+   "resumeGatesSeen": 0,
+   "secondLegPosts": 0
+  },
+  "ord0278-negative-off-page-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0278-negative-off-page",
+   "journeyId": "0a5aa9e2-c57f-4dfe-9da9-195caee1d2d9",
+   "paintedLine": "上次规划有记录，但现在读不到它的进度，无法确认进行到哪一步。",
+   "resumeGatesSeen": 0,
+   "secondLegPosts": 0,
+   "markerStillPersisted": 90
+  },
+  "ord0278-negative-refused-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0278-negative-refused",
+   "journeyId": "0a5aa9e2-c57f-4dfe-9da9-195caee1d2d9",
+   "refusedSentence": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。服务器给出的原因：another request is still writing this journey",
+   "serverReasonShown": "服务器给出的原因：another request is still writing this journey",
+   "noSentenceOutcome": "服务器拒绝了这一次尝试。没有产生新东西，上次的记录还在，你可以再试一次。服务器没有给出原因文字（这条是本机说的，不是服务器说的）。",
+   "secondLegPosts": 2,
+   "markerAfterEachRefusal": "present"
+  },
+  "ord0278-positive-reading.json": {
+   "generatedBy": "e345b9d6",
+   "node": "ord0278-positive",
+   "journeyId": "0a5aa9e2-c57f-4dfe-9da9-195caee1d2d9",
+   "bodyKeys": [
+    "candidate_count",
+    "mission_id"
+   ],
+   "bodyMissionId": "11111111-2222-4333-8444-555555555555",
+   "headerKeyLength": 36,
+   "headerKeyIsNotTheMissionId": true,
+   "differsFromInterruptedRunKey": true,
+   "paintedOutcome": "已接着上次把第二步发出去，但这一轮没有产出新方案。",
+   "markerClearedAfterAcceptedOutcome": true,
+   "readFrom": "the request object Playwright actually observed -- not the source file"
+  }
+ },
+ "leak_scan_selftest": {
+  "main_sentence": [],
+  "english_main_sentence": [],
+  "technical_detail_control": [
+   "origin answered",
+   "unusable body",
+   "text/html"
+  ]
+ },
+ "dictionary_equality": {
+  "per_locale": {
+   "en": {
+    "dictionary_value": "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
+    "painted": "Couldn't read the sealed demo: the server answered just now, but what it answered isn't something we can use. Nothing you filled in caused this.",
+    "equal": true,
+    "contains_cjk": false
+   },
+   "zh-CN": {
+    "dictionary_value": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+    "painted": "没读到封存演示的信息：服务器刚才答了，但答的内容我们用不了。这不是你填错了什么。",
+    "equal": true,
+    "contains_cjk": true
+   }
+  }
+ },
+ "caught_this_round": "commit 9d28c2b carried the Chinese sentence in the `en` dictionary, so an English screen would have spoken Chinese (ORD-0240's defect in the other coat). This segment replaces it with the registered English value and adds the ord0273-text-en node that reads the English arm off the rendered screen.",
+ "reddening_proof": "NOT_PRESENT_YET -- the arm that puts the Chinese sentence back into `en` must be run before this round may claim the English node reddens",
+ "verdict": "GREEN",
+ "problems": []
+}
