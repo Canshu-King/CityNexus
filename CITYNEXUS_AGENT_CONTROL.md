@@ -16588,6 +16588,30 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0926-0041 · 号令者 494abfd7：额度事实更正（B 已活）+ 派单让序撤回 + 四车道敲门记账 + 开单 ORD-0319
+
+**事实更正（我 00:18 那条判定被新读数推翻，总线勘误帖 `issuecomment-5835906242`）**
+- 同一把尺两次读数：`evidence/cmdr-session-quota-probe-0025/probe_r1.json` = d0886da6f1c5ef5ae278978fb742eebde89b0636（00:25 一档，当时 B 的 `last_content` 停在 23:05:51）与 `evidence/cmdr-session-quota-probe-0031/probe_r2.json` = 49bec57f3fa083023b2706490902bd5afacf5b9e（件内 `at_local` = 2026-09-26T00:31:31+0800，正文 4094 B，`git cat-file -s` 与 contents 回读双向一致，commit 3ef6b93f70632dfc0a770452fb12587fdad9b197）。
+- 两件字段差只有一处含义：`still_blocked` 从 `['B c01d72a3']` 变成 **none**。B 恢复后第一句原文（记录级读它自己 jsonl 的 assistant 文本）：00:26:02 "值守探针：没受限，能动。先读 `### CMDR-0925-2329` 那块原文，再落 b5。"；下一句 00:31:34 自报 collect 门逮住它补丁脚本一个 `\n` 转义滑失。⇒ 00:25 那趟读数没错，世界在我读后移动；对外引用"谁还卡着"请引这两件的 `at_local`，不要引我帖子的口语时间。
+
+**派单撤回（一字只改顺序，不改要件）**
+- 撤回 CMDR-0926-0010 里我给的临时让序"ORD-0296 排在 ORD-0302 之前"，其前提（B 不能交付 b5）已消失。恢复仲裁原序：`ORD-0312 → ORD-0314 → ORD-0302-close → key-rotation`。
+- ORD-0302 的 b5 归 B（要件仍为 CMDR-0925-2324 里 Q64=① 白名单：面板去掉 `body=…`、`expectedRaw` 双向断言；允许字段清单见常设规则 `UI_EVIDENCE_EXPOSURE_GATE_V1`）。已开工的 ORD-0296 十臂 campaign 不停、不回滚，只把 0312/0302 让回原车道。
+
+**四车道敲门记账（本机 +08，均含现尖 2344145ce6342b6ac32ac4d0955c0f524d8c9320，我 00:41:27 现读 `git ls-remote origin refs/heads/mirror/integration-frontend-apple-pass1`）**
+- 00:36 → `F 8ccd71d8`：继续 ORD-0296；每臂自报 (sha,nodeid,shape)，控制轮不绿整批作废；你那句"不要把 11 行的口径当覆盖分母"我照办并改在自己的尺上（`evidence/cmdr-write-entry-scope-2257/write_entry_scope_r3.json` = 66d90bfbb2ed583a7ad726b1bb593142afba818d，该件现尖字段：有界 0 处 / 只带取消 1 处 / 裸 10 处）；"最迟 60 秒"定义已作为 Q65 送仲裁，盖章前不改产品字节。
+- 00:36 → `D e345b9d6`：ORD-0310 第三轮验收（我对 r3b 的 Q38 重量 = cells 6 / hard 0 / soft 0 → `Q38_GATE_GREEN`，件 evidence/cmdr-f0317-recount-2358/recount_r1.json = 1178ce64c25c28d026c0aad0936ba3177b25700e 是我对 F 的 0317 复算，两者不同件）；欠两句：正文两枚不可解析 40 位串的说明，与 `30de4ebe` 要不要我落（只读预测 ahead 1 / behind 0 / `git merge-tree --write-tree` CLEAN，只动 `review/ord0310_kill_arms.py`，0 产品字节）。
+- 00:36 → `HJ-P3 aad2d1f2`：ORD-0312 优先、ORD-0316 第二（被门挡下的原件按新路径 publish，不改一字、不覆盖、量具代码路径禁重写）。
+- 00:37 → `E d2305848`：答复"只差落 CLOSED"——**不落 plain CLOSED**。本账本内 `CLOSED-ON-GENERATION` 我 grep 到 5 处，其中 L16717/L16737/L16746/L16756 四行都写明 ORD-0314 = `CLOSED-ON-GENERATION(13af1ff4ba4516aa1a39cda67428ed4a2a34ac69) / OPEN-FOR-CURRENT-TIP`；仲裁原话是 `ACCEPTED-CODE / NOT CLOSED`，按 B-1 闭单只认 verifier 的 `derived_result` + 代次自缚，所以现尖上它是 OPEN。她的 a4 我在 CMDR-0925-2243 已记 6/6 等值复算通过（件 `evidence/cmdr-a4-derived-check-2243/derived_check_r1.json` = f463e901d61a6126cce15740929d5dde276a5230）。
+
+**开单 ORD-0319（红队 E，限定一枚新交付 + 一次自测，不依赖任何车道）**
+- 对象：号令者的 Q64 尺 `evidence/cmdr-ui-exposure-gate-2327/ui_exposure_field_check_r1.py` = 0ba79e00738984ee06651219530e5a9d7fa897e3（自测件 084af05abbee2c2b7008eedf6eb192464c744eee；b4 捕获件 c5e689e252cd8e3a972ae8350826fcb80edee145 报 6 处命中，站点 `PlanWithAiSheet.tsx:187` / `:582` / `:1068`；现尖捕获件 4bf0eafa23f6c814518fabcfc8f38ff34e0b59b3 报 0 命中）。
+- 要件：① 至少两枚反例使尺必须红（原话正文 / `detail` / 异常栈被渲染）；② 一枚正控必须保持干净（只带 `http_status`/`content_type`/`body_bytes`/`response_received`/`elapsed_ms`/`request_id`）；③ 按 `CROSS_SURFACE_GAUGE_REPRO_V1` 至少两对不同 (HTTP base, disk root) 跑自测；④ 双向归因写死：尺红而现场无 forbidden 字段 ⇒ `COMMANDER_RULER_BLIND_SPOT`（归号令者），尺绿而确有 ⇒ 真实缺口。
+- 边界：0 改产品字节、不改那把尺本体、不删任何已引用路径，新件须带车道名与时间戳的新路径。
+
+**通道与门槛（不变）**：车道不写共享账本，块落 `D:\moodle\_qoder_ledger_inbox\<lane>_<HHMM>.md`（首行 `### `），我跑 `evidence/cmdr-ledger-inbox-tool-2307/ledger_inbox_apply_r1.py` = 0507b3762faae4de1e626b868bc4f4a0eacfb090 的 `--apply` 代插；00:31:12 那趟空跑 `tally` 全零，此刻 inbox 0 积压。`:8000` 仍 NOT AVAILABLE、手机不换代（Q61）、P0 两枚 key × 两层仍在用户手上。
+
+
 ### CMDR-0926-0010 号令者 494abfd7：F 的 ORD-0317 ②③我逐格复算通过（并把我自己那把尺的"signal 当期限"改掉）；P3 的 ORD-0301 pass 3 按代次签收；inbox 加了防重投规则
 - **ORD-0317 ②③ 复算通过**：F 的件 `evidence/ord0317-entry-states-f/o317_states_and_definition_f_r1.json` = 83d4507487d814381f5e866926ca011c91536adc（64,082 字节）。我另起炉灶从她 21 行 `rows_this_generation` 逐行重数五态，与她顶层 `five_state_summary` 用等值比：**10/10 全等**（key 无键 17/有键 4、cancel 不可取消或测不出 19/可取消 2、deadline 无期限 18/有期限 3、must_wait 必须等待 18/不必无限等待 3、recoverable 不可恢复 15/可恢复 6；network_effect 追到真 fetch 21/21；她映射我 11 行 = 11；**被排除的 4 处设备态写与我那把尺逐站点全等** `lib/inFlightWrites.ts:57`、`lib/offlineJourney.ts:43`、`lib/offlineJourney.ts:55`、`main.tsx:1706`；她自带的 generation = 现尖 `2344145c…` 一致）。复算件 `evidence/cmdr-f0317-recount-2358/recount_r1.json` = 1178ce64c25c28d026c0aad0936ba3177b25700e。
 - **她纠正了我，我认并且已经改到尺子里**：我的表把一列命名为 `deadline`，值却写 `OPTION_SIGNAL` —— 这正是"有 signal = 有期限"这种没牙判据的温床。改版 `evidence/cmdr-write-entry-scope-2257/write_entry_scope_r3.json` = 66d90bfbb2ed583a7ad726b1bb593142afba818d 把**取消通道**与**期限**彻底分开：`SIGNAL_NO_TIMER` / `SIGNAL_NO_TIMER_VIA_PARAM` 属取消，`OPTION_TIMEOUT` / `ABORTSIGNAL_TIMEOUT_IN_WRAPPER` / `DEADLINE_WORD_IN_WRAPPER` 才算有界。**现尖重量的结果因此变了口径**：我那 11 行里**有界 0 处、只有取消通道 1 处、NONE 10 处**（三个数都读自件 66d90bfbb2ed583a7ad726b1bb593142afba818d 的 `entries_bounded_by_timer` / `entries_cancel_signal_only` / `entries_by_deadline_state`；旧版写成“带期限 1”是误导）；F 的 21 行口径里有界 3 处（都在包装腿，件 83d4507487d814381f5e866926ca011c91536adc 的 `five_state_summary.deadline`）⇒ 引数必须同时说"哪把尺、哪个 scope"。
