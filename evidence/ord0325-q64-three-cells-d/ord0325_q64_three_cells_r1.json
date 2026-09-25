@@ -1,0 +1,603 @@
+{
+ "schema": "CNX_ORD0325_Q64_THREE_CELLS_FIXED_V1",
+ "order": "ORD-0325",
+ "lane": "D e345b9d6",
+ "at_local": "2026-09-26T04:53:05+0800",
+ "measurement_scope": {
+  "scope": "Q64=① 清扫桶里归我的三格（住宿 / 方案选择 / 外壳横幅）改到上游正文不上屏，且这台设备量到的字段仍在屏",
+  "generation": {
+   "baseline_tip": "0f8b925facabc9df57bab600b86d999dd515bf94",
+   "tested_commit": "bff5c462bdea8b8a384bd02bc85d9232f2211b64"
+  },
+  "artifact": "D:/moodle/_qoder_d_lane_20260923/_scratch_0325/ord0325_q64_three_cells_r1.json",
+  "method": "尺 r3 双向量（改前 git show <尖>、改后 git show <候选>）+ Playwright 双向断言门（读 innerText）+ 五枚拆臂（单变量替换、按字节还原）"
+ },
+ "ruler": {
+  "name": "ui_exposure_field_check_r3.py",
+  "blob": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+  "matches_the_blob_the_order_named": true,
+  "selftest": "SELFTEST_PASS on 13 fixtures (5 clean / 8 bad), rc 0"
+ },
+ "coordinates": {
+  "authority_tip_read_now": "0f8b925facabc9df57bab600b86d999dd515bf94",
+  "baseline_tip_equals_tip_read_now": true,
+  "candidate_ref": "refs/heads/agent/d-e345b9d6-ord0325",
+  "candidate_commit": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+  "ff_only": true,
+  "only_in_baseline_tip": "0",
+  "only_in_candidate": "3",
+  "rev_list_left_right_counts": [
+   "0",
+   "3"
+  ],
+  "merge_tree_rc": 0,
+  "merge_tree_conflict_section": "NO_CONFLICT_OUTPUT",
+  "files_changed": [
+   "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/components/RawFactsPanel.tsx",
+   "frontend/src/features/planning/PlanComparison.tsx",
+   "frontend/src/features/stay/HotelsPanel.tsx",
+   "frontend/src/lib/rawFacts.ts"
+  ],
+  "numstat": [
+   "464\t0\tfrontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+   "79\t6\tfrontend/src/app/V8Experience.tsx",
+   "37\t0\tfrontend/src/components/RawFactsPanel.tsx",
+   "24\t5\tfrontend/src/features/planning/PlanComparison.tsx",
+   "32\t8\tfrontend/src/features/stay/HotelsPanel.tsx",
+   "79\t0\tfrontend/src/lib/rawFacts.ts"
+  ],
+  "product_files_changed": [
+   "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/components/RawFactsPanel.tsx",
+   "frontend/src/features/planning/PlanComparison.tsx",
+   "frontend/src/features/stay/HotelsPanel.tsx",
+   "frontend/src/lib/rawFacts.ts"
+  ],
+  "capture_bytes_verified_against_named_revisions": {
+   "frontend/src/features/stay/HotelsPanel.tsx": {
+    "baseline_blob": "5154c19580bd344cb49afe07c34dc346dff49f0f",
+    "baseline_extract_hashes_to_the_same_blob": true,
+    "tested_blob": "0fb415405b79a968f1e639137180ad879d8d61ce",
+    "tested_extract_hashes_to_the_same_blob": true
+   },
+   "frontend/src/features/planning/PlanComparison.tsx": {
+    "baseline_blob": "378bd15134f62bff6479d1700953cd1966cf15ae",
+    "baseline_extract_hashes_to_the_same_blob": true,
+    "tested_blob": "30c953c631f9d372a86170302fb0a1be2c664eb4",
+    "tested_extract_hashes_to_the_same_blob": true
+   },
+   "frontend/src/app/V8Experience.tsx": {
+    "baseline_blob": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+    "baseline_extract_hashes_to_the_same_blob": true,
+    "tested_blob": "aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5",
+    "tested_extract_hashes_to_the_same_blob": true
+   }
+  }
+ },
+ "cells": [
+  {
+   "cell": "T-A",
+   "path": "frontend/src/features/stay/HotelsPanel.tsx",
+   "ordered_cites": [
+    "HotelsPanel.tsx:97-103 白名单只覆盖两枚冲突码",
+    "HotelsPanel.tsx:104 `raw ||` 漏未映射码",
+    "HotelsPanel.tsx:229 上屏"
+   ],
+   "gate_nodes": [
+    "A1 住宿被拒",
+    "A2 住宿冲突码仍由 token 决定",
+    "A3 住宿被拒：英文那半边"
+   ],
+   "baseline_pinned_hit_line": 91,
+   "baseline_blob": "5154c19580bd344cb49afe07c34dc346dff49f0f",
+   "tested_blob": "0fb415405b79a968f1e639137180ad879d8d61ce",
+   "ruler_r3_at_baseline": {
+    "verdict": "EXPOSURE_SHAPE_FOUND",
+    "hit_count": 1,
+    "hits": [
+     "UPSTREAM_READ_DIRECT@91"
+    ],
+    "capture": "baseline2_before_HotelsPanel.json"
+   },
+   "ruler_r3_at_tested": {
+    "verdict": "NO_EXPOSURE_SHAPE_FOUND",
+    "hit_count": 0,
+    "hits": [],
+    "capture_bytes": 1653,
+    "capture": "after_HotelsPanel.json"
+   },
+   "before_hits_relocated": [
+    {
+     "rule": "UPSTREAM_READ_DIRECT",
+     "line_in_baseline": 91,
+     "snippet": "if (!r.ok) {",
+     "still_a_hit_on_the_tested_file": false,
+     "same_hit_now_reports_at_line": null,
+     "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移"
+    }
+   ],
+   "ordered_cell_hit_removed": true,
+   "removed": [
+    {
+     "rule": "UPSTREAM_READ_DIRECT",
+     "line_in_baseline": 91,
+     "snippet": "if (!r.ok) {",
+     "still_a_hit_on_the_tested_file": false,
+     "same_hit_now_reports_at_line": null,
+     "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移"
+    }
+   ],
+   "survivors": []
+  },
+  {
+   "cell": "T-B",
+   "path": "frontend/src/features/planning/PlanComparison.tsx",
+   "ordered_cites": [
+    "PlanComparison.tsx:92 直读响应字段",
+    "PlanComparison.tsx:260 上屏"
+   ],
+   "gate_nodes": [
+    "B1 采用方案被拒"
+   ],
+   "baseline_pinned_hit_line": 92,
+   "baseline_blob": "378bd15134f62bff6479d1700953cd1966cf15ae",
+   "tested_blob": "30c953c631f9d372a86170302fb0a1be2c664eb4",
+   "ruler_r3_at_baseline": {
+    "verdict": "EXPOSURE_SHAPE_FOUND",
+    "hit_count": 1,
+    "hits": [
+     "UPSTREAM_READ_DIRECT@92"
+    ],
+    "capture": "baseline2_before_PlanComparison.json"
+   },
+   "ruler_r3_at_tested": {
+    "verdict": "NO_EXPOSURE_SHAPE_FOUND",
+    "hit_count": 0,
+    "hits": [],
+    "capture_bytes": 1656,
+    "capture": "after_PlanComparison.json"
+   },
+   "before_hits_relocated": [
+    {
+     "rule": "UPSTREAM_READ_DIRECT",
+     "line_in_baseline": 92,
+     "snippet": "if (!response.ok) {",
+     "still_a_hit_on_the_tested_file": false,
+     "same_hit_now_reports_at_line": null,
+     "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移"
+    }
+   ],
+   "ordered_cell_hit_removed": true,
+   "removed": [
+    {
+     "rule": "UPSTREAM_READ_DIRECT",
+     "line_in_baseline": 92,
+     "snippet": "if (!response.ok) {",
+     "still_a_hit_on_the_tested_file": false,
+     "same_hit_now_reports_at_line": null,
+     "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移"
+    }
+   ],
+   "survivors": []
+  },
+  {
+   "cell": "T-C",
+   "path": "frontend/src/app/V8Experience.tsx",
+   "ordered_cites": [
+    "V8Experience.tsx:169-171 rejectionReason 原样拼 detail / error.message",
+    "V8Experience.tsx:1562 上屏"
+   ],
+   "gate_nodes": [
+    "C1 建行程后的住宿搜索被拒",
+    "C2 建行程这一步本身被拒"
+   ],
+   "baseline_pinned_hit_line": 1028,
+   "baseline_blob": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+   "tested_blob": "aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5",
+   "ruler_r3_at_baseline": {
+    "verdict": "EXPOSURE_SHAPE_FOUND",
+    "hit_count": 3,
+    "hits": [
+     "RAW_BODY_TO_DOM@320",
+     "UPSTREAM_READ_DIRECT@833",
+     "UPSTREAM_READ_DIRECT@1028"
+    ],
+    "capture": "baseline2_before_V8Experience.json"
+   },
+   "ruler_r3_at_tested": {
+    "verdict": "EXPOSURE_SHAPE_FOUND",
+    "hit_count": 2,
+    "hits": [
+     "RAW_BODY_TO_DOM@372",
+     "UPSTREAM_READ_DIRECT@897"
+    ],
+    "capture_bytes": 2228,
+    "capture": "after_V8Experience.json"
+   },
+   "before_hits_relocated": [
+    {
+     "rule": "RAW_BODY_TO_DOM",
+     "line_in_baseline": 320,
+     "snippet": "* Slicing the raw ISO string (``start_at.slice(11, 16)``) shows UTC wall time",
+     "still_a_hit_on_the_tested_file": true,
+     "same_hit_now_reports_at_line": 372,
+     "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移",
+     "why_not_this_cell": "注释行：`raw` 与 `slice(` 出现在一句文档注释里（`* Slicing the raw ISO string (``start_at.slice(11, 16)``) shows …`），不是任何 JSX 插值；改前改后同一枚，与本单的三格无关"
+    },
+    {
+     "rule": "UPSTREAM_READ_DIRECT",
+     "line_in_baseline": 833,
+     "snippet": "? { message: error.message, name: error.name }",
+     "still_a_hit_on_the_tested_file": true,
+     "same_hit_now_reports_at_line": 897,
+     "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移",
+     "why_not_this_cell": "对象字面量：`{ message: error.message, name: error.name }` 不在 JSX 里，它进 sealedDemoDetail，最终只作为 `data-error-message` 属性落在 JourneyTrialSetup.tsx:1248 —— 文本位没有它（这一枚的『属性算不算上屏』属 Q64 未定义的那一格，已挂给仲裁，不在本单射程）"
+    },
+    {
+     "rule": "UPSTREAM_READ_DIRECT",
+     "line_in_baseline": 1028,
+     "snippet": "} else {",
+     "still_a_hit_on_the_tested_file": false,
+     "same_hit_now_reports_at_line": null,
+     "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移"
+    }
+   ],
+   "ordered_cell_hit_removed": true,
+   "removed": [
+    {
+     "rule": "UPSTREAM_READ_DIRECT",
+     "line_in_baseline": 1028,
+     "snippet": "} else {",
+     "still_a_hit_on_the_tested_file": false,
+     "same_hit_now_reports_at_line": null,
+     "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移"
+    }
+   ],
+   "survivors": [
+    {
+     "rule": "RAW_BODY_TO_DOM",
+     "line_in_baseline": 320,
+     "snippet": "* Slicing the raw ISO string (``start_at.slice(11, 16)``) shows UTC wall time",
+     "still_a_hit_on_the_tested_file": true,
+     "same_hit_now_reports_at_line": 372,
+     "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移",
+     "why_not_this_cell": "注释行：`raw` 与 `slice(` 出现在一句文档注释里（`* Slicing the raw ISO string (``start_at.slice(11, 16)``) shows …`），不是任何 JSX 插值；改前改后同一枚，与本单的三格无关"
+    },
+    {
+     "rule": "UPSTREAM_READ_DIRECT",
+     "line_in_baseline": 833,
+     "snippet": "? { message: error.message, name: error.name }",
+     "still_a_hit_on_the_tested_file": true,
+     "same_hit_now_reports_at_line": 897,
+     "how_persisted_sinks_were_matched": "同一 rule 下锚句字节相等（尺输出的 snippet），不是行号 -- 行号会因为我在上文加行而整体下移",
+     "why_not_this_cell": "对象字面量：`{ message: error.message, name: error.name }` 不在 JSX 里，它进 sealedDemoDetail，最终只作为 `data-error-message` 属性落在 JourneyTrialSetup.tsx:1248 —— 文本位没有它（这一枚的『属性算不算上屏』属 Q64 未定义的那一格，已挂给仲裁，不在本单射程）"
+    }
+   ]
+  }
+ ],
+ "gate": {
+  "spec": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+  "spec_blob_at_tested": "5abb21ac830d5f6fadc600101fa8eca8485fdbd3",
+  "gate_node_count": 6,
+  "new_paths_at_tested": [
+   "frontend/src/lib/rawFacts.ts",
+   "frontend/src/components/RawFactsPanel.tsx"
+  ],
+  "new_blobs_at_tested": {
+   "frontend/src/lib/rawFacts.ts": "aae2369e34fedb5679b2d0c4d0fcd06d73cad152",
+   "frontend/src/components/RawFactsPanel.tsx": "7d3ea8530735bfff204a0269f4056f092d262292"
+  },
+  "ruler_r3_on_the_two_new_files": {
+   "verdict": "NO_EXPOSURE_SHAPE_FOUND",
+   "hit_count": 0,
+   "targets": [
+    "rawFacts.ts",
+    "RawFactsPanel.tsx"
+   ]
+  },
+  "readings_head": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+  "readings_match_tested_commit": true,
+  "sentinels": {
+   "leak": "ORD0325-the-servers-own-sentence-请别把我画上屏",
+   "credential_shaped": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.ORD0325.not-a-real-token"
+  },
+  "per_cell": {
+   "T-A1": {
+    "page_text": "菜单 / 行程 跟随系统 EN TI 行程 住宿 预订 花费 住宿 选一家住的地方 按与行程的关系排序的 4 家住宿。价格未知时我们如实说明。 Haihe Riverside Hotel 已选择 价格 CNY 180 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 121 分钟。 已选择这家 Central Station Courtyard 价格 CNY 210 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 123 分钟。 选择这家住宿 Five Avenues House 价格 CNY 260 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 117 分钟。 选择这家住宿 North Canal Guesthouse 价格 CNY 155 / 晚 步行 28 分钟 到达/离开衔接 1% / 1% 退改 不可取消 推荐理由：与行程冲突最少，步行负担 28 分钟，预留缓冲 123 分钟。 选择这家住宿 暂时无法选择这家住宿。 这台设备自己量到的回读字段 http_status=422 content-type=application/json bytes=386 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+    "facts_text": "http_status=422 content-type=application/json bytes=386",
+    "attribution_label": "这台设备自己量到的回读字段",
+    "screen_sentence": "暂时无法选择这家住宿。",
+    "expected_lines": [
+     "http_status=422",
+     "content-type=application/json",
+     "bytes=386"
+    ],
+    "sent_bytes": 386,
+    "reached_by": {
+     "hotel_cards_on_screen": 4,
+     "cards_already_chosen": 1,
+     "note": "舞台上这趟自己就有住宿卡片，补位分支没被走到"
+    }
+   },
+   "T-A2": {
+    "page_text": "菜单 / 行程 跟随系统 EN TI 行程 住宿 预订 花费 住宿 选一家住的地方 按与行程的关系排序的 4 家住宿。价格未知时我们如实说明。 Haihe Riverside Hotel 已选择 价格 CNY 180 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 121 分钟。 已选择这家 Central Station Courtyard 价格 CNY 210 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 123 分钟。 选择这家住宿 Five Avenues House 价格 CNY 260 / 晚 步行 34 分钟 到达/离开衔接 1% / 1% 退改 可取消 推荐理由：与行程冲突最少，步行负担 34 分钟，预留缓冲 117 分钟。 选择这家住宿 North Canal Guesthouse 价格 CNY 155 / 晚 步行 28 分钟 到达/离开衔接 1% / 1% 退改 不可取消 推荐理由：与行程冲突最少，步行负担 28 分钟，预留缓冲 123 分钟。 选择这家住宿 这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。 这台设备自己量到的回读字段 http_status=422 content-type=application/json bytes=263 ✦ CityNexus Copilot 今天 行程 地图 Copilot 我的",
+    "facts_text": "http_status=422 content-type=application/json bytes=263",
+    "attribution_label": "这台设备自己量到的回读字段",
+    "screen_sentence": "这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。",
+    "expected_lines": [
+     "http_status=422",
+     "content-type=application/json",
+     "bytes=263"
+    ],
+    "sent_bytes": 263
+   },
+   "T-A3": {
+    "facts_text": "http_status=404 content-type=application/json bytes=386",
+    "sentence": "Could not choose this stay.",
+    "expected_lines": [
+     "http_status=404",
+     "content-type=application/json",
+     "bytes=386"
+    ]
+   },
+   "T-B1": {
+    "page_text": "菜单 / 今天 跟随系统 EN TI 选择你的方案 我们按这座城可核验的地点和你的预算，生成了 1 个可选方案。 方案 A 花费未知 总花费 暂无价格 活动数 0 采用这个方案 这个方案暂时不能采用。 这台设备自己量到的回读字段 http_status=409 content-type=application/json bytes=386 还没休息 天津之旅 10月9日 18:00 — 10月11日 15:00 · 1 位旅行者 · 3 天 AI 帮我规划 试用其他城市 打开行程工作台 现在 Arrival 接下来 18:45 Check in · Haihe Riverside Hotel 今天还有 3 项安排 查看实时行程 “现在”取自服务器场景（执行游标）：10月9日 18:00 · 现在/接下来由服务器的执行投影给出 1 2 3 4 5 6 7 8 9 路线上下文 8 段路程 供应商支持的路线 · WGS84 单指拖动地图 · 双指缩放 · 想翻这一页就拖地图以外的地方 住宿 Haihe Riverside Hotel 到达 10月9日 18:00 出发 10月11日 15:00 一切正常 方案概览 每一天，紧密相连。 对比住宿 → 以下只是其中一个候选方案的预览，你还没有采用它。 第 1 天 星期五 Arrival · Check in · Haihe Riverside Hotel · Overnight · Haihe Riverside Hotel 公交地铁 抵达锚点 第 2 天 星期六 Five Great Avenues · Tianjin Museum · Tianjin Eye · Overnight · Haihe Riverside Hotel 公交地铁 住宿锚点 第 3 天 星期日 Check out · Haihe Riverside Hotel · Departure 驾车 离开锚点 今天 行程 地图 Copilot 我的",
+    "facts_text": "http_status=409 content-type=application/json bytes=386",
+    "attribution_label": "这台设备自己量到的回读字段",
+    "screen_sentence": "这个方案暂时不能采用。",
+    "expected_lines": [
+     "http_status=409",
+     "content-type=application/json",
+     "bytes=386"
+    ],
+    "sent_bytes": 386
+   },
+   "T-C1": {
+    "banner_text": "服务器拒绝了这一步（HTTP 422）。你的行程没有因此改变，可以检查后重试。 这台设备自己量到的回读字段 http_status=422 content-type=application/json bytes=386 知道了",
+    "facts_text": "http_status=422 content-type=application/json bytes=386",
+    "expected_lines": [
+     "http_status=422",
+     "content-type=application/json",
+     "bytes=386"
+    ],
+    "page_text": "CN CityNexus 行程智能 工作区 行程运营 TODAY 今天 实时行程 地图 PLAN 行程工作台 住宿选择 城市探索 TRAVEL 旅行票夹 Copilot SYSTEM 恢复与执行 智能守护 旅行者画像 行程事实已同步 0 个方案 · 5 种模式 TI Tianjin 2 位旅行者 ••• 行程 / 今天 行程事实就绪 跟随系统 EN ◌ TI 服务器拒绝了这一步（HTTP 422）。你的行程没有因此改变，可以检查后重试。 这台设备自己量到的回读字段 http_status=422 content-type=application/json bytes=386 知道了 还没休息 天津之旅 住宿搜索失败了，行程本身还在。 再查一次 9月27日 10:00 — 9月29日 20:00 · 2 位旅行者 · 3 天 AI 帮我规划 试用其他城市 打开行程工作台 今天 还没有安排 “现在”取自服务器场景（执行游标。服务器没有给出这一分钟的执行游标，这一屏的时间按行程的时间窗来读）：10月9日 18:00 · 现在/接下来由服务器的执行投影给出 尚未获取地图位置 这个行程还没有可信的坐标。添加活动地点或开启定位后，地图会显示正确的城市。 住宿 还没有选定 到达 9月27日 10:00 出发 9月29日 20:00 这个行程还没有可信的坐标 方案概览 每一天，紧密相连。 对比住宿 → 还没有可以预览的行程 选定方案后，这里会显示每天的安排。 ✦ CityNexus Copilot"
+   },
+   "T-C2": {
+    "refusal_block": "这一步没有成功，行程还没有创建。 服务器拒绝了这一步（HTTP 422）。你的行程没有因此改变，可以检查后重试。",
+    "page_text": "用你自己的城市试用 CITYNEXUS 新建行程 三步完成。选择目的地、告诉我们怎么玩，剩下的交给 CityNexus。 EN ✓ 目的地与时间 ✓ 人数与偏好 3 确认创建 目的地 天津 抵达 天津站 · 2026-09-27 10:00 离开 北京南站 · 2026-09-29 20:00 人数 / 房间 2 · 1 · 我们替你填的 总预算 / 住宿 CNY 1500 / 1000 · 我们替你填的 节奏 紧凑 兴趣 美食 特殊要求 — 自动设置 CN · CNY · Asia/Shanghai 这一步没有成功，行程还没有创建。 服务器拒绝了这一步（HTTP 422）。你的行程没有因此改变，可以检查后重试。 返回 确认创建 使用封存的演示行程",
+    "raw_facts_block_on_this_surface": 0,
+    "note": "向导遮罩这一屏只有外壳横幅才渲染读数块；此处主张的是『原话不上屏 + 句子是本机的』，读数块仍在 C1 那枚外壳横幅上主张"
+   }
+  },
+  "two_way_rule": "每格两问：上游原话（含哨兵与假凭据）不在 body.innerText；这台设备量到的三行在屏，bytes 由本节点 fulfill 的正文重算"
+ },
+ "arms": {
+  "receipt": "D:/moodle/_qoder_d_lane_20260923/_scratch_0325/ord0325_arms_r3.json",
+  "receipt_blob": "02d89298abe673339abe0c6630e4c6c75d524a3f",
+  "tested_tree": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+  "tested_tree_equals_candidate": true,
+  "campaign_valid": true,
+  "killed": 6,
+  "survived": 0,
+  "arm_count": 6,
+  "all_restored_byte_exact": true,
+  "per_arm": [
+   {
+    "arm": "AR1_refusal_freeze_list_ignored",
+    "file": "frontend/src/lib/rawFacts.ts",
+    "triple": {
+     "exact_sha": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+     "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: A1 住宿被拒",
+     "shape": [
+      "chromium"
+     ]
+    },
+    "anchor_hits": [
+     1
+    ],
+    "edit_lines": 1,
+    "claimed_result": "KILLED",
+    "owner_nodes_red": [
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边"
+    ],
+    "all_red_nodes_this_attempt": [
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边"
+    ],
+    "named_sibling_stayed_green": true,
+    "same_key_precondition_holds": true,
+    "restored_to_tested_tree_bytes": true,
+    "run_id": "run369050",
+    "db": "_run369050.db",
+    "derived_result": null
+   },
+   {
+    "arm": "AR2_hotel_general_branch_leaks_back",
+    "file": "frontend/src/features/stay/HotelsPanel.tsx",
+    "triple": {
+     "exact_sha": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+     "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: A1 住宿被拒",
+     "shape": [
+      "chromium"
+     ]
+    },
+    "anchor_hits": [
+     1
+    ],
+    "edit_lines": 3,
+    "claimed_result": "KILLED",
+    "owner_nodes_red": [
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边"
+    ],
+    "all_red_nodes_this_attempt": [
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边",
+     "A3 住宿被拒：英文那半边同样两问"
+    ],
+    "named_sibling_stayed_green": true,
+    "same_key_precondition_holds": true,
+    "restored_to_tested_tree_bytes": true,
+    "run_id": "run369087",
+    "db": "_run369087.db",
+    "derived_result": null
+   },
+   {
+    "arm": "AR3_plan_cmp_leaks_back",
+    "file": "frontend/src/features/planning/PlanComparison.tsx",
+    "triple": {
+     "exact_sha": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+     "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: B1 采用方案被拒",
+     "shape": [
+      "chromium"
+     ]
+    },
+    "anchor_hits": [
+     1,
+     1
+    ],
+    "edit_lines": 2,
+    "claimed_result": "KILLED",
+    "owner_nodes_red": [
+     "B1 采用方案被拒（409）：原话不上屏、三行读数在屏"
+    ],
+    "all_red_nodes_this_attempt": [
+     "B1 采用方案被拒（409）：原话不上屏、三行读数在屏"
+    ],
+    "named_sibling_stayed_green": true,
+    "same_key_precondition_holds": true,
+    "restored_to_tested_tree_bytes": true,
+    "run_id": "run369119",
+    "db": "_run369119.db",
+    "derived_result": null
+   },
+   {
+    "arm": "AR4_shell_retry_sink_prints_error_message",
+    "file": "frontend/src/app/V8Experience.tsx",
+    "triple": {
+     "exact_sha": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+     "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: C1 建行程后的住宿搜索被拒",
+     "shape": [
+      "chromium"
+     ]
+    },
+    "anchor_hits": [
+     1
+    ],
+    "edit_lines": 1,
+    "claimed_result": "KILLED",
+    "owner_nodes_red": [
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数"
+    ],
+    "all_red_nodes_this_attempt": [
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数"
+    ],
+    "named_sibling_stayed_green": true,
+    "same_key_precondition_holds": true,
+    "restored_to_tested_tree_bytes": true,
+    "run_id": "run369145",
+    "db": "_run369145.db",
+    "derived_result": null
+   },
+   {
+    "arm": "AR4b_shell_create_sink_prints_error_message",
+    "file": "frontend/src/app/V8Experience.tsx",
+    "triple": {
+     "exact_sha": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+     "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: C2 建行程这一步本身被拒",
+     "shape": [
+      "chromium"
+     ]
+    },
+    "anchor_hits": [
+     1
+    ],
+    "edit_lines": 1,
+    "claimed_result": "KILLED",
+    "owner_nodes_red": [
+     "C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话"
+    ],
+    "all_red_nodes_this_attempt": [
+     "C2 建行程这一步本身被拒：向导里的拒绝句也不印上游原话"
+    ],
+    "named_sibling_stayed_green": true,
+    "same_key_precondition_holds": true,
+    "restored_to_tested_tree_bytes": true,
+    "run_id": "run369174",
+    "db": "_run369174.db",
+    "derived_result": null
+   },
+   {
+    "arm": "AR5_bytes_becomes_a_constant",
+    "file": "frontend/src/lib/rawFacts.ts",
+    "triple": {
+     "exact_sha": "bff5c462bdea8b8a384bd02bc85d9232f2211b64",
+     "nodeid": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts :: A1 住宿被拒",
+     "shape": [
+      "chromium"
+     ]
+    },
+    "anchor_hits": [
+     1
+    ],
+    "edit_lines": 1,
+    "claimed_result": "KILLED",
+    "owner_nodes_red": [
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边"
+    ],
+    "all_red_nodes_this_attempt": [
+     "A1 住宿被拒（未映射的 422）：原话不上屏、三行读数在屏 — 中文半边",
+     "A2 住宿冲突码仍由 token 决定（正控）：换成行程冲突句，且原话仍不上屏",
+     "A3 住宿被拒：英文那半边同样两问",
+     "C1 建行程后的住宿搜索被拒：banner 不印 error.message，改印本机读数"
+    ],
+    "named_sibling_stayed_green": true,
+    "same_key_precondition_holds": true,
+    "restored_to_tested_tree_bytes": true,
+    "run_id": "run369206",
+    "db": "_run369206.db",
+    "derived_result": null
+   }
+  ]
+ },
+ "typecheck": {
+  "tsconfig.check.json": "exit 0",
+  "tsconfig.typecheck.json": "exit 0",
+  "how": "npx tsc -p <配置> --noEmit，两枚配置各跑一遍，退出码取子进程本身"
+ },
+ "not_touched_by_this_order": {
+  "files": [
+   "frontend/src/features/inbox/JourneyInboxWorkbench.tsx（号令者归 B）",
+   "frontend/src/components/ProductErrorBoundary.tsx（同上）",
+   "frontend/src/features/setup/JourneyTrialSetup.tsx（r3 那枚属性形的落点，不在本单射程）",
+   "三枚 NEEDS_RULING（等裁）"
+  ],
+  "shared_owner_reuse": "没有另起一套分类：句子是本机按机器事实组的，读数字段用 lib/rawFacts.ts，渲染块用 components/RawFactsPanel.tsx，字段词与 ORD-0302 b5 已验收那一枚一致（http_status / content-type / bytes）"
+ },
+ "self_reported_instrument_defect_fixed_mid_order": {
+  "first_campaign": "ord0325_arms_r1.json（同一把驱动器、同一套臂的第一轮）",
+  "what_happened": "第一轮里 AR4 打的是 createJourney 那一枚 sink，而当时门里只有 C1（走 retryStaySearch 那条腿）—— 于是那一枚臂 SURVIVED：4/5。这一枚存活证明的不是门没牙齿，是我的臂没瞄准；补了 C2（把创建那一步本身拒掉，读向导里的拒绝块）之后，第二轮战役 6/6 全红且逐枚按字节还原",
+  "why_it_is_kept": "不删第一轮件：它是这单里『一形 MET 不许冒充整族』的现场证据，也是 C2 存在的原因"
+ },
+ "open_questions_for_the_commander": [
+  "要件②写的字段名是 body_bytes；仓库里在屏的那一行是 bytes=（rawFacts 的字段也叫 bytes）。尺 r3 的 ALLOWED 清单里两者都在（allow list 含 body_bytes），已验收的 b5 上屏写的是 bytes=。我沿用在屏那一枚 bytes=，没造第二个词；要统一成 body_bytes 请点名改哪几处",
+  "JourneyTrialSetup.tsx:1248 的 data-error-message 属性里仍带着 error.message（= rejectionReason 拼出来的上游句子）。文本位没有它，r3 也不把属性算作上屏；这一格与我自己 ORD-0320 里挂的『折叠块算不算上屏』同族，等裁"
+ ],
+ "discipline": {
+  "authority_ref_writes": 0,
+  "refs_pushed_by_this_receipt": 0,
+  "authoritative_tip_moved_by_me": 0,
+  "vite_build_run": 0,
+  "node_modules_touched": 0,
+  "phone_chain_touched": 0,
+  "demo_reset": 0,
+  "user_db_reads_writes": 0,
+  "credentials_printed": 0,
+  "assertions_changed_to_buy_green": 0,
+  "tests_skipped": 0,
+  "how": "产品工作树只在拆臂窗口内被改，窗口外逐字节等于候选提交；权威线只用 git ls-remote / git show / git merge-tree 读"
+ },
+ "interpretation_limit": "claimed_result 与 derived_result 都在件里留位；等级归红队（B-1）",
+ "claimed_result": "三格改完：T-A、T-B、T-C 各有一枚本单点名的 r3 命中在候选上不再报出；改前三文件共 5 命中，改后共 2 —— 消失的 3 枚就是这三格各那一枚，存活的 2 枚都在 V8Experience.tsx 里且逐枚指认不是本单三格（一枚文档注释、一枚只落 data-* 属性的对象字面量）；门 6 枚节点绿（断言读 innerText，两问齐）；拆臂 6/6 枚把对应格弄红且按字节还原",
+ "derived_result": null
+}
