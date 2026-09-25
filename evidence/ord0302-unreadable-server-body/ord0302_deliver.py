@@ -518,10 +518,8 @@ def gate_ok(outs, label):
 
 
 ok = True
-for label, path in (("ledger", ledger_txt),):
-    outs = gate(path)
-    gate_ok(outs, label)
-    LEDGER_GATE = outs
+for label, path in (("ledger-draft", ledger_txt),):
+    gate_ok(gate(path), label)
 
 before = LEDGER.read_bytes()
 if MARK.encode("utf-8") in before:
@@ -531,10 +529,25 @@ else:
         fh.write(LEDGER_BODY)
     print("ledger appended:", len(LEDGER.read_bytes()) - len(before), "B")
 
+# What gets gated and published as "the ledger block" is the block as it now sits in the shared file, not my
+# in-memory draft: the file is rewritten by others and the draft carries a wall-clock stamp, so a re-run would
+# otherwise cite bytes nobody can find.
+live = LEDGER.read_text(encoding="utf-8", errors="replace")
+i = live.find(MARK)
+if i < 0:
+    raise SystemExit("my block is not in the ledger I just wrote to; refusing to describe a text I cannot read")
+j = live.find("\n### ", i + len(MARK))
+block = live[i:j if j > 0 else len(live)]
+ledger_txt.write_text(block, "utf-8", newline="\n")
+LEDGER_GATE = gate(ledger_txt)
+gate_ok(LEDGER_GATE, "ledger-as-written")
+
 first = ("B c01d72a3 → 号令者 494abfd7：ORD-0302 交候选 " + CAND + "（基座 " + BASE
          + "，两枚具名格落在同一枚 ref " + BRANCH + " 上，快进自你手上那一枚 " + SUPERSEDED
          + "，没有 force-push）：两处安全读 + NETWORK 的可见兑底 + X-5 的承诺与块成对；"
          + "五枚臂 MET、四枚反件各自只咬自己那一格")
+X5_CAS = "；".join(f"{c['readings']['shape']} 的 playwright 报告 blob {c['readings']['report_blob']}"
+                  for c in cas if c["readings"]["arm_that_flipped"] == "X1")
 body = "\n".join([first, ""] + lines[1:] + [
     "",
     "读了就能自己复算的四条：",
@@ -550,7 +563,8 @@ body = "\n".join([first, ""] + lines[1:] + [
     "句子里不得出现该承诺。X1 跑的是过去会断的那一形（mission 存了 COMPLETED、没存 reason、这屏一条可用结果都没"
     "拿到），它同时要求块存在、块里有读数、且那句话还在指过去（Q53=① 选了「渲染出来」而不是「软化句子」）；X2 是"
     "另一侧——BASELINE_UNAVAILABLE 那句话不做承诺，块缺席就不算说谎，这条规则因此不会退化成「永远渲染点什么」。"
-    "杀手反件两枚各改一侧：`ca_x5_no_block` 动渲染门、`ca_x5_soft_promise` 动文案，两枚都只让 X1 那一格红。",
+    "杀手反件两枚各改一侧：" + X5_CAS + " —— `ca_x5_no_block` 动渲染门、`ca_x5_soft_promise` 动文案，"
+    "两枚都只让 X1 那一格红。",
     "",
     "没闭合：发布级面（生产构建产物）仍欠；places / plans/generate 两条腿的同一形没写臂（同一个 helper，"
     "我不拿推理替读数）；X-5 我也只在 vite dev 上量到——按你的代次口径，手机上那一代是否真有这个空洞仍是 "
