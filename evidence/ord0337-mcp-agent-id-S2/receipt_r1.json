@@ -1,0 +1,236 @@
+{
+ "schema": "CNX_ORD0337_MCP_AGENT_ID_V1",
+ "order": "ORD-0337",
+ "lane": "S2-hermes-port",
+ "at_local": "2026-09-26T06:52+0800",
+ "approved_by": "commander ruling 2026-09-26 06:47, scoped by my own impact map",
+ "live_tip_read_this_run": "f45489c6d17f16973faad161618789237ac3814e",
+ "base": "f45489c6d17f16973faad161618789237ac3814e",
+ "candidate": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+ "candidate_branch": "refs/heads/agent/S2-ord0337-agent-id-candidates",
+ "candidate_parent": "f45489c6d17f16973faad161618789237ac3814e",
+ "ahead_behind_vs_base": {
+  "ahead": 1,
+  "behind": 0
+ },
+ "changed_paths": [
+  "agent-mcp/citynexus_mcp/server.py",
+  "agent-mcp/tests/test_hermes_validation_principal.py"
+ ],
+ "numstat": [
+  "8\t3\tagent-mcp/citynexus_mcp/server.py",
+  "11\t0\tagent-mcp/tests/test_hermes_validation_principal.py"
+ ],
+ "blobs": {
+  "agent-mcp/citynexus_mcp/server.py": {
+   "candidate": "6b4da1b9b939b16dfb2384f808741029dd798a51",
+   "tip": "759b59e80665c1a80e82948ca88ac87a8ea831f2",
+   "hermes": "6b4da1b9b939b16dfb2384f808741029dd798a51"
+  },
+  "agent-mcp/tests/test_hermes_validation_principal.py": {
+   "candidate": "270b7ea2fb3a194449a9a89b7523b1255a997d91",
+   "tip": "absent-on-tip",
+   "hermes": "270b7ea2fb3a194449a9a89b7523b1255a997d91"
+  }
+ },
+ "coordinates_measured": {
+  "candidate_agent_id_def": [
+   58
+  ],
+  "candidate_env_read": [
+   60
+  ],
+  "candidate_call_sites": [
+   119,
+   316,
+   366
+  ],
+  "main_overwrite_v2": [
+   1102,
+   1122
+  ],
+  "principal_docstring": [
+   49
+  ],
+  "gateway_predicate": [
+   331
+  ],
+  "boundary_audit_test": [
+   46
+  ]
+ },
+ "what_was_ported": {
+  "form": "_agent_id() reads CITYNEXUS_AGENT_ID with the native MCP guard as default, replacing the three hardcoded agent_id literals",
+  "server_py_equals_hermes_blob": true,
+  "witness": "agent-mcp/tests/test_hermes_validation_principal.py",
+  "witness_equals_hermes_blob": true
+ },
+ "scope_statement": "Measured, and signed as: this changes only the untrusted hint. Both agent tool routes overwrite the body's agent_id with the server principal at backend/app/main.py:1102 and backend/app/main.py:1122; the resolver states the caller name is not an input at backend/app/agent/principal.py:49; the one predicate that names MCP callers, backend/app/agent/gateway.py:331, reads the overwritten value. No product principal, boundary decision or user-visible text moves.",
+ "readings": {
+  "line_agent_mcp": {
+   "exit": 0,
+   "passed": 14,
+   "failed": 0,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [],
+   "live_db_named_in_output": false,
+   "tail": "14 passed in 1.61s",
+   "files": [
+    "conftest.py",
+    "test_client_error_detail.py",
+    "test_mcp_boundary.py",
+    "test_replan_proposal_view.py"
+   ]
+  },
+  "candidate_agent_mcp": {
+   "exit": 0,
+   "passed": 16,
+   "failed": 0,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [],
+   "live_db_named_in_output": false,
+   "tail": "16 passed in 1.39s",
+   "files": [
+    "conftest.py",
+    "test_client_error_detail.py",
+    "test_hermes_validation_principal.py",
+    "test_mcp_boundary.py",
+    "test_replan_proposal_view.py"
+   ]
+  },
+  "M1_env_ignored": {
+   "exit": 1,
+   "passed": 15,
+   "failed": 1,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [
+    "test_isolated_validation_lane_can_name_its_principal"
+   ],
+   "live_db_named_in_output": false,
+   "tail": "1 failed, 15 passed in 1.45s"
+  },
+  "M2_default_dropped": {
+   "exit": 1,
+   "passed": 15,
+   "failed": 1,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [
+    "test_native_mcp_principal_is_default"
+   ],
+   "live_db_named_in_output": false,
+   "tail": "1 failed, 15 passed in 1.41s"
+  },
+  "boundary_on_candidate": {
+   "exit": 0,
+   "passed": 2,
+   "failed": 0,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [],
+   "live_db_named_in_output": false,
+   "tail": "2 passed, 2 warnings in 1.61s"
+  },
+  "boundary_trust_hint_mutant": {
+   "exit": 1,
+   "passed": 1,
+   "failed": 1,
+   "errors": 0,
+   "collected": 0,
+   "failed_tests": [
+    "test_agent_audit_actor_is_server_principal_not_request_agent_id"
+   ],
+   "live_db_named_in_output": false,
+   "tail": "1 failed, 1 passed, 2 warnings in 1.45s"
+  }
+ },
+ "identity_delta_vs_tip": {
+  "changed_lines": 11,
+  "blank_or_whitespace_lines": 2,
+  "lines_outside_the_identity_form": []
+ },
+ "red_sets": {
+  "M1_env_ignored": [
+   "test_isolated_validation_lane_can_name_its_principal"
+  ],
+  "M2_default_dropped": [
+   "test_native_mcp_principal_is_default"
+  ],
+  "boundary_trust_hint_mutant": [
+   "test_agent_audit_actor_is_server_principal_not_request_agent_id"
+  ]
+ },
+ "gate_on_candidate": {
+  "generation": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+  "harness_files": 22,
+  "whole_collected": 1342,
+  "whole_collect_errors": 0,
+  "harness_collected": 72,
+  "harness_passed": 72,
+  "harness_failed": 0,
+  "exit": 0,
+  "verdict": "HERMES_GATE_GREEN whole_collected=1342 harness_collected=72 harness_passed=72"
+ },
+ "mutant_provenance": {
+  "M1_env_ignored": "the env read replaced by the literal default - reddens only the env-named witness",
+  "M2_default_dropped": "the default argument dropped from os.getenv - reddens only the default witness",
+  "boundary_trust_hint_mutant": "in a throwaway export only, the two overwrite lines in backend/app/main.py are replaced by passing the raw payload, so the gateway trusts the hint. It reddens the audit-actor witness, which is what proves that witness can actually see the boundary. Nothing was committed or pushed in backend/.",
+  "nothing_in_backend_committed": true
+ },
+ "correction_carried_forward": {
+  "old_claim": "ORD-0334's table row said the deferred _agent_id() form changes principal identity",
+  "now": "measured false on this line - it changes only the untrusted hint; the boundary overwrites it",
+  "old_artifact_left_untouched": "evidence/ord0334-hermes-port-table-S2/receipt_r1.json blob 9a212be0d7473f0664f46a680c9dad3611dff139 was not edited; the earlier denominator erratum went out as a new post, not a rewrite",
+  "authorised_by": "commander condition 3 of the ORD-0337 ruling"
+ },
+ "checks": {
+  "candidate_parent_is_the_live_tip": true,
+  "only_agent_mcp_paths_changed": true,
+  "server_file_is_the_hermes_source_verbatim": true,
+  "witness_is_the_hermes_source_verbatim": true,
+  "identity_form_is_the_only_delta": true,
+  "suite_grew_by_exactly_the_two_witnesses": true,
+  "each_identity_witness_owns_its_mutant": true,
+  "boundary_witness_green_on_the_candidate": true,
+  "trust_the_hint_mutant_reddens_the_boundary_witness": true,
+  "the_other_boundary_test_survives_the_mutant": true,
+  "gate_measured_the_candidate_itself": true,
+  "backend_harness_unaffected": true,
+  "collection_still_clean_with_the_new_file": true,
+  "impact_map_prediction_matched": true,
+  "no_live_or_preview_db_in_any_run": true,
+  "shared_repo_porcelain_still_the_two_pre_existing_files": true
+ },
+ "checks_met": "16_of_16",
+ "verdict": "ORD0337_ALL_CHECKS_MET 16_of_16",
+ "verdict_derivation": "verdict_of() counts the checks dict; each check compares artifacts read in this run (git plumbing, the build proof, the measurement file, the gate receipt) or re-reads source line numbers. The selftest flips every predicate once and requires the verdict string to change.",
+ "selftest_flip_each_check_changes_verdict": true,
+ "discipline": {
+  "paths_touched": [
+   "agent-mcp/citynexus_mcp/server.py",
+   "agent-mcp/tests/test_hermes_validation_principal.py"
+  ],
+  "product_bytes_changed_outside_agent_mcp": 0,
+  "authoritative_branch_moved_by_lane": 0,
+  "refs_pushed_by_lane": 1,
+  "ref_pushed_is_candidate_only": true,
+  "demo_reset_invoked_by_lane": 0,
+  "credentials_printed": 0,
+  "model_calls_made": 0,
+  "live_or_preview_db_touched": 0,
+  "junctions_created": 0,
+  "other_lane_files_touched": 0,
+  "frontend_files_touched": 0,
+  "backend_app_files_committed": 0,
+  "shared_repo_porcelain_this_run": [
+   " M backend/app/agent/runtime_identity.py",
+   " M backend/app/main.py"
+  ],
+  "throwaway_exports_removed": true
+ },
+ "derived_result": null,
+ "derived_result_policy": "null by standing rule - sign-off belongs to the verifier"
+}
