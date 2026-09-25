@@ -1,0 +1,121 @@
+{
+ "schema": "CNX_CMDR_LEDGER_DOOR_COORD_BOLT_SELFTEST_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T04:40:00+0800",
+ "why": "Two lane blocks were refused tonight for reasons that were mine, not theirs: HJ-P3's `aad2d1f2_0059.md` cites a locally recomputed sha1 of bytes that never entered git and says so in its own words, and S4's `S4-ast-taint_0412.md` names a plain sha1-over-bytes for the same reason.  A bolt that cannot read an honest disclosure is a bolt lanes will route around, so the disclosure path was added to the door itself and proven both ways here.",
+ "rule_added": "A 40-hex that does not resolve may be carried only when (i) the value's OWN line declares it non-git in one of the recognised literal phrases and (ii) a coordinate that does resolve sits in the same paragraph. Every carried value is printed and dumped to _non_retrievable_carried.json next to the block.",
+ "recognised_phrases": [
+  "故意不可取回",
+  "从未入 git",
+  "非 blob",
+  "不可 cat-file",
+  "本地字节重算",
+  "sha1(over bytes)",
+  "sha1 over bytes"
+ ],
+ "tool_blobs": {
+  "ledger_insert_after.py": [
+   "3dd3b33ae64951b6071253e0a369c5f97eebc2a0",
+   8161
+  ],
+  "selftest ledger_door_bolt_selftest_r1.py": [
+   "d9d7907454254596ea70f17d0b6be82ccd625fbe",
+   6093
+  ],
+  "q43 claim_coordinate_check_r4c.py": [
+   "08f7d3249528b019d1c431770f662aeec91eb2f2",
+   14164
+  ]
+ },
+ "anchor_coordinate_used": "11e298036a65465e7b38b56a58d9f0f8c3b382f6",
+ "fixtures": {
+  "exempt_line_all_coordinates_resolve": {
+   "fixture": "exempt_line_all_coordinates_resolve",
+   "expect": "exempt",
+   "rc": 2,
+   "bolt_fired": false,
+   "reached_anchor_check": true,
+   "first_line": "ABORT: anchor not found: 'ZZZ this anchor does not exist in the shared ledger ZZZ'"
+  },
+  "exempt_p3_line45_verbatim": {
+   "fixture": "exempt_p3_line45_verbatim",
+   "expect": "exempt",
+   "rc": 2,
+   "bolt_fired": false,
+   "reached_anchor_check": true,
+   "first_line": "COORD-BOLT: carried 1 declared-non-retrievable value(s): line 5 661ba47a91fd…"
+  },
+  "exempt_p3_line48_verbatim": {
+   "fixture": "exempt_p3_line48_verbatim",
+   "expect": "exempt",
+   "rc": 2,
+   "bolt_fired": false,
+   "reached_anchor_check": true,
+   "first_line": "COORD-BOLT: carried 1 declared-non-retrievable value(s): line 5 661ba47a91fd…"
+  },
+  "exempt_s4_sha1_over_bytes_wording": {
+   "fixture": "exempt_s4_sha1_over_bytes_wording",
+   "expect": "exempt",
+   "rc": 2,
+   "bolt_fired": false,
+   "reached_anchor_check": true,
+   "first_line": "COORD-BOLT: carried 1 declared-non-retrievable value(s): line 5 661ba47a91fd…"
+  },
+  "fire_declared_anchor_in_OTHER_paragraph": {
+   "fixture": "fire_declared_anchor_in_OTHER_paragraph",
+   "expect": "fire",
+   "rc": 9,
+   "bolt_fired": true,
+   "reached_anchor_check": false,
+   "first_line": "ABORT: coordinate 661ba47a91fd2e87c5f4bff70f7c6e07b7fcdbfe (line 7) does not resolve in D:/moodle/CityNexus."
+  },
+  "fire_declared_but_no_anchor_on_line": {
+   "fixture": "fire_declared_but_no_anchor_on_line",
+   "expect": "fire",
+   "rc": 9,
+   "bolt_fired": true,
+   "reached_anchor_check": false,
+   "first_line": "ABORT: coordinate 661ba47a91fd2e87c5f4bff70f7c6e07b7fcdbfe (line 5) does not resolve in D:/moodle/CityNexus."
+  },
+  "fire_undeclared_same_value": {
+   "fixture": "fire_undeclared_same_value",
+   "expect": "fire",
+   "rc": 9,
+   "bolt_fired": true,
+   "reached_anchor_check": false,
+   "first_line": "ABORT: coordinate 661ba47a91fd2e87c5f4bff70f7c6e07b7fcdbfe (line 5) does not resolve in D:/moodle/CityNexus."
+  },
+  "negative_control_the_word_blob_alone_does_not_refuse": {
+   "fixture": "negative_control_the_word_blob_alone_does_not_refuse",
+   "expect": "exempt",
+   "rc": 2,
+   "bolt_fired": false,
+   "reached_anchor_check": true,
+   "first_line": "ABORT: anchor not found: 'ZZZ this anchor does not exist in the shared ledger ZZZ'"
+  }
+ },
+ "declared_expectation_vs_observed": {
+  "exempt_line_all_coordinates_resolve": true,
+  "exempt_p3_line45_verbatim": true,
+  "exempt_p3_line48_verbatim": true,
+  "exempt_s4_sha1_over_bytes_wording": true,
+  "fire_declared_anchor_in_OTHER_paragraph": true,
+  "fire_declared_but_no_anchor_on_line": true,
+  "fire_undeclared_same_value": true,
+  "negative_control_the_word_blob_alone_does_not_refuse": true
+ },
+ "derived": {
+  "every_fixture_answered_as_declared": true,
+  "the_bolt_fires_on_undeclared_values": true,
+  "the_bolt_fires_when_no_fetchable_coordinate_is_nearby": true,
+  "the_bolt_fires_across_a_paragraph_boundary": true,
+  "honest_disclosures_are_carried_not_punished": true,
+  "no_fixture_reached_the_ledger_write": true,
+  "selftest_all_two_way_assertions_hold": true
+ },
+ "claim_kind": "recomputation",
+ "raw_run_blob": [
+  "ad950400312220e58a219c330c7a108fdef0b177",
+  2748
+ ]
+}
