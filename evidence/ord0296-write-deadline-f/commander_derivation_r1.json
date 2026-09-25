@@ -1,0 +1,208 @@
+{
+ "order": "ORD-0296",
+ "derived_by": "commander 494abfd7 (mechanical, from the published campaign artifact)",
+ "arms_total": 10,
+ "arms_killed_by_commander": 10,
+ "rules": "per round rc!=0 AND expected_red node named in that round AND before_blob!=after_blob AND restored_byte_exact AND py_compile_ok AND carriers>=1 AND unexpected_red empty AND lane left derived_result null",
+ "global": {
+  "survivors": [],
+  "control_rounds_green": true,
+  "unexpected_red_total": 0,
+  "rounds": 3
+ },
+ "commander_own_runs": {
+  "collect_only": 10,
+  "green_rounds": 3,
+  "reverse_control": "DEADLINE_NOT_ABOVE_BUSY_TIMEOUT on CITYNEXUS_WRITE_DEADLINE_MS=10000",
+  "regressions_named": [
+   "tests/test_qoder_ord0287_k8_carrier.py 2 passed",
+   "tests/test_contract.py 4 passed"
+  ],
+  "ab_fullsuite": {
+   "baseline_reds": 10,
+   "candidate_reds_run1": 10,
+   "candidate_reds_run2": 10,
+   "candidate_set_equals_baseline_set": true
+  }
+ },
+ "per_arm": [
+  {
+   "arm": "M1_reachability_is_not_strict",
+   "rounds": 3,
+   "claimed": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_null": true,
+   "blob_changed": true,
+   "restored": true,
+   "py_compile": true,
+   "carriers": 1,
+   "unexpected_red": [],
+   "green_kept": [],
+   "all_rounds_red_named": true,
+   "hunks": 1,
+   "always_red": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+   ]
+  },
+  {
+   "arm": "M2_no_named_conversion",
+   "rounds": 3,
+   "claimed": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_null": true,
+   "blob_changed": true,
+   "restored": true,
+   "py_compile": true,
+   "carriers": 1,
+   "unexpected_red": [],
+   "green_kept": [
+    "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+   ],
+   "all_rounds_red_named": true,
+   "hunks": 1,
+   "always_red": [
+    "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+   ]
+  },
+  {
+   "arm": "M3_always_renames_the_lock_failure",
+   "rounds": 3,
+   "claimed": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_null": true,
+   "blob_changed": true,
+   "restored": true,
+   "py_compile": true,
+   "carriers": 1,
+   "unexpected_red": [],
+   "green_kept": [
+    "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+   ],
+   "all_rounds_red_named": true,
+   "hunks": 1,
+   "always_red": [
+    "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+   ]
+  },
+  {
+   "arm": "M4_startup_door_disabled",
+   "rounds": 3,
+   "claimed": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_null": true,
+   "blob_changed": true,
+   "restored": true,
+   "py_compile": true,
+   "carriers": 2,
+   "unexpected_red": [],
+   "green_kept": [
+    "test_G3_door_is_GREEN_one_millisecond_above_it"
+   ],
+   "all_rounds_red_named": true,
+   "hunks": 1,
+   "always_red": [
+    "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ]
+  },
+  {
+   "arm": "M5_lock_wait_copied_a_second_time",
+   "rounds": 3,
+   "claimed": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_null": true,
+   "blob_changed": true,
+   "restored": true,
+   "py_compile": true,
+   "carriers": 1,
+   "unexpected_red": [],
+   "green_kept": [],
+   "all_rounds_red_named": true,
+   "hunks": 1,
+   "always_red": [
+    "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+   ]
+  },
+  {
+   "arm": "M6_scenario_override_ignored",
+   "rounds": 3,
+   "claimed": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_null": true,
+   "blob_changed": true,
+   "restored": true,
+   "py_compile": true,
+   "carriers": 1,
+   "unexpected_red": [],
+   "green_kept": [],
+   "all_rounds_red_named": true,
+   "hunks": 1,
+   "always_red": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ]
+  },
+  {
+   "arm": "M7_deadline_answer_status_is_500",
+   "rounds": 3,
+   "claimed": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_null": true,
+   "blob_changed": true,
+   "restored": true,
+   "py_compile": true,
+   "carriers": 1,
+   "unexpected_red": [],
+   "green_kept": [],
+   "all_rounds_red_named": true,
+   "hunks": 1,
+   "always_red": [
+    "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+   ]
+  },
+  {
+   "arm": "M8_effective_cap_ignores_the_budget",
+   "rounds": 3,
+   "claimed": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_null": true,
+   "blob_changed": true,
+   "restored": true,
+   "py_compile": true,
+   "carriers": 1,
+   "unexpected_red": [],
+   "green_kept": [],
+   "all_rounds_red_named": true,
+   "hunks": 1,
+   "always_red": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ]
+  },
+  {
+   "arm": "M9_budget_shared_across_scenarios",
+   "rounds": 3,
+   "claimed": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_null": true,
+   "blob_changed": true,
+   "restored": true,
+   "py_compile": true,
+   "carriers": 1,
+   "unexpected_red": [],
+   "green_kept": [],
+   "all_rounds_red_named": true,
+   "hunks": 1,
+   "always_red": [
+    "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+   ]
+  },
+  {
+   "arm": "M10_malformed_override_crashes_instead_of_naming",
+   "rounds": 3,
+   "claimed": "KILLED_CANDIDATE_ALL_ROUNDS_RED",
+   "derived_null": true,
+   "blob_changed": true,
+   "restored": true,
+   "py_compile": true,
+   "carriers": 1,
+   "unexpected_red": [],
+   "green_kept": [],
+   "all_rounds_red_named": true,
+   "hunks": 1,
+   "always_red": [
+    "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+   ]
+  }
+ ],
+ "derived_result": "KILLED_ALL_ARMS_AND_CLEAN_AB"
+}
