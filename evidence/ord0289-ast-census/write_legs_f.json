@@ -1,0 +1,869 @@
+{
+ "what": "ORD-0289 写腿逐条清单（机器形制，包工头 494abfd7 点名要的那半：逐行对账）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T14:08:35+08:00",
+ "claim_kind": "code_determined",
+ "claimed_result": "LIST-PUBLISHED-AND-SELF-DIFFED",
+ "derived_result": null,
+ "count": 14,
+ "write_legs": [
+  {
+   "callee": "fetch",
+   "col": 23,
+   "enclosing_fn": "accept:221",
+   "file": "features/execution/LiveRecovery.tsx",
+   "line": 225,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 30,
+   "enclosing_fn": "enable:45",
+   "file": "features/notifications/PushCapabilityCard.tsx",
+   "line": 56,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 30,
+   "enclosing_fn": "choose:84",
+   "file": "features/planning/PlanComparison.tsx",
+   "line": 88,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 30,
+   "enclosing_fn": "submit:452",
+   "file": "features/planning/PlanWithAiSheet.tsx",
+   "line": 492,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": true,
+   "signal_how": "property",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 34,
+   "enclosing_fn": "submit:452",
+   "file": "features/planning/PlanWithAiSheet.tsx",
+   "line": 605,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": true,
+   "signal_how": "property",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 10,
+   "enclosing_fn": "(anon):25",
+   "file": "features/recovery/RecoveryRequiredPanel.tsx",
+   "line": 26,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 30,
+   "enclosing_fn": "accept:65",
+   "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 69,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 26,
+   "enclosing_fn": "(anon):228",
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 229,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 26,
+   "enclosing_fn": "(anon):291",
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 296,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 26,
+   "enclosing_fn": "(anon):334",
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 335,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 26,
+   "enclosing_fn": "(anon):372",
+   "file": "features/simulation/simulationAdapter.ts",
+   "line": 376,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 19,
+   "enclosing_fn": "(anon):50",
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 63,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 19,
+   "enclosing_fn": "(anon):50",
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 64,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  },
+  {
+   "callee": "fetch",
+   "col": 23,
+   "enclosing_fn": "select:83",
+   "file": "features/stay/HotelsPanel.tsx",
+   "line": 87,
+   "method": "POST",
+   "method_how": "literal",
+   "options_spread": false,
+   "second_arg": "object-literal",
+   "signal": false,
+   "signal_how": "absent",
+   "timer": null,
+   "options_arg_shape": "object-literal"
+  }
+ ],
+ "write_predicate": {
+  "rule": "method ∈ {POST,PUT,PATCH,DELETE} 才算写腿；method 必须由字面量/成员/同文件常量解析出来，解析不出的不猜、也不计入写腿",
+  "implemented_in": "o289_ast_census.js:144-145 (WRITE set + filter)",
+  "join_keys_for_set_difference": [
+   "file",
+   "line",
+   "method"
+  ],
+  "note_on_paths": "file 是 <导出>/frontend/src 下的相对路径（与红队 ORD-0295 若用 frontend/src/… 前缀，差一个前缀，集合差前先归一）"
+ },
+ "census_provenance": {
+  "tree_tip": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "tree_tip_read_from": "git ls-remote --heads https://github.com/Canshu-King/CityNexus 的 refs/heads/mirror/integration-frontend-apple-pass1（普查当时它就是权威尖）",
+  "export_command": "git -c core.autocrlf=false archive 45b0a5e281cae9c37715173afd3ac5778f309ca7 backend data contracts tools frontend | tar -x",
+  "export_dir_scanned": "D:/moodle/_qoder_f_run/o289_landed_45b0a5e2/frontend/src",
+  "frontend_subtree_sha_at_this_tip": "d6885e002eb67a0c5f8fd182217a1698eb0e96a0",
+  "parser": "ts 5.9.3",
+  "node_runtime": "v24.14.0",
+  "excluded": [
+   "*.d.ts",
+   "node_modules",
+   "点开头目录"
+  ],
+  "excluded_measured": {
+   "d_ts_files_in_scanned_tree": 0,
+   "ts_or_tsx_files_in_scanned_tree": 71,
+   "comment": "这一节是量出来的而不是抄规则：若 .d.ts 计数为 0，说明该排除在本代没有可咬的对象，写出来是为了让规则可复核，不是为了凑数"
+  },
+  "files_scanned": 71,
+  "fetch_sites": 39,
+  "reproduce": "node o289_ast_census.js <导出>/frontend/src <out.json> <repo>/frontend/node_modules/typescript/lib"
+ },
+ "self_checks": {
+  "summary_count_equals_derived_rows": true,
+  "fresh_rerun_rows_identical_to_published_generation_rows": true,
+  "fresh_vs_published_set_diff_both_ways": {
+   "fresh_minus_published": [],
+   "published_minus_fresh": []
+  },
+  "against_my_previously_published_string_list": {
+   "n_previous": 14,
+   "previous_minus_mine": [],
+   "empty_means_no_line_was_dropped_or_invented": true
+  },
+  "per_generation_counts_reproduced": {
+   "write_with_signal": 2,
+   "write_with_timer": 0,
+   "declared_in_summary": [
+    2,
+    0
+   ]
+  }
+ },
+ "not_write_legs_but_adjacent": {
+  "method_absent_sites": [
+   {
+    "file": "api/candidateRejections.ts",
+    "line": 37,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "api/travelerPreferences.ts",
+    "line": 23,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "api/useContinuationState.ts",
+    "line": 22,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "api/v10Execution.ts",
+    "line": 26,
+    "second_arg": "absent"
+   },
+   {
+    "file": "api/v10Execution.ts",
+    "line": 32,
+    "second_arg": "absent"
+   },
+   {
+    "file": "api/v12Authoritative.ts",
+    "line": 21,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "app/V8Experience.tsx",
+    "line": 243,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "features/discovery/RealCityDiscoveryPanel.tsx",
+    "line": 59,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "features/execution/LiveRecovery.tsx",
+    "line": 112,
+    "second_arg": "absent"
+   },
+   {
+    "file": "features/execution/LiveRecovery.tsx",
+    "line": 151,
+    "second_arg": "absent"
+   },
+   {
+    "file": "features/inbox/JourneyInboxWorkbench.tsx",
+    "line": 82,
+    "second_arg": "non-literal-expr"
+   },
+   {
+    "file": "features/notifications/PushCapabilityCard.tsx",
+    "line": 36,
+    "second_arg": "absent"
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 374,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 402,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 434,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 534,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 561,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "features/recovery/V14PreventivePanel.tsx",
+    "line": 79,
+    "second_arg": "absent"
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "line": 55,
+    "second_arg": "absent"
+   },
+   {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 433,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 480,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 54,
+    "second_arg": "absent"
+   },
+   {
+    "file": "lib/readDeadline.ts",
+    "line": 44,
+    "second_arg": "non-literal-expr"
+   },
+   {
+    "file": "lib/readDeadline.ts",
+    "line": 59,
+    "second_arg": "object-literal"
+   },
+   {
+    "file": "lib/sceneClock.ts",
+    "line": 116,
+    "second_arg": "object-literal"
+   }
+  ],
+  "options_non_literal_expr": [
+   {
+    "file": "features/inbox/JourneyInboxWorkbench.tsx",
+    "line": 82,
+    "method": null
+   },
+   {
+    "file": "lib/readDeadline.ts",
+    "line": 44,
+    "method": null
+   }
+  ],
+  "unresolved": [],
+  "comment": "这 8 处没有可解析的 method、2 处第二实参是非字面量表达式 ⇒ 都不算写腿。若红队把其中任何一处计成写腿，差异就落在这一节，而不是 14 那个数上。"
+ },
+ "generation_still_current": {
+  "line_tip_now": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+  "line_tip_ref_now": [
+   "refs/heads/mirror/integration-frontend-apple-pass1",
+   "refs/heads/review/0280-attribution-label-r3"
+  ],
+  "frontend_subtree_sha_at_line_tip_now": "663b4516bd8d79eecb1ebc7991dd7d3a45fb90c0",
+  "same_frontend_subtree_as_censused": false,
+  "consequence": "frontend 子树 sha 变了 ⇒ 本清单只代表 45b0a5e281 那一代，逐条数需在当代重普查"
+ },
+ "discipline": {
+  "code_changed": 0,
+  "authoritative_branch_written": false,
+  "refs_pushed": 0,
+  "demo_reset": 0,
+  "live_or_preview_db_reads_writes": 0,
+  "credentials_printed": 0
+ },
+ "generation_bridge": {
+  "why": "上一条读数已经量到 frontend 子树 sha 在两代之间不同 ⇒ 逐枚 blob 对账，免得把一份 14 条清单当成无条件适用当代",
+  "census_tip": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+  "line_tip_now": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+  "frontend_subtree_sha": {
+   "census": "d6885e002eb67a0c5f8fd182217a1698eb0e96a0",
+   "line_tip": "663b4516bd8d79eecb1ebc7991dd7d3a45fb90c0"
+  },
+  "blob_entries_compared": {
+   "census": 180,
+   "line_tip": 182
+  },
+  "per_file": [
+   {
+    "file": "features/execution/LiveRecovery.tsx",
+    "path_in_frontend_tree": "src/features/execution/LiveRecovery.tsx",
+    "blob_at_census_tip": "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+    "blob_at_line_tip": "225b8efcc544fb727cdc9d4e759f2a78f85fc36f",
+    "present_on_line": true,
+    "bytes_unchanged_since_census": true,
+    "legs_from_this_file": 1
+   },
+   {
+    "file": "features/notifications/PushCapabilityCard.tsx",
+    "path_in_frontend_tree": "src/features/notifications/PushCapabilityCard.tsx",
+    "blob_at_census_tip": "1077e5bb1071dcf16a156c705562c46f752e090b",
+    "blob_at_line_tip": "1077e5bb1071dcf16a156c705562c46f752e090b",
+    "present_on_line": true,
+    "bytes_unchanged_since_census": true,
+    "legs_from_this_file": 1
+   },
+   {
+    "file": "features/planning/PlanComparison.tsx",
+    "path_in_frontend_tree": "src/features/planning/PlanComparison.tsx",
+    "blob_at_census_tip": "378bd15134f62bff6479d1700953cd1966cf15ae",
+    "blob_at_line_tip": "378bd15134f62bff6479d1700953cd1966cf15ae",
+    "present_on_line": true,
+    "bytes_unchanged_since_census": true,
+    "legs_from_this_file": 1
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "path_in_frontend_tree": "src/features/planning/PlanWithAiSheet.tsx",
+    "blob_at_census_tip": "4c3821b7129320d7940237d33c5f7dd14742f292",
+    "blob_at_line_tip": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+    "present_on_line": true,
+    "bytes_unchanged_since_census": false,
+    "legs_from_this_file": 2
+   },
+   {
+    "file": "features/recovery/RecoveryRequiredPanel.tsx",
+    "path_in_frontend_tree": "src/features/recovery/RecoveryRequiredPanel.tsx",
+    "blob_at_census_tip": "d51563442f15cc160e25af0566c46d3908e98f07",
+    "blob_at_line_tip": "d51563442f15cc160e25af0566c46d3908e98f07",
+    "present_on_line": true,
+    "bytes_unchanged_since_census": true,
+    "legs_from_this_file": 1
+   },
+   {
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "path_in_frontend_tree": "src/features/recovery/V14RecoveryTruthPanel.tsx",
+    "blob_at_census_tip": "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+    "blob_at_line_tip": "6a91ea0a2ab1e407dcf62b1e74425084f1c4368d",
+    "present_on_line": true,
+    "bytes_unchanged_since_census": true,
+    "legs_from_this_file": 1
+   },
+   {
+    "file": "features/simulation/simulationAdapter.ts",
+    "path_in_frontend_tree": "src/features/simulation/simulationAdapter.ts",
+    "blob_at_census_tip": "0770b33107d20c26d575e64b1610700e79ff72dd",
+    "blob_at_line_tip": "0770b33107d20c26d575e64b1610700e79ff72dd",
+    "present_on_line": true,
+    "bytes_unchanged_since_census": true,
+    "legs_from_this_file": 4
+   },
+   {
+    "file": "features/stay/HotelsPanel.tsx",
+    "path_in_frontend_tree": "src/features/stay/HotelsPanel.tsx",
+    "blob_at_census_tip": "5154c19580bd344cb49afe07c34dc346dff49f0f",
+    "blob_at_line_tip": "5154c19580bd344cb49afe07c34dc346dff49f0f",
+    "present_on_line": true,
+    "bytes_unchanged_since_census": true,
+    "legs_from_this_file": 3
+   }
+  ],
+  "verdict_computed": {
+   "files_unchanged_since_census": 7,
+   "files_changed_or_absent": 1,
+   "legs_still_on_identical_bytes": 12,
+   "legs_on_files_that_changed": 2,
+   "all_14_legs_still_current": false,
+   "total_legs": 14
+  },
+  "reading": "12/14 根写腿所在文件在两代之间是同一枚 blob ⇒ file:line 直接有效；其余 2 根所在文件字节变了，行号可能漂移，跨代引用只能到文件级。",
+  "red_team_note": "与红队 ORD-0295 做集合差时请用 census_tip=45b0a5e281 那一代（她那份的分母也是它）；本节只是说明这份清单离当代有多远，不参与对账。"
+ },
+ "changed_files_recensus": {
+  "why": "上一节的 bridge 量到 PlanWithAiSheet.tsx 在两代之间是不同 blob ⇒ 这一节把那个文件在权威尖上取回原文重普查，给那几根写腿一个当代行号，而不是把行号漂移留给别人猜",
+  "file": "features/planning/PlanWithAiSheet.tsx",
+  "blob_at_census_tip": "4c3821b7129320d7940237d33c5f7dd14742f292",
+  "blob_at_line_tip": "c22cf42506a4175db992bde387ed8d9c6f1ffb9d",
+  "blob_changed": true,
+  "fetch_method": "contents API + 本机重算 sha1 == contents.sha（两侧各自证过）",
+  "legs_in_my_census_list": [
+   {
+    "callee": "fetch",
+    "col": 30,
+    "enclosing_fn": "submit:452",
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 492,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": true,
+    "signal_how": "property",
+    "timer": null,
+    "options_arg_shape": "object-literal"
+   },
+   {
+    "callee": "fetch",
+    "col": 34,
+    "enclosing_fn": "submit:452",
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 605,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": true,
+    "signal_how": "property",
+    "timer": null,
+    "options_arg_shape": "object-literal"
+   }
+  ],
+  "legs_recomputed_on_census_generation": [
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 492,
+    "method": "POST",
+    "signal": true,
+    "options_arg_shape": "object-literal",
+    "enclosing_fn": "submit:452"
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 605,
+    "method": "POST",
+    "signal": true,
+    "options_arg_shape": "object-literal",
+    "enclosing_fn": "submit:452"
+   }
+  ],
+  "legs_recomputed_on_line_tip": [
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 510,
+    "method": "POST",
+    "signal": true,
+    "options_arg_shape": "object-literal",
+    "enclosing_fn": "submit:470"
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 638,
+    "method": "POST",
+    "signal": true,
+    "options_arg_shape": "object-literal",
+    "enclosing_fn": "submit:470"
+   }
+  ],
+  "line_numbers_identical_across_generations": false,
+  "verdict_computed": {
+   "legs_on_this_file_census": 2,
+   "legs_on_this_file_tip": 2,
+   "signal_true_census": 2,
+   "signal_true_tip": 2
+  },
+  "reading": "该文件在两代之间字节不同（4c3821b712 → c22cf42506），但写腿仍是 2 根、行号 [510, 638] 与普查代 [492, 605] 不同 ⇒ 行号已漂移，跨代引用只能到文件级",
+  "effect_on_total": "2 根行号需按当代重算"
+ },
+ "write_legs_current_generation": {
+  "line_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+  "count": 14,
+  "legs": [
+   {
+    "callee": "fetch",
+    "col": 23,
+    "enclosing_fn": "accept:221",
+    "file": "features/execution/LiveRecovery.tsx",
+    "line": 225,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   },
+   {
+    "callee": "fetch",
+    "col": 30,
+    "enclosing_fn": "enable:45",
+    "file": "features/notifications/PushCapabilityCard.tsx",
+    "line": 56,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   },
+   {
+    "callee": "fetch",
+    "col": 30,
+    "enclosing_fn": "choose:84",
+    "file": "features/planning/PlanComparison.tsx",
+    "line": 88,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 510,
+    "method": "POST",
+    "signal": true,
+    "options_arg_shape": "object-literal",
+    "enclosing_fn": "submit:470",
+    "coordinate_basis": "recomputed-on-line-tip（该文件在两代之间换了 blob，行号由同一条 AST 判据在当代原文上重新算出）"
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "line": 638,
+    "method": "POST",
+    "signal": true,
+    "options_arg_shape": "object-literal",
+    "enclosing_fn": "submit:470",
+    "coordinate_basis": "recomputed-on-line-tip（该文件在两代之间换了 blob，行号由同一条 AST 判据在当代原文上重新算出）"
+   },
+   {
+    "callee": "fetch",
+    "col": 10,
+    "enclosing_fn": "(anon):25",
+    "file": "features/recovery/RecoveryRequiredPanel.tsx",
+    "line": 26,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   },
+   {
+    "callee": "fetch",
+    "col": 30,
+    "enclosing_fn": "accept:65",
+    "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+    "line": 69,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   },
+   {
+    "callee": "fetch",
+    "col": 26,
+    "enclosing_fn": "(anon):228",
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 229,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   },
+   {
+    "callee": "fetch",
+    "col": 26,
+    "enclosing_fn": "(anon):291",
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 296,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   },
+   {
+    "callee": "fetch",
+    "col": 26,
+    "enclosing_fn": "(anon):334",
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 335,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   },
+   {
+    "callee": "fetch",
+    "col": 26,
+    "enclosing_fn": "(anon):372",
+    "file": "features/simulation/simulationAdapter.ts",
+    "line": 376,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   },
+   {
+    "callee": "fetch",
+    "col": 19,
+    "enclosing_fn": "(anon):50",
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 63,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   },
+   {
+    "callee": "fetch",
+    "col": 19,
+    "enclosing_fn": "(anon):50",
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 64,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   },
+   {
+    "callee": "fetch",
+    "col": 23,
+    "enclosing_fn": "select:83",
+    "file": "features/stay/HotelsPanel.tsx",
+    "line": 87,
+    "method": "POST",
+    "method_how": "literal",
+    "options_spread": false,
+    "second_arg": "object-literal",
+    "signal": false,
+    "signal_how": "absent",
+    "timer": null,
+    "options_arg_shape": "object-literal",
+    "coordinate_basis": "same-blob-on-line-tip（文件在两代之间是同一枚 blob，file:line 直接有效）"
+   }
+  ],
+  "how_derived": {
+   "from_same_blob_files": 12,
+   "recomputed_after_blob_change": 2
+  },
+  "line_shifts": [
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "census_line": 492,
+    "line_tip_line": 510,
+    "delta": 18,
+    "method": "POST",
+    "signal": true
+   },
+   {
+    "file": "features/planning/PlanWithAiSheet.tsx",
+    "census_line": 605,
+    "line_tip_line": 638,
+    "delta": 33,
+    "method": "POST",
+    "signal": true
+   }
+  ],
+  "predicate_recheck": {
+   "total": 14,
+   "with_signal": 2,
+   "with_timer": 0,
+   "methods": [
+    "POST"
+   ]
+  },
+  "assertions": {
+   "count_equals_census_count": true,
+   "signal_count_matches_bridge": true,
+   "no_duplicate_coordinates": true
+  },
+  "reading": "当前尖 90d29a172e 上仍是 14 根写腿；其中 2 根的行号相对普查代发生位移（492→510; 605→638）⇒ 计数不变、成员不变、只有行号漂。逐行对账用普查代那一节，引用当代用本节。"
+ }
+}
