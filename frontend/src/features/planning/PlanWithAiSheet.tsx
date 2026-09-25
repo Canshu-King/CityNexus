@@ -171,6 +171,15 @@ function serverReasonSentence(body: unknown): string | null {
  */
 type FailureNote = { text: string; from: "server" | "device" };
 
+/** What this device measured on the leg that answered, before it tried to understand any of it.
+ *  Field names are labels; the values are the answer's own bytes, unedited. */
+type RawReading = {
+  http_status: number;
+  content_type: string;
+  bytes: number | null;
+  body_head: string;
+};
+
 function failureNote(serverText: string | null, deviceText: string): FailureNote {
   return serverText ? { text: serverText, from: "server" } : { text: deviceText, from: "device" };
 }
@@ -361,6 +370,7 @@ export function PlanWithAiSheet({
     status: string;
     failureReason: FailureNote | null;
     summary: string | null;
+    rawReading?: RawReading | null;
     planCount?: number;
     newPlanIds?: string[];
   }>(null);
@@ -528,8 +538,26 @@ export function PlanWithAiSheet({
         body: JSON.stringify({ command }),
         signal,
       });
-      const body = await response.json().catch(() => null);
-      const mission = body?.mission ?? null;
+      /* Q53=①: the answer is kept as the bytes it arrived in, because a byte count and a body head cannot be
+         recovered once `json()` has thrown -- the old one-liner turned "the origin answered 200 with nothing
+         usable" into the same unreadable state as "nothing answered at all". */
+      const raw = await response.text().catch(() => null);
+      let body: unknown = null;
+      if (raw !== null) {
+        try {
+          body = JSON.parse(raw);
+        } catch {
+          body = null;
+        }
+      }
+      const rawReading: RawReading = {
+        http_status: response.status,
+        content_type: response.headers.get("content-type") ?? "",
+        bytes: raw === null ? null : new TextEncoder().encode(raw).length,
+        body_head: raw === null ? "" : raw.slice(0, 240),
+      };
+      const mission = (body as { mission?: { id?: string; status?: string; failure_reason?: string | null;
+                                             reasoning_summary?: string | null } } | null)?.mission ?? null;
       /* ORD-0269 clause 1: the pending marker is written the moment leg 1 returns a mission id --
          after the response is in hand and before leg 2 could ever be sent.  It is NOT cleared when
          a request goes out (clause 5); only a visible outcome supersedes it. */
@@ -553,6 +581,7 @@ export function PlanWithAiSheet({
             `agent/commands -> HTTP ${response.status}`,
           ),
           summary: null,
+          rawReading,
           planCount: -1,
           newPlanIds: [],
         });
@@ -732,12 +761,15 @@ export function PlanWithAiSheet({
            so it may not render a screen where that block does not exist.  Q53=① chose "render it" over
            "soften the sentence", so when the mission stored no reason we show what THIS screen measured
            -- a count it derived from the two reads it was allowed to make -- labelled as a device reading. */
+        /* Q53=① deleted the device-composed count sentence this line used to fall back to: the card already
+           points at 技术详情, and what belongs under it is the answer's own bytes, not a sentence this screen
+           invented. The block still renders -- it is gated on `rawReading` below -- it just says nothing that
+           was not measured. */
         failureReason: mission?.failure_reason
           ? { text: mission.failure_reason, from: "server" as const }
-          : blockedSentence ?? (status === "NO_PLANS_PRODUCED"
-              ? failureNote(null, `plans compiled; ${planCount} usable result(s) reached this screen`)
-              : null),
+          : blockedSentence,
         summary: mission?.reasoning_summary ?? null,
+        rawReading,
         planCount,
       });
       if (status === "COMPLETED") onPlanned?.();
@@ -948,7 +980,7 @@ export function PlanWithAiSheet({
           >
             <b>{copy.title}</b>
             <p>{copy.body}</p>
-            {(result?.failureReason || result?.summary) && (
+            {(result?.failureReason || result?.summary || result?.rawReading) && (
               <details className="plan-ai-detail">
                 <summary data-testid="plan-ai-detail-toggle">
                   {zh ? "技术详情" : "Technical detail"}
@@ -975,6 +1007,27 @@ export function PlanWithAiSheet({
                           : "This device's own reading (the server sent no sentence)"}
                     </span>
                     <code data-testid="plan-ai-reason">{result.failureReason.text}</code>
+                  </>
+                )}
+                {result?.rawReading && (
+                  <>
+                    {/* Field, then the value exactly as it arrived: no translation, no rewriting, no
+                        "probably because". An empty body shows as `bytes=0` with nothing after `body=`. */}
+                    <span className="plan-ai-detail-label" data-testid="plan-ai-raw-label">
+                      {zh ? "这台设备读到的原始回读" : "Raw reading this device took"}
+                    </span>
+                    <pre
+                      className="plan-ai-raw-reading"
+                      data-testid="plan-ai-raw-reading"
+                      data-raw-http-status={result.rawReading.http_status}
+                      data-raw-content-type={result.rawReading.content_type}
+                      data-raw-bytes={result.rawReading.bytes ?? ""}
+                    >
+                      {`http_status=${result.rawReading.http_status}\n`}
+                      {`content-type=${result.rawReading.content_type}\n`}
+                      {`bytes=${result.rawReading.bytes ?? ""}\n`}
+                      {`body=${result.rawReading.body_head}`}
+                    </pre>
                   </>
                 )}
                 {result?.summary && (

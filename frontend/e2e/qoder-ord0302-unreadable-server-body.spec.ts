@@ -208,15 +208,38 @@ async function bootWithStubs(page: Page, stubs: Stub[], arm: string) {
   let reason = "";
   let label = "";
   let origin = "";
+  let rawText = "";
   if (count > 0) {
     await details.first().click();
-    label = clean(await page.getByTestId("plan-ai-detail-kind").innerText());
-    origin = (await page.getByTestId("plan-ai-detail-kind").getAttribute("data-reason-origin")) ?? "";
-    reason = clean(await page.getByTestId("plan-ai-reason").innerText());
+    const kind = page.getByTestId("plan-ai-detail-kind");
+    if (await kind.count() > 0) {
+      label = clean(await kind.innerText());
+      origin = (await kind.getAttribute("data-reason-origin")) ?? "";
+      reason = clean(await page.getByTestId("plan-ai-reason").innerText());
+    }
+    /* Q53=①: what has to be under the block is the answer's own bytes. Reading them is a separate probe
+       because a shape can carry a raw reading and no sentence at all. */
+    const raw = page.getByTestId("plan-ai-raw-reading");
+    if (await raw.count() > 0) rawText = String(await raw.textContent());
+  }
+  const rawFields: Record<string, string> = {};
+  for (const line of rawText.split("\n")) {
+    const at = line.indexOf("=");
+    if (at > 0) rawFields[line.slice(0, at)] = line.slice(at + 1);
   }
   return { arm, status: (await result.getAttribute("data-result-status")) ?? "", card_text: cardText,
            sentence, details_count: count, promise_in_copy: sentence.includes("技术详情"), reason, label,
-           origin };
+           origin, raw_text: rawText, raw_fields: rawFields };
+}
+
+/** What the block must show for a shape we forced: the answer's own fields, unedited. */
+function expectedRaw(sh: X5Shape): Record<string, string> {
+  return {
+    http_status: String(sh.status),
+    "content-type": sh.contentType,
+    bytes: String(new TextEncoder().encode(sh.body).length),
+    body: sh.body,
+  };
 }
 
 const MISSION_CLEAN = { mission: { id: "ord0302-mission", status: "COMPLETED", failure_reason: null,
@@ -266,13 +289,16 @@ test(`ord0302-X1 ${"every 200 shape whose card points at 技术详情 renders a 
         got: { promise_in_copy: read.promise_in_copy, details_count: read.details_count } });
       rows.push({ claim: `${sh.row}: this is the shape X-5 named`,
         ok: read.status === "NO_PLANS_PRODUCED", got: { status: read.status } });
-      rows.push({ claim: `${sh.row}: its block carries a reading rather than nothing`,
-        ok: read.details_count >= 1 && read.reason.length > 0, got: { reason: read.reason } });
+      const want = expectedRaw(sh);
+      const got = read.raw_fields;
+      rows.push({ claim: `${sh.row}: its block carries the raw reading, field for field, unedited`,
+        ok: Object.entries(want).every(([k, v]) => (got[k] ?? null) === v),
+        got: { expected: want, rendered: got } });
       rows.push({ claim: `${sh.row}: the copy still points there (Q53=①: render it, keep the pointer)`,
         ok: read.promise_in_copy === true, got: { promise_in_copy: read.promise_in_copy } });
     }
     const head = per[X5_SHAPES[2].row] as Record<string, unknown>;
-    readings["X1"] = { want: "device", force_shape: "five HTTP 200 bodies on both write legs (R19-R23)",
+    readings["X1"] = { want: "raw", force_shape: "five HTTP 200 bodies on both write legs (R19-R23)",
                        shape_count: X5_SHAPES.length, per_shape: per,
                        read: { ...head, shape_count: X5_SHAPES.length },
                        verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
