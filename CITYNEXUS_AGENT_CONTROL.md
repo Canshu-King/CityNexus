@@ -16588,6 +16588,67 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### SESSION=e345b9d6 @2026-09-26 08:35+08 —— **ORD-0325 附答（号令者 03:49 两问）：① ORD-0104 的欠项没被我这枚改动覆盖，而且它要的那半在 09-21 已被 ORD-0134② 反转判据；② ORD-0266 我的候选不该再落，同一枚形状已由 ORD-0246 的同步互斥关掉并被一把现成的门盖住两头 —— 建议口径 SUPERSEDED**
+
+本块重投那两枚：inbox 里我名下前两枚待插块（文件名已各加 `.superseded_by_<新号>` 后缀移出待插队列，旧文件一字未改也未删；号令者的件我一枚没动）。较早那枚只有一处形错：我在一个「说明这枚数为何不可解」的句子里把完整 40 位又抄了一遍，门拦它拦得对（命令 0 推 ref，所以那枚候选对象的字节从未上行，GitHub 对它的 commit / blob / tree 三枚探针全部返回 HTTP 404）——本块那一处只写短号加披露词，读数一个字没减。它引用的读数件本身倒是在行上的（`…ord0325_two_questions_readings_r1.json`）；我重跑那次改了它的本地字节又没过门，「名字对、字节不对」比没上架更难查，所以本块起改成一枚名字一代读数：先过门、再引用门上那一枚 blob。
+
+较新那枚已经过同一道门、坐标全可解，只是它自己有三处文字与实际不符，我按「错了发新件、不覆盖不删」的规矩重投，逐条 was/now：
+
+1) was「板比我下面这些读数早两个半小时」——那是我从板的 `at_local` 手点出来的；now 两端都是读出来的：板 `2026-09-26T03:07:58+08:00`、本批读数 `2026-09-26T07:55:22+08:00`，差 287 分钟。
+2) was 那句「也不把 ② 说成已修」——那个 ② 指 ORD-0104 自己的第二格，和号令者两问的 ② 撞了号；now 写成「ORD-0104 的那半枚」。同一问的两处旧提问现在也带行号：`CITYNEXUS_AGENT_CONTROL.md:9099`、`CITYNEXUS_AGENT_CONTROL.md:9405`。
+3) was 我抄账本那句写成「re-parent 到 c79e2b4 后落地（已核）」并给了手写行号 `CITYNEXUS_AGENT_CONTROL.md:24178`；那既不是原文（原文是「3) ORD-0266：D 的 db6ac1d re-parent 到 c79e2b4 后落地（DELIVERED / NOT-LANDED 已核）。」），行号也早被别人的插入顶走了。now 行号与原文都从账本现读，就是 `CITYNEXUS_AGENT_CONTROL.md:24675 :: 3) ORD-0266：D 的 db6ac1d re-parent 到 c79e2b4 后落地（DELIVERED / NOT-LANDED 已核）。`。
+
+读数前提：现读尖 commit=`c740f45d68f337c460a1a43b995162689d0110af`（`git ls-remote` 读出，`refs/heads/mirror/integration-frontend-apple-pass1`）。我 ORD-0325 落地那枚 commit=`c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400` 是它的祖先（`git merge-base --is-ancestor` 退出 0），并且 `frontend/src/app/V8Experience.tsx` 在尖上的 blob 与我落地时同一枚：`aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5`。状态板那件我按你给的坐标取回并逐字节重算：`evidence/state-board-S1/state_board_r1.json` 的 git blob = `524183cc6a9084d8e4dabbf1a61c4d5f1347b9f6`，与你帖里那枚相等，它自己的 `at_local` = 2026-09-26T03:07:58+08:00 —— 也就是板比我下面这批读数（2026-09-26T07:55:22+08:00）早 287 分钟。
+
+换代核对：本批读数与上一枚块那批（`ord0325_two_questions_readings_r3.json`，它取的尖 `c740f45d68f337c460a1a43b995162689d0110af`）逐字段比过，22 枚字段完全相同，变了 1 枚 = `['readings_written_at']`。变的这些里没有 `gesture_spec_*`、`sheet_*`、`same_tick_gate_nodes`、`v8_hunks_touched_by_my_landing` —— 也就是两问的依据在这一代与上一代是同一份，差的只是代次指针和账本行号这类会随别人的插入走的东西。
+
+① **ORD-0104：没被覆盖，理由要分开说。** 逐 hunk 的清单在架上那件 `evidence/ord0325-q64-three-cells-d/ord0325_two_questions_readings_r5.json` 的字段 `v8_hunks_touched_by_my_landing`（blob `36c8ca90a3724758f15ff9587ade4af3e14ef4c3`）里，我这枚改动碰了 9 枚，全在导入区、`rejectionReason` 的注释、`V8Rejection` 与 `v8RequestInner`、banner 状态与两处 catch、banner 渲染：`frontend/src/app/V8Experience.tsx:17`、`frontend/src/app/V8Experience.tsx:85`、`frontend/src/app/V8Experience.tsx:154`、`frontend/src/app/V8Experience.tsx:193`、`frontend/src/app/V8Experience.tsx:274`、`frontend/src/app/V8Experience.tsx:530`。整枚落地 diff 里含 map/touch/scroll 字样的行只有 3 行，全部是我**门文件**里的 `scrollIntoViewIfNeeded()`（三次点击前各一次），产品侧的地图与手势代码一行没动 —— 所以不能拿 0325 当 0104 的证据行号。
+
+但板说的「欠的那半枚」在现尖上已经不是一条待修缺陷：ORD-0134② 反转了旧判据（账本 09-21 我那块原话：「旧节点 `ord0104-one-finger-on-the-map-scrolls-the-page` 从 `frontend/e2e/qoder-map-gesture-ownership.spec.ts` 改写为 `ord0134-map-gesture-ownership`，`df5ad73` 里那条 `test.fail(true,…)` 承载随之撤销」。现尖字节核对：该 spec 里 `test.fail(` 命中 0 处，测试节点只有 1 枚 = frontend/e2e/qoder-map-gesture-ownership.spec.ts:146 :: test("ord0134-map-gesture-ownership — 拖地图地图动、拖页面页面动，各不抢对方的手势；旧名字还剩 2 处提及，逐处是：`frontend/e2e/qoder-map-gesture-ownership.spec.ts:20` 是注释/字段（`* This replaces `ord0104-one-finger-on-the-map-scrolls-the-page`…`）；`frontend/e2e/qoder-map-gesture-ownership.spec.ts:417` 是注释/字段（`replaces: "ord0104-one-finger-on-the-map-scrolls-the-page (crite…`） —— 都是**说明撤销的注释与 `replaces:` 字段**，不是还在跑的判据。所以 ① 的答复是：**不推我 0325 去覆盖它**；板把 PARTIAL 留住，是因为它取的最新状态行是我 09-21 18:1x 那条 `status:` 行，而反转发生在同一晚更晚的块里（按作者分块插入 ≠ 全局时间序）。
+
+①-剩下真正还缺的一步（不是代码）：两指缩放这台仪器发不出来 —— `synthesizePinchGesture` 的 `touch` 源被协议拒、`default` 源不动相机；我把 `dragPan.disable()` 改下去又读不回状态就撤回了。这一步要的是你给口子（真机走查一次，或允许我把 `map.handlers` 状态做成可读测试缝），这条我从 09-21 问到今天没答（账本 `CITYNEXUS_AGENT_CONTROL.md:9099` 与 `CITYNEXUS_AGENT_CONTROL.md:9405` 两处都记着「上一条问过一次，没答」）。不给口子的话，我不硬猜着改，也不把 ORD-0104 的那半枚说成已修。
+
+② **ORD-0266：不算「我的候选交完」，但也不该再落。** 三条现尖事实：(a) 我那枚候选在这里只写作短号 `db6ac1d`（完整 40 位我不在这句里重述：它从未推上任何 ref，GitHub 对它的 commit / blob / tree 三枚探针全部返回 HTTP 404，字节只在我本地对象库里，所以它不是一枚行上可解的坐标；号令者对这一枚的命令是 0 推 ref，我也不为它造可解性），它是 2026-09-23T21:55:08+08:00 fix(frontend): count in-flight legs instead of trusting one boolean (ORD-0266) 那一笔，**不是现尖的祖先**（`git merge-base --is-ancestor` 非 0），它引入的标识 `inFlightRef` 在尖上 `frontend/src` 命中 0 处、整条线命中文件 = `NONE`；(b) 同一枚形状在尖上的现状是：`frontend/src/features/planning/PlanWithAiSheet.tsx` 只有 frontend/src/features/planning/PlanWithAiSheet.tsx:381 :: const [busy, setBusy] = useState(false);、一枚 acquire frontend/src/features/planning/PlanWithAiSheet.tsx:528 :: setBusy(true);、一枚 release frontend/src/features/planning/PlanWithAiSheet.tsx:839 :: setBusy(false);，而在 acquire 之前有一句同步互斥 frontend/src/features/planning/PlanWithAiSheet.tsx:515 :: if (runningRef.current) return;，release 在同一个 `finally` 里与它成对 frontend/src/features/planning/PlanWithAiSheet.tsx:838 :: runningRef.current = false; —— 也就是「第二腿根本不许起飞」——0266 要量的那个「两腿同时在飞」从这块面板已不可达；(c) 这层互斥不是我加的，是 commit=`dc690d7465171c08fad75c15e0aadabfa8983506`（dc690d74 2026-09-23 13:02:34 +0800 fix(frontend): refuse the second tap synchronously, and give the summary a finger-sized target (ORD-0246, ORD-0247)）带进来的，并且两头都有门在线上：`frontend/e2e/qoder-same-tick-double-tap-plans-once.spec.ts:130`、`frontend/e2e/qoder-same-tick-double-tap-plans-once.spec.ts:174`、`frontend/e2e/qoder-same-tick-double-tap-plans-once.spec.ts:232` —— 第 2 枚专门管「互斥不许变成永久上锁」。
+
+② 的口径建议（归你定，我不自己改账本状态）：ORD-0266 = **SUPERSEDED_BY commit=`dc690d7465171c08fad75c15e0aadabfa8983506`**，不是我那枚候选的 LANDED；`db6ac1d` 我标 RETIRED、不再 re-parent、不重投（若你判「还是要引用计数」，那是一枚新单：现在只有一个 acquire/release 对，引用计数会先把那对拆成两半）。CLOSED 还差两件、都不在我手里：一件是你对上面这个口径的点收；另一件是 `derived_result`/等级（B-1 起交件方不自宣 KILLED 或 CLOSED）归红队。另报一条给 S3/你：板的 ORD-0266 那一行把 `as_of` 绑到 2026-09-25 09:39 那块，而那块正文讲的是 ORD-0298 的 re-parent，0266 在里面只出现在队列句里（「仍 DELIVERED/NOT-LANDED 等窗口」）；而账本里那条「3) ORD-0266：D 的 db6ac1d re-parent 到 c79e2b4 后落地（DELIVERED / NOT-LANDED 已核）。」在「⑤ 闭单之后的排队」标题下面（`CITYNEXUS_AGENT_CONTROL.md:24675 :: 3) ORD-0266：D 的 db6ac1d re-parent 到 c79e2b4 后落地（DELIVERED / NOT-LANDED 已核）。`），是排程不是落地确认 —— 我按现尖核过，它确实没落。这是尺的绑定面，不是我的账，我不动别人的件。
+
+本块边界：只读。`git ls-remote` / `show` / `grep -n` / `log -S` / `merge-base` 之外 0 操作；产品字节 0 改、权威线 0 写、ref 0 推、`vite build` 0 次、`demo/reset` 0 次、凭据 0 打印。读数值存 `evidence/ord0325-q64-three-cells-d/ord0325_two_questions_readings_r5.json`（blob `36c8ca90a3724758f15ff9587ade4af3e14ef4c3`，本块写它之前已过号令者那道门 `live_checks/publish_evidence_gated_r1.py`，判 `CREATED`，从 `commander/control` 逐字节回读相等；同目录里前两代分别留在 `ord0325_two_questions_readings_r1.json`（blob `83f300d348ada7f89fef5a7f60db9d3098e0328c`）与 `ord0325_two_questions_readings_r2.json` 与 `ord0325_two_questions_readings_r1.json`（各自 blob 在 `commander/control` 上可解），名字各占各的，我不覆写），尺的 selfproof 我没重跑（不是我的尺：`c03b50880d35c266f54cfe85dbcc21a2c5dac396`）。`claimed_result` 只到观测，`derived_result` 留 null，等级归红队。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0340 前置 · lane S2-hermes-port · 死路形状已在尖上量出来，修它要动 F 的地 ⇒ 状态 BLOCKED-ON-SEQUENCING（0 推 ref、0 产品字节）
+
+**lane**: S2-hermes-port（Qoder）· **at_local**: 2026-09-26T07:38+0800 · **单号**: ORD-0340（前置，未开工）· **读数全部钉在** `9b84a5fea9e7b38f3cace4160508f7a1b46c1418`
+
+#### 先认我自己的仪器错
+第一版慢 worker 是用 Popen 直起的，我没把 `CITYNEXUS_DATABASE_URL` 传进它的环境 ⇒ 它开了 `./citynexus.db` 空库，D 到 G 四格作废（当时 holder 回 404）。修正后整轮重跑，下面引的全是第二轮，且五枚 pid 互不相同（跨进程成立）。另一处：耐久行是 `plans.generate:<头值>`，我第一趟拿裸值去查，得到 0 行差点报成「占位没落库」——同一枚坑我记忆里已有，今天又踩一次。
+
+#### 八格读数（一次性导出树；耐久用第二条独立连接 + `PRAGMA query_only=ON` 读；journal_mode 实测 wal）
+- A 抢占后 worker 死：调用方在路由 `backend/app/main.py:4717` 那一层拿到 500，正文整句只有 `Internal Server Error`（21 B，无 code、无 reason_code），而库里那行停在 `response_status=NULL`、`response_json` 为空、`expires_at` 是 +7 天（写占位在 `backend/app/main.py:4773`）。
+- B/C 新进程重放这把死键：409 `agent idempotency record is incomplete`，各等约 812 与 828 毫秒（读端是 40 次 × 20 毫秒的等待循环，坐标 `backend/app/main.py:10132`、`:10142`、`:10158`），第三次那行仍是 NULL ⇒ 这把键在回执寿命内永久作废。
+- D/E 换成**健康但在飞**的 worker：库里的行形与 A 完全一致（NULL + 同 `expires_at`），重放拿到同一句 409，去掉每调用都新的 `trace_id` 之后正文与死形逐字相同 ⇒ 客户端分不开「还在算」与「已经死了」。
+- F/G 那个健康 worker 最后 201 落了答案；事后重放同一把键得 201（16 毫秒）⇒ 当时递给调用方的那句 409 本身就是错的判断，不是保守。
+- H 对照：一把没用过的键走同一路由照样回 201（答案与回执在同一次提交里写入，`backend/app/main.py:4844`），所以不是路由整体坏了。
+
+#### 决定设计安全性的承重前提（量出来的，不是推的）
+NULL 回执**不留 durable 候选**：一次成功调用后 `plan_versions` 为 1 行，随后那枚死抢占仍是 1 行（新增 0），三次重放也 0 新增；`idempotency_keys` 从 1 行变 2 行（多出来的正是那个 NULL 占位）⇒ 「租约过期即可重抢」不会重复落候选行。外部 AI/Hermes 那一支不在前提内（远端效果不可回滚，挂在 ORD-0270 `EXTERNAL_EFFECT_NOT_ROLLBACKABLE`），租约不撤销它，这点我不含糊过去。
+
+#### 触碰面（全部现读坐标，`backend/app/main.py` 本趟 11490 行）
+- 写占位 `backend/app/main.py:4773`，其中把 `response_json=None` 落库在 `:4791` 一带；回填守卫在 `backend/app/main.py:4847`，回填计数校验在 `:4852`；那句无名 409 有两个出口 `backend/app/main.py:4804` 与 `backend/app/main.py:4854`；等待读端在 `backend/app/main.py:10132`。
+- 持久形状：`backend/db/schema.sql:402` 是 `response_json TEXT`（可空），`backend/db/schema.sql:404` 是 `expires_at`（语义=回执有效期 +7 天，现注释还写着「绝不按 expires_at 回收」）；模型在 `backend/app/db/models.py:669`。租约需要一枚**每尝试**的期限与 token，复用 `expires_at` 会把「重抢」和「遗忘」合成同一列。
+- 加列不用离线迁移：`backend/app/db/session.py:535` 已经是 `PRAGMA table_info` + `ALTER TABLE ... ADD COLUMN` 的现成惯例。
+- 租约时长不该我拍：应从现在的写预算派生 —— `backend/app/core/config.py:95` 的 30000 毫秒忙等与 `backend/app/core/config.py:96` 的 45000 毫秒期限（那两枚文件正好在 F 的 ORD-0332 面上）。
+
+#### 我要你裁的排序（按你边界原话：需要动 `main.py` 就先报）
+claim、fill 守卫、等待读端、把结论写成 HTTP 的那一层，四件事**全在** `backend/app/main.py`，而 F 正在里面跑 ORD-0332。两种排法请你选：F 收口后我 rebase 再落；或我先落租约、F rebase。另请答一问：`backend/app/db/session.py` 与 `backend/db/schema.sql` 那枚新列能不能跟我同一笔走（不能走就得另开一单，因为只改 `backend/app/agent/` 与 `backend/app/services` 到不了那四件事）。
+
+#### 方案（等你批，不开工）
+每把键带一枚 per-attempt token 与 claim 期限；租约未过期且被别人持有 ⇒ 具名 `PLAN_GENERATION_IN_FLIGHT` + `retry_after_ms`（不作废键）；期限已过且仍是 NULL ⇒ 具名 `PLAN_GENERATION_ATTEMPT_STALE`，可 CAS 接管；回填改成 `WHERE response_json IS NULL AND claim_token = <自己>` ⇒ 复活的原抢占者**覆写不了**新答案；任何路径都不删占位、不遗忘回执。验收四格：过期可重抢且新答案能落 / 未过期重抢被具名拒 / 复活者覆写被拒且赢家正文逐字存活 / 死键形状不再永久（同键后来能拿到真答案）。
+
+**证据**：`evidence/ord0340-claim-lease-S2/dead_end_cells_r1.json` blob `500ec4d72765a103fd4388c28d40747a8973cbe3`、`reclaim_premise_r1.json` blob `e6f3559493f90ea986e032a9124054023cf74390`、`touch_set_r1.json` blob `8fea6e8e955bb98a01fefd99475c509eb0a90006`（远端字节与本地逐位相等）。**纪律**：推 ref 0 次、权威线移动 0、`backend/app` 与 `frontend/` 产品字节 0、`credentials_printed` 0、`model_calls_made` 0、`live_or_preview_db_touched` 0、`junctions_created` 0；`demo/reset` 只作用在我声明的一次性库上（套件本就用的那扇门）；导出树跑完自删。`derived_result` 留 `null`。
+
+
 ### SESSION=c01d72a3 · ORD-0323 交付 · 车道 B（候选 499522db0903790c3eaba5837bf8e8e3764b7463，基线 9a669c8bec863fadf31d5158f4a1be66aec49f23）
 
 **要件对照** ①基线按你点名的那一枚现读 9a669c8bec863fadf31d5158f4a1be66aec49f23，我的候选 499522db0903790c3eaba5837bf8e8e3764b7463 在它之上 13 枚提交，分支只开新名 `review/0323-ten-cells-b`；②每格两向断言见下（两向各配一枚反件，可各自变红）；③尺量我自己那一枚：r3（blob 44e062e6ce9c7b5d97d78e09e432072da102292c，与你贴的逐位相同，自检 SELFTEST_PASS）改前 11 命中、改后 1 命中，读数组件 ba38900ecb4c79fe9af0870e4bfab80b9dcd5aa5；同一格再用取代它的 r4（blob eb262f59e54d5142ad0e8041704e751eac473ace，自检 SELFTEST_PASS 20/20）量了一遍，读数组件 a1f37a32d88aff91b41287f36b4e42c835eedf99；④0 处 skip、0 条既有断言被改（frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts 的 spec blob c7bdadac30ce3182a6acd195a21f03a7430f9b83，skip/fixme 命中 0 行）；⑤权威线 0 次移动、0 次 force-push。
