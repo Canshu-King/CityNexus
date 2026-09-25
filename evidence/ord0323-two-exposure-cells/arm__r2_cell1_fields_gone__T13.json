@@ -1,0 +1,16 @@
+{
+ "run_id": "0323c1f3929",
+ "arm": "T13",
+ "cell": "T13",
+ "route": "PATCH_INBOX",
+ "method": "PATCH",
+ "status_asked": 511,
+ "slot_text": "服务器自己报错了（HTTP 511）。这是它那边的问题，不是你填错了什么。可以重试；如果一直这样，稍后再来。",
+ "status_in_slot": true,
+ "needles_found": [],
+ "needles_found_in_attributes": [],
+ "attribute_pairs_swept": 72,
+ "foreign_status_found": [],
+ "internal_token_on_screen": false,
+ "test_status": "passed"
+}
