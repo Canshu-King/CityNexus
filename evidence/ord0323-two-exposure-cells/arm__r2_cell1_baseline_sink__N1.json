@@ -1,0 +1,23 @@
+{
+ "run_id": "0323c1b3929",
+ "arm": "N1",
+ "panel_copy": "Something went wrong hereYour trip data has not been lost. You can retry this screen or go back to Today.Try againBack to TodayReload the appTechnical detailCannot read properties of undefined (reading 'length') at JourneyInboxWorkbench (http://127.0.0.1:4481/src/features/inbox/JourneyInboxWorkbench.tsx:163:41) at div (<anonymous>) at div (<anonymous>) at main (<anonymous>) at div (<anonymous>) at V8Experience (http://127.0.0.1:4481/src/app/V8Experience.tsx:297:29) at ProductErrorBoundary (http://127.0.0.1:4481/src/components/ProductErrorBoundary.tsx:29:5) at App (<anonymo",
+ "error_detail_text": "Cannot read properties of undefined (reading 'length')\n\n    at JourneyInboxWorkbench (http://127.0.0.1:4481/src/features/inbox/JourneyInboxWorkbench.tsx:163:41)\n    at div (<anonymous>)\n    at div (<anonymous>)\n    at main (<anonymous>)\n    at div (<anonymous>)\n    at V8Experience (http://127.0.0.1:4481/src/app/V8Experience.tsx:297:29)\n    at ProductErrorBoundary (http://127.0.0.1:4481/src/components/ProductErrorBoundary.tsx:29:5)\n    at App (<anonymo",
+ "console_error_count": 1,
+ "console_error_head": [
+  "%o\n\n%s\n\n%s\n TypeError: Cannot read properties of undefined (reading 'length')\n    at http://127.0.0.1:4481/src/features/inbox/JourneyInboxWorkbench.tsx:959:82\n    at Array.map (<anonymous>)\n    at JourneyInboxWorkbench ("
+ ],
+ "root_text_length": 612,
+ "overlay_hosts": [
+  "div#root",
+  "script"
+ ],
+ "leaked_needles_still_on_screen": [
+  "Cannot read",
+  "JourneyInboxWorkbench"
+ ],
+ "leaked_needles_in_attributes": [],
+ "attribute_pairs_swept": 12,
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N1 — the fold no longer states which screen failed; it reads \"Cannot read properties of undefined (reading 'length') at JourneyInboxWorkbench (http://127.0.0.1:4481/src/features/inbox/JourneyInboxWorkbench.tsx:163:41) at div (<anonymous>) at div (<a\" \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+}
