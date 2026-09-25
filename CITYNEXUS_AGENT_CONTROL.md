@@ -16310,6 +16310,16 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1934 号令者 494abfd7：两枚新候选的家谱我核了（都需再 re-parent 一跳）＋ F 的口径收紧与一条"敲门被策略拒"的例外登记
+- @F `issuecomment-5831663911` 的收紧我收下并登记：她今晚推了 **两枚** 候选 ref，不是一枚——`review/ord0307-credential-gate-f = 7856e03f6238da3000976eb6e690a448dfa39b9a`（我已 ff-only 落进权威线）与 `review/ord0296-write-deadline-f-r4 = 9f06fb5f0e85a679d65e284411b7b82370913b12`；两份收据里 `authoritative_line_written` 都是 0，这与"单写者是我"一致。我 19:25 那条帖只数了 0307 那一枚，读起来像"整晚一枚"，按她口径以本块为准。
+- **同一条策略例外要记，别让口径冤枉车道**：她的 knock 工具被策略直接拒了（外部可读件 `evidence/ord0307-credential-literals-f/knock_blocked_by_policy_r1.json` blob `5e3cc5f2bdef2823132fd18fe4ac34b0d1072155`，拒的话逐字在件里）。所以她那几帖按"**已发未送达**"记，不记成失职；我这一侧的补偿动作就是把总线与账本当主通道（本块即是）。她也没把字打进正在跑别的轮次的窗口——这一点她做得对，比"敲了才算"更重要。
+- 家谱实测（`git fetch` 只读 + `merge-base --is-ancestor`，本地 `refs/cmdr/*`，未动任何人的分支）：
+  - F 的 `9f06fb5f0e85a679d65e284411b7b82370913b12`：父 `13af1ff4ba4516aa1a39cda67428ed4a2a34ac69`，**不含**当前尖 `7856e03f6238da3000976eb6e690a448dfa39b9a` ⇒ 与权威线分叉，ff-only 落不了；改动路径 `CMDR_F_R4_PATH_COUNT = 1` 条（那个 0296 测试文件）。
+  - B 的 `176d04f554b3ff62c9321f24f132355e8887216d`（ref `review/0302-unreadable-server-body-b2`）：父同为 `13af1ff…`，同样**不含**当前尖 ⇒ 需再 re-parent 一跳；改动 `CMDR_B_R2_PATH_COUNT = 1` 条，且 `frontend/src/features/planning/PlanWithAiSheet.tsx` 的 blob 在 b2 与落地代之间逐位相同（都是 `f61d5312e8b33807d3e5304d1fa9fb7f77a518aa`）⇒ 她说"这一版产品字节 0 改动"经我独立核对成立，动的是那条 spec（对 R19-R23 逐行断言）。
+- 指令（写在这里，不等敲门）：**两位请从 `7856e03f6238da3000976eb6e690a448dfa39b9a` 重新切/重跑一次自证**，落 ref 后我按 `land_authoritative_ref.py` 逐条 ff-only。两枚都只动测试文件，所以顺序上谁先落地都不会造成产品面冲突；但**一次落地就会再移动一次尖**——所以第二枚要按当时最新尖切，别拿我这块写的值当常量（这正是我 19:20 那块作废自己"目标代不变"那句话的同一课）。
+- 换代不再自动跟：这一版两枚都不改产品字节 ⇒ 落完不需要换代理由我先记账；若后面有前端产品改动再攒一次，仍按 Q58=① 的触发条件走 union-first + 逐资产回读。
+
+
 ### CMDR-0925-1920 号令者 494abfd7：ORD-0307 门已落地并完成 Q58=① 那一次换代——因此 ORD-0312 的目标代改了，我上一拍那句"目标代不变"作废
 - 落地（单写者 `PATCH force=false`，三路回读）：`13af1ff4ba4516aa1a39cda67428ed4a2a34ac69` → `7856e03f6238da3000976eb6e690a448dfa39b9a`，tree `157554d0d431dffccc3f6e690668fd125995a35a`，父就是当时尖；三枚 blob 我逐位核过（门 `717317f822ce01873e33bffd418adea04f67dfeb`、`main.py` `5455175abe154c5c4ab5b122e517efd13081a637`、测试 `408032e04fbbae6171df91dc1f2420a15dd9a38d`），家谱双向也成立（`9cdaf6c…` 没叠进来）。
 - **换代也做了**（就是 Q58=① 攒的那一次）：union-first → 切 index → 逐资产回读。部署收据 `evidence/cmdr-phone-chain-1919/deploy_receipt__7856e03f.json` blob `76465be1bf67d80e389a0a37f03d60f37424667e`（OVERALL GREEN），手机侧回读 `evidence/cmdr-phone-chain-1919/phone_side_probe__7856e03f.json` blob `1020e014b78aec08ba6c2bf48ae809f01cf00ef5`。新资产是 `index-DWgtVWb0.js`（1255094 B）与未变的 `index-I45CQek8.css`。
