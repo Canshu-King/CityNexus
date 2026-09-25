@@ -1,0 +1,68 @@
+{
+ "schema": "CNX_VERIFIER_DERIVATION_V1",
+ "order": "ORD-0292 (D's seven reverse-mutation arms on the frozen candidate tip 06717045; mechanical derived_result per B-1)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T08:45+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "coordinates_verified": {
+  "gate_round": {"path": "evidence/ord0292-on-frozen-0671704/gate-round-0671704.json",
+                 "blob": "0160e8db0295e600b44a5e5ff021d5da507bc7d2", "bytes": 36615, "sha_ok": true},
+  "arms": {"path": "evidence/ord0292-on-frozen-0671704/arms-0292c-0671704.json",
+           "blob": "cb9270671adc323ff2816d406739e04518b9d05f", "bytes": 35661, "sha_ok": true},
+  "frozen_candidate_tip": "0671704546f9c9ea1d1b57627b059124c7800803 (matches the tip I read myself first for ORD-0286 - the ref has been frozen since, as D promised)",
+  "note": "generation note: the arms ran on the CANDIDATE generation 06717045, not on the landed 5c4608ce; per Q24/Q25 these kills are candidate-generation facts. The commander's order says D is re-parenting to 5c4608ce (ORD-0298) with fresh rounds - those will be the landed-generation facts."
+ },
+ "green_round_check": {
+  "triples": 14, "exact_sha_all_equal_frozen_tip": true,
+  "spec_denominators": {"owner spec (continuation-owner)": 4, "sealed-failure": 3,
+                         "resume-carries-identity": 4, "sheet-legs-idempotency": 3},
+  "verdict": "GREEN", "problems": 0,
+  "collection": "Playwright 15 tests in 5 files => 14 gate nodes; backend 1232 collected rc=0"
+ },
+ "mechanical_derivation": {
+  "rules": "same as v5/v6: baseline exit 0, attempt exit != 0, redSet matches attempt per-node readings, owner in redSet, anchor_hits >= 1, bytes_changed, restored_exact, runIds distinct per arm, triple exact_sha == frozen tip, same_key_precondition key names the frozen tip and was green in the green round",
+  "per_arm": {
+   "K278_NO_MISSION_ID_IN_BODY": {"red": 1, "attempt_nodes": 4, "attempt_mismatches": 0, "owner_red": true,
+     "exclusive": true, "restored_exact": true, "anchor": 1, "derived": "KILLED (exclusive, sole carrier)"},
+   "K278_TWO_KEYS_MERGED": {"red": 1, "attempt_nodes": 4, "attempt_mismatches": 0, "owner_red": true,
+     "exclusive": true, "restored_exact": true, "anchor": 1, "derived": "KILLED (exclusive, sole carrier)"},
+   "K278_CLEAR_BEFORE_SEND": {"red": 1, "attempt_nodes": 4, "attempt_mismatches": 0, "owner_red": true,
+     "exclusive": true, "restored_exact": true, "anchor": 1, "derived": "KILLED (exclusive, sole carrier; clause-5 shape)"},
+   "K278_SILENCE_ON_NON_ACCEPT": {"red": 1, "attempt_nodes": 4, "attempt_mismatches": 0, "owner_red": true,
+     "exclusive": true, "restored_exact": true, "anchor": 1, "derived": "KILLED (exclusive, sole carrier)"},
+   "K253_LEG2_KEY_DROPPED": {"red": 3, "attempt_nodes": 3, "attempt_mismatches": 0, "owner_red": true,
+     "exclusive": false, "restored_exact": true, "anchor": 1, "derived": "KILLED (compound cut-set: reds cover all 3 nodes of the 0253 spec; PRIMARY = owner both-legs, the other two are the same cut seen from their own nodes - counted as ONE kill of the compound set, not three)"},
+   "K253_LEG1_KEY_DROPPED": {"red": 3, "attempt_nodes": 3, "attempt_mismatches": 0, "owner_red": true,
+     "exclusive": false, "restored_exact": true, "anchor": 1, "derived": "KILLED (same compound set)"},
+   "K253_ONE_KEY_FOR_ALL_INTENTS": {"red": 3, "attempt_nodes": 3, "attempt_mismatches": 0, "owner_red": true,
+     "exclusive": false, "restored_exact": true, "anchor": 1, "derived": "KILLED (same compound set)"}
+  },
+  "receipt_level_checks": {
+   "allArmsKilled_true": true, "claimed_KILLED": 7, "derived_KILLED": 7,
+   "allArmsRestoredToTestedTreeBytes_true": true,
+   "allArmsCarryAGreenSameKeyPrecondition_true": true,
+   "treeUnchangedByThisRun_true": true,
+   "filesBefore_equals_filesAfter": true, "files_hashed": 3,
+   "pristine_files_equal_tested_tree_blobs": "3/3 (journeyContinuation.ts, V8Experience.tsx, PlanWithAiSheet.tsx sha256 == blob at the tested tree)",
+   "runIds_unique_per_arm": true,
+   "restore_proof_carries_digest_triple": "before == after == frozen tree blob, per arm"
+  },
+  "derived_result": "7/7 KILLED on frozen candidate 06717045; every kill derived from raw round fields; zero claims taken from claimed_result"
+ },
+ "evidence_accounting": {
+  "independent_kills": "5 distinct behavioural classes: 4 exclusive K278 carriers (each sole-owner) + 1 compound K253 cut-set (three arms red on the same 3-node spec; they are the same cut set seen from three owner nodes, so they count as ONE compound kill with three owners, not three independent kills)",
+  "primary_vs_collateral": "K278 arms: reds are all exclusive (no collateral). K253 arms: all three nodes red together - each arm's owner is primary FOR ITS OWN NODE, and the other two are co-reds of the same cut; per the standing rule (one arm red on three nodes != three pieces of evidence) the compound set is one kill event",
+  "comparison_with_0286": "my ORD-0286 gate run on the same tip signed 0278 GATE_GREEN_4_4 and 0253 GATE_GREEN_3_3 - the green face these arms attack is the same face, now with teeth: every 0278 node has an exclusive kill, the 0253 triple is a compound cut-set"
+ },
+ "generation_status": {
+  "these_kills": "candidate-generation facts (06717045) per Q24/Q25",
+  "landed_generation": "5c4608ce (two hops later); ORD-0298 (D re-parent + rerun) is the path to landed-generation kills; the v6 9/9 do NOT transfer (5/8 files differ) and neither do these until rerun on 5c4608ce"
+ },
+ "derivation_notes": [
+  "my first pass flagged a possible exclusivity flag mismatch - recheck showed exclusiveToOwner == (redSet size == 1) for all 7 arms, no mismatch",
+  "K253 arms' redSet covers the ENTIRE spec denominator (3/3 nodes RED) - that is the compound-cut shape, and the attempt node readings match exactly"
+ ],
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this derivation)"}
+}
