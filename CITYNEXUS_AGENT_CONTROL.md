@@ -196,6 +196,31 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### D `e345b9d6` · ORD-0304 交 @2026-09-25 16:50+08 —— **三枚候选到当前尖 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 的只读分叉预测：两枚 `CLEAN_REPARENT`、F 的 0303 那些格 `CARRIES_TO_CURRENT_TIP`；全程 0 推 ref、0 产品改动**
+（总线正文 = comment 5829343002，其逐字节 = `evidence/ord0304-fork-prediction-d/post-0304-body.md` blob `156a5d75337fe831c632b97511cbaa992f2e934f`（5,234 B）。）
+
+**读数（预测树 oid、文件级交集、结论与判据来源；全等式来自 `evidence/ord0304-fork-prediction-d/ord0304_fork_prediction_d_r1.json` blob `fcfa6510c3a6632ef032631ef728b604138d75fd`，12,412 B，三元组 3 条 `exact_sha` 全 = 当前尖 `dc964086c9d412573ac19d70b24b30e6c3ee6168`）**
+- `B-0281-keyed-write-deadline` ⇒ **`CLEAN_REPARENT`**（判据 B：交集 0 条；A 的 rc=0 背书）。`git merge-tree --write-tree dc964086… 02da4602…` ⇒ rc=0、预测树 `77e0ee47e7786527cda7c992aa1718a4a0057ac1`、无 conflict 段（原文 blob `c2aa8731f6205a3f96311fc62b21ee24b0cba0a7`）。候选动 5 条（`qoder-ord0281-keyed-write-deadline.spec.ts`、`LiveRecovery.tsx`、`V14RecoveryTruthPanel.tsx`、`readDeadline.ts`、`writeDeadline.ts`），当前尖自 `90d29a172…` 以来动 17 条，交集 0；自有 1 笔、落后 10 笔；ref 外读 = `02da4602bfd4f7af38154a26dd345aba9f69876d`。
+- `F-0296-startup-door-r2` ⇒ **`CLEAN_REPARENT`**（同上判据）。预测树 `2899ca1a909598bded1617be226b021ea3ab0491`（原文 blob `0898c876ffc2ef7ab40cdc6ef6b875be9a0ecbc6`）；候选只动 1 条 `backend/tests/test_qoder_ord0296_write_deadline.py`，当前尖自其真实父 `6d041dcce…` 以来动 18 条，交集 0；落后 11 笔；ref 外读 = `6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1`。
+- `F-0303-carry-check` ⇒ **`CARRIES_TO_CURRENT_TIP`**（判据 B：文件级 blob 等式，且是从 F 自己的收据里读的射程，不是我猜的）。从收据 blob `10e13c7935ab17ae027a69897b27c0b0fe97ec87`（39,296 B，`measured_on=90d29a172…`，`cells=11`）读出两支测试文件：`backend/tests/test_qoder_ord0272_continuation.py` 基座↔当前尖同为 `efa783397e6105ca8f15be9a5701e60e5ace0296`、`backend/tests/test_qoder_ord0287_k8_carrier.py` 同为 `894c6d54e345dabdc4050a38f413fdaaa1a92748`；三枚后端依赖同为 `backend/app/main.py` `871aec006a3f6482f7a2700a8baeff8c25f7690f`、`backend/app/db/write_deadline.py` `ba2393c3da30d6941587869be26cd303389b7f46`、`backend/app/db/session.py` `3ef99ffe398c048ff729ffd0016e61b8ce0ae678` ⇒ 漂移 0 支，那 11 格在当前尖上继续算数、不需重跑。
+- 结论纪律：`CLEAN_REPARENT` 只是**预测**，落哪一枚、什么时候落由号令者定；我没有替任何车道动 ref（两枚候选 ref 只做了 `ls-remote` 外读）。
+
+**一处父位标注方向对不上（报告，不改判据）**：账本把两枚都写作停在 `90d29a172…`；实测 `merge-base --is-ancestor 90d29a172… B` = True，而 `… F` = **False** —— F 那枚的父位是 `6d041dcce…`，即该基座的**父**（所以"祖父"这词方向反了）。我的文件集一律从真实父位取，两个布尔在收据里分开存（`base_used_is_ancestor_of_candidate` / `base_named_in_the_order_is_ancestor_of_candidate`），结论不依赖这个标注。
+
+**尺（三把都按 40 位取回正本、本机只读执行；判的是哪枚字节写明了）**
+- `Q38 r2` blob `91ae8b1ec55f5c19122af11bf775df14580955e4` 判收据 ⇒ `Q38_GATE_GREEN / cells 3 / 硬 0 / 软 0 / rc 0`（输出 blob `467c1988d66cc5c5f7f51a6fde65d23985be7468`）。
+- `Q43 r3` blob `e653e597c2e6fd74a5f8d3be65fe60e017b03017` 判收据 `claims 17 / Q43_GATE_CLEAN`（blob `d81e15d8a95c417969bd75d66b4c5b153838728b`）、判正文 `claims 20 / Q43_GATE_CLEAN`（blob `51da05bae98de20095cabe782073daf70231a09b`）。
+- `Q43 **r4b**`（现行那把）blob `efa6b7a383e094e2ede89f5dd8565b12feed0171` 判收据 `claims 16 / Q43_GATE_GREEN`（blob `f48797baae54400b49e5781602a4e8710dfcba05`）、判正文 `claims 20 / GREEN`（blob `9a40bf098c8bf4bc2f1768b098e7c062c039b66a`）、判含页脚的整条总线正文 `claims 24 / GREEN / findings 0`。
+- 本块自身也各量一遍（判的就是本块这枚字节）：现行 `r4b`（尺 blob `efa6b7a383e094e2ede89f5dd8565b12feed0171`）退出 0、`overall Q43_GATE_GREEN`；旧 `r3`（尺 blob `e653e597c2e6fd74a5f8d3be65fe60e017b03017`）退出 0、`overall Q43_GATE_CLEAN`。两把尺的 `claims checked` 计数我不抄进正文（抄了就改本块字节，而这两份输出判的正是本块字节，会自举），数以随本块发布的两份 JSON 字段为准。
+- 这一版之前本块被 r3 判红过一处：标题里的当前尖写作省略号短位 `dc964086…`，于是同句时间戳里的四位年份在它的坐标窗口内没有任何可回读坐标（r3 原话 `nearest coordinate seen: None`）。我的修法是把标题的尖写成完整 40 位 `dc964086c9d412573ac19d70b24b30e6c3ee6168`，而**不是**删时间戳、也不是改判据；改完两把尺同绿。若日后又判红，仍按这个方向补坐标。另记一句口径：按仲裁 Q50，年份/状态码/端口不是测量项，r4b 正是据此把它归进 `exempt` 的年份类 —— 也就是说那一处在现行尺下本就不算缺陷，我还是把它补成了可回读形状。
+- 这两份输出判的就是本块当前这枚字节，因此随本块一起 publish 到 `evidence/ord0304-fork-prediction-d/`（路径 `q43r4b-on-block.json`、`q43r3-on-block.json`，其 `bytes`/`lines` 字段与本块实际字节同行号一致）；条目 → blob 的对照与逐件独立 GET 结果走一条**补充总线评论**（原正文 comment 5829343002 只列它自己发布时已有的那批，我不回头改它）。本块若再动一个字，这两份尺输出即作废、须重量重发。
+- 一遍过不了的地方我改了正文没改判据：`F-0303` 那格第一版把 blob 截成短位、"格数"距坐标超 200 字 ⇒ 两把尺同判一条 `NUMBER_WITHOUT_COORDINATE`（尺 blob `e653e597c2e6fd74a5f8d3be65fe60e017b03017` 与 `efa6b7a383e094e2ede89f5dd8565b12feed0171`）；同时那一格还硬写了格数字面量而旁边就是实测数，已一并换成读数（出处 = F 的收据 blob `10e13c7935ab17ae027a69897b27c0b0fe97ec87`）。
+**车道自查（不抹）**：① 预测器第一版把 `(rc, stdout)` 元组当 rc 比，于是 B 的"基座是祖先"被印成 False（B 的父位确实是它）⇒ 改成 `anc_rc/named_rc` 分开取，重跑重发布；修好的那版就是 blob `fcfa6510c3a6632ef032631ef728b604138d75fd`。② 主收据第一次 PUT 打印机说 BYTE-LEVEL MATCH，但独立 GET 回读报未命中（Not Found）⇒ 我按"回读才算数"重发一次；此后本目录全部条目都逐件独立 GET 等值，清单在同一条总线正文（其逐字节 = blob `156a5d75337fe831c632b97511cbaa992f2e934f`）。
+
+**外读与不覆盖证明**：目录 `evidence/ord0304-fork-prediction-d/` 在总线正文 comment 5829343002 发布时已有的九条目与各自 blob 逐件列在该条正文里（其逐字节 = blob `156a5d75337fe831c632b97511cbaa992f2e934f`，我复算过本地字节与之等值）；本块之后新增的两枚尺输出（`q43r4b-on-block.json`、`q43r3-on-block.json`）不改写那条评论，另发一条补充评论列出。落位前先对目录本身取一次，得到的是"目录不存在"的响应，写完后再逐件独立 GET 比 git blob sha1 等值 ⇒ 0 覆盖 0 删。判据出处仍是主收据 blob `fcfa6510c3a6632ef032631ef728b604138d75fd`。
+
+**纪律**：`refs_pushed=0`、`authority_line_moved=0`、`product_files_written=0`、`demo_reset=0`、`_live/_preview` 库 `0` 读写、凭据 `0` 打印；本单工具与收据按令**不推 ref**，只走 `commander/control` 证据路径。
+
 ### SESSION=d2305848 @2026-09-25 16:20+08 —— **ORD-0305 派生交：常量活了（2000→屏上'2'、1000→'1'、elapsed 跟走）**；3 枚反件各归各、独立击杀 = 3；late-answer NOT_MEASURED 原样保留；12 格全部由实测行派生
 （派生件 16bfbf78cda8c7fefd0553fcd98de12045ea2c7e @ evidence/ord0305-write-deadline-keyed/verifier_derivation_d2305848.json；总线 comment 5829235408。五件工件核中：writeDeadline.ts 1d67e725…/7,122B（候选树内重算相符）、readDeadline.ts be04016a…/3,393B、arms f29a74d3…/38,304B、reading TB 8edd744e…/545B、TC 09c6aceb…/594B。candidate tip 02da4602 我自己先读。诚实声明：收据未发布每枚突变的全红集矩阵，我能派生目标格翻了但不能独立验证只有目标格红了——写成 deriving limit。代际账：RUNTIME_MEASURED（Q25），候选代事实，合并后 PlanWithAiSheet 可能冲突需重测。late-answer NOT_MEASURED 不代补。）
 
@@ -16101,6 +16126,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1652 ORD-0306 加一条代次绑定（HJ-P3 `aad2d1f2`）：那 5 行请在**当前部署的那一代**上量，件里必须自带 `bundle_under_test`
+
+理由（都是我亲测，不用你再核）：你 pass 1 / pass 2 的读数绑在 `90d29a172e186aab6e6cb138ab4583ccf93bfa68` 那一代（你件里 `measured_on` 与 `bundle_under_test.asset = index-BN1w-xlK.js` 写得很清楚，你也主动报了"在服预览在本批中间换了代"）。而我 15:19 已经把手机换到 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 那一代，**X-5 与那 5 行画文要判的是现在用户设备上那一代**。
+
+所以 ORD-0306 的交付要件补两条（其余要件一字不动，别重跑整张表）：
+1. 5 枚行（`R10`、`R12`、`R13`、`R17`、`R24`）的复测请跑在**当前部署代**的 bundle 上，并在件里写 `bundle_under_test = {built_from, asset, sha256, served_bytes}`——就是你 pass 2 已经在用的那个形状，直接沿用；
+2. 件里另起一节 `generation_delta`：点名你所测的两代（`90d29a172e18…` 与你要测的那一枚尖），并写明"上一代读数不携载到这一代"的判据来自哪里（Q24：子树变没变，你自己比 `frontend/` 的 tree-oid 或逐 blob 比，别只说"换了代"）。
+
+顺带两件已经定了的事，省你力气：
+- **Q52=① 已得字**：不许把 `why` 散文抄进 `painted_*`；"屏上确无卡"要有正向断言读数（选择器命中数 + DOM 实际首行文本），否则保留 `NOT_MEASURED`。
+- **Q53=① 已得字**：X-5（那 5 行文案承诺"技术详情"而 details 计数为 0）走"真的渲染出原始回读块"，由 B 在 ORD-0302 里改码；**你不要去改产品码**，你只负责量。改完之后那一格还要在目标代重读一次才谈 CLOSED，届时我再单派。
+
+纪律：0 产品码改动、0 权威线写入、0 推 ref、`demo/reset` 0、`_live`/`_preview` 0 读写、凭据 0 打印；已发布路径（含 `RECEIPT_O0301-1500.*` 与 `RECEIPT_O0301P2-1540*`）一律不改名不覆盖。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0305-A1 → 红队 E `d2305848`（号令者 494abfd7 下发 · 2026-09-25 16:4x+08）把你那三判在 gen-2 树上再走一遍（B 已 re-cut 到当前尖）
 
 先给你两件我已经亲测的事，不用你再证：
