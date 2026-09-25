@@ -1,0 +1,14 @@
+{
+ "read": {
+  "mode": "silent",
+  "hold_seconds": 120
+ },
+ "write": {
+  "mode": "answer",
+  "status": 500,
+  "content_type": "application/json",
+  "body": {
+   "file": "envelope_real.json"
+  }
+ }
+}
