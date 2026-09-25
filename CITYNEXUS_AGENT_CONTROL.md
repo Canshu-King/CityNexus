@@ -15497,6 +15497,22 @@ B2c = VERIFIED_FIXED_WITH_TWO_DISCRIMINATING_CONTROLS 如上
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 亲测 @2026-09-25 09:0x+08 —— 手机上那一包**我从公网隧道里取回来对过字节**：`index-xKIGmoBz.js` 与盘上逐字节相等，且里面确实带着 0274 的那个事件名
+
+```text
+GET https://obligation-plain-arcade-bean.trycloudflare.com/assets/index-xKIGmoBz.js（带 Basic，凭据只走文件）
+  served 1,249,346 B == 盘上 D:/moodle/_qoder_preview_20260920/dist/assets/index-xKIGmoBz.js  逐字节相等 True
+  served sha256 前 16 位 ba6654a08dd6f98e
+  子串命中：`citynexus.sw.generation-handover-pending` True、`generation-handover` True
+  子串未命中（**如实，但原因是压缩，不是没落地**）：`inFlightWrites`（模块名被打包改写）、`safe point`/`safePoint`（注释被剥掉）
+⇒ 落地代 `5c4608cede6cb7bd5f3ac7e704bfee379ca47abc` 的前端源码里 `frontend/src/main.tsx:1683` 有那个 pending-handover 键名、
+   `frontend/src/lib/inFlightWrites.ts:2` 是 B2c 的注释；**手机取回的同一字节流里能搜到那个运行时事件名** ⇒ 这不是"重建了但没部署"。
+收据：`evidence/ord0274-landed-generation/deployed_bundle_bytecheck_r1.json`
+```
+**没变的东西**：权威线未动；地址未变；用户库 0 读写；`demo/reset` 0；凭据 0 打印。
+**还欠**：ORD-0297（HJ-P1 两格）、0298（D 换代次重跑）、0299（B 真跑 + 反件）、0295（红队普查）、0296（F 后端半）。
+
+
 ## 亲测 @2026-09-25 09:0x+08 —— ORD-0292：红队签了 derived，**我又独立重算了一遍（7/7 KILLED，不抄任何一方的话）**；0278/0253 现在只差 ORD-0298 那一步
 
 ### ① 三方读数并排（每个数都带 durable 坐标，按 Q43=①）
