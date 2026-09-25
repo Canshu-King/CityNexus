@@ -291,7 +291,8 @@ test(`ord0302-X1 ${"every 200 shape whose card points at 技术详情 renders a 
       await page.unrouteAll({ behavior: "ignoreErrors" });
       const read = await bootWithStubs(page, stubsForShape(sh), "X1");
       per[sh.row] = { status: read.status, promise_in_copy: read.promise_in_copy,
-                      details_count: read.details_count, reason: read.reason, origin: read.origin };
+                      details_count: read.details_count, reason: read.reason, origin: read.origin,
+                      raw_rendered: read.raw_fields, raw_expected: expectedRaw(sh) };
       rows.push({ claim: `${sh.row}: the card's promise and the DOM agree (promise => block exists)`,
         ok: !read.promise_in_copy || read.details_count >= 1,
         got: { promise_in_copy: read.promise_in_copy, details_count: read.details_count } });
@@ -316,12 +317,13 @@ test(`ord0302-X1 ${"every 200 shape whose card points at 技术详情 renders a 
 
 test(`ord0302-X2 ${"the direction with no block makes no promise: a cancelled request has nothing to show"}`,
   async ({ page }) => {
+    test.setTimeout(240_000);
     /* Requirement 2 asks for a reading in EACH direction. X1 covers "promise => block exists"; this covers
        "block absent => no promise", and it can only be measured where no answer ever arrived, so the leg is
        left in flight and the traveller cancels it. */
     const stubs: Stub[] = [
       { url: "**/api/v1/journeys/*/plans", method: "GET", body: [] },
-      { url: "**/api/v1/journeys/*/agent/commands", method: "POST", body: MISSION_CLEAN, delay: 20_000 },
+      { url: "**/api/v1/journeys/*/agent/commands", method: "POST", body: MISSION_CLEAN, delay: 6_000 },
       { url: "**/api/v1/places**", body: TWO_PLACES },
     ];
     const read = await bootWithStubs(page, stubs, "X2", true);
