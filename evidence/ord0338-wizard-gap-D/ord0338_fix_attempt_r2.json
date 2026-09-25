@@ -1,0 +1,223 @@
+{
+ "schema": "CNX_ORD0338_FIX_ATTEMPT_V1",
+ "order": "ORD-0338",
+ "lane": "D e345b9d6",
+ "generation": {
+  "tip": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+  "diagnostic_files": {
+   "tip_shape": "ord0338-mechanism-comparison-tip-shape.json (scratch, read on the reverted tree)",
+   "candidate_shape": "NOT retained as a file -- my second diagnostic run reused the same fixed filename and overwrote the candidate copy. The candidate geometry survives in ord0338-gate-G3-clearance-still-clears.json (centre + who it hit) and in the shipped gate's red line. Self-report: 'one evidence file per arm' is a rule I have been told before and broke here again, so the loss is named rather than hidden."
+  },
+  "how_read": "ls-remote + fetch + 复读一致",
+  "ord0325_landing_is_ancestor": true,
+  "styles_css": {
+   "tip_blob": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+   "worktree_blob_after_revert": "b942bf640365c013fa02897f19e8a34b5c9d9c46",
+   "reverted_byte_identical": true
+  },
+  "branch_state": "本地 worktree `D:/moodle/_qoder_d_ord0338_fix`（枝名 agent/d-e345b9d6-ord0338）—— 0 commit、0 push：交一枚自己知道会红的候选不是交件"
+ },
+ "what_i_tried": {
+  "shape": "把那 212px 的 clearance 从步骤条挪到卡片底部留白（`.trial-card` padding-bottom = 84 + clearance），步骤条那条只在 ≤680px 取消，>680px 一字不动",
+  "patch_verbatim": "@@ -670,684 +670,690 @@ frontend/src/styles.css\n-.cn-onboarding .trial-steps { padding-bottom: calc(76px + env(...)); }\n-@media (max-width: 680px) { .cn-onboarding .trial-steps {\n-    padding-bottom: calc(76px + var(--cn-sim-float-clearance, 132px) + env(...)); } }\n+@media (min-width: 681px) { .cn-onboarding .trial-steps {\n+    padding-bottom: calc(76px + env(...)); } }            /* 桌面一字不动 */\n+@media (max-width: 680px) { .cn-onboarding .trial-card {\n+    padding-bottom: calc(84px + var(--cn-sim-float-clearance, 132px) + env(...)); } }\n"
+ },
+ "result_measured": {
+  "band_on_candidate": {
+   "measured_on_band_bound_gate": true,
+   "height_px": 17,
+   "bound_px": 60,
+   "content_nodes_in_band": 0,
+   "tallest_node_in_band_px": 0,
+   "G1_green": true,
+   "G2_green": true,
+   "reverse_arm_G4": {
+    "band_back_px": 229,
+    "fixed_before_px": 17,
+    "meaning": "把旧形状装回页面带高就回到一整块 ⇒ G1 量的正是这条声明"
+   }
+  },
+  "shipped_gate_on_candidate": {
+   "file": "frontend/e2e/qoder-wizard-advanced-is-tappable.spec.ts",
+   "node_red": "ord0264-opener-is-scroll-reachable-and-tappable",
+   "predicate_that_failed_verbatim_from_source": "const roll = await wheelToControl(page, '[data-testid=\"trial-show-advanced\"]');\n  expect(\n    roll.scrolled,\n    node(\"ord0264\", `the wheel rolled 0px -- the opener is not scroll-reachable (${JSON.stringify(roll)})`),\n  ).toBeGreaterThan(0);",
+   "run_rows": {
+    "run_ids": [
+     "run378417"
+    ],
+    "tallies": [
+     "1 failed",
+     "3 passed (13.9s)"
+    ],
+    "red_nodes": [
+     "ord0264"
+    ]
+   },
+   "sibling_nodes_still_green": [
+    "ord0261-sticky-bar-must-not-cover-the-summary-row",
+    "ord0264 的 locality 段与 draft 存活段（同一枚文件里 3 passed）"
+   ]
+  },
+  "why_the_move_cannot_work": {
+   "tip_shape_opener_at_rest_top_px": 959,
+   "tip_shape_steps_padding_bottom": "212px",
+   "tip_shape_card_padding_bottom": "84px",
+   "tip_shape_note": "这一枚诊断跑在还原之后的尖树上，两个状态读到的同一份数字（页面内那条旧规则在尖上是空操作）—— 所以它只证明尖的形状，不证明候选",
+   "candidate_band_height_px": 17,
+   "candidate_steps_padding_bottom": "0px",
+   "candidate_card_padding_bottom": "220px",
+   "candidate_opener_centre": [
+    195,
+    650
+   ],
+   "candidate_hit": [
+    "div",
+    "下一步"
+   ],
+   "sticky_bar_band": [
+    628,
+    708
+   ],
+   "viewport": 844,
+   "mechanism": "现尖的绿是靠『入口一开始在视口外』达成的：`wheelToControl` 的停止条件是『元素完整进入视口』，而 ord0264 另外要求 `roll.scrolled > 0`。尖上入口 at rest 在 y=959（视口 844 之外），所以一定滚得动；把 212px 从步骤条挪到卡片底部之后，卡片里的东西整体上移，我的 G3 量到入口中心在 [195, 650]，正落在 sticky 条的带 [628, 708] 里，命中的是「下一步」——同一枚文件里 ord0261 仍绿，红只有 ord0264 一枚。",
+   "candidate_opener_at_rest_top_px": 747,
+   "candidate_opener_centre_in_gate_context": [
+    195,
+    769
+   ],
+   "candidate_opener_hits_itself_at_rest_in_my_probe": true,
+   "candidate_wheel": {
+    "before": 0,
+    "after": 0
+   },
+   "tip_wheel": {
+    "before": 0,
+    "after": 240
+   },
+   "unreconciled": "我这趟按门的上下文（390×844 + hasTouch + 只填城市）量到候选态入口 at rest 在 y=747、中心 [195, 769]、命中的是它自己，滚轮滚 0px；而门自己报的红文是『命中「下一步」』。同一棵候选树两次跑到不同的红因，我没把这两条对上——所以这里只交『候选让空白消失但门红、且红在哪一枚节点』这一条事实，不交机制解释。要对上得在门里加读数，那是改它的断言行文，得你先裁。 补：候选树上按门的单字段 procedure 复跑到的是『滚 0px』这一条红，门自己报的是『命中「下一步」』；两次都红在同一枚节点，我没把这两条红因对上（怀疑与「已自动设置」段落何时插入有关，未证）。",
+   "disclosed_differences": "我这枚 G3 与现成门差两件事：它填了城市+抵达+离开三格（门只填城市），且那一轮还没加 hasTouch（现在加了）。所以我说『门红了、红在 ord0264 的哪一条、候选下入口中心落在条的带里』，不说『我在门的原条件下复现了同一枚数』——那一趟留给开工时补。",
+   "conclusion": "所以这 212px 不是『放错了元素的装饰』：它同时承担着『把入口顶到视口外，好让滚轮有意义』和『别让内容落进条的带里』两件事，只搬位置必塌其一。空白能消、遮挡也能防，但不能靠挪同一份 padding 做到。",
+   "gate_context_recheck_on_candidate": {
+    "source": "ord0338-mechanism-comparison-candidate.json",
+    "context": "390x844 + hasTouch + 只填城市（照抄门自己的 openWizard/typeDraft/wheelToControl）",
+    "opener_at_rest_top_px": 747,
+    "opener_centre": [
+     195,
+     769
+    ],
+    "opener_hits_itself_at_rest": true,
+    "steps_padding_bottom": "0px",
+    "card_padding_bottom": "220px",
+    "wheel_roll_px": 0,
+    "same_file_old_shape": {
+     "opener_at_rest_top_px": 959,
+     "steps_padding_bottom": "212px",
+     "card_padding_bottom": "84px",
+     "wheel_roll_px": 240,
+     "opener_offscreen_at_rest": true
+    },
+    "reading": "候选上入口 at rest 已在视口内（y=747），滚轮滚 0px，`roll.scrolled > 0` 先塌；旧形状同一枚诊断里入口 at rest 在 y=959（844 之外），滚轮滚 240px 后命中的是它自己。所以那 212px 的承重作用是量出来的，不是我从注释里读来的。"
+   }
+  }
+ },
+ "options_i_will_not_decide_for_you": [
+  {
+   "id": "甲",
+   "shape": "给 sticky 条一份真正的布局预留（把条做成流内元素或在它前面放一枚占位块），两处 padding hack 一起删",
+   "cost": "动 ORD-0261/0264 两枚门的几何前提，需要重推它们的臂，且要 E 复签",
+   "band_after": "0（不留白）"
+  },
+  {
+   "id": "乙",
+   "shape": "把那块空白变成有内容的东西：步骤条补一条进度轨／当前步的说明句，clearance 原地不动",
+   "cost": "最小，但『用内容填空白』是文案口径，得你点头；不解决 sticky 条的机制问题",
+   "band_after": "212px 有内容"
+  },
+  {
+   "id": "丙",
+   "shape": "承认 sticky 条会盖住内容，把判据改成『入口在任意滚动位置都可点』（即给条一份不透明底 + 内容末尾真留白）",
+   "cost": "这是改既有断言的形状，按规矩必须你先裁，我不能自己换绿",
+   "band_after": "不定"
+  }
+ ],
+ "my_recommendation": "甲。它同时答你 06:05 里那两个猜想的真正成因（条盖内容），且不需要任何一块无主空白；代价是那两枚门的臂要重推。要我开这枚就说一句，我按 ORD-0325 的节奏交：门双向 + 逐臂三元组 + 收据 + 上架回读。",
+ "discipline": {
+  "product_bytes_left_changed": 0,
+  "css_reverted_and_verified": true,
+  "commits_on_branch": 0,
+  "refs_pushed": 0,
+  "authoritative_line_written": 0,
+  "shipped_gate_assertions_edited": 0,
+  "skips": 0,
+  "candidate_shipped": "NO —— 一枚自己知道会红的候选不算交件",
+  "vite_build_runs": 0,
+  "demo_reset": 0,
+  "phone_chain_touched": 0,
+  "credentials_printed": 0
+ },
+ "self_report": {
+  "what_i_did_wrong": "诊断件写死一个文件名，第二趟把第一趟（候选态）覆盖了；候选态的完整 rect 表因此没有留档",
+  "what_still_proves_it": [
+   "ord0338-gate-G1/G2/G4 三件（候选树跑的）",
+   "ord0338_existing.out 与 07:5x 的复跑里 ord0264 的红行与 run id（同一枚候选树上跑了两次，都红在同一枚节点）",
+   "tip 态诊断件（当前 EVID 里那份）"
+  ],
+  "fix_for_next_time": "诊断件也必须按 run id 或状态名落盘，不许同名复写"
+ },
+ "claimed_result": "候选修法（同一份 padding 挪位置）被现尖的门否掉，成因量出来并写清；空白可消已被 G1/G2 证成，但消它的同时保住 ord0264 需要结构改动",
+ "derived_result": null,
+ "grade_owner": "red team E / 口径归号令者",
+ "evidence_files": [
+  "ord0338-clearance-S1-tip.json",
+  "ord0338-clearance-S2-covered-shape.json",
+  "ord0338-clearance-S2-padding-removed.json",
+  "ord0338-clearance-S3-candidate.json",
+  "ord0338-gate-G1-band-bound.json",
+  "ord0338-gate-G2-no-invisible-reserved.json",
+  "ord0338-gate-G3-clearance-still-clears.json",
+  "ord0338-gate-G4-reverse-arm.json",
+  "ord0338-mechanism-comparison-candidate.json",
+  "ord0338-mechanism-comparison.json"
+ ],
+ "runs": {
+  "ord0338_existing.out": {
+   "run_ids": [
+    "run378417"
+   ],
+   "tallies": [
+    "1 failed",
+    "3 passed (13.9s)"
+   ],
+   "red_nodes": [
+    "ord0264"
+   ]
+  },
+  "ord0338_gate.out": {
+   "run_ids": [
+    "run378389"
+   ],
+   "tallies": [
+    "1 failed",
+    "4 passed (12.2s)"
+   ],
+   "red_nodes": [
+    "G3"
+   ]
+  },
+  "ord0338_three_state.out": {
+   "run_ids": [
+    "run378222"
+   ],
+   "tallies": [
+    "1 failed",
+    "3 passed (14.5s)"
+   ],
+   "red_nodes": [
+    "S1"
+   ]
+  }
+ },
+ "receipt_round": {
+  "r1": "13088b67422b3574a89fd381defa7c82fb04a2bc",
+  "r2_reason": "r1 上架后我又补了一趟候选态的门上下文复测；发布名不可覆写，所以出 r2"
+ }
+}
