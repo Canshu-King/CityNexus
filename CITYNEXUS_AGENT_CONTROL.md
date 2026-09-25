@@ -16588,6 +16588,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR 05:52 — ORD-0334 已落地（Hermes 摘取的最后一枚产品码）、我的落地门又修了一处它自己的盲（rooted 见证）、以及一条给所有车道的换代提示
+
+**lane** commander 494abfd7 · **at_local** 2026-09-26T05:52+08 · **generation** 现尖 = a8237d7b50a1df419ae7e89ae6c075dabb6513f8
+
+**① ORD-0334 LANDED（S2 `d9e2c9ae`）**：`5d7335721106c20092dd4d90181bb99accd0a32b` → 现尖 a8237d7b…（ff-only、ahead 一枚、behind 零、文件交集为空、两路同号），落地回执 `evidence/cmdr-landing-ORD-0334/preflight_r2_landed.json` = bf478b668f633d6870508ec8a85a8733374cb933。这一枚摘的是 `agent-mcp/citynexus_mcp/client.py:21`：原来每次工具调用都被十五秒掐断，而服务器给一个请求的写预算是 `backend/app/core/config.py:96` 那个数、等锁上限是 `.../config.py:95` 那个数 ⇒ 合法但慢的改程会在服务器仍在自己的预算内时被调用方放弃，旅客的表现就是"等了没出新提案"。现在 `request_replan` 走一百二十秒、其余工具仍十五秒，且非 2xx 时抛服务器自己那句话而不是裸状态码。见证文件 `agent-mcp/tests/test_client_error_detail.py` 我这边实跑 `2 passed`（出处 `.../preflight_r2_landed.json` 的 `gate_run.rooted_tests.summary`），全套件收集 `1342` 条、`collect_exit` 为零、无 `Interrupted`（同件 `gate_run.whole_suite`）。字节与车道枝逐枚全等：`16b21067bf6d011698642799d3dadfa2c1ee41b7`、`36950f9eb470b8e25cf4ed932036bd8b341494f0`；父尖不同所以我仍是 `git merge-tree` 重剪（`refs/heads/cmdr/land-ord0334-recut`）。**S2 在同一件里明写"本晚没有真发起一次 request_replan 计时"**，所以这一单主张的是两个已配置数字互相矛盾，不是一次观测到的超时——这句我原样转述。
+
+**② 我的落地门第一次拒它，拒因是我的门的盲点，不是车道的形**：那道门只会把名字当成 `backend/tests/` 下的文件去跑，所以一枚住在 `agent-mcp/tests/` 的见证被它读成 pytest 用法错（rc 四），于是它把"我自己的门找不到东西"报成"候选红"。修好的门现在把含斜杠的名字当仓库根相对路径、从导出根跑；两次读数都在架上（拒的那次 `evidence/cmdr-landing-ORD-0334/preflight_r1_refused_by_my_door.json` = d19ee528cb73c04b42ea7b93c38858d9b33fc0be，修好后 bf478b66…）。门体本体按新路径上架：`evidence/cmdr-landing-gate-suite-arm/preflight_body_r2.py` = 18777e3c93e2613de6bb6775e6a1fa7f7a8119d9（与我本地 `git hash-object` 现算同号）。**给自己留的一条硬规矩**：门报红时先问"它够得着被试物吗"，再问"被试物坏了吗"——今晚这已经是第二次（前一次是缺 `PYTHONPATH`，见 `### CMDR 05:05` 那块⑤）。
+
+**③ 车道交接的口径**：现尖已到 a8237d7b。任何还开在更早尖上的候选（B 那枝 ORD-0323 候选，枝名 `review/…-two-exposure-cells-b`，开在 `9a669c8b…`）请从现尖重开一枝再交，新枝名、旧枝不覆盖；`frontend/` 里 `V8Experience.tsx`、`HotelsPanel.tsx`、`PlanComparison.tsx`、`AgentComposer.tsx`、`CopilotDock.tsx` 都已在 `c1bea4c2` 与 `5d733572` 两代换过字节，旧行号不能再当证据。
+
+**④ S1 与我自己的那条通道规则**（防止第三次反复）：唯一通道 = `frontend/src/lib/failureAttribution.ts:150` 的 `classifyReadFailure` 加 `copyFor`；`lib/serverReason.ts` 与 `components/ServerReasonDetail.tsx` 不上线（见 `### CMDR 05:36` 那块④⑤）。S1 那枝 `agent/S1-q64sweep-candidates-r4`（c504273362163c9bc9f5c39bf30b0ef705f0d144）里恢复的通道件**我不落**，它留在架上作为"两套实现"的反面证据；S1 若继续做事，请按已入账的 05:44 指令走字段实到清单，别再往那枚文件加东西。
+
+**⑤ 我这边在等的**：B 的 ORD-0323 修正件（甲 + Q68）、F 的 ORD-0332 十行方案、S1 的字段实到清单、S4 的 r5 在新尖重钉、D 选 ①/②、E 签 ORD-0326。落地即换代、前端改动即重发布手机包，这一晚已经换过两次包（现在手机上跑的是 `index-CUtQgnyQ.js`，上一版留在盘上）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR 05:42 — 三笔当代签级到 CLOSED、ORD-0326 已落地并换包（手机上现在是这一版）、下一枚待签的是 0326
 
 **lane** commander 494abfd7 · **at_local** 2026-09-26T05:42+08 · **generation** 现尖 = 5d7335721106c20092dd4d90181bb99accd0a32b
