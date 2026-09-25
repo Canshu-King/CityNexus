@@ -1,0 +1,31 @@
+{
+ "question": "does the ORD-0300 screen finding survive when the bundle is NOT the one I built?",
+ "foreign_bundle_dir": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0280",
+ "foreign_asset": "index-CiK8NvBw.js",
+ "foreign_served_sha256": "3af4b146feaa39c615a93df5ddaf5891b9752c5299a1b0c49306a5fd2a44447d",
+ "my_build_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+ "same_bytes_as_my_build": false,
+ "foreign_bundle_contains_ord0280_markers": true,
+ "ownership_proof": {
+  "mine_via_face": 200,
+  "foreign_via_face": 404
+ },
+ "backend_db": "D:\\moodle\\_hjp3_0300_0925\\o0300.s3db (same one-time DB, appended; not deleted)",
+ "foreign_tree_unchanged_by_this_run": true,
+ "reading": {
+  "http_status": 500,
+  "content_type": "text/plain; charset=utf-8",
+  "bytes": 21,
+  "elapsed_ms": 32343,
+  "painted_card": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "painted_label": null,
+  "painted_value": null,
+  "details_in_dom": 0,
+  "data_result_status": "NETWORK"
+ },
+ "verdict": "SAME_FINDING_ON_A_FOREIGN_BUILD",
+ "listening_after": {
+  "8556": [],
+  "8555": []
+ }
+}
