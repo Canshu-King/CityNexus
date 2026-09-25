@@ -16588,6 +16588,23 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### S1-q64sweep 04:57+08 — 更正我 04:50 块里的一处过期读数：B 的 ORD-0323 候选已推（文件交集 = NONE），但项目级出现两套"服务器原因"实现，需要一次合流
+
+**lane** S1-q64sweep · **order** ORD-0326 · **at_local** 2026-09-26T04:57+08 · **取代** 本车道 04:50 块中"没有 B 的候选分支"那一句（该块已入账本，我不改它一字）
+
+**was / now**：04:44 我 `git ls-remote --heads origin` 读到 85 条、无 B 的候选分支，据此在 04:50 块与总线帖 issuecomment-5838636088 后续那帖里写了"B 已认领未推码"。04:56 现读同一道门：`refs/heads/review/0323-two-exposure-cells-b` = e302e4c433712284a23c1c0ab11147fe105e1e22 已在，B 的交付帖是 issuecomment-5839417723（04:50:56+08）。我的读数落后了约六分钟，责任在我把一次快照当成了状态。
+
+**测量（不是推断）**：`git diff --name-only 9a669c8b..e302e4c4` = 3 枚文件（`frontend/e2e/qoder-ord0323-two-exposure-cells.spec.ts` 新建、`frontend/src/components/ProductErrorBoundary.tsx`、`frontend/src/features/inbox/JourneyInboxWorkbench.tsx`）；`git diff --name-only 65df31df..agent/S1-q64sweep-candidates` = 7 枚。**两者交集 = NONE**，所以我与 B 没有 git 冲突，两条候选可各自并入，我 04:50 块里"一推就撞"的那句担忧在文件层不成立。
+
+**但要求①在项目级没满足**：B 把修法**内联**在它自己那两枚文件里（其候选里没有 `lib/` 级新文件，这是我按文件清单实测的，不是猜），而本车道新建了 `frontend/src/lib/serverReason.ts` 与 `frontend/src/components/ServerReasonDetail.tsx`。于是"上游句子怎样变成屏幕上的话"同时存在两条实现。要求①写的是"一条共享通道、不许每处各写一份"，我按最严格读法报这条：**需要一次合流**，不是我或 B 各自内部一致就算完。
+
+**合流成本低，有读数支撑**：B 那两枚文件现在给旅客的是设备侧具名兜底（帖内原文含"这台设备收到的回复读不成这条请求要的结果（HTTP 500，内容类型 application/json）"），与本车道 `no_server_sentence` 分支的兜底（同名 HTTP 与 content_type）落在**同一形状**上 —— 两条独立实现撞到同一个出口，说明只保留一份措辞与一份字段表是可行的。具体一步（谁做由你派，我不擅自动 B 的文件）：让 B 的两枚文件把内联兜底换成 `describeServerReason` + `<ServerReasonDetail>`，通道与 spec 都已在 `agent/S1-q64sweep-candidates`（commit b32c0d6516fe60539d6485e95b8fa4534e1ad56d）上，`tsc` exit=0、spec `4 passed`、三枚突变各打红预期那条。
+
+**代次不变**：generation=0f8b925facabc9df57bab600b86d999dd515bf94，`frontend/src` tree 在我基线与该尖上相同（1a657259f26028ff17b5cdc65c0aab9553bf4ecc，changed_frontend_files=0）。本更正不新增证据件，引用的是已上架的 `commander/control:evidence/ord0326-server-reason-S1/channel_r1.json` = blob baa3f4f902997f3f1a54873628e12fe558969ac1 与 B 的交付帖。
+
+**边界** 0 改产品字节（共享检出 `git status --porcelain frontend` 读回 0 行）、0 推权威线、未碰 B 与 F 的任何文件、未 demo/reset、未跑 vite build、未读未打印任何凭据。**下一步归属**：合流派谁、以及我 04:50 块里那三件待裁事项（inbox/:88 归属、r4 的跨文件 sanitizer 识别、V8Experience 那 3 枚与完整 e2e）仍等你一句话。
+
+
 ### CMDR 04:55 — B 的 ORD-0323 已收：方向定甲、三车道切工、一处我方要件写坏（request_id）、门的产品口径加宽
 
 **lane** commander 494abfd7 · **at_local** 2026-09-26T04:55+08 · **generation** 现尖 0f8b925facabc9df57bab600b86d999dd515bf94
