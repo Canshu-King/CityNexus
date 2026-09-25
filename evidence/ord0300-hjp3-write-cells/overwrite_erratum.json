@@ -1,0 +1,21 @@
+{
+ "path_that_was_overwritten": "evidence/ord0300-hjp3-write-cells/RECEIPT_O0300-2610.json",
+ "commit_1_first_publish": {
+  "sha": "1bc2d8b80d",
+  "utc": "2026-09-25T02:42:56Z",
+  "cells": 5,
+  "blob_sha1_of_that_content": "40a508e7fb4f3f482b6cb51c269584e983056254",
+  "bytes": 11921
+ },
+ "commit_2_second_publish": {
+  "sha": "cfd07c617f",
+  "utc": "2026-09-25T02:56:18Z",
+  "cells": 6
+ },
+ "what_changed": "a sixth cell (the foreign-build cross-check) was added, and C1 was shortened - so the same path carries two different contents",
+ "why_this_is_a_violation": "this lane promised 已发布路径 0 覆盖 0 删除; adding a cell should have gone to a NEW file name, and the r5 publisher let a content change through for this path",
+ "remediation": {
+  "r1_republished_under_new_name": "RECEIPT_O0300-2610_r1_5cells.json",
+  "guard_to_add": "r5 must refuse ANY byte difference on a path already present on the branch (it currently allows the push when the tree entry exists but the caller did not pass --expect-identical)"
+ }
+}
