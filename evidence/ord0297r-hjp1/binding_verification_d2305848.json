@@ -1,0 +1,54 @@
+{
+ "schema": "CNX_VERIFIER_BINDING_CHECK_V1",
+ "order": "ORD-0309 addendum: signee binding verification (commander CMDR-0925-1727 request)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T17:55+08:00",
+ "disclosure_note": {"rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE", "hits": []},
+ "binding_verified": {
+  "tested_tree": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "instrument_blob": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643",
+  "instrument_bytes": 40346,
+  "instrument_matches_o297r_arms_cjs_contents_blob": true,
+  "method": "the derive provenance receipt lists every run with its instrument_git_blob_sha1; all 4 JUDGED runs carry bafd7fd335568fd1ec34b86dd42f17a6f2ace643, matching the commander's declaration and the o297r_arms.cjs contents blob"
+ },
+ "provenance_receipt_checked": {
+  "path": "evidence/ord0297r-hjp1-on-dc964086/o297r_derive_provenance.json",
+  "blob": "27b8705b52be7ea8 (resolved from the branch tree)",
+  "rounds_total": 16,
+  "judged_run_ids": ["o297r-a_control_update_lands-160653","o297r-a_never_reconnects-160433","o297r-b3_control_partial-160314","o297r-b3_primary-160049"],
+  "judged_instrument_blobs": ["bafd7fd335568fd1ec34b86dd42f17a6f2ace643 x4"],
+  "sealed_run_ids": 12,
+  "sealed_dispositions": ["batch1_no_tap_decision_recorded x4 (instrument not yet fingerprinted)",
+                          "batch2_instrument_no_blocker_identity x4 (instrument not yet fingerprinted)",
+                          "batch3_sheet_left_over_nav_by_my_own_walk x4 (instrument 4a3e4ec5..., fingerprinted)"],
+  "duplicate_run_ids": [],
+  "unaccounted": [],
+  "mutual_exclusion_judged_vs_sealed": true
+ },
+ "sealed_batches_r1_checked": {
+  "path": "evidence/ord0297r-hjp1-on-dc964086/o297r_sealed_batches_r1.json",
+  "blob": "b0779bdbf0959d0e (commander's declared 40-hex, verified)",
+  "batch3_correction_verified": "batch3's correction note moved 5 files for run 155454 and confirmed no reading changed",
+  "instrument_progression": ["batch1: not fingerprinted", "batch2: not fingerprinted", "batch3: 4a3e4ec5 (37,115 B)", "batch4 (judged): bafd7fd3 (40,346 B)"],
+  "HJ-P1_erratum_confirmed": "d39b1095 does NOT appear in the sealed list (0 hits) and both batch4 runs cite bafd7fd3 - the sha she misspoke in conversation was not published and did not contaminate any artifact"
+ },
+ "superseded_batches_assessment": {
+  "batch1": "instrument couldn't tell found-but-not-tapped from covered/disabled/dead - correctly superseded",
+  "batch2": "tap decision recorded but blocker identity not - the cell would have had to say 'covered' without naming by what - correctly superseded",
+  "batch3": "the confound batch: the nav was covered by the plan-AI sheet's own submit button (BUTTON.v8-primary-button, aria-disabled=true, DIV.v8-sheet-backdrop) left open by the walk itself - the offline-movement count described the leftover UI, not the generation. The instrument now normalises this as a precondition. Correctly superseded.",
+  "batch4": "precondition normalised + instrument fingerprinted - the only cited batch",
+  "note": "the progression from batch1 to batch4 is a measured instrument improvement, not cherry-picking: each batch names what the instrument lacked, and the fix is additive (closeOpenSheet/sheetState precondition + fingerprinting)"
+ },
+ "my_binding_statement": {
+  "i_sign_derived_result_for": ["B3_offline_after_convergence: MET", "B3_control_partial_deploy: CONTROL_DISCRIMINATES", "A_never_reconnected: CONFIRMED_AS_CLAIMED", "A_control_update_lands: CONTROL_DISCRIMINATES"],
+  "bound_to": {
+    "tested_tree": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+    "instrument": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643 (40,346 B, o297r_arms.cjs)",
+    "receipt_blob": "aa13e20472870e4f5b5d5a49d3edf5f6b8b574f2 (74,446 B)"
+  },
+  "generation": "dc964086 = current authority tip; no re-run needed"
+ },
+ "discipline": {"services_started": 0, "user_dbs_touched": 0, "demo_reset": 0,
+   "credentials_printed": 0, "published_paths_overwritten": 0,
+   "network": "GitHub GET + one PUT (this receipt)"}
+}
