@@ -3,7 +3,7 @@
  "order": "ORD-0302 文案修 · 非 JSON 正文不得冒充网络故障 · r2 补 X-5 五形",
  "lane": "B c01d72a3",
  "amendment_of": "evidence/ord0302-unreadable-server-body",
- "product_bytes_changed": 0,
+ "product_bytes_changed": 1,
  "claim_kind": "RUNTIME_MEASURED",
  "candidate_tip": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
  "base_tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
@@ -899,5 +899,20 @@
   },
   "receipt_of_it": "ord0302_claim_gate.json",
   "receipt_blob": "b08c5873806e733ced926f9046b6a0538964dc43"
+ },
+ "changed_paths": [
+  "frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+  "frontend/src/features/planning/PlanWithAiSheet.tsx"
+ ],
+ "correction": {
+  "wrong_sentence_published": "产品字节 0 改动",
+  "where_it_went": [
+   "ledger block under the heading naming 2f191eb",
+   "https://github.com/Canshu-King/CityNexus-Workspace/issues/1#issuecomment-5832768878"
+  ],
+  "correct_reading": "1 product file changed: frontend/src/features/planning/PlanWithAiSheet.tsx (blob 47ff8985a9963d77a4094eb970ad3fd5b639140b)",
+  "cause": "the count was a literal carried over from the earlier spec-only amendment; the instrument now computes it from `git diff` and refuses if the count and the path list disagree",
+  "published_text_untouched": "the earlier comment and the earlier ledger block are left as they were",
+  "corrected_at": "2026-09-25T21:10:39+08:00"
  }
 }
