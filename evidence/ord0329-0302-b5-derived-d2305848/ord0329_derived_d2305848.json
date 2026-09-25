@@ -1,0 +1,181 @@
+{
+ "schema": "CNX_LANE_E_ORD0329_DERIVED_V1",
+ "order": "ORD-0329 (ORD-0302 b5 derived_result)",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-26T04:19:36+0800",
+ "generation": {
+  "landed_commit": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "sheet_blob_landed_prefix": "fc4d6111dc013008",
+  "spec_blob_landed": "70b1df97308f48b606add160b63ceaee3d17ed9b",
+  "authority_tip_at_derivation": "65df31df96cfb8a954f5feb36484710a883e1597"
+ },
+ "claim_kind": "RUNTIME_MEASURED (rendered innerText readings from e2e arms; bound to the tree the runs executed - B's own face with the b5 patch bytes, per-run DBs named in her provenance files; does not transfer per Q25)",
+ "measurement_scope": {
+  "what_ran_where": "arms executed on lane B's vite dev face with the b5 patch bytes in the tree (per-run DBs, provenance authoritative.json per run); phone transport identity proven separately by commander phone_probe_after_r1.json 4f67fce4... (assets byte-identical, none served as HTML); no leg here needs a live :8000 backend (shapes are forced by stubs), so no NOT-DEPLOYED row arises for these cells; a phone *walkthrough* claim remains outside this receipt"
+ },
+ "derived_cells": [
+  {
+   "cell": "server_gives_sentence -> screen carries it (rendered text, `==` equality)",
+   "derived_result": "MET",
+   "readings": {
+    "status": "HTTP_422",
+    "label_rendered": "服务器给出的原因",
+    "origin_attr": "server",
+    "reason_rendered": "该目的地的候选目录尚未就绪，请稍后重试。",
+    "expected_sentence": "该目的地的候选目录尚未就绪，请稍后重试。",
+    "equality": true,
+    "source": "arm_N2.json run 0302fix33353335 (plan-ai-reason innerText read by the spec)"
+   }
+  },
+  {
+   "cell": "server_gives_no_sentence (non-JSON 5xx) -> device attribution + device line, no network blame",
+   "derived_result": "MET",
+   "readings": {
+    "status": "HTTP_500",
+    "label_rendered": "这台设备自己的读数（服务器没给句子）",
+    "origin_attr": "device",
+    "reason_rendered": "agent/commands -> HTTP 500",
+    "network_copy_absent": true,
+    "source": "arm_N1.json run 0302fix33353335"
+   }
+  },
+  {
+   "cell": "no answer at all (abort) -> NETWORK named, detail block attached, device line shown",
+   "derived_result": "MET",
+   "readings": {
+    "status": "NETWORK",
+    "label_rendered": "这台设备自己的读数（服务器没给句子）",
+    "origin_attr": "device",
+    "reason_rendered": "no readable answer reached this device (network or origin)",
+    "rows_ok": {
+     "a request that really never got an answer is NETWORK": true,
+     "ORD-0302 ②: even then the detail block is still there": true,
+     "and it carries a device line rather than nothing": true
+    },
+    "source": "arm_N3.json run 0302fix33353335"
+   }
+  },
+  {
+   "cell": "raw panel renders only this device's measured fields (6 forced 200 shapes, incl. credential witness)",
+   "derived_result": "MET",
+   "readings": {
+    "fields_union": [
+     "bytes",
+     "content-type",
+     "http_status"
+    ],
+    "body_key_rendered": false,
+    "x1_rows_ok": true,
+    "x1_rows_total": 36,
+    "shape_R24_credential_witness": {
+     "http_status": "200",
+     "content-type": "text/plain; charset=utf-8",
+     "bytes": "82"
+    },
+    "source": "arm_X1.json run 0302fix33353335"
+   }
+  },
+  {
+   "cell": "promise-free card stays honest (X2)",
+   "derived_result": "MET",
+   "readings": {
+    "status": "BASELINE_UNAVAILABLE",
+    "promise_in_copy": false,
+    "verdict": "MET",
+    "source": "arm_X2.json run 0302fix33353335"
+   }
+  },
+  {
+   "cell": "counter-arm ca_unsafe_read",
+   "derived_result": "MET",
+   "readings": {
+    "intended_arm": "N1",
+    "run_id": "0302unr33353355",
+    "failed_claims": [
+     "an unreadable answer stays HTTP_500 and never becomes NETWORK",
+     "the card does not blame the network"
+    ],
+    "hits_expected_detector": true
+   }
+  },
+  {
+   "cell": "counter-arm ca_null_on_network",
+   "derived_result": "MET",
+   "readings": {
+    "intended_arm": "N3",
+    "run_id": "0302nul33353414",
+    "failed_claims": [
+     "ORD-0302 ②: even then the detail block is still there",
+     "and it carries a device line rather than nothing"
+    ],
+    "hits_expected_detector": true
+   }
+  },
+  {
+   "cell": "counter-arm ca_q64_body_back",
+   "derived_result": "MET",
+   "readings": {
+    "intended_arm": "X1",
+    "run_id": "0302q64b33353512",
+    "failed_claims": [
+     "R20_④_200_json_empty_object: no fragment of the answer's body reaches the DOM (Q64=①)",
+     "R21_④_200_json_array: no fragment of the answer's body reaches the DOM (Q64=①)",
+     "R22_④_200_text_plain_payload: no fragment of the answer's body reaches the DOM (Q64=①)",
+     "R23_④_200_mission_unusable_status: no fragment of the answer's body reaches the DOM (Q64=①)",
+     "R24_Q64_200_credential_shaped_text: no fragment of the answer's body reaches the DOM (Q64=①)"
+    ],
+    "hits_expected_detector": true
+   }
+  },
+  {
+   "cell": "counter-arm ca_x5_soft_promise",
+   "derived_result": "MET",
+   "readings": {
+    "intended_arm": "X1",
+    "run_id": "0302xsp33353453",
+    "failed_claims": [
+     "R19_④_200_empty_body: the copy still points there (Q53=①: render it, keep the pointer)",
+     "R20_④_200_json_empty_object: the copy still points there (Q53=①: render it, keep the pointer)",
+     "R21_④_200_json_array: the copy still points there (Q53=①: render it, keep the pointer)",
+     "R22_④_200_text_plain_payload: the copy still points there (Q53=①: render it, keep the pointer)",
+     "R23_④_200_mission_unusable_status: the copy still points there (Q53=①: render it, keep the pointer)",
+     "R24_Q64_200_credential_shaped_text: the copy still points there (Q53=①: render it, keep the pointer)"
+    ],
+    "hits_expected_detector": true
+   }
+  },
+  {
+   "cell": "counter-arm ca_x5_no_block",
+   "derived_result": "MET",
+   "readings": {
+    "intended_arm": "X1",
+    "run_id": "0302xnb33353433",
+    "failed_claims": [
+     "R19_④_200_empty_body: the card's promise and the DOM agree (promise => block exists)",
+     "R19_④_200_empty_body: its block carries the whitelist fields, value for value",
+     "R19_④_200_empty_body: an empty answer still shows its byte count, so the check above is not vacuous",
+     "R20_④_200_json_empty_object: the card's promise and the DOM agree (promise => block exists)",
+     "R20_④_200_json_empty_object: its block carries the whitelist fields, value for value",
+     "R21_④_200_json_array: the card's promise and the DOM agree (promise => block exists)",
+     "R21_④_200_json_array: its block carries the whitelist fields, value for value",
+     "R22_④_200_text_plain_payload: the card's promise and the DOM agree (promise => block exists)",
+     "R22_④_200_text_plain_payload: its block carries the whitelist fields, value for value",
+     "R23_④_200_mission_unusable_status: the card's promise and the DOM agree (promise => block exists)",
+     "R23_④_200_mission_unusable_status: its block carries the whitelist fields, value for value",
+     "R24_Q64_200_credential_shaped_text: the card's promise and the DOM agree (promise => block exists)",
+     "R24_Q64_200_credential_shaped_text: its block carries the whitelist fields, value for value"
+    ],
+    "hits_expected_detector": true
+   }
+  }
+ ],
+ "top_level_derived_result": "ALL_MET",
+ "derivation_rule": "every cell verdict above is computed from the arm JSON rows/readings named in its readings.source; no PASS literal",
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "demo_reset": 0,
+  "databases_opened_by_me": 0,
+  "credential_values_printed": 0
+ }
+}
