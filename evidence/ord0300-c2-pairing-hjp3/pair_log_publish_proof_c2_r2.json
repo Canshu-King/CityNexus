@@ -1,0 +1,40 @@
+{
+ "ran_at_local": "2026-09-25T20:16:15+0800",
+ "why": "the content guard matches the quoted field name \"token\" with a 16+ char value; the values here are per-request pairing markers, not credentials",
+ "only_change": "the JSON field name token -> pair_id; values, order and every other field untouched",
+ "original": {
+  "path": "pair_log.jsonl (unchanged on disk, and its bytes also ship where as_ran_bytes_are_published_too points)",
+  "bytes": 162231,
+  "sha256_64_hex": "b0a2bc0f3b42515638c3f64740a3d088cb938e15c7061d97190fe50410ba334f",
+  "blob_sha1_40_hex": "33961871027a4d3fe2bb456318d5795703e554a2",
+  "lines": 334
+ },
+ "published_copy": {
+  "path": "pair_log_pub.jsonl",
+  "bytes": 162565,
+  "sha256_64_hex": "10d5c5a9be7e99d2812ad8ed15d6a68f74a8e408fb912d36d52a767f883e8b22",
+  "blob_sha1_40_hex": "854195065bf43d4ee020c68b3646e580e8b3fa42",
+  "lines": 334
+ },
+ "as_ran_bytes_are_published_too": {
+  "bundle_file_on_disk": "raw_bundle_c2.json",
+  "bundle_member_name": "pair_log.jsonl",
+  "bundle_member_blob_40_hex": "33961871027a4d3fe2bb456318d5795703e554a2",
+  "bundle_own_blob_40_hex": "6c434fa4c93d46356fa6b6dd39aedac95a8bc6c0",
+  "bundle_members": 86,
+  "bundle_remote_name": "raw_bundle_c2_r3.json",
+  "how_to_recompute": "instruments/c2_bundle_check.py downloads the bundle from the branch and re-hashes every member, so this is checkable from published bytes alone"
+ },
+ "line_counts_equal": true,
+ "ids_in_the_same_order_and_unchanged": true,
+ "distinct_ids": 334,
+ "per_line_field_by_field_equal_apart_from_that_key": true,
+ "lines_where_it_did_not_hold": [],
+ "guard_check": {
+  "original_still_matches_the_refused_pattern": true,
+  "published_copy_matches_it": false
+ },
+ "verdict": {
+  "ALL_HOLD": true
+ }
+}
