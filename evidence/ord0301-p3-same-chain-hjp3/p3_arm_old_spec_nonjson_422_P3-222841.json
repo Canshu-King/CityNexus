@@ -1,0 +1,192 @@
+{
+ "arm": "old_spec_nonjson_422",
+ "run_id": "P3-222841",
+ "intent_declared_before": "A6 the same non-JSON 4xx on the unguarded generation",
+ "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "scenario": "spec",
+ "proxy_mode": "answer_spec",
+ "spec": {
+  "name": "nonjson_422",
+  "status": 422,
+  "reason": "Unprocessable Entity",
+  "content_type": "text/plain; charset=utf-8",
+  "body": "Request validation failed"
+ },
+ "lock_plan": null,
+ "rig": {
+  "backend_pid": 62216,
+  "proxy_pid": 54020,
+  "face_pid": 20752,
+  "face_port": 8654,
+  "all_up": true,
+  "identity_two_sided": true,
+  "journey_id": "39501977-a686-4b84-85cf-32a4d892c436",
+  "seed": {
+   "places_before": 0,
+   "demo_places_before": 0,
+   "seeded_by_this_call": true,
+   "demo_places_after": 8
+  },
+  "db": "D:\\moodle\\_hjp3_0301p3_0925\\p3_old.s3db",
+  "access_log": "p3_backend_access_222841.log",
+  "rig_state_file": "p3_rig_state_old_answer_spec_222841.json"
+ },
+ "node_rc": 0,
+ "node_tail": [
+  [
+   "{\"scenario\":\"spec\",\"status\":\"NETWORK\",\"title\":\"连不上服务端\",\"label\":null,\"reason\":null,\"details\":0,\"opened_label_rendered\":null,\"origin\":null,\"fetch_rejected\":false,\"page_saw\":422,\"pair_id\":\"hjp3p3-95a834c454894a7b\",\"body_parsed\":false,\"parse_err\":\"SyntaxError\"}"
+  ]
+ ],
+ "wall_seconds": 4,
+ "pairing": [
+  {
+   "leg": "39501977-a686-4b84-85cf-32a4d892c436/agent/commands",
+   "pair_id": "hjp3p3-95a834c454894a7b",
+   "one_request_one_id": true,
+   "server_side_from_the_same_hop": {
+    "recorded": true,
+    "reached_upstream": false,
+    "answered_by": "instrument_origin_per_spec",
+    "status": 422,
+    "content_type": "text/plain; charset=utf-8",
+    "bytes": 25,
+    "body_parses_as_json": false,
+    "top_level_keys": null,
+    "body_head": "Request validation failed",
+    "elapsed_ms": 0,
+    "request_mutation": null,
+    "spec_name": "nonjson_422"
+   },
+   "screen_side_from_the_page": {
+    "fetch_rejected": false,
+    "status": 422,
+    "ok": false,
+    "content_type": "text/plain; charset=utf-8",
+    "elapsed_ms": 7,
+    "app_read_the_body": {
+     "url": "http://127.0.0.1:8654/api/v1/journeys/39501977-a686-4b84-85cf-32a4d892c436/agent/commands",
+     "status": 422,
+     "pair_id": "hjp3p3-95a834c454894a7b",
+     "content_type": "text/plain; charset=utf-8",
+     "at_wall": "2026-09-25T14:28:50.376Z",
+     "parsed": false,
+     "error_name": "SyntaxError",
+     "error_message": "Unexpected token 'R', \"Request va\"... is not valid JSON"
+    },
+    "body_parse_failed": true,
+    "body_parsed": false,
+    "browser_stack": {
+     "url": "/api/v1/journeys/39501977-a686-4b84-85cf-32a4d892c436/agent/commands",
+     "status": 422,
+     "pair_id": "hjp3p3-95a834c454894a7b",
+     "content_type": "text/plain; charset=utf-8",
+     "failure": null,
+     "at_wall": "2026-09-25T14:28:50.376Z"
+    }
+   },
+   "both_ends_agree_on_status": true,
+   "both_ends_agree_on_json_class": true
+  }
+ ],
+ "write_legs_with_a_5xx_or_4xx": [
+  {
+   "leg": "39501977-a686-4b84-85cf-32a4d892c436/agent/commands",
+   "status": 422,
+   "answered_by": "instrument_origin_per_spec",
+   "json": false,
+   "page_saw": 422,
+   "rejected": false
+  }
+ ],
+ "screen_as_painted_before_tapping": {
+  "result_card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "result_card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "card_title_painted": "连不上服务端",
+  "card_body_painted": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "reason_label_painted": null,
+  "reason_value_painted": null,
+  "reason_label_text_content": null,
+  "reason_value_text_content": null,
+  "details_elements_present": 0,
+  "details_open_attribute": null,
+  "detail_toggle_present": false,
+  "network_card_painted": true,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": null
+ },
+ "screen_as_painted_after_tapping_detail": {
+  "result_card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "result_card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "card_title_painted": "连不上服务端",
+  "card_body_painted": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "reason_label_painted": null,
+  "reason_value_painted": null,
+  "reason_label_text_content": null,
+  "reason_value_text_content": null,
+  "details_elements_present": 0,
+  "details_open_attribute": null,
+  "detail_toggle_present": false,
+  "network_card_painted": true,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": null
+ },
+ "detail_block_open_attempt": {
+  "toggle": "no_toggle_present"
+ },
+ "screen": {
+  "result_card_painted": "连不上服务端\n\n网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "result_card_text_content": "连不上服务端网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "card_title_painted": "连不上服务端",
+  "card_body_painted": "网络或后端没有响应，这与你的需求内容无关。你的行程没有被改动，检查网络后可以重试。",
+  "reason_label_painted": null,
+  "reason_value_painted": null,
+  "reason_label_text_content": null,
+  "reason_value_text_content": null,
+  "details_elements_present": 0,
+  "details_open_attribute": null,
+  "detail_toggle_present": false,
+  "network_card_painted": true,
+  "http_failed_card_painted": false,
+  "refused_card_painted": false,
+  "server_attribution_painted": false,
+  "device_attribution_painted": false,
+  "unreadable_answer_note_painted": false,
+  "whole_page_contains_server_label": false,
+  "whole_page_contains_device_label": false,
+  "next_step_painted": null,
+  "cross_check_data_result_status": "NETWORK",
+  "cross_check_data_reason_origin": null
+ },
+ "page_errors": [],
+ "waited_ms": 3061,
+ "sample_tail": [
+  {
+   "ms": 548,
+   "status": "NETWORK",
+   "details": 0,
+   "busy": false
+  }
+ ],
+ "access_log_witness": {
+  "present": true,
+  "path": "p3_backend_access_222841.log",
+  "lines_naming_the_leg": 0,
+  "lines": []
+ }
+}
