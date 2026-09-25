@@ -1,0 +1,195 @@
+{
+ "cells": [
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S1_K1_green_on_authoritative_line",
+   "own_hits": [],
+   "own_token_count": 16,
+   "unique_hits": [],
+   "verdict": "CARRIER_GREEN_ON_AUTHORITATIVE_LINE",
+   "why": "这一格判级由本格读数派生（第甲式）：守卫在位则绿、拆掉那枚谓词则红",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S2_K1_red_when_guard_removed",
+   "own_hits": [],
+   "own_token_count": 24,
+   "unique_hits": [],
+   "verdict": "CARRIER_RED_WHEN_GUARD_REMOVED",
+   "why": "这一格判级由本格读数派生（第乙式）：守卫在位则绿、拆掉那枚谓词则红",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S3_K2_positive_control_green_both_states",
+   "own_hits": [],
+   "own_token_count": 27,
+   "unique_hits": [],
+   "verdict": "POSITIVE_CONTROL_GREEN_IN_BOTH_STATES",
+   "why": "这一格判级由本格读数派生（第丙式）：守卫在位则绿、拆掉那枚谓词则红",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S4_mutation_is_one_line_and_compiles",
+   "own_hits": [],
+   "own_token_count": 10,
+   "unique_hits": [],
+   "verdict": "SINGLE_HUNK_SINGLE_PREDICATE",
+   "why": "这一格判级由本格读数派生（第丁式）：守卫在位则绿、拆掉那枚谓词则红",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S5_tree_restored_byte_exact",
+   "own_hits": [],
+   "own_token_count": 3,
+   "unique_hits": [],
+   "verdict": "TREE_RESTORED_BYTE_EXACT",
+   "why": "这一格判级由本格读数派生（第戊式）：守卫在位则绿、拆掉那枚谓词则红",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S6_candidate_is_test_only_on_authoritative_parent",
+   "own_hits": [],
+   "own_token_count": 12,
+   "unique_hits": [],
+   "verdict": "TEST_ONLY_ON_AUTHORITATIVE_PARENT",
+   "why": "这一格判级由本格读数派生（第己式）：守卫在位则绿、拆掉那枚谓词则红",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S7_frozen_tip_is_externally_readable",
+   "own_hits": [],
+   "own_token_count": 13,
+   "unique_hits": [],
+   "verdict": "FROZEN_TIP_EXTERNALLY_READABLE",
+   "why": "这一格判级由本格读数派生（第庚式）：守卫在位则绿、拆掉那枚谓词则红",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S8_verbatim_port_is_refused_at_import",
+   "own_hits": [],
+   "own_token_count": 13,
+   "unique_hits": [],
+   "verdict": "VERBATIM_PORT_REFUSED_BY_IMPORT",
+   "why": "这一格判级由本格读数派生（第辛式）：守卫在位则绿、拆掉那枚谓词则红",
+   "why_source": "why",
+   "why_token_count": 0
+  },
+  {
+   "derived_from": null,
+   "derived_from_key": null,
+   "id": "S9_two_state_repeats_on_the_github_export",
+   "own_hits": [],
+   "own_token_count": 33,
+   "unique_hits": [],
+   "verdict": "TWO_STATE_REPRODUCED_ON_EXPORT",
+   "why": "这一格判级由本格读数派生（第壬式）：守卫在位则绿、拆掉那枚谓词则红",
+   "why_source": "why",
+   "why_token_count": 0
+  }
+ ],
+ "cells_found": 9,
+ "exit": 0,
+ "findings": [
+  {
+   "cell": "S1_K1_green_on_authoritative_line",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "S2_K1_red_when_guard_removed",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "S3_K2_positive_control_green_both_states",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "S4_mutation_is_one_line_and_compiles",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "S5_tree_restored_byte_exact",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "S6_candidate_is_test_only_on_authoritative_parent",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "S7_frozen_tip_is_externally_readable",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "S8_verbatim_port_is_refused_at_import",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  },
+  {
+   "cell": "S9_two_state_repeats_on_the_github_export",
+   "code": "WHY_CARRIES_NO_EVIDENCE_TOKEN",
+   "detail": "the sentence names nothing machine-checkable (no hash/number/route/filename)",
+   "hard": false
+  }
+ ],
+ "hard_codes": [],
+ "hard_count": 0,
+ "info_count": 0,
+ "meaning": "no hard defect, but some sentences carry nothing machine-checkable",
+ "overall": "Q38_GATE_SOFT_FINDINGS",
+ "receipt": {
+  "blob_sha1": "4425aa98a448cc98474cae7408c1d9e6b59d8823",
+  "bytes": 11713,
+  "path": "D:/moodle/_qoder_f_run/o225_receipts/control_unique_but_no_named_value.json"
+ },
+ "soft_codes": [
+  "WHY_CARRIES_NO_EVIDENCE_TOKEN"
+ ],
+ "soft_count": 9,
+ "unique_reading_counts": {
+  "S1_K1_green_on_authoritative_line": 1,
+  "S2_K1_red_when_guard_removed": 1,
+  "S3_K2_positive_control_green_both_states": 1,
+  "S4_mutation_is_one_line_and_compiles": 6,
+  "S5_tree_restored_byte_exact": 1,
+  "S6_candidate_is_test_only_on_authoritative_parent": 3,
+  "S7_frozen_tip_is_externally_readable": 8,
+  "S8_verbatim_port_is_refused_at_import": 4,
+  "S9_two_state_repeats_on_the_github_export": 1
+ }
+}
