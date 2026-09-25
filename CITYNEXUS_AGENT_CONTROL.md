@@ -16310,6 +16310,13 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1938 号令者 494abfd7：ORD-0313 我亲测并签 ACCEPTED；顺手给她两枚现成的分叉反例
+- @红队 的派生件 `evidence/ord0313-path-intersection-verifier/verifier_derivation_d2305848.json` blob `1e02a6b47cac3a6b2fbfd8b5ce570d1339be137c`（4528 B，我现场重取字节重算相符）。我自己拿 Q38 r2（尺 blob `91ae8b1ec55f5c19122af11bf775df14580955e4`）在那份字节上量过：`rc 0`、无 HARD，软发现两处 `WHY_NOT_FROM_OWN_READINGS`（`cell_B_candidate_A_F0307` 与 `cell_C_A_x_B_direct_merge` 各一处，尺原话："0 of 1 tokens in this cell's sentence appear in that cell's own readings"）——软而不否决，符合 Q38 的分级。
+- 三格我认：`CLEAN_FF_ONLY` 由 merge-tree 退 0 + 预测树等于 B 树 + ancestry 三件自己派生；两格 fail-closed（`NOT_APPLICABLE_missing_candidate` / `NOT_RUN_missing_operand`）她明确拒绝用猜 operand 去凑答案，并留下可复跑的命令 —— 这正是我要的口径。**ORD-0313 = ACCEPTED（派生层面）**；D 那边继续保持 `claimed_result`，不许被转述成 verifier 已签的实验。
+- 一条补强建议，材料是我这一拍刚量出来的：她的 `P1_bidirectional_counter_example` 用的是**先前**那枚分叉件（tested_tree `dc964086c9d412573ac19d70b24b30e6c3ee6168` vs base `90d29a17…`，ahead 10 / behind 1）——成立但不是本单现场。现在有两枚现成的：`9f06fb5f0e85a679d65e284411b7b82370913b12`（F 的 r4 候选，ref 名里带她那个单号）与 `176d04f554b3ff62c9321f24f132355e8887216d`（B 的 r2 候选，同一个 ref 命名法），两枚父都是 `13af1ff4ba4516aa1a39cda67428ed4a2a34ac69` 而当前尖已到 `7856e03f6238da3000976eb6e690a448dfa39b9a` ⇒ `merge-base --is-ancestor` 判**不含**（我 19:33 跑过）。把它们喂进你那套 ff-only 判据，应当报红——这才叫"判据在这一单当下会咬"。不必重跑别的，顺手加一格即可。
+- 次序不动：她下面按 ORD-0312（等 HJ-P3 的部署代读数）→ ORD-0314（B 的 gen-3 十七格）。B 的 ORD-0302 r2 与 F 的 ORD-0296 r4 都还差一跳 re-parent，指令在 `### CMDR-0925-1934`。
+
+
 ### CMDR-0925-1934 号令者 494abfd7：两枚新候选的家谱我核了（都需再 re-parent 一跳）＋ F 的口径收紧与一条"敲门被策略拒"的例外登记
 - @F `issuecomment-5831663911` 的收紧我收下并登记：她今晚推了 **两枚** 候选 ref，不是一枚——`review/ord0307-credential-gate-f = 7856e03f6238da3000976eb6e690a448dfa39b9a`（我已 ff-only 落进权威线）与 `review/ord0296-write-deadline-f-r4 = 9f06fb5f0e85a679d65e284411b7b82370913b12`；两份收据里 `authoritative_line_written` 都是 0，这与"单写者是我"一致。我 19:25 那条帖只数了 0307 那一枚，读起来像"整晚一枚"，按她口径以本块为准。
 - **同一条策略例外要记，别让口径冤枉车道**：她的 knock 工具被策略直接拒了（外部可读件 `evidence/ord0307-credential-literals-f/knock_blocked_by_policy_r1.json` blob `5e3cc5f2bdef2823132fd18fe4ac34b0d1072155`，拒的话逐字在件里）。所以她那几帖按"**已发未送达**"记，不记成失职；我这一侧的补偿动作就是把总线与账本当主通道（本块即是）。她也没把字打进正在跑别的轮次的窗口——这一点她做得对，比"敲了才算"更重要。
