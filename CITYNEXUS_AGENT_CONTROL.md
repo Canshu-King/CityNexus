@@ -16588,6 +16588,44 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0338 → 红队 E `d2305848` 交（三笔签级 · 2026-09-26 07:1x+08）
+
+**派生件**：`evidence/ord0338-three-signoffs-d2305848/ord0338_derived_d2305848.json` blob `811fd86d98e5494b6001b5d016e5d7a47c95040d`（9,081 B，树回验相符）。总线帖 `5840643042`。
+**ORD-0326（S1）代 `5d7335721106c20092dd4d90181bb99accd0a32b` = ALL_MET**：两枚 agent sink 移除（AgentComposer:185/CopilotDock:450/:770）、r5 28→26、唯一新增 sink=ServerReasonDetail.tsx:29（designated slot）、分类层 0 行改动、spec 4 passed；落地绑 5d733572 + 手机 index-CUtQgnyQ.js 传输层身份；Q68 表 6 字段诚实命名、Q70 锚点 0 枚记待补（缺≠违规）、Q71 咬出 JourneyTrialSetup.tsx:1247/:1248 data-* 携 error 名/句（判给它主人，不在此单两枚文件）。
+**ORD-0334（S2）代 `a8237d7b50a1df419ae7e89ae6c075dabb6513f8` = ALL_MET**：两枚配置数字已量具名（tip 上 client 15s cap vs server 45s 预算，件 `evidence/ord0334-hermes-port-table-S2/receipt_r1.json` = `9a212be0d747…`）+ candidate 给 request_replan 120s；**按单字面只签"数字不再矛盾+文案形状"，NOT 观测到的超时修复**（S2 自报 no live timing，not_measured 原样保留）；双臂各咬各的 witness（M1 timeout-budget 测试/M2 error-detail 测试）、M0 8/8 绿、套件 6→8；client blob==hermes `16b21067bf6d011698642799d3dadfa2c1ee41b7`。
+**ORD-0336（S2）代 `f45489c6d17f16973faad161618789237ac3814e` = ALL_MET**：16/16 checks 全 true 且 flip 自证有牙；身份形 D 两路排除（tip 身份位 0/字面 principal 3）deferred 到 ORD-0337；A/B/C 三形各咬各的红、union 4==sum 4 互不兜底；收集 clean、harness +6 全跑；落地绑 f45489c6、门 12 passed。
+**范围**：尺层 r5 24→21 号令者已量，我未重跑；无格需活后端 ⇒ 无 NOT-DEPLOYED 行；手机侧只认传输层身份。
+**边界**：0 改产品字节、0 推 ref、0 demo/reset、0 开别人的库、凭据 0 打印、新路径 0 覆盖。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
+### ORD-0337 前置 · lane S2-hermes-port · 只交影响面，未动一字节产品码（0 推 ref）
+
+**lane**: S2-hermes-port（Qoder）· **at_local**: 2026-09-26T06:42+0800 · **单号**: ORD-0337（前置）
+
+#### 你要的三十秒读数
+- `backend/app/agent/runtime_identity.py` 在主线尖 `f45489c6d17f16973faad161618789237ac3814e` 与 Hermes 线 `2cb16f471b81381f6917933a1d55f10f2be49ecb` 上是同一枚 blob `cb14edcc8747e906503ed8241cc0baa80d1d04e7` ⇒ 这一枚不需要从 Hermes 摘任何东西，`git diff --numstat` 两线之间该路径为空。
+- 那枚脏还在：`git status --porcelain backend/app/agent` 现列 `backend/app/agent/runtime_identity.py` 为 ` M`，它不在任何 ref 上，也没有一笔提交（`git log -1` 只到整树导入 `a9c2504274dd3284b1a98b6707f7c4c9f7071cc3`）。
+
+#### 主体身份这一问，线上早就有 HTTP 级见证
+- 两条路由 `backend/app/main.py:1102` 与 `backend/app/main.py:1122` 都把请求体的 `agent_id` 改写成服务端 principal；`backend/app/agent/principal.py:49` 写明调用方 `agent_id` 不是解析输入；actor 取自 `backend/app/core/config.py:40`。
+- 唯一认 MCP 名字的判据 `backend/app/agent/gateway.py:331` 读的就是改写后的值（`backend/app/agent/gateway.py:330`），所以适配器送什么都不翻不动这条 PLAN_ONLY 边界；能翻它的是服务端的 `CITYNEXUS_AGENT_PRINCIPAL_ID`。
+
+#### 实测（本地 detached 工作树，跑完已删；实验形状 = 现线 + 两枚 Hermes blob `6b4da1b9b939b16dfb2384f808741029dd798a51`、`270b7ea2fb3a194449a9a89b7523b1255a997d91`）
+- 驱动真 FastMCP 对象抓到线上送出的 hint：`agent-mcp/citynexus_mcp/server.py:114` 那枚字面量 `mcp-client` 在带 `CITYNEXUS_AGENT_ID` 的实验里变成 `hermes-test`，在现线上带同一个环境变量仍是 `mcp-client`。这就是该形的全部可观测差。
+- 已有见证 `backend/tests/test_agent_principal_boundary.py:46` 在实验里仍 2 passed；后端门在实验 whole collected 1342 且 collect_errors 0、harness collected 72 = passed 72、exit 0，与落地线门件 blob `8b154325c61bcf690bf3084bb7201bd38954c793` 逐项相等 ⇒ 现有测试因这枚形变红的数量是 0，用户可见文案变化 0 处。
+- 收据 `evidence/ord0337-mcp-agent-id-S2/impact_map_r1.json`，blob `c8c5b645036e3760d14b491f8b1c0a41d05244d2`（7 条 checks 全真，verdict `ORD0337_IMPACT_MAP_COMPLETE_IDENTITY_FORM_IS_WIRE_HINT_ONLY 7_of_7`，每条 check 各翻一次都能改 verdict）。
+
+#### 我自己的勘误
+ORD-0334 的表里我写 `_agent_id()` 会改主体身份 —— 按现线实测不成立，它改的是不被信任的 hint。那行写于 `backend/app/main.py:1102`、`backend/app/main.py:1122` 这两处改写落地之前，不是别人读错。
+
+#### 建议（归你裁，我不主动动码）
+只要验证车道能自报本地身份：这单最多值那 2 枚见证（`agent-mcp/tests/test_hermes_validation_principal.py`）。要让 MCP 调用方真的进入产品边界：那是另一张单，要动 `backend/app/main.py:1102` 与 `backend/app/main.py:1122` 或加 scoped credential，属 F 的地、由你排顺序。
+
+**纪律**：本车道推 ref 0 次、权威线移动 0 次、`backend/app` 与 `frontend/` 产品字节 0、`demo_reset` 0、`credentials_printed` 0、`model_calls_made` 0、`live_or_preview_db_touched` 0、`junctions_created` 0；一次性导出与本地实验工作树自删（未用 force，本地对象已随工作树丢弃，可核验的两枚 Hermes blob 见上）。
+
+
 ### ORD-0336 · lane S2-hermes-port · `server.py` 三形摘入，身份那一形留在 ORD-0337 · 状态 DELIVERED（候选 `f45489c6d17f16973faad161618789237ac3814e`）
 
 **lane**: S2-hermes-port（Qoder）· **at_local**: 2026-09-26T06:20+0800 · **单号**: ORD-0336
