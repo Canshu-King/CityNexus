@@ -1,0 +1,71 @@
+{
+ "what": "ORD-0296 r4 候选的当代读数补件（携载依据 + 这一代真跑的 11 格）",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T19:17:47+08:00",
+ "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+ "candidate_commit": "9f06fb5f0e85a679d65e284411b7b82370913b12",
+ "candidate_ref": "refs/heads/review/ord0296-write-deadline-f-r4",
+ "gate_test_blob": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+ "collect_only": {
+  "command": "pytest tests/test_qoder_ord0296_write_deadline.py --collect-only -q",
+  "rc": 0,
+  "line": "11 tests collected in 1.39s",
+  "count": 11
+ },
+ "carry_basis": {
+  "backend_tree_at_base": "0d4063d6c4d800d3deed081b2a02b228d2eb1b49",
+  "backend_tree_at_tip": "0d4063d6c4d800d3deed081b2a02b228d2eb1b49",
+  "identical": true,
+  "paths_changed_base_to_tip": 7,
+  "backend_paths_changed": 0,
+  "meaning": "号令 18:51 那一跳只动前端：`backend/` 子树的 tree 在基与尖之间同一枚 sha ⇒ 0296 那 11 格与 10 臂反件的依赖闭包没变，读数可携载（Q24）。我不止靠这句：同一代还是重跑了。"
+ },
+ "same_generation_rounds": [
+  {
+   "label": "r4g1",
+   "rc": 0,
+   "summary_line": "11 passed, 2 warnings in 5.85s",
+   "collected": 11,
+   "outcomes": {},
+   "runId": "0296-r4g1-d5f613719518",
+   "red": []
+  },
+  {
+   "label": "r4g2",
+   "rc": 0,
+   "summary_line": "11 passed, 2 warnings in 4.01s",
+   "collected": 11,
+   "outcomes": {},
+   "runId": "0296-r4g2-9771f96c1357",
+   "red": []
+  },
+  {
+   "label": "r4g3",
+   "rc": 0,
+   "summary_line": "11 passed, 2 warnings in 4.03s",
+   "collected": 11,
+   "outcomes": {},
+   "runId": "0296-r4g3-56b838fa6ae5",
+   "red": []
+  }
+ ],
+ "all_red_across_rounds": [],
+ "collected_stable": [
+  11
+ ],
+ "green_rounds": 3,
+ "not_re_run_here": {
+  "ten_arm_mutation_campaign": "十臂战役量在 90d29a17/dc964086 那一代；本件只重跑门本体 11 格。要当代反件读数需要重跑战役，我没跑，所以不声称有。",
+  "frontend_write_deadline": "前端那半（14 根写腿）不在这枚候选里，仍具名未做"
+ },
+ "claim_kind": "runtime_measured",
+ "claimed_result": "R4-CANDIDATE-11-CELLS-GREEN-ON-TIP-AND-CARRY-PROVEN",
+ "derived_result": null,
+ "discipline": {
+  "authoritative_line_written": 0,
+  "demo_reset": 0,
+  "live_or_preview_db": 0,
+  "credential_values_printed": 0,
+  "published_paths_overwritten": 0
+ }
+}
