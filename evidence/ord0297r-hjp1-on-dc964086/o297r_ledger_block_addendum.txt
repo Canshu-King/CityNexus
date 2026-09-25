@@ -1,0 +1,19 @@
+### 1a986a24 HJ-P1 · ORD-0297r 补记（块落账之后现跑的尺，以及我自己仪器里的一个提取 bug）@ 16:38+08
+
+上一条里我写了"本块的句级尺判定不在块里自宣"。这是落账之后量出来的那些数，逐条给对象：
+
+| 谁量的（blob 40 位） | 量的是哪份字节 | 结果 |
+| --- | --- | --- |
+| `receipt_cell_derivation_check_r2.py` `91ae8b1ec55f5c19122af11bf775df14580955e4` | 派生完就冻结的收据 `o297r_measured_object.json`（13 个顶层键、4 格） | `Q38_GATE_GREEN` / cells 4 / hard 0 / soft 0 |
+| 同一把尺，收据被 stage a 的判定追加过之后 | `o297r_measured_object_b.json`（20 个顶层键、4 格） | `Q38_GATE_GREEN` / cells 4 —— 判定加进去不改变判定 |
+| `claim_coordinate_check_r3.py` `e653e597c2e6fd74a5f8d3be65fe60e017b03017` | 收据 JSON 面 | `Q43_GATE_RED`（claims 207、findings 169、rc 3） |
+| `claim_coordinate_check_r4b.py` `efa6b7a383e094e2ede89f5dd8565b12feed0171` | 收据 JSON 面 | `Q43_GATE_RED`（claims 163、exempt {"YEAR": 21, "HTTP_STATUS": 10, "IDENTIFIER_PART": 13}、findings 118、rc 3） |
+| `claim_coordinate_check_r3.py` | 账本块本体（从账本按标题切出来、逐字节比对与发布件相同） | `Q43_GATE_CLEAN`（claims 59、findings 0、rc 0） |
+| `claim_coordinate_check_r4b.py` | 同一份块字节 | `Q43_GATE_GREEN`（claims 58、findings 0、rc 0） |
+
+块在账本里的字节与身份：14097 B，blob `0d52a70921bd1773bf7b045c7988f313f05e1ce6`（写这条时它在第 15525–15576 行；本补记插在它上面，插完行号就会整体下移——账本每次插入都是全文重写，所以**认 blob，不认行号**）。
+
+**我自己仪器里的一个真 bug（具名，不粉）**：第一次"量账本块"是从我的标题往下取 200 行——那已经不是我的块，是把后面别的车道的正文一起量了，于是一幅 `Q43_GATE_RED` 被当成"我的块红"印了出来；同一版还让 Python 在 Windows 上把 LF 写成 CRLF，所以被量的字节和落账的字节不是同一份。现在按"切到下一个标题为止 + newline='' 原样字节"重切重跑，上面 r3/r4b 那两行就是重跑后的读数（`o297r_ruler_runs.json` 把 10 次运行逐条列在一起，包含被这两个 bug 污染的那几次，没有删）。
+
+JSON 面那两发红不是我的格错了：`Q50=①`（`issuecomment-5829176662`，号令者转达，durable 等级 COMMANDER_RELAYED）已裁定机器生成的测量表这一面对句级坐标尺是 `RULER_OUT_OF_SCOPE`。原样输出全部随件发布，不做解释性改写。
+边界：权威线 0 次移动、手机链 0 次变更、`demo/reset` 0 次、凭据 0 打印、已发布路径 0 覆盖；本补记只新增块，未改动上一条任何一个字。
