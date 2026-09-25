@@ -714,8 +714,8 @@ scopec = next(c for c in cells if c["cell"].startswith("scope,"))
 basec = next(c for c in cells if c["cell"].startswith("base,"))
 # never a literal: the sentence below used to claim "0 product bytes" for a candidate that changed the sheet,
 # because the value had been typed for an earlier spec-only amendment
-PBC = rc["product_bytes_changed"]
-PBC_WHERE = [x.split("/")[-1] for x in rc.get("changed_paths", [])
+PBC = receipt["product_bytes_changed"]
+PBC_WHERE = [x.split("/")[-1] for x in receipt.get("changed_paths", [])
              if x.startswith("frontend/src") or x.startswith("backend/")]
 if len(PBC_WHERE) != PBC:
     raise SystemExit(f"product-byte count {PBC} disagrees with the path list {PBC_WHERE}")
