@@ -1,0 +1,166 @@
+{
+ "schema": "CNX_ORD0326_FINAL_V1",
+ "order": "ORD-0326",
+ "lane": "S1-q64sweep",
+ "at_local": "2026-09-26T05:39:06+0800",
+ "ruling_executed": "commander 04:57 - the lane's channel is the single presentation layer, classifyReadFailure stays the classification layer, HotelsPanel dropped",
+ "generation": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "authoritative_tip_now": "5d7335721106c20092dd4d90181bb99accd0a32b",
+ "tip_moved_after_measurement": true,
+ "branch_off_sha": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "branch_off_is_ancestor": true,
+ "candidate_branch": "agent/S1-q64sweep-candidates-r4",
+ "candidate_tip": "c504273362163c9bc9f5c39bf30b0ef705f0d144",
+ "candidate_verified_by_ls_remote": "c504273362163c9bc9f5c39bf30b0ef705f0d144",
+ "files_touched": [
+  "frontend/e2e/server-reason-ord0326.spec.ts",
+  "frontend/playwright.logic.config.ts",
+  "frontend/src/components/ServerReasonDetail.tsx",
+  "frontend/src/features/agent/AgentComposer.tsx",
+  "frontend/src/features/agent/CopilotDock.tsx",
+  "frontend/src/lib/serverReason.ts"
+ ],
+ "file_count": 6,
+ "files_not_mine_confirmed_untouched": {
+  "frontend/src/features/stay/HotelsPanel.tsx": true,
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx": true,
+  "frontend/src/components/ProductErrorBoundary.tsx": true,
+  "frontend/src/app/V8Experience.tsx": true,
+  "frontend/src/features/planning/PlanWithAiSheet.tsx": true,
+  "frontend/src/features/planning/PlanComparison.tsx": true
+ },
+ "two_layers_not_two_implementations": {
+  "presentation": "frontend/src/lib/serverReason.ts (describeServerReason / reasonFromThrown / serverReasonScreenTexts) + frontend/src/components/ServerReasonDetail.tsx",
+  "classification": "frontend/src/lib/failureAttribution.ts :: classifyReadFailure - untouched by this branch, it still owns which kind of failure this is",
+  "classification_lines_changed": 0
+ },
+ "r5": {
+  "ruler": "ff98091cf3accb0d836ae25ba49820170b92d932",
+  "mode": "--tree over `git archive <sha> frontend/src` exports",
+  "at_branch_off": 28,
+  "on_this_branch": 26,
+  "sinks_removed": [
+   "AgentComposer.tsx:185|UPSTREAM_EXCEPTION_TO_DOM",
+   "CopilotDock.tsx:450|UPSTREAM_EXCEPTION_TO_DOM",
+   "CopilotDock.tsx:770|UPSTREAM_EXCEPTION_TO_DOM"
+  ],
+  "sinks_added": [
+   "ServerReasonDetail.tsx:29|UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+  ],
+  "added_is_the_designated_slot_only": true,
+  "other_lanes_readings_unchanged": {
+   "JourneyInboxWorkbench.tsx": true,
+   "ProductErrorBoundary.tsx": true,
+   "HotelsPanel.tsx": true,
+   "V8Experience.tsx": true,
+   "PlanWithAiSheet.tsx": true,
+   "PlanComparison.tsx": true
+  }
+ },
+ "verification": {
+  "tsc": "node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit 0",
+  "spec": "4 passed on this branch: direction A / direction B / parked raw body / multi-line refusal, via playwright.logic.config.ts which starts no server",
+  "existing_assertions_changed": 0,
+  "skips_added": 0,
+  "authoritative_pushes": 0
+ },
+ "request_id_ruling_applied": {
+  "rule": "shown when the server sent one, NOT-EMITTED otherwise, never invented",
+  "hits_per_file_at_generation": {
+   "backend/app/agent/gateway.py": 18,
+   "backend/app/agent/contracts.py": 3,
+   "backend/app/agent/guardian.py": 3,
+   "backend/app/agent/runtime.py": 1,
+   "backend/app/main.py": 0,
+   "backend/app/schemas.py": 1,
+   "agent-mcp/citynexus_mcp/schemas.py": 3
+  },
+  "citations": {
+   "inbound_contract_field": {
+    "where": "backend/app/agent/contracts.py",
+    "line": 67,
+    "text": "request_id: str"
+   },
+   "is_idempotency_scope_not_response_meta": {
+    "where": "backend/app/agent/gateway.py",
+    "line": 463,
+    "text": "# request_id is the caller's idempotency scope. Keep the proposal or"
+   },
+   "gateway_uses_are_audit_and_signature_payloads": [
+    {
+     "where": "backend/app/agent/gateway.py",
+     "line": 314,
+     "text": "\"request_id\": request.request_id,"
+    },
+    {
+     "where": "backend/app/agent/gateway.py",
+     "line": 454,
+     "text": "\"request_id\": request.request_id,"
+    }
+   ],
+   "server_mints_these_itself": [
+    {
+     "where": "backend/app/agent/guardian.py",
+     "line": 401,
+     "text": "\"request_id\": f\"guardian-inspect-{run.id}\","
+    },
+    {
+     "where": "backend/app/agent/runtime.py",
+     "line": 430,
+     "text": "arguments[\"request_id\"] = f\"agent-run-{run.id}-{sequence}\""
+    }
+   ],
+   "frontend_optional_response_field": {
+    "where": "frontend/src/api/citynexus.ts",
+    "line": 558,
+    "text": "request_id?: string;",
+    "owner": "AgentToolResponse (declared at api/citynexus.ts:553)"
+   },
+   "frontend_outbound_payload_only": {
+    "where": "frontend/src/api/citynexus.ts",
+    "line": 1089,
+    "text": "request_id: string;"
+   },
+   "error_envelope_carries_trace_id_instead": [
+    {
+     "where": "backend/app/main.py",
+     "line": 456,
+     "text": "def trace_id() -> str:"
+    },
+    {
+     "where": "backend/app/main.py",
+     "line": 487,
+     "text": "\"trace_id\": trace_id(),"
+    }
+   ],
+   "backend_declares_it_only_on_an_inbound_model": {
+    "where": "backend/app/schemas.py",
+    "line": 130,
+    "text": "request_id: str = Field(min_length=8, max_length=128)",
+    "enclosing_class": "AgentToolCall (extra=forbid, declared at schemas.py:127)"
+   }
+  },
+  "answer_for_the_two_paths_this_branch_uses": {
+   "copilot_send": "CopilotResponse (api/citynexus.ts:383) has no request_id; a refusal carries error.trace_id (main.py:487) which the channel maps into the request_id slot - shown as trace_id, never as a made-up id",
+   "stop_and_approve": "the gateway's request_id occurrences are inbound contract values echoed into audit rows and the canonical signature (gateway.py:314/:454), not response keys; AgentToolResponse.request_id is optional (api/citynexus.ts:558) and neither agent file reads it",
+   "frontend_type_never_filled": "since backend/app only declares request_id on the inbound AgentToolCall (schemas.py:130) and echoes it into audit/signature rows, the optional AgentToolResponse.request_id at api/citynexus.ts:558 is a field this backend never populates",
+   "verdict": "NOT-EMITTED on both paths under that name today; ORD-0332's real question is which name the existing error.trace_id is exposed under - and whether to delete the dead optional field rather than teach the backend to fill it"
+  }
+ },
+ "field_arrival_copilot_path": {
+  "route": "POST /api/v1/journeys/{journey_id}/copilot/messages (plural; main.py:11046)",
+  "fields": {
+   "http_status": "EMITTED",
+   "content_type": "EMITTED but read on one leg only (api/citynexus.ts:686 guard)",
+   "body_bytes": "NOT-EMITTED (length discarded at api/citynexus.ts:663)",
+   "response_received": "not a field; encoded as evidence_kind (lib/failureAttribution.ts:42)",
+   "elapsed_ms": "NOT-EMITTED on this path",
+   "request_id": "NOT-EMITTED (0 hits in main.py; see request_id_ruling_applied)"
+  },
+  "detail_artifact": "evidence/ord0326-server-reason-S1/agent_fields_r1.json = c80f6f61bff8d574dc529a27ba21dd9cbc5cb328 (already published, unchanged)"
+ },
+ "handoff_to_B": "B's two files adopt describeServerReason + <ServerReasonDetail>; the channel and its four assertions are on this branch, and r5 shows that swap removing five sinks while leaving the three inbox slots flagged when the sentence is re-minted instead",
+ "claim_kind": "code_landed_on_candidate_branch",
+ "claimed_result": "agent/S1-q64sweep-candidates-r4 @ c50427336216 off 0f8b925facab: 6 files (6 ordered, 0 others), r5 28 -> 26, 3 agent sinks removed, added only at the designated slot (True), tsc 0, spec 4 passed, request_id NOT-EMITTED on both paths",
+ "derived_result": "04:57 ruling executed: one presentation channel, one classification layer, no other lane's file touched"
+}
