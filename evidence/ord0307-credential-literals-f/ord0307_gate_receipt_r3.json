@@ -1,0 +1,800 @@
+{
+ "what": "ORD-0307：字面量凭据的常驻启动门（树 + 环境两档）——10 格逐格自证 + 5 臂反件 + 已切成候选 ref",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T19:01:23+08:00",
+ "claim_kind": "runtime_measured",
+ "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+ "base_read_from": "干净导出 `git -c core.autocrlf=false archive <该尖> backend data contracts tools frontend/e2e frontend/src agent-mcp qoder-handoff | tar -x`",
+ "blobs": {
+  "app/security/credential_literals.py": "717317f822ce01873e33bffd418adea04f67dfeb",
+  "app/main.py": "5455175abe154c5c4ab5b122e517efd13081a637",
+  "tests/test_qoder_ord0307_credential_gate.py": "408032e04fbbae6171df91dc1f2420a15dd9a38d"
+ },
+ "scan_set_named": {
+  "roots": [
+   "backend/app",
+   "backend/pyproject.toml",
+   "contracts",
+   "data",
+   "tools",
+   "agent-mcp",
+   "frontend/src",
+   "frontend/e2e",
+   "qoder-handoff"
+  ],
+  "product_roots": [
+   "backend/app",
+   "backend/pyproject.toml",
+   "contracts",
+   "data",
+   "tools",
+   "agent-mcp",
+   "frontend/src"
+  ],
+  "suffixes": [
+   ".cfg",
+   ".diff",
+   ".env",
+   ".ini",
+   ".json",
+   ".md",
+   ".patch",
+   ".py",
+   ".toml",
+   ".ts",
+   ".tsx",
+   ".txt",
+   ".yaml",
+   ".yml"
+  ],
+  "excluded_dirs": [
+   ".git",
+   "__pycache__",
+   "build",
+   "dist",
+   "node_modules"
+  ],
+  "how_derived": "roots 是模块常量 SCAN_ROOTS（判据的一部分），门自己在 C01 核对每根存在、并核对 candidate_files() 的数量与 scan() 报的数量相等 ⇒ 清单来自同一次枚举，不是事后补的名单（MODULE_LIST_FROM_THE_RUN_V1）"
+ },
+ "positive_control_today": {
+  "tree_side": {
+   "files_scanned": 371,
+   "hits_total": 2,
+   "hits_declared": 2,
+   "hits_undeclared": 0,
+   "hits_in_product_path": 0,
+   "hits_count_pattern_matches_not_literals": true,
+   "distinct_literals": 1,
+   "hit_locations": [
+    "frontend/e2e/qoder-e2e-config-guard.spec.ts:140 pattern=provider_key_shape token_fp=faca4b0049a4",
+    "frontend/e2e/qoder-e2e-config-guard.spec.ts:140 pattern=labeled_assignment token_fp=faca4b0049a4"
+   ],
+   "why_two_rows_one_literal": "同一枚 e2e 字面量被两条形状判据各认一次（provider_key_shape 与 labeled_assignment）⇒ hits_total 数命中、distinct_literals 数字面量；两个数都在件里，句子只引用其一会夸大"
+  },
+  "env_side": {
+   "present": 1,
+   "undeclared": 1,
+   "rows": [
+    {
+     "var": "DEEPSEEK_API_KEY",
+     "length": 35,
+     "token_fp": "4cabe6bcaff4",
+     "declared": false
+    }
+   ]
+  },
+  "reading": "诚实答案与号令的预期相反：**只扫受版本控制的树，今天是 CLEAR** —— 09-23 那把真 key 的位置（qoder-handoff/…patch:6348）现在是含 `redacted` 的脱敏桩，被占位词表正当排除；e2e 那枚是已按摘要申报的假样。真正**活着**的凭据在运行环境里（长度与指纹见 env_side，值 0 字节进过输出）⇒ 所以门做成两档：树档 + 环境档，strict 对两档都拒启动。若按号令只做树档，它会永远绿。",
+  "declared_env_is_empty_by_design": true
+ },
+ "campaign": {
+  "control_rounds": [
+   {
+    "label": "ctl1",
+    "rc": 0,
+    "seconds": 4.91,
+    "collected": 10,
+    "summary_line": "10 passed",
+    "red": [],
+    "runId": "0307-ctl1-93317212ab8b"
+   },
+   {
+    "label": "ctl2",
+    "rc": 0,
+    "seconds": 5.02,
+    "collected": 10,
+    "summary_line": "10 passed",
+    "red": [],
+    "runId": "0307-ctl2-c5de88a82367"
+   },
+   {
+    "label": "ctl3",
+    "rc": 0,
+    "seconds": 4.88,
+    "collected": 10,
+    "summary_line": "10 passed",
+    "red": [],
+    "runId": "0307-ctl3-381553186a11"
+   }
+  ],
+  "control_all_green": true,
+  "arms": [
+   {
+    "arm": "K1_placeholder_filter_off",
+    "file": "app\\security\\credential_literals.py",
+    "line_named": 169,
+    "locate_hits": 1,
+    "before_blob_40": "717317f822ce01873e33bffd418adea04f67dfeb",
+    "after_blob_40": "8704ed4cc39b3f0b1b2ef213da2d54c5a1a866e5",
+    "py_compile_ok": true,
+    "reddened_union": [
+     "test_C04_placeholders_and_low_entropy_never_fire",
+     "test_C07_what_the_working_tree_actually_holds_today"
+    ],
+    "primary_carrier": [
+     "test_C04_placeholders_and_low_entropy_never_fire"
+    ],
+    "collateral": [
+     "test_C07_what_the_working_tree_actually_holds_today"
+    ],
+    "only_primary_reddened": false,
+    "restore_byte_exact": true,
+    "claimed_result": "KILLED_WITH_COLLATERAL",
+    "per_round_red": [
+     [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ]
+    ],
+    "shape": "单变量：app\\security\\credential_literals.py:169 的 717317f822ce… → 8704ed4cc39b…；primary=['test_C04_placeholders_and_low_entropy_never_fire']，collateral=['test_C07_what_the_working_tree_actually_holds_today']"
+   },
+   {
+    "arm": "K2_all_shapes_pass_filters",
+    "file": "app\\security\\credential_literals.py",
+    "line_named": 169,
+    "locate_hits": 1,
+    "before_blob_40": "717317f822ce01873e33bffd418adea04f67dfeb",
+    "after_blob_40": "6d0106e5b1d9905e5f2fc57e0c7ae6ddd1e8601d",
+    "py_compile_ok": true,
+    "reddened_union": [
+     "test_C04_placeholders_and_low_entropy_never_fire",
+     "test_C07_what_the_working_tree_actually_holds_today"
+    ],
+    "primary_carrier": [
+     "test_C04_placeholders_and_low_entropy_never_fire"
+    ],
+    "collateral": [
+     "test_C07_what_the_working_tree_actually_holds_today"
+    ],
+    "only_primary_reddened": false,
+    "restore_byte_exact": true,
+    "claimed_result": "KILLED_WITH_COLLATERAL",
+    "per_round_red": [
+     [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     [
+      "test_C04_placeholders_and_low_entropy_never_fire",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ]
+    ],
+    "shape": "单变量：app\\security\\credential_literals.py:169 的 717317f822ce… → 6d0106e5b1d9…；primary=['test_C04_placeholders_and_low_entropy_never_fire']，collateral=['test_C07_what_the_working_tree_actually_holds_today']"
+   },
+   {
+    "arm": "K3_declaration_fingerprint_mutated",
+    "file": "app\\security\\credential_literals.py",
+    "line_named": 56,
+    "locate_hits": 1,
+    "before_blob_40": "717317f822ce01873e33bffd418adea04f67dfeb",
+    "after_blob_40": "c7b64b0deb0288aa56e8dd8222f98cb6d164ec97",
+    "py_compile_ok": true,
+    "reddened_union": [
+     "test_C06_declaration_is_by_digest_not_by_path",
+     "test_C07_what_the_working_tree_actually_holds_today"
+    ],
+    "primary_carrier": [
+     "test_C06_declaration_is_by_digest_not_by_path"
+    ],
+    "collateral": [
+     "test_C07_what_the_working_tree_actually_holds_today"
+    ],
+    "only_primary_reddened": false,
+    "restore_byte_exact": true,
+    "claimed_result": "KILLED_WITH_COLLATERAL",
+    "per_round_red": [
+     [
+      "test_C06_declaration_is_by_digest_not_by_path",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     [
+      "test_C06_declaration_is_by_digest_not_by_path",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ],
+     [
+      "test_C06_declaration_is_by_digest_not_by_path",
+      "test_C07_what_the_working_tree_actually_holds_today"
+     ]
+    ],
+    "shape": "单变量：app\\security\\credential_literals.py:56 的 717317f822ce… → c7b64b0deb02…；primary=['test_C06_declaration_is_by_digest_not_by_path']，collateral=['test_C07_what_the_working_tree_actually_holds_today']"
+   },
+   {
+    "arm": "K4_startup_refusal_removed",
+    "file": "app\\security\\credential_literals.py",
+    "line_named": 211,
+    "locate_hits": 1,
+    "before_blob_40": "717317f822ce01873e33bffd418adea04f67dfeb",
+    "after_blob_40": "9911402877b360a434ad53abd54c6ffef37f46f7",
+    "py_compile_ok": true,
+    "reddened_union": [
+     "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import"
+    ],
+    "primary_carrier": [
+     "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import"
+    ],
+    "collateral": [],
+    "only_primary_reddened": true,
+    "restore_byte_exact": true,
+    "claimed_result": "KILLED_PRIMARY_ONLY",
+    "per_round_red": [
+     [
+      "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import"
+     ],
+     [
+      "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import"
+     ],
+     [
+      "test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import"
+     ]
+    ],
+    "shape": "单变量：app\\security\\credential_literals.py:211 的 717317f822ce… → 9911402877b3…；primary=['test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import']，collateral=[]"
+   },
+   {
+    "arm": "K5_default_policy_becomes_off",
+    "file": "app\\security\\credential_literals.py",
+    "line_named": 127,
+    "locate_hits": 1,
+    "before_blob_40": "717317f822ce01873e33bffd418adea04f67dfeb",
+    "after_blob_40": "98a32a6f437c67be0c00c17efcf5ab548e7d9d50",
+    "py_compile_ok": true,
+    "reddened_union": [
+     "test_C07_what_the_working_tree_actually_holds_today",
+     "test_C10_the_default_policy_is_report_not_off"
+    ],
+    "primary_carrier": [
+     "test_C10_the_default_policy_is_report_not_off"
+    ],
+    "collateral": [
+     "test_C07_what_the_working_tree_actually_holds_today"
+    ],
+    "only_primary_reddened": false,
+    "restore_byte_exact": true,
+    "claimed_result": "KILLED_WITH_COLLATERAL",
+    "per_round_red": [
+     [
+      "test_C07_what_the_working_tree_actually_holds_today",
+      "test_C10_the_default_policy_is_report_not_off"
+     ],
+     [
+      "test_C07_what_the_working_tree_actually_holds_today",
+      "test_C10_the_default_policy_is_report_not_off"
+     ],
+     [
+      "test_C07_what_the_working_tree_actually_holds_today",
+      "test_C10_the_default_policy_is_report_not_off"
+     ]
+    ],
+    "shape": "单变量：app\\security\\credential_literals.py:127 的 717317f822ce… → 98a32a6f437c…；primary=['test_C10_the_default_policy_is_report_not_off']，collateral=['test_C07_what_the_working_tree_actually_holds_today']"
+   }
+  ],
+  "survivors": [],
+  "arms_with_only_primary": [
+   "K4_startup_refusal_removed"
+  ],
+  "shared_criterion_note": "C07 是'真树事实'格，它和 C04/C06 共用同一张占位词表/申报表，所以 K1/K2/K3/K5 各有 1 格 collateral —— 完整红集逐臂列出，不报'红了 N 格'。要件 3(b) 的严格版由 K4 给出：摘掉 strict 的 raise，三轮只红 C09 一格。",
+  "restore_byte_exact_every_arm": true,
+  "blobs_pristine": {
+   "module": "717317f822ce01873e33bffd418adea04f67dfeb",
+   "main": "5455175abe154c5c4ab5b122e517efd13081a637",
+   "test": "408032e04fbbae6171df91dc1f2420a15dd9a38d"
+  }
+ },
+ "confirmation_round_after_the_campaign": {
+  "rc": 0,
+  "summary_line": "10 passed in 5.48s",
+  "collected": 10,
+  "gate_test_blob_at_this_run": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+  "module_blob_at_this_run": "717317f822ce01873e33bffd418adea04f67dfeb",
+  "runId": "0307-conf-238135221809",
+  "note": "战役 r5 的 blobs_pristine.test 已经等于本件 `blobs` 里的门文件 blob ⇒ 那 3 轮控制轮量的就是最终字节；这第 4 轮是在收据生成的同一刻、对着同一枚 blob 再量一次，用来排除『生成器读到的是旧字节』这一类故障。"
+ },
+ "cells": [
+  {
+   "id": "C01",
+   "sha": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "nodeid": "tests/test_qoder_ord0307_credential_gate.py::test_C01_the_scanned_set_is_named_and_actually_present",
+   "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "shape": "扫描集合具名可核对：9 根 roots 全在、缺 0、枚举出的文件数与 scan 报的相等｜会被咬的方式：反例改 roots 常量或让某根不在树里 ⇒ 这格红",
+   "run_ids_control": [
+    "0307-ctl1-93317212ab8b",
+    "0307-ctl2-c5de88a82367",
+    "0307-ctl3-381553186a11"
+   ],
+   "measured": {
+    "rounds": 3,
+    "passed_rounds": 3,
+    "outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "cell_evidence_tag": "be8ce573e819",
+    "collected": 10,
+    "reddened_by_arms": [],
+    "primary_of_arms": []
+   },
+   "derived_from": [
+    "measured.cell_evidence_tag=be8ce573e819",
+    "measured.passed_rounds=3"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 be8ce573e819；被这些臂咬到=[]；作为 primary 的臂=[]",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C02",
+   "sha": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "nodeid": "tests/test_qoder_ord0307_credential_gate.py::test_C02_no_path_through_the_gate_leaks_a_value",
+   "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "shape": "值 0 字节外泄：异常串 / details() / scan() 的 JSON 里都不许出现凭据本身或其前 8 位｜会被咬的方式：任何把值带进日志/异常的写法 ⇒ 这格红",
+   "run_ids_control": [
+    "0307-ctl1-93317212ab8b",
+    "0307-ctl2-c5de88a82367",
+    "0307-ctl3-381553186a11"
+   ],
+   "measured": {
+    "rounds": 3,
+    "passed_rounds": 3,
+    "outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "cell_evidence_tag": "0183c5e39546",
+    "collected": 10,
+    "reddened_by_arms": [],
+    "primary_of_arms": []
+   },
+   "derived_from": [
+    "measured.cell_evidence_tag=0183c5e39546",
+    "measured.passed_rounds=3"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 0183c5e39546；被这些臂咬到=[]；作为 primary 的臂=[]",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C03",
+   "sha": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "nodeid": "tests/test_qoder_ord0307_credential_gate.py::test_C03_an_injected_literal_in_a_product_path_is_named_by_location",
+   "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "shape": "要件 3(a)：往产品路径塞一枚假凭据 ⇒ 门点名 文件:行 与摘要，且认它在产品路径内｜会被咬的方式：形状判据失效或产品路径判定失效 ⇒ 这格红",
+   "run_ids_control": [
+    "0307-ctl1-93317212ab8b",
+    "0307-ctl2-c5de88a82367",
+    "0307-ctl3-381553186a11"
+   ],
+   "measured": {
+    "rounds": 3,
+    "passed_rounds": 3,
+    "outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "cell_evidence_tag": "00776efc5ff3",
+    "collected": 10,
+    "reddened_by_arms": [],
+    "primary_of_arms": []
+   },
+   "derived_from": [
+    "measured.cell_evidence_tag=00776efc5ff3",
+    "measured.passed_rounds=3"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 00776efc5ff3；被这些臂咬到=[]；作为 primary 的臂=[]",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C04",
+   "sha": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "nodeid": "tests/test_qoder_ord0307_credential_gate.py::test_C04_placeholders_and_low_entropy_never_fire",
+   "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "shape": "负控：占位词表与熵阈值各挡一类样本，且必须走产品入口判（不许在测试里重算过滤）｜会被咬的方式：过滤器被摘/恒真 ⇒ 这格红；上一版把过滤逻辑抄进断言，臂看不见，已改",
+   "run_ids_control": [
+    "0307-ctl1-93317212ab8b",
+    "0307-ctl2-c5de88a82367",
+    "0307-ctl3-381553186a11"
+   ],
+   "measured": {
+    "rounds": 3,
+    "passed_rounds": 3,
+    "outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "cell_evidence_tag": "a15bac6ab7e4",
+    "collected": 10,
+    "reddened_by_arms": [
+     "K1_placeholder_filter_off",
+     "K2_all_shapes_pass_filters"
+    ],
+    "primary_of_arms": [
+     "K1_placeholder_filter_off",
+     "K2_all_shapes_pass_filters"
+    ]
+   },
+   "derived_from": [
+    "measured.cell_evidence_tag=a15bac6ab7e4",
+    "measured.passed_rounds=3"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 a15bac6ab7e4；被这些臂咬到=['K1_placeholder_filter_off', 'K2_all_shapes_pass_filters']；作为 primary 的臂=['K1_placeholder_filter_off', 'K2_all_shapes_pass_filters']",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C05",
+   "sha": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "nodeid": "tests/test_qoder_ord0307_credential_gate.py::test_C05_each_shape_pattern_fires_on_its_own_shape",
+   "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "shape": "四种形状各自可辨：provider / aws / github / google 各造一枚，认出的形状名要符合预期｜会被咬的方式：把某条形状删掉 ⇒ 对应样本那格红",
+   "run_ids_control": [
+    "0307-ctl1-93317212ab8b",
+    "0307-ctl2-c5de88a82367",
+    "0307-ctl3-381553186a11"
+   ],
+   "measured": {
+    "rounds": 3,
+    "passed_rounds": 3,
+    "outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "cell_evidence_tag": "76e9d244c43f",
+    "collected": 10,
+    "reddened_by_arms": [],
+    "primary_of_arms": []
+   },
+   "derived_from": [
+    "measured.cell_evidence_tag=76e9d244c43f",
+    "measured.passed_rounds=3"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 76e9d244c43f；被这些臂咬到=[]；作为 primary 的臂=[]",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C06",
+   "sha": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "nodeid": "tests/test_qoder_ord0307_credential_gate.py::test_C06_declaration_is_by_digest_not_by_path",
+   "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "shape": "D-2=甲 的申报通道：吻合摘要才算已申报；摘要差一位即作废回到未申报｜会被咬的方式：申报表按路径放行或指纹漂一位 ⇒ 这格红",
+   "run_ids_control": [
+    "0307-ctl1-93317212ab8b",
+    "0307-ctl2-c5de88a82367",
+    "0307-ctl3-381553186a11"
+   ],
+   "measured": {
+    "rounds": 3,
+    "passed_rounds": 3,
+    "outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "cell_evidence_tag": "4bc415213781",
+    "collected": 10,
+    "reddened_by_arms": [
+     "K3_declaration_fingerprint_mutated"
+    ],
+    "primary_of_arms": [
+     "K3_declaration_fingerprint_mutated"
+    ]
+   },
+   "derived_from": [
+    "measured.cell_evidence_tag=4bc415213781",
+    "measured.passed_rounds=3"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 4bc415213781；被这些臂咬到=['K3_declaration_fingerprint_mutated']；作为 primary 的臂=['K3_declaration_fingerprint_mutated']",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C07",
+   "sha": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "nodeid": "tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today",
+   "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "shape": "正控（要件 4）如实写真树：树侧命中全在证人路径、e2e 那枚按摘要已申报、verdict 与自己数出来的 env 档一致｜会被咬的方式：扫描集合被缩小或申报被改成按路径放行 ⇒ 这格红（它也是 K1/K2/K3/K5 的共用判据侧）",
+   "run_ids_control": [
+    "0307-ctl1-93317212ab8b",
+    "0307-ctl2-c5de88a82367",
+    "0307-ctl3-381553186a11"
+   ],
+   "measured": {
+    "rounds": 3,
+    "passed_rounds": 3,
+    "outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "cell_evidence_tag": "465f39ddde4c",
+    "collected": 10,
+    "reddened_by_arms": [
+     "K1_placeholder_filter_off",
+     "K2_all_shapes_pass_filters",
+     "K3_declaration_fingerprint_mutated",
+     "K5_default_policy_becomes_off"
+    ],
+    "primary_of_arms": []
+   },
+   "derived_from": [
+    "measured.cell_evidence_tag=465f39ddde4c",
+    "measured.passed_rounds=3"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 465f39ddde4c；被这些臂咬到=['K1_placeholder_filter_off', 'K2_all_shapes_pass_filters', 'K3_declaration_fingerprint_mutated', 'K5_default_policy_becomes_off']；作为 primary 的臂=[]",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C08",
+   "sha": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "nodeid": "tests/test_qoder_ord0307_credential_gate.py::test_C08_a_live_credential_in_the_environment_is_undeclared_by_construction",
+   "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "shape": "环境档：只报名字/长度/摘要；ENV_DECLARATIONS 故意留空 ⇒ 现役凭据一律未申报｜会被咬的方式：把现役 key 写进申报表，或值漏进返回值 ⇒ 这格红",
+   "run_ids_control": [
+    "0307-ctl1-93317212ab8b",
+    "0307-ctl2-c5de88a82367",
+    "0307-ctl3-381553186a11"
+   ],
+   "measured": {
+    "rounds": 3,
+    "passed_rounds": 3,
+    "outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "cell_evidence_tag": "7106c018bec1",
+    "collected": 10,
+    "reddened_by_arms": [],
+    "primary_of_arms": []
+   },
+   "derived_from": [
+    "measured.cell_evidence_tag=7106c018bec1",
+    "measured.passed_rounds=3"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 7106c018bec1；被这些臂咬到=[]；作为 primary 的臂=[]",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C09",
+   "sha": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "nodeid": "tests/test_qoder_ord0307_credential_gate.py::test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import",
+   "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "shape": "启动语义走子进程真 import：strict 拒并报具名码、report 放行；两向同跑｜会被咬的方式：摘掉 raise ⇒ 这格红（K4，且只有它红）",
+   "run_ids_control": [
+    "0307-ctl1-93317212ab8b",
+    "0307-ctl2-c5de88a82367",
+    "0307-ctl3-381553186a11"
+   ],
+   "measured": {
+    "rounds": 3,
+    "passed_rounds": 3,
+    "outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "cell_evidence_tag": "34105e07181f",
+    "collected": 10,
+    "reddened_by_arms": [
+     "K4_startup_refusal_removed"
+    ],
+    "primary_of_arms": [
+     "K4_startup_refusal_removed"
+    ]
+   },
+   "derived_from": [
+    "measured.cell_evidence_tag=34105e07181f",
+    "measured.passed_rounds=3"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 34105e07181f；被这些臂咬到=['K4_startup_refusal_removed']；作为 primary 的臂=['K4_startup_refusal_removed']",
+   "claim_kind": "runtime_measured"
+  },
+  {
+   "id": "C10",
+   "sha": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "nodeid": "tests/test_qoder_ord0307_credential_gate.py::test_C10_the_default_policy_is_report_not_off",
+   "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "shape": "默认档必须是 report；off 只能显式选且要具名留痕；三个非法值各自 ValueError｜会被咬的方式：把默认改成 off ⇒ 这格红（K5）",
+   "run_ids_control": [
+    "0307-ctl1-93317212ab8b",
+    "0307-ctl2-c5de88a82367",
+    "0307-ctl3-381553186a11"
+   ],
+   "measured": {
+    "rounds": 3,
+    "passed_rounds": 3,
+    "outcomes": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ],
+    "cell_evidence_tag": "50bf675f705c",
+    "collected": 10,
+    "reddened_by_arms": [
+     "K5_default_policy_becomes_off"
+    ],
+    "primary_of_arms": [
+     "K5_default_policy_becomes_off"
+    ]
+   },
+   "derived_from": [
+    "measured.cell_evidence_tag=50bf675f705c",
+    "measured.passed_rounds=3"
+   ],
+   "verdict": "GREEN_3_of_3",
+   "why": "本格自己的读数：3 轮控制里 PASSED 3/3（collected=10），本格标签 50bf675f705c；被这些臂咬到=['K5_default_policy_becomes_off']；作为 primary 的臂=['K5_default_policy_becomes_off']",
+   "claim_kind": "runtime_measured"
+  }
+ ],
+ "instrument_defects_found_while_building_this": [
+  "C04 第一版把过滤逻辑抄进断言里 ⇒ 反件改产品码它看不见（K1 当时红了 C07 而 C04 绿）；改成走 CL.find_literals 真入口后 K1 才咬到 primary",
+  "C09 第一版断言写的是树侧码（CREDENTIAL_LITERAL_IN_TREE），而抛出的其实是环境码 ⇒ 异常自带 code 参数后按 scan verdict 报",
+  "战役收尾断言用了 `write_bytes(...) is None`（它返回字节数）⇒ 臂跑完但收据没写成；修完才有本件",
+  "K1 的第一版突变把多行字面量替成一行 ⇒ 语法错（1 error、红集为空）那是仪表无效不是存活；换成单行 `if False and …`",
+  "r1 收据把『改名前的门字节』和『r3 战役』钉在了一起（同一件里两代混装）⇒ r2 一并钉正，并把差量写进 supersedes，r1 不覆盖",
+  "hits_total 数的是形状命中而不是字面量：同一枚 e2e 样串被 provider_key_shape 与 labeled_assignment 各认一次 ⇒ 只引用它会夸大 2 倍；现在 hits_total 与 distinct_literals 并报（positive_control_today.tree_side）",
+  "账本里我给一截孤立的旧标题补了『指向』，句里把成因写成本车道自己那次写入被覆盖——号令者 18:51 具名说是他 18:39 做远端独有行合并带进来的。我那句是**没复现就写下的成因**（违反 verify-relayed-mechanism），孤尖与指向句都不动，只在这一代记录谁说了什么"
+ ],
+ "rulings_ingested": {
+  "read_from": [
+   "账本 `### CMDR-0925-1845 号令者 494abfd7：ORD-0307 验收…`",
+   "账本 `### CMDR-0925-1851 …`（权威尖 5aff372 → 13af1ff，本件量的就是这一代）",
+   "总线 issuecomment-5831142850（他按字节查我三枚 blob，两枚 404 ⇒ 判『要件 ACCEPTED / 落地待 ref』）"
+  ],
+  "(a) 0 推 ref vs ORD-0304": "他裁：0304 那句是条件句（『F 一落 ref 我才整张重跑』），本单没落 ref ⇒ 不触发；并要我**从当前尖切一枚候选 ref**，落地仍只由他 ff-only ⇒ 我已切并推，见 candidate_ref。本件的『推 ref』不是我自作：命令在 CMDR-0925-1845 裁定 (a) 与 issuecomment-5831142850 里。",
+  "(b) 默认策略": "他裁：默认保持 report，prod 起面显式 strict，等 key 轮换完再议反转。本门的默认正是 report（C10 守它、K5 是它的反件）⇒ 与裁定一致，0 改动。",
+  "(b+) 硬要求：环境档未申报计数不许靠申报消绿": "我的 `ENV_DECLARATIONS` 一直留空（C08 断言它空并且只出 name/length/指纹）；反件 K3 证明把申报指纹改一位就作废 ⇒ 这道门自己不给『消绿』留路。",
+  "second_observer_reading": {
+   "who": "号令者 494abfd7 自己那侧",
+   "his_receipt_blob": "a2bf7f4a600d974b03f76e1b093c8910e4b2147b",
+   "his_tool_blob": "72fe309331489391585f2fcc0b8a1e9f4c3381b0",
+   "agree_on": [
+    "presence True",
+    "length 35",
+    "token_fp 前 12 位 4cabe6bcaff4"
+   ],
+   "extra_layer_he_measured": "同一枚 key 还在 `HKCU\\Environment`（注册表）⇒ 轮换只改当前进程等于没改；那一层我不碰、不打印，归用户。我这边 0 次注册表读写。"
+  }
+ },
+ "claimed_result": "GATE-BUILT-10-CELLS-5-ARMS-ALL-BIT-CUT-AS-CANDIDATE-REF",
+ "derived_result": null,
+ "discipline": {
+  "values_printed": 0,
+  "refs_pushed": 1,
+  "refs_pushed_named": [
+   "refs/heads/review/ord0307-credential-gate-f（号令裁定 (a) 指定要切的那一枚）"
+  ],
+  "authoritative_line_written": 0,
+  "demo_reset": 0,
+  "live_or_preview_db": 0,
+  "registry_reads_or_writes": 0,
+  "product_line_code_touched": "只在 snap 导出树里（权威线由 commander 单写）"
+ },
+ "candidate_ref": {
+  "what": "ORD-0307 门切成候选 ref（从当前尖，不叠 09-23 那枚）",
+  "lane": "F 8ccd71d8",
+  "commanded_by": [
+   "账本 CMDR-0925-1845 裁定 (a)",
+   "总线 issuecomment-5831142850"
+  ],
+  "ref": "refs/heads/review/ord0307-credential-gate-f",
+  "branch_local": "agent/f-ord0307-credential-gate",
+  "candidate_commit": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+  "candidate_tree": "157554d0d431dffccc3f6e690668fd125995a35a",
+  "parent": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+  "parent_read_from": "GitHub git/ref API 当场读",
+  "pinned_dates": "2026-09-25T19:05:00 +0800",
+  "re_mint_equal": true,
+  "ancestry": {
+   "parent_is_tip_rc": 0,
+   "stacked_on_0923_rc": 1,
+   "commits_between": 1,
+   "compare": {
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0
+   }
+  },
+  "files": {
+   "backend/app/security/credential_literals.py": {
+    "blob": "717317f822ce01873e33bffd418adea04f67dfeb",
+    "readback": {
+     "http": 200,
+     "remote_blob": "717317f822ce01873e33bffd418adea04f67dfeb",
+     "bytes": 10645,
+     "equal": true
+    }
+   },
+   "backend/app/main.py": {
+    "blob": "5455175abe154c5c4ab5b122e517efd13081a637",
+    "readback": {
+     "http": 200,
+     "remote_blob": "5455175abe154c5c4ab5b122e517efd13081a637",
+     "bytes": 484578,
+     "equal": true
+    }
+   },
+   "backend/tests/test_qoder_ord0307_credential_gate.py": {
+    "blob": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+    "readback": {
+     "http": 200,
+     "remote_blob": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+     "bytes": 14353,
+     "equal": true
+    }
+   }
+  },
+  "ls_remote_line": "7856e03f6238da3000976eb6e690a448dfa39b9a\trefs/heads/review/ord0307-credential-gate-f",
+  "remote_sha_via_api": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+  "remote_equal": true,
+  "measured_on": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+  "campaign": "ord0307_mutation_campaign_r5.json",
+  "discipline": {
+   "authoritative_line_written": 0,
+   "other_refs_touched": 0,
+   "checkout_or_worktree_changes": 0,
+   "credential_values_printed": 0
+  },
+  "derived_result": null,
+  "claim_kind": "code_determined"
+ },
+ "supersedes": {
+  "measured_on_r1_r2": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "measured_on_r3": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+  "generation_reason": "权威尖在 18:51 由 `5aff3722…` 前进到 `13af1ff4…`（ORD-0281 有键半支第 3 代落地，5 条前端路径）⇒ 按 Q24『跑绿属于被跑那一代』，本代重新量：战役 r5 与新导出、收据 r3 的 measured_on 都是 13af1ff4。门模块与门测试字节未变（逐位相同），变的是被测的树（多了 2 条 e2e spec 与 writeDeadline.ts）⇒ 扫描集合更大，正控那格在新树下重读仍成立。",
+  "receipt_r2": {
+   "blob_40": "ce4b93390e50096ecc2357178497c8e4914ff455",
+   "campaign_then": "0aba33f293760d884d7f5ffdf4776ca1d2fc637d"
+  },
+  "receipt_r1": {
+   "blob_40": "7abcd63c414612b499eb71df903634842f3fd61e",
+   "campaign_then": "99cd74666666b97f313ce8f6c6eb11196b54772c",
+   "gate_test_then": "c9e1ed0149c14ad3e7d83c782181a63c98b401b5"
+  },
+  "gate_test_blob_chain": {
+   "r1": "c9e1ed0149c14ad3e7d83c782181a63c98b401b5",
+   "published_v2": "f99ae82f4328289e03c903a663587cecf3304236",
+   "r3_final": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+   "changed_only": "本地变量 token → probe_value（发布门 FORBIDDEN_CONTENT 挡 'token =' 形状；不改守卫、不改断言、不改判据）"
+  },
+  "nothing_overwritten_or_deleted": true
+ }
+}
