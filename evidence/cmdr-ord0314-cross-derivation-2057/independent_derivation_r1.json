@@ -1,0 +1,1396 @@
+{
+ "schema": "CNX_CMDR_ORD0314_INDEPENDENT_DERIVATION_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T20:57:07+0800",
+ "what": "re-derive lane E's three ORD-0314 criteria from the published per-arm readings, because her receipt cites that directory rather than each file's blob",
+ "verifier_under_test": {
+  "path": "evidence/ord0314-0281-gen3-derivation-d2305848/verifier_derivation_d2305848.json",
+  "blob": "d0f3ebc274213170e4a35cac55bda23c06079020",
+  "blob_match": true
+ },
+ "commander_control_tip": "8118805c73cc0b6fae2f94d0bfb1eaa13037006f",
+ "directory": "evidence/ord0281-keyed-write-deadline-gen3",
+ "entries_in_directory": 63,
+ "arm_reading_files_found": 35,
+ "per_config_failing_arms": {
+  "bound1000": {
+   "arms_published": [
+    "K1",
+    "K2",
+    "K3",
+    "TA",
+    "TB",
+    "TC",
+    "TD"
+   ],
+   "states": {
+    "K1": "PASS",
+    "K2": "PASS",
+    "K3": "PASS",
+    "TA": "PASS",
+    "TB": "PASS",
+    "TC": "PASS",
+    "TD": "PASS"
+   },
+   "failing": []
+  },
+  "bound2000": {
+   "arms_published": [
+    "K1",
+    "K2",
+    "K3",
+    "TA",
+    "TB",
+    "TC",
+    "TD"
+   ],
+   "states": {
+    "K1": "PASS",
+    "K2": "PASS",
+    "K3": "PASS",
+    "TA": "PASS",
+    "TB": "PASS",
+    "TC": "PASS",
+    "TD": "PASS"
+   },
+   "failing": []
+  },
+  "ca_fixed_secs": {
+   "arms_published": [
+    "TA",
+    "TB"
+   ],
+   "states": {
+    "TA": "PASS",
+    "TB": "FAIL"
+   },
+   "failing": [
+    "TB"
+   ]
+  },
+  "ca_keyless_too": {
+   "arms_published": [
+    "K1",
+    "TA",
+    "TB",
+    "TC",
+    "TD"
+   ],
+   "states": {
+    "K1": "FAIL",
+    "TA": "PASS",
+    "TB": "PASS",
+    "TC": "PASS",
+    "TD": "PASS"
+   },
+   "failing": [
+    "K1"
+   ]
+  },
+  "ca_no_delegate": {
+   "arms_published": [
+    "K1",
+    "K2",
+    "K3",
+    "TA",
+    "TB",
+    "TC",
+    "TD"
+   ],
+   "states": {
+    "K1": "PASS",
+    "K2": "PASS",
+    "K3": "FAIL",
+    "TA": "PASS",
+    "TB": "PASS",
+    "TC": "PASS",
+    "TD": "PASS"
+   },
+   "failing": [
+    "K3"
+   ]
+  },
+  "pristine": {
+   "arms_published": [
+    "K1",
+    "K2",
+    "K3",
+    "TA",
+    "TB",
+    "TC",
+    "TD"
+   ],
+   "states": {
+    "K1": "PASS",
+    "K2": "PASS",
+    "K3": "PASS",
+    "TA": "PASS",
+    "TB": "PASS",
+    "TC": "PASS",
+    "TD": "PASS"
+   },
+   "failing": []
+  }
+ },
+ "criterion_1_recomputed": {
+  "TB_bound2000": {
+   "blob": "4051aa1894e8bbb58ae50a7cd955582f2170a6c2",
+   "sentence_seconds_named": 2,
+   "elapsed_ms": 2404
+  },
+  "TC_bound1000": {
+   "blob": "45c91cb141df1797613a9b78d56f0df1c4c97bda",
+   "sentence_seconds_named": 1,
+   "elapsed_ms": 1416
+  },
+  "reading_level_probe": {
+   "TB": {
+    "top_level_says": null,
+    "nested_says": 2
+   },
+   "TC": {
+    "top_level_says": null,
+    "nested_says": 1
+   },
+   "meaning": "the same file read at the top level gives None while the nested `reading` object gives the number - this proves the value is being taken from the observation, not from a key I hoped existed"
+  },
+  "derives": true
+ },
+ "criterion_2_recomputed": {
+  "ca_no_delegate": {
+   "e_claimed_exclusive": [
+    "K3"
+   ],
+   "cmdr_recomputed_failing": [
+    "K3"
+   ],
+   "exclusive_as_claimed": true,
+   "arms_published_in_this_config": [
+    "K1",
+    "K2",
+    "K3",
+    "TA",
+    "TB",
+    "TC",
+    "TD"
+   ]
+  },
+  "ca_keyless_too": {
+   "e_claimed_exclusive": [
+    "K1"
+   ],
+   "cmdr_recomputed_failing": [
+    "K1"
+   ],
+   "exclusive_as_claimed": true,
+   "arms_published_in_this_config": [
+    "K1",
+    "TA",
+    "TB",
+    "TC",
+    "TD"
+   ]
+  },
+  "ca_fixed_secs": {
+   "e_claimed_exclusive": [
+    "TB"
+   ],
+   "cmdr_recomputed_failing": [
+    "TB"
+   ],
+   "exclusive_as_claimed": true,
+   "arms_published_in_this_config": [
+    "TA",
+    "TB"
+   ]
+  }
+ },
+ "criterion_3_late_answer": {
+  "files_matching_late": [],
+  "note": "no late-answer reading file exists in this directory, so NOT_MEASURED is the only honest value - it is confirmed as not-measured, not converted into a pass"
+ },
+ "readings": {
+  "bound1000__arm_K1.json": {
+   "blob": "0d5ae23060878d8ee55573fe867e67c496b6583e",
+   "bytes": 653,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "note",
+    "observed_outcome",
+    "on_screen",
+    "server_said",
+    "surface_not_judged",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": 1011,
+   "on_screen": null,
+   "server_said": "not-applicable",
+   "runId": "0281p33227",
+   "bound_ms_under_test": 1000
+  },
+  "bound1000__arm_K2.json": {
+   "blob": "446ee98126907d464cf7532b4dc9e62b1e80c06f",
+   "bytes": 252,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [],
+   "status": "skipped",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": null,
+   "runId": "0281p33227",
+   "bound_ms_under_test": 1000
+  },
+  "bound1000__arm_K3.json": {
+   "blob": "f1620bd77b1f9c6078b61a50ffc6e8b74c25858e",
+   "bytes": 678,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "note",
+    "observed_outcome",
+    "on_screen",
+    "sentence_seconds_named",
+    "server_said",
+    "surface_not_judged",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": "not-applicable",
+   "runId": "0281p33227",
+   "bound_ms_under_test": 1000
+  },
+  "bound1000__arm_TA.json": {
+   "blob": "0b0247c79c5fc579f23b6b098390cb81a9f5adce",
+   "bytes": 745,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": 471,
+   "on_screen": "success",
+   "server_said": "answered-200",
+   "runId": "0281p33227",
+   "bound_ms_under_test": 1000
+  },
+  "bound1000__arm_TB.json": {
+   "blob": "31507823e8be8ddf77d5404761e0b6ef6baf023a",
+   "bytes": 752,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 1,
+   "elapsed_ms": 1433,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p33227",
+   "bound_ms_under_test": 1000
+  },
+  "bound1000__arm_TC.json": {
+   "blob": "45c91cb141df1797613a9b78d56f0df1c4c97bda",
+   "bytes": 801,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "note",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 1,
+   "elapsed_ms": 1416,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p33227",
+   "bound_ms_under_test": 1000
+  },
+  "bound1000__arm_TD.json": {
+   "blob": "d52c890b87e0a280ab3893d592c1561b10eaea90",
+   "bytes": 813,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 1,
+   "elapsed_ms": 2506,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p33227",
+   "bound_ms_under_test": 1000
+  },
+  "bound2000__arm_K1.json": {
+   "blob": "08487ded77b96947ea732a77c0788cf2112edd4a",
+   "bytes": 653,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "note",
+    "observed_outcome",
+    "on_screen",
+    "server_said",
+    "surface_not_judged",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": 2007,
+   "on_screen": null,
+   "server_said": "not-applicable",
+   "runId": "0281p23227",
+   "bound_ms_under_test": 2000
+  },
+  "bound2000__arm_K2.json": {
+   "blob": "bd72912631f2fe405b90888d52fd2ab5dfe27249",
+   "bytes": 252,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [],
+   "status": "skipped",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": null,
+   "runId": "0281p23227",
+   "bound_ms_under_test": 2000
+  },
+  "bound2000__arm_K3.json": {
+   "blob": "be049e2b23d137491b1709612fb1b59fd1a1562c",
+   "bytes": 678,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "note",
+    "observed_outcome",
+    "on_screen",
+    "sentence_seconds_named",
+    "server_said",
+    "surface_not_judged",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": "not-applicable",
+   "runId": "0281p23227",
+   "bound_ms_under_test": 2000
+  },
+  "bound2000__arm_TA.json": {
+   "blob": "1de1d02fdb7e73acffde5740c145f44be8b3f64e",
+   "bytes": 745,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": 453,
+   "on_screen": "success",
+   "server_said": "answered-200",
+   "runId": "0281p23227",
+   "bound_ms_under_test": 2000
+  },
+  "bound2000__arm_TB.json": {
+   "blob": "4051aa1894e8bbb58ae50a7cd955582f2170a6c2",
+   "bytes": 752,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 2,
+   "elapsed_ms": 2404,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p23227",
+   "bound_ms_under_test": 2000
+  },
+  "bound2000__arm_TC.json": {
+   "blob": "b0a5763ee51ac9cf27602405ea9fcef91e9f65f4",
+   "bytes": 801,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "note",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 2,
+   "elapsed_ms": 2407,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p23227",
+   "bound_ms_under_test": 2000
+  },
+  "bound2000__arm_TD.json": {
+   "blob": "dba6aabf7e0cf96607ec86867e74cfaf7a1d2132",
+   "bytes": 813,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 2,
+   "elapsed_ms": 4479,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p23227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_fixed_secs__arm_TA.json": {
+   "blob": "d900520677d2a2f3320c99efff59ef4a86f6b082",
+   "bytes": 747,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": 404,
+   "on_screen": "success",
+   "server_said": "answered-200",
+   "runId": "0281p63227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_fixed_secs__arm_TB.json": {
+   "blob": "76dca26ed2ee51422ff0bb08a29e79bba23d329d",
+   "bytes": 757,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "failed",
+   "verdict": null,
+   "sentence_seconds_named": 99,
+   "elapsed_ms": 2400,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p63227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_keyless_too__arm_K1.json": {
+   "blob": "87d180e689303d0aa23afa7ea87b63332eb13ad0",
+   "bytes": 663,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "note",
+    "observed_outcome",
+    "on_screen",
+    "server_said",
+    "surface_not_judged",
+    "verdict"
+   ],
+   "status": "failed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": 2015,
+   "on_screen": null,
+   "server_said": "not-applicable",
+   "runId": "0281p53227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_keyless_too__arm_TA.json": {
+   "blob": "5c1800cdff619933dce9ada73e21b26da27854ad",
+   "bytes": 745,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": 461,
+   "on_screen": "success",
+   "server_said": "answered-200",
+   "runId": "0281p53227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_keyless_too__arm_TB.json": {
+   "blob": "79e4b43dc20f22a0130c1720134afac1bb640c63",
+   "bytes": 752,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 2,
+   "elapsed_ms": 2391,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p53227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_keyless_too__arm_TC.json": {
+   "blob": "dd17fe3f79f78151e3a40d5e98b051cea83011f2",
+   "bytes": 801,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "note",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 2,
+   "elapsed_ms": 2409,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p53227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_keyless_too__arm_TD.json": {
+   "blob": "100e28c16458ebfd2a156387c461081cd193bf03",
+   "bytes": 813,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 2,
+   "elapsed_ms": 4485,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p53227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_no_delegate__arm_K1.json": {
+   "blob": "8faa636dd0d2f0a0cb75f998eb2d1340504b902d",
+   "bytes": 653,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "note",
+    "observed_outcome",
+    "on_screen",
+    "server_said",
+    "surface_not_judged",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": 2011,
+   "on_screen": null,
+   "server_said": "not-applicable",
+   "runId": "0281p43227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_no_delegate__arm_K2.json": {
+   "blob": "877172e93350479c608cd91e8bd22a79c7b5a192",
+   "bytes": 252,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [],
+   "status": "skipped",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": null,
+   "runId": "0281p43227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_no_delegate__arm_K3.json": {
+   "blob": "b2a201ee029fac9471b653c3a8db5d60b92f011a",
+   "bytes": 676,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "note",
+    "observed_outcome",
+    "on_screen",
+    "sentence_seconds_named",
+    "server_said",
+    "surface_not_judged",
+    "verdict"
+   ],
+   "status": "failed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": "not-applicable",
+   "runId": "0281p43227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_no_delegate__arm_TA.json": {
+   "blob": "89a23a5b0acd881df1dba3ced3b162a686f65bdf",
+   "bytes": 745,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": 446,
+   "on_screen": "success",
+   "server_said": "answered-200",
+   "runId": "0281p43227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_no_delegate__arm_TB.json": {
+   "blob": "5df71fc8b1bff57a976a84c3e55e045e63d4a593",
+   "bytes": 752,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 2,
+   "elapsed_ms": 2444,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p43227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_no_delegate__arm_TC.json": {
+   "blob": "3b112a219bfca1b04129b076bacf08ac4e65e07f",
+   "bytes": 801,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "note",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 2,
+   "elapsed_ms": 2419,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p43227",
+   "bound_ms_under_test": 2000
+  },
+  "ca_no_delegate__arm_TD.json": {
+   "blob": "e9ec0952c61997e9c2650e7014b9e1b8d6e9b5ef",
+   "bytes": 813,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 2,
+   "elapsed_ms": 4473,
+   "on_screen": "bound-sentence",
+   "server_said": "never-answered",
+   "runId": "0281p43227",
+   "bound_ms_under_test": 2000
+  },
+  "pristine__arm_K1.json": {
+   "blob": "5636fdb7f1cb55582cd0bbef530f05488cb44ec3",
+   "bytes": 253,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [],
+   "status": "skipped",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": null,
+   "runId": "0281p13227",
+   "bound_ms_under_test": 60000
+  },
+  "pristine__arm_K2.json": {
+   "blob": "40b742dd451fd6456cc1f6673e78096574ee9659",
+   "bytes": 610,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "observed_outcome",
+    "on_screen",
+    "sentence_seconds_named",
+    "server_said",
+    "surface_not_judged",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": 60,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": "not-applicable",
+   "runId": "0281p13227",
+   "bound_ms_under_test": 60000
+  },
+  "pristine__arm_K3.json": {
+   "blob": "b79072e883bd9bb743b3362e9fb84cf9f1202ec0",
+   "bytes": 253,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [],
+   "status": "skipped",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": null,
+   "runId": "0281p13227",
+   "bound_ms_under_test": 60000
+  },
+  "pristine__arm_TA.json": {
+   "blob": "789c10a15403858eb5a255d68e33e91500c3de09",
+   "bytes": 748,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [
+    "arm",
+    "clicked",
+    "elapsed_ms",
+    "had_network_blame",
+    "keys_seen",
+    "on_screen",
+    "screen_text_head",
+    "sentence_seconds_named",
+    "server_said",
+    "settled_at",
+    "verdict"
+   ],
+   "status": "passed",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": 396,
+   "on_screen": "success",
+   "server_said": "answered-200",
+   "runId": "0281p13227",
+   "bound_ms_under_test": 60000
+  },
+  "pristine__arm_TB.json": {
+   "blob": "bdc98d6e1f461c6985e33b6f27fa9c18f79c2477",
+   "bytes": 253,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [],
+   "status": "skipped",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": null,
+   "runId": "0281p13227",
+   "bound_ms_under_test": 60000
+  },
+  "pristine__arm_TC.json": {
+   "blob": "949cc67fd010b2bf33628d7331f70bcd32c26aaf",
+   "bytes": 253,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [],
+   "status": "skipped",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": null,
+   "runId": "0281p13227",
+   "bound_ms_under_test": 60000
+  },
+  "pristine__arm_TD.json": {
+   "blob": "c9cad01e16bce08fac9dcc5ccb64bd60dc79ef3c",
+   "bytes": 253,
+   "top_level_keys": [
+    "arm",
+    "baseline_ms_declared",
+    "bound_ms_under_test",
+    "expectation",
+    "file",
+    "pristine_tree",
+    "reading",
+    "runId",
+    "status"
+   ],
+   "reading_keys": [],
+   "status": "skipped",
+   "verdict": null,
+   "sentence_seconds_named": null,
+   "elapsed_ms": null,
+   "on_screen": null,
+   "server_said": null,
+   "runId": "0281p13227",
+   "bound_ms_under_test": 60000
+  }
+ },
+ "my_first_pass_defect": "the first run of this tool reported criterion 1 NOT_CONFIRMED with nulls, because it read `sentence_seconds_named` at the top level while the per-arm files nest observations under `reading`. Fixed here; the bad first-pass output is kept out of the evidence trail only in the sense that it is named - the numbers it printed are in `criterion_1_recomputed.reading_level_probe.top_level_says`.",
+ "gate_status_for_her_receipt": {
+  "tool": "receipt_cell_derivation_check_r2.py (blob 91ae8b1ec55f5c19122af11bf775df14580955e4, recomputed identical on disk before use)",
+  "verdict": "NOT_ASSESSABLE",
+  "exit": 4,
+  "why": "her cell map holds verdict STRINGS with no per-cell readings and no (sha, nodeid, shape) triples; the gate refuses to grade a sentence it cannot derive. That is a shape problem, not a content problem - which is why this file exists."
+ },
+ "what_this_changes": "If criterion_1_recomputed.derives and every criterion_2 entry is exclusive_as_claimed, the SUBSTANCE of ORD-0314 is verified by a second party and ORD-0281's 12 cells may be graded; the remaining ask of lane E is only to cite each reading by blob and re-emit in an assessable shape.",
+ "discipline": {
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "evidence_paths_overwritten": 0
+ },
+ "claim_kind": "rederived_from_published_readings",
+ "claimed_result": "criterion 1 CONFIRMED; criterion 2 exclusive flips 3 of 3; criterion 3 confirmed NOT_MEASURED",
+ "derived_result": null
+}
