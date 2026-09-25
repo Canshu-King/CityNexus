@@ -1,0 +1,74 @@
+{
+ "ran_at_local": "2026-09-25T18:35:59+0800",
+ "tips": {
+  "old": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "new": "5aff3722d5c36c760a424f5fea5c3a771298f9ac",
+  "mut": "5aff3722d5c36c760a424f5fea5c3a771298f9ac"
+ },
+ "adds": [
+  "data",
+  "contracts"
+ ],
+ "per_snap": {
+  "old": {
+   "data_files": 16,
+   "contract_files": 23,
+   "city_operations_present": true,
+   "city_operations_bytes": 3599,
+   "city_operations_sha256": "6a972dd59a75aeaa4fabcfc48dc86b37febd9f100c17667487969d36744d3d88",
+   "subject_unchanged_by_this_repair": true,
+   "sheet_blob_still": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+   "files_seen_before": {
+    "backend_main_py_sha256": "46e696c0230759888ce5e76fe28688dbb808cd7ca4ad61365cc8410c201ab451",
+    "sheet_sha256": "57fb0b6048f4c4aab042a983965f44f605ad0fd42416070ca73817cda40a2885",
+    "sheet_blob": "fd5f6e5ba2771a8d12669b9bec1ba91590970701"
+   },
+   "files_seen_after": {
+    "backend_main_py_sha256": "46e696c0230759888ce5e76fe28688dbb808cd7ca4ad61365cc8410c201ab451",
+    "sheet_sha256": "57fb0b6048f4c4aab042a983965f44f605ad0fd42416070ca73817cda40a2885",
+    "sheet_blob": "fd5f6e5ba2771a8d12669b9bec1ba91590970701"
+   }
+  },
+  "new": {
+   "data_files": 16,
+   "contract_files": 23,
+   "city_operations_present": true,
+   "city_operations_bytes": 3599,
+   "city_operations_sha256": "6a972dd59a75aeaa4fabcfc48dc86b37febd9f100c17667487969d36744d3d88",
+   "subject_unchanged_by_this_repair": true,
+   "sheet_blob_still": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa",
+   "files_seen_before": {
+    "backend_main_py_sha256": "46e696c0230759888ce5e76fe28688dbb808cd7ca4ad61365cc8410c201ab451",
+    "sheet_sha256": "342cb8e3e43d132f899456982efb6f9a5704bd497a2195c0d0d55b665a8b8e53",
+    "sheet_blob": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa"
+   },
+   "files_seen_after": {
+    "backend_main_py_sha256": "46e696c0230759888ce5e76fe28688dbb808cd7ca4ad61365cc8410c201ab451",
+    "sheet_sha256": "342cb8e3e43d132f899456982efb6f9a5704bd497a2195c0d0d55b665a8b8e53",
+    "sheet_blob": "f61d5312e8b33807d3e5304d1fa9fb7f77a518aa"
+   }
+  },
+  "mut": {
+   "data_files": 16,
+   "contract_files": 23,
+   "city_operations_present": true,
+   "city_operations_bytes": 3599,
+   "city_operations_sha256": "6a972dd59a75aeaa4fabcfc48dc86b37febd9f100c17667487969d36744d3d88",
+   "subject_unchanged_by_this_repair": true,
+   "sheet_blob_still": "2838fbb69d55671f4cb14d2fd1424dd1a2be064d",
+   "files_seen_before": {
+    "backend_main_py_sha256": "46e696c0230759888ce5e76fe28688dbb808cd7ca4ad61365cc8410c201ab451",
+    "sheet_sha256": "c223d781d6bcff75123b1a87152c2b07681f796229d249d2d2e88393e845e97d",
+    "sheet_blob": "2838fbb69d55671f4cb14d2fd1424dd1a2be064d"
+   },
+   "files_seen_after": {
+    "backend_main_py_sha256": "46e696c0230759888ce5e76fe28688dbb808cd7ca4ad61365cc8410c201ab451",
+    "sheet_sha256": "c223d781d6bcff75123b1a87152c2b07681f796229d249d2d2e88393e845e97d",
+    "sheet_blob": "2838fbb69d55671f4cb14d2fd1424dd1a2be064d"
+   }
+  }
+ },
+ "all_three_subjects_unchanged": true,
+ "mut_still_differs_from_new_by_two_lines_only": true,
+ "data_identical_across_the_three_snaps": true
+}
