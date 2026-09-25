@@ -1,0 +1,27 @@
+version Q43_r4 | input D:\moodle\_qoder_f_run\o225_receipts\ord0307_credential_gate_receipt_r1.json 24777 B
+claims checked 80 | exempt {"YEAR": 1, "IDENTIFIER_PART": 7} | overall Q43_GATE_RED | findings 43 ['NUMBER_WITHOUT_COORDINATE']
+  line 83 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 6348 | no class matched
+  line 91 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 78, | no class matched
+  line 92 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 10, | no class matched
+  line 95 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 101 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 10, | no class matched
+  line 104 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 109 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 36, | no class matched
+  line 110 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 10, | no class matched
+  line 113 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 320 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 331 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 10, | no class matched
+  line 351 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 352 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 363 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 10, | no class matched
+  line 384 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 395 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 10, | no class matched
+  line 416 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 427 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 10, | no class matched
+  line 453 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 454 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 465 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 10, | no class matched
+  line 486 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 497 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 10, | no class matched
+  line 520 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
+  line 521 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0307 | no class matched
