@@ -1,0 +1,68 @@
+{
+ "file": "e2e/qoder-ord0302-unreadable-server-body.spec.ts",
+ "arm": "N1",
+ "runId": "0302fix05050505",
+ "status": "passed",
+ "expectation": "passed",
+ "reading": {
+  "want": "device",
+  "force_shape": {
+   "status": 500,
+   "contentType": "text/html; content-type=text/plain",
+   "body": "<html><body>502 Bad Gateway</body></html>"
+  },
+  "read": {
+   "arm": "N1",
+   "status": "HTTP_500",
+   "detail_block_attached": true,
+   "label": "这台设备自己的读数（服务器没给句子）",
+   "origin": "device",
+   "reason": "agent/commands -> HTTP 500",
+   "card_text": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；反复出现请保留“技术详情”。 技术详情",
+   "legs": [
+    "GET /plans(baseline)",
+    "GET /plans(baseline)",
+    "POST /agent/commands"
+   ]
+  },
+  "verdict": "MET",
+  "rows": [
+   {
+    "claim": "an unreadable answer stays HTTP_500 and never becomes NETWORK",
+    "ok": true,
+    "got": {
+     "status": "HTTP_500"
+    }
+   },
+   {
+    "claim": "the technical-detail block is still in the DOM",
+    "ok": true,
+    "got": {
+     "detail_block_attached": true
+    }
+   },
+   {
+    "claim": "the reading is labelled as this device's, not the server's",
+    "ok": true,
+    "got": {
+     "label": "这台设备自己的读数（服务器没给句子）",
+     "origin": "device"
+    }
+   },
+   {
+    "claim": "the card does not blame the network",
+    "ok": true,
+    "got": {
+     "card_head": "服务端处理失败 这次是服务端出错，不是你的需求有问题。行程未被改动，可稍后重试；"
+    }
+   },
+   {
+    "claim": "a device-composed line is still shown (this is not a mute-the-error fix)",
+    "ok": true,
+    "got": {
+     "reason": "agent/commands -> HTTP 500"
+    }
+   }
+  ]
+ }
+}
