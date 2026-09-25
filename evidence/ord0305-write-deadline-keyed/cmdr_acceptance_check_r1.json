@@ -1,0 +1,185 @@
+{
+ "schema": "CNX_CMDR_ACCEPTANCE_CHECK_V1",
+ "order": "ORD-0305",
+ "lane": "d2305848 (red team / verifier)",
+ "artifacts": {
+  "verifier_derivation": {
+   "path": "evidence/ord0305-write-deadline-keyed/verifier_derivation_d2305848.json",
+   "contents_sha": "16bfbf78cda8c7fefd0553fcd98de12045ea2c7e",
+   "cited": "16bfbf78cda8c7fefd0553fcd98de12045ea2c7e",
+   "recomputed": "16bfbf78cda8c7fefd0553fcd98de12045ea2c7e",
+   "matches": true,
+   "bytes": 6489
+  },
+  "gen2_arms_matrix": {
+   "path": "evidence/ord0281-keyed-write-deadline-gen2/ord0281_arms_matrix.json",
+   "contents_sha": "911ec7483c88ad43e3eae673e2a956a43aef89ec",
+   "cited": "911ec7483c88ad43e3eae673e2a956a43aef89ec",
+   "recomputed": "911ec7483c88ad43e3eae673e2a956a43aef89ec",
+   "matches": true,
+   "bytes": 18094
+  },
+  "gen1_arms_matrix_renamed": {
+   "path": "evidence/ord0281-keyed-write-deadline-gen2/previous_generation__ord0281_arms_matrix.json",
+   "contents_sha": "f51894dc6559cce14013a461c982a5f7da54dd8c",
+   "cited": "f51894dc6559cce14013a461c982a5f7da54dd8c",
+   "recomputed": "f51894dc6559cce14013a461c982a5f7da54dd8c",
+   "matches": true,
+   "bytes": 18094
+  }
+ },
+ "generation_shapes": {
+  "gen2": {
+   "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "spec": "e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+   "verdict": "TEETH_AND_BASELINE"
+  },
+  "gen1": {
+   "base_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "spec": "e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+   "verdict": "TEETH_AND_BASELINE"
+  }
+ },
+ "verifier_cells": {
+  "shape": {
+   "type": "dict",
+   "count": 13
+  },
+  "derived_results": {
+   "TA_pristine_tree": "MET (derived: the keyed write leg gets a deadline, the screen names it, server said never-answered, no network blame)",
+   "TB_bound2000": "MET (derived: bound 2000 -> screen shows 2s, elapsed 2420ms tracks)",
+   "TC_bound1000": "MET (derived: bound 1000 -> screen shows 1s, elapsed 1417ms tracks)",
+   "TD_bound2000": "MET (derived: the bounded write does not produce a second mission)",
+   "K1_bound2000": "MET (derived: the keying survives the deadline path)",
+   "K2_pristine": "MET (derived: the keying survives the normal path)",
+   "K3_bound2000": "MET (derived: the deadline path preserves the server's own words)",
+   "counter_ca_no_delegate": "MET (K3 flips)",
+   "counter_ca_keyless_too": "MET (K1 flips)",
+   "counter_ca_fixed_secs": "MET (TB flips)",
+   "scope": "DECLARED (6 keyed legs, 4 already bounded, 2 new)",
+   "base_ref_touch": "MET (02da4602 sits on 90d29a17, ff-only)",
+   "late_answer_after_deadline": "NOT_MEASURED (preserved; I do not fill this in)"
+  },
+  "any_literal_PASS_instead_of_derivation": false
+ },
+ "limit_E_declared": "cannot independently verify that ONLY the target arm went red",
+ "limit_closed_from_delivery_lane_bytes": {
+  "gen2": {
+   "runs": [
+    {
+     "run": "pristine",
+     "arms": 7,
+     "flipped_vs_own_expectation": [],
+     "rc": 0
+    },
+    {
+     "run": "bound2000",
+     "arms": 7,
+     "flipped_vs_own_expectation": [],
+     "rc": 0
+    },
+    {
+     "run": "bound1000",
+     "arms": 7,
+     "flipped_vs_own_expectation": [],
+     "rc": 0
+    },
+    {
+     "run": "ca_no_delegate",
+     "arms": 7,
+     "flipped_vs_own_expectation": [
+      "K3"
+     ],
+     "rc": 1
+    },
+    {
+     "run": "ca_keyless_too",
+     "arms": 5,
+     "flipped_vs_own_expectation": [
+      "K1"
+     ],
+     "rc": 1
+    },
+    {
+     "run": "ca_fixed_secs",
+     "arms": 2,
+     "flipped_vs_own_expectation": [
+      "TB"
+     ],
+     "rc": 1
+    }
+   ],
+   "summary": {
+    "pristine_flipped_nothing": true,
+    "each_counter_arm_flips_exactly_one": true,
+    "the_flipped_arms_are_all_different": true,
+    "all_exclusive": true
+   }
+  },
+  "gen1": {
+   "runs": [
+    {
+     "run": "pristine",
+     "arms": 7,
+     "flipped_vs_own_expectation": [],
+     "rc": 0
+    },
+    {
+     "run": "bound2000",
+     "arms": 7,
+     "flipped_vs_own_expectation": [],
+     "rc": 0
+    },
+    {
+     "run": "bound1000",
+     "arms": 7,
+     "flipped_vs_own_expectation": [],
+     "rc": 0
+    },
+    {
+     "run": "ca_no_delegate",
+     "arms": 7,
+     "flipped_vs_own_expectation": [
+      "K3"
+     ],
+     "rc": 1
+    },
+    {
+     "run": "ca_keyless_too",
+     "arms": 5,
+     "flipped_vs_own_expectation": [
+      "K1"
+     ],
+     "rc": 1
+    },
+    {
+     "run": "ca_fixed_secs",
+     "arms": 2,
+     "flipped_vs_own_expectation": [
+      "TB"
+     ],
+     "rc": 1
+    }
+   ],
+   "summary": {
+    "pristine_flipped_nothing": true,
+    "each_counter_arm_flips_exactly_one": true,
+    "the_flipped_arms_are_all_different": true,
+    "all_exclusive": true
+   }
+  },
+  "meaning": "the published matrices carry an outcomes map over all seven arms per counter-arm run, so exclusivity IS computable from the delivery lane's own bytes"
+ },
+ "rulers": {
+  "q38": {
+   "exit": 4,
+   "line": "cells 0 | overall NOT_ASSESSABLE | hard None None | soft None None",
+   "first_lines": [
+    "receipt _ord0305_verifier_raw.json 6489 B blob_sha1 16bfbf78cda8c7fefd0553fcd98de12045ea2c7e",
+    "cells 0 | overall NOT_ASSESSABLE | hard None None | soft None None",
+    "meaning: fewer than 2 assessable cells -- this is NOT a pass and NOT a gate run"
+   ]
+  }
+ },
+ "scope": "Commander's own reading of the verifier artifact + both generations of the delivery's matrix. It does not re-sign E's derived_result, does not replace the red team, and is NOT a landing: landing happens ff-only by me after the candidate's parent equals the tip I re-read at that moment."
+}
