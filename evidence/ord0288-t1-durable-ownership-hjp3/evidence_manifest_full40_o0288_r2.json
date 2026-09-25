@@ -1,11 +1,11 @@
 {
- "generated_at_local": "2026-09-25T17:44:52+0800",
+ "generated_at_local": "2026-09-25T18:01:41+0800",
  "repo": "Canshu-King/CityNexus",
  "branch": "commander/control",
- "commit_tip": "4250154ec85dc35665885087300f566d8cfead35",
- "tree": "921bbbfb9749201b810a3659c0929b613594bd3e",
+ "commit_tip": "0a0b01ea7efeaf01a0e6b7733e14c78e45fcacf4",
+ "tree": "36529a9a46c5a6888eba7c6e95c143c61f1af6d5",
  "prefix": "evidence/ord0288-t1-durable-ownership-hjp3",
- "count": 59,
+ "count": 62,
  "self_reference": "this manifest lists what is on the branch, so it lists the state before itself was pushed; its own blob is reported in the delivery post",
  "files": [
   {
@@ -73,6 +73,18 @@
    "blob_sha1_40_hex": "00fba8b33a837dc7596516d40ad03617a7bf67fe",
    "size": 4746,
    "display_prefix": "00fba8b33a83"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/bus_post_o0288_t1.md",
+   "blob_sha1_40_hex": "bfc0b451c0b603cde5f5842d38d2e0e31713732b",
+   "size": 10121,
+   "display_prefix": "bfc0b451c0b6"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/bus_readback_o0288_t1.json",
+   "blob_sha1_40_hex": "a1298a6e1cdfd5d90ac8fbf09140bf921c32fadb",
+   "size": 739,
+   "display_prefix": "a1298a6e1cdf"
   },
   {
    "path": "evidence/ord0288-t1-durable-ownership-hjp3/cell_t1_crash_mutant_mut_crash.json",
@@ -169,6 +181,12 @@
    "blob_sha1_40_hex": "9bc321ed5ae5ab1c5e3d38b8a586ab4dbf7f0c4f",
    "size": 13279,
    "display_prefix": "9bc321ed5ae5"
+  },
+  {
+   "path": "evidence/ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json",
+   "blob_sha1_40_hex": "5ac1c5900840f4eff682b610ba2eb6f8fe231434",
+   "size": 13519,
+   "display_prefix": "5ac1c5900840"
   },
   {
    "path": "evidence/ord0288-t1-durable-ownership-hjp3/gate_refusal_recorded_o0288.json",
