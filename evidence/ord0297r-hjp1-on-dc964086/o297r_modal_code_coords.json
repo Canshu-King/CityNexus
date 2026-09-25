@@ -1,0 +1,55 @@
+{
+ "why": "attribution coordinates for the A arm's blocked navigation: the covering node is the plan-AI sheet's own submit button, and that sheet is an aria-modal dialog whose backdrop spans the bottom bar -- so a covered nav while it is open is the product behaving as written, and the offline-movement count is only about the generation once the walk closes it",
+ "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "read_from": "git show <tip>:<path> in D:/moodle/_qoder_integration_20260919 (no worktree file read)",
+ "stamped": "2026-09-25T16:04:00+0800",
+ "anchors": [
+  {
+   "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 786,
+   "needle": "plan-ai-close",
+   "text": "<button type=\"button\" className=\"plan-ai-close\" aria-label={zh ? \"关闭\" : \"Close\"} onClick={onClose}>",
+   "blob40": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+   "total_lines": 1042
+  },
+  {
+   "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 775,
+   "needle": "v8-sheet-backdrop",
+   "text": "<div className=\"v8-sheet-backdrop\" role=\"dialog\" aria-modal=\"true\" data-testid=\"plan-ai-sheet\">",
+   "blob40": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+   "total_lines": 1042
+  },
+  {
+   "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 1027,
+   "needle": "plan-ai-submit",
+   "text": "data-testid=\"plan-ai-submit\"",
+   "blob40": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+   "total_lines": 1042
+  },
+  {
+   "path": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 775,
+   "needle": "aria-modal",
+   "text": "<div className=\"v8-sheet-backdrop\" role=\"dialog\" aria-modal=\"true\" data-testid=\"plan-ai-sheet\">",
+   "blob40": "fd5f6e5ba2771a8d12669b9bec1ba91590970701",
+   "total_lines": 1042
+  },
+  {
+   "path": "frontend/src/app/V8Experience.tsx",
+   "line": 1787,
+   "needle": "nav.v8-mobile-nav rendered",
+   "text": "<nav className=\"v8-mobile-nav\" aria-label=\"Mobile navigation\">",
+   "blob40": "17ef83b6ec58b4190f483733501ea1b973336d5f"
+  },
+  {
+   "path": "frontend/e2e/qoder-map-gesture-ownership.spec.ts",
+   "line": 16,
+   "needle": "repo's own statement of the nav's y-range and the covered-pixel rule",
+   "text": "* under `nav.v8-mobile-nav` (y 768..844 measured at 390x844), so the finger was hitting a nav button",
+   "blob40": "5b0a4e1ad69446c62f18a06db91925552c6e482b"
+  }
+ ],
+ "corroboration": "the repository's own mobile gate already measures `nav.v8-mobile-nav` at y 768..844 for a 390x844 viewport and refuses to attribute a gesture at a pixel elementFromPoint gives to somebody else. The press points used here ([119,813] [195,813] [271,813]) fall inside that band, which is why a hit test answering BUTTON.v8-primary-button / data-testid=plan-ai-submit is a covered nav and not a mis-aimed finger."
+}
