@@ -170,6 +170,9 @@ from app.db.write_deadline import (
     start_request_budget,
     write_attempt,
 )
+from app.security.credential_literals import (  # ORD-0307: 字面量凭据的常驻启动门
+    startup_report as credential_gate_startup,
+)
 from app.execution.clock import execution_clock
 from app.execution.traveler_twin import (
     clear_learned,
@@ -425,6 +428,7 @@ from app.anywhere_capability import (
 )
 
 assert_configuration_reachable()   # ORD-0296: refuse to boot a deadline that cannot mean anything
+CREDENTIAL_GATE = credential_gate_startup()   # ORD-0307: report→只报计数；strict→命中即拒启动
 ensure_schema()
 # Rows still open at this point were left by a process that no longer exists, so no thread
 # here can ever finish them; they are closed as WORKER_LOST rather than left to be polled
