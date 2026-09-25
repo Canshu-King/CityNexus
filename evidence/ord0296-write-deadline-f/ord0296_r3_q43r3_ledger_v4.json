@@ -1,0 +1,16 @@
+{
+ "claims_checked": 19,
+ "exit": 0,
+ "finding_codes": [],
+ "finding_count": 0,
+ "findings": [],
+ "input": {
+  "bytes": 3856,
+  "lines": 23,
+  "path": "q43v2_ledger.md"
+ },
+ "meaning": "every claim names a durable coordinate within 200 chars",
+ "overall": "Q43_GATE_CLEAN",
+ "scope": "F1 `NAME = digits` (after fullwidth-`=` normalisation), F2 relay wording, and F3 ANY bare numeric claim (>=3 digits, or digits + a unit/counter word) -- all judged against the same durable-coordinate window; structural ids (ORD-####, Q#, `x-1`, HH:MM) are not claims",
+ "window_chars": 200
+}
