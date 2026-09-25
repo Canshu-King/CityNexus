@@ -112,7 +112,11 @@ for name, needle in ANCHORS.items():
     for tree, hits in (("candidate", n), ("base", nb)):
         if len(hits) > want:
             raise SystemExit(f"anchor {name} occurs {len(hits)} times on the {tree}: {hits}")
-    measured[name], measured_base[name] = n, nb
+    # the two envelope reads sit at two places each; every other anchor is required to be unique, so it is
+    # stored as one number rather than a one-element list -- a list rendering into `file.tsx:[539]` reads as
+    # an unresolved bracket, not as the coordinate it means to be.
+    measured[name] = n if "detail_read" in name else n[0]
+    measured_base[name] = nb if "detail_read" in name else nb[0]
 unsafe_before = measured_base["unguarded_detail_read"]
 if len(unsafe_before) != 2 or len(measured["guarded_detail_read"]) != 2 \
         or measured["unguarded_detail_read"] or measured_base["guarded_detail_read"]:
