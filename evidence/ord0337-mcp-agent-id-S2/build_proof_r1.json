@@ -1,0 +1,50 @@
+{
+ "schema": "CNX_ORD0337_BUILD_PROOF_V1",
+ "order": "ORD-0337",
+ "lane": "S2-hermes-port",
+ "base": "f45489c6d17f16973faad161618789237ac3814e",
+ "candidate": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418",
+ "hermes_source": "2cb16f471b81381f6917933a1d55f10f2be49ecb",
+ "blobs": {
+  "agent-mcp/citynexus_mcp/server.py": {
+   "candidate": "6b4da1b9b939b16dfb2384f808741029dd798a51",
+   "tip": "759b59e80665c1a80e82948ca88ac87a8ea831f2",
+   "hermes": "6b4da1b9b939b16dfb2384f808741029dd798a51"
+  },
+  "agent-mcp/tests/test_hermes_validation_principal.py": {
+   "candidate": "270b7ea2fb3a194449a9a89b7523b1255a997d91",
+   "tip": "absent-on-tip",
+   "hermes": "270b7ea2fb3a194449a9a89b7523b1255a997d91"
+  }
+ },
+ "identity_delta_vs_tip": {
+  "changed_lines": 11,
+  "blank_or_whitespace_lines": 2,
+  "lines_outside_the_identity_form": []
+ },
+ "changed_paths": [
+  "agent-mcp/citynexus_mcp/server.py",
+  "agent-mcp/tests/test_hermes_validation_principal.py"
+ ],
+ "numstat": [
+  "8\t3\tagent-mcp/citynexus_mcp/server.py",
+  "11\t0\tagent-mcp/tests/test_hermes_validation_principal.py"
+ ],
+ "counts": {
+  "literal_sites_on_tip": 3,
+  "literal_sites_on_hermes": 0,
+  "call_sites_on_hermes": 3,
+  "def_block_on_tip": 0,
+  "def_block_on_hermes": 1,
+  "anchor_on_tip": 1
+ },
+ "built_equals_hermes_bytes": true,
+ "built_bytes_sha1": "36d5838ca783951cb0e4b580bf0ac482d0ea2c70",
+ "hermes_bytes_sha1": "36d5838ca783951cb0e4b580bf0ac482d0ea2c70",
+ "tip_bytes_sha1": "66717abb85b6f779148356cd5be95767cd8c5d3a",
+ "witness_bytes_sha1": "691017a21b741122ca9cbb9832989bf74e7bb7e1",
+ "git_blob_built": "6b4da1b9b939b16dfb2384f808741029dd798a51",
+ "git_blob_hermes": "6b4da1b9b939b16dfb2384f808741029dd798a51",
+ "git_blob_witness": "270b7ea2fb3a194449a9a89b7523b1255a997d91",
+ "line_delta_tip_to_built": 5
+}
