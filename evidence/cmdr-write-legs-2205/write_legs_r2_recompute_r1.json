@@ -1,0 +1,349 @@
+{
+ "schema": "CNX_CMDR_WRITE_LEGS_R2_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T22:05:23+0800",
+ "why": "lane F's ORD-0315 disputed my denominator; I read the four disputed lines and they were not network writes, so my published 16/20 numbers are superseded by this file",
+ "scans": {
+  "old_tip": {
+   "tip": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+   "files_scanned": 73,
+   "legs_total": 12,
+   "legs_by_method": {
+    "POST": 12
+   },
+   "covered": 2,
+   "bare": 10,
+   "bare_sites": [
+    {
+     "file": "features/notifications/PushCapabilityCard.tsx",
+     "line": 56,
+     "method": "POST"
+    },
+    {
+     "file": "features/planning/PlanComparison.tsx",
+     "line": 88,
+     "method": "POST"
+    },
+    {
+     "file": "features/recovery/RecoveryRequiredPanel.tsx",
+     "line": 26,
+     "method": "POST"
+    },
+    {
+     "file": "features/simulation/simulationAdapter.ts",
+     "line": 229,
+     "method": "POST"
+    },
+    {
+     "file": "features/simulation/simulationAdapter.ts",
+     "line": 296,
+     "method": "POST"
+    },
+    {
+     "file": "features/simulation/simulationAdapter.ts",
+     "line": 335,
+     "method": "POST"
+    },
+    {
+     "file": "features/simulation/simulationAdapter.ts",
+     "line": 376,
+     "method": "POST"
+    },
+    {
+     "file": "features/stay/HotelsPanel.tsx",
+     "line": 63,
+     "method": "POST"
+    },
+    {
+     "file": "features/stay/HotelsPanel.tsx",
+     "line": 64,
+     "method": "POST"
+    },
+    {
+     "file": "features/stay/HotelsPanel.tsx",
+     "line": 87,
+     "method": "POST"
+    }
+   ],
+   "local_state_writes_excluded": [
+    {
+     "file": "lib/inFlightWrites.ts",
+     "line": 57,
+     "receiver": "quietListeners",
+     "call": "delete",
+     "reason": "receiver is a Set/Map/cache/IndexedDB store, not an HTTP client"
+    },
+    {
+     "file": "lib/offlineJourney.ts",
+     "line": 43,
+     "receiver": "database.journeys",
+     "call": "put",
+     "reason": "receiver is a Set/Map/cache/IndexedDB store, not an HTTP client"
+    },
+    {
+     "file": "lib/offlineJourney.ts",
+     "line": 55,
+     "receiver": "database.journeys",
+     "call": "put",
+     "reason": "receiver is a Set/Map/cache/IndexedDB store, not an HTTP client"
+    },
+    {
+     "file": "main.tsx",
+     "line": 1706,
+     "receiver": "caches",
+     "call": "delete",
+     "reason": "receiver is a Set/Map/cache/IndexedDB store, not an HTTP client"
+    }
+   ],
+   "local_state_writes_count": 4,
+   "instrument_r1_numbers_kept_for_the_record": {
+    "r1_artifact_blob": "1731358d86e71215aa6757a07ec14b3dfec14c45",
+    "my_legs_total_r1": 16,
+    "my_covered_r1": 2,
+    "union_with_lane_F_r1": 20,
+    "lane_F_legs_r1": 14,
+    "lane_F_covered_r1": 2
+   }
+  },
+  "current_tip": {
+   "tip": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+   "files_scanned": 74,
+   "legs_total": 11,
+   "legs_by_method": {
+    "POST": 11
+   },
+   "covered": 1,
+   "bare": 10,
+   "bare_sites": [
+    {
+     "file": "features/notifications/PushCapabilityCard.tsx",
+     "line": 56,
+     "method": "POST"
+    },
+    {
+     "file": "features/planning/PlanComparison.tsx",
+     "line": 88,
+     "method": "POST"
+    },
+    {
+     "file": "features/recovery/RecoveryRequiredPanel.tsx",
+     "line": 26,
+     "method": "POST"
+    },
+    {
+     "file": "features/simulation/simulationAdapter.ts",
+     "line": 229,
+     "method": "POST"
+    },
+    {
+     "file": "features/simulation/simulationAdapter.ts",
+     "line": 296,
+     "method": "POST"
+    },
+    {
+     "file": "features/simulation/simulationAdapter.ts",
+     "line": 335,
+     "method": "POST"
+    },
+    {
+     "file": "features/simulation/simulationAdapter.ts",
+     "line": 376,
+     "method": "POST"
+    },
+    {
+     "file": "features/stay/HotelsPanel.tsx",
+     "line": 63,
+     "method": "POST"
+    },
+    {
+     "file": "features/stay/HotelsPanel.tsx",
+     "line": 64,
+     "method": "POST"
+    },
+    {
+     "file": "features/stay/HotelsPanel.tsx",
+     "line": 87,
+     "method": "POST"
+    }
+   ],
+   "local_state_writes_excluded": [
+    {
+     "file": "lib/inFlightWrites.ts",
+     "line": 57,
+     "receiver": "quietListeners",
+     "call": "delete",
+     "reason": "receiver is a Set/Map/cache/IndexedDB store, not an HTTP client"
+    },
+    {
+     "file": "lib/offlineJourney.ts",
+     "line": 43,
+     "receiver": "database.journeys",
+     "call": "put",
+     "reason": "receiver is a Set/Map/cache/IndexedDB store, not an HTTP client"
+    },
+    {
+     "file": "lib/offlineJourney.ts",
+     "line": 55,
+     "receiver": "database.journeys",
+     "call": "put",
+     "reason": "receiver is a Set/Map/cache/IndexedDB store, not an HTTP client"
+    },
+    {
+     "file": "main.tsx",
+     "line": 1706,
+     "receiver": "caches",
+     "call": "delete",
+     "reason": "receiver is a Set/Map/cache/IndexedDB store, not an HTTP client"
+    }
+   ],
+   "local_state_writes_count": 4,
+   "instrument_r1_numbers_kept_for_the_record": {
+    "r1_artifact_blob": "1731358d86e71215aa6757a07ec14b3dfec14c45",
+    "my_legs_total_r1": 16,
+    "my_covered_r1": 2,
+    "union_with_lane_F_r1": 20,
+    "lane_F_legs_r1": 14,
+    "lane_F_covered_r1": 2
+   }
+  }
+ },
+ "erratum_for_what_I_already_published": {
+  "numbers_I_published": null,
+  "superseded_by_this_file": true,
+  "what_was_wrong": "4 of my 16 legs were device-state writes, not network writes: lib/inFlightWrites.ts:57 quietListeners.delete(fn) (a Set unsubscribe), lib/offlineJourney.ts:43 and :55 database.journeys.put(x) (IndexedDB), main.tsx:1706 caches.delete(name) (the Service Worker cache API). I read all four lines before accepting it - lane F disputed my denominator and was right.",
+  "r1_numbers_as_recorded_in_the_r1_receipt": {
+   "r1_artifact_blob": "1731358d86e71215aa6757a07ec14b3dfec14c45",
+   "my_legs_total_r1": 16,
+   "my_covered_r1": 2,
+   "union_with_lane_F_r1": 20,
+   "lane_F_legs_r1": 14,
+   "lane_F_covered_r1": 2
+  }
+ },
+ "already_published_artifacts_this_supersedes": {
+  "evidence/cmdr-write-legs-2022/write_leg_reconciliation_r1.json": "1731358d86e71215aa6757a07ec14b3dfec14c45",
+  "evidence/cmdr-bare-leg-reach-2044/bare_leg_reach_r1.json": "30662a703940ef9dab8dce29d34437a1d4419155"
+ },
+ "reach_recomputed_on_the_corrected_set": {
+  "entry_asset": "assets/index-DWgtVWb0.js",
+  "origin_bytes": 1255094,
+  "proxy_bytes": 1255094,
+  "two_surfaces_byte_identical": true,
+  "origin_sha256": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+  "proxy_sha256": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+  "files_with_bare_legs": [
+   "features/notifications/PushCapabilityCard.tsx",
+   "features/planning/PlanComparison.tsx",
+   "features/recovery/RecoveryRequiredPanel.tsx",
+   "features/simulation/simulationAdapter.ts",
+   "features/stay/HotelsPanel.tsx"
+  ],
+  "per_file": {
+   "features/notifications/PushCapabilityCard.tsx": {
+    "markers": [
+     "RECORD_ONLY",
+     "push_capability()",
+     "${value}${\"=\".repeat((4 - (value.length % 4)) % 4)}",
+     ").replace(/_/g, ",
+     "still checking",
+     "/api/v1/travelers/${travelerId}/push-config"
+    ],
+    "hits": [
+     "RECORD_ONLY"
+    ],
+    "verdict": "PRESENT_in_shipped_bundle"
+   },
+   "features/planning/PlanComparison.tsx": {
+    "markers": [
+     "比较候选方案 -> 采用方案",
+     "${currency} ${major.toLocaleString(\"zh-CN\")}",
+     "${currency} ${major.toLocaleString(\"en-GB\")}",
+     "within",
+     "/api/v1/journeys/${journeyId}/plans/${planId}/select",
+     ", headers: { Accept: "
+    ],
+    "hits": [
+     "within"
+    ],
+    "verdict": "PRESENT_in_shipped_bundle"
+   },
+   "features/recovery/RecoveryRequiredPanel.tsx": {
+    "markers": [
+     "Trip evidence needs re-syncing",
+     "No safe alternative is available",
+     "Your trip needs a decision",
+     "The mobility evidence for this plan has expired. Generate fresh options before you continue.",
+     "A replan was attempted for ${recovery?.capability_code ?? \"the new requirement\"} and produced no feasible alternative. The current plan stays unverified.",
+     "A new hard requirement (${recovery?.capability_code ?? \"accessibility need\"}) means the current plan can no longer be confirmed as safe. Your existing plan has not been changed."
+    ],
+    "hits": [
+     "Trip evidence needs re-syncing",
+     "No safe alternative is available",
+     "Your trip needs a decision",
+     "The mobility evidence for this plan has expired. Generate fresh options before you continue."
+    ],
+    "verdict": "PRESENT_in_shipped_bundle"
+   },
+   "features/simulation/simulationAdapter.ts": {
+    "markers": [
+     "cityNexusApi",
+     "occurred_at",
+     "the request was invalid",
+     "HTTP ${error.status}",
+     "这台部署没有开模拟舞台（服务器要求 CITYNEXUS_DEMO_MODE=true）。它明确拒绝，并且说没有任何数据被删除。",
+     "This deployment is not a simulation stage (the server requires CITYNEXUS_DEMO_MODE=true). It refused and says nothing was deleted."
+    ],
+    "hits": [
+     "occurred_at",
+     "这台部署没有开模拟舞台（服务器要求 CITYNEXUS_DEMO_MODE=true）。它明确拒绝，并且说没有任何数据被删除。",
+     "This deployment is not a simulation stage (the server requires CITYNEXUS_DEMO_MODE=true). It refused and says nothing was deleted."
+    ],
+    "verdict": "PRESENT_in_shipped_bundle"
+   },
+   "features/stay/HotelsPanel.tsx": {
+    "markers": [
+     "/api/v1/journeys/${journeyId}/stays/offers/capture",
+     "/api/v1/journeys/${journeyId}/stay-options/${optionId}/select",
+     "这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。",
+     "This stay's check-in / check-out windows clash with your confirmed itinerary, so it cannot be used without changing your trip. Try another one.",
+     "暂时无法选择这家住宿。",
+     "Could not choose this stay."
+    ],
+    "hits": [
+     "这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。",
+     "This stay's check-in / check-out windows clash with your confirmed itinerary, so it cannot be used without changing your trip. Try another one.",
+     "暂时无法选择这家住宿。",
+     "Could not choose this stay."
+    ],
+    "verdict": "PRESENT_in_shipped_bundle"
+   }
+  },
+  "files_present": [
+   "features/notifications/PushCapabilityCard.tsx",
+   "features/planning/PlanComparison.tsx",
+   "features/recovery/RecoveryRequiredPanel.tsx",
+   "features/simulation/simulationAdapter.ts",
+   "features/stay/HotelsPanel.tsx"
+  ],
+  "files_present_count": 5,
+  "note": "presence proves the module shipped; it does not prove a user can reach that press in the current demo state, and a missed marker proves nothing about absence"
+ },
+ "agreement_with_lane_F": {
+  "her_per_tip_artifact": "evidence/ord0315-write-leg-reconciliation-f/ord0315_leg_reconciliation_per_tip_r2.json",
+  "her_blob": "e157a892ffc75cc048d8944d55d8201d3062dd9e",
+  "her_sites_per_tip": 20,
+  "my_network_only_legs_now": 11,
+  "why_the_two_still_differ": "her definition counts the wrapper form (fetchWithWriteDeadline) and request({method:<write>}); mine counts only fetch(...) with a literal write method plus a client verb call on a non-local receiver. Neither is wrong; hers is the wider one and carries an occurrence-indexed site key, so it is the list to quote - together with the tip it was taken on."
+ },
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "databases_opened": 0,
+  "credential_values_printed": 0,
+  "evidence_paths_overwritten": 0
+ },
+ "claim_kind": "code_and_deployment_determined",
+ "claimed_result": "network-only write legs: 12 on 30a5f90e (covered 2, bare 10) and 11 on 2344145c (covered 1, bare 10); 4 device-state writes excluded; of the bare files, 5 carry a literal in the shipped bundle",
+ "derived_result": null
+}
