@@ -1,0 +1,78 @@
+{
+ "arm": "a12_ctl_silent_read",
+ "run_id": "O0301-144834",
+ "face_port": 8564,
+ "policy_stamp": "A12_CTL_SILENT_READ",
+ "instrumented": true,
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "bundle_sha256": "57c2a927f9e65ca0b33acdc737cbf941fc395c214aa213d861a4f7e5c664338e",
+ "bundle_asset": "index-BN1w-xlK.js",
+ "journey_id": "d845ac26-0add-4305-bd3f-3f7c6f6fe3c1",
+ "request_text": "想傍晚在老城慢慢走一圈，别太赶",
+ "opened": {
+  "hub_reached": false
+ },
+ "cap_ms": 40000,
+ "no_sheet": {
+  "screen": {
+   "result_card": null,
+   "network_card_painted": false,
+   "detail_toggle_present": false,
+   "details_elements_present": 1,
+   "detail_open": null,
+   "reason_label_painted": null,
+   "reason_value_painted": null,
+   "cross_check_data_result_status": null,
+   "cross_check_data_reason_origin": null,
+   "deadline_sentence_on_screen": true,
+   "body_head": "没有回音\n\n等了 12 秒，这台服务器一个字也没回答\n\n这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应。这台设备上也没有可只读查看的本地副本，所以现在没有内容可显示。可以再试一次。\n\n重试\n归因详情",
+   "submit_visible": false
+  },
+  "watch": [
+   {
+    "ms": 1005,
+    "network_card": false,
+    "deadline": true,
+    "body_head": "没有回音\n\n等了 12 秒，这台服务器一个字也没回答\n\n这一发读取到了期限仍然没有任何回答：服务器既没有拒绝，也没有答应。这台设备上也没有可只读查看的本地副本，所以现在没有内容可显示。可以再试一次。\n\n重试\n归因详情"
+   }
+  ],
+  "legs": [
+   {
+    "url": "/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+    "method": "GET",
+    "api": true,
+    "sent_ms_since_load": 96,
+    "sent_wall": "2026-09-25T06:48:35.323Z",
+    "has_signal": true,
+    "request_body": null,
+    "client_error": "AbortError: signal is aborted without reason",
+    "elapsed_ms": 12044
+   },
+   {
+    "url": "/api/v1/health",
+    "method": "GET",
+    "api": true,
+    "sent_ms_since_load": 12140,
+    "sent_wall": "2026-09-25T06:48:47.367Z",
+    "has_signal": true,
+    "request_body": null,
+    "client_error": "AbortError: signal is aborted without reason",
+    "elapsed_ms": 4012
+   }
+  ],
+  "json_errors": []
+ },
+ "request_failures": [
+  {
+   "url": "v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+   "method": "GET",
+   "failure": "net::ERR_ABORTED"
+  },
+  {
+   "url": "v1/health",
+   "method": "GET",
+   "failure": "net::ERR_ABORTED"
+  }
+ ],
+ "page_events": []
+}
