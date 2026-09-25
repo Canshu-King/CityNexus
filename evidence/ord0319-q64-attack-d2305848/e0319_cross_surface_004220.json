@@ -1,0 +1,30 @@
+{
+ "schema": "CNX_LANE_E_ORD0319_CROSS_SURFACE_V1",
+ "requirement": "CROSS_SURFACE_GAUGE_REPRO_V1: >=2 distinct (HTTP base, disk root) pairings",
+ "rows": [
+  {
+   "pairing": 1,
+   "http_base": "none (offline fixture surface A)",
+   "disk_root": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\raw\\ord0319",
+   "python": "C:\\Users\\仓鼠王\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+   "rc": 0,
+   "selftest_verdict": "SELFTEST_PASS",
+   "ruler_bytes": "92fe93bbe7fca569ab3f3f562e9310968634969f",
+   "stdout_head": "{"
+  },
+  {
+   "pairing": 2,
+   "http_base": "none (offline fixture surface B)",
+   "disk_root": "D:\\moodle\\_qoder_redteam_anywhere_20260921\\raw\\ord0319\\surfaceB_004220",
+   "python": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+   "rc": 0,
+   "selftest_verdict": "SELFTEST_PASS",
+   "ruler_bytes": "92fe93bbe7fca569ab3f3f562e9310968634969f",
+   "stdout_head": "{"
+  }
+ ],
+ "discipline": {
+  "ruler_unchanged": true,
+  "product_bytes_changed": 0
+ }
+}
