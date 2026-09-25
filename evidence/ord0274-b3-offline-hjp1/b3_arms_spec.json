@@ -1,0 +1,26 @@
+{
+  "b3_primary": {
+    "kind": "b3_offline",
+    "cells": ["B3"],
+    "claim": "B3 (chain tip ef277b2d): a traveller whose client converged to the new generation, and who really has a trip, must stay usable offline - same generation executed, no fallback to the previous bundle, in-app navigation still moving, and no origin contact during the offline window",
+    "installed_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+    "next_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f + inert generation marker (next_gen build)",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\s3_b2b\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+    "mode": "answer",
+    "install_mode": "two_navigations",
+    "asset_root_during_offline": "root_next (complete deploy: shell and assets both new)"
+  },
+  "b3_control_partial": {
+    "kind": "b3_control_partial",
+    "cells": ["B3-control"],
+    "claim": "The discriminating control for B3: identical walk, identical trigger, one configured byte changed - the shell moves to the new generation while the asset root stays on the old one, i.e. the deploy that does not retain the previous bundles.  If this arm reads as usable as the primary arm, the B3 judgement is vacuous and must not be signed.",
+    "installed_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+    "next_sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f + inert generation marker (next_gen build)",
+    "root_installed": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\s3_b2b\\frontend\\dist",
+    "root_next": "D:\\moodle\\_qoder_hjp1_o207_20260922\\o290\\next_gen\\frontend\\dist",
+    "mode": "answer",
+    "install_mode": "two_navigations",
+    "asset_root_during_offline": "root_installed (partial deploy: new shell, old assets)"
+  }
+}
