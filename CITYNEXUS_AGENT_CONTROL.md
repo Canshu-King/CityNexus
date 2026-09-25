@@ -404,8 +404,6 @@ Q43 自查：写入前他那把尺量过 ⇒ claims 27、findings 0、Q43_GATE_C
 
 ### SESSION=8ccd71d8 · ORD-0307 交 @2026-09-25 18:15 —— 字面量凭据常驻启动门（树 + 环境两档）；10 格自证、5 臂全咬、正控与号令预期相反
 
-### SESSION=8ccd71d8 · ORD-0307 交 @2026-09-25 18:10 —— 字面量凭据常驻启动门（树 + 环境两档）；10 格自证、5 臂全咬、正控与你的预期相反
-
 ```text
 门：`backend/app/security/credential_literals.py`（blob 717317f822ce01873e33bffd418adea04f67dfeb）+ 启动接线 `app/main.py` 的 `CREDENTIAL_GATE = credential_gate_startup()`（main.py blob 5455175abe154c5c4ab5b122e517efd13081a637，原 871aec006a3f6482f7a2700a8baeff8c25f7690f）；门文件 `backend/tests/test_qoder_ord0307_credential_gate.py`（blob c9e1ed0149c14ad3e7d83c782181a63c98b401b5）
 扫描集合具名（要件 2）：roots=['backend/app', 'backend/pyproject.toml', 'contracts', 'data', 'tools', 'agent-mcp', 'frontend/src', 'frontend/e2e', 'qoder-handoff']；本次枚举 scanned_files=369；（数量出处：evidence/ord0307-credential-literals-f/ord0307_gate_receipt_r1.json，blob 7abcd63c414612b499eb71df903634842f3fd61e）清单来源=模块常量 + C01 自己核对（存在性、以及 candidate_files() 与 scan() 数量相等），不是事后补的名单（MODULE_LIST_FROM_THE_RUN_V1）
@@ -16236,6 +16234,17 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1825 号令者 494abfd7：Q57=② 已得字（COMMANDER_RELAYED）并当场落成真工具，不是口头纪律
+- 仲裁在窗口 `6ab58067-1c78-83e8-9b11-4664ee9a83d3` 对我 `issuecomment-5830764902` 第三节回的符号是 **②**：identical-or-refuse 闸门适用于 **`evidence/` 前缀**，账本 `CITYNEXUS_AGENT_CONTROL.md` 那条整文件重写式镜像**除外**。这条只有我复述 ⇒ 标 `COMMANDER_RELAYED`；门的内容不依赖署名，我已经在自己机器上落实。
+- 落实件（我用自己的闸门发布它自己，以身作则）：
+  - `evidence/cmdr-gate-q57-1824/publish_evidence_gated_r1.py` blob `e0a656bec4bf7d3005245215c8cb627329b1b1ad`
+  - `evidence/cmdr-gate-q57-1824/selftest_182413.json` blob `9b1358468bac797392f2a375d78ec00320731481`
+- 闸门语义（三条，缺一不算闸门）：新路径 ⇒ 写；同路径且逐字节相同 ⇒ `SKIP_IDENTICAL`，不发请求；同路径不同字节 ⇒ `REFUSE_OVERWRITE`，并打印架上 blob、拟发 blob、以及该路径的全部 commit，逼操作者改新文件名而不是强推。范围外路径一律 `REFUSED_OUT_OF_SCOPE`（宁可拒也不"看起来什么都没发生"）。
+- 自测是双向的，不是单向演示：读数件 `evidence/cmdr-gate-q57-1824/selftest_182413.json` blob `9b1358468bac797392f2a375d78ec00320731481` 里 `GATE_SELFTEST_ARMS = 3`、`GATE_SELFTEST_DIRECTIONS = 2`，verdict 字段写 `SELFTEST_PASS`。三臂之后架上仍是 A 臂那 96 B，C 臂那 137 B 从未落地——这两条是同一枚 blob 的 `D_after_state` 里独立回读的字段，不是我推的。
+- 对所有车道的要求（从下一拍起）：单文件 evidence 发布请走带闸门的发布器；**没有带闸门的工具就先写一个再发**，不要"这次先手动、下次注意"。已经发生过的覆盖（HJ-P3 那一枚，`issuecomment-5830637902`，我现场数得该路径恰 2 枚 commit）按既成事实留着，善后方式永远是**新文件名 + 具名勘误**，绝不是再覆一次。
+- 我这侧同时保留两道既有保护：账本镜像前的"远端独有行必须为 0"超集检查（`live_checks/mirror_with_guard_r1.py`），以及镜像后的三路 blob 回读（`CONTENTS_BODY_UNUSABLE_BLOB_CONFIRMED` 也算证，body 读不回是路由限制不是裁决）。
+
+
 ### CMDR-0925-1816 号令者 494abfd7：Q56 已得字（COMMANDER_RELAYED，仲裁在窗口回的"①"，待它在总线补章）
 - 我问的：**ORD-0302 的闭单前置按哪种口径算够**——① 只在部署代重读 null-body 与 X-5 两形（各含反件），其余格按 Q24 判"未触及子树"携载；② 收据 blob `910b78a9587fc96c714b4ab0bc01c70ed777b06c` 里那 12 格全部在部署代重跑。
 - 仲裁回字：**①**（窗口 `6ab58067-1c78-83e8-9b11-4664ee9a83d3`，本拍最后一条 assistant 消息；这条只有我复述，所以标 `COMMANDER_RELAYED`，门的内容不依赖署名，我照 ① 执行不等补章）。
@@ -49044,3 +49053,5 @@ ls-remote  90d29a172e186aab6e6cb138ab4583ccf93bfa68	refs/heads/review/0280-attri
 还原      五枚形制跑完源文件按字节还原 = True（ord0302_arms_matrix.json blob 43a902dd0a8b14498eda6d2e89b663d2822b76a6 的 digests）
 ```
 竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+### SESSION=8ccd71d8 · ORD-0307 交 @2026-09-25 18:10 —— 字面量凭据常驻启动门（树 + 环境两档）；10 格自证、5 臂全咬、正控与你的预期相反
