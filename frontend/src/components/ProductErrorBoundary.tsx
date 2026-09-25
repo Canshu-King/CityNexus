@@ -8,8 +8,10 @@
 
 import { Component, type ErrorInfo, type ReactNode } from "react";
 
+import { describeServerReason, reasonFromThrown } from "../lib/serverReason";
+import { ServerReasonDetail } from "./ServerReasonDetail";
 type Props = { children: ReactNode };
-type State = { error: Error | null; info: string | null };
+type State = { error: Error | null };
 
 const COPY = {
   en: {
@@ -35,18 +37,26 @@ function pick() {
   return lang.toLowerCase().startsWith("zh") ? COPY.zh : COPY.en;
 }
 
+function pickZh() {
+  const lang = (typeof navigator !== "undefined" && navigator.language) || "en";
+  return lang.toLowerCase().startsWith("zh");
+}
+
 export class ProductErrorBoundary extends Component<Props, State> {
-  state: State = { error: null, info: null };
+  state: State = { error: null };
 
   static getDerivedStateFromError(error: Error): Partial<State> {
     return { error };
   }
 
   componentDidCatch(error: Error, info: ErrorInfo) {
-    this.setState({ info: String(info?.componentStack || "").slice(0, 400) });
+    /* ORD-0326 / Q64=1: a component stack is developer evidence, never traveller-facing text. It used to
+       be stored in state and printed in the <pre> below, which is the "异常栈直接进 DOM" the ruling
+       forbids; it now stays on the developer channel only. */
+    console.error("[ProductErrorBoundary]", error?.message, info?.componentStack);
   }
 
-  private reset = () => this.setState({ error: null, info: null });
+  private reset = () => this.setState({ error: null });
 
   private goHome = () => {
     try {
@@ -59,9 +69,10 @@ export class ProductErrorBoundary extends Component<Props, State> {
   };
 
   render() {
-    const { error, info } = this.state;
+    const { error } = this.state;
     if (!error) return this.props.children;
     const t = pick();
+    const reason = describeServerReason(reasonFromThrown(error));
     return (
       <section
         className="v8-page"
@@ -100,10 +111,7 @@ export class ProductErrorBoundary extends Component<Props, State> {
         </div>
         <details style={{ marginTop: 18, opacity: 0.7, fontSize: 12 }}>
           <summary>{t.detail}</summary>
-          <pre style={{ whiteSpace: "pre-wrap" }} data-testid="error-detail">
-            {String(error?.message || error)}
-            {info ? `\n${info}` : ""}
-          </pre>
+          <ServerReasonDetail reason={reason} zh={pickZh()} testId="error-detail" />
         </details>
       </section>
     );

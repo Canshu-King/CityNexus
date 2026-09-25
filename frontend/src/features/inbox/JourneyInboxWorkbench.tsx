@@ -78,16 +78,40 @@ type ApplyResponse = {
   draft?: Draft;
 };
 
+/**
+ * ORD-0326: the refusal carries the evidence, not the server's sentence.
+
+ * Before this, :88 re-cast `payload.error.message` into `Error.message` and eight catch sites then wrote
+ * that string straight into the DOM -- r5 still reads three of those slots as live sinks. The sentence is
+ * reachable from `.envelope` and may only surface through <ServerReasonDetail>, which attributes it.
+ */
+class InboxApiFailure extends Error {
+  constructor(
+    readonly status: number,
+    readonly body: unknown,
+  ) {
+    super(`inbox request refused (HTTP ${status})`);
+    this.name = "InboxApiFailure";
+  }
+}
+
+import { describeServerReason, reasonFromThrown, type ServerReason } from "../../lib/serverReason";
+import { ServerReasonDetail, serverReasonHeadline } from "../../components/ServerReasonDetail";
 async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, init);
-  const payload = (await response.json()) as T & {
-    detail?: string;
-    error?: { message?: string };
-  };
-  if (!response.ok) {
-    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);
+  const text = await response.text();
+  let payload: unknown = null;
+  if (text.trim() !== "") {
+    try {
+      payload = JSON.parse(text);
+    } catch {
+      payload = null;
+    }
   }
-  return payload;
+  if (!response.ok) {
+    throw new InboxApiFailure(response.status, payload);
+  }
+  return payload as T;
 }
 
 async function postJson<T>(path: string, body: unknown): Promise<T> {
@@ -234,6 +258,12 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
   const t = useT();
   const { locale } = useLocale();
   const zh = locale.startsWith("zh");
+  /** One place a catch may turn evidence into words: the headline is always device-written. */
+  const noteFailure = (cause: unknown, fallback: string): string => {
+    const reason = describeServerReason(reasonFromThrown(cause));
+    setFailureReason(reason);
+    return serverReasonHeadline(reason, zh) ?? fallback;
+  };
   const [text, setText] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -245,6 +275,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
   const [rawDetail, setRawDetail] = useState<string | null>(null);
   const [memory, setMemory] = useState<Memory | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  const [failureReason, setFailureReason] = useState<ServerReason | null>(null);
   const [busy, setBusy] = useState(false);
   const [role, setRole] = useState("UNKNOWN");
   const [scheduledDeparture, setScheduledDeparture] = useState("");
@@ -305,7 +336,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         setMessage(t("inbox.memoryLoadError"));
       }
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.memoryLoadError"));
+      setMessage(noteFailure(error, t("inbox.memoryLoadError")));
     } finally {
       setBusy(false);
     }
@@ -315,7 +346,8 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
     try {
       setMemory(await requestJson<Memory>(`/api/v1/journeys/${journeyId}/memory`));
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.memoryLoadError"));
+      setFailureReason(null);
+      setMessage(noteFailure(error, t("inbox.memoryLoadError")));
     }
   };
 
@@ -335,9 +367,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
       return drafts;
     } catch (error) {
       setPending(null);
-      setPendingError(
-        error instanceof Error ? error.message : t("inbox.pendingUnreadable"),
-      );
+      setPendingError(noteFailure(error, t("inbox.pendingUnreadable")));
       return [];
     }
   };
@@ -384,7 +414,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         ),
       );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.textFailed"));
+      setMessage(noteFailure(error, t("inbox.textFailed")));
     } finally {
       setBusy(false);
     }
@@ -405,7 +435,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         ),
       );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.imageFailed"));
+      setMessage(noteFailure(error, t("inbox.imageFailed")));
     } finally {
       setBusy(false);
     }
@@ -433,7 +463,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
         ),
       );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.smartApplyFailed"));
+      setMessage(noteFailure(error, t("inbox.smartApplyFailed")));
     } finally {
       setBusy(false);
     }
@@ -457,7 +487,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
     try {
       await postJson(`/api/v1/journeys/${journeyId}/inbox/${draftId}/confirm`, {});
     } catch (error) {
-      failure = error instanceof Error ? error.message : t("inbox.confirmFailed");
+      failure = noteFailure(error, t("inbox.confirmFailed"));
     }
     /* The verdict is read back, never written here.  `confirm_reservation_draft` is the one that
        decides, and its answer can still be "not passed" (a duplicate confirmation_ref, a field that
@@ -515,7 +545,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
           : t("inbox.correctionsSaved"),
       );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t("inbox.correctionsFailed"));
+      setMessage(noteFailure(error, t("inbox.correctionsFailed")));
     } finally {
       setBusy(false);
     }
@@ -685,6 +715,7 @@ export function JourneyInboxWorkbench({ journeyId, decodedText, onConfirmed, imp
       </div>
       )}
       {message && <p className="v10-inbox-message" role="status">{message}</p>}
+      <ServerReasonDetail reason={failureReason} zh={zh} testId="inbox-failure" />
       {rawDetail && (
         <details className="v8-advanced" data-testid="inbox-confirm-detail">
           <summary>{t("inbox.technicalDetail")}</summary>
