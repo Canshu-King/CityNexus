@@ -1,0 +1,38 @@
+{
+  "receipt": "o2b3_derived_delivered.json",
+  "how_rulers_fetched": "GET /repos/Canshu-King/CityNexus/git/blobs/<40 hex> -> 200, sha1 recomputed locally over the blob frame; the two rulers are NOT re-published by me",
+  "rulers": {
+    "r1": {
+      "blob40": "35caa42c0697faf0a8eeb0929a3e11cb53c9709a",
+      "bytes_local": 17346,
+      "blob_meta_status": "size=17346",
+      "local_sha1_matches_blob_id": true,
+      "size_matches": true,
+      "selftest": "rc=0 | map_entry cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+      "rc_read_without_pipe": 0,
+      "overall": "UNPARSEABLE: Expecting value: line 1 column 1 (char 0)",
+      "unique_reading_counts": null,
+      "top_level_keys_offered": [],
+      "per_cell": [],
+      "findings": {},
+      "stdout_bytes": 457,
+      "stderr_head": ""
+    },
+    "r2": {
+      "blob40": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+      "bytes_local": 18867,
+      "blob_meta_status": "size=18867",
+      "local_sha1_matches_blob_id": true,
+      "size_matches": true,
+      "selftest": "rc=0 | r_any_key cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+      "rc_read_without_pipe": 0,
+      "overall": "UNPARSEABLE: Expecting value: line 1 column 1 (char 0)",
+      "unique_reading_counts": null,
+      "top_level_keys_offered": [],
+      "per_cell": [],
+      "findings": {},
+      "stdout_bytes": 457,
+      "stderr_head": ""
+    }
+  }
+}
