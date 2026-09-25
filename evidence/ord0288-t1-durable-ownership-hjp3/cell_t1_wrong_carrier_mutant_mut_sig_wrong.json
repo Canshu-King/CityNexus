@@ -1,0 +1,107 @@
+{
+ "arm": "t1_wrong_carrier_mutant_mut_sig_wrong",
+ "measured_on": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "private_copy": {
+  "dir": "D:\\moodle\\_hjp3_0288t1_0925\\mut_sig_wrong",
+  "hardlink_audit": {
+   "files_checked": 305,
+   "nlink_gt_1": [],
+   "verdict": "PRIVATE_COPY"
+  },
+  "patch": {
+   "removed_carrier": "if existing_generation.request_hash != generation_signature:",
+   "replaced_with": "if False and ..."
+  },
+  "main_py_sha256": "fd6a8e6080d9b194",
+  "pristine_main_py_sha256": "46e696c023075988",
+  "only_file_changed": [
+   "app\\main.py"
+  ]
+ },
+ "seed": {
+  "rc": 0,
+  "seed": {
+   "places": 16
+  }
+ },
+ "backend": {
+  "tag": "mut_sig_wrong",
+  "pid": 34416,
+  "port": 8614,
+  "tree": "D:\\moodle\\_hjp3_0288t1_0925\\mut_sig_wrong",
+  "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_sig_wrong.s3db",
+  "listening": true,
+  "exited": false,
+  "cmdline_at_start": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8614 --log-level info"
+ },
+ "journey": {
+  "traveler_http": 201,
+  "journey_http": 201,
+  "journey_id": "fbff8dbd-4095-4aee-8917-828b4158c274"
+ },
+ "db": "D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_sig_wrong.s3db",
+ "carrier_removed_or_injected": "the replan-route guard `if existing_generation.request_hash != generation_signature:` - kept as the NEGATIVE case of a mutation control: deleting it does not reach this leg",
+ "steps": [
+  {
+   "intent": "the send that claims the key",
+   "response": {
+    "key": "ord0288-sigwrong-163221",
+    "request_body": {
+     "candidate_count": 3
+    },
+    "status": 422,
+    "bytes": 1443,
+    "body": "{\"error\":{\"code\":\"VALIDATION_ERROR\",\"message\":\"No feasible plan candidates satisfy the journey constraints\",\"message_key\":\"request.invalid\",\"trace_id\":\"69b8664b-0262-4b40-972a-4b05ac7eea10\",\"details\":{\"city_code\":\"CNX-DEMO\",\"places_in_catalog\":8,\"city_services_in_catalog\":5,\"day_sequences_available\":3,\"requested_candidates\":3,\"candidate_rejections\":[{\"reason_codes\":[\"CANDIDATE_REJECTED_BY_FEASIBILITY_GATE\"],\"summary\":\"candidate dropped before persistence: JOURNEY_WINDOW_EXCEEDED\",\"failures\":[\"JOURNEY_WINDOW_EXCEEDED\"],\"hard_rule_codes\":[],\"candidate_sequence\":0,\"stops\":[\"place-old-town\",\"place",
+    "elapsed_ms": 32,
+    "at": "16:32:21"
+   },
+   "durable_after_this": {
+    "connection": "file:D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_sig_wrong.s3db?mode=ro (a SECOND, read-only connection)",
+    "rows": [
+     {
+      "key": "plans.generate:ord0288-sigwrong-163221",
+      "operation": "plans.generate",
+      "response_status": 422,
+      "response_json_bytes": 1424,
+      "request_hash_head": "{\"candidate_coun",
+      "created_at": "2026-09-25T08:32:21.927925+00:00",
+      "expires_at": "2026-10-02T08:32:21.927925+00:00",
+      "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"fail"
+     }
+    ],
+    "plan_versions": 0
+   }
+  },
+  {
+   "intent": "same key, DIFFERENT body with the signature comparison deleted",
+   "response": {
+    "key": "ord0288-sigwrong-163221",
+    "request_body": {
+     "candidate_count": 5
+    },
+    "status": 409,
+    "bytes": 189,
+    "body": "{\"error\":{\"code\":\"CONFLICT\",\"message\":\"same idempotency key used for a different request\",\"message_key\":\"request.conflict\",\"trace_id\":\"a8c8d5f7-a24a-4e47-895a-86d3a10a80e4\",\"details\":null}}",
+    "elapsed_ms": 4,
+    "at": "16:32:21"
+   },
+   "still_409": true,
+   "durable_after_this": {
+    "connection": "file:D:\\moodle\\_hjp3_0288t1_0925\\t1_mut_sig_wrong.s3db?mode=ro (a SECOND, read-only connection)",
+    "rows": [
+     {
+      "key": "plans.generate:ord0288-sigwrong-163221",
+      "operation": "plans.generate",
+      "response_status": 422,
+      "response_json_bytes": 1424,
+      "request_hash_head": "{\"candidate_coun",
+      "created_at": "2026-09-25T08:32:21.927925+00:00",
+      "expires_at": "2026-10-02T08:32:21.927925+00:00",
+      "response_json_head": "{\"refusal\": {\"detail\": \"No feasible plan candidates satisfy the journey constraints\", \"error_details\": {\"candidate_rejections\": [{\"candidate_sequence\": 0, \"fail"
+     }
+    ],
+    "plan_versions": 0
+   }
+  }
+ ]
+}
