@@ -1,0 +1,11 @@
+{
+ "run_id": "0323c2f3929",
+ "arm": "N2",
+ "message_text": "文本提取失败。",
+ "pending_text": "待审清单读不出来： http_status=none content_type=none evidence=none 重读清单",
+ "leaked_needles_still_on_screen": [],
+ "leaked_needles_in_attributes": [],
+ "attribute_pairs_swept": 63,
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status this device measured (文本提取失败。) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mtrue\u001b[39m Received: \u001b[31mfalse\u001b[39m"
+}
