@@ -134,7 +134,7 @@ export class ProductErrorBoundary extends Component<Props, State> {
             {t.reload}
           </button>
         </div>
-        <details style={{ marginTop: 18, opacity: 0.7, fontSize: 12 }} data-testid="error-detail-fold">
+        <details style={{ marginTop: 18, opacity: 0.7, fontSize: 12 }}>
           <summary>{t.detail}</summary>
           <pre style={{ whiteSpace: "pre-wrap" }} data-testid="error-detail">
             {fieldsText(fields)}
