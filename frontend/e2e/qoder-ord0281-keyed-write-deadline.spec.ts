@@ -42,8 +42,12 @@ type Reading = {
   settled_at: number | null;
   elapsed_ms: number | null;
   on_screen: string | null;
+  /** what a wire- or module-level arm actually observed; `on_screen` stays null there so no cell can borrow
+   *  a surface reading it never took (criterion 2 of bus issuecomment-5829112344). */
+  observed_outcome?: string | null;
   sentence_seconds_named: number | null;
-  had_network_blame: boolean;
+  had_network_blame: boolean | null;
+  surface_not_judged?: string;
   server_said: "answered-200" | "never-answered" | "answered-late" | string;
   keys_seen: string[];
   verdict: string;
@@ -338,10 +342,12 @@ test.describe.serial("ORD-0281 keyed write deadline", () => {
     record("K1", {
       arm: "K1",
       elapsed_ms: probe.keyed.at,
-      on_screen: `${probe.keyless.outcome}/${probe.keyed.outcome}`,
+      on_screen: null,
+      observed_outcome: `${probe.keyless.outcome}/${probe.keyed.outcome}`,
       server_said: "not-applicable",
       keys_seen: [],
-      had_network_blame: false,
+      had_network_blame: null,
+      surface_not_judged: "wire-level leg race; this arm never reads the panel",
       verdict:
         probe.keyless.outcome === "still-pending" &&
         probe.keyed.outcome === "WriteDeadlineMissed" &&
@@ -369,9 +375,11 @@ test.describe.serial("ORD-0281 keyed write deadline", () => {
       return { ...mod.writeDeadlineNumbersAreOrdered(), copy: mod.writeDeadlineCopy(false, 60_000) };
     });
     record("K2", {
-      arm: "K2", on_screen: shipped.copy.title, server_said: "not-applicable", keys_seen: [],
+      arm: "K2", on_screen: null, observed_outcome: shipped.copy.title,
+      server_said: "not-applicable", keys_seen: [],
       elapsed_ms: null, sentence_seconds_named: shipped.client_ms / 1000,
-      had_network_blame: false,
+      had_network_blame: null,
+      surface_not_judged: "the copy builder's return value and the shipped constants, not a panel read",
       verdict:
         shipped.client_ms === 60_000 && shipped.server_ms === 45_000 && shipped.client_above_server
           ? "MET"
@@ -416,10 +424,12 @@ test.describe.serial("ORD-0281 keyed write deadline", () => {
     }, BOUND_MS);
     record("K3", {
       arm: "K3",
-      on_screen: `${probe.keyed}/${probe.keyless}`,
+      on_screen: null,
+      observed_outcome: `${probe.keyed}/${probe.keyless}`,
       elapsed_ms: null,
       sentence_seconds_named: null,
-      had_network_blame: false,
+      had_network_blame: null,
+      surface_not_judged: "module-level race through readDeadline/writeDeadline",
       server_said: "not-applicable",
       keys_seen: [],
       verdict:
