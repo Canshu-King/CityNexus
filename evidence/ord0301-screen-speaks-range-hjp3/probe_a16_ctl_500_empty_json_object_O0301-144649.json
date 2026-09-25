@@ -1,0 +1,26 @@
+{
+ "asked": "http://127.0.0.1:8564/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/agent/commands",
+ "face_port": 8564,
+ "face_tag": "outcome_origin",
+ "policy_stamp": "A16_CTL_500_EMPTY_JSON_OBJECT",
+ "method": "POST",
+ "why_this_method": "the controlled face manufactures the POST outcome, so the probe asks the same leg the traveller hits",
+ "upstream_port": 8563,
+ "upstream_listening": true,
+ "origin_listening": true,
+ "real_backend_listening": true,
+ "probe": {
+  "status": 500,
+  "content_type": "application/json",
+  "bytes": 2,
+  "headers": {
+   "server": "BaseHTTP/0.6 Python/3.12.14",
+   "date": "Fri, 25 Sep 2026 06:46:59 GMT",
+   "content-length": "2",
+   "connection": "close"
+  },
+  "body_head": "{}",
+  "http_error": "HTTP Error 500: Internal Server Error",
+  "elapsed_ms": 294
+ }
+}
