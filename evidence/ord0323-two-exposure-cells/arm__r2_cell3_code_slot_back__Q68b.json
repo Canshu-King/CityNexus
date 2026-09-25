@@ -1,0 +1,14 @@
+{
+ "run_id": "0323c3b3929",
+ "arm": "Q68b",
+ "card_text": "这次排不出方案：数据不够，不是你说的不对服务器回的原因编号是 Q68_FORBIDDEN_PROSE_行程过长无法在三日预算内排布，这条我们还没有本地文案，所以不替你解释它——原话在\"技术详情\"里。技术详情服务器给出的原因q68_forbidden_prose_行程过长无法在三日预算内排布这台设备自己量到的回读字段http_status=200 content-type=application/json bytes=108 照原话再试一次",
+ "reason_fold_text": "q68_forbidden_prose_行程过长无法在三日预算内排布",
+ "uppercased_prose_in_code_slot": true,
+ "uppercased_prose_in_attributes": true,
+ "attribute_pairs_swept": 126,
+ "attributed_sentence_in_fold": true,
+ "server_label_present": true,
+ "needle_in_dom": true,
+ "test_status": "failed",
+ "error_head": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: Q68b — the 原因编号 slot is showing the reply's sentence again (这次排不出方案：数据不够，不是你说的不对服务器回的原因编号是 Q68_FORBIDDEN_PROSE_行程过长无法在三日预算内排布，这条我们还没有本地文案，所以不替你解释它——原话在\"技术详情\"里。技术详情服务器给出的原因这台设备自己量到的回读字段http_status=200 content-type=application/json bytes=108 照原话再试一次) \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m Expected: \u001b[32mfalse\u001b[39m Received: \u001b[31mtrue\u001b[39m"
+}
