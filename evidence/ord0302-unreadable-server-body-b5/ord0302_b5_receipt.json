@@ -1,5 +1,5 @@
 {
- "at": "2026-09-26T00:44:05+08:00",
+ "at": "2026-09-26T00:45:32+08:00",
  "order": "ORD-0302 · b5 · Q64=① 白名单面板（五形臂+五枚反件在新基座重跑）",
  "lane": "B c01d72a3",
  "candidate_tip": "b6e1dd3295aafa3330cc9142a4475ac359eb7a3e",
@@ -909,21 +909,5 @@
    "ord0302_index.json",
    "ord0302_b5_receipt.json"
   ]
- },
- "ruler_check": {
-  "pass_1": {
-   "rc": 0,
-   "headline": [
-    "cells 14 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
-   ],
-   "green": true
-  },
-  "pass_2_on_published_bytes": {
-   "rc": 0,
-   "headline": [
-    "cells 14 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
-   ],
-   "green": true
-  }
  }
 }
