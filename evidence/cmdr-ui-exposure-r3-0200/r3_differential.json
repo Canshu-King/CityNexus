@@ -1,0 +1,49 @@
+{
+ "schema": "CNX_CMDR_Q64_R3_DIFFERENTIAL_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T03:01:10+0800",
+ "generation": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+ "ruler_r3_local_sha1_of_bytes": "8300737c256446a6c689fa39572d10a18a3dd784",
+ "attacked_by": "lane E d2305848 ORD-0319 round 2 (evidence/ord0319-q64-r2-attack-d2305848/, readings f80714550238b9d459ecbc85177ca8082daec967)",
+ "r3_generalisations": [
+  "bare local hop {sentence}",
+  "prose-name aliases outside the old TEXTISH list (value/content/reason/output/head)",
+  "paren alias (x.y || {}).text",
+  "one-level nesting deliberately NOT widened into INTERP_BLOCK - guarded by clean fixtures"
+ ],
+ "selftest": {
+  "verdict": "SELFTEST_PASS",
+  "n_fixtures": 13,
+  "n_clean": 5,
+  "n_bad": 8,
+  "all_assertions_met": true
+ },
+ "e_fixtures_hits": {
+  "r2": 0,
+  "r3": 3,
+  "expected_r3": 3,
+  "control_stays_clean": true
+ },
+ "tip_hits": {
+  "r2": 1,
+  "r3": 1
+ },
+ "b4_hits_regression": {
+  "r2": 7,
+  "r3": 7
+ },
+ "cross_surface": {
+  "surfaceA": "cwd live_checks, python -X utf8",
+  "surfaceB": "cwd CityNexus, py -3.13 -X utf8",
+  "both_selftest_pass": true
+ },
+ "derived": {
+  "r3_catches_all_three_E_shapes": true,
+  "tip_report_unchanged_between_r2_r3": true,
+  "no_narrowing_on_older_generation": true,
+  "selftest_clean_side_holds": true
+ },
+ "claim_kind": "pattern_determined",
+ "claimed_result": "E shapes r2 0 -> r3 3; tip r2 1 / r3 1; b4 r2 7 / r3 7; selftest SELFTEST_PASS/13",
+ "derived_result": null
+}
