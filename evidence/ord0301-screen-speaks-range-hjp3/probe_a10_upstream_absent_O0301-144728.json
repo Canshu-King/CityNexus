@@ -1,0 +1,24 @@
+{
+ "asked": "http://127.0.0.1:8565/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+ "face_port": 8565,
+ "face_tag": "upstream_absent",
+ "policy_stamp": "A10_UPSTREAM_ABSENT",
+ "method": "GET",
+ "why_this_method": "the real-backend face is probed with a READ so this probe adds no write to the product database",
+ "upstream_port": 8566,
+ "upstream_listening": false,
+ "origin_listening": true,
+ "real_backend_listening": true,
+ "probe": {
+  "status": 500,
+  "content_type": "text/plain",
+  "bytes": 0,
+  "headers": {
+   "date": "Fri, 25 Sep 2026 06:48:34 GMT",
+   "connection": "close"
+  },
+  "body_head": "",
+  "http_error": "HTTP Error 500: Internal Server Error",
+  "elapsed_ms": 48
+ }
+}
