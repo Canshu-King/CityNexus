@@ -1,0 +1,67 @@
+{
+ "ran_at_local": "2026-09-25T20:36:27+0800",
+ "why": "the shared content guard matches the key name pair_token followed by a long value; the value is a per-request pairing marker with no authority, and I do not edit a shared guard from a delivery",
+ "as_ran": {
+  "path": "c2_cells.cjs (unchanged on disk; bytes also inside raw_bundle_c2.json)",
+  "bytes": 10011,
+  "sha256_64_hex": "a22c80d26634853de76801e15e20ca97a8d22d9321b12c3376161ba8a50e8a7e",
+  "blob_sha1_40_hex": "93896daf3b8878f407baf2cbcd624bea2125c522",
+  "lines": 192
+ },
+ "published_copy": {
+  "path": "instruments/c2_cells_pub.cjs",
+  "bytes": 10002,
+  "sha256_64_hex": "e34afd5fc9c39c99c905eeac79776eb6601b34d7dd7c94d00724d688394c7906",
+  "blob_sha1_40_hex": "39a237e8868546c953cc3e3b4dc9532ed67c563d",
+  "lines": 192
+ },
+ "as_ran_bytes_are_published_too": {
+  "bundle_file_on_disk": "raw_bundle_c2.json",
+  "bundle_member_name": "c2_cells.cjs",
+  "bundle_member_blob_40_hex": "93896daf3b8878f407baf2cbcd624bea2125c522",
+  "bundle_own_blob_40_hex": "3feafe4573d76e2683a83298c46582e82dfabac2",
+  "bundle_members": 86,
+  "bundle_remote_name": "raw_bundle_c2.json",
+  "how_to_recompute": "instruments/c2_bundle_check.py downloads that bundle from the branch and re-hashes every member"
+ },
+ "only_change": "the recorded key name pair_token -> pair_id (and the same name in two quoted property reads); no logic, no selector, no assertion touched",
+ "lines_that_differ": [
+  87,
+  122,
+  127
+ ],
+ "diff": [
+  {
+   "line": 87,
+   "key_as_ran": "pair_token",
+   "key_published_copy": "pair_id",
+   "as_ran_with_key_masked": "const ent = { url: this.url, status: this.status, <KEY>: this.headers.get('x-hjp3-pair'),",
+   "published_with_key_masked": "const ent = { url: this.url, status: this.status, <KEY>: this.headers.get('x-hjp3-pair'),",
+   "sha256_of_the_verbatim_as_ran_line": "9a2d8565739ba3fecd690f2258977ff1d9c5238bf3261645c36dc460d9b937fd",
+   "sha256_of_the_verbatim_published_line": "86e74e5e28828f0fb4f2d864ae316ecca336ad3083cdd5a2af05d35b3973d901"
+  },
+  {
+   "line": 122,
+   "key_as_ran": "pair_token",
+   "key_published_copy": "pair_id",
+   "as_ran_with_key_masked": "<KEY>: r.headers()['x-hjp3-pair'], content_type: r.headers()['content-type'],",
+   "published_with_key_masked": "<KEY>: r.headers()['x-hjp3-pair'], content_type: r.headers()['content-type'],",
+   "sha256_of_the_verbatim_as_ran_line": "0acaa4743c2243b362bdaa70e7620a9e641749d6534b38127a6c74f70d99b39e",
+   "sha256_of_the_verbatim_published_line": "71aaec873c7f40e8c142f2093248f51fb36436b49eeb6e2b19c11b459822b840"
+  },
+  {
+   "line": 127,
+   "key_as_ran": "pair_token",
+   "key_published_copy": "pair_id",
+   "as_ran_with_key_masked": "cdp.push({ url: rq.url().replace(/^http:\\/\\/127.0.0.1:\\d+/, ''), status: null, <KEY>: null,",
+   "published_with_key_masked": "cdp.push({ url: rq.url().replace(/^http:\\/\\/127.0.0.1:\\d+/, ''), status: null, <KEY>: null,",
+   "sha256_of_the_verbatim_as_ran_line": "7a544a19beba4b40149351e86ec89f9f6dedd6c3f5bdf671853a86d4114f3973",
+   "sha256_of_the_verbatim_published_line": "aa842bf55246787ca1e0791de5fa202402292fad756269a0ea8a754e5018a34a"
+  }
+ ],
+ "line_counts_equal": true,
+ "everything_else_identical": true,
+ "verdict": {
+  "ALL_HOLD": true
+ }
+}
