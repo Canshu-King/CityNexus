@@ -46,12 +46,31 @@ EXPECTED = {
         "ord0273-text-en-arm-speaks-english-and-neither-side-leaks",
         "ord0273-action-retry-is-a-real-executable-step",
     ],
+    "e2e/qoder-continuation-resume-carries-identity.spec.ts": [
+        "ord0278-positive-the-resume-request-carries-both-keys",
+        "ord0278-negative-no-marker-sends-nothing",
+        "ord0278-negative-off-page-sends-nothing",
+        "ord0278-negative-refused-keeps-the-marker-and-says-whose-words-these-are",
+    ],
+    "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts": [
+        "ord0253-both-legs-of-one-intent-share-one-key",
+        "ord0253-each-intent-mints-a-fresh-key",
+        "ord0253-a-burst-consumes-no-key",
+    ],
 }
 # The named leak shapes, copied from the spec text (not imported) and re-checked below.
 LEAK_SHAPES = ["origin answered", "unusable body", "text/html", "text/plain", "Error", "TypeError"]
 RUN_SHAPES = {
     "e2e/qoder-continuation-owner.spec.ts": "whole owner spec on the committed tip, 1 worker, mobile 390x844",
     "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts": "whole owner spec on the committed tip, 1 worker, mobile 390x844",
+    "e2e/qoder-continuation-resume-carries-identity.spec.ts": (
+        "whole owner spec on the committed tip, 1 worker, mobile 390x844; every 0278 assertion is read "
+        "off the request Playwright observed, not off the source"
+    ),
+    "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts": (
+        "whole owner spec on the committed tip, 1 worker, mobile 390x844; both legs' headers come from "
+        "captured requests"
+    ),
 }
 
 
@@ -79,7 +98,7 @@ def git_out(args: str) -> str:
     return run(args, ROOT)[1].strip()
 
 
-def collect_evidence(landed_tip: str, pre_rebase_tip: str, problems: list) -> dict:
+def collect_evidence(landed_tip: str, pre_rebase_tip: str, problems: list, stamped_tip: str = "") -> dict:
     """The commander asked for collection numbers after a re-parent, so they are measured here.
 
     A count is only printed when the command that produced it exited 0 and actually said a number;
@@ -121,14 +140,21 @@ def collect_evidence(landed_tip: str, pre_rebase_tip: str, problems: list) -> di
         "playwright_node_count": len(pw_nodes),
         "backend_collected_line": bt_line,
         "backend_collected": int(bt_collected.group(1)) if bt_collected else None,
-        "re_parent_proof": {
+        "base_proof": {
             "landed_tip": landed_tip,
             "candidate_is_descendant": is_desc,
             "commits_ahead": git_out(f"git rev-list --count {landed_tip}..HEAD"),
-            "pre_rebase_tip": pre_rebase_tip,
-            "frontend_files_moved_by_reparent": [
+            "stamped_tree_is_descendant": run(f"git merge-base --is-ancestor {landed_tip} {stamped_tip}", ROOT)[0] == 0,
+            "stamped_tree": stamped_tip,
+            "stamped_tree_commits_ahead": git_out(f"git rev-list --count {landed_tip}..{stamped_tip}"),
+
+            "base_tip": pre_rebase_tip,
+            "frontend_files_differring_from_base": [
                 line for line in git_out(f"git diff --name-only {pre_rebase_tip} HEAD -- frontend").splitlines() if line
             ],
+            "reading": "base_tip is the branch this work started from, not a re-parent target; the "
+            "frontend files listed are what this segment changed on top of it. The generational claim "
+            "that matters is `candidate_is_descendant` against the landed tip.",
         },
     }
 
@@ -230,16 +256,33 @@ def main() -> int:
 
     landing_tip = flag("--landing")
     pre_rebase_tip = flag("--pre-rebase")
+    tested_tree = flag("--tested-tree")
     positional = [
         token
         for index, token in enumerate(argv)
-        if not token.startswith("--") and argv[index - 1] not in ("--landing", "--pre-rebase")
+        if not token.startswith("--")
+        and argv[index - 1] not in ("--landing", "--pre-rebase", "--tested-tree")
     ]
     logs = positional[1:] or [
         f"{ROOT}/review/run-run222109.log",
         f"{ROOT}/review/run-run222133.log",
     ]
     head = sha_of_head()
+    # A frozen candidate may be judged from a tooling commit that only adds review/**: then the
+    # triples are stamped with the FROZEN tip, so an arm receipt can key its same-key precondition
+    # on the very sha the commander holds.  Only legal if frontend/** is byte-identical, measured.
+    if tested_tree:
+        moved_frontend = subprocess.run(
+            f"git diff --name-only {tested_tree} {head} -- frontend",
+            cwd=ROOT, capture_output=True, text=True, shell=True,
+        ).stdout.splitlines()
+        moved_frontend = [l for l in moved_frontend if l.strip()]
+        if moved_frontend:
+            print(f"ABORT: frontend differs between {tested_tree[:12]} and {head[:12]}: {moved_frontend}")
+            return 5
+    else:
+        moved_frontend = []
+    exact_stamp = tested_tree or head
     dirty = porcelain_lines()
     runs = [parse_log(p) for p in logs]
     all_nodes = [n for r in runs for n in r["nodes"]]
@@ -266,7 +309,7 @@ def main() -> int:
             run_tag = (owner_run["run_ids"] or ["?"])[0]
             triples.append(
                 {
-                    "exact_sha": head,
+                    "exact_sha": exact_stamp,
                     "nodeid": nodeid,
                     # The carrier coordinate has to round-trip: nodeid is rooted at the Playwright
                     # config root, so run_shape names that same directory as the cwd.  A nodeid read
@@ -299,19 +342,18 @@ def main() -> int:
 
     # measured fields, re-read from the gates' own output
     readings = {}
-    for name in (
-        "ord0269-cell1-reading.json",
-        "ord0269-cell3-feed-failure.json",
-        "ord0269-r6-exclusion-reading.json",
-        "ord0269-r4-negative.json",
-        "ord0273-text-reading.json",
-        "ord0273-text-en-reading.json",
-        "ord0273-action-reading.json",
-    ):
+    names = sorted(
+        os.path.basename(p)
+        for p in __import__("glob").glob(f"{EVIDENCE}/ord02[0-9][0-9]-*-reading.json")
+        + __import__("glob").glob(f"{EVIDENCE}/ord02[0-9][0-9]-negative-*.json")
+        + __import__("glob").glob(f"{EVIDENCE}/ord02[0-9][0-9]-*-failure.json")
+        + __import__("glob").glob(f"{EVIDENCE}/ord02[0-9][0-9]-*-negative.json")
+    )
+    for family in ("ord0269", "ord0273", "ord0278", "ord0253"):
+        if not any(name.startswith(family) for name in names):
+            problems.append(f"no reading written by the {family} gate")
+    for name in names:
         path = f"{EVIDENCE}/{name}"
-        if not os.path.exists(path):
-            problems.append(f"missing reading {name}")
-            continue
         readings[name] = json.load(open(path, encoding="utf-8"))
 
     text_reading = readings.get("ord0273-text-reading.json", {})
@@ -373,7 +415,7 @@ def main() -> int:
         if not (landing_tip and pre_rebase_tip):
             problems.append("--landing and --pre-rebase must be given together (one without the other proves nothing)")
         else:
-            collection = collect_evidence(landing_tip, pre_rebase_tip, problems)
+            collection = collect_evidence(landing_tip, pre_rebase_tip, problems, exact_stamp)
             landing = landing_groups(landing_tip, problems)
 
     payload = {
@@ -382,7 +424,16 @@ def main() -> int:
         "landing_groups": landing,
         "orders": ["ORD-0269 cells 1/3 + R-4 negative + R-6 pagination", "ORD-0273 TEXT + ACTION"],
         "authoritative_tip_at_delivery": "c79e2b4f4efe414dba22a071a7136ae10b5c84aa",
-        "candidate_tip": head,
+        "candidate_tip": exact_stamp,
+        "generation": {
+            "sha_the_triples_carry": exact_stamp,
+            "tooling_commit_the_scripts_ran_from": head,
+            "same_commit": exact_stamp == head,
+            "frontend_files_moved_between_them": moved_frontend,
+            "reading": "triples are stamped with the tree under test.  When that is not the commit the "
+            "scripts sit on, the only legal difference is review/** -- measured here as an empty "
+            "frontend diff, and the run aborts otherwise, so a stamp can never be inherited by intent.",
+        },
         "candidate_blob_sha1_note": "sha1 of the tree bytes as committed; the authoritative line is untouched (single-writer)",
         "clean_worktree": {"porcelain_lines_frontend_review": dirty},
         "R_SCHEMA_01_class": {
@@ -448,17 +499,17 @@ def main() -> int:
     with open(OUT, "wb") as fh:
         fh.write(blob)
     print(f"wrote {OUT} bytes={len(blob)} sha1={hashlib.sha1(blob).hexdigest()[:16]}")
-    print(f"candidate_tip={head}")
+    print(f"triples carry exact_sha={exact_stamp}  scripts sat on={head}")
     print(f"triples={len(triples)}  problems={len(problems)}")
     if collection:
-        proof = collection["re_parent_proof"]
+        proof = collection["base_proof"]
         print(
             f"collection: playwright {collection['playwright_total_line']!r} nodes={collection['playwright_node_count']}"
             f" | backend collected={collection['backend_collected']} ({collection['backend_collected_line']!r})"
         )
         print(
-            f"re-parent: descendant={proof['candidate_is_descendant']} ahead={proof['commits_ahead']}"
-            f" frontend_moved={len(proof['frontend_files_moved_by_reparent'])}"
+            f"base: descendant-of-landed={proof['candidate_is_descendant']} ahead={proof['commits_ahead']}"
+            f" frontend_changed_since_base={len(proof['frontend_files_differring_from_base'])}"
         )
 
     for t in triples:
