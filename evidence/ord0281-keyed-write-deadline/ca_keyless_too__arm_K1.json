@@ -1,0 +1,20 @@
+{
+ "file": "e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+ "runId": "0281p51651",
+ "bound_ms_under_test": 2000,
+ "baseline_ms_declared": 4000,
+ "pristine_tree": false,
+ "arm": "K1",
+ "status": "failed",
+ "expectation": "passed",
+ "reading": {
+  "arm": "K1",
+  "elapsed_ms": 2007,
+  "on_screen": "WriteDeadlineMissed/WriteDeadlineMissed",
+  "server_said": "not-applicable",
+  "keys_seen": [],
+  "had_network_blame": false,
+  "verdict": "NOT_MET",
+  "note": "module-level in real browser: the product has no keyless surface that renders this sentence"
+ }
+}
