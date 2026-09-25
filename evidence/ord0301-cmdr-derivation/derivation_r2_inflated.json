@@ -1,0 +1,1227 @@
+{
+ "schema": "CNX_CMDR_DERIVATION_V2",
+ "order": "ORD-0301",
+ "revision": "r2",
+ "supersedes": "r1 (T_B was a false absence: WHO_KEYS omitted answer_attributed_to)",
+ "artifact": {
+  "path": "evidence/ord0301-screen-speaks-range-hjp3/RECEIPT_O0301-1500.json",
+  "contents_sha": "9035e162b69f171de7a5d57ec30fdeddd58f0e7e",
+  "recomputed_git_sha1": "9035e162b69f171de7a5d57ec30fdeddd58f0e7e",
+  "recomputed_equals_cited": true,
+  "bytes": 97514,
+  "md_path": "evidence/ord0301-screen-speaks-range-hjp3/RECEIPT_O0301-1500.md",
+  "md_contents_sha": "9898cfa6455a22634b0b3688906f3bb9358ea412",
+  "md_bytes": 17313
+ },
+ "cells_total": 8,
+ "rows_total": 52,
+ "field_name_union_read_across_all_rows": [
+  "_who_missing",
+  "answer_attributed_to",
+  "at",
+  "body_sha256_12",
+  "bytes",
+  "bytes_written",
+  "cap_ms",
+  "client_error",
+  "content_type",
+  "data_result_status",
+  "declared",
+  "declared_content_length",
+  "delay_ms",
+  "details_elements_in_dom",
+  "elapsed_ms",
+  "envelope_code",
+  "error_message",
+  "first_rejection_message",
+  "http_status",
+  "leg",
+  "method",
+  "mode",
+  "origin_own_record",
+  "painted_first_line",
+  "path",
+  "policy_stamp",
+  "reason_label",
+  "reason_value",
+  "request_bytes",
+  "response_bytes",
+  "row",
+  "run_id",
+  "says_cannot_reach_server",
+  "secondary_surface",
+  "short_body",
+  "sibling_probe",
+  "stamp",
+  "status",
+  "syntax_error_count",
+  "verdict",
+  "verdict_reason"
+ ],
+ "T_A_cells_with_no_browser_observation": [
+  "C3_the_discriminator_is_the_body_not_the_status_code_and_not_the_clock",
+  "C7_the_named_server_deadline_answer_is_still_not_reachable_on_this_path"
+ ],
+ "T_A_rows_missing_a_side": {
+  "C4_the_relabel_happens_because_the_client_reads_a_property_off_a_null_body": [
+   {
+    "row": "R1_①_contentless_500_from_the_product",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "R2_①_contentless_500_fast",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "R3_①_contentless_500_after_35s",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "R9_③_503_plain_gateway",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "R11_④_reset_no_response",
+    "missing": [
+     "screen"
+    ]
+   }
+  ],
+  "C8_headers_answered_and_the_body_cut_short_leaves_the_traveller_with_no_card_at_all": [
+   {
+    "row": "#0",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#1",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#2",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#3",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#4",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#5",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#6",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#7",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#8",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#9",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#10",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#11",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#12",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#13",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#14",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#15",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#16",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#0",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#1",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#2",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#3",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#4",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#5",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#6",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#7",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#8",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#9",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#10",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#11",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#12",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#13",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#14",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#15",
+    "missing": [
+     "screen"
+    ]
+   },
+   {
+    "row": "#16",
+    "missing": [
+     "screen"
+    ]
+   }
+  ]
+ },
+ "T_B_rows_not_naming_who_answered": {
+  "C4_the_relabel_happens_because_the_client_reads_a_property_off_a_null_body": [
+   "R1_①_contentless_500_from_the_product",
+   "R2_①_contentless_500_fast",
+   "R3_①_contentless_500_after_35s",
+   "R9_③_503_plain_gateway",
+   "R11_④_reset_no_response"
+  ],
+  "C8_headers_answered_and_the_body_cut_short_leaves_the_traveller_with_no_card_at_all": [
+   "#0",
+   "#1",
+   "#2",
+   "#3",
+   "#4",
+   "#5",
+   "#6",
+   "#7",
+   "#8",
+   "#9",
+   "#10",
+   "#11",
+   "#12",
+   "#13",
+   "#14",
+   "#15",
+   "#16",
+   "#0",
+   "#1",
+   "#2",
+   "#3",
+   "#4",
+   "#5",
+   "#6",
+   "#7",
+   "#8",
+   "#9",
+   "#10",
+   "#11",
+   "#12",
+   "#13",
+   "#14",
+   "#15",
+   "#16"
+  ]
+ },
+ "T_C_duration_pairs_same_declared_answer": {
+  "pairs_found": 0,
+  "detail": {}
+ },
+ "per_cell": [
+  {
+   "cell_index": 0,
+   "id": "C1_contentless_500_is_still_relabelled_as_no_connection_on_this_tip",
+   "verdict": "SERVER_ANSWERED_BUT_SCREEN_SAYS_UNREACHABLE_STILL_ON_LANDED_TIP",
+   "observation_lists": [
+    {
+     "path": "rows",
+     "rows": 4,
+     "server_names_read": [
+      "answer_attributed_to",
+      "bytes",
+      "client_error",
+      "content_type",
+      "declared",
+      "envelope_code",
+      "http_status",
+      "origin_own_record",
+      "sibling_probe"
+     ],
+     "screen_names_read": [
+      "data_result_status",
+      "details_elements_in_dom",
+      "painted_first_line",
+      "reason_label",
+      "reason_value",
+      "says_cannot_reach_server",
+      "secondary_surface",
+      "verdict"
+     ],
+     "who_names_read": [
+      "answer_attributed_to",
+      "declared"
+     ],
+     "duration_names_read": [
+      "cap_ms",
+      "elapsed_ms"
+     ],
+     "rows_missing_a_side": [],
+     "rows_not_naming_who": []
+    }
+   ],
+   "rows_total": 4,
+   "has_browser_observation": true,
+   "T_A_rows_missing_a_side": [],
+   "T_B_rows_not_naming_who": []
+  },
+  {
+   "cell_index": 1,
+   "id": "C2_an_answer_that_carries_a_json_object_is_attributed_to_the_server_at_any_5xx",
+   "verdict": "ANSWER_WITH_A_JSON_OBJECT_IS_QUOTED_AND_ATTRIBUTED_TO_THE_SERVER",
+   "observation_lists": [
+    {
+     "path": "rows",
+     "rows": 5,
+     "server_names_read": [
+      "answer_attributed_to",
+      "bytes",
+      "client_error",
+      "content_type",
+      "declared",
+      "envelope_code",
+      "http_status",
+      "origin_own_record",
+      "sibling_probe"
+     ],
+     "screen_names_read": [
+      "data_result_status",
+      "details_elements_in_dom",
+      "painted_first_line",
+      "reason_label",
+      "reason_value",
+      "says_cannot_reach_server",
+      "secondary_surface",
+      "verdict"
+     ],
+     "who_names_read": [
+      "answer_attributed_to",
+      "declared"
+     ],
+     "duration_names_read": [
+      "cap_ms",
+      "elapsed_ms"
+     ],
+     "rows_missing_a_side": [],
+     "rows_not_naming_who": []
+    }
+   ],
+   "rows_total": 5,
+   "has_browser_observation": true,
+   "T_A_rows_missing_a_side": [],
+   "T_B_rows_not_naming_who": []
+  },
+  {
+   "cell_index": 2,
+   "id": "C3_the_discriminator_is_the_body_not_the_status_code_and_not_the_clock",
+   "verdict": "DISCRIMINATOR_IS_THE_BODY_SHAPE_NOT_THE_STATUS_NOT_THE_DURATION",
+   "observation_lists": [],
+   "rows_total": 0,
+   "has_browser_observation": false,
+   "T_A_rows_missing_a_side": [],
+   "T_B_rows_not_naming_who": []
+  },
+  {
+   "cell_index": 3,
+   "id": "C4_the_relabel_happens_because_the_client_reads_a_property_off_a_null_body",
+   "verdict": "CLIENT_HELPER_THROWS_ON_A_NULL_BODY_AND_THE_CATCH_RELABELS_IT_AS_NETWORK",
+   "observation_lists": [
+    {
+     "path": "rejections_seen_in_the_browser",
+     "rows": 5,
+     "server_names_read": [
+      "content_type"
+     ],
+     "screen_names_read": [],
+     "who_names_read": [],
+     "duration_names_read": [],
+     "rows_missing_a_side": [
+      {
+       "row": "R1_①_contentless_500_from_the_product",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "R2_①_contentless_500_fast",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "R3_①_contentless_500_after_35s",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "R9_③_503_plain_gateway",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "R11_④_reset_no_response",
+       "missing": [
+        "screen"
+       ]
+      }
+     ],
+     "rows_not_naming_who": [
+      "R1_①_contentless_500_from_the_product",
+      "R2_①_contentless_500_fast",
+      "R3_①_contentless_500_after_35s",
+      "R9_③_503_plain_gateway",
+      "R11_④_reset_no_response"
+     ]
+    }
+   ],
+   "rows_total": 5,
+   "has_browser_observation": true,
+   "T_A_rows_missing_a_side": [
+    {
+     "row": "R1_①_contentless_500_from_the_product",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "R2_①_contentless_500_fast",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "R3_①_contentless_500_after_35s",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "R9_③_503_plain_gateway",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "R11_④_reset_no_response",
+     "missing": [
+      "screen"
+     ]
+    }
+   ],
+   "T_B_rows_not_naming_who": [
+    "R1_①_contentless_500_from_the_product",
+    "R2_①_contentless_500_fast",
+    "R3_①_contentless_500_after_35s",
+    "R9_③_503_plain_gateway",
+    "R11_④_reset_no_response"
+   ]
+  },
+  {
+   "cell_index": 4,
+   "id": "C5_the_two_connection_class_outcomes_are_not_the_same_disease",
+   "verdict": "UPSTREAM_ABSENT_VS_RESET_SPLIT_ON_WHO_ANSWERED",
+   "observation_lists": [
+    {
+     "path": "rows",
+     "rows": 2,
+     "server_names_read": [
+      "answer_attributed_to",
+      "bytes",
+      "client_error",
+      "content_type",
+      "declared",
+      "envelope_code",
+      "http_status",
+      "origin_own_record",
+      "sibling_probe"
+     ],
+     "screen_names_read": [
+      "data_result_status",
+      "details_elements_in_dom",
+      "painted_first_line",
+      "reason_label",
+      "reason_value",
+      "says_cannot_reach_server",
+      "secondary_surface",
+      "verdict"
+     ],
+     "who_names_read": [
+      "answer_attributed_to",
+      "declared"
+     ],
+     "duration_names_read": [
+      "cap_ms",
+      "elapsed_ms"
+     ],
+     "rows_missing_a_side": [],
+     "rows_not_naming_who": []
+    }
+   ],
+   "rows_total": 2,
+   "has_browser_observation": true,
+   "T_A_rows_missing_a_side": [],
+   "T_B_rows_not_naming_who": []
+  },
+  {
+   "cell_index": 5,
+   "id": "C6_a_silent_leg_still_has_no_client_answer_on_the_write_side_and_a_named_one_on_the_read_side",
+   "verdict": "WRITE_LEG_STILL_UNBOUNDED_READ_LEG_NAMED_AT_THE_12_SECOND_CONSTANT",
+   "observation_lists": [
+    {
+     "path": "rows",
+     "rows": 2,
+     "server_names_read": [
+      "answer_attributed_to",
+      "bytes",
+      "client_error",
+      "content_type",
+      "declared",
+      "envelope_code",
+      "http_status",
+      "origin_own_record",
+      "sibling_probe"
+     ],
+     "screen_names_read": [
+      "data_result_status",
+      "details_elements_in_dom",
+      "painted_first_line",
+      "reason_label",
+      "reason_value",
+      "says_cannot_reach_server",
+      "secondary_surface",
+      "verdict"
+     ],
+     "who_names_read": [
+      "answer_attributed_to",
+      "declared"
+     ],
+     "duration_names_read": [
+      "cap_ms",
+      "elapsed_ms"
+     ],
+     "rows_missing_a_side": [],
+     "rows_not_naming_who": []
+    }
+   ],
+   "rows_total": 2,
+   "has_browser_observation": true,
+   "T_A_rows_missing_a_side": [],
+   "T_B_rows_not_naming_who": []
+  },
+  {
+   "cell_index": 6,
+   "id": "C7_the_named_server_deadline_answer_is_still_not_reachable_on_this_path",
+   "verdict": "NAMED_503_ONLY_REACHABLE_BY_A_CONFIG_THE_SHIPPED_DOOR_REFUSES",
+   "observation_lists": [],
+   "rows_total": 0,
+   "has_browser_observation": false,
+   "T_A_rows_missing_a_side": [],
+   "T_B_rows_not_naming_who": []
+  },
+  {
+   "cell_index": 7,
+   "id": "C8_headers_answered_and_the_body_cut_short_leaves_the_traveller_with_no_card_at_all",
+   "verdict": "TRUNCATED_BODY_LEAVES_NO_OUTCOME_CARD_WITHIN_THE_CAP",
+   "observation_lists": [
+    {
+     "path": "row.origin_own_record",
+     "rows": 17,
+     "server_names_read": [
+      "bytes",
+      "content_type",
+      "status"
+     ],
+     "screen_names_read": [],
+     "who_names_read": [],
+     "duration_names_read": [
+      "delay_ms"
+     ],
+     "rows_missing_a_side": [
+      {
+       "row": "#0",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#1",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#2",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#3",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#4",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#5",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#6",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#7",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#8",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#9",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#10",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#11",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#12",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#13",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#14",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#15",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#16",
+       "missing": [
+        "screen"
+       ]
+      }
+     ],
+     "rows_not_naming_who": [
+      "#0",
+      "#1",
+      "#2",
+      "#3",
+      "#4",
+      "#5",
+      "#6",
+      "#7",
+      "#8",
+      "#9",
+      "#10",
+      "#11",
+      "#12",
+      "#13",
+      "#14",
+      "#15",
+      "#16"
+     ]
+    },
+    {
+     "path": "origin_own_record",
+     "rows": 17,
+     "server_names_read": [
+      "bytes",
+      "content_type",
+      "status"
+     ],
+     "screen_names_read": [],
+     "who_names_read": [],
+     "duration_names_read": [
+      "delay_ms"
+     ],
+     "rows_missing_a_side": [
+      {
+       "row": "#0",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#1",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#2",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#3",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#4",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#5",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#6",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#7",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#8",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#9",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#10",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#11",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#12",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#13",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#14",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#15",
+       "missing": [
+        "screen"
+       ]
+      },
+      {
+       "row": "#16",
+       "missing": [
+        "screen"
+       ]
+      }
+     ],
+     "rows_not_naming_who": [
+      "#0",
+      "#1",
+      "#2",
+      "#3",
+      "#4",
+      "#5",
+      "#6",
+      "#7",
+      "#8",
+      "#9",
+      "#10",
+      "#11",
+      "#12",
+      "#13",
+      "#14",
+      "#15",
+      "#16"
+     ]
+    }
+   ],
+   "rows_total": 34,
+   "has_browser_observation": true,
+   "T_A_rows_missing_a_side": [
+    {
+     "row": "#0",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#1",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#2",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#3",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#4",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#5",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#6",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#7",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#8",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#9",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#10",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#11",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#12",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#13",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#14",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#15",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#16",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#0",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#1",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#2",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#3",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#4",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#5",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#6",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#7",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#8",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#9",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#10",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#11",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#12",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#13",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#14",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#15",
+     "missing": [
+      "screen"
+     ]
+    },
+    {
+     "row": "#16",
+     "missing": [
+      "screen"
+     ]
+    }
+   ],
+   "T_B_rows_not_naming_who": [
+    "#0",
+    "#1",
+    "#2",
+    "#3",
+    "#4",
+    "#5",
+    "#6",
+    "#7",
+    "#8",
+    "#9",
+    "#10",
+    "#11",
+    "#12",
+    "#13",
+    "#14",
+    "#15",
+    "#16",
+    "#0",
+    "#1",
+    "#2",
+    "#3",
+    "#4",
+    "#5",
+    "#6",
+    "#7",
+    "#8",
+    "#9",
+    "#10",
+    "#11",
+    "#12",
+    "#13",
+    "#14",
+    "#15",
+    "#16"
+   ]
+  }
+ ],
+ "controls": {
+  "positive_control_caught": true,
+  "positive_control_detail": [
+   {
+    "row": "#0",
+    "missing": [
+     "screen"
+    ]
+   }
+  ],
+  "negative_control_who_name_present_in_real_rows": true
+ },
+ "rulers": {
+  "q38_json": {
+   "exit_code": 0,
+   "verdict_line": "cells 8 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []",
+   "claims_or_cells_line": "cells 8 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []",
+   "top_finding_kinds": []
+  },
+  "q43_json": {
+   "exit_code": 3,
+   "verdict_line": "claims checked 636 | overall Q43_GATE_RED | findings 622 ['BARE_NUMBER_WITHOUT_COORDINATE', 'CONSTANT_VALUE_CLAIM_WITHOUT_COORDINATE']",
+   "claims_or_cells_line": "claims checked 636 | overall Q43_GATE_RED | findings 622 ['BARE_NUMBER_WITHOUT_COORDINATE', 'CONSTANT_VALUE_CLAIM_WITHOUT_COORDINATE']",
+   "top_finding_kinds": [
+    "BARE_NUMBER_WITHOUT_COORDINATE",
+    "CONSTANT_VALUE_CLAIM_WITHOUT_COORDINATE"
+   ]
+  },
+  "q43_md": {
+   "exit_code": 3,
+   "verdict_line": "claims checked 179 | overall Q43_GATE_RED | findings 133 ['BARE_NUMBER_WITHOUT_COORDINATE']",
+   "claims_or_cells_line": "claims checked 179 | overall Q43_GATE_RED | findings 133 ['BARE_NUMBER_WITHOUT_COORDINATE']",
+   "top_finding_kinds": [
+    "BARE_NUMBER_WITHOUT_COORDINATE"
+   ]
+  }
+ },
+ "decisions": {
+  "artifact_rehashes_to_cited_blob": true,
+  "T_A_every_observation_row_judges_both_sides": false,
+  "T_B_every_observation_row_names_who_answered": false,
+  "T_C_duration_claim_is_a_measured_pair": false,
+  "controls_pass": true
+ },
+ "scope": "What the table's own rows prove. It does not sign derived_result (red team's job) and it does not decide ORD-0302's wording - it says which rows a wording rule may quote and which cells are code-only / in-process and therefore cannot carry a traveller-facing claim."
+}
