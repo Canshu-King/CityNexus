@@ -1,0 +1,2 @@
+version Q43_r4 | input o297r_ledger_block_for_q43.txt 14148 B
+claims checked 58 | exempt {"HTTP_STATUS": 1} | overall Q43_GATE_GREEN | findings 0 []
