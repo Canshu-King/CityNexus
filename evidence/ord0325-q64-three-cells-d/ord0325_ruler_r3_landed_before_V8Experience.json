@@ -1,0 +1,56 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1_R2",
+ "revision_of": "ui_exposure_field_check_r1.py = 0ba79e00738984ee06651219530e5a9d7fa897e3 (bytes untouched)",
+ "revision_reason": "lane E d2305848 ORD-0319 caught a blind spot; commander reproduced it first-hand: r1 reports 0 hits on the tip while PlanWithAiSheet.tsx:1016 renders result.failureReason.text, fed by serverReasonSentence (:159-165) reading body.detail / error.message at :576/:637/:711",
+ "attribution": "COMMANDER_RULER_BLIND_SPOT",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T05:17:57+0800",
+ "standing_rule": "Q64=1 (arbiter): data reaching UI / screenshot / evidence artifacts must pass source classification -> allowed fields -> render. mask is a helper, never the first gate.",
+ "allowed_fields": [
+  "http_status",
+  "content_type",
+  "body_bytes",
+  "response_received",
+  "elapsed_ms",
+  "request_id"
+ ],
+ "forbidden": [
+  "raw body",
+  "raw detail",
+  "raw exception",
+  "upstream sentence reaching DOM via a helper"
+ ],
+ "rules_fired": [
+  "RAW_BODY_TO_DOM",
+  "UPSTREAM_READ_DIRECT"
+ ],
+ "targets_scanned": [
+  "D:/moodle/_qoder_d_lane_20260923/_scratch_0325/at_landed_baseline/V8Experience.tsx"
+ ],
+ "hits": [
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "file": "D:/moodle/_qoder_d_lane_20260923/_scratch_0325/at_landed_baseline/V8Experience.tsx",
+   "line": 320,
+   "snippet": "* Slicing the raw ISO string (``start_at.slice(11, 16)``) shows UTC wall time"
+  },
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 833,
+   "snippet": "? { message: error.message, name: error.name }",
+   "file": "D:/moodle/_qoder_d_lane_20260923/_scratch_0325/at_landed_baseline/V8Experience.tsx"
+  },
+  {
+   "rule": "UPSTREAM_READ_DIRECT",
+   "line": 1028,
+   "snippet": "} else {",
+   "file": "D:/moodle/_qoder_d_lane_20260923/_scratch_0325/at_landed_baseline/V8Experience.tsx"
+  }
+ ],
+ "verdict": "EXPOSURE_SHAPE_FOUND",
+ "interpretation_limit": "a hit names a shape to justify, not a defect verdict; NO_EXPOSURE_SHAPE_FOUND from r1 is additionally worthless on its own, because r1 was proven blind at this exact file - only r2's clean verdict is a clean verdict.",
+ "selftest_command": "python ui_exposure_field_check_r2.py --selftest",
+ "claim_kind": "pattern_determined",
+ "claimed_result": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 3 hit(s) ['RAW_BODY_TO_DOM@V8Experience.tsx:320', 'UPSTREAM_READ_DIRECT@V8Experience.tsx:1028', 'UPSTREAM_READ_DIRECT@V8Experience.tsx:833']",
+ "derived_result": null
+}
