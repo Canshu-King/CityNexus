@@ -1,0 +1,14 @@
+{
+ "version": "Q43_r4",
+ "input": "_scratch_0304/post-0304.md",
+ "bytes": 5234,
+ "lines": 40,
+ "claims_checked": 20,
+ "exempt_classes": {},
+ "verdict": "Q43_GATE_GREEN",
+ "exit_code": 0,
+ "findings": [],
+ "finding_kinds": [],
+ "finding_total": 0,
+ "scope": "Numeric/constant/relay claims in the text. A green verdict here means every quantity carries a durable coordinate - it does not mean the measurements are correct, and it does not sign derived_result."
+}
