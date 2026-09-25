@@ -1,0 +1,251 @@
+{
+ "order": "ORD-0297r",
+ "stamped": "2026-09-25T16:39:08+0800",
+ "receipt_file": "o297r_derived_r1.json",
+ "why": "three batches were run on this base. Only the last one is cited; the others are moved out of the deriver's glob and published as sealed notes, so the receipt cannot be read as a selection of rounds that happened to look good.",
+ "batches": [
+  {
+   "batch": "1 (15:18-15:25)",
+   "instrument": "before the tap decision was recorded",
+   "disposition": "superseded: a found-but-not-tapped step could not be told apart from a covered or disabled one, so the A arm's 0-of-3 was uninterpretable"
+  },
+  {
+   "batch": "2 (15:40-15:48)",
+   "instrument": "tap decision recorded, blocker identity not",
+   "disposition": "superseded: the cell would have had to say 'covered' without naming by what"
+  },
+  {
+   "batch": "3 (15:49-15:56)",
+   "instrument": "blocker identity recorded",
+   "disposition": "superseded: this is the batch that EXPOSED the confound -- the nav was covered by the plan-AI sheet's own submit button, a state my walk left open, so the offline-movement count described my leftover UI and not the generation. The instrument now normalises and records that precondition."
+  },
+  {
+   "batch": "4 (16:00-…)",
+   "instrument": "precondition normalised + recorded, instrument fingerprinted",
+   "disposition": "JUDGED -- the published cells are derived from these rounds only"
+  }
+ ],
+ "rounds": [
+  {
+   "run_id": "o297r-a_control_update_lands-152311",
+   "arm": "a_control_update_lands",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "sealed: batch1_no_tap_decision_recorded"
+   ],
+   "instrument_git_blob_sha1": [
+    null
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": false
+  },
+  {
+   "run_id": "o297r-a_control_update_lands-154611",
+   "arm": "a_control_update_lands",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "sealed: batch2_instrument_no_blocker_identity"
+   ],
+   "instrument_git_blob_sha1": [
+    null
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": false
+  },
+  {
+   "run_id": "o297r-a_control_update_lands-155454",
+   "arm": "a_control_update_lands",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "judged (lane root)"
+   ],
+   "instrument_git_blob_sha1": [
+    "4a3e4ec5722a21cb1246a01c91d44ef589ac9aca"
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": true
+  },
+  {
+   "run_id": "o297r-a_control_update_lands-160653",
+   "arm": "a_control_update_lands",
+   "disposition": "JUDGED_IN_PUBLISHED_RECEIPT",
+   "copies_found": 1,
+   "where": [
+    "judged (lane root)"
+   ],
+   "instrument_git_blob_sha1": [
+    "bafd7fd335568fd1ec34b86dd42f17a6f2ace643"
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": true
+  },
+  {
+   "run_id": "o297r-a_never_reconnects-152057",
+   "arm": "a_never_reconnects",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "sealed: batch1_no_tap_decision_recorded"
+   ],
+   "instrument_git_blob_sha1": [
+    null
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": false
+  },
+  {
+   "run_id": "o297r-a_never_reconnects-154350",
+   "arm": "a_never_reconnects",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "sealed: batch2_instrument_no_blocker_identity"
+   ],
+   "instrument_git_blob_sha1": [
+    null
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": false
+  },
+  {
+   "run_id": "o297r-a_never_reconnects-155239",
+   "arm": "a_never_reconnects",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "sealed: batch3_sheet_left_over_nav_by_my_own_walk"
+   ],
+   "instrument_git_blob_sha1": [
+    "4a3e4ec5722a21cb1246a01c91d44ef589ac9aca"
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": false
+  },
+  {
+   "run_id": "o297r-a_never_reconnects-160433",
+   "arm": "a_never_reconnects",
+   "disposition": "JUDGED_IN_PUBLISHED_RECEIPT",
+   "copies_found": 1,
+   "where": [
+    "judged (lane root)"
+   ],
+   "instrument_git_blob_sha1": [
+    "bafd7fd335568fd1ec34b86dd42f17a6f2ace643"
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": true
+  },
+  {
+   "run_id": "o297r-b3_control_partial-151943",
+   "arm": "b3_control_partial",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "sealed: batch1_no_tap_decision_recorded"
+   ],
+   "instrument_git_blob_sha1": [
+    null
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": false
+  },
+  {
+   "run_id": "o297r-b3_control_partial-154216",
+   "arm": "b3_control_partial",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "sealed: batch2_instrument_no_blocker_identity"
+   ],
+   "instrument_git_blob_sha1": [
+    null
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": false
+  },
+  {
+   "run_id": "o297r-b3_control_partial-155122",
+   "arm": "b3_control_partial",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "sealed: batch3_sheet_left_over_nav_by_my_own_walk"
+   ],
+   "instrument_git_blob_sha1": [
+    "4a3e4ec5722a21cb1246a01c91d44ef589ac9aca"
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": false
+  },
+  {
+   "run_id": "o297r-b3_control_partial-160314",
+   "arm": "b3_control_partial",
+   "disposition": "JUDGED_IN_PUBLISHED_RECEIPT",
+   "copies_found": 1,
+   "where": [
+    "judged (lane root)"
+   ],
+   "instrument_git_blob_sha1": [
+    "bafd7fd335568fd1ec34b86dd42f17a6f2ace643"
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": true
+  },
+  {
+   "run_id": "o297r-b3_primary-151812",
+   "arm": "b3_primary",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "sealed: batch1_no_tap_decision_recorded"
+   ],
+   "instrument_git_blob_sha1": [
+    null
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": false
+  },
+  {
+   "run_id": "o297r-b3_primary-154040",
+   "arm": "b3_primary",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "sealed: batch2_instrument_no_blocker_identity"
+   ],
+   "instrument_git_blob_sha1": [
+    null
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": false
+  },
+  {
+   "run_id": "o297r-b3_primary-154949",
+   "arm": "b3_primary",
+   "disposition": "SEALED_SUPERSEDED_NOT_CITED",
+   "copies_found": 1,
+   "where": [
+    "sealed: batch3_sheet_left_over_nav_by_my_own_walk"
+   ],
+   "instrument_git_blob_sha1": [
+    "4a3e4ec5722a21cb1246a01c91d44ef589ac9aca"
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": false
+  },
+  {
+   "run_id": "o297r-b3_primary-160049",
+   "arm": "b3_primary",
+   "disposition": "JUDGED_IN_PUBLISHED_RECEIPT",
+   "copies_found": 1,
+   "where": [
+    "judged (lane root)"
+   ],
+   "instrument_git_blob_sha1": [
+    "bafd7fd335568fd1ec34b86dd42f17a6f2ace643"
+   ],
+   "also_seen_in_all_run_ids_for_this_arm": true
+  }
+ ],
+ "duplicate_run_ids": [],
+ "unaccounted": [],
+ "sealed_folders": [
+  "batch1_no_tap_decision_recorded",
+  "batch2_instrument_no_blocker_identity",
+  "batch3_sheet_left_over_nav_by_my_own_walk"
+ ],
+ "judged_run_ids": [
+  "o297r-a_control_update_lands-160653",
+  "o297r-a_never_reconnects-160433",
+  "o297r-b3_control_partial-160314",
+  "o297r-b3_primary-160049"
+ ]
+}
