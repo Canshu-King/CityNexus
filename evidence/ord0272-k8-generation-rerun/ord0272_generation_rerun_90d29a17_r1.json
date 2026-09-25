@@ -1,0 +1,541 @@
+{
+ "what": "ORD-0272 的门与 K8 那臂，在包工头写死的基座上重跑一遍（新一代读数）",
+ "lane": "F 8ccd71d8",
+ "ran_at": "2026-09-25T14:47:08+08:00",
+ "claim_kind": "runtime_measured",
+ "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "measured_on_read_from": "git archive <该尖> 干净导出后本机跑；main.py blob 先对过 871aec006a3f6482f7a2700a8baeff8c25f7690f 才动手",
+ "tree": "D:/moodle/_qoder_f_run/snap_0272_line（git -c core.autocrlf=false archive 90d29a172e186aab6e6cb138ab4583ccf93bfa68 backend data contracts tools | tar -x）",
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "backend_cwd": "D:\\moodle\\_qoder_f_run\\snap_0272_line\\backend",
+ "scope_actually_run": [
+  "tests/test_qoder_ord0272_continuation.py",
+  "tests/test_qoder_ord0287_k8_carrier.py"
+ ],
+ "collect_only": {
+  "rc": 0,
+  "collected": 10
+ },
+ "cells_on_this_base": {
+  "count": 10,
+  "nodeids": [
+   "test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+   "test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+   "test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+   "test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+   "test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+   "test_G6_no_second_failure_vocabulary_is_introduced",
+   "test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+   "test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+   "test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+   "test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer"
+  ],
+  "note": "线上这一代 `test_qoder_ord0272_continuation.py` 是 8 格（G1–G8）；第九格 G9 只活在我车道候选树 _qoder_f_ord253_20260923 里（那里 9 个 def test_），它守的那条不变量在线上的载体是 0287 的 K1/K2 ⇒ 这代合计仍是 10 个节点。"
+ },
+ "control_rounds_product_untouched": [
+  {
+   "label": "ctl1",
+   "rc": 0,
+   "seconds": 2.98,
+   "scope_actually_run": [
+    "tests/test_qoder_ord0272_continuation.py",
+    "tests/test_qoder_ord0287_k8_carrier.py"
+   ],
+   "collected": 10,
+   "summary_line": "======================= 10 passed, 2 warnings in 2.47s ========================",
+   "red": [],
+   "database_url_declared": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0272_ctl1_980zmynx/gate.db",
+   "database_file_exists": true,
+   "row_counts": {
+    "idempotency_keys": 13,
+    "journey_missions": 10,
+    "plan_versions": 30
+   },
+   "stdout_tail": "======================= 10 passed, 2 warnings in 2.47s ========================"
+  },
+  {
+   "label": "ctl2",
+   "rc": 0,
+   "seconds": 3.09,
+   "scope_actually_run": [
+    "tests/test_qoder_ord0272_continuation.py",
+    "tests/test_qoder_ord0287_k8_carrier.py"
+   ],
+   "collected": 10,
+   "summary_line": "======================= 10 passed, 2 warnings in 2.48s ========================",
+   "red": [],
+   "database_url_declared": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0272_ctl2_46v4fzty/gate.db",
+   "database_file_exists": true,
+   "row_counts": {
+    "idempotency_keys": 13,
+    "journey_missions": 10,
+    "plan_versions": 30
+   },
+   "stdout_tail": "======================= 10 passed, 2 warnings in 2.48s ========================"
+  },
+  {
+   "label": "ctl3",
+   "rc": 0,
+   "seconds": 3.0,
+   "scope_actually_run": [
+    "tests/test_qoder_ord0272_continuation.py",
+    "tests/test_qoder_ord0287_k8_carrier.py"
+   ],
+   "collected": 10,
+   "summary_line": "======================= 10 passed, 2 warnings in 2.48s ========================",
+   "red": [],
+   "database_url_declared": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0272_ctl3_ukg8ccp3/gate.db",
+   "database_file_exists": true,
+   "row_counts": {
+    "idempotency_keys": 13,
+    "journey_missions": 10,
+    "plan_versions": 30
+   },
+   "stdout_tail": "======================= 10 passed, 2 warnings in 2.48s ========================"
+  }
+ ],
+ "per_cell_readings": [
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+   "file": "tests/test_qoder_ord0272_continuation.py",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "rounds": [
+    {
+     "round": "ctl1",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl2",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl3",
+     "outcome": "PASSED"
+    }
+   ],
+   "green_every_round": true,
+   "never_assumed_green": true
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+   "file": "tests/test_qoder_ord0272_continuation.py",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "rounds": [
+    {
+     "round": "ctl1",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl2",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl3",
+     "outcome": "PASSED"
+    }
+   ],
+   "green_every_round": true,
+   "never_assumed_green": true
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+   "file": "tests/test_qoder_ord0272_continuation.py",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "rounds": [
+    {
+     "round": "ctl1",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl2",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl3",
+     "outcome": "PASSED"
+    }
+   ],
+   "green_every_round": true,
+   "never_assumed_green": true
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+   "file": "tests/test_qoder_ord0272_continuation.py",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "rounds": [
+    {
+     "round": "ctl1",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl2",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl3",
+     "outcome": "PASSED"
+    }
+   ],
+   "green_every_round": true,
+   "never_assumed_green": true
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+   "file": "tests/test_qoder_ord0272_continuation.py",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "rounds": [
+    {
+     "round": "ctl1",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl2",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl3",
+     "outcome": "PASSED"
+    }
+   ],
+   "green_every_round": true,
+   "never_assumed_green": true
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+   "file": "tests/test_qoder_ord0272_continuation.py",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "rounds": [
+    {
+     "round": "ctl1",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl2",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl3",
+     "outcome": "PASSED"
+    }
+   ],
+   "green_every_round": true,
+   "never_assumed_green": true
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+   "file": "tests/test_qoder_ord0272_continuation.py",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "rounds": [
+    {
+     "round": "ctl1",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl2",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl3",
+     "outcome": "PASSED"
+    }
+   ],
+   "green_every_round": true,
+   "never_assumed_green": true
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+   "file": "tests/test_qoder_ord0272_continuation.py",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "rounds": [
+    {
+     "round": "ctl1",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl2",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl3",
+     "outcome": "PASSED"
+    }
+   ],
+   "green_every_round": true,
+   "never_assumed_green": true
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+   "file": "tests/test_qoder_ord0287_k8_carrier.py",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "rounds": [
+    {
+     "round": "ctl1",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl2",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl3",
+     "outcome": "PASSED"
+    }
+   ],
+   "green_every_round": true,
+   "never_assumed_green": true
+  },
+  {
+   "nodeid": "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+   "file": "tests/test_qoder_ord0287_k8_carrier.py",
+   "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "rounds": [
+    {
+     "round": "ctl1",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl2",
+     "outcome": "PASSED"
+    },
+    {
+     "round": "ctl3",
+     "outcome": "PASSED"
+    }
+   ],
+   "green_every_round": true,
+   "never_assumed_green": true
+  }
+ ],
+ "K8": {
+  "arm": "K8_receipt_overwrite_guard_removed",
+  "file": "app/main.py",
+  "line_named": 4798,
+  "site_on_this_base": "内联在 `_execute_plan_generation_claimed` 里（我车道抽的那条缝没上线）",
+  "before": "                    .where(IdempotencyKey.key == key,\n                           IdempotencyKey.response_json.is_(None))\n",
+  "after": "                    .where(IdempotencyKey.key == key)\n",
+  "locate_hits": 1,
+  "before_blob_40": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+  "after_blob_40": "4192afed758de9060a69410d8b17cb8565109620",
+  "py_compile_ok": true,
+  "per_round": [
+   {
+    "label": "k8_1",
+    "rc": 1,
+    "seconds": 3.0,
+    "scope_actually_run": [
+     "tests/test_qoder_ord0272_continuation.py",
+     "tests/test_qoder_ord0287_k8_carrier.py"
+    ],
+    "collected": 10,
+    "summary_line": "=================== 1 failed, 9 passed, 2 warnings in 2.51s ===================",
+    "red": [
+     "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+    ],
+    "database_url_declared": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0272_k8_1_n1tm4kvk/gate.db",
+    "database_file_exists": true,
+    "row_counts": {
+     "idempotency_keys": 13,
+     "journey_missions": 10,
+     "plan_versions": 33
+    },
+    "stdout_tail": "=================== 1 failed, 9 passed, 2 warnings in 2.51s ==================="
+   },
+   {
+    "label": "k8_2",
+    "rc": 1,
+    "seconds": 2.99,
+    "scope_actually_run": [
+     "tests/test_qoder_ord0272_continuation.py",
+     "tests/test_qoder_ord0287_k8_carrier.py"
+    ],
+    "collected": 10,
+    "summary_line": "=================== 1 failed, 9 passed, 2 warnings in 2.39s ===================",
+    "red": [
+     "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+    ],
+    "database_url_declared": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0272_k8_2_4aihep6s/gate.db",
+    "database_file_exists": true,
+    "row_counts": {
+     "idempotency_keys": 13,
+     "journey_missions": 10,
+     "plan_versions": 33
+    },
+    "stdout_tail": "=================== 1 failed, 9 passed, 2 warnings in 2.39s ==================="
+   },
+   {
+    "label": "k8_3",
+    "rc": 1,
+    "seconds": 2.84,
+    "scope_actually_run": [
+     "tests/test_qoder_ord0272_continuation.py",
+     "tests/test_qoder_ord0287_k8_carrier.py"
+    ],
+    "collected": 10,
+    "summary_line": "=================== 1 failed, 9 passed, 2 warnings in 2.35s ===================",
+    "red": [
+     "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+    ],
+    "database_url_declared": "sqlite:///C:/Users/仓鼠王/AppData/Local/Temp/cnx_0272_k8_3_pg2t8lji/gate.db",
+    "database_file_exists": true,
+    "row_counts": {
+     "idempotency_keys": 13,
+     "journey_missions": 10,
+     "plan_versions": 33
+    },
+    "stdout_tail": "=================== 1 failed, 9 passed, 2 warnings in 2.35s ==================="
+   }
+  ],
+  "per_cell_when_guard_removed": [
+   {
+    "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+    "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "outcome_when_guard_removed": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ]
+   },
+   {
+    "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+    "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "outcome_when_guard_removed": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ]
+   },
+   {
+    "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+    "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "outcome_when_guard_removed": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ]
+   },
+   {
+    "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+    "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "outcome_when_guard_removed": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ]
+   },
+   {
+    "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+    "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "outcome_when_guard_removed": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ]
+   },
+   {
+    "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G6_no_second_failure_vocabulary_is_introduced",
+    "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "outcome_when_guard_removed": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ]
+   },
+   {
+    "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+    "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "outcome_when_guard_removed": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ]
+   },
+   {
+    "nodeid": "tests/test_qoder_ord0272_continuation.py::test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity",
+    "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "outcome_when_guard_removed": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ]
+   },
+   {
+    "nodeid": "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+    "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "outcome_when_guard_removed": [
+     "FAILED",
+     "FAILED",
+     "FAILED"
+    ]
+   },
+   {
+    "nodeid": "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+    "measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+    "outcome_when_guard_removed": [
+     "PASSED",
+     "PASSED",
+     "PASSED"
+    ]
+   }
+  ],
+  "expect_red_declared_before_running": [
+   "tests/test_qoder_ord0287_k8_carrier.py::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+  ],
+  "expect_green_declared_before_running": [
+   "tests/test_qoder_ord0287_k8_carrier.py::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+   "test_G1_one_mission_generates_once_and_a_plain_resend_replays_the_same_plans",
+   "test_G2_the_two_states_of_one_claim_answer_differently_and_neither_reruns_generation",
+   "test_G3_second_device_with_no_client_header_still_gets_the_same_answer",
+   "test_G4_two_identities_stay_two_doors_and_both_use_the_canonical_409",
+   "test_G5_requests_with_neither_mission_nor_header_keep_todays_shape",
+   "test_G6_no_second_failure_vocabulary_is_introduced",
+   "test_G7_the_feed_projection_names_the_mission_and_the_plans_it_produced",
+   "test_G8_a_mission_that_is_not_this_journeys_is_not_an_identity"
+  ],
+  "carriers_removed": [
+   "test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name"
+  ],
+  "k2_positive_control_stayed_green": true,
+  "only_expected_cell_reddened": true,
+  "unexpected_red": []
+ },
+ "restore": {
+  "main_byte_exact": true,
+  "main_blob_after": "871aec006a3f6482f7a2700a8baeff8c25f7690f"
+ },
+ "aggregates_derived_from_this_runs_scope": {
+  "green_node_rows": 30,
+  "red_node_rows": 0,
+  "files_in_scope": 2,
+  "per_file": {
+   "test_qoder_ord0272_continuation.py": {
+    "declared_in_scope": true,
+    "green_nodes": 24,
+    "red_nodes": 0
+   },
+   "test_qoder_ord0287_k8_carrier.py": {
+    "declared_in_scope": true,
+    "green_nodes": 6,
+    "red_nodes": 0
+   }
+  },
+  "rule": "MODULE_LIST_FROM_THE_RUN_V1：分母只从本次真正传进 pytest 的 scope 与它自己的节点行派生（scope_actually_run 已内嵌）"
+ },
+ "supersession": {
+  "old_generation_readings": [
+   "ord0272_mutation_receipt_v2 / 0272 九格 campaign（跑在车道树，G9 在内）",
+   "ord0272_cmdr_r4_recheck_v2.json、ord0296_neighbour_regression_r1.json 里 0272=8 passed 那一行"
+  ],
+  "status": "SUPERSEDED_BY_GENERATION",
+  "carried_forward": "不搬时长、不搬旧轮次数字（Q25）；本文件每一格都自带 measured_on=90d29a172e186aab6e6cb138ab4583ccf93bfa68"
+ },
+ "not_done": [
+  "未跑全量套件（本次 scope 只有那两枚文件）",
+  "未动权威线",
+  "未推任何 ref",
+  "未 demo/reset",
+  "未读写 _live/_preview",
+  "未打印凭据"
+ ],
+ "claimed_result": "RERUN-ON-90d29a17-DONE",
+ "derived_result": null
+}
