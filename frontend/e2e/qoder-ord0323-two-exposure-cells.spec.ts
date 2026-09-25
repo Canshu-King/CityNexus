@@ -98,7 +98,7 @@ async function journeyId(page: Page): Promise<string> {
 /* The arm key is the cell, not the test's prefix: eight legs share the `N4_` prefix and the two Q68 legs
  * share `N6_`, so keying on the first token would have collided two legs onto one evidence file. */
 const armOf = (title: string): string =>
-  /^N4_(T\d\d)_/.exec(title)?.[1] ?? /^N6_(Q68[ab])_/.exec(title)?.[1] ?? title.split("_")[0];
+  /^N4_(T\d\d)_/.exec(title)?.[1] ?? /^N6_(Q68[abcd])_/.exec(title)?.[1] ?? title.split("_")[0];
 
 test.afterEach(({}, info) => {
   const arm = armOf(info.title);
@@ -486,6 +486,13 @@ async function drive(page: Page, trigger: Leg["trigger"]): Promise<void> {
  * 技术详情 fold, under the attribution label.
  */
 const Q68_CODE = "ZZ_Q68_SERVER_CODE";
+/* CMDR 04:14 names `{"error":{"code":"BUDGET_INFEASIBLE"}}` as the shape a traveller must be able to see,
+   and `serverReasonCode` accepts three machine keys, so each key gets its own arm and its own code. */
+const Q68_CODE_KEYS: Array<[string, string]> = [
+  ["reason_code", Q68_CODE],
+  ["code", "BUDGET_INFEASIBLE"],
+  ["message_key", "ZZ_Q68_MESSAGE_KEY"],
+];
 const Q68_PROSE = "q68_forbidden_prose_行程过长无法在三日预算内排布";
 
 async function askTheSheet(page: Page, generateBody: string): Promise<void> {
@@ -563,8 +570,13 @@ test("N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号�
   await askTheSheet(page, jsonBody({error: {hint: "no machine code in this envelope"}, detail: Q68_PROSE}));
   const reasonEl = page.getByTestId("plan-ai-reason");
   const reasonText = clean(await reasonEl.textContent().catch(() => ""));
+  const reasonRaw = (await reasonEl.textContent().catch(() => "")) ?? "";
+  /* the page as one surface, with the sanctioned attributed copy taken back out of it */
+  const pageButFold = ((await domReading(page)).body || "").replace(reasonRaw, "");
   const cardAll = clean(await page.getByTestId("plan-ai-result").textContent());
   const cardWithoutReason = cardAll.replace(reasonText, "");
+  /* both copies the product is allowed to use for "the server gave no machine code" */
+  const noCodeAnyWording = /（没给编号）|[(]none given[)]|没有给出具体原因编号/.test(cardAll);
   const dom = await domReading(page);
   readings[arm] = {
     card_text: cardAll,
@@ -575,6 +587,19 @@ test("N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号�
     attributed_sentence_in_fold: reasonText.includes(Q68_PROSE),
     server_label_present: /服务器给出的原因|Reason the server gave/.test(cardAll),
     needle_in_dom: dom.body.includes(Q68_PROSE),
+    no_code_branch_on_screen: noCodeAnyWording,
+    no_code_copy_in_the_code_slot: /（没给编号）|[(]none given[)]/.test(cardAll),
+    no_code_copy_in_the_no_plan_state: /没有给出具体原因编号/.test(cardAll),
+    which_no_code_branch: /（没给编号）|[(]none given[)]/.test(cardAll)
+      ? "code_slot"
+      : /没有给出具体原因编号/.test(cardAll)
+        ? "no_plan_state"
+        : "neither",
+    uppercased_prose_anywhere_but_the_fold: pageButFold
+      .toUpperCase()
+      .includes(Q68_PROSE.toUpperCase().slice(0, 60)),
+    prose_anywhere_but_the_fold: pageButFold.includes(Q68_PROSE),
+    page_text_length: pageButFold.length,
   };
   /* the code slot's own text may not hold the sentence, in any case or truncation */
   expect(
@@ -590,7 +615,49 @@ test("N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号�
     node(arm, `the sentence vanished from 技术详情 too (${reasonText.slice(0, 160)}) -- Q68 says the code slot is not its place, not that it may be deleted`)).toBe(true);
   expect(/服务器给出的原因|Reason the server gave/.test(cardAll),
     node(arm, `the attribution label is gone, so whatever sentence shows is unattributed (${cardAll.slice(0, 220)})`)).toBe(true);
+  /* CMDR 04:14 B, first half: no machine code means the screen says it does not know. Deleting this
+     branch would also answer "no prose in the slot", so it is asserted as a positive, not assumed. */
+  expect(
+    noCodeAnyWording,
+    node(arm, `the screen names no absence of a machine code in either sanctioned wording (${{cardAll.slice(0, 240)}}) -- an invented code and a silent slot are both wrong`),
+  ).toBe(true);
+  /* CMDR 0323 B, second half: the old fallback rendered the sentence truncated and uppercased. That form
+     may not survive anywhere on the page except the attributed fold that holds the original. */
+  expect(
+    pageButFold.toUpperCase().includes(Q68_PROSE.toUpperCase().slice(0, 60)),
+    node(arm, `the reply's sentence is on the page outside 技术详情 in the screaming form (${pageButFold.slice(0, 240)})`),
+  ).toBe(false);
+  expect(
+    pageButFold.includes(Q68_PROSE),
+    node(arm, `the reply's sentence is on the page outside 技术详情 even in its own case (${pageButFold.slice(0, 240)})`),
+  ).toBe(false);
 });
+
+/* One arm per machine key: `serverReasonCode` reads them in a loop, but a loop is not evidence that each
+   spelling reaches the traveller, and Q68's other half is "a real code still shows". */
+for (const [key, code] of Q68_CODE_KEYS) {
+  if (key === "reason_code") continue; // already the Q68a arm, kept as it was measured
+  test(`N6_Q68${key === "code" ? "c" : "d"}_a_machine_code_in_${key}_reaches_the_code_slot — 编号那格：${key} 这一形给了真编号时，编号还在屏上`, async ({page}) => {
+    test.setTimeout(300_000);
+    const arm = key === "code" ? "Q68c" : "Q68d";
+    await askTheSheet(page, jsonBody({error: {[key]: code}, detail: Q68_PROSE}));
+    const card = clean(await page.getByTestId("plan-ai-result").textContent());
+    const reason = clean(await page.getByTestId("plan-ai-reason").textContent().catch(() => ""));
+    const dom = await domReading(page);
+    readings[arm] = {asked_key: key, asked_code: code, card_text: card,
+                     code_in_card: card.includes(code),
+                     prose_outside_the_fold: clean(card.replace(reason, "")),
+                     needle_in_dom: dom.body.includes(Q68_PROSE),
+                     sweep_sees_the_tested_card: dom.attrs.includes("|data-testid|plan-ai-result"),
+                     attribute_pairs_swept: dom.attr_pairs};
+    expect(card.includes(code),
+      node(arm, `the 原因编号 slot lost the code the server really sent in ${key} (${card.slice(0, 200)})`)).toBe(true);
+    expect(/服务器回的原因编号|服务器给的原因编号/.test(card),
+      node(arm, `the card no longer names this as a server-coded block for ${key} (${card.slice(0, 200)})`)).toBe(true);
+    expect(dom.attrs.includes("|data-testid|plan-ai-result"),
+      node(arm, `the attribute sweep found ${String(dom.attr_pairs)} pairs but not the tested card (${key})`)).toBe(true);
+  });
+}
 
 /* One test per leg: a shared test spends one timeout across eight chances and hides which leg stuck
  * (measured -- the loop version died at `running_leg = T09` with three legs done). Each leg gets its own
