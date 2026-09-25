@@ -1,0 +1,118 @@
+{
+  "delivered": {
+    "folder": ".",
+    "receipt": "o2b3_derived_delivered.json",
+    "why_this_round_is_what_it_is": {
+      "carries_probe_smoke": true,
+      "page_threw_on_my_helper": [],
+      "any_fatal": [
+        null,
+        null
+      ],
+      "retry_logic_present": true,
+      "primary_offline_bodyChars": 83,
+      "control_offline_bodyChars": 0,
+      "primary_mtime_arm_json": 1790298892.5718944,
+      "folder": ".",
+      "delivered": true
+    },
+    "cells": {
+      "B3_offline_after_convergence": "RED_B3_OFFLINE_USABILITY_BROKEN",
+      "B3_control_partial_deploy": "CONTROL_DISCRIMINATES_BY_offline_document_boots"
+    },
+    "instrument_ok": [
+      true,
+      true
+    ],
+    "nav_steps": [
+      0,
+      0
+    ],
+    "offline_bodyChars": [
+      83,
+      0
+    ],
+    "reload_bodyChars": [
+      87,
+      0
+    ]
+  },
+  "pre_smoke": {
+    "folder": "b3_round1",
+    "receipt": "o2b3_derived_pre_smoke.json",
+    "why_this_round_is_what_it_is": {
+      "carries_probe_smoke": false,
+      "page_threw_on_my_helper": [],
+      "any_fatal": [
+        null,
+        null
+      ],
+      "retry_logic_present": false,
+      "primary_offline_bodyChars": 83,
+      "control_offline_bodyChars": 0,
+      "primary_mtime_arm_json": 1790296907.9434052,
+      "folder": "b3_round1",
+      "delivered": false
+    },
+    "cells": {
+      "B3_offline_after_convergence": "ARM_INVALID_INSTRUMENT_FAILED",
+      "B3_control_partial_deploy": "ARM_INVALID_INSTRUMENT_FAILED"
+    },
+    "instrument_ok": [
+      false,
+      false
+    ],
+    "nav_steps": [
+      0,
+      0
+    ],
+    "offline_bodyChars": [
+      83,
+      0
+    ],
+    "reload_bodyChars": [
+      87,
+      0
+    ]
+  },
+  "broken_probe": {
+    "folder": "b3_round2_brokenprobe",
+    "receipt": "o2b3_derived_broken_probe.json",
+    "why_this_round_is_what_it_is": {
+      "carries_probe_smoke": false,
+      "page_threw_on_my_helper": [
+        "GEN_MARKER is not defined"
+      ],
+      "any_fatal": [
+        "page.evaluate: ReferenceError: GEN_MARKER is not defined",
+        "page.evaluate: ReferenceError: GEN_MARKER is not defined"
+      ],
+      "retry_logic_present": false,
+      "primary_offline_bodyChars": null,
+      "control_offline_bodyChars": null,
+      "primary_mtime_arm_json": 1790297310.2633305,
+      "folder": "b3_round2_brokenprobe",
+      "delivered": false
+    },
+    "cells": {
+      "B3_offline_after_convergence": "ARM_INVALID_INSTRUMENT_FAILED",
+      "B3_control_partial_deploy": "ARM_INVALID_INSTRUMENT_FAILED"
+    },
+    "instrument_ok": [
+      false,
+      false
+    ],
+    "nav_steps": [
+      0,
+      0
+    ],
+    "offline_bodyChars": [
+      "NOT_MEASURED",
+      "NOT_MEASURED"
+    ],
+    "reload_bodyChars": [
+      "NOT_MEASURED",
+      "NOT_MEASURED"
+    ]
+  }
+}
