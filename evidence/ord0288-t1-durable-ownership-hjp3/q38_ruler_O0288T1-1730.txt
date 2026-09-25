@@ -1,0 +1,14 @@
+receipt RECEIPT_O0288T1-1730.json 39787 B blob_sha1 429a5de3872d87f98a2532b23a8ed3e35426747e
+cells 7 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []
+  cell 0 | why_source why | why tokens 11 | own hits 11 | unique hits 0 | shares why with []
+  cell 1 | why_source why | why tokens 5 | own hits 5 | unique hits 0 | shares why with []
+  cell 2 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []
+  cell 3 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []
+  cell 4 | why_source why | why tokens 3 | own hits 3 | unique hits 0 | shares why with []
+  cell 5 | why_source why | why tokens 6 | own hits 6 | unique hits 0 | shares why with []
+  cell 6 | why_source why | why tokens 12 | own hits 5 | unique hits 0 | shares why with []
+meaning: no shared literal and every sentence names its own readings
+expectation held: Q38_GATE_GREEN
+
+STDERR:
+EXIT=0
