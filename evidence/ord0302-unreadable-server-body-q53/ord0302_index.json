@@ -191,6 +191,11 @@
    "bytes": 9795
   },
   {
+   "name": "ord0281_receipt_commits_between.py",
+   "blob40": "ce7cb4eeb0f41fa76b1dc4ca7d06db1afd4e356a",
+   "bytes": 31946
+  },
+  {
    "name": "ord0302_arms_matrix.json",
    "blob40": "f2e0b99ca0d17cc550e450f45c7a9cdcf7d32536",
    "bytes": 81768
@@ -206,14 +211,39 @@
    "bytes": 44374
   },
   {
+   "name": "ord0302_deliver_markfix.py",
+   "blob40": "ca05b5b2dbf520f82b364e40a1de761c8d7adbdd",
+   "bytes": 46785
+  },
+  {
    "name": "ord0302_deliver_r2_patch.py",
    "blob40": "26342bf3012db74ff70c37a80a3f23eef7ac4ea1",
    "bytes": 7508
   },
   {
+   "name": "ord0302_erratum_appendguard.py",
+   "blob40": "b4febf49e099133b4d57e5ad9ecfb845da7bf299",
+   "bytes": 11234
+  },
+  {
+   "name": "ord0302_ledger_disclosure.py",
+   "blob40": "524c41257da07359a3029c9b13d09517a7dfafb2",
+   "bytes": 28558
+  },
+  {
    "name": "ord0302_receipt.json",
    "blob40": "a650fe1fdd04ff6f6bd7d2fffdcebf0a3c36cd09",
    "bytes": 45509
+  },
+  {
+   "name": "ord0302_recut_overlap.json",
+   "blob40": "2b7accdfb94bd38d4f61d141fba6605a8d898e1a",
+   "bytes": 3585
+  },
+  {
+   "name": "ord0302_recut_overlap.py",
+   "blob40": "c265e73813efe740fc7165e4dd893a1de09745ef",
+   "bytes": 5589
   },
   {
    "name": "ord0302_run_arms.py",
@@ -236,5 +266,6 @@
    "bytes": 6740
   }
  ],
- "audit": "every blob here was recomputed from the branch's own answer by ord0302_verify_r2.py"
+ "audit": "every blob here was recomputed from the branch's own answer by ord0302_verify_r2.py",
+ "note_bookkeeping": "the index lists every file in this directory except itself and except ord0302_ledger_disclosure.json, which is published after the index and names this index's own blob"
 }
