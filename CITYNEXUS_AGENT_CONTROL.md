@@ -528,6 +528,30 @@ r4 候选      refs/heads/review/ord0296-write-deadline-f-r4 = 9f06fb5f0e85a679d
              （两枚都走号令那把闸门发的：publish_evidence_gated_r1.py blob e0a656bec4bf7d3005245215c8cb627329b1b1ad ⇒ CREATED + BYTE-LEVEL MATCH）
 没声称的     十臂反突变战役与 11 格的『这一代』反件读数我没有重跑 ⇒ 不在本件里声称；要就下一拍跑
 ```
+
+
+```text
+ORD-0296 第三次搬家（@2026-09-25 19:45）—— 号令 relay 里写的 5aff3722 已被他自己 19:20 那两跳超掉，现场尖是 7856e03f6238da3000976eb6e690a448dfa39b9a
+候选         refs/heads/review/ord0296-write-deadline-f-r5 = 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b（提交树 78bfb5ba4b91dc24096bf97610af03ef3dd53920）；父 = 7856e03f6238da3000976eb6e690a448dfa39b9a 是推之前从 GitHub git/ref 当场读的
+             compare 相对尖 ahead_by 1、behind_by 0；重铸幂等 equal=True；`--is-ancestor 尖 候选` rc=0
+携载         尖上那枚测试字节 deacc9d7483f1b8fd8d24b6e23e586bf402d85f6 与我做改动时的父字节逐位相同 ⇒ 反件读数可搬（Q24）
+重叠         我这枚 1 条路径 × 那跳落地 3 条 = 交集 0 条（按路径集合现算）
+当代自证     默认档连跑 3 轮全绿，runId=0296-r5a1-2a9ef4019bc1, 0296-r5a2-bbc8e5636ee2, 0296-r5a3-17f1217bf0a4
+strict 两侧  B：把 strict 传进 pytest 再跑 ⇒ rc=0、门在输出里被点名=False
+             C：同一枚 strict 在 pytest 之外 import app.main ⇒ rc=1、具名=True、值外泄=False
+             解释在 tests/conftest.py:110：收集前 conftest 把 4 个 AI key 从环境 pop 掉 ⇒ 套件的绿不能否认 prod 会拒
+作废一个数   我先用正则数出「101/159 个测试文件顶层 import app.main」是仪表错（正则允许行首空白，
+             把函数里的 import 也算了）；AST 重测 = 顶层 100 个、只在函数里 6 个
+             修正件 evidence/ord0296-write-deadline-f/ord0296r5_import_shape_r2.json = a3ba86f6ee23097d94e8362308a6ef3ca76d57ed
+收据         evidence/ord0296-write-deadline-f/ord0296_candidate_r5.json = e4b487db31179c58909e846ec269a887ea53b6e8
+             evidence/ord0296-write-deadline-f/ord0296_r5_same_generation_r1.json = 51a634705545366e5fc163e5cbd8e26e59e14ba1
+             两件都走 Q57 闸门（blob e0a656bec4bf7d3005245215c8cb627329b1b1ad），CREATED + BYTE-LEVEL MATCH
+0307 状态    门已在 CMDR-0925-1920 那拍由号令 ff-only 落地并换代：refs/heads/review/ord0307-credential-gate-f = 7856e03f6238da3000976eb6e690a448dfa39b9a → 现场尖；
+             部署收据 76465be1bf67d80e389a0a37f03d60f37424667e、手机侧回读 1020e014b78aec08ba6c2bf48ae809f01cf00ef5。我这边 0307 剩两件不归我：
+             key 轮换（含 HKCU\Environment 那一层，只有用户能做）、十臂战役签级（红队按 B-1）
+仍具名没做   前端 14 根写腿的 e2e 半件不在这枚候选里；号令 relay 那句『你欠的 e2e 收据』若指那一半，
+             需要单开一单（跨前端与部署面，不是我这条测量车道能自己落的）
+```
 ### SESSION=8ccd71d8 · ORD-0303 换代重跑 @2026-09-25 15:06 —— 基座 90d29a17：11 格逐格自证，K8 只红 K1、正控 K2 绿；两把尺原样同发
 
 ```text
