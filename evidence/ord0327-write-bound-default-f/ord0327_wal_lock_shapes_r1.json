@@ -1,0 +1,123 @@
+{
+ "schema": "CNX_ORD0327_WAL_LOCK_SHAPES_V1",
+ "lane": "F 8ccd71d8",
+ "at_local": "2026-09-26T04:58:58+0800",
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe (3.12.14)",
+ "sqlite_version": "3.53.1",
+ "journal_mode_measured": "wal",
+ "busy_timeout_ms_set": 400,
+ "reps_per_shape": 3,
+ "db": "D:/moodle/_qoder_f_run/_wal_shape_db/shapes.db（本件自建的临时库，不是任何库的副本）",
+ "selftest": "SELFTEST_PASS",
+ "shapes": [
+  {
+   "shape": "S1_shared_reader_vs_commit_of_reserved_writer",
+   "expected": "green",
+   "reps": [
+    {
+     "outcome": "green",
+     "ms": 0,
+     "text": null
+    },
+    {
+     "outcome": "green",
+     "ms": 0,
+     "text": null
+    },
+    {
+     "outcome": "green",
+     "ms": 0,
+     "text": null
+    }
+   ],
+   "matches_expectation": true,
+   "ms_min": 0,
+   "ms_median": 0,
+   "ms_max": 0
+  },
+  {
+   "shape": "S2_read_then_write_against_active_writer",
+   "expected": "raised",
+   "reps": [
+    {
+     "outcome": "raised",
+     "ms": 0,
+     "text": "database is locked"
+    },
+    {
+     "outcome": "raised",
+     "ms": 0,
+     "text": "database is locked"
+    },
+    {
+     "outcome": "raised",
+     "ms": 0,
+     "text": "database is locked"
+    }
+   ],
+   "matches_expectation": true,
+   "ms_min": 0,
+   "ms_median": 0,
+   "ms_max": 0
+  },
+  {
+   "shape": "S3_immediate_write_start_against_active_writer",
+   "expected": "raised",
+   "reps": [
+    {
+     "outcome": "raised",
+     "ms": 516,
+     "text": "database is locked"
+    },
+    {
+     "outcome": "raised",
+     "ms": 516,
+     "text": "database is locked"
+    },
+    {
+     "outcome": "raised",
+     "ms": 500,
+     "text": "database is locked"
+    }
+   ],
+   "matches_expectation": true,
+   "ms_min": 500,
+   "ms_median": 516,
+   "ms_max": 516
+  },
+  {
+   "shape": "S4_read_only_while_writer_active",
+   "expected": "green",
+   "reps": [
+    {
+     "outcome": "green",
+     "ms": 0,
+     "text": null
+    },
+    {
+     "outcome": "green",
+     "ms": 0,
+     "text": null
+    },
+    {
+     "outcome": "green",
+     "ms": 0,
+     "text": null
+    }
+   ],
+   "matches_expectation": true,
+   "ms_min": 0,
+   "ms_median": 0,
+   "ms_max": 0
+  }
+ ],
+ "readings": {
+  "S1_shared_reader_vs_commit_of_reserved_writer": "0–0 ms, green",
+  "S2_read_then_write_against_active_writer": "0–0 ms, raised",
+  "S3_immediate_write_start_against_active_writer": "500–516 ms, raised",
+  "S4_read_only_while_writer_active": "0–0 ms, green"
+ },
+ "claim_derived": "读锁不挡提交（S1/S4 green）；事务里先读过再写的写语句是立即 BUSY（S2 等待远小于 400 ms）；只有上来就抢写锁才等满 busy_timeout（S3 ≈ 400 ms）",
+ "claimed_result": "SELFTEST_PASS：4 形 × 3 次，4/4 形符合预期",
+ "derived_result": null
+}
