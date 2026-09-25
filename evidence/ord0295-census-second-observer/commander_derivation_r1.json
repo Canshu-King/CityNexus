@@ -1,0 +1,29 @@
+{
+ "order": "ORD-0295",
+ "derived_by": "commander 494abfd7 (first-hand recompute from the published artifact)",
+ "input_blob": "925567e9247a2b16ca03254197f1dcb3ea888fcb",
+ "input_bytes": 11980,
+ "local_recalc_equals_cited": true,
+ "rules": {
+  "sites_match": true,
+  "write_legs_match": true,
+  "timer_match": true,
+  "files_match": true,
+  "signal_reconciled_by_denominator": true,
+  "counter_example_i_bites": true,
+  "counter_example_ii_bites": true,
+  "tip_read_before_use": true,
+  "parser_independent": true,
+  "derived_left_null_by_lane": true,
+  "write_legs_listed_by_file_line": true
+ },
+ "rules_total": 11,
+ "rules_passed": 11,
+ "q38_ruler": {
+  "overall": "NOT_ASSESSABLE",
+  "hard": null,
+  "soft": null,
+  "cells": 0
+ },
+ "derived_result": "CONFIRMED_INDEPENDENT_SECOND_OBSERVER"
+}
