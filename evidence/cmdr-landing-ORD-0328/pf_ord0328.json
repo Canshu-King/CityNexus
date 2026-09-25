@@ -1,0 +1,96 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T04:18:57+0800",
+ "mode": "DRY_RUN",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "65df31df96cfb8a954f5feb36484710a883e1597",
+ "candidate_ref": "refs/heads/agent/S2-ord0328-agent-mcp-candidates",
+ "candidate_tip": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "65df31df96cfb8a954f5feb36484710a883e1597",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "agent-mcp/citynexus_mcp/schemas.py",
+   "backend/tests/test_v18_hermes_r20_transport_reliability_probe.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": []
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "86b574082cddb5071ab34efa04176696370f9a7e",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "test_v18_hermes_r20_transport_reliability_probe.py"
+  ],
+  "collect_exit": 2,
+  "collected": null,
+  "test_exit": 2,
+  "summary": [
+   "!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!",
+   "1 error in 0.15s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_041841",
+  "blob_equality": [
+   {
+    "path": "agent-mcp/citynexus_mcp/schemas.py",
+    "candidate_blob": "f284a42d7b19e7e6cf10ddd010a2468a506b9cdf",
+    "export_blob": "f284a42d7b19e7e6cf10ddd010a2468a506b9cdf",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_v18_hermes_r20_transport_reliability_probe.py",
+    "candidate_blob": "cfc4e1ef16867a2164cdcea4e139a119cc8db45d",
+    "export_blob": "cfc4e1ef16867a2164cdcea4e139a119cc8db45d",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1319,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0296_write_deadline.py::test_G7_lost_lock_inside_the_budget_stays_todays_error",
+    "tests/test_qoder_ord0310_keyless_leg_receipts.py::test_t1b_landed_error_row_reports_the_status_the_client_saw",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1319 tests collected in 5.30s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "collect_stdout_tail": [
+   "ERROR tests/test_v18_hermes_r20_transport_reliability_probe.py",
+   "!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!",
+   "no tests collected, 1 error in 0.15s"
+  ],
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+ },
+ "problems": [
+  "gate run not green (collect rc=2 test rc=2)"
+ ],
+ "verdict": "REFUSED",
+ "landing": null,
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": "refused: gate run not green (collect rc=2 test rc=2)",
+ "derived_result": null
+}
