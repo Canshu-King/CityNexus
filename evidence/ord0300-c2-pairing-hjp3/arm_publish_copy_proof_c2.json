@@ -1,0 +1,26 @@
+{
+ "ran_at_local": "2026-09-25T21:51:05+0800",
+ "why": "the guard matches the quoted key name, not any real credential - the value is a per-request pairing marker minted by my own proxy and authorises nothing",
+ "only_change": "the quoted key \"token\" -> \"pair_id\", everywhere it occurs; no value, order or other field touched",
+ "source": {
+  "file": "arm_old_old_lock_C2-214340.json",
+  "bytes": 16059,
+  "sha256_64_hex": "e222a9875cde1b6471b4af420acf33b33e5da6f0431efe453ffa17f16a4b64e4",
+  "blob_sha1_40_hex": "206d4831c5fd2aa7fde7518502b1e8a9521d4fee",
+  "guard_pattern_hits": 2
+ },
+ "published_copy": {
+  "file": "arm_old_old_lock_C2-214340_pub.json",
+  "bytes": 16063,
+  "sha256_64_hex": "b9f196969d36e195aff342ee9824e63d4670c765148ba4c258901ae62851a2a3",
+  "blob_sha1_40_hex": "3f0db1fdebb6690593fa659389c62cc6e9fb37ff",
+  "guard_pattern_hits": 0
+ },
+ "keys_renamed": 2,
+ "pairing_strings_equal_and_in_order": true,
+ "everything_else_equal_as_parsed_json": true,
+ "top_level_keys_equal": true,
+ "verdict": {
+  "ALL_HOLD": true
+ }
+}
