@@ -1,0 +1,457 @@
+{
+  "order": "ORD-0274",
+  "cell_group": "B3 (offline after convergence) and its discriminating control",
+  "verifier": "1a986a24 HJ-P1 (B-1: only the verifier's derived closes)",
+  "revision": "b3-broken_probe",
+  "artifacts_read_from": "D:\\moodle\\_qoder_hjp1_o207_20260922\\b3_round2_brokenprobe",
+  "candidate_tip_read_by_me_first": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+  "instrument": {
+    "arms": "o2b3_arms.cjs",
+    "origin": "o2b3_origin.py (two root pointers: shell root vs asset root)",
+    "runner": "o2b3_run.py",
+    "spec": "o2b3_arms.json",
+    "origin_selftest": "o2b3_origin_selftest.py -- proves the split root can answer a .js URL with 200 + HTML before any browser is started"
+  },
+  "cells": {
+    "B3_offline_after_convergence": {
+      "claim_under_test": "a traveller whose client converged onto the new generation, and who really has a trip, stays usable offline on that same generation",
+      "derived_result": "ARM_INVALID_INSTRUMENT_FAILED",
+      "why": "arm=b3_primary; installed=ef277b2d; asset_root_written=None; pointer_read_back_ok=None; instrument_ok=false; probe_smoke=NOT_MEASURED; instrument_self_errors=[\"GEN_MARKER is not defined\"]; converged_by_executed_bundle=false; converged_by_marker=false; executed_before_transition=[]; executed_after_transition=[]; marker_after_transition=None; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; the_one_navigation=None; journeys_rows=0 before / 0 after; tables_measured=55; server_logged_201_for_journeys=false; journey_id=None; retry_presses=NOT_MEASURED; nav_labels_at_creation=None; offline_first_bodyChars=NOT_MEASURED; offline_first_leafCount=NOT_MEASURED; offline_first_executed=[]; old_bundle_executed_offline=false; in_app_taps_of_steps=0/0; nav_labels_tapped=[]; nav_path_changed=0; nav_bodyChars=[]; reload_bodyChars=NOT_MEASURED; reload_http_status=NOT_MEASURED; reload_executed=[]; reload_replaced_document=false; origin_hits_during_offline_total=22; page_level_hits_offline=14; worker_update_hits_offline=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; offline_document_boots=false; pageErrors=[\"GEN_MARKER is not defined\", \"GEN_MARKER is not defined\"]; arm_invalid_reason=None; differs_from_control_on=[] | rendered offline sentences: {\"first_screen\": null, \"per_nav_step\": [], \"after_reload\": null}",
+      "controls": [],
+      "field_lines": [
+        "b3_primary@ef277b2d converged_by_bundle=false; converged_by_marker=false; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; asset_root=None; offline_first_bodyChars=NOT_MEASURED; offline_first_executed=[]; old_bundle_offline=false; nav_tapped_of_steps=0/0; nav_path_changed=0; nav_bodyChars=[]; reload_bodyChars=NOT_MEASURED; reload_executed=[]; page_hits_offline=14; worker_update_hits_offline=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; journeys_rows=0/0; offline_document_boots=false; usable_offline=false; instrument_ok=false\n",
+        "b3_control_partial@ef277b2d converged_by_bundle=false; converged_by_marker=false; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; asset_root=None; offline_first_bodyChars=NOT_MEASURED; offline_first_executed=[]; old_bundle_offline=false; nav_tapped_of_steps=0/0; nav_path_changed=0; nav_bodyChars=[]; reload_bodyChars=NOT_MEASURED; reload_executed=[]; page_hits_offline=14; worker_update_hits_offline=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; journeys_rows=0/0; offline_document_boots=false; usable_offline=false; instrument_ok=false\n"
+      ],
+      "instrument_state": {
+        "primary_probe_smoke": "NOT_MEASURED",
+        "control_probe_smoke": "NOT_MEASURED",
+        "primary_self_errors": [
+          "GEN_MARKER is not defined"
+        ],
+        "control_self_errors": [
+          "GEN_MARKER is not defined"
+        ]
+      },
+      "rendered_offline_text": {
+        "primary": {
+          "first_screen": null,
+          "per_nav_step": [],
+          "after_reload": null
+        },
+        "control": {
+          "first_screen": null,
+          "per_nav_step": [],
+          "after_reload": null
+        }
+      },
+      "criterion_boundaries": "what this cell scores is the document: does it render, on which generation, and does moving inside it still work.  The app's own data reads are not cached by the worker on this surface, so an offline read failing is reported in rendered_offline_text and scored neither as a pass nor as a defect here.  Worker update checks survive Playwright's offline emulation (measured: [\"/v10-sw.js\", \"/workbox-6923124b.js\"]), so they are counted apart from page traffic rather than as proof the app reached the network.",
+      "triples": [
+        {
+          "sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+          "nodeid": "B3_offline_after_convergence",
+          "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8964, \"origin\": 8963}",
+          "executed_offline": [],
+          "marker": "NOT_MEASURED",
+          "bodyChars": "NOT_MEASURED"
+        },
+        {
+          "sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+          "nodeid": "B3_control_partial_deploy",
+          "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8964, \"origin\": 8963}",
+          "executed_offline": [],
+          "marker": "NOT_MEASURED",
+          "bodyChars": "NOT_MEASURED"
+        }
+      ],
+      "same_key_precondition": "identical walk, identical typed draft, identical convergence trigger and identical offline window on both arms; exactly one configured byte differs - the root the origin serves /assets/ from (primary None, control None), each written to a pointer file and read back before the swap",
+      "isolation": {
+        "b3_primary": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        },
+        "b3_control_partial": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      },
+      "red_cause_if_any": "instrument_failed",
+      "durable_read_back": {
+        "tables_measured": [
+          55,
+          55
+        ],
+        "journeys_rows": [
+          0,
+          0
+        ]
+      }
+    },
+    "B3_control_partial_deploy": {
+      "claim_under_test": "the control must be able to break B3: same everything, new shell over old assets -- a deploy that does not retain the previous bundles",
+      "derived_result": "ARM_INVALID_INSTRUMENT_FAILED",
+      "why": "arm=b3_control_partial; installed=ef277b2d; asset_root_written=None; pointer_read_back_ok=None; instrument_ok=false; probe_smoke=NOT_MEASURED; instrument_self_errors=[\"GEN_MARKER is not defined\"]; converged_by_executed_bundle=false; converged_by_marker=false; executed_before_transition=[]; executed_after_transition=[]; marker_after_transition=None; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; the_one_navigation=None; journeys_rows=0 before / 0 after; tables_measured=55; server_logged_201_for_journeys=false; journey_id=None; retry_presses=NOT_MEASURED; nav_labels_at_creation=None; offline_first_bodyChars=NOT_MEASURED; offline_first_leafCount=NOT_MEASURED; offline_first_executed=[]; old_bundle_executed_offline=false; in_app_taps_of_steps=0/0; nav_labels_tapped=[]; nav_path_changed=0; nav_bodyChars=[]; reload_bodyChars=NOT_MEASURED; reload_http_status=NOT_MEASURED; reload_executed=[]; reload_replaced_document=false; origin_hits_during_offline_total=22; page_level_hits_offline=14; worker_update_hits_offline=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; offline_document_boots=false; pageErrors=[\"GEN_MARKER is not defined\", \"GEN_MARKER is not defined\"]; arm_invalid_reason=None; differs_from_primary_on=[] | rendered offline sentences: {\"first_screen\": null, \"per_nav_step\": [], \"after_reload\": null}",
+      "controls": [],
+      "field_lines": [
+        "b3_primary@ef277b2d converged_by_bundle=false; converged_by_marker=false; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; asset_root=None; offline_first_bodyChars=NOT_MEASURED; offline_first_executed=[]; old_bundle_offline=false; nav_tapped_of_steps=0/0; nav_path_changed=0; nav_bodyChars=[]; reload_bodyChars=NOT_MEASURED; reload_executed=[]; page_hits_offline=14; worker_update_hits_offline=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; journeys_rows=0/0; offline_document_boots=false; usable_offline=false; instrument_ok=false\n",
+        "b3_control_partial@ef277b2d converged_by_bundle=false; converged_by_marker=false; instrument_navigations=[\"P0-nav1-install\", \"P0-nav2-take-control\"]; asset_root=None; offline_first_bodyChars=NOT_MEASURED; offline_first_executed=[]; old_bundle_offline=false; nav_tapped_of_steps=0/0; nav_path_changed=0; nav_bodyChars=[]; reload_bodyChars=NOT_MEASURED; reload_executed=[]; page_hits_offline=14; worker_update_hits_offline=[\"/v10-sw.js\", \"/workbox-6923124b.js\"]; origin_html_at_js_urls=[]; journeys_rows=0/0; offline_document_boots=false; usable_offline=false; instrument_ok=false\n"
+      ],
+      "triples": [
+        {
+          "sha": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+          "nodeid": "B3_control_partial_deploy",
+          "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8964, \"origin\": 8963}",
+          "executed_offline": [],
+          "marker": "NOT_MEASURED",
+          "bodyChars": "NOT_MEASURED"
+        }
+      ],
+      "same_key_precondition": "identical walk, identical typed draft, identical convergence trigger and identical offline window on both arms; exactly one configured byte differs - the root the origin serves /assets/ from (primary None, control None), each written to a pointer file and read back before the swap",
+      "isolation": {
+        "b3_control_partial": {
+          "rundir_deleted": true,
+          "db_leftovers": [],
+          "profile_leftovers": false,
+          "ports_final": {
+            "backend": [],
+            "origin": []
+          }
+        }
+      }
+    }
+  },
+  "arms": {
+    "b3_primary": {
+      "arm": "b3_primary",
+      "kind": "b3_offline",
+      "cells_this_arm_judges": [
+        "B3"
+      ],
+      "installed_commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+      "next_commit_label": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f + inert generation marker (next_gen build)",
+      "old_bundle": "index-xKIGmoBz.js",
+      "new_bundle": "index-DimRtCQm.js",
+      "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8964, \"origin\": 8963}",
+      "fatal": "page.evaluate: ReferenceError: GEN_MARKER is not defined",
+      "arm_invalid_reason": null,
+      "arm_exit": 1,
+      "arm_wall_s": 28.5,
+      "probe_smoke": "NOT_MEASURED",
+      "pageErrors": [
+        "GEN_MARKER is not defined",
+        "GEN_MARKER is not defined"
+      ],
+      "instrument_self_errors": [
+        "GEN_MARKER is not defined"
+      ],
+      "journey_id_in_localStorage": null,
+      "retry_presses_made": "NOT_MEASURED",
+      "nav_labels_at_creation": null,
+      "server_logged_201_for_journeys": false,
+      "journeys_rows_before": 0,
+      "journeys_rows_after": 0,
+      "tables_measured": 55,
+      "update_trigger": null,
+      "asset_root_written": null,
+      "pointer_read_back_ok": null,
+      "executed_before_transition": [],
+      "executed_after_transition": [],
+      "marker_after_transition": null,
+      "instrument_navigations": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ],
+      "the_one_navigation": null,
+      "offline_first_bodyChars": "NOT_MEASURED",
+      "offline_first_leafCount": "NOT_MEASURED",
+      "offline_first_marker": "NOT_MEASURED",
+      "offline_first_scripts": [],
+      "offline_first_rendered": null,
+      "nav_steps": 0,
+      "nav_tapped": 0,
+      "nav_path_changed": 0,
+      "nav_labels_tapped": [],
+      "nav_bodyChars": [],
+      "nav_executed": [],
+      "nav_rendered": [],
+      "reload_bodyChars": "NOT_MEASURED",
+      "reload_bundles": [],
+      "reload_marker": "NOT_MEASURED",
+      "reload_http_status": "NOT_MEASURED",
+      "reload_replaced_document": false,
+      "reload_rendered": null,
+      "origin_hits_during_offline": 22,
+      "page_level_hits_offline": [
+        {
+          "kind": "static",
+          "path": "/",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/v8/hub",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/index-I45CQek8.css",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/index-xKIGmoBz.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/sw.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/index.html",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/maplibre-gl-JaODVDnV.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/JourneyMap-DOROX9Q5.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/index-xKIGmoBz.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/index-I45CQek8.css",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/favicon.svg",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/manifest.webmanifest",
+          "status": null
+        },
+        {
+          "kind": "api",
+          "path": "/api/v1/demo/scene",
+          "status": 200
+        },
+        {
+          "kind": "api",
+          "path": "/api/v1/demo/scene",
+          "status": 200
+        }
+      ],
+      "worker_update_hits_offline": [
+        "/v10-sw.js",
+        "/workbox-6923124b.js"
+      ],
+      "origin_html_at_js_urls": [],
+      "isolation": {
+        "rundir_deleted": true,
+        "db_leftovers": [],
+        "profile_leftovers": false,
+        "ports_final": {
+          "backend": [],
+          "origin": []
+        }
+      },
+      "converged_by_executed_bundle": false,
+      "converged_by_marker": false,
+      "converged_onto_next": false,
+      "stays_on_new_generation_offline": false,
+      "offline_document_boots": false,
+      "usable_offline": false,
+      "no_page_origin_contact_offline": false,
+      "worker_update_survived_offline_emulation": true,
+      "instrument_ok": false,
+      "b3_fields_all_green": false
+    },
+    "b3_control_partial": {
+      "arm": "b3_control_partial",
+      "kind": "b3_control_partial",
+      "cells_this_arm_judges": [
+        "B3-control"
+      ],
+      "installed_commit": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+      "next_commit_label": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f + inert generation marker (next_gen build)",
+      "old_bundle": "index-xKIGmoBz.js",
+      "new_bundle": "index-DimRtCQm.js",
+      "shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8964, \"origin\": 8963}",
+      "fatal": "page.evaluate: ReferenceError: GEN_MARKER is not defined",
+      "arm_invalid_reason": null,
+      "arm_exit": 1,
+      "arm_wall_s": 28.6,
+      "probe_smoke": "NOT_MEASURED",
+      "pageErrors": [
+        "GEN_MARKER is not defined",
+        "GEN_MARKER is not defined"
+      ],
+      "instrument_self_errors": [
+        "GEN_MARKER is not defined"
+      ],
+      "journey_id_in_localStorage": null,
+      "retry_presses_made": "NOT_MEASURED",
+      "nav_labels_at_creation": null,
+      "server_logged_201_for_journeys": false,
+      "journeys_rows_before": 0,
+      "journeys_rows_after": 0,
+      "tables_measured": 55,
+      "update_trigger": null,
+      "asset_root_written": null,
+      "pointer_read_back_ok": null,
+      "executed_before_transition": [],
+      "executed_after_transition": [],
+      "marker_after_transition": null,
+      "instrument_navigations": [
+        "P0-nav1-install",
+        "P0-nav2-take-control"
+      ],
+      "the_one_navigation": null,
+      "offline_first_bodyChars": "NOT_MEASURED",
+      "offline_first_leafCount": "NOT_MEASURED",
+      "offline_first_marker": "NOT_MEASURED",
+      "offline_first_scripts": [],
+      "offline_first_rendered": null,
+      "nav_steps": 0,
+      "nav_tapped": 0,
+      "nav_path_changed": 0,
+      "nav_labels_tapped": [],
+      "nav_bodyChars": [],
+      "nav_executed": [],
+      "nav_rendered": [],
+      "reload_bodyChars": "NOT_MEASURED",
+      "reload_bundles": [],
+      "reload_marker": "NOT_MEASURED",
+      "reload_http_status": "NOT_MEASURED",
+      "reload_replaced_document": false,
+      "reload_rendered": null,
+      "origin_hits_during_offline": 22,
+      "page_level_hits_offline": [
+        {
+          "kind": "static",
+          "path": "/",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/v8/hub",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/index-xKIGmoBz.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/index-I45CQek8.css",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/sw.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/index.html",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/maplibre-gl-JaODVDnV.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/JourneyMap-DOROX9Q5.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/index-xKIGmoBz.js",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/assets/index-I45CQek8.css",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/favicon.svg",
+          "status": null
+        },
+        {
+          "kind": "static",
+          "path": "/manifest.webmanifest",
+          "status": null
+        },
+        {
+          "kind": "api",
+          "path": "/api/v1/demo/scene",
+          "status": 200
+        },
+        {
+          "kind": "api",
+          "path": "/api/v1/demo/scene",
+          "status": 200
+        }
+      ],
+      "worker_update_hits_offline": [
+        "/v10-sw.js",
+        "/workbox-6923124b.js"
+      ],
+      "origin_html_at_js_urls": [],
+      "isolation": {
+        "rundir_deleted": true,
+        "db_leftovers": [],
+        "profile_leftovers": false,
+        "ports_final": {
+          "backend": [],
+          "origin": []
+        }
+      },
+      "converged_by_executed_bundle": false,
+      "converged_by_marker": false,
+      "converged_onto_next": false,
+      "stays_on_new_generation_offline": false,
+      "offline_document_boots": false,
+      "usable_offline": false,
+      "no_page_origin_contact_offline": false,
+      "worker_update_survived_offline_emulation": true,
+      "instrument_ok": false,
+      "b3_fields_all_green": false
+    }
+  },
+  "not_run": {
+    "A_never_reconnected": "a device that never receives the new worker needs its own arm and its own control; not run in this revision, and written as not_run rather than inferred from the two arms above"
+  },
+  "selftest_duplicate_why": {
+    "cells": 2,
+    "distinct_why_strings": 2,
+    "duplicates": [],
+    "result": "PASS"
+  }
+}
