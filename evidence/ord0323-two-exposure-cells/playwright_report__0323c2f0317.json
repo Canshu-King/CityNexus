@@ -1,0 +1,313 @@
+{
+  "config": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\node_modules\\@playwright\\test\\cli.js",
+      "test",
+      "-c",
+      "playwright.config.ts",
+      "e2e/qoder-ord0323-two-exposure-cells.spec.ts",
+      "--reporter=json"
+    ],
+    "configFile": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\playwright.config.ts",
+    "rootDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\_qoderAuthoritativeSetup.ts",
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "real-seed",
+        "name": "real-seed",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "/_qoderRealSeed\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "D:/moodle/_qoder_b_lane_20260923/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "D:/moodle/_qoder_b_lane_20260923/frontend/e2e",
+        "testIgnore": [
+          "/[\\\\/]e2e[\\\\/]legacy[\\\\/]/"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.63.0",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "_qoderRealSeed.setup.ts",
+      "file": "_qoderRealSeed.setup.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "seed a real journey through the product API",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "real-seed",
+              "projectName": "real-seed",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4822,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "[qoder-real-seed] journey=bf507fc5-b0cb-4f64-8e95-4cfa2aad861b options=4 chosen=e8dc7247-67c4-4b4c-b5e2-4eb42d392a55 (Haihe Riverside Hotel)\n"
+                    },
+                    {
+                      "text": "[qoder-real-seed] trialWizard=false live-journey-current=true\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T20:04:44.356Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e5b963f3c8f6099f74d0-d425156f0efa8e024368",
+          "file": "_qoderRealSeed.setup.ts",
+          "line": 110,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "qoder-ord0323-two-exposure-cells.spec.ts",
+      "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "N1_boundary_panel_keeps_its_own_readings_and_drops_the_failure_prose — 边界自己量的字段还在，失败原文与组件帧不在屏上",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 915,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T20:04:49.638Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-23d909069f0d27801731",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 99,
+          "column": 1
+        },
+        {
+          "title": "N2_rejected_readings_render_their_own_status_and_content_type_not_the_reply_s_sentence — 顶回来的两条读数各自还在，回复原话不在屏上",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 578,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status and content type this device got (这台设备收到的回复读不成这条请求要的结果，请再看一次。)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status and content type this device got (这台设备收到的回复读不成这条请求要的结果，请再看一次。)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:237:5",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 5,
+                      "line": 237
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 235 |\u001b[39m     messageText\u001b[33m.\u001b[39mincludes(\u001b[32m\"500\"\u001b[39m) \u001b[33m&&\u001b[39m messageText\u001b[33m.\u001b[39mincludes(\u001b[32m\"application/json\"\u001b[39m)\u001b[33m,\u001b[39m\n \u001b[90m 236 |\u001b[39m     node(arm\u001b[33m,\u001b[39m \u001b[32m`the memory slot no longer states the status and content type this device got (${messageText})`\u001b[39m)\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 237 |\u001b[39m   )\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 238 |\u001b[39m   expect(\n \u001b[90m 239 |\u001b[39m     pendingText\u001b[33m.\u001b[39mincludes(\u001b[32m\"503\"\u001b[39m) \u001b[33m&&\u001b[39m pendingText\u001b[33m.\u001b[39mincludes(\u001b[32m\"application/json\"\u001b[39m)\u001b[33m,\u001b[39m\n \u001b[90m 240 |\u001b[39m     node(arm\u001b[33m,\u001b[39m \u001b[32m`the queue slot no longer states the status and content type this device got (${pendingText})`\u001b[39m)\u001b[33m,\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 5,
+                        "line": 237
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N2 — the memory slot no longer states the status and content type this device got (这台设备收到的回复读不成这条请求要的结果，请再看一次。)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  235 |     messageText.includes(\"500\") && messageText.includes(\"application/json\"),\n  236 |     node(arm, `the memory slot no longer states the status and content type this device got (${messageText})`),\n> 237 |   ).toBe(true);\n      |     ^\n  238 |   expect(\n  239 |     pendingText.includes(\"503\") && pendingText.includes(\"application/json\"),\n  240 |     node(arm, `the queue slot no longer states the status and content type this device got (${pendingText})`),\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:237:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T20:04:50.652Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-f0e4c-nce-—-顶回来的两条读数各自还在，回复原话不在屏上-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 5,
+                    "line": 237
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-e9b970889ed65a93377e",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 189,
+          "column": 1
+        },
+        {
+          "title": "N3_confirm_fold_carries_the_attempt_reading_not_the_attempt_s_words — 确认那一折带着这台设备的读数，不带回复的原话",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 300000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 1073,
+                  "error": {
+                    "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold no longer states what this device measured about the attempt (技术详情这台设备收到的回复读不成这条请求要的结果，请再看一次。)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m",
+                    "stack": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold no longer states what this device measured about the attempt (技术详情这台设备收到的回复读不成这条请求要的结果，请再看一次。)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:323:5",
+                    "location": {
+                      "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                      "column": 5,
+                      "line": 323
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 321 |\u001b[39m     detailText\u001b[33m.\u001b[39mincludes(\u001b[32m\"500\"\u001b[39m) \u001b[33m&&\u001b[39m detailText\u001b[33m.\u001b[39mincludes(\u001b[32m\"application/json\"\u001b[39m)\u001b[33m,\u001b[39m\n \u001b[90m 322 |\u001b[39m     node(arm\u001b[33m,\u001b[39m \u001b[32m`the confirmation fold no longer states what this device measured about the attempt (${detailText})`\u001b[39m)\u001b[33m,\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 323 |\u001b[39m   )\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 324 |\u001b[39m   expect(\n \u001b[90m 325 |\u001b[39m     codeText\u001b[33m.\u001b[39mincludes(\u001b[32m\"500\"\u001b[39m)\u001b[33m,\u001b[39m\n \u001b[90m 326 |\u001b[39m     node(arm\u001b[33m,\u001b[39m \u001b[32m`the reading is in the fold but not on the screen once it is opened (${codeText})`\u001b[39m)\u001b[33m,\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                        "column": 5,
+                        "line": 323
+                      },
+                      "message": "Error: e2e/qoder-ord0323-two-exposure-cells.spec.ts :: N3 — the confirmation fold no longer states what this device measured about the attempt (技术详情这台设备收到的回复读不成这条请求要的结果，请再看一次。)\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32mtrue\u001b[39m\nReceived: \u001b[31mfalse\u001b[39m\n\n  321 |     detailText.includes(\"500\") && detailText.includes(\"application/json\"),\n  322 |     node(arm, `the confirmation fold no longer states what this device measured about the attempt (${detailText})`),\n> 323 |   ).toBe(true);\n      |     ^\n  324 |   expect(\n  325 |     codeText.includes(\"500\"),\n  326 |     node(arm, `the reading is in the fold but not on the screen once it is opened (${codeText})`),\n    at D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts:323:5"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-09-25T20:04:51.619Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\test-results\\qoder-ord0323-two-exposure-3c743-ds-—-确认那一折带着这台设备的读数，不带回复的原话-chromium\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\e2e\\qoder-ord0323-two-exposure-cells.spec.ts",
+                    "column": 5,
+                    "line": 323
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "10b2d8883c0bec666957-7b32271c01e9f8430b42",
+          "file": "qoder-ord0323-two-exposure-cells.spec.ts",
+          "line": 257,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-09-25T20:04:40.927Z",
+    "duration": 12557.353000000001,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}
