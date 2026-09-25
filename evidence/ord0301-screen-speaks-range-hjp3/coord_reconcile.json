@@ -1,0 +1,17 @@
+{
+ "why_this_file_exists": "the human receipt prints a coordinate line that can only list files already on the branch, so its own line says 96 件 while the final listing is 97 件; this note reconciles them instead of rewriting a published path",
+ "final_listing": "坐标（脚本从分支 tree 读回，非手抄）：`Canshu-King/CityNexus @ commander/control` 读回 commit 尖 `3267f2a0c90e279606d64277540b1b9580ab5047` · 其 tree `1045479b5f640f77675117cfeb27dcd67fb026a1` · `evidence/ord0301-screen-speaks-range-hjp3/` 共 97 件（合计 2,691,009 B）。外部可读探针 `GET /git/blobs/9898cfa6455a22634b0b3688906f3bb9358ea412` → 重算 sha1 与 tree 上 blob id 相等 = True；与本机字节一致 = True（17,313 B）。关键件：`RECEIPT_O0301-1500.json` 97,514 B `9035e162b69f` · `RECEIPT_O0301-1500.md` 17,313 B `9898cfa6455a` · `boundary_proof.json` 3,943 B `5b060c3e08f6` · `q38_ruler_run1.txt` 990 B `cf464b372a7e` · `table_O0301.json` 112,469 B `db1927627aae` · `tip_moved_readback.json` 1,938 B `55246d35fb7f`。",
+ "files_on_branch": 97,
+ "total_bytes": 2691009,
+ "the_receipt_md_blob": "9898cfa6455a22634b0b3688906f3bb9358ea412",
+ "probe_command": "GET /repos/Canshu-King/CityNexus/git/blobs/<sha below>",
+ "note": "0 覆盖：本件是新路径；已发布的 RECEIPT_O0301-1500.md 一字未动",
+ "receipt_md_readback": {
+  "size": 17313,
+  "recomputed_sha1_equals_tree": true,
+  "local_bytes_match": true,
+  "listing_count_written_inside_the_receipt_md": true,
+  "files_counted_by_this_note": 97,
+  "bytes_counted_by_this_note": 2691009
+ }
+}
