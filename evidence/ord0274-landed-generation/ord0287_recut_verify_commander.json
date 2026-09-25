@@ -1,0 +1,119 @@
+{
+ "candidate": {
+  "carrier_blob": "894c6d54e345dabdc4050a38f413fdaaa1a92748",
+  "file": "backend/tests/test_qoder_ord0287_k8_carrier.py",
+  "parent": "ef277b2da5dfff22ae3f1deaf63b295f5cda678f",
+  "sha": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc"
+ },
+ "claimed_result_by_lane": null,
+ "clean_runs": [
+  {
+   "all_passed": true,
+   "cases": [
+    {
+     "nodeid": "tests.test_qoder_ord0287_k8_carrier::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+     "outcome": "passed"
+    },
+    {
+     "nodeid": "tests.test_qoder_ord0287_k8_carrier::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+     "outcome": "passed"
+    }
+   ],
+   "collected": 2,
+   "db_removed_before_run": [],
+   "rc": 0,
+   "seconds": 3.8,
+   "summary_lines": [
+    "2 passed, 2 warnings in 2.36s"
+   ],
+   "tag": "clean1"
+  },
+  {
+   "all_passed": true,
+   "cases": [
+    {
+     "nodeid": "tests.test_qoder_ord0287_k8_carrier::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+     "outcome": "passed"
+    },
+    {
+     "nodeid": "tests.test_qoder_ord0287_k8_carrier::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+     "outcome": "passed"
+    }
+   ],
+   "collected": 2,
+   "db_removed_before_run": [],
+   "rc": 0,
+   "seconds": 2.6,
+   "summary_lines": [
+    "2 passed, 2 warnings in 1.42s"
+   ],
+   "tag": "clean2"
+  },
+  {
+   "all_passed": true,
+   "cases": [
+    {
+     "nodeid": "tests.test_qoder_ord0287_k8_carrier::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+     "outcome": "passed"
+    },
+    {
+     "nodeid": "tests.test_qoder_ord0287_k8_carrier::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+     "outcome": "passed"
+    }
+   ],
+   "collected": 2,
+   "db_removed_before_run": [],
+   "rc": 0,
+   "seconds": 3.2,
+   "summary_lines": [
+    "2 passed, 2 warnings in 1.84s"
+   ],
+   "tag": "clean3"
+  }
+ ],
+ "derived_result": "KILLED_CANDIDATE_ALL_ROUNDS_GREEN_AND_GUARD_IS_LOAD_BEARING",
+ "guard_carrier_unique": true,
+ "how_derived": {
+  "kill": "carrier hits 1 -> 0, run rc 1, every case passed? False",
+  "restore": "main.py re-hash identical to pre-mutation: True",
+  "streak": "clean runs with a fresh db each: 3/3 all_passed"
+ },
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "kill": {
+  "cases": [
+   {
+    "nodeid": "tests.test_qoder_ord0287_k8_carrier::test_K1_a_receipt_another_writer_already_filled_is_never_rewritten_and_refuses_by_name",
+    "outcome": "failure"
+   },
+   {
+    "nodeid": "tests.test_qoder_ord0287_k8_carrier::test_K2_my_own_unfilled_claims_do_get_filled_and_hold_my_answer",
+    "outcome": "passed"
+   }
+  ],
+  "collected": 2,
+  "db_removed_before_run": [],
+  "guard_carrier_hits_after_mutation": 0,
+  "rc": 1,
+  "seconds": 2.9,
+  "summary_lines": [
+   "1 failed, 1 passed, 2 warnings in 1.60s"
+  ],
+  "survived": false,
+  "tag": "killed"
+ },
+ "main_py_before": {
+  "bytes": 482850,
+  "guard_carrier_hits": 1,
+  "sha1": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+ },
+ "order": "ORD-0287",
+ "restore": {
+  "guard_carrier_hits": 1,
+  "identical_to_before": true,
+  "sha1": "416ea4f210e967130710a900cdecd20e7a1b5eca"
+ },
+ "runs": [],
+ "snap": "D:/moodle/_qoder_snap_0287_recut/backend",
+ "streak_green_runs": 3,
+ "verified_by": "commander 494abfd7 (first-hand)"
+}
