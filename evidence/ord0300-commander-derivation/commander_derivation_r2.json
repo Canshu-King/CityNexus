@@ -1,0 +1,107 @@
+{
+ "schema": "CNX_CMDR_DERIVATION_V2",
+ "revision_note": "r1 (`verify_ord0300_commander_r1.py`) accused four cells of not judging both sides; that was this instrument's fault (server-key pattern missed `*_status`, and the both-sides rule was applied to cells whose subject is one-sided). r2 keeps r1 published unedited.",
+ "order": "ORD-0300",
+ "lane": "HJ-P3 aad2d1f2",
+ "run_id": "O0300-2610",
+ "asked_in": "Canshu-King/CityNexus-Workspace issue #1 comment 5825415532",
+ "subject_blob_cited": "6e93836db5b6a5322b4b7d8c77e0e240c0aaf894",
+ "subject_bytes": 13423,
+ "recomputed_git_blob_sha1": "6e93836db5b6a5322b4b7d8c77e0e240c0aaf894",
+ "recomputed_equals_cited": true,
+ "authoritative_tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "receipt_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+ "cells_total": 6,
+ "cells": [
+  {
+   "id": "C1_server_side_answer_on_the_contended_write",
+   "verdict": "NOT_200_BUT_UNNAMED_STILL",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "R_A_measured_rows": 32,
+   "R_A_generation_bound": true,
+   "server_field_count": 25,
+   "screen_field_count": 0,
+   "asserts_something_about_the_screen": false,
+   "R_C_ok": true,
+   "why_chars": 447
+  },
+  {
+   "id": "C2_screen_side_attribution_of_that_same_answer",
+   "verdict": "SERVER_ANSWERED_BUT_SCREEN_SAYS_UNREACHABLE",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "R_A_measured_rows": 13,
+   "R_A_generation_bound": true,
+   "server_field_count": 5,
+   "screen_field_count": 8,
+   "asserts_something_about_the_screen": true,
+   "R_C_ok": true,
+   "why_chars": 415
+  },
+  {
+   "id": "C3_positive_control_the_server_channel_still_carries_words_verbatim",
+   "verdict": "SERVER_SENTENCE_QUOTED_VERBATIM_WHEN_ONE_EXISTS",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "R_A_measured_rows": 11,
+   "R_A_generation_bound": true,
+   "server_field_count": 2,
+   "screen_field_count": 4,
+   "asserts_something_about_the_screen": true,
+   "R_C_ok": true,
+   "why_chars": 701
+  },
+  {
+   "id": "C4_write_leg_deadline_on_the_silent_origin",
+   "verdict": "WRITE_LEG_STILL_UNBOUNDED",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "R_A_measured_rows": 15,
+   "R_A_generation_bound": true,
+   "server_field_count": 2,
+   "screen_field_count": 0,
+   "asserts_something_about_the_screen": false,
+   "R_C_ok": true,
+   "why_chars": 377
+  },
+  {
+   "id": "C5_is_the_named_503_reachable_on_the_user_path",
+   "verdict": "NAMED_503_NOT_REACHED_IN_TWO_SCHEDULES",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "R_A_measured_rows": 46,
+   "R_A_generation_bound": true,
+   "server_field_count": 43,
+   "screen_field_count": 0,
+   "asserts_something_about_the_screen": false,
+   "R_C_ok": true,
+   "why_chars": 444
+  },
+  {
+   "id": "C6_the_same_finding_on_a_bundle_i_did_not_build",
+   "verdict": "SAME_FINDING_ON_A_FOREIGN_BUILD",
+   "cell_measured_on": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "R_A_measured_rows": 17,
+   "R_A_generation_bound": true,
+   "server_field_count": 5,
+   "screen_field_count": 5,
+   "asserts_something_about_the_screen": false,
+   "R_C_ok": true,
+   "why_chars": 407
+  }
+ ],
+ "cells_asserting_about_the_screen": [
+  "C2_screen_side_attribution_of_that_same_answer",
+  "C3_positive_control_the_server_channel_still_carries_words_verbatim"
+ ],
+ "q38_ruler": {
+  "instrument": "receipt_cell_derivation_check_r2.py",
+  "exit_code": 0,
+  "line_printed": "cells 6 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []"
+ },
+ "decisions": {
+  "blob_recompute_matches_citation": true,
+  "R_A_every_cell_measured_something_and_bound_to_tip": true,
+  "R_B_delivery_has_server_side_AND_screen_side_cells_under_one_generation": true,
+  "R_C_every_screen_claiming_cell_also_carries_server_fields": true,
+  "B1_lane_signed_claimed_not_derived": true
+ },
+ "overall": "ORD0300_READINGS_IN_ORDER",
+ "scope": "Proves only internal order + generation binding of the receipt's readings. It does not sign derived_result (red team's job), does not prove the product sentence is right, and does not decide whether this state should reach the phone."
+}
