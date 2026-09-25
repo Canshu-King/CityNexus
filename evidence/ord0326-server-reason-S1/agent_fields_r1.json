@@ -1,0 +1,313 @@
+{
+ "schema": "CNX_ORD0326_AGENT_AND_FIELDS_V1",
+ "order": "ORD-0326",
+ "lane": "S1-q64sweep",
+ "at_local": "2026-09-26T05:31:25+0800",
+ "generation": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "authoritative_tip_now": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba",
+ "tip_moved_after_my_measurement": true,
+ "branch_off_sha_ordered": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "candidate_branch": "agent/S1-q64sweep-candidates-r3",
+ "candidate_tip": "08a651e7fc25cf1ccaa0617e97a313b45aad3066",
+ "candidate_verified_by_ls_remote": "08a651e7fc25cf1ccaa0617e97a313b45aad3066",
+ "branch_is_off_the_ordered_sha": true,
+ "files_touched": [
+  "frontend/src/features/agent/AgentComposer.tsx",
+  "frontend/src/features/agent/CopilotDock.tsx"
+ ],
+ "no_new_lib_module": true,
+ "yielded_files_confirmed_untouched": {
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx": true,
+  "frontend/src/components/ProductErrorBoundary.tsx": true,
+  "frontend/src/features/stay/HotelsPanel.tsx": true,
+  "frontend/src/app/V8Experience.tsx": true,
+  "frontend/src/features/planning/PlanWithAiSheet.tsx": true,
+  "frontend/src/features/planning/PlanComparison.tsx": true
+ },
+ "ruler": "ff98091cf3accb0d836ae25ba49820170b92d932",
+ "ruler_mode": "--tree over git archive exports of the tip and of the candidate tree",
+ "r5_readings": {
+  "at_tip": 28,
+  "with_my_change": 25,
+  "sinks_removed": [
+   "AgentComposer.tsx:185",
+   "CopilotDock.tsx:450",
+   "CopilotDock.tsx:770"
+  ],
+  "anything_added": []
+ },
+ "two_direction_proof": {
+  "clean": "r5 on the candidate tree: agent files flagged = 0",
+  "mutant": "restoring `cause.message` at the CopilotDock send site re-flags the render sink",
+  "mutant_hits": 26,
+  "mutant_reflag": [
+   "CopilotDock.tsx:783|UPSTREAM_EXCEPTION_TO_DOM"
+  ],
+  "note": "the mutant was applied to a scratch copy of the tree, never to the branch"
+ },
+ "verification": {
+  "tsc": "node node_modules/typescript/bin/tsc -p tsconfig.typecheck.json --noEmit -> exit 0",
+  "existing_assertions_untouched": "no existing spec file was edited; no skip/fixme added",
+  "authoritative_pushes": 0
+ },
+ "field_arrival_table_copilot_path": {
+  "route_as_it_actually_is": "POST /api/v1/journeys/{journey_id}/copilot/messages",
+  "route_as_written_in_the_order": "/copilot/message (singular) - the handler is plural at backend/app/main.py:11046, so an ORD-0332 cite should use the plural or it will not find the code",
+  "request_id_hits_in_main_py": 0,
+  "request_id_header_or_middleware_hits": 0,
+  "backend_lines_scanned": 11446,
+  "fields": [
+   {
+    "field": "http_status",
+    "verdict": "EMITTED",
+    "produced_by": [
+     [
+      "backend",
+      "backend/app/main.py",
+      492
+     ]
+    ],
+    "read_by_client": [
+     [
+      "frontend",
+      "api/citynexus.ts",
+      681
+     ],
+     [
+      "frontend",
+      "api/citynexus.ts",
+      689
+     ]
+    ],
+    "channel_key": [
+     [
+      "frontend",
+      "lib/failureAttribution.ts",
+      57
+     ],
+     [
+      "frontend",
+      "lib/failureAttribution.ts",
+      123
+     ]
+    ],
+    "on_screen_via": [
+     [
+      "frontend",
+      "lib/failureAttribution.ts",
+      358
+     ],
+     [
+      "frontend",
+      "lib/failureAttribution.ts",
+      133
+     ]
+    ],
+    "note": "the status is the HTTP status line, not a body key; it reaches the traveller inside copyFor's device sentence and inside Attribution.telemetry",
+    "citations": [
+     {
+      "kind": "backend",
+      "where": "backend/app/main.py",
+      "line": 492,
+      "text": "return JSONResponse(status_code=status, content={\"error\": body})"
+     },
+     {
+      "kind": "frontend",
+      "where": "api/citynexus.ts",
+      "line": 681,
+      "text": "response.status,"
+     },
+     {
+      "kind": "frontend",
+      "where": "api/citynexus.ts",
+      "line": 689,
+      "text": "response.status,"
+     },
+     {
+      "kind": "frontend",
+      "where": "lib/failureAttribution.ts",
+      "line": 57,
+      "text": "http_status: number | null;"
+     },
+     {
+      "kind": "frontend",
+      "where": "lib/failureAttribution.ts",
+      "line": 123,
+      "text": "http_status,"
+     },
+     {
+      "kind": "frontend",
+      "where": "lib/failureAttribution.ts",
+      "line": 358,
+      "text": "? `服务器刚才答了你，但它自己报错了（HTTP ${attribution.http_status}）。这是服务暂时不可用，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`"
+     },
+     {
+      "kind": "frontend",
+      "where": "lib/failureAttribution.ts",
+      "line": 133,
+      "text": "`http_status=${http_status ?? \"none\"}`,"
+     }
+    ]
+   },
+   {
+    "field": "content_type",
+    "verdict": "EMITTED_BUT_ONLY_READ_ON_ONE_LEG",
+    "produced_by": [
+     [
+      "backend",
+      "backend/app/main.py",
+      492
+     ]
+    ],
+    "read_by_client": [
+     [
+      "frontend",
+      "api/citynexus.ts",
+      687
+     ]
+    ],
+    "channel_key": [
+     [
+      "frontend",
+      "lib/failureAttribution.ts",
+      68
+     ]
+    ],
+    "on_screen_via": [
+     [
+      "frontend",
+      "lib/failureAttribution.ts",
+      378
+     ]
+    ],
+    "note": "the client reads the header only inside the guard at api/citynexus.ts:686 (parse failed, or a 2xx with no bytes). A plain 4xx with a valid JSON body never reads it, so Attribution.content_type stays undefined on that leg and the telemetry line omits the key rather than showing an empty one",
+    "citations": [
+     {
+      "kind": "backend",
+      "where": "backend/app/main.py",
+      "line": 492,
+      "text": "return JSONResponse(status_code=status, content={\"error\": body})"
+     },
+     {
+      "kind": "frontend",
+      "where": "api/citynexus.ts",
+      "line": 687,
+      "text": "const contentType = response.headers.get(\"content-type\");"
+     },
+     {
+      "kind": "frontend",
+      "where": "lib/failureAttribution.ts",
+      "line": 68,
+      "text": "content_type?: string | null;"
+     },
+     {
+      "kind": "frontend",
+      "where": "lib/failureAttribution.ts",
+      "line": 378,
+      "text": "? `它确实回了话（HTTP ${attribution.http_status ?? \"2xx\"}，Content-Type: ${attribution.content_type ?? \"未知\"}），只是那不是一个可解析的行程响应。这属于服务暂时不可用的一种，不是你填错了什么。这台设备上还留着你已保存的行程，用下面的按钮可以只读查看这份本地快照；也可以稍后重试。`"
+     }
+    ]
+   },
+   {
+    "field": "body_bytes",
+    "verdict": "NOT_EMITTED_ANYWHERE",
+    "produced_by": [],
+    "read_by_client": [],
+    "channel_key": [],
+    "on_screen_via": [],
+    "note": "the only place a byte count could exist is api/citynexus.ts:663, which reads the whole body as text and then throws the length away. The server never sends one. Requiring this field on screen today asks the product to state a number nobody measured",
+    "citations": []
+   },
+   {
+    "field": "response_received",
+    "verdict": "NOT_EMITTED_AS_A_FIELD_ALREADY_COVERED_UNDER_ANOTHER_NAME",
+    "produced_by": [],
+    "read_by_client": [],
+    "channel_key": [
+     [
+      "frontend",
+      "lib/failureAttribution.ts",
+      42
+     ]
+    ],
+    "on_screen_via": [
+     [
+      "frontend",
+      "lib/failureAttribution.ts",
+      132
+     ]
+    ],
+    "note": "the existing channel encodes the same fact as evidence_kind = HTTP_RESPONSE | TRANSPORT (and HEALTH_PROBE). Adding a boolean that duplicates it would widen Attribution for no new information - that is a semantics change and per the order I report it instead of doing it",
+    "citations": [
+     {
+      "kind": "frontend",
+      "where": "lib/failureAttribution.ts",
+      "line": 42,
+      "text": "export type EvidenceKind = \"HTTP_RESPONSE\" | \"TRANSPORT\" | \"HEALTH_PROBE\";"
+     },
+     {
+      "kind": "frontend",
+      "where": "lib/failureAttribution.ts",
+      "line": 132,
+      "text": "`evidence_kind=${evidence_kind}`,"
+     }
+    ]
+   },
+   {
+    "field": "elapsed_ms",
+    "verdict": "NOT_EMITTED_ON_THIS_PATH",
+    "produced_by": [],
+    "read_by_client": [],
+    "channel_key": [],
+    "on_screen_via": [],
+    "note": "the name does exist in the codebase at api/citynexus.ts:730, but it belongs to the execution-clock payload, not to a copilot failure, and the comment at api/citynexus.ts:757 records that the backend refuses to invent that denominator. Nothing times the copilot request today",
+    "citations": []
+   },
+   {
+    "field": "request_id",
+    "verdict": "NOT_EMITTED",
+    "produced_by": [
+     [
+      "backend",
+      "backend/app/main.py",
+      487
+     ],
+     [
+      "backend",
+      "backend/app/main.py",
+      456
+     ]
+    ],
+    "read_by_client": [],
+    "channel_key": [],
+    "on_screen_via": [],
+    "note": "lane B's measurement reproduces: request_id appears 0 times in backend/app/main.py, and there is no X-Request-Id header and no middleware that adds one (0 hits for request-id/middleware in the whole file). The server does mint an id for every refusal - error.trace_id, produced by trace_id() - but the client never reads it and the channel has no slot for it. ORD-0332's real question is therefore not 'emit request_id' but 'expose the trace_id that already exists, under which name'",
+    "citations": [
+     {
+      "kind": "backend",
+      "where": "backend/app/main.py",
+      "line": 487,
+      "text": "\"trace_id\": trace_id(),"
+     },
+     {
+      "kind": "backend",
+      "where": "backend/app/main.py",
+      "line": 456,
+      "text": "def trace_id() -> str:"
+     }
+    ]
+   }
+  ],
+  "summary": {
+   "EMITTED": 1,
+   "EMITTED_BUT_ONLY_READ_ON_ONE_LEG": 1,
+   "NOT_EMITTED_ANYWHERE": 1,
+   "NOT_EMITTED_AS_A_FIELD_ALREADY_COVERED_UNDER_ANOTHER_NAME": 1,
+   "NOT_EMITTED_ON_THIS_PATH": 1,
+   "NOT_EMITTED": 1
+  }
+ },
+ "claim_kind": "code_landed_plus_field_measurement",
+ "claimed_result": "agent/S1-q64sweep-candidates-r3 @ 08a651e7fc25: 2 files, r5 28 -> 25 (3 agent sinks removed, 0 added), tsc 0, of the six allowed fields {\"EMITTED\": 1, \"EMITTED_BUT_ONLY_READ_ON_ONE_LEG\": 1, \"NOT_EMITTED\": 1, \"NOT_EMITTED_ANYWHERE\": 1, \"NOT_EMITTED_AS_A_FIELD_ALREADY_COVERED_UNDER_ANOTHER_NAME\": 1, \"NOT_EMITTED_ON_THIS_PATH\": 1}",
+ "derived_result": "the two assigned agent files are clean under r5 in both directions; three of the six allowed fields cannot be shown at all today, so ORD-0332 is the order that decides whether they get produced"
+}
