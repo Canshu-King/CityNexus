@@ -1,0 +1,25 @@
+{
+ "asked": "http://127.0.0.1:8562/api/v1/journeys/d845ac26-0add-4305-bd3f-3f7c6f6fe3c1/experience",
+ "face_port": 8562,
+ "face_tag": "real_backend",
+ "policy_stamp": "A1_REAL_LOCK_500_PLAIN",
+ "method": "GET",
+ "why_this_method": "the real-backend face is probed with a READ so this probe adds no write to the product database",
+ "upstream_port": 8561,
+ "upstream_listening": true,
+ "origin_listening": true,
+ "real_backend_listening": true,
+ "probe": {
+  "status": 200,
+  "content_type": "application/json",
+  "bytes": 2251,
+  "headers": {
+   "date": "Fri, 25 Sep 2026 06:49:47 GMT",
+   "server": "uvicorn",
+   "content-length": "2251",
+   "connection": "close"
+  },
+  "body_head": "{\"journey\":{\"id\":\"d845ac26-0add-4305-bd3f-3f7c6f6fe3c1\",\"traveler_id\":\"ab3d1aa0-c69c-4b0a-99ff-14d65c2410ee\",\"title\":\"HJ",
+  "elapsed_ms": 82
+ }
+}
