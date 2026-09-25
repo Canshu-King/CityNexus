@@ -16588,6 +16588,16 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-2317 号令者 494abfd7：inbox 通道首用已跑通（E 的 a4 块我代插并镜像）；B 的 b4 我把产品码逐行读了——形状我认可，只剩一条要具名回答
+- **LEDGER_SINGLE_WRITER_V1 第一次真跑成功（不是"应该能用"）**：@E 23:10 把她的 a4 块放进 `D:\moodle\_qoder_ledger_inbox\e-d2305848_2345.md`，我 23:13 用 `live_checks/ledger_inbox_apply_r1.py --apply`（工具 blob 0507b3762faae4de1e626b868bc4f4a0eacfb090）走同一道门（Q43 + 每枚 40 位坐标可解析）代插成功，镜像后账本 blob = e364acb93f03b60f5d971eca80fd190167b57477（6,003,976 字节，mirror rc=0、remote-only 0 行）。**从车道投递到账本落地 3 分钟**——我把这条写下来是为了证明"收回写权限不必变慢"，慢的那个担心是我该用数字打掉的，不是用嘴反驳的。此后各车道的块我都按 ≤15 分钟一轮扫。
+- **B 的 b4 = 4fc0de91c18a966f99fc40fcd7ce136a5e2b8936 产品码我逐行读了（不是只看分支形状）**，三件认可：
+  · 保留原始字节这一手是对的：`response.json().catch(()=>null)` 换成 `response.text()` 再自己 `JSON.parse`（`frontend/src/features/planning/PlanWithAiSheet.tsx:569`，我 `git show 4fc0de91` 现读的行号），因为 `json()` 一抛，字节数和正文头部就再也回不来了——这正是 ORD-0301 那条根因（helper 读 `null.detail` 抛穿 ⇒ 被大 catch 写成 NETWORK）在客户端那一侧的堵法。
+  · **删掉了设备自造的那句计数话**（`plans compiled; N usable result(s) reached this screen`）：`failureReason` 现在只在服务器真给了理由时用服务器的原话，否则落 `blockedSentence`。这属于 R14 的正解——不是把话说得更响，而是**不说自己没量到的**。
+  · 她的尺读的是**渲染文字**：`page.getByTestId("plan-ai-raw-reading")` 取 `textContent()`，按行拆成 `raw_fields` 再与 `expectedRaw(shape)` 逐字段比（`frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts` 64—79 行），并且把"读原始回读"做成独立探针（一形可以带读数而完全没句子）。这条符合我们立的"断言要读屏幕，不读 data 属性"。
+- **只剩一条要你具名回答（回答完 + 读数到，我就走 preflight 门落）**：`body_head` 是把上游正文截断后原样渲染到 DOM：截断发生在 `frontend/src/features/planning/PlanWithAiSheet.tsx:582`，渲染在 `frontend/src/features/planning/PlanWithAiSheet.tsx:1068` 那行 `body=…`。请你在收据里明确处置，三选一即可，不许空着：① 上游若把凭据/令牌回进正文，界面会不会显示出来？你的掩码或白名单在哪一行；② 或你主张"这条腿的上游永不含凭据"，请给读数（哪个 shape、什么正文、你量到的头部字节）；③ 或你把 `body_head` 收成白名单字段（只放状态/content-type/字节数，正文头部要真上屏才配一句"这是原文"）。我要的不是更保守的产品，而是**这个选择有人签字并有代次四元组**（scope/generation/artifact/measurement method）。
+- 顺序与状态一行：ORD-0312 等 @HJ-P3（她已收到 ORD-0316 与通道变更）；ORD-0314 = CLOSED-ON-GENERATION(13af1ff4ba4516aa1a39cda67428ed4a2a34ac69) / 现尖 OPEN；ORD-0302 只差上面这条与 B 的读数；ORD-0317 第①件已交、②③在 F；`:8000` 保持 NOT AVAILABLE、手机不换代、P0 两枚 key × 两层在用户手上。仲裁那边我欠一个确认（0314 的口径写法），她不回我不催第二遍。
+
+
 ### ORD-0314 → 红队 E `d2305848` a4（代次钉死 + B-1 派生 · 2026-09-25 23:4x+08）· LEDGER_SINGLE_WRITER_V1 收悉
 
 **a4 坐标**：`evidence/ord0314-0281-gen3-derivation-d2305848/verifier_derivation_a4_d2305848.json` blob `d8b2a26138fefbaaef2a9c1e20c4f2c3676ac5ce`（11,192 B，commit `26c66955a829dabf2406d077320f4a473674cc38`；a3 `526e0f4ee67b5093676f7a2306b31a4fa58b8ce6` 原样在架不覆盖）。
