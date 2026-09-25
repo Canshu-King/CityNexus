@@ -1,0 +1,115 @@
+{
+ "what": "pytest 之外、环境未洗的 strict 臂（三向 + 一个默认对照），号令 19:52 记在 F 名下待接那一格",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T20:00:30+08:00",
+ "measured_on": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+ "tree": "整树导出 snap_0296r5（含 frontend/ 与 qoder-handoff/，不是部分导出）",
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe",
+ "command_per_arm": "\"<venv python>\" -c \"import app.main\"，cwd=snap_0296r5/backend",
+ "why_three_arms": "两向（strict 拒 / report 起）分不出牙来自策略还是来自环境 ⇒ 必须加『strict + 环境洗过』这一臂：它不拒，才证明套件里那条绿来自 conftest 清洗环境，而不是来自 strict 安全。第四臂是默认档 + 洗过，对齐 pytest 的真实语境。",
+ "arms": [
+  {
+   "arm": "A1_strict_unscrubbed",
+   "policy": "strict",
+   "environment_scrubbed": false,
+   "ai_keys_visible_to_child": 2,
+   "names": [
+    "DEEPSEEK_API_KEY",
+    "OPENAI_API_KEY"
+   ],
+   "lengths": {
+    "DEEPSEEK_API_KEY": 35,
+    "OPENAI_API_KEY": 67
+   },
+   "fingerprints": {
+    "DEEPSEEK_API_KEY": "4cabe6bcaff4",
+    "OPENAI_API_KEY": "ed7e75ba651c"
+   },
+   "rc": 1,
+   "refused": true,
+   "gate_named_in_output": true,
+   "value_leaked_into_output": false,
+   "tail": [
+    "raise CredentialLiteralError(report[\"live\"], \"strict\", report[\"verdict\"])",
+    "app.security.credential_literals.CredentialLiteralError: LIVE_CREDENTIAL_IN_ENVIRONMENT: 1 处未申报的字面量凭据（只报位置与摘要）：DEEPSEEK_API_KEY:0 token_fp=4cabe6bcaff"
+   ],
+   "runId": "strictarm-A1_strict_unscrubbed-34b279b9d461"
+  },
+  {
+   "arm": "A2_report_unscrubbed",
+   "policy": "report",
+   "environment_scrubbed": false,
+   "ai_keys_visible_to_child": 2,
+   "names": [
+    "DEEPSEEK_API_KEY",
+    "OPENAI_API_KEY"
+   ],
+   "lengths": {
+    "DEEPSEEK_API_KEY": 35,
+    "OPENAI_API_KEY": 67
+   },
+   "fingerprints": {
+    "DEEPSEEK_API_KEY": "4cabe6bcaff4",
+    "OPENAI_API_KEY": "ed7e75ba651c"
+   },
+   "rc": 0,
+   "refused": false,
+   "gate_named_in_output": false,
+   "value_leaked_into_output": false,
+   "tail": [],
+   "runId": "strictarm-A2_report_unscrubbed-090bb73490dc"
+  },
+  {
+   "arm": "A3_strict_scrubbed",
+   "policy": "strict",
+   "environment_scrubbed": true,
+   "ai_keys_visible_to_child": 0,
+   "names": [],
+   "lengths": {},
+   "fingerprints": {},
+   "rc": 0,
+   "refused": false,
+   "gate_named_in_output": false,
+   "value_leaked_into_output": false,
+   "tail": [],
+   "runId": "strictarm-A3_strict_scrubbed-a25d43b8f4cf"
+  },
+  {
+   "arm": "A4_default_scrubbed",
+   "policy": "(未设=默认)",
+   "environment_scrubbed": true,
+   "ai_keys_visible_to_child": 0,
+   "names": [],
+   "lengths": {},
+   "fingerprints": {},
+   "rc": 0,
+   "refused": false,
+   "gate_named_in_output": false,
+   "value_leaked_into_output": false,
+   "tail": [],
+   "runId": "strictarm-A4_default_scrubbed-a25d43b8f4cf"
+  }
+ ],
+ "verdict": "ARM_PROVES_STRICT_HAS_TEETH_ONLY_WITH_ENVIRONMENT",
+ "for_the_prod_decision": "prod 显式 strict 的验收必须在**没被 conftest 洗过的进程**里做（例如起面脚本或这条臂），并且不能拿 pytest 的绿当证据；今天这棵树在真环境下 strict 会拒启动 ⇒ 上 prod 前必须先把 key 轮换完，否则门会把自己的服务拒掉（这与号令 18:45 裁定 (b) 的顺序一致）。",
+ "db_side_effects": {
+  "before": [
+   "citynexus.db"
+  ],
+  "after": [
+   "citynexus.db"
+  ],
+  "note": "只在 snap 导出目录内，用户库与 _live/_preview 0 读写"
+ },
+ "discipline": {
+  "credential_values_printed": 0,
+  "registry_reads_or_writes": 0,
+  "authoritative_line_written": 0,
+  "product_tree_written": 0,
+  "refs_pushed_this_note": 0,
+  "live_or_preview_db": 0
+ },
+ "claim_kind": "runtime_measured",
+ "claimed_result": "ARM_PROVES_STRICT_HAS_TEETH_ONLY_WITH_ENVIRONMENT",
+ "derived_result": null
+}
