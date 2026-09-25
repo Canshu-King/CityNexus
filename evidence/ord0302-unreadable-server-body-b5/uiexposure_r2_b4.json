@@ -1,0 +1,82 @@
+{
+ "schema": "CNX_CMDR_UI_EVIDENCE_EXPOSURE_GATE_V1_R2",
+ "revision_of": "ui_exposure_field_check_r1.py = 0ba79e00738984ee06651219530e5a9d7fa897e3 (bytes untouched)",
+ "revision_reason": "lane E d2305848 ORD-0319 caught a blind spot; commander reproduced it first-hand: r1 reports 0 hits on the tip while PlanWithAiSheet.tsx:1016 renders result.failureReason.text, fed by serverReasonSentence (:159-165) reading body.detail / error.message at :576/:637/:711",
+ "attribution": "COMMANDER_RULER_BLIND_SPOT",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T01:17:56+0800",
+ "standing_rule": "Q64=1 (arbiter): data reaching UI / screenshot / evidence artifacts must pass source classification -> allowed fields -> render. mask is a helper, never the first gate.",
+ "allowed_fields": [
+  "http_status",
+  "content_type",
+  "body_bytes",
+  "response_received",
+  "elapsed_ms",
+  "request_id"
+ ],
+ "forbidden": [
+  "raw body",
+  "raw detail",
+  "raw exception",
+  "upstream sentence reaching DOM via a helper"
+ ],
+ "rules_fired": [
+  "RAW_BODY_TO_DOM",
+  "RAW_TEXT_INTERPOLATION",
+  "UPSTREAM_TEXT_VIA_HELPER_TO_DOM"
+ ],
+ "targets_scanned": [
+  "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx"
+ ],
+ "hits": [
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 187,
+   "snippet": "body_head: string;"
+  },
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 582,
+   "snippet": "body_head: raw === null ? \"\" : raw.slice(0, 240),"
+  },
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 582,
+   "snippet": "body_head: raw === null ? \"\" : raw.slice(0, 240),"
+  },
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 1068,
+   "snippet": "{`body=${result.rawReading.body_head}`}"
+  },
+  {
+   "rule": "RAW_BODY_TO_DOM",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 1068,
+   "snippet": "{`body=${result.rawReading.body_head}`}"
+  },
+  {
+   "rule": "RAW_TEXT_INTERPOLATION",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 1068,
+   "snippet": "{`body=${result.rawReading.body_head}`}"
+  },
+  {
+   "rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "line": 1048,
+   "snippet": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>",
+   "taint_chain": "poisoned helper serverReasonSentence (def :159) -> bound name failureReason (assigned :604) -> result.failureReason.text rendered as text at :1048",
+   "file": "4fc0de91c18a:frontend/src/features/planning/PlanWithAiSheet.tsx"
+  }
+ ],
+ "verdict": "EXPOSURE_SHAPE_FOUND",
+ "interpretation_limit": "a hit names a shape to justify, not a defect verdict; NO_EXPOSURE_SHAPE_FOUND from r1 is additionally worthless on its own, because r1 was proven blind at this exact file - only r2's clean verdict is a clean verdict.",
+ "selftest_command": "python ui_exposure_field_check_r2.py --selftest",
+ "claim_kind": "pattern_determined",
+ "claimed_result": "EXPOSURE_SHAPE_FOUND across 1 scanned file(s): 7 hit(s) ['RAW_BODY_TO_DOM@PlanWithAiSheet.tsx:1068', 'RAW_BODY_TO_DOM@PlanWithAiSheet.tsx:187', 'RAW_BODY_TO_DOM@PlanWithAiSheet.tsx:582', 'RAW_TEXT_INTERPOLATION@PlanWithAiSheet.tsx:1068', 'UPSTREAM_TEXT_VIA_HELPER_TO_DOM@PlanWithAiSheet.tsx:1048']",
+ "derived_result": null
+}
