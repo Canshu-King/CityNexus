@@ -1,0 +1,237 @@
+{
+ "roots": [
+  "D:\\moodle\\_qoder_preview_20260920",
+  "D:\\moodle\\_qoder_integration_20260919\\frontend",
+  "D:\\moodle\\_qoder_b_lane_20260923",
+  "D:\\moodle\\_qoder_b_landing_20260923",
+  "D:\\moodle\\_qoder_wt_45b0a5e\\frontend",
+  "D:\\moodle\\CityNexus\\frontend",
+  "D:\\moodle\\_hjp3_0300_0925\\snap\\frontend"
+ ],
+ "looked": [
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\candidate_0923_f5a6b9a\\assets\\index-CrAwWm5f.js",
+   "bytes": 1234802,
+   "sha256": "9fd89456daf12bca",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-BCF4ptyk.js",
+   "bytes": 1230082,
+   "sha256": "f3bda3d696d37cd1",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-ChOTTCvB.js",
+   "bytes": 1245203,
+   "sha256": "2d56a79632efc0c6",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-CnfHH2K_.js",
+   "bytes": 1228395,
+   "sha256": "524038d21f51edfe",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-Cpy_jhEg.js",
+   "bytes": 1242399,
+   "sha256": "5d674a444291f10b",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-CrAwWm5f.js",
+   "bytes": 1234802,
+   "sha256": "9fd89456daf12bca",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-CtuiCkKf.js",
+   "bytes": 1248629,
+   "sha256": "08e5de2c560ce5a8",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-D76m_cky.js",
+   "bytes": 1238834,
+   "sha256": "270377c83471a5a1",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-DJEINrOl.js",
+   "bytes": 1236190,
+   "sha256": "80a8ca1afb915cfd",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-DtQ86lsQ.js",
+   "bytes": 1231985,
+   "sha256": "cf3a08108ffba413",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist\\assets\\index-xKIGmoBz.js",
+   "bytes": 1249346,
+   "sha256": "ba6654a08dd6f98e",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_0006\\assets\\index-BwIS1pck.js",
+   "bytes": 1210418,
+   "sha256": "bd734d7947a8402f",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_0144\\assets\\index-BkEHAbFb.js",
+   "bytes": 1214260,
+   "sha256": "bc7b94997d83d3ae",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_0210\\assets\\index-DCeYs7jw.js",
+   "bytes": 1215218,
+   "sha256": "09c58396b44e4a03",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_1247\\assets\\index-CKaJ5xEh.js",
+   "bytes": 1192171,
+   "sha256": "49eff6bb57a25774",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_1538\\assets\\index-CnfHH2K_.js",
+   "bytes": 1228395,
+   "sha256": "524038d21f51edfe",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_1825\\assets\\index-AkCV4A2Q.js",
+   "bytes": 1197305,
+   "sha256": "a6df8e1ceb86c327",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_1945\\assets\\index-6vq1iijw.js",
+   "bytes": 1201865,
+   "sha256": "74fb5cd8354732dc",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_2129\\assets\\index-DDgOVfG6.js",
+   "bytes": 1201903,
+   "sha256": "f2eaeee4223adff4",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_preview_20260920\\dist_bak_2314\\assets\\index-BVbc7LUF.js",
+   "bytes": 1202697,
+   "sha256": "712a3bd6048e73af",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_integration_20260919\\frontend\\dist\\assets\\index-DtQ86lsQ.js",
+   "bytes": 1231985,
+   "sha256": "cf3a08108ffba413",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274b2b_stepforced\\assets\\index-DedDtw0T.js",
+   "bytes": 1245890,
+   "sha256": "454c44e8843c8984",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274b2b_stepforced_t\\assets\\index-BAv32_dV.js",
+   "bytes": 1249359,
+   "sha256": "c46dcefc3e7fc47b",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274b2b_steponly\\assets\\index-B6rmzT7Z.js",
+   "bytes": 1245910,
+   "sha256": "d5406d4a62c2590a",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274b2b_steponly_t\\assets\\index-ANxDgNzp.js",
+   "bytes": 1249377,
+   "sha256": "06eacbe22711cf6d",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274b2c_eager\\assets\\index-B-sFqRzq.js",
+   "bytes": 1249039,
+   "sha256": "d61ab0e586c7e2e9",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274b2c_manual\\assets\\index-EX5IfQcB.js",
+   "bytes": 1249176,
+   "sha256": "33d801b06bcf1c13",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274gen2b\\assets\\index-CL1NqhoE.js",
+   "bytes": 1249387,
+   "sha256": "390febe6e7e0983b",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274sw\\assets\\index-xKIGmoBz.js",
+   "bytes": 1249346,
+   "sha256": "ba6654a08dd6f98e",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0274sw_gen2\\assets\\index-0274gen2.js",
+   "bytes": 1245186,
+   "sha256": "6e06030433cba7ed",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0280\\assets\\index-CiK8NvBw.js",
+   "bytes": 1248878,
+   "sha256": "3af4b146feaa39c6",
+   "markers": 2
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_ord0267b\\assets\\index-ChOTTCvB.js",
+   "bytes": 1245203,
+   "sha256": "2d56a79632efc0c6",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_ord0268_impl\\assets\\index-Cpy_jhEg.js",
+   "bytes": 1242399,
+   "sha256": "5d674a444291f10b",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_s5\\assets\\index-ChOTTCvB.js",
+   "bytes": 1245203,
+   "sha256": "2d56a79632efc0c6",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\_qoder_wt_45b0a5e\\frontend\\dist\\assets\\index-CtuiCkKf.js",
+   "bytes": 1248629,
+   "sha256": "08e5de2c560ce5a8",
+   "markers": 0
+  },
+  {
+   "file": "D:\\moodle\\CityNexus\\frontend\\dist\\assets\\index-C2AROhZO.js",
+   "bytes": 1123347,
+   "sha256": "58a5c90df70bc011",
+   "markers": 0
+  }
+ ],
+ "matches": [
+  "D:\\moodle\\_qoder_b_lane_20260923\\frontend\\dist_0280\\assets\\index-CiK8NvBw.js"
+ ],
+ "markers": [
+  "这台设备自己的读数（服务器没给句子）",
+  "agent/commands -> HTTP"
+ ],
+ "coverage": "NOT EXHAUSTIVE - these roots only; a build in another lane's private directory would not be seen here"
+}
