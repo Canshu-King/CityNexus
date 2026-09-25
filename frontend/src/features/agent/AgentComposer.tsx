@@ -4,6 +4,9 @@ import { cityNexusApi, type CopilotResponse } from "../../api/citynexus";
 import { useLocale, useT, type TripLocale } from "../../i18n/LocaleContext";
 import { formatMinorMoney } from "../../lib/money";
 import { NativeMissionTimeline } from "./CopilotDock";
+import { classifyReadFailure, copyFor } from "../../lib/failureAttribution";
+import type { Attribution } from "../../lib/failureAttribution";
+
 
 type CopilotMessage = {
   role: "user" | "assistant";
@@ -54,6 +57,8 @@ export function AgentComposer({
   const [messages, setMessages] = useState<CopilotMessage[]>(() => readStoredMessages(data.journey.id));
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /* ORD-0326: what the request actually answered, as the existing channel measured it. */
+  const [failureFacts, setFailureFacts] = useState<string | null>(null);
   const localeCode = locale === "zh-CN" ? "zh" : "en";
   const latestNativeRun = useMemo(() => {
     for (let index = messages.length - 1; index >= 0; index -= 1) {
@@ -95,7 +100,9 @@ export function AgentComposer({
         { role: "assistant", text: response.message, response },
       ]);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : t("agent.sendError"));
+      const attribution: Attribution = classifyReadFailure(cause);
+      setFailureFacts(attribution.telemetry);
+      setError(copyFor(attribution, locale.startsWith("zh")).body ?? t("agent.sendError"));
     } finally {
       setSending(false);
     }
@@ -182,7 +189,11 @@ export function AgentComposer({
         </div>
       </div>
 
-      {error && <p className="v8-message error">{error}</p>}
+      {error && (
+        <p className="v8-message error" data-testid="agent-send-error" data-attribution={failureFacts ?? ""}>
+          {error}
+        </p>
+      )}
 
       <div className="v15-copilot-history" aria-live="polite">
         {messages.map((item, index) => (

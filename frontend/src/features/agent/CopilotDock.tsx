@@ -9,6 +9,8 @@ import {
 } from "../../api/citynexus";
 import { useLocale, useT } from "../../i18n/LocaleContext";
 import { AgentRunRail, type AgentRailStep } from "./AgentRunRail";
+import { classifyReadFailure, copyFor, type Attribution } from "../../lib/failureAttribution";
+
 
 type Message = { role: "user" | "assistant"; text: string; response?: CopilotResponse };
 type NativeRun = NonNullable<CopilotResponse["agent_run"]>;
@@ -167,6 +169,7 @@ export function NativeMissionTimeline({
   );
   const [runState, setRunState] = useState(run.status);
   const [actionState, setActionState] = useState<string | null>(null);
+  const [actionFacts, setActionFacts] = useState<string | null>(null);
   const [streamError, setStreamError] = useState<string | null>(null);
 
   const appendEvents = useCallback((incoming: NativeRuntimeEvent[]) => {
@@ -342,7 +345,9 @@ export function NativeMissionTimeline({
       setRunState("stopped");
       setActionState(zh ? "已通过 CityNexus 停止" : "Stopped through CityNexus");
     } catch (cause) {
-      setActionState(cause instanceof Error ? cause.message : (zh ? "停止失败" : "Stop failed"));
+      const attribution: Attribution = classifyReadFailure(cause);
+      setActionFacts(attribution.telemetry);
+      setActionState(copyFor(attribution, zh).body ?? (zh ? "停止失败" : "Stop failed"));
     }
   };
 
@@ -360,7 +365,9 @@ export function NativeMissionTimeline({
       await cityNexusApi.approveAgentAction(data.journey.id, approvalEvent.approval_id);
       setActionState(zh ? "确认已记录；仍需由 CityNexus 执行授权" : "Approval recorded; CityNexus still owns execution authorization");
     } catch (cause) {
-      setActionState(cause instanceof Error ? cause.message : (zh ? "确认失败" : "Approval failed"));
+      const attribution: Attribution = classifyReadFailure(cause);
+      setActionFacts(attribution.telemetry);
+      setActionState(copyFor(attribution, zh).body ?? (zh ? "确认失败" : "Approval failed"));
     }
   };
 
@@ -447,7 +454,10 @@ export function NativeMissionTimeline({
         </div>
       )}
 
-      {actionState && <p className="cn-copilot-action-state" role="status">{actionState}</p>}
+      {actionState && (
+        <p className="cn-copilot-action-state" role="status" data-testid="copilot-action-state"
+           data-attribution={actionFacts ?? ""}>{actionState}</p>
+      )}
       {streamError && <p className="cn-copilot-stream-state" role="status">{streamError}</p>}
       {active && <button type="button" className="cn-copilot-stop" onClick={() => void stop()}>{zh ? "停止任务" : "Stop mission"}</button>}
     </section>
@@ -577,6 +587,7 @@ export function CopilotDock({
   const [sending, setSending] = useState(false);
   const [messages, setMessages] = useState<Message[]>(() => readStoredMessages(data.journey.id));
   const [error, setError] = useState<string | null>(null);
+  const [sendFacts, setSendFacts] = useState<string | null>(null);
   // Whether execution was observed against the Journey.  The internal
   // runtime identity never reaches the traveller.
   const [executed, setExecuted] = useState(false);
@@ -614,7 +625,9 @@ export function CopilotDock({
       setExecuted(false);
       setMessages((current) => [...current, { role: "assistant", text: response.message, response }]);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : t("agent.sendError"));
+      const attribution: Attribution = classifyReadFailure(cause);
+      setSendFacts(attribution.telemetry);
+      setError(copyFor(attribution, zh).body ?? t("agent.sendError"));
     } finally {
       setSending(false);
     }
@@ -767,7 +780,10 @@ export function CopilotDock({
               onExecutionChange={setExecuted}
             />
           )}
-          {error && <p className="cn-copilot-error" role="alert">{error}</p>}
+          {error && (
+            <p className="cn-copilot-error" role="alert" data-testid="copilot-send-error"
+               data-attribution={sendFacts ?? ""}>{error}</p>
+          )}
           <form className="cn-copilot-form" onSubmit={(event) => { event.preventDefault(); void send(); }}>
             <textarea value={draft} onChange={(event) => setDraft(event.target.value)} placeholder={t("agent.inputPlaceholder")} aria-label={t("agent.message")} rows={2} />
             <button className="v8-primary" type="submit" disabled={sending || draft.trim().length < 2}>{sending ? t("agent.working") : t("agent.send")}</button>
