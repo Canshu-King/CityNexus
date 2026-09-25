@@ -1,0 +1,1639 @@
+{
+ "schema": "CNX_ORD0320_TRIAGE_V1",
+ "order": "CMDR-0926-0308 / ORD-0320",
+ "lane": "D e345b9d6",
+ "at_local": "2026-09-26T03:30:48+0800",
+ "kind": "READ_ONLY_TRIAGE",
+ "generation": {
+  "tip_read_by_this_run": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "tip_the_sweep_measured": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+  "same": false,
+  "frontend_subtree": "3257a0266fbb73cfd452c5a1106ba416a4703ec0",
+  "ruler_r2_blob": "608016f6a538097041554b76cfe3e9a4192f299c",
+  "sweep_artifact": {
+   "path": "commander/control:evidence/q64-sweep-S1/sweep_r1.json",
+   "blob": "f783b12eea629d52dbe8ff00f45716d50b99e30c"
+  },
+  "commander_verify_artifact": {
+   "path": "commander/control:evidence/cmdr-s1-verify-0306/verify_r1.json",
+   "blob": "2799ec3d3be2b058edde839bfeba96c947e6332d"
+  }
+ },
+ "method": "三个谓词（upstream_read / reaches_dom / attributed）全部在本脚本对 `git show <tip>:<path>` 的字节上算，引用的每一行都重新读回并与清扫件引文逐字比对；桶计数由 rows 派生，不写字面量",
+ "input_cells": {
+  "selected_upstream_prose": 16,
+  "sweep_classification_tally": {
+   "local_wording": 6,
+   "machine_label": 3,
+   "upstream_prose": 16
+  },
+  "sweep_hits_total": 25,
+  "consistency_check": true,
+  "files_touched_by_these_cells": 8
+ },
+ "generation_transfer": {
+  "current_tip_read_after_the_rows": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "sweep_tip": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+  "same": false,
+  "per_cell": {
+   "T01": {
+    "blob_at_sweep_tip": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+    "blob_at_current_tip": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+    "bytes_identical": true,
+    "cited_lines": [
+     169,
+     170,
+     172,
+     1028,
+     1030,
+     1562
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T02": {
+    "blob_at_sweep_tip": "9ebcd97969102e95bfecc1c78995570409dd0964",
+    "blob_at_current_tip": "9ebcd97969102e95bfecc1c78995570409dd0964",
+    "bytes_identical": true,
+    "cited_lines": [
+     102,
+     104,
+     105
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T03": {
+    "blob_at_sweep_tip": "504ef34fe79d1bc96bb1c8ae6aa99ba68bbc665d",
+    "blob_at_current_tip": "504ef34fe79d1bc96bb1c8ae6aa99ba68bbc665d",
+    "bytes_identical": true,
+    "cited_lines": [
+     95,
+     196,
+     384,
+     908
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T04": {
+    "blob_at_sweep_tip": "d6019d003aa4cd266374d7dbbfb3b803379a8c55",
+    "blob_at_current_tip": "d6019d003aa4cd266374d7dbbfb3b803379a8c55",
+    "bytes_identical": true,
+    "cited_lines": [
+     384,
+     615,
+     743
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T05": {
+    "blob_at_sweep_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "blob_at_current_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "bytes_identical": true,
+    "cited_lines": [
+     88,
+     460,
+     474,
+     688,
+     691
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T06": {
+    "blob_at_sweep_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "blob_at_current_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "bytes_identical": true,
+    "cited_lines": [
+     88,
+     307,
+     308,
+     687
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T07": {
+    "blob_at_sweep_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "blob_at_current_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "bytes_identical": true,
+    "cited_lines": [
+     88,
+     317,
+     318,
+     687
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T08": {
+    "blob_at_sweep_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "blob_at_current_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "bytes_identical": true,
+    "cited_lines": [
+     88,
+     336,
+     339,
+     731
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T09": {
+    "blob_at_sweep_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "blob_at_current_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "bytes_identical": true,
+    "cited_lines": [
+     88,
+     386,
+     387,
+     687
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T10": {
+    "blob_at_sweep_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "blob_at_current_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "bytes_identical": true,
+    "cited_lines": [
+     88,
+     407,
+     408,
+     687
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T11": {
+    "blob_at_sweep_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "blob_at_current_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "bytes_identical": true,
+    "cited_lines": [
+     88,
+     435,
+     436,
+     687
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T12": {
+    "blob_at_sweep_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "blob_at_current_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "bytes_identical": true,
+    "cited_lines": [
+     88,
+     459,
+     460,
+     474,
+     691
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T13": {
+    "blob_at_sweep_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "blob_at_current_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+    "bytes_identical": true,
+    "cited_lines": [
+     88,
+     517,
+     518,
+     687
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T14": {
+    "blob_at_sweep_tip": "378bd15134f62bff6479d1700953cd1966cf15ae",
+    "blob_at_current_tip": "378bd15134f62bff6479d1700953cd1966cf15ae",
+    "bytes_identical": true,
+    "cited_lines": [
+     92,
+     95,
+     96,
+     260
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   },
+   "T15": {
+    "blob_at_sweep_tip": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+    "blob_at_current_tip": "fc4d6111dc013008b610a240aab096deebe2436f",
+    "bytes_identical": false,
+    "cited_lines": [
+     159,
+     161,
+     163,
+     1013,
+     1016
+    ],
+    "lines_that_differ": [
+     1013,
+     1016
+    ],
+    "verdict": "RE-MEASURE_ON_THE_CURRENT_TIP",
+    "remeasured_at_current_tip": {
+     "looked_for_this_sink_text": "<code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>",
+     "found_at_lines": [
+      1046
+     ],
+     "attribution_within_the_same_window": [
+      [
+       1036,
+       "data-reason-origin={result.failureReason.from}"
+      ],
+      [
+       1038,
+       "{result.failureReason.from === \"server\""
+      ],
+      [
+       1040,
+       "? \"服务器给出的原因\""
+      ],
+      [
+       1041,
+       ": \"Reason the server gave\""
+      ],
+      [
+       1043,
+       "? \"这台设备自己的读数（服务器没给句子）\""
+      ],
+      [
+       1044,
+       ": \"This device's own reading (the server sent no sentence)\"}"
+      ]
+     ],
+     "bucket_carries_over": true,
+     "bucket_at_current_tip": "COMPLIANT_WITH_ATTRIBUTION"
+    }
+   },
+   "T16": {
+    "blob_at_sweep_tip": "5154c19580bd344cb49afe07c34dc346dff49f0f",
+    "blob_at_current_tip": "5154c19580bd344cb49afe07c34dc346dff49f0f",
+    "bytes_identical": true,
+    "cited_lines": [
+     91,
+     93,
+     104,
+     229
+    ],
+    "lines_that_differ": [],
+    "verdict": "CITES_HOLD_ON_BOTH_TIPS"
+   }
+  },
+  "verdicts": [
+   "CITES_HOLD_ON_BOTH_TIPS",
+   "RE-MEASURE_ON_THE_CURRENT_TIP"
+  ]
+ },
+ "population_upstream_throwers": [
+  "api/v12Authoritative.ts:throw new Error(body?.detail ?? body?.error?.message ?? `Request faile",
+  "features/discovery/RealCityDiscoveryPanel.tsx:throw new Error(body?.error?.message ?? body?.detail ?? `Request faile",
+  "features/inbox/JourneyInboxWorkbench.tsx:throw new Error(payload.error?.message ?? payload.detail ?? `Request f",
+  "features/recovery/V14RecoveryTruthPanel.tsx:if (!response.ok) throw new Error(body?.detail ?? \"Recovery acceptance"
+ ],
+ "disagreement_with_the_sweep": [
+  {
+   "id": "T02",
+   "cite": "frontend/src/components/ProductErrorBoundary.tsx:104",
+   "bucket": "NEEDS_RULING",
+   "why_this_lane_cannot_confirm_upstream_prose": "根错误边界渲染的是别处抛出的 Error.message + React 组件栈；全树有 4 枚 thrower 把响应字段塞进 Error.message（清单见 population_upstream_throwers），上游句子能否到达这里取决于抛出阶段（render/effect 会被边界接住，事件处理器里的 throw 不会），Q64/边界口径都没定义这一层 ⇒ 不自己拍。另记一句：组件栈进 `<pre>` 是另一条规则的事，不在本单射程"
+  },
+  {
+   "id": "T03",
+   "cite": "frontend/src/features/agent/AgentComposer.tsx:95",
+   "bucket": "NEEDS_RULING",
+   "why_this_lane_cannot_confirm_upstream_prose": "Q64 未定义『服务器 authored 的内容通道』（助手回话 / agent outcome）算不算「上游正文」：这类句子不是失败原因，但确实是服务器写的字上屏"
+  },
+  {
+   "id": "T04",
+   "cite": "frontend/src/features/agent/CopilotDock.tsx:615",
+   "bucket": "NEEDS_RULING",
+   "why_this_lane_cannot_confirm_upstream_prose": "Q64 未定义『服务器 authored 的内容通道』（助手回话 / agent outcome）算不算「上游正文」：这类句子不是失败原因，但确实是服务器写的字上屏"
+  }
+ ],
+ "buckets": {
+  "FIX_IN_PRODUCT": 12,
+  "NEEDS_RULING": 3,
+  "COMPLIANT_WITH_ATTRIBUTION": 1
+ },
+ "per_file_cell_count": {
+  "frontend/src/app/V8Experience.tsx": 1,
+  "frontend/src/components/ProductErrorBoundary.tsx": 1,
+  "frontend/src/features/agent/AgentComposer.tsx": 1,
+  "frontend/src/features/agent/CopilotDock.tsx": 1,
+  "frontend/src/features/inbox/JourneyInboxWorkbench.tsx": 9,
+  "frontend/src/features/planning/PlanComparison.tsx": 1,
+  "frontend/src/features/planning/PlanWithAiSheet.tsx": 1,
+  "frontend/src/features/stay/HotelsPanel.tsx": 1
+ },
+ "rules_of_mapping": {
+  "checked_in_this_order": [
+   "attributed -> COMPLIANT_WITH_ATTRIBUTION",
+   "no upstream read -> NEEDS_RULING",
+   "content channel -> NEEDS_RULING",
+   "inherited read at a root boundary -> NEEDS_RULING",
+   "no setter chain to the rendered name -> NEEDS_RULING",
+   "reaches DOM with a proven chain -> FIX_IN_PRODUCT"
+  ],
+  "NEEDS_RULING": "谓词不足以判定（内容通道未定义 / 本文件内找不到渲染点 / 找不到上游读取行），并写出缺哪个定义，不偷转为前两桶"
+ },
+ "rows": [
+  {
+   "id": "T01",
+   "file": "frontend/src/app/V8Experience.tsx",
+   "blob_at_tip": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+   "blob_quoted_by_the_sweep": "17ef83b6ec58b4190f483733501ea1b973336d5f",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 1028,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/app/V8Experience.tsx:1030",
+     "text": "          error instanceof Error ? error.message : t(\"shell.loadError\"),",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/app/V8Experience.tsx:1562",
+     "text": "            {message}",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/app/V8Experience.tsx:169",
+     "text": "    (typeof body?.detail === \"string\" ? body.detail : null) ??",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/app/V8Experience.tsx:170",
+     "text": "    (typeof body?.error?.message === \"string\" ? body.error.message : null) ??",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/app/V8Experience.tsx:172",
+     "text": "  return fields ? `${headline} — ${fields}` : headline;",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/app/V8Experience.tsx:169",
+     "frontend/src/app/V8Experience.tsx:170"
+    ],
+    "in_file_thrower_embeds_response_body": false,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/app/V8Experience.tsx:1562"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 1018,
+     "to": 1038
+    },
+    "rendered_names_at_the_sink": [
+     "message"
+    ],
+    "state_write_chain": {
+     "rendered": "message",
+     "link": "FROM_ERROR_OBJECT_MESSAGE",
+     "setter_line": 1029,
+     "setter_text": "setMessage(",
+     "region": [
+      "1019:setMessage(",
+      "1020:locale.startsWith(\"zh\")",
+      "1021:? tripWritten",
+      "1022:? \"已停止等待。行程已经创建，住宿搜索可能仍在服务器上运行，稍后回到 Today 查看结果。\"",
+      "1023:: \"已停止等待，行程还没有创建。\"",
+      "1024:: tripWritten"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "setMessage(error.message); the throw site is v8RequestInner -> V8Rejection(rejectionReason(body,status)) and rejectionReason takes body.detail / body.error.message verbatim (169-171) plus the server validation msgs joined at 163. Rendered as text at 1562."
+  },
+  {
+   "id": "T02",
+   "file": "frontend/src/components/ProductErrorBoundary.tsx",
+   "blob_at_tip": "9ebcd97969102e95bfecc1c78995570409dd0964",
+   "blob_quoted_by_the_sweep": "9ebcd97969102e95bfecc1c78995570409dd0964",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 104,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/components/ProductErrorBoundary.tsx:102",
+     "text": "          <summary>{t.detail}</summary>",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/components/ProductErrorBoundary.tsx:104",
+     "text": "            {String(error?.message || error)}",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/components/ProductErrorBoundary.tsx:105",
+     "text": "            {info ? `\\n${info}` : \"\"}",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [],
+    "in_file_thrower_embeds_response_body": false,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/components/ProductErrorBoundary.tsx:102",
+     "frontend/src/components/ProductErrorBoundary.tsx:104",
+     "frontend/src/components/ProductErrorBoundary.tsx:105"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 94,
+     "to": 111
+    },
+    "rendered_names_at_the_sink": [
+     "detail",
+     "error",
+     "info",
+     "message",
+     "t"
+    ],
+    "state_write_chain": {
+     "rendered": "detail",
+     "link": "NO_SETTER_FOUND"
+    },
+    "state_link_established": true
+   },
+   "bucket": "NEEDS_RULING",
+   "missing_definition": "根错误边界渲染的是别处抛出的 Error.message + React 组件栈；全树有 4 枚 thrower 把响应字段塞进 Error.message（清单见 population_upstream_throwers），上游句子能否到达这里取决于抛出阶段（render/effect 会被边界接住，事件处理器里的 throw 不会），Q64/边界口径都没定义这一层 ⇒ 不自己拍。另记一句：组件栈进 `<pre>` 是另一条规则的事，不在本单射程",
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "components/ProductErrorBoundary.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 components/ProductErrorBoundary.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "A pre with data-testid=error-detail renders String(error?.message || error) and React's info (the component stack) verbatim. The details fold is closed by default, but both strings are in the DOM the moment the boundary trips."
+  },
+  {
+   "id": "T03",
+   "file": "frontend/src/features/agent/AgentComposer.tsx",
+   "blob_at_tip": "504ef34fe79d1bc96bb1c8ae6aa99ba68bbc665d",
+   "blob_quoted_by_the_sweep": "504ef34fe79d1bc96bb1c8ae6aa99ba68bbc665d",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 95,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/agent/AgentComposer.tsx:95",
+     "text": "        { role: \"assistant\", text: response.message, response },",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/agent/AgentComposer.tsx:196",
+     "text": "            <p>{item.text}</p>",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/api/citynexus.ts:384",
+     "text": "  message: string;",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/api/citynexus.ts:908",
+     "text": "    return requestJson<CopilotResponse>(\"/journeys/\" + journeyId + \"/copilot/messages\", {",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/agent/AgentComposer.tsx:95"
+    ],
+    "in_file_thrower_embeds_response_body": false,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/agent/AgentComposer.tsx:95",
+     "frontend/src/features/agent/AgentComposer.tsx:196"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 85,
+     "to": 105
+    },
+    "rendered_names_at_the_sink": [
+     "assistant",
+     "item",
+     "message",
+     "response",
+     "role",
+     "text"
+    ],
+    "state_write_chain": {
+     "rendered": "message",
+     "link": "VIA_LOCAL_VARIABLE",
+     "setter_line": 145,
+     "setter_text": "onChange={(event) => setMessage(event.target.value)}",
+     "region": [
+      "145:onChange={(event) => setMessage(event.target.value)}"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "NEEDS_RULING",
+   "missing_definition": "Q64 未定义『服务器 authored 的内容通道』（助手回话 / agent outcome）算不算「上游正文」：这类句子不是失败原因，但确实是服务器写的字上屏",
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/agent/AgentComposer.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/agent/AgentComposer.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "response.message is CopilotResponse.message from POST /copilot/messages (citynexus.ts 384, 908) stored as the assistant bubble text and rendered in a p at 196. This is the designed content channel (a model answer), not an error string - flagged so the commander can rule it apart."
+  },
+  {
+   "id": "T04",
+   "file": "frontend/src/features/agent/CopilotDock.tsx",
+   "blob_at_tip": "d6019d003aa4cd266374d7dbbfb3b803379a8c55",
+   "blob_quoted_by_the_sweep": "d6019d003aa4cd266374d7dbbfb3b803379a8c55",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 615,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/agent/CopilotDock.tsx:615",
+     "text": "      setMessages((current) => [...current, { role: \"assistant\", text: response.message, response }]);",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/agent/CopilotDock.tsx:743",
+     "text": "                <p>{item.text}</p>",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/api/citynexus.ts:384",
+     "text": "  message: string;",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/agent/CopilotDock.tsx:615"
+    ],
+    "in_file_thrower_embeds_response_body": false,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/agent/CopilotDock.tsx:743"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 605,
+     "to": 625
+    },
+    "rendered_names_at_the_sink": [
+     "item",
+     "text"
+    ],
+    "state_write_chain": {
+     "rendered": "item",
+     "link": "ALL_SETTER_SITES_CLEAN_OR_UNUPSTREAM",
+     "sites_examined": 2,
+     "per_site": [
+      {
+       "setter_line": 189,
+       "verdict": "ARGUMENT_NOT_UPSTREAM",
+       "setter_text": "window.localStorage.setItem(",
+       "region": [
+        "189:window.localStorage.setItem(",
+        "190:`citynexus.native-hermes.timeline.${data.journey.id}.${run.run_id}`,",
+        "191:JSON.stringify(events.slice(-250)),",
+        "192:);",
+        "193:} catch {",
+        "194:// Local storage is an enhancement only; server audit history remains authoritat"
+       ]
+      },
+      {
+       "setter_line": 594,
+       "verdict": "ARGUMENT_NOT_UPSTREAM",
+       "setter_text": "window.localStorage.setItem(",
+       "region": [
+        "594:window.localStorage.setItem(",
+        "595:`citynexus.copilot.history.${data.journey.id}`,",
+        "596:JSON.stringify(messages.slice(-50)),",
+        "597:);",
+        "598:} catch {",
+        "599:// Local persistence is best effort."
+       ]
+      }
+     ]
+    },
+    "state_link_established": false
+   },
+   "bucket": "NEEDS_RULING",
+   "missing_definition": "Q64 未定义『服务器 authored 的内容通道』（助手回话 / agent outcome）算不算「上游正文」：这类句子不是失败原因，但确实是服务器写的字上屏",
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/agent/CopilotDock.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/agent/CopilotDock.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "Same channel as AgentComposer: server assistant text stored as message text, rendered in a p at 743. Designed content, not an error string."
+  },
+  {
+   "id": "T05",
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob_at_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_quoted_by_the_sweep": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_equality": true,
+   "ruler_rule": "RAW_TEXT_INTERPOLATION",
+   "ruler_anchor_line": 691,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:688",
+     "text": "      {rawDetail && (",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691",
+     "text": "          <code>{rawDetail}</code>",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:474",
+     "text": "    setRawDetail(passed ? null : failure ?? t(\"inbox.confirmUnreadable\"));",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:460",
+     "text": "      failure = error instanceof Error ? error.message : t(\"inbox.confirmFailed\");",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88",
+     "text": "    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88"
+    ],
+    "in_file_thrower_embeds_response_body": true,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:688",
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 681,
+     "to": 701
+    },
+    "rendered_names_at_the_sink": [
+     "rawDetail"
+    ],
+    "state_write_chain": {
+     "rendered": "rawDetail",
+     "link": "VIA_VARIABLE_CHAIN",
+     "setter_line": 474,
+     "setter_text": "setRawDetail(passed ? null : failure ?? t(\"inbox.confirmUnreadable\"));",
+     "hops": [
+      [
+       "failure",
+       460,
+       "error instanceof Error ? error.message : t(\"inbox.confirmFailed\");"
+      ]
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": "该渲染点在默认折叠的 <details> 里：字节进 DOM，但『不展开就算不算上屏』Q64 未定义 ⇒ 仍按上屏记 FIX，同时把这一句挂给仲裁",
+   "mount_chain_to_root": [
+    "features/inbox/JourneyInboxWorkbench.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/inbox/JourneyInboxWorkbench.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "rawDetail is set at 474 from failure, which 460 took off error.message, and this file's own requestJson throws new Error(payload.error?.message ?? payload.detail ?? ...) at 88 - the server sentence verbatim. Rendered inside a code element at 691 when the confirmation did not pass."
+  },
+  {
+   "id": "T06",
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob_at_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_quoted_by_the_sweep": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 307,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:308",
+     "text": "      setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\"));",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88",
+     "text": "    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687",
+     "text": "      {message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88"
+    ],
+    "in_file_thrower_embeds_response_body": true,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 297,
+     "to": 317
+    },
+    "rendered_names_at_the_sink": [
+     "message"
+    ],
+    "state_write_chain": {
+     "rendered": "message",
+     "link": "FROM_ERROR_OBJECT_MESSAGE",
+     "setter_line": 308,
+     "setter_text": "setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\"));",
+     "region": [
+      "308:setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\"));"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/inbox/JourneyInboxWorkbench.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/inbox/JourneyInboxWorkbench.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "setMessage(error.message) where the only thrower on this path is this file's requestJson at 88, which embeds payload.error.message / payload.detail. Rendered in a role=status p at 687."
+  },
+  {
+   "id": "T07",
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob_at_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_quoted_by_the_sweep": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 317,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:318",
+     "text": "      setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\"));",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88",
+     "text": "    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687",
+     "text": "      {message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88"
+    ],
+    "in_file_thrower_embeds_response_body": true,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 307,
+     "to": 327
+    },
+    "rendered_names_at_the_sink": [
+     "message"
+    ],
+    "state_write_chain": {
+     "rendered": "message",
+     "link": "FROM_ERROR_OBJECT_MESSAGE",
+     "setter_line": 318,
+     "setter_text": "setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\"));",
+     "region": [
+      "308:setMessage(error instanceof Error ? error.message : t(\"inbox.memoryLoadError\"));"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/inbox/JourneyInboxWorkbench.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/inbox/JourneyInboxWorkbench.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "Same thrower (88) and same sink (687) as :307, on the loadMemory retry path."
+  },
+  {
+   "id": "T08",
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob_at_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_quoted_by_the_sweep": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 336,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:339",
+     "text": "        error instanceof Error ? error.message : t(\"inbox.pendingUnreadable\"),",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88",
+     "text": "    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:731",
+     "text": "            <code> {pendingError}</code>{\" \"}",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88"
+    ],
+    "in_file_thrower_embeds_response_body": true,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:731"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 326,
+     "to": 346
+    },
+    "rendered_names_at_the_sink": [
+     "pendingError"
+    ],
+    "state_write_chain": {
+     "rendered": "pendingError",
+     "link": "FROM_ERROR_OBJECT_MESSAGE",
+     "setter_line": 338,
+     "setter_text": "setPendingError(",
+     "region": [
+      "338:setPendingError(",
+      "339:error instanceof Error ? error.message : t(\"inbox.pendingUnreadable\"),",
+      "340:);",
+      "341:return [];",
+      "342:}",
+      "343:};"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/inbox/JourneyInboxWorkbench.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/inbox/JourneyInboxWorkbench.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "setPendingError(error.message) from the same 88 thrower; pendingError is rendered in a code element at 731 inside the queue slot."
+  },
+  {
+   "id": "T09",
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob_at_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_quoted_by_the_sweep": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 386,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:387",
+     "text": "      setMessage(error instanceof Error ? error.message : t(\"inbox.textFailed\"));",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88",
+     "text": "    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687",
+     "text": "      {message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88"
+    ],
+    "in_file_thrower_embeds_response_body": true,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 376,
+     "to": 396
+    },
+    "rendered_names_at_the_sink": [
+     "message"
+    ],
+    "state_write_chain": {
+     "rendered": "message",
+     "link": "FROM_ERROR_OBJECT_MESSAGE",
+     "setter_line": 387,
+     "setter_text": "setMessage(error instanceof Error ? error.message : t(\"inbox.textFailed\"));",
+     "region": [
+      "366:setMessage(",
+      "367:result.status === \"READY\"",
+      "368:? t(\"inbox.semanticReady\")",
+      "369:: result.status === \"NOT_CONFIGURED\"",
+      "370:? t(\"inbox.notConfigured\")",
+      "371:: result.reason ?? `${t(\"inbox.extractionStatus\")} ${result.status}`,"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/inbox/JourneyInboxWorkbench.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/inbox/JourneyInboxWorkbench.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "Text-intake failure: setMessage(error.message) from 88, rendered at 687."
+  },
+  {
+   "id": "T10",
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob_at_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_quoted_by_the_sweep": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 407,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:408",
+     "text": "      setMessage(error instanceof Error ? error.message : t(\"inbox.imageFailed\"));",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88",
+     "text": "    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687",
+     "text": "      {message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88"
+    ],
+    "in_file_thrower_embeds_response_body": true,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 397,
+     "to": 417
+    },
+    "rendered_names_at_the_sink": [
+     "message"
+    ],
+    "state_write_chain": {
+     "rendered": "message",
+     "link": "FROM_ERROR_OBJECT_MESSAGE",
+     "setter_line": 408,
+     "setter_text": "setMessage(error instanceof Error ? error.message : t(\"inbox.imageFailed\"));",
+     "region": [
+      "387:setMessage(error instanceof Error ? error.message : t(\"inbox.textFailed\"));"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/inbox/JourneyInboxWorkbench.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/inbox/JourneyInboxWorkbench.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "Image-intake failure: setMessage(error.message) from 88, rendered at 687."
+  },
+  {
+   "id": "T11",
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob_at_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_quoted_by_the_sweep": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 435,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:436",
+     "text": "      setMessage(error instanceof Error ? error.message : t(\"inbox.smartApplyFailed\"));",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88",
+     "text": "    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687",
+     "text": "      {message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88"
+    ],
+    "in_file_thrower_embeds_response_body": true,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 425,
+     "to": 445
+    },
+    "rendered_names_at_the_sink": [
+     "message"
+    ],
+    "state_write_chain": {
+     "rendered": "message",
+     "link": "FROM_ERROR_OBJECT_MESSAGE",
+     "setter_line": 436,
+     "setter_text": "setMessage(error instanceof Error ? error.message : t(\"inbox.smartApplyFailed\"));",
+     "region": [
+      "418:setMessage(",
+      "419:result.status === \"APPLIED\"",
+      "420:? t(\"inbox.semanticApplied\")",
+      "421:: t(\"inbox.stoppedAt\", { step: result.status }) + t(\"inbox.correctHint\"),",
+      "422:);",
+      "423:};"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/inbox/JourneyInboxWorkbench.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/inbox/JourneyInboxWorkbench.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "Smart-apply failure: setMessage(error.message) from 88, rendered at 687."
+  },
+  {
+   "id": "T12",
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob_at_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_quoted_by_the_sweep": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 459,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:460",
+     "text": "      failure = error instanceof Error ? error.message : t(\"inbox.confirmFailed\");",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88",
+     "text": "    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:474",
+     "text": "    setRawDetail(passed ? null : failure ?? t(\"inbox.confirmUnreadable\"));",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691",
+     "text": "          <code>{rawDetail}</code>",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88"
+    ],
+    "in_file_thrower_embeds_response_body": true,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:691"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 449,
+     "to": 469
+    },
+    "rendered_names_at_the_sink": [
+     "rawDetail"
+    ],
+    "state_write_chain": {
+     "rendered": "rawDetail",
+     "link": "VIA_VARIABLE_CHAIN",
+     "setter_line": 474,
+     "setter_text": "setRawDetail(passed ? null : failure ?? t(\"inbox.confirmUnreadable\"));",
+     "hops": [
+      [
+       "failure",
+       460,
+       "error instanceof Error ? error.message : t(\"inbox.confirmFailed\");"
+      ]
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/inbox/JourneyInboxWorkbench.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/inbox/JourneyInboxWorkbench.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "confirm(): failure = error.message from the 88 thrower, then 474 stores it in rawDetail and 691 renders it in a code element. The in-file comment at 466-467 states the intent explicitly: the raw server string is kept in the technical fold rather than paraphrased."
+  },
+  {
+   "id": "T13",
+   "file": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx",
+   "blob_at_tip": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_quoted_by_the_sweep": "b4bdf4b809478ccadd7951895a39e966852620a8",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 517,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:518",
+     "text": "      setMessage(error instanceof Error ? error.message : t(\"inbox.correctionsFailed\"));",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88",
+     "text": "    throw new Error(payload.error?.message ?? payload.detail ?? `Request failed (${response.status})`);",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687",
+     "text": "      {message && <p className=\"v10-inbox-message\" role=\"status\">{message}</p>}",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:88"
+    ],
+    "in_file_thrower_embeds_response_body": true,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/inbox/JourneyInboxWorkbench.tsx:687"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 507,
+     "to": 527
+    },
+    "rendered_names_at_the_sink": [
+     "message"
+    ],
+    "state_write_chain": {
+     "rendered": "message",
+     "link": "FROM_ERROR_OBJECT_MESSAGE",
+     "setter_line": 518,
+     "setter_text": "setMessage(error instanceof Error ? error.message : t(\"inbox.correctionsFailed\"));",
+     "region": [
+      "510:setMessage(",
+      "511:fresh.unresolved_fields.length",
+      "512:? t(\"inbox.correctionsSavedStillNeeds\", {",
+      "513:fields: fresh.unresolved_fields.map((field) => fieldLabel(field, zh)).join(\"、\"),",
+      "514:})",
+      "515:: t(\"inbox.correctionsSaved\"),"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/inbox/JourneyInboxWorkbench.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/inbox/JourneyInboxWorkbench.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "Corrections-save failure: setMessage(error.message) from 88, rendered at 687."
+  },
+  {
+   "id": "T14",
+   "file": "frontend/src/features/planning/PlanComparison.tsx",
+   "blob_at_tip": "378bd15134f62bff6479d1700953cd1966cf15ae",
+   "blob_quoted_by_the_sweep": "378bd15134f62bff6479d1700953cd1966cf15ae",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 92,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/planning/PlanComparison.tsx:95",
+     "text": "          body?.error?.message ??",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/planning/PlanComparison.tsx:96",
+     "text": "            body?.detail ??",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/planning/PlanComparison.tsx:260",
+     "text": "          {error}",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/planning/PlanComparison.tsx:95",
+     "frontend/src/features/planning/PlanComparison.tsx:96"
+    ],
+    "in_file_thrower_embeds_response_body": false,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/planning/PlanComparison.tsx:260"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 82,
+     "to": 102
+    },
+    "rendered_names_at_the_sink": [
+     "error"
+    ],
+    "state_write_chain": {
+     "rendered": "error",
+     "link": "DIRECT_FROM_RESPONSE_FIELD",
+     "setter_line": 94,
+     "setter_text": "setError(",
+     "region": [
+      "94:setError(",
+      "95:body?.error?.message ??",
+      "96:body?.detail ??",
+      "97:(zh ? \"这个方案暂时不能采用。\" : \"This plan could not be chosen.\"),",
+      "98:);",
+      "99:return;"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/planning/PlanComparison.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/planning/PlanComparison.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "setError(body?.error?.message ?? body?.detail ?? local sentence) read straight off the parsed select response; error is rendered in a role=alert p at 260. Two-step-free direct upstream read."
+  },
+  {
+   "id": "T15",
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "blob_at_tip": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+   "blob_quoted_by_the_sweep": "3bb6a39067a380c2f75629fd7562f0de8f5d2f2a",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   "ruler_anchor_line": 1016,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/planning/PlanWithAiSheet.tsx:1016",
+     "text": "                    <code data-testid=\"plan-ai-reason\">{result.failureReason.text}</code>",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/planning/PlanWithAiSheet.tsx:159",
+     "text": "function serverReasonSentence(body: unknown): string | null {",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/planning/PlanWithAiSheet.tsx:161",
+     "text": "  if (error && typeof error.message === \"string\" && error.message.trim()) return error.message;",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/planning/PlanWithAiSheet.tsx:163",
+     "text": "  if (typeof detail === \"string\" && detail.trim()) return detail;",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/planning/PlanWithAiSheet.tsx:1013",
+     "text": "                          ? \"这台设备自己的读数（服务器没给句子）\"",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": false,
+    "upstream_producer_lines": [],
+    "in_file_thrower_embeds_response_body": false,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/planning/PlanWithAiSheet.tsx:1016"
+    ],
+    "attributed_at_the_render_site": true,
+    "attribution_evidence": [
+     {
+      "line": 1006,
+      "text": "data-reason-origin={result.failureReason.from}"
+     },
+     {
+      "line": 1008,
+      "text": "{result.failureReason.from === \"server\""
+     },
+     {
+      "line": 1010,
+      "text": "? \"服务器给出的原因\""
+     },
+     {
+      "line": 1011,
+      "text": ": \"Reason the server gave\""
+     },
+     {
+      "line": 1013,
+      "text": "? \"这台设备自己的读数（服务器没给句子）\""
+     },
+     {
+      "line": 1014,
+      "text": ": \"This device's own reading (the server sent no sentence)\"}"
+     }
+    ],
+    "window_checked": {
+     "from": 1006,
+     "to": 1026
+    },
+    "rendered_names_at_the_sink": [
+     "failureReason",
+     "result",
+     "text"
+    ],
+    "state_write_chain": {
+     "rendered": "result",
+     "link": "VIA_LOCAL_VARIABLE",
+     "setter_line": 751,
+     "setter_text": "setResult({",
+     "region": [
+      "657:setResult({",
+      "658:status: knownIds.size === 0 ? \"BLOCKED:CATALOG_EMPTY\" : \"BLOCKED:CATALOG_INSUFFI",
+      "659:/* A count this screen measured out of a 200 it was allowed to read.  It is a fa",
+      "660:our data, said as one, and it is NOT the server's reason -- ORD-0280 puts the la",
+      "661:where the words came from. */",
+      "662:failureReason: {"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "COMPLIANT_WITH_ATTRIBUTION",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/planning/PlanWithAiSheet.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/planning/PlanWithAiSheet.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "The named baseline cell. serverReasonSentence (159) returns error.message (161) or detail (163) verbatim - the in-file comment above it says so - and the value is rendered in a code element at 1016. Line 1013 shows the local wording that is used only when the server sent no sentence."
+  },
+  {
+   "id": "T16",
+   "file": "frontend/src/features/stay/HotelsPanel.tsx",
+   "blob_at_tip": "5154c19580bd344cb49afe07c34dc346dff49f0f",
+   "blob_quoted_by_the_sweep": "5154c19580bd344cb49afe07c34dc346dff49f0f",
+   "blob_equality": true,
+   "ruler_rule": "UPSTREAM_READ_DIRECT",
+   "ruler_anchor_line": 91,
+   "basis_lines_re_read": [
+    {
+     "cite": "frontend/src/features/stay/HotelsPanel.tsx:93",
+     "text": "        const raw = String(body?.error?.message ?? body?.detail ?? \"\");",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/stay/HotelsPanel.tsx:104",
+     "text": "            : raw || (zh ? \"暂时无法选择这家住宿。\" : \"Could not choose this stay.\"),",
+     "equals_what_the_sweep_quoted": true
+    },
+    {
+     "cite": "frontend/src/features/stay/HotelsPanel.tsx:229",
+     "text": "        <p className=\"role-alert\" data-testid=\"hotel-error\" role=\"alert\">{error}</p>",
+     "equals_what_the_sweep_quoted": true
+    }
+   ],
+   "basis_lines_that_do_not_match_the_tip": [],
+   "predicates": {
+    "upstream_read": true,
+    "upstream_producer_lines": [
+     "frontend/src/features/stay/HotelsPanel.tsx:93"
+    ],
+    "in_file_thrower_embeds_response_body": false,
+    "reaches_dom": true,
+    "render_lines": [
+     "frontend/src/features/stay/HotelsPanel.tsx:229"
+    ],
+    "attributed_at_the_render_site": false,
+    "attribution_evidence": [],
+    "window_checked": {
+     "from": 81,
+     "to": 101
+    },
+    "rendered_names_at_the_sink": [
+     "error"
+    ],
+    "state_write_chain": {
+     "rendered": "error",
+     "link": "VIA_LOCAL_VARIABLE",
+     "setter_line": 99,
+     "setter_text": "setError(",
+     "region": [
+      "99:setError(",
+      "100:isConflict",
+      "101:? zh",
+      "102:? \"这家住宿的入住/退房时间和你已确认的行程冲突，无法在不改动行程的情况下采用。换一家试试。\"",
+      "103:: \"This stay's check-in / check-out windows clash with your confirmed itinerary,",
+      "104:: raw || (zh ? \"暂时无法选择这家住宿。\" : \"Could not choose this stay.\"),"
+     ]
+    },
+    "state_link_established": true
+   },
+   "bucket": "FIX_IN_PRODUCT",
+   "missing_definition": null,
+   "details_fold_open_question": null,
+   "mount_chain_to_root": [
+    "features/stay/HotelsPanel.tsx",
+    "app/V8Experience.tsx",
+    "main.tsx"
+   ],
+   "phone_side": {
+    "verdict": "REACHABLE_IF_THE_STATE_OCCURS",
+    "why": "组件挂在 features/stay/HotelsPanel.tsx -> app/V8Experience.tsx -> main.tsx；句子只在该失败状态出现时上屏",
+    "unknown_step": "手机侧 served bundle 的 asset 归属未查（边界：不碰手机链、不跑 vite build）；本行只主张源码可达 + 触发条件"
+   },
+   "s1_why_verbatim": "raw = String(body?.error?.message ?? body?.detail ?? '') at 93. The conflict branch (97-103) is local wording, but the else branch at 104 renders raw itself when the code is not one of the two tested names, and error is shown in a role=alert p at 229. So the whitelist leaks on unmapped codes - the opposite of LiveRecovery's humanReplanReason."
+  }
+ ],
+ "discipline": {
+  "product_bytes_written": 0,
+  "refs_pushed": 0,
+  "vite_build_run": 0,
+  "node_modules_touched": 0,
+  "phone_chain_touched": 0,
+  "credentials_printed": 0,
+  "how": "全部只读：git show / git grep / git ls-remote / git rev-parse；清扫件与复核件是从 commander/control 用 contents API 取回后逐字节重算 blob 的"
+ },
+ "claimed_result": null,
+ "derived_result": null,
+ "self_reference_note": "this file cannot carry its own blob; the published name is read back by a separate single GET whose number goes in the ledger block"
+}
