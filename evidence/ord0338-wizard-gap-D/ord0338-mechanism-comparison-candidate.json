@@ -1,0 +1,150 @@
+{
+ "order": "ORD-0338",
+ "generatedBy": "e345b9d6",
+ "candidate_at_rest": {
+  "opener": {
+   "top": 747,
+   "bottom": 791,
+   "height": 44
+  },
+  "steps": {
+   "top": 240,
+   "bottom": 262,
+   "height": 22
+  },
+  "card": {
+   "top": 278,
+   "bottom": 1012,
+   "height": 734
+  },
+  "ctaBar": {
+   "top": 628,
+   "bottom": 708,
+   "height": 80
+  },
+  "centre": [
+   195,
+   769
+  ],
+  "hitTag": "button",
+  "hitText": "高级设置",
+  "hitsItself": true,
+  "scrollY": 0,
+  "docHeight": 1353,
+  "viewportHeight": 844,
+  "stepsPad": "0px",
+  "cardPad": "220px"
+ },
+ "candidate_after_wheel": {
+  "before": 0,
+  "after": 0
+ },
+ "candidate_probe": {
+  "opener": {
+   "top": 747,
+   "bottom": 791,
+   "height": 44
+  },
+  "steps": {
+   "top": 240,
+   "bottom": 262,
+   "height": 22
+  },
+  "card": {
+   "top": 278,
+   "bottom": 1012,
+   "height": 734
+  },
+  "ctaBar": {
+   "top": 628,
+   "bottom": 708,
+   "height": 80
+  },
+  "centre": [
+   195,
+   769
+  ],
+  "hitTag": "button",
+  "hitText": "高级设置",
+  "hitsItself": true,
+  "scrollY": 0,
+  "docHeight": 1353,
+  "viewportHeight": 844,
+  "stepsPad": "0px",
+  "cardPad": "220px"
+ },
+ "old_at_rest": {
+  "opener": {
+   "top": 959,
+   "bottom": 1003,
+   "height": 44
+  },
+  "steps": {
+   "top": 240,
+   "bottom": 474,
+   "height": 234
+  },
+  "card": {
+   "top": 490,
+   "bottom": 1088,
+   "height": 598
+  },
+  "ctaBar": {
+   "top": 628,
+   "bottom": 708,
+   "height": 80
+  },
+  "centre": [
+   195,
+   981
+  ],
+  "hitTag": "NONE",
+  "hitText": "",
+  "hitsItself": false,
+  "scrollY": 0,
+  "docHeight": 1429,
+  "viewportHeight": 844,
+  "stepsPad": "212px",
+  "cardPad": "84px"
+ },
+ "old_after_wheel": {
+  "before": 0,
+  "after": 240
+ },
+ "old_probe": {
+  "opener": {
+   "top": 719,
+   "bottom": 763,
+   "height": 44
+  },
+  "steps": {
+   "top": 0,
+   "bottom": 234,
+   "height": 234
+  },
+  "card": {
+   "top": 250,
+   "bottom": 848,
+   "height": 598
+  },
+  "ctaBar": {
+   "top": 628,
+   "bottom": 708,
+   "height": 80
+  },
+  "centre": [
+   195,
+   741
+  ],
+  "hitTag": "button",
+  "hitText": "高级设置",
+  "hitsItself": true,
+  "scrollY": 240,
+  "docHeight": 1429,
+  "viewportHeight": 844,
+  "stepsPad": "212px",
+  "cardPad": "84px"
+ },
+ "run": "run378934",
+ "tree_sha": "9b84a5fea9e7b38f3cace4160508f7a1b46c1418"
+}
