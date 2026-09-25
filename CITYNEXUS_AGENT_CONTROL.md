@@ -393,6 +393,33 @@ derived_result=null（B-1，归红队）；claimed_result=RERUN-ON-ORDERED-BASE-
 纪律：全量套件未跑（scope 就那两枚文件）；0 推 ref、0 权威线写入、`demo/reset` 0、`_live`/`_preview` 0 读写、凭据 0 打印。
 ```
 
+### SESSION=8ccd71d8 · ORD-0296 r3 re-parent @2026-09-25 16:52 —— G11 挂上线尖 `fd8eaf3644b6…`；号令者的两个量：一条成立、一处要改字
+
+```text
+r3 已铸：`fd8eaf3644b66b44c44ce3178a7babac2bf561c0`（父 = 线尖 `dc964086c9d412573ac19d70b24b30e6c3ee6168`，ref `review/ord0296-write-deadline-f-r3`）；对尖 diff 恰好 1 件 = backend/tests/test_qoder_ord0296_write_deadline.py，门文件 blob 由 deacc9d7483f1b8fd8d24b6e23e586bf402d85f6 换成 f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93（20,366 B）。旧两枚 ref 原位不动（r1 6d041dcce11d05f28a55abadd40717f321b4db38 / r2 6c20f04b195faf2339f1fb55d8ea9a0b0d825fe1）（evidence/ord0296-write-deadline-f/ord0296_candidate_r3.json，blob 42ed3dd976b49b9f23f6e65b6acf6c85c19eddc0）
+外读两路：ls-remote 与 git/ref API 都 == fd8eaf3644b66b44c44ce3178a7babac2bf561c0（True/True）；权威尖未动 = True；钉时间戳重铸同一枚 = True（blob 42ed3dd976b49b9f23f6e65b6acf6c85c19eddc0）
+
+你让我写清的那两个量，复现结论：一条成立、一处要改字（两条都在 evidence/ord0296-write-deadline-f/ord0296_reparent_prefix_r1.json，blob 72c74949711eeb37a47dc565e518c5cd2c9ebdc9）：
+  ① 门文件 blob 在基座/尖/r1 三处同为 deacc9d7483f1b8fd8d24b6e23e586bf402d85f6 ⇒ 成立（含 contents.sha 逐位回读）
+  ② 但『r1 父 5c4608cede6cb7bd5f3ac7e704bfee379ca47abc 也相同』不成立：那枚尖上该文件**不存在**（contents 路由 HTTP 404，见 evidence/ord0296-write-deadline-f/ord0296_reparent_prefix_r1.json 的 gate_file_blob_by_revision.r1_parent_5c4608ce）——是 r1 才首次落地它。这条不影响 re-parent 判据（要的是 base 与 tip 相同），但账上不该留一处不存在的相等
+  ③ base...tip 共 17 件改动（status=ahead、commits_ahead=12），其中 backend/ 下 0 件 ⇒ 你的『backend 0 件』成立（两个数都出自上面那件收据）
+  ④ 我再补一条：r2 与 r3 的 backend 子树 sha 同为 93f851d875c9ec3e5c6a33fcdb5ef86008fa8f7a（equal=True）⇒ 携载的是同一枚后端字节面，不是同一枚提交的记录
+
+携载的读数（不重跑，Q24）：11 格逐格自证——控制轮 3 轮各 11 passed、M11 三轮只红 G11、正控 K2 轮轮 PASSED、还原 byte-exact（evidence/ord0296-write-deadline-f/ord0296_G11_and_M11_r2.json，blob 8cf1a395a9492906db4bf2fe97b5e1592b25e864）；三枚击杀的 (sha,nodeid,shape) 在 evidence/ord0296-write-deadline-f/ord0296_delivery_receipt_r1.json，blob 381c16f7e1007fc6b5fddd525e2466872dba1363
+
+两把尺对**同一版正文**各跑一遍（原样输出同发）：
+  Q43 r4（4262ecfdef077269b935e038554660377f38f955，本机重算逐位相同，10,718 B）⇒ 见 ord0296_r3_q43r4_*_v2 两件
+  Q43 r3（e653e597c2e6fd74a5f8d6be65fe60e017b03017，号令者已把它标为错版本、留档不复用）⇒ 见 ord0296_r3_q43r3_*_v2 两件
+  一处我自己的读法错要报：r4 的输出字段是 verdict/finding_total/finding_kinds，我第一遍按 r3 的 overall/finding_count 去读，于是打印成 None——尺没坏，是我读错键（第一遍那几件已按原名发布、不回写；本轮起用 v2 名，两份都改对）
+
+待你落：r3 是线上唯一守『启动接线』的一格；不落则线尖上那 11 格仍全绿但无人看接线（逐格读数 blob 8cf1a395a9492906db4bf2fe97b5e1592b25e864）。我不再自推任何 ref，也不动 r1/r2 与已发布路径。
+纪律：权威线写入 0 次、checkout 0 次、产品码改动 0 件（本代唯一改动是那枚测试文件，出自 evidence/ord0296-write-deadline-f/ord0296_candidate_r3.json，blob 42ed3dd976b49b9f23f6e65b6acf6c85c19eddc0）；`demo/reset` 0 次、`_live`/`_preview` 0 读写、凭据 0 打印（本轮只读 contents / git-trees / compare，凭据字节 0 进入任何输出）。
+```
+
+```text
+尺读数（同一版正文，两把各一遍，原样输出都在 evidence/ord0296-write-deadline-f/）：Q43 r4 ⇒ claims 17、findings 0、Q43_GATE_GREEN；Q43 r3（错版本留档）⇒ claims 19、findings 0、Q43_GATE_CLEAN。尺量的是不含本行的那一版，这层关系照实写。
+```
+
 ### SESSION=8ccd71d8 · ORD-0296 交付 @2026-09-25 09:29+08 —— 0281 后端半落码：服务端写预算 + 13 格门 + 10 臂反突变；候选推成外部可读新 ref；**权威线我没动**
 
 先说没改善的那一半（不等人问）：第一次撞锁、预算还没用完时，仍是今天的 `OperationalError → 框架 500`——这是我故意保留的，G7 就钉这一条：不许把所有锁失败一律刷成好看的码；那半属 0262 的射程。前端那 14 条写腿（signal 2、计时器 0）一条未碰 ⇒ 手机上那句期限话仍拿不到，那一半在 @B 的 0280/0281 名下。
@@ -16126,6 +16153,18 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1655 两枚号令者自查（16:55+08）：换代的现成工单 + X-5 在**已部署代**里的字节读数
+
+一、换代工单已写：`live_checks/SWAP_RUNBOOK.md`，发布件 `evidence/cmdr-runbook/SWAP_RUNBOOK_r1.md` blob `e8588b257176b9b1a5fd08de2080ea883c7014c7`（5760 B）。它把今晚 ORD-0302 落地后那一跳要做的事按顺序钉死：前置四条（P1 已落地且尖相等、P2 两把尺跑在**要部署的那份字节**上且 `claims checked > 0`、P3 无硬链快照、P4 数据面状态如实标）、`DEPLOY_BUNDLE_RETENTION` 的**先并资产再换 index**、隧道侧 `phone_side_probe_r1.py` 的五条判定、发布路径冻结（改名=新文件，绝不覆盖已引用件）、以及这一串仪表坑（共享端口归属、管道吃退出码、shell `date` 是 UTC、反斜杠/反引号/直双引号被吃、`git rev-parse <rev>:<path>` 找不到也回显参数）。最后一节明写这份工单**不覆盖**什么：不覆盖重启后端/`:8000`、不覆盖真机 SW 缓存驱逐、不覆盖"乘客能不能走完一次规划"那道门。
+
+二、X-5 到底在不在用户设备上那代里——我自己读了一遍**字节**（不是运行时）：`evidence/cmdr-phone-chain-1654/bundle_string_read_r1.json`。从 `:4781` 取 `index.html`（1200 B），它点名 2 枚资产，逐条取回并算 git blob sha1：JS 是 `/assets/index--q2k569d.js`（1253228 B，blob `d6e8d468c86a029d3294ac276db53fcdd396cada`），与磁盘逐字节相同 = True，无一枚以 HTML 兜底。句子里的承诺串「原因原文在」命中 1 次、`NO_PLANS_PRODUCED` 命中 2 次、「技术详情」这个标签命中 8 次。
+⇒ 结论只到这一步：**X-5 的代码路径确实在手机当前被服务的那一代里**（这比我早上做的"源码区域级 sha1 相等"更近一层）。但"屏上真的印出这句话"仍要一次运行时读数，而那 5 形（200 + 空/畸形 payload）需要后端在跑——数据面现在是断的，所以那一半照旧记 `NOT-DEPLOYED-OBSERVED`，等 `:8000` 恢复（等用户回字）或由 HJ-P3 在她自己的 rig 上量（ORD-0306 已加代次绑定 `### CMDR-0925-1652`）。
+
+纪律：本拍权威线未移动、0 ref 推送、产品码 0 改动、`demo/reset` 0、`_live`/`_preview` 0 读写、凭据 0 打印（我只取未鉴权的本地预览口，隧道那条走文件路径不打印值）。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-0925-1652 ORD-0306 加一条代次绑定（HJ-P3 `aad2d1f2`）：那 5 行请在**当前部署的那一代**上量，件里必须自带 `bundle_under_test`
 
 理由（都是我亲测，不用你再核）：你 pass 1 / pass 2 的读数绑在 `90d29a172e186aab6e6cb138ab4583ccf93bfa68` 那一代（你件里 `measured_on` 与 `bundle_under_test.asset = index-BN1w-xlK.js` 写得很清楚，你也主动报了"在服预览在本批中间换了代"）。而我 15:19 已经把手机换到 `dc964086c9d412573ac19d70b24b30e6c3ee6168` 那一代，**X-5 与那 5 行画文要判的是现在用户设备上那一代**。
