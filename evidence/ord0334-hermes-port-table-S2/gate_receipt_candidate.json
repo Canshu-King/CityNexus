@@ -1,0 +1,132 @@
+{
+ "schema": "CNX_ORD0324_HERMES_SUITE_GATE_V1",
+ "at_local": "2026-09-26T05:32:12+0800",
+ "generation": "7188a2064edc8432a011291fc240b18c7f998a2c",
+ "generation_context": {
+  "ref_requested": "7188a2064edc8432a011291fc240b18c7f998a2c",
+  "resolved_via": "7188a2064edc8432a011291fc240b18c7f998a2c",
+  "resolved_40": "7188a2064edc8432a011291fc240b18c7f998a2c",
+  "tried": [
+   "7188a2064edc8432a011291fc240b18c7f998a2c"
+  ],
+  "fetch_performed": false,
+  "live_branch": "refs/heads/mirror/integration-frontend-apple-pass1",
+  "live_branch_sha": "821a0eb54cca1b305a4aa75c1ca8d46a95d51bba",
+  "equals_live_branch": false
+ },
+ "interpreter": "D:/moodle/CityNexus/.venv/Scripts/python.exe (Python 3.12.14)",
+ "repo": "D:\\moodle\\CityNexus",
+ "export_set": [
+  "backend",
+  "data",
+  "contracts",
+  "tools",
+  "scripts",
+  "agent-mcp"
+ ],
+ "export_receipt": {
+  "git_archive_exit": 0,
+  "tar_exit": 0,
+  "files": 472,
+  "bytes": 5721502
+ },
+ "work_dir": "D:/moodle/_ord0324_gate_20260926-053201",
+ "work_dir_removed": true,
+ "hardlink_or_junction_used": false,
+ "harness_test_files_discovered": 22,
+ "harness_test_files": [
+  "test_hermes_r5_cached_replan_compatibility.py",
+  "test_v18_hermes_native_client.py",
+  "test_v18_hermes_r10_tool_planning_probe.py",
+  "test_v18_hermes_r11_reliability_probe.py",
+  "test_v18_hermes_r12_delay_reliability_probe.py",
+  "test_v18_hermes_r13_weather_reliability_probe.py",
+  "test_v18_hermes_r14_budget_reliability_probe.py",
+  "test_v18_hermes_r15_commitment_reliability_probe.py",
+  "test_v18_hermes_r16_protected_target_reliability_probe.py",
+  "test_v18_hermes_r17_provider_state_reliability_probe.py",
+  "test_v18_hermes_r18_unavailable_proposal_reliability_probe.py",
+  "test_v18_hermes_r19_runtime_fallback_reliability_probe.py",
+  "test_v18_hermes_r20_transport_reliability_probe.py",
+  "test_v18_hermes_r21_request_replan_retry_probe.py",
+  "test_v18_hermes_r22_response_loss_recovery_probe.py",
+  "test_v18_hermes_r23_unguided_response_loss_probe.py",
+  "test_v18_hermes_r24_concurrent_request_replan_probe.py",
+  "test_v18_hermes_r25_concurrent_request_replan_conflict_probe.py",
+  "test_v18_hermes_r6_h11_model_probe.py",
+  "test_v18_hermes_r7_human_approval_probe.py",
+  "test_v18_hermes_r8_context_probe.py",
+  "test_v18_hermes_r9_mcp_context_probe.py"
+ ],
+ "arms": {
+  "whole_backend_tests_collect": {
+   "collected": 1342,
+   "passed": 0,
+   "failed": 0,
+   "skipped": 0,
+   "collect_errors": 0,
+   "error_lines": 0,
+   "interrupted": false,
+   "wallclock": "5.52 s",
+   "error_modules": [],
+   "exit": 0,
+   "argv": "pytest --collect-only tests"
+  },
+  "harness_collect": {
+   "collected": 72,
+   "passed": 0,
+   "failed": 0,
+   "skipped": 0,
+   "collect_errors": 0,
+   "error_lines": 0,
+   "interrupted": false,
+   "wallclock": "1.33 s",
+   "error_modules": [],
+   "exit": 0,
+   "argv": "pytest --collect-only tests/test_hermes_r5_cached_replan_compatibility.py tests/test_v18_hermes_native_client.py tests/test_v18_hermes_r10_tool_planning_probe.py tests/test_v18_hermes_r11_reliability_probe.py tests/test_v18_hermes_r12_delay_reliability_probe.py tests/test_v18_hermes_r13_weather_reliability_probe.py tests/test_v18_hermes_r14_budget_reliability_probe.py tests/test_v18_hermes_r15_commitment_reliability_probe.py tests/test_v18_hermes_r16_protected_target_reliability_probe.py tests/test_v18_hermes_r17_provider_state_reliability_probe.py tests/test_v18_hermes_r18_unavailable_proposal_reliability_probe.py tests/test_v18_hermes_r19_runtime_fallback_reliability_probe.py tests/test_v18_hermes_r20_transport_reliability_probe.py tests/test_v18_hermes_r21_request_replan_retry_probe.py tests/test_v18_hermes_r22_response_loss_recovery_probe.py tests/test_v18_hermes_r23_unguided_response_loss_probe.py tests/test_v18_hermes_r24_concurrent_request_replan_probe.py tests/test_v18_hermes_r25_concurrent_request_replan_conflict_probe.py tests/test_v18_hermes_r6_h11_model_probe.py tests/test_v18_hermes_r7_human_approval_probe.py tests/test_v18_hermes_r8_context_probe.py tests/test_v18_hermes_r9_mcp_context_probe.py"
+  },
+  "harness_run": {
+   "collected": 0,
+   "passed": 72,
+   "failed": 0,
+   "skipped": 0,
+   "collect_errors": 0,
+   "error_lines": 0,
+   "interrupted": false,
+   "wallclock": "1.92 s",
+   "error_modules": [],
+   "exit": 0,
+   "argv": "pytest tests/test_hermes_r5_cached_replan_compatibility.py tests/test_v18_hermes_native_client.py tests/test_v18_hermes_r10_tool_planning_probe.py tests/test_v18_hermes_r11_reliability_probe.py tests/test_v18_hermes_r12_delay_reliability_probe.py tests/test_v18_hermes_r13_weather_reliability_probe.py tests/test_v18_hermes_r14_budget_reliability_probe.py tests/test_v18_hermes_r15_commitment_reliability_probe.py tests/test_v18_hermes_r16_protected_target_reliability_probe.py tests/test_v18_hermes_r17_provider_state_reliability_probe.py tests/test_v18_hermes_r18_unavailable_proposal_reliability_probe.py tests/test_v18_hermes_r19_runtime_fallback_reliability_probe.py tests/test_v18_hermes_r20_transport_reliability_probe.py tests/test_v18_hermes_r21_request_replan_retry_probe.py tests/test_v18_hermes_r22_response_loss_recovery_probe.py tests/test_v18_hermes_r23_unguided_response_loss_probe.py tests/test_v18_hermes_r24_concurrent_request_replan_probe.py tests/test_v18_hermes_r25_concurrent_request_replan_conflict_probe.py tests/test_v18_hermes_r6_h11_model_probe.py tests/test_v18_hermes_r7_human_approval_probe.py tests/test_v18_hermes_r8_context_probe.py tests/test_v18_hermes_r9_mcp_context_probe.py"
+  }
+ },
+ "collected": 72,
+ "collect_errors": 0,
+ "whole_suite_collected": 1342,
+ "whole_suite_collect_errors": 0,
+ "passed": 72,
+ "failed": 0,
+ "checks": {
+  "harness_files_discovered": true,
+  "whole_suite_collection_not_interrupted": true,
+  "whole_suite_collected_positive": true,
+  "harness_collected_positive_with_zero_errors": true,
+  "harness_passed_with_zero_failures": true,
+  "harness_run_executed_every_collected_test": true
+ },
+ "verdict": "HERMES_GATE_GREEN whole_collected=1342 harness_collected=72 harness_passed=72",
+ "verdict_derivation": "verdict is computed from the arm readings above: green only when every key in checks is true, and the string embeds the three measured counts; a red run names the failing checks rather than printing a fixed token",
+ "selftest": null,
+ "repo_write_attempted": 0,
+ "repo_porcelain_after": [
+  " M backend/app/agent/runtime_identity.py",
+  " M backend/app/main.py"
+ ],
+ "refs_pushed": 0,
+ "selftest_ok": true,
+ "repo_porcelain_unchanged": true,
+ "repo_porcelain_before": [
+  " M backend/app/agent/runtime_identity.py",
+  " M backend/app/main.py"
+ ],
+ "exit_code": 0
+}
