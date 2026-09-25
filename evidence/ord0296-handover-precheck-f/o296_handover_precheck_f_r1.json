@@ -1,0 +1,299 @@
+{
+ "schema": "CNX_F_O296_HANDOVER_PRECHECK_V1",
+ "lane": "F 8ccd71d8",
+ "at_local": "2026-09-25T22:51:00+0800",
+ "order": "ORD-0296 十臂 campaign（号令者 22:29 令：回一行尖 + collect 条数）",
+ "why": "冷车道接手前不引旧数：尖与条数都在这一刻重测；并把他修正后的分母与我的逐站合一，免得『以你的为准』把两套口径混成一套。",
+ "measurements": {
+  "his_survey_readback": {
+   "blob_verified": true,
+   "at_tip": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+   "sha_equals_precheck_tip": true,
+   "candidates": {
+    "b4": {
+     "sha": "4fc0de91c18a966f99fc40fcd7ce136a5e2b8936",
+     "ff_possible": true,
+     "merge_tree_exit": 0,
+     "n_files": 2,
+     "touches_PlanWithAiSheet": true
+    },
+    "d0310_2344": {
+     "sha": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+     "ff_possible": true,
+     "merge_tree_exit": 0,
+     "n_files": 1,
+     "touches_PlanWithAiSheet": false
+    },
+    "b3": {
+     "sha": "2f191eb5fd1682a53cf95f883c7200f00cbb6ebe",
+     "ff_possible": false,
+     "merge_tree_exit": 1,
+     "n_files": 18,
+     "touches_PlanWithAiSheet": true
+    }
+   }
+  },
+  "tip_read_now": {
+   "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+   "sha": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+   "read_by": "git ls-remote <GH> <BRANCH> 于本次运行",
+   "local_object_present_rc": 0
+  },
+  "reuse_proof": {
+   "export_dir": "tipsrc/2344145",
+   "files_in_tip_tree": 78,
+   "files_on_disk": 78,
+   "missing": 0,
+   "extra": 0,
+   "blob_mismatch": 0,
+   "all_bytes_equal": true
+  },
+  "gate_bytes_at_tip": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+  "gate0296_blob_expected_from_candidate": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+  "collect": {
+   "ord0296_write_deadline": {
+    "file": "backend/tests/test_qoder_ord0296_write_deadline.py",
+    "file_blob": "f3cf05e8fe75cf9322c6eddc1ae6ffbdea8d0f93",
+    "rounds": [
+     {
+      "round": 1,
+      "rc": 0,
+      "reported_collected": 11,
+      "nodeid_lines": 11,
+      "distinct_nodeids": 11,
+      "summary_line": "11 tests collected in 1.47s",
+      "nodeids": [
+       "tests/test_qoder_ord0296_write_deadline.py::test_G10_the_budget_belongs_to_one_request_not_one_connection",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G11_importing_the_app_is_what_arms_the_door",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G1_shipped_default_is_strictly_above_the_measured_busy_timeout",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G3_door_is_GREEN_one_millisecond_above_it",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G5_a_scenario_override_moves_one_route_and_names_every_other_case",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G6_lost_lock_after_the_budget_answers_under_its_own_name",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G7_lost_lock_inside_the_budget_stays_todays_error",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G8_the_answer_is_registered_and_carries_the_servers_own_words",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G9_the_normal_write_path_is_unchanged"
+      ]
+     },
+     {
+      "round": 2,
+      "rc": 0,
+      "reported_collected": 11,
+      "nodeid_lines": 11,
+      "distinct_nodeids": 11,
+      "summary_line": "11 tests collected in 1.11s",
+      "nodeids": [
+       "tests/test_qoder_ord0296_write_deadline.py::test_G10_the_budget_belongs_to_one_request_not_one_connection",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G11_importing_the_app_is_what_arms_the_door",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G1_shipped_default_is_strictly_above_the_measured_busy_timeout",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G3_door_is_GREEN_one_millisecond_above_it",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G4_the_lock_wait_is_written_in_exactly_one_place",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G5_a_scenario_override_moves_one_route_and_names_every_other_case",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G6_lost_lock_after_the_budget_answers_under_its_own_name",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G7_lost_lock_inside_the_budget_stays_todays_error",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G8_the_answer_is_registered_and_carries_the_servers_own_words",
+       "tests/test_qoder_ord0296_write_deadline.py::test_G9_the_normal_write_path_is_unchanged"
+      ]
+     }
+    ],
+    "two_rounds_identical": true,
+    "collected": 11,
+    "rc": 0
+   },
+   "ord0307_credential_gate": {
+    "file": "backend/tests/test_qoder_ord0307_credential_gate.py",
+    "file_blob": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+    "rounds": [
+     {
+      "round": 1,
+      "rc": 0,
+      "reported_collected": 10,
+      "nodeid_lines": 10,
+      "distinct_nodeids": 10,
+      "summary_line": "10 tests collected in 0.04s",
+      "nodeids": [
+       "tests/test_qoder_ord0307_credential_gate.py::test_C01_the_scanned_set_is_named_and_actually_present",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C02_no_path_through_the_gate_leaks_a_value",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C03_an_injected_literal_in_a_product_path_is_named_by_location",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C04_placeholders_and_low_entropy_never_fire",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C05_each_shape_pattern_fires_on_its_own_shape",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C06_declaration_is_by_digest_not_by_path",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C08_a_live_credential_in_the_environment_is_undeclared_by_construction",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C10_the_default_policy_is_report_not_off"
+      ]
+     },
+     {
+      "round": 2,
+      "rc": 0,
+      "reported_collected": 10,
+      "nodeid_lines": 10,
+      "distinct_nodeids": 10,
+      "summary_line": "10 tests collected in 0.03s",
+      "nodeids": [
+       "tests/test_qoder_ord0307_credential_gate.py::test_C01_the_scanned_set_is_named_and_actually_present",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C02_no_path_through_the_gate_leaks_a_value",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C03_an_injected_literal_in_a_product_path_is_named_by_location",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C04_placeholders_and_low_entropy_never_fire",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C05_each_shape_pattern_fires_on_its_own_shape",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C06_declaration_is_by_digest_not_by_path",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C08_a_live_credential_in_the_environment_is_undeclared_by_construction",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C09_strict_refuses_boot_and_report_does_not_in_a_real_import",
+       "tests/test_qoder_ord0307_credential_gate.py::test_C10_the_default_policy_is_report_not_off"
+      ]
+     }
+    ],
+    "two_rounds_identical": true,
+    "collected": 10,
+    "rc": 0
+   }
+  },
+  "dbs_created_in_export": {
+   "tracked_in_tip_tree": 0,
+   "on_disk_after_run": 0,
+   "newly_created_by_my_run": []
+  },
+  "census": {
+   "selftest": "SELFTEST_PASS",
+   "files_scanned": 74,
+   "legs": 20,
+   "with_deadline": 4,
+   "unresolved": 6
+  },
+  "reconciliation": {
+   "my_rule_sites": 20,
+   "his_rule_sites": 11,
+   "mine_that_are_his_rule": 11,
+   "wrapper_legs_only_mine": [
+    "features/execution/LiveRecovery.tsx:230|fetchWithWriteDeadline",
+    "features/planning/PlanWithAiSheet.tsx:538|fetchWithKeylessWriteDeadline",
+    "features/recovery/V14RecoveryTruthPanel.tsx:74|fetchWithWriteDeadline"
+   ],
+   "request_form_only_mine": [
+    "api/travelerPreferences.ts:69",
+    "api/v12Authoritative.ts:52",
+    "api/v12Authoritative.ts:63",
+    "api/v12Authoritative.ts:77",
+    "api/v12Authoritative.ts:88",
+    "features/discovery/RealCityDiscoveryPanel.tsx:103"
+   ],
+   "bridge": {
+    "my_total": 20,
+    "his_total": 11,
+    "his_total_minus_mine_subset": 0,
+    "arithmetic_closes": true,
+    "why_the_extra": {
+     "wrapper_form_fetchWithWriteDeadline": 3,
+     "request_form_wrapper": 6
+    }
+   },
+   "diff_rows": [
+    {
+     "file": "features/execution/LiveRecovery.tsx",
+     "anchor_line": 230,
+     "method": "POST",
+     "call": "fetchWithWriteDeadline",
+     "deadline_source": "wrapper",
+     "url": "/api/v1/replans/${…}"
+    },
+    {
+     "file": "features/planning/PlanWithAiSheet.tsx",
+     "anchor_line": 538,
+     "method": "POST",
+     "call": "fetchWithKeylessWriteDeadline",
+     "deadline_source": "options_signal",
+     "url": "/api/v1/journeys/${…}"
+    },
+    {
+     "file": "features/recovery/V14RecoveryTruthPanel.tsx",
+     "anchor_line": 74,
+     "method": "POST",
+     "call": "fetchWithWriteDeadline",
+     "deadline_source": "wrapper",
+     "url": "/api/v1/replans/${…}"
+    },
+    {
+     "file": "api/travelerPreferences.ts",
+     "anchor_line": 69,
+     "method": "PUT",
+     "call": "request",
+     "deadline_source": "none",
+     "url": "/api/v1/travelers/${…}"
+    },
+    {
+     "file": "api/v12Authoritative.ts",
+     "anchor_line": 52,
+     "method": "POST",
+     "call": "request",
+     "deadline_source": "none",
+     "url": "/journeys/${…}"
+    },
+    {
+     "file": "api/v12Authoritative.ts",
+     "anchor_line": 63,
+     "method": "POST",
+     "call": "request",
+     "deadline_source": "none",
+     "url": "/journeys/${…}"
+    },
+    {
+     "file": "api/v12Authoritative.ts",
+     "anchor_line": 77,
+     "method": "POST",
+     "call": "request",
+     "deadline_source": "none",
+     "url": "/journeys/${…}"
+    },
+    {
+     "file": "api/v12Authoritative.ts",
+     "anchor_line": 88,
+     "method": "POST",
+     "call": "request",
+     "deadline_source": "none",
+     "url": "/journeys/${…}"
+    },
+    {
+     "file": "features/discovery/RealCityDiscoveryPanel.tsx",
+     "anchor_line": 103,
+     "method": "POST",
+     "call": "request",
+     "deadline_source": "none",
+     "url": "/api/v1/journeys/${…}"
+    }
+   ],
+   "his_bare_sites_total": 10,
+   "his_bare_matched_into_my_subset": 10,
+   "his_bare_unmatched": [],
+   "my_subset_sites_with_deadline": [
+    "features/planning/PlanWithAiSheet.tsx:678"
+   ],
+   "his_receipt_covered_count": 1,
+   "his_receipt_files_scanned": 74,
+   "his_receipt_tip": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+   "his_excluded_device_writes_found_in_my_list": []
+  },
+  "campaign_precondition": {
+   "backend_tree_at_tip": "8d67d5b6145420ccb34cb17efb213a36d77b3996",
+   "backend_tree_at_30a5f90e": "c4dc4636bccada126ba245c4a3e370c4c0fd02ea",
+   "backend_tree_changed_since_my_r5": true,
+   "my_r5_is_ancestor_of_tip_rc": 0
+  }
+ },
+ "claim_kind": "measured_on_the_tip_read_at_this_instant",
+ "claimed_result": "接手点 = 2344145ce6342b6ac32ac4d0955c0f524d8c9320（此刻 refs/heads/mirror/integration-frontend-apple-pass1 的尖）；我那把尺 test_qoder_ord0296_write_deadline.py 在这代 collect 11 条（rc=0、两轮一致 True）；凭据尺 10 条。两份分母合一：我 20 处 ⊇ 他 11 处，子集 11 处、仅我 3 条包装腿 + 6 条 request 形，算式闭合 True。",
+ "derived_result": null,
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "user_databases_opened": 0,
+  "demo_reset_calls": 0,
+  "credential_values_printed": 0,
+  "authoritative_lines_written": 0,
+  "evidence_paths_overwritten": 0
+ }
+}
