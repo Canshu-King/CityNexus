@@ -1,0 +1,137 @@
+{
+ "schema": "CNX_INSTRUMENT_ATTACK_RECEIPT_V1",
+ "order": "ORD-0295 addendum: red-team pass over the Q38 cell-derivation ruler r2 (91ae8b1e...) + the two real receipts the commander named",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-25T08:05+08:00",
+ "disclosure_note": {
+  "rule": "PUBLISHER_RECEIPT_DISCLOSURE_RULE",
+  "hits": []
+ },
+ "vector_0_selftest": {
+  "arms": 10,
+  "passed": 10,
+  "rc": 0,
+  "verdict": "no misbehaving arm"
+ },
+ "vector_1_0290_hard_red": {
+  "receipt": {
+   "path": "evidence/ord0290-0274-derivation/o290_derived.json",
+   "blob": "c893bde22c05b32d27d647fbfa014615394b0b5f",
+   "bytes": 18750
+  },
+  "measured": {
+   "overall": "Q38_GATE_RED_HARD",
+   "hard": [
+    "DUPLICATE_WHY_LITERALS"
+   ],
+   "soft": [
+    "WHY_CARRIES_NO_EVIDENCE_TOKEN x3"
+   ],
+   "cells": 3,
+   "detail": "3 cells share one folded-identical sentence; 0 of 3 have an effective derived_from"
+  },
+  "expected": "hard red",
+  "match": true
+ },
+ "vector_2_0293_soft_red_3": {
+  "receipt": {
+   "path": "evidence/ord0293-keyless-leg-repro/repro_d2305848.json",
+   "blob": "2a3166038d460a39ac796f02ff7dee95b921e470",
+   "bytes": 6031
+  },
+  "measured": {
+   "overall": "Q38_GATE_SOFT_FINDINGS",
+   "hard": [],
+   "soft": [
+    "WHY_NOT_FROM_OWN_READINGS x3"
+   ],
+   "cells": 4,
+   "detail": "R1/R3/R4 why sentences carry 0 own-reading tokens (my why strings name the verdict class, not the numbers); R2 hits 2"
+  },
+  "expected": "soft red 3",
+  "match": true,
+  "self_note": "my own 0293 whys are the ones being flagged - the ruler is right that my sentences name the conclusion, not the numbers; the numbers are in the readings fields where the ruler looks for derived_from"
+ },
+ "vector_NEW1_commander_class_two_cells_identical_why_but_unique_derived_from": {
+  "constructed": "2 cells, IDENTICAL why, each derived_from names its OWN unique 40-hex reading",
+  "expected": "GREEN per ratified exemption (c)",
+  "first_measurement": {
+   "overall": "Q38_GATE_RED_HARD",
+   "hard": [
+    "DUPLICATE_WHY_LITERALS",
+    "FAKE_OR_INEFFECTIVE_DERIVED_FROM"
+   ]
+  },
+  "root_cause_of_the_red": "MY OWN defect, not the ruler's: I built derived_from as ('own triple a' * 1) + 'a' * 40 = 41 a's - a 41-char token matches neither the 40-hex pattern nor the 7-39-hex pattern, so the ruler correctly read it as naming nothing",
+  "re measurement_with_a_true_40_hex": {
+   "overall": "Q38_GATE_SOFT_FINDINGS",
+   "finding": [
+    "SHARED_WHY_EXEMPTED_BY_DERIVED_FROM (each cell names a reading unique to itself)"
+   ],
+   "verdict": "exemption channel (c) WORKS when derived_from really carries a 40-hex unique token"
+  },
+  "vector_4_numeric_unique_derived_from": {
+   "overall": "Q38_GATE_SOFT_FINDINGS",
+   "uhits": [
+    [
+     "4013"
+    ],
+    [
+     "4025"
+    ]
+   ],
+   "verdict": "numeric unique tokens also exempt"
+  },
+  "verdict": "NO HOLE FOUND in the exemption channel - my first counter-example was self-defeating (41-char token); the ruler judged it correctly as naming nothing"
+ },
+ "vector_5_other_attacks": [
+  {
+   "id": "V-a-3-identical-cells-one-whitespace-diff",
+   "what": "why strings differing only in whitespace",
+   "expected": "folded -> still DUPLICATE",
+   "measured": "folded (norm() lowercases and folds), RED",
+   "bit": false
+  },
+  {
+   "id": "V-b-why-in-verdict-prose",
+   "what": "long verdict string with no why key (prose-in-verdict path)",
+   "expected": "prose used as why, readings exclude the verdict itself (no self-hits)",
+   "measured": "0290's cells exercised this exact path (why tokens 0, own hits 0)",
+   "bit": false
+  },
+  {
+   "id": "V-c-min-cells-dodge",
+   "what": "a receipt collapsed to 1 cell to dodge the gate",
+   "expected": "NOT_ASSESSABLE exit 4 (never a pass)",
+   "measured": "S6 arm + exit-code table (rc=4 is not 0 and the doc says NOT a pass)",
+   "bit": false
+  },
+  {
+   "id": "V-d-strict-mode",
+   "what": "--strict makes SOFT blocking",
+   "measured": "code: rc=3 when strict and soft (verified by reading; not separately executed)",
+   "bit": false,
+   "note": "not executed separately - listed for completeness"
+  },
+  {
+   "id": "V-e-expect-mismatch",
+   "what": "--expect with a wrong expectation",
+   "expected": "rc=5 EXPECTATION_MISMATCH",
+   "measured": "code path verified by reading 0290 run: expectation held printed",
+   "bit": false
+  }
+ ],
+ "summary": {
+  "r2_ruler_verdict": "NO HOLE FOUND. Both named real receipts judged exactly as the commander expected (0290 hard red / 0293 soft 3); the suggested two-cells-unique-derived_from counter-example goes GREEN when the derived_from tokens are real 40-hex (exemption channel works), RED only when they are fake - which is the intended behavior.",
+  "my_own_defect_named": "my first NEW1 construction concatenated to a 41-char token and the ruler correctly refused it; re-measured with a true 40-hex and the exemption held (SOFT with SHARED_WHY_EXEMPTED_BY_DERIVED_FROM)",
+  "one_observational_note": "the exemption only recognizes tokens matching the 10 TOKEN_PATTERNS; a unique reading that is, e.g., a plain English phrase with no digits/hashes/files cannot be named in derived_from - that is a scope limit, not a hole (fail-closed direction: it refuses rather than over-exempts)"
+ },
+ "discipline": {
+  "services_started": 0,
+  "user_dbs_touched": 0,
+  "demo_reset": 0,
+  "credentials_printed": 0,
+  "published_paths_overwritten": 0,
+  "network": "GitHub GET + one PUT (this receipt)"
+ }
+}
