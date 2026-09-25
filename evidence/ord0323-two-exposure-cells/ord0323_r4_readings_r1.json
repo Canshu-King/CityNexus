@@ -1,0 +1,110 @@
+{
+ "schema": "CNX_ORD0323_R4_READINGS_R1",
+ "order": "ORD-0323",
+ "lane": "B c01d72a3",
+ "at_local": "2026-09-26T04:22:13+0800",
+ "ruler": {
+  "path": "live_checks/ui_exposure_taint_ast_r1.cjs",
+  "published_blob": "eb262f59e54d5142ad0e8041704e751eac473ace",
+  "local_git_hash_object": "eb262f59e54d5142ad0e8041704e751eac473ace",
+  "typescript": "5.9.3",
+  "supersedes": "44e062e6ce9c7b5d97d78e09e432072da102292c",
+  "selftest_verdict": "SELFTEST_PASS",
+  "selftest_assertions_met": "20/20"
+ },
+ "generations": {
+  "before": "9a669c8bec863fadf31d5158f4a1be66aec49f23",
+  "after": "e302e4c433712284a23c1c0ab11147fe105e1e22"
+ },
+ "before": {
+  "verdict": "EXPOSURE_SHAPE_FOUND",
+  "hit_count": 5,
+  "cells": [
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:687[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:691[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:731[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:104[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:105[jsx-text]"
+  ],
+  "truncated": 0,
+  "files_failed": 0
+ },
+ "after": {
+  "verdict": "EXPOSURE_SHAPE_FOUND",
+  "hit_count": 3,
+  "cells": [
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:703[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:707[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:747[jsx-text]"
+  ],
+  "truncated": 0,
+  "files_failed": 0
+ },
+ "gone": [
+  "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:687[jsx-text]",
+  "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:691[jsx-text]",
+  "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:731[jsx-text]",
+  "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:104[jsx-text]",
+  "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx:105[jsx-text]"
+ ],
+ "remaining": [
+  "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:703[jsx-text]",
+  "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:707[jsx-text]",
+  "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx:747[jsx-text]"
+ ],
+ "by_shape_identity": {
+  "before": [
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx[jsx-text]"
+  ],
+  "after": [
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx[jsx-text]",
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx[jsx-text]"
+  ],
+  "cleared": [
+   "UPSTREAM_EXCEPTION_TO_DOM@ProductErrorBoundary.tsx[jsx-text]"
+  ],
+  "still_there": [
+   "UPSTREAM_EXCEPTION_TO_DOM@JourneyInboxWorkbench.tsx[jsx-text]"
+  ]
+ },
+ "per_file_lines": [
+  {
+   "file": "JourneyInboxWorkbench.tsx",
+   "lines_before": [
+    687,
+    691,
+    731
+   ],
+   "lines_after": [
+    703,
+    707,
+    747
+   ],
+   "shift_if_same_count": 16
+  },
+  {
+   "file": "ProductErrorBoundary.tsx",
+   "lines_before": [
+    104,
+    105
+   ],
+   "lines_after": [],
+   "shift_if_same_count": null
+  }
+ ],
+ "traces_remaining": [
+  ":534 upstream read error.message off error -> :534 state `message` written by setMessage(...) -> :703 rendered here",
+  ":475 upstream read error.message off error -> :475 `failure` reassigned to error instanceof Error ? error.message : t(\"inbox.confirmFailed\") -> :490 state `confirmDetail` written by setConfirmDetail(...) -> :707 rendered here",
+  ":354 upstream read error.message off error -> :353 state `pendingError` written by setPendingError(...) -> :747 rendered here"
+ ],
+ "reading": "sink-bound shapes at the tip 5, at the candidate 3; by shape identity 1 cleared and 0 new; per file [{\"f\": \"JourneyInboxWorkbench.tsx\", \"before\": 3, \"after\": 3}, {\"f\": \"ProductErrorBoundary.tsx\", \"before\": 2, \"after\": 0}]; depth-cut truncation 0",
+ "interpretation_limit": "r4 decides by flow, not by content: a sink that can be handed `error.message` is reported no matter what this lane's own error now carries in it. Which sentences actually reach the screen is judged by the e2e arms.",
+ "claim_kind": "ast_flow_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
