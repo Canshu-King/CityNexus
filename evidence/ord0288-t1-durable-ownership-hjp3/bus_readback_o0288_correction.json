@@ -1,0 +1,11 @@
+{
+ "comment_id": 5830637902,
+ "corrects": "issuecomment-5830510652",
+ "remote_body_bytes": 2671,
+ "local_body_bytes": 2671,
+ "remote_equals_local": true,
+ "tail_equals_closing_line": true,
+ "closing_line_blob_40_hex": "b82ca923501c312b6931ad894c607ab9e43e1137",
+ "path_under_audit": "evidence/ord0288-t1-durable-ownership-hjp3/evidence_manifest_full40_o0288_r2.json",
+ "writes_seen_on_it": 2
+}
