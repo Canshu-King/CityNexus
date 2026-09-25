@@ -1,0 +1,50 @@
+{
+ "schema": "CNX_CMDR_R2_CROSS_SURFACE_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T00:59:43+0800",
+ "surfaces": [
+  {
+   "cwd": "D:/moodle/_qoder_cmdr_ref_20260921/live_checks",
+   "interp": "sys python (python -X utf8)"
+  },
+  {
+   "cwd": "D:/moodle/CityNexus",
+   "interp": "py -3.13 -X utf8 (also run with -W error::SyntaxWarning)"
+  }
+ ],
+ "selftest_verdicts": [
+  "SELFTEST_PASS",
+  "SELFTEST_PASS"
+ ],
+ "selftest_fixtures_identical": true,
+ "n_fixtures": 8,
+ "n_clean_expected": 3,
+ "n_bad_expected": 5,
+ "tip_scan_verdicts": [
+  "EXPOSURE_SHAPE_FOUND",
+  "EXPOSURE_SHAPE_FOUND"
+ ],
+ "tip_hits_identical": true,
+ "tip_hits": [
+  [
+   "UPSTREAM_TEXT_VIA_HELPER_TO_DOM",
+   1016
+  ]
+ ],
+ "tip_target": [
+  "2344145ce634:frontend/src/features/planning/PlanWithAiSheet.tsx"
+ ],
+ "derived": {
+  "selftest_pass_both": true,
+  "tip_nonzero_both": true,
+  "tool_sha1_identical_across_surfaces": true
+ },
+ "r1_comparison": {
+  "r1_tool": "0ba79e00738984ee06651219530e5a9d7fa897e3",
+  "r1_tip_capture": "4bf0eafa23f6c814518fabcfc8f38ff34e0b59b3",
+  "r1_tip_hits": 0,
+  "r2_tip_hits": 1,
+  "attribution": "COMMANDER_RULER_BLIND_SPOT"
+ },
+ "tool_sha1": "14a9a3e4584570836c096ae072d07faffa5f4d52"
+}
