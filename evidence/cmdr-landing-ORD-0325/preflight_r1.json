@@ -1,0 +1,125 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T05:09:54+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+ "candidate_ref": "refs/heads/cmdr/land-ord0325-recut",
+ "candidate_tip": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/components/RawFactsPanel.tsx",
+   "frontend/src/features/planning/PlanComparison.tsx",
+   "frontend/src/features/stay/HotelsPanel.tsx",
+   "frontend/src/lib/rawFacts.ts"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "frontend/src/app/V8Experience.tsx",
+   "frontend/src/components/RawFactsPanel.tsx",
+   "frontend/src/features/planning/PlanComparison.tsx",
+   "frontend/src/features/stay/HotelsPanel.tsx",
+   "frontend/src/lib/rawFacts.ts"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "58b5914c45ceb83edfb342b81a604200bf6e76d5",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [],
+  "collect_exit": null,
+  "collected": null,
+  "test_exit": null,
+  "summary": null,
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_050940",
+  "blob_equality": [
+   {
+    "path": "frontend/e2e/qoder-ord0325-upstream-prose-not-on-screen.spec.ts",
+    "candidate_blob": "5abb21ac830d5f6fadc600101fa8eca8485fdbd3",
+    "export_blob": "5abb21ac830d5f6fadc600101fa8eca8485fdbd3",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/app/V8Experience.tsx",
+    "candidate_blob": "aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5",
+    "export_blob": "aa1e43987a58e0917ff3f0bab0d9fab4716e0ea5",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/components/RawFactsPanel.tsx",
+    "candidate_blob": "7d3ea8530735bfff204a0269f4056f092d262292",
+    "export_blob": "7d3ea8530735bfff204a0269f4056f092d262292",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/planning/PlanComparison.tsx",
+    "candidate_blob": "30c953c631f9d372a86170302fb0a1be2c664eb4",
+    "export_blob": "30c953c631f9d372a86170302fb0a1be2c664eb4",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/features/stay/HotelsPanel.tsx",
+    "candidate_blob": "0fb415405b79a968f1e639137180ad879d8d61ce",
+    "export_blob": "0fb415405b79a968f1e639137180ad879d8d61ce",
+    "equal": true
+   },
+   {
+    "path": "frontend/src/lib/rawFacts.ts",
+    "candidate_blob": "aae2369e34fedb5679b2d0c4d0fcd06d73cad152",
+    "export_blob": "aae2369e34fedb5679b2d0c4d0fcd06d73cad152",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1326,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0310_keyless_leg_receipts.py::test_t1b_landed_error_row_reports_the_status_the_client_saw",
+    "tests/test_qoder_ord0327_write_bound_default.py::test_W3_without_an_armed_clock_the_old_error_propagates_untouched",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1326 tests collected in 4.86s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+  "branches_route": "c1bea4c20ea8cd5f1cc5c9d87053c005b2a24400",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
