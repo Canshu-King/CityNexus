@@ -16588,6 +16588,16 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-2324 号令者 494abfd7：**Q64=① 已回，并升级为长期规则 UI_EVIDENCE_EXPOSURE_GATE_V1**；B 的 b4 因此**暂时不落**（拦停理由写死在这里，不是我挑刺）
+- **仲裁 23:2x 回字**（我 23:20 提的 Q64）：**选 ①——只许列白名单字段**。允许集合她写得很具体：`http_status / content_type / body_bytes / response_received / elapsed_ms / request_id（若可公开）`；**禁止** `raw body / raw detail / raw exception`。她否掉我倾向的 ②（掩码）的原话理由：**"正则永远追不上所有秘密形态"**——`token=abc` 容易，但 `eyJhbGci...` 看起来就像普通字符串，而且还有内部 ID、用户数据、路径；**"mask 是辅助，不应该成为第一道门"**。③ 更不行：**"'演示环境承担风险'这种说法在证据系统里很危险，因为截图和收据通常会离开演示环境"**。
+- **她顺手把这条升级成常设规则 UI_EVIDENCE_EXPOSURE_GATE_V1**（我即刻执行、全员适用）：任何要进入 **UI / 截图 / 证据工件** 的数据，必须先走 `source classification → allowed fields → render`，**不许** `backend returned something → frontend displays it`。她的定位很准：前面几轮防的是"页面说了不存在的原因"，这一条防的是"页面**诚实地**展示了不该展示的东西"——两件事同属一大类：**用户看到的信息必须既真实、又经过授权**。
+- **@B c01d72a3：你的 b4（4fc0de91c18a966f99fc40fcd7ce136a5e2b8936）因此暂缓落地**，理由具名到行：`frontend/src/features/planning/PlanWithAiSheet.tsx:582` 截正文头部（240 字符），`:1068` 把它作为 `body=…` 渲染进 DOM，`<pre data-testid="plan-ai-raw-reading">` 里那一行就是上游原文。我 23:17 那块（CMDR-0925-2317）本来问的是"三选一，你签哪个"，现在仲裁直接把门挪到了 ①，所以这不再是选择题。
+  请交 **b5**：① 面板保留白名单字段（`http_status / content-type / bytes`，要加 `response_received`/`elapsed_ms` 也行），**删掉 `body=…` 那一行**；② `expectedRaw(shape)` 改成断言**白名单字段等值 + 面板文本里不出现上游正文的任何片段**（双向：喂一段带假 token 的正文，屏上必须看不到它；喂空正文，`bytes=0` 仍要显示——否则这条断言是永真的）；③ 其余两件我认可的（`response.text()` 保字节、删设备自造计数句）原样保留。旧代读数按 Q24 不折算，五形臂+四反件请在新基座 2344145ce6342b6ac32ac4d0955c0f524d8c9320 上重跑。**这是护栏不是返工**：你的根因判断和取证方式我认为是对的，只是取证面从"原文"换成"字段"。
+- **对所有人立即生效的两件事**：① 任何证据工件/截图里含上游正文片段的，今后必须具名说明它为什么属于允许字段；② 我在 ORD-0317 的表里（`evidence/cmdr-write-entry-scope-2257/write_entry_scope_r2.json` = fba4e01a4e7ad9833a5b4fc35920b8a089ae9525）没有渲染任何响应正文，分类时若要引用正文，请在账本里引 path:line 而不是贴正文。
+- **口径确认收到**：仲裁本轮回复里把我的 ORD-0314 写法原样列成 `CLOSED-ON-GENERATION / OPEN-FOR-CURRENT-TIP`，我 23:17 的收紧口径与她的判词已对齐，不再有两种说法并存。她列的收敛状态与账本一致：ORD-0302 已部署等 verifier、ORD-0307 的 G11 已强化真实启动路径、ORD-0312 等派生闭环、ORD-0315 measurement scope 修正、ORD-0316 rename gate、ORD-0317 write deadline 分类。
+- 优先级她重申一遍，与我账本一致：**用户处理两枚 key × 两层 → 用户处理 `:8000` 数据面 → ORD-0312 → ORD-0302 verifier → ORD-0317**。手机按 Q61 继续不换代；inbox 通道今晚已跑通第一枚（E 23:10 投递 → 我 23:13 代插+镜像）。
+
+
 ### CMDR-0925-2317 号令者 494abfd7：inbox 通道首用已跑通（E 的 a4 块我代插并镜像）；B 的 b4 我把产品码逐行读了——形状我认可，只剩一条要具名回答
 - **LEDGER_SINGLE_WRITER_V1 第一次真跑成功（不是"应该能用"）**：@E 23:10 把她的 a4 块放进 `D:\moodle\_qoder_ledger_inbox\e-d2305848_2345.md`，我 23:13 用 `live_checks/ledger_inbox_apply_r1.py --apply`（工具 blob 0507b3762faae4de1e626b868bc4f4a0eacfb090）走同一道门（Q43 + 每枚 40 位坐标可解析）代插成功，镜像后账本 blob = e364acb93f03b60f5d971eca80fd190167b57477（6,003,976 字节，mirror rc=0、remote-only 0 行）。**从车道投递到账本落地 3 分钟**——我把这条写下来是为了证明"收回写权限不必变慢"，慢的那个担心是我该用数字打掉的，不是用嘴反驳的。此后各车道的块我都按 ≤15 分钟一轮扫。
 - **B 的 b4 = 4fc0de91c18a966f99fc40fcd7ce136a5e2b8936 产品码我逐行读了（不是只看分支形状）**，三件认可：
