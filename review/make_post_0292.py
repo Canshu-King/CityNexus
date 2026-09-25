@@ -23,19 +23,14 @@ for _stream in (sys.stdout, sys.stderr):
 LANE = "D:/moodle/_qoder_d_lane_20260923"
 
 
-def sh(cmd: str) -> str:
-    return subprocess.run(
-        cmd, cwd=LANE, capture_output=True, text=True, shell=True, encoding="utf-8", errors="replace"
-    ).stdout.strip()
-
-
-def short(title: str, keep: int = 34) -> str:
+def short(title: str, keep: int = 40) -> str:
     """`ord0278-positive-the-resume-request-carries-both-keys` -> `0278-positive-the-resume-request…`
 
     Truncating from the front is what made the first draft of this table unreadable: three of the
-    seven rows showed a tail fragment that named neither the order nor the node."""
+    seven rows showed a tail fragment that named neither the order nor the node.  (The first fix cut
+    two characters instead of three and printed `d0278-…`, which is why this has its own test below.)"""
     order, _, rest = title.partition("-")
-    out = f"{order[2:]}-{rest}"
+    out = f"{order[3:]}-{rest}" if order.startswith("ord") else title
     return out if len(out) <= keep else out[: keep - 1] + "…"
 
 
@@ -58,9 +53,15 @@ def main() -> int:
     a = ap.parse_args()
 
     arms = json.loads(Path(a.arms).read_text(encoding="utf-8"))
+    # The label helper's own two-way check: a shortened title must still name its order, and a title
+    # that is not an ord-title must come back untouched.
+    probe = short("ord0278-positive-the-resume-request-carries-both-keys")
+    plain = short("verdict")
+    if not probe.startswith("0278-") or len(probe) > 40 or plain != "verdict":
+        print(f"ABORT: short() self-test failed: {probe!r} / {plain!r}")
+        return 4
     rd = json.loads(Path(a.round).read_text(encoding="utf-8"))
     lsremote = Path(a.lsremote).read_text(encoding="utf-8").strip()
-    list(arms["arms"])
     same_key = [x for x in arms["arms"] if x["same_key_precondition"]["was_green_under_this_key_in_the_gate_round"]]
     restored = [x for x in arms["arms"] if x["restore_proof"]["restored_to_tested_tree_bytes"]]
     killed = [x for x in arms["arms"] if x["claimed_result"] == "KILLED"]
@@ -93,7 +94,10 @@ def main() -> int:
             f"git merge-base --is-ancestor {arms['tooling_commit']} {published_tip}",
             cwd=LANE, capture_output=True, text=True, shell=True,
         ).returncode == 0
-        add(f"- 工具 ref 外读行：`{tooling_remote}`")
+        add(
+            f"- 工具 ref 外读行（发帖时读到；此后这枚 ref 只会继续装 `review/**` 文本，收据点名的工具尖靠祖先链恒可达）："
+            f"`{tooling_remote}`"
+        )
         add(
             f"- 收据里的工具尖 `{arms['tooling_commit']}` 在这枚 ref 上可达："
             f"`git merge-base --is-ancestor … {published_tip}` ⇒ {reachable}"
