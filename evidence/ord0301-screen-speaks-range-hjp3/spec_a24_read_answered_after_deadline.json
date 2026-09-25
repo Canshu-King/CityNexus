@@ -1,0 +1,12 @@
+{
+ "read": {
+  "mode": "proxy",
+  "delay_ms": 20000
+ },
+ "write": {
+  "mode": "answer",
+  "status": 200,
+  "content_type": "application/json",
+  "body": "{}"
+ }
+}
