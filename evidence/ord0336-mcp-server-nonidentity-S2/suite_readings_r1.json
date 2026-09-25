@@ -1,0 +1,58 @@
+{
+ "schema": "CNX_ORD0336_SUITE_READINGS_V1",
+ "order": "ORD-0336",
+ "lane": "S2-hermes-port",
+ "candidate": "f45489c6d17f16973faad161618789237ac3814e",
+ "agent_mcp_line_before_this_port": {
+  "exit": 0,
+  "passed": 8,
+  "failed": 0,
+  "errors": 0,
+  "interrupted": 0,
+  "collected": 0,
+  "collect_errors": 0,
+  "failed_tests": [],
+  "tail": "8 passed in 1.56s",
+  "files_exported": 9,
+  "collect": {
+   "exit": 0,
+   "collected": 8,
+   "collect_errors": 0
+  }
+ },
+ "agent_mcp_candidate": {
+  "exit": 0,
+  "passed": 14,
+  "failed": 0,
+  "errors": 0,
+  "interrupted": 0,
+  "collected": 0,
+  "collect_errors": 0,
+  "failed_tests": [],
+  "tail": "14 passed in 1.47s",
+  "files_exported": 10,
+  "collect": {
+   "exit": 0,
+   "collected": 14,
+   "collect_errors": 0
+  },
+  "server_bytes_sha1": "66717abb85b6f779148356cd5be95767cd8c5d3a"
+ },
+ "backend_gate_on_candidate": {
+  "generation": "f45489c6d17f16973faad161618789237ac3814e",
+  "harness_files": 22,
+  "whole_collected": 1342,
+  "whole_collect_errors": 0,
+  "harness_collected": 72,
+  "harness_passed": 72,
+  "harness_failed": 0,
+  "exit": 0,
+  "verdict": "HERMES_GATE_GREEN whole_collected=1342 harness_collected=72 harness_passed=72"
+ },
+ "backend_gate_on_landed_tip_for_comparison": {
+  "generation": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+  "whole_collected": 1342,
+  "harness_collected": 72,
+  "harness_passed": 72
+ }
+}
