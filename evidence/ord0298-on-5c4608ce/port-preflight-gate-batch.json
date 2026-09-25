@@ -1,0 +1,161 @@
+{
+  "tag": "on-5c4608ce",
+  "preflight": {
+    "base": 4940,
+    "pairs": [
+      [
+        4940,
+        8940
+      ],
+      [
+        4941,
+        8941
+      ],
+      [
+        4942,
+        8942
+      ],
+      [
+        4943,
+        8943
+      ]
+    ],
+    "ports": {
+      "4940": {
+        "port": 4940,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      },
+      "8940": {
+        "port": 8940,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      },
+      "4941": {
+        "port": 4941,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      },
+      "8941": {
+        "port": 8941,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      },
+      "4942": {
+        "port": 4942,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      },
+      "8942": {
+        "port": 8942,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      },
+      "4943": {
+        "port": 4943,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      },
+      "8943": {
+        "port": 8943,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      }
+    },
+    "all_silent": true
+  },
+  "runs": [
+    {
+      "spec": "e2e/qoder-continuation-owner.spec.ts",
+      "port": 4940,
+      "backend_port": 8940,
+      "exit": 0,
+      "run_id": "run298058",
+      "log": "run-run298058.log",
+      "seconds": 24,
+      "tally": [
+        "5 passed (22.2s)"
+      ],
+      "post_run_probe": {
+        "port": 8940,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      }
+    },
+    {
+      "spec": "e2e/qoder-sealed-failure-speaks-and-offers-retry.spec.ts",
+      "port": 4941,
+      "backend_port": 8941,
+      "exit": 0,
+      "run_id": "run298084",
+      "log": "run-run298084.log",
+      "seconds": 33,
+      "tally": [
+        "4 passed (31.2s)"
+      ],
+      "post_run_probe": {
+        "port": 8941,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      }
+    },
+    {
+      "spec": "e2e/qoder-continuation-resume-carries-identity.spec.ts",
+      "port": 4942,
+      "backend_port": 8942,
+      "exit": 0,
+      "run_id": "run298119",
+      "log": "run-run298119.log",
+      "seconds": 24,
+      "tally": [
+        "5 passed (22.3s)"
+      ],
+      "post_run_probe": {
+        "port": 8942,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      }
+    },
+    {
+      "spec": "e2e/qoder-sheet-legs-carry-idempotency-key.spec.ts",
+      "port": 4943,
+      "backend_port": 8943,
+      "exit": 0,
+      "run_id": "run298145",
+      "log": "run-run298145.log",
+      "seconds": 21,
+      "tally": [
+        "4 passed (18.9s)"
+      ],
+      "post_run_probe": {
+        "port": 8943,
+        "listening_pid": "",
+        "listening_process": "",
+        "http_probe": "no answer",
+        "occupied": false
+      }
+    }
+  ]
+}
