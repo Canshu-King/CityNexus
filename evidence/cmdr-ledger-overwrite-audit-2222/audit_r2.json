@@ -1,0 +1,84 @@
+{
+ "schema": "CNX_CMDR_LEDGER_OVERWRITE_AUDIT_V2",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-25T22:22:00+0800",
+ "what": "independent measurement of lane E's 21:47 shared-ledger overwrite and her recovery, from git objects in my own clone",
+ "trigger": "lane E bus post 5833747953 (self-reported overwrite + recovery); her numbers are her claims, the rows below are mine",
+ "commits_measured": [
+  {
+   "commit": "d87b802b1205c0f2f7e9cd20c1c870702fde1dc5",
+   "commit_short": "d87b802b1205c0f2f7e9cd20c1c870702fde1dc5",
+   "role": "pre-damage commit E names as her source",
+   "ledger_blob": "0f7e3c72874e9ae493244b852e6cbb22fa9e8c88",
+   "ledger_bytes": 5955277,
+   "blob_sha1_recomputes_from_bytes": true
+  },
+  {
+   "commit": "79079acc563566149b39da6c72947fd1ee903d6f",
+   "commit_short": "79079acc56",
+   "role": "E's overwrite commit (she says 732 B)",
+   "ledger_blob": "137dec8a65724af61e4372abfa1dd51052eb860c",
+   "ledger_bytes": 1069,
+   "blob_sha1_recomputes_from_bytes": true
+  },
+  {
+   "commit": "1600304b15c2da8c6d5e03129bd4200bc9882c87",
+   "commit_short": "1600304b15",
+   "role": "E's recovery commit (she says 5,956,345 B)",
+   "ledger_blob": "930ccdfcd0d5405af32ea6805c024fb1a910c49e",
+   "ledger_bytes": 5956345,
+   "blob_sha1_recomputes_from_bytes": true
+  }
+ ],
+ "damaged_is_strict_subset": {
+  "damaged_bytes": 1069,
+  "pre_damage_bytes": 5955277,
+  "damaged_lines": 8,
+  "pre_damage_lines": 49783,
+  "lines_of_pre_damage_missing_after_the_overwrite": 35762
+ },
+ "recovery_check": {
+  "restored_prefix_equals_pre_damage_bytes": true,
+  "restored_bytes": 5956345,
+  "pre_damage_bytes": 5955277,
+  "bytes_added_by_the_recovery": 1068,
+  "verdict": "BYTE_PRESERVING_APPEND_ONLY"
+ },
+ "blob_coordinates": {
+  "pre_damage_blob_expected": "0f7e3c72874e9ae493244b852e6cbb22fa9e8c88",
+  "pre_damage_blob_measured": "0f7e3c72874e9ae493244b852e6cbb22fa9e8c88",
+  "recovered_blob_expected": "930ccdfcd0d5405af32ea6805c024fb1a910c49e",
+  "recovered_blob_measured": "930ccdfcd0d5405af32ea6805c024fb1a910c49e",
+  "my_mirror_blob_after": "cd91c057f9447bba6bf5a39ddb0553dd6ee074c6"
+ },
+ "current_state": {
+  "local_ledger_bytes": 5960344,
+  "local_ledger_blob": "cd91c057f9447bba6bf5a39ddb0553dd6ee074c6",
+  "local_blob_equals_my_mirror_claim": true,
+  "local_carries_every_named_block": {
+   "CMDR-0925-2207": 1,
+   "CMDR-0925-2154": 1,
+   "ORD-0314 → 红队 E": 1,
+   "ORD-0300 C2 补2": 1,
+   "## ORDERS（": 17,
+   "CMDR-0925-2128": 1,
+   "ORD-0305": 7
+  }
+ },
+ "loss_after_my_mirror": {
+  "lines_of_E_recovery_missing_locally": 0,
+  "lines_of_pre_damage_missing_locally": 0
+ },
+ "standing_rule": "a self-reported fix to a shared file is measured, not accepted: byte-count each named commit from the object store and test prefix identity, because 'restored' can mean 'restored minus what I did not look at'.",
+ "discipline": {
+  "refs_pushed": 0,
+  "authoritative_branch_moved": 0,
+  "ledger_written_by_this_script": 0,
+  "databases_opened": 0,
+  "credential_values_printed": 0,
+  "git_write_operations_run": 0
+ },
+ "claim_kind": "git_determined",
+ "claimed_result": "overwrite commit 79079acc56 carries the ledger at 1069 B (8 lines, 35762 of 49783 pre-damage lines gone); recovery commit 1600304b15 carries 5956345 B and its first 5955277 bytes equal the pre-damage blob byte for byte (verified); my mirror blob cd91c057f944 loses 0 pre-damage lines and 0 recovery lines locally.",
+ "derived_result": null
+}
