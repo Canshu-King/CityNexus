@@ -1,0 +1,78 @@
+{
+ "kind": "ERRATUM_ON_A_PUBLISHED_READING",
+ "stamped": "2026-09-25T16:27:16+0800",
+ "what_is_wrong": "attribution of the cause, not the measurement: the ORD-0297 A cell reported offline navigation as lost on the held generation (0 of 3 destinations) and I wrote that up as a property of a device that never reconnects",
+ "was": {
+  "order": "ORD-0297",
+  "published_dir": "evidence/ord0297-hjp1-0274-post-landing/",
+  "file": "o297_derived_r1.json",
+  "blob40": "230525a007e8b08cd59cb42e1e6f716dc18db43f",
+  "bytes_retrieved": 49361,
+  "retrieved_sha1_matches_cited_blob": true,
+  "base_tip": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+  "run_shape": "390x844 touch / zh-CN persistent profile / one-shot sqlite / ports {\"backend\": 8980, \"origin\": 8981}",
+  "claimed_result": "CLAIMED_RED_NEVER_RECONNECTED_BROKEN",
+  "offline_first_bodyChars": 789,
+  "nav_found": null,
+  "nav_tapped": 0,
+  "nav_steps": 3,
+  "executed_offline": [
+   "index-xKIGmoBz.js"
+  ],
+  "why_this_side_is_still_valid": "every number above is what that round measured, and the round is reproducible from the published instrument; nothing here retroactively falsifies a reading"
+ },
+ "now": {
+  "order": "ORD-0297r",
+  "base_tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+  "run_id": "o297r-a_never_reconnects-160433",
+  "instrument_git_blob_sha1": "bafd7fd335568fd1ec34b86dd42f17a6f2ace643",
+  "offline_first_bodyChars": 703,
+  "nav_found": 3,
+  "nav_tapped": 3,
+  "nav_steps": 3,
+  "nav_path_changed": 3,
+  "executed_offline": [
+   "index--q2k569d.js"
+  ],
+  "claimed_result": "CLAIMED_RED_NEVER_RECONNECTED_BROKEN__HELD_SCREEN_USABLE_OFFLINE+OFFLINE_REENTRY_LEFT_HELD_GEN",
+  "precondition_offline": "NAV_CLEAR_BEFORE_OUTAGE",
+  "sheet_found_before_offline": [
+   {
+    "cls": "plan-ai-sheet",
+    "testid": null,
+    "rect": [
+     0,
+     401,
+     390,
+     443
+    ],
+    "over_nav_slots": 3
+   }
+  ],
+  "close_control_used": {
+   "needed": true,
+   "control_found": true,
+   "control": "×",
+   "testid": null,
+   "point": [
+    282,
+    452
+   ],
+   "pressed": true
+  },
+  "boxes_over_nav_after_closing": 0,
+  "blockers_named_when_it_was_still_covered": [
+   "none: every step tapped once the sheet was closed"
+  ]
+ },
+ "code_side_evidence": "the covering node is the plan-AI sheet's submit button and the sheet is a modal: frontend/src/features/planning/PlanWithAiSheet.tsx blob fd5f6e5ba2771a8d12669b9bec1ba91590970701 lines 775 (v8-sheet-backdrop, role=dialog, aria-modal=true) and 1027 (data-testid=plan-ai-submit) at tip dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "what_survives_of_the_old_finding": [
+  "an offline re-entry (full reload) on the held generation lands on the NEXT generation even though the page never reconnected -- that part of the A reading is reproduced on the new base and is now the cell's live content",
+  "the partial-deploy control still bricks the client (0 characters), which is the DEPLOY_BUNDLE_RETENTION tooth"
+ ],
+ "what_does_not_survive": [
+  "'in-app movement is lost on the never-reconnected generation' -- with the modal closed by its own close control, 3 of 3 destinations open offline on that generation"
+ ],
+ "instrument_limit_this_erratum_exposes": "Playwright's setOffline(true) does not stop the service worker's own update fetch, so this arm cannot distinguish 'the device never reconnected' from 'the device reconnected for the worker only'. The A cell therefore keeps its direction-reversal reading but loses any claim about what a truly radio-off device would do.",
+ "method": "both sides were read from bytes, not from memory: the WAS side is the published blob fetched by its 40-hex id and re-hashed, the NOW side is this package's own artifact"
+}
