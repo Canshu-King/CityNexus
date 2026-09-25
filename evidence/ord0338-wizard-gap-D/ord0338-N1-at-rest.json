@@ -1,0 +1,132 @@
+{
+ "generatedBy": "e345b9d6",
+ "file": "e2e/qoder-ord0338-wizard-gap-anatomy.spec.ts",
+ "arm": "N1-at-rest",
+ "head": "unknown",
+ "run": "run376920",
+ "tree_sha": "f45489c6d17f16973faad161618789237ac3814e",
+ "head_as_reported_by_runner": "unknown",
+ "tree": "git archive of the tip; key blobs re-hashed against it before the run",
+ "question": "步骤条与目的地之间那一整块空白是插槽还是留白",
+ "viewport": {
+  "width": 390,
+  "height": 844
+ },
+ "stepsRect": {
+  "top": 257,
+  "bottom": 491,
+  "height": 234
+ },
+ "stepItemsRect": [
+  {
+   "text": "1目的地与时间",
+   "top": 257,
+   "bottom": 279,
+   "height": 22
+  },
+  {
+   "text": "2人数与偏好",
+   "top": 257,
+   "bottom": 279,
+   "height": 22
+  },
+  {
+   "text": "3确认创建",
+   "top": 257,
+   "bottom": 279,
+   "height": 22
+  }
+ ],
+ "cardRect": {
+  "top": 507,
+  "bottom": 1077,
+  "height": 570
+ },
+ "cityLabel": "目的地",
+ "cityLabelRect": {
+  "top": 508,
+  "bottom": 524,
+  "height": 16
+ },
+ "band": {
+  "top": 279,
+  "bottom": 508,
+  "height": 229
+ },
+ "bandElements": [],
+ "bandWaitingAffordances": [],
+ "computed": {
+  "stepsPaddingBottom": "212px",
+  "stepsMarginBottom": "16px",
+  "stepsHeight": "22px",
+  "simClearance": "calc(124px + 0px + 12px)"
+ },
+ "cssRulesTouchingTrialSteps": [
+  {
+   "selector": ".trial-steps",
+   "media": null,
+   "paddingBottom": "0px",
+   "margin": "12px 0px 16px"
+  },
+  {
+   "selector": ".trial-steps li",
+   "media": null,
+   "paddingBottom": null,
+   "margin": null
+  },
+  {
+   "selector": ".trial-steps li span:last-child",
+   "media": null,
+   "paddingBottom": null,
+   "margin": null
+  },
+  {
+   "selector": ".trial-steps li.active, .trial-steps li.done",
+   "media": null,
+   "paddingBottom": null,
+   "margin": null
+  },
+  {
+   "selector": ".trial-steps li.active .trial-step-dot",
+   "media": null,
+   "paddingBottom": null,
+   "margin": null
+  },
+  {
+   "selector": ".trial-steps li.done .trial-step-dot",
+   "media": null,
+   "paddingBottom": null,
+   "margin": null
+  },
+  {
+   "selector": ".cn-onboarding .trial-steps",
+   "media": null,
+   "paddingBottom": "calc(76px + env(safe-area-inset-bottom, 0px))",
+   "margin": null
+  },
+  {
+   "selector": ".cn-onboarding .trial-steps",
+   "media": "(max-width: 680px)",
+   "paddingBottom": "calc(76px + var(--cn-sim-float-clearance, 132px) + env(safe-area-inset-bottom, 0px))",
+   "margin": null
+  },
+  {
+   "selector": ".trial-steps",
+   "media": "(max-width: 680px)",
+   "paddingBottom": null,
+   "margin": null
+  },
+  {
+   "selector": ".trial-steps li",
+   "media": "(max-width: 680px)",
+   "paddingBottom": null,
+   "margin": null
+  },
+  {
+   "selector": ".trial-steps li:not(.active) span:last-child",
+   "media": "(max-width: 680px)",
+   "paddingBottom": "0px",
+   "margin": "-1px"
+  }
+ ]
+}
