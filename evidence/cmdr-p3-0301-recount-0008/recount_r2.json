@@ -1,0 +1,69 @@
+{
+ "schema": "CNX_CMDR_P3_O0301_PASS3_RECOUNT_V2",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T00:09:23+0800",
+ "what": "recount the numbers in her ledger block from her own published artifact, and state the generation the batch really belongs to",
+ "recount": {
+  "arms_scored_len": 9,
+  "arms_scored_count_field": 9,
+  "answer_producer_counts_field": {
+   "product": 4,
+   "instrument": 4,
+   "never_answered": 1
+  },
+  "answer_producer_counts_recounted": {
+   "nobody_answered_this_leg": 1,
+   "product": 4,
+   "instrument_origin_per_spec": 4
+  },
+  "producer_counts_agree": false,
+  "booleans_total": 25,
+  "booleans_held": 25,
+  "derived_all_hold": true,
+  "derived_false": [],
+  "arms_per_generation": {
+   "dep|7856e03f6238da3000976eb6e690a448dfa39b9a": 5,
+   "old|dc964086c9d412573ac19d70b24b30e6c3ee6168": 4
+  },
+  "excluded_runs": 5,
+  "class_flip_table_rows": 4,
+  "teardown_ports_free": {
+   "backend": [],
+   "proxy": [],
+   "face_dep": [],
+   "face_old": []
+  },
+  "served_asset_dep": "/assets/index-DWgtVWb0.js",
+  "served_bytes_dep": 1255094,
+  "sha256_dep": "1c90b81eca9e8947b05821586b6c1d2af2ff69487f266006d3d7ae16bd74c51c",
+  "answer_producer_counts_recounted_via_row_vocabulary": {
+   "never_answered": 1,
+   "product": 4,
+   "instrument": 4
+  },
+  "answer_producer_counts_agree_after_label_mapping": true
+ },
+ "sign_off": "ORD-0301 pass 3 accepted at the generation it measured: the batch is a DEPLOYED-bundle measurement (index-DWgtVWb0.js, the generation the phone holds under Q61), not a current-tip measurement. Cite it that way; the current-tip half of the same table still needs a run after the next swap.",
+ "discipline": {
+  "refs_pushed": 0,
+  "product_bytes_changed": 0,
+  "databases_opened": 0,
+  "credential_values_printed": 0,
+  "rig_reruns_by_me": 0
+ },
+ "claim_kind": "artifact_determined",
+ "claimed_result": "arms 9 (field 9); producer split agrees once the row vocabulary is mapped: {\"never_answered\": 1, \"product\": 4, \"instrument\": 4} == field {\"product\": 4, \"instrument\": 4, \"never_answered\": 1} -> True; 25 of 25 derived booleans hold, false list []; per-generation arms {\"dep|7856e03f6238da3000976eb6e690a448dfa39b9a\": 5, \"old|dc964086c9d412573ac19d70b24b30e6c3ee6168\": 4}; r1's 'False' was my own label bug, disclosed here and superseded, not deleted",
+ "derived_result": null,
+ "supersedes": {
+  "path": "evidence/cmdr-p3-0301-recount-0008/recount_r1.json",
+  "blob": "07e82897002921c12e18c73847b4ddbf92190e5e",
+  "disposition": "kept published, not overwritten"
+ },
+ "my_defect_disclosed": "r1 reported producer_counts_agree=False. That was MY instrument: I compared the field's labels (product/instrument/never_answered) against the row-level labels (product / instrument_origin_per_spec / nobody_answered_this_leg). Mapped through the row vocabulary the split is identical: {\"never_answered\": 1, \"product\": 4, \"instrument\": 4} vs field {\"product\": 4, \"instrument\": 4, \"never_answered\": 1}. Lane data was never in question - the same class of mistake I keep catching in myself, so it is recorded rather than deleted.",
+ "measurement_scope": {
+  "scope": "HJ-P3's ORD-0301 pass-3 batch: same-hop pairing of server-side and page-side readings",
+  "generation": "arms measured on two bundles: dep=7856e03f6238da3000976eb6e690a448dfa39b9a (5 arms) and old=dc964086c9d412573ac19d70b24b30e6c3ee6168 (4 arms); neither is the current authoritative tip 2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+  "artifact": "evidence/ord0301-p3-scored/p3_scored.json blob 4a0c4c5dc160e125a87b498dc08fe05038ff84d1",
+  "measurement_method": "git cat-file of her published artifact + independent recount in python (no re-run of her rig)"
+ }
+}
