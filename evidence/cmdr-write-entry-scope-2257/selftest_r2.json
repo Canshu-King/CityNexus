@@ -1,0 +1,46 @@
+{
+ "verdict": "SELFTEST_PASS",
+ "template_path_fixture": {
+  "path": "/api/v1/journeys/${...}",
+  "operation": "POST",
+  "network_effect": true,
+  "deadline": "NONE",
+  "wrapper": "accept",
+  "site": {
+   "file": "e.ts",
+   "line": 2
+  }
+ },
+ "covered_row": {
+  "path": "/api/v1/journeys",
+  "operation": "POST",
+  "network_effect": true,
+  "deadline": "OPTION_SIGNAL",
+  "wrapper": "sendJourney",
+  "site": {
+   "file": "a.ts",
+   "line": 2
+  }
+ },
+ "bare_row": {
+  "path": "/api/v1/journeys",
+  "operation": "POST",
+  "network_effect": true,
+  "deadline": "NONE",
+  "wrapper": "sendBare",
+  "site": {
+   "file": "b.ts",
+   "line": 2
+  }
+ },
+ "prototype_fixture_rows": 0,
+ "local_state_fixture": {
+  "rows": 0,
+  "excluded": [
+   "sub:quietListeners",
+   "putSnap:db.journeys",
+   "clr:caches"
+  ]
+ },
+ "scope": "four directions: a leg with its own signal must read OPTION_SIGNAL; an identical call without it must read NONE; device-state writes must leave the row table and land in excluded; prototype method names must never become legs."
+}
