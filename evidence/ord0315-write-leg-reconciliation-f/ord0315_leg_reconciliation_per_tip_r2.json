@@ -1,0 +1,948 @@
+{
+ "what": "ORD-0315 r2：同一把尺跑六个尖，答『这一处在哪个尖上还是裸的』；并复号令的冲突主张",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T21:30:32+08:00",
+ "measured_on": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+ "r1_measured_on": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+ "instrument": {
+  "tool": "o315_ast_census.cjs（同一把尺、同一次自检，未改判据）",
+  "selftest": "SELFTEST_PASS",
+  "why_same_tool": "要答的是同一问在不同尖上的答案，换尺就没有可比性"
+ },
+ "tips_measured": [
+  {
+   "short": "45b0a5e",
+   "tip": "45b0a5e281cae9c37715173afd3ac5778f309ca7",
+   "label": "0289 普查那一代",
+   "legs": 20,
+   "covered": 2,
+   "files_scanned": 71,
+   "unresolved": 6
+  },
+  {
+   "short": "90d29a1",
+   "tip": "90d29a172e186aab6e6cb138ab4583ccf93bfa68",
+   "label": "0303 重跑那一代",
+   "legs": 20,
+   "covered": 2,
+   "files_scanned": 72,
+   "unresolved": 6
+  },
+  {
+   "short": "dc96408",
+   "tip": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+   "label": "0296/0307 交付基座",
+   "legs": 20,
+   "covered": 2,
+   "files_scanned": 72,
+   "unresolved": 6
+  },
+  {
+   "short": "13af1ff",
+   "tip": "13af1ff4ba4516aa1a39cda67428ed4a2a34ac69",
+   "label": "0281 有键半支第3代",
+   "legs": 20,
+   "covered": 4,
+   "files_scanned": 73,
+   "unresolved": 6
+  },
+  {
+   "short": "30a5f90",
+   "tip": "30a5f90e5deaed6e45a704ddcc7d6e5e9790475b",
+   "label": "0296 r5（我 r1 清单量的那一代）",
+   "legs": 20,
+   "covered": 4,
+   "files_scanned": 73,
+   "unresolved": 6
+  },
+  {
+   "short": "2344145",
+   "tip": "2344145ce6342b6ac32ac4d0955c0f524d8c9320",
+   "label": "0310 落地后（现场尖）",
+   "legs": 20,
+   "covered": 4,
+   "files_scanned": 74,
+   "unresolved": 6
+  }
+ ],
+ "site_identity_note": "跨尖不能拿 文件:行 当键（行会漂，r1 就是栽在这上面）⇒ 键换成 `文件|verb|URL|第几次出现`，锚点行号作为**每尖的属性**记录；加序号是因为同一文件里允许多条 (verb,URL) 完全相同的腿，不加就会把 20 腿压成 13 站",
+ "sites_total": 20,
+ "sites_by_tip": {
+  "45b0a5e": 20,
+  "90d29a1": 20,
+  "dc96408": 20,
+  "13af1ff": 20,
+  "30a5f90": 20,
+  "2344145": 20
+ },
+ "anchors_that_moved_between_tips": [
+  {
+   "site": "features/execution/LiveRecovery.tsx|POST|/api/v1/replans/${…}|#1",
+   "anchors_by_tip": {
+    "45b0a5e": 225,
+    "90d29a1": 225,
+    "dc96408": 225,
+    "13af1ff": 230,
+    "30a5f90": 230,
+    "2344145": 230
+   }
+  },
+  {
+   "site": "features/planning/PlanWithAiSheet.tsx|POST|/api/v1/journeys/${…}|#1",
+   "anchors_by_tip": {
+    "45b0a5e": 492,
+    "90d29a1": 510,
+    "dc96408": 518,
+    "13af1ff": 518,
+    "30a5f90": 518,
+    "2344145": 538
+   }
+  },
+  {
+   "site": "features/planning/PlanWithAiSheet.tsx|POST|/api/v1/journeys/${…}|#2",
+   "anchors_by_tip": {
+    "45b0a5e": 605,
+    "90d29a1": 638,
+    "dc96408": 653,
+    "13af1ff": 653,
+    "30a5f90": 653,
+    "2344145": 678
+   }
+  },
+  {
+   "site": "features/recovery/V14RecoveryTruthPanel.tsx|POST|/api/v1/replans/${…}|#1",
+   "anchors_by_tip": {
+    "45b0a5e": 69,
+    "90d29a1": 69,
+    "dc96408": 69,
+    "13af1ff": 74,
+    "30a5f90": 74,
+    "2344145": 74
+   }
+  }
+ ],
+ "always_bare_sites": [
+  "api/travelerPreferences.ts|PUT|/api/v1/travelers/${…}|#1",
+  "api/v12Authoritative.ts|POST|/journeys/${…}|#1",
+  "api/v12Authoritative.ts|POST|/journeys/${…}|#2",
+  "api/v12Authoritative.ts|POST|/journeys/${…}|#3",
+  "api/v12Authoritative.ts|POST|/journeys/${…}|#4",
+  "features/discovery/RealCityDiscoveryPanel.tsx|POST|/api/v1/journeys/${…}|#1",
+  "features/notifications/PushCapabilityCard.tsx|POST|/api/v1/travelers/${…}|#1",
+  "features/planning/PlanComparison.tsx|POST|/api/v1/journeys/${…}|#1",
+  "features/recovery/RecoveryRequiredPanel.tsx|POST|<path>|#1",
+  "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/${…}|#1",
+  "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/reset|#1",
+  "features/simulation/simulationAdapter.ts|POST|/api/v1/journeys/${…}|#1",
+  "features/simulation/simulationAdapter.ts|POST|/api/v1/journeys/${…}|#2",
+  "features/stay/HotelsPanel.tsx|POST|/api/v1/journeys/${…}|#1",
+  "features/stay/HotelsPanel.tsx|POST|/api/v1/journeys/${…}|#2",
+  "features/stay/HotelsPanel.tsx|POST|/api/v1/journeys/${…}|#3"
+ ],
+ "got_a_deadline_between_the_two_newest_tips": [],
+ "per_site": {
+  "api/travelerPreferences.ts|PUT|/api/v1/travelers/${…}|#1": {
+   "45b0a5e": {
+    "anchor": 69,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 69,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 69,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 69,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 69,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 69,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   }
+  },
+  "api/v12Authoritative.ts|POST|/journeys/${…}|#1": {
+   "45b0a5e": {
+    "anchor": 52,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 52,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 52,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 52,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 52,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 52,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   }
+  },
+  "api/v12Authoritative.ts|POST|/journeys/${…}|#2": {
+   "45b0a5e": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   }
+  },
+  "api/v12Authoritative.ts|POST|/journeys/${…}|#3": {
+   "45b0a5e": {
+    "anchor": 77,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 77,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 77,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 77,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 77,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 77,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   }
+  },
+  "api/v12Authoritative.ts|POST|/journeys/${…}|#4": {
+   "45b0a5e": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   }
+  },
+  "features/discovery/RealCityDiscoveryPanel.tsx|POST|/api/v1/journeys/${…}|#1": {
+   "45b0a5e": {
+    "anchor": 103,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 103,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 103,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 103,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 103,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 103,
+    "deadline_source": "none",
+    "wrapper": "request",
+    "covered": false
+   }
+  },
+  "features/execution/LiveRecovery.tsx|POST|/api/v1/replans/${…}|#1": {
+   "45b0a5e": {
+    "anchor": 225,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 225,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 225,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 230,
+    "deadline_source": "wrapper",
+    "wrapper": "fetchWithWriteDeadline",
+    "covered": true
+   },
+   "30a5f90": {
+    "anchor": 230,
+    "deadline_source": "wrapper",
+    "wrapper": "fetchWithWriteDeadline",
+    "covered": true
+   },
+   "2344145": {
+    "anchor": 230,
+    "deadline_source": "wrapper",
+    "wrapper": "fetchWithWriteDeadline",
+    "covered": true
+   }
+  },
+  "features/notifications/PushCapabilityCard.tsx|POST|/api/v1/travelers/${…}|#1": {
+   "45b0a5e": {
+    "anchor": 56,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 56,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 56,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 56,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 56,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 56,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   }
+  },
+  "features/planning/PlanComparison.tsx|POST|/api/v1/journeys/${…}|#1": {
+   "45b0a5e": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 88,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   }
+  },
+  "features/planning/PlanWithAiSheet.tsx|POST|/api/v1/journeys/${…}|#1": {
+   "45b0a5e": {
+    "anchor": 492,
+    "deadline_source": "options_signal",
+    "wrapper": null,
+    "covered": true
+   },
+   "90d29a1": {
+    "anchor": 510,
+    "deadline_source": "options_signal",
+    "wrapper": null,
+    "covered": true
+   },
+   "dc96408": {
+    "anchor": 518,
+    "deadline_source": "options_signal",
+    "wrapper": null,
+    "covered": true
+   },
+   "13af1ff": {
+    "anchor": 518,
+    "deadline_source": "options_signal",
+    "wrapper": null,
+    "covered": true
+   },
+   "30a5f90": {
+    "anchor": 518,
+    "deadline_source": "options_signal",
+    "wrapper": null,
+    "covered": true
+   },
+   "2344145": {
+    "anchor": 538,
+    "deadline_source": "options_signal",
+    "wrapper": "fetchWithKeylessWriteDeadline",
+    "covered": true
+   }
+  },
+  "features/planning/PlanWithAiSheet.tsx|POST|/api/v1/journeys/${…}|#2": {
+   "45b0a5e": {
+    "anchor": 605,
+    "deadline_source": "options_signal",
+    "wrapper": null,
+    "covered": true
+   },
+   "90d29a1": {
+    "anchor": 638,
+    "deadline_source": "options_signal",
+    "wrapper": null,
+    "covered": true
+   },
+   "dc96408": {
+    "anchor": 653,
+    "deadline_source": "options_signal",
+    "wrapper": null,
+    "covered": true
+   },
+   "13af1ff": {
+    "anchor": 653,
+    "deadline_source": "options_signal",
+    "wrapper": null,
+    "covered": true
+   },
+   "30a5f90": {
+    "anchor": 653,
+    "deadline_source": "options_signal",
+    "wrapper": null,
+    "covered": true
+   },
+   "2344145": {
+    "anchor": 678,
+    "deadline_source": "options_signal",
+    "wrapper": null,
+    "covered": true
+   }
+  },
+  "features/recovery/RecoveryRequiredPanel.tsx|POST|<path>|#1": {
+   "45b0a5e": {
+    "anchor": 26,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 26,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 26,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 26,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 26,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 26,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   }
+  },
+  "features/recovery/V14RecoveryTruthPanel.tsx|POST|/api/v1/replans/${…}|#1": {
+   "45b0a5e": {
+    "anchor": 69,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 69,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 69,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 74,
+    "deadline_source": "wrapper",
+    "wrapper": "fetchWithWriteDeadline",
+    "covered": true
+   },
+   "30a5f90": {
+    "anchor": 74,
+    "deadline_source": "wrapper",
+    "wrapper": "fetchWithWriteDeadline",
+    "covered": true
+   },
+   "2344145": {
+    "anchor": 74,
+    "deadline_source": "wrapper",
+    "wrapper": "fetchWithWriteDeadline",
+    "covered": true
+   }
+  },
+  "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/reset|#1": {
+   "45b0a5e": {
+    "anchor": 229,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 229,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 229,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 229,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 229,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 229,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   }
+  },
+  "features/simulation/simulationAdapter.ts|POST|/api/v1/journeys/${…}|#1": {
+   "45b0a5e": {
+    "anchor": 296,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 296,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 296,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 296,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 296,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 296,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   }
+  },
+  "features/simulation/simulationAdapter.ts|POST|/api/v1/demo/${…}|#1": {
+   "45b0a5e": {
+    "anchor": 335,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 335,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 335,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 335,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 335,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 335,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   }
+  },
+  "features/simulation/simulationAdapter.ts|POST|/api/v1/journeys/${…}|#2": {
+   "45b0a5e": {
+    "anchor": 376,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 376,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 376,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 376,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 376,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 376,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   }
+  },
+  "features/stay/HotelsPanel.tsx|POST|/api/v1/journeys/${…}|#1": {
+   "45b0a5e": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 63,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   }
+  },
+  "features/stay/HotelsPanel.tsx|POST|/api/v1/journeys/${…}|#2": {
+   "45b0a5e": {
+    "anchor": 64,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 64,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 64,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 64,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 64,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 64,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   }
+  },
+  "features/stay/HotelsPanel.tsx|POST|/api/v1/journeys/${…}|#3": {
+   "45b0a5e": {
+    "anchor": 87,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "90d29a1": {
+    "anchor": 87,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "dc96408": {
+    "anchor": 87,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "13af1ff": {
+    "anchor": 87,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "30a5f90": {
+    "anchor": 87,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   },
+   "2344145": {
+    "anchor": 87,
+    "deadline_source": "none",
+    "wrapper": null,
+    "covered": false
+   }
+  }
+ },
+ "his_conflict_claim_reproduced": {
+  "claim": "B 的 ORD-0302 r2 与现尖在 PlanWithAiSheet.tsx 真冲突（merge-tree 退出 1），点名 176d04f5",
+  "result": {
+   "review/0302-unreadable-server-body-b": {
+    "commit": "5aff3722",
+    "exit_code": 0,
+    "conflict_files": []
+   },
+   "review/0302-unreadable-server-body-b2": {
+    "commit": "176d04f5",
+    "exit_code": 0,
+    "conflict_files": []
+   },
+   "review/0302-unreadable-server-body-b3": {
+    "commit": "2f191eb5",
+    "exit_code": 1,
+    "conflict_files": [
+     "frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "Auto-merging frontend/src/features/planning/PlanWithAiSheet.tsx",
+     "CONFLICT (content): Merge conflict in frontend/src/features/planning/PlanWithAiSheet.tsx"
+    ]
+   }
+  },
+  "reading": "形状成立、对象不成立：176d04f5（b2）与现尖 merge-tree 退 **0**（干净，因为它那侧相对共同祖先没改这文件）；退 **1** 的是更新的 2f191eb5（b3）。我把三个 ref 逐个跑了，退出码都在件里，谁要引用哪个都不会踩错",
+  "why_i_bother": "他这条是我这单为什么值钱的理由；我照同一把尺量回去，而不是照形容词点头"
+ },
+ "r1_now_stale_by_its_own_rule": {
+  "r1_list_size": 20,
+  "r2_list_size": 20,
+  "sites_only_in_r1": [],
+  "meaning": "r1 量在 30a5f90；0310 一落地尖就变了 ⇒ 按我自己刚交的根因，r1 的行号从现在起是历史坐标，**引用清单要连它那个尖一起引用**。本件就是把这条规则用在自己身上"
+ },
+ "boundary": {
+  "product_bytes_written": 0,
+  "refs_pushed": 0,
+  "authoritative_line_written": 0,
+  "phone_generation_swapped": 0,
+  "live_or_preview_db_reads_or_writes": 0,
+  "credential_values_printed": 0
+ },
+ "claim_kind": "code_determined",
+ "claimed_result": "PER_TIP_DENOMINATOR_AND_CONFLICT_REPRODUCED",
+ "derived_result": null
+}
