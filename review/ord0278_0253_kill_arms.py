@@ -317,7 +317,9 @@ def main() -> int:
         token
         for index, token in enumerate(argv)
         if not token.startswith("--")
-        and argv[index - 1] not in ("--tested-tree", "--round", "--frozen-tree", "--landed-tip")
+        and argv[index - 1] not in (
+            "--tested-tree", "--round", "--frozen-tree", "--landed-tip", "--candidate-ref", "--candidate-line"
+        )
     ]
     tag = positional[0] if positional else "first"
     port = int(positional[1]) if len(positional) > 1 else 4920
@@ -329,6 +331,8 @@ def main() -> int:
     remote_line = flag("--remote-line")
     frozen_tree = flag("--frozen-tree")
     landed_tip = flag("--landed-tip")
+    candidate_ref = flag("--candidate-ref")
+    candidate_line = flag("--candidate-line")
     # The tree the gates were judged on is the FROZEN candidate tip, not this branch's tooling tip.
     # If they differ, only review/** may differ, and that has to be measured rather than claimed.
     moved_frontend = [
@@ -388,12 +392,21 @@ def main() -> int:
         "orders": ["ORD-0278 resume carries mission_id + Idempotency-Key", "ORD-0253 client half: both legs carry the key"],
         "runTag": tag,
         "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
-        "frozen_candidate": {
-            "ref": "refs/heads/review/0278-0253-on-45b0a5e",
+        "candidate_ref": {
+            "ref": candidate_ref or "NOT_GIVEN",
             "tip": tested_tree,
+            "externally_readable_ls_remote_line": candidate_line or "NOT_GIVEN",
+        },
+        "superseded_frozen_ref": {
+            "ref": "refs/heads/review/0278-0253-on-45b0a5e",
+            "tip": frozen_tree or "NOT_GIVEN",
             "externally_readable_ls_remote_line": remote_line or "NOT_GIVEN",
-            "push_stopped_at": "this ref is not pushed by ORD-0292; the tooling commit below lives on "
-            "refs/heads/review/0292-arm-receipt-tooling, and any later work opens a separate ref",
+            "push_stopped_at": "frozen by the commander's ORD-0292 order and still frozen: ORD-0298 cut a "
+            "new ref instead of moving this one, so the two generations keep their own coordinates",
+        },
+        "authoritative_tip_under_test": {
+            "ref": "refs/heads/mirror/integration-frontend-apple-pass1",
+            "tip": landed_tip or "NOT_GIVEN",
         },
         "tested_tree": tested_tree,
         "tooling_commit": head_now,
