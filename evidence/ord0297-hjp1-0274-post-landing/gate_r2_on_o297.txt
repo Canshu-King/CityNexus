@@ -1,0 +1,6 @@
+receipt o297_derived_r1.json 38003 B blob_sha1 cf0335ce19e38341e8119f86649d02928b86f638
+cells 3 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []
+  cell B3_offline_after_convergence | why_source why | why tokens 24 | own hits 5 | unique hits 0 | shares why with []
+  cell A_never_reconnected | why_source why | why tokens 19 | own hits 5 | unique hits 0 | shares why with []
+  cell B3_with_backend_6d041dcc | why_source why | why tokens 23 | own hits 4 | unique hits 0 | shares why with []
+meaning: no shared literal and every sentence names its own readings
