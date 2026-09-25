@@ -47,13 +47,28 @@ const jsonBody = (o: unknown) => JSON.stringify(o);
 type Readings = Record<string, unknown>;
 const readings: Readings = {};
 
-async function domReading(page: Page): Promise<{ root: string; body: string; overlay: string[] }> {
+async function domReading(page: Page): Promise<{
+  root: string;
+  body: string;
+  attrs: string;
+  attr_pairs: number;
+  overlay: string[];
+}> {
   return page.evaluate(() => {
     const root = document.getElementById("root");
     const body = document.body;
+    /* Q71: data-* / aria-* are part of the screen, and textContent cannot see them, so the prose check
+       is run over the attribute values as its own sweep rather than assumed to follow from the text one. */
+    const pairs = Array.from(document.querySelectorAll("*")).flatMap((el) =>
+      Array.from(el.attributes)
+        .filter((a) => a.name.startsWith("data-") || a.name.startsWith("aria-"))
+        .map((a) => `${el.tagName.toLowerCase()}|${a.name}|${a.value}`),
+    );
     return {
       root: root ? root.textContent ?? "" : "",
       body: body.textContent ?? "",
+      attrs: pairs.join("\n"),
+      attr_pairs: pairs.length,
       // Anything bolted onto the page outside the product tree (a dev-only overlay would show here).
       overlay: Array.from(body.children).map((el) => {
         const tag = el.tagName.toLowerCase();
@@ -153,6 +168,8 @@ test("N1_boundary_panel_keeps_its_own_readings_and_drops_the_failure_prose — �
     root_text_length: dom.root.length,
     overlay_hosts: dom.overlay,
     leaked_needles_still_on_screen: CELL1_LEAKS.filter((n) => dom.root.includes(n) || dom.body.includes(n)),
+    leaked_needles_in_attributes: CELL1_LEAKS.filter((n) => dom.attrs.includes(n)),
+    attribute_pairs_swept: dom.attr_pairs,
   };
 
   /* POSITIVE -- readings this device took itself, each one only present if the measurement still runs. */
@@ -187,6 +204,15 @@ test("N1_boundary_panel_keeps_its_own_readings_and_drops_the_failure_prose — �
       `the boundary is printing what it was handed again (${JSON.stringify(
         (readings[arm] as Readings).leaked_needles_still_on_screen,
       )}); the screen reads "${clean(dom.root).slice(0, 240)}"`,
+    ),
+  ).toEqual([]);
+  expect(
+    (readings[arm] as Readings).leaked_needles_in_attributes,
+    node(
+      arm,
+      `Q71 counts an attribute as the screen: ${JSON.stringify(
+        (readings[arm] as Readings).leaked_needles_in_attributes,
+      )} is held in a data / aria attribute value (${String((readings[arm] as Readings).attribute_pairs_swept)} pairs swept)`,
     ),
   ).toEqual([]);
 });
@@ -232,6 +258,8 @@ test("N2_rejected_readings_render_their_own_status_and_content_type_not_the_repl
     message_text: messageText,
     pending_text: pendingText,
     leaked_needles_still_on_screen: CELL2_LEAKS.filter((n) => dom.root.includes(n) || dom.body.includes(n)),
+    leaked_needles_in_attributes: CELL2_LEAKS.filter((n) => dom.attrs.includes(n)),
+    attribute_pairs_swept: dom.attr_pairs,
   };
 
   /* POSITIVE -- each slot carries the reading of ITS OWN request, which is what makes these two
@@ -259,6 +287,17 @@ test("N2_rejected_readings_render_their_own_status_and_content_type_not_the_repl
     node(
       arm,
       `the panel is repeating the reply again (${JSON.stringify((readings[arm] as Readings).leaked_needles_still_on_screen)}); memory reads "${messageText}" and the queue reads "${pendingText}"`,
+    ),
+  ).toEqual([]);
+  expect(
+    (readings[arm] as Readings).leaked_needles_in_attributes,
+    node(
+      arm,
+      `Q71 counts an attribute as the screen: ${JSON.stringify(
+        (readings[arm] as Readings).leaked_needles_in_attributes,
+      )} is held in a data / aria attribute value (${String(
+        (readings[arm] as Readings).attribute_pairs_swept,
+      )} pairs swept)`,
     ),
   ).toEqual([]);
 });
@@ -320,6 +359,8 @@ test("N3_confirm_fold_carries_the_attempt_reading_not_the_attempt_s_words — �
     fold_code_visible: codeText,
     status_line: clean((await page.locator(".v10-inbox-message").first().textContent().catch(() => "")) ?? ""),
     leaked_needles_still_on_screen: CELL2_LEAKS.filter((n) => dom.root.includes(n) || dom.body.includes(n)),
+    leaked_needles_in_attributes: CELL2_LEAKS.filter((n) => dom.attrs.includes(n)),
+    attribute_pairs_swept: dom.attr_pairs,
   };
 
   expect(
@@ -340,6 +381,17 @@ test("N3_confirm_fold_carries_the_attempt_reading_not_the_attempt_s_words — �
     node(
       arm,
       `the confirmation fold is repeating the reply again (${JSON.stringify((readings[arm] as Readings).leaked_needles_still_on_screen)}); it reads "${detailText}"`,
+    ),
+  ).toEqual([]);
+  expect(
+    (readings[arm] as Readings).leaked_needles_in_attributes,
+    node(
+      arm,
+      `Q71 counts an attribute as the screen: ${JSON.stringify(
+        (readings[arm] as Readings).leaked_needles_in_attributes,
+      )} is held in a data / aria attribute value (${String(
+        (readings[arm] as Readings).attribute_pairs_swept,
+      )} pairs swept)`,
     ),
   ).toEqual([]);
 });
@@ -484,12 +536,19 @@ test("N6_Q68a_a_server_code_still_reaches_the_code_slot — 编号那格：服�
   const card = clean(await page.getByTestId("plan-ai-result").textContent());
   const dom = await domReading(page);
   readings[arm] = {card_text: card, code_in_card: card.includes(Q68_CODE),
+                   sweep_sees_the_tested_card: dom.attrs.includes("|data-testid|plan-ai-result"),
+                   attribute_pairs_swept: dom.attr_pairs,
                    prose_outside_the_fold: clean(card.replace(clean(await page.getByTestId("plan-ai-reason").textContent().catch(() => "")), "")),
                    needle_in_dom: dom.body.includes(Q68_PROSE)};
   expect(card.includes(Q68_CODE),
     node(arm, `the code slot lost a code the server really gave (${card.slice(0, 200)}) -- "do not show prose" is not "show nothing"`)).toBe(true);
   expect(card.includes("BLOCKED") || card.includes("服务器回的原因编号"),
     node(arm, `the card no longer names this as a server-coded block (${card.slice(0, 200)})`)).toBe(true);
+  /* The control that keeps the attribute leg from being vacuous: the card under test carries its own
+     data-testid, so if the sweep cannot name that pair, every "no sentence in the attributes" reading
+     on this page measures nothing. */
+  expect(dom.attrs.includes("|data-testid|plan-ai-result"),
+    node(arm, `the attribute sweep found ${String(dom.attr_pairs)} pairs but not the tested card among them (${card.slice(0, 160)})`)).toBe(true);
 });
 
 test("N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号那格：只有句子时，编号位上不许出现句子，句子归技术详情", async ({
@@ -511,6 +570,8 @@ test("N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号�
     card_text: cardAll,
     reason_fold_text: reasonText,
     uppercased_prose_in_code_slot: cardWithoutReason.toUpperCase().includes(Q68_PROSE.toUpperCase().slice(0, 18)),
+    uppercased_prose_in_attributes: dom.attrs.toUpperCase().includes(Q68_PROSE.toUpperCase().slice(0, 18)),
+    attribute_pairs_swept: dom.attr_pairs,
     attributed_sentence_in_fold: reasonText.includes(Q68_PROSE),
     server_label_present: /服务器给出的原因|Reason the server gave/.test(cardAll),
     needle_in_dom: dom.body.includes(Q68_PROSE),
@@ -519,6 +580,10 @@ test("N6_Q68b_a_sentence_only_refusal_is_not_presentation_as_a_code — 编号�
   expect(
     cardWithoutReason.toUpperCase().includes(Q68_PROSE.toUpperCase().slice(0, 18)),
     node(arm, `the 原因编号 slot is showing the reply's sentence again (${cardWithoutReason.slice(0, 220)})`),
+  ).toBe(false);
+  expect(
+    dom.attrs.toUpperCase().includes(Q68_PROSE.toUpperCase().slice(0, 18)),
+    node(arm, `Q71: the sentence is in a data / aria attribute value (${String((readings[arm] as Readings).attribute_pairs_swept)} pairs swept) even though the visible slot is clean`),
   ).toBe(false);
   /* and Q67=①'s home for it is still there: the attributed sentence inside 技术详情 */
   expect(reasonText.includes(Q68_PROSE),
