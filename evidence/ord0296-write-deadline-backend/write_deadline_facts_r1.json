@@ -1,0 +1,122 @@
+{
+ "what": "ORD-0296 现场事实（新进程、一次性临时库；与门内 G1 走不同路径的第二读数）",
+ "lane": "F 8ccd71d8",
+ "read_at": "2026-09-25T09:12:42+08:00",
+ "cwd": "D:\\moodle\\_qoder_f_run\\snap_0296_g2\\backend",
+ "interpreter": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+ "env_stripped": [
+  "DEEPSEEK_API_KEY",
+  "OPENAI_API_KEY",
+  "CITYNEXUS_AI_API_KEY",
+  "CITYNEXUS_LIVE_VALHALLA_URL",
+  "CITYNEXUS_HERMES_API_URL"
+ ],
+ "throwaway_db": "_o296_facts.db",
+ "demo_reset_calls": 0,
+ "live_read": {
+  "sqlite_driver_version": "3.53.1",
+  "journal_mode": "wal",
+  "live_pragma_busy_timeout_ms": 30000,
+  "settings_write_busy_timeout_ms": 30000,
+  "settings_write_deadline_ms": 45000,
+  "settings_env_names_seen": [],
+  "deadline_ms_plans": 45000,
+  "deadline_ms_commands": 45000,
+  "deadline_sources": {
+   "plans.generate": "default",
+   "agent.commands": "default"
+  },
+  "effective_busy_timeout_ms": {
+   "agent.commands": 30000,
+   "plans.generate": 30000
+  },
+  "configuration_verdict": {
+   "scenario": null,
+   "busy_timeout_ms": 30000,
+   "default_deadline_ms": 45000,
+   "scenario_overrides": {},
+   "per_scenario": {
+    "agent.commands": {
+     "deadline_ms": 45000,
+     "busy_timeout_ms": 30000,
+     "delta_ms": 15000,
+     "deadline_source": "default",
+     "effective_busy_timeout_ms": 30000,
+     "reachable": true,
+     "verdict": "WRITE_DEADLINE_CONFIG_OK"
+    },
+    "plans.generate": {
+     "deadline_ms": 45000,
+     "busy_timeout_ms": 30000,
+     "delta_ms": 15000,
+     "deadline_source": "default",
+     "effective_busy_timeout_ms": 30000,
+     "reachable": true,
+     "verdict": "WRITE_DEADLINE_CONFIG_OK"
+    }
+   },
+   "verdict": "WRITE_DEADLINE_CONFIG_OK"
+  },
+  "door": {
+   "raised": false,
+   "named": null
+  }
+ },
+ "env_variants": {
+  "CITYNEXUS_WRITE_DEADLINE_MS": {
+   "verdict": "WRITE_DEADLINE_CONFIG_OK",
+   "deadline_ms_plans": 45000,
+   "effective_busy_timeout_ms": {
+    "agent.commands": 30000,
+    "plans.generate": 30000
+   },
+   "door": {
+    "raised": false,
+    "named": null
+   },
+   "child_rc": 0,
+   "stderr_tail": ""
+  },
+  "CITYNEXUS_WRITE_DEADLINE_MS_TOO_SMALL": {
+   "verdict": "DEADLINE_NOT_ABOVE_BUSY_TIMEOUT",
+   "deadline_ms_plans": 1,
+   "effective_busy_timeout_ms": {
+    "agent.commands": 1,
+    "plans.generate": 1
+   },
+   "door": {
+    "raised": true,
+    "named": "WriteDeadlineConfigurationError",
+    "text": "DEADLINE_NOT_ABOVE_BUSY_TIMEOUT: write_deadline_ms must be strictly above write_busy_timeout_ms=30000 for every scenario in ['agent.commands', 'plans.generate']; got {'agent.commands': {'deadline_ms': 1, 'busy_timeout_ms"
+   },
+   "child_rc": 0,
+   "stderr_tail": ""
+  },
+  "CITYNEXUS_WRITE_DEADLINE_SCENARIOS": {
+   "verdict": "WRITE_DEADLINE_CONFIG_OK",
+   "deadline_ms_plans": 60000,
+   "effective_busy_timeout_ms": {
+    "agent.commands": 30000,
+    "plans.generate": 30000
+   },
+   "door": {
+    "raised": false,
+    "named": null
+   },
+   "child_rc": 0,
+   "stderr_tail": ""
+  }
+ },
+ "collect_only": {
+  "rc": 0,
+  "line": [
+   "tests/test_qoder_ord0296_write_deadline.py::test_G7_lost_lock_inside_the_budget_stays_todays_error",
+   "10 tests collected in 1.62s"
+  ]
+ },
+ "discipline": {
+  "live_or_preview_db_touched": false,
+  "authoritative_branch_written": false,
+  "credentials_printed": 0
+ }
+}
