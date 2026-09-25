@@ -1,0 +1,110 @@
+{
+ "schema": "CNX_CMDR_LANDING_PREFLIGHT_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T05:03:12+0800",
+ "mode": "LAND",
+ "authoritative_line": "mirror/integration-frontend-apple-pass1",
+ "tip_re_read_from_github_before": "0f8b925facabc9df57bab600b86d999dd515bf94",
+ "candidate_ref": "refs/heads/review/ord0327-write-bound-default-f",
+ "candidate_tip": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+ "genealogy": {
+  "ff_possible_rc": 0,
+  "ff_possible": true,
+  "merge_base": "0f8b925facabc9df57bab600b86d999dd515bf94",
+  "line_only_commits": 0,
+  "candidate_only_commits": 1
+ },
+ "file_sets": {
+  "line_side_since_base": [],
+  "candidate_side_since_base": [
+   "backend/app/db/write_deadline.py",
+   "backend/app/main.py",
+   "backend/tests/test_qoder_ord0327_write_bound_default.py"
+  ],
+  "intersection": [],
+  "product_introduced_by_candidate": [
+   "backend/app/db/write_deadline.py",
+   "backend/app/main.py"
+  ]
+ },
+ "merge_tree": {
+  "exit": 0,
+  "first_line": "e9ac9aadfd66b24944f123f44da2b215d584eb95",
+  "conflict_reported": false,
+  "stderr_head": ""
+ },
+ "gate_run": {
+  "requested": [
+   "test_qoder_ord0327_write_bound_default.py"
+  ],
+  "collect_exit": 0,
+  "collected": null,
+  "test_exit": 0,
+  "summary": [
+   "7 passed, 2 warnings in 4.02s"
+  ],
+  "export": "D:/moodle/_qoder_cmdr_ref_20260921/snap_preflight_050250",
+  "blob_equality": [
+   {
+    "path": "backend/app/db/write_deadline.py",
+    "candidate_blob": "be24fbdeb7095d4e7cd558c58a7ac98197f69990",
+    "export_blob": "be24fbdeb7095d4e7cd558c58a7ac98197f69990",
+    "equal": true
+   },
+   {
+    "path": "backend/app/main.py",
+    "candidate_blob": "e2ff3ffb6f9b74c82cc1663980d6e46dacc6938e",
+    "export_blob": "e2ff3ffb6f9b74c82cc1663980d6e46dacc6938e",
+    "equal": true
+   },
+   {
+    "path": "backend/tests/test_qoder_ord0327_write_bound_default.py",
+    "candidate_blob": "1b0189880745eefacd50af85d0c625168ade449d",
+    "export_blob": "1b0189880745eefacd50af85d0c625168ade449d",
+    "equal": true
+   }
+  ],
+  "whole_suite": {
+   "collect_exit": 0,
+   "collected": 1326,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0310_keyless_leg_receipts.py::test_t1b_landed_error_row_reports_the_status_the_client_saw",
+    "tests/test_qoder_ord0327_write_bound_default.py::test_W3_without_an_armed_clock_the_old_error_propagates_untouched",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1326 tests collected in 5.61s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "collect_stdout_tail": [
+   "",
+   "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+   "7 tests collected in 1.95s"
+  ],
+  "interpreter": "Python 3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]"
+ },
+ "problems": [],
+ "verdict": "READY_TO_LAND",
+ "landing": {
+  "http": 200,
+  "response_head": "{'ref': 'refs/heads/mirror/integration-frontend-apple-pass1', 'node_id': 'REF_kwDOUhlJJ9oAMnJlZnMvaGVhZHMvbWlycm9yL2ludGVncmF0aW9uLWZyb250ZW5kLWFwcGxlLXBhc3Mx', 'url': 'https://api.github.com/repos/Ca",
+  "tip_after": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+  "branches_route": "09dffbb70c151e6734221d6d3d69d88775a1fbd0",
+  "both_routes_agree": true,
+  "landed": true
+ },
+ "discipline": {
+  "evidence_paths_overwritten": 0,
+  "databases_opened": 0,
+  "surfaces_started_or_stopped": 0,
+  "credential_values_printed": 0,
+  "candidate_refs_pushed_by_commander": 0
+ },
+ "claim_kind": "git_and_pytest_determined",
+ "claimed_result": null,
+ "derived_result": null
+}
