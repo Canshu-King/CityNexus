@@ -394,7 +394,9 @@ def main() -> int:
         "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "candidate_ref": {
             "ref": candidate_ref or "NOT_GIVEN",
-            "tip": tested_tree,
+            "tip_under_test": tested_tree,
+            "ref_tip_after_tooling_commits": head_now,
+            "frontend_files_moved_between_them": moved_frontend,
             "externally_readable_ls_remote_line": candidate_line or "NOT_GIVEN",
         },
         "superseded_frozen_ref": {
@@ -455,10 +457,17 @@ def main() -> int:
         baseline = run("baseline-owner-spec", port, spec)
         port += 1
         before = digests()
+        # `guard.bytes_changed` is a BOOLEAN ("did the file move at all"), and the first version of
+        # this sentence printed it as if it were a count -- `True bytes changed`.  Measure the size
+        # on both sides of the mutation so the number in the prose is a number.
+        size_before = path.stat().st_size
         with temporary_guarded_replace(path, anchor.encode(), mutant.encode(), expected_hits=1) as guard:
+            size_during = path.stat().st_size
             attempt = run("mutated-owner-spec", port, spec)
             port += 1
         after = digests()
+        size_after = path.stat().st_size
+        bytes_delta = size_during - size_before
         red = sorted(k for k, v in attempt["nodes"].items() if v == "RED")
         # (exact_sha, nodeid, run_shape) for the ARM run itself, keyed exactly the way the green
         # round keys it -- spec-qualified title, slash-normalised -- so the two receipts join on
@@ -473,7 +482,7 @@ def main() -> int:
         committed12 = committed[path.name]["sha256"][:12]
         why_measured = (
             f"{why}  Measured on this tip: anchor {guard.anchor_hits} hit in {rel_to_root(path)}, "
-            f"{guard.bytes_changed} bytes changed, mutant {mutated12}. Baseline run {baseline['runId']} "
+            f"{bytes_delta} bytes changed ({size_before} -> {size_during}), mutant {mutated12}. Baseline run {baseline['runId']} "
             f"({baseline['db']}, port {baseline['port']}) read {baseline['nodes'].get(owner)}; the same "
             f"spec with the mutant in place ran as {attempt['runId']} ({attempt['db']}, port "
             f"{attempt['port']}) and put {len(red)} node(s) in RED [{', '.join(red) or 'none'}] out of "
@@ -527,9 +536,15 @@ def main() -> int:
                 "digest_as_committed_in_tested_tree_12": committed12,
                 "roundtrip_equal": before[path.name] == after[path.name],
                 "restored_to_tested_tree_bytes": after[path.name] == committed[path.name]["sha256"],
+                "file_bytes_before": size_before,
+                "file_bytes_under_mutant": size_during,
+                "file_bytes_after_restore": size_after,
+                "bytes_delta": bytes_delta,
+                "guard_reports_bytes_changed": bool(guard.bytes_changed),
                 "owner_spec_ran_to_completion_under_the_mutant": bool(attempt["stackStarted"]),
             },
             "anchor_hits": guard.anchor_hits, "bytes_changed": guard.bytes_changed,
+            "bytes_delta": bytes_delta,
             "mutated_sha256": guard.mutated_sha256,
             "restored_exact": after[path.name] == before[path.name] == originals[path.name],
             "baseline": baseline, "attempt": attempt, "redSet": red,
