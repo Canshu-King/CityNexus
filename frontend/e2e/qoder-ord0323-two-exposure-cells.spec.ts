@@ -80,8 +80,13 @@ async function journeyId(page: Page): Promise<string> {
   return id;
 }
 
+/* The arm key is the cell, not the test's prefix: eight legs share the `N4_` prefix and the two Q68 legs
+ * share `N6_`, so keying on the first token would have collided two legs onto one evidence file. */
+const armOf = (title: string): string =>
+  /^N4_(T\d\d)_/.exec(title)?.[1] ?? /^N6_(Q68[ab])_/.exec(title)?.[1] ?? title.split("_")[0];
+
 test.afterEach(({}, info) => {
-  const arm = info.title.split("_")[0];
+  const arm = armOf(info.title);
   const body: Readings = { ...(readings[arm] ?? {}) };
   /* A red arm has to carry its own readings too, or the counter-example proves nothing about which
      direction flipped. */
