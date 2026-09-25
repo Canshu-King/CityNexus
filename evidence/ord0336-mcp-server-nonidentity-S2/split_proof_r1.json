@@ -1,0 +1,82 @@
+{
+ "schema": "CNX_ORD0336_SPLIT_PROOF_V1",
+ "order": "ORD-0336",
+ "lane": "S2-hermes-port",
+ "base": "a8237d7b50a1df419ae7e89ae6c075dabb6513f8",
+ "hermes_source": "2cb16f471b81381f6917933a1d55f10f2be49ecb",
+ "candidate": "f45489c6d17f16973faad161618789237ac3814e",
+ "blobs": {
+  "agent-mcp/citynexus_mcp/server.py": {
+   "candidate_blob": "759b59e80665c1a80e82948ca88ac87a8ea831f2",
+   "tip_blob": "0da006a587938d37a069784d6c93b0b3ceb46a22",
+   "hermes_blob": "6b4da1b9b939b16dfb2384f808741029dd798a51"
+  },
+  "agent-mcp/tests/test_mcp_boundary.py": {
+   "candidate_blob": "8c24599aae0de3dc2278c7f346548086a39e198c",
+   "tip_blob": "41a20978c1548a33d91a19e7c3359dec12a1f484",
+   "hermes_blob": "8c24599aae0de3dc2278c7f346548086a39e198c"
+  },
+  "agent-mcp/tests/test_replan_proposal_view.py": {
+   "candidate_blob": "bc2dc2710ff6788fd38245661964673d786d2a6b",
+   "tip_blob": "absent-on-tip",
+   "hermes_blob": "bc2dc2710ff6788fd38245661964673d786d2a6b"
+  }
+ },
+ "form_not_ported": {
+  "D_agent_id_identity": "deferred to ORD-0337 by order",
+  "measured_counts": {
+   "hermes_identity_def_sites": 1,
+   "hermes_identity_call_sites": 3,
+   "tip_identity_sites": 0,
+   "tip_literal_principal_sites": 3,
+   "hermes_literal_principal_sites": 0
+  },
+  "changed_lines_hermes_to_candidate": 11,
+  "identity_lines_between_candidate_and_tip": 0
+ },
+ "coordinates_measured": {
+  "server_request_id_type_def": [
+   21
+  ],
+  "server_min_length_kwarg": [
+   24
+  ],
+  "server_low_level_min_length": [
+   195
+  ],
+  "server_proposal_views_attach": [
+   82
+  ],
+  "server_tool_guidance_start": [
+   36
+  ],
+  "gateway_guard_on_the_line": [
+   116
+  ]
+ },
+ "raw_two_construction_output": {
+  "counts": {
+   "hermes_identity_def_sites": 1,
+   "hermes_identity_call_sites": 3,
+   "tip_identity_sites": 0,
+   "tip_literal_principal_sites": 3,
+   "hermes_literal_principal_sites": 0
+  },
+  "claim_two_constructions_identical": true,
+  "changed_lines_hermes_to_candidate": 11,
+  "claim_candidate_vs_tip_carries_no_identity_line": true,
+  "changed_lines_tip_to_candidate": 103,
+  "line_delta_tip_to_candidate": 47,
+  "forms": {
+   "A_tool_descriptions_shortened": true,
+   "B_request_id_boundary_forwarded": true,
+   "C_proposal_views_contract": true,
+   "D_identity_not_ported": true
+  },
+  "digests_sha1": {
+   "tip_server_py": "78a5bc7b0d58d0c316d0f64e8f3b79c1e8c8a9cb",
+   "hermes_server_py": "36d5838ca783951cb0e4b580bf0ac482d0ea2c70",
+   "candidate_server_py": "66717abb85b6f779148356cd5be95767cd8c5d3a"
+  }
+ }
+}
