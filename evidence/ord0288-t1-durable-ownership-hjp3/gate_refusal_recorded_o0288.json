@@ -1,0 +1,41 @@
+{
+ "ran_at_local": "2026-09-25T17:34:44+0800",
+ "gate": "o0288_publish.gate() - identical-or-refuse, before any write",
+ "events": [
+  {
+   "path_that_was_refused": "instruments/o0288_md_final.py",
+   "status": "NOT COMPARABLE",
+   "new_name_planned": "instruments/o0288_md_final_r2.py"
+  },
+  {
+   "path_that_was_refused": "boundary_proof_O0288T1.json",
+   "status": "NOT COMPARABLE",
+   "new_name_planned": "boundary_proof_O0288T1_r2.json"
+  }
+ ],
+ "count_refused_and_renamed": 2,
+ "live_gate_now": {
+  "planned": 55,
+  "fresh": 8,
+  "identical_skip": 48,
+  "refusals": 0
+ },
+ "event": "REFUSED a re-PUT of already published paths (see events)",
+ "path_that_was_refused": "instruments/o0288_md_final.py",
+ "local_blob_now": "ee0098303d9653f86394e7f9f59b780bf05fb1e9",
+ "branch_blob_at_tip": null,
+ "bytes_are_identical": false,
+ "branch_tip": "09524eec74a5b44dbbbf4f3441e442f4654c4f54",
+ "branch_tree": "8f428d1eaedcc8c4a4c6ef305e7b6c9027d7d2e6",
+ "resolution": {
+  "superseded_name_left_untouched_on_branch": "instruments/o0288_md_final.py",
+  "new_name_published_instead": "instruments/o0288_md_final_r2.py",
+  "what_changed_in_the_revision": "teardown rounds write stamped files instead of replacing `teardown_O0288T1.json`; the negative scan now separates real calls from lines that merely name the forbidden path and from the scanner reading itself"
+ },
+ "three_way_control": {
+  "positive_same_name_same_bytes": "48 planned files came back SKIP byte-identical",
+  "negative_unseen_name": "every file in this batch started as FRESH and the batch sent them once",
+  "mutation_same_name_different_bytes": "this refusal - one edited instrument, and it stopped the whole batch until the name changed"
+ },
+ "why_this_matters": "the commander’s rule after ORD-0300 is 加格子一律新文件名; a gate that only prints a warning is not a gate, so the refusal is recorded here with both blob ids rather than described"
+}
