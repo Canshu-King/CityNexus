@@ -1,0 +1,3 @@
+version Q43_r4 | input review/evidence/ord0308/ord0308_path_intersection_d_r1.json 12235 B
+claims checked 16 | exempt {"YEAR": 3, "IDENTIFIER_PART": 1} | overall Q43_GATE_RED | findings 1 ['NUMBER_WITHOUT_COORDINATE']
+  line 200 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 56, | no class matched
