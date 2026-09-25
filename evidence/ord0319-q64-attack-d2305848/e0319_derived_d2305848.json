@@ -1,0 +1,45 @@
+{
+ "schema": "CNX_LANE_E_ORD0319_DERIVED_V1",
+ "order": "ORD-0319",
+ "verifier": "lane E d2305848",
+ "at": "2026-09-26T00:42:49+0800",
+ "derived": {
+  "counter_examples_must_red": [
+   "e0319_counter_raw_body_head.tsx",
+   "e0319_counter_backend_detail.tsx",
+   "e0319_counter_exception_stack.tsx"
+  ],
+  "counter_examples_red": [
+   "e0319_counter_raw_body_head.tsx",
+   "e0319_counter_exception_stack.tsx"
+  ],
+  "counter_examples_missed_by_ruler": [
+   "e0319_counter_backend_detail.tsx"
+  ],
+  "positive_control_stayed_clean": [
+   "e0319_control_whitelist_only.tsx"
+  ],
+  "cross_surface_pairings": 2,
+  "cross_surface_all_pass": true,
+  "cross_surface_distinct_pairings": true,
+  "ruler_unchanged": true,
+  "two_way_judgement": {
+   "cmdr_tip_capture_zero_hits": true,
+   "tip_render_path_named": "serverReasonSentence(body) (reads raw body.detail / error.message) -> result.failureReason.text -> <code data-testid=plan-ai-reason>",
+   "tip_lines": [
+    577,
+    1016
+   ],
+   "verdict": "COMMANDER_RULER_BLIND_SPOT (attributed to the commander's net, not to the lane): the tip file DOES put upstream server words into the DOM through the plan-ai-reason sink, while the four patterns report 0 hits on that same file. My counter `backend_detail` (body?.detail into <code>) also goes unnoticed."
+  },
+  "verdicts": {
+   "counter_raw_body_head": "RED_AS_REQUIRED",
+   "counter_backend_detail": "MISSED_BY_RULER",
+   "counter_exception_stack": "RED_AS_REQUIRED",
+   "positive_control": "CLEAN_AS_REQUIRED",
+   "cross_surface": "REPRODUCED_2_PAIRINGS"
+  }
+ },
+ "claim_kind": "pattern_determined (my own reruns through the commander's unchanged ruler bytes)",
+ "artifact_note": "fixtures + readings are new paths under raw/ord0319 locally; published copies follow with e-stamped names"
+}
