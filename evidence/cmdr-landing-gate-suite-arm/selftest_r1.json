@@ -1,0 +1,67 @@
+{
+ "schema": "CNX_CMDR_LANDING_GATE_SUITE_ARM_SELFTEST_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T04:13:21+0800",
+ "what_changed": "preflight_and_land_r1.py gained a whole-suite `--collect-only` arm (default on, --suite-collect off to silence).  It runs on the FULL-tree export of the candidate, with PYTHONPATH set to the export root, and refuses the landing unless collect_exit==0, no `Interrupted`, and a non-zero collected count.",
+ "why": "A candidate carrying one unimportable test file makes pytest abort during collection of the whole tree: the named files still report a tidy summary while ZERO of the rest ever ran.  Per-file collection cannot see that.  Observed on refs/heads/agent/S2-hermes-port-candidates.",
+ "tool": {
+  "path": "live_checks/preflight_and_land_r1.py",
+  "blob": "aee2a618628647830da706456ebb22925a6eb5a7",
+  "bytes": 16946,
+  "lines": 281
+ },
+ "trees": {
+  "clean": null,
+  "poisoned_ref": "refs/heads/agent/S2-hermes-port-candidates",
+  "poisoned": null
+ },
+ "arm_readings": {
+  "clean_tree": {
+   "collect_exit": 0,
+   "collected": 1318,
+   "interrupted": false,
+   "error_lines": [
+    "tests/test_qoder_ord0296_write_deadline.py::test_G7_lost_lock_inside_the_budget_stays_todays_error",
+    "tests/test_qoder_ord0310_keyless_leg_receipts.py::test_t1b_landed_error_row_reports_the_status_the_client_saw",
+    "tests/test_solver_runtime_policy.py::test_unexpected_solver_programming_error_is_not_silently_hidden"
+   ],
+   "tail": [
+    "    _PortalFactoryType = Callable[[], AbstractContextManager[anyio.abc.BlockingPortal]]",
+    "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+    "1318 tests collected in 5.27s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "poisoned_tree": {
+   "collect_exit": 2,
+   "collected": 1318,
+   "interrupted": true,
+   "error_lines": [
+    "ERROR tests/test_v18_hermes_r20_transport_reliability_probe.py",
+    "!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!",
+    "1318 tests collected, 2 errors in 6.30s"
+   ],
+   "tail": [
+    "ERROR tests/test_v18_hermes_r20_transport_reliability_probe.py",
+    "!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!",
+    "1318 tests collected, 2 errors in 6.30s"
+   ],
+   "cmd": "D:/moodle/CityNexus/.venv/Scripts/python.exe -m pytest --collect-only -q tests  (cwd=<export>/backend, PYTHONPATH=<export>)"
+  },
+  "same_command": true,
+  "same_interpreter": true,
+  "collected_equal": true
+ },
+ "derived": {
+  "arm_refuses_the_poisoned_tree": true,
+  "arm_stays_silent_on_the_clean_tree": true,
+  "collection_measured_on_both": true,
+  "both_arms_ran_the_same_command": true,
+  "the_two_trees_differ_only_in_execution": true
+ },
+ "claim_kind": "recomputation",
+ "raw_receipts": {
+  "pf_goodtip.json": "2f4e2cd60b5e4af64055ce250017af994a099900",
+  "pf_badcand.json": "31050fe1f269e80a1004fceb23fc5f8cbbc0e048"
+ }
+}
