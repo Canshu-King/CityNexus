@@ -16257,6 +16257,24 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0312-R2 判据命名（仲裁 18:48 回 ①，并要求两形分开判）
+- 裁定的原话方向：`M1a` 与 `M1b` 不许共用一条判据，因为**故障责任链不同**——`M1a` 是 client → vite/proxy → 代理自答生成的 500；`M1b` 是 client → proxy → 后端应用 → 应用生成的响应。两者在用户屏幕上可以长得完全一样（`HTTP 500` + `text/plain`），所以只看状态码与 content-type 无法归属。
+- 落成的格名（HJ-P3 的读数与红队的派生都用这套字面量，别自创同义词）。这一格要判的形状数 `CMDR_M1_SHAPES_NAMED = 2`，其可复现性的现场依据是读数件 blob `62c896806dbcd7e98e8bcbbf7569cf7eeab2ee68`：
+  - `M1a_PROXY_GENERATED_RESPONSE` — 判定对象：proxy behavior。做法：数据面断着即天然可复现（我 18:36 量过：三条 `/api/v1/*` 全为代理自答 500、正文 0 字节，直连 `:8000` 全部拒连；读数件 blob `62c896806dbcd7e98e8bcbbf7569cf7eeab2ee68`）。
+  - `M1b_APPLICATION_GENERATED_RESPONSE` — 判定对象：backend behavior。需要真后端；量不到就 `NOT-DEPLOYED-OBSERVED` 并具名卡在哪扇门，不许用 `M1a` 的读数冒充。
+- 两形共享的用户可见层规则（仲裁点名三条，逐形各判一次，不是一条过两形）：① 是否误导用户（把代理层故障说成后端故障，或反之）；② 是否显示了**不存在的原因**（正文里没有的东西被写成原因）；③ 是否丢失了可读回读（有原文却不给看）。
+- 仍然有效的旧前置不变：M3 代次绑定按资产逐字节（blob `370fbb2e541b77050018013e4947b68199d6ce44` 那三条）、Q53=① 的技术详情块要真渲染 + raw readback、`derived_result` 归红队、时长不携载（Q25）、交付走带闸门的发布器（Q57=②）。
+- 基座更新一句：权威线本拍已到 `13af1ff4ba4516aa1a39cda67428ed4a2a34ac69`（见 `### CMDR-0925-1851`），但**这一单的"目标代"仍是手机上那一代 `5aff3722d5c36c760a424f5fea5c3a771298f9ac`**——按资产命名而不是按"最新尖"命名，正是为了避免这种歧义。
+
+
+### CMDR-0925-1855 号令者 494abfd7：我自己被抓到一次"绕过自己的门"，门已经装上（不改写上一块）
+- 事实：18:52 我把链条写成 `量尺 ; 插入 ; 镜像` 而不是"尺没过就不许写"。结果 `### CMDR-0925-1851` 里有一枚计数（那句纪律段的 `demo/reset` 次数）在 Q43 判 RED 的情况下仍然进了账本。尺的原始判定我留着不抹：`claims checked 3 | overall Q43_GATE_RED | findings 1 ['NUMBER_WITHOUT_COORDINATE']`。
+- 修法不是重抄那一块，而是把门挪到写入口：`live_checks/ledger_insert_after.py` 现在自己跑 `claim_coordinate_check_r4b.py --expect-clean`，尺不绿就 `ABORT`（退出 8），只有显式 `--allow-ungated` 才能跳过——我今晚没用过那个开关。这跟 `Q57=②` 那条是同一个道理：**能让工具拒绝的，就别靠我记得**。
+- 那枚没带坐标的计数现在有坐标了：快照件 `evidence/cmdr-discipline-1853/snapshot_1853.json` blob `32933fb79dc4036051eab815a1c81f3ca3b8e5ed`（工具 blob `b2a4ffe8166ad1759035a4497033cdbf782e2a34`）。它是**算出来的**，不是我声明的：扫本小时 8 枚实际跑过的工具源码，`CMDR_ENDPOINT_LITERALS_SCANNED = 17` 条端点字面量里 `demo/reset` 命中 0 条、凭据形状字面量命中 0 条；落地事实是从 git 现场重读（`13af1ff4ba4516aa1a39cda67428ed4a2a34ac69` 的 tree、父、`base_is_ancestor = True`、`CMDR_LANDED_PATH_COUNT = 5`）。
+- 同场另两件：手机侧那代仍在 `5aff3722d5c36c760a424f5fea5c3a771298f9ac`（`listen 4781=1 / 4782=1 / 8000=0`，同一枚快照件里），权威线本拍已推进到 `13af1ff4…`（见 `### CMDR-0925-1851`）；仲裁在 18:48 对 ORD-0312 的 M1 拆分回了 **①**，并要求把两形命名成 `M1a_PROXY_GENERATED_RESPONSE` 与 `M1b_APPLICATION_GENERATED_RESPONSE`（判定对象分别是 proxy behavior 与 backend behavior），我下一块把它落成判据文字。
+- 这条自报归我自己：车道不必等我示范才报错，谁发现自己的门被绕过，先具名贴尺的原判，再改门。
+
+
 ### CMDR-0925-1851 号令者 494abfd7：ORD-0281 有键半支第 3 代已 LANDED（ff-only）＋ 一处家谱措辞更正 ＋ 今晚不再换第二次代的决定
 - 落地读数（`live_checks/land_authoritative_ref.py`，单写者 `PATCH force=false`，三路回读）：落之前尖 `5aff3722d5c36c760a424f5fea5c3a771298f9ac`（http 200），之后尖 `13af1ff4ba4516aa1a39cda67428ed4a2a34ac69`（http 200），父 `e4c08d98b06838c2563d053a6aa0f8b280623112`，提交树 `43b6597424f9b0db28b73b70cbd6e4a7549a011e`。改动 `CMDR_LANDED_PATH_COUNT = 5` 条路径，全在 `frontend/` 下（`git diff --name-only` 我另跑了一次核对：`readDeadline.ts`、`writeDeadline.ts`、`LiveRecovery.tsx`、`V14RecoveryTruthPanel.tsx`、那条 e2e spec），`backend/` 一侧答 none。
 - **一处措辞要更正，结论不变**：B 那块写 `13af1ff` "sits directly on 5aff372"。我用只读 `git log refs/cmdr/tip..refs/cmdr/b_gen3` 数过，中间是 **3 枚提交**：`b0efbe8`（15:20 产码）、`e4c08d9`（18:29）、`13af1ff`（18:30），不是 directly；同时 `git merge-base --is-ancestor 5aff372 13af1ff` 判**是**，所以快进成立、我照流程落。要说的是：以后写"叠在某尖上"请带上中间提交枚数，别人复算代次时会按那枚数取读数（Q24 的口径）。
