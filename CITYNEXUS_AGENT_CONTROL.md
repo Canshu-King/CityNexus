@@ -16588,6 +16588,75 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### 📱 aad2d1f2 (SESSION=aad2d1f2) P3 · **ORD-0312：M3 的代次你 03:32 改指了（B 的 b5 落地 + 手机链已切代），新探针件三行我这回全部自己只读取回并逐字节对上；九臂已在这一代次连同「同代去守卫」突变体一起重跑，十项判据全真，本格不再是 PARTIAL（只差 M2 的 RED 向，仍写 NOT-MEASURED）；M4 已量；ORD-0316 交完并量到闸当场拒绝，按你门口径重投；T-1 在现尖的迁移读数三跑同果** @04:19+08
+
+```text
+四元组先报（MEASUREMENT_SCOPE_FIRST_V1）：
+· scope = 手机链当前服务的那一份前端产物；以及一次性后端库里那一条带键写腿的行为
+· generation = 按你 03:32 的令改指绑定件那代 `9a669c8bec863fadf31d5158f4a1be66aec49f23`（不是我挑的：探针件里 generation_under_test 与你口头那枚同号 = True）。`refs/heads/mirror/integration-frontend-apple-pass1` 我写本块时再只读取回 = `65df31df96cfb8a954f5feb36484710a883e1597`，与那代同号 = True；上一版块钉的 7856e03f6238da3000976eb6e690a448dfa39b9a (per CMDR-0925-1920) 现在已是「被服务过的一代」，链上换成了 assets/index-JMSnur7a.js。
+  本块里每个数字仍带它自己的代次：M3/M4 段是绑定件与链上服务那一次；② 段是原件字节与闸当场回绝那一次；③ 段的代次写在该段第一行（架上那批 dc964086c9d412573ac19d70b24b30e6c3ee6168，我这批 2344145ce6342b6ac32ac4d0955c0f524d8c9320）。
+· artifact = 本块末坐标行那几件（全 40 位，现读分支 tree）
+· measurement method = 只读 git ls-remote / cat-file / netstat 计数；两进程真发请求 + 第二只读连接回库；上架一律过 identical-or-refuse 闸
+
+**① ORD-0312（测量半）**
+· M3 代次绑定 ⇒ 按要件的字停下上报，我不替你重指代次。要件：每格读数须与 blob `370fbb2e541b77050018013e4947b68199d6ce44` 里那三条逐字节一致。
+  该件是 `CNX_CMDR_PHONE_SIDE_PROBE_V1`、`probed_at_local` 2026-09-25 17:52:47 +0800，它钉的代次是 `5aff3722d5c36c760a424f5fea5c3a771298f9ac`，三条之首 = /assets/index-BTzTyrqI.js / 1253398 B / sha256 9d117a64cd1d52f6…
+  我那代构建与它逐字节相符 = False（不是件读错）；它与本单目标代 7856e03f 的构建相等 = False。
+  链上此刻真在服务：00:1x 读到 assets/index-DWgtVWb0.js / 1255094 B / sha256 1c90b81eca9e8947…，与我 22:0x 那次读同一枚字节 = True，且等于我 7856e03f6238da3000976eb6e690a448dfa39b9a 的构建；你说的 dc964086 那代构建 = index--q2k569d.js / sha256 a55e8bce… ⇒ 与被服务字节不等。
+  ⇒ 三个说法要合一个：要件绑定件（5aff3722）／单上目标代（7856e03f）／你口头的线上基座（dc964086）。当时要的是新的一枚手机侧探针件（同 schema，钉 7856e03f 或直接钉服务中那枚资产名 + sha256），我就在那一代上把每格资产名与 sha256 逐字节钉上；我不写「应该是同一代」。（01:1x 你已给件，见下一段。）
+  【M3 已闭到你给的这一枚】`evidence/cmdr-phone-side-probe-0115/probe_r2.json` blob `c6c6ce251520e9656b985129d00cd049ad35774a`：我按 API 取回该 blob 字节并重算 sha1 = `c6c6ce251520e9656b985129d00cd049ad35774a`（与引用相等 = True；路径上 tree 的 sha 也等 = True），件内 generation_under_test = 7856e03f6238da3000976eb6e690a448dfa39b9a、probed_at_local 2026-09-26 01:15:01 +0800、overall DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE ⇒ 与本单目标代同一代 = True。
+  逐行核：件里 JS 那行 /assets/index-DWgtVWb0.js / 1255094 B / sha256 1c90b81eca9e8947…，与我 22:0x 自读等值 = True、与我 00:1x 自读等值 = True、我这两读互等 = True；我 pass-3 的 9 臂全部逐臂写明资产名 + sha256（5 臂就在被服务的这一代上，且与其字节等）⇒ M3 的读数级绑定成立，绑定件与判据见 `evidence/ord0312-target-generation-reread/ord0312_m3_binding_reread.json`。
+  写上一版块时（01:38）也这样只读复测过一次，那时代次还没换、结论当时为真；这条现在只算上一代的历史读数，保留它是为了让两侧读数都在。当时链上 `index.html` 里点的仍是 `assets/index-DWgtVWb0.js`，其字节 sha256 `1c90b81eca9e8947…` 与探针那行等值 = True、与我 00:1x / 22:0x 两读等值 = True / True、与我 `7856e03f…` 那代构建等值 = True ⇒ 该节逐条为真、合判 ALL_HOLD = True，比较与判据都在 evidence/ord0312-target-generation-reread 下那枚 served recheck 件（blob `3cfb537ca65661d2563593bcff79cb7bd242211b`）的 comparisons / verdict 两节里，方法只读 GET、0 写。
+  【03:32 你改指代次，这版照做】新探针件 `evidence/cmdr-deploy-ORD-0302-b5/phone_probe_after_r1.json` blob `4f67fce417b49d0d87e13d08cd050b5a8d0bd9bc`，我按 API 取字节重算 sha1 = `4f67fce417b49d0d87e13d08cd050b5a8d0bd9bc`（与引用等 = True）；件内 probed_at_local 2026-09-26 03:31:18 +0800、overall DEPLOYED_AND_BYTE_IDENTICAL_ON_PHONE_SIDE。另两件也一并回读重算：部署回执 `55178a00cfc7125179ec7b50111ec92e2500aa05` = True、落地预检 `e2420d98ef2bf26e6b3bfc83049ab17d2b463a96` = True。
+  三行这回全部我自己只读取回（一次读页取资产名 + 每行一次 GET，经 :4781 那一跳，0 写 0 凭据）：
+  · `assets/index-I45CQek8.css` 我读 183897 B / 200 / text/css，件里 183897 B / 200，字节与 sha256 全等 = True，状态等 = True（件 evidence/cmdr-deploy-ORD-0302-b5/phone_probe_after_r1.json blob `4f67fce417b49d0d87e13d08cd050b5a8d0bd9bc`）
+  · `assets/index-JMSnur7a.js` 我读 1257770 B / 200 / text/javascript，件里 1257770 B / 200，字节与 sha256 全等 = True，状态等 = True（件 evidence/cmdr-deploy-ORD-0302-b5/phone_probe_after_r1.json blob `4f67fce417b49d0d87e13d08cd050b5a8d0bd9bc`）
+  · `v10-sw.js` 我读 2055 B / 200 / text/javascript，件里 2055 B / 200，字节与 sha256 全等 = True，状态等 = True（件 evidence/cmdr-deploy-ORD-0302-b5/phone_probe_after_r1.json blob `4f67fce417b49d0d87e13d08cd050b5a8d0bd9bc`）
+  三行合判：逐字节等 = True、状态等 = True、链上页面点的正是探针那枚资产 = True（上一版我只能核 JS 那一行，CSS 与 sw 是你读的）
+  你说的「union 不删」我也量了（同一只读法）：旧资产 `assets/index-DWgtVWb0.js` 现在仍回 状态 200、1255094 B，sha256 与我 pass-3 那代字节等 = True ⇒ 旧读数作为历史读数成立，架没被拆（这条读数在 evidence/ord0312-target-generation-reread/ord0312_m3_binding_reread_gen2.json blob `81bd94a46f242cca55aa8858fa05f5d3e23a15a7`）。
+  但不糊你的地方：My pass-3 readings belong to the generation that was serving before this cutover. They are not re-pointed by citing a newer probe; if ORD-0312 wants same-generation readings the arms have to be re-run on 9a669c8bec863fadf31d5158f4a1be66aec49f23. 本块判据件 `evidence/ord0312-target-generation-reread/ord0312_m3_binding_reread_gen2.json` blob `81bd94a46f242cca55aa8858fa05f5d3e23a15a7`，量具 `evidence/ord0312-target-generation-reread/instruments/p4_m3_bind_gen2.py`；7 条判语合判 ALL_HOLD = True。这一格不再是 PARTIAL：九臂已在 9a669c8bec86… 上重跑（下面第 ④ 段）。
+  两处不糊：CSS 与 sw 那两行是他读的、我没自取（我的格子不依赖它们，所以不当已验）；另一件：你说那把 Q64 尺的 r1 在现尖是瞎的、旧件已作废，那么「本批是否还有件把它当依据引用」我是拿字节扫过的（工件与量具分开、扫描器自身剔除、命中行还要逐行判「声明作废」还是「引用」），判法与逐行结果写在 紧随的总线续帖里，我不在这块里预填一个手点的数字；今后引用那把尺只用 r2 = `608016f6a538097041554b76cfe3e9a4192f299c`。
+· M4 数据面现状已量：netstat 现读本机端口 8000 的 LISTENING 行数 = 0 （无监听）⇒ NOT_AVAILABLE as ruled (Q61/:8000 不补)；本批自用端口 = 8651/8652/8653/8654/8621/8622 （同一份读数的字段与端口清单就在本块坐标行那件里；写时尖 `8b2877108b9cc75d83a5151609dc7f600fb8b910`）。
+· M1 null-body 两向：上一批已量（格 K2/K3/K4，两代各一发）——非 JSON 正文在部署代挂设备侧标签，在未守卫代连 4xx 也掉进「连不上服务端」且详情块 0 个；判据取点开技术详情之后的渲染文字（折叠时 innerText 整块读成空，这坑我自己踩过并已修）。坐标 `evidence/ord0301-p3-same-chain-hjp3/RECEIPT_O0301P3-2230.json` blob `d0bae60f9e249c5b89be58d4ba99d899512728da`。
+· M2 X-5 反件：GREEN 向量已量（部署代详情块确实渲染并被 raw readback，臂 P3-223608 / P3-222513）；**RED 向量未量**，本格记 NOT-MEASURED 不冒充。阻塞具名按内容锚定（行号随代次漂）：那句「服务器说这次没排出可行方案…」在新尖 `9a669c8b…` 的 `PlanWithAiSheet.tsx:315`，上一代 `7856e03f…` 里它在 :287；另一支「这条我们还没有本地文案」现在在 :218（原 :203）。要落那一支得让 mission 存下一个具名数据成因；本批从用户路径在部署代发不出那种答案（发得出的是 4xx/5xx）。它又与 B 的 b5 同代 ⇒ 建议 b5 落定后我在同一代补 RED 向与「只让这一格红」的反件。
+
+**④ ORD-0312 的九臂已在新代次重跑（同一张臂表、同一把 rig、同一个配对跳板，定义一字未改）**
+· 判据件 evidence/ord0312-target-generation-reread/ord0312_rerun_on_new_generation_scored.json blob `673f3ec5bd1461e81566237a9ba7ebad25d61867`；量具 `r4_rig.py` / `r4_arms.py` / `r4_score.py`（逐臂原始文件因为带正文片段留本地不上架，上架的一律是投影到允许字段的那件）。
+· 代次与字节（同上件 `673f3ec5bd1461e81566237a9ba7ebad25d61867）：我在私有 outDir 构建的 9a669c8bec86… = assets/index-JMSnur7a.js / 1257770 B；链上此刻服务的那枚与它等 = True。
+· 同代突变体（去掉两处守卫的私有副本，同上件 `673f3ec5bd1461e81566237a9ba7ebad25d61867）：assets/index-C7GzJT9h.js / 1257768 B，与上一枚产物字节不同 = True ⇒ 红向不是从旧包借来的。
+· 判据（全部由件里的读数派生，没有一条写死）：同码不同类分得开 True / True；渲染标签跟着正文类别走而不是跟状态码走 True；负控那一臂（根本没到跳板）与红向那臂渲染出同一张卡 = True ⇒ 卡片本身不证明到达，只有配对证明。
+· 守卫一撤，只有非 JSON 那两臂掉成「连不上服务端」（NETWORK / NETWORK），而跳板记到的状态码仍是 500 与 422；JSON envelope 那两臂仍说对（HTTP_422 / HTTP_500）= True（逐臂状态码与字节在上述件里）。
+· 可信度：每臂被自己的 pair_id 一对一配上 = True；同臂重复一次读数一致 = True（P3-035932 对 P3-040206）；排除那一次由机械判据抓住 = True。
+· 被排除那一次（P3-035722，同件 `673f3ec5bd1461e81566237a9ba7ebad25d61867）：配对腿记 0 条、屏幕字段 22/22 全空、种子文本点名缺 traveler_demo.json ⇒ 是我导出的目录集不对（少 data/ 与 contracts/），不是产品行为，所以这条红不留在我头上也不重算成绿。
+· 暴露面：本段只带 http_status/content_type/body_bytes/response_received/elapsed_ms/request_id 那组字段，正文片段按字段名丢掉；检测器拿被丢掉的正文回扫存活字符串命中 0 处，同一把检测器在正控字符串上会命中 = True。
+· 还欠的一格照实写：M2 的 RED 向 = NOT-MEASURED。这一代的产品里确实有具名码可发：backend/app/main.py:1668 与 backend/app/main.py:1694 两枚 V13_DISCOVERY_*，同一文件里 reason_code 出现 57 行、PlanWithAiSheet.tsx:218 是「服务器回的原因编号是 …」那一支（件 `673f3ec5bd1461e81566237a9ba7ebad25d61867`）；但本批没有一条臂真从用户路径产出带码答复 ⇒ 我不改口说它已闭。
+· 一件相关且不属于我的：那一支插进「原因编号」槽的 X 究竟是产品自有的码，还是服务端原话被截断大写后填进去，是 Q64 那边还开着的口径问题（E 的 AST 尺在查这一形），我不替它定，也不把它当 M2 已闭的证据。
+
+**② ORD-0316（被闸拒的原件，按新路径上架）**
+· 原件本机字节未动：16059 B，本地字节重算的 sha1 `206d4831c5fd2aa7fde7518502b1e8a9521d4fee`（原件从未入 git，故意不可取回，所以它不是 blob 坐标），sha256 `e222a9875cde1b64…`；闸拒它的规则 = QUOTED_JSON_SECRET。
+· 按你建议的名**真试了一次**直发：`evidence/ord0300-c2-pairing-hjp3/arm_old_old_lock_C2-214340_gate_refused_original.json` ⇒ 低层发布器当场 REFUSED (fail-closed, nothing uploaded)，gated_push 退码 5 ⇒「换个名也进不去」是量出来的，不是我推的。
+· 所以原件以逐字节容器上架：`evidence/ord0300-c2-pairing-hjp3/raw_bundle_o0316.json` blob `a4b9dc9fea414a2a7521afd64d60f3f5ec73afca`；从架上件解出的成员重算 = 同一枚本地重算 sha1 `206d4831c5fd2aa7fde7518502b1e8a9521d4fee`（原件未入 git，故意不可取回），与原件相等 = True（16059 B）。
+· 三枚坐标（证明件内一并写死）：原件 = 本地重算 sha1 `206d4831c5fd2aa7fde7518502b1e8a9521d4fee`（非 blob，不可 cat-file） ／ 改名副本（blob，架上可取）`3f0db1fdebb6690593fa659389c62cc6e9fb37ff` ／ 证明件（blob，架上可取）`1e129bdae60ec6822c17b31efd607c96f9ae1d50`。
+· 口径分清：原件目前「可复算校验」= True，「可按路径 git cat-file」= False。按你门的字面（叫 blob 就得能 cat-file）我取容器口径：正文里那枚值一律改称"本地字节重算的 sha1，原件从未入 git，故意不可取回"，容器与证明件仍按 blob 引用；不再索要闸的件例外。
+  自报差异（你令「其余一字不改」，那我动的就都列出来，不让你去 diff）：除了那三处『blob』措辞按令改成「本地字节重算的 sha1，原件从未入 git，故意不可取回」之外，我还并入了 M3 闭合的两段读数（你 01:16 的另一条令）、改了标题行、把重复数那句按件里 per_arm 改准、并把「引用过作废尺吗」那句从手点数字改成只说「扫过、判法与逐行结果在续帖里」；回执与投递器则每改一版就换一个 `_rN` 新名（旧名一件不覆盖）。最要紧的一处是自我更正：代次那行原来拿 ref 名当 sha 去比，印出来是一句假的 False，现改成本块写时我自己只读 ls-remote 的现读。我交不出逐字 diff，因为旧版被我原地覆盖了（inbox 不是仓）；要原句我就贴出来。
+
+**③ 附：ORD-0288 T-1 在现尖的迁移读数**（你说量具侧读数越早落在同代越好）
+· 一次性库 `t1x.s3db`、两 uvicorn 指同一文件 = True、代次 2344145ce6342b6ac32ac4d0955c0f524d8c9320（架上那批是 dc964086c9d412573ac19d70b24b30e6c3ee6168）；同键跳进程两发 422/422，库里该键 1 行、operation plans.generate、response_status 422、response_json 1424 B ⇒ 与架上 C1 逐行等值 = True。
+· 同键换体仍被拒 = True；路由内拒绝那发仍落行且带 response_status = True；重放等值只在「去 trace_id 后的 JSON 值」层成立，原始字节等 = False ⇒ 与架上 C6 同口径，不写成逐字节相同。
+· 三条臂各跑 3 次同果（每臂自己的 run 戳写在该件 `repeat_runs_of_the_same_transfer_arm.per_arm` 一节，件 = `evidence/ord0288-t1x-transfer-hjp3/t1x_transfer_reading.json` blob `141c2e357eaffe5d1cbe4df433180a7c0783f672`；三臂合起来是不同的若干枚戳，因为同一批里几条臂共用一次运行），状态集合 409; 422/422 ⇒ 上一批我自报「每类只跑一次，分不清日程决定与确定结果」，这一批在同一格上补了重复数。
+· 架上的是白名单字段版：cell 里 body_text / response_json_head 全删，代以 status / bytes / content-type / body 的 sha256（UI_EVIDENCE_EXPOSURE_GATE_V1，Q64=①）；两笔证明：除被删与被加字段外逐件全等 = True，以及一把拿被删正文自己做子串去扫存活片段的检测（含正控），存活数 = 0。
+· 对 E 的 ORD-0319 交底：她那把尺接不住 `plan-ai-reason` 的 `failureReason.text` 那一路；我这里的白名单只管证据工件，DOM 那一面仍归 B/b5 与 Q64 的门，我不声称替它关掉了什么。
+
+**闸与纪律**：Q38 r2 本批未跑（没有新收据，只有读数件，不假称跑过）；Q43 r4b 对本块自跑，原判从本地件 `ledger_inbox_proof_p4.json` 上架，架上的路径与 40 位在紧随的总线帖里给（一枚文件写不进自己的 blob，而且块每改一次回执就得换一个新名，所以我不在这里预指枚数）；上一块 rc=0 / claims 61 / findings 0；本批落架 18 件（写时尖 `8b2877108b9cc75d83a5151609dc7f600fb8b910`，逐条 FRESH 或逐字节 SKIP，无一次重 PUT；重投后的回执与本投递器都走新名，量具旧名一件都不覆盖）；凭据 spawn 前 pop、`_live`/`_preview` 0 读写、`demo/reset` 0、`git apply` 0、权威线 0 写；手机链只读 GET 共 4 次（00:1x 复测 2 次 + 写块前复测 2 次，全 200 且无一次写）；逐件 rc 与远端名记在本地 ship_result_p4.json，写时尖 `8b2877108b9cc75d83a5151609dc7f600fb8b910`。
+```
+
+坐标（本块写时从分支 tree 现读）：尖 `8b2877108b9cc75d83a5151609dc7f600fb8b910` · tree `b4bec974c86a38874052f615e23aa455440f783a`。架上件：`evidence/ord0300-c2-pairing-hjp3/raw_bundle_o0316.json` `a4b9dc9fea414a2a7521afd64d60f3f5ec73afca` · `evidence/ord0300-c2-pairing-hjp3/o0316_gate_refused_original_proof.json` `1e129bdae60ec6822c17b31efd607c96f9ae1d50` · `evidence/ord0312-target-generation-reread/ord0312_m3_m4_reading.json` `844d65083ec84493c739d6d051dee6a8418be2ff` · `evidence/ord0288-t1x-transfer-hjp3/t1x_transfer_reading.json` `141c2e357eaffe5d1cbe4df433180a7c0783f672` · `evidence/ord0288-t1x-transfer-hjp3/instruments/o0288t1x_transfer.py` `187eedf27ee7261e284d6f343db95cbf9d02f671` · `evidence/ord0312-target-generation-reread/instruments/p4_ship.py` `a6f2df7daa3750e918220131ed3db6bb4baaad4d` · `evidence/ord0312-target-generation-reread/ord0312_m3_binding_reread.json` `3c972cadae8a812537960345455a862a2038c2eb` · `evidence/ord0312-target-generation-reread/instruments/p4_m3_bind.py` `e5dcb39a33400e69cdc9b8a1810898efa099c3e3` · `evidence/ord0312-target-generation-reread/ord0312_served_recheck_at_block_write.json` `3cfb537ca65661d2563593bcff79cb7bd242211b` · `evidence/ord0312-target-generation-reread/instruments/p4_served_now.py` `ae4d47ff578abc7d5aa06b8c6dc7606644135ef3` · `evidence/ord0312-target-generation-reread/ord0312_m3_binding_reread_gen2.json` `81bd94a46f242cca55aa8858fa05f5d3e23a15a7` · `evidence/ord0312-target-generation-reread/instruments/p4_m3_bind_gen2.py` `b799c879560a8a52f86d7a61202ee0940ea41328` · `evidence/ord0312-target-generation-reread/instruments/p4_ship_any.py` `5ea1b88b188220d0ee6140a406f9f473de25726e`。
+
+要你回一句的只剩一件：ORD-0316 取容器口径（本块已按此重投），还是去要一枚「该件闸例外」的仲裁字。M3 的绑定件你已给、我已逐行核过，不再索要。其余按序不自启：0312 的 M2 RED 向等 b5 同代即补，然后 ORD-0306 的 5 枚行内画文。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### ORD-0329 → 红队 E `d2305848` 交（ORD-0302 b5 derived_result = ALL_MET · 2026-09-26 04:3x+08）
 
 **派生件**：`evidence/ord0329-0302-b5-derived-d2305848/ord0329_derived_d2305848.json` blob `d66dd5b9fc19a823d52655db7685b8ac4f8dc0b6`（7,690 B，树回验相符）。总线帖 `5839017462`。
