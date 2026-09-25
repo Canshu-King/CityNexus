@@ -1,0 +1,207 @@
+{
+ "schema": "CNX_ORD0338_PUBLISH_READBACK_V1",
+ "evidence_dir": "evidence/ord0338-wizard-gap-D",
+ "file_count": 12,
+ "per_file": {
+  "ord0338-N1-at-rest-ARM-neutered.json": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=SKIP_IDENTICAL",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338-N1-at-rest-ARM-neutered.json",
+    "door_decision": "SKIP_IDENTICAL",
+    "local_bytes": 2656,
+    "remote_bytes": 2656,
+    "local_blob": "03f15b831ea7785450a2bf8dfab64462ff4aff20",
+    "remote_blob": "03f15b831ea7785450a2bf8dfab64462ff4aff20",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 2656,
+   "local_blob": "03f15b831ea7785450a2bf8dfab64462ff4aff20"
+  },
+  "ord0338-N1-at-rest.json": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338-N1-at-rest.json",
+    "door_decision": "CREATED",
+    "local_bytes": 2784,
+    "remote_bytes": 2784,
+    "local_blob": "8903d097201864273ef850118f870f52787e366b",
+    "remote_blob": "8903d097201864273ef850118f870f52787e366b",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 2784,
+   "local_blob": "8903d097201864273ef850118f870f52787e366b"
+  },
+  "ord0338-N2-single-variable-ARM-neutered.json": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338-N2-single-variable-ARM-neutered.json",
+    "door_decision": "CREATED",
+    "local_bytes": 5517,
+    "remote_bytes": 5517,
+    "local_blob": "b339dd6eeab1c34c1cd56ce1ef8ea3cc27797c94",
+    "remote_blob": "b339dd6eeab1c34c1cd56ce1ef8ea3cc27797c94",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 5517,
+   "local_blob": "b339dd6eeab1c34c1cd56ce1ef8ea3cc27797c94"
+  },
+  "ord0338-N2-single-variable.json": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338-N2-single-variable.json",
+    "door_decision": "CREATED",
+    "local_bytes": 5772,
+    "remote_bytes": 5772,
+    "local_blob": "78c706826a39fbfd0e2794a27fa30b90292b0cb6",
+    "remote_blob": "78c706826a39fbfd0e2794a27fa30b90292b0cb6",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 5772,
+   "local_blob": "78c706826a39fbfd0e2794a27fa30b90292b0cb6"
+  },
+  "ord0338-N3-not-data-gated-ARM-neutered.json": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338-N3-not-data-gated-ARM-neutered.json",
+    "door_decision": "CREATED",
+    "local_bytes": 5293,
+    "remote_bytes": 5293,
+    "local_blob": "43e4e2a42425f27b680f5a9c308e5a4d774ce6bc",
+    "remote_blob": "43e4e2a42425f27b680f5a9c308e5a4d774ce6bc",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 5293,
+   "local_blob": "43e4e2a42425f27b680f5a9c308e5a4d774ce6bc"
+  },
+  "ord0338-N3-not-data-gated.json": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338-N3-not-data-gated.json",
+    "door_decision": "CREATED",
+    "local_bytes": 5551,
+    "remote_bytes": 5551,
+    "local_blob": "9da8c08dc6672d9973d1cb8abc2e0a80ae696344",
+    "remote_blob": "9da8c08dc6672d9973d1cb8abc2e0a80ae696344",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 5551,
+   "local_blob": "9da8c08dc6672d9973d1cb8abc2e0a80ae696344"
+  },
+  "ord0338-N4-what-the-eye-sees-ARM-neutered.json": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338-N4-what-the-eye-sees-ARM-neutered.json",
+    "door_decision": "CREATED",
+    "local_bytes": 2509,
+    "remote_bytes": 2509,
+    "local_blob": "160869fd87cb5761d787fe1e0e149ea691b5b509",
+    "remote_blob": "160869fd87cb5761d787fe1e0e149ea691b5b509",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 2509,
+   "local_blob": "160869fd87cb5761d787fe1e0e149ea691b5b509"
+  },
+  "ord0338-N4-what-the-eye-sees.json": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338-N4-what-the-eye-sees.json",
+    "door_decision": "CREATED",
+    "local_bytes": 2635,
+    "remote_bytes": 2635,
+    "local_blob": "af4078ed7ae41d2933d92532d746782b58bb78a2",
+    "remote_blob": "af4078ed7ae41d2933d92532d746782b58bb78a2",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 2635,
+   "local_blob": "af4078ed7ae41d2933d92532d746782b58bb78a2"
+  },
+  "ord0338-screenshot-at-rest-run376920.png": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338-screenshot-at-rest-run376920.png",
+    "door_decision": "CREATED",
+    "local_bytes": 37069,
+    "remote_bytes": 37069,
+    "local_blob": "7df7fa5e2cd7c5884870853e436743c4c8821963",
+    "remote_blob": "7df7fa5e2cd7c5884870853e436743c4c8821963",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 37069,
+   "local_blob": "7df7fa5e2cd7c5884870853e436743c4c8821963"
+  },
+  "ord0338-screenshot-padding-zeroed-run376977.png": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338-screenshot-padding-zeroed-run376977.png",
+    "door_decision": "CREATED",
+    "local_bytes": 39338,
+    "remote_bytes": 39338,
+    "local_blob": "8a4aa841ce5a3f580243e4d53cdf29732ce1189d",
+    "remote_blob": "8a4aa841ce5a3f580243e4d53cdf29732ce1189d",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 39338,
+   "local_blob": "8a4aa841ce5a3f580243e4d53cdf29732ce1189d"
+  },
+  "ord0338_gap_anatomy_r1.json": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_gap_anatomy_r1.json",
+    "door_decision": "CREATED",
+    "local_bytes": 33690,
+    "remote_bytes": 33690,
+    "local_blob": "ebb8ab5c96fbc19a3f1fe26de82e502eeead9004",
+    "remote_blob": "ebb8ab5c96fbc19a3f1fe26de82e502eeead9004",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 33690,
+   "local_blob": "ebb8ab5c96fbc19a3f1fe26de82e502eeead9004"
+  },
+  "ord0338_instrument_copy__qoder-ord0338-wizard-gap-anatomy.spec.ts": {
+   "exit": 0,
+   "door_said": "door rc=0 decision=CREATED",
+   "readback": {
+    "file": "evidence/ord0338-wizard-gap-D/ord0338_instrument_copy__qoder-ord0338-wizard-gap-anatomy.spec.ts",
+    "door_decision": "CREATED",
+    "local_bytes": 12456,
+    "remote_bytes": 12456,
+    "local_blob": "c7635b6b07e7a3d5ba9e7a3a678bddd7512c7c0a",
+    "remote_blob": "c7635b6b07e7a3d5ba9e7a3a678bddd7512c7c0a",
+    "byte_identical": true,
+    "blob_recomputed_matches_api_sha": true
+   },
+   "bytes": 12456,
+   "local_blob": "c7635b6b07e7a3d5ba9e7a3a678bddd7512c7c0a"
+  }
+ },
+ "how": "每件由 publish_one.py 过门后再从 commander/control contents API 取回、逐字节比、两侧各重算一次 blob",
+ "all_byte_identical": true,
+ "all_blobs_agree": true,
+ "decisions": [
+  "CREATED",
+  "SKIP_IDENTICAL"
+ ],
+ "screenshots_differ": true
+}
