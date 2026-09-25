@@ -1,0 +1,200 @@
+{
+ "tree": "D:\\moodle\\_qoder_wt_45b0a5e",
+ "search_space": "<tree>/frontend/src/**/*.ts,tsx, pattern \\bfetch\\(",
+ "files_scanned": 71,
+ "fetch_call_sites": 40,
+ "write_call_sites": 14,
+ "write_sites_with_signal": 2,
+ "write_sites_with_timer": 0,
+ "write_sites_named": [
+  {
+   "file": "frontend/src/features/execution/LiveRecovery.tsx",
+   "line": 225,
+   "col": 23,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": true
+  },
+  {
+   "file": "frontend/src/features/notifications/PushCapabilityCard.tsx",
+   "line": 56,
+   "col": 30,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  },
+  {
+   "file": "frontend/src/features/planning/PlanComparison.tsx",
+   "line": 88,
+   "col": 30,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  },
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 492,
+   "col": 30,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": true,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  },
+  {
+   "file": "frontend/src/features/planning/PlanWithAiSheet.tsx",
+   "line": 605,
+   "col": 34,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": true,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  },
+  {
+   "file": "frontend/src/features/recovery/RecoveryRequiredPanel.tsx",
+   "line": 26,
+   "col": 10,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  },
+  {
+   "file": "frontend/src/features/recovery/V14RecoveryTruthPanel.tsx",
+   "line": 69,
+   "col": 30,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": true
+  },
+  {
+   "file": "frontend/src/features/simulation/simulationAdapter.ts",
+   "line": 229,
+   "col": 26,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  },
+  {
+   "file": "frontend/src/features/simulation/simulationAdapter.ts",
+   "line": 296,
+   "col": 26,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  },
+  {
+   "file": "frontend/src/features/simulation/simulationAdapter.ts",
+   "line": 335,
+   "col": 26,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  },
+  {
+   "file": "frontend/src/features/simulation/simulationAdapter.ts",
+   "line": 376,
+   "col": 26,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  },
+  {
+   "file": "frontend/src/features/stay/HotelsPanel.tsx",
+   "line": 63,
+   "col": 19,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  },
+  {
+   "file": "frontend/src/features/stay/HotelsPanel.tsx",
+   "line": 64,
+   "col": 19,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  },
+  {
+   "file": "frontend/src/features/stay/HotelsPanel.tsx",
+   "line": 87,
+   "col": 23,
+   "method": "POST",
+   "is_write": true,
+   "carries_signal": false,
+   "carries_timer": false,
+   "through_deadline_wrapper": false,
+   "idempotency_key_header": false
+  }
+ ],
+ "fetchWithReadDeadline_call_sites": [
+  {
+   "file": "frontend/src/api/citynexus.ts",
+   "line": 645,
+   "method": "DEFAULT(GET)"
+  },
+  {
+   "file": "frontend/src/app/V8Experience.tsx",
+   "line": 187,
+   "method": "DEFAULT(GET)"
+  },
+  {
+   "file": "frontend/src/lib/readDeadline.ts",
+   "line": 37,
+   "method": "DEFAULT(GET)"
+  }
+ ],
+ "wrapper_definition": {
+  "file": "frontend/src/lib/readDeadline.ts",
+  "constant_lines": [
+   15
+  ],
+  "method_gate_lines": [
+   43
+  ],
+  "constant_text": [
+   "export const READ_DEADLINE_MS = 12_000;"
+  ]
+ },
+ "coverage": "NOT EXHAUSTIVE - a write issued through a helper that does not literally call `fetch(`, or a method taken from a variable, is not seen by this scan",
+ "regex_selftest": {
+  "matches_deadline_sentence": true,
+  "matches_progress_counter": false,
+  "verdict": "SELFTEST_OK"
+ }
+}
