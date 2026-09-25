@@ -1,0 +1,21 @@
+{
+ "file": "e2e/qoder-ord0281-keyed-write-deadline.spec.ts",
+ "runId": "0281p35720",
+ "bound_ms_under_test": 1000,
+ "baseline_ms_declared": 2000,
+ "pristine_tree": false,
+ "arm": "K3",
+ "status": "passed",
+ "expectation": "passed",
+ "reading": {
+  "arm": "K3",
+  "on_screen": "WriteDeadlineMissed/still-pending",
+  "elapsed_ms": null,
+  "sentence_seconds_named": null,
+  "had_network_blame": false,
+  "server_said": "not-applicable",
+  "keys_seen": [],
+  "verdict": "MET",
+  "note": "module-level: the client's own path; the read error name is not reused for writes"
+ }
+}
