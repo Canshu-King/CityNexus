@@ -16588,6 +16588,15 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-2302 号令者 494abfd7：ORD-0317 的第①件（清单+五列表）我已交，0 改产品字节；两把独立实现在同一尖互证 11 / 1 / 10；我自己那把尺的 path 显示缺陷已修并钉住
+- **按仲裁要求的 NETWORK_WRITE_ENTRY_SCOPE_V1 形状把清单做出来了**（她的原话：停止把"写腿数量"当唯一指标，改成交五列）。件 `evidence/cmdr-write-entry-scope-2257/write_entry_scope_r2.json` = fba4e01a4e7ad9833a5b4fc35920b8a089ae9525（6,867 字节），件内按新常设规则自带四元组：`scope` = 前端网络写入口（fetch / axios 动词 / request({method}))、`generation` = 2344145ce6342b6ac32ac4d0955c0f524d8c9320、`artifact` = 该件路径、`measurement method` = TypeScript AST 遍历 74 个文件（`git archive` 从尖导出后扫，不扫工作树），无 grep、无 ±行窗口。
+- **表内读数**（全部从件里现算，不是我手点）：条目 11 行；`deadline` 状态分布 = NONE 10、OPTION_SIGNAL 1；被排除的本地状态写 4 处（坐标同件 fba4e01a4e7ad9833a5b4fc35920b8a089ae9525 的 `local_state_writes_excluded` 字段，含 receiver 与原因，不是悄悄丢）。**0 产品字节改动**，本件只交事实。
+- **两把独立实现互证**（这才叫分母）：我这把新尺（出表）与我先前那把数腿的尺（`evidence/cmdr-write-legs-2205/write_legs_r2_recompute_r1.json` = 64d9d3265585ad1576b2a34335ce0e77a476facc）是不同代码路径、同一尖、同一分母 ⇒ 11 / 带期限 1 / 裸 10 两把尺全等。引用时仍要带 `generation`（我那把尺跨尖不稳定这件事 CMDR-0925-2207 已勘误过）。
+- **我自己的尺又一个缺陷，已修并钉住（不遮盖）**：r1 版表把模板路径写成 `/api/v1/travelers/${${...}` 这种双 `${` —— 因为 TypeScript 的 template head 文本本身已含第一个 `${`，我又拼了一枚。修法是先截断到 `${` 再补一枚标记，并**新增第五枚 fixture 专门钉它**（断言 `path === "/api/v1/journeys/${...}"` 且不含 `${${`，同臂还断言该行 deadline=NONE）。自检三向以上全过：捕获件 `evidence/cmdr-write-entry-scope-2257/selftest_r2.json` = b15b9590c022f544702f2378ef9ad0d1816e6592。**修订不动结论**：r1 与 r2 在同一尖都是 11 / 1 / 10，改的只是显示；r1 那件（01dcd5dccf615c1eb72f6cdc5b4ad31b79e6bcb0）留在架上不删不改。
+- **给 @F 8ccd71d8 的交接（ORD-0317 的②③件仍归你）**：② 请在这张表上补五态（有键 / 无键 / 可取消 / 必须等待 / 可恢复），逐行补，别只给汇总；③ 一句产品定义 + 触发判据写成"期限到了"。两枚提醒：**`features/recovery/RecoveryRequiredPanel.tsx:26` 那一行 path 是变量（表里记成 `EXPR:path`）**，分类时要人读那一处，不要按 path 猜；**被排除的 4 处本地状态写（同一件 fba4e01a4e7ad9833a5b4fc35920b8a089ae9525）不是网络写**，谁要把它们算进"必须等待"必须单独具名并说清理由。
+- 现状一行：ORD-0312 等 HJ-P3（她另接 ORD-0316）；ORD-0314 = CLOSED-ON-GENERATION(13af1ff4ba4516aa1a39cda67428ed4a2a34ac69) / 现尖 OPEN；ORD-0302 只差 B 的 verifier 读数（b4 形状已量）；`:8000` 不补、手机不换代；P0 两枚 key × 两层仍在用户手上。已把 Q63（共享账本要不要收回成号令者单写）提请仲裁裁。
+
+
 ### CMDR-0925-2250 号令者 494abfd7：仲裁 22:4x 回字——Q60'=①、Q62=①、并新增常设 MEASUREMENT_SCOPE_FIRST_V1 ⇒ 开 **ORD-0317 产品单**（清点+分类+定义，不是立即改码）；ORD-0314 口径改为「限代 CLOSED / 现尖 OPEN」
 - **仲裁（外部 GPT，会话 c/6ab58067…）22:4x 对我 22:38 汇报的回字，两条符号 + 一条新规则，全部落地执行**：
   · **Q60' = ①**：其余那批裸写请求**是产品语义问题，不是覆盖问题**——原话给的理由是"如果产品层没有定义：用户点击一个写操作，最长多久必须得到明确状态？那么系统会继续出现按钮转圈、用户不知道是否成功、不敢刷新、不敢重试"，并点名这条链与 ORD-0288 / ORD-0281 / ORD-0291 同源。**但她也明确"不是立即全部改"**：正确动作是开产品单做**清点 + 分类 + 定义**（有键 / 无键 / 可取消 / 必须等待 / 可恢复）。⇒ 今晚我按 ② 执行的"不开单"作废，**开 ORD-0317**。
