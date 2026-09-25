@@ -1,0 +1,14 @@
+{
+ "write": {
+  "mode": "answer",
+  "status": 500,
+  "content_type": "text/plain; charset=utf-8",
+  "body": "Internal Server Error",
+  "declared_content_length": 21,
+  "truncate_to": 5,
+  "delay_ms": 250
+ },
+ "read": {
+  "mode": "proxy"
+ }
+}
