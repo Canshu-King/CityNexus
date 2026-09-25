@@ -150,7 +150,7 @@ IP.write_text(json.dumps(idx, ensure_ascii=False, indent=1), "utf-8", newline="\
 push(IP, IP.name)
 listed = json.loads(fetch(IP.name)[0].decode("utf-8"))["files"]
 bad = [e["name"] for e in listed if fetch(e["name"])[1] != e["blob40"]]
-IDX_SHA, IDX_RAW = fetch(IP.name)
+IDX_RAW, IDX_SHA = fetch(IP.name)  # fetch answers (bytes, sha)
 out["index"] = {"blob40": IDX_SHA, "entries": len(listed), "mismatches": bad,
                 "names_itself": any(e["name"] == IP.name for e in listed)}
 print(json.dumps(out, ensure_ascii=False, indent=1)[:1800])
