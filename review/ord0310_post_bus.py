@@ -17,10 +17,12 @@ for _stream in (sys.stdout, sys.stderr):
         _stream.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = Path("D:/moodle/_qoder_d_lane_20260923")
-BODY = ROOT / "_scratch_0310" / "ord0310-post-body.md"
+BODY = ROOT / "_scratch_0310" / (sys.argv[1] if len(sys.argv) > 1 else "ord0310-post-body.md")
 CLOSING = Path("D:/moodle/_qoder_cmdr_ref_20260921/live_checks/CLOSING_LINE.txt")
 API = "https://api.github.com/repos/Canshu-King/CityNexus-Workspace/issues/1/comments"
-OUT = ROOT / "_scratch_0310" / "ord0310-bus-post.json"
+OUT = ROOT / "_scratch_0310" / (sys.argv[2] if len(sys.argv) > 2 else "ord0310-bus-post.json")
+# a retry after a transport failure must not create a second comment, so the id is pinned by body blob
+IDS = ROOT / "_scratch_0310" / "ord0310-bus-ids.json"
 
 
 def secret() -> str:
@@ -40,6 +42,12 @@ def call(url: str, payload=None):
 
 def main() -> int:
     body = BODY.read_text(encoding="utf-8")
+    body_blob = hashlib.sha1(b"blob %d\0" % len(body.encode("utf-8")) + body.encode("utf-8")).hexdigest()
+    seen = json.loads(IDS.read_text(encoding="utf-8")) if IDS.exists() else {}
+    if body_blob in seen:
+        print(f"ABORT: this exact body is already posted as {seen[body_blob]['comment_id']} - "
+              f"a retry must not double-post")
+        return 4
     closing = CLOSING.read_text(encoding="utf-8").strip()
     made = call(API, {"body": body})
     cid = made["id"]
@@ -57,6 +65,10 @@ def main() -> int:
                                               + closing.encode("utf-8")).hexdigest(),
             "post_body_blob": hashlib.sha1(b"blob %d\0" % len(body.encode("utf-8"))
                                            + body.encode("utf-8")).hexdigest()}
+    seen[body_blob] = {"comment_id": cid, "permalink": note["permalink"],
+                       "posted_at": note["created_at"], "body_file": BODY.name}
+    IDS.write_text(json.dumps(seen, ensure_ascii=False, indent=1) + "\n",
+                   encoding="utf-8", newline="\n")
     OUT.write_text(json.dumps(note, ensure_ascii=False, indent=1) + "\n", encoding="utf-8",
                    newline="\n")
     print(json.dumps(note, ensure_ascii=False, indent=1))
