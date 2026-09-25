@@ -1,0 +1,18 @@
+{
+ "version": "Q43_r4",
+ "input": "D:\\moodle\\_qoder_d_lane_20260923\\_scratch_0310\\ord0310-ledger-block-r3.md",
+ "bytes": 16734,
+ "lines": 65,
+ "claims_checked": 45,
+ "exempt_classes": {
+  "YEAR": 1,
+  "PORT": 1,
+  "HTTP_STATUS": 5
+ },
+ "verdict": "Q43_GATE_GREEN",
+ "exit_code": 0,
+ "findings": [],
+ "finding_kinds": [],
+ "finding_total": 0,
+ "scope": "Numeric/constant/relay claims in the text. A green verdict here means every quantity carries a durable coordinate - it does not mean the measurements are correct, and it does not sign derived_result."
+}
