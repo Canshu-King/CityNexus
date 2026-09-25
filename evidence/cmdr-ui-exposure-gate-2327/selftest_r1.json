@@ -1,0 +1,13 @@
+{
+ "verdict": "SELFTEST_PASS",
+ "whitelist_only_render_hits": 0,
+ "raw_body_hits": [
+  "RAW_BODY_TO_DOM",
+  "RAW_BODY_TO_DOM",
+  "RAW_TEXT_INTERPOLATION"
+ ],
+ "dangerous_html_hits": [
+  "DANGEROUS_HTML"
+ ],
+ "why_three": "a gate that only catches `body=` would let an exception stack or an innerHTML sink through; the clean render must stay clean or the gate is just theatre"
+}
