@@ -340,7 +340,7 @@ test(`ord0302-X2 ${"a promise-free card stays honest, and the empty-block direct
                        absent_block_direction: read.details_count === 0 ? "OBSERVED" : "NOT_MEASURED",
                        why_absent_direction_unreachable:
                          "the block is gated on the raw reading, so no drivable shape of this screen leaves it "
-                         "out of the DOM",
+                         + "out of the DOM",
                        verdict: rows.every((r) => r.ok) ? "MET" : "NOT_MET", rows };
     expect(rows.filter((r) => !r.ok), node("X2", JSON.stringify(read))).toEqual([]);
   });
