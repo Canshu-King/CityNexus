@@ -1,0 +1,716 @@
+{
+ "what": "ORD-0296 · ORD-0281 的后端半：服务端写预算（Q36=① 落地）+ 13 格门 + 10 臂反突变",
+ "lane": "F 8ccd71d8",
+ "generated_at": "2026-09-25T09:44:55+08:00",
+ "ref_tip_read": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+ "frozen_tip": "6d041dcce11d05f28a55abadd40717f321b4db38",
+ "frozen_at": null,
+ "candidate": {
+  "commit": "6d041dcce11d05f28a55abadd40717f321b4db38",
+  "tree": "5e9b6decb7f7396e79d0d0b607b81b3f9c493663",
+  "parent": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+  "parent_equals_authoritative_tip": true,
+  "ref": "review/ord0296-write-deadline-f",
+  "github_ls_remote_line": "6d041dcce11d05f28a55abadd40717f321b4db38\trefs/heads/review/ord0296-write-deadline-f",
+  "https_git_ref_sha": "6d041dcce11d05f28a55abadd40717f321b4db38",
+  "https_equals_candidate": true
+ },
+ "criteria_vs_reading": {
+  "1_default_strictly_above_busy_timeout": "DEFAULT_ABOVE_BUSY_TIMEOUT",
+  "2_two_way_door": {
+   "red_side": "DOOR_BLOCKS_UNREACHABLE_DEADLINE",
+   "green_side": "DOOR_ALLOWS_VALID_CONFIGURATION"
+  },
+  "3_ast_census_used_as_scope": {
+   "write_legs": 14,
+   "with_signal": 2,
+   "with_timer": 0,
+   "source": "ORD-0289 canonical（本单只引用，不重算前端）"
+  },
+  "4_candidate_ref_new_name_and_receipts": {
+   "ref": "review/ord0296-write-deadline-f",
+   "ref_tip_read": "5c4608cede6cb7bd5f3ac7e704bfee379ca47abc",
+   "claimed": "见各格 claimed_result",
+   "derived": null
+  },
+  "5_every_why_names_its_own_readings": "Q38 形状，见每格 measured/why"
+ },
+ "cells": {
+  "C1_default_strictly_above_measured_busy_timeout": {
+   "claim": "写期限的默认值严格大于 SQLite 的锁等待，而且引擎真的把配置用到了连接上",
+   "claim_kind": "code_determined",
+   "measured": {
+    "sqlite_driver_version": "3.53.1",
+    "journal_mode": "wal",
+    "live_pragma_busy_timeout_ms": 30000,
+    "settings_write_busy_timeout_ms": 30000,
+    "settings_write_deadline_ms": 45000,
+    "settings_env_names_seen": [],
+    "deadline_ms_plans": 45000,
+    "deadline_ms_commands": 45000,
+    "deadline_sources": {
+     "plans.generate": "default",
+     "agent.commands": "default"
+    },
+    "effective_busy_timeout_ms": {
+     "agent.commands": 30000,
+     "plans.generate": 30000
+    },
+    "configuration_verdict": {
+     "scenario": null,
+     "busy_timeout_ms": 30000,
+     "default_deadline_ms": 45000,
+     "scenario_overrides": {},
+     "per_scenario": {
+      "agent.commands": {
+       "deadline_ms": 45000,
+       "busy_timeout_ms": 30000,
+       "delta_ms": 15000,
+       "deadline_source": "default",
+       "effective_busy_timeout_ms": 30000,
+       "reachable": true,
+       "verdict": "WRITE_DEADLINE_CONFIG_OK"
+      },
+      "plans.generate": {
+       "deadline_ms": 45000,
+       "busy_timeout_ms": 30000,
+       "delta_ms": 15000,
+       "deadline_source": "default",
+       "effective_busy_timeout_ms": 30000,
+       "reachable": true,
+       "verdict": "WRITE_DEADLINE_CONFIG_OK"
+      }
+     },
+     "verdict": "WRITE_DEADLINE_CONFIG_OK"
+    },
+    "door": {
+     "raised": false,
+     "named": null
+    },
+    "collect_only": {
+     "rc": 0,
+     "line": [
+      "tests/test_qoder_ord0296_write_deadline.py::test_G7_lost_lock_inside_the_budget_stays_todays_error",
+      "10 tests collected in 1.62s"
+     ]
+    }
+   },
+   "verdict": "DEFAULT_ABOVE_BUSY_TIMEOUT",
+   "why": "一次性库上 PRAGMA busy_timeout 实测 30000 ms，settings.write_busy_timeout_ms=30000，write_deadline_ms=45000，configuration_verdict=WRITE_DEADLINE_CONFIG_OK；门 backend/tests/test_qoder_ord0296_write_deadline.py collect=['tests/test_qoder_ord0296_write_deadline.py::test_G7_lost_lock_inside_the_budget_stays_todays_error', '10 tests collected in 1.62s']"
+  },
+  "C2_two_way_door_RED_when_deadline_not_above": {
+   "claim": "Q36 的反向：默认值调到锁等待之下/相等 ⇒ 启动门必须拦，判级必须是具名的不可达",
+   "claim_kind": "code_determined",
+   "measured": {
+    "env_variants": {
+     "CITYNEXUS_WRITE_DEADLINE_MS": {
+      "verdict": "WRITE_DEADLINE_CONFIG_OK",
+      "deadline_ms_plans": 45000,
+      "effective_busy_timeout_ms": {
+       "agent.commands": 30000,
+       "plans.generate": 30000
+      },
+      "door": {
+       "raised": false,
+       "named": null
+      },
+      "child_rc": 0,
+      "stderr_tail": ""
+     },
+     "CITYNEXUS_WRITE_DEADLINE_MS_TOO_SMALL": {
+      "verdict": "DEADLINE_NOT_ABOVE_BUSY_TIMEOUT",
+      "deadline_ms_plans": 1,
+      "effective_busy_timeout_ms": {
+       "agent.commands": 1,
+       "plans.generate": 1
+      },
+      "door": {
+       "raised": true,
+       "named": "WriteDeadlineConfigurationError",
+       "text": "DEADLINE_NOT_ABOVE_BUSY_TIMEOUT: write_deadline_ms must be strictly above write_busy_timeout_ms=30000 for every scenario in ['agent.commands', 'plans.generate']; got {'agent.commands': {'deadline_ms': 1, 'busy_timeout_ms"
+      },
+      "child_rc": 0,
+      "stderr_tail": ""
+     },
+     "CITYNEXUS_WRITE_DEADLINE_SCENARIOS": {
+      "verdict": "WRITE_DEADLINE_CONFIG_OK",
+      "deadline_ms_plans": 60000,
+      "effective_busy_timeout_ms": {
+       "agent.commands": 30000,
+       "plans.generate": 30000
+      },
+      "door": {
+       "raised": false,
+       "named": null
+      },
+      "child_rc": 0,
+      "stderr_tail": ""
+     }
+    },
+    "carrier_cell": "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+    "arm_M4": "ba2393c3da30d6941587869be26cd303389b7f46"
+   },
+   "verdict": "DOOR_BLOCKS_UNREACHABLE_DEADLINE",
+   "why": "只换一枚环境变量：45000 ⇒ WRITE_DEADLINE_CONFIG_OK，1 ⇒ door.raised=True 具名 WriteDeadlineConfigurationError（stderr 尾行 ），载体是 test_G2 与启动门本身；把门改成只算不拦（M4，blob 38b86a7c7efd）时该格 3/3 红"
+  },
+  "C3_two_way_door_GREEN_strictly_above": {
+   "claim": "同一扇门，只把期限抬到锁等待之上 ⇒ 必须放行（与 C2 只差一个变量）",
+   "claim_kind": "code_determined",
+   "measured": {
+    "delta_ms": 15000,
+    "verdict": "WRITE_DEADLINE_CONFIG_OK",
+    "per_scenario": {
+     "agent.commands": {
+      "deadline_ms": 45000,
+      "busy_timeout_ms": 30000,
+      "delta_ms": 15000,
+      "deadline_source": "default",
+      "effective_busy_timeout_ms": 30000,
+      "reachable": true,
+      "verdict": "WRITE_DEADLINE_CONFIG_OK"
+     },
+     "plans.generate": {
+      "deadline_ms": 45000,
+      "busy_timeout_ms": 30000,
+      "delta_ms": 15000,
+      "deadline_source": "default",
+      "effective_busy_timeout_ms": 30000,
+      "reachable": true,
+      "verdict": "WRITE_DEADLINE_CONFIG_OK"
+     }
+    }
+   },
+   "verdict": "DOOR_ALLOWS_VALID_CONFIGURATION",
+   "why": "plans.generate 的 delta_ms=15000 （45000 − 30000），两场景 verdict 均为 WRITE_DEADLINE_CONFIG_OK"
+  },
+  "C4_lock_wait_has_exactly_one_source": {
+   "claim": "30 秒那枚数只能写一次（0281 T-c 点名的 DEADLINE_CONSTANT_NOT_SINGLE_SOURCE 形状）",
+   "claim_kind": "code_determined",
+   "measured": {
+    "arm_M5_before_blob_40": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+    "arm_M5_after_blob_40": "09a280ee4f1a5c3483d17b4edb8734a763791307",
+    "carrier": "test_G4_the_lock_wait_is_written_in_exactly_one_place",
+    "hunks": 1
+   },
+   "verdict": "SINGLE_SOURCE_ENFORCED",
+   "why": "把 session.py 那行换回内联 30000（3ef99ffe398c→09a280ee4f1a，hunks=1）⇒ test_G4 红 3 轮；还原后逐字节相等=True"
+  },
+  "C5_per_scenario_configuration_is_real": {
+   "claim": "按场景可配不是口号：覆盖只动被点名的那一格，畸形值与未知场景要具名",
+   "claim_kind": "code_determined",
+   "measured": {
+    "variant_60000": {
+     "verdict": "WRITE_DEADLINE_CONFIG_OK",
+     "deadline_ms_plans": 60000,
+     "effective_busy_timeout_ms": {
+      "agent.commands": 30000,
+      "plans.generate": 30000
+     },
+     "door": {
+      "raised": false,
+      "named": null
+     },
+     "child_rc": 0,
+     "stderr_tail": ""
+    },
+    "ignore_override_arm_M6": {
+     "before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "after": "9db8a453ddb4d906132797e105ca725f2e8c1c8d",
+     "red_rounds": [
+      "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+     ]
+    },
+    "ignore_cap_arm_M8": {
+     "before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "after": "22d5983875caa0e56f7623c57429d789c92aa699"
+    }
+   },
+   "verdict": "SCENARIO_CONFIG_EFFECTIVE",
+   "why": "env CITYNEXUS_WRITE_DEADLINE_SCENARIOS=plans.generate:60000 ⇒ deadline_ms_plans=60000 而 effective 等待仍是 {'agent.commands': 30000, 'plans.generate': 30000}；把覆盖当空气（M6 9db8a453ddb4）与把上限写死（M8 22d5983875ca）两臂都让 test_G5 恒红 3 轮"
+  },
+  "C6_exhausted_budget_answers_by_name": {
+   "claim": "预算用完又撞锁 ⇒ 服务端必须给出具名答复（不是框架那句没有内容的 500）",
+   "claim_kind": "code_determined",
+   "measured": {
+    "carrier": "test_G6_lost_lock_after_the_budget_answers_under_its_own_name",
+    "lock_mechanism": "第二条 sqlite3 连接 BEGIN IMMEDIATE + 一行写入（真锁，不是 mock）",
+    "remove_conversion_arm_M2": {
+     "before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "after": "3c604dd7d3e9f518a59b7f03fe2ea3858ba81984",
+     "always_red": [
+      "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+     ]
+    }
+   },
+   "verdict": "NAMED_ANSWER_LOAD_BEARING",
+   "why": "删掉那一支改名（ba2393c3da30→3c604dd7d3e9）⇒ test_G6_lost_lock_after_the_budget_answers_under_its_own_name 恒红 3 轮，且期望仍绿的 ['test_G7_lost_lock_inside_the_budget_stays_todays_error'] 没被牵连"
+  },
+  "C7_inside_budget_keeps_todays_error": {
+   "claim": "没超预算就不许改名 ⇒ 我不能把所有锁失败一律刷成好看的码（反向对照）",
+   "claim_kind": "code_determined",
+   "measured": {
+    "carrier": "test_G7_lost_lock_inside_the_budget_stays_todays_error",
+    "always_rename_arm_M3": {
+     "before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "after": "231c30ecd7a194959c33957bfc4ef4148e896bb0"
+    },
+    "g6_stayed_green": [
+     "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+    ]
+   },
+   "verdict": "RENAME_IS_BUDGET_CONDITIONAL",
+   "why": "让改名不看预算（ba2393c3da30→231c30ecd7a1）⇒ test_G7_lost_lock_inside_the_budget_stays_todays_error 恒红，而 C6 那一格仍绿=['test_G6_lost_lock_after_the_budget_answers_under_its_own_name']；两格合起来才证明「看预算」这条判据在干活"
+  },
+  "C8_answer_is_registered_and_server_said_it": {
+   "claim": "那句话必须由服务端产生并可逐字核对（0280 只允许屏幕转述服务器说过的话）",
+   "claim_kind": "code_determined",
+   "measured": {
+    "carrier": "test_G8_the_answer_is_registered_and_carries_the_servers_own_words",
+    "status_downgrade_arm_M7": {
+     "before": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+     "after": "17bfdefcd0e7a829c6d61f27eb63e26f50388c82"
+    },
+    "message_contains_both_numbers": true
+   },
+   "verdict": "HANDLER_REGISTERED_AND_SELF_DESCRIBING",
+   "why": "把 503 写成 500（871aec006a3f→17bfdefcd0e7）⇒ test_G8 恒红 3 轮；句子里带 elapsed 与 deadline 两枚数（断言在格内）"
+  },
+  "C9_normal_write_path_unchanged": {
+   "claim": "正控：没有争锁时写路径照旧，并且真的多出一行 durable 任务",
+   "claim_kind": "code_determined",
+   "measured": {
+    "carrier": "test_G9_the_normal_write_path_is_unchanged",
+    "neighbour_modules": [
+     "test_qoder_ord0296_write_deadline.py",
+     "test_qoder_ord0272_continuation.py",
+     "test_qoder_ord0287_k8_carrier.py",
+     "test_agent_mission_runtime.py",
+     "test_v16_integration.py",
+     "test_v18_2_agent_productization.py"
+    ],
+    "neighbour_per_module": {
+     "test_qoder_ord0296_write_deadline.py": "10 passed, 2 warnings in 2.51s",
+     "test_qoder_ord0272_continuation.py": "8 passed, 2 warnings in 3.63s",
+     "test_qoder_ord0287_k8_carrier.py": "2 passed, 2 warnings in 1.81s",
+     "test_agent_mission_runtime.py": "2 passed, 2 warnings in 1.92s",
+     "test_v16_integration.py": "9 passed, 2 warnings in 1.91s",
+     "test_v18_2_agent_productization.py": "4 passed in 1.08s"
+    },
+    "neighbour_combined": {
+     "rc": 0,
+     "summary_line": "35 passed, 2 warnings in 4.95s",
+     "red_nodeids": [],
+     "passed_count": 35
+    },
+    "neighbour_artifact": "evidence/ord0296-write-deadline-backend/neighbour_regression_r1.json",
+    "this_cell_was_corrected": "r1/r2 这里是我手打的 \"23 passed\"，与账本里的 22 也不一致 ⇒ 现在改为逐模块实测",
+    "control_rounds": [
+     {
+      "rc": 0,
+      "seconds": 3.7,
+      "red": [],
+      "summary_line": "10 passed, 2 warnings in 2.09s",
+      "round": 1
+     },
+     {
+      "rc": 0,
+      "seconds": 3.06,
+      "red": [],
+      "summary_line": "10 passed, 2 warnings in 1.75s",
+      "round": 2
+     },
+     {
+      "rc": 0,
+      "seconds": 3.64,
+      "red": [],
+      "summary_line": "10 passed, 2 warnings in 1.93s",
+      "round": 3
+     }
+    ]
+   },
+   "verdict": "HAPPY_PATH_UNTOUCHED",
+   "why": "控制轮 3 轮 red=[[], [], []]；邻居 6 个模块合跑 35 passed, 2 warnings in 4.95s、red=无（0272 的 G1–G8 与 0287 载体都直接跑在我改过的两条腿上）"
+  },
+  "C10_budget_is_per_request": {
+   "claim": "一次请求一个钟；共享到连接上就是上一条请求替这一条超时",
+   "claim_kind": "code_determined",
+   "measured": {
+    "carrier": "test_G10_the_budget_belongs_to_one_request_not_one_connection",
+    "share_arm_M9": {
+     "before": "ba2393c3da30d6941587869be26cd303389b7f46",
+     "after": "391c778bc3a9a21322802e13fee52d75879e4e51"
+    }
+   },
+   "verdict": "BUDGET_SCOPED_TO_REQUEST",
+   "why": "把 scenario 判断去掉（ba2393c3da30→391c778bc3a9）⇒ test_G10_the_budget_belongs_to_one_request_not_one_connection 恒红 3 轮"
+  },
+  "C11_mutation_campaign_summary": {
+   "claim": "九臂 × 三轮的总账：每臂都只被它该咬的那格咬住，没有意外红，每轮字节级还原",
+   "claim_kind": "code_determined",
+   "measured": {
+    "arms": [
+     {
+      "arm": "M1_reachability_is_not_strict",
+      "hunks": 1,
+      "py_compile_ok": true,
+      "carriers_removed": [
+       "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout"
+      ],
+      "unexpected_red": [],
+      "restore_byte_exact": true,
+      "per_round_red_counts": [
+       1,
+       1,
+       1
+      ],
+      "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+      "after_blob_40": "da4e10f3989d833303af4ed7bcc0883adfe38119",
+      "shape": "single-string-replacement"
+     },
+     {
+      "arm": "M2_no_named_conversion",
+      "hunks": 1,
+      "py_compile_ok": true,
+      "carriers_removed": [
+       "test_G6_lost_lock_after_the_budget_answers_under_its_own_name"
+      ],
+      "unexpected_red": [],
+      "restore_byte_exact": true,
+      "per_round_red_counts": [
+       1,
+       1,
+       1
+      ],
+      "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+      "after_blob_40": "3c604dd7d3e9f518a59b7f03fe2ea3858ba81984",
+      "shape": "single-string-replacement"
+     },
+     {
+      "arm": "M3_always_renames_the_lock_failure",
+      "hunks": 1,
+      "py_compile_ok": true,
+      "carriers_removed": [
+       "test_G7_lost_lock_inside_the_budget_stays_todays_error"
+      ],
+      "unexpected_red": [],
+      "restore_byte_exact": true,
+      "per_round_red_counts": [
+       1,
+       1,
+       1
+      ],
+      "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+      "after_blob_40": "231c30ecd7a194959c33957bfc4ef4148e896bb0",
+      "shape": "single-string-replacement"
+     },
+     {
+      "arm": "M4_startup_door_disabled",
+      "hunks": 1,
+      "py_compile_ok": true,
+      "carriers_removed": [
+       "test_G2_door_is_RED_when_the_deadline_sits_at_or_below_busy_timeout",
+       "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+      ],
+      "unexpected_red": [],
+      "restore_byte_exact": true,
+      "per_round_red_counts": [
+       2,
+       2,
+       2
+      ],
+      "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+      "after_blob_40": "38b86a7c7efd1c7c309e6745cb8777a594e4d531",
+      "shape": "single-string-replacement"
+     },
+     {
+      "arm": "M5_lock_wait_copied_a_second_time",
+      "hunks": 1,
+      "py_compile_ok": true,
+      "carriers_removed": [
+       "test_G4_the_lock_wait_is_written_in_exactly_one_place"
+      ],
+      "unexpected_red": [],
+      "restore_byte_exact": true,
+      "per_round_red_counts": [
+       1,
+       1,
+       1
+      ],
+      "before_blob_40": "3ef99ffe398c048ff729ffd0016e61b8ce0ae678",
+      "after_blob_40": "09a280ee4f1a5c3483d17b4edb8734a763791307",
+      "shape": "single-string-replacement"
+     },
+     {
+      "arm": "M6_scenario_override_ignored",
+      "hunks": 1,
+      "py_compile_ok": true,
+      "carriers_removed": [
+       "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+      ],
+      "unexpected_red": [],
+      "restore_byte_exact": true,
+      "per_round_red_counts": [
+       1,
+       1,
+       1
+      ],
+      "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+      "after_blob_40": "9db8a453ddb4d906132797e105ca725f2e8c1c8d",
+      "shape": "single-string-replacement"
+     },
+     {
+      "arm": "M7_deadline_answer_status_is_500",
+      "hunks": 1,
+      "py_compile_ok": true,
+      "carriers_removed": [
+       "test_G8_the_answer_is_registered_and_carries_the_servers_own_words"
+      ],
+      "unexpected_red": [],
+      "restore_byte_exact": true,
+      "per_round_red_counts": [
+       1,
+       1,
+       1
+      ],
+      "before_blob_40": "871aec006a3f6482f7a2700a8baeff8c25f7690f",
+      "after_blob_40": "17bfdefcd0e7a829c6d61f27eb63e26f50388c82",
+      "shape": "single-string-replacement"
+     },
+     {
+      "arm": "M8_effective_cap_ignores_the_budget",
+      "hunks": 1,
+      "py_compile_ok": true,
+      "carriers_removed": [
+       "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+      ],
+      "unexpected_red": [],
+      "restore_byte_exact": true,
+      "per_round_red_counts": [
+       1,
+       1,
+       1
+      ],
+      "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+      "after_blob_40": "22d5983875caa0e56f7623c57429d789c92aa699",
+      "shape": "single-string-replacement"
+     },
+     {
+      "arm": "M9_budget_shared_across_scenarios",
+      "hunks": 1,
+      "py_compile_ok": true,
+      "carriers_removed": [
+       "test_G10_the_budget_belongs_to_one_request_not_one_connection"
+      ],
+      "unexpected_red": [],
+      "restore_byte_exact": true,
+      "per_round_red_counts": [
+       1,
+       1,
+       1
+      ],
+      "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+      "after_blob_40": "391c778bc3a9a21322802e13fee52d75879e4e51",
+      "shape": "single-string-replacement"
+     },
+     {
+      "arm": "M10_malformed_override_crashes_instead_of_naming",
+      "hunks": 1,
+      "py_compile_ok": true,
+      "carriers_removed": [
+       "test_G5_a_scenario_override_moves_one_route_and_names_every_other_case"
+      ],
+      "unexpected_red": [],
+      "restore_byte_exact": true,
+      "per_round_red_counts": [
+       1,
+       1,
+       1
+      ],
+      "before_blob_40": "ba2393c3da30d6941587869be26cd303389b7f46",
+      "after_blob_40": "ca336ee9d685d578a0920b66445b4810c50dfee4",
+      "shape": "single-string-replacement"
+     }
+    ],
+    "summary": {
+     "arms": 10,
+     "control_rounds_green": true,
+     "survivors": [],
+     "unexpected_red_total": 0,
+     "restore_byte_exact_every_round": true
+    }
+   },
+   "verdict": "ALL_10_ARMS_HAVE_CARRIERS",
+   "why": "10 臂、carriers_removed 合计 11 条、survivors 无、意外红 0 条、每轮字节级还原 True、控制轮 ['10 passed, 2 warnings in 2.09s']"
+  },
+  "C12_full_suite_ab": {
+   "claim": "整套件 A/B（候选 vs 权威尖那一棵）：新增红只能是我这一格之外的零条；恒红必须是两边都有的基线红",
+   "claim_kind": "runtime_measured",
+   "measured": {
+    "candidate_r1": {
+     "file": "o296_g2_cand_suite.txt",
+     "red": [
+      "test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+      "test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools",
+      "test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+      "test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+      "test_g5_an_ai_run_that_changed_must_say_which_it_was",
+      "test_g8a_default_suite_contains_no_live_provider_calls",
+      "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "test_release_metadata_and_map_entrypoint_are_converged"
+     ],
+     "counts": {
+      "10": "failed",
+      "1218": "passed",
+      "15": "skipped",
+      "1": "xfailed"
+     },
+     "summary_line": "10 failed, 1218 passed, 15 skipped, 1 xfailed, 2 warnings in 171.52s (0:02:51)",
+     "rc": "rc=1",
+     "denominator": 0
+    },
+    "candidate_r2": {
+     "file": "o296_g2_cand_suite_r2.txt",
+     "red": [
+      "test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+      "test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools",
+      "test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+      "test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+      "test_g5_an_ai_run_that_changed_must_say_which_it_was",
+      "test_g8a_default_suite_contains_no_live_provider_calls",
+      "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "test_release_metadata_and_map_entrypoint_are_converged"
+     ],
+     "counts": {
+      "10": "failed",
+      "1218": "passed",
+      "15": "skipped",
+      "1": "xfailed"
+     },
+     "summary_line": "10 failed, 1218 passed, 15 skipped, 1 xfailed, 2 warnings in 163.04s (0:02:43)",
+     "rc": "rc=1",
+     "denominator": 0
+    },
+    "baseline": {
+     "file": "o296_g2_base_suite.txt",
+     "red": [
+      "test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+      "test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools",
+      "test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+      "test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+      "test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+      "test_g5_an_ai_run_that_changed_must_say_which_it_was",
+      "test_g8a_default_suite_contains_no_live_provider_calls",
+      "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+      "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+      "test_release_metadata_and_map_entrypoint_are_converged"
+     ],
+     "counts": {
+      "10": "failed",
+      "1208": "passed",
+      "15": "skipped",
+      "1": "xfailed"
+     },
+     "summary_line": "10 failed, 1208 passed, 15 skipped, 1 xfailed, 2 warnings in 182.53s (0:03:02)",
+     "rc": "rc=1",
+     "denominator": 0
+    },
+    "only_in_candidate": [],
+    "only_in_baseline": [],
+    "always_red_both_trees": [
+     "test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at",
+     "test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools",
+     "test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes",
+     "test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts",
+     "test_g14c_the_verdict_must_not_depend_on_the_providers_wording",
+     "test_g5_an_ai_run_that_changed_must_say_which_it_was",
+     "test_g8a_default_suite_contains_no_live_provider_calls",
+     "test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls",
+     "test_g9b_provider_http_never_runs_inside_an_open_write_transaction",
+     "test_release_metadata_and_map_entrypoint_are_converged"
+    ]
+   },
+   "verdict": "NO_NEW_RED",
+   "why": "分母 候选 {'10': 'failed', '1218': 'passed', '15': 'skipped', '1': 'xfailed'} vs 基线 {'10': 'failed', '1208': 'passed', '15': 'skipped', '1': 'xfailed'}；only_in_candidate=空、only_in_baseline=空、两棵三轮恒红 10 条；候选第二轮 red=['test_a_live_failure_arrives_named_and_carries_the_stage_it_broke_at', 'test_aiv3_02_v2_mcp_builder_includes_read_plan_and_action_tools', 'test_g10_every_normalised_place_carries_a_usable_coordinate_including_nodes', 'test_g14a_an_oversized_matrix_fails_closed_and_invents_no_facts', 'test_g14c_the_verdict_must_not_depend_on_the_providers_wording', 'test_g5_an_ai_run_that_changed_must_say_which_it_was', 'test_g8a_default_suite_contains_no_live_provider_calls', 'test_g9a_the_instrument_actually_sees_write_transactions_and_provider_calls', 'test_g9b_provider_http_never_runs_inside_an_open_write_transaction', 'test_release_metadata_and_map_entrypoint_are_converged']"
+  },
+  "C13_what_this_change_does_NOT_improve": {
+   "claim": "射程与不改善的部分必须我自己先说：这一枚只覆盖服务端的两条腿，且第一次撞锁仍是今天的形状",
+   "claim_kind": "code_determined",
+   "measured": {
+    "scenarios_covered": [
+     "agent.commands",
+     "plans.generate"
+    ],
+    "frontend_write_legs_out_of_scope": 14,
+    "frontend_legs_with_signal": 2,
+    "frontend_legs_with_timer": 0,
+    "census_provenance": {
+     "artifact": "evidence/ord0289-write-leg-census-f/census_landed_45b0a5e2.json",
+     "blob_40": "b30bc3fdac67587636fd1ef2b45b5a3f31edac74",
+     "bytes": 12597,
+     "sites": 39,
+     "files_scanned": 71,
+     "summary": {
+      "files_scanned": 71,
+      "fetch_sites": 39,
+      "write_sites": 14,
+      "write_with_signal": 2,
+      "write_with_timer": 0,
+      "read_sites": 0,
+      "method_unresolved_with_options": 0,
+      "method_absent_no_options": 8,
+      "sites_with_spread_options": 4,
+      "parse_error_files": []
+     }
+    },
+    "first_lost_lock_still": "OperationalError → 框架 500（未超预算时我不改名，见 C7）",
+    "seconds_are_readings_only": "具名那一支的触发前件是「累计等待 ≥ 期限」，判据不用时长（Q25）"
+   },
+   "verdict": "SCOPE_NAMED",
+   "why": "只声明 2 个场景（['agent.commands', 'plans.generate']）；AST 普查那 14 条前端写腿（0289 canonical，signal 2 / 计时器 0）本单一条未动；0274/0280/0281 前端半仍在别人名下"
+  }
+ },
+ "files_changed": [
+  "M\tbackend/app/core/config.py",
+  "M\tbackend/app/db/session.py",
+  "A\tbackend/app/db/write_deadline.py",
+  "M\tbackend/app/main.py",
+  "A\tbackend/tests/test_qoder_ord0296_write_deadline.py"
+ ],
+ "numstat": [
+  "10\t0\tbackend/app/core/config.py",
+  "5\t2\tbackend/app/db/session.py",
+  "234\t0\tbackend/app/db/write_deadline.py",
+  "103\t78\tbackend/app/main.py",
+  "361\t0\tbackend/tests/test_qoder_ord0296_write_deadline.py"
+ ],
+ "product_diff_shape": {
+  "backend_only": true,
+  "frontend_files_touched": [],
+  "new_module": "backend/app/db/write_deadline.py",
+  "routes_touched": [
+   "POST /api/v1/journeys/{id}/agent/commands",
+   "POST /api/v1/journeys/{id}/plans/generate"
+  ]
+ },
+ "claimed_result": "CODE_AND_DOOR_DELIVERED_ALL_10_ARMS_HAVE_CARRIERS",
+ "derived_result": null,
+ "not_claimed": [
+  "不宣称 KILLED：击杀派生归 verifier（B-1）",
+  "不宣称手机端已改善：那 14 条前端写腿本单一条未动（0280/0281 前端半在别人名下）",
+  "不宣称第一次撞锁就有具名答复：未超预算时仍是今天的 OperationalError→500（C7 故意保留）",
+  "不宣称权威线已动：落地归号令者，我只推候选 ref"
+ ],
+ "discipline": {
+  "demo_reset_calls": 0,
+  "live_or_preview_db_touched": false,
+  "credentials_printed": 0,
+  "authoritative_branch_written": false,
+  "published_paths_overwritten": 0,
+  "published_paths_deleted": 0,
+  "other_lanes_refs_touched": 0
+ }
+}
