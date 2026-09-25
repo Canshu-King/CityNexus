@@ -1,0 +1,9 @@
+receipt RECEIPT_O0301P2-1540.json 17796 B blob_sha1 28d14eba57eeb17a26835fe71c2744665dd14939
+cells 5 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []
+  cell 0 | why_source why | why tokens 7 | own hits 7 | unique hits 0 | shares why with []
+  cell 1 | why_source why | why tokens 4 | own hits 4 | unique hits 0 | shares why with []
+  cell 2 | why_source why | why tokens 8 | own hits 7 | unique hits 0 | shares why with []
+  cell 3 | why_source why | why tokens 18 | own hits 17 | unique hits 0 | shares why with []
+  cell 4 | why_source why | why tokens 4 | own hits 1 | unique hits 0 | shares why with []
+meaning: no shared literal and every sentence names its own readings
+expectation held: Q38_GATE_GREEN
