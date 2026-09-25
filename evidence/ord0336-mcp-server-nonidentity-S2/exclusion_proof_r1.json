@@ -1,0 +1,16 @@
+{
+ "schema": "CNX_ORD0336_EXCLUSION_PROOF_V1",
+ "order": "ORD-0336",
+ "lane": "S2-hermes-port",
+ "candidate": "f45489c6d17f16973faad161618789237ac3814e",
+ "path": "agent-mcp/tests/test_hermes_validation_principal.py",
+ "measured": {
+  "collect_exit": 2,
+  "collected": 14,
+  "collect_errors": 1,
+  "interrupted_line": "",
+  "named_missing_symbol": true,
+  "tail": "14 tests collected, 1 error in 0.23s"
+ },
+ "meaning": "collection reports a non-zero exit with one error naming the missing symbol, so this witness cannot travel with a port that omits _agent_id"
+}
