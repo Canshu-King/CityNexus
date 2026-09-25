@@ -1,0 +1,151 @@
+{
+  "receipt_measured": {
+    "file": "o297r_derived_r1.json",
+    "bytes": 74446,
+    "blob40": "aa13e20472870e4f5b5d5a49d3edf5f6b8b574f2"
+  },
+  "measured_object_frozen_as": "o297r_measured_object_b.json",
+  "stage": "b",
+  "q38_r2": {
+    "script": "receipt_cell_derivation_check_r2.py",
+    "blob40": "91ae8b1ec55f5c19122af11bf775df14580955e4",
+    "local_sha1_matches_blob_id": true,
+    "blob_meta_size": 18867,
+    "selftest_rc": 0,
+    "selftest_tail": "r_any_key cells 2 got Q38_GATE_GREEN [] | want Q38_GATE_GREEN [] -> ok",
+    "rc": 0,
+    "parsed": {
+      "cells_found": 4,
+      "overall": "Q38_GATE_GREEN",
+      "hard": "0",
+      "soft": "0",
+      "cells": [
+        {
+          "cell": "B3_offline_after_convergence",
+          "why_tokens": 34,
+          "own_hits": 11,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        },
+        {
+          "cell": "A_never_reconnected",
+          "why_tokens": 37,
+          "own_hits": 11,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        },
+        {
+          "cell": "B3_control_partial_deploy",
+          "why_tokens": 30,
+          "own_hits": 6,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        },
+        {
+          "cell": "A_control_update_lands",
+          "why_tokens": 32,
+          "own_hits": 8,
+          "unique_hits": 0,
+          "shares_why_with": "[]"
+        }
+      ]
+    },
+    "judged_object_top_level_keys": [
+      "arms",
+      "base_tip",
+      "bases",
+      "cells",
+      "claim_semantics",
+      "derived_result_is_null_everywhere",
+      "gate_measured_object",
+      "gate_q38_r2_a",
+      "gate_q38_r2_b",
+      "gate_q38_r2_verbatim_a",
+      "gate_q38_r2_verbatim_b",
+      "gate_q43_r3_a",
+      "gate_q43_r3_b",
+      "instrument",
+      "not_run",
+      "order",
+      "ref_tip_read",
+      "selftest_duplicate_why",
+      "verifier",
+      "why_this_round_exists"
+    ],
+    "judged_object_top_level_key_count": 20,
+    "cells_in_judged_object": [
+      "A_control_update_lands",
+      "A_never_reconnected",
+      "B3_control_partial_deploy",
+      "B3_offline_after_convergence"
+    ],
+    "verbatim": "receipt o297r_measured_object_b.json 74446 B blob_sha1 aa13e20472870e4f5b5d5a49d3edf5f6b8b574f2\ncells 4 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []\n  cell B3_offline_after_convergence | why_source why | why tokens 34 | own hits 11 | unique hits 0 | shares why with []\n  cell A_never_reconnected | why_source why | why tokens 37 | own hits 11 | unique hits 0 | shares why with []\n  cell B3_control_partial_deploy | why_source why | why tokens 30 | own hits 6 | unique hits 0 | shares why with []\n  cell A_control_update_lands | why_source why | why tokens 32 | own hits 8 | unique hits 0 | shares why with []\nmeaning: no shared literal and every sentence names its own readings\n",
+    "stderr_head": ""
+  },
+  "q43_r3": {
+    "o297r_measured_object_b.json": {
+      "blob40": "e653e597c2e6fd74a5f8d3be65fe60e017b03017",
+      "local_sha1_matches_blob_id": true,
+      "selftest_rc": 0,
+      "selftest_tail": "laims 3 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok",
+      "rc": 3,
+      "summary": {
+        "claims_checked": 232,
+        "overall": "Q43_GATE_RED",
+        "findings": "186"
+      },
+      "verbatim": "input o297r_measured_object_b.json 72809 B 1638 lines\nclaims checked 232 | overall Q43_GATE_RED | findings 186 ['BARE_NUMBER_WITHOUT_COORDINATE']\n  line 44 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 12, | nearest coordinate seen: None\n  line 139 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 23, | nearest coordinate seen: None\n  line 143 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 143 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 144 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 144 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 145 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 145 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 146 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 146 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 147 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 147 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 148 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 148 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 149 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 149 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 150 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 150 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 151 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 151 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 152 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 152 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 153 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 153 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 154 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 154 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 186 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 651 | nearest coordinate seen: None\n  line 186 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 114, | nearest coordinate seen: None\n  line 186 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 271, | nearest coordinate seen: None\n  line 186 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 334 | nearest coordinate seen: None\n  line 209 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9120, | nearest coordinate seen: None\n  line 209 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9121 | nearest coordinate seen: None\n  line 221 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9120, | nearest coordinate seen: None\n  line 221 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9121 | nearest coordinate seen: None\n  line 257 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 55, | nearest coordinate seen: None\n  line 275 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 127 | nearest coordinate seen: None\n  line 275 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 703 | nearest coordinate seen: None\n  line 275 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 166, | nearest coordinate seen: None\n  line 275 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 323, | nearest coordinate seen: None\n  line 275 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 386 | nearest coordinate seen: None\n  line 305 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9120, | nearest coordinate seen: None\n  line 305 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9121 | nearest coordinate seen: None\n  line 317 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9120, | nearest coordinate seen: None\n  line 317 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9121 | nearest coordinate seen: None\n  line 326 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 25, | nearest coordinate seen: None\n  line 326 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 1790323740574 | nearest coordinate seen: None\n  line 353 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 55, | nearest coordinate seen: None\n  line 389 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9120, | nearest coordinate seen: None\n  line 389 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9121 | nearest coordinate seen: None\n  line 433 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 138 | nearest coordinate seen: None\n  line 433 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 25, | nearest coordinate seen: None\n  line 433 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 1790323740574 | nearest coordinate seen: None\n  line 439 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9120, | nearest coordinate seen: None\n  line 439 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9121 | nearest coordinate seen: None\n  line 448 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 25, | nearest coordinate seen: None\n  line 448 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 1790323740574 | nearest coordinate seen: None\n  line 470 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 470 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 493 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390 | nearest coordinate seen: None\n  line 493 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9120, | nearest coordinate seen: None\n  line 493 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9121 | nearest coordinate seen: None\n  line 497 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 138 | nearest coordinate seen: None\n  line 520 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 25, | nearest coordinate seen: None\n  line 521 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 1790323740574 | nearest coordinate seen: None\n  line 532 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 401, | nearest coordinate seen: None\n  line 533 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390, | nearest coordinate seen: None\n  line 534 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 443 | nearest coordinate seen: None\n  line 548 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 282, | nearest coordinate seen: None\n  line 549 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 452 | nearest coordinate seen: None\n  line 570 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 91, | nearest coordinate seen: None\n  line 592 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 91, | nearest coordinate seen: None\n  line 597 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 200, | nearest coordinate seen: None\n  line 606 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 14, | nearest coordinate seen: None\n  line 632 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 55, | nearest coordinate seen: None\n  line 666 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 666 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 688 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390 | nearest coordinate seen: None\n  line 688 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9120, | nearest coordinate seen: None\n  line 688 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9121 | nearest coordinate seen: None\n  line 692 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 127 | nearest coordinate seen: None\n  line 723 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 401, | nearest coordinate seen: None\n  line 724 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390, | nearest coordinate seen: None\n  line 725 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 443 | nearest coordinate seen: None\n  line 739 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 282, | nearest coordinate seen: None\n  line 740 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 452 | nearest coordinate seen: None\n  line 761 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 703, | nearest coordinate seen: None\n  line 762 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 50, | nearest coordinate seen: None\n  line 782 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 166, | nearest coordinate seen: None\n  line 783 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 323, | nearest coordinate seen: None\n  line 784 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 386 | nearest coordinate seen: None\n  line 794 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 119, | nearest coordinate seen: None\n  line 795 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 813 | nearest coordinate seen: None\n  line 816 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 81, | nearest coordinate seen: None\n  line 817 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 789, | nearest coordinate seen: None\n  line 818 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 76, | nearest coordinate seen: None\n  line 822 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390, | nearest coordinate seen: None\n  line 823 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 844 | nearest coordinate seen: None\n  line 835 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 195, | nearest coordinate seen: None\n  line 836 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 813 | nearest coordinate seen: None\n  line 857 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 157, | nearest coordinate seen: None\n  line 858 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 789, | nearest coordinate seen: None\n  line 859 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 76, | nearest coordinate seen: None\n  line 863 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390, | nearest coordinate seen: None\n  line 864 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 844 | nearest coordinate seen: None\n  line 876 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 271, | nearest coordinate seen: None\n  line 877 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 813 | nearest coordinate seen: None\n  line 898 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 233, | nearest coordinate seen: None\n  line 899 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 789, | nearest coordinate seen: None\n  line 900 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 76, | nearest coordinate seen: None\n  line 904 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390, | nearest coordinate seen: None\n  line 905 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 844 | nearest coordinate seen: None\n  line 927 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 91, | nearest coordinate seen: None\n  line 932 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 200, | nearest coordinate seen: None\n  line 941 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 10, | nearest coordinate seen: None\n  line 967 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 55, | nearest coordinate seen: None\n  line 1001 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 1001 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 1023 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390 | nearest coordinate seen: None\n  line 1023 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9120, | nearest coordinate seen: None\n  line 1023 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9121 | nearest coordinate seen: None\n  line 1097 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 200, | nearest coordinate seen: None\n  line 1112 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 55, | nearest coordinate seen: None\n  line 1146 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 2026 | nearest coordinate seen: None\n  line 1146 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0800 | nearest coordinate seen: None\n  line 1168 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390 | nearest coordinate seen: None\n  line 1168 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9120, | nearest coordinate seen: None\n  line 1168 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 9121 | nearest coordinate seen: None\n  line 1222 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 651, | nearest coordinate seen: None\n  line 1223 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 47, | nearest coordinate seen: None\n  line 1243 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 114, | nearest coordinate seen: None\n  line 1244 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 271, | nearest coordinate seen: None\n  line 1245 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 334 | nearest coordinate seen: None\n  line 1255 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 119, | nearest coordinate seen: None\n  line 1256 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 813 | nearest coordinate seen: None\n  line 1277 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 81, | nearest coordinate seen: None\n  line 1278 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 789, | nearest coordinate seen: None\n  line 1279 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 76, | nearest coordinate seen: None\n  line 1283 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390, | nearest coordinate seen: None\n  line 1284 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 844 | nearest coordinate seen: None\n  line 1296 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 195, | nearest coordinate seen: None\n  line 1297 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 813 | nearest coordinate seen: None\n  line 1318 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 157, | nearest coordinate seen: None\n  line 1319 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 789, | nearest coordinate seen: None\n  line 1320 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 76, | nearest coordinate seen: None\n  line 1324 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390, | nearest coordinate seen: None\n  line 1325 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 844 | nearest coordinate seen: None\n  line 1337 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 271, | nearest coordinate seen: None\n  line 1338 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 813 | nearest coordinate seen: None\n  line 1359 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 233, | nearest coordinate seen: None\n  line 1360 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 789, | nearest coordinate seen: None\n  line 1361 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 76, | nearest coordinate seen: None\n  line 1365 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 390, | nearest coordinate seen: None\n  line 1366 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 844 | nearest coordinate seen: None\n  line 1388 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 91, | nearest coordinate seen: None\n  line 1393 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 200, | nearest coordinate seen: None\n  line 1411 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 55, | nearest coordinate seen: None\n  line 1463 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 34, | nearest coordinate seen: None\n  line 1464 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 11, | nearest coordinate seen: None\n  line 1470 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 37, | nearest coordinate seen: None\n  line 1471 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 11, | nearest coordinate seen: None\n  line 1477 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 30, | nearest coordinate seen: None\n  line 1484 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 32, | nearest coordinate seen: None\n  line 1506 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 13, | nearest coordinate seen: None\n  line 1524 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 207, | nearest coordinate seen: None\n  line 1526 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 169 | nearest coordinate seen: None\n  line 1553 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 34, | nearest coordinate seen: None\n  line 1554 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 11, | nearest coordinate seen: None\n  line 1560 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 37, | nearest coordinate seen: None\n  line 1561 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 11, | nearest coordinate seen: None\n  line 1567 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 30, | nearest coordinate seen: None\n  line 1574 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 32, | nearest coordinate seen: None\n  line 1600 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 17, | nearest coordinate seen: None\n  line 1631 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 181, | nearest coordinate seen: None\n  line 143 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 0298 s | nearest coordinate seen: None\n  line 186 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160049.s | nearest coordinate seen: None\n  line 261 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160049.s | nearest coordinate seen: None\n  line 262 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160314.s | nearest coordinate seen: None\n  line 275 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160433.s | nearest coordinate seen: None\n  line 357 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160433.s | nearest coordinate seen: None\n  line 358 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160653.s | nearest coordinate seen: None\n  line 383 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160314.s | nearest coordinate seen: None\n  line 433 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160653.s | nearest coordinate seen: None\n  line 642 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160653.s | nearest coordinate seen: None\n  line 977 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160433.s | nearest coordinate seen: None\n  line 1122 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160314.s | nearest coordinate seen: None\n  line 1421 F3_bare_numeric_claim BARE_NUMBER_WITHOUT_COORDINATE | 160049.s | nearest coordinate seen: None\nscope: F1 `NAME = digits` (after fullwidth-`=` normalisation), F2 relay wording, and F3 ANY bare numeric claim (>=3 digits, or digits + a unit/counter word) -- all judged against the same durable-coordinate window; structural ids (ORD-####, Q#, `x-1`, HH:MM) are not claims\nmeaning: a number is asserted or relayed with nothing durable to check it against\n",
+      "stderr_head": ""
+    },
+    "o297r_ledger_block_for_q43.txt": {
+      "blob40": "e653e597c2e6fd74a5f8d3be65fe60e017b03017",
+      "local_sha1_matches_blob_id": true,
+      "selftest_rc": 0,
+      "selftest_tail": "laims 3 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok",
+      "rc": 0,
+      "summary": {
+        "claims_checked": 59,
+        "overall": "Q43_GATE_CLEAN",
+        "findings": "0"
+      },
+      "verbatim": "input o297r_ledger_block_for_q43.txt 14097 B 52 lines\nclaims checked 59 | overall Q43_GATE_CLEAN | findings 0 []\nscope: F1 `NAME = digits` (after fullwidth-`=` normalisation), F2 relay wording, and F3 ANY bare numeric claim (>=3 digits, or digits + a unit/counter word) -- all judged against the same durable-coordinate window; structural ids (ORD-####, Q#, `x-1`, HH:MM) are not claims\nmeaning: every claim names a durable coordinate within 200 chars\n",
+      "stderr_head": ""
+    }
+  },
+  "q43_r4b": {
+    "o297r_measured_object_b.json": {
+      "blob40": "efa6b7a383e094e2ede89f5dd8565b12feed0171",
+      "bytes_fetched": 10862,
+      "local_sha1_matches_blob_id": true,
+      "selftest_rc": 0,
+      "selftest_tail": "s\": 1, \"findings\": [ \"NUMBER_WITHOUT_COORDINATE\" ], \"exempt\": {} } ] }",
+      "rc": 3,
+      "summary": {
+        "claims_checked": 188,
+        "exempt": "{\"YEAR\": 21, \"HTTP_STATUS\": 10, \"IDENTIFIER_PART\": 13}",
+        "overall": "Q43_GATE_RED",
+        "findings": "135"
+      },
+      "q50_ruling": "machine-generated tables are RULER_OUT_OF_SCOPE for this gauge, per issuecomment-5829176662",
+      "verbatim": "version Q43_r4 | input o297r_measured_object_b.json 74446 B\nclaims checked 188 | exempt {\"YEAR\": 21, \"HTTP_STATUS\": 10, \"IDENTIFIER_PART\": 13} | overall Q43_GATE_RED | findings 135 ['NUMBER_WITHOUT_COORDINATE']\n  line 44 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 12, | no class matched\n  line 139 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 23, | no class matched\n  line 143 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 144 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 145 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 146 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 147 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 148 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 149 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 150 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 151 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 152 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 153 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 154 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 0800 | no class matched\n  line 186 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 651 | no class matched\n  line 186 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 114, | no class matched\n  line 186 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 271, | no class matched\n  line 186 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 334 | no class matched\n  line 275 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 127 | no class matched\n  line 275 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 703 | no class matched\n  line 275 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 166, | no class matched\n  line 275 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 323, | no class matched\n  line 275 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 386 | no class matched\n  line 326 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 25, | no class matched\n  line 326 F3_bare_numeric_claim NUMBER_WITHOUT_COORDINATE | 1790323740574 | no class matched\n",
+      "stderr_head": ""
+    },
+    "o297r_ledger_block_for_q43.txt": {
+      "blob40": "efa6b7a383e094e2ede89f5dd8565b12feed0171",
+      "bytes_fetched": 10862,
+      "local_sha1_matches_blob_id": true,
+      "selftest_rc": 0,
+      "selftest_tail": "s\": 1, \"findings\": [ \"NUMBER_WITHOUT_COORDINATE\" ], \"exempt\": {} } ] }",
+      "rc": 0,
+      "summary": {
+        "claims_checked": 58,
+        "exempt": "{\"HTTP_STATUS\": 1}",
+        "overall": "Q43_GATE_GREEN",
+        "findings": "0"
+      },
+      "q50_ruling": null,
+      "verbatim": "version Q43_r4 | input o297r_ledger_block_for_q43.txt 14148 B\nclaims checked 58 | exempt {\"HTTP_STATUS\": 1} | overall Q43_GATE_GREEN | findings 0 []\n",
+      "stderr_head": ""
+    }
+  }
+}
