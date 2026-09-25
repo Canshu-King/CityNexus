@@ -5,49 +5,39 @@
  "dir": "evidence/ord0302-unreadable-server-body",
  "files": [
   {
-   "name": "ord0302_receipt.json",
-   "blob40": "910b78a9587fc96c714b4ab0bc01c70ed777b06c",
-   "bytes": 36283
-  },
-  {
-   "name": "ord0302_arms_matrix.json",
-   "blob40": "43a902dd0a8b14498eda6d2e89b663d2822b76a6",
-   "bytes": 42867
-  },
-  {
-   "name": "fixed__arm_N1.json",
-   "blob40": "b77d818d618c589a76d9bcdfd4cd4830ac5f2f89",
+   "name": "ca_null_on_network__arm_N1.json",
+   "blob40": "eebc177a5493b294953742abe5656f9b3b6543f9",
    "bytes": 1828
   },
   {
-   "name": "fixed__arm_N2.json",
-   "blob40": "f2bafc1ce7bfff8600b7d186544ee8a33a3c2f28",
+   "name": "ca_null_on_network__arm_N2.json",
+   "blob40": "f84400681320b21946d50eb8f43dcdd3e355f5ca",
    "bytes": 1646
   },
   {
-   "name": "fixed__arm_N3.json",
-   "blob40": "1889c7c4669fcce39461baffa33557dae3b6be06",
-   "bytes": 1307
+   "name": "ca_null_on_network__arm_N3.json",
+   "blob40": "df9b38dc871a22c7c4680f98cc4da36fd2cd0fef",
+   "bytes": 1120
   },
   {
-   "name": "fixed__arm_X1.json",
-   "blob40": "d484693c9471378e633961e0c180d914972778fd",
+   "name": "ca_null_on_network__arm_X1.json",
+   "blob40": "b715071e925af72a18911c0edeeb39cb26b663b3",
    "bytes": 1810
   },
   {
-   "name": "fixed__arm_X2.json",
-   "blob40": "10eb25793d2bbaec0a1757e0a21df9c08e934aec",
+   "name": "ca_null_on_network__arm_X2.json",
+   "blob40": "4c2c6a2457b4f2398b428346f3bc50bf611c2ca0",
    "bytes": 969
   },
   {
-   "name": "fixed__authoritative.json",
-   "blob40": "ca637e333c45a25b997c4aa6f03369c1263620f1",
+   "name": "ca_null_on_network__authoritative.json",
+   "blob40": "bc5588dba9175c74add382dec4d64f19794b2859",
    "bytes": 772
   },
   {
-   "name": "fixed__playwright_report.json",
-   "blob40": "5b970d8a4a76fbb952b3359b861995650b91e15b",
-   "bytes": 9779
+   "name": "ca_null_on_network__playwright_report.json",
+   "blob40": "34159d6b6df11a5011be09057ba0a1c03e43b19b",
+   "bytes": 17695
   },
   {
    "name": "ca_unsafe_read__arm_N1.json",
@@ -83,41 +73,6 @@
    "name": "ca_unsafe_read__playwright_report.json",
    "blob40": "755cb40e8b2e78af73d7d8b125ffdec24b54d6f0",
    "bytes": 18269
-  },
-  {
-   "name": "ca_null_on_network__arm_N1.json",
-   "blob40": "eebc177a5493b294953742abe5656f9b3b6543f9",
-   "bytes": 1828
-  },
-  {
-   "name": "ca_null_on_network__arm_N2.json",
-   "blob40": "f84400681320b21946d50eb8f43dcdd3e355f5ca",
-   "bytes": 1646
-  },
-  {
-   "name": "ca_null_on_network__arm_N3.json",
-   "blob40": "df9b38dc871a22c7c4680f98cc4da36fd2cd0fef",
-   "bytes": 1120
-  },
-  {
-   "name": "ca_null_on_network__arm_X1.json",
-   "blob40": "b715071e925af72a18911c0edeeb39cb26b663b3",
-   "bytes": 1810
-  },
-  {
-   "name": "ca_null_on_network__arm_X2.json",
-   "blob40": "4c2c6a2457b4f2398b428346f3bc50bf611c2ca0",
-   "bytes": 969
-  },
-  {
-   "name": "ca_null_on_network__authoritative.json",
-   "blob40": "bc5588dba9175c74add382dec4d64f19794b2859",
-   "bytes": 772
-  },
-  {
-   "name": "ca_null_on_network__playwright_report.json",
-   "blob40": "34159d6b6df11a5011be09057ba0a1c03e43b19b",
-   "bytes": 17695
   },
   {
    "name": "ca_x5_no_block__arm_N1.json",
@@ -200,9 +155,49 @@
    "bytes": 16149
   },
   {
-   "name": "ord0302_run_arms.py",
-   "blob40": "b1da325412b85717c29fadddad9062b64d7207af",
-   "bytes": 11258
+   "name": "fixed__arm_N1.json",
+   "blob40": "b77d818d618c589a76d9bcdfd4cd4830ac5f2f89",
+   "bytes": 1828
+  },
+  {
+   "name": "fixed__arm_N2.json",
+   "blob40": "f2bafc1ce7bfff8600b7d186544ee8a33a3c2f28",
+   "bytes": 1646
+  },
+  {
+   "name": "fixed__arm_N3.json",
+   "blob40": "1889c7c4669fcce39461baffa33557dae3b6be06",
+   "bytes": 1307
+  },
+  {
+   "name": "fixed__arm_X1.json",
+   "blob40": "d484693c9471378e633961e0c180d914972778fd",
+   "bytes": 1810
+  },
+  {
+   "name": "fixed__arm_X2.json",
+   "blob40": "10eb25793d2bbaec0a1757e0a21df9c08e934aec",
+   "bytes": 969
+  },
+  {
+   "name": "fixed__authoritative.json",
+   "blob40": "ca637e333c45a25b997c4aa6f03369c1263620f1",
+   "bytes": 772
+  },
+  {
+   "name": "fixed__playwright_report.json",
+   "blob40": "5b970d8a4a76fbb952b3359b861995650b91e15b",
+   "bytes": 9779
+  },
+  {
+   "name": "ord0302_arms_matrix.json",
+   "blob40": "43a902dd0a8b14498eda6d2e89b663d2822b76a6",
+   "bytes": 42867
+  },
+  {
+   "name": "ord0302_claim_gate.json",
+   "blob40": "90392df7ff6968f4c6b70e25b1008aa721e9d9f7",
+   "bytes": 1740
   },
   {
    "name": "ord0302_deliver.py",
@@ -210,11 +205,22 @@
    "bytes": 40085
   },
   {
-   "name": "ord0302_claim_gate.json",
-   "blob40": "90392df7ff6968f4c6b70e25b1008aa721e9d9f7",
-   "bytes": 1740
+   "name": "ord0302_receipt.json",
+   "blob40": "910b78a9587fc96c714b4ab0bc01c70ed777b06c",
+   "bytes": 36283
+  },
+  {
+   "name": "ord0302_run_arms.py",
+   "blob40": "b1da325412b85717c29fadddad9062b64d7207af",
+   "bytes": 11258
+  },
+  {
+   "name": "ord0302_verify_published.json",
+   "blob40": "2d7048c27dbe28a8f76a365e192594ea3d2f1317",
+   "bytes": 2458
   }
  ],
  "self_reference": "this file is not in its own list; its blob is what the read-back of the branch prints",
- "repair_note": "the first version of this index carried an entry for itself whose blob had been computed before the file was written, i.e. it named the previous bytes. Entry removed; every other entry is untouched."
+ "repair_note": "the first version of this index carried an entry for itself whose blob had been computed before the file was written, i.e. it named the previous bytes. Entry removed; every other entry is untouched.",
+ "audit": "every blob in this list was recomputed from the branch's own answer by ord0302_publish_and_audit.py"
 }
