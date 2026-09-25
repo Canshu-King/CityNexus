@@ -1,0 +1,41 @@
+{
+ "ran_at": "2026-09-25 16:52",
+ "rulers": {
+  "r4": "4262ecfdef077269b935e038554660377f38f955",
+  "r3": "e653e597c2e6fd74a5f8d6be65fe60e017b03017"
+ },
+ "r4_bytes": 10718,
+ "r3_bytes": 11765,
+ "results": {
+  "r4_ledger": {
+   "rc": 0,
+   "verdict": "Q43_GATE_GREEN",
+   "claims": 17,
+   "findings": 0,
+   "kinds": []
+  },
+  "r3_ledger": {
+   "rc": 0,
+   "verdict": "Q43_GATE_CLEAN",
+   "claims": 19,
+   "findings": 0,
+   "kinds": []
+  },
+  "r4_bus": {
+   "rc": 0,
+   "verdict": "Q43_GATE_GREEN",
+   "claims": 17,
+   "findings": 0,
+   "kinds": []
+  },
+  "r3_bus": {
+   "rc": 0,
+   "verdict": "Q43_GATE_CLEAN",
+   "claims": 18,
+   "findings": 0,
+   "kinds": []
+  }
+ },
+ "derived_result": null,
+ "claim_kind": "code_determined"
+}
