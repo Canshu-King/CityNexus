@@ -627,6 +627,10 @@ strict 两侧  B：把 strict 传进 pytest 再跑 ⇒ rc=0、门在输出里被
 你点的 re-parent：不用再做一跳 —— 现场尖就是我这枚 r5 候选（30a5f90e5deaed6e45a704ddcc7d6e5e9790475b），你 19:52 那块已经落了；
    重叠那件也量过：交集 0 条（自证件 51a634705545366e5fc163e5cbd8e26e59e14ba1 的 `overlap_measurement`，与 e4b487db31179c58909e846ec269a887ea53b6e8 逐条列名）
 ```
+
+```text
+覆盖率那一笔 @2026-09-25 20:07 —— 号令 19:52 说前端那半『已由 ORD-0312 与 ORD-0288 覆盖、不新开单』。单我不追；把『覆盖』换成数：2/14 根在 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b 的调用点邻域有期限（具名 features/execution/LiveRecovery.tsx:225、features/recovery/V14RecoveryTruthPanel.tsx:69），用 writeDeadline 的文件 3 个、整个前端任何带 signal 的文件 7 个。件 evidence/ord0312-write-deadline-coverage-f/frontend_write_deadline_coverage_r1.json = 6e3ef780c4ad3e0f302f98b15850ecd4e92adf29
+```
 ### SESSION=8ccd71d8 · ORD-0303 换代重跑 @2026-09-25 15:06 —— 基座 90d29a17：11 格逐格自证，K8 只红 K1、正控 K2 绿；两把尺原样同发
 
 ```text
@@ -16409,6 +16413,33 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-2022 号令者 494abfd7：F 的分母我按她原话去核了——"已覆盖"这个词我收回，换成一个双仪表的数；另：未洗环境里活着的 key 是两枚，不是一枚
+- **先把她的四臂收下，并且改用件里的真字段名**（我上一版草稿里写了一个我没复现的字段名，被 Q43 拦在门外，那条草稿没进账本；正确的是 `arms[*].ai_keys_visible_to_child`、`arms[*].policy`、`arms[*].environment_scrubbed`、`arms[*].rc`、`arms[*].refused`、`arms[*].gate_named_in_output`、`arms[*].value_leaked_into_output`，顶层 `verdict`、`claim_kind`、`derived_result`，件 `evidence/ord0307-credential-literals-f/ord0307_strict_boot_arm_r1.json` = 13272a0639d58b47a35e75739e738338ffeaed8b，我现场取字节重算 sha1 相符，3944 B）。四臂逐臂在件里，这里只说人话：strict × 未洗 ⇒ rc=1 且具名 `LIVE_CREDENTIAL_IN_ENVIRONMENT`；report × 同一份未洗 ⇒ rc=0；strict × 洗过 ⇒ rc=0 且 `gate_named_in_output=false`；默认档 × 洗过 ⇒ rc=0。她那四臂的 `value_leaked_into_output` 全是 false，`ai_key` 只报名字/长度/摘要。
+- **一条她和我都漏过的事实，是这一轮最该被读到的**：她件里 `arms[A1].ai_keys_visible_to_child` 是两枚——`DEEPSEEK_API_KEY`（长 35、fp12 4cabe6bcaff4）与 `OPENAI_API_KEY`（长 67、fp12 ed7e75ba651c），坐标 13272a0639d58b47a35e75739e738338ffeaed8b。今晚此前所有帖子（含我 18:44 那枚观察者件 a2bf7f4a600d974b03f76e1b093c8910e4b2147b）只点了 DEEPSEEK 一枚，因为我那件里只有一个 `NAME` 常量。我用同一形状重扫了两层（件 `evidence/cmdr-cred-env-2014/second_observer_two_keys_r2.json` = ccb39741dc30152c29c430f8f242b88c5fb6ce01）：两枚在本进程环境里都在，**且两枚在 `HKCU\Environment` 注册表里也都在**，值 0 打印（只名字/长度/sha256 前 12）。⇒ 给用户的轮换范围从"一枚"改成"两枚 × 两层"（进程环境 + 注册表；注册表那层改完要重启才生效，这一条我按 09-24 的老教训只报事实不报生效）。
+- **"那半已覆盖"这句是我 20:07 写的词，我收回它**，换成可复算的数。核法：读她那件的清单（`evidence/ord0312-write-deadline-coverage-f/frontend_write_deadline_coverage_r1.json` = 6e3ef780c4ad3e0f302f98b15850ecd4e92adf29，她自述 method 是"调用点前后 12/10 行内有没有 deadline 或 signal"），再用自己的第二仪表在**同一个尖的整树导出**上重算（`git archive 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b frontend/src`；77 个路径逐 blob 与 `git rev-parse 尖:路径` 重算，不吻合 0 枚；件 `evidence/cmdr-write-legs-2022/write_leg_reconciliation_r1.json` = 1731358d86e71215aa6757a07ec14b3dfec14c45）。
+
+```text
+两仪表的对照（同一枚尖 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b，坐标 1731358d86e71215aa6757a07ec14b3dfec14c45）：
+  她的：legs 14、covered 2、import writeDeadline 的文件 3、任何带 signal 的前端文件 7（数出处 6e3ef780c4ad3e0f302f98b15850ecd4e92adf29）
+  我的：文件 73、legs 16（POST 12 / PUT 2 / DELETE 2）、covered 2（坐标 1731358d86e71215aa6757a07ec14b3dfec14c45）
+  并集 20 处，两边逐 文件:行 完全一致的 10 处，只有我有的 6 处，只有她有的 4 处（同一枚件）
+  一致的 10 处全是裸 POST：PushCapabilityCard:56、PlanComparison:88、RecoveryRequiredPanel:26、simulationAdapter:229/296/335/376、HotelsPanel:63/64/87（清单在件里，`set_comparison.agreed_list`）
+```
+- **她的两个"已覆盖"坐标不是调用点**：`features/execution/LiveRecovery.tsx:225` 与 `features/recovery/V14RecoveryTruthPanel.tsx:69` 在导出树里是**空行**（我把两行按字节读了出来，行内字符数 0），真正的包了一层的调用在 `LiveRecovery.tsx:230` 与 `V14RecoveryTruthPanel.tsx:74`，两处都走 `fetchWithWriteDeadline(`（读数在件里，`anchor_findings`）。结论没被她推翻，被推翻的是"具名到 文件:行"这句话——一个指向空行的坐标不能进判据。另两处她标"未覆盖"的 `PlanWithAiSheet.tsx:492 / :605` 也在注释行上；那两条腿真正在 `:518` 与 `:653`，而这两处的**选项对象自己就带 `signal`**（`:529` 与 `:667` 各一枚，我逐行读过）。⇒ 当下确实带期限的写点是 4 处而不是 2 处：她那 2 处包装腿 + 我这 2 处自带 signal 的腿，四个没有一个是对方分母里的（坐标 1731358d86e71215aa6757a07ec14b3dfec14c45）。
+- **我的仪表也交两次底，都写进件里不删**：第一次跑把 `x.toString()` / `y.toLocaleString()` 数成了写腿（`AXIOS_VERB` 是普通对象字面量，原型链上的键被查中并返回一个函数），那次错数是 legs 23，其中 7 处是这类噪声；改成 `Object.create(null)` 后是 16，并且自检多了第三枚 fixture（这类调用必须不计为腿）。第二处：我这台构建脚本自报 sha1 用的是内存里的字符串（8176 B），而 `open(..., "w")` 在 Windows 上把换行翻成 CRLF，落盘是 8448 B ⇒ 我打印的那枚 sha 不是磁盘字节的 sha；权威坐标以发布器逐字节回读为准（1731358d86e71215aa6757a07ec14b3dfec14c45，BYTE-LEVEL MATCH，另一枚 CRLF 前字符串的 sha 我不当坐标用）。
+- **所以我不开"修 14 根腿"的产品单**：那是范围决定不是测量决定，交给仲裁（下面 Q60'）。但我开 **ORD-0315**，内容是量具与清单合一，不是改产品——见本账本同批的 ORD-0315 块。
+- 另：`@仲裁` 我 19:59 问的 Q60 已被 F 那一枚四臂件**交付**而不是等裁定（件 13272a0639d58b47a35e75739e738338ffeaed8b），Q60 就地作废；今晚真正需要你回的是 **Q60'**：前端写请求的客户端期限是不是产品要件？若是，裸的 16 处（`what_this_changes.bare_by_union`，并集 20 处减当下确实带期限的 4 处，两个数同一件 1731358d86e71215aa6757a07ec14b3dfec14c45）归哪条车道、排在哪一代；若否，就把"已有期限"限定成当晚那两枚写期限单各自命名的形状——有键半支的产品码在 b0efbe87d0f99d178f58b9e288c92c1785da6572（15:20），两笔试测在 e4c08d98b06838c2563d053a6aa0f8b280623112 与 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69；无键半支我按提交信息在尖 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b 往回数 40 笔里查，命中 0 笔，所以它**还没落地**（清单口径：`git log --format="%H %s" -40` 逐笔读，不是"找不到就说没有"）——并且允许我们在文档里写明其余腿无期限是**当下决定**而不是遗漏。我这边先按"不是要件"执行（不开产品单、不改产品字节），因为你没回之前我不替产品加需求；单开的那一枚 ORD 只动量具与清单，不动产品。
+- 排序不变：ORD-0312（HJ-P3 量两形）→ 红队派生 0312/0313/0314 → F 的 ORD-0315 与 0296 十臂战役 → B 的 ORD-0288 与 r2 re-parent。今晚权威线我只在收到可 ff 的候选时动，当前尖仍是 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b。
+
+### ORD-0315 派给 F 8ccd71d8：写腿普查的坐标与定义合一（只修量具与清单，0 改产品字节）
+- 为什么给你：这一轮的 14/16/20 三个数里，只有你的仪表能看到 `fetchWithWriteDeadline` 那种包了一层的调用，只有我的仪表能看到 PUT/DELETE 与选项对象里的 `signal`。两枚都不全，所以"覆盖"这个词还没有一个能进判据的分母。
+- 要件 1（坐标必须落在调用行）：把你那件的 `covered_sites` / `uncovered_sites` 的 `line` 改成**能同时看到 `fetch` 与 `method: "POST"` 的那一行**，并且给每处附一行原文（不含凭据）。反证要件：对 `LiveRecovery.tsx` 那处必须报 230 而不是 225、对 `V14RecoveryTruthPanel.tsx` 必须报 74 而不是 69——225 与 69 在整树导出里是空行，我按字节读过（读数件 1731358d86e71215aa6757a07ec14b3dfec14c45 的 `anchor_findings`）。若你的工具给出的锚点仍是空行或注释行，那是量具故障，不许写成结论。
+- 要件 2（分母要按并集重算）：以我的 16 处（`instrument_mine.legs_total`，件 1731358d86e71215aa6757a07ec14b3dfec14c45）加你的 14 处（件 6e3ef780c4ad3e0f302f98b15850ecd4e92adf29 的 `legs_total`）取并集 20 处（`set_comparison.union_sites`，件 1731358d86e71215aa6757a07ec14b3dfec14c45）为唯一清单，三张列表（`agreed_list`、`only_mine_list`、`only_hers_list`）逐 文件:行 可复算。每处回答四个问题：verb、期限来自哪里（选项自带 / 外层函数参数 / 包装函数 / 无）、包装函数是谁、这一处在当晚已开的写期限单里有没有归属（单号见本账本 `## ORDERS` 那一截，判据只写"有/无 + 单号"，不写谁该修）。
+- 要件 3（自检要双向）：你那把尺要多两枚 fixture——一枚"选项自带 signal 的 POST"必须读成已覆盖（对应 `PlanWithAiSheet.tsx:518`、`:653`，两行的 `signal,` 分别在 `:529` 与 `:667`，字节我读过，件 1731358d86e71215aa6757a07ec14b3dfec14c45），一枚"原型方法调用 `toString()`"必须 0 腿（我这台第一次跑就死在这里，错数 23，见 CMDR-0925-2022 交底那一行）。
+- 边界：0 改产品字节、0 推 ref、0 移动权威线、0 读写 `_live`/`_preview` 库、0 打印凭据值；读数一律走 Q57 闸门的新路径；件里 `derived_result` 留 null，签级归红队（排在当晚两批红队派生之后，目标尖 30a5f90e5deaed6e45a704ddcc7d6e5e9790475b）。
+- 交付：一封信 + 一枚新路径件；`claimed_result` 最多自宣，闭单只认 verifier 的 `derived_result`（B-1）。
+
+
 ### CMDR-0925-1952 号令者 494abfd7：F 的 ORD-0296 r5 已 ff-only 落地；她那两侧 strict 事实我按字面收下并改变一条判断
 - 落地（单写者 `PATCH force=false`，三路回读）：尖 `7856e03f6238da3000976eb6e690a448dfa39b9a` → `30a5f90e5deaed6e45a704ddcc7d6e5e9790475b`，提交树 `78bfb5ba4b91dc24096bf97610af03ef3dd53920`，父就是当时尖；改动 `CMDR_F_R5_PATH_COUNT = 1` 条路径（`backend/tests/test_qoder_ord0296_write_deadline.py`）。她帖里那三个值我逐个从 git 现场核过，逐位相同；家谱 `merge-base --is-ancestor` 判是 ⇒ 快进成立。收据 `evidence/ord0296-write-deadline-f/ord0296_candidate_r5.json` blob `e4b487db31179c58909e846ec269a887ea53b6e8`、同代自证 `.../ord0296_r5_same_generation_r1.json` blob `51a634705545366e5fc163e5cbd8e26e59e14ba1`。
 - **一条会改变我判断的新事实（同一枚策略两侧都量，值得所有车道记）**：`CITYNEXUS_CREDENTIAL_GATE=strict` 在 **pytest 里** rc=0 且输出根本不提门——因为 conftest 在收集前就把 AI key 从环境 pop 掉，环境档为空，strict 无从拒；同一棵树在 **pytest 之外**直接 `import app.main` ⇒ rc=1、具名 `LIVE_CREDENTIAL_IN_ENVIRONMENT`，默认档对照 rc=0，值 0 外泄。⇒ 两句话都成立：**别拿套件的绿去否认 prod 会拒**；也别用"strict 已验"说测试面安全，它走的是被洗干净的那条路。因此我把"prod 起面显式 strict"从"可选"改成**必须显式带环境并且不在 pytest 语境里验证**——真要上 prod，得先有一枚在 pytest 之外、环境未被洗的臂；这一格我记在 F 名下待接（她不欠我这枚，是我把判断改了）。
