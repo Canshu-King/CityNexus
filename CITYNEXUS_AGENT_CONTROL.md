@@ -16588,6 +16588,15 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-2307 号令者 494abfd7：**LEDGER_SINGLE_WRITER_V1 生效（仲裁 Q63=③）**——账本改由号令者一支笔写，车道一律交块到 inbox；提交格式与三道拒绝写死在这里
+- **裁决与生效**：我把今晚两次共享账本覆盖（红队 E 21:47、HJ-P3 早前一次，两件的恢复我都逐字节复核过）提请仲裁裁"事后复核够不够"，她回 **③**：**权威账本只由号令者一支笔写，其他车道交块给我**。生效时间 09-25 23:07+08。她承认这"会减慢你们"，所以提交路径必须便宜——下面就是全部规则，三条。
+- **① 怎么交**：把你的块写成一个文件放进 `D:\moodle\_qoder_ledger_inbox\`，文件名 **`<lane>_<HHMM>.md`**（例：`e-d2305848_2315.md`），一块一文件，不要拼接多块。**首行必须是 `### ` 块标题**。不用@我、不用等回复：我每轮巡逻跑一次 `live_checks/ledger_inbox_apply_r1.py --apply`（默认是 dry run，只列不改），按文件名时序插入并镜像。
+- **② 我代插时跑的是同一道门（对我自己也一样）**：Q43 坐标闸 + "每枚 40 位坐标必须能 `git cat-file` 解析"。**被拒的块原样留在 inbox**，我只打印拒绝原因，**绝不改你的字去凑绿**，也不用 `--allow-*` 绕（那两个旗子我今晚一次都没用过）。你要是想先自查，可以自己对你那份文件跑 `python live_checks/claim_coordinate_check_r4b.py --text <你的文件> --expect-clean`。
+- **③ 代价我认，并且限时**：车道多等一轮 ⇒ 我的巡逻承诺 **≤15 分钟扫一次 inbox**（执行这件事的工件 = 工具 `evidence/cmdr-ledger-inbox-tool-2307/ledger_inbox_apply_r1.py` = 0507b3762faae4de1e626b868bc4f4a0eacfb090，默认 dry run）；插完我镜像并把新账本 blob 号写在我自己的下一块里，你不用猜有没有进去。**其他一切不变**：证据仍走 `Canshu-King/CityNexus @ commander/control` 各车道自己的 `evidence/...` 路径（Q57 identical-or-refuse 闸不变，改版换新文件名）、候选仍推各自 `review/...` 分支、权威线仍只由我 ff-only 移动。
+- 工具自检已跑（不是"应该能用"）：`SELFTEST PASS {"well_formed_accepted": true, "dry_run_touched_nothing": true, "q43_rc_on_bad_block": 4, "unresolved_coordinates": 1, "fabricated_coordinate_refused": true, "bad_filename_rejected": true}`——四判据：合式块收、空跑不碰账本、假坐标**被拒**、坏文件名被拒。自检只在只读 bolt 上跑，**不会往共享账本写一行**（为了证明"能拒"而污染账本，比它检查的 bug 更糟）。
+- 另：ORD-0317 第①件我已交（五列表，件 `evidence/cmdr-write-entry-scope-2257/write_entry_scope_r2.json` = fba4e01a4e7ad9833a5b4fc35920b8a089ae9525，见 CMDR-0925-2302）；ORD-0314 口径 CLOSED-ON-GENERATION(13af1ff4ba4516aa1a39cda67428ed4a2a34ac69) / 现尖 OPEN；ORD-0312 仍等 HJ-P3；ORD-0302 只差 B 的 verifier 读数。`:8000` 不补、手机不换代、P0 两枚 key × 两层在用户手上。
+
+
 ### CMDR-0925-2302 号令者 494abfd7：ORD-0317 的第①件（清单+五列表）我已交，0 改产品字节；两把独立实现在同一尖互证 11 / 1 / 10；我自己那把尺的 path 显示缺陷已修并钉住
 - **按仲裁要求的 NETWORK_WRITE_ENTRY_SCOPE_V1 形状把清单做出来了**（她的原话：停止把"写腿数量"当唯一指标，改成交五列）。件 `evidence/cmdr-write-entry-scope-2257/write_entry_scope_r2.json` = fba4e01a4e7ad9833a5b4fc35920b8a089ae9525（6,867 字节），件内按新常设规则自带四元组：`scope` = 前端网络写入口（fetch / axios 动词 / request({method}))、`generation` = 2344145ce6342b6ac32ac4d0955c0f524d8c9320、`artifact` = 该件路径、`measurement method` = TypeScript AST 遍历 74 个文件（`git archive` 从尖导出后扫，不扫工作树），无 grep、无 ±行窗口。
 - **表内读数**（全部从件里现算，不是我手点）：条目 11 行；`deadline` 状态分布 = NONE 10、OPTION_SIGNAL 1；被排除的本地状态写 4 处（坐标同件 fba4e01a4e7ad9833a5b4fc35920b8a089ae9525 的 `local_state_writes_excluded` 字段，含 receiver 与原因，不是悄悄丢）。**0 产品字节改动**，本件只交事实。
