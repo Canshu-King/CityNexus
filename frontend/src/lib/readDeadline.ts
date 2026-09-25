@@ -7,10 +7,15 @@
  * back, the `await` never settled, the `catch` never ran, `busy` stayed true, and the three states
  * the screen is supposed to tell apart were down to two -- because the third one never happened.
  *
- * Reads only, deliberately.  Aborting a *write* at a deadline tells the client the request is over
- * while the server may still be finishing it, which is an idempotency question this order does not
- * ask and this module does not get to answer by silence.
+ * Reads only, deliberately -- until ORD-0281.  Aborting a *write* at a deadline tells the client the request is
+ * over while the server may still be finishing it, which is an idempotency question this module does not get to
+ * answer by silence.  ORD-0281 answered it for the one case where a replay is well-defined: a write carrying an
+ * `Idempotency-Key`, handed to `fetchWithWriteDeadline` below.  Keyless writes still pass straight through,
+ * because "what does an aborted write the server cannot recognise mean?" is ORD-0288 and is still held for
+ * arbitration -- so the pass-through is a named decision with an owner, not the old silence.
  */
+
+import { fetchWithWriteDeadline } from "./writeDeadline";
 
 export const READ_DEADLINE_MS = 12_000;
 export const READ_DEADLINE_SECONDS = READ_DEADLINE_MS / 1000;
@@ -41,7 +46,9 @@ export async function fetchWithReadDeadline(
 ): Promise<Response> {
   const method = (init.method ?? "GET").toUpperCase();
   if (method !== "GET" && method !== "HEAD") {
-    return fetch(input, init);
+    /* ORD-0281: the keyed subset is bounded inside this call; a keyless write is still passed through
+       (ORD-0288, held).  One decision point, so a leg cannot be "server's answer" here and "unknown" there. */
+    return fetchWithWriteDeadline(input, init);
   }
   const controller = new AbortController();
   let firedHere = false;
