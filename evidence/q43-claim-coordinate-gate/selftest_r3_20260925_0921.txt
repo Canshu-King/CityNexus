@@ -1,0 +1,13 @@
+selftest SELFTEST_GREEN | arms run 12 passed 12 | failed: []
+  arm S1_relay_with_code_coordinate claims 2 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok
+  arm S2_relay_without_coordinate claims 1 got Q43_GATE_RED ['NO_COORDINATE_FOR_RELAY'] | want Q43_GATE_RED ['NO_COORDINATE_FOR_RELAY'] -> ok
+  arm S3_constant_with_40hex claims 2 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok
+  arm S4_constant_without_coordinate claims 2 got Q43_GATE_RED ['BARE_NUMBER_WITHOUT_COORDINATE', 'CONSTANT_VALUE_CLAIM_WITHOUT_COORDINATE'] | want Q43_GATE_RED ['CONSTANT_VALUE_CLAIM_WITHOUT_COORDINATE'] -> ok
+  arm S5_no_claims_at_all claims 0 got NO_CLAIM_FOUND_NOT_APPLICABLE [] | want NO_CLAIM_FOUND_NOT_APPLICABLE [] -> ok
+  arm S6_coordinate_too_far claims 1 got Q43_GATE_RED ['NO_COORDINATE_FOR_RELAY'] | want Q43_GATE_RED ['NO_COORDINATE_FOR_RELAY'] -> ok
+  arm S7_structural_numbers_and_a_cited_number claims 7 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok
+  arm S8_markdown_line_number_alone_is_unstable claims 3 got Q43_GATE_RED ['BARE_NUMBER_WITHOUT_COORDINATE', 'CONSTANT_VALUE_CLAIM_WITH_UNSTABLE_COORDINATE'] | want Q43_GATE_RED ['CONSTANT_VALUE_CLAIM_WITH_UNSTABLE_COORDINATE'] -> ok
+  arm S10_fullwidth_equals_is_caught_r3_B1 claims 2 got Q43_GATE_RED ['BARE_NUMBER_WITHOUT_COORDINATE', 'CONSTANT_VALUE_CLAIM_WITHOUT_COORDINATE'] | want Q43_GATE_RED ['BARE_NUMBER_WITHOUT_COORDINATE', 'CONSTANT_VALUE_CLAIM_WITHOUT_COORDINATE'] -> ok
+  arm S11_paraphrased_relay_is_caught_r3_B3 claims 1 got Q43_GATE_RED ['BARE_NUMBER_WITHOUT_COORDINATE'] | want Q43_GATE_RED ['BARE_NUMBER_WITHOUT_COORDINATE'] -> ok
+  arm S12_bare_number_with_coordinate_nearby_is_clean claims 2 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok
+  arm S9_markdown_line_plus_durable_is_clean claims 3 got Q43_GATE_CLEAN [] | want Q43_GATE_CLEAN [] -> ok
