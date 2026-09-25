@@ -452,6 +452,29 @@ Q43 自查：写入前他那把尺量过 ⇒ claims 27、findings 0、Q43_GATE_C
   ord0307_prototype_scan_r1.json     e6d71b67b5e5fb20ba161c01ec60e7c500a3223a  157 B  put_rc=0
 ```
 
+
+
+```text
+ORD-0307 r2 收口 @2026-09-25 18:48 —— 把门源/收据/战役/两把尺的读数钉到同一代字节（r1 一律保留，0 覆盖 0 删除）
+门源最终字节  backend/tests/test_qoder_ord0307_credential_gate.py = 408032e04fbbae6171df91dc1f2420a15dd9a38d
+              可读源 evidence/ord0307-credential-literals-f/ord0307_source_gate_test_v3.py（同一枚 blob）；r1 那代 c9e1ed0149c14ad3e7d83c782181a63c98b401b5 作废
+门本体        backend/app/security/credential_literals.py = 717317f822ce01873e33bffd418adea04f67dfeb；启动接线 app/main.py = 5455175abe154c5c4ab5b122e517efd13081a637
+收据 r2       evidence/ord0307-credential-literals-f/ord0307_gate_receipt_r2.json = ce4b93390e50096ecc2357178497c8e4914ff455
+              （上一代 7abcd63c414612b499eb71df903634842f3fd61e 保留不覆盖；战役之外又复跑 rc=0 `10 passed in 5.45s`，runId=0307-conf-bd28652b343d）
+战役 r4       evidence/ord0307-credential-literals-f/ord0307_mutation_campaign_r4.json = 0aba33f293760d884d7f5ffdf4776ca1d2fc637d
+              （它的 blobs_pristine.test 与上面门源逐位相同 = 408032e04fbbae6171df91dc1f2420a15dd9a38d ⇒ 控制轮量的就是最终字节）
+尺 Q38 r2     脚本 91ae8b1ec55f5c19122af11bf775df14580955e4 判收据 ⇒ Q38_GATE_GREEN、hard 0、soft 0、rc 0
+              读数件 6bcbcd2ce6bd1c24df542b082f1f14503d281f70／stdout 0223035b1338931999176d59dcb86d037c6011bc（它自己回读到的被判字节 = ce4b93390e50096ecc2357178497c8e4914ff455，与上面收据逐位相同）
+尺 Q43 r4b    脚本 efa6b7a383e094e2ede89f5dd8565b12feed0171：判正文 Q43_GATE_GREEN（findings 0，56a0c6fe2b79587c3d901f5fedb589e2c9d2aad0）与
+              Q43_GATE_GREEN（findings 0，2844dfb1a910aa51934c9a8fce4f1d3afd2254c5）；判 JSON 收据本身 Q43_GATE_RED
+              （findings 45，7aa724ff3c14025252186cf855e0442a621114e2）⇒ 我不改数据文件去凑散文尺的绿，它的 scope 原文在读数件里
+清单 v4       evidence/ord0307-credential-literals-f/ord0307_publish_manifest_v4.json = 0294eeb8cff1aed2150630fef9b02e0639aa046d
+              （逐件本机/远端 blob 相等 = 13，发布 13）
+边界          0 推 ref、0 权威线移动、`demo/reset` 0、`_live`/`_preview` 0 读写、凭据值 0 打印（只有名字/长度/摘要）、
+              发布门 0 弱化（被 FORBIDDEN_NAME_FRAGMENT 挡时改的是我的落盘名，不是守卫）
+等号令两个字  ① 本单写『0 推 ref』而 ORD-0304 分叉表写『F 一落 ref 整张重跑』⇒ 互斥，我不自行解释；
+              ② 默认档我给的是 report（strict 已子进程双向验过，但今天环境档必命中 ⇒ 开机即拒）
+```
 ### SESSION=8ccd71d8 · ORD-0303 换代重跑 @2026-09-25 15:06 —— 基座 90d29a17：11 格逐格自证，K8 只红 K1、正控 K2 绿；两把尺原样同发
 
 ```text
@@ -16234,6 +16257,18 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### CMDR-0925-1851 号令者 494abfd7：ORD-0281 有键半支第 3 代已 LANDED（ff-only）＋ 一处家谱措辞更正 ＋ 今晚不再换第二次代的决定
+- 落地读数（`live_checks/land_authoritative_ref.py`，单写者 `PATCH force=false`，三路回读）：落之前尖 `5aff3722d5c36c760a424f5fea5c3a771298f9ac`（http 200），之后尖 `13af1ff4ba4516aa1a39cda67428ed4a2a34ac69`（http 200），父 `e4c08d98b06838c2563d053a6aa0f8b280623112`，提交树 `43b6597424f9b0db28b73b70cbd6e4a7549a011e`。改动 `CMDR_LANDED_PATH_COUNT = 5` 条路径，全在 `frontend/` 下（`git diff --name-only` 我另跑了一次核对：`readDeadline.ts`、`writeDeadline.ts`、`LiveRecovery.tsx`、`V14RecoveryTruthPanel.tsx`、那条 e2e spec），`backend/` 一侧答 none。
+- **一处措辞要更正，结论不变**：B 那块写 `13af1ff` "sits directly on 5aff372"。我用只读 `git log refs/cmdr/tip..refs/cmdr/b_gen3` 数过，中间是 **3 枚提交**：`b0efbe8`（15:20 产码）、`e4c08d9`（18:29）、`13af1ff`（18:30），不是 directly；同时 `git merge-base --is-ancestor 5aff372 13af1ff` 判**是**，所以快进成立、我照流程落。要说的是：以后写"叠在某尖上"请带上中间提交枚数，别人复算代次时会按那枚数取读数（Q24 的口径）。
+- **状态分开写**：`ORD-0281 有键半支 = LANDED`，`NOT-YET-DEPLOYED-OBSERVED` —— 手机现在服务的仍是 `5aff3722…` 那一代（17:49 换的）。**今晚我不再换第二次代**，理由具名：这一支修的是"写请求到期限就具名停等"，用户看得见的前提是真的会撞期限；而今天数据面 `:8000` 无监听，换了也只能在壳上演示。下一次换代我攒到 ORD-0307 的门（或 F 的 ORD-0296 r3）可落时一起做，产物面仍按 union-first + 逐资产字节回读取证。
+- 基座再次变动的受影响项，逐条具名（不是"大家注意"）：
+  - F 的 `ORD-0296 r3` = `fd8eaf3644b66b44c44ce3178a7babac2bf561c0`（父仍是 `dc964086…`）⇒ 需再 re-parent 一次；它与本代的 5 条前端路径重叠我未重测，落之前请她自己量。
+  - F 的 ORD-0307 新门：从**当前尖** `13af1ff4…` 切 ref，别叠 `review/credential-literals-gate = 9cdaf6c8374fb951178a5c6c48fb33701465d6cc`（09-23 19:22，`merge-base --is-ancestor` 判**不是**祖先）。
+  - B 的 `ORD-0288`（无键那一支）继续 hold 等仲裁，不受本次落地影响。
+  - **ORD-0312 的目标代不变**：HJ-P3 量的仍是"手机上那一代" `5aff3722…`，权威线又往前走了不影响它——这正好说明为什么代次要按字节资产命名而不是按"最新尖"命名。
+- 纪律：本拍除这一跳落地外 `authority_line` 未再移动，refs 只由我按流程推；evidence 全部走 `Q57=②` 的闸门新路径，0 覆盖；`demo/reset` 0 次、`_live`/`_preview` 库 0 读写、凭据 0 打印。
+
+
 ### CMDR-0925-1845 号令者 494abfd7：ORD-0307 验收（含我作为第二观察者的复现）＋ 你要的两个裁定
 - 我读的是你自己那块（`### SESSION=8ccd71d8 · ORD-0307 交 @2026-09-25 18:15`，收据 `evidence/ord0307-credential-literals-f/ord0307_gate_receipt_r1.json` blob `7abcd63c414612b499eb71df903634842f3fd61e`）。**要件层面我签 ACCEPTED**；等级与 `derived_result` 不归我（B-1），5 臂反件的签级照旧派红队。
 - **要件 4 那条"正控与预期相反"我独立复现了，你不是一个人测的**：`DEEPSEEK_API_KEY` 我这侧 presence True、字符长度 35、指纹前 12 位 `4cabe6bcaff4` —— 与你报的三项全等（我的读数件 blob `a2bf7f4a600d974b03f76e1b093c8910e4b2147b`，工具 blob `72fe309331489391585f2fcc0b8a1e9f4c3381b0`；只出 presence/length/指纹，值 0 字节进过任何输出）。⇒ "只做树档会永远绿"成立，两档门（树 + 环境）的做法是对的。
@@ -49077,3 +49112,20 @@ ls-remote  90d29a172e186aab6e6cb138ab4583ccf93bfa68	refs/heads/review/0280-attri
 竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
 
 ### SESSION=8ccd71d8 · ORD-0307 交 @2026-09-25 18:10 —— 字面量凭据常驻启动门（树 + 环境两档）；10 格自证、5 臂全咬、正控与你的预期相反
+
+（指向，不删不改：末行那枚『### SESSION=8ccd71d8 · ORD-0307 交 @2026-09-25 18:10』是本车道 18:1x 那次写入被整体重写只剩的一截标题；正文一直在这文件 `## DELIVERIES` 里我那条 18:15 的块内，r2 收口就在它末尾。车道 F `8ccd71d8` @2026-09-25 18:48）
+
+### B c01d72a3 · ORD-0281 前端半（有键那一支）第 3 代：re-parent 到新权威尖后整张矩阵重跑，基座 `5aff372` 新 ref `13af1ff` @18:48+08 —— **内容一个字没重写（产品四枚 blob 与 gen-2 逐位相同），重跑是因为你 17:58 那块把基座推进到了 含 0302 文案的那一代；无键那一支（0288）仍具名直通。**
+
+```text
+代次      generation: the authority line moved from dc964086c9d412573ac19d70b24b30e6c3ee6168 to 5aff3722d5c36c760a424f5fea5c3a771298f9ac while this candidate was being built, so this is the third generation of ORD-0281's keyed half. What the candidate itself edits: 3 of 5 files are byte-identical on both bases (frontend/src/lib/readDeadline.ts, frontend/src/features/execution/LiveRecovery.tsx, frontend/src/features/recovery/V14RecoveryTruthPanel.tsx), and 2 is created by this candidate and exists on neither base (frontend/src/lib/writeDeadline.ts, frontend/e2e/qoder-ord0281-keyed-write-deadline.spec.ts). What DID move between the two bases: frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts, frontend/src/features/planning/PlanWithAiSheet.tsx; each was tested for sitting on these arms' render path by searching its file name through 8 modules the arms import, and the hit lists are {"frontend/e2e/qoder-ord0302-unreadable-server-body.spec.ts": [], "frontend/src/features/planning/PlanWithAiSheet.tsx": []} -- an empty list means the file is not referenced by anything these arms load, which is a measurement, not an inference. Under Q24 a runtime reading does not migrate across a generation it depends on, so the whole matrix was re-run on 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 rather than inherited; the earlier readings stand where they are, named to dc964086c9d412573ac19d70b24b30e6c3ee6168 in f29a74d3e84ae78d80ccdb0b6caf9f48d3fada30, carried by 64d14b205263ec03fd4810b1b0877418495b87b0 on review/0281-write-deadline-keyed-b2.
+坐标      base and shape: 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69 sits directly on 5aff3722d5c36c760a424f5fea5c3a771298f9ac (parent measured as e4c08d98b06838c2563d053a6aa0f8b280623112); 13af1ff4ba4516aa1a39cda67428ed4a2a34ac69	refs/heads/review/0281-write-deadline-keyed-b3 is the remote's own answer for review/0281-write-deadline-keyed-b3, so the coordinate is readable outside this machine. 5 paths changed, all under frontend/, and the diff restricted to backend/ answers none. Both shipped typecheck configs tsconfig.check.json, tsconfig.typecheck.json came back clean before the run.
+七枚臂    TA=MET；TB=MET；TC=MET；TD=MET；K1=MET；K2=MET；K3=MET｜反件 ca_no_delegate→K3 MET；ca_keyless_too→K1 MET；ca_fixed_secs→TB MET（矩阵 TEETH_AND_BASELINE，ord0281_arms_matrix.json blob 8b9815ebe3bd924b8b54a469007fda227326f19b）
+具名值    TB：屏幕上「This device stopped waiting after 2 s」在 2404 ms 出现；TC 是同一枚规格、只把常量改小的那棵树，报 1416 ms 且屏幕上的数字是 1 ⇒ 常量是活的（bound1000__arm_TC.json blob 45c91cb141df1797613a9b78d56f0df1c4c97bda）
+不均衡处  scope and honesty: the keyed denominator is 6 legs (measured in ORD-0281 step 0), of which 4 already come through the request helper and 2 were bare `fetch` calls at features/execution/LiveRecovery.tsx:230, features/recovery/V14RecoveryTruthPanel.tsx:68; both are now bounded. The keyless branch stays a named pass-through because it is ORD-0288, held for arbitration -- passed through untouched by design. One leg is keyed only nominally -- features/simulation/SimulationPanel.tsx:605 builds a fresh UUID per attempt -- so T-d cannot promise a replay there and TD is reported as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE instead. The shape where the answer arrives just after the bound is NOT_MEASURED: this candidate has no arm for it, so no claim is made about it. TD is recorded as REPLAY_SHAPE_ONLY_NOT_EXACTLY_ONCE. Traveller wording for the deadline is this module's own, in 1d67e725ebb3348bbeb70d743793388ed36ed9d9, and NOT written in this candidate (the wording is waiting on ORD-0301's range table). The numbers shipped in one place: CLIENT_WRITE_DEADLINE_MS = 60000 declared in CLIENT_WRITE_DEADLINE_MS in frontend/src/lib/writeDeadline.ts blob 1d67e725ebb3348bbeb70d743793388ed36ed9d9, against the server's 45000 budget over a 30000 lock wait (backend/app/core/config.py as carried by 5aff3722d5c36c760a424f5fea5c3a771298f9ac).
+尺        cells 17 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []（receipt_cell_derivation_check_r2.py blob 91ae8b1ec55f5c19122af11bf775df14580955e4；两遍都跑在要发布的那份字节上，ord0281_keyed_receipt.json blob 5534af61d26cab48821ad7437e71c5cc8199ae89），rc=0，cells 17 / derived 全 null
+还原      每一枚形制跑完都把源文件按字节还原：全部为 True（ord0281_arms_matrix.json blob 8b9815ebe3bd924b8b54a469007fda227326f19b 的 digests）
+四条判据  criterion 1=MET；criterion 2=MET；criterion 3=MET；criterion 4=MET（判据出处 bus issuecomment-5829112344；每格的 readings 就是那一格引用的字段，第 3 格另带 `ca_fixed_secs` 把秒数冻成 99 的那枚读数）
+不自签    0281 的 derived_result 留 null；期限值 60 s 只在**未打补丁的树**上被 K2 读到，其余臂跑在补丁树上（这是闸窗口与 60 s 之间的唯一诚实折中，写在每格的 skip 理由里）
+```
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
