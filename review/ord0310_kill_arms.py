@@ -88,6 +88,16 @@ ARMS = [
                "K1 里「等待时长与常数一致」那条必须红。",
     },
     {
+        "name": "K0310_KEYLESS_LEG_HAS_SIGNAL_BUT_NO_DEADLINE", "file": SHEET, "expected_hits": 1,
+        "anchor": "      const response = await fetchWithKeylessWriteDeadline(",
+        "mutant": "      const response = await fetch(",
+        "owner": K1, "kind": "kill",
+        "why": "号令者 20:5x 要的那枚双臂自证：把外层包装拆掉，`signal` 一个不少地留在选项对象里"
+               "（那一发的 init 里本来就有 `signal,`），只是期限没有了。若判据是「有没有 signal」，"
+               "这一枚会绿；实测 K1 必须红、K3 必须仍绿，所以判据确实是「期限到了」，"
+               "而拆包装也没有动到旅行者自己的取消那一支。",
+    },
+    {
         "name": "K0310_DERIVATION_PROBE_CONSTANT_TO_7S", "file": MODULE, "expected_hits": 1,
         "anchor": "export const KEYLESS_WRITE_DEADLINE_MS = 60_000;",
         "mutant": "export const KEYLESS_WRITE_DEADLINE_MS = 7_000;",
