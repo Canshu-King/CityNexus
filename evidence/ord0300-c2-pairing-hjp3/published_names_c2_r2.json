@@ -1,0 +1,73 @@
+{
+ "read_at_local": "2026-09-25T20:36:03+0800",
+ "branch_tip": "c21dfd16121e8a88598685f2cc07afa8039833b6",
+ "tree": "9db2f39a1438e3ee400297bd0cb4b9346c82ac6a",
+ "prefix": "evidence/ord0300-c2-pairing-hjp3",
+ "files_under_prefix": 53,
+ "paths": {
+  "RECEIPT_O0300C2-1955.json": {
+   "blob_40_hex": "a8305c99cd81bf9c5904b018f1beca8624fe83d8",
+   "size": 60413
+  },
+  "RECEIPT_O0300C2-1955_r2.json": {
+   "blob_40_hex": "af4a81bc36ce9dfc60295d12fbb1b4b0772dafa5",
+   "size": 62927
+  },
+  "c2_score.json": {
+   "blob_40_hex": "fb8ea255eb3f4f219a2bbbe6cb268c5fdb92a754",
+   "size": 50175
+  },
+  "gate_selftest_publish_c2.json": {
+   "blob_40_hex": "eaca78e6e2ad832e5cc2e41dedfc7186ad3224c4",
+   "size": 1657
+  },
+  "pair_log_pub.jsonl": {
+   "blob_40_hex": "854195065bf43d4ee020c68b3646e580e8b3fa42",
+   "size": 162565
+  },
+  "pair_log_publish_proof_c2.json": {
+   "blob_40_hex": "5182c27477963d7de52e38790ada6f1170c598bb",
+   "size": 1194
+  },
+  "pair_log_publish_proof_c2_r2.json": {
+   "blob_40_hex": "d0f9d1f1f01df31c4b6c5f80d703c14b9d52ac0c",
+   "size": 1734
+  },
+  "pair_log_publish_proof_c2_r3.json": {
+   "blob_40_hex": "c7b1b13394b21f5c1cb875dc9d8ca95ef746ce58",
+   "size": 1734
+  },
+  "publish_plan_c2.json": {
+   "blob_40_hex": "96bffbac9dfc2ea0cbc4b78dad6c069e24daf444",
+   "size": 6028
+  },
+  "publish_plan_c2_r2.json": {
+   "blob_40_hex": "05e5350a14b17cb53e215ce34cfdb1804a9b04a0",
+   "size": 6561
+  },
+  "published_names_c2.json": {
+   "blob_40_hex": "a5e1d8ed96339fd09a0fa173f9f79b9eb9a63fe1",
+   "size": 1286
+  },
+  "q38_ruler_O0300C2-1955_200920.txt": {
+   "blob_40_hex": "5588d365a0b3eae4ea278ab19d145150e13ca0b6",
+   "size": 909
+  },
+  "q38_ruler_O0300C2-1955_r2_203213.txt": {
+   "blob_40_hex": "80284f50cddff3bd9edab906db51d007f54fe951",
+   "size": 912
+  },
+  "raw_bundle_c2.json": {
+   "blob_40_hex": "0946a65c0fa17921faa7efc5b8a34341496a7566",
+   "size": 649724
+  },
+  "raw_bundle_c2_r2.json": {
+   "blob_40_hex": "6c434fa4c93d46356fa6b6dd39aedac95a8bc6c0",
+   "size": 879911
+  },
+  "raw_bundle_c2_r3.json": {
+   "blob_40_hex": "3feafe4573d76e2683a83298c46582e82dfabac2",
+   "size": 880041
+  }
+ }
+}
