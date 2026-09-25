@@ -1,0 +1,17 @@
+{
+ "version": "Q43_r4",
+ "input": "C:\\Users\\仓鼠王\\AppData\\Local\\Temp\\q43b_ledger_r2.md",
+ "bytes": 8226,
+ "lines": 33,
+ "claims_checked": 18,
+ "exempt_classes": {
+  "YEAR": 1,
+  "IDENTIFIER_PART": 1
+ },
+ "verdict": "Q43_GATE_GREEN",
+ "exit_code": 0,
+ "findings": [],
+ "finding_kinds": [],
+ "finding_total": 0,
+ "scope": "Numeric/constant/relay claims in the text. A green verdict here means every quantity carries a durable coordinate - it does not mean the measurements are correct, and it does not sign derived_result."
+}
