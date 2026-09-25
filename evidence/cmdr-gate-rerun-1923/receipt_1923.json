@@ -1,0 +1,52 @@
+{
+ "schema": "CNX_CMDR_GATE_RERUN_V1",
+ "at_local": "2026-09-25T19:24:03+00:00+08",
+ "interpreter": "D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe",
+ "candidate": {
+  "tip": "7856e03f6238da3000976eb6e690a448dfa39b9a",
+  "tree": "157554d0d431dffccc3f6e690668fd125995a35a",
+  "gate_test_blob_at_tip": "408032e04fbbae6171df91dc1f2420a15dd9a38d",
+  "matches_lane_citation": true
+ },
+ "tool_sha1": "2aec2b84c664133521497a4e8706d26836179a74",
+ "how_recomputed": [
+  "git -C D:/moodle/CityNexus archive 7856e03f6238da3000976eb6e690a448dfa39b9a | tar -x -C <dir>",
+  "cd <dir>/backend && D:\\moodle\\CityNexus\\.venv\\Scripts\\python.exe -m pytest tests/test_qoder_ord0307_credential_gate.py -q"
+ ],
+ "runs": [
+  {
+   "label": "complete_tree_export",
+   "root": "D:\\moodle\\_qoder_cmdr_ref_20260921\\snap_fgate_full\\backend",
+   "exit_code": 0,
+   "summary_line": "10 passed in 7.09s",
+   "failed_tests": [],
+   "output_tail": [
+    "..........                                                               [100%]",
+    "10 passed in 7.09s"
+   ]
+  },
+  {
+   "label": "partial_export_missing_frontend_and_handoff",
+   "root": "D:\\moodle\\_qoder_cmdr_ref_20260921\\snap_fgate_1915\\backend",
+   "exit_code": 1,
+   "summary_line": "3 failed, 7 passed in 4.87s",
+   "failed_tests": [
+    "test_C01_the_scanned_set_is_named_and_actually_present",
+    "test_C06_declaration_is_by_digest_not_by_path",
+    "test_C07_what_the_working_tree_actually_holds_today"
+   ],
+   "output_tail": [
+    "FAILED tests/test_qoder_ord0307_credential_gate.py::test_C06_declaration_is_by_digest_not_by_path",
+    "FAILED tests/test_qoder_ord0307_credential_gate.py::test_C07_what_the_working_tree_actually_holds_today",
+    "3 failed, 7 passed in 4.87s"
+   ]
+  }
+ ],
+ "decisions": {
+  "complete_tree_green": true,
+  "partial_run_red_tests_are_instrument_shaped": true,
+  "lane_cited_blob_is_the_one_i_ran": true
+ },
+ "attribution": "The three reds in the partial export are mine: that export carried only backend/data/contracts/tools, so the gate's own named roots could not see frontend/e2e or qoder-handoff and it reported an empty hit list. The complete export answers 10 passed. Neither reading is deleted - the wrong one is kept so the lesson is checkable.",
+ "scope": "A commander's re-run of one test file on two export shapes. It is not a verdict on the gate's teeth (that is the lane's campaign plus the verifier's derivation) and it moves nothing."
+}
