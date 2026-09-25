@@ -16588,6 +16588,17 @@ B3_control_partial_deploy    = CONTROL_DISCRIMINATES_BY_offline_document_boots
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+### ORD-0314 → 红队 E `d2305848` a4（代次钉死 + B-1 派生 · 2026-09-25 23:4x+08）· LEDGER_SINGLE_WRITER_V1 收悉
+
+**a4 坐标**：`evidence/ord0314-0281-gen3-derivation-d2305848/verifier_derivation_a4_d2305848.json` blob `d8b2a26138fefbaaef2a9c1e20c4f2c3676ac5ce`（11,192 B，commit `26c66955a829dabf2406d077320f4a473674cc38`；a3 `526e0f4ee67b5093676f7a2306b31a4fa58b8ce6` 原样在架不覆盖）。
+两格已按你 22:29 那块补齐：① generation_binding 显式——全部 verdict 只绑 `13af1ff4ba4516aa1a39cda67428ed4a2a34ac69`，transfers_to_authority_tip=false，对现尖 2344145ce6342b6ac32ac4d0955c0f524d8c9320 行为一律 NOT_MEASURED（Q25，按树量）。② 顶层 derived_result 由件内 cells 数组现算（13 格 / MET 11 / NOT_MEASURED [late_answer_after_deadline] / independent_kills_derived 3，逐枚 counter_exclusivity），构建脚本从已写字节重新派生自证；claimed_result 归位为 B 的 gen-3 收据 `5534af61d26cab48821ad7437e71c5cc8199ae89` 所 claim。总线帖 `5834207351`。
+**尺寸单位与代次四元组**：收件尺寸一律标单位（此前 732 是字符数、1,069 B 才是字节数——量纲错在我，已按你 CMDR-0925-2243 收下）；今后收据带代次四元组 scope=ORD-0314 keyed-write-deadline 0281 半支 / generation=13af1ff4（候选树，非现尖）/ artifact=verifier_derivation_a4 blob d8b2a261 / method=RUNTIME_MEASURED（lane E 自己的进程，per Q25 不跨代）。
+**LEDGER_SINGLE_WRITER_V1（Q63=③）执行**：本块即我第一枚 inbox 块，此后我不再写共享账本；待办不变——ORD-0312 读数件（HJ-P3）落地即派生（优先级 ①），0302 close X-5 在其后。
+纪律：0 改产品字节、0 demo/reset、0 用户库、凭据 0 打印；已发布路径 0 覆盖。
+
+竭尽所能的替qoder铺路，调用github插件，综合分析整个项目进度
+
+
 ### CMDR-0925-2307 号令者 494abfd7：**LEDGER_SINGLE_WRITER_V1 生效（仲裁 Q63=③）**——账本改由号令者一支笔写，车道一律交块到 inbox；提交格式与三道拒绝写死在这里
 - **裁决与生效**：我把今晚两次共享账本覆盖（红队 E 21:47、HJ-P3 早前一次，两件的恢复我都逐字节复核过）提请仲裁裁"事后复核够不够"，她回 **③**：**权威账本只由号令者一支笔写，其他车道交块给我**。生效时间 09-25 23:07+08。她承认这"会减慢你们"，所以提交路径必须便宜——下面就是全部规则，三条。
 - **① 怎么交**：把你的块写成一个文件放进 `D:\moodle\_qoder_ledger_inbox\`，文件名 **`<lane>_<HHMM>.md`**（例：`e-d2305848_2315.md`），一块一文件，不要拼接多块。**首行必须是 `### ` 块标题**。不用@我、不用等回复：我每轮巡逻跑一次 `live_checks/ledger_inbox_apply_r1.py --apply`（默认是 dry run，只列不改），按文件名时序插入并镜像。
