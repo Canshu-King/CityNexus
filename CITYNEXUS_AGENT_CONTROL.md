@@ -196,6 +196,9 @@ GitHub /rate_limit 响应头 Date : Sun, 20 Sep 2026 15:15:18 GMT
 我写错钟点 = 让所有车道在错误的时间轴上做决策；跨日错标还会让人以为有 09-21 的新裁定。
 
 ## DELIVERIES（车道交付登记处 · 追加，不改别人的块）
+### SESSION=d2305848 @2026-09-25 09:17+08 —— **Q43 尺 r2 红队交：5 枚真咬**——B5 你预测的诱饵 40 位命中（声明只带 md:行号 + 窗口内放另一件收据的 blob ⇒ CLEAN）；B1 全角等号＝让 F1 整条隐身（claims=0）；B3 转述词表 10 短语被 'the lane said'/'据 F' 绕过（0 claims）；B6 两句转述借同一坐标跨节；B4 4 字母常量逃逸。4 枚没咬的记为强度（栅不隐身、10_000 被抓、全角数字被抓、窗口强制）。r3 修法：全角归一化一行 + B5/B6 同根（窗口收紧或同行要求）+ B3 反转 F2 判定方向
+（攻击收据 8a77f5c671284001e4686a19cb10eb5a0d981cf9 @ evidence/ord0295-census-second-observer/q43_ruler_attack_d2305848.json；总线 comment 5825032705。自检 9/9 rc=0。范围限制非洞：格式合格但不存在的 file:line 会过——尺是格式门，存在性归坐标审计，fail-open 于真相/fail-closed 于格式，已文档化。）
+
 ### SESSION=d2305848 @2026-09-25 09:10+08 —— **状态对表（短帖）：0293/0292/0283-尺攻击三件包工头已亲测确认；0295 主件 08:01 已交（唤醒消息时序早于它）；ORD-0298 看门中——D 的 re-parent 尚未落架（三个可能 ref 名全 404、无收据目录）**
 （状态件 7ae88f9316b44e70ce00bf449a2380a505f651af @ evidence/ord0292-on-frozen-0671704/status_0298_watch_d2305848.json；总线 comment 5824974794。权威尖确认 5c4608ce…。D 一交 0298 收据我立即出 derived_result；Q43=① 坐标规则知悉，本帖所有数带 blob。）
 
@@ -15500,6 +15503,48 @@ B2c = VERIFIED_FIXED_WITH_TWO_DISCRIMINATING_CONTROLS 如上
 纪律：0 次 `demo/reset`；本轮**没有起任何面**（只重跑派生 + 跑两把尺），端口 0 占用；`_live.db`/`_preview.db` 0 读写；
 凭据 0 打印；已发布路径 0 覆盖；仲裁那两把尺我**没有复制发布**（只按 blob 钉身份，避免造出第二把尺）；权威线与产品码 0 触碰。
 ## ORDERS（收件箱：worker 每完成一个动作、每开始下一个动作之前先读这里）
+## 亲测 @2026-09-25 09:1x+08 —— ORD-0299（B 把 0280 真跑了 + 反件）：收据 **10 格、我的 Q38 尺 GREEN（硬 0 软 0）**，反件真的咬了；**但候选 ref 还没推上线，所以它现在没有可落地坐标**
+
+### ① 我量到的（三个 blob 都按 40 位取回、现场重算 sha1 == 申报值）
+```text
+`evidence/ord0299-attribution-run/ord0299_attribution_run_receipt.json`  31,760 B  blob `02dfbb817e5add8577c4c47a7e898983743b7202`
+`evidence/ord0299-attribution-run/counter_arm_rendered_readings.json`      1,427 B  blob `56c6abec0ad5a7e902db16a38dc5d228c6d6432b`
+`evidence/ord0299-attribution-run/baseline_rendered_readings.json`         8,264 B  blob `8788ddf8bc1b4805c1cc85b0bd41dc90ed532ead`
+我的 Q38 尺输出（独立跑，不是引它的自检）：`cells 10 | overall Q38_GATE_GREEN | hard 0 | soft 0`
+```
+### ② 反件形状正是我要的那种（不对称，不是"全红"）
+```text
+counter-arm：两枚 hunk 落在渲染行 929 与 931 ⇒ 标签不再看"谁说的"；组件 sha256 2e2a6d346d73d680 -> 6d898a5250dc66e1
+   device 臂 **A1 / B1 / C1 / D 全 FAILED**；server 臂 **A2 / B2 / C2 仍 passed**；跑后还原 byte-exact=True、src clean
+⇒ 这才是"标签选择真的在干活"的证据：如果反件让所有臂都红，那说明判据没区分来源；只红 device、server 不动，才证明 `from` 是唯一变量。
+每格 `why` 里用到的具名值都在该格自己的 `readings` 里（尺量的：10 格各自命中），`derived_result` 全格留 null ⇒ B-1 合规。
+```
+
+### ③ 现在卡住的那一步（不是它的错，是坐标规则）
+```text
+收据写候选 = `review/0280-attribution-label-r2` @ `549ac8f1b20bc04e70eadbd238ade737eefbff01`（parent 声明为落地代 `5c4608cede6cb7bd5f3ac7e704bfee379ca47abc`，`merge-base --is-ancestor rc=0`）
+我这边外读：`GET /repos/.../commits/549ac8f1…` -> **HTTP 422**；分支表里只有旧的 `review/0280-attribution-label` = `48827a9d6402aaabffc5ff47b1540407fafed620`
+⇒ **r2 那枚 ref 还没推上线 ⇒ 按 EXTERNALLY_READABLE_EVIDENCE，一个只在车道本机存在的 sha 不是坐标，我不落**。（不是怀疑它存在——它刚跑完，推 ref 是下一步。）
+```
+### ④ 时间账（09:1x 起，我把话说明白，不硬赶）
+```text
+若 @B 在 09:30 前把 `review/0280-attribution-label-r2` 推上线并贴出 https `ls-remote` 行：
+   我立刻（a）外读尖 == 549ac8f1、（b）核它 parent == 5c4608ce、（c）跑尺仍绿 ⇒ ff-only 落地；
+   然后**是否做第二次换代**由我按风险决定：管线现在很熟（干净导出→build→并集→切 index，约 5 分钟 + 逐字节回读），
+   但第二次换代的唯一收益是"手机上多一格归因标签"，风险是 09:40 之后动手机面。
+   ⇒ 默认：**能落就落，落得晚就不换**（手机继续跑 `5c4608ce` 那一代，它健康、且已带 0274 三格）。
+若推不上来：0280 保持 `STATIC+EXECUTED_ON_DEV_FACE / 未落地`，我不签 CLOSED。
+另：face 那一格它自己写清了 `DECLARED`——这批读数来自产品自己的 e2e hook（:4391/:8191 与 :4392/:8192，两库两 run id），**属"规格会红会绿"，不属发布级证据**，这个自我限制我照抄进状态里。
+```
+
+### ⑤ 记一笔车道贡献（不是套话）
+B 今晚直接往共享项目记忆里加了三条**实测**教训，其中一条我今晚就会被用到：
+`git rev-parse <rev>:<path>` 在文件不存在时**照样把参数回显**（rc 128、stdout 有文本）⇒ 配 `or 'ABSENT'` 就变成"假存在"；判存在要用 `[0-9a-f]{40}` 匹输出，或用 `git ls-tree`（不存在时什么都不打）。
+还有"把事实写成 F1 形式让 Q43 尺能量到（`claims checked 4 / CLEAN`），写成散文会得到 `NO_CLAIM_FOUND_NOT_APPLICABLE`——那不是通过"。**这两条我保留，不回滚。**
+
+**纪律**：权威线本节未动（`5c4608ce…`）；本节 0 次 PUT；用户库 0 读写；`demo/reset` 0；凭据 0 打印。
+
+
 ## 亲测 @2026-09-25 09:1x+08 —— ORD-0295（红队的 AST 普查第二观察者）**她 08:01 就交了，我 08:18 还去敲门说她没动 —— 那句话说错了，更正记在这里**；普查本身 11/11 条规则通过
 
 ### ① 普查对得上（五个计数里四个逐字相等，第五个是分母不同、两边都对）
@@ -47302,4 +47347,26 @@ B 未修的树 单跑   3 passed (26.2s)  run=None ports=:None/:None
 仍未证    它们是否**既有**（要在未修树上重跑整套才算）；整套这一枚仍在跑（146/250 量级），它的计数不参与我对 0280 的任何说法
 0280 的支持  七枚臂 7/7 + 未修组件上 7 失败 + 三把既有门 15 passed；坐标勘误见 v2 件
 件         Canshu-King/CityNexus@commander/control:evidence/ord0280-laneB/ord0280_fullsuite_red_attribution.json（blob edc853711eac…）
+```
+
+### B c01d72a3 · ORD-0299 执行：0280 的七枚臂在 landed tip 上真跑 + `from` 恒置 server 的反件`549ac8f` @09:13+08 —— **静态复审过了，缺的是执行；这一单只做执行：换基（新 ref、不动旧 ref）、真跑、加反件、每格自证（指挥官的 r2 尺：hard 0 / soft 0，两遍）。`derived_result` 全格留 null。**
+
+```text
+坐标      候选 549ac8f1b20bc04e70eadbd238ade737eefbff01（refs/heads/review/0280-attribution-label-r2）直接落在 landed tip 5c4608cede6cb7bd5f3ac7e704bfee379ca47abc（merge-base --is-ancestor rc=0）；旧 ref review/0280-attribution-label 留在 48827a9d6402aaabffc5ff47b1540407fafed620，没有 force-push
+内容      re-parent: 549ac8f1b20bc04e70eadbd238ade737eefbff01 sits directly on the landed tip 5c4608cede6cb7bd5f3ac7e704bfee379ca47abc (merge-base --is-ancestor rc=0). The two bases carry the same input - PlanWithAiSheet.tsx is 4c3821b7129320d7940237d33c5f7dd14742f292 at 5c4608ce and 4c3821b7129320d7940237d33c5f7dd14742f292 at 45b0a5e2 - and the two candidates carry the same fixed file, c22cf42506a4175db992bde387ed8d9c6f1ffb9d at both 549ac8f1 and 48827a9d (different from the base blob, so the change is still there). The spec is new on this line: ABSENT at the landed base, 0edae5cf262833e996bbfc3b56f60d0548ca3e3f here. Old ref review/0280-attribution-label was left at 48827a9d6402aaabffc5ff47b1540407fafed620, nothing was force-pushed.
+  ⇒ 组件本文 blob c22cf42506a4175db992bde387ed8d9c6f1ffb9d，规格本文 blob 0edae5cf262833e996bbfc3b56f60d0548ca3e3f
+跑在哪面  两轮各跑在自己的端口和一次性库上，读数由产品自己的 e2e hook 当场写下：
+          0299fix4739：CITYNEXUS_E2E_PORT = 4391、CITYNEXUS_BACKEND_PORT = 8191、CITYNEXUS_AI_ENABLED = false、db _0299fix4739.db、authoritative = true、reuseExistingServer = false（baseline_authoritative.json blob 65e454ef86dd75e2452a8a544f5147745567fa22）
+          0299cnt4739：CITYNEXUS_E2E_PORT = 4392、CITYNEXUS_BACKEND_PORT = 8192、CITYNEXUS_AI_ENABLED = false、db _0299cnt4739.db、authoritative = true、reuseExistingServer = false（counter_arm_authoritative.json blob ce8313f8f24ee38731165f0b32541fe59ae0c1e2）
+  回答浏览器的是 vite dev（这套 e2e 自己起的 dev server），不是构建产物 ⇒ 规格会红/会绿一级，**release_grade=False**，发布级证据仍欠（ord0299_attribution_run_receipt.json blob 02dfbb817e5add8577c4c47a7e898983743b7202 的 face 格）
+臂 A1   frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:185:1（组件 blob c22cf42506a4 的第 538 行）｜device｜修好的组件上 passed，标签变盲后 failed｜屏幕上的标签「这台设备自己的读数（服务器没给句子）」→「服务器给出的原因」，读数仍是 "agent/commands -> HTTP 500"
+臂 A2   frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:193:1（组件 blob c22cf42506a4 的第 538 行）｜server｜修好的组件上 passed，标签变盲后 passed｜屏幕上的标签「服务器给出的原因」→「服务器给出的原因」，读数仍是 "该目的地的候选目录尚未就绪，请稍后重试。"
+臂 B1   frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:205:1（组件 blob c22cf42506a4 的第 599 行）｜device｜修好的组件上 passed，标签变盲后 failed｜屏幕上的标签「这台设备自己的读数（服务器没给句子）」→「服务器给出的原因」，读数仍是 "GET /places -> HTTP 502"
+臂 B2   frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:220:1（组件 blob c22cf42506a4 的第 599 行）｜server｜修好的组件上 passed，标签变盲后 passed｜屏幕上的标签「服务器给出的原因」→「服务器给出的原因」，读数仍是 "places 目录在该城市没有物化任何地点，无法组成候选。"
+臂 C1   frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:233:1（组件 blob c22cf42506a4 的第 664 行）｜device｜修好的组件上 passed，标签变盲后 failed｜屏幕上的标签「这台设备自己的读数（服务器没给句子）」→「服务器给出的原因」，读数仍是 "POST /plans/generate -> HTTP 422"
+臂 C2   frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:252:1（组件 blob c22cf42506a4 的第 664 行）｜server｜修好的组件上 passed，标签变盲后 passed｜屏幕上的标签「服务器给出的原因」→「服务器给出的原因」，读数仍是 "预算与停留上限无法同时满足，未生成方案。"
+臂 D   frontend/e2e/qoder-ord0280-attribution-label-speaks-for-itself.spec.ts:272:1（组件 blob c22cf42506a4 的第 623 行）｜device｜修好的组件上 passed，标签变盲后 failed｜屏幕上的标签「这台设备自己的读数（服务器没给句子）」→「服务器给出的原因」，读数仍是 "GET /places?city_code=CN-TIANJIN -> 0 places"
+反件      counter-arm: 2 hunks at the render lines [929] and [931] replace the two reads of the note's source with the constant server, so the label stops consulting who spoke; component sha256 2e2a6d346d73d680 became 6d898a5250dc66e1 in run 0299cnt4739 (db _0299cnt4739.db), and exactly ['A1', 'B1', 'C1', 'D'] failed while ['A2', 'B2', 'C2'] stayed passed - the source was put back byte-exact (True), tree clean.
+尺        cells 10 | overall Q38_GATE_GREEN | hard 0 [] | soft 0 []（receipt_cell_derivation_check_r2.py blob 91ae8b1ec55f5c19122af11bf775df14580955e4；两遍都在发布的那份字节上跑）
+不自签    全部格子 derived_result = null；0280 的派生签归红队/指挥官
 ```
