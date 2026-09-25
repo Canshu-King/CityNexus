@@ -1,0 +1,86 @@
+{
+ "schema": "CNX_CMDR_HERMES_FEASIBILITY_CORRECTION_V1",
+ "lane": "commander 494abfd7",
+ "at_local": "2026-09-26T03:16:57+0800",
+ "corrects": {
+  "artifact": "evidence/cmdr-hermes-mainline-feasibility-2350/feasibility_r1.json",
+  "blob": "2036d33b24e2bbbd6bad5fc7e12d785c219ce0a0",
+  "policy": "a published path is never rewritten or deleted; this file only adds corrections"
+ },
+ "found_by": "lane S2-hermes-port (ORD-0318) reverse-engineered the bucket arithmetic and re-grepped the line; every claim below was then re-measured by the commander from git objects, not copied",
+ "corrections": [
+  {
+   "id": "C1_ref_name_is_not_a_source",
+   "wrong_in_old": "`genealogy` quoted the branch as if `refs/heads/hermes/validation-0212` still carried the measured line",
+   "measured_now": {
+    "ref_now_points_at": "5de4f770e4624154c485c8caa2161c677fcd304b",
+    "measured_line": "0fe51945cdf2d0ae35494b615f3418957174da03",
+    "own_commits_from_merge_base": "94",
+    "merge_base": "7d22cd0eb7840121ba42a5ba363e1a4c7ca1a7e7"
+   },
+   "rule": "pin Hermes by full 40 hex and re-count with `git rev-list --count <merge-base>..<sha>` before quoting a commit count; a force-push moves the name, not the history I measured"
+  },
+  {
+   "id": "C2_bucket_sums",
+   "wrong_in_old": "`hermes_named_files_on_branch` presented buckets {scripts 67, backend/tests 22, reports 25, other 21} under `harness_only_paths: 115`, but those four sum to 135 = the named total, not the harness-only subset",
+   "measured_now": {
+    "named_total": 135,
+    "harness_only_recomposition": "67 scripts + 22 backend/tests + 21 reports/hermes + 4 reports/product-v1x + 1 agent-mcp/tests = 115"
+   },
+   "rule": "a bucket table must state which denominator it sums to; two different denominators in one field set is how a self-consistent-looking artifact lies"
+  },
+  {
+   "id": "C3_symbol_attribution",
+   "wrong_in_old": "`product_symbol_gaps` said `_upgrade_cached_request_replan_response` had `on_hermes: false`, and put `HermesReplanProposalView` behind a backend test",
+   "measured_now": {
+    "upgrade_def_and_calls_on_hermes_line": [
+     "0fe51945cdf2d0ae35494b615f3418957174da03:backend/app/agent/gateway.py:107:def _upgrade_cached_request_replan_response(",
+     "0fe51945cdf2d0ae35494b615f3418957174da03:backend/app/agent/gateway.py:542:            return _upgrade_cached_request_replan_response(",
+     "0fe51945cdf2d0ae35494b615f3418957174da03:backend/app/agent/gateway.py:617:                return _upgrade_cached_request_replan_response("
+    ],
+    "upgrade_hits_on_tip_rc": 1,
+    "view_hits_in_that_test_rc": 1,
+    "view_class_defined_at": "0fe51945cdf2d0ae35494b615f3418957174da03:agent-mcp/citynexus_mcp/schemas.py:51:class HermesReplanProposalView:",
+    "view_hits_on_tip_rc": 1
+   },
+   "reading": "the first symbol is on the Hermes line and simply absent from the tip; the second is not referenced by that test at all - the chain is test -> scripts/hermes_r20_..._probe.py -> scripts/hermes_r4_contract_probe.py -> `citynexus_mcp.schemas`, so Group B's home is `agent-mcp/`, not `backend/app/`"
+  },
+  {
+   "id": "C4_model_dependent_is_a_grep_proxy",
+   "wrong_in_old": "`model_dependent_rounds` counted 36 runnable files as if a grep hit proved a model call",
+   "measured_now": "the two tests named there were actually run in this session and passed without any provider call (`\"real_model\": True` is a key inside a literal fixture they assert over), so the 36 is an upper bound from text search, not a measurement",
+   "rule": "a count derived from grep must say so in the field name; otherwise someone will use it as an exclusion list"
+  }
+ ],
+ "port_candidate_as_delivered": {
+  "candidate": "afbbf5be3256d76eac0453ab3ad8e6dd1356d7cc",
+  "tip_at_check": "30de4ebe409f49c5e25f4758cb2e5f4e90764a4f",
+  "state_buckets": {
+   "A": 109
+  },
+  "paths_touching_product_dirs": 0,
+  "preflight_dry": "READY_TO_LAND / ff=True / ahead 1 / behind 0 / product introduced: (none) (receipt evidence/cmdr-landing-ORD-0318-gen4*/preflight_r1.json family)",
+  "commander_clean_arm_run": "git archive of the candidate + venv Python 3.12.14: 22 files -> collected 58 with 2 collection errors; 20 files (the two unimportable ones removed) -> 58 passed / 0 failed / 0.75s",
+  "why_not_landed_yet": "with those 2 unimportable test files inside the authoritative tree, `pytest -q backend/tests` aborts during collection and executes 0 tests (observed directly: `Interrupted: 2 errors during collection`), so landing this shape would poison every later full-suite gate; S2 was asked to re-cut at 107 paths with the two named in the receipt instead of skipped"
+ },
+ "discipline": {
+  "product_bytes_changed": 0,
+  "refs_moved": 0,
+  "published_paths_overwritten": 0,
+  "credential_values_printed": 0,
+  "lane_words_edited": 0
+ },
+ "claim_kind": "recomputation",
+ "derived": {
+  "ref_name_moved_off_measured_line": true,
+  "old_bucket_buckets_sum_to_named_total": true,
+  "harness_only_recomposition_adds_up": true,
+  "upgrade_symbol_found_on_hermes_line": true,
+  "upgrade_symbol_absent_from_tip": true,
+  "view_absent_from_tip": true,
+  "view_not_referenced_by_that_test": true,
+  "candidate_adds_nothing_to_product_dirs": true,
+  "candidate_is_all_additions": true
+ },
+ "claimed_result": "4 corrections to 2036d33b24e2; hermes name now 5de4f770e462 vs measured line 0fe51945cdf2 (own commits 94); candidate afbbf5be3256 adds 109 paths, 0 of them in product dirs"
+}
