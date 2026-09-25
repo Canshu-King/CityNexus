@@ -1,0 +1,78 @@
+{
+ "schema": "CNX_CMDR_ACCEPTANCE_CHECK_V1",
+ "order": "ORD-0309",
+ "verifier": "d2305848",
+ "delivery_verifier_blob": "6906e57c61b20353fae153beea76f3505b4b3088",
+ "delivery_receipt_blob": "aa13e20472870e4f5b5d5a49d3edf5f6b8b574f2",
+ "authority_tip_now": "dc964086c9d412573ac19d70b24b30e6c3ee6168",
+ "ledger_mirror_blob": "5543267441c5a7543e1f192fa3a3976abba12a1f",
+ "ledger_bytes": 5722754,
+ "per_cell": [
+  {
+   "cell": "cell_B3_offline_after_convergence",
+   "arm": "b3_primary",
+   "run_id": "o297r-b3_primary-160049",
+   "claimed": "CLAIMED_MET_ON_BASE_DC964086",
+   "verifier_derived": "MET",
+   "raw_fields_named": 13,
+   "raw_fields_present_in_delivery_bytes": 13,
+   "raw_fields_absent": [],
+   "verifier_annotation_keys": [
+    "offline_first_rendered_contains_app_content",
+    "offline_first_rendered_note",
+    "no_page_origin_contact_note",
+    "origin_html_note",
+    "journeys_rows_note"
+   ]
+  },
+  {
+   "cell": "cell_B3_control_partial_deploy",
+   "arm": "b3_control_partial",
+   "run_id": "o297r-b3_control_partial-160314",
+   "claimed": "CONTROL_DISCRIMINATES_BY_offline_document_boots+usable_offline",
+   "verifier_derived": "CONTROL_DISCRIMINATES",
+   "raw_fields_named": 10,
+   "raw_fields_present_in_delivery_bytes": 10,
+   "raw_fields_absent": [],
+   "verifier_annotation_keys": []
+  },
+  {
+   "cell": "cell_A_never_reconnected",
+   "arm": "a_never_reconnects",
+   "run_id": "o297r-a_never_reconnects-160433",
+   "claimed": "CLAIMED_RED_NEVER_RECONNECTED_BROKEN__HELD_SCREEN_USABLE_OFFLINE+OFFLI",
+   "verifier_derived": "CONFIRMED_AS_CLAIMED (both halves of the compound claim are supported by the raw fields)",
+   "raw_fields_named": 13,
+   "raw_fields_present_in_delivery_bytes": 12,
+   "raw_fields_absent": [
+    "note_from_value"
+   ],
+   "verifier_annotation_keys": [
+    "paren_note"
+   ]
+  },
+  {
+   "cell": "cell_A_control_update_lands",
+   "arm": "a_control_update_lands",
+   "run_id": "o297r-a_control_update_lands-160653",
+   "claimed": "CONTROL_DISCRIMINATES_BY_usable_offline+offline_first_marker+outage_up",
+   "verifier_derived": "CONTROL_DISCRIMINATES",
+   "raw_fields_named": 14,
+   "raw_fields_present_in_delivery_bytes": 14,
+   "raw_fields_absent": [],
+   "verifier_annotation_keys": [
+    "paren_note"
+   ]
+  }
+ ],
+ "raw_field_coverage": {
+  "named": 50,
+  "found_in_delivery_bytes": 49,
+  "fabricated_fields": [
+   "note_from_value"
+  ],
+  "note": "annotation keys the verifier invented for its own sentences are counted separately, so a coverage number cannot hide a field that does not exist"
+ },
+ "verdict": "PARTIAL - 1 named raw field(s) are absent from the delivery bytes: note_from_value",
+ "scope": "Commander's independent cross-check of the verifier's field citations. It does not re-derive the product behaviour, and it does not cover the phone data plane (still down) nor the A-arm's retracted cause attribution."
+}
